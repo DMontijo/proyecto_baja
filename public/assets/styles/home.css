@@ -1,0 +1,8 @@
+.menu .btn:hover{
+    background-color: var(--tertiary);
+}
+
+.movil-icon{
+    height: 90px;
+    width: 90px;
+}

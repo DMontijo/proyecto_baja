@@ -1,0 +1,17 @@
+:root{
+    --primary:#511229;
+    --secondary:#092B47;
+    --tertiary:#BF9B55;
+    --font: 'Montserrat',sans-serif;
+}
+
+html, body{
+    font-family: var(--font)!important;
+}
+/*Bootstrap*/
+.bg-primary{
+    background-color: var(--primary)!important;
+}
+.bg-blue{
+    background-color: var(--secondary)!important;
+}

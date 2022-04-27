@@ -33,6 +33,14 @@ $routes->setAutoRoute(false);
 // route since we don't have to scan directories.
 $routes->get('/', 'HomeController::index');
 
+$routes->group('justicia', function ($routes) {
+
+});
+
+$routes->group('denuncia', function ($routes) {
+    
+});
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing
