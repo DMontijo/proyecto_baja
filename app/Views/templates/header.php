@@ -23,7 +23,7 @@
         <!--Versión escritorio-->
         <div class="container-fluid bg-primary p-0 d-none d-lg-block">
             <div class="container py-3 d-flex align-items-center">
-                <div class="d-inline-block"><a href="<?=base_url()?>"><img src="<?=base_url()?>/assets/img/logo.png" alt="FGEBC Logo"></a></div>
+                <div class="d-inline-block"><a href="<?=base_url()?>"><img src="<?=base_url()?>/assets/img/logo.png" class="logo-header" alt="FGEBC Logo"></a></div>
                 <div class="d-inline-block ms-3"><span class="fw-bolder text-white">FÍSCALIA GENERAL DEL ESTADO <br>DE
                         BAJA CALIFORNIA</span></div>
             </div>
@@ -61,7 +61,7 @@
         <!--Versión movil-->
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary d-block d-lg-none">
             <div class="container">
-                <a class="navbar-brand d-block" href="<?=base_url()?>"><img src="<?=base_url()?>/assets/img/logo.png" alt="FGEBC Logo"></a><br>
+                <a class="navbar-brand d-block" href="<?=base_url()?>"><img src="<?=base_url()?>/assets/img/logo.png" class="logo-header-movil" alt="FGEBC Logo"></a><br>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
                     aria-label="Toggle navigation">

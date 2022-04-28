@@ -1,17 +1,49 @@
 :root{
-    --primary:#511229;
-    --secondary:#092B47;
-    --tertiary:#BF9B55;
+    /*Primarios*/
+    --gris1:#E5E4E3;
+    --gris1-light:#f4f4f4;
+    --gris1-dark:#cdcccb;
+
+    --gris2:#7D7D7D;
+    --gris2-light:#919191;
+    --gris2-dark:#626262;
+
+    --gris3:#262626;
+    --gris3-light:#3a3a3a;
+    --gris3-dark:#161616;
+
+    --azul:#092B47;
+    --azul-light:#0b3557;
+    --azul-dark:#072238;
+
+    /*Secundarios*/
+    --tinto:#511229;
+    --tinto-light:#601530;
+    --tinto-dark:#3e0e20;
+
+    --amarillo:#BF9B55;
+    --amarillo-light:#d2ab5e;
+    --amarillo-dark:#a18347;
+
+    /*Tipografias*/
     --font: 'Montserrat',sans-serif;
 }
 
 html, body{
     font-family: var(--font)!important;
 }
+
+
 /*Bootstrap*/
+
 .bg-primary{
-    background-color: var(--primary)!important;
+    background-color: var(--tinto)!important;
 }
+
 .bg-blue{
-    background-color: var(--secondary)!important;
+    background-color: var(--azul)!important;
+}
+
+.bg-light{
+    background-color: var(--gris1)!important;
 }
