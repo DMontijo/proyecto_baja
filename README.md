@@ -10,20 +10,19 @@ Una vez instalado composer vas a la carpeta raíz del proyecto y corres el coman
 
 ## Documentación sobre codeigniter
 
-[Sitio web de Codeigniter.](http://codeigniter.com)
-
-<!-- ## Installation & updates
-
-`composer create-project codeigniter4/appstarter` then `composer update` whenever
-there is a new release of the framework.
-
-When updating, check the release notes to see if there are any changes you might need to apply
-to your `app` folder. The affected files can be copied or merged from
-`vendor/codeigniter4/framework/app`. -->
+[Documentación Codeigniter 4.](https://www.codeigniter.com/user_guide/index.html)
 
 ## Configuraciones
 
-Para las configurar el proyecto renombre el archivo a `env` a `.env` y posterior coloca todas las configuraciones locales ya que este archivo es el que se tomar en cuenta si colocas `CI_ENVIRONMENT = development` de lo contrario si esta en producción usa las configuraciones que están en `app/Config`.
+- Instalar composer.
+- Correr el comando `composer install`.
+- Copiar el archivo `env` y renombrar la copia a `.env`.
+- Descomentar `CI_ENVIRONMENT = production` y pasar a `CI_ENVIRONMENT = development`.
+- Descomentar `app.baseURL` y colocar la liga de tu proyecto `app.baseURL = 'http://localhost/proyecto_baja/public/`.
+
+**Notas:**
+- Cualquier configuración que se desee en el ambiente de desarrollo debes hacerlo en el archivo `.env`.
+- Cualquier configuracióbn para el ambiente de producción se debe realizar en los archivos de configuraciones en app/Config
 
 <!-- ## Important Change with index.php
 
