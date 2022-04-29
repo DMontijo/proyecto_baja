@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="<?= base_url() ?>/assets/styles/global.css">
     <link rel="stylesheet" href="<?= base_url() ?>/assets/styles/home.css">
 
-    <title>FGEBC <?php ' - ' ?></title>
+    <title>FGEBC <?php echo ' - '.$title ?></title>
 </head>
 
 <body>

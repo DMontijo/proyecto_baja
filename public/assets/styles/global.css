@@ -34,8 +34,9 @@ html, body{
 }
 
 
-/*Bootstrap*/
+/* ------------ Bootstrap ------------*/
 
+/*Backgrounds*/
 .bg-primary{
     background-color: var(--tinto)!important;
 }
@@ -46,4 +47,10 @@ html, body{
 
 .bg-light{
     background-color: var(--gris1)!important;
+}
+
+/*Fonts colors*/
+
+.text-dark{
+    color: var(--gris3)!important;
 }
