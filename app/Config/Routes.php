@@ -38,7 +38,7 @@ $routes->group('justicia', function ($routes) {
 });
 
 $routes->group('denuncia', function ($routes) {
-    
+    $routes->get('/', 'client/RegistroController::index');
 });
 
 /*

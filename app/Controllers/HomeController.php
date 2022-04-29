@@ -7,17 +7,17 @@ class HomeController extends BaseController
     public function index()
     {
         $data = array();
-        $this->_loadView( 'Servicio',$data,'home_view');
+        $this->_loadView('Servicios', $data, 'home_view');
     }
 
-    private function _loadView($title,$data,$view){
-
-        $header_data =[
+    private function _loadView($title, $data, $view)
+    {
+        $header_data = [
             'title' => $title
         ];
 
-        echo view("templates/header",$header_data);
-        echo view("$view",$data);
+        echo view("templates/header", $header_data);
+        echo view("$view", $data);
         echo view("templates/footer");
     }
 }
