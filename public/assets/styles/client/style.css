@@ -1,0 +1,12 @@
+.header{
+    height: 100px;
+}
+.footer{
+    height: 50px;
+}
+.logo-header{
+    height: 80px;
+}
+.main{
+    min-height: calc(100vh - 150px)!important;
+}

@@ -8,9 +8,10 @@ Una vez instalado composer vas a la carpeta raíz del proyecto y corres el coman
 
 **Nota:** Para poder iniciarlo debes tener un servidor local como mamp, xamp, laragon, etc., colocar el proyecto en la carpeta www o htdocs y posterior dirijirte al proyecto desde el navegador a la carpeta public.
 
-## Documentación sobre codeigniter
+## Documentación sobre codeigniter y bootstrap 5
 
 [Documentación Codeigniter 4.](https://www.codeigniter.com/user_guide/index.html)
+[Documentación Bootstrap 5.](https://getbootstrap.com/docs/5.0/getting-started/introduction/)
 
 ## Configuraciones
 

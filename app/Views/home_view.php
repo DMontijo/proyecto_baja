@@ -4,7 +4,7 @@
         <div class="col-sm-4 col-md-3 d-none d-lg-block">
             <div class="card text-center bg-transparent border-0">
                 <div class="card-body">
-                    <a href="" class="text-decoration-none">
+                    <a href="<?=base_url()?>/denuncia" class="text-decoration-none">
                         <img src="<?=base_url()?>/assets/img/icons/video_denuncia.png" class="w-75"
                             alt="Video Denuncia">
                         <p class="fw-bold fs-5 mt-2  text-dark ">Video Denuncia</p>

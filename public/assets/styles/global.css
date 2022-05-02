@@ -54,3 +54,6 @@ html, body{
 .text-dark{
     color: var(--gris3)!important;
 }
+.text-blue{
+    color:var(--azul);
+}
