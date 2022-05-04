@@ -21,19 +21,4 @@
 </head>
 
 <body>
-    <header>
-        <!--Versión escritorio-->
-        <div class="container-fluid d-flex align-items-center bg-primary p-0 m-0 header">
-            <div class="container d-flex align-items-center justify-content-between">
-                <div class="d-inline-block">
-                    <a href="<?= base_url() ?>">
-                        <img src="<?= base_url() ?>/assets/img/FGEBC.png" class="logo-header" alt="FGEBC Logo">
-                    </a>
-                    <a href="<?= base_url() ?>">
-                        <img src="<?= base_url() ?>/assets/img/SEJAP.png" class="logo-header" alt="FGEBC Logo">
-                    </a>
-                </div>
-            </div>
-        </div>
-    </header>
-    <div class="container-fluid bg-white p-0 py-5 main">
+    <div class="container-fluid bg-white p-0 main">

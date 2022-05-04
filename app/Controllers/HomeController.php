@@ -7,7 +7,7 @@ class HomeController extends BaseController
     public function index()
     {
         $data = array();
-        $this->_loadView('Servicios', $data, 'home_view');
+        $this->_loadView('Servicios', $data, 'index');
     }
 
     private function _loadView($title, $data, $view)

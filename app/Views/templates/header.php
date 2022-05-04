@@ -23,7 +23,7 @@
         <!--Versión escritorio-->
         <div class="container-fluid bg-primary p-0 d-none d-lg-block">
             <div class="container py-3 d-flex align-items-center">
-                <div class="d-inline-block"><a href="<?=base_url()?>"><img src="<?=base_url()?>/assets/img/logo.png" class="logo-header" alt="FGEBC Logo"></a></div>
+                <div class="d-inline-block"><a href="<?=base_url()?>"><img src="<?=base_url()?>/assets/img/FGEBC.png" class="logo-header" alt="FGEBC Logo"></a></div>
                 <div class="d-inline-block ms-3"><span class="fw-bolder text-white">FÍSCALIA GENERAL DEL ESTADO <br>DE
                         BAJA CALIFORNIA</span></div>
             </div>

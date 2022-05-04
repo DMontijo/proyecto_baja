@@ -1,12 +1,27 @@
-.header{
-    height: 100px;
+/*Global*/
+.main {
+  min-height: calc(100vh - 150px) !important;
 }
-.footer{
-    height: 50px;
+.header {
+  height: 100px;
 }
-.logo-header{
-    height: 80px;
+.footer {
+  height: 50px;
 }
-.main{
-    min-height: calc(100vh - 150px)!important;
+.logo-header {
+  height: 80px;
+}
+.logo-sejap{
+
+}
+.asterisco-rojo{
+  margin-left: 3px;
+  color: red;
+  font-weight: bold;
+}
+
+/*Login Page*/
+.logo-login{
+  width: auto;
+  max-width: 300px;
 }
