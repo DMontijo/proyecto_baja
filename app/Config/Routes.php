@@ -38,9 +38,9 @@ $routes->group('justicia', function ($routes) {
 });
 
 $routes->group('denuncia', function ($routes) {
-    $routes->get('/login', 'client/LoginController::index');
     $routes->get('/', 'client/LoginController::index');
-    $routes->get('/registro', 'client/RegistroController::index');
+    $routes->get('login', 'client/LoginController::index');
+    $routes->get('registro', 'client/RegistroController::index');
 });
 
 /*

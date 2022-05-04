@@ -1,8 +1,6 @@
 <div class="container">
     <h1 class="text-center fw-bolder pb-1 text-blue">DATOS DEL DENUNCIANTE</h1>
     <p class="text-center pb-5">Los campos con un <span class="asterisco-rojo">*</span> son obligatorios</p>
-    <h3 class="text-center fw-bolder pb-1 text-blue">DATOS PERSONALES</h3>
-    <hr>
     <form class="row g-3 needs-validation" novalidate>
         <div class="col-12 col-sm-6 col-md-4">
             <label for="nombre" class="form-label fw-bold input-required">Nombre(s)</label>
@@ -113,7 +111,7 @@
         </div>
         <div class="col-12">
             <div class="d-grid gap-2">
-                <button type="submit" class="btn btn-primary">Continuar</button>
+                <button type="submit" class="btn btn-primary">Registrarme</button>
             </div>
         </div>
     </form>

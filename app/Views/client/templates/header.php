@@ -8,11 +8,14 @@
     <meta http-equiv='expires' content='0'>
     <meta http-equiv='pragma' content='no-cache'>
     <!--Bootstrap 5-->
-    <link rel="stylesheet" href="<?= base_url() ?>/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="<?= base_url() ?>/assets/bootstrap/css/bootstrap.css">
+    <!--Bootstrap Icons-->
+    <link rel="stylesheet" href="<?= base_url() ?>/assets/bootstrap/icons/bootstrap-icons.css">
     <!--Font-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap">
     <!--Styles-->
     <link rel="stylesheet" href="<?= base_url() ?>/assets/styles/global.css">
     <link rel="stylesheet" href="<?= base_url() ?>/assets/styles/client/style.css">
@@ -23,15 +26,19 @@
 <body>
     <header>
         <!--Versión escritorio-->
-        <div class="container-fluid d-flex align-items-center bg-primary p-0 m-0 header">
-            <div class="container d-flex align-items-center justify-content-between">
-                <div class="d-inline-block">
-                    <a href="<?= base_url() ?>">
-                        <img src="<?= base_url() ?>/assets/img/FGEBC.png" class="logo-header" alt="FGEBC Logo">
-                    </a>
-                    <a href="<?= base_url() ?>">
-                        <img src="<?= base_url() ?>/assets/img/SEJAP.png" class="logo-header" alt="FGEBC Logo">
-                    </a>
+        <div class="container-fluid bg-primary p-0 m-0 header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-6 d-flex">
+                        <a href="<?= base_url() ?>">
+                            <img src="<?= base_url() ?>/assets/img/FGEBC.png" class="logo-header" alt="FGEBC Logo">
+                        </a>
+                    </div>
+                    <div class="col-6 d-flex justify-content-end">
+                        <a href="<?= base_url() ?>">
+                            <img src="<?= base_url() ?>/assets/img/SEJAP.png" class="logo-header" alt="FGEBC Logo">
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

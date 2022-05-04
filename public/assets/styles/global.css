@@ -31,7 +31,7 @@
 
 html,
 body {
-  font-family: var(--font) !important;
+  /* font-family: var(--font) !important; */
   font-size: 16px;
 }
 
@@ -52,6 +52,10 @@ body {
   background-color: var(--azul) !important;
 }
 
+.bg-yellow {
+  background-color: var(--amarillo) !important;
+}
+
 .bg-light {
   background-color: var(--gris1) !important;
 }
@@ -67,5 +71,8 @@ body {
   color: var(--gris3) !important;
 }
 .text-blue {
-  color: var(--azul);
+  color: var(--azul) !important;
+}
+.text-yellow{
+  color: var(--amarillo)!important;
 }

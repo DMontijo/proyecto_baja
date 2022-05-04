@@ -11,9 +11,6 @@
 .logo-header {
   height: 80px;
 }
-.logo-sejap{
-
-}
 .asterisco-rojo{
   margin-left: 3px;
   color: red;
@@ -23,5 +20,5 @@
 /*Login Page*/
 .logo-login{
   width: auto;
-  max-width: 300px;
+  max-width: 150px;
 }
