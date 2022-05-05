@@ -11,7 +11,11 @@ class RegistroController extends BaseController
         $data = array();
         $this->_loadView('Denuncia', $data, 'index');
     }
-
+    public function formularioDenuncia()
+    {
+        $data = array();
+        $this->_loadView('Denuncia', $data, 'denuncia');
+    }
     private function _loadView($title, $data, $view)
     {
         $header_data = [
