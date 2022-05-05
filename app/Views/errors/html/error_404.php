@@ -16,21 +16,23 @@
 
 <body>
     <section class="container-fluid bg-primary">
-        <div class="row vh-100 text-white align-items-center justify-content-center text-center">
-            <div class="col-12">
-                <a href="<?= base_url() ?>">
-                    <img src="<?= base_url() ?>/assets/img/FGEBC.png" alt="FGEBC Logo" style="width:200px;">
-                </a>
-                <h1 class="display-1 fw-bolder">404</h1>
-                <p>
-                    <?php if (! empty($message) && $message !== '(null)') : ?>
-                    <?= nl2br(esc($message)) ?>
-                    <?php else : ?>
-                    Sorry! Cannot seem to find the page you were looking for.
-                    <?php endif ?>
-                </p>
-            </div>
-        </div>
+		<div class="container">
+			<div class="row vh-100 text-white align-items-center justify-content-center text-center">
+				<div class="col-12">
+					<a href="<?= base_url() ?>">
+						<img src="<?= base_url() ?>/assets/img/FGEBC.png" alt="FGEBC Logo" style="width:200px;">
+					</a>
+					<h1 class="display-1 fw-bolder">404</h1>
+					<p class="p-2">
+						<?php if (! empty($message) && $message !== '(null)') : ?>
+						<?= nl2br(esc($message)) ?>
+						<?php else : ?>
+						Sorry! Cannot seem to find the page you were looking for.
+						<?php endif ?>
+					</p>
+				</div>
+			</div>
+		</div>
     </section>
 </body>
 

@@ -110,9 +110,13 @@
             </div>
         </div>
         <div class="col-12">
-            <div class="d-grid gap-2">
-                <button type="submit" class="btn btn-primary">Registrarme</button>
-            </div>
+            <?php include('e_firma_canva.php') ?>
+        </div>
+        <div class="col-12 text-center">
+            <button class="btn btn-primary " type="button" data-bs-toggle="modal"
+                data-bs-target="#otp_validation">Guardar</button>
+            <!-- <button type="submit" class="btn btn-primary">Registrarme</button> -->
         </div>
     </form>
 </div>
+<?php include('otp_validation_modal.php') ?>
