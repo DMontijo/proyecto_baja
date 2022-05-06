@@ -48,6 +48,7 @@ $routes->group('admin', function ($routes) {
     $routes->get('login', 'admin/LoginAdminController::index');
     $routes->get('dashboard', 'Dashboard::index');
     $routes->get('registrarUsuario', 'Dashboard::registrarUsuario');
+    $routes->get('videollamadasAtendidas', 'Dashboard::videollamadasAtendidas');
 });
 /*
  * --------------------------------------------------------------------

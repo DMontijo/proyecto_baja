@@ -14,6 +14,11 @@ class Dashboard extends BaseController
             $data = array();
             $this->_loadView('Dashboard', $data, 'registrarUsuario');
         }
+        public function videollamadasAtendidas()
+        {
+            $data = array();
+            $this->_loadView('Dashboard', $data, 'videollamadasAtendidas');
+        }
         private function _loadView($title, $data, $view)
         {
             $header_data = [
