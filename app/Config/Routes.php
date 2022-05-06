@@ -44,8 +44,18 @@ $routes->group('denuncia', function ($routes) {
     $routes->get('/registro', 'client/RegistroController::index');
 =======
     $routes->get('login', 'client/LoginController::index');
+<<<<<<< Updated upstream
     $routes->get('registro', 'client/RegistroController::index');  
     $routes->get('formularioDenuncia', 'client/RegistroController::formularioDenuncia');
+>>>>>>> Stashed changes
+=======
+    $routes->get('registro', 'client/RegistroController::index');
+    $routes->get('formularioDenuncia', 'client/RegistroController::index');
+});
+$routes->group('admin', function ($routes) {
+    $routes->get('/', 'admin/LoginAdminController::index');
+    $routes->get('login', 'admin/LoginAdminController::index');
+    $routes->get('dashboard', 'Dashboard::index');
 >>>>>>> Stashed changes
 });
 /*
