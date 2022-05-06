@@ -1,6 +1,6 @@
 <section class="container-fluid bg-primary d-flex align-items-center justify-content-center" style="min-height: 100vh;">
     <div class="container">
-        <div class="row">
+        <div class="row py-5">
             <div class="col-12 col-md-6 d-flex justify-content-center align-items-center">
                 <div class="row mb-3">
                     <div class="col-6 d-flex align-items-center justify-content-center p-3">
@@ -26,7 +26,7 @@
                 </div>
                 <div class="row align-items-center justify-content-center">
                     <div class="col-12 col-md-10 offset-md-1">
-                        <div class="card bg-white shadow-lg py-5 px-3">
+                        <div class="card bg-white shadow-lg py-3 px-3">
                             <h2 class="fw-bolder text-white text-center text-blue mb-2">Ingresa y denuncia</h2>
                             <div class="card-body">
                                 

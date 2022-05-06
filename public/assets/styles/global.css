@@ -76,3 +76,12 @@ body {
 .text-yellow{
   color: var(--amarillo)!important;
 }
+
+/*Links*/
+.link-yellow {
+  color: var(--amarillo);
+}
+.link-yellow:hover,
+.link-yellow:focus {
+  color: var(--amarillo);
+}

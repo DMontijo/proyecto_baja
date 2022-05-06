@@ -4,9 +4,6 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv='cache-control' content='no-cache'>
-    <meta http-equiv='expires' content='0'>
-    <meta http-equiv='pragma' content='no-cache'>
     <!--Bootstrap 5-->
     <link rel="stylesheet" href="<?= base_url() ?>/assets/bootstrap/css/bootstrap.css">
     <!--Bootstrap Icons-->

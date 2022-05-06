@@ -4,41 +4,37 @@
 }
 .header {
   height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .footer {
-  height: 50px;
+  min-height: 50px;
 }
 .logo-header {
   height: 80px;
 }
-.asterisco-rojo{
+.asterisco-rojo {
   margin-left: 3px;
   color: red;
   font-weight: bold;
 }
 
 /*Login Page*/
-.logo-login{
+.logo-login {
   width: auto;
   max-width: 150px;
 }
 
 /*Firma electrónica*/
-
-#draw-canvas {
-  border: 2px dotted #CCCCCC;
+#trazo_firma {
+  border: 2px solid #cccccc;
   border-radius: 5px;
   cursor: crosshair;
+  background-color: transparent !important;
 }
 
-#draw-dataUrl {
+#firma_url {
   width: 100%;
 }
-
-.contenedor {
-    width: 100%;
-    margin: 5px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
+/*End firma electrónica*/
