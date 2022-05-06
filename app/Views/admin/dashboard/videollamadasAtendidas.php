@@ -1,6 +1,10 @@
 <?= $this->extend('templates/admin_template') ?>
 <?= $this->section('content') ?>
+<style>
+   .pagination > li > a, .pagination > li > span{background-color:#092b47 !important}
+.pagination > li.active > a, .pagination > li.active > span{background-color:#092b47 !important}
 
+</style>
 <section class="content">
     <div class="container-fluid">
 </br>
