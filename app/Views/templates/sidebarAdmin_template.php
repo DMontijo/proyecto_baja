@@ -64,6 +64,23 @@
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-copy"></i>
               <p>
+               Usuarios
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="<?=base_url()?>/admin/registrarUsuario" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Registrar usuario</p>
+                </a>
+              </li>  
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-copy"></i>
+              <p>
                Videollamadas
                 <i class="fas fa-angle-left right"></i>
                 <span class="badge badge-info right">6</span>
@@ -75,8 +92,7 @@
                   <i class="far fa-circle nav-icon"></i>
                   <p>Registros de videollamadas</p>
                 </a>
-              </li>
-              
+              </li>  
             </ul>
           </li>
           <li class="nav-item">
