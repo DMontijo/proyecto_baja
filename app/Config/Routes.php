@@ -35,12 +35,21 @@ $routes->get('/', 'HomeController::index');
 
 $routes->group('justicia', function ($routes) {
 
+    $routes->group('dashboard', function ($routes) {
+
+    });
 });
 
 $routes->group('denuncia', function ($routes) {
     $routes->get('/', 'client/LoginController::index');
     $routes->get('login', 'client/LoginController::index');
     $routes->get('registro', 'client/RegistroController::index');
+    
+    $routes->group('dashboard', function ($routes) {
+        $routes->get('/', 'client/DashboardController::index');
+        $routes->get('video-denuncia', 'client/DashboardController::video_denuncia');
+        $routes->get('denuncias', 'client/DashboardController::denuncias');
+    });
 });
 
 /*

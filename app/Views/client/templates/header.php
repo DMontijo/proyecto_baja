@@ -4,6 +4,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="<?= base_url() ?>/assets/img/FGEBC.png" type="image/x-icon">
+    <link rel="shortcut icon" href="<?= base_url() ?>/assets/img/FGEBC.png" type="image/x-icon">
     <!--Bootstrap 5-->
     <link rel="stylesheet" href="<?= base_url() ?>/assets/bootstrap/css/bootstrap.css">
     <!--Bootstrap Icons-->
@@ -20,18 +22,14 @@
 </head>
 
 <body>
+    <script src="<?= base_url() ?>/assets/jQuery/jquery.js"></script>
     <header>
         <div class="container-fluid bg-primary p-0 m-0 header">
             <div class="container">
                 <div class="row">
-                    <div class="col-6 d-flex">
+                    <div class="col-12">
                         <a href="<?= base_url() ?>">
-                            <img src="<?= base_url() ?>/assets/img/FGEBC.png" class="logo-header" alt="FGEBC Logo">
-                        </a>
-                    </div>
-                    <div class="col-6 d-flex justify-content-end">
-                        <a href="<?= base_url() ?>">
-                            <img src="<?= base_url() ?>/assets/img/SEJAP.png" class="logo-header" alt="FGEBC Logo">
+                            <img src="<?= base_url() ?>/assets/img/FGEBC_SEJAP_LOGO.png" class="logo-header" alt="FGEBC Logo">
                         </a>
                     </div>
                 </div>

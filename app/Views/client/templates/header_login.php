@@ -4,6 +4,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="<?= base_url() ?>/assets/img/FGEBC.png" type="image/x-icon">
+    <link rel="shortcut icon" href="<?= base_url() ?>/assets/img/FGEBC.png" type="image/x-icon">
     <!--Bootstrap 5-->
     <link rel="stylesheet" href="<?= base_url() ?>/assets/bootstrap/css/bootstrap.css">
     <!--Bootstrap Icons-->
@@ -20,4 +22,5 @@
 </head>
 
 <body>
+    <script src="<?= base_url() ?>/assets/jQuery/jquery.js"></script>
     <div class="container-fluid bg-white p-0 main">
