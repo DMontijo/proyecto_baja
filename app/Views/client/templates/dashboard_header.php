@@ -58,7 +58,7 @@
             <div class="collapse navbar-collapse" id="navegacion">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link <?php if ($menu === 'dashboard' || $menu === 'video-denuncia') echo 'active'; ?>" href="<?= base_url() ?>/denuncia/dashboard"><i class="bi bi-camera-video-fill"></i> Denunciar</a>
+                        <a class="nav-link <?php if ($menu === 'dashboard' || $menu === 'video-denuncia22222') echo 'active'; ?>" href="<?= base_url() ?>/denuncia/dashboard"><i class="bi bi-camera-video-fill"></i> Denunciar</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link <?php if ($menu === 'denuncias') echo 'active'; ?>" href="<?= base_url() ?>/denuncia/dashboard/denuncias"><i class="bi bi-archive-fill"></i> Mis denuncias</a>
