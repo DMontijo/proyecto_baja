@@ -44,6 +44,7 @@ $routes->group('denuncia', function ($routes) {
     $routes->get('/', 'client/LoginController::index');
     $routes->get('login', 'client/LoginController::index');
     $routes->get('registro', 'client/RegistroController::index');
+    $routes->get('recuperar', 'client/LoginController::change_password');
     
     $routes->group('dashboard', function ($routes) {
         $routes->get('/', 'client/DashboardController::index');

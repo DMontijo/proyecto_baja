@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controllers\client;
+
 use App\Controllers\BaseController;
 
 
@@ -10,6 +11,12 @@ class LoginController extends BaseController
     {
         $data = array();
         $this->_loadView('Login', $data, 'index');
+    }
+
+    public function change_password()
+    {
+        $data = array();
+        $this->_loadView('Recuperar', $data, 'change_password');
     }
 
     private function _loadView($title, $data, $view)
