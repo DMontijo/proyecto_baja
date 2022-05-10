@@ -33,7 +33,7 @@
                         BAJA CALIFORNIA</span></div>
             </div>
         </div>
-        <nav class="navbar navbar-expand navbar-dark bg-blue d-none d-lg-block">
+        <!-- <nav class="navbar navbar-expand navbar-dark bg-blue d-none d-lg-block">
             <div class="container">
                 <ul class="navbar-nav mb-2 mb-lg-0 w-100 justify-content-around py-2 menu">
                     <li class="nav-item">
@@ -62,9 +62,9 @@
                     </li>
                 </ul>
             </div>
-        </nav>
-        <!--Versión movil-->
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary d-block d-lg-none">
+        </nav> -->
+        <!-- Versión movil-->
+        <!-- <nav class="navbar navbar-expand-lg navbar-dark bg-primary d-block d-lg-none">
             <div class="container">
                 <a class="navbar-brand d-block" href="<?=base_url()?>"><img src="<?=base_url()?>/assets/img/logo.png" class="logo-header-movil" alt="FGEBC Logo"></a><br>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -101,6 +101,6 @@
                     </ul>
                 </div>
             </div>
-        </nav>
+        </nav>  -->
     </header>
     <div class="container-fluid bg-white p-0 py-5">

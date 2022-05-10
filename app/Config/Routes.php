@@ -34,9 +34,12 @@ $routes->setAutoRoute(false);
 $routes->get('/', 'HomeController::index');
 
 $routes->group('justicia', function ($routes) {
+    $routes->get('/', 'admin/LoginController::index');
+    $routes->get('login', 'admin/LoginController::index');
 
     $routes->group('dashboard', function ($routes) {
-
+        $routes->get('/', 'admin/DashboardController::index');
+        $routes->get('atencion', 'admin/DashboardController::atencion');
     });
 });
 
@@ -45,7 +48,7 @@ $routes->group('denuncia', function ($routes) {
     $routes->get('login', 'client/LoginController::index');
     $routes->get('registro', 'client/RegistroController::index');
     $routes->get('recuperar', 'client/LoginController::change_password');
-    
+
     $routes->group('dashboard', function ($routes) {
         $routes->get('/', 'client/DashboardController::index');
         $routes->get('video-denuncia', 'client/DashboardController::video_denuncia');

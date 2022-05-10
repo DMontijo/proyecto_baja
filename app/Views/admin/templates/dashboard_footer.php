@@ -1,0 +1,1 @@
+<footer class="main-footer">Copyright &copy; 2022 FISCALÍA GENERAL DEL ESTADO DE BAJA CALIFORNIA</footer>
