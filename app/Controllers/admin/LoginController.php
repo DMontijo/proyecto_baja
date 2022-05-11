@@ -12,14 +12,16 @@ class LoginController extends BaseController
         $this->_loadView('Login', $data, 'index');
     }
 
-    private function _loadView($title, $data, $view)
+	private function _loadView($title, $data, $view)
     {
-        $header_data = [
-            'title' => $title
-        ];
+        $data = [
+			'header_data' => (object)['title' => $title],
+			'body_data' => $data
+		];
 
-        echo view("client/templates/header_login", $header_data);
-        echo view("admin/login/$view", $data);
-        echo view("client/templates/footer_login");
+		echo view("admin/login/$view", $data);
     }
 }
+
+/* End of file LoginController.php */
+/* Location: ./app/Controllers/admin/LoginController.php */

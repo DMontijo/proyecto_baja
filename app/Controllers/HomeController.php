@@ -4,20 +4,22 @@ namespace App\Controllers;
 
 class HomeController extends BaseController
 {
-    public function index()
-    {
-        $data = array();
-        $this->_loadView('Servicios', $data, 'index');
-    }
+	public function index()
+	{
+		$data = array();
+		$this->_loadView('Inicio', $data, 'index');
+	}
 
-    private function _loadView($title, $data, $view)
-    {
-        $header_data = [
-            'title' => $title
-        ];
+	private function _loadView($title, $data, $view)
+	{
+		$data = [
+			'header_data' => (object)['title' => $title],
+			'body_data' => $data
+		];
 
-        echo view("templates/header", $header_data);
-        echo view("$view", $data);
-        echo view("templates/footer");
-    }
+		echo view($view, $data);
+	}
 }
+
+/* End of file HomeController.php */
+/* Location: ./app/Controllers/HomeController.php */

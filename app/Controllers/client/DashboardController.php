@@ -10,31 +10,31 @@ class DashboardController extends BaseController
     public function index()
     {
         $data = array();
-        $this->_loadViewDashboard('Dashboard', 'dashboard', '', $data, 'index');
+        $this->_loadView('Dashboard', 'dashboard', '', $data, 'index');
     }
 
     public function video_denuncia()
     {
         $data = array();
-        $this->_loadViewDashboard('Video denuncia', 'video-denuncia', '', $data, 'video_denuncia');
+        $this->_loadView('Video denuncia', 'video-denuncia', '', $data, 'video_denuncia');
     }
 
     public function denuncias()
     {
         $data = array();
-        $this->_loadViewDashboard('Mis denuncias', 'denuncias', '', $data, 'lista_denuncias');
+        $this->_loadView('Mis denuncias', 'denuncias', '', $data, 'lista_denuncias');
     }
 
-    private function _loadViewDashboard($title = '', $menu = '', $submenu = '', $data, $view)
+	private function _loadView($title, $menu = '', $submenu = '', $data, $view)
     {
-        $header_data = [
-            'title' => $title,
-            'menu' => $menu,
-            'submenu' => $submenu
-        ];
+        $data = [
+			'header_data' => (object)['title' => $title, 'menu' => $menu, 'submenu' => $submenu],
+			'body_data' => $data
+		];
 
-        echo view("client/templates/dashboard_header", $header_data);
-        echo view("client/dashboard/$view", $data);
-        echo view("client/templates/dashboard_footer");
+		echo view("client/dashboard/$view", $data);
     }
 }
+
+/* End of file DashboardController.php */
+/* Location: ./app/Controllers/client/DashboardController.php */

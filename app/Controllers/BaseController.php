@@ -50,3 +50,6 @@ class BaseController extends Controller
         // E.g.: $this->session = \Config\Services::session();
     }
 }
+
+/* End of file BaseController.php */
+/* Location: ./app/Controllers/BaseController.php */

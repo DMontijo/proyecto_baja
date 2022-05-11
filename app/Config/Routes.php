@@ -8,22 +8,22 @@ $routes = Services::routes();
 // Load the system's routing file first, so that the app and ENVIRONMENT
 // can override as needed.
 if (file_exists(SYSTEMPATH . 'Config/Routes.php')) {
-    require SYSTEMPATH . 'Config/Routes.php';
+	require SYSTEMPATH . 'Config/Routes.php';
 }
 
-/*
+/**
  * --------------------------------------------------------------------
  * Router Setup
  * --------------------------------------------------------------------
  */
 $routes->setDefaultNamespace('App\Controllers');
-$routes->setDefaultController('client\MainController');
+$routes->setDefaultController('Welcome');
 $routes->setDefaultMethod('index');
 $routes->setTranslateURIDashes(false);
 $routes->set404Override();
-$routes->setAutoRoute(false);
+$routes->setAutoRoute(true);
 
-/*
+/**
  * --------------------------------------------------------------------
  * Route Definitions
  * --------------------------------------------------------------------
@@ -33,30 +33,34 @@ $routes->setAutoRoute(false);
 // route since we don't have to scan directories.
 $routes->get('/', 'HomeController::index');
 
-$routes->group('justicia', function ($routes) {
-    $routes->get('/', 'admin/LoginController::index');
-    $routes->get('login', 'admin/LoginController::index');
+/**
+ *  Admin Routes
+ * */
+$routes->group('admin', function ($routes) {
+	$routes->get('/', 'admin/LoginController::index');
 
-    $routes->group('dashboard', function ($routes) {
-        $routes->get('/', 'admin/DashboardController::index');
-        $routes->get('atencion', 'admin/DashboardController::atencion');
-    });
+	$routes->group('dashboard', function ($routes) {
+		$routes->get('/', 'admin/DashboardController::index');
+		$routes->get('video-denuncia', 'admin/DashboardController::video_denuncia');
+	});
 });
 
+/**
+ *  Client Routes
+ * */
 $routes->group('denuncia', function ($routes) {
-    $routes->get('/', 'client/LoginController::index');
-    $routes->get('login', 'client/LoginController::index');
-    $routes->get('registro', 'client/RegistroController::index');
-    $routes->get('recuperar', 'client/LoginController::change_password');
+	$routes->get('/', 'client/LoginController::index');
+	$routes->get('registro', 'client/RegistroController::index');
+	$routes->get('recuperar', 'client/LoginController::change_password');
 
-    $routes->group('dashboard', function ($routes) {
-        $routes->get('/', 'client/DashboardController::index');
-        $routes->get('video-denuncia', 'client/DashboardController::video_denuncia');
-        $routes->get('denuncias', 'client/DashboardController::denuncias');
-    });
+	$routes->group('dashboard', function ($routes) {
+		$routes->get('/', 'client/DashboardController::index');
+		$routes->get('video-denuncia', 'client/DashboardController::video_denuncia');
+		$routes->get('denuncias', 'client/DashboardController::denuncias');
+	});
 });
 
-/*
+/**
  * --------------------------------------------------------------------
  * Additional Routing
  * --------------------------------------------------------------------
@@ -70,5 +74,5 @@ $routes->group('denuncia', function ($routes) {
  * needing to reload it.
  */
 if (file_exists(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {
-    require APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php';
+	require APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php';
 }
