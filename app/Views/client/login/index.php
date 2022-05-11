@@ -1,3 +1,10 @@
+<?= $this->extend('client/templates/login_template') ?>
+
+<?= $this->section('title') ?>
+	<?php echo $header_data->title ?>
+<?= $this->endSection() ?>
+
+<?= $this->section('content') ?>
 <section class="container-fluid bg-primary d-flex align-items-center justify-content-center" style="min-height: 100vh;">
     <div class="container">
         <div class="row py-5">
@@ -49,3 +56,5 @@
     </div>
 </section>
 <?php include('reset_password_modal.php') ?>
+
+<?= $this->endSection() ?>

@@ -1,53 +1,99 @@
-# Proyecto Video Denuncia (Baja California) by Yo Contigo IT.
+# Proyecto Baja California
 
-## ¿Cómo instalar?
+## Instalación
 
-Para instalar este repo debes tener instalado composer.
+Para instalar el repositorio escoja o SSH o HTTPS
 
-Una vez instalado composer vas a la carpeta raíz del proyecto y corres el comanto `composer install` y listo.
+Una vez clonado el repositorio ejecute
+```bash
+$ composer install
+```
 
-**Nota:** Para poder iniciarlo debes tener un servidor local como mamp, xamp, laragon, etc., colocar el proyecto en la carpeta www o htdocs y posterior dirijirte al proyecto desde el navegador a la carpeta public.
+Seguido instale las dependecias de Node
+```bash
+$ npm install
+```
 
-## Documentación sobre codeigniter y bootstrap 5
+Para compilar los recursos ejecute
 
-[Documentación Codeigniter 4.](https://www.codeigniter.com/user_guide/index.html)
-[Documentación Bootstrap 5.](https://getbootstrap.com/docs/5.0/getting-started/introduction/)
+```bash
+$ npm run dev
+```
 
-## Configuraciones
+## Documentación
 
-- Instalar composer.
-- Correr el comando `composer install`.
-- Copiar el archivo `env` y renombrar la copia a `.env`.
-- Descomentar `CI_ENVIRONMENT = production` y pasar a `CI_ENVIRONMENT = development`.
-- Descomentar `app.baseURL` y colocar la liga de tu proyecto `app.baseURL = 'http://localhost/proyecto_baja/public/`.
+- Sitio oficial          : [Sitio oficial](http://codeigniter.com).
+- Repositorio oficial    : [Repositorio](https://github.com/codeigniter4/CodeIgniter4).
+- Guía de usuario oficial: [Aquí](https://codeigniter4.github.io/userguide/). 
+- Documentación para el front: [COREUI](https://coreui.io/demo/4.0/free/base/navs.html).
 
-**Notas:**
-- Cualquier configuración que se desee en el ambiente de desarrollo debes hacerlo en el archivo `.env`.
-- Cualquier configuracióbn para el ambiente de producción se debe realizar en los archivos de configuraciones en app/Config
+## Actualización
 
-<!-- ## Important Change with index.php
+Para actualizar las dependencias de PHP y Node ejecute
+```bash
+$ composer update
+$ npm update
+$ npm dev
+```
 
-`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
-for better security and separation of components.
+## Comandos
 
-This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
-framework are exposed.
+Los comandos disponibles en el reposistorios son los siguientes
+```bash
+$ npm run dev
+$ npm run watch
+$ npm run server
+```
 
-**Please** read the user guide for a better explanation of how CI4 works! -->
+## Configuración
 
-## Sobre el repositorio
+- Renombrar el `env` por `.env`
+- Definir la variable `CI_ENVIRONMENT` a `development`
+- Definir el `app.baseURL` al nombre de tu proyecto. Ejemplo 'http://localhost/proyecto_baja/public'. En caso de utilizar __Docker__, debe asignarle el valor https://localhost.
 
-Se esta usando un repositorio privado a nombre de Yo Contigo IT por lo tanto no es posible compartirlo sin autorización de Yo Contigo IT, de hacerlo se harán acreedores a las sanciones pertinentes.
+### Configuración Docker
 
-## Requerimientos del servidor
+Para iniciar con una configuración por defecto de Docker, ha de copiar el archivo `docker/web.env.example` a `docker/web.env`.
 
-PHP version 7.3 or higher is required, with the following extensions installed:
+Para generar la imagen del servidor web, desde la carpeta `docker` del proyecto debe ejecutar el script de bash:
+
+```bash
+$ ./build-all.sh
+```
+
+O en la consola y dentro de la carpeta `docker`, el comando:
+```bash
+$ docker build -t starter:web -f Dockerfile-web .
+```
+
+Una vez haya generado la imagen, puede iniciar los servicios con el comando:
+
+```bash
+$ docker-compose up 
+```
+
+O para que una vez iniciado, vuelva al prompt:
+
+```bash
+$ docker-compose up -d
+```
+
+Para detener los servicios, puede hacerlo con el comando:
+
+```bash
+$ docker-compose down
+```
+
+O `ctrl+c` en caso de no haber iniciado con el parámetro `-d`
+
+## Requerimientos del Servidor
+
+Se requiere PHP 7.3 || 8.0 con las siguientes extensiones instaladas: 
 
 - [intl](http://php.net/manual/en/intl.requirements.php)
 - [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
 
-Additionally, make sure that the following extensions are enabled in your PHP:
+Además, asegúrese de que las siguientes extensiones estén habilitadas en su PHP:
 
 - json (enabled by default - don't turn it off)
 - [mbstring](http://php.net/manual/en/mbstring.installation.php)
