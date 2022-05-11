@@ -23,7 +23,7 @@ class DERIVACION extends Migration
                 'unsigned'       => TRUE,
             ],
         ]);
-        $this->forge->addKey('IDDELITO', TRUE);
+        $this->forge->addKey('IDDERIVACION', TRUE);
         $this->forge->addForeignKey('IDDEPDERIVACION', 'CATEGORIA_DERIVACION', 'IDCATDERIVACION');
         $this->forge->createTable('DERIVACION');
     }

@@ -18,10 +18,6 @@ class SUBCATEGORIADELITOS extends Migration
                 'type'           => 'VARCHAR',
                 'constraint'     => '100',
             ],
-            'NOMBRE'       => [
-                'type'           => 'VARCHAR',
-                'constraint'     => '100',
-            ],
             'IDDELITO'          => [
                 'type'           => 'INT',
                 'unsigned'       => TRUE,
