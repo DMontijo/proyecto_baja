@@ -18,12 +18,16 @@ class SUBCATEGORIADELITOS extends Migration
                 'type'           => 'VARCHAR',
                 'constraint'     => '100',
             ],
+            'NOMBRE'       => [
+                'type'           => 'VARCHAR',
+                'constraint'     => '100',
+            ],
             'IDDELITO'          => [
                 'type'           => 'INT',
                 'unsigned'       => TRUE,
             ],
         ]);
-        $this->forge->addKey('IDDELITO', TRUE);
+        $this->forge->addKey('IDSUBDELITO', TRUE);
         $this->forge->addForeignKey('IDDELITO', 'CATEGORIA_DELITOS', 'IDDELITO');
         $this->forge->createTable('SUBCATEGORIA_DELITOS');
     }
