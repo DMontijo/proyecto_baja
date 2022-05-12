@@ -10,141 +10,116 @@ class EXPEDIENTEPERSONAMORAL extends Migration
     {
       
         $this->forge->addField([
-            'EXPEDIENTEPMID'          => [
+            'PERSONAMORALID'          => [
                 'type'           => 'INT',
                 'unsigned'       => TRUE,
                 'auto_increment' => TRUE
             ],
             'EXPEDIENTEID'          => [
                 'type'           => 'INT',
-                'unsigned'       => TRUE
-            ],
-            'PERSONAMORALID'       => [
-                'type'           => 'INT',
                 'unsigned'       => TRUE,
             ],
             'CALIDADJURIDICAID'       => [
                 'type'           => 'INT',
                 'unsigned'       => TRUE,
-                'null'=>TRUE,
             ],
             'DENOMINACION'          => [
                 'type'           => 'VARCHAR',
                 'constraint'     => '500',
-                'unsigned'       => TRUE,
                 'null'=>TRUE,
             ],
             'ESTADOID'          => [
                 'type'           => 'INT',
                 'unsigned'       => TRUE,
-                'null'=>TRUE,
             ],
             'MUNICIPIOID'       => [
                 'type'           => 'INT',
                 'unsigned'       => TRUE,
-                'null'=>TRUE,
             ],
             'LOCALIDADID'       => [
                 'type'           => 'INT',
                 'unsigned'       => TRUE,
-                'null'=>TRUE,
             ],
             'DELEGACIONID'       => [
                 'type'           => 'INT',
-                'unsigned'       => TRUE,
-                'null'=>TRUE,
+                //'unsigned'       => TRUE,
             ],
             'ZONA'       => [
                 'type'           => 'CHAR',
-                'unsigned'       => TRUE,
                 'constraint'     => '1',
-                'null'=>TRUE,
+                //'null'=>TRUE,
             ],
             'COLONIAID'       => [
                 'type'           => 'INT',
                 'unsigned'       => TRUE,
-                'null'=>TRUE,
             ],
             'COLONIADESCR'       => [
                 'type'           => 'VARCHAR',
-                'unsigned'       => TRUE,
                 'constraint'     => '100',
                 'null'=>TRUE,
             ],
             'CALLE'       => [
                 'type'           => 'VARCHAR',
-                'unsigned'       => TRUE,
                 'constraint'     => '100',
                 'null'=>TRUE,
             ],
             'NUMERO'       => [
                 'type'           => 'VARCHAR',
-                'unsigned'       => TRUE,
                 'constraint'     => '10',
                 'null'=>TRUE,
             ],
             'NUMEROINTERIOR'       => [
                 'type'           => 'VARCHAR',
-                'unsigned'       => TRUE,
                 'constraint'     => '10',
                 'null'=>TRUE,
             ],
             'REFERENCIA'       => [
                 'type'           => 'VARCHAR',
-                'unsigned'       => TRUE,
                 'constraint'     => '300',
                 'null'=>TRUE,
             ],
             'TELEFONO'       => [
                 'type'           => 'VARCHAR',
-                'unsigned'       => TRUE,
                 'constraint'     => '100',
                 'null'=>TRUE,
             ],
             'CORREO'       => [
                 'type'           => 'VARCHAR',
-                'unsigned'       => TRUE,
                 'constraint'     => '100',
                 'null'=>TRUE,
             ],
             'PERSONAMORALGIROID'          => [
                 'type'           => 'INT',
                 'unsigned'       => TRUE,
-                'null'=>TRUE,
             ],
             'PODERVOLUMEN'       => [
                 'type'           => 'VARCHAR',
-                'unsigned'       => TRUE,
                 'constraint'     => '15',
                 'null'=>TRUE,
             ],
            
             'PODERNONOTARIO'       => [
                 'type'           => 'VARCHAR',
-                'unsigned'       => TRUE,
                 'constraint'     => '15',
                 'null'=>TRUE,
             ],
             'PODERNOPODER'       => [
                 'type'           => 'VARCHAR',
-                'unsigned'       => TRUE,
                 'constraint'     => '15',
                 'null'=>TRUE,
             ],
             'FECHAREGISTRO'          => [
                 'type'           => 'DATE',
-                'unsigned'       => TRUE,
             ],
         ]);
-        $this->forge->addKey('EXPEDIENTEPMID', TRUE);
-        $this->forge->addForeignKey('EXPEDIENTEID', '', '');
-        $this->forge->addForeignKey('PERSONAMORALID', '', '');
-        $this->forge->addForeignKey('CALIDADJURIDICAID', '', '');
-        $this->forge->addForeignKey('ESTADOID', '', '');
-        $this->forge->addForeignKey('MUNICIPIOID', '', '');
-        $this->forge->addForeignKey('LOCALIDADID', '', '');
-        $this->forge->addForeignKey('DELEGACIONID', '', '');
-        $this->forge->addForeignKey('COLONIAID', '', '');
+        $this->forge->addKey('PERSONAMORALID', TRUE);
+        $this->forge->addForeignKey('EXPEDIENTEID', 'EXPEDIENTE', 'EXPEDIENTEID');
+         $this->forge->addForeignKey('CALIDADJURIDICAID', 'CATEGORIA_PERSONACALIDADJURIDICA', 'PERSONACALIDADJURIDICAID');
+        $this->forge->addForeignKey('ESTADOID','CATEGORIA_ESTADO', 'ESTADOID');
+        $this->forge->addForeignKey('MUNICIPIOID', 'CATEGORIA_MUNICIPIO', 'MUNICIPIOID');
+        $this->forge->addForeignKey('LOCALIDADID',  'CATEGORIA_LOCALIDAD', 'LOCALIDADID');
+      //  $this->forge->addForeignKey('DELEGACIONID', '', '');
+         $this->forge->addForeignKey('COLONIAID', 'CATEGORIA_COLONIA', 'COLONIAID');
         $this->forge->createTable('EXPEDIENTEPERSONAMORAL');
     }
 

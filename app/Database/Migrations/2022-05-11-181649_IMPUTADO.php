@@ -36,17 +36,17 @@ class IMPUTADO extends Migration
                 'constraint'     => '10',
                 'null' => TRUE,
             ],
-            'IDMUNICIPIO'          => [
+            'MUNICIPIOID'          => [
                 'type'           => 'INT',
                 'unsigned'       => TRUE,
                 'null' => TRUE,
             ],
-            'IDLOCALIDAD'          => [
+            'LOCALIDADID'          => [
                 'type'           => 'INT',
                 'unsigned'       => TRUE,
                 'null' => TRUE,
             ],
-            'IDCOLONIA'          => [
+            'COLONIAID'          => [
                 'type'           => 'INT',
                 'unsigned'       => TRUE,
                 'null' => TRUE,
@@ -74,9 +74,9 @@ class IMPUTADO extends Migration
 
         ]);
         $this->forge->addKey('IDIMPUTADO', TRUE);
-        $this->forge->addForeignKey('IDMUNICIPIO', 'CATEGORIA_MUNICIPIO', 'IDMUNICIPIO');
-        $this->forge->addForeignKey('IDLOCALIDAD', 'CATEGORIA_LOCALIDAD', 'IDLOCALIDAD');
-        $this->forge->addForeignKey('IDCOLONIA', 'CATEGORIA_COLONIA', 'IDCOLONIA');
+        $this->forge->addForeignKey('MUNICIPIOID', 'CATEGORIA_MUNICIPIO', 'MUNICIPIOID');
+        $this->forge->addForeignKey('LOCALIDADID', 'CATEGORIA_LOCALIDAD', 'LOCALIDADID');
+        $this->forge->addForeignKey('COLONIAID', 'CATEGORIA_COLONIA', 'COLONIAID');
         $this->forge->createTable('IMPUTADO');
 
     }

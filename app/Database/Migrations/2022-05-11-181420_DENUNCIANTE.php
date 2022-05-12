@@ -34,15 +34,15 @@ class DENUNCIANTE extends Migration
                 'type'           => 'VARCHAR',
                 'constraint'     => '10',
             ],
-            'IDMUNICIPIO'          => [
+            'MUNICIPIOID'          => [
                 'type'           => 'INT',
                 'unsigned'       => TRUE
             ],
-            'IDLOCALIDAD'          => [
+            'LOCALIDADID'          => [
                 'type'           => 'INT',
                 'unsigned'       => TRUE
             ],
-            'IDCOLONIA'          => [
+            'COLONIAID'          => [
                 'type'           => 'INT',
                 'unsigned'       => TRUE
             ],
@@ -81,9 +81,9 @@ class DENUNCIANTE extends Migration
 
         ]);
         $this->forge->addKey('IDDENUNCIANTE', TRUE);
-        $this->forge->addForeignKey('IDMUNICIPIO', 'CATEGORIA_MUNICIPIO', 'IDMUNICIPIO');
-        $this->forge->addForeignKey('IDLOCALIDAD', 'CATEGORIA_LOCALIDAD', 'IDLOCALIDAD');
-        $this->forge->addForeignKey('IDCOLONIA', 'CATEGORIA_COLONIA', 'IDCOLONIA');
+        $this->forge->addForeignKey('MUNICIPIOID', 'CATEGORIA_MUNICIPIO', 'MUNICIPIOID');
+        $this->forge->addForeignKey('LOCALIDADID', 'CATEGORIA_LOCALIDAD', 'LOCALIDADID');
+        $this->forge->addForeignKey('COLONIAID', 'CATEGORIA_COLONIA', 'COLONIAID');
         $this->forge->createTable('DENUNCIANTE');
     }
 

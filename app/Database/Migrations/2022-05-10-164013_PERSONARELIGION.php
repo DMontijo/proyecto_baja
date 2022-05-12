@@ -4,27 +4,28 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class CATEGORIAESTADO extends Migration
+class PERSONARELIGION extends Migration
 {
     public function up()
     {
         $this->forge->addField([
-            'IDESTADO'          => [
+            'PERSONARELIGIONID'          => [
                 'type'           => 'INT',
                 'unsigned'       => TRUE,
                 'auto_increment' => TRUE
             ],
-            'NOMBRE_ESTADO'       => [
+            'PERSONARELIGIONDESCR'       => [
                 'type'           => 'VARCHAR',
                 'constraint'     => '100',
             ],
+            
         ]);
-        $this->forge->addKey('IDESTADO', TRUE);
-        $this->forge->createTable('CATEGORIA_ESTADO');
+        $this->forge->addKey('PERSONARELIGIONID', TRUE);
+        $this->forge->createTable('CATEGORIA_PERSONARELIGION');
     }
 
     public function down()
     {
-        $this->forge->dropTable('CATEGORIA_ESTADO');
+        $this->forge->dropTable('CATEGORIA_PERSONARELIGION');
     }
 }

@@ -40,11 +40,11 @@ class ATENCIONCLIENTE extends Migration
             ],
             'IDAGENTE'          => [
                 'type'           => 'INT',
-                'unsigned'       => TRUE,
+               'unsigned'       => TRUE,
             ],
             'ID_MODULO_SEJAP'       => [
                 'type'           => 'INT',
-                'unsigned'       => TRUE,
+              //  'unsigned'       => TRUE,
             ],
             'NOTAS'       => [
                 'type'           => 'VARCHAR',
@@ -53,12 +53,12 @@ class ATENCIONCLIENTE extends Migration
 
         ]);
         $this->forge->addKey('IDATENCION', TRUE);
-        $this->forge->addForeignKey('IDMUNICIPIO', 'CATEGORIA_MUNICIPIO', 'IDMUNICIPIO');
+        $this->forge->addForeignKey('IDMUNICIPIO', 'CATEGORIA_MUNICIPIO', 'MUNICIPIOID');
         $this->forge->addForeignKey('IDCIUDADANO', 'DENUNCIANTE', 'IDDENUNCIANTE');
-        $this->forge->addForeignKey('IDEXPEDIENTE', '', '');
+     /*   $this->forge->addForeignKey('IDEXPEDIENTE', 'EXPEDIENTE', 'EXPEDIENTEID');
         $this->forge->addForeignKey('IDDERIVACION', 'DERIVACION', 'IDDERIVACION');
         $this->forge->addForeignKey('IDAGENTE', 'USUARIOS', 'IDUSUARIO');
-        $this->forge->addForeignKey('ID_MODULO_SEJAP', '', '');
+      */ //  $this->forge->addForeignKey('ID_MODULO_SEJAP', '', '');
         $this->forge->createTable('ATENCION_CLIENTE');
     }
 
