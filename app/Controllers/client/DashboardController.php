@@ -25,14 +25,14 @@ class DashboardController extends BaseController
         $this->_loadView('Mis denuncias', 'denuncias', '', $data, 'lista_denuncias');
     }
 
-	private function _loadView($title, $menu = '', $submenu = '', $data, $view)
+	private function _loadView($title, $menu, $submenu, $data, $view)
     {
-        $data = [
+        $data2 = [
 			'header_data' => (object)['title' => $title, 'menu' => $menu, 'submenu' => $submenu],
 			'body_data' => $data
 		];
 
-		echo view("client/dashboard/$view", $data);
+		echo view("client/dashboard/$view", $data2);
     }
 }
 
