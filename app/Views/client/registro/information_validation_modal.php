@@ -6,7 +6,7 @@
 				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<form class="needs-validation" novalidate>
+				<form class="needs-validation g-3" novalidate>
 					<div class="mb-3" id="divValidationDatos">
 						<label for="nombre" class="col-form-label">Nombre: </label>
 						<input type="text" class="form-control" id="nombre" name="nombre" disabled>
@@ -39,7 +39,7 @@
 						<label for="identificacion" class="col-form-label">Firma digital: </label>
 						<img id="imgFirma" class="form-control" />
 					</div>
-					<button type="submit" id="submit" data-bs-target="#otp_validation_modal" data-bs-toggle="modal" data-bs-dismiss="modal" class="btn btn-primary">Validar informacion</button>
+					<button type="submit" id="submit" data-bs-target="#otp_validation_modal" data-bs-toggle="modal" data-bs-dismiss="modal" class="btn btn-primary">Mi información esta correcta</button>
 				</form>
 			</div>
 		</div>

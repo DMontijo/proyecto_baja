@@ -5,7 +5,7 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
-<section class="d-flex align-items-center justify-content-center bg-primary" style="min-height: 100vh;">
+<section class="d-flex align-items-center justify-content-center bg-primary" style="min-height: 100vh;background:url(<?= base_url() ?>/assets/img/lineas_background.png);background-repeat: no-repeat;background-attachment: fixed;background-size: cover !important;">
 	<div class="container ">
 		<div class="row rounded d-flex justify-content-center">
 			<div class="col-12 col-md-6 d-flex justify-content-center align-items-center mb-5">

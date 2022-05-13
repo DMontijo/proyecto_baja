@@ -78,12 +78,12 @@
 		</div>
 		<div class="col-12 col-sm-6 col-md-6 col-lg-3">
 			<label for="pais" class="form-label fw-bold input-required">País del denunciante</label>
-			<select class="form-select" id="select_pais" name="select_pais" onchange="activatePaisInput(event)" required>
+			<!-- <select class="form-select" id="select_pais" name="select_pais" onchange="activatePaisInput(event)" required>
 				<option value="MEXICO" selected>MÉXICO</option>
 				<option value="ESTADOS UNIDOS">ESTADOS UNIDOS</option>
 				<option value="OTRO">OTRO</option>
-			</select>
-			<input type="text" class="form-control d-none" id="pais" name="pais" required>
+			</select> -->
+			<input type="text" class="form-control" id="pais" name="pais" required>
 			<div class="invalid-feedback">
 				El país es obligatorio
 			</div>

@@ -1,32 +1,35 @@
 <?= $this->extend('admin/templates/dashboard_template') ?>
 
 <?= $this->section('title') ?>
-	<?php echo $header_data->title ?>
+<?php echo $header_data->title ?>
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
 <div class="row">
 	<div class="col">
-		<div class="card" style="width: 18rem;">
-			<div class="card-body">
-				<h5 class="card-title">Card title</h5>
-				<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+		<div class="card shadow" style="width: 18rem; border-radius:10px;">
+			<div class="card-body text-center">
+				<h5 class="card-title">FOLIOS</h5>
+				<h4 class="font-weight-bold">4,500</h4>
+				<button type="button" class="btn btn-primary font-weight-bold mt-4">VER MÁS</button>
 			</div>
 		</div>
 	</div>
 	<div class="col">
-		<div class="card" style="width: 18rem;">
-			<div class="card-body">
-				<h5 class="card-title">Card title</h5>
-				<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+		<div class="card shadow" style="width: 18rem; border-radius:10px;">
+			<div class="card-body text-center">
+				<h5 class="card-title">EXPEDIENTES</h5>
+				<h4 class="font-weight-bold">4,500</h4>
+				<button type="button" class="btn btn-primary font-weight-bold mt-4">VER MÁS</button>
 			</div>
 		</div>
 	</div>
 	<div class="col">
-		<div class="card" style="width: 18rem;">
-			<div class="card-body">
-				<h5 class="card-title">Card title</h5>
-				<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+		<div class="card shadow" style="width: 18rem; border-radius:10px;">
+			<div class="card-body text-center">
+				<h5 class="card-title">DERIVACIONES</h5>
+				<h4 class="font-weight-bold">4,500</h4>
+				<button type="button" class="btn btn-primary font-weight-bold mt-4">VER MÁS</button>
 			</div>
 		</div>
 	</div>

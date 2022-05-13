@@ -62,7 +62,7 @@
 						<a class="dropdown-item" href="#">
 							<i class="fas fa-user-cog mr-2"></i> Pérfil
 						</a>
-						<a class="dropdown-item" href="#">
+						<a class="dropdown-item" href="<?=base_url()?>/admin">
 							<i class="fas fa-sign-out-alt mr-2"></i> Salir
 						</a>
 					</div>
