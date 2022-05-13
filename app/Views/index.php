@@ -6,7 +6,7 @@
 
 <?= $this->section('content') ?>
 
-<div class="container" style="min-height:80vh;">
+<div class="container">
 
     <div class="row mb-5">
         <div class="col-10 offset-1 text-white">

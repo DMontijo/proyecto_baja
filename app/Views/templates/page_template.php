@@ -25,7 +25,7 @@
 	<script src="<?= base_url() ?>/assets/jQuery/jquery.js"></script>
 	<header>
 		<!--Versión escritorio-->
-		<div class="container-fluid bg-primary p-0">
+		<div class="container-fluid bg-primary p-0" style="height:162px;">
 			<div class="container py-3 d-flex align-items-center">
 				<div class="d-inline-block"><a href="<?= base_url() ?>"><img src="<?= base_url() ?>/assets/img/FGEBC.png" class="logo-header" alt="FGEBC Logo"></a></div>
 				<div class="d-inline-block ms-3"><span class="fw-bolder text-white">FÍSCALIA GENERAL DEL ESTADO <br>DE
@@ -33,12 +33,12 @@
 			</div>
 		</div>
 	</header>
-	<div class="container-fluid bg-white p-0 py-5">
+	<div class="container-fluid bg-white p-0 py-5" style="min-height:calc(100vh - 242px);">
 
 		<?= $this->renderSection('content') ?>
 		
 	</div>
-	<footer class="container-fluid text-center text-white bg-primary d-flex align-items-center justify-content-center footer py-3">
+	<footer class="container-fluid text-center text-white bg-primary d-flex align-items-center justify-content-center footer py-3" style="min-height:80px">
 		<span>© <?= date("Y") ?> Fiscalía General del Estado de Baja California</span>
 	</footer>
 	<script src="<?= base_url() ?>/assets/bootstrap/js/bootstrap.bundle.min.js"></script>
