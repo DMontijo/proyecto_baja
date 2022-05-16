@@ -27,6 +27,10 @@ class CATEGORIACOLONIA extends Migration
                 'type'           => 'INT',
                 'unsigned'       => TRUE,
             ],
+            'ZONA'       => [
+                'type'           => 'CHAR',
+                'constraint'     => '1',
+            ],
             'DELEGACIONID'          => [
                 'type'           => 'INT',
                 'unsigned'       => TRUE,
