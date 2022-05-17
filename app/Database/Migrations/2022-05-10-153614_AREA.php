@@ -12,7 +12,7 @@ class AREA extends Migration
             'AREAID'          => [
                 'type'           => 'INT',
                
-                'auto_increment' => TRUE,
+               // 'auto_increment' => TRUE,
             ],
             'AREADESCR'       => [
                 'type'           => 'VARCHAR',
@@ -26,6 +26,7 @@ class AREA extends Migration
             'OFICINAID'          => [
                 'type'           => 'INT',
                 'unsigned'       => TRUE,
+                'null' => TRUE,
             ],
             'EMPLEADOIDRESPONSABLEAREA'          => [
                 'type'           => 'INT',

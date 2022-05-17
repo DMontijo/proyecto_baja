@@ -11,7 +11,7 @@ class OFICINA extends Migration
         $this->forge->addField([
             'OFICINAID'          => [
                 'type'           => 'INT',
-                'auto_increment' => TRUE,
+               // 'auto_increment' => TRUE,
                 'unsigned'       => TRUE,
             ],
             'OFICINADESCR'       => [
@@ -37,6 +37,7 @@ class OFICINA extends Migration
             'LOCALIDADID'          => [
                 'type'           => 'INT',
                 'unsigned'       => TRUE,
+                'null' =>TRUE,
             ],
             'DOMICILIO'       => [
                 'type'           => 'VARCHAR',

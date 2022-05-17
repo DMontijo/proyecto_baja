@@ -13,7 +13,7 @@ class CATEGORIACOLONIA extends Migration
             'COLONIAID'          => [
                 'type'           => 'INT',
                 'unsigned'       => TRUE,
-                'auto_increment' => TRUE
+              //  'auto_increment' => TRUE
             ],
             'ESTADOID'          => [
                 'type'           => 'INT',
@@ -41,6 +41,9 @@ class CATEGORIACOLONIA extends Migration
             ]
         ]);
         $this->forge->addKey('COLONIAID', TRUE);
+        $this->forge->addPrimaryKey('ESTADOID');
+        $this->forge->addPrimaryKey('MUNICIPIOID');
+        $this->forge->addPrimaryKey('LOCALIDADID');
         $this->forge->addForeignKey('ESTADOID', 'CATEGORIA_ESTADO', 'ESTADOID');
         $this->forge->addForeignKey('MUNICIPIOID', 'CATEGORIA_MUNICIPIO', 'MUNICIPIOID');
         $this->forge->addForeignKey('LOCALIDADID', 'CATEGORIA_LOCALIDAD', 'LOCALIDADID');
