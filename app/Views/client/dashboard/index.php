@@ -88,11 +88,13 @@
 							<label for="municipio" class="form-label fw-bold input-required">Municipio:</label>
 							<select class="form-select" id="municipio" name="municipio" required>
 								<option selected disabled value="">Elige el municipio</option>
-								<option value="1">TIJUANA - ZONA COSTA - 204</option>
-								<option value="2">PLAYAS DE ROSARITO - ZONA COSTA - 205</option>
-								<option value="3">TECATE - ZONA COSTA - 203</option>
-								<option value="4">MEXICALI (INCLUYE SAN FELIPE) - ZONA MEXICALI - 202</option>
-								<option value="5">ENSENADA (INCLUYE SAN QUINTIN ) - ZONA ENSENADA - 201</option>
+								<option value="1">TIJUANA</option>
+								<option value="2">PLAYAS DE ROSARITO</option>
+								<option value="3">TECATE</option>
+								<option value="4">MEXICALI</option>
+								<option value="5">ENSENADA</option>
+								<option value="6">SAN FELIPE</option>
+								<option value="7">SAN QUINTIN</option>
 							</select>
 							<div class="invalid-feedback">
 								Por favor, selecciona un municipio.

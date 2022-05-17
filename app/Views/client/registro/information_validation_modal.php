@@ -154,10 +154,10 @@
 						<label for="identificacion" class="form-label">Firma digital: </label>
 						<img id="imgFirma" class="form-control" />
 					</div>
+					<div class="col-12 text-center">
+						<button type="submit" id="submit" data-bs-target="#otp_validation_modal" data-bs-toggle="modal" data-bs-dismiss="modal" class="btn btn-primary mt-4">Mi información esta correcta</button>
+					</div>
 				</div>
-
-
-				<button type="submit" id="submit" data-bs-target="#otp_validation_modal" data-bs-toggle="modal" data-bs-dismiss="modal" class="btn btn-primary">Mi información esta correcta</button>
 			</div>
 		</div>
 	</div>
