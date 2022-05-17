@@ -30,7 +30,7 @@
 				</a>
 			</li>
 			<li class="c-sidebar-nav-item">
-				<a class="c-sidebar-nav-link font-weight-bold" href="#">
+				<a class="c-sidebar-nav-link font-weight-bold" href="<?=base_url()?>/admin/dashboard/registrarUsuario">
 					<i class="fas fa-users c-sidebar-nav-icon"></i> Usuarios
 				</a>
 			</li>
