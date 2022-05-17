@@ -4,7 +4,7 @@
 <?= $this->endSection() ?>
 <?= $this->section('content') ?>
 <style>
-    .card-header{
+    .card-header {
         background: #092b47 !important;
     }
 </style>
@@ -20,7 +20,7 @@
                     <form id="form" name="form" class="needs-validation" novalidate>
                         <div class="card-body">
                             <div class="form-group">
-                                <label for="nombreU"  class="form-label fw-bold input-required">Nombre</label>
+                                <label for="nombreU" class="form-label fw-bold input-required">Nombre</label>
                                 <input type="text" name="nombreU" class="form-control" id="nombreU" placeholder="Escribe el nombre" required>
                                 <div class="invalid-feedback">
                                     El nombre es obligatorio
@@ -97,7 +97,7 @@
                             </div>
                         </div>
                         <div class="card-footer">
-                            <button id ="submit" type="submit" class="btn btn-primary">Registrar usuario</button>
+                            <button id="submit" type="submit" class="btn btn-primary">Registrar usuario</button>
                         </div>
                     </form>
                 </div>
@@ -107,28 +107,28 @@
 </section>
 <script>
     (function() {
-  'use strict';
-  window.addEventListener('load', function() {
-    // Get the forms we want to add validation styles to
-    var forms = document.getElementsByClassName('needs-validation');
-    // Loop over them and prevent submission
-    var validation = Array.prototype.filter.call(forms, function(form) {
-      form.addEventListener('submit', function(event) {
-        if (form.checkValidity() === false) {
-          event.preventDefault();
-          event.stopPropagation();
-        }
-        if(form.checkValidity()){       
-            event.preventDefault();
-            alert("Se ha registrado con exito")
-          }
-        
-        form.classList.add('was-validated');
-      }, false);
-    });
-  }, false);
-})();
-  /*(function () {
+        'use strict';
+        window.addEventListener('load', function() {
+            // Get the forms we want to add validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    if (form.checkValidity()) {
+                        event.preventDefault();
+                        alert("Se ha registrado con exito")
+                    }
+
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+    /*(function () {
   'use strict'
   var forms = document.querySelectorAll('.needs-validation')
   Array.prototype.slice.call(forms)

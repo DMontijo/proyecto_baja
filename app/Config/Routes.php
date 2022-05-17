@@ -43,6 +43,7 @@ $routes->group('admin', function ($routes) {
 		$routes->get('/', 'admin/DashboardController::index');
 		$routes->get('registrarUsuario', 'admin/DashboardController::registrar_usuario');
 		$routes->get('video-denuncia', 'admin/DashboardController::video_denuncia');
+		$routes->get('video-denuncias-atendidas', 'admin/DashboardController::video_denuncia_atendida');
 	});
 });
 
