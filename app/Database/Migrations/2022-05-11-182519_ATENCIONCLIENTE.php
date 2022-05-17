@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class ATENCIONCIUDADANO extends Migration
+class ATENCIONCLIENTE extends Migration
 {
     public function up()
     {
@@ -59,11 +59,11 @@ class ATENCIONCIUDADANO extends Migration
         $this->forge->addForeignKey('IDDERIVACION', 'DERIVACION', 'IDDERIVACION');
         $this->forge->addForeignKey('IDAGENTE', 'USUARIOS', 'IDUSUARIO');
       */ //  $this->forge->addForeignKey('ID_MODULO_SEJAP', '', '');
-        $this->forge->createTable('ATENCION_CIUDADANO');
+        $this->forge->createTable('ATENCION_CLIENTE');
     }
 
     public function down()
     {
-        $this->forge->dropTable('ATENCION_CIUDADANO');
+        $this->forge->dropTable('ATENCION_CLIENTE');
     }
 }

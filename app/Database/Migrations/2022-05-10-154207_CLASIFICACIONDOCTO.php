@@ -174,6 +174,11 @@ class CLASIFICACIONDOCTO extends Migration
                 'constraint'     => '1',
                 'null' => TRUE,
             ],
+            'ASIGNASOLICITUDSECUENCIAL'          => [
+                'type'           => 'CHAR',
+                'constraint'     => '1',
+                'null' => TRUE,
+            ], 
             'ENVIANOTIFICACIONSEJAP'          => [
                 'type'           => 'CHAR',
                 'constraint'     => '1',
