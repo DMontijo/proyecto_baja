@@ -17,7 +17,7 @@
 			<p class="text-center pb-5">Los campos con un <span class="asterisco-rojo">*</span> son obligatorios</p>
 
 			<div class="progress">
-				<div aria-valuemax="100" aria-valuemin="0" aria-valuenow="50" class="progress-bar progress-bar-striped progress-bar-animated bg-yellow" role="progressbar" style="width: 15%"></div>
+				<div id="progress-bar" aria-valuemax="100" aria-valuemin="0" aria-valuenow="50" class="progress-bar progress-bar-striped progress-bar-animated bg-yellow" role="progressbar"></div>
 			</div>
 
 			<form class="row g-3 needs-validation py-5" novalidate>
@@ -25,7 +25,7 @@
 					<div class="row">
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="nombre" class="form-label fw-bold input-required">Nombre(s)</label>
-							<input type="text" class="form-control" id="nombres" name="nombre" required>
+							<input type="text" class="form-control" id="nombre" name="nombre" required>
 							<div class="invalid-feedback">
 								El nombre es obligatorio
 							</div>
@@ -61,21 +61,21 @@
 						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="nacionalidad" class="form-label fw-bold input-required">Nacionalidad</label>
-							<input class="form-control" id="nacionalidad" name="nacionalidad" type="text">
+							<input class="form-control" id="nacionalidad" name="nacionalidad" type="text" required>
 						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="escolaridad" class="form-label fw-bold input-required">Escolaridad</label>
-							<input class="form-control" id="escolaridad" name="escolaridad" type="text">
+							<input class="form-control" id="escolaridad" name="escolaridad" type="text" required>
 						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="sexo" class="form-label fw-bold input-required">Sexo biológico</label>
 							<br>
 							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio" name="sexo" id="H" required>
+								<input class="form-check-input" type="radio" name="sexo" value="H" checked required>
 								<label class="form-check-label" for="flexRadioDefault1">HOMBRE</label>
 							</div>
 							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio" name="sexo" id="M" required>
+								<input class="form-check-input" type="radio" name="sexo" value="M" required>
 								<label class="form-check-label" for="flexRadioDefault2">MUJER</label>
 							</div>
 						</div>
@@ -100,7 +100,7 @@
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="pais" class="form-label fw-bold input-required">País del denunciante</label>
-							<select class="form-select" id="select_pais" name="pais" onchange="activatePaisInput(event)" required>
+							<select class="form-select" id="select_pais" name="pais" required>
 								<option value="MEXICO" selected>MÉXICO</option>
 								<option value="ESTADOS UNIDOS">ESTADOS UNIDOS</option>
 								<option value="OTRO">OTRO</option>
@@ -177,7 +177,7 @@
 							</div>
 						</div>
 
-						<div class="col-12 col-sm-6 col-md-6 col-lg-2">
+						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="interior" class="form-label fw-bold">Número interior</label>
 							<input type="text" class="form-control" id="interior" name="interior">
 						</div>
@@ -257,8 +257,8 @@
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="orientacion" class="form-label fw-bold input-required">Orientación sexual</label>
-							<input type="text" class="form-control" id="orientacion" name="orientacion" required>
+							<label for="iden_genero" class="form-label fw-bold">Identidad de género</label>
+							<input type="text" class="form-control" id="iden_genero" name="iden_genero">
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -292,6 +292,11 @@
 							<input class="form-control" type="file" id="documento" name="documento" accept="image/*" capture="user" required multiple>
 							<div class="form-text">Para tomar foto <a class="link-yellow" type="button" data-bs-toggle="modal" data-bs-target="#take_photo_modal">clic aquí <i class="bi bi-camera-fill"></i></a></div>
 						</div>
+						<div class="col-12">
+							<div class="alert alert-warning text-center fw-bold d-none mt-2" id="idioma_alert" role="alert">
+								Si tu idioma no es español se recomienda estar acompañado de un traductor.
+							</div>
+						</div>
 					</div>
 				</div>
 
@@ -309,14 +314,19 @@
 								Debes aceptar el envío de notificaciones para continuar
 							</div>
 						</div>
+					</div>
+				</div>
+				<div class="col-12 d-none step">
+					<div class="row">
 						<div class="col-12 text-center">
-							<button class="btn btn-primary " type="submit">REGISTRARME</button>
+							<p class="fw-bold">Haz completado la información, ahora da clic en "Validar mi información" para corroborarla y terminar tu registro.</p>
 						</div>
 					</div>
 				</div>
 				<div class="col-12 mt-5 text-center">
-					<button class="btn btn-primary d-none" id="prev-btn" type="button"> <i class="bi bi-caret-left-fill"></i> Anterior</button>
-					<button class="btn btn-primary" id="next-btn" type="button"> Siguiente <i class="bi bi-caret-right-fill"></i> </button>
+					<button class="btn btn-primary mb-3 d-none" id="prev-btn" type="button"> <i class="bi bi-caret-left-fill"></i> Anterior</button>
+					<button class="btn btn-primary mb-3" id="next-btn" type="button"> Siguiente <i class="bi bi-caret-right-fill"></i> </button>
+					<button class="btn btn-primary mb-3 d-none" type="submit" id="submit-btn"><i class="bi bi-check-circle-fill"></i> Validar mi información</button>
 				</div>
 			</form>
 		</div>
@@ -328,11 +338,148 @@
 <?php include('information_validation_modal.php') ?>
 
 <script>
-	let steps = document.querySelectorAll('.step');
-	let steps_count = steps.length;
+	const steps = document.querySelectorAll('.step');
+	const prevBtn = document.querySelector('#prev-btn');
+	const nextBtn = document.querySelector('#next-btn');
+	const submitBtn = document.querySelector('#submit-btn');
+	const progress = document.querySelector('#progress-bar');
+	let stepCount = steps.length - 1;
+	let width = 100 / stepCount;
 	let currentStep = 0;
 
-	console.log(steps);
+	chargeCurrentStep(currentStep);
+
+	nextBtn.addEventListener('click', () => {
+		if (validarStep(currentStep)) {
+			console.log('SI SE VALIDO');
+			currentStep++;
+			console.log(currentStep);
+			let previousStep = currentStep - 1;
+			if ((currentStep > 0) && (currentStep <= stepCount)) {
+				prevBtn.classList.remove('d-none');
+				prevBtn.classList.add('d-inline-block');
+				steps[currentStep].classList.remove('d-none');
+				steps[currentStep].classList.add('d-block');
+				steps[previousStep].classList.remove('d-block');
+				steps[previousStep].classList.add('d-none');
+				if (currentStep === stepCount) {
+					submitBtn.classList.remove('d-none');
+					submitBtn.classList.add('d-inline-block');
+					nextBtn.classList.remove('d-inline-block');
+					nextBtn.classList.add('d-none');
+				}
+			}
+			progress.style.width = `${currentStep*width}%`
+		} else {
+			console.log('NO SE VALIDO');
+			submitBtn.click();
+			Swal.fire({
+				icon: 'error',
+				title: 'Error',
+				text: 'Debes llenar todos los campos requeridos para avanzar',
+				confirmButtonColor: '#bf9b55',
+			})
+		}
+	});
+
+	prevBtn.addEventListener('click', () => {
+		if (currentStep > 0) {
+			currentStep--;
+			let previousStep = currentStep + 1;
+			prevBtn.classList.add('d-none');
+			prevBtn.classList.add('d-inline-block');
+			steps[currentStep].classList.remove('d-none');
+			steps[currentStep].classList.add('d-block')
+			steps[previousStep].classList.remove('d-block');
+			steps[previousStep].classList.add('d-none');
+			if (currentStep < stepCount) {
+				submitBtn.classList.remove('d-inline-block');
+				submitBtn.classList.add('d-none');
+				nextBtn.classList.remove('d-none');
+				nextBtn.classList.add('d-inline-block');
+				prevBtn.classList.remove('d-none');
+				prevBtn.classList.add('d-inline-block');
+			}
+		}
+
+		if (currentStep === 0) {
+			prevBtn.classList.remove('d-inline-block');
+			prevBtn.classList.add('d-none');
+		}
+		progress.style.width = `${currentStep*width}%`
+	});
+
+	function chargeCurrentStep(num) {
+		steps.forEach((step, index) => {
+			if (num === index) {
+				step.classList.remove('d-none');
+			} else {
+				step.classList.remove('d-block');
+				step.classList.add('d-none');
+			}
+		})
+		progress.style.width = `${currentStep*width}%`
+	}
+
+	function validarStep(step) {
+		switch (step) {
+			case 0:
+				if (
+					document.querySelector('#nombre').value != '' &&
+					document.querySelector('#apellido_paterno').value != '' &&
+					document.querySelector('#correo').value != '' &&
+					document.querySelector('#fecha_nacimiento').value != '' &&
+					document.querySelector('#nacionalidad').value != '' &&
+					document.querySelector('#escolaridad').value != ''
+				) {
+					return true
+				} else {
+					return false;
+				}
+				break;
+			case 1:
+				if (
+					document.querySelector('#pais').value != '' &&
+					document.querySelector('#estado').value != '' &&
+					document.querySelector('#municipio').value != '' &&
+					document.querySelector('#colonia').value != '' &&
+					document.querySelector('#calle').value != '' &&
+					document.querySelector('#exterior').value != '' &&
+					document.querySelector('#telefono').value != ''
+				) {
+					return true
+				} else {
+					return false
+				}
+				break;
+			case 2:
+				if (
+					document.querySelector('#identificacion').value != '' &&
+					document.querySelector('#e_civil').value != '' &&
+					document.querySelector('#discapacidad').value != '' &&
+					document.querySelector('#idioma').value != '' &&
+					document.querySelector('#documento').value != ''
+				) {
+					return true
+				} else {
+					return false
+				}
+				break;
+			case 3:
+				if (
+					document.querySelector('#firma_url').value != '' &&
+					document.querySelector('#notificaciones_check').checked
+				) {
+					return true
+				} else {
+					return false
+				}
+				break;
+			default:
+				return true;
+				break;
+		}
+	}
 </script>
 
 <script>
@@ -350,7 +497,6 @@
 			.forEach(function(form) {
 				form.addEventListener('submit', function(event) {
 					event.preventDefault();
-					$('#crear_firma').click();
 					if (!form.checkValidity()) {
 						event.stopPropagation();
 					} else {
@@ -374,6 +520,47 @@
 				event.target.value = event.target.value.toLowerCase();
 			}, false)
 		})
+
+		document.querySelector('#fecha_nacimiento').addEventListener('change', (e) => {
+			let fecha = e.target.value;
+			let hoy = new Date();
+			let cumpleanos = new Date(fecha);
+			let edad = hoy.getFullYear() - cumpleanos.getFullYear();
+			let m = hoy.getMonth() - cumpleanos.getMonth();
+
+			if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
+				edad--;
+			}
+			document.querySelector('#edad').value = edad;
+			if (edad < 18) {
+				document.getElementById("menor").classList.remove('d-none');
+			} else {
+				document.getElementById("menor").classList.add('d-none');
+			}
+		})
+
+		document.querySelector('#select_pais').addEventListener('change', (e) => {
+			let select_pais = document.getElementById('select_pais');
+			let pais = document.getElementById('pais');
+
+			if (e.target.value === 'OTRO') {
+				select_pais.classList.add('d-none');
+				pais.value = '';
+				pais.classList.remove('d-none');
+				pais.focus();
+			} else {
+				pais.value = e.target.value;
+			}
+		})
+
+		document.querySelector('#idioma').addEventListener('change', (e) => {
+			let alert = document.querySelector('#idioma_alert');
+			if (e.target.value !== 'ES') {
+				alert.classList.remove('d-none')
+			} else {
+				alert.classList.add('d-none')
+			}
+		})
 	})()
 
 	const activateColoniaInput = (e) => {
@@ -390,43 +577,6 @@
 		}
 	};
 
-	const activatePaisInput = (e) => {
-		let select_pais = document.getElementById('select_pais');
-		let pais = document.getElementById('pais');
-
-		if (e.target.value === 'OTRO') {
-			select_pais.classList.add('d-none');
-			pais.value = '';
-			pais.classList.remove('d-none');
-			pais.focus();
-		} else {
-			pais.value = e.target.value;
-		}
-	};
-
-	$(function() {
-		$('#fecha_nacimiento').on('change', calcularEdad);
-	});
-
-	function calcularEdad() {
-
-		fecha = $(this).val();
-		var hoy = new Date();
-		var cumpleanos = new Date(fecha);
-		var edad = hoy.getFullYear() - cumpleanos.getFullYear();
-		var m = hoy.getMonth() - cumpleanos.getMonth();
-
-		if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
-			edad--;
-		}
-		$('#edad').val(edad);
-		if (edad < 18) {
-			document.getElementById("menor").classList.remove('d-none');
-		} else {
-			document.getElementById("menor").classList.add('d-none');
-		}
-	}
-
 	var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
 	var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
 		return new bootstrap.Tooltip(tooltipTriggerEl)
@@ -439,7 +589,7 @@
 			var reader = new FileReader(); //Leemos el contenido
 
 			reader.onload = function(e) { //Al cargar el contenido lo pasamos como atributo de la imagen de arriba
-				$('#imgSalidaModal').attr('src', e.target.result);
+				$('#img_identificacion_modal').attr('src', e.target.result);
 			}
 			reader.readAsDataURL(input.files[0]);
 		}
@@ -447,60 +597,69 @@
 
 	function enviar_datos() {
 
-		let nombre = document.querySelector("#nombres").value;
-		let apellido1 = document.querySelector("#apellido_paterno").value;
-		let apellido2 = document.querySelector("#apellido_materno").value;
-		let correo = document.querySelector("#correo").value;
-		let fechanac = document.querySelector("#fecha_nacimiento").value;
-		let edad = document.querySelector("#edad").value;
-		let activoFijo = document.querySelector('input[name="sexo"]:checked').value;
-		let codigop = document.querySelector("#cp").value;
-		let pais = document.querySelector("#select_pais").value;
-		let estado = document.querySelector("#estado").value;
-		let municipio = document.querySelector("#municipio").value;
-		let localidad = document.querySelector("#localidad").value;
-		let colonia = document.querySelector("#colonia").value;
-		let calle = document.querySelector("#calle").value;
-		let nexterior = document.querySelector("#exterior").value;
-		let telefono = document.querySelector("#telefono").value;
-		let telefono2 = document.querySelector("#telefono2").value;
-		let tipo = document.querySelector("#identificacion").value;
-		let numeroid = document.querySelector("#numero_ide").value;
-		let edoc = document.querySelector("#e_civil").value;
-		let ocupacion = document.querySelector("#ocupacion").value;
-		let orientacions = document.querySelector("#orientacion").value;
-		let discapacidad = document.querySelector("#discapacidad").value;
-		let idioma = document.querySelector("#idioma").value;
-		let ninterior = document.querySelector("#interior").value;
+		let nombre = document.querySelector("#nombre").value ? document.querySelector("#nombre").value : '';
+		let apellido1 = document.querySelector("#apellido_paterno").value ? document.querySelector("#apellido_paterno").value : '';
+		let apellido2 = document.querySelector("#apellido_materno").value ? document.querySelector("#apellido_materno").value : '';
+		let correo = document.querySelector("#correo").value ? document.querySelector("#correo").value : '';
+		let fechanac = document.querySelector("#fecha_nacimiento").value ? document.querySelector("#fecha_nacimiento").value : '';
+		let edad = document.querySelector("#edad").value ? document.querySelector("#edad").value : '';
+		let nacionalidad = document.querySelector("#nacionalidad").value ? document.querySelector("#nacionalidad").value : '';
+		let escolaridad = document.querySelector("#escolaridad").value ? document.querySelector("#escolaridad").value : '';
+		let sexo = document.querySelector('input[name="sexo"]:checked').value ? document.querySelector('input[name="sexo"]:checked').value : '';
+		let codigop = document.querySelector("#cp").value ? document.querySelector("#cp").value : '';
 
-		document.querySelector('#nombre').value = nombre;
-		document.querySelector('#apellido1').value = apellido1;
-		document.querySelector('#apellido2').value = apellido2;
-		document.querySelector('#correom').value = correo;
-		document.querySelector('#fechanacimiento').value = fechanac;
-		document.querySelector('#edadm').value = edad;
-		document.querySelector('#fechanacimiento').value = fechanac;
-		document.querySelector('#sexom').value = activoFijo;
-		document.querySelector('#cpm').value = codigop;
-		document.querySelector('#paism').value = pais;
-		document.querySelector('#estadom').value = estado;
-		document.querySelector('#municipiom').value = municipio;
-		document.querySelector('#localidadm').value = localidad;
-		document.querySelector('#coloniam').value = colonia;
-		document.querySelector('#callem').value = calle;
-		document.querySelector('#exteriorm').value = nexterior;
-		document.querySelector('#telefonom').value = telefono;
-		document.querySelector('#telefonomo').value = telefono2;
-		document.querySelector('#identificacionm').value = tipo;
-		document.querySelector('#numi').value = numeroid;
-		document.querySelector('#edocm').value = edoc;
-		document.querySelector('#ocupacionm').value = ocupacion;
-		document.querySelector('#discapacidadm').value = discapacidad;
-		document.querySelector('#orientacionm').value = orientacions;
-		document.querySelector('#idiomam').value = idioma;
-		document.querySelector('#interiorm').value = ninterior;
+		let pais = document.querySelector("#select_pais").value ? document.querySelector("#select_pais").value : '';
+		let estado = document.querySelector("#estado").value ? document.querySelector("#estado").value : '';
+		let municipio = document.querySelector("#municipio").value ? document.querySelector("#municipio").value : '';
+		let localidad = document.querySelector("#localidad").value ? document.querySelector("#localidad").value : '';
+		let colonia = document.querySelector("#colonia").value ? document.querySelector("#colonia").value : '';
+		let calle = document.querySelector("#calle").value ? document.querySelector("#calle").value : '';
+		let nexterior = document.querySelector("#exterior").value ? document.querySelector("#exterior").value : '';
+		let ninterior = document.querySelector("#interior").value ? document.querySelector("#interior").value : '';
+		let telefono = document.querySelector("#telefono").value ? document.querySelector("#telefono").value : '';
+		let telefono2 = document.querySelector("#telefono2").value ? document.querySelector("#telefono2").value : '';
+
+		let tipo = document.querySelector("#identificacion").value ? document.querySelector("#identificacion").value : '';
+		let numeroid = document.querySelector("#numero_ide").value ? document.querySelector("#numero_ide").value : '';
+		let edoc = document.querySelector("#e_civil").value ? document.querySelector("#e_civil").value : '';
+		let ocupacion = document.querySelector("#ocupacion").value ? document.querySelector("#ocupacion").value : '';
+		let genero = document.querySelector("#iden_genero").value ? document.querySelector("#iden_genero").value : '';
+		let discapacidad = document.querySelector("#discapacidad").value ? document.querySelector("#discapacidad").value : '';
+		let idioma = document.querySelector("#idioma").value ? document.querySelector("#idioma").value : '';
+		let firma_url = document.querySelector("#firma_url").value ? document.querySelector("#firma_url").value : '';
+
+		document.querySelector('#nombre_modal').value = nombre;
+		document.querySelector('#apellido_paterno_modal').value = apellido1;
+		document.querySelector('#apellido_materno_modal').value = apellido2;
+		document.querySelector('#correo_modal').value = correo;
+		document.querySelector('#fecha_nacimiento_modal').value = fechanac;
+		document.querySelector('#edad_modal').value = edad;
+		document.querySelector('#nacionalidad_modal').value = nacionalidad;
+		document.querySelector('#escolaridad_modal').value = escolaridad;
+		document.querySelector('#sexo_modal').value = sexo;
+
+		document.querySelector('#cp_modal').value = codigop;
+		document.querySelector('#pais_modal').value = pais;
+		document.querySelector('#estado_modal').value = estado;
+		document.querySelector('#municipio_modal').value = municipio;
+		document.querySelector('#localidad_modal').value = localidad;
+		document.querySelector('#colonia_modal').value = colonia;
+		document.querySelector('#calle_modal').value = calle;
+		document.querySelector('#exterior_modal').value = nexterior;
+		document.querySelector('#interior_modal').value = ninterior;
+		document.querySelector('#telefono_modal').value = telefono;
+		document.querySelector('#telefono2_modal').value = telefono2;
+
+		document.querySelector('#identificacion_modal').value = tipo;
+		document.querySelector('#numero_ide_modal').value = numeroid;
+		document.querySelector('#e_civil_modal').value = edoc;
+		document.querySelector('#ocupacion_modal').value = ocupacion;
+		document.querySelector('#discapacidad_modal').value = discapacidad;
+		document.querySelector('#iden_genero_modal').value = genero;
+		document.querySelector('#idioma_modal').value = idioma;
+		document.querySelector('#img_firma_modal').setAttribute("src", firma_url);
+
 		readURL(document.querySelector('#documento'));
-
 	}
 </script>
 

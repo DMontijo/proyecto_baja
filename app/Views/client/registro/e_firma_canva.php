@@ -4,7 +4,7 @@
 	</p>
 	<div class="col-12">
 		<button type="button" class="btn btn-secondary mb-3" id="crear_firma" hidden>Subir firma</button>
-		<button type="button" class="btn btn-secondary mb-3" id="limpiar_firma">Borrar firma</button>
+		<button type="button" class="btn btn-secondary mb-3" id="limpiar_firma"><i class="bi bi-eraser-fill"></i> Limpiar firma</button>
 	</div>
 	<div class="col-12">
 		<canvas id="trazo_firma" width="300" height="300">
@@ -12,7 +12,7 @@
 		</canvas>
 	</div>
 	<div class="col-12">
-		<textarea id="firma_url" hidden class="form-control" rows="2" required></textarea>
+		<textarea id="firma_url" class="form-control" rows="2" required hidden></textarea>
 		<div class="invalid-feedback">
 			Debes agregar tu firma para poder avanzar.
 		</div>
@@ -31,45 +31,45 @@
 				};
 		})();
 
-		var canvas = document.getElementById("trazo_firma");
-		var ctx = canvas.getContext("2d");
+		let canvas = document.getElementById("trazo_firma");
+		let ctx = canvas.getContext("2d");
 
-		var drawText = document.getElementById("firma_url");
-		var drawImage = document.getElementById("firma_imagen");
-		var clearBtn = document.getElementById("limpiar_firma");
-		var submitBtn = document.getElementById("crear_firma");
+		let drawText = document.getElementById("firma_url");
+		let drawImage = document.getElementById("firma_imagen");
+		let clearBtn = document.getElementById("limpiar_firma");
+		let submitBtn = document.getElementById("crear_firma");
 
 		clearBtn.addEventListener("click", function(e) {
 			clearCanvas();
-			drawImage.setAttribute("src", "");
+			drawText.innerHTML = '';
 		}, false);
 
 		submitBtn.addEventListener("click", function(e) {
-			console.log('Click en subir');
 			canvas.fillStyle = "rgba(0,0,0,.4)";
-			var dataUrl = canvas.toDataURL();
+			let dataUrl = canvas.toDataURL();
 			drawText.innerHTML = dataUrl;
-			// drawImage.setAttribute("src", dataUrl);
-			document.getElementById("imgFirma").setAttribute("src", dataUrl);
 		}, false);
 
-		var drawing = false;
-		var mousePos = {
+		let drawing = false;
+		let mousePos = {
 			x: 0,
 			y: 0
 		};
-		var lastPos = mousePos;
+		let lastPos = mousePos;
 
 		canvas.addEventListener("mousedown", function(e) {
-			var tint = '#000000';
-			var punta = 3;
-			console.log(e);
+			let tint = '#000000';
+			let punta = 3;
 			drawing = true;
 			lastPos = getMousePos(canvas, e);
 		}, false);
 
 		canvas.addEventListener("mouseup", function(e) {
 			drawing = false;
+			console.log('mouse levantado')
+			canvas.fillStyle = "rgba(0,0,0,.4)";
+			let dataUrl = canvas.toDataURL();
+			drawText.innerHTML = dataUrl;
 		}, false);
 
 		canvas.addEventListener("mousemove", function(e) {
@@ -80,8 +80,8 @@
 			mousePos = getTouchPos(canvas, e);
 			console.log(mousePos);
 			e.preventDefault();
-			var touch = e.touches[0];
-			var mouseEvent = new MouseEvent("mousedown", {
+			let touch = e.touches[0];
+			let mouseEvent = new MouseEvent("mousedown", {
 				clientX: touch.clientX,
 				clientY: touch.clientY
 			});
@@ -90,20 +90,20 @@
 
 		canvas.addEventListener("touchend", function(e) {
 			e.preventDefault();
-			var mouseEvent = new MouseEvent("mouseup", {});
+			let mouseEvent = new MouseEvent("mouseup", {});
 			canvas.dispatchEvent(mouseEvent);
 		}, false);
 
 		canvas.addEventListener("touchleave", function(e) {
 			e.preventDefault();
-			var mouseEvent = new MouseEvent("mouseup", {});
+			let mouseEvent = new MouseEvent("mouseup", {});
 			canvas.dispatchEvent(mouseEvent);
 		}, false);
 
 		canvas.addEventListener("touchmove", function(e) {
 			e.preventDefault();
-			var touch = e.touches[0];
-			var mouseEvent = new MouseEvent("mousemove", {
+			let touch = e.touches[0];
+			let mouseEvent = new MouseEvent("mousemove", {
 				clientX: touch.clientX,
 				clientY: touch.clientY
 			});
@@ -111,7 +111,7 @@
 		}, false);
 
 		function getMousePos(canvasDom, mouseEvent) {
-			var rect = canvasDom.getBoundingClientRect();
+			let rect = canvasDom.getBoundingClientRect();
 			return {
 				x: mouseEvent.clientX - rect.left,
 				y: mouseEvent.clientY - rect.top
@@ -119,7 +119,7 @@
 		}
 
 		function getTouchPos(canvasDom, touchEvent) {
-			var rect = canvasDom.getBoundingClientRect();
+			let rect = canvasDom.getBoundingClientRect();
 			console.log(touchEvent);
 			return {
 				x: touchEvent.touches[0].clientX - rect.left,
@@ -129,8 +129,8 @@
 
 		function renderCanvas() {
 			if (drawing) {
-				var tint = '#000000';
-				var punta = 3;
+				let tint = '#000000';
+				let punta = 3;
 				ctx.strokeStyle = tint.value;
 				ctx.beginPath();
 				ctx.moveTo(lastPos.x, lastPos.y);
