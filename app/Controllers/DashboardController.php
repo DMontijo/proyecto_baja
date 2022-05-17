@@ -12,7 +12,6 @@ class DashboardController extends BaseController
 		$data = array();
 		$this->_loadView('Principal', 'dashboard', '', $data, 'index');
 	}
-	
 	public function registrar_usuario()
 	{
 		$data = array();
