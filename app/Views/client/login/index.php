@@ -1,62 +1,60 @@
-<section class="container-fluid bg-primary vh-100">
+<?= $this->extend('client/templates/login_template') ?>
+
+<?= $this->section('title') ?>
+	<?php echo $header_data->title ?>
+<?= $this->endSection() ?>
+
+<?= $this->section('content') ?>
+<section class="container-fluid bg-primary d-flex align-items-center justify-content-center" style="min-height: 100vh;background:url(<?= base_url() ?>/assets/img/lineas_background.png);background-repeat: no-repeat;background-attachment: fixed;background-size: cover !important;">
     <div class="container">
-        <div class="row">
-            <div class="col-12 col-lg-6 vh-100 d-flex align-items-center justify-content-center">
-                <img src="<?= base_url() ?>/assets/img/FGEBC.png" class="logo-login" alt="FGEBC Logo">
+        <div class="row py-5">
+            <div class="col-12 col-md-6 d-flex justify-content-center align-items-center">
+                <img src="<?= base_url() ?>/assets/img/FGEBC_SEJAP_LOGO.png" class="logo-login" alt="FGEBC Logo">
             </div>
-
-            <div class="col-12 col-lg-6 vh-100 d-flex align-items-center justify-content-center">
-                <div class="card bg-glass" style="max-width:400px;">
-                    <div class="card-body px-4 py-5 px-md-5">
-                        <form>
-
-                            <div class="form-outline mb-4">
-                                <input type="email" id="form3Example3" class="form-control" />
-                                <label class="form-label" for="form3Example3">Correo electrónico</label>
+            <div class="col-12 col-md-6 py-5">
+                <div class="row align-items-center justify-content-center mb-5">
+                    <div class="col-12 col-md-10 offset-md-1">
+                        <div class="card bg-blue shadow-lg">
+                            <div class="card-body text-center">
+                                <h2 class="fw-bolder text-white">¿Quieres denunciar?</h2>
+                                <a href="<?= base_url() ?>/denuncia/registro" class="btn btn-light">
+                                    REGISTRATE
+                                </a>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row align-items-center justify-content-center">
+                    <div class="col-12 col-md-10 offset-md-1">
+                        <div class="card bg-white shadow-lg py-3 px-3">
+                            <h2 class="fw-bolder text-white text-center text-blue mb-2">Ingresa y denuncia</h2>
+                            <div class="card-body">
+                                <form action="<?= base_url() ?>/denuncia/dashboard" class="row g-3 needs-validation" novalidate>
+                                    <div class="col-12">
+                                        <label for="correo" class="form-label fw-bold">Correo electrónico</label>
+                                        <input type="email" class="form-control" id="correo" name="correo" required>
+                                    </div>
 
-                            <div class="form-outline mb-4">
-                                <input type="password" id="form3Example4" class="form-control" />
-                                <label class="form-label" for="form3Example4">Contraseña</label>
+                                    <div class="col-12">
+                                        <label for="contrasena" class="form-label fw-bold">Contraseña</label>
+                                        <input type="password" class="form-control" id="contrasena" name="contrasena" required>
+                                    </div>
+                                    <p class="text-center"><a class="link-primary" type="button" data-bs-toggle="modal" data-bs-target="#reset_pass">Olvidé mi contraseña</a></p>
+
+                                    <div class="col-12 d-flex align-items-center justify-content-center">
+                                        <button type="submit" class="btn btn-primary btn-block">
+                                            ENTRAR
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
-
-                            <!-- Checkbox -->
-                            <div class="form-check d-flex justify-content-center mb-4">
-                                <input class="form-check-input me-2" type="checkbox" value="" id="form2Example33"
-                                    checked />
-                                <label class="form-check-label" for="form2Example33">
-                                    Subscribe to our newsletter
-                                </label>
-                            </div>
-
-                            <!-- Submit button -->
-                            <button type="submit" class="btn btn-primary btn-block mb-4">
-                                Sign up
-                            </button>
-
-                            <!-- Register buttons -->
-                            <div class="text-center">
-                                <p>or sign up with:</p>
-                                <button type="button" class="btn btn-link btn-floating mx-1">
-                                    <i class="fab fa-facebook-f"></i>
-                                </button>
-
-                                <button type="button" class="btn btn-link btn-floating mx-1">
-                                    <i class="fab fa-google"></i>
-                                </button>
-
-                                <button type="button" class="btn btn-link btn-floating mx-1">
-                                    <i class="fab fa-twitter"></i>
-                                </button>
-
-                                <button type="button" class="btn btn-link btn-floating mx-1">
-                                    <i class="fab fa-github"></i>
-                                </button>
-                            </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+<?php include('reset_password_modal.php') ?>
+
+<?= $this->endSection() ?>

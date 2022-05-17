@@ -110,11 +110,11 @@ nb-configuration.xml
 .nb-gradle/
 
 # Sublime Text
-*.tmlanguage.cache
-*.tmPreferences.cache
-*.stTheme.cache
-*.sublime-workspace
-*.sublime-project
+.tmlanguage.cache
+.tmPreferences.cache
+.stTheme.cache
+.sublime-workspace
+.sublime-project
 .phpintel
 /api/
 
@@ -124,3 +124,18 @@ nb-configuration.xml
 /results/
 /phpunit*.xml
 /.phpunit.*.cache
+
+#-------------------------
+# Npm
+#-------------------------
+node_modules/
+
+#-------------------------
+# Github-Workflow
+#-------------------------
+.github/
+
+#-------------------------
+# Docker env files
+#-------------------------
+docker/*.env

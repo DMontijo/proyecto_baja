@@ -31,7 +31,7 @@
 
 html,
 body {
-  font-family: var(--font) !important;
+  /* font-family: var(--font) !important; */
   font-size: 16px;
 }
 
@@ -42,7 +42,6 @@ body {
   font-weight: bold;
 }
 
-
 /*Backgrounds*/
 .bg-primary {
   background-color: var(--tinto) !important;
@@ -50,6 +49,10 @@ body {
 
 .bg-blue {
   background-color: var(--azul) !important;
+}
+
+.bg-yellow {
+  background-color: var(--amarillo) !important;
 }
 
 .bg-light {
@@ -62,10 +65,26 @@ body {
 }
 
 /*Fonts colors*/
+.btn-primary {
+  
+}
+/*Fonts colors*/
 
 .text-dark {
   color: var(--gris3) !important;
 }
 .text-blue {
-  color: var(--azul);
+  color: var(--azul) !important;
+}
+.text-yellow {
+  color: var(--amarillo) !important;
+}
+
+/*Links*/
+.link-yellow {
+  color: var(--amarillo);
+}
+.link-yellow:hover,
+.link-yellow:focus {
+  color: var(--amarillo);
 }

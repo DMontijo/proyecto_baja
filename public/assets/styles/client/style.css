@@ -4,24 +4,37 @@
 }
 .header {
   height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .footer {
-  height: 50px;
+  min-height: 50px;
 }
 .logo-header {
   height: 80px;
 }
-.logo-sejap{
-
-}
-.asterisco-rojo{
+.asterisco-rojo {
   margin-left: 3px;
   color: red;
   font-weight: bold;
 }
 
 /*Login Page*/
-.logo-login{
+.logo-login {
   width: auto;
-  max-width: 300px;
+  max-width: 400px;
 }
+
+/*Firma electrónica*/
+#trazo_firma {
+  border: 2px solid #cccccc;
+  border-radius: 5px;
+  cursor: crosshair;
+  background-color: transparent !important;
+}
+
+#firma_url {
+  width: 100%;
+}
+/*End firma electrónica*/

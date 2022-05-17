@@ -1,72 +1,181 @@
-<div class="modal fade" id="information_validation" tabindex="-1" aria-labelledby="resetLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered  modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="bs">Validación de informacion</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form class="needs-validation" novalidate>
-                    <div class="mb-3" id="divValidationDatos">
-                        <label for="nombre" class="col-form-label">Nombre: </label>
-                        <input type="text" class="form-control" id="nombre" name="nombre" disabled>
-                        <label for="apellido_paterno" class="col-form-label">Apellido paterno: </label>
-                        <input type="text" class="form-control" id="apellido1" name="apellido_paterno" disabled>
-                        <label for="apellido_materno" class="col-form-label">Apellido materno: </label>
-                        <input type="text" class="form-control" id="apellido2" name="apellido_materno" disabled>
-                        <label for="correo" class="col-form-label">Correo electronico: </label>
-                        <input type="text" class="form-control" id="correom" name="correo" disabled>
-                        <label for="fecha_nacimiento" class="col-form-label">Fecha de nacimiento: </label>
-                        <input type="text" class="form-control" id="fechanacimiento" name="fecha_nacimiento" disabled>
-                        <label for="edad" class="col-form-label">Edad: </label>
-                        <input type="text" class="form-control" id="edadm" name="edadm" disabled>
-                        <label for="sexo" class="col-form-label">Sexo biologico: </label>
-                        <input type="text" class="form-control" id="sexom" name="sexo" disabled>
-                        <label for="cp" class="col-form-label">Código Postal: </label>
-                        <input type="text" class="form-control" id="cpm" name="cpm" disabled>
-                        <label for="pais" class="col-form-label">Pais: </label>
-                        <input type="text" class="form-control" id="paism" name="paism" disabled>
-                        <label for="estadom" class="col-form-label">Estado del denunciante: </label>
-                        <input type="text" class="form-control" id="estadom" name="estadom" disabled>
-                        <label for="municipio" class="col-form-label">Municipio: </label>
-                        <input type="text" class="form-control" id="municipiom" name="municipio" disabled>
-                        <label for="localidad" class="col-form-label">Localidad: </label>
-                        <input type="text" class="form-control" id="localidadm" name="localidad" disabled>
-                        <label for="colonia_select" class="col-form-label">Colonia: </label>
-                        <input type="text" class="form-control" id="coloniam" name="coloniam" disabled>
-                        <label for="calle" class="col-form-label">Calle o avenida: </label>
-                        <input type="text" class="form-control" id="callem" name="calle" disabled>
-                        <label for="exterior" class="col-form-label">Número exterior: </label>
-                        <input type="text" class="form-control" id="exteriorm" name="exterior" disabled>
-                        <label for="tel" class="col-form-label">Número de télefono: </label>
-                        <input type="text" class="form-control" id="telefonom" name="telefonom" disabled>
-                        <label for="tel2" class="col-form-label">Número de télefono 2: </label>
-                        <input type="text" class="form-control" id="telefonomo" name="telefonomo" disabled>
-                        <!---<label for="interior" class="col-form-label">Numero interior: </label>
-                        <input type="text" class="form-control" id="interiorm" name="interior" disabled>-->
-                        <label for="identificacion" class="col-form-label">Tipo identificacion: </label>
-                        <input type="text" class="form-control" id="identificacionm" name="identificacion" disabled>
-                        <label for="numi" class="col-form-label">Número de identificacion: </label>
-                        <input type="text" class="form-control" id="numi" name="numi" disabled>
-                        <label for="edoc" class="col-form-label">Estado civil: </label>
-                        <input type="text" class="form-control" id="edocm" name="edocm" disabled>
-                        <label for="ocup" class="col-form-label">Ocupación: </label>
-                        <input type="text" class="form-control" id="ocupacionm" name="ocupacionm" disabled>
-                        <label for="discapacidad" class="col-form-label">Discapacidad: </label>
-                        <input type="text" class="form-control" id="discapacidadm" name="discapacidadm" disabled>
-                        <label for="orientacion" class="col-form-label">Orientación sexual: </label>
-                        <input type="text" class="form-control" id="orientacionm" name="orientacionm" disabled>
-                        <label for="idioma" class="col-form-label">Idioma: </label>
-                        <input type="text" class="form-control" id="idiomam" name="idiomam" disabled>
-                        <label for="identificacion" class="col-form-label">Foto de identificacion: </label>
-                        <img id="imgSalidaModal" class="form-control" />
-                        <label for="identificacion" class="col-form-label">Firma digital: </label>
-                        <img id="imgFirma" class="form-control" />
-                    </div>
-                    <button type="submit" id="submit" data-bs-target="#otp_validation_modal" data-bs-toggle="modal" data-bs-dismiss="modal" class="btn btn-primary">Validar informacion</button>
-                </form>
-            </div>
-        </div>
-    </div>
+<div class="modal fade" id="information_validation" tabindex="-1" aria-labelledby="information_validation" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-centered  modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header bg-primary text-white">
+				<h5 class="modal-title" id="bs">Validación de informacion</h5>
+				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-12">
+						<div class="card shadow bg-blue mb-3">
+							<div class="card-body text-white text-center">
+								Verifica que todos tus datos esten correctos. De no estar correctos cierra este mensaje y editalos.
+							</div>
+						</div>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
+						<label for="nombre_modal" class="form-label fw-bold">Nombre(s): </label>
+						<input type="text" class="form-control" id="nombre_modal" name="nombre_modal" disabled>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
+						<label for="apellido_paterno_modal" class="form-label fw-bold">Apellido paterno: </label>
+						<input type="text" class="form-control" id="apellido_paterno_modal" name="apellido_paterno_modal" disabled>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
+						<label for="apellido_materno_modal" class="form-label fw-bold">Apellido materno: </label>
+						<input type="text" class="form-control" id="apellido_materno_modal" name="apellido_materno_modal" disabled>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
+						<label for="correo_modal" class="form-label fw-bold">Correo electronico: </label>
+						<input type="text" class="form-control" id="correo_modal" name="correo_modal" disabled>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
+						<label for="fecha_nacimiento_modal" class="form-label fw-bold">Fecha de nacimiento: </label>
+						<input type="text" class="form-control" id="fecha_nacimiento_modal" name="fecha_nacimiento_modal" disabled>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
+						<label for="edad_modal" class="form-label fw-bold">Edad: </label>
+						<input type="text" class="form-control" id="edad_modal" name="edad_modal" disabled>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
+						<label for="nacionalidad_modal" class="form-label fw-bold input-required">Nacionalidad</label>
+						<input class="form-control" id="nacionalidad_modal" name="nacionalidad_modal" type="text" disabled>
+					</div>
+					
+					<div class="col-12 col-sm-6 mb-3">
+						<label for="escolaridad_modal" class="form-label fw-bold input-required">Escolaridad</label>
+						<input class="form-control" id="escolaridad_modal" name="escolaridad_modal" type="text" disabled>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
+						<label for="sexo_modal" class="form-label fw-bold">Sexo biologico: </label>
+						<input type="text" class="form-control" id="sexo_modal" name="sexo_modal" disabled>
+					</div>
+
+					<div class="col-12">
+						<hr>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
+						<label for="cp_modal" class="form-label fw-bold">Código Postal: </label>
+						<input type="text" class="form-control" id="cp_modal" name="cp_modal" disabled>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
+						<label for="pais_modal" class="form-label fw-bold">Pais: </label>
+						<input type="text" class="form-control" id="pais_modal" name="pais_modal" disabled>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
+						<label for="estado_modal" class="form-label fw-bold">Estado del denunciante: </label>
+						<input type="text" class="form-control" id="estado_modal" name="estado_modal" disabled>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
+						<label for="municipio_modal" class="form-label fw-bold">Municipio: </label>
+						<input type="text" class="form-control" id="municipio_modal" name="municipio_modal" disabled>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
+						<label for="localidad_modal" class="form-label fw-bold">Localidad: </label>
+						<input type="text" class="form-control" id="localidad_modal" name="localidad_modal" disabled>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
+						<label for="colonia_modal" class="form-label fw-bold">Colonia: </label>
+						<input type="text" class="form-control" id="colonia_modal" name="colonia_modal" disabled>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
+						<label for="calle_modal" class="form-label fw-bold">Calle o avenida: </label>
+						<input type="text" class="form-control" id="calle_modal" name="calle_modal" disabled>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
+						<label for="exterior_modal" class="form-label fw-bold">Número exterior: </label>
+						<input type="text" class="form-control" id="exterior_modal" name="exterior_modal" disabled>
+					</div>
+					<div class="col-12 col-sm-6 mb-3">
+						<label for="interior_modal" class="form-label fw-bold">Número interior: </label>
+						<input type="text" class="form-control" id="interior_modal" name="interior_modal" disabled>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
+						<label for="telefono_modal" class="form-label fw-bold">Número de télefono: </label>
+						<input type="text" class="form-control" id="telefono_modal" name="telefono_modal" disabled>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
+						<label for="telefono2_modal" class="form-label fw-bold">Número de télefono 2: </label>
+						<input type="text" class="form-control" id="telefono2_modal" name="telefono2_modal" disabled>
+					</div>
+
+					<div class="col-12">
+						<hr>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
+						<label for="identificacion_modal" class="form-label fw-bold">Tipo identificacion: </label>
+						<input type="text" class="form-control" id="identificacion_modal" name="identificacion_modal" disabled>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
+						<label for="numero_ide_modal" class="form-label fw-bold">Número de identificacion: </label>
+						<input type="text" class="form-control" id="numero_ide_modal" name="numero_ide_modal" disabled>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
+						<label for="e_civil_modal" class="form-label fw-bold">Estado civil: </label>
+						<input type="text" class="form-control" id="e_civil_modal" name="e_civil_modal" disabled>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
+						<label for="ocupacion_modal" class="form-label fw-bold">Ocupación: </label>
+						<input type="text" class="form-control" id="ocupacion_modal" name="ocupacion_modal" disabled>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
+						<label for="discapacidad_modal" class="form-label fw-bold">Discapacidad: </label>
+						<input type="text" class="form-control" id="discapacidad_modal" name="discapacidad_modal" disabled>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
+						<label for="iden_genero_modal" class="form-label fw-bold">Orientación sexual: </label>
+						<input type="text" class="form-control" id="iden_genero_modal" name="iden_genero_modal" disabled>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
+						<label for="idioma_modal" class="form-label fw-bold">Idioma: </label>
+						<input type="text" class="form-control" id="idioma_modal" name="idioma_modal" disabled>
+					</div>
+
+					<div class="col-12">
+						<hr>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
+						<label class="form-label fw-bold">Fotos de identificación: </label>
+						<img id="img_identificacion_modal" class="form-control" />
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
+						<label class="form-label fw-bold">Firma digital: </label>
+						<img id="img_firma_modal" class="form-control" />
+					</div>
+					<div class="col-12 text-center">
+						<button type="submit" id="submit" data-bs-target="#otp_validation_modal" data-bs-toggle="modal" data-bs-dismiss="modal" class="btn btn-primary mt-4">Mi información esta correcta</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 <?php include('otp_validation_modal.php') ?>
