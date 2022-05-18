@@ -29,10 +29,11 @@
                         <div class="card bg-white shadow-lg py-3 px-3">
                             <h2 class="fw-bolder text-white text-center text-blue mb-2">Ingresa y denuncia</h2>
                             <div class="card-body">
-                                <form action="<?= base_url() ?>/denuncia/dashboard" class="row g-3 needs-validation" novalidate>
+								
+                                <form action="<?= base_url() ?>/denuncia/dashboard" method="post" class="row g-3 needs-validation" novalidate>
                                     <div class="col-12">
                                         <label for="correo" class="form-label fw-bold">Correo electrónico</label>
-                                        <input type="email" class="form-control" id="correo" name="correo" required>
+                                        <input type="email" class="form-control" id="correo" name="correo" required autofocus>
                                     </div>
 
                                     <div class="col-12">
