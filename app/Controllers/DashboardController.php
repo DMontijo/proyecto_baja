@@ -17,7 +17,11 @@ class DashboardController extends BaseController
 		$data = array();
 		$this->_loadView('Registrar usuario', 'registrarusuario', '', $data, 'register_user');
 	}
-
+	public function video_denuncia_atendida()
+	{
+		$data = array();
+		$this->_loadView('Video denuncias atendidas', 'videodenunciasatendidas', '', $data, 'video_denuncia_atendida');
+	}
 	public function video_denuncia()
 	{
 		$data = array();

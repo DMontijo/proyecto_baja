@@ -11,6 +11,10 @@
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap">
 	<!--  App CSS (Do not remove) -->
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url('/dist/css/dash.css'); ?>">
+	<!--DataTables-->
+	<link rel="stylesheet" href="<?= base_url() ?>/assets/DataTables/datatables-bs4/css/dataTables.bootstrap4.min.css">
+	<link rel="stylesheet" href="<?= base_url() ?>/assets/DataTables/datatables-responsive/css/responsive.bootstrap4.min.css">
+	<link rel="stylesheet" href="<?= base_url() ?>/assets/DataTables/datatables-buttons/css/buttons.bootstrap4.min.css">
 </head>
 
 <body class="c-app c-legacy-theme">
@@ -20,18 +24,23 @@
 		</div>
 		<ul class="c-sidebar-nav">
 			<li class="c-sidebar-nav-item">
-				<a class="c-sidebar-nav-link font-weight-bold" href="<?=base_url()?>/admin/dashboard">
+				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard">
 					<i class="fas fa-tachometer-alt c-sidebar-nav-icon"></i> Inicio
 				</a>
 			</li>
 			<li class="c-sidebar-nav-item">
-				<a class="c-sidebar-nav-link font-weight-bold" href="<?=base_url()?>/admin/dashboard/video-denuncia">
+				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/video-denuncia">
 					<i class="fas fa-video c-sidebar-nav-icon"></i> Video denuncia
 				</a>
 			</li>
 			<li class="c-sidebar-nav-item">
 				<a class="c-sidebar-nav-link font-weight-bold" href="<?=base_url()?>/admin/dashboard/registrar-usuario">
 					<i class="fas fa-users c-sidebar-nav-icon"></i> Usuarios
+				</a>
+			</li>
+			<li class="c-sidebar-nav-item">
+				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/folios">
+					<i class="fas fa-archive c-sidebar-nav-icon"></i> Folios
 				</a>
 			</li>
 		</ul>
@@ -62,7 +71,7 @@
 						<a class="dropdown-item" href="#">
 							<i class="fas fa-user-cog mr-2"></i> Pérfil
 						</a>
-						<a class="dropdown-item" href="<?=base_url()?>/admin">
+						<a class="dropdown-item" href="<?= base_url() ?>/admin">
 							<i class="fas fa-sign-out-alt mr-2"></i> Salir
 						</a>
 					</div>
@@ -86,6 +95,18 @@
 	<!-- App JS (Do not remove) -->
 	<script src="<?php echo base_url('/dist/js/commons.js'); ?>"></script>
 	<script src="<?php echo base_url('/dist/js/dash.js'); ?>"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/datatables/jquery.dataTables.min.js"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/datatables-responsive/js/dataTables.responsive.min.js"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/datatables-buttons/js/dataTables.buttons.min.js"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/jszip/jszip.min.js"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/pdfmake/pdfmake.min.js"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/pdfmake/vfs_fonts.js"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/datatables-buttons/js/buttons.html5.min.js"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/datatables-buttons/js/buttons.print.min.js"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/datatables-buttons/js/buttons.colVis.min.js"></script>
 </body>
 
 </html>

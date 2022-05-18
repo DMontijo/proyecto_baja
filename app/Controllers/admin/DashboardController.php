@@ -12,13 +12,19 @@ class DashboardController extends BaseController
 		$data = array();
 		$this->_loadView('Principal', 'dashboard', '', $data, 'index');
 	}
-	
+
 	public function registrar_usuario()
 	{
 		$data = array();
 		$this->_loadView('Registrar usuario', 'registrarusuario', '', $data, 'register_user');
 	}
 
+	public function folios()
+	{
+		$data = array();
+		$this->_loadView('Folios', 'folios', '', $data, 'folios');
+	}
+	
 	public function video_denuncia()
 	{
 		$data = array();
