@@ -17,7 +17,7 @@
                         <div class="card bg-blue shadow-lg">
                             <div class="card-body text-center">
                                 <h2 class="fw-bolder text-white">¿Quieres denunciar?</h2>
-                                <a href="<?= base_url() ?>/denuncia/registro" class="btn btn-light">
+                                <a href="<?= base_url() ?>/denuncia/denunciante/new" class="btn btn-light">
                                     REGISTRATE
                                 </a>
                             </div>
@@ -30,7 +30,7 @@
                             <h2 class="fw-bolder text-white text-center text-blue mb-2">Ingresa y denuncia</h2>
                             <div class="card-body">
 								
-                                <form action="<?= base_url() ?>/denuncia/dashboard" method="post" class="row g-3 needs-validation" novalidate>
+                                <form action="<?= route_to("ciudadano_login_post") ?>" method="post" class="row g-3 needs-validation" novalidate>
                                     <div class="col-12">
                                         <label for="correo" class="form-label fw-bold">Correo electrónico</label>
                                         <input type="email" class="form-control" id="correo" name="correo" required autofocus>

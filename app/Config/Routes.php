@@ -52,12 +52,14 @@ $routes->group('admin', function ($routes) {
  * */
 $routes->group('denuncia', function ($routes) {
 
-	$routes->get('/', 'client/UserController::index', ['as' => 'ciudadano_login_get']);
-	$routes->post('/login_post', 'client/UserController::login_post', ['as' => 'ciudadano_login_post']);
-	$routes->post('/logout', 'client/UserController::logout', ['as' => 'ciudadano_logout']);
+	$routes->get('/', 'client/AuthController::index', ['as' => 'ciudadano_login_get']);
+	$routes->post('login_post', 'client/AuthController::login_post', ['as' => 'ciudadano_login_post']);
+	$routes->post('logout', 'client/AuthController::logout', ['as' => 'ciudadano_logout']);
+	
+	$routes->resource('denunciante',['controller' =>'client/UserController']);
+	$routes->get('exist-email','client/UserController::existEmail');
 
-	$routes->get('registro', 'client/RegistroController::index');
-	$routes->get('recuperar', 'client/UserController::change_password');
+	$routes->get('recuperar', 'client/AuthController::change_password');
 
 	$routes->group('dashboard', function ($routes) {
 		$routes->get('/', 'client/DashboardController::index');

@@ -6,7 +6,7 @@
 <div class="row">
 	<div class="col-8">
 		<div class="embed-responsive embed-responsive-1by1 shadow rounded">
-			<iframe class="embed-responsive-item" src="https://smartbc.assertivebusiness.com.mx/videollamada?name=Agente"></iframe>
+			<iframe class="embed-responsive-item" src="https://smartbc.assertivebusiness.com.mx/videollamada?name=Agente" allow="camera *;microphone *"></iframe>
 		</div>
 	</div>
 

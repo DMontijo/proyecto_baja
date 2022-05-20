@@ -20,7 +20,7 @@
 				<div id="progress-bar" aria-valuemax="100" aria-valuemin="0" aria-valuenow="50" class="progress-bar progress-bar-striped progress-bar-animated bg-yellow" role="progressbar"></div>
 			</div>
 
-			<form class="row g-3 needs-validation py-5" novalidate>
+			<form class="row g-3 needs-validation py-5" action="<?= base_url() ?>/denuncia/denunciante" method="POST" enctype="multipart/form-data" novalidate>
 				<div class="col-12 step">
 					<div class="row">
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -61,21 +61,41 @@
 						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="nacionalidad" class="form-label fw-bold input-required">Nacionalidad</label>
-							<input class="form-control" id="nacionalidad" name="nacionalidad" type="text" required>
+							<select class="form-select" id="nacionalidad" name="nacionalidad" required>
+								<option selected disabled value="">Seleccione la nacionalidad</option>
+								<?php foreach ($body_data->nacionalidades as $index => $nac) { ?>
+									<option value="<?= $nac->PERSONANACIONALIDADID ?>"> <?= $nac->PERSONANACIONALIDADDESCR ?> </option>
+								<?php } ?>
+							</select>
+							<div class="invalid-feedback">
+								La nacionalidad es obligatoria.
+							</div>
 						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="escolaridad" class="form-label fw-bold input-required">Escolaridad</label>
-							<input class="form-control" id="escolaridad" name="escolaridad" type="text" required>
+							<select class="form-select" id="escolaridad" name="escolaridad" required>
+								<option selected disabled value="">Seleccione la escolaridad</option>
+								<option value="NINGUNA">NINGUNA</option>
+								<option value="PRIMARIA">PRIMARIA</option>
+								<option value="SECUNDARIA">SECUNDARIA</option>
+								<option value="BACHILLERATO">BACHILLERATO</option>
+								<option value="LICENCIATURA">LICENCIATURA</option>
+								<option value="MAESTRIA">MAESTRÍA</option>
+								<option value="DOCTORADO">DOCTORADO</option>
+							</select>
+							<div class="invalid-feedback">
+								La escolaridad es obligatoria
+							</div>
 						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="sexo" class="form-label fw-bold input-required">Sexo biológico</label>
 							<br>
 							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio" name="sexo" value="H" checked required>
+								<input class="form-check-input" type="radio" name="sexo" value="HOMBRE" checked required>
 								<label class="form-check-label" for="flexRadioDefault1">HOMBRE</label>
 							</div>
 							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio" name="sexo" value="M" required>
+								<input class="form-check-input" type="radio" name="sexo" value="MUJER" required>
 								<label class="form-check-label" for="flexRadioDefault2">MUJER</label>
 							</div>
 						</div>
@@ -93,9 +113,6 @@
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="cp" class="form-label fw-bold">Código postal</label>
 							<input type="number" class="form-control" id="cp" name="cp">
-							<div class="invalid-feedback">
-								El código postal es obligatorio
-							</div>
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -336,7 +353,6 @@
 <?php include('aviso_modal.php') ?>
 <?php include('take_photo_modal.php') ?>
 <?php include('information_validation_modal.php') ?>
-
 <script>
 	const steps = document.querySelectorAll('.step');
 	const prevBtn = document.querySelector('#prev-btn');
@@ -351,7 +367,6 @@
 
 	nextBtn.addEventListener('click', () => {
 		if (validarStep(currentStep)) {
-			console.log('SI SE VALIDO');
 			currentStep++;
 			console.log(currentStep);
 			let previousStep = currentStep - 1;
@@ -496,10 +511,11 @@
 		Array.prototype.slice.call(forms)
 			.forEach(function(form) {
 				form.addEventListener('submit', function(event) {
-					event.preventDefault();
 					if (!form.checkValidity()) {
+						event.preventDefault();
 						event.stopPropagation();
 					} else {
+						event.preventDefault();
 						enviar_datos();
 						setTimeout(() => {
 							$('#information_validation').modal('show');

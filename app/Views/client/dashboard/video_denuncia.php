@@ -11,7 +11,7 @@
 			<div class="card text-center">
 				<div class="card-body p-0 m-0">
 					<div class="ratio ratio-16x9">
-						<iframe src="https://smartbc.assertivebusiness.com.mx/videollamada?name=Otoniel_Flores" frameborder="0"></iframe>
+						<iframe src="https://smartbc.assertivebusiness.com.mx/videollamada?name=Otoniel_Flores" frameborder="0" allow="camera *;microphone *"></iframe>
 					</div>
 				</div>
 			</div>
