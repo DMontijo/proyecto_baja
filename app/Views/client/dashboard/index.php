@@ -220,7 +220,7 @@
 									<input type="datetime" class="form-control" id="fecha_nac_imputado" name="fecha_nac_imputado">
 								</div>
 								<div class="col-12 col-sm-6 col-md-6 col-lg-4">
-									<label for="sexo_imputado" class="form-label fw-bold ">Sexo biológico del imputado</label>
+									<label for="sexo_imputado" class="form-label fw-bold ">Sexo del imputado</label>
 									<br>
 									<div class="form-check form-check-inline">
 										<input class="form-check-input" type="radio" name="sexo_imputado" id="M">

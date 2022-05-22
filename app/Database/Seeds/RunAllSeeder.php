@@ -18,7 +18,6 @@ class RunAllSeeder extends Seeder
 		$this->call('PlantillaSeeder');
 		$this->call('DelitoModalidadSeeder');
 		$this->call('MedioConocimientoSeeder');
-		$this->call('PerfilesSeeder');
 		$this->call('PersonaCalidadJuridicaSeeder');
 		$this->call('PersonaEdoCivilSeeder ');
 		$this->call('PersonaIdiomaSeeder  ');
@@ -29,7 +28,10 @@ class RunAllSeeder extends Seeder
 		$this->call('TipoViviendaSeeder ');
 		$this->call('VehiculoColorSeeder');
 		$this->call('VehiculoTipoSeeder ');
-		$this->call('UsersSeeder');
-		$this->call('DerivacionesAtencion');
+		$this->call('DerivacionesAtencionSeeder');
+		$this->call('RolesusuariosSeeder');
+		$this->call('ZonasUsuariosSeeder');
+		$this->call('PerfilesUsuariosSeeder');
+		$this->call('UsuariosSeeder');
 	}
 }

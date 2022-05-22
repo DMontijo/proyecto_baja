@@ -4,13 +4,13 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class CIUDADANOS extends Migration
+class DENUNCIANTES extends Migration
 {
 	public function up()
 	{
 
 		$this->forge->addField([
-			'ID' => [
+			'ID_DENUNCIANTE' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'auto_increment' => TRUE,
@@ -43,12 +43,6 @@ class CIUDADANOS extends Migration
 				'constraint' => '255',
 				'null' => FALSE
 			],
-			'PERFIL' => [
-				'type' => 'ENUM',
-				'constraint' => ['ciudadano', 'admin'],
-				'default' => 'ciudadano',
-				'null' => FALSE
-			],
 			'CREADO' => [
 				'type' => 'DATETIME',
 				'null' => TRUE
@@ -62,12 +56,12 @@ class CIUDADANOS extends Migration
 				'null' => TRUE
 			],
 		]);
-		$this->forge->addKey('ID', TRUE);
-		$this->forge->createTable('CIUDADANOS');
+		$this->forge->addKey('ID_DENUNCIANTE', TRUE);
+		$this->forge->createTable('DENUNCIANTES');
 	}
 
 	public function down()
 	{
-		$this->forge->dropTable('CIUDADANOS');
+		$this->forge->dropTable('DENUNCIANTES');
 	}
 }

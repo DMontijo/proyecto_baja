@@ -28,8 +28,6 @@ class VEHICULOMODELO extends Migration
             ],
         ]);
         $this->forge->addKey('VEHICULOMODELOID', TRUE);
-        $this->forge->addForeignKey('VEHICULOMARCAID', 'CATEGORIA_VEHICULOMARCA', 'VEHICULOMARCAID');
-       // $this->forge->addForeignKey('VEHICULODISTRIBUIDORID', '', '');
         $this->forge->createTable('CATEGORIA_VEHICULOMODELO');
     }
 

@@ -35,7 +35,7 @@
 								<input type="text" name="apellido_materno" class="form-control" id="apellido_materno" placeholder="Escribe el apellido materno">
 							</div>
 							<div class="form-group">
-								<label for="sexo" class="form-label fw-bold input-required">Sexo biológico</label>
+								<label for="sexo" class="form-label fw-bold input-required">Sexo</label>
 								<div class="form-check">
 									<input class="form-check-input" type="radio" name="sexo" id="H" checked required>
 									<label class="form-check-label" for="flexRadioDefault1">Hombre</label>

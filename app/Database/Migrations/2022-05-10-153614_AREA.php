@@ -46,7 +46,7 @@ class AREA extends Migration
             ],
         ]);
         $this->forge->addKey('AREAID', TRUE);
-        $this->forge->addForeignKey('OFICINAID', 'OFICINA', 'OFICINAID');
+        // $this->forge->addForeignKey('OFICINAID', 'OFICINA', 'OFICINAID');
         $this->forge->createTable('AREA');
     }
 

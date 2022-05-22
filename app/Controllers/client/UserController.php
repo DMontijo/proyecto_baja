@@ -4,7 +4,7 @@ namespace App\Controllers\client;
 
 use App\Controllers\BaseController;
 
-use App\Models\CiudadanoModel;
+use App\Models\DenuncianteModel;
 use App\Models\PersonaNacionalidadModel;
 use \CodeIgniter\Exceptions\PageNotFoundException;
 
@@ -29,7 +29,7 @@ class UserController extends BaseController
 
 	public function create()
 	{
-		$ciudadanoModel = new CiudadanoModel();
+		$denuncianteModel = new DenuncianteModel();
 		$data = [
 			'NOMBRE' => $this->request->getPost('nombre'),
 			'APELLIDO_PATERNO' => $this->request->getPost('apellido_paterno'),
@@ -44,7 +44,7 @@ class UserController extends BaseController
 			'apellido_paterno' => 'required|max_length[100]',
 			'correo' => 'required|is_unique[CIUDADANOS.CORREO]'
 		])) {
-			$this->$ciudadanoModel->insert($data);
+			$this->$denuncianteModel->insert($data);
 			return redirect()->to(base_url() . "/denuncia")->with('message', 'Denunciante creado con éxito.');
 		} else {
 			return redirect()->back()->with('message', 'Hubo un error en los datos');

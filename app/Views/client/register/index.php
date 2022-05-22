@@ -88,7 +88,7 @@
 							</div>
 						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="sexo" class="form-label fw-bold input-required">Sexo biológico</label>
+							<label for="sexo" class="form-label fw-bold input-required">Sexo</label>
 							<br>
 							<div class="form-check form-check-inline">
 								<input class="form-check-input" type="radio" name="sexo" value="HOMBRE" checked required>

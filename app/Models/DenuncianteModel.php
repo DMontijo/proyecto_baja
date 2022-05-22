@@ -4,10 +4,10 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class CiudadanoModel extends Model
+class DenuncianteModel extends Model
 {
 	protected $DBGroup          = 'default';
-	protected $table            = 'CIUDADANOS';
+	protected $table            = 'DENUNCIANTES';
 	protected $primaryKey       = 'ID';
 	protected $allowedFields    = [
 		'NOMBRE',

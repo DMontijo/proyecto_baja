@@ -28,7 +28,7 @@ class CATEGORIAMUNICIPIO extends Migration
             ],
         ]);
         $this->forge->addKey('MUNICIPIOID', TRUE);
-        $this->forge->addForeignKey('ESTADOID', 'CATEGORIA_ESTADO', 'ESTADOID');
+        // $this->forge->addForeignKey('ESTADOID', 'CATEGORIA_ESTADO', 'ESTADOID');
         $this->forge->createTable('CATEGORIA_MUNICIPIO');
     }
 
