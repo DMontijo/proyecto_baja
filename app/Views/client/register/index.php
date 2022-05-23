@@ -60,34 +60,6 @@
 							<input class="form-control" id="edad" name="edad" type="text" disabled>
 						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="nacionalidad" class="form-label fw-bold input-required">Nacionalidad</label>
-							<select class="form-select" id="nacionalidad" name="nacionalidad" required>
-								<option selected disabled value="">Seleccione la nacionalidad</option>
-								<?php foreach ($body_data->nacionalidades as $index => $nac) { ?>
-									<option value="<?= $nac->PERSONANACIONALIDADID ?>"> <?= $nac->PERSONANACIONALIDADDESCR ?> </option>
-								<?php } ?>
-							</select>
-							<div class="invalid-feedback">
-								La nacionalidad es obligatoria.
-							</div>
-						</div>
-						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="escolaridad" class="form-label fw-bold input-required">Escolaridad</label>
-							<select class="form-select" id="escolaridad" name="escolaridad" required>
-								<option selected disabled value="">Seleccione la escolaridad</option>
-								<option value="NINGUNA">NINGUNA</option>
-								<option value="PRIMARIA">PRIMARIA</option>
-								<option value="SECUNDARIA">SECUNDARIA</option>
-								<option value="BACHILLERATO">BACHILLERATO</option>
-								<option value="LICENCIATURA">LICENCIATURA</option>
-								<option value="MAESTRIA">MAESTRÍA</option>
-								<option value="DOCTORADO">DOCTORADO</option>
-							</select>
-							<div class="invalid-feedback">
-								La escolaridad es obligatoria
-							</div>
-						</div>
-						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="sexo" class="form-label fw-bold input-required">Sexo</label>
 							<br>
 							<div class="form-check form-check-inline">
@@ -129,8 +101,13 @@
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="estado" class="form-label fw-bold input-required">Estado del denunciante</label>
-							<input type="text" class="form-control" id="estado" name="estado" required>
+							<label for="estado_denunciante" class="form-label fw-bold input-required">Estado del denunciante</label>
+							<!-- <input type="text" class="form-control" id="estado_denunciante" name="estado_denunciante" required> -->
+							<select class="form-select" id="estado_denunciante" name="estado_denunciante" required>
+								<?php foreach ($body_data->estados as $index => $municipio) { ?>
+									<option value="<?= $municipio->ESTADOID ?>"> <?= $municipio->ESTADODESCR ?> </option>
+								<?php } ?>
+							</select>
 							<div class="invalid-feedback">
 								El estado es obligatorio
 							</div>
@@ -138,7 +115,12 @@
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="municipio" class="form-label fw-bold input-required">Municipio del denunciante</label>
-							<input type="text" class="form-control" id="municipio" name="municipio" required>
+							<!-- <input type="text" class="form-control" id="municipio" name="municipio" required> -->
+							<select class="form-select" id="municipio" name="municipio" required>
+								<?php foreach ($body_data->municipios as $index => $municipio) { ?>
+									<option value="<?= $municipio->MUNICIPIOID ?>"> <?= $municipio->MUNICIPIODESCR ?> </option>
+								<?php } ?>
+							</select>
 							<div class="invalid-feedback">
 								El municipio es obligatorio
 							</div>
@@ -146,7 +128,12 @@
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="localidad" class="form-label fw-bold">Localidad del denunciante</label>
-							<input type="text" class="form-control" id="localidad" name="localidad">
+							<!-- <input type="text" class="form-control" id="localidad" name="localidad"> -->
+							<select class="form-select" id="localidad" name="localidad" required>
+								<?php foreach ($body_data->localidades as $index => $localidad) { ?>
+									<option value="<?= $localidad->LOCALIDADID ?>"> <?= $localidad->LOCALIDADDESCR ?> </option>
+								<?php } ?>
+							</select>
 							<div class="invalid-feedback">
 								La localidad es obligatoria
 							</div>
@@ -155,7 +142,12 @@
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="colonia" class="form-label fw-bold input-required">Colonia del denunciante</label>
-							<input type="text" class="form-control" id="colonia" name="colonia" required>
+							<!-- <input type="text" class="form-control" id="colonia" name="colonia" required> -->
+							<select class="form-select" id="colonia" name="colonia" required>
+								<?php foreach ($body_data->colonias as $index => $colonia) { ?>
+									<option value="<?= $colonia->COLONIAID ?>"> <?= $colonia->COLONIADESCR ?> </option>
+								<?php } ?>
+							</select>
 							<div class="invalid-feedback">
 								La colonia es obligatoria
 							</div>
@@ -221,26 +213,9 @@
 							<label for="identificacion" class="form-label fw-bold input-required">Identificación</label>
 							<select class="form-select" id="identificacion" name="identificacion" required>
 								<option selected disabled value="">Seleccione la identificación</option>
-								<option value="CREDENCIAL_PARA_VOTAR">CREDENCIAL PARA VOTAR</option>
-								<option value="LICENCIA_DE_CONDUCIR">LICENCIA DE CONDUCIR</option>
-								<option value="CARTA_DE_NATURALIZACION">CARTA DE NATURALIZACIÓN</option>
-								<option value="CARTILLA_MILITAR">CARTILLA MILITAR</option>
-								<option vaulue="CURP">CURP</option>
-								<option vaulue="CEDULA_PROFESIONAL">CÉDULA PROFESIONAL</option>
-								<option vaulue="CREDENCIAL_EMPLEO">CREDENCIAL DE EMPLEO</option>
-								<option vaulue="CREDENCIAL_ESTUDIANTE">CREDENCIAL DE ESTUDIANTE</option>
-								<option vaulue="CREDENCIAL_IMSS">CREDENCIAL DE AFILIACIÓN AL IMSS</option>
-								<option vaulue="CREDENCIAL_ISSSTE">CREDENCIAL DE AFILIACIÓN AL ISSSTE</option>
-								<option vaulue="CREDENCIAL_ISSSTECALI">CREDENCIAL DE AFILIACIÓN AL ISSSTECALI</option>
-								<option vaulue="CREDENCIAL_INAPAM">CREDENCIAL INAPAM</option>
-								<option vaulue="PASAPORTE">PASAPORTE</option>
-								<option vaulue="CERTIFICADO_ESCOLAR">CERTIFICADO ESCOLAR</option>
-								<option vaulue="BOLETA_CALIFICACIONES">BOLETA DE CALIFICACIONES</option>
-								<option vaulue="ACTA_NACIMIENTO"> ACTA DE NACIMIENTO</option>
-								<option vaulue="TARJETA_BANCARIA">TARJETA BANCARIA</option>
-								<option vaulue="GAFETE">GAFETE</option>
-								<option vaulue="CONSTANCIA_ESTUDIOS">CONSTANCIA DE ESTUDIOS</option>
-								<option vaulue="NINGUNA">NINGUNA</option>
+								<?php foreach ($body_data->tiposIdentificaciones as $index => $identificacion) { ?>
+									<option value="<?= $identificacion->PERSONATIPOIDENTIFICACIONID ?>"> <?= $identificacion->PERSONATIPOIDENTIFICACIONDESCR ?> </option>
+								<?php } ?>
 							</select>
 							<div class="invalid-feedback">
 								El tipo de identificación es obligatorio.
@@ -255,13 +230,10 @@
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="e_civil" class="form-label fw-bold input-required">Estado civil</label>
 							<select class="form-select" id="e_civil" name="e_civil" required>
-								<option selected disabled value="">Seleccione su estado civil...</option>
-								<option value="SOLTERO">SOLTERO</option>
-								<option value="CASADO">CASADO</option>
-								<option value="DIVORCIADO">DIVORCIADO</option>
-								<option value="SEPARCION EN PROCESO JUDICIAL">SEPARCION EN PROCESO JUDICIAL</option>
-								<option value="VIUDO">VIUDO</option>
-								<option value="CONCUBINATO">CONCUBINATO</option>
+								<option selected disabled value="">Seleccione su estado civil</option>
+								<?php foreach ($body_data->edoCiviles as $index => $edo) { ?>
+									<option value="<?= $edo->PERSONAESTADOCIVILID ?>"> <?= $edo->PERSONAESTADOCIVILDESCR ?> </option>
+								<?php } ?>
 							</select>
 							<div class="invalid-feedback">
 								El estado civil es obligatorio.
@@ -281,12 +253,12 @@
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="discapacidad" class="form-label fw-bold input-required">¿Padece alguna
 								discapacidad?</label>
-							<select class="form-select" id="discapacidad" name="discapacidad" onchange="" required>
+							<select class="form-select" id="discapacidad" name="discapacidad" required>
 								<option selected disabled value="">Seleccione si padece alguna discapacidad</option>
-								<option value="D_VISUAL">VISUAL</option>
-								<option value="D_FISICA">FISICA</option>
-								<option value="D_AUDITIVA">AUDITIVA</option>
-								<option vaulue="D_NINGUNA">NINGUNA</option>
+								<option value="VISUAL">VISUAL</option>
+								<option value="FISICA">FISICA</option>
+								<option value="AUDITIVA">AUDITIVA</option>
+								<option vaulue="NINGUNA">NINGUNA</option>
 							</select>
 							<div class="invalid-feedback">
 								El campo discapacidad es obligatorio.
@@ -294,11 +266,42 @@
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+							<label for="nacionalidad" class="form-label fw-bold input-required">Nacionalidad</label>
+							<select class="form-select" id="nacionalidad" name="nacionalidad" required>
+								<option selected disabled value="">Seleccione la nacionalidad</option>
+								<?php foreach ($body_data->nacionalidades as $index => $nac) { ?>
+									<option value="<?= $nac->PERSONANACIONALIDADID ?>"> <?= $nac->PERSONANACIONALIDADDESCR ?> </option>
+								<?php } ?>
+							</select>
+							<div class="invalid-feedback">
+								La nacionalidad es obligatoria.
+							</div>
+						</div>
+
+						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+							<label for="escolaridad" class="form-label fw-bold input-required">Escolaridad</label>
+							<select class="form-select" id="escolaridad" name="escolaridad" required>
+								<option selected disabled value="">Seleccione la escolaridad</option>
+								<option value="NINGUNA">NINGUNA</option>
+								<option value="PRIMARIA">PRIMARIA</option>
+								<option value="SECUNDARIA">SECUNDARIA</option>
+								<option value="BACHILLERATO">BACHILLERATO</option>
+								<option value="LICENCIATURA">LICENCIATURA</option>
+								<option value="MAESTRIA">MAESTRÍA</option>
+								<option value="DOCTORADO">DOCTORADO</option>
+							</select>
+							<div class="invalid-feedback">
+								La escolaridad es obligatoria
+							</div>
+						</div>
+
+						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="idioma" class="form-label fw-bold input-required">Idioma</label>
 							<select class="form-select" id="idioma" name="idioma" required>
 								<option selected disabled value="">Seleccione el idioma</option>
-								<option value="ES">ESPAÑOL</option>
-								<option value="EN">INGLES</option>
+								<?php foreach ($body_data->idiomas as $index => $nac) { ?>
+									<option value="<?= $nac->PERSONAIDIOMAID ?>"> <?= $nac->PERSONAIDIOMADESCR ?> </option>
+								<?php } ?>
 							</select>
 							<div class="invalid-feedback">
 								Debes elegir un idioma
@@ -333,6 +336,7 @@
 						</div>
 					</div>
 				</div>
+
 				<div class="col-12 d-none step">
 					<div class="row">
 						<div class="col-12 text-center">
@@ -340,6 +344,7 @@
 						</div>
 					</div>
 				</div>
+
 				<div class="col-12 mt-5 text-center">
 					<button class="btn btn-primary mb-3 d-none" id="prev-btn" type="button"> <i class="bi bi-caret-left-fill"></i> Anterior</button>
 					<button class="btn btn-primary mb-3" id="next-btn" type="button"> Siguiente <i class="bi bi-caret-right-fill"></i> </button>
@@ -353,6 +358,7 @@
 <?php include('aviso_modal.php') ?>
 <?php include('take_photo_modal.php') ?>
 <?php include('information_validation_modal.php') ?>
+
 <script>
 	const steps = document.querySelectorAll('.step');
 	const prevBtn = document.querySelector('#prev-btn');
@@ -443,9 +449,7 @@
 					document.querySelector('#nombre').value != '' &&
 					document.querySelector('#apellido_paterno').value != '' &&
 					document.querySelector('#correo').value != '' &&
-					document.querySelector('#fecha_nacimiento').value != '' &&
-					document.querySelector('#nacionalidad').value != '' &&
-					document.querySelector('#escolaridad').value != ''
+					document.querySelector('#fecha_nacimiento').value != ''
 				) {
 					return true
 				} else {
@@ -473,7 +477,9 @@
 					document.querySelector('#e_civil').value != '' &&
 					document.querySelector('#discapacidad').value != '' &&
 					document.querySelector('#idioma').value != '' &&
-					document.querySelector('#documento').value != ''
+					document.querySelector('#documento').value != '' &&
+					document.querySelector('#nacionalidad').value != '' &&
+					document.querySelector('#escolaridad').value != ''
 				) {
 					return true
 				} else {
@@ -502,6 +508,14 @@
 		$('#aviso_modal').modal('toggle')
 	});
 
+	function clearText(text) {
+		text
+			.normalize('NFD')
+			.replace(/([^n\u0300-\u036f]|n(?!\u0303(?![\u0300-\u036f])))[\u0300-\u036f]+/gi, "$1")
+			.normalize();
+		return text.replaceAll('´', '');
+	}
+
 	(function() {
 		'use strict'
 		var forms = document.querySelectorAll('.needs-validation');
@@ -527,13 +541,13 @@
 
 		inputsText.forEach((input) => {
 			input.addEventListener('input', function(event) {
-				event.target.value = event.target.value.toUpperCase();
+				event.target.value = clearText(event.target.value).toUpperCase();
 			}, false)
 		})
 
 		inputsEmail.forEach((input) => {
 			input.addEventListener('input', function(event) {
-				event.target.value = event.target.value.toLowerCase();
+				event.target.value = clearText(event.target.value).toLowerCase();
 			}, false)
 		})
 
@@ -571,7 +585,7 @@
 
 		document.querySelector('#idioma').addEventListener('change', (e) => {
 			let alert = document.querySelector('#idioma_alert');
-			if (e.target.value !== 'ES') {
+			if (e.target.value !== '22') {
 				alert.classList.remove('d-none')
 			} else {
 				alert.classList.add('d-none')
@@ -625,7 +639,7 @@
 		let codigop = document.querySelector("#cp").value ? document.querySelector("#cp").value : '';
 
 		let pais = document.querySelector("#select_pais").value ? document.querySelector("#select_pais").value : '';
-		let estado = document.querySelector("#estado").value ? document.querySelector("#estado").value : '';
+		let estado = document.querySelector("#estado").value ? document.querySelector("#estado_denunciante").value : '';
 		let municipio = document.querySelector("#municipio").value ? document.querySelector("#municipio").value : '';
 		let localidad = document.querySelector("#localidad").value ? document.querySelector("#localidad").value : '';
 		let colonia = document.querySelector("#colonia").value ? document.querySelector("#colonia").value : '';

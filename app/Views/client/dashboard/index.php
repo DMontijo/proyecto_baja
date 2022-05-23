@@ -15,292 +15,59 @@
 				<div class="container">
 					<h1 class="text-center fw-bolder pb-1 text-blue">DENUNCIA</h1>
 					<p class="text-center fw-bold text-blue ">Llena los campos siguientes para continuar tu denuncia</p>
-					<p class="text-center pb-5">Los campos con un <span class="asterisco-rojo">*</span> son obligatorios</p>
+					<p class="text-center pb-3">Los campos con un <span class="asterisco-rojo">*</span> son obligatorios</p>
+
+					<div class="progress mb-4">
+						<div id="progress-bar" aria-valuemax="100" aria-valuemin="0" aria-valuenow="50" class="progress-bar progress-bar-striped progress-bar-animated bg-yellow" role="progressbar"></div>
+					</div>
+
 					<form action="<?= base_url() ?>/denuncia/dashboard/video-denuncia" class="row needs-validation" novalidate>
-						<div class="col-12 col-sm-6 col-md-6 col-lg-4">
-							<label for="delito-text" class="form-label fw-bold input-required">Delito:</label>
-							<select class="form-select" id="delito" name="delito" required>
-								<option selected disabled value="">Elige la categoría</option>
-								<option value="0">ABUSO DE AUTORIDAD</option>
-								<option value="1">ABUSO DE CONFIANZA</option>
-								<option value="2">ABUSO DE RETENCIÓN</option>
-								<option value="3">ABUSO SEXUAL</option>
-								<option value="4">AMENAZAS - EJECUTADAS CON ARMA DE FUEGO, ARMA BLANCA U OBJETO CONTUNDENTE.</option>
-								<option value="5">ALLANAMIENTO DE MORADA, EJECUTADO CON VIOLENCIA.</option>
-								<option value="6">ATAQUES A LA VÍAS DE COMUNICACIÓN Y A LOS MEDIOS DE TRANSPORTE.</option>
-								<option value="7">BIGAMIA</option>
-								<option value="8">COBRANZA ILEGITIMA.</option>
-								<option value="9">CORRUPCIÓN</option>
-								<option value="10">DAÑO EN PROPIEDAD AJENA</option>
-								<option value="11">DAÑO EN PROPIEDAD AJENA AGRAVADO POR INCENDIO</option>
-								<option value="12">DAÑO EN PROPIEDAD AJENA AGRAVADO POR INUNDACIÓN</option>
-								<option value="13">DAÑO EN PROPIEDAD AJENA AGRAVADO POR EXPLOSIÓN</option>
-								<option value="14">DAÑO EN PROPIEDAD AJENA CULPOSO</option>
-								<option value="15">DELITOS CONTRA EL AMBIENTE</option>
-								<option value="16">DELITOS CONTRA LA INTIMIDAD Y LA IMAGEN</option>
-								<option value="17">DELITOS CONTRA INVIOLABILIDAD DEL SECRETO Y DE LOS SISTEMAS Y EQUIPO DE COMPUTO Y PROTECCIÓN DE LOS DATOS PERSONALES</option>
-								<option value="18">DELITOS DE ABOGADOS</option>
-								<option value="19">DELITOS ELECTORALES</option>
-								<option value="20">DESPOJO, EJECUTADO CON VIOLENCIA.</option>
-								<option value="21">EXTORSIÓN</option>
-								<option value="22">FALSEDAD ANTE LAS AUTORIDADES</option>
-								<option value="23">FALSIFICACIÓN DE DOCUMENTOS</option>
-								<option value="24">FALSIFICAR SELLOS, MARCAS, LLAVE U OTROS OBJETOS.</option>
-								<option value="25">FRAUDE</option>
-								<option value="26">FRAUDE PROCESAL</option>
-								<option value="27">HOSTIGAMIENTO</option>
-								<option value="28">HOSTIGAMIENTO SEXUAL</option>
-								<option value="29">INCESTO</option>
-								<option value="30">INCUMPLIMIENTO DE OBLIGACIONES DE ASISTENCIA FAMILIAR</option>
-								<option value="31">INHUMACIÓN Y EXHUMACIÓN DE CADÁVERES</option>
-								<option value="32">LESIONES (NAC)</option>
-								<option value="33">LESIONES CAUSADAS POR ANIMAL</option>
-								<option value="34">LESIONES POR CULPA</option>
-								<option value="35">LOCALIZACIÓN DE PERSONA</option>
-								<option value="36">MALTRATO O CRUELDAD ANIMAL</option>
-								<option value="37">OMISIÓN DE CUIDADO</option>
-								<option value="38">PELIGRO DE CONTAGIO DE SALUD</option>
-								<option value="39">PORNOGRAFÍA DE PERSONA MENOR DE 18 AÑOS</option>
-								<option value="40">QUEBRANTAMIENTO DE SELLOS</option>
-								<option value="41">RECEPCIÓN U OCULTACIÓN DE BIENES PRODUCTO DE UN DELITO</option>
-								<option value="42">RESPONSABILIDAD MÉDICA Y TÉCNICA</option>
-								<option value="43">ROBO</option>
-								<option value="44">ROBO CALIFICADO A CASA HABITACIÓN</option>
-								<option value="45">ROBO CALIFICADO A LUGAR CERRADO</option>
-								<option value="46">ROBO CALIFICADO DE DEPENDIENTE</option>
-								<option value="47">ROBO CON VIOELENCIA</option>
-								<option value="48">ROBO DE VEHÍCULO</option>
-								<option value="49">ROBO DE VEHÍCULO CON VIOLENCIA</option>
-								<option value="50">SUSTRACCIÓN DE MENORES</option>
-								<option value="51">USO DE DOCUMENTOS FALSOS</option>
-								<option value="52">USURPACIÓN DE FUNCIONES PÚBLICAS</option>
-								<option value="53">USURPACIÓN DE PROFESIONES</option>
-								<option value="54">SUPLANTACIÓN, USURPACIÓN DE IDENTIDAD.</option>
-								<option value="55">VIOLACIÓN DE CORRESPONDENCIA</option>
-								<option value="56">VIOLENCIA FAMILIAR</option>
-							</select>
-							<div class="invalid-feedback">
-								Selecciona el delito
-							</div>
+
+						<!-- PREGUNTAS INICIALES -->
+						<div id="datos_iniciales" class="col-12 step">
+							<?php include('form_preguntas_iniciales.php') ?>
 						</div>
 
-						<div class="col-12 col-sm-6 col-md-6 col-lg-4">
-							<label for="municipio" class="form-label fw-bold input-required">Municipio:</label>
-							<select class="form-select" id="municipio" name="municipio" required>
-								<option selected disabled value="">Elige el municipio</option>
-								<option value="1">TIJUANA</option>
-								<option value="2">PLAYAS DE ROSARITO</option>
-								<option value="3">TECATE</option>
-								<option value="4">MEXICALI</option>
-								<option value="5">ENSENADA</option>
-								<option value="6">SAN FELIPE</option>
-								<option value="7">SAN QUINTIN</option>
-							</select>
-							<div class="invalid-feedback">
-								Por favor, selecciona un municipio.
-							</div>
+						<!-- DATOS DELITO -->
+						<div id="datos_delito" class="col-12 d-none step">
+							<?php include('form_delito.php') ?>
 						</div>
-						<div class="col-12 col-sm-6 col-md-6 col-lg-4">
-							<label for="calle" class="form-label fw-bold input-required">Calle o avenida del delito:</label>
-							<input type="text" class="form-control" id="calle" name="calle" required>
-							<div class="invalid-feedback">
-								Por favor, anexa una calle o avenida.
-							</div>
+
+						<!-- DATOS IMPUTADO -->
+						<div id="datos_imputado" class="col-12 d-none step">
+							<?php include('form_imputado.php') ?>
 						</div>
-						<div class="col-12 col-sm-6 col-md-6 col-lg-4">
-							<label for="exterior" class="form-label fw-bold input-required">No. exterior del delito:</label>
-							<input type="text" class="form-control" id="exterior" name="exterior" required>
-							<div class="invalid-feedback">
-								Por favor, anexa un numero exterior del delito.
-							</div>
+
+						<!-- DATOS DESAPARECIDO -->
+						<div id="datos_desaparecido" class="col-12 d-none step">
+							<?php include('form_persona_desaparecida.php') ?>
 						</div>
-						<div class="col-12 col-sm-6 col-md-6 col-lg-4">
-							<label for="interior" class="form-label fw-bold">No. interior del delito:</label>
-							<input type="text" class="form-control" id="interior" name="interior">
-							<div class="invalid-feedback">
-								Por favor, anexa un numero interior del delito.
-							</div>
+
+						<!-- DATOS VEHICULO ROBADO -->
+						<div id="datos_robo_vehiculo" class="col-12 d-none step">
+							<?php include('form_robo_vehiculo.php') ?>
 						</div>
-						<div class="col-12 col-sm-6 col-md-6 col-lg-4">
-							<label for="colonia-text" class="form-label fw-bold input-required">Colonia del delito:</label>
-							<select class="form-select" id="colonia" name="colonia" required>
-								<option selected disabled value="">Elige la colonia</option>
-								<option value="1">Ciudad morelos</option>
-								<option value="2">Hechicera</option>
-								<option value="3">Mexicali</option>
-							</select>
-							<div class="invalid-feedback">
-								Por favor, selecciona una colonia.
-							</div>
-						</div>
-						<div class="col-12 col-sm-6 col-md-6 col-lg-4">
-							<label for="lugar" class="form-label fw-bold input-required">Lugar del delito:</label>
-							<select class="form-select" id="lugar" name="lugar" required>
-								<option selected disabled value="">Elige el lugar del delito</option>
-								<option value="1">Instituciones privadas</option>
-								<option value="2">Centro escolar</option>
-								<option value="3">Centro recreativo</option>
-							</select>
-							<div class="invalid-feedback">
-								Por favor, selecciona un lugar.
-							</div>
-						</div>
-						<div class="col-12 col-sm-6 col-md-6 col-lg-4">
-							<label for="clasificacion" class="form-label fw-bold">Clasificación del lugar</label>
-							<input type="text" class="form-control" id="clasificacion" name="clasificacion">
-						</div>
-						<div class="col-12 col-sm-6 col-md-6 col-lg-4">
-							<label for="fecha" class="form-label fw-bold input-required">Fecha y hora del delito:</label>
-							<input type="datetime-local" class="form-control" id="fecha" name="fecha" required>
-							<div class="invalid-feedback">
-								Por favor, anexa una fecha y hora.
-							</div>
-						</div>
-						<div class="col-12 col-sm-6 col-md-6 col-lg-4">
-							<label for="responsable" class="form-label fw-bold ">¿Identifica al responsable del delito?</label>
-							<br>
-							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio" name="responsable" id="SI" onclick="MostrarSiconoce();">
-								<label class="form-check-label" for="flexRadioDefault1">SI</label>
-							</div>
-							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio" name="responsable" id="NO" onclick="Esconder();">
-								<label class="form-check-label" for="flexRadioDefault2">NO</label>
-							</div>
-						</div>
-						<!--Campos que salen si selecciona que si conoce al responsable-->
-						<div id="siconoce" style="display:none" class="col-12">
+
+						<!-- PASO FINAL -->
+						<div id="paso_final" class="col-12 step d-none step">
 							<div class="row">
-								<div class="col-12 col-sm-6 col-md-6 col-lg-4">
-									<label for="nombre_imputado" class="form-label fw-bold">Nombre(s) imputado</label>
-									<input type="text" class="form-control" id="nombre_imputado" name="nombre_imputado">
-
-								</div>
-								<div class="col-12 col-sm-6 col-md-6 col-lg-4">
-									<label for="alias" class="form-label fw-bold">Alias</label>
-									<input type="text" class="form-control" id="alias" name="alias">
-								</div>
-								<div class="col-12 col-sm-6 col-md-6 col-lg-4">
-									<label for="primer_apellido" class="form-label fw-bold">Primer apellido</label>
-									<input type="text" class="form-control" id="primer_apellido" name="primer_apellido">
-								</div>
-								<div class="col-12 col-sm-6 col-md-6 col-lg-4">
-									<label for="segundo_apellido" class="form-label fw-bold">Segundo apellido</label>
-									<input type="text" class="form-control" id="segundo_apellido" name="segundo_apellido">
-								</div>
-								<div class="col-12 col-sm-6 col-md-6 col-lg-4">
-									<label for="municipio_imputado" class="form-label fw-bold">Municipio del imputado:</label>
-									<select class="form-select" id="municipio_imputado" name="municipio_imputado">
-										<option selected disabled value="">Elige el municipio del imputado</option>
-										<option value="1">TIJUANA</option>
-										<option value="2">PLAYAS DE ROSARITO</option>
-										<option value="3">TECATE</option>
-										<option value="4">MEXICALI</option>
-										<option value="5">ENSENADA</option>
-									</select>
-								</div>
-								<div class="col-12 col-sm-6 col-md-6 col-lg-4">
-									<label for="calle_imputado" class="form-label fw-bold">Calle o avenida del imputado</label>
-									<input type="text" class="form-control" id="calle_imputado" name="calle_imputado">
-								</div>
-								<div class="col-12 col-sm-6 col-md-6 col-lg-4">
-									<label for="numero_ext_imputado" class="form-label fw-bold">Número exterior</label>
-									<input type="text" class="form-control" id="numero_ext_imputado" name="numero_ext_imputado">
-								</div>
-								<div class="col-12 col-sm-6 col-md-6 col-lg-4">
-									<label for="numero_int_imputado" class="form-label fw-bold">Número interior</label>
-									<input type="text" class="form-control" id="numero_int_imputado" name="numero_int_imputado">
-								</div>
-								<div class="col-12 col-sm-6 col-md-6 col-lg-4">
-									<label for="tel_imputado" class="form-label fw-bold">Teléfono del imputado</label>
-									<input type="text" class="form-control" id="tel_imputado" name="tel_imputado">
-								</div>
-								<div class="col-12 col-sm-6 col-md-6 col-lg-4">
-									<label for="fecha_nac_imputado" class="form-label fw-bold ">Fecha de nacimiento del imputado:</label>
-									<input type="datetime" class="form-control" id="fecha_nac_imputado" name="fecha_nac_imputado">
-								</div>
-								<div class="col-12 col-sm-6 col-md-6 col-lg-4">
-									<label for="sexo_imputado" class="form-label fw-bold ">Sexo del imputado</label>
-									<br>
-									<div class="form-check form-check-inline">
-										<input class="form-check-input" type="radio" name="sexo_imputado" id="M">
-										<label class="form-check-label" for="flexRadioDefault1">MASCULINO</label>
-									</div>
-									<div class="form-check form-check-inline">
-										<input class="form-check-input" type="radio" name="sexo_imputado" id="F">
-										<label class="form-check-label" for="flexRadioDefault2">FEMENINO</label>
-									</div>
-								</div>
-								<div class="col-12 col-sm-6 col-md-6 col-lg-4">
-									<label for="escolaridad_imputado" class="form-label fw-bold">Escolaridad del imputado</label>
-									<input type="text" class="form-control" id="escolaridad_imputado" name="escolaridad_imputado">
-								</div>
-								<div class="col-12 col-sm-6 col-md-6 col-lg-4">
-									<label for="description-text" class="form-label fw-bold">Descripcion:</label>
-									<textarea class="form-control" id="description" name="description" maxlength="300"></textarea>
-									<div class="invalid-feedback">
-										Por favor, anexa una breve descripcion del delito
-									</div>
-									<div id="mensaje_ayuda" class="form-text">300 carácteres restantes</div>
+								<div class="col-12 text-center">
+									<p class="fw-bold">Haz completado la información</p>
+									<p class="text-center">
+										<i class="bi bi-exclamation-triangle"> Es muy importante que antes de iniciar tu video denuncia aceptes los derechos de víctima u ofendido.</i>
+										<br>
+										Para consultar la constancia de Derechos, da clic <a target="_blank" href="" data-bs-toggle="modal" data-bs-target="#exampleModal">aquí</a>
+										<br><br>
+										<input class="form-check-input" type="checkbox" name="derechos_imputado" id="derechos_imputado" required> <span class="fw-bold">Aceptar derechos de víctima u ofendido</span>
+									</p>
 								</div>
 							</div>
 						</div>
 
-						<!-- 
-						<div class="col-12 col-sm-6 col-md-6 col-lg-4">
-							<label for="localidad" class="form-label fw-bold input-required">Localidad del delito:</label>
-							<select class="form-select" id="localidad" name="localidad" required>
-								<option selected disabled value="">Elige la localidad</option>
-								<option value="1">Ciudad morelos</option>
-								<option value="2">Hechicera</option>
-								<option value="3">Mexicali</option>
-							</select>
-							<div class="invalid-feedback">
-								Por favor, selecciona una localidad.
-							</div>
-						</div>
-						 -->
-						<!-- <div class="col-12 col-sm-6 col-md-6 col-lg-4">
-							<label for="objetoImplicado-text" class="form-label fw-bold input-required">Describa el objeto implicado:</label>
-							<textarea class="form-control" id="objetoImplicado" name="objetoImplicado" required></textarea>
-							<div class="invalid-feedback">
-								Por favor, describe el objeto implicado.
-							</div>
-						</div> -->
-
-						<div class="col-12 " style="font-size: 14px; text-align:center;">
-							<div class="row" style="margin-top: 50px;">
-
-								<i class="bi bi-exclamation-triangle"> <span class="span-derechos_imp">Es muy importante que antes de iniciar tu video denuncia aceptes los derechos de víctima u ofendido. </span> </i>
-								<br>
-								<label>Para consultar la constancia de Derechos, da clic <a target="_blank" href="" class="enlace-derechos_imp" data-bs-toggle="modal" data-bs-target="#exampleModal">aquí</a></label>
-								<br>
-
-								<label> <input type="checkbox" name="derechos_imputado" id="derechos_imputado" value=""> Aceptar derechos de víctima u ofendido</label>
-
-							</div>
-						</div>
-
-						<!-- Modal -->
-						<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-							<div class="modal-dialog">
-								<div class="modal-content">
-									<div class="modal-header bg-primary text-white">
-										<h5 class="modal-title" id="exampleModalLabel">Derechos de víctima u ofendido</h5>
-										<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-									</div>
-									<div class="modal-body">
-										<iframe id="pdfdoc" src="<?= base_url() ?>/assets/documentos/DERECHOS DE VÍCTIMA U OFENDIDO.pdf" width="100%" height="500px"></iframe>
-									</div>
-									<div class="modal-footer">
-										<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<div class="col-12 text-center" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Aceptar derechos de víctima u ofendido">
-							<button onclick="AceptarDerechos(event)" class="btn btn-primary mt-5" type="submit"><i class="bi bi-camera-video-fill"></i> Iniciar denuncia</button>
+						<div class="col-12 mt-5 text-center">
+							<button class="btn btn-primary mb-3 d-none" id="prev-btn" type="button"> <i class="bi bi-caret-left-fill"></i> Anterior</button>
+							<button class="btn btn-primary mb-3" id="next-btn" type="button"> Siguiente <i class="bi bi-caret-right-fill"></i> </button>
+							<button class="btn btn-primary mb-3 d-none" type="submit" id="submit-btn"><i class="bi bi-camera-video-fill"></i> Iniciar denuncia</button>
 						</div>
 					</form>
 				</div>
@@ -308,58 +75,296 @@
 		</div>
 	</div>
 </div>
+<?php include('aviso_modal.php') ?>
+<?php include('derechos_ofendido_modal.php') ?>
+
 <script>
+	var steps = document.querySelectorAll('.step');
+	const prevBtn = document.querySelector('#prev-btn');
+	const nextBtn = document.querySelector('#next-btn');
+	const submitBtn = document.querySelector('#submit-btn');
+	const progress = document.querySelector('#progress-bar');
+	var stepCount = steps.length - 1;
+	var width = 100 / stepCount;
+	var currentStep = 0;
+
+	$(document).ready(function() {
+		$('#aviso_modal').modal('toggle')
+	});
+
 	(function() {
 		'use strict'
-
-		var forms = document.querySelectorAll('.needs-validation')
+		var forms = document.querySelectorAll('.needs-validation');
+		var inputsText = document.querySelectorAll('input[type="text"]');
+		var inputsEmail = document.querySelectorAll('input[type="email"]');
+		var radiosDesaparecido = document.getElementsByName('esta_desaparecido');
 
 		Array.prototype.slice.call(forms)
 			.forEach(function(form) {
-				form.addEventListener('submit', function(event) {
+				form.addEventListener('submit', (event) => {
 					if (!form.checkValidity()) {
-						event.preventDefault()
-						event.stopPropagation()
+						event.preventDefault();
+						event.stopPropagation();
+					} else {
+
 					}
 					form.classList.add('was-validated')
 				}, false)
 			})
+
+		inputsText.forEach((input) => {
+			input.addEventListener('input', (event) => {
+				event.target.value = clearText(event.target.value).toUpperCase();
+			}, false)
+		});
+
+		inputsEmail.forEach((input) => {
+			input.addEventListener('input', (event) => {
+				event.target.value = clearText(event.target.value).toLowerCase();
+			}, false)
+		});
+
+		// radiosDesaparecido.forEach((radio) => {
+		// 	radio.addEventListener('change', (e) => {
+		// 		if (e.target.value === 'SI') {
+		// 			document.querySelector('#datos_desaparecido').classList.add('step');
+		// 			refreshSteps()
+		// 			console.log('stepCount');
+		// 		} else {
+		// 			document.querySelector('#datos_desaparecido').classList.remove('step');
+		// 			refreshSteps()
+		// 			console.log('stepCount');
+		// 		}
+		// 	})
+		// });
+
 	})()
 
-	$('#description').keyup(function() {
+	$('#description').keyup(() => {
 		let ch = 150 - $(this).val().length;
 		$('#mensaje_ayuda').text(ch + ' carácteres restantes');
 	});
 
-	function MostrarSiconoce() {
-		document.getElementById('siconoce').style.display = "block";
-	}
+	//Steps
 
-	function Esconder() {
-		document.getElementById('siconoce').style.display = "none";
-	}
+	chargeCurrentStep(currentStep);
 
-
-	var myModal = document.getElementById('myModal')
-	var myInput = document.getElementById('myInput')
-
-	myModal.addEventListener('shown.bs.modal', function() {
-		myInput.focus()
-	})
-
-
-	function AceptarDerechos(e) {
-		var chk = document.getElementById("derechos_imputado").checked;
-		if (!chk) {
-			e.preventDefault();
-
-			var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
-			var popoverList = popoverTriggerList.map(function(popoverTriggerEl) {
-				return new bootstrap.Popover(popoverTriggerEl)
-
+	nextBtn.addEventListener('click', () => {
+		if (validarStep(currentStep)) {
+			currentStep++;
+			console.log(currentStep);
+			let previousStep = currentStep - 1;
+			if ((currentStep > 0) && (currentStep <= stepCount)) {
+				prevBtn.classList.remove('d-none');
+				prevBtn.classList.add('d-inline-block');
+				steps[currentStep].classList.remove('d-none');
+				steps[currentStep].classList.add('d-block');
+				steps[previousStep].classList.remove('d-block');
+				steps[previousStep].classList.add('d-none');
+				if (currentStep === stepCount) {
+					submitBtn.classList.remove('d-none');
+					submitBtn.classList.add('d-inline-block');
+					nextBtn.classList.remove('d-inline-block');
+					nextBtn.classList.add('d-none');
+				}
+			}
+			progress.style.width = `${currentStep*width}%`
+		} else {
+			console.log('NO SE VALIDO');
+			submitBtn.click();
+			Swal.fire({
+				icon: 'error',
+				title: 'Error',
+				text: 'Debes llenar todos los campos requeridos para avanzar',
+				confirmButtonColor: '#bf9b55',
 			})
 		}
+	});
+
+	prevBtn.addEventListener('click', () => {
+		if (currentStep > 0) {
+			currentStep--;
+			let previousStep = currentStep + 1;
+			prevBtn.classList.add('d-none');
+			prevBtn.classList.add('d-inline-block');
+			steps[currentStep].classList.remove('d-none');
+			steps[currentStep].classList.add('d-block')
+			steps[previousStep].classList.remove('d-block');
+			steps[previousStep].classList.add('d-none');
+			if (currentStep < stepCount) {
+				submitBtn.classList.remove('d-inline-block');
+				submitBtn.classList.add('d-none');
+				nextBtn.classList.remove('d-none');
+				nextBtn.classList.add('d-inline-block');
+				prevBtn.classList.remove('d-none');
+				prevBtn.classList.add('d-inline-block');
+			}
+		}
+
+		if (currentStep === 0) {
+			prevBtn.classList.remove('d-inline-block');
+			prevBtn.classList.add('d-none');
+		}
+
+		progress.style.width = `${currentStep*width}%`
+	});
+
+
+
+	//FUNCTIONS *************************************************
+	function refreshSteps() {
+		steps = document.querySelectorAll('.step');
+		stepCount = steps.length - 1;
+		width = 100 / stepCount;
+	}
+
+	function clearText(text) {
+		text
+			.normalize('NFD')
+			.replace(/([^n\u0300-\u036f]|n(?!\u0303(?![\u0300-\u036f])))[\u0300-\u036f]+/gi, "$1")
+			.normalize();
+		return text.replaceAll('´', '');
+	}
+
+	function enviar_datos() {
+		let delito = document.querySelector("#delito").value ? document.querySelector("#delito").value : '';
+		let municipio = document.querySelector("#municipio").value ? document.querySelector("#municipio").value : '';
+		let calle = document.querySelector("#calle").value ? document.querySelector("#calle").value : '';
+		let exterior = document.querySelector("#exterior").value ? document.querySelector("#exterior").value : '';
+		let interior = document.querySelector("#interior").value ? document.querySelector("#interior").value : '';
+		let colonia = document.querySelector("#colonia").value ? document.querySelector("#colonia").value : '';
+		let lugar = document.querySelector("#lugar").value ? document.querySelector("#lugar").value : '';
+		let clasificacion = document.querySelector("#clasificacion").value ? document.querySelector("#clasificacion").value : '';
+		let fecha = document.querySelector("#fecha").value ? document.querySelector("#fecha").value : '';
+
+		let nombre_imputado = document.querySelector("#nombre_imputado").value ? document.querySelector("#nombre_imputado").value : '';
+		let alias = document.querySelector("#alias").value ? document.querySelector("#alias").value : '';
+		let primer_apellido = document.querySelector("#primer_apellido").value ? document.querySelector("#primer_apellido").value : '';
+		let segundo_apellido = document.querySelector("#segundo_apellido").value ? document.querySelector("#segundo_apellido").value : '';
+		let municipio_imputado = document.querySelector("#municipio_imputado").value ? document.querySelector("#municipio_imputado").value : '';
+		let calle_imputado = document.querySelector("#calle_imputado").value ? document.querySelector("#calle_imputado").value : '';
+		let numero_ext_imputado = document.querySelector("#numero_ext_imputado").value ? document.querySelector("#numero_ext_imputado").value : '';
+		let numero_int_imputado = document.querySelector("#numero_int_imputado").value ? document.querySelector("#numero_int_imputado").value : '';
+		let tel_imputado = document.querySelector("#tel_imputado").value ? document.querySelector("#tel_imputado").value : '';
+		let fecha_nac_imputado = document.querySelector("#fecha_nac_imputado").value ? document.querySelector("#fecha_nac_imputado").value : '';
+		let sexo = document.querySelector('input[name="sexo_imputado"]:checked').value ? document.querySelector('input[name="sexo_imputado"]:checked').value : '';
+		let escolaridad_imputado = document.querySelector("#escolaridad_imputado").value ? document.querySelector("#escolaridad_imputado").value : '';
+		let description = document.querySelector("#description").value ? document.querySelector("#description").value : '';
+
+		document.querySelector('#delito_modal').value = delito;
+		document.querySelector('#municipio_modal').value = municipio;
+		document.querySelector('#calle_modal').value = calle;
+		document.querySelector('#exterior_modal').value = exterior;
+		document.querySelector('#interior_modal').value = interior;
+		document.querySelector('#colonia_modal').value = colonia;
+		document.querySelector('#lugar_modal').value = lugar;
+		document.querySelector('#clasificacion_modal').value = clasificacion;
+		document.querySelector('#fechadel_modal').value = fecha;
+
+		document.querySelector('#nombre_modal').value = nombre_imputado;
+		document.querySelector('#alias_modal').value = alias;
+		document.querySelector('#primer_modal').value = primer_apellido;
+		document.querySelector('#segundo_modal').value = segundo_apellido;
+		document.querySelector('#municipioimp_modal').value = municipio_imputado;
+		document.querySelector('#calleimp_modal').value = calle_imputado;
+		document.querySelector('#numext_modal').value = calle;
+		document.querySelector('#numinterior_modal').value = numero_int_imputado;
+		document.querySelector('#telimp_modal').value = tel_imputado;
+		document.querySelector('#fechaimp_modal').value = fecha_nac_imputado;
+		document.querySelector('#escolaridadimp_modal').value = escolaridad_imputado;
+		document.querySelector('#descrimp_modal').value = description;
+	}
+
+	function enviar_datosT() {
+		let delito = document.querySelector("#delito").value ? document.querySelector("#delito").value : '';
+		let municipio = document.querySelector("#municipio").value ? document.querySelector("#municipio").value : '';
+		let calle = document.querySelector("#calle").value ? document.querySelector("#calle").value : '';
+		let exterior = document.querySelector("#exterior").value ? document.querySelector("#exterior").value : '';
+		let interior = document.querySelector("#interior").value ? document.querySelector("#interior").value : '';
+		let colonia = document.querySelector("#colonia").value ? document.querySelector("#colonia").value : '';
+		let lugar = document.querySelector("#lugar").value ? document.querySelector("#lugar").value : '';
+		let clasificacion = document.querySelector("#clasificacion").value ? document.querySelector("#clasificacion").value : '';
+		let fecha = document.querySelector("#fecha").value ? document.querySelector("#fecha").value : '';
+
+		document.querySelector('#delito_modalT').value = delito;
+		document.querySelector('#municipio_modalT').value = municipio;
+		document.querySelector('#calle_modalT').value = calle;
+		document.querySelector('#exterior_modalT').value = exterior;
+		document.querySelector('#interior_modalT').value = interior;
+		document.querySelector('#colonia_modalT').value = colonia;
+		document.querySelector('#lugar_modalT').value = lugar;
+		document.querySelector('#clasificacion_modalT').value = clasificacion;
+		document.querySelector('#fechadel_modalT').value = fecha;
+	}
+
+	function chargeCurrentStep(num) {
+		steps.forEach((step, index) => {
+			if (num === index) {
+				step.classList.remove('d-none');
+			} else {
+				step.classList.remove('d-block');
+				step.classList.add('d-none');
+			}
+		})
+		progress.style.width = `${currentStep*width}%`
+	}
+
+	function validarStep(step) {
+		// switch (step) {
+		// 	case 0:
+		// 		if (
+		// 			document.querySelector('input[name="tiene_discapacidad"]:checked') &&
+		// 			document.querySelector('input[name="fue_con_arma"]:checked') &&
+		// 			document.querySelector('input[name="esta_desaparecido"]:checked')
+		// 		) {
+		// 			return true
+		// 		} else {
+		// 			return false;
+		// 		}
+		// 		break;
+		// 	case 1:
+		// 		if (
+		// 			document.querySelector('#delito').value != '' &&
+		// 			document.querySelector('#municipio').value != '' &&
+		// 			document.querySelector('#calle').value != '' &&
+		// 			document.querySelector('#exterior').value != '' &&
+		// 			document.querySelector('#colonia').value != '' &&
+		// 			document.querySelector('#lugar').value != '' &&
+		// 			document.querySelector('#fecha').value != ''
+		// 		) {
+		// 			return true
+		// 		} else {
+		// 			return false
+		// 		}
+		// 		break;
+		// 	case 2:
+		// 		if (
+		// 			document.querySelector('#identificacion').value != '' &&
+		// 			document.querySelector('#e_civil').value != '' &&
+		// 			document.querySelector('#discapacidad').value != '' &&
+		// 			document.querySelector('#idioma').value != '' &&
+		// 			document.querySelector('#documento').value != ''
+		// 		) {
+		// 			return true
+		// 		} else {
+		// 			return false
+		// 		}
+		// 		break;
+		// 	case 3:
+		// 		if (
+		// 			document.querySelector('#firma_url').value != '' &&
+		// 			document.querySelector('#notificaciones_check').checked
+		// 		) {
+		// 			return true
+		// 		} else {
+		// 			return false
+		// 		}
+		// 		break;
+		// 	default:
+		// 		return true;
+		// 		break;
+		// }
+		return true;
 	}
 </script>
-
 <?= $this->endSection() ?>

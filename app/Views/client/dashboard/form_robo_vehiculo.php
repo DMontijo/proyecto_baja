@@ -1,0 +1,157 @@
+<div class="row">
+	<h3 class="fw-bold text-center text-blue pb-3">Datos del vehiculo robado</h3>
+	<p class="fw-bold text-center">PLACAS</p>
+	<hr>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="tipo_placas_vehiculo" class="form-label fw-bold">Tipo de placas:</label>
+		<select class="form-select" id="tipo_placas_vehiculo" name="tipo_placas_vehiculo" autofocus>
+			<option selected disabled value="">Seleccione el tipo de placas</option>
+		</select>
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="placas_vehiculo" class="form-label fw-bold">Placas:</label>
+		<input type="text" class="form-control" id="placas_vehiculo" name="placas_vehiculo">
+		<input class="form-check-input" type="checkbox" name="placas_vehiculo_desconocidas" id="placas_vehiculo_desconocidas"> Se desconoce
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="confirm_placas_vehiculo" class="form-label fw-bold">Confirma las placas:</label>
+		<input type="text" class="form-control" id="confirm_placas_vehiculo" name="confirm_placas_vehiculo">
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="estado_vehiculo" class="form-label fw-bold">Estado de origen:</label>
+		<select class="form-select" id="estado_vehiculo" name="estado_vehiculo" autofocus>
+			<option selected disabled value="">Seleccione el estado</option>
+		</select>
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="serie_vehiculo" class="form-label fw-bold">No. Serie:</label>
+		<input type="text" class="form-control" id="serie_vehiculo" name="serie_vehiculo">
+		<input class="form-check-input" type="checkbox" name="serie_vehiculo_desconocida" id="serie_vehiculo_desconocida"> Se desconoce
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="confirm_serie_vehiculo" class="form-label fw-bold">Confirmar serie</label>
+		<input type="text" class="form-control" id="confirm_serie_vehiculo" name="confirm_serie_vehiculo">
+	</div>
+
+	<p class="fw-bold text-center mt-3">FABRICANTE</p>
+	<hr>
+
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="distribuidor_vehiculo" class="form-label fw-bold">Distribuidor:</label>
+		<select class="form-select" id="distribuidor_vehiculo" name="distribuidor_vehiculo" autofocus>
+			<option selected disabled value="">Seleccione el distribuidor</option>
+		</select>
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="marca" class="form-label fw-bold">Marca:</label>
+		<select class="form-select" id="marca" name="marca" autofocus>
+			<option selected disabled value="">Seleccione la marca</option>
+		</select>
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="linea_vehiculo" class="form-label fw-bold">Linea:</label>
+		<select class="form-select" id="linea_vehiculo" name="linea_vehiculo" autofocus>
+			<option selected disabled value="">Seleccione la linea</option>
+		</select>
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="version_vehiculo" class="form-label fw-bold">Versión:</label>
+		<select class="form-select" id="version_vehiculo" name="version_vehiculo" autofocus>
+			<option selected disabled value="">Seleccione la version</option>
+		</select>
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="tipo_vehiculo" class="form-label fw-bold">Tipo de vehiculo:</label>
+		<select class="form-select" id="tipo_vehiculo" name="tipo_vehiculo" autofocus>
+			<option selected disabled value="">Seleccione el tipo de vehiculo</option>
+		</select>
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="servicio_vehiculo" class="form-label fw-bold">Servicio:</label>
+		<select class="form-select" id="servicio_vehiculo" name="servicio_vehiculo" autofocus>
+			<option selected disabled value="">Seleccione el servicio</option>
+		</select>
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="modelo_vehiculo" class="form-label fw-bold">Modelo:</label>
+		<select class="form-select" id="modelo_vehiculo" name="modelo_vehiculo" autofocus>
+			<option selected disabled value="">Seleccione el modelo</option>
+		</select>
+	</div>
+	<div class="col-12 col-sm-12 col-md-12 col-lg-8 mb-3">
+		<label for="seguro_vigente_vehiculo" class="form-label fw-bold ">¿Cuenta con seguro vigente?</label>
+		<br>
+		<div class="form-check form-check-inline">
+			<input class="form-check-input" type="radio" name="seguro_vigente_vehiculo" id="SI">
+			<label class="form-check-label" for="flexRadioDefault1">Si</label>
+		</div>
+		<div class="form-check form-check-inline">
+			<input class="form-check-input" type="radio" name="seguro_vigente_vehiculo" id="NO">
+			<label class="form-check-label" for="flexRadioDefault2">No</label>
+		</div>
+		<div class="form-check form-check-inline">
+			<input class="form-check-input" type="radio" name="seguro_vigente_vehiculo" id="DESCONOCIDO">
+			<label class="form-check-label" for="flexRadioDefault2">Se desconoce</label>
+		</div>
+	</div>
+
+	<p class="fw-bold text-center mt-3">GENERALES</p>
+	<hr>
+
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="color_vehiculo" class="form-label fw-bold">Color:</label>
+		<select class="form-select" id="color_vehiculo" name="color_vehiculo" autofocus>
+			<option selected disabled value="">Seleccione el color</option>
+		</select>
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="color_tapiceria_vehiculo" class="form-label fw-bold">Color tapiceria:</label>
+		<select class="form-select" id="color_tapiceria_vehiculo" name="color_tapiceria_vehiculo" autofocus>
+			<option selected disabled value="">Seleccione el color de tapiceria</option>
+		</select>
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="num_chasis_vehiculo" class="form-label fw-bold">No. Chasis:</label>
+		<input type="text" class="form-control" id="num_chasis_vehiculo" name="num_chasis_vehiculo">
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="transmision_vehiculo" class="form-label fw-bold ">Caja / Transmisión:</label>
+		<br>
+		<div class="form-check">
+			<input class="form-check-input" type="radio" name="transmision_vehiculo" id="AUTOMATICA">
+			<label class="form-check-label" for="flexRadioDefault1">Automática</label>
+		</div>
+		<div class="form-check">
+			<input class="form-check-input" type="radio" name="transmision_vehiculo" id="MANUAL">
+			<label class="form-check-label" for="flexRadioDefault2">Manual</label>
+		</div>
+		<div class="form-check">
+			<input class="form-check-input" type="radio" name="transmision_vehiculo" id="DUAL">
+			<label class="form-check-label" for="flexRadioDefault2">Dual</label>
+		</div>
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="traccion_vehiculo" class="form-label fw-bold ">Tracción:</label>
+		<br>
+		<div class="form-check">
+			<input class="form-check-input" type="radio" name="traccion_vehiculo" id="DOBLE">
+			<label class="form-check-label" for="flexRadioDefault1">Doble</label>
+		</div>
+		<div class="form-check">
+			<input class="form-check-input" type="radio" name="traccion_vehiculo" id="SENCILLA">
+			<label class="form-check-label" for="flexRadioDefault2">Sencilla</label>
+		</div>
+		<div class="form-check">
+			<input class="form-check-input" type="radio" name="traccion_vehiculo" id="DUAL">
+			<label class="form-check-label" for="flexRadioDefault2">Dual</label>
+		</div>
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="foto_vehiculo" class="form-label fw-bold">Fotografía del vehículo:</label>
+		<input class="form-control" type="file" id="foto_vehiculo" name="foto_vehiculo" accept="image/*" capture="user">
+	</div>
+	<div class="col-12 mb-3">
+		<label for="description_vehiculo" class="form-label fw-bold">Otras carcterísticas que permitan identificar el vehiculo:</label>
+		<textarea class="form-control" id="description_vehiculo" name="description_vehiculo" rows="10"></textarea>
+	</div>
+</div>

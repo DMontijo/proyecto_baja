@@ -1,0 +1,150 @@
+	<div class="row">
+		<h3 class="text-center fw-bolder pb-3 text-blue">Datos de la persona desaparecida</h3>
+		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+			<label for="nombre_des" class="form-label fw-bold">Nombre(s)</label>
+			<input type="text" class="form-control" id="nombre_des" name="nombre_des" autofocus>
+		</div>
+		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+			<label for="apellido_paterno_des" class="form-label fw-bold ">Apellido paterno</label>
+			<input type="text" class="form-control" id="apellido_paterno_des" name="apellido_paterno_des">
+		</div>
+		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+			<label for="apellido_materno_des" class="form-label fw-bold ">Apellido materno</label>
+			<input type="text" class="form-control" id="apellido_materno_des" name="apellido_materno_des">
+		</div>
+		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+			<label for="estatura_des" class="form-label fw-bold ">Estatura</label>
+			<input type="number" class="form-control" id="estatura_des" name="estatura_des">
+		</div>
+		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+			<label for="fecha_nacimiento_des" class="form-label fw-bold">Fecha de nacimiento</label>
+			<input type="date" class="form-control" id="fecha_nacimiento_des" name="fecha_nacimiento_des">
+		</div>
+		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+			<label for="edad_des" class="form-label fw-bold ">Edad</label>
+			<input type="number" class="form-control" id="edad_des" name="edad_des">
+		</div>
+		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+			<label for="peso_des" class="form-label fw-bold ">Peso aproximado</label>
+			<input type="number" class="form-control" id="peso_des" name="peso_des">
+		</div>
+		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+			<label for="complexion_des" class="form-label fw-bold ">Complexión</label>
+			<select class="form-select" id="complexion_des" name="complexion_des">
+				<option selected disabled value="">Elige la complexión</option>
+				<option value="1">MEDIANA</option>
+				<option value="2">ROBUSTA</option>
+				<option value="3">DELGADA</option>
+			</select>
+		</div>
+		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+			<label for="color_des" class="form-label fw-bold ">Color de tes</label>
+			<input type="text" class="form-control" id="color_des" name="color_des">
+		</div>
+		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+			<label for="sexo" class="form-label fw-bold input-required">Sexo</label>
+			<br>
+			<div class="form-check form-check-inline">
+				<input class="form-check-input" type="radio" name="sexo" value="H" checked>
+				<label class="form-check-label" for="flexRadioDefault1">HOMBRE</label>
+			</div>
+			<div class="form-check form-check-inline">
+				<input class="form-check-input" type="radio" name="sexo" value="M">
+				<label class="form-check-label" for="flexRadioDefault2">MUJER</label>
+			</div>
+		</div>
+		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+			<label for="señas_des" class="form-label fw-bold ">Señas particulares</label>
+			<textarea class="form-control" id="señas_des" name="señas_des"></textarea>
+		</div>
+		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+			<label for="identidad_des" class="form-label fw-bold ">Identidad de género</label>
+			<input type="text" class="form-control" id="identidad_des" name="identidad_des">
+		</div>
+		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+			<label for="color_cabello_des" class="form-label fw-bold ">Color de cabello</label>
+			<input type="text" class="form-control" id="color_cabello_des" name="color_cabello_des">
+		</div>
+		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+			<label for="tam_cabello_des" class="form-label fw-bold ">Tamaño de cabello</label>
+			<select class="form-select" id="tam_cabello_des" name="tam_cabello_des">
+				<option selected disabled value="">Elige el tamaño del cabello</option>
+				<option value="1">CORTO</option>
+				<option value="2">MEDIANO</option>
+				<option value="3">LARGO</option>
+			</select>
+		</div>
+		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+			<label for="form_cabello_des" class="form-label fw-bold ">Forma de cabello</label>
+			<select class="form-select" id="form_cabello_des" name="form_cabello_des">
+				<option selected disabled value="">Elige el tamaño del cabello</option>
+				<option value="1">CHINO</option>
+				<option value="2">LACIO</option>
+				<option value="3">ONDULADO</option>
+				<option value="3">QUEBRADIZO</option>
+			</select>
+		</div>
+		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+			<label for="color_ojos_des" class="form-label fw-bold ">Color de ojos</label>
+			<input type="text" class="form-control" id="color_ojos_des" name="color_ojos_des">
+		</div>
+		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+			<label for="frente_des" class="form-label fw-bold ">Tipo de frente</label>
+			<select class="form-select" id="frente_des" name="frente_des">
+				<option selected disabled value="">Elige el tipo de frente</option>
+				<option value="1">REGULAR</option>
+				<option value="2">AMPLIA</option>
+				<option value="3">PEQUEÑA</option>
+				<option value="4">GRANDE</option>
+			</select>
+		</div>
+		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+			<label for="ceja_des" class="form-label fw-bold ">Tipo de ceja</label>
+			<select class="form-select" id="ceja_des" name="ceja_des">
+				<option selected disabled value="">Elige el tipo de ceja</option>
+				<option value="1">POBLADAS</option>
+				<option value="2">NO POBLADAS</option>
+			</select>
+		</div>
+		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+			<label for="discapacidad_desaparecida" class="form-label fw-bold">¿Padece alguna
+				discapacidad?</label>
+			<select class="form-select" id="discapacidad_desaparecida" name="discapacidad_desaparecida">
+				<option selected disabled value="">Seleccione si padece alguna discapacidad</option>
+				<option value="VISUAL">VISUAL</option>
+				<option value="FISICA">FISICA</option>
+				<option value="AUDITIVA">AUDITIVA</option>
+				<option vaulue="NINGUNA">NINGUNA</option>
+			</select>
+			<div class="invalid-feedback">
+				El campo discapacidad es obligatorio.
+			</div>
+		</div>
+		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+			<label for="origen_des" class="form-label fw-bold ">Lugar de origen</label>
+			<input type="text" class="form-control" id="origen_des" name="origen_des">
+		</div>
+		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+			<label for="dia_des" class="form-label fw-bold ">¿Cuando se le vio por ultima vez?</label>
+			<input type="date" class="form-control" id="dia_des" name="dia_des">
+		</div>
+		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+			<label for="lugar_des" class="form-label fw-bold ">¿Dónde se le vio por ultima vez?</label>
+			<input type="text" class="form-control" id="lugar_des" name="lugar_des">
+		</div>
+		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+			<label for="vestimenta_des" class="form-label fw-bold ">Vestimenta que portaba</label>
+			<input type="text" class="form-control" id="vestimenta_des" name="vestimenta_des">
+		</div>
+		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+			<label for="parentesco" class="form-label fw-bold ">Parentesco:</label>
+			<input type="text" class="form-control" id="parentesco" name="parentesco">
+		</div>
+		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+			<div class="form-check d-inline-block">
+				<input class="form-check-input" type="checkbox">
+				<label class="form-check-label" for="AceptarTodos">
+					Doy autorización de publicar la fotografía e información en medios de comunicación.</label>
+			</div>
+		</div>
+	</div>

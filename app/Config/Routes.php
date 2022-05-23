@@ -55,8 +55,8 @@ $routes->group('admin', function ($routes) {
 $routes->group('denuncia', function ($routes) {
 
 	$routes->get('/', 'client/AuthController::index', ['as' => 'ciudadano_login_get']);
-	$routes->post('login_post', 'client/AuthController::login_post', ['as' => 'ciudadano_login_post']);
-	$routes->post('logout', 'client/AuthController::logout', ['as' => 'ciudadano_logout']);
+	$routes->post('login_auth', 'client/AuthController::login_auth');
+	$routes->post('logout', 'client/AuthController::logout');
 
 	$routes->resource('denunciante', ['controller' => 'client/UserController']);
 	$routes->get('exist-email', 'client/UserController::existEmail');

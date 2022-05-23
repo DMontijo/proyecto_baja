@@ -4,17 +4,38 @@ namespace App\Controllers\client;
 
 use App\Controllers\BaseController;
 
+use App\Models\UsuariosModel;
 
 class AuthController extends BaseController
 {
+
+	private $_usuariosModel;
+
+	function __construct()
+	{
+		$this->_usuariosModel = new UsuariosModel();
+	}
+
 	public function index()
 	{
 		$this->_loadView('Login', [], 'index');
 	}
 
-	public function login_post()
+	public function login_auth()
 	{
-		$this->_loadView('Login', [], 'index');
+		$session = session();
+		$email = $this->request->getVar('correo');
+		$password = $this->request->getVar('password');
+
+		$data = $this->_usuariosModel->where('CORREO', $email)->first();
+		if ($data && $password === $data['PASSWORD']) {
+			$session = session();
+			$session->set($data);
+			return redirect()->to(base_url('/denuncia/dashboard'))->with('mensaje', '1');
+		} else {
+			$session->setFlashdata('message', 'Correo o contraseña incorrectos.');
+			return redirect()->back();
+		}
 	}
 
 	public function logout()
@@ -33,7 +54,6 @@ class AuthController extends BaseController
 			'header_data' => (object)['title' => $title],
 			'body_data' => $data
 		];
-		echo session('message');
 		echo view("client/auth/$view", $data);
 	}
 }

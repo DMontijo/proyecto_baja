@@ -29,7 +29,7 @@ class UsuariosSeeder extends Seeder
 			array('ID_ROL' => '6', 'ID_ZONA' => '5', 'ID_PERFIL' => '5', 'NOMBRE' => 'KARLA VANESA', 'APELLIDO_PATERNO' => 'PARRA', 'APELLIDO_MATERNO' => 'PIZARRO', 'SEXO' => 'MUJER', 'CORREO' => 'karlav.parra@fgebc.gob.mx', 'PASSWORD' => '123456', 'HUELLA_DIGITAL' => 'N/D', 'FIRMA_DIGITAL' => 'N/D'),
 			array('ID_ROL' => '6', 'ID_ZONA' => '9', 'ID_PERFIL' => '3', 'NOMBRE' => 'GIANELLA', 'APELLIDO_PATERNO' => 'ROMERO', 'APELLIDO_MATERNO' => 'CASTELLARES', 'SEXO' => 'MUJER', 'CORREO' => 'gianella.romero@fgebc.gob.mx', 'PASSWORD' => '123456', 'HUELLA_DIGITAL' => 'N/D', 'FIRMA_DIGITAL' => 'N/D'),
 			array('ID_ROL' => '1', 'ID_ZONA' => '1', 'ID_PERFIL' => '1', 'NOMBRE' => 'ANDREA', 'APELLIDO_PATERNO' => 'SOLORZANO', 'APELLIDO_MATERNO' => 'GUTIERREZ', 'SEXO' => 'MUJER', 'CORREO' => 'andrea.solorzano@yocontigo-it.com', 'PASSWORD' => '123456', 'HUELLA_DIGITAL' => 'N/D', 'FIRMA_DIGITAL' => 'N/D'),
-			array('ID_ROL' => '1', 'ID_ZONA' => '1', 'ID_PERFIL' => '1', 'NOMBRE' => 'OTONIEL', 'APELLIDO_PATERNO' => 'FLORES', 'APELLIDO_MATERNO' => 'GONZALEZ', 'SEXO' => 'HOMBRE', 'CORREO' => 'abdiel_flores@outlook.com', 'PASSWORD' => '123456', 'HUELLA_DIGITAL' => 'N/D', 'FIRMA_DIGITAL' => 'N/D'),
+			array('ID_ROL' => '1', 'ID_ZONA' => '1', 'ID_PERFIL' => '1', 'NOMBRE' => 'OTONIEL', 'APELLIDO_PATERNO' => 'FLORES', 'APELLIDO_MATERNO' => 'GONZALEZ', 'SEXO' => 'HOMBRE', 'CORREO' => 'otoniel.f@yocontigo-it.com', 'PASSWORD' => '123456', 'HUELLA_DIGITAL' => 'N/D', 'FIRMA_DIGITAL' => 'N/D'),
 		];
 		$this->db->table('USUARIOS')->insertBatch($data);
 	}

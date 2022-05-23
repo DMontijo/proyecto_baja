@@ -4,32 +4,55 @@ namespace App\Controllers\client;
 
 use App\Controllers\BaseController;
 
-use App\Models\DenuncianteModel;
+use App\Models\DenunciantesModel;
 use App\Models\PersonaNacionalidadModel;
-use \CodeIgniter\Exceptions\PageNotFoundException;
+use App\Models\PersonaEstadoCivilModel;
+use App\Models\PersonaIdiomaModel;
+use App\Models\EstadosModel;
+use App\Models\MunicipiosModel;
+use App\Models\LocalidadesModel;
+use App\Models\ColoniasModel;
+use App\Models\PersonaTipoIdentificacionModel;
 
 
 class UserController extends BaseController
 {
+	function __construct()
+	{
+		//Models
+		$this->_nacionalidadModel = new PersonaNacionalidadModel();
+		$this->_estadosCivilesModel = new PersonaEstadoCivilModel();
+		$this->_personaIdiomaModel = new PersonaIdiomaModel();
+		$this->_estadosModel = new EstadosModel();
+		$this->_municipiosModel = new MunicipiosModel();
+		$this->_localidadesModel = new LocalidadesModel();
+		$this->_coloniasModel = new ColoniasModel();
+		$this->_denunciantesModel = new DenunciantesModel();
+		$this->_tipoIdentificacionModel = new PersonaTipoIdentificacionModel();
+	}
 
 	public function index()
 	{
 		$data = (object) array();
-		echo session('message');
 		$this->_loadView('Denuncia', $data, 'index');
 	}
 
 	public function new()
 	{
-		$nacionalidadModel = new PersonaNacionalidadModel();
 		$data = (object) array();
-		$data->nacionalidades = $nacionalidadModel->asObject()->findAll();
+		$data->nacionalidades = $this->_nacionalidadModel->asObject()->findAll();
+		$data->edoCiviles = $this->_estadosCivilesModel->asObject()->findAll();
+		$data->idiomas = $this->_personaIdiomaModel->asObject()->findAll();
+		$data->estados = $this->_estadosModel->asObject()->findAll();
+		$data->municipios = $this->_municipiosModel->asObject()->findAll();
+		$data->localidades = $this->_localidadesModel->asObject()->findAll();
+		$data->colonias = $this->_coloniasModel->asObject()->findAll();
+		$data->tiposIdentificaciones = $this->_tipoIdentificacionModel->asObject()->findAll();
 		$this->_loadView('Denuncia', $data, 'index');
 	}
 
 	public function create()
 	{
-		$denuncianteModel = new DenuncianteModel();
 		$data = [
 			'NOMBRE' => $this->request->getPost('nombre'),
 			'APELLIDO_PATERNO' => $this->request->getPost('apellido_paterno'),
@@ -44,7 +67,7 @@ class UserController extends BaseController
 			'apellido_paterno' => 'required|max_length[100]',
 			'correo' => 'required|is_unique[CIUDADANOS.CORREO]'
 		])) {
-			$this->$denuncianteModel->insert($data);
+			$this->_denunciantesModel->insert($data);
 			return redirect()->to(base_url() . "/denuncia")->with('message', 'Denunciante creado con éxito.');
 		} else {
 			return redirect()->back()->with('message', 'Hubo un error en los datos');
