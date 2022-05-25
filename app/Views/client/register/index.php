@@ -102,8 +102,8 @@
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="estado_denunciante" class="form-label fw-bold input-required">Estado del denunciante</label>
-							<!-- <input type="text" class="form-control" id="estado_denunciante" name="estado_denunciante" required> -->
 							<select class="form-select" id="estado_denunciante" name="estado_denunciante" required>
+							<option selected disabled value="">Seleccione el estado</option>
 								<?php foreach ($body_data->estados as $index => $municipio) { ?>
 									<option value="<?= $municipio->ESTADOID ?>"> <?= $municipio->ESTADODESCR ?> </option>
 								<?php } ?>
@@ -197,11 +197,13 @@
 							<div class="invalid-feedback">
 								El número télefono es obligatorio
 							</div>
+							<input type="number" id="codigo_pais" name="codigo_pais" hidden>
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="telefono2" class="form-label fw-bold">Número de télefono 2 (opcional)</label>
 							<input type="number" class="form-control" id="telefono2" name="telefono2">
+							<input type="number" id="codigo_pais_2" name="codigo_pais_2" hidden>
 						</div>
 
 					</div>
@@ -502,6 +504,34 @@
 		}
 	}
 </script>
+<script>
+	let input = document.querySelector("#telefono");
+	let input2 = document.querySelector("#telefono2");
+	let inputPais = document.querySelector("#codigo_pais");
+	let inputPais2 = document.querySelector("#codigo_pais_2");
+
+	let iti = window.intlTelInput(input, {
+		separateDialCode: true,
+		initialCountry: "MX",
+	});
+	let iti2 = window.intlTelInput(input2, {
+		separateDialCode: true,
+		initialCountry: "MX",
+	});
+
+	const getData = () => {
+		inputPais.value = parseInt(iti.getSelectedCountryData().dialCode);
+		inputPais2.value = parseInt(iti2.getSelectedCountryData().dialCode);
+	};
+
+	input.addEventListener('change', getData);
+	input.addEventListener('keyup', getData);
+	input.addEventListener('blur', getData);
+
+	input2.addEventListener('change', getData);
+	input2.addEventListener('keyup', getData);
+	input2.addEventListener('blur', getData);
+</script>
 
 <script>
 	$(document).ready(function() {
@@ -646,8 +676,10 @@
 		let calle = document.querySelector("#calle").value ? document.querySelector("#calle").value : '';
 		let nexterior = document.querySelector("#exterior").value ? document.querySelector("#exterior").value : '';
 		let ninterior = document.querySelector("#interior").value ? document.querySelector("#interior").value : '';
-		let telefono = document.querySelector("#telefono").value ? document.querySelector("#telefono").value : '';
-		let telefono2 = document.querySelector("#telefono2").value ? document.querySelector("#telefono2").value : '';
+		// let telefono = document.querySelector("#telefono").value ? document.querySelector("#telefono").value : '';
+		// let telefono2 = document.querySelector("#telefono2").value ? document.querySelector("#telefono2").value : '';
+		let telefono = $('#output').text();
+		let telefono2 = $('#telefonooutput').text();
 
 		let tipo = document.querySelector("#identificacion").value ? document.querySelector("#identificacion").value : '';
 		let numeroid = document.querySelector("#numero_ide").value ? document.querySelector("#numero_ide").value : '';

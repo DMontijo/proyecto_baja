@@ -36,5 +36,6 @@ class RunAllSeeder extends Seeder
 		$this->call('PerfilesUsuariosSeeder');
 		$this->call('UsuariosSeeder');
 		$this->call('HechoLugarSeeder');
+		$this->call('PaisesSeeder');
 	}
 }

@@ -65,7 +65,7 @@ class UserController extends BaseController
 		if ($this->validate([
 			'nombre' => 'required|max_length[100]',
 			'apellido_paterno' => 'required|max_length[100]',
-			'correo' => 'required|is_unique[CIUDADANOS.CORREO]'
+			'correo' => 'required|is_unique[DENUNCIANTES.CORREO]'
 		])) {
 			$this->_denunciantesModel->insert($data);
 			return redirect()->to(base_url() . "/denuncia")->with('message', 'Denunciante creado con éxito.');

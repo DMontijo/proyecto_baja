@@ -37,4 +37,8 @@
 #firma_url {
   width: 100%;
 }
+
+.iti {
+    display: block!important;
+}
 /*End firma electrónica*/

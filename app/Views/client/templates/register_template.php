@@ -6,6 +6,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="icon" href="<?= base_url() ?>/assets/img/FGEBC.png" type="image/x-icon">
 	<link rel="shortcut icon" href="<?= base_url() ?>/assets/img/FGEBC.png" type="image/x-icon">
+	<!-- Lada Telefonica -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
 	<!--Bootstrap 5-->
 	<link rel="stylesheet" href="<?= base_url() ?>/assets/bootstrap/css/bootstrap.css">
 	<!--Bootstrap Icons-->
@@ -17,7 +20,7 @@
 	<!--Sweet Alert 2-->
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.css">
-	<!--Styles-->
+	<!-- Styles -->
 	<link rel="stylesheet" href="<?= base_url() ?>/assets/styles/global.css">
 	<link rel="stylesheet" href="<?= base_url() ?>/assets/styles/client/style.css">
 
