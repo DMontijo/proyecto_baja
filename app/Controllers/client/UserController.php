@@ -13,6 +13,7 @@ use App\Models\MunicipiosModel;
 use App\Models\LocalidadesModel;
 use App\Models\ColoniasModel;
 use App\Models\PersonaTipoIdentificacionModel;
+use App\Models\PaisesModel;
 
 
 class UserController extends BaseController
@@ -29,6 +30,7 @@ class UserController extends BaseController
 		$this->_coloniasModel = new ColoniasModel();
 		$this->_denunciantesModel = new DenunciantesModel();
 		$this->_tipoIdentificacionModel = new PersonaTipoIdentificacionModel();
+		$this->_paisesModel = new PaisesModel();
 	}
 
 	public function index()
@@ -43,11 +45,10 @@ class UserController extends BaseController
 		$data->nacionalidades = $this->_nacionalidadModel->asObject()->findAll();
 		$data->edoCiviles = $this->_estadosCivilesModel->asObject()->findAll();
 		$data->idiomas = $this->_personaIdiomaModel->asObject()->findAll();
+		$data->paises = $this->_paisesModel->asObject()->findAll();
 		$data->estados = $this->_estadosModel->asObject()->findAll();
-		$data->municipios = $this->_municipiosModel->asObject()->findAll();
-		$data->localidades = $this->_localidadesModel->asObject()->findAll();
-		$data->colonias = $this->_coloniasModel->asObject()->findAll();
 		$data->tiposIdentificaciones = $this->_tipoIdentificacionModel->asObject()->findAll();
+
 		$this->_loadView('Denuncia', $data, 'index');
 	}
 
@@ -72,6 +73,29 @@ class UserController extends BaseController
 		} else {
 			return redirect()->back()->with('message', 'Hubo un error en los datos');
 		}
+	}
+
+	public function getMunicipiosByEstado()
+	{
+		$estadoID = $this->request->getPost('estado_id');
+		$data = $this->_municipiosModel->asObject()->where('ESTADOID', $estadoID)->findAll();
+		return json_encode((object)['data' => $data]);
+	}
+
+	public function getLocalidadesByMunicipio()
+	{
+		$estadoID = $this->request->getPost('estado_id');
+		$municipioID = $this->request->getPost('municipio_id');
+		$data = $this->_localidadesModel->asObject()->where('ESTADOID', $estadoID)->where('MUNICIPIOID', $municipioID)->findAll();
+		return json_encode((object)['data' => $data]);
+	}
+
+	public function getColoniasByEstadoAndMunicipio()
+	{
+		$estadoID = $this->request->getPost('estado_id');
+		$municipioID = $this->request->getPost('municipio_id');
+		$data = $this->_coloniasModel->asObject()->where('ESTADOID', $estadoID)->where('MUNICIPIOID', $municipioID)->findAll();
+		return json_encode((object)['data' => $data]);
 	}
 
 	private function _generatePassword($length)

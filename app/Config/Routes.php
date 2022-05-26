@@ -71,6 +71,16 @@ $routes->group('denuncia', function ($routes) {
 });
 
 /**
+ *  Client Routes
+ * */
+
+$routes->group('data', function ($routes) {
+	$routes->post('get-municipios-by-estado', 'client/UserController::getMunicipiosByEstado');
+	$routes->post('get-localidades-by-municipio', 'client/UserController::getLocalidadesByMunicipio');
+	$routes->post('get-colonias-by-estado-and-municipio', 'client/UserController::getColoniasByEstadoAndMunicipio');
+});
+
+/**
  * --------------------------------------------------------------------
  * Additional Routing
  * --------------------------------------------------------------------

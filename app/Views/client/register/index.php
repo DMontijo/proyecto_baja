@@ -90,22 +90,21 @@
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="pais" class="form-label fw-bold input-required">País del denunciante</label>
 							<select class="form-select" id="select_pais" name="pais" required>
-								<option value="MEXICO" selected>MÉXICO</option>
-								<option value="ESTADOS UNIDOS">ESTADOS UNIDOS</option>
-								<option value="OTRO">OTRO</option>
+								<?php foreach ($body_data->paises as $index => $pais) { ?>
+									<option value="<?= $pais->ISO_2 ?>" <?= $pais->ISO_2 == 'MX' ? 'selected' : '' ?>> <?= mb_strtoupper($pais->NAME, 'UTF-8') ?> </option>
+								<?php } ?>
 							</select>
-							<input type="text" class="form-control d-none" id="pais" name="pais" value="MEXICO" required>
 							<div class="invalid-feedback">
 								El país es obligatorio
 							</div>
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="estado_denunciante" class="form-label fw-bold input-required">Estado del denunciante</label>
-							<select class="form-select" id="estado_denunciante" name="estado_denunciante" required>
-							<option selected disabled value="">Seleccione el estado</option>
-								<?php foreach ($body_data->estados as $index => $municipio) { ?>
-									<option value="<?= $municipio->ESTADOID ?>"> <?= $municipio->ESTADODESCR ?> </option>
+							<label for="estado_select" class="form-label fw-bold input-required">Estado del denunciante</label>
+							<select class="form-select" id="estado_select" name="estado_select" required>
+								<option selected disabled value="">Seleccione el estado</option>
+								<?php foreach ($body_data->estados as $index => $estado) { ?>
+									<option value="<?= $estado->ESTADOID ?>"> <?= $estado->ESTADODESCR ?> </option>
 								<?php } ?>
 							</select>
 							<div class="invalid-feedback">
@@ -115,12 +114,10 @@
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="municipio" class="form-label fw-bold input-required">Municipio del denunciante</label>
-							<!-- <input type="text" class="form-control" id="municipio" name="municipio" required> -->
-							<select class="form-select" id="municipio" name="municipio" required>
-								<?php foreach ($body_data->municipios as $index => $municipio) { ?>
-									<option value="<?= $municipio->MUNICIPIOID ?>"> <?= $municipio->MUNICIPIODESCR ?> </option>
-								<?php } ?>
+							<select class="form-select" id="municipio_select" name="municipio_select" required>
+								<option selected disabled value="">Seleccione el municipio</option>
 							</select>
+							<input type="text" class="form-control d-none" id="municipio" name="municipio" required>
 							<div class="invalid-feedback">
 								El municipio es obligatorio
 							</div>
@@ -128,12 +125,10 @@
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="localidad" class="form-label fw-bold">Localidad del denunciante</label>
-							<!-- <input type="text" class="form-control" id="localidad" name="localidad"> -->
-							<select class="form-select" id="localidad" name="localidad" required>
-								<?php foreach ($body_data->localidades as $index => $localidad) { ?>
-									<option value="<?= $localidad->LOCALIDADID ?>"> <?= $localidad->LOCALIDADDESCR ?> </option>
-								<?php } ?>
+							<select class="form-select" id="localidad_select" name="localidad_select" required>
+								<option selected disabled value="">Seleccione la localidad</option>
 							</select>
+							<input type="text" class="form-control d-none" id="localidad" name="localidad" required>
 							<div class="invalid-feedback">
 								La localidad es obligatoria
 							</div>
@@ -142,39 +137,20 @@
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="colonia" class="form-label fw-bold input-required">Colonia del denunciante</label>
-							<!-- <input type="text" class="form-control" id="colonia" name="colonia" required> -->
-							<select class="form-select" id="colonia" name="colonia" required>
-								<?php foreach ($body_data->colonias as $index => $colonia) { ?>
-									<option value="<?= $colonia->COLONIAID ?>"> <?= $colonia->COLONIADESCR ?> </option>
-								<?php } ?>
-							</select>
-							<div class="invalid-feedback">
-								La colonia es obligatoria
-							</div>
-						</div>
-
-						<!-- <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="colonia" class="form-label fw-bold input-required">Colonia del denunciante</label>
-							<select class="form-select" id="colonia_select" name="colonia_select" onchange="activateColoniaInput(event)" required>
+							<select class="form-select" id="colonia_select" name="colonia_select" required>
 								<option selected disabled value="">Seleccione la colonia</option>
-								<option value="1">COLONIA</option>
-								<option value="2">COLONIA</option>
-								<option value="2">COLONIA</option>
-								<option value="3">COLONIA</option>
-								<option value="4">COLONIA</option>
-								<option value="0">[NO APARECE MI COLONIA]</option>
 							</select>
 							<input type="text" class="form-control d-none" id="colonia" name="colonia" required>
 							<div class="invalid-feedback">
 								La colonia es obligatoria
 							</div>
-						</div> -->
+						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="calle" class="form-label fw-bold input-required">Calle o Avenida del denunciante</label>
+							<label for="calle" class="form-label fw-bold input-required">Calle del denunciante</label>
 							<input type="text" class="form-control" id="calle" name="calle" required>
 							<div class="invalid-feedback">
-								La calle o avenida es obligatoria
+								La calle es obligatoria
 							</div>
 						</div>
 
@@ -197,7 +173,7 @@
 							<div class="invalid-feedback">
 								El número télefono es obligatorio
 							</div>
-							<input type="number" id="codigo_pais" name="codigo_pais" hidden>
+							<input type="number" id="codigo_pais" name="codigo_pais" required hidden>
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -369,7 +345,7 @@
 	const progress = document.querySelector('#progress-bar');
 	let stepCount = steps.length - 1;
 	let width = 100 / stepCount;
-	let currentStep = 0;
+	let currentStep = 1;
 
 	chargeCurrentStep(currentStep);
 
@@ -599,20 +575,6 @@
 			}
 		})
 
-		document.querySelector('#select_pais').addEventListener('change', (e) => {
-			let select_pais = document.getElementById('select_pais');
-			let pais = document.getElementById('pais');
-
-			if (e.target.value === 'OTRO') {
-				select_pais.classList.add('d-none');
-				pais.value = '';
-				pais.classList.remove('d-none');
-				pais.focus();
-			} else {
-				pais.value = e.target.value;
-			}
-		})
-
 		document.querySelector('#idioma').addEventListener('change', (e) => {
 			let alert = document.querySelector('#idioma_alert');
 			if (e.target.value !== '22') {
@@ -621,21 +583,212 @@
 				alert.classList.add('d-none')
 			}
 		})
+
+		document.querySelector('#select_pais').addEventListener('change', (e) => {
+
+			let select_estado = document.querySelector('#estado_select');
+			let select_municipio = document.querySelector('#municipio_select');
+			let select_localidad = document.querySelector('#localidad_select');
+			let select_colonia = document.querySelector('#colonia_select');
+
+			let input_municipio = document.querySelector('#municipio');
+			let input_localidad = document.querySelector('#localidad');
+			let input_colonia = document.querySelector('#colonia');
+
+			if (e.target.value !== 'MX') {
+
+				select_estado.value = '33';
+				select_estado.setAttribute('disabled', true);
+
+				let data = {
+					'estado_id': 33,
+					'municipio_id': 1,
+				}
+
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/get-municipios-by-estado') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						let municipios = response.data;
+						municipios.forEach(municipio => {
+							let option = document.createElement("option");
+							option.text = municipio.MUNICIPIODESCR;
+							option.value = municipio.ID;
+							select_municipio.add(option);
+						});
+						select_municipio.value = '33001';
+						select_municipio.setAttribute('disabled', true);
+						input_municipio.value = '33001';
+					}
+				});
+
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/get-localidades-by-municipio') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						let localidades = response.data;
+						localidades.forEach(localidad => {
+							let option = document.createElement("option");
+							option.text = localidad.LOCALIDADDESCR;
+							option.value = localidad.ID;
+							select_localidad.add(option);
+						});
+						let option = document.createElement("option");
+						option.text = 'OTRO';
+						option.value = '0';
+						select_colonia.add(option);
+
+						select_localidad.value = '33001001';
+						input_localidad.value = '33001001';
+						select_localidad.setAttribute('disabled', true);
+
+						select_colonia.value = '0';
+						select_colonia.classList.add('d-none');
+						input_colonia.classList.remove('d-none');
+						input_colonia.value = 'EXTRANJERO';
+						input_colonia.setAttribute('disabled', true);
+					}
+				});
+
+
+			} else {
+				select_estado.value = '';
+				select_estado.removeAttribute('disabled');
+				select_municipio.value = '';
+				select_municipio.removeAttribute('disabled');
+				select_localidad.value = '';
+				select_localidad.removeAttribute('disabled');
+				select_colonia.value = '';
+				select_colonia.removeAttribute('disabled');
+				select_colonia.classList.remove('d-none');
+				input_colonia.removeAttribute('disabled');
+				input_colonia.classList.add('d-none');
+				input_municipio.value = '';
+				input_localidad.value = '';
+				input_colonia.value = '';
+
+				clearSelect(select_municipio);
+				clearSelect(select_localidad);
+				clearSelect(select_colonia);
+			}
+		});
+
+		document.querySelector('#estado_select').addEventListener('change', (e) => {
+			let select_municipio = document.querySelector('#municipio_select');
+			let select_colonia = document.querySelector('#colonia_select');
+			let input_colonia = document.querySelector('#colonia');
+
+			clearSelect(select_municipio);
+			select_municipio.value = '';
+			console.log(e.target.value);
+
+			if (e.target.value === 2) {
+				select_colonia.value = '';
+				select_colonia.classList.remove('d-none');
+				input_colonia.classList.add('d-none');
+			}
+
+			let data = {
+				'estado_id': e.target.value,
+			}
+
+			$.ajax({
+				data: data,
+				url: "<?= base_url('/data/get-municipios-by-estado') ?>",
+				method: "POST",
+				dataType: "json",
+				success: function(response) {
+					let municipios = response.data;
+					let select = document.querySelector('#municipio_select');
+
+					municipios.forEach(municipio => {
+						var option = document.createElement("option");
+						option.text = municipio.MUNICIPIODESCR;
+						option.value = municipio.ID;
+						select.add(option);
+					});
+				}
+			});
+		});
+
+		document.querySelector('#municipio_select').addEventListener('change', (e) => {
+			let select_localidad = document.querySelector('#localidad_select');
+			let select_colonia = document.querySelector('#colonia_select');
+			let input_colonia = document.querySelector('#colonia');
+			let estado = parseInt(Number(e.target.value) / 1000);
+			let municipio = (Number(e.target.value) - estado * 1000);
+			document.querySelector('#municipio').value = municipio;
+
+			clearSelect(select_localidad);
+			clearSelect(select_colonia);
+
+			let data = {
+				'estado_id': estado,
+				'municipio_id': municipio
+			};
+
+			$.ajax({
+				data: data,
+				url: "<?= base_url('/data/get-localidades-by-municipio') ?>",
+				method: "POST",
+				dataType: "json",
+				success: function(response) {
+					console.log(response);
+					let localidades = response.data;
+
+					localidades.forEach(localidad => {
+						var option = document.createElement("option");
+						option.text = localidad.LOCALIDADDESCR;
+						option.value = localidad.ID;
+						select_localidad.add(option);
+					});
+				}
+			});
+
+			if (estado === 2) {
+				select_colonia.classList.remove('d-none');
+				colonia.classList.add('d-none');
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/get-colonias-by-estado-and-municipio') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						let colonias = response.data;
+
+						colonias.forEach(colonia => {
+							var option = document.createElement("option");
+							option.text = colonia.COLONIADESCR;
+							option.value = colonia.COLONIAID;
+							select_colonia.add(option);
+						});
+						var option = document.createElement("option");
+						option.text = 'OTRO';
+						option.value = '0';
+						select_colonia.add(option);
+					}
+				});
+
+			} else {
+
+				select_colonia.value = '0';
+				select_colonia.classList.add('d-none');
+				colonia.classList.remove('d-none');
+			}
+
+		});
+
 	})()
 
-	const activateColoniaInput = (e) => {
-		let select_colonia = document.getElementById('colonia_select');
-		let colonia = document.getElementById('colonia');
-
-		if (e.target.value === '0') {
-			select_colonia.classList.add('d-none');
-			colonia.value = '';
-			colonia.classList.remove('d-none');
-			colonia.focus();
-		} else {
-			colonia.value = e.target.value;
+	function clearSelect(select_element) {
+		for (let i = select_element.options.length; i >= 1; i--) {
+			select_element.remove(i);
 		}
-	};
+	}
 
 	var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
 	var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
@@ -671,7 +824,7 @@
 		let pais = document.querySelector("#select_pais").value ? document.querySelector("#select_pais").value : '';
 		let estado = document.querySelector("#estado").value ? document.querySelector("#estado_denunciante").value : '';
 		let municipio = document.querySelector("#municipio").value ? document.querySelector("#municipio").value : '';
-		let localidad = document.querySelector("#localidad").value ? document.querySelector("#localidad").value : '';
+		let colonia = document.querySelector("#localidad").value ? document.querySelector("#localidad").value : '';
 		let colonia = document.querySelector("#colonia").value ? document.querySelector("#colonia").value : '';
 		let calle = document.querySelector("#calle").value ? document.querySelector("#calle").value : '';
 		let nexterior = document.querySelector("#exterior").value ? document.querySelector("#exterior").value : '';
