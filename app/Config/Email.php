@@ -54,14 +54,14 @@ class Email extends BaseConfig
 	 *
 	 * @var string
 	 */
-	public $SMTPUser = 'otoniel.f@yocontigo-it.com';
+	public $SMTPUser = 'andrea.solorzano@yocontigo-it.com';
 
 	/**
 	 * SMTP Password
 	 *
 	 * @var string
 	 */
-	public $SMTPPass='Yocontigo2021';
+	public $SMTPPass='andrea.yocontigo';
 
 	/**
 	 * SMTP Port
