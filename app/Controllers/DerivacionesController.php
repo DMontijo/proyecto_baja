@@ -8,8 +8,7 @@ use App\Models\DerivacionesModel;
 
 class DerivacionesController extends Controller
 {
-	private $_derivacionesModel;
-
+	
 	function __construct()
 	{
 		$this->_derivacionesModel = new DerivacionesModel();
@@ -18,9 +17,9 @@ class DerivacionesController extends Controller
 	public function index()
 	{
 		$data = (object) array();
-		$data->derivacionesEnsenada = $this->_derivacionesModel->asObject()->where('MUNICIPIO','ENSENADA')->findAll();
-		$data->derivacionesTijuana = $this->_derivacionesModel->asObject()->where('MUNICIPIO','TIJUANA-RTO')->findAll();
-		$data->derivacionesMexicali = $this->_derivacionesModel->asObject()->where('MUNICIPIO','MEXICALI-TKT')->findAll();
+		$data->derivacionesEnsenada = $this->_derivacionesModel->asObject()->where('MUNICIPIO', 'ENSENADA')->findAll();
+		$data->derivacionesTijuana = $this->_derivacionesModel->asObject()->where('MUNICIPIO', 'TIJUANA-RTO')->findAll();
+		$data->derivacionesMexicali = $this->_derivacionesModel->asObject()->where('MUNICIPIO', 'MEXICALI-TKT')->findAll();
 		$this->_loadView('Catálogo derivaciones', $data, 'derivaciones');
 	}
 

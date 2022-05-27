@@ -526,11 +526,11 @@
 						event.preventDefault();
 						event.stopPropagation();
 					} else {
-						// event.preventDefault();
-						// enviar_datos();
-						// setTimeout(() => {
-						// 	$('#information_validation').modal('show');
-						// }, 500);
+						event.preventDefault();
+						enviar_datos();
+						setTimeout(() => {
+							$('#information_validation').modal('show');
+						}, 300);
 					}
 					form.classList.add('was-validated')
 				}, false)
@@ -609,7 +609,8 @@
 						});
 						select_municipio.value = '33001';
 						select_municipio.setAttribute('disabled', true);
-					}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {}
 				});
 
 				$.ajax({
@@ -638,7 +639,8 @@
 						input_colonia.classList.remove('d-none');
 						input_colonia.value = 'EXTRANJERO';
 						input_colonia.setAttribute('disabled', true);
-					}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {}
 				});
 
 
@@ -700,7 +702,8 @@
 						option.value = municipio.ID;
 						select_municipio.add(option);
 					});
-				}
+				},
+				error: function(jqXHR, textStatus, errorThrown) {}
 			});
 		});
 
@@ -734,7 +737,8 @@
 						option.value = localidad.ID;
 						select_localidad.add(option);
 					});
-				}
+				},
+				error: function(jqXHR, textStatus, errorThrown) {}
 			});
 
 			if (estado === 2) {
@@ -758,6 +762,9 @@
 						option.text = 'OTRO';
 						option.value = '0';
 						select_colonia.add(option);
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+
 					}
 				});
 

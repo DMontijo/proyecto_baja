@@ -59,7 +59,6 @@ $routes->group('denuncia', function ($routes) {
 	$routes->post('logout', 'client/AuthController::logout');
 
 	$routes->resource('denunciante', ['controller' => 'client/UserController']);
-	$routes->get('exist-email', 'client/UserController::existEmail');
 
 	$routes->get('recuperar', 'client/AuthController::change_password');
 
@@ -73,11 +72,15 @@ $routes->group('denuncia', function ($routes) {
 /**
  *  Client Routes
  * */
+$routes->get('email', 'CorreoOTPController::index');
 
 $routes->group('data', function ($routes) {
 	$routes->post('get-municipios-by-estado', 'client/UserController::getMunicipiosByEstado');
 	$routes->post('get-localidades-by-municipio', 'client/UserController::getLocalidadesByMunicipio');
 	$routes->post('get-colonias-by-estado-and-municipio', 'client/UserController::getColoniasByEstadoAndMunicipio');
+
+	$routes->post('sendOTP', 'OTPController::sendEmailOTP');
+	$routes->post('getLastOTP', 'OTPController::getLastOTP');
 });
 
 /**

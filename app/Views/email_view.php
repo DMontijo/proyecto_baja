@@ -2,7 +2,7 @@
 
 <?= $this->section('content') ?>
 <div class="container mt-5">
-	<form method="post" action="<?= base_url() ?>/CorreoController/sendMail">
+	<form method="post" action="<?= base_url('/data/getOTP') ?>">
 		<div class="form-group">
 			<label>Destinatario</label>
 			<input type="email" name="destinatario" class="form-control">

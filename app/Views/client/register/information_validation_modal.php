@@ -49,7 +49,7 @@
 						<label for="nacionalidad_modal" class="form-label fw-bold input-required">Nacionalidad:</label>
 						<input class="form-control" id="nacionalidad_modal" name="nacionalidad_modal" type="text" disabled>
 					</div>
-					
+
 					<div class="col-12 col-sm-6 mb-3">
 						<label for="escolaridad_modal" class="form-label fw-bold input-required">Escolaridad:</label>
 						<input class="form-control" id="escolaridad_modal" name="escolaridad_modal" type="text" disabled>
@@ -170,8 +170,8 @@
 						<label class="form-label fw-bold">Firma digital: </label>
 						<img id="img_firma_modal" class="form-control" />
 					</div>
-					<div class="col-12 text-center">
-						<button type="submit" id="submit" data-bs-target="#otp_validation_modal" data-bs-toggle="modal" data-bs-dismiss="modal" class="btn btn-primary mt-4">Mi información esta correcta</button>
+					<div class="col-12 text-center mb-4">
+						<button type="submit" id="valid_information_btn" class="btn btn-primary mt-4">Mi información esta correcta</button>
 					</div>
 				</div>
 			</div>
@@ -179,3 +179,29 @@
 	</div>
 </div>
 <?php include('otp_validation_modal.php') ?>
+<script>
+	document.querySelector('#valid_information_btn').addEventListener('click', (e) => {
+
+		e.target.setAttribute('disabled', true);
+		var data = {
+			'email': document.querySelector('#correo').value
+		}
+
+		$.ajax({
+			data: data,
+			method: "post",
+			url: "<?php echo base_url('/data/sendOTP'); ?>",
+			dataType: "json",
+			success: function(data) {
+				e.target.removeAttribute('disabled');
+
+				console.log(data);
+				$('#otp_validation_modal').modal('show');
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				e.target.removeAttribute('disabled');
+				console.log(jqXHR);
+			}
+		});
+	});
+</script>
