@@ -12,7 +12,7 @@
 		</canvas>
 	</div>
 	<div class="col-12">
-		<textarea id="firma_url" class="form-control" rows="2" required hidden></textarea>
+		<textarea id="firma_url" name="firma_url" class="form-control" required></textarea>
 		<div class="invalid-feedback">
 			Debes agregar tu firma para poder avanzar.
 		</div>
@@ -46,7 +46,7 @@
 
 		submitBtn.addEventListener("click", function(e) {
 			canvas.fillStyle = "rgba(0,0,0,.4)";
-			let dataUrl = canvas.toDataURL();
+			let dataUrl = canvas.toBlob();
 			drawText.innerHTML = dataUrl;
 		}, false);
 
@@ -66,10 +66,12 @@
 
 		canvas.addEventListener("mouseup", function(e) {
 			drawing = false;
-			console.log('mouse levantado')
 			canvas.fillStyle = "rgba(0,0,0,.4)";
-			let dataUrl = canvas.toDataURL();
-			drawText.innerHTML = dataUrl;
+			canvas.toBlob(function(blob) {
+				console.log('Este es el blob: ', blob);
+				drawText.innerHTML = blob;
+			});
+
 		}, false);
 
 		canvas.addEventListener("mousemove", function(e) {
@@ -78,7 +80,6 @@
 
 		canvas.addEventListener("touchstart", function(e) {
 			mousePos = getTouchPos(canvas, e);
-			console.log(mousePos);
 			e.preventDefault();
 			let touch = e.touches[0];
 			let mouseEvent = new MouseEvent("mousedown", {
@@ -120,7 +121,6 @@
 
 		function getTouchPos(canvasDom, touchEvent) {
 			let rect = canvasDom.getBoundingClientRect();
-			console.log(touchEvent);
 			return {
 				x: touchEvent.touches[0].clientX - rect.left,
 				y: touchEvent.touches[0].clientY - rect.top
@@ -135,7 +135,6 @@
 				ctx.beginPath();
 				ctx.moveTo(lastPos.x, lastPos.y);
 				ctx.lineTo(mousePos.x, mousePos.y);
-				console.log(punta.value);
 				ctx.lineWidth = punta.value;
 				ctx.stroke();
 				ctx.closePath();

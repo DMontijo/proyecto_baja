@@ -54,24 +54,52 @@ class UserController extends BaseController
 
 	public function create()
 	{
+
 		$data = [
 			'NOMBRE' => $this->request->getPost('nombre'),
 			'APELLIDO_PATERNO' => $this->request->getPost('apellido_paterno'),
 			'APELLIDO_MATERNO' => $this->request->getPost('apellido_materno'),
 			'CORREO' => $this->request->getPost('correo'),
 			'PASSWORD' => $this->_generatePassword(6),
-			'CREADO' => date('m-d-Y h:i:s a', time()),
+			'FECHA_DE_NACIMIENTO' => $this->request->getPost('fecha_nacimiento'),
+			'EDAD' => $this->request->getPost('edad'),
+			'SEXO' => $this->request->getPost('sexo'),
+			'CODIGO_POSTAL' => $this->request->getPost('cp'),
+			'PAIS_ID' => $this->request->getPost('pais_select'),
+			'ESTADO_ID' => $this->request->getPost('estado_select'),
+			'MUNICIPIO_ID' => $this->request->getPost('municipio_select'),
+			'LOCALIDAD_ID' => $this->request->getPost('localidad_select'),
+			'COLONIA' => $this->request->getPost('colonia'),
+			'CALLE' => $this->request->getPost('calle'),
+			'NUM_EXT' => $this->request->getPost('exterior'),
+			'NUM_INT' => $this->request->getPost('interior'),
+			'TELEFONO' => $this->request->getPost('telefono'),
+			'TELEFONO2' => $this->request->getPost('telefono2'),
+			'CODIGO_PAIS' => $this->request->getPost('codigo_pais'),
+			'CODIGO_PAIS2' => $this->request->getPost('codigo_pais_2'),
+			'TIPO_DE_IDENTIFICACION' => $this->request->getPost('identificacion'),
+			'NUMERO_DE_IDENTIFICACION' => $this->request->getPost('numero_ide'),
+			'ESTADO_CIVIL' => $this->request->getPost('e_civil'),
+			'OCUPACION' => $this->request->getPost('ocupacion'),
+			'IDENTIDAD_DE_GENERO' => $this->request->getPost('iden_genero'),
+			'DISCAPACIDAD' => $this->request->getPost('discapacidad'),
+			'NACIONALIDAD_ID' => $this->request->getPost('nacionalidad'),
+			'ESCOLARIDAD' => $this->request->getPost('escolaridad'),
+			'IDIOMA_ID' => $this->request->getPost('idioma'),
+			'DOCUMENTO' => $this->request->getPost('documento_text'),
+			'FIRMA' => $this->request->getPost('firma_url'),
+			'NOTIFICACIONES' => $this->request->getPost('notificaciones_check'),
 		];
 
+		var_dump($data);
+
 		if ($this->validate([
-			'nombre' => 'required|max_length[100]',
-			'apellido_paterno' => 'required|max_length[100]',
 			'correo' => 'required|is_unique[DENUNCIANTES.CORREO]'
 		])) {
 			$this->_denunciantesModel->insert($data);
-			return redirect()->to(base_url() . "/denuncia")->with('message', 'Denunciante creado con éxito.');
+			return redirect()->to(base_url('/denuncia'))->with('message', 'Registro realizado con éxito.');
 		} else {
-			return redirect()->back()->with('message', 'Hubo un error en los datos');
+			return redirect()->back()->with('message', 'Hubo un error en los datos o puede que ya exista un registro con el mismo correo');
 		}
 	}
 

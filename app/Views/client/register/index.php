@@ -25,25 +25,25 @@
 					<div class="row">
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="nombre" class="form-label fw-bold input-required">Nombre(s)</label>
-							<input type="text" class="form-control" id="nombre" name="nombre" required>
+							<input type="text" class="form-control" id="nombre" name="nombre" maxlength="100" required>
 							<div class="invalid-feedback">
 								El nombre es obligatorio
 							</div>
 						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="apellido_paterno" class="form-label fw-bold input-required">Apellido paterno</label>
-							<input type="text" class="form-control" id="apellido_paterno" name="apellido_paterno" required>
+							<input type="text" class="form-control" id="apellido_paterno" name="apellido_paterno" maxlength="100" required>
 							<div class="invalid-feedback">
 								El apellido paterno es obligatorio
 							</div>
 						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="apellido_materno" class="form-label fw-bold ">Apellido materno</label>
-							<input type="text" class="form-control" id="apellido_materno" name="apellido_materno">
+							<input type="text" class="form-control" id="apellido_materno" name="apellido_materno" maxlength="100">
 						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="correo" class="form-label fw-bold input-required">Correo electrónico</label>
-							<input type="email" class="form-control" id="correo" name="correo" required>
+							<input type="email" class="form-control" id="correo" name="correo" maxlength="100" required>
 							<div class="invalid-feedback">
 								El correo esta erroneo
 							</div>
@@ -55,10 +55,7 @@
 								La fecha de nacimiento es obligatoria
 							</div>
 						</div>
-						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="edad" class="form-label fw-bold">Edad</label>
-							<input class="form-control" id="edad" name="edad" type="text" disabled>
-						</div>
+						<input class="form-control" id="edad" name="edad" maxlength="3" type="text" hidden required>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="sexo" class="form-label fw-bold input-required">Sexo</label>
 							<br>
@@ -84,12 +81,12 @@
 					<div class="row">
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="cp" class="form-label fw-bold">Código postal</label>
-							<input type="number" class="form-control" id="cp" name="cp">
+							<input type="number" class="form-control" id="cp" maxlength="10" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" name="cp">
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="pais" class="form-label fw-bold input-required">País del denunciante</label>
-							<select class="form-select" id="select_pais" name="pais" required>
+							<label for="pais_select" class="form-label fw-bold input-required">País del denunciante</label>
+							<select class="form-select" id="pais_select" name="pais_select" required>
 								<?php foreach ($body_data->paises as $index => $pais) { ?>
 									<option value="<?= $pais->ISO_2 ?>" <?= $pais->ISO_2 == 'MX' ? 'selected' : '' ?>> <?= mb_strtoupper($pais->NAME, 'UTF-8') ?> </option>
 								<?php } ?>
@@ -117,7 +114,6 @@
 							<select class="form-select" id="municipio_select" name="municipio_select" required>
 								<option selected disabled value="">Seleccione el municipio</option>
 							</select>
-							<input type="text" class="form-control d-none" id="municipio" name="municipio" required>
 							<div class="invalid-feedback">
 								El municipio es obligatorio
 							</div>
@@ -125,13 +121,9 @@
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="localidad" class="form-label fw-bold">Localidad del denunciante</label>
-							<select class="form-select" id="localidad_select" name="localidad_select" required>
+							<select class="form-select" id="localidad_select" name="localidad_select">
 								<option selected disabled value="">Seleccione la localidad</option>
 							</select>
-							<input type="text" class="form-control d-none" id="localidad" name="localidad" required>
-							<div class="invalid-feedback">
-								La localidad es obligatoria
-							</div>
 						</div>
 
 
@@ -140,7 +132,7 @@
 							<select class="form-select" id="colonia_select" name="colonia_select" required>
 								<option selected disabled value="">Seleccione la colonia</option>
 							</select>
-							<input type="text" class="form-control d-none" id="colonia" name="colonia" required>
+							<input type="text" class="form-control d-none" id="colonia" name="colonia" maxlength="100" required>
 							<div class="invalid-feedback">
 								La colonia es obligatoria
 							</div>
@@ -148,7 +140,7 @@
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="calle" class="form-label fw-bold input-required">Calle del denunciante</label>
-							<input type="text" class="form-control" id="calle" name="calle" required>
+							<input type="text" class="form-control" id="calle" name="calle" maxlength="100" required>
 							<div class="invalid-feedback">
 								La calle es obligatoria
 							</div>
@@ -156,7 +148,7 @@
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="exterior" class="form-label fw-bold input-required">Número exterior</label>
-							<input type="text" class="form-control" id="exterior" name="exterior" required>
+							<input type="text" class="form-control" id="exterior" name="exterior" maxlength="10" required>
 							<div class="invalid-feedback">
 								El número exterior es obligatorio
 							</div>
@@ -164,22 +156,22 @@
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="interior" class="form-label fw-bold">Número interior</label>
-							<input type="text" class="form-control" id="interior" name="interior">
+							<input type="text" class="form-control" id="interior" name="interior" maxlength="10">
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="telefono" class="form-label fw-bold input-required">Número de télefono</label>
-							<input type="number" class="form-control" id="telefono" name="telefono" required>
+							<input type="number" class="form-control" id="telefono" name="telefono" maxlength="20" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" required>
 							<div class="invalid-feedback">
 								El número télefono es obligatorio
 							</div>
-							<input type="number" id="codigo_pais" name="codigo_pais" required hidden>
+							<input type="number" id="codigo_pais" name="codigo_pais" maxlength="3" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" required hidden>
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="telefono2" class="form-label fw-bold">Número de télefono 2 (opcional)</label>
-							<input type="number" class="form-control" id="telefono2" name="telefono2">
-							<input type="number" id="codigo_pais_2" name="codigo_pais_2" hidden>
+							<input type="number" class="form-control" id="telefono2" name="telefono2" maxlength="20" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+							<input type="number" id="codigo_pais_2" name="codigo_pais_2" maxlength="3" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" hidden>
 						</div>
 
 					</div>
@@ -220,12 +212,12 @@
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="ocupacion" class="form-label fw-bold">Ocupación</label>
-							<input type="text" class="form-control" id="ocupacion" name="ocupacion">
+							<input type="text" class="form-control" id="ocupacion" name="ocupacion" maxlength="100">
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="iden_genero" class="form-label fw-bold">Identidad de género</label>
-							<input type="text" class="form-control" id="iden_genero" name="iden_genero">
+							<input type="text" class="form-control" id="iden_genero" name="iden_genero" maxlength="50">
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -287,7 +279,8 @@
 						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="documento" class="form-label fw-bold input-required">Foto de identificación</label>
-							<input class="form-control" type="file" id="documento" name="documento" accept="image/*" capture="user" required multiple>
+							<input class="form-control" type="file" id="documento" name="documento" accept="image/*" capture="user" required>
+							<textarea id="documento_text" name="documento_text" hidden required></textarea>
 							<div class="form-text">Para tomar foto <a class="link-yellow" type="button" data-bs-toggle="modal" data-bs-target="#take_photo_modal">clic aquí <i class="bi bi-camera-fill"></i></a></div>
 						</div>
 						<div class="col-12">
@@ -304,7 +297,7 @@
 							<?php include('e_firma_canva.php') ?>
 						</div>
 						<div class="col-12 text-center items-center mt-2">
-							<input class="form-check-input" type="checkbox" value="" id="notificaciones_check" required>
+							<input class="form-check-input" type="checkbox" id="notificaciones_check" name="notificaciones_check" required>
 							<label class="form-check-label fw-bold" for="notificaciones_check">
 								Acepto envío de notificaciones por teléfono, correo y a mi domicilio.
 							</label>
@@ -345,14 +338,13 @@
 	const progress = document.querySelector('#progress-bar');
 	let stepCount = steps.length - 1;
 	let width = 100 / stepCount;
-	let currentStep = 1;
+	let currentStep = 0;
 
 	chargeCurrentStep(currentStep);
 
 	nextBtn.addEventListener('click', () => {
 		if (validarStep(currentStep)) {
 			currentStep++;
-			console.log(currentStep);
 			let previousStep = currentStep - 1;
 			if ((currentStep > 0) && (currentStep <= stepCount)) {
 				prevBtn.classList.remove('d-none');
@@ -370,7 +362,6 @@
 			}
 			progress.style.width = `${currentStep*width}%`
 		} else {
-			console.log('NO SE VALIDO');
 			submitBtn.click();
 			Swal.fire({
 				icon: 'error',
@@ -436,9 +427,9 @@
 				break;
 			case 1:
 				if (
-					document.querySelector('#pais').value != '' &&
-					document.querySelector('#estado').value != '' &&
-					document.querySelector('#municipio').value != '' &&
+					document.querySelector('#pais_select').value != '' &&
+					document.querySelector('#estado_select').value != '' &&
+					document.querySelector('#municipio_select').value != '' &&
 					document.querySelector('#colonia').value != '' &&
 					document.querySelector('#calle').value != '' &&
 					document.querySelector('#exterior').value != '' &&
@@ -535,11 +526,11 @@
 						event.preventDefault();
 						event.stopPropagation();
 					} else {
-						event.preventDefault();
-						enviar_datos();
-						setTimeout(() => {
-							$('#information_validation').modal('show');
-						}, 500);
+						// event.preventDefault();
+						// enviar_datos();
+						// setTimeout(() => {
+						// 	$('#information_validation').modal('show');
+						// }, 500);
 					}
 					form.classList.add('was-validated')
 				}, false)
@@ -584,15 +575,13 @@
 			}
 		})
 
-		document.querySelector('#select_pais').addEventListener('change', (e) => {
+		document.querySelector('#pais_select').addEventListener('change', (e) => {
 
 			let select_estado = document.querySelector('#estado_select');
 			let select_municipio = document.querySelector('#municipio_select');
 			let select_localidad = document.querySelector('#localidad_select');
 			let select_colonia = document.querySelector('#colonia_select');
 
-			let input_municipio = document.querySelector('#municipio');
-			let input_localidad = document.querySelector('#localidad');
 			let input_colonia = document.querySelector('#colonia');
 
 			if (e.target.value !== 'MX') {
@@ -620,7 +609,6 @@
 						});
 						select_municipio.value = '33001';
 						select_municipio.setAttribute('disabled', true);
-						input_municipio.value = '33001';
 					}
 				});
 
@@ -640,10 +628,9 @@
 						let option = document.createElement("option");
 						option.text = 'OTRO';
 						option.value = '0';
-						select_colonia.add(option);
 
+						select_colonia.add(option);
 						select_localidad.value = '33001001';
-						input_localidad.value = '33001001';
 						select_localidad.setAttribute('disabled', true);
 
 						select_colonia.value = '0';
@@ -656,41 +643,44 @@
 
 
 			} else {
+				clearSelect(select_municipio);
+				clearSelect(select_localidad);
+				clearSelect(select_colonia);
+
 				select_estado.value = '';
 				select_estado.removeAttribute('disabled');
+
 				select_municipio.value = '';
 				select_municipio.removeAttribute('disabled');
+
 				select_localidad.value = '';
 				select_localidad.removeAttribute('disabled');
+
 				select_colonia.value = '';
 				select_colonia.removeAttribute('disabled');
 				select_colonia.classList.remove('d-none');
 				input_colonia.removeAttribute('disabled');
 				input_colonia.classList.add('d-none');
-				input_municipio.value = '';
-				input_localidad.value = '';
-				input_colonia.value = '';
-
-				clearSelect(select_municipio);
-				clearSelect(select_localidad);
-				clearSelect(select_colonia);
 			}
 		});
 
 		document.querySelector('#estado_select').addEventListener('change', (e) => {
 			let select_municipio = document.querySelector('#municipio_select');
+			let select_localidad = document.querySelector('#localidad_select');
 			let select_colonia = document.querySelector('#colonia_select');
 			let input_colonia = document.querySelector('#colonia');
 
 			clearSelect(select_municipio);
-			select_municipio.value = '';
-			console.log(e.target.value);
+			clearSelect(select_localidad);
+			clearSelect(select_colonia);
 
-			if (e.target.value === 2) {
-				select_colonia.value = '';
-				select_colonia.classList.remove('d-none');
-				input_colonia.classList.add('d-none');
-			}
+			select_municipio.value = '';
+			select_localidad.value = '';
+			select_colonia.value = '';
+			input_colonia.value = '';
+
+			select_colonia.classList.remove('d-none');
+			input_colonia.classList.add('d-none');
 
 			let data = {
 				'estado_id': e.target.value,
@@ -703,13 +693,12 @@
 				dataType: "json",
 				success: function(response) {
 					let municipios = response.data;
-					let select = document.querySelector('#municipio_select');
 
 					municipios.forEach(municipio => {
 						var option = document.createElement("option");
 						option.text = municipio.MUNICIPIODESCR;
 						option.value = municipio.ID;
-						select.add(option);
+						select_municipio.add(option);
 					});
 				}
 			});
@@ -719,9 +708,9 @@
 			let select_localidad = document.querySelector('#localidad_select');
 			let select_colonia = document.querySelector('#colonia_select');
 			let input_colonia = document.querySelector('#colonia');
+
 			let estado = parseInt(Number(e.target.value) / 1000);
 			let municipio = (Number(e.target.value) - estado * 1000);
-			document.querySelector('#municipio').value = municipio;
 
 			clearSelect(select_localidad);
 			clearSelect(select_colonia);
@@ -737,7 +726,6 @@
 				method: "POST",
 				dataType: "json",
 				success: function(response) {
-					console.log(response);
 					let localidades = response.data;
 
 					localidades.forEach(localidad => {
@@ -763,7 +751,7 @@
 						colonias.forEach(colonia => {
 							var option = document.createElement("option");
 							option.text = colonia.COLONIADESCR;
-							option.value = colonia.COLONIAID;
+							option.value = colonia.ID;
 							select_colonia.add(option);
 						});
 						var option = document.createElement("option");
@@ -774,10 +762,44 @@
 				});
 
 			} else {
-
+				var option = document.createElement("option");
+				option.text = 'OTRO';
+				option.value = '0';
+				select_colonia.add(option);
 				select_colonia.value = '0';
 				select_colonia.classList.add('d-none');
 				colonia.classList.remove('d-none');
+			}
+
+		});
+
+		document.querySelector('#colonia_select').addEventListener('change', (e) => {
+			let select_colonia = document.querySelector('#colonia_select');
+			let input_colonia = document.querySelector('#colonia');
+
+			if (e.target.value === '0') {
+				select_colonia.classList.add('d-none');
+				input_colonia.classList.remove('d-none');
+				input_colonia.focus();
+			} else {
+				input_colonia.value = e.target.value;
+			}
+		});
+
+		document.querySelector('#documento').addEventListener('change', (e) => {
+			let documento_identidad = document.querySelector('#documento_text');
+			let documento_identidad_modal = document.querySelector('#img_identificacion_modal');
+
+			if (e.target.files && e.target.files[0]) {
+				console.log(e.target.files);
+				let reader = new FileReader();
+				reader.onload = function(e) {
+					console.log(e.target);
+					documento_identidad.value = e.target.result;
+					documento_identidad_modal.setAttribute('src', e.target.result);
+				}
+
+				reader.readAsDataURL(e.target.files[0]);
 			}
 
 		});
@@ -797,46 +819,34 @@
 </script>
 
 <script>
-	function readURL(input) {
-		if (input.files && input.files[0]) { //Revisamos que el input tenga contenido
-			var reader = new FileReader(); //Leemos el contenido
-
-			reader.onload = function(e) { //Al cargar el contenido lo pasamos como atributo de la imagen de arriba
-				$('#img_identificacion_modal').attr('src', e.target.result);
-			}
-			reader.readAsDataURL(input.files[0]);
-		}
-	}
-
 	function enviar_datos() {
-
 		let nombre = document.querySelector("#nombre").value ? document.querySelector("#nombre").value : '';
 		let apellido1 = document.querySelector("#apellido_paterno").value ? document.querySelector("#apellido_paterno").value : '';
 		let apellido2 = document.querySelector("#apellido_materno").value ? document.querySelector("#apellido_materno").value : '';
 		let correo = document.querySelector("#correo").value ? document.querySelector("#correo").value : '';
 		let fechanac = document.querySelector("#fecha_nacimiento").value ? document.querySelector("#fecha_nacimiento").value : '';
 		let edad = document.querySelector("#edad").value ? document.querySelector("#edad").value : '';
-		let nacionalidad = document.querySelector("#nacionalidad").value ? document.querySelector("#nacionalidad").value : '';
-		let escolaridad = document.querySelector("#escolaridad").value ? document.querySelector("#escolaridad").value : '';
 		let sexo = document.querySelector('input[name="sexo"]:checked').value ? document.querySelector('input[name="sexo"]:checked').value : '';
-		let codigop = document.querySelector("#cp").value ? document.querySelector("#cp").value : '';
 
-		let pais = document.querySelector("#select_pais").value ? document.querySelector("#select_pais").value : '';
-		let estado = document.querySelector("#estado").value ? document.querySelector("#estado_denunciante").value : '';
-		let municipio = document.querySelector("#municipio").value ? document.querySelector("#municipio").value : '';
-		let colonia = document.querySelector("#localidad").value ? document.querySelector("#localidad").value : '';
+		let codigop = document.querySelector("#cp").value ? document.querySelector("#cp").value : '';
+		let pais = document.querySelector("#pais_select").value ? document.querySelector("#pais_select").value : '';
+		let estado = document.querySelector("#estado_select").value ? document.querySelector("#estado_select").value : '';
+		let municipio = document.querySelector("#municipio_select").value ? document.querySelector("#municipio_select").value : '';
+		let localidad = document.querySelector("#localidad_select").value ? document.querySelector("#localidad_select").value : '';
 		let colonia = document.querySelector("#colonia").value ? document.querySelector("#colonia").value : '';
 		let calle = document.querySelector("#calle").value ? document.querySelector("#calle").value : '';
 		let nexterior = document.querySelector("#exterior").value ? document.querySelector("#exterior").value : '';
 		let ninterior = document.querySelector("#interior").value ? document.querySelector("#interior").value : '';
-		// let telefono = document.querySelector("#telefono").value ? document.querySelector("#telefono").value : '';
-		// let telefono2 = document.querySelector("#telefono2").value ? document.querySelector("#telefono2").value : '';
-		let telefono = $('#output').text();
-		let telefono2 = $('#telefonooutput').text();
+		let telefono = document.querySelector("#telefono").value ? document.querySelector("#telefono").value : '';
+		let telefono2 = document.querySelector("#telefono2").value ? document.querySelector("#telefono2").value : '';
+		let codigo_pais = document.querySelector("#codigo_pais").value ? document.querySelector("#codigo_pais").value : '';
+		let codigo_pais_2 = document.querySelector("#codigo_pais_2").value ? document.querySelector("#codigo_pais_2").value : '';
 
 		let tipo = document.querySelector("#identificacion").value ? document.querySelector("#identificacion").value : '';
 		let numeroid = document.querySelector("#numero_ide").value ? document.querySelector("#numero_ide").value : '';
 		let edoc = document.querySelector("#e_civil").value ? document.querySelector("#e_civil").value : '';
+		let nacionalidad = document.querySelector("#nacionalidad").value ? document.querySelector("#nacionalidad").value : '';
+		let escolaridad = document.querySelector("#escolaridad").value ? document.querySelector("#escolaridad").value : '';
 		let ocupacion = document.querySelector("#ocupacion").value ? document.querySelector("#ocupacion").value : '';
 		let genero = document.querySelector("#iden_genero").value ? document.querySelector("#iden_genero").value : '';
 		let discapacidad = document.querySelector("#discapacidad").value ? document.querySelector("#discapacidad").value : '';
@@ -873,8 +883,6 @@
 		document.querySelector('#iden_genero_modal').value = genero;
 		document.querySelector('#idioma_modal').value = idioma;
 		document.querySelector('#img_firma_modal').setAttribute("src", firma_url);
-
-		readURL(document.querySelector('#documento'));
 	}
 </script>
 
