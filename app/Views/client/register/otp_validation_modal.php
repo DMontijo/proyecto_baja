@@ -8,18 +8,16 @@
 				<div class="mb-3" id="divCorreo">
 					<label for="correo_otp" class="col-form-label">Ingresa el código de 6 dígitos que llego a tu correo electrónico.</label>
 					<input type="text" class="form-control text-center" id="correo_otp" name="correo_otp" required pattern="\d{6}" maxlength="6">
-					<div class="invalid-feedback">
-						Deben ser 6 dígitos númericos
-					</div>
 				</div>
-				<a id="resend_btn" class="btn btn-secondary" href="" role="button"><i class="bi bi-arrow-clockwise"></i> Solicitar de nuevo</a>
-				<a id="validate_btn" class="btn btn-primary" href="" role="button"><i class="bi bi-check-circle-fill"></i> Validar correo</a>
+				<button id="resend_btn" class="btn btn-secondary" role="button" type="submit"><i class="bi bi-arrow-clockwise"></i> Solicitar de nuevo</button>
+				<button id="validate_btn" class="btn btn-primary" role="button" type="submit"><i class="bi bi-check-circle-fill"></i> Validar correo</button>
 			</div>
 		</div>
 	</div>
 </div>
 
 <script>
+	//Validate OTP
 	document.querySelector('#validate_btn').addEventListener('click', (e) => {
 		let input_otp = document.getElementById('correo_otp').value;
 		let data = {
@@ -31,10 +29,10 @@
 			method: "post",
 			url: "<?php echo base_url('/data/getLastOTP'); ?>",
 			dataType: "json",
-			success: function(data) {
+			success: function(response) {
 				console.log(data);
-				let mesage = data.data.CODIGO_OTP;
-				let fechaVencimiento = data.data.VENCIMIENTO;
+				let otp = response.data.CODIGO_OTP;
+				let fechaVencimiento = response.data.VENCIMIENTO;
 				let date = new Date();
 
 				const formatDate = (current_datetime) => {
@@ -42,40 +40,43 @@
 					return formatted_date;
 				}
 
-				console.log(formatDate(date));
-				console.log(fechaVencimiento);
-
-				if (formatDate(date) > fechaVencimiento) {
-					Swal.fire({
-						icon: 'error',
-						title: 'Error',
-						text: 'El código ya vencio, solicita uno nuevo.',
-						confirmButtonColor: '#bf9b55',
-					}).then(() => {
+				if (otp == input_otp) {
+					console.log('Si son iguales');
+					if (fechaVencimiento > formatDate(date)) {
+						let form = document.querySelector('#form_register');
 						e.target.removeAttribute('disabled');
-					})
-				} else {
-					if (mesage == input_otp) {
-						console.log("Igual");
-						e.target.removeAttribute('disabled');
+						form.submit();
 					} else {
+						console.log('Vencido');
 						Swal.fire({
 							icon: 'error',
 							title: 'Error',
-							text: 'El código es incorrecto verificalo nuevamente.',
+							text: 'El token ya venció solicita uno nuevo.',
 							confirmButtonColor: '#bf9b55',
 						}).then(() => {
 							e.target.removeAttribute('disabled');
 						})
 					}
+				} else {
+					console.log('Codigo incorrecto');
+					Swal.fire({
+						icon: 'error',
+						title: 'Error',
+						text: 'Token incorrecto verificalo nuevamente.',
+						confirmButtonColor: '#bf9b55',
+					}).then(() => {
+						e.target.removeAttribute('disabled');
+					})
 				}
+
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 				e.target.removeAttribute('disabled');
 			}
 		});
-	})
+	});
 
+	//Resend OTP
 	document.querySelector('#resend_btn').addEventListener('click', (e) => {
 
 		e.target.setAttribute('disabled', true);
@@ -97,5 +98,10 @@
 			}
 		});
 
-	})
+	});
+
+	//Only numbers OTP
+	document.querySelector('#correo_otp').addEventListener('input', (e) => {
+		e.target.value = e.target.value.replace(/[^0-9]/g, '')
+	});
 </script>

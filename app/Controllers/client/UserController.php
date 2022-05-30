@@ -91,13 +91,10 @@ class UserController extends BaseController
 			'NOTIFICACIONES' => $this->request->getPost('notificaciones_check'),
 		];
 
-		var_dump($data);
-
-		if ($this->validate([
-			'correo' => 'required|is_unique[DENUNCIANTES.CORREO]'
-		])) {
+		if ($this->validate(['correo' => 'required|is_unique[DENUNCIANTES.CORREO]'])) {
 			$this->_denunciantesModel->insert($data);
-			return redirect()->to(base_url('/denuncia'))->with('message', 'Registro realizado con éxito.');
+			$this->_sendEmailPassword($data['CORREO'], $data['PASSWORD']);
+			return redirect()->to(base_url('/denuncia'))->with('created', 'Inicia sesión con la contraseña que llegará a tu correo y comienza tu denuncia');
 		} else {
 			return redirect()->back()->with('message', 'Hubo un error en los datos o puede que ya exista un registro con el mismo correo');
 		}
@@ -135,6 +132,22 @@ class UserController extends BaseController
 			$password .= substr($pattern, mt_rand(0, $max), 1);
 		}
 		return $password;
+	}
+
+	private function _sendEmailPassword($to, $password)
+	{
+		$email = \Config\Services::email();
+		$email->setTo($to);
+		$email->setFrom('andrea.solorzano@yocontigo-it.com', 'FGEBC');
+		$email->setSubject('Registro realizado');
+		$body = view('email_template/password_email_template.php', ['email' => $to, 'password' => $password]);
+		$email->setMessage($body);
+
+		if ($email->send()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	private function _loadView($title, $data, $view)

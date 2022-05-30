@@ -6,7 +6,7 @@
 				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<iframe id="pdfdoc" src="<?= base_url() ?>/assets/documentos/DERECHOS DE VÍCTIMA U OFENDIDO.pdf" width="100%" height="500px"></iframe>
+				<iframe id="pdfdoc" src="<?= base_url() ?>/assets/documentos/Derechos_De_Victima_Ofendido.pdf" width="100%" height="500px"></iframe>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>

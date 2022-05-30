@@ -11,6 +11,7 @@ class OTPModel extends Model
 	protected $allowedFields = [
 		'CODIGO_OTP',
 		'CORREO',
+		'CREADO',
 		'VENCIMIENTO',
 	];
 }

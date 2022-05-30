@@ -12,7 +12,7 @@
 		</canvas>
 	</div>
 	<div class="col-12">
-		<textarea id="firma_url" name="firma_url" class="form-control" required></textarea>
+		<textarea id="firma_url" name="firma_url" class="form-control" hidden required></textarea>
 		<div class="invalid-feedback">
 			Debes agregar tu firma para poder avanzar.
 		</div>

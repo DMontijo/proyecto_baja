@@ -46,18 +46,22 @@ class OTPController extends BaseController
 
 	public function sendEmailOTP()
 	{
-		$email = \Config\Services::email();
 		$to = $this->request->getPost('email');
 		$otp = $this->_generarOTP();
+
 		date_default_timezone_set('America/Tijuana');
 		$dateTimeVariable = date("Y-m-d H:i:s");
-		$nuevafecha = strtotime('+1 minute', strtotime($dateTimeVariable));
+		$nuevafecha = strtotime('+5 minute', strtotime($dateTimeVariable));
 		$convert = date("Y-m-d H:i:s", $nuevafecha);
+
 		if ($to) {
+
+			$email = \Config\Services::email();
 			$email->setTo($to);
-			$email->setFrom('otoniel.f@yocontigo-it.com', 'FGEBC');
+			$email->setFrom('andrea.solorzano@yocontigo-it.com', 'FGEBC');
 			$email->setSubject('Nuevo Token');
-			$email->setMessage('Se ha generado un nuevo token : <strong>' . $otp . '</strong>');
+			$body = view('email_template/token_email_template', ['otp' => $otp]);
+			$email->setMessage($body);
 
 			$data = [
 				'CODIGO_OTP' => $otp,
@@ -68,13 +72,13 @@ class OTPController extends BaseController
 			$this->_OTPModel->insert($data);
 
 			if ($email->send()) {
-				return json_encode((object)['status' => 200, 'data' => $data]);
+				return json_encode((object)['status' => 200]);
 			} else {
 				$data = $email->printDebugger(['headers']);
 				return json_encode((object)['status' => 500, 'data' => $data]);
 			}
 		} else {
-			$data['message'] = 'Error en envío de mensaje';
+			$data = ['message' => 'Error en envío de mensaje'];
 			return json_encode((object)['status' => 500, 'data' => $data]);
 		}
 	}

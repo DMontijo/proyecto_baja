@@ -4,16 +4,16 @@ namespace App\Controllers\client;
 
 use App\Controllers\BaseController;
 
-use App\Models\UsuariosModel;
+use App\Models\DenunciantesModel;
 
 class AuthController extends BaseController
 {
 
-	private $_usuariosModel;
+	private $_denunciantesModel;
 
 	function __construct()
 	{
-		$this->_usuariosModel = new UsuariosModel();
+		$this->_denunciantesModel = new DenunciantesModel();
 	}
 
 	public function index()
@@ -27,7 +27,7 @@ class AuthController extends BaseController
 		$email = $this->request->getVar('correo');
 		$password = $this->request->getVar('password');
 
-		$data = $this->_usuariosModel->where('CORREO', $email)->first();
+		$data = $this->_denunciantesModel->where('CORREO', $email)->first();
 		if ($data && $password === $data['PASSWORD']) {
 			$session = session();
 			$session->set($data);

@@ -20,7 +20,7 @@
 				<div id="progress-bar" aria-valuemax="100" aria-valuemin="0" aria-valuenow="50" class="progress-bar progress-bar-striped progress-bar-animated bg-yellow" role="progressbar"></div>
 			</div>
 
-			<form class="row g-3 needs-validation py-5" action="<?= base_url() ?>/denuncia/denunciante" method="POST" enctype="multipart/form-data" novalidate>
+			<form id="form_register" name="form_register" class="row g-3 needs-validation py-5" action="<?= base_url() ?>/denuncia/denunciante" method="POST" enctype="multipart/form-data" novalidate>
 				<div class="col-12 step">
 					<div class="row">
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -279,7 +279,8 @@
 						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="documento" class="form-label fw-bold input-required">Foto de identificación</label>
-							<input class="form-control" type="file" id="documento" name="documento" accept="image/*" capture="user" required>
+							<!-- <input class="form-control" type="file" id="documento" name="documento" accept="image/*" capture="user" required> -->
+							<input class="form-control" type="file" id="documento" name="documento" accept="image/*" required>
 							<textarea id="documento_text" name="documento_text" hidden required></textarea>
 							<div class="form-text">Para tomar foto <a class="link-yellow" type="button" data-bs-toggle="modal" data-bs-target="#take_photo_modal">clic aquí <i class="bi bi-camera-fill"></i></a></div>
 						</div>
@@ -518,23 +519,19 @@
 		var forms = document.querySelectorAll('.needs-validation');
 		var inputsText = document.querySelectorAll('input[type="text"]');
 		var inputsEmail = document.querySelectorAll('input[type="email"]');
+		let form = document.querySelector('#form_register');
 
-		Array.prototype.slice.call(forms)
-			.forEach(function(form) {
-				form.addEventListener('submit', function(event) {
-					if (!form.checkValidity()) {
-						event.preventDefault();
-						event.stopPropagation();
-					} else {
-						event.preventDefault();
-						enviar_datos();
-						setTimeout(() => {
-							$('#information_validation').modal('show');
-						}, 300);
-					}
-					form.classList.add('was-validated')
-				}, false)
-			})
+		form.addEventListener('submit', function(event) {
+			if (!form.checkValidity()) {
+				event.preventDefault();
+				event.stopPropagation();
+			} else {
+				event.preventDefault();
+				enviar_datos();
+				$('#information_validation').modal('show');
+			}
+			form.classList.add('was-validated')
+		}, false)
 
 		inputsText.forEach((input) => {
 			input.addEventListener('input', function(event) {

@@ -3,68 +3,57 @@
 namespace App\Controllers;
 
 use App\Models\OTPModel;
-use CodeIgniter\Controller;
+use App\Controllers\BaseController;
 
-class CorreoOTPController extends Controller
+class CorreoController extends BaseController
 {
 	public function index()
 	{
 		return view('email_view');
 	}
 
-	protected $mRequest;
-
-	public function __construct()
+	public function sendEmail()
 	{
-		$this->mRequest = service("request");
-	}
+		$to = $this->request->getVar('email');
 
-	public function sendMail()
-	{
-		$to = $this->mRequest->getVar('destinatario');
-
-		$subject = $this->mRequest->getVar('asunto');
 		$rndno = rand(100000, 999999); //OTP generate
 		$message = urlencode($rndno);
-		$data['mensaje'] = $message;
-		$data['to'] = $to;
 
 		$email = \Config\Services::email();
 		$email->setTo($to);
-		$email->setFrom('andrea.solorzano@yocontigo-it.com', 'Prueba');
+		$email->setFrom('andrea.solorzano@yocontigo-it.com', 'FGEBC - TEST');
+		$email->setSubject('Subject');
+		$email->setMessage("Token: " . $message);
 
-		$email->setSubject($subject);
-		$email->setMessage("otp number " . $message);
 		date_default_timezone_set('America/Mexico_City');
 		$dateTimeVariable = date("Y-m-d H:i:s");
 
 		$nuevafecha = strtotime('+1 minute', strtotime($dateTimeVariable));
 		$convert = date("Y-m-d H:i:s", $nuevafecha);
 
-		$data['fecha'] = $convert;
-
 		$datos = [
 			'CODIGO_OTP' => $message,
 			'CORREO' => $to,
 			'VENCIMIENTO' => $convert,
 		];
+
 		$model = new OTPModel();
 		$model->insert($datos);
 
 		if ($email->send()) {
-			echo '<script>alert("Email successfully sent")</script>';
-			echo view('client/registro/otp_validation_modal', $data);
-			//var_dump(json_encode($data));
+			// echo '<script>alert("Email successfully sent")</script>';
+			// echo view('client/registro/otp_validation_modal', $data);
+			var_dump(json_encode($datos));
 		} else {
 			$data = $email->printDebugger(['headers']);
-			print_r($data);
+			var_dump(json_encode($data));
 		}
 	}
 
 	public function resend()
 	{
-		$to = $this->mRequest->getPost('to');
-		$subject = $this->mRequest->getPost('asunto');
+		$to = $this->request->getPost('to');
+		$subject = $this->request->getPost('asunto');
 
 		if ($to && $subject) {
 			$rndno = rand(100000, 999999); //OTP generate
@@ -109,7 +98,7 @@ class CorreoOTPController extends Controller
 
 	public function getLastOTP()
 	{
-		$email = $this->mRequest->getPost('email');
+		$email = $this->request->getPost('email');
 		$model = new OTPModel();
 		$data = $model->asObject()->where('CORREO', $email)->orderBy('IDOTP', 'desc')->first();
 		return json_encode((object)['data' => $data]);

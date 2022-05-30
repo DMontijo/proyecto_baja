@@ -21,7 +21,7 @@
 			<input type="date" class="form-control" id="fecha_nacimiento_des" name="fecha_nacimiento_des">
 		</div>
 		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-			<label for="edad_des" class="form-label fw-bold ">Edad</label>
+			<label for="edad_des" class="form-label fw-bold ">Edad aproximada</label>
 			<input type="number" class="form-control" id="edad_des" name="edad_des">
 		</div>
 		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -38,24 +38,24 @@
 			</select>
 		</div>
 		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-			<label for="color_des" class="form-label fw-bold ">Color de tes</label>
+			<label for="color_des" class="form-label fw-bold ">Color de piel o tez</label>
 			<input type="text" class="form-control" id="color_des" name="color_des">
 		</div>
 		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-			<label for="sexo" class="form-label fw-bold input-required">Sexo</label>
+			<label for="sexo_des" class="form-label fw-bold input-required">Sexo</label>
 			<br>
 			<div class="form-check form-check-inline">
-				<input class="form-check-input" type="radio" name="sexo" value="H" checked>
+				<input class="form-check-input" type="radio" name="sexo_des" value="H" checked>
 				<label class="form-check-label" for="flexRadioDefault1">HOMBRE</label>
 			</div>
 			<div class="form-check form-check-inline">
-				<input class="form-check-input" type="radio" name="sexo" value="M">
+				<input class="form-check-input" type="radio" name="sexo_des" value="M">
 				<label class="form-check-label" for="flexRadioDefault2">MUJER</label>
 			</div>
 		</div>
 		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 			<label for="señas_des" class="form-label fw-bold ">Señas particulares</label>
-			<textarea class="form-control" id="señas_des" name="señas_des"></textarea>
+			<textarea class="form-control" id="señas_des" name="señas_des" maxlength="300"></textarea>
 		</div>
 		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 			<label for="identidad_des" class="form-label fw-bold ">Identidad de género</label>
@@ -107,9 +107,9 @@
 			</select>
 		</div>
 		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-			<label for="discapacidad_desaparecida" class="form-label fw-bold">¿Padece alguna
+			<label for="discapacidad_des" class="form-label fw-bold">¿Padece alguna
 				discapacidad?</label>
-			<select class="form-select" id="discapacidad_desaparecida" name="discapacidad_desaparecida">
+			<select class="form-select" id="discapacidad_des" name="discapacidad_des">
 				<option selected disabled value="">Seleccione si padece alguna discapacidad</option>
 				<option value="VISUAL">VISUAL</option>
 				<option value="FISICA">FISICA</option>
@@ -137,13 +137,17 @@
 			<input type="text" class="form-control" id="vestimenta_des" name="vestimenta_des">
 		</div>
 		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-			<label for="parentesco" class="form-label fw-bold ">Parentesco:</label>
-			<input type="text" class="form-control" id="parentesco" name="parentesco">
+			<label for="parentesco_des" class="form-label fw-bold ">Parentesco:</label>
+			<input type="text" class="form-control" id="parentesco_des" name="parentesco_des">
+		</div>
+		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+			<label for="foto_des" class="form-label fw-bold ">Fotografía:</label>
+			<input type="file" class="form-control" id="foto_des" name="foto_des">
 		</div>
 		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 			<div class="form-check d-inline-block">
-				<input class="form-check-input" type="checkbox">
-				<label class="form-check-label" for="AceptarTodos">
+				<input id="autorization_photo_des" name="autorization_photo_des" class="form-check-input" type="checkbox">
+				<label class="form-check-label" for="autorization_photo_des">
 					Doy autorización de publicar la fotografía e información en medios de comunicación.</label>
 			</div>
 		</div>

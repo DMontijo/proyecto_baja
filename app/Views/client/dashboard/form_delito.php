@@ -134,10 +134,17 @@
 		<input type="text" class="form-control" id="clasificacion" name="clasificacion">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="fecha" class="form-label fw-bold input-required">Fecha y hora del delito:</label>
-		<input type="datetime-local" class="form-control" id="fecha" name="fecha" required>
+		<label for="fecha" class="form-label fw-bold input-required">Fecha del delito:</label>
+		<input type="date" class="form-control" id="fecha" name="fecha" required>
 		<div class="invalid-feedback">
-			Por favor, anexa una fecha y hora.
+			La fecha del delito es obligatoria
+		</div>
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="hora" class="form-label fw-bold input-required">Hora del delito:</label>
+		<input type="time" class="form-control" id="hora" name="hora" required>
+		<div class="invalid-feedback">
+			La hora del delito es obligatoria
 		</div>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">

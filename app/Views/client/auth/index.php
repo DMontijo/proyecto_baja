@@ -62,4 +62,16 @@
 </section>
 <?php include('reset_password_modal.php') ?>
 
+<?php if (session()->getFlashdata('created')) : ?>
+	<div class="alert alert-warning">
+		<script>
+			Swal.fire({
+				icon: 'success',
+				title: 'CREADO CON ÉXITO',
+				text: '<?= session()->getFlashdata('created') ?>',
+				confirmButtonColor: '#bf9b55',
+			})
+		</script>
+	</div>
+<?php endif; ?>
 <?= $this->endSection() ?>

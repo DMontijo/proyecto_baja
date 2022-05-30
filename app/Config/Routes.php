@@ -37,6 +37,7 @@ $routes->get('derivaciones', 'DerivacionesController::index');
 /**
  *  Admin Routes
  * */
+
 $routes->group('admin', function ($routes) {
 	$routes->get('/', 'admin/LoginController::index');
 	$routes->post('login', 'admin/LoginController::login_auth');
@@ -52,6 +53,7 @@ $routes->group('admin', function ($routes) {
 /**
  *  Client Routes
  * */
+
 $routes->group('denuncia', function ($routes) {
 
 	$routes->get('/', 'client/AuthController::index', ['as' => 'ciudadano_login_get']);
@@ -70,15 +72,18 @@ $routes->group('denuncia', function ($routes) {
 });
 
 /**
- *  Client Routes
+ *  Data get, emails amd OTP
  * */
-$routes->get('email', 'CorreoOTPController::index');
+
+$routes->get('email', 'CorreoController::index');
 
 $routes->group('data', function ($routes) {
 	$routes->post('get-municipios-by-estado', 'client/UserController::getMunicipiosByEstado');
 	$routes->post('get-localidades-by-municipio', 'client/UserController::getLocalidadesByMunicipio');
 	$routes->post('get-colonias-by-estado-and-municipio', 'client/UserController::getColoniasByEstadoAndMunicipio');
 
+	$routes->post('getOTP', 'CorreoController::sendEmail');
+	
 	$routes->post('sendOTP', 'OTPController::sendEmailOTP');
 	$routes->post('getLastOTP', 'OTPController::getLastOTP');
 });

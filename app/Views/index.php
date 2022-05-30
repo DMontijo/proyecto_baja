@@ -21,8 +21,8 @@
 				<div class="card-body">
 					<div class="row">
 						<div class="col-10">
-							<p class="m-0">Para realizar una video denuncia ó solicitar constancia de extravío acepta aviso de
-								privacidad y términos y condiciones. Puedes consultarlos <a style="color: var(--amarillo);" onclick="window.open(); return false;" href="">aquí</a></p>
+							<p>Para realizar una video denuncia ó solicitar constancia de extravío es necesario que aceptes los <a href="<?= base_url() ?>/assets/documentos/Terminos_Y_Condiciones.pdf" target="_blank" class="text-yellow">términos y condiciones</a> y <a href="<?= base_url() ?>/assets/documentos/Aviso_De_Privacidad_De_Datos.pdf" target="_blank" class="text-yellow">aviso de privacidad de datos</a>.
+							<br>Puedes consultar el aviso de privacidad <a href="<?= base_url() ?>/assets/documentos/Aviso_De_Privacidad_De_Datos.pdf" target="_blank" class="text-yellow">aquí</a>. Puedes consultar los términos y condiciones <a href="<?= base_url() ?>/assets/documentos/Terminos_Y_Condiciones.pdf" target="_blank" class="text-yellow">aquí</a></p>
 						</div>
 						<div class="col-2 d-flex align-content-center justify-content-end">
 							<div class="form-check d-inline-block m-0 p-0" style="min-height: 0px!important;">
@@ -38,7 +38,7 @@
 
 	<section class="row align-content-center justify-content-center">
 		<div class="col-4 d-none d-md-block">
-			<div class="card text-center bg-transparent border-0" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Para continuar debes aceptar: Aviso de privacidad y Términos y condiciones">
+			<div class="card text-center bg-transparent border-0" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Para continuar debes aceptar el Aviso de Privacidad y los Términos y Condiciones">
 				<div class="card-body">
 					<a href="<?= base_url() ?>/denuncia" class="text-decoration-none" onclick="handleClickBTN(event)" name="VideoDenuncia" id="VideoDenuncia">
 						<img src="<?= base_url() ?>/assets/img/icons/video_denuncia.png" class="w-75" alt="Video Denuncia">
@@ -74,7 +74,9 @@
 				<div class="card-body box-checks" style="background-color: var(--azul)">
 					<div class="row">
 						<div class="col-12">
-							<p>Para realizar una video denuncia ó solicitar constancia de extravío acepta términos y condiciones, aviso de privacidad y derechos del ofendido. Puedes consultarlos <a href="#" class="text-yellow">aquí</a></p>
+							<p>Para realizar una video denuncia ó solicitar constancia de extravío es necesario que aceptes los <a href="<?= base_url() ?>/assets/documentos/Aviso_De_Privacidad_De_Datos.pdf" target="_blank" class="text-yellow">términos y condiciones</a> y <a href="<?= base_url() ?>/assets/documentos/Aviso_De_Privacidad_De_Datos.pdf" target="_blank" class="text-yellow">aviso de privacidad de datos</a>.<br></p>
+							<p>Puedes consultar el aviso de privacidad <a href="<?= base_url() ?>/assets/documentos/Aviso_De_Privacidad_De_Datos.pdf" target="_blank" class="text-yellow">aquí</a></p>
+							<p>Puedes consultar los términos y condiciones <a href="<?= base_url() ?>/assets/documentos/Aviso_De_Privacidad_De_Datos.pdf" target="_blank" class="text-yellow">aquí</a></p>
 						</div>
 						<div class="col-12">
 							<div class="form-check">

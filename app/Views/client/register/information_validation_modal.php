@@ -194,8 +194,7 @@
 			dataType: "json",
 			success: function(data) {
 				e.target.removeAttribute('disabled');
-
-				console.log(data);
+				$('#information_validation').modal('hide');
 				$('#otp_validation_modal').modal('show');
 			},
 			error: function(jqXHR, textStatus, errorThrown) {

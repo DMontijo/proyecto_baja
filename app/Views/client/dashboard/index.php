@@ -33,9 +33,19 @@
 							<?php include('form_delito.php') ?>
 						</div>
 
-						<!-- DATOS IMPUTADO -->
+						<!-- DATOS POSIBLE RESPONSABLE -->
 						<div id="datos_imputado" class="col-12 d-none step">
 							<?php include('form_imputado.php') ?>
+						</div>
+
+						<!-- DATOS DEL ADULTO -->
+						<div id="datos_adulto" class="col-12 d-none step">
+							<?php include('form_datos_adulto.php') ?>
+						</div>
+
+						<!-- DATOS MENOR -->
+						<div id="datos_menor" class="col-12 d-none step">
+							<?php include('form_datos_menor.php') ?>
 						</div>
 
 						<!-- DATOS DESAPARECIDO -->
@@ -58,8 +68,14 @@
 										<br>
 										Para consultar la constancia de Derechos, da clic <a target="_blank" href="" data-bs-toggle="modal" data-bs-target="#exampleModal">aquí</a>
 										<br><br>
-										<input class="form-check-input" type="checkbox" name="derechos_imputado" id="derechos_imputado" required> <span class="fw-bold">Aceptar derechos de víctima u ofendido</span>
 									</p>
+									<div class="form-group">
+										<input class="form-check-input" type="checkbox" name="derechos_imputado" id="derechos_imputado" required>
+										<span class="fw-bold">Aceptar derechos de víctima u ofendido</span>
+										<div class="invalid-feedback">
+											Debes aceptar los derechos de víctima u ofendido para continuar.
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>

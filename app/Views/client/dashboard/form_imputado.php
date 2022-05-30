@@ -1,23 +1,23 @@
 <div class="row">
-	<h3 class="text-center fw-bolder pb-3 text-blue">Datos del imputado</h3>
+	<h3 class="text-center fw-bolder pb-3 text-blue">Datos del posible responsable</h3>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="nombre_imputado" class="form-label fw-bold">Nombre(s) imputado</label>
+		<label for="nombre_imputado" class="form-label fw-bold">Nombre(s)</label>
 		<input type="text" class="form-control" id="nombre_imputado" name="nombre_imputado" autofocus>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="alias" class="form-label fw-bold">Alias</label>
-		<input type="text" class="form-control" id="alias" name="alias">
+		<label for="alias_imputado" class="form-label fw-bold">Alias</label>
+		<input type="text" class="form-control" id="alias_imputado" name="alias_imputado">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="primer_apellido" class="form-label fw-bold">Primer apellido</label>
-		<input type="text" class="form-control" id="primer_apellido" name="primer_apellido">
+		<label for="primer_apellido_imputado" class="form-label fw-bold">Primer apellido del posible responsable</label>
+		<input type="text" class="form-control" id="primer_apellido_imputado" name="primer_apellido_imputado">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="segundo_apellido" class="form-label fw-bold">Segundo apellido</label>
-		<input type="text" class="form-control" id="segundo_apellido" name="segundo_apellido">
+		<label for="segundo_apellido_imputado" class="form-label fw-bold">Segundo apellido del posible responsable</label>
+		<input type="text" class="form-control" id="segundo_apellido_imputado" name="segundo_apellido_imputado">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="municipio_imputado" class="form-label fw-bold">Municipio del imputado:</label>
+		<label for="municipio_imputado" class="form-label fw-bold">Municipio del posible responsable</label>
 		<select class="form-select" id="municipio_imputado" name="municipio_imputado">
 			<option selected disabled value="">Elige el municipio del imputado</option>
 			<option value="1">TIJUANA</option>
@@ -28,7 +28,7 @@
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="calle_imputado" class="form-label fw-bold">Calle o avenida del imputado</label>
+		<label for="calle_imputado" class="form-label fw-bold">Calle del posible responsable</label>
 		<input type="text" class="form-control" id="calle_imputado" name="calle_imputado">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -40,35 +40,31 @@
 		<input type="text" class="form-control" id="numero_int_imputado" name="numero_int_imputado">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="tel_imputado" class="form-label fw-bold">Teléfono del imputado</label>
+		<label for="tel_imputado" class="form-label fw-bold">Teléfono del posible responsable</label>
 		<input type="text" class="form-control" id="tel_imputado" name="tel_imputado">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="fecha_nac_imputado" class="form-label fw-bold ">Fecha de nacimiento del imputado:</label>
+		<label for="fecha_nac_imputado" class="form-label fw-bold ">Fecha de nacimiento del posible responsable</label>
 		<input type="date" class="form-control" id="fecha_nac_imputado" name="fecha_nac_imputado">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="sexo_imputado" class="form-label fw-bold ">Sexo del imputado</label>
+		<label for="sexo_imputado" class="form-label fw-bold ">Sexo del posible responsable</label>
 		<br>
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="radio" name="sexo_imputado" id="M">
+			<input class="form-check-input" type="radio" name="sexo_imputado" id="HOMBRE">
 			<label class="form-check-label" for="flexRadioDefault1">MASCULINO</label>
 		</div>
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="radio" name="sexo_imputado" id="F">
+			<input class="form-check-input" type="radio" name="sexo_imputado" id="MUJER">
 			<label class="form-check-label" for="flexRadioDefault2">FEMENINO</label>
 		</div>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="escolaridad_imputado" class="form-label fw-bold">Escolaridad del imputado</label>
+		<label for="escolaridad_imputado" class="form-label fw-bold">Escolaridad del posible responsable</label>
 		<input type="text" class="form-control" id="escolaridad_imputado" name="escolaridad_imputado">
 	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="description-text" class="form-label fw-bold">Descripcion:</label>
-		<textarea class="form-control" id="description" name="description" maxlength="300"></textarea>
-		<div class="invalid-feedback">
-			Por favor, anexa una breve descripcion del delito
-		</div>
-		<div id="mensaje_ayuda" class="form-text">300 carácteres restantes</div>
+	<div class="col-12">
+		<label for="description_fisica_imputado" class="form-label fw-bold">Descripción física del posible responsable</label>
+		<textarea class="form-control" id="description_fisica_imputado" name="description_fisica_imputado" row="5" maxlength="300"></textarea>
 	</div>
 </div>
