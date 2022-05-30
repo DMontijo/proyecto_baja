@@ -134,6 +134,19 @@ class UserController extends BaseController
 		return $password;
 	}
 
+	public function existEmail()
+	{
+		$email = $this->request->getPost('email');
+		$data = $this->_denunciantesModel->where('CORREO', $email)->first();
+		if ($data == NULL) {
+			return json_encode((object)['exist' => 0]);
+		} else if (count($data) > 0) {
+			return json_encode((object)['exist' => 1]);
+		} else {
+			return json_encode((object)['exist' => 0]);
+		}
+	}
+
 	private function _sendEmailPassword($to, $password)
 	{
 		$email = \Config\Services::email();

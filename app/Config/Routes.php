@@ -78,12 +78,11 @@ $routes->group('denuncia', function ($routes) {
 $routes->get('email', 'CorreoController::index');
 
 $routes->group('data', function ($routes) {
+	$routes->post('exist-email', 'client/UserController::existEmail');
 	$routes->post('get-municipios-by-estado', 'client/UserController::getMunicipiosByEstado');
 	$routes->post('get-localidades-by-municipio', 'client/UserController::getLocalidadesByMunicipio');
 	$routes->post('get-colonias-by-estado-and-municipio', 'client/UserController::getColoniasByEstadoAndMunicipio');
 
-	$routes->post('getOTP', 'CorreoController::sendEmail');
-	
 	$routes->post('sendOTP', 'OTPController::sendEmailOTP');
 	$routes->post('getLastOTP', 'OTPController::getLastOTP');
 });

@@ -369,7 +369,7 @@
 				title: 'Error',
 				text: 'Debes llenar todos los campos requeridos para avanzar',
 				confirmButtonColor: '#bf9b55',
-			})
+			});
 		}
 	});
 
@@ -807,6 +807,38 @@
 			}
 
 		});
+
+		document.querySelector('#correo').addEventListener('input', (e) => {
+			let regex = /\S+@\S+\.\S+/
+
+			if (regex.test(e.target.value)) {
+
+				console.log('Cumple');
+
+				$.ajax({
+					data: {
+						'email': e.target.value
+					},
+					url: "<?= base_url('/data/exist-email') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						if (response.exist === 1) {
+							Swal.fire({
+								icon: 'error',
+								text: 'El correo ya se encuentra registrado, ingresa uno diferente.',
+								confirmButtonColor: '#bf9b55',
+							}).then(() => {
+								e.target.value = '';
+							})
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {}
+				});
+			} else {
+				console.log('No cumple');
+			}
+		})
 
 	})()
 
