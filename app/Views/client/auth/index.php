@@ -9,7 +9,7 @@
 	<div class="container">
 		<div class="row py-5">
 			<div class="col-12 col-md-6 d-flex justify-content-center align-items-center">
-				<img src="<?= base_url() ?>/assets/img/FGEBC_SEJAP_LOGO.png" class="logo-login" alt="FGEBC Logo">
+				<img src="<?= base_url() ?>/assets/img/LOGO_LOGIN_DESKTOP.png" class="logo-login" alt="FGEBC Logo">
 			</div>
 			<div class="col-12 col-md-6 py-5">
 				<div class="row align-items-center justify-content-center mb-5">
@@ -26,7 +26,7 @@
 				</div>
 				<div class="row align-items-center justify-content-center">
 					<div class="col-12 col-md-10 offset-md-1">
-						<div class="card bg-white shadow-lg py-3 px-3">
+						<div class="card shadow-lg py-3 px-3" style="background: rgba(255,255,255,0.8);">
 							<h2 class="fw-bolder text-white text-center text-blue mb-2">Ingresa y denuncia</h2>
 							<div class="card-body">
 								<?php if (session()->getFlashdata('message')) : ?>

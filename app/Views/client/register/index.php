@@ -808,13 +808,10 @@
 
 		});
 
-		document.querySelector('#correo').addEventListener('input', (e) => {
+		document.querySelector('#correo').addEventListener('blur', (e) => {
 			let regex = /\S+@\S+\.\S+/
 
 			if (regex.test(e.target.value)) {
-
-				console.log('Cumple');
-
 				$.ajax({
 					data: {
 						'email': e.target.value
@@ -835,8 +832,6 @@
 					},
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
-			} else {
-				console.log('No cumple');
 			}
 		})
 
