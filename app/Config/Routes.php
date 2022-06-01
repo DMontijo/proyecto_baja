@@ -62,7 +62,9 @@ $routes->group('denuncia', function ($routes) {
 
 	$routes->resource('denunciante', ['controller' => 'client/UserController']);
 
-	$routes->get('recuperar', 'client/AuthController::change_password');
+	$routes->get('change_password', 'client/AuthController::change_password');
+	$routes->post('change_password', 'client/AuthController::change_password_post');
+	$routes->post('send_email_change_password', 'client/AuthController::sendEmailChangePassword');
 
 	$routes->group('dashboard', function ($routes) {
 		$routes->get('/', 'client/DashboardController::index');
@@ -72,7 +74,7 @@ $routes->group('denuncia', function ($routes) {
 });
 
 /**
- *  Data get, emails amd OTP
+ *  Data get, emails and OTP
  * */
 
 $routes->get('email', 'CorreoController::index');

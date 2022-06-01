@@ -13,7 +13,7 @@
 	</div>
 	<div class="card shadow py-4 px-3">
 		<div class="card-body">
-			<h1 class="text-center fw-bolder pb-1 text-blue">DATOS DEL DENUNCIANTE</h1>
+			<h1 id="titulo" class="text-center fw-bolder pb-1 text-blue">DATOS DEL DENUNCIANTE</h1>
 			<p class="text-center pb-5">Los campos con un <span class="asterisco-rojo">*</span> son obligatorios</p>
 
 			<div class="progress">
@@ -25,7 +25,7 @@
 					<div class="row">
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="nombre" class="form-label fw-bold input-required">Nombre(s)</label>
-							<input type="text" class="form-control" id="nombre" name="nombre" maxlength="100" required>
+							<input type="text" class="form-control" id="nombre" name="nombre" maxlength="100" required autofocus>
 							<div class="invalid-feedback">
 								El nombre es obligatorio
 							</div>
@@ -81,7 +81,7 @@
 					<div class="row">
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="cp" class="form-label fw-bold">Código postal</label>
-							<input type="number" class="form-control" id="cp" maxlength="10" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" name="cp">
+							<input type="number" class="form-control" id="cp" maxlength="10" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" name="cp" autofocus>
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -362,6 +362,7 @@
 				}
 			}
 			progress.style.width = `${currentStep*width}%`
+			document.querySelector('#titulo').scrollIntoView();
 		} else {
 			submitBtn.click();
 			Swal.fire({

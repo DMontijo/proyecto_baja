@@ -6,8 +6,8 @@
 			</div>
 			<div class="modal-body text-center">
 				<div class="mb-3" id="divCorreo">
-					<label for="correo_otp" class="col-form-label">Ingresa el código de 6 dígitos que llego a tu correo electrónico.</label>
-					<input type="text" class="form-control text-center" id="correo_otp" name="correo_otp" required pattern="\d{6}" maxlength="6">
+					<label for="correo_otp" class="col-form-label">Ingresa el código que llego a tu correo electrónico.</label>
+					<input type="text" class="form-control text-center" id="correo_otp" name="correo_otp" required pattern="\d{6}" maxlength="6" placeholder="Código de 6 dígitos númericos.">
 				</div>
 				<button id="resend_btn" class="btn btn-secondary" role="button" type="submit"><i class="bi bi-arrow-clockwise"></i> Solicitar de nuevo</button>
 				<button id="validate_btn" class="btn btn-primary" role="button" type="submit"><i class="bi bi-check-circle-fill"></i> Validar correo</button>
@@ -24,6 +24,7 @@
 			'email': document.querySelector('#correo').value
 		}
 		e.target.setAttribute('disabled', true);
+		document.querySelector('#resend_btn').setAttribute('disabled', true);
 		$.ajax({
 			data: data,
 			method: "post",
@@ -45,16 +46,18 @@
 					if (fechaVencimiento > formatDate(date)) {
 						let form = document.querySelector('#form_register');
 						e.target.removeAttribute('disabled');
+						document.querySelector('#resend_btn').removeAttribute('disabled');
 						form.submit();
 					} else {
 						console.log('Vencido');
 						Swal.fire({
 							icon: 'error',
 							title: 'Error',
-							text: 'El token ya venció solicita uno nuevo.',
+							text: 'El código ingresado ya venció, solicita uno nuevo.',
 							confirmButtonColor: '#bf9b55',
 						}).then(() => {
 							e.target.removeAttribute('disabled');
+							document.querySelector('#resend_btn').removeAttribute('disabled');
 						})
 					}
 				} else {
@@ -62,16 +65,18 @@
 					Swal.fire({
 						icon: 'error',
 						title: 'Error',
-						text: 'Token incorrecto verificalo nuevamente.',
+						text: 'El código ingresado es incorrecto.',
 						confirmButtonColor: '#bf9b55',
 					}).then(() => {
 						e.target.removeAttribute('disabled');
+						document.querySelector('#resend_btn').removeAttribute('disabled');
 					})
 				}
 
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 				e.target.removeAttribute('disabled');
+				document.querySelector('#resend_btn').removeAttribute('disabled');
 			}
 		});
 	});
@@ -80,6 +85,7 @@
 	document.querySelector('#resend_btn').addEventListener('click', (e) => {
 
 		e.target.setAttribute('disabled', true);
+		document.querySelector('#validate_btn').setAttribute('disabled', true);
 		var data = {
 			'email': document.querySelector('#correo').value
 		}
@@ -92,9 +98,11 @@
 			success: function(data) {
 				console.log(data);
 				e.target.removeAttribute('disabled');
+				document.querySelector('#validate_btn').removeAttribute('disabled');
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 				e.target.removeAttribute('disabled');
+				document.querySelector('#validate_btn').removeAttribute('disabled');
 			}
 		});
 

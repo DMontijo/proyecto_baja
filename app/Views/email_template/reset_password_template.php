@@ -104,7 +104,7 @@
 		}
 
 		.footer p {
-			font-size: 14px !important;
+			font-size: .8em !important;
 		}
 	</style>
 </head>
@@ -126,10 +126,14 @@
 									<div style="background-color: #E5E4E3!important; margin-top: -100px;padding: 0px 20px 0px 20px;text-align: center;">
 										<img src="<?= base_url('/assets/img/email/LOGO_CORREO.png') ?> " alt="Logo" style="margin-top: -100px;width: 200px;">
 										<div class="body">
-											<p>Se ha generado un nuevo código.</p>
-											<h2>SU CÓDIGO ES:<br />
-												<?= $otp ?>
-											</h2>
+											<p>
+												Usted ha solicitado un cambio de contraseña.
+												<br>Para cambiar la contraseña haga clic en el boton inferior.
+											</p>
+											<br>
+											<a class="btn" href="<?= $link ?>">
+												NUEVA CONTRASEÑA
+											</a>
 										</div>
 										<div class="footer">
 											<p>Si usted no ha realizado esta acción ignore este mensaje.</p>
