@@ -7,10 +7,31 @@
 <?= $this->section('content') ?>
 <div class="row">
 	<div class="col-12">
-		<div class="card rounded bg-yellow shadow text-center mb-4">
-			<img src="<?= base_url() ?>/assets/img/banner.png" width="100%" height="100%" alt="" />
+		<div class="col-12">
+			<div class="card bg-primary shadow mb-4" style="font-size:14px;background:url(<?= base_url('/assets/img/banner/LINEAS_BANNER.png') ?>);background-repeat: no-repeat;background-size: cover !important;background-position-y: top;border-radius:10px;">
+				<div class="row py-5 px-5">
+					<div class="col-lg-7 col-12 fw-bold text-white ">
+						<p>Los delitos que se enuncian a continuación deberá ser denunciados de manera personal ante la Unidad de Investigación correspondiente.</p>
+						<ul class="ps-5 m-0">
+							<li>Violación</li>
+							<li>Secuestro</li>
+							<li>Tortura</li>
+							<li>Trata de personas</li>
+							<li>Abuso de autoridad en contra del personal adacrito</li>
+							<li>Homicidio en todas sus modalidades</li>
+							<li>Delitos contra la salud modalidad narcomenudeo</li>
+							<li>Abuso sexual cuando la victima sea menor de edad</li>
+							<li>Tráfico de menores</li>
+						</ul>
+					</div>
+					<div class="col-lg-5 col-12 d-flex flex-column justify-content-between text-center">
+						<a class="p-0 my-3" href="tel:911" role="button"><img src="<?= base_url('/assets/img/banner/911_BANNER.png') ?>" class="img-fluid"></a>
+						<a class="p-0 my-3" href="tel:089" role="button" role="button"><img src="<?= base_url('/assets/img/banner/089_BANNER.png') ?>" class="img-fluid"></a>
+					</div>
+				</div>
+			</div>
 		</div>
-		<div class="card rounded shadow">
+		<div class="card rounded shadow border-0">
 			<div class="card-body p-0 py-3 p-sm-5">
 				<div class="container">
 					<h1 class="text-center fw-bolder pb-1 text-blue">DENUNCIA</h1>
@@ -157,7 +178,7 @@
 		var vista = document.querySelectorAll('.step');
 
 		if (validarStep(vista[currentStep].id)) {
-			
+
 			if (document.querySelector('input[name="es_menor"]:checked').value == "NO") {
 				document.getElementById('datos_menor').classList.remove('step');
 				document.getElementById('datos_adulto').classList.remove('step');
