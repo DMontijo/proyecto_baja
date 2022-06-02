@@ -72,16 +72,22 @@
 		<label for="municipio" class="form-label fw-bold input-required">Municipio:</label>
 		<select class="form-select" id="municipio" name="municipio" required>
 			<option selected disabled value="">Elige el municipio</option>
-			<option value="1">TIJUANA</option>
-			<option value="2">PLAYAS DE ROSARITO</option>
-			<option value="3">TECATE</option>
-			<option value="4">MEXICALI</option>
-			<option value="5">ENSENADA</option>
-			<option value="6">SAN FELIPE</option>
-			<option value="7">SAN QUINTIN</option>
+			<?php foreach ($body_data->municipios as $index => $municipio) { ?>
+				<option value="<?= $municipio->ID ?>"> <?= $municipio->MUNICIPIODESCR ?> </option>
+			<?php } ?>
 		</select>
 		<div class="invalid-feedback">
 			Por favor, selecciona un municipio.
+		</div>
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="colonia" class="form-label fw-bold input-required">Colonia del delito</label>
+		<select class="form-select" id="colonia_select" name="colonia_select" required>
+			<option selected disabled value="">Seleccione la colonia</option>
+		</select>
+		<input type="text" class="form-control d-none" id="colonia" name="colonia" maxlength="100" required>
+		<div class="invalid-feedback">
+			La colonia es obligatoria
 		</div>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -106,24 +112,12 @@
 		</div>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="colonia-text" class="form-label fw-bold input-required">Colonia del delito:</label>
-		<select class="form-select" id="colonia" name="colonia" required>
-			<option selected disabled value="">Elige la colonia</option>
-			<?php foreach ($body_data->colonias as $index => $colonia) { ?>
-				<option value="<?= $colonia->COLONIAID ?>"> <?= $colonia->COLONIADESCR ?> </option>
-			<?php } ?>
-		</select>
-		<div class="invalid-feedback">
-			Por favor, selecciona una colonia.
-		</div>
-	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="lugar" class="form-label fw-bold input-required">Lugar del delito:</label>
 		<select class="form-select" id="lugar" name="lugar" required>
 			<option selected disabled value="">Elige el lugar del delito</option>
-			<option value="1">Instituciones privadas</option>
-			<option value="2">Centro escolar</option>
-			<option value="3">Centro recreativo</option>
+			<?php foreach ($body_data->lugares as $index => $lugar) { ?>
+				<option value="<?= $lugar->HECHOLUGARID ?>"> <?= $lugar->HECHODESCR ?> </option>
+			<?php } ?>
 		</select>
 		<div class="invalid-feedback">
 			Por favor, selecciona un lugar.
@@ -160,3 +154,64 @@
 		</div>
 	</div>
 </div>
+<script>
+	function clearSelect(select_element) {
+		for (let i = select_element.options.length; i >= 1; i--) {
+			select_element.remove(i);
+		}
+	}
+
+	document.querySelector('#municipio').addEventListener('change', (e) => {
+		let select_colonia = document.querySelector('#colonia_select');
+		let colonia = document.querySelector('#colonia');
+
+		let estado = parseInt(Number(e.target.value) / 1000);
+		let municipio = (Number(e.target.value) - estado * 1000);
+
+		clearSelect(select_colonia);
+
+		let data = {
+			'estado_id': estado,
+			'municipio_id': municipio
+		};
+
+		select_colonia.classList.remove('d-none');
+		colonia.classList.add('d-none');
+
+		$.ajax({
+			data: data,
+			url: "<?= base_url('/data/get-colonias-by-estado-and-municipio') ?>",
+			method: "POST",
+			dataType: "json",
+			success: function(response) {
+				let colonias = response.data;
+
+				colonias.forEach(colonia => {
+					var option = document.createElement("option");
+					option.text = colonia.COLONIADESCR;
+					option.value = colonia.ID;
+					select_colonia.add(option);
+				});
+				var option = document.createElement("option");
+				option.text = 'OTRO';
+				option.value = '0';
+				select_colonia.add(option);
+			},
+			error: function(jqXHR, textStatus, errorThrown) {}
+		});
+
+	});
+
+	document.querySelector('#colonia_select').addEventListener('change', (e) => {
+		let select_colonia = document.querySelector('#colonia_select');
+		let input_colonia = document.querySelector('#colonia');
+
+		if (e.target.value === '0') {
+			select_colonia.classList.add('d-none');
+			input_colonia.classList.remove('d-none');
+			input_colonia.focus();
+		} else {
+			input_colonia.value = e.target.value;
+		}
+	});
+</script>

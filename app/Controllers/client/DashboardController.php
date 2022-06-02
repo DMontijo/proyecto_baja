@@ -15,6 +15,7 @@ use App\Models\Datos_del_responsableModel;
 use App\Models\Datos_desaparecidoModel;
 use App\Models\Datos_menorModel;
 use App\Models\Datos_vehiculoModel;
+use App\Models\HechoLugarModel;
 
 
 class DashboardController extends BaseController
@@ -33,15 +34,17 @@ class DashboardController extends BaseController
 		$this->_datosdelmenorModel = new Datos_menorModel();
 		$this->_datosdesaparecidoModel = new Datos_desaparecidoModel();
 		$this->_datosvehiculoModel = new Datos_vehiculoModel();
+		$this->_hechoLugarModel = new HechoLugarModel();
 	}
 
 	public function index()
 	{
 		$data = (object)array();
 		$data->estados = $this->_estadosModel->asObject()->findAll();
-		$data->municipios = $this->_municipiosModel->asObject()->findAll();
+		$data->municipios = $this->_municipiosModel->asObject()->where('ESTADOID', '2')->findAll();
 		$data->localidades = $this->_localidadesModel->asObject()->findAll();
 		$data->colonias = $this->_coloniasModel->asObject()->findAll();
+		$data->lugares = $this->_hechoLugarModel->asObject()->orderBy('HECHODESCR', 'asc')->findAll();
 		$this->_loadView('Dashboard', 'dashboard', '', $data, 'index');
 	}
 
@@ -55,16 +58,6 @@ class DashboardController extends BaseController
 	{
 		$data = array();
 		$this->_loadView('Mis denuncias', 'denuncias', '', $data, 'lista_denuncias');
-	}
-
-	private function _loadView($title, $menu, $submenu, $data, $view)
-	{
-		$data2 = [
-			'header_data' => (object)['title' => $title, 'menu' => $menu, 'submenu' => $submenu],
-			'body_data' => $data
-		];
-
-		echo view("client/dashboard/$view", $data2);
 	}
 
 	public function create()
@@ -208,6 +201,16 @@ class DashboardController extends BaseController
 		var_dump($dataPreguntas, $dataDelito, $dataImputado, $dataAdulto, $dataMenor, $dataDesaparecido, $dataVehiculo);
 
 		// $this->_datosvehiculoModel->insert($dataVehiculo);
+	}
+
+	private function _loadView($title, $menu, $submenu, $data, $view)
+	{
+		$data2 = [
+			'header_data' => (object)['title' => $title, 'menu' => $menu, 'submenu' => $submenu],
+			'body_data' => $data
+		];
+
+		echo view("client/dashboard/$view", $data2);
 	}
 }
 

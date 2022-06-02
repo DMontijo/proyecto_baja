@@ -52,12 +52,9 @@
 
 
 <script>
-	$(function() {
-		$('#fecha_nacimiento_menor').on('change', calcularEdad);
-	});
-
-	function calcularEdad() {
-		fecha = $(this).val();
+	document.querySelector('#fecha_nacimiento_menor').addEventListener('change', (e) => {
+		console.log('Cambiando fecha de nacimiento');
+		let fecha = e.target.value;
 		var hoy = new Date();
 		var cumpleanos = new Date(fecha);
 		var edad = hoy.getFullYear() - cumpleanos.getFullYear();
@@ -66,6 +63,7 @@
 		if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
 			edad--;
 		}
-		$('#edad_menor').val(edad);
-	}
+		console.log('Edad: ', edad);
+		document.querySelector('#edad_menor').value = edad;
+	})
 </script>
