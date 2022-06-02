@@ -15,11 +15,11 @@
 		<label for="eres_tu" class="form-label fw-bold input-required">¿Eres tú el menor de edad?</label>
 		<br>
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="radio" name="eres_tu" value="SI" checked>
+			<input class="form-check-input" type="radio" name="eres_tu" value="SI" onclick="alerta(event)" required>
 			<label class="form-check-label" for="flexRadioDefault1">SI</label>
 		</div>
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="radio" name="eres_tu" value="NO">
+			<input class="form-check-input" type="radio" name="eres_tu" value="NO" checked onclick="alerta(event)" required>
 			<label class="form-check-label" for="flexRadioDefault2">NO</label>
 		</div>
 	</div>
@@ -27,11 +27,11 @@
 		<label for="es_tercera_edad" class="form-label fw-bold input-required">¿La victima u ofendido es de la tercera edad?</label>
 		<br>
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="radio" name="es_tercera_edad" value="SI">
+			<input class="form-check-input" type="radio" name="es_tercera_edad" value="SI" required>
 			<label class="form-check-label" for="flexRadioDefault1">SI</label>
 		</div>
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="radio" name="es_tercera_edad" value="NO">
+			<input class="form-check-input" type="radio" name="es_tercera_edad" value="NO" required checked>
 			<label class="form-check-label" for="flexRadioDefault2">NO</label>
 		</div>
 	</div>
@@ -83,13 +83,22 @@
 <script>
 	function MostrarSiEresTu() {
 		document.getElementById('eres_tu').classList.remove('d-none');
-		document.getElementById('menor').classList.remove('d-none');
 		document.getElementById('es_mayor').classList.add('d-none');
 	}
 
 	function EsconderSiEresTu() {
 		document.getElementById('eres_tu').classList.add('d-none');
-		document.getElementById('menor').classList.add('d-none');
 		document.getElementById('es_mayor').classList.remove('d-none');
+	}
+
+	function alerta(e) {
+		console.log(e.target.value);
+		if (e.target.value === 'SI') {
+			document.getElementById('menor').classList.remove('d-none');
+		}
+
+		if (e.target.value === 'NO') {
+			document.getElementById('menor').classList.add('d-none');
+		}
 	}
 </script>

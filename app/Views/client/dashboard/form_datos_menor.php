@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row" method="POST">
 	<h3 class="text-center fw-bolder pb-3 text-blue">Registra los datos del menor de edad</h3>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="nombre_menor" class="form-label fw-bold">Nombre(s)</label>

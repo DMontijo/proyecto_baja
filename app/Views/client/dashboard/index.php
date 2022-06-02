@@ -21,7 +21,7 @@
 						<div id="progress-bar" aria-valuemax="100" aria-valuemin="0" aria-valuenow="50" class="progress-bar progress-bar-striped progress-bar-animated bg-yellow" role="progressbar"></div>
 					</div>
 
-					<form action="<?= base_url() ?>/denuncia/dashboard/video-denuncia" class="row needs-validation" novalidate>
+					<form action="<?= base_url() ?>/denuncia/dashboard/create" method="post" class="row needs-validation" novalidate>
 
 						<!-- PREGUNTAS INICIALES -->
 						<div id="datos_iniciales" class="col-12 step">
@@ -33,9 +33,9 @@
 							<?php include('form_delito.php') ?>
 						</div>
 
-						<!-- DATOS POSIBLE RESPONSABLE -->
-						<div id="datos_imputado" class="col-12 d-none step">
-							<?php include('form_imputado.php') ?>
+						<!-- DATOS MENOR -->
+						<div id="datos_menor" class="col-12 d-none step">
+							<?php include('form_datos_menor.php') ?>
 						</div>
 
 						<!-- DATOS DEL ADULTO -->
@@ -43,9 +43,9 @@
 							<?php include('form_datos_adulto.php') ?>
 						</div>
 
-						<!-- DATOS MENOR -->
-						<div id="datos_menor" class="col-12 d-none step">
-							<?php include('form_datos_menor.php') ?>
+						<!-- DATOS POSIBLE RESPONSABLE -->
+						<div id="datos_imputado" class="col-12 d-none step">
+							<?php include('form_imputado.php') ?>
 						</div>
 
 						<!-- DATOS DESAPARECIDO -->
@@ -57,6 +57,7 @@
 						<div id="datos_robo_vehiculo" class="col-12 d-none step">
 							<?php include('form_robo_vehiculo.php') ?>
 						</div>
+
 
 						<!-- PASO FINAL -->
 						<div id="paso_final" class="col-12 step d-none step">
@@ -140,20 +141,6 @@
 			}, false)
 		});
 
-		// radiosDesaparecido.forEach((radio) => {
-		// 	radio.addEventListener('change', (e) => {
-		// 		if (e.target.value === 'SI') {
-		// 			document.querySelector('#datos_desaparecido').classList.add('step');
-		// 			refreshSteps()
-		// 			console.log('stepCount');
-		// 		} else {
-		// 			document.querySelector('#datos_desaparecido').classList.remove('step');
-		// 			refreshSteps()
-		// 			console.log('stepCount');
-		// 		}
-		// 	})
-		// });
-
 	})()
 
 	$('#description').keyup(() => {
@@ -166,7 +153,47 @@
 	chargeCurrentStep(currentStep);
 
 	nextBtn.addEventListener('click', () => {
-		if (validarStep(currentStep)) {
+
+		var vista = document.querySelectorAll('.step');
+
+		if (validarStep(vista[currentStep].id)) {
+			
+			if (document.querySelector('input[name="es_menor"]:checked').value == "NO") {
+				document.getElementById('datos_menor').classList.remove('step');
+				document.getElementById('datos_adulto').classList.remove('step');
+			} else {
+				if (document.querySelector('input[name="eres_tu"]:checked').value == "NO") {
+					document.getElementById('datos_adulto').classList.remove('step');
+					document.getElementById('datos_menor').classList.add('step');
+				} else {
+					document.getElementById('datos_menor').classList.remove('step');
+					document.getElementById('datos_adulto').classList.add('step');
+				}
+			}
+
+			if (document.querySelector('input[name="esta_desaparecido"]:checked').value == "NO") {
+				document.getElementById('datos_desaparecido').classList.remove('step');
+			} else {
+				document.getElementById('datos_desaparecido').classList.add('step');
+			}
+
+			if (document.querySelector("#delito").value == "49" || document.querySelector("#delito").value == "50") {
+				document.getElementById('datos_robo_vehiculo').classList.add('step');
+			} else {
+				document.getElementById('datos_robo_vehiculo').classList.remove('step');
+			}
+
+			if (document.querySelector('input[name="responsable"]:checked').value == "NO") {
+				document.getElementById('datos_imputado').classList.remove('step');
+			} else {
+				document.getElementById('datos_imputado').classList.add('step');
+			}
+
+
+			steps = document.querySelectorAll('.step');
+			var stepCount = steps.length - 1;
+			var width = 100 / stepCount;
+
 			currentStep++;
 			console.log(currentStep);
 			let previousStep = currentStep - 1;
@@ -242,77 +269,6 @@
 		return text.replaceAll('´', '');
 	}
 
-	function enviar_datos() {
-		let delito = document.querySelector("#delito").value ? document.querySelector("#delito").value : '';
-		let municipio = document.querySelector("#municipio").value ? document.querySelector("#municipio").value : '';
-		let calle = document.querySelector("#calle").value ? document.querySelector("#calle").value : '';
-		let exterior = document.querySelector("#exterior").value ? document.querySelector("#exterior").value : '';
-		let interior = document.querySelector("#interior").value ? document.querySelector("#interior").value : '';
-		let colonia = document.querySelector("#colonia").value ? document.querySelector("#colonia").value : '';
-		let lugar = document.querySelector("#lugar").value ? document.querySelector("#lugar").value : '';
-		let clasificacion = document.querySelector("#clasificacion").value ? document.querySelector("#clasificacion").value : '';
-		let fecha = document.querySelector("#fecha").value ? document.querySelector("#fecha").value : '';
-
-		let nombre_imputado = document.querySelector("#nombre_imputado").value ? document.querySelector("#nombre_imputado").value : '';
-		let alias = document.querySelector("#alias").value ? document.querySelector("#alias").value : '';
-		let primer_apellido = document.querySelector("#primer_apellido").value ? document.querySelector("#primer_apellido").value : '';
-		let segundo_apellido = document.querySelector("#segundo_apellido").value ? document.querySelector("#segundo_apellido").value : '';
-		let municipio_imputado = document.querySelector("#municipio_imputado").value ? document.querySelector("#municipio_imputado").value : '';
-		let calle_imputado = document.querySelector("#calle_imputado").value ? document.querySelector("#calle_imputado").value : '';
-		let numero_ext_imputado = document.querySelector("#numero_ext_imputado").value ? document.querySelector("#numero_ext_imputado").value : '';
-		let numero_int_imputado = document.querySelector("#numero_int_imputado").value ? document.querySelector("#numero_int_imputado").value : '';
-		let tel_imputado = document.querySelector("#tel_imputado").value ? document.querySelector("#tel_imputado").value : '';
-		let fecha_nac_imputado = document.querySelector("#fecha_nac_imputado").value ? document.querySelector("#fecha_nac_imputado").value : '';
-		let sexo = document.querySelector('input[name="sexo_imputado"]:checked').value ? document.querySelector('input[name="sexo_imputado"]:checked').value : '';
-		let escolaridad_imputado = document.querySelector("#escolaridad_imputado").value ? document.querySelector("#escolaridad_imputado").value : '';
-		let description = document.querySelector("#description").value ? document.querySelector("#description").value : '';
-
-		document.querySelector('#delito_modal').value = delito;
-		document.querySelector('#municipio_modal').value = municipio;
-		document.querySelector('#calle_modal').value = calle;
-		document.querySelector('#exterior_modal').value = exterior;
-		document.querySelector('#interior_modal').value = interior;
-		document.querySelector('#colonia_modal').value = colonia;
-		document.querySelector('#lugar_modal').value = lugar;
-		document.querySelector('#clasificacion_modal').value = clasificacion;
-		document.querySelector('#fechadel_modal').value = fecha;
-
-		document.querySelector('#nombre_modal').value = nombre_imputado;
-		document.querySelector('#alias_modal').value = alias;
-		document.querySelector('#primer_modal').value = primer_apellido;
-		document.querySelector('#segundo_modal').value = segundo_apellido;
-		document.querySelector('#municipioimp_modal').value = municipio_imputado;
-		document.querySelector('#calleimp_modal').value = calle_imputado;
-		document.querySelector('#numext_modal').value = calle;
-		document.querySelector('#numinterior_modal').value = numero_int_imputado;
-		document.querySelector('#telimp_modal').value = tel_imputado;
-		document.querySelector('#fechaimp_modal').value = fecha_nac_imputado;
-		document.querySelector('#escolaridadimp_modal').value = escolaridad_imputado;
-		document.querySelector('#descrimp_modal').value = description;
-	}
-
-	function enviar_datosT() {
-		let delito = document.querySelector("#delito").value ? document.querySelector("#delito").value : '';
-		let municipio = document.querySelector("#municipio").value ? document.querySelector("#municipio").value : '';
-		let calle = document.querySelector("#calle").value ? document.querySelector("#calle").value : '';
-		let exterior = document.querySelector("#exterior").value ? document.querySelector("#exterior").value : '';
-		let interior = document.querySelector("#interior").value ? document.querySelector("#interior").value : '';
-		let colonia = document.querySelector("#colonia").value ? document.querySelector("#colonia").value : '';
-		let lugar = document.querySelector("#lugar").value ? document.querySelector("#lugar").value : '';
-		let clasificacion = document.querySelector("#clasificacion").value ? document.querySelector("#clasificacion").value : '';
-		let fecha = document.querySelector("#fecha").value ? document.querySelector("#fecha").value : '';
-
-		document.querySelector('#delito_modalT').value = delito;
-		document.querySelector('#municipio_modalT').value = municipio;
-		document.querySelector('#calle_modalT').value = calle;
-		document.querySelector('#exterior_modalT').value = exterior;
-		document.querySelector('#interior_modalT').value = interior;
-		document.querySelector('#colonia_modalT').value = colonia;
-		document.querySelector('#lugar_modalT').value = lugar;
-		document.querySelector('#clasificacion_modalT').value = clasificacion;
-		document.querySelector('#fechadel_modalT').value = fecha;
-	}
-
 	function chargeCurrentStep(num) {
 		steps.forEach((step, index) => {
 			if (num === index) {
@@ -325,61 +281,169 @@
 		progress.style.width = `${currentStep*width}%`
 	}
 
+
 	function validarStep(step) {
-		// switch (step) {
-		// 	case 0:
-		// 		if (
-		// 			document.querySelector('input[name="tiene_discapacidad"]:checked') &&
-		// 			document.querySelector('input[name="fue_con_arma"]:checked') &&
-		// 			document.querySelector('input[name="esta_desaparecido"]:checked')
-		// 		) {
-		// 			return true
-		// 		} else {
-		// 			return false;
-		// 		}
-		// 		break;
-		// 	case 1:
-		// 		if (
-		// 			document.querySelector('#delito').value != '' &&
-		// 			document.querySelector('#municipio').value != '' &&
-		// 			document.querySelector('#calle').value != '' &&
-		// 			document.querySelector('#exterior').value != '' &&
-		// 			document.querySelector('#colonia').value != '' &&
-		// 			document.querySelector('#lugar').value != '' &&
-		// 			document.querySelector('#fecha').value != ''
-		// 		) {
-		// 			return true
-		// 		} else {
-		// 			return false
-		// 		}
-		// 		break;
-		// 	case 2:
-		// 		if (
-		// 			document.querySelector('#identificacion').value != '' &&
-		// 			document.querySelector('#e_civil').value != '' &&
-		// 			document.querySelector('#discapacidad').value != '' &&
-		// 			document.querySelector('#idioma').value != '' &&
-		// 			document.querySelector('#documento').value != ''
-		// 		) {
-		// 			return true
-		// 		} else {
-		// 			return false
-		// 		}
-		// 		break;
-		// 	case 3:
-		// 		if (
-		// 			document.querySelector('#firma_url').value != '' &&
-		// 			document.querySelector('#notificaciones_check').checked
-		// 		) {
-		// 			return true
-		// 		} else {
-		// 			return false
-		// 		}
-		// 		break;
-		// 	default:
-		// 		return true;
-		// 		break;
-		// }
+		switch (step) {
+			case 'datos_iniciales':
+				if (
+					document.querySelector('input[name="es_menor"]:checked') &&
+					document.querySelector('input[name="eres_tu"]:checked') &&
+					document.querySelector('input[name="tiene_discapacidad"]:checked') &&
+					document.querySelector('input[name="fue_con_arma"]:checked') &&
+					document.querySelector('input[name="esta_desaparecido"]:checked')
+				) {
+					return true;
+				} else {
+					return false;
+				}
+				break;
+			case 'datos_menor':
+				if (
+					document.querySelector('#nombre_menor').value != '' &&
+					document.querySelector('#apellido_paterno_menor').value != '' &&
+					document.querySelector('#apellido_materno_menor').value != '' &&
+					document.querySelector('#pais_menor').value != '' &&
+					document.querySelector('#estado_menor').value != '' &&
+					document.querySelector('#municipio_menor').value != '' &&
+					document.querySelector('#calle_menor').value != '' &&
+					document.querySelector('#numero_ext_menor').value != '' &&
+					document.querySelector('#numero_int_menor').value != '' &&
+					document.querySelector('#cp_menor').value != '' &&
+					document.querySelector('#fecha_nacimiento_menor').value != '' &&
+					document.querySelector('#edad_menor').value != ''
+				) {
+					return true
+				} else {
+					return true
+				}
+				break;
+			case 'datos_adulto':
+				if (
+					document.querySelector('#nombre_adulto').value != '' &&
+					document.querySelector('#ape_paterno_adulto').value != '' &&
+					document.querySelector('#ape_materno_adulto').value != '' &&
+					document.querySelector('#pais_adulto').value != '' &&
+					document.querySelector('#estado_adulto').value != '' &&
+					document.querySelector('#municipio_adulto').value != '' &&
+					document.querySelector('#calle_adulto').value != '' &&
+					document.querySelector('#numero_ext_adulto').value != '' &&
+					document.querySelector('#numero_int_adulto').value != '' &&
+					document.querySelector('#cp_adulto').value != '' &&
+					document.querySelector('#fecha_nac_adulto').value != '' &&
+					document.querySelector('#edad_adulto').value != ''
+
+				) {
+					return true
+				} else {
+					return true
+				}
+				break;
+			case 'datos_desaparecido':
+				if (
+					document.querySelector('#nombre_des').value != '' &&
+					document.querySelector('#apellido_paterno_des').value != '' &&
+					document.querySelector('#apellido_materno_des').value != '' &&
+					document.querySelector('#estatura_des').value != '' &&
+					document.querySelector('#fecha_nacimiento_des').value != '' &&
+					document.querySelector('#edad_des').value != '' &&
+					document.querySelector('#peso_des').value != '' &&
+					document.querySelector('#complexion_des').value != '' &&
+					document.querySelector('#color_des').value != '' &&
+					document.querySelector('input[name="sexo_des"]:checked') &&
+					document.querySelector('#señas_des').value != '' &&
+					document.querySelector('#identidad_des').value != '' &&
+					document.querySelector('#color_cabello_des').value != '' &&
+					document.querySelector('#tam_cabello_des').value != '' &&
+					document.querySelector('#form_cabello_des').value != '' &&
+					document.querySelector('#color_ojos_des').value != '' &&
+					document.querySelector('#frente_des').value != '' &&
+					document.querySelector('#ceja_des').value != '' &&
+					document.querySelector('#discapacidad_des').value != '' &&
+					document.querySelector('#origen_des').value != '' &&
+					document.querySelector('#dia_des').value != '' &&
+					document.querySelector('#lugar_des').value != '' &&
+					document.querySelector('#vestimenta_des').value != '' &&
+					document.querySelector('#parentesco_des').value != '' &&
+					document.querySelector('#foto_des').value != '' &&
+					document.querySelector('#autorization_photo_des').value != ''
+				) {
+					return true
+				} else {
+					return true
+				}
+				break;
+			case 'datos_delito':
+				if (
+					document.querySelector('#delito').value != '' &&
+					document.querySelector('#municipio').value != '' &&
+					document.querySelector('#calle').value != '' &&
+					document.querySelector('#exterior').value != '' &&
+					document.querySelector('#colonia').value != '' &&
+					document.querySelector('#lugar').value != '' &&
+					document.querySelector('#fecha').value != '' &&
+					document.querySelector('#hora').value != '' &&
+					document.querySelector('input[name="responsable"]:checked')
+				) {
+					return true;
+				} else {
+					return false;
+				}
+				break;
+			case 'datos_robo_vehiculo':
+				if (
+					document.querySelector('#tipo_placas_vehiculo').value != '' &&
+					document.querySelector('#placas_vehiculo').value != '' &&
+					document.querySelector('#confirm_placas_vehiculo').value != '' &&
+					document.querySelector('#estado_vehiculo').value != '' &&
+					document.querySelector('#serie_vehiculo').value != '' &&
+					document.querySelector('#confirm_serie_vehiculo').value != '' &&
+					document.querySelector('#distribuidor_vehiculo').value != '' &&
+					document.querySelector('#marca').value != '' &&
+					document.querySelector('#linea_vehiculo').value != '' &&
+					document.querySelector('#version_vehiculo').value != '' &&
+					document.querySelector('#tipo_vehiculo').value != '' &&
+					document.querySelector('#servicio_vehiculo').value != '' &&
+					document.querySelector('#modelo_vehiculo').value != '' &&
+					document.querySelector('input[name="seguro_vigente_vehiculo"]:checked') &&
+					document.querySelector('#color_vehiculo').value != '' &&
+					document.querySelector('#color_tapiceria_vehiculo').value != '' &&
+					document.querySelector('#num_chasis_vehiculo').value != '' &&
+					document.querySelector('input[name="transmision_vehiculo"]:checked') &&
+					document.querySelector('input[name="traccion_vehiculo"]:checked') &&
+					document.querySelector('#foto_vehiculo').value != '' &&
+					document.querySelector('#description_vehiculo').value != ''
+				) {
+					return true;
+				} else {
+					return true;
+				}
+				break;
+			case 'datos_imputado':
+				if (
+					document.querySelector('#nombre_imputado').value != '' &&
+					document.querySelector('#alias_imputado').value != '' &&
+					document.querySelector('#primer_apellido_imputado').value != '' &&
+					document.querySelector('#segundo_apellido_imputado').value != '' &&
+					document.querySelector('#municipio_imputado').value != '' &&
+					document.querySelector('#calle_imputado').value != '' &&
+					document.querySelector('#numero_ext_imputado').value != '' &&
+					document.querySelector('#numero_int_imputado').value != '' &&
+					document.querySelector('#tel_imputado').value != '' &&
+					document.querySelector('#fecha_nac_imputado').value != '' &&
+					document.querySelector('#sexo_imputado').value != '' &&
+					document.querySelector('#escolaridad_imputado').value != '' &&
+					document.querySelector('#description_fisica_imputado').value != ''
+
+				) {
+					return true
+				} else {
+					return true;
+				}
+				break;
+			default:
+				return true;
+				break;
+		}
 		return true;
 	}
 </script>

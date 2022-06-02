@@ -55,7 +55,6 @@ $routes->group('admin', function ($routes) {
  * */
 
 $routes->group('denuncia', function ($routes) {
-
 	$routes->get('/', 'client/AuthController::index', ['as' => 'ciudadano_login_get']);
 	$routes->post('login_auth', 'client/AuthController::login_auth');
 	$routes->post('logout', 'client/AuthController::logout');
@@ -70,6 +69,7 @@ $routes->group('denuncia', function ($routes) {
 		$routes->get('/', 'client/DashboardController::index');
 		$routes->get('video-denuncia', 'client/DashboardController::video_denuncia');
 		$routes->get('denuncias', 'client/DashboardController::denuncias');
+		$routes->post('create', 'client/DashboardController::create');
 	});
 });
 

@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row" method="POST">
 	<h3 class="fw-bold text-center text-blue pb-3">Datos del vehiculo robado</h3>
 	<p class="fw-bold text-center">PLACAS</p>
 	<hr>

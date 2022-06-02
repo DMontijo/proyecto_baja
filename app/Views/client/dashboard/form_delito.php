@@ -147,15 +147,15 @@
 			La hora del delito es obligatoria
 		</div>
 	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+	<div class="col-12 col-sm-6 col-md-6 col-lg-8 mb-3">
 		<label for="responsable" class="form-label fw-bold input-required">¿Identifica al responsable del delito?</label>
 		<br>
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="radio" name="responsable" id="SI" required>
+			<input class="form-check-input" type="radio" name="responsable" value="SI" required>
 			<label class="form-check-label" for="flexRadioDefault1">SI</label>
 		</div>
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="radio" name="responsable" id="NO" required>
+			<input class="form-check-input" type="radio" name="responsable" value="NO" required checked>
 			<label class="form-check-label" for="flexRadioDefault2">NO</label>
 		</div>
 	</div>

@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row" method="POST">
 	<h3 class="text-center fw-bolder pb-3 text-blue">Datos del posible responsable</h3>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="nombre_imputado" class="form-label fw-bold">Nombre(s)</label>
@@ -51,11 +51,11 @@
 		<label for="sexo_imputado" class="form-label fw-bold ">Sexo del posible responsable</label>
 		<br>
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="radio" name="sexo_imputado" id="HOMBRE">
+			<input class="form-check-input" type="radio" name="sexo_imputado" value="HOMBRE" id="HOMBRE">
 			<label class="form-check-label" for="flexRadioDefault1">MASCULINO</label>
 		</div>
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="radio" name="sexo_imputado" id="MUJER">
+			<input class="form-check-input" type="radio" name="sexo_imputado" value="MUJER" id="MUJER">
 			<label class="form-check-label" for="flexRadioDefault2">FEMENINO</label>
 		</div>
 	</div>

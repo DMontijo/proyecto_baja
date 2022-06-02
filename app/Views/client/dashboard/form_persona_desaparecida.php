@@ -1,4 +1,4 @@
-	<div class="row">
+	<div class="row" method="POST">
 		<h3 class="text-center fw-bolder pb-3 text-blue">Datos de la persona desaparecida</h3>
 		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 			<label for="nombre_des" class="form-label fw-bold">Nombre(s)</label>
@@ -42,7 +42,7 @@
 			<input type="text" class="form-control" id="color_des" name="color_des">
 		</div>
 		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-			<label for="sexo_des" class="form-label fw-bold input-required">Sexo</label>
+			<label for="sexo_des" class="form-label fw-bold">Sexo</label>
 			<br>
 			<div class="form-check form-check-inline">
 				<input class="form-check-input" type="radio" name="sexo_des" value="H" checked>
