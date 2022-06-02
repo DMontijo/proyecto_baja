@@ -35,6 +35,7 @@ class DATOSDELDELITO extends Migration
 			'NO_INTERIOR' => [
 				'type' => 'VARCHAR',
 				'constraint' => '10',
+				'null' => TRUE,
 			],
 			'COLONIA' => [
 				'type' => 'VARCHAR',
@@ -47,6 +48,7 @@ class DATOSDELDELITO extends Migration
 			'CLASIFICACION' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
+				'null' => TRUE,
 			],
 			'FECHA' => [
 				'type' => 'DATE',

@@ -10,7 +10,7 @@ class ATENCIONCLIENTE extends Migration
 	{
 
 		$this->forge->addField([
-			'IDATENCION'          => [
+			'ID'          => [
 				'type'           => 'INT',
 				'unsigned'       => TRUE,
 				'auto_increment' => TRUE
@@ -21,44 +21,75 @@ class ATENCIONCLIENTE extends Migration
 			],
 			'FECHA_HORA'       => [
 				'type'           => 'DATETIME',
+				'null' => TRUE,
 			],
 			'IDMUNICIPIO'          => [
 				'type'           => 'INT',
 				'unsigned'       => TRUE,
+				'null' => TRUE,
 			],
 			'IDCIUDADANO'          => [
 				'type'           => 'INT',
 				'unsigned'       => TRUE,
+				'null' => TRUE,
 			],
 			'IDEXPEDIENTE'          => [
 				'type'           => 'INT',
 				'unsigned'       => TRUE,
+				'null' => TRUE,
 			],
 			'IDDERIVACION'          => [
 				'type'           => 'INT',
 				'unsigned'       => TRUE,
+				'null' => TRUE,
 			],
 			'IDAGENTE'          => [
 				'type'           => 'INT',
 				'unsigned'       => TRUE,
+				'null' => TRUE,
+			],
+			'ID_DENUNCIA'       => [
+				'type'           => 'INT',
+				'null' => TRUE,
+			],
+			'ID_DATOS_DELITO'       => [
+				'type'           => 'INT',
+				'null' => TRUE,
+			],
+			'ID_DATOS_DEL_RESPONSABLE'       => [
+				'type'           => 'INT',
+				'null' => TRUE,
+			],
+			'ID_DATOS_ADULTO_ACOMPANANTE'       => [
+				'type'           => 'INT',
+				'null' => TRUE,
+			],
+			'ID_DATOS_MENOR_EDAD'       => [
+				'type'           => 'INT',
+				'null' => TRUE,
+			],
+			'ID_DATOS_PERSONA_DESAPARECIDA'       => [
+				'type'           => 'INT',
+				'null' => TRUE,
+			],
+			'ID_DATOS_ROBO_VEHICULO'       => [
+				'type'           => 'INT',
+				'null' => TRUE,
 			],
 			'ID_MODULO_SEJAP'       => [
 				'type'           => 'INT',
-				//  'unsigned'       => TRUE,
+				'null' => TRUE,
 			],
 			'NOTAS'       => [
 				'type'           => 'VARCHAR',
 				'constraint'     => '200',
+				'null' => TRUE,
 			],
+			'CREADO DATETIME DEFAULT CURRENT_TIMESTAMP',
+			'ACTUALIZADO DATETIME ON UPDATE CURRENT_TIMESTAMP',
 
 		]);
-		$this->forge->addKey('IDATENCION', TRUE);
-		// $this->forge->addForeignKey('IDMUNICIPIO', 'CATEGORIA_MUNICIPIO', 'MUNICIPIOID');
-		// $this->forge->addForeignKey('IDCIUDADANO', 'DENUNCIANTE', 'IDDENUNCIANTE');
-		// $this->forge->addForeignKey('IDEXPEDIENTE', 'EXPEDIENTE', 'EXPEDIENTEID');
-		// $this->forge->addForeignKey('IDDERIVACION', 'DERIVACION', 'IDDERIVACION');
-		// $this->forge->addForeignKey('IDAGENTE', 'USUARIOS', 'IDUSUARIO');
-		//  $this->forge->addForeignKey('ID_MODULO_SEJAP', '', '');
+		$this->forge->addKey('ID', TRUE);
 		$this->forge->createTable('ATENCION_CLIENTE');
 	}
 

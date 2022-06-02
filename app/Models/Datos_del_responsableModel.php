@@ -9,7 +9,7 @@ class Datos_del_responsableModel extends Model
 {   
 
     protected $DBGroup          = 'default';
-	protected $table            = 'DATOS_REPONSABLE';
+	protected $table            = 'DATOS_RESPONSABLE';
 	protected $primaryKey       = 'ID';
 	protected $allowedFields    = [
         'NOMBRE_IMPUTADO',

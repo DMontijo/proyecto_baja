@@ -31,10 +31,14 @@
 						DATOS DEL CIUDADANO
 					</div>
 					<div id="datos_ciudadano" class="collapse" aria-labelledby="heading_datos_ciudadano" data-parent="#accordionExample">
-						<p class="font-weight-bold">ABDIEL OTONIEL FLORES GONZÁLEZ</p>
-						<p>Robo</p>
+						<p class="font-weight-bold">OTONIEL FLORES GONZALEZ</p>
 						<p>01-11-1995</p>
-						Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quas, sequi! Nobis in sint non assumenda maiores labore delectus inventore quis beatae eum. Illo dicta quaerat praesentium eius cumque, corrupti consequatur.
+						<p>26 AÑOS</p>
+						<p>HOMBRE</p>
+						<p>MÉXICO</p>
+						<p>JALISCO</p>
+						<p>GUADALAJARA</p>
+						<p>SOFTWARE DEVELOPER</p>
 					</div>
 
 					<div class="btn btn-primary btn-block py-2 mb-2 font-weight-bold" id="heading_otros_datos" type="button" data-toggle="collapse" data-target="#otros_datos" aria-expanded="true" aria-controls="otros_datos">

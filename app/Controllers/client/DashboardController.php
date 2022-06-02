@@ -16,6 +16,7 @@ use App\Models\Datos_desaparecidoModel;
 use App\Models\Datos_menorModel;
 use App\Models\Datos_vehiculoModel;
 use App\Models\HechoLugarModel;
+use App\Models\AtencionesModel;
 
 
 class DashboardController extends BaseController
@@ -35,6 +36,7 @@ class DashboardController extends BaseController
 		$this->_datosdesaparecidoModel = new Datos_desaparecidoModel();
 		$this->_datosvehiculoModel = new Datos_vehiculoModel();
 		$this->_hechoLugarModel = new HechoLugarModel();
+		$this->_atencionesModel = new AtencionesModel();
 	}
 
 	public function index()
@@ -72,8 +74,6 @@ class DashboardController extends BaseController
 			'ESTA_DESAPARECIDO' => $this->request->getPost('esta_desaparecido'),
 		);
 
-		// $this->_denunciaModel->insert($dataPreguntas);
-
 		$dataDelito = array(
 			//FORM_DELITO
 			'DELITO' => $this->request->getPost('delito'),
@@ -88,7 +88,6 @@ class DashboardController extends BaseController
 			'HORA' => $this->request->getPost('hora'),
 			'RESPONSABLE' => $this->request->getPost('responsable'),
 		);
-		// $this->_datosdeldelitoModel->insert($dataDelito);
 
 		$dataImputado = array(
 			//IMPUTADO O POSIBLE RESPONSABLE
@@ -106,7 +105,6 @@ class DashboardController extends BaseController
 			'ESCOLARIDAD' => $this->request->getPost('escolaridad_imputado'),
 			'DESCRIPCION_FISICA' => $this->request->getPost('description_fisica_imputado'),
 		);
-		// $this->_datosdelresponsableModel->insert($dataImputado);
 
 		$dataAdulto = array(
 			//DATOS ADULTO
@@ -123,7 +121,6 @@ class DashboardController extends BaseController
 			'FECHA_NACIMIENTO' => $this->request->getPost('fecha_nac_adulto'),
 			'EDAD' => $this->request->getPost('edad_adulto'),
 		);
-		// $this->_datosdeladultoModel->insert($dataAdulto);
 
 		$dataMenor = array(
 			//DATOS MENOR
@@ -140,7 +137,6 @@ class DashboardController extends BaseController
 			'FECHA_NACIMIENTO' => $this->request->getPost('fecha_nacimiento_menor'),
 			'EDAD' => $this->request->getPost('edad_menor'),
 		);
-		// $this->_datosdelmenorModel->insert($dataMenor);
 
 		$dataDesaparecido = array(
 			// PERSONA DESAPARECIDA
@@ -148,7 +144,7 @@ class DashboardController extends BaseController
 			'APE_PATERNO' => $this->request->getPost('apellido_paterno_des'),
 			'APE_MATERNO' => $this->request->getPost('apellido_materno_des'),
 			'ESTATURA' => $this->request->getPost('estatura_des'),
-			'FECHA_NAC' => $this->request->getPost('fecha_nacimiento_des'),
+			'FECHA_NACIMIENTO' => $this->request->getPost('fecha_nacimiento_des'),
 			'EDAD' => $this->request->getPost('edad_des'),
 			'PESO' => $this->request->getPost('peso_des'),
 			'COMPLEXION' => $this->request->getPost('complexion_des'),
@@ -171,7 +167,6 @@ class DashboardController extends BaseController
 			'FOTOGRAFIA' => $this->request->getPost('foto_des'),
 			'AUTORIZA_FOTO' => $this->request->getPost('autorization_photo_des'),
 		);
-		// $this->_datosdesaparecidoModel->insert($dataDesaparecido);
 
 		$dataVehiculo = array(
 			// ROBO DE VEHICULO
@@ -198,9 +193,33 @@ class DashboardController extends BaseController
 			'DESCRIPCION_VEHICULO' => $this->request->getPost('description_vehiculo'),
 			'DERECHOS_IMPUTADO' => $this->request->getPost('derechos_victima_ofendido'),
 		);
-		var_dump($dataPreguntas, $dataDelito, $dataImputado, $dataAdulto, $dataMenor, $dataDesaparecido, $dataVehiculo);
+		$session = session();
 
-		// $this->_datosvehiculoModel->insert($dataVehiculo);
+		$year = date("Y");
+		$month = date("m");
+		$day = date("d");
+
+		$dataFolio = [
+			'FOLIO' => $year . $month . $day,
+			'FECHA_HORA',
+			'IDMUNICIPIO',
+			'IDCIUDADANO' => $session->get('ID_DENUNCIANTE'),
+			'IDEXPEDIENTE',
+			'IDDERIVACION',
+			'IDAGENTE',
+			'ID_DENUNCIA' => $this->_denunciaModel->insert($dataPreguntas),
+			'ID_DATOS_DELITO' => $this->_datosdeldelitoModel->insert($dataDelito),
+			'ID_DATOS_DEL_RESPONSABLE' => $this->_datosdelresponsableModel->insert($dataImputado),
+			'ID_DATOS_ADULTO_ACOMPANANTE' => $this->_datosdeladultoModel->insert($dataAdulto),
+			'ID_DATOS_MENOR_EDAD' => $this->_datosdelmenorModel->insert($dataMenor),
+			'ID_DATOS_PERSONA_DESAPARECIDA' => $this->_datosdesaparecidoModel->insert($dataDesaparecido),
+			'ID_DATOS_ROBO_VEHICULO' => $this->_datosvehiculoModel->insert($dataVehiculo),
+			'ID_MODULO_SEJAP',
+			'NOTAS',
+		];
+		$this->_atencionesModel->insert($dataFolio);
+
+		$this->_loadView('Video denuncia', 'video-denuncia', '', $dataFolio, 'video_denuncia');
 	}
 
 	private function _loadView($title, $menu, $submenu, $data, $view)

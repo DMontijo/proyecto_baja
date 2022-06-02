@@ -40,7 +40,6 @@ class DENUNCIA extends Migration
 				'type' => 'VARCHAR',
 				'constraint' => '10',
 			],
-
 			'CREADO DATETIME DEFAULT CURRENT_TIMESTAMP',
 			'ACTUALIZADO DATETIME ON UPDATE CURRENT_TIMESTAMP',
 		]);

@@ -19,53 +19,66 @@ class DATOSDELRESPONSABLE extends Migration
 			'NOMBRE_IMPUTADO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
+				'null' => TRUE,
 			],
 			'ALIAS' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
+				'null' => TRUE,
 			],
 			'PRIMER_APELLIDO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
+				'null' => TRUE,
 			],
             'SEGUNDO_APELLIDO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
+				'null' => TRUE,
 			],
             'MUNICIPIO_IMPUTADO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '50',
+				'null' => TRUE,
 			],
 			'CALLE' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
+				'null' => TRUE,
 			],
 			'NO_EXT_IMPUTADO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '10',
+				'null' => TRUE,
 			],
 			'NO_INT_IMPUTADO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '10',
+				'null' => TRUE,
 			],
             'TELEFONO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '10',
+				'null' => TRUE,
 			],
             'FECHA_NACIMIENTO' => [
 				'type' => 'DATE',
+				'null' => TRUE,
 			],
             'SEXO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '10',
+				'null' => TRUE,
 			],
             'ESCOLARIDAD' => [
 				'type' => 'VARCHAR',
 				'constraint' => '50',
+				'null' => TRUE,
 			],
             'DESCRIPCION_FISICA' => [
 				'type' => 'VARCHAR',
 				'constraint' => '300',
+				'null' => TRUE,
 			],
 
 			'CREADO DATETIME DEFAULT CURRENT_TIMESTAMP',

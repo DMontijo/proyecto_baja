@@ -24,14 +24,15 @@
 							</thead>
 							<tbody>
 								<tr>
-									<?php for ($i = 0; $i < 20; $i++) { ?>
+									<?php for ($i = 1; $i < 2; $i++) { ?>
 										<td><?= $i ?></td>
-										<td>Andrea Gutierrez</td>
-										<td>18/05/2021</td>
-										<td>44<?= $i ?>HC</td>
-										<td>NUC</td>
+										<td>OTONIEL FLORES GONZALEZ</td>
+										<td>01/06/2022</td>
+										<td>20220601</td>
+										<td>-</td>
 										<td>INVESTIGACIÓN</td>
 								</tr>
+
 							<?php } ?>
 							</tbody>
 						</table>

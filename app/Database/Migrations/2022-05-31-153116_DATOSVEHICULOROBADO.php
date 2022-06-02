@@ -6,7 +6,7 @@ use CodeIgniter\Database\Migration;
 
 class DATOSVEHICULOROBADO extends Migration
 {
-    public function up()
+	public function up()
 	{
 
 		$this->forge->addField([
@@ -19,89 +19,111 @@ class DATOSVEHICULOROBADO extends Migration
 			'TIPO_PLACAS' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
+				'null' => TRUE,
 			],
 			'PLACAS' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
+				'null' => TRUE,
 			],
-            'CONFIRM_PLACAS' => [
+			'CONFIRM_PLACAS' => [
 				'type' => 'TINYINT',
 				'constraint' => '1',
+				'null' => TRUE,
 			],
 			'ESTADO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '50',
+				'null' => TRUE,
 			],
 			'SERIE' => [
 				'type' => 'VARCHAR',
 				'constraint' => '50',
+				'null' => TRUE,
 			],
-            'CONFIRM_SERIE' => [
+			'CONFIRM_SERIE' => [
 				'type' => 'TINYINT',
 				'constraint' => '1',
+				'null' => TRUE,
 			],
-            'DISTRIBUIDOR' => [
+			'DISTRIBUIDOR' => [
 				'type' => 'VARCHAR',
 				'constraint' => '50',
+				'null' => TRUE,
 			],
-            'MARCA' => [
+			'MARCA' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
+				'null' => TRUE,
 			],
-            'LINEA' => [
+			'LINEA' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
+				'null' => TRUE,
 			],
-            'VERSION' => [
+			'VERSION' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
+				'null' => TRUE,
 			],
-            'TIPO_VEHICULO' => [
+			'TIPO_VEHICULO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
+				'null' => TRUE,
 			],
-            'SERVICIO' => [
+			'SERVICIO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '50',
+				'null' => TRUE,
 			],
-            'MODELO' => [
+			'MODELO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '50',
+				'null' => TRUE,
 			],
-            'SEGURO_VIGENTE' => [
+			'SEGURO_VIGENTE' => [
 				'type' => 'VARCHAR',
 				'constraint' => '50',
+				'null' => TRUE,
 			],
-            'COLOR_VEHICULO' => [
+			'COLOR_VEHICULO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '50',
+				'null' => TRUE,
 			],
-            'COLOR_TAPICERIA' => [
+			'COLOR_TAPICERIA' => [
 				'type' => 'VARCHAR',
 				'constraint' => '50',
+				'null' => TRUE,
 			],
-            'NUM_CHASIS' => [
+			'NUM_CHASIS' => [
 				'type' => 'VARCHAR',
 				'constraint' => '50',
+				'null' => TRUE,
 			],
-            'TRANSMISION' => [
+			'TRANSMISION' => [
 				'type' => 'VARCHAR',
 				'constraint' => '50',
+				'null' => TRUE,
 			],
-            'TRACCION_VEHICULO' => [
+			'TRACCION_VEHICULO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '50',
+				'null' => TRUE,
 			],
-            'FOTO_VEHICULO' => [
+			'FOTO_VEHICULO' => [
 				'type' => 'BLOB',
+				'null' => TRUE,
 			],
-            'DESCRIPCION_VEHICULO' => [
+			'DESCRIPCION_VEHICULO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '300',
+				'null' => TRUE,
 			],
-            'DERECHOS_IMPUTADO' => [
+			'DERECHOS_IMPUTADO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '50',
+				'null' => TRUE,
 			],
 
 			'CREADO DATETIME DEFAULT CURRENT_TIMESTAMP',

@@ -16,7 +16,7 @@ class Datos_desaparecidoModel extends Model
         'APE_PATERNO',
         'APE_MATERNO',
         'ESTATURA',
-        'FECHA_NAC',
+        'FECHA_NACIMIENTO',
         'EDAD',
         'PESO',
         'COMPLEXION',
@@ -38,6 +38,5 @@ class Datos_desaparecidoModel extends Model
         'PARENTESCO',
         'FOTOGRAFIA',
         'AUTORIZA_FOTO',
-
 	];
 }

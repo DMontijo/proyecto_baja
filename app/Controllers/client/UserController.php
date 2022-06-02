@@ -54,7 +54,6 @@ class UserController extends BaseController
 
 	public function create()
 	{
-
 		$data = [
 			'NOMBRE' => $this->request->getPost('nombre'),
 			'APELLIDO_PATERNO' => $this->request->getPost('apellido_paterno'),

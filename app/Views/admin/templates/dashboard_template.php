@@ -34,7 +34,7 @@
 				</a>
 			</li>
 			<li class="c-sidebar-nav-item">
-				<a class="c-sidebar-nav-link font-weight-bold" href="<?=base_url()?>/admin/dashboard/registrar-usuario">
+				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/registrar-usuario">
 					<i class="fas fa-users c-sidebar-nav-icon"></i> Usuarios
 				</a>
 			</li>
@@ -56,6 +56,9 @@
 			</a>
 			<button class="c-header-toggler c-class-toggler mfs-3 d-md-down-none" type="button" data-target="#sidebar" data-class="c-sidebar-lg-show" responsive="true">
 				<i class="fas fa-bars"></i>
+			</button>
+			<button class="c-header-toggler c-class-toggler mfs-3 d-md-down-none" type="button" data-target="#sidebar" data-class="c-sidebar-lg-show" responsive="true">
+				BIENVENIDO SONIA LOPEZ URREA
 			</button>
 			<ul class="c-header-nav ml-auto mr-2">
 				<li class="c-header-nav-item dropdown">

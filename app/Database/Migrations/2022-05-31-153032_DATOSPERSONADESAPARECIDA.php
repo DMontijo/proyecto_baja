@@ -19,104 +19,130 @@ class DATOSPERSONADESAPARECIDA extends Migration
 			'NOMBRE' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
+				'null' => TRUE,
 			],
 			'APE_PATERNO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
+				'null' => TRUE,
 			],
 			'APE_MATERNO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
+				'null' => TRUE,
 			],
 			'ESTATURA' => [
 				'type' => 'VARCHAR',
 				'constraint' => '50',
+				'null' => TRUE,
 			],
             'FECHA_NACIMIENTO' => [
 				'type' => 'DATE',
+				'null' => TRUE,
 			],
             'EDAD' => [
 				'type' => 'VARCHAR',
 				'constraint' => '10',
+				'null' => TRUE,
 			],
             'PESO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '10',
+				'null' => TRUE,
 			],
             'COMPLEXION' => [
 				'type' => 'VARCHAR',
 				'constraint' => '10',
+				'null' => TRUE,
 			],
             'COLOR_TEZ' => [
 				'type' => 'VARCHAR',
 				'constraint' => '50',
+				'null' => TRUE,
 			],
             'SEXO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '10',
+				'null' => TRUE,
 			],
             'SENAS' => [
 				'type' => 'VARCHAR',
 				'constraint' => '50',
+				'null' => TRUE,
 			],
             'IDENTIDAD' => [
 				'type' => 'VARCHAR',
 				'constraint' => '50',
+				'null' => TRUE,
 			],
             'COLOR_CABELLO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '50',
+				'null' => TRUE,
 			],
             'TAM_CABELLO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '50',
+				'null' => TRUE,
 			],
             'FORMA_CABELLO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '50',
+				'null' => TRUE,
 			],
             'COLOR_OJOS' => [
 				'type' => 'VARCHAR',
 				'constraint' => '50',
+				'null' => TRUE,
 			],
             'FRENTE' => [
 				'type' => 'VARCHAR',
 				'constraint' => '50',
+				'null' => TRUE,
 			],
             'CEJA' => [
 				'type' => 'VARCHAR',
 				'constraint' => '50',
+				'null' => TRUE,
 			],
             'DISCAPACIDAD' => [
 				'type' => 'VARCHAR',
 				'constraint' => '50',
+				'null' => TRUE,
 			],
             'ORIGEN' => [
 				'type' => 'VARCHAR',
 				'constraint' => '50',
+				'null' => TRUE,
 			],
             'DIA_DESAPARICION' => [
 				'type' => 'DATE',
+				'null' => TRUE,
 			],
             'LUGAR_DESAPARICION' => [
 				'type' => 'VARCHAR',
 				'constraint' => '50',
+				'null' => TRUE,
 			],
             'VESTIMENTA' => [
 				'type' => 'VARCHAR',
 				'constraint' => '50',
+				'null' => TRUE,
 			],
             'PARENTESCO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '50',
+				'null' => TRUE,
 			],
             'FOTOGRAFIA' => [
 				'type' => 'BLOB',
 
+				'null' => TRUE,
 			],
 			'AUTORIZA_FOTO' => [
 				'type' => 'TINYINT',
 				'constraint' => '1',
+				'null' => TRUE,
 			],
             
 
