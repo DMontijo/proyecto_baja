@@ -115,7 +115,7 @@
 			<td align="center" style="background-color: #7D7D7D!important;padding-top: 50px;padding-bottom: 50px" bgcolor="#7D7D7D">
 				<table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:600px;">
 					<tr>
-						<td valign="top" style="font-size: 0; background-color: #511229!important;height: 200px;background-image: url('<?= base_url('/assets/img/email/LINEAS_CABECERA_CORREO.png') ?> ');background-repeat: no-repeat;
+						<td valign="top" style="font-size: 0; background-color: #511229!important;height: 200px;background-image: url('https://yocontigo-it.com.mx/justicia/public/assets/img/email/LINEAS_CABECERA_CORREO.png ');background-repeat: no-repeat;
 							background-size: 600px 200px;" bgcolor="#511229">
 						</td>
 					</tr>
@@ -124,7 +124,7 @@
 							<table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:600px;">
 								<td style="background-color: #E5E4E3!important;" bgcolor="#E5E4E3">
 									<div style="background-color: #E5E4E3!important; margin-top: -100px;padding: 0px 20px 0px 20px;text-align: center;">
-										<img src="<?= base_url('/assets/img/email/LOGO_CORREO.png') ?> " alt="Logo" style="margin-top: -100px;width: 200px;">
+										<img src="https://yocontigo-it.com.mx/justicia/public/assets/img/email/LOGO_CORREO.png" alt="Logo" style="margin-top: -100px;width: 200px;">
 										<div class="body">
 											<p>Se ha generado un nuevo código.</p>
 											<h2>SU CÓDIGO ES:<br />
