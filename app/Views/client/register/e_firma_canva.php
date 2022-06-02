@@ -46,7 +46,7 @@
 
 		submitBtn.addEventListener("click", function(e) {
 			canvas.fillStyle = "rgba(0,0,0,.4)";
-			let dataUrl = canvas.toBlob();
+			let dataUrl = canvas.toDataURL();
 			drawText.innerHTML = dataUrl;
 		}, false);
 
@@ -67,11 +67,8 @@
 		canvas.addEventListener("mouseup", function(e) {
 			drawing = false;
 			canvas.fillStyle = "rgba(0,0,0,.4)";
-			canvas.toBlob(function(blob) {
-				console.log('Este es el blob: ', blob);
-				drawText.innerHTML = blob;
-			});
-
+			let dataUrl = canvas.toDataURL();
+			drawText.innerHTML = dataUrl;
 		}, false);
 
 		canvas.addEventListener("mousemove", function(e) {
