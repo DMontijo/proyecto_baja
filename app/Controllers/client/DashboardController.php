@@ -16,7 +16,7 @@ use App\Models\Datos_desaparecidoModel;
 use App\Models\Datos_menorModel;
 use App\Models\Datos_vehiculoModel;
 use App\Models\HechoLugarModel;
-use App\Models\AtencionesModel;
+use App\Models\FoliosAtencionModel;
 
 
 class DashboardController extends BaseController
@@ -36,7 +36,7 @@ class DashboardController extends BaseController
 		$this->_datosdesaparecidoModel = new Datos_desaparecidoModel();
 		$this->_datosvehiculoModel = new Datos_vehiculoModel();
 		$this->_hechoLugarModel = new HechoLugarModel();
-		$this->_atencionesModel = new AtencionesModel();
+		$this->_foliosAtencionModel = new FoliosAtencionModel();
 	}
 
 	public function index()
@@ -217,7 +217,7 @@ class DashboardController extends BaseController
 			'ID_MODULO_SEJAP',
 			'NOTAS',
 		];
-		$this->_atencionesModel->insert($dataFolio);
+		$this->_foliosAtencionModel->insert($dataFolio);
 
 		$this->_loadView('Video denuncia', 'video-denuncia', '', $dataFolio, 'video_denuncia');
 	}

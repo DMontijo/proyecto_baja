@@ -90,11 +90,11 @@ class ATENCIONCLIENTE extends Migration
 
 		]);
 		$this->forge->addKey('ID', TRUE);
-		$this->forge->createTable('ATENCION_CLIENTE');
+		$this->forge->createTable('FOLIOS_ATENCION');
 	}
 
 	public function down()
 	{
-		$this->forge->dropTable('ATENCION_CLIENTE');
+		$this->forge->dropTable('FOLIOS_ATENCION');
 	}
 }
