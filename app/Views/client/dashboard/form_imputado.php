@@ -20,11 +20,9 @@
 		<label for="municipio_imputado" class="form-label fw-bold">Municipio del posible responsable</label>
 		<select class="form-select" id="municipio_imputado" name="municipio_imputado">
 			<option selected disabled value="">Elige el municipio del imputado</option>
-			<option value="1">TIJUANA</option>
-			<option value="2">PLAYAS DE ROSARITO</option>
-			<option value="3">TECATE</option>
-			<option value="4">MEXICALI</option>
-			<option value="5">ENSENADA</option>
+			<?php foreach ($body_data->municipios as $index => $municipio) { ?>
+				<option value="<?= $municipio->ID ?>"> <?= $municipio->MUNICIPIODESCR ?> </option>
+			<?php } ?>
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -51,11 +49,11 @@
 		<label for="sexo_imputado" class="form-label fw-bold ">Sexo del posible responsable</label>
 		<br>
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="radio" name="sexo_imputado" value="HOMBRE" id="HOMBRE">
+			<input class="form-check-input" type="radio" name="sexo_imputado" value="MASCULINO" id="MASCULINO">
 			<label class="form-check-label" for="flexRadioDefault1">MASCULINO</label>
 		</div>
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="radio" name="sexo_imputado" value="MUJER" id="MUJER">
+			<input class="form-check-input" type="radio" name="sexo_imputado" value="FEMENINO" id="FEMENINO">
 			<label class="form-check-label" for="flexRadioDefault2">FEMENINO</label>
 		</div>
 	</div>

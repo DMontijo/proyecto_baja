@@ -52,7 +52,9 @@ class DashboardController extends BaseController
 
 	public function video_denuncia()
 	{
-		$data = array();
+		$session = session();
+		$data = (object)array();
+		$data = $this->_foliosAtencionModel->asObject()->where('ID',$session->get('ID_DENUNCIANTE'))->findAll();
 		$this->_loadView('Video denuncia', 'video-denuncia', '', $data, 'video_denuncia');
 	}
 
@@ -197,16 +199,10 @@ class DashboardController extends BaseController
 
 		$year = date("Y");
 		$month = date("m");
-		$day = date("d");
 
 		$dataFolio = [
-			'FOLIO' => $year . $month . $day,
-			'FECHA_HORA',
-			'IDMUNICIPIO',
+			'IDMUNICIPIO' => $this->request->getPost('municipio'),
 			'IDCIUDADANO' => $session->get('ID_DENUNCIANTE'),
-			'IDEXPEDIENTE',
-			'IDDERIVACION',
-			'IDAGENTE',
 			'ID_DENUNCIA' => $this->_denunciaModel->insert($dataPreguntas),
 			'ID_DATOS_DELITO' => $this->_datosdeldelitoModel->insert($dataDelito),
 			'ID_DATOS_DEL_RESPONSABLE' => $this->_datosdelresponsableModel->insert($dataImputado),
@@ -214,12 +210,35 @@ class DashboardController extends BaseController
 			'ID_DATOS_MENOR_EDAD' => $this->_datosdelmenorModel->insert($dataMenor),
 			'ID_DATOS_PERSONA_DESAPARECIDA' => $this->_datosdesaparecidoModel->insert($dataDesaparecido),
 			'ID_DATOS_ROBO_VEHICULO' => $this->_datosvehiculoModel->insert($dataVehiculo),
-			'ID_MODULO_SEJAP',
-			'NOTAS',
 		];
-		$this->_foliosAtencionModel->insert($dataFolio);
 
-		$this->_loadView('Video denuncia', 'video-denuncia', '', $dataFolio, 'video_denuncia');
+		$idFolio = $this->_foliosAtencionModel->insert($dataFolio);
+
+		$dataFolio['FOLIO'] = $year . $month . $idFolio;
+
+		$this->_foliosAtencionModel->update($idFolio, $dataFolio);
+
+		if ($this->_sendEmailFolio($session->get('CORREO'), $year . $month . $idFolio)) {
+			return redirect()->to(base_url('/denuncia/dashboard/video-denuncia'));
+		} else {
+			return redirect()->to(base_url('/denuncia/dashboard/video-denuncia'));
+		}
+	}
+
+	private function _sendEmailFolio($to, $folio)
+	{
+		$email = \Config\Services::email();
+		$email->setTo($to);
+		$email->setFrom('andrea.solorzano@yocontigo-it.com', 'FGEBC');
+		$email->setSubject('Nuevo folio generado.');
+		$body = view('email_template/folio_email_template.php', ['folio' => $folio]);
+		$email->setMessage($body);
+
+		if ($email->send()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	private function _loadView($title, $menu, $submenu, $data, $view)

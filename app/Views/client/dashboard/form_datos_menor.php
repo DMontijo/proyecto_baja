@@ -38,7 +38,7 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="cp_menor" class="form-label fw-bold">Código Postal</label>
-		<input type="text" class="form-control" id="cp_menor" name="cp_menor">
+		<input type="number" class="form-control" id="cp_menor" name="cp_menor">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="fecha_nacimiento_menor" class="form-label fw-bold">Fecha de nacimiento</label>

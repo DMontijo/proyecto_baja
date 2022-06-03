@@ -13,7 +13,7 @@
 			<input type="text" class="form-control" id="apellido_materno_des" name="apellido_materno_des">
 		</div>
 		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-			<label for="estatura_des" class="form-label fw-bold ">Estatura</label>
+			<label for="estatura_des" class="form-label fw-bold ">Estatura (en centímetros)</label>
 			<input type="number" class="form-control" id="estatura_des" name="estatura_des">
 		</div>
 		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -25,7 +25,7 @@
 			<input type="number" class="form-control" id="edad_des" name="edad_des">
 		</div>
 		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-			<label for="peso_des" class="form-label fw-bold ">Peso aproximado</label>
+			<label for="peso_des" class="form-label fw-bold ">Peso aproximado (en kg.)</label>
 			<input type="number" class="form-control" id="peso_des" name="peso_des">
 		</div>
 		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -45,12 +45,12 @@
 			<label for="sexo_des" class="form-label fw-bold">Sexo</label>
 			<br>
 			<div class="form-check form-check-inline">
-				<input class="form-check-input" type="radio" name="sexo_des" value="H" checked>
-				<label class="form-check-label" for="flexRadioDefault1">HOMBRE</label>
+				<input class="form-check-input" type="radio" name="sexo_des" value="MASCULINO">
+				<label class="form-check-label" for="flexRadioDefault1">MASCULINO</label>
 			</div>
 			<div class="form-check form-check-inline">
-				<input class="form-check-input" type="radio" name="sexo_des" value="M">
-				<label class="form-check-label" for="flexRadioDefault2">MUJER</label>
+				<input class="form-check-input" type="radio" name="sexo_des" value="FEMENINO">
+				<label class="form-check-label" for="flexRadioDefault2">FEMENINO</label>
 			</div>
 		</div>
 		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">

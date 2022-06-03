@@ -10,7 +10,7 @@
 		USUARIO: <?= $email ?><br>
 		CONTRASEÑA: <?= $password ?>
 	</p>
-	<br><br>
+	<br>
 	<a class="btn" href="<?= base_url('/denuncia') ?>">
 		INICIAR VIDEO DENUNCIA
 	</a>

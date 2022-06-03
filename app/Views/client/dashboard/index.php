@@ -162,6 +162,15 @@
 			}, false)
 		});
 
+		document.querySelector('#description_fisica_imputado').addEventListener('input', (event) => {
+			console.log('DESCRIPCION FISICA');
+			event.target.value = clearText(event.target.value).toUpperCase();
+		}, false)
+
+		document.querySelector('#señas_des').addEventListener('input', (event) => {
+			event.target.value = clearText(event.target.value).toUpperCase();
+		}, false)
+
 	})()
 
 	$('#description').keyup(() => {

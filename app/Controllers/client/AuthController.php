@@ -26,8 +26,9 @@ class AuthController extends BaseController
 		$session = session();
 		$email = $this->request->getVar('correo');
 		$password = $this->request->getVar('password');
-
 		$data = $this->_denunciantesModel->where('CORREO', $email)->first();
+		$data['logged_in'] = TRUE;
+
 		if ($data && $password === $data['PASSWORD']) {
 			$session = session();
 			$session->set($data);
@@ -40,7 +41,9 @@ class AuthController extends BaseController
 
 	public function logout()
 	{
-		$this->_loadView('Login', [], 'index');
+		$session = session();
+		$session->destroy();
+		return redirect()->to('/index');
 	}
 
 	public function change_password()
@@ -73,7 +76,6 @@ class AuthController extends BaseController
 	{
 		$to = $this->request->getPost('correo_reset_password');
 		$user = $this->_denunciantesModel->asObject()->where('CORREO', $to)->first();
-		var_dump($user);
 		$email = \Config\Services::email();
 		$email->setTo($to);
 		$email->setFrom('andrea.solorzano@yocontigo-it.com', 'FGEBC');
