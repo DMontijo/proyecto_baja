@@ -5,6 +5,7 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
+<?php $session = session(); ?>
 <div class="row">
 	<div class="col-12">
 		<div class="col-12">
@@ -31,8 +32,9 @@
 				</div>
 			</div>
 		</div>
+		<h4 class="text-center text-blue fw-bold my-4" >BIENVENID@ <?= $session->NOMBRE ?> <?= $session->APELLIDO_PATERNO ?> <?= $session->APELLIDO_MATERNO ?></h4>
 		<div class="card rounded shadow border-0">
-			<div class="card-body p-0 py-3 p-sm-5">
+			<div class="card-body py-5 p-sm-5">
 				<div class="container">
 					<h1 class="text-center fw-bolder pb-1 text-blue">DENUNCIA</h1>
 					<p class="text-center fw-bold text-blue ">Llena los campos siguientes para continuar tu denuncia</p>

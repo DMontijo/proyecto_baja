@@ -18,21 +18,24 @@ class AuthController extends BaseController
 
 	public function index()
 	{
-		$this->_loadView('Login', [], 'index');
+		if ($this->_isAuth()) {
+			return redirect()->to(base_url('/denuncia/dashboard'));
+		} else {
+			$this->_loadView('Login', [], 'index');
+		}
 	}
 
 	public function login_auth()
 	{
 		$session = session();
-		$email = $this->request->getVar('correo');
-		$password = $this->request->getVar('password');
+		$email = $this->request->getPost('correo');
+		$password = $this->request->getPost('password');
 		$data = $this->_denunciantesModel->where('CORREO', $email)->first();
 		$data['logged_in'] = TRUE;
-
-		if ($data && $password === $data['PASSWORD']) {
+		if ($data && validatePassword($password, $data['PASSWORD'])) {
 			$session = session();
 			$session->set($data);
-			return redirect()->to(base_url('/denuncia/dashboard'))->with('mensaje', '1');
+			return redirect()->to(base_url('/denuncia/dashboard'));
 		} else {
 			$session->setFlashdata('message', 'Correo o contraseña incorrectos.');
 			return redirect()->back();
@@ -43,7 +46,7 @@ class AuthController extends BaseController
 	{
 		$session = session();
 		$session->destroy();
-		return redirect()->to('/index');
+		return redirect()->to(base_url('denuncia'));
 	}
 
 	public function change_password()
@@ -56,19 +59,15 @@ class AuthController extends BaseController
 
 		if ($id || $token || $email) {
 			$data = $this->_denunciantesModel->asObject()->where('ID_DENUNCIANTE', $id)->orWhere('CORREO', $email)->first();
-
 			$this->_loadView('Cambiar contraseña', $data, 'change_password');
 		}
 	}
 
 	public function change_password_post()
 	{
-
 		$id = $this->request->getPost('id');
 		$password = $this->request->getPost('password');
-
-		$this->_denunciantesModel->set('PASSWORD', $password)->where('ID_DENUNCIANTE', $id)->update();
-
+		$this->_denunciantesModel->update($id, ['PASSWORD' => hashPassword($password)]);
 		return redirect()->to(base_url('/denuncia'))->with('created', 'Contraseña modificada con éxito.');
 	}
 
@@ -87,6 +86,12 @@ class AuthController extends BaseController
 		if ($email->send()) {
 			return redirect()->to(base_url('/denuncia'))->with('created', 'Verifica tu correo para recuperar tu contraseña.');
 		}
+	}
+
+	private function _isAuth()
+	{
+		$session = session();
+		return $session->logged_in;
 	}
 
 	private function _loadView($title, $data, $view)

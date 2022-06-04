@@ -1,6 +1,5 @@
 <!doctype html>
 <html lang="es">
-
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -41,7 +40,7 @@
 						<a class="nav-link <?php if ('' === 'denuncias') echo 'active'; ?>" href="<?= base_url() ?>/denuncia/dashboard/denuncias"><i class="bi bi-archive-fill"></i> Mis denuncias</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="<?= base_url() ?>/denuncia"><i class="bi bi-box-arrow-left"></i> Cerrar sesión</a>
+						<a class="nav-link" href="<?= base_url('denuncia/logout') ?>"><i class="bi bi-box-arrow-left"></i> Cerrar sesión</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="#!" onclick="javascript:toggleFullScreen()"><i class="bi bi-fullscreen"></i></a>
@@ -50,7 +49,6 @@
 			</div>
 		</div>
 	</nav>
-
 	<div class="container-fluid main bg-light py-3">
 		<div class="container">
 			<?= $this->renderSection('content') ?>

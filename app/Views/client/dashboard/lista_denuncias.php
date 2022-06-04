@@ -9,27 +9,31 @@
 	<div class="col-12">
 		<div class="card text-center overflow-auto shadow rounded">
 			<div class="card-body p-0 py-3 p-sm-5">
-				<h1 class="card-title">MIS DENUNCIAS</h1>
-				<table class="table table-striped table-hover mt-5">
-					<thead>
-						<tr>
-							<th scope="col">Folio</th>
-							<th scope="col">Nombre</th>
-							<th scope="col">Delito</th>
-							<th scope="col">Estado</th>
-						</tr>
-					</thead>
-					<tbody>
-						<?php for ($i = 0; $i < 20; $i++) { ?>
+				<h1 class="card-title fw-bold">MIS DENUNCIAS</h1>
+				<?php if (count($body_data->folios) > 0) { ?>
+					<table class="table table-striped table-hover mt-5">
+						<thead>
 							<tr>
-								<th scope="row">123456789</th>
-								<td>Otoniel Flores</td>
-								<td>Robo</td>
-								<td>En investigación</td>
+								<th scope="col">FOLIO</th>
+								<th scope="col">Fecha Y HORA</th>
+								<th scope="col">DELITO</th>
+								<th scope="col">ESTADO</th>
 							</tr>
-						<?php } ?>
-					</tbody>
-				</table>
+						</thead>
+						<tbody>
+							<?php foreach ($body_data->folios as $index => $folio) { ?>
+								<tr>
+									<th scope="row"><?= $folio->FOLIO ?></th>
+									<td><?= $folio->CREADO ?></td>
+									<td><?= $folio->DELITO ?></td>
+									<td><?= $folio->IDAGENTE ? 'ATENDIDO' : 'NO ATENDIDO' ?></td>
+								</tr>
+							<?php } ?>
+						</tbody>
+					</table>
+				<?php } else { ?>
+					<p class="mt-5 text-yellow fw-bolder"> <i class="bi bi-archive"></i> Aún no haz levantado ninguna denuncia</p>
+				<?php } ?>
 			</div>
 		</div>
 	</div>

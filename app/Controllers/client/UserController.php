@@ -54,12 +54,14 @@ class UserController extends BaseController
 
 	public function create()
 	{
+		$password = $this->_generatePassword(6);
+		
 		$data = [
 			'NOMBRE' => $this->request->getPost('nombre'),
 			'APELLIDO_PATERNO' => $this->request->getPost('apellido_paterno'),
 			'APELLIDO_MATERNO' => $this->request->getPost('apellido_materno'),
 			'CORREO' => $this->request->getPost('correo'),
-			'PASSWORD' => $this->_generatePassword(6),
+			'PASSWORD' => hashPassword($password),
 			'FECHA_DE_NACIMIENTO' => $this->request->getPost('fecha_nacimiento'),
 			'EDAD' => $this->request->getPost('edad'),
 			'SEXO' => $this->request->getPost('sexo'),
@@ -92,7 +94,7 @@ class UserController extends BaseController
 
 		if ($this->validate(['correo' => 'required|is_unique[DENUNCIANTES.CORREO]'])) {
 			$this->_denunciantesModel->insert($data);
-			$this->_sendEmailPassword($data['CORREO'], $data['PASSWORD']);
+			$this->_sendEmailPassword($data['CORREO'], $password);
 			return redirect()->to(base_url('/denuncia'))->with('created', 'Inicia sesión con la contraseña que llegará a tu correo y comienza tu denuncia');
 		} else {
 			return redirect()->back()->with('message', 'Hubo un error en los datos o puede que ya exista un registro con el mismo correo');

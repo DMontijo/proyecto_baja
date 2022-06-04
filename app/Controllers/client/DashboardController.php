@@ -54,13 +54,15 @@ class DashboardController extends BaseController
 	{
 		$session = session();
 		$data = (object)array();
-		$data = $this->_foliosAtencionModel->asObject()->where('ID',$session->get('ID_DENUNCIANTE'))->findAll();
+		$data = $this->_foliosAtencionModel->asObject()->where('IDCIUDADANO', $session->get('ID_DENUNCIANTE'))->findAll();
 		$this->_loadView('Video denuncia', 'video-denuncia', '', $data, 'video_denuncia');
 	}
 
 	public function denuncias()
 	{
-		$data = array();
+		$session = session();
+		$data = (object)array();
+		$data->folios = $this->_foliosAtencionModel->asObject()->where('IDCIUDADANO', $session->get('ID_DENUNCIANTE'))->join('DATOS_DEL_DELITO', 'DATOS_DEL_DELITO.ID_DELITO = FOLIOS_ATENCION.ID_DATOS_DELITO','right')->findAll();
 		$this->_loadView('Mis denuncias', 'denuncias', '', $data, 'lista_denuncias');
 	}
 
