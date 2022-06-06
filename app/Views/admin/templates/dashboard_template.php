@@ -58,7 +58,8 @@
 				<i class="fas fa-bars"></i>
 			</button>
 			<button class="c-header-toggler c-class-toggler mfs-3 d-md-down-none" type="button" data-target="#sidebar" data-class="c-sidebar-lg-show" responsive="true">
-				BIENVENIDO SONIA LOPEZ URREA
+				<?php $session = session(); ?>
+				BIENVENIDO <?= $session->NOMBRE ?> <?= $session->APELLIDO_PATERNO ?> <?= $session->APELLIDO_MATERNO ?>
 			</button>
 			<ul class="c-header-nav ml-auto mr-2">
 				<li class="c-header-nav-item dropdown">
@@ -74,7 +75,7 @@
 						<a class="dropdown-item" href="#">
 							<i class="fas fa-user-cog mr-2"></i> Pérfil
 						</a>
-						<a class="dropdown-item" href="<?= base_url() ?>/admin">
+						<a class="dropdown-item" href="<?= base_url('admin/logout') ?>">
 							<i class="fas fa-sign-out-alt mr-2"></i> Salir
 						</a>
 					</div>

@@ -8,36 +8,50 @@ use App\Models\UsuariosModel;
 
 class LoginController extends BaseController
 {
-
-	private $_usuariosModel;
-
 	function __construct()
 	{
 		$this->_usuariosModel = new UsuariosModel();
 	}
-	
+
 	public function index()
 	{
 		$data = array();
-		$this->_loadView('Login', $data, 'index');
+		if ($this->_isAuth()) {
+			return redirect()->to(base_url('/admin/dashboard'));
+		} else {
+			$data = array();
+			$this->_loadView('Login', $data, 'index');
+		}
 	}
 
 	public function login_auth()
 	{
 		$session = session();
-		$email = $this->request->getVar('correo');
-		$password = $this->request->getVar('password');
-
+		$email = $this->request->getPost('correo');
+		$password = $this->request->getPost('password');
 		$data = $this->_usuariosModel->where('CORREO', $email)->first();
-
-		if (count($data) > 0 && $password == $data['PASSWORD']) {
+		$data['logged_in'] = TRUE;
+		if ($data && validatePassword($password, $data['PASSWORD'])) {
 			$session = session();
 			$session->set($data);
-			return redirect()->to(base_url('/admin/dashboard'))->with('mensaje', '1');
+			return redirect()->to(base_url('/admin/dashboard'));
 		} else {
 			$session->setFlashdata('message', 'Correo o contraseña incorrectos.');
-			return redirect()->back()->withInput(); 
+			return redirect()->back();
 		}
+	}
+
+	public function logout()
+	{
+		$session = session();
+		$session->destroy();
+		return redirect()->to(base_url('admin'));
+	}
+
+	private function _isAuth()
+	{
+		$session = session();
+		return $session->logged_in;
 	}
 
 	private function _loadView($title, $data, $view)

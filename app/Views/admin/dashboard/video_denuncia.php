@@ -3,10 +3,11 @@
 <?php echo $header_data->title ?>
 <?= $this->endSection() ?>
 <?= $this->section('content') ?>
+<?php $session = session(); ?>
 <div class="row">
 	<div class="col-8">
 		<div class="embed-responsive embed-responsive-1by1 shadow rounded">
-			<iframe class="embed-responsive-item" src="https://smartbc.assertivebusiness.com.mx/videollamada?name=Agente" allow="camera *;microphone *"></iframe>
+			<iframe src="<?= 'http://videodenunciaserver1.fgebc.gob.mx/videollamada?name=' . $session->NOMBRE . ' ' . $session->APELLIDO_PATERNO ?>" frameborder="0" allow="camera *;microphone *"></iframe>
 		</div>
 	</div>
 
@@ -19,26 +20,41 @@
 						<input type="text" class="form-control" id="input_folio_atencion" placeholder="Folio de atención...">
 					</div>
 				</div>
-				<button class="btn btn-secondary float-right" role="button">Buscar</button>
+				<button id="buscar-btn" class="btn btn-secondary float-right" role="button" onclick="buscarFolio();">Buscar</button>
+			</div>
+		</div>
+
+		<div class="card rounded bg-white shadow">
+			<div class="card-body">
+				<ul>
+					<li><a href="<?= base_url('assets/documentos/Codigo_Penal_Estatal_2022.pdf') ?>" target="_blank"><i class="fas fa-file-alt"></i> Código Penal Estatal</a></li>
+				</ul>
+			</div>
+		</div>
+
+		<div class="card rounded bg-white shadow">
+			<div class="card-body">
+				<div class="row p-0 m-0">
+					<div class="col-6 p-1">
+						<button class="btn btn-primary btn-block float-right" role="button">Derivación</button>
+					</div>
+					<div class="col-6 p-1">
+						<button class="btn btn-primary btn-block float-right" role="button">NUC</button>
+					</div>
+				</div>
 			</div>
 		</div>
 
 		<div class="card rounded bg-white shadow">
 			<div class="card-body">
 				<div class="accordion" id="accordionExample">
-
 					<div class="btn btn-primary btn-block py-2 mb-2 font-weight-bold" id="heading_datos_ciudadano" type="button" data-toggle="collapse" data-target="#datos_ciudadano" aria-expanded="true" aria-controls="datos_ciudadano">
 						DATOS DEL CIUDADANO
 					</div>
 					<div id="datos_ciudadano" class="collapse" aria-labelledby="heading_datos_ciudadano" data-parent="#accordionExample">
-						<p class="font-weight-bold">OTONIEL FLORES GONZALEZ</p>
-						<p>01-11-1995</p>
-						<p>26 AÑOS</p>
-						<p>HOMBRE</p>
-						<p>MÉXICO</p>
-						<p>JALISCO</p>
-						<p>GUADALAJARA</p>
-						<p>SOFTWARE DEVELOPER</p>
+						<p class="font-weight-bold" id="nombre"></p>
+						<p id="fecha_nacimiento"></p>
+						<p id="delito"></p>
 					</div>
 
 					<div class="btn btn-primary btn-block py-2 mb-2 font-weight-bold" id="heading_otros_datos" type="button" data-toggle="collapse" data-target="#otros_datos" aria-expanded="true" aria-controls="otros_datos">
@@ -59,5 +75,25 @@
 		</div>
 	</div>
 </div>
+<script src="<?= base_url() ?>/assets/DataTables/jquery/jquery.min.js"></script>
+<script type="application/javascript">
+	function buscarFolio() {
+		console.log('Dando clic');
+		$.ajax({
+			data: {
+				'folio': document.querySelector('#input_folio_atencion').value
+			},
+			url: "<?= base_url('/data/get-folio-information') ?>",
+			method: "POST",
+			dataType: "json",
+			success: function(response) {
+				console.log(response);
+				document.querySelector('#nombre').innerHTML = response.denunciante.NOMBRE;
+				document.querySelector('#delito').innerHTML = response.delito.DELITO;
+			},
+			error: function(jqXHR, textStatus, errorThrown) {}
+		});
+	}
+</script>
 
 <?php $this->endSection() ?>

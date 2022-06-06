@@ -126,26 +126,5 @@
 			});
 		}, false);
 	})();
-	/*(function () {
-  'use strict'
-  var forms = document.querySelectorAll('.needs-validation')
-  Array.prototype.slice.call(forms)
-    .forEach(function (form) {
-      form.addEventListener('submit', function (event) {
-         if (!form.checkValidity()) {
-          event.preventDefault()
-          event.stopPropagation()    
-        }  
-          if(form.checkValidity()){       
-            event.preventDefault();
-            alert("Se ha registrado con exito")
-          }
-        
-        form.classList.add('was-validated')
-      //  alert(form.checkValidity());
- 
-      }, false)
-    })
-})()*/
 </script>
 <?= $this->endSection() ?>

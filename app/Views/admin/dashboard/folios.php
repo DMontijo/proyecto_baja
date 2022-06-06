@@ -19,21 +19,18 @@
 									<th>Fecha</th>
 									<th>Folio</th>
 									<th>Salida</th>
-									<th>Estado</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<?php for ($i = 1; $i < 2; $i++) { ?>
-										<td><?= $i ?></td>
-										<td>OTONIEL FLORES GONZALEZ</td>
-										<td>01/06/2022</td>
-										<td>20220601</td>
+								<?php foreach ($body_data as $index => $folio) { ?>
+									<tr>
+										<th scope="row"><?= $folio->FOLIO ?></th>
+										<td><?= $folio->CREADO ?></td>
+										<td><?= $folio->DELITO ?></td>
+										<td><?= $folio->IDAGENTE ? 'ATENDIDO' : 'NO ATENDIDO' ?></td>
 										<td>-</td>
-										<td>INVESTIGACIÓN</td>
-								</tr>
-
-							<?php } ?>
+									</tr>
+								<?php } ?>
 							</tbody>
 						</table>
 					</div>

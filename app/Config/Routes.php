@@ -41,6 +41,7 @@ $routes->get('derivaciones', 'DerivacionesController::index');
 $routes->group('admin', function ($routes) {
 	$routes->get('/', 'admin/LoginController::index');
 	$routes->post('login', 'admin/LoginController::login_auth');
+	$routes->get('logout', 'admin/LoginController::logout');
 
 	$routes->group('dashboard', function ($routes) {
 		$routes->get('/', 'admin/DashboardController::index');
@@ -84,6 +85,8 @@ $routes->group('data', function ($routes) {
 	$routes->post('get-municipios-by-estado', 'client/UserController::getMunicipiosByEstado');
 	$routes->post('get-localidades-by-municipio', 'client/UserController::getLocalidadesByMunicipio');
 	$routes->post('get-colonias-by-estado-and-municipio', 'client/UserController::getColoniasByEstadoAndMunicipio');
+
+	$routes->post('get-folio-information', 'admin/DashboardController::getFolioInformation');
 
 	$routes->post('sendOTP', 'OTPController::sendEmailOTP');
 	$routes->post('getLastOTP', 'OTPController::getLastOTP');

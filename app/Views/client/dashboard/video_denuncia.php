@@ -5,13 +5,14 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
+<?php $session = session(); ?>
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-12">
 			<div class="card text-center">
 				<div class="card-body p-0 m-0">
 					<div class="ratio ratio-16x9">
-						<iframe src="https://smartbc.assertivebusiness.com.mx/videollamada?name=Otoniel_Flores" frameborder="0" allow="camera *;microphone *"></iframe>
+						<iframe src="<?= 'http://videodenunciaserver1.fgebc.gob.mx/videollamada?name=' . $session->NOMBRE . ' ' . $session->APELLIDO_PATERNO ?>" frameborder="0" allow="camera *;microphone *"></iframe>
 					</div>
 				</div>
 			</div>

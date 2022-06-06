@@ -31,13 +31,18 @@ class AuthController extends BaseController
 		$email = $this->request->getPost('correo');
 		$password = $this->request->getPost('password');
 		$data = $this->_denunciantesModel->where('CORREO', $email)->first();
-		$data['logged_in'] = TRUE;
-		if ($data && validatePassword($password, $data['PASSWORD'])) {
-			$session = session();
-			$session->set($data);
-			return redirect()->to(base_url('/denuncia/dashboard'));
+		if ($data) {
+			if (validatePassword($password, $data['PASSWORD'])) {
+				$session = session();
+				$session->set($data);
+				$data['logged_in'] = TRUE;
+				return redirect()->to(base_url('/denuncia/dashboard'));
+			} else {
+				$session->setFlashdata('message', 'La contraseña es incorrecta.');
+				return redirect()->back();
+			}
 		} else {
-			$session->setFlashdata('message', 'Correo o contraseña incorrectos.');
+			$session->setFlashdata('message', 'El correo no está registrado.');
 			return redirect()->back();
 		}
 	}
