@@ -14,15 +14,27 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="pais_adulto" class="form-label fw-bold">País</label>
-		<input type="text" class="form-control" id="pais_adulto" name="pais_adulto">
+		<select class="form-select" id="pais_adulto" name="pais_adulto">
+			<?php foreach ($body_data->paises as $index => $pais) { ?>
+				<option value="<?= $pais->ISO_2 ?>" <?= $pais->ISO_2 == 'MX' ? 'selected' : '' ?>> <?= mb_strtoupper($pais->NAME, 'UTF-8') ?> </option>
+			<?php } ?>
+		</select>
 	</div>
+
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="estado_adulto" class="form-label fw-bold">Estado</label>
-		<input type="text" class="form-control" id="estado_adulto" name="estado_adulto">
+		<select class="form-select" id="estado_adulto" name="estado_adulto">
+			<option selected disabled value="">Seleccione el estado</option>
+			<?php foreach ($body_data->estados as $index => $estado) { ?>
+				<option value="<?= $estado->ESTADOID ?>"> <?= $estado->ESTADODESCR ?> </option>
+			<?php } ?>
+		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="municipio_adulto" class="form-label fw-bold">Municipio</label>
-		<input type="text" class="form-control" id="municipio_adulto" name="municipio_adulto">
+		<select class="form-select" id="municipio_adulto" name="municipio_adulto">
+			<option selected disabled value="">Seleccione el municipio</option>
+		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="calle_adulto" class="form-label fw-bold">Calle</label>
@@ -53,20 +65,15 @@
 
 
 <script>
-	$(function() {
-		$('#fecha_nac_adulto').on('change', calcularEdad);
-	});
-
-	function calcularEdad() {
-		fecha = $(this).val();
-		var hoy = new Date();
-		var cumpleanos = new Date(fecha);
-		var edad = hoy.getFullYear() - cumpleanos.getFullYear();
-		var m = hoy.getMonth() - cumpleanos.getMonth();
-
+	document.querySelector('#fecha_nac_adulto').addEventListener('change', (e) => {
+		let fecha = e.target.value;
+		let hoy = new Date();
+		let cumpleanos = new Date(fecha);
+		let edad = hoy.getFullYear() - cumpleanos.getFullYear();
+		let m = hoy.getMonth() - cumpleanos.getMonth();
 		if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
 			edad--;
 		}
-		$('#edad_adulto').val(edad);
-	}
+		document.querySelector('#edad_adulto').value = edad;
+	})
 </script>

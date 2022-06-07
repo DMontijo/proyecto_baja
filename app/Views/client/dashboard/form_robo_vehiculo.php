@@ -1,5 +1,5 @@
 <div class="row" method="POST">
-	<h3 class="fw-bold text-center text-blue pb-3">Datos del vehiculo robado</h3>
+	<h3 class="fw-bold text-center text-blue pb-3">Datos del vehículo robado</h3>
 	<p class="fw-bold text-center">PLACAS</p>
 	<hr>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -46,6 +46,9 @@
 		<label for="marca" class="form-label fw-bold">Marca:</label>
 		<select class="form-select" id="marca" name="marca" autofocus>
 			<option selected disabled value="">Seleccione la marca</option>
+				<?php foreach ($body_data->marcaVehiculo as $index => $marca) { ?>
+					<option value="<?= $marca->VEHICULODISTRIBUIDORID ?> <?= $marca->VEHICULOMARCAID ?> ">  <?= $marca->VEHICULOMARCADESCR ?></option>
+				<?php } ?>
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -61,9 +64,12 @@
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="tipo_vehiculo" class="form-label fw-bold">Tipo de vehiculo:</label>
+		<label for="tipo_vehiculo" class="form-label fw-bold">Tipo de vehículo:</label>
 		<select class="form-select" id="tipo_vehiculo" name="tipo_vehiculo" autofocus>
-			<option selected disabled value="">Seleccione el tipo de vehiculo</option>
+			<option selected disabled value="">Seleccione el tipo de vehículo</option>
+				<?php foreach ($body_data->tipoVehiculo as $index => $tipo_vehiculo) { ?>
+					<option value="<?= $tipo_vehiculo->VEHICULOTIPOID ?>">  <?= $tipo_vehiculo->VEHICULOTIPODESCR ?></option>
+				<?php } ?>
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -76,6 +82,9 @@
 		<label for="modelo_vehiculo" class="form-label fw-bold">Modelo:</label>
 		<select class="form-select" id="modelo_vehiculo" name="modelo_vehiculo" autofocus>
 			<option selected disabled value="">Seleccione el modelo</option>
+				<?php foreach ($body_data->modeloVehiculo as $index => $modelo_vehiculo) { ?>
+					<option value="<?= $modelo_vehiculo->VEHICULODISTRIBUIDORID ?> <?= $modelo_vehiculo->VEHICULOMARCAID ?> <?= $modelo_vehiculo->VEHICULOMODELOID ?> ">  <?= $modelo_vehiculo->VEHICULOMODELODESCR ?></option>
+				<?php } ?>
 		</select>
 	</div>
 	<div class="col-12 col-sm-12 col-md-12 col-lg-8 mb-3">
@@ -102,6 +111,9 @@
 		<label for="color_vehiculo" class="form-label fw-bold">Color:</label>
 		<select class="form-select" id="color_vehiculo" name="color_vehiculo" autofocus>
 			<option selected disabled value="">Seleccione el color</option>
+				<?php foreach ($body_data->colorVehiculo as $index => $color_vehiculo) { ?>
+					<option value="<?= $color_vehiculo->VEHICULOCOLORID ?>"> <?= $color_vehiculo->VEHICULOCOLORDESCR ?> </option>
+				<?php } ?>
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">

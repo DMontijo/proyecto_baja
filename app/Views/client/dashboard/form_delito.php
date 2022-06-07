@@ -1,7 +1,7 @@
 <div class="row">
 	<h3 class="fw-bold text-center text-blue pb-3">Datos del delito</h3>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="delito-text" class="form-label fw-bold input-required">Delito:</label>
+		<label for="delito" class="form-label fw-bold input-required">Delito:</label>
 		<select class="form-select" id="delito" name="delito" required autofocus>
 			<option selected disabled value="">Elige el delito</option>
 			<option value="ABUSO DE AUTORIDAD">ABUSO DE AUTORIDAD</option>
@@ -100,14 +100,14 @@
 		<label for="exterior" class="form-label fw-bold input-required">No. exterior del delito:</label>
 		<input type="text" class="form-control" id="exterior" name="exterior" required>
 		<div class="invalid-feedback">
-			Por favor, anexa un numero exterior del delito.
+			Por favor, anexa un número exterior del delito.
 		</div>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="interior" class="form-label fw-bold">No. interior del delito:</label>
 		<input type="text" class="form-control" id="interior" name="interior">
 		<div class="invalid-feedback">
-			Por favor, anexa un numero interior del delito.
+			Por favor, anexa un número interior del delito.
 		</div>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">

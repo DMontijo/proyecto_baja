@@ -14,15 +14,26 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="pais_menor" class="form-label fw-bold">País</label>
-		<input type="text" class="form-control" id="pais_menor" name="pais_menor">
+		<select class="form-select" id="pais_menor" name="pais_menor">
+			<?php foreach ($body_data->paises as $index => $pais) { ?>
+				<option value="<?= $pais->ISO_2 ?>" <?= $pais->ISO_2 == 'MX' ? 'selected' : '' ?>> <?= mb_strtoupper($pais->NAME, 'UTF-8') ?> </option>
+			<?php } ?>
+		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="estado_menor" class="form-label fw-bold">Estado</label>
-		<input type="text" class="form-control" id="estado_menor" name="estado_menor">
+		<select class="form-select" id="estado_menor" name="estado_menor">
+			<option selected disabled value="">Seleccione el estado</option>
+			<?php foreach ($body_data->estados as $index => $estado) { ?>
+				<option value="<?= $estado->ESTADOID ?>"> <?= $estado->ESTADODESCR ?> </option>
+			<?php } ?>
+		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="municipio_menor" class="form-label fw-bold">Municipio</label>
-		<input type="text" class="form-control" id="municipio_menor" name="municipio_menor">
+		<select class="form-select" id="municipio_menor" name="municipio_menor">
+			<option selected disabled value="">Seleccione el municipio</option>
+		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="calle_menor" class="form-label fw-bold">Calle</label>
@@ -53,17 +64,15 @@
 
 <script>
 	document.querySelector('#fecha_nacimiento_menor').addEventListener('change', (e) => {
-		console.log('Cambiando fecha de nacimiento');
 		let fecha = e.target.value;
-		var hoy = new Date();
-		var cumpleanos = new Date(fecha);
-		var edad = hoy.getFullYear() - cumpleanos.getFullYear();
-		var m = hoy.getMonth() - cumpleanos.getMonth();
+		let hoy = new Date();
+		let cumpleanos = new Date(fecha);
+		let edad = hoy.getFullYear() - cumpleanos.getFullYear();
+		let m = hoy.getMonth() - cumpleanos.getMonth();
 
 		if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
 			edad--;
 		}
-		console.log('Edad: ', edad);
 		document.querySelector('#edad_menor').value = edad;
 	})
 </script>

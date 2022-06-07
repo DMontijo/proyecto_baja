@@ -3,11 +3,11 @@
 		<label for="es_menor" class="form-label fw-bold input-required">¿La victima u ofendido del delito es menor de edad?</label>
 		<br>
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="radio" name="es_menor" value="SI" onclick="MostrarSiEresTu();" required>
+			<input class="form-check-input" type="radio" name="es_menor" value="SI" required>
 			<label class="form-check-label" for="flexRadioDefault1">SI</label>
 		</div>
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="radio" name="es_menor" value="NO" onclick="EsconderSiEresTu();" required>
+			<input class="form-check-input" type="radio" name="es_menor" value="NO" required>
 			<label class="form-check-label" for="flexRadioDefault2">NO</label>
 		</div>
 	</div>
@@ -15,11 +15,11 @@
 		<label for="eres_tu" class="form-label fw-bold input-required">¿Eres tú el menor de edad?</label>
 		<br>
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="radio" name="eres_tu" value="SI" onclick="alerta(event)" required>
+			<input class="form-check-input" type="radio" name="eres_tu" value="SI" required>
 			<label class="form-check-label" for="flexRadioDefault1">SI</label>
 		</div>
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="radio" name="eres_tu" value="NO" checked onclick="alerta(event)" required>
+			<input class="form-check-input" type="radio" name="eres_tu" value="NO" checked required>
 			<label class="form-check-label" for="flexRadioDefault2">NO</label>
 		</div>
 	</div>
@@ -81,24 +81,32 @@
 
 
 <script>
-	function MostrarSiEresTu() {
-		document.getElementById('eres_tu').classList.remove('d-none');
-		document.getElementById('es_mayor').classList.add('d-none');
-	}
+	let radiosMenor = document.querySelectorAll('input[name="es_menor"]');
+	let radiosDesaparecido = document.querySelectorAll('input[name="esta_desaparecido"]');
 
-	function EsconderSiEresTu() {
-		document.getElementById('eres_tu').classList.add('d-none');
-		document.getElementById('es_mayor').classList.remove('d-none');
-	}
+	radiosMenor.forEach((radio) => {
+		radio.addEventListener('click', (e) => {
+			if (e.target.value === 'SI') {
+				document.getElementById('eres_tu').classList.remove('d-none');
+				document.getElementById('es_mayor').classList.add('d-none');
+				document.getElementById('menor').classList.remove('d-none');
+			} else {
+				document.getElementById('eres_tu').classList.add('d-none');
+				document.getElementById('es_mayor').classList.remove('d-none');
+				document.getElementById('menor').classList.add('d-none');
+			}
+		})
+	});
 
-	function alerta(e) {
-		console.log(e.target.value);
-		if (e.target.value === 'SI') {
-			document.getElementById('menor').classList.remove('d-none');
-		}
-
-		if (e.target.value === 'NO') {
-			document.getElementById('menor').classList.add('d-none');
-		}
-	}
+	radiosDesaparecido.forEach((radio) => {
+		radio.addEventListener('click', (e) => {
+			if (e.target.value === 'SI') {
+				document.querySelector('#delito').value = 'PERSONA DESAPARECIDA';
+				document.querySelector('#delito').setAttribute('disabled', true);
+			} else {
+				document.querySelector('#delito').value = '';
+				document.querySelector('#delito').removeAttribute('disabled');
+			}
+		})
+	});
 </script>

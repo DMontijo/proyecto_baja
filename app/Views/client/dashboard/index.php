@@ -106,7 +106,7 @@
 						<div class="col-12 mt-5 text-center">
 							<button class="btn btn-primary mb-3 d-none" id="prev-btn" type="button"> <i class="bi bi-caret-left-fill"></i> Anterior</button>
 							<button class="btn btn-primary mb-3" id="next-btn" type="button"> Siguiente <i class="bi bi-caret-right-fill"></i> </button>
-							<button class="btn btn-primary mb-3 d-none" type="submit" id="submit-btn"><i class="bi bi-camera-video-fill"></i> Iniciar video denuncia</button>
+							<button class="btn btn-primary mb-3 d-none" type="submit" id="submit-btn"><i class="bi bi-camera-video-fill"></i> Iniciar denuncia</button>
 						</div>
 					</form>
 				</div>
@@ -271,6 +271,7 @@
 				confirmButtonColor: '#bf9b55',
 			})
 		}
+		return false;
 	});
 
 	prevBtn.addEventListener('click', () => {
@@ -301,9 +302,111 @@
 		progress.style.width = `${currentStep*width}%`
 	});
 
+	document.querySelector('#pais_adulto').addEventListener('change', (e) => {
+		paisselector('adulto', e);
+	});
 
+	document.querySelector('#pais_menor').addEventListener('change', (e) => {
+		paisselector('menor', e);
+	});
+
+
+	document.querySelector('#estado_adulto').addEventListener('change', (e) => {
+		estadoselector('adulto', e);
+	});
+
+	document.querySelector('#estado_menor').addEventListener('change', (e) => {
+		estadoselector('menor', e);
+	});
 
 	//FUNCTIONS *************************************************
+
+	function paisselector(value, e) {
+
+		let select_estado = document.querySelector('#estado_' + value);
+		let select_municipio = document.querySelector('#municipio_' + value);
+
+		if (e.target.value !== 'MX') {
+
+			select_estado.value = '33';
+			select_estado.setAttribute('disabled', true);
+
+
+
+			let data = {
+				'estado_id': 33,
+				'municipio_id': 1,
+			}
+
+			$.ajax({
+				data: data,
+				url: "<?= base_url('/data/get-municipios-by-estado') ?>",
+				method: "POST",
+				dataType: "json",
+				success: function(response) {
+					let municipios = response.data;
+					municipios.forEach(municipio => {
+						let option = document.createElement("option");
+						option.text = municipio.MUNICIPIODESCR;
+						option.value = municipio.ID;
+						select_municipio.add(option);
+					});
+					select_municipio.value = '33001';
+					select_municipio.setAttribute('disabled', true);
+				},
+				error: function(jqXHR, textStatus, errorThrown) {}
+			});
+
+		} else {
+			clearSelect(select_municipio);
+
+			select_estado.value = '';
+			select_estado.removeAttribute('disabled');
+
+			select_municipio.value = '';
+			select_municipio.removeAttribute('disabled');
+
+
+		}
+	}
+
+
+	function estadoselector(value, e) {
+		let select_municipio = document.querySelector('#municipio_' + value);
+		clearSelect(select_municipio);
+
+		select_municipio.value = '';
+
+		let data = {
+			'estado_id': e.target.value,
+		}
+
+		$.ajax({
+			data: data,
+			url: "<?= base_url('/data/get-municipios-by-estado') ?>",
+			method: "POST",
+			dataType: "json",
+			success: function(response) {
+				let municipios = response.data;
+
+				municipios.forEach(municipio => {
+					var option = document.createElement("option");
+					option.text = municipio.MUNICIPIODESCR;
+					option.value = municipio.ID;
+					select_municipio.add(option);
+				});
+			},
+			error: function(jqXHR, textStatus, errorThrown) {}
+		});
+	}
+
+	function clearSelect(select_element) {
+		for (let i = select_element.options.length; i >= 1; i--) {
+			select_element.remove(i);
+		}
+	}
+
+
 	function refreshSteps() {
 		steps = document.querySelectorAll('.step');
 		stepCount = steps.length - 1;
