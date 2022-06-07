@@ -76,7 +76,6 @@ class HechoLugarSeeder extends Seeder
 			array('HECHODESCR' => 'CUENTA HABIENTE (SIN ARMA)'),
 			array('HECHODESCR' => 'CARRETERAS FEDERALES (SIN ARMA)'),
 			array('HECHODESCR' => 'OTROS'),
-
 		];
 
 		$this->db->table('CATEGORIA_HECHOLUGAR')->insertBatch($data);
