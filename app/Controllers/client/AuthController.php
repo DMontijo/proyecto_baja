@@ -72,7 +72,7 @@ class AuthController extends BaseController
 	{
 		$id = $this->request->getPost('id');
 		$password = $this->request->getPost('password');
-		$this->_denunciantesModel->update($id, ['PASSWORD' => hashPassword($password)]);
+		$this->_denunciantesModel->set('PASSWORD', hashPassword($password))->where('ID_DENUNCIANTE', $id)->update();
 		return redirect()->to(base_url('/denuncia'))->with('created', 'Contraseña modificada con éxito.');
 	}
 

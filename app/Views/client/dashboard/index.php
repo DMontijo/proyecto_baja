@@ -32,7 +32,7 @@
 				</div>
 			</div>
 		</div>
-		<h4 class="text-center text-blue fw-bold my-4" >BIENVENID@ <?= $session->NOMBRE ?> <?= $session->APELLIDO_PATERNO ?> <?= $session->APELLIDO_MATERNO ?></h4>
+		<h4 class="text-center text-blue fw-bold my-4">BIENVENID@ <?= $session->NOMBRE ?> <?= $session->APELLIDO_PATERNO ?> <?= $session->APELLIDO_MATERNO ?></h4>
 		<div class="card rounded shadow border-0">
 			<div class="card-body py-5 p-sm-5">
 				<div class="container">
@@ -56,6 +56,11 @@
 							<?php include('form_delito.php') ?>
 						</div>
 
+						<!-- DATOS POSIBLE RESPONSABLE -->
+						<div id="datos_imputado" class="col-12 d-none step">
+							<?php include('form_imputado.php') ?>
+						</div>
+
 						<!-- DATOS MENOR -->
 						<div id="datos_menor" class="col-12 d-none step">
 							<?php include('form_datos_menor.php') ?>
@@ -64,11 +69,6 @@
 						<!-- DATOS DEL ADULTO -->
 						<div id="datos_adulto" class="col-12 d-none step">
 							<?php include('form_datos_adulto.php') ?>
-						</div>
-
-						<!-- DATOS POSIBLE RESPONSABLE -->
-						<div id="datos_imputado" class="col-12 d-none step">
-							<?php include('form_imputado.php') ?>
 						</div>
 
 						<!-- DATOS DESAPARECIDO -->
@@ -80,7 +80,6 @@
 						<div id="datos_robo_vehiculo" class="col-12 d-none step">
 							<?php include('form_robo_vehiculo.php') ?>
 						</div>
-
 
 						<!-- PASO FINAL -->
 						<div id="paso_final" class="col-12 step d-none step">
@@ -107,7 +106,7 @@
 						<div class="col-12 mt-5 text-center">
 							<button class="btn btn-primary mb-3 d-none" id="prev-btn" type="button"> <i class="bi bi-caret-left-fill"></i> Anterior</button>
 							<button class="btn btn-primary mb-3" id="next-btn" type="button"> Siguiente <i class="bi bi-caret-right-fill"></i> </button>
-							<button class="btn btn-primary mb-3 d-none" type="submit" id="submit-btn"><i class="bi bi-camera-video-fill"></i> Iniciar denuncia</button>
+							<button class="btn btn-primary mb-3 d-none" type="submit" id="submit-btn"><i class="bi bi-camera-video-fill"></i> Iniciar video denuncia</button>
 						</div>
 					</form>
 				</div>
@@ -116,6 +115,7 @@
 	</div>
 </div>
 <?php include('aviso_modal.php') ?>
+<?php include('open_folios_modal.php') ?>
 <?php include('derechos_ofendido_modal.php') ?>
 
 <script>
@@ -128,8 +128,8 @@
 	var width = 100 / stepCount;
 	var currentStep = 0;
 
-	$(document).ready(function() {
-		$('#aviso_modal').modal('toggle')
+	$(document).ready(() => {
+		$('#aviso_modal').modal('show');
 	});
 
 	(function() {
@@ -173,6 +173,23 @@
 			event.target.value = clearText(event.target.value).toUpperCase();
 		}, false)
 
+		document.querySelector('#aviso_modal').addEventListener('hidden.bs.modal', (event) => {
+			$.ajax({
+				data: {
+					'id': <?= $session->ID_DENUNCIANTE ?>
+				},
+				url: "<?= base_url('/data/get-folios-user-unattended') ?>",
+				method: "POST",
+				dataType: "json",
+			}).done((response) => {
+				if (response.length > 0) {
+					document.querySelector('#open_folios_modal #folio_num_span').innerHTML = response[0].FOLIO;
+					$('#open_folios_modal').modal('show');
+				}
+			}).fail(function(jqXHR, textStatus) {});
+
+		})
+
 	})()
 
 	$('#description').keyup(() => {
@@ -209,7 +226,7 @@
 				document.getElementById('datos_desaparecido').classList.add('step');
 			}
 
-			if (document.querySelector("#delito").value == "49" || document.querySelector("#delito").value == "50") {
+			if (document.querySelector("#delito").value == "ROBO DE VEHÍCULO" || document.querySelector("#delito").value == "ROBO DE VEHÍCULO CON VIOLENCIA") {
 				document.getElementById('datos_robo_vehiculo').classList.add('step');
 			} else {
 				document.getElementById('datos_robo_vehiculo').classList.remove('step');

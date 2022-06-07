@@ -14,6 +14,7 @@ use App\Models\LocalidadesModel;
 use App\Models\ColoniasModel;
 use App\Models\PersonaTipoIdentificacionModel;
 use App\Models\PaisesModel;
+use App\Models\FoliosAtencionModel;
 
 
 class UserController extends BaseController
@@ -31,6 +32,7 @@ class UserController extends BaseController
 		$this->_denunciantesModel = new DenunciantesModel();
 		$this->_tipoIdentificacionModel = new PersonaTipoIdentificacionModel();
 		$this->_paisesModel = new PaisesModel();
+		$this->_foliosAtencionModel = new FoliosAtencionModel();
 	}
 
 	public function index()
@@ -55,7 +57,7 @@ class UserController extends BaseController
 	public function create()
 	{
 		$password = $this->_generatePassword(6);
-		
+
 		$data = [
 			'NOMBRE' => $this->request->getPost('nombre'),
 			'APELLIDO_PATERNO' => $this->request->getPost('apellido_paterno'),
@@ -146,6 +148,14 @@ class UserController extends BaseController
 		} else {
 			return json_encode((object)['exist' => 0]);
 		}
+	}
+
+	public function getFolios()
+	{
+		$id = $this->request->getPost('id');
+		$data = (object)array();
+		$data = $this->_foliosAtencionModel->asObject()->where('IDAGENTE', NULL)->where('IDCIUDADANO', $id)->findAll();
+		return json_encode($data);
 	}
 
 	private function _sendEmailPassword($to, $password)
