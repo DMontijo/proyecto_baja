@@ -14,7 +14,7 @@
 						<select class="form-select" name="listaDeDispositivos" id="listaDeDispositivos"></select>
 					</div>
 					<div class="col-12">
-						<button class="btn btn-primary" id="boton">Tomar foto</button>
+						<button class="btn btn-primary" id="btn-photo"><i class="bi bi-camera"></i> Tomar foto</button>
 						<p class="fw-bold text-primary" id="estado"></p>
 					</div>
 					<div class="col-12">
@@ -32,7 +32,7 @@
 <script>
 	const $video = document.querySelector("#video");
 	const $canvas = document.querySelector("#canvas");
-	const $boton = document.querySelector("#boton");
+	const $btn_take_photo = document.querySelector("#btn-photo");
 	const $estado = document.querySelector("#estado");
 	const $listaDeDispositivos = document.querySelector("#listaDeDispositivos");
 
@@ -140,7 +140,7 @@
 					$video.play();
 
 					//Escuchar el click del botón para tomar la foto
-					$boton.addEventListener("click", function() {
+					$btn_take_photo.addEventListener("click", function(e) {
 
 						//Pausar reproducción
 						$video.pause();
@@ -152,10 +152,24 @@
 						contexto.drawImage($video, 0, 0, $canvas.width, $canvas.height);
 
 						let foto = $canvas.toDataURL();
-						console.log(document.getElementById('documento'));
-						
+
+						let documento = document.querySelector('#documento');
+						let documento_identidad = document.querySelector('#documento_text');
+						let documento_identidad_modal = document.querySelector('#img_identificacion_modal');
+						let preview = document.querySelector('#img_preview');
+
+						documento.removeAttribute('required');
+						documento.value = '';
+						documento_identidad.value = foto;
+						documento_identidad_modal.setAttribute('src', foto);
+						preview.classList.remove('d-none');
+						preview.setAttribute('src', foto);
+
 						//Reanudar reproducción
 						$video.play();
+
+						let modal = bootstrap.Modal.getInstance(document.querySelector('#take_photo_modal'));
+						modal.hide();
 					});
 				},
 				function(error) {

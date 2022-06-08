@@ -176,12 +176,13 @@
 		document.querySelector('#aviso_modal').addEventListener('hidden.bs.modal', (event) => {
 			$.ajax({
 				data: {
-					'id': <?= $session->ID_DENUNCIANTE ?>
+					'id': '<?= $session->ID_DENUNCIANTE ?>'
 				},
 				url: "<?= base_url('/data/get-folios-user-unattended') ?>",
 				method: "POST",
 				dataType: "json",
 			}).done((response) => {
+				console.log()
 				if (response.length > 0) {
 					document.querySelector('#open_folios_modal #folio_num_span').innerHTML = response[0].FOLIO;
 					$('#open_folios_modal').modal('show');
@@ -220,10 +221,10 @@
 				}
 			}
 
-			if (document.querySelector('input[name="esta_desaparecido"]:checked').value == "NO") {
-				document.getElementById('datos_desaparecido').classList.remove('step');
-			} else {
+			if (document.querySelector('input[name="esta_desaparecido"]:checked').value == "SI" || document.querySelector("#delito").value == "LOCALIZACIÓN DE PERSONA" || document.querySelector("#delito").value == "PERSONA DESAPARECIDA") {
 				document.getElementById('datos_desaparecido').classList.add('step');
+			} else {
+				document.getElementById('datos_desaparecido').classList.remove('step');
 			}
 
 			if (document.querySelector("#delito").value == "ROBO DE VEHÍCULO" || document.querySelector("#delito").value == "ROBO DE VEHÍCULO CON VIOLENCIA") {
@@ -244,7 +245,6 @@
 			var width = 100 / stepCount;
 
 			currentStep++;
-			console.log(currentStep);
 			let previousStep = currentStep - 1;
 			if ((currentStep > 0) && (currentStep <= stepCount)) {
 				prevBtn.classList.remove('d-none');

@@ -5,8 +5,9 @@
 				<h5 class="modal-title"> <i class="bi bi-file-earmark-text-fill"></i> Folio de atención abierto</h5>
 			</div>
 			<div class="modal-body text-center">
-				<p>El folio <span class="fw-bold" id="folio_num_span"></span> sigue sin ser atendido, debes cerrar este folio para levantar uno nuevo.</p>
+				<p>Ya cuentas con un folio <span class="fw-bold" id="folio_num_span"></span> por el delito de <span class="fw-bold" id="folio_delito_span"></span>,continua con la denuncia.</p>
 				<a class="btn btn-primary" href="<?= base_url('/denuncia/dashboard/video-denuncia') ?>"><i class="bi bi-camera-video-fill"></i> Iniciar denuncia</a>
+				<p class="form-text text-center">Si deseas levantar una denuncia por el mismo delito no será posible hasta que finalices el primero.</p>
 			</div>
 		</div>
 	</div>

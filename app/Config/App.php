@@ -96,7 +96,7 @@ class App extends BaseConfig
 	 *
 	 * @var string[]
 	 */
-	public $supportedLocales = ['en'];
+	public $supportedLocales = ['es','en'];
 
 	/**
 	 * --------------------------------------------------------------------------
@@ -174,7 +174,8 @@ class App extends BaseConfig
 	 *
 	 * @var integer
 	 */
-	public $sessionExpiration = 7200;
+	// public $sessionExpiration = 7200;
+	public $sessionExpiration = 0;
 
 	/**
 	 * --------------------------------------------------------------------------

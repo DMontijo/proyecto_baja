@@ -101,7 +101,7 @@
 	radiosDesaparecido.forEach((radio) => {
 		radio.addEventListener('click', (e) => {
 			if (e.target.value === 'SI') {
-				document.querySelector('#delito').value = 'PERSONA DESAPARECIDA';
+				document.querySelector('#delito').value = 'LOCALIZACIÓN DE PERSONA';
 				document.querySelector('#delito').setAttribute('disabled', true);
 			} else {
 				document.querySelector('#delito').value = '';

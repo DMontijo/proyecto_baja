@@ -298,6 +298,7 @@
 						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="documento" class="form-label fw-bold input-required">Foto de identificación</label>
+							<img class="img-fluid d-none py-2" src="" id="img_preview">
 							<!-- <input class="form-control" type="file" id="documento" name="documento" accept="image/*" capture="user" required> -->
 							<input class="form-control" type="file" id="documento" name="documento" accept="image/*" required>
 							<textarea id="documento_text" name="documento_text" hidden required></textarea>
@@ -358,7 +359,7 @@
 	const progress = document.querySelector('#progress-bar');
 	let stepCount = steps.length - 1;
 	let width = 100 / stepCount;
-	let currentStep = 0;
+	let currentStep = 2;
 
 	chargeCurrentStep(currentStep);
 
@@ -811,18 +812,21 @@
 		});
 
 		document.querySelector('#documento').addEventListener('change', (e) => {
+			console.log('change');
 			let documento_identidad = document.querySelector('#documento_text');
 			let documento_identidad_modal = document.querySelector('#img_identificacion_modal');
+			let preview = document.querySelector('#img_preview');
 
 			if (e.target.files && e.target.files[0]) {
-				console.log(e.target.files);
+				console.log('change');
 				let reader = new FileReader();
 				reader.onload = function(e) {
-					console.log(e.target);
 					documento_identidad.value = e.target.result;
 					documento_identidad_modal.setAttribute('src', e.target.result);
+					preview.classList.remove('d-none');
+					preview.setAttribute('src', e.target.result);
+					console.log(preview);
 				}
-
 				reader.readAsDataURL(e.target.files[0]);
 			}
 

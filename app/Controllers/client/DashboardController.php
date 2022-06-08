@@ -22,6 +22,7 @@ use App\Models\VehiculoMarcaModel;
 use App\Models\VehiculoModeloModel;
 use App\Models\VehiculoTipoModel;
 use App\Models\PaisesModel;
+use App\Models\DelitosUsuariosModel;
 
 
 class DashboardController extends BaseController
@@ -47,6 +48,7 @@ class DashboardController extends BaseController
 		$this->_marcaVehiculoModel = new VehiculoMarcaModel();
 		$this->_modeloVehiculoModel = new VehiculoModeloModel();
 		$this->_tipoVehiculoModel = new VehiculoTipoModel();
+		$this->_delitosUsuariosModel = new DelitosUsuariosModel();
 	}
 
 	public function index()
@@ -62,6 +64,7 @@ class DashboardController extends BaseController
 		$data->marcaVehiculo = $this->_marcaVehiculoModel->asObject()->orderBy('VEHICULOMARCADESCR', 'ASC')->findAll();
 		$data->modeloVehiculo = $this->_modeloVehiculoModel->asObject()->orderBy('VEHICULOMODELODESCR', 'ASC')->findAll();
 		$data->tipoVehiculo = $this->_tipoVehiculoModel->asObject()->orderBy('VEHICULOTIPODESCR', 'ASC')->findAll();
+		$data->delitosUsuarios = $this->_delitosUsuariosModel->asObject()->orderBy('DELITO', 'ASC')->findAll();
 		$this->_loadView('Dashboard', 'dashboard', '', $data, 'index');
 	}
 

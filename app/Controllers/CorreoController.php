@@ -25,7 +25,7 @@ class CorreoController extends BaseController
 		$email->setSubject('Subject');
 		$email->setMessage("Token: " . $message);
 
-		date_default_timezone_set('America/Mexico_City');
+		date_default_timezone_set('America/Tijuana');
 		$dateTimeVariable = date("Y-m-d H:i:s");
 
 		$nuevafecha = strtotime('+1 minute', strtotime($dateTimeVariable));
@@ -69,7 +69,7 @@ class CorreoController extends BaseController
 			$email->setSubject($subject);
 			$email->setMessage('OTP code: ' . $message);
 
-			date_default_timezone_set('America/Mexico_City');
+			date_default_timezone_set('America/Tijuana');
 			$dateTimeVariable = date("Y-m-d H:i:s");
 
 			$nuevafecha = strtotime('+1 minute', strtotime($dateTimeVariable));
