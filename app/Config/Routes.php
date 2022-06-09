@@ -48,6 +48,12 @@ $routes->group('admin', function ($routes) {
 		$routes->get('registrar-usuario', 'admin/DashboardController::registrar_usuario');
 		$routes->get('video-denuncia', 'admin/DashboardController::video_denuncia');
 		$routes->get('folios', 'admin/DashboardController::folios');
+
+		$routes->get('certificadoMedico', 'PDFController::certificadoMedico');
+		$routes->get('constancia-video-denuncia', 'PDFController::constanciaVideoDenuncia');
+		$routes->get('orden-proteccion-albergue', 'PDFController::proteccionAlbergue');
+		$routes->get('orden-proteccion-pertenencia', 'PDFController::proteccionPertenencia');
+		$routes->get('orden-proteccion-rondines', 'PDFController::proteccionRondines');
 	});
 });
 
