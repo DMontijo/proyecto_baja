@@ -13,7 +13,7 @@
 						<input type="text" class="form-control" id="input_folio_atencion" placeholder="Folio de atención...">
 					</div>
 				</div>
-				<button id="buscar-btn" class="btn btn-secondary float-right" role="button" onclick="buscarFolio();">Buscar</button>
+				<button id="buscar-btn" class="btn btn-secondary float-right" role="button">Buscar</button>
 			</div>
 		</div>
 	</div>
@@ -27,20 +27,15 @@
 	</div>
 	<div class="col-3">
 		<div class="card rounded bg-white shadow" style="height: 150px;">
-			<div class="form-group">
-				<label for=""></label>
-				<select class="form-control" name="" id="">
-					<option></option>
-					<option></option>
-					<option></option>
-				</select>
+			<div class="card-body">
+				<button id="buscar-btn" class="btn btn-primary btn-block" role="button">INFORMACIÓN DEL CASO</button>
 			</div>
 		</div>
 	</div>
 	<div class="col-3">
 		<div class="card rounded bg-white shadow" style="height: 150px;">
 			<div class="card-body">
-				
+
 			</div>
 		</div>
 	</div>
@@ -67,9 +62,11 @@
 		</div>
 	</div>
 </div>
-<script type="application/javascript">
-	function buscarFolio() {
-		console.log('Dando clic');
+<script>
+	const inputFolio = document.querySelector('#input_folio_atencion');
+	const buscar_btn = document.querySelector('#buscar-btn');
+
+	buscar_btn.addEventListener('click', (e) => {
 		$.ajax({
 			data: {
 				'folio': document.querySelector('#input_folio_atencion').value
@@ -84,7 +81,7 @@
 			},
 			error: function(jqXHR, textStatus, errorThrown) {}
 		});
-	}
+	})
 </script>
 
 <?php $this->endSection() ?>

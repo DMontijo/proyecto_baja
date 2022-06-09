@@ -1,6 +1,6 @@
 import 'core-js/stable'
 // import Vue from 'vue'
-// import '@coreui/coreui'
+import '@coreui/coreui'
 
 // Import Main styles for this application
 import '../../scss/dashboard'
