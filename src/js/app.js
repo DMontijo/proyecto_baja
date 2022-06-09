@@ -1,6 +1,6 @@
 import 'bootstrap'
 import '@fortawesome/fontawesome-free'
-import Vue from 'vue'
+// import Vue from 'vue'
 
 // App
 import '../scss/app'
@@ -9,9 +9,9 @@ import '../scss/app'
  * [app description]: Instanciamos Vue en 'app'
  * @type {Vue}
  */
-new Vue({
-    el: '#app',
-    data: {
-    	msg: 'FGEBC'
-	}
-})
+// new Vue({
+//     el: '#app',
+//     data: {
+//     	msg: 'FGEBC'
+// 	}
+// })

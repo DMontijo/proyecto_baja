@@ -5,15 +5,8 @@
 <?= $this->section('content') ?>
 <?php $session = session(); ?>
 <div class="row">
-	<div class="col-8">
-		<div class="embed-responsive embed-responsive-1by1 shadow rounded">
-			<iframe src="<?= 'http://videodenunciaserver1.fgebc.gob.mx/videollamada?name=' . $session->NOMBRE . ' ' . $session->APELLIDO_PATERNO ?>" frameborder="0" allow="camera *;microphone *"></iframe>
-		</div>
-	</div>
-
-	<div class="col-4">
-
-		<div class="card rounded bg-white shadow">
+	<div class="col-3">
+		<div class="card rounded bg-white shadow" style="height: 150px;">
 			<div class="card-body">
 				<div class="form-group">
 					<div class="input-group mb-2">
@@ -23,7 +16,42 @@
 				<button id="buscar-btn" class="btn btn-secondary float-right" role="button" onclick="buscarFolio();">Buscar</button>
 			</div>
 		</div>
-
+	</div>
+	<div class="col-3">
+		<div class="card rounded bg-white shadow" style="height: 150px;">
+			<div class="card-body">
+				<p><span class="font-weight-bold">Delito:</span> <span id="delito_dash">Robo</span></p>
+				<p><span class="font-weight-bold">Descripción:</span> <span id="delito_descr_dash">Me robarón mi télefono.</span></p>
+			</div>
+		</div>
+	</div>
+	<div class="col-3">
+		<div class="card rounded bg-white shadow" style="height: 150px;">
+			<div class="form-group">
+				<label for=""></label>
+				<select class="form-control" name="" id="">
+					<option></option>
+					<option></option>
+					<option></option>
+				</select>
+			</div>
+		</div>
+	</div>
+	<div class="col-3">
+		<div class="card rounded bg-white shadow" style="height: 150px;">
+			<div class="card-body">
+				
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col">
+		<div class="embed-responsive embed-responsive-1by1 shadow rounded">
+			<iframe src="https://videodenunciaserver1.fgebc.gob.mx/pde?u=24&token=198429b7cc8a2a5733d97bc13153227dd5017555" frameborder="0" allow="camera *;microphone *" style="margin-top:-130px;"></iframe>
+		</div>
+	</div>
+	<div class="col-3">
 		<div class="card rounded bg-white shadow">
 			<div class="card-body">
 				<ul>
@@ -31,51 +59,14 @@
 				</ul>
 			</div>
 		</div>
-
-		<div class="card rounded bg-white shadow">
-			<div class="card-body">
-				<div class="row p-0 m-0">
-					<div class="col-6 p-1">
-						<button class="btn btn-primary btn-block float-right" role="button">Derivación</button>
-					</div>
-					<div class="col-6 p-1">
-						<button class="btn btn-primary btn-block float-right" role="button">NUC</button>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div class="card rounded bg-white shadow">
-			<div class="card-body">
-				<div class="accordion" id="accordionExample">
-					<div class="btn btn-primary btn-block py-2 mb-2 font-weight-bold" id="heading_datos_ciudadano" type="button" data-toggle="collapse" data-target="#datos_ciudadano" aria-expanded="true" aria-controls="datos_ciudadano">
-						DATOS DEL CIUDADANO
-					</div>
-					<div id="datos_ciudadano" class="collapse" aria-labelledby="heading_datos_ciudadano" data-parent="#accordionExample">
-						<p class="font-weight-bold" id="nombre"></p>
-						<p id="fecha_nacimiento"></p>
-						<p id="delito"></p>
-					</div>
-
-					<div class="btn btn-primary btn-block py-2 mb-2 font-weight-bold" id="heading_otros_datos" type="button" data-toggle="collapse" data-target="#otros_datos" aria-expanded="true" aria-controls="otros_datos">
-						OTROS DATOS
-					</div>
-					<div id="otros_datos" class="collapse" aria-labelledby="heading_otros_datos" data-parent="#accordionExample">
-						Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quas, sequi! Nobis in sint non assumenda maiores labore delectus inventore quis beatae eum. Illo dicta quaerat praesentium eius cumque, corrupti consequatur.
-					</div>
-				</div>
-			</div>
-		</div>
-
 		<div class="card rounded bg-white shadow">
 			<div class="card-body">
 				<label class="font-weight-bold" for="notas">Notas:</label>
-				<textarea class="form-control" id="notas" placeholder="Notas del caso..." rows="10" required></textarea>
+				<textarea class="form-control" id="notas_mp" placeholder="Notas del caso..." rows="10" required></textarea>
 			</div>
 		</div>
 	</div>
 </div>
-<script src="<?= base_url() ?>/assets/DataTables/jquery/jquery.min.js"></script>
 <script type="application/javascript">
 	function buscarFolio() {
 		console.log('Dando clic');

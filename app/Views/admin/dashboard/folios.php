@@ -3,7 +3,6 @@
 <?php echo $header_data->title ?>
 <?= $this->endSection() ?>
 <?= $this->section('content') ?>
-<script src="<?= base_url() ?>/assets/DataTables/jquery/jquery.min.js"></script>
 <section class="content">
 	<div class="container-fluid">
 		<div class="row">

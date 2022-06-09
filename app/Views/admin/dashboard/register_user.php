@@ -118,7 +118,6 @@
 					}
 					if (form.checkValidity()) {
 						event.preventDefault();
-						alert("Se ha registrado con exito")
 					}
 
 					form.classList.add('was-validated');

@@ -15,6 +15,7 @@
 	<link rel="stylesheet" href="<?= base_url() ?>/assets/DataTables/datatables-bs4/css/dataTables.bootstrap4.min.css">
 	<link rel="stylesheet" href="<?= base_url() ?>/assets/DataTables/datatables-responsive/css/responsive.bootstrap4.min.css">
 	<link rel="stylesheet" href="<?= base_url() ?>/assets/DataTables/datatables-buttons/css/buttons.bootstrap4.min.css">
+	<script src="<?= base_url() ?>/assets/DataTables/jquery/jquery.min.js"></script>
 </head>
 
 <body class="c-app c-legacy-theme">

@@ -302,7 +302,7 @@
 							<!-- <input class="form-control" type="file" id="documento" name="documento" accept="image/*" capture="user" required> -->
 							<input class="form-control" type="file" id="documento" name="documento" accept="image/*" required>
 							<textarea id="documento_text" name="documento_text" hidden required></textarea>
-							<div class="form-text">Para tomar foto <a class="link-yellow" type="button" data-bs-toggle="modal" data-bs-target="#take_photo_modal">clic aquí <i class="bi bi-camera-fill"></i></a></div>
+							<div class="form-text"><button id="photo-btn" class="btn btn-link p-0 m-0" style="font-size:14px;" type="button">Para tomar foto clic aquí <i class="bi bi-camera-fill"></i></button></div>
 						</div>
 						<div class="col-12">
 							<div class="alert alert-warning text-center fw-bold d-none mt-2" id="idioma_alert" role="alert">
@@ -348,7 +348,7 @@
 </div>
 
 <?php include('aviso_modal.php') ?>
-<?php include('take_photo_modal.php') ?>
+<?php include('take_photo_modal.php'); ?>
 <?php include('information_validation_modal.php') ?>
 
 <script>
@@ -359,9 +359,14 @@
 	const progress = document.querySelector('#progress-bar');
 	let stepCount = steps.length - 1;
 	let width = 100 / stepCount;
-	let currentStep = 2;
+	let currentStep = 0;
 
 	chargeCurrentStep(currentStep);
+
+	document.querySelector('#photo-btn').addEventListener('click', () => {
+		initPhoto();
+		$('#take_photo_modal').modal('show');
+	});
 
 	nextBtn.addEventListener('click', () => {
 		if (validarStep(currentStep)) {
@@ -941,4 +946,140 @@
 	}
 </script>
 
+<script>
+	const $video = document.querySelector("#video");
+	const $canvas = document.querySelector("#canvas");
+	const $btn_take_photo = document.querySelector("#btn-photo");
+	const $estado = document.querySelector("#estado");
+	const $listaDeDispositivos = document.querySelector("#listaDeDispositivos");
+	const take_photo_modal = document.getElementById('take_photo_modal');
+
+	function tieneSoporteUserMedia() {
+		return !!(navigator.getUserMedia || (navigator.mozGetUserMedia || navigator.mediaDevices.getUserMedia) || navigator.webkitGetUserMedia || navigator.msGetUserMedia)
+	}
+
+	function _getUserMedia() {
+		return (navigator.getUserMedia || (navigator.mozGetUserMedia || navigator.mediaDevices.getUserMedia) || navigator.webkitGetUserMedia || navigator.msGetUserMedia).apply(navigator, arguments);
+	}
+
+	function stopVideoOnly(stream) {
+		stream.getTracks().forEach(function(track) {
+			if (track.readyState == 'live' && track.kind === 'video') {
+				track.stop();
+			}
+		});
+	}
+
+	const llenarSelectConDispositivosDisponibles = () => {
+		navigator.mediaDevices.enumerateDevices().then(function(dispositivos) {
+			const dispositivosDeVideo = [];
+			dispositivos.forEach(function(dispositivo) {
+				const tipo = dispositivo.kind;
+				if (tipo === "videoinput") {
+					dispositivosDeVideo.push(dispositivo);
+				}
+			});
+
+			if (dispositivosDeVideo.length > 0) {
+				dispositivosDeVideo.forEach(dispositivo => {
+					const option = document.createElement('option');
+					option.value = dispositivo.deviceId;
+					option.text = dispositivo.label;
+					$listaDeDispositivos.appendChild(option);
+				});
+			}
+		});
+	}
+
+	function initPhoto() {
+		if (!tieneSoporteUserMedia()) {
+			alert("Tu navegador no soporta esta característica");
+			$estado.innerHTML = "Tu navegador no soporta este funcionamiento. Sube una foto desde tu dispositivo.";
+			return;
+		}
+		let stream;
+
+		navigator.mediaDevices.enumerateDevices().then(function(dispositivos) {
+			const dispositivosDeVideo = [];
+
+			dispositivos.forEach(function(dispositivo) {
+				const tipo = dispositivo.kind;
+				if (tipo === "videoinput") {
+					dispositivosDeVideo.push(dispositivo);
+				}
+			});
+
+			if (dispositivosDeVideo.length > 0) {
+				mostrarStream(dispositivosDeVideo[0].deviceId);
+			}
+		});
+
+
+
+		const mostrarStream = idDeDispositivo => {
+			_getUserMedia({
+					video: {
+						deviceId: idDeDispositivo,
+					}
+				},
+				function(streamObtenido) {
+					$estado.classList.add('d-none');
+					llenarSelectConDispositivosDisponibles();
+
+					$listaDeDispositivos.onchange = () => {
+						if (stream) {
+							stream.getTracks().forEach(function(track) {
+								track.stop();
+							});
+						}
+						mostrarStream($listaDeDispositivos.value);
+					}
+
+					stream = streamObtenido;
+
+					$video.srcObject = stream;
+					$video.play();
+
+					$btn_take_photo.addEventListener("click", function(e) {
+
+						$video.pause();
+
+						let contexto = $canvas.getContext("2d");
+						$canvas.width = $video.videoWidth;
+						$canvas.height = $video.videoHeight;
+						contexto.drawImage($video, 0, 0, $canvas.width, $canvas.height);
+
+						let foto = $canvas.toDataURL();
+
+						let documento = document.querySelector('#documento');
+						let documento_identidad = document.querySelector('#documento_text');
+						let documento_identidad_modal = document.querySelector('#img_identificacion_modal');
+						let preview = document.querySelector('#img_preview');
+
+						documento.removeAttribute('required');
+						documento.value = '';
+						documento_identidad.value = foto;
+						documento_identidad_modal.setAttribute('src', foto);
+						preview.classList.remove('d-none');
+						preview.setAttribute('src', foto);
+
+						$video.play();
+
+						let modal = bootstrap.Modal.getInstance(document.querySelector('#take_photo_modal'));
+
+						stopVideoOnly(stream);
+						modal.hide();
+					});
+
+					take_photo_modal.addEventListener('hidden.bs.modal', function(event) {
+						stopVideoOnly(stream);
+					})
+				},
+				function(error) {
+					console.log("Permiso denegado o error: ", error);
+					$estado.classList.remove('d-none');
+				});
+		}
+	};
+</script>
 <?= $this->endSection() ?>
