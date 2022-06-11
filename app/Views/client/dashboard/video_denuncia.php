@@ -12,7 +12,7 @@
 			<div class="card text-center">
 				<div class="card-body p-0 m-0">
 					<div class="ratio ratio-16x9">
-						<iframe src="<?= 'http://videodenunciaserver1.fgebc.gob.mx/videollamada?name=' . $session->NOMBRE . ' ' . $session->APELLIDO_PATERNO ?>" frameborder="0" allow="camera *;microphone *"></iframe>
+						<iframe src="<?= 'http://videodenunciaserver1.fgebc.gob.mx/videollamada?folio=123&nombre=' . $session->NOMBRE . ' ' . $session->APELLIDO_PATERNO . ' ' . $session->APELLIDO_MATERNO . '&delito=ROBO+CON+ARMA+DE+FUEGO&descripcion=ME+ENCONTRABA+EN+UN+CALLEJON+CAMINANDO+HACIA+MI+CASA+Y+DE+PRONTO+SE+ACERCO+UN+TIPO+CON+UNA+PISTOLA+Y+ME+ROBO+TODAS+MIS+PERTENENCIAS&idioma=INGLES&edad=12&perfil=0&sexo=0&prioridad=3' ?>" frameborder="0" allow="camera *;microphone *"></iframe>
 					</div>
 				</div>
 			</div>

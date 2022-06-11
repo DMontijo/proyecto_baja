@@ -7,6 +7,6 @@ use CodeIgniter\Model;
 class PersonaCalidadJuridicaModel extends Model
 {
 	protected $DBGroup          = 'default';
-	protected $table            = 'CATEGORIA_PERSONACALIDADJURIDICA';
+	protected $table            = 'PERSONACALIDADJURIDICA';
 	protected $allowedFields    = [];
 }

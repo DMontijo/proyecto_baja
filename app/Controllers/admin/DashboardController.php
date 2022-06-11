@@ -53,25 +53,30 @@ class DashboardController extends BaseController
 		$data = (object)array();
 		$numfolio = $this->request->getPost('folio');
 		$data->folio = $this->_foliosAtencionModel->asObject()->where('FOLIO', $numfolio)->first();
-		$data->denunciante = $this->_denunciantesModel->asObject()->where('ID_DENUNCIANTE', $data->folio->IDCIUDADANO)->first();
-		$data->delito = $this->_datosDelitoModel->asObject()->where('ID_DELITO', $data->folio->ID_DATOS_DELITO)->first();
+		if ($data->folio) {
+			$data->status = 1;
+			$data->denunciante = $this->_denunciantesModel->asObject()->where('ID_DENUNCIANTE', $data->folio->IDCIUDADANO)->first();
+			$data->delito = $this->_datosDelitoModel->asObject()->where('ID_DELITO', $data->folio->ID_DATOS_DELITO)->first();
 
-		if ($data->folio->ID_DATOS_DEL_RESPONSABLE) {
-			$data->responsable = $this->_datosResponsablesModel->asObject()->where('ID_RESPONSABLE', $data->folio->ID_DATOS_DEL_RESPONSABLE)->first();
+			if ($data->folio->ID_DATOS_DEL_RESPONSABLE) {
+				$data->responsable = $this->_datosResponsablesModel->asObject()->where('ID_RESPONSABLE', $data->folio->ID_DATOS_DEL_RESPONSABLE)->first();
+			}
+			if ($data->folio->ID_DATOS_ADULTO_ACOMPANANTE) {
+				$data->adulto = $this->_datosAdultoModel->asObject()->where('ID_ACOMPANANTE', $data->folio->ID_DATOS_ADULTO_ACOMPANANTE)->first();
+			}
+			if ($data->folio->ID_DATOS_MENOR_EDAD) {
+				$data->menor = $this->_datosMenorModel->asObject()->where('ID_MENOR', $data->folio->ID_DATOS_MENOR_EDAD)->first();
+			}
+			if ($data->folio->ID_DATOS_PERSONA_DESAPARECIDA) {
+				$data->desaparecido = $this->_datosDesaparecidoModel->asObject()->where('ID_PERSONA_DESAPARECIDA', $data->folio->ID_DATOS_PERSONA_DESAPARECIDA)->first();
+			}
+			if ($data->folio->ID_DATOS_ROBO_VEHICULO) {
+				$data->vehiculo = $this->_datosVehiculoModel->asObject()->where('ID_VEHICULO', $data->folio->ID_DATOS_ROBO_VEHICULO)->first();
+			}
+			return json_encode($data);
+		} else {
+			return json_encode(['status' => 0]);
 		}
-		if ($data->folio->ID_DATOS_ADULTO_ACOMPANANTE) {
-			$data->adulto = $this->_datosAdultoModel->asObject()->where('ID_ACOMPANANTE', $data->folio->ID_DATOS_ADULTO_ACOMPANANTE)->first();
-		}
-		if ($data->folio->ID_DATOS_MENOR_EDAD) {
-			$data->menor = $this->_datosMenorModel->asObject()->where('ID_MENOR', $data->folio->ID_DATOS_MENOR_EDAD)->first();
-		}
-		if ($data->folio->ID_DATOS_PERSONA_DESAPARECIDA) {
-			$data->desaparecido = $this->_datosDesaparecidoModel->asObject()->where('ID_PERSONA_DESAPARECIDA', $data->folio->ID_DATOS_PERSONA_DESAPARECIDA)->first();
-		}
-		if ($data->folio->ID_DATOS_ROBO_VEHICULO) {
-			$data->vehiculo = $this->_datosVehiculoModel->asObject()->where('ID_VEHICULO', $data->folio->ID_DATOS_ROBO_VEHICULO)->first();
-		}
-		return json_encode($data);
 	}
 
 	public function video_denuncia()

@@ -8,7 +8,6 @@ class DATOSDELDELITO extends Migration
 {
     public function up()
 	{
-
 		$this->forge->addField([
 			'ID_DELITO' => [
 				'type' => 'INT',
