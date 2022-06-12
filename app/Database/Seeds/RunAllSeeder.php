@@ -30,6 +30,10 @@ class RunAllSeeder extends Seeder
 		$this->call('VehiculoTipoSeeder ');
 		$this->call('VehiculoMarcaSeeder');
 		$this->call('VehiculoModeloSeeder');
+		$this->call('VehiculoVersionSeeder');
+		$this->call('VehiculoServicioSeeder');
+		$this->call('VehiculoDistribuidorSeeder');
+		$this->call('HechoClasificacionLugarSeeder');
 		$this->call('DerivacionesAtencionSeeder');
 		$this->call('RolesusuariosSeeder');
 		$this->call('ZonasUsuariosSeeder');

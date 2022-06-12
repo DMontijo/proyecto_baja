@@ -6,7 +6,7 @@ use CodeIgniter\Database\Migration;
 
 class DATOSMENOREDAD extends Migration
 {
-    public function up()
+	public function up()
 	{
 
 		$this->forge->addField([
@@ -43,7 +43,12 @@ class DATOSMENOREDAD extends Migration
 			],
 			'MUNICIPIO' => [
 				'type' => 'VARCHAR',
-                'constraint' => '100',
+				'constraint' => '100',
+				'null' => TRUE,
+			],
+			'COLONIA' => [
+				'type' => 'VARCHAR',
+				'constraint' => '100',
 				'null' => TRUE,
 			],
 			'CALLE' => [
@@ -61,23 +66,23 @@ class DATOSMENOREDAD extends Migration
 				'constraint' => '10',
 				'null' => TRUE,
 			],
-            'CP' => [
+			'CP' => [
 				'type' => 'VARCHAR',
 				'constraint' => '10',
 				'null' => TRUE,
 			],
-            'FECHA_NACIMIENTO' => [
+			'FECHA_NACIMIENTO' => [
 				'type' => 'DATE',
 				'null' => TRUE,
 			],
-            'EDAD' => [
+			'EDAD' => [
 				'type' => 'VARCHAR',
 				'constraint' => '10',
 				'null' => TRUE,
 			],
 
-			'FECHAREGISTRO DATETIME DEFAULT CURRENT_TIMESTAMP',
-			'FECHAACTUALIZACION DATETIME ON UPDATE CURRENT_TIMESTAMP',
+			'CREADO DATETIME DEFAULT CURRENT_TIMESTAMP',
+			'ACTUALIZADO DATETIME ON UPDATE CURRENT_TIMESTAMP',
 		]);
 		$this->forge->addKey('ID_MENOR', TRUE);
 		$this->forge->createTable('DATOS_MENOR_EDAD');

@@ -46,6 +46,11 @@ class DATOSADULTOACOMPANANTE extends Migration
                 'constraint' => '100',
 				'null' => TRUE,
 			],
+			'COLONIA' => [
+				'type' => 'VARCHAR',
+                'constraint' => '100',
+				'null' => TRUE,
+			],
 			'CALLE' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
@@ -76,8 +81,8 @@ class DATOSADULTOACOMPANANTE extends Migration
 				'null' => TRUE,
 			],
 
-			'FECHAREGISTRO DATETIME DEFAULT CURRENT_TIMESTAMP',
-			'FECHAACTUALIZACION DATETIME ON UPDATE CURRENT_TIMESTAMP',
+			'CREADO DATETIME DEFAULT CURRENT_TIMESTAMP',
+			'ACTUALIZADO DATETIME ON UPDATE CURRENT_TIMESTAMP',
 		]);
 		$this->forge->addKey('ID_ACOMPANANTE', TRUE);
 		$this->forge->createTable('DATOS_ADULTO_ACOMPANANTE');
