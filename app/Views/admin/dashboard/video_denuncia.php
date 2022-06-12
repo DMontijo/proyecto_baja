@@ -6,64 +6,74 @@
 <?php $session = session(); ?>
 <div class="row">
 	<div id="card1" class="col-3">
-		<div class="card rounded bg-white shadow" style="height: 150px;">
+		<div class="card rounded bg-white shadow" style="height: 190px;">
 			<div class="card-body">
-				<div class="form-group">
-					<div class="input-group mb-2">
-						<input type="text" class="form-control" id="input_folio_atencion" placeholder="Folio de atención..." value="2022062">
+				<div class="row">
+					<div class="col-12">
+						<div class="form-group mb-1">
+							<div class="input-group mb-1">
+								<input type="text" class="form-control" id="input_folio_atencion" placeholder="Folio de atención..." value="123456">
+							</div>
+							<button id="buscar-btn" class="btn btn-secondary btn-block" role="button">Buscar</button>
+						</div>
 					</div>
 				</div>
-				<button id="buscar-btn" class="btn btn-secondary float-right" role="button">Buscar</button>
 			</div>
 		</div>
 	</div>
 	<div id="card2" class="col-3 d-none">
-		<div class="card rounded bg-white shadow" style="height: 150px;">
+		<div class="card rounded bg-white shadow" style="min-height: 190px;">
 			<div class="card-body">
-				<p><span class="font-weight-bold">Delito:</span> <span id="delito_dash">Robo</span></p>
-				<p><span class="font-weight-bold">Descripción:</span> <span id="delito_descr_dash">Me robarón mi télefono.</span></p>
+				<label class="font-weight-bold">Delito:</label>
+				<input class="form-control" type="text" id="delito_dash">
+				<label class="font-weight-bold">Descripción:</label>
+				<textarea class="form-control" id="delito_descr_dash">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Illum suscipit iste commodi accusantium delectus, exercitationem ad vitae! Mollitia modi ut eveniet at. Eius laudantium deleniti ad odit fuga recusandae porro. Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab nemo accusantium maior</textarea>
 			</div>
 		</div>
 	</div>
 	<div id="card3" class="col-3">
-		<div class="card rounded bg-white shadow" style="height: 150px;">
+		<div class="card rounded bg-white shadow" style="height: 190px;">
 			<div class="card-body">
-				<button id="info-folio-btn" class="btn btn-primary btn-block" role="button" data-toggle="modal" data-target="#info_folio">INFORMACIÓN DEL CASO</button>
+				<button id="info-folio-btn" class="btn btn-primary btn-block h-100" role="button" data-toggle="modal" data-target="#info_folio_modal"><i class="fas fa-file-alt"></i> INFORMACIÓN DEL CASO</button>
 			</div>
 		</div>
 	</div>
-	<div id="card4" class="col-3 d-none">
-		<div class="card rounded bg-white shadow" style="height: 150px;">
+	<div id="card4" class="col-3">
+		<div class="card rounded bg-white shadow" style="height: 190px;">
 			<div class="card-body">
-
+				<button id="salida-folio-btn" class="btn btn-primary btn-block h-100" role="button" data-toggle="modal" data-target="#salida_modal"><i class="fas fa-sign-out-alt"></i> DAR SALIDA</button>
 			</div>
 		</div>
 	</div>
 </div>
 <div class="row">
 	<div class="col">
-		<div class="embed-responsive embed-responsive-1by1 shadow rounded">
-			<!-- <iframe src="https://videodenunciaserver1.fgebc.gob.mx/pde?u=24&token=198429b7cc8a2a5733d97bc13153227dd5017555" frameborder="0" allow="camera *;microphone *" style="margin-top:-130px;"></iframe> -->
+		<div class="bg-white embed-responsive embed-responsive-1by1 shadow rounded">
+			<iframe src="https://videodenunciaserver1.fgebc.gob.mx/pde?u=24&token=198429b7cc8a2a5733d97bc13153227dd5017555" frameborder="0" allow="camera *;microphone *" style="margin-top:-130px;"></iframe>
 		</div>
 	</div>
 	<div id="card5" class="col-3 d-none">
 		<div class="card rounded bg-white shadow">
 			<div class="card-body">
-				<ul>
-					<li><a href="<?= base_url('assets/documentos/Codigo_Penal_Estatal_2022.pdf') ?>" target="_blank"><i class="fas fa-file-alt"></i> Código Penal Estatal</a></li>
-				</ul>
+				<div class="row">
+					<div class="col-12 overflow-auto">
+						<a class="btn btn-primary btn-block" target="_blank" href="https://diputados.gob.mx/LeyesBiblio/ref/cpf.htm"><i class="fas fa-file-alt"></i> Código Penal Federal</a>
+						<a class="btn btn-primary btn-block" target="_blank" href="https://diputados.gob.mx/LeyesBiblio/ref/cpf.htm"><i class="fas fa-file-alt"></i> Código Penal Estatal</a>
+					</div>
+				</div>
 			</div>
 		</div>
 		<div class="card rounded bg-white shadow">
 			<div class="card-body">
-				<label class="font-weight-bold" for="notas">Notas:</label>
-				<textarea class="form-control" id="notas_mp" placeholder="Notas del caso..." rows="10" required></textarea>
+				<label class="font-weight-bold" for="notas">Breve descripción del caso:</label>
+				<textarea class="form-control" id="notas_mp" placeholder="Descripción del caso..." rows="10" required></textarea>
 			</div>
 		</div>
 	</div>
 </div>
 
 <?php include('video_denuncia_modals/info_folio_modal.php') ?>
+<?php include('video_denuncia_modals/salida_modal.php') ?>
 <script>
 	const inputFolio = document.querySelector('#input_folio_atencion');
 	const buscar_btn = document.querySelector('#buscar-btn');
@@ -88,8 +98,8 @@
 					card3.classList.remove('d-none');
 					card4.classList.remove('d-none');
 					card5.classList.remove('d-none');
-					document.querySelector('#delito_dash').innerHTML = response.delito.DELITO;
-					document.querySelector('#delito_descr_dash').innerHTML = response.delito.DELITO;
+					document.querySelector('#delito_dash').value = response.delito.DELITO;
+					document.querySelector('#delito_descr_dash').value = response.delito.DELITO;
 				} else {
 					card2.classList.add('d-none');
 					card3.classList.add('d-none');
@@ -100,10 +110,6 @@
 			error: function(jqXHR, textStatus, errorThrown) {}
 		});
 	})
-
-	// info_folio_btn.addEventListener('click',() => {
-	// 	$('#info_folio').modal('show');
-	// })
 </script>
 
 <?php $this->endSection() ?>
