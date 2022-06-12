@@ -96,7 +96,7 @@
 
 					<div class="col-12 col-sm-6 mb-3">
 						<label for="municipio_modal" class="form-label fw-bold">Municipio: </label>
-						<select class="form-select" id="localidad_modal" name="localidad_modal" required disabled>
+						<select class="form-select" id="municipio_modal" name="municipio_modal" required disabled>
 							<option selected disabled value="">Seleccione...</option>
 						</select>
 					</div>

@@ -60,6 +60,30 @@
 		</div>
 	</div>
 	<div class="col-12 mb-3">
+		<label for="lesiones" class="form-label fw-bold input-required">¿Tienes lesiones?</label>
+		<br>
+		<div class="form-check form-check-inline">
+			<input class="form-check-input" type="radio" name="lesiones" value="SI" required>
+			<label class="form-check-label" for="flexRadioDefault1">SI</label>
+		</div>
+		<div class="form-check form-check-inline">
+			<input class="form-check-input" type="radio" name="lesiones" value="NO" required>
+			<label class="form-check-label" for="flexRadioDefault2">NO</label>
+		</div>
+	</div>
+	<div class="col-12 mb-3 d-none" id="lesiones_visibles_form">
+		<label for="lesiones_visibles" class="form-label fw-bold input-required">¿Las lesiones son visibles?</label>
+		<br>
+		<div class="form-check form-check-inline">
+			<input class="form-check-input" type="radio" name="lesiones_visibles" value="SI" required>
+			<label class="form-check-label" for="flexRadioDefault1">SI</label>
+		</div>
+		<div class="form-check form-check-inline">
+			<input class="form-check-input" type="radio" name="lesiones_visibles" value="NO" checked required>
+			<label class="form-check-label" for="flexRadioDefault2">NO</label>
+		</div>
+	</div>
+	<div class="col-12 mb-3">
 		<label for="esta_desaparecido" class="form-label fw-bold input-required">¿La victima u ofendido se encuentra desaparecido?</label>
 		<br>
 		<div class="form-check form-check-inline">
@@ -83,6 +107,7 @@
 <script>
 	let radiosMenor = document.querySelectorAll('input[name="es_menor"]');
 	let radiosDesaparecido = document.querySelectorAll('input[name="esta_desaparecido"]');
+	let radiosLesiones = document.querySelectorAll('input[name="lesiones"]');
 
 	radiosMenor.forEach((radio) => {
 		radio.addEventListener('click', (e) => {
@@ -109,4 +134,15 @@
 			}
 		})
 	});
+
+	radiosLesiones.forEach((radio) => {
+		radio.addEventListener('click', (e) => {
+			if (e.target.value === 'SI') {
+				document.querySelector('#lesiones_visibles_form').classList.remove('d-none');
+			} else {
+				document.querySelector('#lesiones_visibles_form').classList.add('d-none');
+			}
+		})
+	});
+	
 </script>
