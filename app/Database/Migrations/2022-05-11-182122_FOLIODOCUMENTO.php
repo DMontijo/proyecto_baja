@@ -29,11 +29,9 @@ class FOLIODOCUMENTO extends Migration
 				'null' => TRUE,
 			],
 			'DOCUMENTO' => [
-				'type' => 'BLOB',
+				'type' => 'TEXT',
 				'null' => TRUE,
 			],
-			'FECHACREACION DATETIME DEFAULT CURRENT_TIMESTAMP',
-			'FECHAACTUALIZACION DATETIME ON UPDATE CURRENT_TIMESTAMP',
 			'FECHAIMPRESODEFINITIVA' => [
 				'type' => 'DATE',
 				'null' => TRUE,
@@ -108,6 +106,8 @@ class FOLIODOCUMENTO extends Migration
 				'constraint' => '10',
 				'null' => TRUE,
 			],
+			'FECHACREACION DATETIME DEFAULT CURRENT_TIMESTAMP',
+			'FECHAACTUALIZACION DATETIME ON UPDATE CURRENT_TIMESTAMP',
 		]);
 		$this->forge->addKey('ID', TRUE);
 		$this->forge->createTable('FOLIODOCUMENTO');

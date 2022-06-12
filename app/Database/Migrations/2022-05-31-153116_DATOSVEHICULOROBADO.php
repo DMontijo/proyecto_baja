@@ -112,7 +112,7 @@ class DATOSVEHICULOROBADO extends Migration
 				'null' => TRUE,
 			],
 			'FOTO_VEHICULO' => [
-				'type' => 'BLOB',
+				'type' => 'TEXT',
 				'null' => TRUE,
 			],
 			'DESCRIPCION_VEHICULO' => [

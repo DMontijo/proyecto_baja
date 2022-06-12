@@ -32,7 +32,7 @@ class FOLIOARCHIVOEXTERNO extends Migration
 				'unsigned' => TRUE,
 			],
 			'ARCHIVO' => [
-				'type' => 'BLOB',
+				'type' => 'TEXT',
 				'null' => TRUE,
 			],
 			'EXTENSION' => [

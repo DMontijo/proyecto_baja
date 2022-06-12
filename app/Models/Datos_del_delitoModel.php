@@ -22,6 +22,7 @@ class Datos_del_delitoModel extends Model
 		'FECHA',
 		'HORA',
 		'RESPONSABLE',
+		'DESCRIPCION_BREVE'
 	];
     
 }

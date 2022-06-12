@@ -18,6 +18,7 @@ class Datos_menorModel extends Model
         'PAIS',
         'ESTADO',
         'MUNICIPIO',
+        'COLONIA',
         'CALLE',
         'NO_EXTERIOR',
         'NO_INTERIOR',

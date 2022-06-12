@@ -17,6 +17,7 @@ class Datos_adultoModel extends Model
 		'PAIS',
 		'ESTADO',
 		'MUNICIPIO',
+		'COLONIA',
 		'CALLE',
 		'NO_EXTERIOR',
 		'NO_INTERIOR',

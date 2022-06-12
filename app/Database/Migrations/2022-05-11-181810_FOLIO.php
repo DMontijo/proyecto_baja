@@ -133,7 +133,7 @@ class FOLIO extends Migration
                 'null' => TRUE,
             ],
             'HECHONARRACION' => [
-                'type' => 'BLOB',
+                'type' => 'TEXT',
                 'null' => TRUE,
             ],
             'TIPOEXPEDIENTEID' => [

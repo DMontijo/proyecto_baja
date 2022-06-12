@@ -83,7 +83,7 @@ class FOLIOOBJETO extends Migration
 				'null' => TRUE,
 			],
 			'FOTO' => [
-				'type' => 'BLOB',
+				'type' => 'TEXT',
 				'null' => TRUE,
 			],
 			'PARTICIPAESTADO' => [

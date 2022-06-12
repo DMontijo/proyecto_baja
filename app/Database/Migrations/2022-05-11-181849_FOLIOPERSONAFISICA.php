@@ -48,6 +48,11 @@ class FOLIOPERSONAFISICA extends Migration
 				'constraint' => '20',
 				'null' => TRUE,
 			],
+			'APODO' => [
+				'type' => 'VARCHAR',
+				'constraint' => '100',
+				'null' => TRUE,
+			],
 			'NOMBRE' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
@@ -114,14 +119,8 @@ class FOLIOPERSONAFISICA extends Migration
 				'type' => 'INT',
 				'unsigned' => TRUE,
 			],
-			'APODO' => [
-				'type' => 'VARCHAR',
-				'constraint' => '100',
-				'null' => TRUE,
-			],
 			'FOTO' => [
-				'type' => 'BLOB',
-				'constraint' => '30',
+				'type' => 'TEXT',
 				'null' => TRUE,
 			],
 			'ESTADOJURIDICOIMPUTADOID' => [
@@ -176,8 +175,6 @@ class FOLIOPERSONAFISICA extends Migration
 				'constraint' => '100',
 				'null' => TRUE,
 			],
-			'FECHAREGISTRO DATETIME DEFAULT CURRENT_TIMESTAMP',
-			'FECHAACTUALIZACION DATETIME ON UPDATE CURRENT_TIMESTAMP',
 			'SOLICITANTEASESORIA' => [
 				'type' => 'CHAR',
 				'constraint' => '1',
@@ -206,6 +203,18 @@ class FOLIOPERSONAFISICA extends Migration
 				'constraint' => '3',
 				'null' => TRUE,
 			],
+			'ESCOLARIDAD' => [
+				'type' => 'VARCHAR',
+				'constraint' => '50',
+				'null' => TRUE,
+			],
+			'DESCRIPCION_FISICA' => [
+				'type' => 'VARCHAR',
+				'constraint' => '300',
+				'null' => TRUE,
+			],
+			'FECHAREGISTRO DATETIME DEFAULT CURRENT_TIMESTAMP',
+			'FECHAACTUALIZACION DATETIME ON UPDATE CURRENT_TIMESTAMP',
 		]);
 		$this->forge->addKey('ID', TRUE);
 		$this->forge->createTable('FOLIOPERSONAFISICA');

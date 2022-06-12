@@ -26,6 +26,11 @@ class FOLIOPERSONAFISDOMICILIO extends Migration
 				'type' => 'INT',
 				'unsigned' => TRUE,
 			],
+			'CP' => [
+				'type' => 'VARCHAR',
+				'constraint' => '10',
+				'null' => TRUE,
+			],
 			'TIPODOMICILIO' => [
 				'type' => 'CHAR',
 				'constraint' => '1',
