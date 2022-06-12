@@ -47,7 +47,12 @@
 
 					<div class="col-12 col-sm-6 mb-3">
 						<label for="nacionalidad_modal" class="form-label fw-bold input-required">Nacionalidad:</label>
-						<input class="form-control" id="nacionalidad_modal" name="nacionalidad_modal" type="text" disabled>
+						<select class="form-select" id="nacionalidad_modal" name="nacionalidad_modal" required disabled>
+							<option selected disabled value="">Seleccione...</option>
+							<?php foreach ($body_data->nacionalidades as $index => $nac) { ?>
+								<option value="<?= $nac->PERSONANACIONALIDADID ?>"> <?= $nac->PERSONANACIONALIDADDESCR ?> </option>
+							<?php } ?>
+						</select>
 					</div>
 
 					<div class="col-12 col-sm-6 mb-3">
@@ -71,27 +76,43 @@
 
 					<div class="col-12 col-sm-6 mb-3">
 						<label for="pais_modal" class="form-label fw-bold">Pais: </label>
-						<input type="text" class="form-control" id="pais_modal" name="pais_modal" disabled>
+						<select class="form-select" id="pais_modal" name="pais_modal" required disabled>
+							<option selected disabled value="">Seleccione...</option>
+							<?php foreach ($body_data->paises as $index => $pais) { ?>
+								<option value="<?= $pais->ISO_2 ?>" <?= $pais->ISO_2 == 'MX' ? 'selected' : '' ?>> <?= mb_strtoupper($pais->NAME, 'UTF-8') ?> </option>
+							<?php } ?>
+						</select>
 					</div>
 
 					<div class="col-12 col-sm-6 mb-3">
 						<label for="estado_modal" class="form-label fw-bold">Estado del denunciante: </label>
-						<input type="text" class="form-control" id="estado_modal" name="estado_modal" disabled>
+						<select class="form-select" id="estado_modal" name="estado_modal" required disabled>
+							<option selected disabled value="">Seleccione...</option>
+							<?php foreach ($body_data->estados as $index => $estado) { ?>
+								<option value="<?= $estado->ESTADOID ?>"> <?= $estado->ESTADODESCR ?> </option>
+							<?php } ?>
+						</select>
 					</div>
 
 					<div class="col-12 col-sm-6 mb-3">
 						<label for="municipio_modal" class="form-label fw-bold">Municipio: </label>
-						<input type="text" class="form-control" id="municipio_modal" name="municipio_modal" disabled>
+						<select class="form-select" id="municipio_modal" name="municipio_modal" required disabled>
+							<option selected disabled value="">Seleccione...</option>
+						</select>
 					</div>
 
 					<div class="col-12 col-sm-6 mb-3">
 						<label for="localidad_modal" class="form-label fw-bold">Localidad: </label>
-						<input type="text" class="form-control" id="localidad_modal" name="localidad_modal" disabled>
+						<select class="form-select" id="localidad_modal" name="localidad_modal" required disabled>
+							<option selected disabled value="">Seleccione...</option>
+						</select>
 					</div>
 
 					<div class="col-12 col-sm-6 mb-3">
 						<label for="colonia_modal" class="form-label fw-bold">Colonia: </label>
-						<input type="text" class="form-control" id="colonia_modal" name="colonia_modal" disabled>
+						<select class="form-select" id="colonia_modal" name="colonia_modal" required disabled>
+							<option selected disabled value="">Seleccione...</option>
+						</select>
 					</div>
 
 					<div class="col-12 col-sm-6 mb-3">
@@ -124,7 +145,12 @@
 
 					<div class="col-12 col-sm-6 mb-3">
 						<label for="identificacion_modal" class="form-label fw-bold">Tipo identificacion: </label>
-						<input type="text" class="form-control" id="identificacion_modal" name="identificacion_modal" disabled>
+						<select class="form-select" id="identificacion_modal" name="identificacion_modal" required disabled>
+							<option selected disabled value="">Seleccione...</option>
+							<?php foreach ($body_data->tiposIdentificaciones as $index => $identificacion) { ?>
+								<option value="<?= $identificacion->PERSONATIPOIDENTIFICACIONID ?>"> <?= $identificacion->PERSONATIPOIDENTIFICACIONDESCR ?> </option>
+							<?php } ?>
+						</select>
 					</div>
 
 					<div class="col-12 col-sm-6 mb-3">
@@ -134,7 +160,12 @@
 
 					<div class="col-12 col-sm-6 mb-3">
 						<label for="e_civil_modal" class="form-label fw-bold">Estado civil: </label>
-						<input type="text" class="form-control" id="e_civil_modal" name="e_civil_modal" disabled>
+						<select class="form-select" id="e_civil_modal" name="e_civil_modal" required disabled>
+							<option selected disabled value="">Seleccione...</option>
+							<?php foreach ($body_data->edoCiviles as $index => $edo) { ?>
+								<option value="<?= $edo->PERSONAESTADOCIVILID ?>"> <?= $edo->PERSONAESTADOCIVILDESCR ?> </option>
+							<?php } ?>
+						</select>
 					</div>
 
 					<div class="col-12 col-sm-6 mb-3">
@@ -148,13 +179,18 @@
 					</div>
 
 					<div class="col-12 col-sm-6 mb-3">
-						<label for="iden_genero_modal" class="form-label fw-bold">Orientación sexual: </label>
+						<label for="iden_genero_modal" class="form-label fw-bold">Identidad de género: </label>
 						<input type="text" class="form-control" id="iden_genero_modal" name="iden_genero_modal" disabled>
 					</div>
 
 					<div class="col-12 col-sm-6 mb-3">
 						<label for="idioma_modal" class="form-label fw-bold">Idioma: </label>
-						<input type="text" class="form-control" id="idioma_modal" name="idioma_modal" disabled>
+						<select class="form-select" id="idioma_modal" name="idioma_modal" required disabled>
+							<option selected disabled value="">Seleccione...</option>
+							<?php foreach ($body_data->idiomas as $index => $nac) { ?>
+								<option value="<?= $nac->PERSONAIDIOMAID ?>"> <?= $nac->PERSONAIDIOMADESCR ?> </option>
+							<?php } ?>
+						</select>
 					</div>
 
 					<div class="col-12">

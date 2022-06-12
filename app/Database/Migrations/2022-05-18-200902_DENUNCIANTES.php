@@ -145,17 +145,17 @@ class DENUNCIANTES extends Migration
 				'unsigned' => TRUE,
 			],
 			'DOCUMENTO' => [
-				'type' => 'BLOB',
+				'type' => 'TEXT',
 			],
 			'FIRMA' => [
-				'type' => 'BLOB',
+				'type' => 'TEXT',
 			],
 			'NOTIFICACIONES' => [
 				'type' => 'TINYINT',
 				'constraint' => '1',
 			],
-			'CREADO DATETIME DEFAULT CURRENT_TIMESTAMP',
-			'ACTUALIZADO DATETIME ON UPDATE CURRENT_TIMESTAMP',
+			'FECHAREGISTRO DATETIME DEFAULT CURRENT_TIMESTAMP',
+			'FECHAACTUALIZACION DATETIME ON UPDATE CURRENT_TIMESTAMP',
 		]);
 		$this->forge->addKey('ID_DENUNCIANTE', TRUE);
 		$this->forge->createTable('DENUNCIANTES');

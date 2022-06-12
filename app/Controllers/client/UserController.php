@@ -50,7 +50,6 @@ class UserController extends BaseController
 		$data->paises = $this->_paisesModel->asObject()->findAll();
 		$data->estados = $this->_estadosModel->asObject()->findAll();
 		$data->tiposIdentificaciones = $this->_tipoIdentificacionModel->asObject()->findAll();
-
 		$this->_loadView('Denuncia', $data, 'index');
 	}
 

@@ -473,7 +473,7 @@
 					document.querySelector('#e_civil').value != '' &&
 					document.querySelector('#discapacidad').value != '' &&
 					document.querySelector('#idioma').value != '' &&
-					document.querySelector('#documento').value != '' &&
+					document.querySelector('#documento_text').value != '' &&
 					document.querySelector('#nacionalidad').value != '' &&
 					document.querySelector('#escolaridad').value != ''
 				) {
@@ -606,12 +606,14 @@
 			let select_colonia = document.querySelector('#colonia_select');
 
 			let input_colonia = document.querySelector('#colonia');
+			clearSelect(select_municipio);
+			clearSelect(select_localidad);
+			clearSelect(select_colonia);
 
 			if (e.target.value !== 'MX') {
 
 				select_estado.value = '33';
 				select_estado.setAttribute('disabled', true);
-
 				let data = {
 					'estado_id': 33,
 					'municipio_id': 1,
@@ -630,7 +632,7 @@
 							option.value = municipio.ID;
 							select_municipio.add(option);
 						});
-						select_municipio.value = '33001';
+						select_municipio.value = '1';
 						select_municipio.setAttribute('disabled', true);
 					},
 					error: function(jqXHR, textStatus, errorThrown) {}
@@ -654,7 +656,7 @@
 						option.value = '0';
 
 						select_colonia.add(option);
-						select_localidad.value = '33001001';
+						select_localidad.value = '1';
 						select_localidad.setAttribute('disabled', true);
 
 						select_colonia.value = '0';

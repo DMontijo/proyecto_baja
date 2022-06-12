@@ -22,7 +22,7 @@ class OTP extends Migration
                 'type'           => 'VARCHAR',
                 'constraint'     => '100',
             ],
-            'CREADO DATETIME DEFAULT CURRENT_TIMESTAMP',
+            'FECHAREGISTRO DATETIME DEFAULT CURRENT_TIMESTAMP',
             'VENCIMIENTO DATETIME',
 
         ]);
