@@ -6,7 +6,7 @@
 			</div>
 			<div class="modal-body text-center">
 				<p>Ya cuentas con un folio <span class="fw-bold" id="folio_num_span"></span> por el delito de <span class="fw-bold" id="folio_delito_span"></span>,continua con la denuncia.</p>
-				<a class="btn btn-primary" href="<?= base_url('/denuncia/dashboard/video-denuncia') ?>"><i class="bi bi-camera-video-fill"></i> Iniciar denuncia</a>
+				<button class="btn btn-primary" href="<?= base_url('/denuncia/dashboard/video-denuncia') ?>"><i class="bi bi-camera-video-fill"></i> Iniciar denuncia</button>
 				<p class="form-text text-center">Si deseas levantar una denuncia por el mismo delito no será posible hasta que finalices el primero.</p>
 			</div>
 		</div>

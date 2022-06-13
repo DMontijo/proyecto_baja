@@ -15,6 +15,8 @@ use App\Models\ColoniasModel;
 use App\Models\PersonaTipoIdentificacionModel;
 use App\Models\PaisesModel;
 use App\Models\FoliosAtencionModel;
+use App\Models\HechoClasificacionLugarModel;
+use App\Models\FolioModel;
 
 
 class UserController extends BaseController
@@ -33,6 +35,8 @@ class UserController extends BaseController
 		$this->_tipoIdentificacionModel = new PersonaTipoIdentificacionModel();
 		$this->_paisesModel = new PaisesModel();
 		$this->_foliosAtencionModel = new FoliosAtencionModel();
+		$this->_clasificacionLugarModel = new HechoClasificacionLugarModel();
+		$this->_folioModel = new FolioModel();
 	}
 
 	public function index()
@@ -125,6 +129,13 @@ class UserController extends BaseController
 		return json_encode((object)['data' => $data]);
 	}
 
+	public function getClasificacionByLugar()
+	{
+		$lugar_id = $this->request->getPost('lugar_id');
+		$data = $this->_clasificacionLugarModel->asObject()->where('HECHOLUGARID', $lugar_id)->findAll();
+		return json_encode((object)['data' => $data]);
+	}
+
 	private function _generatePassword($length)
 	{
 		$password = "";
@@ -149,11 +160,11 @@ class UserController extends BaseController
 		}
 	}
 
-	public function getFolios()
+	public function getFoliosAbiertosById()
 	{
 		$id = $this->request->getPost('id');
 		$data = (object)array();
-		$data = $this->_foliosAtencionModel->asObject()->where('IDAGENTE', NULL)->where('IDCIUDADANO', $id)->findAll();
+		$data = $this->_folioModel->asObject()->where('STATUS', 'ABIERTO')->where('DENUNCIANTEID', $id)->findAll();
 		return json_encode($data);
 	}
 

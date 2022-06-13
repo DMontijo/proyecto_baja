@@ -127,10 +127,8 @@
 		radio.addEventListener('click', (e) => {
 			if (e.target.value === 'SI') {
 				document.querySelector('#delito').value = 'LOCALIZACIÓN DE PERSONA';
-				document.querySelector('#delito').setAttribute('disabled', true);
 			} else {
 				document.querySelector('#delito').value = '';
-				document.querySelector('#delito').removeAttribute('disabled');
 			}
 		})
 	});

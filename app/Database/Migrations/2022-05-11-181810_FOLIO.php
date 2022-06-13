@@ -18,11 +18,6 @@ class FOLIO extends Migration
                 'type' => 'VARCHAR',
                 'constraint' => '16',
             ],
-            'EXPEDIENTEID' => [
-                'type' => 'VARCHAR',
-                'constraint' => '16',
-                'null' => TRUE,
-            ],
             'DENUNCIANTEID' => [
                 'type' => 'INT',
                 'unsigned' => TRUE,
@@ -69,6 +64,10 @@ class FOLIO extends Migration
             ],
             'HECHOFECHA' => [
                 'type' => 'DATE',
+                'null' => TRUE,
+            ],
+			'HECHOHORA' => [
+                'type' => 'TIME',
                 'null' => TRUE,
             ],
             'HECHOLUGARID' => [
@@ -260,6 +259,10 @@ class FOLIO extends Migration
                 'unsigned' => TRUE,
                 'null' => TRUE,
             ],
+			'DELITODENUNCIA' => [
+				'type' => 'VARCHAR',
+				'constraint' => '100',
+			],
             'FECHAREGISTRO DATETIME DEFAULT CURRENT_TIMESTAMP',
             'FECHAACTUALIZACION DATETIME ON UPDATE CURRENT_TIMESTAMP',
         ]);

@@ -5,7 +5,7 @@ namespace App\Controllers\admin;
 use App\Controllers\BaseController;
 use App\Models\FoliosAtencionModel;
 use App\Models\DenunciantesModel;
-use App\Models\Datos_del_delitoModel;
+use App\Models\FolioDenunciaModel;
 use App\Models\Datos_del_responsableModel;
 use App\Models\Datos_adultoModel;
 use App\Models\Datos_menorModel;
@@ -20,7 +20,7 @@ class DashboardController extends BaseController
 		//Models
 		$this->_foliosAtencionModel = new FoliosAtencionModel();
 		$this->_denunciantesModel = new DenunciantesModel();
-		$this->_datosDelitoModel = new Datos_del_delitoModel();
+		$this->_datosDelitoModel = new FolioDenunciaModel();
 		$this->_datosResponsablesModel = new Datos_del_responsableModel();
 		$this->_datosAdultoModel = new Datos_adultoModel;
 		$this->_datosMenorModel = new Datos_menorModel;

@@ -6,6 +6,9 @@
 		<label for="tipo_placas_vehiculo" class="form-label fw-bold">Tipo de placas:</label>
 		<select class="form-select" id="tipo_placas_vehiculo" name="tipo_placas_vehiculo" autofocus>
 			<option selected disabled value="">Seleccione el tipo de placas</option>
+			<option value="N">NACIONAL</option>
+			<option value="F">FRONTERIZO</option>
+			<option value="E">EXTRANJERO</option>
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -46,30 +49,36 @@
 		<label for="marca" class="form-label fw-bold">Marca:</label>
 		<select class="form-select" id="marca" name="marca" autofocus>
 			<option selected disabled value="">Seleccione la marca</option>
-				<?php foreach ($body_data->marcaVehiculo as $index => $marca) { ?>
-					<option value="<?= $marca->VEHICULODISTRIBUIDORID ?> <?= $marca->VEHICULOMARCAID ?> ">  <?= $marca->VEHICULOMARCADESCR ?></option>
-				<?php } ?>
+			<?php foreach ($body_data->marcaVehiculo as $index => $marca) { ?>
+				<option value="<?= $marca->VEHICULODISTRIBUIDORID ?> <?= $marca->VEHICULOMARCAID ?> "> <?= $marca->VEHICULOMARCADESCR ?></option>
+			<?php } ?>
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="linea_vehiculo" class="form-label fw-bold">Linea:</label>
+		<label for="linea_vehiculo" class="form-label fw-bold">Modelo:</label>
 		<select class="form-select" id="linea_vehiculo" name="linea_vehiculo" autofocus>
-			<option selected disabled value="">Seleccione la linea</option>
+			<option selected disabled value="">Seleccione el modelo</option>
+			<?php foreach ($body_data->lineaVehiculo as $index => $linea_vehiculo) { ?>
+				<option value="<?= $linea_vehiculo->VEHICULODISTRIBUIDORID ?> <?= $linea_vehiculo->VEHICULOMARCAID ?> <?= $linea_vehiculo->VEHICULOMODELOID ?> "> <?= $linea_vehiculo->VEHICULOMODELODESCR ?></option>
+			<?php } ?>
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="version_vehiculo" class="form-label fw-bold">Versión:</label>
 		<select class="form-select" id="version_vehiculo" name="version_vehiculo" autofocus>
-			<option selected disabled value="">Seleccione la version</option>
+			<option selected disabled value="">Seleccione la versión</option>
+			<?php foreach ($body_data->marcaVehiculo as $index => $version_vehiculo) { ?>
+				<option value="<?= $version_vehiculo->VEHICULODISTRIBUIDORID ?> <?= $version_vehiculo->VEHICULOMARCAID ?> "> <?= $version_vehiculo->VEHICULOMARCADESCR ?></option>
+			<?php } ?>
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="tipo_vehiculo" class="form-label fw-bold">Tipo de vehículo:</label>
 		<select class="form-select" id="tipo_vehiculo" name="tipo_vehiculo" autofocus>
 			<option selected disabled value="">Seleccione el tipo de vehículo</option>
-				<?php foreach ($body_data->tipoVehiculo as $index => $tipo_vehiculo) { ?>
-					<option value="<?= $tipo_vehiculo->VEHICULOTIPOID ?>">  <?= $tipo_vehiculo->VEHICULOTIPODESCR ?></option>
-				<?php } ?>
+			<?php foreach ($body_data->tipoVehiculo as $index => $tipo_vehiculo) { ?>
+				<option value="<?= $tipo_vehiculo->VEHICULOTIPOID ?>"> <?= $tipo_vehiculo->VEHICULOTIPODESCR ?></option>
+			<?php } ?>
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -79,13 +88,9 @@
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="modelo_vehiculo" class="form-label fw-bold">Modelo:</label>
-		<select class="form-select" id="modelo_vehiculo" name="modelo_vehiculo" autofocus>
-			<option selected disabled value="">Seleccione el modelo</option>
-				<?php foreach ($body_data->modeloVehiculo as $index => $modelo_vehiculo) { ?>
-					<option value="<?= $modelo_vehiculo->VEHICULODISTRIBUIDORID ?> <?= $modelo_vehiculo->VEHICULOMARCAID ?> <?= $modelo_vehiculo->VEHICULOMODELOID ?> ">  <?= $modelo_vehiculo->VEHICULOMODELODESCR ?></option>
-				<?php } ?>
-		</select>
+		<label for="modelo_vehiculo" class="form-label fw-bold">Año:</label>
+		<select class="form-select" name="modelo_vehiculo" id="modelo_vehiculo"></select>
+
 	</div>
 	<div class="col-12 col-sm-12 col-md-12 col-lg-8 mb-3">
 		<label for="seguro_vigente_vehiculo" class="form-label fw-bold ">¿Cuenta con seguro vigente?</label>
@@ -111,15 +116,18 @@
 		<label for="color_vehiculo" class="form-label fw-bold">Color:</label>
 		<select class="form-select" id="color_vehiculo" name="color_vehiculo" autofocus>
 			<option selected disabled value="">Seleccione el color</option>
-				<?php foreach ($body_data->colorVehiculo as $index => $color_vehiculo) { ?>
-					<option value="<?= $color_vehiculo->VEHICULOCOLORID ?>"> <?= $color_vehiculo->VEHICULOCOLORDESCR ?> </option>
-				<?php } ?>
+			<?php foreach ($body_data->colorVehiculo as $index => $color_vehiculo) { ?>
+				<option value="<?= $color_vehiculo->VEHICULOCOLORID ?>"> <?= $color_vehiculo->VEHICULOCOLORDESCR ?> </option>
+			<?php } ?>
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="color_tapiceria_vehiculo" class="form-label fw-bold">Color tapiceria:</label>
 		<select class="form-select" id="color_tapiceria_vehiculo" name="color_tapiceria_vehiculo" autofocus>
 			<option selected disabled value="">Seleccione el color de tapiceria</option>
+			<?php foreach ($body_data->colorVehiculo as $index => $color_vehiculo) { ?>
+				<option value="<?= $color_vehiculo->VEHICULOCOLORID ?>"> <?= $color_vehiculo->VEHICULOCOLORDESCR ?> </option>
+			<?php } ?>
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -167,3 +175,11 @@
 		<textarea class="form-control" id="description_vehiculo" name="description_vehiculo" rows="10"></textarea>
 	</div>
 </div>
+
+<script>
+	let startYear = 1800;
+	let endYear = new Date().getFullYear();
+	for (i = endYear; i > startYear; i--) {
+		$('#modelo_vehiculo').append($('<option />').val(i).html(i));
+	}
+</script>

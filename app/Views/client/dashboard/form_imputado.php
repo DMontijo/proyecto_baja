@@ -1,11 +1,11 @@
-<div class="row" method="POST">
+<div class="row">
 	<h3 class="text-center fw-bolder pb-3 text-blue">Datos del posible responsable</h3>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="nombre_imputado" class="form-label fw-bold">Nombre(s)</label>
 		<input type="text" class="form-control" id="nombre_imputado" name="nombre_imputado" autofocus>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="alias_imputado" class="form-label fw-bold">Alias</label>
+		<label for="alias_imputado" class="form-label fw-bold">Apodo</label>
 		<input type="text" class="form-control" id="alias_imputado" name="alias_imputado">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -49,11 +49,11 @@
 		<label for="sexo_imputado" class="form-label fw-bold ">Sexo del posible responsable</label>
 		<br>
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="radio" name="sexo_imputado" value="MASCULINO" id="MASCULINO">
+			<input class="form-check-input" type="radio" name="sexo_imputado" value="M" id="MASCULINO">
 			<label class="form-check-label" for="flexRadioDefault1">MASCULINO</label>
 		</div>
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="radio" name="sexo_imputado" value="FEMENINO" id="FEMENINO">
+			<input class="form-check-input" type="radio" name="sexo_imputado" value="F" id="FEMENINO">
 			<label class="form-check-label" for="flexRadioDefault2">FEMENINO</label>
 		</div>
 	</div>

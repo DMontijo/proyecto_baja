@@ -35,56 +35,68 @@ class FOLIOPERSONAFISDOMICILIO extends Migration
 				'type' => 'CHAR',
 				'constraint' => '1',
 				'default' => 'R',
+				'null' => TRUE,
+			],
+			'PAIS' => [
+				'type' => 'VARCHAR',
+				'constraint' => '50',
+				'null' => TRUE,
 			],
 			'ESTADOID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
+				'null' => TRUE,
 			],
 			'MUNICIPIOID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
+				'null' => TRUE,
 			],
 			'LOCALIDADID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
+				'null' => TRUE,
 			],
 			'DELEGACIONID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
+				'null' => TRUE,
 			],
 			'ZONA' => [
 				'type' => 'CHAR',
 				'constraint' => '1',
 				'default' => 'U',
+				'null' => TRUE,
 			],
 			'COLONIAID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
+				'null' => TRUE,
 			],
 			'COLONIADESCR' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
-			],
-			'ESTADOJURIDICOIMPUTADOID' => [
-				'type' => 'INT',
-				'unsigned' => TRUE,
-				'default' => 1,
+				'null' => TRUE,
 			],
 			'CALLE' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
+				'null' => TRUE,
 			],
 			'NUMEROCASA' => [
 				'type' => 'VARCHAR',
 				'constraint' => '10',
+				'null' => TRUE,
 			],
 			'NUMEROINTERIOR' => [
 				'type' => 'VARCHAR',
 				'constraint' => '10',
+				'null' => TRUE,
 			],
 			'REFERENCIA' => [
 				'type' => 'VARCHAR',
 				'constraint' => '300',
+				'null' => TRUE,
 			],
 		]);
 		$this->forge->addKey('ID', TRUE);

@@ -18,7 +18,7 @@
 		<select class="form-select" id="municipio" name="municipio" required>
 			<option selected disabled value="">Elige el municipio</option>
 			<?php foreach ($body_data->municipios as $index => $municipio) { ?>
-				<option value="<?= $municipio->ID ?>"> <?= $municipio->MUNICIPIODESCR ?> </option>
+				<option value="<?= $municipio->MUNICIPIOID ?>"> <?= $municipio->MUNICIPIODESCR ?> </option>
 			<?php } ?>
 		</select>
 		<div class="invalid-feedback">
@@ -30,7 +30,7 @@
 		<select class="form-select" id="colonia_select" name="colonia_select" required>
 			<option selected disabled value="">Seleccione la colonia</option>
 		</select>
-		<input type="text" class="form-control d-none" id="colonia" name="colonia" maxlength="100" required>
+		<input type="text" class="form-control d-none" id="colonia" name="colonia" maxlength="100">
 		<div class="invalid-feedback">
 			La colonia es obligatoria
 		</div>
@@ -70,7 +70,9 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="clasificacion" class="form-label fw-bold">Clasificación del lugar</label>
-		<input type="text" class="form-control" id="clasificacion" name="clasificacion">
+		<select class="form-select" id="clasificacion" name="clasificacion">
+			<option selected disabled value="">Elige la clasificacion</option>
+		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="fecha" class="form-label fw-bold input-required">Fecha del delito:</label>
@@ -86,7 +88,7 @@
 			La hora del delito es obligatoria
 		</div>
 	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-8 mb-3">
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="responsable" class="form-label fw-bold input-required">¿Identifica al responsable del delito?</label>
 		<br>
 		<div class="form-check form-check-inline">
@@ -97,6 +99,11 @@
 			<input class="form-check-input" type="radio" name="responsable" value="NO" required checked>
 			<label class="form-check-label" for="flexRadioDefault2">NO</label>
 		</div>
+	</div>
+	<div class="col-12">
+		<label for="descripcion_breve" class="form-label fw-bold input-required">Descripción breve del delito</label>
+		<textarea class="form-control" id="descripcion_breve" name="descripcion_breve" row="5" maxlength="300" onkeyup="contarCaracteres(this);" required></textarea>
+		<small id="numCaracter">300 caracteres restantes</small>
 	</div>
 </div>
 <script>
@@ -110,8 +117,8 @@
 		let select_colonia = document.querySelector('#colonia_select');
 		let colonia = document.querySelector('#colonia');
 
-		let estado = parseInt(Number(e.target.value) / 1000);
-		let municipio = (Number(e.target.value) - estado * 1000);
+		let estado = 2;
+		let municipio = e.target.value;
 
 		clearSelect(select_colonia);
 
@@ -134,7 +141,7 @@
 				colonias.forEach(colonia => {
 					var option = document.createElement("option");
 					option.text = colonia.COLONIADESCR;
-					option.value = colonia.ID;
+					option.value = colonia.COLONIAID;
 					select_colonia.add(option);
 				});
 				var option = document.createElement("option");
@@ -144,7 +151,6 @@
 			},
 			error: function(jqXHR, textStatus, errorThrown) {}
 		});
-
 	});
 
 	document.querySelector('#colonia_select').addEventListener('change', (e) => {
@@ -159,4 +165,45 @@
 			input_colonia.value = e.target.value;
 		}
 	});
+
+	document.querySelector('#lugar').addEventListener('change', (e) => {
+		let select_clasificacion = document.querySelector('#clasificacion');
+
+		clearSelect(select_clasificacion);
+
+		data = {
+			'lugar_id': e.target.value,
+		}
+
+		$.ajax({
+			data: data,
+			url: "<?= base_url('/data/get-clasificacion-by-lugar') ?>",
+			method: "POST",
+			dataType: "json",
+			success: function(response) {
+				let clasificaciones = response.data;
+
+				clasificaciones.forEach(clasificacion => {
+					var option = document.createElement("option");
+					option.text = clasificacion.HECHOCLASIFICACIONLUGARDESCR;
+					option.value = clasificacion.HECHOCLASIFICACIONLUGARID;
+					select_clasificacion.add(option);
+				});
+			},
+			error: function(jqXHR, textStatus, errorThrown) {}
+		});
+	});
+
+	function contarCaracteres(obj) {
+		var maxLength = 300;
+		var strLength = obj.value.length;
+		var charRemain = (maxLength - strLength);
+
+		if (charRemain < 0) {
+			document.getElementById("numCaracter").innerHTML = '<span style="color: red;">Has superado el límite de ' + maxLength + ' caracteres </span>';
+		} else {
+			document.getElementById("numCaracter").innerHTML = charRemain + ' caracteres restantes';
+		}
+
+	}
 </script>

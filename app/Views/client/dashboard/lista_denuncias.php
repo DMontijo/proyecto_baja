@@ -23,10 +23,10 @@
 						<tbody>
 							<?php foreach ($body_data->folios as $index => $folio) { ?>
 								<tr>
-									<th scope="row"><?= $folio->FOLIO ?></th>
-									<td><?= $folio->CREADO ?></td>
-									<td><?= $folio->DELITO ?></td>
-									<td><?= $folio->IDAGENTE ? 'ATENDIDO' : 'NO ATENDIDO' ?></td>
+									<th scope="row"><?= $folio->FOLIOID ?></th>
+									<td><?= $folio->FECHAREGISTRO ?></td>
+									<td><?= $folio->DELITODENUNCIA ?></td>
+									<td><?= $folio->STATUS ?></td>
 								</tr>
 							<?php } ?>
 						</tbody>

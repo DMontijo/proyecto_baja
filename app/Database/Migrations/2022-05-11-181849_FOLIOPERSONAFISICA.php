@@ -24,24 +24,30 @@ class FOLIOPERSONAFISICA extends Migration
 			],
 			'CALIDADJURIDICAID' => [
 				'type' => 'INT',
+				'constraint' => '5',
+				'null' => TRUE,
 			],
 			'RESERVARIDENTIDAD' => [
 				'type' => 'CHAR',
 				'constraint' => '1',
 				'default' => 'N',
+				'null' => TRUE,
 			],
 			'DENUNCIANTE' => [
 				'type' => 'CHAR',
 				'constraint' => '1',
 				'default' => 'N',
+				'null' => TRUE,
 			],
 			'VIVA' => [
 				'type' => 'CHAR',
 				'constraint' => '1',
 				'default' => 'S',
+				'null' => TRUE,
 			],
 			'TIPOIDENTIFICACIONID' => [
 				'type' => 'INT',
+				'null' => TRUE,
 			],
 			'NUMEROIDENTIFICACION' => [
 				'type' => 'VARCHAR',
@@ -75,16 +81,20 @@ class FOLIOPERSONAFISICA extends Migration
 			],
 			'ESTADOORIGENID' => [
 				'type' => 'INT',
+				'null' => TRUE,
 			],
 			'MUNICIPIOORIGENID' => [
 				'type' => 'INT',
+				'null' => TRUE,
 			],
 			'FECHANACIMIENTO' => [
 				'type' => 'DATE',
+				'null' => TRUE,
 			],
 			'EDAD' => [
 				'type' => 'INT',
 				'constraint' => '3',
+				'null' => TRUE,
 			],
 			'SEXO' => [
 				'type' => 'CHAR',
@@ -114,10 +124,12 @@ class FOLIOPERSONAFISICA extends Migration
 			'NACIONALIDADID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
+				'null' => TRUE,
 			],
 			'ESTADOCIVILID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
+				'null' => TRUE,
 			],
 			'FOTO' => [
 				'type' => 'TEXT',
@@ -131,6 +143,7 @@ class FOLIOPERSONAFISICA extends Migration
 			'DESAPARECIDA' => [
 				'type' => 'CHAR',
 				'constraint' => '1',
+				'default' => 'N',
 				'null' => TRUE,
 			],
 			'PERSONATIPOMUERTEID' => [
@@ -140,10 +153,12 @@ class FOLIOPERSONAFISICA extends Migration
 			'PERSONARELIGIONID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
+				'null' => TRUE,
 			],
 			'TIPOVIVIENDAID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
+				'null' => TRUE,
 			],
 			'LUGARFRECUENTA' => [
 				'type' => 'VARCHAR',
@@ -179,6 +194,7 @@ class FOLIOPERSONAFISICA extends Migration
 				'type' => 'CHAR',
 				'constraint' => '1',
 				'default' => 'N',
+				'null' => TRUE,
 			],
 			'INGRESOS' => [
 				'type' => 'DECIMAL(12,2)',
@@ -187,6 +203,7 @@ class FOLIOPERSONAFISICA extends Migration
 			'PERSONAIDIOMAID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
+				'null' => TRUE,
 			],
 			'TIEMPORESIDEANOS' => [
 				'type' => 'INT',

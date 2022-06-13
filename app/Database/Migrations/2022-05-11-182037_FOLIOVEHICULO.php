@@ -157,8 +157,6 @@ class FOLIOVEHICULO extends Migration
 				'unsigned' => TRUE,
 				'null' => TRUE,
 			],
-			'FECHAREGISTRO DATETIME DEFAULT CURRENT_TIMESTAMP',
-			'FECHAACTUALIZACION DATETIME ON UPDATE CURRENT_TIMESTAMP',
 			'PROVIENEPADRON' => [
 				'type' => 'CHAR',
 				'constraint' => '1',
@@ -170,7 +168,8 @@ class FOLIOVEHICULO extends Migration
 				'constraint' => '1',
 				'null' => TRUE,
 			],
-
+			'FECHAREGISTRO DATETIME DEFAULT CURRENT_TIMESTAMP',
+			'FECHAACTUALIZACION DATETIME ON UPDATE CURRENT_TIMESTAMP',
 		]);
 		$this->forge->addKey('ID', TRUE);
 		$this->forge->createTable('FOLIOVEHICULO');

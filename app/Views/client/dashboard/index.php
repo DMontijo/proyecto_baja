@@ -182,9 +182,9 @@
 				method: "POST",
 				dataType: "json",
 			}).done((response) => {
-				console.log()
 				if (response.length > 0) {
-					document.querySelector('#open_folios_modal #folio_num_span').innerHTML = response[0].FOLIO;
+					document.querySelector('#open_folios_modal #folio_num_span').innerHTML = response[0].FOLIOID;
+					document.querySelector('#open_folios_modal #folio_delito_span').innerHTML = response[0].DELITODENUNCIA;
 					$('#open_folios_modal').modal('show');
 				}
 			}).fail(function(jqXHR, textStatus) {});
@@ -221,10 +221,10 @@
 				}
 			}
 
-			if (document.querySelector('input[name="esta_desaparecido"]:checked').value == "SI" || document.querySelector("#delito").value == "LOCALIZACIÓN DE PERSONA" || document.querySelector("#delito").value == "PERSONA DESAPARECIDA") {
-				document.getElementById('datos_desaparecido').classList.add('step');
-			} else {
+			if (document.querySelector('input[name="esta_desaparecido"]:checked').value == "NO") {
 				document.getElementById('datos_desaparecido').classList.remove('step');
+			} else {
+				document.getElementById('datos_desaparecido').classList.add('step');
 			}
 
 			if (document.querySelector("#delito").value == "ROBO DE VEHÍCULO" || document.querySelector("#delito").value == "ROBO DE VEHÍCULO CON VIOLENCIA") {
@@ -245,6 +245,7 @@
 			var width = 100 / stepCount;
 
 			currentStep++;
+			console.log(currentStep);
 			let previousStep = currentStep - 1;
 			if ((currentStep > 0) && (currentStep <= stepCount)) {
 				prevBtn.classList.remove('d-none');
@@ -301,104 +302,6 @@
 
 		progress.style.width = `${currentStep*width}%`
 	});
-
-	document.querySelector('#pais_adulto').addEventListener('change', (e) => {
-		paisselector('adulto', e);
-	});
-
-	document.querySelector('#pais_menor').addEventListener('change', (e) => {
-		paisselector('menor', e);
-	});
-
-
-	document.querySelector('#estado_adulto').addEventListener('change', (e) => {
-		estadoselector('adulto', e);
-	});
-
-	document.querySelector('#estado_menor').addEventListener('change', (e) => {
-		estadoselector('menor', e);
-	});
-
-	//FUNCTIONS *************************************************
-
-	function paisselector(value, e) {
-
-		let select_estado = document.querySelector('#estado_' + value);
-		let select_municipio = document.querySelector('#municipio_' + value);
-
-		if (e.target.value !== 'MX') {
-
-			select_estado.value = '33';
-			select_estado.setAttribute('disabled', true);
-
-
-
-			let data = {
-				'estado_id': 33,
-				'municipio_id': 1,
-			}
-
-			$.ajax({
-				data: data,
-				url: "<?= base_url('/data/get-municipios-by-estado') ?>",
-				method: "POST",
-				dataType: "json",
-				success: function(response) {
-					let municipios = response.data;
-					municipios.forEach(municipio => {
-						let option = document.createElement("option");
-						option.text = municipio.MUNICIPIODESCR;
-						option.value = municipio.ID;
-						select_municipio.add(option);
-					});
-					select_municipio.value = '33001';
-					select_municipio.setAttribute('disabled', true);
-				},
-				error: function(jqXHR, textStatus, errorThrown) {}
-			});
-
-		} else {
-			clearSelect(select_municipio);
-
-			select_estado.value = '';
-			select_estado.removeAttribute('disabled');
-
-			select_municipio.value = '';
-			select_municipio.removeAttribute('disabled');
-
-
-		}
-	}
-
-
-	function estadoselector(value, e) {
-		let select_municipio = document.querySelector('#municipio_' + value);
-		clearSelect(select_municipio);
-
-		select_municipio.value = '';
-
-		let data = {
-			'estado_id': e.target.value,
-		}
-
-		$.ajax({
-			data: data,
-			url: "<?= base_url('/data/get-municipios-by-estado') ?>",
-			method: "POST",
-			dataType: "json",
-			success: function(response) {
-				let municipios = response.data;
-
-				municipios.forEach(municipio => {
-					var option = document.createElement("option");
-					option.text = municipio.MUNICIPIODESCR;
-					option.value = municipio.ID;
-					select_municipio.add(option);
-				});
-			},
-			error: function(jqXHR, textStatus, errorThrown) {}
-		});
-	}
 
 	function clearSelect(select_element) {
 		for (let i = select_element.options.length; i >= 1; i--) {
@@ -477,13 +380,13 @@
 					document.querySelector('#pais_adulto').value != '' &&
 					document.querySelector('#estado_adulto').value != '' &&
 					document.querySelector('#municipio_adulto').value != '' &&
+					document.querySelector('#colonia_adulto').value != '' &&
 					document.querySelector('#calle_adulto').value != '' &&
 					document.querySelector('#numero_ext_adulto').value != '' &&
 					document.querySelector('#numero_int_adulto').value != '' &&
 					document.querySelector('#cp_adulto').value != '' &&
 					document.querySelector('#fecha_nac_adulto').value != '' &&
 					document.querySelector('#edad_adulto').value != ''
-
 				) {
 					return true
 				} else {
@@ -534,7 +437,8 @@
 					document.querySelector('#lugar').value != '' &&
 					document.querySelector('#fecha').value != '' &&
 					document.querySelector('#hora').value != '' &&
-					document.querySelector('input[name="responsable"]:checked')
+					document.querySelector('input[name="responsable"]:checked') &&
+					document.querySelector('#descripcion_breve').value != ''
 				) {
 					return true;
 				} else {
@@ -582,7 +486,6 @@
 					document.querySelector('#numero_int_imputado').value != '' &&
 					document.querySelector('#tel_imputado').value != '' &&
 					document.querySelector('#fecha_nac_imputado').value != '' &&
-					document.querySelector('#sexo_imputado').value != '' &&
 					document.querySelector('#escolaridad_imputado').value != '' &&
 					document.querySelector('#description_fisica_imputado').value != ''
 

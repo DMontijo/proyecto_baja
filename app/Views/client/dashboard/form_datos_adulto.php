@@ -1,4 +1,4 @@
-<div class="row" method="POST">
+<div class="row">
 	<h3 class="text-center fw-bolder pb-3 text-blue">Datos del adulto acompañante</h3>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="nombre_adulto" class="form-label fw-bold">Nombre(s)</label>
@@ -37,6 +37,13 @@
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="colonia" class="form-label fw-bold">Colonia</label>
+		<select class="form-select" id="colonia_adulto" name="colonia_adulto">
+			<option selected disabled value="">Seleccione la colonia</option>
+		</select>
+		<input type="text" class="form-control d-none" id="colonia" name="colonia" maxlength="100">
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="calle_adulto" class="form-label fw-bold">Calle</label>
 		<input type="text" class="form-control" id="calle_adulto" name="calle_adulto">
 	</div>
@@ -57,6 +64,18 @@
 		<input type="date" class="form-control" id="fecha_nac_adulto" name="fecha_nac_adulto">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="sexo_adulto" class="form-label fw-bold ">Sexo</label>
+		<br>
+		<div class="form-check form-check-inline">
+			<input class="form-check-input" type="radio" name="sexo_adulto" value="M" id="MASCULINO">
+			<label class="form-check-label" for="flexRadioDefault1">MASCULINO</label>
+		</div>
+		<div class="form-check form-check-inline">
+			<input class="form-check-input" type="radio" name="sexo_adulto" value="F" id="FEMENINO">
+			<label class="form-check-label" for="flexRadioDefault2">FEMENINO</label>
+		</div>
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3" hidden>
 		<label for="edad_adulto" class="form-label fw-bold">Edad</label>
 		<input class="form-control" id="edad_adulto" name="edad_adulto" type="text" disabled>
 	</div>
@@ -76,4 +95,194 @@
 		}
 		document.querySelector('#edad_adulto').value = edad;
 	})
+
+
+	function clearSelect(select_element) {
+		for (let i = select_element.options.length; i >= 1; i--) {
+			select_element.remove(i);
+		}
+	}
+
+	document.querySelector('#pais_adulto').addEventListener('change', (e) => {
+
+		let select_estado = document.querySelector('#estado_adulto');
+		let select_municipio = document.querySelector('#municipio_adulto');
+		let select_colonia = document.querySelector('#colonia_adulto');
+
+		let input_colonia = document.querySelector('#colonia');
+
+		if (e.target.value !== 'MX') {
+
+			select_estado.value = '33';
+
+			let data = {
+				'estado_id': 33,
+				'municipio_id': 1,
+			}
+
+			$.ajax({
+				data: data,
+				url: "<?= base_url('/data/get-municipios-by-estado') ?>",
+				method: "POST",
+				dataType: "json",
+				success: function(response) {
+					let municipios = response.data;
+					municipios.forEach(municipio => {
+						let option = document.createElement("option");
+						option.text = municipio.MUNICIPIODESCR;
+						option.value = municipio.ID;
+						select_municipio.add(option);
+					});
+					select_municipio.value = '1';
+				},
+				error: function(jqXHR, textStatus, errorThrown) {}
+			});
+
+			$.ajax({
+				data: data,
+				url: "<?= base_url('/data/get-localidades-by-municipio') ?>",
+				method: "POST",
+				dataType: "json",
+				success: function(response) {
+					let localidades = response.data;
+					localidades.forEach(localidad => {
+						let option = document.createElement("option");
+						option.text = localidad.LOCALIDADDESCR;
+						option.value = localidad.ID;
+						select_localidad.add(option);
+					});
+					let option = document.createElement("option");
+					option.text = 'OTRO';
+					option.value = '0';
+
+					select_colonia.add(option);
+					select_localidad.value = '1';
+
+					select_colonia.value = '0';
+					select_colonia.classList.add('d-none');
+					input_colonia.classList.remove('d-none');
+					input_colonia.value = 'EXTRANJERO';
+				},
+				error: function(jqXHR, textStatus, errorThrown) {}
+			});
+
+
+		} else {
+			clearSelect(select_estado);
+			clearSelect(select_municipio);
+			clearSelect(select_colonia);
+
+			select_estado.value = '';
+
+			select_municipio.value = '';
+
+			select_colonia.value = '';
+			select_colonia.classList.remove('d-none');
+			input_colonia.classList.add('d-none');
+		}
+	});
+
+	document.querySelector('#estado_adulto').addEventListener('change', (e) => {
+		let select_municipio = document.querySelector('#municipio_adulto');
+		let select_colonia = document.querySelector('#colonia_adulto');
+		let input_colonia = document.querySelector('#colonia');
+
+		clearSelect(select_municipio);
+		clearSelect(select_colonia);
+
+		select_municipio.value = '';
+		select_colonia.value = '';
+		input_colonia.value = '';
+
+		select_colonia.classList.remove('d-none');
+		input_colonia.classList.add('d-none');
+
+		let data = {
+			'estado_id': e.target.value,
+		}
+
+		$.ajax({
+			data: data,
+			url: "<?= base_url('/data/get-municipios-by-estado') ?>",
+			method: "POST",
+			dataType: "json",
+			success: function(response) {
+				let municipios = response.data;
+
+				municipios.forEach(municipio => {
+					var option = document.createElement("option");
+					option.text = municipio.MUNICIPIODESCR;
+					option.value = municipio.ID;
+					select_municipio.add(option);
+				});
+			},
+			error: function(jqXHR, textStatus, errorThrown) {}
+		});
+	});
+
+	document.querySelector('#municipio_adulto').addEventListener('change', (e) => {
+		let select_colonia = document.querySelector('#colonia_adulto');
+		let input_colonia = document.querySelector('#colonia');
+
+		let estado = parseInt(Number(e.target.value) / 1000);
+		let municipio = (Number(e.target.value) - estado * 1000);
+
+		clearSelect(select_colonia);
+
+		let data = {
+			'estado_id': estado,
+			'municipio_id': municipio
+		};
+
+		if (estado === 2) {
+			select_colonia.classList.remove('d-none');
+			colonia.classList.add('d-none');
+			$.ajax({
+				data: data,
+				url: "<?= base_url('/data/get-colonias-by-estado-and-municipio') ?>",
+				method: "POST",
+				dataType: "json",
+				success: function(response) {
+					let colonias = response.data;
+
+					colonias.forEach(colonia => {
+						var option = document.createElement("option");
+						option.text = colonia.COLONIADESCR;
+						option.value = colonia.ID;
+						select_colonia.add(option);
+					});
+					var option = document.createElement("option");
+					option.text = 'OTRO';
+					option.value = '0';
+					select_colonia.add(option);
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+
+				}
+			});
+
+		} else {
+			var option = document.createElement("option");
+			option.text = 'OTRO';
+			option.value = '0';
+			select_colonia.add(option);
+			select_colonia.value = '0';
+			select_colonia.classList.add('d-none');
+			colonia.classList.remove('d-none');
+		}
+
+	});
+
+	document.querySelector('#colonia_adulto').addEventListener('change', (e) => {
+		let select_colonia = document.querySelector('#colonia_adulto');
+		let input_colonia = document.querySelector('#colonia');
+
+		if (e.target.value === '0') {
+			select_colonia.classList.add('d-none');
+			input_colonia.classList.remove('d-none');
+			input_colonia.focus();
+		} else {
+			input_colonia.value = e.target.value;
+		}
+	});
 </script>
