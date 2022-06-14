@@ -93,6 +93,7 @@ $routes->group('data', function ($routes) {
 	$routes->post('get-colonias-by-estado-and-municipio', 'client/UserController::getColoniasByEstadoAndMunicipio');
 	$routes->post('get-folios-user-unattended', 'client/UserController::getFoliosAbiertosById');
 	$routes->post('get-clasificacion-by-lugar', 'client/UserController::getClasificacionByLugar');
+	$routes->post('get-link-videodenuncia','client/DashboardController::getLinkVideodenuncia');
 
 	$routes->post('get-folio-information', 'admin/DashboardController::getFolioInformation');
 

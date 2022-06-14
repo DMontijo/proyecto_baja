@@ -12,7 +12,7 @@
 					<div class="col-12">
 						<div class="form-group mb-1">
 							<div class="input-group mb-1">
-								<input type="text" class="form-control" id="input_folio_atencion" placeholder="Folio de atención..." value="123456">
+								<input type="text" class="form-control" id="input_folio_atencion" placeholder="Folio de atención..." value="402002202200001">
 							</div>
 							<button id="buscar-btn" class="btn btn-secondary btn-block" role="button">Buscar</button>
 						</div>
@@ -119,6 +119,12 @@
 					document.querySelector('#esta_desaparecido').value = preguntas.ESTA_DESAPARECIDO;
 					document.querySelector('#lesiones').value = preguntas.LESIONES;
 					document.querySelector('#lesiones_visibles').value = preguntas.LESIONES_VISIBLES;
+
+					$("#table-personas").DataTable({
+						"responsive": true,
+						"lengthChange": false,
+						"autoWidth": false,
+					}).buttons().container().appendTo('#videollamadasA_wrapper .col-md-6:eq(0)');
 				} else {
 					card2.classList.add('d-none');
 					card3.classList.add('d-none');

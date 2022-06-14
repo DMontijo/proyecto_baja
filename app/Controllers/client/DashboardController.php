@@ -188,31 +188,31 @@ class DashboardController extends BaseController
 			'NOMBRE' => $denunciante->NOMBRE,
 			'PRIMERAPELLIDO' => $denunciante->APELLIDO_PATERNO,
 			'SEGUNDOAPELLIDO' => $denunciante->APELLIDO_MATERNO,
-			'FECHANACIMIENTO' => $denunciante->FECHA_NACIMIENTO,
+			'FECHANACIMIENTO' => $denunciante->FECHA_DE_NACIMIENTO,
 			'EDAD' => $denunciante->EDAD,
 			'EDADCANTIDAD' => $denunciante->EDAD,
 			'SEXO' => $denunciante->SEXO,
 			'TELEFONO' => $denunciante->TELEFONO,
 			'TELEFONO2' => $denunciante->TELEFONO2,
-			'CODIGOPAISTEL' => $denunciante->CODIGOPAIS,
-			'CODIGOPAISTEL2' => $denunciante->CODIGOPAIS2,
+			'CODIGOPAISTEL' => $denunciante->CODIGO_PAIS,
+			'CODIGOPAISTEL2' => $denunciante->CODIGO_PAIS2,
 			'CORREO' => $denunciante->CORREO,
 			'TIPOIDENTIFICACIONID' => $denunciante->TIPO_DE_IDENTIFICACION,
 			'NUMEROIDENTIFICACION' => $denunciante->NUMERO_DE_IDENTIFICACION,
 			'NACIONALIDADID' => $denunciante->NACIONALIDAD_ID,
-			'PERSONAIDIOMAID' => $denunciante->IDIOMA_ID,
+			'PERSONAIDIOMAID' => $denunciante->IDIOMAID,
 			'ESCOLARIDAD' => $denunciante->ESCOLARIDAD,
 			'ESTADOCIVILID' => $denunciante->ESTADO_CIVIL,
-			'ESTADOORIGENID' => $denunciante->ESTADO_ID,
-			'MUNICIPIOORIGENID' => $denunciante->MUNICIPIO_ID,
+			'ESTADOORIGENID' => $denunciante->ESTADOID,
+			'MUNICIPIOORIGENID' => $denunciante->MUNICIPIOID,
 		);
 
 		$dataOfendidoDomicilio = array(
 			'PAIS' => $denunciante->CODIGO_PAIS,
-			'ESTADOID' => $denunciante->ESTADO_ID,
-			'MUNICIPIOID' => $denunciante->MUNICIPIO_ID,
-			'LOCALIDADID' => $denunciante->LOCALIDAD_ID,
-			'COLONIAID' => $denunciante->COLONIA,
+			'ESTADOID' => $denunciante->ESTADOID,
+			'MUNICIPIOID' => $denunciante->MUNICIPIOID,
+			'LOCALIDADID' => $denunciante->LOCALIDADID,
+			'COLONIAID' => $denunciante->COLONIAID,
 			'COLONIADESCR' => $denunciante->COLONIA,
 			'CALLE' => $denunciante->CALLE,
 			'NUMEROCASA' => $denunciante->NUM_EXT,
@@ -348,7 +348,7 @@ class DashboardController extends BaseController
 		}
 
 		$denunciante = $this->_denunciantesModel->asObject()->where('ID_DENUNCIANTE', $session->get('ID_DENUNCIANTE'))->first();
-		$idioma = $this->_personaIdiomaModel->asObject()->where('PERSONAIDIOMAID', $denunciante->IDIOMA_ID)->first();
+		$idioma = $this->_personaIdiomaModel->asObject()->where('PERSONAIDIOMAID', $denunciante->IDIOMAID)->first();
 		$delito = $this->_delitosUsuariosModel->asObject()->where('DELITO', $this->request->getPost('delito'))->first();
 		$prioridad = 1;
 
@@ -626,6 +626,44 @@ class DashboardController extends BaseController
 		];
 
 		echo view("client/dashboard/$view", $data2);
+	}
+
+	public function getLinkVideodenuncia()
+	{
+		$FOLIOID = $this->request->getPost('folio');
+		$IDDENUNCIANTE = $this->request->getPost('id');
+		$EDAD = $this->request->getPost('edad');
+		$folio = $this->_folioModel->asObject()->where('FOLIOID', $FOLIOID,)->first();
+
+		if ($FOLIOID && $folio && $EDAD && $IDDENUNCIANTE) {
+
+			$preguntas = $this->_folioPreguntasModel->asObject()->where('FOLIOID', $FOLIOID)->first();
+			$denunciante = $this->_denunciantesModel->asObject()->where('ID_DENUNCIANTE', $IDDENUNCIANTE)->first();
+			$idioma = $this->_personaIdiomaModel->asObject()->where('PERSONAIDIOMAID', $denunciante->IDIOMAID)->first();
+			$delito = $this->_delitosUsuariosModel->asObject()->where('DELITO', $folio->DELITODENUNCIA)->first();
+			$prioridad = 1;
+
+			if ($preguntas->ES_MENOR == 'SI' || $preguntas->ES_TERCERA_EDAD == 'SI' || $preguntas->TIENE_DISCAPACIDAD == 'SI' || $preguntas->FUE_CON_ARMA == 'SI' || $preguntas->ESTA_DESAPARECIDO == 'SI') {
+				$prioridad = 3;
+			} else {
+				$prioridad = $delito->IMPORTANCIA;
+			}
+
+			$data = (object)[
+				'delito' => $folio->DELITODENUNCIA,
+				'descripcion' => $folio->HECHONARRACION,
+				'idioma' => $idioma->PERSONAIDIOMADESCR ? $idioma->PERSONAIDIOMADESCR : 'DESCONOCIDO',
+				'edad' => $EDAD,
+				'perfil' => $folio->DELITODENUNCIA == 'VIOLENCIA FAMILIAR' ? 1 : 0,
+				'sexo' => $folio->DELITODENUNCIA == 'VIOLENCIA FAMILIAR' ? 2 : 0,
+			];
+
+			$url = base_url() . "/denuncia/dashboard/video-denuncia?folio=" . $FOLIOID . "&delito=" . $data->delito . "&descripcion=" . $data->descripcion . "&idioma=" . $data->idioma . "&edad=" . $data->edad . "&perfil=" . $data->perfil . "&sexo=" . $data->sexo . "&prioridad=" . $prioridad;
+
+			return json_encode((object)['status' => 1, 'url' => $url]);
+		} else {
+			return json_encode((object)['status' => 0, 'error' => 'No hay data disponible']);
+		}
 	}
 }
 

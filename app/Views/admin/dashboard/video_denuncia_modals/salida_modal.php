@@ -23,10 +23,14 @@
 								<div class="form-group">
 									<label for="tipo_salida" class="font-weight-bold">Seleccione la salida</label>
 									<select class="form-control" name="tipo_salida" id="tipo_salida">
-										<option value="Derivar">Derivar</option>
-										<option value="Canalizar">Canalizar</option>
+										<option value="Derivado">Derivar</option>
+										<option value="Canalizado">Canalizar</option>
 										<option value="NAC">NAC</option>
 									</select>
+								</div>
+								<div id="notas" class="form-group">
+									<label for="exampleFormControlTextarea1">Notas de derivación o canalización.</label>
+									<textarea class="form-control" id="exampleFormControlTextarea1" rows="10" maxlength="300"></textarea>
 								</div>
 							</div>
 							<div class="tab-pane fade" id="v-pills-delitos" role="tabpanel" aria-labelledby="v-pills-delitos-tab">
@@ -53,9 +57,11 @@
 		if (e.target.value !== 'NAC') {
 			document.querySelector('#v-pills-delitos-tab').classList.add('d-none');
 			document.querySelector('#v-pills-documentos-tab').classList.add('d-none');
+			document.querySelector('#notas').classList.remove('d-none');
 		} else {
 			document.querySelector('#v-pills-delitos-tab').classList.remove('d-none');
 			document.querySelector('#v-pills-documentos-tab').classList.remove('d-none');
+			document.querySelector('#notas').classList.add('d-none');
 		}
 	})
 </script>

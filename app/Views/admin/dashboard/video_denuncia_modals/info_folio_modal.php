@@ -32,7 +32,7 @@
 								<?php echo view('/admin/dashboard/video_denuncia_forms/form_denunciante'); ?>
 							</div>
 							<div class="tab-pane fade" id="v-pills-personas" role="tabpanel" aria-labelledby="v-pills-personas-tab">
-								<table class="table table-bordered table-striped">
+								<table id="table-personas" class="table table-bordered table-striped">
 									<thead>
 										<tr>
 											<th class="text-center">NOMBRE</th>
@@ -52,7 +52,7 @@
 								</table>
 							</div>
 							<div class="tab-pane fade" id="v-pills-domicilios" role="tabpanel" aria-labelledby="v-pills-domicilios-tab">
-								<table class="table table-bordered table-striped">
+								<table id="table-domicilio" class="table table-bordered table-striped">
 									<thead>
 										<tr>
 											<th class="text-center">NOMBRE</th>
@@ -92,7 +92,7 @@
 								</table>
 							</div> -->
 							<div class="tab-pane fade" id="v-pills-vehiculos" role="tabpanel" aria-labelledby="v-pills-vehiculos-tab">
-								<table class="table table-bordered table-striped">
+								<table id="table-vehiculos" class="table table-bordered table-striped">
 									<thead>
 										<tr>
 											<th class="text-center">PLACAS</th>
