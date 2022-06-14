@@ -79,6 +79,10 @@ class FOLIOPERSONAFISICA extends Migration
 				'constraint' => '30',
 				'null' => TRUE,
 			],
+			'PAIS' => [
+				'type' => 'CHAR',
+				'constraint' => '2',
+			],
 			'ESTADOORIGENID' => [
 				'type' => 'INT',
 				'null' => TRUE,
@@ -102,6 +106,21 @@ class FOLIOPERSONAFISICA extends Migration
 				'null' => TRUE,
 			],
 			'TELEFONO' => [
+				'type' => 'VARCHAR',
+				'constraint' => '100',
+				'null' => TRUE,
+			],
+			'TELEFONO2' => [
+				'type' => 'VARCHAR',
+				'constraint' => '100',
+				'null' => TRUE,
+			],
+			'CODIGOPAISTEL' => [
+				'type' => 'VARCHAR',
+				'constraint' => '100',
+				'null' => TRUE,
+			],
+			'CODIGOPAISTEL2' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
 				'null' => TRUE,

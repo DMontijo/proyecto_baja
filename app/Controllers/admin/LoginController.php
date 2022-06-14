@@ -15,7 +15,6 @@ class LoginController extends BaseController
 
 	public function index()
 	{
-		$data = array();
 		if ($this->_isAuth()) {
 			return redirect()->to(base_url('/admin/dashboard'));
 		} else {
@@ -30,9 +29,9 @@ class LoginController extends BaseController
 		$email = $this->request->getPost('correo');
 		$password = $this->request->getPost('password');
 		$data = $this->_usuariosModel->where('CORREO', $email)->first();
-		$data['logged_in'] = TRUE;
 		if ($data && validatePassword($password, $data['PASSWORD'])) {
-			$session = session();
+			$data['logged_in'] = TRUE;
+			$data['type'] = 'admin';
 			$session->set($data);
 			return redirect()->to(base_url('/admin/dashboard'));
 		} else {
@@ -50,8 +49,12 @@ class LoginController extends BaseController
 
 	private function _isAuth()
 	{
-		$session = session();
-		return $session->logged_in;
+		if (session('logged_in') && session('type') == 'admin') {
+			return true;
+		} else {
+			session()->destroy;
+			return false;
+		}
 	}
 
 	private function _loadView($title, $data, $view)

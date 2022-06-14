@@ -12,7 +12,6 @@ class PERSONAEDOCIVIL extends Migration
             'PERSONAESTADOCIVILID'          => [
                 'type'           => 'INT',
                 'unsigned'       => TRUE,
-                'auto_increment' => TRUE
             ],
             'PERSONAESTADOCIVILDESCR'       => [
                 'type'           => 'VARCHAR',

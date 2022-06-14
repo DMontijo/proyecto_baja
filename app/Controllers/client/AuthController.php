@@ -33,9 +33,9 @@ class AuthController extends BaseController
 		$data = $this->_denunciantesModel->where('CORREO', $email)->first();
 		if ($data) {
 			if (validatePassword($password, $data['PASSWORD'])) {
-				$session = session();
-				$session->set($data);
 				$data['logged_in'] = TRUE;
+				$data['type'] = 'user';
+				$session->set($data);
 				return redirect()->to(base_url('/denuncia/dashboard'));
 			} else {
 				$session->setFlashdata('message', 'La contraseña es incorrecta.');
@@ -95,8 +95,12 @@ class AuthController extends BaseController
 
 	private function _isAuth()
 	{
-		$session = session();
-		return $session->logged_in;
+		if (session('logged_in') && session('logged_in') == 'user') {
+			return true;
+		} else {
+			session()->destroy;
+			return false;
+		}
 	}
 
 	private function _loadView($title, $data, $view)

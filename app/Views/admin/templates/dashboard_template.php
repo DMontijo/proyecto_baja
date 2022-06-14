@@ -41,7 +41,22 @@
 			</li>
 			<li class="c-sidebar-nav-item">
 				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/folios">
-					<i class="fas fa-archive c-sidebar-nav-icon"></i> Folios
+					<i class="fas fa-archive c-sidebar-nav-icon"></i> Folios Abiertos
+				</a>
+			</li>
+			<li class="c-sidebar-nav-item">
+				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/folios">
+					<i class="fas fa-archive c-sidebar-nav-icon"></i> Folios Sin Firma
+				</a>
+			</li>
+			<li class="c-sidebar-nav-item">
+				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/folios">
+					<i class="fas fa-archive c-sidebar-nav-icon"></i> Folios Canalizados
+				</a>
+			</li>
+			<li class="c-sidebar-nav-item">
+				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/folios">
+					<i class="fas fa-archive c-sidebar-nav-icon"></i> Folios Derivados
 				</a>
 			</li>
 		</ul>

@@ -8,13 +8,11 @@ class DENUNCIANTES extends Migration
 {
 	public function up()
 	{
-
 		$this->forge->addField([
 			'ID_DENUNCIANTE' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'auto_increment' => TRUE,
-				'unique' => TRUE,
 			],
 			'NOMBRE' => [
 				'type' => 'VARCHAR',
@@ -45,42 +43,49 @@ class DENUNCIANTES extends Migration
 				'type' => 'TINYINT',
 			],
 			'SEXO' => [
-				'type' => 'VARCHAR',
-				'constraint' => '6',
+				'type' => 'CHAR',
+				'constraint' => '1',
 			],
 			'CODIGO_POSTAL' => [
 				'type' => 'INT',
 				'constraint' => '10',
 				'null' => TRUE
 			],
-			'PAIS_ID' => [
-				'type' => 'INT',
-				'unsigned' => TRUE,
+			'PAIS' => [
+				'type' => 'CHAR',
+				'constraint' => '2',
+				'null' => TRUE
 			],
-			'ESTADO_ID' => [
+			'ESTADOID' => [
 				'type' => 'INT',
-				'unsigned' => TRUE,
+				'null' => TRUE
 			],
-			'MUNICIPIO_ID' => [
+			'MUNICIPIOID' => [
 				'type' => 'INT',
-				'unsigned' => TRUE,
+				'null' => TRUE
 			],
-			'LOCALIDAD_ID' => [
+			'LOCALIDADID' => [
 				'type' => 'INT',
-				'unsigned' => TRUE,
+				'null' => TRUE
+			],
+			'COLONIAID' => [
+				'type' => 'INT',
 				'null' => TRUE
 			],
 			'COLONIA' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
+				'null' => TRUE
 			],
 			'CALLE' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
+				'null' => TRUE
 			],
 			'NUM_EXT' => [
 				'type' => 'VARCHAR',
 				'constraint' => '10',
+				'null' => TRUE
 			],
 			'NUM_INT' => [
 				'type' => 'VARCHAR',
@@ -90,6 +95,7 @@ class DENUNCIANTES extends Migration
 			'TELEFONO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '20',
+				'null' => TRUE
 			],
 			'TELEFONO2' => [
 				'type' => 'VARCHAR',
@@ -99,6 +105,7 @@ class DENUNCIANTES extends Migration
 			'CODIGO_PAIS' => [
 				'type' => 'VARCHAR',
 				'constraint' => '3',
+				'null' => TRUE
 			],
 			'CODIGO_PAIS2' => [
 				'type' => 'VARCHAR',
@@ -108,6 +115,7 @@ class DENUNCIANTES extends Migration
 			'TIPO_DE_IDENTIFICACION' => [
 				'type' => 'VARCHAR',
 				'constraint' => '80',
+				'null' => TRUE
 			],
 			'NUMERO_DE_IDENTIFICACION' => [
 				'type' => 'VARCHAR',
@@ -117,6 +125,7 @@ class DENUNCIANTES extends Migration
 			'ESTADO_CIVIL' => [
 				'type' => 'VARCHAR',
 				'constraint' => '20',
+				'null' => TRUE
 			],
 			'OCUPACION' => [
 				'type' => 'VARCHAR',
@@ -131,6 +140,7 @@ class DENUNCIANTES extends Migration
 			'DISCAPACIDAD' => [
 				'type' => 'VARCHAR',
 				'constraint' => '40',
+				'null' => TRUE
 			],
 			'NACIONALIDAD_ID' => [
 				'type' => 'INT',
@@ -139,20 +149,25 @@ class DENUNCIANTES extends Migration
 			'ESCOLARIDAD' => [
 				'type' => 'VARCHAR',
 				'constraint' => '30',
+				'null' => TRUE
 			],
-			'IDIOMA_ID' => [
+			'IDIOMAID' => [
 				'type' => 'INT',
-				'unsigned' => TRUE,
+				'null' => TRUE
 			],
 			'DOCUMENTO' => [
 				'type' => 'TEXT',
+				'null' => TRUE
 			],
 			'FIRMA' => [
 				'type' => 'TEXT',
+				'null' => TRUE
 			],
 			'NOTIFICACIONES' => [
-				'type' => 'TINYINT',
+				'type' => 'CHAR',
 				'constraint' => '1',
+				'default' => 'S',
+				'null' => TRUE
 			],
 			'FECHAREGISTRO DATETIME DEFAULT CURRENT_TIMESTAMP',
 			'FECHAACTUALIZACION DATETIME ON UPDATE CURRENT_TIMESTAMP',

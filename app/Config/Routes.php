@@ -43,7 +43,7 @@ $routes->group('admin', function ($routes) {
 	$routes->post('login', 'admin/LoginController::login_auth');
 	$routes->get('logout', 'admin/LoginController::logout');
 
-	$routes->group('dashboard', function ($routes) {
+	$routes->group('dashboard', ['filter' => 'adminAuth'], function ($routes) {
 		$routes->get('/', 'admin/DashboardController::index');
 		$routes->get('registrar-usuario', 'admin/DashboardController::registrar_usuario');
 		$routes->get('video-denuncia', 'admin/DashboardController::video_denuncia');
@@ -72,7 +72,7 @@ $routes->group('denuncia', function ($routes) {
 	$routes->post('change_password', 'client/AuthController::change_password_post');
 	$routes->post('send_email_change_password', 'client/AuthController::sendEmailChangePassword');
 
-	$routes->group('dashboard', function ($routes) {
+	$routes->group('dashboard', ['filter' => 'denuciantesAuth'], function ($routes) {
 		$routes->get('/', 'client/DashboardController::index');
 		$routes->get('video-denuncia', 'client/DashboardController::video_denuncia');
 		$routes->get('denuncias', 'client/DashboardController::denuncias');

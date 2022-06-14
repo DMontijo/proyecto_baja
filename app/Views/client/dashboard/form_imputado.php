@@ -5,10 +5,6 @@
 		<input type="text" class="form-control" id="nombre_imputado" name="nombre_imputado" autofocus>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="alias_imputado" class="form-label fw-bold">Apodo</label>
-		<input type="text" class="form-control" id="alias_imputado" name="alias_imputado">
-	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="primer_apellido_imputado" class="form-label fw-bold">Primer apellido del posible responsable</label>
 		<input type="text" class="form-control" id="primer_apellido_imputado" name="primer_apellido_imputado">
 	</div>
@@ -17,11 +13,15 @@
 		<input type="text" class="form-control" id="segundo_apellido_imputado" name="segundo_apellido_imputado">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="alias_imputado" class="form-label fw-bold">Apodo</label>
+		<input type="text" class="form-control" id="alias_imputado" name="alias_imputado">
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="municipio_imputado" class="form-label fw-bold">Municipio del posible responsable</label>
 		<select class="form-select" id="municipio_imputado" name="municipio_imputado">
 			<option selected disabled value="">Elige el municipio del imputado</option>
 			<?php foreach ($body_data->municipios as $index => $municipio) { ?>
-				<option value="<?= $municipio->ID ?>"> <?= $municipio->MUNICIPIODESCR ?> </option>
+				<option value="<?= $municipio->MUNICIPIOID ?>"> <?= $municipio->MUNICIPIODESCR ?> </option>
 			<?php } ?>
 		</select>
 	</div>

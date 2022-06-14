@@ -8,7 +8,7 @@ class DenunciantesModel extends Model
 {
 	protected $DBGroup          = 'default';
 	protected $table            = 'DENUNCIANTES';
-	protected $primaryKey       = 'ID';
+	protected $primaryKey       = 'ID_DENUNCIANTE';
 	protected $allowedFields    = [
 		'NOMBRE',
 		'APELLIDO_PATERNO',
@@ -20,15 +20,14 @@ class DenunciantesModel extends Model
 		'SEXO',
 		'CODIGO_POSTAL',
 		'PAIS',
-		'ESTADO',
-		'MUNICIPIO',
-		'LOCALIDAD',
+		'ESTADOID',
+		'MUNICIPIOID',
+		'LOCALIDADID',
+		'COLONIAID',
 		'COLONIA',
 		'CALLE',
 		'NUM_EXT',
 		'NUM_INT',
-		'TELEFONO',
-		'TELEFONO2',
 		'TELEFONO',
 		'TELEFONO2',
 		'CODIGO_PAIS',
@@ -39,14 +38,11 @@ class DenunciantesModel extends Model
 		'OCUPACION',
 		'IDENTIDAD_DE_GENERO',
 		'DISCAPACIDAD',
-		'NACIONALIDAD',
+		'NACIONALIDAD_ID',
 		'ESCOLARIDAD',
-		'IDIOMA',
+		'IDIOMAID',
 		'DOCUMENTO',
 		'FIRMA',
 		'NOTIFICACIONES',
-		'CREADO',
-		'ACTUALIZADO',
-		'ELIMINADO',
 	];
 }

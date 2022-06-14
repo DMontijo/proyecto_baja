@@ -15,7 +15,7 @@ class HECHOCLASIFICACIONLUGAR extends Migration
             ],
             'HECHOCLASIFICACIONLUGARDESCR'       => [
                 'type'           => 'VARCHAR',
-                'constraint'     => '10',
+                'constraint'     => '100',
             ],
             'HECHOLUGARID'       => [
                 'type'           => 'INT',

@@ -79,12 +79,12 @@
 							<label for="sexo" class="form-label fw-bold input-required">Sexo</label>
 							<br>
 							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio" name="sexo" value="HOMBRE" checked required>
-								<label class="form-check-label" for="flexRadioDefault1">HOMBRE</label>
+								<input class="form-check-input" type="radio" name="sexo" value="M" checked required>
+								<label class="form-check-label" for="flexRadioDefault1">MASCULINO</label>
 							</div>
 							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio" name="sexo" value="MUJER" required>
-								<label class="form-check-label" for="flexRadioDefault2">MUJER</label>
+								<input class="form-check-input" type="radio" name="sexo" value="F" required>
+								<label class="form-check-label" for="flexRadioDefault2">FEMENINO</label>
 							</div>
 						</div>
 						<div class="col-12">
@@ -299,8 +299,8 @@
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="documento" class="form-label fw-bold input-required">Foto de identificación</label>
 							<img class="img-fluid d-none py-2" src="" id="img_preview">
-							<!-- <input class="form-control" type="file" id="documento" name="documento" accept="image/*" capture="user" required> -->
-							<input class="form-control" type="file" id="documento" name="documento" accept="image/*" required>
+							<input class="form-control" type="file" id="documento" name="documento" accept="image/*" capture="user" required>
+							<!-- <input class="form-control" type="file" id="documento" name="documento" accept="image/*" required> -->
 							<textarea id="documento_text" name="documento_text" hidden required></textarea>
 							<div class="form-text"><button id="photo-btn" class="btn btn-link p-0 m-0" style="font-size:14px;" type="button">Para tomar foto clic aquí <i class="bi bi-camera-fill"></i></button></div>
 						</div>
@@ -320,10 +320,10 @@
 						<div class="col-12 text-center items-center mt-2">
 							<input class="form-check-input" type="checkbox" id="notificaciones_check" name="notificaciones_check" required>
 							<label class="form-check-label fw-bold" for="notificaciones_check">
-								Acepto envío de notificaciones por teléfono, correo y a mi domicilio.
+								Acepto envío de notificaciones por teléfono, correo electrónico y a mi domicilio.
 							</label>
 							<div class="invalid-feedback">
-								Debes aceptar el envío de notificaciones para continuar
+								Debes aceptar el envío de notificaciones para continuar.
 							</div>
 						</div>
 					</div>
@@ -674,18 +674,13 @@
 				clearSelect(select_colonia);
 
 				select_estado.value = '';
-				select_estado.removeAttribute('disabled');
 
 				select_municipio.value = '';
-				select_municipio.removeAttribute('disabled');
 
 				select_localidad.value = '';
-				select_localidad.removeAttribute('disabled');
 
 				select_colonia.value = '';
-				select_colonia.removeAttribute('disabled');
 				select_colonia.classList.remove('d-none');
-				input_colonia.removeAttribute('disabled');
 				input_colonia.classList.add('d-none');
 			}
 		});
@@ -723,7 +718,7 @@
 					municipios.forEach(municipio => {
 						var option = document.createElement("option");
 						option.text = municipio.MUNICIPIODESCR;
-						option.value = municipio.ID;
+						option.value = municipio.MUNICIPIOID;
 						select_municipio.add(option);
 					});
 				},
@@ -736,8 +731,8 @@
 			let select_colonia = document.querySelector('#colonia_select');
 			let input_colonia = document.querySelector('#colonia');
 
-			let estado = parseInt(Number(e.target.value) / 1000);
-			let municipio = (Number(e.target.value) - estado * 1000);
+			let estado = document.querySelector('#estado_select').value;
+			let municipio = e.target.value;
 
 			clearSelect(select_localidad);
 			clearSelect(select_colonia);
@@ -758,16 +753,17 @@
 					localidades.forEach(localidad => {
 						var option = document.createElement("option");
 						option.text = localidad.LOCALIDADDESCR;
-						option.value = localidad.ID;
+						option.value = localidad.LOCALIDADID;
 						select_localidad.add(option);
 					});
 				},
 				error: function(jqXHR, textStatus, errorThrown) {}
 			});
 
-			if (estado === 2) {
+			if (estado == 2) {
 				select_colonia.classList.remove('d-none');
-				colonia.classList.add('d-none');
+				input_colonia.classList.add('d-none');
+				input_colonia.value = '';
 				$.ajax({
 					data: data,
 					url: "<?= base_url('/data/get-colonias-by-estado-and-municipio') ?>",
@@ -779,9 +775,10 @@
 						colonias.forEach(colonia => {
 							var option = document.createElement("option");
 							option.text = colonia.COLONIADESCR;
-							option.value = colonia.ID;
+							option.value = colonia.COLONIAID;
 							select_colonia.add(option);
 						});
+
 						var option = document.createElement("option");
 						option.text = 'OTRO';
 						option.value = '0';
@@ -799,7 +796,8 @@
 				select_colonia.add(option);
 				select_colonia.value = '0';
 				select_colonia.classList.add('d-none');
-				colonia.classList.remove('d-none');
+				input_colonia.classList.remove('d-none');
+				input_colonia.value = '';
 			}
 
 		});
@@ -811,6 +809,7 @@
 			if (e.target.value === '0') {
 				select_colonia.classList.add('d-none');
 				input_colonia.classList.remove('d-none');
+				input_colonia.value = '';
 				input_colonia.focus();
 			} else {
 				input_colonia.value = e.target.value;

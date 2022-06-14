@@ -56,11 +56,6 @@
 							<?php include('form_delito.php') ?>
 						</div>
 
-						<!-- DATOS POSIBLE RESPONSABLE -->
-						<div id="datos_imputado" class="col-12 d-none step">
-							<?php include('form_imputado.php') ?>
-						</div>
-
 						<!-- DATOS MENOR -->
 						<div id="datos_menor" class="col-12 d-none step">
 							<?php include('form_datos_menor.php') ?>
@@ -74,6 +69,11 @@
 						<!-- DATOS DESAPARECIDO -->
 						<div id="datos_desaparecido" class="col-12 d-none step">
 							<?php include('form_persona_desaparecida.php') ?>
+						</div>
+
+						<!-- DATOS POSIBLE RESPONSABLE -->
+						<div id="datos_imputado" class="col-12 d-none step">
+							<?php include('form_imputado.php') ?>
 						</div>
 
 						<!-- DATOS VEHICULO ROBADO -->
@@ -94,9 +94,9 @@
 									</p>
 									<div class="form-group">
 										<input class="form-check-input" type="checkbox" name="derechos_imputado" id="derechos_imputado" required>
-										<span class="fw-bold">Aceptar derechos de víctima u ofendido</span>
+										<span class="fw-bold">Confirmo que he leído y conozco los derechos de derechos de víctima u ofendido</span>
 										<div class="invalid-feedback">
-											Debes aceptar los derechos de víctima u ofendido para continuar.
+											Debes confirmar de leído los derechos de víctima u ofendido para continuar.
 										</div>
 									</div>
 								</div>

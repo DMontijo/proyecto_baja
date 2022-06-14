@@ -12,6 +12,19 @@ use App\Models\Datos_menorModel;
 use App\Models\Datos_desaparecidoModel;
 use App\Models\Datos_vehiculoModel;
 
+use App\Models\FolioPreguntasModel;
+use App\Models\FolioCorrelativoModel;
+use App\Models\FolioModel;
+use App\Models\FolioPersonaFisicaModel;
+use App\Models\FolioPersonaFisicaDomicilioModel;
+use App\Models\FolioPersonaFisicaDesaparecidaModel;
+use App\Models\FolioPersonaFisicaImputadoDelitoModel;
+use App\Models\FolioPersonaFisicaImputadoModel;
+use App\Models\FolioRelacionFisicaFisicaModel;
+use App\Models\FolioObjetoModel;
+use App\Models\FolioVehiculoModel;
+use App\Models\FolioDocumentoModel;
+use App\Models\FolioArchivoExternoModel;
 
 class DashboardController extends BaseController
 {
@@ -26,12 +39,26 @@ class DashboardController extends BaseController
 		$this->_datosMenorModel = new Datos_menorModel;
 		$this->_datosDesaparecidoModel = new Datos_desaparecidoModel;
 		$this->_datosVehiculoModel = new Datos_vehiculoModel;
+
+		$this->_folioCorrelativoModel = new FolioCorrelativoModel();
+		$this->_folioModel = new FolioModel();
+		$this->_folioPreguntasModel = new FolioPreguntasModel();
+		$this->_folioPersonaFisicaModel = new FolioPersonaFisicaModel();
+		$this->_folioPersonaFisicaDomicilioModel = new FolioPersonaFisicaDomicilioModel();
+		$this->_folioPersonaFisicaDesaparecidaModel = new FolioPersonaFisicaDesaparecidaModel();
+		$this->_folioPersonaFisicaImputadoDelitoModel = new FolioPersonaFisicaImputadoDelitoModel();
+		$this->_folioPersonaFisicaImputadoModel = new FolioPersonaFisicaImputadoModel();
+		$this->_folioRelacionFisicaFisicaModel = new FolioRelacionFisicaFisicaModel();
+		$this->_folioObjetoModel = new FolioObjetoModel();
+		$this->_folioVehiculoModel = new FolioVehiculoModel();
+		$this->_folioDocumentoModel = new FolioDocumentoModel();
+		$this->_folioArchivoExternoModel = new FolioArchivoExternoModel();
 	}
 
 	public function index()
 	{
 		$data = (object)array();
-		$data->cantidad_folios = count($this->_foliosAtencionModel->asObject()->findAll());
+		$data->cantidad_folios = count($this->_folioModel->asObject()->findAll());
 		$this->_loadView('Principal', 'dashboard', '', $data, 'index');
 	}
 
@@ -44,7 +71,7 @@ class DashboardController extends BaseController
 	public function folios()
 	{
 		$data = (object)array();
-		$data = $this->_foliosAtencionModel->asObject()->join('DATOS_DEL_DELITO', 'DATOS_DEL_DELITO.ID_DELITO = FOLIOS_ATENCION.ID_DATOS_DELITO', 'right')->findAll();
+		$data = $this->_folioModel->asObject()->findAll();
 		$this->_loadView('Folios no atendidos', 'folios', '', $data, 'folios');
 	}
 
@@ -52,27 +79,13 @@ class DashboardController extends BaseController
 	{
 		$data = (object)array();
 		$numfolio = $this->request->getPost('folio');
-		$data->folio = $this->_foliosAtencionModel->asObject()->where('FOLIO', $numfolio)->first();
+		$data->folio = $this->_folioModel->asObject()->where('FOLIOID', $numfolio)->first();
 		if ($data->folio) {
 			$data->status = 1;
-			$data->denunciante = $this->_denunciantesModel->asObject()->where('ID_DENUNCIANTE', $data->folio->IDCIUDADANO)->first();
-			$data->delito = $this->_datosDelitoModel->asObject()->where('ID_DELITO', $data->folio->ID_DATOS_DELITO)->first();
-
-			if ($data->folio->ID_DATOS_DEL_RESPONSABLE) {
-				$data->responsable = $this->_datosResponsablesModel->asObject()->where('ID_RESPONSABLE', $data->folio->ID_DATOS_DEL_RESPONSABLE)->first();
-			}
-			if ($data->folio->ID_DATOS_ADULTO_ACOMPANANTE) {
-				$data->adulto = $this->_datosAdultoModel->asObject()->where('ID_ACOMPANANTE', $data->folio->ID_DATOS_ADULTO_ACOMPANANTE)->first();
-			}
-			if ($data->folio->ID_DATOS_MENOR_EDAD) {
-				$data->menor = $this->_datosMenorModel->asObject()->where('ID_MENOR', $data->folio->ID_DATOS_MENOR_EDAD)->first();
-			}
-			if ($data->folio->ID_DATOS_PERSONA_DESAPARECIDA) {
-				$data->desaparecido = $this->_datosDesaparecidoModel->asObject()->where('ID_PERSONA_DESAPARECIDA', $data->folio->ID_DATOS_PERSONA_DESAPARECIDA)->first();
-			}
-			if ($data->folio->ID_DATOS_ROBO_VEHICULO) {
-				$data->vehiculo = $this->_datosVehiculoModel->asObject()->where('ID_VEHICULO', $data->folio->ID_DATOS_ROBO_VEHICULO)->first();
-			}
+			$data->preguntas_iniciales = $this->_folioPreguntasModel->where('FOLIOID', $numfolio)->first();
+			$data->personas = $this->_folioPersonaFisicaModel->where('FOLIOID', $numfolio)->findAll();
+			$data->domicilio = $this->_folioPersonaFisicaDomicilioModel->where('FOLIOID', $numfolio)->findAll();
+			$data->vehiculos = $this->_folioVehiculoModel->where('FOLIOID', $numfolio)->findAll();
 			return json_encode($data);
 		} else {
 			return json_encode(['status' => 0]);

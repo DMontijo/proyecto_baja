@@ -34,13 +34,13 @@ module.exports = {
         auth : path.resolve(__dirname, 'src/js/auth/index')
     },
     output: {
-        path     : path.resolve(__dirname, 'public/dist/'),
+        path     : path.resolve(__dirname, 'dist/'),
         filename : 'js/[name].js'
     },
     resolve: {
         modules: [
             "node_modules",
-            path.resolve(__dirname, 'public/dist/')
+            path.resolve(__dirname, 'dist/')
         ],
         // directories where to look for modules
         extensions: [

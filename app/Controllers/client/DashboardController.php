@@ -181,6 +181,48 @@ class DashboardController extends BaseController
 		$imputadoId = $this->_folioPersonaFisica($dataImputado, $FOLIOID, 2);
 		$this->_folioPersonaFisicaDomicilio($dataImputadoDomicilio, $FOLIOID, $imputadoId);
 
+		$session = session();
+		$denunciante = $this->_denunciantesModel->asObject()->where('ID_DENUNCIANTE', $session->get('ID_DENUNCIANTE'))->first();
+
+		$dataOfendido = array(
+			'NOMBRE' => $denunciante->NOMBRE,
+			'PRIMERAPELLIDO' => $denunciante->APELLIDO_PATERNO,
+			'SEGUNDOAPELLIDO' => $denunciante->APELLIDO_MATERNO,
+			'FECHANACIMIENTO' => $denunciante->FECHA_NACIMIENTO,
+			'EDAD' => $denunciante->EDAD,
+			'EDADCANTIDAD' => $denunciante->EDAD,
+			'SEXO' => $denunciante->SEXO,
+			'TELEFONO' => $denunciante->TELEFONO,
+			'TELEFONO2' => $denunciante->TELEFONO2,
+			'CODIGOPAISTEL' => $denunciante->CODIGOPAIS,
+			'CODIGOPAISTEL2' => $denunciante->CODIGOPAIS2,
+			'CORREO' => $denunciante->CORREO,
+			'TIPOIDENTIFICACIONID' => $denunciante->TIPO_DE_IDENTIFICACION,
+			'NUMEROIDENTIFICACION' => $denunciante->NUMERO_DE_IDENTIFICACION,
+			'NACIONALIDADID' => $denunciante->NACIONALIDAD_ID,
+			'PERSONAIDIOMAID' => $denunciante->IDIOMA_ID,
+			'ESCOLARIDAD' => $denunciante->ESCOLARIDAD,
+			'ESTADOCIVILID' => $denunciante->ESTADO_CIVIL,
+			'ESTADOORIGENID' => $denunciante->ESTADO_ID,
+			'MUNICIPIOORIGENID' => $denunciante->MUNICIPIO_ID,
+		);
+
+		$dataOfendidoDomicilio = array(
+			'PAIS' => $denunciante->CODIGO_PAIS,
+			'ESTADOID' => $denunciante->ESTADO_ID,
+			'MUNICIPIOID' => $denunciante->MUNICIPIO_ID,
+			'LOCALIDADID' => $denunciante->LOCALIDAD_ID,
+			'COLONIAID' => $denunciante->COLONIA,
+			'COLONIADESCR' => $denunciante->COLONIA,
+			'CALLE' => $denunciante->CALLE,
+			'NUMEROCASA' => $denunciante->NUM_EXT,
+			'NUMEROINTERIOR' => $denunciante->NUM_INT,
+			'CP' => $denunciante->CODIGO_POSTAL,
+		);
+
+		$menor = $this->_folioPersonaFisica($dataOfendido, $FOLIOID, 1);
+		$this->_folioPersonaFisicaDomicilio($dataOfendidoDomicilio, $FOLIOID, $menor);
+
 		if ($this->request->getPost('eres_tu') == "SI") {
 			$dataAdulto = array(
 				//DATOS ADULTO
@@ -231,47 +273,7 @@ class DashboardController extends BaseController
 				'CP' => $this->request->getPost('cp_menor'),
 			);
 
-			$menor = $this->_folioPersonaFisica($dataMenor, $FOLIOID, 1);
-			$this->_folioPersonaFisicaDomicilio($dataMenorDomicilio, $FOLIOID, $menor);
-		} else if ($this->request->getPost('es_menor') === "SI" && $this->request->getPost('eres_tu') === "SI") {
-
-			$session = session();
-			$denunciante = $this->_denunciantesModel->asObject()->where('ID_DENUNCIANTE', $session->get('ID_DENUNCIANTE'))->first();
-
-			$dataMenor = array(
-				'NOMBRE' => $denunciante->NOMBRE,
-				'PRIMERAPELLIDO' => $denunciante->APELLIDO_PATERNO,
-				'SEGUNDOAPELLIDO' => $denunciante->APELLIDO_MATERNO,
-				'FECHANACIMIENTO' => $denunciante->FECHA_NACIMIENTO,
-				'EDAD' => $denunciante->EDAD,
-				'EDADCANTIDAD' => $denunciante->EDAD,
-				'SEXO' => $denunciante->SEXO,
-				'TELEFONO' => $denunciante->TELEFONO,
-				'CORREO' => $denunciante->CORREO,
-				'TIPOIDENTIFICACIONID' => $denunciante->TIPO_DE_IDENTIFICACION,
-				'NUMEROIDENTIFICACION' => $denunciante->NUMERO_DE_IDENTIFICACION,
-				'NACIONALIDADID' => $denunciante->NACIONALIDAD_ID,
-				'PERSONAIDIOMAID' => $denunciante->IDIOMA_ID,
-				'ESCOLARIDAD' => $denunciante->ESCOLARIDAD,
-				'ESTADOCIVILID' => $denunciante->ESTADO_CIVIL,
-				'ESTADOORIGENID' => $denunciante->ESTADO_ID,
-				'MUNICIPIOORIGENID' => $denunciante->MUNICIPIO_ID,
-			);
-
-			$dataMenorDomicilio = array(
-				'PAIS' => $denunciante->CODIGO_PAIS,
-				'ESTADOID' => $denunciante->ESTADO_ID,
-				'MUNICIPIOID' => $denunciante->MUNICIPIO_ID,
-				'LOCALIDADID' => $denunciante->LOCALIDAD_ID,
-				'COLONIAID' => $denunciante->COLONIA,
-				'COLONIADESCR' => $denunciante->COLONIA,
-				'CALLE' => $denunciante->CALLE,
-				'NUMEROCASA' => $denunciante->NUM_EXT,
-				'NUMEROINTERIOR' => $denunciante->NUM_INT,
-				'CP' => $denunciante->CODIGO_POSTAL,
-			);
-
-			$menor = $this->_folioPersonaFisica($dataMenor, $FOLIOID, 1);
+			$menor = $this->_folioPersonaFisica($dataMenor, $FOLIOID, 6);
 			$this->_folioPersonaFisicaDomicilio($dataMenorDomicilio, $FOLIOID, $menor);
 		}
 
@@ -384,7 +386,7 @@ class DashboardController extends BaseController
 			'ANO' => (int)date("Y"),
 		];
 
-		$correlativo = $this->_folioCorrelativoModel->asObject()->orderBy('ID', 'desc')->first();
+		$correlativo = $this->_folioCorrelativoModel->asObject()->where('ANO', date("Y"))->orderBy('ID', 'desc')->first();
 
 		if ($correlativo) {
 			$data = [

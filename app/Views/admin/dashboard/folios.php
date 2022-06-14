@@ -13,21 +13,21 @@
 						<table id="folios_atendidos" class="table table-bordered table-striped">
 							<thead>
 								<tr>
-									<th>ID</th>
-									<th>Nombre del denunciante</th>
-									<th>Fecha</th>
-									<th>Folio</th>
-									<th>Salida</th>
+									<th>FOLIO</th>
+									<th>FECHA</th>
+									<th>DELITO</th>
+									<th>ESTADO</th>
+									<th></th>
 								</tr>
 							</thead>
 							<tbody>
 								<?php foreach ($body_data as $index => $folio) { ?>
 									<tr>
-										<th scope="row"><?= $folio->FOLIO ?></th>
-										<td><?= $folio->CREADO ?></td>
-										<td><?= $folio->DELITO ?></td>
-										<td><?= $folio->IDAGENTE ? 'ATENDIDO' : 'NO ATENDIDO' ?></td>
-										<td>-</td>
+										<th scope="row"><?= $folio->FOLIOID ?></th>
+										<td><?= $folio->FECHAREGISTRO ?></td>
+										<td><?= $folio->DELITODENUNCIA ?></td>
+										<td><?= $folio->STATUS ?></td>
+										<td><button type="button" class="btn btn-primary"><i class="fas fa-eye"></i></button></td>
 									</tr>
 								<?php } ?>
 							</tbody>

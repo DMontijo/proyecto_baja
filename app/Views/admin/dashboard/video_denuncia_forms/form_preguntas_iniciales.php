@@ -20,6 +20,14 @@
 		<input class="form-control" type="text" id="fue_con_arma" name="fue_con_arma">
 	</div>
 	<div class="col-6">
+		<label for="lesiones" class="form-label font-weight-bold">¿Tienes lesiones?</label>
+		<input class="form-control" type="text" id="lesiones" name="lesiones">
+	</div>
+	<div class="col-6">
+		<label for="lesiones_visibles" class="form-label font-weight-bold">¿Las lesiones son visibles?</label>
+		<input class="form-control" type="text" id="lesiones_visibles" name="lesiones_visibles">
+	</div>
+	<div class="col-6">
 		<label for="esta_desaparecido" class="form-label font-weight-bold">¿La victima u ofendido se encuentra desaparecido?</label>
 		<input class="form-control" type="text" id="esta_desaparecido" name="esta_desaparecido">
 	</div>
