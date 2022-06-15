@@ -51,8 +51,8 @@ class Database extends Config
 	// ];
 	
 	public $default = [
-		'DSN'      => 'database-yo-contigo-video-denuncia.cluster-cenwfxggsegs.us-east-1.rds.amazonaws.com',
-		'hostname' => '127.0.0.1',
+		'DSN'      => '',
+		'hostname' => 'database-yo-contigo-video-denuncia.cluster-cenwfxggsegs.us-east-1.rds.amazonaws.com',
 		'username' => 'admin',
 		'password' => '12345678',
 		'database' => 'justicia_db',
