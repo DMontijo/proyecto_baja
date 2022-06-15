@@ -82,6 +82,7 @@ class FOLIOPERSONAFISICA extends Migration
 			'PAIS' => [
 				'type' => 'CHAR',
 				'constraint' => '2',
+				'null' => TRUE,
 			],
 			'ESTADOORIGENID' => [
 				'type' => 'INT',

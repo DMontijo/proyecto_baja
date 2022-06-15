@@ -21,6 +21,7 @@ class AuthController extends BaseController
 		if ($this->_isAuth()) {
 			return redirect()->to(base_url('/denuncia/dashboard'));
 		} else {
+			session()->destroy;
 			$this->_loadView('Login', [], 'index');
 		}
 	}
@@ -95,12 +96,9 @@ class AuthController extends BaseController
 
 	private function _isAuth()
 	{
-		if (session('logged_in') && session('logged_in') == 'user') {
+		if (session('logged_in') && session('type') == 'user') {
 			return true;
-		} else {
-			session()->destroy;
-			return false;
-		}
+		};
 	}
 
 	private function _loadView($title, $data, $view)

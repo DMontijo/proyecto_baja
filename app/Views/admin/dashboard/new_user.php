@@ -77,7 +77,7 @@
 							<label class="form-check-label" for="flexRadioDefault2">FEMENINO</label>
 						</div>
 					</div>
-					<div class="col-12">
+					<!-- <div class="col-12">
 						<h4 class="text-center pt-5">FIRMA ELECTRÓNICA</h4>
 						<hr>
 					</div>
@@ -92,8 +92,8 @@
 					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 						<label for="frase">CLAVE FIEL</label>
 						<input autocomplete="off" class="form-control" type="text" id="frase" name="frase">
-					</div>
-					<div class="col-12 py-5 text-center">
+					</div> -->
+					<div class="col-12 pt-5 text-center">
 						<button type="submit" class="btn btn-primary">CREAR USUARIO</button>
 					</div>
 				</div>

@@ -30,10 +30,12 @@ class FOLIO extends Migration
 			'AGENTEATENCIONID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
+				'null' => TRUE,
 			],
 			'AGENTEFIRMAID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
+				'null' => TRUE,
 			],
 			'STATUS' => [
 				'type' => 'VARCHAR',

@@ -72,7 +72,8 @@ class DashboardController extends BaseController
 	public function usuarios()
 	{
 		$data = (object)array();
-		$data = $this->_usuariosModel->asObject()->findAll();
+		$data = $this->_usuariosModel->asObject()->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->join('ZONAS_USUARIOS', 'ZONAS_USUARIOS.ID_ZONA = USUARIOS.ZONAID')->findAll();
+		// var_dump($data);
 		$this->_loadView('Registrar usuario', 'registrarusuario', '', $data, 'users');
 	}
 
@@ -179,6 +180,13 @@ class DashboardController extends BaseController
 		} else {
 			return json_encode((object)['exist' => 0]);
 		}
+	}
+	public function findPersonaFisicaById()
+	{
+		$id = $this->request->getPost('id');
+		$folio = $this->request->getPost('folio');
+		$data = $this->_folioPersonaFisicaModel->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
+		return json_encode($data);
 	}
 }
 

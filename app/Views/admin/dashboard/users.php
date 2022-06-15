@@ -25,10 +25,10 @@
 											<th class="text-center">CORREO</th>
 											<th class="text-center">ROL</th>
 											<th class="text-center">ZONA</th>
-											<th class="text-center">HUELLA</th>
+											<!-- <th class="text-center">HUELLA</th>
 											<th class="text-center">.CER</th>
 											<th class="text-center">.KEY</th>
-											<th class="text-center">FRASE</th>
+											<th class="text-center">FRASE</th> -->
 											<th></th>
 										</tr>
 									</thead>
@@ -38,16 +38,16 @@
 												<td class="text-center"><?= $user->NOMBRE ?> <?= $user->APELLIDO_PATERNO ?> <?= $user->APELLIDO_MATERNO ?></td>
 												<td class="text-center"><?= $user->SEXO ?></td>
 												<td class="text-center"><?= $user->CORREO ?></td>
-												<td class="text-center"><?= $user->CORREO ?></td>
-												<td class="text-center"><?= $user->CORREO ?></td>
-												<td class="text-center"><?= $user->HUELLA_DIGITAL ? 'SI' : '' ?></td>
+												<td class="text-center"><?= $user->NOMBRE_ROL ?></td>
+												<td class="text-center"><?= $user->NOMBRE_ZONA ?></td>
+												<!-- <td class="text-center"><?= $user->HUELLA_DIGITAL ? 'SI' : '' ?></td>
 												<td class="text-center"><?= $user->CERTIFICADOFIRMA ? 'SI' : '' ?></td>
 												<td class="text-center"><?= $user->KEYFIRMA ? 'SI' : '' ?></td>
-												<td class="text-center"><?= $user->FRASEFIRMA ? 'SI' : '' ?></td>
+												<td class="text-center"><?= $user->FRASEFIRMA ? 'SI' : '' ?></td> -->
 												<td class="text-center" style="width:200px;">
-													<button type="button" class="btn btn-success" onclick="viewUser(<?= $user->ID ?>)"><i class="fas fa-eye"></i></button>
+													<!-- <button type="button" class="btn btn-success" onclick="viewUser(<?= $user->ID ?>)"><i class="fas fa-eye"></i></button>
 													<button type="button" class="btn btn-secondary" onclick="viewUser(<?= $user->ID ?>)"><i class="fas fa-edit"></i></button>
-													<button type="button" class="btn btn-danger" onclick="viewUser(<?= $user->ID ?>)"><i class="fas fa-trash-alt"></i></button>
+													<button type="button" class="btn btn-danger" onclick="viewUser(<?= $user->ID ?>)"><i class="fas fa-trash-alt"></i></button> -->
 												</td>
 											</tr>
 										<?php } ?>

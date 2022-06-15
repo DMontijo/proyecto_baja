@@ -85,10 +85,6 @@
 	const buscar_nuevo_btn = document.querySelector('#buscar-nuevo-btn');
 	const info_folio_btn = document.querySelector('#info-folio-btn');
 
-	let tipoSalida = document.querySelector('#tipo_salida');
-	let btnFinalizar = document.querySelector('#btn-finalizar-derivacion');
-	let notas_derivacion = document.querySelector('#btn-finalizar-derivacion');
-
 	const card1 = document.querySelector('#card1');
 	const card2 = document.querySelector('#card2');
 	const card3 = document.querySelector('#card3');
@@ -156,8 +152,6 @@
 		buscar_nuevo_btn.classList.add('d-none');
 		inputFolio.classList.remove('d-none');
 		buscar_btn.classList.remove('d-none');
-		tipoSalida.value = 'Derivado';
-		btnFinalizar.value = '';
 
 		card2.classList.add('d-none');
 		card3.classList.add('d-none');

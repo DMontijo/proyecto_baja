@@ -68,6 +68,7 @@
 
 	btnFinalizar.addEventListener('click', () => {
 		let salida = tipoSalida.value;
-		let descripcion = document.querySelector
+		let descripcion = document.querySelector.value;
+		console.log(salida, descripcion);
 	});
 </script>

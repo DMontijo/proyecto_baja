@@ -70,13 +70,13 @@
 			<button class="c-header-toggler c-class-toggler d-lg-none mfe-auto" type="button" data-target="#sidebar" data-class="c-sidebar-show">
 				<i class="fas fa-bars"></i>
 			</button>
-			<a class="c-header-brand d-lg-none" href="#">
+			<!-- <a class="c-header-brand d-lg-none" href="#">
 				<i class="fas fa-bars"></i>
-			</a>
+			</a> -->
 			<button class="c-header-toggler c-class-toggler mfs-3 d-md-down-none" type="button" data-target="#sidebar" data-class="c-sidebar-lg-show" responsive="true">
 				<i class="fas fa-bars"></i>
 			</button>
-			<button class="c-header-toggler c-class-toggler mfs-3 d-md-down-none" type="button" data-target="#sidebar" data-class="c-sidebar-lg-show" responsive="true">
+			<button class="c-header-toggler c-class-toggler mfs-3 d-sm-down-none" type="button" data-target="#sidebar" data-class="c-sidebar-lg-show" responsive="true">
 				<?php $session = session(); ?>
 				BIENVENIDO <?= $session->NOMBRE ?> <?= $session->APELLIDO_PATERNO ?> <?= $session->APELLIDO_MATERNO ?>
 			</button>

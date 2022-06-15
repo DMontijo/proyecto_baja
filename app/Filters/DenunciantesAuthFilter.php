@@ -16,7 +16,7 @@ class DenunciantesAuthFilter implements FilterInterface
 			if (session('type') == 'admin') {
 				session()->destroy;
 				return redirect()->to(base_url('/denuncia'));
-			}
+			};
 		}
 	}
 

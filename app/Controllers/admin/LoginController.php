@@ -18,8 +18,8 @@ class LoginController extends BaseController
 		if ($this->_isAuth()) {
 			return redirect()->to(base_url('/admin/dashboard'));
 		} else {
-			$data = array();
-			$this->_loadView('Login', $data, 'index');
+			session()->destroy;
+			$this->_loadView('Login', [], 'index');
 		}
 	}
 
@@ -51,10 +51,7 @@ class LoginController extends BaseController
 	{
 		if (session('logged_in') && session('type') == 'admin') {
 			return true;
-		} else {
-			session()->destroy;
-			return false;
-		}
+		};
 	}
 
 	private function _loadView($title, $data, $view)
