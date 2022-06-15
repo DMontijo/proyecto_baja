@@ -12,7 +12,7 @@
 					<div class="col-12">
 						<div class="form-group mb-1">
 							<div class="input-group mb-1">
-								<input type="text" class="form-control" id="input_folio_atencion" placeholder="Folio de atención..." value="402001202200002">
+								<input type="text" class="form-control" id="input_folio_atencion" placeholder="Folio de atención..." value="">
 							</div>
 						</div>
 					</div>

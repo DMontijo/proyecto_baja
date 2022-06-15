@@ -68,7 +68,8 @@
 
 	btnFinalizar.addEventListener('click', () => {
 		let salida = tipoSalida.value;
-		let descripcion = document.querySelector.value;
+		let descripcion = document.querySelector('#notas_derivacion').value;
+		//402002202200001
 		console.log(salida, descripcion);
 	});
 </script>

@@ -49,13 +49,13 @@ class Database extends Config
 	// 	'failover' => [],
 	// 	'port'     => 3306,
 	// ];
-
+	
 	public $default = [
-		'DSN'      => '',
+		'DSN'      => 'database-yo-contigo-video-denuncia.cluster-cenwfxggsegs.us-east-1.rds.amazonaws.com',
 		'hostname' => '127.0.0.1',
-		'username' => '',
-		'password' => '',
-		'database' => '',
+		'username' => 'admin',
+		'password' => '12345678',
+		'database' => 'justicia_db',
 		'DBDriver' => 'MySQLi',
 		'DBPrefix' => '',
 		'pConnect' => false,
@@ -105,8 +105,7 @@ class Database extends Config
 		// Ensure that we always set the database group to 'tests' if
 		// we are currently running an automated test suite, so that
 		// we don't overwrite live data on accident.
-		if (ENVIRONMENT === 'testing')
-		{
+		if (ENVIRONMENT === 'testing') {
 			$this->defaultGroup = 'tests';
 		}
 	}

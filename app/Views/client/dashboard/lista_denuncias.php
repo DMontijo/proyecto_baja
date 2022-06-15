@@ -15,8 +15,8 @@
 						<thead>
 							<tr>
 								<th scope="col">FOLIO</th>
-								<th scope="col">FECHA Y HORA</th>
-								<th scope="col">DELITO</th>
+								<th scope="col">FECHA Y HORA DE LA DENUNCIA</th>
+								<th scope="col">DELITO MENCIONADO</th>
 								<th scope="col">ESTADO</th>
 							</tr>
 						</thead>
