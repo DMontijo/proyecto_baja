@@ -3,6 +3,7 @@
 namespace App\Controllers\admin;
 
 use App\Controllers\BaseController;
+use App\Database\Migrations\PERSONACALIDADJURIDICA;
 use App\Models\FoliosAtencionModel;
 use App\Models\DenunciantesModel;
 use App\Models\FolioDenunciaModel;
@@ -25,6 +26,7 @@ use App\Models\FolioObjetoModel;
 use App\Models\FolioVehiculoModel;
 use App\Models\FolioDocumentoModel;
 use App\Models\FolioArchivoExternoModel;
+use App\Models\PersonaCalidadJuridicaModel;
 
 class DashboardController extends BaseController
 {
@@ -53,6 +55,7 @@ class DashboardController extends BaseController
 		$this->_folioVehiculoModel = new FolioVehiculoModel();
 		$this->_folioDocumentoModel = new FolioDocumentoModel();
 		$this->_folioArchivoExternoModel = new FolioArchivoExternoModel();
+		$this->_folioPersonaCalidadJuridica = new PersonaCalidadJuridicaModel();
 	}
 
 	public function index()
@@ -91,7 +94,39 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
-
+	public function findPersonaFisicaById()
+	{
+	//	$data=array();
+		$id = $this->request->getPost('id');
+		$folio = $this->request->getPost('folio');
+		$idcalidad = $this->request->getPost('idcalidad');
+		$data= $this->_folioPersonaFisicaModel->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
+		//$data->calidadjuridica = $this->_folioPersonaFisicaModel->join('PERSONACALIDADJURIDICA', 'PERSONACALIDADJURIDICA.PERSONACALIDADJURIDICAID =FOLIOPERSONAFISICA.CALIDADJURIDICAID')->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->where('CALIDADJURIDICAID', $idcalidad)->first();
+	//	return view('admin/video_denuncia_models/email_view', $data);
+		return json_encode($data);
+		//return view('admin/video_denuncia_modals/info_folio_modal', $data);
+	//	$this->_loadView('Info modal', 'Info modal', '', $data, 'info_folio_modal');
+	}
+	public function joinFisico()
+	{
+		$data =  $this->_folioPersonaFisicaModel->join('PERSONACALIDADJURIDICA', 'PERSONACALIDADJURIDICA.PERSONACALIDADJURIDICAID =FOLIOPERSONAFISICA.CALIDADJURIDICAID')
+		->where('FOLIOID', 402004202200001)->where('PERSONAFISICAID', 1)->first();
+		return json_encode($data);
+	}
+	public function findPersonadDomicilioById()
+	{
+		$id = $this->request->getPost('id');
+		$folio = $this->request->getPost('folio');
+		$data = $this->_folioPersonaFisicaDomicilioModel->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
+		return json_encode($data);
+	}
+	public function findPersonadVehiculoById()
+	{
+		$id = $this->request->getPost('id');
+		$folio = $this->request->getPost('folio');
+		$data = $this->_folioVehiculoModel->where('FOLIOID', $folio)->first();
+		return json_encode($data);
+	}
 	public function video_denuncia()
 	{
 		$data = array();

@@ -1,3 +1,4 @@
+
 <div class="modal fade" id="info_folio_modal" tabindex="-1" role="dialog" aria-labelledby="infoFolioModal" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered mw-100 w-75">
 		<div class="modal-content">
@@ -35,11 +36,12 @@
 								<table id="table-personas" class="table table-bordered table-striped">
 									<thead>
 										<tr>
-											<th class="text-center">NOMBRE</th>
-											<th class="text-center">CALIDAD JURIDICA</th>
+											<th class="text-center" id="nombreP" name="nombreP">NOMBRE</th>
+											<th class="text-center" id="calidadP" name="calidadP">CALIDAD JURIDICA</th>
 											<th></th>
 										</tr>
 									</thead>
+							
 									<tbody>
 										<tr>
 											<td class="text-center">OTONIEL FLORES GONZALEZ</td>
@@ -48,19 +50,19 @@
 												<button type="button" class="btn btn-primary" onclick="viewPersonaFisica(1)"><i class="fas fa-eye"></i></button>
 											</td>
 										</tr>
-									</tbody>
+									</tbody> 
 								</table>
 							</div>
 							<div class="tab-pane fade" id="v-pills-domicilios" role="tabpanel" aria-labelledby="v-pills-domicilios-tab">
 								<table id="table-domicilio" class="table table-bordered table-striped">
-									<thead>
+								<thead>
 										<tr>
 											<th class="text-center">NOMBRE</th>
 											<th class="text-center">CALIDAD JURIDICA</th>
 											<th></th>
 										</tr>
 									</thead>
-									<tbody>
+										<!--<tbody>
 										<tr>
 											<td class="text-center">OTONIEL FLORES GONZALEZ</td>
 											<td class="text-center">DENUNCIANTE</td>
@@ -68,7 +70,7 @@
 												<button type="button" class="btn btn-primary" onclick="viewDomicilio(1)"><i class="fas fa-eye"></i></button>
 											</td>
 										</tr>
-									</tbody>
+									</tbody>-->
 								</table>
 							</div>
 							<!-- <div class="tab-pane fade" id="v-pills-objetos" role="tabpanel" aria-labelledby="v-pills-objetos-tab">
@@ -93,14 +95,14 @@
 							</div> -->
 							<div class="tab-pane fade" id="v-pills-vehiculos" role="tabpanel" aria-labelledby="v-pills-vehiculos-tab">
 								<table id="table-vehiculos" class="table table-bordered table-striped">
-									<thead>
+								<thead>
 										<tr>
 											<th class="text-center">PLACAS</th>
 											<th class="text-center">SERIE</th>
 											<th></th>
 										</tr>
 									</thead>
-									<tbody>
+									<!--	<tbody>
 										<tr>
 											<td class="text-center">FJH12312KJ</td>
 											<td class="text-center">MXN123123ASJ-2</td>
@@ -108,7 +110,7 @@
 												<button type="button" class="btn btn-primary" onclick="viewVehiculo(1)"><i class="fas fa-eye"></i></button>
 											</td>
 										</tr>
-									</tbody>
+									</tbody>-->
 								</table>
 							</div>
 						</div>
@@ -122,9 +124,29 @@
 <?php include('vehiculo_modal.php') ?>
 <?php include('domicilio_modal.php') ?>
 <script>
-	function viewPersonaFisica(persona) {
-		$('#folio_persona_fisica_modal').modal('show');
-	}
+	//function viewPersonaFisica(id) {
+	/*	$.ajax({
+			url: "<?= base_url('/data/get-persona-fisica-by-id') ?>",
+			type: "POST",
+			dataType: "JSON",
+			success: function(data)
+			{
+				console.log(data);
+			/*	document.querySelector('#calidad_juridicaP').value = data.CALIDADJURIDICAID;
+					
+					document.querySelector('#nombrePersona').value = data.NOMBRE;
+					document.querySelector('#apellido_paternoP').value = data.PRIMERAPELLIDO;
+					document.querySelector('#apellido_maternoP').value = data.SEGUNDOAPELLIDO;
+					document.querySelector('#sexoP').value = data.SEXO;
+					document.querySelector('#fecha_nacimientoP').value = data.FECHANACIMIENTO;
+					document.querySelector('#edadP').value = data.EDAD;
+					document.querySelector('#numero_identidadP').value = data.NUMEROIDENTIDAD;
+					document.querySelector('#telefonoP').value = data.TELEFONO;
+					document.querySelector('#correoP').value = data.CORREO;
+			}
+	});*/
+	//	$('#folio_persona_fisica_modal').modal('show');
+	//}
 
 	function viewDomicilio(persona) {
 		$('#folio_domicilio_modal').modal('show');

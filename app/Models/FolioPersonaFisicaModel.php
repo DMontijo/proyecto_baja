@@ -55,4 +55,8 @@ class FolioPersonaFisicaModel extends Model
 		'ESCOLARIDAD',
 		'DESCRIPCION_FISICA',
 	];
+	public function buscar($id){
+		return $this->where("ID=". $id)->find(); 
+	}
+
 }
