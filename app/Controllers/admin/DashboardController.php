@@ -25,6 +25,9 @@ use App\Models\FolioObjetoModel;
 use App\Models\FolioVehiculoModel;
 use App\Models\FolioDocumentoModel;
 use App\Models\FolioArchivoExternoModel;
+use App\Models\UsuariosModel;
+use App\Models\ZonasUsuariosModel;
+use App\Models\RolesUsuariosModel;
 
 class DashboardController extends BaseController
 {
@@ -53,6 +56,10 @@ class DashboardController extends BaseController
 		$this->_folioVehiculoModel = new FolioVehiculoModel();
 		$this->_folioDocumentoModel = new FolioDocumentoModel();
 		$this->_folioArchivoExternoModel = new FolioArchivoExternoModel();
+
+		$this->_usuariosModel = new UsuariosModel();
+		$this->_zonasUsuariosModel = new ZonasUsuariosModel();
+		$this->_rolesUsuariosModel = new RolesUsuariosModel();
 	}
 
 	public function index()
@@ -62,10 +69,47 @@ class DashboardController extends BaseController
 		$this->_loadView('Principal', 'dashboard', '', $data, 'index');
 	}
 
-	public function registrar_usuario()
+	public function usuarios()
 	{
-		$data = array();
-		$this->_loadView('Registrar usuario', 'registrarusuario', '', $data, 'register_user');
+		$data = (object)array();
+		$data = $this->_usuariosModel->asObject()->findAll();
+		$this->_loadView('Registrar usuario', 'registrarusuario', '', $data, 'users');
+	}
+
+	public function nuevo_usuario()
+	{
+		$data = (object)array();
+		$data->zonas = $this->_zonasUsuariosModel->asObject()->findAll();
+		$data->roles = $this->_rolesUsuariosModel->asObject()->findAll();
+		$this->_loadView('Nuevo usuario', 'registrarusuario', '', $data, 'new_user');
+	}
+
+	public function crear_usuario()
+	{
+
+		$data = [
+			'NOMBRE' => $this->request->getPost('nombre'),
+			'APELLIDO_PATERNO' => $this->request->getPost('apellido_paterno'),
+			'APELLIDO_MATERNO' => $this->request->getPost('apellido_materno'),
+			'CORREO' => $this->request->getPost('correo'),
+			'PASSWORD' => hashPassword($this->request->getPost('password')),
+			'SEXO' => $this->request->getPost('sexo'),
+			'ROLID' => $this->request->getPost('rol'),
+			'ZONAID' => $this->request->getPost('zona'),
+			'HUELLA_DIGITAL' => NULL,
+			'CERTIFICADOFIRMA' => $this->request->getPost('cer'),
+			'KEYFIRMA' => $this->request->getPost('key'),
+			'FRASEFIRMA' => $this->request->getPost('frase'),
+		];
+
+		var_dump($data);
+		if ($this->validate(['correo' => 'required|is_unique[USUARIOS.CORREO]'])) {
+			$this->_usuariosModel->insert($data);
+			$this->_sendEmailPassword($data['CORREO'], $this->request->getPost('password'));
+			return redirect()->to(base_url('/admin/dashboard/usuarios'));
+		} else {
+			return redirect()->back();
+		}
 	}
 
 	public function folios()
@@ -106,6 +150,35 @@ class DashboardController extends BaseController
 		];
 
 		echo view("admin/dashboard/$view", $data2);
+	}
+
+	private function _sendEmailPassword($to, $password)
+	{
+		$email = \Config\Services::email();
+		$email->setTo($to);
+		$email->setFrom('andrea.solorzano@yocontigo-it.com', 'FGEBC');
+		$email->setSubject('Nueva cuenta creada');
+		$body = view('email_template/password_email_admin_template.php', ['email' => $to, 'password' => $password]);
+		$email->setMessage($body);
+
+		if ($email->send()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public function existEmailAdmin()
+	{
+		$email = $this->request->getPost('email');
+		$data = $this->_usuariosModel->where('CORREO', $email)->first();
+		if ($data == NULL) {
+			return json_encode((object)['exist' => 0]);
+		} else if (count($data) > 0) {
+			return json_encode((object)['exist' => 1]);
+		} else {
+			return json_encode((object)['exist' => 0]);
+		}
 	}
 }
 

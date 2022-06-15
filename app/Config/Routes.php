@@ -45,7 +45,11 @@ $routes->group('admin', function ($routes) {
 
 	$routes->group('dashboard', ['filter' => 'adminAuth'], function ($routes) {
 		$routes->get('/', 'admin/DashboardController::index');
-		$routes->get('registrar-usuario', 'admin/DashboardController::registrar_usuario');
+
+		$routes->get('usuarios', 'admin/DashboardController::usuarios');
+		$routes->get('nuevo_usuario', 'admin/DashboardController::nuevo_usuario');
+		$routes->post('nuevo_usuario', 'admin/DashboardController::crear_usuario');
+
 		$routes->get('video-denuncia', 'admin/DashboardController::video_denuncia');
 		$routes->get('folios', 'admin/DashboardController::folios');
 
@@ -88,12 +92,14 @@ $routes->get('email', 'CorreoController::index');
 
 $routes->group('data', function ($routes) {
 	$routes->post('exist-email', 'client/UserController::existEmail');
+	$routes->post('exist-email-admin', 'admin/DashboardController::existEmailAdmin');
+
 	$routes->post('get-municipios-by-estado', 'client/UserController::getMunicipiosByEstado');
 	$routes->post('get-localidades-by-municipio', 'client/UserController::getLocalidadesByMunicipio');
 	$routes->post('get-colonias-by-estado-and-municipio', 'client/UserController::getColoniasByEstadoAndMunicipio');
 	$routes->post('get-folios-user-unattended', 'client/UserController::getFoliosAbiertosById');
 	$routes->post('get-clasificacion-by-lugar', 'client/UserController::getClasificacionByLugar');
-	$routes->post('get-link-videodenuncia','client/DashboardController::getLinkVideodenuncia');
+	$routes->post('get-link-videodenuncia', 'client/DashboardController::getLinkVideodenuncia');
 
 	$routes->post('get-folio-information', 'admin/DashboardController::getFolioInformation');
 

@@ -11,6 +11,9 @@
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap">
 	<!--  App CSS (Do not remove) -->
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url('/dist/css/dash.css'); ?>">
+	<!--Sweet Alert 2-->
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.css">
 	<!--DataTables-->
 	<link rel="stylesheet" href="<?= base_url() ?>/assets/DataTables/datatables-bs4/css/dataTables.bootstrap4.min.css">
 	<link rel="stylesheet" href="<?= base_url() ?>/assets/DataTables/datatables-responsive/css/responsive.bootstrap4.min.css">
@@ -35,7 +38,7 @@
 				</a>
 			</li>
 			<li class="c-sidebar-nav-item">
-				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/registrar-usuario">
+				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/usuarios">
 					<i class="fas fa-users c-sidebar-nav-icon"></i> Usuarios
 				</a>
 			</li>
