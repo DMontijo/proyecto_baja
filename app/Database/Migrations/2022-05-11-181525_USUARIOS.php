@@ -49,6 +49,9 @@ class USUARIOS extends Migration
 				'type' => 'VARCHAR',
 				'constraint' => '255',
 			],
+			'USUARIOVIDEO' => [
+				'type' => 'INT',
+			],
 			'TOKENVIDEO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '255',

@@ -14,7 +14,6 @@
 							<a class="nav-link active" id="v-pills-salida-tab" data-toggle="pill" href="#v-pills-salida" role="tab" aria-controls="v-pills-salida" aria-selected="true"><i class="fas fa-sign-out-alt"></i> Salida</a>
 							<a class="nav-link d-none" id="v-pills-delitos-tab" data-toggle="pill" href="#v-pills-delitos" role="tab" aria-controls="v-pills-delitos" aria-selected="false"><i class="fas fa-people-arrows"></i> Delitos</a>
 							<a class="nav-link d-none" id="v-pills-documentos-tab" data-toggle="pill" href="#v-pills-documentos" role="tab" aria-controls="v-pills-documentos" aria-selected="false"><i class="fas fa-file-alt"></i> Documentos</a>
-							<a class="nav-link" id="v-pills-finalizar-tab" data-toggle="pill" href="#v-pills-finalizar" role="tab" aria-controls="v-pills-finalizar" aria-selected="false"><i class="fas fa-paper-plane"></i> Finalizar</a>
 						</div>
 					</div>
 					<div class="col-9">
@@ -30,16 +29,14 @@
 								</div>
 								<div id="notas" class="form-group">
 									<label for="exampleFormControlTextarea1">Notas de derivación o canalización.</label>
-									<textarea class="form-control" id="exampleFormControlTextarea1" rows="10" maxlength="300"></textarea>
+									<textarea id="notas_derivacion" class="form-control" id="exampleFormControlTextarea1" rows="10" maxlength="300"></textarea>
 								</div>
+								<button type="button" id="btn-finalizar-derivacion" class="btn btn-primary">FINALIZAR</button>
 							</div>
 							<div class="tab-pane fade" id="v-pills-delitos" role="tabpanel" aria-labelledby="v-pills-delitos-tab">
 								<?php echo view('/admin/dashboard/video_denuncia_forms/form_denuncia'); ?>
 							</div>
 							<div class="tab-pane fade" id="v-pills-documentos" role="tabpanel" aria-labelledby="v-pills-documentos-tab">
-								<?php echo view('/admin/dashboard/video_denuncia_forms/form_denuncia'); ?>
-							</div>
-							<div class="tab-pane fade" id="v-pills-finalizar" role="tabpanel" aria-labelledby="v-pills-finalizar-tab">
 								<?php echo view('/admin/dashboard/video_denuncia_forms/form_denuncia'); ?>
 							</div>
 						</div>
@@ -51,17 +48,26 @@
 </div>
 
 <script>
-	let tipoSalida = document.querySelector('#tipo_salida');
+	const tipoSalida = document.querySelector('#tipo_salida');
+	const btnFinalizar = document.querySelector('#btn-finalizar-derivacion');
+	const notas_derivacion = document.querySelector('#btn-finalizar-derivacion');
 
 	tipoSalida.addEventListener('change', (e) => {
 		if (e.target.value !== 'NAC') {
 			document.querySelector('#v-pills-delitos-tab').classList.add('d-none');
 			document.querySelector('#v-pills-documentos-tab').classList.add('d-none');
 			document.querySelector('#notas').classList.remove('d-none');
+			btnFinalizar.classList.remove('d-none');
 		} else {
 			document.querySelector('#v-pills-delitos-tab').classList.remove('d-none');
 			document.querySelector('#v-pills-documentos-tab').classList.remove('d-none');
 			document.querySelector('#notas').classList.add('d-none');
+			btnFinalizar.classList.add('d-none');
 		}
 	})
+
+	btnFinalizar.addEventListener('click', () => {
+		let salida = tipoSalida.value;
+		let descripcion = document.querySelector
+	});
 </script>

@@ -15,7 +15,7 @@
 						<thead>
 							<tr>
 								<th scope="col">FOLIO</th>
-								<th scope="col">Fecha Y HORA</th>
+								<th scope="col">FECHA Y HORA</th>
 								<th scope="col">DELITO</th>
 								<th scope="col">ESTADO</th>
 							</tr>

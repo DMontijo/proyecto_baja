@@ -18,6 +18,11 @@ class FOLIO extends Migration
 				'type' => 'VARCHAR',
 				'constraint' => '16',
 			],
+			'EXPEDIENTEID' => [
+				'type' => 'VARCHAR',
+				'constraint' => '16',
+				'null' => TRUE,
+			],
 			'DENUNCIANTEID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,

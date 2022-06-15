@@ -12,12 +12,13 @@
 					<div class="col-12">
 						<div class="form-group mb-1">
 							<div class="input-group mb-1">
-								<input type="text" class="form-control" id="input_folio_atencion" placeholder="Folio de atención..." value="402002202200001">
+								<input type="text" class="form-control" id="input_folio_atencion" placeholder="Folio de atención..." value="402001202200002">
 							</div>
-							<button id="buscar-btn" class="btn btn-secondary btn-block" role="button">Buscar</button>
 						</div>
 					</div>
 				</div>
+				<button id="buscar-btn" class="btn btn-secondary btn-block" role="button"><i class="fas fa-search"></i> Buscar</button>
+				<button id="buscar-nuevo-btn" class="btn btn-primary btn-block h-100 d-none m-0 p-0" role="button"><i class="fas fa-search"></i> Buscar nuevo</button>
 			</div>
 		</div>
 	</div>
@@ -27,7 +28,7 @@
 				<label class="font-weight-bold">Delito:</label>
 				<input class="form-control" type="text" id="delito_dash">
 				<label class="font-weight-bold">Descripción:</label>
-				<textarea class="form-control" id="delito_descr_dash">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Illum suscipit iste commodi accusantium delectus, exercitationem ad vitae! Mollitia modi ut eveniet at. Eius laudantium deleniti ad odit fuga recusandae porro. Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab nemo accusantium maior</textarea>
+				<textarea class="form-control" id="delito_descr_dash"></textarea>
 			</div>
 		</div>
 	</div>
@@ -49,7 +50,7 @@
 <div class="row">
 	<div class="col">
 		<div class="bg-white embed-responsive embed-responsive-1by1 shadow rounded">
-			<iframe src="https://videodenunciaserver1.fgebc.gob.mx/pde?u=33&token=7b2a0523176a9dd9f28b694b44de4d5a4edcff31" frameborder="0" allow="camera *;microphone *" style="margin-top:-130px;"></iframe>
+			<iframe src="https://videodenunciaserver1.fgebc.gob.mx/pde?u=33&token=7b2a0523176a9dd9f28b694b44de4d5a4edcff31" frameborder="0" allow="camera *;microphone *"></iframe>
 		</div>
 	</div>
 	<div id="card5" class="col-3 d-none">
@@ -81,7 +82,13 @@
 <script>
 	const inputFolio = document.querySelector('#input_folio_atencion');
 	const buscar_btn = document.querySelector('#buscar-btn');
+	const buscar_nuevo_btn = document.querySelector('#buscar-nuevo-btn');
 	const info_folio_btn = document.querySelector('#info-folio-btn');
+
+	let tipoSalida = document.querySelector('#tipo_salida');
+	let btnFinalizar = document.querySelector('#btn-finalizar-derivacion');
+	let notas_derivacion = document.querySelector('#btn-finalizar-derivacion');
+
 	const card1 = document.querySelector('#card1');
 	const card2 = document.querySelector('#card2');
 	const card3 = document.querySelector('#card3');
@@ -99,15 +106,23 @@
 			success: function(response) {
 				console.log(response);
 				if (response.status === 1) {
-					card2.classList.remove('d-none');
-					card3.classList.remove('d-none');
-					card4.classList.remove('d-none');
-					card5.classList.remove('d-none');
+					console.log('Encontrado');
 					const folio = response.folio;
 					const preguntas = response.preguntas_iniciales;
 					const personas = response.personas;
 					const domicilios = response.domicilios;
 					const vehiculos = response.vehiculos;
+
+					console.log('status 1')
+					inputFolio.classList.add('d-none');
+					buscar_btn.classList.add('d-none');
+					buscar_nuevo_btn.classList.remove('d-none');
+
+					card2.classList.remove('d-none');
+					card3.classList.remove('d-none');
+					card4.classList.remove('d-none');
+					card5.classList.remove('d-none');
+
 					document.querySelector('#delito_dash').value = folio.DELITODENUNCIA;
 					document.querySelector('#delito_descr_dash').value = folio.HECHONARRACION;
 
@@ -119,22 +134,36 @@
 					document.querySelector('#esta_desaparecido').value = preguntas.ESTA_DESAPARECIDO;
 					document.querySelector('#lesiones').value = preguntas.LESIONES;
 					document.querySelector('#lesiones_visibles').value = preguntas.LESIONES_VISIBLES;
-
-					$("#table-personas").DataTable({
-						"responsive": true,
-						"lengthChange": false,
-						"autoWidth": false,
-					}).buttons().container().appendTo('#videollamadasA_wrapper .col-md-6:eq(0)');
 				} else {
 					card2.classList.add('d-none');
 					card3.classList.add('d-none');
 					card4.classList.add('d-none');
 					card5.classList.add('d-none');
+					Swal.fire({
+						icon: 'error',
+						text: 'El folio no existe, verificalo de nuevo.',
+						confirmButtonColor: '#bf9b55',
+					})
 				}
 			},
-			error: function(jqXHR, textStatus, errorThrown) {}
+			error: function(jqXHR, textStatus, errorThrown) {
+				console.log('Error');
+			}
 		});
-	})
+	});
+
+	buscar_nuevo_btn.addEventListener('click', () => {
+		buscar_nuevo_btn.classList.add('d-none');
+		inputFolio.classList.remove('d-none');
+		buscar_btn.classList.remove('d-none');
+		tipoSalida.value = 'Derivado';
+		btnFinalizar.value = '';
+
+		card2.classList.add('d-none');
+		card3.classList.add('d-none');
+		card4.classList.add('d-none');
+		card5.classList.add('d-none');
+	});
 </script>
 
 <?php $this->endSection() ?>

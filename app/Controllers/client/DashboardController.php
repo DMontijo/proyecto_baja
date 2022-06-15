@@ -309,12 +309,12 @@ class DashboardController extends BaseController
 				'AUTORIZA_FOTO' => $this->request->getPost('autorization_photo_des'),
 				'DESAPARECIDA' => 'S',
 			);
-			var_dump($dataPreguntas);
-			echo '<br><br><br>';
-			var_dump($dataDesaparecido);
-			echo '<br><br><br>';
-			var_dump($dataMenor);
-			echo '<br><br><br>';
+			// var_dump($dataPreguntas);
+			// echo '<br><br><br>';
+			// var_dump($dataDesaparecido);
+			// echo '<br><br><br>';
+			// var_dump($dataMenor);
+			// echo '<br><br><br>';
 			$desaparecido = $this->_folioPersonaFisica($dataDesaparecido, $FOLIOID, 1);
 			$this->_folioPersonaFisicaDesaparecida($dataDesaparecido, $FOLIOID, $desaparecido);
 		}
@@ -341,9 +341,8 @@ class DashboardController extends BaseController
 				'FOTO_VEHICULO' => $this->request->getPost('foto_vehiculo'),
 				'SENASPARTICULARES' => $this->request->getPost('description_vehiculo'),
 			);
-			var_dump($dataVehiculo);
-			echo '<br><br><br>';
-
+			// var_dump($dataVehiculo);
+			// echo '<br><br><br>';
 			$this->_folioVehiculo($dataVehiculo, $FOLIOID);
 		}
 
@@ -664,6 +663,11 @@ class DashboardController extends BaseController
 		} else {
 			return json_encode((object)['status' => 0, 'error' => 'No hay data disponible']);
 		}
+	}
+
+	public function derivar()
+	{
+	
 	}
 }
 
