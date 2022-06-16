@@ -11,11 +11,13 @@ class FolioModel extends Model
 	protected $primaryKey       = 'ID';
 	protected $allowedFields    = [
 		'FOLIOID',
+		'EXPEDIENTEID',
 		'DENUNCIANTEID',
 		'AGENTEATENCIONID',
 		'AGENTEFIRMAID',
 		'STATUS',
-		'NOTAS',
+		'NOTASAGENTE',
+		'ENLACEVIDEO',
 		'ESTADOID',
 		'MUNICIPIOID',
 		'ANO',

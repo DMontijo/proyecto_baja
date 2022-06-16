@@ -126,12 +126,17 @@ class DashboardController extends BaseController
 		$numfolio = $this->request->getPost('folio');
 		$data->folio = $this->_folioModel->asObject()->where('FOLIOID', $numfolio)->first();
 		if ($data->folio) {
-			$data->status = 1;
-			$data->preguntas_iniciales = $this->_folioPreguntasModel->where('FOLIOID', $numfolio)->first();
-			$data->personas = $this->_folioPersonaFisicaModel->where('FOLIOID', $numfolio)->findAll();
-			$data->domicilio = $this->_folioPersonaFisicaDomicilioModel->where('FOLIOID', $numfolio)->findAll();
-			$data->vehiculos = $this->_folioVehiculoModel->where('FOLIOID', $numfolio)->findAll();
-			return json_encode($data);
+			if ($data->folio->STATUS == 'ABIERTO') {
+				$data->status = 1;
+				$data->preguntas_iniciales = $this->_folioPreguntasModel->where('FOLIOID', $numfolio)->first();
+				$data->personas = $this->_folioPersonaFisicaModel->where('FOLIOID', $numfolio)->findAll();
+				$data->domicilio = $this->_folioPersonaFisicaDomicilioModel->where('FOLIOID', $numfolio)->findAll();
+				$data->vehiculos = $this->_folioVehiculoModel->where('FOLIOID', $numfolio)->findAll();
+				return json_encode($data);
+			} else {
+				$agente = $this->_usuariosModel->asObject()->where('ID', $data->folio->AGENTEATENCIONID)->first();
+				return json_encode(['status' => 2, 'motivo' => $data->folio->STATUS, 'agente' => $agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' . $agente->APELLIDO_MATERNO]);
+			}
 		} else {
 			return json_encode(['status' => 0]);
 		}
@@ -151,6 +156,52 @@ class DashboardController extends BaseController
 		];
 
 		echo view("admin/dashboard/$view", $data2);
+	}
+
+	public function updateStatusFolio()
+	{
+		$status = $this->request->getPost('status');
+		$motivo = $this->request->getPost('motivo');
+		$folio = $this->request->getPost('folio');
+		$agenteId = $this->request->getPost('agenteId');
+
+		$data = [
+			'STATUS' => $status,
+			'NOTASAGENTE' => $motivo,
+			'AGENTEATENCIONID' => $agenteId,
+			'FOLIOID' => $folio
+		];
+		if (!empty($status) && !empty($motivo) && !empty($folio) && !empty($agenteId)) {
+			$update = $this->_folioModel->set($data)->where('FOLIOID', $folio)->update();
+			if ($update) {
+				$folio = $this->_folioModel->asObject()->where('FOLIOID', $folio)->first();
+				$denunciante = $this->_denunciantesModel->asObject()->where('ID_DENUNCIANTE', $folio->DENUNCIANTEID)->first();
+				if ($this->_sendEmailDerivacionCanalizacion($denunciante->CORREO, $folio->FOLIOID, $status)) {
+					return json_encode(['status' => 1]);
+				} else {
+					return json_encode(['status' => 1]);
+				}
+			} else {
+				return json_encode(['status' => 0, 'error' => 'No hizo el update']);
+			}
+		} else {
+			return json_encode(['status' => 0, 'error' => 'No existe alguna de las variables']);
+		}
+	}
+
+	private function _sendEmailDerivacionCanalizacion($to, $folio, $motivo)
+	{
+		$email = \Config\Services::email();
+		$email->setTo($to);
+		$email->setFrom('andrea.solorzano@yocontigo-it.com', 'FGEBC');
+		$email->setSubject('Folio atendido');
+		$body = view('email_template/folio_der_can_email_template.php', ['folio' => $folio, 'motivo' => $motivo]);
+		$email->setMessage($body);
+		if ($email->send()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	private function _sendEmailPassword($to, $password)
@@ -181,6 +232,7 @@ class DashboardController extends BaseController
 			return json_encode((object)['exist' => 0]);
 		}
 	}
+
 	public function findPersonaFisicaById()
 	{
 		$id = $this->request->getPost('id');

@@ -12,7 +12,7 @@
 					<div class="col-12">
 						<div class="form-group mb-1">
 							<div class="input-group mb-1">
-								<input type="text" class="form-control" id="input_folio_atencion" placeholder="Folio de atención..." value="">
+								<input type="text" class="form-control" id="input_folio_atencion" placeholder="Folio de atención..." value="402002202200001">
 							</div>
 						</div>
 					</div>
@@ -72,18 +72,12 @@
 		</div>
 	</div>
 </div>
-
-<?php include('video_denuncia_modals/info_folio_modal.php') ?>
-<?php include('video_denuncia_modals/salida_modal.php') ?>
-<?php include('video_denuncia_modals/persona_modal.php') ?>
-<?php include('video_denuncia_modals/vehiculo_modal.php') ?>
-<?php include('video_denuncia_modals/domicilio_modal.php') ?>
-
 <script>
 	const inputFolio = document.querySelector('#input_folio_atencion');
 	const buscar_btn = document.querySelector('#buscar-btn');
 	const buscar_nuevo_btn = document.querySelector('#buscar-nuevo-btn');
 	const info_folio_btn = document.querySelector('#info-folio-btn');
+	const notas_mp = document.querySelector('#notas_mp');
 
 	const card1 = document.querySelector('#card1');
 	const card2 = document.querySelector('#card2');
@@ -94,7 +88,7 @@
 	buscar_btn.addEventListener('click', (e) => {
 		$.ajax({
 			data: {
-				'folio': document.querySelector('#input_folio_atencion').value
+				'folio': inputFolio.value
 			},
 			url: "<?= base_url('/data/get-folio-information') ?>",
 			method: "POST",
@@ -102,7 +96,6 @@
 			success: function(response) {
 				console.log(response);
 				if (response.status === 1) {
-					console.log('Encontrado');
 					const folio = response.folio;
 					const preguntas = response.preguntas_iniciales;
 					const personas = response.personas;
@@ -130,6 +123,16 @@
 					document.querySelector('#esta_desaparecido').value = preguntas.ESTA_DESAPARECIDO;
 					document.querySelector('#lesiones').value = preguntas.LESIONES;
 					document.querySelector('#lesiones_visibles').value = preguntas.LESIONES_VISIBLES;
+				} else if (response.status === 2) {
+					card2.classList.add('d-none');
+					card3.classList.add('d-none');
+					card4.classList.add('d-none');
+					card5.classList.add('d-none');
+					Swal.fire({
+						icon: 'error',
+						html: 'El folio ya fue atentido por el agente<br><strong>' + response.agente + '</strong><br><br><strong>' + response.motivo + '</strong>',
+						confirmButtonColor: '#bf9b55',
+					})
 				} else {
 					card2.classList.add('d-none');
 					card3.classList.add('d-none');
@@ -159,5 +162,9 @@
 		card5.classList.add('d-none');
 	});
 </script>
-
+<?php include('video_denuncia_modals/info_folio_modal.php') ?>
+<?php include('video_denuncia_modals/salida_modal.php') ?>
+<?php include('video_denuncia_modals/persona_modal.php') ?>
+<?php include('video_denuncia_modals/vehiculo_modal.php') ?>
+<?php include('video_denuncia_modals/domicilio_modal.php') ?>
 <?php $this->endSection() ?>

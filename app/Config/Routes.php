@@ -103,6 +103,7 @@ $routes->group('data', function ($routes) {
 
 	$routes->post('get-folio-information', 'admin/DashboardController::getFolioInformation');
 	$routes->post('get-persona-fisica-by-id', 'admin/DashboardController::findPersonaFisicaById');
+	$routes->post('update-status-folio', 'admin/DashboardController::updateStatusFolio');
 
 	$routes->post('sendOTP', 'OTPController::sendEmailOTP');
 	$routes->post('getLastOTP', 'OTPController::getLastOTP');
