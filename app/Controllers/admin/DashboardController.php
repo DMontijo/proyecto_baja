@@ -96,16 +96,19 @@ class DashboardController extends BaseController
 	}
 	public function findPersonaFisicaById()
 	{
-	//	$data=array();
+		$data=array();
 		$id = $this->request->getPost('id');
 		$folio = $this->request->getPost('folio');
 		$idcalidad = $this->request->getPost('idcalidad');
-		$data= $this->_folioPersonaFisicaModel->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
+		$data = $this->_folioPersonaFisicaModel->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
+		
+		// $data['data'] = $data;
 		//$data->calidadjuridica = $this->_folioPersonaFisicaModel->join('PERSONACALIDADJURIDICA', 'PERSONACALIDADJURIDICA.PERSONACALIDADJURIDICAID =FOLIOPERSONAFISICA.CALIDADJURIDICAID')->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->where('CALIDADJURIDICAID', $idcalidad)->first();
-	//	return view('admin/video_denuncia_models/email_view', $data);
+	//	return view('admin/dashboard/video_denuncia_modals/info_folio_modal', $data);
 		return json_encode($data);
-		//return view('admin/video_denuncia_modals/info_folio_modal', $data);
-	//	$this->_loadView('Info modal', 'Info modal', '', $data, 'info_folio_modal');
+		
+		
+		
 	}
 	public function joinFisico()
 	{

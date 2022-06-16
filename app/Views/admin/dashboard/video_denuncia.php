@@ -4,6 +4,7 @@
 <?= $this->endSection() ?>
 <?= $this->section('content') ?>
 <?php $session = session(); ?>
+
 <div class="row">
 	<div id="card1" class="col-3">
 		<div class="card rounded bg-white shadow" style="height: 190px;">
@@ -89,7 +90,7 @@
 	var respuesta;
 	buscar_btn.addEventListener('click', (e) => {
 		$.ajax({
-			async: false,
+			//async: false,
 			data: {
 				'folio': document.querySelector('#input_folio_atencion').value
 			},
@@ -106,7 +107,7 @@
 					const folio = response.folio;
 					const preguntas = response.preguntas_iniciales;
 					const personas = response.personas;
-					const domicilios = response.domicilios;
+					const domicilios = response.domicilio;
 					const vehiculos = response.vehiculos;
 					document.querySelector('#delito_dash').value = folio.DELITODENUNCIA;
 					document.querySelector('#delito_descr_dash').value = folio.HECHONARRACION;
@@ -130,32 +131,50 @@
 					document.querySelector('#hora').value = folio.HECHOHORA;
 					document.querySelector('#fecha').value = folio.HECHOFECHA;
 					//PERSONAS
+					var k = 1; //contador para asignar id al boton que borrara la fila
 					for (let i = 0; i < personas.length; i++) {
-						var id = personas[i].PERSONAFISICAID;
-						var btn = `<button type='button'  class='btn btn-primary' onclick='viewPersonaFisica(${id})'><i class='fas fa-eye'></i></button>`
-						$('#table-personas').DataTable({
-							paging: false,
-							searching: false,
-							info: false,
-							data: personas,
-							columns: [
-								{
-									title: "NOMBRE",
-									data: "NOMBRE"
-								},
-								{
-									title: "CALIDAD JURIDICA",
-									data: "CALIDADJURIDICAID"
-								},
-								{
+						var btn = `<button type='button'  class='btn btn-primary' onclick='viewPersonaFisica(${k})'><i class='fas fa-eye'></i></button>`
+						var btnDomicilio = `<button type='button' class='btn btn-primary' onclick='viewDomicilio(${k})'><i class='fas fa-eye'></i></button>`
 
-									title: "ACCION",
-									defaultContent: btn,
-								}
-							]
-						});
+						var fila = '<tr id="row' + i + '"><td>' +
+							personas[i].PERSONAFISICAID + '</td><td>' +
+							personas[i].NOMBRE + '</td><td>' +
+							personas[i].CALIDADJURIDICAID +
+							'</td><td>' + btn + '</td></tr>'; //esto seria lo que contendria la fila
 
-						alert(id);
+						var fila2 = '<tr id="row' + i + '"><td>' +
+							personas[i].NOMBRE + '</td><td>' +
+							personas[i].CALIDADJURIDICAID +
+							'</td><td>' + btnDomicilio + '</td></tr>';
+				
+						k++;
+						
+
+						$('#table-personas tr:first').after(fila);
+						$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
+						var nFilas = $("#personas tr").length;
+						$("#adicionados").append(nFilas - 1);
+						//DOMICILIO
+
+						$('#table-domicilio tr:first').after(fila2);
+						$("#adicionados").text("");
+						var nFilas = $("#domicilio tr").length;
+						$("#adicionados").append(nFilas - 1);
+
+
+
+					}
+					for (let i = 0; i < personas.length; i++) {
+						var btnVehiculo = `<button type='button' class='btn btn-primary' onclick='viewVehiculo(${k})'><i class='fas fa-eye'></i></button>`;
+						var fila3 = '<tr id="row' + i + '"><td>' +
+							vehiculos[i].PLACAS + '</td><td>' +
+							vehiculos[i].NUMEROSERIE +
+							'</td><td>' + btnVehiculo + '</td></tr>';
+						k++;
+						$('#table-vehiculos tr:first').after(fila3);
+						$("#adicionados").text("");
+						var nFilas = $("#vehiculos tr").length;
+						$("#vehiculos").append(nFilas - 1);
 
 					}
 
@@ -163,33 +182,7 @@
 						"responsive": true,
 						"lengthChange": false,
 						"autoWidth": false,
-					}).buttons().container().appendTo('#videollamadasA_wrapper .col-md-6:eq(0)');
-
-					//DOMICILIOS
-					//	for (let i = 0; i < domicilios.length; i++) {
-					//		var id = domicilios[i].DOMICILIOID;
-					$('#table-domicilio').DataTable({
-						paging: false,
-						searching: false,
-						info: false,
-						data: personas,
-						columns: [{
-								title: "NOMBRE",
-								data: "NOMBRE"
-							},
-							{
-								title: "CALIDAD JURIDICA",
-								data: "CALIDADJURIDICAID"
-							},
-							{
-
-								title: "ACCION",
-								defaultContent: "<button type='button' class='btn btn-primary' onclick='viewDomicilio(id)'><i class='fas fa-eye'></i></button>",
-							}
-						]
 					});
-					alert(id);
-					//}
 
 					$("#table-domicilio").DataTable({
 						"responsive": true,
@@ -197,39 +190,14 @@
 						"autoWidth": false,
 					});
 
-					//VEHICULOS
-
-					for (let i = 0; i < vehiculos.length; i++) {
-						var id = vehiculos[i].VEHICULOID;
-						$('#table-vehiculos').DataTable({
-							paging: false,
-							searching: false,
-							info: false,
-							data: vehiculos,
-							columns: [{
-									title: "PLACAS",
-									data: "PLACAS"
-								},
-								{
-									title: "SERIE",
-									data: "NUMEROSERIE"
-								},
-								{
-
-									title: "ACCION",
-									defaultContent: "<button type='button' class='btn btn-primary' onclick='viewVehiculo(id)'><i class='fas fa-eye'></i></button>",
-								}
-							]
-						});
-						alert(id);
-					}
 
 					$("#table-vehiculos").DataTable({
 						"responsive": true,
 						"lengthChange": false,
 						"autoWidth": false,
 					});
-					respuesta = (response);
+
+					//respuesta = (response);
 				} else {
 					card2.classList.add('d-none');
 					card3.classList.add('d-none');
@@ -244,107 +212,97 @@
 </script>
 <script>
 	function viewPersonaFisica(id) {
-		const person = respuesta.personas;
+		//alert(id);
+		/*const person = respuesta.personas;
 		console.log(id);
-		for (let i = 0; i < person.length; i++) {
-			$.ajax({
-				data: {
-					'folio': document.querySelector('#input_folio_atencion').value,
-					'id':id
-				},
-				url: "<?= base_url('/data/get-persona-fisica-by-id') ?>",
-				method: "POST",
-				dataType: "json",
-				success: function(response) {
-				//	console.log(response);
-					document.querySelector('#calidad_juridicaP').value = person[i].CALIDADJURIDICAID;
-					document.querySelector('#nombrePersona').value = person[i].NOMBRE;
-					document.querySelector('#apellido_paternoP').value = person[i].PRIMERAPELLIDO;
-					document.querySelector('#apellido_maternoP').value = person[i].SEGUNDOAPELLIDO;
-					document.querySelector('#sexoP').value = person[i].SEXO;
-					document.querySelector('#fecha_nacimientoP').value = person[i].FECHANACIMIENTO;
-					document.querySelector('#edadP').value = person[i].EDAD;
-					document.querySelector('#numero_identidadP').value = person[i].NUMEROIDENTIDAD;
-					document.querySelector('#telefonoP').value = person[i].TELEFONO;
-					document.querySelector('#correoP').value = person[i].CORREO;
-					$('#folio_persona_fisica_modal').modal('show');
-					
-				}
-			});
-	}
-	}
-	function viewDomicilio(id) {
-		const dom = respuesta.domicilio;
-		console.log(dom);
-		for (let i = 0; i < dom.length; i++) {
-			var id = dom[i].PERSONAFISICAID;
-			//console.log(dom[i].CP);
-			$.ajax({
-				data: {
-					'folio': document.querySelector('#input_folio_atencion').value,
-					'id':dom[i].PERSONAFISICAID
+		//for (let i = 0; i < person.length; i++) {*/
+		$.ajax({
+			data: {
+				'folio': document.querySelector('#input_folio_atencion').value,
+				'id': id
+			},
+			url: "<?= base_url('/data/get-persona-fisica-by-id') ?>",
+			method: "POST",
+			dataType: "json",
+			success: function(response) {
+				console.log(response);
+				document.querySelector('#calidad_juridicaP').value = response.CALIDADJURIDICAID;
+				document.querySelector('#nombrePersona').value = response.NOMBRE;
+				document.querySelector('#apellido_paternoP').value = response.PRIMERAPELLIDO;
+				document.querySelector('#apellido_maternoP').value = response.SEGUNDOAPELLIDO;
+				document.querySelector('#sexoP').value = response.SEXO;
+				document.querySelector('#fecha_nacimientoP').value = response.FECHANACIMIENTO;
+				document.querySelector('#edadP').value = response.EDAD;
+				document.querySelector('#numero_identidadP').value = response.NUMEROIDENTIDAD;
+				document.querySelector('#telefonoP').value = response.TELEFONO;
+				document.querySelector('#correoP').value = response.CORREO;
+				$('#folio_persona_fisica_modal').modal('show');
 
-				},
-				url: "<?= base_url('/data/get-persona-domicilio-by-id') ?>",
-				method: "POST",
-				dataType: "json",
-				success: function(response) {
-					document.querySelector('#pais').value = dom[i].PAIS;
-					document.querySelector('#estado').value = dom[i].ESTADOID;
-					document.querySelector('#municipio').value = dom[i].MUNICIPIOID;
-					document.querySelector('#localidad').value = dom[i].LOCALIDADID;
-					document.querySelector('#colonia').value = dom[i].COLONIADESCR;
-					document.querySelector('#cp').value = dom[i].CP;
-					document.querySelector('#calle').value = dom[i].CALLE;
-					document.querySelector('#exterior').value = dom[i].NUMEROCASA;
-					document.querySelector('#interior').value = dom[i].NUMEROINTERIOR;
-					document.querySelector('#zona').value = dom[i].ZONA;
-					$('#folio_domicilio_modal').modal('show');
-				}
-			});
-		}
+			}
+		});
+		//}
+	}
+
+	function viewDomicilio(id) {
+
+		$.ajax({
+			data: {
+				'folio': document.querySelector('#input_folio_atencion').value,
+				'id': id
+
+			},
+			url: "<?= base_url('/data/get-persona-domicilio-by-id') ?>",
+			method: "POST",
+			dataType: "json",
+			success: function(response) {
+				document.querySelector('#paisp').value = response.PAIS;
+				document.querySelector('#estadop').value = response.ESTADOID;
+				document.querySelector('#municipiop').value = response.MUNICIPIOID;
+				document.querySelector('#localidadp').value = response.LOCALIDADID;
+				document.querySelector('#coloniap').value = response.COLONIADESCR;
+				document.querySelector('#cp').value = response.CP;
+				document.querySelector('#callep').value = response.CALLE;
+				document.querySelector('#exteriorp').value = response.NUMEROCASA;
+				document.querySelector('#interiorp').value = response.NUMEROINTERIOR;
+				document.querySelector('#zonap').value = response.ZONA;
+				$('#folio_domicilio_modal').modal('show');
+			}
+		});
 	}
 
 	function viewVehiculo(id) {
-		const vehiculo = respuesta.vehiculos;
-		console.log(vehiculo);
-		for (let i = 0; i < vehiculo.length; i++) {
-			var id = vehiculo[i].PERSONAFISICAID;
-			//console.log(vehiculo[i].TIPOID);
-			$.ajax({
-				data: {
-					'folio': document.querySelector('#input_folio_atencion').value
+		$.ajax({
+			data: {
+				'folio': document.querySelector('#input_folio_atencion').value,
+				'id': id
+			},
+			url: "<?= base_url('/data/get-persona-vehiculo-by-id') ?>",
+			method: "POST",
+			dataType: "json",
+			success: function(response) {
+				document.querySelector('#tipo_placas_vehiculo').value = response.TIPOPLACA;
+				document.querySelector('#placas_vehiculo').value = response.PLACAS;
+				document.querySelector('#estado_vehiculo').value = response.ESTADOIDPLACA;
+				document.querySelector('#serie_vehiculo').value = response.NUMEROSERIE;
+				document.querySelector('#distribuidor_vehiculo').value = response.VEHICULODISTRIBUIDORID;
+				document.querySelector('#marca').value = response.MARCADESCR;
+				//document.querySelector('#linea_vehiculo').value = response.CALLE;
+				document.querySelector('#version_vehiculo').value = response.VEHICULOVERSIONID;
+				document.querySelector('#tipo_vehiculo').value = response.NUMEROINTERIOR;
+				document.querySelector('#servicio_vehiculo').value = response.VEHICULOSERVICIOID;
+				document.querySelector('#modelo_vehiculo').value = response.MODELODESCR;
+				document.querySelector('#seguro_vigente_vehiculo').value = response.SEGUROVIGENTE;
+				document.querySelector('#color_vehiculo').value = response.PRIMERCOLORID;
+				//	document.querySelector('#color_tapiceria_vehiculo').value = response.ZONA;
+				document.querySelector('#num_chasis_vehiculo').value = response.NUMEROCHASIS;
+				document.querySelector('#transmision_vehiculo').value = response.TRANSMISION;
+				document.querySelector('#traccion_vehiculo').value = response.TRACCION;
+				document.querySelector('#foto_vehiculo').value = response.FOTO;
+				document.querySelector('#description_vehiculo').value = response.SENASPARTICULARES;
 
-				},
-				url: "<?= base_url('/data/get-persona-vehiculo-by-id') ?>",
-				method: "POST",
-				dataType: "json",
-				success: function(response) {
-					document.querySelector('#tipo_placas_vehiculo').value = vehiculo[i].TIPOPLACA;
-					document.querySelector('#placas_vehiculo').value = vehiculo[i].PLACAS;
-					document.querySelector('#estado_vehiculo').value = vehiculo[i].ESTADOIDPLACA;
-					document.querySelector('#serie_vehiculo').value = vehiculo[i].NUMEROSERIE;
-					document.querySelector('#distribuidor_vehiculo').value = vehiculo[i].VEHICULODISTRIBUIDORID;
-					document.querySelector('#marca').value = vehiculo[i].MARCADESCR;
-					//document.querySelector('#linea_vehiculo').value = vehiculo[i].CALLE;
-					document.querySelector('#version_vehiculo').value = vehiculo[i].VEHICULOVERSIONID;
-					document.querySelector('#tipo_vehiculo').value = vehiculo[i].NUMEROINTERIOR;
-					document.querySelector('#servicio_vehiculo').value = vehiculo[i].VEHICULOSERVICIOID;
-					document.querySelector('#modelo_vehiculo').value = vehiculo[i].MODELODESCR;
-					document.querySelector('#seguro_vigente_vehiculo').value = vehiculo[i].SEGUROVIGENTE;
-					document.querySelector('#color_vehiculo').value = vehiculo[i].PRIMERCOLORID;
-				//	document.querySelector('#color_tapiceria_vehiculo').value = vehiculo[i].ZONA;
-					document.querySelector('#num_chasis_vehiculo').value = vehiculo[i].NUMEROCHASIS;
-					document.querySelector('#transmision_vehiculo').value = vehiculo[i].TRANSMISION;
-					document.querySelector('#traccion_vehiculo').value = vehiculo[i].TRACCION;
-					document.querySelector('#foto_vehiculo').value = vehiculo[i].FOTO;
-					document.querySelector('#description_vehiculo').value = vehiculo[i].SENASPARTICULARES;
-
-					$('#folio_vehiculo_modal').modal('show');
-				}
-			});
-		}
-		//$('#folio_vehiculo_modal').modal('show');
+				$('#folio_vehiculo_modal').modal('show');
+			}
+		});
 	}
 </script>
 

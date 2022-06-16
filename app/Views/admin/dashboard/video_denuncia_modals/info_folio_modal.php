@@ -33,24 +33,27 @@
 								<?php echo view('/admin/dashboard/video_denuncia_forms/form_denunciante'); ?>
 							</div>
 							<div class="tab-pane fade" id="v-pills-personas" role="tabpanel" aria-labelledby="v-pills-personas-tab">
-								<table id="table-personas" class="table table-bordered table-striped">
+							<div id="adicionados" class="d-none"></div>
+							<table id="table-personas" class="table table-bordered table-striped">
 									<thead>
 										<tr>
+										<th class="text-center" id="id" name="id">ID</th>
 											<th class="text-center" id="nombreP" name="nombreP">NOMBRE</th>
 											<th class="text-center" id="calidadP" name="calidadP">CALIDAD JURIDICA</th>
 											<th></th>
 										</tr>
 									</thead>
 							
-									<tbody>
+								<!--	<tbody>
 										<tr>
-											<td class="text-center">OTONIEL FLORES GONZALEZ</td>
-											<td class="text-center">DENUNCIANTE</td>
+										<td class="text-center" id="idT" name="idT">ID</td>
+											<td class="text-center" id="nameT" name="nameT">OTONIEL FLORES GONZALEZ</td>
+											<td class="text-center"id="calidadT" name="calidadT">DENUNCIANTE</td>
 											<td class="text-center">
 												<button type="button" class="btn btn-primary" onclick="viewPersonaFisica(1)"><i class="fas fa-eye"></i></button>
 											</td>
 										</tr>
-									</tbody> 
+									</tbody> -->
 								</table>
 							</div>
 							<div class="tab-pane fade" id="v-pills-domicilios" role="tabpanel" aria-labelledby="v-pills-domicilios-tab">
