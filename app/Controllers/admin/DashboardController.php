@@ -3,6 +3,7 @@
 namespace App\Controllers\admin;
 
 use App\Controllers\BaseController;
+
 use App\Models\FoliosAtencionModel;
 use App\Models\DenunciantesModel;
 use App\Models\FolioDenunciaModel;

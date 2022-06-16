@@ -51,7 +51,13 @@ $routes->group('admin', function ($routes) {
 		$routes->post('nuevo_usuario', 'admin/DashboardController::crear_usuario');
 
 		$routes->get('video-denuncia', 'admin/DashboardController::video_denuncia');
-		$routes->get('folios', 'admin/DashboardController::folios');
+
+		$routes->get('folios', 'admin/FoliosController::index');
+		$routes->get('folios_abiertos', 'admin/FoliosController::folios_abiertos');
+		$routes->get('folios_derivados', 'admin/FoliosController::folios_derivados');
+		$routes->get('folios_canalizados', 'admin/FoliosController::folios_canalizados');
+		$routes->get('folios_expediente', 'admin/FoliosController::folios_expediente');
+		$routes->get('folios_sin_firma', 'admin/FoliosController::folios_sin_firma');
 
 		$routes->get('certificadoMedico', 'PDFController::certificadoMedico');
 		$routes->get('constancia-video-denuncia', 'PDFController::constanciaVideoDenuncia');
