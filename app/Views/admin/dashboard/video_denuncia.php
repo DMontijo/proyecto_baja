@@ -98,7 +98,7 @@
 			method: "POST",
 			dataType: "json",
 			success: function(response) {
-				console.log(response);
+				respuesta=(response);
 				if (response.status === 1) {
 					card2.classList.remove('d-none');
 					card3.classList.remove('d-none');
@@ -133,8 +133,8 @@
 					//PERSONAS
 					var k = 1; //contador para asignar id al boton que borrara la fila
 					for (let i = 0; i < personas.length; i++) {
-						var btn = `<button type='button'  class='btn btn-primary' onclick='viewPersonaFisica(${k})'><i class='fas fa-eye'></i></button>`
-						var btnDomicilio = `<button type='button' class='btn btn-primary' onclick='viewDomicilio(${k})'><i class='fas fa-eye'></i></button>`
+						var btn = `<button type='button'  class='btn btn-primary' onclick='viewPersonaFisica(${personas[i].PERSONAFISICAID},${personas[i].CALIDADJURIDICAID})'><i class='fas fa-eye'></i></button>`
+						var btnDomicilio = `<button type='button' class='btn btn-primary' onclick='viewDomicilio(${personas[i].PERSONAFISICAID})'><i class='fas fa-eye'></i></button>`
 
 						var fila = '<tr id="row' + i + '"><td>' +
 							personas[i].PERSONAFISICAID + '</td><td>' +
@@ -207,11 +207,12 @@
 			},
 			error: function(jqXHR, textStatus, errorThrown) {}
 		});
-		return respuesta;
+		//return respuesta;
 	})
 </script>
 <script>
-	function viewPersonaFisica(id) {
+	function viewPersonaFisica(id, calidad) {
+
 		//alert(id);
 		/*const person = respuesta.personas;
 		console.log(id);
@@ -219,23 +220,25 @@
 		$.ajax({
 			data: {
 				'folio': document.querySelector('#input_folio_atencion').value,
-				'id': id
+				'id': id,
+				'idcalidad': calidad
 			},
 			url: "<?= base_url('/data/get-persona-fisica-by-id') ?>",
 			method: "POST",
 			dataType: "json",
 			success: function(response) {
-				console.log(response);
-				document.querySelector('#calidad_juridicaP').value = response.CALIDADJURIDICAID;
-				document.querySelector('#nombrePersona').value = response.NOMBRE;
-				document.querySelector('#apellido_paternoP').value = response.PRIMERAPELLIDO;
-				document.querySelector('#apellido_maternoP').value = response.SEGUNDOAPELLIDO;
-				document.querySelector('#sexoP').value = response.SEXO;
-				document.querySelector('#fecha_nacimientoP').value = response.FECHANACIMIENTO;
-				document.querySelector('#edadP').value = response.EDAD;
-				document.querySelector('#numero_identidadP').value = response.NUMEROIDENTIDAD;
-				document.querySelector('#telefonoP').value = response.TELEFONO;
-				document.querySelector('#correoP').value = response.CORREO;
+				const calidad = response.calidadjuridica;
+				const personaid = response.personaid;
+				document.querySelector('#calidad_juridicaP').value = calidad.PERSONACALIDADJURIDICADESCR;
+				document.querySelector('#nombrePersona').value = personaid.NOMBRE;
+				document.querySelector('#apellido_paternoP').value = personaid.PRIMERAPELLIDO;
+				document.querySelector('#apellido_maternoP').value = personaid.SEGUNDOAPELLIDO;
+				document.querySelector('#sexoP').value = personaid.SEXO;
+				document.querySelector('#fecha_nacimientoP').value = personaid.FECHANACIMIENTO;
+				document.querySelector('#edadP').value = personaid.EDAD;
+				document.querySelector('#numero_identidadP').value = personaid.NUMEROIDENTIDAD;
+				document.querySelector('#telefonoP').value = personaid.TELEFONO;
+				document.querySelector('#correoP').value = personaid.CORREO;
 				$('#folio_persona_fisica_modal').modal('show');
 
 			}
@@ -244,7 +247,6 @@
 	}
 
 	function viewDomicilio(id) {
-
 		$.ajax({
 			data: {
 				'folio': document.querySelector('#input_folio_atencion').value,
@@ -255,16 +257,21 @@
 			method: "POST",
 			dataType: "json",
 			success: function(response) {
-				document.querySelector('#paisp').value = response.PAIS;
-				document.querySelector('#estadop').value = response.ESTADOID;
-				document.querySelector('#municipiop').value = response.MUNICIPIOID;
-				document.querySelector('#localidadp').value = response.LOCALIDADID;
-				document.querySelector('#coloniap').value = response.COLONIADESCR;
-				document.querySelector('#cp').value = response.CP;
-				document.querySelector('#callep').value = response.CALLE;
-				document.querySelector('#exteriorp').value = response.NUMEROCASA;
-				document.querySelector('#interiorp').value = response.NUMEROINTERIOR;
-				document.querySelector('#zonap').value = response.ZONA;
+				const pais = response.pais;
+				const persondom = response.persondom;
+				const estado = response.estado;
+				const municipio = response.municipio;
+				const localidad = response.localidad
+				document.querySelector('#paisp').value = persondom.PAIS;
+				document.querySelector('#estadop').value = estado.ESTADODESCR;
+				document.querySelector('#municipiop').value = municipio.MUNICIPIODESCR;
+				document.querySelector('#localidadp').value = localidad.LOCALIDADDESCR;
+				document.querySelector('#coloniap').value = persondom.COLONIADESCR;
+				document.querySelector('#cp').value = persondom.CP;
+				document.querySelector('#callep').value = persondom.CALLE;
+				document.querySelector('#exteriorp').value = persondom.NUMEROCASA;
+				document.querySelector('#interiorp').value = persondom.NUMEROINTERIOR;
+				document.querySelector('#zonap').value = persondom.ZONA;
 				$('#folio_domicilio_modal').modal('show');
 			}
 		});
