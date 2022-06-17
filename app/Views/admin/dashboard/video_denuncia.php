@@ -144,18 +144,24 @@
 							personas[i].CALIDADJURIDICAID +
 							'</td><td>' + btn + '</td></tr>'; //esto seria lo que contendria la fila
 
-						var fila2 = '<tr id="row' + i + '"><td>' +
-							personas[i].NOMBRE + '</td><td>' +
-							personas[i].CALIDADJURIDICAID +
-							'</td><td>' + btnDomicilio + '</td></tr>';
-				
-						k++;
 						
 
 						$('#table-personas tr:first').after(fila);
 						$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
 						var nFilas = $("#personas tr").length;
 						$("#adicionados").append(nFilas - 1);
+					
+					
+					}
+					for (let i = 0; i < domicilios.length; i++) {
+						var btnDomicilio = `<button type='button' class='btn btn-primary' onclick='viewDomicilio(${personas[i].PERSONAFISICAID})'><i class='fas fa-eye'></i></button>`
+
+						var fila2 = '<tr id="row' + i + '"><td>' +
+							personas[i].NOMBRE + '</td><td>' +
+							personas[i].CALIDADJURIDICAID +
+							'</td><td>' + btnDomicilio + '</td></tr>';
+				
+						k++;
 						//DOMICILIO
 
 						$('#table-domicilio tr:first').after(fila2);
@@ -163,7 +169,7 @@
 						var nFilas = $("#domicilio tr").length;
 						$("#adicionados").append(nFilas - 1);
 
-					
+
 					}
 					for (let i = 0; i < personas.length; i++) {
 						var btnVehiculo = `<button type='button' class='btn btn-primary' onclick='viewVehiculo(${k})'><i class='fas fa-eye'></i></button>`;
@@ -267,14 +273,13 @@
 				var qestado =document.querySelector('#estadoper').value;
 				var qmunicipio =document.querySelector('#municipiop').value;
 				var qlocalidad = document.querySelector('#localidadp').value;
-				if (!qpais)  {
-					document.querySelector('#paisp').value ="NULL"
+	
+				if (persondom.PAIS == null)  {
+					document.querySelector('#paisp').value ="NULL";
 				}else{
-					document.querySelector('#paisp').value = persondom.PAIS;
+					document.querySelector('#paisp').value =persondom.PAIS;
 				}
-
-				if (!qestado)  {
-					document.querySelector('#estadoper').value ="NULL"
+				if (persondom.ESTADOID == null)  {
 					document.querySelector('#estadoper').value ="NULL";
 				}else{
 					document.querySelector('#estadoper').value = estado.ESTADODESCR;
