@@ -6,7 +6,7 @@
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="estado" class="form-label fw-bold">Estado</label>
-		<input class="form-control" type="text" id="estadop" name="estadop">
+		<input class="form-control" type="text" id="estadoper" name="estadoper">
 	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">

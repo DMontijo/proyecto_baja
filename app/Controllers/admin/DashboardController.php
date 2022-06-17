@@ -132,9 +132,14 @@ class DashboardController extends BaseController
 	}
 	public function findPersonadVehiculoById()
 	{
+		$data = (object)array();
 		$id = $this->request->getPost('id');
 		$folio = $this->request->getPost('folio');
-		$data = $this->_folioVehiculoModel->where('FOLIOID', $folio)->first();
+		$data->vehiculo = $this->_folioVehiculoModel->where('FOLIOID', $folio)->first();
+		$data->color =$this->_folioVehiculoModel->join('CATEGORIA_VEHICULOCOLOR', 'CATEGORIA_VEHICULOCOLOR.VEHICULOCOLORID  =FOLIOVEHICULO.PRIMERCOLORID')->where('FOLIOID', $folio)->first();
+		$data->estadov =$this->_folioVehiculoModel->join('CATEGORIA_ESTADO', 'CATEGORIA_ESTADO.ESTADOID  =FOLIOVEHICULO.ESTADOIDPLACA')->where('FOLIOID', $folio)->first();
+		$data->tipov =$this->_folioVehiculoModel->join('CATEGORIA_VEHICULOTIPO', 'CATEGORIA_VEHICULOTIPO.VEHICULOTIPOID   =FOLIOVEHICULO.TIPOID')->where('FOLIOID', $folio)->first();
+
 		return json_encode($data);
 	}
 	public function video_denuncia()

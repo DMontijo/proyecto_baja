@@ -131,6 +131,8 @@
 					document.querySelector('#hora').value = folio.HECHOHORA;
 					document.querySelector('#fecha').value = folio.HECHOFECHA;
 					//PERSONAS
+			
+
 					var k = 1; //contador para asignar id al boton que borrara la fila
 					for (let i = 0; i < personas.length; i++) {
 						var btn = `<button type='button'  class='btn btn-primary' onclick='viewPersonaFisica(${personas[i].PERSONAFISICAID},${personas[i].CALIDADJURIDICAID})'><i class='fas fa-eye'></i></button>`
@@ -161,8 +163,7 @@
 						var nFilas = $("#domicilio tr").length;
 						$("#adicionados").append(nFilas - 1);
 
-
-
+					
 					}
 					for (let i = 0; i < personas.length; i++) {
 						var btnVehiculo = `<button type='button' class='btn btn-primary' onclick='viewVehiculo(${k})'><i class='fas fa-eye'></i></button>`;
@@ -176,8 +177,8 @@
 						var nFilas = $("#vehiculos tr").length;
 						$("#vehiculos").append(nFilas - 1);
 
+					
 					}
-
 					$("#table-personas").DataTable({
 						"responsive": true,
 						"lengthChange": false,
@@ -261,11 +262,37 @@
 				const persondom = response.persondom;
 				const estado = response.estado;
 				const municipio = response.municipio;
-				const localidad = response.localidad
-				document.querySelector('#paisp').value = persondom.PAIS;
-				document.querySelector('#estadop').value = estado.ESTADODESCR;
-				document.querySelector('#municipiop').value = municipio.MUNICIPIODESCR;
-				document.querySelector('#localidadp').value = localidad.LOCALIDADDESCR;
+				const localidad = response.localidad;
+				var qpais= document.querySelector('#paisp').value;
+				var qestado =document.querySelector('#estadoper').value;
+				var qmunicipio =document.querySelector('#municipiop').value;
+				var qlocalidad = document.querySelector('#localidadp').value;
+				if (!qpais)  {
+					document.querySelector('#paisp').value ="NULL"
+				}else{
+					document.querySelector('#paisp').value = persondom.PAIS;
+				}
+
+				if (!qestado)  {
+					document.querySelector('#estadoper').value ="NULL"
+				}else{
+					document.querySelector('#estadoper').value = estado.ESTADODESCR;
+				}
+				if (!qmunicipio)  {
+					document.querySelector('#municipiop').value ="NULL"
+				}else{
+					document.querySelector('#municipiop').value = municipio.MUNICIPIODESCR;
+				}
+				if (!qlocalidad)  {
+					document.querySelector('#localidadp').value ="NULL"
+				}else{
+					document.querySelector('#localidadp').value = localidad.LOCALIDADDESCR;
+				}
+				
+				//document.querySelector('#paisp').value = persondom.PAIS;
+			//	document.querySelector('#estadoper').value = estado.ESTADODESCR;
+			//	document.querySelector('#municipiop').value = municipio.MUNICIPIODESCR;
+			//	document.querySelector('#localidadp').value = localidad.LOCALIDADDESCR;
 				document.querySelector('#coloniap').value = persondom.COLONIADESCR;
 				document.querySelector('#cp').value = persondom.CP;
 				document.querySelector('#callep').value = persondom.CALLE;
@@ -287,25 +314,29 @@
 			method: "POST",
 			dataType: "json",
 			success: function(response) {
-				document.querySelector('#tipo_placas_vehiculo').value = response.TIPOPLACA;
-				document.querySelector('#placas_vehiculo').value = response.PLACAS;
-				document.querySelector('#estado_vehiculo').value = response.ESTADOIDPLACA;
-				document.querySelector('#serie_vehiculo').value = response.NUMEROSERIE;
-				document.querySelector('#distribuidor_vehiculo').value = response.VEHICULODISTRIBUIDORID;
-				document.querySelector('#marca').value = response.MARCADESCR;
-				//document.querySelector('#linea_vehiculo').value = response.CALLE;
-				document.querySelector('#version_vehiculo').value = response.VEHICULOVERSIONID;
-				document.querySelector('#tipo_vehiculo').value = response.NUMEROINTERIOR;
-				document.querySelector('#servicio_vehiculo').value = response.VEHICULOSERVICIOID;
-				document.querySelector('#modelo_vehiculo').value = response.MODELODESCR;
-				document.querySelector('#seguro_vigente_vehiculo').value = response.SEGUROVIGENTE;
-				document.querySelector('#color_vehiculo').value = response.PRIMERCOLORID;
-				//	document.querySelector('#color_tapiceria_vehiculo').value = response.ZONA;
-				document.querySelector('#num_chasis_vehiculo').value = response.NUMEROCHASIS;
-				document.querySelector('#transmision_vehiculo').value = response.TRANSMISION;
-				document.querySelector('#traccion_vehiculo').value = response.TRACCION;
-				document.querySelector('#foto_vehiculo').value = response.FOTO;
-				document.querySelector('#description_vehiculo').value = response.SENASPARTICULARES;
+				const vehiculo = response.vehiculo;
+				const color = response.color;
+				const estadov = response.estadov;
+				const tipov = response.tipov;
+				document.querySelector('#tipo_placas_vehiculo').value = vehiculo.TIPOPLACA;
+				document.querySelector('#placas_vehiculo').value = vehiculo.PLACAS;
+				document.querySelector('#estado_vehiculo').value = estadov.ESTADODESCR;
+				document.querySelector('#serie_vehiculo').value = vehiculo.NUMEROSERIE;
+				document.querySelector('#distribuidor_vehiculo').value = vehiculo.VEHICULODISTRIBUIDORID;
+				document.querySelector('#marca').value = vehiculo.MARCADESCR;
+				//document.querySelector('#linea_vehiculo').value = vehiculo.CALLE;
+				document.querySelector('#version_vehiculo').value = vehiculo.VEHICULOVERSIONID;
+				document.querySelector('#tipo_vehiculo').value = tipov.VEHICULOTIPODESCR;
+				document.querySelector('#servicio_vehiculo').value = vehiculo.VEHICULOSERVICIOID;
+				document.querySelector('#modelo_vehiculo').value = vehiculo.MODELODESCR;
+				document.querySelector('#seguro_vigente_vehiculo').value = vehiculo.SEGUROVIGENTE;
+				document.querySelector('#color_vehiculo').value = color.VEHICULOCOLORDESCR;
+				//	document.querySelector('#color_tapiceria_vehiculo').value = vehiculo.ZONA;
+				document.querySelector('#num_chasis_vehiculo').value = vehiculo.NUMEROCHASIS;
+				document.querySelector('#transmision_vehiculo').value = vehiculo.TRANSMISION;
+				document.querySelector('#traccion_vehiculo').value = vehiculo.TRACCION;
+				document.querySelector('#foto_vehiculo').value = vehiculo.FOTO;
+				document.querySelector('#description_vehiculo').value = vehiculo.SENASPARTICULARES;
 
 				$('#folio_vehiculo_modal').modal('show');
 			}
