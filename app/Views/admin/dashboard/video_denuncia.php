@@ -275,18 +275,19 @@
 
 				if (!qestado)  {
 					document.querySelector('#estadoper').value ="NULL"
+					document.querySelector('#estadoper').value ="NULL";
 				}else{
 					document.querySelector('#estadoper').value = estado.ESTADODESCR;
 				}
-				if (!qmunicipio)  {
-					document.querySelector('#municipiop').value ="NULL"
+				if (persondom.MUNICIPIOID == null)  {
+					document.querySelector('#municipiop').value ="NULL";
 				}else{
-					document.querySelector('#municipiop').value = municipio.MUNICIPIODESCR;
+					document.querySelector('#municipiop').value =  municipio.MUNICIPIODESCR;
 				}
-				if (!qlocalidad)  {
-					document.querySelector('#localidadp').value ="NULL"
+				if (persondom.LOCALIDADID == null)  {
+					document.querySelector('#localidadp').value ="NULL";
 				}else{
-					document.querySelector('#localidadp').value = localidad.LOCALIDADDESCR;
+					document.querySelector('#localidadp').value =localidad.LOCALIDADDESCR;
 				}
 				
 				//document.querySelector('#paisp').value = persondom.PAIS;
