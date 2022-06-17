@@ -16,10 +16,10 @@
 						<li>Secuestro</li>
 						<li>Tortura</li>
 						<li>Trata de personas</li>
-						<li>Abuso de autoridad en contra del personal adacrito</li>
+						<li>Delitos cometidos por personal adscrito a la Físcalia General del Estado de Baja California</li>
 						<li>Homicidio en todas sus modalidades</li>
 						<li>Delitos contra la salud modalidad narcomenudeo</li>
-						<li>Abuso sexual cuando la victima sea menor de edad</li>
+						<li>Abuso sexual cuando la víctima sea menor de edad</li>
 						<li>Tráfico de menores</li>
 					</ul>
 				</div>
@@ -152,6 +152,7 @@
 								<option selected disabled value="">Seleccione la colonia</option>
 							</select>
 							<input type="text" class="form-control d-none" id="colonia" name="colonia" maxlength="100" required>
+							<small>Si no encuentras tu colonia selecciona otro</small>
 							<div class="invalid-feedback">
 								La colonia es obligatoria
 							</div>
@@ -320,7 +321,7 @@
 						<div class="col-12 text-center items-center mt-2">
 							<input class="form-check-input" type="checkbox" id="notificaciones_check" name="notificaciones_check" required>
 							<label class="form-check-label fw-bold" for="notificaciones_check">
-								Acepto envío de notificaciones por teléfono, correo electrónico y a mi domicilio.
+								Acepto y autorizo como medio de notificaciones: teléfono, correo electrónico y domicilio registrado.
 							</label>
 							<div class="invalid-feedback">
 								Debes aceptar el envío de notificaciones para continuar.

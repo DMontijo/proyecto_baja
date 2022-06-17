@@ -20,7 +20,7 @@
 									<th>FECHA</th>
 									<th>DELITO</th>
 									<th>ESTADO</th>
-									<th></th>
+									<!-- <th></th> -->
 								</tr>
 							</thead>
 							<tbody>
@@ -30,7 +30,7 @@
 										<td><?= $folio->FECHAREGISTRO ?></td>
 										<td><?= $folio->DELITODENUNCIA ?></td>
 										<td><?= $folio->STATUS ?></td>
-										<td><button type="button" class="btn btn-primary"><i class="fas fa-eye"></i></button></td>
+										<!-- <td><button type="button" class="btn btn-primary"><i class="fas fa-eye"></i></button></td> -->
 									</tr>
 								<?php } ?>
 							</tbody>

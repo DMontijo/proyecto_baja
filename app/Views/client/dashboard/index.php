@@ -18,10 +18,10 @@
 							<li>Secuestro</li>
 							<li>Tortura</li>
 							<li>Trata de personas</li>
-							<li>Abuso de autoridad en contra del personal adacrito</li>
+							<li>Delitos cometidos por personal adscrito a la Físcalia General del Estado de Baja California</li>
 							<li>Homicidio en todas sus modalidades</li>
 							<li>Delitos contra la salud modalidad narcomenudeo</li>
-							<li>Abuso sexual cuando la victima sea menor de edad</li>
+							<li>Abuso sexual cuando la víctima sea menor de edad</li>
 							<li>Tráfico de menores</li>
 						</ul>
 					</div>

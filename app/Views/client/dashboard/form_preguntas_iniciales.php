@@ -1,6 +1,6 @@
 <div class="row">
 	<div class="col-12 mb-3">
-		<label for="es_menor" class="form-label fw-bold input-required">¿La victima u ofendido del delito es menor de edad?</label>
+		<label for="es_menor" class="form-label fw-bold input-required">¿La víctima u ofendido del delito es menor de edad?</label>
 		<br>
 		<div class="form-check form-check-inline">
 			<input class="form-check-input" type="radio" name="es_menor" value="SI" required>
@@ -24,7 +24,7 @@
 		</div>
 	</div>
 	<div class="col-12 mb-3 d-none" id="es_mayor">
-		<label for="es_tercera_edad" class="form-label fw-bold input-required">¿La victima u ofendido es de la tercera edad?</label>
+		<label for="es_tercera_edad" class="form-label fw-bold input-required">¿La víctima u ofendido es de la tercera edad?</label>
 		<br>
 		<div class="form-check form-check-inline">
 			<input class="form-check-input" type="radio" name="es_tercera_edad" value="SI" required>
@@ -36,7 +36,7 @@
 		</div>
 	</div>
 	<div class="col-12 mb-3">
-		<label for="tiene_discapacidad" class="form-label fw-bold input-required">¿La victima u ofendido del delito tiene alguna discapacidad?</label>
+		<label for="tiene_discapacidad" class="form-label fw-bold input-required">¿La víctima u ofendido del delito tiene alguna discapacidad?</label>
 		<br>
 		<div class="form-check form-check-inline">
 			<input class="form-check-input" type="radio" name="tiene_discapacidad" value="SI" required>
@@ -48,7 +48,7 @@
 		</div>
 	</div>
 	<div class="col-12 mb-3">
-		<label for="fue_con_arma" class="form-label fw-bold input-required">¿El delito a denuncias fue cometido con arma de fuego, arma blanca u objeto contundente?</label>
+		<label for="fue_con_arma" class="form-label fw-bold input-required">¿El delito a denunciar fue cometido con arma de fuego, arma blanca u objeto contundente?</label>
 		<br>
 		<div class="form-check form-check-inline">
 			<input class="form-check-input" type="radio" name="fue_con_arma" value="SI" required>
@@ -84,7 +84,7 @@
 		</div>
 	</div>
 	<div class="col-12 mb-3">
-		<label for="esta_desaparecido" class="form-label fw-bold input-required">¿La victima u ofendido se encuentra desaparecido?</label>
+		<label for="esta_desaparecido" class="form-label fw-bold input-required">¿La víctima u ofendido se encuentra desaparecido?</label>
 		<br>
 		<div class="form-check form-check-inline">
 			<input class="form-check-input" type="radio" name="esta_desaparecido" value="SI" required>

@@ -21,10 +21,10 @@
 							<li>Secuestro</li>
 							<li>Tortura</li>
 							<li>Trata de personas</li>
-							<li>Abuso de autoridad en contra del personal adacrito</li>
+							<li>Delitos cometidos por personal adscrito a la Físcalia General del Estado de Baja California</li>
 							<li>Homicidio en todas sus modalidades</li>
 							<li>Delitos contra la salud modalidad narcomenudeo</li>
-							<li>Abuso sexual cuando la victima sea menor de edad</li>
+							<li>Abuso sexual cuando la víctima sea menor de edad</li>
 							<li>Tráfico de menores</li>
 						</ul>
 					</div>
@@ -40,7 +40,7 @@
 				<div class="card-body">
 					<div class="row">
 						<div class="col-10">
-							<p>Para realizar una video denuncia ó solicitar constancia de extravío es necesario que aceptes los <a href="<?= base_url() ?>/assets/documentos/Terminos_Y_Condiciones.pdf" target="_blank" class="text-yellow">términos y condiciones</a> y <a href="<?= base_url() ?>/assets/documentos/Aviso_De_Privacidad_De_Datos.pdf" target="_blank" class="text-yellow">aviso de privacidad de datos</a>.
+							<p>Para realizar una video denuncia ó solicitar constancia de extravío es importante que aceptes los <a href="<?= base_url() ?>/assets/documentos/Terminos_Y_Condiciones.pdf" target="_blank" class="text-yellow">términos y condiciones</a> y <a href="<?= base_url() ?>/assets/documentos/Aviso_De_Privacidad_De_Datos.pdf" target="_blank" class="text-yellow">aviso de privacidad de datos</a>.
 								<br>Puedes consultar el aviso de privacidad <a href="<?= base_url() ?>/assets/documentos/Aviso_De_Privacidad_De_Datos.pdf" target="_blank" class="text-yellow">aquí</a>. Puedes consultar los términos y condiciones <a href="<?= base_url() ?>/assets/documentos/Terminos_Y_Condiciones.pdf" target="_blank" class="text-yellow">aquí</a>
 							</p>
 						</div>

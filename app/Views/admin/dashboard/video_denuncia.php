@@ -12,7 +12,7 @@
 					<div class="col-12">
 						<div class="form-group mb-1">
 							<div class="input-group mb-1">
-								<input type="text" class="form-control" id="input_folio_atencion" placeholder="Folio de atención..." value="402002202200001">
+								<input type="text" class="form-control" id="input_folio_atencion" placeholder="Folio de atención..." value="">
 							</div>
 						</div>
 					</div>
@@ -50,7 +50,7 @@
 <div class="row">
 	<div class="col">
 		<div class="bg-white embed-responsive embed-responsive-1by1 shadow rounded">
-			<iframe src="https://videodenunciaserver1.fgebc.gob.mx/pde?u=33&token=7b2a0523176a9dd9f28b694b44de4d5a4edcff31" frameborder="0" allow="camera *;microphone *"></iframe>
+			<iframe src="https://videodenunciaserver1.fgebc.gob.mx/pde?u=33&token=7b2a0523176a9dd9f28b694b44de4d5a4edcff31" frameborder="0" allow="camera *;microphone *" style="margin-top:-100px;"></iframe>
 		</div>
 	</div>
 	<div id="card5" class="col-3 d-none">
