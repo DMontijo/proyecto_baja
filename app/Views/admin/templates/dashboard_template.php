@@ -61,12 +61,19 @@
 			<button class="c-header-toggler c-class-toggler mfs-3 d-md-down-none" type="button" data-target="#sidebar" data-class="c-sidebar-lg-show" responsive="true">
 				<i class="fas fa-bars"></i>
 			</button>
-			<button class="c-header-toggler c-class-toggler mfs-3 d-sm-down-none" type="button" data-target="#sidebar" data-class="c-sidebar-lg-show" responsive="true">
+			<button class="c-header-toggler c-class-toggler mfs-3 d-sm-down-none font-weight-bold" type="button" data-target="#sidebar" data-class="c-sidebar-lg-show" responsive="true">
 				<?php $session = session(); ?>
 				BIENVENIDO <?= $session->NOMBRE ?> <?= $session->APELLIDO_PATERNO ?> <?= $session->APELLIDO_MATERNO ?>
 			</button>
 			<ul class="c-header-nav ml-auto mr-2">
 				<li class="c-header-nav-item dropdown">
+					<a class="c-header-nav-link" href="<?= base_url('admin/logout') ?>">
+						<div class="c-avatar font-weight-bold">
+							<i class="fas fa-sign-out-alt mr-2"></i> Salir
+						</div>
+					</a>
+				</li>
+				<!-- <li class="c-header-nav-item dropdown">
 					<a class="c-header-nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
 						<div class="c-avatar">
 							<i class="fas fa-cogs"></i>
@@ -83,7 +90,7 @@
 							<i class="fas fa-sign-out-alt mr-2"></i> Salir
 						</a>
 					</div>
-				</li>
+				</li> -->
 			</ul>
 		</header>
 		<div class="c-body">

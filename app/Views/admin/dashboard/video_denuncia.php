@@ -39,7 +39,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="card4" class="col-3 d-none">
+	<div id="card4" class="col-3">
 		<div class="card rounded bg-white shadow" style="height: 190px;">
 			<div class="card-body">
 				<button id="salida-folio-btn" class="btn btn-primary btn-block h-100" role="button" data-toggle="modal" data-target="#salida_modal"><i class="fas fa-sign-out-alt"></i> DAR SALIDA</button>
@@ -63,7 +63,7 @@
 			</div>
 		<?php } ?>
 	</div>
-	<div id="card5" class="col-3 d-none">
+	<div id="card5" class="col-3">
 		<div class="card rounded bg-white shadow">
 			<div class="card-body">
 				<div class="row">
@@ -77,7 +77,7 @@
 		<div class="card rounded bg-white shadow">
 			<div class="card-body">
 				<label class="font-weight-bold" for="notas">Breve descripción del caso:</label>
-				<textarea class="form-control" id="notas_mp" placeholder="Descripción del caso..." rows="10" required></textarea>
+				<textarea class="form-control" id="notas_mp" placeholder="Descripción del caso..." rows="10" required maxlength="300"></textarea>
 			</div>
 		</div>
 	</div>

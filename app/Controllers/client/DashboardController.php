@@ -20,6 +20,9 @@ use App\Models\VehiculoTipoModel;
 use App\Models\PaisesModel;
 use App\Models\DelitosUsuariosModel;
 use App\Models\PersonaIdiomaModel;
+use App\Models\VehiculoDistribuidorModel;
+use App\Models\VehiculoVersionModel;
+use App\Models\VehiculoServicioModel;
 
 use App\Models\FolioPreguntasModel;
 use App\Models\FolioCorrelativoModel;
@@ -46,13 +49,14 @@ class DashboardController extends BaseController
 		$this->_localidadesModel = new LocalidadesModel();
 		$this->_coloniasModel = new ColoniasModel();
 		$this->_datosdeldelitoModel = new FolioDenunciaModel();
-		$this->_datosdeladultoModel = new Datos_adultoModel();
 		$this->_hechoLugarModel = new HechoLugarModel();
-		$this->_foliosAtencionModel = new FoliosAtencionModel();
 		$this->_coloresVehiculoModel = new VehiculoColorModel();
 		$this->_marcaVehiculoModel = new VehiculoMarcaModel();
 		$this->_lineaVehiculoModel = new VehiculoModeloModel();
 		$this->_tipoVehiculoModel = new VehiculoTipoModel();
+		$this->_distribuidorVehiculoModel = new VehiculoDistribuidorModel();
+		$this->_versionVehiculoModel = new VehiculoVersionModel();
+		$this->_servicioVehiculoModel = new VehiculoServicioModel();
 		$this->_delitosUsuariosModel = new DelitosUsuariosModel();
 		$this->_denunciantesModel = new DenunciantesModel();
 		$this->_personaIdiomaModel = new PersonaIdiomaModel();
@@ -84,6 +88,9 @@ class DashboardController extends BaseController
 		$data->colorVehiculo = $this->_coloresVehiculoModel->asObject()->findAll();
 		$data->marcaVehiculo = $this->_marcaVehiculoModel->asObject()->orderBy('VEHICULOMARCADESCR', 'ASC')->findAll();
 		$data->lineaVehiculo = $this->_lineaVehiculoModel->asObject()->orderBy('VEHICULOMODELODESCR', 'ASC')->findAll();
+		$data->distribuidorVehiculo = $this->_distribuidorVehiculoModel->asObject()->orderBy('VEHICULODISTRIBUIDORDESCR', 'ASC')->findAll();
+		$data->versionVehiculo = $this->_versionVehiculoModel->asObject()->orderBy('VEHICULOVERSIONDESCR', 'ASC')->findAll();
+		$data->servicioVehiculo = $this->_servicioVehiculoModel->asObject()->orderBy('VEHICULOSERVICIODESCR', 'ASC')->findAll();
 		$data->tipoVehiculo = $this->_tipoVehiculoModel->asObject()->orderBy('VEHICULOTIPODESCR', 'ASC')->findAll();
 		$data->delitosUsuarios = $this->_delitosUsuariosModel->asObject()->orderBy('DELITO', 'ASC')->findAll();
 		$this->_loadView('Dashboard', 'dashboard', '', $data, 'index');
@@ -146,141 +153,34 @@ class DashboardController extends BaseController
 			'TIPOEXPEDIENTEID' => 4,
 			'DELITODENUNCIA' => $this->request->getPost('delito')
 		];
+		$this->_folio($dataFolio, $FOLIOID);
 
 		$dataPreguntas = array(
 			'ES_MENOR' => $this->request->getPost('es_menor'),
-			'ERES_TU' => $this->request->getPost('eres_tu'),
 			'ES_TERCERA_EDAD' => $this->request->getPost('es_tercera_edad'),
+			'ES_OFENDIDO' => $this->request->getPost('es_ofendido'),
 			'TIENE_DISCAPACIDAD' => $this->request->getPost('tiene_discapacidad'),
 			'FUE_CON_ARMA' => $this->request->getPost('fue_con_arma'),
-			'ESTA_DESAPARECIDO' => $this->request->getPost('esta_desaparecido'),
 			'LESIONES' => $this->request->getPost('lesiones'),
 			'LESIONES_VISIBLES' => $this->request->getPost('lesiones_visibles'),
+			'ESTA_DESAPARECIDO' => $this->request->getPost('esta_desaparecido'),
 		);
-
-		$dataImputado = array(
-			'NOMBRE' => $this->request->getPost('nombre_imputado'),
-			'PRIMERAPELLIDO' => $this->request->getPost('primer_apellido_imputado'),
-			'SEGUNDOAPELLIDO' => $this->request->getPost('segundo_apellido_imputado'),
-			'APODO' => $this->request->getPost('alias_imputado'),
-			'MUNICIPIOORIGENID' => $this->request->getPost('municipio_imputado'),
-			'TELEFONO' => $this->request->getPost('tel_imputado'),
-			'FECHA_NACIMIENTO' => $this->request->getPost('fecha_nac_imputado'),
-			'SEXO' => $this->request->getPost('sexo_imputado'),
-			'ESCOLARIDAD' => $this->request->getPost('escolaridad_imputado'),
-			'DESCRIPCION_FISICA' => $this->request->getPost('description_fisica_imputado'),
-		);
-
-		$dataImputadoDomicilio = array(
-			'CALLE' => $this->request->getPost('calle_imputado'),
-			'NO_EXT' => $this->request->getPost('numero_ext_imputado'),
-			'NO_INT' => $this->request->getPost('numero_int_imputado'),
-		);
-
-		$this->_folio($dataFolio, $FOLIOID);
 		$this->_folioPreguntasIniciales($dataPreguntas, $FOLIOID);
-		$imputadoId = $this->_folioPersonaFisica($dataImputado, $FOLIOID, 2);
-		$this->_folioPersonaFisicaDomicilio($dataImputadoDomicilio, $FOLIOID, $imputadoId);
 
-		$session = session();
-		$denunciante = $this->_denunciantesModel->asObject()->where('ID_DENUNCIANTE', $session->get('ID_DENUNCIANTE'))->first();
-
-		$dataOfendido = array(
-			'NOMBRE' => $denunciante->NOMBRE,
-			'PRIMERAPELLIDO' => $denunciante->APELLIDO_PATERNO,
-			'SEGUNDOAPELLIDO' => $denunciante->APELLIDO_MATERNO,
-			'FECHANACIMIENTO' => $denunciante->FECHA_DE_NACIMIENTO,
-			'EDAD' => $denunciante->EDAD,
-			'EDADCANTIDAD' => $denunciante->EDAD,
-			'SEXO' => $denunciante->SEXO,
-			'TELEFONO' => $denunciante->TELEFONO,
-			'TELEFONO2' => $denunciante->TELEFONO2,
-			'CODIGOPAISTEL' => $denunciante->CODIGO_PAIS,
-			'CODIGOPAISTEL2' => $denunciante->CODIGO_PAIS2,
-			'CORREO' => $denunciante->CORREO,
-			'TIPOIDENTIFICACIONID' => $denunciante->TIPO_DE_IDENTIFICACION,
-			'NUMEROIDENTIFICACION' => $denunciante->NUMERO_DE_IDENTIFICACION,
-			'NACIONALIDADID' => $denunciante->NACIONALIDAD_ID,
-			'PERSONAIDIOMAID' => $denunciante->IDIOMAID,
-			'ESCOLARIDAD' => $denunciante->ESCOLARIDAD,
-			'ESTADOCIVILID' => $denunciante->ESTADO_CIVIL,
-			'ESTADOORIGENID' => $denunciante->ESTADOID,
-			'MUNICIPIOORIGENID' => $denunciante->MUNICIPIOID,
-		);
-
-		$dataOfendidoDomicilio = array(
-			'PAIS' => $denunciante->CODIGO_PAIS,
-			'ESTADOID' => $denunciante->ESTADOID,
-			'MUNICIPIOID' => $denunciante->MUNICIPIOID,
-			'LOCALIDADID' => $denunciante->LOCALIDADID,
-			'COLONIAID' => $denunciante->COLONIAID,
-			'COLONIADESCR' => $denunciante->COLONIA,
-			'CALLE' => $denunciante->CALLE,
-			'NUMEROCASA' => $denunciante->NUM_EXT,
-			'NUMEROINTERIOR' => $denunciante->NUM_INT,
-			'CP' => $denunciante->CODIGO_POSTAL,
-		);
-
-		$menor = $this->_folioPersonaFisica($dataOfendido, $FOLIOID, 1);
-		$this->_folioPersonaFisicaDomicilio($dataOfendidoDomicilio, $FOLIOID, $menor);
-
-		if ($this->request->getPost('eres_tu') == "SI") {
-			$dataAdulto = array(
-				//DATOS ADULTO
-				'NOMBRE' => $this->request->getPost('nombre_adulto'),
-				'PRIMERAPELLIDO' => $this->request->getPost('ape_paterno_adulto'),
-				'SEGUNDOAPELLIDO' => $this->request->getPost('ape_materno_adulto'),
-				'FECHA_NACIMIENTO' => $this->request->getPost('fecha_nac_adulto'),
-				'EDAD' => $this->request->getPost('edad_adulto'),
-				'EDADCANTIDAD' => $this->request->getPost('edad_adulto'),
-				'SEXO' => $this->request->getPost('sexo_adulto')
-			);
-
-			$dataAdultoDomicilio = array(
-				'PAIS' => $this->request->getPost('pais_adulto'),
-				'ESTADOID' => $this->request->getPost('estado_adulto'),
-				'MUNICIPIOID' => $this->request->getPost('municipio_adulto'),
-				'CALLE' => $this->request->getPost('calle_adulto'),
-				'NUMEROCASA' => $this->request->getPost('numero_ext_adulto'),
-				'NUMEROINTERIOR' => $this->request->getPost('numero_int_adulto'),
-				'CP' => $this->request->getPost('cp_adulto'),
-			);
-
-			$adulto = $this->_folioPersonaFisica($dataAdulto, $FOLIOID, 4);
-			$this->_folioPersonaFisicaDomicilio($dataAdultoDomicilio, $FOLIOID, $adulto);
+		foreach ($dataFolio as $key => $value) {
+			var_dump($key, $value);
+			echo '<br>';
+		}
+		echo '<br>';
+		echo '<br>';
+		foreach ($dataPreguntas as $key => $value) {
+			var_dump($key, $value);
+			echo '<br>';
 		}
 
-		if ($this->request->getPost('es_menor') === "SI" && $this->request->getPost('eres_tu') === "NO") {
-
-			$dataMenor = array(
-				'NOMBRE' => $this->request->getPost('nombre_menor'),
-				'PRIMERAPELLIDO' => $this->request->getPost('apellido_paterno_menor'),
-				'SEGUNDOAPELLIDO' => $this->request->getPost('apellido_materno_menor'),
-				'FECHA_NACIMIENTO' => $this->request->getPost('fecha_nacimiento_menor'),
-				'EDAD' => $this->request->getPost('edad_menor'),
-				'EDADCANTIDAD' => $this->request->getPost('edad_menor'),
-				'SEXO' => $this->request->getPost('sexo_menor')
-			);
-
-			$dataMenorDomicilio = array(
-				'PAIS' => $this->request->getPost('pais_menor'),
-				'ESTADOID' => $this->request->getPost('estado_menor'),
-				'MUNICIPIOID' => $this->request->getPost('municipio_menor'),
-				'COLONIAID' => $this->request->getPost('colonia_menor_select'),
-				'COLONIADESCR' => $this->request->getPost('colonia_menor'),
-				'CALLE' => $this->request->getPost('calle_menor'),
-				'NUMEROCASA' => $this->request->getPost('numero_ext_menor'),
-				'NUMEROINTERIOR' => $this->request->getPost('numero_int_menor'),
-				'CP' => $this->request->getPost('cp_menor'),
-			);
-
-			$menor = $this->_folioPersonaFisica($dataMenor, $FOLIOID, 6);
-			$this->_folioPersonaFisicaDomicilio($dataMenorDomicilio, $FOLIOID, $menor);
-		}
-
+		//DATOS DESAPARECIDO
 		if ($this->request->getPost('esta_desaparecido')  == "SI") {
 			$dataDesaparecido = array(
-				// PERSONA DESAPARECIDA
 				'NOMBRE' => $this->request->getPost('nombre_des'),
 				'PRIMERAPELLIDO' => $this->request->getPost('apellido_paterno_des'),
 				'SEGUNDOAPELLIDO' => $this->request->getPost('apellido_materno_des'),
@@ -307,43 +207,165 @@ class DashboardController extends BaseController
 				'VESTIMENTA' => $this->request->getPost('vestimenta_des'),
 				'PARENTESCO' => $this->request->getPost('parentesco_des'),
 				'FOTO' => $this->request->getPost('foto_des'),
-				'AUTORIZA_FOTO' => $this->request->getPost('autorization_photo_des'),
+				'AUTORIZA_FOTO' => $this->request->getPost('autorization_photo_des') == 'on' ? 'S' : 'N',
 				'DESAPARECIDA' => 'S',
 			);
-			// var_dump($dataPreguntas);
-			// echo '<br><br><br>';
-			// var_dump($dataDesaparecido);
-			// echo '<br><br><br>';
-			// var_dump($dataMenor);
-			// echo '<br><br><br>';
+			echo '<br>';
+			echo '<br>';
+			foreach ($dataDesaparecido as $key => $value) {
+				var_dump($key, $value);
+				echo '<br>';
+			}
 			$desaparecido = $this->_folioPersonaFisica($dataDesaparecido, $FOLIOID, 1);
 			$this->_folioPersonaFisicaDesaparecida($dataDesaparecido, $FOLIOID, $desaparecido);
 		}
 
-		if ($this->request->getPost('delito') == "ROBO DE VEHÍCULO" || $this->request->getPost('delito') == "ROBO DE VEHÍCULO CON VIOLENCIA") {
-			$dataVehiculo = array(
-				'TIPOPLACA' => $this->request->getPost('tipo_placas_vehiculo'),
-				'PLACAS' => $this->request->getPost('placas_vehiculo'),
-				'ESTADOIDPLACA' => $this->request->getPost('estado_vehiculo'),
-				'NUMEROSERIE' => $this->request->getPost('serie_vehiculo'),
-				'VEHICULODISTRIBUIDORID' => $this->request->getPost('distribuidor_vehiculo'),
-				'MARCAID' => $this->request->getPost('marca'),
-				'LINEA' => $this->request->getPost('linea_vehiculo'),
-				'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo'),
-				'TIPO_VEHICULO' => $this->request->getPost('tipo_vehiculo'),
-				'VEHICULOSERVICIOID' => $this->request->getPost('servicio_vehiculo'),
-				'MODELO' => $this->request->getPost('modelo_vehiculo'),
-				'SEGUROVIGENTE' => $this->request->getPost('seguro_vigente_vehiculo'),
-				'PRIMERCOLORID' => $this->request->getPost('color_vehiculo'),
-				'SEGUNDOCOLORID' => $this->request->getPost('color_tapiceria_vehiculo'),
-				'NUMEROCHASIS' => $this->request->getPost('num_chasis_vehiculo'),
-				'TRANSMISION' => $this->request->getPost('transmision_vehiculo'),
-				'TRACCION' => $this->request->getPost('traccion_vehiculo'),
-				'FOTO_VEHICULO' => $this->request->getPost('foto_vehiculo'),
-				'SENASPARTICULARES' => $this->request->getPost('description_vehiculo'),
+
+		//DATOS DEL MENOR DE EDAD
+		if ($this->request->getPost('es_menor') === "SI" && $this->request->getPost('esta_desaparecido') === "NO") {
+
+			$dataMenor = array(
+				'NOMBRE' => $this->request->getPost('nombre_menor'),
+				'PRIMERAPELLIDO' => $this->request->getPost('apellido_paterno_menor'),
+				'SEGUNDOAPELLIDO' => $this->request->getPost('apellido_materno_menor'),
+				'FECHA_NACIMIENTO' => $this->request->getPost('fecha_nacimiento_menor'),
+				'EDAD' => $this->request->getPost('edad_menor'),
+				'EDADCANTIDAD' => $this->request->getPost('edad_menor'),
+				'SEXO' => $this->request->getPost('sexo_menor')
 			);
-			// var_dump($dataVehiculo);
-			// echo '<br><br><br>';
+
+			$dataMenorDomicilio = array(
+				'PAIS' => $this->request->getPost('pais_menor'),
+				'ESTADOID' => $this->request->getPost('estado_menor'),
+				'MUNICIPIOID' => $this->request->getPost('municipio_menor'),
+				'COLONIAID' => $this->request->getPost('colonia_menor_select'),
+				'COLONIADESCR' => $this->request->getPost('colonia_menor'),
+				'CALLE' => $this->request->getPost('calle_menor'),
+				'NUMEROCASA' => $this->request->getPost('numero_ext_menor'),
+				'NUMEROINTERIOR' => $this->request->getPost('numero_int_menor'),
+				'CP' => $this->request->getPost('cp_menor'),
+			);
+
+			echo '<br>';
+			echo '<br>';
+			foreach ($dataMenor as $key => $value) {
+				var_dump($key, $value);
+				echo '<br>';
+			}
+			foreach ($dataMenorDomicilio as $key => $value) {
+				var_dump($key, $value);
+				echo '<br>';
+			}
+
+			$menor = $this->_folioPersonaFisica($dataMenor, $FOLIOID, 1);
+			$this->_folioPersonaFisicaDomicilio($dataMenorDomicilio, $FOLIOID, $menor);
+		}
+
+		//DATOS DEL DENUNCIANTE
+		$denunciante = $this->_denunciantesModel->asObject()->where('ID_DENUNCIANTE', $session->get('ID_DENUNCIANTE'))->first();
+
+		$dataDenunciante = array(
+			'NOMBRE' => $denunciante->NOMBRE,
+			'PRIMERAPELLIDO' => $denunciante->APELLIDO_PATERNO,
+			'SEGUNDOAPELLIDO' => $denunciante->APELLIDO_MATERNO,
+			'FECHANACIMIENTO' => $denunciante->FECHA_DE_NACIMIENTO,
+			'EDAD' => $denunciante->EDAD,
+			'EDADCANTIDAD' => $denunciante->EDAD,
+			'SEXO' => $denunciante->SEXO,
+			'TELEFONO' => $denunciante->TELEFONO,
+			'TELEFONO2' => $denunciante->TELEFONO2,
+			'CODIGOPAISTEL' => $denunciante->CODIGO_PAIS,
+			'CODIGOPAISTEL2' => $denunciante->CODIGO_PAIS2,
+			'CORREO' => $denunciante->CORREO,
+			'TIPOIDENTIFICACIONID' => $denunciante->TIPO_DE_IDENTIFICACION,
+			'NUMEROIDENTIFICACION' => $denunciante->NUMERO_DE_IDENTIFICACION,
+			'NACIONALIDADID' => $denunciante->NACIONALIDAD_ID,
+			'PERSONAIDIOMAID' => $denunciante->IDIOMAID,
+			'ESCOLARIDAD' => $denunciante->ESCOLARIDAD,
+			'ESTADOCIVILID' => $denunciante->ESTADO_CIVIL,
+			'ESTADOORIGENID' => $denunciante->ESTADOID,
+			'MUNICIPIOORIGENID' => $denunciante->MUNICIPIOID,
+			'FOTO' => $denunciante->DOCUMENTO,
+			'DENUNCIANTE' => 'S', 1
+		);
+
+		$dataDenuncianteDomicilio = array(
+			'PAIS' => $denunciante->CODIGO_PAIS,
+			'ESTADOID' => $denunciante->ESTADOID,
+			'MUNICIPIOID' => $denunciante->MUNICIPIOID,
+			'LOCALIDADID' => $denunciante->LOCALIDADID,
+			'COLONIAID' => $denunciante->COLONIAID,
+			'COLONIADESCR' => $denunciante->COLONIA,
+			'CALLE' => $denunciante->CALLE,
+			'NUMEROCASA' => $denunciante->NUM_EXT,
+			'NUMEROINTERIOR' => $denunciante->NUM_INT,
+			'CP' => $denunciante->CODIGO_POSTAL,
+		);
+		echo '<br>';
+		echo '<br>';
+		foreach ($dataDenunciante as $key => $value) {
+			var_dump($key, $value);
+			echo '<br>';
+		}
+		foreach ($dataDenuncianteDomicilio as $key => $value) {
+			var_dump($key, $value);
+			echo '<br>';
+		}
+		$denuncianteCalidad = $this->request->getPost('es_menor') == "SI" || $this->request->getPost('esta_desaparecido') == "SI" || $this->request->getPost('es_ofendido') === "NO" ? 3 : 1;
+		$denuncinateIdPersona = $this->_folioPersonaFisica($dataDenunciante, $FOLIOID, $denuncianteCalidad);
+		$this->_folioPersonaFisicaDomicilio($dataDenuncianteDomicilio, $FOLIOID, $denuncinateIdPersona);
+
+		//DATOS DEL POSIBLE RESPONSABLE
+		if (!empty($this->request->getPost('responsable')) && $this->request->getPost('responsable') == 'SI') {
+			$dataImputado = array(
+				'NOMBRE' => $this->request->getPost('nombre_imputado'),
+				'PRIMERAPELLIDO' => $this->request->getPost('primer_apellido_imputado'),
+				'SEGUNDOAPELLIDO' => $this->request->getPost('segundo_apellido_imputado'),
+				'APODO' => $this->request->getPost('alias_imputado'),
+				'MUNICIPIOORIGENID' => $this->request->getPost('municipio_imputado'),
+				'TELEFONO' => $this->request->getPost('tel_imputado'),
+				'FECHA_NACIMIENTO' => $this->request->getPost('fecha_nac_imputado'),
+				'SEXO' => $this->request->getPost('sexo_imputado'),
+				'ESCOLARIDAD' => $this->request->getPost('escolaridad_imputado'),
+				'DESCRIPCION_FISICA' => $this->request->getPost('description_fisica_imputado'),
+			);
+
+			$dataImputadoDomicilio = array(
+				'CALLE' => $this->request->getPost('calle_imputado'),
+				'NO_EXT' => $this->request->getPost('numero_ext_imputado'),
+				'NO_INT' => $this->request->getPost('numero_int_imputado'),
+			);
+
+			$imputadoId = $this->_folioPersonaFisica($dataImputado, $FOLIOID, 2);
+			$this->_folioPersonaFisicaDomicilio($dataImputadoDomicilio, $FOLIOID, $imputadoId);
+
+			echo '<br>';
+			echo '<br>';
+			foreach ($dataImputado as $key => $value) {
+				var_dump($key, $value);
+				echo '<br>';
+			}
+			foreach ($dataImputadoDomicilio as $key => $value) {
+				var_dump($key, $value);
+				echo '<br>';
+			}
+		}
+
+		if ($this->request->getPost('delito') == "ROBO DE VEHÍCULO") {
+			$dataVehiculo = array(
+				'TIPO_VEHICULO' => $this->request->getPost('tipo_vehiculo'),
+				'PRIMERCOLORID' => $this->request->getPost('color_vehiculo'),
+				'SENASPARTICULARES' => $this->request->getPost('description_vehiculo'),
+				'FOTO' => $this->request->getPost('foto_vehiculo'),
+				'DOCUMENTO' => $this->request->getPost('foto_vehiculo'),
+			);
+
+			echo '<br>';
+			echo '<br>';
+			foreach ($dataVehiculo as $key => $value) {
+				var_dump($key, $value);
+				echo '<br>';
+			}
 			$this->_folioVehiculo($dataVehiculo, $FOLIOID);
 		}
 
@@ -425,13 +447,13 @@ class DashboardController extends BaseController
 		$datos = [
 			'FOLIOID' => $folio,
 			'ES_MENOR' => $data->ES_MENOR,
-			'ERES_TU' => $data->ERES_TU,
 			'ES_TERCERA_EDAD' => $data->ES_TERCERA_EDAD,
+			'ES_OFENDIDO' => $data->ES_OFENDIDO,
 			'TIENE_DISCAPACIDAD' => $data->TIENE_DISCAPACIDAD,
 			'FUE_CON_ARMA' => $data->FUE_CON_ARMA,
-			'ESTA_DESAPARECIDO' => $data->ESTA_DESAPARECIDO,
 			'LESIONES' => $data->LESIONES,
 			'LESIONES_VISIBLES' => $data->LESIONES_VISIBLES,
+			'ESTA_DESAPARECIDO' => $data->ESTA_DESAPARECIDO,
 		];
 		$this->_folioPreguntasModel->insert($datos);
 	}
@@ -497,110 +519,6 @@ class DashboardController extends BaseController
 			$data['VEHICULOID'] = 1;
 			$this->_folioVehiculoModel->insert($data);
 		}
-	}
-
-	private function _folioPersonaFisicaImputadoDelito($data, $folio)
-	{
-		$data = [
-			'FOLIOID' => $folio,
-			'PERSONAFISICAID' => $data->PERSONAFISICAID,
-			'DELITOMODALIDADID' => $data->DELITOMODALIDADID,
-			'DELITOCARACTERISTICAID' => $data->DELITOCARACTERISTICAID,
-			'TENTATIVA' => $data->TENTATIVA,
-		];
-	}
-
-	private function _folioPersonaFisicaImputado($data, $folio)
-	{
-		$data = [
-			'FOLIOID' => $folio,
-			'PERSONAFISICAID' => $data->PERSONAFISICAID,
-			'DETENIDO' => $data->DETENIDO,
-			'ESTADOJURIDICOIMPUTADOID' => $data->ESTADOJURIDICOIMPUTADOID,
-			'ETAPAIMPUTADOID' => $data->ETAPAIMPUTADOID,
-			'INDIVIDUALIZADO' => $data->INDIVIDUALIZADO,
-		];
-	}
-
-	private function _folioRelacionFisicaFisica($data, $folio)
-	{
-		$data = [
-			'FOLIOID' => $folio,
-			'PERSONAFISICAIDVICTIMA' => $data->PERSONAFISICAIDVICTIMA,
-			'DELITOMODALIDADID' => $data->DELITOMODALIDADID,
-			'PERSONAFISICAIDIMPUTADO' => $data->PERSONAFISICAIDIMPUTADO,
-			'GRADOPARTICIPACIONID' => $data->GRADOPARTICIPACIONID,
-			'TENTATIVA' => $data->TENTATIVA,
-			'CONVIOLENCIA' => $data->CONVIOLENCIA,
-		];
-	}
-
-	private function _folioObjeto($data, $folio)
-	{
-		$data = [
-			'FOLIOID' => $folio,
-			'OBJETOID' => $data->OBJETOID,
-			'SITUACION' => $data->SITUACION,
-			'CLASIFICACIONID' => $data->CLASIFICACIONID,
-			'SUBCLASIFICACIONID' => $data->SUBCLASIFICACIONID,
-			'MARCA' => $data->MARCA,
-			'NUMEROSERIE' => $data->NUMEROSERIE,
-			'CANTIDAD' => $data->CANTIDAD,
-			'VALOR' => $data->VALOR,
-			'TIPOMONEDAID' => $data->TIPOMONEDAID,
-			'DESCRIPCION' => $data->DESCRIPCION,
-			'DESCRIPCIONDETALLADA' => $data->DESCRIPCIONDETALLADA,
-			'PERSONAFISICAIDPROPIETARIO' => $data->PERSONAFISICAIDPROPIETARIO,
-			'PERSONAMORALIDPROPIETARIO' => $data->PERSONAMORALIDPROPIETARIO,
-			'FOTO' => $data->FOTO,
-			'PARTICIPAESTADO' => $data->PARTICIPAESTADO,
-		];
-	}
-
-	private function _folioArchivosExterno($data, $folio)
-	{
-		$data = [
-			'FOLIOID' => $folio,
-			'FOLIOARCHIVOID' => $data->FOLIOARCHIVOID,
-			'ARCHIVODESCR' => $data->ARCHIVODESCR,
-			'CLASIFICACIONID' => $data->CLASIFICACIONID,
-			'ARCHIVO' => $data->ARCHIVO,
-			'EXTENSION' => $data->EXTENSION,
-			'FECHAACTUALIZACION' => $data->FECHAACTUALIZACION,
-			'AUTOR' => $data->AUTOR,
-			'OFICINAIDAUTOR' => $data->OFICINAIDAUTOR,
-			'CLASIFICACIONDOCTOID' => $data->CLASIFICACIONDOCTOID,
-			'ESTADOACCESO' => $data->ESTADOACCESO,
-			'PUBLICADO' => $data->PUBLICADO,
-			'RUTAALMACENAMIENTOID' => $data->RUTAALMACENAMIENTOID,
-			'STATUSALMACENID' => $data->STATUSALMACENID,
-			'EXPORTAR' => $data->EXPORTAR,
-		];
-	}
-
-	private function _folioDocumento($data, $folio)
-	{
-		$data = [
-			'FOLIOID' => $folio,
-			'FOLIODOCTOID' => $data->FOLIODOCTOID,
-			'DOCTODESCR' => $data->DOCTODESCR,
-			'DOCUMENTO' => $data->DOCUMENTO,
-			'FECHAIMPRESODEFINITIVA' => $data->FECHAIMPRESODEFINITIVA,
-			'CLASIFICACIONDOCTOID' => $data->CLASIFICACIONDOCTOID,
-			'AUTOR' => $data->AUTOR,
-			'OFICINAIDAUTOR' => $data->OFICINAIDAUTOR,
-			'STATUSDOCUMENTOID' => $data->STATUSDOCUMENTOID,
-			'PLANTILLAID' => $data->PLANTILLAID,
-			'CALIFICACION' => $data->CALIFICACION,
-			'ESTADOACCESO' => $data->ESTADOACCESO,
-			'EMPLEADORESPONSABLE' => $data->EMPLEADORESPONSABLE,
-			'EXPAREAIDRESPONSABLE' => $data->EXPAREAIDRESPONSABLE,
-			'EXPEMPIDRESPONSABLE' => $data->EXPEMPIDRESPONSABLE,
-			'PUBLICADO' => $data->PUBLICADO,
-			'RUTAALMACENAMIENTOID' => $data->RUTAALMACENAMIENTOID,
-			'STATUSALMACENID' => $data->STATUSALMACENID,
-			'EXPORTAR' => $data->EXPORTAR,
-		];
 	}
 
 	private function _sendEmailFolio($to, $folio)

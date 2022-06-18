@@ -4,14 +4,8 @@ namespace App\Controllers\admin;
 
 use App\Controllers\BaseController;
 
-use App\Models\FoliosAtencionModel;
 use App\Models\DenunciantesModel;
 use App\Models\FolioDenunciaModel;
-use App\Models\Datos_del_responsableModel;
-use App\Models\Datos_adultoModel;
-use App\Models\Datos_menorModel;
-use App\Models\Datos_desaparecidoModel;
-use App\Models\Datos_vehiculoModel;
 
 use App\Models\FolioPreguntasModel;
 use App\Models\FolioCorrelativoModel;
@@ -35,14 +29,8 @@ class FoliosController extends BaseController
 	function __construct()
 	{
 		//Models
-		$this->_foliosAtencionModel = new FoliosAtencionModel();
 		$this->_denunciantesModel = new DenunciantesModel();
 		$this->_datosDelitoModel = new FolioDenunciaModel();
-		$this->_datosResponsablesModel = new Datos_del_responsableModel();
-		$this->_datosAdultoModel = new Datos_adultoModel;
-		$this->_datosMenorModel = new Datos_menorModel;
-		$this->_datosDesaparecidoModel = new Datos_desaparecidoModel;
-		$this->_datosVehiculoModel = new Datos_vehiculoModel;
 
 		$this->_folioCorrelativoModel = new FolioCorrelativoModel();
 		$this->_folioModel = new FolioModel();

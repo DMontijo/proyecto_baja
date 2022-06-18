@@ -42,5 +42,6 @@ class RunAllSeeder extends Seeder
 		$this->call('PaisesSeeder');
 		$this->call('DelitosUsuariosSeeder');
 		$this->call('FileOriginalesSeeder');
+		$this->call('EmpleadosSeeder');
 	}
 }

@@ -39,12 +39,10 @@
 					<h1 class="text-center fw-bolder pb-1 text-blue">DENUNCIA</h1>
 					<p class="text-center fw-bold text-blue ">Llena los campos siguientes para continuar tu denuncia</p>
 					<p class="text-center pb-3">Los campos con un <span class="asterisco-rojo">*</span> son obligatorios</p>
-
 					<div class="progress mb-4">
 						<div id="progress-bar" aria-valuemax="100" aria-valuemin="0" aria-valuenow="50" class="progress-bar progress-bar-striped progress-bar-animated bg-yellow" role="progressbar"></div>
 					</div>
-
-					<form action="<?= base_url() ?>/denuncia/dashboard/create" method="post" class="row needs-validation" novalidate>
+					<form id="denuncia_form" action="<?= base_url() ?>/denuncia/dashboard/create" method="post" class="row needs-validation" novalidate>
 
 						<!-- PREGUNTAS INICIALES -->
 						<div id="datos_iniciales" class="col-12 step">
@@ -140,6 +138,11 @@
 					if (!form.checkValidity()) {
 						event.preventDefault();
 						event.stopPropagation();
+						submitBtn.removeAttribute('disabled');
+					} else {
+						event.preventDefault();
+						submitBtn.setAttribute('disabled', true);
+						document.querySelector('#denuncia_form').submit();
 					}
 					form.classList.add('was-validated')
 				}, false)
@@ -162,6 +165,14 @@
 		}, false)
 
 		document.querySelector('#señas_des').addEventListener('input', (event) => {
+			event.target.value = clearText(event.target.value).toUpperCase();
+		}, false)
+
+		document.querySelector('#descripcion_breve').addEventListener('input', (event) => {
+			event.target.value = clearText(event.target.value).toUpperCase();
+		}, false)
+
+		document.querySelector('#description_vehiculo').addEventListener('input', (event) => {
 			event.target.value = clearText(event.target.value).toUpperCase();
 		}, false)
 
@@ -193,27 +204,95 @@
 
 	chargeCurrentStep(currentStep);
 
-
 	nextBtn.addEventListener('click', () => {
 
 		var vista = document.querySelectorAll('.step');
 
 		if (validarStep(vista[currentStep].id)) {
 
-			if (document.querySelector('input[name="es_menor"]:checked').value === 'SI' &&
-				document.querySelector('input[name="esta_desaparecido"]:checked').value == "SI") {
-				document.getElementById('datos_desaparecido').classList.remove('step');
-				document.getElementById('datos_menor').classList.add('step');
-			} else if (document.querySelector('input[name="es_menor"]:checked').value === 'SI' &&
-				document.querySelector('input[name="esta_desaparecido"]:checked').value == "NO") {
+			if (
+				document.querySelector('input[name="es_menor"]:checked').value === 'SI' &&
+				document.querySelector('input[name="esta_desaparecido"]:checked').value == "SI"
+			) {
+
 				document.getElementById('datos_desaparecido').classList.add('step');
 				document.getElementById('datos_menor').classList.remove('step');
+				console.log('Datos desaparecido');
+
+				document.querySelector('#nombre_menor').removeAttribute('required');
+				document.querySelector('#apellido_paterno_menor').removeAttribute('required');
+				document.querySelector('#pais_menor').removeAttribute('required');
+				document.querySelector('#estado_menor').removeAttribute('required');
+				document.querySelector('#municipio_menor').removeAttribute('required');
+				document.querySelector('#colonia_menor').removeAttribute('required');
+				document.querySelector('#colonia_menor_input').removeAttribute('required');
+				document.querySelector('#calle_menor').removeAttribute('required');
+				document.querySelector('#numero_ext_menor').removeAttribute('required');
+				document.querySelector('#fecha_nacimiento_menor').removeAttribute('required');
+				document.querySelector('#edad_menor').removeAttribute('required');
+			} else if (
+				document.querySelector('input[name="es_menor"]:checked').value === 'SI' &&
+				document.querySelector('input[name="esta_desaparecido"]:checked').value == "NO"
+			) {
+
+				document.getElementById('datos_desaparecido').classList.remove('step');
+				document.getElementById('datos_menor').classList.add('step');
+
+				document.querySelector('#nombre_menor').setAttribute('required', true);
+				document.querySelector('#apellido_paterno_menor').setAttribute('required', true);
+				document.querySelector('#pais_menor').setAttribute('required', true);
+				document.querySelector('#estado_menor').setAttribute('required', true);
+				document.querySelector('#municipio_menor').setAttribute('required', true);
+				document.querySelector('#colonia_menor').setAttribute('required', true);
+				document.querySelector('#colonia_menor_input').setAttribute('required', true);
+				document.querySelector('#calle_menor').setAttribute('required', true);
+				document.querySelector('#numero_ext_menor').setAttribute('required', true);
+				document.querySelector('#fecha_nacimiento_menor').setAttribute('required', true);
+				document.querySelector('#edad_menor').setAttribute('required', true);
+
+			} else if (document.querySelector('input[name="es_menor"]:checked').value === 'NO') {
+				document.getElementById('datos_menor').classList.remove('step');
+				document.querySelector('#nombre_menor').removeAttribute('required');
+				document.querySelector('#apellido_paterno_menor').removeAttribute('required');
+				document.querySelector('#pais_menor').removeAttribute('required');
+				document.querySelector('#estado_menor').removeAttribute('required');
+				document.querySelector('#municipio_menor').removeAttribute('required');
+				document.querySelector('#colonia_menor').removeAttribute('required');
+				document.querySelector('#colonia_menor_input').removeAttribute('required');
+				document.querySelector('#calle_menor').removeAttribute('required');
+				document.querySelector('#numero_ext_menor').removeAttribute('required');
+				document.querySelector('#fecha_nacimiento_menor').removeAttribute('required');
+				document.querySelector('#edad_menor').removeAttribute('required');
 			}
 
 			if (document.querySelector('input[name="esta_desaparecido"]:checked').value === 'SI') {
-				document.getElementById('datos_desaparecido').classList.remove('step');
-			} else {
 				document.getElementById('datos_desaparecido').classList.add('step');
+
+				document.querySelector('#nombre_des').setAttribute('required', true);
+				document.querySelector('#apellido_paterno_des').setAttribute('required', true);
+				document.querySelector('#pais_des').setAttribute('required', true);
+				document.querySelector('#estado_des').setAttribute('required', true);
+				document.querySelector('#municipio_des').setAttribute('required', true);
+				document.querySelector('#colonia_des').setAttribute('required', true);
+				document.querySelector('#colonia_des_input').setAttribute('required', true);
+				document.querySelector('#calle_des').setAttribute('required', true);
+				document.querySelector('#numero_ext_des').setAttribute('required', true);
+				document.querySelector('#edad_des').setAttribute('required', true);
+
+			} else {
+				document.getElementById('datos_desaparecido').classList.remove('step');
+
+				document.querySelector('#nombre_des').removeAttribute('required');
+				document.querySelector('#apellido_paterno_des').removeAttribute('required');
+				document.querySelector('#pais_des').removeAttribute('required');
+				document.querySelector('#estado_des').removeAttribute('required');
+				document.querySelector('#municipio_des').removeAttribute('required');
+				document.querySelector('#colonia_des').removeAttribute('required');
+				document.querySelector('#colonia_des_input').removeAttribute('required');
+				document.querySelector('#calle_des').removeAttribute('required');
+				document.querySelector('#numero_ext_des').removeAttribute('required');
+				document.querySelector('#numero_int_des').removeAttribute('required');
+				document.querySelector('#edad_des').removeAttribute('required');
 			}
 
 			if (document.querySelector("#delito").value == "ROBO DE VEHÍCULO") {
@@ -251,6 +330,7 @@
 			}
 			progress.style.width = `${currentStep*width}%`
 		} else {
+			console.log('NO SE VALIDO');
 			submitBtn.click();
 			Swal.fire({
 				icon: 'error',
@@ -342,54 +422,33 @@
 				if (
 					document.querySelector('#nombre_menor').value != '' &&
 					document.querySelector('#apellido_paterno_menor').value != '' &&
-					document.querySelector('#apellido_materno_menor').value != '' &&
 					document.querySelector('#pais_menor').value != '' &&
 					document.querySelector('#estado_menor').value != '' &&
 					document.querySelector('#municipio_menor').value != '' &&
 					document.querySelector('#calle_menor').value != '' &&
 					document.querySelector('#numero_ext_menor').value != '' &&
-					document.querySelector('#numero_int_menor').value != '' &&
-					document.querySelector('#cp_menor').value != '' &&
 					document.querySelector('#fecha_nacimiento_menor').value != '' &&
 					document.querySelector('#edad_menor').value != ''
 				) {
 					return true
 				} else {
-					return true
+					return false
 				}
 				break;
 			case 'datos_desaparecido':
 				if (
 					document.querySelector('#nombre_des').value != '' &&
 					document.querySelector('#apellido_paterno_des').value != '' &&
-					document.querySelector('#apellido_materno_des').value != '' &&
-					document.querySelector('#estatura_des').value != '' &&
-					document.querySelector('#fecha_nacimiento_des').value != '' &&
-					document.querySelector('#edad_des').value != '' &&
-					document.querySelector('#peso_des').value != '' &&
-					document.querySelector('#complexion_des').value != '' &&
-					document.querySelector('#color_des').value != '' &&
-					document.querySelector('input[name="sexo_des"]:checked') &&
-					document.querySelector('#señas_des').value != '' &&
-					document.querySelector('#identidad_des').value != '' &&
-					document.querySelector('#color_cabello_des').value != '' &&
-					document.querySelector('#tam_cabello_des').value != '' &&
-					document.querySelector('#form_cabello_des').value != '' &&
-					document.querySelector('#color_ojos_des').value != '' &&
-					document.querySelector('#frente_des').value != '' &&
-					document.querySelector('#ceja_des').value != '' &&
-					document.querySelector('#discapacidad_des').value != '' &&
-					document.querySelector('#origen_des').value != '' &&
-					document.querySelector('#dia_des').value != '' &&
-					document.querySelector('#lugar_des').value != '' &&
-					document.querySelector('#vestimenta_des').value != '' &&
-					document.querySelector('#parentesco_des').value != '' &&
-					document.querySelector('#foto_des').value != '' &&
-					document.querySelector('#autorization_photo_des').value != ''
+					document.querySelector('#pais_des').value != '' &&
+					document.querySelector('#estado_des').value != '' &&
+					document.querySelector('#municipio_des').value != '' &&
+					document.querySelector('#calle_des').value != '' &&
+					document.querySelector('#numero_ext_des').value != '' &&
+					document.querySelector('#edad_des').value != ''
 				) {
 					return true
 				} else {
-					return true
+					return false
 				}
 				break;
 			case 'datos_delito':
@@ -411,50 +470,14 @@
 				}
 				break;
 			case 'datos_robo_vehiculo':
-				if (
-					document.querySelector('#tipo_placas_vehiculo').value != '' &&
-					document.querySelector('#placas_vehiculo').value != '' &&
-					document.querySelector('#confirm_placas_vehiculo').value != '' &&
-					document.querySelector('#estado_vehiculo').value != '' &&
-					document.querySelector('#serie_vehiculo').value != '' &&
-					document.querySelector('#confirm_serie_vehiculo').value != '' &&
-					document.querySelector('#distribuidor_vehiculo').value != '' &&
-					document.querySelector('#marca').value != '' &&
-					document.querySelector('#linea_vehiculo').value != '' &&
-					document.querySelector('#version_vehiculo').value != '' &&
-					document.querySelector('#tipo_vehiculo').value != '' &&
-					document.querySelector('#servicio_vehiculo').value != '' &&
-					document.querySelector('#modelo_vehiculo').value != '' &&
-					document.querySelector('input[name="seguro_vigente_vehiculo"]:checked') &&
-					document.querySelector('#color_vehiculo').value != '' &&
-					document.querySelector('#color_tapiceria_vehiculo').value != '' &&
-					document.querySelector('#num_chasis_vehiculo').value != '' &&
-					document.querySelector('input[name="transmision_vehiculo"]:checked') &&
-					document.querySelector('input[name="traccion_vehiculo"]:checked') &&
-					document.querySelector('#foto_vehiculo').value != '' &&
-					document.querySelector('#description_vehiculo').value != ''
-				) {
+				if (true) {
 					return true;
 				} else {
-					return true;
+					return false;
 				}
 				break;
 			case 'datos_imputado':
-				if (
-					document.querySelector('#nombre_imputado').value != '' &&
-					document.querySelector('#alias_imputado').value != '' &&
-					document.querySelector('#primer_apellido_imputado').value != '' &&
-					document.querySelector('#segundo_apellido_imputado').value != '' &&
-					document.querySelector('#municipio_imputado').value != '' &&
-					document.querySelector('#calle_imputado').value != '' &&
-					document.querySelector('#numero_ext_imputado').value != '' &&
-					document.querySelector('#numero_int_imputado').value != '' &&
-					document.querySelector('#tel_imputado').value != '' &&
-					document.querySelector('#fecha_nac_imputado').value != '' &&
-					document.querySelector('#escolaridad_imputado').value != '' &&
-					document.querySelector('#description_fisica_imputado').value != ''
-
-				) {
+				if (true) {
 					return true
 				} else {
 					return true;

@@ -64,5 +64,6 @@ class FolioModel extends Model
 		'HECHOCLASIFICACIONLUGARID',
 		'HECHOVIALIDADID',
 		'DELITODENUNCIA',
+		'DERECHOS',
 	];
 }

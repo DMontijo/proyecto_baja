@@ -275,6 +275,11 @@ class FOLIO extends Migration
 				'type' => 'VARCHAR',
 				'constraint' => '100',
 			],
+			'DERECHOS' => [
+				'type' => 'CHAR',
+				'constraint' => '1',
+				'default' => 'S'
+			],
 			'FECHAREGISTRO DATETIME DEFAULT CURRENT_TIMESTAMP',
 			'FECHAACTUALIZACION DATETIME ON UPDATE CURRENT_TIMESTAMP',
 		]);

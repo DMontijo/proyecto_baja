@@ -22,11 +22,11 @@ class FOLIOPREGUNTASDENUNCIA extends Migration
 				'type' => 'CHAR',
 				'constraint' => '2',
 			],
-			'ERES_TU' => [
+			'ES_TERCERA_EDAD' => [
 				'type' => 'CHAR',
 				'constraint' => '2',
 			],
-			'ES_TERCERA_EDAD' => [
+			'ES_OFENDIDO' => [
 				'type' => 'CHAR',
 				'constraint' => '2',
 			],
@@ -38,15 +38,15 @@ class FOLIOPREGUNTASDENUNCIA extends Migration
 				'type' => 'CHAR',
 				'constraint' => '2',
 			],
-			'ESTA_DESAPARECIDO' => [
-				'type' => 'CHAR',
-				'constraint' => '2',
-			],
 			'LESIONES' => [
 				'type' => 'CHAR',
 				'constraint' => '2',
 			],
 			'LESIONES_VISIBLES' => [
+				'type' => 'CHAR',
+				'constraint' => '2',
+			],
+			'ESTA_DESAPARECIDO' => [
 				'type' => 'CHAR',
 				'constraint' => '2',
 			],

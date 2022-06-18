@@ -8,7 +8,7 @@ class FolioVehiculoModel extends Model
 {
 	protected $DBGroup          = 'default';
 	protected $table            = 'FOLIOVEHICULO';
-	protected $primaryKey       = 'ID';
+	// protected $primaryKey       = 'ID';
 	protected $allowedFields    = [
 		'FOLIOID',
 		'VEHICULOID',
@@ -31,6 +31,7 @@ class FolioVehiculoModel extends Model
 		'PERSONAFISICAIDPROPIETARIO',
 		'PERSONAMORALIDPROPIETARIO',
 		'FOTO',
+		'DOCUMENTO',
 		'PARTICIPAESTADO',
 		'TIPOPLACA',
 		'ESTADOIDPLACA',
