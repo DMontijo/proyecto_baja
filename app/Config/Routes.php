@@ -113,6 +113,11 @@ $routes->group('data', function ($routes) {
 
 	$routes->post('sendOTP', 'OTPController::sendEmailOTP');
 	$routes->post('getLastOTP', 'OTPController::getLastOTP');
+
+	//VEHÍCULOS
+	$routes->post('get-marca-by-dist', 'client/DashboardController::getMarcaByDist');
+	$routes->post('get-modelo-by-marca', 'client/DashboardController::getModeloByMarca');
+	$routes->post('get-version-by-modelo', 'client/DashboardController::getVersionByModelo');
 });
 
 /**

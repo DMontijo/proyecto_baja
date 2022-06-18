@@ -44,7 +44,7 @@
 					<div class="row">
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="nombre" class="form-label fw-bold input-required">Nombre(s)</label>
-							<input type="text" class="form-control" id="nombre" name="nombre" maxlength="100" required autofocus>
+							<input type="text" class="form-control" id="nombre" name="nombre" maxlength="100" required>
 							<div class="invalid-feedback">
 								El nombre es obligatorio
 							</div>
@@ -74,23 +74,17 @@
 								La fecha de nacimiento es obligatoria
 							</div>
 						</div>
-						<input class="form-control" id="edad" name="edad" maxlength="3" type="text" hidden required>
+						<input class="form-control" id="edad" name="edad" maxlength="3" type="text" hidden>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="sexo" class="form-label fw-bold input-required">Sexo</label>
 							<br>
 							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio" name="sexo" value="M" checked required>
+								<input class="form-check-input" type="radio" name="sexo" value="M" required>
 								<label class="form-check-label" for="flexRadioDefault1">MASCULINO</label>
 							</div>
 							<div class="form-check form-check-inline">
 								<input class="form-check-input" type="radio" name="sexo" value="F" required>
 								<label class="form-check-label" for="flexRadioDefault2">FEMENINO</label>
-							</div>
-						</div>
-						<div class="col-12">
-							<div class="alert alert-warning text-center fw-bold d-none" id="menor" role="alert">
-								Eres menor de edad.<br>
-								Para continuar es preferente que estes acompañado por un adulto.
 							</div>
 						</div>
 					</div>
@@ -99,8 +93,29 @@
 				<div class="col-12 d-none step">
 					<div class="row">
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="cp" class="form-label fw-bold">Código postal</label>
-							<input type="number" class="form-control" id="cp" maxlength="10" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" name="cp" autofocus>
+							<label for="nacionalidad" class="form-label fw-bold input-required">Nacionalidad</label>
+							<select class="form-select" id="nacionalidad" name="nacionalidad" required>
+								<option selected disabled value="">Seleccione la nacionalidad</option>
+								<?php foreach ($body_data->nacionalidades as $index => $nac) { ?>
+									<option value="<?= $nac->PERSONANACIONALIDADID ?>" <?= $nac->PERSONANACIONALIDADDESCR == 'MEXICANA' ? 'selected' : '' ?>> <?= $nac->PERSONANACIONALIDADDESCR ?> </option>
+								<?php } ?>
+							</select>
+							<div class="invalid-feedback">
+								La nacionalidad es obligatoria.
+							</div>
+						</div>
+
+						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+							<label for="idioma" class="form-label fw-bold input-required">Idioma</label>
+							<select class="form-select" id="idioma" name="idioma" required>
+								<option selected disabled value="">Seleccione el idioma</option>
+								<?php foreach ($body_data->idiomas as $index => $nac) { ?>
+									<option value="<?= $nac->PERSONAIDIOMAID ?>" <?= $nac->PERSONAIDIOMADESCR == 'ESPAÑOL' ? 'selected' : '' ?>> <?= $nac->PERSONAIDIOMADESCR ?> </option>
+								<?php } ?>
+							</select>
+							<div class="invalid-feedback">
+								Debes elegir un idioma
+							</div>
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -140,7 +155,7 @@
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="localidad" class="form-label fw-bold">Localidad del denunciante</label>
-							<select class="form-select" id="localidad_select" name="localidad_select">
+							<select class="form-select" id="localidad_select" name="localidad_select" required>
 								<option selected disabled value="">Seleccione la localidad</option>
 							</select>
 						</div>
@@ -152,10 +167,15 @@
 								<option selected disabled value="">Seleccione la colonia</option>
 							</select>
 							<input type="text" class="form-control d-none" id="colonia" name="colonia" maxlength="100" required>
-							<small>Si no encuentras tu colonia selecciona otro</small>
+							<small class="text-primary">Si no encuentras tu colonia selecciona otro.</small>
 							<div class="invalid-feedback">
 								La colonia es obligatoria
 							</div>
+						</div>
+
+						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+							<label for="cp" class="form-label fw-bold">Código postal</label>
+							<input type="number" class="form-control" id="cp" maxlength="10" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" name="cp">
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -181,11 +201,11 @@
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="telefono" class="form-label fw-bold input-required">Número de télefono</label>
-							<input type="number" class="form-control" id="telefono" name="telefono" maxlength="20" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" required>
+							<input type="number" class="form-control" id="telefono" name="telefono" required maxlength="20" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
 							<div class="invalid-feedback">
 								El número télefono es obligatorio
 							</div>
-							<input type="number" id="codigo_pais" name="codigo_pais" maxlength="3" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" required hidden>
+							<input type="number" id="codigo_pais" name="codigo_pais" maxlength="3" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" hidden>
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -194,6 +214,11 @@
 							<input type="number" id="codigo_pais_2" name="codigo_pais_2" maxlength="3" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" hidden>
 						</div>
 
+						<div class="col-12">
+							<div class="alert alert-warning text-center fw-bold d-none mt-2" id="idioma_alert" role="alert">
+								Si tu idioma no es español se recomienda estar acompañado de un traductor.
+							</div>
+						</div>
 					</div>
 				</div>
 
@@ -236,35 +261,10 @@
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="iden_genero" class="form-label fw-bold">Identidad de género</label>
-							<input type="text" class="form-control" id="iden_genero" name="iden_genero" maxlength="50">
-						</div>
-
-						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="discapacidad" class="form-label fw-bold input-required">¿Padece alguna
-								discapacidad?</label>
-							<select class="form-select" id="discapacidad" name="discapacidad" required>
-								<option selected disabled value="">Seleccione si padece alguna discapacidad</option>
-								<option value="VISUAL">VISUAL</option>
-								<option value="FISICA">FISICA</option>
-								<option value="AUDITIVA">AUDITIVA</option>
-								<option vaulue="NINGUNA">NINGUNA</option>
-							</select>
+							<label for="discapacidad" class="form-label fw-bold">¿Padece alguna discapacidad?</label>
+							<input type="text" class="form-control" id="discapacidad" name="discapacidad" maxlength="100">
 							<div class="invalid-feedback">
 								El campo discapacidad es obligatorio.
-							</div>
-						</div>
-
-						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="nacionalidad" class="form-label fw-bold input-required">Nacionalidad</label>
-							<select class="form-select" id="nacionalidad" name="nacionalidad" required>
-								<option selected disabled value="">Seleccione la nacionalidad</option>
-								<?php foreach ($body_data->nacionalidades as $index => $nac) { ?>
-									<option value="<?= $nac->PERSONANACIONALIDADID ?>"> <?= $nac->PERSONANACIONALIDADDESCR ?> </option>
-								<?php } ?>
-							</select>
-							<div class="invalid-feedback">
-								La nacionalidad es obligatoria.
 							</div>
 						</div>
 
@@ -286,29 +286,12 @@
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="idioma" class="form-label fw-bold input-required">Idioma</label>
-							<select class="form-select" id="idioma" name="idioma" required>
-								<option selected disabled value="">Seleccione el idioma</option>
-								<?php foreach ($body_data->idiomas as $index => $nac) { ?>
-									<option value="<?= $nac->PERSONAIDIOMAID ?>"> <?= $nac->PERSONAIDIOMADESCR ?> </option>
-								<?php } ?>
-							</select>
-							<div class="invalid-feedback">
-								Debes elegir un idioma
-							</div>
-						</div>
-						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="documento" class="form-label fw-bold input-required">Foto de identificación</label>
 							<img class="img-fluid d-none py-2" src="" id="img_preview">
-							<input class="form-control" type="file" id="documento" name="documento" accept="image/*" capture="user" required>
-							<!-- <input class="form-control" type="file" id="documento" name="documento" accept="image/*" required> -->
-							<textarea id="documento_text" name="documento_text" hidden required></textarea>
+							<input class="form-control" type="file" id="documento" required name="documento" accept="image/*" capture="user">
+							<!-- <input class="form-control" type="file" id="documento" name="documento" accept="image/*"> -->
+							<textarea id="documento_text" name="documento_text" hidden></textarea>
 							<div class="form-text"><button id="photo-btn" class="btn btn-link p-0 m-0" style="font-size:14px;" type="button">Para tomar foto clic aquí <i class="bi bi-camera-fill"></i></button></div>
-						</div>
-						<div class="col-12">
-							<div class="alert alert-warning text-center fw-bold d-none mt-2" id="idioma_alert" role="alert">
-								Si tu idioma no es español se recomienda estar acompañado de un traductor.
-							</div>
 						</div>
 					</div>
 				</div>
@@ -349,6 +332,7 @@
 </div>
 
 <?php include('aviso_modal.php') ?>
+<?php include('correo_obligatorio_modal.php') ?>
 <?php include('take_photo_modal.php'); ?>
 <?php include('information_validation_modal.php') ?>
 
@@ -461,7 +445,9 @@
 					document.querySelector('#colonia').value != '' &&
 					document.querySelector('#calle').value != '' &&
 					document.querySelector('#exterior').value != '' &&
-					document.querySelector('#telefono').value != ''
+					document.querySelector('#telefono').value != '' &&
+					document.querySelector('#nacionalidad').value != '' &&
+					document.querySelector('#idioma').value != ''
 				) {
 					return true
 				} else {
@@ -472,10 +458,8 @@
 				if (
 					document.querySelector('#identificacion').value != '' &&
 					document.querySelector('#e_civil').value != '' &&
-					document.querySelector('#discapacidad').value != '' &&
 					document.querySelector('#idioma').value != '' &&
 					document.querySelector('#documento_text').value != '' &&
-					document.querySelector('#nacionalidad').value != '' &&
 					document.querySelector('#escolaridad').value != ''
 				) {
 					return true
@@ -527,11 +511,14 @@
 	input2.addEventListener('keyup', getData);
 	input2.addEventListener('blur', getData);
 </script>
-
 <script>
 	$(document).ready(function() {
-		$('#aviso_modal').modal('toggle')
+		$('#aviso_modal').modal('show');
 	});
+
+	document.querySelector('#aviso_modal').addEventListener('hidden.bs.modal', (event) => {
+		$('#correo_obligatorio').modal('show');
+	})
 
 	function clearText(text) {
 		text
@@ -552,8 +539,11 @@
 			if (!form.checkValidity()) {
 				event.preventDefault();
 				event.stopPropagation();
+				enviar_datos();
+				console.log('En submit con datos erroneos');
 			} else {
 				event.preventDefault();
+				console.log('En submit con datos');
 				enviar_datos();
 				$('#information_validation').modal('show');
 			}
@@ -579,16 +569,33 @@
 			let edad = hoy.getFullYear() - cumpleanos.getFullYear();
 			let m = hoy.getMonth() - cumpleanos.getMonth();
 
+			document.querySelector('#edad').value = edad;
 			if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
 				edad--;
 			}
-			document.querySelector('#edad').value = edad;
-			if (edad < 18) {
-				document.getElementById("menor").classList.remove('d-none');
-			} else {
-				document.getElementById("menor").classList.add('d-none');
+		});
+
+		document.querySelector('#fecha_nacimiento').addEventListener('blur', (e) => {
+			let fecha = e.target.value;
+			let hoy = new Date();
+			let cumpleanos = new Date(fecha);
+			let edad = hoy.getFullYear() - cumpleanos.getFullYear();
+			let m = hoy.getMonth() - cumpleanos.getMonth();
+
+			if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
+				edad--;
 			}
-		})
+			if (edad < 18) {
+				Swal.fire({
+					icon: 'error',
+					title: 'No podemos procesar tu solicitud',
+					text: 'Debes ser mayor de edad para realizar tu registro.',
+					confirmButtonColor: '#bf9b55',
+				});
+
+				e.target.value = '';
+			}
+		});
 
 		document.querySelector('#idioma').addEventListener('change', (e) => {
 			let alert = document.querySelector('#idioma_alert');
@@ -818,20 +825,17 @@
 		});
 
 		document.querySelector('#documento').addEventListener('change', (e) => {
-			console.log('change');
 			let documento_identidad = document.querySelector('#documento_text');
 			let documento_identidad_modal = document.querySelector('#img_identificacion_modal');
 			let preview = document.querySelector('#img_preview');
 
 			if (e.target.files && e.target.files[0]) {
-				console.log('change');
 				let reader = new FileReader();
 				reader.onload = function(e) {
 					documento_identidad.value = e.target.result;
 					documento_identidad_modal.setAttribute('src', e.target.result);
 					preview.classList.remove('d-none');
 					preview.setAttribute('src', e.target.result);
-					console.log(preview);
 				}
 				reader.readAsDataURL(e.target.files[0]);
 			}
@@ -878,7 +882,6 @@
 		return new bootstrap.Tooltip(tooltipTriggerEl)
 	});
 </script>
-
 <script>
 	function enviar_datos() {
 		let nombre = document.querySelector("#nombre").value ? document.querySelector("#nombre").value : '';
@@ -886,15 +889,17 @@
 		let apellido2 = document.querySelector("#apellido_materno").value ? document.querySelector("#apellido_materno").value : '';
 		let correo = document.querySelector("#correo").value ? document.querySelector("#correo").value : '';
 		let fechanac = document.querySelector("#fecha_nacimiento").value ? document.querySelector("#fecha_nacimiento").value : '';
-		let edad = document.querySelector("#edad").value ? document.querySelector("#edad").value : '';
+		let edad = document.querySelector("#edad").value;
 		let sexo = document.querySelector('input[name="sexo"]:checked').value ? document.querySelector('input[name="sexo"]:checked').value : '';
 
+		let nacionalidad = document.querySelector("#nacionalidad").value ? document.querySelector("#nacionalidad").options[document.querySelector("#nacionalidad").selectedIndex].text : '';
+		let idioma = document.querySelector("#idioma").value ? document.querySelector("#idioma").options[document.querySelector("#idioma").selectedIndex].text : '';
 		let codigop = document.querySelector("#cp").value ? document.querySelector("#cp").value : '';
 		let pais = document.querySelector("#pais_select").value ? document.querySelector("#pais_select").value : '';
-		let estado = document.querySelector("#estado_select").value ? document.querySelector("#estado_select").value : '';
-		let municipio = document.querySelector("#municipio_select").value ? document.querySelector("#municipio_select").value : '';
-		let localidad = document.querySelector("#localidad_select").value ? document.querySelector("#localidad_select").value : '';
-		let colonia = document.querySelector("#colonia").value ? document.querySelector("#colonia").value : '';
+		let estado = document.querySelector("#estado_select").value ? document.querySelector("#estado_select").options[document.querySelector("#estado_select").selectedIndex].text : '';
+		let municipio = document.querySelector("#municipio_select").value ? document.querySelector("#municipio_select").options[document.querySelector("#municipio_select").selectedIndex].text : '';
+		let localidad = document.querySelector("#localidad_select").value ? document.querySelector("#localidad_select").options[document.querySelector("#localidad_select").selectedIndex].text : '';
+		let colonia = document.querySelector("#colonia_select").value == 0 || document.querySelector("#colonia_select").value == '' ? document.querySelector("#colonia").value : document.querySelector("#colonia_select").options[document.querySelector("#colonia_select").selectedIndex].text;
 		let calle = document.querySelector("#calle").value ? document.querySelector("#calle").value : '';
 		let nexterior = document.querySelector("#exterior").value ? document.querySelector("#exterior").value : '';
 		let ninterior = document.querySelector("#interior").value ? document.querySelector("#interior").value : '';
@@ -906,12 +911,9 @@
 		let tipo = document.querySelector("#identificacion").value ? document.querySelector("#identificacion").value : '';
 		let numeroid = document.querySelector("#numero_ide").value ? document.querySelector("#numero_ide").value : '';
 		let edoc = document.querySelector("#e_civil").value ? document.querySelector("#e_civil").value : '';
-		let nacionalidad = document.querySelector("#nacionalidad").value ? document.querySelector("#nacionalidad").value : '';
 		let escolaridad = document.querySelector("#escolaridad").value ? document.querySelector("#escolaridad").value : '';
 		let ocupacion = document.querySelector("#ocupacion").value ? document.querySelector("#ocupacion").value : '';
-		let genero = document.querySelector("#iden_genero").value ? document.querySelector("#iden_genero").value : '';
 		let discapacidad = document.querySelector("#discapacidad").value ? document.querySelector("#discapacidad").value : '';
-		let idioma = document.querySelector("#idioma").value ? document.querySelector("#idioma").value : '';
 		let firma_url = document.querySelector("#firma_url").value ? document.querySelector("#firma_url").value : '';
 
 		document.querySelector('#nombre_modal').value = nombre;
@@ -922,7 +924,7 @@
 		document.querySelector('#edad_modal').value = edad;
 		document.querySelector('#nacionalidad_modal').value = nacionalidad;
 		document.querySelector('#escolaridad_modal').value = escolaridad;
-		document.querySelector('#sexo_modal').value = sexo;
+		document.querySelector('#sexo_modal').value = sexo == 'F' ? 'FEMENINO' : 'MASCULINO';
 
 		document.querySelector('#cp_modal').value = codigop;
 		document.querySelector('#pais_modal').value = pais;
@@ -941,7 +943,6 @@
 		document.querySelector('#e_civil_modal').value = edoc;
 		document.querySelector('#ocupacion_modal').value = ocupacion;
 		document.querySelector('#discapacidad_modal').value = discapacidad;
-		document.querySelector('#iden_genero_modal').value = genero;
 		document.querySelector('#idioma_modal').value = idioma;
 		document.querySelector('#img_firma_modal').setAttribute("src", firma_url);
 	}

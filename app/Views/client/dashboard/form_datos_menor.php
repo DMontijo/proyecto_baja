@@ -36,11 +36,11 @@
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="colonia" class="form-label fw-bold">Colonia</label>
-		<select class="form-select" id="colonia_menor_select" name="colonia_menor">
+		<label for="colonia_menor_input" class="form-label fw-bold">Colonia</label>
+		<select class="form-select" id="colonia_menor" name="colonia_menor">
 			<option selected disabled value="">Seleccione la colonia</option>
 		</select>
-		<input type="text" class="form-control d-none" id="colonia_menor" name="colonia" maxlength="100">
+		<input type="text" class="form-control d-none" id="colonia_menor_input" name="colonia_menor_input" maxlength="100">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="calle_menor" class="form-label fw-bold">Calle</label>
@@ -105,9 +105,11 @@
 
 		let select_estado = document.querySelector('#estado_menor');
 		let select_municipio = document.querySelector('#municipio_menor');
-		let select_colonia = document.querySelector('#colonia_menor_select');
+		let select_colonia = document.querySelector('#colonia_menor');
+		let input_colonia = document.querySelector('#colonia_menor_input');
 
-		let input_colonia = document.querySelector('#colonia_menor');
+		clearSelect(select_municipio);
+		clearSelect(select_colonia);
 
 		if (e.target.value !== 'MX') {
 
@@ -128,45 +130,15 @@
 					municipios.forEach(municipio => {
 						let option = document.createElement("option");
 						option.text = municipio.MUNICIPIODESCR;
-						option.value = municipio.ID;
+						option.value = municipio.MUNICIPIOID;
 						select_municipio.add(option);
 					});
-					select_municipio.value = '33001';
+					select_municipio.value = '1';
 				},
 				error: function(jqXHR, textStatus, errorThrown) {}
 			});
-
-			$.ajax({
-				data: data,
-				url: "<?= base_url('/data/get-localidades-by-municipio') ?>",
-				method: "POST",
-				dataType: "json",
-				success: function(response) {
-					let localidades = response.data;
-					localidades.forEach(localidad => {
-						let option = document.createElement("option");
-						option.text = localidad.LOCALIDADDESCR;
-						option.value = localidad.ID;
-						select_localidad.add(option);
-					});
-					let option = document.createElement("option");
-					option.text = 'OTRO';
-					option.value = '0';
-
-					select_colonia.add(option);
-					select_localidad.value = '33001001';
-
-					select_colonia.value = '0';
-					select_colonia.classList.add('d-none');
-					input_colonia.classList.remove('d-none');
-					input_colonia.value = 'EXTRANJERO';
-				},
-				error: function(jqXHR, textStatus, errorThrown) {}
-			});
-
 
 		} else {
-			clearSelect(select_estado);
 			clearSelect(select_municipio);
 			clearSelect(select_colonia);
 
@@ -182,8 +154,8 @@
 
 	document.querySelector('#estado_menor').addEventListener('change', (e) => {
 		let select_municipio = document.querySelector('#municipio_menor');
-		let select_colonia = document.querySelector('#colonia_menor_select');
-		let input_colonia = document.querySelector('#colonia_menor');
+		let select_colonia = document.querySelector('#colonia_menor');
+		let input_colonia = document.querySelector('#colonia_menor_input');
 
 		clearSelect(select_municipio);
 		clearSelect(select_colonia);
@@ -210,7 +182,7 @@
 				municipios.forEach(municipio => {
 					var option = document.createElement("option");
 					option.text = municipio.MUNICIPIODESCR;
-					option.value = municipio.ID;
+					option.value = municipio.MUNICIPIOID;
 					select_municipio.add(option);
 				});
 			},
@@ -219,11 +191,11 @@
 	});
 
 	document.querySelector('#municipio_menor').addEventListener('change', (e) => {
-		let select_colonia = document.querySelector('#colonia_menor_select');
-		let input_colonia = document.querySelector('#colonia_menor');
+		let select_colonia = document.querySelector('#colonia_menor');
+		let input_colonia = document.querySelector('#colonia_menor_input');
 
-		let estado = parseInt(Number(e.target.value) / 1000);
-		let municipio = (Number(e.target.value) - estado * 1000);
+		let estado = document.querySelector('#estado_menor').value;
+		let municipio = e.target.value;
 
 		clearSelect(select_colonia);
 
@@ -232,9 +204,10 @@
 			'municipio_id': municipio
 		};
 
-		if (estado === 2) {
+		if (estado == 2) {
 			select_colonia.classList.remove('d-none');
-			colonia.classList.add('d-none');
+			input_colonia.classList.add('d-none');
+			input_colonia.value = '';
 			$.ajax({
 				data: data,
 				url: "<?= base_url('/data/get-colonias-by-estado-and-municipio') ?>",
@@ -246,9 +219,10 @@
 					colonias.forEach(colonia => {
 						var option = document.createElement("option");
 						option.text = colonia.COLONIADESCR;
-						option.value = colonia.ID;
+						option.value = colonia.COLONIAID;
 						select_colonia.add(option);
 					});
+
 					var option = document.createElement("option");
 					option.text = 'OTRO';
 					option.value = '0';
@@ -266,18 +240,20 @@
 			select_colonia.add(option);
 			select_colonia.value = '0';
 			select_colonia.classList.add('d-none');
-			colonia.classList.remove('d-none');
+			input_colonia.classList.remove('d-none');
+			input_colonia.value = '';
 		}
 
 	});
 
 	document.querySelector('#colonia_menor').addEventListener('change', (e) => {
-		let select_colonia = document.querySelector('#colonia_menor_select');
-		let input_colonia = document.querySelector('#colonia_menor');
+		let select_colonia = document.querySelector('#colonia_menor');
+		let input_colonia = document.querySelector('#colonia_menor_input');
 
 		if (e.target.value === '0') {
 			select_colonia.classList.add('d-none');
 			input_colonia.classList.remove('d-none');
+			input_colonia.value = '';
 			input_colonia.focus();
 		} else {
 			input_colonia.value = e.target.value;

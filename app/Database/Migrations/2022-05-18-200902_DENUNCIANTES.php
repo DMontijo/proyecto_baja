@@ -139,7 +139,7 @@ class DENUNCIANTES extends Migration
 			],
 			'DISCAPACIDAD' => [
 				'type' => 'VARCHAR',
-				'constraint' => '40',
+				'constraint' => '100',
 				'null' => TRUE
 			],
 			'NACIONALIDAD_ID' => [

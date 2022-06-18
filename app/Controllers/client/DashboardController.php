@@ -100,6 +100,7 @@ class DashboardController extends BaseController
 			'perfil' => $this->request->getGet('perfil'),
 			'sexo' => $this->request->getGet('sexo'),
 			'prioridad' => $this->request->getGet('prioridad'),
+			'sexo_denunciante' => $this->request->getGet('sexo_denunciante') == 'F' ? 'FEMENINO' : 'MASCULINO',
 		];
 
 		if ($data->folio) {
@@ -122,7 +123,7 @@ class DashboardController extends BaseController
 		$session = session();
 
 		$FOLIOID = $this->_correlativo($this->request->getPost('municipio'), 4);
-		$CORRELATIVO = (int)substr($FOLIOID, -5);
+		$CORRELATIVO = (int)substr($FOLIOID, -6);
 
 		$dataFolio = [
 			'DENUNCIANTEID' => $session->get('ID_DENUNCIANTE'),
@@ -366,7 +367,8 @@ class DashboardController extends BaseController
 			'sexo' => $this->request->getPost('delito') == 'VIOLENCIA FAMILIAR' ? 2 : 0,
 		];
 
-		$url = "/denuncia/dashboard/video-denuncia?folio=" . $FOLIOID . "&delito=" . $data->delito . "&descripcion=" . $data->descripcion . "&idioma=" . $data->idioma . "&edad=" . $data->edad . "&perfil=" . $data->perfil . "&sexo=" . $data->sexo . "&prioridad=" . $prioridad;
+		$sexo_denunciante = $session->get('SEXO') == 'F' ? 'FEMENINO' : 'MASCULINO';
+		$url = "/denuncia/dashboard/video-denuncia?folio=" . $FOLIOID . "&delito=" . $data->delito . "&descripcion=" . $data->descripcion . "&idioma=" . $data->idioma . "&edad=" . $data->edad . "&perfil=" . $data->perfil . "&sexo=" . $data->sexo . "&prioridad=" . $prioridad . "&sexo_denunciante=" . $sexo_denunciante;
 
 		if ($this->_sendEmailFolio($session->get('CORREO'), $FOLIOID)) {
 			return redirect()->to(base_url($url));
@@ -396,7 +398,7 @@ class DashboardController extends BaseController
 				'CORRELATIVO' => ((int)$correlativo->CORRELATIVO) + 1
 			];
 			$this->_folioCorrelativoModel->insert($data);
-			return $tipoExpediente . str_pad(2, 2, "0", STR_PAD_LEFT) . str_pad((int)$municipio, 3, "0", STR_PAD_LEFT) . $data['ANO'] . str_pad((int)$data['CORRELATIVO'], 5, "0", STR_PAD_LEFT);
+			return $tipoExpediente . str_pad(2, 2, "0", STR_PAD_LEFT) . str_pad((int)$municipio, 3, "0", STR_PAD_LEFT) . $data['ANO'] . str_pad((int)$data['CORRELATIVO'], 6, "0", STR_PAD_LEFT);
 		} else {
 			$data = [
 				'ESTADOID' => (int)2,
@@ -406,7 +408,7 @@ class DashboardController extends BaseController
 				'CORRELATIVO' => 1
 			];
 			$this->_folioCorrelativoModel->insert($data);
-			return $tipoExpediente . str_pad(2, 2, "0", STR_PAD_LEFT) . str_pad((int)$municipio, 3, "0", STR_PAD_LEFT) . $data['ANO'] . str_pad((int)$data['CORRELATIVO'], 5, "0", STR_PAD_LEFT);
+			return $tipoExpediente . str_pad(2, 2, "0", STR_PAD_LEFT) . str_pad((int)$municipio, 3, "0", STR_PAD_LEFT) . $data['ANO'] . str_pad((int)$data['CORRELATIVO'], 6, "0", STR_PAD_LEFT);
 		}
 	}
 
@@ -632,9 +634,10 @@ class DashboardController extends BaseController
 		$FOLIOID = $this->request->getPost('folio');
 		$IDDENUNCIANTE = $this->request->getPost('id');
 		$EDAD = $this->request->getPost('edad');
+		$SEXO_DENUNCIANTE = $this->request->getPost('sexo_denunciante');
 		$folio = $this->_folioModel->asObject()->where('FOLIOID', $FOLIOID,)->first();
 
-		if ($FOLIOID && $folio && $EDAD && $IDDENUNCIANTE) {
+		if ($FOLIOID && $folio && $EDAD && $IDDENUNCIANTE && $SEXO_DENUNCIANTE) {
 
 			$preguntas = $this->_folioPreguntasModel->asObject()->where('FOLIOID', $FOLIOID)->first();
 			$denunciante = $this->_denunciantesModel->asObject()->where('ID_DENUNCIANTE', $IDDENUNCIANTE)->first();
@@ -655,19 +658,15 @@ class DashboardController extends BaseController
 				'edad' => $EDAD,
 				'perfil' => $folio->DELITODENUNCIA == 'VIOLENCIA FAMILIAR' ? 1 : 0,
 				'sexo' => $folio->DELITODENUNCIA == 'VIOLENCIA FAMILIAR' ? 2 : 0,
+				'sexo_denunciante' => $SEXO_DENUNCIANTE == 'F' ? 'FEMENINO' : 'MASCULINO',
 			];
 
-			$url = base_url() . "/denuncia/dashboard/video-denuncia?folio=" . $FOLIOID . "&delito=" . $data->delito . "&descripcion=" . $data->descripcion . "&idioma=" . $data->idioma . "&edad=" . $data->edad . "&perfil=" . $data->perfil . "&sexo=" . $data->sexo . "&prioridad=" . $prioridad;
+			$url = base_url() . "/denuncia/dashboard/video-denuncia?folio=" . $FOLIOID . "&delito=" . $data->delito . "&descripcion=" . $data->descripcion . "&idioma=" . $data->idioma . "&edad=" . $data->edad . "&perfil=" . $data->perfil . "&sexo=" . $data->sexo . "&prioridad=" . $prioridad . "&sexo_denunciante=" . $data->sexo_denunciante;
 
 			return json_encode((object)['status' => 1, 'url' => $url]);
 		} else {
 			return json_encode((object)['status' => 0, 'error' => 'No hay data disponible']);
 		}
-	}
-
-	public function derivar()
-	{
-	
 	}
 }
 

@@ -13,27 +13,35 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="placas_vehiculo" class="form-label fw-bold">Placas:</label>
-		<input type="text" class="form-control" id="placas_vehiculo" name="placas_vehiculo">
-		<input class="form-check-input" type="checkbox" name="placas_vehiculo_desconocidas" id="placas_vehiculo_desconocidas"> Se desconoce
+		<input type="text" class="form-control" id="placas_vehiculo" name="placas_vehiculo" onkeyup="verificarPlacas()">
+		<!-- <input class="form-check-input" type="checkbox" name="placas_vehiculo_desconocidas" id="placas_vehiculo_desconocidas"> Se desconoce -->
+		<!-- <label for="mensajeok" id="mensajeok" name="mensajeok" class="form-label fw-bold d-none" style="color: #009130; font-size: 12px; text-align:center;">Las placas coinciden </label>
+		 <label for="mensaje" id="mensaje" name="mensaje" class="form-label fw-bold d-none" style="color: #D52600; font-size: 12px; text-align:center;">Las placas no coinciden!</label> -->
+
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="confirm_placas_vehiculo" class="form-label fw-bold">Confirma las placas:</label>
-		<input type="text" class="form-control" id="confirm_placas_vehiculo" name="confirm_placas_vehiculo">
+		<input type="text" class="form-control" id="confirm_placas_vehiculo" name="confirm_placas_vehiculo" onkeyup="verificarPlacas()">
+		<label for="mensajeok" id="mensajeok" name="mensajeok" class="form-label fw-bold d-none" style="color: #009130; font-size: 12px; text-align:center;">Las placas coinciden </label>
+		<label for="mensaje" id="mensaje" name="mensaje" class="form-label fw-bold d-none" style="color: #D52600; font-size: 12px; text-align:center;">Las placas no coinciden</label>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="estado_vehiculo" class="form-label fw-bold">Estado de origen:</label>
-		<select class="form-select" id="estado_vehiculo" name="estado_vehiculo" autofocus>
+		<!-- <select class="form-select" id="estado_vehiculo" name="estado_vehiculo" autofocus>
 			<option selected disabled value="">Seleccione el estado</option>
-		</select>
+		</select> -->
+		<input type="text" class="form-control" id="estado_vehiculo" name="estado_vehiculo">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="serie_vehiculo" class="form-label fw-bold">No. Serie:</label>
 		<input type="text" class="form-control" id="serie_vehiculo" name="serie_vehiculo">
-		<input class="form-check-input" type="checkbox" name="serie_vehiculo_desconocida" id="serie_vehiculo_desconocida"> Se desconoce
+		<!-- <input class="form-check-input" type="checkbox" name="serie_vehiculo_desconocida" id="serie_vehiculo_desconocida"> Se desconoce -->
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="confirm_serie_vehiculo" class="form-label fw-bold">Confirmar serie</label>
-		<input type="text" class="form-control" id="confirm_serie_vehiculo" name="confirm_serie_vehiculo">
+		<input type="text" class="form-control" id="confirm_serie_vehiculo" name="confirm_serie_vehiculo" onkeyup="verificarSerie()">
+		<label for="coinciden" id="coinciden" name="coinciden" class="form-label fw-bold d-none" style="color: #009130; font-size: 12px; text-align:center;">La serie coincide </label>
+		<label for="nocoinciden" id="nocoinciden" name="nocoinciden" class="form-label fw-bold d-none" style="color: #D52600; font-size: 12px; text-align:center;">La serie no coincide</label>
 	</div>
 
 	<p class="fw-bold text-center mt-3">FABRICANTE</p>
@@ -43,6 +51,9 @@
 		<label for="distribuidor_vehiculo" class="form-label fw-bold">Distribuidor:</label>
 		<select class="form-select" id="distribuidor_vehiculo" name="distribuidor_vehiculo" autofocus>
 			<option selected disabled value="">Seleccione el distribuidor</option>
+			<?php foreach ($body_data->distribuidorVehiculo as $index => $distribuidor_vehiculo) { ?>
+				<option value="<?= $distribuidor_vehiculo->VEHICULODISTRIBUIDORID ?> "> <?= $distribuidor_vehiculo->VEHICULODISTRIBUIDORDESCR ?></option>
+			<?php } ?>
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -67,8 +78,8 @@
 		<label for="version_vehiculo" class="form-label fw-bold">Versión:</label>
 		<select class="form-select" id="version_vehiculo" name="version_vehiculo" autofocus>
 			<option selected disabled value="">Seleccione la versión</option>
-			<?php foreach ($body_data->marcaVehiculo as $index => $version_vehiculo) { ?>
-				<option value="<?= $version_vehiculo->VEHICULODISTRIBUIDORID ?> <?= $version_vehiculo->VEHICULOMARCAID ?> "> <?= $version_vehiculo->VEHICULOMARCADESCR ?></option>
+			<?php foreach ($body_data->versionVehiculo as $index => $version_vehiculo) { ?>
+				<option value="<?= $version_vehiculo->VEHICULODISTRIBUIDORID ?> <?= $version_vehiculo->VEHICULOMARCAID ?> <?= $version_vehiculo->VEHICULOMODELOID ?> <?= $version_vehiculo->VEHICULOVERSIONID ?>"> <?= $version_vehiculo->VEHICULOVERSIONDESCR ?></option>
 			<?php } ?>
 		</select>
 	</div>
@@ -85,6 +96,9 @@
 		<label for="servicio_vehiculo" class="form-label fw-bold">Servicio:</label>
 		<select class="form-select" id="servicio_vehiculo" name="servicio_vehiculo" autofocus>
 			<option selected disabled value="">Seleccione el servicio</option>
+			<?php foreach ($body_data->servicioVehiculo as $index => $servicio_vehiculo) { ?>
+				<option value="<?= $servicio_vehiculo->VEHICULOSERVICIOID ?> "> <?= $servicio_vehiculo->VEHICULOSERVICIODESCR ?></option>
+			<?php } ?>
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -171,7 +185,7 @@
 		<input class="form-control" type="file" id="foto_vehiculo" name="foto_vehiculo" accept="image/*" capture="user">
 	</div>
 	<div class="col-12 mb-3">
-		<label for="description_vehiculo" class="form-label fw-bold">Otras carcterísticas que permitan identificar el vehiculo:</label>
+		<label for="description_vehiculo" class="form-label fw-bold">Otras carcterísticas que permitan identificar el vehículo:</label>
 		<textarea class="form-control" id="description_vehiculo" name="description_vehiculo" rows="10"></textarea>
 	</div>
 </div>
@@ -182,4 +196,147 @@
 	for (i = endYear; i > startYear; i--) {
 		$('#modelo_vehiculo').append($('<option />').val(i).html(i));
 	}
+
+	function verificarPlacas() {
+
+		placas = document.getElementById('placas_vehiculo');
+		confirm_placas = document.getElementById('confirm_placas_vehiculo');
+
+		if (placas.value != confirm_placas.value) {
+
+			document.getElementById("mensaje").classList.remove("d-none")
+			document.getElementById("mensajeok").classList.add("d-none")
+
+
+		} else {
+			document.getElementById("mensaje").classList.add("d-none")
+			document.getElementById("mensajeok").classList.remove("d-none")
+		}
+
+	}
+
+	function verificarSerie() {
+
+		serie = document.getElementById('serie_vehiculo');
+		confirm_serie = document.getElementById('confirm_serie_vehiculo');
+
+		if (serie.value != confirm_serie.value) {
+
+			document.getElementById("nocoinciden").classList.remove("d-none")
+			document.getElementById("coinciden").classList.add("d-none")
+
+
+		} else {
+			document.getElementById("nocoinciden").classList.add("d-none")
+			document.getElementById("coinciden").classList.remove("d-none")
+		}
+
+	}
+
+
+	document.querySelector('#distribuidor_vehiculo').addEventListener('change', (e) => {
+
+		let select_marca = document.querySelector('#marca');
+		let select_linea = document.querySelector('#linea_vehiculo');
+		let select_version = document.querySelector('#version_vehiculo');
+
+		clearSelect(select_marca);
+		clearSelect(select_linea);
+		clearSelect(select_version);
+
+
+		let data = {
+			'distribuidor_vehiculo': e.target.value,
+		}
+
+		$.ajax({
+			data: data,
+			url: "<?= base_url('/data/get-marca-by-dist') ?>",
+			method: "POST",
+			dataType: "json",
+			success: function(response) {
+				let marcaVehiculo = response.data;
+				marcaVehiculo.forEach(marca_vehiculo => {
+					let option = document.createElement("option");
+					option.text = marca_vehiculo.VEHICULOMARCADESCR;
+					option.value = marca_vehiculo.VEHICULOMARCAID;
+					select_marca.add(option);
+				});
+				select_marca.value = '1';
+			},
+			error: function(jqXHR, textStatus, errorThrown) {}
+		});
+
+	});
+
+	document.querySelector('#marca').addEventListener('change', (e) => {
+		let select_linea = document.querySelector('#linea_vehiculo');
+		let select_version = document.querySelector('#version_vehiculo');
+		let select_distribuidor = document.querySelector('#distribuidor_vehiculo');
+
+		clearSelect(select_linea);
+		clearSelect(select_version);
+
+		// select_linea.value = '';
+		// select_version.value = '';
+
+		// select_version.classList.remove('d-none');
+
+		let data = {
+			'marca': e.target.value,
+			'dist': select_distribuidor.value,
+		}
+
+		$.ajax({
+			data: data,
+			url: "<?= base_url('/data/get-modelo-by-marca') ?>",
+			method: "POST",
+			dataType: "json",
+			success: function(response) {
+				let lineaVehiculo = response.data;
+
+				lineaVehiculo.forEach(linea_vehiculo => {
+					var option = document.createElement("option");
+					option.text = linea_vehiculo.VEHICULOMODELODESCR;
+					option.value = linea_vehiculo.VEHICULOMODELOID;
+					select_linea.add(option);
+				});
+
+			},
+			error: function(jqXHR, textStatus, errorThrown) {}
+		});
+	});
+
+	document.querySelector('#linea_vehiculo').addEventListener('change', (e) => {
+		let select_version = document.querySelector('#version_vehiculo');
+		let select_distribuidor = document.querySelector('#distribuidor_vehiculo');
+		let select_marca = document.querySelector('#marca');
+
+		clearSelect(select_version);
+
+		let data = {
+			'linea_vehiculo': e.target.value,
+			'dist': select_distribuidor.value,
+			'marca': select_marca.value,
+		}
+
+		$.ajax({
+			data: data,
+			url: "<?= base_url('/data/get-version-by-modelo') ?>",
+			method: "POST",
+			dataType: "json",
+			success: function(response) {
+				let versionVehiculo = response.data;
+
+				versionVehiculo.forEach(version_vehiculo => {
+					var option = document.createElement("option");
+					option.text = version_vehiculo.VEHICULOVERSIONDESCR;
+					option.value = version_vehiculo.VEHICULOVERSIONID;
+					select_version.add(option);
+				});
+
+			},
+			error: function(jqXHR, textStatus, errorThrown) {}
+		});
+	});
 </script>

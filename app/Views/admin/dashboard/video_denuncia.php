@@ -49,9 +49,19 @@
 </div>
 <div class="row">
 	<div class="col">
-		<div class="bg-white embed-responsive embed-responsive-1by1 shadow rounded">
-			<iframe src="https://videodenunciaserver1.fgebc.gob.mx/pde?u=33&token=7b2a0523176a9dd9f28b694b44de4d5a4edcff31" frameborder="0" allow="camera *;microphone *" style="margin-top:-100px;"></iframe>
-		</div>
+		<?php if (session('USUARIOVIDEO') && session('TOKENVIDEO')) { ?>
+			<div class="card rounded bg-white shadow">
+				<div class="card-body embed-responsive embed-responsive-1by1 shadow rounded">
+					<iframe src="<?= "https://videodenunciaserver1.fgebc.gob.mx/pde?u=" . session('USUARIOVIDEO') . "&token=" . session('TOKENVIDEO') ?>" frameborder="0" allow="camera *;microphone *"></iframe>
+				</div>
+			</div>
+		<?php } else { ?>
+			<div class="card rounded bg-white shadow">
+				<div class="card-body">
+					<h2>NO CUENTAS CON TOKEN PARA VIDEODENUNCIA</h2>
+				</div>
+			</div>
+		<?php } ?>
 	</div>
 	<div id="card5" class="col-3 d-none">
 		<div class="card rounded bg-white shadow">

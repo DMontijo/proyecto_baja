@@ -61,11 +61,6 @@
 							<?php include('form_datos_menor.php') ?>
 						</div>
 
-						<!-- DATOS DEL ADULTO -->
-						<div id="datos_adulto" class="col-12 d-none step">
-							<?php include('form_datos_adulto.php') ?>
-						</div>
-
 						<!-- DATOS DESAPARECIDO -->
 						<div id="datos_desaparecido" class="col-12 d-none step">
 							<?php include('form_persona_desaparecida.php') ?>
@@ -145,8 +140,6 @@
 					if (!form.checkValidity()) {
 						event.preventDefault();
 						event.stopPropagation();
-					} else {
-
 					}
 					form.classList.add('was-validated')
 				}, false)
@@ -165,7 +158,6 @@
 		});
 
 		document.querySelector('#description_fisica_imputado').addEventListener('input', (event) => {
-			console.log('DESCRIPCION FISICA');
 			event.target.value = clearText(event.target.value).toUpperCase();
 		}, false)
 
@@ -188,10 +180,9 @@
 					$('#open_folios_modal').modal('show');
 				}
 			}).fail(function(jqXHR, textStatus) {});
-
 		})
 
-	})()
+	})();
 
 	$('#description').keyup(() => {
 		let ch = 150 - $(this).val().length;
@@ -202,32 +193,30 @@
 
 	chargeCurrentStep(currentStep);
 
+
 	nextBtn.addEventListener('click', () => {
 
 		var vista = document.querySelectorAll('.step');
 
 		if (validarStep(vista[currentStep].id)) {
 
-			if (document.querySelector('input[name="es_menor"]:checked').value == "NO") {
+			if (document.querySelector('input[name="es_menor"]:checked').value === 'SI' &&
+				document.querySelector('input[name="esta_desaparecido"]:checked').value == "SI") {
+				document.getElementById('datos_desaparecido').classList.remove('step');
+				document.getElementById('datos_menor').classList.add('step');
+			} else if (document.querySelector('input[name="es_menor"]:checked').value === 'SI' &&
+				document.querySelector('input[name="esta_desaparecido"]:checked').value == "NO") {
+				document.getElementById('datos_desaparecido').classList.add('step');
 				document.getElementById('datos_menor').classList.remove('step');
-				document.getElementById('datos_adulto').classList.remove('step');
-			} else {
-				if (document.querySelector('input[name="eres_tu"]:checked').value == "NO") {
-					document.getElementById('datos_adulto').classList.remove('step');
-					document.getElementById('datos_menor').classList.add('step');
-				} else {
-					document.getElementById('datos_menor').classList.remove('step');
-					document.getElementById('datos_adulto').classList.add('step');
-				}
 			}
 
-			if (document.querySelector('input[name="esta_desaparecido"]:checked').value == "NO") {
+			if (document.querySelector('input[name="esta_desaparecido"]:checked').value === 'SI') {
 				document.getElementById('datos_desaparecido').classList.remove('step');
 			} else {
 				document.getElementById('datos_desaparecido').classList.add('step');
 			}
 
-			if (document.querySelector("#delito").value == "ROBO DE VEHÍCULO" || document.querySelector("#delito").value == "ROBO DE VEHÍCULO CON VIOLENCIA") {
+			if (document.querySelector("#delito").value == "ROBO DE VEHÍCULO") {
 				document.getElementById('datos_robo_vehiculo').classList.add('step');
 			} else {
 				document.getElementById('datos_robo_vehiculo').classList.remove('step');
@@ -245,7 +234,6 @@
 			var width = 100 / stepCount;
 
 			currentStep++;
-			console.log(currentStep);
 			let previousStep = currentStep - 1;
 			if ((currentStep > 0) && (currentStep <= stepCount)) {
 				prevBtn.classList.remove('d-none');
@@ -263,7 +251,6 @@
 			}
 			progress.style.width = `${currentStep*width}%`
 		} else {
-			console.log('NO SE VALIDO');
 			submitBtn.click();
 			Swal.fire({
 				icon: 'error',
@@ -342,7 +329,6 @@
 			case 'datos_iniciales':
 				if (
 					document.querySelector('input[name="es_menor"]:checked') &&
-					document.querySelector('input[name="eres_tu"]:checked') &&
 					document.querySelector('input[name="tiene_discapacidad"]:checked') &&
 					document.querySelector('input[name="fue_con_arma"]:checked') &&
 					document.querySelector('input[name="esta_desaparecido"]:checked')
@@ -366,27 +352,6 @@
 					document.querySelector('#cp_menor').value != '' &&
 					document.querySelector('#fecha_nacimiento_menor').value != '' &&
 					document.querySelector('#edad_menor').value != ''
-				) {
-					return true
-				} else {
-					return true
-				}
-				break;
-			case 'datos_adulto':
-				if (
-					document.querySelector('#nombre_adulto').value != '' &&
-					document.querySelector('#ape_paterno_adulto').value != '' &&
-					document.querySelector('#ape_materno_adulto').value != '' &&
-					document.querySelector('#pais_adulto').value != '' &&
-					document.querySelector('#estado_adulto').value != '' &&
-					document.querySelector('#municipio_adulto').value != '' &&
-					document.querySelector('#colonia_adulto').value != '' &&
-					document.querySelector('#calle_adulto').value != '' &&
-					document.querySelector('#numero_ext_adulto').value != '' &&
-					document.querySelector('#numero_int_adulto').value != '' &&
-					document.querySelector('#cp_adulto').value != '' &&
-					document.querySelector('#fecha_nac_adulto').value != '' &&
-					document.querySelector('#edad_adulto').value != ''
 				) {
 					return true
 				} else {
