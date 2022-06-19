@@ -75,35 +75,11 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="transmision_vehiculo" class="form-label font-weight-bold ">Caja / Transmisión:</label>
-		<br>
-		<div class="form-check">
-			<input class="form-check-input" type="radio" name="transmision_vehiculo" id="AUTOMATICA">
-			<label class="form-check-label" for="flexRadioDefault1">Automática</label>
-		</div>
-		<div class="form-check">
-			<input class="form-check-input" type="radio" name="transmision_vehiculo" id="MANUAL">
-			<label class="form-check-label" for="flexRadioDefault2">Manual</label>
-		</div>
-		<div class="form-check">
-			<input class="form-check-input" type="radio" name="transmision_vehiculo" id="DUAL">
-			<label class="form-check-label" for="flexRadioDefault2">Dual</label>
-		</div>
+		<input type="text" class="form-control" id="transmision_vehiculo" name="transmision_vehiculo">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="traccion_vehiculo" class="form-label font-weight-bold ">Tracción:</label>
-		<br>
-		<div class="form-check">
-			<input class="form-check-input" type="radio" name="traccion_vehiculo" id="DOBLE">
-			<label class="form-check-label" for="flexRadioDefault1">Doble</label>
-		</div>
-		<div class="form-check">
-			<input class="form-check-input" type="radio" name="traccion_vehiculo" id="SENCILLA">
-			<label class="form-check-label" for="flexRadioDefault2">Sencilla</label>
-		</div>
-		<div class="form-check">
-			<input class="form-check-input" type="radio" name="traccion_vehiculo" id="DUAL">
-			<label class="form-check-label" for="flexRadioDefault2">Dual</label>
-		</div>
+		<input type="text" class="form-control" id="traccion_vehiculo" name="traccion_vehiculo">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="foto_vehiculo" class="form-label font-weight-bold">Fotografía del vehículo:</label>

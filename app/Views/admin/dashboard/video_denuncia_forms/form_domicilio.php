@@ -1,27 +1,27 @@
 <div class="row">
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="pais" class="form-label fw-bold">País</label>
-		<input class="form-control" type="text" id="pais" name="pais">
+		<input class="form-control" type="text" id="paisp" name="paisp">
 	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="estado" class="form-label fw-bold">Estado</label>
-		<input class="form-control" type="text" id="estado" name="estado">
+		<input class="form-control" type="text" id="estadoper" name="estadoper">
 	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="municipio" class="form-label fw-bold">Municipio</label>
-		<input class="form-control" type="text" id="municipio" name="municipio">
+		<input class="form-control" type="text" id="municipiop" name="municipiop">
 	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="localidad" class="form-label fw-bold">Localidad</label>
-		<input class="form-control" type="text" id="localidad" name="localidad">
+		<input class="form-control" type="text" id="localidadp" name="localidadp">
 	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="colonia" class="form-label fw-bold">Colonia</label>
-		<input type="text" class="form-control" id="colonia" name="colonia">
+		<input type="text" class="form-control" id="coloniap" name="coloniap">
 	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -31,22 +31,22 @@
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="calle" class="form-label fw-bold">Calle</label>
-		<input type="text" class="form-control" id="calle" name="calle">
+		<input type="text" class="form-control" id="callep" name="callep">
 	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="exterior" class="form-label fw-bold">Número exterior</label>
-		<input type="text" class="form-control" id="exterior" name="exterior">
+		<input type="text" class="form-control" id="exteriorp" name="exteriorp">
 	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="interior" class="form-label fw-bold">Número interior</label>
-		<input type="text" class="form-control" id="interior" name="interior">
+		<input type="text" class="form-control" id="interiorp" name="interiorp">
 	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="interior" class="form-label fw-bold">Zona</label>
-		<input type="text" class="form-control" id="zona" name="zona">
+		<input type="text" class="form-control" id="zonap" name="zonap">
 	</div>
 
 </div>

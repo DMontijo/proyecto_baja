@@ -63,4 +63,8 @@ class FolioPersonaFisicaModel extends Model
 
 		return $query->getRow();
 	}
+	public function buscar($id){
+		return $this->where("ID=". $id)->find(); 
+	}
+
 }

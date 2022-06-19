@@ -118,6 +118,10 @@ $routes->group('data', function ($routes) {
 	$routes->post('get-marca-by-dist', 'client/DashboardController::getMarcaByDist');
 	$routes->post('get-modelo-by-marca', 'client/DashboardController::getModeloByMarca');
 	$routes->post('get-version-by-modelo', 'client/DashboardController::getVersionByModelo');
+	// $routes->post('get-persona-fisica-by-id', 'admin/DashboardController::findPersonaFisicaById');
+	$routes->post('get-persona-domicilio-by-id', 'admin/DashboardController::findPersonadDomicilioById');
+	$routes->post('get-persona-vehiculo-by-id', 'admin/DashboardController::findPersonadVehiculoById');
+	$routes->post('join', 'admin/DashboardController::joinFisico');
 });
 
 /**
