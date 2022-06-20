@@ -125,6 +125,10 @@ $routes->group('data', function ($routes) {
 
 	//SAVE IN JUSTICIA DATABASE
 	$routes->post('save-in-justicia', 'admin/DashboardController::saveInJusticia');
+	$routes->post('get-persona-fisica-by-id', 'admin/DashboardController::findPersonaFisicaById');
+	$routes->post('get-persona-domicilio-by-id', 'admin/DashboardController::findPersonadDomicilioById');
+	$routes->post('get-persona-vehiculo-by-id', 'admin/DashboardController::findPersonadVehiculoById');
+	$routes->post('join', 'admin/DashboardController::joinFisico');
 });
 
 /**
