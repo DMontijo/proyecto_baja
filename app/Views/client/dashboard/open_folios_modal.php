@@ -20,7 +20,8 @@
 			data: {
 				'id': '<?= $session->ID_DENUNCIANTE ?>',
 				'edad': '<?= $session->EDAD ?>',
-				'folio': document.querySelector('#folio_num_span').innerHTML
+				'folio': document.querySelector('#folio_num_span').innerHTML,
+				'sexo_denunciante': '<?= $session->SEXO ?>',
 			},
 			url: "<?= base_url('/data/get-link-videodenuncia') ?>",
 			method: "POST",

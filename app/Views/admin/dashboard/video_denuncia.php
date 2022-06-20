@@ -12,7 +12,7 @@
 					<div class="col-12">
 						<div class="form-group mb-1">
 							<div class="input-group mb-1">
-								<input type="text" class="form-control" id="input_folio_atencion" placeholder="Folio de atención..." value="">
+								<input type="text" class="form-control" id="input_folio_atencion" placeholder="Folio de atención..." value="<?= isset($body_data->folio) ? $body_data->folio : '' ?>">
 							</div>
 						</div>
 					</div>
@@ -39,7 +39,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="card4" class="col-3">
+	<div id="card4" class="col-3 d-none">
 		<div class="card rounded bg-white shadow" style="height: 190px;">
 			<div class="card-body">
 				<button id="salida-folio-btn" class="btn btn-primary btn-block h-100" role="button" data-toggle="modal" data-target="#salida_modal"><i class="fas fa-sign-out-alt"></i> DAR SALIDA</button>
@@ -63,7 +63,7 @@
 			</div>
 		<?php } ?>
 	</div>
-	<div id="card5" class="col-3">
+	<div id="card5" class="col-3 d-none">
 		<div class="card rounded bg-white shadow">
 			<div class="card-body">
 				<div class="row">

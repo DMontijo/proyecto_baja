@@ -57,7 +57,8 @@ class FoliosController extends BaseController
 		$data->abiertos = count($this->_folioModel->where('STATUS', 'ABIERTO')->findAll());
 		$data->derivados = count($this->_folioModel->where('STATUS', 'DERIVADO')->findAll());
 		$data->canalizados = count($this->_folioModel->where('STATUS', 'CANALIZADO')->findAll());
-		$data->expedientes = count($this->_folioModel->where('EXPEDIENTEID !=', NULL)->findAll());
+		$data->expedientes = count($this->_folioModel->asObject()->where('EXPEDIENTEID !=', NULL)->where('AGENTEATENCIONID !=', NULL)->where('AGENTEFIRMAID !=', NULL)->findAll());
+		$data->expedientes_no_firmados = count($this->_folioModel->asObject()->where('EXPEDIENTEID !=', NULL)->where('AGENTEATENCIONID !=', NULL)->where('AGENTEFIRMAID', NULL)->findAll());
 		$this->_loadView('Folios', 'folios', '', $data, 'index');
 	}
 
@@ -85,15 +86,23 @@ class FoliosController extends BaseController
 	public function folios_expediente()
 	{
 		$data = (object)array();
-		$data = $this->_folioModel->asObject()->where('EXPEDIENTEID !=', NULL)->where('AGENTEFIRMAID !=', NULL)->findAll();
+		$data = $this->_folioModel->asObject()->where('EXPEDIENTEID !=', NULL)->where('AGENTEATENCIONID !=', NULL)->where('AGENTEFIRMAID !=', NULL)->findAll();
 		$this->_loadView('Folios expediente', 'folios', '', $data, 'folios_expediente');
 	}
 
 	public function folios_sin_firma()
 	{
 		$data = (object)array();
-		$data = $this->_folioModel->asObject()->where('EXPEDIENTEID !=', NULL)->where('AGENTEFIRMAID', NULL)->findAll();
+		$data = $this->_folioModel->asObject()->where('EXPEDIENTEID !=', NULL)->where('AGENTEATENCIONID !=', NULL)->where('AGENTEFIRMAID', NULL)->findAll();
 		$this->_loadView('Folios sin firma', 'folios', '', $data, 'folios_sin_firma');
+	}
+
+	public function firmar_folio()
+	{
+		$folio = $this->request->getVar('folio');
+		$data = ['AGENTEFIRMAID' => session('ID')];
+		$this->_folioModel->set($data)->where('FOLIOID', $folio)->update();
+		return redirect()->to(base_url('/admin/dashboard/folios_sin_firma'));
 	}
 
 	private function _loadView($title, $menu, $submenu, $data, $view)

@@ -98,12 +98,64 @@
 	const oficina_empleado_container = document.querySelector('#oficina_empleado_container');
 	const empleado_container = document.querySelector('#empleado_container');
 
+	const municipio_empleado = document.querySelector('#municipio_empleado');
+	const oficina_empleado = document.querySelector('#oficina_empleado');
+	const empleado = document.querySelector('#empleado');
+
+	municipio_empleado.addEventListener('change', (e) => {
+		clearSelect(oficina_empleado);
+		clearSelect(empleado);
+		oficina_empleado.value = '';
+		empleado.value = '';
+
+		$.ajax({
+			data: {
+				'municipio': e.target.value
+			},
+			url: "<?= base_url('/data/get-oficinas-by-municipio') ?>",
+			method: "POST",
+			dataType: "json",
+		}).done(function(data) {
+			clearSelect(oficina_empleado);
+			data.forEach(oficina => {
+				let option = document.createElement("option");
+				option.text = oficina.OFICINADESCR;
+				option.value = oficina.OFICINAID;
+				oficina_empleado.add(option);
+			});
+			oficina_empleado.value = '';
+		}).fail(function(jqXHR, textStatus) {
+			clearSelect(oficina_empleado);
+		});
+	});
+
+	oficina_empleado.addEventListener('change', (e) => {
+		$.ajax({
+			data: {
+				'municipio': municipio_empleado.value,
+				'oficina': e.target.value,
+			},
+			url: "<?= base_url('/data/get-empleados-by-municipio-and-oficina') ?>",
+			method: "POST",
+			dataType: "json",
+		}).done(function(data) {
+			clearSelect(empleado);
+			data.forEach(emp => {
+				let option = document.createElement("option");
+				option.text = emp.NOMBRE + ' ' + emp.PRIMERAPELLIDO + ' ' + emp.SEGUNDOAPELLIDO;
+				option.value = emp.EMPLEADOID;
+				empleado.add(option);
+			});
+			empleado.value = '';
+		}).fail(function(jqXHR, textStatus) {
+			clearSelect(empleado);
+		});
+	});
+
 	tipoSalida.addEventListener('change', (e) => {
 		const notas_caso_salida = document.querySelector('#notas_caso_salida');
 		const notas_caso_mp = document.querySelector('#notas_mp');
 		notas_caso_salida.value = notas_caso_mp.value;
-
-		console.log(notas_caso_mp.value);
 
 		if (e.target.value !== 'NAC') {
 			document.querySelector('#v-pills-delitos-tab').classList.add('d-none');
@@ -126,11 +178,11 @@
 
 
 	btnFinalizar.addEventListener('click', () => {
+		btnFinalizar.setAttribute('disabled', true);
+
 		if (tipoSalida.value !== 'NAC') {
 			let salida = tipoSalida.value;
 			let descripcion = document.querySelector('#notas_caso_salida').value;
-
-			btnFinalizar.setAttribute('disabled', true);
 			data = {
 				'folio': document.querySelector('#input_folio_atencion').value,
 				'agenteId': <?= session('ID') ?>,
@@ -146,6 +198,7 @@
 					dataType: "json",
 
 				}).done(function(data) {
+					btnFinalizar.removeAttribute('disabled');
 					if (data.status == 1) {
 						document.querySelector('#tipo_salida').value = "";
 						document.querySelector('#notas_caso_salida').value = '';
@@ -158,7 +211,6 @@
 							$("#salida_modal").modal("hide");
 							$('body').removeClass('modal-open');
 							$('.modal-backdrop').remove();
-							btnFinalizar.removeAttribute('disabled');
 							buscar_nuevo_btn.classList.add('d-none');
 							inputFolio.classList.remove('d-none');
 							buscar_btn.classList.remove('d-none');
@@ -186,8 +238,93 @@
 				});
 			}
 		} else {
+			if (municipio_empleado.value != '' && oficina_empleado.value != '' && empleado.value != '') {
+				let descripcion = document.querySelector('#notas_caso_salida').value;
 
+				if (
+					descripcion &&
+					inputFolio.value != '' &&
+					municipio_empleado.value != '' &&
+					oficina_empleado.value != '' &&
+					empleado.value != '') {
+					data = {
+						'folio': inputFolio.value,
+						'municipio': municipio_empleado.value,
+						'estado': 2,
+						'notas': descripcion,
+						'oficina': oficina_empleado.value,
+						'empleado': empleado.value,
+					}
+					$.ajax({
+						data: data,
+						url: "<?= base_url('/data/save-in-justicia') ?>",
+						method: "POST",
+						dataType: "json",
+
+					}).done(function(data) {
+						btnFinalizar.removeAttribute('disabled');
+						console.log(data);
+						if (data.status == 1) {
+							document.querySelector('#tipo_salida').value = "";
+							document.querySelector('#notas_caso_salida').value = '';
+
+							Swal.fire({
+								icon: 'success',
+								text: 'EXPEDIENTE CREADO CORRECTAMENTE',
+								confirmButtonColor: '#bf9b55',
+							}).then((e) => {
+								$("#salida_modal").modal("hide");
+								$('body').removeClass('modal-open');
+								$('.modal-backdrop').remove();
+								buscar_nuevo_btn.classList.add('d-none');
+								inputFolio.classList.remove('d-none');
+								buscar_btn.classList.remove('d-none');
+								municipio_empleado.value = '';
+								oficina_empleado.value = '';
+								empleado.value = '';
+
+								card2.classList.add('d-none');
+								card3.classList.add('d-none');
+								card4.classList.add('d-none');
+								card5.classList.add('d-none');
+								notas_mp.value = '';
+								inputFolio.value = '';
+							})
+						}
+						console.log(data);
+
+					}).fail(function(jqXHR, textStatus) {
+						btnFinalizar.removeAttribute('disabled');
+						Swal.fire({
+							icon: 'error',
+							text: 'Fallo la conexión, revisa con soporte técnico.',
+							confirmButtonColor: '#bf9b55',
+						});
+					});
+				} else {
+					btnFinalizar.removeAttribute('disabled');
+					Swal.fire({
+						icon: 'error',
+						text: 'Debes agregar comentarios y elegir una asignación para finalizar.',
+						confirmButtonColor: '#bf9b55',
+					});
+				}
+
+			} else {
+				btnFinalizar.removeAttribute('disabled');
+				Swal.fire({
+					icon: 'error',
+					text: 'Debes seleccionar un municipio, una oficina y una asignación',
+					confirmButtonColor: '#bf9b55',
+				});
+			}
 		}
 
 	});
+
+	function clearSelect(select_element) {
+		for (let i = select_element.options.length; i >= 1; i--) {
+			select_element.remove(i);
+		}
+	}
 </script>

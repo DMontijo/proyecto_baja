@@ -13,10 +13,11 @@
 			<div class="col-12">
 				<div class="card shadow border-0">
 					<div class="card-body">
-						<table id="foios_expediente" class="table table-bordered table-striped">
+						<table id="folios_expediente" class="table table-bordered table-striped">
 							<thead>
 								<tr>
 									<th>FOLIO</th>
+									<th>EXPEDIENTE</th>
 									<th>FECHA</th>
 									<th>DELITO</th>
 									<th>ESTADO</th>
@@ -27,6 +28,7 @@
 								<?php foreach ($body_data as $index => $folio) { ?>
 									<tr>
 										<th scope="row"><?= $folio->FOLIOID ?></th>
+										<td><?= $folio->EXPEDIENTEID ?></td>
 										<td><?= $folio->FECHAREGISTRO ?></td>
 										<td><?= $folio->DELITODENUNCIA ?></td>
 										<td><?= $folio->STATUS ?></td>
@@ -43,7 +45,7 @@
 </section>
 <script>
 	$(function() {
-		$("#foios_expediente").DataTable({
+		$("#folios_expediente").DataTable({
 			"responsive": true,
 			"lengthChange": false,
 			"autoWidth": false,

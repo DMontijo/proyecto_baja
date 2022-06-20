@@ -58,6 +58,7 @@ $routes->group('admin', function ($routes) {
 		$routes->get('folios_canalizados', 'admin/FoliosController::folios_canalizados');
 		$routes->get('folios_expediente', 'admin/FoliosController::folios_expediente');
 		$routes->get('folios_sin_firma', 'admin/FoliosController::folios_sin_firma');
+		$routes->post('firmar_folio', 'admin/FoliosController::firmar_folio');
 
 		$routes->get('certificadoMedico', 'PDFController::certificadoMedico');
 		$routes->get('constancia-video-denuncia', 'PDFController::constanciaVideoDenuncia');
@@ -111,6 +112,9 @@ $routes->group('data', function ($routes) {
 	$routes->post('get-persona-fisica-by-id', 'admin/DashboardController::findPersonaFisicaById');
 	$routes->post('update-status-folio', 'admin/DashboardController::updateStatusFolio');
 
+	$routes->post('get-oficinas-by-municipio', 'admin/DashboardController::getOficinasByMunicipio');
+	$routes->post('get-empleados-by-municipio-and-oficina', 'admin/DashboardController::getEmpleadosByMunicipioAndOficina');
+
 	$routes->post('sendOTP', 'OTPController::sendEmailOTP');
 	$routes->post('getLastOTP', 'OTPController::getLastOTP');
 
@@ -118,6 +122,9 @@ $routes->group('data', function ($routes) {
 	$routes->post('get-marca-by-dist', 'client/DashboardController::getMarcaByDist');
 	$routes->post('get-modelo-by-marca', 'client/DashboardController::getModeloByMarca');
 	$routes->post('get-version-by-modelo', 'client/DashboardController::getVersionByModelo');
+
+	//SAVE IN JUSTICIA DATABASE
+	$routes->post('save-in-justicia', 'admin/DashboardController::saveInJusticia');
 });
 
 /**

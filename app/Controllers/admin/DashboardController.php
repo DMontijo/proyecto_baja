@@ -24,6 +24,8 @@ use App\Models\FolioArchivoExternoModel;
 use App\Models\UsuariosModel;
 use App\Models\ZonasUsuariosModel;
 use App\Models\RolesUsuariosModel;
+use App\Models\OficinasModel;
+use App\Models\EmpleadosModel;
 
 class DashboardController extends BaseController
 {
@@ -50,6 +52,8 @@ class DashboardController extends BaseController
 		$this->_usuariosModel = new UsuariosModel();
 		$this->_zonasUsuariosModel = new ZonasUsuariosModel();
 		$this->_rolesUsuariosModel = new RolesUsuariosModel();
+		$this->_oficinasModel = new OficinasModel();
+		$this->_empleadosModel = new EmpleadosModel();
 	}
 
 	public function index()
@@ -134,7 +138,8 @@ class DashboardController extends BaseController
 
 	public function video_denuncia()
 	{
-		$data = array();
+		$data = (object)array();
+		$data->folio = $this->request->getGet('folio');
 		$this->_loadView('Video denuncia', 'videodenuncia', '', $data, 'video_denuncia');
 	}
 
@@ -194,6 +199,21 @@ class DashboardController extends BaseController
 		}
 	}
 
+	private function _sendEmailExpediente($to, $folio, $expedienteId)
+	{
+		$email = \Config\Services::email();
+		$email->setTo($to);
+		$email->setFrom('andrea.solorzano@yocontigo-it.com', 'FGEBC');
+		$email->setSubject('Nuevo expediente creado');
+		$body = view('email_template/expediente_email_template.php', ['expediente' => $expedienteId]);
+		$email->setMessage($body);
+		if ($email->send()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	private function _sendEmailPassword($to, $password)
 	{
 		$email = \Config\Services::email();
@@ -229,6 +249,69 @@ class DashboardController extends BaseController
 		$folio = $this->request->getPost('folio');
 		$data = $this->_folioPersonaFisicaModel->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
 		return json_encode($data);
+	}
+
+	public function getOficinasByMunicipio()
+	{
+		$municipio = $this->request->getPost('municipio');
+
+		if (!empty($municipio)) {
+			$data = $this->_oficinasModel->asObject()->where('MUNICIPIOID', $municipio)->findAll();
+			return json_encode($data);
+		} else {
+			$data = $this->_oficinasModel->asObject()->findAll();
+			return json_encode($data);
+		}
+	}
+
+	public function getEmpleadosByMunicipioAndOficina()
+	{
+		$municipio = $this->request->getPost('municipio');
+		$oficina = $this->request->getPost('oficina');
+
+		if (!empty($municipio) && !empty($municipio)) {
+			$data = $this->_empleadosModel->asObject()->where('MUNICIPIOID', $municipio)->where('OFICINAID', $oficina)->findAll();
+			return json_encode($data);
+		} else {
+			$data = $this->_empleadosModel->asObject()->findAll();
+			return json_encode($data);
+		}
+	}
+
+	public function saveInJusticia()
+	{
+		$folio = $this->request->getPost('folio');
+		$municipio = $this->request->getPost('municipio');
+		$estado = empty($this->request->getPost('estado')) ? 2 : $this->request->getPost('estado');
+		$notas = $this->request->getPost('notas');
+		$oficina = $this->request->getPost('oficina');
+		$empleado = $this->request->getPost('empleado');
+
+		// $url = '192.168.191.33/API-RestJusticia/public/expediente';
+		if (!empty($folio) && !empty($municipio) && !empty($estado) && !empty($notas) && !empty($oficina) && !empty($empleado)) {
+			$folioRow = $this->_folioModel->where('FOLIOID', $folio)->first();
+			$folioRow['MUNICIPIOID'] = $municipio;
+			$folioRow['EXPEDIENTEID'] = $folio;
+			$folioRow['ESTADOID'] = $estado;
+			$folioRow['NOTASAGENTE'] = $notas;
+			$folioRow['STATUS'] = 'EXPEDIENTE';
+			$folioRow['AGENTEATENCIONID'] = session('ID');
+			$folioRow['AGENTEFIRMAID'] = session('ROLID') != '5' ? session('ID') : NULL;
+
+			$update = $this->_folioModel->set($folioRow)->where('FOLIOID', $folio)->update();
+			if ($update) {
+				$denunciante = $this->_denunciantesModel->asObject()->where('ID_DENUNCIANTE', $folioRow['DENUNCIANTEID'])->first();
+				if ($this->_sendEmailExpediente($denunciante->CORREO, $folio, $folioRow['EXPEDIENTEID'])) {
+					return json_encode(['status' => 1]);
+				} else {
+					return json_encode(['status' => 1]);
+				}
+			} else {
+				return json_encode(['status' => 0, 'error' => 'No hizo el update']);
+			}
+		} else {
+			return json_encode(['status' => 0, 'error' => 'No existe alguna de las variables']);
+		}
 	}
 }
 

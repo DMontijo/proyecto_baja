@@ -13,24 +13,29 @@
 			<div class="col-12">
 				<div class="card shadow border-0">
 					<div class="card-body">
-						<table id="folios_abiertos" class="table table-bordered table-striped">
+						<table id="folios_sin_firma" class="table table-bordered table-striped">
 							<thead>
 								<tr>
 									<th>FOLIO</th>
+									<th>EXPEDIENTE</th>
 									<th>FECHA</th>
 									<th>DELITO</th>
-									<th>ESTADO</th>
-									<!-- <th></th> -->
+									<th></th>
 								</tr>
 							</thead>
 							<tbody>
 								<?php foreach ($body_data as $index => $folio) { ?>
 									<tr>
-										<th scope="row"><?= $folio->FOLIOID ?></th>
+										<td><?= $folio->FOLIOID ?></td>
+										<td><?= $folio->EXPEDIENTEID ?></td>
 										<td><?= $folio->FECHAREGISTRO ?></td>
 										<td><?= $folio->DELITODENUNCIA ?></td>
-										<td><?= $folio->STATUS ?></td>
-										<!-- <td><button type="button" class="btn btn-primary"><i class="fas fa-eye"></i></button></td> -->
+										<td>
+											<form id="<?= 'form_' . $folio->FOLIOID ?>" action="<?= base_url('admin/dashboard/firmar_folio') ?>" method="POST">
+												<input type="text" name="folio" value="<?= $folio->FOLIOID ?>" hidden>
+												<button type="submit" class="btn btn-primary">FIRMADO</button>
+											</form>
+										</td>
 									</tr>
 								<?php } ?>
 							</tbody>
@@ -43,7 +48,7 @@
 </section>
 <script>
 	$(function() {
-		$("#folios_abiertos").DataTable({
+		$("#folios_sin_firma").DataTable({
 			"responsive": true,
 			"lengthChange": false,
 			"autoWidth": false,

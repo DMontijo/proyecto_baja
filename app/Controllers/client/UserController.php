@@ -14,7 +14,6 @@ use App\Models\LocalidadesModel;
 use App\Models\ColoniasModel;
 use App\Models\PersonaTipoIdentificacionModel;
 use App\Models\PaisesModel;
-use App\Models\FoliosAtencionModel;
 use App\Models\HechoClasificacionLugarModel;
 use App\Models\FolioModel;
 
@@ -34,7 +33,6 @@ class UserController extends BaseController
 		$this->_denunciantesModel = new DenunciantesModel();
 		$this->_tipoIdentificacionModel = new PersonaTipoIdentificacionModel();
 		$this->_paisesModel = new PaisesModel();
-		$this->_foliosAtencionModel = new FoliosAtencionModel();
 		$this->_clasificacionLugarModel = new HechoClasificacionLugarModel();
 		$this->_folioModel = new FolioModel();
 	}
