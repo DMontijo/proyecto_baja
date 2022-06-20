@@ -3,7 +3,6 @@
 namespace App\Controllers\admin;
 
 use App\Controllers\BaseController;
-use App\Models\FoliosAtencionModel;
 use App\Models\DenunciantesModel;
 use App\Models\FolioDenunciaModel;
 
@@ -126,7 +125,7 @@ class DashboardController extends BaseController
 			if ($data->folio->STATUS == 'ABIERTO') {
 				$data->status = 1;
 				$data->preguntas_iniciales = $this->_folioPreguntasModel->where('FOLIOID', $numfolio)->first();
-				$data->personas = $this->_folioPersonaFisicaModel->where('FOLIOID', $numfolio)->findAll();
+				$data->personas = $this->_folioPersonaFisicaModel->join('PERSONACALIDADJURIDICA', 'PERSONACALIDADJURIDICA.PERSONACALIDADJURIDICAID = FOLIOPERSONAFISICA.CALIDADJURIDICAID')->where('FOLIOID', $numfolio)->orderBy('ID','desc')->findAll();
 				$data->domicilio = $this->_folioPersonaFisicaDomicilioModel->where('FOLIOID', $numfolio)->findAll();
 				$data->vehiculos = $this->_folioVehiculoModel->where('FOLIOID', $numfolio)->findAll();
 				return json_encode($data);

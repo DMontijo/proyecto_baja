@@ -31,7 +31,6 @@
 								<table id="table-personas" class="table table-bordered table-striped">
 									<thead>
 										<tr>
-											<th class="text-center" id="id" name="id">ID</th>
 											<th class="text-center" id="nombreP" name="nombreP">NOMBRE</th>
 											<th class="text-center" id="calidadP" name="calidadP">CALIDAD JURIDICA</th>
 											<th></th>

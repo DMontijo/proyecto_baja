@@ -137,45 +137,40 @@
 
 					//DENUNCIA
 					document.querySelector('#delito').value = folio.DELITODENUNCIA;
-					document.querySelector('#municipio').value = folio.MUNICIPIOID;
-					document.querySelector('#colonia').value = folio.COLONIAID;
+					document.querySelector('#municipio').value = folio.HECHOMUNICIPIOID;
+					document.querySelector('#colonia').value = folio.HECHOCOLONIAID;
 					document.querySelector('#calle').value = folio.HECHOCALLE;
 					document.querySelector('#exterior').value = folio.HECHONUMEROCASA;
 					document.querySelector('#interior').value = folio.HECHONUMEROCASAINT;
 					document.querySelector('#lugar').value = folio.HECHOLUGARID;
 					document.querySelector('#hora').value = folio.HECHOHORA;
 					document.querySelector('#fecha').value = folio.HECHOFECHA;
+					document.querySelector('#narracion').value = folio.HECHONARRACION;
+
 					//PERSONAS
-
-
 					var k = 1; //contador para asignar id al boton que borrara la fila
+
 					for (let i = 0; i < personas.length; i++) {
 						var btn = `<button type='button'  class='btn btn-primary' onclick='viewPersonaFisica(${personas[i].PERSONAFISICAID},${personas[i].CALIDADJURIDICAID})'><i class='fas fa-eye'></i></button>`
-						var btnDomicilio = `<button type='button' class='btn btn-primary' onclick='viewDomicilio(${personas[i].PERSONAFISICAID})'><i class='fas fa-eye'></i></button>`
 
 						var fila = '<tr id="row' + i + '"><td>' +
-							personas[i].PERSONAFISICAID + '</td><td>' +
 							personas[i].NOMBRE + '</td><td>' +
-							personas[i].CALIDADJURIDICAID +
+							personas[i].PERSONACALIDADJURIDICADESCR +
 							'</td><td>' + btn + '</td></tr>'; //esto seria lo que contendria la fila
-
-
 
 						$('#table-personas tr:first').after(fila);
 						$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
 						var nFilas = $("#personas tr").length;
 						$("#adicionados").append(nFilas - 1);
-
-
 					}
+
 					for (let i = 0; i < domicilios.length; i++) {
 						var btnDomicilio = `<button type='button' class='btn btn-primary' onclick='viewDomicilio(${personas[i].PERSONAFISICAID})'><i class='fas fa-eye'></i></button>`
 
 						var fila2 = '<tr id="row' + i + '"><td>' +
 							personas[i].NOMBRE + '</td><td>' +
-							personas[i].CALIDADJURIDICAID +
+							personas[i].PERSONACALIDADJURIDICADESCR +
 							'</td><td>' + btnDomicilio + '</td></tr>';
-
 						k++;
 						//DOMICILIO
 
@@ -374,6 +369,7 @@
 				document.querySelector('#serie_vehiculo').value = vehiculo.NUMEROSERIE;
 				document.querySelector('#distribuidor_vehiculo').value = vehiculo.VEHICULODISTRIBUIDORID;
 				document.querySelector('#marca').value = vehiculo.MARCADESCR;
+				//document.querySelector('#linea_vehiculo').value = vehiculo.CALLE;
 				document.querySelector('#version_vehiculo').value = vehiculo.VEHICULOVERSIONID;
 				document.querySelector('#tipo_vehiculo').value = tipov.VEHICULOTIPODESCR;
 				document.querySelector('#servicio_vehiculo').value = vehiculo.VEHICULOSERVICIOID;
