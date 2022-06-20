@@ -25,7 +25,7 @@ $Fec1 = date("d/m/Y");
 $Fec2 = date("Y/m/d");
 $Hora = date("H:i:s");
 
-$URL_ValidDoc = "http://34.233.176.0/firma/validardocumentos.php";
+$URL_ValidDoc = "http://localhost/proyecto_baja/firmas/validardocumentos.php";
 
 $Senda_Archs_pem  = "archs_pem/";
 $Senda_Archs_Firmados = "archs_firmados/";
@@ -189,7 +189,7 @@ $pdf->MultiCell(17.2, 0.45, utf8_decode($FirmaElec), 0, 'L', 0);
 $pdf->SetFont('arial','',11);
 $pdf->SetTextColor(102,102,102);
 $pdf->SetXY(1.5+1.3,9.2);
-$pdf->Cell(1, 0.25, utf8_decode('Algorítmo de firmado: SHA-512, resulatado codificado en Base64.'), 0, 1,'L', 0);
+$pdf->Cell(1, 0.25, utf8_decode('Algorítmo de firmado: SHA-512, resultado codificado en Base64.'), 0, 1,'L', 0);
 
 $pdf->SetTextColor(102,102,102);
 $pdf->SetXY(1.5,9.2+1);

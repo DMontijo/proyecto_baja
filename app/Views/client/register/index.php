@@ -155,7 +155,7 @@
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="localidad" class="form-label fw-bold">Localidad del denunciante</label>
-							<select class="form-select" id="localidad_select" name="localidad_select" required>
+							<select class="form-select" id="localidad_select" name="localidad_select">
 								<option selected disabled value="">Seleccione la localidad</option>
 							</select>
 						</div>
