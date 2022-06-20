@@ -73,6 +73,14 @@ class DashboardController extends BaseController
 		$this->_loadView('Registrar usuario', 'registrarusuario', '', $data, 'users');
 	}
 
+	public function firmas()
+	{
+		$data = (object)array();
+		$data = $this->_usuariosModel->asObject()->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->join('ZONAS_USUARIOS', 'ZONAS_USUARIOS.ID_ZONA = USUARIOS.ZONAID')->findAll();
+		// var_dump($data);
+		$this->_loadView('Registrar usuario', 'registrarusuario', '', $data, 'signs');
+	}
+
 	public function nuevo_usuario()
 	{
 		$data = (object)array();

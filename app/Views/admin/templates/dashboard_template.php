@@ -47,6 +47,11 @@
 					<i class="fas fa-archive c-sidebar-nav-icon"></i> Folios
 				</a>
 			</li>
+			<li class="c-sidebar-nav-item">
+				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/firmas">
+					<i class="fas fa-file-alt c-sidebar-nav-icon"></i> Firmas
+				</a>
+			</li>
 		</ul>
 		<button class="c-sidebar-minimizer c-class-toggler" type="button" data-target="_parent" data-class="c-sidebar-minimized"></button>
 	</div>
