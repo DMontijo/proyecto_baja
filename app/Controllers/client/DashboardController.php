@@ -165,16 +165,16 @@ class DashboardController extends BaseController
 		);
 		$this->_folioPreguntasIniciales($dataPreguntas, $FOLIOID);
 
-		foreach ($dataFolio as $key => $value) {
-			var_dump($key, $value);
-			echo '<br>';
-		}
-		echo '<br>';
-		echo '<br>';
-		foreach ($dataPreguntas as $key => $value) {
-			var_dump($key, $value);
-			echo '<br>';
-		}
+		// foreach ($dataFolio as $key => $value) {
+		// 	var_dump($key, $value);
+		// 	echo '<br>';
+		// }
+		// echo '<br>';
+		// echo '<br>';
+		// foreach ($dataPreguntas as $key => $value) {
+		// 	var_dump($key, $value);
+		// 	echo '<br>';
+		// }
 
 		//DATOS DESAPARECIDO
 		if ($this->request->getPost('esta_desaparecido')  == "SI") {
@@ -208,14 +208,34 @@ class DashboardController extends BaseController
 				'AUTORIZA_FOTO' => $this->request->getPost('autorization_photo_des') == 'on' ? 'S' : 'N',
 				'DESAPARECIDA' => 'S',
 			);
+
+			$datadataDesaparecidoDomicilio = array(
+				'PAIS' => $this->request->getPost('pais_des'),
+				'ESTADOID' => $this->request->getPost('estado_des'),
+				'MUNICIPIOID' => $this->request->getPost('municipio_des'),
+				'COLONIAID' => $this->request->getPost('colonia_des_select'),
+				'COLONIADESCR' => $this->request->getPost('colonia_des'),
+				'CALLE' => $this->request->getPost('calle_des'),
+				'NUMEROCASA' => $this->request->getPost('numero_ext_des'),
+				'NUMEROINTERIOR' => $this->request->getPost('numero_int_des'),
+				'CP' => $this->request->getPost('cp_des'),
+			);
+
 			echo '<br>';
 			echo '<br>';
 			foreach ($dataDesaparecido as $key => $value) {
 				var_dump($key, $value);
 				echo '<br>';
 			}
+			echo '<br>';
+			echo '<br>';
+			foreach ($datadataDesaparecidoDomicilio as $key => $value) {
+				var_dump($key, $value);
+				echo '<br>';
+			}
 			$desaparecido = $this->_folioPersonaFisica($dataDesaparecido, $FOLIOID, 1);
 			$this->_folioPersonaFisicaDesaparecida($dataDesaparecido, $FOLIOID, $desaparecido);
+			$this->_folioPersonaFisicaDomicilio($datadataDesaparecidoDomicilio, $FOLIOID, $desaparecido);
 		}
 
 
@@ -244,16 +264,16 @@ class DashboardController extends BaseController
 				'CP' => $this->request->getPost('cp_menor'),
 			);
 
-			echo '<br>';
-			echo '<br>';
-			foreach ($dataMenor as $key => $value) {
-				var_dump($key, $value);
-				echo '<br>';
-			}
-			foreach ($dataMenorDomicilio as $key => $value) {
-				var_dump($key, $value);
-				echo '<br>';
-			}
+			// echo '<br>';
+			// echo '<br>';
+			// foreach ($dataMenor as $key => $value) {
+			// 	var_dump($key, $value);
+			// 	echo '<br>';
+			// }
+			// foreach ($dataMenorDomicilio as $key => $value) {
+			// 	var_dump($key, $value);
+			// 	echo '<br>';
+			// }
 
 			$menor = $this->_folioPersonaFisica($dataMenor, $FOLIOID, 1);
 			$this->_folioPersonaFisicaDomicilio($dataMenorDomicilio, $FOLIOID, $menor);
@@ -299,16 +319,16 @@ class DashboardController extends BaseController
 			'NUMEROINTERIOR' => $denunciante->NUM_INT,
 			'CP' => $denunciante->CODIGO_POSTAL,
 		);
-		echo '<br>';
-		echo '<br>';
-		foreach ($dataDenunciante as $key => $value) {
-			var_dump($key, $value);
-			echo '<br>';
-		}
-		foreach ($dataDenuncianteDomicilio as $key => $value) {
-			var_dump($key, $value);
-			echo '<br>';
-		}
+		// echo '<br>';
+		// echo '<br>';
+		// foreach ($dataDenunciante as $key => $value) {
+		// 	var_dump($key, $value);
+		// 	echo '<br>';
+		// }
+		// foreach ($dataDenuncianteDomicilio as $key => $value) {
+		// 	var_dump($key, $value);
+		// 	echo '<br>';
+		// }
 		$denuncianteCalidad = $this->request->getPost('es_menor') == "SI" || $this->request->getPost('esta_desaparecido') == "SI" || $this->request->getPost('es_ofendido') === "NO" ? 3 : 1;
 		$denuncinateIdPersona = $this->_folioPersonaFisica($dataDenunciante, $FOLIOID, $denuncianteCalidad);
 		$this->_folioPersonaFisicaDomicilio($dataDenuncianteDomicilio, $FOLIOID, $denuncinateIdPersona);
@@ -337,16 +357,16 @@ class DashboardController extends BaseController
 			$imputadoId = $this->_folioPersonaFisica($dataImputado, $FOLIOID, 2);
 			$this->_folioPersonaFisicaDomicilio($dataImputadoDomicilio, $FOLIOID, $imputadoId);
 
-			echo '<br>';
-			echo '<br>';
-			foreach ($dataImputado as $key => $value) {
-				var_dump($key, $value);
-				echo '<br>';
-			}
-			foreach ($dataImputadoDomicilio as $key => $value) {
-				var_dump($key, $value);
-				echo '<br>';
-			}
+			// echo '<br>';
+			// echo '<br>';
+			// foreach ($dataImputado as $key => $value) {
+			// 	var_dump($key, $value);
+			// 	echo '<br>';
+			// }
+			// foreach ($dataImputadoDomicilio as $key => $value) {
+			// 	var_dump($key, $value);
+			// 	echo '<br>';
+			// }
 		}
 
 		if ($this->request->getPost('delito') == "ROBO DE VEHÍCULO") {
@@ -358,12 +378,12 @@ class DashboardController extends BaseController
 				'DOCUMENTO' => $this->request->getPost('foto_vehiculo'),
 			);
 
-			echo '<br>';
-			echo '<br>';
-			foreach ($dataVehiculo as $key => $value) {
-				var_dump($key, $value);
-				echo '<br>';
-			}
+			// echo '<br>';
+			// echo '<br>';
+			// foreach ($dataVehiculo as $key => $value) {
+			// 	var_dump($key, $value);
+			// 	echo '<br>';
+			// }
 			$this->_folioVehiculo($dataVehiculo, $FOLIOID);
 		}
 
