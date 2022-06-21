@@ -1,19 +1,19 @@
 <div class="row">
 	<h3 class="text-center fw-bolder pb-3 text-blue">Registra los datos del menor de edad</h3>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="nombre_menor" class="form-label fw-bold">Nombre(s)</label>
-		<input type="text" class="form-control" id="nombre_menor" name="nombre_menor" autofocus>
+		<label for="nombre_menor" class="form-label fw-bold input-required">Nombre(s)</label>
+		<input type="text" class="form-control" id="nombre_menor" name="nombre_menor" maxlength="50">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="apellido_paterno_menor" class="form-label fw-bold">Apellido paterno</label>
-		<input type="text" class="form-control" id="apellido_paterno_menor" name="apellido_paterno_menor">
+		<label for="apellido_paterno_menor" class="form-label fw-bold input-required">Apellido paterno</label>
+		<input type="text" class="form-control" id="apellido_paterno_menor" name="apellido_paterno_menor" maxlength="50">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="apellido_materno_menor" class="form-label fw-bold">Apellido materno</label>
-		<input type="text" class="form-control" id="apellido_materno_menor" name="apellido_materno_menor">
+		<input type="text" class="form-control" id="apellido_materno_menor" name="apellido_materno_menor" maxlength="50">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="pais_menor" class="form-label fw-bold">País</label>
+		<label for="pais_menor" class="form-label fw-bold input-required">País</label>
 		<select class="form-select" id="pais_menor" name="pais_menor">
 			<?php foreach ($body_data->paises as $index => $pais) { ?>
 				<option value="<?= $pais->ISO_2 ?>" <?= $pais->ISO_2 == 'MX' ? 'selected' : '' ?>> <?= mb_strtoupper($pais->NAME, 'UTF-8') ?> </option>
@@ -21,7 +21,7 @@
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="estado_menor" class="form-label fw-bold">Estado</label>
+		<label for="estado_menor" class="form-label fw-bold input-required">Estado</label>
 		<select class="form-select" id="estado_menor" name="estado_menor">
 			<option selected disabled value="">Seleccione el estado</option>
 			<?php foreach ($body_data->estados as $index => $estado) { ?>
@@ -30,43 +30,43 @@
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="municipio_menor" class="form-label fw-bold">Municipio</label>
+		<label for="municipio_menor" class="form-label fw-bold input-required">Municipio</label>
 		<select class="form-select" id="municipio_menor" name="municipio_menor">
 			<option selected disabled value="">Seleccione el municipio</option>
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="colonia" class="form-label fw-bold">Colonia</label>
-		<select class="form-select" id="colonia_menor_select" name="colonia_menor">
+		<label for="colonia_menor_input" class="form-label fw-bold input-required">Colonia</label>
+		<select class="form-select" id="colonia_menor" name="colonia_menor">
 			<option selected disabled value="">Seleccione la colonia</option>
 		</select>
-		<input type="text" class="form-control d-none" id="colonia_menor" name="colonia" maxlength="100">
-	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="calle_menor" class="form-label fw-bold">Calle</label>
-		<input type="text" class="form-control" id="calle_menor" name="calle_menor">
-	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="numero_ext_menor" class="form-label fw-bold">Número exterior</label>
-		<input type="text" class="form-control" id="numero_ext_menor" name="numero_ext_menor">
-	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="numero_int_menor" class="form-label fw-bold">Número interior</label>
-		<input type="text" class="form-control" id="numero_int_menor" name="numero_int_menor">
+		<input type="text" class="form-control d-none" id="colonia_menor_input" name="colonia_menor_input" maxlength="100">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="cp_menor" class="form-label fw-bold">Código Postal</label>
-		<input type="number" class="form-control" id="cp_menor" name="cp_menor">
+		<input type="number" class="form-control" id="cp_menor" name="cp_menor" maxlength="10">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="fecha_nacimiento_menor" class="form-label fw-bold">Fecha de nacimiento</label>
+		<label for="calle_menor" class="form-label fw-bold input-required">Calle</label>
+		<input type="text" class="form-control" id="calle_menor" name="calle_menor" maxlength="100">
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="numero_ext_menor" class="form-label fw-bold input-required">Número exterior</label>
+		<input type="text" class="form-control" id="numero_ext_menor" name="numero_ext_menor" maxlength="10">
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="numero_int_menor" class="form-label fw-bold">Número interior</label>
+		<input type="text" class="form-control" id="numero_int_menor" name="numero_int_menor" maxlength="10">
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="fecha_nacimiento_menor" class="form-label fw-bold input-required">Fecha de nacimiento</label>
 		<input type="date" class="form-control" id="fecha_nacimiento_menor" name="fecha_nacimiento_menor">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="sexo_menor" class="form-label fw-bold ">Sexo</label>
+		<label for="sexo_menor" class="form-label fw-bold input-required">Sexo</label>
 		<br>
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="radio" name="sexo_menor" value="M" id="MASCULINO">
+			<input class="form-check-input" type="radio" name="sexo_menor" value="M" checked id="MASCULINO">
 			<label class="form-check-label" for="flexRadioDefault1">MASCULINO</label>
 		</div>
 		<div class="form-check form-check-inline">
@@ -76,10 +76,9 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3" hidden>
 		<label for="edad_menor" class="form-label fw-bold">Edad</label>
-		<input class="form-control" id="edad_menor" name="edad_menor" type="text" disabled>
+		<input class="form-control" id="edad_menor" name="edad_menor" type="text">
 	</div>
 </div>
-
 
 <script>
 	document.querySelector('#fecha_nacimiento_menor').addEventListener('change', (e) => {
@@ -105,9 +104,11 @@
 
 		let select_estado = document.querySelector('#estado_menor');
 		let select_municipio = document.querySelector('#municipio_menor');
-		let select_colonia = document.querySelector('#colonia_menor_select');
+		let select_colonia = document.querySelector('#colonia_menor');
+		let input_colonia = document.querySelector('#colonia_menor_input');
 
-		let input_colonia = document.querySelector('#colonia_menor');
+		clearSelect(select_municipio);
+		clearSelect(select_colonia);
 
 		if (e.target.value !== 'MX') {
 
@@ -128,52 +129,32 @@
 					municipios.forEach(municipio => {
 						let option = document.createElement("option");
 						option.text = municipio.MUNICIPIODESCR;
-						option.value = municipio.ID;
+						option.value = municipio.MUNICIPIOID;
 						select_municipio.add(option);
 					});
-					select_municipio.value = '33001';
+					select_municipio.value = '1';
 				},
 				error: function(jqXHR, textStatus, errorThrown) {}
 			});
 
-			$.ajax({
-				data: data,
-				url: "<?= base_url('/data/get-localidades-by-municipio') ?>",
-				method: "POST",
-				dataType: "json",
-				success: function(response) {
-					let localidades = response.data;
-					localidades.forEach(localidad => {
-						let option = document.createElement("option");
-						option.text = localidad.LOCALIDADDESCR;
-						option.value = localidad.ID;
-						select_localidad.add(option);
-					});
-					let option = document.createElement("option");
-					option.text = 'OTRO';
-					option.value = '0';
+			let option = document.createElement("option");
+			option.text = 'OTRO';
+			option.value = '0';
 
-					select_colonia.add(option);
-					select_localidad.value = '33001001';
+			select_colonia.add(option);
 
-					select_colonia.value = '0';
-					select_colonia.classList.add('d-none');
-					input_colonia.classList.remove('d-none');
-					input_colonia.value = 'EXTRANJERO';
-				},
-				error: function(jqXHR, textStatus, errorThrown) {}
-			});
+			select_colonia.value = '0';
+			select_colonia.classList.add('d-none');
+			input_colonia.classList.remove('d-none');
+			input_colonia.value = 'EXTRANJERO';
 
 
 		} else {
-			clearSelect(select_estado);
 			clearSelect(select_municipio);
 			clearSelect(select_colonia);
 
 			select_estado.value = '';
-
 			select_municipio.value = '';
-
 			select_colonia.value = '';
 			select_colonia.classList.remove('d-none');
 			input_colonia.classList.add('d-none');
@@ -182,8 +163,8 @@
 
 	document.querySelector('#estado_menor').addEventListener('change', (e) => {
 		let select_municipio = document.querySelector('#municipio_menor');
-		let select_colonia = document.querySelector('#colonia_menor_select');
-		let input_colonia = document.querySelector('#colonia_menor');
+		let select_colonia = document.querySelector('#colonia_menor');
+		let input_colonia = document.querySelector('#colonia_menor_input');
 
 		clearSelect(select_municipio);
 		clearSelect(select_colonia);
@@ -210,7 +191,7 @@
 				municipios.forEach(municipio => {
 					var option = document.createElement("option");
 					option.text = municipio.MUNICIPIODESCR;
-					option.value = municipio.ID;
+					option.value = municipio.MUNICIPIOID;
 					select_municipio.add(option);
 				});
 			},
@@ -219,11 +200,11 @@
 	});
 
 	document.querySelector('#municipio_menor').addEventListener('change', (e) => {
-		let select_colonia = document.querySelector('#colonia_menor_select');
-		let input_colonia = document.querySelector('#colonia_menor');
+		let select_colonia = document.querySelector('#colonia_menor');
+		let input_colonia = document.querySelector('#colonia_menor_input');
 
-		let estado = parseInt(Number(e.target.value) / 1000);
-		let municipio = (Number(e.target.value) - estado * 1000);
+		let estado = document.querySelector('#estado_menor').value;
+		let municipio = e.target.value;
 
 		clearSelect(select_colonia);
 
@@ -232,9 +213,10 @@
 			'municipio_id': municipio
 		};
 
-		if (estado === 2) {
+		if (estado == 2) {
 			select_colonia.classList.remove('d-none');
-			colonia.classList.add('d-none');
+			input_colonia.classList.add('d-none');
+			input_colonia.value = '';
 			$.ajax({
 				data: data,
 				url: "<?= base_url('/data/get-colonias-by-estado-and-municipio') ?>",
@@ -246,9 +228,10 @@
 					colonias.forEach(colonia => {
 						var option = document.createElement("option");
 						option.text = colonia.COLONIADESCR;
-						option.value = colonia.ID;
+						option.value = colonia.COLONIAID;
 						select_colonia.add(option);
 					});
+
 					var option = document.createElement("option");
 					option.text = 'OTRO';
 					option.value = '0';
@@ -266,18 +249,20 @@
 			select_colonia.add(option);
 			select_colonia.value = '0';
 			select_colonia.classList.add('d-none');
-			colonia.classList.remove('d-none');
+			input_colonia.classList.remove('d-none');
+			input_colonia.value = '';
 		}
 
 	});
 
 	document.querySelector('#colonia_menor').addEventListener('change', (e) => {
-		let select_colonia = document.querySelector('#colonia_menor_select');
-		let input_colonia = document.querySelector('#colonia_menor');
+		let select_colonia = document.querySelector('#colonia_menor');
+		let input_colonia = document.querySelector('#colonia_menor_input');
 
 		if (e.target.value === '0') {
 			select_colonia.classList.add('d-none');
 			input_colonia.classList.remove('d-none');
+			input_colonia.value = '';
 			input_colonia.focus();
 		} else {
 			input_colonia.value = e.target.value;

@@ -55,6 +55,14 @@ class FolioPersonaFisicaModel extends Model
 		'ESCOLARIDAD',
 		'DESCRIPCION_FISICA',
 	];
+
+	public function get_by_id($id)
+	{
+		$sql = 'select * from FOLIOPERSONAFISICA where PERSONAFISICAID =' . $id;
+		$query =  $this->db->query($sql);
+
+		return $query->getRow();
+	}
 	public function buscar($id){
 		return $this->where("ID=". $id)->find(); 
 	}

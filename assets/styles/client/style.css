@@ -12,7 +12,7 @@
   min-height: 50px;
 }
 .logo-header {
-  height: 80px;
+  max-width: 200px;
 }
 .asterisco-rojo {
   margin-left: 3px;

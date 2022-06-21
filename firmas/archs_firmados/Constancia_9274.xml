@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documento>
+  <DatosDelDocumento FechaDeFirma="17/06/2022" HoraDeFirma="21:55:32" RFC_Firmante="CACX7605101P8" NoCertificadoFIEL="30001000000400002300" DescripDoc="CONSTANCIA" FolioDoc="9274" NomArchXML="Constancia_9274.xml" NomArchPDF="Constancia_9274.pdf" NomArchLlavePub="Constancia_9274.pub" NomArchQR="Constancia_9274.png" AlgoritmoFirma="SHA512"/>
+  <FirmaDigital FechaHoraCertif="17/06/2022-21:55:32" CadenaFirmada="DescripDoc:CONSTANCIA|Firmante:XOCHILT CASAS CHAVEZ|RFC del firmante:CACX7605101P8|No de certificado de la FIEL del firmante:30001000000400002300|FechaHora:17/06/2022-21:55:32"/>
+</documento>

@@ -1,0 +1,14 @@
+<< DATOS DEL PROCESO DE FIRMA ELECTRÓNICA >>.
+Fecha de firma:17/06/2022
+Hora de firma: 21:55:32
+Firmante: XOCHILT CASAS CHAVEZ
+RFC del firmante: CACX7605101P8
+No. de certificado de la FIEL del firmante: 30001000000400002300
+Descripción del documento: CONSTANCIA
+Folio del documento: 9274
+Nombre del archivo electrónico (archivo .xml): Constancia_9274.xml
+Nombre del archivo pdf (representación impresa del doc. electrónico): Constancia_9274.pdf
+Nombre del archivo de la Llave pública: Constancia_9274.pub
+Nombre del archivo png con código QR que muestra la URL para validación del documento: Constancia_9274.png
+Algoritmo de firmado: SHA512 
+

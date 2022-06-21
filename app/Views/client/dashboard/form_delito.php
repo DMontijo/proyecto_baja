@@ -68,12 +68,12 @@
 			Por favor, selecciona un lugar.
 		</div>
 	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+	<!-- <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="clasificacion" class="form-label fw-bold">Clasificación del lugar</label>
 		<select class="form-select" id="clasificacion" name="clasificacion">
 			<option selected disabled value="">Elige la clasificacion</option>
 		</select>
-	</div>
+	</div> -->
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="fecha" class="form-label fw-bold input-required">Fecha del delito:</label>
 		<input type="date" class="form-control" id="fecha" name="fecha" required>
@@ -166,33 +166,33 @@
 		}
 	});
 
-	document.querySelector('#lugar').addEventListener('change', (e) => {
-		let select_clasificacion = document.querySelector('#clasificacion');
+	// document.querySelector('#lugar').addEventListener('change', (e) => {
+	// 	let select_clasificacion = document.querySelector('#clasificacion');
 
-		clearSelect(select_clasificacion);
+	// 	clearSelect(select_clasificacion);
 
-		data = {
-			'lugar_id': e.target.value,
-		}
+	// 	data = {
+	// 		'lugar_id': e.target.value,
+	// 	}
 
-		$.ajax({
-			data: data,
-			url: "<?= base_url('/data/get-clasificacion-by-lugar') ?>",
-			method: "POST",
-			dataType: "json",
-			success: function(response) {
-				let clasificaciones = response.data;
+	// 	$.ajax({
+	// 		data: data,
+	// 		url: "<?= base_url('/data/get-clasificacion-by-lugar') ?>",
+	// 		method: "POST",
+	// 		dataType: "json",
+	// 		success: function(response) {
+	// 			let clasificaciones = response.data;
 
-				clasificaciones.forEach(clasificacion => {
-					var option = document.createElement("option");
-					option.text = clasificacion.HECHOCLASIFICACIONLUGARDESCR;
-					option.value = clasificacion.HECHOCLASIFICACIONLUGARID;
-					select_clasificacion.add(option);
-				});
-			},
-			error: function(jqXHR, textStatus, errorThrown) {}
-		});
-	});
+	// 			clasificaciones.forEach(clasificacion => {
+	// 				var option = document.createElement("option");
+	// 				option.text = clasificacion.HECHOCLASIFICACIONLUGARDESCR;
+	// 				option.value = clasificacion.HECHOCLASIFICACIONLUGARID;
+	// 				select_clasificacion.add(option);
+	// 			});
+	// 		},
+	// 		error: function(jqXHR, textStatus, errorThrown) {}
+	// 	});
+	// });
 
 	function contarCaracteres(obj) {
 		var maxLength = 300;

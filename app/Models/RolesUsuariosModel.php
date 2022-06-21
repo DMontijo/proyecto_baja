@@ -7,6 +7,16 @@ use CodeIgniter\Model;
 class RolesUsuariosModel extends Model
 {
 	protected $DBGroup          = 'default';
-	protected $table            = 'ROLES_USUARIOS';
-	protected $allowedFields    = [];
+	protected $table            = 'ROLES';
+	protected $allowedFields    = [
+		'ID' => [
+			'type' => 'INT',
+			'unsigned' => TRUE,
+			'auto_increment' => TRUE,
+		],
+		'NOMBRE_ROL' => [
+			'type' => 'VARCHAR',
+			'constraint' => '100',
+		],
+	];
 }

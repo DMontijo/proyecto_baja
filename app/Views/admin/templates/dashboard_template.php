@@ -11,6 +11,9 @@
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap">
 	<!--  App CSS (Do not remove) -->
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url('/dist/css/dash.css'); ?>">
+	<!--Sweet Alert 2-->
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.css">
 	<!--DataTables-->
 	<link rel="stylesheet" href="<?= base_url() ?>/assets/DataTables/datatables-bs4/css/dataTables.bootstrap4.min.css">
 	<link rel="stylesheet" href="<?= base_url() ?>/assets/DataTables/datatables-responsive/css/responsive.bootstrap4.min.css">
@@ -35,28 +38,18 @@
 				</a>
 			</li>
 			<li class="c-sidebar-nav-item">
-				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/registrar-usuario">
+				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/usuarios">
 					<i class="fas fa-users c-sidebar-nav-icon"></i> Usuarios
 				</a>
 			</li>
 			<li class="c-sidebar-nav-item">
 				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/folios">
-					<i class="fas fa-archive c-sidebar-nav-icon"></i> Folios Abiertos
+					<i class="fas fa-archive c-sidebar-nav-icon"></i> Folios
 				</a>
 			</li>
 			<li class="c-sidebar-nav-item">
-				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/folios">
-					<i class="fas fa-archive c-sidebar-nav-icon"></i> Folios Sin Firma
-				</a>
-			</li>
-			<li class="c-sidebar-nav-item">
-				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/folios">
-					<i class="fas fa-archive c-sidebar-nav-icon"></i> Folios Canalizados
-				</a>
-			</li>
-			<li class="c-sidebar-nav-item">
-				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/folios">
-					<i class="fas fa-archive c-sidebar-nav-icon"></i> Folios Derivados
+				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/firmas">
+					<i class="fas fa-file-alt c-sidebar-nav-icon"></i> Firmas
 				</a>
 			</li>
 		</ul>
@@ -67,18 +60,25 @@
 			<button class="c-header-toggler c-class-toggler d-lg-none mfe-auto" type="button" data-target="#sidebar" data-class="c-sidebar-show">
 				<i class="fas fa-bars"></i>
 			</button>
-			<a class="c-header-brand d-lg-none" href="#">
+			<!-- <a class="c-header-brand d-lg-none" href="#">
 				<i class="fas fa-bars"></i>
-			</a>
+			</a> -->
 			<button class="c-header-toggler c-class-toggler mfs-3 d-md-down-none" type="button" data-target="#sidebar" data-class="c-sidebar-lg-show" responsive="true">
 				<i class="fas fa-bars"></i>
 			</button>
-			<button class="c-header-toggler c-class-toggler mfs-3 d-md-down-none" type="button" data-target="#sidebar" data-class="c-sidebar-lg-show" responsive="true">
+			<button class="c-header-toggler c-class-toggler mfs-3 d-sm-down-none font-weight-bold" type="button" data-target="#sidebar" data-class="c-sidebar-lg-show" responsive="true">
 				<?php $session = session(); ?>
 				BIENVENIDO <?= $session->NOMBRE ?> <?= $session->APELLIDO_PATERNO ?> <?= $session->APELLIDO_MATERNO ?>
 			</button>
 			<ul class="c-header-nav ml-auto mr-2">
 				<li class="c-header-nav-item dropdown">
+					<a class="c-header-nav-link" href="<?= base_url('admin/logout') ?>">
+						<div class="c-avatar font-weight-bold">
+							<i class="fas fa-sign-out-alt mr-2"></i> Salir
+						</div>
+					</a>
+				</li>
+				<!-- <li class="c-header-nav-item dropdown">
 					<a class="c-header-nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
 						<div class="c-avatar">
 							<i class="fas fa-cogs"></i>
@@ -95,7 +95,7 @@
 							<i class="fas fa-sign-out-alt mr-2"></i> Salir
 						</a>
 					</div>
-				</li>
+				</li> -->
 			</ul>
 		</header>
 		<div class="c-body">

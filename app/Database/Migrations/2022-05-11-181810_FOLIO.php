@@ -18,6 +18,11 @@ class FOLIO extends Migration
 				'type' => 'VARCHAR',
 				'constraint' => '16',
 			],
+			'EXPEDIENTEID' => [
+				'type' => 'VARCHAR',
+				'constraint' => '16',
+				'null' => TRUE,
+			],
 			'DENUNCIANTEID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
@@ -25,10 +30,12 @@ class FOLIO extends Migration
 			'AGENTEATENCIONID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
+				'null' => TRUE,
 			],
 			'AGENTEFIRMAID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
+				'null' => TRUE,
 			],
 			'STATUS' => [
 				'type' => 'VARCHAR',
@@ -267,6 +274,11 @@ class FOLIO extends Migration
 			'DELITODENUNCIA' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
+			],
+			'DERECHOS' => [
+				'type' => 'CHAR',
+				'constraint' => '1',
+				'default' => 'S'
 			],
 			'FECHAREGISTRO DATETIME DEFAULT CURRENT_TIMESTAMP',
 			'FECHAACTUALIZACION DATETIME ON UPDATE CURRENT_TIMESTAMP',

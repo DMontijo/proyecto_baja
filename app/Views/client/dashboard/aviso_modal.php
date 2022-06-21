@@ -9,7 +9,7 @@
 					Esta forma <br><span class="fw-bold">NO ES PARA EMERGENCIAS.</span>
 				</p>
 				<p>
-					Si tu o alguien más está <span class="fw-bold">en peligro</span> en este momento, marca al <a href="tel:911" class="fw-bold">911</a>.
+					Si tú o alguien más está <span class="fw-bold">en peligro</span> en este momento, marca al <a href="tel:911" class="fw-bold">911</a>.
 				</p>
 				<p>
 					Si quieres realizar una <span class="fw-bold">denuncia anónima</span> en este momento, marca al <a href="tel:089" class="fw-bold">089</a>.

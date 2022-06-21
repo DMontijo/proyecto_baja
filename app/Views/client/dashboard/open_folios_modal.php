@@ -6,25 +6,28 @@
 			</div>
 			<div class="modal-body text-center">
 				<p>Ya cuentas con un folio abierto con número <span class="fw-bold" id="folio_num_span"></span> por el delito de <span class="fw-bold" id="folio_delito_span"></span>, continua con la denuncia.</p>
-				<a id="btn-inicia-denuncia" class="btn btn-secondary" href="<?= base_url('denuncia/logout') ?>"><i class="bi bi-box-arrow-left"></i> Cerrar sesión</a>
-				<button id="btn-inicia-denuncia" class="btn btn-primary"><i class="bi bi-camera-video-fill"></i> Iniciar denuncia</button>	
+				<a id="btn-inicia-denuncia" class="btn btn-secondary mb-3" href="<?= base_url('denuncia/logout') ?>"><i class="bi bi-box-arrow-left"></i> Cerrar sesión</a>
+				<button id="btn-inicia-denuncia" type="button" name="btn-inicia-denuncia" class="btn btn-primary  mb-3" onclick="iniciarDenuncia();"><i class="bi bi-camera-video-fill"></i> Iniciar denuncia</button>
 			</div>
 		</div>
 	</div>
 </div>
 
 <script>
-	document.querySelector('#btn-inicia-denuncia').addEventListener('click', () => {
+	function iniciarDenuncia() {
+		console.log('Click en boton');
 		$.ajax({
 			data: {
 				'id': '<?= $session->ID_DENUNCIANTE ?>',
 				'edad': '<?= $session->EDAD ?>',
-				'folio': document.querySelector('#folio_num_span').innerHTML
+				'folio': document.querySelector('#folio_num_span').innerHTML,
+				'sexo_denunciante': '<?= $session->SEXO ?>',
 			},
 			url: "<?= base_url('/data/get-link-videodenuncia') ?>",
 			method: "POST",
 			dataType: "json",
 		}).done((response) => {
+			console.log(response);
 			if (response.status == 1) {
 				window.location.href = response.url;
 			} else {
@@ -35,5 +38,5 @@
 				})
 			}
 		}).fail(function(jqXHR, textStatus) {});
-	});
+	}
 </script>

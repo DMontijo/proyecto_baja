@@ -21,6 +21,7 @@ class AuthController extends BaseController
 		if ($this->_isAuth()) {
 			return redirect()->to(base_url('/denuncia/dashboard'));
 		} else {
+			session()->destroy;
 			$this->_loadView('Login', [], 'index');
 		}
 	}
@@ -78,29 +79,40 @@ class AuthController extends BaseController
 
 	public function sendEmailChangePassword()
 	{
+		$password = $this->_generatePassword(6);
 		$to = $this->request->getPost('correo_reset_password');
 		$user = $this->_denunciantesModel->asObject()->where('CORREO', $to)->first();
+		$this->_denunciantesModel->set('PASSWORD', hashPassword($password))->where('ID_DENUNCIANTE', $user->ID_DENUNCIANTE)->update();
+
 		$email = \Config\Services::email();
 		$email->setTo($to);
 		$email->setFrom('andrea.solorzano@yocontigo-it.com', 'FGEBC');
 		$email->setSubject('Cambio de contraseña');
-		$link = base_url('/denuncia/change_password?id=' . $user->ID_DENUNCIANTE);
-		$body = view('email_template/reset_password_template.php', ['link' => $link]);
+		// $link = base_url('/denuncia/change_password?id=' . $user->ID_DENUNCIANTE);
+		$body = view('email_template/reset_password_template.php', ['password' => $password]);
 		$email->setMessage($body);
 
 		if ($email->send()) {
-			return redirect()->to(base_url('/denuncia'))->with('created', 'Verifica tu correo para recuperar tu contraseña.');
+			return redirect()->to(base_url('/denuncia'))->with('created', 'Verifica tu nueva contraseña en tu correo.');
 		}
 	}
 
 	private function _isAuth()
 	{
-		if (session('logged_in') && session('logged_in') == 'user') {
+		if (session('logged_in') && session('type') == 'user') {
 			return true;
-		} else {
-			session()->destroy;
-			return false;
+		};
+	}
+
+	private function _generatePassword($length)
+	{
+		$password = "";
+		$pattern = "1234567890abcdefghijklmnopqrstuvwxyz";
+		$max = strlen($pattern) - 1;
+		for ($i = 0; $i < $length; $i++) {
+			$password .= substr($pattern, mt_rand(0, $max), 1);
 		}
+		return $password;
 	}
 
 	private function _loadView($title, $data, $view)

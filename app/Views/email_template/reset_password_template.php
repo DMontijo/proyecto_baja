@@ -4,12 +4,11 @@
 <div style="text-align:center;">
 	<p>
 		Usted ha solicitado un cambio de contraseña.
-		<br>Para cambiar la contraseña haga clic en el botón inferior.
 	</p>
 	<br>
-	<a class="btn" href="<?= $link ?>">
-		NUEVA CONTRASEÑA
-	</a>
+	<p>Su nueva contraseña es:</p>
+	<h2><?= $password ?></h2>
+	<br>
 </div>
 
 <?= $this->endSection() ?>

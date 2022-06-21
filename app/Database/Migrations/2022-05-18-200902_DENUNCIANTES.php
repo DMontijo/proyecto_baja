@@ -139,7 +139,7 @@ class DENUNCIANTES extends Migration
 			],
 			'DISCAPACIDAD' => [
 				'type' => 'VARCHAR',
-				'constraint' => '40',
+				'constraint' => '100',
 				'null' => TRUE
 			],
 			'NACIONALIDAD_ID' => [
@@ -167,7 +167,6 @@ class DENUNCIANTES extends Migration
 				'type' => 'CHAR',
 				'constraint' => '1',
 				'default' => 'S',
-				'null' => TRUE
 			],
 			'FECHAREGISTRO DATETIME DEFAULT CURRENT_TIMESTAMP',
 			'FECHAACTUALIZACION DATETIME ON UPDATE CURRENT_TIMESTAMP',

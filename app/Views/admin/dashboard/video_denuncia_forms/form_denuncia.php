@@ -9,7 +9,7 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="colonia" class="form-label font-weight-bold">Colonia del delito</label>
-		<input type="text" class="form-control d-none" id="colonia" name="colonia" maxlength="100">
+		<input type="text" class="form-control" id="colonia" name="colonia" maxlength="100">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="calle" class="form-label font-weight-bold">Calle o avenida del delito:</label>
@@ -28,10 +28,6 @@
 		<input class="form-control" id="lugar" name="lugar">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="clasificacion" class="form-label font-weight-bold">Clasificación del lugar</label>
-		<input type="text" class="form-control" id="clasificacion" name="clasificacion">
-	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="fecha" class="form-label font-weight-bold">Fecha del delito:</label>
 		<input type="date" class="form-control" id="fecha" name="fecha">
 	</div>
@@ -39,8 +35,8 @@
 		<label for="hora" class="form-label font-weight-bold">Hora del delito:</label>
 		<input type="time" class="form-control" id="hora" name="hora">
 	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-8 mb-3">
-		<label for="responsable" class="form-label font-weight-bold">¿Identifica al responsable del delito?</label>
-		<input class="form-control" type="text" id="responsable" name="responsable">
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="narracion" class="form-label font-weight-bold">Descripción del delito:</label>
+		<textarea type="text" class="form-control" id="narracion" name="narracion" rows="3"></textarea>
 	</div>
 </div>

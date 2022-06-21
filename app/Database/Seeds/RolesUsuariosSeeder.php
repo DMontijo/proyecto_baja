@@ -16,6 +16,6 @@ class RolesUsuariosSeeder extends Seeder
 			array('NOMBRE_ROL' => 'OPERADOR MP'),
 			array('NOMBRE_ROL' => 'OPERADOR'),
 		];
-		$this->db->table('ROLES_USUARIOS')->insertBatch($data);
+		$this->db->table('ROLES')->insertBatch($data);
 	}
 }

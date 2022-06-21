@@ -10,20 +10,16 @@ class USUARIOS extends Migration
 	{
 
 		$this->forge->addField([
-			'ID_USUARIO' => [
+			'ID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'auto_increment' => TRUE,
 			],
-			'ID_ROL' => [
+			'ROLID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 			],
-			'ID_ZONA' => [
-				'type' => 'INT',
-				'unsigned' => TRUE,
-			],
-			'ID_PERFIL' => [
+			'ZONAID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 			],
@@ -53,6 +49,9 @@ class USUARIOS extends Migration
 				'type' => 'VARCHAR',
 				'constraint' => '255',
 			],
+			'USUARIOVIDEO' => [
+				'type' => 'INT',
+			],
 			'TOKENVIDEO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '255',
@@ -75,7 +74,7 @@ class USUARIOS extends Migration
 				'null' => TRUE,
 			],
 		]);
-		$this->forge->addKey('ID_USUARIO', TRUE);
+		$this->forge->addKey('ID', TRUE);
 		$this->forge->createTable('USUARIOS');
 	}
 

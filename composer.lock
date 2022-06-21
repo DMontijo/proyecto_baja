@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "codeigniter4/framework",
-            "version": "v4.2.0",
+            "version": "v4.1.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/codeigniter4/framework.git",
-                "reference": "29f0e9eb2442eba41f4e9832b6695c7584e096e0"
+                "reference": "4ec623a6b8269dd09f570ab514e5864276bb7f56"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/codeigniter4/framework/zipball/29f0e9eb2442eba41f4e9832b6695c7584e096e0",
-                "reference": "29f0e9eb2442eba41f4e9832b6695c7584e096e0",
+                "url": "https://api.github.com/repos/codeigniter4/framework/zipball/4ec623a6b8269dd09f570ab514e5864276bb7f56",
+                "reference": "4ec623a6b8269dd09f570ab514e5864276bb7f56",
                 "shasum": ""
             },
             "require": {
@@ -25,15 +25,15 @@
                 "ext-intl": "*",
                 "ext-json": "*",
                 "ext-mbstring": "*",
-                "kint-php/kint": "^4.1.1",
+                "kint-php/kint": "^4.0",
                 "laminas/laminas-escaper": "^2.9",
-                "php": "^7.4 || ^8.0",
+                "php": "^7.3 || ^8.0",
                 "psr/log": "^1.1"
             },
             "require-dev": {
                 "codeigniter/coding-standard": "^1.1",
                 "fakerphp/faker": "^1.9",
-                "friendsofphp/php-cs-fixer": "3.6.*",
+                "friendsofphp/php-cs-fixer": "^3.1",
                 "mikey179/vfsstream": "^1.6",
                 "nexusphp/cs-config": "^3.3",
                 "phpunit/phpunit": "^9.1",
@@ -62,25 +62,25 @@
                 "slack": "https://codeigniterchat.slack.com",
                 "source": "https://github.com/codeigniter4/CodeIgniter4"
             },
-            "time": "2022-06-03T14:04:14+00:00"
+            "time": "2022-02-26T00:51:52+00:00"
         },
         {
             "name": "codeigniter4/translations",
-            "version": "v4.2.0",
+            "version": "v4.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/codeigniter4/translations.git",
-                "reference": "d58db5cba9e2d2c2274a89f9a6586144ecfa6984"
+                "reference": "3d4fbcca80a6d37b4513350d45f68aef64e5a288"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/codeigniter4/translations/zipball/d58db5cba9e2d2c2274a89f9a6586144ecfa6984",
-                "reference": "d58db5cba9e2d2c2274a89f9a6586144ecfa6984",
+                "url": "https://api.github.com/repos/codeigniter4/translations/zipball/3d4fbcca80a6d37b4513350d45f68aef64e5a288",
+                "reference": "3d4fbcca80a6d37b4513350d45f68aef64e5a288",
                 "shasum": ""
             },
             "require": {
                 "ext-intl": "*",
-                "php": "^7.4 || ^8.0"
+                "php": "^7.2 || ^8.0"
             },
             "require-dev": {
                 "codeigniter/coding-standard": "^1.1",
@@ -113,7 +113,7 @@
                 "slack": "https://codeigniterchat.slack.com",
                 "source": "https://github.com/codeigniter4/translations"
             },
-            "time": "2022-06-04T16:10:32+00:00"
+            "time": "2022-01-05T06:41:39+00:00"
         },
         {
             "name": "kint-php/kint",
@@ -303,5 +303,5 @@
         "php": "^7.3||^8.0"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.2.0"
 }

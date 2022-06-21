@@ -35,13 +35,13 @@ class RunAllSeeder extends Seeder
 		$this->call('VehiculoDistribuidorSeeder');
 		$this->call('HechoClasificacionLugarSeeder');
 		$this->call('DerivacionesAtencionSeeder');
-		$this->call('RolesusuariosSeeder');
+		$this->call('RolesUsuariosSeeder');
 		$this->call('ZonasUsuariosSeeder');
-		$this->call('PerfilesUsuariosSeeder');
 		$this->call('UsuariosSeeder');
 		$this->call('HechoLugarSeeder');
 		$this->call('PaisesSeeder');
 		$this->call('DelitosUsuariosSeeder');
 		$this->call('FileOriginalesSeeder');
+		$this->call('EmpleadosSeeder');
 	}
 }
