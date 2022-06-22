@@ -543,7 +543,6 @@ class DashboardController extends BaseController
 	{
 		$email = \Config\Services::email();
 		$email->setTo($to);
-		$email->setFrom('andrea.solorzano@yocontigo-it.com', 'FGEBC');
 		$email->setSubject('Nuevo folio generado.');
 		$body = view('email_template/folio_email_template.php', ['folio' => $folio]);
 		$email->setMessage($body);

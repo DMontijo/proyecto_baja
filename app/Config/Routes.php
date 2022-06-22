@@ -99,7 +99,8 @@ $routes->group('denuncia', function ($routes) {
  *  Data get, emails and OTP
  * */
 
-$routes->get('email', 'CorreoController::index');
+// $routes->get('email', 'CorreoController::index');
+// $routes->post('email', 'CorreoController::sendEmail');
 
 $routes->group('data', function ($routes) {
 	$routes->post('exist-email', 'client/UserController::existEmail');

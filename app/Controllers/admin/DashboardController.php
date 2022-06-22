@@ -242,7 +242,6 @@ class DashboardController extends BaseController
 	{
 		$email = \Config\Services::email();
 		$email->setTo($to);
-		$email->setFrom('andrea.solorzano@yocontigo-it.com', 'FGEBC');
 		$email->setSubject('Folio atendido');
 		$body = view('email_template/folio_der_can_email_template.php', ['folio' => $folio, 'motivo' => $motivo]);
 		$email->setMessage($body);
@@ -257,7 +256,6 @@ class DashboardController extends BaseController
 	{
 		$email = \Config\Services::email();
 		$email->setTo($to);
-		$email->setFrom('andrea.solorzano@yocontigo-it.com', 'FGEBC');
 		$email->setSubject('Nuevo expediente creado');
 		$body = view('email_template/expediente_email_template.php', ['expediente' => $expedienteId]);
 		$email->setMessage($body);
@@ -272,7 +270,6 @@ class DashboardController extends BaseController
 	{
 		$email = \Config\Services::email();
 		$email->setTo($to);
-		$email->setFrom('andrea.solorzano@yocontigo-it.com', 'FGEBC');
 		$email->setSubject('Nueva cuenta creada');
 		$body = view('email_template/password_email_admin_template.php', ['email' => $to, 'password' => $password]);
 		$email->setMessage($body);

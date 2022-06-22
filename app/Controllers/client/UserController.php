@@ -171,7 +171,6 @@ class UserController extends BaseController
 	{
 		$email = \Config\Services::email();
 		$email->setTo($to);
-		$email->setFrom('andrea.solorzano@yocontigo-it.com', 'FGEBC');
 		$email->setSubject('Te estamos atendiendo');
 		$body = view('email_template/password_email_template.php', ['email' => $to, 'password' => $password]);
 		$email->setMessage($body);

@@ -1,8 +1,8 @@
-<?= $this->extend('admin/templates/dashboard_template') ?>
+<?= $this->extend('templates/page_template') ?>
 
 <?= $this->section('content') ?>
 <div class="container mt-5">
-	<form method="post" action="<?= base_url('/data/sendOTP') ?>">
+	<form method="post" action="<?= base_url('/email') ?>">
 		<div class="form-group">
 			<label>Destinatario</label>
 			<input type="email" name="email" class="form-control">
