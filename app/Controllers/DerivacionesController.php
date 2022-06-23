@@ -17,9 +17,9 @@ class DerivacionesController extends Controller
 	public function index()
 	{
 		$data = (object) array();
-		$data->derivacionesEnsenada = $this->_derivacionesModel->asObject()->where('MUNICIPIO', 'ENSENADA')->findAll();
-		$data->derivacionesTijuana = $this->_derivacionesModel->asObject()->where('MUNICIPIO', 'TIJUANA-RTO')->findAll();
-		$data->derivacionesMexicali = $this->_derivacionesModel->asObject()->where('MUNICIPIO', 'MEXICALI-TKT')->findAll();
+		$data->derivacionesEnsenada = $this->_derivacionesModel->asObject()->where('MUNICIPIO', 'ENSENADA')->orderBy('INSTITUCIONREMISIONDESCR','asc')->findAll();
+		$data->derivacionesTijuana = $this->_derivacionesModel->asObject()->where('MUNICIPIO', 'TIJUANA-RTO')->orderBy('INSTITUCIONREMISIONDESCR','asc')->findAll();
+		$data->derivacionesMexicali = $this->_derivacionesModel->asObject()->where('MUNICIPIO', 'MEXICALI-TKT')->orderBy('INSTITUCIONREMISIONDESCR','asc')->findAll();
 		$this->_loadView('Catálogo derivaciones', $data, 'derivaciones');
 	}
 

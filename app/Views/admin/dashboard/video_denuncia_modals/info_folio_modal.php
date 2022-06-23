@@ -70,3 +70,13 @@
 <?php include('persona_modal.php') ?>
 <?php include('vehiculo_modal.php') ?>
 <?php include('domicilio_modal.php') ?>
+<script>
+	$(function() {
+		$("#folios_sin_firma").DataTable({
+			"responsive": true,
+			"lengthChange": false,
+			"autoWidth": false,
+			"buttons": ["copy", "csv", "excel", "pdf", "print", ]
+		}).buttons().container().appendTo('#videollamadasA_wrapper .col-md-6:eq(0)');
+	});
+</script>
