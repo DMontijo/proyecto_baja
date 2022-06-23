@@ -10,24 +10,16 @@
 	<div class="col-12">
 		<div class="col-12">
 			<div class="card bg-primary shadow mb-4" style="font-size:14px;background:url(<?= base_url('/assets/img/banner/LINEAS_BANNER.png') ?>);background-repeat: no-repeat;background-size: cover !important;background-position-y: top;border-radius:10px;">
-				<div class="row py-5 px-5">
-					<div class="col-lg-7 col-12 fw-bold text-white ">
-						<p>Los delitos que se enuncian a continuación deberá ser denunciados de manera personal ante la Unidad de Investigación correspondiente.</p>
-						<ul class="ps-5 m-0">
-							<li>Violación</li>
-							<li>Secuestro</li>
-							<li>Tortura</li>
-							<li>Trata de personas</li>
-							<li>Delitos cometidos por personal adscrito a la Físcalia General del Estado de Baja California</li>
-							<li>Homicidio en todas sus modalidades</li>
-							<li>Delitos contra la salud modalidad narcomenudeo</li>
-							<li>Abuso sexual cuando la víctima sea menor de edad</li>
-							<li>Tráfico de menores</li>
-						</ul>
-					</div>
-					<div class="col-lg-5 col-12 d-flex flex-column justify-content-between text-center">
-						<a class="p-0 my-3" href="tel:911" role="button"><img src="<?= base_url('/assets/img/banner/911_BANNER.png') ?>" class="img-fluid"></a>
-						<a class="p-0 my-3" href="tel:089" role="button" role="button"><img src="<?= base_url('/assets/img/banner/089_BANNER.png') ?>" class="img-fluid"></a>
+				<div class="row p-4">
+					<div class="col-12">
+						<div class="row">
+							<div class="col-12 col-md-6">
+								<a class="p-0 my-3" href="tel:911" role="button"><img src="<?= base_url('/assets/img/banner/911_BANNER.png') ?>" class="img-fluid"></a>
+							</div>
+							<div class="col-12 col-md-6 mt-4 mt-md-0">
+								<a class="p-0 my-3" href="tel:8003432220" role="button" role="button"><img src="<?= base_url('/assets/img/banner/089_BANNER.png') ?>" class="img-fluid"></a>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
