@@ -212,17 +212,9 @@ class DashboardController extends BaseController
 		$data = (object)array();
 		$data->var= $this->enviarFolio();
 		$data->folio = $this->request->getGet('folio');
-		$data->folioIn = $this->request->getGet('folioIn');
-		
-	//	var_dump($this->enviarFolio());
-	//	var_dump($data->folio = $this->request->getGet('folio'));
-	//	echo "<br>";
-	//	var_dump($this->request->getPost('folioIn'));
-
-		// $data->folio = $this->request->getGet('folio');
-		// $data->folioIn = $this->request->getPost('folioIn');
 		$data->folios = $this->_folioModel->asObject()->where('FOLIOID', $data->folio)->first();
-		
+		$data->domicilio = $this->_folioPersonaFisicaDomicilioModel->asObject()->where('FOLIOID', $data->folio)->first();
+
 		$this->_loadView('Video denuncia', 'videodenuncia', '', $data, 'video_denuncia');
 	}
 

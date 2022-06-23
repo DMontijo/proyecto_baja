@@ -15,13 +15,8 @@
 							<a class="nav-link" id="v-pills-denuncia-tab" data-toggle="pill" href="#v-pills-denuncia" role="tab" aria-controls="v-pills-denuncia" aria-selected="false"><i class="fas fa-file-alt"></i> DENUNCIA</a>
 							<a class="nav-link" id="v-pills-personas-tab" data-toggle="pill" href="#v-pills-personas" role="tab" aria-controls="v-pills-personas" aria-selected="false"><i class="fas fa-users"></i> PERSONAS</a>
 							<a class="nav-link" id="v-pills-domicilios-tab" data-toggle="pill" href="#v-pills-domicilios" role="tab" aria-controls="v-pills-domicilios" aria-selected="false"><i class="fas fa-map-marker-alt"></i> DOMICILIOS</a>
-							<?php var_dump($body_data)?>
-							<?php if(isset($body_data->folios->DELITODENUNCIA)){
-									if ($body_data->folios->DELITODENUNCIA == "ROBO DE VEHÍCULO") {?>
-										<a class="nav-link" id="v-pills-vehiculos-tab" data-toggle="pill" href="#v-pills-vehiculos" role="tab" aria-controls="v-pills-vehiculos" aria-selected="false"><i class="fas fa-car"></i> VEHICULOS</a>
-								<?php }
-								}
-								?>
+							<a class="nav-link" id="v-pills-vehiculos-tab" data-toggle="pill" href="#v-pills-vehiculos" role="tab" aria-controls="v-pills-vehiculos" aria-selected="false" style="display: none;"><i class="fas fa-car"></i> VEHICULOS</a>
+							
 						</div>
 					</div>
 					<div class="col-9">
@@ -73,9 +68,6 @@
 		</div>
 	</div>
 </div>
-<script>
-		
-</script>
 <?php include('persona_modal.php') ?>
 <?php include('vehiculo_modal.php') ?>
 <?php include('domicilio_modal.php') ?>
