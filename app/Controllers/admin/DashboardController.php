@@ -164,6 +164,8 @@ class DashboardController extends BaseController
 		$data->idioma = $this->_folioPersonaFisicaModel->join('CATEGORIA_PERSONAIDIOMA', 'CATEGORIA_PERSONAIDIOMA.PERSONAIDIOMAID  =FOLIOPERSONAFISICA.PERSONAIDIOMAID')->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
 
 		$data->nacionalidad = $this->_folioPersonaFisicaModel->join('CATEGORIA_PERSONANACIONALIDAD', 'CATEGORIA_PERSONANACIONALIDAD.PERSONANACIONALIDADID =FOLIOPERSONAFISICA.NACIONALIDADID')->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
+		$data->personaDesaparecida = $this->_folioPersonaFisicaDesaparecidaModel->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->findAll();
+	
 		//	return view('admin/dashboard/video_denuncia_modals/info_folio_modal', $data);
 		return json_encode($data);
 	}
@@ -199,11 +201,28 @@ class DashboardController extends BaseController
 
 		return json_encode($data);
 	}
+	public function enviarFolio(){
+		$data = (object)array();
+		$data->folioIn= $this->request->getPost('folioIn');
+		return json_encode($data);
+	}
+	
 	public function video_denuncia()
 	{
 		$data = (object)array();
+		$data->var= $this->enviarFolio();
 		$data->folio = $this->request->getGet('folio');
+		$data->folioIn = $this->request->getGet('folioIn');
+		
+	//	var_dump($this->enviarFolio());
+	//	var_dump($data->folio = $this->request->getGet('folio'));
+	//	echo "<br>";
+	//	var_dump($this->request->getPost('folioIn'));
+
+		// $data->folio = $this->request->getGet('folio');
+		// $data->folioIn = $this->request->getPost('folioIn');
 		$data->folios = $this->_folioModel->asObject()->where('FOLIOID', $data->folio)->first();
+		
 		$this->_loadView('Video denuncia', 'videodenuncia', '', $data, 'video_denuncia');
 	}
 

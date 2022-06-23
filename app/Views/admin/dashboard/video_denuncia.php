@@ -17,7 +17,7 @@
 						</div>
 					</div>
 				</div>
-				<button id="buscar-btn" class="btn btn-secondary btn-block" role="button"><i class="fas fa-search"></i> Buscar</button>
+				<button id="buscar-btn" class="btn btn-secondary btn-block" role="button" ><i class="fas fa-search"></i> Buscar</button>
 				<button id="buscar-nuevo-btn" class="btn btn-primary btn-block h-100 d-none m-0 p-0" role="button"><i class="fas fa-search"></i> Buscar nuevo</button>
 			</div>
 		</div>
@@ -25,6 +25,7 @@
 	<div id="card2" class="col-3 d-none">
 		<div class="card rounded bg-white shadow" style="min-height: 190px;">
 			<div class="card-body">
+				<?php var_dump($body_data)?>
 				<label class="font-weight-bold">Delito:</label>
 				<input class="form-control" type="text" id="delito_dash">
 				<label class="font-weight-bold">Descripción:</label>
@@ -84,6 +85,7 @@
 </div>
 <script>
 	const inputFolio = document.querySelector('#input_folio_atencion');
+	const inputF = document.getElementById('input_folio_atencion').value;
 	const buscar_btn = document.querySelector('#buscar-btn');
 	const buscar_nuevo_btn = document.querySelector('#buscar-nuevo-btn');
 	const info_folio_btn = document.querySelector('#info-folio-btn');
@@ -95,9 +97,31 @@
 	const card4 = document.querySelector('#card4');
 	const card5 = document.querySelector('#card5');
 	var respuesta;
+	
 	buscar_btn.addEventListener('click', (e) => {
+		localStorage.setItem('folioD', inputFolio.value);
+		var fol =localStorage.getItem('folioD');
+		//alert(fol);
 		$.ajax({
-			//async: false,
+	data: {
+		'folioIn': fol
+	},
+	url: "<?= base_url('/data/save-folio') ?>",
+	method: "POST",
+	dataType: "json",
+      success: function(response) {
+          //$('#output').html(data);
+          console.log("respuesta" + response);
+		  const folioin = response.folioIn;
+		  alert(folioin);
+      },
+	  error: function(jqXHR, textStatus, errorThrown) {
+				console.log('Error' + jqXHR + textStatus + errorThrown);
+			}
+  });
+		/*fol =localStorage.getItem('folioD');
+		alert(fol);*/
+		 $.ajax({
 			data: {
 				'folio': inputFolio.value
 			},
@@ -145,7 +169,7 @@
 					document.querySelector('#calle').value = folio.HECHOCALLE;
 					document.querySelector('#exterior').value = folio.HECHONUMEROCASA;
 					document.querySelector('#interior').value = folio.HECHONUMEROCASAINT;
-					document.querySelector('#lugar').value = folio.HECHOLUGARID;
+					document.querySelector('#lugar').value = foliol.HECHODESCR;
 					document.querySelector('#hora').value = folio.HECHOHORA;
 					document.querySelector('#fecha').value = folio.HECHOFECHA;
 					document.querySelector('#narracion').value = folio.HECHONARRACION;
@@ -217,7 +241,6 @@
 						"autoWidth": false,
 					});
 
-					//respuesta = (response);
 				} else if (response.status === 2) {
 					card2.classList.add('d-none');
 					card3.classList.add('d-none');
@@ -247,17 +270,17 @@
 	});
 
 	buscar_nuevo_btn.addEventListener('click', () => {
-		buscar_nuevo_btn.classList.add('d-none');
-		inputFolio.classList.remove('d-none');
-		buscar_btn.classList.remove('d-none');
+ 		// buscar_nuevo_btn.classList.add('d-none');
+		// inputFolio.classList.remove('d-none');
+		// buscar_btn.classList.remove('d-none');
 
-		card2.classList.add('d-none');
-		card3.classList.add('d-none');
-		card4.classList.add('d-none');
+		// card2.classList.add('d-none');
+		// card3.classList.add('d-none');
+		// card4.classList.add('d-none');
 		card5.classList.add('d-none');
+		window.location='/proyecto_baja/admin/dashboard/folios_abiertos';
 	});
 </script>
-
 
 <script>
 	function viewPersonaFisica(id, calidad) {
@@ -282,6 +305,7 @@ $.ajax({
 		const nacionalidad = response.nacionalidad;
 		const edocivil = response.edocivil;
 		const pidioma = response.idioma;
+		const desaparecida = response.personaDesaparecida;
 		document.querySelector('#calidad_juridicaP').value = calidad.PERSONACALIDADJURIDICADESCR;
 		document.querySelector('#nombrePersona').value = personaid.NOMBRE;
 		document.querySelector('#apellido_paternoP').value = personaid.PRIMERAPELLIDO;
@@ -317,6 +341,43 @@ $.ajax({
 		document.querySelector('#telefonoP').value = personaid.TELEFONO;
 		document.querySelector('#apodo').value = personaid.APODO;
 		document.querySelector('#correoP').value = personaid.CORREO;
+
+		console.log(desaparecida);
+
+		//desaparecida
+		if (personaid.DESAPARECIDA == 'S') {
+	
+			for (let index = 0; index < desaparecida.length; index++) {
+				
+				
+			
+			document.querySelector('#estaturaD').value = desaparecida[index].ESTATURA;
+			document.querySelector('#pesoD').value = desaparecida[index].PESO;
+			document.querySelector('#complexionD').value = desaparecida[index].COMPLEXION;
+			document.querySelector('#colortezD').value = desaparecida[index].COLOR_TEZ;
+			document.querySelector('#senasD').value = desaparecida[index].SENAS;
+		//	document.querySelector('#identidadD').value = desaparecida[index].IDENTIDAD;
+			document.querySelector('#colorCD').value = desaparecida[index].COLOR_CABELLO;
+			document.querySelector('#tamanoCD').value = desaparecida[index].TAM_CABELLO;
+			document.querySelector('#formaCD').value = desaparecida[index].FORMA_CABELLO;
+			document.querySelector('#colorOD').value = desaparecida[index].COLOR_OJOS;
+			document.querySelector('#tipoFD').value = desaparecida[index].FRENTE;
+			document.querySelector('#cejaD').value = desaparecida[index].CEJA;
+			document.querySelector('#discapacidadD').value = desaparecida[index].DISCAPACIDAD;
+			document.querySelector('#origenD').value = desaparecida[index].ORIGEN;
+			document.querySelector('#diaDesaparicion').value = desaparecida[index].DIA_DESAPARICION;
+			document.querySelector('#lugarDesaparicion').value = desaparecida[index].LUGAR_DESAPARICION;
+			document.querySelector('#vestimentaD').value = desaparecida[index].VESTIMENTA;
+			document.querySelector('#parentescoD').value = desaparecida[index].PARENTESCO;
+			//document.querySelector('#fotoDes').value = desaparecida[index].FOTOGRAFIA;
+			document.querySelector('#autorizaFoto').value = desaparecida[index].AUTORIZA_FOTO;
+			}
+	
+			document.getElementById("personadesaparecida").style.display="block";
+			
+		}else{
+			document.getElementById("personadesaparecida").style.display="none";
+		}
 		$('#folio_persona_fisica_modal').modal('show');
 
 	}
@@ -395,38 +456,17 @@ function viewDomicilio(id) {
 				const color = response.color;
 				const estadov = response.estadov;
 				const tipov = response.tipov;
-				document.querySelector('#tipo_placas_vehiculo').value = vehiculo.TIPOPLACA;
-				document.querySelector('#placas_vehiculo').value = vehiculo.PLACAS;
-				if (vehiculo.ESTADOIDPLACA == null) {
-					document.querySelector('#estado_vehiculo').value = "NULL";
-				} else {
-					document.querySelector('#estado_vehiculo').value = estadov.ESTADODESCR;
-				}
-			//	document.querySelector('#estado_vehiculo').value = estadov.ESTADODESCR;
-				document.querySelector('#serie_vehiculo').value = vehiculo.NUMEROSERIE;
-				document.querySelector('#distribuidor_vehiculo').value = vehiculo.VEHICULODISTRIBUIDORID;
-				document.querySelector('#marca').value = vehiculo.MARCADESCR;
-				//document.querySelector('#linea_vehiculo').value = vehiculo.CALLE;
-				document.querySelector('#version_vehiculo').value = vehiculo.VEHICULOVERSIONID;
 				if (vehiculo.TIPOID == null) {
 					document.querySelector('#tipo_vehiculo').value = "NULL";
 				} else {
 					document.querySelector('#tipo_vehiculo').value = tipov.VEHICULOTIPODESCR;
 				}
-				//document.querySelector('#tipo_vehiculo').value = tipov.VEHICULOTIPODESCR;
-				document.querySelector('#servicio_vehiculo').value = vehiculo.VEHICULOSERVICIOID;
-				document.querySelector('#modelo_vehiculo').value = vehiculo.MODELODESCR;
-				document.querySelector('#seguro_vigente_vehiculo').value = vehiculo.SEGUROVIGENTE;
 				document.querySelector('#color_vehiculo').value = color.VEHICULOCOLORDESCR;
-				//	document.querySelector('#color_tapiceria_vehiculo').value = vehiculo.ZONA;
-				document.querySelector('#num_chasis_vehiculo').value = vehiculo.NUMEROCHASIS;
-				document.querySelector('#transmision_vehiculo').value = vehiculo.TRANSMISION;
 				$("#foto_vehiculo").attr("src",vehiculo.FOTO);
-			//	document.querySelector('#traccion_vehiculo').value = vehiculo.TRACCION;
 		//	let fotovehicuo=document.querySelector('#foto_vehiculo');
 		//		fotovehicuo.setAttribute("src", vehiculo.FOTO);
 				document.querySelector('#description_vehiculo').value = vehiculo.SENASPARTICULARES;
-
+				document.querySelector('#doc_vehiculo').value = vehiculo.DOCUMENTO;
 				$('#folio_vehiculo_modal').modal('show');
 			}
 		});

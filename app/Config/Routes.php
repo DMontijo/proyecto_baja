@@ -122,6 +122,10 @@ $routes->group('data', function ($routes) {
 	$routes->post('sendOTP', 'OTPController::sendEmailOTP');
 	$routes->post('getLastOTP', 'OTPController::getLastOTP');
 
+	//VIDEODENUNCIA
+	
+	$routes->post('save-folio', 'admin/DashboardController::video_denuncia');
+	
 	//VEHÍCULOS
 	$routes->post('get-marca-by-dist', 'client/DashboardController::getMarcaByDist');
 	$routes->post('get-modelo-by-marca', 'client/DashboardController::getModeloByMarca');
