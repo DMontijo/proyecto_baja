@@ -9,11 +9,6 @@ class FOLIORELACIONFISFIS extends Migration
 	public function up()
 	{
 		$this->forge->addField([
-			'ID' => [
-				'type' => 'INT',
-				'unsigned' => TRUE,
-				'auto_increment' => TRUE
-			],
 			'FOLIOID' => [
 				'type' => 'VARCHAR',
 				'constraint' => '16',
@@ -47,7 +42,10 @@ class FOLIORELACIONFISFIS extends Migration
 			]
 		]);
 
-		$this->forge->addKey('ID', TRUE);
+		$this->forge->addKey('FOLIOID', TRUE);
+		$this->forge->addKey('PERSONAFISICAIDVICTIMA', TRUE);
+		$this->forge->addKey('DELITOMODALIDADID', TRUE);
+		$this->forge->addKey('PERSONAFISICAIDIMPUTADO', TRUE);
 		$this->forge->createTable('FOLIORELACIONFISFIS');
 	}
 

@@ -9,11 +9,6 @@ class FOLIOCORRELATIVO extends Migration
 	public function up()
 	{
 		$this->forge->addField([
-			'ID' => [
-				'type' => 'INT',
-				'unsigned' => TRUE,
-				'auto_increment' => TRUE
-			],
 			'CORRELATIVO' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
@@ -36,7 +31,11 @@ class FOLIOCORRELATIVO extends Migration
 			],
 		]);
 
-		$this->forge->addKey('ID', TRUE);
+		$this->forge->addKey('TIPOEXPEDIENTEID', TRUE);
+		$this->forge->addKey('ESTADOID', TRUE);
+		$this->forge->addKey('MUNICIPIOID', TRUE);
+		$this->forge->addKey('ANO', TRUE);
+		$this->forge->addKey('CORRELATIVO', TRUE);
 		$this->forge->createTable('FOLIOCORRELATIVO');
 	}
 

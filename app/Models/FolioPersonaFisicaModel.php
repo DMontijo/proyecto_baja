@@ -8,7 +8,6 @@ class FolioPersonaFisicaModel extends Model
 {
 	protected $DBGroup          = 'default';
 	protected $table            = 'FOLIOPERSONAFISICA';
-	protected $primaryKey       = 'ID';
 	protected $allowedFields    = [
 		'FOLIOID',
 		'PERSONAFISICAID',
@@ -23,12 +22,16 @@ class FolioPersonaFisicaModel extends Model
 		'PRIMERAPELLIDO',
 		'SEGUNDOAPELLIDO',
 		'NUMEROIDENTIDAD',
+		'PAIS',
 		'ESTADOORIGENID',
 		'MUNICIPIOORIGENID',
 		'FECHANACIMIENTO',
 		'EDAD',
 		'SEXO',
 		'TELEFONO',
+		'TELEFONO2',
+		'CODIGOPAISTEL',
+		'CODIGOPAISTEL2',
 		'CORREO',
 		'EDADCANTIDAD',
 		'EDADTIEMPO',
@@ -54,6 +57,9 @@ class FolioPersonaFisicaModel extends Model
 		'TIEMPORESIDEDIAS',
 		'ESCOLARIDAD',
 		'DESCRIPCION_FISICA',
+		'FACEBOOK',
+		'INSTAGRAM',
+		'TWITTER',
 	];
 
 	public function get_by_id($id)
@@ -63,8 +69,8 @@ class FolioPersonaFisicaModel extends Model
 
 		return $query->getRow();
 	}
-	public function buscar($id){
-		return $this->where("ID=". $id)->find(); 
+	public function buscar($id)
+	{
+		return $this->where("ID=" . $id)->find();
 	}
-
 }

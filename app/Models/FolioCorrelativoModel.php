@@ -8,7 +8,6 @@ class FolioCorrelativoModel extends Model
 {
 	protected $DBGroup          = 'default';
 	protected $table            = 'FOLIOCORRELATIVO';
-	protected $primaryKey       = 'ID';
 	protected $allowedFields    = [
 		'CORRELATIVO',
 		'ESTADOID',

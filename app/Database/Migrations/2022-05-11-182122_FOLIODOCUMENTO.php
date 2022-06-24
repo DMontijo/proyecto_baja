@@ -10,11 +10,6 @@ class FOLIODOCUMENTO extends Migration
 	{
 
 		$this->forge->addField([
-			'ID' => [
-				'type' => 'INT',
-				'unsigned' => TRUE,
-				'auto_increment' => TRUE
-			],
 			'FOLIOID' => [
 				'type' => 'VARCHAR',
 				'constraint' => '16',
@@ -109,7 +104,8 @@ class FOLIODOCUMENTO extends Migration
 			'FECHACREACION DATETIME DEFAULT CURRENT_TIMESTAMP',
 			'FECHAACTUALIZACION DATETIME ON UPDATE CURRENT_TIMESTAMP',
 		]);
-		$this->forge->addKey('ID', TRUE);
+		$this->forge->addKey('FOLIOID', TRUE);
+		$this->forge->addKey('FOLIODOCTOID', TRUE);
 		$this->forge->createTable('FOLIODOCUMENTO');
 	}
 

@@ -9,11 +9,6 @@ class FOLIOARCHIVOEXTERNO extends Migration
 	public function up()
 	{
 		$this->forge->addField([
-			'ID' => [
-				'type' => 'INT',
-				'unsigned' => TRUE,
-				'auto_increment' => TRUE
-			],
 			'FOLIOID' => [
 				'type' => 'VARCHAR',
 				'constraint' => '16',
@@ -82,7 +77,8 @@ class FOLIOARCHIVOEXTERNO extends Migration
 				'null' => TRUE,
 			],
 		]);
-		$this->forge->addKey('ID', TRUE);
+		$this->forge->addKey('FOLIOID', TRUE);
+		$this->forge->addKey('FOLIOARCHIVOID', TRUE);
 		$this->forge->createTable('FOLIOARCHIVOEXTERNO');
 	}
 

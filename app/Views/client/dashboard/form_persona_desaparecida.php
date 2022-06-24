@@ -87,6 +87,32 @@
 		<hr>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="facebook_des" class="form-label fw-bold">Facebook</label>
+		<div class="input-group">
+			<span class="input-group-text" id="facebook_vanity"><i class="bi bi-facebook"></i></span>
+			<input type="text" class="form-control" name="facebook_des" id="facebook_des" aria-describedby="facebook_vanity" maxlength="200">
+		</div>
+	</div>
+
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="instagram_des" class="form-label fw-bold">Instagram</label>
+		<div class="input-group">
+			<span class="input-group-text" id="instagram_vanity"><i class="bi bi-instagram"></i></span>
+			<input type="text" class="form-control" name="instagram_des" id="instagram_des" aria-describedby="instagram_vanity" maxlength="200">
+		</div>
+	</div>
+
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="twitter_des" class="form-label fw-bold">Twitter</label>
+		<div class="input-group">
+			<span class="input-group-text" id="twitter_vanity"><i class="bi bi-twitter"></i></span>
+			<input type="text" class="form-control" name="twitter_des" id="twitter_des" aria-describedby="twitter_vanity" maxlength="200">
+		</div>
+	</div>
+	<div class="col-12">
+		<hr>
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="estatura_des" class="form-label fw-bold ">Estatura (en centímetros)</label>
 		<input type="number" class="form-control" id="estatura_des" name="estatura_des">
 	</div>

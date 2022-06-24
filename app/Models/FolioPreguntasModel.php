@@ -8,16 +8,17 @@ class FolioPreguntasModel extends Model
 {
 	protected $DBGroup          = 'default';
 	protected $table            = 'FOLIOPREGUNTASDENUNCIA';
-	protected $primaryKey       = 'ID';
 	protected $allowedFields    = [
 		'FOLIOID',
 		'ES_MENOR',
-		'ERES_TU',
 		'ES_TERCERA_EDAD',
+		'ES_OFENDIDO',
 		'TIENE_DISCAPACIDAD',
+		'ES_GRUPO_VULNERABLE',
+		'ES_GRUPO_VULNERABLE_DESCR',
 		'FUE_CON_ARMA',
-		'ESTA_DESAPARECIDO',
 		'LESIONES',
 		'LESIONES_VISIBLES',
+		'ESTA_DESAPARECIDO',
 	];
 }

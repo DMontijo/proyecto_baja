@@ -5,7 +5,6 @@ namespace App\Controllers\admin;
 use App\Controllers\BaseController;
 
 use App\Models\DenunciantesModel;
-use App\Models\FolioDenunciaModel;
 
 use App\Models\FolioPreguntasModel;
 use App\Models\FolioCorrelativoModel;
@@ -30,7 +29,6 @@ class FoliosController extends BaseController
 	{
 		//Models
 		$this->_denunciantesModel = new DenunciantesModel();
-		$this->_datosDelitoModel = new FolioDenunciaModel();
 
 		$this->_folioCorrelativoModel = new FolioCorrelativoModel();
 		$this->_folioModel = new FolioModel();

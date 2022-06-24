@@ -8,7 +8,6 @@ class FolioArchivoExternoModel extends Model
 {
 	protected $DBGroup          = 'default';
 	protected $table            = 'FOLIOARCHIVOEXTERNO';
-	protected $primaryKey       = 'ID';
 	protected $allowedFields    = [
 		'FOLIOID',
 		'FOLIOARCHIVOID',

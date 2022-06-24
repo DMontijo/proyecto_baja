@@ -9,7 +9,6 @@ use App\Models\EstadosModel;
 use App\Models\MunicipiosModel;
 use App\Models\LocalidadesModel;
 use App\Models\ColoniasModel;
-use App\Models\FolioDenunciaModel;
 use App\Models\HechoLugarModel;
 use App\Models\VehiculoColorModel;
 use App\Models\VehiculoMarcaModel;
@@ -46,7 +45,6 @@ class DashboardController extends BaseController
 		$this->_municipiosModel = new MunicipiosModel();
 		$this->_localidadesModel = new LocalidadesModel();
 		$this->_coloniasModel = new ColoniasModel();
-		$this->_datosdeldelitoModel = new FolioDenunciaModel();
 		$this->_hechoLugarModel = new HechoLugarModel();
 		$this->_coloresVehiculoModel = new VehiculoColorModel();
 		$this->_marcaVehiculoModel = new VehiculoMarcaModel();

@@ -10,11 +10,6 @@ class FOLIOPERSONAFISICADESAPARECIDA extends Migration
 	{
 
 		$this->forge->addField([
-			'ID_PERSONA_DESAPARECIDA' => [
-				'type' => 'INT',
-				'unsigned' => TRUE,
-				'auto_increment' => TRUE,
-			],
 			'FOLIOID' => [
 				'type' => 'VARCHAR',
 				'constraint' => '16',
@@ -125,7 +120,8 @@ class FOLIOPERSONAFISICADESAPARECIDA extends Migration
 			'FECHAREGISTRO DATETIME DEFAULT CURRENT_TIMESTAMP',
 			'FECHAACTUALIZACION DATETIME ON UPDATE CURRENT_TIMESTAMP',
 		]);
-		$this->forge->addKey('ID_PERSONA_DESAPARECIDA', TRUE);
+		$this->forge->addKey('FOLIOID', TRUE);
+		$this->forge->addKey('PERSONAFISICAID', TRUE);
 		$this->forge->createTable('FOLIOPERSONAFISICADESAPARECIDA');
 	}
 

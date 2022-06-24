@@ -1,5 +1,5 @@
 <div class="row">
-	<h3 class="text-center fw-bolder pb-3 text-blue">Datos del posible responsable</h3>
+	<h3 class="text-center fw-bolder pb-3 text-blue">Datos del imputado (posible responsable)</h3>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="nombre_imputado" class="form-label fw-bold">Nombre(s)</label>
 		<input type="text" class="form-control" id="nombre_imputado" name="nombre_imputado" maxlength="50">
@@ -46,6 +46,10 @@
 		<input type="date" class="form-control" id="fecha_nac_imputado" name="fecha_nac_imputado">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="escolaridad_imputado" class="form-label fw-bold">Escolaridad del posible responsable</label>
+		<input type="text" class="form-control" id="escolaridad_imputado" name="escolaridad_imputado" maxlength="30">
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="sexo_imputado" class="form-label fw-bold ">Sexo del posible responsable</label>
 		<br>
 		<div class="form-check form-check-inline">
@@ -57,9 +61,34 @@
 			<label class="form-check-label" for="flexRadioDefault2">FEMENINO</label>
 		</div>
 	</div>
+	<div class="col-12">
+		<hr>
+	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="escolaridad_imputado" class="form-label fw-bold">Escolaridad del posible responsable</label>
-		<input type="text" class="form-control" id="escolaridad_imputado" name="escolaridad_imputado" maxlength="30">
+		<label for="facebook_imputado" class="form-label fw-bold">Facebook</label>
+		<div class="input-group">
+			<span class="input-group-text" id="facebook_vanity"><i class="bi bi-facebook"></i></span>
+			<input type="text" class="form-control" name="facebook_imputado" id="facebook_imputado" aria-describedby="facebook_vanity" maxlength="200">
+		</div>
+	</div>
+
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="instagram_imputado" class="form-label fw-bold">Instagram</label>
+		<div class="input-group">
+			<span class="input-group-text" id="instagram_vanity"><i class="bi bi-instagram"></i></span>
+			<input type="text" class="form-control" name="instagram_imputado" id="instagram_imputado" aria-describedby="instagram_vanity" maxlength="200">
+		</div>
+	</div>
+
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="twitter_imputado" class="form-label fw-bold">Twitter</label>
+		<div class="input-group">
+			<span class="input-group-text" id="twitter_vanity"><i class="bi bi-twitter"></i></span>
+			<input type="text" class="form-control" name="twitter_imputado" id="twitter_imputado" aria-describedby="twitter_vanity" maxlength="200">
+		</div>
+	</div>
+	<div class="col-12">
+		<hr>
 	</div>
 	<div class="col-12">
 		<label for="description_fisica_imputado" class="form-label fw-bold">Descripción física del posible responsable</label>

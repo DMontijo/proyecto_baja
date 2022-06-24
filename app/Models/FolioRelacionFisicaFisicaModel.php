@@ -8,7 +8,6 @@ class FolioRelacionFisicaFisicaModel extends Model
 {
 	protected $DBGroup          = 'default';
 	protected $table            = 'FOLIORELACIONFISFIS';
-	protected $primaryKey       = 'ID';
 	protected $allowedFields    = [
 		'FOLIOID',
 		'PERSONAFISICAIDVICTIMA',
