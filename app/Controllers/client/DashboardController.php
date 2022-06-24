@@ -352,17 +352,15 @@ class DashboardController extends BaseController
 		if ($this->request->getPost('delito') == "ROBO DE VEHÍCULO") {
 			$img_file = $this->request->getFile('foto_vehiculo');
 			var_dump($_FILES);
-			//$imgData = base64_encode(file_get_contents($img_file)); 
-			//$img_file= $_FILES['foto_vehiculo']['full_path']; 
 			$imgData = base64_encode(file_get_contents($img_file)); 
-			//$imgFile = $this->request->getPost('foto_vehiculo');
-			//
+			$document_file = $this->request->getFile('documento_vehiculo');
+			$docData = base64_encode(file_get_contents($document_file)); 
 			$dataVehiculo = array(
 				'TIPOID' => $this->request->getPost('tipo_vehiculo'),
 				'PRIMERCOLORID' => $this->request->getPost('color_vehiculo'),
 				'SENASPARTICULARES' => $this->request->getPost('description_vehiculo'),
 				'FOTO' => $imgData,
-				'DOCUMENTO' => $this->request->getPost('foto_vehiculo'),
+				'DOCUMENTO' => $docData
 			);
 
 			echo '<br>';

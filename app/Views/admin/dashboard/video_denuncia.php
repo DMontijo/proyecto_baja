@@ -436,8 +436,11 @@
 				}
 				document.querySelector('#color_vehiculo').value = color.VEHICULOCOLORDESCR;
 				document.querySelector('#foto_vehiculo').setAttribute('src', 'data:image/jpg;base64,' + vehiculo.FOTO);
+				document.querySelector('#downloadImage').setAttribute('href', 'data:image/jpg;base64,' + vehiculo.FOTO);
 				document.querySelector('#description_vehiculo').value = vehiculo.SENASPARTICULARES;
-				document.querySelector('#doc_vehiculo').value = vehiculo.DOCUMENTO;
+				document.querySelector('#doc_vehiculo').setAttribute('src', 'data:image/jpg;base64,' + vehiculo.DOCUMENTO);
+				document.querySelector('#downloadDoc').setAttribute('href', 'data:image/jpg;base64,' + vehiculo.DOCUMENTO);
+
 				$('#folio_vehiculo_modal').modal('show');
 			}
 		});
