@@ -94,6 +94,11 @@ class DashboardController extends BaseController
 		$this->_loadView('Dashboard', 'dashboard', '', $data, 'index');
 	}
 
+	public function otp()
+	{
+		echo view("client/register/otp");
+	}
+
 	public function video_denuncia()
 	{
 		$data = (object)[

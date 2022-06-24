@@ -54,7 +54,10 @@
 						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="correo" class="form-label fw-bold input-required">Correo electrónico</label>
-							<input type="email" class="form-control" id="correo" name="correo" maxlength="100" required>
+							<div class="input-group">
+								<span class="input-group-text" id="correo_vanity"><i class="bi bi-envelope-fill"></i></span>
+								<input type="email" class="form-control" name="correo" id="correo" aria-describedby="correo_vanity" maxlength="100" required>
+							</div>
 							<div class="invalid-feedback">
 								El correo esta erroneo
 							</div>
@@ -248,19 +251,6 @@
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="ocupacion" class="form-label fw-bold">Ocupación</label>
-							<input type="text" class="form-control" id="ocupacion" name="ocupacion" maxlength="100">
-						</div>
-
-						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="discapacidad" class="form-label fw-bold">¿Padece alguna discapacidad?</label>
-							<input type="text" class="form-control" id="discapacidad" name="discapacidad" maxlength="100">
-							<div class="invalid-feedback">
-								El campo discapacidad es obligatorio.
-							</div>
-						</div>
-
-						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="escolaridad" class="form-label fw-bold input-required">Escolaridad</label>
 							<select class="form-select" id="escolaridad" name="escolaridad" required>
 								<option selected disabled value="">Seleccione la escolaridad</option>
@@ -274,6 +264,41 @@
 							</select>
 							<div class="invalid-feedback">
 								La escolaridad es obligatoria
+							</div>
+						</div>
+
+						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+							<label for="ocupacion" class="form-label fw-bold">Ocupación</label>
+							<input type="text" class="form-control" id="ocupacion" name="ocupacion" maxlength="100">
+						</div>
+
+						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+							<label for="discapacidad" class="form-label fw-bold">¿Padece alguna discapacidad?</label>
+							<input type="text" class="form-control" id="discapacidad" name="discapacidad" maxlength="100">
+						</div>
+
+						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+							<label for="facebook" class="form-label fw-bold">Facebook</label>
+							<div class="input-group">
+								<span class="input-group-text" id="facebook_vanity"><i class="bi bi-facebook"></i></span>
+								<input type="text" class="form-control" name="facebook" id="facebook" aria-describedby="facebook_vanity" maxlength="200">
+							</div>
+						</div>
+
+
+						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+							<label for="instagram" class="form-label fw-bold">Instagram</label>
+							<div class="input-group">
+								<span class="input-group-text" id="instagram_vanity"><i class="bi bi-instagram"></i></span>
+								<input type="text" class="form-control" name="instagram" id="instagram" aria-describedby="instagram_vanity" maxlength="200">
+							</div>
+						</div>
+
+						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+							<label for="twitter" class="form-label fw-bold">Twitter</label>
+							<div class="input-group">
+								<span class="input-group-text" id="twitter_vanity"><i class="bi bi-twitter"></i></span>
+								<input type="text" class="form-control" name="twitter" id="twitter" aria-describedby="twitter_vanity" maxlength="200">
 							</div>
 						</div>
 
