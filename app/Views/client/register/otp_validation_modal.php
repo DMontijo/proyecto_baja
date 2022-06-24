@@ -34,7 +34,7 @@
 				let otp = response.data.CODIGO_OTP;
 				let fechaVencimiento = response.data.VENCIMIENTO;
 				let datelocal = new Date();
-				let dateToTijuanaString = date.toLocaleString('en-US', {
+				let dateToTijuanaString = datelocal.toLocaleString('en-US', {
 					timeZone: 'America/Tijuana'
 				});
 				let dateTijuana = new Date(dateToTijuanaString);

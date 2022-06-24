@@ -17,6 +17,8 @@ use App\Models\PaisesModel;
 use App\Models\HechoClasificacionLugarModel;
 use App\Models\FolioModel;
 
+use App\Libraries\Base64FileUpload;
+
 
 class UserController extends BaseController
 {
@@ -58,6 +60,9 @@ class UserController extends BaseController
 	public function create()
 	{
 		$password = $this->_generatePassword(6);
+		$base64file = new Base64FileUpload();
+		$documento = $base64file->upload_file('uploads/denunciantes/perfil/', $this->request->getPost('documento_text'));
+		$firma = $base64file->upload_file('uploads/denunciantes/firmas/', $this->request->getPost('firma_url'));
 
 		$data = [
 			'NOMBRE' => $this->request->getPost('nombre'),
@@ -94,9 +99,9 @@ class UserController extends BaseController
 			'INSTAGRAM' => $this->request->getPost('instagram'),
 			'TWITTER' => $this->request->getPost('twitter'),
 			'IDIOMAID' => (int)$this->request->getPost('idioma'),
-			'DOCUMENTO' => $this->request->getPost('documento_text'),
-			'FIRMA' => $this->request->getPost('firma_url'),
 			'NOTIFICACIONES' => $this->request->getPost('notificaciones_check') == 'on' ? 'S' : 'N',
+			'DOCUMENTO' => $documento['file_path'],
+			'FIRMA' => $firma['file_path'],
 		];
 
 		if ($this->validate(['correo' => 'required|is_unique[DENUNCIANTES.CORREO]'])) {

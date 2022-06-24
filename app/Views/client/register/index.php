@@ -74,11 +74,11 @@
 							<label for="sexo" class="form-label fw-bold input-required">Sexo</label>
 							<br>
 							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio" name="sexo" value="M" required>
+								<input class="form-check-input" type="radio" name="sexo" id="sexo" value="M" required>
 								<label class="form-check-label" for="flexRadioDefault1">MASCULINO</label>
 							</div>
 							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio" name="sexo" value="F" required>
+								<input class="form-check-input" type="radio" name="sexo" id="sexo" value="F" required>
 								<label class="form-check-label" for="flexRadioDefault2">FEMENINO</label>
 							</div>
 						</div>
@@ -284,7 +284,6 @@
 								<input type="text" class="form-control" name="facebook" id="facebook" aria-describedby="facebook_vanity" maxlength="200">
 							</div>
 						</div>
-
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="instagram" class="form-label fw-bold">Instagram</label>
@@ -580,16 +579,17 @@
 		})
 
 		document.querySelector('#fecha_nacimiento').addEventListener('change', (e) => {
-			let fecha = e.target.value;
+			let fecha = e.target.value + 'T00:00:00';
 			let hoy = new Date();
 			let cumpleanos = new Date(fecha);
 			let edad = hoy.getFullYear() - cumpleanos.getFullYear();
 			let m = hoy.getMonth() - cumpleanos.getMonth();
 
-			document.querySelector('#edad').value = edad;
 			if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
 				edad--;
 			}
+
+			document.querySelector('#edad').value = edad;
 		});
 
 		document.querySelector('#fecha_nacimiento').addEventListener('blur', (e) => {
@@ -925,6 +925,10 @@
 		let codigo_pais = document.querySelector("#codigo_pais").value ? document.querySelector("#codigo_pais").value : '';
 		let codigo_pais_2 = document.querySelector("#codigo_pais_2").value ? document.querySelector("#codigo_pais_2").value : '';
 
+		let facebook = document.querySelector("#facebook").value ? document.querySelector("#facebook").value : '';
+		let instagram = document.querySelector("#instagram").value ? document.querySelector("#instagram").value : '';
+		let twitter = document.querySelector("#twitter").value ? document.querySelector("#twitter").value : '';
+
 		let tipo = document.querySelector("#identificacion").value ? document.querySelector("#identificacion").value : '';
 		let numeroid = document.querySelector("#numero_ide").value ? document.querySelector("#numero_ide").value : '';
 		let edoc = document.querySelector("#e_civil").value ? document.querySelector("#e_civil").value : '';
@@ -954,6 +958,10 @@
 		document.querySelector('#interior_modal').value = ninterior;
 		document.querySelector('#telefono_modal').value = telefono;
 		document.querySelector('#telefono2_modal').value = telefono2;
+
+		document.querySelector('#facebook_modal').value = facebook;
+		document.querySelector('#instagram_modal').value = instagram;
+		document.querySelector('#twitter_modal').value = twitter;
 
 		document.querySelector('#identificacion_modal').value = tipo;
 		document.querySelector('#numero_ide_modal').value = numeroid;
