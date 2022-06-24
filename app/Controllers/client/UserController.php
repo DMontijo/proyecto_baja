@@ -58,7 +58,8 @@ class UserController extends BaseController
 	public function create()
 	{
 		$password = $this->_generatePassword(6);
-
+		$document_file = $this->request->getFile('documentoDenunciante');
+		$docData = base64_encode(file_get_contents($document_file)); 
 		$data = [
 			'NOMBRE' => $this->request->getPost('nombre'),
 			'APELLIDO_PATERNO' => $this->request->getPost('apellido_paterno'),
@@ -91,7 +92,7 @@ class UserController extends BaseController
 			'NACIONALIDAD_ID' => (int)$this->request->getPost('nacionalidad'),
 			'ESCOLARIDAD' => $this->request->getPost('escolaridad'),
 			'IDIOMAID' => (int)$this->request->getPost('idioma'),
-			'DOCUMENTO' => $this->request->getPost('documento_text'),
+			'DOCUMENTO' => $docData,
 			'FIRMA' => $this->request->getPost('firma_url'),
 			'NOTIFICACIONES' => $this->request->getPost('notificaciones_check') == 'on' ? 'S' : 'N',
 		];

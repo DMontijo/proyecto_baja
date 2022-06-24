@@ -286,6 +286,7 @@
 				const edocivil = response.edocivil;
 				const pidioma = response.idioma;
 				const desaparecida = response.personaDesaparecida;
+				document.querySelector('#img_denunciante').setAttribute('src', 'data:image/jpg;base64,' + personaid.FOTO);
 				document.querySelector('#calidad_juridicaP').value = calidad.PERSONACALIDADJURIDICADESCR;
 				document.querySelector('#nombrePersona').value = personaid.NOMBRE;
 				document.querySelector('#apellido_paternoP').value = personaid.PRIMERAPELLIDO;
@@ -294,6 +295,13 @@
 				document.querySelector('#denunciantep').value = personaid.DENUNCIANTE == 'S' ? 'SI' : 'NO';
 				document.querySelector('#vivaP').value = personaid.VIVA == 'S' ? 'SI' : 'NO';
 				document.querySelector('#desaparecidaP').value = personaid.DESAPARECIDA == 'N' ? 'NO' : 'S';
+				if (personaid.CALIDADJURIDICAID == 1) {
+					document.getElementById("img_denuncianteDiv").style.display = "block";
+				}else{
+					document.getElementById("img_denuncianteDiv").style.display = "none";
+
+				}
+			
 				if (personaid.TIPOIDENTIFICACIONID == null) {
 					document.querySelector('#tipoiP').value = "NULL";
 				} else {

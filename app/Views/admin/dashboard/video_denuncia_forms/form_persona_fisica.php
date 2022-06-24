@@ -1,9 +1,14 @@
 
 <div class="row">
+<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3" id="img_denuncianteDiv" style="display: none;">
+		<label for="img_denunciante" class="form-label fw-bold">Imagen del denunciante</label>
+		<img class="img-fluid" id="img_denunciante" name="img_denunciante" src="" alt="">
+	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="calidad_juridica" class="form-label fw-bold">Calidad Juridica</label>
 		<input type="text" class="form-control" id="calidad_juridicaP" name="calidad_juridicaP" autofocus>
 	</div>
+
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="nombre" class="form-label fw-bold">Nombre(s)</label>
 		<input type="text" class="form-control" id="nombrePersona" name="nombrePersona" autofocus>
