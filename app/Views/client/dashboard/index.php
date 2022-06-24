@@ -42,7 +42,7 @@
 					<div class="progress mb-4">
 						<div id="progress-bar" aria-valuemax="100" aria-valuemin="0" aria-valuenow="50" class="progress-bar progress-bar-striped progress-bar-animated bg-yellow" role="progressbar"></div>
 					</div>
-					<form id="denuncia_form" action="<?= base_url() ?>/denuncia/dashboard/create" method="post" class="row needs-validation" novalidate>
+					<form id="denuncia_form" action="<?= base_url() ?>/denuncia/dashboard/create" method="post"  enctype="multipart/form-data" class="row needs-validation" novalidate >
 
 						<!-- PREGUNTAS INICIALES -->
 						<div id="datos_iniciales" class="col-12 step">

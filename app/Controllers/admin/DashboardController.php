@@ -136,6 +136,7 @@ class DashboardController extends BaseController
 				$data->personas = $this->_folioPersonaFisicaModel->join('PERSONACALIDADJURIDICA', 'PERSONACALIDADJURIDICA.PERSONACALIDADJURIDICAID = FOLIOPERSONAFISICA.CALIDADJURIDICAID')->where('FOLIOID', $numfolio)->orderBy('ID','desc')->findAll();
 				$data->domicilio = $this->_folioPersonaFisicaDomicilioModel->where('FOLIOID', $numfolio)->findAll();
 				$data->vehiculos = $this->_folioVehiculoModel->where('FOLIOID', $numfolio)->findAll();
+				
 				$data->folioMunicipio = $this->_folioModel->join('CATEGORIA_MUNICIPIO', 'CATEGORIA_MUNICIPIO.MUNICIPIOID =FOLIO.HECHOMUNICIPIOID')->where('FOLIOID', $numfolio)->first();
 				$data->folioColonia = $this->_folioModel->join('CATEGORIA_COLONIA', 'CATEGORIA_COLONIA.COLONIAID =FOLIO.HECHOCOLONIAID')->where('FOLIOID', $numfolio)->first();
 				$data->folioLugar = $this->_folioModel->join('CATEGORIA_HECHOLUGAR', 'CATEGORIA_HECHOLUGAR.HECHOLUGARID =FOLIO.HECHOLUGARID')->where('FOLIOID', $numfolio)->first();

@@ -435,13 +435,15 @@
 					document.querySelector('#tipo_vehiculo').value = tipov.VEHICULOTIPODESCR;
 				}
 				document.querySelector('#color_vehiculo').value = color.VEHICULOCOLORDESCR;
-				$("#foto_vehiculo").attr("src", vehiculo.FOTO);
+				document.querySelector('#foto_vehiculo').setAttribute('src', 'data:image/jpg;base64,' + vehiculo.FOTO);
 				document.querySelector('#description_vehiculo').value = vehiculo.SENASPARTICULARES;
 				document.querySelector('#doc_vehiculo').value = vehiculo.DOCUMENTO;
 				$('#folio_vehiculo_modal').modal('show');
 			}
 		});
 	}
+
+
 </script>
 
 <?php include('video_denuncia_modals/info_folio_modal.php') ?>
