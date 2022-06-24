@@ -125,11 +125,12 @@ class DashboardController extends BaseController
 		$data = (object)array();
 		$numfolio = $this->request->getPost('folio');
 		$data->folio = $this->_folioModel->asObject()->where('FOLIOID', $numfolio)->first();
+
 		if ($data->folio) {
 			if ($data->folio->STATUS == 'ABIERTO') {
 				$data->status = 1;
 				$data->preguntas_iniciales = $this->_folioPreguntasModel->where('FOLIOID', $numfolio)->first();
-				$data->personas = $this->_folioPersonaFisicaModel->join('PERSONACALIDADJURIDICA', 'PERSONACALIDADJURIDICA.PERSONACALIDADJURIDICAID = FOLIOPERSONAFISICA.CALIDADJURIDICAID')->where('FOLIOID', $numfolio)->orderBy('ID','desc')->findAll();
+				$data->personas = $this->_folioPersonaFisicaModel->join('PERSONACALIDADJURIDICA', 'PERSONACALIDADJURIDICA.PERSONACALIDADJURIDICAID = FOLIOPERSONAFISICA.CALIDADJURIDICAID')->where('FOLIOID', $numfolio)->orderBy('PERSONAFISICAID', 'desc')->findAll();
 				$data->domicilio = $this->_folioPersonaFisicaDomicilioModel->where('FOLIOID', $numfolio)->findAll();
 				$data->vehiculos = $this->_folioVehiculoModel->where('FOLIOID', $numfolio)->findAll();
 				return json_encode($data);

@@ -95,9 +95,10 @@
 	const card4 = document.querySelector('#card4');
 	const card5 = document.querySelector('#card5');
 	var respuesta;
+
 	buscar_btn.addEventListener('click', (e) => {
+		console.log('Click');
 		$.ajax({
-			//async: false,
 			data: {
 				'folio': inputFolio.value
 			},

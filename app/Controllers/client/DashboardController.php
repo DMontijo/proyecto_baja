@@ -92,11 +92,6 @@ class DashboardController extends BaseController
 		$this->_loadView('Dashboard', 'dashboard', '', $data, 'index');
 	}
 
-	public function otp()
-	{
-		echo view("client/register/otp");
-	}
-
 	public function video_denuncia()
 	{
 		$data = (object)[
@@ -207,6 +202,9 @@ class DashboardController extends BaseController
 				'LUGAR_DESAPARICION' => $this->request->getPost('lugar_des'),
 				'VESTIMENTA' => $this->request->getPost('vestimenta_des'),
 				'PARENTESCO' => $this->request->getPost('parentesco_des'),
+				'FACEBOOK' => $this->request->getPost('facebook_des'),
+				'INSTAGRAM' => $this->request->getPost('instagram_des'),
+				'TWITTER' => $this->request->getPost('twitter_des'),
 				'FOTO' => $this->request->getPost('foto_des'),
 				'AUTORIZA_FOTO' => $this->request->getPost('autorization_photo_des') == 'on' ? 'S' : 'N',
 				'DESAPARECIDA' => 'S',
@@ -224,18 +222,18 @@ class DashboardController extends BaseController
 				'CP' => $this->request->getPost('cp_des'),
 			);
 
-			echo '<br>';
-			echo '<br>';
-			foreach ($dataDesaparecido as $key => $value) {
-				var_dump($key, $value);
-				echo '<br>';
-			}
-			echo '<br>';
-			echo '<br>';
-			foreach ($datadataDesaparecidoDomicilio as $key => $value) {
-				var_dump($key, $value);
-				echo '<br>';
-			}
+			// echo '<br>';
+			// echo '<br>';
+			// foreach ($dataDesaparecido as $key => $value) {
+			// 	var_dump($key, $value);
+			// 	echo '<br>';
+			// }
+			// echo '<br>';
+			// echo '<br>';
+			// foreach ($datadataDesaparecidoDomicilio as $key => $value) {
+			// 	var_dump($key, $value);
+			// 	echo '<br>';
+			// }
 			$desaparecido = $this->_folioPersonaFisica($dataDesaparecido, $FOLIOID, 1);
 			$this->_folioPersonaFisicaDesaparecida($dataDesaparecido, $FOLIOID, $desaparecido);
 			$this->_folioPersonaFisicaDomicilio($datadataDesaparecidoDomicilio, $FOLIOID, $desaparecido);
@@ -252,7 +250,10 @@ class DashboardController extends BaseController
 				'FECHA_NACIMIENTO' => $this->request->getPost('fecha_nacimiento_menor'),
 				'EDAD' => $this->request->getPost('edad_menor'),
 				'EDADCANTIDAD' => $this->request->getPost('edad_menor'),
-				'SEXO' => $this->request->getPost('sexo_menor')
+				'SEXO' => $this->request->getPost('sexo_menor'),
+				'FACEBOOK' => $this->request->getPost('facebook_menor'),
+				'INSTAGRAM' => $this->request->getPost('instagram_menor'),
+				'TWITTER' => $this->request->getPost('twitter_menor'),
 			);
 
 			$dataMenorDomicilio = array(
@@ -307,7 +308,10 @@ class DashboardController extends BaseController
 			'ESTADOORIGENID' => $denunciante->ESTADOID,
 			'MUNICIPIOORIGENID' => $denunciante->MUNICIPIOID,
 			'FOTO' => $denunciante->DOCUMENTO,
-			'DENUNCIANTE' => 'S', 1
+			'DENUNCIANTE' => 'S',
+			'FACEBOOK' => $denunciante->FACEBOOK,
+			'INSTAGRAM' => $denunciante->FACEBOOK,
+			'TWITTER' => $denunciante->FACEBOOK,
 		);
 
 		$dataDenuncianteDomicilio = array(
@@ -349,6 +353,9 @@ class DashboardController extends BaseController
 				'SEXO' => $this->request->getPost('sexo_imputado'),
 				'ESCOLARIDAD' => $this->request->getPost('escolaridad_imputado'),
 				'DESCRIPCION_FISICA' => $this->request->getPost('description_fisica_imputado'),
+				'FACEBOOK' => $this->request->getPost('facebook_imputado'),
+				'INSTAGRAM' => $this->request->getPost('instagram_imputado'),
+				'TWITTER' => $this->request->getPost('twitter_imputado'),
 			);
 
 			$dataImputadoDomicilio = array(
@@ -430,7 +437,7 @@ class DashboardController extends BaseController
 			'ANO' => (int)date("Y"),
 		];
 
-		$correlativo = $this->_folioCorrelativoModel->asObject()->where('ANO', date("Y"))->orderBy('ID', 'desc')->first();
+		$correlativo = $this->_folioCorrelativoModel->asObject()->where('ANO', date("Y"))->where('ESTADOID', $data['ESTADOID'])->where('MUNICIPIOID', $data['MUNICIPIOID'])->where('TIPOEXPEDIENTEID', $data['TIPOEXPEDIENTEID'])->orderBy('CORRELATIVO', 'desc')->first();
 
 		if ($correlativo) {
 			$data = [
