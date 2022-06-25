@@ -24,7 +24,7 @@ class FOLIODOCUMENTO extends Migration
 				'null' => TRUE,
 			],
 			'DOCUMENTO' => [
-				'type' => 'TEXT',
+				'type' => 'BLOB',
 				'null' => TRUE,
 			],
 			'FECHAIMPRESODEFINITIVA' => [

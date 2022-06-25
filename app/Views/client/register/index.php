@@ -304,8 +304,7 @@
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="documento" class="form-label fw-bold input-required">Foto de identificación</label>
 							<img class="img-fluid d-none py-2" src="" id="img_preview">
-							<input class="form-control" type="file" id="documento" required name="documento" accept="image/jpeg,image/jpg" capture="user">
-							<!-- <input class="form-control" type="file" id="documento" name="documento" accept="image/*"> -->
+							<input class="form-control" type="file" id="documento" name="documento" accept="image/jpeg,image/jpg" required>
 							<textarea id="documento_text" name="documento_text" hidden></textarea>
 							<div class="form-text"><button id="photo-btn" class="btn btn-link p-0 m-0" style="font-size:14px;" type="button">Para tomar foto clic aquí <i class="bi bi-camera-fill"></i></button></div>
 						</div>
@@ -556,10 +555,8 @@
 				event.preventDefault();
 				event.stopPropagation();
 				enviar_datos();
-				console.log('En submit con datos erroneos');
 			} else {
 				event.preventDefault();
-				console.log('En submit con datos');
 				enviar_datos();
 				$('#information_validation').modal('show');
 			}

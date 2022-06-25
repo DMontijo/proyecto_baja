@@ -62,15 +62,16 @@ class USUARIOS extends Migration
 				'null' => TRUE,
 			],
 			'CERTIFICADOFIRMA' => [
-				'type' => 'TEXT',
+				'type' => 'BLOB',
 				'null' => TRUE,
 			],
 			'KEYFIRMA' => [
-				'type' => 'TEXT',
+				'type' => 'BLOB',
 				'null' => TRUE,
 			],
 			'FRASEFIRMA' => [
-				'type' => 'TEXT',
+				'type' => 'VARCHAR',
+				'constraint' => '200',
 				'null' => TRUE,
 			],
 		]);

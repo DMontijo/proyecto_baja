@@ -38,13 +38,13 @@ class FOLIO extends Migration
 				'default' => 'ABIERTO',
 			],
 			'NOTASAGENTE' => [
-				'type' => 'VARCHAR',
+				'type' => 'TEXT',
 				'constraint' => '300',
 				'default' => 'SIN NOTAS',
 			],
 			'ENLACEVIDEO' => [
-				'type' => 'VARCHAR',
-				'constraint' => '250',
+				'type' => 'TEXT',
+				'constraint' => '500',
 				'null' => TRUE,
 			],
 			'ESTADOID' => [
@@ -134,12 +134,13 @@ class FOLIO extends Migration
 				'null' => TRUE,
 			],
 			'HECHOREFERENCIA' => [
-				'type' => 'VARCHAR',
+				'type' => 'TEXT',
 				'constraint' => '300',
 				'null' => TRUE,
 			],
 			'HECHONARRACION' => [
 				'type' => 'TEXT',
+				'constraint' => '300',
 				'null' => TRUE,
 			],
 			'TIPOEXPEDIENTEID' => [

@@ -27,7 +27,7 @@ class FOLIOARCHIVOEXTERNO extends Migration
 				'unsigned' => TRUE,
 			],
 			'ARCHIVO' => [
-				'type' => 'TEXT',
+				'type' => 'BLOB',
 				'null' => TRUE,
 			],
 			'EXTENSION' => [

@@ -380,12 +380,16 @@ class DashboardController extends BaseController
 		}
 
 		if ($this->request->getPost('delito') == "ROBO DE VEHÍCULO") {
+			$img_file = $this->request->getFile('foto_vehiculo');
+			$imgData = base64_encode(file_get_contents($img_file));
+			$document_file = $this->request->getFile('documento_vehiculo');
+			$docData = base64_encode(file_get_contents($document_file));
 			$dataVehiculo = array(
-				'TIPO_VEHICULO' => $this->request->getPost('tipo_vehiculo'),
+				'TIPOID' => $this->request->getPost('tipo_vehiculo'),
 				'PRIMERCOLORID' => $this->request->getPost('color_vehiculo'),
 				'SENASPARTICULARES' => $this->request->getPost('description_vehiculo'),
-				'FOTO' => $this->request->getPost('foto_vehiculo'),
-				'DOCUMENTO' => $this->request->getPost('foto_vehiculo'),
+				'FOTO' => $imgData,
+				'DOCUMENTO' => $docData
 			);
 
 			// echo '<br>';
@@ -426,7 +430,6 @@ class DashboardController extends BaseController
 			return redirect()->to(base_url($url));
 		}
 	}
-
 
 	private function _correlativo($municipio, $tipoExpediente)
 	{

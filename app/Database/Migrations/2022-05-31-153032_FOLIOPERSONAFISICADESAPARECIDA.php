@@ -108,7 +108,7 @@ class FOLIOPERSONAFISICADESAPARECIDA extends Migration
 				'null' => TRUE,
 			],
 			'FOTOGRAFIA' => [
-				'type' => 'TEXT',
+				'type' => 'BLOB',
 				'null' => TRUE,
 			],
 			'AUTORIZA_FOTO' => [

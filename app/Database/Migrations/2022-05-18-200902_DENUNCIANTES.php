@@ -171,11 +171,11 @@ class DENUNCIANTES extends Migration
 				'null' => TRUE
 			],
 			'DOCUMENTO' => [
-				'type' => 'TEXT',
+				'type' => 'BLOB',
 				'null' => TRUE
 			],
 			'FIRMA' => [
-				'type' => 'TEXT',
+				'type' => 'BLOB',
 				'null' => TRUE
 			],
 			'NOTIFICACIONES' => [
