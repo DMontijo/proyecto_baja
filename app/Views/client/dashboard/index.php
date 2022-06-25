@@ -402,6 +402,7 @@
 				if (
 					document.querySelector('input[name="es_menor"]:checked') &&
 					document.querySelector('input[name="tiene_discapacidad"]:checked') &&
+					document.querySelector('input[name="es_vulnerable"]:checked') &&
 					document.querySelector('input[name="fue_con_arma"]:checked') &&
 					document.querySelector('input[name="esta_desaparecido"]:checked')
 				) {

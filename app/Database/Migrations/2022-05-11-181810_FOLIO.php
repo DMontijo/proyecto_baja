@@ -40,7 +40,6 @@ class FOLIO extends Migration
 			'NOTASAGENTE' => [
 				'type' => 'TEXT',
 				'constraint' => '300',
-				'default' => 'SIN NOTAS',
 			],
 			'ENLACEVIDEO' => [
 				'type' => 'TEXT',

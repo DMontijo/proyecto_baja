@@ -58,6 +58,16 @@ class UserController extends BaseController
 	{
 		$password = $this->_generatePassword(6);
 
+		$foto_des = $this->request->getPost('documento_text');
+		list($type, $foto_des) = explode(';', $foto_des);
+		list(, $extension) = explode('/', $type);
+		list(, $foto_des) = explode(',', $foto_des);
+
+		$firma = $this->request->getPost('firma_url');
+		list($type, $firma) = explode(';', $firma);
+		list(, $extension) = explode('/', $type);
+		list(, $firma) = explode(',', $firma);
+
 		$data = [
 			'NOMBRE' => $this->request->getPost('nombre'),
 			'APELLIDO_PATERNO' => $this->request->getPost('apellido_paterno'),
@@ -94,8 +104,8 @@ class UserController extends BaseController
 			'TWITTER' => $this->request->getPost('twitter'),
 			'IDIOMAID' => (int)$this->request->getPost('idioma'),
 			'NOTIFICACIONES' => $this->request->getPost('notificaciones_check') == 'on' ? 'S' : 'N',
-			'DOCUMENTO' => $this->request->getPost('documento_text'),
-			'FIRMA' => $this->request->getPost('firma_url'),
+			'DOCUMENTO' => $foto_des,
+			'FIRMA' => $firma,
 		];
 
 		if ($this->validate(['correo' => 'required|is_unique[DENUNCIANTES.CORREO]'])) {

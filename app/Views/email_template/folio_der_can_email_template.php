@@ -7,11 +7,11 @@
 	<p>DA CLIC EN EL BOTÓN INFERIOR PARA VER EL DIRECTORIO DE DERIVACIONES Y CANALIZACIONES</p>
 	<br>
 	<?php if ($motivo == 'CANALIZADO') { ?>
-		<a class="btn" href="<?= base_url('/derivaciones') ?>">
+		<a class="btn" href="https://www.fgebc.gob.mx/">
 			VER DIRECTORIO
 		</a>
 	<?php } else { ?>
-		<a class="btn" href="https://www.fgebc.gob.mx/">
+		<a class="btn" href="<?= base_url('/derivaciones') ?>">
 			VER DIRECTORIO
 		</a>
 	<?php } ?>

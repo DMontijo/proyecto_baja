@@ -15,7 +15,8 @@
 							<a class="nav-link" id="v-pills-denuncia-tab" data-toggle="pill" href="#v-pills-denuncia" role="tab" aria-controls="v-pills-denuncia" aria-selected="false"><i class="fas fa-file-alt"></i> DENUNCIA</a>
 							<a class="nav-link" id="v-pills-personas-tab" data-toggle="pill" href="#v-pills-personas" role="tab" aria-controls="v-pills-personas" aria-selected="false"><i class="fas fa-users"></i> PERSONAS</a>
 							<a class="nav-link" id="v-pills-domicilios-tab" data-toggle="pill" href="#v-pills-domicilios" role="tab" aria-controls="v-pills-domicilios" aria-selected="false"><i class="fas fa-map-marker-alt"></i> DOMICILIOS</a>
-							<a class="nav-link" id="v-pills-vehiculos-tab" data-toggle="pill" href="#v-pills-vehiculos" role="tab" aria-controls="v-pills-vehiculos" aria-selected="false"><i class="fas fa-car"></i> VEHICULOS</a>
+							<a class="nav-link" id="v-pills-vehiculos-tab" data-toggle="pill" href="#v-pills-vehiculos" role="tab" aria-controls="v-pills-vehiculos" aria-selected="false" style="display: none;"><i class="fas fa-car"></i> VEHICULOS</a>
+
 						</div>
 					</div>
 					<div class="col-9">
@@ -29,35 +30,29 @@
 							<div class="tab-pane fade" id="v-pills-personas" role="tabpanel" aria-labelledby="v-pills-personas-tab">
 								<div id="adicionados" class="d-none"></div>
 								<table id="table-personas" class="table table-bordered table-striped">
-									<thead>
-										<tr>
-											<th class="text-center" id="nombreP" name="nombreP">NOMBRE</th>
-											<th class="text-center" id="calidadP" name="calidadP">CALIDAD JURIDICA</th>
-											<th></th>
-										</tr>
-									</thead>
+									<tr>
+										<th class="text-center" id="nombreP" name="nombreP">NOMBRE</th>
+										<th class="text-center" id="calidadP" name="calidadP">CALIDAD JURIDICA</th>
+										<th></th>
+									</tr>
 								</table>
 							</div>
 							<div class="tab-pane fade" id="v-pills-domicilios" role="tabpanel" aria-labelledby="v-pills-domicilios-tab">
 								<table id="table-domicilio" class="table table-bordered table-striped">
-									<thead>
-										<tr>
-											<th class="text-center">NOMBRE</th>
-											<th class="text-center">CALIDAD JURIDICA</th>
-											<th></th>
-										</tr>
-									</thead>
+									<tr>
+										<th class="text-center">NOMBRE</th>
+										<th class="text-center">CALIDAD JURIDICA</th>
+										<th></th>
+									</tr>
 								</table>
 							</div>
 							<div class="tab-pane fade" id="v-pills-vehiculos" role="tabpanel" aria-labelledby="v-pills-vehiculos-tab">
 								<table id="table-vehiculos" class="table table-bordered table-striped">
-									<thead>
-										<tr>
-											<th class="text-center">PLACAS</th>
-											<th class="text-center">SERIE</th>
-											<th></th>
-										</tr>
-									</thead>
+									<tr>
+										<th class="text-center">PLACAS</th>
+										<th class="text-center">SERIE</th>
+										<th></th>
+									</tr>
 								</table>
 							</div>
 						</div>
@@ -70,13 +65,3 @@
 <?php include('persona_modal.php') ?>
 <?php include('vehiculo_modal.php') ?>
 <?php include('domicilio_modal.php') ?>
-<script>
-	$(function() {
-		$("#folios_sin_firma").DataTable({
-			"responsive": true,
-			"lengthChange": false,
-			"autoWidth": false,
-			"buttons": ["copy", "csv", "excel", "pdf", "print", ]
-		}).buttons().container().appendTo('#videollamadasA_wrapper .col-md-6:eq(0)');
-	});
-</script>

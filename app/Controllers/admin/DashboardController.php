@@ -133,6 +133,11 @@ class DashboardController extends BaseController
 				$data->personas = $this->_folioPersonaFisicaModel->join('PERSONACALIDADJURIDICA', 'PERSONACALIDADJURIDICA.PERSONACALIDADJURIDICAID = FOLIOPERSONAFISICA.CALIDADJURIDICAID')->where('FOLIOID', $numfolio)->orderBy('PERSONAFISICAID', 'desc')->findAll();
 				$data->domicilio = $this->_folioPersonaFisicaDomicilioModel->where('FOLIOID', $numfolio)->findAll();
 				$data->vehiculos = $this->_folioVehiculoModel->where('FOLIOID', $numfolio)->findAll();
+				
+				$data->folioMunicipio = $this->_folioModel->join('CATEGORIA_MUNICIPIO', 'CATEGORIA_MUNICIPIO.MUNICIPIOID =FOLIO.HECHOMUNICIPIOID')->where('FOLIOID', $numfolio)->first();
+				$data->folioColonia = $this->_folioModel->join('CATEGORIA_COLONIA', 'CATEGORIA_COLONIA.COLONIAID =FOLIO.HECHOCOLONIAID')->where('FOLIOID', $numfolio)->first();
+				$data->folioLugar = $this->_folioModel->join('CATEGORIA_HECHOLUGAR', 'CATEGORIA_HECHOLUGAR.HECHOLUGARID =FOLIO.HECHOLUGARID')->where('FOLIOID', $numfolio)->first();
+
 				return json_encode($data);
 			} else {
 				$agente = $this->_usuariosModel->asObject()->where('ID', $data->folio->AGENTEATENCIONID)->first();
@@ -142,6 +147,7 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
+	
 	public function findPersonaFisicaById()
 	{
 		$data = (object)array();
@@ -152,6 +158,13 @@ class DashboardController extends BaseController
 
 		// $data['data'] = $data;
 		$data->calidadjuridica = $this->_folioPersonaFisicaModel->join('PERSONACALIDADJURIDICA', 'PERSONACALIDADJURIDICA.PERSONACALIDADJURIDICAID =FOLIOPERSONAFISICA.CALIDADJURIDICAID')->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->where('CALIDADJURIDICAID', $idcalidad)->first();
+		$data->tipoidentificacion = $this->_folioPersonaFisicaModel->join('CATEGORIA_PERSONATIPOIDENTIFICACION', 'CATEGORIA_PERSONATIPOIDENTIFICACION.PERSONATIPOIDENTIFICACIONID =FOLIOPERSONAFISICA.TIPOIDENTIFICACIONID')->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
+		$data->edocivil = $this->_folioPersonaFisicaModel->join('CATEGORIA_PERSONAEDOCIVIL', 'CATEGORIA_PERSONAEDOCIVIL.PERSONAESTADOCIVILID =FOLIOPERSONAFISICA.ESTADOCIVILID')->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
+		$data->idioma = $this->_folioPersonaFisicaModel->join('CATEGORIA_PERSONAIDIOMA', 'CATEGORIA_PERSONAIDIOMA.PERSONAIDIOMAID  =FOLIOPERSONAFISICA.PERSONAIDIOMAID')->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
+
+		$data->nacionalidad = $this->_folioPersonaFisicaModel->join('CATEGORIA_PERSONANACIONALIDAD', 'CATEGORIA_PERSONANACIONALIDAD.PERSONANACIONALIDADID =FOLIOPERSONAFISICA.NACIONALIDADID')->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
+		$data->personaDesaparecida = $this->_folioPersonaFisicaDesaparecidaModel->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->findAll();
+	
 		//	return view('admin/dashboard/video_denuncia_modals/info_folio_modal', $data);
 		return json_encode($data);
 	}
@@ -168,9 +181,10 @@ class DashboardController extends BaseController
 		$folio = $this->request->getPost('folio');
 		$idestado = $this->request->getPost('idestado');
 		$idmunicipio = $this->request->getPost('idmunicipio');
+
 		$data->persondom = $this->_folioPersonaFisicaDomicilioModel->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
 		$data->estado = $this->_folioPersonaFisicaDomicilioModel->join('CATEGORIA_ESTADO', 'CATEGORIA_ESTADO.ESTADOID =FOLIOPERSONAFISDOMICILIO.ESTADOID')->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
-		$data->municipio = $this->_folioPersonaFisicaDomicilioModel->join('CATEGORIA_MUNICIPIO', 'CATEGORIA_MUNICIPIO.ID =FOLIOPERSONAFISDOMICILIO.MUNICIPIOID')->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
+		$data->municipio = $this->_folioPersonaFisicaDomicilioModel->join('CATEGORIA_MUNICIPIO', 'CATEGORIA_MUNICIPIO.MUNICIPIOID =FOLIOPERSONAFISDOMICILIO.MUNICIPIOID')->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
 		$data->localidad = $this->_folioPersonaFisicaDomicilioModel->join('CATEGORIA_LOCALIDAD', 'CATEGORIA_LOCALIDAD.LOCALIDADID =FOLIOPERSONAFISDOMICILIO.LOCALIDADID')->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
 
 		return json_encode($data);
@@ -187,10 +201,20 @@ class DashboardController extends BaseController
 
 		return json_encode($data);
 	}
+	public function enviarFolio(){
+		$data = (object)array();
+		$data->folioIn= $this->request->getPost('folioIn');
+		return json_encode($data);
+	}
+	
 	public function video_denuncia()
 	{
 		$data = (object)array();
+		// $data->var= $this->enviarFolio();
 		$data->folio = $this->request->getGet('folio');
+		// $data->folios = $this->_folioModel->asObject()->where('FOLIOID', $data->folio)->first();
+		// $data->domicilio = $this->_folioPersonaFisicaDomicilioModel->asObject()->where('FOLIOID', $data->folio)->first();
+
 		$this->_loadView('Video denuncia', 'videodenuncia', '', $data, 'video_denuncia');
 	}
 

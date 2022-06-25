@@ -221,7 +221,7 @@
 							card5.classList.add('d-none');
 							notas_mp.value = '';
 							inputFolio.value = '';
-							location.reload();
+							borrartodo();
 						})
 					}
 				}).fail(function(jqXHR, textStatus) {
@@ -290,7 +290,7 @@
 								card5.classList.add('d-none');
 								notas_mp.value = '';
 								inputFolio.value = '';
-								location.reload();
+								borrartodo();
 							})
 						}
 						console.log(data);

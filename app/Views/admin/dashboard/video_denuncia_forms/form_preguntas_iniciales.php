@@ -4,10 +4,6 @@
 		<input class="form-control" type="text" id="es_menor" name="es_menor">
 	</div>
 	<div class="col-6">
-		<label for="eres_tu" class="form-label font-weight-bold">¿Eres tú el menor de edad?</label>
-		<input class="form-control" type="text" id="eres_tu" name="eres_tu">
-	</div>
-	<div class="col-6">
 		<label for="es_tercera_edad" class="form-label font-weight-bold">¿La víctima u ofendido es de la tercera edad?</label>
 		<input class="form-control" type="text" id="es_tercera_edad" name="es_tercera_edad">
 	</div>
