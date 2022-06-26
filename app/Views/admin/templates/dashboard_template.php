@@ -22,9 +22,10 @@
 </head>
 
 <body class="c-app c-legacy-theme">
-	<div class="c-sidebar c-sidebar-dark c-sidebar-fixed c-sidebar-lg-show" id="sidebar">
-		<div class="c-sidebar-brand d-lg-down-none">
+	<div class="c-sidebar c-sidebar-dark c-sidebar-fixed c-sidebar-lg-show c-sidebar-minimized" id="sidebar">
+		<div class="c-sidebar-brand">
 			<img alt="Logo" class="img-fluid c-sidebar-brand-full" src="<?= base_url() ?>/assets/img/FGEBC.png" style="max-height:50px;" />
+			<img alt="Logo" class="img-fluid c-sidebar-brand-minimized" src="<?= base_url() ?>/assets/img/FGEBC.png" style="max-height:50px;" />
 		</div>
 		<ul class="c-sidebar-nav">
 			<li class="c-sidebar-nav-item">
@@ -37,21 +38,25 @@
 					<i class="fas fa-video c-sidebar-nav-icon"></i> Video denuncia
 				</a>
 			</li>
-			<li class="c-sidebar-nav-item">
-				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/usuarios">
-					<i class="fas fa-users c-sidebar-nav-icon"></i> Usuarios
-				</a>
-			</li>
+			<?php if (session('ROLID') == 1 || session('ROLID') == 2 || session('ROLID') == 3 || session('ROLID') == 4) : ?>
+				<li class="c-sidebar-nav-item">
+					<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/usuarios">
+						<i class="fas fa-users c-sidebar-nav-icon"></i> Usuarios
+					</a>
+				</li>
+			<?php endif; ?>
 			<li class="c-sidebar-nav-item">
 				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/folios">
 					<i class="fas fa-archive c-sidebar-nav-icon"></i> Folios
 				</a>
 			</li>
-			<li class="c-sidebar-nav-item">
-				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/firmas">
-					<i class="fas fa-file-alt c-sidebar-nav-icon"></i> Firmas
-				</a>
-			</li>
+			<?php if (session('ROLID') == 1 || session('ROLID') == 2 || session('ROLID') == 3 || session('ROLID') == 4 || session('ROLID') == 5) : ?>
+				<li class="c-sidebar-nav-item">
+					<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/firmas">
+						<i class="fas fa-file-alt c-sidebar-nav-icon"></i> Firmas
+					</a>
+				</li>
+			<?php endif; ?>
 		</ul>
 		<button class="c-sidebar-minimizer c-class-toggler" type="button" data-target="_parent" data-class="c-sidebar-minimized"></button>
 	</div>
