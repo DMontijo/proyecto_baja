@@ -355,9 +355,6 @@
 				if (personaid.DESAPARECIDA == 'S') {
 
 					for (let index = 0; index < desaparecida.length; index++) {
-
-
-
 						document.querySelector('#estaturaD').value = desaparecida[index].ESTATURA;
 						document.querySelector('#pesoD').value = desaparecida[index].PESO;
 						document.querySelector('#complexionD').value = desaparecida[index].COMPLEXION;
@@ -376,8 +373,8 @@
 						document.querySelector('#lugarDesaparicion').value = desaparecida[index].LUGAR_DESAPARICION;
 						document.querySelector('#vestimentaD').value = desaparecida[index].VESTIMENTA;
 						document.querySelector('#parentescoD').value = desaparecida[index].PARENTESCO;
-						//document.querySelector('#fotoDes').value = desaparecida[index].FOTOGRAFIA;
-						document.querySelector('#autorizaFoto').value = desaparecida[index].AUTORIZA_FOTO;
+						document.querySelector('#fotoDes').setAttribute('src', 'data:image/jpg;base64,' + desaparecida[index].FOTOGRAFIA);
+						document.querySelector('#autorizaFoto').value = desaparecida[index].AUTORIZA_FOTO == 'S' ? 'SI' : 'NO';
 					}
 
 					document.getElementById("personadesaparecida").style.display = "block";
@@ -462,7 +459,7 @@
 				} else {
 					document.querySelector('#tipo_vehiculo').value = tipov.VEHICULOTIPODESCR;
 				}
-				document.querySelector('#color_vehiculo').value = color.VEHICULOCOLORDESCR;
+				document.querySelector('#color_vehiculo').value = color ? color.VEHICULOCOLORDESCR : '';
 				document.querySelector('#foto_vehiculo').setAttribute('src', 'data:image/jpg;base64,' + vehiculo.FOTO);
 				document.querySelector('#downloadImage').setAttribute('href', 'data:image/jpg;base64,' + vehiculo.FOTO);
 				document.querySelector('#description_vehiculo').value = vehiculo.SENASPARTICULARES;

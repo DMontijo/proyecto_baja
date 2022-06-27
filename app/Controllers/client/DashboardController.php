@@ -179,6 +179,7 @@ class DashboardController extends BaseController
 
 			$foto_des = $this->request->getFile('foto_des');
 			$foto_data = base64_encode(file_get_contents($foto_des));
+			var_dump($foto_data);
 
 			$dataDesaparecido = array(
 				'NOMBRE' => $this->request->getPost('nombre_des'),
@@ -209,7 +210,7 @@ class DashboardController extends BaseController
 				'FACEBOOK' => $this->request->getPost('facebook_des'),
 				'INSTAGRAM' => $this->request->getPost('instagram_des'),
 				'TWITTER' => $this->request->getPost('twitter_des'),
-				'FOTO' => $foto_data,
+				'FOTOGRAFIA' => $foto_data,
 				'AUTORIZA_FOTO' => $this->request->getPost('autorization_photo_des') == 'on' ? 'S' : 'N',
 				'DESAPARECIDA' => 'S',
 			);

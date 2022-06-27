@@ -23,7 +23,7 @@ class App extends BaseConfig
 	 *
 	 * @var string
 	 */
-	public $baseURL = 'https://cdt.fgebc.gob.mx/';
+	public $baseURL = 'http://cdt.fgebc.gob.mx/';
 
 	/**
 	 * --------------------------------------------------------------------------
