@@ -22,7 +22,7 @@
 </head>
 
 <body class="c-app c-legacy-theme">
-	<div class="c-sidebar c-sidebar-dark c-sidebar-fixed c-sidebar-lg-show c-sidebar-minimized" id="sidebar">
+	<div class="c-sidebar c-sidebar-dark c-sidebar-fixed c-sidebar-lg-show" id="sidebar">
 		<div class="c-sidebar-brand">
 			<img alt="Logo" class="img-fluid c-sidebar-brand-full" src="<?= base_url() ?>/assets/img/FGEBC.png" style="max-height:50px;" />
 			<img alt="Logo" class="img-fluid c-sidebar-brand-minimized" src="<?= base_url() ?>/assets/img/FGEBC.png" style="max-height:50px;" />
@@ -57,6 +57,11 @@
 					</a>
 				</li>
 			<?php endif; ?>
+			<li class="c-sidebar-nav-item">
+				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/perfil">
+					<i class="fas fa-address-card c-sidebar-nav-icon"></i> Perfil
+				</a>
+			</li>
 		</ul>
 		<button class="c-sidebar-minimizer c-class-toggler" type="button" data-target="_parent" data-class="c-sidebar-minimized"></button>
 	</div>

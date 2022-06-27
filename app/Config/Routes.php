@@ -33,6 +33,7 @@ $routes->setAutoRoute(true);
 // route since we don't have to scan directories.
 $routes->get('/', 'HomeController::index');
 $routes->get('derivaciones', 'DerivacionesController::index');
+$routes->get('canalizaciones', 'DerivacionesController::canalizaciones');
 
 /**
  *  Admin Routes
@@ -61,6 +62,9 @@ $routes->group('admin', function ($routes) {
 		$routes->get('folios_expediente', 'admin/FoliosController::folios_expediente');
 		$routes->get('folios_sin_firma', 'admin/FoliosController::folios_sin_firma');
 		$routes->post('firmar_folio', 'admin/FoliosController::firmar_folio');
+
+		$routes->get('perfil', 'admin/DashboardController::perfil');
+		$routes->post('update_password', 'admin/DashboardController::update_password');
 
 		$routes->get('certificadoMedico', 'PDFController::certificadoMedico');
 		$routes->get('constancia-video-denuncia', 'PDFController::constanciaVideoDenuncia');

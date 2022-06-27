@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class DERIVACIONESATENCION extends Migration
+class CANALIZACIONESATENCION extends Migration
 {
 	public function up()
 	{
@@ -21,7 +21,7 @@ class DERIVACIONESATENCION extends Migration
 			],
 			'INSTITUCIONREMISIONID' => [
 				'type' => 'SMALLINT',
-				'constrait'		 => '3',
+				'constrait' => '3',
 				'null' => TRUE,
 			],
 			'INSTITUCIONREMISIONDESCR' => [
@@ -41,11 +41,11 @@ class DERIVACIONESATENCION extends Migration
 			],
 		]);
 		$this->forge->addKey('ID', TRUE);
-		$this->forge->createTable('DERIVACIONES_ATENCION');
+		$this->forge->createTable('CANALIZACIONES_ATENCION');
 	}
 
 	public function down()
 	{
-		$this->forge->dropTable('DERIVACIONES_ATENCION');
+		$this->forge->dropTable('CANALIZACIONES_ATENCION');
 	}
 }

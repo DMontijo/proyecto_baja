@@ -102,7 +102,6 @@ class DashboardController extends BaseController
 			'FRASEFIRMA' => $this->request->getPost('frase'),
 		];
 
-		var_dump($data);
 		if ($this->validate(['correo' => 'required|is_unique[USUARIOS.CORREO]'])) {
 			$this->_usuariosModel->insert($data);
 			$this->_sendEmailPassword($data['CORREO'], $this->request->getPost('password'));
@@ -117,6 +116,26 @@ class DashboardController extends BaseController
 		$data = (object)array();
 		$data = $this->_folioModel->asObject()->findAll();
 		$this->_loadView('Folios no atendidos', 'folios', '', $data, 'folios');
+	}
+
+	public function perfil()
+	{
+		$data = (object)array();
+		$data->zonas = $this->_zonasUsuariosModel->asObject()->findAll();
+		$data->roles = $this->_rolesUsuariosModel->asObject()->findAll();
+		$this->_loadView('Perfil', 'perfil', '', $data, 'perfil');
+	}
+
+	public function update_password()
+	{
+		$password = $this->request->getPost('password');
+		$data = [
+			'PASSWORD' => hashPassword($password),
+		];
+		$this->_usuariosModel->set($data)->where('ID', session('ID'))->update();
+		$session = session();
+		$session->destroy();
+		return redirect()->to(base_url('admin'));
 	}
 
 	public function getFolioInformation()
