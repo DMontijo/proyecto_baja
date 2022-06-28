@@ -25,6 +25,10 @@ use App\Models\OficinasModel;
 use App\Models\EmpleadosModel;
 use App\Models\PersonaCalidadJuridicaModel;
 
+use App\Models\MunicipiosModel;
+use App\Models\LocalidadesModel;
+use App\Models\ColoniasModel;
+
 class DashboardController extends BaseController
 {
 	function __construct()
@@ -52,6 +56,10 @@ class DashboardController extends BaseController
 		$this->_oficinasModel = new OficinasModel();
 		$this->_empleadosModel = new EmpleadosModel();
 		$this->_folioPersonaCalidadJuridica = new PersonaCalidadJuridicaModel();
+
+		$this->_municipiosModel = new MunicipiosModel();
+		$this->_localidadesModel = new LocalidadesModel();
+		$this->_coloniasModel = new ColoniasModel();
 	}
 
 	public function index()
@@ -152,9 +160,9 @@ class DashboardController extends BaseController
 				$data->domicilio = $this->_folioPersonaFisicaDomicilioModel->where('FOLIOID', $numfolio)->findAll();
 				$data->vehiculos = $this->_folioVehiculoModel->where('FOLIOID', $numfolio)->findAll();
 
-				$data->folioMunicipio = $this->_folioModel->join('CATEGORIA_MUNICIPIO', 'CATEGORIA_MUNICIPIO.MUNICIPIOID =FOLIO.HECHOMUNICIPIOID')->where('FOLIOID', $numfolio)->first();
-				$data->folioColonia = $this->_folioModel->join('CATEGORIA_COLONIA', 'CATEGORIA_COLONIA.COLONIAID =FOLIO.HECHOCOLONIAID')->where('FOLIOID', $numfolio)->first();
-				$data->folioLugar = $this->_folioModel->join('CATEGORIA_HECHOLUGAR', 'CATEGORIA_HECHOLUGAR.HECHOLUGARID =FOLIO.HECHOLUGARID')->where('FOLIOID', $numfolio)->first();
+				$data->folioMunicipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data->folio->HECHOMUNICIPIOID)->first();
+				$data->folioColonia = $this->_coloniasModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data->folio->HECHOMUNICIPIOID)->where('COLONIAID', $data->folio->HECHOCOLONIAID)->first();
+				$data->folioLugar = $this->_folioModel->join('CATEGORIA_HECHOLUGAR', 'CATEGORIA_HECHOLUGAR.HECHOLUGARID = FOLIO.HECHOLUGARID')->where('FOLIOID', $numfolio)->first();
 
 				return json_encode($data);
 			} else {

@@ -79,7 +79,7 @@
 									</p>
 									<div class="form-group">
 										<input class="form-check-input" type="checkbox" name="derechos_imputado" id="derechos_imputado" required>
-										<span class="fw-bold">Confirmo que he leído y conozco los derechos de derechos de víctima u ofendido</span>
+										<span class="fw-bold">Confirmo que he leído y conozco los derechos de víctima u ofendido</span>
 										<div class="invalid-feedback">
 											Debes confirmar de leído los derechos de víctima u ofendido para continuar.
 										</div>
