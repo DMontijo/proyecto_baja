@@ -73,7 +73,7 @@ class DashboardController extends BaseController
 		$data = (object)array();
 		$data = $this->_usuariosModel->asObject()->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->join('ZONAS_USUARIOS', 'ZONAS_USUARIOS.ID_ZONA = USUARIOS.ZONAID')->findAll();
 		// var_dump($data);
-		$this->_loadView('Registrar usuario', 'registrarusuario', '', $data, 'signs');
+		$this->_loadView('Firmar documentos', 'firmar', '', $data, 'signs');
 	}
 
 	public function nuevo_usuario()
@@ -370,31 +370,67 @@ class DashboardController extends BaseController
 		$oficina = $this->request->getPost('oficina');
 		$empleado = $this->request->getPost('empleado');
 
-		// $url = '192.168.191.33/API-RestJusticia/public/expediente';
 		if (!empty($folio) && !empty($municipio) && !empty($estado) && !empty($notas) && !empty($oficina) && !empty($empleado)) {
 			$folioRow = $this->_folioModel->where('FOLIOID', $folio)->first();
+
 			$folioRow['MUNICIPIOID'] = $municipio;
-			$folioRow['EXPEDIENTEID'] = $folio;
 			$folioRow['ESTADOID'] = $estado;
 			$folioRow['NOTASAGENTE'] = $notas;
 			$folioRow['STATUS'] = 'EXPEDIENTE';
 			$folioRow['AGENTEATENCIONID'] = session('ID');
 			$folioRow['AGENTEFIRMAID'] = session('ROLID') != '5' ? session('ID') : NULL;
+			// $folioRow['AGENTEATENCIONID'] = NULL;
+			// $folioRow['AGENTEFIRMAID'] = NULL;
+			// $folioRow['STATUS'] = NULL;
 
 			$update = $this->_folioModel->set($folioRow)->where('FOLIOID', $folio)->update();
-			if ($update) {
-				$denunciante = $this->_denunciantesModel->asObject()->where('ID_DENUNCIANTE', $folioRow['DENUNCIANTEID'])->first();
-				if ($this->_sendEmailExpediente($denunciante->CORREO, $folio, $folioRow['EXPEDIENTEID'])) {
-					return json_encode(['status' => 1]);
+
+			$expedienteCreado = $this->createExp($folioRow);
+
+			if ($expedienteCreado->status == 201) {
+				$folioRow['EXPEDIENTEID'] = $expedienteCreado->EXPEDIENTEID;
+				$update2 = $this->_folioModel->set($folioRow)->where('FOLIOID', $folio)->update();
+				if ($update2) {
+					$denunciante = $this->_denunciantesModel->asObject()->where('ID_DENUNCIANTE', $folioRow['DENUNCIANTEID'])->first();
+					if ($this->_sendEmailExpediente($denunciante->CORREO, $folio, $folioRow['EXPEDIENTEID'])) {
+						return json_encode(['status' => 1]);
+					} else {
+						return json_encode(['status' => 1]);
+					}
 				} else {
-					return json_encode(['status' => 1]);
+					return json_encode(['status' => 0, 'error' => 'No hizo el update']);
 				}
 			} else {
-				return json_encode(['status' => 0, 'error' => 'No hizo el update']);
+				return json_encode(['status' => 0, 'error' => 'No se creo el expediente']);
 			}
 		} else {
 			return json_encode(['status' => 0, 'error' => 'No existe alguna de las variables']);
 		}
+	}
+
+	public function createExp($folioRow)
+	{
+		$endpoint = 'http://192.168.191.33/API-RestJusticia/public/expediente';
+		$data = (object)array();
+		$data = [
+			'ESTADOID' => $folioRow['ESTADOID'],
+			'MUNICIPIOID' => $folioRow['MUNICIPIOID'],
+			'TIPOEXPEDIENTEID' => 4
+		];
+		// var_dump($data);
+		// Crear opciones de la peticion HTTP
+		$opciones = array(
+			"http" => array(
+				"header" => "Content-type: application/x-www-form-urlencoded\r\n",
+				"method" => "POST",
+				"content" => http_build_query($data), # Agregar el contenido definido antes
+			),
+		);
+		# Preparar peticion
+		$contexto = stream_context_create($opciones);
+		# Hacerla
+		$resultado = file_get_contents($endpoint, false, $contexto);
+		return json_decode($resultado);
 	}
 }
 

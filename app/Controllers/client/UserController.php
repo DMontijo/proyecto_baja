@@ -59,14 +59,14 @@ class UserController extends BaseController
 		$password = $this->_generatePassword(6);
 
 		$foto_des = $this->request->getPost('documento_text');
-		list($type, $foto_des) = explode(';', $foto_des);
-		list(, $extension) = explode('/', $type);
-		list(, $foto_des) = explode(',', $foto_des);
+		// list($type, $foto_des) = explode(';', $foto_des);
+		// list(, $extension) = explode('/', $type);
+		// list(, $foto_des) = explode(',', $foto_des);
 
 		$firma = $this->request->getPost('firma_url');
-		list($type, $firma) = explode(';', $firma);
-		list(, $extension) = explode('/', $type);
-		list(, $firma) = explode(',', $firma);
+		// list($type, $firma) = explode(';', $firma);
+		// list(, $extension) = explode('/', $type);
+		// list(, $firma) = explode(',', $firma);
 
 		$data = [
 			'NOMBRE' => $this->request->getPost('nombre'),

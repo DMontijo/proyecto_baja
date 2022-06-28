@@ -221,7 +221,7 @@
 							card5.classList.add('d-none');
 							notas_mp.value = '';
 							inputFolio.value = '';
-							borrartodo();
+							borrarTodo();
 						})
 					}
 				}).fail(function(jqXHR, textStatus) {
@@ -256,6 +256,7 @@
 						'oficina': oficina_empleado.value,
 						'empleado': empleado.value,
 					}
+					console.log('DENTRO DEL IF');
 					$.ajax({
 						data: data,
 						url: "<?= base_url('/data/save-in-justicia') ?>",
@@ -264,7 +265,6 @@
 
 					}).done(function(data) {
 						btnFinalizar.removeAttribute('disabled');
-						console.log(data);
 						if (data.status == 1) {
 							document.querySelector('#tipo_salida').value = "";
 							document.querySelector('#notas_caso_salida').value = '';
@@ -290,12 +290,13 @@
 								card5.classList.add('d-none');
 								notas_mp.value = '';
 								inputFolio.value = '';
-								borrartodo();
+								borrarTodo();
 							})
 						}
 						console.log(data);
 
 					}).fail(function(jqXHR, textStatus) {
+						console.log(jqXHR, textStatus);
 						btnFinalizar.removeAttribute('disabled');
 						Swal.fire({
 							icon: 'error',

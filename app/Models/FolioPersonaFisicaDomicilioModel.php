@@ -14,6 +14,7 @@ class FolioPersonaFisicaDomicilioModel extends Model
 		'DOMICILIOID',
 		'CP',
 		'TIPODOMICILIO',
+		'PAIS',
 		'ESTADOID',
 		'MUNICIPIOID',
 		'LOCALIDADID',

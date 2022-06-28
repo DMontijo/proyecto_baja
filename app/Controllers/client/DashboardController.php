@@ -159,6 +159,8 @@ class DashboardController extends BaseController
 			'FUE_CON_ARMA' => $this->request->getPost('fue_con_arma'),
 			'LESIONES' => $this->request->getPost('lesiones'),
 			'LESIONES_VISIBLES' => $this->request->getPost('lesiones_visibles'),
+			'ES_GRUPO_VULNERABLE' => $this->request->getPost('es_vulnerable'),
+			'ES_GRUPO_VULNERABLE_DESCR' => $this->request->getPost('vulnerable_descripcion'),
 			'ESTA_DESAPARECIDO' => $this->request->getPost('esta_desaparecido'),
 		);
 		$this->_folioPreguntasIniciales($dataPreguntas, $FOLIOID);
@@ -178,8 +180,7 @@ class DashboardController extends BaseController
 		if ($this->request->getPost('esta_desaparecido')  == "SI") {
 
 			$foto_des = $this->request->getFile('foto_des');
-			$foto_data = base64_encode(file_get_contents($foto_des));
-			var_dump($foto_data);
+			$foto_data = $foto_des->getSize() > 0 ? $foto_des->getMimeType() . ';base64,' .base64_encode(file_get_contents($foto_des)) : NULL;
 
 			$dataDesaparecido = array(
 				'NOMBRE' => $this->request->getPost('nombre_des'),
@@ -386,9 +387,10 @@ class DashboardController extends BaseController
 
 		if ($this->request->getPost('delito') == "ROBO DE VEHÍCULO") {
 			$img_file = $this->request->getFile('foto_vehiculo');
-			$imgData = base64_encode(file_get_contents($img_file));
+			$imgData = $img_file->getSize() > 0 ? 'data:' . $img_file->getMimeType() . ';base64,' . base64_encode(file_get_contents($img_file)) : NULL;
 			$document_file = $this->request->getFile('documento_vehiculo');
-			$docData = base64_encode(file_get_contents($document_file));
+			$docData = $document_file->getSize() > 0 ? 'data:' . $document_file->getMimeType() . ';base64,' . base64_encode(file_get_contents($document_file)) : NULL;
+			
 			$dataVehiculo = array(
 				'TIPOID' => $this->request->getPost('tipo_vehiculo'),
 				'PRIMERCOLORID' => $this->request->getPost('color_vehiculo'),
@@ -489,6 +491,8 @@ class DashboardController extends BaseController
 			'FUE_CON_ARMA' => $data->FUE_CON_ARMA,
 			'LESIONES' => $data->LESIONES,
 			'LESIONES_VISIBLES' => $data->LESIONES_VISIBLES,
+			'ES_GRUPO_VULNERABLE' => $data->ES_GRUPO_VULNERABLE,
+			'ES_GRUPO_VULNERABLE_DESCR' => $data->ES_GRUPO_VULNERABLE_DESCR,
 			'ESTA_DESAPARECIDO' => $data->ESTA_DESAPARECIDO,
 		];
 		$this->_folioPreguntasModel->insert($datos);
