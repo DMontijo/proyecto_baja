@@ -1,9 +1,15 @@
 <?php
-header("Content-Type: application/xml");
 date_default_timezone_set('America/Mexico_City'); 
+header('Content-Type: text/html; charset=UTF-8');
+$key            = $_FILES['ArchFIELkey'];
+$pdf            = $_FILES['ArchFIELpdf'];
+$cer            = $_FILES['ArchFIELcer'];
+$FIEL_password  = $_POST["ClaveFIEL"];
+
+echo $cer;
+die();
 
 $RefAlfa = $_POST["RefAlfa"];
-$FIEL_password = $_POST["ClaveFIEL"];
 
 $Senda_Archs_pem  = "archs_pem/";
 $Senda_Archs_txt  = "archs_txt/";
@@ -75,7 +81,7 @@ if (file_exists($Senda_Archs_pem."/".$file_cer_pem)) {
         $Valid_ApertArchsFIEL = 1;
     }
     
-    
+
 # VERIFICAR SI LOS ARCHIVOS CORRESPONEDEN A UNA FIEL ###################################################################################################################
 
 //===============================================================
@@ -109,14 +115,18 @@ if (file_exists($Senda_Archs_pem."/".$file_cer_pem)) {
             }
         }
         
+        $ResBus1 = false;
+        $ResBus2 = false;
+        $ResBus3 = false;
+
         for ($i=0; $i<count($ArrayUsos); $i++){
 
-            if (trim($ArrayUsos[$i])=="Digital Signature"){$ResBus1=1;}
-            if (trim($ArrayUsos[$i])=="Data Encipherment"){$ResBus2=1;}
-            if (trim($ArrayUsos[$i])=="Key Agreement")    {$ResBus3=1;}
+            if (trim($ArrayUsos[$i])=="Digital Signature"){$ResBus1=true;}
+            if (trim($ArrayUsos[$i])=="Data Encipherment"){$ResBus2=true;}
+            if (trim($ArrayUsos[$i])=="Key Agreement")    {$ResBus3=true;}
         }
         
-        if ($ResBus1==1 && $ResBus2==1 && $ResBus3==1){
+        if ($ResBus1 && $ResBus2 && $ResBus3){
             // Si es una FIEL.
             $Valid_EsFIEL = 0;
         }else{
@@ -130,7 +140,7 @@ if (file_exists($Senda_Archs_pem."/".$file_cer_pem)) {
         $Valid_EsFIEL = 1;
     }
 
-    
+
 # VERIFICAR VIGENCIA DE LA FIEL. #######################################################################################################################################
     
     $StatusVigencia = "";
@@ -161,7 +171,7 @@ if (file_exists($Senda_Archs_pem."/".$file_cer_pem)) {
     
     
     
-    
+
 # OBTENER DATOS DE LA FIEL (no. de certificado, nombre y RFC). #############################################################
     
     # Obtener el número de certificado.

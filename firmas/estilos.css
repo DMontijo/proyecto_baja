@@ -493,5 +493,8 @@ body{
         top:1px;
 }
 
+.swal2-styled.swal2-confirm.swalBtnColor {
+    background-color: #511229
+  }
 
 

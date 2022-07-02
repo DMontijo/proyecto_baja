@@ -1,178 +1,177 @@
-
 <!DOCTYPE html>
 
 <html>
     
     <head>
-        <title>Firmar documentos con FIEL.</title>
+        <title>Cargar documentos PDF.</title>
         <meta charset="UTF-8">
         <link rel="stylesheet" href="estilos.css?ver=111000011" type="text/css" />
         <link rel="shortcut icon" href="Browser.ico"/>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.js"></script>
+	    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.css">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+	    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap">
 
     </head>
      
-    <body>
-        
+    <body style="font-family: 'Montserrat', sans-serif;">
+        <nav class="navbar" style="background-color:#511229;">
+            <div class="container">
+                <a class="navbar-brand" href="#">
+                    <img src="../assets/img/FGEBC_SEJAP_LOGO.png" alt="" width="270" height="auto">
+                </a>
+            </div>
+        </nav>
+
+
         <script type="text/javascript" >
 
             var xmlHttp;
 
             function CreateXmlHttp() {
+                
                 if (window.XMLHttpRequest) {
                         xmlHttp =  new XMLHttpRequest();
                 } else if (window.ActiveXObject) {
                         xmlHttp =  new ActiveXObject("Microsoft.XMLHTTP");
                 }
             }
-            
+
             function NumAleat(){
                 Num =  Math.floor((Math.random()*10000000000)+1);
                 return Num;
             }
-            
+
         </script>
-        
-        
+
+
         <script src="jquery.js" type="text/javascript"></script>
-        
-        <div id="DivDefault" style="display: block;">
+        <div class="container m-auto">
 
-            <table class="table" border="0" cellpadding="2" cellspacing="0" width="80%">
+            <div class="card shadow py-4 px-3 border-0">
+                <div class="card-body">
+                    <h1 id="titulo" class="text-center fw-bolder pb-1 text-blue">FIRMAR DOCUMENTOS CON FIEL</h1>
 
-                <tr>
-                
                     
-                    <td valign="top" style="height: auto; width: 1000px; padding: 0px; margin: 0px; background-color: #FFFFFF;">
+                    <div id="DivDefault" style="display: block;">
 
-                        <div id="Div_Cont1" style="padding: 10px;">
-                            
-                            <table class="table" cellpadding="2" cellspacing="0" width="100%" class="">
-
-                                <tr>
-                                    <td  valign="top" colspan="3" style="padding: 8px;">
+                        <table width="100%">
+                            <tr>
+                                <td align="center" valign="top" style="height: auto; width: 1000px; padding: 0px; margin: 0px; background-color: #FFFFFF;">
+                                    <div id="Div_Cont1" style="padding: 10px;">
+                                        <table width="100%" class="">
+                                            <tr>
+                                                <td align="center" valign="top"  style="padding: 8px;">
                                         
-                                        <div id="Div_Cont2" style="overflow-y: auto;">
+                                                    <div id="Div_Cont2" style="overflow-y: auto;">
+                                                        <blockquote>
                                             
-                                            <div style="font-size: 13pt; margin-top: 0px; margin-bottom: 10px; color: #bf9b55;">
-                                                Cargar y validar los archivos de la FIEL.
-                                            </div>
-                                            
-                                            <blockquote>
-                                            
-                                                <form id="FIEL_upload_form" enctype="multipart/form-data" method="post" action="#">
+                                                            <form id="FIEL_upload_form" enctype="multipart/form-data" method="post" action="#">
 
-                                                    <table class="table" border="1" cellpadding="5" cellspacing="0" style="width: 540px;" class="">
+                                                                <table   style="width: 800px;" class="table table-bordered ">
 
-                                                    <thead>
-                                                        <tr>
-                                                            <th valign="middle" height="" align="left" class="" style=" background-color:#3e0e20; color: #FFFFFF; padding: 10px; padding-left: 10px; font-size: 11pt;">
-                                                                Seleccione los archivos correspondientes a la FIEL.
-                                                            </th>
-                                                        </tr>
-                                                    </thead>
+                                                                            
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th valign="middle" align="left" class="" style="background-color:#3e0e20; color: #FFFFFF; padding: 10px; padding-left: 10px; font-size: 11pt;" colspan="2">
+                                                                                Seleccione los archivos correspondientes a la FIEL.
+                                                                            </th>
+                                                                        </tr>
+                                                                    </thead>
 
-                                                        <tr>
-                                                            <td valign="middle" height="" align="left">
-                                                                Archivo .KEY&nbsp;<input class="form-control input-sm" name="ArchFIELkey" id="ArchFIELkey" type="file" onchange="FIEL_fileSelected(this);" />
-                                                            </td>
-                                                        </tr>
+                                                                        <tr>
+                                                                            <td>
+                                                                                Archivo .PDF
+                                                                            </td>
+                                                                            <td valign="middle" height="" align="left" colspan="2">
+                                                                                <input class="form-control form-control-sm" name="ArchFIELpdf" id="ArchFIELpdf" type="file" accepts=".pdf" onchange="FIEL_fileSelected(this);" />
+                                                                            </td>
+                                                                        </tr>
+                                                                        
+                                                                        <tr>
+                                                                            <td>
+                                                                                 Archivo .KEY
+                                                                            </td>
+                                                                            <td valign="middle" height="" align="left">
+                                                                                <input class="form-control form-control-sm" name="ArchFIELkey" id="ArchFIELkey" type="file" accepts=".key" onchange="FIEL_fileSelected(this);" />
+                                                                            </td>
+                                                                        </tr>
                                                         
-                                                        <tr>
-                                                            <td valign="middle" height="" align="left">
-                                                                Archivo .CER&nbsp;<input class="form-control input-sm" name="ArchFIELcer" id="ArchFIELcer" type="file" onchange="FIEL_fileSelected(this);" />
-                                                            </td>
-                                                        </tr>
+                                                                        <tr>
+                                                                            <td>
+                                                                                Archivo .CER
+                                                                            </td>
+                                                                            <td valign="middle" height="" align="left">
+                                                                                <input class="form-control form-control-sm" name="ArchFIELcer" id="ArchFIELcer" type="file" accepts=".cer" onchange="FIEL_fileSelected(this);" />
+                                                                            </td>
+                                                                        </tr>
 
-                                                        <tr>
-                                                            <td valign="middle" height="" align="left">
-                                                                Contraseña:&nbsp;<input class="form-control input-sm" type="password" id="ClaveFIEL" value="" size="12" onchange="LimpiarCadenaObj(Objeto)" class="EstiloTextBox" style="font-size: 11pt;" />
-                                                            </td>
-                                                        </tr>
+                                                                        <tr>
+                                                                            <td>
+                                                                                Contraseña
+                                                                            </td>
+                                                                            <td valign="middle" height="" align="left">
+                                                                                <input class="form-control form-control-sm" type="password" name="ClaveFIEL" id="ClaveFIEL" value="" size="12" onchange="LimpiarCadenaObj(this)" class="EstiloTextBox" style="font-size: 11pt;" />
+                                                                            </td>
+                                                                        </tr>
 
-                                                        <tr>
-                                                            <td valign="top" height="" align="left">
-                                                                <input class="btn btn-outline-dark btn-sm" type="button" onclick="FIEL_startUploading()" value="Subir archivos" />
-                                                            </td>
-                                                        </tr>
+                                                                        <tr>
+                                                                            <td valign="middle" align="right" colspan="2" style="padding-left: 10px; height: 40px;">
+                                                                                <input class="btn btn-outline-dark btn-sm" type="button" onclick="FIEL_DirectSign()" value="Firmar PDF" />
+                                                                            </td>
+                                                                        </tr>
 
-                                                    </table>
+                                                                </table>
 
-                                                    <div id="FIEL_progress_info" style="display: none;">
+                                                                <div id="FIEL_progress_info" style="display: none;">
 
-                                                        <table class="table" border="0" width="50%" cellpadding="6" cellspacing="0">
+                                                                    <table border="0" width="50%" cellpadding="6" cellspacing="0">
 
-                                                            <tr>
-                                                                <td width="100%" align="left" valign="top" height="22">
-                                                                    <progress id="FIEL_progressBar" value="0" max="100" style="width:400px; height: 20px; display: none;"></progress>
-                                                                </td>
-                                                            </tr>
+                                                                        <tr>
+                                                                            <td width="100%" align="left" valign="top" height="22">
+                                                                                <progress id="FIEL_progressBar" value="0" max="100" style="width:100%; height: 20px; display: none;"></progress>
+                                                                            </td>
+                                                                        </tr>
 
-                                                        </table>
+                                                                    </table>    
 
-                                                        <div id="FIEL_progress"></div>
-                                                        <div id="FIEL_progress_percent">&nbsp;</div>
-                                                        <div class="FIEL_clear_both"></div>
+                                                                    <div id="FIEL_progress"></div>
+                                                                    <div id="FIEL_progress_percent">&nbsp;</div>
+                                                                    <div class="FIEL_clear_both"></div>
 
-                                                        <div>
-                                                            <div id="FIEL_b_transfered">&nbsp;</div>
-                                                            <div class="FIEL_clear_both"></div>
-                                                        </div>
+                                                                    <div>
+                                                                        <div id="FIEL_b_transfered">&nbsp;</div>
+                                                                        <div class="FIEL_clear_both"></div>
+                                                                    </div>
 
-                                                        <div id="FIEL_upload_response"></div>
+                                                                        <div id="FIEL_upload_response"></div>
 
+                                                                </div>
+
+                                                            </form>                                             
+
+                                                            <div id="RespServ" style="margin-top: 10px; margin-bottom: 10px;"></div>
+                                                        </blockquote>
                                                     </div>
-                                                    
-                                                    <input type="hidden" name="RefAlfa" id="RefAlfa" size="12" />
-
-                                                </form>                                             
-
-                                                <div id="RespServ" style="margin-top: 10px; margin-bottom: 10px;">
-                                                    
-                                                </div>
-                                                
-                                            </blockquote>
-                                            
-                                            <table id="TablaOpcsDocsPDF" border="1" cellpadding="4" cellspacing="0" style="width: auto; display: none;" class="EstiloBordeFino">
-
-                                                <tr style="height: 50px;">
-                                                    <td align="right" valign="middle" style="width: 150px; font-size: 11pt;">
-                                                        Documento a firmar:&nbsp;
-                                                    </td>
-                                                    <td align="center" valign="middle" style="width: 320px;">
-                                                        <select id="OpcDocAFirmar" style="font-size: 11pt; width: 300px;" onchange="ProcesOpcDocAFirm()" ></select>
-                                                    </td>
-                                                    <td align="left" valign="middle" style="width: 40px;">
-                                                        &nbsp;
-                                                    </td>
-                                                    <td align="center" valign="middle" style="width: 40px; padding-top: 8px; padding-right: 6px;">
-                                                        <img id="Img_PDF" src="images/pdf.png" width="32" height="32" alt="pdf" style="cursor: pointer; display: none;" onclick="PrevisDocPDF()" />
-                                                    </td>
-                                                    <td align="center" valign="middle" style="width: 200px;">
-                                                        <input id="Btn_FirmDoc" style="display: none;" type="button" value="Firmar documento" onclick="FirmarDoc()" class="myButtonAzul" />
-                                                    </td>
-                                                </tr>
-
-                                            </table>
-                                            
-                                        </div>
-                                        
-                                    </td>
-                                </tr>
-
-                            </table>
-                            
-                        </div>
-                        
-                    </td>
-                    
-                </tr>
-                
-            </table>
-                
+                                                </td>
+                                            </tr>
+                                        </table>  
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
-        
-        
+
+        <footer class="container-fluid text-center text-white d-flex align-items-center justify-content-center footer py-3" style="background-color:#511229;">
+		    <span>© <?= date("Y") ?> Fiscalía General del Estado de Baja California</span>
+	    </footer>
+
         <script>
             
             $.ajax({
@@ -198,18 +197,7 @@
             }); 
        
         </script>
-        
     </body>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-
     
 </html>
-
-
-
-
-
-
-
-
 

@@ -198,6 +198,7 @@ function XML_LimpiarDatsArch(){
     
     document.getElementById("ArchXML").value = "";
     document.getElementById("ArchFIELcer").value = "";
+    document.getElementById("ArchFIELpdf").value = "";
     document.getElementById('XML_progressBar').value = "0";
     document.getElementById('XML_progressBar').style.display = "none";
     document.getElementById("XML_progress_info").style.display = "none";

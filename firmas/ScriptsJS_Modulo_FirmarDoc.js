@@ -1,35 +1,4 @@
 
-
-function FIEL_fileSelected(Obj) {
-
-    FIEL_RestVal();
-    
-    var Arch1 = document.getElementById("ArchFIELkey").value.toUpperCase();
-    var Ext1 = Arch1.substr(Arch1.length-4, 4);
-    
-    var Arch2 = document.getElementById("ArchFIELcer").value.toUpperCase();
-    var Ext2 = Arch2.substr(Arch2.length-4, 4);
-    
-    if (Ext1.length>0){
-        if (Ext1!==".KEY"){
-            alert("El primer archivo seleccionado no es válido");
-            document.getElementById("ArchFIELkey").value = "";
-            return false;
-        }
-    }
-    
-    if (Ext2.length>0){
-        if (Ext2!==".CER"){
-            alert("El segundo archivo seleccionado no es válido");
-            document.getElementById("ArchFIELcer").value = "";
-            return false;
-        }
-    }
-    
-    document.getElementById("ClaveFIEL").focus();
-}
-
-
 function FIEL_RestVal(){
 
     document.getElementById('FIEL_upload_response').innerHTML = "";
@@ -40,21 +9,45 @@ function FIEL_RestVal(){
 }
 
 
-function FIEL_startUploading() {
+function FIEL_DirectSign() { // FUNCION DE FIRMA DIRECTA
     
     document.getElementById("ClaveFIEL").style.backgroundColor = "";
+    document.getElementById("RespServ").innerHTML = "";
     
     FIEL_RestVal();
     
     document.getElementById("FIEL_progress_info").style.display = "block";
 
+    if (document.getElementById("ArchFIELpdf").value.length === 0){
+        Swal.fire({
+            customClass: {
+              confirmButton: 'swalBtnColor'
+            },
+            title: '¡Seleccione el archivo .pdf a firmar!',
+            icon: 'error'
+          });
+        return false;
+    }
+
     if (document.getElementById("ArchFIELkey").value.length === 0){
-        alert("¡Seleccione el archivo .key a subir!");
+        Swal.fire({
+            customClass: {
+              confirmButton: 'swalBtnColor'
+            },
+            title: '¡Seleccione el archivo .key a subir!',
+            icon: 'error'
+          });
         return false;
     }
     
     if (document.getElementById("ArchFIELcer").value.length === 0){
-        alert("¡Seleccione el archivo .cer a subir!");
+        Swal.fire({
+            customClass: {
+              confirmButton: 'swalBtnColor'
+            },
+            title: '¡Seleccione el archivo .cer a subir!',
+            icon: 'error'
+          });
         return false;
     }
 
@@ -63,11 +56,15 @@ function FIEL_startUploading() {
     if (ClaveSellos.length===0){
         document.getElementById("ClaveFIEL").style.backgroundColor = "#FF9";
         document.getElementById("ClaveFIEL").focus();
-        alert("Escriba la contraseña");
+        Swal.fire({
+            customClass: {
+              confirmButton: 'swalBtnColor'
+            },
+            title: 'Escriba la contraseña',
+            icon: 'error'
+          });
         return false;
     }
-    
-    document.getElementById("RefAlfa").value = CrearID(10);
 
     // cleanup all temp states
     iPreviousBytesLoaded = 0;
@@ -80,14 +77,204 @@ function FIEL_startUploading() {
     // get form data for POSTing
     var vFD = new FormData(document.getElementById('FIEL_upload_form'));
 
-    // create XMLHttpRequest object, adding few event listeners, and POSTing our data
+    //create XMLHttpRequest object, adding few event listeners, and POSTing our data
     var oXHR = new XMLHttpRequest();
     oXHR.upload.addEventListener('progress', FIEL_uploadProgress, false);
-    oXHR.addEventListener('load',  FIEL_uploadFinish, false);
-    oXHR.addEventListener('error', FIEL_uploadError, false);
+    oXHR.addEventListener('load',  Resp_Validate, false);
     oXHR.addEventListener('abort', FIEL_uploadAbort, false);
-    oXHR.open('POST', 'UpLoad_KeyCer.php');
+    oXHR.open('POST', 'DirectSign.php');
     oXHR.send(vFD);
+
+}
+
+function Resp_Validate ({ target }) {
+    document.getElementById('FIEL_progress_percent').innerHTML = '100%';
+    document.getElementById('FIEL_progress').style.width = '100%';
+
+    var oUploadResponse = document.getElementById('FIEL_upload_response');
+    oUploadResponse.innerHTML = '';
+    oUploadResponse.style.display = 'none';
+
+    const response = JSON.parse(target.response);
+    if (target.status === 400) {
+        Display_Error(response)
+    } else if (target.status === 200) {
+        Display_Document(response);
+    }
+}
+
+function Display_Document (resp) {
+    document.getElementById("RespServ").style.display = "block";
+        
+    var CodHTML = '';
+
+    CodHTML += '<table border="1" cellpadding="8" cellspacing="0" style="width: 550px; margin-top: 20px;" class="EstiloBordeFino">';
+
+        CodHTML += '<tr>';
+
+            CodHTML += '<td align="center" valign="top" style="width: 160px;" rowspan="2">';
+                CodHTML += '<img src="'+resp.NomArchPNG+'" width="150" height="150" alt="CodQR"/>';
+            CodHTML += '</td>';
+
+            CodHTML += '<td align="center" valign="top" style="width: auto; padding-top: 4px;">';
+
+                CodHTML += '<table border="0" cellpadding="1" cellspacing="0" style="width: 100%">';
+                    CodHTML += '<tr>';
+                        CodHTML += '<td align="left" valign="middle" style="width: 28%; font-size: 13pt; height: 40px;">';
+                            CodHTML += '<input type="button" value="Imprimir documento firmado" onclick="ImprDocPDF(\''+resp.NomArchPDF+'\');" class="myButtonVerde" style="width: 340px;"/>';
+                        CodHTML += '</td>';
+                    CodHTML += '</tr>';
+                    CodHTML += '<tr>';
+                        CodHTML += '<td align="left" valign="middle" style="font-size: 13pt; height: 40px;">';
+                            CodHTML += '<input type="button" value="Descargar archivos del documento firmado" onclick="DescargarDocFirmado(\''+resp.NomArchZIP+'\');" class="myButtonAzul" style="width: 340px;"/>';
+                        CodHTML += '</td>';
+                    CodHTML += '</tr>';
+                CodHTML += '</table>';
+
+            CodHTML += '</td>';
+
+        CodHTML += '</tr>';
+
+    CodHTML += '</table>';
+    
+    document.getElementById("RespServ").innerHTML = CodHTML;
+    
+    document.getElementById("TablaOpcsDocsPDF").style.display = "none";
+}
+
+function Display_Error (error) {
+    CodHTML = '';
+
+    if (error.StatusVigencia==="CADUCO"){
+            
+        CodHTML += '<table border="1" cellpadding="5" cellspacing="0" style="width: 400px; margin-top: 20px;" class="EstiloBordeFino">';
+            CodHTML += '<tr>';
+                CodHTML += '<td valign="middle" height="" align="left" style="width: 130px;">';
+                    CodHTML += '<img src="images/Exclamacion.png" width="120" height="120" alt="Exclamacion"/>';
+                CodHTML += '</td>';
+                CodHTML += '<td valign="middle" height="" align="left" style="width: auto; font-size: 14pt;">';
+                    CodHTML += 'Los archivos de la FIEL han caducado.';
+                CodHTML += '</td>';
+            CodHTML += '</tr>';
+        CodHTML += '</table>';
+        
+        document.getElementById("RespServ").innerHTML = CodHTML;
+        
+        document.getElementById("FIEL_progress_info").style.display = "none";
+        document.getElementById("RespServ").style.display = "";
+        document.getElementById("RespServ").innerHTML = CodHTML;
+
+        return false;
+    }
+
+    if (error.Valid_ApertArchsFIEL===1){
+        
+        CodHTML += '<table border="1" cellpadding="5" cellspacing="0" style="width: 400px; margin-top: 20px;" class="EstiloBordeFino">';
+            CodHTML += '<tr>';
+                CodHTML += '<td valign="middle" height="" align="left" style="width: 130px;">';
+                    CodHTML += '<img src="images/Exclamacion.png" width="120" height="120" alt="Exclamacion"/>';
+                CodHTML += '</td>';
+                CodHTML += '<td valign="middle" height="" align="left" style="width: auto; font-size: 14pt;">';
+                    CodHTML += 'Los archivos cargados no se puedieron abrir.';
+                CodHTML += '</td>';
+            CodHTML += '</tr>';
+        CodHTML += '</table>';
+        
+        document.getElementById("RespServ").innerHTML = CodHTML;
+    }
+    
+    if (error.Valid_EsFIEL===1){
+        
+        CodHTML += '<table border="1" cellpadding="5" cellspacing="0" style="width: 400px; margin-top: 20px;" class="EstiloBordeFino">';
+            CodHTML += '<tr>';
+                CodHTML += '<td valign="middle" height="" align="left" style="width: 130px;">';
+                    CodHTML += '<img src="images/Exclamacion.png" width="120" height="120" alt="Exclamacion"/>';
+                CodHTML += '</td>';
+                CodHTML += '<td valign="middle" height="" align="left" style="width: auto; font-size: 14pt;">';
+                    CodHTML += 'Los archivos cargados no corresponden a una FIEL';
+                CodHTML += '</td>';
+            CodHTML += '</tr>';
+        CodHTML += '</table>';
+        
+        document.getElementById("RespServ").innerHTML = CodHTML;
+    }
+
+    if (error.Valid_ObtenDatsFIEL===1){
+        
+        CodHTML += '<table border="1" cellpadding="5" cellspacing="0" style="width: 400px; margin-top: 20px;" class="EstiloBordeFino">';
+            CodHTML += '<tr>';
+                CodHTML += '<td valign="middle" height="" align="left" style="width: 130px;">';
+                    CodHTML += '<img src="images/Exclamacion.png" width="120" height="120" alt="Exclamacion"/>';
+                CodHTML += '</td>';
+                CodHTML += '<td valign="middle" height="" align="left" style="width: auto; font-size: 14pt;">';
+                    CodHTML += 'No se pudieron obtener datos de la FIEL.';
+                CodHTML += '</td>';
+            CodHTML += '</tr>';
+        CodHTML += '</table>';
+        
+        document.getElementById("RespServ").innerHTML = CodHTML;
+    }
+    
+    if (error.Valid_ApertArchsFIEL===0 && error.Valid_EsFIEL===0 && error.Valid_ObtenDatsFIEL===0){
+        
+        FIEL_LimpiarDatsArch();
+
+        document.getElementById("ClaveFIEL").focus();
+
+        CodHTML += '<table border="1" cellpadding="8" cellspacing="0" style="width: 650px; margin-top: 20px;" class="EstiloBordeFino">';
+
+            CodHTML += '<tr>';
+
+                CodHTML += '<td align="center" valign="top" style="width: 120px;" rowspan="2">';
+                    CodHTML += '<img src="images/bien_120x120.png" width="100" height="100" alt="bien_120x120"/>';
+                CodHTML += '</td>';
+
+                CodHTML += '<td align="left" valign="top" style="width: auto; padding-top: 4px;">';
+
+                    CodHTML += '<table border="0" cellpadding="1" cellspacing="0" style="width: 450px">';
+                        CodHTML += '<tr>';
+                            CodHTML += '<td align="left" valign="top" style="color: #006B1B; font-size: 17pt; padding-bottom: 10px;" colspan="2" >';
+                                CodHTML += 'Datos obtenidos de la FIEL.';
+                            CodHTML += '</td>';
+                        CodHTML += '</tr>';
+                        CodHTML += '<tr>';
+                            CodHTML += '<td align="left" valign="top" style="width: 27%; font-size: 13pt;">';
+                                CodHTML += 'RFC:';
+                            CodHTML += '</td>';
+                            CodHTML += '<td align="left" valign="top" style="width: 73%; font-size: 13pt; color: #000099;">';
+                                CodHTML += RFC;
+                            CodHTML += '</td>';
+                        CodHTML += '</tr>';
+                        CodHTML += '<tr>';
+                            CodHTML += '<td align="left" valign="top" style="font-size: 13pt;">';
+                                CodHTML += 'Nombre:';
+                            CodHTML += '</td>';
+                            CodHTML += '<td align="left" valign="top" style="font-size: 13pt; color: #000000;">';
+                                CodHTML += Nombre;
+                            CodHTML += '</td>';
+                        CodHTML += '</tr>';
+                        CodHTML += '<tr>';
+                            CodHTML += '<td align="left" valign="top" style="font-size: 13pt;">';
+                                CodHTML += 'Certificado:';
+                            CodHTML += '</td>';
+                            CodHTML += '<td align="left" valign="top" style="font-size: 13pt; color: #A70202;">';
+                                CodHTML += NoCert;
+                            CodHTML += '</td>';
+                        CodHTML += '</tr>';
+                    CodHTML += '</table>';
+
+                CodHTML += '</td>';
+        
+            CodHTML += '</tr>';
+
+        CodHTML += '</table>';
+        
+        document.getElementById("FIEL_progress_info").style.display = "none";
+        document.getElementById("RespServ").style.display = "";
+        document.getElementById("RespServ").innerHTML = CodHTML;
+        
+        document.getElementById("TablaOpcsDocsPDF").style.display = "";
+    }
 }
 
 
@@ -144,188 +331,11 @@ var Nombre = "";
 var FIEL_password = "";
 var RefAlfa = "";
 
-function FIEL_VerifArchsKey(){
-    
-    var RefAlfa  = document.getElementById("RefAlfa").value;
-    var ClaveFIEL = document.getElementById("ClaveFIEL").value;
-
-    NoCert = "";
-    RFC    = "";
-    Nombre = "";
-    FIEL_password = "";
-    
-    CreateXmlHttp();
-    xmlHttp.onreadystatechange = Resp_VerifArchsKey;
-    xmlHttp.open("POST","ScriptPHP_VerifArchsKeyCer.php");
-    xmlHttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
-    xmlHttp.send("ClaveFIEL="+ClaveFIEL+"&RefAlfa="+RefAlfa);
-}
-
-
-function Resp_VerifArchsKey(){
-
-    if(xmlHttp.readyState === 4 && xmlHttp.status === 200){
-        
-//        alert(xmlHttp.responseText);
-
-        document.getElementById("RespServ").style.display = "block";
-
-        var DocXML = xmlHttp.responseXML;
-        var CodHTML = '';
-        
-        var Valid_ApertArchsFIEL = parseInt(DocXML.firstChild.getElementsByTagName('param')[0].getAttribute('Valid_ApertArchsFIEL'));
-        var Valid_EsFIEL         = parseInt(DocXML.firstChild.getElementsByTagName('param')[0].getAttribute('Valid_EsFIEL'));
-        var Valid_ObtenDatsFIEL  = parseInt(DocXML.firstChild.getElementsByTagName('param')[0].getAttribute('Valid_ObtenDatsFIEL'));
-        var StatusVigencia       = DocXML.firstChild.getElementsByTagName('param')[0].getAttribute('StatusVigencia');
-        
-        var NomArchkeyPem = DocXML.firstChild.getElementsByTagName('param')[0].getAttribute('Valid_ApertArchsFIEL');
-        
-        NoCert = DocXML.firstChild.getElementsByTagName('param')[0].getAttribute('NoCert');
-        RFC    = DocXML.firstChild.getElementsByTagName('param')[0].getAttribute('RFC');
-        Nombre = DocXML.firstChild.getElementsByTagName('param')[0].getAttribute('Nombre');
-        FIEL_password = DocXML.firstChild.getElementsByTagName('param')[0].getAttribute('FIEL_password');
-        RefAlfa = DocXML.firstChild.getElementsByTagName('param')[0].getAttribute('RefAlfa');
-        
-        document.getElementById("TablaOpcsDocsPDF").style.display = "none";
-        
-        if (StatusVigencia==="CADUCO"){
-            
-            CodHTML += '<table border="1" cellpadding="5" cellspacing="0" style="width: 400px; margin-top: 20px;" class="EstiloBordeFino">';
-                CodHTML += '<tr>';
-                    CodHTML += '<td valign="middle" height="" align="left" style="width: 130px;">';
-                        CodHTML += '<img src="images/Exclamacion.png" width="120" height="120" alt="Exclamacion"/>';
-                    CodHTML += '</td>';
-                    CodHTML += '<td valign="middle" height="" align="left" style="width: auto; font-size: 14pt;">';
-                        CodHTML += 'Los archivos de la FIEL han caducado.';
-                    CodHTML += '</td>';
-                CodHTML += '</tr>';
-            CodHTML += '</table>';
-            
-            document.getElementById("RespServ").innerHTML = CodHTML;
-            
-            document.getElementById("FIEL_progress_info").style.display = "none";
-            document.getElementById("RespServ").style.display = "";
-            document.getElementById("RespServ").innerHTML = CodHTML;
-
-            return false;
-        }
-
-        if (Valid_ApertArchsFIEL===1){
-            
-            CodHTML += '<table border="1" cellpadding="5" cellspacing="0" style="width: 400px; margin-top: 20px;" class="EstiloBordeFino">';
-                CodHTML += '<tr>';
-                    CodHTML += '<td valign="middle" height="" align="left" style="width: 130px;">';
-                        CodHTML += '<img src="images/Exclamacion.png" width="120" height="120" alt="Exclamacion"/>';
-                    CodHTML += '</td>';
-                    CodHTML += '<td valign="middle" height="" align="left" style="width: auto; font-size: 14pt;">';
-                        CodHTML += 'Los archivos cargados no se puedieron abrir.';
-                    CodHTML += '</td>';
-                CodHTML += '</tr>';
-            CodHTML += '</table>';
-            
-            document.getElementById("RespServ").innerHTML = CodHTML;
-        }
-        
-        if (Valid_EsFIEL===1){
-            
-            CodHTML += '<table border="1" cellpadding="5" cellspacing="0" style="width: 400px; margin-top: 20px;" class="EstiloBordeFino">';
-                CodHTML += '<tr>';
-                    CodHTML += '<td valign="middle" height="" align="left" style="width: 130px;">';
-                        CodHTML += '<img src="images/Exclamacion.png" width="120" height="120" alt="Exclamacion"/>';
-                    CodHTML += '</td>';
-                    CodHTML += '<td valign="middle" height="" align="left" style="width: auto; font-size: 14pt;">';
-                        CodHTML += 'Los archivos cargados no corresponden a una FIEL';
-                    CodHTML += '</td>';
-                CodHTML += '</tr>';
-            CodHTML += '</table>';
-            
-            document.getElementById("RespServ").innerHTML = CodHTML;
-        }
-
-        if (Valid_ObtenDatsFIEL===1){
-            
-            CodHTML += '<table border="1" cellpadding="5" cellspacing="0" style="width: 400px; margin-top: 20px;" class="EstiloBordeFino">';
-                CodHTML += '<tr>';
-                    CodHTML += '<td valign="middle" height="" align="left" style="width: 130px;">';
-                        CodHTML += '<img src="images/Exclamacion.png" width="120" height="120" alt="Exclamacion"/>';
-                    CodHTML += '</td>';
-                    CodHTML += '<td valign="middle" height="" align="left" style="width: auto; font-size: 14pt;">';
-                        CodHTML += 'No se pudieron obtener datos de la FIEL.';
-                    CodHTML += '</td>';
-                CodHTML += '</tr>';
-            CodHTML += '</table>';
-            
-            document.getElementById("RespServ").innerHTML = CodHTML;
-        }
-        
-        if (Valid_ApertArchsFIEL===0 && Valid_EsFIEL===0 && Valid_ObtenDatsFIEL===0){
-            
-            FIEL_LimpiarDatsArch();
-
-            document.getElementById("ClaveFIEL").focus();
-
-            CodHTML += '<table border="1" cellpadding="8" cellspacing="0" style="width: 650px; margin-top: 20px;" class="EstiloBordeFino">';
-
-                CodHTML += '<tr>';
-
-                    CodHTML += '<td align="center" valign="top" style="width: 120px;" rowspan="2">';
-                        CodHTML += '<img src="images/bien_120x120.png" width="100" height="100" alt="bien_120x120"/>';
-                    CodHTML += '</td>';
-
-                    CodHTML += '<td align="left" valign="top" style="width: auto; padding-top: 4px;">';
-
-                        CodHTML += '<table border="0" cellpadding="1" cellspacing="0" style="width: 450px">';
-                            CodHTML += '<tr>';
-                                CodHTML += '<td align="left" valign="top" style="color: #006B1B; font-size: 17pt; padding-bottom: 10px;" colspan="2" >';
-                                    CodHTML += 'Datos obtenidos de la FIEL.';
-                                CodHTML += '</td>';
-                            CodHTML += '</tr>';
-                            CodHTML += '<tr>';
-                                CodHTML += '<td align="left" valign="top" style="width: 27%; font-size: 13pt;">';
-                                    CodHTML += 'RFC:';
-                                CodHTML += '</td>';
-                                CodHTML += '<td align="left" valign="top" style="width: 73%; font-size: 13pt; color: #000099;">';
-                                    CodHTML += RFC;
-                                CodHTML += '</td>';
-                            CodHTML += '</tr>';
-                            CodHTML += '<tr>';
-                                CodHTML += '<td align="left" valign="top" style="font-size: 13pt;">';
-                                    CodHTML += 'Nombre:';
-                                CodHTML += '</td>';
-                                CodHTML += '<td align="left" valign="top" style="font-size: 13pt; color: #000000;">';
-                                    CodHTML += Nombre;
-                                CodHTML += '</td>';
-                            CodHTML += '</tr>';
-                            CodHTML += '<tr>';
-                                CodHTML += '<td align="left" valign="top" style="font-size: 13pt;">';
-                                    CodHTML += 'Certificado:';
-                                CodHTML += '</td>';
-                                CodHTML += '<td align="left" valign="top" style="font-size: 13pt; color: #A70202;">';
-                                    CodHTML += NoCert;
-                                CodHTML += '</td>';
-                            CodHTML += '</tr>';
-                        CodHTML += '</table>';
-
-                    CodHTML += '</td>';
-            
-                CodHTML += '</tr>';
-
-            CodHTML += '</table>';
-            
-            document.getElementById("FIEL_progress_info").style.display = "none";
-            document.getElementById("RespServ").style.display = "";
-            document.getElementById("RespServ").innerHTML = CodHTML;
-            
-            document.getElementById("TablaOpcsDocsPDF").style.display = "";
-        }
-    }
-}
- 
- 
 function FIEL_LimpiarDatsArch(){
     
     document.getElementById("ArchFIELkey").value = "";
     document.getElementById("ArchFIELcer").value = "";
+    document.getElementById("ArchFIELpdf").value = "";
     document.getElementById('FIEL_progressBar').value = "0";
     document.getElementById('FIEL_progressBar').style.display = "none";
     document.getElementById("FIEL_progress_info").style.display = "none";
@@ -335,7 +345,7 @@ function FIEL_LimpiarDatsArch(){
 
 
 
-function FirmarDoc(){
+function FirmarDoc(){   // FUNCION QUE FIRMA EL DOCUMENTO
     
     document.getElementById("TablaOpcsDocsPDF").style.display = "none";
     document.getElementById("RespServ").style.display = "block";
@@ -362,6 +372,8 @@ function FirmarDoc(){
     var NomArchPDF = Array_NomArchPDF[idx-1];
     var DescripDoc = Array_DescripDoc[idx-1];
     
+    
+    
     CreateXmlHttp();
     xmlHttp.onreadystatechange = Resp_FirmDoc;
     xmlHttp.open("POST","ScriptPHP_FirmarDocumento.php");
@@ -374,72 +386,16 @@ var NomArchPNG = "";
 var NomArchPDF = "";
 var NomArchZIP = "";
 
-function Resp_FirmDoc(){
 
-    if(xmlHttp.readyState === 4 && xmlHttp.status === 200){
-        
-//        alert(xmlHttp.responseText);
-        
-        document.getElementById("RespServ").style.display = "block";
-        
-        var CodHTML = '';
-        
-        var Senda_Archs_Firmados = "archs_firmados/";
-        
-        var DocXML = xmlHttp.responseXML;
-        
-        NomArchPNG = DocXML.firstChild.getElementsByTagName("param")[0].getAttribute("NomArchPNG");
-        NomArchPDF = DocXML.firstChild.getElementsByTagName("param")[0].getAttribute("NomArchPDF");
-        NomArchZIP = DocXML.firstChild.getElementsByTagName("param")[0].getAttribute("NomArchZIP");
-    
-        CodHTML += '<table border="1" cellpadding="8" cellspacing="0" style="width: 550px; margin-top: 20px;" class="EstiloBordeFino">';
-
-            CodHTML += '<tr>';
-
-                CodHTML += '<td align="center" valign="top" style="width: 160px;" rowspan="2">';
-                    CodHTML += '<img src="'+Senda_Archs_Firmados+NomArchPNG+'" width="150" height="150" alt="CodQR"/>';
-                CodHTML += '</td>';
-
-                CodHTML += '<td align="center" valign="top" style="width: auto; padding-top: 4px;">';
-
-                    CodHTML += '<table border="0" cellpadding="1" cellspacing="0" style="width: 100%">';
-                        CodHTML += '<tr>';
-                            CodHTML += '<td align="left" valign="middle" style="width: 28%; font-size: 13pt; height: 40px;">';
-                                CodHTML += '<input type="button" value="Imprimir documento firmado" onclick="ImprDocPDF();" class="myButtonVerde" style="width: 340px;"/>';
-                            CodHTML += '</td>';
-                        CodHTML += '</tr>';
-                        CodHTML += '<tr>';
-                            CodHTML += '<td align="left" valign="middle" style="font-size: 13pt; height: 40px;">';
-                                CodHTML += '<input type="button" value="Descargar archivos del documento firmado" onclick="DefarcarDocFirmado();" class="myButtonAzul" style="width: 340px;"/>';
-                            CodHTML += '</td>';
-                        CodHTML += '</tr>';
-                    CodHTML += '</table>';
-
-                CodHTML += '</td>';
-
-            CodHTML += '</tr>';
-
-        CodHTML += '</table>';
-        
-        document.getElementById("RespServ").innerHTML = CodHTML;
-        
-        document.getElementById("TablaOpcsDocsPDF").style.display = "none";
-    }
+function ImprDocPDF(dir){
+    window.open(dir,"_blank");        
 }
 
-
-function ImprDocPDF(){
-    
-    var Senda_Archs_Firmados = "archs_firmados/";
-    var URL = Senda_Archs_Firmados+NomArchPDF;
-    window.open(URL,"_blank");        
-}
-
-function DefarcarDocFirmado(){
+function DescargarDocFirmado(file){
         
-    var URL = "DescZIP.php?NomArchZIP=" + NomArchZIP;
-
-    window.open(URL,"_blank");  }
+    var URL = "DescZIP.php?NomArchZIP=" + file;
+    window.open(URL,"_blank");
+}
 
 
 //##############################################################################

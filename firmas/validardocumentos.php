@@ -9,10 +9,21 @@
         <link rel="stylesheet" href="estilos.css?ver=111000011" type="text/css" />
         <link rel="shortcut icon" href="Browser.ico"/>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+	    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap">
 
     </head>
      
-    <body>
+    <body style="font-family: 'Montserrat', sans-serif;">
+
+    <nav class="navbar" style="background-color:#511229;">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="../assets/img/FGEBC_SEJAP_LOGO.png" alt="" width="270" height="auto">
+            </a>
+        </div>
+    </nav>
         
         <script type="text/javascript" >
 
@@ -35,54 +46,58 @@
         
         
         <script src="jquery.js" type="text/javascript"></script>
+<div class="container m-auto">
+
+    <div class="card shadow py-4 px-3 border-0">
+        <div class="card-body">
+            <h1 id="titulo" class="text-center fw-bolder pb-1 text-blue">VALIDAR DOCUMENTO FIRMADO</h1>
         
         <div id="DivDefault" style="display: block;">
-
-            <table class="table" cellpadding="2" cellspacing="0" width="80%">
-                
+            <table width="100%">
                 <tr>
-                    
-                    <td valign="top" style="height: auto; width: 1000px; padding: 0px; margin: 0px; background-color: #FFFFFF;">
-
+                    <td align="center" valign="top" style="height: auto; width: 1000px; padding: 0px; margin: 0px; background-color: #FFFFFF;">
                         <div id="Div_Cont1" style="padding: 10px;">
                             
-                            <table class="table" cellpadding="2" cellspacing="0" width="100%" class="EstiloBordeFino">
+                            <table width="100%" class="">
 
                                 <tr>
-                                    <td valign="top" colspan="3" style="padding: 12px;">
+                                    <td align="center" valign="top"  style="padding: 8px;">
                                         
                                         <div id="Div_Cont2" style="overflow-y: auto;">
-                                            
-                                            <div style="font-size: 13pt; margin-top: 0px; margin-bottom: 10px; color: #bf9b55;">
-                                                Validar documento firmado con FIEL.
-                                            </div>
                                             
                                             <blockquote>
                                             
                                                 <form id="XML_upload_form" enctype="multipart/form-data" method="post" action="#">
 
-                                                    <table class="table" border="1" cellpadding="5" cellspacing="0" style="width: 540px;" class="EstiloBordeFino">
+                                                    <table style="width: 800px;" class="table table-bordered ">
 
+                                                    <thead>
                                                         <tr>
-                                                            <td valign="middle" height="" align="left"  class="EstiloGrisTenue" style="background-color:#3e0e20; color: #FFFFFF; padding: 10px; font-size: 11pt;">
+                                                            <th valign="middle" align="left" class="" style="background-color:#3e0e20; color: #FFFFFF; padding: 10px; padding-left: 10px; font-size: 11pt;" colspan="2">
                                                                 Seleccione el archivo XML del documento a validar.
-                                                            </td>
+                                                            </th>
                                                         </tr>
-
+                                                    </thead>
                                                         <tr>
+                                                            <td>
+                                                                Archivo .xml
+                                                            </td>
                                                             <td valign="middle" height="" align="left">
-                                                                Archivo .xml&nbsp;<input class="form-control input-sm" name="ArchXML" id="ArchXML" type="file" onchange="XML_fileSelected(this);" />
+                                                                <input class="form-control form-control-sm" name="ArchXML" id="ArchXML" type="file" onchange="XML_fileSelected(this);" />
                                                             </td>
                                                         </tr>
                                                         
                                                         <tr>
+                                                            <td>
+                                                                Archivo .pub
+                                                            </td>
                                                             <td valign="middle" height="" align="left">
-                                                                Archivo .pub&nbsp;<input class="form-control input-sm" name="ArchPUB" id="ArchPUB" type="file" onchange="XML_fileSelected(this);" />
+                                                                <input class="form-control form-control-sm" name="ArchPUB" id="ArchPUB" type="file" onchange="XML_fileSelected(this);" />
                                                             </td>
                                                         </tr>
 
                                                         <tr>
-                                                            <td valign="top" height="" align="left">
+                                                        <td valign="middle" align="right" colspan="2" style="padding-left: 10px; height: 40px;">
                                                                 <input class="btn btn-outline-dark btn-sm" type="button" onclick="XML_startUploading()" value="Subir y validar archivo" />
                                                             </td>
                                                         </tr>
@@ -139,6 +154,13 @@
             </table>
                 
         </div>
+        </div>
+        </div>
+        </div>
+
+        <footer class="container-fluid text-center text-white d-flex align-items-center justify-content-center footer py-3" style="background-color:#511229;">
+		    <span>© <?= date("Y") ?> Fiscalía General del Estado de Baja California</span>
+	    </footer>
         
         <script>
             

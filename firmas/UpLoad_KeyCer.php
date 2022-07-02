@@ -26,6 +26,20 @@ $ArchDes = $DirDes."/".$ArchCER;
 move_uploaded_file($file_tmp,$ArchDes);
 chmod($ArchDes, 0777);
 
+//---------
+$ArchPDF = $RefAlfa.".pdf";
+
+if (file_exists($DirDes."/".$ArchPDF)) {
+    unlink($DirDes."/".$ArchPDF);
+}  
+
+$file_tmp  = $_FILES['ArchFIELpdf']['tmp_name'];
+$ArchDes = $DirDes."/".$ArchPDF;
+move_uploaded_file($file_tmp,$ArchDes);
+chmod($ArchDes, 0777);
+//--------
+
+
 echo "OK";
     
 
