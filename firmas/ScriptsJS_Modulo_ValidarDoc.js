@@ -12,7 +12,13 @@ function XML_fileSelected(Obj) {
     
     if (Ext1.length>0){
         if (Ext1!==".XML"){
-            alert("El archivo seleccionado no es válido");
+            Swal.fire({
+                customClass: {
+                  confirmButton: 'swalBtnColor'
+                },
+                title: 'El archivo seleccionado no es válido',
+                icon: 'error'
+              });
             document.getElementById("ArchXML").value = "";
             return false;
         }
@@ -23,7 +29,13 @@ function XML_fileSelected(Obj) {
     
     if (Ext2.length>0){
         if (Ext2!==".PUB"){
-            alert("El archivo seleccionado no es válido");
+            Swal.fire({
+                customClass: {
+                  confirmButton: 'swalBtnColor'
+                },
+                title: 'El archivo seleccionado no es válido',
+                icon: 'error'
+              });
             document.getElementById("ArchPUB").value = "";
             return false;
         }
@@ -48,12 +60,24 @@ function XML_startUploading() {
     document.getElementById("XML_progress_info").style.display = "block";
 
     if (document.getElementById("ArchXML").value.length === 0){
-        alert("¡Seleccione el archivo .xml a subir!");
+        Swal.fire({
+            customClass: {
+              confirmButton: 'swalBtnColor'
+            },
+            title: '¡Seleccione el archivo .xml a subir!',
+            icon: 'error'
+          });
         return false;
     }
     
     if (document.getElementById("ArchPUB").value.length === 0){
-        alert("¡Seleccione el archivo .pub a subir!");
+        Swal.fire({
+            customClass: {
+              confirmButton: 'swalBtnColor'
+            },
+            title: '¡Seleccione el archivo .pub a subir!',
+            icon: 'error'
+          });
         return false;
     }
     
@@ -74,10 +98,10 @@ function XML_startUploading() {
     // create XMLHttpRequest object, adding few event listeners, and POSTing our data
     var oXHR = new XMLHttpRequest();
     oXHR.upload.addEventListener('progress', XML_uploadProgress, false);
-    oXHR.addEventListener('load',  XML_uploadFinish, false);
+    oXHR.addEventListener('load',  Resp_VerifArchXML, false);
     oXHR.addEventListener('error', XML_uploadError, false);
     oXHR.addEventListener('abort', XML_uploadAbort, false);
-    oXHR.open('POST', 'UpLoad_XmlPub.php');
+    oXHR.open('POST', 'ScriptPHP_VerifArchXML.php');
     oXHR.send(vFD);
 }
 
@@ -125,7 +149,7 @@ function XML_uploadFinish(e) { // upload successfully finished
     document.getElementById('XML_progress_percent').innerHTML = '100%';
     document.getElementById('XML_progress').style.width = '400px';
     
-    XML_VerifArchXML();
+    // XML_VerifArchXML();
 }
 
 
@@ -145,20 +169,20 @@ var RFC    = "";
 var RazSoc = "";
 var XML_password = "";
 
-function Resp_VerifArchXML(){
-
-    if(xmlHttp.readyState === 4 && xmlHttp.status === 200){
+function Resp_VerifArchXML({ target }){
+    
+    const response = JSON.parse(target.response);
+    
+    if(target.readyState === 4 && target.status === 200){
+        console.log(response)
         
 //        alert(xmlHttp.responseText);
 
         document.getElementById("XML_progress_info").style.display = "none";
 
         var CodHTML = '';
-
-        var DocXML = xmlHttp.responseXML;
-        
-        var Resp = DocXML.firstChild.getElementsByTagName("param")[0].getAttribute("Resp");
-        var CodErr = parseInt(DocXML.firstChild.getElementsByTagName("param")[0].getAttribute("CodErr"));
+        var Resp = response.Resp;
+        var CodErr = response.CodErr;
         
         if (CodErr===0){
 

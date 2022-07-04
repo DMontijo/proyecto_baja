@@ -87,6 +87,62 @@ function FIEL_DirectSign() { // FUNCION DE FIRMA DIRECTA
 
 }
 
+function FIEL_fileSelected(Obj) {
+
+    FIEL_RestVal();
+    
+    var Arch1 = document.getElementById("ArchFIELpdf").value.toUpperCase();
+    var Arch2 = document.getElementById("ArchFIELkey").value.toUpperCase();
+    var Arch3 = document.getElementById("ArchFIELcer").value.toUpperCase();
+
+    var Ext1 = Arch1.substr(Arch1.length-4, 4);
+    var Ext2 = Arch2.substr(Arch2.length-4, 4);
+    var Ext3 = Arch3.substr(Arch3.length-4, 4);
+    
+    if (Ext1.length>0){
+        if (Ext1!==".PDF"){
+            Swal.fire({
+                customClass: {
+                  confirmButton: 'swalBtnColor'
+                },
+                title: '¡El archivo seleccionado no es válido, seleccione un archivo con extensión .pdf!',
+                icon: 'error'
+              });
+            document.getElementById("ArchFIELpdf").value = "";
+            return false;
+        }
+    }
+    if (Ext2.length>0){
+        if (Ext2!==".KEY"){
+            Swal.fire({
+                customClass: {
+                  confirmButton: 'swalBtnColor'
+                },
+                title: '¡El archivo seleccionado no es válido, seleccione un archivo con extensión .key!',
+                icon: 'error'
+              });            document.getElementById("ArchFIELkey").value = "";
+            return false;
+        }
+    }
+    if (Ext3.length>0){
+        if (Ext3!==".CER"){
+            Swal.fire({
+                customClass: {
+                  confirmButton: 'swalBtnColor'
+                },
+                title: '¡El archivo seleccionado no es válido, seleccione un archivo con extensión .cer!',
+                icon: 'error'
+              });            document.getElementById("ArchFIELcer").value = "";
+            return false;
+        }
+    }
+
+
+
+
+
+}
+
 function Resp_Validate ({ target }) {
     document.getElementById('FIEL_progress_percent').innerHTML = '100%';
     document.getElementById('FIEL_progress').style.width = '100%';
@@ -139,7 +195,7 @@ function Display_Document (resp) {
     
     document.getElementById("RespServ").innerHTML = CodHTML;
     
-    document.getElementById("TablaOpcsDocsPDF").style.display = "none";
+    // document.getElementById("TablaOpcsDocsPDF").style.display = "none";
 }
 
 function Display_Error (error) {
@@ -425,18 +481,18 @@ function Resp_CargarLstDocsPDF(){
         
         VaciarArrays();        
 
-        var DocXML     = xmlHttp.responseXML;
-        var CantRegs   = DocXML.getElementsByTagName("rst").length;
+        // var DocXML     = xmlHttp.responseXML;
+        // var CantRegs   = DocXML.getElementsByTagName("rst").length;
         
-        document.getElementById("OpcDocAFirmar").options[0] = new Option("");
+        // document.getElementById("OpcDocAFirmar").options[0] = new Option("");
 
-        for(var i=0;i<CantRegs;i++){
+        // for(var i=0;i<CantRegs;i++){
 
-            Array_NomArchPDF.push(DocXML.firstChild.getElementsByTagName("rst")[i].getAttribute("NomArchPDF"));
-            Array_DescripDoc.push(DocXML.firstChild.getElementsByTagName("rst")[i].getAttribute("DescripDoc"));
+        //     Array_NomArchPDF.push(DocXML.firstChild.getElementsByTagName("rst")[i].getAttribute("NomArchPDF"));
+        //     Array_DescripDoc.push(DocXML.firstChild.getElementsByTagName("rst")[i].getAttribute("DescripDoc"));
             
-            document.getElementById("OpcDocAFirmar").options[i+1] = new Option(DocXML.firstChild.getElementsByTagName("rst")[i].getAttribute("DescripDoc"));
-        }
+        //     document.getElementById("OpcDocAFirmar").options[i+1] = new Option(DocXML.firstChild.getElementsByTagName("rst")[i].getAttribute("DescripDoc"));
+        // }
     }    
 }
 

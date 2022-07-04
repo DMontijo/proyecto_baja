@@ -4,19 +4,28 @@ date_default_timezone_set('America/Mexico_City');
 
 $RefAlfa = $_POST["RefAlfa"];
 
+
+$xmlTmp = $_FILES['ArchXML']["tmp_name"];
+$pubTmp = $_FILES['ArchPUB']["tmp_name"];
+
+
+$xmlFile = $xmlTmp.".xml"; // Nombre del archivo .XML 
+$pubFile = $pubTmp.".pub"; // Nombre del archivo .PUB
+
+rename($xmlTmp, $xmlFile);
+chmod($xmlFile, 0777);
+
+rename($pubTmp, $pubFile);
+chmod($pubFile, 0777);
+
+
 // Asignación de valores a variables. ==========================================
-
-$Senda_Archs_Valid  = "archs_valid/";
-    
-$NomArchXML = $RefAlfa.".xml"; // Nombre del archivo .XML 
-$file_pub   = $RefAlfa.".pub"; // Nombre del archivo .PUB
-
 $Resp = "";
 $CodErr = 0;
 
 #== Obteniendo datos del archivo .XML y .PUB ===================================
 
-$xml = file_get_contents($Senda_Archs_Valid.$NomArchXML);
+$xml = file_get_contents($xmlFile);
 
 $DOM = new DOMDocument('1.0', 'utf-8');
 $DOM->preserveWhiteSpace = FALSE;
@@ -24,8 +33,8 @@ $DOM->loadXML($xml);
 
 $params = $DOM->getElementsByTagName('FirmaDigital');
 foreach ($params as $param) {
-   $FirmaBase64 = $param->getAttribute('FirmaBase64');
-   $CadenaFirmada = $param->getAttribute('CadenaFirmada');
+   $FirmaBase64     = $param->getAttribute('FirmaBase64');
+   $CadenaFirmada   = $param->getAttribute('CadenaFirmada');
 }   
 
 $signature = base64_decode($FirmaBase64);
@@ -33,7 +42,7 @@ $signature = base64_decode($FirmaBase64);
 // se asume que $data y $signature contienen la información y la firma
 
 // traer la clave pública desde el certifiado y prepararla
-$fp = fopen($Senda_Archs_Valid.$file_pub, "r");
+$fp = fopen($pubFile, "r");
 $cert = fread($fp, 8192);
 fclose($fp);
 $pubkeyid = openssl_get_publickey($cert);
@@ -57,11 +66,13 @@ if ($ok == 1) {
     $Resp = 'Error en el proceso de verificación.';
 }
 // libera la clave de la memoria
-openssl_free_key($pubkeyid);    
+// openssl_free_key($pubkeyid);    
 
-
-$Param = "<param CodErr='$CodErr' Resp='$Resp' />\n";
-
-echo "<datos>\n$Param</datos>";
+$response = [
+    "CodErr" => $CodErr,
+    "Resp"   => $Resp,
+];
+echo json_encode($response);
+exit;
 
 

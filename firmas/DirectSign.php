@@ -9,7 +9,7 @@ include("qrlib/qrlib.php");
 include("fpdf/fpdf.php");
 require_once('FPDI/src/autoload.php');
 
-$pdf_dir            = $_FILES['ArchFIELpdf']["tmp_name"];
+$pdf_dir        = $_FILES['ArchFIELpdf']["tmp_name"];
 $key            = $_FILES['ArchFIELkey']["tmp_name"];
 $cer            = $_FILES['ArchFIELcer']["tmp_name"];
 $FIEL_password  = $_POST["ClaveFIEL"];
@@ -241,11 +241,11 @@ $URL_ValidDoc = "https://cdt.fgebc.gob.mx/firmas/validardocumentos.php";
 $FechaHora  = $Fec1 . "-" . $Hora; // Se determina fecha y hora del proceso de firmado.
 
 
-$NomArchPNG         = "public/".$NomArch."_".$FolioDoc.".png"; // Nombre del archivo de imagen que se va a crear con el código QR.
-$NomArchPDF         = "public/".$NomArch."_".$FolioDoc.".pdf"; // Nombre del archivo PDF que se va a crear.
-$NomArchXML         = "public/".$NomArch."_".$FolioDoc.".xml"; // Nombre del archivo XML que se va a crear.
-$NomArchLlavePub    = "public/".$NomArch."_".$FolioDoc.".pub"; // Nombre del archivo Llave pública.
-$NomArchTXT         = "public/".$NomArch."_".$FolioDoc.".txt"; // Nombre del archivo TXT que contiene los datos del proceso de firma.
+$NomArchPNG         = $NomArch."/".$NomArch."_".$FolioDoc.".png"; // Nombre del archivo de imagen que se va a crear con el código QR.
+$NomArchPDF         = $NomArch."/".$NomArch."_".$FolioDoc.".pdf"; // Nombre del archivo PDF que se va a crear.
+$NomArchXML         = $NomArch."/".$NomArch."_".$FolioDoc.".xml"; // Nombre del archivo XML que se va a crear.
+$NomArchLlavePub    = $NomArch."/".$NomArch."_".$FolioDoc.".pub"; // Nombre del archivo Llave pública.
+$NomArchTXT         = $NomArch."/".$NomArch."_".$FolioDoc.".txt"; // Nombre del archivo TXT que contiene los datos del proceso de firma.
 
 $NomArchPDF_Firma = $NomArch."_Firma.pdf"; // Nombre de archivo PDF que contiena la firma.
 
@@ -469,13 +469,17 @@ copy($NomArchXML, $NomArchXML);
 chmod($NomArchLlavePub, 0777);
 chmod($NomArchXML, 0777);
 
-$NomArchZIP = "public/".$NomArch."_".$FolioDoc.".zip";
+$NomArchZIP = $NomArch."/".$FolioDoc.".zip";
 
 $archive = new PclZip($NomArchZIP);
-$v_list = $archive->add($NomArchLlavePub, PCLZIP_OPT_REMOVE_PATH, 'public');
-$v_list = $archive->add($NomArchPDF, PCLZIP_OPT_REMOVE_PATH, 'public');
-$v_list = $archive->add($NomArchXML, PCLZIP_OPT_REMOVE_PATH, 'public');
-$v_list = $archive->add($NomArchTXT, PCLZIP_OPT_REMOVE_PATH, 'public');
+// $v_list = $archive->add($NomArchLlavePub, PCLZIP_OPT_REMOVE_PATH, 'public');
+// $v_list = $archive->add($NomArchPDF, PCLZIP_OPT_REMOVE_PATH, 'public');
+// $v_list = $archive->add($NomArchXML, PCLZIP_OPT_REMOVE_PATH, 'public');
+// $v_list = $archive->add($NomArchTXT, PCLZIP_OPT_REMOVE_PATH, 'public');
+$v_list = $archive->add($NomArchLlavePub);
+$v_list = $archive->add($NomArchPDF);
+$v_list = $archive->add($NomArchXML);
+$v_list = $archive->add($NomArchTXT);
 
 
 chmod($NomArchZIP, 0777);  

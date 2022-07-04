@@ -56,22 +56,22 @@
                     <h1 id="titulo" class="text-center fw-bolder pb-1 text-blue">FIRMAR DOCUMENTOS CON FIEL</h1>
 
                     
-                    <div id="DivDefault" style="display: block;">
+                    <div id="DivDefault">
 
                         <table width="100%">
                             <tr>
-                                <td align="center" valign="top" style="height: auto; width: 1000px; padding: 0px; margin: 0px; background-color: #FFFFFF;">
+                                <td align="center" valign="top" style="width: 1000px; padding: 0px; margin: 0px; background-color: #FFFFFF;">
                                     <div id="Div_Cont1" style="padding: 10px;">
                                         <table width="100%" class="">
                                             <tr>
                                                 <td align="center" valign="top"  style="padding: 8px;">
                                         
-                                                    <div id="Div_Cont2" style="overflow-y: auto;">
+                                                    <div id="Div_Cont2">
                                                         <blockquote>
                                             
                                                             <form id="FIEL_upload_form" enctype="multipart/form-data" method="post" action="#">
 
-                                                                <table   style="width: 800px;" class="table table-bordered ">
+                                                                <table  class="table table-bordered ">
 
                                                                             
                                                                     <thead>
@@ -165,9 +165,11 @@
                         </table>
                     </div>
                 </div>
+                <br><br><br><br><br><br>
             </div>
+            
         </div>
-
+           
         <footer class="container-fluid text-center text-white d-flex align-items-center justify-content-center footer py-3" style="background-color:#511229;">
 		    <span>© <?= date("Y") ?> Fiscalía General del Estado de Baja California</span>
 	    </footer>
