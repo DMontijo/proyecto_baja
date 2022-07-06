@@ -48,18 +48,6 @@
 		</div>
 	</div>
 	<div class="col-12 mb-3">
-		<label for="fue_con_arma" class="form-label fw-bold input-required">¿El delito a denunciar fue cometido con arma de fuego, arma blanca u objeto contundente?</label>
-		<br>
-		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="radio" name="fue_con_arma" value="SI" required>
-			<label class="form-check-label" for="flexRadioDefault1">SI</label>
-		</div>
-		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="radio" name="fue_con_arma" value="NO" required>
-			<label class="form-check-label" for="flexRadioDefault2">NO</label>
-		</div>
-	</div>
-	<div class="col-12 mb-3">
 		<label for="es_vulnerable" class="form-label fw-bold input-required">¿La víctima u ofendido es de un grupo vulnerable?</label>
 		<br>
 		<div class="form-check form-check-inline">
@@ -74,6 +62,18 @@
 	<div id="vulnerable_container" class="col-12 mb-3 d-none">
 		<label for="vulnerable_descripcion" class="form-label fw-bold input-required">Describe cual</label>
 		<input type="text" class="form-control" id="vulnerable_descripcion" name="vulnerable_descripcion" maxlength="100">
+	</div>
+	<div class="col-12 mb-3">
+		<label for="fue_con_arma" class="form-label fw-bold input-required">¿El delito a denunciar fue cometido con arma de fuego, arma blanca u objeto contundente?</label>
+		<br>
+		<div class="form-check form-check-inline">
+			<input class="form-check-input" type="radio" name="fue_con_arma" value="SI" required>
+			<label class="form-check-label" for="flexRadioDefault1">SI</label>
+		</div>
+		<div class="form-check form-check-inline">
+			<input class="form-check-input" type="radio" name="fue_con_arma" value="NO" required>
+			<label class="form-check-label" for="flexRadioDefault2">NO</label>
+		</div>
 	</div>
 	<div class="col-12 mb-3">
 		<label for="lesiones" class="form-label fw-bold input-required">¿La víctima u ofendido presenta lesiones?</label>
