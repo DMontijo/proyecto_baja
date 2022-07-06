@@ -180,7 +180,7 @@ class DashboardController extends BaseController
 		if ($this->request->getPost('esta_desaparecido')  == "SI") {
 
 			$foto_des = $this->request->getFile('foto_des');
-			$foto_data = $foto_des->getSize() > 0 ? $foto_des->getMimeType() . ';base64,' .base64_encode(file_get_contents($foto_des)) : NULL;
+			$foto_data = $foto_des->getSize() > 0 ? $foto_des->getMimeType() . ';base64,' . base64_encode(file_get_contents($foto_des)) : NULL;
 
 			$dataDesaparecido = array(
 				'NOMBRE' => $this->request->getPost('nombre_des'),
@@ -321,7 +321,7 @@ class DashboardController extends BaseController
 		);
 
 		$dataDenuncianteDomicilio = array(
-			'PAIS' => $denunciante->CODIGO_PAIS,
+			'PAIS' => $denunciante->PAIS,
 			'ESTADOID' => $denunciante->ESTADOID,
 			'MUNICIPIOID' => $denunciante->MUNICIPIOID,
 			'LOCALIDADID' => $denunciante->LOCALIDADID,
@@ -383,6 +383,27 @@ class DashboardController extends BaseController
 			// 	var_dump($key, $value);
 			// 	echo '<br>';
 			// }
+
+		} else {
+			$dataImputado = array(
+				'NOMBRE' => 'N',
+				'PRIMERAPELLIDO' => 'N',
+				'SEGUNDOAPELLIDO' => 'N',
+				'APODO' => 'N',
+			);
+
+			$imputadoId = $this->_folioPersonaFisica($dataImputado, $FOLIOID, 2);
+
+			// echo '<br>';
+			// echo '<br>';
+			// foreach ($dataImputado as $key => $value) {
+			// 	var_dump($key, $value);
+			// 	echo '<br>';
+			// }
+			// foreach ($dataImputadoDomicilio as $key => $value) {
+			// 	var_dump($key, $value);
+			// 	echo '<br>';
+			// }
 		}
 
 		if ($this->request->getPost('delito') == "ROBO DE VEHÍCULO") {
@@ -390,7 +411,7 @@ class DashboardController extends BaseController
 			$imgData = $img_file->getSize() > 0 ? 'data:' . $img_file->getMimeType() . ';base64,' . base64_encode(file_get_contents($img_file)) : NULL;
 			$document_file = $this->request->getFile('documento_vehiculo');
 			$docData = $document_file->getSize() > 0 ? 'data:' . $document_file->getMimeType() . ';base64,' . base64_encode(file_get_contents($document_file)) : NULL;
-			
+
 			$dataVehiculo = array(
 				'TIPOID' => $this->request->getPost('tipo_vehiculo'),
 				'PRIMERCOLORID' => $this->request->getPost('color_vehiculo'),
@@ -618,7 +639,7 @@ class DashboardController extends BaseController
 				'sexo_denunciante' => $SEXO_DENUNCIANTE == 'F' ? 'FEMENINO' : 'MASCULINO',
 			];
 
-			$url = base_url() . "/denuncia/dashboard/video-denuncia?folio=" . $FOLIOID . "&delito=" . $data->delito . "&descripcion=" . $data->descripcion . "&idioma=" . $data->idioma . "&edad=" . $data->edad . "&perfil=" . $data->perfil . "&sexo=" . $data->sexo . "&prioridad=" . $prioridad . "&sexo_denunciante=" . $data->sexo_denunciante;
+			$url = base_url() . "/denuncia/dashboard/video-denuncia?folio=" . $FOLIOID . "&delito=" . $data->delito . "&descripcion=" . $data->descripcion . "&idioma=" . $data->idioma . "&edad=" . $data->edad . "&perfil=" . $data->perfil . "&sexo=" . $data->sexo . "&prioridad=" . $prioridad . "&sexo_denunciante=" . $data->sexo_denunciante . '&descripcion=' . $data->descripcion;
 
 			return json_encode((object)['status' => 1, 'url' => $url]);
 		} else {

@@ -106,12 +106,13 @@
 			method: "POST",
 			dataType: "json",
 			success: function(response) {
+				console.log(response);
 				respuesta = (response);
 				if (response.status === 1) {
 					const folio = response.folio;
 					const preguntas = response.preguntas_iniciales;
 					const personas = response.personas;
-					const domicilios = response.domicilio;
+					const domicilios = response.domicilios;
 					const vehiculos = response.vehiculos;
 					const folioM = response.folioMunicipio;
 					const folioC = response.folioColonia;
@@ -132,6 +133,9 @@
 					//PREGUNTAS INICIALES
 					document.querySelector('#es_menor').value = preguntas.ES_MENOR;
 					document.querySelector('#es_tercera_edad').value = preguntas.ES_TERCERA_EDAD;
+					document.querySelector('#tiene_discapacidad').value = preguntas.TIENE_DISCAPACIDAD;
+					document.querySelector('#es_vulnerable').value = preguntas.ES_GRUPO_VULNERABLE;
+					document.querySelector('#vulnerable_descripcion').value = preguntas.ES_GRUPO_VULNERABLE_DESCR;
 					document.querySelector('#tiene_discapacidad').value = preguntas.TIENE_DISCAPACIDAD;
 					document.querySelector('#fue_con_arma').value = preguntas.FUE_CON_ARMA;
 					document.querySelector('#esta_desaparecido').value = preguntas.ESTA_DESAPARECIDO;
@@ -173,8 +177,9 @@
 						$("#adicionados").append(nFilas - 1);
 					}
 
+					//DOMICILIOS
 					for (let i = 0; i < domicilios.length; i++) {
-						var btnDomicilio = `<button type='button' class='btn btn-primary' onclick='viewDomicilio(${personas[i].PERSONAFISICAID})'><i class='fas fa-eye'></i></button>`
+						var btnDomicilio = `<button type='button' class='btn btn-primary' onclick='viewDomicilio(${domicilios[i].PERSONAFISICAID})'><i class='fas fa-eye'></i></button>`
 
 						var fila2 = '<tr id="row' + i + '"><td>' +
 							personas[i].NOMBRE + '</td><td>' +
@@ -188,6 +193,7 @@
 						$("#adicionados").append(nFilas - 1);
 					}
 
+					//VEHICULOS
 					for (let i = 0; i < vehiculos.length; i++) {
 						var btnVehiculo = `<button type='button' class='btn btn-primary' onclick='viewVehiculo(${vehiculos[i].VEHICULOID})'><i class='fas fa-eye'></i></button>`;
 						var fila3 = '<tr id="row' + i + '"><td>' +
@@ -270,6 +276,8 @@
 		document.querySelector('#es_menor').value = '';
 		document.querySelector('#es_tercera_edad').value = '';
 		document.querySelector('#tiene_discapacidad').value = '';
+		document.querySelector('#es_vulnerable').value = '';
+		document.querySelector('#vulnerable_descripcion').value = '';
 		document.querySelector('#fue_con_arma').value = '';
 		document.querySelector('#esta_desaparecido').value = '';
 		document.querySelector('#lesiones').value = '';

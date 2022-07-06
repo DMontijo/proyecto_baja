@@ -31,6 +31,7 @@ use App\Models\ColoniasModel;
 
 class DashboardController extends BaseController
 {
+
 	function __construct()
 	{
 		//Models
@@ -60,6 +61,10 @@ class DashboardController extends BaseController
 		$this->_municipiosModel = new MunicipiosModel();
 		$this->_localidadesModel = new LocalidadesModel();
 		$this->_coloniasModel = new ColoniasModel();
+
+		$this->protocol = 'http://';
+		$this->ip = '10.241.244.223';
+		$this->endpoint = $this->protocol . $this->ip . '/API-RestJusticia/public/';
 	}
 
 	public function index()
@@ -156,8 +161,8 @@ class DashboardController extends BaseController
 			if ($data->folio->STATUS == 'ABIERTO') {
 				$data->status = 1;
 				$data->preguntas_iniciales = $this->_folioPreguntasModel->where('FOLIOID', $numfolio)->first();
-				$data->personas = $this->_folioPersonaFisicaModel->join('PERSONACALIDADJURIDICA', 'PERSONACALIDADJURIDICA.PERSONACALIDADJURIDICAID = FOLIOPERSONAFISICA.CALIDADJURIDICAID')->where('FOLIOID', $numfolio)->orderBy('PERSONAFISICAID', 'desc')->findAll();
-				$data->domicilio = $this->_folioPersonaFisicaDomicilioModel->where('FOLIOID', $numfolio)->findAll();
+				$data->personas = $this->_folioPersonaFisicaModel->join('PERSONACALIDADJURIDICA', 'PERSONACALIDADJURIDICA.PERSONACALIDADJURIDICAID = FOLIOPERSONAFISICA.CALIDADJURIDICAID')->where('FOLIOID', $numfolio)->orderBy('PERSONAFISICAID', 'asc')->findAll();
+				$data->domicilios = $this->_folioPersonaFisicaDomicilioModel->where('FOLIOID', $numfolio)->findAll();
 				$data->vehiculos = $this->_folioVehiculoModel->where('FOLIOID', $numfolio)->findAll();
 
 				$data->folioMunicipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data->folio->HECHOMUNICIPIOID)->first();
@@ -380,6 +385,7 @@ class DashboardController extends BaseController
 
 		if (!empty($folio) && !empty($municipio) && !empty($estado) && !empty($notas) && !empty($oficina) && !empty($empleado)) {
 			$folioRow = $this->_folioModel->where('FOLIOID', $folio)->first();
+			$personas = $this->_folioPersonaFisicaModel->where('FOLIOID', $folioRow['FOLIOID'])->orderBy('PERSONAFISICAID', 'desc')->findAll();
 
 			$folioRow['MUNICIPIOID'] = $municipio;
 			$folioRow['ESTADOID'] = $estado;
@@ -387,23 +393,33 @@ class DashboardController extends BaseController
 			$folioRow['STATUS'] = 'EXPEDIENTE';
 			$folioRow['AGENTEATENCIONID'] = session('ID');
 			$folioRow['AGENTEFIRMAID'] = session('ROLID') != '5' ? session('ID') : NULL;
-			// $folioRow['AGENTEATENCIONID'] = NULL;
-			// $folioRow['AGENTEFIRMAID'] = NULL;
-			// $folioRow['STATUS'] = NULL;
 
 			$update = $this->_folioModel->set($folioRow)->where('FOLIOID', $folio)->update();
 
-			$expedienteCreado = $this->createExp($folioRow);
+			$expedienteCreado = $this->createExpediente($folioRow);
+
+			foreach ($personas as $key => $persona) {
+				$_persona = $this->createPersonaFisica($expedienteCreado->EXPEDIENTEID, $persona);
+				$domicilios = $this->_folioPersonaFisicaDomicilioModel->where('FOLIOID', $folioRow['FOLIOID'])->where('PERSONAFISICAID', $persona['PERSONAFISICAID'])->findAll();
+
+				if ($persona['CALIDADJURIDICAID'] == '2') {
+					$this->createExpImputado($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID);
+				}
+
+				foreach ($domicilios as $key => $domicilio) {
+					$_domicilio = $this->createDomicilioPersonaFisica($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $domicilio);
+				}
+			}
 
 			if ($expedienteCreado->status == 201) {
 				$folioRow['EXPEDIENTEID'] = $expedienteCreado->EXPEDIENTEID;
 				$update2 = $this->_folioModel->set($folioRow)->where('FOLIOID', $folio)->update();
-				if ($update2) {
+				if ($update && $update2) {
 					$denunciante = $this->_denunciantesModel->asObject()->where('ID_DENUNCIANTE', $folioRow['DENUNCIANTEID'])->first();
 					if ($this->_sendEmailExpediente($denunciante->CORREO, $folio, $folioRow['EXPEDIENTEID'])) {
-						return json_encode(['status' => 1]);
+						return json_encode(['status' => 1, 'expediente' => $expedienteCreado->EXPEDIENTEID]);
 					} else {
-						return json_encode(['status' => 1]);
+						return json_encode(['status' => 1, 'expediente' => $expedienteCreado->EXPEDIENTEID]);
 					}
 				} else {
 					return json_encode(['status' => 0, 'error' => 'No hizo el update']);
@@ -416,16 +432,19 @@ class DashboardController extends BaseController
 		}
 	}
 
-	public function createExp($folioRow)
+	private function createExpediente($folioRow)
 	{
-		$endpoint = 'http://192.168.191.33/API-RestJusticia/public/expediente';
+		$function = 'expediente';
+		$endpoint = $this->endpoint . $function;
+
 		$data = (object)array();
+
 		$data = [
 			'ESTADOID' => $folioRow['ESTADOID'],
 			'MUNICIPIOID' => $folioRow['MUNICIPIOID'],
 			'TIPOEXPEDIENTEID' => 4
 		];
-		// var_dump($data);
+
 		// Crear opciones de la peticion HTTP
 		$opciones = array(
 			"http" => array(
@@ -434,6 +453,99 @@ class DashboardController extends BaseController
 				"content" => http_build_query($data), # Agregar el contenido definido antes
 			),
 		);
+		# Preparar peticion
+		$contexto = stream_context_create($opciones);
+		# Hacerla
+		$resultado = file_get_contents($endpoint, false, $contexto);
+		return json_decode($resultado);
+	}
+
+	private function createPersonaFisica($expedienteId, $personaFisica)
+	{
+		$function = 'personaFisica';
+		$endpoint = $this->endpoint . $function;
+		$data = $personaFisica;
+
+		$data['EXPEDIENTEID'] = $expedienteId;
+		unset($data['FOTO']);
+		unset($data['PERSONAFISICAID']);
+		foreach ($data as $clave => $valor) {
+			if (empty($valor)) unset($data[$clave]);
+		}
+
+		// Crear opciones de la peticion HTTP
+		$opciones = array(
+			"http" => array(
+				"header" => "Content-type: application/x-www-form-urlencoded\r\n",
+				"method" => "POST",
+				"content" => http_build_query($data), # Agregar el contenido definido antes
+			),
+		);
+
+		# Preparar peticion
+		$contexto = stream_context_create($opciones);
+		# Hacerla
+		$resultado = file_get_contents($endpoint, false, $contexto);
+		return json_decode($resultado);
+	}
+
+	private function createExpImputado($expedienteId, $personaFisicaId)
+	{
+		$function = 'imputado';
+		$endpoint = $this->endpoint . $function;
+		$data = array();
+
+		$data['EXPEDIENTEID'] = $expedienteId;
+		$data['PERSONAFISICAID'] = $personaFisicaId;
+		$data['DETENIDO'] = 'N';
+		$data['ESTADOJURIDICOIMPUTADOID'] = 1;
+		$data['ETAPAIMPUTADOID'] = 1;
+		$data['INDIVIDUALIZADO'] = 'N';
+
+		foreach ($data as $clave => $valor) {
+			if (empty($valor)) unset($data[$clave]);
+		}
+
+		// Crear opciones de la peticion HTTP
+		$opciones = array(
+			"http" => array(
+				"header" => "Content-type: application/x-www-form-urlencoded\r\n",
+				"method" => "POST",
+				"content" => http_build_query($data), # Agregar el contenido definido antes
+			),
+		);
+
+		# Preparar peticion
+		$contexto = stream_context_create($opciones);
+
+		# Hacerla
+		$resultado = file_get_contents($endpoint, false, $contexto);
+		return json_decode($resultado);
+	}
+
+	private function createDomicilioPersonaFisica($expedienteId, $personaFisicaId, $domicilioPersonaFisica)
+	{
+		$function = 'expPersonaDom';
+		$endpoint = $this->endpoint . $function;
+		$data = $domicilioPersonaFisica;
+
+		$data['EXPEDIENTEID'] = $expedienteId;
+		$data['PERSONAFISICAID'] = $personaFisicaId;
+		unset($data['DOMICILIOID']);
+
+		foreach ($data as $clave => $valor) {
+			if (empty($valor)) unset($data[$clave]);
+		}
+
+		// Crear opciones de la peticion HTTP
+		$opciones = array(
+			"http" => array(
+				"header" => "Content-type: application/x-www-form-urlencoded\r\n",
+				"method" => "POST",
+				"content" => http_build_query($data), # Agregar el contenido definido antes
+			),
+		);
+
 		# Preparar peticion
 		$contexto = stream_context_create($opciones);
 		# Hacerla

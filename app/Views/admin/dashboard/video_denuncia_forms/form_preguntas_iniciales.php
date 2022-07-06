@@ -12,6 +12,14 @@
 		<input class="form-control" type="text" id="tiene_discapacidad" name="tiene_discapacidad">
 	</div>
 	<div class="col-6">
+		<label for="es_vulnerable" class="form-label font-weight-bold input-required">¿La víctima u ofendido es de un grupo vulnerable?</label>
+		<input class="form-control" type="text" id="es_vulnerable" name="es_vulnerable">
+	</div>
+	<div class="col-6">
+		<label for="vulnerable_descripcion" class="form-label font-weight-bold input-required">Grupo vulnerable descripción</label>
+		<input type="text" class="form-control" id="vulnerable_descripcion" name="vulnerable_descripcion">
+	</div>
+	<div class="col-6">
 		<label for="fue_con_arma" class="form-label font-weight-bold">¿El delito a denunciar fue cometido con arma de fuego, arma blanca u objeto contundente?</label>
 		<input class="form-control" type="text" id="fue_con_arma" name="fue_con_arma">
 	</div>

@@ -241,7 +241,7 @@
 		} else {
 			if (municipio_empleado.value != '' && oficina_empleado.value != '' && empleado.value != '') {
 				let descripcion = document.querySelector('#notas_caso_salida').value;
-
+				
 				if (
 					descripcion &&
 					inputFolio.value != '' &&
@@ -256,7 +256,7 @@
 						'oficina': oficina_empleado.value,
 						'empleado': empleado.value,
 					}
-					console.log('DENTRO DEL IF');
+
 					$.ajax({
 						data: data,
 						url: "<?= base_url('/data/save-in-justicia') ?>",
@@ -271,7 +271,7 @@
 
 							Swal.fire({
 								icon: 'success',
-								text: 'EXPEDIENTE CREADO CORRECTAMENTE',
+								html: 'EXPEDIENTE <strong>' + data.expediente + '</strong> CREADO CORRECTAMENTE',
 								confirmButtonColor: '#bf9b55',
 							}).then((e) => {
 								$("#salida_modal").modal("hide");
