@@ -28,6 +28,8 @@ use App\Models\PersonaCalidadJuridicaModel;
 use App\Models\MunicipiosModel;
 use App\Models\LocalidadesModel;
 use App\Models\ColoniasModel;
+use App\Models\ConexionesDBModel;
+
 
 class DashboardController extends BaseController
 {
@@ -62,9 +64,11 @@ class DashboardController extends BaseController
 		$this->_localidadesModel = new LocalidadesModel();
 		$this->_coloniasModel = new ColoniasModel();
 
+		$this->_conexionesDBModel = new ConexionesDBModel();
+
 		$this->protocol = 'http://';
 		$this->ip = '10.241.244.223';
-		$this->endpoint = $this->protocol . $this->ip . '/API-RestJusticia/public/';
+		$this->endpoint = $this->protocol . $this->ip . '/wsJusticia';
 	}
 
 	public function index()
@@ -399,15 +403,15 @@ class DashboardController extends BaseController
 			$expedienteCreado = $this->createExpediente($folioRow);
 
 			foreach ($personas as $key => $persona) {
-				$_persona = $this->createPersonaFisica($expedienteCreado->EXPEDIENTEID, $persona);
+				$_persona = $this->createPersonaFisica($expedienteCreado->EXPEDIENTEID, $persona, $folioRow['MUNICIPIOID']);
 				$domicilios = $this->_folioPersonaFisicaDomicilioModel->where('FOLIOID', $folioRow['FOLIOID'])->where('PERSONAFISICAID', $persona['PERSONAFISICAID'])->findAll();
 
 				if ($persona['CALIDADJURIDICAID'] == '2') {
-					$this->createExpImputado($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID);
+					$this->createExpImputado($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $folioRow['MUNICIPIOID']);
 				}
 
 				foreach ($domicilios as $key => $domicilio) {
-					$_domicilio = $this->createDomicilioPersonaFisica($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $domicilio);
+					$_domicilio = $this->createDomicilioPersonaFisica($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $domicilio, $folioRow['MUNICIPIOID']);
 				}
 			}
 
@@ -434,12 +438,18 @@ class DashboardController extends BaseController
 
 	private function createExpediente($folioRow)
 	{
-		$function = 'expediente';
+		$function = '/expediente.php?process=crear';
 		$endpoint = $this->endpoint . $function;
+		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int)$folioRow['MUNICIPIOID'])->where('TYPE', !getenv('CI_ENVIRONMENT') ? 'production' : getenv('CI_ENVIRONMENT'))->first();
 
 		$data = (object)array();
 
 		$data = [
+			'userDB' => $conexion->USER,
+			'pwdDB' => $conexion->PASSWORD,
+			'instance' => $conexion->IP . '/' . $conexion->INSTANCE,
+			'schema' => $conexion->SCHEMA,
+
 			'ESTADOID' => $folioRow['ESTADOID'],
 			'MUNICIPIOID' => $folioRow['MUNICIPIOID'],
 			'TIPOEXPEDIENTEID' => 4
@@ -460,13 +470,20 @@ class DashboardController extends BaseController
 		return json_decode($resultado);
 	}
 
-	private function createPersonaFisica($expedienteId, $personaFisica)
+	private function createPersonaFisica($expedienteId, $personaFisica, $municipio)
 	{
 		$function = 'personaFisica';
 		$endpoint = $this->endpoint . $function;
+		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int)$municipio)->where('TYPE', !getenv('CI_ENVIRONMENT') ? 'production' : getenv('CI_ENVIRONMENT'))->first();
 		$data = $personaFisica;
 
 		$data['EXPEDIENTEID'] = $expedienteId;
+
+		$data['userDB'] = $conexion->USER;
+		$data['pwdDB'] = $conexion->PASSWORD;
+		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
+		$data['schema'] = $conexion->SCHEMA;
+
 		unset($data['FOTO']);
 		unset($data['PERSONAFISICAID']);
 		foreach ($data as $clave => $valor) {
@@ -489,10 +506,11 @@ class DashboardController extends BaseController
 		return json_decode($resultado);
 	}
 
-	private function createExpImputado($expedienteId, $personaFisicaId)
+	private function createExpImputado($expedienteId, $personaFisicaId, $municipio)
 	{
 		$function = 'imputado';
 		$endpoint = $this->endpoint . $function;
+		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int)$municipio)->where('TYPE', !getenv('CI_ENVIRONMENT') ? 'production' : getenv('CI_ENVIRONMENT'))->first();
 		$data = array();
 
 		$data['EXPEDIENTEID'] = $expedienteId;
@@ -501,6 +519,11 @@ class DashboardController extends BaseController
 		$data['ESTADOJURIDICOIMPUTADOID'] = 1;
 		$data['ETAPAIMPUTADOID'] = 1;
 		$data['INDIVIDUALIZADO'] = 'N';
+
+		$data['userDB'] = $conexion->USER;
+		$data['pwdDB'] = $conexion->PASSWORD;
+		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
+		$data['schema'] = $conexion->SCHEMA;
 
 		foreach ($data as $clave => $valor) {
 			if (empty($valor)) unset($data[$clave]);
@@ -523,15 +546,21 @@ class DashboardController extends BaseController
 		return json_decode($resultado);
 	}
 
-	private function createDomicilioPersonaFisica($expedienteId, $personaFisicaId, $domicilioPersonaFisica)
+	private function createDomicilioPersonaFisica($expedienteId, $personaFisicaId, $domicilioPersonaFisica, $municipio)
 	{
 		$function = 'expPersonaDom';
 		$endpoint = $this->endpoint . $function;
+		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int)$municipio)->where('TYPE', !getenv('CI_ENVIRONMENT') ? 'production' : getenv('CI_ENVIRONMENT'))->first();
 		$data = $domicilioPersonaFisica;
 
 		$data['EXPEDIENTEID'] = $expedienteId;
 		$data['PERSONAFISICAID'] = $personaFisicaId;
 		unset($data['DOMICILIOID']);
+
+		$data['userDB'] = $conexion->USER;
+		$data['pwdDB'] = $conexion->PASSWORD;
+		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
+		$data['schema'] = $conexion->SCHEMA;
 
 		foreach ($data as $clave => $valor) {
 			if (empty($valor)) unset($data[$clave]);
