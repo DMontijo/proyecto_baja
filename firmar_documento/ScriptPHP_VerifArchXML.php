@@ -1,6 +1,6 @@
 <?php
 header("Content-Type: application/xml");
-date_default_timezone_set('America/Mexico_City'); 
+date_default_timezone_set('America/Tijuana'); 
 
 $RefAlfa = $_POST["RefAlfa"];
 

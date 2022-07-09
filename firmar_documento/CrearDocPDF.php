@@ -2,7 +2,7 @@
 header('Content-Type: text/html; charset=UTF-8');
 require('fpdf/fpdf.php');
 
-date_default_timezone_set('America/Mexico_City');
+date_default_timezone_set('America/Tijuana');
 
 
 //==============================================================================

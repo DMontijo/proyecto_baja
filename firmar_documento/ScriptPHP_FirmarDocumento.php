@@ -6,7 +6,7 @@ include("qrlib/qrlib.php");
 include("fpdf/fpdf.php");
 require_once('FPDI/src/autoload.php');
 
-date_default_timezone_set('America/Mexico_City'); 
+date_default_timezone_set('America/Tijuana'); 
 
 
 ## RECUPERANDO DATOS POR EL MÉTODO POST ########################################

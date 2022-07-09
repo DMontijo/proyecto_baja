@@ -66,8 +66,10 @@ class DashboardController extends BaseController
 
 		$this->_conexionesDBModel = new ConexionesDBModel();
 
-		$this->protocol = 'http://';
-		$this->ip = '10.241.244.223';
+		// $this->protocol = 'http://';
+		// $this->ip = "10.144.244.223";
+		$this->protocol = 'https://';
+		$this->ip = "ws.fgebc.gob.mx";
 		$this->endpoint = $this->protocol . $this->ip . '/wsJusticia';
 	}
 
@@ -389,10 +391,19 @@ class DashboardController extends BaseController
 
 		if (!empty($folio) && !empty($municipio) && !empty($estado) && !empty($notas) && !empty($oficina) && !empty($empleado)) {
 			$folioRow = $this->_folioModel->where('FOLIOID', $folio)->first();
-			$personas = $this->_folioPersonaFisicaModel->where('FOLIOID', $folioRow['FOLIOID'])->orderBy('PERSONAFISICAID', 'desc')->findAll();
+			$empleadoRow = $this->_empleadosModel->asObject()->where('MUNICIPIOID', $municipio)->where('OFICINAID', $oficina)->where('EMPLEADOID', $empleado)->first();
+			$personas = $this->_folioPersonaFisicaModel->where('FOLIOID', $folioRow['FOLIOID'])->orderBy('PERSONAFISICAID', 'asc')->findAll();
+			$narracion = $folioRow['HECHONARRACION'];
+			$fecha = $folioRow['HECHOFECHA'];
 
 			$folioRow['MUNICIPIOID'] = $municipio;
 			$folioRow['ESTADOID'] = $estado;
+			$folioRow['OFICINAIDRESPONSABLE'] = $oficina;
+			$folioRow['EMPLEADOIDREGISTRO'] = $empleado;
+			$folioRow['AREAIDREGISTRO'] = $empleadoRow->AREAID;
+			$folioRow['AREAIDRESPONSABLE'] = $empleadoRow->AREAID;
+			$folioRow['ESTADOJURIDICOEXPEDIENTEID'] = (string)2;
+			$folioRow['HECHOMEDIOCONOCIMIENTOID'] = (string)5;
 			$folioRow['NOTASAGENTE'] = $notas;
 			$folioRow['STATUS'] = 'EXPEDIENTE';
 			$folioRow['AGENTEATENCIONID'] = session('ID');
@@ -400,18 +411,23 @@ class DashboardController extends BaseController
 
 			$update = $this->_folioModel->set($folioRow)->where('FOLIOID', $folio)->update();
 
+			$folioRow['HECHOFECHA'] = $folioRow['HECHOFECHA'] . ' ' . $folioRow['HECHOHORA'];
+			$folioRow['HECHONARRACION'] = $notas;
+
 			$expedienteCreado = $this->createExpediente($folioRow);
+
+			$folioRow['HECHONARRACION'] = $narracion;
+			$folioRow['HECHOFECHA'] = $fecha;
 
 			foreach ($personas as $key => $persona) {
 				$_persona = $this->createPersonaFisica($expedienteCreado->EXPEDIENTEID, $persona, $folioRow['MUNICIPIOID']);
 				$domicilios = $this->_folioPersonaFisicaDomicilioModel->where('FOLIOID', $folioRow['FOLIOID'])->where('PERSONAFISICAID', $persona['PERSONAFISICAID'])->findAll();
-
 				if ($persona['CALIDADJURIDICAID'] == '2') {
 					$this->createExpImputado($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $folioRow['MUNICIPIOID']);
 				}
 
 				foreach ($domicilios as $key => $domicilio) {
-					$_domicilio = $this->createDomicilioPersonaFisica($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $domicilio, $folioRow['MUNICIPIOID']);
+					$this->createDomicilioPersonaFisica($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $domicilio, $folioRow['MUNICIPIOID']);
 				}
 			}
 
@@ -438,79 +454,145 @@ class DashboardController extends BaseController
 
 	private function createExpediente($folioRow)
 	{
+		// header('Content-Type: application/json');
 		$function = '/expediente.php?process=crear';
 		$endpoint = $this->endpoint . $function;
-		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int)$folioRow['MUNICIPIOID'])->where('TYPE', !getenv('CI_ENVIRONMENT') ? 'production' : getenv('CI_ENVIRONMENT'))->first();
-
-		$data = (object)array();
-
-		$data = [
-			'userDB' => $conexion->USER,
-			'pwdDB' => $conexion->PASSWORD,
-			'instance' => $conexion->IP . '/' . $conexion->INSTANCE,
-			'schema' => $conexion->SCHEMA,
-
-			'ESTADOID' => $folioRow['ESTADOID'],
-			'MUNICIPIOID' => $folioRow['MUNICIPIOID'],
-			'TIPOEXPEDIENTEID' => 4
+		// $conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int)$folioRow['MUNICIPIOID'])->where('TYPE', !getenv('CI_ENVIRONMENT') ? 'production' : getenv('CI_ENVIRONMENT'))->first();
+		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int)$folioRow['MUNICIPIOID'])->where('TYPE', 'production')->first();
+		$array = [
+			"ESTADOID",
+			"MUNICIPIOID",
+			"ANO",
+			"HECHOMEDIOCONOCIMIENTOID",
+			"HECHOFECHA",
+			"HECHOLUGARID",
+			"HECHOESTADOID",
+			"HECHOMUNICIPIOID",
+			"HECHOLOCALIDADID",
+			"HECHODELEGACIONID",
+			"HECHOZONA",
+			"HECHOCOLONIAID",
+			"HECHOCOLONIADESCR",
+			"HECHOCALLE",
+			"HECHONUMEROCASA",
+			"HECHONUMEROCASAINT",
+			"HECHOREFERENCIA",
+			"HECHONARRACION",
+			"TIPOEXPEDIENTEID",
+			"PARTICIPAESTADO",
+			"EMPLEADOIDREGISTRO",
+			"OFICINAIDRESPONSABLE",
+			"CONFIDENCIAL",
+			"ESTADOJURIDICOEXPEDIENTEID",
+			"RELACIONDOCUMENTOS",
+			"HECHOCOORDENADAX",
+			"HECHOCOORDENADAY",
+			"PARTENUMERO",
+			"PARTEFECHA",
+			"PARTEAUTORIDADID",
+			"PARTEAREADOID",
+			"PARTEEMPLEADOID",
+			"EXHORTONUMERO",
+			"EXHORTOESTADOID",
+			"EXHORTOMUNICIPIOID",
+			"EXHORTOOFICINAID",
+			"AREAIDREGISTRO",
+			"AREAIDRESPONSABLE",
+			"LOCALIZACIONPERSONA",
+			"CONCLUIDO",
+			"EXHORTOAUTORIDADID",
+			"HECHOCLASIFICACIONLUGARID",
+			"HECHOVIALIDADID"
 		];
 
-		// Crear opciones de la peticion HTTP
-		$opciones = array(
-			"http" => array(
-				"header" => "Content-type: application/x-www-form-urlencoded\r\n",
-				"method" => "POST",
-				"content" => http_build_query($data), # Agregar el contenido definido antes
-			),
-		);
-		# Preparar peticion
-		$contexto = stream_context_create($opciones);
-		# Hacerla
-		$resultado = file_get_contents($endpoint, false, $contexto);
-		return json_decode($resultado);
-	}
+		$data = $folioRow;
 
-	private function createPersonaFisica($expedienteId, $personaFisica, $municipio)
-	{
-		$function = 'personaFisica';
-		$endpoint = $this->endpoint . $function;
-		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int)$municipio)->where('TYPE', !getenv('CI_ENVIRONMENT') ? 'production' : getenv('CI_ENVIRONMENT'))->first();
-		$data = $personaFisica;
-
-		$data['EXPEDIENTEID'] = $expedienteId;
+		foreach ($data as $clave => $valor) {
+			if (empty($valor)) unset($data[$clave]);
+		}
+		foreach ($data as $clave => $valor) {
+			if (!in_array($clave, $array)) unset($data[$clave]);
+		}
 
 		$data['userDB'] = $conexion->USER;
 		$data['pwdDB'] = $conexion->PASSWORD;
 		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
 		$data['schema'] = $conexion->SCHEMA;
 
-		unset($data['FOTO']);
-		unset($data['PERSONAFISICAID']);
+		return $this->curlPost($endpoint, $data);
+	}
+
+	private function createPersonaFisica($expedienteId, $personaFisica, $municipio)
+	{
+		$function = '/personaFisica.php?process=crear';
+		$array = [
+			'EXPEDIENTEID',
+			'CALIDADJURIDICAID',
+			'RESERVARIDENTIDAD',
+			'DENUNCIANTE',
+			'VIVA',
+			'TIPOIDENTIFICACIONID',
+			'NUMEROIDENTIFICACION',
+			'APODO',
+			'NOMBRE',
+			'PRIMERAPELLIDO',
+			'SEGUNDOAPELLIDO',
+			'NUMEROIDENTIDAD',
+			'ESTADOORIGENID',
+			'MUNICIPIOORIGENID',
+			'FECHANACIMIENTO',
+			'SEXO',
+			'TELEFONO',
+			'CORREO',
+			'EDADCANTIDAD',
+			'EDADTIEMPO',
+			'NACIONALIDADID',
+			'ESTADOCIVILID',
+			'ESTADOJURIDICOIMPUTADOID',
+			'DESAPARECIDA',
+			'PERSONATIPOMUERTEID',
+			'PERSONARELIGIONID',
+			'TIPOVIVIENDAID',
+			'LUGARFRECUENTA',
+			'VESTUARIO',
+			'AFECTOBEBIDA',
+			'BEBIDAS',
+			'AFECTODROGA',
+			'DROGAS',
+			'SOLICITANTEASESORIA',
+			'INGRESOS',
+			'PERSONAIDIOMAID',
+			'TIEMPORESIDEANOS',
+			'TIEMPORESIDEMESES',
+			'TIEMPORESIDEDIAS'
+		];
+		$endpoint = $this->endpoint . $function;
+		// $conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int)$municipio)->where('TYPE', !getenv('CI_ENVIRONMENT') ? 'production' : getenv('CI_ENVIRONMENT'))->first();
+		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int)$municipio)->where('TYPE', 'production')->first();
+		$data = $personaFisica;
+
 		foreach ($data as $clave => $valor) {
 			if (empty($valor)) unset($data[$clave]);
 		}
+		foreach ($data as $clave => $valor) {
+			if (!in_array($clave, $array)) unset($data[$clave]);
+		}
 
-		// Crear opciones de la peticion HTTP
-		$opciones = array(
-			"http" => array(
-				"header" => "Content-type: application/x-www-form-urlencoded\r\n",
-				"method" => "POST",
-				"content" => http_build_query($data), # Agregar el contenido definido antes
-			),
-		);
+		$data['EXPEDIENTEID'] = $expedienteId;
+		$data['userDB'] = $conexion->USER;
+		$data['pwdDB'] = $conexion->PASSWORD;
+		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
+		$data['schema'] = $conexion->SCHEMA;
 
-		# Preparar peticion
-		$contexto = stream_context_create($opciones);
-		# Hacerla
-		$resultado = file_get_contents($endpoint, false, $contexto);
-		return json_decode($resultado);
+		return $this->curlPost($endpoint, $data);
 	}
 
 	private function createExpImputado($expedienteId, $personaFisicaId, $municipio)
 	{
-		$function = 'imputado';
+		$function = '/imputado.php?process=crear';
 		$endpoint = $this->endpoint . $function;
-		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int)$municipio)->where('TYPE', !getenv('CI_ENVIRONMENT') ? 'production' : getenv('CI_ENVIRONMENT'))->first();
+		// $conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int)$municipio)->where('TYPE', !getenv('CI_ENVIRONMENT') ? 'production' : getenv('CI_ENVIRONMENT'))->first();
+		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int)$municipio)->where('TYPE', 'production')->first();
 		$data = array();
 
 		$data['EXPEDIENTEID'] = $expedienteId;
@@ -529,57 +611,80 @@ class DashboardController extends BaseController
 			if (empty($valor)) unset($data[$clave]);
 		}
 
-		// Crear opciones de la peticion HTTP
-		$opciones = array(
-			"http" => array(
-				"header" => "Content-type: application/x-www-form-urlencoded\r\n",
-				"method" => "POST",
-				"content" => http_build_query($data), # Agregar el contenido definido antes
-			),
-		);
-
-		# Preparar peticion
-		$contexto = stream_context_create($opciones);
-
-		# Hacerla
-		$resultado = file_get_contents($endpoint, false, $contexto);
-		return json_decode($resultado);
+		return $this->curlPost($endpoint, $data);
 	}
 
 	private function createDomicilioPersonaFisica($expedienteId, $personaFisicaId, $domicilioPersonaFisica, $municipio)
 	{
-		$function = 'expPersonaDom';
+		$function = '/domicilio.php?process=crear';
+		$array = [
+			"EXPEDIENTEID",
+			"PERSONAFISICAID",
+			"TIPODOMICILIO",
+			"ESTADOID",
+			"MUNICIPIOID",
+			"LOCALIDADID",
+			"DELEGACIONID",
+			"ZONA",
+			"COLONIAID",
+			"COLONIADESCR",
+			"CALLE",
+			"NUMEROCASA",
+			"REFERENCIA",
+			"NUMEROINTERIOR"
+		];
 		$endpoint = $this->endpoint . $function;
-		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int)$municipio)->where('TYPE', !getenv('CI_ENVIRONMENT') ? 'production' : getenv('CI_ENVIRONMENT'))->first();
+		// $conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int)$municipio)->where('TYPE', !getenv('CI_ENVIRONMENT') ? 'production' : getenv('CI_ENVIRONMENT'))->first();
+		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int)$municipio)->where('TYPE', 'production')->first();
 		$data = $domicilioPersonaFisica;
 
 		$data['EXPEDIENTEID'] = $expedienteId;
 		$data['PERSONAFISICAID'] = $personaFisicaId;
 		unset($data['DOMICILIOID']);
 
+		foreach ($data as $clave => $valor) {
+			if (empty($valor)) unset($data[$clave]);
+		}
+		foreach ($data as $clave => $valor) {
+			if (!in_array($clave, $array)) unset($data[$clave]);
+		}
 		$data['userDB'] = $conexion->USER;
 		$data['pwdDB'] = $conexion->PASSWORD;
 		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
 		$data['schema'] = $conexion->SCHEMA;
 
-		foreach ($data as $clave => $valor) {
-			if (empty($valor)) unset($data[$clave]);
+		return $this->curlPost($endpoint, $data);
+	}
+
+	private function curlPost($endpoint, $data)
+	{
+		$ch = curl_init();
+
+		curl_setopt($ch, CURLOPT_URL, $endpoint);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+
+		$headers = array();
+		$headers[] = 'Content-Type: application/json';
+		$headers[] = 'Access-Control-Allow-Origin: *';
+		$headers[] = 'Access-Control-Allow-Credentials: true';
+		$headers[] = 'Access-Control-Allow-Headers: Content-Type';
+
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+		$result = curl_exec($ch);
+
+		if ($result === FALSE) {
+			die('Curl failed: ' . curl_error($ch));
 		}
 
-		// Crear opciones de la peticion HTTP
-		$opciones = array(
-			"http" => array(
-				"header" => "Content-type: application/x-www-form-urlencoded\r\n",
-				"method" => "POST",
-				"content" => http_build_query($data), # Agregar el contenido definido antes
-			),
-		);
+		curl_close($ch);
 
-		# Preparar peticion
-		$contexto = stream_context_create($opciones);
-		# Hacerla
-		$resultado = file_get_contents($endpoint, false, $contexto);
-		return json_decode($resultado);
+		return json_decode($result);
 	}
 }
 
