@@ -445,11 +445,11 @@ class DashboardController extends BaseController
 				$_persona = $this->createPersonaFisica($expedienteCreado->EXPEDIENTEID, $persona, $folioRow['MUNICIPIOID']);
 				$domicilios = $this->_folioPersonaFisicaDomicilioModel->where('FOLIOID', $folioRow['FOLIOID'])->where('PERSONAFISICAID', $persona['PERSONAFISICAID'])->findAll();
 				if ($persona['CALIDADJURIDICAID'] == '2') {
-					$this->createExpImputado($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $folioRow['MUNICIPIOID']);
+					$_imputado = $this->createExpImputado($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $folioRow['MUNICIPIOID']);
 				}
 
 				foreach ($domicilios as $key => $domicilio) {
-					$this->createDomicilioPersonaFisica($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $domicilio, $folioRow['MUNICIPIOID']);
+					$_domicilio = $this->createDomicilioPersonaFisica($expedienteCreado->EXPEDIENTEID, 1, $domicilio, $folioRow['MUNICIPIOID']);
 				}
 			}
 
@@ -675,7 +675,33 @@ class DashboardController extends BaseController
 		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
 		$data['schema'] = $conexion->SCHEMA;
 
-		return $this->curlPost($endpoint, $data);
+		$ch = curl_init();
+
+		curl_setopt($ch, CURLOPT_URL, $endpoint);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+
+		$headers = array();
+		$headers[] = 'Content-Type: application/json';
+		$headers[] = 'Access-Control-Allow-Origin: *';
+		$headers[] = 'Access-Control-Allow-Credentials: true';
+		$headers[] = 'Access-Control-Allow-Headers: Content-Type';
+
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+		$result = curl_exec($ch);
+
+		if ($result === FALSE) {
+			die('Curl failed: ' . curl_error($ch));
+		}
+
+		curl_close($ch);
+
+		return $result;
 	}
 
 	private function curlPost($endpoint, $data)
@@ -722,6 +748,30 @@ class DashboardController extends BaseController
 		$response = $this->curlPost($endpoint, $data);
 
 		return json_encode($response);
+	}
+	public function restoreFolio()
+	{
+		$folio = $this->request->getPost('folio');
+
+		if (!empty($folio)) {
+			$folioRow = $this->_folioModel->where('FOLIOID', $folio)->first();
+			$folioRow['ESTADOID'] = 2;
+			$folioRow['OFICINAIDRESPONSABLE'] = NULL;
+			$folioRow['EMPLEADOIDREGISTRO'] = NULL;
+			$folioRow['AREAIDREGISTRO'] = NULL;
+			$folioRow['AREAIDRESPONSABLE'] = NULL;
+			$folioRow['ESTADOJURIDICOEXPEDIENTEID'] = NULL;
+			$folioRow['HECHOMEDIOCONOCIMIENTOID'] = NULL;
+			$folioRow['NOTASAGENTE'] = NULL;
+			$folioRow['STATUS'] = 'ABIERTO';
+			$folioRow['EXPEDIENTEID'] = NULL;
+			$folioRow['AGENTEATENCIONID'] = NULL;
+			$folioRow['AGENTEFIRMAID'] = NULL;
+
+			$this->_folioModel->set($folioRow)->where('FOLIOID', $folio)->update();
+
+			return json_encode(['status' => 1]);
+		}
 	}
 }
 

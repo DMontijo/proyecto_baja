@@ -297,12 +297,29 @@
 						console.log(data);
 
 					}).fail(function(jqXHR, textStatus) {
-						console.log(jqXHR, textStatus);
-						btnFinalizar.removeAttribute('disabled');
-						Swal.fire({
-							icon: 'error',
-							text: 'Fallo la conexión, revisa con soporte técnico.',
-							confirmButtonColor: '#bf9b55',
+						data = {
+							'folio': inputFolio.value
+						}
+						$.ajax({
+							data: data,
+							url: "<?= base_url('/data/restore-folio') ?>",
+							method: "POST",
+							dataType: "json",
+
+						}).done(function(data) {
+							Swal.fire({
+								icon: 'error',
+								text: 'Fallo la conexión, revisa con soporte técnico.',
+								confirmButtonColor: '#bf9b55',
+							});
+							btnFinalizar.removeAttribute('disabled');
+						}).fail(function(jqXHR, textStatus) {
+							Swal.fire({
+								icon: 'error',
+								text: 'Fallo la conexión, revisa con soporte técnico.',
+								confirmButtonColor: '#bf9b55',
+							});
+							btnFinalizar.removeAttribute('disabled');
 						});
 					});
 				} else {
