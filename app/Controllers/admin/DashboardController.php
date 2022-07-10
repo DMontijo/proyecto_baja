@@ -103,6 +103,12 @@ class DashboardController extends BaseController
 		$this->_loadView('Nuevo usuario', 'registrarusuario', '', $data, 'new_user');
 	}
 
+	public function denuncia_anonima()
+	{
+		$data = (object)array();
+		$this->_loadView('Denuncia anónima', 'denuncia_anonima', '', $data, 'denuncia_anonima');
+	}
+
 	public function crear_usuario()
 	{
 
@@ -685,6 +691,21 @@ class DashboardController extends BaseController
 		curl_close($ch);
 
 		return json_decode($result);
+	}
+
+	public function getVideoLink()
+	{
+		$folio = $this->request->getPost('folio');
+		$endpoint = 'https://videodenunciaserver1.fgebc.gob.mx/api/vc';
+		$data = array();
+		$data['u'] = '24';
+		$data['token'] = '198429b7cc8a2a5733d97bc13153227dd5017555';
+		$data['a'] = 'getRepo';
+		$data['folio'] = $folio;
+
+		$response = $this->curlPost($endpoint, $data);
+
+		return json_encode($response);
 	}
 }
 

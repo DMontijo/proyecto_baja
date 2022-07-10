@@ -59,6 +59,11 @@
 	<div class="container py-5" style="min-height: calc( 100vh - 120px );">
 		<h1 id="titulo" class="text-center fw-bolder pb-5 text-blue">FIRMAR DOCUMENTOS CON FIEL</h1>
 		<div class="row">
+			<div class="col-12 text-center">
+				<a class="btn btn-primary" href="<?= $_SERVER['REQUEST_URI'] . 'validar.php' ?>" role="button">Validar documentos</a>
+			</div>
+		</div>
+		<div class="row">
 			<div class="col-12 col-md-8 offset-md-2">
 				<div id="DivDefault">
 
@@ -123,7 +128,7 @@
 
 																<tr>
 																	<td class="text-center" colspan="2">
-																		<input class="btn btn-secondary" type="button" onclick="FIEL_DirectSign()" value="Firmar PDF" />
+																		<input class="btn btn-secondary" type="button" onclick="FIEL_DirectSign()" value="Firmar documento" />
 																	</td>
 																</tr>
 
@@ -181,7 +186,6 @@
 			dataType: "script",
 			cache: false
 		});
-
 
 		$.ajax({
 			url: "ScriptsJS_Modulo_FirmarDoc.js?sesion=" + NumAleat(),

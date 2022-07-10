@@ -54,6 +54,7 @@ $routes->group('admin', function ($routes) {
 		$routes->post('nuevo_usuario', 'admin/DashboardController::crear_usuario');
 
 		$routes->get('video-denuncia', 'admin/DashboardController::video_denuncia');
+		$routes->get('denuncia-anonima', 'admin/DashboardController::denuncia_anonima');
 
 		$routes->get('folios', 'admin/FoliosController::index');
 		$routes->get('folios_abiertos', 'admin/FoliosController::folios_abiertos');
@@ -126,6 +127,9 @@ $routes->group('data', function ($routes) {
 
 	$routes->post('sendOTP', 'OTPController::sendEmailOTP');
 	$routes->post('getLastOTP', 'OTPController::getLastOTP');
+
+	//Link
+	$routes->post('get-video-link', 'admin/DashboardController::getVideoLink');
 
 	//VEHÍCULOS
 	$routes->post('get-marca-by-dist', 'client/DashboardController::getMarcaByDist');
