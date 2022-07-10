@@ -55,7 +55,7 @@
 					</a>
 				</li>
 			<?php endif; ?>
-			<?php if (session('ROLID') == 1 || session('ROLID') == 2 || session('ROLID') == 3 || session('ROLID') == 4) : ?>
+			<?php if (session('ROLID') == 1 || session('ROLID') == 2 || session('ROLID') == 3) : ?>
 				<li class="c-sidebar-nav-item">
 					<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/usuarios">
 						<i class="fas fa-users c-sidebar-nav-icon"></i> Usuarios

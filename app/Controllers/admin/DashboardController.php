@@ -76,7 +76,23 @@ class DashboardController extends BaseController
 	public function index()
 	{
 		$data = (object)array();
-		$data->cantidad_folios = count($this->_folioModel->asObject()->findAll());
+		$agente = $this->_usuariosModel->asObject()->where('ID', session('ID'))->first();
+		$roles = [1, 2, 3, 4];
+		if (in_array($agente->ROLID, $roles)) {
+			$data->cantidad_folios = count($this->_folioModel->asObject()->findAll());
+			$data->cantidad_abiertos = count($this->_folioModel->asObject()->where('STATUS', 'ABIERTO')->findAll());
+			$data->cantidad_derivados = count($this->_folioModel->asObject()->where('STATUS', 'DERIVADO')->findAll());
+			$data->cantidad_canalizados = count($this->_folioModel->asObject()->where('STATUS', 'CANALIZADO')->findAll());
+			$data->cantidad_expedientes = count($this->_folioModel->asObject()->where('EXPEDIENTEID !=', NULL)->where('AGENTEATENCIONID !=', NULL)->where('AGENTEFIRMAID !=', NULL)->findAll());
+			$data->cantidad_expedientes_no_firmados = count($this->_folioModel->asObject()->where('EXPEDIENTEID !=', NULL)->where('AGENTEATENCIONID !=', NULL)->where('AGENTEFIRMAID', NULL)->findAll());
+		} else {
+			$data->cantidad_folios = count($this->_folioModel->asObject()->where('AGENTEATENCIONID', session('ID'))->findAll());
+			$data->cantidad_abiertos = count($this->_folioModel->asObject()->where('AGENTEATENCIONID', session('ID'))->where('STATUS', 'ABIERTO')->findAll());
+			$data->cantidad_derivados = count($this->_folioModel->asObject()->where('AGENTEATENCIONID', session('ID'))->where('STATUS', 'DERIVADO')->findAll());
+			$data->cantidad_canalizados = count($this->_folioModel->asObject()->where('AGENTEATENCIONID', session('ID'))->where('STATUS', 'CANALIZADO')->findAll());
+			$data->cantidad_expedientes = count($this->_folioModel->asObject()->where('AGENTEATENCIONID', session('ID'))->where('EXPEDIENTEID !=', NULL)->where('AGENTEATENCIONID !=', NULL)->where('AGENTEFIRMAID !=', NULL)->findAll());
+			$data->cantidad_expedientes_no_firmados = count($this->_folioModel->asObject()->where('EXPEDIENTEID !=', NULL)->where('AGENTEATENCIONID !=', NULL)->where('AGENTEFIRMAID', NULL)->findAll());
+		}
 		$this->_loadView('Principal', 'dashboard', '', $data, 'index');
 	}
 
@@ -280,7 +296,7 @@ class DashboardController extends BaseController
 		$agenteId = $this->request->getPost('agenteId');
 
 		$data = [
-			'STATUS' => $status,
+			'STATUS' => $status == 'ATENDIDA' ? 'CANALIZADO' : $status,
 			'NOTASAGENTE' => $motivo,
 			'AGENTEATENCIONID' => $agenteId,
 			'FOLIOID' => $folio

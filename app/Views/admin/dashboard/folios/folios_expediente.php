@@ -21,8 +21,8 @@
 									<th class="text-center">EXPEDIENTE</th>
 									<th class="text-center">DELITO</th>
 									<th class="text-center">ESTADO</th>
+									<th class="text-center">ATENDIDO POR</th>
 									<th class="text-center">VIDEO</th>
-									<!-- <th></th> -->
 								</tr>
 							</thead>
 							<tbody>
@@ -33,8 +33,8 @@
 										<td class="text-center"><?= $folio->EXPEDIENTEID ?></td>
 										<td class="text-center"><?= $folio->DELITODENUNCIA ?></td>
 										<td class="text-center"><?= $folio->STATUS ?></td>
+										<td class="text-center"><?= $folio->NOMBRE ?> <?= $folio->APELLIDO_PATERNO ?> <?= $folio->APELLIDO_MATERNO ?></td>
 										<td class="text-center"><button type="button" class="btn btn-primary" onclick="viewVideo(<?= $folio->FOLIOID ?>)"><i class="fas fa-video"></i></button></td>
-										<!-- <td><button type="button" class="btn btn-primary"><i class="fas fa-eye"></i></button></td> -->
 									</tr>
 								<?php } ?>
 							</tbody>

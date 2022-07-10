@@ -23,6 +23,7 @@
 									<label for="tipo_salida" class="font-weight-bold">Seleccione la salida</label>
 									<select class="form-control" name="tipo_salida" id="tipo_salida">
 										<option value="" selected disabled>Seleccione...</option>
+										<option value="ATENDIDA">DENUNCIA YA ATENDIDA</option>
 										<option value="DERIVADO">DERIVACION</option>
 										<option value="CANALIZADO">CANALIZACION</option>
 										<option value="NAC">NAC</option>
@@ -241,7 +242,7 @@
 		} else {
 			if (municipio_empleado.value != '' && oficina_empleado.value != '' && empleado.value != '') {
 				let descripcion = document.querySelector('#notas_caso_salida').value;
-				
+
 				if (
 					descripcion &&
 					inputFolio.value != '' &&
