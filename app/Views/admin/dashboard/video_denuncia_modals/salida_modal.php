@@ -56,7 +56,7 @@
 								</div>
 								<div id="notas" class="form-group">
 									<label for="notas_caso_salida">Notas</label>
-									<textarea id="notas_caso_salida" class="form-control" placeholder="Notas..." rows="10" maxlength="300"></textarea>
+									<textarea id="notas_caso_salida" class="form-control" placeholder="Notas..." rows="10" maxlength="300" oninput="mayuscTextarea(this)"></textarea>
 								</div>
 								<button type="button" id="btn-finalizar-derivacion" class="btn btn-primary">FINALIZAR</button>
 							</div>

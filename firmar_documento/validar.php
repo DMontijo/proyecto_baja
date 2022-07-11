@@ -23,14 +23,14 @@
 	<link rel="stylesheet" href="../assets/styles/client/style.css">
 
 	<link rel="stylesheet" href="estilos.css?ver=111000011" type="text/css" />
-	<title>Validar documentos</title>
+	<title>FGEBC - Validar documentos</title>
 </head>
 
 <body style="font-family: 'Montserrat', sans-serif;">
 
 	<nav class="navbar" style="background-color:#511229;">
 		<div class="container">
-			<a class="navbar-brand" href="#">
+			<a class="navbar-brand" href="https://cdt.fgebc.gob.mx/admin">
 				<img src="../assets/img/FGEBC_SEJAP_LOGO.png" alt="" width="270" height="auto">
 			</a>
 		</div>
@@ -81,7 +81,7 @@
 
 																<thead>
 																	<tr>
-																		<th valign="middle" align="left" class="" style="background-color:#3e0e20; color: #FFFFFF; padding: 10px; padding-left: 10px; font-size: 11pt;" colspan="2">
+																		<th class="bg-primary text-white text-center" colspan="2">
 																			Seleccione el archivo XML del documento a validar.
 																		</th>
 																	</tr>
@@ -91,7 +91,7 @@
 																		Archivo .xml
 																	</td>
 																	<td valign="middle" height="" align="left">
-																		<input class="form-control form-control-sm" name="ArchXML" id="ArchXML" type="file" onchange="XML_fileSelected(this);" />
+																		<input class="form-control form-control-sm" accept=".xml" name="ArchXML" id="ArchXML" type="file" onchange="XML_fileSelected(this);" />
 																	</td>
 																</tr>
 
@@ -100,7 +100,7 @@
 																		Archivo .pub
 																	</td>
 																	<td valign="middle" height="" align="left">
-																		<input class="form-control form-control-sm" name="ArchPUB" id="ArchPUB" type="file" onchange="XML_fileSelected(this);" />
+																		<input class="form-control form-control-sm" accept=".pub" name="ArchPUB" id="ArchPUB" type="file" onchange="XML_fileSelected(this);" />
 																	</td>
 																</tr>
 

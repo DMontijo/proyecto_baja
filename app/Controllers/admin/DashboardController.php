@@ -5,6 +5,22 @@ namespace App\Controllers\admin;
 use App\Controllers\BaseController;
 use App\Models\DenunciantesModel;
 
+use App\Models\EstadosModel;
+use App\Models\MunicipiosModel;
+use App\Models\LocalidadesModel;
+use App\Models\ColoniasModel;
+use App\Models\HechoLugarModel;
+use App\Models\VehiculoColorModel;
+use App\Models\VehiculoMarcaModel;
+use App\Models\VehiculoModeloModel;
+use App\Models\VehiculoTipoModel;
+use App\Models\PaisesModel;
+use App\Models\DelitosUsuariosModel;
+use App\Models\PersonaIdiomaModel;
+use App\Models\VehiculoDistribuidorModel;
+use App\Models\VehiculoVersionModel;
+use App\Models\VehiculoServicioModel;
+
 use App\Models\FolioPreguntasModel;
 use App\Models\FolioCorrelativoModel;
 use App\Models\FolioModel;
@@ -25,9 +41,6 @@ use App\Models\OficinasModel;
 use App\Models\EmpleadosModel;
 use App\Models\PersonaCalidadJuridicaModel;
 
-use App\Models\MunicipiosModel;
-use App\Models\LocalidadesModel;
-use App\Models\ColoniasModel;
 use App\Models\ConexionesDBModel;
 
 
@@ -38,6 +51,23 @@ class DashboardController extends BaseController
 	{
 		//Models
 		$this->_denunciantesModel = new DenunciantesModel();
+
+		$this->_paisesModel = new PaisesModel();
+		$this->_estadosModel = new EstadosModel();
+		$this->_municipiosModel = new MunicipiosModel();
+		$this->_localidadesModel = new LocalidadesModel();
+		$this->_coloniasModel = new ColoniasModel();
+		$this->_hechoLugarModel = new HechoLugarModel();
+		$this->_coloresVehiculoModel = new VehiculoColorModel();
+		$this->_marcaVehiculoModel = new VehiculoMarcaModel();
+		$this->_lineaVehiculoModel = new VehiculoModeloModel();
+		$this->_tipoVehiculoModel = new VehiculoTipoModel();
+		$this->_distribuidorVehiculoModel = new VehiculoDistribuidorModel();
+		$this->_versionVehiculoModel = new VehiculoVersionModel();
+		$this->_servicioVehiculoModel = new VehiculoServicioModel();
+		$this->_delitosUsuariosModel = new DelitosUsuariosModel();
+		$this->_denunciantesModel = new DenunciantesModel();
+		$this->_personaIdiomaModel = new PersonaIdiomaModel();
 
 		$this->_folioCorrelativoModel = new FolioCorrelativoModel();
 		$this->_folioModel = new FolioModel();
@@ -122,6 +152,20 @@ class DashboardController extends BaseController
 	public function denuncia_anonima()
 	{
 		$data = (object)array();
+		$data->paises = $this->_paisesModel->asObject()->findAll();
+		$data->estados = $this->_estadosModel->asObject()->findAll();
+		$data->municipios = $this->_municipiosModel->asObject()->where('ESTADOID', '2')->findAll();
+		$data->localidades = $this->_localidadesModel->asObject()->findAll();
+		$data->colonias = $this->_coloniasModel->asObject()->findAll();
+		$data->lugares = $this->_hechoLugarModel->asObject()->orderBy('HECHODESCR', 'asc')->findAll();
+		$data->colorVehiculo = $this->_coloresVehiculoModel->asObject()->findAll();
+		$data->marcaVehiculo = $this->_marcaVehiculoModel->asObject()->orderBy('VEHICULOMARCADESCR', 'ASC')->findAll();
+		$data->lineaVehiculo = $this->_lineaVehiculoModel->asObject()->orderBy('VEHICULOMODELODESCR', 'ASC')->findAll();
+		$data->distribuidorVehiculo = $this->_distribuidorVehiculoModel->asObject()->orderBy('VEHICULODISTRIBUIDORDESCR', 'ASC')->findAll();
+		$data->versionVehiculo = $this->_versionVehiculoModel->asObject()->orderBy('VEHICULOVERSIONDESCR', 'ASC')->findAll();
+		$data->servicioVehiculo = $this->_servicioVehiculoModel->asObject()->orderBy('VEHICULOSERVICIODESCR', 'ASC')->findAll();
+		$data->tipoVehiculo = $this->_tipoVehiculoModel->asObject()->orderBy('VEHICULOTIPODESCR', 'ASC')->findAll();
+		$data->delitosUsuarios = $this->_delitosUsuariosModel->asObject()->orderBy('DELITO', 'ASC')->findAll();
 		$this->_loadView('Denuncia anónima', 'denuncia_anonima', '', $data, 'denuncia_anonima');
 	}
 

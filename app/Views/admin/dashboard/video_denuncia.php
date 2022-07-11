@@ -77,7 +77,7 @@
 		<div class="card rounded bg-white shadow">
 			<div class="card-body">
 				<label class="font-weight-bold" for="notas">Breve descripción del caso:</label>
-				<textarea class="form-control" id="notas_mp" placeholder="Descripción del caso..." rows="10" required maxlength="300"></textarea>
+				<textarea class="form-control" id="notas_mp" placeholder="Descripción del caso..." rows="10" required maxlength="300" oninput="mayuscTextarea(this)"></textarea>
 			</div>
 		</div>
 	</div>
@@ -96,6 +96,10 @@
 	const card4 = document.querySelector('#card4');
 	const card5 = document.querySelector('#card5');
 	var respuesta;
+
+	const mayuscTextarea = (e) => {
+		e.value = e.value.toUpperCase();
+	}
 
 	buscar_btn.addEventListener('click', (e) => {
 		$.ajax({

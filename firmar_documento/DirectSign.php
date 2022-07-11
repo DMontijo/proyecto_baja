@@ -499,7 +499,7 @@ $archive = new PclZip($NomArchZIP);
 $v_list = $archive->add($NomArchLlavePub);
 $v_list = $archive->add($NomArchPDF);
 $v_list = $archive->add($NomArchXML);
-$v_list = $archive->add($NomArchTXT);
+// $v_list = $archive->add($NomArchTXT);
 
 
 chmod($NomArchZIP, 0777);
