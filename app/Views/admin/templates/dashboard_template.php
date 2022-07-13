@@ -23,8 +23,9 @@
 
 <body class="c-app c-legacy-theme">
 	<div class="c-sidebar c-sidebar-dark c-sidebar-fixed c-sidebar-lg-show" id="sidebar">
-		<div class="c-sidebar-brand d-lg-down-none">
+		<div class="c-sidebar-brand">
 			<img alt="Logo" class="img-fluid c-sidebar-brand-full" src="<?= base_url() ?>/assets/img/FGEBC.png" style="max-height:50px;" />
+			<img alt="Logo" class="img-fluid c-sidebar-brand-minimized" src="<?= base_url() ?>/assets/img/FGEBC.png" style="max-height:50px;" />
 		</div>
 		<ul class="c-sidebar-nav">
 			<li class="c-sidebar-nav-item">
@@ -38,8 +39,8 @@
 				</a>
 			</li>
 			<li class="c-sidebar-nav-item">
-				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/usuarios">
-					<i class="fas fa-users c-sidebar-nav-icon"></i> Usuarios
+				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/denuncia-anonima">
+					<i class="fas fa-phone-alt c-sidebar-nav-icon"></i> Denuncia anónima
 				</a>
 			</li>
 			<li class="c-sidebar-nav-item">
@@ -47,9 +48,23 @@
 					<i class="fas fa-archive c-sidebar-nav-icon"></i> Folios
 				</a>
 			</li>
+			<?php if (session('ROLID') == 1 || session('ROLID') == 2 || session('ROLID') == 3 || session('ROLID') == 4 || session('ROLID') == 5) : ?>
+				<li class="c-sidebar-nav-item">
+					<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/firmas">
+						<i class="fas fa-file-alt c-sidebar-nav-icon"></i> Firmar documentos
+					</a>
+				</li>
+			<?php endif; ?>
+			<?php if (session('ROLID') == 1 || session('ROLID') == 2 || session('ROLID') == 3) : ?>
+				<li class="c-sidebar-nav-item">
+					<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/usuarios">
+						<i class="fas fa-users c-sidebar-nav-icon"></i> Usuarios
+					</a>
+				</li>
+			<?php endif; ?>
 			<li class="c-sidebar-nav-item">
-				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/firmas">
-					<i class="fas fa-file-alt c-sidebar-nav-icon"></i> Firmas
+				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/perfil">
+					<i class="fas fa-address-card c-sidebar-nav-icon"></i> Perfil
 				</a>
 			</li>
 		</ul>

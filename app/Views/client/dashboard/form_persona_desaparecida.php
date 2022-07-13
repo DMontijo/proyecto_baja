@@ -61,7 +61,7 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="fecha_nacimiento_des" class="form-label fw-bold">Fecha de nacimiento</label>
-		<input type="date" class="form-control" id="fecha_nacimiento_des" name="fecha_nacimiento_des">
+		<input type="date" class="form-control" id="fecha_nacimiento_des" name="fecha_nacimiento_des" max="<?= date("Y-m-d") ?>">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="edad_des" class="form-label fw-bold ">Edad aproximada</label>
@@ -82,6 +82,32 @@
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3" hidden>
 		<label for="edad_des" class="form-label fw-bold">Edad</label>
 		<input class="form-control" id="edad_des" name="edad_des" type="text">
+	</div>
+	<div class="col-12">
+		<hr>
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="facebook_des" class="form-label fw-bold">Facebook</label>
+		<div class="input-group">
+			<span class="input-group-text" id="facebook_vanity"><i class="bi bi-facebook"></i></span>
+			<input type="text" class="form-control" name="facebook_des" id="facebook_des" aria-describedby="facebook_vanity" maxlength="200">
+		</div>
+	</div>
+
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="instagram_des" class="form-label fw-bold">Instagram</label>
+		<div class="input-group">
+			<span class="input-group-text" id="instagram_vanity"><i class="bi bi-instagram"></i></span>
+			<input type="text" class="form-control" name="instagram_des" id="instagram_des" aria-describedby="instagram_vanity" maxlength="200">
+		</div>
+	</div>
+
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="twitter_des" class="form-label fw-bold">Twitter</label>
+		<div class="input-group">
+			<span class="input-group-text" id="twitter_vanity"><i class="bi bi-twitter"></i></span>
+			<input type="text" class="form-control" name="twitter_des" id="twitter_des" aria-describedby="twitter_vanity" maxlength="200">
+		</div>
 	</div>
 	<div class="col-12">
 		<hr>
@@ -176,7 +202,7 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="dia_des" class="form-label fw-bold ">¿Cuando se le vio por ultima vez?</label>
-		<input type="date" class="form-control" id="dia_des" name="dia_des">
+		<input type="date" class="form-control" id="dia_des" name="dia_des" max="<?= date("Y-m-d") ?>">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="lugar_des" class="form-label fw-bold ">¿Dónde se le vio por ultima vez?</label>

@@ -16,21 +16,25 @@
 						<table id="folios_sin_firma" class="table table-bordered table-striped">
 							<thead>
 								<tr>
-									<th>FOLIO</th>
-									<th>EXPEDIENTE</th>
-									<th>FECHA</th>
-									<th>DELITO</th>
-									<th></th>
+									<th class="text-center">FOLIO</th>
+									<th class="text-center">EXPEDIENTE</th>
+									<th class="text-center">FECHA</th>
+									<th class="text-center">DELITO</th>
+									<th class="text-center">ATENDIDO POR</th>
+									<th class="text-center">NOTAS AGENTE</th>
+									<th class="text-center"></th>
 								</tr>
 							</thead>
 							<tbody>
 								<?php foreach ($body_data as $index => $folio) { ?>
 									<tr>
-										<td><?= $folio->FOLIOID ?></td>
-										<td><?= $folio->EXPEDIENTEID ?></td>
-										<td><?= $folio->FECHAREGISTRO ?></td>
-										<td><?= $folio->DELITODENUNCIA ?></td>
-										<td>
+										<td class="text-center"><?= $folio->FOLIOID ?></td>
+										<td class="text-center"><?= $folio->EXPEDIENTEID ?></td>
+										<td class="text-center"><?= $folio->FECHAREGISTRO ?></td>
+										<td class="text-center"><?= $folio->DELITODENUNCIA ?></td>
+										<td class="text-center"><?= $folio->NOMBRE ?> <?= $folio->APELLIDO_PATERNO ?> <?= $folio->APELLIDO_MATERNO ?></td>
+										<td class="text-center"><?= $folio->NOTASAGENTE ?></td>
+										<td class="text-center">
 											<form id="<?= 'form_' . $folio->FOLIOID ?>" action="<?= base_url('admin/dashboard/firmar_folio') ?>" method="POST">
 												<input type="text" name="folio" value="<?= $folio->FOLIOID ?>" hidden>
 												<button type="submit" class="btn btn-primary">FIRMADO</button>

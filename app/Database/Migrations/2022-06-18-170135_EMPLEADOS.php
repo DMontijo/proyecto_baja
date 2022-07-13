@@ -38,9 +38,17 @@ class EMPLEADOS extends Migration
 				'type' => 'INT',
 				'unsigned' => TRUE,
 			],
+			'OFICINADESCR' => [
+				'type' => 'VARCHAR',
+				'constraint' => '255',
+			],
 			'AREAID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
+			],
+			'AREADESCR' => [
+				'type' => 'VARCHAR',
+				'constraint' => '255',
 			],
 			'FECHA DATETIME DEFAULT CURRENT_TIMESTAMP',
 		]);

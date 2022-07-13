@@ -15,35 +15,16 @@ class CorreoController extends BaseController
 	public function sendEmail()
 	{
 		$to = $this->request->getVar('email');
-
-		$rndno = rand(100000, 999999); //OTP generate
-		$message = urlencode($rndno);
+		$subject = 	$this->request->getVar('subject');
+		$message = 	$this->request->getVar('message');
 
 		$email = \Config\Services::email();
 		$email->setTo($to);
-		$email->setFrom('andrea.solorzano@yocontigo-it.com', 'FGEBC - TEST');
-		$email->setSubject('Subject');
-		$email->setMessage("Token: " . $message);
-
-		date_default_timezone_set('America/Tijuana');
-		$dateTimeVariable = date("Y-m-d H:i:s");
-
-		$nuevafecha = strtotime('+1 minute', strtotime($dateTimeVariable));
-		$convert = date("Y-m-d H:i:s", $nuevafecha);
-
-		$datos = [
-			'CODIGO_OTP' => $message,
-			'CORREO' => $to,
-			'VENCIMIENTO' => $convert,
-		];
-
-		$model = new OTPModel();
-		$model->insert($datos);
+		$email->setSubject($subject);
+		$email->setMessage($message);
 
 		if ($email->send()) {
-			// echo '<script>alert("Email successfully sent")</script>';
-			// echo view('client/registro/otp_validation_modal', $data);
-			var_dump(json_encode($datos));
+			return redirect()->to(base_url('/email'));
 		} else {
 			$data = $email->printDebugger(['headers']);
 			var_dump(json_encode($data));
@@ -64,8 +45,6 @@ class CorreoController extends BaseController
 
 			$email = \Config\Services::email();
 			$email->setTo($to);
-			$email->setFrom('andrea.solorzano@yocontigo-it.com', 'Prueba');
-
 			$email->setSubject($subject);
 			$email->setMessage('OTP code: ' . $message);
 

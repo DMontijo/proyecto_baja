@@ -17,22 +17,27 @@ class DERIVACIONESATENCION extends Migration
 			'MUNICIPIO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '250',
+				'null' => TRUE,
 			],
 			'INSTITUCIONREMISIONID' => [
 				'type' => 'SMALLINT',
 				'constrait'		 => '3',
+				'null' => TRUE,
 			],
 			'INSTITUCIONREMISIONDESCR' => [
 				'type' => 'VARCHAR',
 				'constraint' => '50',
+				'null' => TRUE,
 			],
 			'DOMICILIO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '250',
+				'null' => TRUE,
 			],
 			'TELEFONO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '50',
+				'null' => TRUE,
 			],
 		]);
 		$this->forge->addKey('ID', TRUE);

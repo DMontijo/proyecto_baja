@@ -46,11 +46,6 @@
 					</div>
 
 					<div class="col-12 col-sm-6 mb-3">
-						<label for="nacionalidad_modal" class="form-label fw-bold input-required">Nacionalidad:</label>
-						<input type="text" class="form-control" id="nacionalidad_modal" name="nacionalidad_modal" disabled>
-					</div>
-
-					<div class="col-12 col-sm-6 mb-3">
 						<label for="escolaridad_modal" class="form-label fw-bold input-required">Escolaridad:</label>
 						<input class="form-control" id="escolaridad_modal" name="escolaridad_modal" type="text" disabled>
 					</div>
@@ -67,6 +62,16 @@
 					<div class="col-12 col-sm-6 mb-3">
 						<label for="cp_modal" class="form-label fw-bold">Código Postal: </label>
 						<input type="text" class="form-control" id="cp_modal" name="cp_modal" disabled>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
+						<label for="nacionalidad_modal" class="form-label fw-bold input-required">Nacionalidad:</label>
+						<input type="text" class="form-control" id="nacionalidad_modal" name="nacionalidad_modal" disabled>
+					</div>
+					
+					<div class="col-12 col-sm-6 mb-3">
+						<label for="idioma_modal" class="form-label fw-bold">Idioma: </label>
+						<input type="text" class="form-control" id="idioma_modal" name="idioma_modal" disabled>
 					</div>
 
 					<div class="col-12 col-sm-6 mb-3">
@@ -163,8 +168,18 @@
 					</div>
 
 					<div class="col-12 col-sm-6 mb-3">
-						<label for="idioma_modal" class="form-label fw-bold">Idioma: </label>
-						<input type="text" class="form-control" id="idioma_modal" name="idioma_modal" disabled>
+						<label for="facebook_modal" class="form-label fw-bold">Facebook: </label>
+						<input type="text" class="form-control" id="facebook_modal" name="facebook_modal" disabled>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
+						<label for="instagram_modal" class="form-label fw-bold">Instagram: </label>
+						<input type="text" class="form-control" id="instagram_modal" name="instagram_modal" disabled>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
+						<label for="twitter_modal" class="form-label fw-bold">Twitter: </label>
+						<input type="text" class="form-control" id="twitter_modal" name="twitter_modal" disabled>
 					</div>
 
 					<div class="col-12">

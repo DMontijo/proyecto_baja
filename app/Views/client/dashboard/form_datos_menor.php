@@ -12,6 +12,35 @@
 		<label for="apellido_materno_menor" class="form-label fw-bold">Apellido materno</label>
 		<input type="text" class="form-control" id="apellido_materno_menor" name="apellido_materno_menor" maxlength="50">
 	</div>
+	<div class="col-12">
+		<hr>
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="facebook_menor" class="form-label fw-bold">Facebook</label>
+		<div class="input-group">
+			<span class="input-group-text" id="facebook_vanity"><i class="bi bi-facebook"></i></span>
+			<input type="text" class="form-control" name="facebook_menor" id="facebook_menor" aria-describedby="facebook_vanity" maxlength="200">
+		</div>
+	</div>
+
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="instagram_menor" class="form-label fw-bold">Instagram</label>
+		<div class="input-group">
+			<span class="input-group-text" id="instagram_vanity"><i class="bi bi-instagram"></i></span>
+			<input type="text" class="form-control" name="instagram_menor" id="instagram_menor" aria-describedby="instagram_vanity" maxlength="200">
+		</div>
+	</div>
+
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="twitter_menor" class="form-label fw-bold">Twitter</label>
+		<div class="input-group">
+			<span class="input-group-text" id="twitter_vanity"><i class="bi bi-twitter"></i></span>
+			<input type="text" class="form-control" name="twitter_menor" id="twitter_menor" aria-describedby="twitter_vanity" maxlength="200">
+		</div>
+	</div>
+	<div class="col-12">
+		<hr>
+	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="pais_menor" class="form-label fw-bold input-required">País</label>
 		<select class="form-select" id="pais_menor" name="pais_menor">
@@ -60,7 +89,7 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="fecha_nacimiento_menor" class="form-label fw-bold input-required">Fecha de nacimiento</label>
-		<input type="date" class="form-control" id="fecha_nacimiento_menor" name="fecha_nacimiento_menor">
+		<input type="date" class="form-control" id="fecha_nacimiento_menor" name="fecha_nacimiento_menor" max="<?= date("Y-m-d") ?>">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="sexo_menor" class="form-label fw-bold input-required">Sexo</label>

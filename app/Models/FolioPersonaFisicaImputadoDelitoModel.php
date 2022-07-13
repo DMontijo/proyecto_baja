@@ -8,7 +8,6 @@ class FolioPersonaFisicaImputadoDelitoModel extends Model
 {
 	protected $DBGroup          = 'default';
 	protected $table            = 'FOLIOPERSONAFISIMPDELITO';
-	protected $primaryKey       = 'ID';
 	protected $allowedFields    = [
 		'FOLIOID',
 		'PERSONAFISICAID',

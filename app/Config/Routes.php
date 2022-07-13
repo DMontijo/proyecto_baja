@@ -33,6 +33,7 @@ $routes->setAutoRoute(true);
 // route since we don't have to scan directories.
 $routes->get('/', 'HomeController::index');
 $routes->get('derivaciones', 'DerivacionesController::index');
+$routes->get('canalizaciones', 'DerivacionesController::canalizaciones');
 
 /**
  *  Admin Routes
@@ -53,6 +54,7 @@ $routes->group('admin', function ($routes) {
 		$routes->post('nuevo_usuario', 'admin/DashboardController::crear_usuario');
 
 		$routes->get('video-denuncia', 'admin/DashboardController::video_denuncia');
+		$routes->get('denuncia-anonima', 'admin/DashboardController::denuncia_anonima');
 
 		$routes->get('folios', 'admin/FoliosController::index');
 		$routes->get('folios_abiertos', 'admin/FoliosController::folios_abiertos');
@@ -61,6 +63,9 @@ $routes->group('admin', function ($routes) {
 		$routes->get('folios_expediente', 'admin/FoliosController::folios_expediente');
 		$routes->get('folios_sin_firma', 'admin/FoliosController::folios_sin_firma');
 		$routes->post('firmar_folio', 'admin/FoliosController::firmar_folio');
+
+		$routes->get('perfil', 'admin/DashboardController::perfil');
+		$routes->post('update_password', 'admin/DashboardController::update_password');
 
 		$routes->get('certificadoMedico', 'PDFController::certificadoMedico');
 		$routes->get('constancia-video-denuncia', 'PDFController::constanciaVideoDenuncia');
@@ -99,7 +104,8 @@ $routes->group('denuncia', function ($routes) {
  *  Data get, emails and OTP
  * */
 
-$routes->get('email', 'CorreoController::index');
+// $routes->get('email', 'CorreoController::index');
+// $routes->post('email', 'CorreoController::sendEmail');
 
 $routes->group('data', function ($routes) {
 	$routes->post('exist-email', 'client/UserController::existEmail');
@@ -122,10 +128,9 @@ $routes->group('data', function ($routes) {
 	$routes->post('sendOTP', 'OTPController::sendEmailOTP');
 	$routes->post('getLastOTP', 'OTPController::getLastOTP');
 
-	//VIDEODENUNCIA
-	
-	$routes->post('save-folio', 'admin/DashboardController::video_denuncia');
-	
+	//Link
+	$routes->post('get-video-link', 'admin/DashboardController::getVideoLink');
+
 	//VEHÍCULOS
 	$routes->post('get-marca-by-dist', 'client/DashboardController::getMarcaByDist');
 	$routes->post('get-modelo-by-marca', 'client/DashboardController::getModeloByMarca');
@@ -133,6 +138,8 @@ $routes->group('data', function ($routes) {
 
 	//SAVE IN JUSTICIA DATABASE
 	$routes->post('save-in-justicia', 'admin/DashboardController::saveInJusticia');
+	$routes->post('restore-folio', 'admin/DashboardController::restoreFolio');
+
 	$routes->post('get-persona-fisica-by-id', 'admin/DashboardController::findPersonaFisicaById');
 	$routes->post('get-persona-domicilio-by-id', 'admin/DashboardController::findPersonadDomicilioById');
 	$routes->post('get-persona-vehiculo-by-id', 'admin/DashboardController::findPersonadVehiculoById');

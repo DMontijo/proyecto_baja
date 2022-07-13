@@ -7,47 +7,37 @@
 <?= $this->section('content') ?>
 
 <div class="container">
-
 	<!--Versión escritorio-->
-
 	<div class="row mb-5">
 		<div class="col-12">
 			<div class="card bg-primary shadow mb-4" style="font-size:14px;background:url(<?= base_url('/assets/img/banner/LINEAS_BANNER.png') ?>);background-repeat: no-repeat;background-size: cover !important;background-position-y: top;border-radius:10px;">
-				<div class="row py-5 px-5">
-					<div class="col-lg-7 col-12 fw-bold text-white ">
-						<p>Los delitos que se enuncian a continuación deberá ser denunciados de manera personal ante la Unidad de Investigación correspondiente.</p>
-						<ul class="ps-5 m-0">
-							<li>Violación</li>
-							<li>Secuestro</li>
-							<li>Tortura</li>
-							<li>Trata de personas</li>
-							<li>Delitos cometidos por personal adscrito a la Físcalia General del Estado de Baja California</li>
-							<li>Homicidio en todas sus modalidades</li>
-							<li>Delitos contra la salud modalidad narcomenudeo</li>
-							<li>Abuso sexual cuando la víctima sea menor de edad</li>
-							<li>Tráfico de menores</li>
-						</ul>
-					</div>
-					<div class="col-lg-5 col-12 d-flex flex-column justify-content-between text-center">
-						<a class="p-0 my-3" href="tel:911" role="button"><img src="<?= base_url('/assets/img/banner/911_BANNER.png') ?>" class="img-fluid"></a>
-						<a class="p-0 my-3"  href="tel:089" role="button" role="button"><img src="<?= base_url('/assets/img/banner/089_BANNER.png') ?>" class="img-fluid"></a>
+				<div class="row p-4">
+					<div class="col-12">
+						<div class="row">
+							<div class="col-12 col-md-6">
+								<a class="p-0 my-3" href="tel:911" role="button"><img src="<?= base_url('/assets/img/banner/911_BANNER.png') ?>" class="img-fluid"></a>
+							</div>
+							<div class="col-12 col-md-6 mt-4 mt-md-0">
+								<a class="p-0 my-3" href="tel:8003432220" role="button" role="button"><img src="<?= base_url('/assets/img/banner/089_BANNER.png') ?>" class="img-fluid"></a>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="col-lg-10 offset-lg-1 col-12 text-white">
+		<div class="col-lg-12 col-12 text-white">
 			<div class="card" style="font-size:13px;background:var(--azul);border-radius:10px;">
 				<div class="card-body">
-					<div class="row">
-						<div class="col-10">
-							<p>Para realizar una video denuncia ó solicitar constancia de extravío es importante que aceptes los <a href="<?= base_url() ?>/assets/documentos/Terminos_Y_Condiciones.pdf" target="_blank" class="text-yellow">términos y condiciones</a> y <a href="<?= base_url() ?>/assets/documentos/Aviso_De_Privacidad_De_Datos.pdf" target="_blank" class="text-yellow">aviso de privacidad de datos</a>.
-								<br>Puedes consultar el aviso de privacidad <a href="<?= base_url() ?>/assets/documentos/Aviso_De_Privacidad_De_Datos.pdf" target="_blank" class="text-yellow">aquí</a>. Puedes consultar los términos y condiciones <a href="<?= base_url() ?>/assets/documentos/Terminos_Y_Condiciones.pdf" target="_blank" class="text-yellow">aquí</a>
+					<div class="row m-0 p-0">
+						<div class="col-12 col-lg-9">
+							<p class="" style="font-size:16px;text-align:justify;">Para realizar una video denuncia ó solicitar constancia de extravío es importante que aceptes los términos y condiciones y aviso de privacidad de datos.
+								<br><br>Puedes consultar los términos y condiciones <a href="<?= base_url() ?>/assets/documentos/Terminos_Y_Condiciones.pdf" target="_blank" class="text-yellow">aquí</a>. Puedes consultar el aviso de privacidad <a href="<?= base_url() ?>/assets/documentos/Aviso_De_Privacidad_De_Datos.pdf" target="_blank" class="text-yellow">aquí</a>.
 							</p>
 						</div>
-						<div class="col-2 d-flex align-content-center justify-content-end">
+						<div class="col-12 col-lg-3 d-flex align-items-center justify-content-lg-end justify-content-center text-center py-4">
 							<div class="form-check d-inline-block m-0 p-0" style="min-height: 0px!important;">
-								<input title="Aceptar términos y condiciones y aviso de privacidad." class="form-check-input" type="checkbox" name="miCheck" id="aceptar_todos">
-								<label class="form-check-label" for="AceptarTodos">Aceptar todos</label>
+								<input title="Aceptar términos y condiciones y aviso de privacidad." class="form-check-input" type="checkbox" name="aceptar_todos" id="aceptar_todos">
+								<label class="form-check-label" for="aceptar_todos" style="font-size:16px;text-align:justify;">Aceptar todos</label>
 							</div>
 						</div>
 					</div>
@@ -58,7 +48,7 @@
 
 	<section class="row d-none d-lg-block">
 		<div class="col-lg-4 offset-lg-4 d-none d-md-block text-center">
-			<div class="card text-center bg-transparent border-0" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Para continuar debes aceptar el Aviso de Privacidad y los Términos y Condiciones">
+			<div class="card text-center bg-transparent border-0" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Para continuar debes aceptar el aviso de privacidad de datos y los términos y condiciones">
 				<div class="card-body">
 					<a href="<?= base_url() ?>/denuncia" class="text-decoration-none" onclick="handleClickBTN(event)" name="VideoDenuncia" id="VideoDenuncia">
 						<img src="<?= base_url() ?>/assets/img/icons/video_denuncia.png" class="w-75" alt="Video Denuncia">
@@ -84,8 +74,17 @@
 			</a>
 		</div>
 	</section>
-
+	<section>
+		<div class="row">
+			<div class="col-12 text-center">
+				<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tutorial_modal">
+					<i class="bi bi-play-btn-fill"></i> Ver video tutorial
+				</button>
+			</div>
+		</div>
+	</section>
 </div>
+<?php include('tutorial_modal.php') ?>
 
 <script>
 	function handleClickBTN(e) {
@@ -99,6 +98,16 @@
 			})
 		}
 	}
+
+	document.querySelector('#tutorial_modal').addEventListener('shown.bs.modal', () => {
+		document.querySelector('#tutorial_video').play();
+		console.log('Dando play');
+	});
+
+	document.querySelector('#tutorial_modal').addEventListener('hidden.bs.modal', () => {
+		document.querySelector('#tutorial_video').pause();
+	});
 </script>
+
 
 <?= $this->endSection() ?>

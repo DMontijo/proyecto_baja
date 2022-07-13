@@ -108,11 +108,11 @@ class FOLIOVEHICULO extends Migration
 				'null' => TRUE,
 			],
 			'FOTO' => [
-				'type' => 'TEXT',
+				'type' => 'BLOB',
 				'null' => TRUE,
 			],
 			'DOCUMENTO' => [
-				'type' => 'TEXT',
+				'type' => 'BLOB',
 				'null' => TRUE,
 			],
 			'PARTICIPAESTADO' => [

@@ -33,7 +33,7 @@
 										<td class="text-center"><?= $folio->FECHAREGISTRO ?></td>
 										<td class="text-center"><?= $folio->DELITODENUNCIA ?></td>
 										<td class="text-center"><?= $folio->STATUS ?></td>
-										<td class="text-center"><?= $folio->HECHONARRACION ?></td>
+										<td class="text-center"><?= $folio->NOTASAGENTE ?></td>
 										<td class="text-center"><?= $folio->NOMBRE ?> <?= $folio->APELLIDO_PATERNO ?> <?= $folio->APELLIDO_MATERNO ?></td>
 										<td class="text-center"><?= $folio->NOMBRE_ROL ?></td>
 										<!-- <td class="text-center"><button type="button" class="btn btn-primary"><i class="fas fa-eye"></i></button></td> -->

@@ -1,5 +1,5 @@
 <div class="modal fade shadow" id="folio_domicilio_modal" tabindex="-1" role="dialog" aria-labelledby="DomicilioModal" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered mw-100 w-50">
+	<div class="modal-dialog modal-dialog-centered mw-100 w-75">
 		<div class="modal-content">
 			<div class="modal-header bg-secondary text-primary">
 				<h5 class="modal-title font-weight-bold">DOMICILIO</h5>

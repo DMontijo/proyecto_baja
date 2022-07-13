@@ -1,7 +1,6 @@
-
 <div class="row">
-	
-<div class="col-12">
+
+	<div class="col-12">
 		<p class="font-weight-bold text-center mt-3">PERSONA DESAPARECIDA</p>
 	</div>
 	<hr>

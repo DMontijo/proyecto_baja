@@ -125,13 +125,10 @@
 <body style="margin: 0 !important; padding: 0 !important; background-color: #7D7D7D!important;" bgcolor="#7D7D7D">
 	<table border="0" cellpadding="0" cellspacing="0" width="100%">
 		<tr>
-			<td align="center" style="background-color: #7D7D7D!important;padding-top: 50px;padding-bottom: 50px"
-				bgcolor="#7D7D7D">
+			<td align="center" style="background-color: #7D7D7D!important;padding-top: 50px;padding-bottom: 50px" bgcolor="#7D7D7D">
 				<table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:600px;">
 					<tr>
-						<td border="0" valign="top"
-							style="font-size: 0; background-color: #511229!important;height: 294px;background-image: url('https://yocontigo-it.com.mx/justicia/public/assets/img/email/HEADER_CORREO.jpg');background-repeat: no-repeat; background-size: 600px 294px;"
-							bgcolor="#511229"></td>
+						<td border="0" valign="top" style="<?= "font-size: 0; background-color: #511229!important;height: 294px;background-image: url('" . base_url('assets/img/email/HEADER_CORREO.jpg') . "');background-repeat: no-repeat; background-size: 600px 294px;" ?>" bgcolor="#511229"></td>
 					</tr>
 					<tr>
 						<td style="padding: 0px 50px 50px 50px; background-color: #ffffff!important;" bgcolor="#ffffff">

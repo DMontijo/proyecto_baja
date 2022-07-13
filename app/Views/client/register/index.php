@@ -8,24 +8,16 @@
 <div class="container m-auto">
 	<div class="col-12">
 		<div class="card bg-primary shadow mb-4" style="font-size:14px;background:url(<?= base_url('/assets/img/banner/LINEAS_BANNER.png') ?>);background-repeat: no-repeat;background-size: cover !important;background-position-y: top;border-radius:10px;">
-			<div class="row py-5 px-5">
-				<div class="col-lg-7 col-12 fw-bold text-white ">
-					<p>Los delitos que se enuncian a continuación deberá ser denunciados de manera personal ante la Unidad de Investigación correspondiente.</p>
-					<ul class="ps-5 m-0">
-						<li>Violación</li>
-						<li>Secuestro</li>
-						<li>Tortura</li>
-						<li>Trata de personas</li>
-						<li>Delitos cometidos por personal adscrito a la Físcalia General del Estado de Baja California</li>
-						<li>Homicidio en todas sus modalidades</li>
-						<li>Delitos contra la salud modalidad narcomenudeo</li>
-						<li>Abuso sexual cuando la víctima sea menor de edad</li>
-						<li>Tráfico de menores</li>
-					</ul>
-				</div>
-				<div class="col-lg-5 col-12 d-flex flex-column justify-content-between text-center">
-					<a class="p-0 my-3" href="tel:911" role="button"><img src="<?= base_url('/assets/img/banner/911_BANNER.png') ?>" class="img-fluid"></a>
-					<a class="p-0 my-3" href="tel:089" role="button" role="button"><img src="<?= base_url('/assets/img/banner/089_BANNER.png') ?>" class="img-fluid"></a>
+			<div class="row p-4">
+				<div class="col-12">
+					<div class="row">
+						<div class="col-12 col-md-6">
+							<a class="p-0 my-3" href="tel:911" role="button"><img src="<?= base_url('/assets/img/banner/911_BANNER.png') ?>" class="img-fluid"></a>
+						</div>
+						<div class="col-12 col-md-6 mt-4 mt-md-0">
+							<a class="p-0 my-3" href="tel:8003432220" role="button" role="button"><img src="<?= base_url('/assets/img/banner/089_BANNER.png') ?>" class="img-fluid"></a>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -62,14 +54,17 @@
 						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="correo" class="form-label fw-bold input-required">Correo electrónico</label>
-							<input type="email" class="form-control" id="correo" name="correo" maxlength="100" required>
+							<div class="input-group">
+								<span class="input-group-text" id="correo_vanity"><i class="bi bi-envelope-fill"></i></span>
+								<input type="email" class="form-control" name="correo" id="correo" aria-describedby="correo_vanity" maxlength="100" required>
+							</div>
 							<div class="invalid-feedback">
 								El correo esta erroneo
 							</div>
 						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="fecha_nacimiento" class="form-label fw-bold input-required">Fecha de nacimiento</label>
-							<input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" required>
+							<input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" required max="<?= date("Y-m-d") ?>">
 							<div class="invalid-feedback">
 								La fecha de nacimiento es obligatoria
 							</div>
@@ -79,11 +74,11 @@
 							<label for="sexo" class="form-label fw-bold input-required">Sexo</label>
 							<br>
 							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio" name="sexo" value="M" required>
+								<input class="form-check-input" type="radio" name="sexo" id="sexo" value="M" required>
 								<label class="form-check-label" for="flexRadioDefault1">MASCULINO</label>
 							</div>
 							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio" name="sexo" value="F" required>
+								<input class="form-check-input" type="radio" name="sexo" id="sexo" value="F" required>
 								<label class="form-check-label" for="flexRadioDefault2">FEMENINO</label>
 							</div>
 						</div>
@@ -201,16 +196,15 @@
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="telefono" class="form-label fw-bold input-required">Número de télefono</label>
-							<input type="number" class="form-control" id="telefono" name="telefono" required maxlength="20" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
-							<div class="invalid-feedback">
-								El número télefono es obligatorio
-							</div>
+							<input type="number" class="form-control" id="telefono" name="telefono" required min="111111" max="99999999999999999999" minlenght="6" maxlength="20" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+							<!-- <small>Mínimo 6 digitos</small> -->
 							<input type="number" id="codigo_pais" name="codigo_pais" maxlength="3" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" hidden>
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="telefono2" class="form-label fw-bold">Número de télefono 2 (opcional)</label>
-							<input type="number" class="form-control" id="telefono2" name="telefono2" maxlength="20" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+							<input type="number" class="form-control" id="telefono2" name="telefono2" min="111111" max="99999999999999999999" minlenght="6" maxlength="20" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+							<!-- <small>Mínimo 6 digitos</small> -->
 							<input type="number" id="codigo_pais_2" name="codigo_pais_2" maxlength="3" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" hidden>
 						</div>
 
@@ -256,19 +250,6 @@
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="ocupacion" class="form-label fw-bold">Ocupación</label>
-							<input type="text" class="form-control" id="ocupacion" name="ocupacion" maxlength="100">
-						</div>
-
-						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="discapacidad" class="form-label fw-bold">¿Padece alguna discapacidad?</label>
-							<input type="text" class="form-control" id="discapacidad" name="discapacidad" maxlength="100">
-							<div class="invalid-feedback">
-								El campo discapacidad es obligatorio.
-							</div>
-						</div>
-
-						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="escolaridad" class="form-label fw-bold input-required">Escolaridad</label>
 							<select class="form-select" id="escolaridad" name="escolaridad" required>
 								<option selected disabled value="">Seleccione la escolaridad</option>
@@ -286,10 +267,43 @@
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+							<label for="ocupacion" class="form-label fw-bold">Ocupación</label>
+							<input type="text" class="form-control" id="ocupacion" name="ocupacion" maxlength="100">
+						</div>
+
+						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+							<label for="discapacidad" class="form-label fw-bold">¿Padece alguna discapacidad?</label>
+							<input type="text" class="form-control" id="discapacidad" name="discapacidad" maxlength="100">
+						</div>
+
+						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+							<label for="facebook" class="form-label fw-bold">Facebook</label>
+							<div class="input-group">
+								<span class="input-group-text" id="facebook_vanity"><i class="bi bi-facebook"></i></span>
+								<input type="text" class="form-control" name="facebook" id="facebook" aria-describedby="facebook_vanity" maxlength="200">
+							</div>
+						</div>
+
+						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+							<label for="instagram" class="form-label fw-bold">Instagram</label>
+							<div class="input-group">
+								<span class="input-group-text" id="instagram_vanity"><i class="bi bi-instagram"></i></span>
+								<input type="text" class="form-control" name="instagram" id="instagram" aria-describedby="instagram_vanity" maxlength="200">
+							</div>
+						</div>
+
+						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+							<label for="twitter" class="form-label fw-bold">Twitter</label>
+							<div class="input-group">
+								<span class="input-group-text" id="twitter_vanity"><i class="bi bi-twitter"></i></span>
+								<input type="text" class="form-control" name="twitter" id="twitter" aria-describedby="twitter_vanity" maxlength="200">
+							</div>
+						</div>
+
+						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="documento" class="form-label fw-bold input-required">Foto de identificación</label>
 							<img class="img-fluid d-none py-2" src="" id="img_preview">
-							<input class="form-control" type="file" id="documentoDenunciante" required name="documentoDenunciante" accept="image/jpeg,image/jpg" capture="user">
-							<!-- <input class="form-control" type="file" id="documento" name="documento" accept="image/*"> -->
+							<input class="form-control" type="file" id="documento" name="documento" accept="image/jpeg,image/jpg" required>
 							<textarea id="documento_text" name="documento_text" hidden></textarea>
 							<div class="form-text"><button id="photo-btn" class="btn btn-link p-0 m-0" style="font-size:14px;" type="button">Para tomar foto clic aquí <i class="bi bi-camera-fill"></i></button></div>
 						</div>
@@ -540,10 +554,8 @@
 				event.preventDefault();
 				event.stopPropagation();
 				enviar_datos();
-				console.log('En submit con datos erroneos');
 			} else {
 				event.preventDefault();
-				console.log('En submit con datos');
 				enviar_datos();
 				$('#information_validation').modal('show');
 			}
@@ -563,16 +575,17 @@
 		})
 
 		document.querySelector('#fecha_nacimiento').addEventListener('change', (e) => {
-			let fecha = e.target.value;
+			let fecha = e.target.value + 'T00:00:00';
 			let hoy = new Date();
 			let cumpleanos = new Date(fecha);
 			let edad = hoy.getFullYear() - cumpleanos.getFullYear();
 			let m = hoy.getMonth() - cumpleanos.getMonth();
 
-			document.querySelector('#edad').value = edad;
 			if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
 				edad--;
 			}
+
+			document.querySelector('#edad').value = edad;
 		});
 
 		document.querySelector('#fecha_nacimiento').addEventListener('blur', (e) => {
@@ -824,7 +837,7 @@
 			}
 		});
 
-		document.querySelector('#documentoDenunciante').addEventListener('change', (e) => {
+		document.querySelector('#documento').addEventListener('change', (e) => {
 			let documento_identidad = document.querySelector('#documento_text');
 			let documento_identidad_modal = document.querySelector('#img_identificacion_modal');
 			let preview = document.querySelector('#img_preview');
@@ -908,6 +921,10 @@
 		let codigo_pais = document.querySelector("#codigo_pais").value ? document.querySelector("#codigo_pais").value : '';
 		let codigo_pais_2 = document.querySelector("#codigo_pais_2").value ? document.querySelector("#codigo_pais_2").value : '';
 
+		let facebook = document.querySelector("#facebook").value ? document.querySelector("#facebook").value : '';
+		let instagram = document.querySelector("#instagram").value ? document.querySelector("#instagram").value : '';
+		let twitter = document.querySelector("#twitter").value ? document.querySelector("#twitter").value : '';
+
 		let tipo = document.querySelector("#identificacion").value ? document.querySelector("#identificacion").value : '';
 		let numeroid = document.querySelector("#numero_ide").value ? document.querySelector("#numero_ide").value : '';
 		let edoc = document.querySelector("#e_civil").value ? document.querySelector("#e_civil").value : '';
@@ -937,6 +954,10 @@
 		document.querySelector('#interior_modal').value = ninterior;
 		document.querySelector('#telefono_modal').value = telefono;
 		document.querySelector('#telefono2_modal').value = telefono2;
+
+		document.querySelector('#facebook_modal').value = facebook;
+		document.querySelector('#instagram_modal').value = instagram;
+		document.querySelector('#twitter_modal').value = twitter;
 
 		document.querySelector('#identificacion_modal').value = tipo;
 		document.querySelector('#numero_ide_modal').value = numeroid;
@@ -1053,7 +1074,7 @@
 
 						let foto = $canvas.toDataURL();
 
-						let documento = document.querySelector('#documentoDenunciante');
+						let documento = document.querySelector('#documento');
 						let documento_identidad = document.querySelector('#documento_text');
 						let documento_identidad_modal = document.querySelector('#img_identificacion_modal');
 						let preview = document.querySelector('#img_preview');

@@ -4,16 +4,20 @@
 		<input class="form-control" type="text" id="es_menor" name="es_menor">
 	</div>
 	<div class="col-6">
-		<label for="eres_tu" class="form-label font-weight-bold">¿Eres tu la víctima u ofendido?</label>
-		<input class="form-control" type="text" id="eres_tu" name="eres_tu">
-	</div>
-	<div class="col-6">
 		<label for="es_tercera_edad" class="form-label font-weight-bold">¿La víctima u ofendido es de la tercera edad?</label>
 		<input class="form-control" type="text" id="es_tercera_edad" name="es_tercera_edad">
 	</div>
 	<div class="col-6">
 		<label for="tiene_discapacidad" class="form-label font-weight-bold">¿La víctima u ofendido del delito tiene alguna discapacidad?</label>
 		<input class="form-control" type="text" id="tiene_discapacidad" name="tiene_discapacidad">
+	</div>
+	<div class="col-6">
+		<label for="es_vulnerable" class="form-label font-weight-bold input-required">¿La víctima u ofendido es de un grupo vulnerable?</label>
+		<input class="form-control" type="text" id="es_vulnerable" name="es_vulnerable">
+	</div>
+	<div class="col-6">
+		<label for="vulnerable_descripcion" class="form-label font-weight-bold input-required">Grupo vulnerable descripción</label>
+		<input type="text" class="form-control" id="vulnerable_descripcion" name="vulnerable_descripcion">
 	</div>
 	<div class="col-6">
 		<label for="fue_con_arma" class="form-label font-weight-bold">¿El delito a denunciar fue cometido con arma de fuego, arma blanca u objeto contundente?</label>

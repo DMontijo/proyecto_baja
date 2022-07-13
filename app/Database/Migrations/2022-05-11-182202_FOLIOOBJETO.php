@@ -9,11 +9,6 @@ class FOLIOOBJETO extends Migration
 	public function up()
 	{
 		$this->forge->addField([
-			'ID' => [
-				'type' => 'INT',
-				'unsigned' => TRUE,
-				'auto_increment' => TRUE
-			],
 			'FOLIOID' => [
 				'type' => 'VARCHAR',
 				'constraint' => '16',
@@ -83,7 +78,7 @@ class FOLIOOBJETO extends Migration
 				'null' => TRUE,
 			],
 			'FOTO' => [
-				'type' => 'TEXT',
+				'type' => 'BLOB',
 				'null' => TRUE,
 			],
 			'PARTICIPAESTADO' => [
@@ -95,7 +90,8 @@ class FOLIOOBJETO extends Migration
 			'FECHAREGISTRO DATETIME DEFAULT CURRENT_TIMESTAMP',
 			'FECHAACTUALIZACION DATETIME ON UPDATE CURRENT_TIMESTAMP',
 		]);
-		$this->forge->addKey('ID', TRUE);
+		$this->forge->addKey('FOLIOID', TRUE);
+		$this->forge->addKey('OBJETOID', TRUE);
 		$this->forge->createTable('FOLIOOBJETO');
 	}
 

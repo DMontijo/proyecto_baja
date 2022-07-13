@@ -8,5 +8,11 @@ class PersonaTipoIdentificacionModel extends Model
 {
 	protected $DBGroup          = 'default';
 	protected $table            = 'CATEGORIA_PERSONATIPOIDENTIFICACION';
-	protected $allowedFields    = [];
+	protected $allowedFields    = [
+		'PERSONATIPOIDENTIFICACIONID',
+		'PERSONATIPOIDENTIFICACIONDESCR',
+		'FORMATOCAPTURA',
+		'IDENTIFICACIONPREDETERMINADA',
+		'EXPRESIONREGULAR',
+	];
 }

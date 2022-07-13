@@ -42,7 +42,7 @@
 
 											<div class="col-12 d-flex align-items-center justify-content-center">
 												<button type="submit" class="btn btn-primary btn-block">
-													Iniciar sesión.
+													ENTRAR
 												</button>
 											</div>
 											<!-- </br></br>

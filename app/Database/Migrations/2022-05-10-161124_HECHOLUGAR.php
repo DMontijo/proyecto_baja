@@ -15,7 +15,7 @@ class HECHOLUGAR extends Migration
                 'auto_increment' => TRUE
             ],
             'HECHODESCR'       => [
-                'type'           => 'VARCHAR',
+                'type'           => 'TEXT',
                 'constraint'     => '300',
             ],
         ]);

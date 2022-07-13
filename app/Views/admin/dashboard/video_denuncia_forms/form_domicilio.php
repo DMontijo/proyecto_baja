@@ -1,8 +1,8 @@
 <div class="row">
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+	<!-- <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="pais" class="form-label fw-bold">País</label>
 		<input class="form-control" type="text" id="paisp" name="paisp">
-	</div>
+	</div> -->
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="estado" class="form-label fw-bold">Estado</label>

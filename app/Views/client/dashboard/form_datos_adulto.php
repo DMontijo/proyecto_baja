@@ -61,7 +61,7 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="fecha_nac_adulto" class="form-label fw-bold">Fecha de nacimiento</label>
-		<input type="date" class="form-control" id="fecha_nac_adulto" name="fecha_nac_adulto">
+		<input type="date" class="form-control" id="fecha_nac_adulto" name="fecha_nac_adulto" max="<?= date("Y-m-d") ?>">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="sexo_adulto" class="form-label fw-bold ">Sexo</label>

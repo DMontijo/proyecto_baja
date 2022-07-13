@@ -17,7 +17,6 @@ use App\Models\PaisesModel;
 use App\Models\HechoClasificacionLugarModel;
 use App\Models\FolioModel;
 
-
 class UserController extends BaseController
 {
 	function __construct()
@@ -58,8 +57,17 @@ class UserController extends BaseController
 	public function create()
 	{
 		$password = $this->_generatePassword(6);
-		$document_file = $this->request->getFile('documentoDenunciante');
-		$docData = base64_encode(file_get_contents($document_file)); 
+
+		$foto_des = $this->request->getPost('documento_text');
+		// list($type, $foto_des) = explode(';', $foto_des);
+		// list(, $extension) = explode('/', $type);
+		// list(, $foto_des) = explode(',', $foto_des);
+
+		$firma = $this->request->getPost('firma_url');
+		// list($type, $firma) = explode(';', $firma);
+		// list(, $extension) = explode('/', $type);
+		// list(, $firma) = explode(',', $firma);
+
 		$data = [
 			'NOMBRE' => $this->request->getPost('nombre'),
 			'APELLIDO_PATERNO' => $this->request->getPost('apellido_paterno'),
@@ -91,10 +99,13 @@ class UserController extends BaseController
 			'DISCAPACIDAD' => $this->request->getPost('discapacidad'),
 			'NACIONALIDAD_ID' => (int)$this->request->getPost('nacionalidad'),
 			'ESCOLARIDAD' => $this->request->getPost('escolaridad'),
+			'FACEBOOK' => $this->request->getPost('facebook'),
+			'INSTAGRAM' => $this->request->getPost('instagram'),
+			'TWITTER' => $this->request->getPost('twitter'),
 			'IDIOMAID' => (int)$this->request->getPost('idioma'),
-			'DOCUMENTO' => $docData,
-			'FIRMA' => $this->request->getPost('firma_url'),
 			'NOTIFICACIONES' => $this->request->getPost('notificaciones_check') == 'on' ? 'S' : 'N',
+			'DOCUMENTO' => $foto_des,
+			'FIRMA' => $firma,
 		];
 
 		if ($this->validate(['correo' => 'required|is_unique[DENUNCIANTES.CORREO]'])) {
@@ -172,7 +183,6 @@ class UserController extends BaseController
 	{
 		$email = \Config\Services::email();
 		$email->setTo($to);
-		$email->setFrom('andrea.solorzano@yocontigo-it.com', 'FGEBC');
 		$email->setSubject('Te estamos atendiendo');
 		$body = view('email_template/password_email_template.php', ['email' => $to, 'password' => $password]);
 		$email->setMessage($body);

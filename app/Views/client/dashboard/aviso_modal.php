@@ -12,13 +12,15 @@
 					Si tú o alguien más está <span class="fw-bold">en peligro</span> en este momento, marca al <a href="tel:911" class="fw-bold">911</a>.
 				</p>
 				<p>
-					Si quieres realizar una <span class="fw-bold">denuncia anónima</span> en este momento, marca al <a href="tel:089" class="fw-bold">089</a>.
+					Si quieres realizar una <span class="fw-bold">denuncia anónima</span> da clic <a href="tel:8003432220" class="fw-bold">aquí</a>.
 				</p>
 			</div>
 			<div class="modal-footer justify-content-center">
-				<button type="button" class="btn btn-secondary btn-lg" data-bs-dismiss="modal">ACEPTAR</button>
-				<a class="btn btn-primary btn-lg" href="tel:911" role="button"><i class="bi bi-telephone"></i> 911</a>
-				<a class="btn btn-primary btn-lg" href="tel:089" role="button"><i class="bi bi-telephone"></i> 089</a>
+				<div class="d-grid gap-2 d-md-flex col-12 mx-auto justify-content-md-center">
+					<button type="button" class="btn btn-secondary btn-lg" data-bs-dismiss="modal">ACEPTAR</button>
+					<a class="btn btn-primary btn-lg btn-block" href="tel:911" role="button"><i class="bi bi-telephone"></i> 911</a>
+					<a class="btn btn-primary btn-lg btn-block" href="tel:8003432220" role="button"><i class="bi bi-telephone"></i> Anónima</a>
+				</div>
 			</div>
 		</div>
 	</div>

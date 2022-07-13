@@ -31,10 +31,14 @@
 			url: "<?php echo base_url('/data/getLastOTP'); ?>",
 			dataType: "json",
 			success: function(response) {
-				console.log(data);
 				let otp = response.data.CODIGO_OTP;
 				let fechaVencimiento = response.data.VENCIMIENTO;
-				let date = new Date();
+				let datelocal = new Date();
+				let dateToTijuanaString = datelocal.toLocaleString('en-US', {
+					timeZone: 'America/Tijuana'
+				});
+				let dateTijuana = new Date(dateToTijuanaString);
+
 
 				const formatDate = (current_datetime) => {
 					let formatted_date = current_datetime.getFullYear().toString().padStart(4, '0') + "-" + (current_datetime.getMonth() + 1).toString().padStart(2, '0') + "-" + current_datetime.getDate().toString().padStart(2, '0') + " " + current_datetime.getHours().toString().padStart(2, '0') + ":" + current_datetime.getMinutes().toString().padStart(2, '0') + ":" + current_datetime.getSeconds().toString().padStart(2, '0');
@@ -42,14 +46,12 @@
 				}
 
 				if (otp == input_otp) {
-					console.log('Si son iguales');
-					if (fechaVencimiento > formatDate(date)) {
+					if (fechaVencimiento > formatDate(dateTijuana)) {
 						let form = document.querySelector('#form_register');
 						e.target.removeAttribute('disabled');
 						document.querySelector('#resend_btn').removeAttribute('disabled');
 						form.submit();
 					} else {
-						console.log('Vencido');
 						Swal.fire({
 							icon: 'error',
 							title: 'Error',
@@ -61,7 +63,6 @@
 						})
 					}
 				} else {
-					console.log('Codigo incorrecto');
 					Swal.fire({
 						icon: 'error',
 						title: 'Error',
@@ -96,7 +97,6 @@
 			url: "<?php echo base_url('/data/sendOTP'); ?>",
 			dataType: "json",
 			success: function(data) {
-				console.log(data);
 				e.target.removeAttribute('disabled');
 				document.querySelector('#validate_btn').removeAttribute('disabled');
 			},

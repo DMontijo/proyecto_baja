@@ -52,7 +52,7 @@ class AuthController extends BaseController
 	{
 		$session = session();
 		$session->destroy();
-		return redirect()->to(base_url('denuncia'));
+		return redirect()->to(base_url());
 	}
 
 	public function change_password()
@@ -86,7 +86,6 @@ class AuthController extends BaseController
 
 		$email = \Config\Services::email();
 		$email->setTo($to);
-		$email->setFrom('andrea.solorzano@yocontigo-it.com', 'FGEBC');
 		$email->setSubject('Cambio de contraseña');
 		// $link = base_url('/denuncia/change_password?id=' . $user->ID_DENUNCIANTE);
 		$body = view('email_template/reset_password_template.php', ['password' => $password]);

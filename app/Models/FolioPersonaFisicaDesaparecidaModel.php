@@ -8,9 +8,7 @@ class FolioPersonaFisicaDesaparecidaModel extends Model
 {
 	protected $DBGroup          = 'default';
 	protected $table            = 'FOLIOPERSONAFISICADESAPARECIDA';
-	protected $primaryKey       = 'ID_PERSONA_DESAPARECIDA';
 	protected $allowedFields    = [
-		'ID_PERSONA_DESAPARECIDA',
 		'FOLIOID',
 		'PERSONAFISICAID',
 		'ESTATURA',

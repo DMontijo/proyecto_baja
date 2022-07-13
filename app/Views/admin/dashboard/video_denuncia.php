@@ -77,7 +77,7 @@
 		<div class="card rounded bg-white shadow">
 			<div class="card-body">
 				<label class="font-weight-bold" for="notas">Breve descripción del caso:</label>
-				<textarea class="form-control" id="notas_mp" placeholder="Descripción del caso..." rows="10" required maxlength="300"></textarea>
+				<textarea class="form-control" id="notas_mp" placeholder="Descripción del caso..." rows="10" required maxlength="300" oninput="mayuscTextarea(this)"></textarea>
 			</div>
 		</div>
 	</div>
@@ -97,6 +97,10 @@
 	const card5 = document.querySelector('#card5');
 	var respuesta;
 
+	const mayuscTextarea = (e) => {
+		e.value = e.value.toUpperCase();
+	}
+
 	buscar_btn.addEventListener('click', (e) => {
 		$.ajax({
 			data: {
@@ -106,18 +110,18 @@
 			method: "POST",
 			dataType: "json",
 			success: function(response) {
+				// console.log(response);
 				respuesta = (response);
 				if (response.status === 1) {
 					const folio = response.folio;
 					const preguntas = response.preguntas_iniciales;
 					const personas = response.personas;
-					const domicilios = response.domicilio;
+					const domicilios = response.domicilios;
 					const vehiculos = response.vehiculos;
 					const folioM = response.folioMunicipio;
 					const folioC = response.folioColonia;
 					const foliol = response.folioLugar;
 
-					console.log('status 1')
 					inputFolio.classList.add('d-none');
 					buscar_btn.classList.add('d-none');
 					buscar_nuevo_btn.classList.remove('d-none');
@@ -129,10 +133,13 @@
 
 					document.querySelector('#delito_dash').value = folio.DELITODENUNCIA;
 					document.querySelector('#delito_descr_dash').value = folio.HECHONARRACION;
+
 					//PREGUNTAS INICIALES
 					document.querySelector('#es_menor').value = preguntas.ES_MENOR;
-					document.querySelector('#eres_tu').value = preguntas.ERES_TU;
 					document.querySelector('#es_tercera_edad').value = preguntas.ES_TERCERA_EDAD;
+					document.querySelector('#tiene_discapacidad').value = preguntas.TIENE_DISCAPACIDAD;
+					document.querySelector('#es_vulnerable').value = preguntas.ES_GRUPO_VULNERABLE;
+					document.querySelector('#vulnerable_descripcion').value = preguntas.ES_GRUPO_VULNERABLE_DESCR;
 					document.querySelector('#tiene_discapacidad').value = preguntas.TIENE_DISCAPACIDAD;
 					document.querySelector('#fue_con_arma').value = preguntas.FUE_CON_ARMA;
 					document.querySelector('#esta_desaparecido').value = preguntas.ESTA_DESAPARECIDO;
@@ -142,7 +149,7 @@
 					//DENUNCIA
 					document.querySelector('#delito').value = folio.DELITODENUNCIA;
 					document.querySelector('#municipio').value = folioM.MUNICIPIODESCR;
-					document.querySelector('#colonia').value = folioC.COLONIADESCR;
+					document.querySelector('#colonia').value = folioC ? folioC.COLONIADESCR : folio.HECHOCOLONIADESCR;
 					document.querySelector('#calle').value = folio.HECHOCALLE;
 					document.querySelector('#exterior').value = folio.HECHONUMEROCASA;
 					document.querySelector('#interior').value = folio.HECHONUMEROCASAINT;
@@ -160,14 +167,16 @@
 
 
 					//PERSONAS
-					var k = 1; //contador para asignar id al boton que borrara la fila
 					for (let i = 0; i < personas.length; i++) {
 						var btn = `<button type='button'  class='btn btn-primary' onclick='viewPersonaFisica(${personas[i].PERSONAFISICAID},${personas[i].CALIDADJURIDICAID})'><i class='fas fa-eye'></i></button>`
 
-						var fila = '<tr id="row' + i + '"><td>' +
-							personas[i].NOMBRE + '</td><td>' +
-							personas[i].PERSONACALIDADJURIDICADESCR +
-							'</td><td>' + btn + '</td></tr>'; //esto seria lo que contendria la fila
+						var fila =
+							`<tr id="row${i}">` +
+							`<td class="text-center">${personas[i].DENUNCIANTE=='S'?'<strong>DENUNCIANTE</strong>':''}</td>` +
+							`<td class="text-center">${personas[i].NOMBRE}</td>` +
+							`<td class="text-center">${personas[i].PERSONACALIDADJURIDICADESCR}</td>` +
+							`<td class="text-center">${btn}</td>` +
+							`</tr>`;
 
 						$('#table-personas tr:first').after(fila);
 						$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
@@ -175,55 +184,41 @@
 						$("#adicionados").append(nFilas - 1);
 					}
 
+					//DOMICILIOS
 					for (let i = 0; i < domicilios.length; i++) {
-						var btnDomicilio = `<button type='button' class='btn btn-primary' onclick='viewDomicilio(${personas[i].PERSONAFISICAID})'><i class='fas fa-eye'></i></button>`
+						var btnDomicilio = `<button type='button' class='btn btn-primary' onclick='viewDomicilio(${domicilios[i].PERSONAFISICAID})'><i class='fas fa-eye'></i></button>`
 
-						var fila2 = '<tr id="row' + i + '"><td>' +
-							personas[i].NOMBRE + '</td><td>' +
-							personas[i].PERSONACALIDADJURIDICADESCR +
-							'</td><td>' + btnDomicilio + '</td></tr>';
-						k++;
+						var fila2 =
+							`<tr id="row${i}">` +
+							`<td class="text-center">${personas[i].DENUNCIANTE=='S'?'<strong>DENUNCIANTE</strong>':''}</td>` +
+							`<td class="text-center">${personas[i].NOMBRE}</td>` +
+							`<td class="text-center">${personas[i].PERSONACALIDADJURIDICADESCR}</td>` +
+							`<td class="text-center">${btnDomicilio}</td>` +
+							`</tr>`;
+
 						//DOMICILIO
-
 						$('#table-domicilio tr:first').after(fila2);
 						$("#adicionados").text("");
 						var nFilas = $("#domicilio tr").length;
 						$("#adicionados").append(nFilas - 1);
-
-
 					}
-					for (let i = 0; i < personas.length; i++) {
-						var btnVehiculo = `<button type='button' class='btn btn-primary' onclick='viewVehiculo(${k})'><i class='fas fa-eye'></i></button>`;
-						var fila3 = '<tr id="row' + i + '"><td>' +
-							vehiculos[i].PLACAS + '</td><td>' +
-							vehiculos[i].NUMEROSERIE +
-							'</td><td>' + btnVehiculo + '</td></tr>';
-						k++;
+
+					//VEHICULOS
+					for (let i = 0; i < vehiculos.length; i++) {
+						var btnVehiculo = `<button type='button' class='btn btn-primary' onclick='viewVehiculo(${vehiculos[i].VEHICULOID})'><i class='fas fa-eye'></i></button>`;
+
+						var fila3 =
+							`<tr id="row${i}">` +
+							`<td class="text-center">DESCONOCIDO</td>` +
+							`<td class="text-center">DESCONOCIDO</td>` +
+							`<td class="text-center">${btnVehiculo}</td>` +
+							`</tr>`;
+
 						$('#table-vehiculos tr:first').after(fila3);
 						$("#adicionados").text("");
 						var nFilas = $("#vehiculos tr").length;
 						$("#vehiculos").append(nFilas - 1);
-
-
 					}
-					/*	$("#table-personas").DataTable({
-							"responsive": true,
-							"lengthChange": false,
-							"autoWidth": false,
-						});
-
-						$("#table-domicilio").DataTable({
-							"responsive": true,
-							"lengthChange": false,
-							"autoWidth": false,
-						});
-
-
-						$("#table-vehiculos").DataTable({
-							"responsive": true,
-							"lengthChange": false,
-							"autoWidth": false,
-						});*/
 
 				} else if (response.status === 2) {
 					card2.classList.add('d-none');
@@ -253,17 +248,71 @@
 		});
 	});
 
-	buscar_nuevo_btn.addEventListener('click', () => {
-
-		location.reload();
+	function borrarTodo() {
 		buscar_nuevo_btn.classList.add('d-none');
 		inputFolio.classList.remove('d-none');
+		inputFolio.value = "";
 		buscar_btn.classList.remove('d-none');
+		console.log('dentro de buscar nuevo');
+
+		tabla_personas = document.querySelectorAll('#table-personas tr');
+		tabla_domicilios = document.querySelectorAll('#table-domicilio tr');
+		tabla_vehiculos = document.querySelectorAll('#table-vehiculos tr');
+
+		tabla_personas.forEach(row => {
+			if (row.id !== '') {
+				row.remove();
+			}
+		});
+
+		tabla_domicilios.forEach(row => {
+			if (row.id !== '') {
+				row.remove();
+			}
+		});
+
+		tabla_vehiculos.forEach(row => {
+			if (row.id !== '') {
+				row.remove();
+			}
+		});
 
 		card2.classList.add('d-none');
 		card3.classList.add('d-none');
 		card4.classList.add('d-none');
 		card5.classList.add('d-none');
+
+		document.querySelector('#delito_dash').value = '';
+		document.querySelector('#delito_descr_dash').value = '';
+
+		//PREGUNTAS INICIALES
+		document.querySelector('#es_menor').value = '';
+		document.querySelector('#es_tercera_edad').value = '';
+		document.querySelector('#tiene_discapacidad').value = '';
+		document.querySelector('#es_vulnerable').value = '';
+		document.querySelector('#vulnerable_descripcion').value = '';
+		document.querySelector('#fue_con_arma').value = '';
+		document.querySelector('#esta_desaparecido').value = '';
+		document.querySelector('#lesiones').value = '';
+		document.querySelector('#lesiones_visibles').value = '';
+
+		//DENUNCIA
+		document.querySelector('#delito').value = '';
+		document.querySelector('#municipio').value = '';
+		document.querySelector('#colonia').value = '';
+		document.querySelector('#calle').value = '';
+		document.querySelector('#exterior').value = '';
+		document.querySelector('#interior').value = '';
+		document.querySelector('#lugar').value = '';
+		document.querySelector('#hora').value = '';
+		document.querySelector('#fecha').value = '';
+		document.querySelector('#narracion').value = '';
+
+		$('#v-pills-vehiculos-tab').css('display', 'NONE');
+	}
+
+	buscar_nuevo_btn.addEventListener('click', () => {
+		borrarTodo();
 	});
 </script>
 
@@ -286,58 +335,57 @@
 				const edocivil = response.edocivil;
 				const pidioma = response.idioma;
 				const desaparecida = response.personaDesaparecida;
-				document.querySelector('#img_denunciante').setAttribute('src', 'data:image/jpg;base64,' + personaid.FOTO);
-				document.querySelector('#calidad_juridicaP').value = calidad.PERSONACALIDADJURIDICADESCR;
-				document.querySelector('#nombrePersona').value = personaid.NOMBRE;
-				document.querySelector('#apellido_paternoP').value = personaid.PRIMERAPELLIDO;
-				document.querySelector('#apellido_maternoP').value = personaid.SEGUNDOAPELLIDO;
-				document.querySelector('#sexoP').value = personaid.SEXO == 'F' ? 'FEMENINO' : 'MASCULINO';
-				document.querySelector('#denunciantep').value = personaid.DENUNCIANTE == 'S' ? 'SI' : 'NO';
-				document.querySelector('#vivaP').value = personaid.VIVA == 'S' ? 'SI' : 'NO';
-				document.querySelector('#desaparecidaP').value = personaid.DESAPARECIDA == 'N' ? 'NO' : 'S';
-				if (personaid.CALIDADJURIDICAID == 1) {
-					document.getElementById("img_denuncianteDiv").style.display = "block";
-				}else{
-					document.getElementById("img_denuncianteDiv").style.display = "none";
 
+				if (personaid.DENUNCIANTE == 'S') {
+					document.querySelector('#fisica_foto').setAttribute('src', personaid.FOTO);
+					document.querySelector('#fisica_foto').classList.remove('d-none');
+					document.querySelector('#contenedor_fisica_foto').classList.remove('d-none');
+				} else {
+					document.querySelector('#fisica_foto').setAttribute('src', '');
+					document.querySelector('#fisica_foto').classList.add('d-none');
+					document.querySelector('#contenedor_fisica_foto').classList.add('d-none');
 				}
-			
+
+				document.querySelector('#calidad_juridicaP').value = calidad.PERSONACALIDADJURIDICADESCR ? calidad.PERSONACALIDADJURIDICADESCR : 'DESCONOCIDO';
+				document.querySelector('#nombrePersona').value = personaid.NOMBRE ? personaid.NOMBRE : 'DESCONOCIDO';
+				document.querySelector('#apellido_paternoP').value = personaid.PRIMERAPELLIDO ? personaid.PRIMERAPELLIDO : 'DESCONOCIDO';
+				document.querySelector('#apellido_maternoP').value = personaid.SEGUNDOAPELLIDO ? personaid.SEGUNDOAPELLIDO : 'DESCONOCIDO';
+				document.querySelector('#sexoP').value = personaid.SEXO ? (personaid.SEXO == 'F' ? 'FEMENINO' : 'MASCULINO') : 'DESCONOCIDO';
+				document.querySelector('#denunciantep').value = personaid.DENUNCIANTE == 'S' ? 'SI' : 'NO';
+				// document.querySelector('#vivaP').value = personaid.VIVA == 'S' ? 'SI' : 'NO';
+				document.querySelector('#desaparecidaP').value = personaid.DESAPARECIDA == 'N' ? 'NO' : 'S';
 				if (personaid.TIPOIDENTIFICACIONID == null) {
-					document.querySelector('#tipoiP').value = "NULL";
+					document.querySelector('#tipoiP').value = "DESCONOCIDO";
 				} else {
 					document.querySelector('#tipoiP').value = tipoi.PERSONATIPOIDENTIFICACIONDESCR;
 				}
 				if (personaid.NACIONALIDADID == null) {
-					document.querySelector('#nacionalidadp').value = "NULL";
+					document.querySelector('#nacionalidadp').value = "DESCONOCIDO";
 				} else {
 					document.querySelector('#nacionalidadp').value = nacionalidad.PERSONANACIONALIDADDESCR;
 				}
 				if (personaid.ESTADOCIVILID == null) {
-					document.querySelector('#edocp').value = "NULL";
+					document.querySelector('#edocp').value = "DESCONOCIDO";
 				} else {
 					document.querySelector('#edocp').value = edocivil.PERSONAESTADOCIVILDESCR;
 				}
 				if (personaid.PERSONAIDIOMAID == null) {
-					document.querySelector('#idiomap').value = "NULL";
+					document.querySelector('#idiomap').value = "DESCONOCIDO";
 				} else {
 					document.querySelector('#idiomap').value = pidioma.PERSONAIDIOMADESCR;
 				}
-				document.querySelector('#fecha_nacimientoP').value = personaid.FECHANACIMIENTO;
-				document.querySelector('#edadP').value = personaid.EDAD;
-				document.querySelector('#numero_identidadP').value = personaid.NUMEROIDENTIFICACION;
-				document.querySelector('#telefonoP').value = personaid.TELEFONO;
-				document.querySelector('#apodo').value = personaid.APODO;
-				document.querySelector('#correoP').value = personaid.CORREO;
-
-				console.log(desaparecida);
+				document.querySelector('#fecha_nacimientoP').value = personaid.FECHANACIMIENTO ? personaid.FECHANACIMIENTO : 'DESCONOCIDO';
+				document.querySelector('#edadP').value = personaid.EDAD ? personaid.EDAD : 'DESCONOCIDO';
+				document.querySelector('#numero_identidadP').value = personaid.NUMEROIDENTIFICACION ? personaid.NUMEROIDENTIFICACION : 'DESCONOCIDO';
+				document.querySelector('#telefonoP').value = `+${personaid.CODIGOPAISTEL?personaid.CODIGOPAISTEL:''} - ${personaid.TELEFONO ? personaid.TELEFONO : 'DESCONOCIDO'}`;
+				document.querySelector('#telefonoP2').value = `+${personaid.CODIGOPAISTEL2?personaid.CODIGOPAISTEL2:''} - ${personaid.TELEFONO2 ? personaid.TELEFONO2 : 'DESCONOCIDO'}`;
+				document.querySelector('#apodo').value = personaid.APODO ? personaid.APODO : 'DESCONOCIDO';
+				document.querySelector('#correoP').value = personaid.CORREO ? personaid.CORREO : 'DESCONOCIDO';
 
 				//desaparecida
 				if (personaid.DESAPARECIDA == 'S') {
 
 					for (let index = 0; index < desaparecida.length; index++) {
-
-
-
 						document.querySelector('#estaturaD').value = desaparecida[index].ESTATURA;
 						document.querySelector('#pesoD').value = desaparecida[index].PESO;
 						document.querySelector('#complexionD').value = desaparecida[index].COMPLEXION;
@@ -356,8 +404,8 @@
 						document.querySelector('#lugarDesaparicion').value = desaparecida[index].LUGAR_DESAPARICION;
 						document.querySelector('#vestimentaD').value = desaparecida[index].VESTIMENTA;
 						document.querySelector('#parentescoD').value = desaparecida[index].PARENTESCO;
-						//document.querySelector('#fotoDes').value = desaparecida[index].FOTOGRAFIA;
-						document.querySelector('#autorizaFoto').value = desaparecida[index].AUTORIZA_FOTO;
+						document.querySelector('#fotoDes').setAttribute('src', 'data:image/jpg;base64,' + desaparecida[index].FOTOGRAFIA);
+						document.querySelector('#autorizaFoto').value = desaparecida[index].AUTORIZA_FOTO == 'S' ? 'SI' : 'NO';
 					}
 
 					document.getElementById("personadesaparecida").style.display = "block";
@@ -376,7 +424,6 @@
 			data: {
 				'folio': document.querySelector('#input_folio_atencion').value,
 				'id': id
-
 			},
 			url: "<?= base_url('/data/get-persona-domicilio-by-id') ?>",
 			method: "POST",
@@ -387,37 +434,40 @@
 				const estado = response.estado;
 				const municipio = response.municipio;
 				const localidad = response.localidad;
-				var qpais = document.querySelector('#paisp').value;
+				const colonia = response.colonia;
+
+				// var qpais = document.querySelector('#paisp').value;
 				var qestado = document.querySelector('#estadoper').value;
 				var qmunicipio = document.querySelector('#municipiop').value;
 				var qlocalidad = document.querySelector('#localidadp').value;
 
-				if (persondom.PAIS == null) {
-					document.querySelector('#paisp').value = "NULL";
-				} else {
-					document.querySelector('#paisp').value = persondom.PAIS;
-				}
+				// if (persondom.PAIS == null) {
+				// 	document.querySelector('#paisp').value = "DESCONOCIDO";
+				// } else {
+				// 	document.querySelector('#paisp').value = persondom.PAIS;
+				// }
 				if (persondom.ESTADOID == null) {
-					document.querySelector('#estadoper').value = "NULL";
+					document.querySelector('#estadoper').value = "DESCONOCIDO";
 				} else {
 					document.querySelector('#estadoper').value = estado.ESTADODESCR;
 				}
 				if (persondom.MUNICIPIOID == null) {
-					document.querySelector('#municipiop').value = "NULL";
+					document.querySelector('#municipiop').value = "DESCONOCIDO";
 				} else {
 					document.querySelector('#municipiop').value = municipio.MUNICIPIODESCR;
 				}
 				if (persondom.LOCALIDADID == null) {
-					document.querySelector('#localidadp').value = "NULL";
+					document.querySelector('#localidadp').value = "DESCONOCIDO";
 				} else {
 					document.querySelector('#localidadp').value = localidad.LOCALIDADDESCR;
 				}
-				document.querySelector('#coloniap').value = persondom.COLONIADESCR;
+
+				document.querySelector('#coloniap').value = persondom.COLONIAID != 0 ? colonia.COLONIADESCR : persondom.COLONIADESCR;
 				document.querySelector('#cp').value = persondom.CP;
 				document.querySelector('#callep').value = persondom.CALLE;
 				document.querySelector('#exteriorp').value = persondom.NUMEROCASA;
 				document.querySelector('#interiorp').value = persondom.NUMEROINTERIOR;
-				document.querySelector('#zonap').value = persondom.ZONA == 'U' ? 'URBANA' : 'RURAL';;
+				document.querySelector('#zonap').value = persondom.ZONA ? (persondom.ZONA == 'U' ? 'URBANA' : 'RURAL') : 'DESCONOCIDO';
 				$('#folio_domicilio_modal').modal('show');
 			}
 		});
@@ -442,19 +492,17 @@
 				} else {
 					document.querySelector('#tipo_vehiculo').value = tipov.VEHICULOTIPODESCR;
 				}
-				document.querySelector('#color_vehiculo').value = color.VEHICULOCOLORDESCR;
-				document.querySelector('#foto_vehiculo').setAttribute('src', 'data:image/jpg;base64,' + vehiculo.FOTO);
-				document.querySelector('#downloadImage').setAttribute('href', 'data:image/jpg;base64,' + vehiculo.FOTO);
+				document.querySelector('#color_vehiculo').value = color ? color.VEHICULOCOLORDESCR : '';
+				document.querySelector('#foto_vehiculo').setAttribute('src', vehiculo.FOTO);
+				document.querySelector('#downloadImage').setAttribute('href', vehiculo.FOTO);
 				document.querySelector('#description_vehiculo').value = vehiculo.SENASPARTICULARES;
-				document.querySelector('#doc_vehiculo').setAttribute('src', 'data:image/jpg;base64,' + vehiculo.DOCUMENTO);
-				document.querySelector('#downloadDoc').setAttribute('href', 'data:image/jpg;base64,' + vehiculo.DOCUMENTO);
+				document.querySelector('#doc_vehiculo').setAttribute('src', vehiculo.DOCUMENTO);
+				document.querySelector('#downloadDoc').setAttribute('href', vehiculo.DOCUMENTO);
 
 				$('#folio_vehiculo_modal').modal('show');
 			}
 		});
 	}
-
-
 </script>
 
 <?php include('video_denuncia_modals/info_folio_modal.php') ?>

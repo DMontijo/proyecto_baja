@@ -8,7 +8,6 @@ class FolioModel extends Model
 {
 	protected $DBGroup          = 'default';
 	protected $table            = 'FOLIO';
-	protected $primaryKey       = 'ID';
 	protected $allowedFields    = [
 		'FOLIOID',
 		'EXPEDIENTEID',

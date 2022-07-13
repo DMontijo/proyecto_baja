@@ -6,54 +6,54 @@ use CodeIgniter\Database\Migration;
 
 class FILESORIGINALES extends Migration
 {
-    public function up()
-    {
-        $this->forge->addField([
+	public function up()
+	{
+		$this->forge->addField([
 
-            'ID'          => [
+			'ID'          => [
 				'type'           => 'INT',
 				'unsigned'       => TRUE,
 			],
-            'DESCRIPCION'          => [
+			'DESCRIPCION'          => [
 				'type'           => 'VARCHAR',
 				'constraint'     => '50',
 			],
-            'TITULO'          => [
+			'TITULO'          => [
 				'type'           => 'TEXT',
 			],
-            'PLACEHOLDER'          => [
+			'PLACEHOLDER'          => [
 				'type'           => 'TEXT',
 			],
-            'OPCIONES'          => [
+			'OPCIONES'          => [
 				'type'           => 'TEXT',
 			],
-            'TIPO_ARCHIVO'          => [
+			'TIPO_ARCHIVO'          => [
 				'type'           => 'VARCHAR',
 				'constraint'     => '50',
 			],
-            'RELACIONADO_CON'          => [
+			'RELACIONADO_CON'          => [
 				'type'           => 'VARCHAR',
 				'constraint'     => '50',
 			],
-            'MODIFICADO'          => [
+			'MODIFICADO'          => [
 				'type'           => 'TINYINT',
 				'default'     => '0',
 			],
-            'ELIMINADO'          => [
+			'ELIMINADO'          => [
 				'type'           => 'TINYINT',
 				'default'     => '0',
 			],
-            'ID_DENUNCIANTE'          => [
+			'ID_DENUNCIANTE'          => [
 				'type'           => 'INT',
 			],
 
-        ]);
-        $this->forge->addKey('ID', TRUE);
+		]);
+		$this->forge->addKey('ID', TRUE);
 		$this->forge->createTable('FILES_ORIGINALES');
-    }
+	}
 
-    public function down()
-    {
-        $this->forge->dropTable('DERIVACIONES_ATENCION');
-    }
+	public function down()
+	{
+		$this->forge->dropTable('DERIVACIONES_ATENCION');
+	}
 }

@@ -29,14 +29,14 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="fecha" class="form-label font-weight-bold">Fecha del delito:</label>
-		<input type="date" class="form-control" id="fecha" name="fecha">
+		<input type="date" class="form-control" id="fecha" name="fecha" max="<?= date("Y-m-d") ?>">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="hora" class="form-label font-weight-bold">Hora del delito:</label>
 		<input type="time" class="form-control" id="hora" name="hora">
 	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+	<div class="col-12 mb-3">
 		<label for="narracion" class="form-label font-weight-bold">Descripción del delito:</label>
-		<textarea type="text" class="form-control" id="narracion" name="narracion" rows="3"></textarea>
+		<textarea type="text" class="form-control" id="narracion" name="narracion" rows="5"></textarea>
 	</div>
 </div>

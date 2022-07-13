@@ -30,13 +30,13 @@ class Database extends Config
 	 *
 	 * @var array
 	 */
-	
+
 	public $default = [
 		'DSN'      => '',
-		'hostname' => 'localhost',
-		'username' => 'root',
-		'password' => '',
-		'database' => 'justicia',
+		'hostname' => 'database-yo-contigo-video-denuncia.cluster-cenwfxggsegs.us-east-1.rds.amazonaws.com',
+		'username' => 'admin',
+		'password' => '12345678',
+		'database' => 'CDT_DB',
 		'DBDriver' => 'MySQLi',
 		'DBPrefix' => '',
 		'pConnect' => false,

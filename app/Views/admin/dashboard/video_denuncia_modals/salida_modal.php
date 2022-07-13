@@ -23,6 +23,7 @@
 									<label for="tipo_salida" class="font-weight-bold">Seleccione la salida</label>
 									<select class="form-control" name="tipo_salida" id="tipo_salida">
 										<option value="" selected disabled>Seleccione...</option>
+										<option value="ATENDIDA">DENUNCIA YA ATENDIDA</option>
 										<option value="DERIVADO">DERIVACION</option>
 										<option value="CANALIZADO">CANALIZACION</option>
 										<option value="NAC">NAC</option>
@@ -55,7 +56,7 @@
 								</div>
 								<div id="notas" class="form-group">
 									<label for="notas_caso_salida">Notas</label>
-									<textarea id="notas_caso_salida" class="form-control" placeholder="Notas..." rows="10" maxlength="300"></textarea>
+									<textarea id="notas_caso_salida" class="form-control" placeholder="Notas..." rows="10" maxlength="300" oninput="mayuscTextarea(this)"></textarea>
 								</div>
 								<button type="button" id="btn-finalizar-derivacion" class="btn btn-primary">FINALIZAR</button>
 							</div>
@@ -221,7 +222,7 @@
 							card5.classList.add('d-none');
 							notas_mp.value = '';
 							inputFolio.value = '';
-							location.reload();
+							borrarTodo();
 						})
 					}
 				}).fail(function(jqXHR, textStatus) {
@@ -256,6 +257,7 @@
 						'oficina': oficina_empleado.value,
 						'empleado': empleado.value,
 					}
+
 					$.ajax({
 						data: data,
 						url: "<?= base_url('/data/save-in-justicia') ?>",
@@ -264,14 +266,13 @@
 
 					}).done(function(data) {
 						btnFinalizar.removeAttribute('disabled');
-						console.log(data);
 						if (data.status == 1) {
 							document.querySelector('#tipo_salida').value = "";
 							document.querySelector('#notas_caso_salida').value = '';
 
 							Swal.fire({
 								icon: 'success',
-								text: 'EXPEDIENTE CREADO CORRECTAMENTE',
+								html: 'EXPEDIENTE <strong>' + data.expediente + '</strong> CREADO CORRECTAMENTE',
 								confirmButtonColor: '#bf9b55',
 							}).then((e) => {
 								$("#salida_modal").modal("hide");
@@ -290,17 +291,35 @@
 								card5.classList.add('d-none');
 								notas_mp.value = '';
 								inputFolio.value = '';
-								location.reload();
+								borrarTodo();
 							})
 						}
 						console.log(data);
 
 					}).fail(function(jqXHR, textStatus) {
-						btnFinalizar.removeAttribute('disabled');
-						Swal.fire({
-							icon: 'error',
-							text: 'Fallo la conexión, revisa con soporte técnico.',
-							confirmButtonColor: '#bf9b55',
+						data = {
+							'folio': inputFolio.value
+						}
+						$.ajax({
+							data: data,
+							url: "<?= base_url('/data/restore-folio') ?>",
+							method: "POST",
+							dataType: "json",
+
+						}).done(function(data) {
+							Swal.fire({
+								icon: 'error',
+								text: 'Fallo la conexión, revisa con soporte técnico.',
+								confirmButtonColor: '#bf9b55',
+							});
+							btnFinalizar.removeAttribute('disabled');
+						}).fail(function(jqXHR, textStatus) {
+							Swal.fire({
+								icon: 'error',
+								text: 'Fallo la conexión, revisa con soporte técnico.',
+								confirmButtonColor: '#bf9b55',
+							});
+							btnFinalizar.removeAttribute('disabled');
 						});
 					});
 				} else {

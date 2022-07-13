@@ -10,24 +10,16 @@
 	<div class="col-12">
 		<div class="col-12">
 			<div class="card bg-primary shadow mb-4" style="font-size:14px;background:url(<?= base_url('/assets/img/banner/LINEAS_BANNER.png') ?>);background-repeat: no-repeat;background-size: cover !important;background-position-y: top;border-radius:10px;">
-				<div class="row py-5 px-5">
-					<div class="col-lg-7 col-12 fw-bold text-white ">
-						<p>Los delitos que se enuncian a continuación deberá ser denunciados de manera personal ante la Unidad de Investigación correspondiente.</p>
-						<ul class="ps-5 m-0">
-							<li>Violación</li>
-							<li>Secuestro</li>
-							<li>Tortura</li>
-							<li>Trata de personas</li>
-							<li>Delitos cometidos por personal adscrito a la Físcalia General del Estado de Baja California</li>
-							<li>Homicidio en todas sus modalidades</li>
-							<li>Delitos contra la salud modalidad narcomenudeo</li>
-							<li>Abuso sexual cuando la víctima sea menor de edad</li>
-							<li>Tráfico de menores</li>
-						</ul>
-					</div>
-					<div class="col-lg-5 col-12 d-flex flex-column justify-content-between text-center">
-						<a class="p-0 my-3" href="tel:911" role="button"><img src="<?= base_url('/assets/img/banner/911_BANNER.png') ?>" class="img-fluid"></a>
-						<a class="p-0 my-3" href="tel:089" role="button" role="button"><img src="<?= base_url('/assets/img/banner/089_BANNER.png') ?>" class="img-fluid"></a>
+				<div class="row p-4">
+					<div class="col-12">
+						<div class="row">
+							<div class="col-12 col-md-6">
+								<a class="p-0 my-3" href="tel:911" role="button"><img src="<?= base_url('/assets/img/banner/911_BANNER.png') ?>" class="img-fluid"></a>
+							</div>
+							<div class="col-12 col-md-6 mt-4 mt-md-0">
+								<a class="p-0 my-3" href="tel:8003432220" role="button" role="button"><img src="<?= base_url('/assets/img/banner/089_BANNER.png') ?>" class="img-fluid"></a>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -42,7 +34,7 @@
 					<div class="progress mb-4">
 						<div id="progress-bar" aria-valuemax="100" aria-valuemin="0" aria-valuenow="50" class="progress-bar progress-bar-striped progress-bar-animated bg-yellow" role="progressbar"></div>
 					</div>
-					<form id="denuncia_form" action="<?= base_url() ?>/denuncia/dashboard/create" method="post"  enctype="multipart/form-data" class="row needs-validation" novalidate >
+					<form id="denuncia_form" action="<?= base_url() ?>/denuncia/dashboard/create" method="post" enctype="multipart/form-data" class="row needs-validation" novalidate>
 
 						<!-- PREGUNTAS INICIALES -->
 						<div id="datos_iniciales" class="col-12 step">
@@ -87,7 +79,7 @@
 									</p>
 									<div class="form-group">
 										<input class="form-check-input" type="checkbox" name="derechos_imputado" id="derechos_imputado" required>
-										<span class="fw-bold">Confirmo que he leído y conozco los derechos de derechos de víctima u ofendido</span>
+										<span class="fw-bold">Confirmo que he leído y conozco los derechos de víctima u ofendido</span>
 										<div class="invalid-feedback">
 											Debes confirmar de leído los derechos de víctima u ofendido para continuar.
 										</div>
@@ -410,6 +402,7 @@
 				if (
 					document.querySelector('input[name="es_menor"]:checked') &&
 					document.querySelector('input[name="tiene_discapacidad"]:checked') &&
+					document.querySelector('input[name="es_vulnerable"]:checked') &&
 					document.querySelector('input[name="fue_con_arma"]:checked') &&
 					document.querySelector('input[name="esta_desaparecido"]:checked')
 				) {

@@ -151,16 +151,31 @@ class DENUNCIANTES extends Migration
 				'constraint' => '30',
 				'null' => TRUE
 			],
+			'FACEBOOK' => [
+				'type' => 'VARCHAR',
+				'constraint' => '250',
+				'null' => TRUE
+			],
+			'INSTAGRAM' => [
+				'type' => 'VARCHAR',
+				'constraint' => '250',
+				'null' => TRUE
+			],
+			'TWITTER' => [
+				'type' => 'VARCHAR',
+				'constraint' => '250',
+				'null' => TRUE
+			],
 			'IDIOMAID' => [
 				'type' => 'INT',
 				'null' => TRUE
 			],
 			'DOCUMENTO' => [
-				'type' => 'TEXT',
+				'type' => 'BLOB',
 				'null' => TRUE
 			],
 			'FIRMA' => [
-				'type' => 'TEXT',
+				'type' => 'BLOB',
 				'null' => TRUE
 			],
 			'NOTIFICACIONES' => [
