@@ -74,8 +74,17 @@
 			</a>
 		</div>
 	</section>
-
+	<section>
+		<div class="row">
+			<div class="col-12 text-center">
+				<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tutorial_modal">
+					<i class="bi bi-play-btn-fill"></i> Ver video tutorial
+				</button>
+			</div>
+		</div>
+	</section>
 </div>
+<?php include('tutorial_modal.php') ?>
 
 <script>
 	function handleClickBTN(e) {
@@ -89,6 +98,16 @@
 			})
 		}
 	}
+
+	document.querySelector('#tutorial_modal').addEventListener('shown.bs.modal', () => {
+		document.querySelector('#tutorial_video').play();
+		console.log('Dando play');
+	});
+
+	document.querySelector('#tutorial_modal').addEventListener('hidden.bs.modal', () => {
+		document.querySelector('#tutorial_video').pause();
+	});
 </script>
+
 
 <?= $this->endSection() ?>
