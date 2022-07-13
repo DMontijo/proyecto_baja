@@ -89,7 +89,7 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="fecha_nacimiento_menor" class="form-label fw-bold input-required">Fecha de nacimiento</label>
-		<input type="date" class="form-control" id="fecha_nacimiento_menor" name="fecha_nacimiento_menor">
+		<input type="date" class="form-control" id="fecha_nacimiento_menor" name="fecha_nacimiento_menor" max="<?= date("Y-m-d") ?>">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="sexo_menor" class="form-label fw-bold input-required">Sexo</label>

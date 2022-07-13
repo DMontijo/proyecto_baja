@@ -64,7 +64,7 @@
 						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="fecha_nacimiento" class="form-label fw-bold input-required">Fecha de nacimiento</label>
-							<input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" required>
+							<input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" required max="<?= date("Y-m-d") ?>">
 							<div class="invalid-feedback">
 								La fecha de nacimiento es obligatoria
 							</div>

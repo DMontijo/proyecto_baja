@@ -43,7 +43,7 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="fecha_nac_imputado" class="form-label fw-bold ">Fecha de nacimiento del posible responsable</label>
-		<input type="date" class="form-control" id="fecha_nac_imputado" name="fecha_nac_imputado">
+		<input type="date" class="form-control" id="fecha_nac_imputado" name="fecha_nac_imputado" max="<?= date("Y-m-d") ?>">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="escolaridad_imputado" class="form-label fw-bold">Escolaridad del posible responsable</label>
@@ -92,6 +92,20 @@
 	</div>
 	<div class="col-12">
 		<label for="description_fisica_imputado" class="form-label fw-bold">Descripción física del posible responsable</label>
-		<textarea class="form-control" id="description_fisica_imputado" name="description_fisica_imputado" row="5" maxlength="300"></textarea>
+		<textarea class="form-control" id="description_fisica_imputado" name="description_fisica_imputado" onkeyup="contarCaracteresImp(this)" rows="10" maxlength="300"></textarea>
+		<small id="numCaracterImp">300 caracteres restantes</small>
 	</div>
 </div>
+<script>
+	function contarCaracteresImp(obj) {
+		var maxLength = 300;
+		var strLength = obj.value.length;
+		var charRemain = (maxLength - strLength);
+
+		if (charRemain < 0) {
+			document.getElementById("numCaracterImp").innerHTML = '<span style="color: red;">Has superado el límite de ' + maxLength + ' caracteres </span>';
+		} else {
+			document.getElementById("numCaracterImp").innerHTML = charRemain + ' caracteres restantes';
+		}
+	}
+</script>

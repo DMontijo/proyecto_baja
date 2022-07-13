@@ -61,7 +61,7 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="fecha_nacimiento_des" class="form-label fw-bold">Fecha de nacimiento</label>
-		<input type="date" class="form-control" id="fecha_nacimiento_des" name="fecha_nacimiento_des">
+		<input type="date" class="form-control" id="fecha_nacimiento_des" name="fecha_nacimiento_des" max="<?= date("Y-m-d") ?>">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="edad_des" class="form-label fw-bold ">Edad aproximada</label>
@@ -202,7 +202,7 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="dia_des" class="form-label fw-bold ">¿Cuando se le vio por ultima vez?</label>
-		<input type="date" class="form-control" id="dia_des" name="dia_des">
+		<input type="date" class="form-control" id="dia_des" name="dia_des" max="<?= date("Y-m-d") ?>">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="lugar_des" class="form-label fw-bold ">¿Dónde se le vio por ultima vez?</label>

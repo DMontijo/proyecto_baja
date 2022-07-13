@@ -185,7 +185,7 @@
 		<input class="form-control" type="file" id="foto_vehiculo" name="foto_vehiculo" accept="image/*" capture="user">
 	</div>
 	<div class="col-12 mb-3">
-		<label for="description_vehiculo" class="form-label fw-bold">Otras carcterísticas que permitan identificar el vehículo:</label>
+		<label for="description_vehiculo" class="form-label fw-bold">Otras características que permitan identificar el vehículo:</label>
 		<textarea class="form-control" id="description_vehiculo" name="description_vehiculo" rows="10"></textarea>
 	</div>
 </div>

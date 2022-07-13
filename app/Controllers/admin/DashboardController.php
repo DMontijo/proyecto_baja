@@ -279,19 +279,20 @@ class DashboardController extends BaseController
 	}
 	public function findPersonadDomicilioById()
 	{
-		$data = (object)array();
 		$id = $this->request->getPost('id');
 		$folio = $this->request->getPost('folio');
-		$idestado = $this->request->getPost('idestado');
-		$idmunicipio = $this->request->getPost('idmunicipio');
+
+		$data = (object)array();
 
 		$data->persondom = $this->_folioPersonaFisicaDomicilioModel->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
-		$data->estado = $this->_folioPersonaFisicaDomicilioModel->join('CATEGORIA_ESTADO', 'CATEGORIA_ESTADO.ESTADOID =FOLIOPERSONAFISDOMICILIO.ESTADOID')->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
-		$data->municipio = $this->_folioPersonaFisicaDomicilioModel->join('CATEGORIA_MUNICIPIO', 'CATEGORIA_MUNICIPIO.MUNICIPIOID =FOLIOPERSONAFISDOMICILIO.MUNICIPIOID')->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
-		$data->localidad = $this->_folioPersonaFisicaDomicilioModel->join('CATEGORIA_LOCALIDAD', 'CATEGORIA_LOCALIDAD.LOCALIDADID =FOLIOPERSONAFISDOMICILIO.LOCALIDADID')->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
+		$data->estado = $this->_estadosModel->where('ESTADOID', 2)->asObject()->first();
+		$data->municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data->persondom['MUNICIPIOID'])->first();
+		$data->localidad = $this->_localidadesModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data->persondom['MUNICIPIOID'])->where('LOCALIDADID', $data->persondom['LOCALIDADID'])->first();
+		$data->colonia = $this->_coloniasModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data->persondom['MUNICIPIOID'])->where('COLONIAID', $data->persondom['COLONIAID'])->first();
 
 		return json_encode($data);
 	}
+
 	public function findPersonadVehiculoById()
 	{
 		$data = (object)array();
@@ -304,6 +305,7 @@ class DashboardController extends BaseController
 
 		return json_encode($data);
 	}
+	
 	public function enviarFolio()
 	{
 		$data = (object)array();

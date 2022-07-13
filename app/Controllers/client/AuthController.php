@@ -52,7 +52,7 @@ class AuthController extends BaseController
 	{
 		$session = session();
 		$session->destroy();
-		return redirect()->to(base_url('denuncia'));
+		return redirect()->to(base_url());
 	}
 
 	public function change_password()

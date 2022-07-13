@@ -7,7 +7,6 @@
 <?= $this->section('content') ?>
 
 <div class="container">
-
 	<!--Versión escritorio-->
 	<div class="row mb-5">
 		<div class="col-12">

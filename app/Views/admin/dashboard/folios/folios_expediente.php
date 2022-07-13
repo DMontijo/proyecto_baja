@@ -68,8 +68,8 @@
 			let grabacion = "";
 			let enlace = 'https://yocontigo-videodenuncias-video.s3.amazonaws.com/'
 			if (data.data.length > 0) {
-				console.log(data);
-				data.data.forEach(element => {
+				array = data.data.reverse();
+				array.forEach(element => {
 					if (element.Grabación != '') {
 						grabacion = element.Grabación
 					}
