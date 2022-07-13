@@ -144,8 +144,8 @@ class DashboardController extends BaseController
 	public function nuevo_usuario()
 	{
 		$data = (object)array();
-		$data->zonas = $this->_zonasUsuariosModel->asObject()->findAll();
-		$data->roles = $this->_rolesUsuariosModel->asObject()->findAll();
+		$data->zonas = $this->_zonasUsuariosModel->asObject()->where('NOMBRE_ZONA !=', 'SUPERUSUARIO')->findAll();
+		$data->roles = $this->_rolesUsuariosModel->asObject()->where('NOMBRE_ROL !=', 'SUPERUSUARIO')->findAll();
 		$this->_loadView('Nuevo usuario', 'registrarusuario', '', $data, 'new_user');
 	}
 
@@ -182,9 +182,9 @@ class DashboardController extends BaseController
 			'ROLID' => $this->request->getPost('rol'),
 			'ZONAID' => $this->request->getPost('zona'),
 			'HUELLA_DIGITAL' => NULL,
-			'CERTIFICADOFIRMA' => $this->request->getPost('cer'),
-			'KEYFIRMA' => $this->request->getPost('key'),
-			'FRASEFIRMA' => $this->request->getPost('frase'),
+			'CERTIFICADOFIRMA' => NULL,
+			'KEYFIRMA' => NULL,
+			'FRASEFIRMA' => NULL,
 		];
 
 		if ($this->validate(['correo' => 'required|is_unique[USUARIOS.CORREO]'])) {
@@ -305,7 +305,7 @@ class DashboardController extends BaseController
 
 		return json_encode($data);
 	}
-	
+
 	public function enviarFolio()
 	{
 		$data = (object)array();

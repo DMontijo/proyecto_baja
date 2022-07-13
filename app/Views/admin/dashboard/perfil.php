@@ -18,32 +18,32 @@
 							<form class="g-3 needs-validation" method="POST" enctype="multipart/form-data" novalidate>
 								<div class="row">
 									<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-										<label for="nombreU" class="form-label fw-bold">Nombre(s)</label>
+										<label for="nombreU" class="form-label font-weight-bold">Nombre(s)</label>
 										<input autocomplete="off" type="text" name="nombre" class="form-control" id="nombre" value="<?= session('NOMBRE') ?>">
 										<div class="invalid-feedback">
 											El nombre es obligatorio
 										</div>
 									</div>
 									<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-										<label for="apellido_paterno">Apellido paterno</label>
+										<label for="apellido_paterno" class="font-weight-bold">Apellido paterno</label>
 										<input autocomplete="off" type="text" name="apellido_paterno" class="form-control" id="apellido_paterno" value="<?= session('APELLIDO_PATERNO') ?>">
 										<div class="invalid-feedback">
 											El apellido paterno es obligatorio
 										</div>
 									</div>
 									<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-										<label for="apellido_materno">Apellido materno</label>
+										<label for="apellido_materno" class="font-weight-bold">Apellido materno</label>
 										<input autocomplete="off" type="text" name="apellido_materno" class="form-control" id="apellido_materno" value="<?= session('APELLIDO_MATERNO') ?>">
 									</div>
 									<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-										<label for="correo">Correo electrónico</label>
+										<label for="correo" class="font-weight-bold">Correo electrónico</label>
 										<input type="email" name="correo" class="form-control" id="correo" value="<?= session('CORREO') ?>">
 										<div class="invalid-feedback">
 											El correo electrónico es obligatorio
 										</div>
 									</div>
 									<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-										<label for="zona">Zona</label>
+										<label for="zona" class="font-weight-bold">Zona</label>
 										<select class="form-control" id="zona" name="zona" disabled>
 											<option selected value="">Elige la zona</option>
 											<?php foreach ($body_data->zonas as $index => $zonas) { ?>
@@ -55,7 +55,7 @@
 										</div>
 									</div>
 									<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-										<label for="rol">ROL de usuario</label>
+										<label for="rol" class="font-weight-bold">ROL de usuario</label>
 										<select class="form-control" id="rol" name="rol" disabled>
 											<option selected value="">Elige el rol del usuario</option>
 											<?php foreach ($body_data->roles as $index => $roles) { ?>
@@ -67,7 +67,7 @@
 										</div>
 									</div>
 									<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-										<label for="sexo" class="form-label fw-bold">Sexo</label>
+										<label for="sexo" class="form-label font-weight-bold">Sexo</label>
 										<br>
 										<div class="form-check form-check-inline">
 											<input class="form-check-input" type="radio" name="sexo" value="M" <?= session('SEXO') == 'M' ? 'checked' : '' ?>>
@@ -90,14 +90,14 @@
 							<form id="form_password" class="g-3 needs-validation" action="<?= base_url() ?>/admin/dashboard/update_password" method="POST" enctype="multipart/form-data" novalidate>
 								<div class="row">
 									<div class="col-12 col-sm-6 mb-3">
-										<label for="password">Nueva contraseña</label>
+										<label for="password" class="font-weight-bold">Nueva contraseña</label>
 										<input autocomplete="off" type="password" name="password" class="form-control" id="password" placeholder="Escribe la contraseña" required>
 										<div class="invalid-feedback">
 											La contraseña es obligatoria
 										</div>
 									</div>
 									<div class="col-12 col-sm-6 mb-3">
-										<label for="password_confirm">Confirmar nueva contraseña</label>
+										<label for="password_confirm" class="font-weight-bold">Confirmar nueva contraseña</label>
 										<input autocomplete="off" type="password" name="password_confirm" class="form-control" id="password_confirm" placeholder="Escribe la contraseña" required>
 										<div class="invalid-feedback">
 											La confirmación de contraseña es obligatoria
