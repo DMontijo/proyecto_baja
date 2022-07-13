@@ -196,16 +196,15 @@
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="telefono" class="form-label fw-bold input-required">Número de télefono</label>
-							<input type="number" class="form-control" id="telefono" name="telefono" required maxlength="20" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
-							<div class="invalid-feedback">
-								El número télefono es obligatorio
-							</div>
+							<input type="number" class="form-control" id="telefono" name="telefono" required min="111111" max="99999999999999999999" minlenght="6" maxlength="20" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+							<!-- <small>Mínimo 6 digitos</small> -->
 							<input type="number" id="codigo_pais" name="codigo_pais" maxlength="3" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" hidden>
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="telefono2" class="form-label fw-bold">Número de télefono 2 (opcional)</label>
-							<input type="number" class="form-control" id="telefono2" name="telefono2" maxlength="20" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+							<input type="number" class="form-control" id="telefono2" name="telefono2" min="111111" max="99999999999999999999" minlenght="6" maxlength="20" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+							<!-- <small>Mínimo 6 digitos</small> -->
 							<input type="number" id="codigo_pais_2" name="codigo_pais_2" maxlength="3" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" hidden>
 						</div>
 
