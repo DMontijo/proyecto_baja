@@ -253,13 +253,9 @@
 							<label for="escolaridad" class="form-label fw-bold input-required">Escolaridad</label>
 							<select class="form-select" id="escolaridad" name="escolaridad" required>
 								<option selected disabled value="">Seleccione la escolaridad</option>
-								<option value="NINGUNA">NINGUNA</option>
-								<option value="PRIMARIA">PRIMARIA</option>
-								<option value="SECUNDARIA">SECUNDARIA</option>
-								<option value="BACHILLERATO">BACHILLERATO</option>
-								<option value="LICENCIATURA">LICENCIATURA</option>
-								<option value="MAESTRIA">MAESTRÍA</option>
-								<option value="DOCTORADO">DOCTORADO</option>
+								<?php foreach ($body_data->escolaridades as $index => $escolaridad) { ?>
+									<option value="<?= $escolaridad->PERSONAESCOLARIDADDESCR ?>"> <?= $escolaridad->PERSONAESCOLARIDADDESCR ?> </option>
+								<?php } ?>
 							</select>
 							<div class="invalid-feedback">
 								La escolaridad es obligatoria
@@ -268,7 +264,12 @@
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="ocupacion" class="form-label fw-bold">Ocupación</label>
-							<input type="text" class="form-control" id="ocupacion" name="ocupacion" maxlength="100">
+							<select class="form-select" id="ocupacion" name="ocupacion" required>
+								<option selected disabled value="">Seleccione la ocupacion</option>
+								<?php foreach ($body_data->ocupaciones as $index => $ocupacion) { ?>
+									<option value="<?= $ocupacion->PERSONAOCUPACIONDESCR ?>"> <?= $ocupacion->PERSONAOCUPACIONDESCR ?> </option>
+								<?php } ?>
+							</select>
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">

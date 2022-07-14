@@ -17,6 +17,9 @@ use App\Models\PaisesModel;
 use App\Models\HechoClasificacionLugarModel;
 use App\Models\FolioModel;
 
+use App\Models\EscolaridadModel;
+use App\Models\OcupacionModel;
+
 class UserController extends BaseController
 {
 	function __construct()
@@ -34,6 +37,9 @@ class UserController extends BaseController
 		$this->_paisesModel = new PaisesModel();
 		$this->_clasificacionLugarModel = new HechoClasificacionLugarModel();
 		$this->_folioModel = new FolioModel();
+
+		$this->_escolaridadModel = new EscolaridadModel();
+		$this->_ocupacionModel = new OcupacionModel();
 	}
 
 	public function index()
@@ -51,6 +57,8 @@ class UserController extends BaseController
 		$data->paises = $this->_paisesModel->asObject()->findAll();
 		$data->estados = $this->_estadosModel->asObject()->findAll();
 		$data->tiposIdentificaciones = $this->_tipoIdentificacionModel->asObject()->findAll();
+		$data->escolaridades = $this->_escolaridadModel->asObject()->findAll();
+		$data->ocupaciones = $this->_ocupacionModel->asObject()->findAll();
 		$this->_loadView('Denuncia', $data, 'index');
 	}
 

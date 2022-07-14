@@ -330,8 +330,8 @@ class DashboardController extends BaseController
 			$this->_folioPersonaFisicaDomicilio($dataImputadoDomicilio, $FOLIOID, $imputadoId);
 		} else {
 			$dataImputado = array(
-				'NOMBRE' => 'QUIEN RESULTE RESPONSABLE',
-				'PRIMERAPELLIDO' => 'N',
+				'NOMBRE' => 'QRR',
+				// 'PRIMERAPELLIDO' => 'N',
 				// 'SEGUNDOAPELLIDO' => '',
 				// 'APODO' => '',
 			);

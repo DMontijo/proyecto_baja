@@ -52,7 +52,7 @@
 		<?php if (session('USUARIOVIDEO') && session('TOKENVIDEO')) { ?>
 			<div class="card rounded bg-white shadow">
 				<div class="card-body embed-responsive embed-responsive-1by1 shadow rounded">
-					<iframe src="<?= "https://videodenunciaserver1.fgebc.gob.mx/pde?u=" . session('USUARIOVIDEO') . "&token=" . session('TOKENVIDEO') ?>" frameborder="0" allow="camera *;microphone *"></iframe>
+					<iframe src="<?= "https://videodenunciaserver1.fgebc.gob.mx/pde?u=" . session('USUARIOVIDEO') . "&token=" . session('TOKENVIDEO') . '&random=' . uniqid() ?>" frameborder="0" allow="camera *;microphone *"></iframe>
 				</div>
 			</div>
 		<?php } else { ?>
