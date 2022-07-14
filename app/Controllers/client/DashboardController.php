@@ -254,6 +254,14 @@ class DashboardController extends BaseController
 			$this->_folioPersonaFisicaDomicilio($dataMenorDomicilio, $FOLIOID, $menor);
 		}
 
+		if ($this->request->getPost('es_menor') === "NO" && $this->request->getPost('es_ofendido') === "NO") {
+			$dataOfendido = array(
+				'NOMBRE' => 'QUIEN RESULTE OFENDIDO',
+			);
+
+			$ofendidoId = $this->_folioPersonaFisica($dataOfendido, $FOLIOID, 1);
+		}
+
 		//DATOS DEL DENUNCIANTE
 		$denunciante = $this->_denunciantesModel->asObject()->where('ID_DENUNCIANTE', $session->get('ID_DENUNCIANTE'))->first();
 
@@ -331,9 +339,6 @@ class DashboardController extends BaseController
 		} else {
 			$dataImputado = array(
 				'NOMBRE' => 'QRR',
-				// 'PRIMERAPELLIDO' => 'N',
-				// 'SEGUNDOAPELLIDO' => '',
-				// 'APODO' => '',
 			);
 
 			$imputadoId = $this->_folioPersonaFisica($dataImputado, $FOLIOID, 2);

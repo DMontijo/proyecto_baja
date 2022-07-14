@@ -471,7 +471,7 @@ class DashboardController extends BaseController
 			$folioRow['AREAIDREGISTRO'] = $empleadoRow->AREAID;
 			$folioRow['AREAIDRESPONSABLE'] = $empleadoRow->AREAID;
 			$folioRow['ESTADOJURIDICOEXPEDIENTEID'] = (string)2;
-			$folioRow['HECHOMEDIOCONOCIMIENTOID'] = (string)5;
+			$folioRow['HECHOMEDIOCONOCIMIENTOID'] = (string)6;
 			$folioRow['NOTASAGENTE'] = $notas;
 			$folioRow['STATUS'] = 'EXPEDIENTE';
 			$folioRow['AGENTEATENCIONID'] = session('ID');
