@@ -130,7 +130,63 @@ class FileOriginalesSeeder extends Seeder
             AGENTE DEL MINISTERIO PUBLICO ADSCRITO A LA UNIDAD DE ATENCIÓN Y <br> 
             ORIENTACIÓN TEMPRANA(ORIENTACIÓN)<br></p><br>',
             'OPCIONES'=>'NULL','TIPO_ARCHIVO'=>'ORDEN DE PROTECCION RONDINES','RELACIONADO_CON'=>'0','MODIFICADO'=>'0','ELIMINADO'=>'0','ID_DENUNCIANTE'=>'NULL'),
+           
+           
+            array('ID'=>"6", 'DESCRIPCION'=>'CONSTANCIA DE EXTRAVÍO', 'TITULO'=>'CONSTANCIA DE EXTRAVÍO','PLACEHOLDER'=>'<br><p class="p1" style="margin: 0px; text-align: right; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0); min-height: 14px;"><strong>FOLIO: [FOLIO_NUMERO]</strong></p><br>
+
+            <p class="p2" style="margin: 0px; text-align: justify; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0);">
+            El C.AGENTE DEL MINISTERIO PÚBLICO <br>
+            <strong>[NOMBRE_AGENTE] </strong><br> </p><br>
+                
+            <p class="p3" style="margin: 0px; text-align: justify; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0); min-height: 14px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; HACE CONSTAR QUE EL CONTROL DE REPORTES QUE SE LLEVÓ A CABO EN ESTA OFICINA, HA QUEDADO REGISTRADO EL REPORTE DE PÉRDIDA DE: <strong>[NOMBRE_CERTIFICADO]</strong>
+            <br>
+            LA PÉRDIDA DE DICHO(A) <strong>[NOMBRE_CERTIFICADO]</strong> OCURRIÓ BAJO LAS SIGUIENTES CIRCUNSTANCIAS DE LUGAR.
+            <br>
+            MANIFIESTA EL COMPARECIENTE HABER EXTRAVIADO EL ORIGINAL DE <strong>[NOMBRE_CERTIFICADO]</strong>, NÚMERO:, A NOMBRE DE: <strong>[NOMBRE_PERSONA]</strong>
+            <br>
+            </p><br>
+            <table class="t1" style="border:1px solid black;  margin-left: auto;margin-right: auto;">
+                <tr style=" border:1px solid black;">
+                    <th style=" border:1px solid black;">COMPARECIENTE</th>
+                    <th style=" border:1px solid black;">[NOMBRE_PERSONA]</th>
+                </tr>
+                <tr style=" border:1px solid black;">
+                    <th style=" border:1px solid black;">LUGAR DE EXTRAVÍO</th>
+                    <th style=" border:1px solid black;">[LUGAR_EXTRAVIO]</th>
+                </tr>
+                <tr style=" border:1px solid black;">
+                    <th style=" border:1px solid black;">FECHA DE EXTRAVÍO</th>
+                    <th style=" border:1px solid black;">[FECHA_EXTRAVIO]</th>
+                </tr>
+                <tr style=" border:1px solid black;">
+                    <th style=" border:1px solid black;">DESCRIPCIÓN</th>
+                    <th style=" border:1px solid black;">[DESCRIPCION_EXTRAVIO]</th>
+                </tr>
+            </table>
+            <br>
+            <p class="p4" style="margin: 0px; text-align: justify; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0); min-height: 14px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+            SE EXPIDE LA PRESENTE CONSTANCIA EN LA CIUDAD DE: <strong>[NOMBRE_CIUDAD]</strong> A LOS <strong>[DIA]</strong> DÍAS DEL MES DE <strong>[MES]</strong> DEL AÑO <strong>[ANIO]</strong> A LAS <strong>[HORA]</strong>; LA CUAL NO SUSTITUYE EL DOCUMENTO ORIGINAL NI VALIDA LA PREEXISTENCIA DEL DOCUMENTO U OBJETO
+            </p><br>
+                
+                <br>
+                <br>
+                <br>
             
+                <br>
+                <br>
+                <br>
+            
+                <br>
+                <br>
+                <br>
+            
+            <p class="p6" style="margin: 0px; text-align: center; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 11px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0);">
+            <strong>[NOMBRE_AGENTE]</strong> <br>
+            AGENTE DEL MINISTERIO PÚBLICO ADSCRITO AL SISTEMA<br>
+            ESTATAL DE JUSTICIA ALTERNATIVA PENAL<br></p><br>', 'OPCIONES'=>'NULL','TIPO_ARCHIVO'=>'CONSTANCIA DE EXTRAVÍO','RELACIONADO_CON'=>'0','MODIFICADO'=>'0','ELIMINADO'=>'0','ID_DENUNCIANTE'=>'NULL'
+         ),
+
+         
          
         
         ];

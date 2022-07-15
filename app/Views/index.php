@@ -83,6 +83,16 @@
 			</div>
 		</div>
 	</section>
+	<br>
+	<section>
+		<div class="row">
+			<div class="col-12 text-center">
+				<a href="<?= base_url() ?>/constancia_extravio" class="btn btn-primary">
+					<i class="bi bi-file-earmark-plus-fill"></i> Constancia de Extravío
+				</a>
+			</div>
+		</div>
+	</section>
 </div>
 <?php include('tutorial_modal.php') ?>
 

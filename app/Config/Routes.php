@@ -55,7 +55,7 @@ $routes->group('admin', function ($routes) {
 
 		$routes->get('video-denuncia', 'admin/DashboardController::video_denuncia');
 		$routes->get('denuncia-anonima', 'admin/DashboardController::denuncia_anonima');
-
+		$routes->get('solicitudes_extravios', 'admin/FoliosController::constancias_abiertas');
 		$routes->get('folios', 'admin/FoliosController::index');
 		$routes->get('folios_abiertos', 'admin/FoliosController::folios_abiertos');
 		$routes->get('folios_derivados', 'admin/FoliosController::folios_derivados');
@@ -68,10 +68,13 @@ $routes->group('admin', function ($routes) {
 		$routes->post('update_password', 'admin/DashboardController::update_password');
 
 		$routes->get('certificadoMedico', 'PDFController::certificadoMedico');
+		$routes->get('constanciaExtravio', 'PDFController::constanciaExtravio');
 		$routes->get('constancia-video-denuncia', 'PDFController::constanciaVideoDenuncia');
 		$routes->get('orden-proteccion-albergue', 'PDFController::proteccionAlbergue');
 		$routes->get('orden-proteccion-pertenencia', 'PDFController::proteccionPertenencia');
 		$routes->get('orden-proteccion-rondines', 'PDFController::proteccionRondines');
+		$routes->post('generaPDFE', 'PDFController::PDFExtravio');
+
 	});
 });
 
@@ -144,8 +147,27 @@ $routes->group('data', function ($routes) {
 	$routes->post('get-persona-domicilio-by-id', 'admin/DashboardController::findPersonadDomicilioById');
 	$routes->post('get-persona-vehiculo-by-id', 'admin/DashboardController::findPersonadVehiculoById');
 	$routes->post('join', 'admin/DashboardController::joinFisico');
+
+
+	$routes->post('generaPDFE', 'PDFController::PDFExtravio');
+
 });
 
+/**
+ * Extravio Routes
+ */
+$routes->group('constancia_extravio', function ($routes) {
+	$routes->get('/', 'extravio/ExtravioController::index');
+	$routes->get('login', 'extravio/ExtravioController::login');
+	$routes->post('login_auth', 'extravio/ExtravioController::login_auth');
+
+	$routes->get('register', 'extravio/ExtravioController::index');
+	$routes->post('create_constancia', 'extravio/ExtravioController::create');
+	$routes->group('dashboard', function ($routes) {
+		$routes->get('/', 'extravio/DashboardController::index');
+		$routes->post('solicitar_constancia', 'extravio/DashboardController::solicitar_constancia');
+	});
+});
 /**
  * --------------------------------------------------------------------
  * Additional Routing
