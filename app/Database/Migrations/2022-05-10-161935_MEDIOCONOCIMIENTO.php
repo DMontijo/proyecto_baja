@@ -24,11 +24,11 @@ class MEDIOCONOCIMIENTO extends Migration
             ]
         ]);
         $this->forge->addKey('MEDIOCONOCIMIENTOID', TRUE);
-        $this->forge->createTable('CATEGORIA_MEDIOCONOCIMIENTO');
+        $this->forge->createTable('MEDIOCONOCIMIENTO');
     }
 
     public function down()
     {
-        $this->forge->dropTable('CATEGORIA_MEDIOCONOCIMIENTO');
+        $this->forge->dropTable('MEDIOCONOCIMIENTO');
     }
 }

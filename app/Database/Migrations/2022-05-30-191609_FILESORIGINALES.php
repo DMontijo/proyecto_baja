@@ -43,7 +43,7 @@ class FILESORIGINALES extends Migration
 				'type'           => 'TINYINT',
 				'default'     => '0',
 			],
-			'ID_DENUNCIANTE'          => [
+			'DENUNCIANTEID'          => [
 				'type'           => 'INT',
 			],
 

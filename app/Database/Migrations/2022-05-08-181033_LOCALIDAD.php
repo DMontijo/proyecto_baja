@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class CATEGORIALOCALIDAD extends Migration
+class LOCALIDAD extends Migration
 {
 	public function up()
 	{
@@ -41,11 +41,11 @@ class CATEGORIALOCALIDAD extends Migration
 			]
 		]);
 		$this->forge->addKey('ID', TRUE);
-		$this->forge->createTable('CATEGORIA_LOCALIDAD');
+		$this->forge->createTable('LOCALIDAD');
 	}
 
 	public function down()
 	{
-		$this->forge->dropTable('CATEGORIA_LOCALIDAD');
+		$this->forge->dropTable('LOCALIDAD');
 	}
 }

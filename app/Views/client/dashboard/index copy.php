@@ -6,6 +6,7 @@
 
 <?= $this->section('content') ?>
 <?php $session = session(); ?>
+<?= $session ?>
 <div class="row">
 	<div class="col-12">
 		<div class="col-12">
@@ -24,7 +25,7 @@
 				</div>
 			</div>
 		</div>
-		<h4 id="titulo" class="text-center text-blue fw-bold my-4">BIENVENID@ <?= $session->NOMBRE ?> <?= $session->APELLIDO_PATERNO ?> <?= $session->APELLIDO_MATERNO ?></h4>
+		<h4 class="text-center text-blue fw-bold my-4">BIENVENID@ <?= $session->NOMBRE ?> <?= $session->APELLIDO_PATERNO ?> <?= $session->APELLIDO_MATERNO ?></h4>
 		<div class="card rounded shadow border-0">
 			<div class="card-body py-5 p-sm-5">
 				<div class="container">
@@ -241,11 +242,6 @@
 				document.querySelector('#numero_ext_menor').setAttribute('required', true);
 				document.querySelector('#fecha_nacimiento_menor').setAttribute('required', true);
 				document.querySelector('#edad_menor').setAttribute('required', true);
-				
-				let radiosSexoMenor = document.querySelectorAll('input[name="sexo_menor"]');
-				radiosSexoMenor.forEach((radio) => {
-					radio.setAttribute('required', true);
-				});
 
 			} else if (document.querySelector('input[name="es_menor"]:checked').value === 'NO') {
 				document.getElementById('datos_menor').classList.remove('step');
@@ -264,6 +260,7 @@
 
 			if (document.querySelector('input[name="esta_desaparecido"]:checked').value === 'SI') {
 				document.getElementById('datos_desaparecido').classList.add('step');
+
 				document.querySelector('#nombre_des').setAttribute('required', true);
 				document.querySelector('#apellido_paterno_des').setAttribute('required', true);
 				document.querySelector('#pais_des').setAttribute('required', true);
@@ -277,6 +274,7 @@
 
 			} else {
 				document.getElementById('datos_desaparecido').classList.remove('step');
+
 				document.querySelector('#nombre_des').removeAttribute('required');
 				document.querySelector('#apellido_paterno_des').removeAttribute('required');
 				document.querySelector('#pais_des').removeAttribute('required');
@@ -324,7 +322,6 @@
 				}
 			}
 			progress.style.width = `${currentStep*width}%`
-			document.querySelector('#titulo').scrollIntoView();
 		} else {
 			console.log('NO SE VALIDO');
 			submitBtn.click();
@@ -408,7 +405,6 @@
 					document.querySelector('input[name="tiene_discapacidad"]:checked') &&
 					document.querySelector('input[name="es_vulnerable"]:checked') &&
 					document.querySelector('input[name="fue_con_arma"]:checked') &&
-					document.querySelector('input[name="lesiones"]:checked') &&
 					document.querySelector('input[name="esta_desaparecido"]:checked')
 				) {
 					return true;
@@ -426,8 +422,7 @@
 					document.querySelector('#calle_menor').value != '' &&
 					document.querySelector('#numero_ext_menor').value != '' &&
 					document.querySelector('#fecha_nacimiento_menor').value != '' &&
-					document.querySelector('#edad_menor').value != '' &&
-					document.querySelector('input[name="sexo_menor"]:checked')
+					document.querySelector('#edad_menor').value != ''
 				) {
 					return true
 				} else {
@@ -441,7 +436,6 @@
 					document.querySelector('#pais_des').value != '' &&
 					document.querySelector('#estado_des').value != '' &&
 					document.querySelector('#municipio_des').value != '' &&
-					document.querySelector('#colonia_des').value != '' &&
 					document.querySelector('#calle_des').value != '' &&
 					document.querySelector('#numero_ext_des').value != '' &&
 					document.querySelector('#edad_des').value != ''
@@ -480,7 +474,7 @@
 				if (true) {
 					return true
 				} else {
-					return false;
+					return true;
 				}
 				break;
 			default:

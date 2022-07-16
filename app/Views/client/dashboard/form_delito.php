@@ -161,6 +161,7 @@
 		if (e.target.value === '0') {
 			select_colonia.classList.add('d-none');
 			input_colonia.classList.remove('d-none');
+			input_colonia.value = "";
 			input_colonia.focus();
 		} else {
 			input_colonia.value = e.target.value;

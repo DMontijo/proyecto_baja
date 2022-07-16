@@ -30,6 +30,8 @@ class LoginController extends BaseController
 		$session = session();
 		$email = $this->request->getPost('correo');
 		$password = $this->request->getPost('password');
+		$email = trim($email);
+		$password = trim($password);
 		$data = $this->_usuariosModel->where('CORREO', $email)->first();
 		if ($data && validatePassword($password, $data['PASSWORD'])) {
 			$data['logged_in'] = TRUE;

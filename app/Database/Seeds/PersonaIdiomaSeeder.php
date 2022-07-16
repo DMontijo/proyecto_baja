@@ -86,6 +86,6 @@ class PersonaIdiomaSeeder extends Seeder
 			array('PERSONAIDIOMADESCR' => 'VIETNAMES'),
 
 		];
-		$this->db->table('CATEGORIA_PERSONAIDIOMA')->insertBatch($data);
+		$this->db->table('PERSONAIDIOMA')->insertBatch($data);
 	}
 }

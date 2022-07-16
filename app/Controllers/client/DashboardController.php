@@ -11,29 +11,20 @@ use App\Models\LocalidadesModel;
 use App\Models\ColoniasModel;
 use App\Models\HechoLugarModel;
 use App\Models\VehiculoColorModel;
-use App\Models\VehiculoMarcaModel;
-use App\Models\VehiculoModeloModel;
 use App\Models\VehiculoTipoModel;
 use App\Models\PaisesModel;
 use App\Models\DelitosUsuariosModel;
 use App\Models\PersonaIdiomaModel;
-use App\Models\VehiculoDistribuidorModel;
-use App\Models\VehiculoVersionModel;
-use App\Models\VehiculoServicioModel;
 
 use App\Models\FolioPreguntasModel;
-use App\Models\FolioCorrelativoModel;
 use App\Models\FolioModel;
 use App\Models\FolioPersonaFisicaModel;
 use App\Models\FolioPersonaFisicaDomicilioModel;
 use App\Models\FolioPersonaFisicaDesaparecidaModel;
-use App\Models\FolioPersonaFisicaImputadoDelitoModel;
-use App\Models\FolioPersonaFisicaImputadoModel;
-use App\Models\FolioRelacionFisicaFisicaModel;
-use App\Models\FolioObjetoModel;
 use App\Models\FolioVehiculoModel;
-use App\Models\FolioDocumentoModel;
-use App\Models\FolioArchivoExternoModel;
+
+use App\Models\EscolaridadModel;
+use App\Models\OcupacionModel;
 
 class DashboardController extends BaseController
 {
@@ -47,29 +38,20 @@ class DashboardController extends BaseController
 		$this->_coloniasModel = new ColoniasModel();
 		$this->_hechoLugarModel = new HechoLugarModel();
 		$this->_coloresVehiculoModel = new VehiculoColorModel();
-		$this->_marcaVehiculoModel = new VehiculoMarcaModel();
-		$this->_lineaVehiculoModel = new VehiculoModeloModel();
 		$this->_tipoVehiculoModel = new VehiculoTipoModel();
-		$this->_distribuidorVehiculoModel = new VehiculoDistribuidorModel();
-		$this->_versionVehiculoModel = new VehiculoVersionModel();
-		$this->_servicioVehiculoModel = new VehiculoServicioModel();
 		$this->_delitosUsuariosModel = new DelitosUsuariosModel();
 		$this->_denunciantesModel = new DenunciantesModel();
 		$this->_personaIdiomaModel = new PersonaIdiomaModel();
 
-		$this->_folioCorrelativoModel = new FolioCorrelativoModel();
 		$this->_folioModel = new FolioModel();
 		$this->_folioPreguntasModel = new FolioPreguntasModel();
 		$this->_folioPersonaFisicaModel = new FolioPersonaFisicaModel();
 		$this->_folioPersonaFisicaDomicilioModel = new FolioPersonaFisicaDomicilioModel();
 		$this->_folioPersonaFisicaDesaparecidaModel = new FolioPersonaFisicaDesaparecidaModel();
-		$this->_folioPersonaFisicaImputadoDelitoModel = new FolioPersonaFisicaImputadoDelitoModel();
-		$this->_folioPersonaFisicaImputadoModel = new FolioPersonaFisicaImputadoModel();
-		$this->_folioRelacionFisicaFisicaModel = new FolioRelacionFisicaFisicaModel();
-		$this->_folioObjetoModel = new FolioObjetoModel();
 		$this->_folioVehiculoModel = new FolioVehiculoModel();
-		$this->_folioDocumentoModel = new FolioDocumentoModel();
-		$this->_folioArchivoExternoModel = new FolioArchivoExternoModel();
+
+		$this->_escolaridadModel = new EscolaridadModel();
+		$this->_ocupacionModel = new OcupacionModel();
 	}
 
 	public function index()
@@ -78,17 +60,14 @@ class DashboardController extends BaseController
 		$data->paises = $this->_paisesModel->asObject()->findAll();
 		$data->estados = $this->_estadosModel->asObject()->findAll();
 		$data->municipios = $this->_municipiosModel->asObject()->where('ESTADOID', '2')->findAll();
-		$data->localidades = $this->_localidadesModel->asObject()->findAll();
-		$data->colonias = $this->_coloniasModel->asObject()->findAll();
+		// $data->localidades = $this->_localidadesModel->asObject()->findAll();
+		// $data->colonias = $this->_coloniasModel->asObject()->findAll();
 		$data->lugares = $this->_hechoLugarModel->asObject()->orderBy('HECHODESCR', 'asc')->findAll();
 		$data->colorVehiculo = $this->_coloresVehiculoModel->asObject()->findAll();
-		$data->marcaVehiculo = $this->_marcaVehiculoModel->asObject()->orderBy('VEHICULOMARCADESCR', 'ASC')->findAll();
-		$data->lineaVehiculo = $this->_lineaVehiculoModel->asObject()->orderBy('VEHICULOMODELODESCR', 'ASC')->findAll();
-		$data->distribuidorVehiculo = $this->_distribuidorVehiculoModel->asObject()->orderBy('VEHICULODISTRIBUIDORDESCR', 'ASC')->findAll();
-		$data->versionVehiculo = $this->_versionVehiculoModel->asObject()->orderBy('VEHICULOVERSIONDESCR', 'ASC')->findAll();
-		$data->servicioVehiculo = $this->_servicioVehiculoModel->asObject()->orderBy('VEHICULOSERVICIODESCR', 'ASC')->findAll();
 		$data->tipoVehiculo = $this->_tipoVehiculoModel->asObject()->orderBy('VEHICULOTIPODESCR', 'ASC')->findAll();
 		$data->delitosUsuarios = $this->_delitosUsuariosModel->asObject()->orderBy('DELITO', 'ASC')->findAll();
+		$data->escolaridades = $this->_escolaridadModel->asObject()->findAll();
+		$data->ocupaciones = $this->_ocupacionModel->asObject()->findAll();
 		$this->_loadView('Dashboard', 'dashboard', '', $data, 'index');
 	}
 
@@ -117,24 +96,19 @@ class DashboardController extends BaseController
 	{
 		$session = session();
 		$data = (object)array();
-		$data->folios = $this->_folioModel->asObject()->where('DENUNCIANTEID', $session->get('ID_DENUNCIANTE'))->findAll();
+		$data->folios = $this->_folioModel->asObject()->where('DENUNCIANTEID', $session->get('DENUNCIANTEID'))->findAll();
 		$this->_loadView('Mis denuncias', 'denuncias', '', $data, 'lista_denuncias');
 	}
 
 	public function create()
 	{
 		$session = session();
+		$year = date('Y');
 
-		$FOLIOID = $this->_correlativo($this->request->getPost('municipio'), 4);
-		$CORRELATIVO = (int)substr($FOLIOID, -6);
+		$FOLIOID = $this->_folioId($year);
 
 		$dataFolio = [
-			'DENUNCIANTEID' => $session->get('ID_DENUNCIANTE'),
-			'STATUS' => 'ABIERTO',
-			'ESTADOID' => 2,
-			'ANO' => (int)date("Y"),
-			'MUNICIPIOID' => $this->request->getPost('municipio'),
-			'CORRELATIVO' => $CORRELATIVO,
+			'DENUNCIANTEID' => $session->get('DENUNCIANTEID'),
 			'HECHOFECHA' => $this->request->getPost('fecha'),
 			'HECHOHORA' => $this->request->getPost('hora'),
 			'HECHOLUGARID' => $this->request->getPost('lugar'),
@@ -146,10 +120,10 @@ class DashboardController extends BaseController
 			'HECHONUMEROCASA' => $this->request->getPost('exterior'),
 			'HECHONUMEROCASAINT' => $this->request->getPost('interior'),
 			'HECHONARRACION' => $this->request->getPost('descripcion_breve'),
-			'TIPOEXPEDIENTEID' => 4,
-			'DELITODENUNCIA' => $this->request->getPost('delito')
+			'HECHODELITO' => $this->request->getPost('delito')
 		];
-		$this->_folio($dataFolio, $FOLIOID);
+
+		$this->_folioUpdate($FOLIOID, $dataFolio);
 
 		$dataPreguntas = array(
 			'ES_MENOR' => $this->request->getPost('es_menor'),
@@ -163,7 +137,7 @@ class DashboardController extends BaseController
 			'ES_GRUPO_VULNERABLE_DESCR' => $this->request->getPost('vulnerable_descripcion'),
 			'ESTA_DESAPARECIDO' => $this->request->getPost('esta_desaparecido'),
 		);
-		$this->_folioPreguntasIniciales($dataPreguntas, $FOLIOID);
+		$this->_folioPreguntasIniciales($dataPreguntas, $FOLIOID, $year);
 
 		//DATOS DESAPARECIDO
 		if ($this->request->getPost('esta_desaparecido')  == "SI") {
@@ -175,9 +149,11 @@ class DashboardController extends BaseController
 				'NOMBRE' => $this->request->getPost('nombre_des'),
 				'PRIMERAPELLIDO' => $this->request->getPost('apellido_paterno_des'),
 				'SEGUNDOAPELLIDO' => $this->request->getPost('apellido_materno_des'),
+				'PAIS' => $this->request->getPost('pais_des'),
+				'ESTADOORIGENID' => $this->request->getPost('estado_des'),
+				'MUNICIPIOORIGENID' => $this->request->getPost('municipio_des'),
 				'ESTATURA' => $this->request->getPost('estatura_des'),
 				'FECHANACIMIENTO' => $this->request->getPost('fecha_nacimiento_des'),
-				'EDAD' => $this->request->getPost('edad_des'),
 				'EDADCANTIDAD' => $this->request->getPost('edad_des'),
 				'PESO' => $this->request->getPost('peso_des'),
 				'COMPLEXION' => $this->request->getPost('complexion_des'),
@@ -205,7 +181,7 @@ class DashboardController extends BaseController
 				'DESAPARECIDA' => 'S',
 			);
 
-			$datadataDesaparecidoDomicilio = array(
+			$dataDesaparecidoDomicilio = array(
 				'PAIS' => $this->request->getPost('pais_des'),
 				'ESTADOID' => $this->request->getPost('estado_des'),
 				'MUNICIPIOID' => $this->request->getPost('municipio_des'),
@@ -217,9 +193,9 @@ class DashboardController extends BaseController
 				'CP' => $this->request->getPost('cp_des'),
 			);
 
-			$desaparecido = $this->_folioPersonaFisica($dataDesaparecido, $FOLIOID, 1);
-			$this->_folioPersonaFisicaDesaparecida($dataDesaparecido, $FOLIOID, $desaparecido);
-			$this->_folioPersonaFisicaDomicilio($datadataDesaparecidoDomicilio, $FOLIOID, $desaparecido);
+			$desaparecido = $this->_folioPersonaFisica($dataDesaparecido, $FOLIOID, 1, $year);
+			$this->_folioPersonaFisicaDesaparecida($dataDesaparecido, $FOLIOID, $desaparecido, $year);
+			$this->_folioPersonaFisicaDomicilio($dataDesaparecidoDomicilio, $FOLIOID, $desaparecido, $year);
 		}
 
 		//DATOS DEL MENOR DE EDAD
@@ -230,12 +206,12 @@ class DashboardController extends BaseController
 				'PRIMERAPELLIDO' => $this->request->getPost('apellido_paterno_menor'),
 				'SEGUNDOAPELLIDO' => $this->request->getPost('apellido_materno_menor'),
 				'FECHA_NACIMIENTO' => $this->request->getPost('fecha_nacimiento_menor'),
-				'EDAD' => $this->request->getPost('edad_menor'),
 				'EDADCANTIDAD' => $this->request->getPost('edad_menor'),
 				'SEXO' => $this->request->getPost('sexo_menor'),
 				'FACEBOOK' => $this->request->getPost('facebook_menor'),
 				'INSTAGRAM' => $this->request->getPost('instagram_menor'),
 				'TWITTER' => $this->request->getPost('twitter_menor'),
+				'PAIS' => $this->request->getPost('pais_menor'),
 			);
 
 			$dataMenorDomicilio = array(
@@ -250,8 +226,8 @@ class DashboardController extends BaseController
 				'CP' => $this->request->getPost('cp_menor'),
 			);
 
-			$menor = $this->_folioPersonaFisica($dataMenor, $FOLIOID, 1);
-			$this->_folioPersonaFisicaDomicilio($dataMenorDomicilio, $FOLIOID, $menor);
+			$menor = $this->_folioPersonaFisica($dataMenor, $FOLIOID, 1, $year);
+			$this->_folioPersonaFisicaDomicilio($dataMenorDomicilio, $FOLIOID, $menor, $year);
 		}
 
 		if ($this->request->getPost('es_menor') === "NO" && $this->request->getPost('es_ofendido') === "NO") {
@@ -259,38 +235,61 @@ class DashboardController extends BaseController
 				'NOMBRE' => 'QUIEN RESULTE OFENDIDO',
 			);
 
-			$ofendidoId = $this->_folioPersonaFisica($dataOfendido, $FOLIOID, 1);
+			$ofendidoId = $this->_folioPersonaFisica($dataOfendido, $FOLIOID, 1, $year);
 		}
 
 		//DATOS DEL DENUNCIANTE
-		$denunciante = $this->_denunciantesModel->asObject()->where('ID_DENUNCIANTE', $session->get('ID_DENUNCIANTE'))->first();
+		$denunciante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', $session->get('DENUNCIANTEID'))->first();
+
+		$fecha = (object)[
+			'day' => date('d', strtotime($denunciante->FECHANACIMIENTO)),
+			'month' => date('m', strtotime($denunciante->FECHANACIMIENTO)),
+			'year' => date('Y', strtotime($denunciante->FECHANACIMIENTO)),
+		];
+
+		$hoy = (object)[
+			'day' => date('d'),
+			'month' => date('m'),
+			'year' => date('Y'),
+		];
+		$edad = $hoy->year - $fecha->year;
+		$m = $hoy->month - $fecha->month;
+
+		if ($m <= 0) {
+			if ($hoy->day < (int)$fecha->day) {
+				$edad--;
+			}
+		}
 
 		$dataDenunciante = array(
 			'NOMBRE' => $denunciante->NOMBRE,
 			'PRIMERAPELLIDO' => $denunciante->APELLIDO_PATERNO,
 			'SEGUNDOAPELLIDO' => $denunciante->APELLIDO_MATERNO,
-			'FECHANACIMIENTO' => $denunciante->FECHA_DE_NACIMIENTO,
-			'EDAD' => $denunciante->EDAD,
-			'EDADCANTIDAD' => $denunciante->EDAD,
+			'FECHANACIMIENTO' => $denunciante->FECHANACIMIENTO,
+			'EDADCANTIDAD' => $edad,
 			'SEXO' => $denunciante->SEXO,
 			'TELEFONO' => $denunciante->TELEFONO,
 			'TELEFONO2' => $denunciante->TELEFONO2,
 			'CODIGOPAISTEL' => $denunciante->CODIGO_PAIS,
 			'CODIGOPAISTEL2' => $denunciante->CODIGO_PAIS2,
 			'CORREO' => $denunciante->CORREO,
-			'TIPOIDENTIFICACIONID' => $denunciante->TIPO_DE_IDENTIFICACION,
-			'NUMEROIDENTIFICACION' => $denunciante->NUMERO_DE_IDENTIFICACION,
-			'NACIONALIDADID' => $denunciante->NACIONALIDAD_ID,
+			'TIPOIDENTIFICACIONID' => $denunciante->TIPOIDENTIFICACIONID,
+			'NUMEROIDENTIFICACION' => $denunciante->NUMEROIDENTIFICACION,
+			'NACIONALIDADID' => $denunciante->NACIONALIDADID,
 			'PERSONAIDIOMAID' => $denunciante->IDIOMAID,
-			'ESCOLARIDAD' => $denunciante->ESCOLARIDAD,
-			'ESTADOCIVILID' => $denunciante->ESTADO_CIVIL,
+			'ESCOLARIDADID' => $denunciante->ESCOLARIDADID,
+			'OCUPACIONID' => $denunciante->OCUPACIONID,
+			'ESTADOCIVILID' => $denunciante->ESTADOCIVILID,
 			'ESTADOORIGENID' => $denunciante->ESTADOID,
 			'MUNICIPIOORIGENID' => $denunciante->MUNICIPIOID,
 			'FOTO' => $denunciante->DOCUMENTO,
 			'DENUNCIANTE' => 'S',
 			'FACEBOOK' => $denunciante->FACEBOOK,
-			'INSTAGRAM' => $denunciante->FACEBOOK,
-			'TWITTER' => $denunciante->FACEBOOK,
+			'PAIS' => $denunciante->PAIS,
+			'INSTAGRAM' => $denunciante->INSTAGRAM,
+			'TWITTER' => $denunciante->TWITTER,
+			'LEER' => $denunciante->LEER,
+			'ESCRIBIR' => $denunciante->ESCRIBIR,
 		);
 
 		$dataDenuncianteDomicilio = array(
@@ -303,12 +302,12 @@ class DashboardController extends BaseController
 			'CALLE' => $denunciante->CALLE,
 			'NUMEROCASA' => $denunciante->NUM_EXT,
 			'NUMEROINTERIOR' => $denunciante->NUM_INT,
-			'CP' => $denunciante->CODIGO_POSTAL,
+			'CP' => $denunciante->CODIGOPOSTAL,
 		);
 
 		$denuncianteCalidad = $this->request->getPost('es_menor') == "SI" || $this->request->getPost('esta_desaparecido') == "SI" || $this->request->getPost('es_ofendido') === "NO" ? 3 : 1;
-		$denuncinateIdPersona = $this->_folioPersonaFisica($dataDenunciante, $FOLIOID, $denuncianteCalidad);
-		$this->_folioPersonaFisicaDomicilio($dataDenuncianteDomicilio, $FOLIOID, $denuncinateIdPersona);
+		$denuncinateIdPersona = $this->_folioPersonaFisica($dataDenunciante, $FOLIOID, $denuncianteCalidad, $year);
+		$this->_folioPersonaFisicaDomicilio($dataDenuncianteDomicilio, $FOLIOID, $denuncinateIdPersona, $year);
 
 		//DATOS DEL POSIBLE RESPONSABLE
 		if (!empty($this->request->getPost('responsable')) && $this->request->getPost('responsable') == 'SI') {
@@ -321,7 +320,7 @@ class DashboardController extends BaseController
 				'TELEFONO' => $this->request->getPost('tel_imputado'),
 				'FECHA_NACIMIENTO' => $this->request->getPost('fecha_nac_imputado'),
 				'SEXO' => $this->request->getPost('sexo_imputado'),
-				'ESCOLARIDAD' => $this->request->getPost('escolaridad_imputado'),
+				'ESCOLARIDADID' => $this->request->getPost('escolaridad_imputado'),
 				'DESCRIPCION_FISICA' => $this->request->getPost('description_fisica_imputado'),
 				'FACEBOOK' => $this->request->getPost('facebook_imputado'),
 				'INSTAGRAM' => $this->request->getPost('instagram_imputado'),
@@ -334,14 +333,14 @@ class DashboardController extends BaseController
 				'NO_INT' => $this->request->getPost('numero_int_imputado'),
 			);
 
-			$imputadoId = $this->_folioPersonaFisica($dataImputado, $FOLIOID, 2);
-			$this->_folioPersonaFisicaDomicilio($dataImputadoDomicilio, $FOLIOID, $imputadoId);
+			$imputadoId = $this->_folioPersonaFisica($dataImputado, $FOLIOID, 2, $year);
+			$this->_folioPersonaFisicaDomicilio($dataImputadoDomicilio, $FOLIOID, $imputadoId, $year);
 		} else {
 			$dataImputado = array(
 				'NOMBRE' => 'QRR',
 			);
 
-			$imputadoId = $this->_folioPersonaFisica($dataImputado, $FOLIOID, 2);
+			$imputadoId = $this->_folioPersonaFisica($dataImputado, $FOLIOID, 2, $year);
 		}
 
 		if ($this->request->getPost('delito') == "ROBO DE VEHÍCULO") {
@@ -358,10 +357,10 @@ class DashboardController extends BaseController
 				'DOCUMENTO' => $docData
 			);
 
-			$this->_folioVehiculo($dataVehiculo, $FOLIOID);
+			$this->_folioVehiculo($dataVehiculo, $FOLIOID, $year);
 		}
 
-		$denunciante = $this->_denunciantesModel->asObject()->where('ID_DENUNCIANTE', $session->get('ID_DENUNCIANTE'))->first();
+		$denunciante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', $session->get('DENUNCIANTEID'))->first();
 		$idioma = $this->_personaIdiomaModel->asObject()->where('PERSONAIDIOMAID', $denunciante->IDIOMAID)->first();
 		$delito = $this->_delitosUsuariosModel->asObject()->where('DELITO', $this->request->getPost('delito'))->first();
 		$prioridad = 1;
@@ -376,12 +375,11 @@ class DashboardController extends BaseController
 			'delito' => $this->request->getPost('delito'),
 			'descripcion' => $this->request->getPost('descripcion_breve'),
 			'idioma' => $idioma->PERSONAIDIOMADESCR ? $idioma->PERSONAIDIOMADESCR : 'DESCONOCIDO',
-			'edad' => $session->get('EDAD'),
+			'edad' => $denunciante->SEXO,
 			'perfil' => $this->request->getPost('delito') == 'VIOLENCIA FAMILIAR' ? 1 : 0,
 			'sexo' => $this->request->getPost('delito') == 'VIOLENCIA FAMILIAR' ? 2 : 0,
 		];
-
-		$sexo_denunciante = $session->get('SEXO') == 'F' ? 'FEMENINO' : 'MASCULINO';
+		$sexo_denunciante = $denunciante->SEXO == 'F' ? 'FEMENINO' : 'MASCULINO';
 		$url = "/denuncia/dashboard/video-denuncia?folio=" . $FOLIOID . "&delito=" . $data->delito . "&descripcion=" . $data->descripcion . "&idioma=" . $data->idioma . "&edad=" . $data->edad . "&perfil=" . $data->perfil . "&sexo=" . $data->sexo . "&prioridad=" . $prioridad . "&sexo_denunciante=" . $sexo_denunciante;
 
 		if ($this->_sendEmailFolio($session->get('CORREO'), $FOLIOID)) {
@@ -391,52 +389,37 @@ class DashboardController extends BaseController
 		}
 	}
 
-	private function _correlativo($municipio, $tipoExpediente)
+	private function _folioUpdate($id, $data)
 	{
-		$data = [
-			'ESTADOID' => (int)2,
-			'MUNICIPIOID' => (int)$municipio,
-			'TIPOEXPEDIENTEID' => (int)4,
-			'ANO' => (int)date("Y"),
-		];
+		$this->_folioModel->set($data)->where('FOLIOID', $id)->update();
+	}
 
-		$correlativo = $this->_folioCorrelativoModel->asObject()->where('ANO', date("Y"))->where('ESTADOID', $data['ESTADOID'])->where('MUNICIPIOID', $data['MUNICIPIOID'])->where('TIPOEXPEDIENTEID', $data['TIPOEXPEDIENTEID'])->orderBy('CORRELATIVO', 'desc')->first();
-
-		if ($correlativo) {
+	private function _folioId($year)
+	{
+		$folio = $this->_folioModel->asObject()->where('ANO', $year)->orderBy('FOLIOID', 'desc')->first();
+		if ($folio) {
 			$data = [
-				'ESTADOID' => (int)2,
-				'MUNICIPIOID' => (int)$municipio,
-				'TIPOEXPEDIENTEID' => (int)$tipoExpediente,
-				'ANO' => (int)date("Y"),
-				'CORRELATIVO' => ((int)$correlativo->CORRELATIVO) + 1
+				'ANO' => (int)$year,
+				'FOLIOID' => (int)$folio->FOLIOID + 1
 			];
-			$this->_folioCorrelativoModel->insert($data);
-			return $tipoExpediente . str_pad(2, 2, "0", STR_PAD_LEFT) . str_pad((int)$municipio, 3, "0", STR_PAD_LEFT) . $data['ANO'] . str_pad((int)$data['CORRELATIVO'], 6, "0", STR_PAD_LEFT);
+			$this->_folioModel->insert($data);
+			return $data['FOLIOID'];
 		} else {
 			$data = [
-				'ESTADOID' => (int)2,
-				'MUNICIPIOID' => (int)$municipio,
-				'TIPOEXPEDIENTEID' => (int)$tipoExpediente,
-				'ANO' => (int)date("Y"),
-				'CORRELATIVO' => 1
+				'ANO' => (int)$year,
+				'FOLIOID' => 1
 			];
-			$this->_folioCorrelativoModel->insert($data);
-			return $tipoExpediente . str_pad(2, 2, "0", STR_PAD_LEFT) . str_pad((int)$municipio, 3, "0", STR_PAD_LEFT) . $data['ANO'] . str_pad((int)$data['CORRELATIVO'], 6, "0", STR_PAD_LEFT);
+			$this->_folioModel->insert($data);
+			return $data['FOLIOID'];
 		}
 	}
 
-	private function _folio($data, $folio)
-	{
-		$data = $data;
-		$data['FOLIOID'] = $folio;
-		$this->_folioModel->insert($data);
-	}
-
-	private function _folioPreguntasIniciales($data, $folio)
+	private function _folioPreguntasIniciales($data, $folio, $year)
 	{
 		$data = (object)$data;
 		$datos = [
 			'FOLIOID' => $folio,
+			'ANO' => $year,
 			'ES_MENOR' => $data->ES_MENOR,
 			'ES_TERCERA_EDAD' => $data->ES_TERCERA_EDAD,
 			'ES_OFENDIDO' => $data->ES_OFENDIDO,
@@ -451,10 +434,11 @@ class DashboardController extends BaseController
 		$this->_folioPreguntasModel->insert($datos);
 	}
 
-	private function _folioPersonaFisica($data, $folio, $calidadJuridica)
+	private function _folioPersonaFisica($data, $folio, $calidadJuridica, $year)
 	{
 		$data = $data;
 		$data['FOLIOID'] = $folio;
+		$data['ANO'] = $year;
 		$data['CALIDADJURIDICAID'] = $calidadJuridica;
 
 		$personaFisica = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $folio)->orderBy('PERSONAFISICAID', 'desc')->first();
@@ -470,10 +454,11 @@ class DashboardController extends BaseController
 		}
 	}
 
-	private function _folioPersonaFisicaDomicilio($data, $folio, $personaFisicaID)
+	private function _folioPersonaFisicaDomicilio($data, $folio, $personaFisicaID, $year)
 	{
 		$data = $data;
 		$data['FOLIOID'] = $folio;
+		$data['ANO'] = $year;
 		$data['PERSONAFISICAID'] = $personaFisicaID;
 
 		$personaDomicilio = $this->_folioPersonaFisicaDomicilioModel->asObject()->where('FOLIOID', $folio)->where('PERSONAFISICAID', $personaFisicaID)->orderBy('DOMICILIOID', 'desc')->first();
@@ -489,19 +474,21 @@ class DashboardController extends BaseController
 		}
 	}
 
-	private function _folioPersonaFisicaDesaparecida($data, $folio, $personaFisicaID)
+	private function _folioPersonaFisicaDesaparecida($data, $folio, $personaFisicaID, $year)
 	{
 		$data = $data;
 		$data['FOLIOID'] = $folio;
+		$data['ANO'] = $year;
 		$data['PERSONAFISICAID'] = $personaFisicaID;
 
 		$this->_folioPersonaFisicaDesaparecidaModel->insert($data);
 	}
 
-	private function _folioVehiculo($data, $folio)
+	private function _folioVehiculo($data, $folio, $year)
 	{
 		$data = $data;
 		$data['FOLIOID'] = $folio;
+		$data['ANO'] = $year;
 
 		$vehiculo = $this->_folioVehiculoModel->asObject()->where('FOLIOID', $folio)->orderBy('VEHICULOID', 'desc')->first();
 
@@ -550,9 +537,9 @@ class DashboardController extends BaseController
 		if ($FOLIOID && $folio && $EDAD && $IDDENUNCIANTE && $SEXO_DENUNCIANTE) {
 
 			$preguntas = $this->_folioPreguntasModel->asObject()->where('FOLIOID', $FOLIOID)->first();
-			$denunciante = $this->_denunciantesModel->asObject()->where('ID_DENUNCIANTE', $IDDENUNCIANTE)->first();
+			$denunciante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', $IDDENUNCIANTE)->first();
 			$idioma = $this->_personaIdiomaModel->asObject()->where('PERSONAIDIOMAID', $denunciante->IDIOMAID)->first();
-			$delito = $this->_delitosUsuariosModel->asObject()->where('DELITO', $folio->DELITODENUNCIA)->first();
+			$delito = $this->_delitosUsuariosModel->asObject()->where('DELITO', $folio->HECHODELITO)->first();
 			$prioridad = 1;
 
 			if ($preguntas->ES_MENOR == 'SI' || $preguntas->ES_TERCERA_EDAD == 'SI' || $preguntas->TIENE_DISCAPACIDAD == 'SI' || $preguntas->FUE_CON_ARMA == 'SI' || $preguntas->ESTA_DESAPARECIDO == 'SI') {
@@ -562,12 +549,12 @@ class DashboardController extends BaseController
 			}
 
 			$data = (object)[
-				'delito' => $folio->DELITODENUNCIA,
+				'delito' => $folio->HECHODELITO,
 				'descripcion' => $folio->HECHONARRACION,
 				'idioma' => $idioma->PERSONAIDIOMADESCR ? $idioma->PERSONAIDIOMADESCR : 'DESCONOCIDO',
 				'edad' => $EDAD,
-				'perfil' => $folio->DELITODENUNCIA == 'VIOLENCIA FAMILIAR' ? 1 : 0,
-				'sexo' => $folio->DELITODENUNCIA == 'VIOLENCIA FAMILIAR' ? 2 : 0,
+				'perfil' => $folio->HECHODELITO == 'VIOLENCIA FAMILIAR' ? 1 : 0,
+				'sexo' => $folio->HECHODELITO == 'VIOLENCIA FAMILIAR' ? 2 : 0,
 				'sexo_denunciante' => $SEXO_DENUNCIANTE == 'F' ? 'FEMENINO' : 'MASCULINO',
 			];
 

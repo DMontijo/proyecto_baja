@@ -86,7 +86,7 @@
 	<script>
 		Swal.fire({
 			icon: 'success',
-			text: '<?= session()->getFlashdata('created') ?>',
+			html: '<strong><?= session()->getFlashdata('created') ?></strong>',
 			confirmButtonColor: '#bf9b55',
 		})
 	</script>

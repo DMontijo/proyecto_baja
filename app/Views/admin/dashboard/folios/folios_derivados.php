@@ -31,7 +31,7 @@
 									<tr>
 										<td class="text-center"><?= $folio->FOLIOID ?></th>
 										<td class="text-center"><?= $folio->FECHAREGISTRO ?></td>
-										<td class="text-center"><?= $folio->DELITODENUNCIA ?></td>
+										<td class="text-center"><?= $folio->HECHODELITO ?></td>
 										<td class="text-center"><?= $folio->STATUS ?></td>
 										<td class="text-center"><?= $folio->NOTASAGENTE ?></td>
 										<td class="text-center"><?= $folio->NOMBRE ?> <?= $folio->APELLIDO_PATERNO ?> <?= $folio->APELLIDO_MATERNO ?></td>

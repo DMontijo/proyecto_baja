@@ -10,12 +10,16 @@ class FOLIOPERSONAFISICA extends Migration
 	{
 		$this->forge->addField([
 			'FOLIOID' => [
-				'type' => 'VARCHAR',
-				'constraint' => '16',
+				'type' => 'INT',
+				'unsigned' => TRUE,
 			],
 			'PERSONAFISICAID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
+			],
+			'ANO' => [
+				'type' => 'INT',
+				'constraint' => '4',
 			],
 			'CALIDADJURIDICAID' => [
 				'type' => 'INT',
@@ -91,11 +95,6 @@ class FOLIOPERSONAFISICA extends Migration
 				'type' => 'DATE',
 				'null' => TRUE,
 			],
-			'EDAD' => [
-				'type' => 'INT',
-				'constraint' => '3',
-				'null' => TRUE,
-			],
 			'SEXO' => [
 				'type' => 'CHAR',
 				'constraint' => '1',
@@ -129,11 +128,6 @@ class FOLIOPERSONAFISICA extends Migration
 			'EDADCANTIDAD' => [
 				'type' => 'INT',
 				'constraint' => '5',
-				'null' => TRUE,
-			],
-			'EDADTIEMPO' => [
-				'type' => 'CHAR',
-				'constraint' => '1',
 				'null' => TRUE,
 			],
 			'NACIONALIDADID' => [
@@ -235,9 +229,12 @@ class FOLIOPERSONAFISICA extends Migration
 				'constraint' => '3',
 				'null' => TRUE,
 			],
-			'ESCOLARIDAD' => [
-				'type' => 'VARCHAR',
-				'constraint' => '50',
+			'ESCOLARIDADID' => [
+				'type' => 'INT',
+				'null' => TRUE,
+			],
+			'OCUPACIONID' => [
+				'type' => 'INT',
 				'null' => TRUE,
 			],
 			'DESCRIPCION_FISICA' => [
@@ -260,11 +257,22 @@ class FOLIOPERSONAFISICA extends Migration
 				'constraint' => '250',
 				'null' => TRUE
 			],
+			'LEER' => [
+				'type' => 'CHAR',
+				'constraint' => '1',
+				'default' => 'S',
+			],
+			'ESCRIBIR' => [
+				'type' => 'CHAR',
+				'constraint' => '1',
+				'default' => 'S',
+			],
 			'FECHAREGISTRO DATETIME DEFAULT CURRENT_TIMESTAMP',
 			'FECHAACTUALIZACION DATETIME ON UPDATE CURRENT_TIMESTAMP',
 		]);
 		$this->forge->addKey('FOLIOID', TRUE);
 		$this->forge->addKey('PERSONAFISICAID', TRUE);
+		$this->forge->addKey('ANO', TRUE);
 		$this->forge->createTable('FOLIOPERSONAFISICA');
 	}
 

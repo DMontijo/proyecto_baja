@@ -8,5 +8,5 @@ class FileOriginalesModel extends Model
 {
     protected $DBGroup          = 'default';
 	protected $table            = 'FILES_ORIGINALES';
-	protected $allowedFields    = ['ID, DESCRIPCION, TITULO, PLACEHOLDER, OPCIONES,TIPO_ARCHIVO, RELACIONADO_CON, MODIFICADO, ELIMINADO, ID_DENUNCIANTE'];
+	protected $allowedFields    = ['ID, DESCRIPCION, TITULO, PLACEHOLDER, OPCIONES,TIPO_ARCHIVO, RELACIONADO_CON, MODIFICADO, ELIMINADO, DENUNCIANTEID'];
 }

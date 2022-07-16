@@ -7,18 +7,11 @@ use App\Controllers\BaseController;
 use App\Models\DenunciantesModel;
 
 use App\Models\FolioPreguntasModel;
-use App\Models\FolioCorrelativoModel;
 use App\Models\FolioModel;
 use App\Models\FolioPersonaFisicaModel;
 use App\Models\FolioPersonaFisicaDomicilioModel;
 use App\Models\FolioPersonaFisicaDesaparecidaModel;
-use App\Models\FolioPersonaFisicaImputadoDelitoModel;
-use App\Models\FolioPersonaFisicaImputadoModel;
-use App\Models\FolioRelacionFisicaFisicaModel;
-use App\Models\FolioObjetoModel;
 use App\Models\FolioVehiculoModel;
-use App\Models\FolioDocumentoModel;
-use App\Models\FolioArchivoExternoModel;
 use App\Models\UsuariosModel;
 use App\Models\ZonasUsuariosModel;
 use App\Models\RolesUsuariosModel;
@@ -30,19 +23,12 @@ class FoliosController extends BaseController
 		//Models
 		$this->_denunciantesModel = new DenunciantesModel();
 
-		$this->_folioCorrelativoModel = new FolioCorrelativoModel();
 		$this->_folioModel = new FolioModel();
 		$this->_folioPreguntasModel = new FolioPreguntasModel();
 		$this->_folioPersonaFisicaModel = new FolioPersonaFisicaModel();
 		$this->_folioPersonaFisicaDomicilioModel = new FolioPersonaFisicaDomicilioModel();
 		$this->_folioPersonaFisicaDesaparecidaModel = new FolioPersonaFisicaDesaparecidaModel();
-		$this->_folioPersonaFisicaImputadoDelitoModel = new FolioPersonaFisicaImputadoDelitoModel();
-		$this->_folioPersonaFisicaImputadoModel = new FolioPersonaFisicaImputadoModel();
-		$this->_folioRelacionFisicaFisicaModel = new FolioRelacionFisicaFisicaModel();
-		$this->_folioObjetoModel = new FolioObjetoModel();
 		$this->_folioVehiculoModel = new FolioVehiculoModel();
-		$this->_folioDocumentoModel = new FolioDocumentoModel();
-		$this->_folioArchivoExternoModel = new FolioArchivoExternoModel();
 
 		$this->_usuariosModel = new UsuariosModel();
 		$this->_zonasUsuariosModel = new ZonasUsuariosModel();

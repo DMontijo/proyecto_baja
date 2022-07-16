@@ -16,6 +16,6 @@ class TipoViviendaSeeder extends Seeder
 			array('TIPOVIVIENDADESCR' => 'SIN DOMICILIO'),
 
 		];
-		$this->db->table('CATEGORIA_TIPOVIVIENDA')->insertBatch($data);
+		$this->db->table('TIPOVIVIENDA')->insertBatch($data);
 	}
 }

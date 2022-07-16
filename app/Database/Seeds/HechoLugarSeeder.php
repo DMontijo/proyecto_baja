@@ -78,6 +78,6 @@ class HechoLugarSeeder extends Seeder
 			array('HECHODESCR' => 'OTROS'),
 		];
 
-		$this->db->table('CATEGORIA_HECHOLUGAR')->insertBatch($data);
+		$this->db->table('HECHOLUGAR')->insertBatch($data);
 	}
 }

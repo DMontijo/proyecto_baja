@@ -7,6 +7,6 @@ use CodeIgniter\Model;
 class HechoLugarModel extends Model
 {
 	protected $DBGroup          = 'default';
-	protected $table            = 'CATEGORIA_HECHOLUGAR';
+	protected $table            = 'HECHOLUGAR';
 	protected $allowedFields    = [];
 }

@@ -31,23 +31,8 @@
 					</div>
 
 					<div class="col-12 col-sm-6 mb-3">
-						<label for="correo_modal" class="form-label fw-bold">Correo electronico: </label>
-						<input type="text" class="form-control" id="correo_modal" name="correo_modal" disabled>
-					</div>
-
-					<div class="col-12 col-sm-6 mb-3">
 						<label for="fecha_nacimiento_modal" class="form-label fw-bold">Fecha de nacimiento: </label>
 						<input type="text" class="form-control" id="fecha_nacimiento_modal" name="fecha_nacimiento_modal" disabled>
-					</div>
-
-					<div class="col-12 col-sm-6 mb-3">
-						<label for="edad_modal" class="form-label fw-bold">Edad: </label>
-						<input type="text" class="form-control" id="edad_modal" name="edad_modal" disabled>
-					</div>
-
-					<div class="col-12 col-sm-6 mb-3">
-						<label for="escolaridad_modal" class="form-label fw-bold input-required">Escolaridad:</label>
-						<input class="form-control" id="escolaridad_modal" name="escolaridad_modal" type="text" disabled>
 					</div>
 
 					<div class="col-12 col-sm-6 mb-3">
@@ -60,15 +45,29 @@
 					</div>
 
 					<div class="col-12 col-sm-6 mb-3">
-						<label for="cp_modal" class="form-label fw-bold">Código Postal: </label>
-						<input type="text" class="form-control" id="cp_modal" name="cp_modal" disabled>
+						<label for="correo_modal" class="form-label fw-bold">Correo electronico: </label>
+						<input type="text" class="form-control" id="correo_modal" name="correo_modal" disabled>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
+						<label for="telefono_modal" class="form-label fw-bold">Número de télefono: </label>
+						<input type="text" class="form-control" id="telefono_modal" name="telefono_modal" disabled>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
+						<label for="telefono2_modal" class="form-label fw-bold">Número de télefono adicional: </label>
+						<input type="text" class="form-control" id="telefono2_modal" name="telefono2_modal" disabled>
+					</div>
+
+					<div class="col-12">
+						<hr>
 					</div>
 
 					<div class="col-12 col-sm-6 mb-3">
 						<label for="nacionalidad_modal" class="form-label fw-bold input-required">Nacionalidad:</label>
 						<input type="text" class="form-control" id="nacionalidad_modal" name="nacionalidad_modal" disabled>
 					</div>
-					
+
 					<div class="col-12 col-sm-6 mb-3">
 						<label for="idioma_modal" class="form-label fw-bold">Idioma: </label>
 						<input type="text" class="form-control" id="idioma_modal" name="idioma_modal" disabled>
@@ -85,7 +84,7 @@
 					</div>
 
 					<div class="col-12 col-sm-6 mb-3">
-						<label for="estado_modal" class="form-label fw-bold">Estado del denunciante: </label>
+						<label for="estado_modal" class="form-label fw-bold">Estado: </label>
 						<input type="text" class="form-control" id="estado_modal" name="estado_modal" disabled>
 					</div>
 
@@ -105,6 +104,11 @@
 					</div>
 
 					<div class="col-12 col-sm-6 mb-3">
+						<label for="cp_modal" class="form-label fw-bold">Código Postal: </label>
+						<input type="text" class="form-control" id="cp_modal" name="cp_modal" disabled>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
 						<label for="calle_modal" class="form-label fw-bold">Calle o avenida: </label>
 						<input type="text" class="form-control" id="calle_modal" name="calle_modal" disabled>
 					</div>
@@ -116,16 +120,6 @@
 					<div class="col-12 col-sm-6 mb-3">
 						<label for="interior_modal" class="form-label fw-bold">Número interior: </label>
 						<input type="text" class="form-control" id="interior_modal" name="interior_modal" disabled>
-					</div>
-
-					<div class="col-12 col-sm-6 mb-3">
-						<label for="telefono_modal" class="form-label fw-bold">Número de télefono: </label>
-						<input type="text" class="form-control" id="telefono_modal" name="telefono_modal" disabled>
-					</div>
-
-					<div class="col-12 col-sm-6 mb-3">
-						<label for="telefono2_modal" class="form-label fw-bold">Número de télefono 2: </label>
-						<input type="text" class="form-control" id="telefono2_modal" name="telefono2_modal" disabled>
 					</div>
 
 					<div class="col-12">
@@ -158,6 +152,11 @@
 					</div>
 
 					<div class="col-12 col-sm-6 mb-3">
+						<label for="escolaridad_modal" class="form-label fw-bold input-required">Escolaridad:</label>
+						<input class="form-control" id="escolaridad_modal" name="escolaridad_modal" type="text" disabled>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
 						<label for="ocupacion_modal" class="form-label fw-bold">Ocupación: </label>
 						<input type="text" class="form-control" id="ocupacion_modal" name="ocupacion_modal" disabled>
 					</div>
@@ -165,6 +164,20 @@
 					<div class="col-12 col-sm-6 mb-3">
 						<label for="discapacidad_modal" class="form-label fw-bold">Discapacidad: </label>
 						<input type="text" class="form-control" id="discapacidad_modal" name="discapacidad_modal" disabled>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
+						<label for="leer_modal" class="form-label fw-bold">¿Sabe leer?: </label>
+						<input type="text" class="form-control" id="leer_modal" name="leer_modal" disabled>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
+						<label for="escribir_modal" class="form-label fw-bold">¿Sabe escribir?: </label>
+						<input type="text" class="form-control" id="escribir_modal" name="escribir_modal" disabled>
+					</div>
+
+					<div class="col-12">
+						<hr>
 					</div>
 
 					<div class="col-12 col-sm-6 mb-3">

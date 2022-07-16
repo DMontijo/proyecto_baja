@@ -95,7 +95,7 @@
 		<label for="sexo_menor" class="form-label fw-bold input-required">Sexo</label>
 		<br>
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="radio" name="sexo_menor" value="M" checked id="MASCULINO">
+			<input class="form-check-input" type="radio" name="sexo_menor" value="M" id="MASCULINO">
 			<label class="form-check-label" for="flexRadioDefault1">MASCULINO</label>
 		</div>
 		<div class="form-check form-check-inline">

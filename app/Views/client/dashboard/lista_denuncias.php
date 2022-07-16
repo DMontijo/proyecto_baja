@@ -25,7 +25,7 @@
 								<tr>
 									<th scope="row"><?= $folio->FOLIOID ?></th>
 									<td><?= $folio->FECHAREGISTRO ?></td>
-									<td><?= $folio->DELITODENUNCIA ?></td>
+									<td><?= $folio->HECHODELITO ?></td>
 									<td><?= $folio->STATUS ?></td>
 								</tr>
 							<?php } ?>

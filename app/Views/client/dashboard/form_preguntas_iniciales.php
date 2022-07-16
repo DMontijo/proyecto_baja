@@ -95,7 +95,7 @@
 			<label class="form-check-label" for="flexRadioDefault1">SI</label>
 		</div>
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="radio" name="lesiones_visibles" value="NO" required>
+			<input class="form-check-input" type="radio" name="lesiones_visibles" value="NO" checked required>
 			<label class="form-check-label" for="flexRadioDefault2">NO</label>
 		</div>
 	</div>
@@ -155,7 +155,7 @@
 		radio.addEventListener('click', (e) => {
 			if (e.target.value === 'SI') {
 				document.querySelector('#lesiones_visibles_form').classList.remove('d-none');
-				document.querySelector('#lesiones_visibles_form [value="NO"]').checked = false;
+				// document.querySelector('#lesiones_visibles_form [value="NO"]').checked = false;
 			} else {
 				document.querySelector('#lesiones_visibles_form').classList.add('d-none');
 				document.querySelector('#lesiones_visibles_form [value="NO"]').checked = true;

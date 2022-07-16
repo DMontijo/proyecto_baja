@@ -3553,6 +3553,6 @@ class ColoniaSeeder extends Seeder
 			array('ID' => '27209999', 'ESTADOID' => '2', 'MUNICIPIOID' => '7,', 'LOCALIDADID' => '2', 'COLONIAID' => '09999', 'COLONIADESCR' => 'SAN FELIPE LOS ARCOS'),
 		];
 
-		$this->db->table('CATEGORIA_COLONIA')->insertBatch($data);
+		$this->db->table('COLONIA')->insertBatch($data);
 	}
 }

@@ -7,7 +7,7 @@ use CodeIgniter\Model;
 class PersonaNacionalidadModel extends Model
 {
 	protected $DBGroup          = 'default';
-	protected $table            = 'CATEGORIA_PERSONANACIONALIDAD';
+	protected $table            = 'PERSONANACIONALIDAD';
 	protected $primaryKey       = 'PERSONANACIONALIDADID';
 	protected $allowedFields    = [
 		'PERSONANACIONALIDADID',

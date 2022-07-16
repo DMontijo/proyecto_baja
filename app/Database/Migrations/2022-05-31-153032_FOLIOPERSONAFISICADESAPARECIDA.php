@@ -11,12 +11,16 @@ class FOLIOPERSONAFISICADESAPARECIDA extends Migration
 
 		$this->forge->addField([
 			'FOLIOID' => [
-				'type' => 'VARCHAR',
-				'constraint' => '16',
+				'type' => 'INT',
+				'unsigned' => TRUE,
 			],
 			'PERSONAFISICAID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
+			],
+			'ANO' => [
+				'type' => 'INT',
+				'constraint' => '4',
 			],
 			'ESTATURA' => [
 				'type' => 'VARCHAR',
@@ -122,6 +126,7 @@ class FOLIOPERSONAFISICADESAPARECIDA extends Migration
 		]);
 		$this->forge->addKey('FOLIOID', TRUE);
 		$this->forge->addKey('PERSONAFISICAID', TRUE);
+		$this->forge->addKey('ANO', TRUE);
 		$this->forge->createTable('FOLIOPERSONAFISICADESAPARECIDA');
 	}
 

@@ -20,11 +20,11 @@ class HECHOLUGAR extends Migration
             ],
         ]);
         $this->forge->addKey('HECHOLUGARID', TRUE);
-        $this->forge->createTable('CATEGORIA_HECHOLUGAR');
+        $this->forge->createTable('HECHOLUGAR');
     }
 
     public function down()
     {
-        $this->forge->dropTable('CATEGORIA_HECHOLUGAR');
+        $this->forge->dropTable('HECHOLUGAR');
     }
 }

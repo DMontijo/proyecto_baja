@@ -52,7 +52,7 @@
 		<?php if (session('USUARIOVIDEO') && session('TOKENVIDEO')) { ?>
 			<div class="card rounded bg-white shadow">
 				<div class="card-body embed-responsive embed-responsive-1by1 shadow rounded">
-					<iframe src="<?= "https://videodenunciaserver1.fgebc.gob.mx/pde?u=" . session('USUARIOVIDEO') . "&token=" . session('TOKENVIDEO') . '&random=' . uniqid() ?>" frameborder="0" allow="camera *;microphone *"></iframe>
+					<iframe src="<?= "https://videodenunciaserver1.fgebc.gob.mx/pde?u=" . session('USUARIOVIDEO') . "&token=" . session('TOKENVIDEO') ?>" frameborder="0" allow="camera *;microphone *"></iframe>
 				</div>
 			</div>
 		<?php } else { ?>
@@ -131,7 +131,7 @@
 					card4.classList.remove('d-none');
 					card5.classList.remove('d-none');
 
-					document.querySelector('#delito_dash').value = folio.DELITODENUNCIA;
+					document.querySelector('#delito_dash').value = folio.HECHODELITO;
 					document.querySelector('#delito_descr_dash').value = folio.HECHONARRACION;
 
 					//PREGUNTAS INICIALES
@@ -147,7 +147,7 @@
 					document.querySelector('#lesiones_visibles').value = preguntas.LESIONES_VISIBLES;
 
 					//DENUNCIA
-					document.querySelector('#delito').value = folio.DELITODENUNCIA;
+					document.querySelector('#delito').value = folio.HECHODELITO;
 					document.querySelector('#municipio').value = folioM.MUNICIPIODESCR;
 					document.querySelector('#colonia').value = folioC ? folioC.COLONIADESCR : folio.HECHOCOLONIADESCR;
 					document.querySelector('#calle').value = folio.HECHOCALLE;
@@ -158,7 +158,7 @@
 					document.querySelector('#fecha').value = folio.HECHOFECHA;
 					document.querySelector('#narracion').value = folio.HECHONARRACION;
 
-					if (folio.DELITODENUNCIA == "ROBO DE VEHÍCULO") {
+					if (folio.HECHODELITO == "ROBO DE VEHÍCULO") {
 						$('#v-pills-vehiculos-tab').css('display', 'block');
 
 					} else {

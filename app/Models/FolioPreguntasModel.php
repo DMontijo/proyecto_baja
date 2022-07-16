@@ -10,6 +10,7 @@ class FolioPreguntasModel extends Model
 	protected $table            = 'FOLIOPREGUNTASDENUNCIA';
 	protected $allowedFields    = [
 		'FOLIOID',
+		'ANO',
 		'ES_MENOR',
 		'ES_TERCERA_EDAD',
 		'ES_OFENDIDO',

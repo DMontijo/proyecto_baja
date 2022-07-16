@@ -7,6 +7,6 @@ use CodeIgniter\Model;
 class ColoniasModel extends Model
 {
 	protected $DBGroup          = 'default';
-	protected $table            = 'CATEGORIA_COLONIA';
+	protected $table            = 'COLONIA';
 	protected $allowedFields    = [];
 }

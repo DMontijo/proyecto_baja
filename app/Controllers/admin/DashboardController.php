@@ -11,29 +11,17 @@ use App\Models\LocalidadesModel;
 use App\Models\ColoniasModel;
 use App\Models\HechoLugarModel;
 use App\Models\VehiculoColorModel;
-use App\Models\VehiculoMarcaModel;
-use App\Models\VehiculoModeloModel;
 use App\Models\VehiculoTipoModel;
 use App\Models\PaisesModel;
 use App\Models\DelitosUsuariosModel;
 use App\Models\PersonaIdiomaModel;
-use App\Models\VehiculoDistribuidorModel;
-use App\Models\VehiculoVersionModel;
-use App\Models\VehiculoServicioModel;
 
 use App\Models\FolioPreguntasModel;
-use App\Models\FolioCorrelativoModel;
 use App\Models\FolioModel;
 use App\Models\FolioPersonaFisicaModel;
 use App\Models\FolioPersonaFisicaDomicilioModel;
 use App\Models\FolioPersonaFisicaDesaparecidaModel;
-use App\Models\FolioPersonaFisicaImputadoDelitoModel;
-use App\Models\FolioPersonaFisicaImputadoModel;
-use App\Models\FolioRelacionFisicaFisicaModel;
-use App\Models\FolioObjetoModel;
 use App\Models\FolioVehiculoModel;
-use App\Models\FolioDocumentoModel;
-use App\Models\FolioArchivoExternoModel;
 use App\Models\UsuariosModel;
 use App\Models\ZonasUsuariosModel;
 use App\Models\RolesUsuariosModel;
@@ -59,29 +47,17 @@ class DashboardController extends BaseController
 		$this->_coloniasModel = new ColoniasModel();
 		$this->_hechoLugarModel = new HechoLugarModel();
 		$this->_coloresVehiculoModel = new VehiculoColorModel();
-		$this->_marcaVehiculoModel = new VehiculoMarcaModel();
-		$this->_lineaVehiculoModel = new VehiculoModeloModel();
 		$this->_tipoVehiculoModel = new VehiculoTipoModel();
-		$this->_distribuidorVehiculoModel = new VehiculoDistribuidorModel();
-		$this->_versionVehiculoModel = new VehiculoVersionModel();
-		$this->_servicioVehiculoModel = new VehiculoServicioModel();
 		$this->_delitosUsuariosModel = new DelitosUsuariosModel();
 		$this->_denunciantesModel = new DenunciantesModel();
 		$this->_personaIdiomaModel = new PersonaIdiomaModel();
 
-		$this->_folioCorrelativoModel = new FolioCorrelativoModel();
 		$this->_folioModel = new FolioModel();
 		$this->_folioPreguntasModel = new FolioPreguntasModel();
 		$this->_folioPersonaFisicaModel = new FolioPersonaFisicaModel();
 		$this->_folioPersonaFisicaDomicilioModel = new FolioPersonaFisicaDomicilioModel();
 		$this->_folioPersonaFisicaDesaparecidaModel = new FolioPersonaFisicaDesaparecidaModel();
-		$this->_folioPersonaFisicaImputadoDelitoModel = new FolioPersonaFisicaImputadoDelitoModel();
-		$this->_folioPersonaFisicaImputadoModel = new FolioPersonaFisicaImputadoModel();
-		$this->_folioRelacionFisicaFisicaModel = new FolioRelacionFisicaFisicaModel();
-		$this->_folioObjetoModel = new FolioObjetoModel();
 		$this->_folioVehiculoModel = new FolioVehiculoModel();
-		$this->_folioDocumentoModel = new FolioDocumentoModel();
-		$this->_folioArchivoExternoModel = new FolioArchivoExternoModel();
 
 		$this->_usuariosModel = new UsuariosModel();
 		$this->_zonasUsuariosModel = new ZonasUsuariosModel();
@@ -159,11 +135,6 @@ class DashboardController extends BaseController
 		$data->colonias = $this->_coloniasModel->asObject()->findAll();
 		$data->lugares = $this->_hechoLugarModel->asObject()->orderBy('HECHODESCR', 'asc')->findAll();
 		$data->colorVehiculo = $this->_coloresVehiculoModel->asObject()->findAll();
-		$data->marcaVehiculo = $this->_marcaVehiculoModel->asObject()->orderBy('VEHICULOMARCADESCR', 'ASC')->findAll();
-		$data->lineaVehiculo = $this->_lineaVehiculoModel->asObject()->orderBy('VEHICULOMODELODESCR', 'ASC')->findAll();
-		$data->distribuidorVehiculo = $this->_distribuidorVehiculoModel->asObject()->orderBy('VEHICULODISTRIBUIDORDESCR', 'ASC')->findAll();
-		$data->versionVehiculo = $this->_versionVehiculoModel->asObject()->orderBy('VEHICULOVERSIONDESCR', 'ASC')->findAll();
-		$data->servicioVehiculo = $this->_servicioVehiculoModel->asObject()->orderBy('VEHICULOSERVICIODESCR', 'ASC')->findAll();
 		$data->tipoVehiculo = $this->_tipoVehiculoModel->asObject()->orderBy('VEHICULOTIPODESCR', 'ASC')->findAll();
 		$data->delitosUsuarios = $this->_delitosUsuariosModel->asObject()->orderBy('DELITO', 'ASC')->findAll();
 		$this->_loadView('Denuncia anónima', 'denuncia_anonima', '', $data, 'denuncia_anonima');
@@ -239,7 +210,7 @@ class DashboardController extends BaseController
 
 				$data->folioMunicipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data->folio->HECHOMUNICIPIOID)->first();
 				$data->folioColonia = $this->_coloniasModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data->folio->HECHOMUNICIPIOID)->where('COLONIAID', $data->folio->HECHOCOLONIAID)->first();
-				$data->folioLugar = $this->_folioModel->join('CATEGORIA_HECHOLUGAR', 'CATEGORIA_HECHOLUGAR.HECHOLUGARID = FOLIO.HECHOLUGARID')->where('FOLIOID', $numfolio)->first();
+				$data->folioLugar = $this->_folioModel->join('HECHOLUGAR', 'HECHOLUGAR.HECHOLUGARID = FOLIO.HECHOLUGARID')->where('FOLIOID', $numfolio)->first();
 
 				return json_encode($data);
 			} else {
@@ -261,11 +232,11 @@ class DashboardController extends BaseController
 
 		// $data['data'] = $data;
 		$data->calidadjuridica = $this->_folioPersonaFisicaModel->join('PERSONACALIDADJURIDICA', 'PERSONACALIDADJURIDICA.PERSONACALIDADJURIDICAID =FOLIOPERSONAFISICA.CALIDADJURIDICAID')->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->where('CALIDADJURIDICAID', $idcalidad)->first();
-		$data->tipoidentificacion = $this->_folioPersonaFisicaModel->join('CATEGORIA_PERSONATIPOIDENTIFICACION', 'CATEGORIA_PERSONATIPOIDENTIFICACION.PERSONATIPOIDENTIFICACIONID =FOLIOPERSONAFISICA.TIPOIDENTIFICACIONID')->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
-		$data->edocivil = $this->_folioPersonaFisicaModel->join('CATEGORIA_PERSONAEDOCIVIL', 'CATEGORIA_PERSONAEDOCIVIL.PERSONAESTADOCIVILID =FOLIOPERSONAFISICA.ESTADOCIVILID')->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
-		$data->idioma = $this->_folioPersonaFisicaModel->join('CATEGORIA_PERSONAIDIOMA', 'CATEGORIA_PERSONAIDIOMA.PERSONAIDIOMAID  =FOLIOPERSONAFISICA.PERSONAIDIOMAID')->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
+		$data->tipoidentificacion = $this->_folioPersonaFisicaModel->join('PERSONATIPOIDENTIFICACION', 'PERSONATIPOIDENTIFICACION.PERSONATIPOIDENTIFICACIONID =FOLIOPERSONAFISICA.TIPOIDENTIFICACIONID')->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
+		$data->edocivil = $this->_folioPersonaFisicaModel->join('PERSONAEDOCIVIL', 'PERSONAEDOCIVIL.PERSONAESTADOCIVILID =FOLIOPERSONAFISICA.ESTADOCIVILID')->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
+		$data->idioma = $this->_folioPersonaFisicaModel->join('PERSONAIDIOMA', 'PERSONAIDIOMA.PERSONAIDIOMAID  =FOLIOPERSONAFISICA.PERSONAIDIOMAID')->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
 
-		$data->nacionalidad = $this->_folioPersonaFisicaModel->join('CATEGORIA_PERSONANACIONALIDAD', 'CATEGORIA_PERSONANACIONALIDAD.PERSONANACIONALIDADID =FOLIOPERSONAFISICA.NACIONALIDADID')->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
+		$data->nacionalidad = $this->_folioPersonaFisicaModel->join('PERSONANACIONALIDAD', 'PERSONANACIONALIDAD.PERSONANACIONALIDADID =FOLIOPERSONAFISICA.NACIONALIDADID')->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
 		$data->personaDesaparecida = $this->_folioPersonaFisicaDesaparecidaModel->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->findAll();
 
 		//	return view('admin/dashboard/video_denuncia_modals/info_folio_modal', $data);
@@ -299,9 +270,9 @@ class DashboardController extends BaseController
 		$id = $this->request->getPost('id');
 		$folio = $this->request->getPost('folio');
 		$data->vehiculo = $this->_folioVehiculoModel->where('FOLIOID', $folio)->first();
-		$data->color = $this->_folioVehiculoModel->join('CATEGORIA_VEHICULOCOLOR', 'CATEGORIA_VEHICULOCOLOR.VEHICULOCOLORID  =FOLIOVEHICULO.PRIMERCOLORID')->where('FOLIOID', $folio)->first();
-		$data->estadov = $this->_folioVehiculoModel->join('CATEGORIA_ESTADO', 'CATEGORIA_ESTADO.ESTADOID  =FOLIOVEHICULO.ESTADOIDPLACA')->where('FOLIOID', $folio)->first();
-		$data->tipov = $this->_folioVehiculoModel->join('CATEGORIA_VEHICULOTIPO', 'CATEGORIA_VEHICULOTIPO.VEHICULOTIPOID   =FOLIOVEHICULO.TIPOID')->where('FOLIOID', $folio)->first();
+		$data->color = $this->_folioVehiculoModel->join('VEHICULOCOLOR', 'VEHICULOCOLOR.VEHICULOCOLORID  =FOLIOVEHICULO.PRIMERCOLORID')->where('FOLIOID', $folio)->first();
+		$data->estadov = $this->_folioVehiculoModel->join('ESTADO', 'ESTADO.ESTADOID  =FOLIOVEHICULO.ESTADOIDPLACA')->where('FOLIOID', $folio)->first();
+		$data->tipov = $this->_folioVehiculoModel->join('VEHICULOTIPO', 'VEHICULOTIPO.VEHICULOTIPOID   =FOLIOVEHICULO.TIPOID')->where('FOLIOID', $folio)->first();
 
 		return json_encode($data);
 	}
@@ -351,7 +322,7 @@ class DashboardController extends BaseController
 			$update = $this->_folioModel->set($data)->where('FOLIOID', $folio)->update();
 			if ($update) {
 				$folio = $this->_folioModel->asObject()->where('FOLIOID', $folio)->first();
-				$denunciante = $this->_denunciantesModel->asObject()->where('ID_DENUNCIANTE', $folio->DENUNCIANTEID)->first();
+				$denunciante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', $folio->DENUNCIANTEID)->first();
 				if ($this->_sendEmailDerivacionCanalizacion($denunciante->CORREO, $folio->FOLIOID, $status)) {
 					return json_encode(['status' => 1]);
 				} else {
@@ -471,7 +442,7 @@ class DashboardController extends BaseController
 			$folioRow['AREAIDREGISTRO'] = $empleadoRow->AREAID;
 			$folioRow['AREAIDRESPONSABLE'] = $empleadoRow->AREAID;
 			$folioRow['ESTADOJURIDICOEXPEDIENTEID'] = (string)2;
-			$folioRow['HECHOMEDIOCONOCIMIENTOID'] = (string)6;
+			$folioRow['HECHOMEDIOCONOCIMIENTOID'] = (string)5;
 			$folioRow['NOTASAGENTE'] = $notas;
 			$folioRow['STATUS'] = 'EXPEDIENTE';
 			$folioRow['AGENTEATENCIONID'] = session('ID');
@@ -483,7 +454,7 @@ class DashboardController extends BaseController
 			$folioRow['HECHONARRACION'] = $notas;
 
 			$expedienteCreado = $this->createExpediente($folioRow);
-
+			
 			$folioRow['HECHONARRACION'] = $narracion;
 			$folioRow['HECHOFECHA'] = $fecha;
 
@@ -503,7 +474,7 @@ class DashboardController extends BaseController
 				$folioRow['EXPEDIENTEID'] = $expedienteCreado->EXPEDIENTEID;
 				$update2 = $this->_folioModel->set($folioRow)->where('FOLIOID', $folio)->update();
 				if ($update && $update2) {
-					$denunciante = $this->_denunciantesModel->asObject()->where('ID_DENUNCIANTE', $folioRow['DENUNCIANTEID'])->first();
+					$denunciante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', $folioRow['DENUNCIANTEID'])->first();
 					if ($this->_sendEmailExpediente($denunciante->CORREO, $folio, $folioRow['EXPEDIENTEID'])) {
 						return json_encode(['status' => 1, 'expediente' => $expedienteCreado->EXPEDIENTEID]);
 					} else {

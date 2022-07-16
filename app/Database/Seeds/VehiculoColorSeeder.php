@@ -36,6 +36,6 @@ class VehiculoColorSeeder extends Seeder
 			array('VEHICULOCOLORDESCR' => 'OTRO'),
 
 		];
-		$this->db->table('CATEGORIA_VEHICULOCOLOR')->insertBatch($data);
+		$this->db->table('VEHICULOCOLOR')->insertBatch($data);
 	}
 }

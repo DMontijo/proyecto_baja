@@ -20,11 +20,11 @@ class TIPOVIVIENDA extends Migration
             ],
         ]);
         $this->forge->addKey('TIPOVIVIENDAID', TRUE);
-        $this->forge->createTable('CATEGORIA_TIPOVIVIENDA');
+        $this->forge->createTable('TIPOVIVIENDA');
     }
 
     public function down()
     {
-        $this->forge->dropTable('CATEGORIA_TIPOVIVIENDA');
+        $this->forge->dropTable('TIPOVIVIENDA');
     }
 }

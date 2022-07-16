@@ -82,10 +82,9 @@ class UserController extends BaseController
 			'APELLIDO_MATERNO' => $this->request->getPost('apellido_materno'),
 			'CORREO' => $this->request->getPost('correo'),
 			'PASSWORD' => hashPassword($password),
-			'FECHA_DE_NACIMIENTO' => $this->request->getPost('fecha_nacimiento'),
-			'EDAD' => $this->request->getPost('edad'),
+			'FECHANACIMIENTO' => $this->request->getPost('fecha_nacimiento'),
 			'SEXO' => $this->request->getPost('sexo'),
-			'CODIGO_POSTAL' => $this->request->getPost('cp'),
+			'CODIGOPOSTAL' => $this->request->getPost('cp'),
 			'PAIS' => $this->request->getPost('pais_select'),
 			'ESTADOID' => (int)$this->request->getPost('estado_select'),
 			'MUNICIPIOID' => (int)$this->request->getPost('municipio_select'),
@@ -99,14 +98,14 @@ class UserController extends BaseController
 			'TELEFONO2' => $this->request->getPost('telefono2'),
 			'CODIGO_PAIS' => $this->request->getPost('codigo_pais'),
 			'CODIGO_PAIS2' => $this->request->getPost('codigo_pais_2'),
-			'TIPO_DE_IDENTIFICACION' => $this->request->getPost('identificacion'),
-			'NUMERO_DE_IDENTIFICACION' => $this->request->getPost('numero_ide'),
-			'ESTADO_CIVIL' => $this->request->getPost('e_civil'),
-			'OCUPACION' => $this->request->getPost('ocupacion'),
-			'IDENTIDAD_DE_GENERO' => $this->request->getPost('iden_genero'),
+			'TIPOIDENTIFICACIONID' => $this->request->getPost('identificacion'),
+			'NUMEROIDENTIFICACION' => $this->request->getPost('numero_ide'),
+			'ESTADOCIVILID' => $this->request->getPost('e_civil'),
+			'OCUPACIONID' => $this->request->getPost('ocupacion'),
+			'IDENTIDADGENERO' => $this->request->getPost('iden_genero'),
 			'DISCAPACIDAD' => $this->request->getPost('discapacidad'),
-			'NACIONALIDAD_ID' => (int)$this->request->getPost('nacionalidad'),
-			'ESCOLARIDAD' => $this->request->getPost('escolaridad'),
+			'NACIONALIDADID' => (int)$this->request->getPost('nacionalidad'),
+			'ESCOLARIDADID' => $this->request->getPost('escolaridad'),
 			'FACEBOOK' => $this->request->getPost('facebook'),
 			'INSTAGRAM' => $this->request->getPost('instagram'),
 			'TWITTER' => $this->request->getPost('twitter'),
@@ -119,7 +118,7 @@ class UserController extends BaseController
 		if ($this->validate(['correo' => 'required|is_unique[DENUNCIANTES.CORREO]'])) {
 			$this->_denunciantesModel->insert($data);
 			$this->_sendEmailPassword($data['CORREO'], $password);
-			return redirect()->to(base_url('/denuncia'))->with('created', 'Inicia sesión con la contraseña que llegará a tu correo y comienza tu denuncia');
+			return redirect()->to(base_url('/denuncia'))->with('created', 'Inicia sesión con la contraseña que llegará a tu correo electrónico y comienza tu denuncia');
 		} else {
 			return redirect()->back()->with('message', 'Hubo un error en los datos o puede que ya exista un registro con el mismo correo');
 		}

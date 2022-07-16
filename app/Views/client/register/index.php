@@ -53,6 +53,28 @@
 							<input type="text" class="form-control" id="apellido_materno" name="apellido_materno" maxlength="100">
 						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+							<label for="fecha_nacimiento" class="form-label fw-bold input-required">Fecha de nacimiento</label>
+							<input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" required max="<?= ((int)date("Y")) - 18 . '-' . date("m") . '-' . date("d") ?>">
+							<div class="invalid-feedback">
+								La fecha de nacimiento es obligatoria
+							</div>
+						</div>
+						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+							<label for="sexo" class="form-label fw-bold input-required">Sexo</label>
+							<br>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="sexo" id="sexo" value="M" required>
+								<label class="form-check-label" for="sexo">MASCULINO</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="sexo" id="sexo" value="F" required>
+								<label class="form-check-label" for="sexo">FEMENINO</label>
+							</div>
+						</div>
+						<div class="col-12">
+							<hr>
+						</div>
+						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="correo" class="form-label fw-bold input-required">Correo electrónico</label>
 							<div class="input-group">
 								<span class="input-group-text" id="correo_vanity"><i class="bi bi-envelope-fill"></i></span>
@@ -63,24 +85,17 @@
 							</div>
 						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="fecha_nacimiento" class="form-label fw-bold input-required">Fecha de nacimiento</label>
-							<input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" required max="<?= date("Y-m-d") ?>">
-							<div class="invalid-feedback">
-								La fecha de nacimiento es obligatoria
-							</div>
+							<label for="telefono" class="form-label fw-bold input-required">Número de télefono</label>
+							<input type="number" class="form-control" id="telefono" name="telefono" required max="99999999999999999999" minlenght="6" maxlength="20" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+							<!-- <small>Mínimo 6 digitos</small> -->
+							<input type="number" id="codigo_pais" name="codigo_pais" maxlength="3" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" hidden>
 						</div>
-						<input class="form-control" id="edad" name="edad" maxlength="3" type="text" hidden>
+
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="sexo" class="form-label fw-bold input-required">Sexo</label>
-							<br>
-							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio" name="sexo" id="sexo" value="M" required>
-								<label class="form-check-label" for="flexRadioDefault1">MASCULINO</label>
-							</div>
-							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio" name="sexo" id="sexo" value="F" required>
-								<label class="form-check-label" for="flexRadioDefault2">FEMENINO</label>
-							</div>
+							<label for="telefono2" class="form-label fw-bold">Número de télefono adicional (opcional)</label>
+							<input type="number" class="form-control" id="telefono2" name="telefono2" max="99999999999999999999" minlenght="6" maxlength="20" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+							<!-- <small>Mínimo 6 digitos</small> -->
+							<input type="number" id="codigo_pais_2" name="codigo_pais_2" maxlength="3" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" hidden>
 						</div>
 					</div>
 				</div>
@@ -194,20 +209,6 @@
 							<input type="text" class="form-control" id="interior" name="interior" maxlength="10">
 						</div>
 
-						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="telefono" class="form-label fw-bold input-required">Número de télefono</label>
-							<input type="number" class="form-control" id="telefono" name="telefono" required min="111111" max="99999999999999999999" minlenght="6" maxlength="20" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
-							<!-- <small>Mínimo 6 digitos</small> -->
-							<input type="number" id="codigo_pais" name="codigo_pais" maxlength="3" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" hidden>
-						</div>
-
-						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="telefono2" class="form-label fw-bold">Número de télefono 2 (opcional)</label>
-							<input type="number" class="form-control" id="telefono2" name="telefono2" min="111111" max="99999999999999999999" minlenght="6" maxlength="20" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
-							<!-- <small>Mínimo 6 digitos</small> -->
-							<input type="number" id="codigo_pais_2" name="codigo_pais_2" maxlength="3" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" hidden>
-						</div>
-
 						<div class="col-12">
 							<div class="alert alert-warning text-center fw-bold d-none mt-2" id="idioma_alert" role="alert">
 								Si tu idioma no es español se recomienda estar acompañado de un traductor.
@@ -254,7 +255,7 @@
 							<select class="form-select" id="escolaridad" name="escolaridad" required>
 								<option selected disabled value="">Seleccione la escolaridad</option>
 								<?php foreach ($body_data->escolaridades as $index => $escolaridad) { ?>
-									<option value="<?= $escolaridad->PERSONAESCOLARIDADDESCR ?>"> <?= $escolaridad->PERSONAESCOLARIDADDESCR ?> </option>
+									<option value="<?= $escolaridad->PERSONAESCOLARIDADID ?>"> <?= $escolaridad->PERSONAESCOLARIDADDESCR ?> </option>
 								<?php } ?>
 							</select>
 							<div class="invalid-feedback">
@@ -263,11 +264,11 @@
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="ocupacion" class="form-label fw-bold">Ocupación</label>
+							<label for="ocupacion" class="form-label fw-bold input-required">Ocupación</label>
 							<select class="form-select" id="ocupacion" name="ocupacion" required>
 								<option selected disabled value="">Seleccione la ocupacion</option>
 								<?php foreach ($body_data->ocupaciones as $index => $ocupacion) { ?>
-									<option value="<?= $ocupacion->PERSONAOCUPACIONDESCR ?>"> <?= $ocupacion->PERSONAOCUPACIONDESCR ?> </option>
+									<option value="<?= $ocupacion->PERSONAOCUPACIONID ?>"> <?= $ocupacion->PERSONAOCUPACIONDESCR ?> </option>
 								<?php } ?>
 							</select>
 						</div>
@@ -275,6 +276,45 @@
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="discapacidad" class="form-label fw-bold">¿Padece alguna discapacidad?</label>
 							<input type="text" class="form-control" id="discapacidad" name="discapacidad" maxlength="100">
+						</div>
+
+						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+							<label for="documento" class="form-label fw-bold input-required">Foto de identificación</label>
+							<img class="img-fluid d-none py-2" src="" id="img_preview">
+							<input class="form-control" type="file" id="documento" name="documento" accept="image/jpeg,image/jpg" required>
+							<textarea id="documento_text" name="documento_text" hidden></textarea>
+							<div class="form-text"><button id="photo-btn" class="btn btn-link p-0 m-0" style="font-size:14px;" type="button">Para tomar foto clic aquí <i class="bi bi-camera-fill"></i></button></div>
+						</div>
+
+						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+							<label for="leer" class="form-label fw-bold input-required">¿Sabe leer?</label>
+							<br>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="leer" id="leer" value="S" required>
+								<label class="form-check-label" for="flexRadioDefault1">Si</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="leer" id="leer" value="N" required>
+								<label class="form-check-label" for="flexRadioDefault2">No</label>
+							</div>
+						</div>
+
+						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+							<label for="escribir" class="form-label fw-bold input-required">¿Sabe escribir?</label>
+							<br>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="escribir" id="escribir" value="S" required>
+								<label class="form-check-label" for="flexRadioDefault1">Si</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="escribir" id="escribir" value="N" required>
+								<label class="form-check-label" for="flexRadioDefault2">No</label>
+							</div>
+						</div>
+
+
+						<div class="col-12">
+							<hr>
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -299,14 +339,6 @@
 								<span class="input-group-text" id="twitter_vanity"><i class="bi bi-twitter"></i></span>
 								<input type="text" class="form-control" name="twitter" id="twitter" aria-describedby="twitter_vanity" maxlength="200">
 							</div>
-						</div>
-
-						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="documento" class="form-label fw-bold input-required">Foto de identificación</label>
-							<img class="img-fluid d-none py-2" src="" id="img_preview">
-							<input class="form-control" type="file" id="documento" name="documento" accept="image/jpeg,image/jpg" required>
-							<textarea id="documento_text" name="documento_text" hidden></textarea>
-							<div class="form-text"><button id="photo-btn" class="btn btn-link p-0 m-0" style="font-size:14px;" type="button">Para tomar foto clic aquí <i class="bi bi-camera-fill"></i></button></div>
 						</div>
 					</div>
 				</div>
@@ -445,7 +477,9 @@
 					document.querySelector('#nombre').value != '' &&
 					document.querySelector('#apellido_paterno').value != '' &&
 					document.querySelector('#correo').value != '' &&
-					document.querySelector('#fecha_nacimiento').value != ''
+					document.querySelector('#fecha_nacimiento').value != '' &&
+					document.querySelector('input[name="sexo"]:checked') &&
+					document.querySelector('#telefono').value != ''
 				) {
 					return true
 				} else {
@@ -460,7 +494,6 @@
 					document.querySelector('#colonia').value != '' &&
 					document.querySelector('#calle').value != '' &&
 					document.querySelector('#exterior').value != '' &&
-					document.querySelector('#telefono').value != '' &&
 					document.querySelector('#nacionalidad').value != '' &&
 					document.querySelector('#idioma').value != ''
 				) {
@@ -475,7 +508,9 @@
 					document.querySelector('#e_civil').value != '' &&
 					document.querySelector('#idioma').value != '' &&
 					document.querySelector('#documento_text').value != '' &&
-					document.querySelector('#escolaridad').value != ''
+					document.querySelector('#escolaridad').value != '' &&
+					document.querySelector('input[name="leer"]:checked') &&
+					document.querySelector('input[name="escribir"]:checked')
 				) {
 					return true
 				} else {
@@ -554,7 +589,6 @@
 			if (!form.checkValidity()) {
 				event.preventDefault();
 				event.stopPropagation();
-				enviar_datos();
 			} else {
 				event.preventDefault();
 				enviar_datos();
@@ -574,20 +608,6 @@
 				event.target.value = clearText(event.target.value).toLowerCase();
 			}, false)
 		})
-
-		document.querySelector('#fecha_nacimiento').addEventListener('change', (e) => {
-			let fecha = e.target.value + 'T00:00:00';
-			let hoy = new Date();
-			let cumpleanos = new Date(fecha);
-			let edad = hoy.getFullYear() - cumpleanos.getFullYear();
-			let m = hoy.getMonth() - cumpleanos.getMonth();
-
-			if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
-				edad--;
-			}
-
-			document.querySelector('#edad').value = edad;
-		});
 
 		document.querySelector('#fecha_nacimiento').addEventListener('blur', (e) => {
 			let fecha = e.target.value;
@@ -623,7 +643,6 @@
 		document.querySelector('#pais_select').addEventListener('change', (e) => {
 
 			let select_estado = document.querySelector('#estado_select');
-			console.log('Cambiando pais');
 			let select_municipio = document.querySelector('#municipio_select');
 			let select_localidad = document.querySelector('#localidad_select');
 			let select_colonia = document.querySelector('#colonia_select');
@@ -901,10 +920,14 @@
 		let nombre = document.querySelector("#nombre").value ? document.querySelector("#nombre").value : '';
 		let apellido1 = document.querySelector("#apellido_paterno").value ? document.querySelector("#apellido_paterno").value : '';
 		let apellido2 = document.querySelector("#apellido_materno").value ? document.querySelector("#apellido_materno").value : '';
-		let correo = document.querySelector("#correo").value ? document.querySelector("#correo").value : '';
 		let fechanac = document.querySelector("#fecha_nacimiento").value ? document.querySelector("#fecha_nacimiento").value : '';
-		let edad = document.querySelector("#edad").value;
 		let sexo = document.querySelector('input[name="sexo"]:checked').value ? document.querySelector('input[name="sexo"]:checked').value : '';
+
+		let correo = document.querySelector("#correo").value ? document.querySelector("#correo").value : '';
+		let telefono = document.querySelector("#telefono").value ? document.querySelector("#telefono").value : '';
+		let telefono2 = document.querySelector("#telefono2").value ? document.querySelector("#telefono2").value : '';
+		let codigo_pais = document.querySelector("#codigo_pais").value ? document.querySelector("#codigo_pais").value : '';
+		let codigo_pais_2 = document.querySelector("#codigo_pais_2").value ? document.querySelector("#codigo_pais_2").value : '';
 
 		let nacionalidad = document.querySelector("#nacionalidad").value ? document.querySelector("#nacionalidad").options[document.querySelector("#nacionalidad").selectedIndex].text : '';
 		let idioma = document.querySelector("#idioma").value ? document.querySelector("#idioma").options[document.querySelector("#idioma").selectedIndex].text : '';
@@ -917,14 +940,6 @@
 		let calle = document.querySelector("#calle").value ? document.querySelector("#calle").value : '';
 		let nexterior = document.querySelector("#exterior").value ? document.querySelector("#exterior").value : '';
 		let ninterior = document.querySelector("#interior").value ? document.querySelector("#interior").value : '';
-		let telefono = document.querySelector("#telefono").value ? document.querySelector("#telefono").value : '';
-		let telefono2 = document.querySelector("#telefono2").value ? document.querySelector("#telefono2").value : '';
-		let codigo_pais = document.querySelector("#codigo_pais").value ? document.querySelector("#codigo_pais").value : '';
-		let codigo_pais_2 = document.querySelector("#codigo_pais_2").value ? document.querySelector("#codigo_pais_2").value : '';
-
-		let facebook = document.querySelector("#facebook").value ? document.querySelector("#facebook").value : '';
-		let instagram = document.querySelector("#instagram").value ? document.querySelector("#instagram").value : '';
-		let twitter = document.querySelector("#twitter").value ? document.querySelector("#twitter").value : '';
 
 		let tipo = document.querySelector("#identificacion").value ? document.querySelector("#identificacion").value : '';
 		let numeroid = document.querySelector("#numero_ide").value ? document.querySelector("#numero_ide").value : '';
@@ -934,12 +949,18 @@
 		let discapacidad = document.querySelector("#discapacidad").value ? document.querySelector("#discapacidad").value : '';
 		let firma_url = document.querySelector("#firma_url").value ? document.querySelector("#firma_url").value : '';
 
+		let leer = document.querySelector('input[name="leer"]:checked').value ? document.querySelector('input[name="leer"]:checked').value : '';
+		let escribir = document.querySelector('input[name="escribir"]:checked').value ? document.querySelector('input[name="escribir"]:checked').value : '';
+
+		let facebook = document.querySelector("#facebook").value ? document.querySelector("#facebook").value : '';
+		let instagram = document.querySelector("#instagram").value ? document.querySelector("#instagram").value : '';
+		let twitter = document.querySelector("#twitter").value ? document.querySelector("#twitter").value : '';
+
 		document.querySelector('#nombre_modal').value = nombre;
 		document.querySelector('#apellido_paterno_modal').value = apellido1;
 		document.querySelector('#apellido_materno_modal').value = apellido2;
 		document.querySelector('#correo_modal').value = correo;
-		document.querySelector('#fecha_nacimiento_modal').value = fechanac;
-		document.querySelector('#edad_modal').value = edad;
+		document.querySelector('#fecha_nacimiento_modal').value = dateToString(fechanac);
 		document.querySelector('#nacionalidad_modal').value = nacionalidad;
 		document.querySelector('#escolaridad_modal').value = escolaridad;
 		document.querySelector('#sexo_modal').value = sexo == 'F' ? 'FEMENINO' : 'MASCULINO';
@@ -960,6 +981,9 @@
 		document.querySelector('#instagram_modal').value = instagram;
 		document.querySelector('#twitter_modal').value = twitter;
 
+		document.querySelector('#leer_modal').value = leer == 'S' ? 'SI' : 'NO';
+		document.querySelector('#escribir_modal').value = escribir == 'S' ? 'SI' : 'NO';
+
 		document.querySelector('#identificacion_modal').value = tipo;
 		document.querySelector('#numero_ide_modal').value = numeroid;
 		document.querySelector('#e_civil_modal').value = edoc;
@@ -967,6 +991,22 @@
 		document.querySelector('#discapacidad_modal').value = discapacidad;
 		document.querySelector('#idioma_modal').value = idioma;
 		document.querySelector('#img_firma_modal').setAttribute("src", firma_url);
+	}
+
+	function dateToString(fecha) {
+		let date = new Date(fecha);
+		let dateToTijuanaString = date.toLocaleString('en-US', {
+			timeZone: 'America/Tijuana'
+		});
+		let dateTijuana = new Date(dateToTijuanaString);
+		dateTijuana.setDate(dateTijuana.getDate() + 1);
+		var options = {
+			year: 'numeric',
+			month: 'long',
+			day: 'numeric'
+		};
+
+		return dateTijuana.toLocaleDateString("es-ES", options)
 	}
 </script>
 

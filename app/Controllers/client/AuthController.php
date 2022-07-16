@@ -31,6 +31,8 @@ class AuthController extends BaseController
 		$session = session();
 		$email = $this->request->getPost('correo');
 		$password = $this->request->getPost('password');
+		$email = trim($email);
+		$password = trim($password);
 		$data = $this->_denunciantesModel->where('CORREO', $email)->first();
 		if ($data) {
 			if (validatePassword($password, $data['PASSWORD'])) {
@@ -64,7 +66,7 @@ class AuthController extends BaseController
 		$data = (object)array();
 
 		if ($id || $token || $email) {
-			$data = $this->_denunciantesModel->asObject()->where('ID_DENUNCIANTE', $id)->orWhere('CORREO', $email)->first();
+			$data = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', $id)->orWhere('CORREO', $email)->first();
 			$this->_loadView('Cambiar contraseña', $data, 'change_password');
 		}
 	}
@@ -73,7 +75,7 @@ class AuthController extends BaseController
 	{
 		$id = $this->request->getPost('id');
 		$password = $this->request->getPost('password');
-		$this->_denunciantesModel->set('PASSWORD', hashPassword($password))->where('ID_DENUNCIANTE', $id)->update();
+		$this->_denunciantesModel->set('PASSWORD', hashPassword($password))->where('DENUNCIANTEID', $id)->update();
 		return redirect()->to(base_url('/denuncia'))->with('created', 'Contraseña modificada con éxito.');
 	}
 
@@ -82,12 +84,12 @@ class AuthController extends BaseController
 		$password = $this->_generatePassword(6);
 		$to = $this->request->getPost('correo_reset_password');
 		$user = $this->_denunciantesModel->asObject()->where('CORREO', $to)->first();
-		$this->_denunciantesModel->set('PASSWORD', hashPassword($password))->where('ID_DENUNCIANTE', $user->ID_DENUNCIANTE)->update();
+		$this->_denunciantesModel->set('PASSWORD', hashPassword($password))->where('DENUNCIANTEID', $user->DENUNCIANTEID)->update();
 
 		$email = \Config\Services::email();
 		$email->setTo($to);
 		$email->setSubject('Cambio de contraseña');
-		// $link = base_url('/denuncia/change_password?id=' . $user->ID_DENUNCIANTE);
+		// $link = base_url('/denuncia/change_password?id=' . $user->DENUNCIANTEID);
 		$body = view('email_template/reset_password_template.php', ['password' => $password]);
 		$email->setMessage($body);
 

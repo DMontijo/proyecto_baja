@@ -11,6 +11,7 @@ class FolioPersonaFisicaModel extends Model
 	protected $allowedFields    = [
 		'FOLIOID',
 		'PERSONAFISICAID',
+		'ANO',
 		'CALIDADJURIDICAID',
 		'RESERVARIDENTIDAD',
 		'DENUNCIANTE',
@@ -26,7 +27,6 @@ class FolioPersonaFisicaModel extends Model
 		'ESTADOORIGENID',
 		'MUNICIPIOORIGENID',
 		'FECHANACIMIENTO',
-		'EDAD',
 		'SEXO',
 		'TELEFONO',
 		'TELEFONO2',
@@ -34,7 +34,6 @@ class FolioPersonaFisicaModel extends Model
 		'CODIGOPAISTEL2',
 		'CORREO',
 		'EDADCANTIDAD',
-		'EDADTIEMPO',
 		'NACIONALIDADID',
 		'ESTADOCIVILID',
 		'FOTO',
@@ -55,11 +54,14 @@ class FolioPersonaFisicaModel extends Model
 		'TIEMPORESIDEANOS',
 		'TIEMPORESIDEMESES',
 		'TIEMPORESIDEDIAS',
-		'ESCOLARIDAD',
+		'ESCOLARIDADID',
+		'OCUPACIONID',
 		'DESCRIPCION_FISICA',
 		'FACEBOOK',
 		'INSTAGRAM',
 		'TWITTER',
+		'LEER',
+		'ESCRIBIR',
 	];
 
 	public function get_by_id($id)

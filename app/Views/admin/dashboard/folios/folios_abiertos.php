@@ -28,7 +28,7 @@
 									<tr>
 										<th scope="row"><?= $folio->FOLIOID ?></th>
 										<td><?= $folio->FECHAREGISTRO ?></td>
-										<td><?= $folio->DELITODENUNCIA ?></td>
+										<td><?= $folio->HECHODELITO ?></td>
 										<td><?= $folio->STATUS ?></td>
 										<td><a type="button" href="<?= base_url('/admin/dashboard/video-denuncia?folio=') . $folio->FOLIOID ?>" class="btn btn-primary text-white"><i class="fas fa-eye"></i></a></td>
 									</tr>

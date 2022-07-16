@@ -7,7 +7,7 @@ use CodeIgniter\Model;
 class PersonaTipoIdentificacionModel extends Model
 {
 	protected $DBGroup          = 'default';
-	protected $table            = 'CATEGORIA_PERSONATIPOIDENTIFICACION';
+	protected $table            = 'PERSONATIPOIDENTIFICACION';
 	protected $allowedFields    = [
 		'PERSONATIPOIDENTIFICACIONID',
 		'PERSONATIPOIDENTIFICACIONDESCR',

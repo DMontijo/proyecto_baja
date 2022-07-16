@@ -13,7 +13,6 @@ class RunAllSeeder extends Seeder
 		$this->call('LocalidadSeeder');
 		$this->call('ColoniaSeeder');
 		$this->call('OficinaSeeder');
-		$this->call('AreaSeeder');
 		$this->call('ClasificacionDoctoSeeder');
 		$this->call('PlantillaSeeder');
 		$this->call('DelitoModalidadSeeder');
@@ -22,17 +21,11 @@ class RunAllSeeder extends Seeder
 		$this->call('PersonaEdoCivilSeeder ');
 		$this->call('PersonaIdiomaSeeder  ');
 		$this->call('PersonaNacionalidadSeeder');
-		$this->call('PersonaReligionSeeder');
 		$this->call('PersonaTipoIdentificacionSeeder');
 		$this->call('TipoExpedienteSeeder  ');
 		$this->call('TipoViviendaSeeder ');
 		$this->call('VehiculoColorSeeder');
 		$this->call('VehiculoTipoSeeder ');
-		$this->call('VehiculoMarcaSeeder');
-		$this->call('VehiculoModeloSeeder');
-		$this->call('VehiculoVersionSeeder');
-		$this->call('VehiculoServicioSeeder');
-		$this->call('VehiculoDistribuidorSeeder');
 		$this->call('HechoClasificacionLugarSeeder');
 		$this->call('DerivacionesAtencionSeeder');
 		$this->call('RolesUsuariosSeeder');

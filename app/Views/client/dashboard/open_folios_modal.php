@@ -18,7 +18,7 @@
 		console.log('Click en boton');
 		$.ajax({
 			data: {
-				'id': '<?= $session->ID_DENUNCIANTE ?>',
+				'id': '<?= $session->DENUNCIANTEID ?>',
 				'edad': '<?= $session->EDAD ?>',
 				'folio': document.querySelector('#folio_num_span').innerHTML,
 				'sexo_denunciante': '<?= $session->SEXO ?>',

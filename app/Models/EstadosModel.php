@@ -7,6 +7,6 @@ use CodeIgniter\Model;
 class EstadosModel extends Model
 {
 	protected $DBGroup          = 'default';
-	protected $table            = 'CATEGORIA_ESTADO';
+	protected $table            = 'ESTADO';
 	protected $allowedFields    = [];
 }

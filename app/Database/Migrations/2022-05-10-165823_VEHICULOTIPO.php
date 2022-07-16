@@ -20,11 +20,11 @@ class VEHICULOTIPO extends Migration
             ],
         ]);
         $this->forge->addKey('VEHICULOTIPOID', TRUE);
-        $this->forge->createTable('CATEGORIA_VEHICULOTIPO');
+        $this->forge->createTable('VEHICULOTIPO');
     }
 
     public function down()
     {
-        $this->forge->dropTable('CATEGORIA_VEHICULOTIPO');
+        $this->forge->dropTable('VEHICULOTIPO');
     }
 }
