@@ -8,5 +8,8 @@ class HechoLugarModel extends Model
 {
 	protected $DBGroup          = 'default';
 	protected $table            = 'HECHOLUGAR';
-	protected $allowedFields    = [];
+	protected $allowedFields    = [
+		'HECHOLUGARID',
+		'HECHODESCR'
+	];
 }

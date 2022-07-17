@@ -62,7 +62,7 @@ class DashboardController extends BaseController
 		$data->municipios = $this->_municipiosModel->asObject()->where('ESTADOID', '2')->findAll();
 		// $data->localidades = $this->_localidadesModel->asObject()->findAll();
 		// $data->colonias = $this->_coloniasModel->asObject()->findAll();
-		$data->lugares = $this->_hechoLugarModel->asObject()->orderBy('HECHODESCR', 'asc')->findAll();
+		$data->lugares = $this->_hechoLugarModel->asObject()->findAll();
 		$data->colorVehiculo = $this->_coloresVehiculoModel->asObject()->findAll();
 		$data->tipoVehiculo = $this->_tipoVehiculoModel->asObject()->orderBy('VEHICULOTIPODESCR', 'ASC')->findAll();
 		$data->delitosUsuarios = $this->_delitosUsuariosModel->asObject()->orderBy('DELITO', 'ASC')->findAll();
