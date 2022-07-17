@@ -1,25 +1,21 @@
 <div class="row">
 	<div id="contenedor_fisica_foto" class="col-12 mb-5 d-none">
-		<img id="fisica_foto" class="d-none img-fluid" src="" alt="Denunciante" style="max-width:300px;">
+		<img id="fisica_foto" class="d-none img-fluid" src="" style="max-width:300px;">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="calidad_juridica" class="form-label font-weight-bold">Calidad Juridica</label>
-		<input type="text" class="form-control" id="calidad_juridicaP" name="calidad_juridicaP" autofocus>
+		<label for="tipoiP" class="form-label font-weight-bold">Tipo identificacion</label>
+		<input type="text" class="form-control" id="tipoiP" name="tipoiP">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="desaparecidaP" class="form-label font-weight-bold">Desaparecida</label>
-		<input type="text" class="form-control" id="desaparecidaP" name="desaparecidaP">
-	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="denunciantep" class="form-label font-weight-bold">Denunciante</label>
-		<input type="text" class="form-control" id="denunciantep" name="denunciantep">
+		<label for="apellido_materno" class="form-label font-weight-bold">Numero de identificación</label>
+		<input type="text" class="form-control" id="numero_identidadP" name="numero_identidadP">
 	</div>
 	<div class="col-12">
 		<hr>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="nombre" class="form-label font-weight-bold">Nombre(s)</label>
-		<input type="text" class="form-control" id="nombrePersona" name="nombrePersona" autofocus>
+		<input type="text" class="form-control" id="nombrePersona" name="nombrePersona">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="apellido_paterno" class="form-label font-weight-bold">Apellido paterno</label>
@@ -31,6 +27,41 @@
 	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="nacionalidadp" class="form-label font-weight-bold">Nacionalidad</label>
+		<input type="text" class="form-control" id="nacionalidadp" name="nacionalidadp">
+	</div>
+
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="idiomap" class="form-label font-weight-bold">Idioma</label>
+		<input type="text" class="form-control" id="idiomap" name="idiomap">
+	</div>
+
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="edoorigenp" class="form-label font-weight-bold">Estado origen</label>
+		<input type="text" class="form-control" id="edoorigenp" name="edoorigenp">
+	</div>
+
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="munorigenp" class="form-label font-weight-bold">Municipio origen</label>
+		<input type="text" class="form-control" id="munorigenp" name="munorigenp">
+	</div>
+
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="telefonoP" class="form-label font-weight-bold">Teléfono</label>
+		<input type="text" class="form-control" id="telefonoP" name="telefonoP">
+	</div>
+
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="telefonoP2" class="form-label font-weight-bold">Teléfono 2</label>
+		<input type="text" class="form-control" id="telefonoP2" name="telefonoP2">
+	</div>
+
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="correoP" class="form-label font-weight-bold">Correo</label>
+		<input type="text" class="form-control" id="correoP" name="correoP">
+	</div>
+
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="apellido_materno" class="form-label font-weight-bold">Fecha de Nacimiento</label>
 		<input type="text" class="form-control" id="fecha_nacimientoP" name="fecha_nacimientoP">
 	</div>
@@ -39,54 +70,37 @@
 		<label for="apellido_materno" class="form-label font-weight-bold">Edad</label>
 		<input type="text" class="form-control" id="edadP" name="edadP">
 	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="sexoP" class="form-label font-weight-bold">Sexo</label>
-		<input type="text" class="form-control" id="sexoP" name="sexoP">
-	</div>
+
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="edocp" class="form-label font-weight-bold">Estado civil</label>
 		<input type="text" class="form-control" id="edocp" name="edocp">
 	</div>
 
-	<!-- <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="vivaP" class="form-label font-weight-bold">Viva</label>
-		<input type="text" class="form-control" id="vivaP" name="vivaP">
-	</div> -->
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="sexoP" class="form-label font-weight-bold">Sexo</label>
+		<input type="text" class="form-control" id="sexoP" name="sexoP">
+	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="apellido_materno" class="form-label font-weight-bold">Nacionalidad</label>
-		<input type="text" class="form-control" id="nacionalidadp" name="nacionalidadp">
+		<label for="ocupacionP" class="form-label font-weight-bold">Profesión u Oficio</label>
+		<input type="text" class="form-control" id="ocupacionP" name="ocupacionP">
 	</div>
+
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="idiomap" class="form-label font-weight-bold">Idioma</label>
-		<input type="text" class="form-control" id="idiomap" name="idiomap">
+		<label for="escolaridadP" class="form-label font-weight-bold">Escolaridad</label>
+		<input type="text" class="form-control" id="escolaridadP" name="escolaridadP">
 	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="apellido_materno" class="form-label font-weight-bold">Numero identidad</label>
-		<input type="text" class="form-control" id="numero_identidadP" name="numero_identidadP">
-	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="tipoiP" class="form-label font-weight-bold">Tipo identificacion</label>
-		<input type="text" class="form-control" id="tipoiP" name="tipoiP">
+
+	<div class="col-12">
+		<hr>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="apodo" class="form-label font-weight-bold">Apodo</label>
 		<input type="text" class="form-control" id="apodo" name="apodo">
 	</div>
-	<div class="col-12">
-		<hr>
-	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="telefonoP" class="form-label font-weight-bold">Teléfono</label>
-		<input type="text" class="form-control" id="telefonoP" name="telefonoP">
-	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="telefonoP2" class="form-label font-weight-bold">Teléfono 2</label>
-		<input type="text" class="form-control" id="telefonoP2" name="telefonoP2">
-	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="correoP" class="form-label font-weight-bold">Correo</label>
-		<input type="text" class="form-control" id="correoP" name="correoP">
+		<label for="calidad_juridica" class="form-label font-weight-bold">Calidad Juridica</label>
+		<input type="text" class="form-control" id="calidad_juridicaP" name="calidad_juridicaP">
 	</div>
 </div>
 <div id="personadesaparecida" style="display: none;">
@@ -100,11 +114,11 @@
 		<hr>
 		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 			<label for="estaturaD" class="form-label font-weight-bold">Estatura</label>
-			<input type="text" class="form-control" id="estaturaD" name="estaturaD" autofocus>
+			<input type="text" class="form-control" id="estaturaD" name="estaturaD">
 		</div>
 		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 			<label for="pesoD" class="form-label font-weight-bold">Peso</label>
-			<input type="text" class="form-control" id="pesoD" name="pesoD" autofocus>
+			<input type="text" class="form-control" id="pesoD" name="pesoD">
 		</div>
 		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 			<label for="complexionD" class="form-label font-weight-bold">Complexión</label>

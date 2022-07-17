@@ -2,7 +2,7 @@
 	<h3 class="text-center fw-bolder pb-3 text-blue">Datos del adulto acompañante</h3>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="nombre_adulto" class="form-label fw-bold">Nombre(s)</label>
-		<input type="text" class="form-control" id="nombre_adulto" name="nombre_adulto" autofocus>
+		<input type="text" class="form-control" id="nombre_adulto" name="nombre_adulto">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="ape_paterno_adulto" class="form-label fw-bold">Apellido paterno</label>

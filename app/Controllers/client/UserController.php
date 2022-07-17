@@ -127,7 +127,7 @@ class UserController extends BaseController
 	public function getMunicipiosByEstado()
 	{
 		$estadoID = $this->request->getPost('estado_id');
-		$data = $this->_municipiosModel->asObject()->where('ESTADOID', $estadoID)->findAll();
+		$data = $this->_municipiosModel->asObject()->where('ESTADOID', $estadoID)->orderBy('MUNICIPIODESCR', 'asc')->findAll();
 		return json_encode((object)['data' => $data]);
 	}
 
@@ -135,7 +135,7 @@ class UserController extends BaseController
 	{
 		$estadoID = $this->request->getPost('estado_id');
 		$municipioID = $this->request->getPost('municipio_id');
-		$data = $this->_localidadesModel->asObject()->where('ESTADOID', $estadoID)->where('MUNICIPIOID', $municipioID)->findAll();
+		$data = $this->_localidadesModel->asObject()->where('ESTADOID', $estadoID)->where('MUNICIPIOID', $municipioID)->orderBy('LOCALIDADDESCR', 'asc')->findAll();
 		return json_encode((object)['data' => $data]);
 	}
 
@@ -143,7 +143,7 @@ class UserController extends BaseController
 	{
 		$estadoID = $this->request->getPost('estado_id');
 		$municipioID = $this->request->getPost('municipio_id');
-		$data = $this->_coloniasModel->asObject()->where('ESTADOID', $estadoID)->where('MUNICIPIOID', $municipioID)->findAll();
+		$data = $this->_coloniasModel->asObject()->where('ESTADOID', $estadoID)->where('MUNICIPIOID', $municipioID)->orderBy('COLONIADESCR', 'asc')->findAll();
 		return json_encode((object)['data' => $data]);
 	}
 

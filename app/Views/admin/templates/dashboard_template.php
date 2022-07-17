@@ -19,6 +19,11 @@
 	<link rel="stylesheet" href="<?= base_url() ?>/assets/DataTables/datatables-responsive/css/responsive.bootstrap4.min.css">
 	<link rel="stylesheet" href="<?= base_url() ?>/assets/DataTables/datatables-buttons/css/buttons.bootstrap4.min.css">
 	<script src="<?= base_url() ?>/assets/DataTables/jquery/jquery.min.js"></script>
+	<style>
+		body {
+			color: dark!important;
+		}
+	</style>
 </head>
 
 <body class="c-app c-legacy-theme">

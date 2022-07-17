@@ -180,6 +180,7 @@
 				if (response.length > 0) {
 					document.querySelector('#open_folios_modal #folio_num_span').innerHTML = response[0].FOLIOID;
 					document.querySelector('#open_folios_modal #folio_delito_span').innerHTML = response[0].HECHODELITO;
+					document.querySelector('#open_input_year').value = response[0].ANO;
 					$('#open_folios_modal').modal('show');
 				}
 			}).fail(function(jqXHR, textStatus) {});
@@ -241,7 +242,7 @@
 				document.querySelector('#numero_ext_menor').setAttribute('required', true);
 				document.querySelector('#fecha_nacimiento_menor').setAttribute('required', true);
 				document.querySelector('#edad_menor').setAttribute('required', true);
-				
+
 				let radiosSexoMenor = document.querySelectorAll('input[name="sexo_menor"]');
 				radiosSexoMenor.forEach((radio) => {
 					radio.setAttribute('required', true);

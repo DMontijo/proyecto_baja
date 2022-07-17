@@ -4,7 +4,7 @@
 	<hr>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="tipo_placas_vehiculo" class="form-label fw-bold">Tipo de placas:</label>
-		<select class="form-select" id="tipo_placas_vehiculo" name="tipo_placas_vehiculo" autofocus>
+		<select class="form-select" id="tipo_placas_vehiculo" name="tipo_placas_vehiculo">
 			<option selected disabled value="">Seleccione el tipo de placas</option>
 			<option value="N">NACIONAL</option>
 			<option value="F">FRONTERIZO</option>
@@ -27,7 +27,7 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="estado_vehiculo" class="form-label fw-bold">Estado de origen:</label>
-		<!-- <select class="form-select" id="estado_vehiculo" name="estado_vehiculo" autofocus>
+		<!-- <select class="form-select" id="estado_vehiculo" name="estado_vehiculo">
 			<option selected disabled value="">Seleccione el estado</option>
 		</select> -->
 		<input type="text" class="form-control" id="estado_vehiculo" name="estado_vehiculo">
@@ -49,7 +49,7 @@
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="distribuidor_vehiculo" class="form-label fw-bold">Distribuidor:</label>
-		<select class="form-select" id="distribuidor_vehiculo" name="distribuidor_vehiculo" autofocus>
+		<select class="form-select" id="distribuidor_vehiculo" name="distribuidor_vehiculo">
 			<option selected disabled value="">Seleccione el distribuidor</option>
 			<?php foreach ($body_data->distribuidorVehiculo as $index => $distribuidor_vehiculo) { ?>
 				<option value="<?= $distribuidor_vehiculo->VEHICULODISTRIBUIDORID ?> "> <?= $distribuidor_vehiculo->VEHICULODISTRIBUIDORDESCR ?></option>
@@ -58,7 +58,7 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="marca" class="form-label fw-bold">Marca:</label>
-		<select class="form-select" id="marca" name="marca" autofocus>
+		<select class="form-select" id="marca" name="marca">
 			<option selected disabled value="">Seleccione la marca</option>
 			<?php foreach ($body_data->marcaVehiculo as $index => $marca) { ?>
 				<option value="<?= $marca->VEHICULODISTRIBUIDORID ?> <?= $marca->VEHICULOMARCAID ?> "> <?= $marca->VEHICULOMARCADESCR ?></option>
@@ -67,7 +67,7 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="linea_vehiculo" class="form-label fw-bold">Modelo:</label>
-		<select class="form-select" id="linea_vehiculo" name="linea_vehiculo" autofocus>
+		<select class="form-select" id="linea_vehiculo" name="linea_vehiculo">
 			<option selected disabled value="">Seleccione el modelo</option>
 			<?php foreach ($body_data->lineaVehiculo as $index => $linea_vehiculo) { ?>
 				<option value="<?= $linea_vehiculo->VEHICULODISTRIBUIDORID ?> <?= $linea_vehiculo->VEHICULOMARCAID ?> <?= $linea_vehiculo->VEHICULOMODELOID ?> "> <?= $linea_vehiculo->VEHICULOMODELODESCR ?></option>
@@ -76,7 +76,7 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="version_vehiculo" class="form-label fw-bold">Versión:</label>
-		<select class="form-select" id="version_vehiculo" name="version_vehiculo" autofocus>
+		<select class="form-select" id="version_vehiculo" name="version_vehiculo">
 			<option selected disabled value="">Seleccione la versión</option>
 			<?php foreach ($body_data->versionVehiculo as $index => $version_vehiculo) { ?>
 				<option value="<?= $version_vehiculo->VEHICULODISTRIBUIDORID ?> <?= $version_vehiculo->VEHICULOMARCAID ?> <?= $version_vehiculo->VEHICULOMODELOID ?> <?= $version_vehiculo->VEHICULOVERSIONID ?>"> <?= $version_vehiculo->VEHICULOVERSIONDESCR ?></option>
@@ -85,7 +85,7 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="tipo_vehiculo" class="form-label fw-bold">Tipo de vehículo:</label>
-		<select class="form-select" id="tipo_vehiculo" name="tipo_vehiculo" autofocus>
+		<select class="form-select" id="tipo_vehiculo" name="tipo_vehiculo">
 			<option selected disabled value="">Seleccione el tipo de vehículo</option>
 			<?php foreach ($body_data->tipoVehiculo as $index => $tipo_vehiculo) { ?>
 				<option value="<?= $tipo_vehiculo->VEHICULOTIPOID ?>"> <?= $tipo_vehiculo->VEHICULOTIPODESCR ?></option>
@@ -94,7 +94,7 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="servicio_vehiculo" class="form-label fw-bold">Servicio:</label>
-		<select class="form-select" id="servicio_vehiculo" name="servicio_vehiculo" autofocus>
+		<select class="form-select" id="servicio_vehiculo" name="servicio_vehiculo">
 			<option selected disabled value="">Seleccione el servicio</option>
 			<?php foreach ($body_data->servicioVehiculo as $index => $servicio_vehiculo) { ?>
 				<option value="<?= $servicio_vehiculo->VEHICULOSERVICIOID ?> "> <?= $servicio_vehiculo->VEHICULOSERVICIODESCR ?></option>
@@ -128,7 +128,7 @@
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="color_vehiculo" class="form-label fw-bold">Color:</label>
-		<select class="form-select" id="color_vehiculo" name="color_vehiculo" autofocus>
+		<select class="form-select" id="color_vehiculo" name="color_vehiculo">
 			<option selected disabled value="">Seleccione el color</option>
 			<?php foreach ($body_data->colorVehiculo as $index => $color_vehiculo) { ?>
 				<option value="<?= $color_vehiculo->VEHICULOCOLORID ?>"> <?= $color_vehiculo->VEHICULOCOLORDESCR ?> </option>
@@ -137,7 +137,7 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="color_tapiceria_vehiculo" class="form-label fw-bold">Color tapiceria:</label>
-		<select class="form-select" id="color_tapiceria_vehiculo" name="color_tapiceria_vehiculo" autofocus>
+		<select class="form-select" id="color_tapiceria_vehiculo" name="color_tapiceria_vehiculo">
 			<option selected disabled value="">Seleccione el color de tapiceria</option>
 			<?php foreach ($body_data->colorVehiculo as $index => $color_vehiculo) { ?>
 				<option value="<?= $color_vehiculo->VEHICULOCOLORID ?>"> <?= $color_vehiculo->VEHICULOCOLORDESCR ?> </option>
@@ -182,7 +182,7 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="foto_vehiculo" class="form-label fw-bold">Fotografía del vehículo:</label>
-		<input class="form-control" type="file" id="foto_vehiculo" name="foto_vehiculo" accept="image/*" capture="user">
+		<input class="form-control" type="file" id="foto_vehiculo" name="foto_vehiculo" accept="image/jpeg,image/jpg,image/png" capture="user">
 	</div>
 	<div class="col-12 mb-3">
 		<label for="description_vehiculo" class="form-label fw-bold">Otras características que permitan identificar el vehículo:</label>

@@ -75,6 +75,7 @@ class DashboardController extends BaseController
 	{
 		$data = (object)[
 			'folio' => $this->request->getGet('folio'),
+			'year' => $this->request->getGet('year'),
 			'delito' => $this->request->getGet('delito'),
 			'descripcion' => $this->request->getGet('descripcion'),
 			'idioma' => $this->request->getGet('idioma'),
@@ -85,10 +86,12 @@ class DashboardController extends BaseController
 			'sexo_denunciante' => $this->request->getGet('sexo_denunciante') == 'F' ? 'FEMENINO' : 'MASCULINO',
 		];
 
-		if ($data->folio) {
+		$folio = $this->_folioModel->where('ANO', $data->year)->where('FOLIOID', $data->folio)->where('STATUS', 'ABIERTO')->first();
+
+		if ($folio) {
 			$this->_loadView('Video denuncia', 'video-denuncia', '', $data, 'video_denuncia');
 		} else {
-			return redirect()->back();
+			return redirect()->to(base_url('denuncia/dashboard'));
 		}
 	}
 
@@ -252,10 +255,13 @@ class DashboardController extends BaseController
 			'month' => date('m'),
 			'year' => date('Y'),
 		];
+
 		$edad = $hoy->year - $fecha->year;
 		$m = $hoy->month - $fecha->month;
 
-		if ($m <= 0) {
+		if ($m < 0) {
+			$edad--;
+		} else if ($m == 0) {
 			if ($hoy->day < (int)$fecha->day) {
 				$edad--;
 			}
@@ -380,7 +386,7 @@ class DashboardController extends BaseController
 			'sexo' => $this->request->getPost('delito') == 'VIOLENCIA FAMILIAR' ? 2 : 0,
 		];
 		$sexo_denunciante = $denunciante->SEXO == 'F' ? 'FEMENINO' : 'MASCULINO';
-		$url = "/denuncia/dashboard/video-denuncia?folio=" . $FOLIOID . "&delito=" . $data->delito . "&descripcion=" . $data->descripcion . "&idioma=" . $data->idioma . "&edad=" . $data->edad . "&perfil=" . $data->perfil . "&sexo=" . $data->sexo . "&prioridad=" . $prioridad . "&sexo_denunciante=" . $sexo_denunciante;
+		$url = "/denuncia/dashboard/video-denuncia?folio=" . $FOLIOID . '  /  ' . $year . "&year=" . $year . "&delito=" . $data->delito . "&descripcion=" . $data->descripcion . "&idioma=" . $data->idioma . "&edad=" . $data->edad . "&perfil=" . $data->perfil . "&sexo=" . $data->sexo . "&prioridad=" . $prioridad . "&sexo_denunciante=" . $sexo_denunciante;
 
 		if ($this->_sendEmailFolio($session->get('CORREO'), $FOLIOID)) {
 			return redirect()->to(base_url($url));
@@ -528,18 +534,37 @@ class DashboardController extends BaseController
 
 	public function getLinkVideodenuncia()
 	{
-		$FOLIOID = $this->request->getPost('folio');
-		$IDDENUNCIANTE = $this->request->getPost('id');
-		$EDAD = $this->request->getPost('edad');
-		$SEXO_DENUNCIANTE = $this->request->getPost('sexo_denunciante');
-		$folio = $this->_folioModel->asObject()->where('FOLIOID', $FOLIOID,)->first();
+		$folioId = $this->request->getPost('folio');
+		$denuncianteId = $this->request->getPost('id');
+		$year = $this->request->getPost('year');
+		$folio = $this->_folioModel->asObject()->where('FOLIOID', $folioId,)->first();
 
-		if ($FOLIOID && $folio && $EDAD && $IDDENUNCIANTE && $SEXO_DENUNCIANTE) {
+		if ($folioId && $folio && $denuncianteId && $year) {
 
-			$preguntas = $this->_folioPreguntasModel->asObject()->where('FOLIOID', $FOLIOID)->first();
-			$denunciante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', $IDDENUNCIANTE)->first();
+			$preguntas = $this->_folioPreguntasModel->asObject()->where('FOLIOID', $folioId)->first();
+			$denunciante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', $denuncianteId)->first();
 			$idioma = $this->_personaIdiomaModel->asObject()->where('PERSONAIDIOMAID', $denunciante->IDIOMAID)->first();
 			$delito = $this->_delitosUsuariosModel->asObject()->where('DELITO', $folio->HECHODELITO)->first();
+			$fecha = (object)[
+				'day' => date('d', strtotime($denunciante->FECHANACIMIENTO)),
+				'month' => date('m', strtotime($denunciante->FECHANACIMIENTO)),
+				'year' => date('Y', strtotime($denunciante->FECHANACIMIENTO)),
+			];
+			$hoy = (object)[
+				'day' => date('d'),
+				'month' => date('m'),
+				'year' => date('Y'),
+			];
+			$edad = $hoy->year - $fecha->year;
+			$m = $hoy->month - $fecha->month;
+			if ($m < 0) {
+				$edad--;
+			} else if ($m == 0) {
+				if ($hoy->day < (int)$fecha->day) {
+					$edad--;
+				}
+			}
+			$sexoDenunciante = $denunciante->SEXO;
 			$prioridad = 1;
 
 			if ($preguntas->ES_MENOR == 'SI' || $preguntas->ES_TERCERA_EDAD == 'SI' || $preguntas->TIENE_DISCAPACIDAD == 'SI' || $preguntas->FUE_CON_ARMA == 'SI' || $preguntas->ESTA_DESAPARECIDO == 'SI') {
@@ -552,13 +577,13 @@ class DashboardController extends BaseController
 				'delito' => $folio->HECHODELITO,
 				'descripcion' => $folio->HECHONARRACION,
 				'idioma' => $idioma->PERSONAIDIOMADESCR ? $idioma->PERSONAIDIOMADESCR : 'DESCONOCIDO',
-				'edad' => $EDAD,
+				'edad' => $edad,
 				'perfil' => $folio->HECHODELITO == 'VIOLENCIA FAMILIAR' ? 1 : 0,
 				'sexo' => $folio->HECHODELITO == 'VIOLENCIA FAMILIAR' ? 2 : 0,
-				'sexo_denunciante' => $SEXO_DENUNCIANTE == 'F' ? 'FEMENINO' : 'MASCULINO',
+				'sexo_denunciante' => $sexoDenunciante == 'F' ? 'FEMENINO' : 'MASCULINO',
 			];
 
-			$url = base_url() . "/denuncia/dashboard/video-denuncia?folio=" . $FOLIOID . "&delito=" . $data->delito . "&descripcion=" . $data->descripcion . "&idioma=" . $data->idioma . "&edad=" . $data->edad . "&perfil=" . $data->perfil . "&sexo=" . $data->sexo . "&prioridad=" . $prioridad . "&sexo_denunciante=" . $data->sexo_denunciante . '&descripcion=' . $data->descripcion;
+			$url = base_url() . "/denuncia/dashboard/video-denuncia?folio=" . $folioId . '  /  ' . $year . "&year=" . $year . "&delito=" . $data->delito . "&descripcion=" . $data->descripcion . "&idioma=" . $data->idioma . "&edad=" . $data->edad . "&perfil=" . $data->perfil . "&sexo=" . $data->sexo . "&prioridad=" . $prioridad . "&sexo_denunciante=" . $data->sexo_denunciante;
 
 			return json_encode((object)['status' => 1, 'url' => $url]);
 		} else {

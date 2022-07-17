@@ -1,6 +1,6 @@
-<div class="modal shadow" id="salida_modal" tabindex="-1" role="dialog" aria-labelledby="SalidaModal" aria-hidden="true">
+<div class="modal shadow" id="salida_modal" tabindex="-1" role="dialog" aria-labelledby="SalidaModal" aria-hidden="true" data-backdrop="false">
 	<div class="modal-dialog modal-dialog-centered mw-100 w-75">
-		<div class="modal-content">
+		<div class="modal-content" style="box-shadow: 0px 0px 55px 9px rgba(0,0,0,0.66)!important;">
 			<div class="modal-header bg-primary text-white">
 				<h5 class="modal-title font-weight-bold">SALIDA</h5>
 				<button id="btn_salida_exit" type="button" class="close text-white" data-backdrop="false" data-dismiss="modal" aria-label="Close">
@@ -185,8 +185,8 @@
 			let salida = tipoSalida.value;
 			let descripcion = document.querySelector('#notas_caso_salida').value;
 			data = {
-				'folio': document.querySelector('#input_folio_atencion').value,
-				'agenteId': <?= session('ID') ?>,
+				'folio': inputFolio.value,
+				'year': year_select.value,
 				'status': salida,
 				'motivo': descripcion,
 			}
@@ -224,6 +224,12 @@
 							inputFolio.value = '';
 							borrarTodo();
 						})
+					} else {
+						Swal.fire({
+							icon: 'error',
+							text: data.error,
+							confirmButtonColor: '#bf9b55',
+						});
 					}
 				}).fail(function(jqXHR, textStatus) {
 					btnFinalizar.removeAttribute('disabled');
@@ -251,6 +257,7 @@
 					empleado.value != '') {
 					data = {
 						'folio': inputFolio.value,
+						'year': year_select.value,
 						'municipio': municipio_empleado.value,
 						'estado': 2,
 						'notas': descripcion,
@@ -293,8 +300,13 @@
 								inputFolio.value = '';
 								borrarTodo();
 							})
+						} else {
+							Swal.fire({
+								icon: 'error',
+								text: data.error,
+								confirmButtonColor: '#bf9b55',
+							});
 						}
-						console.log(data);
 
 					}).fail(function(jqXHR, textStatus) {
 						data = {
