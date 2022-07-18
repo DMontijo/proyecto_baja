@@ -342,6 +342,7 @@
 					let escolaridad = response.escolaridad;
 
 					if (personaid.DENUNCIANTE == 'S') {
+						console.log(personaid.FOTO);
 						document.querySelector('#fisica_foto').setAttribute('src', personaid.FOTO);
 						document.querySelector('#fisica_foto').classList.remove('d-none');
 						document.querySelector('#contenedor_fisica_foto').classList.remove('d-none');
@@ -389,7 +390,7 @@
 							month: 'long',
 							day: 'numeric'
 						};
-						document.querySelector('#fecha_nacimientoP').value = dateTijuana.toLocaleDateString("es-ES", options)
+						document.querySelector('#fecha_nacimientoP').value = (dateTijuana.toLocaleDateString("es-ES", options)).toUpperCase();
 					} else {
 						document.querySelector('#fecha_nacimientoP').value = '';
 					}
@@ -439,38 +440,53 @@
 					}
 
 					//DOMICILIO
-					let domicilio = response.domicilio.persondom;
-					let estadoDom = response.domicilio.estado;
-					let municipioDom = response.domicilio.municipio;
-					let localidadDom = response.domicilio.localidad;
-					let coloniaDom = response.domicilio.colonia;
+					if (response.domicilio.persondom) {
+						let domicilio = response.domicilio.persondom;
+						let estadoDom = response.domicilio.estado;
+						let municipioDom = response.domicilio.municipio;
+						let localidadDom = response.domicilio.localidad;
+						let coloniaDom = response.domicilio.colonia;
 
-					var qestado = document.querySelector('#estadoper').value;
-					var qmunicipio = document.querySelector('#municipiop').value;
-					var qlocalidad = document.querySelector('#localidadp').value;
+						var qestado = document.querySelector('#estadoper').value;
+						var qmunicipio = document.querySelector('#municipiop').value;
+						var qlocalidad = document.querySelector('#localidadp').value;
 
-					if (estadoDom == null) {
+						if (estadoDom == null) {
+							document.querySelector('#estadoper').value = '';
+						} else {
+							document.querySelector('#estadoper').value = estadoDom.ESTADODESCR;
+						}
+						if (municipioDom == null) {
+							document.querySelector('#municipiop').value = '';
+						} else {
+							document.querySelector('#municipiop').value = municipioDom.MUNICIPIODESCR;
+						}
+						if (localidadDom == null) {
+							document.querySelector('#localidadp').value = '';
+						} else {
+							document.querySelector('#localidadp').value = localidadDom.LOCALIDADDESCR;
+						}
+
+						document.querySelector('#coloniap').value = domicilio.COLONIAID != 0 ? (coloniaDom ? coloniaDom.COLONIADESCR : '') : domicilio.COLONIADESCR;
+						document.querySelector('#cp').value = domicilio.CP;
+						document.querySelector('#callep').value = domicilio.CALLE;
+						document.querySelector('#exteriorp').value = domicilio.NUMEROCASA;
+						document.querySelector('#interiorp').value = domicilio.NUMEROINTERIOR;
+						document.querySelector('#zonap').value = domicilio.ZONA ? (domicilio.ZONA == 'U' ? 'URBANA' : 'RURAL') : '';
+					} else {
 						document.querySelector('#estadoper').value = '';
-					} else {
-						document.querySelector('#estadoper').value = estadoDom.ESTADODESCR;
-					}
-					if (municipioDom == null) {
+						document.querySelector('#estadoper').value = '';
 						document.querySelector('#municipiop').value = '';
-					} else {
-						document.querySelector('#municipiop').value = municipioDom.MUNICIPIODESCR;
-					}
-					if (localidadDom == null) {
+						document.querySelector('#municipiop').value = '';
 						document.querySelector('#localidadp').value = '';
-					} else {
-						document.querySelector('#localidadp').value = localidadDom.LOCALIDADDESCR;
+						document.querySelector('#localidadp').value = '';
+						document.querySelector('#coloniap').value = '';
+						document.querySelector('#cp').value = '';
+						document.querySelector('#callep').value = '';
+						document.querySelector('#exteriorp').value = '';
+						document.querySelector('#interiorp').value = '';
+						document.querySelector('#zonap').value = '';
 					}
-
-					document.querySelector('#coloniap').value = domicilio.COLONIAID != 0 ? (coloniaDom ? coloniaDom.COLONIADESCR : '') : domicilio.COLONIADESCR;
-					document.querySelector('#cp').value = domicilio.CP;
-					document.querySelector('#callep').value = domicilio.CALLE;
-					document.querySelector('#exteriorp').value = domicilio.NUMEROCASA;
-					document.querySelector('#interiorp').value = domicilio.NUMEROINTERIOR;
-					document.querySelector('#zonap').value = domicilio.ZONA ? (domicilio.ZONA == 'U' ? 'URBANA' : 'RURAL') : '';
 
 					$('#folio_persona_fisica_modal').modal('show');
 				} else {

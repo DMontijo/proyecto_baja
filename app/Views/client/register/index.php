@@ -944,8 +944,8 @@
 		let tipo = document.querySelector("#identificacion").value ? document.querySelector("#identificacion").value : '';
 		let numeroid = document.querySelector("#numero_ide").value ? document.querySelector("#numero_ide").value : '';
 		let edoc = document.querySelector("#e_civil").value ? document.querySelector("#e_civil").value : '';
-		let escolaridad = document.querySelector("#escolaridad").value ? document.querySelector("#escolaridad").value : '';
-		let ocupacion = document.querySelector("#ocupacion").value ? document.querySelector("#ocupacion").value : '';
+		let ocupacion = document.querySelector("#ocupacion").value ? document.querySelector("#ocupacion").options[document.querySelector("#ocupacion").selectedIndex].text : '';
+		let escolaridad = document.querySelector("#escolaridad").value ? document.querySelector("#escolaridad").options[document.querySelector("#escolaridad").selectedIndex].text : '';
 		let discapacidad = document.querySelector("#discapacidad").value ? document.querySelector("#discapacidad").value : '';
 		let firma_url = document.querySelector("#firma_url").value ? document.querySelector("#firma_url").value : '';
 

@@ -7,6 +7,6 @@ use CodeIgniter\Model;
 class DelitosUsuariosModel extends Model
 {
 	protected $DBGroup          = 'default';
-	protected $table            = 'DELITOS_USUARIOS';
+	protected $table            = 'DELITOSVIDEODENUNCIA';
 	protected $allowedFields    = [];
 }

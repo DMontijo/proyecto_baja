@@ -64,7 +64,7 @@
 					</div>
 
 					<div class="col-12 col-sm-6 mb-3">
-						<label for="nacionalidad_modal" class="form-label fw-bold input-required">Nacionalidad:</label>
+						<label for="nacionalidad_modal" class="form-label fw-bold ">Nacionalidad:</label>
 						<input type="text" class="form-control" id="nacionalidad_modal" name="nacionalidad_modal" disabled>
 					</div>
 
@@ -152,7 +152,7 @@
 					</div>
 
 					<div class="col-12 col-sm-6 mb-3">
-						<label for="escolaridad_modal" class="form-label fw-bold input-required">Escolaridad:</label>
+						<label for="escolaridad_modal" class="form-label fw-bold ">Escolaridad:</label>
 						<input class="form-control" id="escolaridad_modal" name="escolaridad_modal" type="text" disabled>
 					</div>
 

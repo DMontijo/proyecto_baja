@@ -39,7 +39,7 @@ class FoliosController extends BaseController
 	{
 		$data = (object)array();
 		$agente = $this->_usuariosModel->asObject()->where('ID', session('ID'))->first();
-		$roles = [1, 2, 3, 4];
+		$roles = [1, 3];
 		$data->abiertos = count($this->_folioModel->where('STATUS', 'ABIERTO')->findAll());
 		if (in_array($agente->ROLID, $roles)) {
 			$data->derivados = count($this->_folioModel->asObject()->where('STATUS', 'DERIVADO')->findAll());
@@ -66,7 +66,7 @@ class FoliosController extends BaseController
 	{
 		$data = (object)array();
 		$agente = $this->_usuariosModel->asObject()->where('ID', session('ID'))->first();
-		$roles = [1, 2, 3, 4];
+		$roles = [1, 3];
 		if (in_array($agente->ROLID, $roles)) {
 			$data = $this->_folioModel->asObject()->where('STATUS', 'DERIVADO')->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->findAll();
 		} else {
@@ -79,7 +79,7 @@ class FoliosController extends BaseController
 	{
 		$data = (object)array();
 		$agente = $this->_usuariosModel->asObject()->where('ID', session('ID'))->first();
-		$roles = [1, 2, 3, 4];
+		$roles = [1, 3];
 		if (in_array($agente->ROLID, $roles)) {
 			$data = $this->_folioModel->asObject()->where('STATUS', 'CANALIZADO')->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->findAll();
 		} else {
@@ -92,7 +92,7 @@ class FoliosController extends BaseController
 	{
 		$data = (object)array();
 		$agente = $this->_usuariosModel->asObject()->where('ID', session('ID'))->first();
-		$roles = [1, 2, 3, 4];
+		$roles = [1, 3];
 		if (in_array($agente->ROLID, $roles)) {
 			$data = $this->_folioModel->asObject()->where('EXPEDIENTEID !=', NULL)->where('AGENTEATENCIONID !=', NULL)->where('AGENTEFIRMAID !=', NULL)->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->findAll();
 		} else {

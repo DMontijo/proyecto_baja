@@ -86,7 +86,9 @@ class DashboardController extends BaseController
 			'sexo_denunciante' => $this->request->getGet('sexo_denunciante') == 'F' ? 'FEMENINO' : 'MASCULINO',
 		];
 
-		$folio = $this->_folioModel->where('ANO', $data->year)->where('FOLIOID', $data->folio)->where('STATUS', 'ABIERTO')->first();
+		$array = explode("-", $data->folio);
+
+		$folio = $this->_folioModel->where('ANO', $data->year)->where('FOLIOID', $array[1])->where('STATUS', 'ABIERTO')->first();
 
 		if ($folio) {
 			$this->_loadView('Video denuncia', 'video-denuncia', '', $data, 'video_denuncia');
@@ -235,7 +237,7 @@ class DashboardController extends BaseController
 
 		if ($this->request->getPost('es_menor') === "NO" && $this->request->getPost('es_ofendido') === "NO") {
 			$dataOfendido = array(
-				'NOMBRE' => 'QUIEN RESULTE OFENDIDO',
+				'NOMBRE' => 'QRO',
 			);
 
 			$ofendidoId = $this->_folioPersonaFisica($dataOfendido, $FOLIOID, 1, $year);
@@ -386,7 +388,7 @@ class DashboardController extends BaseController
 			'sexo' => $this->request->getPost('delito') == 'VIOLENCIA FAMILIAR' ? 2 : 0,
 		];
 		$sexo_denunciante = $denunciante->SEXO == 'F' ? 'FEMENINO' : 'MASCULINO';
-		$url = "/denuncia/dashboard/video-denuncia?folio=" . $FOLIOID . '  /  ' . $year . "&year=" . $year . "&delito=" . $data->delito . "&descripcion=" . $data->descripcion . "&idioma=" . $data->idioma . "&edad=" . $data->edad . "&perfil=" . $data->perfil . "&sexo=" . $data->sexo . "&prioridad=" . $prioridad . "&sexo_denunciante=" . $sexo_denunciante;
+		$url = "/denuncia/dashboard/video-denuncia?folio=" . $year . '-' . $FOLIOID . "&year=" . $year . "&delito=" . $data->delito . "&descripcion=" . $data->descripcion . "&idioma=" . $data->idioma . "&edad=" . $data->edad . "&perfil=" . $data->perfil . "&sexo=" . $data->sexo . "&prioridad=" . $prioridad . "&sexo_denunciante=" . $sexo_denunciante;
 
 		if ($this->_sendEmailFolio($session->get('CORREO'), $FOLIOID)) {
 			return redirect()->to(base_url($url));
@@ -583,7 +585,7 @@ class DashboardController extends BaseController
 				'sexo_denunciante' => $sexoDenunciante == 'F' ? 'FEMENINO' : 'MASCULINO',
 			];
 
-			$url = base_url() . "/denuncia/dashboard/video-denuncia?folio=" . $folioId . '  /  ' . $year . "&year=" . $year . "&delito=" . $data->delito . "&descripcion=" . $data->descripcion . "&idioma=" . $data->idioma . "&edad=" . $data->edad . "&perfil=" . $data->perfil . "&sexo=" . $data->sexo . "&prioridad=" . $prioridad . "&sexo_denunciante=" . $data->sexo_denunciante;
+			$url = base_url() . "/denuncia/dashboard/video-denuncia?folio=" . $year . '-' . $folioId . "&year=" . $year . "&delito=" . $data->delito . "&descripcion=" . $data->descripcion . "&idioma=" . $data->idioma . "&edad=" . $data->edad . "&perfil=" . $data->perfil . "&sexo=" . $data->sexo . "&prioridad=" . $prioridad . "&sexo_denunciante=" . $data->sexo_denunciante;
 
 			return json_encode((object)['status' => 1, 'url' => $url]);
 		} else {
