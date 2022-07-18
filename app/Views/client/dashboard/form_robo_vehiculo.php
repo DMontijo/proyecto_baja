@@ -34,7 +34,7 @@
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="documento_vehiculo" class="form-label fw-bold">Documento del vehículo:</label>
-		<input class="form-control" type="file" id="documento_vehiculo" name="documento_vehiculo" accept="image/jpeg,image/jpg">
+		<input class="form-control" type="file" id="documento_vehiculo" name="documento_vehiculo" accept="image/jpeg,image/jpg,application/pdf">
 	</div>
 </div>
 <script>

@@ -340,7 +340,6 @@
 					let munOrigen = response.municipioOrigen;
 					let ocupacion = response.ocupacion;
 					let escolaridad = response.escolaridad;
-
 					if (personaid.DENUNCIANTE == 'S') {
 						console.log(personaid.FOTO);
 						document.querySelector('#fisica_foto').setAttribute('src', personaid.FOTO);
@@ -568,11 +567,11 @@
 					document.querySelector('#tipo_vehiculo').value = tipov.VEHICULOTIPODESCR;
 				}
 				document.querySelector('#color_vehiculo').value = color ? color.VEHICULOCOLORDESCR : '';
-				document.querySelector('#foto_vehiculo').setAttribute('src', vehiculo.FOTO);
-				document.querySelector('#downloadImage').setAttribute('href', vehiculo.FOTO);
+				document.querySelector('#foto_vehiculo').setAttribute('src','data:image/jpg;base64,' + vehiculo.FOTO);
+				document.querySelector('#downloadImage').setAttribute('href', 'data:image/jpg;base64,' +vehiculo.FOTO);
 				document.querySelector('#description_vehiculo').value = vehiculo.SENASPARTICULARES;
-				document.querySelector('#doc_vehiculo').setAttribute('src', vehiculo.DOCUMENTO);
-				document.querySelector('#downloadDoc').setAttribute('href', vehiculo.DOCUMENTO);
+				document.querySelector('#doc_vehiculo').setAttribute('src','data:image/jpg;base64,' + vehiculo.DOCUMENTO);
+				document.querySelector('#downloadDoc').setAttribute('href', 'data:image/jpg;base64,' +vehiculo.DOCUMENTO);
 
 				$('#folio_vehiculo_modal').modal('show');
 			}

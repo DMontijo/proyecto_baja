@@ -166,7 +166,7 @@ class DENUNCIANTES extends Migration
 				'null' => TRUE
 			],
 			'DOCUMENTO' => [
-				'type' => 'BLOB',
+				'type' => 'LONGBLOB',
 				'null' => TRUE
 			],
 			'FIRMA' => [

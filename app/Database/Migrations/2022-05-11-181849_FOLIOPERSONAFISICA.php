@@ -141,7 +141,7 @@ class FOLIOPERSONAFISICA extends Migration
 				'null' => TRUE,
 			],
 			'FOTO' => [
-				'type' => 'BLOB',
+				'type' => 'LONGBLOB',
 				'null' => TRUE,
 			],
 			'ESTADOJURIDICOIMPUTADOID' => [

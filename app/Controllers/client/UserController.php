@@ -65,7 +65,12 @@ class UserController extends BaseController
 	public function create()
 	{
 		$password = $this->_generatePassword(6);
+		// var_dump($_POST['documento_text']);
+		// exit;
+		//$_POST['documento_text'] = str_replace('data:image/jpeg;base64,', '', $_POST['documento_text']);
 
+		//$document_file = $this->request->getFile('documento');
+		//$docData = base64_encode(file_get_contents($document_file)); 
 		$foto_des = $this->request->getPost('documento_text');
 		// list($type, $foto_des) = explode(';', $foto_des);
 		// list(, $extension) = explode('/', $type);
@@ -111,7 +116,7 @@ class UserController extends BaseController
 			'TWITTER' => $this->request->getPost('twitter'),
 			'IDIOMAID' => (int)$this->request->getPost('idioma'),
 			'NOTIFICACIONES' => $this->request->getPost('notificaciones_check') == 'on' ? 'S' : 'N',
-			'DOCUMENTO' => $foto_des,
+			'DOCUMENTO' => $_POST['documento_text'],
 			'FIRMA' => $firma,
 		];
 

@@ -20,7 +20,7 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="foto_vehiculo" class="form-label font-weight-bold">Fotografía del vehículo:</label>
-		<img class="img-fluid" id="foto_vehiculo" name="foto_vehiculo">
+		<img class="img-fluid" id="foto_vehiculo" name="foto_vehiculo" src="" alt="">
 		<a class="btn btn-primary" id="downloadImage" download="foto_vehiculo.jpg">Descargar imagen</a>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">

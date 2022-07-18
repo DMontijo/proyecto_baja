@@ -109,7 +109,6 @@ class DashboardController extends BaseController
 	{
 		$session = session();
 		$year = date('Y');
-
 		$FOLIOID = $this->_folioId($year);
 
 		$dataFolio = [
@@ -353,16 +352,18 @@ class DashboardController extends BaseController
 
 		if ($this->request->getPost('delito') == "ROBO DE VEHÍCULO") {
 			$img_file = $this->request->getFile('foto_vehiculo');
-			$imgData = $img_file->getSize() > 0 ? 'data:' . $img_file->getMimeType() . ';base64,' . base64_encode(file_get_contents($img_file)) : NULL;
+			$fotoV = base64_encode(file_get_contents($img_file)); 
+			//$imgData = $img_file->getSize() > 0 ? 'data:' . $img_file->getMimeType() . ';base64,' . base64_encode(file_get_contents($img_file)) : NULL;
 			$document_file = $this->request->getFile('documento_vehiculo');
-			$docData = $document_file->getSize() > 0 ? 'data:' . $document_file->getMimeType() . ';base64,' . base64_encode(file_get_contents($document_file)) : NULL;
+			//$docData = $document_file->getSize() > 0 ? 'data:' . $document_file->getMimeType() . ';base64,' . base64_encode(file_get_contents($document_file)) : NULL;
+			$docV = base64_encode(file_get_contents($document_file)); 
 
 			$dataVehiculo = array(
 				'TIPOID' => $this->request->getPost('tipo_vehiculo'),
 				'PRIMERCOLORID' => $this->request->getPost('color_vehiculo'),
 				'SENASPARTICULARES' => $this->request->getPost('description_vehiculo'),
-				'FOTO' => $imgData,
-				'DOCUMENTO' => $docData
+				'FOTO' => $fotoV,
+				'DOCUMENTO' => $docV
 			);
 
 			$this->_folioVehiculo($dataVehiculo, $FOLIOID, $year);

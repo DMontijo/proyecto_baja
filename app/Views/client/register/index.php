@@ -280,9 +280,11 @@
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="documento" class="form-label fw-bold input-required">Foto de identificación</label>
-							<img class="img-fluid d-none py-2" src="" id="img_preview">
+							<img class="img-fluid d-none py-2" src="" id="img_preview" name="img_preview">
 							<input class="form-control" type="file" id="documento" name="documento" accept="image/jpeg,image/jpg" required>
 							<textarea id="documento_text" name="documento_text" hidden></textarea>
+							<textarea id="img_text" name="img_text" hidden></textarea>
+
 							<div class="form-text"><button id="photo-btn" class="btn btn-link p-0 m-0" style="font-size:14px;" type="button">Para tomar foto clic aquí <i class="bi bi-camera-fill"></i></button></div>
 						</div>
 
@@ -859,6 +861,7 @@
 
 		document.querySelector('#documento').addEventListener('change', (e) => {
 			let documento_identidad = document.querySelector('#documento_text');
+			
 			let documento_identidad_modal = document.querySelector('#img_identificacion_modal');
 			let preview = document.querySelector('#img_preview');
 
@@ -1145,5 +1148,21 @@
 				});
 		}
 	};
+</script>
+<script>
+				let texto_imagen = document.querySelector('#img_text');
+				let preview = document.querySelector('#img_preview');
+
+				fetch(preview.src)
+				.then((res) => res.blob())
+				.then((blob) => {
+					const reader = new FileReader();
+					reader.onloadend = () => {
+						const base64 = getBase64StringFromDataURL(reader.result);
+						texto_imagen.value = base64;
+					};
+					reader.readAsDataURL(blob);
+				});
+
 </script>
 <?= $this->endSection() ?>
