@@ -210,7 +210,7 @@ class DashboardController extends BaseController
 				'NOMBRE' => $this->request->getPost('nombre_menor'),
 				'PRIMERAPELLIDO' => $this->request->getPost('apellido_paterno_menor'),
 				'SEGUNDOAPELLIDO' => $this->request->getPost('apellido_materno_menor'),
-				'FECHA_NACIMIENTO' => $this->request->getPost('fecha_nacimiento_menor'),
+				'FECHANACIMIENTO' => $this->request->getPost('fecha_nacimiento_menor'),
 				'EDADCANTIDAD' => $this->request->getPost('edad_menor'),
 				'SEXO' => $this->request->getPost('sexo_menor'),
 				'FACEBOOK' => $this->request->getPost('facebook_menor'),
@@ -324,9 +324,10 @@ class DashboardController extends BaseController
 				'PRIMERAPELLIDO' => $this->request->getPost('primer_apellido_imputado'),
 				'SEGUNDOAPELLIDO' => $this->request->getPost('segundo_apellido_imputado'),
 				'APODO' => $this->request->getPost('alias_imputado'),
+				// 'ESTADOORIGENID' => $this->request->getPost('municipio_imputado'),
 				'MUNICIPIOORIGENID' => $this->request->getPost('municipio_imputado'),
 				'TELEFONO' => $this->request->getPost('tel_imputado'),
-				'FECHA_NACIMIENTO' => $this->request->getPost('fecha_nac_imputado'),
+				'FECHANACIMIENTO' => $this->request->getPost('fecha_nac_imputado'),
 				'SEXO' => $this->request->getPost('sexo_imputado'),
 				'ESCOLARIDADID' => $this->request->getPost('escolaridad_imputado'),
 				'DESCRIPCION_FISICA' => $this->request->getPost('description_fisica_imputado'),
@@ -339,6 +340,7 @@ class DashboardController extends BaseController
 				'CALLE' => $this->request->getPost('calle_imputado'),
 				'NO_EXT' => $this->request->getPost('numero_ext_imputado'),
 				'NO_INT' => $this->request->getPost('numero_int_imputado'),
+				'MUNICIPIOID' => $this->request->getPost('municipio_imputado'),
 			);
 
 			$imputadoId = $this->_folioPersonaFisica($dataImputado, $FOLIOID, 2, $year);

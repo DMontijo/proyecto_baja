@@ -112,7 +112,7 @@ class FOLIOPERSONAFISICADESAPARECIDA extends Migration
 				'null' => TRUE,
 			],
 			'FOTOGRAFIA' => [
-				'type' => 'BLOB',
+				'type' => 'LONGBLOB',
 				'null' => TRUE,
 			],
 			'AUTORIZA_FOTO' => [

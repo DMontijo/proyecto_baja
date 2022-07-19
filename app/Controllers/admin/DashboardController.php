@@ -728,6 +728,9 @@ class DashboardController extends BaseController
 
 		$data['EXPEDIENTEID'] = $expedienteId;
 		$data['PERSONAFISICAID'] = $personaFisicaId;
+		if ($data['COLONIAID'] != 0) {
+			unset($data['COLONIADESCR']);
+		}
 		unset($data['DOMICILIOID']);
 
 		foreach ($data as $clave => $valor) {

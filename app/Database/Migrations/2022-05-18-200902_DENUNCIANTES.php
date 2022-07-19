@@ -57,7 +57,15 @@ class DENUNCIANTES extends Migration
 				'type' => 'INT',
 				'null' => TRUE
 			],
+			'ESTADOORIGENID' => [
+				'type' => 'INT',
+				'null' => TRUE
+			],
 			'MUNICIPIOID' => [
+				'type' => 'INT',
+				'null' => TRUE
+			],
+			'MUNICIPIOORIGENID' => [
 				'type' => 'INT',
 				'null' => TRUE
 			],
@@ -166,11 +174,11 @@ class DENUNCIANTES extends Migration
 				'null' => TRUE
 			],
 			'DOCUMENTO' => [
-				'type' => 'BLOB',
+				'type' => 'LONGBLOB',
 				'null' => TRUE
 			],
 			'FIRMA' => [
-				'type' => 'BLOB',
+				'type' => 'LONGBLOB',
 				'null' => TRUE
 			],
 			'NOTIFICACIONES' => [
