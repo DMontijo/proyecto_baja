@@ -92,7 +92,7 @@
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="telefono2" class="form-label fw-bold">Número de télefono adicional (opcional)</label>
+							<label for="telefono2" class="form-label fw-bold">Número de télefono adicional</label>
 							<input type="number" class="form-control" id="telefono2" name="telefono2" max="99999999999999999999" minlenght="6" maxlength="20" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
 							<!-- <small>Mínimo 6 digitos</small> -->
 							<input type="number" id="codigo_pais_2" name="codigo_pais_2" maxlength="3" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" hidden>
@@ -102,6 +102,9 @@
 
 				<div class="col-12 d-none step">
 					<div class="row">
+						<div class="col-12">
+							<h3 class="text-center mb-3 fw-bold">DATOS DE ORIGEN DEL DENUNCIANTE</h3>
+						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="nacionalidad" class="form-label fw-bold input-required">Nacionalidad</label>
 							<select class="form-select" id="nacionalidad" name="nacionalidad" required>
@@ -112,6 +115,29 @@
 							</select>
 							<div class="invalid-feedback">
 								La nacionalidad es obligatoria.
+							</div>
+						</div>
+
+						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+							<label for="estado_select_origen" class="form-label fw-bold input-required">Estado origen</label>
+							<select class="form-select" id="estado_select_origen" name="estado_select_origen" required>
+								<option selected disabled value="">Seleccione el estado</option>
+								<?php foreach ($body_data->estados as $index => $estado) { ?>
+									<option value="<?= $estado->ESTADOID ?>"> <?= $estado->ESTADODESCR ?> </option>
+								<?php } ?>
+							</select>
+							<div class="invalid-feedback">
+								El estado es obligatorio
+							</div>
+						</div>
+
+						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+							<label for="municipio" class="form-label fw-bold input-required">Municipio origen</label>
+							<select class="form-select" id="municipio_select_origen" name="municipio_select_origen" required>
+								<option selected disabled value="">Seleccione el municipio</option>
+							</select>
+							<div class="invalid-feedback">
+								El municipio es obligatorio
 							</div>
 						</div>
 
@@ -128,8 +154,21 @@
 							</div>
 						</div>
 
+						<div class="col-12">
+							<div class="alert alert-warning text-center fw-bold d-none mt-2" id="idioma_alert" role="alert">
+								Si tu idioma no es español se recomienda estar acompañado de un traductor.
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-12 d-none step">
+					<div class="row">
+						<div class="col-12">
+							<h3 class="text-center mb-3 fw-bold">DOMICILIO ACTUAL DEL DENUNCIANTE</h3>
+						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="pais_select" class="form-label fw-bold input-required">País del denunciante</label>
+							<label for="pais_select" class="form-label fw-bold input-required">País</label>
 							<select class="form-select" id="pais_select" name="pais_select" required>
 								<?php foreach ($body_data->paises as $index => $pais) { ?>
 									<option value="<?= $pais->ISO_2 ?>" <?= $pais->ISO_2 == 'MX' ? 'selected' : '' ?>> <?= mb_strtoupper($pais->NAME, 'UTF-8') ?> </option>
@@ -141,7 +180,7 @@
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="estado_select" class="form-label fw-bold input-required">Estado del denunciante</label>
+							<label for="estado_select" class="form-label fw-bold input-required">Estado</label>
 							<select class="form-select" id="estado_select" name="estado_select" required>
 								<option selected disabled value="">Seleccione el estado</option>
 								<?php foreach ($body_data->estados as $index => $estado) { ?>
@@ -154,7 +193,7 @@
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="municipio" class="form-label fw-bold input-required">Municipio del denunciante</label>
+							<label for="municipio" class="form-label fw-bold input-required">Municipio</label>
 							<select class="form-select" id="municipio_select" name="municipio_select" required>
 								<option selected disabled value="">Seleccione el municipio</option>
 							</select>
@@ -164,7 +203,7 @@
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="localidad" class="form-label fw-bold">Localidad del denunciante</label>
+							<label for="localidad" class="form-label fw-bold">Localidad</label>
 							<select class="form-select" id="localidad_select" name="localidad_select">
 								<option selected disabled value="">Seleccione la localidad</option>
 							</select>
@@ -172,7 +211,7 @@
 
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="colonia" class="form-label fw-bold input-required">Colonia del denunciante</label>
+							<label for="colonia" class="form-label fw-bold input-required">Colonia</label>
 							<select class="form-select" id="colonia_select" name="colonia_select" required>
 								<option selected disabled value="">Seleccione la colonia</option>
 							</select>
@@ -189,7 +228,7 @@
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="calle" class="form-label fw-bold input-required">Calle del denunciante</label>
+							<label for="calle" class="form-label fw-bold input-required">Calle</label>
 							<input type="text" class="form-control" id="calle" name="calle" maxlength="100" required>
 							<div class="invalid-feedback">
 								La calle es obligatoria
@@ -208,17 +247,14 @@
 							<label for="interior" class="form-label fw-bold">Número interior</label>
 							<input type="text" class="form-control" id="interior" name="interior" maxlength="10">
 						</div>
-
-						<div class="col-12">
-							<div class="alert alert-warning text-center fw-bold d-none mt-2" id="idioma_alert" role="alert">
-								Si tu idioma no es español se recomienda estar acompañado de un traductor.
-							</div>
-						</div>
 					</div>
 				</div>
 
 				<div class="col-12 d-none step">
 					<div class="row">
+						<div class="col-12">
+							<h3 class="text-center mb-3 fw-bold">DATOS DE IDENTIFICACION DEL DENUNCIANTE</h3>
+						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="identificacion" class="form-label fw-bold input-required">Identificación</label>
 							<select class="form-select" id="identificacion" name="identificacion" required>
@@ -490,12 +526,8 @@
 				break;
 			case 1:
 				if (
-					document.querySelector('#pais_select').value != '' &&
-					document.querySelector('#estado_select').value != '' &&
-					document.querySelector('#municipio_select').value != '' &&
-					document.querySelector('#colonia').value != '' &&
-					document.querySelector('#calle').value != '' &&
-					document.querySelector('#exterior').value != '' &&
+					document.querySelector('#estado_select_origen').value != '' &&
+					document.querySelector('#municipio_select_origen').value != '' &&
 					document.querySelector('#nacionalidad').value != '' &&
 					document.querySelector('#idioma').value != ''
 				) {
@@ -505,6 +537,20 @@
 				}
 				break;
 			case 2:
+				if (
+					document.querySelector('#pais_select').value != '' &&
+					document.querySelector('#estado_select').value != '' &&
+					document.querySelector('#municipio_select').value != '' &&
+					document.querySelector('#colonia').value != '' &&
+					document.querySelector('#calle').value != '' &&
+					document.querySelector('#exterior').value != ''
+				) {
+					return true
+				} else {
+					return false
+				}
+				break;
+			case 3:
 				if (
 					document.querySelector('#identificacion').value != '' &&
 					document.querySelector('#e_civil').value != '' &&
@@ -519,7 +565,7 @@
 					return false
 				}
 				break;
-			case 3:
+			case 4:
 				if (
 					document.querySelector('#firma_url').value != '' &&
 					document.querySelector('#notificaciones_check').checked
@@ -641,6 +687,73 @@
 				alert.classList.add('d-none')
 			}
 		})
+
+		document.querySelector('#nacionalidad').addEventListener('change', (e) => {
+			let select_estado = document.querySelector('#estado_select_origen');
+			let select_municipio = document.querySelector('#municipio_select_origen');
+
+			clearSelect(select_municipio);
+
+			if (e.target.value !== '82') {
+				select_estado.value = '33';
+				let data = {
+					'estado_id': 33,
+					'municipio_id': 1,
+				}
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/get-municipios-by-estado') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						let municipios = response.data;
+						municipios.forEach(municipio => {
+							let option = document.createElement("option");
+							option.text = municipio.MUNICIPIODESCR;
+							option.value = municipio.MUNICIPIOID;
+							select_municipio.add(option);
+						});
+						select_municipio.value = '1';
+					},
+					error: function(jqXHR, textStatus, errorThrown) {}
+				});
+
+			} else {
+				clearSelect(select_municipio);
+				select_estado.value = '';
+				select_municipio.value = '';
+			}
+		});
+
+		document.querySelector('#estado_select_origen').addEventListener('change', (e) => {
+			let select_municipio = document.querySelector('#municipio_select_origen');
+
+			clearSelect(select_municipio);
+
+			select_municipio.value = '';
+
+			let data = {
+				'estado_id': e.target.value,
+			}
+
+			$.ajax({
+				data: data,
+				url: "<?= base_url('/data/get-municipios-by-estado') ?>",
+				method: "POST",
+				dataType: "json",
+				success: function(response) {
+					let municipios = response.data;
+
+					municipios.forEach(municipio => {
+						var option = document.createElement("option");
+						option.text = municipio.MUNICIPIODESCR;
+						option.value = municipio.MUNICIPIOID;
+						select_municipio.add(option);
+					});
+				},
+				error: function(jqXHR, textStatus, errorThrown) {}
+			});
+		});
 
 		document.querySelector('#pais_select').addEventListener('change', (e) => {
 

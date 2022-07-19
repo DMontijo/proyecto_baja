@@ -53,9 +53,6 @@
 				<option value="<?= $escolaridad->PERSONAESCOLARIDADID ?>"> <?= $escolaridad->PERSONAESCOLARIDADDESCR ?> </option>
 			<?php } ?>
 		</select>
-		<div class="invalid-feedback">
-			La escolaridad es obligatoria
-		</div>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="sexo_imputado" class="form-label fw-bold ">Sexo del imputado</label>
