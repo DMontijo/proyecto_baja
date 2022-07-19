@@ -122,9 +122,16 @@ class UserController extends BaseController
 			'FIRMA' => $firma,
 		];
 
+		// foreach ($data as $key => $value) {
+		// 	var_dump($key . ' = ' . $data[$key]);
+		// 	echo '<br>';
+		// }
+		// exit;
+
 		if ($this->validate(['correo' => 'required|is_unique[DENUNCIANTES.CORREO]'])) {
 			$this->_denunciantesModel->insert($data);
 			$this->_sendEmailPassword($data['CORREO'], $password);
+			session()->setFlashdata('message', 'Inicia sesión con la contraseña que llegará a tu correo electrónico');
 			return redirect()->to(base_url('/denuncia'))->with('created', 'Inicia sesión con la contraseña que llegará a tu correo electrónico y comienza tu denuncia');
 		} else {
 			return redirect()->back()->with('message', 'Hubo un error en los datos o puede que ya exista un registro con el mismo correo');

@@ -1,7 +1,7 @@
 <div class="row">
 	<h3 class="fw-bold text-center text-blue pb-3">Datos del delito</h3>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="delito" class="form-label fw-bold input-required">Delito:</label>
+		<label for="delito" class="form-label fw-bold input-required">Delito a denunciar:</label>
 		<select class="form-select" id="delito" name="delito" required>
 			<option selected disabled value="">Elige el delito</option>
 			<?php foreach ($body_data->delitosUsuarios as $index => $delitos) { ?>
@@ -14,7 +14,7 @@
 	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="municipio" class="form-label fw-bold input-required">Municipio:</label>
+		<label for="municipio" class="form-label fw-bold input-required">Municipio del delito:</label>
 		<select class="form-select" id="municipio" name="municipio" required>
 			<option selected disabled value="">Elige el municipio</option>
 			<?php foreach ($body_data->municipios as $index => $municipio) { ?>
@@ -28,9 +28,10 @@
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="colonia" class="form-label fw-bold input-required">Colonia del delito</label>
 		<select class="form-select" id="colonia_select" name="colonia_select" required>
-			<option selected disabled value="">Seleccione la colonia</option>
+			<option selected disabled value="">Selecciona la colonia</option>
 		</select>
 		<input type="text" class="form-control d-none" id="colonia" name="colonia" maxlength="100">
+		<small class="text-primary fw-bold">Si no encuentras tu colonia selecciona otro</small>
 		<div class="invalid-feedback">
 			La colonia es obligatoria
 		</div>

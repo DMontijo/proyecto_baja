@@ -29,7 +29,7 @@
 			<div class="card-body py-5 p-sm-5">
 				<div class="container">
 					<h1 class="text-center fw-bolder pb-1 text-blue">DENUNCIA</h1>
-					<p class="text-center fw-bold text-blue ">Llena los campos siguientes para continuar tu denuncia</p>
+					<p class="text-center fw-bold text-blue ">Llene los campos siguientes para continuar su denuncia</p>
 					<p class="text-center pb-3">Los campos con un <span class="asterisco-rojo">*</span> son obligatorios</p>
 					<div class="progress mb-4">
 						<div id="progress-bar" aria-valuemax="100" aria-valuemin="0" aria-valuenow="50" class="progress-bar progress-bar-striped progress-bar-animated bg-yellow" role="progressbar"></div>
@@ -223,6 +223,15 @@
 				document.querySelector('#numero_ext_menor').removeAttribute('required');
 				document.querySelector('#fecha_nacimiento_menor').removeAttribute('required');
 				document.querySelector('#edad_menor').removeAttribute('required');
+				document.querySelector('#nacionalidad_menor').removeAttribute('required');
+				document.querySelector('#estado_origen_menor').removeAttribute('required');
+				document.querySelector('#municipio_origen_menor').removeAttribute('required');
+
+				let radiosSexoMenor = document.querySelectorAll('input[name="sexo_menor"]');
+				radiosSexoMenor.forEach((radio) => {
+					radio.removeAttribute('required');
+				});
+
 			} else if (
 				document.querySelector('input[name="es_menor"]:checked').value === 'SI' &&
 				document.querySelector('input[name="esta_desaparecido"]:checked').value == "NO"
@@ -242,6 +251,9 @@
 				document.querySelector('#numero_ext_menor').setAttribute('required', true);
 				document.querySelector('#fecha_nacimiento_menor').setAttribute('required', true);
 				document.querySelector('#edad_menor').setAttribute('required', true);
+				document.querySelector('#nacionalidad_menor').setAttribute('required', true);
+				document.querySelector('#estado_origen_menor').setAttribute('required', true);
+				document.querySelector('#municipio_origen_menor').setAttribute('required', true);
 
 				let radiosSexoMenor = document.querySelectorAll('input[name="sexo_menor"]');
 				radiosSexoMenor.forEach((radio) => {
@@ -261,6 +273,14 @@
 				document.querySelector('#numero_ext_menor').removeAttribute('required');
 				document.querySelector('#fecha_nacimiento_menor').removeAttribute('required');
 				document.querySelector('#edad_menor').removeAttribute('required');
+				document.querySelector('#nacionalidad_menor').removeAttribute('required');
+				document.querySelector('#estado_origen_menor').removeAttribute('required');
+				document.querySelector('#municipio_origen_menor').removeAttribute('required');
+
+				let radiosSexoMenor = document.querySelectorAll('input[name="sexo_menor"]');
+				radiosSexoMenor.forEach((radio) => {
+					radio.removeAttribute('required');
+				});
 			}
 
 			if (document.querySelector('input[name="esta_desaparecido"]:checked').value === 'SI') {
@@ -273,8 +293,17 @@
 				document.querySelector('#colonia_des').setAttribute('required', true);
 				document.querySelector('#colonia_des_input').setAttribute('required', true);
 				document.querySelector('#calle_des').setAttribute('required', true);
+				document.querySelector('#fecha_nacimiento_des').setAttribute('required', true);
 				document.querySelector('#numero_ext_des').setAttribute('required', true);
 				document.querySelector('#edad_des').setAttribute('required', true);
+				document.querySelector('#nacionalidad_des').setAttribute('required', true);
+				document.querySelector('#estado_origen_des').setAttribute('required', true);
+				document.querySelector('#municipio_origen_des').setAttribute('required', true);
+
+				let radiosSexoDes = document.querySelectorAll('input[name="sexo_des"]');
+				radiosSexoDes.forEach((radio) => {
+					radio.setAttribute('required', true);
+				});
 
 			} else {
 				document.getElementById('datos_desaparecido').classList.remove('step');
@@ -289,6 +318,15 @@
 				document.querySelector('#numero_ext_des').removeAttribute('required');
 				document.querySelector('#numero_int_des').removeAttribute('required');
 				document.querySelector('#edad_des').removeAttribute('required');
+				document.querySelector('#nacionalidad_des').removeAttribute('required');
+				document.querySelector('#estado_origen_des').removeAttribute('required');
+				document.querySelector('#municipio_origen_des').removeAttribute('required');
+				document.querySelector('#fecha_nacimiento_des').removeAttribute('required');
+
+				let radiosSexoDes = document.querySelectorAll('input[name="sexo_des"]');
+				radiosSexoDes.forEach((radio) => {
+					radio.removeAttribute('required');
+				});
 			}
 
 			if (document.querySelector("#delito").value == "ROBO DE VEHÍCULO") {
@@ -424,11 +462,15 @@
 					document.querySelector('#pais_menor').value != '' &&
 					document.querySelector('#estado_menor').value != '' &&
 					document.querySelector('#municipio_menor').value != '' &&
+					document.querySelector('#colonia_menor').value != '' &&
 					document.querySelector('#calle_menor').value != '' &&
 					document.querySelector('#numero_ext_menor').value != '' &&
 					document.querySelector('#fecha_nacimiento_menor').value != '' &&
 					document.querySelector('#edad_menor').value != '' &&
-					document.querySelector('input[name="sexo_menor"]:checked')
+					document.querySelector('input[name="sexo_menor"]:checked') &&
+					document.querySelector('#nacionalidad_menor').value != '' &&
+					document.querySelector('#estado_origen_menor').value != '' &&
+					document.querySelector('#municipio_origen_menor').value != ''
 				) {
 					return true
 				} else {
@@ -445,7 +487,12 @@
 					document.querySelector('#colonia_des').value != '' &&
 					document.querySelector('#calle_des').value != '' &&
 					document.querySelector('#numero_ext_des').value != '' &&
-					document.querySelector('#edad_des').value != ''
+					document.querySelector('#fecha_nacimiento_des').value != '' &&
+					document.querySelector('#edad_des').value != '' &&
+					document.querySelector('input[name="sexo_des"]:checked') &&
+					document.querySelector('#nacionalidad_des').value != '' &&
+					document.querySelector('#estado_origen_des').value != '' &&
+					document.querySelector('#municipio_origen_des').value != ''
 				) {
 					return true
 				} else {

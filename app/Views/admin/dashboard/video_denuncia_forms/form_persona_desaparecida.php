@@ -78,10 +78,6 @@
 		<input type="text" class="form-control" id="parentescoD" name="parentescoD">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="fotoDes" class="form-label font-weight-bold">Fotografía:</label>
-		<img class="img-fluid" id="fotoDes" name="fotoDes" src="" alt="">
-	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="autorizaFoto" class="form-label fw-bold">Autoriza foto</label>
 		<input type="text" class="form-control" id="autorizaFoto" name="autorizaFoto">
 	</div>

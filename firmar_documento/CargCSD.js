@@ -75,12 +75,12 @@ function CSD_startUploading() {
     document.getElementById("CSD_progress_info").style.display = "block";
 
     if (document.getElementById("CSD_Archivo1").value.length === 0){
-        alert("¡Seleccione el archivo .key a subir!");
+        alert("¡Selecciona el archivo .key a subir!");
         return false;
     }
     
     if (document.getElementById("CSD_Archivo2").value.length === 0){
-        alert("¡Seleccione el archivo .cer a subir!");
+        alert("¡Selecciona el archivo .cer a subir!");
         return false;
     }
 

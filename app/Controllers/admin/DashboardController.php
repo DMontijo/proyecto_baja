@@ -493,6 +493,8 @@ class DashboardController extends BaseController
 				$folioRow['TIPOEXPEDIENTEID'] = 4;
 
 				$expedienteCreado = $this->createExpediente($folioRow);
+				var_dump($expedienteCreado);
+				exit;
 
 				unset($folioRow['OFICINAIDRESPONSABLE']);
 				unset($folioRow['EMPLEADOIDREGISTRO']);
@@ -823,15 +825,10 @@ class DashboardController extends BaseController
 	public function restoreFolio()
 	{
 		$folio = $this->request->getPost('folio');
+		$year = $this->request->getPost('year');
 
 		if (!empty($folio)) {
-			$folioRow = $this->_folioModel->where('FOLIOID', $folio)->first();
-			$folioRow['ESTADOID'] = 2;
-			$folioRow['OFICINAIDRESPONSABLE'] = NULL;
-			$folioRow['EMPLEADOIDREGISTRO'] = NULL;
-			$folioRow['AREAIDREGISTRO'] = NULL;
-			$folioRow['AREAIDRESPONSABLE'] = NULL;
-			$folioRow['ESTADOJURIDICOEXPEDIENTEID'] = NULL;
+			$folioRow = $this->_folioModel->where('ANO', $year)->where('FOLIOID', $folio)->first();
 			$folioRow['HECHOMEDIOCONOCIMIENTOID'] = NULL;
 			$folioRow['NOTASAGENTE'] = NULL;
 			$folioRow['STATUS'] = 'ABIERTO';
@@ -839,9 +836,9 @@ class DashboardController extends BaseController
 			$folioRow['AGENTEATENCIONID'] = NULL;
 			$folioRow['AGENTEFIRMAID'] = NULL;
 
-			$this->_folioModel->set($folioRow)->where('FOLIOID', $folio)->update();
+			$update = $this->_folioModel->set($folioRow)->where('ANO', $year)->where('FOLIOID', $folio)->update();
 
-			return json_encode(['status' => 1]);
+			return json_encode(['status' => 1, 'message' => $update]);
 		}
 	}
 }

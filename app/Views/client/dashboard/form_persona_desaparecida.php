@@ -2,11 +2,11 @@
 	<h3 class="text-center fw-bolder pb-3 text-blue">Datos de la persona desaparecida</h3>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="nombre_des" class="form-label fw-bold">Nombre(s)</label>
+		<label for="nombre_des" class="form-label fw-bold input-required">Nombre(s)</label>
 		<input type="text" class="form-control" id="nombre_des" name="nombre_des" maxlength="50">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="apellido_paterno_des" class="form-label fw-bold">Apellido paterno</label>
+		<label for="apellido_paterno_des" class="form-label fw-bold input-required">Apellido paterno</label>
 		<input type="text" class="form-control" id="apellido_paterno_des" name="apellido_paterno_des" maxlength="50">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -14,64 +14,18 @@
 		<input type="text" class="form-control" id="apellido_materno_des" name="apellido_materno_des" maxlength="50">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="pais_des" class="form-label fw-bold">País</label>
-		<select class="form-select" id="pais_des" name="pais_des">
-			<?php foreach ($body_data->paises as $index => $pais) { ?>
-				<option value="<?= $pais->ISO_2 ?>" <?= $pais->ISO_2 == 'MX' ? 'selected' : '' ?>> <?= mb_strtoupper($pais->NAME, 'UTF-8') ?> </option>
-			<?php } ?>
-		</select>
-	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="estado_des" class="form-label fw-bold">Estado</label>
-		<select class="form-select" id="estado_des" name="estado_des">
-			<option selected disabled value="">Seleccione el estado</option>
-			<?php foreach ($body_data->estados as $index => $estado) { ?>
-				<option value="<?= $estado->ESTADOID ?>"> <?= $estado->ESTADODESCR ?> </option>
-			<?php } ?>
-		</select>
-	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="municipio_des" class="form-label fw-bold">Municipio</label>
-		<select class="form-select" id="municipio_des" name="municipio_des">
-			<option selected disabled value="">Seleccione el municipio</option>
-		</select>
-	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="colonia_des_input" class="form-label fw-bold">Colonia</label>
-		<select class="form-select" id="colonia_des" name="colonia_des">
-			<option selected disabled value="">Seleccione la colonia</option>
-		</select>
-		<input type="text" class="form-control d-none" id="colonia_des_input" name="colonia_des_input" maxlength="100">
-	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="cp_des" class="form-label fw-bold">Código Postal</label>
-		<input type="number" class="form-control" id="cp_des" name="cp_des" maxlength="10">
-	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="calle_des" class="form-label fw-bold">Calle</label>
-		<input type="text" class="form-control" id="calle_des" name="calle_des" maxlength="100">
-	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="numero_ext_des" class="form-label fw-bold">Número exterior</label>
-		<input type="text" class="form-control" id="numero_ext_des" name="numero_ext_des" maxlength="10">
-	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="numero_int_des" class="form-label fw-bold">Número interior</label>
-		<input type="text" class="form-control" id="numero_int_des" name="numero_int_des" maxlength="10">
-	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="fecha_nacimiento_des" class="form-label fw-bold">Fecha de nacimiento</label>
+		<label for="fecha_nacimiento_des" class="form-label fw-bold input-required">Fecha de nacimiento</label>
 		<input type="date" class="form-control" id="fecha_nacimiento_des" name="fecha_nacimiento_des" max="<?= date("Y-m-d") ?>">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="edad_des" class="form-label fw-bold ">Edad aproximada</label>
+		<label for="edad_des" class="form-label fw-bold input-required">Edad aproximada</label>
 		<input type="number" class="form-control" id="edad_des" name="edad_des">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="sexo_des" class="form-label fw-bold ">Sexo</label>
+		<label for="sexo_des" class="form-label fw-bold input-required">Sexo</label>
 		<br>
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="radio" name="sexo_des" value="M" checked id="MASCULINO">
+			<input class="form-check-input" type="radio" name="sexo_des" value="M" id="MASCULINO">
 			<label class="form-check-label" for="flexRadioDefault1">MASCULINO</label>
 		</div>
 		<div class="form-check form-check-inline">
@@ -79,35 +33,99 @@
 			<label class="form-check-label" for="flexRadioDefault2">FEMENINO</label>
 		</div>
 	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3" hidden>
-		<label for="edad_des" class="form-label fw-bold">Edad</label>
-		<input class="form-control" id="edad_des" name="edad_des" type="text">
+	<div class="col-12">
+		<hr>
+	</div>
+	<div class="col-12">
+		<h5 class="text-center mb-3 fw-bold">DATOS DE ORIGEN DE LA PERSONA DESAPARECIDA</h5>
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="nacionalidad_des" class="form-label fw-bold input-required">Nacionalidad</label>
+		<select class="form-select" id="nacionalidad_des" name="nacionalidad_des">
+			<option selected disabled value="">Selecciona la nacionalidad</option>
+			<?php foreach ($body_data->nacionalidades as $index => $nac) { ?>
+				<option value="<?= $nac->PERSONANACIONALIDADID ?>" <?= $nac->PERSONANACIONALIDADDESCR == 'MEXICANA' ? 'selected' : '' ?>> <?= $nac->PERSONANACIONALIDADDESCR ?> </option>
+			<?php } ?>
+		</select>
+		<div class="invalid-feedback">
+			La nacionalidad es obligatoria.
+		</div>
+	</div>
+
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="estado_origen_des" class="form-label fw-bold input-required">Estado origen</label>
+		<select class="form-select" id="estado_origen_des" name="estado_origen_des">
+			<option selected disabled value="">Selecciona el estado</option>
+			<?php foreach ($body_data->estados as $index => $estado) { ?>
+				<option value="<?= $estado->ESTADOID ?>"> <?= $estado->ESTADODESCR ?> </option>
+			<?php } ?>
+		</select>
+		<div class="invalid-feedback">
+			El estado es obligatorio
+		</div>
+	</div>
+
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="municipio" class="form-label fw-bold input-required">Municipio origen</label>
+		<select class="form-select" id="municipio_origen_des" name="municipio_origen_des">
+			<option selected disabled value="">Selecciona el municipio</option>
+		</select>
+		<div class="invalid-feedback">
+			El municipio es obligatorio
+		</div>
 	</div>
 	<div class="col-12">
 		<hr>
 	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="facebook_des" class="form-label fw-bold">Facebook</label>
-		<div class="input-group">
-			<span class="input-group-text" id="facebook_vanity"><i class="bi bi-facebook"></i></span>
-			<input type="text" class="form-control" name="facebook_des" id="facebook_des" aria-describedby="facebook_vanity" maxlength="200">
-		</div>
+	<div class="col-12">
+		<h5 class="text-center mb-3 fw-bold">DOMICILIO ACTUAL DE LA PERSONA DESAPARECIDA</h5>
 	</div>
-
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="instagram_des" class="form-label fw-bold">Instagram</label>
-		<div class="input-group">
-			<span class="input-group-text" id="instagram_vanity"><i class="bi bi-instagram"></i></span>
-			<input type="text" class="form-control" name="instagram_des" id="instagram_des" aria-describedby="instagram_vanity" maxlength="200">
-		</div>
+		<label for="pais_des" class="form-label fw-bold input-required">País</label>
+		<select class="form-select" id="pais_des" name="pais_des">
+			<?php foreach ($body_data->paises as $index => $pais) { ?>
+				<option value="<?= $pais->ISO_2 ?>" <?= $pais->ISO_2 == 'MX' ? 'selected' : '' ?>> <?= mb_strtoupper($pais->NAME, 'UTF-8') ?> </option>
+			<?php } ?>
+		</select>
 	</div>
-
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="twitter_des" class="form-label fw-bold">Twitter</label>
-		<div class="input-group">
-			<span class="input-group-text" id="twitter_vanity"><i class="bi bi-twitter"></i></span>
-			<input type="text" class="form-control" name="twitter_des" id="twitter_des" aria-describedby="twitter_vanity" maxlength="200">
-		</div>
+		<label for="estado_des" class="form-label fw-bold input-required">Estado</label>
+		<select class="form-select" id="estado_des" name="estado_des">
+			<option selected disabled value="">Selecciona el estado</option>
+			<?php foreach ($body_data->estados as $index => $estado) { ?>
+				<option value="<?= $estado->ESTADOID ?>"> <?= $estado->ESTADODESCR ?> </option>
+			<?php } ?>
+		</select>
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="municipio_des" class="form-label fw-bold input-required">Municipio</label>
+		<select class="form-select" id="municipio_des" name="municipio_des">
+			<option selected disabled value="">Selecciona el municipio</option>
+		</select>
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="colonia_des_input" class="form-label fw-bold input-required">Colonia</label>
+		<select class="form-select" id="colonia_des" name="colonia_des">
+			<option selected disabled value="">Selecciona la colonia</option>
+		</select>
+		<input type="text" class="form-control d-none" id="colonia_des_input" name="colonia_des_input" maxlength="100">
+		<small class="text-primary fw-bold">Si no encuentras tu colonia selecciona otro</small>
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="cp_des" class="form-label fw-bold">Código Postal</label>
+		<input type="number" class="form-control" id="cp_des" name="cp_des" maxlength="10">
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="calle_des" class="form-label fw-bold input-required">Calle</label>
+		<input type="text" class="form-control" id="calle_des" name="calle_des" maxlength="100">
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="numero_ext_des" class="form-label fw-bold input-required">Número exterior</label>
+		<input type="text" class="form-control" id="numero_ext_des" name="numero_ext_des" maxlength="10">
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="numero_int_des" class="form-label fw-bold">Número interior</label>
+		<input type="text" class="form-control" id="numero_int_des" name="numero_int_des" maxlength="10">
 	</div>
 	<div class="col-12">
 		<hr>
@@ -186,7 +204,7 @@
 		<label for="discapacidad_des" class="form-label fw-bold">¿Padece alguna
 			discapacidad?</label>
 		<select class="form-select" id="discapacidad_des" name="discapacidad_des">
-			<option selected disabled value="">Seleccione si padece alguna discapacidad</option>
+			<option selected disabled value="">Selecciona si padece alguna discapacidad</option>
 			<option value="VISUAL">VISUAL</option>
 			<option value="FISICA">FISICA</option>
 			<option value="AUDITIVA">AUDITIVA</option>
@@ -220,7 +238,38 @@
 		<label for="foto_des" class="form-label fw-bold ">Fotografía:</label>
 		<input type="file" class="form-control" id="foto_des" name="foto_des">
 	</div>
+	<div class="col-12">
+		<hr>
+	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="facebook_des" class="form-label fw-bold">Facebook</label>
+		<div class="input-group">
+			<span class="input-group-text" id="facebook_vanity"><i class="bi bi-facebook"></i></span>
+			<input type="text" class="form-control" name="facebook_des" id="facebook_des" aria-describedby="facebook_vanity" maxlength="200">
+		</div>
+	</div>
+
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="instagram_des" class="form-label fw-bold">Instagram</label>
+		<div class="input-group">
+			<span class="input-group-text" id="instagram_vanity"><i class="bi bi-instagram"></i></span>
+			<input type="text" class="form-control" name="instagram_des" id="instagram_des" aria-describedby="instagram_vanity" maxlength="200">
+		</div>
+	</div>
+
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="twitter_des" class="form-label fw-bold">Twitter</label>
+		<div class="input-group">
+			<span class="input-group-text" id="twitter_vanity"><i class="bi bi-twitter"></i></span>
+			<input type="text" class="form-control" name="twitter_des" id="twitter_des" aria-describedby="twitter_vanity" maxlength="200">
+		</div>
+	</div>
+
+	<div class="col-12">
+		<hr>
+	</div>
+
+	<div class="col-12 text-center my-5">
 		<div class="form-check d-inline-block">
 			<input id="autorization_photo_des" name="autorization_photo_des" class="form-check-input" type="checkbox">
 			<label class="form-check-label" for="autorization_photo_des">
@@ -248,6 +297,73 @@
 			select_element.remove(i);
 		}
 	}
+
+	document.querySelector('#nacionalidad_des').addEventListener('change', (e) => {
+		let select_estado = document.querySelector('#estado_origen_des');
+		let select_municipio = document.querySelector('#municipio_origen_des');
+
+		clearSelect(select_municipio);
+
+		if (e.target.value !== '82') {
+			select_estado.value = '33';
+			let data = {
+				'estado_id': 33,
+				'municipio_id': 1,
+			}
+			$.ajax({
+				data: data,
+				url: "<?= base_url('/data/get-municipios-by-estado') ?>",
+				method: "POST",
+				dataType: "json",
+				success: function(response) {
+					let municipios = response.data;
+					municipios.forEach(municipio => {
+						let option = document.createElement("option");
+						option.text = municipio.MUNICIPIODESCR;
+						option.value = municipio.MUNICIPIOID;
+						select_municipio.add(option);
+					});
+					select_municipio.value = '1';
+				},
+				error: function(jqXHR, textStatus, errorThrown) {}
+			});
+
+		} else {
+			clearSelect(select_municipio);
+			select_estado.value = '';
+			select_municipio.value = '';
+		}
+	});
+
+	document.querySelector('#estado_origen_des').addEventListener('change', (e) => {
+		let select_municipio = document.querySelector('#municipio_origen_des');
+
+		clearSelect(select_municipio);
+
+		select_municipio.value = '';
+
+		let data = {
+			'estado_id': e.target.value,
+		}
+
+		$.ajax({
+			data: data,
+			url: "<?= base_url('/data/get-municipios-by-estado') ?>",
+			method: "POST",
+			dataType: "json",
+			success: function(response) {
+				let municipios = response.data;
+
+				municipios.forEach(municipio => {
+					var option = document.createElement("option");
+					option.text = municipio.MUNICIPIODESCR;
+					option.value = municipio.MUNICIPIOID;
+					select_municipio.add(option);
+				});
+			},
+			error: function(jqXHR, textStatus, errorThrown) {}
+		});
+	});
 
 	document.querySelector('#pais_des').addEventListener('change', (e) => {
 

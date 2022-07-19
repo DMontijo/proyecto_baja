@@ -108,7 +108,7 @@
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="nacionalidad" class="form-label fw-bold input-required">Nacionalidad</label>
 							<select class="form-select" id="nacionalidad" name="nacionalidad" required>
-								<option selected disabled value="">Seleccione la nacionalidad</option>
+								<option selected disabled value="">Selecciona la nacionalidad</option>
 								<?php foreach ($body_data->nacionalidades as $index => $nac) { ?>
 									<option value="<?= $nac->PERSONANACIONALIDADID ?>" <?= $nac->PERSONANACIONALIDADDESCR == 'MEXICANA' ? 'selected' : '' ?>> <?= $nac->PERSONANACIONALIDADDESCR ?> </option>
 								<?php } ?>
@@ -121,7 +121,7 @@
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="estado_select_origen" class="form-label fw-bold input-required">Estado origen</label>
 							<select class="form-select" id="estado_select_origen" name="estado_select_origen" required>
-								<option selected disabled value="">Seleccione el estado</option>
+								<option selected disabled value="">Selecciona el estado</option>
 								<?php foreach ($body_data->estados as $index => $estado) { ?>
 									<option value="<?= $estado->ESTADOID ?>"> <?= $estado->ESTADODESCR ?> </option>
 								<?php } ?>
@@ -134,7 +134,7 @@
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="municipio" class="form-label fw-bold input-required">Municipio origen</label>
 							<select class="form-select" id="municipio_select_origen" name="municipio_select_origen" required>
-								<option selected disabled value="">Seleccione el municipio</option>
+								<option selected disabled value="">Selecciona el municipio</option>
 							</select>
 							<div class="invalid-feedback">
 								El municipio es obligatorio
@@ -144,7 +144,7 @@
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="idioma" class="form-label fw-bold input-required">Idioma</label>
 							<select class="form-select" id="idioma" name="idioma" required>
-								<option selected disabled value="">Seleccione el idioma</option>
+								<option selected disabled value="">Selecciona el idioma</option>
 								<?php foreach ($body_data->idiomas as $index => $nac) { ?>
 									<option value="<?= $nac->PERSONAIDIOMAID ?>" <?= $nac->PERSONAIDIOMADESCR == 'ESPAÑOL' ? 'selected' : '' ?>> <?= $nac->PERSONAIDIOMADESCR ?> </option>
 								<?php } ?>
@@ -182,7 +182,7 @@
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="estado_select" class="form-label fw-bold input-required">Estado</label>
 							<select class="form-select" id="estado_select" name="estado_select" required>
-								<option selected disabled value="">Seleccione el estado</option>
+								<option selected disabled value="">Selecciona el estado</option>
 								<?php foreach ($body_data->estados as $index => $estado) { ?>
 									<option value="<?= $estado->ESTADOID ?>"> <?= $estado->ESTADODESCR ?> </option>
 								<?php } ?>
@@ -195,7 +195,7 @@
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="municipio" class="form-label fw-bold input-required">Municipio</label>
 							<select class="form-select" id="municipio_select" name="municipio_select" required>
-								<option selected disabled value="">Seleccione el municipio</option>
+								<option selected disabled value="">Selecciona el municipio</option>
 							</select>
 							<div class="invalid-feedback">
 								El municipio es obligatorio
@@ -205,7 +205,7 @@
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="localidad" class="form-label fw-bold">Localidad</label>
 							<select class="form-select" id="localidad_select" name="localidad_select">
-								<option selected disabled value="">Seleccione la localidad</option>
+								<option selected disabled value="">Selecciona la localidad</option>
 							</select>
 						</div>
 
@@ -213,10 +213,10 @@
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="colonia" class="form-label fw-bold input-required">Colonia</label>
 							<select class="form-select" id="colonia_select" name="colonia_select" required>
-								<option selected disabled value="">Seleccione la colonia</option>
+								<option selected disabled value="">Selecciona la colonia</option>
 							</select>
 							<input type="text" class="form-control d-none" id="colonia" name="colonia" maxlength="100" required>
-							<small class="text-primary">Si no encuentras tu colonia selecciona otro.</small>
+							<small class="text-primary fw-bold">Si no encuentras tu colonia selecciona otro</small>
 							<div class="invalid-feedback">
 								La colonia es obligatoria
 							</div>
@@ -258,7 +258,7 @@
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="identificacion" class="form-label fw-bold input-required">Identificación</label>
 							<select class="form-select" id="identificacion" name="identificacion" required>
-								<option selected disabled value="">Seleccione la identificación</option>
+								<option selected disabled value="">Selecciona la identificación</option>
 								<?php foreach ($body_data->tiposIdentificaciones as $index => $identificacion) { ?>
 									<option value="<?= $identificacion->PERSONATIPOIDENTIFICACIONID ?>"> <?= $identificacion->PERSONATIPOIDENTIFICACIONDESCR ?> </option>
 								<?php } ?>
@@ -276,7 +276,7 @@
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="e_civil" class="form-label fw-bold input-required">Estado civil</label>
 							<select class="form-select" id="e_civil" name="e_civil" required>
-								<option selected disabled value="">Seleccione su estado civil</option>
+								<option selected disabled value="">Selecciona su estado civil</option>
 								<?php foreach ($body_data->edoCiviles as $index => $edo) { ?>
 									<option value="<?= $edo->PERSONAESTADOCIVILID ?>"> <?= $edo->PERSONAESTADOCIVILDESCR ?> </option>
 								<?php } ?>
@@ -289,7 +289,7 @@
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="escolaridad" class="form-label fw-bold input-required">Escolaridad</label>
 							<select class="form-select" id="escolaridad" name="escolaridad" required>
-								<option selected disabled value="">Seleccione la escolaridad</option>
+								<option selected disabled value="">Selecciona la escolaridad</option>
 								<?php foreach ($body_data->escolaridades as $index => $escolaridad) { ?>
 									<option value="<?= $escolaridad->PERSONAESCOLARIDADID ?>"> <?= $escolaridad->PERSONAESCOLARIDADDESCR ?> </option>
 								<?php } ?>
@@ -302,7 +302,7 @@
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="ocupacion" class="form-label fw-bold input-required">Ocupación</label>
 							<select class="form-select" id="ocupacion" name="ocupacion" required>
-								<option selected disabled value="">Seleccione la ocupacion</option>
+								<option selected disabled value="">Selecciona la ocupacion</option>
 								<?php foreach ($body_data->ocupaciones as $index => $ocupacion) { ?>
 									<option value="<?= $ocupacion->PERSONAOCUPACIONID ?>"> <?= $ocupacion->PERSONAOCUPACIONDESCR ?> </option>
 								<?php } ?>
@@ -974,7 +974,7 @@
 
 		document.querySelector('#documento').addEventListener('change', (e) => {
 			let documento_identidad = document.querySelector('#documento_text');
-			
+
 			let documento_identidad_modal = document.querySelector('#img_identificacion_modal');
 			let preview = document.querySelector('#img_preview');
 
@@ -1047,6 +1047,9 @@
 
 		let nacionalidad = document.querySelector("#nacionalidad").value ? document.querySelector("#nacionalidad").options[document.querySelector("#nacionalidad").selectedIndex].text : '';
 		let idioma = document.querySelector("#idioma").value ? document.querySelector("#idioma").options[document.querySelector("#idioma").selectedIndex].text : '';
+		let estado_origen = document.querySelector("#estado_select_origen").value ? document.querySelector("#estado_select_origen").options[document.querySelector("#estado_select_origen").selectedIndex].text : '';
+		let municipio_origen = document.querySelector("#municipio_select_origen").value ? document.querySelector("#municipio_select_origen").options[document.querySelector("#municipio_select_origen").selectedIndex].text : '';
+
 		let codigop = document.querySelector("#cp").value ? document.querySelector("#cp").value : '';
 		let pais = document.querySelector("#pais_select").value ? document.querySelector("#pais_select").value : '';
 		let estado = document.querySelector("#estado_select").value ? document.querySelector("#estado_select").options[document.querySelector("#estado_select").selectedIndex].text : '';
@@ -1080,6 +1083,9 @@
 		document.querySelector('#nacionalidad_modal').value = nacionalidad;
 		document.querySelector('#escolaridad_modal').value = escolaridad;
 		document.querySelector('#sexo_modal').value = sexo == 'F' ? 'FEMENINO' : 'MASCULINO';
+
+		document.querySelector('#estado_origen_modal').value = estado_origen;
+		document.querySelector('#municipio_origen_modal').value = municipio_origen;
 
 		document.querySelector('#cp_modal').value = codigop;
 		document.querySelector('#pais_modal').value = pais;
@@ -1122,7 +1128,7 @@
 			day: 'numeric'
 		};
 
-		return dateTijuana.toLocaleDateString("es-ES", options)
+		return (dateTijuana.toLocaleDateString("es-ES", options)).toUpperCase();
 	}
 </script>
 
@@ -1263,19 +1269,18 @@
 	};
 </script>
 <script>
-				let texto_imagen = document.querySelector('#img_text');
-				let preview = document.querySelector('#img_preview');
+	let texto_imagen = document.querySelector('#img_text');
+	let preview = document.querySelector('#img_preview');
 
-				fetch(preview.src)
-				.then((res) => res.blob())
-				.then((blob) => {
-					const reader = new FileReader();
-					reader.onloadend = () => {
-						const base64 = getBase64StringFromDataURL(reader.result);
-						texto_imagen.value = base64;
-					};
-					reader.readAsDataURL(blob);
-				});
-
+	fetch(preview.src)
+		.then((res) => res.blob())
+		.then((blob) => {
+			const reader = new FileReader();
+			reader.onloadend = () => {
+				const base64 = getBase64StringFromDataURL(reader.result);
+				texto_imagen.value = base64;
+			};
+			reader.readAsDataURL(blob);
+		});
 </script>
 <?= $this->endSection() ?>

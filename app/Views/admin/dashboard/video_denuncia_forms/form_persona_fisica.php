@@ -1,6 +1,6 @@
 <div class="row">
 	<div id="contenedor_fisica_foto" class="col-12 mb-5 d-none">
-		<img id="fisica_foto" class="d-none img-fluid" src="" >
+		<img id="fisica_foto" class="d-none img-fluid" src="" style="max-width:300px;">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="tipoiP" class="form-label font-weight-bold">Tipo identificacion</label>
@@ -89,6 +89,10 @@
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="escolaridadP" class="form-label font-weight-bold">Escolaridad</label>
 		<input type="text" class="form-control" id="escolaridadP" name="escolaridadP">
+	</div>
+	<div class="col-12">
+		<label for="descripcionFisicaP" class="form-label font-weight-bold">Descripción física</label>
+		<textarea class="form-control" name="descripcionFisicaP" id="descripcionFisicaP" cols="30" rows="5"></textarea>
 	</div>
 
 	<div class="col-12">
@@ -186,11 +190,7 @@
 			<input type="text" class="form-control" id="parentescoD" name="parentescoD">
 		</div>
 		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-			<label for="fotoDes" class="form-label font-weight-bold">Fotografía:</label>
-			<img class="img-fluid" id="fotoDes" name="fotoDes" src="" alt="">
-		</div>
-		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-			<label for="autorizaFoto" class="form-label font-weight-bold">Autoriza foto</label>
+			<label for="autorizaFoto" class="form-label font-weight-bold">Autoriza foto en medios</label>
 			<input type="text" class="form-control" id="autorizaFoto" name="autorizaFoto">
 		</div>
 	</div>

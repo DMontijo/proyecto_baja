@@ -74,9 +74,23 @@
 					</div>
 
 					<div class="col-12 col-sm-6 mb-3">
+						<label for="estado_origen_modal" class="form-label fw-bold">Estado origen: </label>
+						<input type="text" class="form-control" id="estado_origen_modal" name="estado_origen_modal" disabled>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
+						<label for="municipio_origen_modal" class="form-label fw-bold">Municipio origen: </label>
+						<input type="text" class="form-control" id="municipio_origen_modal" name="municipio_origen_modal" disabled>
+					</div>
+
+					<div class="col-12">
+						<hr>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
 						<label for="pais_modal" class="form-label fw-bold">Pais: </label>
 						<select class="form-select" id="pais_modal" name="pais_modal" required disabled>
-							<option selected disabled value="">Seleccione...</option>
+							<option selected disabled value="">Selecciona...</option>
 							<?php foreach ($body_data->paises as $index => $pais) { ?>
 								<option value="<?= $pais->ISO_2 ?>" <?= $pais->ISO_2 == 'MX' ? 'selected' : '' ?>> <?= mb_strtoupper($pais->NAME, 'UTF-8') ?> </option>
 							<?php } ?>
@@ -129,7 +143,7 @@
 					<div class="col-12 col-sm-6 mb-3">
 						<label for="identificacion_modal" class="form-label fw-bold">Tipo identificacion: </label>
 						<select class="form-select" id="identificacion_modal" name="identificacion_modal" required disabled>
-							<option selected disabled value="">Seleccione...</option>
+							<option selected disabled value="">Selecciona...</option>
 							<?php foreach ($body_data->tiposIdentificaciones as $index => $identificacion) { ?>
 								<option value="<?= $identificacion->PERSONATIPOIDENTIFICACIONID ?>"> <?= $identificacion->PERSONATIPOIDENTIFICACIONDESCR ?> </option>
 							<?php } ?>
@@ -144,7 +158,7 @@
 					<div class="col-12 col-sm-6 mb-3">
 						<label for="e_civil_modal" class="form-label fw-bold">Estado civil: </label>
 						<select class="form-select" id="e_civil_modal" name="e_civil_modal" required disabled>
-							<option selected disabled value="">Seleccione...</option>
+							<option selected disabled value="">Selecciona...</option>
 							<?php foreach ($body_data->edoCiviles as $index => $edo) { ?>
 								<option value="<?= $edo->PERSONAESTADOCIVILID ?>"> <?= $edo->PERSONAESTADOCIVILDESCR ?> </option>
 							<?php } ?>

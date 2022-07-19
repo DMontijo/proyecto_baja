@@ -16,7 +16,7 @@
 					<div class="col-12 mb-3">
 						<button class="btn btn-primary" id="btn-photo"><i class="bi bi-camera"></i> Tomar foto</button>
 						<div id="estado" class="alert alert-warning d-none mt-3">
-							No se puede acceder a la cámara, o no diste permiso.
+							No se puede acceder a la cámara, o no dio permiso.
 						</div>
 					</div>
 					<div class="col-12">

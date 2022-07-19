@@ -20,9 +20,9 @@
 						<div class="tab-content" id="v-pills-contenido">
 							<div class="tab-pane fade show active" id="v-pills-salida" role="tabpanel" aria-labelledby="v-pills-salida-tab">
 								<div class="form-group">
-									<label for="tipo_salida" class="font-weight-bold">Seleccione la salida</label>
+									<label for="tipo_salida" class="font-weight-bold">Selecciona la salida</label>
 									<select class="form-control" name="tipo_salida" id="tipo_salida">
-										<option value="" selected disabled>Seleccione...</option>
+										<option value="" selected disabled>Selecciona...</option>
 										<option value="ATENDIDA">DENUNCIA YA ATENDIDA</option>
 										<option value="DERIVADO">DERIVACION</option>
 										<option value="CANALIZADO">CANALIZACION</option>
@@ -33,7 +33,7 @@
 									<div id="municipio_empleado_container" class="col-4 d-none">
 										<label for="municipio_empleado" class="form-label font-weight-bold">Municipio</label>
 										<select class="form-control" name="municipio_empleado" id="municipio_empleado">
-											<option value="" selected disabled>Seleccione...</option>
+											<option value="" selected disabled>Selecciona...</option>
 											<option value="1">ENSENADA</option>
 											<option value="2">MEXICALI</option>
 											<option value="3">TECATE</option>
@@ -44,13 +44,14 @@
 									<div id="oficina_empleado_container" class="col-4 d-none">
 										<label for="oficina_empleado" class="form-label font-weight-bold">Oficina</label>
 										<select class="form-control" name="oficina_empleado" id="oficina_empleado">
-											<option value="" selected disabled>Seleccione...</option>
+											<option value="" selected disabled>Selecciona...</option>
+											<option value="792">CENTRO DE DENUNCIA TECNOLÓGICO</option>
 										</select>
 									</div>
 									<div id="empleado_container" class="col-4 d-none">
 										<label for="empleado" class="form-label font-weight-bold">Asignar a</label>
 										<select class="form-control" name="empleado" id="empleado">
-											<option value="" selected disabled>Seleccione...</option>
+											<option value="" selected disabled>Selecciona...</option>
 										</select>
 									</div>
 								</div>
@@ -103,37 +104,37 @@
 	const oficina_empleado = document.querySelector('#oficina_empleado');
 	const empleado = document.querySelector('#empleado');
 
-	municipio_empleado.addEventListener('change', (e) => {
-		clearSelect(oficina_empleado);
-		clearSelect(empleado);
-		oficina_empleado.value = '';
-		empleado.value = '';
+	// municipio_empleado.addEventListener('change', (e) => {
+	// 	clearSelect(oficina_empleado);
+	// 	clearSelect(empleado);
+	// 	oficina_empleado.value = '';
+	// 	empleado.value = '';
 
-		$.ajax({
-			data: {
-				'municipio': e.target.value
-			},
-			url: "<?= base_url('/data/get-oficinas-by-municipio') ?>",
-			method: "POST",
-			dataType: "json",
-		}).done(function(data) {
-			clearSelect(oficina_empleado);
-			data.forEach(oficina => {
-				let option = document.createElement("option");
-				option.text = oficina.OFICINADESCR;
-				option.value = oficina.OFICINAID;
-				oficina_empleado.add(option);
-			});
-			oficina_empleado.value = '';
-		}).fail(function(jqXHR, textStatus) {
-			clearSelect(oficina_empleado);
-		});
-	});
+	// 	$.ajax({
+	// 		data: {
+	// 			'municipio': e.target.value
+	// 		},
+	// 		url: "<?= base_url('/data/get-oficinas-by-municipio') ?>",
+	// 		method: "POST",
+	// 		dataType: "json",
+	// 	}).done(function(data) {
+	// 		clearSelect(oficina_empleado);
+	// 		data.forEach(oficina => {
+	// 			let option = document.createElement("option");
+	// 			option.text = oficina.OFICINADESCR;
+	// 			option.value = oficina.OFICINAID;
+	// 			oficina_empleado.add(option);
+	// 		});
+	// 		oficina_empleado.value = '';
+	// 	}).fail(function(jqXHR, textStatus) {
+	// 		clearSelect(oficina_empleado);
+	// 	});
+	// });
 
 	oficina_empleado.addEventListener('change', (e) => {
 		$.ajax({
 			data: {
-				'municipio': municipio_empleado.value,
+				'municipio': 2,
 				'oficina': e.target.value,
 			},
 			url: "<?= base_url('/data/get-empleados-by-municipio-and-oficina') ?>",
@@ -310,7 +311,8 @@
 
 					}).fail(function(jqXHR, textStatus) {
 						data = {
-							'folio': inputFolio.value
+							'folio': inputFolio.value,
+							'year': year_select.value,
 						}
 						$.ajax({
 							data: data,
@@ -324,6 +326,7 @@
 								text: 'Fallo la conexión, revisa con soporte técnico.',
 								confirmButtonColor: '#bf9b55',
 							});
+							console.log(data);
 							btnFinalizar.removeAttribute('disabled');
 						}).fail(function(jqXHR, textStatus) {
 							Swal.fire({
