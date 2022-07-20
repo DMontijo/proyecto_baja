@@ -408,7 +408,7 @@ class DashboardController extends BaseController
 		$oficina = $this->request->getPost('oficina');
 
 		if (!empty($municipio) && !empty($municipio)) {
-			$data = $this->_empleadosModel->asObject()->where('MUNICIPIOID', $municipio)->where('OFICINAID', $oficina)->findAll();
+			$data = $this->_empleadosModel->asObject()->where('MUNICIPIOID', $municipio)->where('OFICINAID', $oficina)->orderBy('NOMBRE', 'asc')->findAll();
 			return json_encode($data);
 		} else {
 			$data = $this->_empleadosModel->asObject()->findAll();
@@ -493,8 +493,6 @@ class DashboardController extends BaseController
 				$folioRow['TIPOEXPEDIENTEID'] = 4;
 
 				$expedienteCreado = $this->createExpediente($folioRow);
-				var_dump($expedienteCreado);
-				exit;
 
 				unset($folioRow['OFICINAIDRESPONSABLE']);
 				unset($folioRow['EMPLEADOIDREGISTRO']);

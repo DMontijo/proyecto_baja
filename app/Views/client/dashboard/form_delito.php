@@ -105,7 +105,7 @@
 	<div class="col-12">
 		<label for="descripcion_breve" class="form-label fw-bold input-required">Descripción breve del delito</label>
 		<textarea class="form-control" id="descripcion_breve" name="descripcion_breve" rows="10" maxlength="300" onkeyup="contarCaracteres(this)" required></textarea>
-		<small id="numCaracter">300 caracteres restantes</small>
+		<small id="numCaracter">1000 caracteres restantes</small>
 	</div>
 </div>
 <script>
@@ -198,7 +198,7 @@
 	// });
 
 	function contarCaracteres(obj) {
-		var maxLength = 300;
+		var maxLength = 1000;
 		var strLength = obj.value.length;
 		var charRemain = (maxLength - strLength);
 

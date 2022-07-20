@@ -129,7 +129,6 @@ class FOLIO extends Migration
 			],
 			'HECHONARRACION' => [
 				'type' => 'TEXT',
-				'constraint' => '300',
 				'null' => TRUE,
 			],
 			'HECHOCOORDENADAX' => [

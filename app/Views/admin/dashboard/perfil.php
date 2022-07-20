@@ -87,6 +87,31 @@
 				<div class="col-12">
 					<div class="card shadow border-0 rounded">
 						<div class="card-body">
+							<form id="form_firma" class="g-3 needs-validation" action="" method="POST" enctype="multipart/form-data" novalidate>
+								<label class="form-label font-weight-bold" for="key">Archivo .key</label>
+								<div class="col-12 col-sm-6 mb-3">
+									<input type="file" class="key" id="key">
+									<label class="custom-file-label" for="key">Seleccionar archivo .key</label>
+									<div class="invalid-feedback">
+										El archivo .key es obligatorio
+									</div>
+								</div>
+								<label class="form-label font-weight-bold" for="key">Archivo .cer</label>
+								<div class="col-12 col-sm-6 mb-3">
+									<input type="file" class="cer" id="cer">
+									<label class="custom-file-label" for="cer">Seleccionar archivo .cer</label>
+									<div class="invalid-feedback">
+										El archivo .cer es obligatorio
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-12">
+					<div class="card shadow border-0 rounded">
+						<div class="card-body">
 							<form id="form_password" class="g-3 needs-validation" action="<?= base_url() ?>/admin/dashboard/update_password" method="POST" enctype="multipart/form-data" novalidate>
 								<div class="row">
 									<div class="col-12 col-sm-6 mb-3">

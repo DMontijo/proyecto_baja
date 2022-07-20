@@ -23,9 +23,9 @@
 									<label for="tipo_salida" class="font-weight-bold">Selecciona la salida</label>
 									<select class="form-control" name="tipo_salida" id="tipo_salida">
 										<option value="" selected disabled>Selecciona...</option>
-										<option value="ATENDIDA">DENUNCIA YA ATENDIDA</option>
 										<option value="DERIVADO">DERIVACION</option>
 										<option value="CANALIZADO">CANALIZACION</option>
+										<option value="ATENDIDA">DENUNCIA YA ATENDIDA</option>
 										<option value="NAC">NAC</option>
 									</select>
 								</div>
@@ -45,7 +45,7 @@
 										<label for="oficina_empleado" class="form-label font-weight-bold">Oficina</label>
 										<select class="form-control" name="oficina_empleado" id="oficina_empleado">
 											<option value="" selected disabled>Selecciona...</option>
-											<option value="792">CENTRO DE DENUNCIA TECNOLÓGICO</option>
+											<option value="792">CENTRO DE DENUNCIA TECNOLÓGICA</option>
 										</select>
 									</div>
 									<div id="empleado_container" class="col-4 d-none">
@@ -57,7 +57,7 @@
 								</div>
 								<div id="notas" class="form-group">
 									<label for="notas_caso_salida">Notas</label>
-									<textarea id="notas_caso_salida" class="form-control" placeholder="Notas..." rows="10" maxlength="300" oninput="mayuscTextarea(this)"></textarea>
+									<textarea id="notas_caso_salida" class="form-control" placeholder="Notas..." rows="10" maxlength="300" oninput="mayuscTextarea(this)" onkeydown="pulsar(event)"></textarea>
 								</div>
 								<button type="button" id="btn-finalizar-derivacion" class="btn btn-primary">FINALIZAR</button>
 							</div>
@@ -104,37 +104,37 @@
 	const oficina_empleado = document.querySelector('#oficina_empleado');
 	const empleado = document.querySelector('#empleado');
 
-	// municipio_empleado.addEventListener('change', (e) => {
-	// 	clearSelect(oficina_empleado);
-	// 	clearSelect(empleado);
-	// 	oficina_empleado.value = '';
-	// 	empleado.value = '';
+	municipio_empleado.addEventListener('change', (e) => {
+		clearSelect(oficina_empleado);
+		clearSelect(empleado);
+		oficina_empleado.value = '';
+		empleado.value = '';
 
-	// 	$.ajax({
-	// 		data: {
-	// 			'municipio': e.target.value
-	// 		},
-	// 		url: "<?= base_url('/data/get-oficinas-by-municipio') ?>",
-	// 		method: "POST",
-	// 		dataType: "json",
-	// 	}).done(function(data) {
-	// 		clearSelect(oficina_empleado);
-	// 		data.forEach(oficina => {
-	// 			let option = document.createElement("option");
-	// 			option.text = oficina.OFICINADESCR;
-	// 			option.value = oficina.OFICINAID;
-	// 			oficina_empleado.add(option);
-	// 		});
-	// 		oficina_empleado.value = '';
-	// 	}).fail(function(jqXHR, textStatus) {
-	// 		clearSelect(oficina_empleado);
-	// 	});
-	// });
+		$.ajax({
+			data: {
+				'municipio': e.target.value
+			},
+			url: "<?= base_url('/data/get-oficinas-by-municipio') ?>",
+			method: "POST",
+			dataType: "json",
+		}).done(function(data) {
+			clearSelect(oficina_empleado);
+			data.forEach(oficina => {
+				let option = document.createElement("option");
+				option.text = oficina.OFICINADESCR;
+				option.value = oficina.OFICINAID;
+				oficina_empleado.add(option);
+			});
+			oficina_empleado.value = '';
+		}).fail(function(jqXHR, textStatus) {
+			clearSelect(oficina_empleado);
+		});
+	});
 
 	oficina_empleado.addEventListener('change', (e) => {
 		$.ajax({
 			data: {
-				'municipio': 2,
+				'municipio': municipio_empleado.value,
 				'oficina': e.target.value,
 			},
 			url: "<?= base_url('/data/get-empleados-by-municipio-and-oficina') ?>",

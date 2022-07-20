@@ -78,7 +78,7 @@
 		<div class="card rounded bg-white shadow">
 			<div class="card-body">
 				<label class="font-weight-bold" for="notas">Breve descripción del caso:</label>
-				<textarea class="form-control" id="notas_mp" placeholder="Descripción del caso..." rows="10" required maxlength="300" oninput="mayuscTextarea(this)"></textarea>
+				<textarea class="form-control" id="notas_mp" placeholder="Descripción del caso..." rows="10" required maxlength="300" oninput="mayuscTextarea(this)" onkeydown="pulsar(event)"></textarea>
 			</div>
 		</div>
 	</div>
@@ -98,6 +98,14 @@
 	const card4 = document.querySelector('#card4');
 	const card5 = document.querySelector('#card5');
 	var respuesta;
+
+	function pulsar(e) {
+		if (e.which === 13 && !e.shiftKey) {
+			e.preventDefault();
+			console.log('prevented');
+			return false;
+		}
+	}
 
 	const mayuscTextarea = (e) => {
 		e.value = e.value.toUpperCase();

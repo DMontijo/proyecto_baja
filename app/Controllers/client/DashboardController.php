@@ -86,6 +86,8 @@ class DashboardController extends BaseController
 			'prioridad' => $this->request->getGet('prioridad'),
 			'sexo_denunciante' => $this->request->getGet('sexo_denunciante') == 'F' ? 'FEMENINO' : 'MASCULINO',
 		];
+		// var_dump($data);
+		// exit;
 
 		$array = explode("-", $data->folio);
 
@@ -403,7 +405,7 @@ class DashboardController extends BaseController
 			'delito' => $this->request->getPost('delito'),
 			'descripcion' => $this->request->getPost('descripcion_breve'),
 			'idioma' => $idioma->PERSONAIDIOMADESCR ? $idioma->PERSONAIDIOMADESCR : 'DESCONOCIDO',
-			'edad' => $denunciante->SEXO,
+			'edad' => $edad,
 			'perfil' => $this->request->getPost('delito') == 'VIOLENCIA FAMILIAR' ? 1 : 0,
 			'sexo' => $this->request->getPost('delito') == 'VIOLENCIA FAMILIAR' ? 2 : 0,
 		];
