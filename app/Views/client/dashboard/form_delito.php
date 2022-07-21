@@ -104,7 +104,7 @@
 	</div>
 	<div class="col-12">
 		<label for="descripcion_breve" class="form-label fw-bold input-required">Descripción breve del delito</label>
-		<textarea class="form-control" id="descripcion_breve" name="descripcion_breve" rows="10" maxlength="300" onkeyup="contarCaracteres(this)" required></textarea>
+		<textarea class="form-control" id="descripcion_breve" name="descripcion_breve" rows="10" maxlength="1000" onkeyup="contarCaracteres(this)" required></textarea>
 		<small id="numCaracter">1000 caracteres restantes</small>
 	</div>
 </div>

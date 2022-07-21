@@ -40,7 +40,7 @@
 		<hr>
 	</div>
 	<div class="col-12">
-		<h5 class="text-center mb-3 fw-bold">DATOS DE ORIGEN DE LA PERSONA DESAPARECIDA</h5>
+		<h5 class="text-center mb-3 fw-bold">DATOS DE ORIGEN DEL IMPUTADO</h5>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="nacionalidad_imputado" class="form-label fw-bold">Nacionalidad</label>

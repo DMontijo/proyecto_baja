@@ -30,8 +30,8 @@ class UsuariosSeeder extends Seeder
 				'SEXO' => 'F',
 				'CORREO' => 'patriciay.caldera@fgebc.gob.mx',
 				'PASSWORD' => '$2y$10$OkSCBt05oaEyz8htYZGP/erLWuGg/H0gVlux1LvbpbyE7/f.2e.Aa',
-				'USUARIOVIDEO' => '25',
-				'TOKENVIDEO' => 'f3dae474c932a9641680211a8f13e59d1d38a145'
+				'USUARIOVIDEO' => '37',
+				'TOKENVIDEO' => 'efea09bd7bde0d5783422ece661367b7eeafb357'
 			),
 			array(
 				'ROLID' => '2',
@@ -66,8 +66,8 @@ class UsuariosSeeder extends Seeder
 				'SEXO' => 'F',
 				'CORREO' => 'andrea.lira@fgebc.gob.mx',
 				'PASSWORD' => '$2y$10$OkSCBt05oaEyz8htYZGP/erLWuGg/H0gVlux1LvbpbyE7/f.2e.Aa',
-				'USUARIOVIDEO' => '28',
-				'TOKENVIDEO' => '91f42fd54949636fa278e66e6a5509821ecb07f9'
+				'USUARIOVIDEO' => '34',
+				'TOKENVIDEO' => 'a282154a464054841535b821b3b115c56afa5502'
 			),
 			array(
 				'ROLID' => '2',
@@ -78,8 +78,8 @@ class UsuariosSeeder extends Seeder
 				'SEXO' => 'F',
 				'CORREO' => 'isnad.medel@fgebc.gob.mx',
 				'PASSWORD' => '$2y$10$OkSCBt05oaEyz8htYZGP/erLWuGg/H0gVlux1LvbpbyE7/f.2e.Aa',
-				'USUARIOVIDEO' => '31',
-				'TOKENVIDEO' => '250f6482ead5499d6641a9ccf86ee3ba29f580b4'
+				'USUARIOVIDEO' => '25',
+				'TOKENVIDEO' => 'f3dae474c932a9641680211a8f13e59d1d38a145'
 			),
 			array(
 				'ROLID' => '2',
@@ -90,8 +90,8 @@ class UsuariosSeeder extends Seeder
 				'SEXO' => 'F',
 				'CORREO' => 'claudiay.paez@fgebc.gob.mx',
 				'PASSWORD' => '$2y$10$OkSCBt05oaEyz8htYZGP/erLWuGg/H0gVlux1LvbpbyE7/f.2e.Aa',
-				'USUARIOVIDEO' => '32',
-				'TOKENVIDEO' => '1d16fb6e027429391085adf58ca0960a783b18a0'
+				'USUARIOVIDEO' => '36',
+				'TOKENVIDEO' => '4f37d8c624292bd7a4eaed4c5d08562838cde1a6'
 			),
 			array(
 				'ROLID' => '3',
@@ -102,8 +102,8 @@ class UsuariosSeeder extends Seeder
 				'SEXO' => 'F',
 				'CORREO' => 'yeseniais.gonzalez@fgebc.gob.mx',
 				'PASSWORD' => '$2y$10$OkSCBt05oaEyz8htYZGP/erLWuGg/H0gVlux1LvbpbyE7/f.2e.Aa',
-				'USUARIOVIDEO' => '33',
-				'TOKENVIDEO' => '7b2a0523176a9dd9f28b694b44de4d5a4edcff31'
+				'USUARIOVIDEO' => '39',
+				'TOKENVIDEO' => '652b226f69789741576360c1df3b58f3aa778b32'
 			),
 			array(
 				'ROLID' => '3',
@@ -114,8 +114,8 @@ class UsuariosSeeder extends Seeder
 				'SEXO' => 'F',
 				'CORREO' => 'karlav.parra@fgebc.gob.mx',
 				'PASSWORD' => '$2y$10$OkSCBt05oaEyz8htYZGP/erLWuGg/H0gVlux1LvbpbyE7/f.2e.Aa',
-				'USUARIOVIDEO' => '34',
-				'TOKENVIDEO' => 'a282154a464054841535b821b3b115c56afa5502'
+				'USUARIOVIDEO' => '41',
+				'TOKENVIDEO' => '8bffa1a43d7fe29f60333c919d68bc228bee176e'
 			),
 			array(
 				'ROLID' => '4',
@@ -138,8 +138,8 @@ class UsuariosSeeder extends Seeder
 				'SEXO' => 'F',
 				'CORREO' => 'analu.olvera@fgebc.gob.mx',
 				'PASSWORD' => '$2y$10$OkSCBt05oaEyz8htYZGP/erLWuGg/H0gVlux1LvbpbyE7/f.2e.Aa',
-				'USUARIOVIDEO' => '36',
-				'TOKENVIDEO' => '4f37d8c624292bd7a4eaed4c5d08562838cde1a6'
+				'USUARIOVIDEO' => '40',
+				'TOKENVIDEO' => 'e485adb382aa8db2810f05cd3fac9f888706310f'
 			),
 			array(
 				'ROLID' => '2',
@@ -150,8 +150,8 @@ class UsuariosSeeder extends Seeder
 				'SEXO' => 'M',
 				'CORREO' => 'jose.cervantes@fgebc.gob.mx',
 				'PASSWORD' => '$2y$10$OkSCBt05oaEyz8htYZGP/erLWuGg/H0gVlux1LvbpbyE7/f.2e.Aa',
-				'USUARIOVIDEO' => '37',
-				'TOKENVIDEO' => 'efea09bd7bde0d5783422ece661367b7eeafb357'
+				'USUARIOVIDEO' => '38',
+				'TOKENVIDEO' => '7e68d87c3f767267089ce3f6cb0d813ee0ab7200'
 			),
 			array(
 				'ROLID' => '2',
@@ -162,8 +162,8 @@ class UsuariosSeeder extends Seeder
 				'SEXO' => 'M',
 				'CORREO' => 'isaias.cortez@fgebc.gob.mx',
 				'PASSWORD' => '$2y$10$OkSCBt05oaEyz8htYZGP/erLWuGg/H0gVlux1LvbpbyE7/f.2e.Aa',
-				'USUARIOVIDEO' => '38',
-				'TOKENVIDEO' => '7e68d87c3f767267089ce3f6cb0d813ee0ab7200'
+				'USUARIOVIDEO' => '31',
+				'TOKENVIDEO' => '250f6482ead5499d6641a9ccf86ee3ba29f580b4'
 			),
 			array(
 				'ROLID' => '2',
@@ -174,8 +174,8 @@ class UsuariosSeeder extends Seeder
 				'SEXO' => 'M',
 				'CORREO' => 'josej.garcia@fgebc.gob.mx',
 				'PASSWORD' => '$2y$10$OkSCBt05oaEyz8htYZGP/erLWuGg/H0gVlux1LvbpbyE7/f.2e.Aa',
-				'USUARIOVIDEO' => '39',
-				'TOKENVIDEO' => '652b226f69789741576360c1df3b58f3aa778b32'
+				'USUARIOVIDEO' => '32',
+				'TOKENVIDEO' => '1d16fb6e027429391085adf58ca0960a783b18a0'
 			),
 			array(
 				'ROLID' => '2',
@@ -186,8 +186,8 @@ class UsuariosSeeder extends Seeder
 				'SEXO' => 'F',
 				'CORREO' => 'cintyam.gonzalez@fgebc.gob.mx',
 				'PASSWORD' => '$2y$10$OkSCBt05oaEyz8htYZGP/erLWuGg/H0gVlux1LvbpbyE7/f.2e.Aa',
-				'USUARIOVIDEO' => '40',
-				'TOKENVIDEO' => 'e485adb382aa8db2810f05cd3fac9f888706310f'
+				'USUARIOVIDEO' => '33',
+				'TOKENVIDEO' => '7b2a0523176a9dd9f28b694b44de4d5a4edcff31'
 			),
 			array(
 				'ROLID' => '2',
@@ -198,8 +198,8 @@ class UsuariosSeeder extends Seeder
 				'SEXO' => 'F',
 				'CORREO' => 'itzela.verdugo@fgebc.gob.mx',
 				'PASSWORD' => '$2y$10$OkSCBt05oaEyz8htYZGP/erLWuGg/H0gVlux1LvbpbyE7/f.2e.Aa',
-				'USUARIOVIDEO' => '41',
-				'TOKENVIDEO' => '8bffa1a43d7fe29f60333c919d68bc228bee176e'
+				'USUARIOVIDEO' => '45',
+				'TOKENVIDEO' => 'c07842fea064b08385e9ec27de5946a9dce3098f'
 			),
 			array(
 				'ROLID' => '2',
@@ -210,8 +210,8 @@ class UsuariosSeeder extends Seeder
 				'SEXO' => 'M',
 				'CORREO' => 'cesarh.acebo@fgebc.gob.mx',
 				'PASSWORD' => '$2y$10$OkSCBt05oaEyz8htYZGP/erLWuGg/H0gVlux1LvbpbyE7/f.2e.Aa',
-				'USUARIOVIDEO' => '42',
-				'TOKENVIDEO' => '48e3aad162ecf9293daef07ea508cf9a34e852e9'
+				'USUARIOVIDEO' => '28',
+				'TOKENVIDEO' => '91f42fd54949636fa278e66e6a5509821ecb07f9'
 			),
 			array(
 				'ROLID' => '2',
@@ -246,8 +246,8 @@ class UsuariosSeeder extends Seeder
 				'SEXO' => 'F',
 				'CORREO' => 'lizethy.torres@fgebc.gob.mx',
 				'PASSWORD' => '$2y$10$OkSCBt05oaEyz8htYZGP/erLWuGg/H0gVlux1LvbpbyE7/f.2e.Aa',
-				'USUARIOVIDEO' => '45',
-				'TOKENVIDEO' => 'c07842fea064b08385e9ec27de5946a9dce3098f'
+				'USUARIOVIDEO' => '42',
+				'TOKENVIDEO' => '48e3aad162ecf9293daef07ea508cf9a34e852e9'
 			),
 			array(
 				'ROLID' => '1',
