@@ -273,6 +273,7 @@
 						dataType: "json",
 
 					}).done(function(data) {
+						console.log(data);
 						btnFinalizar.removeAttribute('disabled');
 						if (data.status == 1) {
 							document.querySelector('#tipo_salida').value = "";
@@ -310,6 +311,7 @@
 						}
 
 					}).fail(function(jqXHR, textStatus) {
+						console.log(jqXHR, textStatus);
 						data = {
 							'folio': inputFolio.value,
 							'year': year_select.value,

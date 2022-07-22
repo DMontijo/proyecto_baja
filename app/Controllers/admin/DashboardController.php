@@ -494,6 +494,8 @@ class DashboardController extends BaseController
 
 				$expedienteCreado = $this->createExpediente($folioRow);
 
+				// return json_encode(['info' => $expedienteCreado]);
+
 				unset($folioRow['OFICINAIDRESPONSABLE']);
 				unset($folioRow['EMPLEADOIDREGISTRO']);
 				unset($folioRow['AREAIDREGISTRO']);
