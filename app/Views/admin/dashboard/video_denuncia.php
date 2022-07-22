@@ -68,6 +68,20 @@
 		<div class="card rounded bg-white shadow">
 			<div class="card-body">
 				<div class="row">
+					<div class="col-12 text-center mb-3">
+						<h5 class="font-weight-bold m-0">HORA</h5>
+						<div id="clock"></div>
+					</div>
+					<div class="col-12 text-center">
+						<h5 class="font-weight-bold m-0">FECHA</h5>
+						<div id="date"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="card rounded bg-white shadow">
+			<div class="card-body">
+				<div class="row">
 					<div class="col-12 overflow-auto">
 						<a class="btn btn-primary btn-block" target="_blank" href="https://www.diputados.gob.mx/LeyesBiblio/ref/cpf.htm"><i class="fas fa-file-alt"></i> Código Penal Federal</a>
 						<a class="btn btn-primary btn-block" target="_blank" href="https://www.congresobc.gob.mx/Contenido/Actividades_Legislativas/Leyes_Codigos.aspx"><i class="fas fa-file-alt"></i> Código Penal Estatal</a>
@@ -98,6 +112,45 @@
 	const card4 = document.querySelector('#card4');
 	const card5 = document.querySelector('#card5');
 	var respuesta;
+
+	function startTime() {
+		var today = new Date();
+		var hr = today.getHours();
+		var min = today.getMinutes();
+		var sec = today.getSeconds();
+		ap = "hrs.";
+		hr = hr;
+		// hr = (hr > 12) ? hr - 12 : hr;
+		//Add a zero in front of numbers<10
+		hr = checkTime(hr);
+		min = checkTime(min);
+		sec = checkTime(sec);
+		document.getElementById("clock").innerHTML = hr + ":" + min + ":" + sec + " " + ap;
+
+		var months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+		var days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+		var curWeekDay = days[today.getDay()];
+		var curDay = today.getDate();
+		var curMonth = months[today.getMonth()];
+		var curYear = today.getFullYear();
+		var date = curWeekDay + ", " + curDay + " " + curMonth + " " + curYear;
+		document.getElementById("date").innerHTML = date;
+
+		var time = setTimeout(function() {
+			startTime()
+		}, 500);
+	}
+
+	window.onload = function() {
+		startTime();
+	};
+
+	function checkTime(i) {
+		if (i < 10) {
+			i = "0" + i;
+		}
+		return i;
+	}
 
 	function pulsar(e) {
 		if (e.which === 13 && !e.shiftKey) {

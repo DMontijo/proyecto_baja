@@ -58,7 +58,7 @@ class FoliosController extends BaseController
 	public function folios_abiertos()
 	{
 		$data = (object)array();
-		$data = $this->_folioModel->asObject()->where('STATUS', 'ABIERTO')->findAll();
+		$data = $this->_folioModel->asObject()->where('STATUS', 'ABIERTO')->join('DENUNCIANTES', 'DENUNCIANTES.DENUNCIANTEID = FOLIO.DENUNCIANTEID')->findAll();
 		$this->_loadView('Folios abiertos', 'folios', '', $data, 'folios_abiertos');
 	}
 
