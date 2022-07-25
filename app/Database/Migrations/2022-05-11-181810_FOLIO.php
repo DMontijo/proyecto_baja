@@ -12,7 +12,6 @@ class FOLIO extends Migration
 			'FOLIOID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
-				'auto_increment' => TRUE,
 			],
 			'ANO' => [
 				'type' => 'INT',

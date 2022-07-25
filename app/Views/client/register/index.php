@@ -511,6 +511,7 @@
 	function validarStep(step) {
 		switch (step) {
 			case 0:
+				document.querySelector('#correo').blur();
 				if (
 					document.querySelector('#nombre').value != '' &&
 					document.querySelector('#apellido_paterno').value != '' &&
@@ -519,7 +520,7 @@
 					document.querySelector('input[name="sexo"]:checked') &&
 					document.querySelector('#telefono').value != ''
 				) {
-					return true
+					return true;
 				} else {
 					return false;
 				}
@@ -1004,18 +1005,18 @@
 					dataType: "json",
 					success: function(response) {
 						if (response.exist === 1) {
+							e.target.value = '';
+							prevBtn.click();
 							Swal.fire({
 								icon: 'error',
 								text: 'El correo ya se encuentra registrado, ingresa uno diferente.',
 								confirmButtonColor: '#bf9b55',
-							}).then(() => {
-								e.target.value = '';
-							})
+							});
 						}
 					},
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
-			}
+			};
 		})
 
 	})()

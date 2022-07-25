@@ -214,6 +214,7 @@ class DashboardController extends BaseController
 
 		if ($data->folio) {
 			if ($data->folio->STATUS == 'ABIERTO') {
+				$this->_folioModel->set(['STATUS' => 'EN PROCESO'])->where('ANO', $year)->where('FOLIOID', $numfolio)->update();
 				$data->status = 1;
 				$data->preguntas_iniciales = $this->_folioPreguntasModel->where('FOLIOID', $numfolio)->first();
 				$data->personas = $this->_folioPersonaFisicaModel->join('PERSONACALIDADJURIDICA', 'PERSONACALIDADJURIDICA.PERSONACALIDADJURIDICAID = FOLIOPERSONAFISICA.CALIDADJURIDICAID')->where('FOLIOID', $numfolio)->orderBy('DENUNCIANTE', 'asc')->findAll();
@@ -224,9 +225,11 @@ class DashboardController extends BaseController
 				$data->folioLugar = $this->_folioModel->join('HECHOLUGAR', 'HECHOLUGAR.HECHOLUGARID = FOLIO.HECHOLUGARID')->where('FOLIOID', $numfolio)->first();
 
 				return json_encode($data);
+			} else if ($data->folio->STATUS == 'EN PROCESO') {
+				return json_encode(['status' => 2, 'motivo' => 'EL FOLIO YA ESTA SIENDO ATENDIDO']);
 			} else {
 				$agente = $this->_usuariosModel->asObject()->where('ID', $data->folio->AGENTEATENCIONID)->first();
-				return json_encode(['status' => 2, 'motivo' => $data->folio->STATUS, 'agente' => $agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' . $agente->APELLIDO_MATERNO]);
+				return json_encode(['status' => 3, 'motivo' => $data->folio->STATUS, 'expediente' => $data->folio->EXPEDIENTEID, 'agente' => $agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' . $agente->APELLIDO_MATERNO]);
 			}
 		} else {
 			return json_encode(['status' => 0]);
@@ -432,7 +435,7 @@ class DashboardController extends BaseController
 		if (!empty($status) && !empty($motivo) && !empty($year) && !empty($folio) && !empty($agenteId)) {
 			$folioRow = $this->_folioModel->where('ANO', $year)->where('FOLIOID', $folio)->where('STATUS', 'ABIERTO')->first();
 			if ($folioRow) {
-				$update = $this->_folioModel->set($data)->where('FOLIOID', $folio)->update();
+				$update = $this->_folioModel->set($data)->where('ANO', $year)->where('FOLIOID', $folio)->update();
 				if ($update) {
 					$folio = $this->_folioModel->asObject()->where('FOLIOID', $folio)->first();
 					$denunciante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', $folio->DENUNCIANTEID)->first();
@@ -463,7 +466,7 @@ class DashboardController extends BaseController
 		$empleado = $this->request->getPost('empleado');
 
 		if (!empty($folio) && !empty($municipio) && !empty($estado) && !empty($notas) && !empty($oficina) && !empty($empleado)) {
-			$folioRow = $this->_folioModel->where('ANO', $year)->where('FOLIOID', $folio)->where('STATUS', 'ABIERTO')->first();
+			$folioRow = $this->_folioModel->where('ANO', $year)->where('FOLIOID', $folio)->where('STATUS', 'EN PROCESO')->first();
 			if ($folioRow) {
 				$empleadoRow = $this->_empleadosModel->asObject()->where('MUNICIPIOID', $municipio)->where('OFICINAID', $oficina)->where('EMPLEADOID', $empleado)->first();
 				$personas = $this->_folioPersonaFisicaModel->where('FOLIOID', $folioRow['FOLIOID'])->orderBy('PERSONAFISICAID', 'asc')->findAll();
@@ -524,7 +527,7 @@ class DashboardController extends BaseController
 					$update2 = $this->_folioModel->set(['EXPEDIENTEID' => $expedienteCreado->EXPEDIENTEID])->where('FOLIOID', $folio)->update();
 					if ($update && $update2) {
 						$denunciante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', $folioRow['DENUNCIANTEID'])->first();
-						if ($this->_sendEmailExpediente($denunciante->CORREO, $folio, $folioRow['EXPEDIENTEID'])) {
+						if ($this->_sendEmailExpediente($denunciante->CORREO, $folio, $expedienteCreado->EXPEDIENTEID)) {
 							return json_encode(['status' => 1, 'expediente' => $expedienteCreado->EXPEDIENTEID]);
 						} else {
 							return json_encode(['status' => 1, 'expediente' => $expedienteCreado->EXPEDIENTEID]);

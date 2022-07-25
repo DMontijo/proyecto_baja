@@ -12,7 +12,7 @@
 	<br>
 	<br>
 	<p style="font-size:10px;">
-		<a href="<?= base_url() ?>/assets/documentos/Aviso_De_Privacidad_De_Datos.pdf">Aviso de privacidad</a> <a href="<?= base_url() ?>/assets/documentos/Terminos_Y_Condiciones.pdf">Términos y condiciones</a> <a href="<?= base_url() ?>/assets/documentos/Derechos_De_Victima_Ofendido.pdf">Derechos de víctima u ofendido.</a>
+		<a href="<?= base_url() ?>/assets/documentos/Aviso_De_Privacidad_De_Datos.pdf">Aviso de privacidad</a> | <a href="<?= base_url() ?>/assets/documentos/Terminos_Y_Condiciones.pdf">Términos y condiciones</a> | <a href="<?= base_url() ?>/assets/documentos/Derechos_De_Victima_Ofendido.pdf">Derechos de víctima u ofendido.</a>
 	</p>
 </div>
 

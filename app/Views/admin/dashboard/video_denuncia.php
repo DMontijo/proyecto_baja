@@ -300,13 +300,23 @@
 					}
 
 				} else if (response.status === 2) {
+					Swal.fire({
+						icon: 'error',
+						html: 'El folio se encuentra en atención.',
+						confirmButtonColor: '#bf9b55',
+					});
+				} else if (response.status === 3) {
 					card2.classList.add('d-none');
 					card3.classList.add('d-none');
 					card4.classList.add('d-none');
 					card5.classList.add('d-none');
+					let texto = 'El folio ya fue atentido por el agente<br><strong>' + response.agente + '</strong><br><br><strong>' + response.motivo + '</strong>';
+					if (response.motivo == 'EXPEDIENTE') {
+						texto = texto + '<br><strong>' + response.expediente + '</strong>';
+					}
 					Swal.fire({
 						icon: 'error',
-						html: 'El folio ya fue atentido por el agente<br><strong>' + response.agente + '</strong><br><br><strong>' + response.motivo + '</strong>',
+						html: texto,
 						confirmButtonColor: '#bf9b55',
 					})
 				} else {
@@ -387,6 +397,23 @@
 	}
 
 	buscar_nuevo_btn.addEventListener('click', () => {
+		data = {
+			'folio': inputFolio.value,
+			'year': year_select.value,
+		}
+		$.ajax({
+			data: data,
+			url: "<?= base_url('/data/restore-folio') ?>",
+			method: "POST",
+			dataType: "json",
+
+		}).done(function(data) {}).fail(function(jqXHR, textStatus) {
+			Swal.fire({
+				icon: 'error',
+				text: 'El folio quedó en proceso, comunicate con soporte técnico para devolver el estado a abierto.',
+				confirmButtonColor: '#bf9b55',
+			});
+		});
 		borrarTodo();
 	});
 

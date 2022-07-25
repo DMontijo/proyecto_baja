@@ -162,7 +162,7 @@ class DashboardController extends BaseController
 				'ESTADOORIGENID' => $this->request->getPost('estado_des'),
 				'MUNICIPIOORIGENID' => $this->request->getPost('municipio_des'),
 				'ESTATURA' => $this->request->getPost('estatura_des'),
-				'FECHANACIMIENTO' => $this->request->getPost('fecha_nacimiento_des'),
+				'FECHANACIMIENTO' => $this->request->getPost('fecha_nacimiento_des') ? $this->request->getPost('fecha_nacimiento_des') : NULL,
 				'EDADCANTIDAD' => $this->request->getPost('edad_des'),
 				'PESO' => $this->request->getPost('peso_des'),
 				'COMPLEXION' => $this->request->getPost('complexion_des'),
@@ -193,6 +193,7 @@ class DashboardController extends BaseController
 				'NACIONALIDADID' => $this->request->getPost('nacionalidad_des'),
 			);
 
+
 			$dataDesaparecidoDomicilio = array(
 				'PAIS' => $this->request->getPost('pais_des'),
 				'ESTADOID' => $this->request->getPost('estado_des'),
@@ -217,7 +218,7 @@ class DashboardController extends BaseController
 				'NOMBRE' => $this->request->getPost('nombre_menor'),
 				'PRIMERAPELLIDO' => $this->request->getPost('apellido_paterno_menor'),
 				'SEGUNDOAPELLIDO' => $this->request->getPost('apellido_materno_menor'),
-				'FECHANACIMIENTO' => $this->request->getPost('fecha_nacimiento_menor'),
+				'FECHANACIMIENTO' => $this->request->getPost('fecha_nacimiento_menor') ? $this->request->getPost('fecha_nacimiento_menor') : NULL,
 				'EDADCANTIDAD' => $this->request->getPost('edad_menor'),
 				'SEXO' => $this->request->getPost('sexo_menor'),
 				'FACEBOOK' => $this->request->getPost('facebook_menor'),
@@ -248,6 +249,7 @@ class DashboardController extends BaseController
 		if ($this->request->getPost('es_menor') === "NO" && $this->request->getPost('es_ofendido') === "NO" && $this->request->getPost('esta_desaparecido') === "NO") {
 			$dataOfendido = array(
 				'NOMBRE' => 'QRO',
+				'FECHANACIMIENTO' => NULL
 			);
 
 			$ofendidoId = $this->_folioPersonaFisica($dataOfendido, $FOLIOID, 1, $year);
@@ -283,7 +285,7 @@ class DashboardController extends BaseController
 			'NOMBRE' => $denunciante->NOMBRE,
 			'PRIMERAPELLIDO' => $denunciante->APELLIDO_PATERNO,
 			'SEGUNDOAPELLIDO' => $denunciante->APELLIDO_MATERNO,
-			'FECHANACIMIENTO' => $denunciante->FECHANACIMIENTO,
+			'FECHANACIMIENTO' => $denunciante->FECHANACIMIENTO ? $denunciante->FECHANACIMIENTO : NULL,
 			'EDADCANTIDAD' => $edad,
 			'SEXO' => $denunciante->SEXO,
 			'TELEFONO' => $denunciante->TELEFONO,
@@ -333,7 +335,7 @@ class DashboardController extends BaseController
 				'NOMBRE' => $this->request->getPost('nombre_imputado'),
 				'PRIMERAPELLIDO' => $this->request->getPost('primer_apellido_imputado'),
 				'SEGUNDOAPELLIDO' => $this->request->getPost('segundo_apellido_imputado'),
-				'FECHANACIMIENTO' => $this->request->getPost('fecha_nacimiento_imputado'),
+				'FECHANACIMIENTO' => $this->request->getPost('fecha_nacimiento_imputado') ? $this->request->getPost('fecha_nacimiento_imputado') : NULL,
 				'APODO' => $this->request->getPost('alias_imputado'),
 				'TELEFONO' => $this->request->getPost('tel_imputado'),
 				'DESCRIPCION_FISICA' => $this->request->getPost('description_fisica_imputado'),
@@ -366,6 +368,7 @@ class DashboardController extends BaseController
 		} else {
 			$dataImputado = array(
 				'NOMBRE' => 'QRR',
+				'FECHANACIMIENTO' => NULL
 			);
 
 			$imputadoId = $this->_folioPersonaFisica($dataImputado, $FOLIOID, 2, $year);
@@ -409,6 +412,7 @@ class DashboardController extends BaseController
 			'perfil' => $this->request->getPost('delito') == 'VIOLENCIA FAMILIAR' ? 1 : 0,
 			'sexo' => $this->request->getPost('delito') == 'VIOLENCIA FAMILIAR' ? 2 : 0,
 		];
+		
 		$sexo_denunciante = $denunciante->SEXO == 'F' ? 'FEMENINO' : 'MASCULINO';
 		$url = "/denuncia/dashboard/video-denuncia?folio=" . $year . '-' . $FOLIOID . "&year=" . $year . "&delito=" . $data->delito . "&descripcion=" . $data->descripcion . "&idioma=" . $data->idioma . "&edad=" . $data->edad . "&perfil=" . $data->perfil . "&sexo=" . $data->sexo . "&prioridad=" . $prioridad . "&sexo_denunciante=" . $sexo_denunciante;
 
