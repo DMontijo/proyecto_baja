@@ -24,6 +24,7 @@ class Filters extends BaseConfig
 		'honeypot' => Honeypot::class,
 		'adminAuth' => AdminAuthFilter::class,
 		'denuciantesAuth' => DenunciantesAuthFilter::class,
+		'denuncianteExtravioAuth'=>DenunciantesExtravioAuthFilter::class,
 	];
 
 	/**

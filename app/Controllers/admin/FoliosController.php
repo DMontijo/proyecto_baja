@@ -15,6 +15,7 @@ use App\Models\FolioVehiculoModel;
 use App\Models\UsuariosModel;
 use App\Models\ZonasUsuariosModel;
 use App\Models\RolesUsuariosModel;
+use App\Models\ConstanciaExtraviadoModel;
 
 class FoliosController extends BaseController
 {
@@ -29,6 +30,8 @@ class FoliosController extends BaseController
 		$this->_folioPersonaFisicaDomicilioModel = new FolioPersonaFisicaDomicilioModel();
 		$this->_folioPersonaFisicaDesaparecidaModel = new FolioPersonaFisicaDesaparecidaModel();
 		$this->_folioVehiculoModel = new FolioVehiculoModel();
+
+		$this->_constanciaExtravioModel= new ConstanciaExtraviadoModel();
 
 		$this->_usuariosModel = new UsuariosModel();
 		$this->_zonasUsuariosModel = new ZonasUsuariosModel();
@@ -60,6 +63,12 @@ class FoliosController extends BaseController
 		$data = (object)array();
 		$data = $this->_folioModel->asObject()->where('STATUS', 'ABIERTO')->join('DENUNCIANTES', 'DENUNCIANTES.DENUNCIANTEID = FOLIO.DENUNCIANTEID')->findAll();
 		$this->_loadView('Folios abiertos', 'folios', '', $data, 'folios_abiertos');
+	}
+
+	public function constancias_abiertas(){
+		$data = (object)array();
+		$data = $this->_constanciaExtravioModel->asObject()->where('STATUS', 'open')->findAll();
+		$this->_loadView('Constancias extraviadas abiertos', 'constancias', '', $data, 'constancias_abiertas');
 	}
 
 	public function folios_derivados()

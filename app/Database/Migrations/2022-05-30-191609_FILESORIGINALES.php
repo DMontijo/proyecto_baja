@@ -10,50 +10,31 @@ class FILESORIGINALES extends Migration
 	{
 		$this->forge->addField([
 
-			'ID'          => [
-				'type'           => 'INT',
-				'unsigned'       => TRUE,
+			'ID' => [
+				'type' => 'INT',
+				'unsigned' => TRUE,
 			],
-			'DESCRIPCION'          => [
-				'type'           => 'VARCHAR',
-				'constraint'     => '50',
+			'DESCRIPCION' => [
+				'type' => 'VARCHAR',
+				'constraint' => '100',
 			],
-			'TITULO'          => [
-				'type'           => 'TEXT',
+			'TITULO' => [
+				'type' => 'VARCHAR',
+				'constraint' => '100',
 			],
-			'PLACEHOLDER'          => [
-				'type'           => 'TEXT',
+			'PLACEHOLDER' => [
+				'type' => 'TEXT',
 			],
-			'OPCIONES'          => [
-				'type'           => 'TEXT',
-			],
-			'TIPO_ARCHIVO'          => [
-				'type'           => 'VARCHAR',
-				'constraint'     => '50',
-			],
-			'RELACIONADO_CON'          => [
-				'type'           => 'VARCHAR',
-				'constraint'     => '50',
-			],
-			'MODIFICADO'          => [
-				'type'           => 'TINYINT',
-				'default'     => '0',
-			],
-			'ELIMINADO'          => [
-				'type'           => 'TINYINT',
-				'default'     => '0',
-			],
-			'DENUNCIANTEID'          => [
-				'type'           => 'INT',
-			],
-
+			'TEXTO' => [
+				'type' => 'TEXT',
+			]
 		]);
 		$this->forge->addKey('ID', TRUE);
-		$this->forge->createTable('FILES_ORIGINALES');
+		$this->forge->createTable('PLANTILLAS');
 	}
 
 	public function down()
 	{
-		$this->forge->dropTable('DERIVACIONES_ATENCION');
+		$this->forge->dropTable('PLANTILLAS');
 	}
 }
