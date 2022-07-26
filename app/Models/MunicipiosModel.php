@@ -7,6 +7,6 @@ use CodeIgniter\Model;
 class MunicipiosModel extends Model
 {
 	protected $DBGroup          = 'default';
-	protected $table            = 'CATEGORIA_MUNICIPIO';
+	protected $table            = 'MUNICIPIO';
 	protected $allowedFields    = [];
 }

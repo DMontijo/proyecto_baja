@@ -132,6 +132,6 @@ class PersonaNacionalidadSeeder extends Seeder
 			array('PERSONANACIONALIDADDESCR' => 'ZAIREÑA'),
 			array('PERSONANACIONALIDADDESCR' => 'ZAMBIA'),
 		];
-		$this->db->table('CATEGORIA_PERSONANACIONALIDAD')->insertBatch($data);
+		$this->db->table('PERSONANACIONALIDAD')->insertBatch($data);
 	}
 }

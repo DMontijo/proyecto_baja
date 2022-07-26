@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class DELITOSUSUARIOS extends Migration
+class DELITOSVIDEODENUNCIA extends Migration
 {
 	public function up()
 	{
@@ -26,11 +26,11 @@ class DELITOSUSUARIOS extends Migration
 			'FECHAACTUALIZACION DATETIME ON UPDATE CURRENT_TIMESTAMP',
 		]);
 		$this->forge->addKey('ID', TRUE);
-		$this->forge->createTable('DELITOS_USUARIOS');
+		$this->forge->createTable('DELITOSVIDEODENUNCIA');
 	}
 
 	public function down()
 	{
-		$this->forge->dropTable('DELITOS_USUARIOS');
+		$this->forge->dropTable('DELITOSVIDEODENUNCIA');
 	}
 }

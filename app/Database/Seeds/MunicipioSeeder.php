@@ -2446,6 +2446,6 @@ class MunicipioSeeder extends Seeder
 			array('ID' => '32056', 'ESTADOID' => '32', 'MUNICIPIOID' => '56,', 'MUNICIPIODESCR' => 'ZACATECAS', 'SECUENCIAEXPEDIENTE' => '0'),
 			array('ID' => '33001', 'ESTADOID' => '33', 'MUNICIPIOID' => '1,', 'MUNICIPIODESCR' => 'EXTRANJERO', 'SECUENCIAEXPEDIENTE' => '0'),
 		];
-		$this->db->table('CATEGORIA_MUNICIPIO')->insertBatch($data);
+		$this->db->table('MUNICIPIO')->insertBatch($data);
 	}
 }

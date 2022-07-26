@@ -10,11 +10,10 @@ class RolesUsuariosSeeder extends Seeder
 	{
 		$data = [
 			array('NOMBRE_ROL' => 'SUPERUSUARIO'),
-			array('NOMBRE_ROL' => 'DIRECTORA GENERAL DE SEJAP'),
-			array('NOMBRE_ROL' => 'COORDINADOR'),
-			array('NOMBRE_ROL' => 'SUPERVISOR'),
-			array('NOMBRE_ROL' => 'OPERADOR MP'),
-			array('NOMBRE_ROL' => 'OPERADOR'),
+			array('NOMBRE_ROL' => 'AGENTE DEL MINISTERIO PÚBLICO'),
+			array('NOMBRE_ROL' => 'FACILITADOR'),
+			array('NOMBRE_ROL' => 'NOTIFICADOR'),
+			array('NOMBRE_ROL' => 'SECRETARIO DE ACUERDOS'),
 		];
 		$this->db->table('ROLES')->insertBatch($data);
 	}

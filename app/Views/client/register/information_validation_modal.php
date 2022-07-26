@@ -31,23 +31,8 @@
 					</div>
 
 					<div class="col-12 col-sm-6 mb-3">
-						<label for="correo_modal" class="form-label fw-bold">Correo electronico: </label>
-						<input type="text" class="form-control" id="correo_modal" name="correo_modal" disabled>
-					</div>
-
-					<div class="col-12 col-sm-6 mb-3">
 						<label for="fecha_nacimiento_modal" class="form-label fw-bold">Fecha de nacimiento: </label>
 						<input type="text" class="form-control" id="fecha_nacimiento_modal" name="fecha_nacimiento_modal" disabled>
-					</div>
-
-					<div class="col-12 col-sm-6 mb-3">
-						<label for="edad_modal" class="form-label fw-bold">Edad: </label>
-						<input type="text" class="form-control" id="edad_modal" name="edad_modal" disabled>
-					</div>
-
-					<div class="col-12 col-sm-6 mb-3">
-						<label for="escolaridad_modal" class="form-label fw-bold input-required">Escolaridad:</label>
-						<input class="form-control" id="escolaridad_modal" name="escolaridad_modal" type="text" disabled>
 					</div>
 
 					<div class="col-12 col-sm-6 mb-3">
@@ -60,24 +45,52 @@
 					</div>
 
 					<div class="col-12 col-sm-6 mb-3">
-						<label for="cp_modal" class="form-label fw-bold">Código Postal: </label>
-						<input type="text" class="form-control" id="cp_modal" name="cp_modal" disabled>
+						<label for="correo_modal" class="form-label fw-bold">Correo electronico: </label>
+						<input type="text" class="form-control" id="correo_modal" name="correo_modal" disabled>
 					</div>
 
 					<div class="col-12 col-sm-6 mb-3">
-						<label for="nacionalidad_modal" class="form-label fw-bold input-required">Nacionalidad:</label>
+						<label for="telefono_modal" class="form-label fw-bold">Número de télefono: </label>
+						<input type="text" class="form-control" id="telefono_modal" name="telefono_modal" disabled>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
+						<label for="telefono2_modal" class="form-label fw-bold">Número de télefono adicional: </label>
+						<input type="text" class="form-control" id="telefono2_modal" name="telefono2_modal" disabled>
+					</div>
+
+					<div class="col-12">
+						<hr>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
+						<label for="nacionalidad_modal" class="form-label fw-bold ">Nacionalidad:</label>
 						<input type="text" class="form-control" id="nacionalidad_modal" name="nacionalidad_modal" disabled>
 					</div>
-					
+
 					<div class="col-12 col-sm-6 mb-3">
 						<label for="idioma_modal" class="form-label fw-bold">Idioma: </label>
 						<input type="text" class="form-control" id="idioma_modal" name="idioma_modal" disabled>
 					</div>
 
 					<div class="col-12 col-sm-6 mb-3">
+						<label for="estado_origen_modal" class="form-label fw-bold">Estado origen: </label>
+						<input type="text" class="form-control" id="estado_origen_modal" name="estado_origen_modal" disabled>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
+						<label for="municipio_origen_modal" class="form-label fw-bold">Municipio origen: </label>
+						<input type="text" class="form-control" id="municipio_origen_modal" name="municipio_origen_modal" disabled>
+					</div>
+
+					<div class="col-12">
+						<hr>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
 						<label for="pais_modal" class="form-label fw-bold">Pais: </label>
 						<select class="form-select" id="pais_modal" name="pais_modal" required disabled>
-							<option selected disabled value="">Seleccione...</option>
+							<option selected disabled value="">Selecciona...</option>
 							<?php foreach ($body_data->paises as $index => $pais) { ?>
 								<option value="<?= $pais->ISO_2 ?>" <?= $pais->ISO_2 == 'MX' ? 'selected' : '' ?>> <?= mb_strtoupper($pais->NAME, 'UTF-8') ?> </option>
 							<?php } ?>
@@ -85,7 +98,7 @@
 					</div>
 
 					<div class="col-12 col-sm-6 mb-3">
-						<label for="estado_modal" class="form-label fw-bold">Estado del denunciante: </label>
+						<label for="estado_modal" class="form-label fw-bold">Estado: </label>
 						<input type="text" class="form-control" id="estado_modal" name="estado_modal" disabled>
 					</div>
 
@@ -105,6 +118,11 @@
 					</div>
 
 					<div class="col-12 col-sm-6 mb-3">
+						<label for="cp_modal" class="form-label fw-bold">Código Postal: </label>
+						<input type="text" class="form-control" id="cp_modal" name="cp_modal" disabled>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
 						<label for="calle_modal" class="form-label fw-bold">Calle o avenida: </label>
 						<input type="text" class="form-control" id="calle_modal" name="calle_modal" disabled>
 					</div>
@@ -118,16 +136,6 @@
 						<input type="text" class="form-control" id="interior_modal" name="interior_modal" disabled>
 					</div>
 
-					<div class="col-12 col-sm-6 mb-3">
-						<label for="telefono_modal" class="form-label fw-bold">Número de télefono: </label>
-						<input type="text" class="form-control" id="telefono_modal" name="telefono_modal" disabled>
-					</div>
-
-					<div class="col-12 col-sm-6 mb-3">
-						<label for="telefono2_modal" class="form-label fw-bold">Número de télefono 2: </label>
-						<input type="text" class="form-control" id="telefono2_modal" name="telefono2_modal" disabled>
-					</div>
-
 					<div class="col-12">
 						<hr>
 					</div>
@@ -135,7 +143,7 @@
 					<div class="col-12 col-sm-6 mb-3">
 						<label for="identificacion_modal" class="form-label fw-bold">Tipo identificacion: </label>
 						<select class="form-select" id="identificacion_modal" name="identificacion_modal" required disabled>
-							<option selected disabled value="">Seleccione...</option>
+							<option selected disabled value="">Selecciona...</option>
 							<?php foreach ($body_data->tiposIdentificaciones as $index => $identificacion) { ?>
 								<option value="<?= $identificacion->PERSONATIPOIDENTIFICACIONID ?>"> <?= $identificacion->PERSONATIPOIDENTIFICACIONDESCR ?> </option>
 							<?php } ?>
@@ -150,11 +158,16 @@
 					<div class="col-12 col-sm-6 mb-3">
 						<label for="e_civil_modal" class="form-label fw-bold">Estado civil: </label>
 						<select class="form-select" id="e_civil_modal" name="e_civil_modal" required disabled>
-							<option selected disabled value="">Seleccione...</option>
+							<option selected disabled value="">Selecciona...</option>
 							<?php foreach ($body_data->edoCiviles as $index => $edo) { ?>
 								<option value="<?= $edo->PERSONAESTADOCIVILID ?>"> <?= $edo->PERSONAESTADOCIVILDESCR ?> </option>
 							<?php } ?>
 						</select>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
+						<label for="escolaridad_modal" class="form-label fw-bold ">Escolaridad:</label>
+						<input class="form-control" id="escolaridad_modal" name="escolaridad_modal" type="text" disabled>
 					</div>
 
 					<div class="col-12 col-sm-6 mb-3">
@@ -165,6 +178,20 @@
 					<div class="col-12 col-sm-6 mb-3">
 						<label for="discapacidad_modal" class="form-label fw-bold">Discapacidad: </label>
 						<input type="text" class="form-control" id="discapacidad_modal" name="discapacidad_modal" disabled>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
+						<label for="leer_modal" class="form-label fw-bold">¿Sabe leer?: </label>
+						<input type="text" class="form-control" id="leer_modal" name="leer_modal" disabled>
+					</div>
+
+					<div class="col-12 col-sm-6 mb-3">
+						<label for="escribir_modal" class="form-label fw-bold">¿Sabe escribir?: </label>
+						<input type="text" class="form-control" id="escribir_modal" name="escribir_modal" disabled>
+					</div>
+
+					<div class="col-12">
+						<hr>
 					</div>
 
 					<div class="col-12 col-sm-6 mb-3">

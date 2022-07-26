@@ -7,6 +7,6 @@ use CodeIgniter\Model;
 class VehiculoTipoModel extends Model
 {
 	protected $DBGroup          = 'default';
-	protected $table            = 'CATEGORIA_VEHICULOTIPO';
+	protected $table            = 'VEHICULOTIPO';
 	protected $allowedFields    = [];
 }

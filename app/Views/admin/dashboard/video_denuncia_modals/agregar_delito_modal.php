@@ -1,4 +1,4 @@
-<div class="modal fade shadow" id="delito_modal" tabindex="-1" role="dialog" aria-labelledby="DelitoModal" aria-hidden="true">
+<div class="modal fade shadow" id="delito_modal" tabindex="-1" role="dialog" aria-labelledby="DelitoModal" aria-hidden="true" data-backdrop="false">
 	<div class="modal-dialog modal-dialog-centered mw-100 w-50">
 		<div class="modal-content">
 			<div class="modal-header bg-secondary text-primary">

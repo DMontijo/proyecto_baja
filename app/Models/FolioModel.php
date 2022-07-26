@@ -10,17 +10,15 @@ class FolioModel extends Model
 	protected $table            = 'FOLIO';
 	protected $allowedFields    = [
 		'FOLIOID',
+		'ANO',
 		'EXPEDIENTEID',
 		'DENUNCIANTEID',
 		'AGENTEATENCIONID',
 		'AGENTEFIRMAID',
 		'STATUS',
 		'NOTASAGENTE',
-		'ENLACEVIDEO',
 		'ESTADOID',
 		'MUNICIPIOID',
-		'ANO',
-		'CORRELATIVO',
 		'HECHOMEDIOCONOCIMIENTOID',
 		'HECHOFECHA',
 		'HECHOHORA',
@@ -62,7 +60,7 @@ class FolioModel extends Model
 		'EXHORTOAUTORIDADID',
 		'HECHOCLASIFICACIONLUGARID',
 		'HECHOVIALIDADID',
-		'DELITODENUNCIA',
+		'HECHODELITO',
 		'DERECHOS',
 	];
 }

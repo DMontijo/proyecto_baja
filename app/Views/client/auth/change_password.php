@@ -13,7 +13,7 @@
 					<div class="card-body">
 						<h4 class="fw-bold text-center text-blue mb-5">ACTUALIZAR CONTRASEÑA</h4>
 						<form action="<?= base_url('/denuncia/change_password') ?>" method="post" class="row needs-validation" novalidate>
-							<input type="text" name="id" value="<?= $body_data->ID_DENUNCIANTE ?>" hidden>
+							<input type="text" name="id" value="<?= $body_data->DENUNCIANTEID ?>" hidden>
 							<div class="col-12 mb-3">
 								<label for="password" class="form-label fw-bold">Nueva contraseña</label>
 								<input type="password" class="form-control" id="password" name="password" required minlength="6">

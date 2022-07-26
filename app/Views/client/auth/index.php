@@ -40,7 +40,7 @@
 										<form id="client_login_form" action="<?= base_url("denuncia/login_auth") ?>" method="post" class="row g-3 needs-validation" novalidate>
 											<div class="col-12">
 												<label for="correo" class="form-label fw-bold">Correo electrónico</label>
-												<input type="email" class="form-control" id="correo" name="correo" required autofocus>
+												<input type="email" class="form-control" id="correo" name="correo" required>
 											</div>
 
 											<div class="col-12">
@@ -86,7 +86,7 @@
 	<script>
 		Swal.fire({
 			icon: 'success',
-			text: '<?= session()->getFlashdata('created') ?>',
+			html: '<strong><?= session()->getFlashdata('created') ?></strong>',
 			confirmButtonColor: '#bf9b55',
 		})
 	</script>

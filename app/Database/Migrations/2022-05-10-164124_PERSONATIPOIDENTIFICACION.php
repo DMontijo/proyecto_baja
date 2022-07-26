@@ -31,11 +31,11 @@ class PERSONATIPOIDENTIFICACION extends Migration
 			],
 		]);
 		$this->forge->addKey('PERSONATIPOIDENTIFICACIONID', TRUE);
-		$this->forge->createTable('CATEGORIA_PERSONATIPOIDENTIFICACION');
+		$this->forge->createTable('PERSONATIPOIDENTIFICACION');
 	}
 
 	public function down()
 	{
-		$this->forge->dropTable('CATEGORIA_PERSONATIPOIDENTIFICACION');
+		$this->forge->dropTable('PERSONATIPOIDENTIFICACION');
 	}
 }

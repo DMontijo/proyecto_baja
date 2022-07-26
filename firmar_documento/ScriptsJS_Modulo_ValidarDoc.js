@@ -64,7 +64,7 @@ function XML_startUploading() {
             customClass: {
               confirmButton: 'swalBtnColor'
             },
-            title: '¡Seleccione el archivo .xml a subir!',
+            title: '¡Selecciona el archivo .xml a subir!',
             icon: 'error'
           });
         return false;
@@ -75,7 +75,7 @@ function XML_startUploading() {
             customClass: {
               confirmButton: 'swalBtnColor'
             },
-            title: '¡Seleccione el archivo .pub a subir!',
+            title: '¡Selecciona el archivo .pub a subir!',
             icon: 'error'
           });
         return false;

@@ -46,7 +46,7 @@ function FIEL_startUploading() {
     
 
     if (document.getElementById("ArchPDF").value.length === 0){
-        alert("¡Seleccione el archivo .pdf a subir!.");
+        alert("¡Selecciona el archivo .pdf a subir!.");
         return false;
     }
     

@@ -48,6 +48,7 @@ $routes->group('admin', function ($routes) {
 		$routes->get('/', 'admin/DashboardController::index');
 
 		$routes->get('usuarios', 'admin/DashboardController::usuarios');
+		$routes->get('firma', 'admin/FirmaController::index');
 		$routes->get('firmas', 'admin/DashboardController::firmas');
 
 		$routes->get('nuevo_usuario', 'admin/DashboardController::nuevo_usuario');
@@ -74,7 +75,6 @@ $routes->group('admin', function ($routes) {
 		$routes->get('orden-proteccion-pertenencia', 'PDFController::proteccionPertenencia');
 		$routes->get('orden-proteccion-rondines', 'PDFController::proteccionRondines');
 		$routes->post('generaPDFE', 'PDFController::PDFExtravio');
-
 	});
 });
 
@@ -122,7 +122,6 @@ $routes->group('data', function ($routes) {
 	$routes->post('get-link-videodenuncia', 'client/DashboardController::getLinkVideodenuncia');
 
 	$routes->post('get-folio-information', 'admin/DashboardController::getFolioInformation');
-	$routes->post('get-persona-fisica-by-id', 'admin/DashboardController::findPersonaFisicaById');
 	$routes->post('update-status-folio', 'admin/DashboardController::updateStatusFolio');
 
 	$routes->post('get-oficinas-by-municipio', 'admin/DashboardController::getOficinasByMunicipio');
@@ -143,7 +142,7 @@ $routes->group('data', function ($routes) {
 	$routes->post('save-in-justicia', 'admin/DashboardController::saveInJusticia');
 	$routes->post('restore-folio', 'admin/DashboardController::restoreFolio');
 
-	$routes->post('get-persona-fisica-by-id', 'admin/DashboardController::findPersonaFisicaById');
+	$routes->post('get-persona-fisica-by-id', 'admin/DashboardController::getPersonaFisicaById');
 	$routes->post('get-persona-domicilio-by-id', 'admin/DashboardController::findPersonadDomicilioById');
 	$routes->post('get-persona-vehiculo-by-id', 'admin/DashboardController::findPersonadVehiculoById');
 	$routes->post('join', 'admin/DashboardController::joinFisico');

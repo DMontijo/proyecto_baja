@@ -38,29 +38,31 @@
 					<i class="fas fa-video c-sidebar-nav-icon"></i> Video denuncia
 				</a>
 			</li>
-			<li class="c-sidebar-nav-item">
-				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/denuncia-anonima">
-					<i class="fas fa-phone-alt c-sidebar-nav-icon"></i> Denuncia anónima
-				</a>
-			</li>
+			<?php if (false) : ?>
+				<li class="c-sidebar-nav-item">
+					<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/denuncia-anonima">
+						<i class="fas fa-phone-alt c-sidebar-nav-icon"></i> Denuncia anónima
+					</a>
+				</li>
+			<?php endif; ?>
 			<li class="c-sidebar-nav-item">
 				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/folios">
 					<i class="fas fa-archive c-sidebar-nav-icon"></i> Folios
 				</a>
 			</li>
+			
 			<li class="c-sidebar-nav-item">
 				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/solicitudes_extravios">
-				<i class="fas fa-folder c-sidebar-nav-icon"></i> Solicitudes de extravíos
+					<i class="fas fa-folder c-sidebar-nav-icon"></i> Constancias de extravío
 				</a>
 			</li>
-			<?php if (session('ROLID') == 1 || session('ROLID') == 2 || session('ROLID') == 3 || session('ROLID') == 4 || session('ROLID') == 5) : ?>
-				<li class="c-sidebar-nav-item">
-					<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/firmas">
-						<i class="fas fa-file-alt c-sidebar-nav-icon"></i> Firmar documentos
-					</a>
-				</li>
-			<?php endif; ?>
-			<?php if (session('ROLID') == 1 || session('ROLID') == 2 || session('ROLID') == 3) : ?>
+
+			<li class="c-sidebar-nav-item">
+				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/firmas">
+					<i class="fas fa-file-alt c-sidebar-nav-icon"></i> Firmar documentos
+				</a>
+			</li>
+			<?php if (session('ROLID') == 1) : ?>
 				<li class="c-sidebar-nav-item">
 					<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/usuarios">
 						<i class="fas fa-users c-sidebar-nav-icon"></i> Usuarios

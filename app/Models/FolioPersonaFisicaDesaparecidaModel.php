@@ -11,6 +11,7 @@ class FolioPersonaFisicaDesaparecidaModel extends Model
 	protected $allowedFields    = [
 		'FOLIOID',
 		'PERSONAFISICAID',
+		'ANO',
 		'ESTATURA',
 		'PESO',
 		'COMPLEXION',

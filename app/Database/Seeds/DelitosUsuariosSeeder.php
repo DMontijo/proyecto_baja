@@ -40,6 +40,6 @@ class DelitosUsuariosSeeder extends Seeder
 			array('DELITO' => 'USURPACIÓN Ó SUPLANTACIÓN DE IDENTIDAD.', 'IMPORTANCIA' => '1'),
 			array('DELITO' => 'VIOLENCIA FAMILIAR', 'IMPORTANCIA' => '2'),
 		];
-		$this->db->table('DELITOS_USUARIOS')->insertBatch($data);
+		$this->db->table('DELITOSVIDEODENUNCIA')->insertBatch($data);
 	}
 }

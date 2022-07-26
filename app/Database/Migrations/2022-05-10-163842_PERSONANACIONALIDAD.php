@@ -21,11 +21,11 @@ class PERSONANACIONALIDAD extends Migration
             
         ]);
         $this->forge->addKey('PERSONANACIONALIDADID', TRUE);
-        $this->forge->createTable('CATEGORIA_PERSONANACIONALIDAD');
+        $this->forge->createTable('PERSONANACIONALIDAD');
     }
 
     public function down()
     {
-        $this->forge->dropTable('CATEGORIA_PERSONANACIONALIDAD');
+        $this->forge->dropTable('PERSONANACIONALIDAD');
     }
 }

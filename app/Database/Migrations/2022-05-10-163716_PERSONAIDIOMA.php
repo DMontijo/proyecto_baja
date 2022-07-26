@@ -21,11 +21,11 @@ class PERSONAIDIOMA extends Migration
             
         ]);
         $this->forge->addKey('PERSONAIDIOMAID', TRUE);
-        $this->forge->createTable('CATEGORIA_PERSONAIDIOMA');
+        $this->forge->createTable('PERSONAIDIOMA');
     }
 
     public function down()
     {
-        $this->forge->dropTable('CATEGORIA_PERSONAIDIOMA');
+        $this->forge->dropTable('PERSONAIDIOMA');
     }
 }

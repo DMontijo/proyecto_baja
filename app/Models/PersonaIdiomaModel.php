@@ -7,6 +7,6 @@ use CodeIgniter\Model;
 class PersonaIdiomaModel extends Model
 {
 	protected $DBGroup          = 'default';
-	protected $table            = 'CATEGORIA_PERSONAIDIOMA';
+	protected $table            = 'PERSONAIDIOMA';
 	protected $allowedFields    = [];
 }

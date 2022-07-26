@@ -39,7 +39,7 @@
 						<div class="form-group">
 							<label for="colonia" class="form-label font-weight-bold">Colonia:</label>
 							<select class="form-control" id="colonia_select" name="colonia_select">
-								<option selected disabled value="">Seleccione la colonia</option>
+								<option selected disabled value="">Selecciona la colonia</option>
 							</select>
 							<input type="text" class="form-control d-none" id="colonia" name="colonia" maxlength="100">
 						</div>

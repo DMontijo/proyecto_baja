@@ -21,7 +21,7 @@ function FIEL_DirectSign() {
 			customClass: {
 				confirmButton: "swalBtnColor"
 			},
-			title: "¡Seleccione el archivo .pdf a firmar!",
+			title: "¡Selecciona el archivo .pdf a firmar!",
 			icon: "error"
 		});
 		return false;
@@ -32,7 +32,7 @@ function FIEL_DirectSign() {
 			customClass: {
 				confirmButton: "swalBtnColor"
 			},
-			title: "¡Seleccione el archivo .key a subir!",
+			title: "¡Selecciona el archivo .key a subir!",
 			icon: "error"
 		});
 		return false;
@@ -43,7 +43,7 @@ function FIEL_DirectSign() {
 			customClass: {
 				confirmButton: "swalBtnColor"
 			},
-			title: "¡Seleccione el archivo .cer a subir!",
+			title: "¡Selecciona el archivo .cer a subir!",
 			icon: "error"
 		});
 		return false;
@@ -102,7 +102,7 @@ function FIEL_fileSelected(Obj) {
 					confirmButton: "swalBtnColor"
 				},
 				title:
-					"¡El archivo seleccionado no es válido, seleccione un archivo con extensión .pdf!",
+					"¡El archivo seleccionado no es válido, selecciona un archivo con extensión .pdf!",
 				icon: "error"
 			});
 			document.getElementById("ArchFIELpdf").value = "";
@@ -116,7 +116,7 @@ function FIEL_fileSelected(Obj) {
 					confirmButton: "swalBtnColor"
 				},
 				title:
-					"¡El archivo seleccionado no es válido, seleccione un archivo con extensión .key!",
+					"¡El archivo seleccionado no es válido, selecciona un archivo con extensión .key!",
 				icon: "error"
 			});
 			document.getElementById("ArchFIELkey").value = "";
@@ -130,7 +130,7 @@ function FIEL_fileSelected(Obj) {
 					confirmButton: "swalBtnColor"
 				},
 				title:
-					"¡El archivo seleccionado no es válido, seleccione un archivo con extensión .cer!",
+					"¡El archivo seleccionado no es válido, selecciona un archivo con extensión .cer!",
 				icon: "error"
 			});
 			document.getElementById("ArchFIELcer").value = "";

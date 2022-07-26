@@ -10,8 +10,8 @@ class FOLIOPERSONAFISDOMICILIO extends Migration
 	{
 		$this->forge->addField([
 			'FOLIOID' => [
-				'type' => 'VARCHAR',
-				'constraint' => '16',
+				'type' => 'INT',
+				'unsigned' => TRUE,
 			],
 			'PERSONAFISICAID' => [
 				'type' => 'INT',
@@ -20,6 +20,10 @@ class FOLIOPERSONAFISDOMICILIO extends Migration
 			'DOMICILIOID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
+			],
+			'ANO' => [
+				'type' => 'INT',
+				'constraint' => '4',
 			],
 			'CP' => [
 				'type' => 'VARCHAR',
@@ -97,6 +101,7 @@ class FOLIOPERSONAFISDOMICILIO extends Migration
 		$this->forge->addKey('FOLIOID', TRUE);
 		$this->forge->addKey('PERSONAFISICAID', TRUE);
 		$this->forge->addKey('DOMICILIOID', TRUE);
+		$this->forge->addKey('ANO', TRUE);
 		$this->forge->createTable('FOLIOPERSONAFISDOMICILIO');
 	}
 

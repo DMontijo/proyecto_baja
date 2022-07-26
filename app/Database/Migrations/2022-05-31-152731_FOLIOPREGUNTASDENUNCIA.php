@@ -10,8 +10,12 @@ class FOLIOPREGUNTASDENUNCIA extends Migration
 	{
 		$this->forge->addField([
 			'FOLIOID' => [
-				'type' => 'VARCHAR',
-				'constraint' => '16',
+				'type' => 'INT',
+				'unsigned' => TRUE,
+			],
+			'ANO' => [
+				'type' => 'INT',
+				'constraint' => '4',
 			],
 			'ES_MENOR' => [
 				'type' => 'CHAR',
@@ -57,6 +61,7 @@ class FOLIOPREGUNTASDENUNCIA extends Migration
 			'FECHAACTUALIZACION DATETIME ON UPDATE CURRENT_TIMESTAMP',
 		]);
 		$this->forge->addKey('FOLIOID', TRUE);
+		$this->forge->addKey('ANO', TRUE);
 		$this->forge->createTable('FOLIOPREGUNTASDENUNCIA');
 	}
 

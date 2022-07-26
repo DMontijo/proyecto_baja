@@ -6,10 +6,10 @@
 		Usted ha generado un nuevo registro en el Centro de Denuncia Tecnológica.
 		<br>Para acceder debes ingresar los siguientes datos
 	</p>
-	<p style="font-weight: bold;">
-		USUARIO: <?= $email ?><br>
-		CONTRASEÑA: <?= $password ?>
-	</p>
+	<h2 style="font-weight: bold;">
+		USUARIO: <br><?= $email ?><br><br>
+		CONTRASEÑA: <br><?= $password ?>
+	</h2>
 	<br>
 	<a class="btn" href="<?= base_url('/denuncia') ?>">
 		INICIAR VIDEO DENUNCIA

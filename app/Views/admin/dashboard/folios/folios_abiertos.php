@@ -16,21 +16,23 @@
 						<table id="folios_abiertos" class="table table-bordered table-striped">
 							<thead>
 								<tr>
-									<th>FOLIO</th>
-									<th>FECHA</th>
-									<th>DELITO</th>
-									<th>ESTADO</th>
-									<th></th>
+									<th class="text-center">FOLIO</th>
+									<th class="text-center">FECHA</th>
+									<th class="text-center">DELITO</th>
+									<th class="text-center">DENUNCIANTE</th>
+									<th class="text-center">ESTADO</th>
+									<th class="text-center"></th>
 								</tr>
 							</thead>
 							<tbody>
 								<?php foreach ($body_data as $index => $folio) { ?>
 									<tr>
-										<th scope="row"><?= $folio->FOLIOID ?></th>
-										<td><?= $folio->FECHAREGISTRO ?></td>
-										<td><?= $folio->DELITODENUNCIA ?></td>
-										<td><?= $folio->STATUS ?></td>
-										<td><a type="button" href="<?= base_url('/admin/dashboard/video-denuncia?folio=') . $folio->FOLIOID ?>" class="btn btn-primary text-white"><i class="fas fa-eye"></i></a></td>
+										<td class="text-center"><?= $folio->FOLIOID ?></td>
+										<td class="text-center"><?= $folio->FECHAREGISTRO ?></td>
+										<td class="text-center"><?= $folio->HECHODELITO ?></td>
+										<td class="text-center"><?= $folio->NOMBRE ?> <?= $folio->APELLIDO_PATERNO ?></td>
+										<td class="text-center"><?= $folio->STATUS ?></td>
+										<td class="text-center"><a type="button" href="<?= base_url('/admin/dashboard/video-denuncia?folio=') . $folio->FOLIOID ?>" class="btn btn-primary text-white"><i class="fas fa-eye"></i></a></td>
 									</tr>
 								<?php } ?>
 							</tbody>

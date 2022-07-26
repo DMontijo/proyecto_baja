@@ -20,11 +20,11 @@ class VEHICULOCOLOR extends Migration
             ],
         ]);
         $this->forge->addKey('VEHICULOCOLORID', TRUE);
-        $this->forge->createTable('CATEGORIA_VEHICULOCOLOR');
+        $this->forge->createTable('VEHICULOCOLOR');
     }
 
     public function down()
     {
-        $this->forge->dropTable('CATEGORIA_VEHICULOCOLOR');
+        $this->forge->dropTable('VEHICULOCOLOR');
     }
 }

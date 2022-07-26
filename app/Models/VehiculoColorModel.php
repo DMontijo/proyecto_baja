@@ -7,6 +7,6 @@ use CodeIgniter\Model;
 class VehiculoColorModel extends Model
 {
 	protected $DBGroup          = 'default';
-	protected $table            = 'CATEGORIA_VEHICULOCOLOR';
+	protected $table            = 'VEHICULOCOLOR';
 	protected $allowedFields    = [];
 }

@@ -46,7 +46,7 @@ class OTPController extends BaseController
 
 	public function sendEmailOTP()
 	{
-		$to = $this->request->getPost('email');
+		$to = trim($this->request->getPost('email'));
 		$otp = $this->_generarOTP();
 
 		date_default_timezone_set('America/Tijuana');

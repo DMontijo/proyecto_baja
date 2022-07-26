@@ -24,12 +24,12 @@
 				</div>
 			</div>
 		</div>
-		<h4 class="text-center text-blue fw-bold my-4">BIENVENID@ <?= $session->NOMBRE ?> <?= $session->APELLIDO_PATERNO ?> <?= $session->APELLIDO_MATERNO ?></h4>
+		<h4 id="titulo" class="text-center text-blue fw-bold my-4">BIENVENID@ <?= $session->NOMBRE ?> <?= $session->APELLIDO_PATERNO ?> <?= $session->APELLIDO_MATERNO ?></h4>
 		<div class="card rounded shadow border-0">
 			<div class="card-body py-5 p-sm-5">
 				<div class="container">
 					<h1 class="text-center fw-bolder pb-1 text-blue">DENUNCIA</h1>
-					<p class="text-center fw-bold text-blue ">Llena los campos siguientes para continuar tu denuncia</p>
+					<p class="text-center fw-bold text-blue ">Llene los campos siguientes para continuar su denuncia</p>
 					<p class="text-center pb-3">Los campos con un <span class="asterisco-rojo">*</span> son obligatorios</p>
 					<div class="progress mb-4">
 						<div id="progress-bar" aria-valuemax="100" aria-valuemin="0" aria-valuenow="50" class="progress-bar progress-bar-striped progress-bar-animated bg-yellow" role="progressbar"></div>
@@ -171,7 +171,7 @@
 		document.querySelector('#aviso_modal').addEventListener('hidden.bs.modal', (event) => {
 			$.ajax({
 				data: {
-					'id': '<?= $session->ID_DENUNCIANTE ?>'
+					'id': '<?= $session->DENUNCIANTEID ?>'
 				},
 				url: "<?= base_url('/data/get-folios-user-unattended') ?>",
 				method: "POST",
@@ -179,7 +179,8 @@
 			}).done((response) => {
 				if (response.length > 0) {
 					document.querySelector('#open_folios_modal #folio_num_span').innerHTML = response[0].FOLIOID;
-					document.querySelector('#open_folios_modal #folio_delito_span').innerHTML = response[0].DELITODENUNCIA;
+					document.querySelector('#open_folios_modal #folio_delito_span').innerHTML = response[0].HECHODELITO;
+					document.querySelector('#open_input_year').value = response[0].ANO;
 					$('#open_folios_modal').modal('show');
 				}
 			}).fail(function(jqXHR, textStatus) {});
@@ -222,6 +223,15 @@
 				document.querySelector('#numero_ext_menor').removeAttribute('required');
 				document.querySelector('#fecha_nacimiento_menor').removeAttribute('required');
 				document.querySelector('#edad_menor').removeAttribute('required');
+				document.querySelector('#nacionalidad_menor').removeAttribute('required');
+				document.querySelector('#estado_origen_menor').removeAttribute('required');
+				document.querySelector('#municipio_origen_menor').removeAttribute('required');
+
+				let radiosSexoMenor = document.querySelectorAll('input[name="sexo_menor"]');
+				radiosSexoMenor.forEach((radio) => {
+					radio.removeAttribute('required');
+				});
+
 			} else if (
 				document.querySelector('input[name="es_menor"]:checked').value === 'SI' &&
 				document.querySelector('input[name="esta_desaparecido"]:checked').value == "NO"
@@ -241,6 +251,14 @@
 				document.querySelector('#numero_ext_menor').setAttribute('required', true);
 				document.querySelector('#fecha_nacimiento_menor').setAttribute('required', true);
 				document.querySelector('#edad_menor').setAttribute('required', true);
+				document.querySelector('#nacionalidad_menor').setAttribute('required', true);
+				document.querySelector('#estado_origen_menor').setAttribute('required', true);
+				document.querySelector('#municipio_origen_menor').setAttribute('required', true);
+
+				let radiosSexoMenor = document.querySelectorAll('input[name="sexo_menor"]');
+				radiosSexoMenor.forEach((radio) => {
+					radio.setAttribute('required', true);
+				});
 
 			} else if (document.querySelector('input[name="es_menor"]:checked').value === 'NO') {
 				document.getElementById('datos_menor').classList.remove('step');
@@ -255,11 +273,18 @@
 				document.querySelector('#numero_ext_menor').removeAttribute('required');
 				document.querySelector('#fecha_nacimiento_menor').removeAttribute('required');
 				document.querySelector('#edad_menor').removeAttribute('required');
+				document.querySelector('#nacionalidad_menor').removeAttribute('required');
+				document.querySelector('#estado_origen_menor').removeAttribute('required');
+				document.querySelector('#municipio_origen_menor').removeAttribute('required');
+
+				let radiosSexoMenor = document.querySelectorAll('input[name="sexo_menor"]');
+				radiosSexoMenor.forEach((radio) => {
+					radio.removeAttribute('required');
+				});
 			}
 
 			if (document.querySelector('input[name="esta_desaparecido"]:checked').value === 'SI') {
 				document.getElementById('datos_desaparecido').classList.add('step');
-
 				document.querySelector('#nombre_des').setAttribute('required', true);
 				document.querySelector('#apellido_paterno_des').setAttribute('required', true);
 				document.querySelector('#pais_des').setAttribute('required', true);
@@ -268,12 +293,20 @@
 				document.querySelector('#colonia_des').setAttribute('required', true);
 				document.querySelector('#colonia_des_input').setAttribute('required', true);
 				document.querySelector('#calle_des').setAttribute('required', true);
+				document.querySelector('#fecha_nacimiento_des').setAttribute('required', true);
 				document.querySelector('#numero_ext_des').setAttribute('required', true);
 				document.querySelector('#edad_des').setAttribute('required', true);
+				document.querySelector('#nacionalidad_des').setAttribute('required', true);
+				document.querySelector('#estado_origen_des').setAttribute('required', true);
+				document.querySelector('#municipio_origen_des').setAttribute('required', true);
+
+				let radiosSexoDes = document.querySelectorAll('input[name="sexo_des"]');
+				radiosSexoDes.forEach((radio) => {
+					radio.setAttribute('required', true);
+				});
 
 			} else {
 				document.getElementById('datos_desaparecido').classList.remove('step');
-
 				document.querySelector('#nombre_des').removeAttribute('required');
 				document.querySelector('#apellido_paterno_des').removeAttribute('required');
 				document.querySelector('#pais_des').removeAttribute('required');
@@ -285,6 +318,15 @@
 				document.querySelector('#numero_ext_des').removeAttribute('required');
 				document.querySelector('#numero_int_des').removeAttribute('required');
 				document.querySelector('#edad_des').removeAttribute('required');
+				document.querySelector('#nacionalidad_des').removeAttribute('required');
+				document.querySelector('#estado_origen_des').removeAttribute('required');
+				document.querySelector('#municipio_origen_des').removeAttribute('required');
+				document.querySelector('#fecha_nacimiento_des').removeAttribute('required');
+
+				let radiosSexoDes = document.querySelectorAll('input[name="sexo_des"]');
+				radiosSexoDes.forEach((radio) => {
+					radio.removeAttribute('required');
+				});
 			}
 
 			if (document.querySelector("#delito").value == "ROBO DE VEHÍCULO") {
@@ -321,6 +363,7 @@
 				}
 			}
 			progress.style.width = `${currentStep*width}%`
+			document.querySelector('#titulo').scrollIntoView();
 		} else {
 			console.log('NO SE VALIDO');
 			submitBtn.click();
@@ -404,6 +447,7 @@
 					document.querySelector('input[name="tiene_discapacidad"]:checked') &&
 					document.querySelector('input[name="es_vulnerable"]:checked') &&
 					document.querySelector('input[name="fue_con_arma"]:checked') &&
+					document.querySelector('input[name="lesiones"]:checked') &&
 					document.querySelector('input[name="esta_desaparecido"]:checked')
 				) {
 					return true;
@@ -418,10 +462,15 @@
 					document.querySelector('#pais_menor').value != '' &&
 					document.querySelector('#estado_menor').value != '' &&
 					document.querySelector('#municipio_menor').value != '' &&
+					document.querySelector('#colonia_menor').value != '' &&
 					document.querySelector('#calle_menor').value != '' &&
 					document.querySelector('#numero_ext_menor').value != '' &&
 					document.querySelector('#fecha_nacimiento_menor').value != '' &&
-					document.querySelector('#edad_menor').value != ''
+					document.querySelector('#edad_menor').value != '' &&
+					document.querySelector('input[name="sexo_menor"]:checked') &&
+					document.querySelector('#nacionalidad_menor').value != '' &&
+					document.querySelector('#estado_origen_menor').value != '' &&
+					document.querySelector('#municipio_origen_menor').value != ''
 				) {
 					return true
 				} else {
@@ -435,9 +484,15 @@
 					document.querySelector('#pais_des').value != '' &&
 					document.querySelector('#estado_des').value != '' &&
 					document.querySelector('#municipio_des').value != '' &&
+					document.querySelector('#colonia_des').value != '' &&
 					document.querySelector('#calle_des').value != '' &&
 					document.querySelector('#numero_ext_des').value != '' &&
-					document.querySelector('#edad_des').value != ''
+					document.querySelector('#fecha_nacimiento_des').value != '' &&
+					document.querySelector('#edad_des').value != '' &&
+					document.querySelector('input[name="sexo_des"]:checked') &&
+					document.querySelector('#nacionalidad_des').value != '' &&
+					document.querySelector('#estado_origen_des').value != '' &&
+					document.querySelector('#municipio_origen_des').value != ''
 				) {
 					return true
 				} else {
@@ -473,7 +528,7 @@
 				if (true) {
 					return true
 				} else {
-					return true;
+					return false;
 				}
 				break;
 			default:

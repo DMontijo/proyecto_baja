@@ -5,7 +5,8 @@
 				<h5 class="modal-title"> <i class="bi bi-file-earmark-text-fill"></i> FOLIO ABIERTO</h5>
 			</div>
 			<div class="modal-body text-center">
-				<p>Ya cuentas con un folio abierto con número <span class="fw-bold" id="folio_num_span"></span> por el delito de <span class="fw-bold" id="folio_delito_span"></span>, continua con la denuncia.</p>
+				<p>El folio <span class="fw-bold" id="folio_num_span"></span> por el delito de <span class="fw-bold" id="folio_delito_span"></span> aún no ha sido atendido, continua con la denuncia.</p>
+				<input type="text" id="open_input_year" hidden>
 				<a id="btn-inicia-denuncia" class="btn btn-secondary mb-3" href="<?= base_url('denuncia/logout') ?>"><i class="bi bi-box-arrow-left"></i> Cerrar sesión</a>
 				<button id="btn-inicia-denuncia" type="button" name="btn-inicia-denuncia" class="btn btn-primary  mb-3" onclick="iniciarDenuncia();"><i class="bi bi-camera-video-fill"></i> Iniciar denuncia</button>
 			</div>
@@ -18,10 +19,9 @@
 		console.log('Click en boton');
 		$.ajax({
 			data: {
-				'id': '<?= $session->ID_DENUNCIANTE ?>',
-				'edad': '<?= $session->EDAD ?>',
+				'id': '<?= $session->DENUNCIANTEID ?>',
 				'folio': document.querySelector('#folio_num_span').innerHTML,
-				'sexo_denunciante': '<?= $session->SEXO ?>',
+				'year': document.querySelector('#open_input_year').value
 			},
 			url: "<?= base_url('/data/get-link-videodenuncia') ?>",
 			method: "POST",

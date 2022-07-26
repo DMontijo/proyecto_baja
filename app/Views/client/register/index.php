@@ -53,6 +53,28 @@
 							<input type="text" class="form-control" id="apellido_materno" name="apellido_materno" maxlength="100">
 						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+							<label for="fecha_nacimiento" class="form-label fw-bold input-required">Fecha de nacimiento</label>
+							<input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" required max="<?= ((int)date("Y")) - 18 . '-' . date("m") . '-' . date("d") ?>">
+							<div class="invalid-feedback">
+								La fecha de nacimiento es obligatoria
+							</div>
+						</div>
+						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+							<label for="sexo" class="form-label fw-bold input-required">Sexo</label>
+							<br>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="sexo" id="sexo" value="M" required>
+								<label class="form-check-label" for="sexo">MASCULINO</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="sexo" id="sexo" value="F" required>
+								<label class="form-check-label" for="sexo">FEMENINO</label>
+							</div>
+						</div>
+						<div class="col-12">
+							<hr>
+						</div>
+						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="correo" class="form-label fw-bold input-required">Correo electrónico</label>
 							<div class="input-group">
 								<span class="input-group-text" id="correo_vanity"><i class="bi bi-envelope-fill"></i></span>
@@ -63,34 +85,30 @@
 							</div>
 						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="fecha_nacimiento" class="form-label fw-bold input-required">Fecha de nacimiento</label>
-							<input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" required max="<?= date("Y-m-d") ?>">
-							<div class="invalid-feedback">
-								La fecha de nacimiento es obligatoria
-							</div>
+							<label for="telefono" class="form-label fw-bold input-required">Número de télefono</label>
+							<input type="number" class="form-control" id="telefono" name="telefono" required max="99999999999999999999" minlenght="6" maxlength="20" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+							<!-- <small>Mínimo 6 digitos</small> -->
+							<input type="number" id="codigo_pais" name="codigo_pais" maxlength="3" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" hidden>
 						</div>
-						<input class="form-control" id="edad" name="edad" maxlength="3" type="text" hidden>
+
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="sexo" class="form-label fw-bold input-required">Sexo</label>
-							<br>
-							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio" name="sexo" id="sexo" value="M" required>
-								<label class="form-check-label" for="flexRadioDefault1">MASCULINO</label>
-							</div>
-							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio" name="sexo" id="sexo" value="F" required>
-								<label class="form-check-label" for="flexRadioDefault2">FEMENINO</label>
-							</div>
+							<label for="telefono2" class="form-label fw-bold">Número de télefono adicional</label>
+							<input type="number" class="form-control" id="telefono2" name="telefono2" max="99999999999999999999" minlenght="6" maxlength="20" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+							<!-- <small>Mínimo 6 digitos</small> -->
+							<input type="number" id="codigo_pais_2" name="codigo_pais_2" maxlength="3" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" hidden>
 						</div>
 					</div>
 				</div>
 
 				<div class="col-12 d-none step">
 					<div class="row">
+						<div class="col-12">
+							<h3 class="text-center mb-3 fw-bold">DATOS DE ORIGEN DEL DENUNCIANTE</h3>
+						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="nacionalidad" class="form-label fw-bold input-required">Nacionalidad</label>
 							<select class="form-select" id="nacionalidad" name="nacionalidad" required>
-								<option selected disabled value="">Seleccione la nacionalidad</option>
+								<option selected disabled value="">Selecciona la nacionalidad</option>
 								<?php foreach ($body_data->nacionalidades as $index => $nac) { ?>
 									<option value="<?= $nac->PERSONANACIONALIDADID ?>" <?= $nac->PERSONANACIONALIDADDESCR == 'MEXICANA' ? 'selected' : '' ?>> <?= $nac->PERSONANACIONALIDADDESCR ?> </option>
 								<?php } ?>
@@ -101,9 +119,32 @@
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+							<label for="estado_select_origen" class="form-label fw-bold input-required">Estado origen</label>
+							<select class="form-select" id="estado_select_origen" name="estado_select_origen" required>
+								<option selected disabled value="">Selecciona el estado</option>
+								<?php foreach ($body_data->estados as $index => $estado) { ?>
+									<option value="<?= $estado->ESTADOID ?>"> <?= $estado->ESTADODESCR ?> </option>
+								<?php } ?>
+							</select>
+							<div class="invalid-feedback">
+								El estado es obligatorio
+							</div>
+						</div>
+
+						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+							<label for="municipio" class="form-label fw-bold input-required">Municipio origen</label>
+							<select class="form-select" id="municipio_select_origen" name="municipio_select_origen" required>
+								<option selected disabled value="">Selecciona el municipio</option>
+							</select>
+							<div class="invalid-feedback">
+								El municipio es obligatorio
+							</div>
+						</div>
+
+						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="idioma" class="form-label fw-bold input-required">Idioma</label>
 							<select class="form-select" id="idioma" name="idioma" required>
-								<option selected disabled value="">Seleccione el idioma</option>
+								<option selected disabled value="">Selecciona el idioma</option>
 								<?php foreach ($body_data->idiomas as $index => $nac) { ?>
 									<option value="<?= $nac->PERSONAIDIOMAID ?>" <?= $nac->PERSONAIDIOMADESCR == 'ESPAÑOL' ? 'selected' : '' ?>> <?= $nac->PERSONAIDIOMADESCR ?> </option>
 								<?php } ?>
@@ -113,8 +154,21 @@
 							</div>
 						</div>
 
+						<div class="col-12">
+							<div class="alert alert-warning text-center fw-bold d-none mt-2" id="idioma_alert" role="alert">
+								Si tu idioma no es español se recomienda estar acompañado de un traductor.
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-12 d-none step">
+					<div class="row">
+						<div class="col-12">
+							<h3 class="text-center mb-3 fw-bold">DOMICILIO ACTUAL DEL DENUNCIANTE</h3>
+						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="pais_select" class="form-label fw-bold input-required">País del denunciante</label>
+							<label for="pais_select" class="form-label fw-bold input-required">País</label>
 							<select class="form-select" id="pais_select" name="pais_select" required>
 								<?php foreach ($body_data->paises as $index => $pais) { ?>
 									<option value="<?= $pais->ISO_2 ?>" <?= $pais->ISO_2 == 'MX' ? 'selected' : '' ?>> <?= mb_strtoupper($pais->NAME, 'UTF-8') ?> </option>
@@ -126,9 +180,9 @@
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="estado_select" class="form-label fw-bold input-required">Estado del denunciante</label>
+							<label for="estado_select" class="form-label fw-bold input-required">Estado</label>
 							<select class="form-select" id="estado_select" name="estado_select" required>
-								<option selected disabled value="">Seleccione el estado</option>
+								<option selected disabled value="">Selecciona el estado</option>
 								<?php foreach ($body_data->estados as $index => $estado) { ?>
 									<option value="<?= $estado->ESTADOID ?>"> <?= $estado->ESTADODESCR ?> </option>
 								<?php } ?>
@@ -139,9 +193,9 @@
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="municipio" class="form-label fw-bold input-required">Municipio del denunciante</label>
+							<label for="municipio" class="form-label fw-bold input-required">Municipio</label>
 							<select class="form-select" id="municipio_select" name="municipio_select" required>
-								<option selected disabled value="">Seleccione el municipio</option>
+								<option selected disabled value="">Selecciona el municipio</option>
 							</select>
 							<div class="invalid-feedback">
 								El municipio es obligatorio
@@ -149,20 +203,20 @@
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="localidad" class="form-label fw-bold">Localidad del denunciante</label>
+							<label for="localidad" class="form-label fw-bold">Localidad</label>
 							<select class="form-select" id="localidad_select" name="localidad_select">
-								<option selected disabled value="">Seleccione la localidad</option>
+								<option selected disabled value="">Selecciona la localidad</option>
 							</select>
 						</div>
 
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="colonia" class="form-label fw-bold input-required">Colonia del denunciante</label>
+							<label for="colonia" class="form-label fw-bold input-required">Colonia</label>
 							<select class="form-select" id="colonia_select" name="colonia_select" required>
-								<option selected disabled value="">Seleccione la colonia</option>
+								<option selected disabled value="">Selecciona la colonia</option>
 							</select>
 							<input type="text" class="form-control d-none" id="colonia" name="colonia" maxlength="100" required>
-							<small class="text-primary">Si no encuentras tu colonia selecciona otro.</small>
+							<small class="text-primary fw-bold">Si no encuentras tu colonia selecciona otro</small>
 							<div class="invalid-feedback">
 								La colonia es obligatoria
 							</div>
@@ -174,7 +228,7 @@
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="calle" class="form-label fw-bold input-required">Calle del denunciante</label>
+							<label for="calle" class="form-label fw-bold input-required">Calle</label>
 							<input type="text" class="form-control" id="calle" name="calle" maxlength="100" required>
 							<div class="invalid-feedback">
 								La calle es obligatoria
@@ -193,35 +247,18 @@
 							<label for="interior" class="form-label fw-bold">Número interior</label>
 							<input type="text" class="form-control" id="interior" name="interior" maxlength="10">
 						</div>
-
-						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="telefono" class="form-label fw-bold input-required">Número de télefono</label>
-							<input type="number" class="form-control" id="telefono" name="telefono" required min="111111" max="99999999999999999999" minlenght="6" maxlength="20" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
-							<!-- <small>Mínimo 6 digitos</small> -->
-							<input type="number" id="codigo_pais" name="codigo_pais" maxlength="3" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" hidden>
-						</div>
-
-						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="telefono2" class="form-label fw-bold">Número de télefono 2 (opcional)</label>
-							<input type="number" class="form-control" id="telefono2" name="telefono2" min="111111" max="99999999999999999999" minlenght="6" maxlength="20" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
-							<!-- <small>Mínimo 6 digitos</small> -->
-							<input type="number" id="codigo_pais_2" name="codigo_pais_2" maxlength="3" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" hidden>
-						</div>
-
-						<div class="col-12">
-							<div class="alert alert-warning text-center fw-bold d-none mt-2" id="idioma_alert" role="alert">
-								Si tu idioma no es español se recomienda estar acompañado de un traductor.
-							</div>
-						</div>
 					</div>
 				</div>
 
 				<div class="col-12 d-none step">
 					<div class="row">
+						<div class="col-12">
+							<h3 class="text-center mb-3 fw-bold">DATOS DE IDENTIFICACION DEL DENUNCIANTE</h3>
+						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="identificacion" class="form-label fw-bold input-required">Identificación</label>
 							<select class="form-select" id="identificacion" name="identificacion" required>
-								<option selected disabled value="">Seleccione la identificación</option>
+								<option selected disabled value="">Selecciona la identificación</option>
 								<?php foreach ($body_data->tiposIdentificaciones as $index => $identificacion) { ?>
 									<option value="<?= $identificacion->PERSONATIPOIDENTIFICACIONID ?>"> <?= $identificacion->PERSONATIPOIDENTIFICACIONDESCR ?> </option>
 								<?php } ?>
@@ -239,7 +276,7 @@
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="e_civil" class="form-label fw-bold input-required">Estado civil</label>
 							<select class="form-select" id="e_civil" name="e_civil" required>
-								<option selected disabled value="">Seleccione su estado civil</option>
+								<option selected disabled value="">Selecciona su estado civil</option>
 								<?php foreach ($body_data->edoCiviles as $index => $edo) { ?>
 									<option value="<?= $edo->PERSONAESTADOCIVILID ?>"> <?= $edo->PERSONAESTADOCIVILDESCR ?> </option>
 								<?php } ?>
@@ -252,14 +289,10 @@
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="escolaridad" class="form-label fw-bold input-required">Escolaridad</label>
 							<select class="form-select" id="escolaridad" name="escolaridad" required>
-								<option selected disabled value="">Seleccione la escolaridad</option>
-								<option value="NINGUNA">NINGUNA</option>
-								<option value="PRIMARIA">PRIMARIA</option>
-								<option value="SECUNDARIA">SECUNDARIA</option>
-								<option value="BACHILLERATO">BACHILLERATO</option>
-								<option value="LICENCIATURA">LICENCIATURA</option>
-								<option value="MAESTRIA">MAESTRÍA</option>
-								<option value="DOCTORADO">DOCTORADO</option>
+								<option selected disabled value="">Selecciona la escolaridad</option>
+								<?php foreach ($body_data->escolaridades as $index => $escolaridad) { ?>
+									<option value="<?= $escolaridad->PERSONAESCOLARIDADID ?>"> <?= $escolaridad->PERSONAESCOLARIDADDESCR ?> </option>
+								<?php } ?>
 							</select>
 							<div class="invalid-feedback">
 								La escolaridad es obligatoria
@@ -267,13 +300,59 @@
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="ocupacion" class="form-label fw-bold">Ocupación</label>
-							<input type="text" class="form-control" id="ocupacion" name="ocupacion" maxlength="100">
+							<label for="ocupacion" class="form-label fw-bold input-required">Ocupación</label>
+							<select class="form-select" id="ocupacion" name="ocupacion" required>
+								<option selected disabled value="">Selecciona la ocupacion</option>
+								<?php foreach ($body_data->ocupaciones as $index => $ocupacion) { ?>
+									<option value="<?= $ocupacion->PERSONAOCUPACIONID ?>"> <?= $ocupacion->PERSONAOCUPACIONDESCR ?> </option>
+								<?php } ?>
+							</select>
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="discapacidad" class="form-label fw-bold">¿Padece alguna discapacidad?</label>
 							<input type="text" class="form-control" id="discapacidad" name="discapacidad" maxlength="100">
+						</div>
+
+						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+							<label for="documento" class="form-label fw-bold input-required">Foto de identificación</label>
+							<img class="img-fluid d-none py-2" src="" id="img_preview" name="img_preview">
+							<input class="form-control" type="file" id="documento" name="documento" accept="image/jpeg,image/jpg" required>
+							<textarea id="documento_text" name="documento_text" hidden></textarea>
+							<textarea id="img_text" name="img_text" hidden></textarea>
+
+							<div class="form-text"><button id="photo-btn" class="btn btn-link p-0 m-0" style="font-size:14px;" type="button">Para tomar foto clic aquí <i class="bi bi-camera-fill"></i></button></div>
+						</div>
+
+						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+							<label for="leer" class="form-label fw-bold input-required">¿Sabe leer?</label>
+							<br>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="leer" id="leer" value="S" required>
+								<label class="form-check-label" for="flexRadioDefault1">Si</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="leer" id="leer" value="N" required>
+								<label class="form-check-label" for="flexRadioDefault2">No</label>
+							</div>
+						</div>
+
+						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+							<label for="escribir" class="form-label fw-bold input-required">¿Sabe escribir?</label>
+							<br>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="escribir" id="escribir" value="S" required>
+								<label class="form-check-label" for="flexRadioDefault1">Si</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="escribir" id="escribir" value="N" required>
+								<label class="form-check-label" for="flexRadioDefault2">No</label>
+							</div>
+						</div>
+
+
+						<div class="col-12">
+							<hr>
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -298,14 +377,6 @@
 								<span class="input-group-text" id="twitter_vanity"><i class="bi bi-twitter"></i></span>
 								<input type="text" class="form-control" name="twitter" id="twitter" aria-describedby="twitter_vanity" maxlength="200">
 							</div>
-						</div>
-
-						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="documento" class="form-label fw-bold input-required">Foto de identificación</label>
-							<img class="img-fluid d-none py-2" src="" id="img_preview">
-							<input class="form-control" type="file" id="documento" name="documento" accept="image/jpeg,image/jpg" required>
-							<textarea id="documento_text" name="documento_text" hidden></textarea>
-							<div class="form-text"><button id="photo-btn" class="btn btn-link p-0 m-0" style="font-size:14px;" type="button">Para tomar foto clic aquí <i class="bi bi-camera-fill"></i></button></div>
 						</div>
 					</div>
 				</div>
@@ -440,26 +511,24 @@
 	function validarStep(step) {
 		switch (step) {
 			case 0:
+				document.querySelector('#correo').blur();
 				if (
 					document.querySelector('#nombre').value != '' &&
 					document.querySelector('#apellido_paterno').value != '' &&
 					document.querySelector('#correo').value != '' &&
-					document.querySelector('#fecha_nacimiento').value != ''
+					document.querySelector('#fecha_nacimiento').value != '' &&
+					document.querySelector('input[name="sexo"]:checked') &&
+					document.querySelector('#telefono').value != ''
 				) {
-					return true
+					return true;
 				} else {
 					return false;
 				}
 				break;
 			case 1:
 				if (
-					document.querySelector('#pais_select').value != '' &&
-					document.querySelector('#estado_select').value != '' &&
-					document.querySelector('#municipio_select').value != '' &&
-					document.querySelector('#colonia').value != '' &&
-					document.querySelector('#calle').value != '' &&
-					document.querySelector('#exterior').value != '' &&
-					document.querySelector('#telefono').value != '' &&
+					document.querySelector('#estado_select_origen').value != '' &&
+					document.querySelector('#municipio_select_origen').value != '' &&
 					document.querySelector('#nacionalidad').value != '' &&
 					document.querySelector('#idioma').value != ''
 				) {
@@ -470,11 +539,12 @@
 				break;
 			case 2:
 				if (
-					document.querySelector('#identificacion').value != '' &&
-					document.querySelector('#e_civil').value != '' &&
-					document.querySelector('#idioma').value != '' &&
-					document.querySelector('#documento_text').value != '' &&
-					document.querySelector('#escolaridad').value != ''
+					document.querySelector('#pais_select').value != '' &&
+					document.querySelector('#estado_select').value != '' &&
+					document.querySelector('#municipio_select').value != '' &&
+					document.querySelector('#colonia').value != '' &&
+					document.querySelector('#calle').value != '' &&
+					document.querySelector('#exterior').value != ''
 				) {
 					return true
 				} else {
@@ -482,6 +552,21 @@
 				}
 				break;
 			case 3:
+				if (
+					document.querySelector('#identificacion').value != '' &&
+					document.querySelector('#e_civil').value != '' &&
+					document.querySelector('#idioma').value != '' &&
+					document.querySelector('#documento_text').value != '' &&
+					document.querySelector('#escolaridad').value != '' &&
+					document.querySelector('input[name="leer"]:checked') &&
+					document.querySelector('input[name="escribir"]:checked')
+				) {
+					return true
+				} else {
+					return false
+				}
+				break;
+			case 4:
 				if (
 					document.querySelector('#firma_url').value != '' &&
 					document.querySelector('#notificaciones_check').checked
@@ -553,7 +638,6 @@
 			if (!form.checkValidity()) {
 				event.preventDefault();
 				event.stopPropagation();
-				enviar_datos();
 			} else {
 				event.preventDefault();
 				enviar_datos();
@@ -573,20 +657,6 @@
 				event.target.value = clearText(event.target.value).toLowerCase();
 			}, false)
 		})
-
-		document.querySelector('#fecha_nacimiento').addEventListener('change', (e) => {
-			let fecha = e.target.value + 'T00:00:00';
-			let hoy = new Date();
-			let cumpleanos = new Date(fecha);
-			let edad = hoy.getFullYear() - cumpleanos.getFullYear();
-			let m = hoy.getMonth() - cumpleanos.getMonth();
-
-			if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
-				edad--;
-			}
-
-			document.querySelector('#edad').value = edad;
-		});
 
 		document.querySelector('#fecha_nacimiento').addEventListener('blur', (e) => {
 			let fecha = e.target.value;
@@ -619,10 +689,76 @@
 			}
 		})
 
+		document.querySelector('#nacionalidad').addEventListener('change', (e) => {
+			let select_estado = document.querySelector('#estado_select_origen');
+			let select_municipio = document.querySelector('#municipio_select_origen');
+
+			clearSelect(select_municipio);
+
+			if (e.target.value !== '82') {
+				select_estado.value = '33';
+				let data = {
+					'estado_id': 33,
+					'municipio_id': 1,
+				}
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/get-municipios-by-estado') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						let municipios = response.data;
+						municipios.forEach(municipio => {
+							let option = document.createElement("option");
+							option.text = municipio.MUNICIPIODESCR;
+							option.value = municipio.MUNICIPIOID;
+							select_municipio.add(option);
+						});
+						select_municipio.value = '1';
+					},
+					error: function(jqXHR, textStatus, errorThrown) {}
+				});
+
+			} else {
+				clearSelect(select_municipio);
+				select_estado.value = '';
+				select_municipio.value = '';
+			}
+		});
+
+		document.querySelector('#estado_select_origen').addEventListener('change', (e) => {
+			let select_municipio = document.querySelector('#municipio_select_origen');
+
+			clearSelect(select_municipio);
+
+			select_municipio.value = '';
+
+			let data = {
+				'estado_id': e.target.value,
+			}
+
+			$.ajax({
+				data: data,
+				url: "<?= base_url('/data/get-municipios-by-estado') ?>",
+				method: "POST",
+				dataType: "json",
+				success: function(response) {
+					let municipios = response.data;
+
+					municipios.forEach(municipio => {
+						var option = document.createElement("option");
+						option.text = municipio.MUNICIPIODESCR;
+						option.value = municipio.MUNICIPIOID;
+						select_municipio.add(option);
+					});
+				},
+				error: function(jqXHR, textStatus, errorThrown) {}
+			});
+		});
+
 		document.querySelector('#pais_select').addEventListener('change', (e) => {
 
 			let select_estado = document.querySelector('#estado_select');
-			console.log('Cambiando pais');
 			let select_municipio = document.querySelector('#municipio_select');
 			let select_localidad = document.querySelector('#localidad_select');
 			let select_colonia = document.querySelector('#colonia_select');
@@ -839,6 +975,7 @@
 
 		document.querySelector('#documento').addEventListener('change', (e) => {
 			let documento_identidad = document.querySelector('#documento_text');
+
 			let documento_identidad_modal = document.querySelector('#img_identificacion_modal');
 			let preview = document.querySelector('#img_preview');
 
@@ -868,18 +1005,18 @@
 					dataType: "json",
 					success: function(response) {
 						if (response.exist === 1) {
+							e.target.value = '';
+							prevBtn.click();
 							Swal.fire({
 								icon: 'error',
 								text: 'El correo ya se encuentra registrado, ingresa uno diferente.',
 								confirmButtonColor: '#bf9b55',
-							}).then(() => {
-								e.target.value = '';
-							})
+							});
 						}
 					},
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
-			}
+			};
 		})
 
 	})()
@@ -900,13 +1037,20 @@
 		let nombre = document.querySelector("#nombre").value ? document.querySelector("#nombre").value : '';
 		let apellido1 = document.querySelector("#apellido_paterno").value ? document.querySelector("#apellido_paterno").value : '';
 		let apellido2 = document.querySelector("#apellido_materno").value ? document.querySelector("#apellido_materno").value : '';
-		let correo = document.querySelector("#correo").value ? document.querySelector("#correo").value : '';
 		let fechanac = document.querySelector("#fecha_nacimiento").value ? document.querySelector("#fecha_nacimiento").value : '';
-		let edad = document.querySelector("#edad").value;
 		let sexo = document.querySelector('input[name="sexo"]:checked').value ? document.querySelector('input[name="sexo"]:checked').value : '';
+
+		let correo = document.querySelector("#correo").value ? document.querySelector("#correo").value : '';
+		let telefono = document.querySelector("#telefono").value ? document.querySelector("#telefono").value : '';
+		let telefono2 = document.querySelector("#telefono2").value ? document.querySelector("#telefono2").value : '';
+		let codigo_pais = document.querySelector("#codigo_pais").value ? document.querySelector("#codigo_pais").value : '';
+		let codigo_pais_2 = document.querySelector("#codigo_pais_2").value ? document.querySelector("#codigo_pais_2").value : '';
 
 		let nacionalidad = document.querySelector("#nacionalidad").value ? document.querySelector("#nacionalidad").options[document.querySelector("#nacionalidad").selectedIndex].text : '';
 		let idioma = document.querySelector("#idioma").value ? document.querySelector("#idioma").options[document.querySelector("#idioma").selectedIndex].text : '';
+		let estado_origen = document.querySelector("#estado_select_origen").value ? document.querySelector("#estado_select_origen").options[document.querySelector("#estado_select_origen").selectedIndex].text : '';
+		let municipio_origen = document.querySelector("#municipio_select_origen").value ? document.querySelector("#municipio_select_origen").options[document.querySelector("#municipio_select_origen").selectedIndex].text : '';
+
 		let codigop = document.querySelector("#cp").value ? document.querySelector("#cp").value : '';
 		let pais = document.querySelector("#pais_select").value ? document.querySelector("#pais_select").value : '';
 		let estado = document.querySelector("#estado_select").value ? document.querySelector("#estado_select").options[document.querySelector("#estado_select").selectedIndex].text : '';
@@ -916,32 +1060,33 @@
 		let calle = document.querySelector("#calle").value ? document.querySelector("#calle").value : '';
 		let nexterior = document.querySelector("#exterior").value ? document.querySelector("#exterior").value : '';
 		let ninterior = document.querySelector("#interior").value ? document.querySelector("#interior").value : '';
-		let telefono = document.querySelector("#telefono").value ? document.querySelector("#telefono").value : '';
-		let telefono2 = document.querySelector("#telefono2").value ? document.querySelector("#telefono2").value : '';
-		let codigo_pais = document.querySelector("#codigo_pais").value ? document.querySelector("#codigo_pais").value : '';
-		let codigo_pais_2 = document.querySelector("#codigo_pais_2").value ? document.querySelector("#codigo_pais_2").value : '';
+
+		let tipo = document.querySelector("#identificacion").value ? document.querySelector("#identificacion").value : '';
+		let numeroid = document.querySelector("#numero_ide").value ? document.querySelector("#numero_ide").value : '';
+		let edoc = document.querySelector("#e_civil").value ? document.querySelector("#e_civil").value : '';
+		let ocupacion = document.querySelector("#ocupacion").value ? document.querySelector("#ocupacion").options[document.querySelector("#ocupacion").selectedIndex].text : '';
+		let escolaridad = document.querySelector("#escolaridad").value ? document.querySelector("#escolaridad").options[document.querySelector("#escolaridad").selectedIndex].text : '';
+		let discapacidad = document.querySelector("#discapacidad").value ? document.querySelector("#discapacidad").value : '';
+		let firma_url = document.querySelector("#firma_url").value ? document.querySelector("#firma_url").value : '';
+
+		let leer = document.querySelector('input[name="leer"]:checked').value ? document.querySelector('input[name="leer"]:checked').value : '';
+		let escribir = document.querySelector('input[name="escribir"]:checked').value ? document.querySelector('input[name="escribir"]:checked').value : '';
 
 		let facebook = document.querySelector("#facebook").value ? document.querySelector("#facebook").value : '';
 		let instagram = document.querySelector("#instagram").value ? document.querySelector("#instagram").value : '';
 		let twitter = document.querySelector("#twitter").value ? document.querySelector("#twitter").value : '';
 
-		let tipo = document.querySelector("#identificacion").value ? document.querySelector("#identificacion").value : '';
-		let numeroid = document.querySelector("#numero_ide").value ? document.querySelector("#numero_ide").value : '';
-		let edoc = document.querySelector("#e_civil").value ? document.querySelector("#e_civil").value : '';
-		let escolaridad = document.querySelector("#escolaridad").value ? document.querySelector("#escolaridad").value : '';
-		let ocupacion = document.querySelector("#ocupacion").value ? document.querySelector("#ocupacion").value : '';
-		let discapacidad = document.querySelector("#discapacidad").value ? document.querySelector("#discapacidad").value : '';
-		let firma_url = document.querySelector("#firma_url").value ? document.querySelector("#firma_url").value : '';
-
 		document.querySelector('#nombre_modal').value = nombre;
 		document.querySelector('#apellido_paterno_modal').value = apellido1;
 		document.querySelector('#apellido_materno_modal').value = apellido2;
 		document.querySelector('#correo_modal').value = correo;
-		document.querySelector('#fecha_nacimiento_modal').value = fechanac;
-		document.querySelector('#edad_modal').value = edad;
+		document.querySelector('#fecha_nacimiento_modal').value = dateToString(fechanac);
 		document.querySelector('#nacionalidad_modal').value = nacionalidad;
 		document.querySelector('#escolaridad_modal').value = escolaridad;
 		document.querySelector('#sexo_modal').value = sexo == 'F' ? 'FEMENINO' : 'MASCULINO';
+
+		document.querySelector('#estado_origen_modal').value = estado_origen;
+		document.querySelector('#municipio_origen_modal').value = municipio_origen;
 
 		document.querySelector('#cp_modal').value = codigop;
 		document.querySelector('#pais_modal').value = pais;
@@ -959,6 +1104,9 @@
 		document.querySelector('#instagram_modal').value = instagram;
 		document.querySelector('#twitter_modal').value = twitter;
 
+		document.querySelector('#leer_modal').value = leer == 'S' ? 'SI' : 'NO';
+		document.querySelector('#escribir_modal').value = escribir == 'S' ? 'SI' : 'NO';
+
 		document.querySelector('#identificacion_modal').value = tipo;
 		document.querySelector('#numero_ide_modal').value = numeroid;
 		document.querySelector('#e_civil_modal').value = edoc;
@@ -966,6 +1114,22 @@
 		document.querySelector('#discapacidad_modal').value = discapacidad;
 		document.querySelector('#idioma_modal').value = idioma;
 		document.querySelector('#img_firma_modal').setAttribute("src", firma_url);
+	}
+
+	function dateToString(fecha) {
+		let date = new Date(fecha);
+		let dateToTijuanaString = date.toLocaleString('en-US', {
+			timeZone: 'America/Tijuana'
+		});
+		let dateTijuana = new Date(dateToTijuanaString);
+		dateTijuana.setDate(dateTijuana.getDate() + 1);
+		var options = {
+			year: 'numeric',
+			month: 'long',
+			day: 'numeric'
+		};
+
+		return (dateTijuana.toLocaleDateString("es-ES", options)).toUpperCase();
 	}
 </script>
 
@@ -1015,6 +1179,12 @@
 	}
 
 	function initPhoto() {
+		var isSafari = navigator.vendor && navigator.vendor.indexOf('Apple') > -1 &&
+			navigator.userAgent &&
+			navigator.userAgent.indexOf('CriOS') == -1 &&
+			navigator.userAgent.indexOf('FxiOS') == -1;
+
+
 		if (!tieneSoporteUserMedia()) {
 			alert("Tu navegador no soporta esta característica");
 			$estado.innerHTML = "Tu navegador no soporta este funcionamiento. Sube una foto desde tu dispositivo.";
@@ -1022,87 +1192,183 @@
 		}
 		let stream;
 
-		navigator.mediaDevices.enumerateDevices().then(function(dispositivos) {
-			const dispositivosDeVideo = [];
+		if (!isSafari) {
+			navigator.mediaDevices.enumerateDevices().then(function(dispositivos) {
+				const dispositivosDeVideo = [];
 
-			dispositivos.forEach(function(dispositivo) {
-				const tipo = dispositivo.kind;
-				if (tipo === "videoinput") {
-					dispositivosDeVideo.push(dispositivo);
+				dispositivos.forEach(function(dispositivo) {
+					const tipo = dispositivo.kind;
+					if (tipo === "videoinput") {
+						dispositivosDeVideo.push(dispositivo);
+					}
+				});
+
+				if (dispositivosDeVideo.length > 0) {
+					mostrarStream(dispositivosDeVideo[0].deviceId);
 				}
 			});
 
-			if (dispositivosDeVideo.length > 0) {
-				mostrarStream(dispositivosDeVideo[0].deviceId);
-			}
-		});
-
-
-
-		const mostrarStream = idDeDispositivo => {
-			_getUserMedia({
-					video: {
-						deviceId: idDeDispositivo,
-					}
-				},
-				function(streamObtenido) {
-					$estado.classList.add('d-none');
-					llenarSelectConDispositivosDisponibles();
-
-					$listaDeDispositivos.onchange = () => {
-						if (stream) {
-							stream.getTracks().forEach(function(track) {
-								track.stop();
-							});
+			const mostrarStream = idDeDispositivo => {
+				_getUserMedia({
+						video: {
+							deviceId: idDeDispositivo,
 						}
-						mostrarStream($listaDeDispositivos.value);
-					}
+					},
+					function(streamObtenido) {
+						$estado.classList.add('d-none');
+						llenarSelectConDispositivosDisponibles();
 
-					stream = streamObtenido;
+						$listaDeDispositivos.onchange = () => {
+							if (stream) {
+								stream.getTracks().forEach(function(track) {
+									track.stop();
+								});
+							}
+							mostrarStream($listaDeDispositivos.value);
+						}
 
-					$video.srcObject = stream;
-					$video.play();
+						stream = streamObtenido;
 
-					$btn_take_photo.addEventListener("click", function(e) {
-
-						$video.pause();
-
-						let contexto = $canvas.getContext("2d");
-						$canvas.width = $video.videoWidth;
-						$canvas.height = $video.videoHeight;
-						contexto.drawImage($video, 0, 0, $canvas.width, $canvas.height);
-
-						let foto = $canvas.toDataURL();
-
-						let documento = document.querySelector('#documento');
-						let documento_identidad = document.querySelector('#documento_text');
-						let documento_identidad_modal = document.querySelector('#img_identificacion_modal');
-						let preview = document.querySelector('#img_preview');
-
-						documento.removeAttribute('required');
-						documento.value = '';
-						documento_identidad.value = foto;
-						documento_identidad_modal.setAttribute('src', foto);
-						preview.classList.remove('d-none');
-						preview.setAttribute('src', foto);
-
+						$video.srcObject = stream;
 						$video.play();
 
-						let modal = bootstrap.Modal.getInstance(document.querySelector('#take_photo_modal'));
+						$btn_take_photo.addEventListener("click", function(e) {
 
-						stopVideoOnly(stream);
-						modal.hide();
+							$video.pause();
+
+							let contexto = $canvas.getContext("2d");
+							$canvas.width = $video.videoWidth;
+							$canvas.height = $video.videoHeight;
+							contexto.drawImage($video, 0, 0, $canvas.width, $canvas.height);
+
+							let foto = $canvas.toDataURL('image/jpeg', 1.0);
+
+							let documento = document.querySelector('#documento');
+							let documento_identidad = document.querySelector('#documento_text');
+							let documento_identidad_modal = document.querySelector('#img_identificacion_modal');
+							let preview = document.querySelector('#img_preview');
+
+							documento.removeAttribute('required');
+							documento.value = '';
+							documento_identidad.value = foto;
+							documento_identidad_modal.setAttribute('src', foto);
+							preview.classList.remove('d-none');
+							preview.setAttribute('src', foto);
+
+							$video.play();
+
+							let modal = bootstrap.Modal.getInstance(document.querySelector('#take_photo_modal'));
+
+							stopVideoOnly(stream);
+							modal.hide();
+						});
+
+						take_photo_modal.addEventListener('hidden.bs.modal', function(event) {
+							stopVideoOnly(stream);
+						})
+					},
+					function(error) {
+						console.log("Permiso denegado o error: ", error);
+						$estado.classList.remove('d-none');
 					});
+			}
+		} else {
+			console.log('Navegador safari');
+			const mostrarStream = (idDeDispositivo = null) => {
+				let options = {
+					video: true,
+					deviceId: idDeDispositivo
+				}
+				idDeDispositivo = null ? delete options.deviceId : idDeDispositivo;
+				navigator.mediaDevices.getUserMedia(options).then(function(streamObtenido) {
 
-					take_photo_modal.addEventListener('hidden.bs.modal', function(event) {
-						stopVideoOnly(stream);
-					})
-				},
-				function(error) {
+					navigator.mediaDevices.enumerateDevices().then(function(dispositivos) {
+						const dispositivosDeVideo = [];
+						dispositivos.forEach(function(dispositivo) {
+							const tipo = dispositivo.kind;
+							if (tipo === "videoinput") {
+								dispositivosDeVideo.push(dispositivo);
+							}
+						});
+						llenarSelectConDispositivosDisponibles();
+
+						$listaDeDispositivos.onchange = () => {
+							console.log('Cambiando dispositivo');
+							if (stream) {
+								stream.getTracks().forEach(function(track) {
+									track.stop();
+								});
+							}
+							mostrarStream($listaDeDispositivos.value);
+						}
+
+						if (dispositivosDeVideo.length > 0) {
+							$estado.classList.add('d-none');
+
+							stream = streamObtenido;
+
+							$video.srcObject = stream;
+							$video.play();
+
+							$btn_take_photo.addEventListener("click", function(e) {
+
+								$video.pause();
+
+								let contexto = $canvas.getContext("2d");
+								$canvas.width = $video.videoWidth;
+								$canvas.height = $video.videoHeight;
+								contexto.drawImage($video, 0, 0, $canvas.width, $canvas.height);
+
+								let foto = $canvas.toDataURL('image/jpeg', 1.0);
+
+								let documento = document.querySelector('#documento');
+								let documento_identidad = document.querySelector('#documento_text');
+								let documento_identidad_modal = document.querySelector('#img_identificacion_modal');
+								let preview = document.querySelector('#img_preview');
+
+								documento.removeAttribute('required');
+								documento.value = '';
+								documento_identidad.value = foto;
+								documento_identidad_modal.setAttribute('src', foto);
+								preview.classList.remove('d-none');
+								preview.setAttribute('src', foto);
+
+								$video.play();
+
+								let modal = bootstrap.Modal.getInstance(document.querySelector('#take_photo_modal'));
+
+								stopVideoOnly(stream);
+								modal.hide();
+							});
+
+							take_photo_modal.addEventListener('hidden.bs.modal', function(event) {
+								stopVideoOnly(stream);
+							})
+						}
+					});
+				}).catch(function(err) {
 					console.log("Permiso denegado o error: ", error);
 					$estado.classList.remove('d-none');
 				});
+			}
+
+			mostrarStream();
 		}
 	};
 </script>
+<!-- <script>
+	let texto_imagen = document.querySelector('#img_text');
+	let preview = document.querySelector('#img_preview');
+
+	fetch(preview.src)
+		.then((res) => res.blob())
+		.then((blob) => {
+			const reader = new FileReader();
+			reader.onloadend = () => {
+				const base64 = getBase64StringFromDataURL(reader.result);
+				texto_imagen.value = base64;
+			};
+			reader.readAsDataURL(blob);
+		});
+</script> -->
 <?= $this->endSection() ?>

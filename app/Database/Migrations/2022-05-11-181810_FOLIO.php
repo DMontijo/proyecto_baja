@@ -10,8 +10,12 @@ class FOLIO extends Migration
 	{
 		$this->forge->addField([
 			'FOLIOID' => [
-				'type' => 'VARCHAR',
-				'constraint' => '16',
+				'type' => 'INT',
+				'unsigned' => TRUE,
+			],
+			'ANO' => [
+				'type' => 'INT',
+				'constraint' => '4',
 			],
 			'EXPEDIENTEID' => [
 				'type' => 'VARCHAR',
@@ -21,6 +25,7 @@ class FOLIO extends Migration
 			'DENUNCIANTEID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
+				'null' => TRUE,
 			],
 			'AGENTEATENCIONID' => [
 				'type' => 'INT',
@@ -40,27 +45,11 @@ class FOLIO extends Migration
 			'NOTASAGENTE' => [
 				'type' => 'TEXT',
 				'constraint' => '300',
-			],
-			'ENLACEVIDEO' => [
-				'type' => 'TEXT',
-				'constraint' => '500',
 				'null' => TRUE,
 			],
-			'ESTADOID' => [
-				'type' => 'INT',
-				'unsigned' => TRUE,
-			],
-			'MUNICIPIOID' => [
-				'type' => 'INT',
-				'unsigned' => TRUE,
-			],
-			'ANO' => [
-				'type' => 'INT',
-				'constraint' => '4',
-				'null' => TRUE,
-			],
-			'CORRELATIVO' => [
-				'type' => 'INT',
+			'HECHODELITO' => [
+				'type' => 'VARCHAR',
+				'constraint' => '100',
 				'null' => TRUE,
 			],
 			'HECHOMEDIOCONOCIMIENTOID' => [
@@ -139,42 +128,6 @@ class FOLIO extends Migration
 			],
 			'HECHONARRACION' => [
 				'type' => 'TEXT',
-				'constraint' => '300',
-				'null' => TRUE,
-			],
-			'TIPOEXPEDIENTEID' => [
-				'type' => 'INT',
-				'unsigned' => TRUE,
-				'null' => TRUE,
-			],
-			'PARTICIPAESTADO' => [
-				'type' => 'CHAR',
-				'default' => 'N',
-				'constraint' => '1',
-			],
-			'EMPLEADOIDREGISTRO' => [
-				'type' => 'INT',
-				'null' => TRUE,
-			],
-			'OFICINAIDRESPONSABLE' => [
-				'type' => 'INT',
-				'unsigned' => TRUE,
-				'null' => TRUE,
-			],
-			'CONFIDENCIAL' => [
-				'type' => 'CHAR',
-				'default' => 'N',
-				'constraint' => '1',
-				'null' => TRUE,
-			],
-			'ESTADOJURIDICOEXPEDIENTEID' => [
-				'type' => 'INT',
-				'unsigned' => TRUE,
-				'null' => TRUE,
-			],
-			'RELACIONDOCUMENTOS' => [
-				'type' => 'VARCHAR',
-				'constraint' => '500',
 				'null' => TRUE,
 			],
 			'HECHOCOORDENADAX' => [
@@ -187,89 +140,6 @@ class FOLIO extends Migration
 				'constraint' => '20',
 				'null' => TRUE,
 			],
-			'PARTENUMERO' => [
-				'type' => 'VARCHAR',
-				'constraint' => '10',
-				'null' => TRUE,
-			],
-			'PARTEFECHA' => [
-				'type' => 'DATE',
-				'null' => TRUE,
-			],
-			'PARTEAUTORIDADID' => [
-				'type' => 'INT',
-				'null' => TRUE,
-				'unsigned' => TRUE,
-			],
-			'PARTEAREADOID' => [
-				'type' => 'INT',
-				'unsigned' => TRUE,
-				'null' => TRUE,
-			],
-			'PARTEEMPLEADOID' => [
-				'type' => 'INT',
-				'unsigned' => TRUE,
-				'null' => TRUE,
-			],
-			'EXHORTONUMERO' => [
-				'type' => 'VARCHAR',
-				'constraint' => '10',
-				'null' => TRUE,
-			],
-			'EXHORTOESTADOID' => [
-				'type' => 'INT',
-				'unsigned' => TRUE,
-				'null' => TRUE,
-			],
-			'EXHORTOMUNICIPIOID' => [
-				'type' => 'INT',
-				'unsigned' => TRUE,
-				'null' => TRUE,
-			],
-			'EXHORTOOFICINAID' => [
-				'type' => 'INT',
-				'unsigned' => TRUE,
-				'null' => TRUE,
-			],
-			'AREAIDREGISTRO' => [
-				'type' => 'INT',
-				'null' => TRUE,
-				'null' => TRUE,
-			],
-			'AREAIDRESPONSABLE' => [
-				'type' => 'INT',
-				'null' => TRUE,
-				'null' => TRUE,
-			],
-			'LOCALIZACIONPERSONA' => [
-				'type' => 'CHAR',
-				'constraint' => '1',
-				'default' => 'N',
-			],
-			'CONCLUIDO' => [
-				'type' => 'CHAR',
-				'constraint' => '1',
-				'default' => 'N',
-			],
-			'EXHORTOAUTORIDADID' => [
-				'type' => 'INT',
-				'unsigned' => TRUE,
-				'null' => TRUE,
-			],
-			'HECHOCLASIFICACIONLUGARID' => [
-				'type' => 'INT',
-				'unsigned' => TRUE,
-				'null' => TRUE,
-			],
-			'HECHOVIALIDADID' => [
-				'type' => 'INT',
-				'unsigned' => TRUE,
-				'null' => TRUE,
-			],
-			'DELITODENUNCIA' => [
-				'type' => 'VARCHAR',
-				'constraint' => '100',
-			],
 			'DERECHOS' => [
 				'type' => 'CHAR',
 				'constraint' => '1',
@@ -279,6 +149,7 @@ class FOLIO extends Migration
 			'FECHAACTUALIZACION DATETIME ON UPDATE CURRENT_TIMESTAMP',
 		]);
 		$this->forge->addKey('FOLIOID', TRUE);
+		$this->forge->addKey('ANO', TRUE);
 		$this->forge->createTable('FOLIO');
 	}
 

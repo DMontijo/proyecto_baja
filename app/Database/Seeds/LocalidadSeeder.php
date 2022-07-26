@@ -2470,6 +2470,6 @@ class LocalidadSeeder extends Seeder
 			array('ID' => '032056056', 'ESTADOID' => '32', 'MUNICIPIOID' => '56,', 'LOCALIDADID' => '56', 'LOCALIDADDESCR' => 'ZACATECAS', 'ZONA' => 'U', 'LOCALIDADIDEXTERNO' => ''),
 			array('ID' => '033001001', 'ESTADOID' => '33', 'MUNICIPIOID' => '1,', 'LOCALIDADID' => '1', 'LOCALIDADDESCR' => 'EXTRANJERO', 'ZONA' => 'U', 'LOCALIDADIDEXTERNO' => ''),
 		];
-		$this->db->table('CATEGORIA_LOCALIDAD')->insertBatch($data);
+		$this->db->table('LOCALIDAD')->insertBatch($data);
 	}
 }

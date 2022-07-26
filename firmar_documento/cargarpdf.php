@@ -63,7 +63,7 @@
                                                 <thead>
                                                         <tr>
                                                         <th valign="middle" align="left" class="EstiloGrisTenue" style="background-color:#3e0e20; color: #FFFFFF; padding: 10px; padding-left: 10px; font-size: 11pt;" colspan="2">
-                                                            Seleccione el documento PDF a ser firmado.
+                                                            Selecciona el documento PDF a ser firmado.
                                                         </th>
                                                     </tr>
                                                 </thead>

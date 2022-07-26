@@ -62,11 +62,11 @@ class USUARIOS extends Migration
 				'null' => TRUE,
 			],
 			'CERTIFICADOFIRMA' => [
-				'type' => 'BLOB',
+				'type' => 'LONGBLOB',
 				'null' => TRUE,
 			],
 			'KEYFIRMA' => [
-				'type' => 'BLOB',
+				'type' => 'LONGBLOB',
 				'null' => TRUE,
 			],
 			'FRASEFIRMA' => [

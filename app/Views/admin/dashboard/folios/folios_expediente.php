@@ -31,10 +31,10 @@
 										<td class="text-center"><?= $folio->FOLIOID ?></td>
 										<td class="text-center"><?= $folio->FECHAREGISTRO ?></td>
 										<td class="text-center"><?= $folio->EXPEDIENTEID ?></td>
-										<td class="text-center"><?= $folio->DELITODENUNCIA ?></td>
+										<td class="text-center"><?= $folio->HECHODELITO ?></td>
 										<td class="text-center"><?= $folio->STATUS ?></td>
 										<td class="text-center"><?= $folio->NOMBRE ?> <?= $folio->APELLIDO_PATERNO ?> <?= $folio->APELLIDO_MATERNO ?></td>
-										<td class="text-center"><button type="button" class="btn btn-primary" onclick="viewVideo(<?= $folio->FOLIOID ?>)"><i class="fas fa-video"></i></button></td>
+										<td class="text-center"><button type="button" class="btn btn-primary" onclick="viewVideo(<?= $folio->ANO ?>,<?= $folio->FOLIOID ?>)"><i class="fas fa-video"></i></button></td>
 									</tr>
 								<?php } ?>
 							</tbody>
@@ -56,11 +56,15 @@
 	});
 </script>
 <script>
-	function viewVideo(folio) {
+	function viewVideo(year, folio) {
+		data = {
+			'folio': year + '-' + folio,
+			'min': '2000-01-01',
+			'max': '<?= date("Y-m-d") ?>'
+		};
+		console.log(data);
 		$.ajax({
-			data: {
-				'folio': folio
-			},
+			data: data,
 			url: "<?= base_url('/data/get-video-link') ?>",
 			method: "POST",
 			dataType: "json",

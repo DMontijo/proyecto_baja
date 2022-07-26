@@ -60,6 +60,6 @@ class VehiculoTipoSeeder extends Seeder
 			array('VEHICULOTIPODESCR' => 'CONTENEDOR'),
 
 		];
-		$this->db->table('CATEGORIA_VEHICULOTIPO')->insertBatch($data);
+		$this->db->table('VEHICULOTIPO')->insertBatch($data);
 	}
 }

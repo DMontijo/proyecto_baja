@@ -11,6 +11,7 @@ class FolioVehiculoModel extends Model
 	protected $allowedFields    = [
 		'FOLIOID',
 		'VEHICULOID',
+		'ANO',
 		'SITUACION',
 		'TIPOID',
 		'MARCAID',

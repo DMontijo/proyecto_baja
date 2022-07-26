@@ -17,6 +17,9 @@ use App\Models\PaisesModel;
 use App\Models\HechoClasificacionLugarModel;
 use App\Models\FolioModel;
 
+use App\Models\EscolaridadModel;
+use App\Models\OcupacionModel;
+
 class UserController extends BaseController
 {
 	function __construct()
@@ -34,6 +37,9 @@ class UserController extends BaseController
 		$this->_paisesModel = new PaisesModel();
 		$this->_clasificacionLugarModel = new HechoClasificacionLugarModel();
 		$this->_folioModel = new FolioModel();
+
+		$this->_escolaridadModel = new EscolaridadModel();
+		$this->_ocupacionModel = new OcupacionModel();
 	}
 
 	public function index()
@@ -51,13 +57,20 @@ class UserController extends BaseController
 		$data->paises = $this->_paisesModel->asObject()->findAll();
 		$data->estados = $this->_estadosModel->asObject()->findAll();
 		$data->tiposIdentificaciones = $this->_tipoIdentificacionModel->asObject()->findAll();
+		$data->escolaridades = $this->_escolaridadModel->asObject()->findAll();
+		$data->ocupaciones = $this->_ocupacionModel->asObject()->findAll();
 		$this->_loadView('Denuncia', $data, 'index');
 	}
 
 	public function create()
 	{
 		$password = $this->_generatePassword(6);
+		// var_dump($_POST['documento_text']);
+		// exit;
+		//$_POST['documento_text'] = str_replace('data:image/jpeg;base64,', '', $_POST['documento_text']);
 
+		//$document_file = $this->request->getFile('documento');
+		//$docData = base64_encode(file_get_contents($document_file)); 
 		$foto_des = $this->request->getPost('documento_text');
 		// list($type, $foto_des) = explode(';', $foto_des);
 		// list(, $extension) = explode('/', $type);
@@ -74,13 +87,14 @@ class UserController extends BaseController
 			'APELLIDO_MATERNO' => $this->request->getPost('apellido_materno'),
 			'CORREO' => $this->request->getPost('correo'),
 			'PASSWORD' => hashPassword($password),
-			'FECHA_DE_NACIMIENTO' => $this->request->getPost('fecha_nacimiento'),
-			'EDAD' => $this->request->getPost('edad'),
+			'FECHANACIMIENTO' => $this->request->getPost('fecha_nacimiento'),
 			'SEXO' => $this->request->getPost('sexo'),
-			'CODIGO_POSTAL' => $this->request->getPost('cp'),
+			'CODIGOPOSTAL' => $this->request->getPost('cp'),
 			'PAIS' => $this->request->getPost('pais_select'),
 			'ESTADOID' => (int)$this->request->getPost('estado_select'),
+			'ESTADOORIGENID' => (int)$this->request->getPost('estado_select_origen'),
 			'MUNICIPIOID' => (int)$this->request->getPost('municipio_select'),
+			'MUNICIPIOORIGENID' => (int)$this->request->getPost('municipio_select_origen'),
 			'LOCALIDADID' => (int)$this->request->getPost('localidad_select'),
 			'COLONIAID' => (int)$this->request->getPost('colonia_select'),
 			'COLONIA' => $this->request->getPost('colonia'),
@@ -91,27 +105,34 @@ class UserController extends BaseController
 			'TELEFONO2' => $this->request->getPost('telefono2'),
 			'CODIGO_PAIS' => $this->request->getPost('codigo_pais'),
 			'CODIGO_PAIS2' => $this->request->getPost('codigo_pais_2'),
-			'TIPO_DE_IDENTIFICACION' => $this->request->getPost('identificacion'),
-			'NUMERO_DE_IDENTIFICACION' => $this->request->getPost('numero_ide'),
-			'ESTADO_CIVIL' => $this->request->getPost('e_civil'),
-			'OCUPACION' => $this->request->getPost('ocupacion'),
-			'IDENTIDAD_DE_GENERO' => $this->request->getPost('iden_genero'),
+			'TIPOIDENTIFICACIONID' => $this->request->getPost('identificacion'),
+			'NUMEROIDENTIFICACION' => $this->request->getPost('numero_ide'),
+			'ESTADOCIVILID' => $this->request->getPost('e_civil'),
+			'OCUPACIONID' => $this->request->getPost('ocupacion'),
+			'IDENTIDADGENERO' => $this->request->getPost('iden_genero'),
 			'DISCAPACIDAD' => $this->request->getPost('discapacidad'),
-			'NACIONALIDAD_ID' => (int)$this->request->getPost('nacionalidad'),
-			'ESCOLARIDAD' => $this->request->getPost('escolaridad'),
+			'NACIONALIDADID' => (int)$this->request->getPost('nacionalidad'),
+			'ESCOLARIDADID' => $this->request->getPost('escolaridad'),
 			'FACEBOOK' => $this->request->getPost('facebook'),
 			'INSTAGRAM' => $this->request->getPost('instagram'),
 			'TWITTER' => $this->request->getPost('twitter'),
 			'IDIOMAID' => (int)$this->request->getPost('idioma'),
 			'NOTIFICACIONES' => $this->request->getPost('notificaciones_check') == 'on' ? 'S' : 'N',
-			'DOCUMENTO' => $foto_des,
+			'DOCUMENTO' => $_POST['documento_text'],
 			'FIRMA' => $firma,
 		];
+
+		// foreach ($data as $key => $value) {
+		// 	var_dump($key . ' = ' . $data[$key]);
+		// 	echo '<br>';
+		// }
+		// exit;
 
 		if ($this->validate(['correo' => 'required|is_unique[DENUNCIANTES.CORREO]'])) {
 			$this->_denunciantesModel->insert($data);
 			$this->_sendEmailPassword($data['CORREO'], $password);
-			return redirect()->to(base_url('/denuncia'))->with('created', 'Inicia sesión con la contraseña que llegará a tu correo y comienza tu denuncia');
+			session()->setFlashdata('message', 'Inicia sesión con la contraseña que llegará a tu correo electrónico');
+			return redirect()->to(base_url('/denuncia'))->with('created', 'Inicia sesión con la contraseña que llegará a tu correo electrónico y comienza tu denuncia');
 		} else {
 			return redirect()->back()->with('message', 'Hubo un error en los datos o puede que ya exista un registro con el mismo correo');
 		}
@@ -120,7 +141,7 @@ class UserController extends BaseController
 	public function getMunicipiosByEstado()
 	{
 		$estadoID = $this->request->getPost('estado_id');
-		$data = $this->_municipiosModel->asObject()->where('ESTADOID', $estadoID)->findAll();
+		$data = $this->_municipiosModel->asObject()->where('ESTADOID', $estadoID)->orderBy('MUNICIPIODESCR', 'asc')->findAll();
 		return json_encode((object)['data' => $data]);
 	}
 
@@ -128,7 +149,7 @@ class UserController extends BaseController
 	{
 		$estadoID = $this->request->getPost('estado_id');
 		$municipioID = $this->request->getPost('municipio_id');
-		$data = $this->_localidadesModel->asObject()->where('ESTADOID', $estadoID)->where('MUNICIPIOID', $municipioID)->findAll();
+		$data = $this->_localidadesModel->asObject()->where('ESTADOID', $estadoID)->where('MUNICIPIOID', $municipioID)->orderBy('LOCALIDADDESCR', 'asc')->findAll();
 		return json_encode((object)['data' => $data]);
 	}
 
@@ -136,7 +157,7 @@ class UserController extends BaseController
 	{
 		$estadoID = $this->request->getPost('estado_id');
 		$municipioID = $this->request->getPost('municipio_id');
-		$data = $this->_coloniasModel->asObject()->where('ESTADOID', $estadoID)->where('MUNICIPIOID', $municipioID)->findAll();
+		$data = $this->_coloniasModel->asObject()->where('ESTADOID', $estadoID)->where('MUNICIPIOID', $municipioID)->orderBy('COLONIADESCR', 'asc')->findAll();
 		return json_encode((object)['data' => $data]);
 	}
 

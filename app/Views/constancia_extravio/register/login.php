@@ -15,11 +15,11 @@
 			<div class="col-12 col-md-6">
 				<div class="row h-100 align-items-center justify-content-center">
 					<div class="col-12">
-					<div class="row align-items-center justify-content-center mb-3">
+						<div class="row align-items-center justify-content-center mb-3">
 							<div class="col-12 col-lg-10 offset-lg-1">
 								<div class="card bg-blue shadow-lg">
 									<div class="card-body text-center">
-										<h2 class="fw-bolder text-white">¿Quieres sacar una constancia de extravío?</h2>
+										<h2 class="fw-bolder text-white">¿Necesitas una constancia de extravío?</h2>
 										<a href="<?= base_url() ?>/constancia_extravio" class="btn btn-light">
 											REGISTRATE
 										</a>
@@ -30,7 +30,7 @@
 						<div class="row align-items-center justify-content-center">
 							<div class="col-12 col-lg-10 offset-lg-1">
 								<div class="card shadow-lg py-3 px-3" style="background: rgba(255,255,255,0.8);">
-									<h2 class="fw-bolder text-white text-center text-blue mb-2">Ingresa y denuncia</h2>
+									<h2 class="fw-bolder text-white text-center text-blue mb-2">Si ya tiene una cuenta para constancias ingresa</h2>
 									<div class="card-body">
 										<?php if (session()->getFlashdata('message')) : ?>
 											<div class="alert alert-warning">

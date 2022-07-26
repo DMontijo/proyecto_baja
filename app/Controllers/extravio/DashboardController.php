@@ -11,31 +11,19 @@ use App\Models\LocalidadesModel;
 use App\Models\ColoniasModel;
 use App\Models\HechoLugarModel;
 use App\Models\VehiculoColorModel;
-use App\Models\VehiculoMarcaModel;
-use App\Models\VehiculoModeloModel;
 use App\Models\VehiculoTipoModel;
 use App\Models\PaisesModel;
 use App\Models\DelitosUsuariosModel;
 use App\Models\PersonaIdiomaModel;
-use App\Models\VehiculoDistribuidorModel;
-use App\Models\VehiculoVersionModel;
-use App\Models\VehiculoServicioModel;
 use App\Models\PersonaTipoIdentificacionModel;
 use App\Models\ConstanciaExtraviadoModel;
 
 use App\Models\FolioPreguntasModel;
-use App\Models\FolioCorrelativoModel;
 use App\Models\FolioModel;
 use App\Models\FolioPersonaFisicaModel;
 use App\Models\FolioPersonaFisicaDomicilioModel;
 use App\Models\FolioPersonaFisicaDesaparecidaModel;
-use App\Models\FolioPersonaFisicaImputadoDelitoModel;
-use App\Models\FolioPersonaFisicaImputadoModel;
-use App\Models\FolioRelacionFisicaFisicaModel;
-use App\Models\FolioObjetoModel;
 use App\Models\FolioVehiculoModel;
-use App\Models\FolioDocumentoModel;
-use App\Models\FolioArchivoExternoModel;
 
 class DashboardController extends BaseController
 {
@@ -49,30 +37,18 @@ class DashboardController extends BaseController
 		$this->_coloniasModel = new ColoniasModel();
 		$this->_hechoLugarModel = new HechoLugarModel();
 		$this->_coloresVehiculoModel = new VehiculoColorModel();
-		$this->_marcaVehiculoModel = new VehiculoMarcaModel();
-		$this->_lineaVehiculoModel = new VehiculoModeloModel();
 		$this->_tipoVehiculoModel = new VehiculoTipoModel();
-		$this->_distribuidorVehiculoModel = new VehiculoDistribuidorModel();
-		$this->_versionVehiculoModel = new VehiculoVersionModel();
-		$this->_servicioVehiculoModel = new VehiculoServicioModel();
 		$this->_delitosUsuariosModel = new DelitosUsuariosModel();
 		$this->_denunciantesModel = new DenunciantesModel();
 		$this->_personaIdiomaModel = new PersonaIdiomaModel();
 		$this->_personaIdentificacionModel = new PersonaTipoIdentificacionModel();
 		$this->_constanciaExtravioModel= new ConstanciaExtraviadoModel();
-		$this->_folioCorrelativoModel = new FolioCorrelativoModel();
 		$this->_folioModel = new FolioModel();
 		$this->_folioPreguntasModel = new FolioPreguntasModel();
 		$this->_folioPersonaFisicaModel = new FolioPersonaFisicaModel();
 		$this->_folioPersonaFisicaDomicilioModel = new FolioPersonaFisicaDomicilioModel();
 		$this->_folioPersonaFisicaDesaparecidaModel = new FolioPersonaFisicaDesaparecidaModel();
-		$this->_folioPersonaFisicaImputadoDelitoModel = new FolioPersonaFisicaImputadoDelitoModel();
-		$this->_folioPersonaFisicaImputadoModel = new FolioPersonaFisicaImputadoModel();
-		$this->_folioRelacionFisicaFisicaModel = new FolioRelacionFisicaFisicaModel();
-		$this->_folioObjetoModel = new FolioObjetoModel();
 		$this->_folioVehiculoModel = new FolioVehiculoModel();
-		$this->_folioDocumentoModel = new FolioDocumentoModel();
-		$this->_folioArchivoExternoModel = new FolioArchivoExternoModel();
 	}
 
 	public function index()

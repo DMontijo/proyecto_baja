@@ -22,7 +22,7 @@
 					<div class="col-12">
 						<div class="ratio ratio-16x9">
 							<video class="rounded" muted="muted" id="video"></video>
-							<canvas id="canvas" class="d-none"></canvas>
+							<canvas id="canvas" name="canvas"class="d-none"></canvas>
 						</div>
 					</div>
 				</div>

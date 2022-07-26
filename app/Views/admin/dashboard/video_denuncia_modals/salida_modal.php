@@ -1,6 +1,6 @@
-<div class="modal shadow" id="salida_modal" tabindex="-1" role="dialog" aria-labelledby="SalidaModal" aria-hidden="true">
+<div class="modal shadow" id="salida_modal" tabindex="-1" role="dialog" aria-labelledby="SalidaModal" aria-hidden="true" data-backdrop="false">
 	<div class="modal-dialog modal-dialog-centered mw-100 w-75">
-		<div class="modal-content">
+		<div class="modal-content" style="box-shadow: 0px 0px 55px 9px rgba(0,0,0,0.66)!important;">
 			<div class="modal-header bg-primary text-white">
 				<h5 class="modal-title font-weight-bold">SALIDA</h5>
 				<button id="btn_salida_exit" type="button" class="close text-white" data-backdrop="false" data-dismiss="modal" aria-label="Close">
@@ -20,12 +20,12 @@
 						<div class="tab-content" id="v-pills-contenido">
 							<div class="tab-pane fade show active" id="v-pills-salida" role="tabpanel" aria-labelledby="v-pills-salida-tab">
 								<div class="form-group">
-									<label for="tipo_salida" class="font-weight-bold">Seleccione la salida</label>
+									<label for="tipo_salida" class="font-weight-bold">Selecciona la salida</label>
 									<select class="form-control" name="tipo_salida" id="tipo_salida">
-										<option value="" selected disabled>Seleccione...</option>
-										<option value="ATENDIDA">DENUNCIA YA ATENDIDA</option>
+										<option value="" selected disabled>Selecciona...</option>
 										<option value="DERIVADO">DERIVACION</option>
 										<option value="CANALIZADO">CANALIZACION</option>
+										<option value="ATENDIDA">DENUNCIA YA ATENDIDA</option>
 										<option value="NAC">NAC</option>
 									</select>
 								</div>
@@ -33,7 +33,7 @@
 									<div id="municipio_empleado_container" class="col-4 d-none">
 										<label for="municipio_empleado" class="form-label font-weight-bold">Municipio</label>
 										<select class="form-control" name="municipio_empleado" id="municipio_empleado">
-											<option value="" selected disabled>Seleccione...</option>
+											<option value="" selected disabled>Selecciona...</option>
 											<option value="1">ENSENADA</option>
 											<option value="2">MEXICALI</option>
 											<option value="3">TECATE</option>
@@ -44,19 +44,20 @@
 									<div id="oficina_empleado_container" class="col-4 d-none">
 										<label for="oficina_empleado" class="form-label font-weight-bold">Oficina</label>
 										<select class="form-control" name="oficina_empleado" id="oficina_empleado">
-											<option value="" selected disabled>Seleccione...</option>
+											<option value="" selected disabled>Selecciona...</option>
+											<option value="792">CENTRO DE DENUNCIA TECNOLÓGICA</option>
 										</select>
 									</div>
 									<div id="empleado_container" class="col-4 d-none">
 										<label for="empleado" class="form-label font-weight-bold">Asignar a</label>
 										<select class="form-control" name="empleado" id="empleado">
-											<option value="" selected disabled>Seleccione...</option>
+											<option value="" selected disabled>Selecciona...</option>
 										</select>
 									</div>
 								</div>
 								<div id="notas" class="form-group">
 									<label for="notas_caso_salida">Notas</label>
-									<textarea id="notas_caso_salida" class="form-control" placeholder="Notas..." rows="10" maxlength="300" oninput="mayuscTextarea(this)"></textarea>
+									<textarea id="notas_caso_salida" class="form-control" placeholder="Notas..." rows="10" maxlength="300" oninput="mayuscTextarea(this)" onkeydown="pulsar(event)"></textarea>
 								</div>
 								<button type="button" id="btn-finalizar-derivacion" class="btn btn-primary">FINALIZAR</button>
 							</div>
@@ -185,8 +186,8 @@
 			let salida = tipoSalida.value;
 			let descripcion = document.querySelector('#notas_caso_salida').value;
 			data = {
-				'folio': document.querySelector('#input_folio_atencion').value,
-				'agenteId': <?= session('ID') ?>,
+				'folio': inputFolio.value,
+				'year': year_select.value,
 				'status': salida,
 				'motivo': descripcion,
 			}
@@ -224,6 +225,12 @@
 							inputFolio.value = '';
 							borrarTodo();
 						})
+					} else {
+						Swal.fire({
+							icon: 'error',
+							text: data.error,
+							confirmButtonColor: '#bf9b55',
+						});
 					}
 				}).fail(function(jqXHR, textStatus) {
 					btnFinalizar.removeAttribute('disabled');
@@ -251,6 +258,7 @@
 					empleado.value != '') {
 					data = {
 						'folio': inputFolio.value,
+						'year': year_select.value,
 						'municipio': municipio_empleado.value,
 						'estado': 2,
 						'notas': descripcion,
@@ -265,6 +273,7 @@
 						dataType: "json",
 
 					}).done(function(data) {
+						console.log(data);
 						btnFinalizar.removeAttribute('disabled');
 						if (data.status == 1) {
 							document.querySelector('#tipo_salida').value = "";
@@ -293,12 +302,19 @@
 								inputFolio.value = '';
 								borrarTodo();
 							})
+						} else {
+							Swal.fire({
+								icon: 'error',
+								text: data.error,
+								confirmButtonColor: '#bf9b55',
+							});
 						}
-						console.log(data);
 
 					}).fail(function(jqXHR, textStatus) {
+						console.log(jqXHR, textStatus);
 						data = {
-							'folio': inputFolio.value
+							'folio': inputFolio.value,
+							'year': year_select.value,
 						}
 						$.ajax({
 							data: data,
@@ -312,6 +328,7 @@
 								text: 'Fallo la conexión, revisa con soporte técnico.',
 								confirmButtonColor: '#bf9b55',
 							});
+							console.log(data);
 							btnFinalizar.removeAttribute('disabled');
 						}).fail(function(jqXHR, textStatus) {
 							Swal.fire({

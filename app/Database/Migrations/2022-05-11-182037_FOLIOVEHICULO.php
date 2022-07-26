@@ -10,12 +10,16 @@ class FOLIOVEHICULO extends Migration
 	{
 		$this->forge->addField([
 			'FOLIOID' => [
-				'type' => 'VARCHAR',
-				'constraint' => '16',
+				'type' => 'INT',
+				'unsigned' => TRUE,
 			],
 			'VEHICULOID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
+			],
+			'ANO' => [
+				'type' => 'INT',
+				'constraint' => '4',
 			],
 			'SITUACION' => [
 				'type' => 'INT',
@@ -45,11 +49,6 @@ class FOLIOVEHICULO extends Migration
 			'MODELODESCR' => [
 				'type' => 'VARCHAR',
 				'constraint' => '50',
-				'null' => TRUE,
-			],
-			'ANO' => [
-				'type' => 'INT',
-				'constraint' => '4',
 				'null' => TRUE,
 			],
 			'PLACAS' => [
@@ -108,11 +107,11 @@ class FOLIOVEHICULO extends Migration
 				'null' => TRUE,
 			],
 			'FOTO' => [
-				'type' => 'BLOB',
+				'type' => 'LONGBLOB',
 				'null' => TRUE,
 			],
 			'DOCUMENTO' => [
-				'type' => 'BLOB',
+				'type' => 'LONGBLOB',
 				'null' => TRUE,
 			],
 			'PARTICIPAESTADO' => [
@@ -172,6 +171,7 @@ class FOLIOVEHICULO extends Migration
 		]);
 		$this->forge->addKey('FOLIOID', TRUE);
 		$this->forge->addKey('VEHICULOID', TRUE);
+		$this->forge->addKey('ANO', TRUE);
 		$this->forge->createTable('FOLIOVEHICULO');
 	}
 

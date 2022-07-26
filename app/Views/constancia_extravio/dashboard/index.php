@@ -25,7 +25,7 @@
 			</div>
 		</div>
 		<h4 class="text-center text-blue fw-bold my-4">BIENVENID@ <?= $session->NOMBRE ?> <?= $session->APELLIDO_PATERNO ?> <?= $session->APELLIDO_MATERNO ?></h4>
-	
+
 		<div class="card rounded shadow border-0">
 			<div class="card-body py-5 p-sm-5">
 				<div class="container">
@@ -34,32 +34,18 @@
 			</div>
 			<section>
 				<div class="row">
-					<div class="col-12 text-center">
-						<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#boletos_modal">
-							<i class="bi bi-play-btn-fill"></i> Boleto de Sorteos
-						</button>
-					</div>
-				</div>
-			</section>
-			<br>
-			<br>
-			<section>
-				<div class="row">
-					<div class="col-12 text-center">
-						<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#documentos_modal">
-							<i class="bi bi-play-btn-fill"></i> Documentos
-						</button>
-					</div>
-				</div>
-			</section>
-			<br>
-			<br>
-			<section>
-				<div class="row">
-					<div class="col-12 text-center">
-						<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#vehiculo_modal">
-							<i class="bi bi-play-btn-fill"></i> Placas
-						</button>
+					<div class="col-12 col-md-4 offset-md-4 text-center">
+						<div class="d-grid gap-2">
+							<button type="button" class="btn btn-primary mb-5" data-bs-toggle="modal" data-bs-target="#boletos_modal">
+								<i class="bi bi-play-btn-fill"></i> Boleto de sorteo
+							</button>
+							<button type="button" class="btn btn-primary mb-5" data-bs-toggle="modal" data-bs-target="#documentos_modal">
+								<i class="bi bi-play-btn-fill"></i> Documento
+							</button>
+							<button type="button" class="btn btn-primary mb-5" data-bs-toggle="modal" data-bs-target="#vehiculo_modal">
+								<i class="bi bi-play-btn-fill"></i> Placas
+							</button>
+						</div>
 					</div>
 				</div>
 			</section>

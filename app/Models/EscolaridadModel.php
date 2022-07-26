@@ -4,9 +4,9 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class VehiculoVersionModel extends Model
+class EscolaridadModel extends Model
 {
 	protected $DBGroup          = 'default';
-	protected $table            = 'VEHICULOVERSION';
+	protected $table            = 'ESCOLARIDAD';
 	protected $allowedFields    = [];
 }

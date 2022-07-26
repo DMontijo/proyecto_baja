@@ -7,24 +7,45 @@
 	font-size: 1.2rem;
 }
 
-$font-family-sans-serif: "Montserrat", -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !default;
+$font-family-sans-serif: "Montserrat", -apple-system, system-ui,
+	BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !default;
 $primary-base: #511229 !default;
 $primary: #511229 !default;
 
 .c-sidebar {
-    background: $primary!important;
+	background: $primary !important;
 }
-.c-sidebar-nav-link{
-	&:hover{
-		background: #651834!important;
+.c-sidebar-nav-link {
+	&:hover {
+		background: #651834 !important;
 	}
 }
 
 .c-header-dark {
-    background: $primary!important;
-    border-bottom: none!important;
+	background: $primary !important;
+	border-bottom: none !important;
 }
 
 .nav-pills .nav-link {
-    border-bottom: 1px solid #bfbfbf;
+	border-bottom: 1px solid #bfbfbf;
+}
+
+.c-app {
+	color: #000000 !important;
+}
+
+.c-app .form-control {
+	color: #000000 !important;
+}
+
+.c-app .table {
+	color: #000000 !important;
+}
+
+.c-app select {
+	color: #000000 !important;
+}
+
+.c-app .bg-blue {
+	background-color: #092b47!important;
 }

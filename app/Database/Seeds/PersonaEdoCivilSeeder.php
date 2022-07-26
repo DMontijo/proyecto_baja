@@ -18,6 +18,6 @@ class PersonaEdoCivilSeeder extends Seeder
 			array('PERSONAESTADOCIVILID' => 9, 'PERSONAESTADOCIVILDESCR' => 'NO ESPECIFICADO'),
 		];
 
-		$this->db->table('CATEGORIA_PERSONAEDOCIVIL')->insertBatch($data);
+		$this->db->table('PERSONAEDOCIVIL')->insertBatch($data);
 	}
 }

@@ -6,11 +6,11 @@
 	<hr>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="estaturaD" class="form-label fw-bold">Estatura</label>
-		<input type="text" class="form-control" id="estaturaD" name="estaturaD" autofocus>
+		<input type="text" class="form-control" id="estaturaD" name="estaturaD">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="pesoD" class="form-label fw-bold">Peso</label>
-		<input type="text" class="form-control" id="pesoD" name="pesoD" autofocus>
+		<input type="text" class="form-control" id="pesoD" name="pesoD">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="complexionD" class="form-label fw-bold">Complexión</label>
@@ -76,10 +76,6 @@
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="parentescoD" class="form-label fw-bold">Parentesco</label>
 		<input type="text" class="form-control" id="parentescoD" name="parentescoD">
-	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="fotoDes" class="form-label font-weight-bold">Fotografía:</label>
-		<img class="img-fluid" id="fotoDes" name="fotoDes" src="" alt="">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="autorizaFoto" class="form-label fw-bold">Autoriza foto</label>

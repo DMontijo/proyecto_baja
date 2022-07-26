@@ -1,7 +1,6 @@
-uploads/denunciantes/*
-uploads/usuarios/*
-uploads/folios/*
 firmar_documento/Documentos_Firmados/*
+*.pem
+*.txt
 
 #-------------------------
 # Operating Specific Junk Files

@@ -16,10 +16,12 @@ class EMPLEADOS extends Migration
 			'NOMBRE' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
+				'null' => TRUE,
 			],
 			'PRIMERAPELLIDO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
+				'null' => TRUE,
 			],
 			'SEGUNDOAPELLIDO' => [
 				'type' => 'VARCHAR',
@@ -37,18 +39,22 @@ class EMPLEADOS extends Migration
 			'OFICINAID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
+				'null' => TRUE,
 			],
 			'OFICINADESCR' => [
 				'type' => 'VARCHAR',
 				'constraint' => '255',
+				'null' => TRUE,
 			],
 			'AREAID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
+				'null' => TRUE,
 			],
 			'AREADESCR' => [
 				'type' => 'VARCHAR',
 				'constraint' => '255',
+				'null' => TRUE,
 			],
 			'FECHA DATETIME DEFAULT CURRENT_TIMESTAMP',
 		]);

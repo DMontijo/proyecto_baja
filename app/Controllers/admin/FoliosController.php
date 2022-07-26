@@ -7,18 +7,11 @@ use App\Controllers\BaseController;
 use App\Models\DenunciantesModel;
 
 use App\Models\FolioPreguntasModel;
-use App\Models\FolioCorrelativoModel;
 use App\Models\FolioModel;
 use App\Models\FolioPersonaFisicaModel;
 use App\Models\FolioPersonaFisicaDomicilioModel;
 use App\Models\FolioPersonaFisicaDesaparecidaModel;
-use App\Models\FolioPersonaFisicaImputadoDelitoModel;
-use App\Models\FolioPersonaFisicaImputadoModel;
-use App\Models\FolioRelacionFisicaFisicaModel;
-use App\Models\FolioObjetoModel;
 use App\Models\FolioVehiculoModel;
-use App\Models\FolioDocumentoModel;
-use App\Models\FolioArchivoExternoModel;
 use App\Models\UsuariosModel;
 use App\Models\ZonasUsuariosModel;
 use App\Models\RolesUsuariosModel;
@@ -31,19 +24,12 @@ class FoliosController extends BaseController
 		//Models
 		$this->_denunciantesModel = new DenunciantesModel();
 
-		$this->_folioCorrelativoModel = new FolioCorrelativoModel();
 		$this->_folioModel = new FolioModel();
 		$this->_folioPreguntasModel = new FolioPreguntasModel();
 		$this->_folioPersonaFisicaModel = new FolioPersonaFisicaModel();
 		$this->_folioPersonaFisicaDomicilioModel = new FolioPersonaFisicaDomicilioModel();
 		$this->_folioPersonaFisicaDesaparecidaModel = new FolioPersonaFisicaDesaparecidaModel();
-		$this->_folioPersonaFisicaImputadoDelitoModel = new FolioPersonaFisicaImputadoDelitoModel();
-		$this->_folioPersonaFisicaImputadoModel = new FolioPersonaFisicaImputadoModel();
-		$this->_folioRelacionFisicaFisicaModel = new FolioRelacionFisicaFisicaModel();
-		$this->_folioObjetoModel = new FolioObjetoModel();
 		$this->_folioVehiculoModel = new FolioVehiculoModel();
-		$this->_folioDocumentoModel = new FolioDocumentoModel();
-		$this->_folioArchivoExternoModel = new FolioArchivoExternoModel();
 
 		$this->_constanciaExtravioModel= new ConstanciaExtraviadoModel();
 
@@ -56,7 +42,7 @@ class FoliosController extends BaseController
 	{
 		$data = (object)array();
 		$agente = $this->_usuariosModel->asObject()->where('ID', session('ID'))->first();
-		$roles = [1, 2, 3, 4];
+		$roles = [1, 3];
 		$data->abiertos = count($this->_folioModel->where('STATUS', 'ABIERTO')->findAll());
 		if (in_array($agente->ROLID, $roles)) {
 			$data->derivados = count($this->_folioModel->asObject()->where('STATUS', 'DERIVADO')->findAll());
@@ -75,20 +61,21 @@ class FoliosController extends BaseController
 	public function folios_abiertos()
 	{
 		$data = (object)array();
-		$data = $this->_folioModel->asObject()->where('STATUS', 'ABIERTO')->findAll();
+		$data = $this->_folioModel->asObject()->where('STATUS', 'ABIERTO')->join('DENUNCIANTES', 'DENUNCIANTES.DENUNCIANTEID = FOLIO.DENUNCIANTEID')->findAll();
 		$this->_loadView('Folios abiertos', 'folios', '', $data, 'folios_abiertos');
 	}
+
 	public function constancias_abiertas(){
 		$data = (object)array();
 		$data = $this->_constanciaExtravioModel->asObject()->where('STATUS', 'open')->findAll();
 		$this->_loadView('Constancias extraviadas abiertos', 'constancias', '', $data, 'constancias_abiertas');
-	
 	}
+
 	public function folios_derivados()
 	{
 		$data = (object)array();
 		$agente = $this->_usuariosModel->asObject()->where('ID', session('ID'))->first();
-		$roles = [1, 2, 3, 4];
+		$roles = [1, 3];
 		if (in_array($agente->ROLID, $roles)) {
 			$data = $this->_folioModel->asObject()->where('STATUS', 'DERIVADO')->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->findAll();
 		} else {
@@ -101,7 +88,7 @@ class FoliosController extends BaseController
 	{
 		$data = (object)array();
 		$agente = $this->_usuariosModel->asObject()->where('ID', session('ID'))->first();
-		$roles = [1, 2, 3, 4];
+		$roles = [1, 3];
 		if (in_array($agente->ROLID, $roles)) {
 			$data = $this->_folioModel->asObject()->where('STATUS', 'CANALIZADO')->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->findAll();
 		} else {
@@ -114,7 +101,7 @@ class FoliosController extends BaseController
 	{
 		$data = (object)array();
 		$agente = $this->_usuariosModel->asObject()->where('ID', session('ID'))->first();
-		$roles = [1, 2, 3, 4];
+		$roles = [1, 3];
 		if (in_array($agente->ROLID, $roles)) {
 			$data = $this->_folioModel->asObject()->where('EXPEDIENTEID !=', NULL)->where('AGENTEATENCIONID !=', NULL)->where('AGENTEFIRMAID !=', NULL)->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->findAll();
 		} else {

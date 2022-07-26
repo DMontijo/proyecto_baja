@@ -82,7 +82,7 @@
 																<thead>
 																	<tr>
 																		<th class="bg-primary text-white text-center" colspan="2">
-																			Seleccione el archivo XML del documento a validar.
+																			Selecciona el archivo XML del documento a validar.
 																		</th>
 																	</tr>
 																</thead>

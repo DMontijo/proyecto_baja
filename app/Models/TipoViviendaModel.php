@@ -7,6 +7,6 @@ use CodeIgniter\Model;
 class TipoViviendaModel extends Model
 {
 	protected $DBGroup          = 'default';
-	protected $table            = 'CATEGORIA_TIPOVIVIENDA';
+	protected $table            = 'TIPOVIVIENDA';
 	protected $allowedFields    = [];
 }

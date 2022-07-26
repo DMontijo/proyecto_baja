@@ -15,6 +15,6 @@ class MedioConocimientoSeeder extends Seeder
 			array('MEDIOCONOCIMIENTODESCR' => 'TELEFONICA', 'COMPORTAMIENTO' => 'DATOSAVISO'),
 			array('MEDIOCONOCIMIENTODESCR' => 'PARTE POLICIAL', 'COMPORTAMIENTO' => 'PARTE')
 		];
-		$this->db->table('CATEGORIA_MEDIOCONOCIMIENTO')->insertBatch($data);
+		$this->db->table('MEDIOCONOCIMIENTO')->insertBatch($data);
 	}
 }

@@ -46,8 +46,8 @@
 		</div>
 	</div>
 
-	<section class="row d-none d-lg-block">
-		<div class="col-lg-4 offset-lg-4 d-none d-md-block text-center">
+	<section class="row d-none d-lg-flex justify-content-center">
+		<div class="col-4 d-none d-md-block text-center">
 			<div class="card text-center bg-transparent border-0" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Para continuar debes aceptar el aviso de privacidad de datos y los términos y condiciones">
 				<div class="card-body">
 					<a href="<?= base_url() ?>/denuncia" class="text-decoration-none" onclick="handleClickBTN(event)" name="VideoDenuncia" id="VideoDenuncia">
@@ -57,10 +57,20 @@
 				</div>
 			</div>
 		</div>
+		<div class="col-4 d-none d-md-block text-center">
+			<div class="card text-center bg-transparent border-0" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Para continuar debes aceptar el aviso de privacidad de datos y los términos y condiciones">
+				<div class="card-body">
+					<a href="<?= base_url() ?>/constancia_extravio/login" class="text-decoration-none" onclick="handleClickBTN(event)" name="ConstanciaExtravio" id="ConstanciaExtravio">
+						<img src="<?= base_url() ?>/assets/img/icons/constancia.png" class="w-75" alt="Constancia de Extravío">
+						<p class="fw-bold fs-5 mt-2  text-dark ">Constancia de Extravío</p>
+					</a>
+				</div>
+			</div>
+		</div>
 	</section>
 	<section class="row d-block d-lg-none">
-		<div class="col-12 mt-4">
-			<a href="<?= base_url() ?>/denuncia" class="text-decoration-none" name="VideoDenuncia" id="VideoDenuncia">
+		<div class="col-12 mt-4" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Para continuar debes aceptar el aviso de privacidad de datos y los términos y condiciones">
+			<a href="<?= base_url() ?>/denuncia" class="text-decoration-none" onclick="handleClickBTN(event)" name="VideoDenuncia" id="VideoDenuncia">
 				<div class="card text-white bg-light border-0 shadow rounded-3 mb-4">
 					<div class="card-body d-flex">
 						<div class="w-75 d-flex align-items-center" style="height:100px">
@@ -74,22 +84,28 @@
 			</a>
 		</div>
 	</section>
+	<section class="row d-block d-lg-none">
+		<div class="col-12 mt-4" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Para continuar debes aceptar el aviso de privacidad de datos y los términos y condiciones">
+			<a href="<?= base_url() ?>/constancia_extravio/login" onclick="handleClickBTN(event)" class="text-decoration-none" name="ConstanciaExtravio" id="ConstanciaExtravio">
+				<div class="card text-white bg-light border-0 shadow rounded-3 mb-4">
+					<div class="card-body d-flex">
+						<div class="w-75 d-flex align-items-center" style="height:100px">
+							<p class="fw-bold d-fle p-0 m-0 fs-4 text-blue">Constancia de Extravío</p>
+						</div>
+						<div class="w-25 d-flex align-items-center justify-content-end" style="height:100px">
+							<img src="<?= base_url() ?>/assets/img/icons/constancia.png" class="movil-icon" alt="Constancia de extravio">
+						</div>
+					</div>
+				</div>
+			</a>
+		</div>
+	</section>
 	<section>
 		<div class="row">
 			<div class="col-12 text-center">
 				<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tutorial_modal">
 					<i class="bi bi-play-btn-fill"></i> Ver video tutorial
 				</button>
-			</div>
-		</div>
-	</section>
-	<br>
-	<section>
-		<div class="row">
-			<div class="col-12 text-center">
-				<a href="<?= base_url() ?>/constancia_extravio/login" class="btn btn-primary">
-					<i class="bi bi-file-earmark-plus-fill"></i> Constancia de Extravío
-				</a>
 			</div>
 		</div>
 	</section>

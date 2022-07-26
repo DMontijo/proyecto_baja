@@ -30,6 +30,6 @@ class PersonaTipoIdentificacionSeeder extends Seeder
 			array('PERSONATIPOIDENTIFICACIONID' => '999', 'PERSONATIPOIDENTIFICACIONDESCR' => 'NINGUNA', 'FORMATOCAPTURA' => '', 'IDENTIFICACIONPREDETERMINADA' => '', 'EXPRESIONREGULAR' => ''),
 
 		];
-		$this->db->table('CATEGORIA_PERSONATIPOIDENTIFICACION')->insertBatch($data);
+		$this->db->table('PERSONATIPOIDENTIFICACION')->insertBatch($data);
 	}
 }

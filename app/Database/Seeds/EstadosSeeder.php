@@ -44,7 +44,7 @@ class EstadosSeeder extends Seeder
 			array('ESTADODESCR' => 'EXTRANJERO')
 		];
 
-		//  $this->db->query("INSERT INTO CATEGORIA_ESTADO (ESTADODESCR) VALUES(:ESTADODESCR:)", $data);
-		$this->db->table('CATEGORIA_ESTADO')->insertBatch($data);
+		//  $this->db->query("INSERT INTO ESTADO (ESTADODESCR) VALUES(:ESTADODESCR:)", $data);
+		$this->db->table('ESTADO')->insertBatch($data);
 	}
 }

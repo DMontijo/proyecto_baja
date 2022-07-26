@@ -9,7 +9,7 @@ class DENUNCIANTES extends Migration
 	public function up()
 	{
 		$this->forge->addField([
-			'ID_DENUNCIANTE' => [
+			'DENUNCIANTEID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'auto_increment' => TRUE,
@@ -36,17 +36,14 @@ class DENUNCIANTES extends Migration
 				'type' => 'VARCHAR',
 				'constraint' => '255',
 			],
-			'FECHA_DE_NACIMIENTO' => [
+			'FECHANACIMIENTO' => [
 				'type' => 'DATE',
-			],
-			'EDAD' => [
-				'type' => 'TINYINT',
 			],
 			'SEXO' => [
 				'type' => 'CHAR',
 				'constraint' => '1',
 			],
-			'CODIGO_POSTAL' => [
+			'CODIGOPOSTAL' => [
 				'type' => 'INT',
 				'constraint' => '10',
 				'null' => TRUE
@@ -60,7 +57,15 @@ class DENUNCIANTES extends Migration
 				'type' => 'INT',
 				'null' => TRUE
 			],
+			'ESTADOORIGENID' => [
+				'type' => 'INT',
+				'null' => TRUE
+			],
 			'MUNICIPIOID' => [
+				'type' => 'INT',
+				'null' => TRUE
+			],
+			'MUNICIPIOORIGENID' => [
 				'type' => 'INT',
 				'null' => TRUE
 			],
@@ -112,27 +117,22 @@ class DENUNCIANTES extends Migration
 				'constraint' => '3',
 				'null' => TRUE
 			],
-			'TIPO_DE_IDENTIFICACION' => [
+			'TIPOIDENTIFICACIONID' => [
 				'type' => 'VARCHAR',
 				'constraint' => '80',
 				'null' => TRUE
 			],
-			'NUMERO_DE_IDENTIFICACION' => [
+			'NUMEROIDENTIFICACION' => [
 				'type' => 'VARCHAR',
 				'constraint' => '80',
 				'null' => TRUE
 			],
-			'ESTADO_CIVIL' => [
+			'ESTADOCIVILID' => [
 				'type' => 'VARCHAR',
 				'constraint' => '20',
 				'null' => TRUE
 			],
-			'OCUPACION' => [
-				'type' => 'VARCHAR',
-				'constraint' => '100',
-				'null' => TRUE
-			],
-			'IDENTIDAD_DE_GENERO' => [
+			'IDENTIDADGENERO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '50',
 				'null' => TRUE
@@ -142,14 +142,17 @@ class DENUNCIANTES extends Migration
 				'constraint' => '100',
 				'null' => TRUE
 			],
-			'NACIONALIDAD_ID' => [
+			'NACIONALIDADID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 			],
-			'ESCOLARIDAD' => [
-				'type' => 'VARCHAR',
-				'constraint' => '30',
-				'null' => TRUE
+			'ESCOLARIDADID' => [
+				'type' => 'INT',
+				'null' => TRUE,
+			],
+			'OCUPACIONID' => [
+				'type' => 'INT',
+				'null' => TRUE,
 			],
 			'FACEBOOK' => [
 				'type' => 'VARCHAR',
@@ -171,11 +174,11 @@ class DENUNCIANTES extends Migration
 				'null' => TRUE
 			],
 			'DOCUMENTO' => [
-				'type' => 'BLOB',
+				'type' => 'LONGBLOB',
 				'null' => TRUE
 			],
 			'FIRMA' => [
-				'type' => 'BLOB',
+				'type' => 'LONGBLOB',
 				'null' => TRUE
 			],
 			'NOTIFICACIONES' => [
@@ -183,10 +186,25 @@ class DENUNCIANTES extends Migration
 				'constraint' => '1',
 				'default' => 'S',
 			],
+			'LEER' => [
+				'type' => 'CHAR',
+				'constraint' => '1',
+				'default' => 'S',
+			],
+			'ESCRIBIR' => [
+				'type' => 'CHAR',
+				'constraint' => '1',
+				'default' => 'S',
+			],
+			'APOYO' => [
+				'type' => 'CHAR',
+				'constraint' => '1',
+				'default' => 'N',
+			],
 			'FECHAREGISTRO DATETIME DEFAULT CURRENT_TIMESTAMP',
 			'FECHAACTUALIZACION DATETIME ON UPDATE CURRENT_TIMESTAMP',
 		]);
-		$this->forge->addKey('ID_DENUNCIANTE', TRUE);
+		$this->forge->addKey('DENUNCIANTEID', TRUE);
 		$this->forge->createTable('DENUNCIANTES');
 	}
 

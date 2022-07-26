@@ -20,11 +20,11 @@ class PERSONAEDOCIVIL extends Migration
             
         ]);
         $this->forge->addKey('PERSONAESTADOCIVILID', TRUE);
-        $this->forge->createTable('CATEGORIA_PERSONAEDOCIVIL');
+        $this->forge->createTable('PERSONAEDOCIVIL');
     }
 
     public function down()
     {
-        $this->forge->dropTable('CATEGORIA_PERSONAEDOCIVIL');
+        $this->forge->dropTable('PERSONAEDOCIVIL');
     }
 }
