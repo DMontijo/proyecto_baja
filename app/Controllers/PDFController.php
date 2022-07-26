@@ -68,9 +68,37 @@ class PDFController extends BaseController
 	public function constanciaExtravio()
 	{
 		$data = (object)array();
+		$datos= $this->db->table("files_originales")->get()->getResult();
 		$data->folio = $this->request->getGet('folio');
-		$data->constanciaExtravio = $this->_fileOriginalModel->asObject()->findAll();
-		
+		$data->constanciaExtravio = $this->_fileOriginalModel->asObject()->where('TITULO', 'CONSTANCIA DE EXTRAVÍO')->first();
+		// $numfolio = $_POST['input_folio_atencion'];
+		$folios = $this->_constanciaExtravioModel->asObject()->where('IDCERTIFICADOEXTRAVIADO', $data->folio)->first();
+
+		$agente = $this->_usuariosModel->asObject()->where('ID', session('ID'))->first();
+		$denunciante = $this->_denunciantesModel->asObject()->where('ID_DENUNCIANTE', $folios->DENUNCIANTEID)->first();
+		$lugar = $this->_hechoLugarModel->asObject()->where('HECHOLUGARID', $folios->HECHOLUGARID)->first();
+		$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $folios->MUNICIPIOID)->where('ESTADOID', $folios->ESTADOID)->first();
+		$estado = $this->_estadosModel->asObject()->where('ESTADOID', $folios->ESTADOID)->first();
+		$timestamp = strtotime($folios->HECHOFECHA);
+		$dia = date('d', $timestamp);
+		$meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+		$mes = $meses[date('n')-1];
+	
+
+		$data->constanciaExtravio->PLACEHOLDER = str_replace('[FOLIO_NUMERO]', $folios->IDCERTIFICADOEXTRAVIADO, $data->constanciaExtravio->PLACEHOLDER);
+		$data->constanciaExtravio->PLACEHOLDER = str_replace('[NOMBRE_AGENTE]', $agente->NOMBRE ." ". $agente->APELLIDO_PATERNO . " ". $agente->APELLIDO_MATERNO, $data->constanciaExtravio->PLACEHOLDER);
+		$data->constanciaExtravio->PLACEHOLDER = str_replace('[NOMBRE_CERTIFICADO]', $folios->EXTRAVIO, $data->constanciaExtravio->PLACEHOLDER);
+		$data->constanciaExtravio->PLACEHOLDER = str_replace('[NOMBRE_PERSONA]', $denunciante->NOMBRE ." ". $denunciante->APELLIDO_PATERNO . " ". $denunciante->APELLIDO_MATERNO, $data->constanciaExtravio->PLACEHOLDER);
+		$data->constanciaExtravio->PLACEHOLDER = str_replace('[LUGAR_EXTRAVIO]', $lugar->HECHODESCR, $data->constanciaExtravio->PLACEHOLDER);
+		$data->constanciaExtravio->PLACEHOLDER = str_replace('[DESCRIPCION_EXTRAVIO]', $folios->DESCRIPCION_EXTRAVIO, $data->constanciaExtravio->PLACEHOLDER);
+		$data->constanciaExtravio->PLACEHOLDER = str_replace('[NOMBRE_CIUDAD]', $municipio->MUNICIPIODESCR .", ". $estado->ESTADODESCR , $data->constanciaExtravio->PLACEHOLDER);
+		$data->constanciaExtravio->PLACEHOLDER = str_replace('[FECHA_EXTRAVIO]', $folios->HECHOFECHA, $data->constanciaExtravio->PLACEHOLDER);
+
+		$data->constanciaExtravio->PLACEHOLDER = str_replace('[DIA]', $dia, $data->constanciaExtravio->PLACEHOLDER);
+		$data->constanciaExtravio->PLACEHOLDER = str_replace('[MES]', strtoupper($mes), $data->constanciaExtravio->PLACEHOLDER);
+		$data->constanciaExtravio->PLACEHOLDER = str_replace('[ANIO]', $folios->ANO, $data->constanciaExtravio->PLACEHOLDER);
+		$data->constanciaExtravio->PLACEHOLDER = str_replace('[HORA]', $folios->HECHOHORA, $data->constanciaExtravio->PLACEHOLDER);
+
 		$this->_loadView('Documentos', $data, 'constanciaExtravio');
 	}
 	

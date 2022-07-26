@@ -13,16 +13,15 @@
         <div class="row">
             <div class="col-12">
             <form method="POST" action="<?php echo base_url('admin/dashboard/generaPDFE')?>">
-            <input type="text" class="form-control" id="input_folio_atencion" name="input_folio_atencion" placeholder="Folio de atención..." value="<?= isset($body_data->folio) ? $body_data->folio : '' ?>">
+            <input type="text" class="form-control" id="input_folio_atencion" name="input_folio_atencion" placeholder="Folio de atención..." value="<?= isset($body_data->folio) ? $body_data->folio : '' ?>" hidden>
 
-                <h3 class="mb-4"><?php echo $body_data->constanciaExtravio[5]->TITULO ?></h3>
+                <h3 class="mb-4"><?php echo $body_data->constanciaExtravio->TITULO ?></h3>
                 <button type="submit" class="btn btn-primary" id="downloadPDF">
                     Descargar PDF
                 </button>
-                <button onclick="clickMe()" class="btn btn-secondary">Descargar RTF</button>
                 <div class="card shadow border-0">
                     <div class="card-body" name="certificado" id="certificado" style="margin: 2%;">
-                        <h5><?php echo $body_data->constanciaExtravio[5]->PLACEHOLDER ?></h5>
+                        <h5><?php echo $body_data->constanciaExtravio->PLACEHOLDER ?></h5>
                     </div>
                 </div>
             </form>
