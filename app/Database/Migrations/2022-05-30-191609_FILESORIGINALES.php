@@ -46,6 +46,9 @@ class FILESORIGINALES extends Migration
 			'ID_DENUNCIANTE'          => [
 				'type'           => 'INT',
 			],
+			'TEXTO'=>[
+				'type'           => 'TEXT',
+			]
 
 		]);
 		$this->forge->addKey('ID', TRUE);

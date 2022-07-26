@@ -5,6 +5,7 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
+
 <div class="container m-auto">
 	<div class="col-12">
 		<div class="card bg-primary shadow mb-4" style="font-size:14px;background:url(<?= base_url('/assets/img/banner/LINEAS_BANNER.png') ?>);background-repeat: no-repeat;background-size: cover !important;background-position-y: top;border-radius:10px;">
@@ -74,10 +75,6 @@
 							<div class="invalid-feedback">
 								La fecha de nacimiento es obligatoria
 							</div>
-						</div>
-						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="edad" class="form-label fw-bold input-required">Edad</label>
-							<input class="form-control" id="edad" name="edad" maxlength="3" type="text">
 						</div>
 						
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -160,7 +157,32 @@
 				e.target.value = '';
 			}
 		});
+		document.querySelector('#correo').addEventListener('blur', (e) => {
+			let regex = /\S+@\S+\.\S+/
 
+			if (regex.test(e.target.value)) {
+				$.ajax({
+					data: {
+						'email': e.target.value
+					},
+					url: "<?= base_url('/data/exist-email') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						if (response.exist === 1) {
+							Swal.fire({
+								icon: 'error',
+								text: 'El correo ya se encuentra registrado, ingresa uno diferente.',
+								confirmButtonColor: '#bf9b55',
+							}).then(() => {
+								e.target.value = '';
+							})
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {}
+				});
+			}
+		})
 		function enviar_datos() {
 		let nombre = document.querySelector("#nombre").value ? document.querySelector("#nombre").value : '';
 		let apellido1 = document.querySelector("#apellido_paterno").value ? document.querySelector("#apellido_paterno").value : '';

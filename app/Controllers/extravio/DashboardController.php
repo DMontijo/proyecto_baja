@@ -141,7 +141,7 @@ class DashboardController extends BaseController
 		// exit;
 		$insert = $this->_constanciaExtravioModel->insert($data);
 		if ($insert) {
-			return redirect()->to(base_url('/constancia_extravio/dashboard'))->with('message', 'Se ha enviado tu petición');
+			return redirect()->to(base_url('/constancia_extravio/dashboard'))->with('peticion', 'Se ha enviado tu petición');
 		} else {
 			return redirect()->back()->with('message', 'Hubo un error en los datos.');
 		}

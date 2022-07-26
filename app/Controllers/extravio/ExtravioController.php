@@ -86,6 +86,7 @@ class ExtravioController extends BaseController
 
     public function create()
 	{
+
 		$password = $this->_generatePassword(6);
 
 		$data = [
@@ -96,11 +97,9 @@ class ExtravioController extends BaseController
 			'PASSWORD' => hashPassword($password),
             'TELEFONO'=> $this->request->getPost('telefono'),
 			'FECHA_DE_NACIMIENTO' => $this->request->getPost('fecha_nacimiento'),
-			'EDAD' => $this->request->getPost('edad'),
 			'SEXO' => $this->request->getPost('sexo'),
 			
 		];
-
 		if ($this->validate(['correo' => 'required|is_unique[DENUNCIANTES.CORREO]'])) {
 			$this->_denunciantesModel->insert($data);
 			$this->_sendEmailPassword($data['CORREO'], $password);

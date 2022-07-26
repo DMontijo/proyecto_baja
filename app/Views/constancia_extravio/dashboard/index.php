@@ -25,6 +25,7 @@
 			</div>
 		</div>
 		<h4 class="text-center text-blue fw-bold my-4">BIENVENID@ <?= $session->NOMBRE ?> <?= $session->APELLIDO_PATERNO ?> <?= $session->APELLIDO_MATERNO ?></h4>
+	
 		<div class="card rounded shadow border-0">
 			<div class="card-body py-5 p-sm-5">
 				<div class="container">
@@ -67,6 +68,16 @@
 		</div>
 	</div>
 </div>
+
+<?php if (session()->getFlashdata('peticion')) : ?>
+	<script>
+		Swal.fire({
+			icon: 'success',
+			text: '<?= session()->getFlashdata('peticion') ?>',
+			confirmButtonColor: '#bf9b55',
+		})
+	</script>
+<?php endif; ?>
 <?php include('modal_form_boletos.php') ?>
 <?php include('modal_form_documentos.php') ?>
 <?php include('modal_form_vehiculo.php') ?>
