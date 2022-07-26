@@ -49,11 +49,11 @@ class FILESORIGINALES extends Migration
 
 		]);
 		$this->forge->addKey('ID', TRUE);
-		$this->forge->createTable('FILES_ORIGINALES');
+		$this->forge->createTable('PLANTILLAS');
 	}
 
 	public function down()
 	{
-		$this->forge->dropTable('DERIVACIONES_ATENCION');
+		$this->forge->dropTable('PLANTILLAS');
 	}
 }
