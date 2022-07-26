@@ -48,6 +48,7 @@ $Valid_ApertArchsFIEL;
 # Obtener el archivo .key.pem del archivo .key (Llave privada).
 
 $Comando_key_pem = "pkcs8 -inform DER -in " . $FIEL_file_key . " -passin pass:$FIEL_password -out " . $file_key_pem;
+$Comando_key_pem = "pkcs8 -inform DER -in " . $FIEL_file_key . " -passin pass:$FIEL_password -out " . $file_key_pem;
 
 exec('openssl ' . $Comando_key_pem, $arr, $status);
 

@@ -48,6 +48,7 @@ $routes->group('admin', function ($routes) {
 		$routes->get('/', 'admin/DashboardController::index');
 
 		$routes->get('usuarios', 'admin/DashboardController::usuarios');
+		$routes->get('firma', 'admin/FirmaController::index');
 		$routes->get('firmas', 'admin/DashboardController::firmas');
 
 		$routes->get('nuevo_usuario', 'admin/DashboardController::nuevo_usuario');
