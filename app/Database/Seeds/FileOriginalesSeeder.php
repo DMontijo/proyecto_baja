@@ -6,11 +6,12 @@ use CodeIgniter\Database\Seeder;
 
 class FileOriginalesSeeder extends Seeder
 {
-    public function run()
-    {
-        $data = [
-            array('ID' => '1', 'DESCRIPCION' => 'CERTIFICADO MEDICO', 'TITULO'=>'CERTIFICADO MEDICO',
-            'PLACEHOLDER'=>'<p class="p1" style="margin: 0px; text-align: center; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0);">SOLICITUD DE PERITAJE</p><br>
+	public function run()
+	{
+		$data = [
+			array(
+				'ID' => '1', 'DESCRIPCION' => 'CERTIFICADO MEDICO', 'TITULO' => 'CERTIFICADO MEDICO',
+				'PLACEHOLDER' => '<p class="p1" style="margin: 0px; text-align: center; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0);">SOLICITUD DE PERITAJE</p><br>
 
             <p class="p2" style="margin: 0px; text-align: right; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0); min-height: 14px;">No. de Caso: [EXPEDIENTE_NUMERO]</p><br>
             
@@ -43,7 +44,7 @@ class FileOriginalesSeeder extends Seeder
             LIC. [EXPEDIENTE_NOMBRE_DEL_RESPONSABLE] <br>
             AGENTE DEL MINISTERIO PUBLICO TITULAR DE LA <br>
             [DOCUMENTO_OFICINA] <br></p><br>',
-            'OPCIONES'=>'NULL','TIPO_ARCHIVO'=>'CERTIFICADO MEDICO','RELACIONADO_CON'=>'0','MODIFICADO'=>'0','ELIMINADO'=>'0','ID_DENUNCIANTE'=>'NULL','TEXTO'=>'SOLICITUD DE PERITAJE
+				'TEXTO' => 'SOLICITUD DE PERITAJE
 
 
             No. de Caso: [EXPEDIENTE_NUMERO]
@@ -77,11 +78,13 @@ class FileOriginalesSeeder extends Seeder
             
             LIC. [EXPEDIENTE_NOMBRE_DEL_RESPONSABLE]
             AGENTE DEL MINISTERIO PUBLICO TITULAR DE LA
-            [DOCUMENTO_OFICINA]'),
-            
-         
-            array('ID' => '2', 'DESCRIPCION' => 'CONSTANCIA DE RECEPCIÓN DE VIDEO DENUNCIA', 'TITULO'=>'CONSTANCIA DE RECEPCIÓN DE VIDEO DENUNCIA',
-            'PLACEHOLDER'=>'<br><p class="p1" style="margin: 0px; text-align: center; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0); min-height: 14px;">CONSTANCIA DE RECEPCIÓN DE VIDEO DENUNCIA</p><br><p class="p2" style="margin: 0px; text-align: justify; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0);">
+            [DOCUMENTO_OFICINA]'
+			),
+
+
+			array(
+				'ID' => '2', 'DESCRIPCION' => 'CONSTANCIA DE RECEPCIÓN DE VIDEO DENUNCIA', 'TITULO' => 'CONSTANCIA DE RECEPCIÓN DE VIDEO DENUNCIA',
+				'PLACEHOLDER' => '<br><p class="p1" style="margin: 0px; text-align: center; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0); min-height: 14px;">CONSTANCIA DE RECEPCIÓN DE VIDEO DENUNCIA</p><br><p class="p2" style="margin: 0px; text-align: justify; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0);">
             En [ESTADO], Baja California, a los [DIA] días del mes de [MES] del año [ANO], siendo las [HORA] horas con [MINUTOS] minutos, la/el suscrita (o) Licenciada(o) [NOMBRE_LICENCIADO], Agente del Ministerio Público adscrita(o) al Centro de Denuncia Tecnológica, hace constar que se inicia video denuncia interpuesta por la/el ciudadana (o) [VICTIMA], quien manifesta en su entrevista que [HECHO], motivo por el que refiere es su deseo presentar denuncia/querella por el delito de [DELITO], previsto en el artículo [NUMERO_DELITO] del Código Penal [ORDENAMIENTO_LEGAL] en contra de [PERSONA],  por tanto se genera [TIPO_EXPEDIENTE] 020[VARIABLE_PENDIENTE]-20[VARIABLE_PENDIENTE]-[VARIABLE_PENDIENTE], misma que será remitida a la Dirección de Zona [ZONA_SEJAP] para su debida remisión. Lo anterior de conformidad con el artículo 131 fracción II del Código Nacional de Procedimientos Penales, Artículo 20 inciso C de la Constitución Política de los Estados Unidos Mexicanos, así como el Artículo 22, fracción II y demás aplicables de la Ley Orgánica de la Fiscalía General del Estado de Baja California. CONSTE.
             <br></p><br><br><p class="p1" style="margin: 0px; text-align: right; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0); min-height: 14px;">EXPEDIENTE: [EXPEDIENTE_NUMERO]</p><br><p class="p2" style="margin: 0px; text-align: justify; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0);">
             DIRECCIÓN DE SEGURIDAD PÚBLICA MUNICIPAL <br>
@@ -99,7 +102,7 @@ class FileOriginalesSeeder extends Seeder
             EXPEDIENTE_NOMBRE_DEL_RESPONSABLE <br>
             AGENTE DEL MINISTERIO PÚBLICO ADSCRITO A LA UNIDAD DE ATENCIÓN Y <br>
             ORIENTACIÓN TEMPRANA (ORIENTACIÓN) <br></p><br>',
-            'OPCIONES'=>'NULL','TIPO_ARCHIVO'=>'CONSTANCIA DE RECEPCIÓN DE VIDEO DENUNCIA','RELACIONADO_CON'=>'0','MODIFICADO'=>'0','ELIMINADO'=>'0','ID_DENUNCIANTE'=>'NULL','TEXTO'=>'
+				'TEXTO' => '
             CONSTANCIA DE RECEPCIÓN DE VIDEO DENUNCIA
             
             
@@ -132,10 +135,12 @@ class FileOriginalesSeeder extends Seeder
             AGENTE DEL MINISTERIO PÚBLICO ADSCRITO A LA UNIDAD DE ATENCIÓN Y
             ORIENTACIÓN TEMPRANA (ORIENTACIÓN)
             
-            '),
-            
-            array('ID' => '3', 'DESCRIPCION' => 'ORDEN DE PROTECCION ALBERGUE', 'TITULO'=>'ORDEN DE PROTECCION ALBERGUE',
-            'PLACEHOLDER'=>'<br><p class="p1" style="margin: 0px; text-align: right; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0); min-height: 14px;">EXPEDIENTE: [EXPEDIENTE_NUMERO]</p><br>
+            '
+			),
+
+			array(
+				'ID' => '3', 'DESCRIPCION' => 'ORDEN DE PROTECCION ALBERGUE', 'TITULO' => 'ORDEN DE PROTECCION ALBERGUE',
+				'PLACEHOLDER' => '<br><p class="p1" style="margin: 0px; text-align: right; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0); min-height: 14px;">EXPEDIENTE: [EXPEDIENTE_NUMERO]</p><br>
 
             <p class="p2" style="margin: 0px; text-align: justify; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0);">
             DIRECCIÓN DE SEGURIDAD PÚBLICA MUNICIPAL <br>
@@ -157,7 +162,7 @@ class FileOriginalesSeeder extends Seeder
             [EXPEDIENTE_NOMBRE_DEL_RESPONSABLE] <br>
             AGENTE DEL MINISTERIO PÚBLICO ADSCRITO A LA UNIDAD DE ATENCIÓN Y <br>
             ORIENTACIÓN TEMPRANA (ORIENTACIÓN) <br></p><br>',
-            'OPCIONES'=>'NULL','TIPO_ARCHIVO'=>'ORDEN DE PROTECCION ALBERGUE','RELACIONADO_CON'=>'0','MODIFICADO'=>'0','ELIMINADO'=>'0','ID_DENUNCIANTE'=>'NULL','TEXTO'=>'EXPEDIENTE: [EXPEDIENTE_NUMERO]
+				'TEXTO' => 'EXPEDIENTE: [EXPEDIENTE_NUMERO]
 
 
             DIRECCIÓN DE SEGURIDAD PÚBLICA MUNICIPAL
@@ -182,11 +187,13 @@ class FileOriginalesSeeder extends Seeder
             AGENTE DEL MINISTERIO PÚBLICO ADSCRITO A LA UNIDAD DE ATENCIÓN Y
             ORIENTACIÓN TEMPRANA (ORIENTACIÓN)
             
-            '),
-            
+            '
+			),
 
-            array('ID' => '4', 'DESCRIPCION' => 'ORDEN DE PROTECCION RECOGER PERTENENCIAS', 'TITULO'=>'ORDEN DE PROTECCION RECOGER PERTENENCIAS',
-            'PLACEHOLDER'=>'<br><p class="p1" style="margin: 0px; text-align: right; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0); min-height: 14px;">EXPEDIENTE: [EXPEDIENTE_NUMERO]</p><br><p class="p2" style="margin: 0px; text-align: justify; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0);">
+
+			array(
+				'ID' => '4', 'DESCRIPCION' => 'ORDEN DE PROTECCION RECOGER PERTENENCIAS', 'TITULO' => 'ORDEN DE PROTECCION RECOGER PERTENENCIAS',
+				'PLACEHOLDER' => '<br><p class="p1" style="margin: 0px; text-align: right; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0); min-height: 14px;">EXPEDIENTE: [EXPEDIENTE_NUMERO]</p><br><p class="p2" style="margin: 0px; text-align: justify; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0);">
             DIRECCIÓN DE SEGURIDAD PÚBLICA MUNICIPAL <br>
             [DOCUMENTO_MUNICIPIO],BAJA CALIFORNIA <br>
             PRESENTE.- <br></p><br><p class="p3" style="margin: 0px; text-align: justify; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0); min-height: 14px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Por medio del presente, con fundamento en el artículo 8 Fracc. VII de la Ley de Atención y protección a la Victimas u Ofendido del Delito para el estado de Baja California, articulo 109 fracciones XVI, XVIII y XIX y artículo 137 en sus Fracc. IV, V, VI, VII, VIII, IX y X del Código Nacional de Procedimientos Penales vigente en el estado de Baja California, y como medida de protección a la víctima, se solicita su apoyo para designar personal a su digno cargo para efectos de prestar auxilio inmediato a la victima de nombre [VICTIMA_NOMBRE] de [VICTIMA_EDAD] AÑOS, con teléfono de contacto [VICTIMA_TELEFONO], para ser trasladado al domicilio ubicado [VICTIMA_DOMICILIO], tijuana, BAJA CALIFORNIA y se encuentre en la posibilidad de recoger pertenencias, lo anterior con la finalidad de salvaguardar en todo momento su integridad física, ya que presento denuncia por el delito de [RELACION_DELITO] al imputado de nombre [IMPUTADO_NOMBRE] de [IMPUTADO_EDAD] AÑOS. Sin más por el momento se agradecen las atenciones brindadas a la presente, solicitando sea informado a la Unidad de Investigación correspondiente sobre las diligencias realizadas al respecto.
@@ -196,7 +203,7 @@ class FileOriginalesSeeder extends Seeder
             LIC. [EXPEDIENTE_NOMBRE_DEL_RESPONSABLE] <br>
             AGENTE DEL MINISTERIO PÚBLICO ADSCRITO A LA UNIDAD DE ATENCIÓN Y <br>
             ORIENTACIÓN TEMPRANA (ORIENTACIÓN) <br></p><br>',
-            'OPCIONES'=>'NULL','TIPO_ARCHIVO'=>'ORDEN DE PROTECCION RECOGER PERTENENCIAS','RELACIONADO_CON'=>'0','MODIFICADO'=>'0','ELIMINADO'=>'0','ID_DENUNCIANTE'=>'NULL','TEXTO'=>'EXPEDIENTE: [EXPEDIENTE_NUMERO]
+				'TEXTO' => 'EXPEDIENTE: [EXPEDIENTE_NUMERO]
 
 
             DIRECCIÓN DE SEGURIDAD PÚBLICA MUNICIPAL
@@ -220,11 +227,13 @@ class FileOriginalesSeeder extends Seeder
             AGENTE DEL MINISTERIO PÚBLICO ADSCRITO A LA UNIDAD DE ATENCIÓN Y
             ORIENTACIÓN TEMPRANA (ORIENTACIÓN)
             
-            '),
-            
-            
-            array('ID' => '5', 'DESCRIPCION' => 'ORDEN DE PROTECCION RONDINES', 'TITULO'=>'ORDEN DE PROTECCION RONDINES',
-            'PLACEHOLDER'=>'<br><p class="p1" style="margin: 0px; text-align: right; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0);">EXPEDIENTE: [EXPEDIENTE_NUMERO]
+            '
+			),
+
+
+			array(
+				'ID' => '5', 'DESCRIPCION' => 'ORDEN DE PROTECCION RONDINES', 'TITULO' => 'ORDEN DE PROTECCION RONDINES',
+				'PLACEHOLDER' => '<br><p class="p1" style="margin: 0px; text-align: right; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0);">EXPEDIENTE: [EXPEDIENTE_NUMERO]
             </p><br>
             
             <p class="p2" style="margin: 0px; text-align: justify; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0); min-height: 14px;">
@@ -245,7 +254,7 @@ class FileOriginalesSeeder extends Seeder
             LIC. [EXPEDIENTE_NOMBRE_MP_RESPONSABLE] <br>
             AGENTE DEL MINISTERIO PUBLICO ADSCRITO A LA UNIDAD DE ATENCIÓN Y <br> 
             ORIENTACIÓN TEMPRANA(ORIENTACIÓN)<br></p><br>',
-            'OPCIONES'=>'NULL','TIPO_ARCHIVO'=>'ORDEN DE PROTECCION RONDINES','RELACIONADO_CON'=>'0','MODIFICADO'=>'0','ELIMINADO'=>'0','ID_DENUNCIANTE'=>'NULL','TEXTO'=>'
+				'TEXTO' => '
             EXPEDIENTE: [EXPEDIENTE_NUMERO]
             
             
@@ -268,10 +277,12 @@ class FileOriginalesSeeder extends Seeder
             
             LIC. [EXPEDIENTE_NOMBRE_MP_RESPONSABLE]
             AGENTE DEL MINISTERIO PUBLICO ADSCRITO A LA UNIDAD DE ATENCIÓN Y
-            ORIENTACIÓN TEMPRANA(ORIENTACIÓN)'),
-           
-           
-            array('ID'=>"6", 'DESCRIPCION'=>'CONSTANCIA DE EXTRAVÍO', 'TITULO'=>'CONSTANCIA DE EXTRAVÍO','PLACEHOLDER'=>'<br><p class="p1" style="margin: 0px; text-align: right; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0); min-height: 14px;"><strong>FOLIO: [FOLIO_NUMERO]</strong></p><br>
+            ORIENTACIÓN TEMPRANA(ORIENTACIÓN)'
+			),
+
+
+			array(
+				'ID' => "6", 'DESCRIPCION' => 'CONSTANCIA DE EXTRAVÍO', 'TITULO' => 'CONSTANCIA DE EXTRAVÍO', 'PLACEHOLDER' => '<br><p class="p1" style="margin: 0px; text-align: right; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0); min-height: 14px;"><strong>FOLIO: [FOLIO_NUMERO]</strong></p><br>
 
             <p class="p2" style="margin: 0px; text-align: justify; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0);">
             El C.AGENTE DEL MINISTERIO PÚBLICO <br>
@@ -322,7 +333,7 @@ class FileOriginalesSeeder extends Seeder
             <p class="p6" style="margin: 0px; text-align: center; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 11px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0);">
             <strong>[NOMBRE_AGENTE]</strong> <br>
             AGENTE DEL MINISTERIO PÚBLICO ADSCRITO AL SISTEMA<br>
-            ESTATAL DE JUSTICIA ALTERNATIVA PENAL<br></p><br>', 'OPCIONES'=>'NULL','TIPO_ARCHIVO'=>'CONSTANCIA DE EXTRAVÍO','RELACIONADO_CON'=>'0','MODIFICADO'=>'0','ELIMINADO'=>'0','ID_DENUNCIANTE'=>'NULL','TEXTO'=>'
+            ESTATAL DE JUSTICIA ALTERNATIVA PENAL<br></p><br>', 'TEXTO' => '
             FOLIO: [FOLIO_NUMERO]
             
             
@@ -353,13 +364,13 @@ class FileOriginalesSeeder extends Seeder
             [NOMBRE_AGENTE]
             AGENTE DEL MINISTERIO PÚBLICO ADSCRITO AL SISTEMA
             ESTATAL DE JUSTICIA ALTERNATIVA PENA'
-         ),
+			),
 
-         
-         
-        
-        ];
-        
-        $this->db->table('PLANTILLAS')->insertBatch($data);
-    }
+
+
+
+		];
+
+		$this->db->table('PLANTILLAS')->insertBatch($data);
+	}
 }
