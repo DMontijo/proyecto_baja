@@ -216,13 +216,13 @@ class DashboardController extends BaseController
 			if ($data->folio->STATUS == 'ABIERTO') {
 				$this->_folioModel->set(['STATUS' => 'EN PROCESO'])->where('ANO', $year)->where('FOLIOID', $numfolio)->update();
 				$data->status = 1;
-				$data->preguntas_iniciales = $this->_folioPreguntasModel->where('FOLIOID', $numfolio)->first();
-				$data->personas = $this->_folioPersonaFisicaModel->join('PERSONACALIDADJURIDICA', 'PERSONACALIDADJURIDICA.PERSONACALIDADJURIDICAID = FOLIOPERSONAFISICA.CALIDADJURIDICAID')->where('FOLIOID', $numfolio)->orderBy('DENUNCIANTE', 'asc')->findAll();
-				$data->vehiculos = $this->_folioVehiculoModel->where('FOLIOID', $numfolio)->findAll();
+				$data->preguntas_iniciales = $this->_folioPreguntasModel->where('FOLIOID', $numfolio)->where('ANO', $year)->first();
+				$data->personas = $this->_folioPersonaFisicaModel->join('PERSONACALIDADJURIDICA', 'PERSONACALIDADJURIDICA.PERSONACALIDADJURIDICAID = FOLIOPERSONAFISICA.CALIDADJURIDICAID')->where('FOLIOID', $numfolio)->where('ANO', $year)->orderBy('DENUNCIANTE', 'asc')->findAll();
+				$data->vehiculos = $this->_folioVehiculoModel->where('FOLIOID', $numfolio)->where('ANO', $year)->findAll();
 
 				$data->folioMunicipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data->folio->HECHOMUNICIPIOID)->first();
 				$data->folioColonia = $this->_coloniasModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data->folio->HECHOMUNICIPIOID)->where('COLONIAID', $data->folio->HECHOCOLONIAID)->first();
-				$data->folioLugar = $this->_folioModel->join('HECHOLUGAR', 'HECHOLUGAR.HECHOLUGARID = FOLIO.HECHOLUGARID')->where('FOLIOID', $numfolio)->first();
+				$data->folioLugar = $this->_folioModel->join('HECHOLUGAR', 'HECHOLUGAR.HECHOLUGARID = FOLIO.HECHOLUGARID')->where('FOLIOID', $numfolio)->where('ANO', $year)->first();
 
 				return json_encode($data);
 			} else if ($data->folio->STATUS == 'EN PROCESO') {
@@ -287,10 +287,11 @@ class DashboardController extends BaseController
 	{
 		$id = $this->request->getPost('id');
 		$folio = $this->request->getPost('folio');
+		$year = $this->request->getPost('year');
 
 		$data = (object)array();
 
-		$data->persondom = $this->_folioPersonaFisicaDomicilioModel->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
+		$data->persondom = $this->_folioPersonaFisicaDomicilioModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $id)->first();
 		$data->estado = $this->_estadosModel->where('ESTADOID', 2)->asObject()->first();
 		$data->municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data->persondom['MUNICIPIOID'])->first();
 		$data->localidad = $this->_localidadesModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data->persondom['MUNICIPIOID'])->where('LOCALIDADID', $data->persondom['LOCALIDADID'])->first();
@@ -304,10 +305,12 @@ class DashboardController extends BaseController
 		$data = (object)array();
 		$id = $this->request->getPost('id');
 		$folio = $this->request->getPost('folio');
-		$data->vehiculo = $this->_folioVehiculoModel->where('FOLIOID', $folio)->first();
-		$data->color = $this->_folioVehiculoModel->join('VEHICULOCOLOR', 'VEHICULOCOLOR.VEHICULOCOLORID  =FOLIOVEHICULO.PRIMERCOLORID')->where('FOLIOID', $folio)->first();
-		$data->estadov = $this->_folioVehiculoModel->join('ESTADO', 'ESTADO.ESTADOID  =FOLIOVEHICULO.ESTADOIDPLACA')->where('FOLIOID', $folio)->first();
-		$data->tipov = $this->_folioVehiculoModel->join('VEHICULOTIPO', 'VEHICULOTIPO.VEHICULOTIPOID   =FOLIOVEHICULO.TIPOID')->where('FOLIOID', $folio)->first();
+		$year = $this->request->getPost('year');
+
+		$data->vehiculo = $this->_folioVehiculoModel->where('FOLIOID', $folio)->where('ANO', $year)->first();
+		$data->color = $this->_folioVehiculoModel->join('VEHICULOCOLOR', 'VEHICULOCOLOR.VEHICULOCOLORID  =FOLIOVEHICULO.PRIMERCOLORID')->where('FOLIOID', $folio)->where('ANO', $year)->first();
+		$data->estadov = $this->_folioVehiculoModel->join('ESTADO', 'ESTADO.ESTADOID  =FOLIOVEHICULO.ESTADOIDPLACA')->where('FOLIOID', $folio)->where('ANO', $year)->first();
+		$data->tipov = $this->_folioVehiculoModel->join('VEHICULOTIPO', 'VEHICULOTIPO.VEHICULOTIPOID   =FOLIOVEHICULO.TIPOID')->where('FOLIOID', $folio)->where('ANO', $year)->first();
 
 		return json_encode($data);
 	}
@@ -437,7 +440,7 @@ class DashboardController extends BaseController
 			if ($folioRow) {
 				$update = $this->_folioModel->set($data)->where('ANO', $year)->where('FOLIOID', $folio)->update();
 				if ($update) {
-					$folio = $this->_folioModel->asObject()->where('FOLIOID', $folio)->first();
+					$folio = $this->_folioModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->first();
 					$denunciante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', $folio->DENUNCIANTEID)->first();
 					if ($this->_sendEmailDerivacionCanalizacion($denunciante->CORREO, $folio->FOLIOID, $status)) {
 						return json_encode(['status' => 1]);
@@ -469,7 +472,7 @@ class DashboardController extends BaseController
 			$folioRow = $this->_folioModel->where('ANO', $year)->where('FOLIOID', $folio)->where('STATUS', 'EN PROCESO')->first();
 			if ($folioRow) {
 				$empleadoRow = $this->_empleadosModel->asObject()->where('MUNICIPIOID', $municipio)->where('OFICINAID', $oficina)->where('EMPLEADOID', $empleado)->first();
-				$personas = $this->_folioPersonaFisicaModel->where('FOLIOID', $folioRow['FOLIOID'])->orderBy('PERSONAFISICAID', 'asc')->findAll();
+				$personas = $this->_folioPersonaFisicaModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->orderBy('PERSONAFISICAID', 'asc')->findAll();
 				$narracion = $folioRow['HECHONARRACION'];
 				$fecha = $folioRow['HECHOFECHA'];
 
@@ -481,7 +484,7 @@ class DashboardController extends BaseController
 				$folioRow['AGENTEATENCIONID'] = session('ID') ? session('ID') : 1;
 				$folioRow['AGENTEFIRMAID'] = session('ID') ? session('ID') : 1;
 
-				$update = $this->_folioModel->set($folioRow)->where('FOLIOID', $folio)->update();
+				$update = $this->_folioModel->set($folioRow)->where('FOLIOID', $folio)->where('ANO', $year)->update();
 
 				$folioRow['HECHOFECHA'] = $folioRow['HECHOFECHA'] . ' ' . $folioRow['HECHOHORA'];
 				$folioRow['HECHONARRACION'] = $notas;
@@ -513,7 +516,7 @@ class DashboardController extends BaseController
 
 				foreach ($personas as $key => $persona) {
 					$_persona = $this->createPersonaFisica($expedienteCreado->EXPEDIENTEID, $persona, $folioRow['HECHOMUNICIPIOID']);
-					$domicilios = $this->_folioPersonaFisicaDomicilioModel->where('FOLIOID', $folioRow['FOLIOID'])->where('PERSONAFISICAID', $persona['PERSONAFISICAID'])->findAll();
+					$domicilios = $this->_folioPersonaFisicaDomicilioModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->where('PERSONAFISICAID', $persona['PERSONAFISICAID'])->findAll();
 					if ($persona['CALIDADJURIDICAID'] == '2') {
 						$_imputado = $this->createExpImputado($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $folioRow['HECHOMUNICIPIOID']);
 					}
@@ -524,7 +527,7 @@ class DashboardController extends BaseController
 				}
 
 				if ($expedienteCreado->status == 201) {
-					$update2 = $this->_folioModel->set(['EXPEDIENTEID' => $expedienteCreado->EXPEDIENTEID])->where('FOLIOID', $folio)->update();
+					$update2 = $this->_folioModel->set(['EXPEDIENTEID' => $expedienteCreado->EXPEDIENTEID])->where('FOLIOID', $folio)->where('ANO', $year)->update();
 					if ($update && $update2) {
 						$denunciante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', $folioRow['DENUNCIANTEID'])->first();
 						if ($this->_sendEmailExpediente($denunciante->CORREO, $folio, $expedienteCreado->EXPEDIENTEID)) {

@@ -131,7 +131,7 @@ class DashboardController extends BaseController
 		];
 
 
-		$this->_folioUpdate($FOLIOID, $dataFolio);
+		$this->_folioUpdate($FOLIOID, $dataFolio, $year);
 
 		$dataPreguntas = array(
 			'ES_MENOR' => $this->request->getPost('es_menor'),
@@ -412,7 +412,7 @@ class DashboardController extends BaseController
 			'perfil' => $this->request->getPost('delito') == 'VIOLENCIA FAMILIAR' ? 1 : 0,
 			'sexo' => $this->request->getPost('delito') == 'VIOLENCIA FAMILIAR' ? 2 : 0,
 		];
-		
+
 		$sexo_denunciante = $denunciante->SEXO == 'F' ? 'FEMENINO' : 'MASCULINO';
 		$url = "/denuncia/dashboard/video-denuncia?folio=" . $year . '-' . $FOLIOID . "&year=" . $year . "&delito=" . $data->delito . "&descripcion=" . $data->descripcion . "&idioma=" . $data->idioma . "&edad=" . $data->edad . "&perfil=" . $data->perfil . "&sexo=" . $data->sexo . "&prioridad=" . $prioridad . "&sexo_denunciante=" . $sexo_denunciante;
 
@@ -423,9 +423,9 @@ class DashboardController extends BaseController
 		}
 	}
 
-	private function _folioUpdate($id, $data)
+	private function _folioUpdate($id, $data, $year)
 	{
-		$this->_folioModel->set($data)->where('FOLIOID', $id)->update();
+		$this->_folioModel->set($data)->where('FOLIOID', $id)->where('ANO', $year)->update();
 	}
 
 	private function _folioId($year)
@@ -475,7 +475,7 @@ class DashboardController extends BaseController
 		$data['ANO'] = $year;
 		$data['CALIDADJURIDICAID'] = $calidadJuridica;
 
-		$personaFisica = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $folio)->orderBy('PERSONAFISICAID', 'desc')->first();
+		$personaFisica = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->orderBy('PERSONAFISICAID', 'desc')->first();
 
 		if ($personaFisica) {
 			$data['PERSONAFISICAID'] = ((int)$personaFisica->PERSONAFISICAID) + 1;
@@ -495,7 +495,7 @@ class DashboardController extends BaseController
 		$data['ANO'] = $year;
 		$data['PERSONAFISICAID'] = $personaFisicaID;
 
-		$personaDomicilio = $this->_folioPersonaFisicaDomicilioModel->asObject()->where('FOLIOID', $folio)->where('PERSONAFISICAID', $personaFisicaID)->orderBy('DOMICILIOID', 'desc')->first();
+		$personaDomicilio = $this->_folioPersonaFisicaDomicilioModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $personaFisicaID)->orderBy('DOMICILIOID', 'desc')->first();
 
 		if ($personaDomicilio) {
 			$data['DOMICILIOID'] = ((int)$personaDomicilio->DOMICILIOID) + 1;
@@ -524,7 +524,7 @@ class DashboardController extends BaseController
 		$data['FOLIOID'] = $folio;
 		$data['ANO'] = $year;
 
-		$vehiculo = $this->_folioVehiculoModel->asObject()->where('FOLIOID', $folio)->orderBy('VEHICULOID', 'desc')->first();
+		$vehiculo = $this->_folioVehiculoModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->orderBy('VEHICULOID', 'desc')->first();
 
 		if ($vehiculo) {
 			$data['VEHICULOID'] = ((int)$vehiculo->VEHICULOID) + 1;
@@ -565,11 +565,11 @@ class DashboardController extends BaseController
 		$folioId = $this->request->getPost('folio');
 		$denuncianteId = $this->request->getPost('id');
 		$year = $this->request->getPost('year');
-		$folio = $this->_folioModel->asObject()->where('FOLIOID', $folioId,)->first();
+		$folio = $this->_folioModel->asObject()->where('FOLIOID', $folioId,)->where('ANO', $year)->first();
 
 		if ($folioId && $folio && $denuncianteId && $year) {
 
-			$preguntas = $this->_folioPreguntasModel->asObject()->where('FOLIOID', $folioId)->first();
+			$preguntas = $this->_folioPreguntasModel->asObject()->where('FOLIOID', $folioId)->where('ANO', $year)->first();
 			$denunciante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', $denuncianteId)->first();
 			$idioma = $this->_personaIdiomaModel->asObject()->where('PERSONAIDIOMAID', $denunciante->IDIOMAID)->first();
 			$delito = $this->_delitosUsuariosModel->asObject()->where('DELITO', $folio->HECHODELITO)->first();
@@ -595,10 +595,12 @@ class DashboardController extends BaseController
 			$sexoDenunciante = $denunciante->SEXO;
 			$prioridad = 1;
 
-			if ($preguntas->ES_MENOR == 'SI' || $preguntas->ES_TERCERA_EDAD == 'SI' || $preguntas->TIENE_DISCAPACIDAD == 'SI' || $preguntas->FUE_CON_ARMA == 'SI' || $preguntas->ESTA_DESAPARECIDO == 'SI') {
-				$prioridad = 3;
-			} else {
-				$prioridad = $delito->IMPORTANCIA;
+			if ($preguntas) {
+				if ($preguntas->ES_MENOR == 'SI' || $preguntas->ES_TERCERA_EDAD == 'SI' || $preguntas->TIENE_DISCAPACIDAD == 'SI' || $preguntas->FUE_CON_ARMA == 'SI' || $preguntas->ESTA_DESAPARECIDO == 'SI') {
+					$prioridad = 3;
+				} else {
+					$prioridad = $delito->IMPORTANCIA;
+				}
 			}
 
 			$data = (object)[

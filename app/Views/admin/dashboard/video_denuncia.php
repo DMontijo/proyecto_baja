@@ -631,8 +631,9 @@
 	function viewDomicilio(id) {
 		$.ajax({
 			data: {
-				'folio': document.querySelector('#input_folio_atencion').value,
-				'id': id
+				'id': id,
+				'folio': inputFolio.value,
+				'year': year_select.value,
 			},
 			url: "<?= base_url('/data/get-persona-domicilio-by-id') ?>",
 			method: "POST",
@@ -679,8 +680,9 @@
 	function viewVehiculo(id) {
 		$.ajax({
 			data: {
-				'folio': document.querySelector('#input_folio_atencion').value,
-				'id': id
+				'id': id,
+				'folio': inputFolio.value,
+				'year': year_select.value,
 			},
 			url: "<?= base_url('/data/get-persona-vehiculo-by-id') ?>",
 			method: "POST",
