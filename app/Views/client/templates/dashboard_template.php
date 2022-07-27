@@ -53,7 +53,7 @@
 		</div>
 	</nav>
 	<div class="container-fluid main bg-light py-3">
-		<div class="container p-0">
+		<div class="container p-0" style="min-height:85vh;">
 			<?= $this->renderSection('content') ?>
 		</div>
 	</div>
