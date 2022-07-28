@@ -12,36 +12,42 @@ class DENUNCIANTES extends Migration
 			'DENUNCIANTEID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
-				'auto_increment' => TRUE,
+				'auto_increment' => TRUE
 			],
 			'NOMBRE' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
+				'null' => TRUE
 			],
 			'APELLIDO_PATERNO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
+				'null' => TRUE
 			],
 			'APELLIDO_MATERNO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
-				'null' => TRUE,
+				'null' => TRUE
 			],
 			'CORREO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
 				'unique' => TRUE,
+				'null' => TRUE
 			],
 			'PASSWORD' => [
 				'type' => 'VARCHAR',
 				'constraint' => '255',
+				'null' => TRUE
 			],
 			'FECHANACIMIENTO' => [
 				'type' => 'DATE',
+				'null' => TRUE
 			],
 			'SEXO' => [
 				'type' => 'CHAR',
 				'constraint' => '1',
+				'null' => TRUE
 			],
 			'CODIGOPOSTAL' => [
 				'type' => 'INT',
@@ -145,14 +151,15 @@ class DENUNCIANTES extends Migration
 			'NACIONALIDADID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
+				'null' => TRUE
 			],
 			'ESCOLARIDADID' => [
 				'type' => 'INT',
-				'null' => TRUE,
+				'null' => TRUE
 			],
 			'OCUPACIONID' => [
 				'type' => 'INT',
-				'null' => TRUE,
+				'null' => TRUE
 			],
 			'FACEBOOK' => [
 				'type' => 'VARCHAR',
@@ -185,21 +192,25 @@ class DENUNCIANTES extends Migration
 				'type' => 'CHAR',
 				'constraint' => '1',
 				'default' => 'S',
+				'null' => TRUE
 			],
 			'LEER' => [
 				'type' => 'CHAR',
 				'constraint' => '1',
 				'default' => 'S',
+				'null' => TRUE
 			],
 			'ESCRIBIR' => [
 				'type' => 'CHAR',
 				'constraint' => '1',
 				'default' => 'S',
+				'null' => TRUE
 			],
 			'APOYO' => [
 				'type' => 'CHAR',
 				'constraint' => '1',
 				'default' => 'N',
+				'null' => TRUE
 			],
 			'FECHAREGISTRO DATETIME DEFAULT CURRENT_TIMESTAMP',
 			'FECHAACTUALIZACION DATETIME ON UPDATE CURRENT_TIMESTAMP',
