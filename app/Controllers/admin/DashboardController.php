@@ -214,7 +214,7 @@ class DashboardController extends BaseController
 
 		if ($data->folio) {
 			if ($data->folio->STATUS == 'ABIERTO') {
-				$this->_folioModel->set(['STATUS' => 'EN PROCESO'])->where('ANO', $year)->where('FOLIOID', $numfolio)->update();
+				$this->_folioModel->set(['STATUS' => 'EN PROCESO', 'AGENTEATENCIONID' => session('ID')])->where('ANO', $year)->where('FOLIOID', $numfolio)->update();
 				$data->status = 1;
 				$data->preguntas_iniciales = $this->_folioPreguntasModel->where('FOLIOID', $numfolio)->where('ANO', $year)->first();
 				$data->personas = $this->_folioPersonaFisicaModel->join('PERSONACALIDADJURIDICA', 'PERSONACALIDADJURIDICA.PERSONACALIDADJURIDICAID = FOLIOPERSONAFISICA.CALIDADJURIDICAID')->where('FOLIOID', $numfolio)->where('ANO', $year)->orderBy('DENUNCIANTE', 'asc')->findAll();
@@ -667,6 +667,12 @@ class DashboardController extends BaseController
 		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int)$municipio)->where('TYPE', 'production')->first();
 		$data = $personaFisica;
 
+		if (!empty($data['FECHANACIMIENTO'])) {
+			if ($data['FECHANACIMIENTO'] == '0000-00-00' || $data['FECHANACIMIENTO'] == null || $data['FECHANACIMIENTO'] == NULL || $data['FECHANACIMIENTO'] == 'NULL' || $data['FECHANACIMIENTO'] == 'null') {
+				$data['FECHANACIMIENTO'] = NULL;
+			}
+		}
+
 		foreach ($data as $clave => $valor) {
 			if (empty($valor)) unset($data[$clave]);
 		}
@@ -828,6 +834,7 @@ class DashboardController extends BaseController
 
 		return json_encode($response);
 	}
+
 	public function restoreFolio()
 	{
 		$folio = $this->request->getPost('folio');

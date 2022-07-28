@@ -63,6 +63,8 @@ $routes->group('admin', function ($routes) {
 		$routes->get('folios_canalizados', 'admin/FoliosController::folios_canalizados');
 		$routes->get('folios_expediente', 'admin/FoliosController::folios_expediente');
 		$routes->get('folios_sin_firma', 'admin/FoliosController::folios_sin_firma');
+		$routes->get('folios_en_proceso', 'admin/FoliosController::folios_en_proceso');
+		$routes->post('liberar_folio', 'admin/FoliosController::liberar_folio');
 		$routes->post('firmar_folio', 'admin/FoliosController::firmar_folio');
 
 		$routes->get('perfil', 'admin/DashboardController::perfil');
@@ -149,7 +151,6 @@ $routes->group('data', function ($routes) {
 
 
 	$routes->post('generaPDFE', 'PDFController::PDFExtravio');
-
 });
 
 /**

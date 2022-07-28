@@ -31,7 +31,7 @@ class FoliosController extends BaseController
 		$this->_folioPersonaFisicaDesaparecidaModel = new FolioPersonaFisicaDesaparecidaModel();
 		$this->_folioVehiculoModel = new FolioVehiculoModel();
 
-		$this->_constanciaExtravioModel= new ConstanciaExtraviadoModel();
+		$this->_constanciaExtravioModel = new ConstanciaExtraviadoModel();
 
 		$this->_usuariosModel = new UsuariosModel();
 		$this->_zonasUsuariosModel = new ZonasUsuariosModel();
@@ -48,11 +48,13 @@ class FoliosController extends BaseController
 			$data->derivados = count($this->_folioModel->asObject()->where('STATUS', 'DERIVADO')->findAll());
 			$data->canalizados = count($this->_folioModel->asObject()->where('STATUS', 'CANALIZADO')->findAll());
 			$data->expedientes = count($this->_folioModel->asObject()->where('EXPEDIENTEID !=', NULL)->where('AGENTEATENCIONID !=', NULL)->where('AGENTEFIRMAID !=', NULL)->findAll());
+			$data->proceso = count($this->_folioModel->asObject()->where('STATUS', 'EN PROCESO')->findAll());
 			$data->expedientes_no_firmados = count($this->_folioModel->asObject()->where('EXPEDIENTEID !=', NULL)->where('AGENTEATENCIONID !=', NULL)->where('AGENTEFIRMAID', NULL)->findAll());
 		} else {
 			$data->derivados = count($this->_folioModel->asObject()->where('AGENTEATENCIONID', session('ID'))->where('STATUS', 'DERIVADO')->findAll());
 			$data->canalizados = count($this->_folioModel->asObject()->where('AGENTEATENCIONID', session('ID'))->where('STATUS', 'CANALIZADO')->findAll());
 			$data->expedientes = count($this->_folioModel->asObject()->where('AGENTEATENCIONID', session('ID'))->where('EXPEDIENTEID !=', NULL)->where('AGENTEATENCIONID !=', NULL)->where('AGENTEFIRMAID !=', NULL)->findAll());
+			$data->proceso = count($this->_folioModel->asObject()->where('STATUS', 'EN PROCESO')->findAll());
 			$data->expedientes_no_firmados = count($this->_folioModel->asObject()->where('AGENTEATENCIONID', session('ID'))->where('EXPEDIENTEID !=', NULL)->where('AGENTEATENCIONID !=', NULL)->where('AGENTEFIRMAID', NULL)->findAll());
 		}
 		$this->_loadView('Folios', 'folios', '', $data, 'index');
@@ -65,7 +67,8 @@ class FoliosController extends BaseController
 		$this->_loadView('Folios abiertos', 'folios', '', $data, 'folios_abiertos');
 	}
 
-	public function constancias_abiertas(){
+	public function constancias_abiertas()
+	{
 		$data = (object)array();
 		$data = $this->_constanciaExtravioModel->asObject()->where('STATUS', 'open')->findAll();
 		$this->_loadView('Constancias extraviadas abiertos', 'constancias', '', $data, 'constancias_abiertas');
@@ -95,6 +98,23 @@ class FoliosController extends BaseController
 			$data = $this->_folioModel->asObject()->where('STATUS', 'CANALIZADO')->where('AGENTEATENCIONID', session('ID'))->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->findAll();
 		}
 		$this->_loadView('Folios canalizados', 'folios', '', $data, 'folios_canalizados');
+	}
+
+	public function folios_en_proceso()
+	{
+		$data = (object)array();
+		$data = $this->_folioModel->asObject()->where('STATUS', 'EN PROCESO')->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')->findAll();
+		$this->_loadView('Folios en proceso', 'folios', '', $data, 'folios_en_proceso');
+	}
+
+	public function liberar_folio()
+	{
+		$folio = $this->request->getVar('folio');
+		$year = $this->request->getVar('year');
+
+		$data = ['EXPEDIENTEID' => NULL, 'AGENTEATENCIONID' => NULL, 'AGENTEFIRMAID' => NULL, 'STATUS' => 'ABIERTO'];
+		$this->_folioModel->set($data)->where('FOLIOID', $folio)->where('ANO', $year)->update();
+		return redirect()->to(base_url('/admin/dashboard/folios_en_proceso'));
 	}
 
 	public function folios_expediente()

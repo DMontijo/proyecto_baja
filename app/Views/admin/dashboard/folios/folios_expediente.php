@@ -70,7 +70,7 @@
 			dataType: "json",
 		}).done(function(data) {
 			let grabacion = "";
-			let enlace = 'https://yocontigo-videodenuncias-video.s3.amazonaws.com/'
+			let enlace = 'https://fgebc-records.s3.amazonaws.com/'
 			if (data.data.length > 0) {
 				array = data.data.reverse();
 				array.forEach(element => {
