@@ -4,7 +4,7 @@ namespace App\Database\Seeds;
 
 use CodeIgniter\Database\Seeder;
 
-class FileOriginalesSeeder extends Seeder
+class PlantillasSeeder extends Seeder
 {
 	public function run()
 	{
@@ -282,88 +282,193 @@ class FileOriginalesSeeder extends Seeder
 
 
 			array(
-				'ID' => "6", 'DESCRIPCION' => 'CONSTANCIA DE EXTRAVÍO', 'TITULO' => 'CONSTANCIA DE EXTRAVÍO', 'PLACEHOLDER' => '<br><p class="p1" style="margin: 0px; text-align: right; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0); min-height: 14px;"><strong>FOLIO: [FOLIO_NUMERO]</strong></p><br>
+				'ID' => "6", 'DESCRIPCION' => 'CONSTANCIA DE EXTRAVÍO', 'TITULO' => 'CONSTANCIA DE EXTRAVÍO', 'PLACEHOLDER' => '<br>
+                <p class="p1"
+                    style="margin: 0px; text-align: right; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0); min-height: 14px;">
+                    <strong>FOLIO: [FOLIO_NUMERO]</strong>
+                </p><br>
+                
+                <p class="p2"
+                    style="margin: 0px; text-align: justify; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0);">
+                    El C.AGENTE DEL MINISTERIO PÚBLICO <br>
+                    <strong>[NOMBRE_AGENTE] </strong><br>
+                </p><br>
+                
+                <p class="p3"
+                    style="margin: 0px; text-align: justify; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0); min-height: 14px;">
+                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; HACE CONSTAR QUE EL CONTROL DE REPORTES QUE SE LLEVÓ A CABO
+                    EN ESTA OFICINA, HA QUEDADO REGISTRADO EL REPORTE DE PÉRDIDA DE: <strong>[NOMBRE_CERTIFICADO]</strong>
+                    <br>
+                    LA PÉRDIDA DE DICHO(A) <strong>[NOMBRE_CERTIFICADO]</strong> OCURRIÓ BAJO LAS SIGUIENTES CIRCUNSTANCIAS DE LUGAR.
+                    <br>
+                    MANIFIESTA EL COMPARECIENTE HABER EXTRAVIADO EL ORIGINAL DE <strong>[NOMBRE_CERTIFICADO]</strong>, NÚMERO: <strong>[NO_DOCUMENTO]</strong>, A NOMBRE
+                    DE: <strong>[NOMBRE_PERSONA]</strong>
+                    <br>
+                </p><br>
+                <table class="t1" style="border:1px solid black;  margin-left: auto;margin-right: auto;">
+                    <tr style=" border:1px solid black;">
+                        <th style=" border:1px solid black;">COMPARECIENTE</th>
+                        <th style=" border:1px solid black;">[NOMBRE_PERSONA]</th>
+                    </tr>
+                    <tr style=" border:1px solid black;">
+                        <th style=" border:1px solid black;">LUGAR DE EXTRAVÍO</th>
+                        <th style=" border:1px solid black;">[LUGAR_EXTRAVIO]</th>
+                    </tr>
+                    <tr style=" border:1px solid black;">
+                        <th style=" border:1px solid black;">FECHA DE EXTRAVÍO</th>
+                        <th style=" border:1px solid black;">[FECHA_EXTRAVIO]</th>
+                    </tr>
+                    <tr style=" border:1px solid black;">
+                        <th style=" border:1px solid black;">DESCRIPCIÓN</th>
+                        <th style=" border:1px solid black;">[DESCRIPCION_EXTRAVIO]</th>
+                    </tr>
+                </table>
+                <br>
+                <p class="p4"
+                    style="margin: 0px; text-align: justify; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0); min-height: 14px;">
+                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                    SE EXPIDE LA PRESENTE CONSTANCIA EN LA CIUDAD DE: <strong>[NOMBRE_CIUDAD]</strong> A LOS <strong>[DIA]</strong> DÍAS
+                    DEL MES DE <strong>[MES]</strong> DEL AÑO <strong>[ANIO]</strong> A LAS <strong>[HORA]</strong>; LA CUAL NO
+                    SUSTITUYE EL DOCUMENTO ORIGINAL NI VALIDA LA PREEXISTENCIA DEL DOCUMENTO U OBJETO
+                </p><br>
+                
+                <br>
+                <br>
+                <br>
+                
+                <p class="p6"
+                    style="margin: 0px; text-align: center; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 11px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0);">
+                    <strong>[NOMBRE_AGENTE]</strong> <br>
+                    AGENTE DEL MINISTERIO PÚBLICO ADSCRITO AL SISTEMA<br>
+                    ESTATAL DE JUSTICIA ALTERNATIVA PENAL<br>
+                </p><br>
+                
+                
+                <div>
+                    <p class="p7"
+                        style="margin: 0px; text-align: center; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 11px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0); background-color:rgb(149, 147, 147);">
+                        <strong>DATOS FIRMA ELECTRÓNICA</strong>
+                    </p>
+                </div>
+                <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+                    <div style="width: 75%; float: left;">
+                        <br>
+                        <p
+                            style="margin: 0px; text-align: justify; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 11px; line-height: normal; font-family: Helvetica; ">
+                            <strong>IDENTIFICADOR ELECTRÓNICO:</strong> [NUMERO_IDENTIFICADOR]
+                        </p>
+                        <p
+                            style="margin: 0px; text-align: justify; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 11px; line-height: normal; font-family: Helvetica; ">
+                            <strong>AGENTE DEL MINISTERIO PÚBLICO:</strong> [NOMBRE_AGENTE]
+                        </p>
+                        <p
+                            style="margin: 0px; text-align: justify; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 11px; line-height: normal; font-family: Helvetica; ">
+                            <strong>RFC AGENTE DEL MINISTERIO PÚBLICO:</strong> [RFC_AGENTE]
+                        </p>
+                        <p
+                            style="margin: 0px; text-align: justify; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 11px; line-height: normal; font-family: Helvetica; ">
+                            <strong>NO. DE CERTIFICACIÓN DE FIRMA ELECTRÓNICA:</strong> [NUMERO_CERTIFICADO]
+                        </p>
+                        <p
+                            style="margin: 0px; text-align: justify; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 11px; line-height: normal; font-family: Helvetica; ">
+                            <strong>FECHA DE FIRMA:</strong> [FECHA_FIRMA]
+                        </p>
+                        <p
+                            style="margin: 0px; text-align: justify; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 11px; line-height: normal; font-family: Helvetica; ">
+                            <strong>HORA DE FIRMA:</strong> [HORA_FIRMA]
+                        </p>
+                        <p
+                            style="margin: 0px; text-align: justify; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 11px; line-height: normal; font-family: Helvetica; ">
+                            <strong>LUGAR DE FIRMA:</strong> [LUGAR_FIRMA]
+                        </p>
+                    </div>
+                    <div style="width: 25%; float: right;">
+                        <br>
+                        <p
+                            style="margin: 0px; text-align: center; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 11px; line-height: normal; font-family: Helvetica; ">
+                            [CODIGO_QR]</p>
+                        <p
+                            style="margin: 0px; text-align: center; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 11px; line-height: normal; font-family: Helvetica; ">
+                            https://cdt.fgebc.gob.mx/[URL]</p>
+                
+                    </div>
+                </div>
+                <br>
+                <br>
+                <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+                    <div style="width: 50%;">
+                        <p
+                            style="margin: 0px; text-align: justify; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 11px; line-height: normal; font-family: Helvetica; ">
+                            <strong>FIRMA ELECTRÓNICA</strong>
+                        </p>
+                        <p
+                            style="margin: 0px; text-align: justify; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 11px; line-height: normal; font-family: Helvetica; ">
+                            [FIRMA_ELECTRONICA]</p>
+                    </div>
+                </div>
+                
+                <br><br>
+                <div style="float: left;">
+                    <p
+                        style="margin: 0px; text-align: center; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 11px; line-height: normal; font-family: Helvetica; ">
+                        [CODIGO_QRS]</p>
+                </div>', 'TEXTO' => '
+                FOLIO: [FOLIO_NUMERO]
 
-            <p class="p2" style="margin: 0px; text-align: justify; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0);">
-            El C.AGENTE DEL MINISTERIO PÚBLICO <br>
-            <strong>[NOMBRE_AGENTE] </strong><br> </p><br>
-                
-            <p class="p3" style="margin: 0px; text-align: justify; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0); min-height: 14px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; HACE CONSTAR QUE EL CONTROL DE REPORTES QUE SE LLEVÓ A CABO EN ESTA OFICINA, HA QUEDADO REGISTRADO EL REPORTE DE PÉRDIDA DE: <strong>[NOMBRE_CERTIFICADO]</strong>
-            <br>
-            LA PÉRDIDA DE DICHO(A) <strong>[NOMBRE_CERTIFICADO]</strong> OCURRIÓ BAJO LAS SIGUIENTES CIRCUNSTANCIAS DE LUGAR.
-            <br>
-            MANIFIESTA EL COMPARECIENTE HABER EXTRAVIADO EL ORIGINAL DE <strong>[NOMBRE_CERTIFICADO]</strong>, NÚMERO:, A NOMBRE DE: <strong>[NOMBRE_PERSONA]</strong>
-            <br>
-            </p><br>
-            <table class="t1" style="border:1px solid black;  margin-left: auto;margin-right: auto;">
-                <tr style=" border:1px solid black;">
-                    <th style=" border:1px solid black;">COMPARECIENTE</th>
-                    <th style=" border:1px solid black;">[NOMBRE_PERSONA]</th>
-                </tr>
-                <tr style=" border:1px solid black;">
-                    <th style=" border:1px solid black;">LUGAR DE EXTRAVÍO</th>
-                    <th style=" border:1px solid black;">[LUGAR_EXTRAVIO]</th>
-                </tr>
-                <tr style=" border:1px solid black;">
-                    <th style=" border:1px solid black;">FECHA DE EXTRAVÍO</th>
-                    <th style=" border:1px solid black;">[FECHA_EXTRAVIO]</th>
-                </tr>
-                <tr style=" border:1px solid black;">
-                    <th style=" border:1px solid black;">DESCRIPCIÓN</th>
-                    <th style=" border:1px solid black;">[DESCRIPCION_EXTRAVIO]</th>
-                </tr>
-            </table>
-            <br>
-            <p class="p4" style="margin: 0px; text-align: justify; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0); min-height: 14px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-            SE EXPIDE LA PRESENTE CONSTANCIA EN LA CIUDAD DE: <strong>[NOMBRE_CIUDAD]</strong> A LOS <strong>[DIA]</strong> DÍAS DEL MES DE <strong>[MES]</strong> DEL AÑO <strong>[ANIO]</strong> A LAS <strong>[HORA]</strong>; LA CUAL NO SUSTITUYE EL DOCUMENTO ORIGINAL NI VALIDA LA PREEXISTENCIA DEL DOCUMENTO U OBJETO
-            </p><br>
-                
-                <br>
-                <br>
-                <br>
-            
-                <br>
-                <br>
-                <br>
-            
-                <br>
-                <br>
-                <br>
-            
-            <p class="p6" style="margin: 0px; text-align: center; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 11px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0);">
-            <strong>[NOMBRE_AGENTE]</strong> <br>
-            AGENTE DEL MINISTERIO PÚBLICO ADSCRITO AL SISTEMA<br>
-            ESTATAL DE JUSTICIA ALTERNATIVA PENAL<br></p><br>', 'TEXTO' => '
-            FOLIO: [FOLIO_NUMERO]
-            
-            
-            El C.AGENTE DEL MINISTERIO PÚBLICO
-            [NOMBRE_AGENTE]
-            
-                            HACE CONSTAR QUE EL CONTROL DE REPORTES QUE SE LLEVÓ A CABO EN ESTA OFICINA, HA QUEDADO REGISTRADO EL REPORTE DE PÉRDIDA DE: [NOMBRE_CERTIFICADO]
-            LA PÉRDIDA DE DICHO(A) [NOMBRE_CERTIFICADO] OCURRIÓ BAJO LAS SIGUIENTES CIRCUNSTANCIAS DE LUGAR.
-            MANIFIESTA EL COMPARECIENTE HABER EXTRAVIADO EL ORIGINAL DE [NOMBRE_CERTIFICADO], NÚMERO:, A NOMBRE DE: [NOMBRE_PERSONA]
-            
-            COMPARECIENTE	[NOMBRE_PERSONA]
-            LUGAR DE EXTRAVÍO	[LUGAR_EXTRAVIO]
-            FECHA DE EXTRAVÍO	[FECHA_EXTRAVIO]
-            DESCRIPCIÓN	[DESCRIPCION_EXTRAVIO]
-            
-                            SE EXPIDE LA PRESENTE CONSTANCIA EN LA CIUDAD DE: [NOMBRE_CIUDAD] A LOS [DIA] DÍAS DEL MES DE [MES] DEL AÑO [ANIO] A LAS [HORA]; LA CUAL NO SUSTITUYE EL DOCUMENTO ORIGINAL NI VALIDA LA PREEXISTENCIA DEL DOCUMENTO U OBJETO
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            [NOMBRE_AGENTE]
-            AGENTE DEL MINISTERIO PÚBLICO ADSCRITO AL SISTEMA
-            ESTATAL DE JUSTICIA ALTERNATIVA PENA'
+
+El C.AGENTE DEL MINISTERIO PÚBLICO
+[NOMBRE_AGENTE]
+
+                HACE CONSTAR QUE EL CONTROL DE REPORTES QUE SE LLEVÓ A CABO EN ESTA OFICINA, HA QUEDADO REGISTRADO EL REPORTE DE PÉRDIDA DE: [NOMBRE_CERTIFICADO]
+LA PÉRDIDA DE DICHO(A) [NOMBRE_CERTIFICADO] OCURRIÓ BAJO LAS SIGUIENTES CIRCUNSTANCIAS DE LUGAR.
+MANIFIESTA EL COMPARECIENTE HABER EXTRAVIADO EL ORIGINAL DE [NOMBRE_CERTIFICADO], NÚMERO: [NO_DOCUMENTO], A NOMBRE DE: [NOMBRE_PERSONA]
+
+COMPARECIENTE	[NOMBRE_PERSONA]
+LUGAR DE EXTRAVÍO	[LUGAR_EXTRAVIO]
+FECHA DE EXTRAVÍO	[FECHA_EXTRAVIO]
+DESCRIPCIÓN	[DESCRIPCION_EXTRAVIO]
+
+                SE EXPIDE LA PRESENTE CONSTANCIA EN LA CIUDAD DE: [NOMBRE_CIUDAD] A LOS [DIA] DÍAS DEL MES DE [MES] DEL AÑO [ANIO] A LAS [HORA]; LA CUAL NO SUSTITUYE EL DOCUMENTO ORIGINAL NI VALIDA LA PREEXISTENCIA DEL DOCUMENTO U OBJETO
+
+
+
+
+
+[NOMBRE_AGENTE]
+AGENTE DEL MINISTERIO PÚBLICO ADSCRITO AL SISTEMA
+ESTATAL DE JUSTICIA ALTERNATIVA PENAL
+
+DATOS FIRMA ELECTRÓNICA
+
+
+IDENTIFICADOR ELECTRÓNICO: [NUMERO_IDENTIFICADOR]
+
+AGENTE DEL MINISTERIO PÚBLICO: [NOMBRE_AGENTE]
+
+RFC AGENTE DEL MINISTERIO PÚBLICO: [RFC_AGENTE]
+
+NO. DE CERTIFICACIÓN DE FIRMA ELECTRÓNICA: [NUMERO_CERTIFICADO]
+
+FECHA DE FIRMA: [FECHA_FIRMA]
+
+HORA DE FIRMA: [HORA_FIRMA]
+
+LUGAR DE FIRMA: [LUGAR_FIRMA]
+
+
+[CODIGO_QR]
+
+https://cdt.fgebc.gob.mx/[URL]
+
+
+
+FIRMA ELECTRÓNICA
+
+[FIRMA_ELECTRONICA]
+
+
+
+[CODIGO_QRS]'
 			),
 
 

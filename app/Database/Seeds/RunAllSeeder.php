@@ -8,15 +8,12 @@ class RunAllSeeder extends Seeder
 {
 	public function run()
 	{
+		$this->call('PaisesSeeder');
 		$this->call('EstadosSeeder');
 		$this->call('MunicipioSeeder');
 		$this->call('LocalidadSeeder');
 		$this->call('ColoniaSeeder');
 		$this->call('OficinaSeeder');
-		$this->call('ClasificacionDoctoSeeder');
-		$this->call('PlantillaSeeder');
-		$this->call('DelitoModalidadSeeder');
-		$this->call('MedioConocimientoSeeder');
 		$this->call('PersonaCalidadJuridicaSeeder');
 		$this->call('PersonaEdoCivilSeeder ');
 		$this->call('PersonaIdiomaSeeder  ');
@@ -32,9 +29,8 @@ class RunAllSeeder extends Seeder
 		$this->call('ZonasUsuariosSeeder');
 		$this->call('UsuariosSeeder');
 		$this->call('HechoLugarSeeder');
-		$this->call('PaisesSeeder');
 		$this->call('DelitosUsuariosSeeder');
-		$this->call('FileOriginalesSeeder');
+		$this->call('PlantillasSeeder');
 		$this->call('EmpleadosSeeder');
 		$this->call('ConexionesDBSeeder');
 		$this->call('EscolaridadSeeder');

@@ -12,7 +12,7 @@
 	</p>
 	<br>
 	<a class="btn" href="<?= base_url('/admin') ?>">
-		INICIAR VIDEO DENUNCIA
+		INGRESAR
 	</a>
 </div>
 

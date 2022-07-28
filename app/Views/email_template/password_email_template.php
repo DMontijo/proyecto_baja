@@ -12,7 +12,7 @@
 	</h2>
 	<br>
 	<a class="btn" href="<?= base_url('/denuncia') ?>">
-		INICIAR VIDEO DENUNCIA
+		INICIAR DENUNCIA
 	</a>
 </div>
 

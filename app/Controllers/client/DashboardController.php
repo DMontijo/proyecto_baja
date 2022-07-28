@@ -63,7 +63,30 @@ class DashboardController extends BaseController
 		$data->estados = $this->_estadosModel->asObject()->findAll();
 		$data->municipios = $this->_municipiosModel->asObject()->where('ESTADOID', '2')->findAll();
 		$data->nacionalidades = $this->_nacionalidadModel->asObject()->findAll();
-		$data->lugares = $this->_hechoLugarModel->asObject()->findAll();
+		$lugares = $this->_hechoLugarModel->orderBy('HECHODESCR', 'ASC')->findAll();
+
+		$lugares_sin = [];
+		$lugares_fuego = [];
+		$lugares_blanca = [];
+		foreach ($lugares as $lugar) {
+			if (strpos($lugar['HECHODESCR'], 'ARMA DE FUEGO')) {
+				array_push($lugares_fuego, (object)$lugar);
+			}
+			if (strpos($lugar['HECHODESCR'], 'ARMA BLANCA')) {
+				array_push($lugares_blanca, (object)$lugar);
+			}
+			if (!strpos($lugar['HECHODESCR'], 'ARMA BLANCA') && !strpos($lugar['HECHODESCR'], 'ARMA DE FUEGO')) {
+				array_push($lugares_sin, (object)$lugar);
+			}
+		}
+		$data->lugares = [];
+		$data->lugares = (object)array_merge($lugares_sin, $lugares_blanca, $lugares_fuego);
+		// foreach ($data->lugares as $lugar) {
+		// 	var_dump($lugar);
+		// 	echo '<br><br>';
+		// }
+		// exit;
+
 		$data->colorVehiculo = $this->_coloresVehiculoModel->asObject()->findAll();
 		$data->tipoVehiculo = $this->_tipoVehiculoModel->asObject()->orderBy('VEHICULOTIPODESCR', 'ASC')->findAll();
 		$data->delitosUsuarios = $this->_delitosUsuariosModel->asObject()->orderBy('DELITO', 'ASC')->findAll();

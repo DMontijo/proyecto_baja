@@ -4,12 +4,11 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class FILESORIGINALES extends Migration
+class PLANTILLAS extends Migration
 {
 	public function up()
 	{
 		$this->forge->addField([
-
 			'ID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
