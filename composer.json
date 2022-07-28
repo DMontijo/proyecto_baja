@@ -7,9 +7,9 @@
 	"require": {
 		"php": "^7.3||^8.0",
 		"codeigniter4/framework": "^4",
-		"codeigniter4/translations" : "^4"
-	},
-	"require-dev": {
+		"codeigniter4/translations" : "^4",
+		"dompdf/dompdf": "^2.0",
+		"endroid/qr-code": "^4.4"
 	},
 	"autoload-dev": {
 		"psr-4": {
