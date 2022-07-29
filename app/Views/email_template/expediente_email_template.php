@@ -6,8 +6,6 @@
 	<br>
 	<h2><?= $expediente ?></h2>
 	<br>
-	<p>Puedes consultarlo en la plataforma</p>
-	<br>
 </div>
 
 <?= $this->endSection() ?>

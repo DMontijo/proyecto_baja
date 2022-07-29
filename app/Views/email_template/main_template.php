@@ -138,14 +138,14 @@
 										<?= $this->renderSection('body') ?>
 									</td>
 								</tr>
-								<tr>
+								<!-- <tr>
 									<td class="footer" bgcolor="#E5E4E3">
 										<p>
 											Si usted no ha realizado esta
 											acción ignore este mensaje.
 										</p>
 									</td>
-								</tr>
+								</tr> -->
 							</table>
 						</td>
 					</tr>

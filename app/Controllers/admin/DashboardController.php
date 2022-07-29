@@ -484,8 +484,6 @@ class DashboardController extends BaseController
 				$folioRow['AGENTEATENCIONID'] = session('ID') ? session('ID') : 1;
 				$folioRow['AGENTEFIRMAID'] = session('ID') ? session('ID') : 1;
 
-				$update = $this->_folioModel->set($folioRow)->where('FOLIOID', $folio)->where('ANO', $year)->update();
-
 				$folioRow['HECHOFECHA'] = $folioRow['HECHOFECHA'] . ' ' . $folioRow['HECHOHORA'];
 				$folioRow['HECHONARRACION'] = $notas;
 
@@ -514,31 +512,41 @@ class DashboardController extends BaseController
 				$folioRow['HECHONARRACION'] = $narracion;
 				$folioRow['HECHOFECHA'] = $fecha;
 
-				foreach ($personas as $key => $persona) {
-					$_persona = $this->createPersonaFisica($expedienteCreado->EXPEDIENTEID, $persona, $folioRow['HECHOMUNICIPIOID']);
-					$domicilios = $this->_folioPersonaFisicaDomicilioModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->where('PERSONAFISICAID', $persona['PERSONAFISICAID'])->findAll();
-					if ($persona['CALIDADJURIDICAID'] == '2') {
-						$_imputado = $this->createExpImputado($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $folioRow['HECHOMUNICIPIOID']);
-					}
+				try {
+					if ($expedienteCreado->status == 201) {
+						$folioRow['EXPEDIENTEID'] = $expedienteCreado->EXPEDIENTEID;
+						
+						$update = $this->_folioModel->set($folioRow)->where('FOLIOID', $folio)->where('ANO', $year)->update();
 
-					foreach ($domicilios as $key => $domicilio) {
-						$_domicilio = $this->createDomicilioPersonaFisica($expedienteCreado->EXPEDIENTEID, 1, $domicilio, $folioRow['HECHOMUNICIPIOID']);
-					}
-				}
+						try {
+							foreach ($personas as $key => $persona) {
+								$_persona = $this->createPersonaFisica($expedienteCreado->EXPEDIENTEID, $persona, $folioRow['HECHOMUNICIPIOID']);
+								$domicilios = $this->_folioPersonaFisicaDomicilioModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->where('PERSONAFISICAID', $persona['PERSONAFISICAID'])->findAll();
+								if ($persona['CALIDADJURIDICAID'] == '2') {
+									$_imputado = $this->createExpImputado($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $folioRow['HECHOMUNICIPIOID']);
+								}
 
-				if ($expedienteCreado->status == 201) {
-					$update2 = $this->_folioModel->set(['EXPEDIENTEID' => $expedienteCreado->EXPEDIENTEID])->where('FOLIOID', $folio)->where('ANO', $year)->update();
-					if ($update && $update2) {
-						$denunciante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', $folioRow['DENUNCIANTEID'])->first();
-						if ($this->_sendEmailExpediente($denunciante->CORREO, $folio, $expedienteCreado->EXPEDIENTEID)) {
-							return json_encode(['status' => 1, 'expediente' => $expedienteCreado->EXPEDIENTEID]);
+								foreach ($domicilios as $key => $domicilio) {
+									$_domicilio = $this->createDomicilioPersonaFisica($expedienteCreado->EXPEDIENTEID, 1, $domicilio, $folioRow['HECHOMUNICIPIOID']);
+								}
+							}
+						} catch (\Exception $e) {
+						}
+
+						if ($update) {
+							$denunciante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', $folioRow['DENUNCIANTEID'])->first();
+							if ($this->_sendEmailExpediente($denunciante->CORREO, $folio, $expedienteCreado->EXPEDIENTEID)) {
+								return json_encode(['status' => 1, 'expediente' => $expedienteCreado->EXPEDIENTEID]);
+							} else {
+								return json_encode(['status' => 1, 'expediente' => $expedienteCreado->EXPEDIENTEID, 'message' => 'Correo no enviado']);
+							}
 						} else {
-							return json_encode(['status' => 1, 'expediente' => $expedienteCreado->EXPEDIENTEID]);
+							return json_encode(['status' => 0, 'error' => 'No hizo el update']);
 						}
 					} else {
-						return json_encode(['status' => 0, 'error' => 'No hizo el update']);
+						return json_encode(['status' => 0, 'error' => 'No se creo el expediente']);
 					}
-				} else {
+				} catch (\Exception $e) {
 					return json_encode(['status' => 0, 'error' => 'No se creo el expediente']);
 				}
 			} else {
