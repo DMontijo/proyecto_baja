@@ -10,7 +10,7 @@ class PlantillasSeeder extends Seeder
 	{
 		$data = [
 			array(
-				'ID' => '1', 'DESCRIPCION' => 'CERTIFICADO MEDICO', 'TITULO' => 'CERTIFICADO MEDICO',
+				'DESCRIPCION' => 'CERTIFICADO MEDICO', 'TITULO' => 'CERTIFICADO MEDICO',
 				'PLACEHOLDER' => '<p class="p1" style="margin: 0px; text-align: center; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0);">SOLICITUD DE PERITAJE</p><br>
 
             <p class="p2" style="margin: 0px; text-align: right; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0); min-height: 14px;">No. de Caso: [EXPEDIENTE_NUMERO]</p><br>
@@ -83,7 +83,7 @@ class PlantillasSeeder extends Seeder
 
 
 			array(
-				'ID' => '2', 'DESCRIPCION' => 'CONSTANCIA DE RECEPCIÓN DE VIDEO DENUNCIA', 'TITULO' => 'CONSTANCIA DE RECEPCIÓN DE VIDEO DENUNCIA',
+				'DESCRIPCION' => 'CONSTANCIA DE RECEPCIÓN DE VIDEO DENUNCIA', 'TITULO' => 'CONSTANCIA DE RECEPCIÓN DE VIDEO DENUNCIA',
 				'PLACEHOLDER' => '<br><p class="p1" style="margin: 0px; text-align: center; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0); min-height: 14px;">CONSTANCIA DE RECEPCIÓN DE VIDEO DENUNCIA</p><br><p class="p2" style="margin: 0px; text-align: justify; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0);">
             En [ESTADO], Baja California, a los [DIA] días del mes de [MES] del año [ANO], siendo las [HORA] horas con [MINUTOS] minutos, la/el suscrita (o) Licenciada(o) [NOMBRE_LICENCIADO], Agente del Ministerio Público adscrita(o) al Centro de Denuncia Tecnológica, hace constar que se inicia video denuncia interpuesta por la/el ciudadana (o) [VICTIMA], quien manifesta en su entrevista que [HECHO], motivo por el que refiere es su deseo presentar denuncia/querella por el delito de [DELITO], previsto en el artículo [NUMERO_DELITO] del Código Penal [ORDENAMIENTO_LEGAL] en contra de [PERSONA],  por tanto se genera [TIPO_EXPEDIENTE] 020[VARIABLE_PENDIENTE]-20[VARIABLE_PENDIENTE]-[VARIABLE_PENDIENTE], misma que será remitida a la Dirección de Zona [ZONA_SEJAP] para su debida remisión. Lo anterior de conformidad con el artículo 131 fracción II del Código Nacional de Procedimientos Penales, Artículo 20 inciso C de la Constitución Política de los Estados Unidos Mexicanos, así como el Artículo 22, fracción II y demás aplicables de la Ley Orgánica de la Fiscalía General del Estado de Baja California. CONSTE.
             <br></p><br><br><p class="p1" style="margin: 0px; text-align: right; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0); min-height: 14px;">EXPEDIENTE: [EXPEDIENTE_NUMERO]</p><br><p class="p2" style="margin: 0px; text-align: justify; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0);">
@@ -139,7 +139,7 @@ class PlantillasSeeder extends Seeder
 			),
 
 			array(
-				'ID' => '3', 'DESCRIPCION' => 'ORDEN DE PROTECCION ALBERGUE', 'TITULO' => 'ORDEN DE PROTECCION ALBERGUE',
+				'DESCRIPCION' => 'ORDEN DE PROTECCION ALBERGUE', 'TITULO' => 'ORDEN DE PROTECCION ALBERGUE',
 				'PLACEHOLDER' => '<br><p class="p1" style="margin: 0px; text-align: right; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0); min-height: 14px;">EXPEDIENTE: [EXPEDIENTE_NUMERO]</p><br>
 
             <p class="p2" style="margin: 0px; text-align: justify; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0);">
@@ -192,7 +192,7 @@ class PlantillasSeeder extends Seeder
 
 
 			array(
-				'ID' => '4', 'DESCRIPCION' => 'ORDEN DE PROTECCION RECOGER PERTENENCIAS', 'TITULO' => 'ORDEN DE PROTECCION RECOGER PERTENENCIAS',
+				'DESCRIPCION' => 'ORDEN DE PROTECCION RECOGER PERTENENCIAS', 'TITULO' => 'ORDEN DE PROTECCION RECOGER PERTENENCIAS',
 				'PLACEHOLDER' => '<br><p class="p1" style="margin: 0px; text-align: right; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0); min-height: 14px;">EXPEDIENTE: [EXPEDIENTE_NUMERO]</p><br><p class="p2" style="margin: 0px; text-align: justify; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0);">
             DIRECCIÓN DE SEGURIDAD PÚBLICA MUNICIPAL <br>
             [DOCUMENTO_MUNICIPIO],BAJA CALIFORNIA <br>
@@ -232,7 +232,7 @@ class PlantillasSeeder extends Seeder
 
 
 			array(
-				'ID' => '5', 'DESCRIPCION' => 'ORDEN DE PROTECCION RONDINES', 'TITULO' => 'ORDEN DE PROTECCION RONDINES',
+				'DESCRIPCION' => 'ORDEN DE PROTECCION RONDINES', 'TITULO' => 'ORDEN DE PROTECCION RONDINES',
 				'PLACEHOLDER' => '<br><p class="p1" style="margin: 0px; text-align: right; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0);">EXPEDIENTE: [EXPEDIENTE_NUMERO]
             </p><br>
             
@@ -282,7 +282,7 @@ class PlantillasSeeder extends Seeder
 
 
 			array(
-				'ID' => "6", 'DESCRIPCION' => 'CONSTANCIA DE EXTRAVÍO', 'TITULO' => 'CONSTANCIA DE EXTRAVÍO', 'PLACEHOLDER' => '<br>
+				'DESCRIPCION' => 'CONSTANCIA DE EXTRAVÍO', 'TITULO' => 'CONSTANCIA DE EXTRAVÍO', 'PLACEHOLDER' => '<br>
                 <p class="p1"
                     style="margin: 0px; text-align: right; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0); min-height: 14px;">
                     <strong>FOLIO: [FOLIO_NUMERO]</strong>

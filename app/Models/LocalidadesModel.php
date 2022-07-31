@@ -8,5 +8,12 @@ class LocalidadesModel extends Model
 {
 	protected $DBGroup          = 'default';
 	protected $table            = 'LOCALIDAD';
-	protected $allowedFields    = [];
+	protected $allowedFields    = [
+		'ESTADOID',
+		'MUNICIPIOID',
+		'LOCALIDADID',
+		'LOCALIDADDESCR',
+		'ZONA',
+		'LOCALIDADIDEXTERNO',
+	];
 }

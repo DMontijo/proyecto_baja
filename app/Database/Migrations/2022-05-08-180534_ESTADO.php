@@ -12,7 +12,6 @@ class ESTADO extends Migration
 			'ESTADOID'          => [
 				'type'           => 'INT',
 				'unsigned'       => TRUE,
-				'auto_increment' => TRUE
 			],
 			'ESTADODESCR'       => [
 				'type'           => 'VARCHAR',

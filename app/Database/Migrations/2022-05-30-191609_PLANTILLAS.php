@@ -12,6 +12,7 @@ class PLANTILLAS extends Migration
 			'ID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
+				'auto_increment' => TRUE
 			],
 			'DESCRIPCION' => [
 				'type' => 'VARCHAR',

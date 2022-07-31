@@ -10,9 +10,9 @@ class BITACORAACTIVIDAD extends Migration
 	{
 		$this->forge->addField([
 			'ID' => [
-				'type' => 'INT',
-				'unsigned' => TRUE,
-				'auto_increment' => TRUE
+				'type' => 'VARCHAR',
+				'constraint' => '255',
+				'null' => false
 			],
 			'USUARIOID' => [
 				'type' => 'INT',
@@ -25,8 +25,10 @@ class BITACORAACTIVIDAD extends Migration
 			'NOTAS' => [
 				'type' => 'VARCHAR',
 				'constraint' => '255',
+				'null' => TRUE,
 			],
-			'FECHA DATETIME DEFAULT CURRENT_TIMESTAMP',
+			'FECHAREGISTRO DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL',
+			'FECHAACTUALIZACION DATETIME ON UPDATE CURRENT_TIMESTAMP',
 		]);
 
 		$this->forge->addKey('ID', TRUE);

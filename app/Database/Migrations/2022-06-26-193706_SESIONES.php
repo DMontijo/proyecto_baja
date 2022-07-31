@@ -12,30 +12,31 @@ class SESIONES extends Migration
 		$this->forge->addField([
 			'ID' => [
 				'type' => 'VARCHAR',
-				'constraint' => 128,
+				'constraint' => '255',
 				'null' => false
 			],
 			'ID_USUARIO' => [
 				'type' => 'VARCHAR',
-				'constraint' => 255,
+				'constraint' => '255',
 				'null' => false
 			],
 			'IP_USUARIO' => [
 				'type' => 'VARCHAR',
-				'constraint' => 45,
+				'constraint' => '45',
 				'null' => false
 			],
 			'IP_PUBLICA' => [
 				'type' => 'VARCHAR',
-				'constraint' => 45,
+				'constraint' => '45',
 				'null' => false
 			],
 			'AGENTE_HTTP' => [
 				'type' => 'VARCHAR',
-				'constraint' => 255,
+				'constraint' => '255',
 				'null' => false
 			],
 			'FECHAINICIO timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL',
+			'FECHAACTUALIZACION DATETIME ON UPDATE CURRENT_TIMESTAMP',
 		]);
 
 		$this->forge->addKey('ID', true);

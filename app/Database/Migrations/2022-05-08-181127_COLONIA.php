@@ -10,40 +10,39 @@ class COLONIA extends Migration
 	{
 
 		$this->forge->addField([
-			'ID'          => [
-				'type'           => 'INT',
-				'unsigned'       => TRUE,
+			'ESTADOID' => [
+				'type' => 'INT',
+				'unsigned' => TRUE,
 			],
-			'COLONIAID'          => [
-				'type'           => 'INT',
-				'unsigned'       => TRUE,
+			'MUNICIPIOID' => [
+				'type' => 'INT',
+				'unsigned' => TRUE,
 			],
-			'ESTADOID'          => [
-				'type'           => 'INT',
-				'unsigned'       => TRUE,
+			'LOCALIDADID' => [
+				'type' => 'INT',
+				'unsigned' => TRUE,
 			],
-			'MUNICIPIOID'          => [
-				'type'           => 'INT',
-				'unsigned'       => TRUE,
+			'COLONIAID' => [
+				'type' => 'INT',
+				'unsigned' => TRUE,
 			],
-			'LOCALIDADID'          => [
-				'type'           => 'INT',
-				'unsigned'       => TRUE,
+			'ZONA' => [
+				'type' => 'CHAR',
+				'constraint' => '1',
 			],
-			'ZONA'       => [
-				'type'           => 'CHAR',
-				'constraint'     => '1',
+			'DELEGACIONID' => [
+				'type' => 'INT',
+				'unsigned' => TRUE,
 			],
-			'DELEGACIONID'          => [
-				'type'           => 'INT',
-				'unsigned'       => TRUE,
-			],
-			'COLONIADESCR'       => [
-				'type'           => 'VARCHAR',
-				'constraint'     => '200',
+			'COLONIADESCR' => [
+				'type' => 'VARCHAR',
+				'constraint' => '200',
 			]
 		]);
-		$this->forge->addKey('ID', TRUE);
+		$this->forge->addKey('ESTADOID', TRUE);
+		$this->forge->addKey('MUNICIPIOID', TRUE);
+		$this->forge->addKey('LOCALIDADID', TRUE);
+		$this->forge->addKey('COLONIAID', TRUE);
 		$this->forge->createTable('COLONIA');
 	}
 

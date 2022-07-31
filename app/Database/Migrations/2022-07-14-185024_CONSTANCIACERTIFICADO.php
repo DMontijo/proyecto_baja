@@ -6,9 +6,9 @@ use CodeIgniter\Database\Migration;
 
 class CONSTANCIACERTIFICADO extends Migration
 {
-    public function up()
-    {
-        $this->forge->addField([
+	public function up()
+	{
+		$this->forge->addField([
 			'IDCERTIFICADOEXTRAVIADO' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
@@ -39,16 +39,16 @@ class CONSTANCIACERTIFICADO extends Migration
 				'type' => 'TEXT',
 				'null' => TRUE,
 			],
-            'DOMICILIO' => [
+			'DOMICILIO' => [
 				'type' => 'TEXT',
 				'constraint' => '300',
 				'null' => TRUE,
 			],
-            'HECHOLUGARID' => [
+			'HECHOLUGARID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 			],
-            'HECHOFECHA' => [
+			'HECHOFECHA' => [
 				'type' => 'DATE',
 				'null' => TRUE,
 			],
@@ -56,91 +56,91 @@ class CONSTANCIACERTIFICADO extends Migration
 				'type' => 'TIME',
 				'null' => TRUE,
 			],
-            'NBOLETO' => [
+			'NBOLETO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '50',
 				'null' => TRUE,
 			],
-            'NTALON' => [
+			'NTALON' => [
 				'type' => 'VARCHAR',
 				'constraint' => '50',
 				'null' => TRUE,
 			],
-            'NOMBRESORTEO' => [
+			'NOMBRESORTEO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '50',
 				'null' => TRUE,
 			],
-            'SORTEOFECHA' => [
+			'SORTEOFECHA' => [
 				'type' => 'DATE',
 				'null' => TRUE,
 			],
-            'PERMISOGOBERNACION' => [
+			'PERMISOGOBERNACION' => [
 				'type' => 'TEXT',
 				'constraint' => '300',
 				'null' => TRUE,
 			],
-            'PERMISOGOBCOLABORADORES' => [
+			'PERMISOGOBCOLABORADORES' => [
 				'type' => 'TEXT',
 				'constraint' => '300',
 				'null' => TRUE,
 			],
-            'TIPODOCUMENTO' => [
+			'TIPODOCUMENTO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '75',
 				'null' => TRUE,
 			],
-            'NDOCUMENTO' => [
+			'NDOCUMENTO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '50',
 				'null' => TRUE,
 			],
-            'DUENONOMBREDOC' => [
+			'DUENONOMBREDOC' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
 				'null' => TRUE,
 			],
-            'DUENOAPELLIDOPDOC' => [
+			'DUENOAPELLIDOPDOC' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
 				'null' => TRUE,
 			],
-            'DUENOAPELLIDOMDOC' => [
+			'DUENOAPELLIDOMDOC' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
 				'null' => TRUE,
 			],
-            'SERIEVEHICULO' => [
+			'SERIEVEHICULO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
 				'null' => TRUE,
 			],
-            'NPLACA' => [
+			'NPLACA' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
 				'null' => TRUE,
 			],
-            'POSICIONPLACA' => [
+			'POSICIONPLACA' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
 				'null' => TRUE,
 			],
-            'DISTRIBUIDORVEHICULO' => [
+			'DISTRIBUIDORVEHICULO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
 				'null' => TRUE,
 			],
-            'MARCAID' => [
+			'MARCAID' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
 				'null' => TRUE,
 			],
-            'MODELOID' => [
+			'MODELOID' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
 				'null' => TRUE,
 			],
-            'ANIOVEHICULO' => [
+			'ANIOVEHICULO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
 				'null' => TRUE,
@@ -185,7 +185,7 @@ class CONSTANCIACERTIFICADO extends Migration
 				'constraint' => '100',
 				'null' => TRUE,
 			],
-			'TEXTO_CONSTANCIA'=> [
+			'TEXTO_CONSTANCIA' => [
 				'type' => 'TEXT',
 				'null' => TRUE,
 			],
@@ -194,17 +194,16 @@ class CONSTANCIACERTIFICADO extends Migration
 				'constraint' => '15',
 				'null' => TRUE,
 			],
-
-        ]);
-        $this->forge->addKey('IDCERTIFICADOEXTRAVIADO', TRUE);
+			'FECHAREGISTRO DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL',
+			'FECHAACTUALIZACION DATETIME ON UPDATE CURRENT_TIMESTAMP',
+		]);
+		$this->forge->addKey('IDCERTIFICADOEXTRAVIADO', TRUE);
 		$this->forge->addKey('ANO', TRUE);
-        $this->forge->createTable('CONSTANCIA_EXTRAVIO');
+		$this->forge->createTable('CONSTANCIA_EXTRAVIO');
+	}
 
-    }
-
-    public function down()
-    {
-        $this->forge->dropTable('CONSTANCIA_EXTRAVIO');
-
-    }
+	public function down()
+	{
+		$this->forge->dropTable('CONSTANCIA_EXTRAVIO');
+	}
 }
