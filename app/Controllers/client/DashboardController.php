@@ -81,11 +81,6 @@ class DashboardController extends BaseController
 		}
 		$data->lugares = [];
 		$data->lugares = (object)array_merge($lugares_sin, $lugares_blanca, $lugares_fuego);
-		// foreach ($data->lugares as $lugar) {
-		// 	var_dump($lugar);
-		// 	echo '<br><br>';
-		// }
-		// exit;
 
 		$data->colorVehiculo = $this->_coloresVehiculoModel->asObject()->findAll();
 		$data->tipoVehiculo = $this->_tipoVehiculoModel->asObject()->orderBy('VEHICULOTIPODESCR', 'ASC')->findAll();
@@ -175,7 +170,10 @@ class DashboardController extends BaseController
 		if ($this->request->getPost('esta_desaparecido')  == "SI") {
 
 			$foto_des = $this->request->getFile('foto_des');
-			$foto_data = $foto_des->getSize() > 0 ? $foto_des->getMimeType() . ';base64,' . base64_encode(file_get_contents($foto_des)) : NULL;
+			$foto_data = NULL;
+			if ($foto_des) {
+				$foto_data = file_get_contents($foto_des);
+			}
 
 			$dataDesaparecido = array(
 				'NOMBRE' => $this->request->getPost('nombre_des'),
@@ -399,11 +397,15 @@ class DashboardController extends BaseController
 
 		if ($this->request->getPost('delito') == "ROBO DE VEHÍCULO") {
 			$img_file = $this->request->getFile('foto_vehiculo');
-			$fotoV = base64_encode(file_get_contents($img_file));
-			//$imgData = $img_file->getSize() > 0 ? 'data:' . $img_file->getMimeType() . ';base64,' . base64_encode(file_get_contents($img_file)) : NULL;
+			$fotoV = NULL;
+			if ($img_file) {
+				$fotoV = file_get_contents($img_file);
+			}
 			$document_file = $this->request->getFile('documento_vehiculo');
-			//$docData = $document_file->getSize() > 0 ? 'data:' . $document_file->getMimeType() . ';base64,' . base64_encode(file_get_contents($document_file)) : NULL;
-			$docV = base64_encode(file_get_contents($document_file));
+			$docV = NULL;
+			if ($document_file) {
+				$docV = file_get_contents($document_file);
+			}
 
 			$dataVehiculo = array(
 				'TIPOID' => $this->request->getPost('tipo_vehiculo'),
@@ -497,6 +499,9 @@ class DashboardController extends BaseController
 		$data['FOLIOID'] = $folio;
 		$data['ANO'] = $year;
 		$data['CALIDADJURIDICAID'] = $calidadJuridica;
+		if (empty($data['FECHANACIMIENTO']) || $data['FECHANACIMIENTO'] = NULL || $data['FECHANACIMIENTO'] = '0000-00-00') {
+			$data['FECHANACIMIENTO'] = NULL;
+		}
 
 		$personaFisica = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->orderBy('PERSONAFISICAID', 'desc')->first();
 
@@ -537,6 +542,9 @@ class DashboardController extends BaseController
 		$data['FOLIOID'] = $folio;
 		$data['ANO'] = $year;
 		$data['PERSONAFISICAID'] = $personaFisicaID;
+		if (empty($data['DIA_DESAPARICION']) || $data['DIA_DESAPARICION'] = NULL || $data['DIA_DESAPARICION'] = '0000-00-00') {
+			$data['DIA_DESAPARICION'] = NULL;
+		}
 
 		$this->_folioPersonaFisicaDesaparecidaModel->insert($data);
 	}

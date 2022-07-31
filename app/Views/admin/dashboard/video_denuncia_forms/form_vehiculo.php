@@ -20,13 +20,13 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="foto_vehiculo" class="form-label font-weight-bold">Fotografía del vehículo:</label>
-		<img class="img-fluid" id="foto_vehiculo" name="foto_vehiculo" src="" alt="">
-		<a class="btn btn-primary" id="downloadImage" download="foto_vehiculo.jpg">Descargar imagen</a>
+		<a class="btn btn-primary btn-block mb-4 font-weight-bold" id="downloadImage" download="">Descargar imagen</a>
+		<img class="img-fluid mb-3" id="foto_vehiculo" name="foto_vehiculo" src="" alt="">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="doc_vehiculo" class="form-label font-weight-bold">Documento del vehículo:</label>
-		<img class="img-fluid" id="doc_vehiculo" name="doc_vehiculo" src="" alt="">
-		<a class="btn btn-primary" id="downloadDoc" download="documento_vehiculo.jpg">Descargar documento</a>
+		<a class="btn btn-primary btn-block mb-4 font-weight-bold" id="downloadDoc" download="">Descargar documento</a>
+		<img class="img-fluid mb-3" id="doc_vehiculo" name="doc_vehiculo" src="" alt="">
 	</div>
 
 </div>

@@ -1,6 +1,8 @@
 <div class="row">
 	<div id="contenedor_fisica_foto" class="col-12 mb-5 d-none">
-		<img id="fisica_foto" class="d-none img-fluid" src="" style="max-width:300px;">
+		<a id="fisica_foto_download" dowload="" href="">
+			<img id="fisica_foto" class="img-fluid" src="" style="max-width:300px;">
+		</a>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="tipoiP" class="form-label font-weight-bold">Tipo identificacion</label>

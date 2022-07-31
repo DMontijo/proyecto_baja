@@ -155,7 +155,6 @@
 	function pulsar(e) {
 		if (e.which === 13 && !e.shiftKey) {
 			e.preventDefault();
-			console.log('prevented');
 			return false;
 		}
 	}
@@ -192,7 +191,7 @@
 			dataType: "json",
 			success: function(response) {
 				// console.log(response);
-				respuesta = (response);
+				respuesta = response;
 				if (response.status === 1) {
 					const folio = response.folio;
 					const preguntas = response.preguntas_iniciales;
@@ -444,14 +443,16 @@
 					let munOrigen = response.municipioOrigen;
 					let ocupacion = response.ocupacion;
 					let escolaridad = response.escolaridad;
-					if (personaid.DENUNCIANTE == 'S') {
-						// console.log(personaid.FOTO);
+					if (personaid.DENUNCIANTE == 'S' && personaid.FOTO) {
 						document.querySelector('#fisica_foto').setAttribute('src', personaid.FOTO);
-						document.querySelector('#fisica_foto').classList.remove('d-none');
+						extension = (((personaid.FOTO.split(';'))[0]).split('/'))[1];
+						document.querySelector('#fisica_foto_download').setAttribute('href', personaid.FOTO);
+						document.querySelector('#fisica_foto_download').setAttribute('download', personaid.NOMBRE ? personaid.NOMBRE + '_' + personaid.PERSONAFISICAID + '_' + personaid.FOLIOID + '_' + personaid.ANO + '.' + extension : personaid.PERSONAFISICAID + '_' + personaid.FOLIOID + '_' + personaid.ANO + '.' + extension);
 						document.querySelector('#contenedor_fisica_foto').classList.remove('d-none');
 					} else {
 						document.querySelector('#fisica_foto').setAttribute('src', '');
-						document.querySelector('#fisica_foto').classList.add('d-none');
+						document.querySelector('#fisica_foto_download').setAttribute('href', '');
+						document.querySelector('#fisica_foto_download').setAttribute('download', '');
 						document.querySelector('#contenedor_fisica_foto').classList.add('d-none');
 					}
 
@@ -515,51 +516,52 @@
 					//PERSONA DESAPARECIDA
 					if (personaid.DESAPARECIDA == 'S') {
 
-						for (let index = 0; index < desaparecida.length; index++) {
-							document.querySelector('#estaturaD').value = desaparecida[index].ESTATURA;
-							document.querySelector('#pesoD').value = desaparecida[index].PESO;
-							document.querySelector('#complexionD').value = desaparecida[index].COMPLEXION;
-							document.querySelector('#colortezD').value = desaparecida[index].COLOR_TEZ;
-							document.querySelector('#senasD').value = desaparecida[index].SENAS;
-							//	document.querySelector('#identidadD').value = desaparecida[index].IDENTIDAD;
-							document.querySelector('#colorCD').value = desaparecida[index].COLOR_CABELLO;
-							document.querySelector('#tamanoCD').value = desaparecida[index].TAM_CABELLO;
-							document.querySelector('#formaCD').value = desaparecida[index].FORMA_CABELLO;
-							document.querySelector('#colorOD').value = desaparecida[index].COLOR_OJOS;
-							document.querySelector('#tipoFD').value = desaparecida[index].FRENTE;
-							document.querySelector('#cejaD').value = desaparecida[index].CEJA;
-							document.querySelector('#discapacidadD').value = desaparecida[index].DISCAPACIDAD;
-							document.querySelector('#origenD').value = desaparecida[index].ORIGEN;
-							if (desaparecida[index].DIA_DESAPARICION) {
-								let date = new Date(desaparecida[index].DIA_DESAPARICION);
-								let dateToTijuanaString = date.toLocaleString('en-US', {
-									timeZone: 'America/Tijuana'
-								});
-								let dateTijuana = new Date(dateToTijuanaString);
-								dateTijuana.setDate(dateTijuana.getDate() + 1);
-								var options = {
-									year: 'numeric',
-									month: 'long',
-									day: 'numeric'
-								};
-								document.querySelector('#diaDesaparicion').value = (dateTijuana.toLocaleDateString("es-ES", options)).toUpperCase();
-							} else {
-								document.querySelector('#diaDesaparicion').value = '';
-							}
-							document.querySelector('#lugarDesaparicion').value = desaparecida[index].LUGAR_DESAPARICION;
-							document.querySelector('#vestimentaD').value = desaparecida[index].VESTIMENTA;
-							document.querySelector('#parentescoD').value = desaparecida[index].PARENTESCO;
-							if (desaparecida[index].FOTOGRAFIA) {
-								document.querySelector('#fisica_foto').setAttribute('src', 'data:' + desaparecida[index].FOTOGRAFIA);
-								document.querySelector('#fisica_foto').classList.remove('d-none');
-								document.querySelector('#contenedor_fisica_foto').classList.remove('d-none');
-							} else {
-								document.querySelector('#fisica_foto').setAttribute('src', '');
-								document.querySelector('#fisica_foto').classList.add('d-none');
-								document.querySelector('#contenedor_fisica_foto').classList.add('d-none');
-							}
-							document.querySelector('#autorizaFoto').value = desaparecida[index].AUTORIZA_FOTO == 'S' ? 'SI' : 'NO';
+						document.querySelector('#estaturaD').value = desaparecida.ESTATURA;
+						document.querySelector('#pesoD').value = desaparecida.PESO;
+						document.querySelector('#complexionD').value = desaparecida.COMPLEXION;
+						document.querySelector('#colortezD').value = desaparecida.COLOR_TEZ;
+						document.querySelector('#senasD').value = desaparecida.SENAS;
+						//	document.querySelector('#identidadD').value = desaparecida.IDENTIDAD;
+						document.querySelector('#colorCD').value = desaparecida.COLOR_CABELLO;
+						document.querySelector('#tamanoCD').value = desaparecida.TAM_CABELLO;
+						document.querySelector('#formaCD').value = desaparecida.FORMA_CABELLO;
+						document.querySelector('#colorOD').value = desaparecida.COLOR_OJOS;
+						document.querySelector('#tipoFD').value = desaparecida.FRENTE;
+						document.querySelector('#cejaD').value = desaparecida.CEJA;
+						document.querySelector('#discapacidadD').value = desaparecida.DISCAPACIDAD;
+						document.querySelector('#origenD').value = desaparecida.ORIGEN;
+						if (desaparecida.DIA_DESAPARICION) {
+							let date = new Date(desaparecida.DIA_DESAPARICION);
+							let dateToTijuanaString = date.toLocaleString('en-US', {
+								timeZone: 'America/Tijuana'
+							});
+							let dateTijuana = new Date(dateToTijuanaString);
+							dateTijuana.setDate(dateTijuana.getDate() + 1);
+							var options = {
+								year: 'numeric',
+								month: 'long',
+								day: 'numeric'
+							};
+							document.querySelector('#diaDesaparicion').value = (dateTijuana.toLocaleDateString("es-ES", options)).toUpperCase();
+						} else {
+							document.querySelector('#diaDesaparicion').value = '';
 						}
+						document.querySelector('#lugarDesaparicion').value = desaparecida.LUGAR_DESAPARICION;
+						document.querySelector('#vestimentaD').value = desaparecida.VESTIMENTA;
+						document.querySelector('#parentescoD').value = desaparecida.PARENTESCO;
+						if (desaparecida.FOTOGRAFIA) {
+							document.querySelector('#fisica_foto').setAttribute('src', desaparecida.FOTOGRAFIA);
+							extension = (((desaparecida.FOTOGRAFIA.split(';'))[0]).split('/'))[1];
+							document.querySelector('#fisica_foto_download').setAttribute('href', desaparecida.FOTOGRAFIA);
+							document.querySelector('#fisica_foto_download').setAttribute('download', personaid.NOMBRE ? personaid.NOMBRE + '_' + personaid.PERSONAFISICAID + '_' + personaid.FOLIOID + '_' + personaid.ANO + '.' + extension : personaid.PERSONAFISICAID + '_' + personaid.FOLIOID + '_' + personaid.ANO + '.' + extension);
+							document.querySelector('#contenedor_fisica_foto').classList.remove('d-none');
+						} else {
+							document.querySelector('#fisica_foto').setAttribute('src', '');
+							document.querySelector('#fisica_foto_download').setAttribute('href', '');
+							document.querySelector('#fisica_foto_download').setAttribute('download', '');
+							document.querySelector('#contenedor_fisica_foto').classList.add('d-none');
+						}
+						document.querySelector('#autorizaFoto').value = desaparecida.AUTORIZA_FOTO == 'S' ? 'SI' : 'NO';
 
 						document.getElementById("personadesaparecida").style.display = "block";
 
@@ -688,23 +690,54 @@
 			method: "POST",
 			dataType: "json",
 			success: function(response) {
-				const vehiculo = response.vehiculo;
-				const color = response.color;
-				const estadov = response.estadov;
-				const tipov = response.tipov;
-				if (vehiculo.TIPOID == null) {
-					document.querySelector('#tipo_vehiculo').value = "NULL";
-				} else {
-					document.querySelector('#tipo_vehiculo').value = tipov.VEHICULOTIPODESCR;
-				}
-				document.querySelector('#color_vehiculo').value = color ? color.VEHICULOCOLORDESCR : '';
-				document.querySelector('#foto_vehiculo').setAttribute('src', 'data:image/jpg;base64,' + vehiculo.FOTO);
-				document.querySelector('#downloadImage').setAttribute('href', 'data:image/jpg;base64,' + vehiculo.FOTO);
-				document.querySelector('#description_vehiculo').value = vehiculo.SENASPARTICULARES;
-				document.querySelector('#doc_vehiculo').setAttribute('src', 'data:image/jpg;base64,' + vehiculo.DOCUMENTO);
-				document.querySelector('#downloadDoc').setAttribute('href', 'data:image/jpg;base64,' + vehiculo.DOCUMENTO);
+				if (response.status == 1) {
+					const vehiculo = response.vehiculo;
+					const color = response.color;
+					const tipov = response.tipov;
+					if (vehiculo.TIPOID == null) {
+						document.querySelector('#tipo_vehiculo').value = "";
+					} else {
+						document.querySelector('#tipo_vehiculo').value = tipov.VEHICULOTIPODESCR;
+					}
+					document.querySelector('#color_vehiculo').value = color ? color.VEHICULOCOLORDESCR : '';
+					document.querySelector('#description_vehiculo').value = vehiculo.SENASPARTICULARES;
 
-				$('#folio_vehiculo_modal').modal('show');
+					if (vehiculo.FOTO) {
+						extension = (((vehiculo.FOTO.split(';'))[0]).split('/'))[1];
+						document.querySelector('#foto_vehiculo').setAttribute('src', vehiculo.FOTO);
+						document.querySelector('#downloadImage').setAttribute('href', vehiculo.FOTO);
+						document.querySelector('#downloadImage').setAttribute('download', vehiculo.FOLIOID + '_' + vehiculo.ANO + '_' + vehiculo.VEHICULOID + '_vehiculo.' + extension);
+						document.querySelector('#downloadImage').classList.remove('d-none');
+					} else {
+						document.querySelector('#foto_vehiculo').setAttribute('src', '<?= base_url() ?>/assets/img/no_image.jpeg');
+						document.querySelector('#downloadImage').setAttribute('href', '');
+						document.querySelector('#downloadImage').setAttribute('download', '');
+						document.querySelector('#downloadImage').classList.add('d-none');
+					}
+					if (vehiculo.DOCUMENTO) {
+						extension = (((vehiculo.DOCUMENTO.split(';'))[0]).split('/'))[1];
+						if (extension == 'pdf' || extension == 'doc') {
+							document.querySelector('#doc_vehiculo').setAttribute('src', '<?= base_url() ?>/assets/img/file.png');
+						} else {
+							document.querySelector('#doc_vehiculo').setAttribute('src', vehiculo.DOCUMENTO);
+						}
+						document.querySelector('#downloadDoc').setAttribute('href', vehiculo.DOCUMENTO);
+						document.querySelector('#downloadDoc').setAttribute('download', vehiculo.FOLIOID + '_' + vehiculo.ANO + '_' + vehiculo.VEHICULOID + '_documento.' + extension);
+						document.querySelector('#downloadDoc').classList.remove('d-none');
+					} else {
+						document.querySelector('#doc_vehiculo').setAttribute('src', '<?= base_url() ?>/assets/img/no_image.jpeg');
+						document.querySelector('#downloadDoc').setAttribute('href', '');
+						document.querySelector('#downloadDoc').setAttribute('download', '');
+						document.querySelector('#downloadDoc').classList.add('d-none');
+					}
+					$('#folio_vehiculo_modal').modal('show');
+				} else {
+					Swal.fire({
+						icon: 'error',
+						html: 'No se encontró el vehículo.',
+						confirmButtonColor: '#bf9b55',
+					});
+				}
 			}
 		});
 	}

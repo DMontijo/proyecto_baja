@@ -3,7 +3,7 @@
 		<div class="modal-content">
 			<div class="modal-header bg-blue text-white"">
 				<h5 class="modal-title font-weight-bold">VEHICULO</h5>
-				<button type="button" class="close text-primary" data-dismiss="modal" aria-label="Close">
+				<button type="button" class="close text-white" id="close" data-dismiss="modal" aria-label="Close">
 					<i class="fas fa-times"></i>
 				</button>
 			</div>

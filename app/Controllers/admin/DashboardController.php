@@ -211,19 +211,16 @@ class DashboardController extends BaseController
 		$numfolio = trim($this->request->getPost('folio'));
 		$year = trim($this->request->getPost('year'));
 		$data->folio = $this->_folioModel->asObject()->where('ANO', $year)->where('FOLIOID', $numfolio)->first();
-
 		if ($data->folio) {
 			if ($data->folio->STATUS == 'ABIERTO') {
-				$this->_folioModel->set(['STATUS' => 'EN PROCESO', 'AGENTEATENCIONID' => session('ID')])->where('ANO', $year)->where('FOLIOID', $numfolio)->update();
 				$data->status = 1;
 				$data->preguntas_iniciales = $this->_folioPreguntasModel->where('FOLIOID', $numfolio)->where('ANO', $year)->first();
-				$data->personas = $this->_folioPersonaFisicaModel->join('PERSONACALIDADJURIDICA', 'PERSONACALIDADJURIDICA.PERSONACALIDADJURIDICAID = FOLIOPERSONAFISICA.CALIDADJURIDICAID')->where('FOLIOID', $numfolio)->where('ANO', $year)->orderBy('DENUNCIANTE', 'asc')->findAll();
-				$data->vehiculos = $this->_folioVehiculoModel->where('FOLIOID', $numfolio)->where('ANO', $year)->findAll();
-
+				$data->personas = $this->_folioPersonaFisicaModel->get_by_folio($numfolio, $year);
+				$data->vehiculos = $this->_folioVehiculoModel->get_by_folio($numfolio, $year);
 				$data->folioMunicipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data->folio->HECHOMUNICIPIOID)->first();
 				$data->folioColonia = $this->_coloniasModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data->folio->HECHOMUNICIPIOID)->where('COLONIAID', $data->folio->HECHOCOLONIAID)->first();
 				$data->folioLugar = $this->_folioModel->join('HECHOLUGAR', 'HECHOLUGAR.HECHOLUGARID = FOLIO.HECHOLUGARID')->where('FOLIOID', $numfolio)->where('ANO', $year)->first();
-
+				$this->_folioModel->set(['STATUS' => 'EN PROCESO', 'AGENTEATENCIONID' => session('ID')])->where('ANO', $year)->where('FOLIOID', $numfolio)->update();
 				return json_encode($data);
 			} else if ($data->folio->STATUS == 'EN PROCESO') {
 				return json_encode(['status' => 2, 'motivo' => 'EL FOLIO YA ESTA SIENDO ATENDIDO']);
@@ -248,12 +245,22 @@ class DashboardController extends BaseController
 		$data->personaid = $this->_folioPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $id)->where('CALIDADJURIDICAID', $idcalidad)->first();
 
 		if ($data->personaid) {
+			if ($data->personaid['FOTO']) {
+				$file_info = new \finfo(FILEINFO_MIME_TYPE);
+				$type = $file_info->buffer($data->personaid['FOTO']);
+				$data->personaid['FOTO'] = 'data:' . $type . ';base64,' . base64_encode($data->personaid['FOTO']);
+			}
 			$data->calidadjuridica = $this->_folioPersonaCalidadJuridica->where('PERSONACALIDADJURIDICAID', $idcalidad)->first();
 			$data->tipoidentificacion = $this->_tipoIdentificacionModel->where('PERSONATIPOIDENTIFICACIONID', $data->personaid['TIPOIDENTIFICACIONID'])->first();
 			$data->edocivil = $this->_estadoCivilModel->where('PERSONAESTADOCIVILID', $data->personaid['ESTADOCIVILID'])->first();
 			$data->idioma = $this->_idiomaModel->where('PERSONAIDIOMAID', $data->personaid['PERSONAIDIOMAID'])->first();
 			$data->nacionalidad = $this->_nacionalidadModel->where('PERSONANACIONALIDADID ', $data->personaid['NACIONALIDADID'])->first();
-			$data->personaDesaparecida = $this->_folioPersonaFisicaDesaparecidaModel->where('ANO', $year)->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->findAll();
+			$data->personaDesaparecida = $this->_folioPersonaFisicaDesaparecidaModel->where('ANO', $year)->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
+			if ($data->personaDesaparecida && $data->personaDesaparecida['FOTOGRAFIA']) {
+				$file_info = new \finfo(FILEINFO_MIME_TYPE);
+				$type = $file_info->buffer($data->personaDesaparecida['FOTOGRAFIA']);
+				$data->personaDesaparecida['FOTOGRAFIA'] = 'data:' . $type . ';base64,' . base64_encode($data->personaDesaparecida['FOTOGRAFIA']);
+			}
 			$data->estadoOrigen = $this->_estadosModel->where('ESTADOID', $data->personaid['ESTADOORIGENID'])->first();
 			$data->municipioOrigen = $this->_municipiosModel->where('ESTADOID', $data->personaid['ESTADOORIGENID'])->where('MUNICIPIOID', $data->personaid['MUNICIPIOORIGENID'])->first();
 			$data->escolaridad = $this->_escolaridadModel->where('PERSONAESCOLARIDADID', $data->personaid['ESCOLARIDADID'])->first();
@@ -274,13 +281,6 @@ class DashboardController extends BaseController
 			$data2 = ['status' => 0];
 			return json_encode($data2);
 		}
-	}
-
-	public function joinFisico()
-	{
-		$data =  $this->_folioPersonaFisicaModel->join('PERSONACALIDADJURIDICA', 'PERSONACALIDADJURIDICA.PERSONACALIDADJURIDICAID =FOLIOPERSONAFISICA.CALIDADJURIDICAID')
-			->where('FOLIOID', 402004202200001)->where('PERSONAFISICAID', 1)->first();
-		return json_encode($data);
 	}
 
 	public function findPersonadDomicilioById()
@@ -307,12 +307,29 @@ class DashboardController extends BaseController
 		$folio = $this->request->getPost('folio');
 		$year = $this->request->getPost('year');
 
-		$data->vehiculo = $this->_folioVehiculoModel->where('FOLIOID', $folio)->where('ANO', $year)->first();
-		$data->color = $this->_folioVehiculoModel->join('VEHICULOCOLOR', 'VEHICULOCOLOR.VEHICULOCOLORID  =FOLIOVEHICULO.PRIMERCOLORID')->where('FOLIOID', $folio)->where('ANO', $year)->first();
-		$data->estadov = $this->_folioVehiculoModel->join('ESTADO', 'ESTADO.ESTADOID  =FOLIOVEHICULO.ESTADOIDPLACA')->where('FOLIOID', $folio)->where('ANO', $year)->first();
-		$data->tipov = $this->_folioVehiculoModel->join('VEHICULOTIPO', 'VEHICULOTIPO.VEHICULOTIPOID   =FOLIOVEHICULO.TIPOID')->where('FOLIOID', $folio)->where('ANO', $year)->first();
-
-		return json_encode($data);
+		$data->vehiculo = $this->_folioVehiculoModel->where('FOLIOID', $folio)->where('ANO', $year)->where('VEHICULOID', $id)->first();
+		if ($data->vehiculo) {
+			try {
+				if ($data->vehiculo['FOTO']) {
+					$file_info = new \finfo(FILEINFO_MIME_TYPE);
+					$type = $file_info->buffer($data->vehiculo['FOTO']);
+					$data->vehiculo['FOTO'] = 'data:' . $type . ';base64,' . base64_encode($data->vehiculo['FOTO']);
+				}
+				if ($data->vehiculo['DOCUMENTO']) {
+					$file_info = new \finfo(FILEINFO_MIME_TYPE);
+					$type = $file_info->buffer($data->vehiculo['DOCUMENTO']);
+					$data->vehiculo['DOCUMENTO'] = 'data:' . $type . ';base64,' . base64_encode($data->vehiculo['DOCUMENTO']);
+				}
+				$data->color = $this->_coloresVehiculoModel->where('VEHICULOCOLORID', $data->vehiculo['PRIMERCOLORID'])->first();
+				$data->tipov = $this->_tipoVehiculoModel->where('VEHICULOTIPOID', $data->vehiculo['TIPOID'])->first();
+				$data->status = 1;
+				return json_encode($data);
+			} catch (\Exception $e) {
+				return json_encode(['status' => 0]);
+			}
+		} else {
+			return json_encode(['status' => 0]);
+		}
 	}
 
 	public function enviarFolio()
@@ -515,7 +532,7 @@ class DashboardController extends BaseController
 				try {
 					if ($expedienteCreado->status == 201) {
 						$folioRow['EXPEDIENTEID'] = $expedienteCreado->EXPEDIENTEID;
-						
+
 						$update = $this->_folioModel->set($folioRow)->where('FOLIOID', $folio)->where('ANO', $year)->update();
 
 						try {

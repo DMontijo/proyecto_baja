@@ -106,9 +106,13 @@ class LoginController extends BaseController
 
 	private function _get_public_ip()
 	{
-		$externalContent = file_get_contents('http://checkip.dyndns.com/');
-		preg_match('/Current IP Address: \[?([:.0-9a-fA-F]+)\]?/', $externalContent, $m);
-		$externalIp = $m[1];
+		try {
+			$externalContent = file_get_contents('http://checkip.dyndns.com/');
+			preg_match('/Current IP Address: \[?([:.0-9a-fA-F]+)\]?/', $externalContent, $m);
+			$externalIp = $m[1];
+		} catch (\Exception $e) {
+			$externalIp = '127.0.0.1';
+		}
 		return $externalIp;
 	}
 }

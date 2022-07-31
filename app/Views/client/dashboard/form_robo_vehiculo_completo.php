@@ -182,7 +182,7 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="foto_vehiculo" class="form-label fw-bold">Fotografía del vehículo:</label>
-		<input class="form-control" type="file" id="foto_vehiculo" name="foto_vehiculo" accept="image/jpeg,image/jpg" capture="user">
+		<input class="form-control" type="file" id="foto_vehiculo" name="foto_vehiculo" accept="image/jpeg, image/jpg, image/png" capture="user">
 	</div>
 	<div class="col-12 mb-3">
 		<label for="description_vehiculo" class="form-label fw-bold">Otras características que permitan identificar el vehículo:</label>

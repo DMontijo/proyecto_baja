@@ -71,8 +71,16 @@ class FolioPersonaFisicaModel extends Model
 
 		return $query->getRow();
 	}
-	public function buscar($id)
+
+	public function get_by_folio($folio, $year)
 	{
-		return $this->where("ID=" . $id)->find();
+		$builder = $this->db->table($this->table);
+		$builder->select(['FOLIOID', 'PERSONAFISICAID', 'ANO', 'CALIDADJURIDICAID', 'NOMBRE', 'PRIMERAPELLIDO', 'SEGUNDOAPELLIDO', 'DENUNCIANTE', 'PERSONACALIDADJURIDICADESCR']);
+		$builder->where('FOLIOID', $folio);
+		$builder->where('ANO', $year);
+		$builder->join('PERSONACALIDADJURIDICA', 'PERSONACALIDADJURIDICA.PERSONACALIDADJURIDICAID =' . $this->table . '.CALIDADJURIDICAID');
+		$builder->orderBy('DENUNCIANTE ASC');
+		$query = $builder->get();
+		return $query->getResult('array');
 	}
 }

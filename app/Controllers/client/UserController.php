@@ -65,21 +65,18 @@ class UserController extends BaseController
 	public function create()
 	{
 		$password = $this->_generatePassword(6);
-		// var_dump($_POST['documento_text']);
-		// exit;
-		//$_POST['documento_text'] = str_replace('data:image/jpeg;base64,', '', $_POST['documento_text']);
 
-		//$document_file = $this->request->getFile('documento');
-		//$docData = base64_encode(file_get_contents($document_file)); 
-		$foto_des = $this->request->getPost('documento_text');
-		// list($type, $foto_des) = explode(';', $foto_des);
-		// list(, $extension) = explode('/', $type);
-		// list(, $foto_des) = explode(',', $foto_des);
+		$documento = $this->request->getPost('documento_text');
+		list($type, $documento) = explode(';', $documento);
+		list(, $extension) = explode('/', $type);
+		list(, $documento) = explode(',', $documento);
+		$documento = base64_decode($documento);
 
 		$firma = $this->request->getPost('firma_url');
-		// list($type, $firma) = explode(';', $firma);
-		// list(, $extension) = explode('/', $type);
-		// list(, $firma) = explode(',', $firma);
+		list($type, $firma) = explode(';', $firma);
+		list(, $extension) = explode('/', $type);
+		list(, $firma) = explode(',', $firma);
+		$firma = base64_decode($firma);
 
 		$data = [
 			'NOMBRE' => $this->request->getPost('nombre'),
@@ -118,15 +115,9 @@ class UserController extends BaseController
 			'TWITTER' => $this->request->getPost('twitter'),
 			'IDIOMAID' => (int)$this->request->getPost('idioma'),
 			'NOTIFICACIONES' => $this->request->getPost('notificaciones_check') == 'on' ? 'S' : 'N',
-			'DOCUMENTO' => $_POST['documento_text'],
+			'DOCUMENTO' => $documento,
 			'FIRMA' => $firma,
 		];
-
-		// foreach ($data as $key => $value) {
-		// 	var_dump($key . ' = ' . $data[$key]);
-		// 	echo '<br>';
-		// }
-		// exit;
 
 		if ($this->validate(['correo' => 'required|is_unique[DENUNCIANTES.CORREO]'])) {
 			$this->_denunciantesModel->insert($data);
