@@ -203,8 +203,8 @@
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="localidad" class="form-label fw-bold">Localidad</label>
-							<select class="form-select" id="localidad_select" name="localidad_select">
+							<label for="localidad" class="form-label fw-bold input-required">Localidad</label>
+							<select class="form-select" id="localidad_select" name="localidad_select" required>
 								<option selected disabled value="">Selecciona la localidad</option>
 							</select>
 						</div>
@@ -216,7 +216,7 @@
 								<option selected disabled value="">Selecciona la colonia</option>
 							</select>
 							<input type="text" class="form-control d-none" id="colonia" name="colonia" maxlength="100" required>
-							<small class="text-primary fw-bold">Si no encuentras tu colonia selecciona otro</small>
+							<small id="colonia-message" class="text-primary fw-bold d-none">Si no encuentras tu colonia selecciona otro</small>
 							<div class="invalid-feedback">
 								La colonia es obligatoria
 							</div>
@@ -542,6 +542,7 @@
 					document.querySelector('#pais_select').value != '' &&
 					document.querySelector('#estado_select').value != '' &&
 					document.querySelector('#municipio_select').value != '' &&
+					document.querySelector('#localidad_select').value != '' &&
 					document.querySelector('#colonia').value != '' &&
 					document.querySelector('#calle').value != '' &&
 					document.querySelector('#exterior').value != ''
@@ -824,6 +825,17 @@
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
 
+				let option = document.createElement("option");
+				option.text = 'OTRO';
+				option.value = '0';
+
+				select_colonia.add(option);
+
+				select_colonia.value = '0';
+				select_colonia.classList.add('d-none');
+				input_colonia.classList.remove('d-none');
+				input_colonia.value = 'EXTRANJERO';
+
 
 			} else {
 				clearSelect(select_municipio);
@@ -831,12 +843,11 @@
 				clearSelect(select_colonia);
 
 				select_estado.value = '';
-
 				select_municipio.value = '';
-
 				select_localidad.value = '';
-
 				select_colonia.value = '';
+				input_colonia.value = '';
+
 				select_colonia.classList.remove('d-none');
 				input_colonia.classList.add('d-none');
 			}
@@ -881,6 +892,19 @@
 				},
 				error: function(jqXHR, textStatus, errorThrown) {}
 			});
+			if (e.target.value != 2) {
+				var option = document.createElement("option");
+				option.text = 'OTRO';
+				option.value = '0';
+				select_colonia.add(option);
+				select_colonia.value = '0';
+				input_colonia.value = '';
+				select_colonia.classList.add('d-none');
+				input_colonia.classList.remove('d-none');
+				document.querySelector('#colonia-message').classList.add('d-none');
+			} else {
+				document.querySelector('#colonia-message').classList.remove('d-none');
+			}
 		});
 
 		document.querySelector('#municipio_select').addEventListener('change', (e) => {
@@ -893,6 +917,8 @@
 
 			clearSelect(select_localidad);
 			clearSelect(select_colonia);
+
+			select_localidad.value = '';
 
 			let data = {
 				'estado_id': estado,
@@ -916,6 +942,26 @@
 				},
 				error: function(jqXHR, textStatus, errorThrown) {}
 			});
+		});
+
+		document.querySelector('#localidad_select').addEventListener('change', (e) => {
+			let select_colonia = document.querySelector('#colonia_select');
+			let input_colonia = document.querySelector('#colonia');
+
+			let estado = document.querySelector('#estado_select').value;
+			let municipio = document.querySelector('#municipio_select').value;
+			let localidad = e.target.value;
+
+			clearSelect(select_colonia);
+			select_colonia.value = '';
+
+			let data = {
+				'estado_id': estado,
+				'municipio_id': municipio,
+				'localidad_id': localidad
+			};
+
+			console.log(data);
 
 			if (estado == 2) {
 				select_colonia.classList.remove('d-none');
@@ -923,7 +969,7 @@
 				input_colonia.value = '';
 				$.ajax({
 					data: data,
-					url: "<?= base_url('/data/get-colonias-by-estado-and-municipio') ?>",
+					url: "<?= base_url('/data/get-colonias-by-estado-municipio-localidad') ?>",
 					method: "POST",
 					dataType: "json",
 					success: function(response) {
@@ -952,12 +998,13 @@
 				option.value = '0';
 				select_colonia.add(option);
 				select_colonia.value = '0';
+				input_colonia.value = '';
 				select_colonia.classList.add('d-none');
 				input_colonia.classList.remove('d-none');
-				input_colonia.value = '';
 			}
-
 		});
+
+
 
 		document.querySelector('#colonia_select').addEventListener('change', (e) => {
 			let select_colonia = document.querySelector('#colonia_select');
@@ -969,7 +1016,7 @@
 				input_colonia.value = '';
 				input_colonia.focus();
 			} else {
-				input_colonia.value = e.target.value;
+				input_colonia.value = '-';
 			}
 		});
 
@@ -989,7 +1036,6 @@
 				}
 				reader.readAsDataURL(e.target.files[0]);
 			}
-
 		});
 
 		document.querySelector('#correo').addEventListener('blur', (e) => {

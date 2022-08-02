@@ -104,8 +104,6 @@ class DashboardController extends BaseController
 			'prioridad' => $this->request->getGet('prioridad'),
 			'sexo_denunciante' => $this->request->getGet('sexo_denunciante') == 'F' ? 'FEMENINO' : 'MASCULINO',
 		];
-		// var_dump($data);
-		// exit;
 
 		$array = explode("-", $data->folio);
 
@@ -139,6 +137,7 @@ class DashboardController extends BaseController
 			'HECHOLUGARID' => $this->request->getPost('lugar'),
 			'HECHOESTADOID' => 2,
 			'HECHOMUNICIPIOID' => $this->request->getPost('municipio'),
+			'HECHOLOCALIDADID' => $this->request->getPost('localidad'),
 			'HECHOCOLONIAID' => $this->request->getPost('colonia_select'),
 			'HECHOCOLONIADESCR' => $this->request->getPost('colonia'),
 			'HECHOCALLE' => $this->request->getPost('calle'),
@@ -148,6 +147,15 @@ class DashboardController extends BaseController
 			'HECHODELITO' => $this->request->getPost('delito')
 		];
 
+		if ((int)$this->request->getPost('colonia_select') == 0) {
+			$dataFolio['HECHOCOLONIAID'] = NULL;
+			$dataFolio['HECHOCOLONIADESCR'] = $this->request->getPost('colonia');
+		} else {
+			$dataFolio['HECHOCOLONIAID'] = (int)$this->request->getPost('colonia_select');
+			$dataFolio['HECHOCOLONIADESCR'] = NULL;
+		}
+		$localidad = $this->_localidadesModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $dataFolio['HECHOMUNICIPIOID'])->where('LOCALIDADID', $dataFolio['HECHOLOCALIDADID'])->first();
+		$localidad ? $dataFolio['HECHOZONA'] = $localidad->ZONA : $dataFolio['HECHOZONA'] = NULL;
 
 		$this->_folioUpdate($FOLIOID, $dataFolio, $year);
 
@@ -172,7 +180,11 @@ class DashboardController extends BaseController
 			$foto_des = $this->request->getFile('foto_des');
 			$foto_data = NULL;
 			if ($foto_des) {
-				$foto_data = file_get_contents($foto_des);
+				try {
+					$foto_data = file_get_contents($foto_des);
+				} catch (\Exception $e) {
+					$foto_data = NULL;
+				}
 			}
 
 			$dataDesaparecido = array(
@@ -183,7 +195,7 @@ class DashboardController extends BaseController
 				'ESTADOORIGENID' => $this->request->getPost('estado_des'),
 				'MUNICIPIOORIGENID' => $this->request->getPost('municipio_des'),
 				'ESTATURA' => $this->request->getPost('estatura_des'),
-				'FECHANACIMIENTO' => $this->request->getPost('fecha_nacimiento_des') ? $this->request->getPost('fecha_nacimiento_des') : NULL,
+				'FECHANACIMIENTO' => $this->request->getPost('fecha_nacimiento_des'),
 				'EDADCANTIDAD' => $this->request->getPost('edad_des'),
 				'PESO' => $this->request->getPost('peso_des'),
 				'COMPLEXION' => $this->request->getPost('complexion_des'),
@@ -219,6 +231,7 @@ class DashboardController extends BaseController
 				'PAIS' => $this->request->getPost('pais_des'),
 				'ESTADOID' => $this->request->getPost('estado_des'),
 				'MUNICIPIOID' => $this->request->getPost('municipio_des'),
+				'LOCALIDADID' => $this->request->getPost('localidad_des'),
 				'COLONIAID' => $this->request->getPost('colonia_des'),
 				'COLONIADESCR' => $this->request->getPost('colonia_des_input'),
 				'CALLE' => $this->request->getPost('calle_des'),
@@ -239,7 +252,7 @@ class DashboardController extends BaseController
 				'NOMBRE' => $this->request->getPost('nombre_menor'),
 				'PRIMERAPELLIDO' => $this->request->getPost('apellido_paterno_menor'),
 				'SEGUNDOAPELLIDO' => $this->request->getPost('apellido_materno_menor'),
-				'FECHANACIMIENTO' => $this->request->getPost('fecha_nacimiento_menor') ? $this->request->getPost('fecha_nacimiento_menor') : NULL,
+				'FECHANACIMIENTO' => $this->request->getPost('fecha_nacimiento_menor'),
 				'EDADCANTIDAD' => $this->request->getPost('edad_menor'),
 				'SEXO' => $this->request->getPost('sexo_menor'),
 				'FACEBOOK' => $this->request->getPost('facebook_menor'),
@@ -255,6 +268,7 @@ class DashboardController extends BaseController
 				'PAIS' => $this->request->getPost('pais_menor'),
 				'ESTADOID' => $this->request->getPost('estado_menor'),
 				'MUNICIPIOID' => $this->request->getPost('municipio_menor'),
+				'LOCALIDADID' => $this->request->getPost('localidad_menor'),
 				'COLONIAID' => $this->request->getPost('colonia_menor'),
 				'COLONIADESCR' => $this->request->getPost('colonia_menor_input'),
 				'CALLE' => $this->request->getPost('calle_menor'),
@@ -273,7 +287,21 @@ class DashboardController extends BaseController
 				'FECHANACIMIENTO' => NULL
 			);
 
+			$dataOfendidoDomicilio = array(
+				'PAIS' => NULL,
+				'ESTADOID' => NULL,
+				'MUNICIPIOID' => NULL,
+				'LOCALIDADID' => NULL,
+				'COLONIAID' => NULL,
+				'COLONIADESCR' => NULL,
+				'CALLE' => NULL,
+				'NUMEROCASA' => NULL,
+				'NUMEROINTERIOR' => NULL,
+				'CP' => NULL,
+			);
+
 			$ofendidoId = $this->_folioPersonaFisica($dataOfendido, $FOLIOID, 1, $year);
+			$this->_folioPersonaFisicaDomicilio($dataOfendidoDomicilio, $FOLIOID, $ofendidoId, $year);
 		}
 
 		//DATOS DEL DENUNCIANTE
@@ -306,7 +334,7 @@ class DashboardController extends BaseController
 			'NOMBRE' => $denunciante->NOMBRE,
 			'PRIMERAPELLIDO' => $denunciante->APELLIDO_PATERNO,
 			'SEGUNDOAPELLIDO' => $denunciante->APELLIDO_MATERNO,
-			'FECHANACIMIENTO' => $denunciante->FECHANACIMIENTO ? $denunciante->FECHANACIMIENTO : NULL,
+			'FECHANACIMIENTO' => $denunciante->FECHANACIMIENTO,
 			'EDADCANTIDAD' => $edad,
 			'SEXO' => $denunciante->SEXO,
 			'TELEFONO' => $denunciante->TELEFONO,
@@ -353,10 +381,10 @@ class DashboardController extends BaseController
 		//DATOS DEL POSIBLE RESPONSABLE
 		if (!empty($this->request->getPost('responsable')) && $this->request->getPost('responsable') == 'SI') {
 			$dataImputado = array(
-				'NOMBRE' => $this->request->getPost('nombre_imputado'),
+				'NOMBRE' => $this->request->getPost('nombre_imputado') ? $this->request->getPost('nombre_imputado') : 'QRR',
 				'PRIMERAPELLIDO' => $this->request->getPost('primer_apellido_imputado'),
 				'SEGUNDOAPELLIDO' => $this->request->getPost('segundo_apellido_imputado'),
-				'FECHANACIMIENTO' => $this->request->getPost('fecha_nacimiento_imputado') ? $this->request->getPost('fecha_nacimiento_imputado') : NULL,
+				'FECHANACIMIENTO' => $this->request->getPost('fecha_nacimiento_imputado'),
 				'APODO' => $this->request->getPost('alias_imputado'),
 				'TELEFONO' => $this->request->getPost('tel_imputado'),
 				'DESCRIPCION_FISICA' => $this->request->getPost('description_fisica_imputado'),
@@ -376,6 +404,7 @@ class DashboardController extends BaseController
 				'PAIS' => $this->request->getPost('pais_imputado'),
 				'ESTADOID' => $this->request->getPost('estado_imputado'),
 				'MUNICIPIOID' => $this->request->getPost('municipio_imputado'),
+				'LOCALIDADID' => $this->request->getPost('localidad_imputado'),
 				'COLONIAID' => $this->request->getPost('colonia_imputado'),
 				'COLONIADESCR' => $this->request->getPost('colonia_imputado_input'),
 				'CALLE' => $this->request->getPost('calle_imputado'),
@@ -392,19 +421,41 @@ class DashboardController extends BaseController
 				'FECHANACIMIENTO' => NULL
 			);
 
+			$dataImputadoDomicilio = array(
+				'PAIS' => NULL,
+				'ESTADOID' => NULL,
+				'MUNICIPIOID' => NULL,
+				'LOCALIDADID' => NULL,
+				'COLONIAID' => NULL,
+				'COLONIADESCR' => NULL,
+				'CALLE' => NULL,
+				'NUMEROCASA' => NULL,
+				'NUMEROINTERIOR' => NULL,
+				'CP' => NULL,
+			);
+
 			$imputadoId = $this->_folioPersonaFisica($dataImputado, $FOLIOID, 2, $year);
+			$this->_folioPersonaFisicaDomicilio($dataImputadoDomicilio, $FOLIOID, $imputadoId, $year);
 		}
 
 		if ($this->request->getPost('delito') == "ROBO DE VEHÍCULO") {
 			$img_file = $this->request->getFile('foto_vehiculo');
 			$fotoV = NULL;
 			if ($img_file) {
-				$fotoV = file_get_contents($img_file);
+				try {
+					$fotoV = file_get_contents($img_file);
+				} catch (\Exception $e) {
+					$fotoV = NULL;
+				}
 			}
 			$document_file = $this->request->getFile('documento_vehiculo');
 			$docV = NULL;
 			if ($document_file) {
-				$docV = file_get_contents($document_file);
+				try {
+					$docV = file_get_contents($document_file);
+				} catch (\Exception $e) {
+					$docV = NULL;
+				}
 			}
 
 			$dataVehiculo = array(
@@ -499,7 +550,7 @@ class DashboardController extends BaseController
 		$data['FOLIOID'] = $folio;
 		$data['ANO'] = $year;
 		$data['CALIDADJURIDICAID'] = $calidadJuridica;
-		if (empty($data['FECHANACIMIENTO']) || $data['FECHANACIMIENTO'] = NULL || $data['FECHANACIMIENTO'] = '0000-00-00') {
+		if ($data['FECHANACIMIENTO'] == '' || $data['FECHANACIMIENTO'] == NULL || $data['FECHANACIMIENTO'] == '0000-00-00') {
 			$data['FECHANACIMIENTO'] = NULL;
 		}
 
@@ -522,6 +573,39 @@ class DashboardController extends BaseController
 		$data['FOLIOID'] = $folio;
 		$data['ANO'] = $year;
 		$data['PERSONAFISICAID'] = $personaFisicaID;
+
+		if ((int)$data['COLONIAID'] == 0 || $data['COLONIAID'] == NULL) {
+			$data['COLONIAID'] = NULL;
+			$data['COLONIADESCR'] = $data['COLONIADESCR'];
+		} else {
+			$data['COLONIAID'] = $data['COLONIAID'];
+			$data['COLONIADESCR'] = NULL;
+		}
+
+		if ($data['COLONIAID'] = NULL) {
+			$data['LOCALIDADID'] = NULL;
+		} else {
+			if ($data['MUNICIPIOID']) {
+				try {
+					$colonia = $this->_coloniasModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data['MUNICIPIOID'])->first();
+					$colonia ? $data['LOCALIDADID'] = $colonia->LOCALIDADID : $data['LOCALIDADID'] = NULL;
+				} catch (\Exception $e) {
+					$data['LOCALIDADID'] = NULL;
+				}
+			} else {
+				$data['LOCALIDADID'] = NULL;
+			}
+		}
+
+		if ($data['LOCALIDADID'] != NULL) {
+			if ($data['MUNICIPIOID']) {
+				try {
+					$localidad = $this->_localidadesModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data['MUNICIPIOID'])->where('LOCALIDADID', $data['LOCALIDADID'])->first();
+					$localidad ? $data['ZONA'] = $localidad->ZONA : NULL;
+				} catch (\Exception $e) {
+				}
+			}
+		}
 
 		$personaDomicilio = $this->_folioPersonaFisicaDomicilioModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $personaFisicaID)->orderBy('DOMICILIOID', 'desc')->first();
 

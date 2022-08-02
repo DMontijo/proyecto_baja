@@ -9,8 +9,8 @@
 				<div class="row">
 					<div class="col-12">
 						<div class="card shadow bg-blue mb-3">
-							<div class="card-body text-white text-center">
-								Verifica que todos tus datos esten correctos. De no estar correctos cierra este mensaje y editalos.
+							<div class="card-body text-white text-center fw-bold">
+								Verifica que todos tus datos esten correctos.<br><br>De no estar correctos cierra este mensaje y editalos.
 							</div>
 						</div>
 					</div>

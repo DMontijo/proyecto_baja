@@ -83,10 +83,10 @@ class DashboardController extends BaseController
 
 		$this->_conexionesDBModel = new ConexionesDBModel();
 
-		// $this->protocol = 'http://';
-		// $this->ip = "10.144.244.223";
-		$this->protocol = 'https://';
-		$this->ip = "ws.fgebc.gob.mx";
+		$this->protocol = 'http://';
+		$this->ip = "10.144.244.223";
+		// $this->protocol = 'https://';
+		// $this->ip = "ws.fgebc.gob.mx";
 		$this->endpoint = $this->protocol . $this->ip . '/wsJusticia';
 	}
 
@@ -538,6 +538,7 @@ class DashboardController extends BaseController
 						try {
 							foreach ($personas as $key => $persona) {
 								$_persona = $this->createPersonaFisica($expedienteCreado->EXPEDIENTEID, $persona, $folioRow['HECHOMUNICIPIOID']);
+
 								$domicilios = $this->_folioPersonaFisicaDomicilioModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->where('PERSONAFISICAID', $persona['PERSONAFISICAID'])->findAll();
 								if ($persona['CALIDADJURIDICAID'] == '2') {
 									$_imputado = $this->createExpImputado($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $folioRow['HECHOMUNICIPIOID']);
@@ -685,12 +686,16 @@ class DashboardController extends BaseController
 			'PERSONAIDIOMAID',
 			'TIEMPORESIDEANOS',
 			'TIEMPORESIDEMESES',
-			'TIEMPORESIDEDIAS'
+			'TIEMPORESIDEDIAS',
+			"PERSONAESCOLARIDADID",
+			"OCUPACIONID"
 		];
 		$endpoint = $this->endpoint . $function;
 		// $conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int)$municipio)->where('TYPE', !getenv('CI_ENVIRONMENT') ? 'production' : getenv('CI_ENVIRONMENT'))->first();
 		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int)$municipio)->where('TYPE', 'production')->first();
 		$data = $personaFisica;
+
+		$data['PERSONAESCOLARIDADID'] = $data['ESCOLARIDADID'];
 
 		if (!empty($data['FECHANACIMIENTO'])) {
 			if ($data['FECHANACIMIENTO'] == '0000-00-00' || $data['FECHANACIMIENTO'] == null || $data['FECHANACIMIENTO'] == NULL || $data['FECHANACIMIENTO'] == 'NULL' || $data['FECHANACIMIENTO'] == 'null') {
@@ -701,6 +706,7 @@ class DashboardController extends BaseController
 		foreach ($data as $clave => $valor) {
 			if (empty($valor)) unset($data[$clave]);
 		}
+
 		foreach ($data as $clave => $valor) {
 			if (!in_array($clave, $array)) unset($data[$clave]);
 		}
@@ -743,73 +749,52 @@ class DashboardController extends BaseController
 
 	private function createDomicilioPersonaFisica($expedienteId, $personaFisicaId, $domicilioPersonaFisica, $municipio)
 	{
-		$function = '/domicilio.php?process=crear';
-		$array = [
-			"EXPEDIENTEID",
-			"PERSONAFISICAID",
-			"TIPODOMICILIO",
-			"ESTADOID",
-			"MUNICIPIOID",
-			"LOCALIDADID",
-			"DELEGACIONID",
-			"ZONA",
-			"COLONIAID",
-			"COLONIADESCR",
-			"CALLE",
-			"NUMEROCASA",
-			"REFERENCIA",
-			"NUMEROINTERIOR"
-		];
-		$endpoint = $this->endpoint . $function;
-		// $conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int)$municipio)->where('TYPE', !getenv('CI_ENVIRONMENT') ? 'production' : getenv('CI_ENVIRONMENT'))->first();
-		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int)$municipio)->where('TYPE', 'production')->first();
-		$data = $domicilioPersonaFisica;
+		if ($domicilioPersonaFisica['ESTADOID'] && $domicilioPersonaFisica['MUNICIPIOID'] && $domicilioPersonaFisica['LOCALIDADID']) {
 
-		$data['EXPEDIENTEID'] = $expedienteId;
-		$data['PERSONAFISICAID'] = $personaFisicaId;
-		if ($data['COLONIAID'] != 0) {
-			unset($data['COLONIADESCR']);
+			$function = '/domicilio.php?process=crear';
+			$array = [
+				"EXPEDIENTEID",
+				"PERSONAFISICAID",
+				"TIPODOMICILIO",
+				"ESTADOID",
+				"MUNICIPIOID",
+				"LOCALIDADID",
+				"DELEGACIONID",
+				"ZONA",
+				"COLONIAID",
+				"COLONIADESCR",
+				"CALLE",
+				"NUMEROCASA",
+				"REFERENCIA",
+				"NUMEROINTERIOR"
+			];
+			$endpoint = $this->endpoint . $function;
+			// $conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int)$municipio)->where('TYPE', !getenv('CI_ENVIRONMENT') ? 'production' : getenv('CI_ENVIRONMENT'))->first();
+			$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int)$municipio)->where('TYPE', 'production')->first();
+			$data = $domicilioPersonaFisica;
+
+			$data['EXPEDIENTEID'] = $expedienteId;
+			$data['PERSONAFISICAID'] = $personaFisicaId;
+			if ($data['COLONIAID'] != 0) {
+				unset($data['COLONIADESCR']);
+			}
+			unset($data['DOMICILIOID']);
+
+			foreach ($data as $clave => $valor) {
+				if (empty($valor)) unset($data[$clave]);
+			}
+			foreach ($data as $clave => $valor) {
+				if (!in_array($clave, $array)) unset($data[$clave]);
+			}
+			$data['userDB'] = $conexion->USER;
+			$data['pwdDB'] = $conexion->PASSWORD;
+			$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
+			$data['schema'] = $conexion->SCHEMA;
+
+			return $this->curlPost($endpoint, $data);
+		} else {
+			return false;
 		}
-		unset($data['DOMICILIOID']);
-
-		foreach ($data as $clave => $valor) {
-			if (empty($valor)) unset($data[$clave]);
-		}
-		foreach ($data as $clave => $valor) {
-			if (!in_array($clave, $array)) unset($data[$clave]);
-		}
-		$data['userDB'] = $conexion->USER;
-		$data['pwdDB'] = $conexion->PASSWORD;
-		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
-		$data['schema'] = $conexion->SCHEMA;
-
-		$ch = curl_init();
-
-		curl_setopt($ch, CURLOPT_URL, $endpoint);
-		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-		curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-
-		$headers = array();
-		$headers[] = 'Content-Type: application/json';
-		$headers[] = 'Access-Control-Allow-Origin: *';
-		$headers[] = 'Access-Control-Allow-Credentials: true';
-		$headers[] = 'Access-Control-Allow-Headers: Content-Type';
-
-		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-		$result = curl_exec($ch);
-
-		if ($result === FALSE) {
-			die('Curl failed: ' . curl_error($ch));
-		}
-
-		curl_close($ch);
-
-		return $result;
 	}
 
 	private function curlPost($endpoint, $data)

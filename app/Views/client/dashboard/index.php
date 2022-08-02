@@ -210,7 +210,7 @@
 
 				document.getElementById('datos_desaparecido').classList.add('step');
 				document.getElementById('datos_menor').classList.remove('step');
-				console.log('Datos desaparecido');
+				// console.log('Datos desaparecido');
 
 				document.querySelector('#nombre_menor').removeAttribute('required');
 				document.querySelector('#apellido_paterno_menor').removeAttribute('required');
@@ -219,6 +219,7 @@
 				document.querySelector('#municipio_menor').removeAttribute('required');
 				document.querySelector('#colonia_menor').removeAttribute('required');
 				document.querySelector('#colonia_menor_input').removeAttribute('required');
+				document.querySelector('#localidad_menor').removeAttribute('required');
 				document.querySelector('#calle_menor').removeAttribute('required');
 				document.querySelector('#numero_ext_menor').removeAttribute('required');
 				document.querySelector('#fecha_nacimiento_menor').removeAttribute('required');
@@ -247,6 +248,7 @@
 				document.querySelector('#municipio_menor').setAttribute('required', true);
 				document.querySelector('#colonia_menor').setAttribute('required', true);
 				document.querySelector('#colonia_menor_input').setAttribute('required', true);
+				document.querySelector('#localidad_menor').setAttribute('required', true);
 				document.querySelector('#calle_menor').setAttribute('required', true);
 				document.querySelector('#numero_ext_menor').setAttribute('required', true);
 				document.querySelector('#fecha_nacimiento_menor').setAttribute('required', true);
@@ -269,6 +271,7 @@
 				document.querySelector('#municipio_menor').removeAttribute('required');
 				document.querySelector('#colonia_menor').removeAttribute('required');
 				document.querySelector('#colonia_menor_input').removeAttribute('required');
+				document.querySelector('#localidad_menor').removeAttribute('required');
 				document.querySelector('#calle_menor').removeAttribute('required');
 				document.querySelector('#numero_ext_menor').removeAttribute('required');
 				document.querySelector('#fecha_nacimiento_menor').removeAttribute('required');
@@ -292,6 +295,7 @@
 				document.querySelector('#municipio_des').setAttribute('required', true);
 				document.querySelector('#colonia_des').setAttribute('required', true);
 				document.querySelector('#colonia_des_input').setAttribute('required', true);
+				document.querySelector('#localidad_des').setAttribute('required', true);
 				document.querySelector('#calle_des').setAttribute('required', true);
 				document.querySelector('#fecha_nacimiento_des').setAttribute('required', true);
 				document.querySelector('#numero_ext_des').setAttribute('required', true);
@@ -314,6 +318,7 @@
 				document.querySelector('#municipio_des').removeAttribute('required');
 				document.querySelector('#colonia_des').removeAttribute('required');
 				document.querySelector('#colonia_des_input').removeAttribute('required');
+				document.querySelector('#localidad_des').removeAttribute('required');
 				document.querySelector('#calle_des').removeAttribute('required');
 				document.querySelector('#numero_ext_des').removeAttribute('required');
 				document.querySelector('#numero_int_des').removeAttribute('required');
@@ -341,7 +346,6 @@
 				document.getElementById('datos_imputado').classList.add('step');
 			}
 
-
 			steps = document.querySelectorAll('.step');
 			var stepCount = steps.length - 1;
 			var width = 100 / stepCount;
@@ -365,7 +369,7 @@
 			progress.style.width = `${currentStep*width}%`
 			document.querySelector('#titulo').scrollIntoView();
 		} else {
-			console.log('NO SE VALIDO');
+			// console.log('NO SE VALIDO');
 			submitBtn.click();
 			Swal.fire({
 				icon: 'error',
@@ -462,7 +466,9 @@
 					document.querySelector('#pais_menor').value != '' &&
 					document.querySelector('#estado_menor').value != '' &&
 					document.querySelector('#municipio_menor').value != '' &&
+					document.querySelector('#localidad_menor').value != '' &&
 					document.querySelector('#colonia_menor').value != '' &&
+					document.querySelector('#colonia_menor_input').value != '' &&
 					document.querySelector('#calle_menor').value != '' &&
 					document.querySelector('#numero_ext_menor').value != '' &&
 					document.querySelector('#fecha_nacimiento_menor').value != '' &&
@@ -484,7 +490,9 @@
 					document.querySelector('#pais_des').value != '' &&
 					document.querySelector('#estado_des').value != '' &&
 					document.querySelector('#municipio_des').value != '' &&
+					document.querySelector('#localidad_des').value != '' &&
 					document.querySelector('#colonia_des').value != '' &&
+					document.querySelector('#colonia_des_input').value != '' &&
 					document.querySelector('#calle_des').value != '' &&
 					document.querySelector('#numero_ext_des').value != '' &&
 					document.querySelector('#fecha_nacimiento_des').value != '' &&
@@ -506,6 +514,8 @@
 					document.querySelector('#calle').value != '' &&
 					document.querySelector('#exterior').value != '' &&
 					document.querySelector('#colonia').value != '' &&
+					document.querySelector('#colonia_select').value != '' &&
+					document.querySelector('#localidad').value != '' &&
 					document.querySelector('#lugar').value != '' &&
 					document.querySelector('#fecha').value != '' &&
 					document.querySelector('#hora').value != '' &&

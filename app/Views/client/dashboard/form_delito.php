@@ -26,11 +26,20 @@
 		</div>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="localidad" class="form-label fw-bold input-required">Localidad del delito</label>
+		<select class="form-select" id="localidad" name="localidad" required>
+			<option selected disabled value="">Selecciona la localidad</option>
+		</select>
+		<div class="invalid-feedback">
+			La localidad es obligatoria
+		</div>
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="colonia" class="form-label fw-bold input-required">Colonia del delito</label>
 		<select class="form-select" id="colonia_select" name="colonia_select" required>
 			<option selected disabled value="">Selecciona la colonia</option>
 		</select>
-		<input type="text" class="form-control d-none" id="colonia" name="colonia" maxlength="100">
+		<input type="text" class="form-control d-none" id="colonia" name="colonia" maxlength="100" required>
 		<small class="text-primary fw-bold">Si no encuentras tu colonia selecciona otro</small>
 		<div class="invalid-feedback">
 			La colonia es obligatoria
@@ -116,42 +125,90 @@
 	}
 
 	document.querySelector('#municipio').addEventListener('change', (e) => {
+		let select_localidad = document.querySelector('#localidad');
 		let select_colonia = document.querySelector('#colonia_select');
-		let colonia = document.querySelector('#colonia');
+		let input_colonia = document.querySelector('#colonia');
 
 		let estado = 2;
 		let municipio = e.target.value;
 
+		clearSelect(select_localidad);
 		clearSelect(select_colonia);
+
+		select_localidad.value = '';
+		select_colonia.value = '';
+		input_colonia.value = '';
+
+		select_colonia.classList.remove('d-none');
+		input_colonia.classList.add('d-none');
 
 		let data = {
 			'estado_id': estado,
 			'municipio_id': municipio
 		};
 
+		$.ajax({
+			data: data,
+			url: "<?= base_url('/data/get-localidades-by-municipio') ?>",
+			method: "POST",
+			dataType: "json",
+			success: function(response) {
+				let localidades = response.data;
+
+				localidades.forEach(localidad => {
+					var option = document.createElement("option");
+					option.text = localidad.LOCALIDADDESCR;
+					option.value = localidad.LOCALIDADID;
+					select_localidad.add(option);
+				});
+			},
+			error: function(jqXHR, textStatus, errorThrown) {}
+		});
+	});
+
+	document.querySelector('#localidad').addEventListener('change', (e) => {
+		let select_colonia = document.querySelector('#colonia_select');
+		let input_colonia = document.querySelector('#colonia');
+
+		let estado = 2;
+		let municipio = document.querySelector('#municipio').value;
+		let localidad = e.target.value;
+
+		clearSelect(select_colonia);
+		select_colonia.value = '';
+		input_colonia.value = '';
 		select_colonia.classList.remove('d-none');
-		colonia.classList.add('d-none');
+		input_colonia.classList.add('d-none');
+
+		let data = {
+			'estado_id': estado,
+			'municipio_id': municipio,
+			'localidad_id': localidad
+		};
 
 		$.ajax({
 			data: data,
-			url: "<?= base_url('/data/get-colonias-by-estado-and-municipio') ?>",
+			url: "<?= base_url('/data/get-colonias-by-estado-municipio-localidad') ?>",
 			method: "POST",
 			dataType: "json",
 			success: function(response) {
 				let colonias = response.data;
-
+				// console.log(colonias);
 				colonias.forEach(colonia => {
 					var option = document.createElement("option");
 					option.text = colonia.COLONIADESCR;
 					option.value = colonia.COLONIAID;
 					select_colonia.add(option);
 				});
+
 				var option = document.createElement("option");
 				option.text = 'OTRO';
 				option.value = '0';
 				select_colonia.add(option);
 			},
-			error: function(jqXHR, textStatus, errorThrown) {}
+			error: function(jqXHR, textStatus, errorThrown) {
+
+			}
 		});
 	});
 
