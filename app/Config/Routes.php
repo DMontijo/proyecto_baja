@@ -149,6 +149,8 @@ $routes->group('data', function ($routes) {
 	$routes->post('get-persona-domicilio-by-id', 'admin/DashboardController::findPersonadDomicilioById');
 	$routes->post('get-persona-vehiculo-by-id', 'admin/DashboardController::findPersonadVehiculoById');
 
+	$routes->post('update-denuncia-by-id', 'admin/DashboardController::updateFolio');
+	$routes->post('update-preguntas-by-id', 'admin/DashboardController::updatePreguntasIniciales');
 
 	$routes->post('generaPDFE', 'PDFController::PDFExtravio');
 });

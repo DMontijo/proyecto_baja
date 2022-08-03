@@ -39,7 +39,7 @@
 		<select class="form-select" id="colonia_select" name="colonia_select" required>
 			<option selected disabled value="">Selecciona la colonia</option>
 		</select>
-		<input type="text" class="form-control d-none" id="colonia" name="colonia" maxlength="100" required>
+		<input type="text" class="form-control d-none" id="colonia" name="colonia" maxlength="50" required>
 		<small class="text-primary fw-bold">Si no encuentras tu colonia selecciona otro</small>
 		<div class="invalid-feedback">
 			La colonia es obligatoria
@@ -47,21 +47,21 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="calle" class="form-label fw-bold input-required">Calle o avenida del delito:</label>
-		<input type="text" class="form-control" id="calle" name="calle" required>
+		<input type="text" class="form-control" id="calle" name="calle" maxlength="50" required>
 		<div class="invalid-feedback">
 			Por favor, anexa una calle o avenida.
 		</div>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="exterior" class="form-label fw-bold input-required">No. exterior del delito:</label>
-		<input type="text" class="form-control" id="exterior" name="exterior" required>
+		<input type="text" class="form-control" id="exterior" name="exterior" maxlength="10" required>
 		<div class="invalid-feedback">
 			Por favor, anexa un número exterior del delito.
 		</div>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="interior" class="form-label fw-bold">No. interior del delito:</label>
-		<input type="text" class="form-control" id="interior" name="interior">
+		<input type="text" class="form-control" id="interior" maxlength="10" name="interior">
 		<div class="invalid-feedback">
 			Por favor, anexa un número interior del delito.
 		</div>

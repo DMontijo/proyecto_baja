@@ -58,6 +58,8 @@ class FirmaController extends BaseController
 
 					if ($status === 0) {
 						chmod($directory . '/' . $file_key_pem, 0777);
+					} else {
+						throw new \Exception('password error');
 					}
 
 					//CREAR ARCHIVO .CER.PEM  ******************************************************
@@ -66,6 +68,8 @@ class FirmaController extends BaseController
 
 					if ($status === 0) {
 						chmod($directory . '/' . $file_cer_pem, 0777);
+					} else {
+						throw new \Exception('password error');
 					}
 
 					//CREAR ARCHIVO .TXT CON INFO DEL .PEM  ******************************************************
@@ -74,6 +78,8 @@ class FirmaController extends BaseController
 
 					if ($status == 0) {
 						chmod($directory . '/' . $file_txt, 0777);
+					} else {
+						throw new \Exception('password error');
 					}
 
 					if (file_exists($directory . '/' . $file_key_pem) && file_exists($directory . '/' . $file_cer_pem) && file_exists($directory . '/' . $file_txt)) {
@@ -87,7 +93,7 @@ class FirmaController extends BaseController
 				}
 			}
 		} else {
-			return false;
+			throw new \Exception('id error');
 		}
 	}
 

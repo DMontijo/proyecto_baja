@@ -7,7 +7,7 @@
 					<i class="fas fa-times"></i>
 				</button>
 			</div>
-			<div class="modal-body">
+			<div class="modal-body bg-light">
 				<?= view('admin/dashboard/video_denuncia_forms/form_vehiculo') ?>
 			</div>
 		</div>

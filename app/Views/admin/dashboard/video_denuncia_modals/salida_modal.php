@@ -7,7 +7,7 @@
 					<i class="fas fa-times"></i>
 				</button>
 			</div>
-			<div class="modal-body">
+			<div class="modal-body bg-light">
 				<div class="row">
 					<div class="col-3">
 						<div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">

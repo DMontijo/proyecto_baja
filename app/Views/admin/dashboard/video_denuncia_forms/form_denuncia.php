@@ -1,42 +1,72 @@
-<div class="row">
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="delito" class="form-label font-weight-bold">Delito:</label>
-		<input class="form-control" id="delito" name="delito">
+<form id="denuncia_form" action="" method="post" class="row needs-validation" novalidate>
+	<div class="col-12 mb-3">
+		<h3 class="font-weight-bold mb-4 text-center">DATOS DEL DELITO</h3>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="municipio" class="form-label font-weight-bold">Municipio:</label>
-		<input class="form-control" id="municipio" name="municipio">
+		<label for="delito_delito" class="form-label font-weight-bold">Delito:</label>
+		<select class="form-control" id="delito_delito" name="delito_delito" required>
+			<option selected disabled value="">Selecciona el delito</option>
+			<?php foreach ($body_data->delitosUsuarios as $index => $delitos) { ?>
+				<option value="<?= $delitos->DELITO ?>"> <?= $delitos->DELITO ?> </option>
+			<?php } ?>
+		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="colonia" class="form-label font-weight-bold">Colonia del delito</label>
-		<input type="text" class="form-control" id="colonia" name="colonia" maxlength="100">
+		<label for="municipio_delito" class="form-label font-weight-bold">Municipio:</label>
+		<select class="form-control" id="municipio_delito" name="municipio_delito" required>
+			<option selected disabled value="">Selecciona el municipio</option>
+			<?php foreach ($body_data->municipios as $index => $municipio) { ?>
+				<option value="<?= $municipio->MUNICIPIOID ?>"> <?= $municipio->MUNICIPIODESCR ?> </option>
+			<?php } ?>
+		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="calle" class="form-label font-weight-bold">Calle o avenida del delito:</label>
-		<input type="text" class="form-control" id="calle" name="calle">
+		<label for="localidad_delito" class="form-label font-weight-bold">Localidad:</label>
+		<select class="form-control" id="localidad_delito" name="localidad_delito" required>
+			<option selected disabled value="">Selecciona la localidad</option>
+		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="exterior" class="form-label font-weight-bold">No. exterior del delito:</label>
-		<input type="text" class="form-control" id="exterior" name="exterior">
+		<label for="colonia_delito" class="form-label font-weight-bold">Colonia</label>
+		<input type="text" class="form-control d-none" id="colonia_delito" name="colonia_delito" maxlength="100" required>
+		<select class="form-control" id="colonia_delito_select" name="colonia_delito_select" required>
+			<option selected disabled value="">Selecciona la colonia</option>
+		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="interior" class="form-label font-weight-bold">No. interior del delito:</label>
-		<input type="text" class="form-control" id="interior" name="interior">
+		<label for="calle_delito" class="form-label font-weight-bold">Calle:</label>
+		<input type="text" class="form-control" id="calle_delito" name="calle_delito" maxlength="100" required>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="lugar" class="form-label font-weight-bold">Lugar del delito:</label>
-		<input class="form-control" id="lugar" name="lugar">
+		<label for="exterior_delito" class="form-label font-weight-bold">No. exterior:</label>
+		<input type="text" class="form-control" id="exterior_delito" name="exterior_delito" maxlength="10" required>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="fecha" class="form-label font-weight-bold">Fecha del delito:</label>
-		<input type="text" class="form-control" id="fecha" name="fecha" max="<?= date("Y-m-d") ?>">
+		<label for="interior_delito" class="form-label font-weight-bold">No. interior:</label>
+		<input type="text" class="form-control" id="interior_delito" maxlength="10" name="interior_delito">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="hora" class="form-label font-weight-bold">Hora del delito:</label>
-		<input type="time" class="form-control" id="hora" name="hora">
+		<label for="lugar_delito" class="form-label font-weight-bold">Lugar:</label>
+		<select class="form-control" id="lugar_delito" name="lugar_delito" required>
+			<option selected disabled value="">Selecciona el lugar del delito</option>
+			<?php foreach ($body_data->lugares as $index => $lugar) { ?>
+				<option value="<?= $lugar->HECHOLUGARID ?>"> <?= $lugar->HECHODESCR ?> </option>
+			<?php } ?>
+		</select>
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="fecha_delito" class="form-label font-weight-bold">Fecha:</label>
+		<input type="date" class="form-control" id="fecha_delito" name="fecha_delito" required max="<?= date("Y-m-d") ?>">
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="hora_delito" class="form-label font-weight-bold">Hora:</label>
+		<input type="time" class="form-control" id="hora_delito" name="hora_delito" required>
 	</div>
 	<div class="col-12 mb-3">
-		<label for="narracion" class="form-label font-weight-bold">Descripción del delito:</label>
-		<textarea type="text" class="form-control" id="narracion" name="narracion" rows="5"></textarea>
+		<label for="narracion_delito" class="form-label font-weight-bold">Narración:</label>
+		<textarea type="text" class="form-control" id="narracion_delito" name="narracion_delito" rows="5" maxlength="1000" required></textarea>
 	</div>
-</div>
+	<div class="col-12 mb-3 text-center">
+		<button type="submit" class="btn btn-primary font-weight-bold" id="btnUpdateDenuncia" name="btnUpdateDenuncia">ACTUALIZAR DENUNCIA</button>
+	</div>
+</form>

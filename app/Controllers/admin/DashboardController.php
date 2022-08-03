@@ -217,9 +217,7 @@ class DashboardController extends BaseController
 				$data->preguntas_iniciales = $this->_folioPreguntasModel->where('FOLIOID', $numfolio)->where('ANO', $year)->first();
 				$data->personas = $this->_folioPersonaFisicaModel->get_by_folio($numfolio, $year);
 				$data->vehiculos = $this->_folioVehiculoModel->get_by_folio($numfolio, $year);
-				$data->folioMunicipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data->folio->HECHOMUNICIPIOID)->first();
-				$data->folioColonia = $this->_coloniasModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data->folio->HECHOMUNICIPIOID)->where('COLONIAID', $data->folio->HECHOCOLONIAID)->first();
-				$data->folioLugar = $this->_folioModel->join('HECHOLUGAR', 'HECHOLUGAR.HECHOLUGARID = FOLIO.HECHOLUGARID')->where('FOLIOID', $numfolio)->where('ANO', $year)->first();
+
 				$this->_folioModel->set(['STATUS' => 'EN PROCESO', 'AGENTEATENCIONID' => session('ID')])->where('ANO', $year)->where('FOLIOID', $numfolio)->update();
 				return json_encode($data);
 			} else if ($data->folio->STATUS == 'EN PROCESO') {
@@ -343,6 +341,42 @@ class DashboardController extends BaseController
 	{
 		$data = (object)array();
 		$data->folio = $this->request->getGet('folio');
+
+		// Catálogos
+		$data->delitosUsuarios = $this->_delitosUsuariosModel->asObject()->orderBy('DELITO', 'ASC')->findAll();
+		$lugares = $this->_hechoLugarModel->orderBy('HECHODESCR', 'ASC')->findAll();
+		$lugares_sin = [];
+		$lugares_fuego = [];
+		$lugares_blanca = [];
+		foreach ($lugares as $lugar) {
+			if (strpos($lugar['HECHODESCR'], 'ARMA DE FUEGO')) {
+				array_push($lugares_fuego, (object)$lugar);
+			}
+			if (strpos($lugar['HECHODESCR'], 'ARMA BLANCA')) {
+				array_push($lugares_blanca, (object)$lugar);
+			}
+			if (!strpos($lugar['HECHODESCR'], 'ARMA BLANCA') && !strpos($lugar['HECHODESCR'], 'ARMA DE FUEGO')) {
+				array_push($lugares_sin, (object)$lugar);
+			}
+		}
+		$data->lugares = [];
+		$data->lugares = (object)array_merge($lugares_sin, $lugares_blanca, $lugares_fuego);
+
+		$data->edoCiviles = $this->_estadoCivilModel->asObject()->findAll();
+		$data->nacionalidades = $this->_nacionalidadModel->asObject()->findAll();
+		$data->calidadJuridica = $this->_folioPersonaCalidadJuridica->asObject()->findAll();
+		$data->idiomas = $this->_idiomaModel->asObject()->findAll();
+
+		$data->municipios = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
+
+		$data->paises = $this->_paisesModel->asObject()->findAll();
+		$data->estados = $this->_estadosModel->asObject()->findAll();
+		$data->tiposIdentificaciones = $this->_tipoIdentificacionModel->asObject()->findAll();
+		$data->escolaridades = $this->_escolaridadModel->asObject()->findAll();
+		$data->ocupaciones = $this->_ocupacionModel->asObject()->findAll();
+		$data->colorVehiculo = $this->_coloresVehiculoModel->asObject()->findAll();
+		$data->tipoVehiculo = $this->_tipoVehiculoModel->asObject()->orderBy('VEHICULOTIPODESCR', 'ASC')->findAll();
+
 		$this->_loadView('Video denuncia', 'videodenuncia', '', $data, 'video_denuncia');
 	}
 
@@ -854,7 +888,7 @@ class DashboardController extends BaseController
 			$folioRow = $this->_folioModel->where('ANO', $year)->where('FOLIOID', $folio)->first();
 			$folioRow['HECHOMEDIOCONOCIMIENTOID'] = NULL;
 			$folioRow['NOTASAGENTE'] = NULL;
-			$folioRow['STATUS'] = 'ABIERTO';
+			$folioRow['STATUS'] = 'EN PROCESO';
 			$folioRow['EXPEDIENTEID'] = NULL;
 			$folioRow['AGENTEATENCIONID'] = NULL;
 			$folioRow['AGENTEFIRMAID'] = NULL;
@@ -862,6 +896,74 @@ class DashboardController extends BaseController
 			$update = $this->_folioModel->set($folioRow)->where('ANO', $year)->where('FOLIOID', $folio)->update();
 
 			return json_encode(['status' => 1, 'message' => $update]);
+		}
+	}
+
+	public function updateFolio()
+	{
+		try {
+			$folio = trim($this->request->getPost('folio'));
+			$year = trim($this->request->getPost('year'));
+			$dataFolio = array(
+				'HECHOFECHA' => $this->request->getPost('fecha_delito'),
+				'HECHOHORA' => $this->request->getPost('hora_delito'),
+				'HECHOLUGARID' => $this->request->getPost('lugar_delito'),
+				'HECHOESTADOID' => 2,
+				'HECHOMUNICIPIOID' => $this->request->getPost('municipio_delito'),
+				'HECHOLOCALIDADID' => $this->request->getPost('localidad_delito'),
+				'HECHOCOLONIAID' => $this->request->getPost('colonia_delito_select'),
+				'HECHOCOLONIADESCR' => $this->request->getPost('colonia_delito'),
+				'HECHOCALLE' => $this->request->getPost('calle_delito'),
+				'HECHONUMEROCASA' => $this->request->getPost('exterior_delito'),
+				'HECHONUMEROCASAINT' => $this->request->getPost('interior_delito'),
+				'HECHONARRACION' => $this->request->getPost('narracion_delito'),
+				'HECHODELITO' => $this->request->getPost('delito_delito'),
+			);
+
+			if ($dataFolio['HECHOCOLONIAID'] == '0') {
+				$dataFolio['HECHOCOLONIAID'] = NULL;
+				$dataFolio['HECHOCOLONIADESCR'] = $this->request->getPost('colonia_delito');
+			} else {
+				$dataFolio['HECHOCOLONIAID'] = (int)$this->request->getPost('colonia_delito_select');
+				$dataFolio['HECHOCOLONIADESCR'] = NULL;
+			}
+			$update = $this->_folioModel->set($dataFolio)->where('FOLIOID', $folio)->where('ANO', $year)->update();
+			if ($update) {
+				return json_encode(['status' => 1]);
+			} else {
+				return json_encode(['status' => 0]);
+			}
+		} catch (\Exception $e) {
+			return json_encode(['status' => 0]);
+		}
+	}
+
+	public function updatePreguntasIniciales()
+	{
+		try {
+			$folio = trim($this->request->getPost('folio'));
+			$year = trim($this->request->getPost('year'));
+			$dataPreguntas = array(
+				'ES_MENOR' => $this->request->getPost('es_menor'),
+				'ES_TERCERA_EDAD' => $this->request->getPost('es_tercera_edad'),
+				'TIENE_DISCAPACIDAD' => $this->request->getPost('tiene_discapacidad'),
+				'ES_GRUPO_VULNERABLE' => $this->request->getPost('es_vulnerable'),
+				'ES_GRUPO_VULNERABLE_DESCR' => $this->request->getPost('vulnerable_descripcion'),
+				'FUE_CON_ARMA' => $this->request->getPost('fue_con_arma'),
+				'LESIONES' => $this->request->getPost('lesiones'),
+				'LESIONES_VISIBLES' => $this->request->getPost('lesiones_visibles'),
+				'ESTA_DESAPARECIDO' => $this->request->getPost('esta_desaparecido'),
+			);
+
+			$update = $this->_folioPreguntasModel->set($dataPreguntas)->where('FOLIOID', $folio)->where('ANO', $year)->update();
+
+			if ($update) {
+				return json_encode(['status' => 1]);
+			} else {
+				return json_encode(['status' => 0]);
+			}
+		} catch (\Exception $e) {
+			return json_encode(['status' => 0]);
 		}
 	}
 }

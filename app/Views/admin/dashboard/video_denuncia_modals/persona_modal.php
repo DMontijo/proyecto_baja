@@ -7,7 +7,7 @@
 					<i class="fas fa-times"></i>
 				</button>
 			</div>
-			<div class="modal-body">
+			<div class="modal-body bg-light">
 				<ul class="nav nav-tabs" id="persona_tabs" role="tablist">
 					<li class="nav-item" role="persona_fisica">
 						<a class="nav-link active" id="persona" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Persona</a>

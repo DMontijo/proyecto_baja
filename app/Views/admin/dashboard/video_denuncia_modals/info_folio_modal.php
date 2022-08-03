@@ -7,7 +7,7 @@
 					<i class="fas fa-times"></i>
 				</button>
 			</div>
-			<div class="modal-body">
+			<div class="modal-body bg-light">
 				<div class="row">
 					<div class="col-3">
 						<div class="nav flex-column nav-pills" id="info_tabs" role="tablist" aria-orientation="vertical">
@@ -27,20 +27,20 @@
 							</div>
 							<div class="tab-pane fade" id="v-pills-personas" role="tabpanel" aria-labelledby="v-pills-personas-tab">
 								<div id="adicionados" class="d-none"></div>
-								<table id="table-personas" class="table table-bordered table-striped">
+								<table id="table-personas" class="table table-bordered table-hover table-striped table-light">
 									<tr>
-										<th class="text-center"></th>
-										<th class="text-center" id="nombreP" name="nombreP">NOMBRE</th>
-										<th class="text-center" id="calidadP" name="calidadP">CALIDAD JURIDICA</th>
-										<th class="text-center">VER</th>
+										<th class="text-center bg-primary text-white"></th>
+										<th class="text-center bg-primary text-white" id="nombreP" name="nombreP">NOMBRE</th>
+										<th class="text-center bg-primary text-white" id="calidadP" name="calidadP">CALIDAD JURIDICA</th>
+										<th class="text-center bg-primary text-white">VER</th>
 									</tr>
 								</table>
 							</div>
 							<div class="tab-pane fade" id="v-pills-vehiculos" role="tabpanel" aria-labelledby="v-pills-vehiculos-tab">
-								<table id="table-vehiculos" class="table table-bordered table-striped">
+								<table id="table-vehiculos" class="table table-bordered table-hover table-striped table-light">
 									<tr>
-										<th class="text-center">PLACAS</th>
-										<th class="text-center">SERIE</th>
+										<th class="text-center bg-primary text-white">PLACAS</th>
+										<th class="text-center bg-primary text-white">SERIE</th>
 										<th></th>
 									</tr>
 								</table>

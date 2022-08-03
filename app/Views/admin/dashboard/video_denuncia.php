@@ -141,10 +141,6 @@
 		}, 500);
 	}
 
-	window.onload = function() {
-		startTime();
-	};
-
 	function checkTime(i) {
 		if (i < 10) {
 			i = "0" + i;
@@ -190,7 +186,7 @@
 			method: "POST",
 			dataType: "json",
 			success: function(response) {
-				// console.log(response);
+				console.log(response);
 				respuesta = response;
 				if (response.status === 1) {
 					const folio = response.folio;
@@ -198,9 +194,6 @@
 					const personas = response.personas;
 					const domicilios = response.domicilios;
 					const vehiculos = response.vehiculos;
-					const folioM = response.folioMunicipio;
-					const folioC = response.folioColonia;
-					const foliol = response.folioLugar;
 
 					inputFolio.classList.add('d-none');
 					buscar_btn.classList.add('d-none');
@@ -228,40 +221,98 @@
 					document.querySelector('#lesiones_visibles').value = preguntas.LESIONES_VISIBLES;
 
 					//DENUNCIA
-					document.querySelector('#delito').value = folio.HECHODELITO;
-					document.querySelector('#municipio').value = folioM.MUNICIPIODESCR;
-					document.querySelector('#colonia').value = folioC ? folioC.COLONIADESCR : folio.HECHOCOLONIADESCR;
-					document.querySelector('#calle').value = folio.HECHOCALLE;
-					document.querySelector('#exterior').value = folio.HECHONUMEROCASA;
-					document.querySelector('#interior').value = folio.HECHONUMEROCASAINT;
-					document.querySelector('#lugar').value = foliol.HECHODESCR;
-					document.querySelector('#hora').value = folio.HECHOHORA;
-					document.querySelector('#fecha').value = folio.HECHOFECHA;
-					if (folio.HECHOFECHA) {
-						let date = new Date(folio.HECHOFECHA);
-						let dateToTijuanaString = date.toLocaleString('en-US', {
-							timeZone: 'America/Tijuana'
-						});
-						let dateTijuana = new Date(dateToTijuanaString);
-						dateTijuana.setDate(dateTijuana.getDate() + 1);
-						var options = {
-							year: 'numeric',
-							month: 'long',
-							day: 'numeric'
+					document.querySelector('#delito_delito').value = folio.HECHODELITO;
+					document.querySelector('#municipio_delito').value = folio.HECHOMUNICIPIOID;
+					if (folio.HECHOLOCALIDADID) {
+						let data = {
+							'estado_id': 2,
+							'municipio_id': folio.HECHOMUNICIPIOID
 						};
-						document.querySelector('#fecha').value = (dateTijuana.toLocaleDateString("es-ES", options)).toUpperCase();
+
+						$.ajax({
+							data: data,
+							url: "<?= base_url('/data/get-localidades-by-municipio') ?>",
+							method: "POST",
+							dataType: "json",
+							success: function(response) {
+								let localidades = response.data;
+								let select_localidad = document.querySelector('#localidad_delito');
+
+								localidades.forEach(localidad => {
+									var option = document.createElement("option");
+									option.text = localidad.LOCALIDADDESCR;
+									option.value = localidad.LOCALIDADID;
+									select_localidad.add(option);
+								});
+
+								select_localidad.value = folio.HECHOLOCALIDADID;
+							},
+							error: function(jqXHR, textStatus, errorThrown) {}
+						});
 					} else {
-						document.querySelector('#fecha').value = '';
+						document.querySelector('#localidad_delito').value = '';
 					}
-					document.querySelector('#narracion').value = folio.HECHONARRACION;
+
+					if (folio.HECHOCOLONIAID) {
+						document.querySelector('#colonia_delito').classList.add('d-none');
+						document.querySelector('#colonia_delito_select').classList.remove('d-none');
+						let data = {
+							'estado_id': 2,
+							'municipio_id': folio.HECHOMUNICIPIOID,
+							'localidad_id': folio.HECHOLOCALIDADID
+						};
+						$.ajax({
+							data: data,
+							url: "<?= base_url('/data/get-colonias-by-estado-municipio-localidad') ?>",
+							method: "POST",
+							dataType: "json",
+							success: function(response) {
+								let select_colonia = document.querySelector('#colonia_delito_select');
+								let input_colonia = document.querySelector('#colonia_delito');
+								let colonias = response.data;
+
+								colonias.forEach(colonia => {
+									var option = document.createElement("option");
+									option.text = colonia.COLONIADESCR;
+									option.value = colonia.COLONIAID;
+									select_colonia.add(option);
+								});
+
+								var option = document.createElement("option");
+								option.text = 'OTRO';
+								option.value = '0';
+								select_colonia.add(option);
+
+								select_colonia.value = folio.HECHOCOLONIAID;
+								input_colonia.value = '-';
+							},
+							error: function(jqXHR, textStatus, errorThrown) {
+
+							}
+						});
+					} else {
+						document.querySelector('#colonia_delito').classList.remove('d-none');
+						document.querySelector('#colonia_delito_select').classList.add('d-none');
+						var option = document.createElement("option");
+						option.text = 'OTRO';
+						option.value = '0';
+						document.querySelector('#colonia_delito_select').add(option);
+						document.querySelector('#colonia_delito_select').value = '0';
+						document.querySelector('#colonia_delito').value = folio.HECHOCOLONIADESCR;
+					}
+					document.querySelector('#calle_delito').value = folio.HECHOCALLE;
+					document.querySelector('#exterior_delito').value = folio.HECHONUMEROCASA;
+					document.querySelector('#interior_delito').value = folio.HECHONUMEROCASAINT;
+					document.querySelector('#lugar_delito').value = folio.HECHOLUGARID;
+					document.querySelector('#hora_delito').value = folio.HECHOHORA;
+					document.querySelector('#fecha_delito').value = folio.HECHOFECHA;
+					document.querySelector('#narracion_delito').value = folio.HECHONARRACION;
 
 					if (folio.HECHODELITO == "ROBO DE VEHÍCULO") {
 						$('#v-pills-vehiculos-tab').css('display', 'block');
-
 					} else {
 						$('#v-pills-vehiculos-tab').css('display', 'NONE');
 					}
-
 
 					//PERSONAS
 					for (let i = 0; i < personas.length; i++) {
@@ -381,16 +432,20 @@
 		document.querySelector('#lesiones_visibles').value = '';
 
 		//DENUNCIA
-		document.querySelector('#delito').value = '';
-		document.querySelector('#municipio').value = '';
-		document.querySelector('#colonia').value = '';
-		document.querySelector('#calle').value = '';
-		document.querySelector('#exterior').value = '';
-		document.querySelector('#interior').value = '';
-		document.querySelector('#lugar').value = '';
-		document.querySelector('#hora').value = '';
-		document.querySelector('#fecha').value = '';
-		document.querySelector('#narracion').value = '';
+		document.querySelector('#delito_delito').value = '';
+		document.querySelector('#municipio_delito').value = '';
+		document.querySelector('#localidad_delito').value = '';
+		document.querySelector('#colonia_delito').value = '';
+		document.querySelector('#colonia_delito_select').value = '';
+		document.querySelector('#calle_delito').value = '';
+		document.querySelector('#exterior_delito').value = '';
+		document.querySelector('#interior_delito').value = '';
+		document.querySelector('#lugar_delito').value = '';
+		document.querySelector('#hora_delito').value = '';
+		document.querySelector('#fecha_delito').value = '';
+		document.querySelector('#narracion_delito').value = '';
+		clearSelect(document.querySelector('#colonia_delito_select'));
+		clearSelect(document.querySelector('#localidad_delito'));
 
 		$('#v-pills-vehiculos-tab').css('display', 'NONE');
 	}
@@ -771,6 +826,268 @@
 		contents[0].classList.add('show');
 		contents[0].classList.add('active');
 	})
+
+	function clearSelect(select_element) {
+		for (let i = select_element.options.length; i >= 1; i--) {
+			select_element.remove(i);
+		}
+	}
+
+	function clearText(text) {
+		text
+			.normalize('NFD')
+			.replace(/([^n\u0300-\u036f]|n(?!\u0303(?![\u0300-\u036f])))[\u0300-\u036f]+/gi, "$1")
+			.normalize();
+		return text.replaceAll('´', '');
+	}
+
+	//DELITO FORM ******************************************************************
+	window.onload = function() {
+		startTime();
+
+		(function() {
+			'use strict'
+			var form_delito = document.querySelector('#denuncia_form');
+			var form_preguntas = document.querySelector('#preguntas_form');
+			var inputsText = document.querySelectorAll('input[type="text"]');
+
+			form_delito.addEventListener('submit', (event) => {
+				if (!form_delito.checkValidity()) {
+					event.preventDefault();
+					event.stopPropagation();
+					form_preguntas.classList.add('was-validated')
+				} else {
+					event.preventDefault();
+					event.stopPropagation();
+					form_preguntas.classList.remove('was-validated')
+					actualizarDenuncia();
+				}
+				form_delito.classList.add('was-validated')
+			}, false);
+
+			form_preguntas.addEventListener('submit', (event) => {
+				if (!form_preguntas.checkValidity()) {
+					event.preventDefault();
+					event.stopPropagation();
+					form_preguntas.classList.add('was-validated')
+				} else {
+					event.preventDefault();
+					event.stopPropagation();
+					form_preguntas.classList.remove('was-validated')
+					actualizarPreguntas();
+				}
+			}, false);
+
+			inputsText.forEach((input) => {
+				input.addEventListener('input', (event) => {
+					event.target.value = clearText(event.target.value).toUpperCase();
+				}, false)
+			});
+
+			document.querySelector('#narracion_delito').addEventListener('input', (event) => {
+				event.target.value = clearText(event.target.value).toUpperCase();
+			}, false)
+
+			document.querySelector('#municipio_delito').addEventListener('change', (e) => {
+				let select_localidad = document.querySelector('#localidad_delito');
+				let select_colonia = document.querySelector('#colonia_delito_select');
+				let input_colonia = document.querySelector('#colonia_delito');
+
+				let estado = 2;
+				let municipio = e.target.value;
+
+				clearSelect(select_localidad);
+				clearSelect(select_colonia);
+				select_colonia.classList.remove('d-none');
+				input_colonia.classList.add('d-none');
+
+				select_localidad.value = '';
+				select_colonia.value = '';
+				input_colonia.value = '';
+
+				let data = {
+					'estado_id': estado,
+					'municipio_id': municipio
+				};
+
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/get-localidades-by-municipio') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						let localidades = response.data;
+						console.log('Localidades');
+						clearSelect(select_localidad);
+						clearSelect(select_colonia);
+						localidades.forEach(localidad => {
+							var option = document.createElement("option");
+							option.text = localidad.LOCALIDADDESCR;
+							option.value = localidad.LOCALIDADID;
+							select_localidad.add(option);
+						});
+					},
+					error: function(jqXHR, textStatus, errorThrown) {}
+				});
+			});
+
+			document.querySelector('#localidad_delito').addEventListener('change', (e) => {
+				let select_colonia = document.querySelector('#colonia_delito_select');
+				let input_colonia = document.querySelector('#colonia_delito');
+
+				let estado = 2;
+				let municipio = document.querySelector('#municipio_delito').value;
+				let localidad = e.target.value;
+
+				clearSelect(select_colonia);
+				select_colonia.classList.remove('d-none');
+				input_colonia.classList.add('d-none');
+
+				select_colonia.value = '';
+				input_colonia.value = '';
+
+				let data = {
+					'estado_id': estado,
+					'municipio_id': municipio,
+					'localidad_id': localidad
+				};
+
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/get-colonias-by-estado-municipio-localidad') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						clearSelect(select_colonia);
+						console.log(response);
+						let colonias = response.data;
+						colonias.forEach(colonia => {
+							var option = document.createElement("option");
+							option.text = colonia.COLONIADESCR;
+							option.value = colonia.COLONIAID;
+							select_colonia.add(option);
+						});
+
+						var option = document.createElement("option");
+						option.text = 'OTRO';
+						option.value = '0';
+						select_colonia.add(option);
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+
+					}
+				});
+			});
+
+			document.querySelector('#colonia_delito_select').addEventListener('change', (e) => {
+				let select_colonia = document.querySelector('#colonia_delito_select');
+				let input_colonia = document.querySelector('#colonia_delito');
+
+				if (e.target.value === '0') {
+					select_colonia.classList.add('d-none');
+					input_colonia.classList.remove('d-none');
+					input_colonia.value = '';
+					input_colonia.focus();
+				} else {
+					input_colonia.value = '-';
+				}
+			});
+
+			function actualizarDenuncia() {
+				const data = {
+					'folio': document.querySelector('#input_folio_atencion').value,
+					'year': document.querySelector('#year_select').value,
+					'delito_delito': document.querySelector('#delito_delito').value,
+					'municipio_delito': document.querySelector('#municipio_delito').value,
+					'localidad_delito': document.querySelector('#localidad_delito').value,
+					'colonia_delito': document.querySelector('#colonia_delito').value,
+					'colonia_delito_select': document.querySelector('#colonia_delito_select').value,
+					'calle_delito': document.querySelector('#calle_delito').value,
+					'exterior_delito': document.querySelector('#exterior_delito').value,
+					'interior_delito': document.querySelector('#interior_delito').value,
+					'lugar_delito': document.querySelector('#lugar_delito').value,
+					'fecha_delito': document.querySelector('#fecha_delito').value,
+					'hora_delito': document.querySelector('#hora_delito').value,
+					'narracion_delito': document.querySelector('#narracion_delito').value,
+				};
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/update-denuncia-by-id') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						if (response.status = 1) {
+							Swal.fire({
+								icon: 'success',
+								text: 'Denuncia actualizada correctamente',
+								confirmButtonColor: '#bf9b55',
+							});
+						} else {
+							Swal.fire({
+								icon: 'error',
+								text: 'No se actualizó la denuncia',
+								confirmButtonColor: '#bf9b55',
+							});
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						Swal.fire({
+							icon: 'error',
+							text: 'No se actualizó la denuncia',
+							confirmButtonColor: '#bf9b55',
+						});
+					}
+				});
+			}
+
+			function actualizarPreguntas() {
+				const data = {
+					'folio': document.querySelector('#input_folio_atencion').value,
+					'year': document.querySelector('#year_select').value,
+					'es_menor': document.querySelector('#es_menor').value,
+					'es_tercera_edad': document.querySelector('#es_tercera_edad').value,
+					'tiene_discapacidad': document.querySelector('#tiene_discapacidad').value,
+					'es_vulnerable': document.querySelector('#es_vulnerable').value,
+					'vulnerable_descripcion': document.querySelector('#vulnerable_descripcion').value,
+					'fue_con_arma': document.querySelector('#fue_con_arma').value,
+					'lesiones': document.querySelector('#lesiones').value,
+					'lesiones_visibles': document.querySelector('#lesiones_visibles').value,
+					'esta_desaparecido': document.querySelector('#esta_desaparecido').value,
+				};
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/update-preguntas-by-id') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						console.log(response);
+						if (response.status = 1) {
+							Swal.fire({
+								icon: 'success',
+								text: 'Preguntas actualizadas correctamente',
+								confirmButtonColor: '#bf9b55',
+							});
+						} else {
+							Swal.fire({
+								icon: 'error',
+								text: 'No se actualizaron las preguntas',
+								confirmButtonColor: '#bf9b55',
+							});
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						Swal.fire({
+							icon: 'error',
+							text: 'No se actualizaron las preguntas',
+							confirmButtonColor: '#bf9b55',
+						});
+					}
+				});
+			}
+
+		})();
+	};
+	//DELITO END FORM ******************************************************************
 </script>
 
 <?php include('video_denuncia_modals/info_folio_modal.php') ?>

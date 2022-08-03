@@ -7,7 +7,7 @@
 					<i class="fas fa-times"></i>
 				</button>
 			</div>
-			<div class="modal-body">
+			<div class="modal-body bg-light">
 				<form id="form_agregar_delito">
 					<?= view('admin/dashboard/video_denuncia_forms/form_delito') ?>
 					<div class="row mt-4">
