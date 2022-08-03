@@ -83,10 +83,10 @@ class DashboardController extends BaseController
 
 		$this->_conexionesDBModel = new ConexionesDBModel();
 
-		$this->protocol = 'http://';
-		$this->ip = "10.144.244.223";
-		// $this->protocol = 'https://';
-		// $this->ip = "ws.fgebc.gob.mx";
+		// $this->protocol = 'http://';
+		// $this->ip = "10.144.244.223";
+		$this->protocol = 'https://';
+		$this->ip = "ws.fgebc.gob.mx";
 		$this->endpoint = $this->protocol . $this->ip . '/wsJusticia';
 	}
 
@@ -890,7 +890,7 @@ class DashboardController extends BaseController
 			$folioRow['NOTASAGENTE'] = NULL;
 			$folioRow['STATUS'] = 'EN PROCESO';
 			$folioRow['EXPEDIENTEID'] = NULL;
-			$folioRow['AGENTEATENCIONID'] = NULL;
+			// $folioRow['AGENTEATENCIONID'] = NULL;
 			$folioRow['AGENTEFIRMAID'] = NULL;
 
 			$update = $this->_folioModel->set($folioRow)->where('ANO', $year)->where('FOLIOID', $folio)->update();
