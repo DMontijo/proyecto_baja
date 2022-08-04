@@ -18,7 +18,7 @@ class CONSTANCIACERTIFICADO extends Migration
 				'type' => 'INT',
 				'constraint' => '4',
 			],
-			'DENUNCIANTEID' => [
+			'SOLICITANTEID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 			],
@@ -33,10 +33,6 @@ class CONSTANCIACERTIFICADO extends Migration
 			'EXTRAVIO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '50',
-				'null' => TRUE,
-			],
-			'DESCRIPCION_EXTRAVIO' => [
-				'type' => 'TEXT',
 				'null' => TRUE,
 			],
 			'DOMICILIO' => [
@@ -181,8 +177,7 @@ class CONSTANCIACERTIFICADO extends Migration
 				'null' => TRUE,
 			],
 			'FIRMA_ELECTRONICA' => [
-				'type' => 'VARCHAR',
-				'constraint' => '100',
+				'type' => 'LONGBLOB',
 				'null' => TRUE,
 			],
 			'TEXTO_CONSTANCIA' => [
@@ -194,7 +189,7 @@ class CONSTANCIACERTIFICADO extends Migration
 				'constraint' => '15',
 				'null' => TRUE,
 			],
-			'FECHAREGISTRO DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL',
+			'FECHAREGISTRO DATETIME DEFAULT CURRENT_TIMESTAMP',
 			'FECHAACTUALIZACION DATETIME ON UPDATE CURRENT_TIMESTAMP',
 		]);
 		$this->forge->addKey('IDCERTIFICADOEXTRAVIADO', TRUE);
