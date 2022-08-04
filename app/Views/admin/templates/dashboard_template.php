@@ -28,16 +28,19 @@
 			<img alt="Logo" class="img-fluid c-sidebar-brand-minimized" src="<?= base_url() ?>/assets/img/FGEBC.png" style="max-height:50px;" />
 		</div>
 		<ul class="c-sidebar-nav">
+
 			<li class="c-sidebar-nav-item">
 				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard">
 					<i class="fas fa-tachometer-alt c-sidebar-nav-icon"></i> Inicio
 				</a>
 			</li>
+
 			<li class="c-sidebar-nav-item">
 				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/video-denuncia">
 					<i class="fas fa-video c-sidebar-nav-icon"></i> Video denuncia
 				</a>
 			</li>
+
 			<?php if (false) : ?>
 				<li class="c-sidebar-nav-item">
 					<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/denuncia-anonima">
@@ -45,6 +48,7 @@
 					</a>
 				</li>
 			<?php endif; ?>
+			
 			<li class="c-sidebar-nav-item">
 				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/folios">
 					<i class="fas fa-archive c-sidebar-nav-icon"></i> Folios
@@ -57,11 +61,12 @@
 				</a>
 			</li> -->
 
-			<li class="c-sidebar-nav-item">
+			<!-- <li class="c-sidebar-nav-item">
 				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/firmas">
 					<i class="fas fa-file-alt c-sidebar-nav-icon"></i> Firmar documentos
 				</a>
-			</li>
+			</li> -->
+
 			<?php if (session('ROLID') == 1) : ?>
 				<li class="c-sidebar-nav-item">
 					<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/usuarios">
@@ -69,11 +74,13 @@
 					</a>
 				</li>
 			<?php endif; ?>
+
 			<li class="c-sidebar-nav-item">
 				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/perfil">
 					<i class="fas fa-address-card c-sidebar-nav-icon"></i> Perfil
 				</a>
 			</li>
+
 		</ul>
 		<button class="c-sidebar-minimizer c-class-toggler" type="button" data-target="_parent" data-class="c-sidebar-minimized"></button>
 	</div>

@@ -48,6 +48,7 @@ $routes->group('admin', function ($routes) {
 		$routes->get('/', 'admin/DashboardController::index');
 
 		$routes->get('usuarios', 'admin/DashboardController::usuarios');
+		$routes->get('usuarios_activos', 'admin/DashboardController::usuarios_activos');
 		$routes->get('firma', 'admin/FirmaController::index');
 		$routes->get('firmas', 'admin/DashboardController::firmas');
 
@@ -135,6 +136,7 @@ $routes->group('data', function ($routes) {
 
 	//Link
 	$routes->post('get-video-link', 'admin/DashboardController::getVideoLink');
+	$routes->post('get-active-users', 'admin/DashboardController::getActiveUsers');
 
 	//VEHÍCULOS
 	$routes->post('get-marca-by-dist', 'client/DashboardController::getMarcaByDist');

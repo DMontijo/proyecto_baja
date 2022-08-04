@@ -117,7 +117,13 @@ class DashboardController extends BaseController
 	{
 		$data = (object)array();
 		$data = $this->_usuariosModel->asObject()->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->join('ZONAS_USUARIOS', 'ZONAS_USUARIOS.ID_ZONA = USUARIOS.ZONAID')->where('ROLID !=', 1)->orderBy('ROLID')->findAll();
-		$this->_loadView('Registrar usuario', 'registrarusuario', '', $data, 'users');
+		$this->_loadView('Registrar usuario', 'usuarios', '', $data, 'users');
+	}
+
+	public function usuarios_activos()
+	{
+		$data = (object)array();
+		$this->_loadView('Usuarios activos', 'usuarios_activos', '', $data, 'usuarios_activos');
 	}
 
 	public function firmas()
@@ -328,13 +334,6 @@ class DashboardController extends BaseController
 		} else {
 			return json_encode(['status' => 0]);
 		}
-	}
-
-	public function enviarFolio()
-	{
-		$data = (object)array();
-		$data->folioIn = $this->request->getPost('folioIn');
-		return json_encode($data);
 	}
 
 	public function video_denuncia()
@@ -877,6 +876,25 @@ class DashboardController extends BaseController
 		$response = $this->curlPost($endpoint, $data);
 
 		return json_encode($response);
+	}
+
+	public function getActiveUsers()
+	{
+		$endpoint = 'https://videodenunciaserver1.fgebc.gob.mx/api/user';
+		$data = array();
+		$data['u'] = '24';
+		$data['token'] = '198429b7cc8a2a5733d97bc13153227dd5017555';
+		$data['a'] = 'status';
+
+		$response = $this->curlPost($endpoint, $data);
+		$active_users = array();
+
+		foreach ($response as $key => $user) {
+			if ($user->log == 'online') {
+				array_push($active_users, $user);
+			}
+		}
+		return json_encode(['users' => $active_users, 'count' => count($active_users)]);
 	}
 
 	public function restoreFolio()
