@@ -43,14 +43,14 @@
 						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="apellido_paterno" class="form-label fw-bold input-required">Apellido paterno</label>
-							<input type="text" class="form-control" id="apellido_paterno" name="apellido_paterno" maxlength="100" required>
+							<input type="text" class="form-control" id="apellido_paterno" name="apellido_paterno" maxlength="50" required>
 							<div class="invalid-feedback">
 								El apellido paterno es obligatorio
 							</div>
 						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="apellido_materno" class="form-label fw-bold ">Apellido materno</label>
-							<input type="text" class="form-control" id="apellido_materno" name="apellido_materno" maxlength="100">
+							<input type="text" class="form-control" id="apellido_materno" name="apellido_materno" maxlength="50">
 						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="fecha_nacimiento" class="form-label fw-bold input-required">Fecha de nacimiento</label>

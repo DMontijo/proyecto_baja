@@ -21,12 +21,12 @@ class DENUNCIANTES extends Migration
 			],
 			'APELLIDO_PATERNO' => [
 				'type' => 'VARCHAR',
-				'constraint' => '100',
+				'constraint' => '50',
 				'null' => TRUE
 			],
 			'APELLIDO_MATERNO' => [
 				'type' => 'VARCHAR',
-				'constraint' => '100',
+				'constraint' => '50',
 				'null' => TRUE
 			],
 			'CORREO' => [
