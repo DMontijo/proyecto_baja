@@ -10,7 +10,7 @@ class PlantillasSeeder extends Seeder
 	{
 		$data = [
 			array(
-				'DESCRIPCION' => 'CERTIFICADO MEDICO', 'TITULO' => 'CERTIFICADO MEDICO',
+				'ID' => '1', 'DESCRIPCION' => 'CERTIFICADO MEDICO', 'TITULO' => 'CERTIFICADO MEDICO',
 				'PLACEHOLDER' => '<p class="p1" style="margin: 0px; text-align: center; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0);">SOLICITUD DE PERITAJE</p><br>
 
             <p class="p2" style="margin: 0px; text-align: right; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0); min-height: 14px;">No. de Caso: [EXPEDIENTE_NUMERO]</p><br>
@@ -83,7 +83,7 @@ class PlantillasSeeder extends Seeder
 
 
 			array(
-				'DESCRIPCION' => 'CONSTANCIA DE RECEPCIÓN DE VIDEO DENUNCIA', 'TITULO' => 'CONSTANCIA DE RECEPCIÓN DE VIDEO DENUNCIA',
+				'ID' => '2', 'DESCRIPCION' => 'CONSTANCIA DE RECEPCIÓN DE VIDEO DENUNCIA', 'TITULO' => 'CONSTANCIA DE RECEPCIÓN DE VIDEO DENUNCIA',
 				'PLACEHOLDER' => '<br><p class="p1" style="margin: 0px; text-align: center; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0); min-height: 14px;">CONSTANCIA DE RECEPCIÓN DE VIDEO DENUNCIA</p><br><p class="p2" style="margin: 0px; text-align: justify; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0);">
             En [ESTADO], Baja California, a los [DIA] días del mes de [MES] del año [ANO], siendo las [HORA] horas con [MINUTOS] minutos, la/el suscrita (o) Licenciada(o) [NOMBRE_LICENCIADO], Agente del Ministerio Público adscrita(o) al Centro de Denuncia Tecnológica, hace constar que se inicia video denuncia interpuesta por la/el ciudadana (o) [VICTIMA], quien manifesta en su entrevista que [HECHO], motivo por el que refiere es su deseo presentar denuncia/querella por el delito de [DELITO], previsto en el artículo [NUMERO_DELITO] del Código Penal [ORDENAMIENTO_LEGAL] en contra de [PERSONA],  por tanto se genera [TIPO_EXPEDIENTE] 020[VARIABLE_PENDIENTE]-20[VARIABLE_PENDIENTE]-[VARIABLE_PENDIENTE], misma que será remitida a la Dirección de Zona [ZONA_SEJAP] para su debida remisión. Lo anterior de conformidad con el artículo 131 fracción II del Código Nacional de Procedimientos Penales, Artículo 20 inciso C de la Constitución Política de los Estados Unidos Mexicanos, así como el Artículo 22, fracción II y demás aplicables de la Ley Orgánica de la Fiscalía General del Estado de Baja California. CONSTE.
             <br></p><br><br><p class="p1" style="margin: 0px; text-align: right; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0); min-height: 14px;">EXPEDIENTE: [EXPEDIENTE_NUMERO]</p><br><p class="p2" style="margin: 0px; text-align: justify; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0);">
@@ -139,7 +139,7 @@ class PlantillasSeeder extends Seeder
 			),
 
 			array(
-				'DESCRIPCION' => 'ORDEN DE PROTECCION ALBERGUE', 'TITULO' => 'ORDEN DE PROTECCION ALBERGUE',
+				'ID' => '3', 'DESCRIPCION' => 'ORDEN DE PROTECCION ALBERGUE', 'TITULO' => 'ORDEN DE PROTECCION ALBERGUE',
 				'PLACEHOLDER' => '<br><p class="p1" style="margin: 0px; text-align: right; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0); min-height: 14px;">EXPEDIENTE: [EXPEDIENTE_NUMERO]</p><br>
 
             <p class="p2" style="margin: 0px; text-align: justify; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0);">
@@ -192,7 +192,7 @@ class PlantillasSeeder extends Seeder
 
 
 			array(
-				'DESCRIPCION' => 'ORDEN DE PROTECCION RECOGER PERTENENCIAS', 'TITULO' => 'ORDEN DE PROTECCION RECOGER PERTENENCIAS',
+				'ID' => '4', 'DESCRIPCION' => 'ORDEN DE PROTECCION RECOGER PERTENENCIAS', 'TITULO' => 'ORDEN DE PROTECCION RECOGER PERTENENCIAS',
 				'PLACEHOLDER' => '<br><p class="p1" style="margin: 0px; text-align: right; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0); min-height: 14px;">EXPEDIENTE: [EXPEDIENTE_NUMERO]</p><br><p class="p2" style="margin: 0px; text-align: justify; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0);">
             DIRECCIÓN DE SEGURIDAD PÚBLICA MUNICIPAL <br>
             [DOCUMENTO_MUNICIPIO],BAJA CALIFORNIA <br>
@@ -232,7 +232,7 @@ class PlantillasSeeder extends Seeder
 
 
 			array(
-				'DESCRIPCION' => 'ORDEN DE PROTECCION RONDINES', 'TITULO' => 'ORDEN DE PROTECCION RONDINES',
+				'ID' => '5', 'DESCRIPCION' => 'ORDEN DE PROTECCION RONDINES', 'TITULO' => 'ORDEN DE PROTECCION RONDINES',
 				'PLACEHOLDER' => '<br><p class="p1" style="margin: 0px; text-align: right; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0);">EXPEDIENTE: [EXPEDIENTE_NUMERO]
             </p><br>
             
@@ -282,10 +282,10 @@ class PlantillasSeeder extends Seeder
 
 
 			array(
-				'DESCRIPCION' => 'CONSTANCIA DE EXTRAVÍO', 'TITULO' => 'CONSTANCIA DE EXTRAVÍO', 'PLACEHOLDER' => '<br>
+				'ID' => "6", 'DESCRIPCION' => 'CONSTANCIA DE EXTRAVÍO', 'TITULO' => 'CONSTANCIA DE EXTRAVÍO', 'PLACEHOLDER' => '<br>
                 <p class="p1"
                     style="margin: 0px; text-align: right; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Helvetica; color: rgb(0, 0, 0); min-height: 14px;">
-                    <strong>FOLIO: [FOLIO_NUMERO]</strong>
+                    <strong>FOLIO: [FOLIO_NUMERO]/[ANIO]</strong>
                 </p><br>
                 
                 <p class="p2"
@@ -305,7 +305,7 @@ class PlantillasSeeder extends Seeder
                     DE: <strong>[NOMBRE_PERSONA]</strong>
                     <br>
                 </p><br>
-                <table class="t1" style="border:1px solid black;  margin-left: auto;margin-right: auto;">
+                <table class="t1" style="border:1px solid black;  margin-left: auto;margin-right: auto; word-wrap: break-word;">
                     <tr style=" border:1px solid black;">
                         <th style=" border:1px solid black;">COMPARECIENTE</th>
                         <th style=" border:1px solid black;">[NOMBRE_PERSONA]</th>
@@ -320,7 +320,7 @@ class PlantillasSeeder extends Seeder
                     </tr>
                     <tr style=" border:1px solid black;">
                         <th style=" border:1px solid black;">DESCRIPCIÓN</th>
-                        <th style=" border:1px solid black;">[DESCRIPCION_EXTRAVIO]</th>
+                        <th style=" border:1px solid black;">EXTRAVÍO ORIGINAL DE [NOMBRE_CERTIFICADO] <br>A NOMBRE DE [NOMBRE_PERSONA] <br>CON NÚMERO DE FOLIO:[FOLIO_NUMERO]/[ANIO] </th>
                     </tr>
                 </table>
                 <br>
@@ -382,7 +382,7 @@ class PlantillasSeeder extends Seeder
                             <strong>LUGAR DE FIRMA:</strong> [LUGAR_FIRMA]
                         </p>
                     </div>
-                    <div style="width: 25%; float: right;">
+                    <div style="width: 25%; float: right; word-wrap: break-word;">
                         <br>
                         <p
                             style="margin: 0px; text-align: center; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 11px; line-height: normal; font-family: Helvetica; ">
@@ -395,12 +395,14 @@ class PlantillasSeeder extends Seeder
                 </div>
                 <br>
                 <br>
-                <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
-                    <div style="width: 50%;">
+                <div style="display: flex; flex-direction: row; flex-wrap: wrap; word-wrap: break-word;">
+                    <div style="width: 30%;">
                         <p
                             style="margin: 0px; text-align: justify; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 11px; line-height: normal; font-family: Helvetica; ">
                             <strong>FIRMA ELECTRÓNICA</strong>
                         </p>
+                    </div>
+                         <div style="width: 100%;">
                         <p
                             style="margin: 0px; text-align: justify; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 11px; line-height: normal; font-family: Helvetica; ">
                             [FIRMA_ELECTRONICA]</p>
@@ -413,7 +415,7 @@ class PlantillasSeeder extends Seeder
                         style="margin: 0px; text-align: center; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 11px; line-height: normal; font-family: Helvetica; ">
                         [CODIGO_QRS]</p>
                 </div>', 'TEXTO' => '
-                FOLIO: [FOLIO_NUMERO]
+                FOLIO: [FOLIO_NUMERO]/[ANIO]
 
 
 El C.AGENTE DEL MINISTERIO PÚBLICO
@@ -426,7 +428,9 @@ MANIFIESTA EL COMPARECIENTE HABER EXTRAVIADO EL ORIGINAL DE [NOMBRE_CERTIFICADO]
 COMPARECIENTE	[NOMBRE_PERSONA]
 LUGAR DE EXTRAVÍO	[LUGAR_EXTRAVIO]
 FECHA DE EXTRAVÍO	[FECHA_EXTRAVIO]
-DESCRIPCIÓN	[DESCRIPCION_EXTRAVIO]
+DESCRIPCIÓN	EXTRAVÍO ORIGINAL DE [NOMBRE_CERTIFICADO]
+A NOMBRE DE [NOMBRE_PERSONA]
+CON NÚMERO DE FOLIO:[FOLIO_NUMERO]/[ANIO]
 
                 SE EXPIDE LA PRESENTE CONSTANCIA EN LA CIUDAD DE: [NOMBRE_CIUDAD] A LOS [DIA] DÍAS DEL MES DE [MES] DEL AÑO [ANIO] A LAS [HORA]; LA CUAL NO SUSTITUYE EL DOCUMENTO ORIGINAL NI VALIDA LA PREEXISTENCIA DEL DOCUMENTO U OBJETO
 
@@ -470,10 +474,6 @@ FIRMA ELECTRÓNICA
 
 [CODIGO_QRS]'
 			),
-
-
-
-
 		];
 
 		$this->db->table('PLANTILLAS')->insertBatch($data);
