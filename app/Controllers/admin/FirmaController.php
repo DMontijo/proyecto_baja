@@ -272,7 +272,7 @@ class FirmaController extends BaseController
 							} else {
 								return redirect()->to(base_url('/admin/dashboard/constancias_extravio_abiertas'))->with('firma', 'Se ha firmado correctamente');
 							}
-						}else{
+						} else {
 							return redirect()->to(base_url('/admin/dashboard/constancia_extravio_show?folio=' . $numfolio . '&year=' . $year))->with('signature_error', $signature->message);
 						}
 					} else {
