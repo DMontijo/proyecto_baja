@@ -48,18 +48,18 @@
 					</a>
 				</li>
 			<?php endif; ?>
-			
+
 			<li class="c-sidebar-nav-item">
 				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/folios">
 					<i class="fas fa-archive c-sidebar-nav-icon"></i> Folios
 				</a>
 			</li>
 
-			<!-- <li class="c-sidebar-nav-item">
-				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/solicitudes_extravios">
+			<li class="c-sidebar-nav-item">
+				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/constancias">
 					<i class="fas fa-folder c-sidebar-nav-icon"></i> Constancias de extravío
 				</a>
-			</li> -->
+			</li>
 
 			<!-- <li class="c-sidebar-nav-item">
 				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/firmas">

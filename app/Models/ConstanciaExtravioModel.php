@@ -1,0 +1,53 @@
+<?php
+
+namespace App\Models;
+
+use CodeIgniter\Model;
+
+class ConstanciaExtravioModel extends Model
+{
+	protected $DBGroup          = 'default';
+	protected $table            = 'CONSTANCIAEXTRAVIO';
+	protected $allowedFields    = [
+		'IDCONSTANCIAEXTRAVIO',
+		'ANO',
+		'SOLICITANTEID',
+		'MUNICIPIOID',
+		'ESTADOID',
+		'EXTRAVIO',
+		'DOMICILIO',
+		'HECHOLUGARID',
+		'HECHOFECHA',
+		'PLACEHOLDER',
+		'TEXTOCONSTANCIA',
+		'NBOLETO',
+		'NTALON',
+		'NOMBRESORTEO',
+		'SORTEOFECHA',
+		'PERMISOGOBERNACION',
+		'PERMISOGOBCOLABORADORES',
+		'TIPODOCUMENTO',
+		'NDOCUMENTO',
+		'DUENONOMBREDOC',
+		'DUENOAPELLIDOPDOC',
+		'DUENOAPELLIDOMDOC',
+		'SERIEVEHICULO',
+		'NPLACA',
+		'POSICIONPLACA',
+		'DISTRIBUIDORVEHICULO',
+		'MARCA',
+		'MODELO',
+		'ANIOVEHICULO',
+		'AGENTEID',
+		'NUMEROIDENTIFICADOR',
+		'RFCFIRMA',
+		'NUMEROCERTIFICADO',
+		'FECHAFIRMA',
+		'HORAFIRMA',
+		'LUGARFIRMA',
+		'FIRMAELECTRONICA',
+		'PDF',
+		'XML',
+		'STATUS',
+	];
+}

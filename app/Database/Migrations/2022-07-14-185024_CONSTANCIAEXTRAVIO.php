@@ -4,15 +4,14 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class CONSTANCIACERTIFICADO extends Migration
+class CONSTANCIAEXTRAVIO extends Migration
 {
 	public function up()
 	{
 		$this->forge->addField([
-			'IDCERTIFICADOEXTRAVIADO' => [
+			'IDCONSTANCIAEXTRAVIO' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
-				'auto_increment' => TRUE
 			],
 			'ANO' => [
 				'type' => 'INT',
@@ -23,6 +22,10 @@ class CONSTANCIACERTIFICADO extends Migration
 				'unsigned' => TRUE,
 			],
 			'MUNICIPIOID' => [
+				'type' => 'INT',
+				'unsigned' => TRUE,
+			],
+			'MUNICIPIOIDCITA' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 			],
@@ -48,8 +51,12 @@ class CONSTANCIACERTIFICADO extends Migration
 				'type' => 'DATE',
 				'null' => TRUE,
 			],
-			'HECHOHORA' => [
-				'type' => 'TIME',
+			'PLACEHOLDER' => [
+				'type' => 'TEXT',
+				'null' => TRUE,
+			],
+			'TEXTOCONSTANCIA' => [
+				'type' => 'TEXT',
 				'null' => TRUE,
 			],
 			'NBOLETO' => [
@@ -126,19 +133,19 @@ class CONSTANCIACERTIFICADO extends Migration
 				'constraint' => '100',
 				'null' => TRUE,
 			],
-			'MARCAID' => [
+			'MARCA' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
 				'null' => TRUE,
 			],
-			'MODELOID' => [
+			'MODELO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
 				'null' => TRUE,
 			],
 			'ANIOVEHICULO' => [
-				'type' => 'VARCHAR',
-				'constraint' => '100',
+				'type' => 'INT',
+				'constraint' => '4',
 				'null' => TRUE,
 			],
 			'AGENTEID' => [
@@ -146,42 +153,45 @@ class CONSTANCIACERTIFICADO extends Migration
 				'constraint' => '5',
 				'null' => TRUE,
 			],
-			'NUMERO_IDENTIFICADOR' => [
+			'NUMEROIDENTIFICADOR' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
 				'null' => TRUE,
 			],
-			'RFC_AGENTE' => [
+			'RFCFIRMA' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
 				'null' => TRUE,
 			],
-			'NUMERO_CERTIFICADO' => [
+			'NUMEROCERTIFICADO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
 				'null' => TRUE,
 			],
-			'FECHA_FIRMA' => [
+			'FECHAFIRMA' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
 				'null' => TRUE,
 			],
-			'HORA_FIRMA' => [
+			'HORAFIRMA' => [
+				'type' => 'TIME',
+				'null' => TRUE,
+			],
+			'LUGARFIRMA' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
 				'null' => TRUE,
 			],
-			'LUGAR_FIRMA' => [
-				'type' => 'VARCHAR',
-				'constraint' => '100',
-				'null' => TRUE,
-			],
-			'FIRMA_ELECTRONICA' => [
+			'FIRMAELECTRONICA' => [
 				'type' => 'LONGBLOB',
 				'null' => TRUE,
 			],
-			'TEXTO_CONSTANCIA' => [
-				'type' => 'TEXT',
+			'PDF' => [
+				'type' => 'LONGBLOB',
+				'null' => TRUE,
+			],
+			'XML' => [
+				'type' => 'LONGBLOB',
 				'null' => TRUE,
 			],
 			'STATUS' => [
@@ -192,13 +202,13 @@ class CONSTANCIACERTIFICADO extends Migration
 			'FECHAREGISTRO DATETIME DEFAULT CURRENT_TIMESTAMP',
 			'FECHAACTUALIZACION DATETIME ON UPDATE CURRENT_TIMESTAMP',
 		]);
-		$this->forge->addKey('IDCERTIFICADOEXTRAVIADO', TRUE);
+		$this->forge->addKey('IDCONSTANCIAEXTRAVIO', TRUE);
 		$this->forge->addKey('ANO', TRUE);
-		$this->forge->createTable('CONSTANCIA_EXTRAVIO');
+		$this->forge->createTable('CONSTANCIAEXTRAVIO');
 	}
 
 	public function down()
 	{
-		$this->forge->dropTable('CONSTANCIA_EXTRAVIO');
+		$this->forge->dropTable('CONSTANCIAEXTRAVIO');
 	}
 }

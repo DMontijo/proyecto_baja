@@ -7,7 +7,7 @@
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-12 text-center mb-4">
-				<h1 class="mb-4 text-center font-weight-bold">CONSTANCIAS EXTRAVIOS ABIERTOS</h1>
+				<h1 class="mb-4 text-center font-weight-bold">CONSTANCIAS DE EXTRAVIO ABIERTAS</h1>
 			</div>
 			<div class="col-12">
 				<div class="card shadow border-0">
@@ -15,22 +15,21 @@
 						<table id="extravios_abiertos" class="table table-bordered table-striped">
 							<thead>
 								<tr>
-									<th>CONSTANCIA</th>
-									<th>FECHA</th>
-									<th>DELITO</th>
-									<th>ESTADO</th>
-									<th>CONSTANCIA</th>
+									<th class="text-center">ID</th>
+									<th class="text-center">FECHA</th>
+									<th class="text-center">TIPO DE CONSTANCIA</th>
+									<th class="text-center">ESTADO</th>
+									<th class="text-center"></th>
 								</tr>
 							</thead>
 							<tbody>
-							<?php foreach ($body_data as $index => $constancia) { ?>
+								<?php foreach ($body_data as $index => $constancia) { ?>
 									<tr>
-										<th scope="row"><?= $constancia->IDCERTIFICADOEXTRAVIADO ?></th>
-										<td><?= $constancia->HECHOFECHA ?></td>
-										<td><?= $constancia->EXTRAVIO ?></td>
-										<td><?= $constancia->STATUS ?></td>
-										<td><a type="button" href="<?= base_url('/admin/dashboard/constanciaExtravio?folio=') . $constancia->IDCERTIFICADOEXTRAVIADO ?>" class="btn btn-primary text-white"><i class="fas fa-download"></i> DESCARGAR</a></td>
-
+										<td class="text-center font-weight-bold"><?= $constancia->IDCONSTANCIAEXTRAVIO ?></td>
+										<td class="text-center"><?= $constancia->FECHAREGISTRO ?></td>
+										<td class="text-center"><?= $constancia->EXTRAVIO ?></td>
+										<td class="text-center"><?= $constancia->STATUS ?></td>
+										<td class="text-center"><a type="button" href="<?= base_url('/admin/dashboard/constancia_extravio_show?folio=' . $constancia->IDCONSTANCIAEXTRAVIO . '&year=' . $constancia->ANO) ?>" class="btn btn-primary text-white"><i class="fas fa-eye"></i> VER SOLICITUD</a></td>
 									</tr>
 								<?php } ?>
 							</tbody>

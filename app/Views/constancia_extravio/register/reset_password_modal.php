@@ -6,7 +6,7 @@
 				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<form id="reset_password" action="<?= base_url("denuncia/send_email_change_password") ?>" method="post" class="needs-validation" novalidate>
+				<form id="reset_password" action="<?= base_url("constancia_extravio/send_email_change_password") ?>" method="post" class="needs-validation" novalidate>
 					<div class="mb-3" id="divCorreo">
 						<label for="correo_reset_password" class="col-form-label">Correo electrónico:</label>
 						<input type="email" class="form-control" id="correo_reset_password" name="correo_reset_password" required>
@@ -40,7 +40,7 @@
 						data: {
 							'email': email.value
 						},
-						url: "<?= base_url('/data/exist-email') ?>",
+						url: "<?= base_url('/data/exist-email-solicitantes') ?>",
 						method: "POST",
 						dataType: "json",
 
@@ -48,7 +48,7 @@
 						if (data.exist !== 1) {
 							Swal.fire({
 								icon: 'error',
-								text: 'El correo no se encuentra registrado en el sistema.',
+								text: 'El correo no se encuentra registrado en el sistema de constancias.',
 								confirmButtonColor: '#bf9b55',
 							});
 						} else {

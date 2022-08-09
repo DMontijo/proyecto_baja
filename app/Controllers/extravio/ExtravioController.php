@@ -4,7 +4,6 @@ namespace App\Controllers\extravio;
 
 use App\Controllers\BaseController;
 
-use App\Models\DenunciantesModel;
 use App\Models\PersonaNacionalidadModel;
 use App\Models\PersonaEstadoCivilModel;
 use App\Models\PersonaIdiomaModel;
@@ -16,7 +15,12 @@ use App\Models\PersonaTipoIdentificacionModel;
 use App\Models\PaisesModel;
 use App\Models\HechoClasificacionLugarModel;
 use App\Models\FolioModel;
-
+use App\Models\SolicitantesConstanciaModel;
+use App\Models\ConstanciaExtravioModel;
+use App\Models\UsuariosModel;
+use App\Models\HechoLugarModel;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class ExtravioController extends BaseController
 {
@@ -24,24 +28,28 @@ class ExtravioController extends BaseController
 
 	function __construct()
 	{
-		$this->_denunciantesModel = new DenunciantesModel();
-        $this->_nacionalidadModel = new PersonaNacionalidadModel();
+		$this->_solicitantesModel = new SolicitantesConstanciaModel();
+		$this->_nacionalidadModel = new PersonaNacionalidadModel();
 		$this->_estadosCivilesModel = new PersonaEstadoCivilModel();
 		$this->_personaIdiomaModel = new PersonaIdiomaModel();
 		$this->_estadosModel = new EstadosModel();
 		$this->_municipiosModel = new MunicipiosModel();
 		$this->_localidadesModel = new LocalidadesModel();
 		$this->_coloniasModel = new ColoniasModel();
-		$this->_denunciantesModel = new DenunciantesModel();
+		$this->_solicitantesModel = new SolicitantesConstanciaModel();
 		$this->_tipoIdentificacionModel = new PersonaTipoIdentificacionModel();
 		$this->_paisesModel = new PaisesModel();
 		$this->_clasificacionLugarModel = new HechoClasificacionLugarModel();
 		$this->_folioModel = new FolioModel();
+		$this->_constanciaExtravioModel = new ConstanciaExtravioModel();
+		$this->_usuariosModel = new UsuariosModel();
+		$this->_hechoLugarModel = new HechoLugarModel();
+
+		$this->db = \Config\Database::connect();
 	}
 
 	public function index()
 	{
-        
 		if ($this->_isAuth()) {
 			return redirect()->to(base_url('/constancia_extravio/dashboard'));
 		} else {
@@ -49,22 +57,23 @@ class ExtravioController extends BaseController
 			$this->_loadView('Login', [], 'index');
 		}
 	}
-    public function login()
+	public function register()
 	{
-    
-			$this->_loadView('Login', [], 'login');
-		
+		$this->_loadView('Nuevo solicitante', [], 'register');
 	}
-    public function login_auth()
+
+	public function login_auth()
 	{
 		$session = session();
 		$email = $this->request->getPost('correo');
 		$password = $this->request->getPost('password');
-		$data = $this->_denunciantesModel->where('CORREO', $email)->first();
+		$email = trim($email);
+		$password = trim($password);
+		$data = $this->_solicitantesModel->where('CORREO', $email)->first();
 		if ($data) {
 			if (validatePassword($password, $data['PASSWORD'])) {
 				$data['logged_in'] = TRUE;
-				$data['type'] = 'user';
+				$data['type'] = 'user_constancia';
 				$session->set($data);
 				return redirect()->to(base_url('/constancia_extravio/dashboard'));
 			} else {
@@ -77,14 +86,7 @@ class ExtravioController extends BaseController
 		}
 	}
 
-	public function logout()
-	{
-		$session = session();
-		$session->destroy();
-		return redirect()->to(base_url());
-	}
-
-    public function create()
+	public function create()
 	{
 
 		$password = $this->_generatePassword(6);
@@ -95,20 +97,20 @@ class ExtravioController extends BaseController
 			'APELLIDO_MATERNO' => $this->request->getPost('apellido_materno'),
 			'CORREO' => $this->request->getPost('correo'),
 			'PASSWORD' => hashPassword($password),
-            'TELEFONO'=> $this->request->getPost('telefono'),
-			'FECHA_DE_NACIMIENTO' => $this->request->getPost('fecha_nacimiento'),
+			'TELEFONO' => $this->request->getPost('telefono'),
+			'FECHANACIMIENTO' => $this->request->getPost('fecha_nacimiento'),
 			'SEXO' => $this->request->getPost('sexo'),
-			
 		];
-		if ($this->validate(['correo' => 'required|is_unique[DENUNCIANTES.CORREO]'])) {
-			$this->_denunciantesModel->insert($data);
+
+		if ($this->validate(['correo' => 'required|is_unique[SOLICITANTESCONSTANCIA.CORREO]'])) {
+			$this->_solicitantesModel->insert($data);
 			$this->_sendEmailPassword($data['CORREO'], $password);
-			return redirect()->to(base_url('/constancia_extravio/login'))->with('created', 'Inicia sesión con la contraseña que llegará a tu correo y comienza tu denuncia');
+			return redirect()->to(base_url('/constancia_extravio'))->with('created', 'Inicia sesión con la contraseña que llegará a tu correo e ingresa.');
 		} else {
 			return redirect()->back()->with('message', 'Hubo un error en los datos o puede que ya exista un registro con el mismo correo');
 		}
 	}
-    
+
 	private function _generatePassword($length)
 	{
 		$password = "";
@@ -120,10 +122,10 @@ class ExtravioController extends BaseController
 		return $password;
 	}
 
-    public function existEmail()
+	public function existEmail()
 	{
 		$email = $this->request->getPost('email');
-		$data = $this->_denunciantesModel->where('CORREO', $email)->first();
+		$data = $this->_solicitantesModel->where('CORREO', $email)->first();
 		if ($data == NULL) {
 			return json_encode((object)['exist' => 0]);
 		} else if (count($data) > 0) {
@@ -132,12 +134,12 @@ class ExtravioController extends BaseController
 			return json_encode((object)['exist' => 0]);
 		}
 	}
-private function _sendEmailPassword($to, $password)
+	private function _sendEmailPassword($to, $password)
 	{
 		$email = \Config\Services::email();
 		$email->setTo($to);
 		$email->setSubject('Te estamos atendiendo');
-		$body = view('email_template/password_email_template.php', ['email' => $to, 'password' => $password]);
+		$body = view('email_template/password_email_constancia.php', ['email' => $to, 'password' => $password]);
 		$email->setMessage($body);
 
 		if ($email->send()) {
@@ -146,18 +148,125 @@ private function _sendEmailPassword($to, $password)
 			return false;
 		}
 	}
-    private function _isAuth()
+
+	public function sendEmailChangePassword()
+	{
+		$password = $this->_generatePassword(6);
+		$to = $this->request->getPost('correo_reset_password');
+		$user = $this->_solicitantesModel->asObject()->where('CORREO', $to)->first();
+		$this->_solicitantesModel->set('PASSWORD', hashPassword($password))->where('SOLICITANTEID', $user->SOLICITANTEID)->update();
+
+		$email = \Config\Services::email();
+		$email->setTo($to);
+		$email->setSubject('Cambio de contraseña');
+		$body = view('email_template/reset_password_template.php', ['password' => $password]);
+		$email->setMessage($body);
+
+		if ($email->send()) {
+			return redirect()->to(base_url('/constancia_extravio'))->with('created', 'Verifica tu nueva contraseña en tu correo.');
+		}
+	}
+
+	private function _isAuth()
 	{
 		if (session('logged_in') && session('type') == 'user') {
 			return true;
 		};
 	}
-    private function _loadView($title, $data, $view)
+	private function _loadView($title, $data, $view)
 	{
 		$data = [
 			'header_data' => (object)['title' => $title],
 			'body_data' => $data
 		];
 		echo view("constancia_extravio/register/$view", $data);
+	}
+	function descargar_pdf()
+	{
+		$data = (object)array();
+		$options = new Options();
+		$options->set('isRemoteEnabled', true);
+		$dompdf = new Dompdf($options);
+		$data = $this->db->table("PLANTILLAS")->get()->getResult();
+		$numfolio = $_POST['input_folio_atencion_pdf'];
+		$constancias = $this->_constanciaExtravioModel->asObject()->where('IDCONSTANCIAEXTRAVIO', base64_decode($numfolio))->first();
+
+		$agente = $this->_usuariosModel->asObject()->where('ID', $constancias->AGENTEID)->first();
+		$denunciante = $this->_solicitantesModel->asObject()->where('SOLICITANTEID', $constancias->SOLICITANTEID)->first();
+		$lugar = $this->_hechoLugarModel->asObject()->where('HECHOLUGARID', $constancias->HECHOLUGARID)->first();
+		$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $constancias->MUNICIPIOID)->where('ESTADOID', $constancias->ESTADOID)->first();
+		$estado = $this->_estadosModel->asObject()->where('ESTADOID', $constancias->ESTADOID)->first();
+		$timestamp = strtotime($constancias->HECHOFECHA);
+		$dia = date('d', $timestamp);
+		$meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
+		$mes = $meses[date('n') - 1];
+		// $dir = base_url() . '/uploads/FIEL/qrcode_' . $numfolio . '.jpg';
+		// $dirFirma = base_url() . '/uploads/FIEL/qrcode_firma_' . $numfolio . '.jpg';
+		$dir = base_url() . '/uploads/qr/' . base64_decode($numfolio) . '/qrcode_' . base64_decode($numfolio) . '.jpg';
+		$dirFirma = base_url() . '/uploads/qr/' . base64_decode($numfolio) . '/qrcode_firma_' . base64_decode($numfolio) . '.jpg';
+
+		$url = base_url('/validar_constancia?folio=' . $numfolio);
+		//replace placeholder
+		$data[5]->PLACEHOLDER = str_replace('https://cdt.fgebc.gob.mx/', ' ', $data[5]->PLACEHOLDER);
+
+		$data[5]->PLACEHOLDER = str_replace('[FOLIO_NUMERO]', $constancias->IDCONSTANCIAEXTRAVIO, $data[5]->PLACEHOLDER);
+		$data[5]->PLACEHOLDER = str_replace('[NOMBRE_AGENTE]', $agente->NOMBRE . " " . $agente->APELLIDO_PATERNO . " " . $agente->APELLIDO_MATERNO, $data[5]->PLACEHOLDER);
+		$data[5]->PLACEHOLDER = str_replace('[NOMBRE_CERTIFICADO]', $constancias->EXTRAVIO, $data[5]->PLACEHOLDER);
+		$data[5]->PLACEHOLDER = str_replace('[NOMBRE_PERSONA]', $denunciante->NOMBRE . " " . $denunciante->APELLIDO_PATERNO . " " . $denunciante->APELLIDO_MATERNO, $data[5]->PLACEHOLDER);
+		$data[5]->PLACEHOLDER = str_replace('[LUGAR_EXTRAVIO]', $lugar->HECHODESCR, $data[5]->PLACEHOLDER);
+		//$data[5]->PLACEHOLDER = str_replace('[DESCRIPCION_EXTRAVIO]', $constancias->DESCRIPCION_EXTRAVIO, $data[5]->PLACEHOLDER);
+		$data[5]->PLACEHOLDER = str_replace('[NOMBRE_CIUDAD]', $municipio->MUNICIPIODESCR . ", " . $estado->ESTADODESCR, $data[5]->PLACEHOLDER);
+		$data[5]->PLACEHOLDER = str_replace('[FECHA_EXTRAVIO]', $constancias->HECHOFECHA, $data[5]->PLACEHOLDER);
+
+		$data[5]->PLACEHOLDER = str_replace('[DIA]', $dia, $data[5]->PLACEHOLDER);
+		$data[5]->PLACEHOLDER = str_replace('[MES]', strtoupper($mes), $data[5]->PLACEHOLDER);
+		$data[5]->PLACEHOLDER = str_replace('[ANIO]', $constancias->ANO, $data[5]->PLACEHOLDER);
+		$data[5]->PLACEHOLDER = str_replace('[HORA]', $constancias->HECHOHORA, $data[5]->PLACEHOLDER);
+
+		$data[5]->PLACEHOLDER = str_replace('[NUMEROIDENTIFICADOR]', $constancias->NUMEROIDENTIFICADOR, $data[5]->PLACEHOLDER);
+		$data[5]->PLACEHOLDER = str_replace('[RFCFIRMA]', $constancias->RFCFIRMA, $data[5]->PLACEHOLDER);
+		$data[5]->PLACEHOLDER = str_replace('[NUMEROCERTIFICADO]', $constancias->NUMEROCERTIFICADO, $data[5]->PLACEHOLDER);
+		$data[5]->PLACEHOLDER = str_replace('[FECHAFIRMA]', $constancias->FECHAFIRMA, $data[5]->PLACEHOLDER);
+		$data[5]->PLACEHOLDER = str_replace('[HORAFIRMA]', $constancias->HORAFIRMA, $data[5]->PLACEHOLDER);
+		$data[5]->PLACEHOLDER = str_replace('[LUGARFIRMA]', $constancias->LUGARFIRMA, $data[5]->PLACEHOLDER);
+		$data[5]->PLACEHOLDER = str_replace('[FIRMAELECTRONICA]', $constancias->FIRMAELECTRONICA, $data[5]->PLACEHOLDER);
+		$data[5]->PLACEHOLDER = str_replace('[URL]', $url, $data[5]->PLACEHOLDER);
+
+		$data[5]->PLACEHOLDER = str_replace('[CODIGO_QR]', '<img src="' . $dir . '" width="50px" height="50px">', $data[5]->PLACEHOLDER);
+		$data[5]->PLACEHOLDER = str_replace('[CODIGO_QRS]', '<img src="' . $dirFirma . '" width="120px" height="120px">', $data[5]->PLACEHOLDER);
+
+
+		if ($constancias->EXTRAVIO == 'BOLETOS DE SORTEO') {
+			$data[5]->PLACEHOLDER = str_replace('[NO_DOCUMENTO]', $constancias->NBOLETO, $data[5]->PLACEHOLDER);
+		}
+		if ($constancias->EXTRAVIO == 'PLACAS') {
+			$data[5]->PLACEHOLDER = str_replace('[NO_DOCUMENTO]', $constancias->NPLACA, $data[5]->PLACEHOLDER);
+		}
+		if ($constancias->EXTRAVIO == 'DOCUMENTOS') {
+			$data[5]->PLACEHOLDER = str_replace('[NO_DOCUMENTO]', $constancias->NDOCUMENTO, $data[5]->PLACEHOLDER);
+		} else {
+			$data[5]->PLACEHOLDER = str_replace('[NO_DOCUMENTO]', '', $data[5]->PLACEHOLDER);
+		}
+		$dompdf->loadHtml(view('pdf/constanciaE', ["certificadoMedico" => $data]));
+		// setting paper to portrait, also we have landscape
+		$dompdf->setPaper('A4', 'portrait');
+		$dompdf->render();
+
+		// Download pdf
+		$dompdf->stream();
+	}
+
+	public function existEmailSolicitantes()
+	{
+		$email = $this->request->getPost('email');
+
+		$data = $this->_solicitantesModel->where('CORREO', $email)->first();
+		if ($data == NULL) {
+			return json_encode((object)['exist' => 0]);
+		} else if (count($data) > 0) {
+			return json_encode((object)['exist' => 1]);
+		} else {
+			return json_encode((object)['exist' => 0]);
+		}
 	}
 }

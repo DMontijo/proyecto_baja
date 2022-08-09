@@ -3,35 +3,289 @@
 namespace App\Controllers\admin;
 
 use App\Controllers\BaseController;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+use App\Models\PlantillasModel;
+use App\Models\FolioModel;
+use App\Models\UsuariosModel;
+use App\Models\SolicitantesConstanciaModel;
+use App\Models\HechoLugarModel;
+use App\Models\MunicipiosModel;
+use App\Models\EstadosModel;
+use App\Models\ConstanciaExtravioModel;
+use App\Models\PersonaTipoIdentificacionModel;
+use Endroid\QrCode\Color\Color;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelLow;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
+use Endroid\QrCode\Writer\PngWriter;
 
 class FirmaController extends BaseController
 {
 	function __construct()
 	{
+		$this->_plantillasModel = new PlantillasModel();
+		$this->_folioModel = new FolioModel();
+		$this->_usuariosModel = new UsuariosModel();
+		$this->_solicitantesModel = new SolicitantesConstanciaModel();
+		$this->_hechoLugarModel = new HechoLugarModel();
+		$this->_municipiosModel = new MunicipiosModel();
+		$this->_estadosModel = new EstadosModel();
+		$this->_constanciaExtravioModel = new ConstanciaExtravioModel();
+		$this->_tipoIdentificacionModel = new PersonaTipoIdentificacionModel();
+
+		$this->db = \Config\Database::connect();
 	}
 
 	public function index()
 	{
+		$data = (object)array();
+		$numfolio = $this->request->getPost('folio');
+		$folio = $numfolio;
+		$year = $this->request->getPost('year');
+		$password = $this->request->getPost('contrasena');
+
 		$user_id = session('ID');
-		$password = '12345678a';
-		$document_name = "CONSTANCIA DE EXTRAVÍO";
-		$informacion = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum iusto quisquam dolor, aspernatur mollitia itaque iste quaerat inventore facere laudantium doloribus fuga quia eaque quae, ipsa saepe, earum ipsum iure";
-		$folio = uniqid();
-		if ($this->_crearArchivosPEMText($user_id, $password) && $this->_validarFiel($user_id)) {
-			$signature = $this->_generateSignature($user_id, $document_name, $informacion, $folio);
-			if ($signature->status == 1) {
-				$info = $this->_extractData($user_id);
-				$xml = $this->_createXMLSignature($signature->signed_chain, $signature->signature, $folio);
-				var_dump($info);
-				echo '<br><br>';
-				var_dump($signature);
-				echo '<br><br>';
-				echo htmlspecialchars($xml);
+
+		$constancia = $this->_constanciaExtravioModel->asObject()->where('IDCONSTANCIAEXTRAVIO', $numfolio)->where('ANO', $year)->first();
+		$plantilla = $this->_plantillasModel->asObject()->where('TITULO', 'CONSTANCIA DE EXTRAVÍO')->first();
+
+		$solicitante = $this->_solicitantesModel->asObject()->where('SOLICITANTEID ', $constancia->SOLICITANTEID)->first();
+
+		$lugar = $this->_hechoLugarModel->asObject()->where('HECHOLUGARID', $constancia->HECHOLUGARID)->first();
+		$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $constancia->MUNICIPIOID)->where('ESTADOID', $constancia->ESTADOID)->first();
+		$estado = $this->_estadosModel->asObject()->where('ESTADOID', $constancia->ESTADOID)->first();
+		$meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
+
+		$timestamp = strtotime($constancia->HECHOFECHA);
+		$dia_extravio = date('d', $timestamp);
+		$mes_extravio = $meses[date('n') - 1];
+		$ano_extravio = date('Y', $timestamp);
+
+		$document_name = $plantilla->TITULO;
+		$FECHAFIRMA = date("Y-m-d");
+		$HORAFIRMA = date("H:i");
+
+		try {
+
+			if ($this->_crearArchivosPEMText($user_id, $password)) {
+				if ($this->_validarFiel($user_id)) {
+					$fiel_user = $this->_extractData($user_id);
+					$razon_social = $fiel_user['razon_social'];
+					$rfc = $fiel_user['rfc'];
+					$num_certificado = $fiel_user['num_certificado'];
+					$url = base_url('/validar_constancia?folio=' . base64_encode($folio) . '&year=' . $year);
+
+					//TEXTO *************************************************************************************************************************************************************************
+
+					$plantilla->TEXTO = str_replace('[FOLIO_NUMERO]', $constancia->IDCONSTANCIAEXTRAVIO, $plantilla->TEXTO);
+					$plantilla->TEXTO = str_replace('[NOMBRE_AGENTE_FIRMA]', $razon_social, $plantilla->TEXTO);
+					$plantilla->TEXTO = str_replace('[DOMICILIO_COMPARECIENTE]', $constancia->DOMICILIO, $plantilla->TEXTO);
+					$plantilla->TEXTO = str_replace('[NOMBRE_COMPARECIENTE]', $solicitante->NOMBRE . " " . $solicitante->APELLIDO_PATERNO . " " . $solicitante->APELLIDO_MATERNO, $plantilla->TEXTO);
+					if ($constancia->DUENONOMBREDOC) {
+						$plantilla->TEXTO = str_replace('[NOMBRE_DUENO]', $constancia->DUENONOMBREDOC . " " . $constancia->DUENOAPELLIDOPDOC . " " . $constancia->DUENOAPELLIDOMDOC, $plantilla->TEXTO);
+					} else {
+						$plantilla->TEXTO = str_replace('[NOMBRE_DUENO]', $solicitante->NOMBRE . " " . $solicitante->APELLIDO_PATERNO . " " . $solicitante->APELLIDO_MATERNO, $plantilla->TEXTO);
+					}
+					$plantilla->TEXTO = str_replace('[LUGAR_EXTRAVIO]', $lugar->HECHODESCR, $plantilla->TEXTO);
+					$plantilla->TEXTO = str_replace('[NOMBRE_CIUDAD]', $municipio->MUNICIPIODESCR . ", " . $estado->ESTADODESCR, $plantilla->TEXTO);
+					$plantilla->TEXTO = str_replace('[FECHA_EXTRAVIO]', $dia_extravio . '/' . strtoupper($mes_extravio) . '/' . $ano_extravio, $plantilla->TEXTO);
+					$plantilla->TEXTO = str_replace('[DIA]', date('d'), $plantilla->TEXTO);
+					$plantilla->TEXTO = str_replace('[MES]', strtoupper($meses[date('m') - 1]), $plantilla->TEXTO);
+					$plantilla->TEXTO = str_replace('[ANIO_FIRMA]', strtoupper(date('Y')), $plantilla->TEXTO);
+					$plantilla->TEXTO = str_replace('[ANIO]', $year, $plantilla->TEXTO);
+					$plantilla->TEXTO = str_replace('[HORA]', date('h:i'), $plantilla->TEXTO);
+
+					switch ($constancia->EXTRAVIO) {
+						case 'BOLETOS DE SORTEO':
+							$plantilla->TEXTO = str_replace('[NOMBRE_CERTIFICADO]', 'BOLETOS', $plantilla->TEXTO);
+
+							$timestamp_sorteo = strtotime($constancia->SORTEOFECHA);
+							$dia_sorteo = date('d', $timestamp_sorteo);
+							$ano_sorteo = date('Y', $timestamp_sorteo);
+							$mes_sorteo = $meses[date('n') - 1];
+
+							$descr = 'EXTRAVÍO DE BOLETO CON NÚMERO: [NBOLETO] Y TALÓN CON NÚMERO: [NTALON] DEL SORTEO: [NOMBRESORTEO] A CELEBRARSE EL DÍA: [SORTEOFECHA], CON PERMISO DE GOBERNACIÓN: [PERMISOGOBERNACION], Y PERMISO DE GOBERNACIÓN DE COLABORADORES: [PERMISOGOBCOLABORADORES].';
+							$descr = str_replace('[NBOLETO]', $constancia->NBOLETO, $descr);
+							$descr = str_replace('[NTALON]', $constancia->NTALON, $descr);
+							$descr = str_replace('[NOMBRESORTEO]', $constancia->NOMBRESORTEO, $descr);
+							$descr = str_replace('[PERMISOGOBERNACION]', $constancia->PERMISOGOBERNACION, $descr);
+							$descr = str_replace('[PERMISOGOBCOLABORADORES]', $constancia->PERMISOGOBCOLABORADORES, $descr);
+							$descr = str_replace('[SORTEOFECHA]', $dia_sorteo . '/' . strtoupper($mes_sorteo) . '/' . $ano_sorteo, $descr);
+							$plantilla->TEXTO = str_replace('[DESCRIPCION_EXTRAVIO]', $descr, $plantilla->TEXTO);
+							$plantilla->TEXTO = str_replace('[NO_DOCUMENTO]', $constancia->NBOLETO, $plantilla->TEXTO);
+							break;
+						case 'PLACAS':
+							$perdido = '';
+							if ($constancia->POSICIONPLACA == 'PLACA DELANTERA' || $constancia->POSICIONPLACA == 'PLACA TRASERA') {
+								$perdido = $constancia->POSICIONPLACA;
+								$ext = $constancia->POSICIONPLACA . '  FEDERAL';
+							} else {
+								$perdido = 'PLACAS';
+								$ext = $constancia->POSICIONPLACA . '  FEDERALES';
+							}
+							$descr = 'EXTRAVÍO DE: [POSICIONPLACA]<br>NÚMERO: [NPLACA]<br><br>RESPECTO DE UN VEHÍCULO:<br>MARCA:[MARCA]<br>LINEA: [MODELO]<br>MODELO: [ANIOVEHICULO]<br>NÚMERO DE SERIE: [SERIEVEHICULO]';
+							$descr = str_replace('[POSICIONPLACA]', $ext, $descr);
+							$descr = str_replace('[NPLACA]', $constancia->NPLACA, $descr);
+							$descr = str_replace('[MARCA]', $constancia->MARCA, $descr);
+							$descr = str_replace('[MODELO]', $constancia->MODELO, $descr);
+							$descr = str_replace('[ANIOVEHICULO]', $constancia->ANIOVEHICULO, $descr);
+							$descr = str_replace('[SERIEVEHICULO]', $constancia->SERIEVEHICULO, $descr);
+							$plantilla->TEXTO = str_replace('[DESCRIPCION_EXTRAVIO]', $descr, $plantilla->TEXTO);
+							$plantilla->TEXTO = str_replace('[NOMBRE_CERTIFICADO]', $perdido, $plantilla->TEXTO);
+							$plantilla->TEXTO = str_replace('[NO_DOCUMENTO]', $constancia->NPLACA, $plantilla->TEXTO);
+							$plantilla->TEXTO = str_replace('[DESCRIPCION]', $constancia->NPLACA, $plantilla->TEXTO);
+							break;
+						case 'DOCUMENTOS':
+							$descr = 'EXTRAVÍO ORIGINAL DE: [TIPODOCUMENTO] A NOMBRE DE: [NOMBRE_DUENO] CON NÚMERO DE FOLIO: [NDOCUMENTO]';
+							$descr = str_replace('[TIPODOCUMENTO]', $constancia->TIPODOCUMENTO, $descr);
+							$descr = str_replace('[NOMBRE_DUENO]', $constancia->DUENONOMBREDOC . " " . $constancia->DUENOAPELLIDOPDOC . " " . $constancia->DUENOAPELLIDOMDOC, $descr);
+							$descr = str_replace('[NDOCUMENTO]', $constancia->NDOCUMENTO, $descr);
+							$plantilla->TEXTO = str_replace('[DESCRIPCION_EXTRAVIO]', $descr, $plantilla->TEXTO);
+							$plantilla->TEXTO = str_replace('[NO_DOCUMENTO]', $constancia->NDOCUMENTO, $plantilla->TEXTO);
+							$plantilla->TEXTO = str_replace('[NOMBRE_CERTIFICADO]', $constancia->TIPODOCUMENTO, $plantilla->TEXTO);
+							break;
+						default:
+							$plantilla->TEXTO = str_replace('[NO_DOCUMENTO]', '', $plantilla->TEXTO);
+							$plantilla->TEXTO = str_replace('[NOMBRE_CERTIFICADO]', '', $plantilla->TEXTO);
+							break;
+					}
+
+					$signature = $this->_generateSignature($user_id, $document_name, $plantilla->TEXTO, $folio);
+
+					//PLACEHOLDER *************************************************************************************************************************************************************************
+
+					$plantilla->PLACEHOLDER = str_replace('[FOLIO_NUMERO]', $constancia->IDCONSTANCIAEXTRAVIO, $plantilla->PLACEHOLDER);
+					$plantilla->PLACEHOLDER = str_replace('[NOMBRE_AGENTE_FIRMA]', $razon_social, $plantilla->PLACEHOLDER);
+					$plantilla->PLACEHOLDER = str_replace('[DOMICILIO_COMPARECIENTE]', $constancia->DOMICILIO, $plantilla->PLACEHOLDER);
+					$plantilla->PLACEHOLDER = str_replace('[NOMBRE_COMPARECIENTE]', $solicitante->NOMBRE . " " . $solicitante->APELLIDO_PATERNO . " " . $solicitante->APELLIDO_MATERNO, $plantilla->PLACEHOLDER);
+					if ($constancia->DUENONOMBREDOC) {
+						$plantilla->PLACEHOLDER = str_replace('[NOMBRE_DUENO]', $constancia->DUENONOMBREDOC . " " . $constancia->DUENOAPELLIDOPDOC . " " . $constancia->DUENOAPELLIDOMDOC, $plantilla->PLACEHOLDER);
+					} else {
+						$plantilla->PLACEHOLDER = str_replace('[NOMBRE_DUENO]', $solicitante->NOMBRE . " " . $solicitante->APELLIDO_PATERNO . " " . $solicitante->APELLIDO_MATERNO, $plantilla->PLACEHOLDER);
+					}
+					$plantilla->PLACEHOLDER = str_replace('[LUGAR_EXTRAVIO]', $lugar->HECHODESCR, $plantilla->PLACEHOLDER);
+					$plantilla->PLACEHOLDER = str_replace('[NOMBRE_CIUDAD]', $municipio->MUNICIPIODESCR . ", " . $estado->ESTADODESCR, $plantilla->PLACEHOLDER);
+					$plantilla->PLACEHOLDER = str_replace('[FECHA_EXTRAVIO]', $dia_extravio . '/' . strtoupper($mes_extravio) . '/' . $ano_extravio, $plantilla->PLACEHOLDER);
+					$plantilla->PLACEHOLDER = str_replace('[DIA]', date('d'), $plantilla->PLACEHOLDER);
+					$plantilla->PLACEHOLDER = str_replace('[MES]', strtoupper($meses[date('m') - 1]), $plantilla->PLACEHOLDER);
+					$plantilla->PLACEHOLDER = str_replace('[ANIO_FIRMA]', strtoupper(date('Y')), $plantilla->PLACEHOLDER);
+					$plantilla->PLACEHOLDER = str_replace('[ANIO]', $year, $plantilla->PLACEHOLDER);
+					$plantilla->PLACEHOLDER = str_replace('[HORA]', date('h:i'), $plantilla->PLACEHOLDER);
+
+					switch ($constancia->EXTRAVIO) {
+						case 'BOLETOS DE SORTEO':
+							$plantilla->PLACEHOLDER = str_replace('[NOMBRE_CERTIFICADO]', 'BOLETOS', $plantilla->PLACEHOLDER);
+
+							$timestamp_sorteo = strtotime($constancia->SORTEOFECHA);
+							$dia_sorteo = date('d', $timestamp_sorteo);
+							$ano_sorteo = date('Y', $timestamp_sorteo);
+							$mes_sorteo = $meses[date('n') - 1];
+
+							$descr = 'EXTRAVÍO DE BOLETO CON NÚMERO: [NBOLETO] Y TALÓN CON NÚMERO: [NTALON] DEL SORTEO: [NOMBRESORTEO] A CELEBRARSE EL DÍA: [SORTEOFECHA], CON PERMISO DE GOBERNACIÓN: [PERMISOGOBERNACION], Y PERMISO DE GOBERNACIÓN DE COLABORADORES: [PERMISOGOBCOLABORADORES].';
+							$descr = str_replace('[NBOLETO]', $constancia->NBOLETO, $descr);
+							$descr = str_replace('[NTALON]', $constancia->NTALON, $descr);
+							$descr = str_replace('[NOMBRESORTEO]', $constancia->NOMBRESORTEO, $descr);
+							$descr = str_replace('[PERMISOGOBERNACION]', $constancia->PERMISOGOBERNACION, $descr);
+							$descr = str_replace('[PERMISOGOBCOLABORADORES]', $constancia->PERMISOGOBCOLABORADORES, $descr);
+							$descr = str_replace('[SORTEOFECHA]', $dia_sorteo . '/' . strtoupper($mes_sorteo) . '/' . $ano_sorteo, $descr);
+							$plantilla->PLACEHOLDER = str_replace('[DESCRIPCION_EXTRAVIO]', $descr, $plantilla->PLACEHOLDER);
+							$plantilla->PLACEHOLDER = str_replace('[NO_DOCUMENTO]', $constancia->NBOLETO, $plantilla->PLACEHOLDER);
+							break;
+						case 'PLACAS':
+							$perdido = '';
+							if ($constancia->POSICIONPLACA == 'PLACA DELANTERA' || $constancia->POSICIONPLACA == 'PLACA TRASERA') {
+								$perdido = $constancia->POSICIONPLACA;
+								$ext = $constancia->POSICIONPLACA . '  FEDERAL';
+							} else {
+								$perdido = 'PLACAS';
+								$ext = $constancia->POSICIONPLACA . '  FEDERALES';
+							}
+							$descr = 'EXTRAVÍO DE: [POSICIONPLACA]<br>NÚMERO: [NPLACA]<br><br>RESPECTO DE UN VEHÍCULO:<br>MARCA:[MARCA]<br>LINEA: [MODELO]<br>MODELO: [ANIOVEHICULO]<br>NÚMERO DE SERIE: [SERIEVEHICULO]';
+							$descr = str_replace('[POSICIONPLACA]', $ext, $descr);
+							$descr = str_replace('[NPLACA]', $constancia->NPLACA, $descr);
+							$descr = str_replace('[MARCA]', $constancia->MARCA, $descr);
+							$descr = str_replace('[MODELO]', $constancia->MODELO, $descr);
+							$descr = str_replace('[ANIOVEHICULO]', $constancia->ANIOVEHICULO, $descr);
+							$descr = str_replace('[SERIEVEHICULO]', $constancia->SERIEVEHICULO, $descr);
+							$plantilla->PLACEHOLDER = str_replace('[DESCRIPCION_EXTRAVIO]', $descr, $plantilla->PLACEHOLDER);
+							$plantilla->PLACEHOLDER = str_replace('[NOMBRE_CERTIFICADO]', $perdido, $plantilla->PLACEHOLDER);
+							$plantilla->PLACEHOLDER = str_replace('[NO_DOCUMENTO]', $constancia->NPLACA, $plantilla->PLACEHOLDER);
+							$plantilla->PLACEHOLDER = str_replace('[DESCRIPCION]', $constancia->NPLACA, $plantilla->PLACEHOLDER);
+							break;
+						case 'DOCUMENTOS':
+							$descr = 'EXTRAVÍO ORIGINAL DE: [TIPODOCUMENTO] A NOMBRE DE: [NOMBRE_DUENO] CON NÚMERO DE FOLIO: [NDOCUMENTO]';
+							$descr = str_replace('[TIPODOCUMENTO]', $constancia->TIPODOCUMENTO, $descr);
+							$descr = str_replace('[NOMBRE_DUENO]', $constancia->DUENONOMBREDOC . " " . $constancia->DUENOAPELLIDOPDOC . " " . $constancia->DUENOAPELLIDOMDOC, $descr);
+							$descr = str_replace('[NDOCUMENTO]', $constancia->NDOCUMENTO, $descr);
+							$plantilla->PLACEHOLDER = str_replace('[DESCRIPCION_EXTRAVIO]', $descr, $plantilla->PLACEHOLDER);
+							$plantilla->PLACEHOLDER = str_replace('[NO_DOCUMENTO]', $constancia->NDOCUMENTO, $plantilla->PLACEHOLDER);
+							$plantilla->PLACEHOLDER = str_replace('[NOMBRE_CERTIFICADO]', $constancia->TIPODOCUMENTO, $plantilla->PLACEHOLDER);
+							break;
+						default:
+							$plantilla->PLACEHOLDER = str_replace('[NO_DOCUMENTO]', '', $plantilla->PLACEHOLDER);
+							$plantilla->PLACEHOLDER = str_replace('[NOMBRE_CERTIFICADO]', '', $plantilla->PLACEHOLDER);
+							break;
+					}
+
+					$plantilla->PLACEHOLDER = str_replace('[NUMEROIDENTIFICADOR]', $constancia->IDCONSTANCIAEXTRAVIO . '/' . $constancia->ANO, $plantilla->PLACEHOLDER);
+					$plantilla->PLACEHOLDER = str_replace('[FIRMAELECTRONICA]', $signature->signature, $plantilla->PLACEHOLDER);
+					$plantilla->PLACEHOLDER = str_replace('[RFCFIRMA_FIRMA]', $rfc, $plantilla->PLACEHOLDER);
+					$plantilla->PLACEHOLDER = str_replace('[NUMEROCERTIFICADO]', $num_certificado, $plantilla->PLACEHOLDER);
+					$plantilla->PLACEHOLDER = str_replace('[FECHAFIRMA]', $FECHAFIRMA, $plantilla->PLACEHOLDER);
+					$plantilla->PLACEHOLDER = str_replace('[HORAFIRMA]', $HORAFIRMA, $plantilla->PLACEHOLDER);
+					$plantilla->PLACEHOLDER = str_replace('[LUGARFIRMA]', $municipio->MUNICIPIODESCR . ", " . $estado->ESTADODESCR, $plantilla->PLACEHOLDER);
+					$plantilla->PLACEHOLDER = str_replace('[URL]', $url, $plantilla->PLACEHOLDER);
+
+					if ($signature->status == 1) {
+						$xml = $this->_createXMLSignature($signature->signed_chain, $signature->signature, $numfolio, $year);
+
+						$qr1 = $this->_generarQR($url);
+						$qr2 = $this->_generarQR($signature->signed_chain);
+
+						$plantilla->PLACEHOLDER = str_replace('[CODIGO_QR_1]', '<img src="' . $qr1 . '" width="50px" height="50px">', $plantilla->PLACEHOLDER);
+						$plantilla->PLACEHOLDER = str_replace('[CODIGO_QR_2]', '<img src="' . $qr2 . '" width="120px" height="120px">', $plantilla->PLACEHOLDER);
+						$pdf = $this->_generarPDF($plantilla->PLACEHOLDER);
+
+						$datosInsert = [
+							'AGENTEID' => $user_id,
+							'NUMEROIDENTIFICADOR' => $constancia->IDCONSTANCIAEXTRAVIO . '/' . $constancia->ANO,
+							'RFCFIRMA' => $rfc,
+							'NUMEROCERTIFICADO' => $num_certificado,
+							'FECHAFIRMA' => $FECHAFIRMA,
+							'HORAFIRMA' => $HORAFIRMA,
+							'LUGARFIRMA' => $municipio->MUNICIPIODESCR . ", " . $estado->ESTADODESCR,
+							'FIRMAELECTRONICA' => base64_decode($signature->signature),
+							'TEXTOCONSTANCIA' => $plantilla->TEXTO,
+							'PLACEHOLDER' => $plantilla->PLACEHOLDER,
+							'XML' => $xml,
+							'PDF' => $pdf,
+							'STATUS' => 'FIRMADO'
+						];
+
+						$insert = $this->_constanciaExtravioModel->set($datosInsert)->where('IDCONSTANCIAEXTRAVIO ', $numfolio)->where('ANO', $year)->update();
+
+						if ($insert) {
+							if ($this->_sendEmailConstanciaFirmada($solicitante->CORREO, $numfolio, $year, $xml, $pdf)) {
+								return redirect()->to(base_url('/admin/dashboard/constancias_extravio_abiertas'))->with('firma', 'Se ha firmado correctamente');
+							} else {
+								return redirect()->to(base_url('/admin/dashboard/constancias_extravio_abiertas'))->with('firma', 'Se ha firmado correctamente');
+							}
+						}else{
+							return redirect()->to(base_url('/admin/dashboard/constancia_extravio_show?folio=' . $numfolio . '&year=' . $year))->with('signature_error', $signature->message);
+						}
+					} else {
+						return redirect()->to(base_url('/admin/dashboard/constancia_extravio_show?folio=' . $numfolio . '&year=' . $year))->with('signature_error', 'Fallo al insertar firmar el documento.');
+					}
+				} else {
+					return redirect()->to(base_url('/admin/dashboard/constancia_extravio_show?folio=' . $numfolio . '&year=' . $year))->with('firma_no_valida', 'Firma no validada por FIEL');
+				}
 			} else {
-				echo $signature->message;
+				return redirect()->to(base_url('/admin/dashboard/constancia_extravio_show?folio=' . $numfolio . '&year=' . $year))->with('password_incorrecto', 'Contraseña incorrecta.');
 			}
-		} else {
-			return 'Firma no válida';
+		} catch (\Exception $e) {
+			return redirect()->to(base_url('/admin/dashboard/constancia_extravio_show?folio=' . $numfolio . '&year=' . $year))->with('password_incorrecto', 'Contraseña incorrecta.');
 		}
 	}
 
@@ -52,7 +306,7 @@ class FirmaController extends BaseController
 			if (file_exists($directory)) {
 				if (file_exists($directory . '/' . $file_key) && file_exists($directory . '/' . $file_cer)) {
 
-					//CREAR ARCHIVO .KEY.PEM  ******************************************************
+					//CREAR ARCHIVO .KEY.PEM  ******************
 					$comando_key_pem = "pkcs8 -inform DER -in " . $directory . '/' . $file_key . " -passin pass:$password -out " . $directory . '/' . $file_key_pem;
 					exec('openssl ' . $comando_key_pem, $arr, $status);
 
@@ -62,7 +316,7 @@ class FirmaController extends BaseController
 						throw new \Exception('password error');
 					}
 
-					//CREAR ARCHIVO .CER.PEM  ******************************************************
+					//CREAR ARCHIVO .CER.PEM  ******************
 					$comando_cer_pem = "x509 -inform DER -outform PEM -in " . $directory . '/' . $file_cer . " -passin pass:$password -out " . $directory . '/' . $file_cer_pem;
 					exec('openssl ' . $comando_cer_pem, $arr, $status);
 
@@ -72,7 +326,7 @@ class FirmaController extends BaseController
 						throw new \Exception('password error');
 					}
 
-					//CREAR ARCHIVO .TXT CON INFO DEL .PEM  ******************************************************
+					//CREAR ARCHIVO .TXT CON INFO DEL .PEM  ******************
 					$comandoOpenSSL = "x509 -in " . $directory . '/' . $file_cer_pem . " > " . $directory . '/' . $file_txt . " -text";
 					exec('openssl ' . $comandoOpenSSL, $arr, $status);
 
@@ -181,7 +435,7 @@ class FirmaController extends BaseController
 			$ArrayRFC = explode("=", $ArraySubject[5]);
 			$razonSocial = trim($ArrayNom[1]);
 			$rfc = trim($ArrayRFC[1]);
-			return (object)['razon_social' => $razonSocial, 'rfc' => $rfc, 'num_certificado' => $NoCert];
+			return ['razon_social' => $razonSocial, 'rfc' => $rfc, 'num_certificado' => $NoCert];
 		} else {
 			return false;
 		}
@@ -212,7 +466,7 @@ class FirmaController extends BaseController
 		}
 
 		// Liberar la clave de la memoria ==============================================
-		openssl_free_key($pkeyid);
+		//openssl_free_key($pkeyid);
 
 		// Verificar que firma sea valida ==============================================
 		// traer la clave pública desde el certifiado y prepararla
@@ -224,7 +478,7 @@ class FirmaController extends BaseController
 		$ok = openssl_verify($cadena_a_firmar, $signature, $pubkeyid, OPENSSL_ALGO_SHA512);
 
 		// Liberar la clave de la memoria ==============================================
-		openssl_free_key($pubkeyid);
+		//	openssl_free_key($pubkeyid);
 		if ($ok == 1) {
 			return (object)['status' => 1, 'signature' => base64_encode($signature), 'signed_chain' => $cadena_a_firmar, 'fecha' => $fecha, 'hora' => $hora];
 		} else {
@@ -232,21 +486,18 @@ class FirmaController extends BaseController
 		}
 	}
 
-	private function _createXMLSignature($signed_chain, $e_signature, $folio)
+	private function _createXMLSignature($signed_chain, $e_signature, $folio, $year)
 	{
-
 		$xml  = new \DOMdocument('1.0', 'UTF-8');
-
 		$root = $xml->createElement("documento");
 		$root = $xml->appendChild($root);
-
 		$datsDoc = $xml->createElement("DatosDelDocumento");
 		$datsDoc = $root->appendChild($datsDoc);
 
 		$firmaDigital = $xml->createElement("FirmaDigital");
 		$firmaDigital = $root->appendChild($firmaDigital);
-		$directory = FCPATH . 'uploads/FIEL/21';
-		$file_xml = $folio . '_' . date('Y') . '.xml';
+		// $file_xml = 'Constancia_' . $folio . '_' . $year . '.xml';
+		// $directory = FCPATH . 'uploads/xml';
 
 		$this->_loadAtt(
 			$firmaDigital,
@@ -258,8 +509,12 @@ class FirmaController extends BaseController
 
 		$ArchXML = $xml->saveXML();
 		// $xml->formatOutput = true;
-		// $xml->save($directory . '/' . $file_xml); // Guarda el archivo .XML
+		// if (!file_exists($directory)) {
+		// 	mkdir($directory, 0777, true);
+		// }
+		// $xml->save($directory . '/' . $file_xml);
 		unset($xml);
+
 		return $ArchXML;
 	}
 
@@ -289,6 +544,55 @@ class FirmaController extends BaseController
 			if (strlen($val) > 0) {
 				$nodo->setAttribute($key, $val);
 			}
+		}
+	}
+
+	private function _generarPDF($placeholder)
+	{
+		$options = new Options();
+		$options->set('isRemoteEnabled', true);
+		$dompdf = new Dompdf($options);
+
+		$dompdf->loadHtml(view('doc_template/document', ['data' => $placeholder]));
+		$dompdf->setPaper('A4', 'portrait');
+		$dompdf->render();
+		return $dompdf->output();
+	}
+
+	private function _generarQR($info)
+	{
+		$writer = new PngWriter();
+
+		// Create QR code
+		$qrCode = QrCode::create($info)
+			->setEncoding(new Encoding('UTF-8'))
+			->setErrorCorrectionLevel(new ErrorCorrectionLevelLow())
+			->setSize(300)
+			->setMargin(10)
+			->setRoundBlockSizeMode(new RoundBlockSizeModeMargin())
+			->setForegroundColor(new Color(0, 0, 0))
+			->setBackgroundColor(new Color(255, 255, 255));
+
+		$result = $writer->write($qrCode);
+		header('Content-Type: ' . $result->getMimeType());
+		return $result->getDataUri();
+	}
+
+	private function _sendEmailConstanciaFirmada($to, $folio, $year, $xml, $pdf)
+	{
+		$email = \Config\Services::email();
+		$email->setTo($to);
+		$email->setSubject('Constancia de extravío firmada');
+		$body = view('email_template/constancia_firmada_email_template.php');
+		$email->setMessage($body);
+
+		$email->attach($pdf, 'attachment', 'Constancia_' . $folio . '_' . $year . '.pdf', 'application/pdf');
+		$email->attach($xml, 'attachment', 'Constancia_' . $folio . '_' . $year . '.xml', 'application/xml');
+
+		if ($email->send()) {
+			return true;
+		} else {
+			return false;
 		}
 	}
 }

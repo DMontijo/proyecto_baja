@@ -34,6 +34,7 @@ $routes->setAutoRoute(true);
 $routes->get('/', 'HomeController::index');
 $routes->get('derivaciones', 'DerivacionesController::index');
 $routes->get('canalizaciones', 'DerivacionesController::canalizaciones');
+$routes->get('validar_constancia', 'extravio/DashboardController::validar_constancia');
 
 /**
  *  Admin Routes
@@ -48,8 +49,11 @@ $routes->group('admin', function ($routes) {
 		$routes->get('/', 'admin/DashboardController::index');
 
 		$routes->get('usuarios', 'admin/DashboardController::usuarios');
+		$routes->post('firma', 'admin/FirmaController::index');
+		$routes->get('generarqr', 'admin/FirmaController::generarqr');
 		$routes->get('usuarios_activos', 'admin/DashboardController::usuarios_activos');
 		$routes->get('firma', 'admin/FirmaController::index');
+
 		$routes->get('firmas', 'admin/DashboardController::firmas');
 
 		$routes->get('nuevo_usuario', 'admin/DashboardController::nuevo_usuario');
@@ -57,7 +61,7 @@ $routes->group('admin', function ($routes) {
 
 		$routes->get('video-denuncia', 'admin/DashboardController::video_denuncia');
 		$routes->get('denuncia-anonima', 'admin/DashboardController::denuncia_anonima');
-		$routes->get('solicitudes_extravios', 'admin/FoliosController::constancias_abiertas');
+
 		$routes->get('folios', 'admin/FoliosController::index');
 		$routes->get('folios_abiertos', 'admin/FoliosController::folios_abiertos');
 		$routes->get('folios_derivados', 'admin/FoliosController::folios_derivados');
@@ -68,16 +72,23 @@ $routes->group('admin', function ($routes) {
 		$routes->post('liberar_folio', 'admin/FoliosController::liberar_folio');
 		$routes->post('firmar_folio', 'admin/FoliosController::firmar_folio');
 
+		$routes->get('constancias', 'admin/ConstanciasController::index');
+		$routes->get('constancias_extravio_abiertas', 'admin/ConstanciasController::constancias_abiertas');
+		$routes->get('constancias_extravio_firmadas', 'admin/ConstanciasController::constancias_firmadas');
+		$routes->get('constancia_extravio_show', 'admin/ConstanciasController::constancia_extravio_show');
+		$routes->post('download_constancia_pdf', 'admin/ConstanciasController::download_constancia_pdf');
+		$routes->post('download_constancia_xml', 'admin/ConstanciasController::download_constancia_xml');
+
 		$routes->get('perfil', 'admin/DashboardController::perfil');
 		$routes->post('update_password', 'admin/DashboardController::update_password');
 
 		$routes->get('certificadoMedico', 'PDFController::certificadoMedico');
-		$routes->get('constanciaExtravio', 'PDFController::constanciaExtravio');
 		$routes->get('constancia-video-denuncia', 'PDFController::constanciaVideoDenuncia');
 		$routes->get('orden-proteccion-albergue', 'PDFController::proteccionAlbergue');
 		$routes->get('orden-proteccion-pertenencia', 'PDFController::proteccionPertenencia');
 		$routes->get('orden-proteccion-rondines', 'PDFController::proteccionRondines');
-		$routes->post('generaPDFE', 'PDFController::PDFExtravio');
+
+		$routes->get('constanciaFirmada', 'admin/FoliosController::constanciaExtravioFirmado');
 	});
 });
 
@@ -101,8 +112,11 @@ $routes->group('denuncia', function ($routes) {
 	$routes->group('dashboard', ['filter' => 'denuciantesAuth'], function ($routes) {
 		$routes->get('/', 'client/DashboardController::index');
 		$routes->get('video-denuncia', 'client/DashboardController::video_denuncia');
+
+
 		$routes->get('denuncias', 'client/DashboardController::denuncias');
 		$routes->post('create', 'client/DashboardController::create');
+		$routes->post('descargarPDF', 'client/DashboardController::descargar_pdf');
 	});
 });
 
@@ -116,6 +130,7 @@ $routes->group('denuncia', function ($routes) {
 $routes->group('data', function ($routes) {
 	$routes->post('exist-email', 'client/UserController::existEmail');
 	$routes->post('exist-email-admin', 'admin/DashboardController::existEmailAdmin');
+	$routes->post('exist-email-solicitantes', 'extravio/ExtravioController::existEmailSolicitantes');
 
 	$routes->post('get-municipios-by-estado', 'client/UserController::getMunicipiosByEstado');
 	$routes->post('get-localidades-by-municipio', 'client/UserController::getLocalidadesByMunicipio');
@@ -153,8 +168,6 @@ $routes->group('data', function ($routes) {
 
 	$routes->post('update-denuncia-by-id', 'admin/DashboardController::updateFolio');
 	$routes->post('update-preguntas-by-id', 'admin/DashboardController::updatePreguntasIniciales');
-
-	$routes->post('generaPDFE', 'PDFController::PDFExtravio');
 });
 
 /**
@@ -165,11 +178,19 @@ $routes->group('constancia_extravio', function ($routes) {
 	$routes->get('login', 'extravio/ExtravioController::login');
 	$routes->post('login_auth', 'extravio/ExtravioController::login_auth');
 
-	$routes->get('register', 'extravio/ExtravioController::index');
-	$routes->post('create_constancia', 'extravio/ExtravioController::create');
-	$routes->group('dashboard', function ($routes) {
+	$routes->post('send_email_change_password', 'extravio/ExtravioController::sendEmailChangePassword');
+	$routes->post('descargarConstanciaRealizada', 'extravio/ExtravioController::descargar_pdf');
+
+	$routes->get('register', 'extravio/ExtravioController::register');
+	$routes->post('create', 'extravio/ExtravioController::create');
+
+	$routes->group('dashboard', ['filter' => 'solicitantesExtravioAuth'], function ($routes) {
 		$routes->get('/', 'extravio/DashboardController::index');
 		$routes->post('solicitar_constancia', 'extravio/DashboardController::solicitar_constancia');
+
+		$routes->get('constancias', 'extravio/DashboardController::constancias');
+		$routes->post('download_constancia_pdf', 'extravio/DashboardController::download_constancia_pdf');
+		$routes->post('download_constancia_xml', 'extravio/DashboardController::download_constancia_xml');
 	});
 });
 /**
