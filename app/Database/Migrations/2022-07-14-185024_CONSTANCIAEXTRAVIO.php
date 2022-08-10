@@ -24,14 +24,17 @@ class CONSTANCIAEXTRAVIO extends Migration
 			'MUNICIPIOID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
+				'null' => TRUE,
 			],
 			'MUNICIPIOIDCITA' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
+				'null' => TRUE,
 			],
 			'ESTADOID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
+				'null' => TRUE,
 			],
 			'EXTRAVIO' => [
 				'type' => 'VARCHAR',
