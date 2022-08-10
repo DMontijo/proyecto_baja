@@ -109,7 +109,7 @@
 	<section>
 		<div class="row">
 			<div class="col-12 text-center">
-				<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tutorial_modal">
+				<button type="button" class="btn btn-primary mt-4" data-bs-toggle="modal" data-bs-target="#tutorial_modal">
 					<i class="bi bi-play-btn-fill"></i> Ver video tutorial
 				</button>
 			</div>
