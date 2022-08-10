@@ -25,11 +25,11 @@
 							<tbody>
 								<?php foreach ($body_data as $index => $constancia) { ?>
 									<tr>
-										<td class="text-center font-weight-bold"><?= $constancia->IDCONSTANCIAEXTRAVIO ?></td>
+										<td class="text-center font-weight-bold"><?= $constancia->CONSTANCIAEXTRAVIOID ?></td>
 										<td class="text-center"><?= $constancia->FECHAREGISTRO ?></td>
 										<td class="text-center"><?= $constancia->EXTRAVIO ?></td>
 										<td class="text-center"><?= $constancia->STATUS ?></td>
-										<td class="text-center"><a type="button" href="<?= base_url('/admin/dashboard/constancia_extravio_show?folio=' . $constancia->IDCONSTANCIAEXTRAVIO . '&year=' . $constancia->ANO) ?>" class="btn btn-primary text-white"><i class="fas fa-eye"></i> VER SOLICITUD</a></td>
+										<td class="text-center"><a type="button" href="<?= base_url('/admin/dashboard/constancia_extravio_show?folio=' . $constancia->CONSTANCIAEXTRAVIOID . '&year=' . $constancia->ANO) ?>" class="btn btn-primary text-white"><i class="fas fa-eye"></i> VER SOLICITUD</a></td>
 									</tr>
 								<?php } ?>
 							</tbody>

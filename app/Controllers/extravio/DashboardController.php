@@ -75,7 +75,7 @@ class DashboardController extends BaseController
 
 		list($CONSECUTIVO, $year) = $this->_constanciaExtravioConsecutivoModel->get_consecutivo();
 		$data = [
-			'IDCONSTANCIAEXTRAVIO' => $CONSECUTIVO,
+			'CONSTANCIAEXTRAVIOID' => $CONSECUTIVO,
 			'ANO' => $year,
 			'SOLICITANTEID' => session('SOLICITANTEID'),
 
@@ -83,6 +83,7 @@ class DashboardController extends BaseController
 
 			'ESTADOID' => 2,
 			'MUNICIPIOID' => $this->request->getPost('municipio'),
+			'MUNICIPIOIDCITA' => $this->request->getPost('municipio_cita'),
 			'DOMICILIO' => $this->request->getPost('domicilio'),
 			'HECHOLUGARID' => $this->request->getPost('lugar'),
 			'HECHOFECHA' =>  $this->request->getPost('fecha'),
@@ -104,10 +105,9 @@ class DashboardController extends BaseController
 			'NPLACA' => $this->request->getPost('noplaca'),
 			'POSICIONPLACA' => $this->request->getPost('posicionPlaca'),
 			'DISTRIBUIDORVEHICULO' => $this->request->getPost('distribuidor'),
-			'MARCAID' => $this->request->getPost('marca'),
-			'MODELOID' => $this->request->getPost('modelo'),
+			'MARCA' => $this->request->getPost('marca'),
+			'MODELO' => $this->request->getPost('modelo'),
 			'ANIOVEHICULO' => $this->request->getPost('anio'),
-
 			'STATUS' => 'ABIERTO',
 		];
 
@@ -133,7 +133,7 @@ class DashboardController extends BaseController
 		$data = (object)array();
 		$folio = $this->request->getGet('folio');
 		$year = $this->request->getGet('year');
-		$constancia = $this->_constanciaExtravioModel->asObject()->where('IDCONSTANCIAEXTRAVIO', base64_decode($folio))->where('ANO', $year)->first();
+		$constancia = $this->_constanciaExtravioModel->asObject()->where('CONSTANCIAEXTRAVIOID', base64_decode($folio))->where('ANO', $year)->first();
 		if ($constancia) {
 			$data2 = [
 				'header_data' => (object)['title' => 'Constancia realizada', 'menu' => 'constancia realizada', 'submenu' => ''],
@@ -160,7 +160,7 @@ class DashboardController extends BaseController
 		$folio = $this->request->getPost('folio');
 		$year = $this->request->getPost('year');
 
-		$constancia = $this->_constanciaExtravioModel->asObject()->where('IDCONSTANCIAEXTRAVIO', $folio)->where('ANO', $year)->first();
+		$constancia = $this->_constanciaExtravioModel->asObject()->where('CONSTANCIAEXTRAVIOID', $folio)->where('ANO', $year)->first();
 		header("Content-type: application/pdf");
 		header("Content-Disposition: attachment; filename=Constancia_" . $folio . '_' . $year . '.pdf');
 		echo $constancia->PDF;
@@ -171,7 +171,7 @@ class DashboardController extends BaseController
 		$folio = $this->request->getPost('folio');
 		$year = $this->request->getPost('year');
 
-		$constancia = $this->_constanciaExtravioModel->asObject()->where('IDCONSTANCIAEXTRAVIO', $folio)->where('ANO', $year)->first();
+		$constancia = $this->_constanciaExtravioModel->asObject()->where('CONSTANCIAEXTRAVIOID', $folio)->where('ANO', $year)->first();
 		header("Content-type: application/xml");
 		header("Content-Disposition: attachment; filename=Constancia_" . $folio . '_' . $year . '.xml');
 		echo $constancia->XML;

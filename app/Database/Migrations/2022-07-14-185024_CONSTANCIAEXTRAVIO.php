@@ -9,7 +9,7 @@ class CONSTANCIAEXTRAVIO extends Migration
 	public function up()
 	{
 		$this->forge->addField([
-			'IDCONSTANCIAEXTRAVIO' => [
+			'CONSTANCIAEXTRAVIOID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 			],
@@ -202,7 +202,7 @@ class CONSTANCIAEXTRAVIO extends Migration
 			'FECHAREGISTRO DATETIME DEFAULT CURRENT_TIMESTAMP',
 			'FECHAACTUALIZACION DATETIME ON UPDATE CURRENT_TIMESTAMP',
 		]);
-		$this->forge->addKey('IDCONSTANCIAEXTRAVIO', TRUE);
+		$this->forge->addKey('CONSTANCIAEXTRAVIOID', TRUE);
 		$this->forge->addKey('ANO', TRUE);
 		$this->forge->createTable('CONSTANCIAEXTRAVIO');
 	}

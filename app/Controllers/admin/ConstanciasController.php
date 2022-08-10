@@ -60,11 +60,16 @@ class ConstanciasController extends BaseController
 		$data->year = $this->request->getGet('year');
 		$year = $this->request->getGet('year');
 		$data->constanciaExtravio = $this->_plantillasModel->asObject()->where('TITULO', 'CONSTANCIA DE EXTRAVÍO')->first();
-		$constancia = $this->_constanciaExtravioModel->asObject()->where('IDCONSTANCIAEXTRAVIO', $data->folio)->where('ANO', $year)->first();
+		$constancia = $this->_constanciaExtravioModel->asObject()->where('CONSTANCIAEXTRAVIOID', $data->folio)->where('ANO', $year)->first();
 
 		$solicitante = $this->_solicitantesModel->asObject()->where('SOLICITANTEID ', $constancia->SOLICITANTEID)->first();
 		$lugar = $this->_hechoLugarModel->asObject()->where('HECHOLUGARID', $constancia->HECHOLUGARID)->first();
-		$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $constancia->MUNICIPIOID)->where('ESTADOID', $constancia->ESTADOID)->first();
+		$municipio = (object)[];
+		if ($constancia->MUNICIPIOIDCITA) {
+			$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $constancia->MUNICIPIOIDCITA)->where('ESTADOID', $constancia->ESTADOID)->first();
+		} else {
+			$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $constancia->MUNICIPIOID)->where('ESTADOID', $constancia->ESTADOID)->first();
+		}
 		$estado = $this->_estadosModel->asObject()->where('ESTADOID', $constancia->ESTADOID)->first();
 		$meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
 
@@ -73,7 +78,7 @@ class ConstanciasController extends BaseController
 		$mes_extravio = $meses[date('n') - 1];
 		$ano_extravio = date('Y', $timestamp);
 
-		$data->constanciaExtravio->PLACEHOLDER = str_replace('[FOLIO_NUMERO]', $constancia->IDCONSTANCIAEXTRAVIO, $data->constanciaExtravio->PLACEHOLDER);
+		$data->constanciaExtravio->PLACEHOLDER = str_replace('[FOLIO_NUMERO]', $constancia->CONSTANCIAEXTRAVIOID, $data->constanciaExtravio->PLACEHOLDER);
 		$data->constanciaExtravio->PLACEHOLDER = str_replace('[DOMICILIO_COMPARECIENTE]', $constancia->DOMICILIO, $data->constanciaExtravio->PLACEHOLDER);
 		$data->constanciaExtravio->PLACEHOLDER = str_replace('[NOMBRE_COMPARECIENTE]', $solicitante->NOMBRE . " " . $solicitante->APELLIDO_PATERNO . " " . $solicitante->APELLIDO_MATERNO, $data->constanciaExtravio->PLACEHOLDER);
 		if ($constancia->DUENONOMBREDOC) {
@@ -158,7 +163,7 @@ class ConstanciasController extends BaseController
 		$folio = $this->request->getPost('folio');
 		$year = $this->request->getPost('year');
 
-		$constancia = $this->_constanciaExtravioModel->asObject()->where('IDCONSTANCIAEXTRAVIO', $folio)->where('ANO', $year)->first();
+		$constancia = $this->_constanciaExtravioModel->asObject()->where('CONSTANCIAEXTRAVIOID', $folio)->where('ANO', $year)->first();
 		header("Content-type: application/pdf");
 		header("Content-Disposition: attachment; filename=Constancia_" . $folio . '_' . $year . '.pdf');
 		echo $constancia->PDF;
@@ -169,7 +174,7 @@ class ConstanciasController extends BaseController
 		$folio = $this->request->getPost('folio');
 		$year = $this->request->getPost('year');
 
-		$constancia = $this->_constanciaExtravioModel->asObject()->where('IDCONSTANCIAEXTRAVIO', $folio)->where('ANO', $year)->first();
+		$constancia = $this->_constanciaExtravioModel->asObject()->where('CONSTANCIAEXTRAVIOID', $folio)->where('ANO', $year)->first();
 		header("Content-type: application/xml");
 		header("Content-Disposition: attachment; filename=Constancia_" . $folio . '_' . $year . '.xml');
 		echo $constancia->XML;

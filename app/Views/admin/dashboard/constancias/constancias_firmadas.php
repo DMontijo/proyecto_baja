@@ -25,24 +25,24 @@
 							<tbody>
 								<?php foreach ($body_data as $index => $constancia) { ?>
 									<tr>
-										<td class="text-center font-weight-bold"><?= $constancia->IDCONSTANCIAEXTRAVIO ?></td>
+										<td class="text-center font-weight-bold"><?= $constancia->CONSTANCIAEXTRAVIOID ?></td>
 										<td class="text-center"><?= $constancia->FECHAREGISTRO ?></td>
 										<td class="text-center"><?= $constancia->EXTRAVIO ?></td>
 										<td class="text-center"><?= $constancia->STATUS ?></td>
 										<?php if ($constancia->STATUS == 'ABIERTO') { ?>
-											<td class="text-center"><a type="button" href="<?= base_url('/admin/dashboard/constancia_extravio_show?folio=' . $constancia->IDCONSTANCIAEXTRAVIO . '&year=' . $constancia->ANO) ?>" class="btn btn-primary text-white"><i class="fas fa-eye"></i> VER SOLICITUD</a></td>
+											<td class="text-center"><a type="button" href="<?= base_url('/admin/dashboard/constancia_extravio_show?folio=' . $constancia->CONSTANCIAEXTRAVIOID . '&year=' . $constancia->ANO) ?>" class="btn btn-primary text-white"><i class="fas fa-eye"></i> VER SOLICITUD</a></td>
 										<?php } ?>
 										<?php if ($constancia->STATUS == 'FIRMADO') { ?>
 											<td class="text-center">
 												<form class="d-inline-block" method="POST" action="<?php echo base_url('admin/dashboard/download_constancia_pdf') ?>">
-													<input type="text" class="form-control" id="folio" name="folio" value="<?= $constancia->IDCONSTANCIAEXTRAVIO ?>" hidden>
+													<input type="text" class="form-control" id="folio" name="folio" value="<?= $constancia->CONSTANCIAEXTRAVIOID ?>" hidden>
 													<input type="text" class="form-control" id="year" name="year" value="<?= $constancia->ANO ?>" hidden>
 													<button type="submit" class="btn btn-primary mb-3">
 														PDF
 													</button>
 												</form>
 												<form class="d-inline-block" method="POST" action="<?php echo base_url('admin/dashboard/download_constancia_xml') ?>">
-													<input type="text" class="form-control" id="folio" name="folio" value="<?= $constancia->IDCONSTANCIAEXTRAVIO ?>" hidden>
+													<input type="text" class="form-control" id="folio" name="folio" value="<?= $constancia->CONSTANCIAEXTRAVIOID ?>" hidden>
 													<input type="text" class="form-control" id="year" name="year" value="<?= $constancia->ANO ?>" hidden>
 													<button type="submit" class="btn btn-primary mb-0 mb-sm-3">
 														XML

@@ -48,13 +48,18 @@ class FirmaController extends BaseController
 
 		$user_id = session('ID');
 
-		$constancia = $this->_constanciaExtravioModel->asObject()->where('IDCONSTANCIAEXTRAVIO', $numfolio)->where('ANO', $year)->first();
+		$constancia = $this->_constanciaExtravioModel->asObject()->where('CONSTANCIAEXTRAVIOID', $numfolio)->where('ANO', $year)->first();
 		$plantilla = $this->_plantillasModel->asObject()->where('TITULO', 'CONSTANCIA DE EXTRAVÍO')->first();
 
 		$solicitante = $this->_solicitantesModel->asObject()->where('SOLICITANTEID ', $constancia->SOLICITANTEID)->first();
 
 		$lugar = $this->_hechoLugarModel->asObject()->where('HECHOLUGARID', $constancia->HECHOLUGARID)->first();
-		$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $constancia->MUNICIPIOID)->where('ESTADOID', $constancia->ESTADOID)->first();
+		$municipio = (object)[];
+		if ($constancia->MUNICIPIOIDCITA) {
+			$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $constancia->MUNICIPIOIDCITA)->where('ESTADOID', $constancia->ESTADOID)->first();
+		} else {
+			$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $constancia->MUNICIPIOID)->where('ESTADOID', $constancia->ESTADOID)->first();
+		}
 		$estado = $this->_estadosModel->asObject()->where('ESTADOID', $constancia->ESTADOID)->first();
 		$meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
 
@@ -79,7 +84,7 @@ class FirmaController extends BaseController
 
 					//TEXTO *************************************************************************************************************************************************************************
 
-					$plantilla->TEXTO = str_replace('[FOLIO_NUMERO]', $constancia->IDCONSTANCIAEXTRAVIO, $plantilla->TEXTO);
+					$plantilla->TEXTO = str_replace('[FOLIO_NUMERO]', $constancia->CONSTANCIAEXTRAVIOID, $plantilla->TEXTO);
 					$plantilla->TEXTO = str_replace('[NOMBRE_AGENTE_FIRMA]', $razon_social, $plantilla->TEXTO);
 					$plantilla->TEXTO = str_replace('[DOMICILIO_COMPARECIENTE]', $constancia->DOMICILIO, $plantilla->TEXTO);
 					$plantilla->TEXTO = str_replace('[NOMBRE_COMPARECIENTE]', $solicitante->NOMBRE . " " . $solicitante->APELLIDO_PATERNO . " " . $solicitante->APELLIDO_MATERNO, $plantilla->TEXTO);
@@ -156,7 +161,7 @@ class FirmaController extends BaseController
 
 					//PLACEHOLDER *************************************************************************************************************************************************************************
 
-					$plantilla->PLACEHOLDER = str_replace('[FOLIO_NUMERO]', $constancia->IDCONSTANCIAEXTRAVIO, $plantilla->PLACEHOLDER);
+					$plantilla->PLACEHOLDER = str_replace('[FOLIO_NUMERO]', $constancia->CONSTANCIAEXTRAVIOID, $plantilla->PLACEHOLDER);
 					$plantilla->PLACEHOLDER = str_replace('[NOMBRE_AGENTE_FIRMA]', $razon_social, $plantilla->PLACEHOLDER);
 					$plantilla->PLACEHOLDER = str_replace('[DOMICILIO_COMPARECIENTE]', $constancia->DOMICILIO, $plantilla->PLACEHOLDER);
 					$plantilla->PLACEHOLDER = str_replace('[NOMBRE_COMPARECIENTE]', $solicitante->NOMBRE . " " . $solicitante->APELLIDO_PATERNO . " " . $solicitante->APELLIDO_MATERNO, $plantilla->PLACEHOLDER);
@@ -229,7 +234,7 @@ class FirmaController extends BaseController
 							break;
 					}
 
-					$plantilla->PLACEHOLDER = str_replace('[NUMEROIDENTIFICADOR]', $constancia->IDCONSTANCIAEXTRAVIO . '/' . $constancia->ANO, $plantilla->PLACEHOLDER);
+					$plantilla->PLACEHOLDER = str_replace('[NUMEROIDENTIFICADOR]', $constancia->CONSTANCIAEXTRAVIOID . '/' . $constancia->ANO, $plantilla->PLACEHOLDER);
 					$plantilla->PLACEHOLDER = str_replace('[FIRMAELECTRONICA]', $signature->signature, $plantilla->PLACEHOLDER);
 					$plantilla->PLACEHOLDER = str_replace('[RFCFIRMA_FIRMA]', $rfc, $plantilla->PLACEHOLDER);
 					$plantilla->PLACEHOLDER = str_replace('[NUMEROCERTIFICADO]', $num_certificado, $plantilla->PLACEHOLDER);
@@ -250,7 +255,7 @@ class FirmaController extends BaseController
 
 						$datosInsert = [
 							'AGENTEID' => $user_id,
-							'NUMEROIDENTIFICADOR' => $constancia->IDCONSTANCIAEXTRAVIO . '/' . $constancia->ANO,
+							'NUMEROIDENTIFICADOR' => $constancia->CONSTANCIAEXTRAVIOID . '/' . $constancia->ANO,
 							'RFCFIRMA' => $rfc,
 							'NUMEROCERTIFICADO' => $num_certificado,
 							'FECHAFIRMA' => $FECHAFIRMA,
@@ -264,7 +269,7 @@ class FirmaController extends BaseController
 							'STATUS' => 'FIRMADO'
 						];
 
-						$insert = $this->_constanciaExtravioModel->set($datosInsert)->where('IDCONSTANCIAEXTRAVIO ', $numfolio)->where('ANO', $year)->update();
+						$insert = $this->_constanciaExtravioModel->set($datosInsert)->where('CONSTANCIAEXTRAVIOID ', $numfolio)->where('ANO', $year)->update();
 
 						if ($insert) {
 							if ($this->_sendEmailConstanciaFirmada($solicitante->CORREO, $numfolio, $year, $xml, $pdf)) {

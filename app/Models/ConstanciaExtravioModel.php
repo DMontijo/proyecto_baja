@@ -9,10 +9,11 @@ class ConstanciaExtravioModel extends Model
 	protected $DBGroup          = 'default';
 	protected $table            = 'CONSTANCIAEXTRAVIO';
 	protected $allowedFields    = [
-		'IDCONSTANCIAEXTRAVIO',
+		'CONSTANCIAEXTRAVIOID',
 		'ANO',
 		'SOLICITANTEID',
 		'MUNICIPIOID',
+		'MUNICIPIOIDCITA',
 		'ESTADOID',
 		'EXTRAVIO',
 		'DOMICILIO',

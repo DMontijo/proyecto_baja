@@ -23,20 +23,20 @@
 							<tbody>
 								<?php foreach ($body_data->constancias as $index => $constancia) { ?>
 									<tr>
-										<th scope="row"><?= $constancia->IDCONSTANCIAEXTRAVIO  ?></th>
+										<th scope="row"><?= $constancia->CONSTANCIAEXTRAVIOID  ?></th>
 										<td><?= $constancia->EXTRAVIO ?></td>
 										<td><?= $constancia->STATUS ?></td>
 										<?php if ($constancia->STATUS == 'FIRMADO') { ?>
 											<td class="text-center">
 												<form class="d-inline-block" method="POST" action="<?php echo base_url('constancia_extravio/dashboard/download_constancia_pdf') ?>">
-													<input type="text" class="form-control" id="folio" name="folio" value="<?= $constancia->IDCONSTANCIAEXTRAVIO ?>" hidden>
+													<input type="text" class="form-control" id="folio" name="folio" value="<?= $constancia->CONSTANCIAEXTRAVIOID ?>" hidden>
 													<input type="text" class="form-control" id="year" name="year" value="<?= $constancia->ANO ?>" hidden>
 													<button type="submit" class="btn btn-primary mb-3">
 														PDF
 													</button>
 												</form>
 												<form class="d-inline-block" method="POST" action="<?php echo base_url('constancia_extravio/dashboard/download_constancia_xml') ?>">
-													<input type="text" class="form-control" id="folio" name="folio" value="<?= $constancia->IDCONSTANCIAEXTRAVIO ?>" hidden>
+													<input type="text" class="form-control" id="folio" name="folio" value="<?= $constancia->CONSTANCIAEXTRAVIOID ?>" hidden>
 													<input type="text" class="form-control" id="year" name="year" value="<?= $constancia->ANO ?>" hidden>
 													<button type="submit" class="btn btn-primary mb-0 mb-sm-3">
 														XML

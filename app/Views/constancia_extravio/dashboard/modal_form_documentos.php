@@ -96,24 +96,60 @@
 						<label for="nodocumento" class="form-label fw-bold">No. documento:</label>
 						<input class="form-control" type="text" id="nodocumento" name="nodocumento">
 					</div>
-					<div class="col-12 mb-3">
-						<label for="solicitante" class="form-label fw-bold">¿El documento está a nombre del solicitante?</label>
-						<input type="checkbox" id="solicitante" name="solicitante">
-					</div>
-					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-						<label for="fecha" class="form-label fw-bold input-required">Documento a nombre de:</label>
-						<input type="text" class="form-control" id="duenonamedoc" name="duenonamedoc" required>
-						<div class="invalid-feedback">
-							El dueño es obligatorio
+					<div id="pasaporte_container" class="col-12 m-0 p-0 d-none">
+						<div class="row m-0 p-0">
+							<hr>
+							<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+								<label for="cita" class="form-label fw-bold input-required">¿Tienes cita para el pasaporte?</label>
+								<br>
+								<div class="form-check form-check-inline">
+									<input class="form-check-input" type="radio" name="cita" id="cita" value="SI">
+									<label class="form-check-label" for="cita">SI</label>
+								</div>
+								<div class="form-check form-check-inline">
+									<input class="form-check-input" type="radio" name="cita" id="cita" value="NO">
+									<label class="form-check-label" for="cita">NO</label>
+								</div>
+							</div>
+							<div id="municipio_cita-container" class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3 d-none">
+								<label for="municipio_cita" class="form-label fw-bold input-required">Municipio de la cita:</label>
+								<select class="form-select" id="municipio_cita" name="municipio_cita">
+									<option selected disabled value="">Elige el municipio del extravío</option>
+									<?php foreach ($body_data->municipios as $index => $municipio) { ?>
+										<option value="<?= $municipio->MUNICIPIOID ?>"> <?= $municipio->MUNICIPIODESCR ?> </option>
+									<?php } ?>
+								</select>
+								<div class="invalid-feedback">
+									Por favor, selecciona un municipio.
+								</div>
+							</div>
 						</div>
 					</div>
-					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-						<label for="duenoapdoc" class="form-label fw-bold input-required">Apellido paterno:</label>
-						<input class="form-control" type="text" id="duenoapdoc" name="duenoapdoc" required>
+					<div class="col-12">
+						<hr>
 					</div>
-					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-						<label for="apellido_m" class="form-label fw-bold">Apellido materno:</label>
-						<input class="form-control" type="text" id="duenoamdoc" name="duenoamdoc">
+					<div class="col-12 m-0 p-0">
+						<div class="row m-0 p-0">
+							<div class="col-12 mb-3">
+								<label for="solicitante" class="form-label fw-bold">¿El documento está a nombre del solicitante?</label>
+								<input type="checkbox" id="solicitante" name="solicitante">
+							</div>
+							<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+								<label for="fecha" class="form-label fw-bold input-required">Documento a nombre de:</label>
+								<input type="text" class="form-control" id="duenonamedoc" name="duenonamedoc" required>
+								<div class="invalid-feedback">
+									El dueño es obligatorio
+								</div>
+							</div>
+							<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+								<label for="duenoapdoc" class="form-label fw-bold input-required">Apellido paterno:</label>
+								<input class="form-control" type="text" id="duenoapdoc" name="duenoapdoc" required>
+							</div>
+							<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+								<label for="apellido_m" class="form-label fw-bold">Apellido materno:</label>
+								<input class="form-control" type="text" id="duenoamdoc" name="duenoamdoc">
+							</div>
+						</div>
 					</div>
 					<div class="col-12 text-center">
 						<button type="submit" class="btn btn-secondary">Solicitar constancia</button>
@@ -139,5 +175,33 @@
 			document.getElementById("duenoapdoc").value = '';
 			document.getElementById("duenoamdoc").value = '';
 		}
+	});
+
+	document.querySelector('#tipodoc').addEventListener('change', (e) => {
+		if (e.target.value == 'PASAPORTE') {
+			document.querySelector('#pasaporte_container').classList.remove('d-none');
+			document.querySelectorAll('input[name="cita"]').forEach((cita) => {
+				cita.setAttribute('required', true);
+			});
+		} else {
+			document.querySelector('#pasaporte_container').classList.add('d-none');
+			document.querySelectorAll('input[name="cita"]').forEach((cita) => {
+				cita.removeAttribute('required');
+			});
+			document.querySelector('#municipio_cita').classList.add('d-none');
+			document.querySelector('#municipio_cita').removeAttribute('required');
+		}
+	});
+
+	document.querySelectorAll('input[name="cita"]').forEach(input => {
+		input.addEventListener('change', (e) => {
+			if (document.querySelector('input[name="cita"]:checked').value == "SI") {
+				document.querySelector('#municipio_cita-container').classList.remove('d-none');
+				document.querySelector('#municipio_cita').setAttribute('required', true)
+			} else {
+				document.querySelector('#municipio_cita-container').classList.add('d-none');
+				document.querySelector('#municipio_cita').removeAttribute('required');
+			}
+		})
 	});
 </script>

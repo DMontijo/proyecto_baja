@@ -189,7 +189,7 @@ class ExtravioController extends BaseController
 		$dompdf = new Dompdf($options);
 		$data = $this->db->table("PLANTILLAS")->get()->getResult();
 		$numfolio = $_POST['input_folio_atencion_pdf'];
-		$constancias = $this->_constanciaExtravioModel->asObject()->where('IDCONSTANCIAEXTRAVIO', base64_decode($numfolio))->first();
+		$constancias = $this->_constanciaExtravioModel->asObject()->where('CONSTANCIAEXTRAVIOID', base64_decode($numfolio))->first();
 
 		$agente = $this->_usuariosModel->asObject()->where('ID', $constancias->AGENTEID)->first();
 		$denunciante = $this->_solicitantesModel->asObject()->where('SOLICITANTEID', $constancias->SOLICITANTEID)->first();
@@ -209,7 +209,7 @@ class ExtravioController extends BaseController
 		//replace placeholder
 		$data[5]->PLACEHOLDER = str_replace('https://cdt.fgebc.gob.mx/', ' ', $data[5]->PLACEHOLDER);
 
-		$data[5]->PLACEHOLDER = str_replace('[FOLIO_NUMERO]', $constancias->IDCONSTANCIAEXTRAVIO, $data[5]->PLACEHOLDER);
+		$data[5]->PLACEHOLDER = str_replace('[FOLIO_NUMERO]', $constancias->CONSTANCIAEXTRAVIOID, $data[5]->PLACEHOLDER);
 		$data[5]->PLACEHOLDER = str_replace('[NOMBRE_AGENTE]', $agente->NOMBRE . " " . $agente->APELLIDO_PATERNO . " " . $agente->APELLIDO_MATERNO, $data[5]->PLACEHOLDER);
 		$data[5]->PLACEHOLDER = str_replace('[NOMBRE_CERTIFICADO]', $constancias->EXTRAVIO, $data[5]->PLACEHOLDER);
 		$data[5]->PLACEHOLDER = str_replace('[NOMBRE_PERSONA]', $denunciante->NOMBRE . " " . $denunciante->APELLIDO_PATERNO . " " . $denunciante->APELLIDO_MATERNO, $data[5]->PLACEHOLDER);
