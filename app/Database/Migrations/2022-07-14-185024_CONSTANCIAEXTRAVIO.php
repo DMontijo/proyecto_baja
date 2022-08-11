@@ -58,10 +58,6 @@ class CONSTANCIAEXTRAVIO extends Migration
 				'type' => 'TEXT',
 				'null' => TRUE,
 			],
-			'TEXTOCONSTANCIA' => [
-				'type' => 'TEXT',
-				'null' => TRUE,
-			],
 			'NBOLETO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '50',
@@ -161,12 +157,17 @@ class CONSTANCIAEXTRAVIO extends Migration
 				'constraint' => '100',
 				'null' => TRUE,
 			],
+			'RAZONSOCIALFIRMA' => [
+				'type' => 'VARCHAR',
+				'constraint' => '255',
+				'null' => TRUE,
+			],
 			'RFCFIRMA' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
 				'null' => TRUE,
 			],
-			'NUMEROCERTIFICADO' => [
+			'NCERTIFICADOFIRMA' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
 				'null' => TRUE,
@@ -183,6 +184,10 @@ class CONSTANCIAEXTRAVIO extends Migration
 			'LUGARFIRMA' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
+				'null' => TRUE,
+			],
+			'CADENAFIRMANDA' => [
+				'type' => 'TEXT',
 				'null' => TRUE,
 			],
 			'FIRMAELECTRONICA' => [

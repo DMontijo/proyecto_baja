@@ -12,7 +12,7 @@
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-12">
-				<button type="button" class="btn btn-primary mb-3" data-toggle="modal" id="firmarConstancia" data-target="#contrasena_modal">Firmar constancia</button>
+				<button type="button" class="btn btn-primary mb-3" data-toggle="modal" id="firmarConstancia" data-target="#contrasena_modal"><i class="fas fa-file-signature"></i> Firmar constancia</button>
 				<div class="card shadow border-0">
 					<div class="card-body" name="certificado" id="certificado" style="margin: 2%;">
 						<h5><?php echo $body_data->constanciaExtravio->PLACEHOLDER ?></h5>

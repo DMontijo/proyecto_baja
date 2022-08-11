@@ -15,16 +15,20 @@
 							<thead>
 								<tr>
 									<th scope="col">FOLIO</th>
+									<th scope="col">AÑO</th>
 									<th scope="col">TIPO DE EXTRAVÍO</th>
 									<th scope="col">ESTADO</th>
-									<th scope="col">DOCUMENTOS</th>
+									<th scope="col"></th>
 								</tr>
 							</thead>
 							<tbody>
 								<?php foreach ($body_data->constancias as $index => $constancia) { ?>
 									<tr>
 										<th scope="row"><?= $constancia->CONSTANCIAEXTRAVIOID  ?></th>
-										<td><?= $constancia->EXTRAVIO ?></td>
+										<td><?= $constancia->ANO ?></td>
+										<td><?= $constancia->EXTRAVIO == 'DOCUMENTOS'
+												? $constancia->TIPODOCUMENTO
+												: $constancia->EXTRAVIO ?></td>
 										<td><?= $constancia->STATUS ?></td>
 										<?php if ($constancia->STATUS == 'FIRMADO') { ?>
 											<td class="text-center">

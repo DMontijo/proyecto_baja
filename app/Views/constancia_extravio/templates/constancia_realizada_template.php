@@ -30,11 +30,7 @@
 	<script src="<?= base_url() ?>/assets/jQuery/jquery.js"></script>
 	<nav class="navbar navbar-expand-md navbar-dark bg-primary">
 		<div class="container">
-			<a class="navbar-brand" href="<?= base_url() ?>/constancia_extravio/dashboard"><img src="<?= base_url() ?>/assets/img/FGEBC_SEJAP_LOGO.png" class="logo-header img-fluid" alt="FGEBC Logo"></a>
-			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navegacion" aria-controls="navegacion" aria-expanded="false" aria-label="FGEBC navegación denuncia">
-				<i class="bi bi-list"></i>
-			</button>
-			
+			<a class="navbar-brand" href="<?= base_url() ?>"><img src="<?= base_url() ?>/assets/img/FGEBC_SEJAP_LOGO.png" class="logo-header img-fluid" alt="FGEBC Logo"></a>
 		</div>
 	</nav>
 	<div class="container-fluid main bg-light py-3">

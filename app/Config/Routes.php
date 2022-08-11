@@ -49,10 +49,8 @@ $routes->group('admin', function ($routes) {
 		$routes->get('/', 'admin/DashboardController::index');
 
 		$routes->get('usuarios', 'admin/DashboardController::usuarios');
-		$routes->post('firma', 'admin/FirmaController::index');
 		$routes->get('generarqr', 'admin/FirmaController::generarqr');
 		$routes->get('usuarios_activos', 'admin/DashboardController::usuarios_activos');
-		$routes->get('firma', 'admin/FirmaController::index');
 
 		$routes->get('firmas', 'admin/DashboardController::firmas');
 
@@ -73,6 +71,7 @@ $routes->group('admin', function ($routes) {
 		$routes->post('firmar_folio', 'admin/FoliosController::firmar_folio');
 
 		$routes->get('constancias', 'admin/ConstanciasController::index');
+		$routes->post('firmar_constancia_extravio', 'admin/FirmaController::firmar_constancia_extravio');
 		$routes->get('constancias_extravio_abiertas', 'admin/ConstanciasController::constancias_abiertas');
 		$routes->get('constancias_extravio_firmadas', 'admin/ConstanciasController::constancias_firmadas');
 		$routes->get('constancia_extravio_show', 'admin/ConstanciasController::constancia_extravio_show');

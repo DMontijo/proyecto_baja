@@ -21,7 +21,7 @@
 						<input class="form-control" id="apellido_m" name="apellido_m" value="<?= $body_data->denunciante->APELLIDO_MATERNO ?>" disabled>
 					</div>
 					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-						<label for="municipio" class="form-label fw-bold input-required">Municipio:</label>
+						<label for="municipio" class="form-label fw-bold input-required">Municipio extravío:</label>
 						<select class="form-select" id="municipio" name="municipio" required>
 							<option selected disabled value="">Elige el municipio del extravío</option>
 							<?php foreach ($body_data->municipios as $index => $municipio) { ?>
@@ -183,13 +183,16 @@
 			document.querySelectorAll('input[name="cita"]').forEach((cita) => {
 				cita.setAttribute('required', true);
 			});
+			document.querySelector('input[name="cita"]:checked').checked = false;
 		} else {
 			document.querySelector('#pasaporte_container').classList.add('d-none');
 			document.querySelectorAll('input[name="cita"]').forEach((cita) => {
 				cita.removeAttribute('required');
 			});
-			document.querySelector('#municipio_cita').classList.add('d-none');
+			document.querySelector('#municipio_cita-container').classList.add('d-none');
 			document.querySelector('#municipio_cita').removeAttribute('required');
+			document.querySelector('#municipio_cita').value='';
+			document.querySelector('input[name="cita"]:checked').checked = false;
 		}
 	});
 

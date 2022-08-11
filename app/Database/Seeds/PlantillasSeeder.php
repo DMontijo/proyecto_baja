@@ -414,7 +414,7 @@ class PlantillasSeeder extends Seeder
 							>NO. DE CERTIFICACI&Oacute;N DE FIRMA
 							ELECTR&Oacute;NICA:</strong
 						>
-						[NUMEROCERTIFICADO]
+						[NCERTIFICADOFIRMA]
 					</p>
 					<p style="margin: 0px; text-align: left;">
 						<strong>FECHA DE FIRMA:</strong> [FECHAFIRMA]

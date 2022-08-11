@@ -123,27 +123,25 @@ class DashboardController extends BaseController
 	{
 		$session = session();
 		$data = (object)array();
-		$data->constancias = $this->_constanciaExtravioModel->asObject()->where('SOLICITANTEID', $session->get('SOLICITANTEID'))->findAll();
-		$this->_loadView('Mis solicitudes de constancia de extravío', $data, 'lista_constancias');
+		$data->constancias = $this->_constanciaExtravioModel->asObject()->where('SOLICITANTEID', $session->get('SOLICITANTEID'))->orderBy('ANO', 'desc')->orderBy('CONSTANCIAEXTRAVIOID', 'desc')->findAll();
+		$this->_loadView('Mis constancias de extravío', $data, 'lista_constancias');
 	}
 
 	public function validar_constancia()
 	{
 		$year = date('Y');
-		$data = (object)array();
 		$folio = $this->request->getGet('folio');
 		$year = $this->request->getGet('year');
 		$constancia = $this->_constanciaExtravioModel->asObject()->where('CONSTANCIAEXTRAVIOID', base64_decode($folio))->where('ANO', $year)->first();
 		if ($constancia) {
-			$data2 = [
-				'header_data' => (object)['title' => 'Constancia realizada', 'menu' => 'constancia realizada', 'submenu' => ''],
-				'body_data' => $constancia
-			];
-
-			echo view("constancia_extravio/dashboard/validar_constancia", $data2);
-		} else {
-			return redirect()->to(base_url('constancia_extravio/login'))->with('peticion_folio', 'Número de folio erroneo');
+			$solicitante = $this->_solicitantesModel->asObject()->where('SOLICITANTEID', $constancia->SOLICITANTEID)->first();
+			$constancia->NOMBRESOLICITANTE = $solicitante->NOMBRE . ' ' . $solicitante->APELLIDO_PATERNO . ' ' . $solicitante->APELLIDO_MATERNO;
 		}
+		$data2 = [
+			'header_data' => (object)['title' => 'Validar constancia', 'menu' => 'constancia realizada', 'submenu' => ''],
+			'body_data' => (object)['constancia' => $constancia]
+		];
+		echo view("constancia_extravio/dashboard/validar_constancia", $data2);
 	}
 
 	private function _loadView($title, $data, $view)

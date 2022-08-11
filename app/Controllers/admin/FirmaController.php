@@ -38,14 +38,12 @@ class FirmaController extends BaseController
 		$this->db = \Config\Database::connect();
 	}
 
-	public function index()
+	public function firmar_constancia_extravio()
 	{
-		$data = (object)array();
-		$numfolio = $this->request->getPost('folio');
+		$numfolio = trim($this->request->getPost('folio'));
 		$folio = $numfolio;
-		$year = $this->request->getPost('year');
-		$password = $this->request->getPost('contrasena');
-
+		$year = trim($this->request->getPost('year'));
+		$password = str_replace(' ', '', trim($this->request->getPost('contrasena')));
 		$user_id = session('ID');
 
 		$constancia = $this->_constanciaExtravioModel->asObject()->where('CONSTANCIAEXTRAVIOID', $numfolio)->where('ANO', $year)->first();
@@ -70,7 +68,7 @@ class FirmaController extends BaseController
 
 		$document_name = $plantilla->TITULO;
 		$FECHAFIRMA = date("Y-m-d");
-		$HORAFIRMA = date("H:i");
+		$HORAFIRMA = date("H:i:");
 
 		try {
 
@@ -157,7 +155,7 @@ class FirmaController extends BaseController
 							break;
 					}
 
-					$signature = $this->_generateSignature($user_id, $document_name, $plantilla->TEXTO, $folio);
+					$signature = $this->_generateSignature($user_id, $document_name, $plantilla->TEXTO, $folio, $FECHAFIRMA, $HORAFIRMA);
 
 					//PLACEHOLDER *************************************************************************************************************************************************************************
 
@@ -237,7 +235,7 @@ class FirmaController extends BaseController
 					$plantilla->PLACEHOLDER = str_replace('[NUMEROIDENTIFICADOR]', $constancia->CONSTANCIAEXTRAVIOID . '/' . $constancia->ANO, $plantilla->PLACEHOLDER);
 					$plantilla->PLACEHOLDER = str_replace('[FIRMAELECTRONICA]', $signature->signature, $plantilla->PLACEHOLDER);
 					$plantilla->PLACEHOLDER = str_replace('[RFCFIRMA_FIRMA]', $rfc, $plantilla->PLACEHOLDER);
-					$plantilla->PLACEHOLDER = str_replace('[NUMEROCERTIFICADO]', $num_certificado, $plantilla->PLACEHOLDER);
+					$plantilla->PLACEHOLDER = str_replace('[NCERTIFICADOFIRMA]', $num_certificado, $plantilla->PLACEHOLDER);
 					$plantilla->PLACEHOLDER = str_replace('[FECHAFIRMA]', $FECHAFIRMA, $plantilla->PLACEHOLDER);
 					$plantilla->PLACEHOLDER = str_replace('[HORAFIRMA]', $HORAFIRMA, $plantilla->PLACEHOLDER);
 					$plantilla->PLACEHOLDER = str_replace('[LUGARFIRMA]', $municipio->MUNICIPIODESCR . ", " . $estado->ESTADODESCR, $plantilla->PLACEHOLDER);
@@ -256,13 +254,14 @@ class FirmaController extends BaseController
 						$datosInsert = [
 							'AGENTEID' => $user_id,
 							'NUMEROIDENTIFICADOR' => $constancia->CONSTANCIAEXTRAVIOID . '/' . $constancia->ANO,
+							'RAZONSOCIALFIRMA' => $razon_social,
 							'RFCFIRMA' => $rfc,
-							'NUMEROCERTIFICADO' => $num_certificado,
+							'NCERTIFICADOFIRMA' => $num_certificado,
 							'FECHAFIRMA' => $FECHAFIRMA,
 							'HORAFIRMA' => $HORAFIRMA,
 							'LUGARFIRMA' => $municipio->MUNICIPIODESCR . ", " . $estado->ESTADODESCR,
 							'FIRMAELECTRONICA' => base64_decode($signature->signature),
-							'TEXTOCONSTANCIA' => $plantilla->TEXTO,
+							'CADENAFIRMANDA' => $plantilla->TEXTO,
 							'PLACEHOLDER' => $plantilla->PLACEHOLDER,
 							'XML' => $xml,
 							'PDF' => $pdf,
@@ -284,13 +283,13 @@ class FirmaController extends BaseController
 						return redirect()->to(base_url('/admin/dashboard/constancia_extravio_show?folio=' . $numfolio . '&year=' . $year))->with('signature_error', 'Fallo al insertar firmar el documento.');
 					}
 				} else {
-					return redirect()->to(base_url('/admin/dashboard/constancia_extravio_show?folio=' . $numfolio . '&year=' . $year))->with('firma_no_valida', 'Firma no validada por FIEL');
+					return redirect()->to(base_url('/admin/dashboard/constancia_extravio_show?folio=' . $numfolio . '&year=' . $year))->with('firma_no_valida', 'Firma no validada por FIEL.');
 				}
 			} else {
-				return redirect()->to(base_url('/admin/dashboard/constancia_extravio_show?folio=' . $numfolio . '&year=' . $year))->with('password_incorrecto', 'Contraseña incorrecta.');
+				return redirect()->to(base_url('/admin/dashboard/constancia_extravio_show?folio=' . $numfolio . '&year=' . $year))->with('password_incorrecto', 'Contraseña de FIEL incorrecta.');
 			}
 		} catch (\Exception $e) {
-			return redirect()->to(base_url('/admin/dashboard/constancia_extravio_show?folio=' . $numfolio . '&year=' . $year))->with('password_incorrecto', 'Contraseña incorrecta.');
+			return redirect()->to(base_url('/admin/dashboard/constancia_extravio_show?folio=' . $numfolio . '&year=' . $year))->with('password_incorrecto', 'Contraseña de FIEL incorrecta.');
 		}
 	}
 
@@ -446,10 +445,10 @@ class FirmaController extends BaseController
 		}
 	}
 
-	private function _generateSignature($agentId, $documentName, $text, $folio)
+	private function _generateSignature($agentId, $documentName, $text, $folio, $fecha, $hora)
 	{
-		$fecha = date("d/m/Y");
-		$hora  = date("H:i:s");
+		$fecha = $fecha;
+		$hora  = $hora;
 		$directory = FCPATH . 'uploads/FIEL/' . $agentId;
 		$file_key_pem = $agentId . '_key.key.pem';
 		$file_cer_pem = $agentId . '_cer.cer.pem';
@@ -471,7 +470,7 @@ class FirmaController extends BaseController
 		}
 
 		// Liberar la clave de la memoria ==============================================
-		//openssl_free_key($pkeyid);
+		// openssl_free_key($pkeyid);
 
 		// Verificar que firma sea valida ==============================================
 		// traer la clave pública desde el certifiado y prepararla
@@ -483,7 +482,8 @@ class FirmaController extends BaseController
 		$ok = openssl_verify($cadena_a_firmar, $signature, $pubkeyid, OPENSSL_ALGO_SHA512);
 
 		// Liberar la clave de la memoria ==============================================
-		//	openssl_free_key($pubkeyid);
+		// openssl_free_key($pubkeyid);
+
 		if ($ok == 1) {
 			return (object)['status' => 1, 'signature' => base64_encode($signature), 'signed_chain' => $cadena_a_firmar, 'fecha' => $fecha, 'hora' => $hora];
 		} else {
@@ -573,7 +573,7 @@ class FirmaController extends BaseController
 			->setEncoding(new Encoding('UTF-8'))
 			->setErrorCorrectionLevel(new ErrorCorrectionLevelLow())
 			->setSize(300)
-			->setMargin(10)
+			->setMargin(2)
 			->setRoundBlockSizeMode(new RoundBlockSizeModeMargin())
 			->setForegroundColor(new Color(0, 0, 0))
 			->setBackgroundColor(new Color(255, 255, 255));
