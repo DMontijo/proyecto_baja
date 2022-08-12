@@ -52,4 +52,27 @@ class ConstanciaExtravioModel extends Model
 		'XML',
 		'STATUS',
 	];
+
+	public function get_constancias_with_joins()
+	{
+		$query = $this
+			->select('
+				CONSTANCIAEXTRAVIOID,
+				ANO,
+				SOLICITANTEID,
+				FECHAFIRMA,
+				HORAFIRMA,
+				LUGARFIRMA,
+				EXTRAVIO,
+				TIPODOCUMENTO,
+				AGENTEID,
+				STATUS,
+				PDF,
+				XML,
+				RAZONSOCIALFIRMA
+				')
+			->where('STATUS','FIRMADO')
+			->get();
+		return $query->getResult('object');
+	}
 }

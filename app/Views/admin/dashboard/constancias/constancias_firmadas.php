@@ -15,22 +15,30 @@ $meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "
 			</div>
 			<div class="col-12">
 				<div class="card shadow border-0">
-					<div class="card-body">
-						<table id="extravios_abiertos" class="table table-bordered table-striped">
+					<div class="card-body" style="overflow-x:auto;">
+						<table id="extravios_abiertos" class="table table-bordered table-striped" data-page-length='50' style="width:100%">
 							<thead>
 								<tr>
-									<th class="text-center">ID</th>
+									<th class="text-center">FOLIO</th>
 									<th class="text-center">FECHA FIRMA</th>
+									<th class="text-center">HORA FIRMA</th>
+									<th class="text-center">LUGAR FIRMA</th>
 									<th class="text-center">TIPO DE CONSTANCIA</th>
+									<th class="text-center">AGENTE QUE FIRMÓ</th>
 									<th class="text-center"></th>
 								</tr>
 							</thead>
 							<tbody>
 								<?php foreach ($body_data as $index => $constancia) { ?>
 									<tr>
-										<td class="text-center font-weight-bold"><?= $constancia->CONSTANCIAEXTRAVIOID ?></td>
-										<td class="text-center"><?= date("d", strtotime($constancia->FECHAFIRMA)) . ' de ' . $meses[date("m", strtotime($constancia->FECHAFIRMA)) - 1] . ' ' . date("Y", strtotime($constancia->FECHAFIRMA)) ?></td>
-										<td class="text-center"><?= $constancia->EXTRAVIO ?></td>
+										<td class="text-center font-weight-bold"><?= $constancia->CONSTANCIAEXTRAVIOID . '/' . $constancia->ANO ?></td>
+										<td class="text-center"><?= date("d-m-Y", strtotime($constancia->FECHAFIRMA)) ?></td>
+										<td class="text-center"><?= date("h:m", strtotime($constancia->HORAFIRMA)) ?></td>
+										<td class="text-center"><?= $constancia->LUGARFIRMA ?></td>
+										<td class="text-center"><?= $constancia->EXTRAVIO == 'DOCUMENTOS'
+																	? $constancia->TIPODOCUMENTO
+																	: $constancia->EXTRAVIO ?></td>
+										<td class="text-center"><?= $constancia->RAZONSOCIALFIRMA ?></td>
 										<?php if ($constancia->STATUS == 'ABIERTO') { ?>
 											<td class="text-center"><a type="button" href="<?= base_url('/admin/dashboard/constancia_extravio_show?folio=' . $constancia->CONSTANCIAEXTRAVIOID . '&year=' . $constancia->ANO) ?>" class="btn btn-primary text-white"><i class="fas fa-eye"></i> VER SOLICITUD</a></td>
 										<?php } ?>
@@ -83,10 +91,13 @@ $meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "
 <script>
 	$(function() {
 		$("#extravios_abiertos").DataTable({
-			"responsive": true,
-			"lengthChange": false,
-			"autoWidth": false,
-			"buttons": ["copy", "csv", "excel", "pdf", "print", ]
+			responsive: false,
+			lengthChange: true,
+			autoWidth: false,
+			ordering: true,
+			language: {
+				url: '//cdn.datatables.net/plug-ins/1.12.1/i18n/es-ES.json'
+			}
 		}).buttons().container().appendTo('#videollamadasA_wrapper .col-md-6:eq(0)');
 	});
 </script>

@@ -50,10 +50,13 @@
 <script>
 	$(function() {
 		$("#folios_canalizados").DataTable({
-			"responsive": true,
-			"lengthChange": false,
-			"autoWidth": false,
-			"buttons": ["copy", "csv", "excel", "pdf", "print", ]
+			responsive: false,
+			lengthChange: true,
+			autoWidth: false,
+			ordering: true,
+			language: {
+				url: '//cdn.datatables.net/plug-ins/1.12.1/i18n/es-ES.json'
+			}
 		}).buttons().container().appendTo('#videollamadasA_wrapper .col-md-6:eq(0)');
 	});
 </script>

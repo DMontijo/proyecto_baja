@@ -17,7 +17,7 @@
 								</a> -->
 							</div>
 							<div class="col-12 mt-3" style="overflow-x:scroll;">
-								<table id="table-usuarios" class="table table-bordered table-striped">
+								<table id="table-usuarios" class="table table-bordered table-striped" data-page-length='50' style="width:100%">
 									<thead>
 										<tr>
 											<th class="text-center">ROL</th>
@@ -25,11 +25,7 @@
 											<th class="text-center">SEXO</th>
 											<th class="text-center">CORREO</th>
 											<th class="text-center">ZONA</th>
-											<!-- <th class="text-center">HUELLA</th> -->
-											<th class="text-center">.CER</th>
-											<th class="text-center">.KEY</th>
-											<!-- <th class="text-center">FRASE</th> -->
-											<!-- <th></th> -->
+											<th class="text-center">FIEL</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -42,15 +38,19 @@
 												</td>
 												<td class="text-center"><?= $user->CORREO ?></td>
 												<td class="text-center"><?= $user->NOMBRE_ZONA ?></td>
-												<!-- <td class="text-center"><?= $user->HUELLA_DIGITAL ? 'SI' : '' ?></td> -->
-												<td class="text-center"><?= $user->CERTIFICADOFIRMA ? 'SI' : '' ?></td>
-												<td class="text-center"><?= $user->KEYFIRMA ? 'SI' : '' ?></td>
-												<!-- <td class="text-center"><?= $user->FRASEFIRMA ? 'SI' : '' ?></td> -->
-												<!-- <td class="text-center" style="width:200px;">
-													<button type="button" class="btn btn-success" onclick="viewUser(<?= $user->ID ?>)"><i class="fas fa-eye"></i></button>
-													<button type="button" class="btn btn-secondary" onclick="viewUser(<?= $user->ID ?>)"><i class="fas fa-edit"></i></button>
-													<button type="button" class="btn btn-danger" onclick="viewUser(<?= $user->ID ?>)"><i class="fas fa-trash-alt"></i></button>
-												</td> -->
+												<td class="text-center font-weight-bold">
+													<?php
+													$user_id = $user->ID;
+													$directory = FCPATH . 'uploads/FIEL/' . $user_id;
+													$file_key = $user_id . '_key.key';
+													$file_cer = $user_id . '_cer.cer';
+													?>
+													<?php if (file_exists($directory . '/' . $file_key) && file_exists($directory . '/' . $file_cer)) : ?>
+														TIENE FIEL CARGADA
+													<?php else : ?>
+														-
+													<?php endif; ?>
+												</td>
 											</tr>
 										<?php } ?>
 									</tbody>
@@ -66,8 +66,13 @@
 <script>
 	$(function() {
 		$("#table-usuarios").DataTable({
-			"autoWidth": true,
-			"buttons": ["copy", "csv", "excel", "pdf", "print", ]
+			responsive: false,
+			lengthChange: true,
+			autoWidth: false,
+			ordering: true,
+			language: {
+				url: '//cdn.datatables.net/plug-ins/1.12.1/i18n/es-ES.json'
+			}
 		}).buttons().container().appendTo('#videollamadasA_wrapper .col-md-6:eq(0)');
 	});
 </script>

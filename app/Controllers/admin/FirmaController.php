@@ -285,8 +285,6 @@ class FirmaController extends BaseController
 				} else {
 					return redirect()->to(base_url('/admin/dashboard/constancia_extravio_show?folio=' . $numfolio . '&year=' . $year))->with('message_error', 'La FIEL no es válida o está vencida');
 				}
-			} else {
-				return redirect()->to(base_url('/admin/dashboard/constancia_extravio_show?folio=' . $numfolio . '&year=' . $year))->with('message_error', 'Contraseña de FIEL incorrecta.');
 			}
 		} catch (\Exception $e) {
 			return redirect()->to(base_url('/admin/dashboard/constancia_extravio_show?folio=' . $numfolio . '&year=' . $year))->with('message_error', $e->getMessage());
@@ -360,6 +358,8 @@ class FirmaController extends BaseController
 				} else {
 					throw new \Exception('No existe una FIEL del usuario, favor de subirla en la sección de perfil.');
 				}
+			}else{
+				throw new \Exception('No existe una FIEL del usuario, favor de subirla en la sección de perfil.');
 			}
 		} else {
 			throw new \Exception('No existe el id del agente.');
