@@ -80,6 +80,7 @@ $routes->group('admin', function ($routes) {
 
 		$routes->get('perfil', 'admin/DashboardController::perfil');
 		$routes->post('update_password', 'admin/DashboardController::update_password');
+		$routes->post('charge_fiel', 'admin/DashboardController::charge_fiel');
 
 		$routes->get('certificadoMedico', 'PDFController::certificadoMedico');
 		$routes->get('constancia-video-denuncia', 'PDFController::constanciaVideoDenuncia');

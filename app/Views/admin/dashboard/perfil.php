@@ -1,8 +1,14 @@
 <?= $this->extend('admin/templates/dashboard_template') ?>
 <?= $this->section('title') ?>
-<?php echo $header_data->title ?>
+<?php echo $header_data->title; ?>
 <?= $this->endSection() ?>
 <?= $this->section('content') ?>
+<?php
+$user_id = session('ID');
+$directory = FCPATH . 'uploads/FIEL/' . $user_id;
+$file_key = $user_id . '_key.key';
+$file_cer = $user_id . '_cer.cer';
+?>
 <section class="content">
 	<div class="container-fluid">
 		<div class="row">
@@ -87,22 +93,33 @@
 				<div class="col-12">
 					<div class="card shadow border-0 rounded">
 						<div class="card-body">
-							<form id="form_firma" class="g-3 needs-validation" action="" method="POST" enctype="multipart/form-data" novalidate>
-								<label class="form-label font-weight-bold" for="key">Archivo .key</label>
-								<div class="col-12 col-sm-6 mb-3">
-									<input type="file" class="key" id="key">
-									<label class="custom-file-label" for="key">Seleccionar archivo .key</label>
-									<div class="invalid-feedback">
-										El archivo .key es obligatorio
+							<h3 class="text-center font-weight-bold mb-3">SUBIR FIEL</h3>
+							<?php if (file_exists($directory . '/' . $file_key) && file_exists($directory . '/' . $file_cer)) : ?>
+								<p class="text-center font-weight-bold">YA EXISTE UNA FIEL CARGADA</p>
+							<?php endif; ?>
+							<form id="form_fiel" class="row needs-validation" action="<?= base_url() ?>/admin/dashboard/charge_fiel" method="POST" enctype="multipart/form-data" novalidate>
+								<div class="col-12 col-md-6 mb-3">
+									<label class="form-label font-weight-bold" for="key">Archivo .key</label>
+									<div class="custom-file">
+										<input type="file" class="custom-file-input" id="key" name="key" accept=".key" required>
+										<label class="custom-file-label" for="key" id="key_label">Seleccionar archivo key</label>
+										<div class="invalid-feedback">
+											El archivo .key es obligatorio
+										</div>
 									</div>
 								</div>
-								<label class="form-label font-weight-bold" for="key">Archivo .cer</label>
-								<div class="col-12 col-sm-6 mb-3">
-									<input type="file" class="cer" id="cer">
-									<label class="custom-file-label" for="cer">Seleccionar archivo .cer</label>
-									<div class="invalid-feedback">
-										El archivo .cer es obligatorio
+								<div class="col-12 col-md-6 mb-3">
+									<label class="form-label font-weight-bold" for="cer">Archivo .cer</label>
+									<div class="custom-file">
+										<input type="file" class="custom-file-input" id="cer" name="cer" accept=".cer" required>
+										<label class="custom-file-label" for="cer" id="cer_label">Seleccionar archivo cer</label>
+										<div class="invalid-feedback">
+											El archivo .cer es obligatorio
+										</div>
 									</div>
+								</div>
+								<div class="col-12 text-center">
+									<button type="submit" class="btn btn-primary"><i class="fas fa-cloud-upload-alt mr-2"></i> SUBIR FIEL</button>
 								</div>
 							</form>
 						</div>
@@ -112,6 +129,7 @@
 				<div class="col-12">
 					<div class="card shadow border-0 rounded">
 						<div class="card-body">
+							<h3 class="text-center font-weight-bold mb-3">ACTUALIZAR CONTRASEÑA</h3>
 							<form id="form_password" class="g-3 needs-validation" action="<?= base_url() ?>/admin/dashboard/update_password" method="POST" enctype="multipart/form-data" novalidate>
 								<div class="row">
 									<div class="col-12 col-sm-6 mb-3">
@@ -129,7 +147,7 @@
 										</div>
 									</div>
 									<div class="col-12 text-center">
-										<button type="submit" class="btn btn-primary">ACTUALIZAR CONTRASEÑA</button>
+										<button type="submit" class="btn btn-primary"><i class="fas fa-lock mr-2"></i> ACTUALIZAR CONTRASEÑA</button>
 									</div>
 								</div>
 							</form>
@@ -143,17 +161,18 @@
 </section>
 
 <script>
-	let form = document.querySelector('#form_password');
+	let form_password = document.querySelector('#form_password');
+	let form_fiel = document.querySelector('#form_fiel');
 	let password = document.querySelector('#password');
 	let password_confirm = document.querySelector('#password_confirm');
 
-	form.addEventListener('submit', function(event) {
-		if (!form.checkValidity()) {
+	form_password.addEventListener('submit', function(event) {
+		if (!form_password.checkValidity()) {
 			event.preventDefault();
 		} else {
 			event.preventDefault();
 			if (password.value === password_confirm.value) {
-				form.submit();
+				form_password.submit();
 			} else {
 				Swal.fire({
 					icon: 'error',
@@ -162,8 +181,40 @@
 				});
 			}
 		}
-		form.classList.add('was-validated')
+		form_password.classList.add('was-validated')
 	}, false)
+
+	form_fiel.addEventListener('submit', function(event) {
+		if (!form_fiel.checkValidity()) {
+			event.preventDefault();
+		}
+		form_fiel.classList.add('was-validated')
+	}, false)
+
+	document.getElementById('key').addEventListener('change', (e) => {
+		document.getElementById('key_label').innerHTML = e.target.files[0].name;
+	});
+	document.getElementById('cer').addEventListener('change', (e) => {
+		document.getElementById('cer_label').innerHTML = e.target.files[0].name;
+	});
 </script>
+<?php if (session()->getFlashdata('message_error')) : ?>
+	<script>
+		Swal.fire({
+			icon: 'error',
+			html: '<strong><?= session()->getFlashdata('message') ?></strong>',
+			confirmButtonColor: '#bf9b55',
+		})
+	</script>
+<?php endif; ?>
+<?php if (session()->getFlashdata('message_success')) : ?>
+	<script>
+		Swal.fire({
+			icon: 'success',
+			html: '<strong><?= session()->getFlashdata('message_success') ?></strong>',
+			confirmButtonColor: '#bf9b55',
+		})
+	</script>
+<?php endif; ?>
 
 <?= $this->endSection() ?>

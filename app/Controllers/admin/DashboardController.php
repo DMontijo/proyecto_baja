@@ -211,6 +211,32 @@ class DashboardController extends BaseController
 		return redirect()->to(base_url('admin'));
 	}
 
+	public function charge_fiel()
+	{
+		$key_fiel = $this->request->getFile('key');
+		$cer_fiel = $this->request->getFile('cer');
+		$user_id = session('ID');
+
+		$directory = FCPATH . 'uploads/FIEL/' . $user_id;
+		$file_key = $user_id . '_key.key';
+		$file_cer = $user_id . '_cer.cer';
+
+		if ($key_fiel->isValid() && $cer_fiel->isValid()) {
+			if (!file_exists($directory)) {
+				mkdir($directory, 0777);
+			}
+
+			if (file_exists($directory . '/' . $file_key)) unlink($directory . '/' . $file_key);
+			if (file_exists($directory . '/' . $file_cer)) unlink($directory . '/' . $file_cer);
+
+			$key_fiel->move($directory, $file_key);
+			$cer_fiel->move($directory, $file_cer);
+			return redirect()->back()->with('message_success', 'FIEL cargada correctamente.');
+		} else {
+			return redirect()->back()->with('message_error', 'No seleccionaste los archivos necesarios.');
+		}
+	}
+
 	public function getFolioInformation()
 	{
 		$data = (object)array();

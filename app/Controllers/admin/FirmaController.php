@@ -343,9 +343,18 @@ class FirmaController extends BaseController
 					if (file_exists($directory . '/' . $file_key_pem) && file_exists($directory . '/' . $file_cer_pem) && file_exists($directory . '/' . $file_txt)) {
 						return true;
 					} else {
-						unlink($directory . '/' . $file_key_pem);
-						unlink($directory . '/' . $file_cer_pem);
-						unlink($directory . '/' . $file_txt);
+						try {
+							unlink($directory . '/' . $file_key_pem);
+						} catch (\Exception $e) {
+						}
+						try {
+							unlink($directory . '/' . $file_key_pem);
+						} catch (\Exception $e) {
+						}
+						try {
+							unlink($directory . '/' . $file_txt);
+						} catch (\Exception $e) {
+						}
 						return false;
 					}
 				}
