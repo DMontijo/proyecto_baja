@@ -68,7 +68,7 @@ class FirmaController extends BaseController
 
 		$document_name = $plantilla->TITULO;
 		$FECHAFIRMA = date("Y-m-d");
-		$HORAFIRMA = date("H:i:");
+		$HORAFIRMA = date("H:i");
 
 		try {
 
@@ -244,12 +244,12 @@ class FirmaController extends BaseController
 					if ($signature->status == 1) {
 						$xml = $this->_createXMLSignature($signature->signed_chain, $signature->signature, $numfolio, $year);
 
-						$qr1 = $this->_generarQR($url);
-						$qr2 = $this->_generarQR($signature->signed_chain);
+						$qr1 = $this->_generateQR($url);
+						$qr2 = $this->_generateQR($signature->signed_chain);
 
 						$plantilla->PLACEHOLDER = str_replace('[CODIGO_QR_1]', '<img src="' . $qr1 . '" width="50px" height="50px">', $plantilla->PLACEHOLDER);
 						$plantilla->PLACEHOLDER = str_replace('[CODIGO_QR_2]', '<img src="' . $qr2 . '" width="120px" height="120px">', $plantilla->PLACEHOLDER);
-						$pdf = $this->_generarPDF($plantilla->PLACEHOLDER);
+						$pdf = $this->_generatePDF($plantilla->PLACEHOLDER);
 
 						$datosInsert = [
 							'AGENTEID' => $user_id,
@@ -272,24 +272,24 @@ class FirmaController extends BaseController
 
 						if ($insert) {
 							if ($this->_sendEmailConstanciaFirmada($solicitante->CORREO, $numfolio, $year, $xml, $pdf)) {
-								return redirect()->to(base_url('/admin/dashboard/constancias_extravio_abiertas'))->with('firma', 'Se ha firmado correctamente');
+								return redirect()->to(base_url('/admin/dashboard/constancias_extravio_abiertas'))->with('message_success', 'Constancia firmada correctamente.');
 							} else {
-								return redirect()->to(base_url('/admin/dashboard/constancias_extravio_abiertas'))->with('firma', 'Se ha firmado correctamente');
+								return redirect()->to(base_url('/admin/dashboard/constancias_extravio_abiertas'))->with('message_success', 'Constancia firmada correctamente.');
 							}
 						} else {
-							return redirect()->to(base_url('/admin/dashboard/constancia_extravio_show?folio=' . $numfolio . '&year=' . $year))->with('signature_error', $signature->message);
+							return redirect()->to(base_url('/admin/dashboard/constancia_extravio_show?folio=' . $numfolio . '&year=' . $year))->with('message_error', $signature->message);
 						}
 					} else {
-						return redirect()->to(base_url('/admin/dashboard/constancia_extravio_show?folio=' . $numfolio . '&year=' . $year))->with('signature_error', 'Fallo al insertar firmar el documento.');
+						return redirect()->to(base_url('/admin/dashboard/constancia_extravio_show?folio=' . $numfolio . '&year=' . $year))->with('message_error', 'Fallo al insertar firmar el documento.');
 					}
 				} else {
-					return redirect()->to(base_url('/admin/dashboard/constancia_extravio_show?folio=' . $numfolio . '&year=' . $year))->with('firma_no_valida', 'Firma no validada por FIEL.');
+					return redirect()->to(base_url('/admin/dashboard/constancia_extravio_show?folio=' . $numfolio . '&year=' . $year))->with('message_error', 'La FIEL no es válida o está vencida');
 				}
 			} else {
-				return redirect()->to(base_url('/admin/dashboard/constancia_extravio_show?folio=' . $numfolio . '&year=' . $year))->with('password_incorrecto', 'Contraseña de FIEL incorrecta.');
+				return redirect()->to(base_url('/admin/dashboard/constancia_extravio_show?folio=' . $numfolio . '&year=' . $year))->with('message_error', 'Contraseña de FIEL incorrecta.');
 			}
 		} catch (\Exception $e) {
-			return redirect()->to(base_url('/admin/dashboard/constancia_extravio_show?folio=' . $numfolio . '&year=' . $year))->with('password_incorrecto', 'Contraseña de FIEL incorrecta.');
+			return redirect()->to(base_url('/admin/dashboard/constancia_extravio_show?folio=' . $numfolio . '&year=' . $year))->with('message_error', $e->getMessage());
 		}
 	}
 
@@ -317,7 +317,7 @@ class FirmaController extends BaseController
 					if ($status === 0) {
 						chmod($directory . '/' . $file_key_pem, 0777);
 					} else {
-						throw new \Exception('password error');
+						throw new \Exception('La contraseña de la FIEL es incorrecta.');
 					}
 
 					//CREAR ARCHIVO .CER.PEM  ******************
@@ -327,7 +327,7 @@ class FirmaController extends BaseController
 					if ($status === 0) {
 						chmod($directory . '/' . $file_cer_pem, 0777);
 					} else {
-						throw new \Exception('password error');
+						throw new \Exception('La contraseña de la FIEL es incorrecta.');
 					}
 
 					//CREAR ARCHIVO .TXT CON INFO DEL .PEM  ******************
@@ -337,7 +337,7 @@ class FirmaController extends BaseController
 					if ($status == 0) {
 						chmod($directory . '/' . $file_txt, 0777);
 					} else {
-						throw new \Exception('password error');
+						throw new \Exception('La contraseña de la FIEL es incorrecta.');
 					}
 
 					if (file_exists($directory . '/' . $file_key_pem) && file_exists($directory . '/' . $file_cer_pem) && file_exists($directory . '/' . $file_txt)) {
@@ -357,10 +357,12 @@ class FirmaController extends BaseController
 						}
 						return false;
 					}
+				} else {
+					throw new \Exception('No existe una FIEL del usuario, favor de subirla en la sección de perfil.');
 				}
 			}
 		} else {
-			throw new \Exception('id error');
+			throw new \Exception('No existe el id del agente.');
 		}
 	}
 
@@ -561,19 +563,31 @@ class FirmaController extends BaseController
 		}
 	}
 
-	private function _generarPDF($placeholder)
+	private function _generatePDF($placeholder)
 	{
 		$options = new Options();
 		$options->set('isRemoteEnabled', true);
+		$options->set('isPhpEnabled', true);
+		$options->set('defaultFont', 'Arial');
 		$dompdf = new Dompdf($options);
-
 		$dompdf->loadHtml(view('doc_template/document', ['data' => $placeholder]));
 		$dompdf->setPaper('A4', 'portrait');
 		$dompdf->render();
+		$canvas = $dompdf->getCanvas();
+
+		$canvas->page_script(function ($pageNumber, $pageCount, $canvas, $fontMetrics) {
+			$font = $fontMetrics->getFont('arial', 'regular');
+			$text = "PÁGINA $pageNumber DE $pageCount";
+			$size = 8;
+			$x = $canvas->get_width();
+			$y = $canvas->get_height();
+			$width = $fontMetrics->getTextWidth($text, $font, $size);
+			$canvas->text($x - 60 - $width, $y - 50, $text, $font, $size, array(0, 0, 0));
+		});
 		return $dompdf->output();
 	}
 
-	private function _generarQR($info)
+	private function _generateQR($info)
 	{
 		$writer = new PngWriter();
 

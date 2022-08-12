@@ -5,9 +5,6 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
-<?php
-
-?>
 <section class="content">
 	<div class="container-fluid">
 		<div class="row">
@@ -22,48 +19,20 @@
 		</div>
 	</div>
 </section>
-<?php if (session()->getFlashdata('firma')) : ?>
+<?php if (session()->getFlashdata('message_success')) : ?>
 	<script>
 		Swal.fire({
 			icon: 'success',
-			text: '<?= session()->getFlashdata('firma') ?>',
-			confirmButtonColor: '#bf9b55',
-		})
-		let btn_descargar_pdf = document.getElementById("downloadPDF");
-		let btn_descargar_xml = document.getElementById("downloadXML");
-
-		let btn_firmar = document.getElementById("firmarConstancia")
-		let inputFolio = document.getElementById("input_folio_atencion");
-		let year = new Date().getFullYear();
-		document.getElementById("firmarConstancia").style.display = "none";
-		document.getElementById("downloadPDF").style.display = "block";
-		document.getElementById("downloadXML").style.display = "block";
-	</script>
-<?php endif; ?>
-<?php if (session()->getFlashdata('password_incorrecto')) : ?>
-	<script>
-		Swal.fire({
-			icon: 'error',
-			text: '<?= session()->getFlashdata('password_incorrecto') ?>',
+			html: '<strong><?= session()->getFlashdata('message_success') ?></strong>',
 			confirmButtonColor: '#bf9b55',
 		})
 	</script>
 <?php endif; ?>
-<?php if (session()->getFlashdata('firma_no_valida')) : ?>
+<?php if (session()->getFlashdata('message_error')) : ?>
 	<script>
 		Swal.fire({
 			icon: 'error',
-			text: '<?= session()->getFlashdata('firma_no_valida') ?>',
-			confirmButtonColor: '#bf9b55',
-		})
-	</script>
-<?php endif; ?>
-
-<?php if (session()->getFlashdata('signature_error')) : ?>
-	<script>
-		Swal.fire({
-			icon: 'error',
-			text: '<?= session()->getFlashdata('signature_error') ?>',
+			html: '<strong><?= session()->getFlashdata('message_error') ?></strong>',
 			confirmButtonColor: '#bf9b55',
 		})
 	</script>

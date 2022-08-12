@@ -49,7 +49,8 @@ class ConstanciasController extends BaseController
 	public function constancias_firmadas()
 	{
 		$data = (object)array();
-		$data = $this->_constanciaExtravioModel->asObject()->where('STATUS', 'FIRMADO')->findAll();
+		$data = $this->_constanciaExtravioModel->asObject()->where('STATUS', 'FIRMADO')->orderBy('FECHAFIRMA','ASC')->findAll();
+		
 		$this->_loadView('Constancias extraviadas abiertos', 'constancias', '', $data, 'constancias_firmadas');
 	}
 

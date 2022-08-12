@@ -10,7 +10,7 @@
 					<div class="col-12 mb-3">
 						<input type="text" class="form-control" id="folio" name="folio" value="<?= $body_data->folio ?>" hidden required>
 						<input type="text" class="form-control" id="year" name="year" value="<?= $body_data->year ?>" hidden required>
-						<input class="form-control" id="contrasena" name="contrasena" type="text" required>
+						<input class="form-control" id="contrasena" name="contrasena" type="text" autocomplete="off" required>
 						<div class="invalid-feedback">
 							La contraseña es obligatoria
 						</div>

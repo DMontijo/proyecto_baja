@@ -10,6 +10,10 @@
 			margin: 0cm 0cm;
 		}
 
+		table {
+			page-break-before: auto;
+		}
+
 		/** Define now the real margins of every page in the PDF **/
 		body {
 			margin-top: 4cm;
@@ -38,10 +42,15 @@
 		footer {
 			position: fixed;
 			bottom: 0cm;
-			left: 0cm;
-			right: 0cm;
-			height: .5cm;
+			left: 2cm;
+			right: 2cm;
+			height: 2cm;
+			border-top: 1px solid #000000;
 		}
+
+		/* footer .pagenum:before {
+			content: counter(page);
+		} */
 	</style>
 </head>
 
@@ -66,6 +75,9 @@
 	</header>
 
 	<footer>
+		<!-- <div id="footer">
+			<div class="pagenum-container">Page <span class="pagenum"></span></div>
+		</div> -->
 	</footer>
 
 	<!-- Wrap the content of your PDF inside a main tag -->

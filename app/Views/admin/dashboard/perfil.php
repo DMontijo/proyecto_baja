@@ -119,7 +119,13 @@ $file_cer = $user_id . '_cer.cer';
 									</div>
 								</div>
 								<div class="col-12 text-center">
-									<button type="submit" class="btn btn-primary"><i class="fas fa-cloud-upload-alt mr-2"></i> SUBIR FIEL</button>
+									<button type="submit" class="btn btn-primary"><i class="fas fa-cloud-upload-alt mr-2"></i>
+										<?php if (file_exists($directory . '/' . $file_key) && file_exists($directory . '/' . $file_cer)) : ?>
+											ACTUALIZAR FIEL
+										<?php else : ?>
+											SUBIR FIEL
+										<?php endif; ?>
+									</button>
 								</div>
 							</form>
 						</div>

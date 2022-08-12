@@ -8,6 +8,7 @@
 		<div class="row">
 			<div class="col-12 text-center mb-4">
 				<h1 class="mb-4 text-center font-weight-bold">CONSTANCIAS DE EXTRAVIO ABIERTAS</h1>
+				<a class="link link-primary" href="<?= base_url('admin/dashboard/constancias') ?>" role="button"><i class="fas fa-reply"></i> REGRESAR A CONSTANCIAS</a>
 			</div>
 			<div class="col-12">
 				<div class="card shadow border-0">
@@ -40,6 +41,24 @@
 		</div>
 	</div>
 </section>
+<?php if (session()->getFlashdata('message_success')) : ?>
+	<script>
+		Swal.fire({
+			icon: 'success',
+			text: '<?= session()->getFlashdata('message_success') ?>',
+			confirmButtonColor: '#bf9b55',
+		})
+	</script>
+<?php endif; ?>
+<?php if (session()->getFlashdata('message_error')) : ?>
+	<script>
+		Swal.fire({
+			icon: 'error',
+			text: '<?= session()->getFlashdata('message_error') ?>',
+			confirmButtonColor: '#bf9b55',
+		})
+	</script>
+<?php endif; ?>
 <script>
 	$(function() {
 		$("#extravios_abiertos").DataTable({
