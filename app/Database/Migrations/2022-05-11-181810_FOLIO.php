@@ -47,6 +47,21 @@ class FOLIO extends Migration
 				'constraint' => '300',
 				'null' => TRUE,
 			],
+			'TIPOEXPEDIENTEID' => [
+				'type' => 'INT',
+				'unsigned' => TRUE,
+				'null' => TRUE,
+			],
+			'ESTADOID' => [
+				'type' => 'INT',
+				'unsigned' => TRUE,
+				'null' => TRUE,
+			],
+			'MUNICIPIOID' => [
+				'type' => 'INT',
+				'unsigned' => TRUE,
+				'null' => TRUE,
+			],
 			'HECHODELITO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
@@ -72,7 +87,6 @@ class FOLIO extends Migration
 			],
 			'HECHOESTADOID' => [
 				'type' => 'INT',
-				'null' => TRUE,
 				'unsigned' => TRUE,
 				'null' => TRUE,
 			],
@@ -144,6 +158,10 @@ class FOLIO extends Migration
 				'type' => 'CHAR',
 				'constraint' => '1',
 				'default' => 'S'
+			],
+			'FECHASALIDA' => [
+				'type' => 'DATETIME',
+				'null' => TRUE,
 			],
 			'FECHAREGISTRO DATETIME DEFAULT CURRENT_TIMESTAMP',
 			'FECHAACTUALIZACION DATETIME ON UPDATE CURRENT_TIMESTAMP',

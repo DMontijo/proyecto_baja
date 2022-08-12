@@ -510,6 +510,7 @@ class DashboardController extends BaseController
 			'STATUS' => $status == 'ATENDIDA' ? 'CANALIZADO' : $status,
 			'NOTASAGENTE' => $motivo,
 			'AGENTEATENCIONID' => $agenteId,
+			'FECHASALIDA' => date('Y-m-d h:m:s')
 		];
 		if (!empty($status) && !empty($motivo) && !empty($year) && !empty($folio) && !empty($agenteId)) {
 			$folioRow = $this->_folioModel->where('ANO', $year)->where('FOLIOID', $folio)->where('STATUS', 'EN PROCESO')->first();
@@ -552,8 +553,8 @@ class DashboardController extends BaseController
 				$narracion = $folioRow['HECHONARRACION'];
 				$fecha = $folioRow['HECHOFECHA'];
 
-				$folioRow['HECHOMUNICIPIOID'] = $municipio;
-				$folioRow['HECHOESTADOID'] = $estado;
+				$folioRow['MUNICIPIOID'] = $municipio;
+				$folioRow['ESTADOID'] = $estado;
 				$folioRow['HECHOMEDIOCONOCIMIENTOID'] = (string)6;
 				$folioRow['NOTASAGENTE'] = $notas;
 				$folioRow['STATUS'] = 'EXPEDIENTE';
@@ -568,8 +569,6 @@ class DashboardController extends BaseController
 				$folioRow['AREAIDREGISTRO'] = $empleadoRow->AREAID;
 				$folioRow['AREAIDRESPONSABLE'] = $empleadoRow->AREAID;
 				$folioRow['ESTADOJURIDICOEXPEDIENTEID'] = (string)2;
-				$folioRow['MUNICIPIOID'] = $municipio;
-				$folioRow['ESTADOID'] = $estado;
 				$folioRow['TIPOEXPEDIENTEID'] = 4;
 
 				$expedienteCreado = $this->createExpediente($folioRow);
@@ -581,8 +580,6 @@ class DashboardController extends BaseController
 				unset($folioRow['AREAIDREGISTRO']);
 				unset($folioRow['AREAIDRESPONSABLE']);
 				unset($folioRow['ESTADOJURIDICOEXPEDIENTEID']);
-				unset($folioRow['MUNICIPIOID']);
-				unset($folioRow['ESTADOID']);
 				unset($folioRow['TIPOEXPEDIENTEID']);
 
 				$folioRow['HECHONARRACION'] = $narracion;
@@ -591,6 +588,7 @@ class DashboardController extends BaseController
 				try {
 					if ($expedienteCreado->status == 201) {
 						$folioRow['EXPEDIENTEID'] = $expedienteCreado->EXPEDIENTEID;
+						$folioRow['FECHASALIDA'] = date('Y-m-d h:m:s');
 
 						$update = $this->_folioModel->set($folioRow)->where('FOLIOID', $folio)->where('ANO', $year)->update();
 
@@ -747,7 +745,8 @@ class DashboardController extends BaseController
 			'TIEMPORESIDEMESES',
 			'TIEMPORESIDEDIAS',
 			"PERSONAESCOLARIDADID",
-			"OCUPACIONID"
+			"OCUPACIONID",
+			"FOTO"
 		];
 		$endpoint = $this->endpoint . $function;
 		// $conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int)$municipio)->where('TYPE', !getenv('CI_ENVIRONMENT') ? 'production' : getenv('CI_ENVIRONMENT'))->first();
@@ -952,6 +951,8 @@ class DashboardController extends BaseController
 				'HECHOFECHA' => $this->request->getPost('fecha_delito'),
 				'HECHOHORA' => $this->request->getPost('hora_delito'),
 				'HECHOLUGARID' => $this->request->getPost('lugar_delito'),
+				'ESTADOID' => 2,
+				'MUNICIPIOID' => $this->request->getPost('municipio_delito'),
 				'HECHOESTADOID' => 2,
 				'HECHOMUNICIPIOID' => $this->request->getPost('municipio_delito'),
 				'HECHOLOCALIDADID' => $this->request->getPost('localidad_delito'),
