@@ -510,7 +510,7 @@ class DashboardController extends BaseController
 			'STATUS' => $status == 'ATENDIDA' ? 'CANALIZADO' : $status,
 			'NOTASAGENTE' => $motivo,
 			'AGENTEATENCIONID' => $agenteId,
-			'FECHASALIDA' => date('Y-m-d h:m:s')
+			'FECHASALIDA' => date('Y-m-d H:m:s')
 		];
 		if (!empty($status) && !empty($motivo) && !empty($year) && !empty($folio) && !empty($agenteId)) {
 			$folioRow = $this->_folioModel->where('ANO', $year)->where('FOLIOID', $folio)->where('STATUS', 'EN PROCESO')->first();
@@ -588,7 +588,7 @@ class DashboardController extends BaseController
 				try {
 					if ($expedienteCreado->status == 201) {
 						$folioRow['EXPEDIENTEID'] = $expedienteCreado->EXPEDIENTEID;
-						$folioRow['FECHASALIDA'] = date('Y-m-d h:m:s');
+						$folioRow['FECHASALIDA'] = date('Y-m-d H:m:s');
 
 						$update = $this->_folioModel->set($folioRow)->where('FOLIOID', $folio)->where('ANO', $year)->update();
 

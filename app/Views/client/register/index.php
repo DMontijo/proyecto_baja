@@ -1326,7 +1326,6 @@
 					});
 			}
 		} else {
-			console.log('Navegador safari');
 			const mostrarStream = (idDeDispositivo = null) => {
 				let options = {
 					video: true,
