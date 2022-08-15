@@ -6,14 +6,12 @@ use App\Controllers\BaseController;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use App\Models\PlantillasModel;
-use App\Models\FolioModel;
 use App\Models\UsuariosModel;
 use App\Models\SolicitantesConstanciaModel;
 use App\Models\HechoLugarModel;
 use App\Models\MunicipiosModel;
 use App\Models\EstadosModel;
 use App\Models\ConstanciaExtravioModel;
-use App\Models\PersonaTipoIdentificacionModel;
 use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelLow;
@@ -26,16 +24,12 @@ class FirmaController extends BaseController
 	function __construct()
 	{
 		$this->_plantillasModel = new PlantillasModel();
-		$this->_folioModel = new FolioModel();
 		$this->_usuariosModel = new UsuariosModel();
 		$this->_solicitantesModel = new SolicitantesConstanciaModel();
 		$this->_hechoLugarModel = new HechoLugarModel();
 		$this->_municipiosModel = new MunicipiosModel();
 		$this->_estadosModel = new EstadosModel();
 		$this->_constanciaExtravioModel = new ConstanciaExtravioModel();
-		$this->_tipoIdentificacionModel = new PersonaTipoIdentificacionModel();
-
-		$this->db = \Config\Database::connect();
 	}
 
 	public function firmar_constancia_extravio()
@@ -261,26 +255,26 @@ class FirmaController extends BaseController
 							'HORAFIRMA' => $HORAFIRMA,
 							'LUGARFIRMA' => $municipio->MUNICIPIODESCR . ", " . $estado->ESTADODESCR,
 							'FIRMAELECTRONICA' => base64_decode($signature->signature),
-							'CADENAFIRMANDA' => $plantilla->TEXTO,
+							'CADENAFIRMADA' => $signature->signed_chain,
 							'PLACEHOLDER' => $plantilla->PLACEHOLDER,
 							'XML' => $xml,
 							'PDF' => $pdf,
 							'STATUS' => 'FIRMADO'
 						];
 
-						$insert = $this->_constanciaExtravioModel->set($datosInsert)->where('CONSTANCIAEXTRAVIOID ', $numfolio)->where('ANO', $year)->update();
+						$update = $this->_constanciaExtravioModel->set($datosInsert)->where('CONSTANCIAEXTRAVIOID ', $numfolio)->where('ANO', $year)->update();
 
-						if ($insert) {
+						if ($update) {
 							if ($this->_sendEmailConstanciaFirmada($solicitante->CORREO, $numfolio, $year, $xml, $pdf)) {
 								return redirect()->to(base_url('/admin/dashboard/constancias_extravio_abiertas'))->with('message_success', 'Constancia firmada correctamente.');
 							} else {
 								return redirect()->to(base_url('/admin/dashboard/constancias_extravio_abiertas'))->with('message_success', 'Constancia firmada correctamente.');
 							}
 						} else {
-							return redirect()->to(base_url('/admin/dashboard/constancia_extravio_show?folio=' . $numfolio . '&year=' . $year))->with('message_error', $signature->message);
+							return redirect()->to(base_url('/admin/dashboard/constancia_extravio_show?folio=' . $numfolio . '&year=' . $year))->with('message_error', 'Hubo un error al guardar la firma electrónica. Intentelo de nuevo.');
 						}
 					} else {
-						return redirect()->to(base_url('/admin/dashboard/constancia_extravio_show?folio=' . $numfolio . '&year=' . $year))->with('message_error', 'Fallo al insertar firmar el documento.');
+						return redirect()->to(base_url('/admin/dashboard/constancia_extravio_show?folio=' . $numfolio . '&year=' . $year))->with('message_error', 'Fallo al firmar el documento. Intentelo de nuevo.');
 					}
 				} else {
 					return redirect()->to(base_url('/admin/dashboard/constancia_extravio_show?folio=' . $numfolio . '&year=' . $year))->with('message_error', 'La FIEL no es válida o está vencida');
@@ -358,7 +352,7 @@ class FirmaController extends BaseController
 				} else {
 					throw new \Exception('No existe una FIEL del usuario, favor de subirla en la sección de perfil.');
 				}
-			}else{
+			} else {
 				throw new \Exception('No existe una FIEL del usuario, favor de subirla en la sección de perfil.');
 			}
 		} else {
@@ -477,7 +471,7 @@ class FirmaController extends BaseController
 		try {
 			openssl_sign($cadena_a_firmar, $signature, $pkeyid, OPENSSL_ALGO_SHA512);
 		} catch (\Exception $e) {
-			return (object)['status' => 0, 'message' => 'Password inválido'];
+			throw new \Exception('No se pudo generar la firma electrónica. Intentelo de nuevo.');
 		}
 
 		// Liberar la clave de la memoria ==============================================
@@ -498,7 +492,7 @@ class FirmaController extends BaseController
 		if ($ok == 1) {
 			return (object)['status' => 1, 'signature' => base64_encode($signature), 'signed_chain' => $cadena_a_firmar, 'fecha' => $fecha, 'hora' => $hora];
 		} else {
-			return (object)['status' => 0];
+			throw new \Exception('No se pudo generar la firma electrónica. Intentelo de nuevo.');
 		}
 	}
 
@@ -565,12 +559,24 @@ class FirmaController extends BaseController
 
 	private function _generatePDF($placeholder)
 	{
+		$arrContextOptions = array(
+			"ssl" => array(
+				"verify_peer" => false,
+				"verify_peer_name" => false,
+			),
+		);
+
+		$data = (object)array();
+		$data->placeholder = $placeholder;
+		$data->image1 = base64_encode(file_get_contents(base_url('assets/img/logo_fgebc.jpg'), false, stream_context_create($arrContextOptions)));
+		$data->image2 = base64_encode(file_get_contents(base_url('assets/img/logo_sejap.jpg'), false, stream_context_create($arrContextOptions)));
+
 		$options = new Options();
 		$options->set('isRemoteEnabled', true);
 		$options->set('isPhpEnabled', true);
 		$options->set('defaultFont', 'Arial');
 		$dompdf = new Dompdf($options);
-		$dompdf->loadHtml(view('doc_template/document', ['data' => $placeholder]));
+		$dompdf->loadHtml(view('doc_template/document', ['data' => $data]));
 		$dompdf->setPaper('A4', 'portrait');
 		$dompdf->render();
 		$canvas = $dompdf->getCanvas();

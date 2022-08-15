@@ -19,11 +19,7 @@
 							<table class="table table-striped table-bordered m-0">
 								<tr>
 									<td class="fw-bold text-end">FOLIO:</td>
-									<td class="text-start"><?= $body_data->constancia->CONSTANCIAEXTRAVIOID ? $body_data->constancia->CONSTANCIAEXTRAVIOID : '' ?></td>
-								</tr>
-								<tr>
-									<td class="fw-bold text-end">AÑO:</td>
-									<td class="text-start"><?= $body_data->constancia->ANO ? $body_data->constancia->ANO : '' ?></td>
+									<td class="text-start"><?= $body_data->constancia->CONSTANCIAEXTRAVIOID ? $body_data->constancia->CONSTANCIAEXTRAVIOID : '' ?>/<?= $body_data->constancia->ANO ? $body_data->constancia->ANO : '' ?></td>
 								</tr>
 								<tr>
 									<td class="fw-bold text-end">SOLICITANTE:</td>

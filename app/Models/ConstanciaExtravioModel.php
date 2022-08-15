@@ -46,7 +46,7 @@ class ConstanciaExtravioModel extends Model
 		'FECHAFIRMA',
 		'HORAFIRMA',
 		'LUGARFIRMA',
-		'CADENAFIRMANDA',
+		'CADENAFIRMADA',
 		'FIRMAELECTRONICA',
 		'PDF',
 		'XML',

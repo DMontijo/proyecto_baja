@@ -60,7 +60,7 @@
 		<table style="width:100%;">
 			<tr>
 				<td style="width: 30%;text-align:left;">
-					<img src="<?= base_url('assets/img/logo_fgebc.jpg') ?>" style="height:2cm;" />
+					<img src="<?= 'data:image/jpg;base64,' . $data->image1 ?>" style="height:2cm;" />
 				</td>
 				<td style="width: 40%;text-align:center;">
 					<h3 style="margin:0px;">FISCALÍA GENERAL DEL ESTADO DE BAJA CALIFORNIA</h3>
@@ -68,7 +68,7 @@
 					<p><strong>CONSTANCIA DE EXTRAVÍO</strong></p>
 				</td>
 				<td style="width: 30%;text-align:right;">
-					<img src="<?= base_url('assets/img/logo_sejap.jpg') ?>" style="height:1cm;" />
+					<img src="<?= 'data:image/jpg;base64,' . $data->image2 ?>" style="height:1cm;" />
 				</td>
 			</tr>
 		</table>
@@ -83,7 +83,7 @@
 	<!-- Wrap the content of your PDF inside a main tag -->
 	<main>
 		<br>
-		<?= $data ?>
+		<?= $data->placeholder ?>
 	</main>
 </body>
 

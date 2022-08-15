@@ -186,7 +186,7 @@ class CONSTANCIAEXTRAVIO extends Migration
 				'constraint' => '100',
 				'null' => TRUE,
 			],
-			'CADENAFIRMANDA' => [
+			'CADENAFIRMADA' => [
 				'type' => 'TEXT',
 				'null' => TRUE,
 			],
