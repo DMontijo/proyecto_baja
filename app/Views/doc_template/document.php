@@ -65,7 +65,7 @@
 				<td style="width: 40%;text-align:center;">
 					<h3 style="margin:0px;">FISCALÍA GENERAL DEL ESTADO DE BAJA CALIFORNIA</h3>
 					<p><strong>CENTRO DE DENUNCIA TECNOLÓGICA</strong></p>
-					<p><strong>CONSTANCIA EXTRAVÍO</strong></p>
+					<p><strong>CONSTANCIA DE EXTRAVÍO</strong></p>
 				</td>
 				<td style="width: 30%;text-align:right;">
 					<img src="http://localhost/proyecto_baja/assets/img/logo_sejap.jpg" style="height:1cm;" />
