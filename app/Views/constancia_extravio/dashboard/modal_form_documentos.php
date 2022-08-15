@@ -84,9 +84,8 @@
 						<select class="form-select" id="tipodoc" name="tipodoc" required>
 							<option selected disabled value="">Elige el tipo de documento</option>
 							<?php foreach ($body_data->identificacion as $index => $identificacion) { ?>
-								<option value="<?= $identificacion->PERSONATIPOIDENTIFICACIONDESCR  ?>"><?= $identificacion->PERSONATIPOIDENTIFICACIONDESCR ?></option>
+								<option value="<?= $identificacion->DOCUMENTOEXTRAVIOTIPODESCR  ?>"><?= $identificacion->DOCUMENTOEXTRAVIOTIPODESCR ?></option>
 							<?php } ?>
-							<option value="VISA">VISA</option>
 						</select>
 						<div class="invalid-feedback">
 							Por favor, selecciona un tipo de documento.
@@ -178,7 +177,7 @@
 	});
 
 	document.querySelector('#tipodoc').addEventListener('change', (e) => {
-		if (e.target.value == 'PASAPORTE') {
+		if (e.target.value == 'PASAPORTE MEXICANO') {
 			document.querySelector('#pasaporte_container').classList.remove('d-none');
 			document.querySelectorAll('input[name="cita"]').forEach((cita) => {
 				cita.setAttribute('required', true);
@@ -191,7 +190,7 @@
 			});
 			document.querySelector('#municipio_cita-container').classList.add('d-none');
 			document.querySelector('#municipio_cita').removeAttribute('required');
-			document.querySelector('#municipio_cita').value='';
+			document.querySelector('#municipio_cita').value = '';
 			document.querySelector('input[name="cita"]:checked').checked = false;
 		}
 	});

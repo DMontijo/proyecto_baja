@@ -15,7 +15,6 @@ use App\Models\VehiculoTipoModel;
 use App\Models\PaisesModel;
 use App\Models\DelitosUsuariosModel;
 use App\Models\PersonaIdiomaModel;
-use App\Models\PersonaTipoIdentificacionModel;
 use App\Models\ConstanciaExtravioModel;
 use App\Models\ConstanciaExtravioConsecutivoModel;
 use App\Models\PlantillasModel;
@@ -26,6 +25,7 @@ use App\Models\FolioPersonaFisicaDomicilioModel;
 use App\Models\FolioPersonaFisicaDesaparecidaModel;
 use App\Models\FolioVehiculoModel;
 use App\Models\UsuariosModel;
+use App\Models\DocumentosExtravioTipoModel;
 
 class DashboardController extends BaseController
 {
@@ -43,7 +43,7 @@ class DashboardController extends BaseController
 		$this->_delitosUsuariosModel = new DelitosUsuariosModel();
 		$this->_solicitantesModel = new SolicitantesConstanciaModel();
 		$this->_personaIdiomaModel = new PersonaIdiomaModel();
-		$this->_personaIdentificacionModel = new PersonaTipoIdentificacionModel();
+		$this->_documentosExtravioTipoModel = new DocumentosExtravioTipoModel();
 		$this->_folioModel = new FolioModel();
 		$this->_folioPreguntasModel = new FolioPreguntasModel();
 		$this->_folioPersonaFisicaModel = new FolioPersonaFisicaModel();
@@ -53,7 +53,6 @@ class DashboardController extends BaseController
 		$this->_constanciaExtravioModel = new ConstanciaExtravioModel();
 		$this->_plantillasModel = new PlantillasModel();
 		$this->_usuariosModel = new UsuariosModel();
-		$this->_tipoIdentificacionModel = new PersonaTipoIdentificacionModel();
 		$this->_constanciaExtravioConsecutivoModel = new ConstanciaExtravioConsecutivoModel();
 	}
 
@@ -64,7 +63,7 @@ class DashboardController extends BaseController
 		$data->estados = $this->_estadosModel->asObject()->findAll();
 		$data->municipios = $this->_municipiosModel->asObject()->where('ESTADOID', '2')->findAll();
 		$data->lugares = $this->_hechoLugarModel->asObject()->orderBy('HECHODESCR', 'asc')->findAll();
-		$data->identificacion = $this->_personaIdentificacionModel->asObject()->orderBy('PERSONATIPOIDENTIFICACIONDESCR', 'asc')->findAll();
+		$data->identificacion = $this->_documentosExtravioTipoModel->asObject()->orderBy('DOCUMENTOEXTRAVIOTIPODESCR', 'asc')->findAll();
 
 		$data->denunciante = $this->_solicitantesModel->asObject()->where('SOLICITANTEID ', $session->get('SOLICITANTEID'))->first();
 		$this->_loadView('Generar constancias', $data, 'index');
