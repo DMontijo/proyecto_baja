@@ -80,6 +80,11 @@
 					<i class="fas fa-address-card c-sidebar-nav-icon"></i> Perfil
 				</a>
 			</li>
+			<li class="c-sidebar-nav-item">
+				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/reportes">
+					<i class="fas fa-address-card c-sidebar-nav-icon"></i> Reportes
+				</a>
+			</li>
 
 		</ul>
 		<button class="c-sidebar-minimizer c-class-toggler" type="button" data-target="_parent" data-class="c-sidebar-minimized"></button>
