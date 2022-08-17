@@ -318,7 +318,7 @@
 						}
 						$.ajax({
 							data: data,
-							url: "<?= base_url('/data/restore-folio') ?>",
+							url: "<?= base_url('/data/restore-folio-to-process') ?>",
 							method: "POST",
 							dataType: "json",
 

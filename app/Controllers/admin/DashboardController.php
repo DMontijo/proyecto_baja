@@ -493,7 +493,7 @@ class DashboardController extends BaseController
 			$data = $this->_empleadosModel->asObject()->where('MUNICIPIOID', $municipio)->where('OFICINAID', $oficina)->orderBy('NOMBRE', 'asc')->findAll();
 			return json_encode($data);
 		} else {
-			$data = $this->_empleadosModel->asObject()->findAll();
+			$data = [];
 			return json_encode($data);
 		}
 	}
@@ -619,10 +619,10 @@ class DashboardController extends BaseController
 							return json_encode(['status' => 0, 'error' => 'No hizo el update']);
 						}
 					} else {
-						return json_encode(['status' => 0, 'error' => 'No se creo el expediente']);
+						return json_encode(['status' => 0, 'error' => 'Expediente no creado']);
 					}
 				} catch (\Exception $e) {
-					return json_encode(['status' => 0, 'error' => 'No se creo el expediente']);
+					return json_encode(['status' => 0, 'error' => 'Expediente no creado']);
 				}
 			} else {
 				return json_encode(['status' => 0, 'error' => 'Ya fue atendido el folio']);
@@ -759,6 +759,10 @@ class DashboardController extends BaseController
 			if ($data['FECHANACIMIENTO'] == '0000-00-00' || $data['FECHANACIMIENTO'] == null || $data['FECHANACIMIENTO'] == NULL || $data['FECHANACIMIENTO'] == 'NULL' || $data['FECHANACIMIENTO'] == 'null') {
 				$data['FECHANACIMIENTO'] = NULL;
 			}
+		}
+
+		if ($data['DESAPARECIDA'] = "N") {
+			$data['FOTO'] = NULL;
 		}
 
 		foreach ($data as $clave => $valor) {
@@ -923,6 +927,26 @@ class DashboardController extends BaseController
 	}
 
 	public function restoreFolio()
+	{
+		$folio = $this->request->getPost('folio');
+		$year = $this->request->getPost('year');
+
+		if (!empty($folio)) {
+			$folioRow = $this->_folioModel->where('ANO', $year)->where('FOLIOID', $folio)->first();
+			$folioRow['HECHOMEDIOCONOCIMIENTOID'] = NULL;
+			$folioRow['NOTASAGENTE'] = NULL;
+			$folioRow['STATUS'] = 'ABIERTO';
+			$folioRow['EXPEDIENTEID'] = NULL;
+			$folioRow['AGENTEATENCIONID'] = NULL;
+			$folioRow['AGENTEFIRMAID'] = NULL;
+
+			$update = $this->_folioModel->set($folioRow)->where('ANO', $year)->where('FOLIOID', $folio)->update();
+
+			return json_encode(['status' => 1, 'message' => $update]);
+		}
+	}
+
+	public function restoreFolioProcess()
 	{
 		$folio = $this->request->getPost('folio');
 		$year = $this->request->getPost('year');

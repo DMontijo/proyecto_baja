@@ -161,6 +161,7 @@ $routes->group('data', function ($routes) {
 	//SAVE IN JUSTICIA DATABASE
 	$routes->post('save-in-justicia', 'admin/DashboardController::saveInJusticia');
 	$routes->post('restore-folio', 'admin/DashboardController::restoreFolio');
+	$routes->post('restore-folio-to-process', 'admin/DashboardController::restoreFolioProcess');
 
 	$routes->post('get-persona-fisica-by-id', 'admin/DashboardController::getPersonaFisicaById');
 	$routes->post('get-persona-domicilio-by-id', 'admin/DashboardController::findPersonadDomicilioById');
