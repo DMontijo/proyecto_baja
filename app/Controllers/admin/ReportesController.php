@@ -5,6 +5,8 @@ use App\Models\FolioModel;
 use App\Controllers\BaseController;
 use App\Models\MunicipiosModel;
 use App\Models\UsuariosModel;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class ReportesController extends BaseController
 {
@@ -63,12 +65,57 @@ class ReportesController extends BaseController
             $dataView->result = $resultFilter->result;
             $dataView->municipios = $municipio;
             $dataView->empleados = $empleado;
+            $this->createXlsx($resultFilter);
         
         //var_dump($dataView);
         $this->_loadView('Folios generados', 'folios', '', $dataView,'folios' );
     }
+
     public function getConstancias(){
         $this->_loadView('Constancias generadas', 'constancias', '', '','constancias' );
+    }
+
+    public function createXlsx ($obj){
+        $spreadSheet = new Spreadsheet();
+        $sheet = $spreadSheet->getActiveSheet();
+        $columns = [
+            'A','B','C','D','E',
+            'F','G','H','I','J',
+            'K','L','M','N','O',
+            'P','Q','R','S','T',
+            'U','V','W','X','Y','Z'
+        ];
+
+        $sheet->setCellValue('A1','ID Folio');
+        $sheet->setCellValue('B1','AÑO');
+        $sheet->setCellValue('C1','EXPEDIENTE');
+        $sheet->setCellValue('D1','FECHA DE SALIDA');
+        $sheet->setCellValue('E1','NOMBRE DEL DENUNCIANTE');
+        $sheet->setCellValue('F1','NOMBRE DEL AGENTE');
+        $sheet->setCellValue('G1','ESTADO DE ATENCION');
+        $sheet->setCellValue('H1','MUNICIPIO DE ATENCION');
+        $sheet->setCellValue('I1','STATUS DE EXPEDIENTE');
+        //var_dump($obj);
+        //exit();
+        $row = 2;
+		foreach ($obj->result as $index => $folio) {
+            $sheet->setCellValue('A'.$row, $folio->FOLIOID);
+            $sheet->setCellValue('B'.$row, $folio->ANO);
+            $sheet->setCellValue('C'.$row, $folio->EXPEDIENTEID);
+            $sheet->setCellValue('D'.$row, $folio->FECHASALIDA);
+            $sheet->setCellValue('E'.$row, $folio->N_DENUNCIANTE.' '.$folio->APP_DENUNCIANTE.' '.$folio->APM_DENUNCIANTE );
+            $sheet->setCellValue('F'.$row, $folio->N_AGENT.' '.$folio->APP_AGENT.' '.$folio->APM_AGENT);
+            $sheet->setCellValue('G'.$row, $folio->ESTADODESCR);
+            $sheet->setCellValue('H'.$row, $folio->MUNICIPIODESCR);
+            $sheet->setCellValue('I'.$row, $folio->STATUS);
+            $row++;
+        }
+        $writer = new Xlsx($spreadSheet);
+        $documento = base_url()."/writable/uploads/reporte_folio.xlsx";
+        //$writer->save("reporte_folio.xlsx");
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment; filename="reporte_folios_'.date("Y-m-d h:i:s").'.xls"');
+        $writer->save("php://output");
     }
 
 

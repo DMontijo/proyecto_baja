@@ -57,10 +57,10 @@ class FolioModel extends Model
 			}
 		}
 		if(isset($obj['fechaInicio']) && !isset($obj['horaInicio'])){
-				$strQuery = $strQuery.' AND '.'FOLIO.FECHAACTUALIZACION BETWEEN CAST("'.$obj['fechaInicio'].'" AS DATE) AND CAST("'.(isset($obj['fechaFin']) ? $obj['fechaFin'] : date("Y-m-d")).'" AS DATE)';
+				$strQuery = $strQuery.' AND '.'FOLIO.FECHASALIDA BETWEEN CAST("'.$obj['fechaInicio'].'" AS DATE) AND CAST("'.(isset($obj['fechaFin']) ? $obj['fechaFin'] : date("Y-m-d")).'" AS DATE)';
 		}
 		if(isset($obj['fechaInicio']) && isset($obj['horaInicio'])){
-				$strQuery = $strQuery.' AND '.'FOLIO.FECHAACTUALIZACION BETWEEN CAST("'.$obj['fechaInicio'].' '.$obj['horaInicio'].':00" AS DATETIME) AND CAST("'.(isset($obj['fechaFin']) ? $obj['fechaFin'].' '.$obj['horaFin'].':00' : date("Y-m-d h:i:s")).'" AS DATETIME)';
+				$strQuery = $strQuery.' AND '.'FOLIO.FECHASALIDA BETWEEN CAST("'.$obj['fechaInicio'].' '.$obj['horaInicio'].':00" AS DATETIME) AND CAST("'.(isset($obj['fechaFin']) ? $obj['fechaFin'].' '.$obj['horaFin'].':00' : date("Y-m-d h:i:s")).'" AS DATETIME)';
 		}
 
 		// var_dump($strQuery);
