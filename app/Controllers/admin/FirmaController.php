@@ -92,7 +92,7 @@ class FirmaController extends BaseController
 					$plantilla->TEXTO = str_replace('[MES]', strtoupper($meses[date('m') - 1]), $plantilla->TEXTO);
 					$plantilla->TEXTO = str_replace('[ANIO_FIRMA]', strtoupper(date('Y')), $plantilla->TEXTO);
 					$plantilla->TEXTO = str_replace('[ANIO]', $year, $plantilla->TEXTO);
-					$plantilla->TEXTO = str_replace('[HORA]', date('h:i'), $plantilla->TEXTO);
+					$plantilla->TEXTO = str_replace('[HORA]', date('H:i'), $plantilla->TEXTO);
 
 					switch ($constancia->EXTRAVIO) {
 						case 'BOLETOS DE SORTEO':
@@ -169,7 +169,7 @@ class FirmaController extends BaseController
 					$plantilla->PLACEHOLDER = str_replace('[MES]', strtoupper($meses[date('m') - 1]), $plantilla->PLACEHOLDER);
 					$plantilla->PLACEHOLDER = str_replace('[ANIO_FIRMA]', strtoupper(date('Y')), $plantilla->PLACEHOLDER);
 					$plantilla->PLACEHOLDER = str_replace('[ANIO]', $year, $plantilla->PLACEHOLDER);
-					$plantilla->PLACEHOLDER = str_replace('[HORA]', date('h:i'), $plantilla->PLACEHOLDER);
+					$plantilla->PLACEHOLDER = str_replace('[HORA]', date('H:i'), $plantilla->PLACEHOLDER);
 
 					switch ($constancia->EXTRAVIO) {
 						case 'BOLETOS DE SORTEO':

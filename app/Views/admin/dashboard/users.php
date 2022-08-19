@@ -7,7 +7,7 @@
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-12">
-				<h3 class="mb-4 font-weight-bold text-center">USUARIOS</h3>
+				<h1 class="mb-4 text-center font-weight-bold">AGENTES REGISTRADOS</h1>
 				<div class="card shadow border-0 rounded">
 					<div class="card-body">
 						<div class="row">
@@ -67,13 +67,22 @@
 	$(function() {
 		$("#table-usuarios").DataTable({
 			responsive: false,
-			lengthChange: true,
-			autoWidth: false,
+			lengthChange: false,
+			autoWidth: true,
 			ordering: true,
+			order: [
+				[0, 'asc'],
+			],
+			searching: true,
+			pageLength: 100,
+			// dom: 'Bfrtip',
+			// buttons: [
+			// 	'copy', 'excel', 'pdf'
+			// ],
 			language: {
-				url: '//cdn.datatables.net/plug-ins/1.12.1/i18n/es-ES.json'
+				url: '//cdn.datatables.net/plug-ins/1.12.1/i18n/es-MX.json'
 			}
-		}).buttons().container().appendTo('#videollamadasA_wrapper .col-md-6:eq(0)');
+		});
 	});
 </script>
 <?= $this->endSection() ?>

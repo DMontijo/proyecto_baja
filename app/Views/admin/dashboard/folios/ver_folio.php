@@ -5,12 +5,12 @@
 <?= $this->section('content') ?>
 <?php $session = session(); ?>
 <div class="row" id="videoDen">
-	<div id="card1" class="col-12 col-sm-6 col-md-4 col-lg-3">
-		<div class="card rounded bg-white shadow" style="height: 190px;">
+	<div id="card1" class="col-12 col-sm-6 col-md-4">
+		<div class="card rounded bg-white shadow" style="height: 240px;">
 			<div class="card-body p-4">
-				<div class="row">
-					<div class="col-12 mb-1">
-						<select class="form-control" id="year_select" name="year_select">
+				<div class="row d-none">
+					<div class="col-12">
+						<select class="form-control d-none" id="year_select" name="year_select">
 							<?php for ($i = date('Y'); $i >= 2020; $i--) { ?>
 								<option <?= $i == date('Y') ? 'selected' : null  ?> value="<?= $i ?>"><?= $i ?></option>
 							<?php } ?>
@@ -18,146 +18,44 @@
 					</div>
 					<div class="col-12">
 						<div class="input-group mb-1">
-							<input type="text" class="form-control" id="input_folio_atencion" placeholder="Folio" value="<?= isset($body_data->folio) ? $body_data->folio : '' ?>">
+							<input type="text" class="form-control d-none" id="input_folio_atencion" placeholder="Folio" value="<?= isset($body_data->folio) ? $body_data->folio : '' ?>">
 						</div>
 					</div>
 				</div>
-				<button id="buscar-btn" class="btn btn-secondary btn-block" role="button"><i class="fas fa-search"></i> Buscar</button>
-				<button id="buscar-nuevo-btn" class="btn btn-primary btn-block h-100 d-none m-0 p-0" role="button"><i class="fas fa-search"></i> Buscar nuevo</button>
+				<button id="buscar-btn" class="btn btn-secondary btn-block h-100 m-0 p-0" role="button"><i class="fas fa-search"></i> BUSCAR</button>
+				<button id="buscar-nuevo-btn" class="btn btn-primary btn-block h-100 d-none m-0 p-0" role="button"><i class="fas fa-search"></i> BUSCAR NUEVO</button>
 			</div>
 		</div>
 	</div>
-	<div id="card2" class="col-12 col-sm-6 col-md-4 col-lg-3 d-none">
-		<div class="card rounded bg-white shadow" style="min-height: 190px;">
+	<div id="card2" class="col-12 col-sm-6 col-md-4 d-none">
+		<div class="card rounded bg-white shadow" style="min-height: 240px;">
 			<div class="card-body">
 				<label class="font-weight-bold">Delito:</label>
 				<input class="form-control" type="text" id="delito_dash">
 				<label class="font-weight-bold">Descripción:</label>
-				<textarea class="form-control" id="delito_descr_dash"></textarea>
+				<textarea class="form-control" id="delito_descr_dash" rows="4"></textarea>
 			</div>
 		</div>
 	</div>
-	<div id="card3" class="col-12 col-sm-6 col-md-4 col-lg-3 d-none">
-		<div class="card rounded bg-white shadow" style="height: 190px;">
+	<div id="card3" class="col-12 col-sm-6 col-md-4 d-none">
+		<div class="card rounded bg-white shadow" style="height: 240px;">
 			<div class="card-body">
 				<button id="info-folio-btn" class="btn btn-primary btn-block h-100" role="button" data-toggle="modal" data-target="#info_folio_modal"><i class="fas fa-file-alt"></i> INFORMACIÓN DEL CASO</button>
-			</div>
-		</div>
-	</div>
-	<div id="card4" class="col-12 col-sm-6 col-md-4 col-lg-3 d-none">
-		<div class="card rounded bg-white shadow" style="height: 190px;">
-			<div class="card-body">
-				<button id="salida-folio-btn" class="btn btn-primary btn-block h-100" role="button" data-toggle="modal" data-target="#salida_modal"><i class="fas fa-sign-out-alt"></i> DAR SALIDA</button>
-			</div>
-		</div>
-	</div>
-</div>
-<div class="row">
-	<div class="col">
-		<?php if (session('USUARIOVIDEO') && session('TOKENVIDEO')) { ?>
-			<div class="card rounded bg-white shadow">
-				<div class="card-body embed-responsive embed-responsive-1by1 shadow rounded">
-					<iframe src="<?= "https://videodenunciaserver1.fgebc.gob.mx/pde?u=" . session('USUARIOVIDEO') . "&token=" . session('TOKENVIDEO') ?>" frameborder="0" allow="camera *;microphone *"></iframe>
-				</div>
-			</div>
-		<?php } else { ?>
-			<div class="card rounded bg-white shadow">
-				<div class="card-body">
-					<h2>NO CUENTAS CON TOKEN PARA VIDEODENUNCIA</h2>
-				</div>
-			</div>
-		<?php } ?>
-	</div>
-	<div id="card5" class="col-12 col-sm-6 col-md-4 col-lg-3 d-none">
-		<div class="card rounded bg-white shadow">
-			<div class="card-body">
-				<div class="row">
-					<div class="col-12 text-center mb-3">
-						<h5 class="font-weight-bold m-0">HORA</h5>
-						<div id="clock"></div>
-					</div>
-					<div class="col-12 text-center">
-						<h5 class="font-weight-bold m-0">FECHA</h5>
-						<div id="date"></div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="card rounded bg-white shadow">
-			<div class="card-body">
-				<div class="row">
-					<div class="col-12 overflow-auto">
-						<a class="btn btn-primary btn-block" target="_blank" href="https://www.diputados.gob.mx/LeyesBiblio/ref/cpf.htm"><i class="fas fa-file-alt"></i> Código Penal Federal</a>
-						<a class="btn btn-primary btn-block" target="_blank" href="https://www.congresobc.gob.mx/Contenido/Actividades_Legislativas/Leyes_Codigos.aspx"><i class="fas fa-file-alt"></i> Código Penal Estatal</a>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="card rounded bg-white shadow">
-			<div class="card-body">
-				<label class="font-weight-bold" for="notas">Breve descripción del caso:</label>
-				<textarea class="form-control" id="notas_mp" placeholder="Descripción del caso..." rows="10" required maxlength="300" oninput="mayuscTextarea(this)" onkeydown="pulsar(event)"></textarea>
 			</div>
 		</div>
 	</div>
 </div>
 <script>
 	const inputFolio = document.querySelector('#input_folio_atencion');
-	const inputF = document.getElementById('input_folio_atencion').value;
 	const buscar_btn = document.querySelector('#buscar-btn');
 	const buscar_nuevo_btn = document.querySelector('#buscar-nuevo-btn');
 	const info_folio_btn = document.querySelector('#info-folio-btn');
-	const notas_mp = document.querySelector('#notas_mp');
 	const year_select = document.querySelector('#year_select');
 
 	const card1 = document.querySelector('#card1');
 	const card2 = document.querySelector('#card2');
 	const card3 = document.querySelector('#card3');
-	const card4 = document.querySelector('#card4');
-	const card5 = document.querySelector('#card5');
 	var respuesta;
-
-	function startTime() {
-		var today = new Date();
-		var hr = today.getHours();
-		var min = today.getMinutes();
-		var sec = today.getSeconds();
-		ap = "hrs.";
-		hr = hr;
-		// hr = (hr > 12) ? hr - 12 : hr;
-		//Add a zero in front of numbers<10
-		hr = checkTime(hr);
-		min = checkTime(min);
-		sec = checkTime(sec);
-		document.getElementById("clock").innerHTML = hr + ":" + min + ":" + sec + " " + ap;
-
-		var months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-		var days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-		var curWeekDay = days[today.getDay()];
-		var curDay = today.getDate();
-		var curMonth = months[today.getMonth()];
-		var curYear = today.getFullYear();
-		var date = curWeekDay + ", " + curDay + " " + curMonth + " " + curYear;
-		document.getElementById("date").innerHTML = date;
-
-		var time = setTimeout(function() {
-			startTime()
-		}, 500);
-	}
-
-	function checkTime(i) {
-		if (i < 10) {
-			i = "0" + i;
-		}
-		return i;
-	}
-
-	function pulsar(e) {
-		if (e.which === 13 && !e.shiftKey) {
-			e.preventDefault();
-			return false;
-		}
-	}
 
 	const mayuscTextarea = (e) => {
 		e.value = e.value.toUpperCase();
@@ -167,7 +65,8 @@
 		$.ajax({
 			data: {
 				'folio': inputFolio.value,
-				'year': year_select.value
+				'year': year_select.value,
+				'search': true
 			},
 			url: "<?= base_url('/data/get-folio-information') ?>",
 			method: "POST",
@@ -189,8 +88,6 @@
 
 					card2.classList.remove('d-none');
 					card3.classList.remove('d-none');
-					card4.classList.remove('d-none');
-					card5.classList.remove('d-none');
 
 					document.querySelector('#delito_dash').value = folio.HECHODELITO;
 					document.querySelector('#delito_descr_dash').value = folio.HECHONARRACION;
@@ -287,6 +184,7 @@
 						document.querySelector('#colonia_delito_select').value = '0';
 						document.querySelector('#colonia_delito').value = folio.HECHOCOLONIADESCR;
 					}
+
 					document.querySelector('#calle_delito').value = folio.HECHOCALLE;
 					document.querySelector('#exterior_delito').value = folio.HECHONUMEROCASA;
 					document.querySelector('#interior_delito').value = folio.HECHONUMEROCASAINT;
@@ -339,14 +237,12 @@
 				} else if (response.status === 2) {
 					Swal.fire({
 						icon: 'error',
-						html: 'El folio se encuentra en atención.',
+						html: response.status,
 						confirmButtonColor: '#bf9b55',
 					});
 				} else if (response.status === 3) {
 					card2.classList.add('d-none');
 					card3.classList.add('d-none');
-					card4.classList.add('d-none');
-					card5.classList.add('d-none');
 					let texto = 'El folio ya fue atentido por el agente<br><strong>' + response.agente + '</strong><br><br><strong>' + response.motivo + '</strong>';
 					if (response.motivo == 'EXPEDIENTE') {
 						texto = texto + '<br><strong>' + response.expediente + '</strong>';
@@ -359,8 +255,6 @@
 				} else {
 					card2.classList.add('d-none');
 					card3.classList.add('d-none');
-					card4.classList.add('d-none');
-					card5.classList.add('d-none');
 					Swal.fire({
 						icon: 'error',
 						text: 'El folio no existe, verificalo de nuevo.',
@@ -401,8 +295,6 @@
 
 		card2.classList.add('d-none');
 		card3.classList.add('d-none');
-		card4.classList.add('d-none');
-		card5.classList.add('d-none');
 
 		document.querySelector('#delito_dash').value = '';
 		document.querySelector('#delito_descr_dash').value = '';
@@ -438,24 +330,7 @@
 	}
 
 	buscar_nuevo_btn.addEventListener('click', () => {
-		data = {
-			'folio': inputFolio.value,
-			'year': year_select.value,
-		}
-		$.ajax({
-			data: data,
-			url: "<?= base_url('/data/restore-folio') ?>",
-			method: "POST",
-			dataType: "json",
-
-		}).done(function(data) {}).fail(function(jqXHR, textStatus) {
-			Swal.fire({
-				icon: 'error',
-				text: 'El folio quedó en proceso, comunicate con soporte técnico para devolver el estado a abierto.',
-				confirmButtonColor: '#bf9b55',
-			});
-		});
-		borrarTodo();
+		history.back();
 	});
 
 	function viewPersonaFisica(id, calidadId) {
@@ -659,7 +534,6 @@
 						document.querySelector('#interiorp').value = '';
 						document.querySelector('#zonap').value = '';
 					}
-
 					$('#folio_persona_fisica_modal').modal('show');
 				} else {
 					Swal.fire({
@@ -830,13 +704,13 @@
 
 	//DELITO FORM ******************************************************************
 	window.onload = function() {
-		startTime();
-
 		(function() {
 			'use strict'
 			var form_delito = document.querySelector('#denuncia_form');
 			var form_preguntas = document.querySelector('#preguntas_form');
 			var inputsText = document.querySelectorAll('input[type="text"]');
+
+			document.querySelector('#buscar-btn').click();
 
 			form_delito.addEventListener('submit', (event) => {
 				if (!form_delito.checkValidity()) {
@@ -1077,9 +951,8 @@
 	//DELITO END FORM ******************************************************************
 </script>
 
-<?php include('video_denuncia_modals/info_folio_modal.php') ?>
-<?php include('video_denuncia_modals/salida_modal.php') ?>
-<?php include('video_denuncia_modals/persona_modal.php') ?>
-<?php include('video_denuncia_modals/vehiculo_modal.php') ?>
-<?php include('video_denuncia_modals/domicilio_modal.php') ?>
+<?php include('modals/info_folio_modal.php') ?>
+<?php include('modals/persona_modal.php') ?>
+<?php include('modals/vehiculo_modal.php') ?>
+<?php include('modals/domicilio_modal.php') ?>
 <?php $this->endSection() ?>

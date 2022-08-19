@@ -44,32 +44,32 @@ class FolioModel extends Model
 		'FECHASALIDA'
 	];
 
-	public function filterDates($obj){
+	public function filterDates($obj)
+	{
 		$strQuery = 'SELECT FOLIO.FOLIOID, FOLIO.ANO, FOLIO.EXPEDIENTEID, FOLIO.STATUS, FOLIO.FECHASALIDA,DENUNCIANTES.NOMBRE AS "N_DENUNCIANTE", DENUNCIANTES.APELLIDO_PATERNO AS "APP_DENUNCIANTE", DENUNCIANTES.APELLIDO_MATERNO AS "APM_DENUNCIANTE", USUARIOS.NOMBRE AS "N_AGENT", USUARIOS.APELLIDO_PATERNO AS "APP_AGENT", USUARIOS.APELLIDO_MATERNO AS "APM_AGENT", ESTADO.ESTADODESCR,MUNICIPIO.MUNICIPIODESCR FROM FOLIO INNER JOIN USUARIOS ON USUARIOS.ID = FOLIO.AGENTEATENCIONID
 		INNER JOIN DENUNCIANTES ON DENUNCIANTES.DENUNCIANTEID = FOLIO.DENUNCIANTEID
 		INNER JOIN ESTADO ON ESTADO.ESTADOID = FOLIO.ESTADOID
 		INNER JOIN MUNICIPIO ON MUNICIPIO.MUNICIPIOID = FOLIO.MUNICIPIOID AND MUNICIPIO.ESTADOID = FOLIO.ESTADOID WHERE NOT FOLIO.STATUS = "ABIERTO" AND NOT FOLIO.STATUS = "EN PROCESO"';
-		//var_dump($obj);
-		foreach($obj as $clave=>$valor){
-			if($clave != 'fechaInicio' && $clave != 'fechaFin' && $clave != 'horaInicio' && $clave != 'horaFin'){
-				$strQuery = $strQuery.' AND ';
-				$strQuery = $strQuery.'FOLIO.'.$clave.' = '.$valor;
+
+		foreach ($obj as $clave => $valor) {
+			if ($clave != 'fechaInicio' && $clave != 'fechaFin' && $clave != 'horaInicio' && $clave != 'horaFin') {
+				$strQuery = $strQuery . ' AND ';
+				$strQuery = $strQuery . 'FOLIO.' . $clave . ' = ' . $valor;
 			}
 		}
-		if(isset($obj['fechaInicio']) && !isset($obj['horaInicio'])){
-				$strQuery = $strQuery.' AND '.'FOLIO.FECHASALIDA BETWEEN CAST("'.$obj['fechaInicio'].'" AS DATE) AND CAST("'.(isset($obj['fechaFin']) ? $obj['fechaFin'] : date("Y-m-d")).'" AS DATE)';
-		}
-		if(isset($obj['fechaInicio']) && isset($obj['horaInicio'])){
-				$strQuery = $strQuery.' AND '.'FOLIO.FECHASALIDA BETWEEN CAST("'.$obj['fechaInicio'].' '.$obj['horaInicio'].':00" AS DATETIME) AND CAST("'.(isset($obj['fechaFin']) ? $obj['fechaFin'].' '.$obj['horaFin'].':00' : date("Y-m-d h:i:s")).'" AS DATETIME)';
-		}
+		
+		$strQuery =
+			$strQuery . ' AND ' .
+			'FOLIO.FECHASALIDA BETWEEN CAST("' .
+			(isset($obj['fechaInicio']) ? date("Y-m-d", strtotime($obj['fechaInicio'])) : date("Y-m-d")) . ' ' .
+			(isset($obj['horaInicio']) ? (date('H:i:s', strtotime($obj['horaInicio']))) : '00:00:00') . '" AS DATETIME)' . ' AND ' . 'CAST("' .
+			(isset($obj['fechaFin']) ? (isset($obj['horaFin']) ? date("Y-m-d", strtotime($obj['fechaFin'])) : date("Y-m-d", strtotime(date("Y-m-d", strtotime($obj['fechaFin'])) . '+1 day'))) : date("Y-m-d", strtotime('+1 day'))) . ' ' .
+			(isset($obj['horaFin']) ? (date('H:i:s', strtotime($obj['horaFin']))) : '00:00:00') . '" AS DATETIME)';
 
-		// var_dump($strQuery);
-		// exit();
-		$db = db_connect(); 
-		$result = $db->query($strQuery)->getResult();
+		$result = $this->db->query($strQuery)->getResult();
 		$dataView = (object)array();
-        $dataView->result = $result;
-        $dataView->strQuery = $strQuery;
+		$dataView->result = $result;
+		$dataView->strQuery = $strQuery;
 		return $dataView;
 	}
 }

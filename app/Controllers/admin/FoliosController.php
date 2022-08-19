@@ -6,6 +6,17 @@ use App\Controllers\BaseController;
 
 use App\Models\DenunciantesModel;
 
+use App\Models\EstadosModel;
+use App\Models\MunicipiosModel;
+use App\Models\LocalidadesModel;
+use App\Models\ColoniasModel;
+use App\Models\HechoLugarModel;
+use App\Models\VehiculoColorModel;
+use App\Models\VehiculoTipoModel;
+use App\Models\PaisesModel;
+use App\Models\DelitosUsuariosModel;
+use App\Models\PersonaIdiomaModel;
+
 use App\Models\FolioPreguntasModel;
 use App\Models\FolioModel;
 use App\Models\FolioPersonaFisicaModel;
@@ -15,6 +26,16 @@ use App\Models\FolioVehiculoModel;
 use App\Models\UsuariosModel;
 use App\Models\ZonasUsuariosModel;
 use App\Models\RolesUsuariosModel;
+use App\Models\OficinasModel;
+use App\Models\EmpleadosModel;
+use App\Models\PersonaCalidadJuridicaModel;
+use App\Models\PersonaTipoIdentificacionModel;
+
+use App\Models\EscolaridadModel;
+use App\Models\OcupacionModel;
+use App\Models\PersonaEstadoCivilModel;
+use App\Models\PersonaNacionalidadModel;
+
 use App\Models\ConstanciaExtravioModel;
 
 class FoliosController extends BaseController
@@ -22,7 +43,23 @@ class FoliosController extends BaseController
 	function __construct()
 	{
 		//Models
+		$this->_constanciaExtravioModel = new ConstanciaExtravioModel();
+
+		$this->_usuariosModel = new UsuariosModel();
+		$this->_zonasUsuariosModel = new ZonasUsuariosModel();
+		$this->_rolesUsuariosModel = new RolesUsuariosModel();
+
+		$this->_paisesModel = new PaisesModel();
+		$this->_estadosModel = new EstadosModel();
+		$this->_municipiosModel = new MunicipiosModel();
+		$this->_localidadesModel = new LocalidadesModel();
+		$this->_coloniasModel = new ColoniasModel();
+		$this->_hechoLugarModel = new HechoLugarModel();
+		$this->_coloresVehiculoModel = new VehiculoColorModel();
+		$this->_tipoVehiculoModel = new VehiculoTipoModel();
+		$this->_delitosUsuariosModel = new DelitosUsuariosModel();
 		$this->_denunciantesModel = new DenunciantesModel();
+		$this->_idiomaModel = new PersonaIdiomaModel();
 
 		$this->_folioModel = new FolioModel();
 		$this->_folioPreguntasModel = new FolioPreguntasModel();
@@ -31,11 +68,18 @@ class FoliosController extends BaseController
 		$this->_folioPersonaFisicaDesaparecidaModel = new FolioPersonaFisicaDesaparecidaModel();
 		$this->_folioVehiculoModel = new FolioVehiculoModel();
 
-		$this->_constanciaExtravioModel = new ConstanciaExtravioModel();
-
 		$this->_usuariosModel = new UsuariosModel();
 		$this->_zonasUsuariosModel = new ZonasUsuariosModel();
 		$this->_rolesUsuariosModel = new RolesUsuariosModel();
+		$this->_oficinasModel = new OficinasModel();
+		$this->_empleadosModel = new EmpleadosModel();
+		$this->_folioPersonaCalidadJuridica = new PersonaCalidadJuridicaModel();
+		$this->_tipoIdentificacionModel = new PersonaTipoIdentificacionModel();
+
+		$this->_escolaridadModel = new EscolaridadModel();
+		$this->_ocupacionModel = new OcupacionModel();
+		$this->_estadoCivilModel = new PersonaEstadoCivilModel();
+		$this->_nacionalidadModel = new PersonaNacionalidadModel();
 	}
 
 	public function index()
@@ -137,6 +181,110 @@ class FoliosController extends BaseController
 		$data = ['AGENTEFIRMAID' => session('ID')];
 		$this->_folioModel->set($data)->where('FOLIOID', $folio)->update();
 		return redirect()->to(base_url('/admin/dashboard/folios_sin_firma'));
+	}
+
+	public function getAllFolios()
+	{
+		$data = (object)array();
+		$data = [
+			'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
+			'fechaFin' => date("Y-m-d"),
+		];
+
+		foreach ($data as $clave => $valor) {
+			if (empty($valor)) unset($data[$clave]);
+		}
+
+		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
+		$resultFilter = $this->_folioModel->filterDates($data);
+		$empleado = $this->_usuariosModel->asObject()->where('ROLID', 2)->orderBy('NOMBRE', 'ASC')->findAll();
+
+		$dataView = (object)array();
+		$dataView->result = $resultFilter->result;
+		$dataView->municipios = $municipio;
+		$dataView->empleados = $empleado;
+
+		$this->_loadView('Folios', 'folios', '', $dataView, 'buscar_folio');
+	}
+
+	public function getFilterFolios()
+	{
+		$data = (object)array();
+		$data = [
+			'FOLIOID' => $this->request->getPost('folio'),
+			'ANO' => $this->request->getPost('year'),
+			'MUNICIPIOID' => $this->request->getPost('municipio'),
+			'AGENTEATENCIONID' => $this->request->getPost('agente'),
+			'fechaInicio' => $this->request->getPost('fecha_inicio'),
+			'fechaFin' => $this->request->getPost('fecha_fin'),
+			'horaInicio' => $this->request->getPost('horaInicio'),
+			'horaFin' => $this->request->getPost('horaFin'),
+		];
+
+		foreach ($data as $clave => $valor) {
+			if (empty($valor)) unset($data[$clave]);
+		}
+		if (count($data) <= 0) {
+			$data = [
+				'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
+				'fechaFin' => date("Y-m-d"),
+			];
+		}
+
+		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
+		$resultFilter = $this->_folioModel->filterDates($data);
+		$empleado = $this->_usuariosModel->asObject()->where('ROLID', 2)->orderBy('NOMBRE', 'ASC')->findAll();
+
+		$dataView = (object)array();
+		$dataView->result = $resultFilter->result;
+		$dataView->municipios = $municipio;
+		$dataView->empleados = $empleado;
+		$dataView->filterParams = (object)$data;
+
+		$this->_loadView('Folios', 'folios', '', $dataView, 'buscar_folio');
+	}
+
+	public function viewFolio()
+	{
+		$data = (object)array();
+		$data->folio = $this->request->getPost('folio');
+
+		// Catálogos
+		$data->delitosUsuarios = $this->_delitosUsuariosModel->asObject()->orderBy('DELITO', 'ASC')->findAll();
+		$lugares = $this->_hechoLugarModel->orderBy('HECHODESCR', 'ASC')->findAll();
+		$lugares_sin = [];
+		$lugares_fuego = [];
+		$lugares_blanca = [];
+		foreach ($lugares as $lugar) {
+			if (strpos($lugar['HECHODESCR'], 'ARMA DE FUEGO')) {
+				array_push($lugares_fuego, (object)$lugar);
+			}
+			if (strpos($lugar['HECHODESCR'], 'ARMA BLANCA')) {
+				array_push($lugares_blanca, (object)$lugar);
+			}
+			if (!strpos($lugar['HECHODESCR'], 'ARMA BLANCA') && !strpos($lugar['HECHODESCR'], 'ARMA DE FUEGO')) {
+				array_push($lugares_sin, (object)$lugar);
+			}
+		}
+		$data->lugares = [];
+		$data->lugares = (object)array_merge($lugares_sin, $lugares_blanca, $lugares_fuego);
+
+		$data->edoCiviles = $this->_estadoCivilModel->asObject()->findAll();
+		$data->nacionalidades = $this->_nacionalidadModel->asObject()->findAll();
+		$data->calidadJuridica = $this->_folioPersonaCalidadJuridica->asObject()->findAll();
+		$data->idiomas = $this->_idiomaModel->asObject()->findAll();
+
+		$data->municipios = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
+
+		$data->paises = $this->_paisesModel->asObject()->findAll();
+		$data->estados = $this->_estadosModel->asObject()->findAll();
+		$data->tiposIdentificaciones = $this->_tipoIdentificacionModel->asObject()->findAll();
+		$data->escolaridades = $this->_escolaridadModel->asObject()->findAll();
+		$data->ocupaciones = $this->_ocupacionModel->asObject()->findAll();
+		$data->colorVehiculo = $this->_coloresVehiculoModel->asObject()->findAll();
+		$data->tipoVehiculo = $this->_tipoVehiculoModel->asObject()->orderBy('VEHICULOTIPODESCR', 'ASC')->findAll();
+
+		$this->_loadView('Video denuncia', 'videodenuncia', '', $data, 'ver_folio');
 	}
 
 	private function _loadView($title, $menu, $submenu, $data, $view)

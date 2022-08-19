@@ -33,7 +33,7 @@ $meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "
 									<tr>
 										<td class="text-center font-weight-bold"><?= $constancia->CONSTANCIAEXTRAVIOID . '/' . $constancia->ANO ?></td>
 										<td class="text-center"><?= date("d-m-Y", strtotime($constancia->FECHAFIRMA)) ?></td>
-										<td class="text-center"><?= date("h:m", strtotime($constancia->HORAFIRMA)) ?></td>
+										<td class="text-center"><?= date("H:i", strtotime($constancia->HORAFIRMA)) ?></td>
 										<td class="text-center"><?= $constancia->LUGARFIRMA ?></td>
 										<td class="text-center"><?= $constancia->EXTRAVIO == 'DOCUMENTOS'
 																	? $constancia->TIPODOCUMENTO
@@ -92,13 +92,22 @@ $meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "
 	$(function() {
 		$("#extravios_abiertos").DataTable({
 			responsive: false,
-			lengthChange: true,
-			autoWidth: false,
+			lengthChange: false,
+			autoWidth: true,
 			ordering: true,
+			order: [
+				[0, 'asc'],
+			],
+			searching: true,
+			pageLength: 100,
+			// dom: 'Bfrtip',
+			// buttons: [
+			// 	'copy', 'excel', 'pdf'
+			// ],
 			language: {
-				url: '//cdn.datatables.net/plug-ins/1.12.1/i18n/es-ES.json'
+				url: '//cdn.datatables.net/plug-ins/1.12.1/i18n/es-MX.json'
 			}
-		}).buttons().container().appendTo('#videollamadasA_wrapper .col-md-6:eq(0)');
+		});
 	});
 </script>
 

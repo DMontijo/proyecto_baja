@@ -114,7 +114,7 @@ class ReportesController extends BaseController
         $documento = base_url()."/writable/uploads/reporte_folio.xlsx";
         //$writer->save("reporte_folio.xlsx");
         header('Content-Type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment; filename="reporte_folios_'.date("Y-m-d h:i:s").'.xls"');
+        header('Content-Disposition: attachment; filename="reporte_folios_'.date("Y-m-d H:i:s").'.xls"');
         $writer->save("php://output");
     }
 

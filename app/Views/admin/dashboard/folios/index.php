@@ -10,7 +10,7 @@
 				<h1 class="mb-4 text-center font-weight-bold">FOLIOS</h1>
 				<a href=""></a>
 			</div>
-			<div class="col-3">
+			<div class="col-12 col-sm-6 col-md-4 col-lg-3">
 				<div class="card shadow border-0 text-center">
 					<img class="card-img-top" src="holder.js/100px180/" alt="">
 					<div class="card-body p-2" style="height:200px;">
@@ -20,7 +20,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-3">
+			<div class="col-12 col-sm-6 col-md-4 col-lg-3">
 				<div class="card shadow border-0 text-center">
 					<img class="card-img-top" src="holder.js/100px180/" alt="">
 					<div class="card-body p-2" style="height:200px;">
@@ -31,7 +31,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-3">
+			<div class="col-12 col-sm-6 col-md-4 col-lg-3">
 				<div class="card shadow border-0 text-center">
 					<img class="card-img-top" src="holder.js/100px180/" alt="">
 					<div class="card-body p-2" style="height:200px;">
@@ -41,7 +41,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-3">
+			<div class="col-12 col-sm-6 col-md-4 col-lg-3">
 				<div class="card shadow border-0 text-center">
 					<img class="card-img-top" src="holder.js/100px180/" alt="">
 					<div class="card-body p-2" style="height:200px;">
@@ -51,7 +51,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-3">
+			<div class="col-12 col-sm-6 col-md-4 col-lg-3">
 				<div class="card shadow border-0 text-center">
 					<img class="card-img-top" src="holder.js/100px180/" alt="">
 					<div class="card-body p-2" style="height:200px;">

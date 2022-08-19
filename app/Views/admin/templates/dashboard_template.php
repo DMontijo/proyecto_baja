@@ -50,6 +50,12 @@
 			<?php endif; ?>
 
 			<li class="c-sidebar-nav-item">
+				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url('admin/dashboard/buscar_folio') ?>">
+					<i class="fas fa-search c-sidebar-nav-icon"></i> Buscar folio
+				</a>
+			</li>
+
+			<li class="c-sidebar-nav-item">
 				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/folios">
 					<i class="fas fa-archive c-sidebar-nav-icon"></i> Folios
 				</a>
@@ -75,14 +81,19 @@
 				</li>
 			<?php endif; ?>
 
-			<li class="c-sidebar-nav-item">
-				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/perfil">
+			<!-- <li class="c-sidebar-nav-item">
+				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url('admin/dashboard/perfil') ?>">
 					<i class="fas fa-address-card c-sidebar-nav-icon"></i> Perfil
+				</a>
+			</li> -->
+			<li class="c-sidebar-nav-item">
+				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url('admin/dashboard/reportes') ?>">
+					<i class="fas fa-folder-open c-sidebar-nav-icon"></i> Reportes
 				</a>
 			</li>
 			<li class="c-sidebar-nav-item">
-				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/reportes">
-					<i class="fas fa-address-card c-sidebar-nav-icon"></i> Reportes
+				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url('admin/logout') ?>">
+					<i class="fas fa-sign-out-alt c-sidebar-nav-icon"></i> Salir
 				</a>
 			</li>
 
@@ -105,14 +116,14 @@
 				BIENVENIDO <?= $session->NOMBRE ?> <?= $session->APELLIDO_PATERNO ?> <?= $session->APELLIDO_MATERNO ?>
 			</button>
 			<ul class="c-header-nav ml-auto mr-2">
-				<li class="c-header-nav-item dropdown">
+				<!-- <li class="c-header-nav-item dropdown">
 					<a class="c-header-nav-link" href="<?= base_url('admin/logout') ?>">
 						<div class="c-avatar font-weight-bold">
 							<i class="fas fa-sign-out-alt mr-2"></i> Salir
 						</div>
 					</a>
-				</li>
-				<!-- <li class="c-header-nav-item dropdown">
+				</li> -->
+				<li class="c-header-nav-item dropdown">
 					<a class="c-header-nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
 						<div class="c-avatar">
 							<i class="fas fa-cogs"></i>
@@ -122,14 +133,21 @@
 						<div class="dropdown-header bg-primary py-2 text-center text-white rounded">
 							<strong>Opciones</strong>
 						</div>
-						<a class="dropdown-item" href="#">
+						<a class="dropdown-item" href="<?= base_url('admin/dashboard/perfil') ?>">
 							<i class="fas fa-user-cog mr-2"></i> Pérfil
 						</a>
 						<a class="dropdown-item" href="<?= base_url('admin/logout') ?>">
 							<i class="fas fa-sign-out-alt mr-2"></i> Salir
 						</a>
 					</div>
-				</li> -->
+				</li>
+				<li class="c-header-nav-item dropdown">
+					<a class="c-header-nav-link" href="#!" onclick="javascript:toggleFullScreen()">
+						<div class="c-avatar font-weight-bold">
+							<i class="fas fa-expand"></i>
+						</div>
+					</a>
+				</li>
 			</ul>
 		</header>
 		<div class="c-body">
@@ -164,6 +182,7 @@
 	<script src="<?= base_url() ?>/assets/DataTables/datatables-buttons/js/buttons.html5.min.js"></script>
 	<script src="<?= base_url() ?>/assets/DataTables/datatables-buttons/js/buttons.print.min.js"></script>
 	<script src="<?= base_url() ?>/assets/DataTables/datatables-buttons/js/buttons.colVis.min.js"></script>
+	<script src="<?= base_url() ?>/assets/js/full_screen.js"></script>
 </body>
 
 </html>

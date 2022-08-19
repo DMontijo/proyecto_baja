@@ -43,7 +43,6 @@ class DashboardController extends BaseController
 	function __construct()
 	{
 		//Models
-		$this->_denunciantesModel = new DenunciantesModel();
 
 		$this->_paisesModel = new PaisesModel();
 		$this->_estadosModel = new EstadosModel();
@@ -71,10 +70,6 @@ class DashboardController extends BaseController
 		$this->_empleadosModel = new EmpleadosModel();
 		$this->_folioPersonaCalidadJuridica = new PersonaCalidadJuridicaModel();
 		$this->_tipoIdentificacionModel = new PersonaTipoIdentificacionModel();
-
-		$this->_municipiosModel = new MunicipiosModel();
-		$this->_localidadesModel = new LocalidadesModel();
-		$this->_coloniasModel = new ColoniasModel();
 
 		$this->_escolaridadModel = new EscolaridadModel();
 		$this->_ocupacionModel = new OcupacionModel();
@@ -242,24 +237,43 @@ class DashboardController extends BaseController
 		$data = (object)array();
 		$numfolio = trim($this->request->getPost('folio'));
 		$year = trim($this->request->getPost('year'));
-		$data->folio = $this->_folioModel->asObject()->where('ANO', $year)->where('FOLIOID', $numfolio)->first();
-		if ($data->folio) {
-			if ($data->folio->STATUS == 'ABIERTO') {
+		$search = $this->request->getPost('search');
+
+		if ($search != 'true') {
+			$data->folio = $this->_folioModel->asObject()->where('ANO', $year)->where('FOLIOID', $numfolio)->first();
+			if ($data->folio) {
+				if ($data->folio->STATUS == 'ABIERTO') {
+					$data->status = 1;
+					$data->preguntas_iniciales = $this->_folioPreguntasModel->where('FOLIOID', $numfolio)->where('ANO', $year)->first();
+					$data->personas = $this->_folioPersonaFisicaModel->get_by_folio($numfolio, $year);
+					$data->vehiculos = $this->_folioVehiculoModel->get_by_folio($numfolio, $year);
+
+					$this->_folioModel->set(['STATUS' => 'EN PROCESO', 'AGENTEATENCIONID' => session('ID')])->where('ANO', $year)->where('FOLIOID', $numfolio)->update();
+					return json_encode($data);
+				} else if ($data->folio->STATUS == 'EN PROCESO') {
+					return json_encode(['status' => 2, 'motivo' => 'EL FOLIO YA ESTA SIENDO ATENDIDO']);
+				} else {
+					$agente = $this->_usuariosModel->asObject()->where('ID', $data->folio->AGENTEATENCIONID)->first();
+					return json_encode(['status' => 3, 'motivo' => $data->folio->STATUS, 'expediente' => $data->folio->EXPEDIENTEID, 'agente' => $agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' . $agente->APELLIDO_MATERNO]);
+				}
+			} else {
+				return json_encode(['status' => 0]);
+			}
+		} else {
+			$data->folio = $this->_folioModel->asObject()->where('ANO', $year)->where('FOLIOID', $numfolio)->first();
+			if ($data->folio) {
 				$data->status = 1;
 				$data->preguntas_iniciales = $this->_folioPreguntasModel->where('FOLIOID', $numfolio)->where('ANO', $year)->first();
 				$data->personas = $this->_folioPersonaFisicaModel->get_by_folio($numfolio, $year);
 				$data->vehiculos = $this->_folioVehiculoModel->get_by_folio($numfolio, $year);
 
-				$this->_folioModel->set(['STATUS' => 'EN PROCESO', 'AGENTEATENCIONID' => session('ID')])->where('ANO', $year)->where('FOLIOID', $numfolio)->update();
+				if ($data->folio->STATUS == 'ABIERTO' || $data->folio->STATUS == 'EN PROCESO') {
+					$data->agente = $this->_usuariosModel->asObject()->where('ID', $data->folio->AGENTEATENCIONID)->first();
+				}
 				return json_encode($data);
-			} else if ($data->folio->STATUS == 'EN PROCESO') {
-				return json_encode(['status' => 2, 'motivo' => 'EL FOLIO YA ESTA SIENDO ATENDIDO']);
 			} else {
-				$agente = $this->_usuariosModel->asObject()->where('ID', $data->folio->AGENTEATENCIONID)->first();
-				return json_encode(['status' => 3, 'motivo' => $data->folio->STATUS, 'expediente' => $data->folio->EXPEDIENTEID, 'agente' => $agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' . $agente->APELLIDO_MATERNO]);
+				return json_encode(['status' => 0, 'motivo' => 'El folio ' . $numfolio . ' del año ' . $year . ' no existe.']);
 			}
-		} else {
-			return json_encode(['status' => 0]);
 		}
 	}
 
@@ -510,7 +524,7 @@ class DashboardController extends BaseController
 			'STATUS' => $status == 'ATENDIDA' ? 'CANALIZADO' : $status,
 			'NOTASAGENTE' => $motivo,
 			'AGENTEATENCIONID' => $agenteId,
-			'FECHASALIDA' => date('Y-m-d H:m:s')
+			'FECHASALIDA' => date('Y-m-d H:i:s')
 		];
 		if (!empty($status) && !empty($motivo) && !empty($year) && !empty($folio) && !empty($agenteId)) {
 			$folioRow = $this->_folioModel->where('ANO', $year)->where('FOLIOID', $folio)->where('STATUS', 'EN PROCESO')->first();
@@ -588,7 +602,7 @@ class DashboardController extends BaseController
 				try {
 					if ($expedienteCreado->status == 201) {
 						$folioRow['EXPEDIENTEID'] = $expedienteCreado->EXPEDIENTEID;
-						$folioRow['FECHASALIDA'] = date('Y-m-d H:m:s');
+						$folioRow['FECHASALIDA'] = date('Y-m-d H:i:s');
 
 						$update = $this->_folioModel->set($folioRow)->where('FOLIOID', $folio)->where('ANO', $year)->update();
 

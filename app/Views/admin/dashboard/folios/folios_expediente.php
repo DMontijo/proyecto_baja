@@ -49,13 +49,22 @@
 	$(function() {
 		$("#folios_expediente").DataTable({
 			responsive: false,
-			lengthChange: true,
-			autoWidth: false,
+			lengthChange: false,
+			autoWidth: true,
 			ordering: true,
+			order: [
+				[0, 'asc'],
+			],
+			searching: true,
+			pageLength: 100,
+			// dom: 'Bfrtip',
+			// buttons: [
+			// 	'copy', 'excel', 'pdf'
+			// ],
 			language: {
-				url: '//cdn.datatables.net/plug-ins/1.12.1/i18n/es-ES.json'
+				url: '//cdn.datatables.net/plug-ins/1.12.1/i18n/es-MX.json'
 			}
-		}).buttons().container().appendTo('#videollamadasA_wrapper .col-md-6:eq(0)');
+		});
 	});
 </script>
 <script>

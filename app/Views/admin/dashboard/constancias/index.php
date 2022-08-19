@@ -7,10 +7,9 @@
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-12">
-				<h1 class="mb-4 text-center font-weight-bold">CONSTANCIAS</h1>
-				<a href=""></a>
+				<h1 class="mb-4 text-center font-weight-bold">CONSTANCIAS DE EXTRAVÍO</h1>
 			</div>
-			<div class="col-3">
+			<div class="col-12 col-sm-6 col-md-4 col-lg-3">
 				<div class="card shadow border-0 text-center">
 					<div class="card-body p-2" style="height:200px;">
 						<a href="<?= base_url('admin/dashboard/constancias_extravio_abiertas') ?>" class="btn btn-primary btn-block h-100 d-flex flex-column justify-content-center align-items-center">
@@ -19,7 +18,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-3">
+			<div class="col-12 col-sm-6 col-md-4 col-lg-3">
 				<div class="card shadow border-0 text-center">
 					<div class="card-body p-2" style="height:200px;">
 						<a href="<?= base_url('admin/dashboard/constancias_extravio_firmadas') ?>" class="btn btn-primary btn-block h-100 d-flex flex-column justify-content-center align-items-center d-flex flex-column justify-content-center align-items-center">

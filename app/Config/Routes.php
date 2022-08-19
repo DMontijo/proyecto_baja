@@ -70,6 +70,10 @@ $routes->group('admin', function ($routes) {
 		$routes->post('liberar_folio', 'admin/FoliosController::liberar_folio');
 		$routes->post('firmar_folio', 'admin/FoliosController::firmar_folio');
 
+		$routes->get('buscar_folio', 'admin/FoliosController::getAllFolios');
+		$routes->post('buscar_folio', 'admin/FoliosController::getFilterFolios');
+		$routes->post('ver_folio', 'admin/FoliosController::viewFolio');
+
 		$routes->get('constancias', 'admin/ConstanciasController::index');
 		$routes->post('firmar_constancia_extravio', 'admin/FirmaController::firmar_constancia_extravio');
 		$routes->get('constancias_extravio_abiertas', 'admin/ConstanciasController::constancias_abiertas');
