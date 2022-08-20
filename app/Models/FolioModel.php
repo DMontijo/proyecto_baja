@@ -54,10 +54,10 @@ class FolioModel extends Model
 		foreach ($obj as $clave => $valor) {
 			if ($clave != 'fechaInicio' && $clave != 'fechaFin' && $clave != 'horaInicio' && $clave != 'horaFin') {
 				$strQuery = $strQuery . ' AND ';
-				$strQuery = $strQuery . 'FOLIO.' . $clave . ' = ' . $valor;
+				$strQuery = $strQuery . 'FOLIO.' . $clave . ' = ' . '"' . $valor . '"';
 			}
 		}
-		
+
 		$strQuery =
 			$strQuery . ' AND ' .
 			'FOLIO.FECHASALIDA BETWEEN CAST("' .
@@ -69,7 +69,7 @@ class FolioModel extends Model
 		$result = $this->db->query($strQuery)->getResult();
 		$dataView = (object)array();
 		$dataView->result = $result;
-		$dataView->strQuery = $strQuery;
+		// $dataView->strQuery = $strQuery;
 		return $dataView;
 	}
 }

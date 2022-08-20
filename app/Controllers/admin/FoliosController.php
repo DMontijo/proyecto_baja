@@ -203,6 +203,7 @@ class FoliosController extends BaseController
 		$dataView->result = $resultFilter->result;
 		$dataView->municipios = $municipio;
 		$dataView->empleados = $empleado;
+		$dataView->filterParams = (object)$data;
 
 		$this->_loadView('Folios', 'folios', '', $dataView, 'buscar_folio');
 	}

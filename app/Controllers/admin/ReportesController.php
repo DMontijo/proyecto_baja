@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controllers\admin;
+
 use App\Models\FolioModel;
 use App\Controllers\BaseController;
 use App\Models\MunicipiosModel;
@@ -12,111 +13,240 @@ class ReportesController extends BaseController
 {
 	function __construct()
 	{
-        $this->_folioModel = new FolioModel(); 
-        $this->_municipiosModel = new MunicipiosModel();
-        $this->_usuariosModel = new UsuariosModel();
+		$this->_folioModel = new FolioModel();
+		$this->_municipiosModel = new MunicipiosModel();
+		$this->_usuariosModel = new UsuariosModel();
 	}
 
-    public function index (){
-        $this->_loadView('Reportes', 'Reportes', '', '','index' );
-    }
+	public function index()
+	{
+		$this->_loadView('Reportes', 'Reportes', '', '', 'index');
+	}
 
-    public function getFolios(){
-        $data = (object)array();
+	public function getFolios()
+	{
 		$data = [
-            'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
-        ];
-        $municipio = $this->_municipiosModel->asObject()->where('ESTADOID', (int)'2')->findAll();
-        $resultFilter = $this->_folioModel->filterDates($data);
-        $empleado = $this->_usuariosModel->asObject()->orderBy('ID', 'DESC')->findAll();
-        $dataView = (object)array();
-        $dataView->result = $resultFilter->result;
-        $dataView->municipios = $municipio;
-        $dataView->empleados = $empleado;
-        //var_dump($dataView);
-        $this->_loadView('Folios generados', 'folios', '', $dataView,'folios' );
-    }
-    public function postFolios(){
-        $data = (object)array();
+			'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
+			'fechaFin' => date("Y-m-d"),
+		];
+
+		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
+		$resultFilter = $this->_folioModel->filterDates($data);
+		$empleado = $this->_usuariosModel->asObject()->where('ROLID', 2)->orderBy('NOMBRE', 'ASC')->findAll();
+
+		$dataView = (object)array();
+		$dataView->result = $resultFilter->result;
+		$dataView->municipios = $municipio;
+		$dataView->empleados = $empleado;
+		$dataView->filterParams = (object)$data;
+
+		$this->_loadView('Folios generados', 'folios', '', $dataView, 'folios');
+	}
+	public function postFolios()
+	{
 		$data = [
-            'fechaInicio' => $this->request->getPost('fechaInicio'),
-            'fechaFin' => $this->request->getPost('fechaFin'),
-            'MUNICIPIOID' => $this->request->getPost('MUNICIPIOID'),
-            'horaInicio' => $this->request->getPost('horaInicio'), 
-            'horaFin' => $this->request->getPost('horaFin'),
-            'AGENTEATENCIONID' => $this->request->getPost('AGENTEATENCIONID')
-        ];
-        //var_dump($data);
-        //exit();
-        foreach($data as $clave=>$valor){
+			'MUNICIPIOID' => $this->request->getPost('municipio'),
+			'AGENTEATENCIONID' => $this->request->getPost('agente'),
+			'STATUS' => $this->request->getPost('status'),
+			'fechaInicio' => $this->request->getPost('fechaInicio'),
+			'fechaFin' => $this->request->getPost('fechaFin'),
+			'horaInicio' => $this->request->getPost('horaInicio'),
+			'horaFin' => $this->request->getPost('horaFin')
+		];
+
+		foreach ($data as $clave => $valor) {
 			//Recorre el array y elimina los valores que nulos o vacíos
-			//evita borrar información de la BD
-			if(empty($valor)) unset($data[$clave]);
+			if (empty($valor)) unset($data[$clave]);
 		}
-        if(count($data)<=0){
-            $data = [
-                'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
-            ];
-        }
-            $municipio = $this->_municipiosModel->asObject()->where('ESTADOID', (int)'2')->findAll();
-            $resultFilter = $this->_folioModel->filterDates($data);
-            $empleado = $this->_usuariosModel->asObject()->orderBy('ID', 'DESC')->findAll();
-            $dataView = (object)array();
-            $dataView->result = $resultFilter->result;
-            $dataView->municipios = $municipio;
-            $dataView->empleados = $empleado;
-            $this->createXlsx($resultFilter);
-        
-        //var_dump($dataView);
-        $this->_loadView('Folios generados', 'folios', '', $dataView,'folios' );
-    }
+		if (count($data) <= 0) {
+			$data = [
+				'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
+				'fechaFin' => date("Y-m-d"),
+			];
+		}
 
-    public function getConstancias(){
-        $this->_loadView('Constancias generadas', 'constancias', '', '','constancias' );
-    }
+		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
+		$resultFilter = $this->_folioModel->filterDates($data);
+		$empleado = $this->_usuariosModel->asObject()->where('ROLID', 2)->orderBy('NOMBRE', 'ASC')->findAll();
 
-    public function createXlsx ($obj){
-        $spreadSheet = new Spreadsheet();
-        $sheet = $spreadSheet->getActiveSheet();
-        $columns = [
-            'A','B','C','D','E',
-            'F','G','H','I','J',
-            'K','L','M','N','O',
-            'P','Q','R','S','T',
-            'U','V','W','X','Y','Z'
-        ];
+		if (isset($data['AGENTEATENCIONID'])) {
+			$agente = $this->_usuariosModel->asObject()->where('ROLID', 2)->where('ID', $data['AGENTEATENCIONID'])->orderBy('NOMBRE', 'ASC')->first();
+			$data['AGENTENOMBRE'] = $agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' . $agente->APELLIDO_MATERNO;
+		}
+		if (isset($data['MUNICIPIOID'])) {
+			$mun = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data['MUNICIPIOID'])->first();
+			$data['MUNICIPIONOMBRE'] = $mun->MUNICIPIODESCR;
+		}
 
-        $sheet->setCellValue('A1','ID Folio');
-        $sheet->setCellValue('B1','AÑO');
-        $sheet->setCellValue('C1','EXPEDIENTE');
-        $sheet->setCellValue('D1','FECHA DE SALIDA');
-        $sheet->setCellValue('E1','NOMBRE DEL DENUNCIANTE');
-        $sheet->setCellValue('F1','NOMBRE DEL AGENTE');
-        $sheet->setCellValue('G1','ESTADO DE ATENCION');
-        $sheet->setCellValue('H1','MUNICIPIO DE ATENCION');
-        $sheet->setCellValue('I1','STATUS DE EXPEDIENTE');
-        //var_dump($obj);
-        //exit();
-        $row = 2;
-		foreach ($obj->result as $index => $folio) {
-            $sheet->setCellValue('A'.$row, $folio->FOLIOID);
-            $sheet->setCellValue('B'.$row, $folio->ANO);
-            $sheet->setCellValue('C'.$row, $folio->EXPEDIENTEID);
-            $sheet->setCellValue('D'.$row, $folio->FECHASALIDA);
-            $sheet->setCellValue('E'.$row, $folio->N_DENUNCIANTE.' '.$folio->APP_DENUNCIANTE.' '.$folio->APM_DENUNCIANTE );
-            $sheet->setCellValue('F'.$row, $folio->N_AGENT.' '.$folio->APP_AGENT.' '.$folio->APM_AGENT);
-            $sheet->setCellValue('G'.$row, $folio->ESTADODESCR);
-            $sheet->setCellValue('H'.$row, $folio->MUNICIPIODESCR);
-            $sheet->setCellValue('I'.$row, $folio->STATUS);
-            $row++;
-        }
-        $writer = new Xlsx($spreadSheet);
-        $documento = base_url()."/writable/uploads/reporte_folio.xlsx";
-        //$writer->save("reporte_folio.xlsx");
-        header('Content-Type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment; filename="reporte_folios_'.date("Y-m-d H:i:s").'.xls"');
-        $writer->save("php://output");
-    }
+		$dataView = (object)array();
+		$dataView->result = $resultFilter->result;
+		$dataView->municipios = $municipio;
+		$dataView->empleados = $empleado;
+		$dataView->filterParams = (object)$data;
+
+		// var_dump($dataView->filterParams);
+		// exit;
+
+		$this->_loadView('Folios generados', 'folios', '', $dataView, 'folios');
+	}
+
+	public function getConstancias()
+	{
+		$this->_loadView('Constancias generadas', 'constancias', '', '', 'constancias');
+	}
+
+	public function createFoliosXlsx()
+	{
+		$data = [
+			'MUNICIPIOID' => $this->request->getPost('municipio'),
+			'AGENTEATENCIONID' => $this->request->getPost('agente'),
+			'STATUS' => $this->request->getPost('status'),
+			'fechaInicio' => $this->request->getPost('fechaInicio'),
+			'fechaFin' => $this->request->getPost('fechaFin'),
+			'horaInicio' => $this->request->getPost('horaInicio'),
+			'horaFin' => $this->request->getPost('horaFin')
+		];
+
+		$date = date("Y_m_d_h_i_s");
+
+		foreach ($data as $clave => $valor) {
+			//Recorre el array y elimina los valores que nulos o vacíos
+			if (empty($valor)) unset($data[$clave]);
+		}
+		if (count($data) <= 0) {
+			$data = [
+				'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
+				'fechaFin' => date("Y-m-d"),
+			];
+		}
+
+		$resultFilter = $this->_folioModel->filterDates($data);
+		$spreadSheet = new Spreadsheet();
+		$spreadSheet->getProperties()
+			->setCreator("Fiscalía General del Estado de Baja California")
+			->setLastModifiedBy("Fiscalía General del Estado de Baja California")
+			->setTitle("Reporte_Folios_' . $date")
+			->setSubject("Reporte_Folios_' . $date")
+			->setDescription(
+				"El presente documento fue generado por el Centro de Denuncia Tecnológica de la Fiscalía General del Estado de Baja California."
+			)
+			->setKeywords("reporte folios cdt fgebc 2022")
+			->setCategory("Reportes");
+		$sheet = $spreadSheet->getActiveSheet();
+
+		$styleHeaders = [
+			'font' => [
+				'bold' => true,
+				'color' => ['argb' => 'FFFFFF'],
+				'name' => 'Arial',
+				'size' => '10'
+			],
+			'alignment' => [
+				'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+				'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+			],
+			'borders' => [
+				'allBorders' => [
+					'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+					'color' => ['argb' => '000000'],
+				],
+			],
+			'fill' => [
+				'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_GRADIENT_LINEAR,
+				'rotation' => 90,
+				'startColor' => [
+					'argb' => '511229',
+				],
+				'endColor' => [
+					'argb' => '511229',
+				],
+			],
+		];
+
+		$styleCells = [
+			'font' => [
+				'bold' => false,
+				'color' => ['argb' => '000000'],
+				'name' => 'Arial',
+				'size' => '10'
+			],
+			'alignment' => [
+				'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+				'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+			],
+			'borders' => [
+				'allBorders' => [
+					'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+					'color' => ['argb' => '000000'],
+				],
+			],
+			'fill' => [
+				'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_GRADIENT_LINEAR,
+				'rotation' => 90,
+				'startColor' => [
+					'argb' => 'FFFFFF',
+				],
+				'endColor' => [
+					'argb' => 'FFFFFF',
+				],
+			],
+		];
+		$row = 1;
+
+		$columns = [
+			'A', 'B', 'C', 'D', 'E',
+			'F', 'G', 'H', 'I', 'J',
+			'K', 'L', 'M', 'N', 'O',
+			'P', 'Q', 'R', 'S', 'T',
+			'U', 'V', 'W', 'X', 'Y', 'Z'
+		];
+		$headers = [
+			'FOLIO',
+			'AÑO',
+			'EXPEDIENTE',
+			'FECHA DE SALIDA',
+			'NOMBRE DEL DENUNCIANTE',
+			'NOMBRE DEL AGENTE',
+			'ESTADO DE ATENCION',
+			'MUNICIPIO DE ATENCION',
+			'ESTATUS DE EXPEDIENTE',
+		];
+
+		for ($i = 0; $i < count($headers); $i++) {
+			$sheet->setCellValue($columns[$i] . 1, $headers[$i]);
+			$sheet->getColumnDimension($columns[$i])->setAutoSize(true);
+		}
+
+		$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
+
+		$row++;
+
+		foreach ($resultFilter->result as $index => $folio) {
+			$sheet->setCellValue('A' . $row, $folio->FOLIOID);
+			$sheet->setCellValue('B' . $row, $folio->ANO);
+			$sheet->setCellValue('C' . $row, $folio->EXPEDIENTEID);
+			$sheet->setCellValue('D' . $row, $folio->FECHASALIDA);
+			$sheet->setCellValue('E' . $row, $folio->N_DENUNCIANTE . ' ' . $folio->APP_DENUNCIANTE . ' ' . $folio->APM_DENUNCIANTE);
+			$sheet->setCellValue('F' . $row, $folio->N_AGENT . ' ' . $folio->APP_AGENT . ' ' . $folio->APM_AGENT);
+			$sheet->setCellValue('G' . $row, $folio->ESTADODESCR);
+			$sheet->setCellValue('H' . $row, $folio->MUNICIPIODESCR);
+			$sheet->setCellValue('I' . $row, $folio->STATUS);
+
+			$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
+
+			if (!(($row - 1) >= count($resultFilter->result))) $row++;
+		}
+
+		$sheet->getStyle('A1:I1')->applyFromArray($styleHeaders);
+		$sheet->getStyle('A2:I' . $row)->applyFromArray($styleCells);
+
+		$writer = new Xlsx($spreadSheet);
+
+		header('Content-Type: application/vnd.ms-excel');
+		header('Content-Disposition: attachment; filename="Reporte_Folios_' . $date . '.xls"');
+		header('Cache-Control: max-age=0');
+		$writer->save("php://output");
+	}
 
 
 
@@ -124,7 +254,7 @@ class ReportesController extends BaseController
 
 
 
-    private function _loadView($title, $menu, $submenu, $data, $view)
+	private function _loadView($title, $menu, $submenu, $data, $view)
 	{
 		$data2 = [
 			'header_data' => (object)['title' => $title, 'menu' => $menu, 'submenu' => $submenu],
@@ -133,6 +263,4 @@ class ReportesController extends BaseController
 
 		echo view("admin/dashboard/reportes/$view", $data2);
 	}
-
-
 }
