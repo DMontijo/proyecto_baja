@@ -41,6 +41,7 @@
 													<?php } ?>
 												</select>
 											</div>
+
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
 												<label for="municipio" class="form-label font-weight-bold">Municipio:</label>
 												<select class="form-control" id="municipio" name="municipio">
@@ -50,6 +51,7 @@
 													<?php } ?>
 												</select>
 											</div>
+
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
 												<label for="agente" class="form-label font-weight-bold">Agente:</label>
 												<select class="form-control" id="agente" name="agente" value="<?= isset($body_data->filterParams->AGENTEATENCIONID) ? $body_data->filterParams->AGENTEATENCIONID : '' ?>">
@@ -59,14 +61,27 @@
 													<?php } ?>
 												</select>
 											</div>
+
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
 												<label for="fecha_inicio" class="form-label font-weight-bold">Fecha de inicio:</label>
 												<input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" max="<?= date("Y-m-d") ?>" value="<?= isset($body_data->filterParams->fechaInicio) ? $body_data->filterParams->fechaInicio : '' ?>">
 											</div>
+
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
 												<label for="fecha_fin" class="form-label font-weight-bold">Fecha de cierre:</label>
 												<input type="date" class="form-control" id="fecha_fin" name="fecha_fin" max="<?= date("Y-m-d") ?>" value="<?= isset($body_data->filterParams->fechaFin) ? $body_data->filterParams->fechaFin : '' ?>">
 											</div>
+
+											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
+												<label for="status" class="form-label font-weight-bold">Estatus:</label>
+												<select class="form-control" id="status" name="status" required>
+													<option selected value="">Todos los estatus</option>
+													<option <?= isset($body_data->filterParams->STATUS) ? ($body_data->filterParams->STATUS == 'EXPEDIENTE' ? 'selected' : '') : null ?> value="EXPEDIENTE">EXPEDIENTE</option>
+													<option <?= isset($body_data->filterParams->STATUS) ? ($body_data->filterParams->STATUS == 'CANALIZADO' ? 'selected' : '') : null ?> value="CANALIZADO">CANALIZADO</option>
+													<option <?= isset($body_data->filterParams->STATUS) ? ($body_data->filterParams->STATUS == 'DERIVADO' ? 'selected' : '') : null ?> value="DERIVADO">DERIVADO</option>
+												</select>
+											</div>
+
 											<div class="col-12 text-right">
 												<a href="<?= base_url('admin/dashboard/buscar_folio') ?>" class="btn btn-secondary font-weight-bold" id="btnFiltroFolio" name="btnFiltroFolio">Borrar filtro</a>
 												<button type="submit" class="btn btn-primary font-weight-bold" id="btnFiltroFolio" name="btnFiltroFolio">Filtrar</button>

@@ -216,6 +216,7 @@ class FoliosController extends BaseController
 			'ANO' => $this->request->getPost('year'),
 			'MUNICIPIOID' => $this->request->getPost('municipio'),
 			'AGENTEATENCIONID' => $this->request->getPost('agente'),
+			'STATUS' => $this->request->getPost('status'),
 			'fechaInicio' => $this->request->getPost('fecha_inicio'),
 			'fechaFin' => $this->request->getPost('fecha_fin'),
 			'horaInicio' => $this->request->getPost('horaInicio'),
