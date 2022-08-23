@@ -98,7 +98,11 @@ $routes->group('admin', function ($routes) {
 		$routes->get('reportes_folios', 'admin/ReportesController::getFolios');
 		$routes->post('reportes_folios', 'admin/ReportesController::postFolios');
 		$routes->get('reportes_constancias', 'admin/ReportesController::getConstancias');
+		$routes->post('reportes_constancias', 'admin/ReportesController::postConstancias');
+
 		$routes->post('generar_excel_folios', 'admin/ReportesController::createFoliosXlsx');
+		$routes->post('generar_excel_constancias', 'admin/ReportesController::createConstanciasXlsx');
+
 	});
 });
 
