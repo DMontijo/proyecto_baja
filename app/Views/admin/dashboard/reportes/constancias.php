@@ -114,7 +114,7 @@
 									<th class="text-center">CONSTANCIA</th>
 									<th class="text-center">AÑO</th>
 									<th class="text-center">FECHA DE FIRMA</th>
-									<th class="text-center">ESTADO COSNTANCIA</th>
+									<th class="text-center">ESTADO CONSTANCIA</th>
 									<th class="text-center">NOMBRE DEL DENUNCIANTE</th>
 									<th class="text-center">NOMBRE DEL AGENTE</th>
 									<th class="text-center">MUNICIPIO DE ATENCIÓN</th>
