@@ -117,12 +117,15 @@
 									<th class="text-center">ESTADO CONSTANCIA</th>
 									<th class="text-center">NOMBRE DEL DENUNCIANTE</th>
 									<th class="text-center">NOMBRE DEL AGENTE</th>
+									
 									<th class="text-center">MUNICIPIO DE ATENCIÓN</th>
 								</tr>
 							</thead>
 							<tbody>
 								<?php
-								foreach ($body_data->result as $index => $constancia) { ?>
+							
+								foreach ($body_data->result as $index => $constancia) { 
+								?>
 									<tr>
 
 										<td class="text-center font-weight-bold"><?= $constancia->CONSTANCIAEXTRAVIOID ?></td>
@@ -131,7 +134,16 @@
 										<td class="text-center"><?= $constancia->STATUS ?></td>
 										<td class="text-center"><?= $constancia->N_SOLICITANTE . ' ' . $constancia->APP_SOLICITANTE . ' ' . $constancia->APM_SOLICITANTE ?></td>
 										<td class="text-center"><?= isset($constancia->N_AGENT) ? $constancia->N_AGENT . ' ' . $constancia->APP_AGENT . ' ' . $constancia->APM_AGENT : 'NO SE HA FIRMADO' ?></td>
-										<td class="text-center"><?= $constancia->MUNICIPIODESCR ?></td>
+										<?php 
+											if ($constancia->TIPODOCUMENTO == "PASAPORTE MEXICANO") {?>
+													<td class="text-center"><?= $constancia->MUNICIPIOCITA?></td>
+											<?php }else{?>
+										
+											<td class="text-center"><?=  $constancia->MUNICIPIODESCR ?></td>
+										<?php }?>
+									
+									
+										
 									</tr>
 								<?php } ?>
 							</tbody>
