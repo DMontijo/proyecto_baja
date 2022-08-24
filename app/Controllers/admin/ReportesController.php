@@ -44,6 +44,7 @@ class ReportesController extends BaseController
 
 		$this->_loadView('Folios generados', 'folios', '', $dataView, 'folios');
 	}
+
 	public function postFolios()
 	{
 		$data = [
@@ -86,79 +87,7 @@ class ReportesController extends BaseController
 		$dataView->empleados = $empleado;
 		$dataView->filterParams = (object)$data;
 
-		// var_dump($dataView->filterParams);
-		// exit;
-
 		$this->_loadView('Folios generados', 'folios', '', $dataView, 'folios');
-	}
-
-
-	public function getConstancias()
-	{
-		
-		$data = [
-			'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
-			'fechaFin' => date("Y-m-d"),
-		];
-
-		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
-		$resultFilter = $this->_constanciaExtravioModel->filterDates($data);
-		$empleado = $this->_usuariosModel->asObject()->where('ROLID', 2)->orderBy('NOMBRE', 'ASC')->findAll();
-
-		$dataView = (object)array();
-		$dataView->result = $resultFilter->result;
-		$dataView->municipios = $municipio;
-		$dataView->empleados = $empleado;
-		$dataView->filterParams = (object)$data;
-		$this->_loadView('Constancias generadas', 'constancias', '', $dataView, 'constancias');
-	}
-	public function postConstancias()
-	{
-		$data = [
-			'MUNICIPIOID' => $this->request->getPost('municipio'),
-			'AGENTEID' => $this->request->getPost('agente'),
-			'STATUS' => $this->request->getPost('status'),
-			'fechaInicio' => $this->request->getPost('fechaInicio'),
-			'fechaFin' => $this->request->getPost('fechaFin'),
-			'horaInicio' => $this->request->getPost('horaInicio'),
-			'horaFin' => $this->request->getPost('horaFin')
-		];
-
-	
-		foreach ($data as $clave => $valor) {
-			//Recorre el array y elimina los valores que nulos o vacíos
-			if (empty($valor)) unset($data[$clave]);
-		}
-		if (count($data) <= 0) {
-			$data = [
-				'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
-				'fechaFin' => date("Y-m-d"),
-			];
-		}
-
-		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
-		$resultFilter = $this->_constanciaExtravioModel->filterDates($data);
-		$empleado = $this->_usuariosModel->asObject()->where('ROLID', 2)->orderBy('NOMBRE', 'ASC')->findAll();
-
-		if (isset($data['AGENTEID'])) {
-			$agente = $this->_usuariosModel->asObject()->where('ROLID', 2)->where('ID', $data['AGENTEID'])->orderBy('NOMBRE', 'ASC')->first();
-			$data['AGENTENOMBRE'] = $agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' . $agente->APELLIDO_MATERNO;
-		}
-		if (isset($data['MUNICIPIOID'])) {
-			$mun = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data['MUNICIPIOID'])->first();
-			$data['MUNICIPIONOMBRE'] = $mun->MUNICIPIODESCR;
-		}
-
-		$dataView = (object)array();
-		$dataView->result = $resultFilter->result;
-		$dataView->municipios = $municipio;
-		$dataView->empleados = $empleado;
-		$dataView->filterParams = (object)$data;
-
-		// var_dump($dataView->filterParams);
-		//  exit;
-
-		$this->_loadView('Constancias generadas', 'constancias', '', $dataView, 'constancias');
 	}
 
 	public function createFoliosXlsx()
@@ -313,6 +242,75 @@ class ReportesController extends BaseController
 		header('Cache-Control: max-age=0');
 		$writer->save("php://output");
 	}
+
+	public function getConstancias()
+	{
+
+		$data = [
+			'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
+			'fechaFin' => date("Y-m-d"),
+		];
+
+		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
+		$resultFilter = $this->_constanciaExtravioModel->filterDates($data);
+		$empleado = $this->_usuariosModel->asObject()->where('ROLID', 2)->orderBy('NOMBRE', 'ASC')->findAll();
+
+		$dataView = (object)array();
+		$dataView->result = $resultFilter->result;
+		$dataView->municipios = $municipio;
+		$dataView->empleados = $empleado;
+		$dataView->filterParams = (object)$data;
+		$this->_loadView('Constancias generadas', 'constancias', '', $dataView, 'constancias');
+	}
+
+	public function postConstancias()
+	{
+		$data = [
+			'MUNICIPIOID' => $this->request->getPost('municipio'),
+			'AGENTEID' => $this->request->getPost('agente'),
+			'STATUS' => $this->request->getPost('status'),
+			'fechaInicio' => $this->request->getPost('fechaInicio'),
+			'fechaFin' => $this->request->getPost('fechaFin'),
+			'horaInicio' => $this->request->getPost('horaInicio'),
+			'horaFin' => $this->request->getPost('horaFin')
+		];
+
+		foreach ($data as $clave => $valor) {
+			//Recorre el array y elimina los valores que nulos o vacíos
+			if (empty($valor)) unset($data[$clave]);
+		}
+		if (count($data) <= 0) {
+			$data = [
+				'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
+				'fechaFin' => date("Y-m-d"),
+			];
+		}
+
+		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
+		$resultFilter = $this->_constanciaExtravioModel->filterDates($data);
+		$empleado = $this->_usuariosModel->asObject()->where('ROLID', 2)->orderBy('NOMBRE', 'ASC')->findAll();
+
+		if (isset($data['AGENTEID'])) {
+			$agente = $this->_usuariosModel->asObject()->where('ROLID', 2)->where('ID', $data['AGENTEID'])->orderBy('NOMBRE', 'ASC')->first();
+			$data['AGENTENOMBRE'] = $agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' . $agente->APELLIDO_MATERNO;
+		}
+		if (isset($data['MUNICIPIOID'])) {
+			$mun = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data['MUNICIPIOID'])->first();
+			$data['MUNICIPIONOMBRE'] = $mun->MUNICIPIODESCR;
+		}
+
+		$dataView = (object)array();
+		$dataView->result = $resultFilter->result;
+		$dataView->municipios = $municipio;
+		$dataView->empleados = $empleado;
+		$dataView->filterParams = (object)$data;
+
+		// var_dump($dataView->filterParams);
+		// exit;
+
+		$this->_loadView('Constancias generadas', 'constancias', '', $dataView, 'constancias');
+	}
+
 	public function createConstanciasXlsx()
 	{
 		$data = [
@@ -348,7 +346,7 @@ class ReportesController extends BaseController
 			->setDescription(
 				"El presente documento fue generado por el Centro de Denuncia Tecnológica de la Fiscalía General del Estado de Baja California."
 			)
-			->setKeywords("reporte constancias de extravío cdt fgebc 2022")
+			->setKeywords("reporte constancias extravío cdt fgebc 2022")
 			->setCategory("Reportes");
 		$sheet = $spreadSheet->getActiveSheet();
 
@@ -438,9 +436,8 @@ class ReportesController extends BaseController
 
 		$row++;
 
-	
 		foreach ($resultFilter->result as $index => $constancia) {
-			$sheet->setCellValue('A' . $row, $constancia->CONSTANCIAEXTRAVIOID );
+			$sheet->setCellValue('A' . $row, $constancia->CONSTANCIAEXTRAVIOID);
 			$sheet->setCellValue('B' . $row, $constancia->ANO);
 			$sheet->setCellValue('C' . $row, $constancia->FECHAFIRMA);
 			$sheet->setCellValue('D' . $row, $constancia->N_SOLICITANTE . ' ' . $constancia->APP_SOLICITANTE . ' ' . $constancia->APM_SOLICITANTE);
@@ -454,8 +451,8 @@ class ReportesController extends BaseController
 			if (!(($row - 1) >= count($resultFilter->result))) $row++;
 		}
 
-		$sheet->getStyle('A1:I1')->applyFromArray($styleHeaders);
-		$sheet->getStyle('A2:I' . $row)->applyFromArray($styleCells);
+		$sheet->getStyle('A1:H1')->applyFromArray($styleHeaders);
+		$sheet->getStyle('A2:H' . $row)->applyFromArray($styleCells);
 
 		$writer = new Xlsx($spreadSheet);
 
@@ -464,12 +461,6 @@ class ReportesController extends BaseController
 		header('Cache-Control: max-age=0');
 		$writer->save("php://output");
 	}
-
-
-
-
-
-
 
 	private function _loadView($title, $menu, $submenu, $data, $view)
 	{

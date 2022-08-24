@@ -4,13 +4,13 @@
 <?= $this->endSection() ?>
 <?= $this->section('content') ?>
 <section class="content">
-	
+
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-12 text-center mb-4">
 				<h1 class="mb-4 text-center font-weight-bold">CONSTANCIAS EMITIDAS</h1>
 				<a class="link link-primary" href="<?= base_url('admin/dashboard/reportes') ?>" role="button"><i class="fas fa-reply"></i> REGRESAR A REPORTES</a>
-            </div>
+			</div>
 			<div class="col-12">
 				<div class="card shadow border-0 p-0">
 					<div class="card-body">
@@ -29,7 +29,7 @@
 									<div class="card-body">
 										<form action="<?= base_url() ?>/admin/dashboard/reportes_constancias" method="post" enctype="multipart/form-data" class="row needs-validation" novalidate>
 
-										<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
+											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
 												<label for="municipio" class="form-label font-weight-bold">Municipio:</label>
 												<select class="form-control" id="municipio" name="municipio" required>
 													<option selected value="">Todos los municipios</option>
@@ -44,7 +44,7 @@
 												<select class="form-control" id="agente" name="agente" required>
 													<option selected value="">Todos los agentes</option>
 													<?php foreach ($body_data->empleados as $index => $empleado) { ?>
-														<option <?= isset($body_data->filterParams->AGENTEATENCIONID) ? ($body_data->filterParams->AGENTEATENCIONID == $empleado->ID ? 'selected' : '') : null ?> value="<?= $empleado->ID ?>"> <?= $empleado->NOMBRE . ' ' . $empleado->APELLIDO_PATERNO . ' ' . $empleado->APELLIDO_MATERNO ?> </option>
+														<option <?= isset($body_data->filterParams->AGENTEID) ? ($body_data->filterParams->AGENTEID == $empleado->ID ? 'selected' : '') : null ?> value="<?= $empleado->ID ?>"> <?= $empleado->NOMBRE . ' ' . $empleado->APELLIDO_PATERNO . ' ' . $empleado->APELLIDO_MATERNO ?> </option>
 													<?php } ?>
 												</select>
 											</div>
@@ -93,7 +93,7 @@
 
 				<div class="card shadow border-0">
 					<div class="card-body" style="overflow-x:auto;">
-						<div class="row">
+						<div class="row mb-3">
 							<div class="col-12 text-right">
 								<?php if (isset($body_data->filterParams)) { ?>
 									<!-- Form para aplicar mismo filtro utilizado para crear el archivo de excel-->
@@ -108,7 +108,7 @@
 								<?php } ?>
 							</div>
 						</div>
-						<table id="expedientes_generados" class="table table-bordered table-striped">
+						<table id="constancias_generadas" class="table table-bordered table-striped">
 							<thead>
 								<tr>
 									<th class="text-center">CONSTANCIA</th>
@@ -162,15 +162,12 @@
 <?php endif; ?>
 <script>
 	$(function() {
-		$("#extravios_abiertos").DataTable({
+		$("#constancias_generadas").DataTable({
 			responsive: false,
 			lengthChange: false,
 			autoWidth: true,
-			ordering: true,
-			order: [
-				[0, 'asc'],
-			],
-			searching: true,
+			ordering: false,
+			searching: false,
 			pageLength: 100,
 			// dom: 'Bfrtip',
 			// buttons: [
@@ -181,6 +178,7 @@
 			}
 		});
 	});
+
 	function collapse_filter() {
 		if (document.querySelector('#filtros').classList.contains('show')) {
 			document.querySelector('#filtros').classList.remove('show');
@@ -220,7 +218,7 @@
 				if (result.isConfirmed) {
 					form.submit();
 				} else if (result.isDenied) {
-					window.location.href = "<?= base_url() ?>/admin/dashboard/reportes_constancias";
+
 				}
 			})
 		});

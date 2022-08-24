@@ -91,7 +91,7 @@
 				</div>
 				<div class="card shadow border-0">
 					<div class="card-body" style="overflow-x:auto;">
-						<div class="row">
+						<div class="row mb-3">
 							<div class="col-12 text-right">
 								<?php if (isset($body_data->filterParams)) { ?>
 									<!-- Form para aplicar mismo filtro utilizado para crear el archivo de excel-->
@@ -106,7 +106,7 @@
 								<?php } ?>
 							</div>
 						</div>
-						<table id="expedientes_generados" class="table table-bordered table-striped">
+						<table id="folios_generados" class="table table-bordered table-striped">
 							<thead>
 								<tr>
 									<th class="text-center">FOLIO</th>
@@ -163,7 +163,7 @@
 <?php endif; ?>
 <script>
 	$(function() {
-		$("#expedientes_generados").DataTable({
+		$("#folios_generados").DataTable({
 			responsive: false,
 			lengthChange: false,
 			autoWidth: true,
@@ -219,7 +219,7 @@
 				if (result.isConfirmed) {
 					form.submit();
 				} else if (result.isDenied) {
-					window.location.href = "<?= base_url() ?>/admin/dashboard/reportes_folios";
+
 				}
 			})
 		});

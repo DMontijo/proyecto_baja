@@ -71,7 +71,7 @@ class ConstanciaExtravioModel extends Model
 				XML,
 				RAZONSOCIALFIRMA
 				')
-			->where('STATUS','FIRMADO')
+			->where('STATUS', 'FIRMADO')
 			->get();
 		return $query->getResult('object');
 	}
@@ -104,8 +104,8 @@ class ConstanciaExtravioModel extends Model
 			'CONSTANCIAEXTRAVIO.FECHAFIRMA BETWEEN CAST("' .
 			(isset($obj['fechaInicio']) ? date("Y-m-d", strtotime($obj['fechaInicio'])) : date("Y-m-d")) . ' ' .
 			(isset($obj['horaInicio']) ? (date('H:i:s', strtotime($obj['horaInicio']))) : '00:00:00') . '" AS DATETIME)' . ' AND ' . 'CAST("' .
-			(isset($obj['fechaFin']) ? (isset($obj['horaFin']) ? date("Y-m-d", strtotime($obj['fechaFin'])) : date("Y-m-d", strtotime(date("Y-m-d", strtotime($obj['fechaFin'])) . '+1 day'))) : date("Y-m-d", strtotime('+1 day'))) . ' ' .
-			(isset($obj['horaFin']) ? (date('H:i:s', strtotime($obj['horaFin']))) : '00:00:00') . '" AS DATETIME)';
+			(isset($obj['fechaFin']) ? (isset($obj['horaFin']) ? date("Y-m-d", strtotime($obj['fechaFin'])) : date("Y-m-d", strtotime(date("Y-m-d", strtotime($obj['fechaFin']))))) : date("Y-m-d")) . ' ' .
+			(isset($obj['horaFin']) ? (date('H:i:s', strtotime($obj['horaFin']))) : '23:59:59') . '" AS DATETIME)';
 
 		$result = $this->db->query($strQuery)->getResult();
 		$dataView = (object)array();
