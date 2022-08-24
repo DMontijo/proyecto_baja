@@ -56,7 +56,7 @@
 
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
 												<label for="fecha" class="form-label font-weight-bold">Fecha de cierre:</label>
-												<input type="date" class="form-control" id="fechaFin" name="fechaFin" max="<?= date("Y-m-d") ?>" value="<?= isset($body_data->filterParams->fechaFin) ? $body_data->filterParams->fechaFin : '' ?>">
+												<input type="date" class="form-control" id="fechaFin" name="fechaFin" max="<?= date("Y-m-d") ?>">
 											</div>
 
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
@@ -72,7 +72,7 @@
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
 												<label for="status" class="form-label font-weight-bold">Estatus:</label>
 												<select class="form-control" id="status" name="status" required>
-													<option selected value="">Todos los estatus</option>
+													<option selected value="FIRMADO">Todos los estatus</option>
 													<option <?= isset($body_data->filterParams->STATUS) ? ($body_data->filterParams->STATUS == 'ABIERTO' ? 'selected' : '') : null ?> value="ABIERTO">ABIERTO</option>
 													<option <?= isset($body_data->filterParams->STATUS) ? ($body_data->filterParams->STATUS == 'FIRMADO' ? 'selected' : '') : null ?> value="FIRMADO">FIRMADO</option>
 												</select>
@@ -124,12 +124,13 @@
 								<?php
 								foreach ($body_data->result as $index => $constancia) { ?>
 									<tr>
+										
 										<td class="text-center font-weight-bold"><?= $constancia->CONSTANCIAEXTRAVIOID ?></td>
 										<td class="text-center"><?= $constancia->ANO ?></td>
-										<td class="text-center"><?= $constancia->FECHAFIRMA ?></td>
+										<td class="text-center"><?= isset($constancia->FECHAFIRMA) ? $constancia->FECHAFIRMA : '' ?></td>
 										<td class="text-center"><?= $constancia->STATUS ?></td>
 										<td class="text-center"><?= $constancia->N_SOLICITANTE . ' ' . $constancia->APP_SOLICITANTE . ' ' . $constancia->APM_SOLICITANTE ?></td>
-										<td class="text-center"><?= $constancia->N_AGENT . ' ' . $constancia->APP_AGENT . ' ' . $constancia->APM_AGENT ?></td>
+										<td class="text-center"><?= isset($constancia->N_AGENT) ? $constancia->N_AGENT . ' ' . $constancia->APP_AGENT . ' ' . $constancia->APM_AGENT : 'NO SE HA FIRMADO' ?></td>
 										<td class="text-center"><?= $constancia->MUNICIPIODESCR ?></td>
 									</tr>
 								<?php } ?>

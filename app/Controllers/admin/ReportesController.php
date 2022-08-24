@@ -92,6 +92,7 @@ class ReportesController extends BaseController
 
 	public function createFoliosXlsx()
 	{
+		
 		$data = [
 			'MUNICIPIOID' => $this->request->getPost('municipio'),
 			'AGENTEATENCIONID' => $this->request->getPost('agente'),
@@ -251,6 +252,10 @@ class ReportesController extends BaseController
 			'fechaFin' => date("Y-m-d"),
 		];
 
+		foreach ($data as $clave => $valor) {
+			if (empty($valor)) unset($data[$clave]);
+		}
+
 		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
 		$resultFilter = $this->_constanciaExtravioModel->filterDates($data);
 		$empleado = $this->_usuariosModel->asObject()->where('ROLID', 2)->orderBy('NOMBRE', 'ASC')->findAll();
@@ -333,9 +338,12 @@ class ReportesController extends BaseController
 			$data = [
 				'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
 				'fechaFin' => date("Y-m-d"),
+				
 			];
 		}
 
+		// var_dump($_POST);
+		// exit;
 		$resultFilter = $this->_constanciaExtravioModel->filterDates($data);
 		$spreadSheet = new Spreadsheet();
 		$spreadSheet->getProperties()
@@ -439,9 +447,9 @@ class ReportesController extends BaseController
 		foreach ($resultFilter->result as $index => $constancia) {
 			$sheet->setCellValue('A' . $row, $constancia->CONSTANCIAEXTRAVIOID);
 			$sheet->setCellValue('B' . $row, $constancia->ANO);
-			$sheet->setCellValue('C' . $row, $constancia->FECHAFIRMA);
+			$sheet->setCellValue('C' . $row,isset($constancia->FECHAFIRMA) ? $constancia->FECHAFIRMA : '' );
 			$sheet->setCellValue('D' . $row, $constancia->N_SOLICITANTE . ' ' . $constancia->APP_SOLICITANTE . ' ' . $constancia->APM_SOLICITANTE);
-			$sheet->setCellValue('E' . $row, $constancia->N_AGENT . ' ' . $constancia->APP_AGENT . ' ' . $constancia->APM_AGENT);
+			$sheet->setCellValue('E' . $row,isset($constancia->N_AGENT) ? $constancia->N_AGENT . ' ' . $constancia->APP_AGENT . ' ' . $constancia->APM_AGENT : 'NO SE HA FIRMADO');
 			$sheet->setCellValue('F' . $row, $constancia->ESTADODESCR);
 			$sheet->setCellValue('G' . $row, $constancia->MUNICIPIODESCR);
 			$sheet->setCellValue('H' . $row, $constancia->STATUS);
