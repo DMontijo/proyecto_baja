@@ -124,7 +124,7 @@
 								<?php
 								foreach ($body_data->result as $index => $constancia) { ?>
 									<tr>
-										
+
 										<td class="text-center font-weight-bold"><?= $constancia->CONSTANCIAEXTRAVIOID ?></td>
 										<td class="text-center"><?= $constancia->ANO ?></td>
 										<td class="text-center"><?= isset($constancia->FECHAFIRMA) ? $constancia->FECHAFIRMA : '' ?></td>
@@ -222,6 +222,26 @@
 
 				}
 			})
+		});
+	</script>
+	<script>
+		$(document).on('change', '#status', function() {
+			var fechaFin = document.getElementById('fechaFin');
+			var horaFin = document.getElementById('horaFin');
+
+			var seleccion = $(this).val();
+			switch (seleccion) {
+				case 'ABIERTO':
+					fechaFin.disabled = true;
+					horaFin.disabled = true;
+
+					break;
+				case 'FIRMADO':
+					fechaFin.disabled = false;
+					horaFin.disabled = false;
+					break;
+
+			}
 		});
 	</script>
 <?php } ?>

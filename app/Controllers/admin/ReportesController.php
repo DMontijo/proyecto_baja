@@ -92,7 +92,7 @@ class ReportesController extends BaseController
 
 	public function createFoliosXlsx()
 	{
-		
+
 		$data = [
 			'MUNICIPIOID' => $this->request->getPost('municipio'),
 			'AGENTEATENCIONID' => $this->request->getPost('agente'),
@@ -321,7 +321,7 @@ class ReportesController extends BaseController
 		$data = [
 			'MUNICIPIOID' => $this->request->getPost('municipio'),
 			'AGENTEID' => $this->request->getPost('agente'),
-			'STATUS' => $this->request->getPost('status'),
+			'STATUS' => $_POST["STATUS"],
 			'fechaInicio' => $this->request->getPost('fechaInicio'),
 			'fechaFin' => $this->request->getPost('fechaFin'),
 			'horaInicio' => $this->request->getPost('horaInicio'),
@@ -338,13 +338,13 @@ class ReportesController extends BaseController
 			$data = [
 				'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
 				'fechaFin' => date("Y-m-d"),
-				
+
 			];
 		}
 
-		// var_dump($_POST);
-		// exit;
+
 		$resultFilter = $this->_constanciaExtravioModel->filterDates($data);
+
 		$spreadSheet = new Spreadsheet();
 		$spreadSheet->getProperties()
 			->setCreator("Fiscalía General del Estado de Baja California")
@@ -445,14 +445,14 @@ class ReportesController extends BaseController
 		$row++;
 
 		foreach ($resultFilter->result as $index => $constancia) {
+
 			$sheet->setCellValue('A' . $row, $constancia->CONSTANCIAEXTRAVIOID);
 			$sheet->setCellValue('B' . $row, $constancia->ANO);
-			$sheet->setCellValue('C' . $row,isset($constancia->FECHAFIRMA) ? $constancia->FECHAFIRMA : '' );
+			$sheet->setCellValue('C' . $row, isset($constancia->FECHAFIRMA) ? $constancia->FECHAFIRMA : '');
 			$sheet->setCellValue('D' . $row, $constancia->N_SOLICITANTE . ' ' . $constancia->APP_SOLICITANTE . ' ' . $constancia->APM_SOLICITANTE);
-			$sheet->setCellValue('E' . $row,isset($constancia->N_AGENT) ? $constancia->N_AGENT . ' ' . $constancia->APP_AGENT . ' ' . $constancia->APM_AGENT : 'NO SE HA FIRMADO');
+			$sheet->setCellValue('E' . $row, isset($constancia->N_AGENT) ? $constancia->N_AGENT . ' ' . $constancia->APP_AGENT . ' ' . $constancia->APM_AGENT : 'NO SE HA FIRMADO');
 			$sheet->setCellValue('F' . $row, $constancia->ESTADODESCR);
 			$sheet->setCellValue('G' . $row, $constancia->MUNICIPIODESCR);
-			$sheet->setCellValue('H' . $row, $constancia->STATUS);
 
 			$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
 
@@ -461,6 +461,7 @@ class ReportesController extends BaseController
 
 		$sheet->getStyle('A1:H1')->applyFromArray($styleHeaders);
 		$sheet->getStyle('A2:H' . $row)->applyFromArray($styleCells);
+		$sheet->setCellValue('H' . $row, $constancia->STATUS);
 
 		$writer = new Xlsx($spreadSheet);
 
