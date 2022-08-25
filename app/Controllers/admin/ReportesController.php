@@ -452,8 +452,12 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('D' . $row, $constancia->N_SOLICITANTE . ' ' . $constancia->APP_SOLICITANTE . ' ' . $constancia->APM_SOLICITANTE);
 			$sheet->setCellValue('E' . $row, isset($constancia->N_AGENT) ? $constancia->N_AGENT . ' ' . $constancia->APP_AGENT . ' ' . $constancia->APM_AGENT : 'NO SE HA FIRMADO');
 			$sheet->setCellValue('F' . $row, $constancia->ESTADODESCR);
+			if ($constancia->MUNICIPIOIDCITA != null) {
+				$sheet->setCellValue('G' . $row, $constancia->MUNICIPIODESCRCITA);
+			}
+			if ($constancia->MUNICIPIOIDCITA == null) {
 			$sheet->setCellValue('G' . $row, $constancia->MUNICIPIODESCR);
-
+			}
 			$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
 
 			if (!(($row - 1) >= count($resultFilter->result))) $row++;
