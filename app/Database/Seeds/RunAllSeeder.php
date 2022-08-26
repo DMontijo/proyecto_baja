@@ -36,5 +36,73 @@ class RunAllSeeder extends Seeder
 		$this->call('EscolaridadSeeder');
 		$this->call('OcupacionSeeder');
 		$this->call('DocumentosExtravioSeeder');
+		$this->call('BarbaPeculiarSeeder');
+		$this->call('BarbaTamanoSeeder');
+		$this->call('BarbillaFormaSeeder');
+		$this->call('BarbillaInclinacionSeeder');
+		$this->call('BarbillaPeculiarSeeder');
+		$this->call('BarbillaTamanoSeeder');
+		$this->call('BigoteFormaSeeder');
+		$this->call('BigoteGrosorSeeder');
+		$this->call('BigotePeculiarSeeder');
+		$this->call('BigoteTamanoSeeder');
+		$this->call('BocaPeculiarSeeder');
+		$this->call('BocaTamanoSeeder');
+		$this->call('CabelloColorSeeder');
+		$this->call('CabelloEstiloSeeder');
+		$this->call('CabelloPeculiarSeeder');
+		$this->call('CabelloTamanoSeeder');
+		$this->call('CabezaFormaSeeder');
+		$this->call('CabezaTamanoSeeder');
+		$this->call('CaraFormaSeeder');
+		$this->call('CaraTamanoSeeder');
+		$this->call('CaraTezSeeder');
+		$this->call('CejaColocacionSeeder');
+		$this->call('CejaContexturaSeeder');
+		$this->call('CejaFormaSeeder');
+		$this->call('CejaGrosorSeeder');
+		$this->call('CejaTamanoSeeder');
+		$this->call('CuelloGrosorSeeder');
+		$this->call('CuelloPeculiarSeeder');
+		$this->call('CuelloTamanoSeeder');
+		$this->call('DientePeculiarSeeder');
+		$this->call('DienteTamanoSeeder');
+		$this->call('DienteTipoSeeder');
+		$this->call('EstomagoSeeder');
+		$this->call('FiguraSeeder');
+		$this->call('FrenteAlturaSeeder');
+		$this->call('FrenteAnchuraSeeder');
+		$this->call('FrenteFormaSeeder');
+		$this->call('FrentePeculiarSeeder');
+		$this->call('HombroGrosorSeeder');
+		$this->call('HombroLongitudSeeder');
+		$this->call('HombroPosicionSeeder');
+		$this->call('LabioLongitudSeeder');
+		$this->call('LabioPeculiarSeeder');
+		$this->call('LabioPosicionSeeder');
+		$this->call('LabiosGrosorSeeder');
+		$this->call('NarizBaseSeeder');
+		$this->call('NarizPeculiarSeeder');
+		$this->call('NarizTamanoSeeder');
+		$this->call('NarizTipoSeeder');
+
+		$this->call('OjoColocacionSeeder');
+		$this->call('OjoColorSeeder');
+		$this->call('OjoFormaSeeder');
+		$this->call('OjoPeculiarSeeder');
+
+		$this->call('OjoTamanoSeeder');
+		$this->call('OjoFormaSeeder');
+		$this->call('OrejaLobuloSeeder');
+		$this->call('OrejaSeparacionSeeder');
+		$this->call('OrejaTamanoSeeder');
+		$this->call('PersonaEtniaSeeder');
+		$this->call('PielColorSeeder');
+
+
+
+
+
+
 	}
 }
