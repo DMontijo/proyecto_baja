@@ -11,7 +11,7 @@ class ConstanciaExtravioModel extends Model
 	protected $allowedFields    = [
 		'CONSTANCIAEXTRAVIOID',
 		'ANO',
-		'SOLICITANTEID',
+		'DENUNCIANTEID',
 		'MUNICIPIOID',
 		'MUNICIPIOIDCITA',
 		'ESTADOID',
@@ -59,7 +59,7 @@ class ConstanciaExtravioModel extends Model
 			->select('
 				CONSTANCIAEXTRAVIOID,
 				ANO,
-				SOLICITANTEID,
+				DENUNCIANTEID,
 				FECHAFIRMA,
 				HORAFIRMA,
 				LUGARFIRMA,

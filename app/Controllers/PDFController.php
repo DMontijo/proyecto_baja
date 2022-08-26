@@ -6,7 +6,6 @@ use App\Controllers\BaseController;
 use App\Models\PlantillasModel;
 use App\Models\FolioModel;
 use App\Models\UsuariosModel;
-use App\Models\SolicitantesConstanciaModel;
 use App\Models\HechoLugarModel;
 use App\Models\MunicipiosModel;
 use App\Models\EstadosModel;
@@ -21,7 +20,6 @@ class PDFController extends BaseController
 		$this->_plantillasModel = new PlantillasModel();
 		$this->_folioModel = new FolioModel();
 		$this->_usuariosModel = new UsuariosModel();
-		$this->_solicitantesModel = new SolicitantesConstanciaModel();
 		$this->_hechoLugarModel = new HechoLugarModel();
 		$this->_municipiosModel = new MunicipiosModel();
 		$this->_estadosModel = new EstadosModel();

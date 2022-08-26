@@ -115,7 +115,9 @@ class UserController extends BaseController
 			'NOTIFICACIONES' => $this->request->getPost('notificaciones_check') == 'on' ? 'S' : 'N',
 			'DOCUMENTO' => $documento,
 			'FIRMA' => $firma,
+			'TIPO' => 1,
 		];
+
 		if ((int)$this->request->getPost('colonia_select') == 0) {
 			$data['COLONIAID'] = NULL;
 			$data['COLONIA'] = $this->request->getPost('colonia');
@@ -131,6 +133,88 @@ class UserController extends BaseController
 			return redirect()->to(base_url('/denuncia'))->with('created', 'Inicia sesión con la contraseña que llegará a tu correo electrónico y comienza tu denuncia');
 		} else {
 			return redirect()->back()->with('message', 'Hubo un error en los datos o puede que ya exista un registro con el mismo correo');
+		}
+	}
+
+	public function updateDenuncianteInfo()
+	{
+		$data = (object) array();
+		$data->nacionalidades = $this->_nacionalidadModel->asObject()->findAll();
+		$data->edoCiviles = $this->_estadosCivilesModel->asObject()->findAll();
+		$data->idiomas = $this->_personaIdiomaModel->asObject()->findAll();
+		$data->paises = $this->_paisesModel->asObject()->findAll();
+		$data->estados = $this->_estadosModel->asObject()->findAll();
+		$data->tiposIdentificaciones = $this->_tipoIdentificacionModel->asObject()->findAll();
+		$data->escolaridades = $this->_escolaridadModel->asObject()->findAll();
+		$data->ocupaciones = $this->_ocupacionModel->asObject()->findAll();
+		$this->_loadViewDashboard('Denuncia', $data, 'dash_register_update/index');
+	}
+
+	public function updateDenuncianteInfoPost()
+	{
+		$password = $this->_generatePassword(6);
+
+		$documento = $this->request->getPost('documento_text');
+		list($type, $documento) = explode(';', $documento);
+		list(, $extension) = explode('/', $type);
+		list(, $documento) = explode(',', $documento);
+		$documento = base64_decode($documento);
+
+		$firma = $this->request->getPost('firma_url');
+		list($type, $firma) = explode(';', $firma);
+		list(, $extension) = explode('/', $type);
+		list(, $firma) = explode(',', $firma);
+		$firma = base64_decode($firma);
+
+		$data = [
+			'PASSWORD' => hashPassword($password),
+			'SEXO' => $this->request->getPost('sexo'),
+			'CODIGOPOSTAL' => $this->request->getPost('cp'),
+			'PAIS' => $this->request->getPost('pais_select'),
+			'ESTADOID' => (int)$this->request->getPost('estado_select'),
+			'ESTADOORIGENID' => (int)$this->request->getPost('estado_select_origen'),
+			'MUNICIPIOID' => (int)$this->request->getPost('municipio_select'),
+			'MUNICIPIOORIGENID' => (int)$this->request->getPost('municipio_select_origen'),
+			'LOCALIDADID' => (int)$this->request->getPost('localidad_select'),
+			'CALLE' => $this->request->getPost('calle'),
+			'NUM_EXT' => $this->request->getPost('exterior'),
+			'NUM_INT' => $this->request->getPost('interior'),
+			'TIPOIDENTIFICACIONID' => $this->request->getPost('identificacion'),
+			'NUMEROIDENTIFICACION' => $this->request->getPost('numero_ide'),
+			'ESTADOCIVILID' => $this->request->getPost('e_civil'),
+			'OCUPACIONID' => $this->request->getPost('ocupacion'),
+			'IDENTIDADGENERO' => $this->request->getPost('iden_genero'),
+			'DISCAPACIDAD' => $this->request->getPost('discapacidad'),
+			'NACIONALIDADID' => (int)$this->request->getPost('nacionalidad'),
+			'ESCOLARIDADID' => $this->request->getPost('escolaridad'),
+			'FACEBOOK' => $this->request->getPost('facebook'),
+			'INSTAGRAM' => $this->request->getPost('instagram'),
+			'TWITTER' => $this->request->getPost('twitter'),
+			'IDIOMAID' => (int)$this->request->getPost('idioma'),
+			'NOTIFICACIONES' => $this->request->getPost('notificaciones_check') == 'on' ? 'S' : 'N',
+			'DOCUMENTO' => $documento,
+			'FIRMA' => $firma,
+			'TIPO' => 1,
+		];
+
+		if ((int)$this->request->getPost('colonia_select') == 0) {
+			$data['COLONIAID'] = NULL;
+			$data['COLONIA'] = $this->request->getPost('colonia');
+		} else {
+			$data['COLONIAID'] = (int)$this->request->getPost('colonia_select');
+			$data['COLONIA'] = NULL;
+		}
+
+		try {
+			if (!session()->has('DENUNCIANTEID')) throw new \Exception();
+			$update = $this->_denunciantesModel->set($data)->where('DENUNCIANTEID', session('DENUNCIANTEID'))->update();
+			if (!$update) throw new \Exception();
+			session()->set('TIPO', '1');
+			session()->setFlashdata('message_success', 'Inicia sesión con la contraseña que llegará a tu correo electrónico');
+			return redirect()->to(base_url('/denuncia'));
+		} catch (\Exception $e) {
+			session()->destroy;
+			return redirect()->to(base_url('/denuncia'))->with('message_error', 'No se pudo actualizar el registro, ingresa e intentalo de nuevo.');
 		}
 	}
 
@@ -228,6 +312,15 @@ class UserController extends BaseController
 		];
 
 		echo view("client/register/$view", $data);
+	}
+
+	private function _loadViewDashboard($title, $data, $view)
+	{
+		$data = [
+			'header_data' => (object)['title' => $title],
+			'body_data' => $data
+		];
+		echo view("client/dashboard/$view", $data);
 	}
 }
 

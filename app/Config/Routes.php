@@ -123,12 +123,15 @@ $routes->group('denuncia', function ($routes) {
 	$routes->post('change_password', 'client/AuthController::change_password_post');
 	$routes->post('send_email_change_password', 'client/AuthController::sendEmailChangePassword');
 
+	$routes->get('actualizar_info', 'client/UserController::updateDenuncianteInfo');
+	$routes->post('actualizar_info', 'client/UserController::updateDenuncianteInfoPost');
+
 	$routes->group('dashboard', ['filter' => 'denuciantesAuth'], function ($routes) {
 		$routes->get('/', 'client/DashboardController::index');
 		$routes->get('video-denuncia', 'client/DashboardController::video_denuncia');
 
-
 		$routes->get('denuncias', 'client/DashboardController::denuncias');
+
 		$routes->post('create', 'client/DashboardController::create');
 		$routes->post('descargarPDF', 'client/DashboardController::descargar_pdf');
 	});

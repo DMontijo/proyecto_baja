@@ -8,8 +8,8 @@ use App\Models\UsuariosModel;
 use App\Models\ZonasUsuariosModel;
 use App\Models\RolesUsuariosModel;
 use App\Models\ConstanciaExtravioModel;
+use App\Models\DenunciantesModel;
 use App\Models\PlantillasModel;
-use App\Models\SolicitantesConstanciaModel;
 use App\Models\HechoLugarModel;
 use App\Models\MunicipiosModel;
 use App\Models\EstadosModel;
@@ -25,7 +25,7 @@ class ConstanciasController extends BaseController
 		$this->_zonasUsuariosModel = new ZonasUsuariosModel();
 		$this->_rolesUsuariosModel = new RolesUsuariosModel();
 		$this->_plantillasModel = new PlantillasModel();
-		$this->_solicitantesModel = new SolicitantesConstanciaModel();
+		$this->_denunciantesModel = new DenunciantesModel();
 		$this->_hechoLugarModel = new HechoLugarModel();
 		$this->_municipiosModel = new MunicipiosModel();
 		$this->_estadosModel = new EstadosModel();
@@ -63,7 +63,7 @@ class ConstanciasController extends BaseController
 		$data->constanciaExtravio = $this->_plantillasModel->asObject()->where('TITULO', 'CONSTANCIA DE EXTRAVÍO')->first();
 		$constancia = $this->_constanciaExtravioModel->asObject()->where('CONSTANCIAEXTRAVIOID', $data->folio)->where('ANO', $year)->first();
 
-		$solicitante = $this->_solicitantesModel->asObject()->where('SOLICITANTEID ', $constancia->SOLICITANTEID)->first();
+		$solicitante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID ', $constancia->DENUNCIANTEID)->first();
 		$lugar = $this->_hechoLugarModel->asObject()->where('HECHOLUGARID', $constancia->HECHOLUGARID)->first();
 		$municipio = (object)[];
 		if ($constancia->MUNICIPIOIDCITA) {

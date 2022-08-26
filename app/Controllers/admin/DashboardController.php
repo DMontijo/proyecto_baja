@@ -125,7 +125,6 @@ class DashboardController extends BaseController
 	{
 		$data = (object)array();
 		$data = $this->_usuariosModel->asObject()->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->join('ZONAS_USUARIOS', 'ZONAS_USUARIOS.ID_ZONA = USUARIOS.ZONAID')->findAll();
-		// var_dump($data);
 		$this->_loadView('Firmar documentos', 'firmar', '', $data, 'signs');
 	}
 
@@ -650,8 +649,8 @@ class DashboardController extends BaseController
 	{
 		$function = '/expediente.php?process=crear';
 		$endpoint = $this->endpoint . $function;
-		// $conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int)$folioRow['MUNICIPIOID'])->where('TYPE', !getenv('CI_ENVIRONMENT') ? 'production' : getenv('CI_ENVIRONMENT'))->first();
-		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int)$folioRow['MUNICIPIOID'])->where('TYPE', 'production')->first();
+		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int)$folioRow['MUNICIPIOID'])->where('TYPE', ENVIRONMENT)->first();
+		// $conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int)$folioRow['MUNICIPIOID'])->where('TYPE', 'production')->first();
 		$array = [
 			"ESTADOID",
 			"MUNICIPIOID",
@@ -763,8 +762,7 @@ class DashboardController extends BaseController
 			"FOTO"
 		];
 		$endpoint = $this->endpoint . $function;
-		// $conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int)$municipio)->where('TYPE', !getenv('CI_ENVIRONMENT') ? 'production' : getenv('CI_ENVIRONMENT'))->first();
-		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int)$municipio)->where('TYPE', 'production')->first();
+		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int)$municipio)->where('TYPE', ENVIRONMENT)->first();
 		$data = $personaFisica;
 
 		$data['PERSONAESCOLARIDADID'] = $data['ESCOLARIDADID'];
@@ -800,8 +798,7 @@ class DashboardController extends BaseController
 	{
 		$function = '/imputado.php?process=crear';
 		$endpoint = $this->endpoint . $function;
-		// $conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int)$municipio)->where('TYPE', !getenv('CI_ENVIRONMENT') ? 'production' : getenv('CI_ENVIRONMENT'))->first();
-		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int)$municipio)->where('TYPE', 'production')->first();
+		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int)$municipio)->where('TYPE', ENVIRONMENT)->first();
 		$data = array();
 
 		$data['EXPEDIENTEID'] = $expedienteId;
@@ -845,8 +842,7 @@ class DashboardController extends BaseController
 				"NUMEROINTERIOR"
 			];
 			$endpoint = $this->endpoint . $function;
-			// $conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int)$municipio)->where('TYPE', !getenv('CI_ENVIRONMENT') ? 'production' : getenv('CI_ENVIRONMENT'))->first();
-			$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int)$municipio)->where('TYPE', 'production')->first();
+			$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int)$municipio)->where('TYPE', ENVIRONMENT)->first();
 			$data = $domicilioPersonaFisica;
 
 			$data['EXPEDIENTEID'] = $expedienteId;
