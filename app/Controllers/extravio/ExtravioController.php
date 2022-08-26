@@ -15,7 +15,7 @@ use App\Models\PersonaTipoIdentificacionModel;
 use App\Models\PaisesModel;
 use App\Models\HechoClasificacionLugarModel;
 use App\Models\FolioModel;
-use App\Models\SolicitantesConstanciaModel;
+use App\Models\DenunciantesModel;
 use App\Models\ConstanciaExtravioModel;
 use App\Models\UsuariosModel;
 use App\Models\HechoLugarModel;
@@ -28,7 +28,7 @@ class ExtravioController extends BaseController
 
 	function __construct()
 	{
-		$this->_solicitantesModel = new SolicitantesConstanciaModel();
+		$this->_denunciantesModel = new DenunciantesModel();
 		$this->_nacionalidadModel = new PersonaNacionalidadModel();
 		$this->_estadosCivilesModel = new PersonaEstadoCivilModel();
 		$this->_personaIdiomaModel = new PersonaIdiomaModel();
@@ -36,7 +36,6 @@ class ExtravioController extends BaseController
 		$this->_municipiosModel = new MunicipiosModel();
 		$this->_localidadesModel = new LocalidadesModel();
 		$this->_coloniasModel = new ColoniasModel();
-		$this->_solicitantesModel = new SolicitantesConstanciaModel();
 		$this->_tipoIdentificacionModel = new PersonaTipoIdentificacionModel();
 		$this->_paisesModel = new PaisesModel();
 		$this->_clasificacionLugarModel = new HechoClasificacionLugarModel();
@@ -69,11 +68,11 @@ class ExtravioController extends BaseController
 		$password = $this->request->getPost('password');
 		$email = trim($email);
 		$password = trim($password);
-		$data = $this->_solicitantesModel->where('CORREO', $email)->first();
+		$data = $this->_denunciantesModel->where('CORREO', $email)->first();
 		if ($data) {
 			if (validatePassword($password, $data['PASSWORD'])) {
 				$data['logged_in'] = TRUE;
-				$data['type'] = 'user_constancia';
+				$data['type'] = 'user_constancias';
 				$session->set($data);
 				return redirect()->to(base_url('/constancia_extravio/dashboard'));
 			} else {
@@ -98,12 +97,16 @@ class ExtravioController extends BaseController
 			'CORREO' => $this->request->getPost('correo'),
 			'PASSWORD' => hashPassword($password),
 			'TELEFONO' => $this->request->getPost('telefono'),
+			'TELEFONO2' => $this->request->getPost('telefono2'),
+			'CODIGO_PAIS' => $this->request->getPost('codigo_pais'),
+			'CODIGO_PAIS2' => $this->request->getPost('codigo_pais_2'),
 			'FECHANACIMIENTO' => $this->request->getPost('fecha_nacimiento'),
 			'SEXO' => $this->request->getPost('sexo'),
+			'TIPO' => 2,
 		];
 
-		if ($this->validate(['correo' => 'required|is_unique[SOLICITANTESCONSTANCIA.CORREO]'])) {
-			$this->_solicitantesModel->insert($data);
+		if ($this->validate(['correo' => 'required|is_unique[DENUNCIANTES.CORREO]'])) {
+			$this->_denunciantesModel->insert($data);
 			$this->_sendEmailPassword($data['CORREO'], $password);
 			return redirect()->to(base_url('/constancia_extravio'))->with('created', 'Inicia sesión con la contraseña que llegará a tu correo e ingresa.');
 		} else {
@@ -125,7 +128,7 @@ class ExtravioController extends BaseController
 	public function existEmail()
 	{
 		$email = $this->request->getPost('email');
-		$data = $this->_solicitantesModel->where('CORREO', $email)->first();
+		$data = $this->_denunciantesModel->where('CORREO', $email)->first();
 		if ($data == NULL) {
 			return json_encode((object)['exist' => 0]);
 		} else if (count($data) > 0) {
@@ -134,6 +137,7 @@ class ExtravioController extends BaseController
 			return json_encode((object)['exist' => 0]);
 		}
 	}
+
 	private function _sendEmailPassword($to, $password)
 	{
 		$email = \Config\Services::email();
@@ -153,8 +157,8 @@ class ExtravioController extends BaseController
 	{
 		$password = $this->_generatePassword(6);
 		$to = $this->request->getPost('correo_reset_password');
-		$user = $this->_solicitantesModel->asObject()->where('CORREO', $to)->first();
-		$this->_solicitantesModel->set('PASSWORD', hashPassword($password))->where('SOLICITANTEID', $user->SOLICITANTEID)->update();
+		$user = $this->_denunciantesModel->asObject()->where('CORREO', $to)->first();
+		$this->_denunciantesModel->set('PASSWORD', hashPassword($password))->where('DENUNCIANTEID', $user->DENUNCIANTEID)->update();
 
 		$email = \Config\Services::email();
 		$email->setTo($to);
@@ -192,7 +196,7 @@ class ExtravioController extends BaseController
 		$constancias = $this->_constanciaExtravioModel->asObject()->where('CONSTANCIAEXTRAVIOID', base64_decode($numfolio))->first();
 
 		$agente = $this->_usuariosModel->asObject()->where('ID', $constancias->AGENTEID)->first();
-		$denunciante = $this->_solicitantesModel->asObject()->where('SOLICITANTEID', $constancias->SOLICITANTEID)->first();
+		$denunciante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', $constancias->DENUNCIANTEID)->first();
 		$lugar = $this->_hechoLugarModel->asObject()->where('HECHOLUGARID', $constancias->HECHOLUGARID)->first();
 		$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $constancias->MUNICIPIOID)->where('ESTADOID', $constancias->ESTADOID)->first();
 		$estado = $this->_estadosModel->asObject()->where('ESTADOID', $constancias->ESTADOID)->first();
@@ -260,7 +264,7 @@ class ExtravioController extends BaseController
 	{
 		$email = $this->request->getPost('email');
 
-		$data = $this->_solicitantesModel->where('CORREO', $email)->first();
+		$data = $this->_denunciantesModel->where('CORREO', $email)->first();
 		if ($data == NULL) {
 			return json_encode((object)['exist' => 0]);
 		} else if (count($data) > 0) {

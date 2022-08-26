@@ -70,20 +70,29 @@ $meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "
 		</div>
 	</div>
 </section>
-<?php if (session()->getFlashdata('message_success')) : ?>
-	<script>
-		Swal.fire({
-			icon: 'success',
-			text: '<?= session()->getFlashdata('message_success') ?>',
-			confirmButtonColor: '#bf9b55',
-		})
-	</script>
-<?php endif; ?>
 <?php if (session()->getFlashdata('message_error')) : ?>
 	<script>
 		Swal.fire({
 			icon: 'error',
-			text: '<?= session()->getFlashdata('message_error') ?>',
+			html: '<strong><?= session()->getFlashdata('message') ?></strong>',
+			confirmButtonColor: '#bf9b55',
+		})
+	</script>
+<?php endif; ?>
+<?php if (session()->getFlashdata('message_success')) : ?>
+	<script>
+		Swal.fire({
+			icon: 'success',
+			html: '<strong><?= session()->getFlashdata('message_success') ?></strong>',
+			confirmButtonColor: '#bf9b55',
+		})
+	</script>
+<?php endif; ?>
+<?php if (session()->getFlashdata('message_warning')) : ?>
+	<script>
+		Swal.fire({
+			icon: 'warning',
+			html: '<strong><?= session()->getFlashdata('message_warning') ?></strong>',
 			confirmButtonColor: '#bf9b55',
 		})
 	</script>

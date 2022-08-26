@@ -17,7 +17,7 @@ class CONSTANCIAEXTRAVIO extends Migration
 				'type' => 'INT',
 				'constraint' => '4',
 			],
-			'SOLICITANTEID' => [
+			'DENUNCIANTEID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 			],

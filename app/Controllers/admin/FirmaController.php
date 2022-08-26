@@ -7,11 +7,11 @@ use Dompdf\Dompdf;
 use Dompdf\Options;
 use App\Models\PlantillasModel;
 use App\Models\UsuariosModel;
-use App\Models\SolicitantesConstanciaModel;
 use App\Models\HechoLugarModel;
 use App\Models\MunicipiosModel;
 use App\Models\EstadosModel;
 use App\Models\ConstanciaExtravioModel;
+use App\Models\DenunciantesModel;
 use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelLow;
@@ -25,7 +25,7 @@ class FirmaController extends BaseController
 	{
 		$this->_plantillasModel = new PlantillasModel();
 		$this->_usuariosModel = new UsuariosModel();
-		$this->_solicitantesModel = new SolicitantesConstanciaModel();
+		$this->_denunciantesModel = new DenunciantesModel();
 		$this->_hechoLugarModel = new HechoLugarModel();
 		$this->_municipiosModel = new MunicipiosModel();
 		$this->_estadosModel = new EstadosModel();
@@ -43,7 +43,7 @@ class FirmaController extends BaseController
 		$constancia = $this->_constanciaExtravioModel->asObject()->where('CONSTANCIAEXTRAVIOID', $numfolio)->where('ANO', $year)->first();
 		$plantilla = $this->_plantillasModel->asObject()->where('TITULO', 'CONSTANCIA DE EXTRAVÍO')->first();
 
-		$solicitante = $this->_solicitantesModel->asObject()->where('SOLICITANTEID ', $constancia->SOLICITANTEID)->first();
+		$solicitante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', $constancia->DENUNCIANTEID)->first();
 
 		$lugar = $this->_hechoLugarModel->asObject()->where('HECHOLUGARID', $constancia->HECHOLUGARID)->first();
 		$municipio = (object)[];

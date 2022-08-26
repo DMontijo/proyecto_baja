@@ -19,6 +19,15 @@
 		</div>
 	</div>
 </section>
+<?php if (session()->getFlashdata('message_error')) : ?>
+	<script>
+		Swal.fire({
+			icon: 'error',
+			html: '<strong><?= session()->getFlashdata('message') ?></strong>',
+			confirmButtonColor: '#bf9b55',
+		})
+	</script>
+<?php endif; ?>
 <?php if (session()->getFlashdata('message_success')) : ?>
 	<script>
 		Swal.fire({
@@ -28,11 +37,11 @@
 		})
 	</script>
 <?php endif; ?>
-<?php if (session()->getFlashdata('message_error')) : ?>
+<?php if (session()->getFlashdata('message_warning')) : ?>
 	<script>
 		Swal.fire({
-			icon: 'error',
-			html: '<strong><?= session()->getFlashdata('message_error') ?></strong>',
+			icon: 'warning',
+			html: '<strong><?= session()->getFlashdata('message_warning') ?></strong>',
 			confirmButtonColor: '#bf9b55',
 		})
 	</script>

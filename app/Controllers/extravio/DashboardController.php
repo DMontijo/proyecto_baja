@@ -4,7 +4,6 @@ namespace App\Controllers\extravio;
 
 use App\Controllers\BaseController;
 
-use App\Models\SolicitantesConstanciaModel;
 use App\Models\EstadosModel;
 use App\Models\MunicipiosModel;
 use App\Models\LocalidadesModel;
@@ -17,6 +16,7 @@ use App\Models\DelitosUsuariosModel;
 use App\Models\PersonaIdiomaModel;
 use App\Models\ConstanciaExtravioModel;
 use App\Models\ConstanciaExtravioConsecutivoModel;
+use App\Models\DenunciantesModel;
 use App\Models\PlantillasModel;
 use App\Models\FolioPreguntasModel;
 use App\Models\FolioModel;
@@ -41,7 +41,7 @@ class DashboardController extends BaseController
 		$this->_coloresVehiculoModel = new VehiculoColorModel();
 		$this->_tipoVehiculoModel = new VehiculoTipoModel();
 		$this->_delitosUsuariosModel = new DelitosUsuariosModel();
-		$this->_solicitantesModel = new SolicitantesConstanciaModel();
+		$this->_denunciantesModel = new DenunciantesModel();
 		$this->_personaIdiomaModel = new PersonaIdiomaModel();
 		$this->_documentosExtravioTipoModel = new DocumentosExtravioTipoModel();
 		$this->_folioModel = new FolioModel();
@@ -58,25 +58,23 @@ class DashboardController extends BaseController
 
 	public function index()
 	{
-		$session = session();
 		$data = (object)array();
 		$data->estados = $this->_estadosModel->asObject()->findAll();
 		$data->municipios = $this->_municipiosModel->asObject()->where('ESTADOID', '2')->findAll();
 		$data->lugares = $this->_hechoLugarModel->asObject()->orderBy('HECHODESCR', 'asc')->findAll();
 		$data->identificacion = $this->_documentosExtravioTipoModel->asObject()->orderBy('DOCUMENTOEXTRAVIOTIPODESCR', 'asc')->findAll();
 
-		$data->denunciante = $this->_solicitantesModel->asObject()->where('SOLICITANTEID ', $session->get('SOLICITANTEID'))->first();
+		$data->denunciante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', session('DENUNCIANTEID'))->first();
 		$this->_loadView('Generar constancias', $data, 'index');
 	}
 
 	public function solicitar_constancia()
 	{
-
 		list($CONSECUTIVO, $year) = $this->_constanciaExtravioConsecutivoModel->get_consecutivo();
 		$data = [
 			'CONSTANCIAEXTRAVIOID' => $CONSECUTIVO,
 			'ANO' => $year,
-			'SOLICITANTEID' => session('SOLICITANTEID'),
+			'DENUNCIANTEID' => session('DENUNCIANTEID'),
 
 			'EXTRAVIO' => $this->request->getPost('extravio'),
 
@@ -120,9 +118,8 @@ class DashboardController extends BaseController
 
 	public function constancias()
 	{
-		$session = session();
 		$data = (object)array();
-		$data->constancias = $this->_constanciaExtravioModel->asObject()->where('SOLICITANTEID', $session->get('SOLICITANTEID'))->orderBy('ANO', 'desc')->orderBy('CONSTANCIAEXTRAVIOID', 'desc')->findAll();
+		$data->constancias = $this->_constanciaExtravioModel->asObject()->where('DENUNCIANTEID', session('DENUNCIANTEID'))->orderBy('ANO', 'desc')->orderBy('CONSTANCIAEXTRAVIOID', 'desc')->findAll();
 		$this->_loadView('Mis constancias de extravío', $data, 'lista_constancias');
 	}
 
@@ -133,7 +130,7 @@ class DashboardController extends BaseController
 		$year = $this->request->getGet('year');
 		$constancia = $this->_constanciaExtravioModel->asObject()->where('CONSTANCIAEXTRAVIOID', base64_decode($folio))->where('ANO', $year)->first();
 		if ($constancia) {
-			$solicitante = $this->_solicitantesModel->asObject()->where('SOLICITANTEID', $constancia->SOLICITANTEID)->first();
+			$solicitante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', $constancia->DENUNCIANTEID)->first();
 			$constancia->NOMBRESOLICITANTE = $solicitante->NOMBRE . ' ' . $solicitante->APELLIDO_PATERNO . ' ' . $solicitante->APELLIDO_MATERNO;
 		}
 		$data2 = [

@@ -52,5 +52,6 @@ class DenunciantesModel extends Model
 		'LEER',
 		'ESCRIBIR',
 		'APOYO',
+		'TIPO',
 	];
 }

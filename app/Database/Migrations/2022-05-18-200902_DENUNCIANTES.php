@@ -212,6 +212,11 @@ class DENUNCIANTES extends Migration
 				'default' => 'N',
 				'null' => TRUE
 			],
+			'TIPO' => [
+				'type' => 'TINYINT',
+				'constraint' => '1',
+				'null' => TRUE
+			],
 			'FECHAREGISTRO DATETIME DEFAULT CURRENT_TIMESTAMP',
 			'FECHAACTUALIZACION DATETIME ON UPDATE CURRENT_TIMESTAMP',
 		]);

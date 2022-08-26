@@ -45,14 +45,20 @@
 						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="telefono" class="form-label fw-bold input-required">Número de télefono</label>
-							<input type="number" class="form-control" id="telefono" name="telefono" required min="111111" max="99999999999999999999" minlenght="6" maxlength="20" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
-							<div class="invalid-feedback">
-								El número de télefono es obligatorio.
-							</div>
+							<input type="number" class="form-control" id="telefono" name="telefono" required max="99999999999999999999" minlenght="6" maxlength="20" oninput="clearInputPhone(event);">
+							<!-- <small>Mínimo 6 digitos</small> -->
+							<input type="number" id="codigo_pais" name="codigo_pais" maxlength="3" hidden>
+						</div>
+
+						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+							<label for="telefono2" class="form-label fw-bold">Número de télefono adicional</label>
+							<input type="number" class="form-control" id="telefono2" name="telefono2" max="99999999999999999999" minlenght="6" maxlength="20" oninput="clearInputPhone(event);">
+							<!-- <small>Mínimo 6 digitos</small> -->
+							<input type="number" id="codigo_pais_2" name="codigo_pais_2" maxlength="3" hidden>
 						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="fecha_nacimiento" class="form-label fw-bold input-required">Fecha de nacimiento</label>
-							<input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" required max="<?= date("Y-m-d") ?>">
+							<input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" required max="<?= ((int)date("Y")) - 18 . '-' . date("m") . '-' . date("d") ?>">
 							<div class="invalid-feedback">
 								La fecha de nacimiento es obligatoria
 							</div>
@@ -92,6 +98,41 @@
 		})
 	</script>
 <?php endif; ?>
+<script>
+	let input = document.querySelector("#telefono");
+	let input2 = document.querySelector("#telefono2");
+	let inputPais = document.querySelector("#codigo_pais");
+	let inputPais2 = document.querySelector("#codigo_pais_2");
+
+	function clearInputPhone(e) {
+		e.target.value = e.target.value.replace(/-/g, "");
+		if (e.target.value.length > e.target.maxLength) {
+			e.target.value = e.target.value.slice(0, e.target.maxLength);
+		};
+	}
+
+	let iti = window.intlTelInput(input, {
+		separateDialCode: true,
+		initialCountry: "MX",
+	});
+	let iti2 = window.intlTelInput(input2, {
+		separateDialCode: true,
+		initialCountry: "MX",
+	});
+
+	const getData = () => {
+		inputPais.value = parseInt(iti.getSelectedCountryData().dialCode);
+		inputPais2.value = parseInt(iti2.getSelectedCountryData().dialCode);
+	};
+
+	input.addEventListener('change', getData);
+	input.addEventListener('keyup', getData);
+	input.addEventListener('blur', getData);
+
+	input2.addEventListener('change', getData);
+	input2.addEventListener('keyup', getData);
+	input2.addEventListener('blur', getData);
+</script>
 <script>
 	(function() {
 		'use strict'

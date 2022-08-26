@@ -222,5 +222,14 @@ $file_cer = $user_id . '_cer.cer';
 		})
 	</script>
 <?php endif; ?>
+<?php if (session()->getFlashdata('message_warning')) : ?>
+	<script>
+		Swal.fire({
+			icon: 'warning',
+			html: '<strong><?= session()->getFlashdata('message_warning') ?></strong>',
+			confirmButtonColor: '#bf9b55',
+		})
+	</script>
+<?php endif; ?>
 
 <?= $this->endSection() ?>
