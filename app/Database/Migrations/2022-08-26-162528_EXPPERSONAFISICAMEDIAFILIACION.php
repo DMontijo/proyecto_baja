@@ -314,6 +314,38 @@ class EXPPERSONAFISICAMEDIAFILIACION extends Migration
 				'constraint' => 200,
 				'null' => TRUE,
 			],
+			'DISCAPACIDAD' => [
+				'type' => 'VARCHAR',
+				'constraint' => '50',
+				'null' => TRUE,
+			],
+			'ORIGEN' => [
+				'type' => 'VARCHAR',
+				'constraint' => '50',
+				'null' => TRUE,
+			],
+			'DIA_DESAPARICION' => [
+				'type' => 'DATE',
+				'null' => TRUE,
+			],
+			'LUGAR_DESAPARICION' => [
+				'type' => 'VARCHAR',
+				'constraint' => '50',
+				'null' => TRUE,
+			],
+			'VESTIMENTA' => [
+				'type' => 'VARCHAR',
+				'constraint' => '50',
+				'null' => TRUE,
+			],
+			'AUTORIZA_FOTO' => [
+				'type' => 'CHAR',
+				'constraint' => '1',
+				'default' => 'S',
+				'null' => TRUE,
+			],
+			'FECHAREGISTRO DATETIME DEFAULT CURRENT_TIMESTAMP',
+			'FECHAACTUALIZACION DATETIME ON UPDATE CURRENT_TIMESTAMP',
 		]);
 		$this->forge->addKey('FOLIOID', TRUE);
 		$this->forge->addKey('PERSONAFISICAID', TRUE);

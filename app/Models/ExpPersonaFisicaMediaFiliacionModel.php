@@ -82,7 +82,12 @@ class ExpPersonaFisicaMediaFiliacionModel extends Model
         'PERSONAESCOLARIDADID',
         'PERSONAETNIAID',
         'ESTOMAGODESCR',
-       
+        'DISCAPACIDAD',
+		'ORIGEN',
+		'DIA_DESAPARICION',
+		'LUGAR_DESAPARICION',
+		'VESTIMENTA',
+		'AUTORIZA_FOTO',
 
     ];
 
