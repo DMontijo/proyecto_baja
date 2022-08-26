@@ -255,6 +255,19 @@ class EXPPERSONAFISICAMEDIAFILIACION extends Migration
 				'constraint' => 200,
 				'null' => TRUE,
 			],
+			'BARBATAMANOID' => [
+				'type' => 'INT',
+				'unsigned' => TRUE,
+			],
+			'BARBAPECULIARID' => [
+				'type' => 'INT',
+				'unsigned' => TRUE,
+			],
+			'BARBADESCR' => [
+				'type' => 'VARCHAR',
+				'constraint' => 200,
+				'null' => TRUE,
+			],
 			'CUELLOTAMANOID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
@@ -355,6 +368,8 @@ class EXPPERSONAFISICAMEDIAFILIACION extends Migration
 		$this->forge->addForeignKey('BARBILLATAMANOID', 'BARBILLATAMANO', 'BARBILLATAMANOID');
 		$this->forge->addForeignKey('BARBILLAINCLINACIONID', 'BARBILLAINCLINACION', 'BARBILLAINCLINACIONID');
 		$this->forge->addForeignKey('BARBILLAPECULIARID', 'BARBILLAPECULIAR', 'BARBILLAPECULIARID');
+		$this->forge->addForeignKey('BARBATAMANOID', 'BARBATAMANO', 'BARBATAMANOID');
+		$this->forge->addForeignKey('BARBAPECULIARID', 'BARBAPECULIAR', 'BARBAPECULIARID');
 		$this->forge->addForeignKey('CUELLOTAMANOID', 'CUELLOTAMANO', 'CUELLOTAMANOID');
 		$this->forge->addForeignKey('CUELLOGROSORID', 'CUELLOGROSOR', 'CUELLOGROSORID');
 		$this->forge->addForeignKey('CUELLOPECULIARID', 'CUELLOPECULIAR', 'CUELLOPECULIARID');
