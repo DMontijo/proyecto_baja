@@ -9,10 +9,9 @@ class EXPPERSONAFISICAMEDIAFILIACION extends Migration
 	public function up()
 	{
 		$this->forge->addField([
-			'EXPPERSONAFISICAMEDIAAFILIACIONID' => [
+			'FOLIOID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
-				'auto_increment'=>TRUE,
 			],
 			'EXPEDIENTEID' => [
 				'type' => 'INT',
@@ -21,6 +20,10 @@ class EXPPERSONAFISICAMEDIAFILIACION extends Migration
 			'PERSONAFISICAID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
+			],
+			'ANO' => [
+				'type' => 'INT',
+				'constraint' => '4',
 			],
 			'OCUPACIONID' => [
 				'type' => 'INT',
@@ -299,10 +302,10 @@ class EXPPERSONAFISICAMEDIAFILIACION extends Migration
 				'null' => TRUE,
 			],
 		]);
-
-		$this->forge->addKey('EXPPERSONAFISICAMEDIAAFILIACIONID', true);
-		//$this->forge->addForeignKey('EXPEDIENTEID', 'categories', 'id');
-
+		$this->forge->addKey('FOLIOID', TRUE);
+		$this->forge->addKey('PERSONAFISICAID', TRUE);
+		$this->forge->addKey('ANO', TRUE);
+		// $this->forge->addKey('EXPPERSONAFISICAMEDIAAFILIACIONID', true);
 		// $this->forge->addForeignKey('PERSONAFISICAID', 'FOLIOPERSONAFISICA', 'PERSONAFISICAID');
 		$this->forge->addForeignKey('OCUPACIONID', 'OCUPACION', 'PERSONAOCUPACIONID');
 		$this->forge->addForeignKey('PIELCOLORID', 'PIELCOLOR', 'PIELCOLORID');
