@@ -8,9 +8,9 @@ class ExpPersonaFisicaMediaFiliacionModel extends Model
 {
     protected $DBGroup          = 'default';
     protected $table            = 'EXPPERSONAFISICAMEDIAFILIACION';
-    protected $primaryKey       = 'EXPEDIENTEID';
     protected $allowedFields    = [
-        'EXPEDIENTEID',
+        'FOLIOID',
+        'ANO',
         'PERSONAFISICAID',
         'OCUPACIONID',
         'ESTATURA',
