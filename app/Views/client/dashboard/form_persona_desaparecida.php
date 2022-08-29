@@ -148,14 +148,22 @@
 		<label for="complexion_des" class="form-label fw-bold ">Complexión</label>
 		<select class="form-select" id="complexion_des" name="complexion_des">
 			<option selected disabled value="">Elige la complexión</option>
-			<option value="MEDIANA">MEDIANA</option>
-			<option value="ROBUSTA">ROBUSTA</option>
-			<option value="DELGADA">DELGADA</option>
+			<?php 
+			foreach ($body_data->figura as $index => $figura) { ?>
+				<option value="<?= $figura->FIGURAID ?>"> <?= $figura->FIGURADESCR?></option>
+			<?php } ?>
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="color_des" class="form-label fw-bold ">Color de piel o tez</label>
-		<input type="text" class="form-control" id="color_des" name="color_des">
+		<input type="text" class="form-control" id="color_des" name="color_des" hidden>
+		<select class="form-select" id="color_des" name="color_des">
+			<option selected disabled value="">Elige el color de piel</option>
+			<?php 
+			foreach ($body_data->pielColor as $index => $pielColor) { ?>
+				<option value="<?= $pielColor->PIELCOLORID  ?>"> <?= $pielColor->PIELCOLORDESCR?></option>
+			<?php } ?>
+		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="señas_des" class="form-label fw-bold ">Señas particulares</label>
@@ -163,67 +171,83 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="color_cabello_des" class="form-label fw-bold ">Color de cabello</label>
-		<input type="text" class="form-control" id="color_cabello_des" name="color_cabello_des">
+		<input type="text" class="form-control" id="color_cabello_des" name="color_cabello_des" hidden>
+		<select class="form-select" id="color_cabello_des" name="color_cabello_des">
+			<option selected disabled value="">Elige el color del cabello</option>
+			<?php 
+			foreach ($body_data->cabelloColor as $index => $cabelloColor) { ?>
+				<option value="<?= $cabelloColor->CABELLOCOLORID ?>"> <?= $cabelloColor->CABELLOCOLORDESCR?></option>
+			<?php } ?>
+		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="tam_cabello_des" class="form-label fw-bold ">Tamaño de cabello</label>
 		<select class="form-select" id="tam_cabello_des" name="tam_cabello_des">
 			<option selected disabled value="">Elige el tamaño del cabello</option>
-			<option value="CORTO">CORTO</option>
-			<option value="MEDIANO">MEDIANO</option>
-			<option value="LARGO">LARGO</option>
+			<?php 
+			foreach ($body_data->cabelloTamano as $index => $cabelloTamano) { ?>
+				<option value="<?= $cabelloTamano->CABELLOTAMANOID ?>"> <?= $cabelloTamano->CABELLOTAMANODESCR?></option>
+			<?php } ?>
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="form_cabello_des" class="form-label fw-bold ">Forma de cabello</label>
 		<select class="form-select" id="form_cabello_des" name="form_cabello_des">
-			<option selected disabled value="">Elige el tamaño del cabello</option>
-			<option value="CHINO">CHINO</option>
-			<option value="LACIO">LACIO</option>
-			<option value="ONDULADO">ONDULADO</option>
-			<option value="QUEBRADIZO">QUEBRADIZO</option>
+			<option selected disabled value="">Elige la forma del cabello</option>
+			<?php 
+			foreach ($body_data->cabelloEstilo as $index => $cabelloEstilo) { ?>
+				<option value="<?= $cabelloEstilo->CABELLOESTILOID  ?>"> <?= $cabelloEstilo->CABELLOESTILODESCR?></option>
+			<?php } ?>
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="color_ojos_des" class="form-label fw-bold ">Color de ojos</label>
-		<input type="text" class="form-control" id="color_ojos_des" name="color_ojos_des">
+		<input type="text" class="form-control" id="color_ojos_des" name="color_ojos_des"hidden>
+		<select class="form-select" id="color_ojos_des" name="color_ojos_des">
+			<option selected disabled value="">Elige el color de ojos</option>
+			<?php 
+			foreach ($body_data->ojoColor as $index => $ojoColor) { ?>
+				<option value="<?= $ojoColor->OJOCOLORID ?>"> <?= $ojoColor->OJOCOLORDESCR?></option>
+			<?php } ?>
+		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="frente_des" class="form-label fw-bold ">Tipo de frente</label>
 		<select class="form-select" id="frente_des" name="frente_des">
-			<option selected disabled value="">Elige el tipo de frente</option>
-			<option value="REGULAR">REGULAR</option>
-			<option value="AMPLIA">AMPLIA</option>
-			<option value="PEQUEÑA">PEQUEÑA</option>
-			<option value="GRANDE">GRANDE</option>
+			<option selected disabled value="">Elige la forma de la frente</option>
+			<?php 
+			foreach ($body_data->frenteForma as $index => $frenteForma) { ?>
+				<option value="<?= $frenteForma->FRENTEFORMAID ?>"> <?= $frenteForma->FRENTEFORMADESCR?></option>
+			<?php } ?>
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="ceja_des" class="form-label fw-bold ">Tipo de ceja</label>
-		<select class="form-select" id="ceja_des" name="ceja_des">
-			<option selected disabled value="">Elige el tipo de ceja</option>
-			<option value="POBLADAS">POBLADAS</option>
-			<option value="NO POBLADAS">NO POBLADAS</option>
+		<label for="forma_ceja_des" class="form-label fw-bold ">Tipo de ceja</label>
+		<select class="form-select" id="forma_ceja_des" name="forma_ceja_des">
+			<option selected disabled value="">Elige el forma de ceja</option>
+			<?php 
+			foreach ($body_data->cejaForma as $index => $cejaForma) { ?>
+				<option value="<?= $cejaForma->CEJAFORMAID ?>"> <?= $cejaForma->CEJAFORMADESCR?></option>
+			<?php } ?>
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="discapacidad_des" class="form-label fw-bold">¿Padece alguna
 			discapacidad?</label>
-		<select class="form-select" id="discapacidad_des" name="discapacidad_des">
+			<input type="text" class="form-control" id="discapacidad_des" name="discapacidad_des">
+
+		<!-- <select class="form-select" id="discapacidad_des" name="discapacidad_des">
 			<option selected disabled value="">Selecciona si padece alguna discapacidad</option>
 			<option value="VISUAL">VISUAL</option>
 			<option value="FISICA">FISICA</option>
 			<option value="AUDITIVA">AUDITIVA</option>
 			<option vaulue="NINGUNA">NINGUNA</option>
-		</select>
+		</select> -->
 		<div class="invalid-feedback">
 			El campo discapacidad es obligatorio.
 		</div>
 	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="origen_des" class="form-label fw-bold ">Lugar de origen</label>
-		<input type="text" class="form-control" id="origen_des" name="origen_des">
-	</div>
+
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="dia_des" class="form-label fw-bold ">¿Cuando se le vio por ultima vez?</label>
 		<input type="date" class="form-control" id="dia_des" name="dia_des" max="<?= date("Y-m-d") ?>">

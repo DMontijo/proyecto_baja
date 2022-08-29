@@ -25,8 +25,18 @@ use App\Models\FolioPersonaFisicaDomicilioModel;
 use App\Models\FolioPersonaFisicaDesaparecidaModel;
 use App\Models\FolioVehiculoModel;
 
+use App\Models\CabelloColorModel;
+use App\Models\CabelloEstiloModel;
+use App\Models\CabelloTamanoModel;
+use App\Models\CejaFormaModel;
+
 use App\Models\EscolaridadModel;
+use App\Models\ExpPersonaFisicaMediaFiliacionModel;
 use App\Models\OcupacionModel;
+use App\Models\FiguraModel;
+use App\Models\FrenteFormaModel;
+use App\Models\OjoColorModel;
+use App\Models\PielColorModel;
 
 class DashboardController extends BaseController
 {
@@ -53,9 +63,20 @@ class DashboardController extends BaseController
 		$this->_folioPersonaFisicaDomicilioModel = new FolioPersonaFisicaDomicilioModel();
 		$this->_folioPersonaFisicaDesaparecidaModel = new FolioPersonaFisicaDesaparecidaModel();
 		$this->_folioVehiculoModel = new FolioVehiculoModel();
+		$this->_expPersonaDesaparecidaMediaFiliacion = new ExpPersonaFisicaMediaFiliacionModel();
 
 		$this->_escolaridadModel = new EscolaridadModel();
 		$this->_ocupacionModel = new OcupacionModel();
+		
+		$this->_cabelloColorModel = new CabelloColorModel();
+		$this->_cabelloTamanoModel = new CabelloTamanoModel();
+		$this->_cabelloEstiloModel = new CabelloEstiloModel();
+		$this->_frenteFormaModel = new FrenteFormaModel();
+		$this->_ojoColorModel = new OjoColorModel();
+		$this->_cejaFormaModel = new CejaFormaModel();
+		$this->_figuraModel = new FiguraModel();
+		$this->_pielColorModel = new PielColorModel();
+
 	}
 
 	public function index()
@@ -89,6 +110,15 @@ class DashboardController extends BaseController
 		$data->delitosUsuarios = $this->_delitosUsuariosModel->asObject()->orderBy('DELITO', 'ASC')->findAll();
 		$data->escolaridades = $this->_escolaridadModel->asObject()->findAll();
 		$data->ocupaciones = $this->_ocupacionModel->asObject()->findAll();
+		$data->figura = $this->_figuraModel->asObject()->findAll();
+		$data->cabelloColor = $this->_cabelloColorModel->asObject()->findAll();
+		$data->cabelloTamano = $this->_cabelloTamanoModel ->asObject()->findAll();
+		$data->frenteForma = $this->_frenteFormaModel ->asObject()->findAll();
+		$data->ojoColor = $this->_ojoColorModel ->asObject()->findAll();
+		$data->cabelloEstilo = $this->_cabelloEstiloModel ->asObject()->findAll();
+		$data->cejaForma = $this->_cejaFormaModel ->asObject()->findAll();
+		$data->pielColor = $this->_pielColorModel->asObject()->findAll();
+
 		$this->_loadView('Dashboard', 'dashboard', '', $data, 'index');
 	}
 
@@ -202,17 +232,17 @@ class DashboardController extends BaseController
 					'FECHANACIMIENTO' => $this->request->getPost('fecha_nacimiento_des'),
 					'EDADCANTIDAD' => $this->request->getPost('edad_des'),
 					'PESO' => $this->request->getPost('peso_des'),
-					'COMPLEXION' => $this->request->getPost('complexion_des'),
-					'COLOR_TEZ' => $this->request->getPost('color_des'),
+					'FIGURAID' => $this->request->getPost('complexion_des'),
+					'PIELCOLORID' => $this->request->getPost('color_des'),
 					'SEXO' => $this->request->getPost('sexo_des'),
-					'SENAS' => $this->request->getPost('señas_des'),
+					'SENASPARTICULARES' => $this->request->getPost('señas_des'),
 					'IDENTIDAD' => $this->request->getPost('identidad_des'),
-					'COLOR_CABELLO' => $this->request->getPost('color_cabello_des'),
-					'TAM_CABELLO' => $this->request->getPost('tam_cabello_des'),
-					'FORMA_CABELLO' => $this->request->getPost('form_cabello_des'),
-					'COLOR_OJOS' => $this->request->getPost('color_ojos_des'),
-					'FRENTE' => $this->request->getPost('frente_des'),
-					'CEJA' => $this->request->getPost('ceja_des'),
+					'CABELLOCOLORID' => $this->request->getPost('color_cabello_des'),
+					'CABELLOTAMANOID' => $this->request->getPost('tam_cabello_des'),
+					'CABELLOESTILOID' => $this->request->getPost('form_cabello_des'),
+					'OJOCOLORID' => $this->request->getPost('color_ojos_des'),
+					'FRENTEFORMAID' => $this->request->getPost('frente_des'),
+					'CEJAFORMAID' => $this->request->getPost('forma_ceja_des'),
 					'DISCAPACIDAD' => $this->request->getPost('discapacidad_des'),
 					'ORIGEN' => $this->request->getPost('origen_des'),
 					'DIA_DESAPARICION' => $this->request->getPost('dia_des'),
@@ -231,6 +261,8 @@ class DashboardController extends BaseController
 					'NACIONALIDADID' => $this->request->getPost('nacionalidad_des'),
 				);
 
+				// var_dump($dataDesaparecido);
+				// exit;
 
 				$dataDesaparecidoDomicilio = array(
 					'PAIS' => $this->request->getPost('pais_des'),
@@ -618,7 +650,7 @@ class DashboardController extends BaseController
 			$data['DIA_DESAPARICION'] = NULL;
 		}
 
-		$this->_folioPersonaFisicaDesaparecidaModel->insert($data);
+		$this->_expPersonaDesaparecidaMediaFiliacion->insert($data);
 	}
 
 	private function _folioVehiculo($data, $folio, $year)
