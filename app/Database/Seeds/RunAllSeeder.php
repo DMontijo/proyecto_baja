@@ -98,6 +98,7 @@ class RunAllSeeder extends Seeder
 		$this->call('OrejaTamanoSeeder');
 		$this->call('PersonaEtniaSeeder');
 		$this->call('PielColorSeeder');
+		$this->call('ParentescoSeeder');
 
 
 

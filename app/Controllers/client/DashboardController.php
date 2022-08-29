@@ -36,6 +36,8 @@ use App\Models\OcupacionModel;
 use App\Models\FiguraModel;
 use App\Models\FrenteFormaModel;
 use App\Models\OjoColorModel;
+use App\Models\ParentescoModel;
+use App\Models\PersonaFisicaParentescoModel;
 use App\Models\PielColorModel;
 
 class DashboardController extends BaseController
@@ -76,6 +78,8 @@ class DashboardController extends BaseController
 		$this->_cejaFormaModel = new CejaFormaModel();
 		$this->_figuraModel = new FiguraModel();
 		$this->_pielColorModel = new PielColorModel();
+		$this->_parentescoModel = new ParentescoModel();
+		$this->_parentescoPersonaFisicaModel = new PersonaFisicaParentescoModel();
 
 	}
 
@@ -118,6 +122,7 @@ class DashboardController extends BaseController
 		$data->cabelloEstilo = $this->_cabelloEstiloModel ->asObject()->findAll();
 		$data->cejaForma = $this->_cejaFormaModel ->asObject()->findAll();
 		$data->pielColor = $this->_pielColorModel->asObject()->findAll();
+		$data->parentesco = $this->_parentescoModel->asObject()->findAll();
 
 		$this->_loadView('Dashboard', 'dashboard', '', $data, 'index');
 	}
@@ -248,7 +253,7 @@ class DashboardController extends BaseController
 					'DIA_DESAPARICION' => $this->request->getPost('dia_des'),
 					'LUGAR_DESAPARICION' => $this->request->getPost('lugar_des'),
 					'VESTIMENTA' => $this->request->getPost('vestimenta_des'),
-					'PARENTESCO' => $this->request->getPost('parentesco_des'),
+					'PARENTESCOID' => $this->request->getPost('parentesco_des'),
 					'FACEBOOK' => $this->request->getPost('facebook_des'),
 					'INSTAGRAM' => $this->request->getPost('instagram_des'),
 					'TWITTER' => $this->request->getPost('twitter_des'),
@@ -414,6 +419,7 @@ class DashboardController extends BaseController
 			$denuncianteCalidad = $this->request->getPost('es_menor') == "SI" || $this->request->getPost('esta_desaparecido') == "SI" || $this->request->getPost('es_ofendido') === "NO" ? 3 : 1;
 			$denuncinateIdPersona = $this->_folioPersonaFisica($dataDenunciante, $FOLIOID, $denuncianteCalidad, $year);
 			$this->_folioPersonaFisicaDomicilio($dataDenuncianteDomicilio, $FOLIOID, $denuncinateIdPersona, $year);
+			$this->_parentescoPersonaFisica($dataDesaparecido, $FOLIOID,$denuncinateIdPersona, $desaparecido, $year);
 
 			//DATOS DEL POSIBLE RESPONSABLE
 			if (!empty($this->request->getPost('responsable')) && $this->request->getPost('responsable') == 'SI') {
@@ -652,7 +658,16 @@ class DashboardController extends BaseController
 
 		$this->_expPersonaDesaparecidaMediaFiliacion->insert($data);
 	}
+	private function _parentescoPersonaFisica($data, $folio, $personaFisicaID1, $personaFisicaID2,  $year)
+	{
+		$data = $data;
+		$data['FOLIOID'] = $folio;
+		$data['ANO'] = $year;
+		$data['PERSONAFISICAID1'] = $personaFisicaID1;
+		$data['PERSONAFISICAID2'] = $personaFisicaID2;
 
+		$this->_parentescoPersonaFisicaModel->insert($data);
+	}
 	private function _folioVehiculo($data, $folio, $year)
 	{
 		$data = $data;

@@ -262,7 +262,14 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="parentesco_des" class="form-label fw-bold ">Parentesco:</label>
-		<input type="text" class="form-control" id="parentesco_des" name="parentesco_des">
+		
+		<select class="form-select" id="parentesco_des" name="parentesco_des">
+			<option selected disabled value="">Elige el parentesco</option>
+			<?php 
+			foreach ($body_data->parentesco as $index => $parentesco) { ?>
+				<option value="<?= $parentesco->PERSONAPARENTESCOID ?>"> <?= $parentesco->PERSONAPARENTESCODESCR?></option>
+			<?php } ?>
+		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="foto_des" class="form-label fw-bold ">Fotografía:</label>
