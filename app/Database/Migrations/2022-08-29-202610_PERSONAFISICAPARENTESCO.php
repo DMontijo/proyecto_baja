@@ -32,11 +32,11 @@ class PERSONAFISICAPARENTESCO extends Migration
         ]);
         $this->forge->addKey('FOLIOID', TRUE);
 		$this->forge->addKey('ANO', TRUE);
-        $this->forge->createTable('PERSONAFISICAPARENTESCO', true);
+        $this->forge->createTable('FOLIORELACIONPARENTESCO', true);
     }
 
     public function down()
     {
-        $this->forge->dropTable('PERSONAFISICAPARENTESCO', true);
+        $this->forge->dropTable('FOLIORELACIONPARENTESCO', true);
     }
 }

@@ -7,7 +7,7 @@ use CodeIgniter\Model;
 class PersonaFisicaParentescoModel extends Model
 {
     protected $DBGroup          = 'default';
-    protected $table            = 'PERSONAFISICAPARENTESCO';
+    protected $table            = 'FOLIORELACIONPARENTESCO';
     protected $allowedFields    = ['FOLIOID','ANO', 'PARENTESCOID', 'PERSONAFISICAID1','PERSONAFISICAID2'];
 
 }
