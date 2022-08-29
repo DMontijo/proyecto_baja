@@ -167,7 +167,6 @@ class UserController extends BaseController
 		$firma = base64_decode($firma);
 
 		$data = [
-			'PASSWORD' => hashPassword($password),
 			'SEXO' => $this->request->getPost('sexo'),
 			'CODIGOPOSTAL' => $this->request->getPost('cp'),
 			'PAIS' => $this->request->getPost('pais_select'),
@@ -214,6 +213,7 @@ class UserController extends BaseController
 			return redirect()->to(base_url('/denuncia'));
 		} catch (\Exception $e) {
 			session()->destroy;
+			session_unset();
 			return redirect()->to(base_url('/denuncia'))->with('message_error', 'No se pudo actualizar el registro, ingresa e intentalo de nuevo.');
 		}
 	}

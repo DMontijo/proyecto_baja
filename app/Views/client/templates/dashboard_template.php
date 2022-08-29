@@ -43,6 +43,9 @@
 						<a class="nav-link <?php if ('' === 'denuncias') echo 'active'; ?>" href="<?= base_url() ?>/denuncia/dashboard/denuncias"><i class="bi bi-archive-fill"></i> Mis denuncias</a>
 					</li>
 					<li class="nav-item">
+						<a class="nav-link <?php if ('' === 'constancias') echo 'active'; ?>" href="<?= base_url() ?>/constancia_extravio/dashboard"><i class="bi-bookmark-plus-fill"></i> Generar constancia</a>
+					</li>
+					<li class="nav-item">
 						<a class="nav-link" href="<?= base_url('denuncia/logout') ?>"><i class="bi bi-box-arrow-left"></i> Salir</a>
 					</li>
 					<li class="nav-item">

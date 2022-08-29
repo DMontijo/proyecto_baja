@@ -12,11 +12,10 @@ class AdminAuthFilter implements FilterInterface
 	{
 		if (!session('logged_in')) {
 			return redirect()->to(base_url('/admin'));
-		} else {
-			if (session('type') == 'user') {
-				session()->destroy;
-				return redirect()->to(base_url('/admin'));
-			}
+		} else if (session('type') == 'user' || session('type') == 'user_constancias') {
+			session()->destroy;
+			session_unset();
+			return redirect()->to(base_url('/admin'));
 		}
 	}
 

@@ -53,6 +53,7 @@ class ExtravioController extends BaseController
 			return redirect()->to(base_url('/constancia_extravio/dashboard'));
 		} else {
 			session()->destroy;
+			session_unset();
 			$this->_loadView('Login', [], 'index');
 		}
 	}

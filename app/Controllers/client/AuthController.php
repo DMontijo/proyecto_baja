@@ -22,6 +22,7 @@ class AuthController extends BaseController
 			return redirect()->to(base_url('/denuncia/dashboard'));
 		} else {
 			session()->destroy;
+			session_unset();
 			$this->_loadView('Login', [], 'index');
 		}
 	}

@@ -43,6 +43,9 @@
 						<a class="nav-link <?php if ('' === 'constancias') echo 'active'; ?>" href="<?= base_url() ?>/constancia_extravio/dashboard/constancias"><i class="bi-inboxes-fill"></i> Mis constancias</a>
 					</li>
 					<li class="nav-item">
+						<a class="nav-link <?php if ('' === 'dashboard' || '' === 'video-denuncia') echo 'active'; ?>" href="<?= base_url() ?>/denuncia/dashboard"><i class="bi bi-camera-video-fill"></i> Denunciar</a>
+					</li>
+					<li class="nav-item">
 						<a class="nav-link" href="<?= base_url('denuncia/logout') ?>"><i class="bi bi-box-arrow-left"></i> Salir</a>
 					</li>
 					<li class="nav-item">

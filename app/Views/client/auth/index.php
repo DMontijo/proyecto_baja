@@ -5,7 +5,6 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
-
 <section class="container-fluid bg-primary d-flex align-items-center justify-content-center" style="min-height: 100vh;background:url(<?= base_url() ?>/assets/img/lineas_background.png);background-repeat: no-repeat;background-attachment: fixed;background-size: cover !important;">
 	<div class="container">
 		<div class="row py-5">

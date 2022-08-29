@@ -21,6 +21,7 @@ class LoginController extends BaseController
 			return redirect()->to(base_url('/admin/dashboard'));
 		} else {
 			session()->destroy;
+			session_unset();
 			$this->_loadView('Login', [], 'index');
 		}
 	}

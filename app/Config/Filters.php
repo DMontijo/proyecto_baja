@@ -8,7 +8,7 @@ use CodeIgniter\Filters\DebugToolbar;
 use CodeIgniter\Filters\Honeypot;
 
 use App\Filters\DenunciantesAuthFilter;
-use App\Filters\SolicitantesExtravioAuthFilter;
+use App\Filters\ConstanciasExtravioAuthFilter;
 use App\Filters\AdminAuthFilter;
 
 class Filters extends BaseConfig
@@ -25,7 +25,7 @@ class Filters extends BaseConfig
 		'honeypot' => Honeypot::class,
 		'adminAuth' => AdminAuthFilter::class,
 		'denuciantesAuth' => DenunciantesAuthFilter::class,
-		'solicitantesExtravioAuth' => SolicitantesExtravioAuthFilter::class,
+		'constanciasExtravioAuth' => ConstanciasExtravioAuthFilter::class,
 	];
 
 	/**

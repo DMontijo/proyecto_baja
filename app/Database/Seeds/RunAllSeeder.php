@@ -85,12 +85,10 @@ class RunAllSeeder extends Seeder
 		$this->call('NarizPeculiarSeeder');
 		$this->call('NarizTamanoSeeder');
 		$this->call('NarizTipoSeeder');
-
 		$this->call('OjoColocacionSeeder');
 		$this->call('OjoColorSeeder');
 		$this->call('OjoFormaSeeder');
 		$this->call('OjoPeculiarSeeder');
-
 		$this->call('OjoTamanoSeeder');
 		$this->call('OjoFormaSeeder');
 		$this->call('OrejaLobuloSeeder');
@@ -99,11 +97,5 @@ class RunAllSeeder extends Seeder
 		$this->call('PersonaEtniaSeeder');
 		$this->call('PielColorSeeder');
 		$this->call('ParentescoSeeder');
-
-
-
-
-
-
 	}
 }

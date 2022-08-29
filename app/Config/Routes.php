@@ -102,7 +102,6 @@ $routes->group('admin', function ($routes) {
 
 		$routes->post('generar_excel_folios', 'admin/ReportesController::createFoliosXlsx');
 		$routes->post('generar_excel_constancias', 'admin/ReportesController::createConstanciasXlsx');
-
 	});
 });
 
@@ -202,7 +201,7 @@ $routes->group('constancia_extravio', function ($routes) {
 	$routes->get('register', 'extravio/ExtravioController::register');
 	$routes->post('create', 'extravio/ExtravioController::create');
 
-	$routes->group('dashboard', ['filter' => 'solicitantesExtravioAuth'], function ($routes) {
+	$routes->group('dashboard', ['filter' => 'constanciasExtravioAuth'], function ($routes) {
 		$routes->get('/', 'extravio/DashboardController::index');
 		$routes->post('solicitar_constancia', 'extravio/DashboardController::solicitar_constancia');
 
