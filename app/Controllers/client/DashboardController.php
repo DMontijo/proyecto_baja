@@ -193,7 +193,7 @@ class DashboardController extends BaseController
 			$dataFolio['HECHOCOLONIAID'] = (int)$this->request->getPost('colonia_select');
 			$dataFolio['HECHOCOLONIADESCR'] = NULL;
 		}
-		if ($this->request->getPost('esta_desaparecido')  == "SI") $dataFolio['LOCALIZACIONPERSONA'] == 'S';
+		if ($this->request->getPost('esta_desaparecido')  == "SI") $dataFolio['LOCALIZACIONPERSONA'] = 'S';
 
 		$localidad = $this->_localidadesModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $dataFolio['HECHOMUNICIPIOID'])->where('LOCALIDADID', $dataFolio['HECHOLOCALIDADID'])->first();
 		$localidad ? $dataFolio['HECHOZONA'] = $localidad->ZONA : $dataFolio['HECHOZONA'] = NULL;
@@ -214,6 +214,7 @@ class DashboardController extends BaseController
 
 			$this->_folioPreguntasIniciales($dataPreguntas, $FOLIOID, $year);
 
+			
 			//DATOS DESAPARECIDO
 			if ($this->request->getPost('esta_desaparecido')  == "SI") {
 
@@ -266,8 +267,8 @@ class DashboardController extends BaseController
 					'ESCOLARIDADID' => $this->request->getPost('escolaridad_des'),
 					'OCUPACIONID' => $this->request->getPost('ocupacion_des'),
 				);
-
-				// var_dump($dataDesaparecido);
+				// var_dump($_POST);
+				//  var_dump($dataDesaparecido);
 				// exit;
 
 				$dataDesaparecidoDomicilio = array(
@@ -665,7 +666,7 @@ class DashboardController extends BaseController
 		$data['FOLIOID'] = $folio;
 		$data['ANO'] = $year;
 		$data['PERSONAFISICAID'] = $personaFisicaID;
-		if (empty($data['FECHADESAPARICION']) || $data['FECHADESAPARICION'] = NULL || $data['FECHADESAPARICION'] = '0000-00-00') {
+		if (empty($data['FECHADESAPARICION'])) {
 			$data['FECHADESAPARICION'] = NULL;
 		}
 
