@@ -35,6 +35,18 @@ use App\Models\OcupacionModel;
 use App\Models\PersonaEstadoCivilModel;
 use App\Models\PersonaNacionalidadModel;
 
+use App\Models\FolioPersonaFisicaMediaFiliacionModel;
+use App\Models\FiguraModel;
+use App\Models\FrenteFormaModel;
+use App\Models\OjoColorModel;
+use App\Models\ParentescoModel;
+use App\Models\PersonaFisicaParentescoModel;
+use App\Models\PielColorModel;
+use App\Models\CabelloColorModel;
+use App\Models\CabelloEstiloModel;
+use App\Models\CabelloTamanoModel;
+use App\Models\CejaFormaModel;
+
 use App\Models\ConexionesDBModel;
 
 class DashboardController extends BaseController
@@ -75,6 +87,18 @@ class DashboardController extends BaseController
 		$this->_ocupacionModel = new OcupacionModel();
 		$this->_estadoCivilModel = new PersonaEstadoCivilModel();
 		$this->_nacionalidadModel = new PersonaNacionalidadModel();
+		$this->_folioMediaFiliacion = new FolioPersonaFisicaMediaFiliacionModel();
+
+		$this->_cabelloColorModel = new CabelloColorModel();
+		$this->_cabelloTamanoModel = new CabelloTamanoModel();
+		$this->_cabelloEstiloModel = new CabelloEstiloModel();
+		$this->_frenteFormaModel = new FrenteFormaModel();
+		$this->_ojoColorModel = new OjoColorModel();
+		$this->_cejaFormaModel = new CejaFormaModel();
+		$this->_figuraModel = new FiguraModel();
+		$this->_pielColorModel = new PielColorModel();
+		$this->_parentescoModel = new ParentescoModel();
+		$this->_parentescoPersonaFisicaModel = new PersonaFisicaParentescoModel();
 
 		$this->_conexionesDBModel = new ConexionesDBModel();
 
@@ -298,12 +322,27 @@ class DashboardController extends BaseController
 			$data->edocivil = $this->_estadoCivilModel->where('PERSONAESTADOCIVILID', $data->personaid['ESTADOCIVILID'])->first();
 			$data->idioma = $this->_idiomaModel->where('PERSONAIDIOMAID', $data->personaid['PERSONAIDIOMAID'])->first();
 			$data->nacionalidad = $this->_nacionalidadModel->where('PERSONANACIONALIDADID ', $data->personaid['NACIONALIDADID'])->first();
-			$data->personaDesaparecida = $this->_folioPersonaFisicaDesaparecidaModel->where('ANO', $year)->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
-			if ($data->personaDesaparecida && $data->personaDesaparecida['FOTOGRAFIA']) {
-				$file_info = new \finfo(FILEINFO_MIME_TYPE);
-				$type = $file_info->buffer($data->personaDesaparecida['FOTOGRAFIA']);
-				$data->personaDesaparecida['FOTOGRAFIA'] = 'data:' . $type . ';base64,' . base64_encode($data->personaDesaparecida['FOTOGRAFIA']);
-			}
+			$data->personaDesaparecida = $this->_folioMediaFiliacion->where('ANO', $year)->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
+			$data->figura = $this->_figuraModel->where('FIGURAID', $data->personaDesaparecida['FIGURAID'])->first();
+			$data->cabelloColor = $this->_cabelloColorModel->where('CABELLOCOLORID', $data->personaDesaparecida['CABELLOCOLORID'])->first();
+			$data->cabelloTamano = $this->_cabelloTamanoModel->where('CABELLOTAMANOID', $data->personaDesaparecida['CABELLOTAMANOID'])->first();
+			$data->frenteForma = $this->_frenteFormaModel->where('FRENTEFORMAID', $data->personaDesaparecida['FRENTEFORMAID'])->first();
+			$data->ojoColor = $this->_ojoColorModel->where('OJOCOLORID', $data->personaDesaparecida['OJOCOLORID'])->first();
+			$data->cabelloEstilo = $this->_cabelloEstiloModel->where('CABELLOESTILOID', $data->personaDesaparecida['CABELLOESTILOID'])->first();
+			$data->cejaForma = $this->_cejaFormaModel->where('CEJAFORMAID', $data->personaDesaparecida['CEJAFORMAID'])->first();
+			$data->pielColor = $this->_pielColorModel->where('PIELCOLORID', $data->personaDesaparecida['PIELCOLORID'])->first();
+	if ($data->personaid['DESAPARECIDA']=='S') {
+		$data->parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO',$year)->where('PERSONAFISICAID2', $data->personaDesaparecida['PERSONAFISICAID'])->first();
+			$data->parentesco = $this->_parentescoModel->where('PERSONAPARENTESCOID', $data->parentescoRelacion['PARENTESCOID'])->first();
+
+	}
+			
+			
+			// if ($data->personaDesaparecida && $data->personaDesaparecida['FOTOGRAFIA']) {
+			// 	$file_info = new \finfo(FILEINFO_MIME_TYPE);
+			// 	$type = $file_info->buffer($data->personaDesaparecida['FOTOGRAFIA']);
+			// 	$data->personaDesaparecida['FOTOGRAFIA'] = 'data:' . $type . ';base64,' . base64_encode($data->personaDesaparecida['FOTOGRAFIA']);
+			// }
 			$data->estadoOrigen = $this->_estadosModel->where('ESTADOID', $data->personaid['ESTADOORIGENID'])->first();
 			$data->municipioOrigen = $this->_municipiosModel->where('ESTADOID', $data->personaid['ESTADOORIGENID'])->where('MUNICIPIOID', $data->personaid['MUNICIPIOORIGENID'])->first();
 			$data->escolaridad = $this->_escolaridadModel->where('PERSONAESCOLARIDADID', $data->personaid['ESCOLARIDADID'])->first();

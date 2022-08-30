@@ -669,7 +669,9 @@ class DashboardController extends BaseController
 		if (empty($data['FECHADESAPARICION'])) {
 			$data['FECHADESAPARICION'] = NULL;
 		}
-
+		if ($data['FECHADESAPARICION'] == '0000-00-00') {
+			$data['FECHADESAPARICION'] = NULL;
+		}
 		$this->_folioMediaFiliacion->insert($data);
 	}
 	private function _parentescoPersonaFisica($data, $folio, $personaFisicaID1, $personaFisicaID2,  $year)

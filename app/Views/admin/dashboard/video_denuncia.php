@@ -485,6 +485,15 @@
 					let munOrigen = response.municipioOrigen;
 					let ocupacion = response.ocupacion;
 					let escolaridad = response.escolaridad;
+					let figura = response.figura;
+					let cabelloColor = response.cabelloColor;
+					let cabelloTamano = response.cabelloTamano;
+					let frenteForma = response.frenteForma;
+					let ojoColor = response.ojoColor;
+					let cabelloEstilo = response.cabelloEstilo;
+					let cejaForma = response.cejaForma;
+					let pielColor = response.pielColor;
+					let parentesco = response.parentesco;
 					if (personaid.DENUNCIANTE == 'S' && personaid.FOTO) {
 						document.querySelector('#fisica_foto').setAttribute('src', personaid.FOTO);
 						extension = (((personaid.FOTO.split(';'))[0]).split('/'))[1];
@@ -560,18 +569,18 @@
 
 						document.querySelector('#estaturaD').value = desaparecida.ESTATURA;
 						document.querySelector('#pesoD').value = desaparecida.PESO;
-						document.querySelector('#complexionD').value = desaparecida.COMPLEXION;
-						document.querySelector('#colortezD').value = desaparecida.COLOR_TEZ;
-						document.querySelector('#senasD').value = desaparecida.SENAS;
-						//	document.querySelector('#identidadD').value = desaparecida.IDENTIDAD;
-						document.querySelector('#colorCD').value = desaparecida.COLOR_CABELLO;
-						document.querySelector('#tamanoCD').value = desaparecida.TAM_CABELLO;
-						document.querySelector('#formaCD').value = desaparecida.FORMA_CABELLO;
-						document.querySelector('#colorOD').value = desaparecida.COLOR_OJOS;
-						document.querySelector('#tipoFD').value = desaparecida.FRENTE;
-						document.querySelector('#cejaD').value = desaparecida.CEJA;
-						document.querySelector('#discapacidadD').value = desaparecida.DISCAPACIDAD;
-						document.querySelector('#origenD').value = desaparecida.ORIGEN;
+						document.querySelector('#complexionD').value = figura.FIGURADESCR;
+						document.querySelector('#colortezD').value = pielColor.PIELCOLORDESCR;
+						document.querySelector('#senasD').value = desaparecida.SENASPARTICULARES;
+						// //	document.querySelector('#identidadD').value = desaparecida.IDENTIDAD;
+						document.querySelector('#colorCD').value = cabelloColor.CABELLOCOLORDESCR;
+						document.querySelector('#tamanoCD').value = cabelloTamano.CABELLOTAMANODESCR;
+						document.querySelector('#formaCD').value = cabelloEstilo.CABELLOESTILODESCR;
+						document.querySelector('#colorOD').value = ojoColor.OJOCOLORDESCR;
+						document.querySelector('#tipoFD').value = frenteForma.FRENTEFORMADESCR;
+						document.querySelector('#cejaD').value = cejaForma.CEJAFORMADESCR;
+						document.querySelector('#discapacidadD').value = desaparecida.DISCAPACIDADDESCR;
+						// //document.querySelector('#origenD').value = desaparecida.ORIGEN;
 						if (desaparecida.FECHADESAPARICION) {
 							let date = new Date(desaparecida.FECHADESAPARICION);
 							let dateToTijuanaString = date.toLocaleString('en-US', {
@@ -590,11 +599,11 @@
 						}
 						document.querySelector('#lugarDesaparicion').value = desaparecida.LUGARDESAPARICION;
 						document.querySelector('#vestimentaD').value = desaparecida.VESTIMENTA;
-						document.querySelector('#parentescoD').value = desaparecida.PARENTESCO;
-						if (desaparecida.FOTOGRAFIA) {
-							document.querySelector('#fisica_foto').setAttribute('src', desaparecida.FOTOGRAFIA);
-							extension = (((desaparecida.FOTOGRAFIA.split(';'))[0]).split('/'))[1];
-							document.querySelector('#fisica_foto_download').setAttribute('href', desaparecida.FOTOGRAFIA);
+						document.querySelector('#parentescoD').value = parentesco.PERSONAPARENTESCODESCR;
+						if (personaid.FOTO) {
+							document.querySelector('#fisica_foto').setAttribute('src',personaid.FOTO);
+							extension = (((personaid.FOTO.split(';'))[0]).split('/'))[1];
+							document.querySelector('#fisica_foto_download').setAttribute('href', personaid.FOTO);
 							document.querySelector('#fisica_foto_download').setAttribute('download', personaid.NOMBRE ? personaid.NOMBRE + '_' + personaid.PERSONAFISICAID + '_' + personaid.FOLIOID + '_' + personaid.ANO + '.' + extension : personaid.PERSONAFISICAID + '_' + personaid.FOLIOID + '_' + personaid.ANO + '.' + extension);
 							document.querySelector('#contenedor_fisica_foto').classList.remove('d-none');
 						} else {
