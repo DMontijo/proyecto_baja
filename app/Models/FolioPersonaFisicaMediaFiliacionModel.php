@@ -86,5 +86,6 @@ class FolioPersonaFisicaMediaFiliacionModel extends Model
 		'FECHADESAPARICION',
 		'LUGARDESAPARICION',
 		'VESTIMENTA',
+		'AUTORIZAMEDIOS'
 	];
 }
