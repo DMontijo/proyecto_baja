@@ -540,13 +540,11 @@ class DashboardController extends BaseController
             $sexo_denunciante = $denunciante->SEXO == 'F' ? 'FEMENINO' : 'MASCULINO';
             $url = "/denuncia/dashboard/video-denuncia?folio=" . $year . '-' . $FOLIOID . "&year=" . $year . "&delito=" . $data->delito . "&descripcion=" . $data->descripcion . "&idioma=" . $data->idioma . "&edad=" . $data->edad . "&perfil=" . $data->perfil . "&sexo=" . $data->sexo . "&prioridad=" . $prioridad . "&sexo_denunciante=" . $sexo_denunciante;
 
-            var_dump($dataDesaparecido);
-            exit;
-            // if ($this->_sendEmailFolio($session->get('CORREO'), $FOLIOID)) {
-            //     return redirect()->to(base_url($url));
-            // } else {
-            //     return redirect()->to(base_url($url));
-            // }
+            if ($this->_sendEmailFolio($session->get('CORREO'), $FOLIOID)) {
+                return redirect()->to(base_url($url));
+            } else {
+                return redirect()->to(base_url($url));
+            }
         } else {
             return redirect()->to(base_url('/denuncia/dashboard'));
         }
