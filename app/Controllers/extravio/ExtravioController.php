@@ -53,7 +53,6 @@ class ExtravioController extends BaseController
 			return redirect()->to(base_url('/constancia_extravio/dashboard'));
 		} else {
 			session()->destroy;
-			session_unset();
 			$this->_loadView('Login', [], 'index');
 		}
 	}
@@ -109,9 +108,9 @@ class ExtravioController extends BaseController
 		if ($this->validate(['correo' => 'required|is_unique[DENUNCIANTES.CORREO]'])) {
 			$this->_denunciantesModel->insert($data);
 			$this->_sendEmailPassword($data['CORREO'], $password);
-			return redirect()->to(base_url('/constancia_extravio'))->with('created', 'Inicia sesión con la contraseña que llegará a tu correo e ingresa.');
+			return redirect()->to(base_url('/constancia_extravio'))->with('message_success', 'Inicia sesión con la contraseña que llegará a tu correo e ingresa.');
 		} else {
-			return redirect()->back()->with('message', 'Hubo un error en los datos o puede que ya exista un registro con el mismo correo');
+			return redirect()->back()->with('message_error', 'Hubo un error en los datos o puede que ya exista un registro con el mismo correo');
 		}
 	}
 
@@ -168,7 +167,7 @@ class ExtravioController extends BaseController
 		$email->setMessage($body);
 
 		if ($email->send()) {
-			return redirect()->to(base_url('/constancia_extravio'))->with('created', 'Verifica tu nueva contraseña en tu correo.');
+			return redirect()->to(base_url('/constancia_extravio'))->with('message_success', 'Verifica tu nueva contraseña en tu correo.');
 		}
 	}
 

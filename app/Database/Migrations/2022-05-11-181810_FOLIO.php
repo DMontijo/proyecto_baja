@@ -154,10 +154,30 @@ class FOLIO extends Migration
 				'constraint' => '20',
 				'null' => TRUE,
 			],
-			'DERECHOS' => [
+			'HECHOCLASIFICACIONLUGARID' => [
+				'type' => 'INT',
+				'unsigned' => TRUE,
+				'null' => TRUE,
+			],
+			'HECHOVIALIDADID' => [
+				'type' => 'INT',
+				'unsigned' => TRUE,
+				'null' => TRUE,
+			],
+			'LOCALIZACIONPERSONA' => [
 				'type' => 'CHAR',
 				'constraint' => '1',
-				'default' => 'S'
+				'default' => 'N'
+			],
+			'DERECHOSOFENDIDO' => [
+				'type' => 'CHAR',
+				'constraint' => '1',
+				'default' => 'S',
+			],
+			'AUTORIZAMEDIOS' => [
+				'type' => 'CHAR',
+				'constraint' => '1',
+				'default' => 'N',
 			],
 			'FECHASALIDA' => [
 				'type' => 'DATETIME',

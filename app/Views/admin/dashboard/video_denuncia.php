@@ -572,8 +572,8 @@
 						document.querySelector('#cejaD').value = desaparecida.CEJA;
 						document.querySelector('#discapacidadD').value = desaparecida.DISCAPACIDAD;
 						document.querySelector('#origenD').value = desaparecida.ORIGEN;
-						if (desaparecida.DIA_DESAPARICION) {
-							let date = new Date(desaparecida.DIA_DESAPARICION);
+						if (desaparecida.FECHADESAPARICION) {
+							let date = new Date(desaparecida.FECHADESAPARICION);
 							let dateToTijuanaString = date.toLocaleString('en-US', {
 								timeZone: 'America/Tijuana'
 							});
@@ -588,7 +588,7 @@
 						} else {
 							document.querySelector('#diaDesaparicion').value = '';
 						}
-						document.querySelector('#lugarDesaparicion').value = desaparecida.LUGAR_DESAPARICION;
+						document.querySelector('#lugarDesaparicion').value = desaparecida.LUGARDESAPARICION;
 						document.querySelector('#vestimentaD').value = desaparecida.VESTIMENTA;
 						document.querySelector('#parentescoD').value = desaparecida.PARENTESCO;
 						if (desaparecida.FOTOGRAFIA) {
@@ -603,7 +603,7 @@
 							document.querySelector('#fisica_foto_download').setAttribute('download', '');
 							document.querySelector('#contenedor_fisica_foto').classList.add('d-none');
 						}
-						document.querySelector('#autorizaFoto').value = desaparecida.AUTORIZA_FOTO == 'S' ? 'SI' : 'NO';
+						document.querySelector('#autorizaFoto').value = desaparecida.AUTORIZAMEDIOS == 'S' ? 'SI' : 'NO';
 
 						document.getElementById("personadesaparecida").style.display = "block";
 

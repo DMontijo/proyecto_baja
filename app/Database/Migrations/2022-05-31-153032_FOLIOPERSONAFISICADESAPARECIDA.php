@@ -92,11 +92,11 @@ class FOLIOPERSONAFISICADESAPARECIDA extends Migration
 				'constraint' => '50',
 				'null' => TRUE,
 			],
-			'DIA_DESAPARICION' => [
+			'FECHADESAPARICION' => [
 				'type' => 'DATE',
 				'null' => TRUE,
 			],
-			'LUGAR_DESAPARICION' => [
+			'LUGARDESAPARICION' => [
 				'type' => 'VARCHAR',
 				'constraint' => '50',
 				'null' => TRUE,
@@ -115,7 +115,7 @@ class FOLIOPERSONAFISICADESAPARECIDA extends Migration
 				'type' => 'LONGBLOB',
 				'null' => TRUE,
 			],
-			'AUTORIZA_FOTO' => [
+			'AUTORIZAMEDIOS' => [
 				'type' => 'CHAR',
 				'constraint' => '1',
 				'default' => 'S',

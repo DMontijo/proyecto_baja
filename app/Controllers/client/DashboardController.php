@@ -31,7 +31,7 @@ use App\Models\CabelloTamanoModel;
 use App\Models\CejaFormaModel;
 
 use App\Models\EscolaridadModel;
-use App\Models\ExpPersonaFisicaMediaFiliacionModel;
+use App\Models\FolioPersonaFisicaMediaFiliacionModel;
 use App\Models\OcupacionModel;
 use App\Models\FiguraModel;
 use App\Models\FrenteFormaModel;
@@ -65,11 +65,11 @@ class DashboardController extends BaseController
 		$this->_folioPersonaFisicaDomicilioModel = new FolioPersonaFisicaDomicilioModel();
 		$this->_folioPersonaFisicaDesaparecidaModel = new FolioPersonaFisicaDesaparecidaModel();
 		$this->_folioVehiculoModel = new FolioVehiculoModel();
-		$this->_expPersonaDesaparecidaMediaFiliacion = new ExpPersonaFisicaMediaFiliacionModel();
+		$this->_folioMediaFiliacion = new FolioPersonaFisicaMediaFiliacionModel();
 
 		$this->_escolaridadModel = new EscolaridadModel();
 		$this->_ocupacionModel = new OcupacionModel();
-		
+
 		$this->_cabelloColorModel = new CabelloColorModel();
 		$this->_cabelloTamanoModel = new CabelloTamanoModel();
 		$this->_cabelloEstiloModel = new CabelloEstiloModel();
@@ -80,7 +80,6 @@ class DashboardController extends BaseController
 		$this->_pielColorModel = new PielColorModel();
 		$this->_parentescoModel = new ParentescoModel();
 		$this->_parentescoPersonaFisicaModel = new PersonaFisicaParentescoModel();
-
 	}
 
 	public function index()
@@ -116,11 +115,11 @@ class DashboardController extends BaseController
 		$data->ocupaciones = $this->_ocupacionModel->asObject()->findAll();
 		$data->figura = $this->_figuraModel->asObject()->findAll();
 		$data->cabelloColor = $this->_cabelloColorModel->asObject()->findAll();
-		$data->cabelloTamano = $this->_cabelloTamanoModel ->asObject()->findAll();
-		$data->frenteForma = $this->_frenteFormaModel ->asObject()->findAll();
-		$data->ojoColor = $this->_ojoColorModel ->asObject()->findAll();
-		$data->cabelloEstilo = $this->_cabelloEstiloModel ->asObject()->findAll();
-		$data->cejaForma = $this->_cejaFormaModel ->asObject()->findAll();
+		$data->cabelloTamano = $this->_cabelloTamanoModel->asObject()->findAll();
+		$data->frenteForma = $this->_frenteFormaModel->asObject()->findAll();
+		$data->ojoColor = $this->_ojoColorModel->asObject()->findAll();
+		$data->cabelloEstilo = $this->_cabelloEstiloModel->asObject()->findAll();
+		$data->cejaForma = $this->_cejaFormaModel->asObject()->findAll();
 		$data->pielColor = $this->_pielColorModel->asObject()->findAll();
 		$data->parentesco = $this->_parentescoModel->asObject()->findAll();
 
@@ -194,6 +193,8 @@ class DashboardController extends BaseController
 			$dataFolio['HECHOCOLONIAID'] = (int)$this->request->getPost('colonia_select');
 			$dataFolio['HECHOCOLONIADESCR'] = NULL;
 		}
+		if ($this->request->getPost('esta_desaparecido')  == "SI") $dataFolio['LOCALIZACIONPERSONA'] == 'S';
+
 		$localidad = $this->_localidadesModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $dataFolio['HECHOMUNICIPIOID'])->where('LOCALIDADID', $dataFolio['HECHOLOCALIDADID'])->first();
 		$localidad ? $dataFolio['HECHOZONA'] = $localidad->ZONA : $dataFolio['HECHOZONA'] = NULL;
 
@@ -230,16 +231,18 @@ class DashboardController extends BaseController
 					'NOMBRE' => $this->request->getPost('nombre_des'),
 					'PRIMERAPELLIDO' => $this->request->getPost('apellido_paterno_des'),
 					'SEGUNDOAPELLIDO' => $this->request->getPost('apellido_materno_des'),
-					'PAIS' => $this->request->getPost('pais_des'),
-					'ESTADOORIGENID' => $this->request->getPost('estado_des'),
-					'MUNICIPIOORIGENID' => $this->request->getPost('municipio_des'),
-					'ESTATURA' => $this->request->getPost('estatura_des'),
 					'FECHANACIMIENTO' => $this->request->getPost('fecha_nacimiento_des'),
 					'EDADCANTIDAD' => $this->request->getPost('edad_des'),
+					'SEXO' => $this->request->getPost('sexo_des'),
+
+					'NACIONALIDADID' => $this->request->getPost('nacionalidad_des'),
+					'ESTADOORIGENID' => $this->request->getPost('estado_origen_des'),
+					'MUNICIPIOORIGENID' => $this->request->getPost('municipio_origen_des'),
+
+					'ESTATURA' => $this->request->getPost('estatura_des'),
 					'PESO' => $this->request->getPost('peso_des'),
 					'FIGURAID' => $this->request->getPost('complexion_des'),
 					'PIELCOLORID' => $this->request->getPost('color_des'),
-					'SEXO' => $this->request->getPost('sexo_des'),
 					'SENASPARTICULARES' => $this->request->getPost('señas_des'),
 					'IDENTIDAD' => $this->request->getPost('identidad_des'),
 					'CABELLOCOLORID' => $this->request->getPost('color_cabello_des'),
@@ -248,22 +251,20 @@ class DashboardController extends BaseController
 					'OJOCOLORID' => $this->request->getPost('color_ojos_des'),
 					'FRENTEFORMAID' => $this->request->getPost('frente_des'),
 					'CEJAFORMAID' => $this->request->getPost('forma_ceja_des'),
-					'DISCAPACIDAD' => $this->request->getPost('discapacidad_des'),
-					'ORIGEN' => $this->request->getPost('origen_des'),
-					'DIA_DESAPARICION' => $this->request->getPost('dia_des'),
-					'LUGAR_DESAPARICION' => $this->request->getPost('lugar_des'),
+					'DISCAPACIDADDESCR' => $this->request->getPost('discapacidad_des'),
+					'FECHADESAPARICION' => $this->request->getPost('dia_des'),
+					'LUGARDESAPARICION' => $this->request->getPost('lugar_des'),
 					'VESTIMENTA' => $this->request->getPost('vestimenta_des'),
 					'PARENTESCOID' => $this->request->getPost('parentesco_des'),
 					'FACEBOOK' => $this->request->getPost('facebook_des'),
 					'INSTAGRAM' => $this->request->getPost('instagram_des'),
 					'TWITTER' => $this->request->getPost('twitter_des'),
 					'FOTO' => $foto_data,
-					'FOTOGRAFIA' => $foto_data,
-					'AUTORIZA_FOTO' => $this->request->getPost('autorization_photo_des') == 'on' ? 'S' : 'N',
+					'AUTORIZAMEDIOS' => $this->request->getPost('autorization_photo_des') == 'on' ? 'S' : 'N',
 					'DESAPARECIDA' => 'S',
-					'ESTADOORIGENID' => $this->request->getPost('estado_origen_des'),
-					'MUNICIPIOORIGENID' => $this->request->getPost('municipio_origen_des'),
-					'NACIONALIDADID' => $this->request->getPost('nacionalidad_des'),
+
+					'ESCOLARIDADID' => $this->request->getPost('escolaridad_des'),
+					'OCUPACIONID' => $this->request->getPost('ocupacion_des'),
 				);
 
 				// var_dump($dataDesaparecido);
@@ -283,7 +284,7 @@ class DashboardController extends BaseController
 				);
 
 				$desaparecido = $this->_folioPersonaFisica($dataDesaparecido, $FOLIOID, 1, $year);
-				$this->_folioPersonaFisicaDesaparecida($dataDesaparecido, $FOLIOID, $desaparecido, $year);
+				$this->_folioPersonaFisicaMediaFiliacion($dataDesaparecido, $FOLIOID, $desaparecido, $year);
 				$this->_folioPersonaFisicaDomicilio($dataDesaparecidoDomicilio, $FOLIOID, $desaparecido, $year);
 			}
 
@@ -304,6 +305,8 @@ class DashboardController extends BaseController
 					'ESTADOORIGENID' => $this->request->getPost('estado_origen_menor'),
 					'MUNICIPIOORIGENID' => $this->request->getPost('municipio_origen_menor'),
 					'NACIONALIDADID' => $this->request->getPost('nacionalidad_menor'),
+					'ESCOLARIDADID' => $this->request->getPost('escolaridad_menor'),
+					'OCUPACIONID' => $this->request->getPost('ocupacion_menor'),
 				);
 
 				$dataMenorDomicilio = array(
@@ -320,6 +323,7 @@ class DashboardController extends BaseController
 				);
 
 				$menor = $this->_folioPersonaFisica($dataMenor, $FOLIOID, 1, $year);
+				$this->_folioPersonaFisicaMediaFiliacion($dataMenor, $FOLIOID, $menor, $year);
 				$this->_folioPersonaFisicaDomicilio($dataMenorDomicilio, $FOLIOID, $menor, $year);
 			}
 
@@ -343,6 +347,7 @@ class DashboardController extends BaseController
 				);
 
 				$ofendidoId = $this->_folioPersonaFisica($dataOfendido, $FOLIOID, 1, $year);
+				$this->_folioPersonaFisicaMediaFiliacion($dataOfendido, $FOLIOID, $ofendidoId, $year);
 				$this->_folioPersonaFisicaDomicilio($dataOfendidoDomicilio, $FOLIOID, $ofendidoId, $year);
 			}
 
@@ -401,6 +406,7 @@ class DashboardController extends BaseController
 				'TWITTER' => $denunciante->TWITTER,
 				'LEER' => $denunciante->LEER,
 				'ESCRIBIR' => $denunciante->ESCRIBIR,
+				'DISCAPACIDADDESCR' => $denunciante->DISCAPACIDAD,
 			);
 
 			$dataDenuncianteDomicilio = array(
@@ -418,8 +424,12 @@ class DashboardController extends BaseController
 
 			$denuncianteCalidad = $this->request->getPost('es_menor') == "SI" || $this->request->getPost('esta_desaparecido') == "SI" || $this->request->getPost('es_ofendido') === "NO" ? 3 : 1;
 			$denuncinateIdPersona = $this->_folioPersonaFisica($dataDenunciante, $FOLIOID, $denuncianteCalidad, $year);
+			$this->_folioPersonaFisicaMediaFiliacion($dataDenunciante, $FOLIOID, $denuncinateIdPersona, $year);
 			$this->_folioPersonaFisicaDomicilio($dataDenuncianteDomicilio, $FOLIOID, $denuncinateIdPersona, $year);
-			$this->_parentescoPersonaFisica($dataDesaparecido, $FOLIOID,$denuncinateIdPersona, $desaparecido, $year);
+
+			if ($this->request->getPost('esta_desaparecido')  == "SI") {
+				$this->_parentescoPersonaFisica($dataDesaparecido, $FOLIOID, $denuncinateIdPersona, $desaparecido, $year);
+			}
 
 			//DATOS DEL POSIBLE RESPONSABLE
 			if (!empty($this->request->getPost('responsable')) && $this->request->getPost('responsable') == 'SI') {
@@ -441,6 +451,7 @@ class DashboardController extends BaseController
 					'MUNICIPIOORIGENID' => $this->request->getPost('municipio_origen_imputado'),
 					'NACIONALIDADID' => $this->request->getPost('nacionalidad_imputado'),
 					'ESCOLARIDADID' => $this->request->getPost('escolaridad_imputado'),
+					'OCUPACIONID' => $this->request->getPost('ocupacion_imputado'),
 				);
 
 				$dataImputadoDomicilio = array(
@@ -457,6 +468,7 @@ class DashboardController extends BaseController
 				);
 
 				$imputadoId = $this->_folioPersonaFisica($dataImputado, $FOLIOID, 2, $year);
+				$this->_folioPersonaFisicaMediaFiliacion($dataImputado, $FOLIOID, $imputadoId, $year);
 				$this->_folioPersonaFisicaDomicilio($dataImputadoDomicilio, $FOLIOID, $imputadoId, $year);
 			} else {
 				$dataImputado = array(
@@ -478,6 +490,7 @@ class DashboardController extends BaseController
 				);
 
 				$imputadoId = $this->_folioPersonaFisica($dataImputado, $FOLIOID, 2, $year);
+				$this->_folioPersonaFisicaMediaFiliacion($dataImputado, $FOLIOID, $imputadoId, $year);
 				$this->_folioPersonaFisicaDomicilio($dataImputadoDomicilio, $FOLIOID, $imputadoId, $year);
 			}
 
@@ -646,17 +659,17 @@ class DashboardController extends BaseController
 		}
 	}
 
-	private function _folioPersonaFisicaDesaparecida($data, $folio, $personaFisicaID, $year)
+	private function _folioPersonaFisicaMediaFiliacion($data, $folio, $personaFisicaID, $year)
 	{
 		$data = $data;
 		$data['FOLIOID'] = $folio;
 		$data['ANO'] = $year;
 		$data['PERSONAFISICAID'] = $personaFisicaID;
-		if (empty($data['DIA_DESAPARICION']) || $data['DIA_DESAPARICION'] = NULL || $data['DIA_DESAPARICION'] = '0000-00-00') {
-			$data['DIA_DESAPARICION'] = NULL;
+		if (empty($data['FECHADESAPARICION']) || $data['FECHADESAPARICION'] = NULL || $data['FECHADESAPARICION'] = '0000-00-00') {
+			$data['FECHADESAPARICION'] = NULL;
 		}
 
-		$this->_expPersonaDesaparecidaMediaFiliacion->insert($data);
+		$this->_folioMediaFiliacion->insert($data);
 	}
 	private function _parentescoPersonaFisica($data, $folio, $personaFisicaID1, $personaFisicaID2,  $year)
 	{

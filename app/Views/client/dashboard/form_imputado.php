@@ -17,7 +17,7 @@
 		<input type="text" class="form-control" id="alias_imputado" name="alias_imputado" maxlength="50">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="fecha_nacimiento_imputado" class="form-label fw-bold ">Fecha de nacimiento </label>
+		<label for="fecha_nacimiento_imputado" class="form-label fw-bold ">Fecha de nacimiento</label>
 		<input type="date" class="form-control" id="fecha_nacimiento_imputado" name="fecha_nacimiento_imputado" max="<?= date("Y-m-d") ?>">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -25,7 +25,7 @@
 		<input type="number" class="form-control" id="edad_imputado" name="edad_imputado">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="sexo_imputado" class="form-label fw-bold ">Sexo </label>
+		<label for="sexo_imputado" class="form-label fw-bold ">Sexo</label>
 		<br>
 		<div class="form-check form-check-inline">
 			<input class="form-check-input" type="radio" name="sexo_imputado" value="M" id="MASCULINO">
@@ -123,7 +123,7 @@
 		<input type="number" class="form-control" id="cp_imputado" name="cp_imputado" maxlength="10">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="calle_imputado" class="form-label fw-bold">Calle </label>
+		<label for="calle_imputado" class="form-label fw-bold">Calle</label>
 		<input type="text" class="form-control" id="calle_imputado" name="calle_imputado" maxlength="50">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -135,15 +135,24 @@
 		<input type="text" class="form-control" id="numero_int_imputado" name="numero_int_imputado" maxlength="10">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="tel_imputado" class="form-label fw-bold">Teléfono </label>
+		<label for="tel_imputado" class="form-label fw-bold">Teléfono</label>
 		<input type="text" class="form-control" id="tel_imputado" name="tel_imputado" maxlength="20">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="escolaridad_imputado" class="form-label fw-bold">Escolaridad </label>
+		<label for="escolaridad_imputado" class="form-label fw-bold">Escolaridad</label>
 		<select class="form-select" id="escolaridad_imputado" name="escolaridad_imputado">
 			<option selected disabled value="">Selecciona la escolaridad</option>
 			<?php foreach ($body_data->escolaridades as $index => $escolaridad) { ?>
 				<option value="<?= $escolaridad->PERSONAESCOLARIDADID ?>"> <?= $escolaridad->PERSONAESCOLARIDADDESCR ?> </option>
+			<?php } ?>
+		</select>
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="ocupacion_imputado" class="form-label fw-bold">Ocupación</label>
+		<select class="form-select" id="ocupacion_imputado" name="ocupacion_imputado">
+			<option selected disabled value="">Selecciona la ocupacion</option>
+			<?php foreach ($body_data->ocupaciones as $index => $ocupacion) { ?>
+				<option value="<?= $ocupacion->PERSONAOCUPACIONID ?>"> <?= $ocupacion->PERSONAOCUPACIONDESCR ?> </option>
 			<?php } ?>
 		</select>
 	</div>
@@ -324,7 +333,7 @@
 				},
 				error: function(jqXHR, textStatus, errorThrown) {}
 			});
-			
+
 			$.ajax({
 				data: data,
 				url: "<?= base_url('/data/get-localidades-by-municipio') ?>",

@@ -4,16 +4,12 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class EXPPERSONAFISICAMEDIAFILIACION extends Migration
+class FOLIOPERSONAFISICAMEDIAFILIACION extends Migration
 {
 	public function up()
 	{
 		$this->forge->addField([
 			'FOLIOID' => [
-				'type' => 'INT',
-				'unsigned' => TRUE,
-			],
-			'EXPEDIENTEID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 			],
@@ -29,19 +25,16 @@ class EXPPERSONAFISICAMEDIAFILIACION extends Migration
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'ESTATURA' => [
-				'type' => 'FLOAT',
+				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'PESO' => [
-				'type' => 'FLOAT',
+				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'SENASPARTICULARES' => [
 				'type' => 'VARCHAR',
@@ -52,79 +45,66 @@ class EXPPERSONAFISICAMEDIAFILIACION extends Migration
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'FIGURAID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'CONTEXTURAID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'CARAFORMAID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'CARATAMANOID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'CARATEZID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'OREJALOBULOID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'OREJAFORMAID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'OREJATAMANOID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'CABELLOCOLORID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'CABELLOESTILOID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'CABELLOTAMANOID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'CABELLOPECULIARID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'CABELLODESCR' => [
 				'type' => 'VARCHAR',
@@ -135,195 +115,163 @@ class EXPPERSONAFISICAMEDIAFILIACION extends Migration
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'FRENTEANCHURAID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'FRENTEFORMAID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'FRENTEPECULIARID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'CEJACOLOCACIONID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'CEJAFORMAID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'CEJATAMANOID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'CEJAGROSORID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'OJOCOLOCACIONID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'OJOFORMAID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'OJOTAMANOID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'OJOCOLORID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'OJOPECULIARID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'NARIZTIPOID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'NARIZTAMANOID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'NARIZBASEID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'NARIZPECULIARID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'NARIZDESCR' => [
 				'type' => 'VARCHAR',
 				'constraint' => 200,
 				'null' => TRUE,
 				'null' => TRUE,
-
 			],
 			'BIGOTEFORMAID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'BIGOTETAMANOID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'BIGOTEGROSORID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'BIGOTEPECULIARID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'BIGOTEDESCR' => [
 				'type' => 'VARCHAR',
 				'constraint' => 200,
 				'null' => TRUE,
 				'null' => TRUE,
-
 			],
 			'BOCATAMANOID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'BOCAPECULIARID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'LABIOGROSORID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'LABIOLONGITUDID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'LABIOPOSICIONID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'LABIOPECULIARID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'DIENTETAMANOID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'DIENTETIPOID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'DIENTEPECULIARID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'DIENTEDESCR' => [
 				'type' => 'VARCHAR',
@@ -334,25 +282,21 @@ class EXPPERSONAFISICAMEDIAFILIACION extends Migration
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'BARBILLATAMANOID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'BARBILLAINCLINACIONID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'BARBILLAPECULIARID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'BARBILLADESCR' => [
 				'type' => 'VARCHAR',
@@ -363,13 +307,11 @@ class EXPPERSONAFISICAMEDIAFILIACION extends Migration
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'BARBAPECULIARID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'BARBADESCR' => [
 				'type' => 'VARCHAR',
@@ -380,19 +322,16 @@ class EXPPERSONAFISICAMEDIAFILIACION extends Migration
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'CUELLOGROSORID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'CUELLOPECULIARID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'CUELLODESCR' => [
 				'type' => 'VARCHAR',
@@ -403,71 +342,54 @@ class EXPPERSONAFISICAMEDIAFILIACION extends Migration
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'HOMBROLONGITUDID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'HOMBROGROSORID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'ESTOMAGOID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'PERSONAESCOLARIDADID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'PERSONAETNIAID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'null' => TRUE,
-
 			],
 			'ESTOMAGODESCR' => [
 				'type' => 'VARCHAR',
 				'constraint' => 200,
 				'null' => TRUE,
 			],
-			'DISCAPACIDAD' => [
+			'DISCAPACIDADDESCR' => [
 				'type' => 'VARCHAR',
-				'constraint' => '50',
+				'constraint' => 200,
 				'null' => TRUE,
 			],
-			'ORIGEN' => [
-				'type' => 'VARCHAR',
-				'constraint' => '50',
-				'null' => TRUE,
-			],
-			'DIA_DESAPARICION' => [
+			'FECHADESAPARICION' => [
 				'type' => 'DATE',
 				'null' => TRUE,
 			],
-			'LUGAR_DESAPARICION' => [
+			'LUGARDESAPARICION' => [
 				'type' => 'VARCHAR',
-				'constraint' => '50',
+				'constraint' => 200,
 				'null' => TRUE,
 			],
 			'VESTIMENTA' => [
 				'type' => 'VARCHAR',
-				'constraint' => '50',
-				'null' => TRUE,
-			],
-			'AUTORIZA_FOTO' => [
-				'type' => 'CHAR',
-				'constraint' => '1',
-				'default' => 'S',
+				'constraint' => 200,
 				'null' => TRUE,
 			],
 			'FECHAREGISTRO DATETIME DEFAULT CURRENT_TIMESTAMP',
@@ -476,9 +398,8 @@ class EXPPERSONAFISICAMEDIAFILIACION extends Migration
 		$this->forge->addKey('FOLIOID', TRUE);
 		$this->forge->addKey('PERSONAFISICAID', TRUE);
 		$this->forge->addKey('ANO', TRUE);
-		// $this->forge->addKey('EXPPERSONAFISICAMEDIAAFILIACIONID', true);
-		// $this->forge->addForeignKey('PERSONAFISICAID', 'FOLIOPERSONAFISICA', 'PERSONAFISICAID');
-		 $this->forge->addForeignKey('OCUPACIONID', 'OCUPACION', 'PERSONAOCUPACIONID');
+
+		$this->forge->addForeignKey('OCUPACIONID', 'OCUPACION', 'PERSONAOCUPACIONID');
 		$this->forge->addForeignKey('PIELCOLORID', 'PIELCOLOR', 'PIELCOLORID');
 		$this->forge->addForeignKey('FIGURAID', 'FIGURA', 'FIGURAID');
 		$this->forge->addForeignKey('CONTEXTURAID', 'CEJACONTEXTURA', 'CONTEXTURAID');
@@ -538,12 +459,11 @@ class EXPPERSONAFISICAMEDIAFILIACION extends Migration
 		$this->forge->addForeignKey('PERSONAESCOLARIDADID', 'ESCOLARIDAD', 'PERSONAESCOLARIDADID');
 		$this->forge->addForeignKey('PERSONAETNIAID', 'PERSONAETNIA', 'PERSONAETNIAID');
 
-        $this->forge->createTable('EXPPERSONAFISICAMEDIAFILIACION', true);
-
+		$this->forge->createTable('FOLIOPERSONAFISICAMEDIAFILIACION', true);
 	}
 
 	public function down()
 	{
-		$this->forge->dropTable('EXPPERSONAFISICAMEDIAFILIACION', true);
+		$this->forge->dropTable('FOLIOPERSONAFISICAMEDIAFILIACION', true);
 	}
 }

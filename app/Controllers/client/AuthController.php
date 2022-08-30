@@ -22,7 +22,6 @@ class AuthController extends BaseController
 			return redirect()->to(base_url('/denuncia/dashboard'));
 		} else {
 			session()->destroy;
-			session_unset();
 			$this->_loadView('Login', [], 'index');
 		}
 	}
@@ -77,7 +76,7 @@ class AuthController extends BaseController
 		$id = $this->request->getPost('id');
 		$password = $this->request->getPost('password');
 		$this->_denunciantesModel->set('PASSWORD', hashPassword($password))->where('DENUNCIANTEID', $id)->update();
-		return redirect()->to(base_url('/denuncia'))->with('created', 'Contraseña modificada con éxito.');
+		return redirect()->to(base_url('/denuncia'))->with('message_success', 'Contraseña modificada con éxito.');
 	}
 
 	public function sendEmailChangePassword()
@@ -95,7 +94,7 @@ class AuthController extends BaseController
 		$email->setMessage($body);
 
 		if ($email->send()) {
-			return redirect()->to(base_url('/denuncia'))->with('created', 'Verifica tu nueva contraseña en tu correo.');
+			return redirect()->to(base_url('/denuncia'))->with('message_success', 'Verifica tu nueva contraseña en tu correo.');
 		}
 	}
 

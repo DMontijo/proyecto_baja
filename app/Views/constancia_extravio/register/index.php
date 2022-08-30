@@ -81,32 +81,4 @@
 		}, false)
 	})();
 </script>
-
-<?php if (session()->getFlashdata('created')) : ?>
-	<script>
-		Swal.fire({
-			icon: 'success',
-			text: '<?= session()->getFlashdata('created') ?>',
-			confirmButtonColor: '#bf9b55',
-		})
-	</script>
-<?php endif; ?>
-<?php if (session()->getFlashdata('peticion_iniciar')) : ?>
-	<script>
-		Swal.fire({
-			icon: 'error',
-			text: '<?= session()->getFlashdata('peticion_iniciar') ?>',
-			confirmButtonColor: '#bf9b55',
-		})
-	</script>
-<?php endif; ?>
-<?php if (session()->getFlashdata('peticion_folio')) : ?>
-	<script>
-		Swal.fire({
-			icon: 'error',
-			text: '<?= session()->getFlashdata('peticion_folio') ?>',
-			confirmButtonColor: '#bf9b55',
-		})
-	</script>
-<?php endif; ?>
 <?= $this->endSection() ?>

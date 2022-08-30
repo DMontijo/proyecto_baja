@@ -80,15 +80,4 @@
 		}, false)
 	})();
 </script>
-
-<?php if (session()->getFlashdata('created')) : ?>
-	<script>
-		Swal.fire({
-			icon: 'success',
-			html: '<strong><?= session()->getFlashdata('created') ?></strong>',
-			confirmButtonColor: '#bf9b55',
-		})
-	</script>
-<?php endif; ?>
-
 <?= $this->endSection() ?>

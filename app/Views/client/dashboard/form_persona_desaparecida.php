@@ -148,35 +148,33 @@
 		<label for="complexion_des" class="form-label fw-bold ">Complexión</label>
 		<select class="form-select" id="complexion_des" name="complexion_des">
 			<option selected disabled value="">Elige la complexión</option>
-			<?php 
+			<?php
 			foreach ($body_data->figura as $index => $figura) { ?>
-				<option value="<?= $figura->FIGURAID ?>"> <?= $figura->FIGURADESCR?></option>
+				<option value="<?= $figura->FIGURAID ?>"> <?= $figura->FIGURADESCR ?></option>
 			<?php } ?>
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="color_des" class="form-label fw-bold ">Color de piel o tez</label>
-		<input type="text" class="form-control" id="color_des" name="color_des" hidden>
 		<select class="form-select" id="color_des" name="color_des">
 			<option selected disabled value="">Elige el color de piel</option>
-			<?php 
+			<?php
 			foreach ($body_data->pielColor as $index => $pielColor) { ?>
-				<option value="<?= $pielColor->PIELCOLORID  ?>"> <?= $pielColor->PIELCOLORDESCR?></option>
+				<option value="<?= $pielColor->PIELCOLORID  ?>"> <?= $pielColor->PIELCOLORDESCR ?></option>
 			<?php } ?>
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="señas_des" class="form-label fw-bold ">Señas particulares</label>
-		<textarea class="form-control" id="señas_des" name="señas_des" maxlength="300"></textarea>
+		<textarea class="form-control" id="señas_des" name="señas_des" maxlength="200"></textarea>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="color_cabello_des" class="form-label fw-bold ">Color de cabello</label>
-		<input type="text" class="form-control" id="color_cabello_des" name="color_cabello_des" hidden>
 		<select class="form-select" id="color_cabello_des" name="color_cabello_des">
 			<option selected disabled value="">Elige el color del cabello</option>
-			<?php 
+			<?php
 			foreach ($body_data->cabelloColor as $index => $cabelloColor) { ?>
-				<option value="<?= $cabelloColor->CABELLOCOLORID ?>"> <?= $cabelloColor->CABELLOCOLORDESCR?></option>
+				<option value="<?= $cabelloColor->CABELLOCOLORID ?>"> <?= $cabelloColor->CABELLOCOLORDESCR ?></option>
 			<?php } ?>
 		</select>
 	</div>
@@ -184,9 +182,9 @@
 		<label for="tam_cabello_des" class="form-label fw-bold ">Tamaño de cabello</label>
 		<select class="form-select" id="tam_cabello_des" name="tam_cabello_des">
 			<option selected disabled value="">Elige el tamaño del cabello</option>
-			<?php 
+			<?php
 			foreach ($body_data->cabelloTamano as $index => $cabelloTamano) { ?>
-				<option value="<?= $cabelloTamano->CABELLOTAMANOID ?>"> <?= $cabelloTamano->CABELLOTAMANODESCR?></option>
+				<option value="<?= $cabelloTamano->CABELLOTAMANOID ?>"> <?= $cabelloTamano->CABELLOTAMANODESCR ?></option>
 			<?php } ?>
 		</select>
 	</div>
@@ -194,20 +192,19 @@
 		<label for="form_cabello_des" class="form-label fw-bold ">Forma de cabello</label>
 		<select class="form-select" id="form_cabello_des" name="form_cabello_des">
 			<option selected disabled value="">Elige la forma del cabello</option>
-			<?php 
+			<?php
 			foreach ($body_data->cabelloEstilo as $index => $cabelloEstilo) { ?>
-				<option value="<?= $cabelloEstilo->CABELLOESTILOID  ?>"> <?= $cabelloEstilo->CABELLOESTILODESCR?></option>
+				<option value="<?= $cabelloEstilo->CABELLOESTILOID  ?>"> <?= $cabelloEstilo->CABELLOESTILODESCR ?></option>
 			<?php } ?>
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="color_ojos_des" class="form-label fw-bold ">Color de ojos</label>
-		<input type="text" class="form-control" id="color_ojos_des" name="color_ojos_des"hidden>
 		<select class="form-select" id="color_ojos_des" name="color_ojos_des">
 			<option selected disabled value="">Elige el color de ojos</option>
-			<?php 
+			<?php
 			foreach ($body_data->ojoColor as $index => $ojoColor) { ?>
-				<option value="<?= $ojoColor->OJOCOLORID ?>"> <?= $ojoColor->OJOCOLORDESCR?></option>
+				<option value="<?= $ojoColor->OJOCOLORID ?>"> <?= $ojoColor->OJOCOLORDESCR ?></option>
 			<?php } ?>
 		</select>
 	</div>
@@ -215,9 +212,9 @@
 		<label for="frente_des" class="form-label fw-bold ">Tipo de frente</label>
 		<select class="form-select" id="frente_des" name="frente_des">
 			<option selected disabled value="">Elige la forma de la frente</option>
-			<?php 
+			<?php
 			foreach ($body_data->frenteForma as $index => $frenteForma) { ?>
-				<option value="<?= $frenteForma->FRENTEFORMAID ?>"> <?= $frenteForma->FRENTEFORMADESCR?></option>
+				<option value="<?= $frenteForma->FRENTEFORMAID ?>"> <?= $frenteForma->FRENTEFORMADESCR ?></option>
 			<?php } ?>
 		</select>
 	</div>
@@ -225,24 +222,16 @@
 		<label for="forma_ceja_des" class="form-label fw-bold ">Tipo de ceja</label>
 		<select class="form-select" id="forma_ceja_des" name="forma_ceja_des">
 			<option selected disabled value="">Elige el forma de ceja</option>
-			<?php 
+			<?php
 			foreach ($body_data->cejaForma as $index => $cejaForma) { ?>
-				<option value="<?= $cejaForma->CEJAFORMAID ?>"> <?= $cejaForma->CEJAFORMADESCR?></option>
+				<option value="<?= $cejaForma->CEJAFORMAID ?>"> <?= $cejaForma->CEJAFORMADESCR ?></option>
 			<?php } ?>
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="discapacidad_des" class="form-label fw-bold">¿Padece alguna
 			discapacidad?</label>
-			<input type="text" class="form-control" id="discapacidad_des" name="discapacidad_des">
-
-		<!-- <select class="form-select" id="discapacidad_des" name="discapacidad_des">
-			<option selected disabled value="">Selecciona si padece alguna discapacidad</option>
-			<option value="VISUAL">VISUAL</option>
-			<option value="FISICA">FISICA</option>
-			<option value="AUDITIVA">AUDITIVA</option>
-			<option vaulue="NINGUNA">NINGUNA</option>
-		</select> -->
+		<input type="text" class="form-control" id="discapacidad_des" name="discapacidad_des" maxlength="200">
 		<div class="invalid-feedback">
 			El campo discapacidad es obligatorio.
 		</div>
@@ -254,23 +243,46 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="lugar_des" class="form-label fw-bold ">¿Dónde se le vio por ultima vez?</label>
-		<input type="text" class="form-control" id="lugar_des" name="lugar_des">
+		<input type="text" class="form-control" id="lugar_des" name="lugar_des" maxlength="200">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="vestimenta_des" class="form-label fw-bold ">Vestimenta que portaba</label>
-		<input type="text" class="form-control" id="vestimenta_des" name="vestimenta_des">
+		<input type="text" class="form-control" id="vestimenta_des" name="vestimenta_des" maxlength="200">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="parentesco_des" class="form-label fw-bold ">Parentesco:</label>
-		
 		<select class="form-select" id="parentesco_des" name="parentesco_des">
 			<option selected disabled value="">Elige el parentesco</option>
-			<?php 
+			<?php
 			foreach ($body_data->parentesco as $index => $parentesco) { ?>
-				<option value="<?= $parentesco->PERSONAPARENTESCOID ?>"> <?= $parentesco->PERSONAPARENTESCODESCR?></option>
+				<option value="<?= $parentesco->PERSONAPARENTESCOID ?>"> <?= $parentesco->PERSONAPARENTESCODESCR ?></option>
 			<?php } ?>
 		</select>
 	</div>
+	
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="escolaridad_des" class="form-label fw-bold">Escolaridad</label>
+		<select class="form-select" id="escolaridad_des" name="escolaridad_des">
+			<option selected disabled value="">Selecciona la escolaridad</option>
+			<?php foreach ($body_data->escolaridades as $index => $escolaridad) { ?>
+				<option value="<?= $escolaridad->PERSONAESCOLARIDADID ?>"> <?= $escolaridad->PERSONAESCOLARIDADDESCR ?> </option>
+			<?php } ?>
+		</select>
+		<div class="invalid-feedback">
+			La escolaridad es obligatoria
+		</div>
+	</div>
+
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="ocupacion_des" class="form-label fw-bold">Ocupación</label>
+		<select class="form-select" id="ocupacion_des" name="ocupacion_des">
+			<option selected disabled value="">Selecciona la ocupacion</option>
+			<?php foreach ($body_data->ocupaciones as $index => $ocupacion) { ?>
+				<option value="<?= $ocupacion->PERSONAOCUPACIONID ?>"> <?= $ocupacion->PERSONAOCUPACIONDESCR ?> </option>
+			<?php } ?>
+		</select>
+	</div>
+
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="foto_des" class="form-label fw-bold ">Fotografía:</label>
 		<input type="file" class="form-control" id="foto_des" name="foto_des">
@@ -310,7 +322,8 @@
 		<div class="form-check d-inline-block">
 			<input id="autorization_photo_des" name="autorization_photo_des" class="form-check-input" type="checkbox">
 			<label class="form-check-label" for="autorization_photo_des">
-				Doy autorización de publicar la fotografía e información en medios de comunicación.</label>
+				Doy autorización de publicar la fotografía e información en medios de comunicación.
+			</label>
 		</div>
 	</div>
 </div>

@@ -132,6 +132,24 @@
 		<label for="numero_int_menor" class="form-label fw-bold">Número interior</label>
 		<input type="text" class="form-control" id="numero_int_menor" name="numero_int_menor" maxlength="10">
 	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="escolaridad_menor" class="form-label fw-bold">Escolaridad</label>
+		<select class="form-select" id="escolaridad_menor" name="escolaridad_menor">
+			<option selected disabled value="">Selecciona la escolaridad</option>
+			<?php foreach ($body_data->escolaridades as $index => $escolaridad) { ?>
+				<option value="<?= $escolaridad->PERSONAESCOLARIDADID ?>"> <?= $escolaridad->PERSONAESCOLARIDADDESCR ?> </option>
+			<?php } ?>
+		</select>
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="ocupacion_menor" class="form-label fw-bold">Ocupación</label>
+		<select class="form-select" id="ocupacion_menor" name="ocupacion_menor">
+			<option selected disabled value="">Selecciona la ocupacion</option>
+			<?php foreach ($body_data->ocupaciones as $index => $ocupacion) { ?>
+				<option value="<?= $ocupacion->PERSONAOCUPACIONID ?>"> <?= $ocupacion->PERSONAOCUPACIONDESCR ?> </option>
+			<?php } ?>
+		</select>
+	</div>
 	<div class="col-12">
 		<hr>
 	</div>

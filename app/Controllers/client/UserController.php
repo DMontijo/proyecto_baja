@@ -130,7 +130,7 @@ class UserController extends BaseController
 			$this->_denunciantesModel->insert($data);
 			$this->_sendEmailPassword($data['CORREO'], $password);
 			session()->setFlashdata('message', 'Inicia sesión con la contraseña que llegará a tu correo electrónico');
-			return redirect()->to(base_url('/denuncia'))->with('created', 'Inicia sesión con la contraseña que llegará a tu correo electrónico y comienza tu denuncia');
+			return redirect()->to(base_url('/denuncia'))->with('message_success', 'Inicia sesión con la contraseña que llegará a tu correo electrónico y comienza tu denuncia');
 		} else {
 			return redirect()->back()->with('message', 'Hubo un error en los datos o puede que ya exista un registro con el mismo correo');
 		}
@@ -152,8 +152,6 @@ class UserController extends BaseController
 
 	public function updateDenuncianteInfoPost()
 	{
-		$password = $this->_generatePassword(6);
-
 		$documento = $this->request->getPost('documento_text');
 		list($type, $documento) = explode(';', $documento);
 		list(, $extension) = explode('/', $type);
@@ -209,11 +207,11 @@ class UserController extends BaseController
 			$update = $this->_denunciantesModel->set($data)->where('DENUNCIANTEID', session('DENUNCIANTEID'))->update();
 			if (!$update) throw new \Exception();
 			session()->set('TIPO', '1');
-			session()->setFlashdata('message_success', 'Inicia sesión con la contraseña que llegará a tu correo electrónico');
-			return redirect()->to(base_url('/denuncia'));
+			return redirect()->to(base_url('/denuncia/dashboard'));
 		} catch (\Exception $e) {
+			var_dump($data);
+			exit;
 			session()->destroy;
-			session_unset();
 			return redirect()->to(base_url('/denuncia'))->with('message_error', 'No se pudo actualizar el registro, ingresa e intentalo de nuevo.');
 		}
 	}
