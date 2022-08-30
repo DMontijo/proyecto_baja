@@ -261,9 +261,6 @@ class DashboardController extends BaseController
                     'ESCOLARIDADID' => $this->request->getPost('escolaridad_des'),
                     'OCUPACIONID' => $this->request->getPost('ocupacion_des'),
                 );
-                // var_dump($_POST);
-                //  var_dump($dataDesaparecido);
-                // exit;
 
                 $dataDesaparecidoDomicilio = array(
                     'PAIS' => $this->request->getPost('pais_des'),
@@ -422,7 +419,7 @@ class DashboardController extends BaseController
             $this->_folioPersonaFisicaMediaFiliacion($dataDenunciante, $FOLIOID, $denuncinateIdPersona, $year);
             $this->_folioPersonaFisicaDomicilio($dataDenuncianteDomicilio, $FOLIOID, $denuncinateIdPersona, $year);
 
-            if ($this->request->getPost('esta_desaparecido') == "SI") {
+            if ($this->request->getPost('esta_desaparecido') == "SI" && $dataDesaparecido['PARENTESCOID']) {
                 $this->_parentescoPersonaFisica($dataDesaparecido, $FOLIOID, $denuncinateIdPersona, $desaparecido, $year);
             }
 
@@ -543,11 +540,13 @@ class DashboardController extends BaseController
             $sexo_denunciante = $denunciante->SEXO == 'F' ? 'FEMENINO' : 'MASCULINO';
             $url = "/denuncia/dashboard/video-denuncia?folio=" . $year . '-' . $FOLIOID . "&year=" . $year . "&delito=" . $data->delito . "&descripcion=" . $data->descripcion . "&idioma=" . $data->idioma . "&edad=" . $data->edad . "&perfil=" . $data->perfil . "&sexo=" . $data->sexo . "&prioridad=" . $prioridad . "&sexo_denunciante=" . $sexo_denunciante;
 
-            if ($this->_sendEmailFolio($session->get('CORREO'), $FOLIOID)) {
-                return redirect()->to(base_url($url));
-            } else {
-                return redirect()->to(base_url($url));
-            }
+            var_dump($dataDesaparecido);
+            exit;
+            // if ($this->_sendEmailFolio($session->get('CORREO'), $FOLIOID)) {
+            //     return redirect()->to(base_url($url));
+            // } else {
+            //     return redirect()->to(base_url($url));
+            // }
         } else {
             return redirect()->to(base_url('/denuncia/dashboard'));
         }
