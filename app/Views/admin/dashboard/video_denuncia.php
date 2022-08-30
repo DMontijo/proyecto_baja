@@ -612,7 +612,7 @@
 							document.querySelector('#fisica_foto_download').setAttribute('download', '');
 							document.querySelector('#contenedor_fisica_foto').classList.add('d-none');
 						}
-						document.querySelector('#autorizaFoto').value = desaparecida.AUTORIZAMEDIOS == 'S' ? 'SI' : 'NO';
+						document.querySelector('#autorizaFoto').value = desaparecida.LOCALIZACIONPERSONAMEDIOS == 'S' ? 'SI' : 'NO';
 
 						document.getElementById("personadesaparecida").style.display = "block";
 
