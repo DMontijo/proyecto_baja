@@ -334,6 +334,7 @@ class DashboardController extends BaseController
                 $data->parentesco = $this->_parentescoModel->where('PERSONAPARENTESCOID', $data->parentescoRelacion['PARENTESCOID'])->first();
 
             }
+			$data->folio = $this->_folioModel->where('FOLIOID', $folio)->where('ANO', $year)->first();
 
             // if ($data->personaDesaparecida && $data->personaDesaparecida['FOTOGRAFIA']) {
             //     $file_info = new \finfo(FILEINFO_MIME_TYPE);

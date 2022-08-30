@@ -369,6 +369,8 @@
 					let cejaForma = response.cejaForma;
 					let pielColor = response.pielColor;
 					let parentesco = response.parentesco;
+					let folio = response.folio;
+
 					if (personaid.DENUNCIANTE == 'S' && personaid.FOTO) {
 						document.querySelector('#fisica_foto').setAttribute('src', personaid.FOTO);
 						extension = (((personaid.FOTO.split(';'))[0]).split('/'))[1];
@@ -486,7 +488,7 @@
 							document.querySelector('#fisica_foto_download').setAttribute('download', '');
 							document.querySelector('#contenedor_fisica_foto').classList.add('d-none');
 						}
-						document.querySelector('#autorizaFoto').value = desaparecida.LOCALIZACIONPERSONAMEDIOS == 'S' ? 'SI' : 'NO';
+						document.querySelector('#autorizaFoto').value = folio.LOCALIZACIONPERSONAMEDIOS == 'S' ? 'SI' : 'NO';
 
 						document.getElementById("personadesaparecida").style.display = "block";
 
