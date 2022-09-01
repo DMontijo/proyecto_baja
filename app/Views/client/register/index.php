@@ -209,7 +209,6 @@
 							</select>
 						</div>
 
-
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="colonia" class="form-label fw-bold input-required">Colonia</label>
 							<select class="form-select" id="colonia_select" name="colonia_select" required>
@@ -673,7 +672,7 @@
 			let edad = hoy.getFullYear() - cumpleanos.getFullYear();
 			let m = hoy.getMonth() - cumpleanos.getMonth();
 
-			if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
+			if (m < 0 || (m === 0 && hoy.getDate() <= cumpleanos.getDate())) {
 				edad--;
 			}
 			if (edad < 18) {
@@ -1010,8 +1009,6 @@
 				input_colonia.classList.remove('d-none');
 			}
 		});
-
-
 
 		document.querySelector('#colonia_select').addEventListener('change', (e) => {
 			let select_colonia = document.querySelector('#colonia_select');

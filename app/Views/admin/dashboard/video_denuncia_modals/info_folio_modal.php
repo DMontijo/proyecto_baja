@@ -1,4 +1,4 @@
-<div class="modal fade" id="info_folio_modal" tabindex="-1" role="dialog" aria-labelledby="infoFolioModal" aria-hidden="true" data-backdrop="false">
+<div class="modal fade" id="info_folio_modal" role="dialog" aria-labelledby="infoFolioModal" aria-hidden="true" data-backdrop="false">
 	<div class="modal-dialog modal-dialog-centered mw-100 w-75">
 		<div class="modal-content" style="box-shadow: 0px 0px 55px 9px rgba(0,0,0,0.66)!important;">
 			<div class="modal-header bg-primary text-white">
@@ -12,7 +12,7 @@
 					<div class="col-3">
 						<div class="nav flex-column nav-pills" id="info_tabs" role="tablist" aria-orientation="vertical">
 							<a class="nav-link active" id="v-pills-denuncia-tab" data-toggle="pill" href="#v-pills-denuncia" role="tab" aria-controls="v-pills-denuncia" aria-selected="false"><i class="fas fa-file-alt"></i> DENUNCIA</a>
-							<a class="nav-link" id="v-pills-preguntas-iniciales-tab" data-toggle="pill" href="#v-pills-preguntas-iniciales" role="tab" aria-controls="v-pills-preguntas-iniciales" aria-selected="true"><i class="fas fa-home"></i> PREGUNTAS INICIALES</a>
+							<a class="nav-link" id="v-pills-preguntas-iniciales-tab" data-toggle="pill" href="#v-pills-preguntas-iniciales" role="tab" aria-controls="v-pills-preguntas-iniciales" aria-selected="true"><i class="fas fa-home"></i> PREGUNTAS</a>
 							<a class="nav-link" id="v-pills-personas-tab" data-toggle="pill" href="#v-pills-personas" role="tab" aria-controls="v-pills-personas" aria-selected="false"><i class="fas fa-users"></i> PERSONAS</a>
 							<a class="nav-link" id="v-pills-vehiculos-tab" data-toggle="pill" href="#v-pills-vehiculos" role="tab" aria-controls="v-pills-vehiculos" aria-selected="false" style="display: none;"><i class="fas fa-car"></i> VEHICULOS</a>
 						</div>

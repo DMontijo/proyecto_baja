@@ -303,63 +303,24 @@ class DashboardController extends BaseController
         $id = trim($this->request->getPost('id'));
         $folio = trim($this->request->getPost('folio'));
         $year = trim($this->request->getPost('year'));
-        $idcalidad = trim($this->request->getPost('calidadId'));
 
         $data = (object) array();
-        $data2 = (object) array();
-        $data->personaid = $this->_folioPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $id)->where('CALIDADJURIDICAID', $idcalidad)->first();
+        $data->personaFisica = $this->_folioPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $id)->first();
 
-        if ($data->personaid) {
-            if ($data->personaid['FOTO']) {
+        if ($data->personaFisica) {
+            $data->personaFisicaMediaFiliacion = $this->_folioMediaFiliacion->where('ANO', $year)->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
+            $data->personaFisicaDomicilio = $this->_folioPersonaFisicaDomicilioModel->where('ANO', $year)->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
+
+            if ($data->personaFisica['FOTO']) {
                 $file_info = new \finfo(FILEINFO_MIME_TYPE);
-                $type = $file_info->buffer($data->personaid['FOTO']);
-                $data->personaid['FOTO'] = 'data:' . $type . ';base64,' . base64_encode($data->personaid['FOTO']);
+                $type = $file_info->buffer($data->personaFisica['FOTO']);
+                $data->personaFisica['FOTO'] = 'data:' . $type . ';base64,' . base64_encode($data->personaFisica['FOTO']);
             }
-            $data->calidadjuridica = $this->_folioPersonaCalidadJuridica->where('PERSONACALIDADJURIDICAID', $idcalidad)->first();
-            $data->tipoidentificacion = $this->_tipoIdentificacionModel->where('PERSONATIPOIDENTIFICACIONID', $data->personaid['TIPOIDENTIFICACIONID'])->first();
-            $data->edocivil = $this->_estadoCivilModel->where('PERSONAESTADOCIVILID', $data->personaid['ESTADOCIVILID'])->first();
-            $data->idioma = $this->_idiomaModel->where('PERSONAIDIOMAID', $data->personaid['PERSONAIDIOMAID'])->first();
-            $data->nacionalidad = $this->_nacionalidadModel->where('PERSONANACIONALIDADID ', $data->personaid['NACIONALIDADID'])->first();
-            $data->personaDesaparecida = $this->_folioMediaFiliacion->where('ANO', $year)->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
-            $data->figura = $this->_figuraModel->where('FIGURAID', $data->personaDesaparecida['FIGURAID'])->first();
-            $data->cabelloColor = $this->_cabelloColorModel->where('CABELLOCOLORID', $data->personaDesaparecida['CABELLOCOLORID'])->first();
-            $data->cabelloTamano = $this->_cabelloTamanoModel->where('CABELLOTAMANOID', $data->personaDesaparecida['CABELLOTAMANOID'])->first();
-            $data->frenteForma = $this->_frenteFormaModel->where('FRENTEFORMAID', $data->personaDesaparecida['FRENTEFORMAID'])->first();
-            $data->ojoColor = $this->_ojoColorModel->where('OJOCOLORID', $data->personaDesaparecida['OJOCOLORID'])->first();
-            $data->cabelloEstilo = $this->_cabelloEstiloModel->where('CABELLOESTILOID', $data->personaDesaparecida['CABELLOESTILOID'])->first();
-            $data->cejaForma = $this->_cejaFormaModel->where('CEJAFORMAID', $data->personaDesaparecida['CEJAFORMAID'])->first();
-            $data->pielColor = $this->_pielColorModel->where('PIELCOLORID', $data->personaDesaparecida['PIELCOLORID'])->first();
-            if ($data->personaid['DESAPARECIDA'] == 'S') {
-                $data->parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID2', $data->personaDesaparecida['PERSONAFISICAID'])->first();
-                $data->parentesco = $this->_parentescoModel->where('PERSONAPARENTESCOID', $data->parentescoRelacion['PARENTESCOID'])->first();
-
-            }
-			$data->folio = $this->_folioModel->where('FOLIOID', $folio)->where('ANO', $year)->first();
-
-            // if ($data->personaDesaparecida && $data->personaDesaparecida['FOTOGRAFIA']) {
-            //     $file_info = new \finfo(FILEINFO_MIME_TYPE);
-            //     $type = $file_info->buffer($data->personaDesaparecida['FOTOGRAFIA']);
-            //     $data->personaDesaparecida['FOTOGRAFIA'] = 'data:' . $type . ';base64,' . base64_encode($data->personaDesaparecida['FOTOGRAFIA']);
-            // }
-            $data->estadoOrigen = $this->_estadosModel->where('ESTADOID', $data->personaid['ESTADOORIGENID'])->first();
-            $data->municipioOrigen = $this->_municipiosModel->where('ESTADOID', $data->personaid['ESTADOORIGENID'])->where('MUNICIPIOID', $data->personaid['MUNICIPIOORIGENID'])->first();
-            $data->escolaridad = $this->_escolaridadModel->where('PERSONAESCOLARIDADID', $data->personaid['ESCOLARIDADID'])->first();
-            $data->ocupacion = $this->_ocupacionModel->where('PERSONAOCUPACIONID', $data->personaid['OCUPACIONID'])->first();
-
-            $data2->persondom = $this->_folioPersonaFisicaDomicilioModel->where('ANO', $year)->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
-            if ($data2->persondom) {
-                $data2->estado = $this->_estadosModel->where('ESTADOID', $data2->persondom['ESTADOID'])->asObject()->first();
-                $data2->municipio = $this->_municipiosModel->asObject()->where('ESTADOID', $data2->persondom['ESTADOID'])->where('MUNICIPIOID', $data2->persondom['MUNICIPIOID'])->first();
-                $data2->localidad = $this->_localidadesModel->asObject()->where('ESTADOID', $data2->persondom['ESTADOID'])->where('MUNICIPIOID', $data2->persondom['MUNICIPIOID'])->where('LOCALIDADID', $data2->persondom['LOCALIDADID'])->first();
-                $data2->colonia = $this->_coloniasModel->asObject()->where('ESTADOID', $data2->persondom['ESTADOID'])->where('MUNICIPIOID', $data2->persondom['MUNICIPIOID'])->where('COLONIAID', $data2->persondom['COLONIAID'])->first();
-            }
-            $data->domicilio = $data2;
             $data->status = 1;
-
             return json_encode($data);
         } else {
-            $data2 = ['status' => 0];
-            return json_encode($data2);
+            $data = (object)['status' => 0];
+            return json_encode($data);
         }
     }
 
@@ -404,7 +365,7 @@ class DashboardController extends BaseController
                 $data->tipov = $this->_tipoVehiculoModel->where('VEHICULOTIPOID', $data->vehiculo['TIPOID'])->first();
                 $data->status = 1;
                 return json_encode($data);
-            } catch (\Exception$e) {
+            } catch (\Exception $e) {
                 return json_encode(['status' => 0]);
             }
         } else {
@@ -441,9 +402,7 @@ class DashboardController extends BaseController
         $data->nacionalidades = $this->_nacionalidadModel->asObject()->findAll();
         $data->calidadJuridica = $this->_folioPersonaCalidadJuridica->asObject()->findAll();
         $data->idiomas = $this->_idiomaModel->asObject()->findAll();
-
         $data->municipios = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
-
         $data->paises = $this->_paisesModel->asObject()->findAll();
         $data->estados = $this->_estadosModel->asObject()->findAll();
         $data->tiposIdentificaciones = $this->_tipoIdentificacionModel->asObject()->findAll();
@@ -655,7 +614,7 @@ class DashboardController extends BaseController
                                     $_domicilio = $this->createDomicilioPersonaFisica($expedienteCreado->EXPEDIENTEID, 1, $domicilio, $folioRow['HECHOMUNICIPIOID']);
                                 }
                             }
-                        } catch (\Exception$e) {
+                        } catch (\Exception $e) {
                         }
 
                         if ($update) {
@@ -671,7 +630,7 @@ class DashboardController extends BaseController
                     } else {
                         return json_encode(['status' => 0, 'error' => 'Expediente no creado']);
                     }
-                } catch (\Exception$e) {
+                } catch (\Exception $e) {
                     return json_encode(['status' => 0, 'error' => 'Expediente no creado']);
                 }
             } else {
@@ -740,13 +699,11 @@ class DashboardController extends BaseController
             if (empty($valor)) {
                 unset($data[$clave]);
             }
-
         }
         foreach ($data as $clave => $valor) {
             if (!in_array($clave, $array)) {
                 unset($data[$clave]);
             }
-
         }
 
         $data['userDB'] = $conexion->USER;
@@ -824,14 +781,12 @@ class DashboardController extends BaseController
             if (empty($valor)) {
                 unset($data[$clave]);
             }
-
         }
 
         foreach ($data as $clave => $valor) {
             if (!in_array($clave, $array)) {
                 unset($data[$clave]);
             }
-
         }
 
         $data['EXPEDIENTEID'] = $expedienteId;
@@ -866,7 +821,6 @@ class DashboardController extends BaseController
             if (empty($valor)) {
                 unset($data[$clave]);
             }
-
         }
 
         return $this->curlPost($endpoint, $data);
@@ -908,13 +862,11 @@ class DashboardController extends BaseController
                 if (empty($valor)) {
                     unset($data[$clave]);
                 }
-
             }
             foreach ($data as $clave => $valor) {
                 if (!in_array($clave, $array)) {
                     unset($data[$clave]);
                 }
-
             }
             $data['userDB'] = $conexion->USER;
             $data['pwdDB'] = $conexion->PASSWORD;
@@ -1070,7 +1022,7 @@ class DashboardController extends BaseController
             } else {
                 return json_encode(['status' => 0]);
             }
-        } catch (\Exception$e) {
+        } catch (\Exception $e) {
             return json_encode(['status' => 0]);
         }
     }
@@ -1099,7 +1051,100 @@ class DashboardController extends BaseController
             } else {
                 return json_encode(['status' => 0]);
             }
-        } catch (\Exception$e) {
+        } catch (\Exception $e) {
+            return json_encode(['status' => 0]);
+        }
+    }
+
+    public function updatePersonaFisicaById()
+    {
+        try {
+            $id = trim($this->request->getPost('pf_id'));
+            $folio = trim($this->request->getPost('folio'));
+            $year = trim($this->request->getPost('year'));
+
+            $data = array(
+                'NOMBRE' => $this->request->getPost('nombre_pf'),
+                'PRIMERAPELLIDO' => $this->request->getPost('apellido_paterno_pf'),
+                'SEGUNDOAPELLIDO' => $this->request->getPost('apellido_materno_pf'),
+                'FECHANACIMIENTO' => $this->request->getPost('fecha_nacimiento_pf'),
+                'EDADCANTIDAD' => $this->request->getPost('edad_pf'),
+                'SEXO' => $this->request->getPost('sexo_pf'),
+                'TELEFONO' => $this->request->getPost('telefono_pf'),
+                'TELEFONO2' => $this->request->getPost('telefono_pf_2'),
+                'CODIGOPAISTEL' => $this->request->getPost('codigo_pais_pf'),
+                'CODIGOPAISTEL2' => $this->request->getPost('codigo_pais_pf_2'),
+                'CORREO' => $this->request->getPost('correo_pf'),
+                'TIPOIDENTIFICACIONID' => $this->request->getPost('tipo_identificacion_pf'),
+                'NUMEROIDENTIFICACION' => $this->request->getPost('numero_identidad_pf'),
+                'NACIONALIDADID' => $this->request->getPost('nacionalidad_pf'),
+                'PERSONAIDIOMAID' => $this->request->getPost('idioma_pf'),
+                'ESCOLARIDADID' => $this->request->getPost('escolaridad_pf'),
+                'OCUPACIONID' => $this->request->getPost('ocupacion_pf'),
+                'ESTADOCIVILID' => $this->request->getPost('edoc_pf'),
+                'ESTADOORIGENID' => $this->request->getPost('edoorigen_pf'),
+                'MUNICIPIOORIGENID' => $this->request->getPost('munorigen_pf'),
+                'CALIDADJURIDICAID' => $this->request->getPost('calidad_juridica_pf'),
+                'DESCRIPCION_FISICA' => $this->request->getPost('descripcionFisica_pf'),
+                'APODO' => $this->request->getPost('apodo_pf'),
+                'DENUNCIANTE' => $this->request->getPost('denunciante_pf'),
+                'FACEBOOK' => $this->request->getPost('facebook_pf'),
+                'INSTAGRAM' => $this->request->getPost('instagram_pf'),
+                'TWITTER' => $this->request->getPost('twitter_pf'),
+            );
+
+            $update = $this->_folioPersonaFisicaModel->set($data)->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $id)->update();
+
+            if ($update) {
+                $personas = $this->_folioPersonaFisicaModel->get_by_folio($folio, $year);
+
+                return json_encode(['status' => 1, 'personas' => $personas]);
+            } else {
+                return json_encode(['status' => 0]);
+            }
+        } catch (\Exception $e) {
+            return json_encode(['status' => 0]);
+        }
+    }
+
+    public function updatePersonaFisicaDomicilioById()
+    {
+        try {
+            $id = trim($this->request->getPost('pf_id'));
+            $id_domicilio = trim($this->request->getPost('pfd_id'));
+            $folio = trim($this->request->getPost('folio'));
+            $year = trim($this->request->getPost('year'));
+            $data = array(
+                'id' => trim($this->request->getPost('pf_id')),
+                'folio' => trim($this->request->getPost('folio')),
+                'year' => trim($this->request->getPost('year')),
+                'CP' => $this->request->getPost('cp_pfd'),
+                'PAIS' => $this->request->getPost('pais_pfd'),
+                'ESTADOID' => $this->request->getPost('estado_pfd'),
+                'MUNICIPIOID' => $this->request->getPost('municipio_pfd'),
+                'LOCALIDADID' => $this->request->getPost('localidad_pfd'),
+                'ZONA' => $this->request->getPost('zona_pfd'),
+                'COLONIAID' => $this->request->getPost('colonia_pfd_select'),
+                'COLONIADESCR' => $this->request->getPost('colonia_pfd'),
+                'CALLE' => $this->request->getPost('calle_pfd'),
+                'NUMEROCASA' => $this->request->getPost('exterior_pfd'),
+                'NUMEROINTERIOR' => $this->request->getPost('interior_pfd'),
+                'REFERENCIA' => $this->request->getPost('referencia_pfd'),
+            );
+            if ((int)$data['COLONIAID'] == 0) {
+                $data['COLONIAID'] = null;
+            } else {
+                $data['COLONIADESCR'] = null;
+            }
+
+            $update = $this->_folioPersonaFisicaDomicilioModel->set($data)->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $id)->where('DOMICILIOID', $id_domicilio)->update();
+
+            if ($update) {
+                return json_encode(['status' => 1, 'message' => $id_domicilio]);
+            } else {
+                return json_encode(['status' => 0, 'message' => $update]);
+            }
+        } catch (\Exception $e) {
             return json_encode(['status' => 0]);
         }
     }

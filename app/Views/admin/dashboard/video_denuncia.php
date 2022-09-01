@@ -12,7 +12,7 @@
 					<div class="col-12 mb-1">
 						<select class="form-control" id="year_select" name="year_select">
 							<?php for ($i = date('Y'); $i >= 2020; $i--) { ?>
-								<option <?= $i == date('Y') ? 'selected' : null  ?> value="<?= $i ?>"><?= $i ?></option>
+								<option <?= $i == date('Y') ? 'selected' : null ?> value="<?= $i ?>"><?= $i ?></option>
 							<?php } ?>
 						</select>
 					</div>
@@ -159,8 +159,41 @@
 		}
 	}
 
-	const mayuscTextarea = (e) => {
-		e.value = e.value.toUpperCase();
+	function llenarTablaPersonas(personas) {
+		for (let i = 0; i < personas.length; i++) {
+			var btn = `<button type='button'  class='btn btn-primary' onclick='viewPersonaFisica(${personas[i].PERSONAFISICAID})'><i class='fas fa-eye'></i></button>`
+
+			var fila =
+				`<tr id="row${i}">` +
+				`<td class="text-center">${personas[i].DENUNCIANTE=='S'?'<strong>DENUNCIANTE</strong>':''}</td>` +
+				`<td class="text-center">${personas[i].NOMBRE}</td>` +
+				`<td class="text-center">${personas[i].PERSONACALIDADJURIDICADESCR}</td>` +
+				`<td class="text-center">${btn}</td>` +
+				`</tr>`;
+
+			$('#table-personas tr:first').after(fila);
+			$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
+			var nFilas = $("#personas tr").length;
+			$("#adicionados").append(nFilas - 1);
+		}
+	}
+
+	function llenarTablaVehiculos(vehiculos) {
+		for (let i = 0; i < vehiculos.length; i++) {
+			var btnVehiculo = `<button type='button' class='btn btn-primary' onclick='viewVehiculo(${vehiculos[i].VEHICULOID})'><i class='fas fa-eye'></i></button>`;
+
+			var fila3 =
+				`<tr id="row${i}">` +
+				`<td class="text-center">DESCONOCIDO</td>` +
+				`<td class="text-center">DESCONOCIDO</td>` +
+				`<td class="text-center">${btnVehiculo}</td>` +
+				`</tr>`;
+
+			$('#table-vehiculos tr:first').after(fila3);
+			$("#adicionados").text("");
+			var nFilas = $("#vehiculos tr").length;
+			$("#vehiculos").append(nFilas - 1);
+		}
 	}
 
 	buscar_btn.addEventListener('click', (e) => {
@@ -173,7 +206,6 @@
 			method: "POST",
 			dataType: "json",
 			success: function(response) {
-				console.log(response);
 				respuesta = response;
 				if (response.status === 1) {
 					const folio = response.folio;
@@ -302,39 +334,10 @@
 					}
 
 					//PERSONAS
-					for (let i = 0; i < personas.length; i++) {
-						var btn = `<button type='button'  class='btn btn-primary' onclick='viewPersonaFisica(${personas[i].PERSONAFISICAID},${personas[i].CALIDADJURIDICAID})'><i class='fas fa-eye'></i></button>`
-
-						var fila =
-							`<tr id="row${i}">` +
-							`<td class="text-center">${personas[i].DENUNCIANTE=='S'?'<strong>DENUNCIANTE</strong>':''}</td>` +
-							`<td class="text-center">${personas[i].NOMBRE}</td>` +
-							`<td class="text-center">${personas[i].PERSONACALIDADJURIDICADESCR}</td>` +
-							`<td class="text-center">${btn}</td>` +
-							`</tr>`;
-
-						$('#table-personas tr:first').after(fila);
-						$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
-						var nFilas = $("#personas tr").length;
-						$("#adicionados").append(nFilas - 1);
-					}
+					llenarTablaPersonas(personas);
 
 					//VEHICULOS
-					for (let i = 0; i < vehiculos.length; i++) {
-						var btnVehiculo = `<button type='button' class='btn btn-primary' onclick='viewVehiculo(${vehiculos[i].VEHICULOID})'><i class='fas fa-eye'></i></button>`;
-
-						var fila3 =
-							`<tr id="row${i}">` +
-							`<td class="text-center">DESCONOCIDO</td>` +
-							`<td class="text-center">DESCONOCIDO</td>` +
-							`<td class="text-center">${btnVehiculo}</td>` +
-							`</tr>`;
-
-						$('#table-vehiculos tr:first').after(fila3);
-						$("#adicionados").text("");
-						var nFilas = $("#vehiculos tr").length;
-						$("#vehiculos").append(nFilas - 1);
-					}
+					llenarTablaVehiculos(vehiculos);
 
 				} else if (response.status === 2) {
 					Swal.fire({
@@ -434,6 +437,57 @@
 		clearSelect(document.querySelector('#colonia_delito_select'));
 		clearSelect(document.querySelector('#localidad_delito'));
 
+		//PERSONA FISICA
+		document.querySelectorAll('#pf_id').forEach(element => {
+			element.value = '';
+		});
+		document.querySelector('#tipo_identificacion_pf').value = '';
+		document.querySelector('#numero_identidad_pf').value = '';
+		document.querySelector('#nombre_pf').value = '';
+		document.querySelector('#apellido_paterno_pf').value = '';
+		document.querySelector('#apellido_materno_pf').value = '';
+		document.querySelector('#nacionalidad_pf').value = '';
+		document.querySelector('#idioma_pf').value = '';
+		document.querySelector('#edoorigen_pf').value = '';
+		document.querySelector('#munorigen_pf').value = '';
+		document.querySelector('#telefono_pf').value = '';
+		document.querySelector('#codigo_pais_pf').value = '';
+		document.querySelector('#telefono_pf_2').value = '';
+		document.querySelector('#codigo_pais_pf_2').value = '';
+		document.querySelector('#correo_pf').value = '';
+		document.querySelector('#fecha_nacimiento_pf').value = '';
+		document.querySelector('#edad_pf').value = '';
+		document.querySelector('#edoc_pf').value = '';
+		document.querySelector('#sexo_pf').value = '';
+		document.querySelector('#ocupacion_pf').value = '';
+		document.querySelector('#escolaridad_pf').value = '';
+		document.querySelector('#descripcionFisica_pf').value = '';
+		document.querySelector('#calidad_juridica_pf').value = '';
+		document.querySelector('#apodo_pf').value = '';
+		document.querySelector('#denunciante_pf').value = '';
+		document.querySelector('#facebook_pf').value = '';
+		document.querySelector('#instagram_pf').value = '';
+		document.querySelector('#twitter_pf').value = '';
+		clearSelect(document.querySelector('#munorigen_pf'));
+
+		//DOMICILIO PERSONA FISICA
+		document.querySelector('#pfd_id').value = '';
+		document.querySelector('#pais_pfd').value = '';
+		document.querySelector('#estado_pfd').value = '';
+		document.querySelector('#municipio_pfd').value = '';
+		document.querySelector('#localidad_pfd').value = '';
+		document.querySelector('#colonia_pfd_select').value = '';
+		document.querySelector('#colonia_pfd').value = '';
+		document.querySelector('#cp_pfd').value = '';
+		document.querySelector('#calle_pfd').value = '';
+		document.querySelector('#exterior_pfd').value = '';
+		document.querySelector('#interior_pfd').value = '';
+		document.querySelector('#referencia_pfd').value = '';
+		document.querySelector('#zona_pfd').value = '';
+		clearSelect(document.querySelector('#municipio_pfd'));
+		clearSelect(document.querySelector('#localidad_pfd'));
+		clearSelect(document.querySelector('#colonia_pfd_select'));
+
 		$('#v-pills-vehiculos-tab').css('display', 'NONE');
 	}
 
@@ -458,48 +512,29 @@
 		borrarTodo();
 	});
 
-	function viewPersonaFisica(id, calidadId) {
+	function viewPersonaFisica(id) {
 		$.ajax({
 			data: {
 				'id': id,
 				'folio': inputFolio.value,
 				'year': year_select.value,
-				'calidadId': calidadId
 			},
 			url: "<?= base_url('/data/get-persona-fisica-by-id') ?>",
 			method: "POST",
 			dataType: "json",
 			success: function(response) {
-				// console.log(response);
 				if (response.status == 1) {
+					//PERSONA FISICA
+					let personaFisica = response.personaFisica;
 
-					//PERSONA
-					let calidad = response.calidadjuridica;
-					let personaid = response.personaid;
-					let tipoi = response.tipoidentificacion;
-					let nacionalidad = response.nacionalidad;
-					let edocivil = response.edocivil;
-					let pidioma = response.idioma;
-					let desaparecida = response.personaDesaparecida;
-					let edoOrigen = response.estadoOrigen;
-					let munOrigen = response.municipioOrigen;
-					let ocupacion = response.ocupacion;
-					let escolaridad = response.escolaridad;
-					let figura = response.figura;
-					let cabelloColor = response.cabelloColor;
-					let cabelloTamano = response.cabelloTamano;
-					let frenteForma = response.frenteForma;
-					let ojoColor = response.ojoColor;
-					let cabelloEstilo = response.cabelloEstilo;
-					let cejaForma = response.cejaForma;
-					let pielColor = response.pielColor;
-					let parentesco = response.parentesco;
-					let folio = response.folio;
-					if (personaid.DENUNCIANTE == 'S' && personaid.FOTO) {
-						document.querySelector('#fisica_foto').setAttribute('src', personaid.FOTO);
-						extension = (((personaid.FOTO.split(';'))[0]).split('/'))[1];
-						document.querySelector('#fisica_foto_download').setAttribute('href', personaid.FOTO);
-						document.querySelector('#fisica_foto_download').setAttribute('download', personaid.NOMBRE ? personaid.NOMBRE + '_' + personaid.PERSONAFISICAID + '_' + personaid.FOLIOID + '_' + personaid.ANO + '.' + extension : personaid.PERSONAFISICAID + '_' + personaid.FOLIOID + '_' + personaid.ANO + '.' + extension);
+					document.querySelectorAll('#pf_id').forEach(element => {
+						element.value = id;
+					});
+					if (personaFisica.FOTO) {
+						document.querySelector('#fisica_foto').setAttribute('src', personaFisica.FOTO);
+						extension = (((personaFisica.FOTO.split(';'))[0]).split('/'))[1];
+						document.querySelector('#fisica_foto_download').setAttribute('href', personaFisica.FOTO);
+						document.querySelector('#fisica_foto_download').setAttribute('download', personaFisica.NOMBRE ? personaFisica.NOMBRE + '_' + personaFisica.PERSONAFISICAID + '_' + personaFisica.FOLIOID + '_' + personaFisica.ANO + '.' + extension : personaFisica.PERSONAFISICAID + '_' + personaFisica.FOLIOID + '_' + personaFisica.ANO + '.' + extension);
 						document.querySelector('#contenedor_fisica_foto').classList.remove('d-none');
 					} else {
 						document.querySelector('#fisica_foto').setAttribute('src', '');
@@ -507,170 +542,220 @@
 						document.querySelector('#fisica_foto_download').setAttribute('download', '');
 						document.querySelector('#contenedor_fisica_foto').classList.add('d-none');
 					}
-
-					document.querySelector('#calidad_juridicaP').value = calidad.PERSONACALIDADJURIDICADESCR ? calidad.PERSONACALIDADJURIDICADESCR : '';
-					document.querySelector('#nombrePersona').value = personaid.NOMBRE ? personaid.NOMBRE : '';
-					document.querySelector('#apellido_paternoP').value = personaid.PRIMERAPELLIDO ? personaid.PRIMERAPELLIDO : '';
-					document.querySelector('#apellido_maternoP').value = personaid.SEGUNDOAPELLIDO ? personaid.SEGUNDOAPELLIDO : '';
-					document.querySelector('#sexoP').value = personaid.SEXO ? (personaid.SEXO == 'F' ? 'FEMENINO' : 'MASCULINO') : '';
-
-					if (personaid.TIPOIDENTIFICACIONID == null) {
-						document.querySelector('#tipoiP').value = '';
-					} else {
-						document.querySelector('#tipoiP').value = tipoi.PERSONATIPOIDENTIFICACIONDESCR;
-					}
-					if (personaid.NACIONALIDADID == null) {
-						document.querySelector('#nacionalidadp').value = '';
-					} else {
-						document.querySelector('#nacionalidadp').value = nacionalidad.PERSONANACIONALIDADDESCR;
-					}
-					if (personaid.ESTADOCIVILID == null) {
-						document.querySelector('#edocp').value = '';
-					} else {
-						document.querySelector('#edocp').value = edocivil.PERSONAESTADOCIVILDESCR;
-					}
-					if (personaid.PERSONAIDIOMAID == null) {
-						document.querySelector('#idiomap').value = '';
-					} else {
-						document.querySelector('#idiomap').value = pidioma.PERSONAIDIOMADESCR;
-					}
-					if (personaid.FECHANACIMIENTO) {
-						let date = new Date(personaid.FECHANACIMIENTO);
-						let dateToTijuanaString = date.toLocaleString('en-US', {
-							timeZone: 'America/Tijuana'
-						});
-						let dateTijuana = new Date(dateToTijuanaString);
-						dateTijuana.setDate(dateTijuana.getDate() + 1);
-						var options = {
-							year: 'numeric',
-							month: 'long',
-							day: 'numeric'
+					document.querySelector('#calidad_juridica_pf').value = personaFisica.CALIDADJURIDICAID ? personaFisica.CALIDADJURIDICAID : '';
+					document.querySelector('#nombre_pf').value = personaFisica.NOMBRE ? personaFisica.NOMBRE : '';
+					document.querySelector('#apellido_paterno_pf').value = personaFisica.PRIMERAPELLIDO ? personaFisica.PRIMERAPELLIDO : '';
+					document.querySelector('#apellido_materno_pf').value = personaFisica.SEGUNDOAPELLIDO ? personaFisica.SEGUNDOAPELLIDO : '';
+					document.querySelector('#sexo_pf').value = personaFisica.SEXO ? personaFisica.SEXO : '';
+					document.querySelector('#tipo_identificacion_pf').value = personaFisica.TIPOIDENTIFICACIONID ? personaFisica.TIPOIDENTIFICACIONID : '';
+					document.querySelector('#nacionalidad_pf').value = personaFisica.NACIONALIDADID ? personaFisica.NACIONALIDADID : '';
+					document.querySelector('#edoc_pf').value = personaFisica.ESTADOCIVILID ? personaFisica.ESTADOCIVILID : '';
+					document.querySelector('#idioma_pf').value = personaFisica.PERSONAIDIOMAID ? personaFisica.PERSONAIDIOMAID : '';
+					document.querySelector('#fecha_nacimiento_pf').value = personaFisica.FECHANACIMIENTO ? personaFisica.FECHANACIMIENTO : '';
+					document.querySelector('#edad_pf').value = personaFisica.EDADCANTIDAD ? personaFisica.EDADCANTIDAD : '';
+					document.querySelector('#numero_identidad_pf').value = personaFisica.NUMEROIDENTIFICACION ? personaFisica.NUMEROIDENTIFICACION : '';
+					document.querySelector('#codigo_pais_pf').value = personaFisica.CODIGOPAISTEL ? personaFisica.CODIGOPAISTEL : '52';
+					document.querySelector('#codigo_pais_pf_2').value = personaFisica.CODIGOPAISTEL2 ? personaFisica.CODIGOPAISTEL2 : '52';
+					personaFisica.CODIGOPAISTEL ? iti.setNumber('+' + personaFisica.CODIGOPAISTEL) : iti.setNumber('+52');
+					personaFisica.CODIGOPAISTEL2 ? iti2.setNumber('+' + personaFisica.CODIGOPAISTEL2) : iti2.setNumber('+52');
+					document.querySelector('#telefono_pf').value = personaFisica.TELEFONO ? personaFisica.TELEFONO : '';
+					document.querySelector('#telefono_pf_2').value = personaFisica.TELEFONO2 ? personaFisica.TELEFONO2 : '';
+					document.querySelector('#apodo_pf').value = personaFisica.APODO ? personaFisica.APODO : '';
+					document.querySelector('#correo_pf').value = personaFisica.CORREO ? personaFisica.CORREO : '';
+					document.querySelector('#edoorigen_pf').value = personaFisica.ESTADOORIGENID ? personaFisica.ESTADOORIGENID : '';
+					if (personaFisica.ESTADOORIGENID) {
+						let data = {
+							'estado_id': personaFisica.ESTADOORIGENID
 						};
-						document.querySelector('#fecha_nacimientoP').value = (dateTijuana.toLocaleDateString("es-ES", options)).toUpperCase();
+						$.ajax({
+							data: data,
+							url: "<?= base_url('/data/get-municipios-by-estado') ?>",
+							method: "POST",
+							dataType: "json",
+							success: function(response) {
+								let municipios = response.data;
+								municipios.forEach(municipio => {
+									let option = document.createElement("option");
+									option.text = municipio.MUNICIPIODESCR;
+									option.value = municipio.MUNICIPIOID;
+									document.querySelector('#munorigen_pf').add(option);
+								});
+								document.querySelector('#munorigen_pf').value = personaFisica.MUNICIPIOORIGENID ? personaFisica.MUNICIPIOORIGENID : '';
+							},
+							error: function(jqXHR, textStatus, errorThrown) {}
+						});
 					} else {
-						document.querySelector('#fecha_nacimientoP').value = '';
+						document.querySelector('#munorigen_pf').value = '';
 					}
-
-					document.querySelector('#edadP').value = personaid.EDADCANTIDAD ? personaid.EDADCANTIDAD : '';
-					document.querySelector('#numero_identidadP').value = personaid.NUMEROIDENTIFICACION ? personaid.NUMEROIDENTIFICACION : '';
-					document.querySelector('#telefonoP').value = `+${personaid.CODIGOPAISTEL?personaid.CODIGOPAISTEL:''} - ${personaid.TELEFONO ? personaid.TELEFONO : ''}`;
-					document.querySelector('#telefonoP2').value = `+${personaid.CODIGOPAISTEL2?personaid.CODIGOPAISTEL2:''} - ${personaid.TELEFONO2 ? personaid.TELEFONO2 : ''}`;
-					document.querySelector('#apodo').value = personaid.APODO ? personaid.APODO : '';
-					document.querySelector('#correoP').value = personaid.CORREO ? personaid.CORREO : '';
-
-					document.querySelector('#edoorigenp').value = edoOrigen ? edoOrigen.ESTADODESCR : '';
-					document.querySelector('#munorigenp').value = munOrigen ? munOrigen.MUNICIPIODESCR : '';
-					document.querySelector('#escolaridadP').value = escolaridad ? escolaridad.PERSONAESCOLARIDADDESCR : '';
-					document.querySelector('#ocupacionP').value = ocupacion ? ocupacion.PERSONAOCUPACIONDESCR : '';
-					document.querySelector('#descripcionFisicaP').value = personaid.DESCRIPCION_FISICA ? personaid.DESCRIPCION_FISICA : '';
-
+					document.querySelector('#escolaridad_pf').value = personaFisica.ESCOLARIDADID ? personaFisica.ESCOLARIDADID : '';
+					document.querySelector('#ocupacion_pf').value = personaFisica.OCUPACIONID ? personaFisica.OCUPACIONID : '';
+					document.querySelector('#descripcionFisica_pf').value = personaFisica.DESCRIPCION_FISICA ? personaFisica.DESCRIPCION_FISICA : '';
+					document.querySelector('#facebook_pf').value = personaFisica.FACEBOOK ? personaFisica.FACEBOOK : '';
+					document.querySelector('#instagram_pf').value = personaFisica.INSTAGRAM ? personaFisica.INSTAGRAM : '';
+					document.querySelector('#twitter_pf').value = personaFisica.TWITTER ? personaFisica.TWITTER : '';
+					document.querySelector('#denunciante_pf').value = personaFisica.DENUNCIANTE ? personaFisica.DENUNCIANTE : '';
+					//PERSONA FISICA END
 
 					//PERSONA DESAPARECIDA
-					if (personaid.DESAPARECIDA == 'S') {
+					// if (personaFisica.DESAPARECIDA == 'S') {
 
-						document.querySelector('#estaturaD').value = desaparecida.ESTATURA;
-						document.querySelector('#pesoD').value = desaparecida.PESO;
-						document.querySelector('#complexionD').value = figura.FIGURADESCR;
-						document.querySelector('#colortezD').value = pielColor.PIELCOLORDESCR;
-						document.querySelector('#senasD').value = desaparecida.SENASPARTICULARES;
-						// //	document.querySelector('#identidadD').value = desaparecida.IDENTIDAD;
-						document.querySelector('#colorCD').value = cabelloColor.CABELLOCOLORDESCR;
-						document.querySelector('#tamanoCD').value = cabelloTamano.CABELLOTAMANODESCR;
-						document.querySelector('#formaCD').value = cabelloEstilo.CABELLOESTILODESCR;
-						document.querySelector('#colorOD').value = ojoColor.OJOCOLORDESCR;
-						document.querySelector('#tipoFD').value = frenteForma.FRENTEFORMADESCR;
-						document.querySelector('#cejaD').value = cejaForma.CEJAFORMADESCR;
-						document.querySelector('#discapacidadD').value = desaparecida.DISCAPACIDADDESCR;
-						// //document.querySelector('#origenD').value = desaparecida.ORIGEN;
-						if (desaparecida.FECHADESAPARICION) {
-							let date = new Date(desaparecida.FECHADESAPARICION);
-							let dateToTijuanaString = date.toLocaleString('en-US', {
-								timeZone: 'America/Tijuana'
-							});
-							let dateTijuana = new Date(dateToTijuanaString);
-							dateTijuana.setDate(dateTijuana.getDate() + 1);
-							var options = {
-								year: 'numeric',
-								month: 'long',
-								day: 'numeric'
-							};
-							document.querySelector('#diaDesaparicion').value = (dateTijuana.toLocaleDateString("es-ES", options)).toUpperCase();
-						} else {
-							document.querySelector('#diaDesaparicion').value = '';
-						}
-						document.querySelector('#lugarDesaparicion').value = desaparecida.LUGARDESAPARICION;
-						document.querySelector('#vestimentaD').value = desaparecida.VESTIMENTA;
-						document.querySelector('#parentescoD').value = parentesco.PERSONAPARENTESCODESCR;
-						if (personaid.FOTO) {
-							document.querySelector('#fisica_foto').setAttribute('src',personaid.FOTO);
-							extension = (((personaid.FOTO.split(';'))[0]).split('/'))[1];
-							document.querySelector('#fisica_foto_download').setAttribute('href', personaid.FOTO);
-							document.querySelector('#fisica_foto_download').setAttribute('download', personaid.NOMBRE ? personaid.NOMBRE + '_' + personaid.PERSONAFISICAID + '_' + personaid.FOLIOID + '_' + personaid.ANO + '.' + extension : personaid.PERSONAFISICAID + '_' + personaid.FOLIOID + '_' + personaid.ANO + '.' + extension);
-							document.querySelector('#contenedor_fisica_foto').classList.remove('d-none');
-						} else {
-							document.querySelector('#fisica_foto').setAttribute('src', '');
-							document.querySelector('#fisica_foto_download').setAttribute('href', '');
-							document.querySelector('#fisica_foto_download').setAttribute('download', '');
-							document.querySelector('#contenedor_fisica_foto').classList.add('d-none');
-						}
-						document.querySelector('#autorizaFoto').value = folio.LOCALIZACIONPERSONAMEDIOS == 'S' ? 'SI' : 'NO';
+					// 	document.querySelector('#estaturaD').value = desaparecida.ESTATURA;
+					// 	document.querySelector('#pesoD').value = desaparecida.PESO;
+					// 	document.querySelector('#complexionD').value = figura.FIGURADESCR;
+					// 	document.querySelector('#colortezD').value = pielColor.PIELCOLORDESCR;
+					// 	document.querySelector('#senasD').value = desaparecida.SENASPARTICULARES;
+					// 	// //	document.querySelector('#identidadD').value = desaparecida.IDENTIDAD;
+					// 	document.querySelector('#colorCD').value = cabelloColor.CABELLOCOLORDESCR;
+					// 	document.querySelector('#tamanoCD').value = cabelloTamano.CABELLOTAMANODESCR;
+					// 	document.querySelector('#formaCD').value = cabelloEstilo.CABELLOESTILODESCR;
+					// 	document.querySelector('#colorOD').value = ojoColor.OJOCOLORDESCR;
+					// 	document.querySelector('#tipoFD').value = frenteForma.FRENTEFORMADESCR;
+					// 	document.querySelector('#cejaD').value = cejaForma.CEJAFORMADESCR;
+					// 	document.querySelector('#discapacidadD').value = desaparecida.DISCAPACIDADDESCR;
+					// 	// //document.querySelector('#origenD').value = desaparecida.ORIGEN;
+					// 	if (desaparecida.FECHADESAPARICION) {
+					// 		let date = new Date(desaparecida.FECHADESAPARICION);
+					// 		let dateToTijuanaString = date.toLocaleString('en-US', {
+					// 			timeZone: 'America/Tijuana'
+					// 		});
+					// 		let dateTijuana = new Date(dateToTijuanaString);
+					// 		dateTijuana.setDate(dateTijuana.getDate() + 1);
+					// 		var options = {
+					// 			year: 'numeric',
+					// 			month: 'long',
+					// 			day: 'numeric'
+					// 		};
+					// 		document.querySelector('#diaDesaparicion').value = (dateTijuana.toLocaleDateString("es-ES", options)).toUpperCase();
+					// 	} else {
+					// 		document.querySelector('#diaDesaparicion').value = '';
+					// 	}
+					// 	document.querySelector('#lugarDesaparicion').value = desaparecida.LUGARDESAPARICION;
+					// 	document.querySelector('#vestimentaD').value = desaparecida.VESTIMENTA;
+					// 	document.querySelector('#parentescoD').value = parentesco.PERSONAPARENTESCODESCR;
+					// 	document.querySelector('#autorizaFoto').value = folio.LOCALIZACIONPERSONAMEDIOS == 'S' ? 'SI' : 'NO';
 
-						document.getElementById("personadesaparecida").style.display = "block";
+					// 	document.getElementById("personadesaparecida").style.display = "block";
 
-					} else {
-						document.getElementById("personadesaparecida").style.display = "none";
-					}
+					// } else {
+					// 	document.getElementById("personadesaparecida").style.display = "none";
+					// }
 
 					//DOMICILIO
-					if (response.domicilio.persondom) {
-						let domicilio = response.domicilio.persondom;
-						let estadoDom = response.domicilio.estado;
-						let municipioDom = response.domicilio.municipio;
-						let localidadDom = response.domicilio.localidad;
-						let coloniaDom = response.domicilio.colonia;
+					let domicilio = response.personaFisicaDomicilio;
 
-						var qestado = document.querySelector('#estadoper').value;
-						var qmunicipio = document.querySelector('#municipiop').value;
-						var qlocalidad = document.querySelector('#localidadp').value;
+					document.querySelector('#pfd_id').value = domicilio.DOMICILIOID;
 
-						if (estadoDom == null) {
-							document.querySelector('#estadoper').value = '';
-						} else {
-							document.querySelector('#estadoper').value = estadoDom.ESTADODESCR;
-						}
-						if (municipioDom == null) {
-							document.querySelector('#municipiop').value = '';
-						} else {
-							document.querySelector('#municipiop').value = municipioDom.MUNICIPIODESCR;
-						}
-						if (localidadDom == null) {
-							document.querySelector('#localidadp').value = '';
-						} else {
-							document.querySelector('#localidadp').value = localidadDom.LOCALIDADDESCR;
-						}
-
-						document.querySelector('#coloniap').value = domicilio.COLONIAID != 0 ? (coloniaDom ? coloniaDom.COLONIADESCR : '') : domicilio.COLONIADESCR;
-						document.querySelector('#cp').value = domicilio.CP;
-						document.querySelector('#callep').value = domicilio.CALLE;
-						document.querySelector('#exteriorp').value = domicilio.NUMEROCASA;
-						document.querySelector('#interiorp').value = domicilio.NUMEROINTERIOR;
-						document.querySelector('#zonap').value = domicilio.ZONA ? (domicilio.ZONA == 'U' ? 'URBANA' : 'RURAL') : '';
+					document.querySelector('#pais_pfd').value = domicilio.PAIS ? domicilio.PAIS : '';
+					document.querySelector('#estado_pfd').value = domicilio.ESTADOID ? domicilio.ESTADOID : '';
+					if (domicilio.ESTADOID && domicilio.MUNICIPIOID) {
+						let data = {
+							'estado_id': domicilio.ESTADOID
+						};
+						$.ajax({
+							data: data,
+							url: "<?= base_url('/data/get-municipios-by-estado') ?>",
+							method: "POST",
+							dataType: "json",
+							success: function(response) {
+								let municipios = response.data;
+								municipios.forEach(municipio => {
+									let option = document.createElement("option");
+									option.text = municipio.MUNICIPIODESCR;
+									option.value = municipio.MUNICIPIOID;
+									document.querySelector('#municipio_pfd').add(option);
+								});
+								document.querySelector('#municipio_pfd').value = domicilio.MUNICIPIOID ? domicilio.MUNICIPIOID : '';
+							},
+							error: function(jqXHR, textStatus, errorThrown) {}
+						});
 					} else {
-						document.querySelector('#estadoper').value = '';
-						document.querySelector('#estadoper').value = '';
-						document.querySelector('#municipiop').value = '';
-						document.querySelector('#municipiop').value = '';
-						document.querySelector('#localidadp').value = '';
-						document.querySelector('#localidadp').value = '';
-						document.querySelector('#coloniap').value = '';
-						document.querySelector('#cp').value = '';
-						document.querySelector('#callep').value = '';
-						document.querySelector('#exteriorp').value = '';
-						document.querySelector('#interiorp').value = '';
-						document.querySelector('#zonap').value = '';
+						document.querySelector('#municipio_pfd').value = '';
 					}
 
+					if (domicilio.ESTADOID && domicilio.MUNICIPIOID && domicilio.LOCALIDADID) {
+						let data = {
+							'estado_id': domicilio.ESTADOID,
+							'municipio_id': domicilio.MUNICIPIOID
+						};
+
+						$.ajax({
+							data: data,
+							url: "<?= base_url('/data/get-localidades-by-municipio') ?>",
+							method: "POST",
+							dataType: "json",
+							success: function(response) {
+								let localidades = response.data;
+								let select_localidad = document.querySelector('#localidad_pfd');
+
+								localidades.forEach(localidad => {
+									var option = document.createElement("option");
+									option.text = localidad.LOCALIDADDESCR;
+									option.value = localidad.LOCALIDADID;
+									select_localidad.add(option);
+								});
+
+								select_localidad.value = domicilio.LOCALIDADID;
+							},
+							error: function(jqXHR, textStatus, errorThrown) {}
+						});
+					} else {
+						document.querySelector('#localidad_pfd').value = '';
+					}
+
+					if (domicilio.ESTADOID && domicilio.MUNICIPIOID && domicilio.LOCALIDADID && domicilio.COLONIAID) {
+						document.querySelector('#colonia_pfd').classList.add('d-none');
+						document.querySelector('#colonia_pfd_select').classList.remove('d-none');
+						let data = {
+							'estado_id': domicilio.ESTADOID,
+							'municipio_id': domicilio.MUNICIPIOID,
+							'localidad_id': domicilio.LOCALIDADID
+						};
+						$.ajax({
+							data: data,
+							url: "<?= base_url('/data/get-colonias-by-estado-municipio-localidad') ?>",
+							method: "POST",
+							dataType: "json",
+							success: function(response) {
+								let select_colonia = document.querySelector('#colonia_pfd_select');
+								let input_colonia = document.querySelector('#colonia_pfd');
+								let colonias = response.data;
+
+								colonias.forEach(colonia => {
+									var option = document.createElement("option");
+									option.text = colonia.COLONIADESCR;
+									option.value = colonia.COLONIAID;
+									select_colonia.add(option);
+								});
+
+								var option = document.createElement("option");
+								option.text = 'OTRO';
+								option.value = '0';
+								select_colonia.add(option);
+
+								select_colonia.value = domicilio.COLONIAID;
+								input_colonia.value = '-';
+							},
+							error: function(jqXHR, textStatus, errorThrown) {}
+						});
+					} else {
+						document.querySelector('#colonia_pfd').classList.remove('d-none');
+						document.querySelector('#colonia_pfd_select').classList.add('d-none');
+						var option = document.createElement("option");
+						option.text = 'OTRO';
+						option.value = '0';
+						document.querySelector('#colonia_pfd_select').add(option);
+						document.querySelector('#colonia_pfd_select').value = '0';
+						document.querySelector('#colonia_pfd').value = domicilio.COLONIADESCR ? domicilio.COLONIADESCR : '';
+					}
+					document.querySelector('#cp_pfd').value = domicilio.CP ? domicilio.CP : '';
+					document.querySelector('#calle_pfd').value = domicilio.CALLE ? domicilio.CALLE : '';
+					document.querySelector('#exterior_pfd').value = domicilio.NUMEROCASA ? domicilio.NUMEROCASA : '';
+					document.querySelector('#interior_pfd').value = domicilio.NUMEROINTERIOR ? domicilio.NUMEROINTERIOR : '';
+					document.querySelector('#referencia_pfd').value = domicilio.REFERENCIA ? domicilio.REFERENCIA : '';
+					document.querySelector('#zona_pfd').value = domicilio.ZONA ? domicilio.ZONA : '';
+
 					$('#folio_persona_fisica_modal').modal('show');
+
 				} else {
 					Swal.fire({
 						icon: 'error',
@@ -678,55 +763,6 @@
 						confirmButtonColor: '#bf9b55',
 					})
 				}
-			}
-		});
-	}
-
-	function viewDomicilio(id) {
-		$.ajax({
-			data: {
-				'id': id,
-				'folio': inputFolio.value,
-				'year': year_select.value,
-			},
-			url: "<?= base_url('/data/get-persona-domicilio-by-id') ?>",
-			method: "POST",
-			dataType: "json",
-			success: function(response) {
-				const pais = response.pais;
-				const persondom = response.persondom;
-				const estado = response.estado;
-				const municipio = response.municipio;
-				const localidad = response.localidad;
-				const colonia = response.colonia;
-
-				var qestado = document.querySelector('#estadoper').value;
-				var qmunicipio = document.querySelector('#municipiop').value;
-				var qlocalidad = document.querySelector('#localidadp').value;
-
-				if (persondom.ESTADOID == null) {
-					document.querySelector('#estadoper').value = '';
-				} else {
-					document.querySelector('#estadoper').value = estado.ESTADODESCR;
-				}
-				if (persondom.MUNICIPIOID == null) {
-					document.querySelector('#municipiop').value = '';
-				} else {
-					document.querySelector('#municipiop').value = municipio.MUNICIPIODESCR;
-				}
-				if (persondom.LOCALIDADID == null) {
-					document.querySelector('#localidadp').value = '';
-				} else {
-					document.querySelector('#localidadp').value = localidad.LOCALIDADDESCR;
-				}
-
-				document.querySelector('#coloniap').value = persondom.COLONIAID != 0 ? colonia.COLONIADESCR : persondom.COLONIADESCR;
-				document.querySelector('#cp').value = persondom.CP;
-				document.querySelector('#callep').value = persondom.CALLE;
-				document.querySelector('#exteriorp').value = persondom.NUMEROCASA;
-				document.querySelector('#interiorp').value = persondom.NUMEROINTERIOR;
-				document.querySelector('#zonap').value = persondom.ZONA ? (persondom.ZONA == 'U' ? 'URBANA' : 'RURAL') : '';
-				$('#folio_domicilio_modal').modal('show');
 			}
 		});
 	}
@@ -810,7 +846,7 @@
 	})
 
 	$(document).on('hidden.bs.modal', '#folio_persona_fisica_modal', function() {
-		let tabs = document.querySelectorAll('#persona_tabs .nav-item .nav-link');
+		let tabs = document.querySelectorAll('#persona_tabs .nav-item');
 		let contents = document.querySelectorAll('#persona_content .tab-pane');
 		tabs.forEach(element => {
 			element.classList.remove('active');
@@ -838,7 +874,22 @@
 		return text.replaceAll('´', '');
 	}
 
+	function clearInputPhone(e) {
+		e.target.value = e.target.value.replace(/-/g, "");
+		if (e.target.value.length > e.target.maxLength) {
+			e.target.value = e.target.value.slice(0, e.target.maxLength);
+		};
+	}
+
+	function mayuscTextarea(e) {
+		e.value = e.value.toUpperCase();
+	}
+
 	//DELITO FORM ******************************************************************
+
+	var iti
+	var iti2
+
 	window.onload = function() {
 		startTime();
 
@@ -846,7 +897,22 @@
 			'use strict'
 			var form_delito = document.querySelector('#denuncia_form');
 			var form_preguntas = document.querySelector('#preguntas_form');
+			var form_persona_fisica = document.querySelector('#persona_fisica_form');
+			var form_persona_fisica_domicilio = document.querySelector('#persona_fisica_domicilio_form');
 			var inputsText = document.querySelectorAll('input[type="text"]');
+			var inputsEmail = document.querySelectorAll('input[type="email"]');
+
+			inputsText.forEach((input) => {
+				input.addEventListener('input', (event) => {
+					event.target.value = clearText(event.target.value).toUpperCase();
+				}, false)
+			});
+
+			inputsEmail.forEach((input) => {
+				input.addEventListener('input', (event) => {
+					event.target.value = clearText(event.target.value).toLowerCase();
+				}, false)
+			});
 
 			form_delito.addEventListener('submit', (event) => {
 				if (!form_delito.checkValidity()) {
@@ -856,10 +922,9 @@
 				} else {
 					event.preventDefault();
 					event.stopPropagation();
-					form_preguntas.classList.remove('was-validated')
+					form_delito.classList.remove('was-validated')
 					actualizarDenuncia();
 				}
-				form_delito.classList.add('was-validated')
 			}, false);
 
 			form_preguntas.addEventListener('submit', (event) => {
@@ -875,11 +940,34 @@
 				}
 			}, false);
 
-			inputsText.forEach((input) => {
-				input.addEventListener('input', (event) => {
-					event.target.value = clearText(event.target.value).toUpperCase();
-				}, false)
-			});
+			form_persona_fisica.addEventListener('submit', (event) => {
+				if (!form_persona_fisica.checkValidity()) {
+					event.preventDefault();
+					event.stopPropagation();
+					form_persona_fisica.classList.add('was-validated')
+				} else {
+					event.preventDefault();
+					event.stopPropagation();
+					form_persona_fisica.classList.remove('was-validated')
+					actualizarPersona();
+				}
+			}, false);
+
+			form_persona_fisica_domicilio.addEventListener('submit', (event) => {
+				if (!form_persona_fisica_domicilio.checkValidity()) {
+					event.preventDefault();
+					event.stopPropagation();
+					form_persona_fisica_domicilio.classList.add('was-validated')
+				} else {
+					event.preventDefault();
+					event.stopPropagation();
+					form_persona_fisica_domicilio.classList.remove('was-validated')
+					actualizarDomicilio();
+				}
+			}, false);
+
+
+			//DENUNCIA
 
 			document.querySelector('#narracion_delito').addEventListener('input', (event) => {
 				event.target.value = clearText(event.target.value).toUpperCase();
@@ -984,7 +1072,6 @@
 					select_colonia.classList.add('d-none');
 					input_colonia.classList.remove('d-none');
 					input_colonia.value = '';
-					input_colonia.focus();
 				} else {
 					input_colonia.value = '-';
 				}
@@ -1013,7 +1100,7 @@
 					method: "POST",
 					dataType: "json",
 					success: function(response) {
-						if (response.status = 1) {
+						if (response.status == 1) {
 							Swal.fire({
 								icon: 'success',
 								text: 'Denuncia actualizada correctamente',
@@ -1036,7 +1123,9 @@
 					}
 				});
 			}
+			//DENUNCIA END
 
+			//PREGUNTAS
 			function actualizarPreguntas() {
 				const data = {
 					'folio': document.querySelector('#input_folio_atencion').value,
@@ -1058,7 +1147,7 @@
 					dataType: "json",
 					success: function(response) {
 						console.log(response);
-						if (response.status = 1) {
+						if (response.status == 1) {
 							Swal.fire({
 								icon: 'success',
 								text: 'Preguntas actualizadas correctamente',
@@ -1082,14 +1171,487 @@
 				});
 			}
 
+			//PERSONA FISICA
+
+			document.querySelector('#edoorigen_pf').addEventListener('change', (e) => {
+				let select_municipio = document.querySelector('#munorigen_pf');
+				clearSelect(select_municipio);
+				select_municipio.value = '';
+				let data = {
+					'estado_id': e.target.value,
+				}
+
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/get-municipios-by-estado') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						let municipios = response.data;
+
+						municipios.forEach(municipio => {
+							var option = document.createElement("option");
+							option.text = municipio.MUNICIPIODESCR;
+							option.value = municipio.MUNICIPIOID;
+							select_municipio.add(option);
+						});
+					},
+					error: function(jqXHR, textStatus, errorThrown) {}
+				});
+			});
+
+			//INTL TEL INPUT START
+			let input_phone = document.querySelector("#telefono_pf");
+			let input2_phone = document.querySelector("#telefono_pf_2");
+			let inputPais_phone = document.querySelector("#codigo_pais_pf");
+			let inputPais2_phone = document.querySelector("#codigo_pais_pf_2");
+
+			iti = window.intlTelInput(input_phone, {
+				separateDialCode: true,
+				// initialCountry: "MX",
+			});
+			iti2 = window.intlTelInput(input2_phone, {
+				separateDialCode: true,
+				// initialCountry: "MX",
+			});
+
+			const getData = () => {
+				inputPais_phone.value = parseInt(iti.getSelectedCountryData().dialCode);
+				inputPais2_phone.value = parseInt(iti2.getSelectedCountryData().dialCode);
+			};
+
+			input_phone.addEventListener('change', getData);
+			input_phone.addEventListener('keyup', getData);
+			input_phone.addEventListener('blur', getData);
+
+			input2_phone.addEventListener('change', getData);
+			input2_phone.addEventListener('keyup', getData);
+			input2_phone.addEventListener('blur', getData);
+			//INTL TEL INPUT END
+
+			document.querySelector('#fecha_nacimiento_pf').addEventListener('change', (e) => {
+				let fecha = e.target.value;
+				let hoy = new Date();
+				let cumpleanos = new Date(fecha);
+				let edad = hoy.getFullYear() - cumpleanos.getFullYear();
+				let m = hoy.getMonth() - cumpleanos.getMonth();
+
+				if (m < 0 || (m === 0 && hoy.getDate() <= cumpleanos.getDate())) {
+					edad--;
+				}
+				document.querySelector('#edad_pf').value = edad;
+			})
+
+			function clearInputPhone(e) {
+				e.target.value = e.target.value.replace(/-/g, "");
+				if (e.target.value.length > e.target.maxLength) {
+					e.target.value = e.target.value.slice(0, e.target.maxLength);
+				};
+			}
+
+			function actualizarPersona() {
+				const data = {
+					'folio': document.querySelector('#input_folio_atencion').value,
+					'year': document.querySelector('#year_select').value,
+					'pf_id': document.querySelector('#pf_id').value,
+					'tipo_identificacion_pf': document.querySelector('#tipo_identificacion_pf').value,
+					'numero_identidad_pf': document.querySelector('#numero_identidad_pf').value,
+					'nombre_pf': document.querySelector('#nombre_pf').value,
+					'apellido_paterno_pf': document.querySelector('#apellido_paterno_pf').value,
+					'apellido_materno_pf': document.querySelector('#apellido_materno_pf').value,
+					'nacionalidad_pf': document.querySelector('#nacionalidad_pf').value,
+					'idioma_pf': document.querySelector('#idioma_pf').value,
+					'edoorigen_pf': document.querySelector('#edoorigen_pf').value,
+					'munorigen_pf': document.querySelector('#munorigen_pf').value,
+					'telefono_pf': document.querySelector('#telefono_pf').value,
+					'codigo_pais_pf': document.querySelector('#codigo_pais_pf').value,
+					'telefono_pf_2': document.querySelector('#telefono_pf_2').value,
+					'codigo_pais_pf_2': document.querySelector('#codigo_pais_pf_2').value,
+					'correo_pf': document.querySelector('#correo_pf').value,
+					'fecha_nacimiento_pf': document.querySelector('#fecha_nacimiento_pf').value,
+					'edad_pf': document.querySelector('#edad_pf').value,
+					'edoc_pf': document.querySelector('#edoc_pf').value,
+					'sexo_pf': document.querySelector('#sexo_pf').value,
+					'ocupacion_pf': document.querySelector('#ocupacion_pf').value,
+					'escolaridad_pf': document.querySelector('#escolaridad_pf').value,
+					'descripcionFisica_pf': document.querySelector('#descripcionFisica_pf').value,
+					'calidad_juridica_pf': document.querySelector('#calidad_juridica_pf').value,
+					'apodo_pf': document.querySelector('#apodo_pf').value,
+					'denunciante_pf': document.querySelector('#denunciante_pf').value,
+					'facebook_pf': document.querySelector('#facebook_pf').value,
+					'instagram_pf': document.querySelector('#instagram_pf').value,
+					'twitter_pf': document.querySelector('#twitter_pf').value,
+				};
+
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/update-persona-fisica-by-id') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						if (response.status == 1) {
+							let tabla_personas = document.querySelectorAll('#table-personas tr');
+							tabla_personas.forEach(row => {
+								if (row.id !== '') {
+									row.remove();
+								}
+							});
+
+							llenarTablaPersonas(response.personas);
+
+							Swal.fire({
+								icon: 'success',
+								text: 'Persona física actualizada correctamente',
+								confirmButtonColor: '#bf9b55',
+							});
+						} else {
+							Swal.fire({
+								icon: 'error',
+								text: 'No se actualizó la información de la persona',
+								confirmButtonColor: '#bf9b55',
+							});
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						Swal.fire({
+							icon: 'error',
+							text: 'No se actualizó la información de la persona',
+							confirmButtonColor: '#bf9b55',
+						});
+					}
+				});
+			}
+
+			//DOMICILIO PERSONA FÍSICA
+
+			document.querySelector('#pais_pfd').addEventListener('change', (e) => {
+
+				let select_estado = document.querySelector('#estado_pfd');
+				let select_municipio = document.querySelector('#municipio_pfd');
+				let select_localidad = document.querySelector('#localidad_pfd');
+				let select_colonia = document.querySelector('#colonia_pfd_select');
+
+				let input_colonia = document.querySelector('#colonia_pfd');
+				clearSelect(select_municipio);
+				clearSelect(select_localidad);
+				clearSelect(select_colonia);
+
+				if (e.target.value !== 'MX') {
+
+					select_estado.value = '33';
+
+					let data = {
+						'estado_id': 33,
+						'municipio_id': 1,
+					}
+
+					$.ajax({
+						data: data,
+						url: "<?= base_url('/data/get-municipios-by-estado') ?>",
+						method: "POST",
+						dataType: "json",
+						success: function(response) {
+							let municipios = response.data;
+							municipios.forEach(municipio => {
+								let option = document.createElement("option");
+								option.text = municipio.MUNICIPIODESCR;
+								option.value = municipio.MUNICIPIOID;
+								select_municipio.add(option);
+							});
+							select_municipio.value = '1';
+						},
+						error: function(jqXHR, textStatus, errorThrown) {}
+					});
+
+					$.ajax({
+						data: data,
+						url: "<?= base_url('/data/get-localidades-by-municipio') ?>",
+						method: "POST",
+						dataType: "json",
+						success: function(response) {
+							let localidades = response.data;
+							localidades.forEach(localidad => {
+								let option = document.createElement("option");
+								option.text = localidad.LOCALIDADDESCR;
+								option.value = localidad.LOCALIDADID;
+								select_localidad.add(option);
+							});
+							let option = document.createElement("option");
+							option.text = 'OTRO';
+							option.value = '0';
+
+							select_colonia.add(option);
+							select_localidad.value = '1';
+
+							select_colonia.value = '0';
+							select_colonia.classList.add('d-none');
+							input_colonia.classList.remove('d-none');
+							input_colonia.value = 'EXTRANJERO';
+						},
+						error: function(jqXHR, textStatus, errorThrown) {}
+					});
+
+					let option = document.createElement("option");
+					option.text = 'OTRO';
+					option.value = '0';
+
+					select_colonia.add(option);
+
+					select_colonia.value = '0';
+					select_colonia.classList.add('d-none');
+					input_colonia.classList.remove('d-none');
+					input_colonia.value = 'EXTRANJERO';
+
+
+				} else {
+					clearSelect(select_municipio);
+					clearSelect(select_localidad);
+					clearSelect(select_colonia);
+
+					select_estado.value = '';
+					select_municipio.value = '';
+					select_localidad.value = '';
+					select_colonia.value = '';
+					input_colonia.value = '';
+
+					select_colonia.classList.remove('d-none');
+					input_colonia.classList.add('d-none');
+				}
+			});
+
+			document.querySelector('#estado_pfd').addEventListener('change', (e) => {
+				let select_municipio = document.querySelector('#municipio_pfd');
+				let select_localidad = document.querySelector('#localidad_pfd');
+				let select_colonia = document.querySelector('#colonia_pfd_select');
+				let input_colonia = document.querySelector('#colonia_pfd');
+
+				clearSelect(select_municipio);
+				clearSelect(select_localidad);
+				clearSelect(select_colonia);
+
+				select_municipio.value = '';
+				select_localidad.value = '';
+				select_colonia.value = '';
+				input_colonia.value = '';
+
+				select_colonia.classList.remove('d-none');
+				input_colonia.classList.add('d-none');
+
+				let data = {
+					'estado_id': e.target.value,
+				}
+
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/get-municipios-by-estado') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						let municipios = response.data;
+
+						municipios.forEach(municipio => {
+							var option = document.createElement("option");
+							option.text = municipio.MUNICIPIODESCR;
+							option.value = municipio.MUNICIPIOID;
+							select_municipio.add(option);
+						});
+					},
+					error: function(jqXHR, textStatus, errorThrown) {}
+				});
+				if (e.target.value != 2) {
+					var option = document.createElement("option");
+					option.text = 'OTRO';
+					option.value = '0';
+					select_colonia.add(option);
+					select_colonia.value = '0';
+					input_colonia.value = '-';
+					select_colonia.classList.add('d-none');
+					input_colonia.classList.remove('d-none');
+				}
+			});
+
+			document.querySelector('#municipio_pfd').addEventListener('change', (e) => {
+				let select_localidad = document.querySelector('#localidad_pfd');
+				let select_colonia = document.querySelector('#colonia_pfd_select');
+				let input_colonia = document.querySelector('#colonia_pfd');
+
+				let estado = document.querySelector('#estado_pfd').value;
+				let municipio = e.target.value;
+
+				clearSelect(select_localidad);
+				clearSelect(select_colonia);
+
+				select_localidad.value = '';
+
+				let data = {
+					'estado_id': estado,
+					'municipio_id': municipio
+				};
+
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/get-localidades-by-municipio') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						let localidades = response.data;
+
+						localidades.forEach(localidad => {
+							var option = document.createElement("option");
+							option.text = localidad.LOCALIDADDESCR;
+							option.value = localidad.LOCALIDADID;
+							select_localidad.add(option);
+						});
+					},
+					error: function(jqXHR, textStatus, errorThrown) {}
+				});
+			});
+
+			document.querySelector('#localidad_pfd').addEventListener('change', (e) => {
+				let select_colonia = document.querySelector('#colonia_pfd_select');
+				let input_colonia = document.querySelector('#colonia_pfd');
+
+				let estado = document.querySelector('#estado_pfd').value;
+				let municipio = document.querySelector('#municipio_pfd').value;
+				let localidad = e.target.value;
+
+				clearSelect(select_colonia);
+				select_colonia.value = '';
+
+				let data = {
+					'estado_id': estado,
+					'municipio_id': municipio,
+					'localidad_id': localidad
+				};
+
+				console.log(data);
+
+				if (estado == 2) {
+					select_colonia.classList.remove('d-none');
+					input_colonia.classList.add('d-none');
+					input_colonia.value = '-';
+					$.ajax({
+						data: data,
+						url: "<?= base_url('/data/get-colonias-by-estado-municipio-localidad') ?>",
+						method: "POST",
+						dataType: "json",
+						success: function(response) {
+							let colonias = response.data;
+
+							colonias.forEach(colonia => {
+								var option = document.createElement("option");
+								option.text = colonia.COLONIADESCR;
+								option.value = colonia.COLONIAID;
+								select_colonia.add(option);
+							});
+
+							var option = document.createElement("option");
+							option.text = 'OTRO';
+							option.value = '0';
+							select_colonia.add(option);
+						},
+						error: function(jqXHR, textStatus, errorThrown) {}
+					});
+
+				} else {
+					var option = document.createElement("option");
+					option.text = '';
+					option.value = '';
+					select_colonia.add(option);
+					select_colonia.value = '';
+					input_colonia.value = '';
+					select_colonia.classList.add('d-none');
+					input_colonia.classList.remove('d-none');
+				}
+			});
+
+			document.querySelector('#colonia_pfd_select').addEventListener('change', (e) => {
+				let select_colonia = document.querySelector('#colonia_pfd_select');
+				let input_colonia = document.querySelector('#colonia_pfd');
+
+				if (e.target.value === '0') {
+					select_colonia.classList.add('d-none');
+					input_colonia.classList.remove('d-none');
+					input_colonia.value = '';
+				} else {
+					select_colonia.classList.remove('d-none');
+					input_colonia.classList.add('d-none');
+					input_colonia.value = '-';
+				}
+			});
+
+			function actualizarDomicilio() {
+				const data = {
+					'folio': document.querySelector('#input_folio_atencion').value,
+					'year': document.querySelector('#year_select').value,
+					'pf_id': document.querySelector('#pf_id').value,
+					'pfd_id': document.querySelector('#pfd_id').value,
+					'pais_pfd': document.querySelector('#pais_pfd').value,
+					'estado_pfd': document.querySelector('#estado_pfd').value,
+					'municipio_pfd': document.querySelector('#municipio_pfd').value,
+					'localidad_pfd': document.querySelector('#localidad_pfd').value,
+					'colonia_pfd_select': document.querySelector('#colonia_pfd_select').value,
+					'colonia_pfd': document.querySelector('#colonia_pfd').value,
+					'cp_pfd': document.querySelector('#cp_pfd').value,
+					'calle_pfd': document.querySelector('#calle_pfd').value,
+					'exterior_pfd': document.querySelector('#exterior_pfd').value,
+					'interior_pfd': document.querySelector('#interior_pfd').value,
+					'referencia_pfd': document.querySelector('#referencia_pfd').value,
+					'zona_pfd': document.querySelector('#zona_pfd').value,
+				};
+
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/update-persona-fisica-domicilio-by-id') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						console.log(response);
+						if (response.status == 1) {
+							Swal.fire({
+								icon: 'success',
+								text: 'Domicilio actualizado correctamente',
+								confirmButtonColor: '#bf9b55',
+							});
+						} else {
+							Swal.fire({
+								icon: 'error',
+								text: 'No se actualizó el domicilio',
+								confirmButtonColor: '#bf9b55',
+							});
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						Swal.fire({
+							icon: 'error',
+							text: 'No se actualizó el domicilio',
+							confirmButtonColor: '#bf9b55',
+						});
+					}
+				});
+			}
+
+			function dateToString(_date) {
+				let date = new Date(_date);
+				let dateToTijuanaString = date.toLocaleString('en-US', {
+					timeZone: 'America/Tijuana'
+				});
+				let dateTijuana = new Date(dateToTijuanaString);
+				dateTijuana.setDate(dateTijuana.getDate() + 1);
+				var options = {
+					year: 'numeric',
+					month: 'long',
+					day: 'numeric'
+				};
+				return (dateTijuana.toLocaleDateString("es-ES", options)).toUpperCase();
+			}
 		})();
 	};
-	//DELITO END FORM ******************************************************************
 </script>
 
-<?php include('video_denuncia_modals/info_folio_modal.php') ?>
-<?php include('video_denuncia_modals/salida_modal.php') ?>
-<?php include('video_denuncia_modals/persona_modal.php') ?>
-<?php include('video_denuncia_modals/vehiculo_modal.php') ?>
-<?php include('video_denuncia_modals/domicilio_modal.php') ?>
+<?php include 'video_denuncia_modals/info_folio_modal.php' ?>
+<?php include 'video_denuncia_modals/salida_modal.php' ?>
+<?php include 'video_denuncia_modals/persona_modal.php' ?>
+<?php include 'video_denuncia_modals/vehiculo_modal.php' ?>
+<?php include 'video_denuncia_modals/domicilio_modal.php' ?>
 <?php $this->endSection() ?>

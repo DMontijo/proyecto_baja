@@ -387,7 +387,7 @@ class FOLIOPERSONAFISICAMEDIAFILIACION extends Migration
                 'constraint' => 200,
                 'null' => true,
             ],
-            'VESTIMENTA' => [
+            'VESTIMENTADESCR' => [
                 'type' => 'VARCHAR',
                 'constraint' => 200,
                 'null' => true,

@@ -1,199 +1,185 @@
-<div class="row">
+<form id="persona_fisica_form" action="" method="post" class="row p-0 m-0 needs-validation" novalidate>
+	<input type="hidden" class="form-control" id="pf_id" name="pf_id">
 	<div id="contenedor_fisica_foto" class="col-12 mb-5 d-none">
 		<a id="fisica_foto_download" dowload="" href="">
 			<img id="fisica_foto" class="img-fluid" src="" style="max-width:300px;">
 		</a>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="tipoiP" class="form-label font-weight-bold">Tipo identificacion</label>
-		<input type="text" class="form-control" id="tipoiP" name="tipoiP">
+		<label for="tipo_identificacion_pf" class="form-label font-weight-bold">Tipo identificacion</label>
+		<select class="form-control" id="tipo_identificacion_pf" name="tipo_identificacion_pf">
+			<option selected value=""></option>
+			<?php foreach ($body_data->tiposIdentificaciones as $index => $identificaciones) { ?>
+				<option value="<?= $identificaciones->PERSONATIPOIDENTIFICACIONID ?>"> <?= $identificaciones->PERSONATIPOIDENTIFICACIONDESCR ?> </option>
+			<?php } ?>
+		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="apellido_materno" class="form-label font-weight-bold">Numero de identificación</label>
-		<input type="text" class="form-control" id="numero_identidadP" name="numero_identidadP">
+		<label for="numero_identidad_pf" class="form-label font-weight-bold">Numero de identificación</label>
+		<input type="text" class="form-control" id="numero_identidad_pf" name="numero_identidad_pf">
 	</div>
 	<div class="col-12">
 		<hr>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="nombre" class="form-label font-weight-bold">Nombre(s)</label>
-		<input type="text" class="form-control" id="nombrePersona" name="nombrePersona">
+		<label for="nombre_pf" class="form-label font-weight-bold">Nombre(s)</label>
+		<input type="text" class="form-control" id="nombre_pf" name="nombre_pf" maxlength="100">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="apellido_paterno" class="form-label font-weight-bold">Apellido paterno</label>
-		<input type="text" class="form-control" id="apellido_paternoP" name="apellido_paternoP">
+		<label for="apellido_paterno_pf" class="form-label font-weight-bold">Apellido paterno</label>
+		<input type="text" class="form-control" id="apellido_paterno_pf" name="apellido_paterno_pf" maxlength="50">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="apellido_materno" class="form-label font-weight-bold">Apellido materno</label>
-		<input type="text" class="form-control" id="apellido_maternoP" name="apellido_maternoP">
-	</div>
-
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="nacionalidadp" class="form-label font-weight-bold">Nacionalidad</label>
-		<input type="text" class="form-control" id="nacionalidadp" name="nacionalidadp">
+		<label for="apellido_materno_pf" class="form-label font-weight-bold">Apellido materno</label>
+		<input type="text" class="form-control" id="apellido_materno_pf" name="apellido_materno_pf" maxlength="50">
 	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="idiomap" class="form-label font-weight-bold">Idioma</label>
-		<input type="text" class="form-control" id="idiomap" name="idiomap">
+		<label for="nacionalidad_pf" class="form-label font-weight-bold">Nacionalidad</label>
+		<select class="form-control" id="nacionalidad_pf" name="nacionalidad_pf">
+			<option selected value=""></option>
+			<?php foreach ($body_data->nacionalidades as $index => $nacionalidades) { ?>
+				<option value="<?= $nacionalidades->PERSONANACIONALIDADID ?>"> <?= $nacionalidades->PERSONANACIONALIDADDESCR ?> </option>
+			<?php } ?>
+		</select>
 	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="edoorigenp" class="form-label font-weight-bold">Estado origen</label>
-		<input type="text" class="form-control" id="edoorigenp" name="edoorigenp">
+		<label for="idioma_pf" class="form-label font-weight-bold">Idioma</label>
+		<select class="form-control" id="idioma_pf" name="idioma_pf">
+			<option selected value=""></option>
+			<?php foreach ($body_data->idiomas as $index => $idiomas) { ?>
+				<option value="<?= $idiomas->PERSONAIDIOMAID ?>"> <?= $idiomas->PERSONAIDIOMADESCR ?> </option>
+			<?php } ?>
+		</select>
 	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="munorigenp" class="form-label font-weight-bold">Municipio origen</label>
-		<input type="text" class="form-control" id="munorigenp" name="munorigenp">
+		<label for="edoorigen_pf" class="form-label font-weight-bold">Estado origen</label>
+		<select class="form-control" id="edoorigen_pf" name="edoorigen_pf">
+			<option selected value=""></option>
+			<?php foreach ($body_data->estados as $index => $estados) { ?>
+				<option value="<?= $estados->ESTADOID ?>"> <?= $estados->ESTADODESCR ?> </option>
+			<?php } ?>
+		</select>
 	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="telefonoP" class="form-label font-weight-bold">Teléfono</label>
-		<input type="text" class="form-control" id="telefonoP" name="telefonoP">
+		<label for="munorigen_pf" class="form-label font-weight-bold">Municipio origen</label>
+		<select class="form-control" id="munorigen_pf" name="munorigen_pf">
+			<option selected value=""></option>
+		</select>
 	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="telefonoP2" class="form-label font-weight-bold">Teléfono 2</label>
-		<input type="text" class="form-control" id="telefonoP2" name="telefonoP2">
+		<label for="telefono_pf" class="form-label font-weight-bold">Télefono</label><br>
+		<input type="number" class="form-control" id="telefono_pf" name="telefono_pf" max="99999999999999999999" minlenght="6" maxlength="20" oninput="clearInputPhone(event);">
+		<input type="number" id="codigo_pais_pf" name="codigo_pais_pf" maxlength="3" hidden>
 	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="correoP" class="form-label font-weight-bold">Correo</label>
-		<input type="text" class="form-control" id="correoP" name="correoP">
+		<label for="telefono_pf_2" class="form-label font-weight-bold">Télefono adicional</label><br>
+		<input type="number" class="form-control" id="telefono_pf_2" name="telefono_pf_2" max="99999999999999999999" minlenght="6" maxlength="20" oninput="clearInputPhone(event);">
+		<input type="number" id="codigo_pais_pf_2" name="codigo_pais_pf_2" maxlength="3" hidden>
 	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="apellido_materno" class="form-label font-weight-bold">Fecha de Nacimiento</label>
-		<input type="text" class="form-control" id="fecha_nacimientoP" name="fecha_nacimientoP">
+		<label for="correo_pf" class="form-label font-weight-bold">Correo</label>
+		<input type="email" class="form-control" id="correo_pf" name="correo_pf" maxlength="100">
 	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="apellido_materno" class="form-label font-weight-bold">Edad</label>
-		<input type="text" class="form-control" id="edadP" name="edadP">
+		<label for="fecha_nacimiento_pf" class="form-label font-weight-bold">Fecha de Nacimiento</label>
+		<input type="date" class="form-control" id="fecha_nacimiento_pf" name="fecha_nacimiento_pf" max="<?= date("Y-m-d") ?>">
 	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="edocp" class="form-label font-weight-bold">Estado civil</label>
-		<input type="text" class="form-control" id="edocp" name="edocp">
+		<label for="edad_pf" class="form-label font-weight-bold">Edad</label>
+		<input type="number" class="form-control" id="edad_pf" name="edad_pf" maxlength="3">
 	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="sexoP" class="form-label font-weight-bold">Sexo</label>
-		<input type="text" class="form-control" id="sexoP" name="sexoP">
+		<label for="edoc_pf" class="form-label font-weight-bold">Estado civil</label>
+		<select class="form-control" id="edoc_pf" name="edoc_pf">
+			<option selected value=""></option>
+			<?php foreach ($body_data->edoCiviles as $index => $edoCiviles) { ?>
+				<option value="<?= $edoCiviles->PERSONAESTADOCIVILID ?>"> <?= $edoCiviles->PERSONAESTADOCIVILDESCR ?> </option>
+			<?php } ?>
+		</select>
 	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="ocupacionP" class="form-label font-weight-bold">Profesión u Oficio</label>
-		<input type="text" class="form-control" id="ocupacionP" name="ocupacionP">
+		<label for="sexo_pf" class="form-label font-weight-bold">Sexo</label>
+		<select class="form-control" id="sexo_pf" name="sexo_pf">
+			<option selected value=""></option>
+			<option value="F">FEMENINO</option>
+			<option value="M">MASCULINO</option>
+		</select>
 	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="escolaridadP" class="form-label font-weight-bold">Escolaridad</label>
-		<input type="text" class="form-control" id="escolaridadP" name="escolaridadP">
+		<label for="ocupacion_pf" class="form-label font-weight-bold">Profesión u Oficio</label>
+		<select class="form-control" id="ocupacion_pf" name="ocupacion_pf">
+			<option selected value=""></option>
+			<?php foreach ($body_data->ocupaciones as $index => $ocupaciones) { ?>
+				<option value="<?= $ocupaciones->PERSONAOCUPACIONID ?>"> <?= $ocupaciones->PERSONAOCUPACIONDESCR ?> </option>
+			<?php } ?>
+		</select>
+	</div>
+
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="escolaridad_pf" class="form-label font-weight-bold">Escolaridad</label>
+		<select class="form-control" id="escolaridad_pf" name="escolaridad_pf">
+			<option selected value=""></option>
+			<?php foreach ($body_data->escolaridades as $index => $escolaridades) { ?>
+				<option value="<?= $escolaridades->PERSONAESCOLARIDADID ?>"> <?= $escolaridades->PERSONAESCOLARIDADDESCR ?> </option>
+			<?php } ?>
+		</select>
 	</div>
 	<div class="col-12">
-		<label for="descripcionFisicaP" class="form-label font-weight-bold">Descripción física</label>
-		<textarea class="form-control" name="descripcionFisicaP" id="descripcionFisicaP" cols="30" rows="5"></textarea>
+		<label for="descripcionFisica_pf" class="form-label font-weight-bold">Descripción física</label>
+		<textarea class="form-control" name="descripcionFisica_pf" id="descripcionFisica_pf" cols="30" rows="5" maxlength="300" oninput="mayuscTextarea(this)"></textarea>
 	</div>
-
 	<div class="col-12">
 		<hr>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="apodo" class="form-label font-weight-bold">Apodo</label>
-		<input type="text" class="form-control" id="apodo" name="apodo">
+		<label for="calidad_juridica_pf" class="form-label font-weight-bold">Calidad Juridica</label>
+		<select class="form-control" id="calidad_juridica_pf" name="calidad_juridica_pf">
+			<option selected value=""></option>
+			<?php foreach ($body_data->calidadJuridica as $index => $calidadJuridica) { ?>
+				<option value="<?= $calidadJuridica->PERSONACALIDADJURIDICAID ?>"> <?= $calidadJuridica->PERSONACALIDADJURIDICADESCR ?> </option>
+			<?php } ?>
+		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="calidad_juridica" class="form-label font-weight-bold">Calidad Juridica</label>
-		<input type="text" class="form-control" id="calidad_juridicaP" name="calidad_juridicaP">
+		<label for="apodo_pf" class="form-label font-weight-bold">Apodo</label>
+		<input type="text" class="form-control" id="apodo_pf" name="apodo_pf" maxlength="100">
 	</div>
-</div>
-<div id="personadesaparecida" style="display: none;">
-	<div class="row">
-		<div class="col-12">
-			<hr>
-		</div>
-		<div class="col-12">
-			<p class="font-weight-bold text-center mt-3">PERSONA DESAPARECIDA</p>
-		</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="denunciante_pf" class="form-label font-weight-bold">Denunciante</label>
+		<select class="form-control" id="denunciante_pf" name="denunciante_pf">
+			<option selected value=""></option>
+			<option value="S">Si</option>
+			<option value="N">No</option>
+		</select>
+	</div>
+	<div class="col-12">
 		<hr>
-		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-			<label for="estaturaD" class="form-label font-weight-bold">Estatura</label>
-			<input type="text" class="form-control" id="estaturaD" name="estaturaD">
-		</div>
-		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-			<label for="pesoD" class="form-label font-weight-bold">Peso</label>
-			<input type="text" class="form-control" id="pesoD" name="pesoD">
-		</div>
-		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-			<label for="complexionD" class="form-label font-weight-bold">Complexión</label>
-			<input type="text" class="form-control" id="complexionD" name="complexionD">
-		</div>
-		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-			<label for="colortezD" class="form-label font-weight-bold">Color de tez</label>
-			<input type="text" class="form-control" id="colortezD" name="colortezD">
-		</div>
-
-		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-			<label for="senasD" class="form-label font-weight-bold">Señas particulares</label>
-			<input type="text" class="form-control" id="senasD" name="senasD">
-		</div>
-		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-			<label for="identidadD" class="form-label font-weight-bold">Identidad</label>
-			<input type="text" class="form-control" id="identidadD" name="identidadD">
-		</div>
-		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-			<label for="colorCD" class="form-label font-weight-bold">Color del cabello</label>
-			<input type="text" class="form-control" id="colorCD" name="colorCD">
-		</div>
-		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-			<label for="tamanoCD" class="form-label font-weight-bold">Tamaño del cabello</label>
-			<input type="text" class="form-control" id="tamanoCD" name="tamanoCD">
-		</div>
-		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-			<label for="formaCD" class="form-label font-weight-bold">Forma del cabello</label>
-			<input type="text" class="form-control" id="formaCD" name="formaCD">
-		</div>
-		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-			<label for="colorOD" class="form-label font-weight-bold">Color de ojos</label>
-			<input type="text" class="form-control" id="colorOD" name="colorOD">
-		</div>
-		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-			<label for="tipoFD" class="form-label font-weight-bold">Tipo de frente</label>
-			<input type="text" class="form-control" id="tipoFD" name="tipoFD">
-		</div>
-		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-			<label for="cejaD" class="form-label font-weight-bold">Ceja</label>
-			<input type="text" class="form-control" id="cejaD" name="cejaD">
-		</div>
-		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-			<label for="discapacidadD" class="form-label font-weight-bold">Discapacidad</label>
-			<input type="text" class="form-control" id="discapacidadD" name="discapacidadD">
-		</div>
-		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-			<label for="origenD" class="form-label font-weight-bold">Origen</label>
-			<input type="text" class="form-control" id="origenD" name="origenD">
-		</div>
-		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-			<label for="diaDesaparicion" class="form-label font-weight-bold">Dia de desaparición</label>
-			<input type="text" class="form-control" id="diaDesaparicion" name="diaDesaparicion">
-		</div>
-		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-			<label for="lugarDesaparicion" class="form-label font-weight-bold">Lugar de desaparición</label>
-			<input type="text" class="form-control" id="lugarDesaparicion" name="lugarDesaparicion">
-		</div>
-		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-			<label for="vestimentaD" class="form-label font-weight-bold">Vestimenta</label>
-			<input type="text" class="form-control" id="vestimentaD" name="vestimentaD">
-		</div>
-		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-			<label for="parentescoD" class="form-label font-weight-bold">Parentesco</label>
-			<input type="text" class="form-control" id="parentescoD" name="parentescoD">
-		</div>
-		<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-			<label for="autorizaFoto" class="form-label font-weight-bold">Autoriza foto en medios</label>
-			<input type="text" class="form-control" id="autorizaFoto" name="autorizaFoto">
-		</div>
 	</div>
-</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="facebook_pf" class="form-label font-weight-bold">Facebook</label>
+		<input type="text" class="form-control" id="facebook_pf" name="facebook_pf" maxlength="200">
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="instagram_pf" class="form-label font-weight-bold">Instagram</label>
+		<input type="text" class="form-control" id="instagram_pf" name="instagram_pf" maxlength="200">
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="twitter_pf" class="form-label font-weight-bold">Twitter</label>
+		<input type="text" class="form-control" id="twitter_pf" name="twitter_pf" maxlength="200">
+	</div>
+	<div class="col-12 my-4 text-center">
+		<button type="submit" class="btn btn-primary font-weight-bold">ACTUALIZAR PERSONA FÍSICA</button>
+	</div>
+</form>

@@ -9,9 +9,6 @@
 				<iframe id="pdfdoc" src="<?= base_url() ?>/assets/documentos/Derechos_De_Victima_Ofendido.pdf" width="100%" height="500px"></iframe>
 				<a class="btn btn-primary my-4" href="<?= base_url() ?>/assets/documentos/Derechos_De_Victima_Ofendido.pdf" download="derechos_victima_u_ofendido.pdf">Descargar</a>
 			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-			</div>
 		</div>
 	</div>
 </div>

@@ -165,7 +165,6 @@ class UserController extends BaseController
 		$firma = base64_decode($firma);
 
 		$data = [
-			'SEXO' => $this->request->getPost('sexo'),
 			'CODIGOPOSTAL' => $this->request->getPost('cp'),
 			'PAIS' => $this->request->getPost('pais_select'),
 			'ESTADOID' => (int)$this->request->getPost('estado_select'),

@@ -67,6 +67,6 @@
 		<textarea type="text" class="form-control" id="narracion_delito" name="narracion_delito" rows="5" maxlength="1000" required></textarea>
 	</div>
 	<div class="col-12 mb-3 text-center">
-		<button type="submit" class="btn btn-primary font-weight-bold" id="btnUpdateDenuncia" name="btnUpdateDenuncia">ACTUALIZAR DENUNCIA</button>
+		<button type="submit" class="btn btn-primary font-weight-bold">ACTUALIZAR DENUNCIA</button>
 	</div>
 </form>

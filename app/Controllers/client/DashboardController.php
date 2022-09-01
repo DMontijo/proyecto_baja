@@ -251,7 +251,7 @@ class DashboardController extends BaseController
                     'DISCAPACIDADDESCR' => $this->request->getPost('discapacidad_des'),
                     'FECHADESAPARICION' => $this->request->getPost('dia_des'),
                     'LUGARDESAPARICION' => $this->request->getPost('lugar_des'),
-                    'VESTIMENTA' => $this->request->getPost('vestimenta_des'),
+                    'VESTIMENTADESCR' => $this->request->getPost('vestimenta_des'),
                     'PARENTESCOID' => $this->request->getPost('parentesco_des'),
                     'FACEBOOK' => $this->request->getPost('facebook_des'),
                     'INSTAGRAM' => $this->request->getPost('instagram_des'),

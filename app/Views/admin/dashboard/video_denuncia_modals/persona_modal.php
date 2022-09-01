@@ -1,5 +1,5 @@
-<div class="modal fade shadow" id="folio_persona_fisica_modal" tabindex="-1" role="dialog" aria-labelledby="personaFisicaModalLabel" aria-hidden="true" data-backdrop="false">
-	<div class="modal-dialog modal-dialog-centered mw-100 w-50">
+<div class="modal fade shadow" id="folio_persona_fisica_modal" role="dialog" aria-labelledby="personaFisicaModalLabel" aria-hidden="true" data-backdrop="">
+	<div class="modal-dialog modal-dialog-centered mw-100 w-75">
 		<div class="modal-content" style="box-shadow: 0px 0px 55px 9px rgba(0,0,0,0.66)!important;">
 			<div class="modal-header bg-blue text-white">
 				<h5 class="modal-title font-weight-bold">PERSONA FÍSICA</h5>
@@ -7,25 +7,23 @@
 					<i class="fas fa-times"></i>
 				</button>
 			</div>
-			<div class="modal-body bg-light">
-				<ul class="nav nav-tabs" id="persona_tabs" role="tablist">
-					<li class="nav-item" role="persona_fisica">
-						<a class="nav-link active" id="persona" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Persona</a>
-					</li>
-					<li class="nav-item" role="persona_fisica">
-						<a class="nav-link" id="domicilio" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Domicilio</a>
-					</li>
-				</ul>
-				<div class="tab-content" id="persona_content">
-					<div class="tab-pane fade py-3 show active" id="home" role="tabpanel" aria-labelledby="persona">
-						<div class="container_tab" style="height:70vh;overflow-y:scroll;">
-							<?= view('admin/dashboard/video_denuncia_forms/form_persona_fisica') ?>
-						</div>
+			<div class="modal-body bg-light" style="height:70vh;overflow-y:auto;">
+				<nav>
+					<div class="nav nav-tabs" id="persona_tabs" role="tablist">
+						<a class="nav-item nav-link active" id="nav-persona-fisica-tab" data-toggle="tab" href="#nav-persona-fisica" role="tab" aria-controls="nav-persona-fisica" aria-selected="true">Person Física</a>
+						<a class="nav-item nav-link" id="nav-media-filiacion-tab" data-toggle="tab" href="#nav-media-filiacion" role="tab" aria-controls="nav-media-filiacion" aria-selected="false">Media Filiacion</a>
+						<a class="nav-item nav-link" id="nav-domicilio-tab" data-toggle="tab" href="#nav-domicilio" role="tab" aria-controls="nav-domicilio" aria-selected="false">Domicilio</a>
 					</div>
-					<div class="tab-pane fade py-3" id="profile" role="tabpanel" aria-labelledby="domicilio">
-						<div class="container_tab" style="height:70vh;overflow-y:scroll;">
-							<?= view('admin/dashboard/video_denuncia_forms/form_domicilio') ?>
-						</div>
+				</nav>
+				<div class="tab-content pt-3" id="persona_content">
+					<div class="tab-pane fade show active" id="nav-persona-fisica" role="tabpanel" aria-labelledby="nav-persona-fisica-tab">
+						<?= view('admin/dashboard/video_denuncia_forms/form_persona_fisica') ?>
+					</div>
+					<div class="tab-pane fade" id="nav-media-filiacion" role="tabpanel" aria-labelledby="nav-media-filiacion-tab">
+						<?= view('admin/dashboard/video_denuncia_forms/form_media_filiacion') ?>
+					</div>
+					<div class="tab-pane fade" id="nav-domicilio" role="tabpanel" aria-labelledby="nav-domicilio-tab">
+						<?= view('admin/dashboard/video_denuncia_forms/form_domicilio') ?>
 					</div>
 				</div>
 			</div>

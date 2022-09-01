@@ -85,6 +85,6 @@ class FolioPersonaFisicaMediaFiliacionModel extends Model
 		'DISCAPACIDADDESCR',
 		'FECHADESAPARICION',
 		'LUGARDESAPARICION',
-		'VESTIMENTA',
+		'VESTIMENTADESCR',
 	];
 }

@@ -684,7 +684,7 @@
 	})
 
 	$(document).on('hidden.bs.modal', '#folio_persona_fisica_modal', function() {
-		let tabs = document.querySelectorAll('#persona_tabs .nav-item .nav-link');
+		let tabs = document.querySelectorAll('#persona_tabs .nav-item');
 		let contents = document.querySelectorAll('#persona_content .tab-pane');
 		tabs.forEach(element => {
 			element.classList.remove('active');
