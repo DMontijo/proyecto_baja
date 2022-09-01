@@ -416,11 +416,11 @@ class DashboardController extends BaseController
 
             $data->personaFisicaMediaFiliacion = $this->_folioMediaFiliacion->where('ANO', $year)->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
             $data->folio = $this->_folioModel->where('FOLIOID', $folio)->where('ANO', $year)->first();
-            if ($data->personaFisica['DESAPARECIDA'] == 'S') {
 
+            
                 $data->parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID2', $data->personaFisicaMediaFiliacion['PERSONAFISICAID'])->first();
                 $data->parentesco = $this->_parentescoModel->where('PERSONAPARENTESCOID', $data->parentescoRelacion['PARENTESCOID'])->first();
-            }
+            
             if ($data->personaFisica['FOTO']) {
                 $file_info = new \finfo(FILEINFO_MIME_TYPE);
                 $type = $file_info->buffer($data->personaFisica['FOTO']);
