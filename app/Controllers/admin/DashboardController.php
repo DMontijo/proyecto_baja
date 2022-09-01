@@ -37,11 +37,64 @@ use App\Models\PersonaIdiomaModel;
 use App\Models\PersonaNacionalidadModel;
 use App\Models\PersonaTipoIdentificacionModel;
 use App\Models\PielColorModel;
+use App\Models\BarbaPeculiarModel;
+
 use App\Models\RolesUsuariosModel;
 use App\Models\UsuariosModel;
 use App\Models\VehiculoColorModel;
 use App\Models\VehiculoTipoModel;
 use App\Models\ZonasUsuariosModel;
+use App\Models\FrenteAlturaModel;
+use App\Models\FrenteAnchuraModel;
+use App\Models\FrentePeculiarModel;
+use App\Models\HombroGrosorModel;
+use App\Models\HombroLongitudModel;
+use App\Models\HombroPosicionModel;
+use App\Models\LabioGrosorModel;
+use App\Models\LabioLongitudModel;
+use App\Models\LabioPeculiarModel;
+use App\Models\LabioPosicionModel;
+use App\Models\NarizBaseModel;
+use App\Models\NarizPeculiarModel;
+use App\Models\NarizTamanoModel;
+use App\Models\NarizTipoModel;
+use App\Models\OjoColocacionModel;
+use App\Models\OjoFormaModel;
+use App\Models\OjoPeculiarModel;
+use App\Models\OjoTamanoModel;
+use App\Models\OrejaFormaModel;
+use App\Models\OrejaLobuloModel;
+use App\Models\OrejaTamanoModel;
+use App\Models\PersonaEtniaModel;
+use App\Models\BarbaTamanoModel;
+use App\Models\BarbillaTamanoModel;
+use App\Models\BarbillaFormaModel;
+use App\Models\BarbillaInclinacionModel;
+use App\Models\BarbillaPeculiarModel;
+use App\Models\BigoteFormaModel;
+use App\Models\BigoteGrosorModel;
+use App\Models\BigotePeculiarModel;
+use App\Models\BigoteTamanoModel;
+use App\Models\BocaPeculiarModel;
+use App\Models\BocaTamanoModel;
+use App\Models\CaraFormaModel;
+use App\Models\CaraTamanoModel;
+use App\Models\CaraTezModel;
+use App\Models\CejaColocacionModel;
+use App\Models\CejaContexturaModel;
+use App\Models\CejaGrosorModel;
+use App\Models\CejaTamanoModel;
+
+use App\Models\CuelloGrosorModel;
+use App\Models\CuelloPeculiarModel;
+use App\Models\CuelloTamanoModel;
+
+use App\Models\DientePeculiarModel;
+use App\Models\DienteTamanoModel;
+use App\Models\DienteTipoModel;
+use App\Models\EstomagoModel;
+use App\Models\CabelloPeculiarModel;
+
 
 class DashboardController extends BaseController
 {
@@ -82,17 +135,67 @@ class DashboardController extends BaseController
         $this->_nacionalidadModel = new PersonaNacionalidadModel();
         $this->_folioMediaFiliacion = new FolioPersonaFisicaMediaFiliacionModel();
 
-        $this->_cabelloColorModel = new CabelloColorModel();
-        $this->_cabelloTamanoModel = new CabelloTamanoModel();
-        $this->_cabelloEstiloModel = new CabelloEstiloModel();
-        $this->_frenteFormaModel = new FrenteFormaModel();
-        $this->_ojoColorModel = new OjoColorModel();
-        $this->_cejaFormaModel = new CejaFormaModel();
-        $this->_figuraModel = new FiguraModel();
-        $this->_pielColorModel = new PielColorModel();
-        $this->_parentescoModel = new ParentescoModel();
-        $this->_parentescoPersonaFisicaModel = new PersonaFisicaParentescoModel();
 
+        $this->_parentescoPersonaFisicaModel = new PersonaFisicaParentescoModel();
+        $this->_figuraModel = new FiguraModel();
+        $this->_cejaContexturaModel = new CejaContexturaModel();
+        $this->_caraFormaModel = new CaraFormaModel();
+        $this->_caraTamanoModel = new CaraTamanoModel();
+        $this->_caraTezModel = new CaraTezModel();
+        $this->_orejaLobuloModel = new OrejaLobuloModel();
+        $this->_orejaFomaModel = new OrejaFormaModel();
+        $this->_orejaTamanoModel = new OrejaTamanoModel();
+        $this->_cabelloColorModel = new CabelloColorModel();
+        $this->_cabelloEstiloModel = new CabelloEstiloModel();
+        $this->_cabelloTamanoModel = new CabelloTamanoModel();
+        $this->_cabelloPeculiarModel = new CabelloPeculiarModel();
+        $this->_frenteAlturaModel = new FrenteAlturaModel();
+        $this->_frenteAnchuraModel = new FrenteAnchuraModel();
+        $this->_frenteFormaModel = new FrenteFormaModel();
+        $this->_frentePeculiarModel = new FrentePeculiarModel();
+        $this->_cejaColocacionModel = new CejaColocacionModel();
+        $this->_cejaFormaModel = new CejaFormaModel();
+        $this->_cejaTamanoModel = new CejaTamanoModel();
+        $this->_cejaGrosorModel = new CejaGrosorModel();
+        $this->_ojoColocacionModel = new OjoColocacionModel();
+        $this->_ojoFormaModel = new OjoFormaModel();
+        $this->_ojoTamanoModel = new OjoTamanoModel();
+        $this->_ojoColorModel = new OjoColorModel();
+        $this->_ojoPeculiarModel = new OjoPeculiarModel();
+        $this->_narizTipoModel = new NarizTipoModel();
+        $this->_narizTamanoModel = new NarizTamanoModel();
+        $this->_narizBaseModel = new NarizBaseModel();
+        $this->_narizPeculiarModel = new NarizPeculiarModel();
+        $this->_bigoteFormaModel = new BigoteFormaModel();
+        $this->_bigoteTamanoModel = new BigoteTamanoModel();
+        $this->_bigoteGrosorModel = new BigoteGrosorModel();
+        $this->_bigotePeculiarModel = new BigotePeculiarModel();
+        $this->_bocaTamanoModel = new BocaTamanoModel();
+        $this->_bocaPeculiarModel = new BocaPeculiarModel();
+        $this->_labioGrosorModel = new LabioGrosorModel();
+        $this->_labioLongitudModel = new LabioLongitudModel();
+        $this->_labioPeculiarModel = new LabioPeculiarModel();
+        $this->_labioPosicionModel = new LabioPosicionModel();
+        $this->_dienteTamanoModel = new DienteTamanoModel();
+        $this->_dienteTipoModel = new DienteTipoModel();
+        $this->_dientePeculiarModel = new DientePeculiarModel();
+        $this->_barbillaFormaModel = new BarbillaFormaModel();
+        $this->_barbillaTamanoModel = new BarbillaTamanoModel();
+
+        $this->_barbillaInclinacionModel = new BarbillaInclinacionModel();
+        $this->_barbillaPeculiarModel = new BarbillaPeculiarModel();
+        $this->_barbaTamanoModel = new BarbaTamanoModel();
+        $this->_barbaPeculiarModel = new BarbaPeculiarModel();
+        $this->_cuelloTamanoModel = new CuelloTamanoModel();
+        $this->_cuelloGrosorModel = new CuelloGrosorModel();
+        $this->_cuelloPeculiarModel = new CuelloPeculiarModel();
+        $this->_hombroPosicionModel = new HombroPosicionModel();
+        $this->_hombroLongitudModel = new HombroLongitudModel();
+        $this->_hombroGrosorModel = new HombroGrosorModel();
+        $this->_estomagoModel = new EstomagoModel();
+        $this->_etniaModel = new PersonaEtniaModel();
+        $this->_parentescoModel = new ParentescoModel();
+        $this->_pielColorModel = new PielColorModel();
         $this->_conexionesDBModel = new ConexionesDBModel();
 
         // $this->protocol = 'http://';
@@ -107,6 +210,7 @@ class DashboardController extends BaseController
         $data = (object) array();
         $agente = $this->_usuariosModel->asObject()->where('ID', session('ID'))->first();
         $roles = [1, 3];
+
         if (in_array($agente->ROLID, $roles)) {
             $data->cantidad_folios = count($this->_folioModel->asObject()->findAll());
             $data->cantidad_abiertos = count($this->_folioModel->asObject()->where('STATUS', 'ABIERTO')->findAll());
@@ -308,14 +412,21 @@ class DashboardController extends BaseController
         $data->personaFisica = $this->_folioPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $id)->first();
 
         if ($data->personaFisica) {
-            $data->personaFisicaMediaFiliacion = $this->_folioMediaFiliacion->where('ANO', $year)->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
             $data->personaFisicaDomicilio = $this->_folioPersonaFisicaDomicilioModel->where('ANO', $year)->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
 
+            $data->personaFisicaMediaFiliacion = $this->_folioMediaFiliacion->where('ANO', $year)->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
+            $data->folio = $this->_folioModel->where('FOLIOID', $folio)->where('ANO', $year)->first();
+            if ($data->personaFisica['DESAPARECIDA'] == 'S') {
+
+                $data->parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID2', $data->personaFisicaMediaFiliacion['PERSONAFISICAID'])->first();
+                $data->parentesco = $this->_parentescoModel->where('PERSONAPARENTESCOID', $data->parentescoRelacion['PARENTESCOID'])->first();
+            }
             if ($data->personaFisica['FOTO']) {
                 $file_info = new \finfo(FILEINFO_MIME_TYPE);
                 $type = $file_info->buffer($data->personaFisica['FOTO']);
                 $data->personaFisica['FOTO'] = 'data:' . $type . ';base64,' . base64_encode($data->personaFisica['FOTO']);
             }
+
             $data->status = 1;
             return json_encode($data);
         } else {
@@ -410,6 +521,67 @@ class DashboardController extends BaseController
         $data->ocupaciones = $this->_ocupacionModel->asObject()->findAll();
         $data->colorVehiculo = $this->_coloresVehiculoModel->asObject()->findAll();
         $data->tipoVehiculo = $this->_tipoVehiculoModel->asObject()->orderBy('VEHICULOTIPODESCR', 'ASC')->findAll();
+
+        $data->parentesco = $this->_parentescoModel->asObject()->findAll();
+        $data->figura = $this->_figuraModel->asObject()->findAll();
+
+        $data->cejaContextura = $this->_cejaContexturaModel->asObject()->findAll();
+        $data->caraForma = $this->_caraFormaModel->asObject()->findAll();
+        $data->caraTamano = $this->_caraTamanoModel->asObject()->findAll();
+        $data->caraTez = $this->_caraTezModel->asObject()->findAll();
+        $data->orejaLobulo = $this->_orejaLobuloModel->asObject()->findAll();
+        $data->orejaForma = $this->_orejaFomaModel->asObject()->findAll();
+        $data->orejaTamano = $this->_orejaTamanoModel->asObject()->findAll();
+        $data->cabelloColor = $this->_cabelloColorModel->asObject()->findAll();
+        $data->cabelloEstilo = $this->_cabelloEstiloModel->asObject()->findAll();
+        $data->cabelloTamano = $this->_cabelloTamanoModel->asObject()->findAll();
+        $data->cabelloPeculiar = $this->_cabelloPeculiarModel->asObject()->findAll();
+        $data->frenteAltura = $this->_frenteAlturaModel->asObject()->findAll();
+        $data->frenteAnchura = $this->_frenteAnchuraModel->asObject()->findAll();
+        $data->frenteForma = $this->_frenteFormaModel->asObject()->findAll();
+        $data->frentePeculiar = $this->_frentePeculiarModel->asObject()->findAll();
+        $data->cejaColocacion = $this->_cejaColocacionModel->asObject()->findAll();
+        $data->cejaForma = $this->_cejaFormaModel->asObject()->findAll();
+        $data->cejaTamano = $this->_cejaTamanoModel->asObject()->findAll();
+        $data->cejaGrosor = $this->_cejaGrosorModel->asObject()->findAll();
+        $data->ojoColocacion = $this->_ojoColocacionModel->asObject()->findAll();
+        $data->ojoForma = $this->_ojoFormaModel->asObject()->findAll();
+        $data->ojoTamano = $this->_ojoTamanoModel->asObject()->findAll();
+        $data->ojoColor = $this->_ojoColorModel->asObject()->findAll();
+        $data->ojoPeculiar = $this->_ojoPeculiarModel->asObject()->findAll();
+        $data->narizTipo = $this->_narizTipoModel->asObject()->findAll();
+        $data->narizTamano = $this->_narizTamanoModel->asObject()->findAll();
+        $data->narizBase = $this->_narizBaseModel->asObject()->findAll();
+        $data->narizPeculiar = $this->_narizPeculiarModel->asObject()->findAll();
+        $data->bigoteForma = $this->_bigoteFormaModel->asObject()->findAll();
+        $data->bigoteTamano = $this->_bigoteTamanoModel->asObject()->findAll();
+        $data->bigoteGrosor = $this->_bigoteGrosorModel->asObject()->findAll();
+        $data->bigotePeculiar = $this->_bigotePeculiarModel->asObject()->findAll();
+        $data->bocaTamano = $this->_bocaTamanoModel->asObject()->findAll();
+        $data->bocaPeculiar = $this->_bocaPeculiarModel->asObject()->findAll();
+        $data->labioGrosor = $this->_labioGrosorModel->asObject()->findAll();
+        $data->labioLongitud = $this->_labioLongitudModel->asObject()->findAll();
+        $data->labioPeculiar = $this->_labioPeculiarModel->asObject()->findAll();
+        $data->labioPosicion = $this->_labioPosicionModel->asObject()->findAll();
+        $data->dienteTamano = $this->_dienteTamanoModel->asObject()->findAll();
+        $data->dienteTipo = $this->_dienteTipoModel->asObject()->findAll();
+        $data->dientePeculiar = $this->_dientePeculiarModel->asObject()->findAll();
+        $data->barbillaForma = $this->_barbillaFormaModel->asObject()->findAll();
+        $data->barbillaTamano = $this->_barbillaTamanoModel->asObject()->findAll();
+        $data->barbillaInclinacion = $this->_barbillaInclinacionModel->asObject()->findAll();
+        $data->barbillaPeculiar = $this->_barbillaPeculiarModel->asObject()->findAll();
+        $data->barbaTamano = $this->_barbaTamanoModel->asObject()->findAll();
+        $data->barbaPeculiar = $this->_barbaPeculiarModel->asObject()->findAll();
+        $data->cuelloTamano = $this->_cuelloTamanoModel->asObject()->findAll();
+        $data->cuelloGrosor = $this->_cuelloGrosorModel->asObject()->findAll();
+        $data->cuelloPeculiar = $this->_cuelloPeculiarModel->asObject()->findAll();
+        $data->hombroPosicion = $this->_hombroPosicionModel->asObject()->findAll();
+        $data->hombroLongitud = $this->_hombroLongitudModel->asObject()->findAll();
+        $data->hombroGrosor = $this->_hombroGrosorModel->asObject()->findAll();
+        $data->estomago = $this->_estomagoModel->asObject()->findAll();
+        $data->pielColor = $this->_pielColorModel->asObject()->findAll();
+        $data->etnia = $this->_etniaModel->asObject()->findAll();
+        $data->parentesco = $this->_parentescoModel->asObject()->findAll();
 
         $this->_loadView('Video denuncia', 'videodenuncia', '', $data, 'video_denuncia');
     }
@@ -1148,6 +1320,106 @@ class DashboardController extends BaseController
             return json_encode(['status' => 0]);
         }
     }
+    public function updateMediaFiliacionById()
+    {
+        try {
+            $id = trim($this->request->getPost('pf_id'));
+            $folio = trim($this->request->getPost('folio'));
+            $year = trim($this->request->getPost('year'));
+         
+            $data = array(
+                'OCUPACIONID' => $this->request->getPost('ocupacion_mf'),
+                'ESTATURA' => $this->request->getPost('estatura_mf'),
+                'PESO' => $this->request->getPost('peso_mf'),
+                'SENASPARTICULARES' => $this->request->getPost('senas_mf'),
+                'PIELCOLORID' => $this->request->getPost('colortez_mf'),
+                'FIGURAID' => $this->request->getPost('complexion_mf'),
+                'CONTEXTURAID' => $this->request->getPost('contextura_ceja_mf'),
+                'CARAFORMAID' => $this->request->getPost('cara_forma_mf'),
+                'CARATAMANOID' => $this->request->getPost('cara_tamano_mf'),
+                'CARATEZID' => $this->request->getPost('caratez_mf'),
+                'OREJALOBULOID' => $this->request->getPost('lobulo_mf'),
+                'OREJAFORMAID' => $this->request->getPost('forma_oreja_mf'),
+                'OREJATAMANOID' => $this->request->getPost('tamano_oreja_mf'),
+                'CABELLOCOLORID' => $this->request->getPost('colorC_mf'),
+                'CABELLOESTILOID' => $this->request->getPost('formaC_mf'),
+                'CABELLOTAMANOID' => $this->request->getPost('tamanoC_mf'),
+                'CABELLOPECULIARID' => $this->request->getPost('peculiarC_mf'),
+                'CABELLODESCR' => $this->request->getPost('cabello_descr_mf'),
+                'FRENTEALTURAID' => $this->request->getPost('frente_altura_mf'),
+                'FRENTEANCHURAID' => $this->request->getPost('frente_anchura_ms'),
+                'FRENTEFORMAID' => $this->request->getPost('tipoF_mf'),
+                'FRENTEPECULIARID' => $this->request->getPost('frente_peculiar_mf'),
+                'CEJACOLOCACIONID' => $this->request->getPost('colocacion_ceja_mf'),
+                'CEJAFORMAID' => $this->request->getPost('ceja_mf'),
+                'CEJATAMANOID' => $this->request->getPost('tamano_ceja_mf'),
+                'CEJAGROSORID' => $this->request->getPost('grosor_ceja_mf'),
+                'OJOCOLOCACIONID' => $this->request->getPost('colocacion_ojos_mf'),
+                'OJOFORMAID' => $this->request->getPost('forma_ojos_mf'),
+                'OJOTAMANOID' => $this->request->getPost('tamano_ojos_mf'),
+                'OJOCOLORID' => $this->request->getPost('colorO_mf'),
+                'OJOPECULIARID' => $this->request->getPost('peculiaridad_ojos_mf'),
+                'NARIZTIPOID' => $this->request->getPost('nariz_tipo_mf'),
+                'NARIZTAMANOID' => $this->request->getPost('nariz_tamano_mf'),
+                'NARIZBASEID' => $this->request->getPost('nariz_base_mf'),
+                'NARIZPECULIARID' => $this->request->getPost('nariz_peculiar_mf'),
+                'NARIZDESCR' => $this->request->getPost('nariz_descr_mf'),
+                'BIGOTEFORMAID' => $this->request->getPost('bigote_forma_mf'),
+                'BIGOTETAMANOID' => $this->request->getPost('bigote_tamaño_mf'),
+                'BIGOTEGROSORID' => $this->request->getPost('bigote_grosor_mf'),
+                'BIGOTEPECULIARID' => $this->request->getPost('bigote_peculiar_mf'),
+                'BIGOTEDESCR' => $this->request->getPost('bigote_descr_mf'),
+                'BOCATAMANOID' => $this->request->getPost('boca_tamano_mf'),
+                'BOCAPECULIARID' => $this->request->getPost('boca_peculiar_mf'),
+                'LABIOGROSORID' => $this->request->getPost('labio_grosor_mf'),
+                'LABIOLONGITUDID' => $this->request->getPost('labio_longitud_mf'),
+                'LABIOPOSICIONID' => $this->request->getPost('labio_posicion_mf'),
+                'LABIOPECULIARID' => $this->request->getPost('labio_peculiar_mf'),
+                'DIENTETAMANOID' => $this->request->getPost('dientes_tamano_mf'),
+                'DIENTETIPOID' => $this->request->getPost('dientes_tipo_mf'),
+                'DIENTEPECULIARID' => $this->request->getPost('dientes_peculiar_mf'),
+                'DIENTEDESCR' => $this->request->getPost('dientes_descr_mf'),
+                'BARBILLAFORMAID' => $this->request->getPost('barbilla_forma_mf'),
+                'BARBILLATAMANOID' => $this->request->getPost('barbilla_tamano_mf'),
+                'BARBILLAINCLINACIONID' => $this->request->getPost('barbilla_inclinacion_mf'),
+                'BARBILLAPECULIARID' => $this->request->getPost('barbilla_peculiar_mf'),
+                'BARBILLADESCR' => $this->request->getPost('barbilla_descr_mf'),
+                'BARBATAMANOID' => $this->request->getPost('barba_tamano_mf'),
+                'BARBAPECULIARID' => $this->request->getPost('barba_peculiar_mf'),
+                'BARBADESCR' => $this->request->getPost('barba_descr_mf'),
+                'CUELLOTAMANOID' => $this->request->getPost('cuello_tamano_mf'),
+                'CUELLOGROSORID' => $this->request->getPost('cuello_grosor_mf'),
+                'CUELLOPECULIARID' => $this->request->getPost('cuello_peculiar_mf'),
+                'CUELLODESCR' => $this->request->getPost('cuello_descr_mf'),
+                'HOMBROPOSICIONID' => $this->request->getPost('hombro_posicion_mf'),
+                'HOMBROLONGITUDID' => $this->request->getPost('hombro_tamano_mf'),
+                'HOMBROGROSORID' => $this->request->getPost('hombro_grosor_mf'),
+                'ESTOMAGOID' => $this->request->getPost('estomago_mf'),
+                'PERSONAESCOLARIDADID' => $this->request->getPost('escolaridad_mf'),
+                'PERSONAETNIAID' => $this->request->getPost('etnia_mf'),
+                'ESTOMAGODESCR' => $this->request->getPost('estomago_descr_mf'),
+                'DISCAPACIDADDESCR' => $this->request->getPost('discapacidad_mf'),
+                'FECHADESAPARICION' => $this->request->getPost('diaDesaparicion'),
+                'LUGARDESAPARICION' => $this->request->getPost('lugarDesaparicion'),
+                'VESTIMENTADESCR' => $this->request->getPost('vestimenta_mf'),
+            );
+      
+            
+            $updateMediaFiliacion = $this->_folioMediaFiliacion->set($data)->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $id)->update();
+            // $updatePersonaFisica = $this->_folioPersonaFisicaModel->set($data)->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $id)->update();
+            // var_dump($updateMediaFiliacion);
+            // exit;
+
+            if ($updateMediaFiliacion) {
+                return json_encode(['status' => 1]);
+            } else {
+                return json_encode(['status' => 0]);
+            }
+        } catch (\Exception $e) {
+            return json_encode(['status' => 0]);
+        }
+    }
+    
 }
 
 /* End of file DashboardController.php */

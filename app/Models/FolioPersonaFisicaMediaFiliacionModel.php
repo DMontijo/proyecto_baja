@@ -87,4 +87,5 @@ class FolioPersonaFisicaMediaFiliacionModel extends Model
 		'LUGARDESAPARICION',
 		'VESTIMENTADESCR',
 	];
+	
 }

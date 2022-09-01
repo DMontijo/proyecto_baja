@@ -526,7 +526,10 @@
 				if (response.status == 1) {
 					//PERSONA FISICA
 					let personaFisica = response.personaFisica;
-
+					//mediafiliacion 
+					let mediaFiliacion = response.personaFisicaMediaFiliacion;
+					let folio = response.folio;
+					let parentesco = response.parentesco;
 					document.querySelectorAll('#pf_id').forEach(element => {
 						element.value = id;
 					});
@@ -595,51 +598,105 @@
 					document.querySelector('#twitter_pf').value = personaFisica.TWITTER ? personaFisica.TWITTER : '';
 					document.querySelector('#denunciante_pf').value = personaFisica.DENUNCIANTE ? personaFisica.DENUNCIANTE : '';
 					//PERSONA FISICA END
+					//MEDIAFILIACION
+					if (mediaFiliacion) {
+						
+						document.querySelector('#estatura_mf').value = mediaFiliacion.ESTATURA;
+						document.querySelector('#peso_mf').value = mediaFiliacion.PESO;
+					
+						document.querySelector('#complexion_mf').value = mediaFiliacion.FIGURAID ? mediaFiliacion.FIGURAID : '';
 
-					//PERSONA DESAPARECIDA
-					// if (personaFisica.DESAPARECIDA == 'S') {
+						document.querySelector('#colortez_mf').value = mediaFiliacion.PIELCOLORID? mediaFiliacion.PIELCOLORID : '';
+						document.querySelector('#senas_mf').value = mediaFiliacion.SENASPARTICULARES;
+						// document.querySelector('#identidadD').value = mediaFiliacion.IDENTIDAD ? mediaFiliacion.IDENTIDAD:'';
+						document.querySelector('#colorC_mf').value = mediaFiliacion.CABELLOCOLORID ? mediaFiliacion.CABELLOCOLORID : '';
+						document.querySelector('#tamanoC_mf').value = mediaFiliacion.CABELLOTAMANOID ? mediaFiliacion.CABELLOTAMANOID : '';
+						document.querySelector('#formaC_mf').value = mediaFiliacion.CABELLOESTILOID ? mediaFiliacion.CABELLOESTILOID : '';
+						document.querySelector('#peculiarC_mf').value = mediaFiliacion.CABELLOPECULIARID ? mediaFiliacion.CABELLOPECULIARID : '';
 
-					// 	document.querySelector('#estaturaD').value = desaparecida.ESTATURA;
-					// 	document.querySelector('#pesoD').value = desaparecida.PESO;
-					// 	document.querySelector('#complexionD').value = figura.FIGURADESCR;
-					// 	document.querySelector('#colortezD').value = pielColor.PIELCOLORDESCR;
-					// 	document.querySelector('#senasD').value = desaparecida.SENASPARTICULARES;
-					// 	// //	document.querySelector('#identidadD').value = desaparecida.IDENTIDAD;
-					// 	document.querySelector('#colorCD').value = cabelloColor.CABELLOCOLORDESCR;
-					// 	document.querySelector('#tamanoCD').value = cabelloTamano.CABELLOTAMANODESCR;
-					// 	document.querySelector('#formaCD').value = cabelloEstilo.CABELLOESTILODESCR;
-					// 	document.querySelector('#colorOD').value = ojoColor.OJOCOLORDESCR;
-					// 	document.querySelector('#tipoFD').value = frenteForma.FRENTEFORMADESCR;
-					// 	document.querySelector('#cejaD').value = cejaForma.CEJAFORMADESCR;
-					// 	document.querySelector('#discapacidadD').value = desaparecida.DISCAPACIDADDESCR;
-					// 	// //document.querySelector('#origenD').value = desaparecida.ORIGEN;
-					// 	if (desaparecida.FECHADESAPARICION) {
-					// 		let date = new Date(desaparecida.FECHADESAPARICION);
-					// 		let dateToTijuanaString = date.toLocaleString('en-US', {
-					// 			timeZone: 'America/Tijuana'
-					// 		});
-					// 		let dateTijuana = new Date(dateToTijuanaString);
-					// 		dateTijuana.setDate(dateTijuana.getDate() + 1);
-					// 		var options = {
-					// 			year: 'numeric',
-					// 			month: 'long',
-					// 			day: 'numeric'
-					// 		};
-					// 		document.querySelector('#diaDesaparicion').value = (dateTijuana.toLocaleDateString("es-ES", options)).toUpperCase();
-					// 	} else {
-					// 		document.querySelector('#diaDesaparicion').value = '';
-					// 	}
-					// 	document.querySelector('#lugarDesaparicion').value = desaparecida.LUGARDESAPARICION;
-					// 	document.querySelector('#vestimentaD').value = desaparecida.VESTIMENTA;
-					// 	document.querySelector('#parentescoD').value = parentesco.PERSONAPARENTESCODESCR;
-					// 	document.querySelector('#autorizaFoto').value = folio.LOCALIZACIONPERSONAMEDIOS == 'S' ? 'SI' : 'NO';
+						document.querySelector('#peculiarC_mf').value = mediaFiliacion.CABELLOPECULIARID ? mediaFiliacion.CABELLOPECULIARID : '';
+						document.querySelector('#cabello_descr_mf').value = mediaFiliacion.CABELLODESCR? mediaFiliacion.CABELLODESCR:'';
+						document.querySelector('#colocacion_ojos_mf').value = mediaFiliacion.OJOCOLOCACIONID ? mediaFiliacion.OJOCOLOCACIONID : '';
+						document.querySelector('#forma_ojos_mf').value = mediaFiliacion.OJOFORMAID ? mediaFiliacion.OJOFORMAID : '';
+						document.querySelector('#tamano_ojos_mf').value = mediaFiliacion.OJOTAMANOID ? mediaFiliacion.OJOTAMANOID : '';
+						document.querySelector('#colorO_mf').value = mediaFiliacion.OJOCOLORID ? mediaFiliacion.OJOCOLORID : '';
 
-					// 	document.getElementById("personadesaparecida").style.display = "block";
+						document.querySelector('#peculiaridad_ojos_mf').value = mediaFiliacion.OJOPECULIARID ? mediaFiliacion.OJOPECULIARID : '';
+						document.querySelector('#frente_altura_mf').value = mediaFiliacion.FRENTEALTURAID ? mediaFiliacion.FRENTEALTURAID : '';
+						document.querySelector('#frente_anchura_ms').value = mediaFiliacion.FRENTEANCHURAID ? mediaFiliacion.FRENTEANCHURAID : '';
+						document.querySelector('#tipoF_mf').value = mediaFiliacion.FRENTEFORMAID ? mediaFiliacion.FRENTEFORMAID : '';
+						document.querySelector('#frente_peculiar_mf').value = mediaFiliacion.FRENTEPECULIARID ? mediaFiliacion.FRENTEPECULIARID : '';
+						document.querySelector('#colocacion_ceja_mf').value = mediaFiliacion.CEJACOLOCACIONID ? mediaFiliacion.CEJACOLOCACIONID : '';
+						document.querySelector('#ceja_mf').value = mediaFiliacion.CEJAFORMAID ? mediaFiliacion.CEJAFORMAID : '';
 
-					// } else {
-					// 	document.getElementById("personadesaparecida").style.display = "none";
-					// }
+						document.querySelector('#tamano_ceja_mf').value = mediaFiliacion.CEJATAMANOID ? mediaFiliacion.CEJATAMANOID : '';
+						document.querySelector('#grosor_ceja_mf').value = mediaFiliacion.CEJAGROSORID ? mediaFiliacion.CEJAGROSORID : '';
+						document.querySelector('#nariz_tipo_mf').value = mediaFiliacion.CEJATAMANOID ? mediaFiliacion.CEJATAMANOID : '';
+						document.querySelector('#nariz_tamano_mf').value = mediaFiliacion.NARIZTAMANOID ? mediaFiliacion.NARIZTAMANOID : '';
+						document.querySelector('#nariz_base_mf').value = mediaFiliacion.NARIZBASEID ? mediaFiliacion.NARIZBASEID : '';
+						document.querySelector('#nariz_peculiar_mf').value = mediaFiliacion.NARIZPECULIARID ? mediaFiliacion.NARIZPECULIARID : '';
+						document.querySelector('#nariz_descr_mf').value = mediaFiliacion.NARIZDESCR ? mediaFiliacion.NARIZDESCR:'';
+						document.querySelector('#bigote_forma_mf').value = mediaFiliacion.BIGOTEFORMAID ? mediaFiliacion.BIGOTEFORMAID : '';
+						document.querySelector('#bigote_tamaño_mf').value = mediaFiliacion.BIGOTETAMANOID ? mediaFiliacion.BIGOTETAMANOID : '';
+						document.querySelector('#bigote_grosor_mf').value = mediaFiliacion.BIGOTEGROSORID ? mediaFiliacion.BIGOTEGROSORID : '';
+						document.querySelector('#bigote_peculiar_mf').value = mediaFiliacion.BIGOTEPECULIARID ? mediaFiliacion.BIGOTEPECULIARID : '';
+						document.querySelector('#bigote_descr_mf').value = mediaFiliacion.BIGOTEDESCR?mediaFiliacion.BIGOTEDESCR:'';
+						document.querySelector('#boca_tamano_mf').value = mediaFiliacion.BOCATAMANOID ? mediaFiliacion.BOCATAMANOID : '';
+						document.querySelector('#boca_peculiar_mf').value = mediaFiliacion.BOCAPECULIARID ? mediaFiliacion.BOCAPECULIARID : '';
+						document.querySelector('#labio_grosor_mf').value = mediaFiliacion.LABIOGROSORID ? mediaFiliacion.LABIOGROSORID : '';
+						document.querySelector('#labio_longitud_mf').value = mediaFiliacion.LABIOLONGITUDID ? mediaFiliacion.LABIOLONGITUDID : '';
+						document.querySelector('#labio_posicion_mf').value = mediaFiliacion.LABIOPOSICIONID ? mediaFiliacion.LABIOPOSICIONID : '';
+						document.querySelector('#labio_peculiar_mf').value = mediaFiliacion.LABIOPECULIARID ? mediaFiliacion.LABIOPECULIARID : '';
+						document.querySelector('#dientes_tamano_mf').value = mediaFiliacion.DIENTETAMANOID ? mediaFiliacion.DIENTETAMANOID : '';
+						document.querySelector('#dientes_tipo_mf').value = mediaFiliacion.DIENTETIPOID ? mediaFiliacion.DIENTETIPOID : '';
+						document.querySelector('#dientes_peculiar_mf').value = mediaFiliacion.DIENTEPECULIARID ? mediaFiliacion.DIENTEPECULIARID : '';
+						document.querySelector('#dientes_descr_mf').value = mediaFiliacion.DIENTEDESCR?mediaFiliacion.DIENTEDESCR:'';
+						document.querySelector('#barbilla_forma_mf').value = mediaFiliacion.BARBILLAFORMAID ? mediaFiliacion.BARBILLAFORMAID : '';
+						document.querySelector('#barbilla_tamano_mf').value = mediaFiliacion.BARBILLATAMANOID ? mediaFiliacion.BARBILLATAMANOID : '';
+						document.querySelector('#barbilla_inclinacion_mf').value = mediaFiliacion.BARBILLAINCLINACIONID ? mediaFiliacion.BARBILLAINCLINACIONID : '';
+						document.querySelector('#barbilla_peculiar_mf').value = mediaFiliacion.BARBILLAPECULIARID ? mediaFiliacion.BARBILLAPECULIARID : '';
+						document.querySelector('#barbilla_descr_mf').value = mediaFiliacion.BARBILLADESCR ? mediaFiliacion.BARBILLADESCR:'';
+						document.querySelector('#barba_tamano_mf').value = mediaFiliacion.BARBATAMANOID ? mediaFiliacion.BARBATAMANOID : '';
+						document.querySelector('#barba_peculiar_mf').value = mediaFiliacion.BARBAPECULIARID ? mediaFiliacion.BARBAPECULIARID : '';
+						document.querySelector('#barba_descr_mf').value = mediaFiliacion.BARBADESCR ? mediaFiliacion.BARBADESCR :'';
+						document.querySelector('#cuello_tamano_mf').value = mediaFiliacion.CUELLOTAMANOID ? mediaFiliacion.CUELLOTAMANOID : '';
+						document.querySelector('#cuello_grosor_mf').value = mediaFiliacion.CUELLOGROSORID ? mediaFiliacion.CUELLOGROSORID : '';
+						document.querySelector('#cuello_peculiar_mf').value = mediaFiliacion.CUELLOPECULIARID ? mediaFiliacion.CUELLOPECULIARID : '';
+						document.querySelector('#cuello_descr_mf').value = mediaFiliacion.CUELLODESCR ? mediaFiliacion.CUELLODESCR :'';
+						document.querySelector('#hombro_posicion_mf').value = mediaFiliacion.HOMBROPOSICIONID ? mediaFiliacion.HOMBROPOSICIONID : '';
+						document.querySelector('#hombro_tamano_mf').value = mediaFiliacion.HOMBROTAMANOID ? mediaFiliacion.HOMBROTAMANOID : '';
+						document.querySelector('#hombro_grosor_mf').value = mediaFiliacion.HOMBROGROSORID ? mediaFiliacion.HOMBROGROSORID : '';
+						document.querySelector('#estomago_mf').value = mediaFiliacion.ESTOMAGOID ? mediaFiliacion.ESTOMAGOID : '';
+						document.querySelector('#estomago_descr_mf').value = mediaFiliacion.ESTOMAGOID ? mediaFiliacion.ESTOMAGOID : '';
 
+
+
+						document.querySelector('#discapacidad_mf').value = mediaFiliacion.DISCAPACIDADDESCR;
+						// document.querySelector('#origen_mf').value = mediaFiliacion.ORIGEN;
+						
+						document.querySelector('#diaDesaparicion').value = mediaFiliacion.FECHADESAPARICION ? mediaFiliacion.FECHADESAPARICION :'';
+						
+						document.querySelector('#lugarDesaparicion').value = mediaFiliacion.LUGARDESAPARICION;
+						document.querySelector('#vestimenta_mf').value = mediaFiliacion.VESTIMENTADESCR;
+						document.querySelector('#parentesco_mf').value = mediaFiliacion.PERSONAPARENTESCOID ? mediaFiliacion.PERSONAPARENTESCOID:'';
+						document.querySelector('#autorizaFoto').value = folio.LOCALIZACIONPERSONAMEDIOS == 'S' ? 'S' : 'N';
+						document.querySelector('#escolaridad_mf').value = mediaFiliacion.ESCOLARIDADID ? mediaFiliacion.ESCOLARIDADID : '';
+					document.querySelector('#ocupacion_mf').value = mediaFiliacion.OCUPACIONID ? mediaFiliacion.OCUPACIONID : '';
+
+					document.querySelector('#contextura_ceja_mf').value = mediaFiliacion.CONTEXTURAID ? mediaFiliacion.CONTEXTURAID : '';
+					document.querySelector('#cara_forma_mf').value = mediaFiliacion.CARAFORMAID ? mediaFiliacion.CARAFORMAID : '';
+					document.querySelector('#cara_tamano_mf').value = mediaFiliacion.CARATAMANOID ? mediaFiliacion.CARATAMANOID : '';
+					document.querySelector('#caratez_mf').value = mediaFiliacion.CARATEZID ? mediaFiliacion.CARATEZID : '';
+					document.querySelector('#lobulo_mf').value = mediaFiliacion.OREJALOBULOID ? mediaFiliacion.OREJALOBULOID : '';
+					document.querySelector('#forma_oreja_mf').value = mediaFiliacion.OREJAFORMAID ? mediaFiliacion.OREJAFORMAID : '';
+					document.querySelector('#tamano_oreja_mf').value = mediaFiliacion.OREJATAMANOID ? mediaFiliacion.OREJATAMANOID : '';
+
+					document.querySelector('#hombro_tamano_mf').value = mediaFiliacion.HOMBROLONGITUDID ? mediaFiliacion.HOMBROLONGITUDID : '';
+					document.querySelector('#parentesco_mf').value = parentesco.PERSONAPARENTESCOID ? parentesco.PERSONAPARENTESCOID : '';
+
+					document.querySelector('#escolaridad_mf').value = mediaFiliacion.PERSONAESCOLARIDADID ? mediaFiliacion.PERSONAESCOLARIDADID : '';
+
+					}
 					//DOMICILIO
 					let domicilio = response.personaFisicaDomicilio;
 
@@ -899,6 +956,8 @@
 			var form_preguntas = document.querySelector('#preguntas_form');
 			var form_persona_fisica = document.querySelector('#persona_fisica_form');
 			var form_persona_fisica_domicilio = document.querySelector('#persona_fisica_domicilio_form');
+			var form_media_filiacion = document.querySelector('#form_media_filiacion');
+
 			var inputsText = document.querySelectorAll('input[type="text"]');
 			var inputsEmail = document.querySelectorAll('input[type="email"]');
 
@@ -965,6 +1024,20 @@
 					actualizarDomicilio();
 				}
 			}, false);
+
+			form_media_filiacion.addEventListener('submit', (event) => {
+				if (!form_media_filiacion.checkValidity()) {
+					event.preventDefault();
+					event.stopPropagation();
+					form_media_filiacion.classList.add('was-validated')
+				} else {
+					event.preventDefault();
+					event.stopPropagation();
+					form_media_filiacion.classList.remove('was-validated')
+					actualizarPersonaMediaAfiliacion();
+				}
+			}, false);
+
 
 
 			//DENUNCIA
@@ -1249,6 +1322,7 @@
 				};
 			}
 
+			
 			function actualizarPersona() {
 				const data = {
 					'folio': document.querySelector('#input_folio_atencion').value,
@@ -1321,7 +1395,6 @@
 					}
 				});
 			}
-
 			//DOMICILIO PERSONA FÍSICA
 
 			document.querySelector('#pais_pfd').addEventListener('change', (e) => {
@@ -1630,6 +1703,117 @@
 					}
 				});
 			}
+			function actualizarPersonaMediaAfiliacion() {
+
+				const data = {
+					'folio': document.querySelector('#input_folio_atencion').value,
+					'year': document.querySelector('#year_select').value,
+					'pf_id': document.querySelector('#pf_id').value,
+					'ocupacion_mf': document.querySelector('#ocupacion_mf').value,
+					'estatura_mf': document.querySelector('#estatura_mf').value,
+					'peso_mf': document.querySelector('#peso_mf').value,
+					'senas_mf': document.querySelector('#senas_mf').value,
+					'colortez_mf': document.querySelector('#colortez_mf').value,
+					'complexion_mf': document.querySelector('#complexion_mf').value,
+					'contextura_ceja_mf': document.querySelector('#contextura_ceja_mf').value,
+					'cara_forma_mf': document.querySelector('#cara_forma_mf').value,
+					'cara_tamano_mf': document.querySelector('#cara_tamano_mf').value,
+					'caratez_mf': document.querySelector('#caratez_mf').value,
+					'lobulo_mf': document.querySelector('#lobulo_mf').value,
+					'forma_oreja_mf': document.querySelector('#forma_oreja_mf').value,
+					'tamano_oreja_mf': document.querySelector('#tamano_oreja_mf').value,
+					'colorC_mf': document.querySelector('#colorC_mf').value,
+					'formaC_mf': document.querySelector('#formaC_mf').value,
+					'tamanoC_mf': document.querySelector('#tamanoC_mf').value,
+					'peculiarC_mf': document.querySelector('#peculiarC_mf').value,
+					'cabello_descr_mf': document.querySelector('#cabello_descr_mf').value,
+					'frente_altura_mf': document.querySelector('#frente_altura_mf').value,
+					'frente_anchura_ms': document.querySelector('#frente_anchura_ms').value,
+					'tipoF_mf': document.querySelector('#tipoF_mf').value,
+					'frente_peculiar_mf': document.querySelector('#frente_peculiar_mf').value,
+					'colocacion_ceja_mf': document.querySelector('#colocacion_ceja_mf').value,
+					'ceja_mf': document.querySelector('#ceja_mf').value,
+					'tamano_ceja_mf': document.querySelector('#tamano_ceja_mf').value,
+					'grosor_ceja_mf': document.querySelector('#grosor_ceja_mf').value,
+					'colocacion_ojos_mf': document.querySelector('#colocacion_ojos_mf').value,
+					'forma_ojos_mf': document.querySelector('#forma_ojos_mf').value,
+					'tamano_ojos_mf': document.querySelector('#tamano_ojos_mf').value,
+					'colorO_mf': document.querySelector('#colorO_mf').value,
+					'peculiaridad_ojos_mf': document.querySelector('#peculiaridad_ojos_mf').value,
+					'nariz_tipo_mf': document.querySelector('#nariz_tipo_mf').value,
+					'nariz_tamano_mf': document.querySelector('#nariz_tamano_mf').value,
+					'nariz_base_mf': document.querySelector('#nariz_base_mf').value,
+					'nariz_peculiar_mf': document.querySelector('#nariz_peculiar_mf').value,
+					'nariz_descr_mf': document.querySelector('#nariz_descr_mf').value,
+					'bigote_forma_mf': document.querySelector('#bigote_forma_mf').value,
+					'bigote_tamaño_mf': document.querySelector('#bigote_tamaño_mf').value,
+					'bigote_grosor_mf': document.querySelector('#bigote_grosor_mf').value,
+					'bigote_peculiar_mf': document.querySelector('#bigote_peculiar_mf').value,
+					'bigote_descr_mf': document.querySelector('#bigote_descr_mf').value,
+					'boca_tamano_mf': document.querySelector('#boca_tamano_mf').value,
+					'boca_peculiar_mf': document.querySelector('#boca_peculiar_mf').value,
+					'labio_longitud_mf': document.querySelector('#labio_longitud_mf').value,
+					'labio_posicion_mf': document.querySelector('#labio_posicion_mf').value,
+					'labio_peculiar_mf': document.querySelector('#labio_peculiar_mf').value,
+					'labio_grosor_mf': document.querySelector('#labio_grosor_mf').value,
+					'dientes_tamano_mf': document.querySelector('#dientes_tamano_mf').value,
+					'dientes_tipo_mf': document.querySelector('#dientes_tipo_mf').value,
+					'dientes_peculiar_mf': document.querySelector('#dientes_peculiar_mf').value,
+					'dientes_descr_mf': document.querySelector('#dientes_descr_mf').value,
+					'barbilla_forma_mf': document.querySelector('#barbilla_forma_mf').value,
+					'barbilla_tamano_mf': document.querySelector('#barbilla_tamano_mf').value,
+					'barbilla_inclinacion_mf': document.querySelector('#barbilla_inclinacion_mf').value,
+					'barbilla_peculiar_mf': document.querySelector('#barbilla_peculiar_mf').value,
+					'barbilla_descr_mf': document.querySelector('#barbilla_descr_mf').value,
+					'barba_tamano_mf': document.querySelector('#barba_tamano_mf').value,
+					'barba_peculiar_mf': document.querySelector('#barba_peculiar_mf').value,
+					'barba_descr_mf': document.querySelector('#barba_descr_mf').value,
+					'cuello_tamano_mf': document.querySelector('#cuello_tamano_mf').value,
+					'cuello_grosor_mf': document.querySelector('#cuello_grosor_mf').value,
+					'cuello_peculiar_mf': document.querySelector('#cuello_peculiar_mf').value,
+					'cuello_descr_mf': document.querySelector('#cuello_descr_mf').value,
+					'hombro_posicion_mf': document.querySelector('#hombro_posicion_mf').value,
+					'hombro_tamano_mf': document.querySelector('#hombro_tamano_mf').value,
+					'hombro_grosor_mf': document.querySelector('#hombro_grosor_mf').value,
+					'estomago_mf': document.querySelector('#estomago_mf').value,
+					'escolaridad_mf': document.querySelector('#escolaridad_mf').value,
+					'etnia_mf': document.querySelector('#etnia_mf').value,
+					'estomago_descr_mf': document.querySelector('#estomago_descr_mf').value,
+					'discapacidad_mf': document.querySelector('#discapacidad_mf').value,
+					'diaDesaparicion': document.querySelector('#diaDesaparicion').value,
+					'lugarDesaparicion': document.querySelector('#lugarDesaparicion').value,
+					'vestimenta_mf': document.querySelector('#vestimenta_mf').value,
+				};
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/update-media-filiacion-by-id') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						if (response.status == 1) {
+			
+							Swal.fire({
+								icon: 'success',
+								text: 'Persona media afiliación actualizada correctamente',
+								confirmButtonColor: '#bf9b55',
+							});
+						} else {
+							Swal.fire({
+								icon: 'error',
+								text: 'No se actualizó la información de la persona media afiliación',
+								confirmButtonColor: '#bf9b55',
+							});
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						console.log(textStatus);
+					}
+				});
+			}
+
+			
+
+
 
 			function dateToString(_date) {
 				let date = new Date(_date);
@@ -1647,6 +1831,7 @@
 			}
 		})();
 	};
+
 </script>
 
 <?php include 'video_denuncia_modals/info_folio_modal.php' ?>
