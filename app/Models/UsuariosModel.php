@@ -7,7 +7,7 @@ use CodeIgniter\Model;
 class UsuariosModel extends Model
 {
 	protected $table = "USUARIOS";
-	protected $primarykey = "ID_USUARIO";
+	protected $primarykey = "ID";
 	protected $allowedFields = [
 		'ROLID',
 		'ZONAID',
@@ -17,6 +17,7 @@ class UsuariosModel extends Model
 		'SEXO',
 		'CORREO',
 		'PASSWORD',
+		'USUARIOVIDEO',
 		'TOKENVIDEO',
 		'HUELLA_DIGITAL',
 		'CERTIFICADOFIRMA',

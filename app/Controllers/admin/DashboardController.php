@@ -234,8 +234,13 @@ class DashboardController extends BaseController
     public function usuarios()
     {
         $data = (object) array();
-        $data = $this->_usuariosModel->asObject()->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->join('ZONAS_USUARIOS', 'ZONAS_USUARIOS.ID_ZONA = USUARIOS.ZONAID')->where('ROLID !=', 1)->orderBy('ROLID')->findAll();
-        $this->_loadView('Registrar usuario', 'usuarios', '', $data, 'users');
+        $data = $this->_usuariosModel->asObject()
+            ->select('USUARIOS.ID,USUARIOS.NOMBRE, USUARIOS.APELLIDO_PATERNO, USUARIOS.APELLIDO_MATERNO, USUARIOS.SEXO, USUARIOS.CORREO, USUARIOS.PASSWORD, USUARIOS.USUARIOVIDEO, USUARIOS.TOKENVIDEO, USUARIOS.HUELLA_DIGITAL, USUARIOS.CERTIFICADOFIRMA, USUARIOS.KEYFIRMA, USUARIOS.FRASEFIRMA, ZONAS_USUARIOS.NOMBRE_ZONA, ROLES.NOMBRE_ROL')
+            ->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')
+            ->join('ZONAS_USUARIOS', 'ZONAS_USUARIOS.ID_ZONA = USUARIOS.ZONAID')
+            ->where('ROLID !=', 1)
+            ->findAll();
+        $this->_loadView('Usuarios', 'usuarios', '', $data, 'users/users');
     }
 
     public function usuarios_activos()
@@ -256,7 +261,23 @@ class DashboardController extends BaseController
         $data = (object) array();
         $data->zonas = $this->_zonasUsuariosModel->asObject()->where('NOMBRE_ZONA !=', 'SUPERUSUARIO')->findAll();
         $data->roles = $this->_rolesUsuariosModel->asObject()->where('NOMBRE_ROL !=', 'SUPERUSUARIO')->findAll();
-        $this->_loadView('Nuevo usuario', 'registrarusuario', '', $data, 'new_user');
+        $this->_loadView('Nuevo usuario', '', '', $data, 'users/new_user');
+    }
+
+    public function editar_usuario()
+    {
+        $id = $this->request->getGet('id');
+        $data = (object) array();
+        $data->zonas = $this->_zonasUsuariosModel
+            ->asObject()
+            ->where('NOMBRE_ZONA !=', 'SUPERUSUARIO')
+            ->findAll();
+        $data->roles = $this->_rolesUsuariosModel
+            ->asObject()
+            ->where('NOMBRE_ROL !=', 'SUPERUSUARIO')
+            ->findAll();
+        $data->usuario = $this->_usuariosModel->asObject()->where('ID', $id)->first();
+        $this->_loadView('Nuevo usuario', '', '', $data, 'users/edit_user');
     }
 
     public function denuncia_anonima()
@@ -278,35 +299,62 @@ class DashboardController extends BaseController
     {
 
         $data = [
-            'NOMBRE' => $this->request->getPost('nombre'),
-            'APELLIDO_PATERNO' => $this->request->getPost('apellido_paterno'),
-            'APELLIDO_MATERNO' => $this->request->getPost('apellido_materno'),
-            'CORREO' => $this->request->getPost('correo'),
-            'PASSWORD' => hashPassword($this->request->getPost('password')),
-            'SEXO' => $this->request->getPost('sexo'),
-            'ROLID' => $this->request->getPost('rol'),
-            'ZONAID' => $this->request->getPost('zona'),
+            'NOMBRE' => $this->request->getPost('nombre_usuario'),
+            'APELLIDO_PATERNO' => $this->request->getPost('apellido_paterno_usuario'),
+            'APELLIDO_MATERNO' => $this->request->getPost('apellido_materno_usuario'),
+            'CORREO' => $this->request->getPost('correo_usuario'),
+            'PASSWORD' => hashPassword($this->request->getPost('password_usuario')),
+            'SEXO' => $this->request->getPost('sexo_usuario'),
+            'ROLID' => $this->request->getPost('rol_usuario'),
+            'ZONAID' => $this->request->getPost('zona_usuario'),
             'HUELLA_DIGITAL' => null,
             'CERTIFICADOFIRMA' => null,
             'KEYFIRMA' => null,
             'FRASEFIRMA' => null,
         ];
-
+        $usuario = ($this->_getUnusedUsersVideo())[0];
 
         $datosBitacora = [
             'ACCION' => 'Ha creado un usuario',
             'NOTAS' => 'CORREO CREADO: ' . $this->request->getPost('correo'),
         ];
 
-
-        if ($this->validate(['correo' => 'required|is_unique[USUARIOS.CORREO]'])) {
+        if ($this->validate(['correo_usuario' => 'required|valid_email|is_unique[USUARIOS.CORREO]'])) {
+            $videoUser = $this->_updateUserVideo($usuario->ID, 'LIC. ' . $data['NOMBRE'], $data['APELLIDO_PATERNO'] . ' ' . $data['APELLIDO_MATERNO'], $data['CORREO'], $data['SEXO'], 'agente');
+            $data['USUARIOVIDEO'] = $videoUser->ID;
+            $data['TOKENVIDEO'] = $videoUser->Token;
             $this->_usuariosModel->insert($data);
-
             $this->_bitacoraActividad($datosBitacora);
             $this->_sendEmailPassword($data['CORREO'], $this->request->getPost('password'));
-            return redirect()->to(base_url('/admin/dashboard/usuarios'));
+            return redirect()->to(base_url('/admin/dashboard/usuarios'))->with('message_success', 'Usuario registrado correctamente.');
         } else {
-            return redirect()->back();
+            return redirect()->back()->with('message_error', 'Usuario no creado, ya existe el correo ingresado.');
+        }
+    }
+
+    public function update_usuario()
+    {
+        $id = $this->request->getPost('id');
+        $usuario = $this->_usuariosModel->asObject()->where('ID', $id)->first();
+
+        $data = [
+            'NOMBRE' => $this->request->getPost('nombre_usuario'),
+            'APELLIDO_PATERNO' => $this->request->getPost('apellido_paterno_usuario'),
+            'APELLIDO_MATERNO' => $this->request->getPost('apellido_materno_usuario'),
+            'CORREO' => $this->request->getPost('correo_usuario'),
+            'SEXO' => $this->request->getPost('sexo_usuario'),
+            'ROLID' => $this->request->getPost('rol_usuario'),
+            'ZONAID' => $this->request->getPost('zona_usuario'),
+        ];
+
+        if ($usuario) {
+            $videoUser = $this->_updateUserVideo($usuario->USUARIOVIDEO, 'LIC. ' . $data['NOMBRE'], $data['APELLIDO_PATERNO'] . ' ' . $data['APELLIDO_MATERNO'], $data['CORREO'], $data['SEXO'], 'agente');
+            $data['USUARIOVIDEO'] = $videoUser->ID;
+            $data['TOKENVIDEO'] = $videoUser->Token;
+            $this->_usuariosModel->set($data)->where('ID', $id)->update();
+            return redirect()->to(base_url('/admin/dashboard/usuarios'))->with('message_success', 'Usuario actualizado correctamente.');
+        } else {
+            return redirect()->back()->with('message_error', 'Usuario no actualizado.');
         }
     }
 
@@ -1155,6 +1203,53 @@ class DashboardController extends BaseController
             }
         }
         return json_encode(['users' => $active_users, 'count' => count($active_users)]);
+    }
+
+    private function _getUnusedUsersVideo()
+    {
+        $endpoint = 'https://videodenunciaserver1.fgebc.gob.mx/api/user';
+        $data = array();
+        $data['u'] = '24';
+        $data['token'] = '198429b7cc8a2a5733d97bc13153227dd5017555';
+        $data['a'] = 'list';
+
+        $response = $this->curlPost($endpoint, $data);
+        $unused_users = array();
+
+        foreach ($response->data as $key => $user) {
+            if (strtoupper($user->Nombre) == 'USUARIO') {
+                array_push($unused_users, $user);
+            }
+        }
+
+        sort($unused_users);
+        return $unused_users;
+    }
+
+    private function _updateUserVideo($id, $nombre, $apellido, $email, $genero, $perfil)
+    {
+        if ($id && $nombre && $apellido && $email && $genero && $perfil) {
+            $endpoint = 'https://videodenunciaserver1.fgebc.gob.mx/api/user';
+            $data = array();
+            $data['u'] = '24';
+            $data['token'] = '198429b7cc8a2a5733d97bc13153227dd5017555';
+            $data['a'] = 'setPars';
+            $data['id'] = $id;
+            $data['nombre'] = $nombre;
+            $data['apellido'] = $apellido;
+            $data['email'] = $email;
+            $data['genero'] = $genero;
+            $data['perfil'] = $perfil;
+            $data['contra'] = 'Fgebc$123456';
+            $data['rol'] = 'mp';
+            $data['st'] = 'r';
+
+            $response = $this->curlPost($endpoint, $data);
+
+            return $response;
+        } else {
+            return false;
+        }
     }
 
     public function restoreFolio()

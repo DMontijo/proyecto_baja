@@ -17,7 +17,7 @@ if (file_exists(SYSTEMPATH . 'Config/Routes.php')) {
  * --------------------------------------------------------------------
  */
 $routes->setDefaultNamespace('App\Controllers');
-$routes->setDefaultController('Welcome');
+$routes->setDefaultController('HomeController');
 $routes->setDefaultMethod('index');
 $routes->setTranslateURIDashes(false);
 $routes->set404Override();
@@ -55,7 +55,9 @@ $routes->group('admin', function ($routes) {
 		$routes->get('firmas', 'admin/DashboardController::firmas');
 
 		$routes->get('nuevo_usuario', 'admin/DashboardController::nuevo_usuario');
+		$routes->get('editar_usuario', 'admin/DashboardController::editar_usuario');
 		$routes->post('nuevo_usuario', 'admin/DashboardController::crear_usuario');
+		$routes->post('editar_usuario', 'admin/DashboardController::update_usuario');
 
 		$routes->get('video-denuncia', 'admin/DashboardController::video_denuncia');
 		$routes->get('denuncia-anonima', 'admin/DashboardController::denuncia_anonima');
