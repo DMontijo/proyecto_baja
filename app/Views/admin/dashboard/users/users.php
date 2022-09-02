@@ -7,14 +7,14 @@
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-12">
-				<h1 class="mb-4 text-center font-weight-bold">AGENTES REGISTRADOS</h1>
+				<h1 class="mb-4 text-center font-weight-bold">USUARIOS REGISTRADOS</h1>
 				<div class="card shadow border-0 rounded">
 					<div class="card-body">
 						<div class="row">
 							<div class="col-12">
-								<!-- <a type="button" id="new_user" href="<?= base_url('/admin/dashboard/nuevo_usuario') ?>" class="btn btn-primary float-right">
+								<a type="button" id="new_user" href="<?= base_url('/admin/dashboard/nuevo_usuario') ?>" class="btn btn-primary float-right">
 									<i class="fas fa-user-plus mr-3"></i> Nuevo usuario
-								</a> -->
+								</a>
 							</div>
 							<div class="col-12 mt-3" style="overflow-x:scroll;">
 								<table id="table-usuarios" class="table table-bordered table-striped" data-page-length='50' style="width:100%">
@@ -26,6 +26,7 @@
 											<th class="text-center">CORREO</th>
 											<th class="text-center">ZONA</th>
 											<th class="text-center">FIEL</th>
+											<th class="text-center"></th>
 										</tr>
 									</thead>
 									<tbody>
@@ -48,8 +49,13 @@
 													<?php if (file_exists($directory . '/' . $file_key) && file_exists($directory . '/' . $file_cer)) : ?>
 														TIENE FIEL CARGADA
 													<?php else : ?>
-														-
+														NO
 													<?php endif; ?>
+												</td>
+												<td class="text-center">
+													<a type="button" class="btn btn-success" href="<?= base_url('admin/dashboard/editar_usuario?id=' . $user->ID) ?>">
+														<i class="fas fa-edit"></i>
+													</a>
 												</td>
 											</tr>
 										<?php } ?>
@@ -72,6 +78,8 @@
 			ordering: true,
 			order: [
 				[0, 'asc'],
+				[2, 'asc'],
+				[1, 'asc'],
 			],
 			searching: true,
 			pageLength: 100,

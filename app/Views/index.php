@@ -133,7 +133,6 @@
 
 	document.querySelector('#tutorial_modal').addEventListener('shown.bs.modal', () => {
 		document.querySelector('#tutorial_video').play();
-		console.log('Dando play');
 	});
 
 	document.querySelector('#tutorial_modal').addEventListener('hidden.bs.modal', () => {

@@ -55,7 +55,7 @@
 		<script>
 			Swal.fire({
 				icon: 'error',
-				html: '<strong><?= session()->getFlashdata('message') ?></strong>',
+				html: '<strong><?= session()->getFlashdata('message_error') ?></strong>',
 				confirmButtonColor: '#bf9b55',
 			})
 		</script>
