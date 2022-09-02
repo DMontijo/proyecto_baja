@@ -3,7 +3,7 @@
 namespace App\Controllers\admin;
 
 use App\Controllers\BaseController;
-
+use App\Models\BitacoraActividadModel;
 use App\Models\UsuariosModel;
 use App\Models\SesionesModel;
 
@@ -13,6 +13,8 @@ class LoginController extends BaseController
 	{
 		$this->_usuariosModel = new UsuariosModel();
 		$this->_sesionesModel = new SesionesModel();
+		$this->_bitacoraActividadModel = new BitacoraActividadModel();
+
 	}
 
 	public function index()
@@ -46,6 +48,10 @@ class LoginController extends BaseController
 				'AGENTE_HTTP' => $_SERVER['HTTP_USER_AGENT'],
 			];
 			$this->_sesionesModel->insert($sesion_data);
+			$datosBitacora = [
+				'ACCION' => 'Ha iniciado sesión',
+			];
+			$this->_bitacoraActividad($datosBitacora);
 			return redirect()->to(base_url('/admin/dashboard'));
 		} else {
 			$session->setFlashdata('message', 'Correo o contraseña incorrectos.');
@@ -57,6 +63,10 @@ class LoginController extends BaseController
 	{
 		$session = session();
 		$session->destroy();
+		$datosBitacora = [
+			'ACCION' => 'Ha cerrado sesión',
+		];
+		$this->_bitacoraActividad($datosBitacora);
 		return redirect()->to(base_url('admin'));
 	}
 
@@ -116,6 +126,15 @@ class LoginController extends BaseController
 		}
 		return $externalIp;
 	}
+	private function _bitacoraActividad($data)
+    {
+        $data = $data;
+        $data['ID'] = uniqid();
+        $data['USUARIOID'] = session('ID');
+
+
+        $this->_bitacoraActividadModel->insert($data);
+    }
 }
 /* End of file LoginController.php */
 /* Location: ./app/Controllers/admin/LoginController.php */

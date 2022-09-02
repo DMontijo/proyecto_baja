@@ -3,6 +3,7 @@
 namespace App\Controllers\admin;
 
 use App\Controllers\BaseController;
+use App\Models\BitacoraActividadModel;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use App\Models\PlantillasModel;
@@ -30,6 +31,8 @@ class FirmaController extends BaseController
 		$this->_municipiosModel = new MunicipiosModel();
 		$this->_estadosModel = new EstadosModel();
 		$this->_constanciaExtravioModel = new ConstanciaExtravioModel();
+		$this->_bitacoraActividadModel = new BitacoraActividadModel();
+
 	}
 
 	public function firmar_constancia_extravio()
@@ -265,11 +268,17 @@ class FirmaController extends BaseController
 						$update = $this->_constanciaExtravioModel->set($datosInsert)->where('CONSTANCIAEXTRAVIOID ', $numfolio)->where('ANO', $year)->update();
 
 						if ($update) {
+							$datosBitacora = [
+								'ACCION' => 'Ha firmado una constancia',
+								'NOTAS'=> 'CONSTANCIA: '.$numfolio . ' AÑO: ' . $year,
+							];
+							$this->_bitacoraActividad($datosBitacora);
 							if ($this->_sendEmailConstanciaFirmada($solicitante->CORREO, $numfolio, $year, $xml, $pdf)) {
 								return redirect()->to(base_url('/admin/dashboard/constancias_extravio_abiertas'))->with('message_success', 'Constancia firmada correctamente.');
 							} else {
 								return redirect()->to(base_url('/admin/dashboard/constancias_extravio_abiertas'))->with('message_success', 'Constancia firmada correctamente.');
 							}
+							
 						} else {
 							return redirect()->to(base_url('/admin/dashboard/constancia_extravio_show?folio=' . $numfolio . '&year=' . $year))->with('message_error', 'Hubo un error al guardar la firma electrónica. Intentelo de nuevo.');
 						}
@@ -629,6 +638,15 @@ class FirmaController extends BaseController
 			return false;
 		}
 	}
+	private function _bitacoraActividad($data)
+    {
+        $data = $data;
+        $data['ID'] = uniqid();
+        $data['USUARIOID'] = session('ID');
+
+
+        $this->_bitacoraActividadModel->insert($data);
+    }
 }
 /* End of file FirmaController.php */
 /* Location: ./app/Controllers/admin/FirmaController.php */

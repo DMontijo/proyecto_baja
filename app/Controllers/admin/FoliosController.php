@@ -3,6 +3,7 @@
 namespace App\Controllers\admin;
 
 use App\Controllers\BaseController;
+use App\Models\BitacoraActividadModel;
 use App\Models\ColoniasModel;
 use App\Models\ConstanciaExtravioModel;
 use App\Models\DelitosUsuariosModel;
@@ -73,6 +74,8 @@ class FoliosController extends BaseController
         $this->_ocupacionModel = new OcupacionModel();
         $this->_estadoCivilModel = new PersonaEstadoCivilModel();
         $this->_nacionalidadModel = new PersonaNacionalidadModel();
+        $this->_bitacoraActividadModel = new BitacoraActividadModel();
+
     }
 
     public function index()
@@ -144,6 +147,11 @@ class FoliosController extends BaseController
 
         $data = ['EXPEDIENTEID' => null, 'AGENTEATENCIONID' => null, 'AGENTEFIRMAID' => null, 'STATUS' => 'ABIERTO'];
         $this->_folioModel->set($data)->where('FOLIOID', $folio)->where('ANO', $year)->update();
+        $datosBitacora = [
+            'ACCION' => 'Ha liberado un folio',
+            'NOTAS'=> 'FOLIO: ' . $folio . ' AÑO: ' . $year
+        ];
+        $this->_bitacoraActividad($datosBitacora);
         return redirect()->to(base_url('/admin/dashboard/folios_en_proceso'));
     }
 
@@ -173,6 +181,11 @@ class FoliosController extends BaseController
         $folio = $this->request->getVar('folio');
         $data = ['AGENTEFIRMAID' => session('ID')];
         $this->_folioModel->set($data)->where('FOLIOID', $folio)->update();
+        $datosBitacora = [
+            'ACCION' => 'Ha firmado un folio',
+            'NOTAS'=>   'FOLIO: ' . $folio,
+        ];
+        $this->_bitacoraActividad($datosBitacora);
         return redirect()->to(base_url('/admin/dashboard/folios_sin_firma'));
     }
 
@@ -296,6 +309,15 @@ class FoliosController extends BaseController
         ];
 
         echo view("admin/dashboard/folios/$view", $data2);
+    }
+    private function _bitacoraActividad($data)
+    {
+        $data = $data;
+        $data['ID'] = uniqid();
+        $data['USUARIOID'] = session('ID');
+     
+
+        $this->_bitacoraActividadModel->insert($data);
     }
 }
 
