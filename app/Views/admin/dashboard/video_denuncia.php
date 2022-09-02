@@ -692,7 +692,11 @@
 					document.querySelector('#tamano_oreja_mf').value = mediaFiliacion.OREJATAMANOID ? mediaFiliacion.OREJATAMANOID : '';
 
 					document.querySelector('#hombro_tamano_mf').value = mediaFiliacion.HOMBROLONGITUDID ? mediaFiliacion.HOMBROLONGITUDID : '';
-					document.querySelector('#parentesco_mf').value = parentesco.PERSONAPARENTESCOID ? parentesco.PERSONAPARENTESCOID : '';
+					if (personaFisica.DESAPARECIDA=='S') {
+						document.querySelector('#parentesco_mf').value = parentesco.PERSONAPARENTESCOID ? parentesco.PERSONAPARENTESCOID : '';
+
+						
+					}
 
 					document.querySelector('#escolaridad_mf').value = mediaFiliacion.PERSONAESCOLARIDADID ? mediaFiliacion.PERSONAESCOLARIDADID : '';
 
@@ -1704,7 +1708,6 @@
 				});
 			}
 			function actualizarPersonaMediaAfiliacion() {
-
 				const data = {
 					'folio': document.querySelector('#input_folio_atencion').value,
 					'year': document.querySelector('#year_select').value,
@@ -1783,6 +1786,8 @@
 					'diaDesaparicion': document.querySelector('#diaDesaparicion').value,
 					'lugarDesaparicion': document.querySelector('#lugarDesaparicion').value,
 					'vestimenta_mf': document.querySelector('#vestimenta_mf').value,
+					'parentesco_mf': document.querySelector('#parentesco_mf').value,
+
 				};
 				$.ajax({
 					data: data,
@@ -1790,6 +1795,7 @@
 					method: "POST",
 					dataType: "json",
 					success: function(response) {
+						// console.log(respobse.idcalidad);
 						if (response.status == 1) {
 			
 							Swal.fire({

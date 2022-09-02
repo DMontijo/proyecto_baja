@@ -416,11 +416,11 @@ class DashboardController extends BaseController
 
             $data->personaFisicaMediaFiliacion = $this->_folioMediaFiliacion->where('ANO', $year)->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
             $data->folio = $this->_folioModel->where('FOLIOID', $folio)->where('ANO', $year)->first();
-
+            if ($data->personaFisica['DESAPARECIDA']=='S') {
             
                 $data->parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID2', $data->personaFisicaMediaFiliacion['PERSONAFISICAID'])->first();
                 $data->parentesco = $this->_parentescoModel->where('PERSONAPARENTESCOID', $data->parentescoRelacion['PARENTESCOID'])->first();
-            
+            }
             if ($data->personaFisica['FOTO']) {
                 $file_info = new \finfo(FILEINFO_MIME_TYPE);
                 $type = $file_info->buffer($data->personaFisica['FOTO']);
@@ -1320,6 +1320,7 @@ class DashboardController extends BaseController
             return json_encode(['status' => 0]);
         }
     }
+
     public function updateMediaFiliacionById()
     {
         try {
@@ -1328,89 +1329,105 @@ class DashboardController extends BaseController
             $year = trim($this->request->getPost('year'));
          
             $data = array(
-                'OCUPACIONID' => $this->request->getPost('ocupacion_mf'),
-                'ESTATURA' => $this->request->getPost('estatura_mf'),
-                'PESO' => $this->request->getPost('peso_mf'),
-                'SENASPARTICULARES' => $this->request->getPost('senas_mf'),
-                'PIELCOLORID' => $this->request->getPost('colortez_mf'),
-                'FIGURAID' => $this->request->getPost('complexion_mf'),
-                'CONTEXTURAID' => $this->request->getPost('contextura_ceja_mf'),
-                'CARAFORMAID' => $this->request->getPost('cara_forma_mf'),
-                'CARATAMANOID' => $this->request->getPost('cara_tamano_mf'),
-                'CARATEZID' => $this->request->getPost('caratez_mf'),
-                'OREJALOBULOID' => $this->request->getPost('lobulo_mf'),
-                'OREJAFORMAID' => $this->request->getPost('forma_oreja_mf'),
-                'OREJATAMANOID' => $this->request->getPost('tamano_oreja_mf'),
-                'CABELLOCOLORID' => $this->request->getPost('colorC_mf'),
-                'CABELLOESTILOID' => $this->request->getPost('formaC_mf'),
-                'CABELLOTAMANOID' => $this->request->getPost('tamanoC_mf'),
-                'CABELLOPECULIARID' => $this->request->getPost('peculiarC_mf'),
-                'CABELLODESCR' => $this->request->getPost('cabello_descr_mf'),
-                'FRENTEALTURAID' => $this->request->getPost('frente_altura_mf'),
-                'FRENTEANCHURAID' => $this->request->getPost('frente_anchura_ms'),
-                'FRENTEFORMAID' => $this->request->getPost('tipoF_mf'),
-                'FRENTEPECULIARID' => $this->request->getPost('frente_peculiar_mf'),
-                'CEJACOLOCACIONID' => $this->request->getPost('colocacion_ceja_mf'),
-                'CEJAFORMAID' => $this->request->getPost('ceja_mf'),
-                'CEJATAMANOID' => $this->request->getPost('tamano_ceja_mf'),
-                'CEJAGROSORID' => $this->request->getPost('grosor_ceja_mf'),
-                'OJOCOLOCACIONID' => $this->request->getPost('colocacion_ojos_mf'),
-                'OJOFORMAID' => $this->request->getPost('forma_ojos_mf'),
-                'OJOTAMANOID' => $this->request->getPost('tamano_ojos_mf'),
-                'OJOCOLORID' => $this->request->getPost('colorO_mf'),
-                'OJOPECULIARID' => $this->request->getPost('peculiaridad_ojos_mf'),
-                'NARIZTIPOID' => $this->request->getPost('nariz_tipo_mf'),
-                'NARIZTAMANOID' => $this->request->getPost('nariz_tamano_mf'),
-                'NARIZBASEID' => $this->request->getPost('nariz_base_mf'),
-                'NARIZPECULIARID' => $this->request->getPost('nariz_peculiar_mf'),
-                'NARIZDESCR' => $this->request->getPost('nariz_descr_mf'),
-                'BIGOTEFORMAID' => $this->request->getPost('bigote_forma_mf'),
-                'BIGOTETAMANOID' => $this->request->getPost('bigote_tamaño_mf'),
-                'BIGOTEGROSORID' => $this->request->getPost('bigote_grosor_mf'),
-                'BIGOTEPECULIARID' => $this->request->getPost('bigote_peculiar_mf'),
-                'BIGOTEDESCR' => $this->request->getPost('bigote_descr_mf'),
-                'BOCATAMANOID' => $this->request->getPost('boca_tamano_mf'),
-                'BOCAPECULIARID' => $this->request->getPost('boca_peculiar_mf'),
-                'LABIOGROSORID' => $this->request->getPost('labio_grosor_mf'),
-                'LABIOLONGITUDID' => $this->request->getPost('labio_longitud_mf'),
-                'LABIOPOSICIONID' => $this->request->getPost('labio_posicion_mf'),
-                'LABIOPECULIARID' => $this->request->getPost('labio_peculiar_mf'),
-                'DIENTETAMANOID' => $this->request->getPost('dientes_tamano_mf'),
-                'DIENTETIPOID' => $this->request->getPost('dientes_tipo_mf'),
-                'DIENTEPECULIARID' => $this->request->getPost('dientes_peculiar_mf'),
-                'DIENTEDESCR' => $this->request->getPost('dientes_descr_mf'),
-                'BARBILLAFORMAID' => $this->request->getPost('barbilla_forma_mf'),
-                'BARBILLATAMANOID' => $this->request->getPost('barbilla_tamano_mf'),
-                'BARBILLAINCLINACIONID' => $this->request->getPost('barbilla_inclinacion_mf'),
-                'BARBILLAPECULIARID' => $this->request->getPost('barbilla_peculiar_mf'),
-                'BARBILLADESCR' => $this->request->getPost('barbilla_descr_mf'),
-                'BARBATAMANOID' => $this->request->getPost('barba_tamano_mf'),
-                'BARBAPECULIARID' => $this->request->getPost('barba_peculiar_mf'),
-                'BARBADESCR' => $this->request->getPost('barba_descr_mf'),
-                'CUELLOTAMANOID' => $this->request->getPost('cuello_tamano_mf'),
-                'CUELLOGROSORID' => $this->request->getPost('cuello_grosor_mf'),
-                'CUELLOPECULIARID' => $this->request->getPost('cuello_peculiar_mf'),
-                'CUELLODESCR' => $this->request->getPost('cuello_descr_mf'),
-                'HOMBROPOSICIONID' => $this->request->getPost('hombro_posicion_mf'),
-                'HOMBROLONGITUDID' => $this->request->getPost('hombro_tamano_mf'),
-                'HOMBROGROSORID' => $this->request->getPost('hombro_grosor_mf'),
-                'ESTOMAGOID' => $this->request->getPost('estomago_mf'),
-                'PERSONAESCOLARIDADID' => $this->request->getPost('escolaridad_mf'),
-                'PERSONAETNIAID' => $this->request->getPost('etnia_mf'),
-                'ESTOMAGODESCR' => $this->request->getPost('estomago_descr_mf'),
-                'DISCAPACIDADDESCR' => $this->request->getPost('discapacidad_mf'),
-                'FECHADESAPARICION' => $this->request->getPost('diaDesaparicion'),
-                'LUGARDESAPARICION' => $this->request->getPost('lugarDesaparicion'),
-                'VESTIMENTADESCR' => $this->request->getPost('vestimenta_mf'),
+                'OCUPACIONID' => $this->request->getPost('ocupacion_mf') == '0' ||empty($this->request->getPost('ocupacion_mf'))? null : $this->request->getPost('ocupacion_mf'),
+                'ESTATURA' => $this->request->getPost('estatura_mf')== '0'||empty($this->request->getPost('estatura_mf')) ? null : $this->request->getPost('estatura_mf'),
+                'PESO' => $this->request->getPost('peso_mf')== '0' ||empty($this->request->getPost('peso_mf'))? null : $this->request->getPost('peso_mf'),
+                'SENASPARTICULARES' => $this->request->getPost('senas_mf')== '0'||empty($this->request->getPost('senas_mf')) ? null : $this->request->getPost('senas_mf'),
+                'PIELCOLORID' => $this->request->getPost('colortez_mf')== '0'||empty($this->request->getPost('colortez_mf')) ? null : $this->request->getPost('colortez_mf'),
+                'FIGURAID' => $this->request->getPost('complexion_mf')== '0'||empty($this->request->getPost('complexion_mf')) ? null : $this->request->getPost('complexion_mf'),
+                'CONTEXTURAID' => $this->request->getPost('contextura_ceja_mf')== '0' ||empty($this->request->getPost('contextura_ceja_mf'))? null : $this->request->getPost('contextura_ceja_mf'),
+                'CARAFORMAID' => $this->request->getPost('cara_forma_mf')== '0'||empty($this->request->getPost('cara_forma_mf')) ? null : $this->request->getPost('cara_forma_mf'),
+                'CARATAMANOID' => $this->request->getPost('cara_tamano_mf')== '0' ||empty($this->request->getPost('cara_tamano_mf'))? null : $this->request->getPost('cara_tamano_mf'),
+                'CARATEZID' => $this->request->getPost('caratez_mf')== '0'||empty($this->request->getPost('caratez_mf')) ? null : $this->request->getPost('caratez_mf'),
+                'OREJALOBULOID' => $this->request->getPost('lobulo_mf')== '0'||empty($this->request->getPost('lobulo_mf')) ? null : $this->request->getPost('lobulo_mf'),
+                'OREJAFORMAID' => $this->request->getPost('forma_oreja_mf')== '0'||empty($this->request->getPost('forma_oreja_mf')) ? null : $this->request->getPost('forma_oreja_mf'),
+                'OREJATAMANOID' => $this->request->getPost('tamano_oreja_mf')== '0'||empty($this->request->getPost('tamano_oreja_mf')) ? null : $this->request->getPost('tamano_oreja_mf'),
+                'CABELLOCOLORID' => $this->request->getPost('colorC_mf')== '0'||empty($this->request->getPost('colorC_mf')) ? null : $this->request->getPost('colorC_mf'),
+                'CABELLOESTILOID' => $this->request->getPost('formaC_mf')== '0' ||empty($this->request->getPost('formaC_mf'))? null : $this->request->getPost('formaC_mf'),
+                'CABELLOTAMANOID' => $this->request->getPost('tamanoC_mf')== '0'||empty($this->request->getPost('tamanoC_mf')) ? null : $this->request->getPost('tamanoC_mf'),
+                'CABELLOPECULIARID' => $this->request->getPost('peculiarC_mf')== '0' ||empty($this->request->getPost('peculiarC_mf'))? null : $this->request->getPost('peculiarC_mf'),
+                'CABELLODESCR' => $this->request->getPost('cabello_descr_mf')== '0'||empty($this->request->getPost('cabello_descr_mf')) ? null : $this->request->getPost('cabello_descr_mf'),
+                'FRENTEALTURAID' => $this->request->getPost('frente_altura_mf')== '0' ||empty($this->request->getPost('frente_altura_mf'))? null : $this->request->getPost('frente_altura_mf'),
+                'FRENTEANCHURAID' => $this->request->getPost('frente_anchura_ms')== '0' ||empty($this->request->getPost('frente_anchura_ms'))? null : $this->request->getPost('frente_anchura_ms'),
+                'FRENTEFORMAID' => $this->request->getPost('tipoF_mf')== '0' ||empty($this->request->getPost('tipoF_mf'))? null : $this->request->getPost('tipoF_mf'),
+                'FRENTEPECULIARID' => $this->request->getPost('frente_peculiar_mf')== '0' ||empty($this->request->getPost('frente_peculiar_mf'))? null : $this->request->getPost('frente_peculiar_mf'),
+                'CEJACOLOCACIONID' => $this->request->getPost('colocacion_ceja_mf')== '0'||empty($this->request->getPost('colocacion_ceja_mf')) ? null : $this->request->getPost('colocacion_ceja_mf'),
+                'CEJAFORMAID' => $this->request->getPost('ceja_mf')== '0' ||empty($this->request->getPost('ceja_mf'))? null : $this->request->getPost('ceja_mf'),
+                'CEJATAMANOID' => $this->request->getPost('tamano_ceja_mf')== '0'||empty($this->request->getPost('tamano_ceja_mf')) ? null : $this->request->getPost('tamano_ceja_mf'),
+                'CEJAGROSORID' => $this->request->getPost('grosor_ceja_mf')== '0' ||empty($this->request->getPost('grosor_ceja_mf'))? null : $this->request->getPost('grosor_ceja_mf'),
+                'OJOCOLOCACIONID' => $this->request->getPost('colocacion_ojos_mf')== '0' ||empty($this->request->getPost('colocacion_ojos_mf'))? null : $this->request->getPost('colocacion_ojos_mf'),
+                'OJOFORMAID' => $this->request->getPost('forma_ojos_mf')== '0'||empty($this->request->getPost('forma_ojos_mf')) ? null : $this->request->getPost('forma_ojos_mf'),
+                'OJOTAMANOID' => $this->request->getPost('tamano_ojos_mf')== '0' ||empty($this->request->getPost('tamano_ojos_mf'))? null : $this->request->getPost('tamano_ojos_mf'),
+                'OJOCOLORID' => $this->request->getPost('colorO_mf')== '0'||empty($this->request->getPost('colorO_mf')) ? null : $this->request->getPost('colorO_mf'),
+                'OJOPECULIARID' => $this->request->getPost('peculiaridad_ojos_mf')== '0'||empty($this->request->getPost('peculiaridad_ojos_mf')) ? null : $this->request->getPost('peculiaridad_ojos_mf'),
+                'NARIZTIPOID' => $this->request->getPost('nariz_tipo_mf')== '0'||empty($this->request->getPost('nariz_tipo_mf')) ? null : $this->request->getPost('nariz_tipo_mf'),
+                'NARIZTAMANOID' => $this->request->getPost('nariz_tamano_mf')== '0' ||empty($this->request->getPost('nariz_tamano_mf'))? null : $this->request->getPost('nariz_tamano_mf'),
+                'NARIZBASEID' => $this->request->getPost('nariz_base_mf')== '0'||empty($this->request->getPost('nariz_base_mf')) ? null : $this->request->getPost('nariz_base_mf'),
+                'NARIZPECULIARID' => $this->request->getPost('nariz_peculiar_mf')== '0' ||empty($this->request->getPost('nariz_peculiar_mf'))? null : $this->request->getPost('nariz_peculiar_mf'),
+                'NARIZDESCR' => $this->request->getPost('nariz_descr_mf')== '0' ||empty($this->request->getPost('nariz_descr_mf'))? null : $this->request->getPost('nariz_descr_mf'),
+                'BIGOTEFORMAID' => $this->request->getPost('bigote_forma_mf')== '0' ||empty($this->request->getPost('bigote_forma_mf'))? null : $this->request->getPost('bigote_forma_mf'),
+                'BIGOTETAMANOID' => $this->request->getPost('bigote_tamaño_mf')== '0' ||empty($this->request->getPost('bigote_tamaño_mf'))? null : $this->request->getPost('bigote_tamaño_mf'),
+                'BIGOTEGROSORID' => $this->request->getPost('bigote_grosor_mf')== '0' ||empty($this->request->getPost('bigote_grosor_mf'))? null : $this->request->getPost('bigote_grosor_mf'),
+                'BIGOTEPECULIARID' => $this->request->getPost('bigote_peculiar_mf')== '0' ||empty($this->request->getPost('bigote_peculiar_mf'))? null : $this->request->getPost('bigote_peculiar_mf'),
+                'BIGOTEDESCR' => $this->request->getPost('bigote_descr_mf')== '0' ||empty($this->request->getPost('bigote_descr_mf'))? null : $this->request->getPost('bigote_descr_mf'),
+                'BOCATAMANOID' => $this->request->getPost('boca_tamano_mf')== '0' ||empty($this->request->getPost('boca_tamano_mf'))? null : $this->request->getPost('boca_tamano_mf'),
+                'BOCAPECULIARID' => $this->request->getPost('boca_peculiar_mf')== '0' ||empty($this->request->getPost('boca_peculiar_mf'))? null : $this->request->getPost('boca_peculiar_mf'),
+                'LABIOGROSORID' => $this->request->getPost('labio_grosor_mf')== '0' ||empty($this->request->getPost('labio_grosor_mf'))? null : $this->request->getPost('labio_grosor_mf'),
+                'LABIOLONGITUDID' => $this->request->getPost('labio_longitud_mf')== '0' ||empty($this->request->getPost('labio_longitud_mf'))? null : $this->request->getPost('labio_longitud_mf'),
+                'LABIOPOSICIONID' => $this->request->getPost('labio_posicion_mf')== '0' ||empty($this->request->getPost('labio_posicion_mf'))? null : $this->request->getPost('labio_posicion_mf'),
+                'LABIOPECULIARID' => $this->request->getPost('labio_peculiar_mf')== '0' ||empty($this->request->getPost('labio_peculiar_mf'))? null : $this->request->getPost('labio_peculiar_mf'),
+                'DIENTETAMANOID' => $this->request->getPost('dientes_tamano_mf')== '0' ||empty($this->request->getPost('dientes_tamano_mf'))? null : $this->request->getPost('dientes_tamano_mf'),
+                'DIENTETIPOID' => $this->request->getPost('dientes_tipo_mf')== '0' ||empty($this->request->getPost('dientes_tipo_mf'))? null : $this->request->getPost('dientes_tipo_mf'),
+                'DIENTEPECULIARID' => $this->request->getPost('dientes_peculiar_mf')== '0' ||empty($this->request->getPost('dientes_peculiar_mf'))? null : $this->request->getPost('dientes_peculiar_mf'),
+                'DIENTEDESCR' => $this->request->getPost('dientes_descr_mf')== '0' ||empty($this->request->getPost('dientes_descr_mf'))? null : $this->request->getPost('dientes_descr_mf'),
+                'BARBILLAFORMAID' => $this->request->getPost('barbilla_forma_mf')== '0' ||empty($this->request->getPost('barbilla_forma_mf'))? null : $this->request->getPost('barbilla_forma_mf'),
+                'BARBILLATAMANOID' => $this->request->getPost('barbilla_tamano_mf')== '0' ||empty($this->request->getPost('barbilla_tamano_mf'))? null : $this->request->getPost('barbilla_tamano_mf'),
+                'BARBILLAINCLINACIONID' => $this->request->getPost('barbilla_inclinacion_mf')== '0' ||empty($this->request->getPost('barbilla_inclinacion_mf'))? null : $this->request->getPost('barbilla_inclinacion_mf'),
+                'BARBILLAPECULIARID' => $this->request->getPost('barbilla_peculiar_mf')== '0' ||empty($this->request->getPost('barbilla_peculiar_mf'))? null : $this->request->getPost('barbilla_peculiar_mf'),
+                'BARBILLADESCR' => $this->request->getPost('barbilla_descr_mf')== '0' ||empty($this->request->getPost('barbilla_descr_mf'))? null : $this->request->getPost('barbilla_descr_mf'),
+                'BARBATAMANOID' => $this->request->getPost('barba_tamano_mf')== '0'||empty($this->request->getPost('barba_tamano_mf')) ? null : $this->request->getPost('barba_tamano_mf'),
+                'BARBAPECULIARID' => $this->request->getPost('barba_peculiar_mf')== '0' ||empty($this->request->getPost('barba_peculiar_mf'))? null : $this->request->getPost('barba_peculiar_mf'),
+                'BARBADESCR' => $this->request->getPost('barba_descr_mf')== '0' ||empty($this->request->getPost('barba_descr_mf'))? null : $this->request->getPost('barba_descr_mf'),
+                'CUELLOTAMANOID' => $this->request->getPost('cuello_tamano_mf')== '0'||empty($this->request->getPost('cuello_tamano_mf')) ? null : $this->request->getPost('cuello_tamano_mf'),
+                'CUELLOGROSORID' => $this->request->getPost('cuello_grosor_mf')== '0'||empty($this->request->getPost('cuello_grosor_mf')) ? null : $this->request->getPost('cuello_grosor_mf'),
+                'CUELLOPECULIARID' => $this->request->getPost('cuello_peculiar_mf')== '0'||empty($this->request->getPost('cuello_peculiar_mf')) ? null : $this->request->getPost('cuello_peculiar_mf'),
+                'CUELLODESCR' => $this->request->getPost('cuello_descr_mf')== '0' ||empty($this->request->getPost('cuello_descr_mf'))? null : $this->request->getPost('cuello_descr_mf'),
+                'HOMBROPOSICIONID' => $this->request->getPost('hombro_posicion_mf')== '0'||empty($this->request->getPost('hombro_posicion_mf')) ? null : $this->request->getPost('hombro_posicion_mf'),
+                'HOMBROLONGITUDID' => $this->request->getPost('hombro_tamano_mf')== '0'||empty($this->request->getPost('hombro_tamano_mf')) ? null : $this->request->getPost('hombro_tamano_mf'),
+                'HOMBROGROSORID' => $this->request->getPost('hombro_grosor_mf')== '0' ||empty($this->request->getPost('hombro_grosor_mf'))? null : $this->request->getPost('hombro_grosor_mf'),
+                'ESTOMAGOID' => $this->request->getPost('estomago_mf')== '0'||empty($this->request->getPost('estomago_mf')) ? null : $this->request->getPost('estomago_mf'),
+                'PERSONAESCOLARIDADID' => $this->request->getPost('escolaridad_mf')== '0' ||empty($this->request->getPost('escolaridad_mf'))? null : $this->request->getPost('escolaridad_mf'),
+                'PERSONAETNIAID' => $this->request->getPost('etnia_mf')== '0' ||empty($this->request->getPost('etnia_mf'))? null : $this->request->getPost('etnia_mf'),
+                'ESTOMAGODESCR' => $this->request->getPost('estomago_descr_mf')== '0'||empty($this->request->getPost('estomago_descr_mf')) ? null : $this->request->getPost('estomago_descr_mf'),
+                'DISCAPACIDADDESCR' => $this->request->getPost('discapacidad_mf')== '0'||empty($this->request->getPost('discapacidad_mf')) ? null : $this->request->getPost('discapacidad_mf'),
+                'FECHADESAPARICION' => $this->request->getPost('diaDesaparicion')== '0' ||empty($this->request->getPost('diaDesaparicion'))? null : $this->request->getPost('diaDesaparicion'),
+                'LUGARDESAPARICION' => $this->request->getPost('lugarDesaparicion')== '0'||empty($this->request->getPost('lugarDesaparicion')) ? null : $this->request->getPost('lugarDesaparicion'),
+                'VESTIMENTADESCR' => $this->request->getPost('vestimenta_mf')== '0' ||empty($this->request->getPost('vestimenta_mf'))? null : $this->request->getPost('vestimenta_mf'),
             );
-      
+            $dataPersonaFisica= array(
+                'OCUPACIONID' => $this->request->getPost('ocupacion_mf') == '0' ||empty($this->request->getPost('ocupacion_mf'))? null : $this->request->getPost('ocupacion_mf'),
+                'ESCOLARIDADID' => $this->request->getPost('escolaridad_mf')== '0' ||empty($this->request->getPost('escolaridad_mf'))? null : $this->request->getPost('escolaridad_mf'),
+            );
+            $dataRelacionParentesco = array(
+                'PARENTESCOID' =>$this->request->getPost('parentesco_mf') == '0' ||empty($this->request->getPost('parentesco_mf'))? null : $this->request->getPost('parentesco_mf'),
+            );
+
+
+            $denunciante = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $id)->first()->DENUNCIANTE;
             
             $updateMediaFiliacion = $this->_folioMediaFiliacion->set($data)->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $id)->update();
-            // $updatePersonaFisica = $this->_folioPersonaFisicaModel->set($data)->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $id)->update();
-            // var_dump($updateMediaFiliacion);
+            $updatePersonaFisica = $this->_folioPersonaFisicaModel->set($dataPersonaFisica)->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $id)->update();
+            $parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID2', $id)->first();
+
+            $updateRelacionParentesco = $this->_parentescoPersonaFisicaModel->set($dataRelacionParentesco)->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID2', $id)->update();
+           
+            //  var_dump($personaFisica);
             // exit;
 
-            if ($updateMediaFiliacion) {
+            // // $this->_parentescoPersonaFisica($dataRelacionParentesco, $folio, $desaparecido, $year);
+
+            
+            if ($updateMediaFiliacion && $updatePersonaFisica && $updateRelacionParentesco) {
                 return json_encode(['status' => 1]);
             } else {
                 return json_encode(['status' => 0]);
