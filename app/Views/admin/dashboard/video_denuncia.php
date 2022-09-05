@@ -846,9 +846,9 @@
 					if (vehiculo.TIPOID == null) {
 						document.querySelector('#tipo_vehiculo').value = "";
 					} else {
-						document.querySelector('#tipo_vehiculo').value = tipov.VEHICULOTIPODESCR;
+						document.querySelector('#tipo_vehiculo').value = tipov.VEHICULOTIPOID;
 					}
-					document.querySelector('#color_vehiculo').value = color ? color.VEHICULOCOLORDESCR : '';
+					document.querySelector('#color_vehiculo').value = color ? color.VEHICULOCOLORID : '';
 					document.querySelector('#description_vehiculo').value = vehiculo.SENASPARTICULARES;
 
 					if (vehiculo.FOTO) {
@@ -961,6 +961,7 @@
 			var form_persona_fisica = document.querySelector('#persona_fisica_form');
 			var form_persona_fisica_domicilio = document.querySelector('#persona_fisica_domicilio_form');
 			var form_media_filiacion = document.querySelector('#form_media_filiacion');
+			var form_vehiculo = document.querySelector('#form_vehiculo');
 
 			var inputsText = document.querySelectorAll('input[type="text"]');
 			var inputsEmail = document.querySelectorAll('input[type="email"]');
@@ -1042,7 +1043,18 @@
 				}
 			}, false);
 
-
+			form_vehiculo.addEventListener('submit', (event) => {
+				if (!form_vehiculo.checkValidity()) {
+					event.preventDefault();
+					event.stopPropagation();
+					form_vehiculo.classList.add('was-validated')
+				} else {
+					event.preventDefault();
+					event.stopPropagation();
+					form_vehiculo.classList.remove('was-validated')
+					actualizarVehiculo();
+				}
+			}, false);
 
 			//DENUNCIA
 
@@ -1817,7 +1829,41 @@
 				});
 			}
 
+			function actualizarVehiculo() {
+				const data = {
+					'folio': document.querySelector('#input_folio_atencion').value,
+					'year': document.querySelector('#year_select').value,
+					'tipo_vehiculo': document.querySelector('#tipo_vehiculo').value,
+					'color_vehiculo': document.querySelector('#color_vehiculo').value,
+					'description_vehiculo': document.querySelector('#description_vehiculo').value,
+					};
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/update-vehiculo-by-id') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						// console.log(respobse.idcalidad);
+						if (response.status == 1) {
 			
+							Swal.fire({
+								icon: 'success',
+								text: 'Vehículo actualizado correctamente',
+								confirmButtonColor: '#bf9b55',
+							});
+						} else {
+							Swal.fire({
+								icon: 'error',
+								text: 'No se actualizó la información del vehículo',
+								confirmButtonColor: '#bf9b55',
+							});
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						console.log(textStatus);
+					}
+				});
+			}
 
 
 

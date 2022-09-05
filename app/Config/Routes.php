@@ -190,6 +190,7 @@ $routes->group('data', function ($routes) {
 	$routes->post('update-persona-fisica-by-id', 'admin/DashboardController::updatePersonaFisicaById');
 	$routes->post('update-persona-fisica-domicilio-by-id', 'admin/DashboardController::updatePersonaFisicaDomicilioById');
 	$routes->post('update-media-filiacion-by-id', 'admin/DashboardController::updateMediaFiliacionById');
+	$routes->post('update-vehiculo-by-id', 'admin/DashboardController::updateVehiculoByFolio');
 
 });
 

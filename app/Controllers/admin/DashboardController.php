@@ -537,6 +537,7 @@ class DashboardController extends BaseController
         $year = $this->request->getPost('year');
 
         $data->vehiculo = $this->_folioVehiculoModel->where('FOLIOID', $folio)->where('ANO', $year)->where('VEHICULOID', $id)->first();
+
         if ($data->vehiculo) {
             try {
                 if ($data->vehiculo['FOTO']) {
@@ -549,8 +550,10 @@ class DashboardController extends BaseController
                     $type = $file_info->buffer($data->vehiculo['DOCUMENTO']);
                     $data->vehiculo['DOCUMENTO'] = 'data:' . $type . ';base64,' . base64_encode($data->vehiculo['DOCUMENTO']);
                 }
+
                 $data->color = $this->_coloresVehiculoModel->where('VEHICULOCOLORID', $data->vehiculo['PRIMERCOLORID'])->first();
                 $data->tipov = $this->_tipoVehiculoModel->where('VEHICULOTIPOID', $data->vehiculo['TIPOID'])->first();
+
                 $data->status = 1;
                 return json_encode($data);
             } catch (\Exception $e) {
@@ -1619,6 +1622,63 @@ class DashboardController extends BaseController
             return json_encode(['status' => 0]);
         }
     }
+    public function updateVehiculoByFolio()
+    {
+        try {
+            $folio = trim($this->request->getPost('folio'));
+            $year = trim($this->request->getPost('year'));
+            $data = array(
+                'folio' => trim($this->request->getPost('folio')),
+                'year' => trim($this->request->getPost('year')),
+                // 'SITUACION' => $this->request->getPost('cp_pfd'),
+                'TIPOID' => $this->request->getPost('tipo_vehiculo'),
+                // 'MARCADESCR' => $this->request->getPost('municipio_pfd'),
+                // 'MODELODESCR' => $this->request->getPost('localidad_pfd'),
+                // 'PLACAS' => $this->request->getPost('zona_pfd'),
+                // 'NUMEROSERIE' => $this->request->getPost('colonia_pfd_select'),
+                // 'NUMEROMOTOR' => $this->request->getPost('colonia_pfd'),
+                // 'NUMEROCHASIS' => $this->request->getPost('calle_pfd'),
+                // 'TRANSMISION' => $this->request->getPost('exterior_pfd'),
+                // 'TRACCION' => $this->request->getPost('interior_pfd'),
+                'PRIMERCOLORID' => $this->request->getPost('color_vehiculo'),
+                // 'SEGUNDOCOLORID' => $this->request->getPost('referencia_pfd'),
+                'SENASPARTICULARES' => $this->request->getPost('description_vehiculo'),
+                // 'PERSONAFISICAIDPROPIETARIO' => $this->request->getPost('referencia_pfd'),
+                // 'FOTO' => $this->request->getPost('referencia_pfd'),
+                // 'DOCUMENTO' => $this->request->getPost('referencia_pfd'),
+                // 'PARTICIPAESTADO' => $this->request->getPost('referencia_pfd'),
+                // 'TIPOPLACA' => $this->request->getPost('referencia_pfd'),
+                // 'ESTADOIDPLACA' => $this->request->getPost('referencia_pfd'),
+                // 'ESTADOEXTRANJEROIDPLACA' => $this->request->getPost('referencia_pfd'),
+                // 'VEHICULODISTRIBUIDORID' => $this->request->getPost('referencia_pfd'),
+                // 'VEHICULOVERSIONID' => $this->request->getPost('referencia_pfd'),
+                // 'VEHICULOSERVICIOID' => $this->request->getPost('referencia_pfd'),
+                // 'VEHICULOSTATUSID' => $this->request->getPost('referencia_pfd'),
+                // 'PROVIENEPADRON' => $this->request->getPost('referencia_pfd'),
+                // 'SEGUROVIGENTE' => $this->request->getPost('referencia_pfd'),
+
+
+            );
+           
+            $update = $this->_folioVehiculoModel->set($data)->where('FOLIOID', $folio)->where('ANO', $year)->update();
+
+            if ($update) {
+                $datosBitacora = [
+                    'ACCION' => 'Ha actualizado el vehículo de una persona fisica',
+                    'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
+                ];
+
+                $this->_bitacoraActividad($datosBitacora);
+
+                return json_encode(['status' => 1]);
+            } else {
+                return json_encode(['status' => 0, 'message' => $update]);
+            }
+        } catch (\Exception $e) {
+            return json_encode(['status' => 0]);
+        }
+    }
+
     private function _bitacoraActividad($data)
     {
         $data = $data;
@@ -1628,6 +1688,7 @@ class DashboardController extends BaseController
 
         $this->_bitacoraActividadModel->insert($data);
     }
+
 }
 
 /* End of file DashboardController.php */
