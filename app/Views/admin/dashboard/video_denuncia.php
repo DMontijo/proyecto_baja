@@ -530,6 +530,8 @@
 					let mediaFiliacion = response.personaFisicaMediaFiliacion;
 					let folio = response.folio;
 					let parentesco = response.parentesco;
+					let relacion_parentesco = response.parentescoRelacion;
+					let idPersonaFisica = response.idPersonaFisica;
 					document.querySelectorAll('#pf_id').forEach(element => {
 						element.value = id;
 					});
@@ -600,13 +602,13 @@
 					//PERSONA FISICA END
 					//MEDIAFILIACION
 					if (mediaFiliacion) {
-						
+
 						document.querySelector('#estatura_mf').value = mediaFiliacion.ESTATURA;
 						document.querySelector('#peso_mf').value = mediaFiliacion.PESO;
-					
+
 						document.querySelector('#complexion_mf').value = mediaFiliacion.FIGURAID ? mediaFiliacion.FIGURAID : '';
 
-						document.querySelector('#colortez_mf').value = mediaFiliacion.PIELCOLORID? mediaFiliacion.PIELCOLORID : '';
+						document.querySelector('#colortez_mf').value = mediaFiliacion.PIELCOLORID ? mediaFiliacion.PIELCOLORID : '';
 						document.querySelector('#senas_mf').value = mediaFiliacion.SENASPARTICULARES;
 						// document.querySelector('#identidadD').value = mediaFiliacion.IDENTIDAD ? mediaFiliacion.IDENTIDAD:'';
 						document.querySelector('#colorC_mf').value = mediaFiliacion.CABELLOCOLORID ? mediaFiliacion.CABELLOCOLORID : '';
@@ -615,7 +617,7 @@
 						document.querySelector('#peculiarC_mf').value = mediaFiliacion.CABELLOPECULIARID ? mediaFiliacion.CABELLOPECULIARID : '';
 
 						document.querySelector('#peculiarC_mf').value = mediaFiliacion.CABELLOPECULIARID ? mediaFiliacion.CABELLOPECULIARID : '';
-						document.querySelector('#cabello_descr_mf').value = mediaFiliacion.CABELLODESCR? mediaFiliacion.CABELLODESCR:'';
+						document.querySelector('#cabello_descr_mf').value = mediaFiliacion.CABELLODESCR ? mediaFiliacion.CABELLODESCR : '';
 						document.querySelector('#colocacion_ojos_mf').value = mediaFiliacion.OJOCOLOCACIONID ? mediaFiliacion.OJOCOLOCACIONID : '';
 						document.querySelector('#forma_ojos_mf').value = mediaFiliacion.OJOFORMAID ? mediaFiliacion.OJOFORMAID : '';
 						document.querySelector('#tamano_ojos_mf').value = mediaFiliacion.OJOTAMANOID ? mediaFiliacion.OJOTAMANOID : '';
@@ -635,12 +637,12 @@
 						document.querySelector('#nariz_tamano_mf').value = mediaFiliacion.NARIZTAMANOID ? mediaFiliacion.NARIZTAMANOID : '';
 						document.querySelector('#nariz_base_mf').value = mediaFiliacion.NARIZBASEID ? mediaFiliacion.NARIZBASEID : '';
 						document.querySelector('#nariz_peculiar_mf').value = mediaFiliacion.NARIZPECULIARID ? mediaFiliacion.NARIZPECULIARID : '';
-						document.querySelector('#nariz_descr_mf').value = mediaFiliacion.NARIZDESCR ? mediaFiliacion.NARIZDESCR:'';
+						document.querySelector('#nariz_descr_mf').value = mediaFiliacion.NARIZDESCR ? mediaFiliacion.NARIZDESCR : '';
 						document.querySelector('#bigote_forma_mf').value = mediaFiliacion.BIGOTEFORMAID ? mediaFiliacion.BIGOTEFORMAID : '';
 						document.querySelector('#bigote_tamaño_mf').value = mediaFiliacion.BIGOTETAMANOID ? mediaFiliacion.BIGOTETAMANOID : '';
 						document.querySelector('#bigote_grosor_mf').value = mediaFiliacion.BIGOTEGROSORID ? mediaFiliacion.BIGOTEGROSORID : '';
 						document.querySelector('#bigote_peculiar_mf').value = mediaFiliacion.BIGOTEPECULIARID ? mediaFiliacion.BIGOTEPECULIARID : '';
-						document.querySelector('#bigote_descr_mf').value = mediaFiliacion.BIGOTEDESCR?mediaFiliacion.BIGOTEDESCR:'';
+						document.querySelector('#bigote_descr_mf').value = mediaFiliacion.BIGOTEDESCR ? mediaFiliacion.BIGOTEDESCR : '';
 						document.querySelector('#boca_tamano_mf').value = mediaFiliacion.BOCATAMANOID ? mediaFiliacion.BOCATAMANOID : '';
 						document.querySelector('#boca_peculiar_mf').value = mediaFiliacion.BOCAPECULIARID ? mediaFiliacion.BOCAPECULIARID : '';
 						document.querySelector('#labio_grosor_mf').value = mediaFiliacion.LABIOGROSORID ? mediaFiliacion.LABIOGROSORID : '';
@@ -650,19 +652,19 @@
 						document.querySelector('#dientes_tamano_mf').value = mediaFiliacion.DIENTETAMANOID ? mediaFiliacion.DIENTETAMANOID : '';
 						document.querySelector('#dientes_tipo_mf').value = mediaFiliacion.DIENTETIPOID ? mediaFiliacion.DIENTETIPOID : '';
 						document.querySelector('#dientes_peculiar_mf').value = mediaFiliacion.DIENTEPECULIARID ? mediaFiliacion.DIENTEPECULIARID : '';
-						document.querySelector('#dientes_descr_mf').value = mediaFiliacion.DIENTEDESCR?mediaFiliacion.DIENTEDESCR:'';
+						document.querySelector('#dientes_descr_mf').value = mediaFiliacion.DIENTEDESCR ? mediaFiliacion.DIENTEDESCR : '';
 						document.querySelector('#barbilla_forma_mf').value = mediaFiliacion.BARBILLAFORMAID ? mediaFiliacion.BARBILLAFORMAID : '';
 						document.querySelector('#barbilla_tamano_mf').value = mediaFiliacion.BARBILLATAMANOID ? mediaFiliacion.BARBILLATAMANOID : '';
 						document.querySelector('#barbilla_inclinacion_mf').value = mediaFiliacion.BARBILLAINCLINACIONID ? mediaFiliacion.BARBILLAINCLINACIONID : '';
 						document.querySelector('#barbilla_peculiar_mf').value = mediaFiliacion.BARBILLAPECULIARID ? mediaFiliacion.BARBILLAPECULIARID : '';
-						document.querySelector('#barbilla_descr_mf').value = mediaFiliacion.BARBILLADESCR ? mediaFiliacion.BARBILLADESCR:'';
+						document.querySelector('#barbilla_descr_mf').value = mediaFiliacion.BARBILLADESCR ? mediaFiliacion.BARBILLADESCR : '';
 						document.querySelector('#barba_tamano_mf').value = mediaFiliacion.BARBATAMANOID ? mediaFiliacion.BARBATAMANOID : '';
 						document.querySelector('#barba_peculiar_mf').value = mediaFiliacion.BARBAPECULIARID ? mediaFiliacion.BARBAPECULIARID : '';
-						document.querySelector('#barba_descr_mf').value = mediaFiliacion.BARBADESCR ? mediaFiliacion.BARBADESCR :'';
+						document.querySelector('#barba_descr_mf').value = mediaFiliacion.BARBADESCR ? mediaFiliacion.BARBADESCR : '';
 						document.querySelector('#cuello_tamano_mf').value = mediaFiliacion.CUELLOTAMANOID ? mediaFiliacion.CUELLOTAMANOID : '';
 						document.querySelector('#cuello_grosor_mf').value = mediaFiliacion.CUELLOGROSORID ? mediaFiliacion.CUELLOGROSORID : '';
 						document.querySelector('#cuello_peculiar_mf').value = mediaFiliacion.CUELLOPECULIARID ? mediaFiliacion.CUELLOPECULIARID : '';
-						document.querySelector('#cuello_descr_mf').value = mediaFiliacion.CUELLODESCR ? mediaFiliacion.CUELLODESCR :'';
+						document.querySelector('#cuello_descr_mf').value = mediaFiliacion.CUELLODESCR ? mediaFiliacion.CUELLODESCR : '';
 						document.querySelector('#hombro_posicion_mf').value = mediaFiliacion.HOMBROPOSICIONID ? mediaFiliacion.HOMBROPOSICIONID : '';
 						document.querySelector('#hombro_tamano_mf').value = mediaFiliacion.HOMBROTAMANOID ? mediaFiliacion.HOMBROTAMANOID : '';
 						document.querySelector('#hombro_grosor_mf').value = mediaFiliacion.HOMBROGROSORID ? mediaFiliacion.HOMBROGROSORID : '';
@@ -673,32 +675,48 @@
 
 						document.querySelector('#discapacidad_mf').value = mediaFiliacion.DISCAPACIDADDESCR;
 						// document.querySelector('#origen_mf').value = mediaFiliacion.ORIGEN;
-						
-						document.querySelector('#diaDesaparicion').value = mediaFiliacion.FECHADESAPARICION ? mediaFiliacion.FECHADESAPARICION :'';
-						
+
+						document.querySelector('#diaDesaparicion').value = mediaFiliacion.FECHADESAPARICION ? mediaFiliacion.FECHADESAPARICION : '';
+
 						document.querySelector('#lugarDesaparicion').value = mediaFiliacion.LUGARDESAPARICION;
 						document.querySelector('#vestimenta_mf').value = mediaFiliacion.VESTIMENTADESCR;
-						document.querySelector('#parentesco_mf').value = mediaFiliacion.PERSONAPARENTESCOID ? mediaFiliacion.PERSONAPARENTESCOID:'';
+
 						document.querySelector('#autorizaFoto').value = folio.LOCALIZACIONPERSONAMEDIOS == 'S' ? 'S' : 'N';
 						document.querySelector('#escolaridad_mf').value = mediaFiliacion.ESCOLARIDADID ? mediaFiliacion.ESCOLARIDADID : '';
-					document.querySelector('#ocupacion_mf').value = mediaFiliacion.OCUPACIONID ? mediaFiliacion.OCUPACIONID : '';
+						document.querySelector('#ocupacion_mf').value = mediaFiliacion.OCUPACIONID ? mediaFiliacion.OCUPACIONID : '';
 
-					document.querySelector('#contextura_ceja_mf').value = mediaFiliacion.CONTEXTURAID ? mediaFiliacion.CONTEXTURAID : '';
-					document.querySelector('#cara_forma_mf').value = mediaFiliacion.CARAFORMAID ? mediaFiliacion.CARAFORMAID : '';
-					document.querySelector('#cara_tamano_mf').value = mediaFiliacion.CARATAMANOID ? mediaFiliacion.CARATAMANOID : '';
-					document.querySelector('#caratez_mf').value = mediaFiliacion.CARATEZID ? mediaFiliacion.CARATEZID : '';
-					document.querySelector('#lobulo_mf').value = mediaFiliacion.OREJALOBULOID ? mediaFiliacion.OREJALOBULOID : '';
-					document.querySelector('#forma_oreja_mf').value = mediaFiliacion.OREJAFORMAID ? mediaFiliacion.OREJAFORMAID : '';
-					document.querySelector('#tamano_oreja_mf').value = mediaFiliacion.OREJATAMANOID ? mediaFiliacion.OREJATAMANOID : '';
+						document.querySelector('#contextura_ceja_mf').value = mediaFiliacion.CONTEXTURAID ? mediaFiliacion.CONTEXTURAID : '';
+						document.querySelector('#cara_forma_mf').value = mediaFiliacion.CARAFORMAID ? mediaFiliacion.CARAFORMAID : '';
+						document.querySelector('#cara_tamano_mf').value = mediaFiliacion.CARATAMANOID ? mediaFiliacion.CARATAMANOID : '';
+						document.querySelector('#caratez_mf').value = mediaFiliacion.CARATEZID ? mediaFiliacion.CARATEZID : '';
+						document.querySelector('#lobulo_mf').value = mediaFiliacion.OREJALOBULOID ? mediaFiliacion.OREJALOBULOID : '';
+						document.querySelector('#forma_oreja_mf').value = mediaFiliacion.OREJAFORMAID ? mediaFiliacion.OREJAFORMAID : '';
+						document.querySelector('#tamano_oreja_mf').value = mediaFiliacion.OREJATAMANOID ? mediaFiliacion.OREJATAMANOID : '';
 
-					document.querySelector('#hombro_tamano_mf').value = mediaFiliacion.HOMBROLONGITUDID ? mediaFiliacion.HOMBROLONGITUDID : '';
-					if (personaFisica.DESAPARECIDA=='S') {
-						document.querySelector('#parentesco_mf').value = parentesco.PERSONAPARENTESCOID ? parentesco.PERSONAPARENTESCOID : '';
+						document.querySelector('#hombro_tamano_mf').value = mediaFiliacion.HOMBROLONGITUDID ? mediaFiliacion.HOMBROLONGITUDID : '';
 
-						
+
+
+						document.querySelector('#escolaridad_mf').value = mediaFiliacion.PERSONAESCOLARIDADID ? mediaFiliacion.PERSONAESCOLARIDADID : '';
+
 					}
+					//PARENTESCO
 
-					document.querySelector('#escolaridad_mf').value = mediaFiliacion.PERSONAESCOLARIDADID ? mediaFiliacion.PERSONAESCOLARIDADID : '';
+					if (relacion_parentesco) {
+						document.querySelector('#parentesco_mf').value = parentesco.PERSONAPARENTESCOID ? parentesco.PERSONAPARENTESCOID : '';
+						document.querySelector('#personaFisica1').value = relacion_parentesco.PERSONAFISICAID1 ? relacion_parentesco.PERSONAFISICAID1 : '';
+						document.querySelector('#personaFisica2').value = idPersonaFisica ? idPersonaFisica : '';
+						document.getElementById("updateParentesco").style.display="block";
+						document.getElementById("insertParentesco").style.display="none";
+
+
+					} 
+					if(relacion_parentesco == null) {
+						document.querySelector('#parentesco_mf').value = '';
+						document.querySelector('#personaFisica1').value = '';
+						document.querySelector('#personaFisica2').value = idPersonaFisica ? idPersonaFisica : '';
+						document.getElementById("insertParentesco").style.display="block";
+						document.getElementById("updateParentesco").style.display="none";
 
 					}
 					//DOMICILIO
@@ -962,7 +980,9 @@
 			var form_persona_fisica_domicilio = document.querySelector('#persona_fisica_domicilio_form');
 			var form_media_filiacion = document.querySelector('#form_media_filiacion');
 			var form_vehiculo = document.querySelector('#form_vehiculo');
-
+			var form_parentesco = document.querySelector('#form_parentesco');
+			var btn_insertar_parentesco = document.querySelector('#insertParentesco')
+		
 			var inputsText = document.querySelectorAll('input[type="text"]');
 			var inputsEmail = document.querySelectorAll('input[type="email"]');
 
@@ -1053,6 +1073,30 @@
 					event.stopPropagation();
 					form_vehiculo.classList.remove('was-validated')
 					actualizarVehiculo();
+				}
+			}, false);
+			form_parentesco.addEventListener('submit', (event) => {
+				if (!form_parentesco.checkValidity()) {
+					event.preventDefault();
+					event.stopPropagation();
+					form_parentesco.classList.add('was-validated')
+				} else {
+					event.preventDefault();
+					event.stopPropagation();
+					form_parentesco.classList.remove('was-validated')
+					actualizarParentesco();
+				}
+			}, false);
+			btn_insertar_parentesco.addEventListener('click',  (event) => {
+				if (!form_parentesco.checkValidity()) {
+					event.preventDefault();
+					event.stopPropagation();
+					form_parentesco.classList.add('was-validated')
+				} else {
+					event.preventDefault();
+					event.stopPropagation();
+					form_parentesco.classList.remove('was-validated')
+					insertarParentesco();
 				}
 			}, false);
 
@@ -1338,7 +1382,7 @@
 				};
 			}
 
-			
+
 			function actualizarPersona() {
 				const data = {
 					'folio': document.querySelector('#input_folio_atencion').value,
@@ -1719,6 +1763,7 @@
 					}
 				});
 			}
+
 			function actualizarPersonaMediaAfiliacion() {
 				const data = {
 					'folio': document.querySelector('#input_folio_atencion').value,
@@ -1809,7 +1854,7 @@
 					success: function(response) {
 						// console.log(respobse.idcalidad);
 						if (response.status == 1) {
-			
+
 							Swal.fire({
 								icon: 'success',
 								text: 'Persona media afiliación actualizada correctamente',
@@ -1829,6 +1874,78 @@
 				});
 			}
 
+			function actualizarParentesco() {
+				const data = {
+					'pf_id': document.querySelector('#pf_id').value,
+					'folio': document.querySelector('#input_folio_atencion').value,
+					'year': document.querySelector('#year_select').value,
+					'personaFisica1': document.querySelector('#personaFisica1').value,
+					'personaFisica2': document.querySelector('#personaFisica2').value,
+					'parentesco_mf': document.querySelector('#parentesco_mf').value,
+				};
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/update-parentesco-by-id') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						// console.log(respobse.idcalidad);
+						if (response.status == 1) {
+
+							Swal.fire({
+								icon: 'success',
+								text: 'Parentesco actualizado correctamente',
+								confirmButtonColor: '#bf9b55',
+							});
+						} else {
+							Swal.fire({
+								icon: 'error',
+								text: 'No se actualizó la información del parentesco',
+								confirmButtonColor: '#bf9b55',
+							});
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						console.log(textStatus);
+					}
+				});
+			}
+			function insertarParentesco() {
+				const data = {
+					'folio': document.querySelector('#input_folio_atencion').value,
+					'year': document.querySelector('#year_select').value,
+					'personaFisica1': document.querySelector('#personaFisica1').value,
+					'personaFisica2': document.querySelector('#personaFisica2').value,
+					'parentesco_mf': document.querySelector('#parentesco_mf').value,
+				};
+				console.log(data);
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/create-parentesco-by-id') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						if (response.status == 1) {
+
+							Swal.fire({
+								icon: 'success',
+								text: 'Parentesco ingresado correctamente',
+								confirmButtonColor: '#bf9b55',
+							});
+						} else {
+							Swal.fire({
+								icon: 'error',
+								text: 'No se agregó la información del parentesco',
+								confirmButtonColor: '#bf9b55',
+							});
+							console.log(response.message);
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						console.log(textStatus);
+					}
+				});
+			}
 			function actualizarVehiculo() {
 				const data = {
 					'folio': document.querySelector('#input_folio_atencion').value,
@@ -1836,7 +1953,7 @@
 					'tipo_vehiculo': document.querySelector('#tipo_vehiculo').value,
 					'color_vehiculo': document.querySelector('#color_vehiculo').value,
 					'description_vehiculo': document.querySelector('#description_vehiculo').value,
-					};
+				};
 				$.ajax({
 					data: data,
 					url: "<?= base_url('/data/update-vehiculo-by-id') ?>",
@@ -1845,7 +1962,7 @@
 					success: function(response) {
 						// console.log(respobse.idcalidad);
 						if (response.status == 1) {
-			
+
 							Swal.fire({
 								icon: 'success',
 								text: 'Vehículo actualizado correctamente',
@@ -1866,7 +1983,6 @@
 			}
 
 
-
 			function dateToString(_date) {
 				let date = new Date(_date);
 				let dateToTijuanaString = date.toLocaleString('en-US', {
@@ -1883,6 +1999,7 @@
 			}
 		})();
 	};
+	
 
 </script>
 

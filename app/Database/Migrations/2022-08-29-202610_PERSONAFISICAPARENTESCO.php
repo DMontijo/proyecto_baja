@@ -9,6 +9,11 @@ class PERSONAFISICAPARENTESCO extends Migration
     public function up()
     {
         $this->forge->addField([
+            'IDRELACION'=>[
+                'type' => 'INT',
+				'unsigned' => TRUE,
+				'auto_increment' => TRUE
+            ],
             'FOLIOID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
@@ -30,8 +35,10 @@ class PERSONAFISICAPARENTESCO extends Migration
 				'constraint' => 200,
 			],
         ]);
+        $this->forge->addKey('IDRELACION', TRUE);
         $this->forge->addKey('FOLIOID', TRUE);
 		$this->forge->addKey('ANO', TRUE);
+
         $this->forge->createTable('FOLIORELACIONPARENTESCO', true);
     }
 

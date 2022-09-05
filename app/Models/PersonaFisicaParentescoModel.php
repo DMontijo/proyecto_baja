@@ -8,6 +8,6 @@ class PersonaFisicaParentescoModel extends Model
 {
     protected $DBGroup          = 'default';
     protected $table            = 'FOLIORELACIONPARENTESCO';
-    protected $allowedFields    = ['FOLIOID','ANO', 'PARENTESCOID', 'PERSONAFISICAID1','PERSONAFISICAID2'];
+    protected $allowedFields    = ['IDRELACION','FOLIOID','ANO', 'PARENTESCOID', 'PERSONAFISICAID1','PERSONAFISICAID2'];
 
 }

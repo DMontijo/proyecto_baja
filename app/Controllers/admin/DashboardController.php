@@ -493,11 +493,18 @@ class DashboardController extends BaseController
 
             $data->personaFisicaMediaFiliacion = $this->_folioMediaFiliacion->where('ANO', $year)->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
             $data->folio = $this->_folioModel->where('FOLIOID', $folio)->where('ANO', $year)->first();
-            if ($data->personaFisica['DESAPARECIDA'] == 'S') {
+            // if ($data->personaFisica['DESAPARECIDA'] == 'S') {
 
-                $data->parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID2', $data->personaFisicaMediaFiliacion['PERSONAFISICAID'])->first();
+            //     $data->parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID2', $data->personaFisicaMediaFiliacion['PERSONAFISICAID'])->first();
+            //     $data->parentesco = $this->_parentescoModel->where('PERSONAPARENTESCOID', $data->parentescoRelacion['PARENTESCOID'])->first();
+            // }
+            $data->parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID2', $id)->first();
+            if ($data->parentescoRelacion) {
                 $data->parentesco = $this->_parentescoModel->where('PERSONAPARENTESCOID', $data->parentescoRelacion['PARENTESCOID'])->first();
+            } else {
+                $data->parentesco = '';
             }
+            $data->idPersonaFisica = $id;
             if ($data->personaFisica['FOTO']) {
                 $file_info = new \finfo(FILEINFO_MIME_TYPE);
                 $type = $file_info->buffer($data->personaFisica['FOTO']);
@@ -568,6 +575,7 @@ class DashboardController extends BaseController
     {
         $data = (object) array();
         $data->folio = $this->request->getGet('folio');
+        $year = date('Y');
 
         // Catálogos
         $data->delitosUsuarios = $this->_delitosUsuariosModel->asObject()->orderBy('DELITO', 'ASC')->findAll();
@@ -662,6 +670,8 @@ class DashboardController extends BaseController
         $data->pielColor = $this->_pielColorModel->asObject()->findAll();
         $data->etnia = $this->_etniaModel->asObject()->findAll();
         $data->parentesco = $this->_parentescoModel->asObject()->findAll();
+        $data->personafisica = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->findAll();
+
 
         $this->_loadView('Video denuncia', 'videodenuncia', '', $data, 'video_denuncia');
     }
@@ -1597,7 +1607,6 @@ class DashboardController extends BaseController
 
             $updateMediaFiliacion = $this->_folioMediaFiliacion->set($data)->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $id)->update();
             $updatePersonaFisica = $this->_folioPersonaFisicaModel->set($dataPersonaFisica)->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $id)->update();
-            $parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID2', $id)->first();
 
             $updateRelacionParentesco = $this->_parentescoPersonaFisicaModel->set($dataRelacionParentesco)->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID2', $id)->update();
 
@@ -1625,41 +1634,20 @@ class DashboardController extends BaseController
     public function updateVehiculoByFolio()
     {
         try {
+
             $folio = trim($this->request->getPost('folio'));
             $year = trim($this->request->getPost('year'));
             $data = array(
                 'folio' => trim($this->request->getPost('folio')),
                 'year' => trim($this->request->getPost('year')),
-                // 'SITUACION' => $this->request->getPost('cp_pfd'),
                 'TIPOID' => $this->request->getPost('tipo_vehiculo'),
-                // 'MARCADESCR' => $this->request->getPost('municipio_pfd'),
-                // 'MODELODESCR' => $this->request->getPost('localidad_pfd'),
-                // 'PLACAS' => $this->request->getPost('zona_pfd'),
-                // 'NUMEROSERIE' => $this->request->getPost('colonia_pfd_select'),
-                // 'NUMEROMOTOR' => $this->request->getPost('colonia_pfd'),
-                // 'NUMEROCHASIS' => $this->request->getPost('calle_pfd'),
-                // 'TRANSMISION' => $this->request->getPost('exterior_pfd'),
-                // 'TRACCION' => $this->request->getPost('interior_pfd'),
                 'PRIMERCOLORID' => $this->request->getPost('color_vehiculo'),
-                // 'SEGUNDOCOLORID' => $this->request->getPost('referencia_pfd'),
                 'SENASPARTICULARES' => $this->request->getPost('description_vehiculo'),
-                // 'PERSONAFISICAIDPROPIETARIO' => $this->request->getPost('referencia_pfd'),
-                // 'FOTO' => $this->request->getPost('referencia_pfd'),
-                // 'DOCUMENTO' => $this->request->getPost('referencia_pfd'),
-                // 'PARTICIPAESTADO' => $this->request->getPost('referencia_pfd'),
-                // 'TIPOPLACA' => $this->request->getPost('referencia_pfd'),
-                // 'ESTADOIDPLACA' => $this->request->getPost('referencia_pfd'),
-                // 'ESTADOEXTRANJEROIDPLACA' => $this->request->getPost('referencia_pfd'),
-                // 'VEHICULODISTRIBUIDORID' => $this->request->getPost('referencia_pfd'),
-                // 'VEHICULOVERSIONID' => $this->request->getPost('referencia_pfd'),
-                // 'VEHICULOSERVICIOID' => $this->request->getPost('referencia_pfd'),
-                // 'VEHICULOSTATUSID' => $this->request->getPost('referencia_pfd'),
-                // 'PROVIENEPADRON' => $this->request->getPost('referencia_pfd'),
-                // 'SEGUROVIGENTE' => $this->request->getPost('referencia_pfd'),
+
 
 
             );
-           
+
             $update = $this->_folioVehiculoModel->set($data)->where('FOLIOID', $folio)->where('ANO', $year)->update();
 
             if ($update) {
@@ -1678,7 +1666,71 @@ class DashboardController extends BaseController
             return json_encode(['status' => 0]);
         }
     }
+    public function updateParentescoByFolio()
+    {
+        try {
+            $id = trim($this->request->getPost('pf_id'));
 
+            $folio = trim($this->request->getPost('folio'));
+            $year = trim($this->request->getPost('year'));
+            $dataRelacionParentesco = array(
+                'folio' => trim($this->request->getPost('folio')),
+                'year' => trim($this->request->getPost('year')),
+                'PERSONAFISICAID1' => $this->request->getPost('personaFisica1'),
+                'PERSONAFISICAID2' => $this->request->getPost('personaFisica2'),
+                'PARENTESCOID' => $this->request->getPost('parentesco_mf'),
+            );
+
+            $updateRelacionParentesco = $this->_parentescoPersonaFisicaModel->set($dataRelacionParentesco)->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID2', $id)->update();
+
+            if ($updateRelacionParentesco) {
+                $datosBitacora = [
+                    'ACCION' => 'Ha actualizado el parentesco de una persona fisica',
+                    'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
+                ];
+
+                $this->_bitacoraActividad($datosBitacora);
+
+                return json_encode(['status' => 1]);
+            } else {
+                return json_encode(['status' => 0, 'message' => $updateRelacionParentesco]);
+            }
+        } catch (\Exception $e) {
+            return json_encode(['status' => 0]);
+        }
+    }
+    public function createParentescoByFolio()
+    {
+
+
+            $folio = trim($this->request->getPost('folio'));
+            $year = trim($this->request->getPost('year'));
+            $dataRelacionParentesco = array(
+                'FOLIOID' => $this->request->getPost('folio'),
+                'ANO' => $this->request->getPost('year'),
+                'PERSONAFISICAID1' => $this->request->getPost('personaFisica1'),
+                'PARENTESCOID' => $this->request->getPost('parentesco_mf'),
+                'PERSONAFISICAID2' => $this->request->getPost('personaFisica2'),
+                
+            );
+
+          
+            $insertRelacionParentesco = $this->_parentescoPersonaFisicaModel->insert($dataRelacionParentesco);
+
+            if ($insertRelacionParentesco) {
+                $datosBitacora = [
+                    'ACCION' => 'Ha ingresado un nuevo parentesco a una persona fisica',
+                    'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
+                ];
+
+                $this->_bitacoraActividad($datosBitacora);
+
+                return json_encode(['status' => 1]);
+            } else {
+                return json_encode(['status' => 0, 'message' => $_POST]);
+            }
+       
+    }
     private function _bitacoraActividad($data)
     {
         $data = $data;
@@ -1688,7 +1740,6 @@ class DashboardController extends BaseController
 
         $this->_bitacoraActividadModel->insert($data);
     }
-
 }
 
 /* End of file DashboardController.php */

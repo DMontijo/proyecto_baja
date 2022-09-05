@@ -191,6 +191,9 @@ $routes->group('data', function ($routes) {
 	$routes->post('update-persona-fisica-domicilio-by-id', 'admin/DashboardController::updatePersonaFisicaDomicilioById');
 	$routes->post('update-media-filiacion-by-id', 'admin/DashboardController::updateMediaFiliacionById');
 	$routes->post('update-vehiculo-by-id', 'admin/DashboardController::updateVehiculoByFolio');
+	$routes->post('update-parentesco-by-id', 'admin/DashboardController::updateParentescoByFolio');
+	$routes->post('create-parentesco-by-id', 'admin/DashboardController::createParentescoByFolio');
+
 
 });
 

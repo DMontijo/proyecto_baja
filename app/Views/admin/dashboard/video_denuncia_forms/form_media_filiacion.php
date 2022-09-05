@@ -640,16 +640,7 @@
 		<label for="vestimenta_mf" class="form-label font-weight-bold">Vestimenta</label>
 		<input type="text" class="form-control" id="vestimenta_mf" name="vestimenta_mf" maxlength="200">
 	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="parentesco_mf" class="form-label font-weight-bold">Parentesco</label>
-		<select class="form-control" id="parentesco_mf" name="parentesco_mf">
-			<option selected value=""></option>
-			<?php
-			foreach ($body_data->parentesco as $index => $parentesco) { ?>
-				<option value="<?= $parentesco->PERSONAPARENTESCOID ?>"> <?= $parentesco->PERSONAPARENTESCODESCR ?></option>
-			<?php } ?>
-		</select>
-	</div>
+
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="ocupacion_mf" class="form-label font-weight-bold">Profesión u Oficio</label>
 		<select class="form-control" id="ocupacion_mf" name="ocupacion_mf">
