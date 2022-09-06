@@ -443,6 +443,11 @@ class DashboardController extends BaseController
                     $data->status = 1;
                     $data->preguntas_iniciales = $this->_folioPreguntasModel->where('FOLIOID', $numfolio)->where('ANO', $year)->first();
                     $data->personas = $this->_folioPersonaFisicaModel->get_by_folio($numfolio, $year);
+                    $data->parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $numfolio)->where('ANO', $year)->findAll();
+                    $data->personaiduno = $this->_parentescoPersonaFisicaModel->get_personaFisicaUno($numfolio, $year);
+                    $data->personaidDos = $this->_parentescoPersonaFisicaModel->get_personaFisicaDos($numfolio, $year);
+                    $data->parentesco = $this->_parentescoPersonaFisicaModel->get_Parentesco($numfolio, $year);
+
                     $data->vehiculos = $this->_folioVehiculoModel->get_by_folio($numfolio, $year);
 
                     $this->_folioModel->set(['STATUS' => 'EN PROCESO', 'AGENTEATENCIONID' => session('ID')])->where('ANO', $year)->where('FOLIOID', $numfolio)->update();
@@ -498,12 +503,14 @@ class DashboardController extends BaseController
             //     $data->parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID2', $data->personaFisicaMediaFiliacion['PERSONAFISICAID'])->first();
             //     $data->parentesco = $this->_parentescoModel->where('PERSONAPARENTESCOID', $data->parentescoRelacion['PARENTESCOID'])->first();
             // }
-            $data->parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID2', $id)->first();
-            if ($data->parentescoRelacion) {
-                $data->parentesco = $this->_parentescoModel->where('PERSONAPARENTESCOID', $data->parentescoRelacion['PARENTESCOID'])->first();
-            } else {
-                $data->parentesco = '';
-            }
+            // $data->parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID2', $id)->first();
+            // $data->parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
+
+            // if ($data->parentescoRelacion) {
+            //     $data->parentesco = $this->_parentescoModel->where('PERSONAPARENTESCOID', $data->parentescoRelacion['PARENTESCOID'])->first();
+            // } else {
+            //     $data->parentesco = '';
+            // }
             $data->idPersonaFisica = $id;
             if ($data->personaFisica['FOTO']) {
                 $file_info = new \finfo(FILEINFO_MIME_TYPE);
@@ -518,7 +525,34 @@ class DashboardController extends BaseController
             return json_encode($data);
         }
     }
+    public function getRelacionParentesco()
+    {
+        $id = trim($this->request->getPost('personafisica1'));
+        $folio = trim($this->request->getPost('folio'));
+        $year = trim($this->request->getPost('year'));
 
+        $data = (object) array();
+        $data->parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID1', $id)->first();
+
+        if ($data->parentescoRelacion) {
+         $data->parentesco = $this->_parentescoModel->where('PERSONAPARENTESCOID', $data->parentescoRelacion['PARENTESCOID'])->first();
+            // $data->parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID2', $id)->first();
+            // $data->parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
+
+            // if ($data->parentescoRelacion) {
+            //     $data->parentesco = $this->_parentescoModel->where('PERSONAPARENTESCOID', $data->parentescoRelacion['PARENTESCOID'])->first();
+            // } else {
+            //     $data->parentesco = '';
+            // }
+            $data->idPersonaFisica = $id;
+           
+            $data->status = 1;
+            return json_encode($data);
+        } else {
+            $data = (object)['status' => 0];
+            return json_encode($data);
+        }
+    }
     public function findPersonadDomicilioById()
     {
         $id = $this->request->getPost('id');
@@ -1669,19 +1703,20 @@ class DashboardController extends BaseController
     public function updateParentescoByFolio()
     {
         try {
-            $id = trim($this->request->getPost('pf_id'));
+            $idp1 = trim($this->request->getPost('personaFisica1'));
+            $idp2 = trim($this->request->getPost('personaFisica2'));
 
             $folio = trim($this->request->getPost('folio'));
             $year = trim($this->request->getPost('year'));
             $dataRelacionParentesco = array(
-                'folio' => trim($this->request->getPost('folio')),
-                'year' => trim($this->request->getPost('year')),
+                'FOLIO' => trim($this->request->getPost('folio')),
+                'ANO' => trim($this->request->getPost('year')),
                 'PERSONAFISICAID1' => $this->request->getPost('personaFisica1'),
                 'PERSONAFISICAID2' => $this->request->getPost('personaFisica2'),
                 'PARENTESCOID' => $this->request->getPost('parentesco_mf'),
             );
 
-            $updateRelacionParentesco = $this->_parentescoPersonaFisicaModel->set($dataRelacionParentesco)->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID2', $id)->update();
+            $updateRelacionParentesco = $this->_parentescoPersonaFisicaModel->set($dataRelacionParentesco)->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID1', $idp1)->where('PERSONAFISICAID2',$idp2)->update();
 
             if ($updateRelacionParentesco) {
                 $datosBitacora = [
@@ -1702,34 +1737,32 @@ class DashboardController extends BaseController
     public function createParentescoByFolio()
     {
 
+ 
+        $folio = trim($this->request->getPost('folio'));
+        $year = trim($this->request->getPost('year'));
+        $dataRelacionParentesco = array(
+            'FOLIOID' => $this->request->getPost('folio'),
+            'ANO' => $this->request->getPost('year'),
+            'PERSONAFISICAID1' => $this->request->getPost('personaFisica1'),
+            'PARENTESCOID' => $this->request->getPost('parentesco_mf'),
+            'PERSONAFISICAID2' => $this->request->getPost('personaFisica2'),
 
-            $folio = trim($this->request->getPost('folio'));
-            $year = trim($this->request->getPost('year'));
-            $dataRelacionParentesco = array(
-                'FOLIOID' => $this->request->getPost('folio'),
-                'ANO' => $this->request->getPost('year'),
-                'PERSONAFISICAID1' => $this->request->getPost('personaFisica1'),
-                'PARENTESCOID' => $this->request->getPost('parentesco_mf'),
-                'PERSONAFISICAID2' => $this->request->getPost('personaFisica2'),
-                
-            );
+        );
 
-          
-            $insertRelacionParentesco = $this->_parentescoPersonaFisicaModel->insert($dataRelacionParentesco);
+        $insertRelacionParentesco = $this->_parentescoPersonaFisicaModel->insert($dataRelacionParentesco);
 
-            if ($insertRelacionParentesco) {
-                $datosBitacora = [
-                    'ACCION' => 'Ha ingresado un nuevo parentesco a una persona fisica',
-                    'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
-                ];
+        if ($insertRelacionParentesco) {
+            $datosBitacora = [
+                'ACCION' => 'Ha ingresado un nuevo parentesco a una persona fisica',
+                'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
+            ];
 
-                $this->_bitacoraActividad($datosBitacora);
+            $this->_bitacoraActividad($datosBitacora);
 
-                return json_encode(['status' => 1]);
-            } else {
-                return json_encode(['status' => 0, 'message' => $_POST]);
-            }
-       
+            return json_encode(['status' => 1]);
+        } else {
+            return json_encode(['status' => 0, 'message' => $_POST]);
+        }
     }
     private function _bitacoraActividad($data)
     {

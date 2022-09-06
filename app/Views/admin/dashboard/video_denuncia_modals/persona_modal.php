@@ -13,7 +13,6 @@
 						<a class="nav-item nav-link active" id="nav-persona-fisica-tab" data-toggle="tab" href="#nav-persona-fisica" role="tab" aria-controls="nav-persona-fisica" aria-selected="true">Person Física</a>
 						<a class="nav-item nav-link" id="nav-media-filiacion-tab" data-toggle="tab" href="#nav-media-filiacion" role="tab" aria-controls="nav-media-filiacion" aria-selected="false">Media Filiacion</a>
 						<a class="nav-item nav-link" id="nav-domicilio-tab" data-toggle="tab" href="#nav-domicilio" role="tab" aria-controls="nav-domicilio" aria-selected="false">Domicilio</a>
-						<a class="nav-item nav-link" id="nav-parentesco-tab" data-toggle="tab" href="#nav-parentesco" role="tab" aria-controls="nav-parentesco" aria-selected="false">Parentesco</a>
 
 					</div>
 				</nav>
@@ -27,9 +26,7 @@
 					<div class="tab-pane fade" id="nav-domicilio" role="tabpanel" aria-labelledby="nav-domicilio-tab">
 						<?= view('admin/dashboard/video_denuncia_forms/form_domicilio') ?>
 					</div>
-					<div class="tab-pane fade" id="nav-parentesco" role="tabpanel" aria-labelledby="nav-parentesco-tab">
-						<?= view('admin/dashboard/video_denuncia_forms/form_parentesco') ?>
-					</div>
+					
 				</div>
 			</div>
 		</div>
