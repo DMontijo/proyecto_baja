@@ -1977,6 +1977,14 @@
 					dataType: "json",
 					success: function(response) {
 						if (response.status == 1) {
+							let tabla_parentesco = document.querySelectorAll('#table-parentesco tr');
+							tabla_parentesco.forEach(row => {
+								if (row.id !== '') {
+									row.remove();
+								}
+							});
+							llenarTablaParentesco(response.parentescoRelacion, response.personaiduno, response.personaidDos, response.parentesco);
+
 							Swal.fire({
 								icon: 'success',
 								text: 'Parentesco actualizado correctamente',

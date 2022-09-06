@@ -1719,6 +1719,10 @@ class DashboardController extends BaseController
             $updateRelacionParentesco = $this->_parentescoPersonaFisicaModel->set($dataRelacionParentesco)->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID1', $idp1)->where('PERSONAFISICAID2',$idp2)->update();
 
             if ($updateRelacionParentesco) {
+                $parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
+                $personaiduno = $this->_parentescoPersonaFisicaModel->get_personaFisicaUno($folio, $year);
+                $personaidDos = $this->_parentescoPersonaFisicaModel->get_personaFisicaDos($folio, $year);
+                $parentesco = $this->_parentescoPersonaFisicaModel->get_Parentesco($folio, $year);
                 $datosBitacora = [
                     'ACCION' => 'Ha actualizado el parentesco de una persona fisica',
                     'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
@@ -1726,7 +1730,7 @@ class DashboardController extends BaseController
 
                 $this->_bitacoraActividad($datosBitacora);
 
-                return json_encode(['status' => 1]);
+                return json_encode(['status' => 1, 'parentescoRelacion' => $parentescoRelacion, 'personaiduno' => $personaiduno, 'personaidDos' => $personaidDos, 'parentesco' => $parentesco]);
             } else {
                 return json_encode(['status' => 0, 'message' => $updateRelacionParentesco]);
             }
