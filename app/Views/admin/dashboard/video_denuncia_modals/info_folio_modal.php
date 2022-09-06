@@ -44,8 +44,8 @@
 								<table id="table-parentesco" class="table table-bordered table-hover table-striped table-light">
 									<tr>
 										<th class="text-center bg-primary text-white" id="nombrePF1" name="nombrePF1">PERSONA FISICA 1</th>
-										<th class="text-center bg-primary text-white" id="nombrePF2" name="nombrePF2">PERSONA FISICA 2</th>
 										<th class="text-center bg-primary text-white" id="parentescoRelacion" name="parentescoRelacion">PARENTESCO</th>
+										<th class="text-center bg-primary text-white" id="nombrePF2" name="nombrePF2">PERSONA FISICA 2</th>
 										<th class="text-center bg-primary text-white">EDITAR</th>
 									</tr>
 								</table>

@@ -218,20 +218,14 @@
 
 		for (let i = 0; i < relacion_parentesco.length; i++) {
 
-
-			// 	if (relacion_parentesco.PERSONAFISICAID1 == personas.PERSONAFISICAID) {
-			// 		console.log(personas.NOMBRE);
-
-
 			var btn = `<button type='button'  class='btn btn-primary' onclick='view_form_parentesco(${relacion_parentesco[i].PERSONAFISICAID1})'><i class="fas fa-pen"></i></button>`
-			// 	console.log(personas[i]);
-			// 	console.log(relacion_parentesco[i]);
+
 
 			var fila =
 				`<tr id="row${i}">` +
 				`<td class="text-center">${personaiduno[i].NOMBRE}</td>` +
-				`<td class="text-center">${personaidDos[i].NOMBRE}</td>` +
 				`<td class="text-center">${parentesco[i].PERSONAPARENTESCODESCR}</td>` +
+				`<td class="text-center">${personaidDos[i].NOMBRE}</td>` +
 				`<td class="text-center">${btn}</td>` +
 				`</tr>`;
 
@@ -566,6 +560,14 @@
 		clearSelect(document.querySelector('#municipio_pfd'));
 		clearSelect(document.querySelector('#localidad_pfd'));
 		clearSelect(document.querySelector('#colonia_pfd_select'));
+
+		//PARENTESCO
+		document.querySelector('#parentesco_mf_I').value = '';
+		document.querySelector('#personaFisica1_I').value = '';
+		document.querySelector('#personaFisica2_I').value = '';
+		document.querySelector('#parentesco_mf').value = '';
+		document.querySelector('#personaFisica1').value = '';
+		document.querySelector('#personaFisica2').value = '';
 
 		$('#v-pills-vehiculos-tab').css('display', 'NONE');
 	}
@@ -2020,6 +2022,13 @@
 					dataType: "json",
 					success: function(response) {
 						if (response.status == 1) {
+							let tabla_parentesco = document.querySelectorAll('#table-parentesco tr');
+							tabla_parentesco.forEach(row => {
+								if (row.id !== '') {
+									row.remove();
+								}
+							});
+							llenarTablaParentesco(response.parentescoRelacion, response.personaiduno, response.personaidDos, response.parentesco);
 
 							Swal.fire({
 								icon: 'success',

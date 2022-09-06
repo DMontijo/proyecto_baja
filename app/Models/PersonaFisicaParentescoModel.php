@@ -8,7 +8,7 @@ class PersonaFisicaParentescoModel extends Model
 {
     protected $DBGroup          = 'default';
     protected $table            = 'FOLIORELACIONPARENTESCO';
-    protected $allowedFields    = ['IDRELACION','FOLIOID','ANO', 'PARENTESCOID', 'PERSONAFISICAID1','PERSONAFISICAID2'];
+    protected $allowedFields    = ['FOLIOID','ANO', 'PARENTESCOID', 'PERSONAFISICAID1','PERSONAFISICAID2'];
 
     public function get_personaFisicaUno($folio, $year)
 	{

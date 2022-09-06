@@ -15,8 +15,13 @@
 					</div>
 
 				</div>
-				
+
 			</div>
 		</div>
 	</div>
 </div>
+<script>
+	$('#relacion_parentesco_modal').on('hidden.bs.modal', function() {
+		$(this).find('form').trigger('reset');
+	});
+</script>

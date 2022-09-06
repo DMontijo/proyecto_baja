@@ -9,17 +9,7 @@
 		<select class="form-control" id="personaFisica1" name="personaFisica1" disabled>
 			<option selected value=""></option>
 			<?php foreach ($body_data->personafisica as $index => $personafisica) { ?>
-				<option value="<?= $personafisica->PERSONAFISICAID ?>"> <?= $personafisica->NOMBRE ?> </option>
-			<?php } ?>
-		</select>
-	</div>
-		
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="personaFisica2" class="form-label font-weight-bold">Persona fisica 2</label>
-		<select class="form-control" id="personaFisica2" name="personaFisica2" disabled>
-			<option selected value=""></option>
-			<?php foreach ($body_data->personafisica as $index => $personafisica) { ?>
-				<option value="<?= $personafisica->PERSONAFISICAID ?>"> <?= $personafisica->NOMBRE ?> </option>
+				<option value="<?= $personafisica->PERSONAFISICAID ?>"> <?= $personafisica->NOMBRE . ' ' .$personafisica->SEGUNDOAPELLIDO?> </option>
 			<?php } ?>
 		</select>
 	</div>
@@ -33,6 +23,16 @@
 			<?php } ?>
 		</select>
 	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="personaFisica2" class="form-label font-weight-bold">Persona fisica 2</label>
+		<select class="form-control" id="personaFisica2" name="personaFisica2" disabled>
+			<option selected value=""></option>
+			<?php foreach ($body_data->personafisica as $index => $personafisica) { ?>
+				<option value="<?= $personafisica->PERSONAFISICAID ?>"> <?= $personafisica->NOMBRE. ' ' .$personafisica->SEGUNDOAPELLIDO ?> </option>
+			<?php } ?>
+		</select>
+	</div>
+	
 	<div class="col-12 mb-3 text-center">
 		<button type="submit" id="updateParentesco" name="updateParentesco" class="btn btn-primary font-weight-bold">ACTUALIZAR PARENTESCO</button>
 	</div>

@@ -1756,6 +1756,10 @@ class DashboardController extends BaseController
         $insertRelacionParentesco = $this->_parentescoPersonaFisicaModel->insert($dataRelacionParentesco);
 
         if ($insertRelacionParentesco) {
+            $parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
+            $personaiduno = $this->_parentescoPersonaFisicaModel->get_personaFisicaUno($folio, $year);
+            $personaidDos = $this->_parentescoPersonaFisicaModel->get_personaFisicaDos($folio, $year);
+            $parentesco = $this->_parentescoPersonaFisicaModel->get_Parentesco($folio, $year);
             $datosBitacora = [
                 'ACCION' => 'Ha ingresado un nuevo parentesco a una persona fisica',
                 'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
@@ -1763,7 +1767,7 @@ class DashboardController extends BaseController
 
             $this->_bitacoraActividad($datosBitacora);
 
-            return json_encode(['status' => 1]);
+            return json_encode(['status' => 1, 'parentescoRelacion' => $parentescoRelacion, 'personaiduno' => $personaiduno, 'personaidDos' => $personaidDos, 'parentesco' => $parentesco]);
         } else {
             return json_encode(['status' => 0, 'message' => $_POST]);
         }
