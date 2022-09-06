@@ -2000,9 +2000,9 @@
 				const data = {
 					'folio': document.querySelector('#input_folio_atencion').value,
 					'year': document.querySelector('#year_select').value,
-					'personaFisica1': document.querySelector('#personaFisica1').value,
-					'personaFisica2': document.querySelector('#personaFisica2').value,
-					'parentesco_mf': document.querySelector('#parentesco_mf').value,
+					'personaFisica1': document.querySelector('#personaFisica1_I').value,
+					'personaFisica2': document.querySelector('#personaFisica2_I').value,
+					'parentesco_mf': document.querySelector('#parentesco_mf_I').value,
 				};
 				// console.log(data);
 				$.ajax({
