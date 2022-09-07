@@ -6,8 +6,10 @@
 	<hr>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="personaFisica1_I" class="form-label font-weight-bold">Persona fisica 1</label>
-		<select class="form-control" id="personaFisica1_I" name="personaFisica1_I"required>
-			<?php foreach ($body_data->personafisica as $index => $personafisica) {?>
+		<select class="form-control" id="personaFisica1_I" name="personaFisica1_I" required>
+			<option selected value="" disabled></option>
+
+			<?php foreach ($body_data->personafisica as $index => $personafisica) { ?>
 				<option value="<?= $personafisica->PERSONAFISICAID ?>"> <?= $personafisica->NOMBRE . ' ' . $personafisica->SEGUNDOAPELLIDO ?> </option>
 			<?php } ?>
 		</select>
@@ -15,6 +17,7 @@
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="parentesco_mf_I" class="form-label font-weight-bold">Parentesco</label>
 		<select class="form-control" id="parentesco_mf_I" name="parentesco_mf_I" required>
+			<option selected value="" disabled></option>
 			<?php
 			foreach ($body_data->parentesco as $index => $parentesco) { ?>
 				<option value="<?= $parentesco->PERSONAPARENTESCOID ?>"> <?= $parentesco->PERSONAPARENTESCODESCR ?></option>
@@ -25,7 +28,7 @@
 		<label for="personaFisica2_I" class="form-label font-weight-bold">Persona fisica 2</label>
 		<select class="form-control" id="personaFisica2_I" name="personaFisica2_I" required>
 			<option selected value=""></option>
-			
+
 		</select>
 	</div>
 
