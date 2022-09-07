@@ -2075,6 +2075,8 @@
 								text: 'Parentesco ingresado correctamente',
 								confirmButtonColor: '#bf9b55',
 							});
+							$('#relacion_parentesco_modal_insert').modal('hide');
+
 						} else {
 							Swal.fire({
 								icon: 'error',
