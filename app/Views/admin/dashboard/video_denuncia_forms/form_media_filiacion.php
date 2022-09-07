@@ -607,7 +607,7 @@
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="estomago_mf" class="form-label font-weight-bold">Tipo de estomago</label>
+		<label for="estomago_mf" class="form-label font-weight-bold">Tipo de estómago</label>
 		<select class="form-control" id="estomago_mf" name="estomago_mf">
 		<option selected value=""></option>
 			<?php
@@ -617,7 +617,7 @@
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="estomago_descr_mf" class="form-label font-weight-bold">Descripción del estomago</label>
+		<label for="estomago_descr_mf" class="form-label font-weight-bold">Descripción del estómago</label>
 		<input type="text" class="form-control" id="estomago_descr_mf" name="estomago_descr_mf" maxlength="200">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
