@@ -278,7 +278,6 @@
 					const personaiduno = response.personaiduno;
 					const personaidDos = response.personaidDos;
 
-
 					inputFolio.classList.add('d-none');
 					buscar_btn.classList.add('d-none');
 					year_select.classList.add('d-none');

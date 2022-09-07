@@ -7,7 +7,6 @@
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="personaFisica1_I" class="form-label font-weight-bold">Persona fisica 1</label>
 		<select class="form-control" id="personaFisica1_I" name="personaFisica1_I"required>
-			<option selected value=""></option>
 			<?php foreach ($body_data->personafisica as $index => $personafisica) {?>
 				<option value="<?= $personafisica->PERSONAFISICAID ?>"> <?= $personafisica->NOMBRE . ' ' . $personafisica->SEGUNDOAPELLIDO ?> </option>
 			<?php } ?>
