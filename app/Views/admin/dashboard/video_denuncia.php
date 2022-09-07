@@ -2027,6 +2027,8 @@
 								text: 'Parentesco actualizado correctamente',
 								confirmButtonColor: '#bf9b55',
 							});
+							$('#relacion_parentesco_modal').modal('hide');
+
 						} else {
 							Swal.fire({
 								icon: 'error',

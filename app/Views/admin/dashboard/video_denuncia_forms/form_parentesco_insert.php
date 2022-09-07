@@ -15,7 +15,6 @@
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="parentesco_mf_I" class="form-label font-weight-bold">Parentesco</label>
 		<select class="form-control" id="parentesco_mf_I" name="parentesco_mf_I" required>
-			<option selected value=""></option>
 			<?php
 			foreach ($body_data->parentesco as $index => $parentesco) { ?>
 				<option value="<?= $parentesco->PERSONAPARENTESCOID ?>"> <?= $parentesco->PERSONAPARENTESCODESCR ?></option>
