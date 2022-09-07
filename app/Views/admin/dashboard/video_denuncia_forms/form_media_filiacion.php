@@ -10,12 +10,12 @@
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="estatura_mf" class="form-label font-weight-bold">Estatura</label>
-		<input type="text" class="form-control" id="estatura_mf" name="estatura_mf">
+		<label for="estatura_mf" class="form-label font-weight-bold">Estatura (cm)</label>
+		<input type="number" class="form-control" id="estatura_mf" name="estatura_mf">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="peso_mf" class="form-label font-weight-bold">Peso</label>
-		<input type="text" class="form-control" id="peso_mf" name="peso_mf">
+		<label for="peso_mf" class="form-label font-weight-bold">Peso (kg)</label>
+		<input type="number" class="form-control" id="peso_mf" name="peso_mf">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="complexion_mf" class="form-label font-weight-bold">Complexión</label>

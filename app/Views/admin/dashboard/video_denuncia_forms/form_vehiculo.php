@@ -26,7 +26,7 @@
 	</div>
 	<div class="col-12 mb-3">
 		<label for="description_vehiculo" class="form-label font-weight-bold">Otras características que permitan identificar el vehiculo:</label>
-		<textarea class="form-control" id="description_vehiculo" name="description_vehiculo" rows="10"></textarea>
+		<textarea class="form-control" id="description_vehiculo" name="description_vehiculo" rows="10" oninput="mayuscTextarea(this)"></textarea>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="foto_vehiculo" class="form-label font-weight-bold">Fotografía del vehículo:</label>
