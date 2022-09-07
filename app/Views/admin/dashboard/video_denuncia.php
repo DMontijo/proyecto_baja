@@ -2059,8 +2059,8 @@
 					success: function(response) {
 						if (response.status == 1) {
 							$('#personaFisica2_I').empty();
-							$('#personaFisica1_I').empty();
-							$('#parentesco_mf_I').empty();
+							document.querySelector('#parentesco_mf_I').value = '';
+							document.querySelector('#personaFisica1_I').value = '';
 
 							let tabla_parentesco = document.querySelectorAll('#table-parentesco tr');
 							tabla_parentesco.forEach(row => {
