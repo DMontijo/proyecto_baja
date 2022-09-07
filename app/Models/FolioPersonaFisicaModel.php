@@ -83,4 +83,15 @@ class FolioPersonaFisicaModel extends Model
 		$query = $builder->get();
 		return $query->getResult('array');
 	}
+	public function get_by_persona_fisica_filtro($folio, $year, $idpersonafisica)
+	{
+		$builder = $this->db->table($this->table);
+		$builder->select(['FOLIOID', 'PERSONAFISICAID', 'ANO','NOMBRE', 'PRIMERAPELLIDO', 'SEGUNDOAPELLIDO']);
+		$builder->where('FOLIOID', $folio);
+		$builder->where('ANO', $year);
+		$builder->where('PERSONAFISICAID <>', $idpersonafisica);
+
+		$query = $builder->get();
+		return $query->getResult('array');
+	}
 }

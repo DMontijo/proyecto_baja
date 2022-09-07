@@ -535,7 +535,7 @@ class DashboardController extends BaseController
         $data->parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID1', $id)->first();
 
         if ($data->parentescoRelacion) {
-         $data->parentesco = $this->_parentescoModel->where('PERSONAPARENTESCOID', $data->parentescoRelacion['PARENTESCOID'])->first();
+            $data->parentesco = $this->_parentescoModel->where('PERSONAPARENTESCOID', $data->parentescoRelacion['PARENTESCOID'])->first();
             // $data->parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID2', $id)->first();
             // $data->parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
 
@@ -545,7 +545,7 @@ class DashboardController extends BaseController
             //     $data->parentesco = '';
             // }
             $data->idPersonaFisica = $id;
-           
+
             $data->status = 1;
             return json_encode($data);
         } else {
@@ -1716,7 +1716,7 @@ class DashboardController extends BaseController
                 'PARENTESCOID' => $this->request->getPost('parentesco_mf'),
             );
 
-            $updateRelacionParentesco = $this->_parentescoPersonaFisicaModel->set($dataRelacionParentesco)->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID1', $idp1)->where('PERSONAFISICAID2',$idp2)->update();
+            $updateRelacionParentesco = $this->_parentescoPersonaFisicaModel->set($dataRelacionParentesco)->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID1', $idp1)->where('PERSONAFISICAID2', $idp2)->update();
 
             if ($updateRelacionParentesco) {
                 $parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
@@ -1741,7 +1741,7 @@ class DashboardController extends BaseController
     public function createParentescoByFolio()
     {
 
- 
+
         $folio = trim($this->request->getPost('folio'));
         $year = trim($this->request->getPost('year'));
         $dataRelacionParentesco = array(
@@ -1771,6 +1771,23 @@ class DashboardController extends BaseController
         } else {
             return json_encode(['status' => 0, 'message' => $_POST]);
         }
+    }
+    public function getPersonaFisicaFiltro()
+    {
+
+        $data = (object) array();
+
+        $folio = $this->request->getPost('folio');
+        $year = $this->request->getPost('year');
+        $idPersonaFisica = $this->request->getPost('id');
+
+        $data->personaFisicaFiltro = $this->_folioPersonaFisicaModel->get_by_persona_fisica_filtro($folio, $year, $idPersonaFisica);
+
+        if ($data->personaFisicaFiltro) {
+            return json_encode(['status' => 1, 'personaFiltro' => $data->personaFisicaFiltro]);
+        } else {
+        }
+        return json_encode(['status' => 0]);
     }
     private function _bitacoraActividad($data)
     {

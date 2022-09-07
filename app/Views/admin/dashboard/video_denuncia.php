@@ -177,41 +177,42 @@
 			$("#adicionados").append(nFilas - 1);
 		}
 	}
+
 	function view_form_parentesco($personafisica) {
-				$.ajax({
-					data: {
-						'personafisica1': $personafisica,
-						'folio': inputFolio.value,
-						'year': year_select.value,
-					},
-					url: "<?= base_url('/data/get-parentesco-by-id') ?>",
-					method: "POST",
-					dataType: "json",
-					success: function(response) {
-						let parentesco = response.parentesco;
-						let relacion_parentesco = response.parentescoRelacion;
-						let idPersonaFisica = response.idPersonaFisica;
-					// 	if (relacion_parentesco) {
-						document.querySelector('#parentesco_mf').value = parentesco.PERSONAPARENTESCOID ? parentesco.PERSONAPARENTESCOID : '';
-						document.querySelector('#personaFisica1').value = relacion_parentesco.PERSONAFISICAID1 ? relacion_parentesco.PERSONAFISICAID1 : '';
-						document.querySelector('#personaFisica2').value = relacion_parentesco.PERSONAFISICAID2 ? relacion_parentesco.PERSONAFISICAID2 : '';
-						document.getElementById("updateParentesco").style.display="block";
+		$.ajax({
+			data: {
+				'personafisica1': $personafisica,
+				'folio': inputFolio.value,
+				'year': year_select.value,
+			},
+			url: "<?= base_url('/data/get-parentesco-by-id') ?>",
+			method: "POST",
+			dataType: "json",
+			success: function(response) {
+				let parentesco = response.parentesco;
+				let relacion_parentesco = response.parentescoRelacion;
+				let idPersonaFisica = response.idPersonaFisica;
+				// 	if (relacion_parentesco) {
+				document.querySelector('#parentesco_mf').value = parentesco.PERSONAPARENTESCOID ? parentesco.PERSONAPARENTESCOID : '';
+				document.querySelector('#personaFisica1').value = relacion_parentesco.PERSONAFISICAID1 ? relacion_parentesco.PERSONAFISICAID1 : '';
+				document.querySelector('#personaFisica2').value = relacion_parentesco.PERSONAFISICAID2 ? relacion_parentesco.PERSONAFISICAID2 : '';
+				document.getElementById("updateParentesco").style.display = "block";
 
 
-					// } 
-					// if(relacion_parentesco == null) {
-					// 	document.querySelector('#parentesco_mf').value = '';
-					// 	document.querySelector('#personaFisica1').value = '';
-					// 	document.querySelector('#personaFisica2').value = idPersonaFisica ? idPersonaFisica : '';
-					// 	document.getElementById("insertParentesco").style.display="block";
-					// 	document.getElementById("updateParentesco").style.display="none";
+				// } 
+				// if(relacion_parentesco == null) {
+				// 	document.querySelector('#parentesco_mf').value = '';
+				// 	document.querySelector('#personaFisica1').value = '';
+				// 	document.querySelector('#personaFisica2').value = idPersonaFisica ? idPersonaFisica : '';
+				// 	document.getElementById("insertParentesco").style.display="block";
+				// 	document.getElementById("updateParentesco").style.display="none";
 
-					// }
-						$('#relacion_parentesco_modal').modal('show');
-					},
-					error: function(jqXHR, textStatus, errorThrown) {}
-				});
-			}
+				// }
+				$('#relacion_parentesco_modal').modal('show');
+			},
+			error: function(jqXHR, textStatus, errorThrown) {}
+		});
+	}
 
 	function llenarTablaParentesco(relacion_parentesco, personaiduno, personaidDos, parentesco) {
 
@@ -1064,6 +1065,8 @@
 			var form_vehiculo = document.querySelector('#form_vehiculo');
 			var form_parentesco = document.querySelector('#form_parentesco');
 			var form_parentesco_insert = document.querySelector('#form_parentesco_insert');
+			var selectPersonaFisica1 = document.querySelector('#personaFisica1_I');
+
 
 			var btn_insertar_parentesco = document.querySelector('#insertParentescoModal')
 
@@ -1173,8 +1176,8 @@
 			}, false);
 			btn_insertar_parentesco.addEventListener('click', (event) => {
 				$('#relacion_parentesco_modal_insert').modal('show');
-				
-			
+
+
 			}, false);
 			form_parentesco_insert.addEventListener('submit', (event) => {
 				if (!form_parentesco_insert.checkValidity()) {
@@ -1188,7 +1191,40 @@
 					insertarParentesco();
 				}
 			}, false);
-			
+			selectPersonaFisica1.addEventListener("change", function() {
+				let personaFisica2_I = document.querySelector("#personaFisica2_I")
+
+				var datos = {
+					"id": selectPersonaFisica1.value,
+					'folio': document.querySelector('#input_folio_atencion').value,
+					'year': document.querySelector('#year_select').value,
+				}
+
+				$.ajax({
+					method: 'POST',
+					url: "<?= base_url('/data/get-personafisicofiltro') ?>",
+					data: datos,
+					dataType: 'JSON',
+					//data: {nombre:n},
+					success: function(response) {
+						const personaFisicaFiltro = response.personaFiltro;
+
+						if (response.status == 1) {
+							$('#personaFisica2_I').empty();
+
+							personaFisicaFiltro.forEach(element => {
+								console.log(element);
+								// document.getElementById("personaFisica2_I").innerHTML += "<option value='"+element.PERSONAFISICAID+"'>"+element.NOMBRE+"</option>"; 
+								const option = document.createElement('option');
+								option.value = element.PERSONAFISICAID;
+								option.text = element.NOMBRE;
+								personaFisica2_I.add(option, null);
+							});
+						}
+					},
+				});
+			});
+
 			//DENUNCIA
 
 			document.querySelector('#narracion_delito').addEventListener('input', (event) => {
@@ -1963,7 +1999,7 @@
 				});
 			}
 
-			
+
 			function actualizarParentesco() {
 				const data = {
 					'folio': document.querySelector('#input_folio_atencion').value,
@@ -2022,6 +2058,10 @@
 					dataType: "json",
 					success: function(response) {
 						if (response.status == 1) {
+							$('#personaFisica2_I').empty();
+							$('#personaFisica1_I').empty();
+							$('#parentesco_mf_I').empty();
+
 							let tabla_parentesco = document.querySelectorAll('#table-parentesco tr');
 							tabla_parentesco.forEach(row => {
 								if (row.id !== '') {

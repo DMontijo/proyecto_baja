@@ -6,14 +6,13 @@
 	<hr>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="personaFisica1_I" class="form-label font-weight-bold">Persona fisica 1</label>
-		<select class="form-control" id="personaFisica1_I" name="personaFisica1_I" onchange="selectBonito();" required>
+		<select class="form-control" id="personaFisica1_I" name="personaFisica1_I"required>
 			<option selected value=""></option>
-			<?php foreach ($body_data->personafisica as $index => $personafisica) { $arregloAux[$index] = $personafisica;  ?>
+			<?php foreach ($body_data->personafisica as $index => $personafisica) {?>
 				<option value="<?= $personafisica->PERSONAFISICAID ?>"> <?= $personafisica->NOMBRE . ' ' . $personafisica->SEGUNDOAPELLIDO ?> </option>
-			<?php } var_dump($arregloAux);?>
+			<?php } ?>
 		</select>
 	</div>
-	<?php var_dump($arregloAux);?>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="parentesco_mf_I" class="form-label font-weight-bold">Parentesco</label>
 		<select class="form-control" id="parentesco_mf_I" name="parentesco_mf_I" required>
@@ -28,9 +27,7 @@
 		<label for="personaFisica2_I" class="form-label font-weight-bold">Persona fisica 2</label>
 		<select class="form-control" id="personaFisica2_I" name="personaFisica2_I" required>
 			<option selected value=""></option>
-			<?php foreach ($body_data->personafisica as $index => $personafisica) { ?>
-				<option value="<?= $personafisica->PERSONAFISICAID ?>"> <?= $personafisica->NOMBRE . ' ' . $personafisica->SEGUNDOAPELLIDO ?> </option>
-			<?php } ?>
+			
 		</select>
 	</div>
 
@@ -43,9 +40,28 @@
 	let personaFisica1_I = document.getElementById("personaFisica1_I")
 	let personaFisica2_I = document.getElementById("personaFisica2_I")
 
-	function selectBonito(){
-		//const index = personaFisica1_I.selectedIndex;
-	}
+	//recorrer hijos del segundo select
+
+	// function selectBonito() {
+	// 	//const index = personaFisica1_I.selectedIndex;
+	// 	var datos = {
+	// 		"id": personaFisica1_I.value
+	// 	}
+	// 	console.log(datos);
+	// 	$.ajax({
+	// 		method: 'POST',
+	// 		url: "<?= base_url('/data/get-personafisicofiltro') ?>",
+	// 		data: datos,
+	// 		dataType: 'JSON',
+	// 		//data: {nombre:n},
+	// 		success: function(response) {
+	// 			$("#respa").val(d[0]); // ID de la 1era caja de texto
+	// 			$("#respa2").html('<option value="' + d[1] + '">' + d[1] + '</option>'); // ID de la 2da caja de texto
+
+	// 		}
+
+	// 	});
+	// }
 
 
 	// personaFisica1_I.addEventListener("change", function() {
