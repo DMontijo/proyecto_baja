@@ -1212,11 +1212,10 @@
 							$('#personaFisica2_I').empty();
 
 							personaFisicaFiltro.forEach(element => {
-								console.log(element);
-								// document.getElementById("personaFisica2_I").innerHTML += "<option value='"+element.PERSONAFISICAID+"'>"+element.NOMBRE+"</option>"; 
+								let primer_apellido = element.PRIMERAPELLIDO ? element.PRIMERAPELLIDO : '';
 								const option = document.createElement('option');
 								option.value = element.PERSONAFISICAID;
-								option.text = element.NOMBRE;
+								option.text = element.NOMBRE +  ' ' + primer_apellido;
 								personaFisica2_I.add(option, null);
 							});
 						}

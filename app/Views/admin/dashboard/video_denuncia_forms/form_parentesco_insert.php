@@ -10,7 +10,8 @@
 			<option selected value="" disabled></option>
 
 			<?php foreach ($body_data->personafisica as $index => $personafisica) { ?>
-				<option value="<?= $personafisica->PERSONAFISICAID ?>"> <?= $personafisica->NOMBRE . ' ' . $personafisica->SEGUNDOAPELLIDO ?> </option>
+				
+				<option value="<?= $personafisica->PERSONAFISICAID ?>"> <?= $personafisica->NOMBRE . ' ' . $personafisica->PRIMERAPELLIDO ?> </option>
 			<?php } ?>
 		</select>
 	</div>

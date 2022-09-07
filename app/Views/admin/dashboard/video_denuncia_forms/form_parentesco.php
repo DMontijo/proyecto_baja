@@ -9,7 +9,7 @@
 		<select class="form-control" id="personaFisica1" name="personaFisica1" disabled>
 			<option selected value="" disabled></option>
 			<?php foreach ($body_data->personafisica as $index => $personafisica) { ?>
-				<option value="<?= $personafisica->PERSONAFISICAID ?>"> <?= $personafisica->NOMBRE . ' ' . $personafisica->SEGUNDOAPELLIDO ?> </option>
+				<option value="<?= $personafisica->PERSONAFISICAID ?>"> <?= $personafisica->NOMBRE . ' ' . $personafisica->PRIMERAPELLIDO ?> </option>
 			<?php } ?>
 		</select>
 	</div>
@@ -29,7 +29,7 @@
 		<select class="form-control" id="personaFisica2" name="personaFisica2" disabled>
 			<option selected value="" disabled></option>
 			<?php foreach ($body_data->personafisica as $index => $personafisica) { ?>
-				<option value="<?= $personafisica->PERSONAFISICAID ?>"> <?= $personafisica->NOMBRE . ' ' . $personafisica->SEGUNDOAPELLIDO ?> </option>
+				<option value="<?= $personafisica->PERSONAFISICAID ?>"> <?= $personafisica->NOMBRE . ' ' . $personafisica->PRIMERAPELLIDO ?> </option>
 			<?php } ?>
 		</select>
 	</div>
