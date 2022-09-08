@@ -177,6 +177,71 @@
 			$("#adicionados").append(nFilas - 1);
 		}
 	}
+	function view_form_parentesco($personafisica) {
+				$.ajax({
+					data: {
+						'personafisica1': $personafisica,
+						'folio': inputFolio.value,
+						'year': year_select.value,
+					},
+					url: "<?= base_url('/data/get-parentesco-by-id') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						let parentesco = response.parentesco;
+						let relacion_parentesco = response.parentescoRelacion;
+						let idPersonaFisica = response.idPersonaFisica;
+					// 	if (relacion_parentesco) {
+						document.querySelector('#parentesco_mf').value = parentesco.PERSONAPARENTESCOID ? parentesco.PERSONAPARENTESCOID : '';
+						document.querySelector('#personaFisica1').value = relacion_parentesco.PERSONAFISICAID1 ? relacion_parentesco.PERSONAFISICAID1 : '';
+						document.querySelector('#personaFisica2').value = relacion_parentesco.PERSONAFISICAID2 ? relacion_parentesco.PERSONAFISICAID2 : '';
+						document.getElementById("updateParentesco").style.display="block";
+
+
+					// } 
+					// if(relacion_parentesco == null) {
+					// 	document.querySelector('#parentesco_mf').value = '';
+					// 	document.querySelector('#personaFisica1').value = '';
+					// 	document.querySelector('#personaFisica2').value = idPersonaFisica ? idPersonaFisica : '';
+					// 	document.getElementById("insertParentesco").style.display="block";
+					// 	document.getElementById("updateParentesco").style.display="none";
+
+					// }
+						$('#relacion_parentesco_modal').modal('show');
+					},
+					error: function(jqXHR, textStatus, errorThrown) {}
+				});
+			}
+
+	function llenarTablaParentesco(relacion_parentesco, personaiduno, personaidDos, parentesco) {
+
+
+		for (let i = 0; i < relacion_parentesco.length; i++) {
+
+
+			// 	if (relacion_parentesco.PERSONAFISICAID1 == personas.PERSONAFISICAID) {
+			// 		console.log(personas.NOMBRE);
+
+
+			var btn = `<button type='button'  class='btn btn-primary' onclick='view_form_parentesco(${relacion_parentesco[i].PERSONAFISICAID1})'><i class="fas fa-pen"></i></button>`
+			// 	console.log(personas[i]);
+			// 	console.log(relacion_parentesco[i]);
+
+			var fila =
+				`<tr id="row${i}">` +
+				`<td class="text-center">${personaiduno[i].NOMBRE}</td>` +
+				`<td class="text-center">${personaidDos[i].NOMBRE}</td>` +
+				`<td class="text-center">${parentesco[i].PERSONAPARENTESCODESCR}</td>` +
+				`<td class="text-center">${btn}</td>` +
+				`</tr>`;
+
+			$('#table-parentesco tr:first').after(fila);
+			$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
+			var nFilas = $("#parentesco tr").length;
+			$("#adicionados").append(nFilas - 1);
+
+		}
+	}
 
 	function llenarTablaVehiculos(vehiculos) {
 		for (let i = 0; i < vehiculos.length; i++) {
@@ -213,6 +278,11 @@
 					const personas = response.personas;
 					const domicilios = response.domicilios;
 					const vehiculos = response.vehiculos;
+					const relacion_parentesco = response.parentescoRelacion;
+					const parentesco = response.parentesco;
+					const personaiduno = response.personaiduno;
+					const personaidDos = response.personaidDos;
+
 
 					inputFolio.classList.add('d-none');
 					buscar_btn.classList.add('d-none');
@@ -339,6 +409,10 @@
 					//VEHICULOS
 					llenarTablaVehiculos(vehiculos);
 
+					//PARENTESCO
+					llenarTablaParentesco(relacion_parentesco, personaiduno, personaidDos, parentesco);
+
+
 				} else if (response.status === 2) {
 					Swal.fire({
 						icon: 'error',
@@ -389,6 +463,7 @@
 
 		tabla_personas = document.querySelectorAll('#table-personas tr');
 		tabla_vehiculos = document.querySelectorAll('#table-vehiculos tr');
+		tabla_parentesco = document.querySelectorAll('#table-personas tr');
 
 		tabla_personas.forEach(row => {
 			if (row.id !== '') {
@@ -401,7 +476,11 @@
 				row.remove();
 			}
 		});
-
+		tabla_parentesco.forEach(row => {
+			if (row.id !== '') {
+				row.remove();
+			}
+		});
 		card2.classList.add('d-none');
 		card3.classList.add('d-none');
 		card4.classList.add('d-none');
@@ -702,23 +781,24 @@
 					}
 					//PARENTESCO
 
-					if (relacion_parentesco) {
-						document.querySelector('#parentesco_mf').value = parentesco.PERSONAPARENTESCOID ? parentesco.PERSONAPARENTESCOID : '';
-						document.querySelector('#personaFisica1').value = relacion_parentesco.PERSONAFISICAID1 ? relacion_parentesco.PERSONAFISICAID1 : '';
-						document.querySelector('#personaFisica2').value = idPersonaFisica ? idPersonaFisica : '';
-						document.getElementById("updateParentesco").style.display="block";
-						document.getElementById("insertParentesco").style.display="none";
+					// if (relacion_parentesco) {
+					// 	document.querySelector('#parentesco_mf').value = parentesco.PERSONAPARENTESCOID ? parentesco.PERSONAPARENTESCOID : '';
+					// 	document.querySelector('#personaFisica1').value = relacion_parentesco.PERSONAFISICAID1 ? relacion_parentesco.PERSONAFISICAID1 : '';
+					// 	document.querySelector('#personaFisica2').value = idPersonaFisica ? idPersonaFisica : '';
+					// 	document.getElementById("updateParentesco").style.display="block";
+					// 	document.getElementById("insertParentesco").style.display="none";
 
 
-					} 
-					if(relacion_parentesco == null) {
-						document.querySelector('#parentesco_mf').value = '';
-						document.querySelector('#personaFisica1').value = '';
-						document.querySelector('#personaFisica2').value = idPersonaFisica ? idPersonaFisica : '';
-						document.getElementById("insertParentesco").style.display="block";
-						document.getElementById("updateParentesco").style.display="none";
+					// } 
+					// if(relacion_parentesco == null) {
+					// 	document.querySelector('#parentesco_mf').value = '';
+					// 	document.querySelector('#personaFisica1').value = '';
+					// 	document.querySelector('#personaFisica2').value = idPersonaFisica ? idPersonaFisica : '';
+					// 	document.getElementById("insertParentesco").style.display="block";
+					// 	document.getElementById("updateParentesco").style.display="none";
 
-					}
+					// }
+
 					//DOMICILIO
 					let domicilio = response.personaFisicaDomicilio;
 
@@ -981,8 +1061,10 @@
 			var form_media_filiacion = document.querySelector('#form_media_filiacion');
 			var form_vehiculo = document.querySelector('#form_vehiculo');
 			var form_parentesco = document.querySelector('#form_parentesco');
-			var btn_insertar_parentesco = document.querySelector('#insertParentesco')
-		
+			var form_parentesco_insert = document.querySelector('#form_parentesco_insert');
+
+			var btn_insertar_parentesco = document.querySelector('#insertParentescoModal')
+
 			var inputsText = document.querySelectorAll('input[type="text"]');
 			var inputsEmail = document.querySelectorAll('input[type="email"]');
 
@@ -1087,19 +1169,24 @@
 					actualizarParentesco();
 				}
 			}, false);
-			btn_insertar_parentesco.addEventListener('click',  (event) => {
-				if (!form_parentesco.checkValidity()) {
+			btn_insertar_parentesco.addEventListener('click', (event) => {
+				$('#relacion_parentesco_modal_insert').modal('show');
+				
+			
+			}, false);
+			form_parentesco_insert.addEventListener('submit', (event) => {
+				if (!form_parentesco_insert.checkValidity()) {
 					event.preventDefault();
 					event.stopPropagation();
-					form_parentesco.classList.add('was-validated')
+					form_parentesco_insert.classList.add('was-validated')
 				} else {
 					event.preventDefault();
 					event.stopPropagation();
-					form_parentesco.classList.remove('was-validated')
+					form_parentesco_insert.classList.remove('was-validated')
 					insertarParentesco();
 				}
 			}, false);
-
+			
 			//DENUNCIA
 
 			document.querySelector('#narracion_delito').addEventListener('input', (event) => {
@@ -1874,9 +1961,9 @@
 				});
 			}
 
+			
 			function actualizarParentesco() {
 				const data = {
-					'pf_id': document.querySelector('#pf_id').value,
 					'folio': document.querySelector('#input_folio_atencion').value,
 					'year': document.querySelector('#year_select').value,
 					'personaFisica1': document.querySelector('#personaFisica1').value,
@@ -1889,8 +1976,14 @@
 					method: "POST",
 					dataType: "json",
 					success: function(response) {
-						// console.log(respobse.idcalidad);
 						if (response.status == 1) {
+							let tabla_parentesco = document.querySelectorAll('#table-parentesco tr');
+							tabla_parentesco.forEach(row => {
+								if (row.id !== '') {
+									row.remove();
+								}
+							});
+							llenarTablaParentesco(response.parentescoRelacion, response.personaiduno, response.personaidDos, response.parentesco);
 
 							Swal.fire({
 								icon: 'success',
@@ -1910,15 +2003,16 @@
 					}
 				});
 			}
+
 			function insertarParentesco() {
 				const data = {
 					'folio': document.querySelector('#input_folio_atencion').value,
 					'year': document.querySelector('#year_select').value,
-					'personaFisica1': document.querySelector('#personaFisica1').value,
-					'personaFisica2': document.querySelector('#personaFisica2').value,
-					'parentesco_mf': document.querySelector('#parentesco_mf').value,
+					'personaFisica1': document.querySelector('#personaFisica1_I').value,
+					'personaFisica2': document.querySelector('#personaFisica2_I').value,
+					'parentesco_mf': document.querySelector('#parentesco_mf_I').value,
 				};
-				console.log(data);
+				// console.log(data);
 				$.ajax({
 					data: data,
 					url: "<?= base_url('/data/create-parentesco-by-id') ?>",
@@ -1938,7 +2032,6 @@
 								text: 'No se agregó la información del parentesco',
 								confirmButtonColor: '#bf9b55',
 							});
-							console.log(response.message);
 						}
 					},
 					error: function(jqXHR, textStatus, errorThrown) {
@@ -1946,6 +2039,7 @@
 					}
 				});
 			}
+
 			function actualizarVehiculo() {
 				const data = {
 					'folio': document.querySelector('#input_folio_atencion').value,
@@ -1999,13 +2093,15 @@
 			}
 		})();
 	};
-	
-
 </script>
 
 <?php include 'video_denuncia_modals/info_folio_modal.php' ?>
 <?php include 'video_denuncia_modals/salida_modal.php' ?>
 <?php include 'video_denuncia_modals/persona_modal.php' ?>
+<?php include 'video_denuncia_modals/relacion_parentesco_modal.php' ?>
+<?php include 'video_denuncia_modals/relacion_parentesco_modal_insert.php' ?>
+
+
 <?php include 'video_denuncia_modals/vehiculo_modal.php' ?>
 <?php include 'video_denuncia_modals/domicilio_modal.php' ?>
 <?php $this->endSection() ?>

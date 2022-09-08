@@ -202,7 +202,7 @@ class DashboardController extends BaseController
 
         $this->protocol = 'http://';
         $this->ip = "10.144.244.223";
-        $this->endpoint = $this->protocol . $this->ip . '/wsServiceVD';
+        $this->endpoint = $this->protocol . $this->ip . '/webServiceVD';
         // $this->protocol = 'https://';
         // $this->ip = "ws.fgebc.gob.mx";
         // $this->endpoint = $this->protocol . $this->ip . '/wsJusticia';
@@ -444,6 +444,11 @@ class DashboardController extends BaseController
                     $data->status = 1;
                     $data->preguntas_iniciales = $this->_folioPreguntasModel->where('FOLIOID', $numfolio)->where('ANO', $year)->first();
                     $data->personas = $this->_folioPersonaFisicaModel->get_by_folio($numfolio, $year);
+                    $data->parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $numfolio)->where('ANO', $year)->findAll();
+                    $data->personaiduno = $this->_parentescoPersonaFisicaModel->get_personaFisicaUno($numfolio, $year);
+                    $data->personaidDos = $this->_parentescoPersonaFisicaModel->get_personaFisicaDos($numfolio, $year);
+                    $data->parentesco = $this->_parentescoPersonaFisicaModel->get_Parentesco($numfolio, $year);
+
                     $data->vehiculos = $this->_folioVehiculoModel->get_by_folio($numfolio, $year);
 
                     $this->_folioModel->set(['STATUS' => 'EN PROCESO', 'AGENTEATENCIONID' => session('ID')])->where('ANO', $year)->where('FOLIOID', $numfolio)->update();
@@ -499,12 +504,14 @@ class DashboardController extends BaseController
             //     $data->parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID2', $data->personaFisicaMediaFiliacion['PERSONAFISICAID'])->first();
             //     $data->parentesco = $this->_parentescoModel->where('PERSONAPARENTESCOID', $data->parentescoRelacion['PARENTESCOID'])->first();
             // }
-            $data->parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID2', $id)->first();
-            if ($data->parentescoRelacion) {
-                $data->parentesco = $this->_parentescoModel->where('PERSONAPARENTESCOID', $data->parentescoRelacion['PARENTESCOID'])->first();
-            } else {
-                $data->parentesco = '';
-            }
+            // $data->parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID2', $id)->first();
+            // $data->parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
+
+            // if ($data->parentescoRelacion) {
+            //     $data->parentesco = $this->_parentescoModel->where('PERSONAPARENTESCOID', $data->parentescoRelacion['PARENTESCOID'])->first();
+            // } else {
+            //     $data->parentesco = '';
+            // }
             $data->idPersonaFisica = $id;
             if ($data->personaFisica['FOTO']) {
                 $file_info = new \finfo(FILEINFO_MIME_TYPE);
@@ -519,7 +526,34 @@ class DashboardController extends BaseController
             return json_encode($data);
         }
     }
+    public function getRelacionParentesco()
+    {
+        $id = trim($this->request->getPost('personafisica1'));
+        $folio = trim($this->request->getPost('folio'));
+        $year = trim($this->request->getPost('year'));
 
+        $data = (object) array();
+        $data->parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID1', $id)->first();
+
+        if ($data->parentescoRelacion) {
+            $data->parentesco = $this->_parentescoModel->where('PERSONAPARENTESCOID', $data->parentescoRelacion['PARENTESCOID'])->first();
+            // $data->parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID2', $id)->first();
+            // $data->parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
+
+            // if ($data->parentescoRelacion) {
+            //     $data->parentesco = $this->_parentescoModel->where('PERSONAPARENTESCOID', $data->parentescoRelacion['PARENTESCOID'])->first();
+            // } else {
+            //     $data->parentesco = '';
+            // }
+            $data->idPersonaFisica = $id;
+
+            $data->status = 1;
+            return json_encode($data);
+        } else {
+            $data = (object)['status' => 0];
+            return json_encode($data);
+        }
+    }
     public function findPersonadDomicilioById()
     {
         $id = $this->request->getPost('id');
@@ -825,66 +859,75 @@ class DashboardController extends BaseController
         $oficina = $this->request->getPost('oficina');
         $empleado = $this->request->getPost('empleado');
 
-        if (!empty($folio) && !empty($municipio) && !empty($estado) && !empty($notas) && !empty($oficina) && !empty($empleado)) {
-            $folioRow = $this->_folioModel->where('ANO', $year)->where('FOLIOID', $folio)->where('STATUS', 'EN PROCESO')->first();
-            if ($folioRow) {
-                $empleadoRow = $this->_empleadosModel->asObject()->where('MUNICIPIOID', $municipio)->where('OFICINAID', $oficina)->where('EMPLEADOID', $empleado)->first();
-                $personas = $this->_folioPersonaFisicaModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->orderBy('PERSONAFISICAID', 'asc')->findAll();
-                $narracion = $folioRow['HECHONARRACION'];
-                $fecha = $folioRow['HECHOFECHA'];
+        try {
+            if (!empty($folio) && !empty($municipio) && !empty($estado) && !empty($notas) && !empty($oficina) && !empty($empleado)) {
+                $folioRow = $this->_folioModel->where('ANO', $year)->where('FOLIOID', $folio)->where('STATUS', 'EN PROCESO')->first();
+                if ($folioRow) {
+                    $empleadoRow = $this->_empleadosModel->asObject()->where('MUNICIPIOID', $municipio)->where('OFICINAID', $oficina)->where('EMPLEADOID', $empleado)->first();
+                    $personas = $this->_folioPersonaFisicaModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->orderBy('PERSONAFISICAID', 'asc')->findAll();
+                    $narracion = $folioRow['HECHONARRACION'];
+                    $fecha = $folioRow['HECHOFECHA'];
 
-                $folioRow['MUNICIPIOID'] = $municipio;
-                $folioRow['ESTADOID'] = $estado;
-                $folioRow['HECHOMEDIOCONOCIMIENTOID'] = (string) 6;
-                $folioRow['NOTASAGENTE'] = $notas;
-                $folioRow['STATUS'] = 'EXPEDIENTE';
-                $folioRow['AGENTEATENCIONID'] = session('ID') ? session('ID') : 1;
-                $folioRow['AGENTEFIRMAID'] = session('ID') ? session('ID') : 1;
+                    $folioRow['MUNICIPIOID'] = $municipio;
+                    $folioRow['ESTADOID'] = $estado;
+                    $folioRow['HECHOMEDIOCONOCIMIENTOID'] = (string) 6;
+                    $folioRow['NOTASAGENTE'] = $notas;
+                    $folioRow['STATUS'] = 'EXPEDIENTE';
+                    $folioRow['AGENTEATENCIONID'] = session('ID') ? session('ID') : 1;
+                    $folioRow['AGENTEFIRMAID'] = session('ID') ? session('ID') : 1;
 
-                $folioRow['HECHOFECHA'] = $folioRow['HECHOFECHA'] . ' ' . $folioRow['HECHOHORA'];
-                $folioRow['HECHONARRACION'] = $notas;
+                    $folioRow['HECHOFECHA'] = $folioRow['HECHOFECHA'] . ' ' . $folioRow['HECHOHORA'];
+                    $folioRow['HECHONARRACION'] = $notas;
 
-                $folioRow['OFICINAIDRESPONSABLE'] = $oficina;
-                $folioRow['EMPLEADOIDREGISTRO'] = $empleado;
-                $folioRow['AREAIDREGISTRO'] = $empleadoRow->AREAID;
-                $folioRow['AREAIDRESPONSABLE'] = $empleadoRow->AREAID;
-                $folioRow['ESTADOJURIDICOEXPEDIENTEID'] = (string) 2;
-                $folioRow['TIPOEXPEDIENTEID'] = 4;
+                    $folioRow['OFICINAIDRESPONSABLE'] = $oficina;
+                    $folioRow['EMPLEADOIDREGISTRO'] = $empleado;
+                    $folioRow['AREAIDREGISTRO'] = $empleadoRow->AREAID;
+                    $folioRow['AREAIDRESPONSABLE'] = $empleadoRow->AREAID;
+                    $folioRow['ESTADOJURIDICOEXPEDIENTEID'] = (string) 2;
+                    $folioRow['TIPOEXPEDIENTEID'] = 4;
 
-                $expedienteCreado = $this->createExpediente($folioRow);
+                    $expedienteCreado = $this->_createExpediente($folioRow);
+                    // $expedienteCreado = (object)array(
+                    //     'status' => 201,
+                    //     'EXPEDIENTEID' => '402002202200257'
+                    // );
 
-                // return json_encode(['info' => $expedienteCreado]);
+                    unset($folioRow['OFICINAIDRESPONSABLE']);
+                    unset($folioRow['EMPLEADOIDREGISTRO']);
+                    unset($folioRow['AREAIDREGISTRO']);
+                    unset($folioRow['AREAIDRESPONSABLE']);
+                    unset($folioRow['ESTADOJURIDICOEXPEDIENTEID']);
+                    unset($folioRow['TIPOEXPEDIENTEID']);
 
-                unset($folioRow['OFICINAIDRESPONSABLE']);
-                unset($folioRow['EMPLEADOIDREGISTRO']);
-                unset($folioRow['AREAIDREGISTRO']);
-                unset($folioRow['AREAIDRESPONSABLE']);
-                unset($folioRow['ESTADOJURIDICOEXPEDIENTEID']);
-                unset($folioRow['TIPOEXPEDIENTEID']);
+                    $folioRow['HECHONARRACION'] = $narracion;
+                    $folioRow['HECHOFECHA'] = $fecha;
 
-                $folioRow['HECHONARRACION'] = $narracion;
-                $folioRow['HECHOFECHA'] = $fecha;
 
-                try {
                     if ($expedienteCreado->status == 201) {
                         $folioRow['EXPEDIENTEID'] = $expedienteCreado->EXPEDIENTEID;
                         $folioRow['FECHASALIDA'] = date('Y-m-d H:i:s');
 
                         $update = $this->_folioModel->set($folioRow)->where('FOLIOID', $folio)->where('ANO', $year)->update();
-
                         try {
                             foreach ($personas as $key => $persona) {
-                                $_persona = $this->createPersonaFisica($expedienteCreado->EXPEDIENTEID, $persona, $folioRow['HECHOMUNICIPIOID']);
+                                $_persona = $this->_createPersonaFisica($expedienteCreado->EXPEDIENTEID, $persona, $folioRow['HECHOMUNICIPIOID']);
                                 $domicilios = $this->_folioPersonaFisicaDomicilioModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->where('PERSONAFISICAID', $persona['PERSONAFISICAID'])->findAll();
-                                $mediaFiliacion = $this->_folioMediaFiliacion->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->where('PERSONAFISICAID', $persona['PERSONAFISICAID'])->findAll();
+                                $mediaFiliacion = $this->_folioMediaFiliacion->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->where('PERSONAFISICAID', $persona['PERSONAFISICAID'])->first();
+
                                 if ($persona['CALIDADJURIDICAID'] == '2') {
-                                    $_imputado = $this->createExpImputado($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $folioRow['HECHOMUNICIPIOID']);
+                                    $_imputado = $this->_createExpImputado($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $folioRow['HECHOMUNICIPIOID']);
                                 }
                                 foreach ($domicilios as $key => $domicilio) {
-                                    $_domicilio = $this->createDomicilioPersonaFisica($expedienteCreado->EXPEDIENTEID, 1, $domicilio, $folioRow['HECHOMUNICIPIOID']);
+                                    $_domicilio = $this->_createDomicilioPersonaFisica($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $domicilio, $folioRow['HECHOMUNICIPIOID']);
                                 }
+
+                                $_mediaFiliacion = $this->_createPersonaFisicaMediaFilicacion($expedienteCreado->EXPEDIENTEID, 18, $mediaFiliacion, $folioRow['HECHOMUNICIPIOID']);
+                                var_dump($_mediaFiliacion);
+                                exit;
                             }
+                            exit;
                         } catch (\Exception $e) {
+                            throw new \Exception($e->getMessage());
                         }
 
                         if ($update) {
@@ -895,23 +938,23 @@ class DashboardController extends BaseController
                                 return json_encode(['status' => 1, 'expediente' => $expedienteCreado->EXPEDIENTEID, 'message' => 'Correo no enviado']);
                             }
                         } else {
-                            return json_encode(['status' => 0, 'error' => 'No hizo el update']);
+                            throw new \Exception('No hizo el update.');
                         }
                     } else {
-                        return json_encode(['status' => 0, 'error' => 'Expediente no creado']);
+                        throw new \Exception($expedienteCreado->error);
                     }
-                } catch (\Exception $e) {
-                    return json_encode(['status' => 0, 'error' => 'Expediente no creado']);
+                } else {
+                    throw new \Exception('Ya fue atendido el folio');
                 }
             } else {
-                return json_encode(['status' => 0, 'error' => 'Ya fue atendido el folio']);
+                throw new \Exception('No se enviarón todas las variables necesarias.');
             }
-        } else {
-            return json_encode(['status' => 0, 'error' => 'No existe alguna de las variables']);
+        } catch (\Exception $e) {
+            return json_encode(['status' => 0, 'error' => $e->getMessage()]);
         }
     }
 
-    private function createExpediente($folioRow)
+    private function _createExpediente($folioRow)
     {
         $function = '/expediente.php?process=crear';
         $endpoint = $this->endpoint . $function;
@@ -984,7 +1027,7 @@ class DashboardController extends BaseController
         return $this->curlPost($endpoint, $data);
     }
 
-    private function createPersonaFisica($expedienteId, $personaFisica, $municipio)
+    private function _createPersonaFisica($expedienteId, $personaFisica, $municipio)
     {
         $function = '/personaFisica.php?process=crear';
         $array = [
@@ -1066,7 +1109,7 @@ class DashboardController extends BaseController
         return $this->curlPost($endpoint, $data);
     }
 
-    private function createDomicilioPersonaFisica($expedienteId, $personaFisicaId, $domicilioPersonaFisica, $municipio)
+    private function _createDomicilioPersonaFisica($expedienteId, $personaFisicaId, $domicilioPersonaFisica, $municipio)
     {
         if ($domicilioPersonaFisica['ESTADOID'] && $domicilioPersonaFisica['MUNICIPIOID'] && $domicilioPersonaFisica['LOCALIDADID']) {
 
@@ -1120,7 +1163,7 @@ class DashboardController extends BaseController
         }
     }
 
-    private function createPersonaFisicaMediaFilicacion($expedienteId, $personaFisicaId, $personaFisicaMediaFiliacion, $municipio)
+    private function _createPersonaFisicaMediaFilicacion($expedienteId, $personaFisicaId, $personaFisicaMediaFiliacion, $municipio)
     {
         $function = '/mediaFiliacion.php?process=crear';
         $array = [
@@ -1217,6 +1260,7 @@ class DashboardController extends BaseController
         }
 
         $data['EXPEDIENTEID'] = $expedienteId;
+        $data['PERSONAFISICAID'] = $personaFisicaId;
         $data['userDB'] = $conexion->USER;
         $data['pwdDB'] = $conexion->PASSWORD;
         $data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
@@ -1225,7 +1269,7 @@ class DashboardController extends BaseController
         return $this->curlPost($endpoint, $data);
     }
 
-    private function createExpImputado($expedienteId, $personaFisicaId, $municipio)
+    private function _createExpImputado($expedienteId, $personaFisicaId, $municipio)
     {
         $function = '/imputado.php?process=crear';
         $endpoint = $this->endpoint . $function;
@@ -1264,7 +1308,6 @@ class DashboardController extends BaseController
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-
         $headers = array();
         $headers[] = 'Content-Type: application/json';
         $headers[] = 'Access-Control-Allow-Origin: *';
@@ -1276,7 +1319,11 @@ class DashboardController extends BaseController
         $result = curl_exec($ch);
 
         if ($result === false) {
-            die('Curl failed: ' . curl_error($ch));
+            // die('Curl failed: ' . curl_error($ch));
+            $result = "{
+                'status' => 401,
+                'error' => 'Curl failed: '" . curl_error($ch) . "
+            }";
         }
 
         curl_close($ch);
@@ -1745,9 +1792,6 @@ class DashboardController extends BaseController
                 'TIPOID' => $this->request->getPost('tipo_vehiculo'),
                 'PRIMERCOLORID' => $this->request->getPost('color_vehiculo'),
                 'SENASPARTICULARES' => $this->request->getPost('description_vehiculo'),
-
-
-
             );
 
             $update = $this->_folioVehiculoModel->set($data)->where('FOLIOID', $folio)->where('ANO', $year)->update();
@@ -1771,21 +1815,26 @@ class DashboardController extends BaseController
     public function updateParentescoByFolio()
     {
         try {
-            $id = trim($this->request->getPost('pf_id'));
+            $idp1 = trim($this->request->getPost('personaFisica1'));
+            $idp2 = trim($this->request->getPost('personaFisica2'));
 
             $folio = trim($this->request->getPost('folio'));
             $year = trim($this->request->getPost('year'));
             $dataRelacionParentesco = array(
-                'folio' => trim($this->request->getPost('folio')),
-                'year' => trim($this->request->getPost('year')),
+                'FOLIO' => trim($this->request->getPost('folio')),
+                'ANO' => trim($this->request->getPost('year')),
                 'PERSONAFISICAID1' => $this->request->getPost('personaFisica1'),
                 'PERSONAFISICAID2' => $this->request->getPost('personaFisica2'),
                 'PARENTESCOID' => $this->request->getPost('parentesco_mf'),
             );
 
-            $updateRelacionParentesco = $this->_parentescoPersonaFisicaModel->set($dataRelacionParentesco)->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID2', $id)->update();
+            $updateRelacionParentesco = $this->_parentescoPersonaFisicaModel->set($dataRelacionParentesco)->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID1', $idp1)->where('PERSONAFISICAID2', $idp2)->update();
 
             if ($updateRelacionParentesco) {
+                $parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
+                $personaiduno = $this->_parentescoPersonaFisicaModel->get_personaFisicaUno($folio, $year);
+                $personaidDos = $this->_parentescoPersonaFisicaModel->get_personaFisicaDos($folio, $year);
+                $parentesco = $this->_parentescoPersonaFisicaModel->get_Parentesco($folio, $year);
                 $datosBitacora = [
                     'ACCION' => 'Ha actualizado el parentesco de una persona fisica',
                     'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
@@ -1793,7 +1842,7 @@ class DashboardController extends BaseController
 
                 $this->_bitacoraActividad($datosBitacora);
 
-                return json_encode(['status' => 1]);
+                return json_encode(['status' => 1, 'parentescoRelacion' => $parentescoRelacion, 'personaiduno' => $personaiduno, 'personaidDos' => $personaidDos, 'parentesco' => $parentesco]);
             } else {
                 return json_encode(['status' => 0, 'message' => $updateRelacionParentesco]);
             }
@@ -1803,8 +1852,6 @@ class DashboardController extends BaseController
     }
     public function createParentescoByFolio()
     {
-
-
         $folio = trim($this->request->getPost('folio'));
         $year = trim($this->request->getPost('year'));
         $dataRelacionParentesco = array(
@@ -1813,9 +1860,7 @@ class DashboardController extends BaseController
             'PERSONAFISICAID1' => $this->request->getPost('personaFisica1'),
             'PARENTESCOID' => $this->request->getPost('parentesco_mf'),
             'PERSONAFISICAID2' => $this->request->getPost('personaFisica2'),
-
         );
-
 
         $insertRelacionParentesco = $this->_parentescoPersonaFisicaModel->insert($dataRelacionParentesco);
 
@@ -1837,7 +1882,6 @@ class DashboardController extends BaseController
         $data = $data;
         $data['ID'] = uniqid();
         $data['USUARIOID'] = session('ID');
-
 
         $this->_bitacoraActividadModel->insert($data);
     }
