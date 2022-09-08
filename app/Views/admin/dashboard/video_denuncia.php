@@ -1499,7 +1499,379 @@
 			input2_phone.addEventListener('change', getData);
 			input2_phone.addEventListener('keyup', getData);
 			input2_phone.addEventListener('blur', getData);
+
+			let input_pf = document.querySelector("#telefono_new");
+			let input2_pf = document.querySelector("#telefono_new2");
+			let inputPais_pf = document.querySelector("#codigo_pais_new");
+			let inputPais2_pf = document.querySelector("#codigo_pais_2_new");
+
+			let iti_pf = window.intlTelInput(input_pf, {
+				separateDialCode: true,
+				initialCountry: "MX",
+			});
+			let iti2_pf = window.intlTelInput(input2_pf, {
+				separateDialCode: true,
+				initialCountry: "MX",
+			});
+
+			const getData_PF = () => {
+				inputPais_pf.value = parseInt(iti_pf.getSelectedCountryData().dialCode);
+				inputPais2_pf.value = parseInt(iti2_pf.getSelectedCountryData().dialCode);
+			};
+
+			input_pf.addEventListener('change', getData_PF);
+			input_pf.addEventListener('keyup', getData_PF);
+			input_pf.addEventListener('blur', getData_PF);
+
+			input2_pf.addEventListener('change', getData_PF);
+			input2_pf.addEventListener('keyup', getData_PF);
+			input2_pf.addEventListener('blur', getData_PF);
+
 			//INTL TEL INPUT END
+
+			//CREAR PERSONA FISICA
+			document.querySelector('#fecha_nacimiento_new').addEventListener('change', (e) => {
+		let fecha = e.target.value;
+		let hoy = new Date();
+		let cumpleanos = new Date(fecha);
+		let edad = hoy.getFullYear() - cumpleanos.getFullYear();
+		let m = hoy.getMonth() - cumpleanos.getMonth();
+
+		if (m < 0 || (m === 0 && hoy.getDate() <= cumpleanos.getDate())) {
+			edad--;
+		}
+		document.querySelector('#edad_new').value = edad;
+	})
+
+	document.querySelector('#nacionalidad_new').addEventListener('change', (e) => {
+			let select_estado = document.querySelector('#estado_select_origen_new');
+			let select_municipio = document.querySelector('#municipio_select_origen_new');
+
+			clearSelect(select_municipio);
+
+			if (e.target.value !== '82') {
+				select_estado.value = '33';
+				let data = {
+					'estado_id': 33,
+					'municipio_id': 1,
+				}
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/get-municipios-by-estado') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						let municipios = response.data;
+						municipios.forEach(municipio => {
+							let option = document.createElement("option");
+							option.text = municipio.MUNICIPIODESCR;
+							option.value = municipio.MUNICIPIOID;
+							select_municipio.add(option);
+						});
+						select_municipio.value = '1';
+					},
+					error: function(jqXHR, textStatus, errorThrown) {}
+				});
+
+			} else {
+				clearSelect(select_municipio);
+				select_estado.value = '';
+				select_municipio.value = '';
+			}
+		});
+
+		document.querySelector('#estado_select_origen_new').addEventListener('change', (e) => {
+			let select_municipio = document.querySelector('#municipio_select_origen_new');
+
+			clearSelect(select_municipio);
+
+			select_municipio.value = '';
+
+			let data = {
+				'estado_id': e.target.value,
+			}
+
+			$.ajax({
+				data: data,
+				url: "<?= base_url('/data/get-municipios-by-estado') ?>",
+				method: "POST",
+				dataType: "json",
+				success: function(response) {
+					let municipios = response.data;
+
+					municipios.forEach(municipio => {
+						var option = document.createElement("option");
+						option.text = municipio.MUNICIPIODESCR;
+						option.value = municipio.MUNICIPIOID;
+						select_municipio.add(option);
+					});
+				},
+				error: function(jqXHR, textStatus, errorThrown) {}
+			});
+		});
+
+		document.querySelector('#pais_select_new').addEventListener('change', (e) => {
+
+			let select_estado = document.querySelector('#estado_select_new');
+			let select_municipio = document.querySelector('#municipio_select_new');
+			let select_localidad = document.querySelector('#localidad_select_new');
+			let select_colonia = document.querySelector('#colonia_select_new');
+
+			let input_colonia = document.querySelector('#colonia_new');
+			clearSelect(select_municipio);
+			clearSelect(select_localidad);
+			clearSelect(select_colonia);
+
+			if (e.target.value !== 'MX') {
+
+				select_estado.value = '33';
+
+				let data = {
+					'estado_id': 33,
+					'municipio_id': 1,
+				}
+
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/get-municipios-by-estado') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						let municipios = response.data;
+						municipios.forEach(municipio => {
+							let option = document.createElement("option");
+							option.text = municipio.MUNICIPIODESCR;
+							option.value = municipio.MUNICIPIOID;
+							select_municipio.add(option);
+						});
+						select_municipio.value = '1';
+					},
+					error: function(jqXHR, textStatus, errorThrown) {}
+				});
+
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/get-localidades-by-municipio') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						let localidades = response.data;
+						localidades.forEach(localidad => {
+							let option = document.createElement("option");
+							option.text = localidad.LOCALIDADDESCR;
+							option.value = localidad.LOCALIDADID;
+							select_localidad.add(option);
+						});
+						let option = document.createElement("option");
+						option.text = 'OTRO';
+						option.value = '0';
+
+						select_colonia.add(option);
+						select_localidad.value = '1';
+
+						select_colonia.value = '0';
+						select_colonia.classList.add('d-none');
+						input_colonia.classList.remove('d-none');
+						input_colonia.value = 'EXTRANJERO';
+						document.querySelector('#calle').focus();
+					},
+					error: function(jqXHR, textStatus, errorThrown) {}
+				});
+
+				let option = document.createElement("option");
+				option.text = 'OTRO';
+				option.value = '0';
+
+				select_colonia.add(option);
+
+				select_colonia.value = '0';
+				select_colonia.classList.add('d-none');
+				input_colonia.classList.remove('d-none');
+				input_colonia.value = 'EXTRANJERO';
+
+
+			} else {
+				clearSelect(select_municipio);
+				clearSelect(select_localidad);
+				clearSelect(select_colonia);
+
+				select_estado.value = '';
+				select_municipio.value = '';
+				select_localidad.value = '';
+				select_colonia.value = '';
+				input_colonia.value = '';
+
+				select_colonia.classList.remove('d-none');
+				input_colonia.classList.add('d-none');
+			}
+		});
+
+		document.querySelector('#estado_select_new').addEventListener('change', (e) => {
+			let select_municipio = document.querySelector('#municipio_select_new');
+			let select_localidad = document.querySelector('#localidad_select_new');
+			let select_colonia = document.querySelector('#colonia_select_new');
+			let input_colonia = document.querySelector('#colonia_new');
+
+			clearSelect(select_municipio);
+			clearSelect(select_localidad);
+			clearSelect(select_colonia);
+
+			select_municipio.value = '';
+			select_localidad.value = '';
+			select_colonia.value = '';
+			input_colonia.value = '';
+
+			select_colonia.classList.remove('d-none');
+			input_colonia.classList.add('d-none');
+
+			let data = {
+				'estado_id': e.target.value,
+			}
+
+			$.ajax({
+				data: data,
+				url: "<?= base_url('/data/get-municipios-by-estado') ?>",
+				method: "POST",
+				dataType: "json",
+				success: function(response) {
+					let municipios = response.data;
+
+					municipios.forEach(municipio => {
+						var option = document.createElement("option");
+						option.text = municipio.MUNICIPIODESCR;
+						option.value = municipio.MUNICIPIOID;
+						select_municipio.add(option);
+					});
+				},
+				error: function(jqXHR, textStatus, errorThrown) {}
+			});
+			if (e.target.value != 2) {
+				var option = document.createElement("option");
+				option.text = 'OTRO';
+				option.value = '0';
+				select_colonia.add(option);
+				select_colonia.value = '0';
+				input_colonia.value = '';
+				select_colonia.classList.add('d-none');
+				input_colonia.classList.remove('d-none');
+			} else {
+				document.querySelector('#colonia-message').classList.remove('d-none');
+			}
+		});
+
+		document.querySelector('#municipio_select_new').addEventListener('change', (e) => {
+			let select_localidad = document.querySelector('#localidad_select_new');
+			let select_colonia = document.querySelector('#colonia_select_new');
+			let input_colonia = document.querySelector('#colonia_new');
+
+			let estado = document.querySelector('#estado_select_new').value;
+			let municipio = e.target.value;
+
+			clearSelect(select_localidad);
+			clearSelect(select_colonia);
+
+			select_localidad.value = '';
+
+			let data = {
+				'estado_id': estado,
+				'municipio_id': municipio
+			};
+
+			$.ajax({
+				data: data,
+				url: "<?= base_url('/data/get-localidades-by-municipio') ?>",
+				method: "POST",
+				dataType: "json",
+				success: function(response) {
+					let localidades = response.data;
+
+					localidades.forEach(localidad => {
+						var option = document.createElement("option");
+						option.text = localidad.LOCALIDADDESCR;
+						option.value = localidad.LOCALIDADID;
+						select_localidad.add(option);
+					});
+				},
+				error: function(jqXHR, textStatus, errorThrown) {}
+			});
+		});
+
+		document.querySelector('#localidad_select_new').addEventListener('change', (e) => {
+			let select_colonia = document.querySelector('#colonia_select_new');
+			let input_colonia = document.querySelector('#colonia_new');
+
+			let estado = document.querySelector('#estado_select_new').value;
+			let municipio = document.querySelector('#municipio_select_new').value;
+			let localidad = e.target.value;
+
+			clearSelect(select_colonia);
+			select_colonia.value = '';
+
+			let data = {
+				'estado_id': estado,
+				'municipio_id': municipio,
+				'localidad_id': localidad
+			};
+
+			console.log(data);
+
+			if (estado == 2) {
+				select_colonia.classList.remove('d-none');
+				input_colonia.classList.add('d-none');
+				input_colonia.value = '';
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/get-colonias-by-estado-municipio-localidad') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						let colonias = response.data;
+
+						colonias.forEach(colonia => {
+							var option = document.createElement("option");
+							option.text = colonia.COLONIADESCR;
+							option.value = colonia.COLONIAID;
+							select_colonia.add(option);
+						});
+
+						var option = document.createElement("option");
+						option.text = 'OTRO';
+						option.value = '0';
+						select_colonia.add(option);
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+
+					}
+				});
+
+			} else {
+				var option = document.createElement("option");
+				option.text = 'OTRO';
+				option.value = '0';
+				select_colonia.add(option);
+				select_colonia.value = '0';
+				input_colonia.value = '';
+				select_colonia.classList.add('d-none');
+				input_colonia.classList.remove('d-none');
+			}
+		});
+
+		document.querySelector('#colonia_select_new').addEventListener('change', (e) => {
+			let select_colonia = document.querySelector('#colonia_select_new');
+			let input_colonia = document.querySelector('#colonia_new');
+
+			if (e.target.value === '0') {
+				select_colonia.classList.add('d-none');
+				input_colonia.classList.remove('d-none');
+				input_colonia.value = '';
+				input_colonia.focus();
+			} else {
+				input_colonia.value = '-';
+			}
+		});
+
+
+			//END CREAR PERSONA FISICA
 
 			document.querySelector('#fecha_nacimiento_pf').addEventListener('change', (e) => {
 				let fecha = e.target.value;
@@ -2152,6 +2524,8 @@
 					'fecha_nacimiento': document.querySelector('#fecha_nacimiento_new').value,
 					'edad': document.querySelector('#edad_new').value,
 					'sexo': document.querySelector('#sexo_new').value,
+					'codigo_pais_pfc': document.querySelector('#codigo_pais_new').value,
+					'codigo_pais_pfc_2': document.querySelector('#codigo_pais_2_new').value,
 					'calidad_juridica': document.querySelector('#calidad_juridica_new').value,
 					'municipio_origen': document.querySelector('#municipio_select_origen_new').value,
 					'telefono': document.querySelector('#telefono_new').value,

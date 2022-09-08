@@ -1789,7 +1789,7 @@ class DashboardController extends BaseController
         }
         return json_encode(['status' => 0]);
     }
-    
+
     public function createPersonaFisicaByFolio()
     {
 
@@ -1808,6 +1808,8 @@ class DashboardController extends BaseController
             'TELEFONO2' => $this->request->getPost('telefono_adicional'),
             'CALIDADJURIDICAID' => $this->request->getPost('calidad_juridica'),
             'TIPOIDENTIFICACIONID' => $this->request->getPost('identificacion'),
+            'CODIGOPAISTEL' => $this->request->getPost('codigo_pais_pfc'),
+            'CODIGOPAISTEL2' => $this->request->getPost('codigo_pais_pfc_2'),
             'NUMEROIDENTIFICACION' => $this->request->getPost('numero_identificacion'),
             'NACIONALIDADID' => $this->request->getPost('nacionalidad_origen'),
             'PERSONAIDIOMAID' => $this->request->getPost('idioma'),
@@ -1821,6 +1823,8 @@ class DashboardController extends BaseController
             'TWITTER' => $this->request->getPost('twitter'),
             'LEER' => $this->request->getPost('leer'),
             'ESCRIBIR' => $this->request->getPost('escribir'),
+            'PAIS' => $this->request->getPost('pais_actual'),
+
         );
 
         $dataNewPersonaFisicaDomicilio = array(
