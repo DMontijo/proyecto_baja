@@ -3,10 +3,10 @@
 namespace App\Controllers\admin;
 
 use App\Controllers\BaseController;
-use App\Models\BitacoraActividadModel;
+
 use App\Models\UsuariosModel;
 use App\Models\SesionesModel;
-
+use App\Models\BitacoraActividadModel;
 class LoginController extends BaseController
 {
 	function __construct()
@@ -14,7 +14,6 @@ class LoginController extends BaseController
 		$this->_usuariosModel = new UsuariosModel();
 		$this->_sesionesModel = new SesionesModel();
 		$this->_bitacoraActividadModel = new BitacoraActividadModel();
-
 	}
 
 	public function index()
@@ -23,7 +22,6 @@ class LoginController extends BaseController
 			return redirect()->to(base_url('/admin/dashboard'));
 		} else {
 			session()->destroy;
-			session_unset();
 			$this->_loadView('Login', [], 'index');
 		}
 	}
