@@ -273,8 +273,8 @@
 						dataType: "json",
 
 					}).done(function(data) {
-						console.log(data);
 						btnFinalizar.removeAttribute('disabled');
+
 						if (data.status == 1) {
 							document.querySelector('#tipo_salida').value = "";
 							document.querySelector('#notas_caso_salida').value = '';
@@ -301,7 +301,7 @@
 								notas_mp.value = '';
 								inputFolio.value = '';
 								borrarTodo();
-							})
+							});
 						} else {
 							Swal.fire({
 								icon: 'error',
@@ -328,7 +328,6 @@
 								text: 'Fallo la conexión, revisa con soporte técnico.',
 								confirmButtonColor: '#bf9b55',
 							});
-							console.log(data);
 							btnFinalizar.removeAttribute('disabled');
 						}).fail(function(jqXHR, textStatus) {
 							Swal.fire({

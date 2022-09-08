@@ -200,11 +200,12 @@ class DashboardController extends BaseController
         $this->_conexionesDBModel = new ConexionesDBModel();
         $this->_bitacoraActividadModel = new BitacoraActividadModel();
 
-        // $this->protocol = 'http://';
-        // $this->ip = "10.144.244.223";
-        $this->protocol = 'https://';
-        $this->ip = "ws.fgebc.gob.mx";
-        $this->endpoint = $this->protocol . $this->ip . '/wsJusticia';
+        $this->protocol = 'http://';
+        $this->ip = "10.144.244.223";
+        $this->endpoint = $this->protocol . $this->ip . '/webServiceVD';
+        // $this->protocol = 'https://';
+        // $this->ip = "ws.fgebc.gob.mx";
+        // $this->endpoint = $this->protocol . $this->ip . '/wsJusticia';
     }
 
     public function index()
@@ -297,7 +298,6 @@ class DashboardController extends BaseController
 
     public function crear_usuario()
     {
-
         $data = [
             'NOMBRE' => $this->request->getPost('nombre_usuario'),
             'APELLIDO_PATERNO' => $this->request->getPost('apellido_paterno_usuario'),
@@ -822,8 +822,6 @@ class DashboardController extends BaseController
             if ($folioRow) {
                 $update = $this->_folioModel->set($data)->where('ANO', $year)->where('FOLIOID', $folio)->update();
 
-
-
                 if ($update) {
                     $datosBitacora = [
                         'ACCION' => 'Ha actualizado el status del folio',
@@ -860,67 +858,76 @@ class DashboardController extends BaseController
         $oficina = $this->request->getPost('oficina');
         $empleado = $this->request->getPost('empleado');
 
-        if (!empty($folio) && !empty($municipio) && !empty($estado) && !empty($notas) && !empty($oficina) && !empty($empleado)) {
-            $folioRow = $this->_folioModel->where('ANO', $year)->where('FOLIOID', $folio)->where('STATUS', 'EN PROCESO')->first();
-            if ($folioRow) {
-                $empleadoRow = $this->_empleadosModel->asObject()->where('MUNICIPIOID', $municipio)->where('OFICINAID', $oficina)->where('EMPLEADOID', $empleado)->first();
-                $personas = $this->_folioPersonaFisicaModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->orderBy('PERSONAFISICAID', 'asc')->findAll();
-                $narracion = $folioRow['HECHONARRACION'];
-                $fecha = $folioRow['HECHOFECHA'];
+        try {
+            if (!empty($folio) && !empty($municipio) && !empty($estado) && !empty($notas) && !empty($oficina) && !empty($empleado)) {
+                $folioRow = $this->_folioModel->where('ANO', $year)->where('FOLIOID', $folio)->where('STATUS', 'EN PROCESO')->first();
+                if ($folioRow) {
+                    $empleadoRow = $this->_empleadosModel->asObject()->where('MUNICIPIOID', $municipio)->where('OFICINAID', $oficina)->where('EMPLEADOID', $empleado)->first();
+                    $personas = $this->_folioPersonaFisicaModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->orderBy('PERSONAFISICAID', 'asc')->findAll();
+                    $narracion = $folioRow['HECHONARRACION'];
+                    $fecha = $folioRow['HECHOFECHA'];
 
-                $folioRow['MUNICIPIOID'] = $municipio;
-                $folioRow['ESTADOID'] = $estado;
-                $folioRow['HECHOMEDIOCONOCIMIENTOID'] = (string) 6;
-                $folioRow['NOTASAGENTE'] = $notas;
-                $folioRow['STATUS'] = 'EXPEDIENTE';
-                $folioRow['AGENTEATENCIONID'] = session('ID') ? session('ID') : 1;
-                $folioRow['AGENTEFIRMAID'] = session('ID') ? session('ID') : 1;
+                    $folioRow['MUNICIPIOID'] = $municipio;
+                    $folioRow['ESTADOID'] = $estado;
+                    $folioRow['HECHOMEDIOCONOCIMIENTOID'] = (string) 6;
+                    $folioRow['NOTASAGENTE'] = $notas;
+                    $folioRow['STATUS'] = 'EXPEDIENTE';
+                    $folioRow['AGENTEATENCIONID'] = session('ID') ? session('ID') : 1;
+                    $folioRow['AGENTEFIRMAID'] = session('ID') ? session('ID') : 1;
 
-                $folioRow['HECHOFECHA'] = $folioRow['HECHOFECHA'] . ' ' . $folioRow['HECHOHORA'];
-                $folioRow['HECHONARRACION'] = $notas;
+                    $folioRow['HECHOFECHA'] = $folioRow['HECHOFECHA'] . ' ' . $folioRow['HECHOHORA'];
+                    $folioRow['HECHONARRACION'] = $notas;
 
-                $folioRow['OFICINAIDRESPONSABLE'] = $oficina;
-                $folioRow['EMPLEADOIDREGISTRO'] = $empleado;
-                $folioRow['AREAIDREGISTRO'] = $empleadoRow->AREAID;
-                $folioRow['AREAIDRESPONSABLE'] = $empleadoRow->AREAID;
-                $folioRow['ESTADOJURIDICOEXPEDIENTEID'] = (string) 2;
-                $folioRow['TIPOEXPEDIENTEID'] = 4;
+                    $folioRow['OFICINAIDRESPONSABLE'] = $oficina;
+                    $folioRow['EMPLEADOIDREGISTRO'] = $empleado;
+                    $folioRow['AREAIDREGISTRO'] = $empleadoRow->AREAID;
+                    $folioRow['AREAIDRESPONSABLE'] = $empleadoRow->AREAID;
+                    $folioRow['ESTADOJURIDICOEXPEDIENTEID'] = (string) 2;
+                    $folioRow['TIPOEXPEDIENTEID'] = 4;
 
-                $expedienteCreado = $this->createExpediente($folioRow);
+                    $expedienteCreado = $this->_createExpediente($folioRow);
+                    // $expedienteCreado = (object)array(
+                    //     'status' => 201,
+                    //     'EXPEDIENTEID' => '402002202200257'
+                    // );
+                    // return json_encode(['info' => $expedienteCreado]);
 
-                // return json_encode(['info' => $expedienteCreado]);
+                    unset($folioRow['OFICINAIDRESPONSABLE']);
+                    unset($folioRow['EMPLEADOIDREGISTRO']);
+                    unset($folioRow['AREAIDREGISTRO']);
+                    unset($folioRow['AREAIDRESPONSABLE']);
+                    unset($folioRow['ESTADOJURIDICOEXPEDIENTEID']);
+                    unset($folioRow['TIPOEXPEDIENTEID']);
 
-                unset($folioRow['OFICINAIDRESPONSABLE']);
-                unset($folioRow['EMPLEADOIDREGISTRO']);
-                unset($folioRow['AREAIDREGISTRO']);
-                unset($folioRow['AREAIDRESPONSABLE']);
-                unset($folioRow['ESTADOJURIDICOEXPEDIENTEID']);
-                unset($folioRow['TIPOEXPEDIENTEID']);
+                    $folioRow['HECHONARRACION'] = $narracion;
+                    $folioRow['HECHOFECHA'] = $fecha;
 
-                $folioRow['HECHONARRACION'] = $narracion;
-                $folioRow['HECHOFECHA'] = $fecha;
 
-                try {
                     if ($expedienteCreado->status == 201) {
                         $folioRow['EXPEDIENTEID'] = $expedienteCreado->EXPEDIENTEID;
                         $folioRow['FECHASALIDA'] = date('Y-m-d H:i:s');
 
                         $update = $this->_folioModel->set($folioRow)->where('FOLIOID', $folio)->where('ANO', $year)->update();
-
                         try {
                             foreach ($personas as $key => $persona) {
-                                $_persona = $this->createPersonaFisica($expedienteCreado->EXPEDIENTEID, $persona, $folioRow['HECHOMUNICIPIOID']);
-
+                                $_persona = $this->_createPersonaFisica($expedienteCreado->EXPEDIENTEID, $persona, $folioRow['HECHOMUNICIPIOID']);
                                 $domicilios = $this->_folioPersonaFisicaDomicilioModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->where('PERSONAFISICAID', $persona['PERSONAFISICAID'])->findAll();
+                                $mediaFiliacion = $this->_folioMediaFiliacion->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->where('PERSONAFISICAID', $persona['PERSONAFISICAID'])->first();
+
                                 if ($persona['CALIDADJURIDICAID'] == '2') {
-                                    $_imputado = $this->createExpImputado($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $folioRow['HECHOMUNICIPIOID']);
+                                    $_imputado = $this->_createExpImputado($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $folioRow['HECHOMUNICIPIOID']);
+                                }
+                                foreach ($domicilios as $key => $domicilio) {
+                                    $_domicilio = $this->_createDomicilioPersonaFisica($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $domicilio, $folioRow['HECHOMUNICIPIOID']);
                                 }
 
-                                foreach ($domicilios as $key => $domicilio) {
-                                    $_domicilio = $this->createDomicilioPersonaFisica($expedienteCreado->EXPEDIENTEID, 1, $domicilio, $folioRow['HECHOMUNICIPIOID']);
-                                }
+                                $_mediaFiliacion = $this->_createPersonaFisicaMediaFilicacion($expedienteCreado->EXPEDIENTEID, 18, $mediaFiliacion, $folioRow['HECHOMUNICIPIOID']);
+                                // var_dump($_mediaFiliacion);
+                                // exit;
                             }
+                            exit;
                         } catch (\Exception $e) {
+                            throw new \Exception($e->getMessage());
                         }
 
                         if ($update) {
@@ -931,23 +938,23 @@ class DashboardController extends BaseController
                                 return json_encode(['status' => 1, 'expediente' => $expedienteCreado->EXPEDIENTEID, 'message' => 'Correo no enviado']);
                             }
                         } else {
-                            return json_encode(['status' => 0, 'error' => 'No hizo el update']);
+                            throw new \Exception('No hizo el update.');
                         }
                     } else {
-                        return json_encode(['status' => 0, 'error' => 'Expediente no creado']);
+                        throw new \Exception($expedienteCreado->error);
                     }
-                } catch (\Exception $e) {
-                    return json_encode(['status' => 0, 'error' => 'Expediente no creado']);
+                } else {
+                    throw new \Exception('Ya fue atendido el folio');
                 }
             } else {
-                return json_encode(['status' => 0, 'error' => 'Ya fue atendido el folio']);
+                throw new \Exception('No se enviarón todas las variables necesarias.');
             }
-        } else {
-            return json_encode(['status' => 0, 'error' => 'No existe alguna de las variables']);
+        } catch (\Exception $e) {
+            return json_encode(['status' => 0, 'error' => $e->getMessage()]);
         }
     }
 
-    private function createExpediente($folioRow)
+    private function _createExpediente($folioRow)
     {
         $function = '/expediente.php?process=crear';
         $endpoint = $this->endpoint . $function;
@@ -1020,7 +1027,7 @@ class DashboardController extends BaseController
         return $this->curlPost($endpoint, $data);
     }
 
-    private function createPersonaFisica($expedienteId, $personaFisica, $municipio)
+    private function _createPersonaFisica($expedienteId, $personaFisica, $municipio)
     {
         $function = '/personaFisica.php?process=crear';
         $array = [
@@ -1063,8 +1070,6 @@ class DashboardController extends BaseController
             'TIEMPORESIDEANOS',
             'TIEMPORESIDEMESES',
             'TIEMPORESIDEDIAS',
-            "PERSONAESCOLARIDADID",
-            "OCUPACIONID",
             "FOTO",
         ];
         $endpoint = $this->endpoint . $function;
@@ -1104,35 +1109,7 @@ class DashboardController extends BaseController
         return $this->curlPost($endpoint, $data);
     }
 
-    private function createExpImputado($expedienteId, $personaFisicaId, $municipio)
-    {
-        $function = '/imputado.php?process=crear';
-        $endpoint = $this->endpoint . $function;
-        $conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
-        $data = array();
-
-        $data['EXPEDIENTEID'] = $expedienteId;
-        $data['PERSONAFISICAID'] = $personaFisicaId;
-        $data['DETENIDO'] = 'N';
-        $data['ESTADOJURIDICOIMPUTADOID'] = 1;
-        $data['ETAPAIMPUTADOID'] = 1;
-        $data['INDIVIDUALIZADO'] = 'N';
-
-        $data['userDB'] = $conexion->USER;
-        $data['pwdDB'] = $conexion->PASSWORD;
-        $data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
-        $data['schema'] = $conexion->SCHEMA;
-
-        foreach ($data as $clave => $valor) {
-            if (empty($valor)) {
-                unset($data[$clave]);
-            }
-        }
-
-        return $this->curlPost($endpoint, $data);
-    }
-
-    private function createDomicilioPersonaFisica($expedienteId, $personaFisicaId, $domicilioPersonaFisica, $municipio)
+    private function _createDomicilioPersonaFisica($expedienteId, $personaFisicaId, $domicilioPersonaFisica, $municipio)
     {
         if ($domicilioPersonaFisica['ESTADOID'] && $domicilioPersonaFisica['MUNICIPIOID'] && $domicilioPersonaFisica['LOCALIDADID']) {
 
@@ -1169,6 +1146,7 @@ class DashboardController extends BaseController
                     unset($data[$clave]);
                 }
             }
+
             foreach ($data as $clave => $valor) {
                 if (!in_array($clave, $array)) {
                     unset($data[$clave]);
@@ -1185,6 +1163,140 @@ class DashboardController extends BaseController
         }
     }
 
+    private function _createPersonaFisicaMediaFilicacion($expedienteId, $personaFisicaId, $personaFisicaMediaFiliacion, $municipio)
+    {
+        $function = '/mediaFiliacion.php?process=crear';
+        $array = [
+            'EXPEDIENTEID',
+            'PERSONAFISICAID',
+            'OCUPACIONID',
+            'ESTATURA',
+            'PESO',
+            'SENASPARTICULARES',
+            'PIELCOLORID',
+            'FIGURAID',
+            'CONTEXTURAID',
+            'CARAFORMAID',
+            'CARATAMANOID',
+            'CARATEZID',
+            'OREJALOBULOID',
+            'OREJAFORMAID',
+            'OREJATAMANOID',
+            'OREJASEPARACIONID',
+            'CABEZAFORMAID',
+            'CABEZATAMANOID',
+            'CABELLOCOLORID',
+            'CABELLOESTILOID',
+            'CABELLOTAMANOID',
+            'CABELLOPECULIARID',
+            'CABELLODESCR',
+            'FRENTEALTURAID',
+            'FRENTEANCHURAID',
+            'FRENTEFORMAID',
+            'FRENTEPECULIARID',
+            'CEJACOLOCACIONID',
+            'CEJAFORMAID',
+            'CEJATAMANOID',
+            'CEJAGROSORID',
+            'OJOCOLOCACIONID',
+            'OJOFORMAID',
+            'OJOTAMANOID',
+            'OJOCOLORID',
+            'OJOPECULIARID',
+            'NARIZTIPOID',
+            'NARIZTAMANOID',
+            'NARIZBASEID',
+            'NARIZPECULIARID',
+            'NARIZDESCR',
+            'BIGOTEFORMAID',
+            'BIGOTETAMANOID',
+            'BIGOTEGROSORID',
+            'BIGOTEPECULIARID',
+            'BIGOTEDESCR',
+            'BOCATAMANOID',
+            'BOCAPECULIARID',
+            'LABIOGROSORID',
+            'LABIOLONGITUDID',
+            'LABIOPOSICIONID',
+            'LABIOPECULIARID',
+            'DIENTETAMANOID',
+            'DIENTETIPOID',
+            'DIENTEPECULIARID',
+            'DIENTEDESCR',
+            'BARBILLAFORMAID',
+            'BARBILLATAMANOID',
+            'BARBILLAINCLINACIONID',
+            'BARBILLAPECULIARID',
+            'BARBILLADESCR',
+            'BARBATAMANOID',
+            'BARBAPECULIARID',
+            'BARBADESCR',
+            'CUELLOTAMANOID',
+            'CUELLOGROSORID',
+            'CUELLOPECULIARID',
+            'CUELLODESCR',
+            'HOMBROPOSICIONID',
+            'HOMBROLONGITUDID',
+            'HOMBROGROSORID',
+            'ESTOMAGOID',
+            'PERSONAESCOLARIDADID',
+            'PERSONAETNIAID',
+            'ESTOMAGODESCR',
+        ];
+        $endpoint = $this->endpoint . $function;
+        $conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
+        $data = $personaFisicaMediaFiliacion;
+
+        foreach ($data as $clave => $valor) {
+            if (empty($valor)) {
+                unset($data[$clave]);
+            }
+        }
+
+        foreach ($data as $clave => $valor) {
+            if (!in_array($clave, $array)) {
+                unset($data[$clave]);
+            }
+        }
+
+        $data['EXPEDIENTEID'] = $expedienteId;
+        $data['PERSONAFISICAID'] = $personaFisicaId;
+        $data['userDB'] = $conexion->USER;
+        $data['pwdDB'] = $conexion->PASSWORD;
+        $data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
+        $data['schema'] = $conexion->SCHEMA;
+
+        return $this->curlPost($endpoint, $data);
+    }
+
+    private function _createExpImputado($expedienteId, $personaFisicaId, $municipio)
+    {
+        $function = '/imputado.php?process=crear';
+        $endpoint = $this->endpoint . $function;
+        $conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
+        $data = array();
+
+        $data['EXPEDIENTEID'] = $expedienteId;
+        $data['PERSONAFISICAID'] = $personaFisicaId;
+        $data['DETENIDO'] = 'N';
+        $data['ESTADOJURIDICOIMPUTADOID'] = 1;
+        $data['ETAPAIMPUTADOID'] = 1;
+        $data['INDIVIDUALIZADO'] = 'N';
+
+        $data['userDB'] = $conexion->USER;
+        $data['pwdDB'] = $conexion->PASSWORD;
+        $data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
+        $data['schema'] = $conexion->SCHEMA;
+
+        foreach ($data as $clave => $valor) {
+            if (empty($valor)) {
+                unset($data[$clave]);
+            }
+        }
+
+        return $this->curlPost($endpoint, $data);
+    }
+
     private function curlPost($endpoint, $data)
     {
         $ch = curl_init();
@@ -1196,7 +1308,6 @@ class DashboardController extends BaseController
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-
         $headers = array();
         $headers[] = 'Content-Type: application/json';
         $headers[] = 'Access-Control-Allow-Origin: *';
@@ -1208,7 +1319,11 @@ class DashboardController extends BaseController
         $result = curl_exec($ch);
 
         if ($result === false) {
-            die('Curl failed: ' . curl_error($ch));
+            // die('Curl failed: ' . curl_error($ch));
+            $result = "{
+                'status' => 401,
+                'error' => 'Curl failed: '" . curl_error($ch) . "
+            }";
         }
 
         curl_close($ch);
@@ -1677,9 +1792,6 @@ class DashboardController extends BaseController
                 'TIPOID' => $this->request->getPost('tipo_vehiculo'),
                 'PRIMERCOLORID' => $this->request->getPost('color_vehiculo'),
                 'SENASPARTICULARES' => $this->request->getPost('description_vehiculo'),
-
-
-
             );
 
             $update = $this->_folioVehiculoModel->set($data)->where('FOLIOID', $folio)->where('ANO', $year)->update();
@@ -1740,8 +1852,6 @@ class DashboardController extends BaseController
     }
     public function createParentescoByFolio()
     {
-
-
         $folio = trim($this->request->getPost('folio'));
         $year = trim($this->request->getPost('year'));
         $dataRelacionParentesco = array(
@@ -1750,7 +1860,6 @@ class DashboardController extends BaseController
             'PERSONAFISICAID1' => $this->request->getPost('personaFisica1'),
             'PARENTESCOID' => $this->request->getPost('parentesco_mf'),
             'PERSONAFISICAID2' => $this->request->getPost('personaFisica2'),
-
         );
 
         $insertRelacionParentesco = $this->_parentescoPersonaFisicaModel->insert($dataRelacionParentesco);
@@ -1792,7 +1901,6 @@ class DashboardController extends BaseController
 
     public function createPersonaFisicaByFolio()
     {
-
         $folio = trim($this->request->getPost('folio'));
         $year = trim($this->request->getPost('year'));
         $dataNewPersonaFisica = array(
@@ -1824,7 +1932,7 @@ class DashboardController extends BaseController
             'LEER' => $this->request->getPost('leer'),
             'ESCRIBIR' => $this->request->getPost('escribir'),
             'PAIS' => $this->request->getPost('pais_actual'),
-            'CORREO'=> $this->request->getPost('correo'),
+            'CORREO' => $this->request->getPost('correo'),
 
         );
 
@@ -1900,7 +2008,7 @@ class DashboardController extends BaseController
             $data['COLONIADESCR'] = null;
         }
 
-       if ($data['MUNICIPIOID']) {
+        if ($data['MUNICIPIOID']) {
             try {
                 $colonia = $this->_coloniasModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data['MUNICIPIOID'])->first();
                 $colonia ? $data['LOCALIDADID'] = $colonia->LOCALIDADID : $data['LOCALIDADID'] = null;
@@ -1953,7 +2061,6 @@ class DashboardController extends BaseController
         $data = $data;
         $data['ID'] = uniqid();
         $data['USUARIOID'] = session('ID');
-
 
         $this->_bitacoraActividadModel->insert($data);
     }
