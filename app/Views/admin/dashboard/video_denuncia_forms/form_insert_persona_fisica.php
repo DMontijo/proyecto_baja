@@ -286,7 +286,7 @@
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="facebook_new" class="form-label font-weight-bold">Facebook</label>
 		<div class="input-group">
-			<span class="input-group-text" id="facebook_vanity"><i class="bi bi-facebook"></i></span>
+			<span class="input-group-text" id="facebook_vanity"><i class='fab fa-facebook'></i></span>
 			<input type="text" class="form-control" name="facebook_new" id="facebook_new" aria-describedby="facebook_vanity" maxlength="200">
 		</div>
 	</div>
@@ -294,7 +294,7 @@
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="instagram_new" class="form-label font-weight-bold">Instagram</label>
 		<div class="input-group">
-			<span class="input-group-text" id="instagram_vanity"><i class="bi bi-instagram"></i></span>
+			<span class="input-group-text" id="instagram_vanity"><i class='fab fa-instagram'></i></span>
 			<input type="text" class="form-control" name="instagram_new" id="instagram_new" aria-describedby="instagram_vanity" maxlength="200">
 		</div>
 	</div>
@@ -302,7 +302,7 @@
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="twitter_new" class="form-label font-weight-bold">Twitter</label>
 		<div class="input-group">
-			<span class="input-group-text" id="twitter_vanity"><i class="bi bi-twitter"></i></span>
+			<span class="input-group-text" id="twitter_vanity"><i class='fab fa-twitter'></i></span>
 			<input type="text" class="form-control" name="twitter_new" id="twitter_new" aria-describedby="twitter_vanity" maxlength="200">
 		</div>
 	</div>
