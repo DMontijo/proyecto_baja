@@ -56,6 +56,15 @@
 		<!-- <small>Mínimo 6 digitos</small> -->
 		<input type="number" id="codigo_pais_2_new" name="codigo_pais_2_new" maxlength="3" hidden>
 	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="correo_new" class="form-label font-weight-bold">Correo electrónico</label>
+		<div class="input-group">
+			<input type="email" class="form-control" name="correo_new" id="correo_new" maxlength="100" required>
+		</div>
+		<div class="invalid-feedback">
+			El correo esta erroneo
+		</div>
+	</div>
 	<div class="col-12">
 		<h3 class="font-weight-bold mb-4 text-center">DATOS DE ORIGEN</h3>
 	</div>

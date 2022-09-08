@@ -1824,6 +1824,7 @@ class DashboardController extends BaseController
             'LEER' => $this->request->getPost('leer'),
             'ESCRIBIR' => $this->request->getPost('escribir'),
             'PAIS' => $this->request->getPost('pais_actual'),
+            'CORREO'=> $this->request->getPost('correo'),
 
         );
 

@@ -2554,6 +2554,7 @@
 					'facebook': document.querySelector('#facebook_new').value,
 					'twitter': document.querySelector('#twitter_new').value,
 					'instagram': document.querySelector('#instagram_new').value,
+					'correo': document.querySelector('#correo_new').value
 
 				};
 				// console.log(data);
