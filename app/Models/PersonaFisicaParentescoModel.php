@@ -8,7 +8,7 @@ class PersonaFisicaParentescoModel extends Model
 {
 	protected $DBGroup          = 'default';
 	protected $table            = 'FOLIORELACIONPARENTESCO';
-	protected $allowedFields    = ['IDRELACION', 'FOLIOID', 'ANO', 'PARENTESCOID', 'PERSONAFISICAID1', 'PERSONAFISICAID2'];
+	protected $allowedFields    = ['FOLIOID', 'ANO', 'PARENTESCOID', 'PERSONAFISICAID1', 'PERSONAFISICAID2'];
 
 	public function get_personaFisicaUno($folio, $year)
 	{
@@ -16,7 +16,12 @@ class PersonaFisicaParentescoModel extends Model
 		$builder->select(['FOLIOPERSONAFISICA.PRIMERAPELLIDO', 'FOLIOPERSONAFISICA.SEGUNDOAPELLIDO', 'FOLIOPERSONAFISICA.NOMBRE']);
 		$builder->where('FOLIORELACIONPARENTESCO.FOLIOID', $folio);
 		$builder->where('FOLIORELACIONPARENTESCO.ANO', $year);
+		$builder->where('FOLIOPERSONAFISICA.FOLIOID', $folio);
+		$builder->where('FOLIOPERSONAFISICA.ANO', $year);
+
 		$builder->join('FOLIOPERSONAFISICA', 'FOLIOPERSONAFISICA.PERSONAFISICAID =' . $this->table . '.PERSONAFISICAID1');
+
+
 		$query = $builder->get();
 		return $query->getResult('array');
 	}
@@ -26,7 +31,12 @@ class PersonaFisicaParentescoModel extends Model
 		$builder->select(['FOLIOPERSONAFISICA.PRIMERAPELLIDO', 'FOLIOPERSONAFISICA.SEGUNDOAPELLIDO', 'FOLIOPERSONAFISICA.NOMBRE']);
 		$builder->where('FOLIORELACIONPARENTESCO.FOLIOID', $folio);
 		$builder->where('FOLIORELACIONPARENTESCO.ANO', $year);
+		$builder->where('FOLIOPERSONAFISICA.FOLIOID', $folio);
+		$builder->where('FOLIOPERSONAFISICA.ANO', $year);
+
 		$builder->join('FOLIOPERSONAFISICA', 'FOLIOPERSONAFISICA.PERSONAFISICAID =' . $this->table . '.PERSONAFISICAID2');
+
+
 		$query = $builder->get();
 		return $query->getResult('array');
 	}

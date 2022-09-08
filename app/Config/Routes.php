@@ -194,7 +194,9 @@ $routes->group('data', function ($routes) {
 	$routes->post('update-parentesco-by-id', 'admin/DashboardController::updateParentescoByFolio');
 	$routes->post('create-parentesco-by-id', 'admin/DashboardController::createParentescoByFolio');
 	$routes->post('get-parentesco-by-id', 'admin/DashboardController::getRelacionParentesco');
+	$routes->post('get-personafisicofiltro', 'admin/DashboardController::getPersonaFisicaFiltro');
 
+	$routes->post('create-persona_fisica-by-folio', 'admin/DashboardController::createPersonaFisicaByFolio');
 
 });
 

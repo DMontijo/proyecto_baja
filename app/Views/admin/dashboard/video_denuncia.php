@@ -177,65 +177,60 @@
 			$("#adicionados").append(nFilas - 1);
 		}
 	}
+
 	function view_form_parentesco($personafisica) {
-				$.ajax({
-					data: {
-						'personafisica1': $personafisica,
-						'folio': inputFolio.value,
-						'year': year_select.value,
-					},
-					url: "<?= base_url('/data/get-parentesco-by-id') ?>",
-					method: "POST",
-					dataType: "json",
-					success: function(response) {
-						let parentesco = response.parentesco;
-						let relacion_parentesco = response.parentescoRelacion;
-						let idPersonaFisica = response.idPersonaFisica;
-					// 	if (relacion_parentesco) {
-						document.querySelector('#parentesco_mf').value = parentesco.PERSONAPARENTESCOID ? parentesco.PERSONAPARENTESCOID : '';
-						document.querySelector('#personaFisica1').value = relacion_parentesco.PERSONAFISICAID1 ? relacion_parentesco.PERSONAFISICAID1 : '';
-						document.querySelector('#personaFisica2').value = relacion_parentesco.PERSONAFISICAID2 ? relacion_parentesco.PERSONAFISICAID2 : '';
-						document.getElementById("updateParentesco").style.display="block";
+		$.ajax({
+			data: {
+				'personafisica1': $personafisica,
+				'folio': inputFolio.value,
+				'year': year_select.value,
+			},
+			url: "<?= base_url('/data/get-parentesco-by-id') ?>",
+			method: "POST",
+			dataType: "json",
+			success: function(response) {
+				let parentesco = response.parentesco;
+				let relacion_parentesco = response.parentescoRelacion;
+				let idPersonaFisica = response.idPersonaFisica;
+				// 	if (relacion_parentesco) {
+				document.querySelector('#parentesco_mf').value = parentesco.PERSONAPARENTESCOID ? parentesco.PERSONAPARENTESCOID : '';
+				document.querySelector('#personaFisica1').value = relacion_parentesco.PERSONAFISICAID1 ? relacion_parentesco.PERSONAFISICAID1 : '';
+				document.querySelector('#personaFisica2').value = relacion_parentesco.PERSONAFISICAID2 ? relacion_parentesco.PERSONAFISICAID2 : '';
+				document.getElementById("updateParentesco").style.display = "block";
 
 
-					// } 
-					// if(relacion_parentesco == null) {
-					// 	document.querySelector('#parentesco_mf').value = '';
-					// 	document.querySelector('#personaFisica1').value = '';
-					// 	document.querySelector('#personaFisica2').value = idPersonaFisica ? idPersonaFisica : '';
-					// 	document.getElementById("insertParentesco").style.display="block";
-					// 	document.getElementById("updateParentesco").style.display="none";
+				// } 
+				// if(relacion_parentesco == null) {
+				// 	document.querySelector('#parentesco_mf').value = '';
+				// 	document.querySelector('#personaFisica1').value = '';
+				// 	document.querySelector('#personaFisica2').value = idPersonaFisica ? idPersonaFisica : '';
+				// 	document.getElementById("insertParentesco").style.display="block";
+				// 	document.getElementById("updateParentesco").style.display="none";
 
-					// }
-						$('#relacion_parentesco_modal').modal('show');
-					},
-					error: function(jqXHR, textStatus, errorThrown) {}
-				});
-			}
+				// }
+				$('#relacion_parentesco_modal').modal('show');
+			},
+			error: function(jqXHR, textStatus, errorThrown) {}
+		});
+	}
 
 	function llenarTablaParentesco(relacion_parentesco, personaiduno, personaidDos, parentesco) {
 
 
 		for (let i = 0; i < relacion_parentesco.length; i++) {
 
-
-			// 	if (relacion_parentesco.PERSONAFISICAID1 == personas.PERSONAFISICAID) {
-			// 		console.log(personas.NOMBRE);
-
-
 			var btn = `<button type='button'  class='btn btn-primary' onclick='view_form_parentesco(${relacion_parentesco[i].PERSONAFISICAID1})'><i class="fas fa-pen"></i></button>`
-			// 	console.log(personas[i]);
-			// 	console.log(relacion_parentesco[i]);
 
-			var fila =
+
+			var fila2 =
 				`<tr id="row${i}">` +
 				`<td class="text-center">${personaiduno[i].NOMBRE}</td>` +
-				`<td class="text-center">${personaidDos[i].NOMBRE}</td>` +
 				`<td class="text-center">${parentesco[i].PERSONAPARENTESCODESCR}</td>` +
+				`<td class="text-center">${personaidDos[i].NOMBRE}</td>` +
 				`<td class="text-center">${btn}</td>` +
 				`</tr>`;
 
-			$('#table-parentesco tr:first').after(fila);
+			$('#table-parentesco tr:first').after(fila2);
 			$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
 			var nFilas = $("#parentesco tr").length;
 			$("#adicionados").append(nFilas - 1);
@@ -282,7 +277,6 @@
 					const parentesco = response.parentesco;
 					const personaiduno = response.personaiduno;
 					const personaidDos = response.personaidDos;
-
 
 					inputFolio.classList.add('d-none');
 					buscar_btn.classList.add('d-none');
@@ -566,6 +560,14 @@
 		clearSelect(document.querySelector('#municipio_pfd'));
 		clearSelect(document.querySelector('#localidad_pfd'));
 		clearSelect(document.querySelector('#colonia_pfd_select'));
+
+		//PARENTESCO
+		document.querySelector('#parentesco_mf_I').value = '';
+		document.querySelector('#personaFisica1_I').value = '';
+		document.querySelector('#personaFisica2_I').value = '';
+		document.querySelector('#parentesco_mf').value = '';
+		document.querySelector('#personaFisica1').value = '';
+		document.querySelector('#personaFisica2').value = '';
 
 		$('#v-pills-vehiculos-tab').css('display', 'NONE');
 	}
@@ -1062,8 +1064,12 @@
 			var form_vehiculo = document.querySelector('#form_vehiculo');
 			var form_parentesco = document.querySelector('#form_parentesco');
 			var form_parentesco_insert = document.querySelector('#form_parentesco_insert');
+			var selectPersonaFisica1 = document.querySelector('#personaFisica1_I');
+			var form_persona_fisica_insert = document.querySelector('#persona_fisica_form_insert');
+
 
 			var btn_insertar_parentesco = document.querySelector('#insertParentescoModal')
+			var btn_insertar_persona_fisica = document.querySelector('#insertPersonaFisicaModal')
 
 			var inputsText = document.querySelectorAll('input[type="text"]');
 			var inputsEmail = document.querySelectorAll('input[type="email"]');
@@ -1171,9 +1177,11 @@
 			}, false);
 			btn_insertar_parentesco.addEventListener('click', (event) => {
 				$('#relacion_parentesco_modal_insert').modal('show');
-				
-			
 			}, false);
+			btn_insertar_persona_fisica.addEventListener('click', (event) => {
+				$('#insert_persona_fisica_modal').modal('show');
+			}, false);
+
 			form_parentesco_insert.addEventListener('submit', (event) => {
 				if (!form_parentesco_insert.checkValidity()) {
 					event.preventDefault();
@@ -1186,7 +1194,51 @@
 					insertarParentesco();
 				}
 			}, false);
-			
+			form_persona_fisica_insert.addEventListener('submit', (event) => {
+				if (!form_persona_fisica_insert.checkValidity()) {
+					event.preventDefault();
+					event.stopPropagation();
+					form_persona_fisica_insert.classList.add('was-validated')
+				} else {
+					event.preventDefault();
+					event.stopPropagation();
+					form_persona_fisica_insert.classList.remove('was-validated')
+					insertarPersonaFisica();
+				}
+			}, false);
+			selectPersonaFisica1.addEventListener("change", function() {
+				let personaFisica2_I = document.querySelector("#personaFisica2_I")
+
+				var datos = {
+					"id": selectPersonaFisica1.value,
+					'folio': document.querySelector('#input_folio_atencion').value,
+					'year': document.querySelector('#year_select').value,
+				}
+
+				$.ajax({
+					method: 'POST',
+					url: "<?= base_url('/data/get-personafisicofiltro') ?>",
+					data: datos,
+					dataType: 'JSON',
+					//data: {nombre:n},
+					success: function(response) {
+						const personaFisicaFiltro = response.personaFiltro;
+
+						if (response.status == 1) {
+							$('#personaFisica2_I').empty();
+
+							personaFisicaFiltro.forEach(element => {
+								let primer_apellido = element.PRIMERAPELLIDO ? element.PRIMERAPELLIDO : '';
+								const option = document.createElement('option');
+								option.value = element.PERSONAFISICAID;
+								option.text = element.NOMBRE + ' ' + primer_apellido;
+								personaFisica2_I.add(option, null);
+							});
+						}
+					},
+				});
+			});
+
 			//DENUNCIA
 
 			document.querySelector('#narracion_delito').addEventListener('input', (event) => {
@@ -1447,7 +1499,379 @@
 			input2_phone.addEventListener('change', getData);
 			input2_phone.addEventListener('keyup', getData);
 			input2_phone.addEventListener('blur', getData);
+
+			let input_pf = document.querySelector("#telefono_new");
+			let input2_pf = document.querySelector("#telefono_new2");
+			let inputPais_pf = document.querySelector("#codigo_pais_new");
+			let inputPais2_pf = document.querySelector("#codigo_pais_2_new");
+
+			let iti_pf = window.intlTelInput(input_pf, {
+				separateDialCode: true,
+				initialCountry: "MX",
+			});
+			let iti2_pf = window.intlTelInput(input2_pf, {
+				separateDialCode: true,
+				initialCountry: "MX",
+			});
+
+			const getData_PF = () => {
+				inputPais_pf.value = parseInt(iti_pf.getSelectedCountryData().dialCode);
+				inputPais2_pf.value = parseInt(iti2_pf.getSelectedCountryData().dialCode);
+			};
+
+			input_pf.addEventListener('change', getData_PF);
+			input_pf.addEventListener('keyup', getData_PF);
+			input_pf.addEventListener('blur', getData_PF);
+
+			input2_pf.addEventListener('change', getData_PF);
+			input2_pf.addEventListener('keyup', getData_PF);
+			input2_pf.addEventListener('blur', getData_PF);
+
 			//INTL TEL INPUT END
+
+			//CREAR PERSONA FISICA
+			document.querySelector('#fecha_nacimiento_new').addEventListener('change', (e) => {
+		let fecha = e.target.value;
+		let hoy = new Date();
+		let cumpleanos = new Date(fecha);
+		let edad = hoy.getFullYear() - cumpleanos.getFullYear();
+		let m = hoy.getMonth() - cumpleanos.getMonth();
+
+		if (m < 0 || (m === 0 && hoy.getDate() <= cumpleanos.getDate())) {
+			edad--;
+		}
+		document.querySelector('#edad_new').value = edad;
+	})
+
+	document.querySelector('#nacionalidad_new').addEventListener('change', (e) => {
+			let select_estado = document.querySelector('#estado_select_origen_new');
+			let select_municipio = document.querySelector('#municipio_select_origen_new');
+
+			clearSelect(select_municipio);
+
+			if (e.target.value !== '82') {
+				select_estado.value = '33';
+				let data = {
+					'estado_id': 33,
+					'municipio_id': 1,
+				}
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/get-municipios-by-estado') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						let municipios = response.data;
+						municipios.forEach(municipio => {
+							let option = document.createElement("option");
+							option.text = municipio.MUNICIPIODESCR;
+							option.value = municipio.MUNICIPIOID;
+							select_municipio.add(option);
+						});
+						select_municipio.value = '1';
+					},
+					error: function(jqXHR, textStatus, errorThrown) {}
+				});
+
+			} else {
+				clearSelect(select_municipio);
+				select_estado.value = '';
+				select_municipio.value = '';
+			}
+		});
+
+		document.querySelector('#estado_select_origen_new').addEventListener('change', (e) => {
+			let select_municipio = document.querySelector('#municipio_select_origen_new');
+
+			clearSelect(select_municipio);
+
+			select_municipio.value = '';
+
+			let data = {
+				'estado_id': e.target.value,
+			}
+
+			$.ajax({
+				data: data,
+				url: "<?= base_url('/data/get-municipios-by-estado') ?>",
+				method: "POST",
+				dataType: "json",
+				success: function(response) {
+					let municipios = response.data;
+
+					municipios.forEach(municipio => {
+						var option = document.createElement("option");
+						option.text = municipio.MUNICIPIODESCR;
+						option.value = municipio.MUNICIPIOID;
+						select_municipio.add(option);
+					});
+				},
+				error: function(jqXHR, textStatus, errorThrown) {}
+			});
+		});
+
+		document.querySelector('#pais_select_new').addEventListener('change', (e) => {
+
+			let select_estado = document.querySelector('#estado_select_new');
+			let select_municipio = document.querySelector('#municipio_select_new');
+			let select_localidad = document.querySelector('#localidad_select_new');
+			let select_colonia = document.querySelector('#colonia_select_new');
+
+			let input_colonia = document.querySelector('#colonia_new');
+			clearSelect(select_municipio);
+			clearSelect(select_localidad);
+			clearSelect(select_colonia);
+
+			if (e.target.value !== 'MX') {
+
+				select_estado.value = '33';
+
+				let data = {
+					'estado_id': 33,
+					'municipio_id': 1,
+				}
+
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/get-municipios-by-estado') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						let municipios = response.data;
+						municipios.forEach(municipio => {
+							let option = document.createElement("option");
+							option.text = municipio.MUNICIPIODESCR;
+							option.value = municipio.MUNICIPIOID;
+							select_municipio.add(option);
+						});
+						select_municipio.value = '1';
+					},
+					error: function(jqXHR, textStatus, errorThrown) {}
+				});
+
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/get-localidades-by-municipio') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						let localidades = response.data;
+						localidades.forEach(localidad => {
+							let option = document.createElement("option");
+							option.text = localidad.LOCALIDADDESCR;
+							option.value = localidad.LOCALIDADID;
+							select_localidad.add(option);
+						});
+						let option = document.createElement("option");
+						option.text = 'OTRO';
+						option.value = '0';
+
+						select_colonia.add(option);
+						select_localidad.value = '1';
+
+						select_colonia.value = '0';
+						select_colonia.classList.add('d-none');
+						input_colonia.classList.remove('d-none');
+						input_colonia.value = 'EXTRANJERO';
+						document.querySelector('#calle').focus();
+					},
+					error: function(jqXHR, textStatus, errorThrown) {}
+				});
+
+				let option = document.createElement("option");
+				option.text = 'OTRO';
+				option.value = '0';
+
+				select_colonia.add(option);
+
+				select_colonia.value = '0';
+				select_colonia.classList.add('d-none');
+				input_colonia.classList.remove('d-none');
+				input_colonia.value = 'EXTRANJERO';
+
+
+			} else {
+				clearSelect(select_municipio);
+				clearSelect(select_localidad);
+				clearSelect(select_colonia);
+
+				select_estado.value = '';
+				select_municipio.value = '';
+				select_localidad.value = '';
+				select_colonia.value = '';
+				input_colonia.value = '';
+
+				select_colonia.classList.remove('d-none');
+				input_colonia.classList.add('d-none');
+			}
+		});
+
+		document.querySelector('#estado_select_new').addEventListener('change', (e) => {
+			let select_municipio = document.querySelector('#municipio_select_new');
+			let select_localidad = document.querySelector('#localidad_select_new');
+			let select_colonia = document.querySelector('#colonia_select_new');
+			let input_colonia = document.querySelector('#colonia_new');
+
+			clearSelect(select_municipio);
+			clearSelect(select_localidad);
+			clearSelect(select_colonia);
+
+			select_municipio.value = '';
+			select_localidad.value = '';
+			select_colonia.value = '';
+			input_colonia.value = '';
+
+			select_colonia.classList.remove('d-none');
+			input_colonia.classList.add('d-none');
+
+			let data = {
+				'estado_id': e.target.value,
+			}
+
+			$.ajax({
+				data: data,
+				url: "<?= base_url('/data/get-municipios-by-estado') ?>",
+				method: "POST",
+				dataType: "json",
+				success: function(response) {
+					let municipios = response.data;
+
+					municipios.forEach(municipio => {
+						var option = document.createElement("option");
+						option.text = municipio.MUNICIPIODESCR;
+						option.value = municipio.MUNICIPIOID;
+						select_municipio.add(option);
+					});
+				},
+				error: function(jqXHR, textStatus, errorThrown) {}
+			});
+			if (e.target.value != 2) {
+				var option = document.createElement("option");
+				option.text = 'OTRO';
+				option.value = '0';
+				select_colonia.add(option);
+				select_colonia.value = '0';
+				input_colonia.value = '';
+				select_colonia.classList.add('d-none');
+				input_colonia.classList.remove('d-none');
+			} else {
+				document.querySelector('#colonia-message').classList.remove('d-none');
+			}
+		});
+
+		document.querySelector('#municipio_select_new').addEventListener('change', (e) => {
+			let select_localidad = document.querySelector('#localidad_select_new');
+			let select_colonia = document.querySelector('#colonia_select_new');
+			let input_colonia = document.querySelector('#colonia_new');
+
+			let estado = document.querySelector('#estado_select_new').value;
+			let municipio = e.target.value;
+
+			clearSelect(select_localidad);
+			clearSelect(select_colonia);
+
+			select_localidad.value = '';
+
+			let data = {
+				'estado_id': estado,
+				'municipio_id': municipio
+			};
+
+			$.ajax({
+				data: data,
+				url: "<?= base_url('/data/get-localidades-by-municipio') ?>",
+				method: "POST",
+				dataType: "json",
+				success: function(response) {
+					let localidades = response.data;
+
+					localidades.forEach(localidad => {
+						var option = document.createElement("option");
+						option.text = localidad.LOCALIDADDESCR;
+						option.value = localidad.LOCALIDADID;
+						select_localidad.add(option);
+					});
+				},
+				error: function(jqXHR, textStatus, errorThrown) {}
+			});
+		});
+
+		document.querySelector('#localidad_select_new').addEventListener('change', (e) => {
+			let select_colonia = document.querySelector('#colonia_select_new');
+			let input_colonia = document.querySelector('#colonia_new');
+
+			let estado = document.querySelector('#estado_select_new').value;
+			let municipio = document.querySelector('#municipio_select_new').value;
+			let localidad = e.target.value;
+
+			clearSelect(select_colonia);
+			select_colonia.value = '';
+
+			let data = {
+				'estado_id': estado,
+				'municipio_id': municipio,
+				'localidad_id': localidad
+			};
+
+			console.log(data);
+
+			if (estado == 2) {
+				select_colonia.classList.remove('d-none');
+				input_colonia.classList.add('d-none');
+				input_colonia.value = '';
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/get-colonias-by-estado-municipio-localidad') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						let colonias = response.data;
+
+						colonias.forEach(colonia => {
+							var option = document.createElement("option");
+							option.text = colonia.COLONIADESCR;
+							option.value = colonia.COLONIAID;
+							select_colonia.add(option);
+						});
+
+						var option = document.createElement("option");
+						option.text = 'OTRO';
+						option.value = '0';
+						select_colonia.add(option);
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+
+					}
+				});
+
+			} else {
+				var option = document.createElement("option");
+				option.text = 'OTRO';
+				option.value = '0';
+				select_colonia.add(option);
+				select_colonia.value = '0';
+				input_colonia.value = '';
+				select_colonia.classList.add('d-none');
+				input_colonia.classList.remove('d-none');
+			}
+		});
+
+		document.querySelector('#colonia_select_new').addEventListener('change', (e) => {
+			let select_colonia = document.querySelector('#colonia_select_new');
+			let input_colonia = document.querySelector('#colonia_new');
+
+			if (e.target.value === '0') {
+				select_colonia.classList.add('d-none');
+				input_colonia.classList.remove('d-none');
+				input_colonia.value = '';
+				input_colonia.focus();
+			} else {
+				input_colonia.value = '-';
+			}
+		});
+
+
+			//END CREAR PERSONA FISICA
 
 			document.querySelector('#fecha_nacimiento_pf').addEventListener('change', (e) => {
 				let fecha = e.target.value;
@@ -1961,7 +2385,7 @@
 				});
 			}
 
-			
+
 			function actualizarParentesco() {
 				const data = {
 					'folio': document.querySelector('#input_folio_atencion').value,
@@ -1990,6 +2414,8 @@
 								text: 'Parentesco actualizado correctamente',
 								confirmButtonColor: '#bf9b55',
 							});
+							$('#relacion_parentesco_modal').modal('hide');
+
 						} else {
 							Swal.fire({
 								icon: 'error',
@@ -2020,12 +2446,25 @@
 					dataType: "json",
 					success: function(response) {
 						if (response.status == 1) {
+							$('#personaFisica2_I').empty();
+							document.querySelector('#parentesco_mf_I').value = '';
+							document.querySelector('#personaFisica1_I').value = '';
+
+							let tabla_parentesco = document.querySelectorAll('#table-parentesco tr');
+							tabla_parentesco.forEach(row => {
+								if (row.id !== '') {
+									row.remove();
+								}
+							});
+							llenarTablaParentesco(response.parentescoRelacion, response.personaiduno, response.personaidDos, response.parentesco);
 
 							Swal.fire({
 								icon: 'success',
 								text: 'Parentesco ingresado correctamente',
 								confirmButtonColor: '#bf9b55',
 							});
+							$('#relacion_parentesco_modal_insert').modal('hide');
+
 						} else {
 							Swal.fire({
 								icon: 'error',
@@ -2056,7 +2495,6 @@
 					success: function(response) {
 						// console.log(respobse.idcalidad);
 						if (response.status == 1) {
-
 							Swal.fire({
 								icon: 'success',
 								text: 'Vehículo actualizado correctamente',
@@ -2076,6 +2514,88 @@
 				});
 			}
 
+			function insertarPersonaFisica() {
+				const data = {
+					'folio': document.querySelector('#input_folio_atencion').value,
+					'year': document.querySelector('#year_select').value,
+					'nombre': document.querySelector('#nombre_new').value,
+					'primer_apellido': document.querySelector('#apellido_paterno_new').value,
+					'segundo_apellido': document.querySelector('#apellido_materno_new').value,
+					'fecha_nacimiento': document.querySelector('#fecha_nacimiento_new').value,
+					'edad': document.querySelector('#edad_new').value,
+					'sexo': document.querySelector('#sexo_new').value,
+					'codigo_pais_pfc': document.querySelector('#codigo_pais_new').value,
+					'codigo_pais_pfc_2': document.querySelector('#codigo_pais_2_new').value,
+					'calidad_juridica': document.querySelector('#calidad_juridica_new').value,
+					'municipio_origen': document.querySelector('#municipio_select_origen_new').value,
+					'telefono': document.querySelector('#telefono_new').value,
+					'telefono_adicional': document.querySelector('#telefono_new2').value,
+					'nacionalidad_origen': document.querySelector('#nacionalidad_new').value,
+					'estado_origen': document.querySelector('#estado_select_origen_new').value,
+					'idioma': document.querySelector('#idioma_new').value,
+					'pais_actual': document.querySelector('#pais_select_new').value,
+					'estado_actual': document.querySelector('#estado_select_new').value,
+					'municipio_actual': document.querySelector('#municipio_select_new').value,
+					'localidad_actual': document.querySelector('#localidad_select_new').value,
+					'colonia_actual': document.querySelector('#colonia_select_new').value,
+					'colonia_actual_descr': document.querySelector('#colonia_new').value,
+					'codigo_postal': document.querySelector('#cp_new').value,
+					'calle': document.querySelector('#calle_new').value,
+					'num_exterior': document.querySelector('#exterior_new').value,
+					'num_interior': document.querySelector('#interior_new').value,
+					'identificacion': document.querySelector('#identificacion_new').value,
+					'numero_identificacion': document.querySelector('#numero_ide_new').value,
+					'estado_civil': document.querySelector('#e_civil_new').value,
+					'escolaridad': document.querySelector('#escolaridad_new').value,
+					'ocupacion': document.querySelector('#ocupacion_new').value,
+					'discapacidad': document.querySelector('#discapacidad_new').value,
+					'leer': document.querySelector('#leer_new').value,
+					'escribir': document.querySelector('#escribir_new').value,
+					'facebook': document.querySelector('#facebook_new').value,
+					'twitter': document.querySelector('#twitter_new').value,
+					'instagram': document.querySelector('#instagram_new').value,
+					'correo': document.querySelector('#correo_new').value
+
+				};
+				// console.log(data);
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/create-persona_fisica-by-folio') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						if (response.status == 1) {
+							console.log(response.domicilio);
+							document.getElementById("persona_fisica_form_insert").reset();
+
+							let tabla_personas = document.querySelectorAll('#table-personas tr');
+							tabla_personas.forEach(row => {
+								if (row.id !== '') {
+									row.remove();
+								}
+							});
+
+							llenarTablaPersonas(response.personas);
+							Swal.fire({
+								icon: 'success',
+								text: 'Persona fisica agregada correctamente',
+								confirmButtonColor: '#bf9b55',
+							});
+							$('#insert_persona_fisica_modal').modal('hide');
+
+						} else {
+							Swal.fire({
+								icon: 'error',
+								text: 'No se agregó la información de la persona fisica',
+								confirmButtonColor: '#bf9b55',
+							});
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						console.log(textStatus);
+					}
+				});
+			}
 
 			function dateToString(_date) {
 				let date = new Date(_date);
@@ -2100,8 +2620,7 @@
 <?php include 'video_denuncia_modals/persona_modal.php' ?>
 <?php include 'video_denuncia_modals/relacion_parentesco_modal.php' ?>
 <?php include 'video_denuncia_modals/relacion_parentesco_modal_insert.php' ?>
-
-
+<?php include 'video_denuncia_modals/insert_persona_fisica_modal.php' ?>
 <?php include 'video_denuncia_modals/vehiculo_modal.php' ?>
 <?php include 'video_denuncia_modals/domicilio_modal.php' ?>
 <?php $this->endSection() ?>
