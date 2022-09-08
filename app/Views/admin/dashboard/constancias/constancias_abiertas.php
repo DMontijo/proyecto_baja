@@ -11,7 +11,7 @@
 				<a class="link link-primary" href="<?= base_url('admin/dashboard/constancias') ?>" role="button"><i class="fas fa-reply"></i> REGRESAR A CONSTANCIAS</a>
 			</div>
 			<div class="col-12">
-				<div class="card shadow border-0">
+				<div class="card shadow border-0" style="overflow-x:auto;">
 					<div class="card-body">
 						<table id="extravios_abiertos" class="table table-bordered table-striped">
 							<thead>
