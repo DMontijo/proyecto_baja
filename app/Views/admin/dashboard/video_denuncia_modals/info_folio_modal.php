@@ -37,6 +37,9 @@
 										<th class="text-center bg-primary text-white">VER</th>
 									</tr>
 								</table>
+								<div class="col-12 mb-3 text-center">
+									<button type="button" id="insertPersonaFisicaModal" name="insertPersonaFisicaModal" class="btn btn-primary font-weight-bold">NUEVO PERSONA FÍSICA</button>
+								</div>
 							</div>
 							<div class="tab-pane fade" id="v-pills-parentesco" role="tabpanel" aria-labelledby="v-pills-parentesco-tab">
 
@@ -50,8 +53,8 @@
 									</tr>
 								</table>
 								<div class="col-12 mb-3 text-center">
-								<button type="button" id="insertParentescoModal" name="insertParentescoModal" class="btn btn-primary font-weight-bold">NUEVO PARENTESCO</button>
-							</div>
+									<button type="button" id="insertParentescoModal" name="insertParentescoModal" class="btn btn-primary font-weight-bold">NUEVO PARENTESCO</button>
+								</div>
 							</div>
 							<div class="tab-pane fade" id="v-pills-vehiculos" role="tabpanel" aria-labelledby="v-pills-vehiculos-tab">
 								<table id="table-vehiculos" class="table table-bordered table-hover table-striped table-light">
@@ -61,9 +64,9 @@
 										<th></th>
 									</tr>
 								</table>
-							
+
 							</div>
-							
+
 						</div>
 					</div>
 				</div>

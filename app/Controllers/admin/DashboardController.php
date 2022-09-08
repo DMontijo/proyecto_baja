@@ -1789,6 +1789,160 @@ class DashboardController extends BaseController
         }
         return json_encode(['status' => 0]);
     }
+    
+    public function createPersonaFisicaByFolio()
+    {
+
+        $folio = trim($this->request->getPost('folio'));
+        $year = trim($this->request->getPost('year'));
+        $dataNewPersonaFisica = array(
+            'FOLIOID' => $this->request->getPost('folio'),
+            'ANO' => $this->request->getPost('year'),
+            'NOMBRE' => $this->request->getPost('nombre'),
+            'PRIMERAPELLIDO' => $this->request->getPost('primer_apellido'),
+            'SEGUNDOAPELLIDO' => $this->request->getPost('segundo_apellido'),
+            'FECHANACIMIENTO' => $this->request->getPost('fecha_nacimiento'),
+            'EDADCANTIDAD' => $this->request->getPost('edad'),
+            'SEXO' => $this->request->getPost('sexo'),
+            'TELEFONO' => $this->request->getPost('telefono'),
+            'TELEFONO2' => $this->request->getPost('telefono_adicional'),
+            'CALIDADJURIDICAID' => $this->request->getPost('calidad_juridica'),
+            'TIPOIDENTIFICACIONID' => $this->request->getPost('identificacion'),
+            'NUMEROIDENTIFICACION' => $this->request->getPost('numero_identificacion'),
+            'NACIONALIDADID' => $this->request->getPost('nacionalidad_origen'),
+            'PERSONAIDIOMAID' => $this->request->getPost('idioma'),
+            'ESCOLARIDADID' => $this->request->getPost('escolaridad'),
+            'OCUPACIONID' => $this->request->getPost('ocupacion'),
+            'ESTADOCIVILID' => $this->request->getPost('estado_civil'),
+            'ESTADOORIGENID' => $this->request->getPost('estado_origen'),
+            'MUNICIPIOORIGENID' => $this->request->getPost('municipio_origen'),
+            'FACEBOOK' => $this->request->getPost('facebook'),
+            'INSTAGRAM' => $this->request->getPost('instagram'),
+            'TWITTER' => $this->request->getPost('twitter'),
+            'LEER' => $this->request->getPost('leer'),
+            'ESCRIBIR' => $this->request->getPost('escribir'),
+        );
+
+        $dataNewPersonaFisicaDomicilio = array(
+            'PAIS' => $this->request->getPost('pais_actual'),
+            'ESTADOID' => $this->request->getPost('estado_actual'),
+            'MUNICIPIOID' => $this->request->getPost('municipio_actual'),
+            'LOCALIDADID' => $this->request->getPost('localidad_actual'),
+            'COLONIAID' => $this->request->getPost('colonia_actual'),
+            'COLONIADESCR' => $this->request->getPost('colonia_actual_descr'),
+            'CALLE' => $this->request->getPost('calle'),
+            'NUMEROCASA' => $this->request->getPost('num_exterior'),
+            'NUMEROINTERIOR' => $this->request->getPost('num_interior'),
+            'CP' => $this->request->getPost('codigo_postal'),
+        );
+
+        $personaFisica = $this->_folioPersonaFisica($dataNewPersonaFisica, $folio, $year);
+        $mediaFiliacion = $this->_folioPersonaFisicaMediaFiliacion($dataNewPersonaFisica, $folio, $personaFisica, $year);
+        $domicilio = $this->_folioPersonaFisicaDomicilio($dataNewPersonaFisicaDomicilio, $folio, $personaFisica, $year);
+
+
+        if ($personaFisica) {
+            $personas = $this->_folioPersonaFisicaModel->get_by_folio($folio, $year);
+
+
+            $datosBitacora = [
+                'ACCION' => 'Ha ingresado una nueva persona fisica',
+                'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
+            ];
+
+            $this->_bitacoraActividad($datosBitacora);
+
+            return json_encode(['status' => 1, 'personas' => $personas, 'domicilio' => $dataNewPersonaFisicaDomicilio]);
+        } else {
+            return json_encode(['status' => 0, 'message' => $_POST]);
+        }
+    }
+    private function _folioPersonaFisica($data, $folio, $year)
+    {
+        $data = $data;
+        $data['FOLIOID'] = $folio;
+        $data['ANO'] = $year;
+        if ($data['FECHANACIMIENTO'] == '' || $data['FECHANACIMIENTO'] == null || $data['FECHANACIMIENTO'] == '0000-00-00') {
+            $data['FECHANACIMIENTO'] = null;
+        }
+
+        $personaFisica = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->orderBy('PERSONAFISICAID', 'desc')->first();
+
+        if ($personaFisica) {
+            $data['PERSONAFISICAID'] = ((int) $personaFisica->PERSONAFISICAID) + 1;
+            $personaFisica = $this->_folioPersonaFisicaModel->insert($data);
+            return $data['PERSONAFISICAID'];
+        } else {
+            $data['PERSONAFISICAID'] = 1;
+            $personaFisica = $this->_folioPersonaFisicaModel->insert($data);
+            return $data['PERSONAFISICAID'];
+        }
+    }
+    private function _folioPersonaFisicaDomicilio($data, $folio, $personaFisicaID, $year)
+    {
+        $data = $data;
+        $data['FOLIOID'] = $folio;
+        $data['ANO'] = $year;
+        $data['PERSONAFISICAID'] = $personaFisicaID;
+
+        if ((int) $data['COLONIAID'] == 0 || $data['COLONIAID'] == null) {
+            $data['COLONIAID'] = null;
+            $data['COLONIADESCR'] = $data['COLONIADESCR'];
+            $data['LOCALIDADID'] = null;
+        }
+        if ($data['COLONIAID']) {
+            $data['COLONIAID'] = $data['COLONIAID'];
+            $data['COLONIADESCR'] = null;
+        }
+
+       if ($data['MUNICIPIOID']) {
+            try {
+                $colonia = $this->_coloniasModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data['MUNICIPIOID'])->first();
+                $colonia ? $data['LOCALIDADID'] = $colonia->LOCALIDADID : $data['LOCALIDADID'] = null;
+            } catch (\Exception $e) {
+                $data['LOCALIDADID'] = null;
+            }
+        } else {
+            $data['LOCALIDADID'] = null;
+        }
+
+        if ($data['LOCALIDADID'] != null) {
+            if ($data['MUNICIPIOID']) {
+                try {
+                    $localidad = $this->_localidadesModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data['MUNICIPIOID'])->where('LOCALIDADID', $data['LOCALIDADID'])->first();
+                    $localidad ? $data['ZONA'] = $localidad->ZONA : null;
+                } catch (\Exception $e) {
+                }
+            }
+        }
+
+        $personaDomicilio = $this->_folioPersonaFisicaDomicilioModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $personaFisicaID)->orderBy('DOMICILIOID', 'desc')->first();
+
+        if ($personaDomicilio) {
+            $data['DOMICILIOID'] = ((int) $personaDomicilio->DOMICILIOID) + 1;
+            $this->_folioPersonaFisicaDomicilioModel->insert($data);
+            return $data['DOMICILIOID'];
+        } else {
+            $data['DOMICILIOID'] = 1;
+            $this->_folioPersonaFisicaDomicilioModel->insert($data);
+            return $data['DOMICILIOID'];
+        }
+    }
+
+    private function _folioPersonaFisicaMediaFiliacion($data, $folio, $personaFisicaID, $year)
+    {
+        $data = $data;
+        $data['FOLIOID'] = $folio;
+        $data['ANO'] = $year;
+        $data['PERSONAFISICAID'] = $personaFisicaID;
+        if (empty($data['FECHADESAPARICION'])) {
+            $data['FECHADESAPARICION'] = null;
+        }
+        if ($data['FECHADESAPARICION'] == '0000-00-00') {
+            $data['FECHADESAPARICION'] = null;
+        }
+        $this->_folioMediaFiliacion->insert($data);
+    }
     private function _bitacoraActividad($data)
     {
         $data = $data;
