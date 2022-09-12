@@ -21,12 +21,11 @@ class EXPRELACIONFISFIS extends Migration
             'type' => 'INT',
             'unsigned' => true,
         ],
-        
         'DELITOMODALIDADID' => [
             'type' => 'INT',
             'unsigned' => true,
         ],
-        'PERSONAFISICAIDIMPUTADO ' => [
+        'PERSONAFISICAIDIMPUTADO' => [
             'type' => 'INT',
             'unsigned' => true,
         ],

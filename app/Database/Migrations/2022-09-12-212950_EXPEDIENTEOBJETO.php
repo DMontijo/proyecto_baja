@@ -39,50 +39,42 @@ class EXPEDIENTEOBJETO extends Migration
         'MARCA' => [
             'type' => 'VARCHAR',
             'constraint' => '100',
-            'unsigned' => true,
             'null' => true,
         ],
         'NUMEROSERIE' => [
             'type' => 'VARCHAR',
             'constraint' => '100',
-            'unsigned' => true,
             'null' => true,
         ],
         'CANTIDAD' => [
             'type' => 'VARCHAR',
             'constraint' => '100',
-            'unsigned' => true,
             'null' => true,
         ],
         'VALOR' => [
             'type' => 'VARCHAR',
             'constraint' => '100',
-            'unsigned' => true,
             'null' => true,
         ],
-        'TIPOMONEDAID ' => [
+        'TIPOMONEDAID' => [
             'type' => 'INT',
             'unsigned' => true,
         ],
         'DESCRIPCIONDETALLADA' => [
             'type' => 'VARCHAR',
             'constraint' => '100',
-            'unsigned' => true,
             'null' => true,
         ],
         'PERSONAFISICAIDPROPIETARIO' => [
             'type' => 'INT',
-            'unsigned' => true,
             'null' => true,
         ],
         'PERSONAMORALIDPROPIETARIO' => [
             'type' => 'INT',
-            'unsigned' => true,
             'null' => true,
         ],
         'FOTO' => [
             'type' => 'LONGBLOB',
-            'unsigned' => true,
             'null' => true,
         ],
         'PARTICIPAESTADO' => [
