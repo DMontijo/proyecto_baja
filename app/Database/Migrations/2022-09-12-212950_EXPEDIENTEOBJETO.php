@@ -42,18 +42,6 @@ class EXPEDIENTEOBJETO extends Migration
             'unsigned' => true,
             'null' => true,
         ],
-        'MARCA' => [
-            'type' => 'VARCHAR',
-            'constraint' => '100',
-            'unsigned' => true,
-            'null' => true,
-        ],
-        'MARCA' => [
-            'type' => 'VARCHAR',
-            'constraint' => '100',
-            'unsigned' => true,
-            'null' => true,
-        ],
         'NUMEROSERIE' => [
             'type' => 'VARCHAR',
             'constraint' => '100',
@@ -95,11 +83,6 @@ class EXPEDIENTEOBJETO extends Migration
         'FOTO' => [
             'type' => 'LONGBLOB',
             'unsigned' => true,
-            'null' => true,
-        ],
-        'PARTICIPAESTADO' => [
-            'type' => 'CHAR',
-            'constraint' => '1',
             'null' => true,
         ],
         'PARTICIPAESTADO' => [

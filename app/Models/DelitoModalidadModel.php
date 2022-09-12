@@ -8,5 +8,5 @@ class DelitoModalidadModel extends Model
 {
 	protected $DBGroup          = 'default';
 	protected $table            = 'DELITOMODALIDAD';
-	protected $allowedFields    = [];
+	protected $allowedFields    = ['DELITOMODALIDADID','DELITOMODALIDADDESCR','DELITOMODALIDADARTICULO','DELITOCAPITULOID','DELITOCLASIFICACION','DELITOPERSONAL','HABILITADO','DELITOPESO','INTENCIONALIDADID','TIPOQUERELLA'];
 }
