@@ -17,7 +17,7 @@ class OBJETOSUBCLASIFICACION extends Migration
                 'type' => 'INT',
                 'unsigned' => true,
             ],
-            'OBJETOCLASIFICACIONDESCR' => [
+            'OBJETOSUBCLASIFICACIONDESCR' => [
                 'type' => 'VARCHAR',
                 'constraint' => '100',
                 'null' => true,
