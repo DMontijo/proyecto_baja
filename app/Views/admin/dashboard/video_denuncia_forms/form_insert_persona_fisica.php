@@ -3,6 +3,23 @@
 		<h3 class="font-weight-bold mb-4 text-center">DATOS DE LA PERSONA FÍSICA</h3>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="calidad_juridica_pf" class="form-label font-weight-bold">Calidad Juridica</label>
+		<select class="form-control" id="calidad_juridica_new" name="calidad_juridica_new" required>
+			<option selected value=""></option>
+			<?php foreach ($body_data->calidadJuridica as $index => $calidadJuridica) { ?>
+				<option value="<?= $calidadJuridica->PERSONACALIDADJURIDICAID ?>"> <?= $calidadJuridica->PERSONACALIDADJURIDICADESCR ?> </option>
+			<?php } ?>
+		</select>
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="desaparecida_new" class="form-label font-weight-bold">Desaparecida</label>
+		<select class="form-control" id="desaparecida_new" name="desaparecida_new" required>
+			<option selected disabled value=""></option>
+			<option value="S">SI</option>
+			<option value="N">NO</option>
+		</select>
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="nombre_new" class="form-label font-weight-bold">Nombre(s)</label>
 		<input type="text" class="form-control" id="nombre_new" name="nombre_new" maxlength="100" required>
 		<div class="invalid-feedback">
@@ -307,15 +324,7 @@
 		</div>
 	</div>
 
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="calidad_juridica_pf" class="form-label font-weight-bold">Calidad Juridica</label>
-		<select class="form-control" id="calidad_juridica_new" name="calidad_juridica_new">
-			<option selected value=""></option>
-			<?php foreach ($body_data->calidadJuridica as $index => $calidadJuridica) { ?>
-				<option value="<?= $calidadJuridica->PERSONACALIDADJURIDICAID ?>"> <?= $calidadJuridica->PERSONACALIDADJURIDICADESCR ?> </option>
-			<?php } ?>
-		</select>
-	</div>
+	
 	<div class="col-12 mb-3 text-center">
 		<button type="submit" id="insertPersonaFisica" name="insertPersonaFisica" class="btn btn-primary font-weight-bold">AGREGAR PERSONA FÍSICA</button>
 	</div>
