@@ -99,7 +99,6 @@ use App\Models\CabelloPeculiarModel;
 
 class DashboardController extends BaseController
 {
-
     public function __construct()
     {
         //Models
@@ -921,11 +920,10 @@ class DashboardController extends BaseController
                                     $_domicilio = $this->_createDomicilioPersonaFisica($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $domicilio, $folioRow['HECHOMUNICIPIOID']);
                                 }
 
-                                $_mediaFiliacion = $this->_createPersonaFisicaMediaFilicacion($expedienteCreado->EXPEDIENTEID, 18, $mediaFiliacion, $folioRow['HECHOMUNICIPIOID']);
+                                $_mediaFiliacion = $this->_createPersonaFisicaMediaFilicacion($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $mediaFiliacion, $folioRow['HECHOMUNICIPIOID']);
                                 // var_dump($_mediaFiliacion);
                                 // exit;
                             }
-                            exit;
                         } catch (\Exception $e) {
                             throw new \Exception($e->getMessage());
                         }
@@ -1024,7 +1022,7 @@ class DashboardController extends BaseController
         $data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
         $data['schema'] = $conexion->SCHEMA;
 
-        return $this->curlPost($endpoint, $data);
+        return $this->_curlPostDataEncrypt($endpoint, $data);
     }
 
     private function _createPersonaFisica($expedienteId, $personaFisica, $municipio)
@@ -1106,7 +1104,7 @@ class DashboardController extends BaseController
         $data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
         $data['schema'] = $conexion->SCHEMA;
 
-        return $this->curlPost($endpoint, $data);
+        return $this->_curlPostDataEncrypt($endpoint, $data);
     }
 
     private function _createDomicilioPersonaFisica($expedienteId, $personaFisicaId, $domicilioPersonaFisica, $municipio)
@@ -1157,7 +1155,7 @@ class DashboardController extends BaseController
             $data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
             $data['schema'] = $conexion->SCHEMA;
 
-            return $this->curlPost($endpoint, $data);
+            return $this->_curlPostDataEncrypt($endpoint, $data);
         } else {
             return false;
         }
@@ -1266,7 +1264,7 @@ class DashboardController extends BaseController
         $data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
         $data['schema'] = $conexion->SCHEMA;
 
-        return $this->curlPost($endpoint, $data);
+        return $this->_curlPostDataEncrypt($endpoint, $data);
     }
 
     private function _createExpImputado($expedienteId, $personaFisicaId, $municipio)
@@ -1294,26 +1292,26 @@ class DashboardController extends BaseController
             }
         }
 
-        return $this->curlPost($endpoint, $data);
+        return $this->_curlPostDataEncrypt($endpoint, $data);
     }
 
-    private function curlPost($endpoint, $data)
+    private function _curlPost($endpoint, $data)
     {
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_URL, $endpoint);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-        $headers = array();
-        $headers[] = 'Content-Type: application/json';
-        $headers[] = 'Access-Control-Allow-Origin: *';
-        $headers[] = 'Access-Control-Allow-Credentials: true';
-        $headers[] = 'Access-Control-Allow-Headers: Content-Type';
-
+        $headers = array(
+            'Content-Type: application/json',
+            'Access-Control-Allow-Origin: *',
+            'Access-Control-Allow-Credentials: true',
+            'Access-Control-Allow-Headers: Content-Type',
+            'Hash-API: ' . password_hash(TOKEN_API, PASSWORD_BCRYPT)
+        );
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
         $result = curl_exec($ch);
@@ -1331,6 +1329,36 @@ class DashboardController extends BaseController
         return json_decode($result);
     }
 
+    private function _curlPostDataEncrypt($endpoint, $data)
+    {
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, $endpoint);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $this->_encriptar(json_encode($data), KEY_128));
+        $headers = array(
+            'Content-Type: application/json',
+            'Access-Control-Allow-Origin: *',
+            'Access-Control-Allow-Credentials: true',
+            'Access-Control-Allow-Headers: Content-Type',
+            'Hash-API: ' . password_hash(TOKEN_API, PASSWORD_BCRYPT),
+            'Key: ' . KEY_128
+        );
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        $result = curl_exec($ch);
+        if ($result === false) {
+            $result = "{
+                'status' => 401,
+                'error' => 'Curl failed: '" . curl_error($ch) . "
+            }";
+        }
+        curl_close($ch);
+        return json_decode($result);
+    }
+
     public function getVideoLink()
     {
         $folio = $this->request->getPost('folio');
@@ -1343,7 +1371,7 @@ class DashboardController extends BaseController
         $data['min'] = !empty($this->request->getPost('min')) ? $this->request->getPost('min') : '2000-01-01';
         $data['max'] = !empty($this->request->getPost('max')) ? $this->request->getPost('max') : date("Y-m-d");
 
-        $response = $this->curlPost($endpoint, $data);
+        $response = $this->_curlPostDataEncrypt($endpoint, $data);
 
         return json_encode($response);
     }
@@ -1356,7 +1384,7 @@ class DashboardController extends BaseController
         $data['token'] = '198429b7cc8a2a5733d97bc13153227dd5017555';
         $data['a'] = 'status';
 
-        $response = $this->curlPost($endpoint, $data);
+        $response = $this->_curlPost($endpoint, $data);
         $active_users = array();
 
         foreach ($response as $key => $user) {
@@ -1375,7 +1403,7 @@ class DashboardController extends BaseController
         $data['token'] = '198429b7cc8a2a5733d97bc13153227dd5017555';
         $data['a'] = 'list';
 
-        $response = $this->curlPost($endpoint, $data);
+        $response = $this->_curlPost($endpoint, $data);
         $unused_users = array();
 
         foreach ($response->data as $key => $user) {
@@ -1406,7 +1434,7 @@ class DashboardController extends BaseController
             $data['rol'] = 'mp';
             $data['st'] = 'r';
 
-            $response = $this->curlPost($endpoint, $data);
+            $response = $this->_curlPostDataEncrypt($endpoint, $data);
 
             return $response;
         } else {
@@ -2056,6 +2084,7 @@ class DashboardController extends BaseController
         }
         $this->_folioMediaFiliacion->insert($data);
     }
+
     private function _bitacoraActividad($data)
     {
         $data = $data;
@@ -2063,6 +2092,22 @@ class DashboardController extends BaseController
         $data['USUARIOID'] = session('ID');
 
         $this->_bitacoraActividadModel->insert($data);
+    }
+
+    private function _encriptar($plaintext, $key128)
+    {
+        $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-128-cbc'));
+        $cipherText = openssl_encrypt($plaintext, 'AES-128-CBC', hex2bin($key128), 1, $iv);
+        return base64_encode($iv . $cipherText);
+    }
+
+    private function _desencriptar($encodedInitialData, $key128)
+    {
+        $encodedInitialData = base64_decode($encodedInitialData);
+        $iv = substr($encodedInitialData, 0, 16);
+        $encodedInitialData = substr($encodedInitialData, 16);
+        $decrypted = openssl_decrypt($encodedInitialData, 'AES-128-CBC', hex2bin($key128), 1, $iv);
+        return $decrypted;
     }
 }
 
