@@ -93,8 +93,8 @@
 						</div>
 					</div>
 				</div>
-				<div class="card shadow border-0">
-					<div class="card-body" style="overflow-x:auto;">
+				<div class="card shadow border-0" style="overflow-x:auto;">
+					<div class="card-body">
 						<table id="expedientes_generados" class="table table-bordered table-striped">
 							<thead>
 								<tr>

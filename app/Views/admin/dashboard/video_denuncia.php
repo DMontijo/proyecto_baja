@@ -1061,6 +1061,8 @@
 			var form_persona_fisica = document.querySelector('#persona_fisica_form');
 			var form_persona_fisica_domicilio = document.querySelector('#persona_fisica_domicilio_form');
 			var form_media_filiacion = document.querySelector('#form_media_filiacion');
+			var form_media_filiacion_insert = document.querySelector('#form_media_filiacion_insert');
+
 			var form_vehiculo = document.querySelector('#form_vehiculo');
 			var form_parentesco = document.querySelector('#form_parentesco');
 			var form_parentesco_insert = document.querySelector('#form_parentesco_insert');
@@ -1147,9 +1149,16 @@
 					event.preventDefault();
 					event.stopPropagation();
 					form_media_filiacion.classList.remove('was-validated')
-					actualizarPersonaMediaAfiliacion();
+					let id_personafisica = document.querySelector('#pf_id').value;
+
+					actualizarPersonaMediaAfiliacion(id_personafisica);
+
+					// console.log('Item:', ultimoid);
+					// alert(ultimoid);
 				}
 			}, false);
+
+
 
 			form_vehiculo.addEventListener('submit', (event) => {
 				if (!form_vehiculo.checkValidity()) {
@@ -1238,6 +1247,7 @@
 					},
 				});
 			});
+
 
 			//DENUNCIA
 
@@ -1531,104 +1541,64 @@
 
 			//CREAR PERSONA FISICA
 			document.querySelector('#fecha_nacimiento_new').addEventListener('change', (e) => {
-		let fecha = e.target.value;
-		let hoy = new Date();
-		let cumpleanos = new Date(fecha);
-		let edad = hoy.getFullYear() - cumpleanos.getFullYear();
-		let m = hoy.getMonth() - cumpleanos.getMonth();
+				let fecha = e.target.value;
+				let hoy = new Date();
+				let cumpleanos = new Date(fecha);
+				let edad = hoy.getFullYear() - cumpleanos.getFullYear();
+				let m = hoy.getMonth() - cumpleanos.getMonth();
 
-		if (m < 0 || (m === 0 && hoy.getDate() <= cumpleanos.getDate())) {
-			edad--;
-		}
-		document.querySelector('#edad_new').value = edad;
-	})
-
-	document.querySelector('#nacionalidad_new').addEventListener('change', (e) => {
-			let select_estado = document.querySelector('#estado_select_origen_new');
-			let select_municipio = document.querySelector('#municipio_select_origen_new');
-
-			clearSelect(select_municipio);
-
-			if (e.target.value !== '82') {
-				select_estado.value = '33';
-				let data = {
-					'estado_id': 33,
-					'municipio_id': 1,
+				if (m < 0 || (m === 0 && hoy.getDate() <= cumpleanos.getDate())) {
+					edad--;
 				}
-				$.ajax({
-					data: data,
-					url: "<?= base_url('/data/get-municipios-by-estado') ?>",
-					method: "POST",
-					dataType: "json",
-					success: function(response) {
-						let municipios = response.data;
-						municipios.forEach(municipio => {
-							let option = document.createElement("option");
-							option.text = municipio.MUNICIPIODESCR;
-							option.value = municipio.MUNICIPIOID;
-							select_municipio.add(option);
-						});
-						select_municipio.value = '1';
-					},
-					error: function(jqXHR, textStatus, errorThrown) {}
-				});
+				document.querySelector('#edad_new').value = edad;
+			})
 
-			} else {
+			document.querySelector('#nacionalidad_new').addEventListener('change', (e) => {
+				let select_estado = document.querySelector('#estado_select_origen_new');
+				let select_municipio = document.querySelector('#municipio_select_origen_new');
+
 				clearSelect(select_municipio);
-				select_estado.value = '';
-				select_municipio.value = '';
-			}
-		});
 
-		document.querySelector('#estado_select_origen_new').addEventListener('change', (e) => {
-			let select_municipio = document.querySelector('#municipio_select_origen_new');
-
-			clearSelect(select_municipio);
-
-			select_municipio.value = '';
-
-			let data = {
-				'estado_id': e.target.value,
-			}
-
-			$.ajax({
-				data: data,
-				url: "<?= base_url('/data/get-municipios-by-estado') ?>",
-				method: "POST",
-				dataType: "json",
-				success: function(response) {
-					let municipios = response.data;
-
-					municipios.forEach(municipio => {
-						var option = document.createElement("option");
-						option.text = municipio.MUNICIPIODESCR;
-						option.value = municipio.MUNICIPIOID;
-						select_municipio.add(option);
+				if (e.target.value !== '82') {
+					select_estado.value = '33';
+					let data = {
+						'estado_id': 33,
+						'municipio_id': 1,
+					}
+					$.ajax({
+						data: data,
+						url: "<?= base_url('/data/get-municipios-by-estado') ?>",
+						method: "POST",
+						dataType: "json",
+						success: function(response) {
+							let municipios = response.data;
+							municipios.forEach(municipio => {
+								let option = document.createElement("option");
+								option.text = municipio.MUNICIPIODESCR;
+								option.value = municipio.MUNICIPIOID;
+								select_municipio.add(option);
+							});
+							select_municipio.value = '1';
+						},
+						error: function(jqXHR, textStatus, errorThrown) {}
 					});
-				},
-				error: function(jqXHR, textStatus, errorThrown) {}
+
+				} else {
+					clearSelect(select_municipio);
+					select_estado.value = '';
+					select_municipio.value = '';
+				}
 			});
-		});
 
-		document.querySelector('#pais_select_new').addEventListener('change', (e) => {
+			document.querySelector('#estado_select_origen_new').addEventListener('change', (e) => {
+				let select_municipio = document.querySelector('#municipio_select_origen_new');
 
-			let select_estado = document.querySelector('#estado_select_new');
-			let select_municipio = document.querySelector('#municipio_select_new');
-			let select_localidad = document.querySelector('#localidad_select_new');
-			let select_colonia = document.querySelector('#colonia_select_new');
+				clearSelect(select_municipio);
 
-			let input_colonia = document.querySelector('#colonia_new');
-			clearSelect(select_municipio);
-			clearSelect(select_localidad);
-			clearSelect(select_colonia);
-
-			if (e.target.value !== 'MX') {
-
-				select_estado.value = '33';
+				select_municipio.value = '';
 
 				let data = {
-					'estado_id': 33,
-					'municipio_id': 1,
+					'estado_id': e.target.value,
 				}
 
 				$.ajax({
@@ -1638,16 +1608,184 @@
 					dataType: "json",
 					success: function(response) {
 						let municipios = response.data;
+
 						municipios.forEach(municipio => {
-							let option = document.createElement("option");
+							var option = document.createElement("option");
 							option.text = municipio.MUNICIPIODESCR;
 							option.value = municipio.MUNICIPIOID;
 							select_municipio.add(option);
 						});
-						select_municipio.value = '1';
 					},
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
+			});
+
+			document.querySelector('#pais_select_new').addEventListener('change', (e) => {
+
+				let select_estado = document.querySelector('#estado_select_new');
+				let select_municipio = document.querySelector('#municipio_select_new');
+				let select_localidad = document.querySelector('#localidad_select_new');
+				let select_colonia = document.querySelector('#colonia_select_new');
+
+				let input_colonia = document.querySelector('#colonia_new');
+				clearSelect(select_municipio);
+				clearSelect(select_localidad);
+				clearSelect(select_colonia);
+
+				if (e.target.value !== 'MX') {
+
+					select_estado.value = '33';
+
+					let data = {
+						'estado_id': 33,
+						'municipio_id': 1,
+					}
+
+					$.ajax({
+						data: data,
+						url: "<?= base_url('/data/get-municipios-by-estado') ?>",
+						method: "POST",
+						dataType: "json",
+						success: function(response) {
+							let municipios = response.data;
+							municipios.forEach(municipio => {
+								let option = document.createElement("option");
+								option.text = municipio.MUNICIPIODESCR;
+								option.value = municipio.MUNICIPIOID;
+								select_municipio.add(option);
+							});
+							select_municipio.value = '1';
+						},
+						error: function(jqXHR, textStatus, errorThrown) {}
+					});
+
+					$.ajax({
+						data: data,
+						url: "<?= base_url('/data/get-localidades-by-municipio') ?>",
+						method: "POST",
+						dataType: "json",
+						success: function(response) {
+							let localidades = response.data;
+							localidades.forEach(localidad => {
+								let option = document.createElement("option");
+								option.text = localidad.LOCALIDADDESCR;
+								option.value = localidad.LOCALIDADID;
+								select_localidad.add(option);
+							});
+							let option = document.createElement("option");
+							option.text = 'OTRO';
+							option.value = '0';
+
+							select_colonia.add(option);
+							select_localidad.value = '1';
+
+							select_colonia.value = '0';
+							select_colonia.classList.add('d-none');
+							input_colonia.classList.remove('d-none');
+							input_colonia.value = 'EXTRANJERO';
+							document.querySelector('#calle').focus();
+						},
+						error: function(jqXHR, textStatus, errorThrown) {}
+					});
+
+					let option = document.createElement("option");
+					option.text = 'OTRO';
+					option.value = '0';
+
+					select_colonia.add(option);
+
+					select_colonia.value = '0';
+					select_colonia.classList.add('d-none');
+					input_colonia.classList.remove('d-none');
+					input_colonia.value = 'EXTRANJERO';
+
+
+				} else {
+					clearSelect(select_municipio);
+					clearSelect(select_localidad);
+					clearSelect(select_colonia);
+
+					select_estado.value = '';
+					select_municipio.value = '';
+					select_localidad.value = '';
+					select_colonia.value = '';
+					input_colonia.value = '';
+
+					select_colonia.classList.remove('d-none');
+					input_colonia.classList.add('d-none');
+				}
+			});
+
+			document.querySelector('#estado_select_new').addEventListener('change', (e) => {
+				let select_municipio = document.querySelector('#municipio_select_new');
+				let select_localidad = document.querySelector('#localidad_select_new');
+				let select_colonia = document.querySelector('#colonia_select_new');
+				let input_colonia = document.querySelector('#colonia_new');
+
+				clearSelect(select_municipio);
+				clearSelect(select_localidad);
+				clearSelect(select_colonia);
+
+				select_municipio.value = '';
+				select_localidad.value = '';
+				select_colonia.value = '';
+				input_colonia.value = '';
+
+				select_colonia.classList.remove('d-none');
+				input_colonia.classList.add('d-none');
+
+				let data = {
+					'estado_id': e.target.value,
+				}
+
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/get-municipios-by-estado') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						let municipios = response.data;
+
+						municipios.forEach(municipio => {
+							var option = document.createElement("option");
+							option.text = municipio.MUNICIPIODESCR;
+							option.value = municipio.MUNICIPIOID;
+							select_municipio.add(option);
+						});
+					},
+					error: function(jqXHR, textStatus, errorThrown) {}
+				});
+				if (e.target.value != 2) {
+					var option = document.createElement("option");
+					option.text = 'OTRO';
+					option.value = '0';
+					select_colonia.add(option);
+					select_colonia.value = '0';
+					input_colonia.value = '';
+					select_colonia.classList.add('d-none');
+					input_colonia.classList.remove('d-none');
+				} else {
+					document.querySelector('#colonia-message').classList.remove('d-none');
+				}
+			});
+
+			document.querySelector('#municipio_select_new').addEventListener('change', (e) => {
+				let select_localidad = document.querySelector('#localidad_select_new');
+				let select_colonia = document.querySelector('#colonia_select_new');
+				let input_colonia = document.querySelector('#colonia_new');
+
+				let estado = document.querySelector('#estado_select_new').value;
+				let municipio = e.target.value;
+
+				clearSelect(select_localidad);
+				clearSelect(select_colonia);
+
+				select_localidad.value = '';
+
+				let data = {
+					'estado_id': estado,
+					'municipio_id': municipio
+				};
 
 				$.ajax({
 					data: data,
@@ -1656,219 +1794,91 @@
 					dataType: "json",
 					success: function(response) {
 						let localidades = response.data;
+
 						localidades.forEach(localidad => {
-							let option = document.createElement("option");
+							var option = document.createElement("option");
 							option.text = localidad.LOCALIDADDESCR;
 							option.value = localidad.LOCALIDADID;
 							select_localidad.add(option);
 						});
-						let option = document.createElement("option");
-						option.text = 'OTRO';
-						option.value = '0';
-
-						select_colonia.add(option);
-						select_localidad.value = '1';
-
-						select_colonia.value = '0';
-						select_colonia.classList.add('d-none');
-						input_colonia.classList.remove('d-none');
-						input_colonia.value = 'EXTRANJERO';
-						document.querySelector('#calle').focus();
 					},
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
+			});
 
-				let option = document.createElement("option");
-				option.text = 'OTRO';
-				option.value = '0';
+			document.querySelector('#localidad_select_new').addEventListener('change', (e) => {
+				let select_colonia = document.querySelector('#colonia_select_new');
+				let input_colonia = document.querySelector('#colonia_new');
 
-				select_colonia.add(option);
+				let estado = document.querySelector('#estado_select_new').value;
+				let municipio = document.querySelector('#municipio_select_new').value;
+				let localidad = e.target.value;
 
-				select_colonia.value = '0';
-				select_colonia.classList.add('d-none');
-				input_colonia.classList.remove('d-none');
-				input_colonia.value = 'EXTRANJERO';
-
-
-			} else {
-				clearSelect(select_municipio);
-				clearSelect(select_localidad);
 				clearSelect(select_colonia);
-
-				select_estado.value = '';
-				select_municipio.value = '';
-				select_localidad.value = '';
 				select_colonia.value = '';
-				input_colonia.value = '';
 
-				select_colonia.classList.remove('d-none');
-				input_colonia.classList.add('d-none');
-			}
-		});
+				let data = {
+					'estado_id': estado,
+					'municipio_id': municipio,
+					'localidad_id': localidad
+				};
 
-		document.querySelector('#estado_select_new').addEventListener('change', (e) => {
-			let select_municipio = document.querySelector('#municipio_select_new');
-			let select_localidad = document.querySelector('#localidad_select_new');
-			let select_colonia = document.querySelector('#colonia_select_new');
-			let input_colonia = document.querySelector('#colonia_new');
+				console.log(data);
 
-			clearSelect(select_municipio);
-			clearSelect(select_localidad);
-			clearSelect(select_colonia);
+				if (estado == 2) {
+					select_colonia.classList.remove('d-none');
+					input_colonia.classList.add('d-none');
+					input_colonia.value = '';
+					$.ajax({
+						data: data,
+						url: "<?= base_url('/data/get-colonias-by-estado-municipio-localidad') ?>",
+						method: "POST",
+						dataType: "json",
+						success: function(response) {
+							let colonias = response.data;
 
-			select_municipio.value = '';
-			select_localidad.value = '';
-			select_colonia.value = '';
-			input_colonia.value = '';
+							colonias.forEach(colonia => {
+								var option = document.createElement("option");
+								option.text = colonia.COLONIADESCR;
+								option.value = colonia.COLONIAID;
+								select_colonia.add(option);
+							});
 
-			select_colonia.classList.remove('d-none');
-			input_colonia.classList.add('d-none');
-
-			let data = {
-				'estado_id': e.target.value,
-			}
-
-			$.ajax({
-				data: data,
-				url: "<?= base_url('/data/get-municipios-by-estado') ?>",
-				method: "POST",
-				dataType: "json",
-				success: function(response) {
-					let municipios = response.data;
-
-					municipios.forEach(municipio => {
-						var option = document.createElement("option");
-						option.text = municipio.MUNICIPIODESCR;
-						option.value = municipio.MUNICIPIOID;
-						select_municipio.add(option);
-					});
-				},
-				error: function(jqXHR, textStatus, errorThrown) {}
-			});
-			if (e.target.value != 2) {
-				var option = document.createElement("option");
-				option.text = 'OTRO';
-				option.value = '0';
-				select_colonia.add(option);
-				select_colonia.value = '0';
-				input_colonia.value = '';
-				select_colonia.classList.add('d-none');
-				input_colonia.classList.remove('d-none');
-			} else {
-				document.querySelector('#colonia-message').classList.remove('d-none');
-			}
-		});
-
-		document.querySelector('#municipio_select_new').addEventListener('change', (e) => {
-			let select_localidad = document.querySelector('#localidad_select_new');
-			let select_colonia = document.querySelector('#colonia_select_new');
-			let input_colonia = document.querySelector('#colonia_new');
-
-			let estado = document.querySelector('#estado_select_new').value;
-			let municipio = e.target.value;
-
-			clearSelect(select_localidad);
-			clearSelect(select_colonia);
-
-			select_localidad.value = '';
-
-			let data = {
-				'estado_id': estado,
-				'municipio_id': municipio
-			};
-
-			$.ajax({
-				data: data,
-				url: "<?= base_url('/data/get-localidades-by-municipio') ?>",
-				method: "POST",
-				dataType: "json",
-				success: function(response) {
-					let localidades = response.data;
-
-					localidades.forEach(localidad => {
-						var option = document.createElement("option");
-						option.text = localidad.LOCALIDADDESCR;
-						option.value = localidad.LOCALIDADID;
-						select_localidad.add(option);
-					});
-				},
-				error: function(jqXHR, textStatus, errorThrown) {}
-			});
-		});
-
-		document.querySelector('#localidad_select_new').addEventListener('change', (e) => {
-			let select_colonia = document.querySelector('#colonia_select_new');
-			let input_colonia = document.querySelector('#colonia_new');
-
-			let estado = document.querySelector('#estado_select_new').value;
-			let municipio = document.querySelector('#municipio_select_new').value;
-			let localidad = e.target.value;
-
-			clearSelect(select_colonia);
-			select_colonia.value = '';
-
-			let data = {
-				'estado_id': estado,
-				'municipio_id': municipio,
-				'localidad_id': localidad
-			};
-
-			console.log(data);
-
-			if (estado == 2) {
-				select_colonia.classList.remove('d-none');
-				input_colonia.classList.add('d-none');
-				input_colonia.value = '';
-				$.ajax({
-					data: data,
-					url: "<?= base_url('/data/get-colonias-by-estado-municipio-localidad') ?>",
-					method: "POST",
-					dataType: "json",
-					success: function(response) {
-						let colonias = response.data;
-
-						colonias.forEach(colonia => {
 							var option = document.createElement("option");
-							option.text = colonia.COLONIADESCR;
-							option.value = colonia.COLONIAID;
+							option.text = 'OTRO';
+							option.value = '0';
 							select_colonia.add(option);
-						});
+						},
+						error: function(jqXHR, textStatus, errorThrown) {
 
-						var option = document.createElement("option");
-						option.text = 'OTRO';
-						option.value = '0';
-						select_colonia.add(option);
-					},
-					error: function(jqXHR, textStatus, errorThrown) {
+						}
+					});
 
-					}
-				});
+				} else {
+					var option = document.createElement("option");
+					option.text = 'OTRO';
+					option.value = '0';
+					select_colonia.add(option);
+					select_colonia.value = '0';
+					input_colonia.value = '';
+					select_colonia.classList.add('d-none');
+					input_colonia.classList.remove('d-none');
+				}
+			});
 
-			} else {
-				var option = document.createElement("option");
-				option.text = 'OTRO';
-				option.value = '0';
-				select_colonia.add(option);
-				select_colonia.value = '0';
-				input_colonia.value = '';
-				select_colonia.classList.add('d-none');
-				input_colonia.classList.remove('d-none');
-			}
-		});
+			document.querySelector('#colonia_select_new').addEventListener('change', (e) => {
+				let select_colonia = document.querySelector('#colonia_select_new');
+				let input_colonia = document.querySelector('#colonia_new');
 
-		document.querySelector('#colonia_select_new').addEventListener('change', (e) => {
-			let select_colonia = document.querySelector('#colonia_select_new');
-			let input_colonia = document.querySelector('#colonia_new');
-
-			if (e.target.value === '0') {
-				select_colonia.classList.add('d-none');
-				input_colonia.classList.remove('d-none');
-				input_colonia.value = '';
-				input_colonia.focus();
-			} else {
-				input_colonia.value = '-';
-			}
-		});
+				if (e.target.value === '0') {
+					select_colonia.classList.add('d-none');
+					input_colonia.classList.remove('d-none');
+					input_colonia.value = '';
+					input_colonia.focus();
+				} else {
+					input_colonia.value = '-';
+				}
+			});
 
 
 			//END CREAR PERSONA FISICA
@@ -2275,88 +2285,89 @@
 				});
 			}
 
-			function actualizarPersonaMediaAfiliacion() {
+			function actualizarPersonaMediaAfiliacion(id) {
 				const data = {
 					'folio': document.querySelector('#input_folio_atencion').value,
 					'year': document.querySelector('#year_select').value,
-					'pf_id': document.querySelector('#pf_id').value,
-					'ocupacion_mf': document.querySelector('#ocupacion_mf').value,
-					'estatura_mf': document.querySelector('#estatura_mf').value,
-					'peso_mf': document.querySelector('#peso_mf').value,
-					'senas_mf': document.querySelector('#senas_mf').value,
-					'colortez_mf': document.querySelector('#colortez_mf').value,
-					'complexion_mf': document.querySelector('#complexion_mf').value,
-					'contextura_ceja_mf': document.querySelector('#contextura_ceja_mf').value,
-					'cara_forma_mf': document.querySelector('#cara_forma_mf').value,
-					'cara_tamano_mf': document.querySelector('#cara_tamano_mf').value,
-					'caratez_mf': document.querySelector('#caratez_mf').value,
-					'lobulo_mf': document.querySelector('#lobulo_mf').value,
-					'forma_oreja_mf': document.querySelector('#forma_oreja_mf').value,
-					'tamano_oreja_mf': document.querySelector('#tamano_oreja_mf').value,
-					'colorC_mf': document.querySelector('#colorC_mf').value,
-					'formaC_mf': document.querySelector('#formaC_mf').value,
-					'tamanoC_mf': document.querySelector('#tamanoC_mf').value,
-					'peculiarC_mf': document.querySelector('#peculiarC_mf').value,
-					'cabello_descr_mf': document.querySelector('#cabello_descr_mf').value,
-					'frente_altura_mf': document.querySelector('#frente_altura_mf').value,
-					'frente_anchura_ms': document.querySelector('#frente_anchura_ms').value,
-					'tipoF_mf': document.querySelector('#tipoF_mf').value,
-					'frente_peculiar_mf': document.querySelector('#frente_peculiar_mf').value,
-					'colocacion_ceja_mf': document.querySelector('#colocacion_ceja_mf').value,
-					'ceja_mf': document.querySelector('#ceja_mf').value,
-					'tamano_ceja_mf': document.querySelector('#tamano_ceja_mf').value,
-					'grosor_ceja_mf': document.querySelector('#grosor_ceja_mf').value,
-					'colocacion_ojos_mf': document.querySelector('#colocacion_ojos_mf').value,
-					'forma_ojos_mf': document.querySelector('#forma_ojos_mf').value,
-					'tamano_ojos_mf': document.querySelector('#tamano_ojos_mf').value,
-					'colorO_mf': document.querySelector('#colorO_mf').value,
-					'peculiaridad_ojos_mf': document.querySelector('#peculiaridad_ojos_mf').value,
-					'nariz_tipo_mf': document.querySelector('#nariz_tipo_mf').value,
-					'nariz_tamano_mf': document.querySelector('#nariz_tamano_mf').value,
-					'nariz_base_mf': document.querySelector('#nariz_base_mf').value,
-					'nariz_peculiar_mf': document.querySelector('#nariz_peculiar_mf').value,
-					'nariz_descr_mf': document.querySelector('#nariz_descr_mf').value,
-					'bigote_forma_mf': document.querySelector('#bigote_forma_mf').value,
-					'bigote_tamaño_mf': document.querySelector('#bigote_tamaño_mf').value,
-					'bigote_grosor_mf': document.querySelector('#bigote_grosor_mf').value,
-					'bigote_peculiar_mf': document.querySelector('#bigote_peculiar_mf').value,
-					'bigote_descr_mf': document.querySelector('#bigote_descr_mf').value,
-					'boca_tamano_mf': document.querySelector('#boca_tamano_mf').value,
-					'boca_peculiar_mf': document.querySelector('#boca_peculiar_mf').value,
-					'labio_longitud_mf': document.querySelector('#labio_longitud_mf').value,
-					'labio_posicion_mf': document.querySelector('#labio_posicion_mf').value,
-					'labio_peculiar_mf': document.querySelector('#labio_peculiar_mf').value,
-					'labio_grosor_mf': document.querySelector('#labio_grosor_mf').value,
-					'dientes_tamano_mf': document.querySelector('#dientes_tamano_mf').value,
-					'dientes_tipo_mf': document.querySelector('#dientes_tipo_mf').value,
-					'dientes_peculiar_mf': document.querySelector('#dientes_peculiar_mf').value,
-					'dientes_descr_mf': document.querySelector('#dientes_descr_mf').value,
-					'barbilla_forma_mf': document.querySelector('#barbilla_forma_mf').value,
-					'barbilla_tamano_mf': document.querySelector('#barbilla_tamano_mf').value,
-					'barbilla_inclinacion_mf': document.querySelector('#barbilla_inclinacion_mf').value,
-					'barbilla_peculiar_mf': document.querySelector('#barbilla_peculiar_mf').value,
-					'barbilla_descr_mf': document.querySelector('#barbilla_descr_mf').value,
-					'barba_tamano_mf': document.querySelector('#barba_tamano_mf').value,
-					'barba_peculiar_mf': document.querySelector('#barba_peculiar_mf').value,
-					'barba_descr_mf': document.querySelector('#barba_descr_mf').value,
-					'cuello_tamano_mf': document.querySelector('#cuello_tamano_mf').value,
-					'cuello_grosor_mf': document.querySelector('#cuello_grosor_mf').value,
-					'cuello_peculiar_mf': document.querySelector('#cuello_peculiar_mf').value,
-					'cuello_descr_mf': document.querySelector('#cuello_descr_mf').value,
-					'hombro_posicion_mf': document.querySelector('#hombro_posicion_mf').value,
-					'hombro_tamano_mf': document.querySelector('#hombro_tamano_mf').value,
-					'hombro_grosor_mf': document.querySelector('#hombro_grosor_mf').value,
-					'estomago_mf': document.querySelector('#estomago_mf').value,
-					'escolaridad_mf': document.querySelector('#escolaridad_mf').value,
-					'etnia_mf': document.querySelector('#etnia_mf').value,
-					'estomago_descr_mf': document.querySelector('#estomago_descr_mf').value,
-					'discapacidad_mf': document.querySelector('#discapacidad_mf').value,
-					'diaDesaparicion': document.querySelector('#diaDesaparicion').value,
-					'lugarDesaparicion': document.querySelector('#lugarDesaparicion').value,
-					'vestimenta_mf': document.querySelector('#vestimenta_mf').value,
-					'parentesco_mf': document.querySelector('#parentesco_mf').value,
+					'pf_id': id,
+					'ocupacion_mf': document.querySelector('#ocupacion_mf').value ? document.querySelector('#ocupacion_mf').value : document.querySelector('#ocupacion_mf1').value,
+					'estatura_mf': document.querySelector('#estatura_mf').value ? document.querySelector('#estatura_mf').value : document.querySelector('#estatura_mf1').value,
+					'peso_mf': document.querySelector('#peso_mf').value ? document.querySelector('#peso_mf').value : document.querySelector('#peso_mf1').value,
+					'senas_mf': document.querySelector('#senas_mf').value ? document.querySelector('#senas_mf').value : document.querySelector('#senas_mf1').value,
+					'colortez_mf': document.querySelector('#colortez_mf').value ? document.querySelector('#colortez_mf').value : document.querySelector('#colortez_mf1').value,
+					'complexion_mf': document.querySelector('#complexion_mf').value ? document.querySelector('#complexion_mf').value : document.querySelector('#complexion_mf1').value,
+					'contextura_ceja_mf': document.querySelector('#contextura_ceja_mf').value ? document.querySelector('#contextura_ceja_mf').value : document.querySelector('#contextura_ceja_mf1').value,
+					'cara_forma_mf': document.querySelector('#cara_forma_mf').value ? document.querySelector('#cara_forma_mf').value : document.querySelector('#cara_forma_mf1').value,
+					'cara_tamano_mf': document.querySelector('#cara_tamano_mf').value ? document.querySelector('#cara_tamano_mf').value : document.querySelector('#cara_tamano_mf1').value,
+					'caratez_mf': document.querySelector('#caratez_mf').value ? document.querySelector('#caratez_mf').value : document.querySelector('#caratez_mf1').value,
+					'lobulo_mf': document.querySelector('#lobulo_mf').value ? document.querySelector('#lobulo_mf').value : document.querySelector('#lobulo_mf1').value,
+					'forma_oreja_mf': document.querySelector('#forma_oreja_mf').value ? document.querySelector('#forma_oreja_mf').value : document.querySelector('#forma_oreja_mf1').value,
+					'tamano_oreja_mf': document.querySelector('#tamano_oreja_mf').value ? document.querySelector('#tamano_oreja_mf').value : document.querySelector('#tamano_oreja_mf1').value,
+					'colorC_mf': document.querySelector('#colorC_mf').value ? document.querySelector('#colorC_mf').value : document.querySelector('#colorC_mf1').value,
+					'formaC_mf': document.querySelector('#formaC_mf').value ? document.querySelector('#formaC_mf').value : document.querySelector('#formaC_mf1').value,
+					'tamanoC_mf': document.querySelector('#tamanoC_mf').value ? document.querySelector('#tamanoC_mf').value : document.querySelector('#tamanoC_mf1').value,
+					'peculiarC_mf': document.querySelector('#peculiarC_mf').value ? document.querySelector('#peculiarC_mf').value : document.querySelector('#peculiarC_mf1').value,
+					'cabello_descr_mf': document.querySelector('#cabello_descr_mf').value ? document.querySelector('#cabello_descr_mf').value : document.querySelector('#cabello_descr_mf1').value,
+					'frente_altura_mf': document.querySelector('#frente_altura_mf').value ? document.querySelector('#frente_altura_mf').value : document.querySelector('#frente_altura_mf1').value,
+					'frente_anchura_ms': document.querySelector('#frente_anchura_ms').value ? document.querySelector('#frente_anchura_ms').value : document.querySelector('#frente_anchura_mf1').value,
+					'tipoF_mf': document.querySelector('#tipoF_mf').value ? document.querySelector('#tipoF_mf').value : document.querySelector('#tipoF_mf1').value,
+					'frente_peculiar_mf': document.querySelector('#frente_peculiar_mf').value ? document.querySelector('#frente_peculiar_mf').value : document.querySelector('#frente_peculiar_mf1').value,
+					'colocacion_ceja_mf': document.querySelector('#colocacion_ceja_mf').value ? document.querySelector('#colocacion_ceja_mf').value : document.querySelector('#colocacion_ceja_mf1').value,
+					'ceja_mf': document.querySelector('#ceja_mf').value ? document.querySelector('#ceja_mf').value : document.querySelector('#ceja_mf1').value,
+					'tamano_ceja_mf': document.querySelector('#tamano_ceja_mf').value ? document.querySelector('#tamano_ceja_mf').value : document.querySelector('#tamano_ceja_mf1').value,
+					'grosor_ceja_mf': document.querySelector('#grosor_ceja_mf').value ? document.querySelector('#grosor_ceja_mf').value : document.querySelector('#grosor_ceja_mf1').value,
+					'colocacion_ojos_mf': document.querySelector('#colocacion_ojos_mf').value ? document.querySelector('#colocacion_ojos_mf').value : document.querySelector('#colocacion_ojos_mf1').value,
+					'forma_ojos_mf': document.querySelector('#forma_ojos_mf').value ? document.querySelector('#forma_ojos_mf').value : document.querySelector('#forma_ojos_mf1').value,
+					'tamano_ojos_mf': document.querySelector('#tamano_ojos_mf').value ? document.querySelector('#tamano_ojos_mf').value : document.querySelector('#tamano_ojos_mf1').value,
+					'colorO_mf': document.querySelector('#colorO_mf').value ? document.querySelector('#colorO_mf').value : document.querySelector('#colorO_mf1').value,
+					'peculiaridad_ojos_mf': document.querySelector('#peculiaridad_ojos_mf').value ? document.querySelector('#peculiaridad_ojos_mf').value : document.querySelector('#peculiaridad_ojos_mf1').value,
+					'nariz_tipo_mf': document.querySelector('#nariz_tipo_mf').value ? document.querySelector('#nariz_tipo_mf').value : document.querySelector('#nariz_tipo_mf1').value,
+					'nariz_tamano_mf': document.querySelector('#nariz_tamano_mf').value ? document.querySelector('#nariz_tamano_mf').value : document.querySelector('#nariz_tamano_mf1').value,
+					'nariz_base_mf': document.querySelector('#nariz_base_mf').value ? document.querySelector('#nariz_base_mf').value : document.querySelector('#nariz_base_mf1').value,
+					'nariz_peculiar_mf': document.querySelector('#nariz_peculiar_mf').value ? document.querySelector('#nariz_peculiar_mf').value : document.querySelector('#nariz_peculiar_mf1').value,
+					'nariz_descr_mf': document.querySelector('#nariz_descr_mf').value ? document.querySelector('#nariz_descr_mf').value : document.querySelector('#nariz_descr_mf1').value,
+					'bigote_forma_mf': document.querySelector('#bigote_forma_mf').value ? document.querySelector('#bigote_forma_mf').value : document.querySelector('#bigote_forma_mf1').value,
+					'bigote_tamaño_mf': document.querySelector('#bigote_tamaño_mf').value ? document.querySelector('#bigote_tamaño_mf').value : document.querySelector('#bigote_tamaño_mf1').value,
+					'bigote_grosor_mf': document.querySelector('#bigote_grosor_mf').value ? document.querySelector('#bigote_grosor_mf').value : document.querySelector('#bigote_grosor_mf1').value,
+					'bigote_peculiar_mf': document.querySelector('#bigote_peculiar_mf').value ? document.querySelector('#bigote_peculiar_mf').value : document.querySelector('#bigote_peculiar_mf1').value,
+					'bigote_descr_mf': document.querySelector('#bigote_descr_mf').value ? document.querySelector('#bigote_descr_mf').value : document.querySelector('#bigote_descr_mf1').value,
+					'boca_tamano_mf': document.querySelector('#boca_tamano_mf').value ? document.querySelector('#boca_tamano_mf').value : document.querySelector('#boca_tamano_mf1').value,
+					'boca_peculiar_mf': document.querySelector('#boca_peculiar_mf').value ? document.querySelector('#boca_peculiar_mf').value : document.querySelector('#boca_peculiar_mf1').value,
+					'labio_longitud_mf': document.querySelector('#labio_longitud_mf').value ? document.querySelector('#labio_longitud_mf').value : document.querySelector('#labio_longitud_mf1').value,
+					'labio_posicion_mf': document.querySelector('#labio_posicion_mf').value ? document.querySelector('#labio_posicion_mf').value : document.querySelector('#labio_posicion_mf1').value,
+					'labio_peculiar_mf': document.querySelector('#labio_peculiar_mf').value ? document.querySelector('#labio_peculiar_mf').value : document.querySelector('#labio_peculiar_mf1').value,
+					'labio_grosor_mf': document.querySelector('#labio_grosor_mf').value ? document.querySelector('#labio_grosor_mf').value : document.querySelector('#labio_grosor_mf1').value,
+					'dientes_tamano_mf': document.querySelector('#dientes_tamano_mf').value ? document.querySelector('#dientes_tamano_mf').value : document.querySelector('#dientes_tamano_mf1').value,
+					'dientes_tipo_mf': document.querySelector('#dientes_tipo_mf').value ? document.querySelector('#dientes_tipo_mf').value : document.querySelector('#dientes_tipo_mf1').value,
+					'dientes_peculiar_mf': document.querySelector('#dientes_peculiar_mf').value ? document.querySelector('#dientes_peculiar_mf').value : document.querySelector('#dientes_peculiar_mf1').value,
+					'dientes_descr_mf': document.querySelector('#dientes_descr_mf').value ? document.querySelector('#dientes_descr_mf').value : document.querySelector('#dientes_descr_mf1').value,
+					'barbilla_forma_mf': document.querySelector('#barbilla_forma_mf').value ? document.querySelector('#barbilla_forma_mf').value : document.querySelector('#barbilla_forma_mf1').value,
+					'barbilla_tamano_mf': document.querySelector('#barbilla_tamano_mf').value ? document.querySelector('#barbilla_tamano_mf').value : document.querySelector('#barbilla_tamano_mf1').value,
+					'barbilla_inclinacion_mf': document.querySelector('#barbilla_inclinacion_mf').value ? document.querySelector('#barbilla_inclinacion_mf').value : document.querySelector('#barbilla_inclinacion_mf1').value,
+					'barbilla_peculiar_mf': document.querySelector('#barbilla_peculiar_mf').value ? document.querySelector('#barbilla_peculiar_mf').value : document.querySelector('#barbilla_peculiar_mf1').value,
+					'barbilla_descr_mf': document.querySelector('#barbilla_descr_mf').value ? document.querySelector('#barbilla_descr_mf').value : document.querySelector('#barbilla_descr_mf1').value,
+					'barba_tamano_mf': document.querySelector('#barba_tamano_mf').value ? document.querySelector('#barba_tamano_mf').value : document.querySelector('#barba_tamano_mf1').value,
+					'barba_peculiar_mf': document.querySelector('#barba_peculiar_mf').value ? document.querySelector('#barba_peculiar_mf').value : document.querySelector('#barba_peculiar_mf1').value,
+					'barba_descr_mf': document.querySelector('#barba_descr_mf').value ? document.querySelector('#barba_descr_mf').value : document.querySelector('#barba_descr_mf1').value,
+					'cuello_tamano_mf': document.querySelector('#cuello_tamano_mf').value ? document.querySelector('#cuello_tamano_mf').value : document.querySelector('#cuello_tamano_mf1').value,
+					'cuello_grosor_mf': document.querySelector('#cuello_grosor_mf').value ? document.querySelector('#cuello_grosor_mf').value : document.querySelector('#cuello_grosor_mf1').value,
+					'cuello_peculiar_mf': document.querySelector('#cuello_peculiar_mf').value ? document.querySelector('#cuello_peculiar_mf').value : document.querySelector('#cuello_peculiar_mf1').value,
+					'cuello_descr_mf': document.querySelector('#cuello_descr_mf').value ? document.querySelector('#cuello_descr_mf').value : document.querySelector('#cuello_descr_mf1').value,
+					'hombro_posicion_mf': document.querySelector('#hombro_posicion_mf').value ? document.querySelector('#hombro_posicion_mf').value : document.querySelector('#hombro_posicion_mf1').value,
+					'hombro_tamano_mf': document.querySelector('#hombro_tamano_mf').value ? document.querySelector('#hombro_tamano_mf').value : document.querySelector('#hombro_tamano_mf1').value,
+					'hombro_grosor_mf': document.querySelector('#hombro_grosor_mf').value ? document.querySelector('#hombro_grosor_mf').value : document.querySelector('#hombro_grosor_mf1').value,
+					'estomago_mf': document.querySelector('#estomago_mf').value ? document.querySelector('#estomago_mf').value : document.querySelector('#estomago_mf1').value,
+					'escolaridad_mf': document.querySelector('#escolaridad_mf').value ? document.querySelector('#escolaridad_mf').value : document.querySelector('#escolaridad_mf1').value,
+					'etnia_mf': document.querySelector('#etnia_mf').value ? document.querySelector('#etnia_mf').value : document.querySelector('#etnia_mf1').value,
+					'estomago_descr_mf': document.querySelector('#estomago_descr_mf').value ? document.querySelector('#estomago_descr_mf').value : document.querySelector('#estomago_descr_mf1').value,
+					'discapacidad_mf': document.querySelector('#discapacidad_mf').value ? document.querySelector('#discapacidad_mf').value : document.querySelector('#discapacidad_mf1').value,
+					'diaDesaparicion': document.querySelector('#diaDesaparicion').value ? document.querySelector('#diaDesaparicion').value : document.querySelector('#diaDesaparicion1').value,
+					'lugarDesaparicion': document.querySelector('#lugarDesaparicion').value ? document.querySelector('#lugarDesaparicion').value : document.querySelector('#lugarDesaparicion1').value,
+					'vestimenta_mf': document.querySelector('#vestimenta_mf').value ? document.querySelector('#vestimenta_mf').value : document.querySelector('#vestimenta_mf1').value,
+					// 'parentesco_mf': document.querySelector('#parentesco_mf').value?document.querySelector('#parentesco_mf').value:document.querySelector('#parentesco_mf1').value,
 
 				};
+				// console.log(id);
 				$.ajax({
 					data: data,
 					url: "<?= base_url('/data/update-media-filiacion-by-id') ?>",
@@ -2365,12 +2376,15 @@
 					success: function(response) {
 						// console.log(respobse.idcalidad);
 						if (response.status == 1) {
-
 							Swal.fire({
 								icon: 'success',
 								text: 'Persona media afiliación actualizada correctamente',
 								confirmButtonColor: '#bf9b55',
 							});
+							document.getElementById("form_media_filiacion_insert").reset();
+							$('#media_filiacion_modal').modal('hide');
+
+
 						} else {
 							Swal.fire({
 								icon: 'error',
@@ -2554,7 +2568,8 @@
 					'facebook': document.querySelector('#facebook_new').value,
 					'twitter': document.querySelector('#twitter_new').value,
 					'instagram': document.querySelector('#instagram_new').value,
-					'correo': document.querySelector('#correo_new').value
+					'correo': document.querySelector('#correo_new').value,
+					'desaparecida': document.querySelector('#desaparecida_new').value
 
 				};
 				// console.log(data);
@@ -2565,7 +2580,6 @@
 					dataType: "json",
 					success: function(response) {
 						if (response.status == 1) {
-							console.log(response.domicilio);
 							document.getElementById("persona_fisica_form_insert").reset();
 
 							let tabla_personas = document.querySelectorAll('#table-personas tr');
@@ -2582,7 +2596,23 @@
 								confirmButtonColor: '#bf9b55',
 							});
 							$('#insert_persona_fisica_modal').modal('hide');
+							$('#media_filiacion_modal').modal('show');
+							form_media_filiacion_insert.addEventListener('submit', (event) => {
 
+								if (!form_media_filiacion_insert.checkValidity()) {
+									event.preventDefault();
+									event.stopPropagation();
+									form_media_filiacion_insert.classList.add('was-validated')
+								} else {
+									event.preventDefault();
+									event.stopPropagation();
+									form_media_filiacion_insert.classList.remove('was-validated')
+				
+									// console.log(response.ultimoRegistro.PERSONAFISICAID);
+									actualizarPersonaMediaAfiliacion(response.ultimoRegistro.PERSONAFISICAID);
+								}
+
+							}, false);
 						} else {
 							Swal.fire({
 								icon: 'error',
@@ -2622,5 +2652,6 @@
 <?php include 'video_denuncia_modals/relacion_parentesco_modal_insert.php' ?>
 <?php include 'video_denuncia_modals/insert_persona_fisica_modal.php' ?>
 <?php include 'video_denuncia_modals/vehiculo_modal.php' ?>
+<?php include 'video_denuncia_modals/media_filiacion_modal.php' ?>
 <?php include 'video_denuncia_modals/domicilio_modal.php' ?>
 <?php $this->endSection() ?>

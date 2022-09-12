@@ -1692,6 +1692,7 @@ class DashboardController extends BaseController
     {
         try {
             $id = trim($this->request->getPost('pf_id'));
+     
             $folio = trim($this->request->getPost('folio'));
             $year = trim($this->request->getPost('year'));
 
@@ -1800,7 +1801,7 @@ class DashboardController extends BaseController
                 ];
 
                 $this->_bitacoraActividad($datosBitacora);
-                return json_encode(['status' => 1]);
+                return json_encode(['status' => 1, 'datosRecibidos'=> $data, 'id_recibido'=>$id]);
             } else {
                 return json_encode(['status' => 0]);
             }
@@ -1961,6 +1962,7 @@ class DashboardController extends BaseController
             'ESCRIBIR' => $this->request->getPost('escribir'),
             'PAIS' => $this->request->getPost('pais_actual'),
             'CORREO' => $this->request->getPost('correo'),
+            'DESAPARECIDA'=> $this->request->getPost('desaparecida'),
 
         );
 
@@ -1984,6 +1986,7 @@ class DashboardController extends BaseController
 
         if ($personaFisica) {
             $personas = $this->_folioPersonaFisicaModel->get_by_folio($folio, $year);
+            $personaFisicaID = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->orderBy('PERSONAFISICAID', 'desc')->first();
 
 
             $datosBitacora = [
@@ -1993,7 +1996,7 @@ class DashboardController extends BaseController
 
             $this->_bitacoraActividad($datosBitacora);
 
-            return json_encode(['status' => 1, 'personas' => $personas, 'domicilio' => $dataNewPersonaFisicaDomicilio]);
+            return json_encode(['status' => 1, 'personas' => $personas, 'ultimoRegistro' => $personaFisicaID]);
         } else {
             return json_encode(['status' => 0, 'message' => $_POST]);
         }

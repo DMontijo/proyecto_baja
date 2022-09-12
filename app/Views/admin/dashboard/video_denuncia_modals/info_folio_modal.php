@@ -29,6 +29,7 @@
 							</div>
 							<div class="tab-pane fade" id="v-pills-personas" role="tabpanel" aria-labelledby="v-pills-personas-tab">
 								<div id="adicionados" class="d-none"></div>
+								<div class="table-responsive">
 								<table id="table-personas" class="table table-bordered table-hover table-striped table-light">
 									<tr>
 										<th class="text-center bg-primary text-white"></th>
@@ -37,6 +38,7 @@
 										<th class="text-center bg-primary text-white">VER</th>
 									</tr>
 								</table>
+								</div>
 								<div class="col-12 mb-3 text-center">
 									<button type="button" id="insertPersonaFisicaModal" name="insertPersonaFisicaModal" class="btn btn-primary font-weight-bold">NUEVO PERSONA FÍSICA</button>
 								</div>
@@ -44,6 +46,7 @@
 							<div class="tab-pane fade" id="v-pills-parentesco" role="tabpanel" aria-labelledby="v-pills-parentesco-tab">
 
 								<div id="adicionados" class="d-none"></div>
+								<div class="table-responsive">
 								<table id="table-parentesco" class="table table-bordered table-hover table-striped table-light">
 									<tr>
 										<th class="text-center bg-primary text-white" id="nombrePF1" name="nombrePF1">PERSONA FISICA 1</th>
@@ -52,11 +55,13 @@
 										<th class="text-center bg-primary text-white">EDITAR</th>
 									</tr>
 								</table>
+								</div>
 								<div class="col-12 mb-3 text-center">
 									<button type="button" id="insertParentescoModal" name="insertParentescoModal" class="btn btn-primary font-weight-bold">NUEVO PARENTESCO</button>
 								</div>
 							</div>
 							<div class="tab-pane fade" id="v-pills-vehiculos" role="tabpanel" aria-labelledby="v-pills-vehiculos-tab">
+							<div class="table-responsive">
 								<table id="table-vehiculos" class="table table-bordered table-hover table-striped table-light">
 									<tr>
 										<th class="text-center bg-primary text-white">PLACAS</th>
@@ -64,7 +69,7 @@
 										<th></th>
 									</tr>
 								</table>
-
+							</div>
 							</div>
 
 						</div>
