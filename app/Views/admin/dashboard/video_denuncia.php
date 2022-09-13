@@ -2930,7 +2930,7 @@
 					'year': document.querySelector('#year_select').value,
 					'victima': document.querySelector('#victima_ofendido').value,
 					'delito': document.querySelector('#delito_cometido').value,
-					'imputado': document.querySelector('#imputado_I').value,
+					'imputado': document.querySelector('#imputado_arbol').value,
 				};
 				// console.log(data);
 				$.ajax({
