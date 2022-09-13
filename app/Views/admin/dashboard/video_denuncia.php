@@ -258,87 +258,89 @@
 	}
 
 	function eliminarImputadoDelito(personafisica, delitoModalidadId) {
-					$.ajax({
-						data: {
-							'personafisica': personafisica,
-							'delito': delitoModalidadId,
-							'folio': inputFolio.value,
-							'year': year_select.value,
+		$.ajax({
+			data: {
+				'personafisica': personafisica,
+				'delito': delitoModalidadId,
+				'folio': inputFolio.value,
+				'year': year_select.value,
 
-						},
-						url: "<?= base_url('/data/delete-fisimpdelito-by-folio') ?>",
-						method: "POST",
-						dataType: "json",
-						success: function(response) {
-							let tabla_impdelito = document.querySelectorAll('#table-delito-cometidos tr');
-							tabla_impdelito.forEach(row => {
-								if (row.id !== '') {
-									row.remove();
-								}
-							});
-							let fisicaImpDelito = response.fisicaImpDelito;
-							llenarTablaImpDel(fisicaImpDelito);
-							if (response.status == 1) {
-								Swal.fire({
-									icon: 'success',
-									text: 'Delito del imputado eliminado correctamente',
-									confirmButtonColor: '#bf9b55',
-								});
-							} else {
-								Swal.fire({
-									icon: 'error',
-									text: 'No se elimino el delito del imputado',
-									confirmButtonColor: '#bf9b55',
-								});
-							}
-						},
-						error: function(jqXHR, textStatus, errorThrown) {}
+			},
+			url: "<?= base_url('/data/delete-fisimpdelito-by-folio') ?>",
+			method: "POST",
+			dataType: "json",
+			success: function(response) {
+				let tabla_impdelito = document.querySelectorAll('#table-delito-cometidos tr');
+				tabla_impdelito.forEach(row => {
+					if (row.id !== '') {
+						row.remove();
+					}
+				});
+				let fisicaImpDelito = response.fisicaImpDelito;
+				llenarTablaImpDel(fisicaImpDelito);
+				if (response.status == 1) {
+					Swal.fire({
+						icon: 'success',
+						text: 'Delito del imputado eliminado correctamente',
+						confirmButtonColor: '#bf9b55',
 					});
-		
-	}
-	function eliminarArbolDelictivo(personafisicavictima, personafisicaimputado,delitoModalidadId) {
-					$.ajax({
-						data: {
-							'personafisicavictima': personafisicavictima,
-							'personafisicaimputado': personafisicaimputado,
-							'delito': delitoModalidadId,
-							'folio': inputFolio.value,
-							'year': year_select.value,
-
-						},
-						url: "<?= base_url('/data/delete-arbol_delictivo-by-folio') ?>",
-						method: "POST",
-						dataType: "json",
-						success: function(response) {
-							let tabla_arbol = document.querySelectorAll('#table-delitos tr');
-							tabla_arbol.forEach(row => {
-								if (row.id !== '') {
-									row.remove();
-								}
-							});
-							let relacionFisFis = response.relacionFisFis;
-							llenarTablaImpDel(relacionFisFis);
-
-							if (response.status == 1) {
-								Swal.fire({
-									icon: 'success',
-									text: 'Árbol delictivo eliminado correctamente',
-									confirmButtonColor: '#bf9b55',
-								});
-							} else {
-								Swal.fire({
-									icon: 'error',
-									text: 'No se elimino el árbol delictivo',
-									confirmButtonColor: '#bf9b55',
-								});
-							}
-						},
-						error: function(jqXHR, textStatus, errorThrown) {
-							console.log(textStatus);
-						}
+				} else {
+					Swal.fire({
+						icon: 'error',
+						text: 'No se elimino el delito del imputado',
+						confirmButtonColor: '#bf9b55',
 					});
-		
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown) {}
+		});
+
 	}
+
+	function eliminarArbolDelictivo(personafisicavictima, personafisicaimputado, delitoModalidadId) {
+		$.ajax({
+			data: {
+				'personafisicavictima': personafisicavictima,
+				'personafisicaimputado': personafisicaimputado,
+				'delito': delitoModalidadId,
+				'folio': inputFolio.value,
+				'year': year_select.value,
+
+			},
+			url: "<?= base_url('/data/delete-arbol_delictivo-by-folio') ?>",
+			method: "POST",
+			dataType: "json",
+			success: function(response) {
+				let tabla_arbol = document.querySelectorAll('#table-delitos tr');
+				tabla_arbol.forEach(row => {
+					if (row.id !== '') {
+						row.remove();
+					}
+				});
+				let relacionFisFis = response.relacionFisFis;
+				llenarTablaFisFis(relacionFisFis);
+
+				if (response.status == 1) {
+					Swal.fire({
+						icon: 'success',
+						text: 'Árbol delictivo eliminado correctamente',
+						confirmButtonColor: '#bf9b55',
+					});
+				} else {
+					Swal.fire({
+						icon: 'error',
+						text: 'No se elimino el árbol delictivo',
+						confirmButtonColor: '#bf9b55',
+					});
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				console.log(textStatus);
+			}
+		});
+
+	}
+
 	function llenarTablaImpDel(impDelito) {
 		for (let i = 0; i < impDelito.length; i++) {
 			var btn = `<button type='button'  class='btn btn-primary' onclick='eliminarImputadoDelito(${impDelito[i].PERSONAFISICAID},${impDelito[i].DELITOMODALIDADID})'><i class='fa fa-trash'></i></button>`
@@ -386,6 +388,8 @@
 			dataType: "json",
 			success: function(response) {
 				respuesta = response;
+				document.getElementById("form_parentesco_insert").reset();
+
 				if (response.status === 1) {
 					const folio = response.folio;
 					const preguntas = response.preguntas_iniciales;
@@ -399,6 +403,9 @@
 					const relacionFisFis = response.relacionFisFis;
 					const fisicaImpDelito = response.fisicaImpDelito;
 					const delitosModalidadFiltro = response.delitosModalidadFiltro;
+					const personafisica = response.personafisica;
+					const imputados = response.imputados;
+					const victimas = response.victimas;
 					inputFolio.classList.add('d-none');
 					buscar_btn.classList.add('d-none');
 					year_select.classList.add('d-none');
@@ -419,13 +426,50 @@
 						option.value = modalidad.DELITOMODALIDADID;
 						option.text = modalidad.DELITOMODALIDADDESCR;
 						select_delitos_imputado.add(option, null);
+
 					});
 
+					$('#victima_ofendido').empty();
+					let select_victima_ofendido = document.querySelector("#victima_ofendido")
+					victimas.forEach(victima => {
+						const option = document.createElement('option');
+						option.value = victima.PERSONAFISICAID;
+						option.text = victima.NOMBRE + ' ' + victima.PRIMERAPELLIDO;
+						select_victima_ofendido.add(option, null);
 
+					});
 
+					$('#imputado_delito_cometido').empty();
 
+					let select_imputado_delito_cometido = document.querySelector("#imputado_delito_cometido")
 
+					imputados.forEach(imputado => {
+						const option = document.createElement('option');
+						option.value = imputado.PERSONAFISICAID;
+						option.text = imputado.NOMBRE + ' ' + imputado.PRIMERAPELLIDO;
+						select_imputado_delito_cometido.add(option, null);
 
+					});
+					$('#imputado_arbol').empty();
+
+					let select_imputado_mputado = document.querySelector("#imputado_arbol")
+					imputados.forEach(imputado => {
+						const option = document.createElement('option');
+						option.value = imputado.PERSONAFISICAID;
+						option.text = imputado.NOMBRE + ' ' + imputado.PRIMERAPELLIDO;
+						select_imputado_mputado.add(option, null);
+
+					});
+					$('#personaFisica1_I').empty();
+
+					let select_personaFisica1_I = document.querySelector("#personaFisica1_I")
+					personas.forEach(persona => {
+						const option = document.createElement('option');
+						option.value = persona.PERSONAFISICAID;
+						option.text = persona.NOMBRE + ' ' + persona.PRIMERAPELLIDO;
+						select_personaFisica1_I.add(option, null);
+
+					});
 					//PREGUNTAS INICIALES
 					document.querySelector('#es_menor').value = preguntas.ES_MENOR;
 					document.querySelector('#es_tercera_edad').value = preguntas.ES_TERCERA_EDAD;
@@ -715,6 +759,16 @@
 		document.querySelector('#parentesco_mf').value = '';
 		document.querySelector('#personaFisica1').value = '';
 		document.querySelector('#personaFisica2').value = '';
+
+		//ARBOL DELICTUAL
+		document.querySelector('#imputado_arbol').value = '';
+		document.querySelector('#delito_cometido').value = '';
+		document.querySelector('#victima_ofendido').value = '';
+
+		//RESET FORM
+		document.getElementById("form_asignar_arbol_delictual_insert").reset();
+		document.getElementById("form_parentesco_insert").reset();
+
 
 		$('#v-pills-vehiculos-tab').css('display', 'NONE');
 	}
@@ -2782,23 +2836,80 @@
 								confirmButtonColor: '#bf9b55',
 							});
 							$('#insert_persona_fisica_modal').modal('hide');
-							$('#media_filiacion_modal').modal('show');
-							form_media_filiacion_insert.addEventListener('submit', (event) => {
+							const delitosModalidadFiltro = response.delitosModalidadFiltro;
+							const imputados = response.imputados;
+							const victimas = response.victimas;
+							const personas = response.personas;
 
-								if (!form_media_filiacion_insert.checkValidity()) {
-									event.preventDefault();
-									event.stopPropagation();
-									form_media_filiacion_insert.classList.add('was-validated')
-								} else {
-									event.preventDefault();
-									event.stopPropagation();
-									form_media_filiacion_insert.classList.remove('was-validated')
+							//SELECT CON DELITOS DEL IMPUTADO
+							$('#delito_cometido').empty();
+							let select_delitos_imputado = document.querySelector("#delito_cometido")
+							delitosModalidadFiltro.forEach(modalidad => {
+								const option = document.createElement('option');
+								option.value = modalidad.DELITOMODALIDADID;
+								option.text = modalidad.DELITOMODALIDADDESCR;
+								select_delitos_imputado.add(option, null);
 
-									// console.log(response.ultimoRegistro.PERSONAFISICAID);
-									actualizarPersonaMediaAfiliacion(response.ultimoRegistro.PERSONAFISICAID);
-								}
+							});
 
-							}, false);
+							$('#victima_ofendido').empty();
+							let select_victima_ofendido = document.querySelector("#victima_ofendido")
+							victimas.forEach(victima => {
+								const option = document.createElement('option');
+								option.value = victima.PERSONAFISICAID;
+								option.text = victima.NOMBRE + ' ' + victima.PRIMERAPELLIDO;
+								select_victima_ofendido.add(option, null);
+
+							});
+
+							$('#imputado_delito_cometido').empty();
+
+							let select_imputado_delito_cometido = document.querySelector("#imputado_delito_cometido")
+
+							imputados.forEach(imputado => {
+								const option = document.createElement('option');
+								option.value = imputado.PERSONAFISICAID;
+								option.text = imputado.NOMBRE + ' ' + imputado.PRIMERAPELLIDO;
+								select_imputado_delito_cometido.add(option, null);
+
+							});
+							$('#imputado_arbol').empty();
+
+							let select_imputado_mputado = document.querySelector("#imputado_arbol")
+							imputados.forEach(imputado => {
+								const option = document.createElement('option');
+								option.value = imputado.PERSONAFISICAID;
+								option.text = imputado.NOMBRE + ' ' + imputado.PRIMERAPELLIDO;
+								select_imputado_mputado.add(option, null);
+
+							});
+							$('#personaFisica1_I').empty();
+
+							let select_personaFisica1_I = document.querySelector("#personaFisica1_I")
+							personas.forEach(persona => {
+								const option = document.createElement('option');
+								option.value = persona.PERSONAFISICAID;
+								option.text = persona.NOMBRE + ' ' + persona.PRIMERAPELLIDO;
+								select_personaFisica1_I.add(option, null);
+
+							});
+							// $('#media_filiacion_modal').modal('show');
+							// form_media_filiacion_insert.addEventListener('submit', (event) => {
+
+							// 	if (!form_media_filiacion_insert.checkValidity()) {
+							// 		event.preventDefault();
+							// 		event.stopPropagation();
+							// 		form_media_filiacion_insert.classList.add('was-validated')
+							// 	} else {
+							// 		event.preventDefault();
+							// 		event.stopPropagation();
+							// 		form_media_filiacion_insert.classList.remove('was-validated')
+
+							// 		// console.log(response.ultimoRegistro.PERSONAFISICAID);
+							// 		actualizarPersonaMediaAfiliacion(response.ultimoRegistro.PERSONAFISICAID);
+							// 	}
+
+							// }, false);
 						} else {
 							Swal.fire({
 								icon: 'error',
@@ -2828,7 +2939,7 @@
 					method: "POST",
 					dataType: "json",
 					success: function(response) {
-						
+
 						if (response.status == 3) {
 							Swal.fire({
 								icon: 'error',
@@ -2854,7 +2965,7 @@
 							document.getElementById("form_asignar_arbol_delictual_insert").reset();
 
 
-						} else if(response.status ==0){
+						} else if (response.status == 0) {
 							Swal.fire({
 								icon: 'error',
 								text: 'No se agregó la información de la relacion',
@@ -2881,7 +2992,7 @@
 					method: "POST",
 					dataType: "json",
 					success: function(response) {
-					
+
 						if (response.status == 3) {
 							Swal.fire({
 								icon: 'error',
@@ -2906,7 +3017,7 @@
 							$('#insert_asignar_delitos_cometidos_modal').modal('hide');
 							document.getElementById("form_delitos_cometidos_insert").reset();
 
-						} else if(response.status == 0){
+						} else if (response.status == 0) {
 							Swal.fire({
 								icon: 'error',
 								text: 'No se agregó la información de la relacion',

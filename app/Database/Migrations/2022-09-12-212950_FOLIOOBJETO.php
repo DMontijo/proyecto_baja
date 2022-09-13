@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class EXPEDIENTEOBJETO extends Migration
+class FOLIOOBJETO extends Migration
 {
     public function up()
     {
@@ -90,12 +90,12 @@ class EXPEDIENTEOBJETO extends Migration
     $this->forge->addKey('ANO', true);
     $this->forge->addKey('OBJETOID', true);
 
-    $this->forge->createTable('EXPEDIENTEOBJETO');
+    $this->forge->createTable('FOLIOEDIENTEOBJETO');
     }
 
 public function down()
 {
-    $this->forge->dropTable('EXPEDIENTEOBJETO');
+    $this->forge->dropTable('FOLIOEDIENTEOBJETO');
 
 }
 }

@@ -5,14 +5,9 @@
 	</div>
 	<hr>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="imputado_I" class="form-label font-weight-bold">Imputado</label>
-		<select class="form-control" id="imputado_I" name="imputado_I" required>
+		<label for="imputado_arbol" class="form-label font-weight-bold">Imputado</label>
+		<select class="form-control" id="imputado_arbol" name="imputado_arbol" required> 
 			<option selected value="" disabled></option>
-
-			<?php foreach ($body_data->imputados as $index => $imputado) { ?>
-				
-				<option value="<?= $imputado->PERSONAFISICAID ?>"> <?= $imputado->NOMBRE . ' ' . $imputado->PRIMERAPELLIDO ?> </option>
-			<?php } ?>
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -26,10 +21,6 @@
 		<label for="victima_ofendido" class="form-label font-weight-bold">Victima / Ofendido</label>
 		<select class="form-control" id="victima_ofendido" name="victima_ofendido" required>
 			<option selected value="" disabled></option>
-			<?php foreach ($body_data->victimas as $index => $victima) { ?>
-				
-				<option value="<?= $victima->PERSONAFISICAID ?>"> <?= $victima->NOMBRE . ' ' . $victima->PRIMERAPELLIDO ?> </option>
-			<?php } ?>
 		</select>
 	</div>
 

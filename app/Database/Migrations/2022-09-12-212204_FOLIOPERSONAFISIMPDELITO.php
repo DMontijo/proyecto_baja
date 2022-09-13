@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class EXPRELACIONFISFIS extends Migration
+class FOLIOPERSONAFISIMPDELITO extends Migration
 {
     public function up()
     {
@@ -17,7 +17,7 @@ class EXPRELACIONFISFIS extends Migration
             'type' => 'INT',
             'constraint' => '4',
         ],
-        'PERSONAFISICAIDVICTIMA' => [
+        'PERSONAFISICAID' => [
             'type' => 'INT',
             'unsigned' => true,
         ],
@@ -25,21 +25,11 @@ class EXPRELACIONFISFIS extends Migration
             'type' => 'INT',
             'unsigned' => true,
         ],
-        'PERSONAFISICAIDIMPUTADO' => [
+        'DELITOCARACTERISTICAID' => [
             'type' => 'INT',
             'unsigned' => true,
-        ],
-        'GRADOPARTICIPACIONID' => [
-            'type' => 'INT',
-            'unsigned' => true,
-            'null' => true,
         ],
         'TENTATIVA' => [
-            'type' => 'CHAR',
-            'constraint' => '1',
-            'null' => true,
-        ],
-        'CONVIOLENCIA' => [
             'type' => 'CHAR',
             'constraint' => '1',
             'null' => true,
@@ -48,16 +38,15 @@ class EXPRELACIONFISFIS extends Migration
     ]);
     $this->forge->addKey('FOLIOID', true);
     $this->forge->addKey('ANO', true);
-    $this->forge->addKey('PERSONAFISICAIDVICTIMA', true);
+    $this->forge->addKey('PERSONAFISICAID', true);
     $this->forge->addKey('DELITOMODALIDADID', true);
-    $this->forge->addKey('PERSONAFISICAIDIMPUTADO', true);
 
-    $this->forge->createTable('EXPRELACIONFISFIS');
+    $this->forge->createTable('FOLIOPERSONAFISIMPDELITO');
     }
 
 public function down()
 {
-    $this->forge->dropTable('EXPRELACIONFISFIS');
+    $this->forge->dropTable('FOLIOPERSONAFISIMPDELITO');
 
 }
 }

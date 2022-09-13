@@ -94,4 +94,26 @@ class FolioPersonaFisicaModel extends Model
 		$query = $builder->get();
 		return $query->getResult('array');
 	}
+	public function get_victimas($folio, $year)
+	{
+		$builder = $this->db->table($this->table);
+		$builder->select(['FOLIOID', 'PERSONAFISICAID', 'ANO','NOMBRE', 'PRIMERAPELLIDO', 'SEGUNDOAPELLIDO']);
+		$builder->where('FOLIOID', $folio);
+		$builder->where('ANO', $year);
+		$builder->where('CALIDADJURIDICAID= 1 OR CALIDADJURIDICAID=6');
+
+		$query = $builder->get();
+		return $query->getResult('array');
+	}
+	public function get_imputados($folio, $year)
+	{
+		$builder = $this->db->table($this->table);
+		$builder->select(['FOLIOID', 'PERSONAFISICAID', 'ANO','NOMBRE', 'PRIMERAPELLIDO', 'SEGUNDOAPELLIDO']);
+		$builder->where('FOLIOID', $folio);
+		$builder->where('ANO', $year);
+		$builder->where('CALIDADJURIDICAID',2);
+
+		$query = $builder->get();
+		return $query->getResult('array');
+	}
 }

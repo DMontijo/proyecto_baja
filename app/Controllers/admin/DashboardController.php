@@ -97,8 +97,8 @@ use App\Models\DienteTipoModel;
 use App\Models\EstomagoModel;
 use App\Models\CabelloPeculiarModel;
 use App\Models\DelitoModalidadModel;
-use App\Models\ExpPersonaFisImpDelitoModel;
-use App\Models\ExpRelacionFisFisModel;
+use App\Models\FolioPersonaFisImpDelitoModel;
+use App\Models\FolioRelacionFisFisModel;
 
 class DashboardController extends BaseController
 {
@@ -202,9 +202,8 @@ class DashboardController extends BaseController
         $this->_conexionesDBModel = new ConexionesDBModel();
         $this->_bitacoraActividadModel = new BitacoraActividadModel();
         $this->_delitoModalidadModel = new DelitoModalidadModel();
-        $this->_imputadoDelitoModel = new ExpPersonaFisImpDelitoModel();
-        $this->_relacionIDOModel = new ExpRelacionFisFisModel();
-        $this->_fisImpDelitoModel = new ExpPersonaFisImpDelitoModel();
+        $this->_imputadoDelitoModel = new FolioPersonaFisImpDelitoModel();
+        $this->_relacionIDOModel = new FolioRelacionFisFisModel();
 
         $this->protocol = 'http://';
         $this->ip = "10.144.244.223";
@@ -455,9 +454,11 @@ class DashboardController extends BaseController
                     $data->parentesco = $this->_parentescoPersonaFisicaModel->get_Parentesco($numfolio, $year);
                     $data->relacionFisFis = $this->_relacionIDOModel->get_by_folio($numfolio, $year);
                     $data->vehiculos = $this->_folioVehiculoModel->get_by_folio($numfolio, $year);
-                    $data->fisicaImpDelito = $this->_fisImpDelitoModel->get_by_folio($numfolio, $year);
-                    $data->delitosModalidadFiltro = $this->_delitoModalidadModel->get_delitodescr();
-
+                    $data->fisicaImpDelito = $this->_imputadoDelitoModel->get_by_folio($numfolio, $year);
+                    $data->delitosModalidadFiltro = $this->_delitoModalidadModel->get_delitodescr($numfolio, $year);
+                    // $data->personafisica = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->findAll();
+                    $data->imputados = $this->_folioPersonaFisicaModel->get_imputados($numfolio, $year);
+                    $data->victimas = $this->_folioPersonaFisicaModel->get_victimas($numfolio, $year);
                     $this->_folioModel->set(['STATUS' => 'EN PROCESO', 'AGENTEATENCIONID' => session('ID')])->where('ANO', $year)->where('FOLIOID', $numfolio)->update();
                     $datosBitacora = [
                         'ACCION' => 'Está atendiendo un folio',
@@ -569,11 +570,11 @@ class DashboardController extends BaseController
         $delitomodalidadid = trim($this->request->getPost('delito'));
 
         $data = (object) array();
-        $data->imputado_delito = $this->_fisImpDelitoModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $id)->where('DELITOMODALIDADID',$delitomodalidadid)->first();
+        $data->imputado_delito = $this->_imputadoDelitoModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $id)->where('DELITOMODALIDADID', $delitomodalidadid)->first();
 
         if ($data->imputado_delito) {
 
-            
+
 
             $data->status = 1;
             return json_encode($data);
@@ -736,8 +737,16 @@ class DashboardController extends BaseController
         $data->personafisica = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->findAll();
         $data->imputados = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->where('CALIDADJURIDICAID', 2)->findAll();
         $data->victimas = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->where('CALIDADJURIDICAID= 1 OR CALIDADJURIDICAID=6')->findAll();
-        $data->delitosModalidad = $this->_delitoModalidadModel->asObject()->orderBy('DELITOMODALIDADDESCR', 'asc')->findAll();
-
+        // $data->delitosModalidad = $this->_delitoModalidadModel->asObject()->orderBy('DELITOMODALIDADDESCR', 'asc')->findAll();
+        $delitosM = $this->_delitoModalidadModel->orderBy('DELITOMODALIDADDESCR', 'ASC')->findAll();
+        $delitos_vacios = [];
+        foreach ($delitosM as $delitos) {
+            if ($delitos['DELITOMODALIDADDESCR'] != null) {
+                array_push($delitos_vacios, (object) $delitos);
+            }
+        }
+        $data->delitosModalidad = [];
+        $data->delitosModalidad = (object) array_merge($delitos_vacios);
         $this->_loadView('Video denuncia', 'videodenuncia', '', $data, 'video_denuncia');
     }
 
@@ -1873,7 +1882,45 @@ class DashboardController extends BaseController
             return json_encode(['status' => 0]);
         }
     }
-    public function updateParentescoByFolio()
+    // public function updateParentescoByFolio()
+    // {
+    //     try {
+    //         $idp1 = trim($this->request->getPost('personaFisica1'));
+    //         $idp2 = trim($this->request->getPost('personaFisica2'));
+
+    //         $folio = trim($this->request->getPost('folio'));
+    //         $year = trim($this->request->getPost('year'));
+    //         $dataRelacionParentesco = array(
+    //             'FOLIO' => trim($this->request->getPost('folio')),
+    //             'ANO' => trim($this->request->getPost('year')),
+    //             'PERSONAFISICAID1' => $this->request->getPost('personaFisica1'),
+    //             'PERSONAFISICAID2' => $this->request->getPost('personaFisica2'),
+    //             'PARENTESCOID' => $this->request->getPost('parentesco_mf'),
+    //         );
+
+    //         $updateRelacionParentesco = $this->_parentescoPersonaFisicaModel->set($dataRelacionParentesco)->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID1', $idp1)->where('PERSONAFISICAID2', $idp2)->update();
+
+    //         if ($updateRelacionParentesco) {
+    //             $parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
+    //             $personaiduno = $this->_parentescoPersonaFisicaModel->get_personaFisicaUno($folio, $year);
+    //             $personaidDos = $this->_parentescoPersonaFisicaModel->get_personaFisicaDos($folio, $year);
+    //             $parentesco = $this->_parentescoPersonaFisicaModel->get_Parentesco($folio, $year);
+    //             $datosBitacora = [
+    //                 'ACCION' => 'Ha actualizado el parentesco de una persona fisica',
+    //                 'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
+    //             ];
+
+    //             $this->_bitacoraActividad($datosBitacora);
+
+    //             return json_encode(['status' => 1, 'parentescoRelacion' => $parentescoRelacion, 'personaiduno' => $personaiduno, 'personaidDos' => $personaidDos, 'parentesco' => $parentesco]);
+    //         } else {
+    //             return json_encode(['status' => 0, 'message' => $updateRelacionParentesco]);
+    //         }
+    //     } catch (\Exception $e) {
+    //         return json_encode(['status' => 0]);
+    //     }
+    // }
+    public function deleteParentescoById()
     {
         try {
             $idp1 = trim($this->request->getPost('personaFisica1'));
@@ -1881,23 +1928,17 @@ class DashboardController extends BaseController
 
             $folio = trim($this->request->getPost('folio'));
             $year = trim($this->request->getPost('year'));
-            $dataRelacionParentesco = array(
-                'FOLIO' => trim($this->request->getPost('folio')),
-                'ANO' => trim($this->request->getPost('year')),
-                'PERSONAFISICAID1' => $this->request->getPost('personaFisica1'),
-                'PERSONAFISICAID2' => $this->request->getPost('personaFisica2'),
-                'PARENTESCOID' => $this->request->getPost('parentesco_mf'),
-            );
+            $parentescoid = trim($this->request->getPost('parentesco_mf'));
 
-            $updateRelacionParentesco = $this->_parentescoPersonaFisicaModel->set($dataRelacionParentesco)->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID1', $idp1)->where('PERSONAFISICAID2', $idp2)->update();
-
-            if ($updateRelacionParentesco) {
+            $deleteRelacionParentesco = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID1', $idp1)->where('PERSONAFISICAID2',$idp2)->where('PARENTESCOID', $parentescoid)->delete();
+            if ($deleteRelacionParentesco) {
                 $parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
                 $personaiduno = $this->_parentescoPersonaFisicaModel->get_personaFisicaUno($folio, $year);
                 $personaidDos = $this->_parentescoPersonaFisicaModel->get_personaFisicaDos($folio, $year);
                 $parentesco = $this->_parentescoPersonaFisicaModel->get_Parentesco($folio, $year);
+
                 $datosBitacora = [
-                    'ACCION' => 'Ha actualizado el parentesco de una persona fisica',
+                    'ACCION' => 'Ha eliminado una relación de parenteso',
                     'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
                 ];
 
@@ -1905,7 +1946,7 @@ class DashboardController extends BaseController
 
                 return json_encode(['status' => 1, 'parentescoRelacion' => $parentescoRelacion, 'personaiduno' => $personaiduno, 'personaidDos' => $personaidDos, 'parentesco' => $parentesco]);
             } else {
-                return json_encode(['status' => 0, 'message' => $updateRelacionParentesco]);
+                return json_encode(['status' => 0]);
             }
         } catch (\Exception $e) {
             return json_encode(['status' => 0]);
@@ -1915,6 +1956,9 @@ class DashboardController extends BaseController
     {
         $folio = trim($this->request->getPost('folio'));
         $year = trim($this->request->getPost('year'));
+        $persona1 = $this->request->getPost('personaFisica1');
+        $persona2 = $this->request->getPost('personaFisica2');
+        $parentescoid = $this->request->getPost('parentesco_mf');
         $dataRelacionParentesco = array(
             'FOLIOID' => $this->request->getPost('folio'),
             'ANO' => $this->request->getPost('year'),
@@ -1922,7 +1966,10 @@ class DashboardController extends BaseController
             'PARENTESCOID' => $this->request->getPost('parentesco_mf'),
             'PERSONAFISICAID2' => $this->request->getPost('personaFisica2'),
         );
-
+        $checarParentesco = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID1', $persona1)->where('PERSONAFISICAID2', $persona2)->first();
+        if (isset($checarParentesco)) {
+            return json_encode(['status' => 3]);
+        }
         $insertRelacionParentesco = $this->_parentescoPersonaFisicaModel->insert($dataRelacionParentesco);
 
         if (!$insertRelacionParentesco) {
@@ -2014,12 +2061,14 @@ class DashboardController extends BaseController
         $personaFisica = $this->_folioPersonaFisica($dataNewPersonaFisica, $folio, $year);
         $mediaFiliacion = $this->_folioPersonaFisicaMediaFiliacion($dataNewPersonaFisica, $folio, $personaFisica, $year);
         $domicilio = $this->_folioPersonaFisicaDomicilio($dataNewPersonaFisicaDomicilio, $folio, $personaFisica, $year);
-
+     
 
         if ($personaFisica) {
             $personas = $this->_folioPersonaFisicaModel->get_by_folio($folio, $year);
             $personaFisicaID = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->orderBy('PERSONAFISICAID', 'desc')->first();
-
+            $imputados = $this->_folioPersonaFisicaModel->get_imputados($folio, $year);
+            $victimas = $this->_folioPersonaFisicaModel->get_victimas($folio, $year);
+            $delitosModalidadFiltro = $this->_delitoModalidadModel->get_delitodescr($folio, $year);
 
             $datosBitacora = [
                 'ACCION' => 'Ha ingresado una nueva persona fisica',
@@ -2028,7 +2077,7 @@ class DashboardController extends BaseController
 
             $this->_bitacoraActividad($datosBitacora);
 
-            return json_encode(['status' => 1, 'personas' => $personas, 'ultimoRegistro' => $personaFisicaID]);
+            return json_encode(['status' => 1, 'personas' => $personas, 'ultimoRegistro' => $personaFisicaID, 'imputados'=> $imputados, 'victimas'=>$victimas, 'delitosModalidadFiltro'=>$delitosModalidadFiltro]);
         } else {
             return json_encode(['status' => 0, 'message' => $_POST]);
         }
@@ -2131,7 +2180,7 @@ class DashboardController extends BaseController
             'DELITOMODALIDADID' => $this->request->getPost('delito'),
             'PERSONAFISICAIDIMPUTADO' => $this->request->getPost('imputado'),
         );
-        $checarDelito = $this->_relacionIDOModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAIDVICTIMA',$this->request->getPost('victima'))->where('PERSONAFISICAIDIMPUTADO',$this->request->getPost('imputado'))->where('DELITOMODALIDADID',$this->request->getPost('delito'))->first();
+        $checarDelito = $this->_relacionIDOModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAIDVICTIMA', $this->request->getPost('victima'))->where('PERSONAFISICAIDIMPUTADO', $this->request->getPost('imputado'))->where('DELITOMODALIDADID', $this->request->getPost('delito'))->first();
         if (isset($checarDelito)) {
             return json_encode(['status' => 3]);
         }
@@ -2146,7 +2195,7 @@ class DashboardController extends BaseController
 
             $this->_bitacoraActividad($datosBitacora);
 
-            return json_encode(['status' => 1, 'relacionFisFis'=>$relacionFisFis]);
+            return json_encode(['status' => 1, 'relacionFisFis' => $relacionFisFis]);
         } else {
             return json_encode(['status' => 0, 'message' => $_POST]);
         }
@@ -2172,14 +2221,13 @@ class DashboardController extends BaseController
 
                 $this->_bitacoraActividad($datosBitacora);
 
-                return json_encode(['status' => 1, 'relacionFisFis'=>$relacionFisFis]);
+                return json_encode(['status' => 1, 'relacionFisFis' => $relacionFisFis]);
             } else {
                 return json_encode(['status' => 0]);
             }
         } catch (\Exception $e) {
             return json_encode(['status' => 0]);
         }
-           
     }
     public function createFisImpDelitoByFolio()
     {
@@ -2191,14 +2239,14 @@ class DashboardController extends BaseController
             'PERSONAFISICAID' => $this->request->getPost('imputado'),
             'DELITOMODALIDADID' => $this->request->getPost('delito'),
         );
-        $checarDelito = $this->_fisImpDelitoModel->where('FOLIOID', $folio)->where('ANO', $year)->where('DELITOMODALIDADID',$this->request->getPost('delito'))->first();
+        $checarDelito = $this->_imputadoDelitoModel->where('FOLIOID', $folio)->where('ANO', $year)->where('DELITOMODALIDADID', $this->request->getPost('delito'))->first();
         if (isset($checarDelito)) {
             return json_encode(['status' => 3]);
         }
-        $insertFisImpDelito = $this->_fisImpDelitoModel->insert($datoFisImpDelito);
+        $insertFisImpDelito = $this->_imputadoDelitoModel->insert($datoFisImpDelito);
 
         if (isset($insertFisImpDelito)) {
-            $fisicaImpDelito = $this->_fisImpDelitoModel->get_by_folio($folio, $year);
+            $fisicaImpDelito = $this->_imputadoDelitoModel->get_by_folio($folio, $year);
             $datosBitacora = [
                 'ACCION' => 'Ha ingresado una nuevo delito en un imputado',
                 'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
@@ -2206,7 +2254,7 @@ class DashboardController extends BaseController
 
             $this->_bitacoraActividad($datosBitacora);
 
-            return json_encode(['status' => 1, 'fisicaImpDelito'=>$fisicaImpDelito]);
+            return json_encode(['status' => 1, 'fisicaImpDelito' => $fisicaImpDelito]);
         } else {
             return json_encode(['status' => 0]);
         }
@@ -2219,10 +2267,10 @@ class DashboardController extends BaseController
             $personafisica = trim($this->request->getPost('personafisica'));
             $delitomodalidad = trim($this->request->getPost('delito'));
 
-            $deleteImpDelito = $this->_fisImpDelitoModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $personafisica)->where('DELITOMODALIDADID', $delitomodalidad)->delete();
+            $deleteImpDelito = $this->_imputadoDelitoModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $personafisica)->where('DELITOMODALIDADID', $delitomodalidad)->delete();
 
             if ($deleteImpDelito) {
-                $fisicaImpDelito = $this->_fisImpDelitoModel->get_by_folio($folio, $year);
+                $fisicaImpDelito = $this->_imputadoDelitoModel->get_by_folio($folio, $year);
 
                 $datosBitacora = [
                     'ACCION' => 'Ha eliminado el delito de un imputado',
@@ -2231,7 +2279,7 @@ class DashboardController extends BaseController
 
                 $this->_bitacoraActividad($datosBitacora);
 
-                return json_encode(['status' => 1, 'fisicaImpDelito'=>$fisicaImpDelito]);
+                return json_encode(['status' => 1, 'fisicaImpDelito' => $fisicaImpDelito]);
             } else {
                 return json_encode(['status' => 0]);
             }

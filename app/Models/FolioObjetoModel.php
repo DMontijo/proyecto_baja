@@ -4,10 +4,10 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class ExpedienteObjetoModel extends Model
+class FolioObjetoModel extends Model
 {
     protected $DBGroup          = 'default';
-	protected $table            = 'EXPEDIENTEOBJETO';
+	protected $table            = 'FOLIOOBJETO';
 	protected $allowedFields    = [
         'FOLIOID',
     'ANO',

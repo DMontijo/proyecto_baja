@@ -6,13 +6,9 @@
 	<hr>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="imputado_delito_cometido" class="form-label font-weight-bold">Imputado</label>
-		<select class="form-control" id="imputado_delito_cometido" name="imputado_I" required> 
+		<select class="form-control" id="imputado_delito_cometido" name="imputado_delito_cometido" required> 
 			<option selected value="" disabled></option>
 
-			<?php foreach ($body_data->imputados as $index => $imputado) { ?>
-				
-				<option value="<?= $imputado->PERSONAFISICAID ?>"> <?= $imputado->NOMBRE . ' ' . $imputado->PRIMERAPELLIDO ?> </option>
-			<?php } ?>
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
