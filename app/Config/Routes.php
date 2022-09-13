@@ -181,6 +181,7 @@ $routes->group('data', function ($routes) {
 	$routes->post('restore-folio', 'admin/DashboardController::restoreFolio');
 	$routes->post('restore-folio-to-process', 'admin/DashboardController::restoreFolioProcess');
 
+	//GET, UPDATE, INSERT WITH AJAX
 	$routes->post('get-persona-fisica-by-id', 'admin/DashboardController::getPersonaFisicaById');
 	$routes->post('get-persona-domicilio-by-id', 'admin/DashboardController::findPersonadDomicilioById');
 	$routes->post('get-persona-vehiculo-by-id', 'admin/DashboardController::findPersonadVehiculoById');
@@ -195,10 +196,16 @@ $routes->group('data', function ($routes) {
 	$routes->post('create-parentesco-by-id', 'admin/DashboardController::createParentescoByFolio');
 	$routes->post('get-parentesco-by-id', 'admin/DashboardController::getRelacionParentesco');
 	$routes->post('get-personafisicofiltro', 'admin/DashboardController::getPersonaFisicaFiltro');
-
 	$routes->post('create-persona_fisica-by-folio', 'admin/DashboardController::createPersonaFisicaByFolio');
+	$routes->post('create-relacion_ido-by-folio', 'admin/DashboardController::createRelacionIDOByFolio');
+	$routes->post('create-fisimpdelito-by-folio', 'admin/DashboardController::createFisImpDelitoByFolio');
+	$routes->post('get-fisimpdelito-by-folio', 'admin/DashboardController::getImputadoDelito');
+	$routes->post('delete-fisimpdelito-by-folio', 'admin/DashboardController::deleteImpDelitoByFolio');
+	$routes->post('delete-arbol_delictivo-by-folio', 'admin/DashboardController::deleteArbolByFolio');
+
 
 });
+
 
 /**
  * Extravio Routes

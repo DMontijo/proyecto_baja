@@ -9,6 +9,18 @@ class EXPPERSONAFISIMPDELITO extends Migration
     public function up()
     {
     $this->forge->addField([
+        'FOLIOID' => [
+            'type' => 'INT',
+            'unsigned' => true,
+        ],
+        'ANO' => [
+            'type' => 'INT',
+            'constraint' => '4',
+        ],
+        'PERSONAFISICAID' => [
+            'type' => 'INT',
+            'unsigned' => true,
+        ],
         'DELITOMODALIDADID' => [
             'type' => 'INT',
             'unsigned' => true,
@@ -24,6 +36,9 @@ class EXPPERSONAFISIMPDELITO extends Migration
         ],
        
     ]);
+    $this->forge->addKey('FOLIOID', true);
+    $this->forge->addKey('ANO', true);
+    $this->forge->addKey('PERSONAFISICAID', true);
     $this->forge->addKey('DELITOMODALIDADID', true);
 
     $this->forge->createTable('EXPPERSONAFISIMPDELITO');

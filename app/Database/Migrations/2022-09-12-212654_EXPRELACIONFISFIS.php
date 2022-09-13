@@ -32,6 +32,7 @@ class EXPRELACIONFISFIS extends Migration
         'GRADOPARTICIPACIONID' => [
             'type' => 'INT',
             'unsigned' => true,
+            'null' => true,
         ],
         'TENTATIVA' => [
             'type' => 'CHAR',

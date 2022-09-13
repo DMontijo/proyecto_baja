@@ -15,8 +15,9 @@
 							<a class="nav-link" id="v-pills-preguntas-iniciales-tab" data-toggle="pill" href="#v-pills-preguntas-iniciales" role="tab" aria-controls="v-pills-preguntas-iniciales" aria-selected="true"><i class="fas fa-home"></i> PREGUNTAS</a>
 							<a class="nav-link" id="v-pills-personas-tab" data-toggle="pill" href="#v-pills-personas" role="tab" aria-controls="v-pills-personas" aria-selected="false"><i class="fas fa-users"></i> PERSONAS</a>
 							<a class="nav-link" id="v-pills-vehiculos-tab" data-toggle="pill" href="#v-pills-vehiculos" role="tab" aria-controls="v-pills-vehiculos" aria-selected="false" style="display: none;"><i class="fas fa-car"></i> VEHICULOS</a>
-
 							<a class="nav-link" id="v-pills-parentesco-tab" data-toggle="pill" href="#v-pills-parentesco" role="tab" aria-controls="v-pills-parentesco" aria-selected="false"><i class="fas fa-handshake"></i> PARENTESCO</a>
+							<a class="nav-link" id="v-pills-delitos-cometidos-tab" data-toggle="pill" href="#v-pills-delitos-cometido" role="tab" aria-controls="v-pills-delitos-cometido" aria-selected="false"><i class='fas fa-user-alt-slash'></i> DELITOS COMETIDOS</a>
+							<a class="nav-link" id="v-pills-delitos-tab" data-toggle="pill" href="#v-pills-asignar-delitos" role="tab" aria-controls="v-pills-asignar-delitos" aria-selected="false"><i class='fas fa-handshake-slash'></i> ÁRBOL DELICTUAL</a>
 						</div>
 					</div>
 					<div class="col-9">
@@ -30,14 +31,14 @@
 							<div class="tab-pane fade" id="v-pills-personas" role="tabpanel" aria-labelledby="v-pills-personas-tab">
 								<div id="adicionados" class="d-none"></div>
 								<div class="table-responsive">
-								<table id="table-personas" class="table table-bordered table-hover table-striped table-light">
-									<tr>
-										<th class="text-center bg-primary text-white"></th>
-										<th class="text-center bg-primary text-white" id="nombreP" name="nombreP">NOMBRE</th>
-										<th class="text-center bg-primary text-white" id="calidadP" name="calidadP">CALIDAD JURIDICA</th>
-										<th class="text-center bg-primary text-white">VER</th>
-									</tr>
-								</table>
+									<table id="table-personas" class="table table-bordered table-hover table-striped table-light">
+										<tr>
+											<th class="text-center bg-primary text-white"></th>
+											<th class="text-center bg-primary text-white" id="nombreP" name="nombreP">NOMBRE</th>
+											<th class="text-center bg-primary text-white" id="calidadP" name="calidadP">CALIDAD JURIDICA</th>
+											<th class="text-center bg-primary text-white">VER</th>
+										</tr>
+									</table>
 								</div>
 								<div class="col-12 mb-3 text-center">
 									<button type="button" id="insertPersonaFisicaModal" name="insertPersonaFisicaModal" class="btn btn-primary font-weight-bold">NUEVO PERSONA FÍSICA</button>
@@ -47,29 +48,62 @@
 
 								<div id="adicionados" class="d-none"></div>
 								<div class="table-responsive">
-								<table id="table-parentesco" class="table table-bordered table-hover table-striped table-light">
-									<tr>
-										<th class="text-center bg-primary text-white" id="nombrePF1" name="nombrePF1">PERSONA FISICA 1</th>
-										<th class="text-center bg-primary text-white" id="parentescoRelacion" name="parentescoRelacion">PARENTESCO</th>
-										<th class="text-center bg-primary text-white" id="nombrePF2" name="nombrePF2">PERSONA FISICA 2</th>
-										<th class="text-center bg-primary text-white">EDITAR</th>
-									</tr>
-								</table>
+									<table id="table-parentesco" class="table table-bordered table-hover table-striped table-light">
+										<tr>
+											<th class="text-center bg-primary text-white" id="nombrePF1" name="nombrePF1">PERSONA FISICA 1</th>
+											<th class="text-center bg-primary text-white" id="parentescoRelacion" name="parentescoRelacion">PARENTESCO</th>
+											<th class="text-center bg-primary text-white" id="nombrePF2" name="nombrePF2">PERSONA FISICA 2</th>
+											<th class="text-center bg-primary text-white">EDITAR</th>
+										</tr>
+									</table>
 								</div>
 								<div class="col-12 mb-3 text-center">
 									<button type="button" id="insertParentescoModal" name="insertParentescoModal" class="btn btn-primary font-weight-bold">NUEVO PARENTESCO</button>
 								</div>
 							</div>
-							<div class="tab-pane fade" id="v-pills-vehiculos" role="tabpanel" aria-labelledby="v-pills-vehiculos-tab">
-							<div class="table-responsive">
-								<table id="table-vehiculos" class="table table-bordered table-hover table-striped table-light">
-									<tr>
-										<th class="text-center bg-primary text-white">PLACAS</th>
-										<th class="text-center bg-primary text-white">SERIE</th>
-										<th></th>
-									</tr>
-								</table>
+							<div class="tab-pane fade" id="v-pills-delitos-cometido" role="tabpanel" aria-labelledby="v-pills-delitos-cometidos-tab">
+								<div id="adicionados" class="d-none"></div>
+								<div class="table-responsive">
+									<table id="table-delito-cometidos" class="table table-bordered table-hover table-striped table-light">
+										<tr>
+											<th class="text-center bg-primary text-white" id="nombreImputado" name="nombreImputado">IMPUTADO</th>
+											<th class="text-center bg-primary text-white" id="delitoCometido" name="delitoCometido">DELITO COMETIDO</th>
+											<th class="text-center bg-primary text-white">ELIMINAR</th>
+
+										</tr>
+									</table>
+								</div>
+								<div class="col-12 mb-3 text-center">
+									<button type="button" id="insertDelitoImputado" name="insertDelitoImputado" class="btn btn-primary font-weight-bold">AÑADIR DELITO</button>
+								</div>
 							</div>
+							<div class="tab-pane fade" id="v-pills-asignar-delitos" role="tabpanel" aria-labelledby="v-pills-delitos-tab">
+								<div id="adicionados" class="d-none"></div>
+								<div class="table-responsive">
+									<table id="table-delitos" class="table table-bordered table-hover table-striped table-light">
+										<tr>
+											<th class="text-center bg-primary text-white" id="nombreImputado" name="nombreImputado">IMPUTADO</th>
+											<th class="text-center bg-primary text-white" id="delitoCometido" name="delitoCometido">DELITO COMETIDO</th>
+											<th class="text-center bg-primary text-white" id="nombreVictima" name="nombreVictima">VÍCTIMA / OFENDIDO</th>
+											<th class="text-center bg-primary text-white">ELIMINAR</th>
+
+										</tr>
+									</table>
+								</div>
+								<div class="col-12 mb-3 text-center">
+									<button type="button" id="insertArbolDelictual" name="insertArbolDelictual" class="btn btn-primary font-weight-bold">AÑADIR ÁRBOL DELICTUAL</button>
+								</div>
+							</div>
+							<div class="tab-pane fade" id="v-pills-vehiculos" role="tabpanel" aria-labelledby="v-pills-vehiculos-tab">
+								<div class="table-responsive">
+									<table id="table-vehiculos" class="table table-bordered table-hover table-striped table-light">
+										<tr>
+											<th class="text-center bg-primary text-white">PLACAS</th>
+											<th class="text-center bg-primary text-white">SERIE</th>
+											<th></th>
+										</tr>
+									</table>
+								</div>
 							</div>
 
 						</div>
