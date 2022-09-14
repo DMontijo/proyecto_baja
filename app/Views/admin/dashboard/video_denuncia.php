@@ -270,20 +270,21 @@
 			method: "POST",
 			dataType: "json",
 			success: function(response) {
-				let tabla_impdelito = document.querySelectorAll('#table-delito-cometidos tr');
-				tabla_impdelito.forEach(row => {
-					if (row.id !== '') {
-						row.remove();
-					}
-				});
-				let fisicaImpDelito = response.fisicaImpDelito;
-				llenarTablaImpDel(fisicaImpDelito);
+
 				if (response.status == 1) {
 					Swal.fire({
 						icon: 'success',
 						text: 'Delito del imputado eliminado correctamente',
 						confirmButtonColor: '#bf9b55',
 					});
+					let tabla_impdelito = document.querySelectorAll('#table-delito-cometidos tr');
+					tabla_impdelito.forEach(row => {
+						if (row.id !== '') {
+							row.remove();
+						}
+					});
+					let fisicaImpDelito = response.fisicaImpDelito;
+					llenarTablaImpDel(fisicaImpDelito);
 				} else {
 					Swal.fire({
 						icon: 'error',
@@ -311,14 +312,7 @@
 			method: "POST",
 			dataType: "json",
 			success: function(response) {
-				let tabla_arbol = document.querySelectorAll('#table-delitos tr');
-				tabla_arbol.forEach(row => {
-					if (row.id !== '') {
-						row.remove();
-					}
-				});
-				let relacionFisFis = response.relacionFisFis;
-				llenarTablaFisFis(relacionFisFis);
+
 
 				if (response.status == 1) {
 					Swal.fire({
@@ -326,6 +320,14 @@
 						text: 'Árbol delictivo eliminado correctamente',
 						confirmButtonColor: '#bf9b55',
 					});
+					let tabla_arbol = document.querySelectorAll('#table-delitos tr');
+					tabla_arbol.forEach(row => {
+						if (row.id !== '') {
+							row.remove();
+						}
+					});
+					let relacionFisFis = response.relacionFisFis;
+					llenarTablaFisFis(relacionFisFis);
 				} else {
 					Swal.fire({
 						icon: 'error',
@@ -426,9 +428,7 @@
 						option.value = modalidad.DELITOMODALIDADID;
 						option.text = modalidad.DELITOMODALIDADDESCR;
 						select_delitos_imputado.add(option, null);
-
 					});
-
 					$('#victima_ofendido').empty();
 					let select_victima_ofendido = document.querySelector("#victima_ofendido")
 					victimas.forEach(victima => {
@@ -436,39 +436,30 @@
 						option.value = victima.PERSONAFISICAID;
 						option.text = victima.NOMBRE + ' ' + victima.PRIMERAPELLIDO;
 						select_victima_ofendido.add(option, null);
-
 					});
-
 					$('#imputado_delito_cometido').empty();
-
 					let select_imputado_delito_cometido = document.querySelector("#imputado_delito_cometido")
-
 					imputados.forEach(imputado => {
 						const option = document.createElement('option');
 						option.value = imputado.PERSONAFISICAID;
 						option.text = imputado.NOMBRE + ' ' + imputado.PRIMERAPELLIDO;
 						select_imputado_delito_cometido.add(option, null);
-
 					});
 					$('#imputado_arbol').empty();
-
 					let select_imputado_mputado = document.querySelector("#imputado_arbol")
 					imputados.forEach(imputado => {
 						const option = document.createElement('option');
 						option.value = imputado.PERSONAFISICAID;
 						option.text = imputado.NOMBRE + ' ' + imputado.PRIMERAPELLIDO;
 						select_imputado_mputado.add(option, null);
-
 					});
 					$('#personaFisica1_I').empty();
-
 					let select_personaFisica1_I = document.querySelector("#personaFisica1_I")
 					personas.forEach(persona => {
 						const option = document.createElement('option');
 						option.value = persona.PERSONAFISICAID;
 						option.text = persona.NOMBRE + ' ' + persona.PRIMERAPELLIDO;
 						select_personaFisica1_I.add(option, null);
-
 					});
 					//PREGUNTAS INICIALES
 					document.querySelector('#es_menor').value = preguntas.ES_MENOR;
@@ -642,8 +633,10 @@
 
 		tabla_personas = document.querySelectorAll('#table-personas tr');
 		tabla_vehiculos = document.querySelectorAll('#table-vehiculos tr');
-		tabla_parentesco = document.querySelectorAll('#table-personas tr');
+		tabla_parentesco = document.querySelectorAll('#table-parentesco tr');
 		tabla_relacion_fis_fis = document.querySelectorAll('#table-delitos tr');
+		tabla_delito_cometido = document.querySelectorAll('#table-delito-cometidos tr');
+
 
 		tabla_personas.forEach(row => {
 			if (row.id !== '') {
@@ -662,6 +655,11 @@
 			}
 		});
 		tabla_relacion_fis_fis.forEach(row => {
+			if (row.id !== '') {
+				row.remove();
+			}
+		});
+		tabla_delito_cometido.forEach(row => {
 			if (row.id !== '') {
 				row.remove();
 			}
@@ -765,9 +763,15 @@
 		document.querySelector('#delito_cometido').value = '';
 		document.querySelector('#victima_ofendido').value = '';
 
+		//DELITOS COMETIDOS
+
+		document.querySelector('#imputado_delito_cometido').value = '';
+		document.querySelector('#delito_cometido_fisimpdelito').value = '';
+
 		//RESET FORM
 		document.getElementById("form_asignar_arbol_delictual_insert").reset();
 		document.getElementById("form_parentesco_insert").reset();
+		document.getElementById("form_delitos_cometidos_insert").reset();
 
 
 		$('#v-pills-vehiculos-tab').css('display', 'NONE');
