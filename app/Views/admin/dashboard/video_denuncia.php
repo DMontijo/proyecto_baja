@@ -2855,7 +2855,6 @@
 								select_delitos_imputado.add(option, null);
 
 							});
-
 							$('#victima_ofendido').empty();
 							let select_victima_ofendido = document.querySelector("#victima_ofendido")
 							victimas.forEach(victima => {
@@ -2863,22 +2862,16 @@
 								option.value = victima.PERSONAFISICAID;
 								option.text = victima.NOMBRE + ' ' + victima.PRIMERAPELLIDO;
 								select_victima_ofendido.add(option, null);
-
 							});
-
 							$('#imputado_delito_cometido').empty();
-
 							let select_imputado_delito_cometido = document.querySelector("#imputado_delito_cometido")
-
 							imputados.forEach(imputado => {
 								const option = document.createElement('option');
 								option.value = imputado.PERSONAFISICAID;
 								option.text = imputado.NOMBRE + ' ' + imputado.PRIMERAPELLIDO;
 								select_imputado_delito_cometido.add(option, null);
-
 							});
 							$('#imputado_arbol').empty();
-
 							let select_imputado_mputado = document.querySelector("#imputado_arbol")
 							imputados.forEach(imputado => {
 								const option = document.createElement('option');
@@ -2888,7 +2881,6 @@
 
 							});
 							$('#personaFisica1_I').empty();
-
 							let select_personaFisica1_I = document.querySelector("#personaFisica1_I")
 							personas.forEach(persona => {
 								const option = document.createElement('option');
@@ -2897,7 +2889,8 @@
 								select_personaFisica1_I.add(option, null);
 
 							});
-							// $('#media_filiacion_modal').modal('show');
+							$('#folio_persona_fisica_modal').modal('show');
+							viewPersonaFisica(response.ultimoRegistro.PERSONAFISICAID);
 							// form_media_filiacion_insert.addEventListener('submit', (event) => {
 
 							// 	if (!form_media_filiacion_insert.checkValidity()) {
@@ -3034,7 +3027,6 @@
 					}
 				});
 			}
-
 			function dateToString(_date) {
 				let date = new Date(_date);
 				let dateToTijuanaString = date.toLocaleString('en-US', {
