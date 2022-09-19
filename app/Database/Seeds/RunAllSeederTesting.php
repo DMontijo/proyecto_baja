@@ -97,5 +97,8 @@ class RunAllSeederTesting extends Seeder
 		$this->call('PersonaEtniaSeeder');
 		$this->call('PielColorSeeder');
 		$this->call('ParentescoSeeder');
+		$this->call('ObjetoClasificacionSeeder');
+		$this->call('ObjetoSubclasificacionSeeder');
+		$this->call('DelitosModalidadSeeder');
 	}
 }

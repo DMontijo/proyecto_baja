@@ -569,11 +569,11 @@ class DashboardController extends BaseController
         $delitomodalidadid = trim($this->request->getPost('delito'));
 
         $data = (object) array();
-        $data->imputado_delito = $this->_fisImpDelitoModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $id)->where('DELITOMODALIDADID',$delitomodalidadid)->first();
+        $data->imputado_delito = $this->_fisImpDelitoModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $id)->where('DELITOMODALIDADID', $delitomodalidadid)->first();
 
         if ($data->imputado_delito) {
 
-            
+
 
             $data->status = 1;
             return json_encode($data);
@@ -1388,6 +1388,7 @@ class DashboardController extends BaseController
             }";
         }
         curl_close($ch);
+
         return json_decode($result);
     }
 
@@ -1466,7 +1467,7 @@ class DashboardController extends BaseController
             $data['rol'] = 'mp';
             $data['st'] = 'r';
 
-            $response = $this->_curlPostDataEncrypt($endpoint, $data);
+            $response = $this->_curlPost($endpoint, $data);
 
             return $response;
         } else {
@@ -2131,7 +2132,7 @@ class DashboardController extends BaseController
             'DELITOMODALIDADID' => $this->request->getPost('delito'),
             'PERSONAFISICAIDIMPUTADO' => $this->request->getPost('imputado'),
         );
-        $checarDelito = $this->_relacionIDOModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAIDVICTIMA',$this->request->getPost('victima'))->where('PERSONAFISICAIDIMPUTADO',$this->request->getPost('imputado'))->where('DELITOMODALIDADID',$this->request->getPost('delito'))->first();
+        $checarDelito = $this->_relacionIDOModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAIDVICTIMA', $this->request->getPost('victima'))->where('PERSONAFISICAIDIMPUTADO', $this->request->getPost('imputado'))->where('DELITOMODALIDADID', $this->request->getPost('delito'))->first();
         if (isset($checarDelito)) {
             return json_encode(['status' => 3]);
         }
@@ -2146,7 +2147,7 @@ class DashboardController extends BaseController
 
             $this->_bitacoraActividad($datosBitacora);
 
-            return json_encode(['status' => 1, 'relacionFisFis'=>$relacionFisFis]);
+            return json_encode(['status' => 1, 'relacionFisFis' => $relacionFisFis]);
         } else {
             return json_encode(['status' => 0, 'message' => $_POST]);
         }
@@ -2172,14 +2173,13 @@ class DashboardController extends BaseController
 
                 $this->_bitacoraActividad($datosBitacora);
 
-                return json_encode(['status' => 1, 'relacionFisFis'=>$relacionFisFis]);
+                return json_encode(['status' => 1, 'relacionFisFis' => $relacionFisFis]);
             } else {
                 return json_encode(['status' => 0]);
             }
         } catch (\Exception $e) {
             return json_encode(['status' => 0]);
         }
-           
     }
     public function createFisImpDelitoByFolio()
     {
@@ -2191,7 +2191,7 @@ class DashboardController extends BaseController
             'PERSONAFISICAID' => $this->request->getPost('imputado'),
             'DELITOMODALIDADID' => $this->request->getPost('delito'),
         );
-        $checarDelito = $this->_fisImpDelitoModel->where('FOLIOID', $folio)->where('ANO', $year)->where('DELITOMODALIDADID',$this->request->getPost('delito'))->first();
+        $checarDelito = $this->_fisImpDelitoModel->where('FOLIOID', $folio)->where('ANO', $year)->where('DELITOMODALIDADID', $this->request->getPost('delito'))->first();
         if (isset($checarDelito)) {
             return json_encode(['status' => 3]);
         }
@@ -2206,7 +2206,7 @@ class DashboardController extends BaseController
 
             $this->_bitacoraActividad($datosBitacora);
 
-            return json_encode(['status' => 1, 'fisicaImpDelito'=>$fisicaImpDelito]);
+            return json_encode(['status' => 1, 'fisicaImpDelito' => $fisicaImpDelito]);
         } else {
             return json_encode(['status' => 0]);
         }
@@ -2231,7 +2231,7 @@ class DashboardController extends BaseController
 
                 $this->_bitacoraActividad($datosBitacora);
 
-                return json_encode(['status' => 1, 'fisicaImpDelito'=>$fisicaImpDelito]);
+                return json_encode(['status' => 1, 'fisicaImpDelito' => $fisicaImpDelito]);
             } else {
                 return json_encode(['status' => 0]);
             }
