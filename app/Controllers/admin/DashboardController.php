@@ -951,7 +951,21 @@ class DashboardController extends BaseController
                                 $_persona = $this->_createPersonaFisica($expedienteCreado->EXPEDIENTEID, $persona, $folioRow['HECHOMUNICIPIOID']);
                                 $domicilios = $this->_folioPersonaFisicaDomicilioModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->where('PERSONAFISICAID', $persona['PERSONAFISICAID'])->findAll();
                                 $mediaFiliacion = $this->_folioMediaFiliacion->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->where('PERSONAFISICAID', $persona['PERSONAFISICAID'])->first();
-
+                                //RELACION PARENTESCO
+                                $relacionp = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
+                                $_relacionParentesco = $this->_createRelacionParentesco($expedienteCreado->EXPEDIENTEID, $relacionp, $folioRow['HECHOMUNICIPIOID']);
+                                //RELACION FISFIS
+                                $relacionff = $this->_relacionIDOModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
+                                $_relacionfisfis = $this->_createRelacionFisFis($expedienteCreado->EXPEDIENTEID, $relacionff, $folioRow['HECHOMUNICIPIOID']);
+                                //ARCHIVO EXTERNO
+                                $archivos = $this->_archivosExternosModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
+                                $archivoext = $this->_createArchivosExternos($expedienteCreado->EXPEDIENTEID, $archivos, $folioRow['HECHOMUNICIPIOID']);
+                                //DOCUMENTOS
+                                $documentos = $this->_documentosModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
+                                $foliodocumentos = $this->_createFolioDocumentos($expedienteCreado->EXPEDIENTEID, $documentos, $folioRow['HECHOMUNICIPIOID']);
+                                //    var_dump($expedienteCreado, $relacionp, $relacionff);
+                                //    var_dump($relacionp);
+                                //    exit;
                                 if ($persona['CALIDADJURIDICAID'] == '2') {
                                     $_imputado = $this->_createExpImputado($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $folioRow['HECHOMUNICIPIOID']);
                                 }
@@ -1334,6 +1348,154 @@ class DashboardController extends BaseController
         return $this->_curlPostDataEncrypt($endpoint, $data);
     }
 
+    private function _createRelacionParentesco($expedienteId, $relacionparentesco, $municipio)
+    {
+        $function = '/relacionParentesco.php?process=crear';
+        $array = [
+            'EXPEDIENTEID',
+            'PERSONAFISICAID1',
+            'PARENTESCOID',
+            'PERSONAFISICAID2'
+        ];
+        $endpoint = $this->endpoint . $function;
+        $conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
+        $data = $relacionparentesco;
+        foreach ($data as $clave => $valor) {
+            if (empty($valor)) {
+                unset($data[$clave]);
+            }
+        }
+
+        foreach ($data as $clave => $valor) {
+            if (!in_array($clave, $array)) {
+                unset($data[$clave]);
+            }
+        }
+        $data['EXPEDIENTEID'] = $expedienteId;
+        $data['userDB'] = $conexion->USER;
+        $data['pwdDB'] = $conexion->PASSWORD;
+        $data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
+        $data['schema'] = $conexion->SCHEMA;
+
+        return $this->_curlPostDataEncrypt($endpoint, $data);
+    }
+
+    private function _createRelacionFisFis($expedienteId, $relacionff, $municipio)
+    {
+        $function = '/relacionfisfis.php?process=crear';
+        $array = [
+            'EXPEDIENTEID',            
+            'PERSONAFISICAIDVICTIMA',  
+            'DELITOMODALIDADID',       
+            'PERSONAFISICAIDIMPUTADO', 
+            'GRADOPARTICIPACIONID',    
+            'TENTATIVA',               
+            'CONVIOLENCIA',
+        ];
+        $endpoint = $this->endpoint . $function;
+        $conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
+        $data = $relacionff;
+        foreach ($data as $clave => $valor) {
+            if (empty($valor)) {
+                unset($data[$clave]);
+            }
+        }
+
+        foreach ($data as $clave => $valor) {
+            if (!in_array($clave, $array)) {
+                unset($data[$clave]);
+            }
+        }
+        $data['EXPEDIENTEID'] = $expedienteId;
+        $data['userDB'] = $conexion->USER;
+        $data['pwdDB'] = $conexion->PASSWORD;
+        $data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
+        $data['schema'] = $conexion->SCHEMA;
+
+        return $this->_curlPostDataEncrypt($endpoint, $data);
+    }
+    private function _createArchivosExternos($expedienteId, $archivos, $municipio)
+    {
+        $function = '/archivoExt.php?process=crear';
+        $array = [
+            'EXPEDIENTEID',         
+            'EXPEDIENTEARCHIVOID',  
+            'ARCHIVODESCR',         
+            'ARCHIVO',              
+            'EXTENSION',            
+            'FECHAACTUALIZACION',   
+            'AUTOR',                
+            'OFICINAIDAUTOR',       
+            'CLASIFICACIONDOCTOID', 
+            'ESTADOACCESO',         
+            'PUBLICADO',            
+            'RUTAALMACENAMIENTOID', 
+            'STATUSALMACENID',      
+            'EXPORTAR', 
+        ];
+        $endpoint = $this->endpoint . $function;
+        $conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
+        $data = $archivos;
+        foreach ($data as $clave => $valor) {
+            if (empty($valor)) {
+                unset($data[$clave]);
+            }
+        }
+
+        foreach ($data as $clave => $valor) {
+            if (!in_array($clave, $array)) {
+                unset($data[$clave]);
+            }
+        }
+        $data['EXPEDIENTEID'] = $expedienteId;
+        $data['userDB'] = $conexion->USER;
+        $data['pwdDB'] = $conexion->PASSWORD;
+        $data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
+        $data['schema'] = $conexion->SCHEMA;
+
+        return $this->_curlPostDataEncrypt($endpoint, $data);
+    }
+    private function _createFolioDocumentos($expedienteId, $documentos, $municipio)
+    {
+        $function = '/archivoExt.php?process=crear';
+        $array = [
+            'EXPEDIENTEID',         
+            'EXPEDIENTEARCHIVOID',  
+            'ARCHIVODESCR',         
+            'ARCHIVO',              
+            'EXTENSION',            
+            'FECHAACTUALIZACION',   
+            'AUTOR',                
+            'OFICINAIDAUTOR',       
+            'CLASIFICACIONDOCTOID', 
+            'ESTADOACCESO',         
+            'PUBLICADO',            
+            'RUTAALMACENAMIENTOID', 
+            'STATUSALMACENID',      
+            'EXPORTAR', 
+        ];
+        $endpoint = $this->endpoint . $function;
+        $conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
+        $data = $documentos;
+        foreach ($data as $clave => $valor) {
+            if (empty($valor)) {
+                unset($data[$clave]);
+            }
+        }
+
+        foreach ($data as $clave => $valor) {
+            if (!in_array($clave, $array)) {
+                unset($data[$clave]);
+            }
+        }
+        $data['EXPEDIENTEID'] = $expedienteId;
+        $data['userDB'] = $conexion->USER;
+        $data['pwdDB'] = $conexion->PASSWORD;
+        $data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
+        $data['schema'] = $conexion->SCHEMA;
+
+        return $this->_curlPostDataEncrypt($endpoint, $data);
+    }
     private function _curlPost($endpoint, $data)
     {
         $ch = curl_init();
@@ -1540,6 +1702,8 @@ class DashboardController extends BaseController
     public function updateFolio()
     {
         try {
+            $localidad = $this->_localidadesModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $this->request->getPost('municipio_delito'))->where('LOCALIDADID', $this->request->getPost('localidad_delito'))->first();
+
             $folio = trim($this->request->getPost('folio'));
             $year = trim($this->request->getPost('year'));
             $dataFolio = array(
@@ -1558,6 +1722,7 @@ class DashboardController extends BaseController
                 'HECHONUMEROCASAINT' => $this->request->getPost('interior_delito'),
                 'HECHONARRACION' => $this->request->getPost('narracion_delito'),
                 'HECHODELITO' => $this->request->getPost('delito_delito'),
+                'HECHOZONA' => $localidad->ZONA,
             );
 
             if ($dataFolio['HECHOCOLONIAID'] == '0') {
