@@ -3013,6 +3013,16 @@
 							});
 							$('#insert_asignar_delitos_cometidos_modal').modal('hide');
 							document.getElementById("form_delitos_cometidos_insert").reset();
+							const delitosModalidadFiltro = response.delitosModalidadFiltro;
+							$('#delito_cometido').empty();
+							let select_delitos_imputado = document.querySelector("#delito_cometido")
+							delitosModalidadFiltro.forEach(modalidad => {
+								const option = document.createElement('option');
+								option.value = modalidad.DELITOMODALIDADID;
+								option.text = modalidad.DELITOMODALIDADDESCR;
+								select_delitos_imputado.add(option, null);
+
+							});
 
 						} else if (response.status == 0) {
 							Swal.fire({

@@ -16,6 +16,8 @@ class FolioPersonaFisImpDelitoModel extends Model
 		$builder->where('FOLIOPERSONAFISICA.FOLIOID', $folio);
 		$builder->where('FOLIOPERSONAFISICA.ANO', $year);
 		$builder->where('FOLIOPERSONAFISICA.CALIDADJURIDICAID',2);
+		$builder->where('FOLIOPERSONAFISIMPDELITO.FOLIOID', $folio);
+		$builder->where('FOLIOPERSONAFISIMPDELITO.ANO', $year);
 		$builder->join('FOLIOPERSONAFISICA', 'FOLIOPERSONAFISICA.PERSONAFISICAID =' . $this->table . '.PERSONAFISICAID');
 		$builder->join('DELITOMODALIDAD', 'DELITOMODALIDAD.DELITOMODALIDADID =' . $this->table . '.DELITOMODALIDADID');
 		$builder->orderBy('DELITOMODALIDADID', 'ASC');
