@@ -8,5 +8,7 @@ class ColoniasModel extends Model
 {
 	protected $DBGroup          = 'default';
 	protected $table            = 'COLONIA';
-	protected $allowedFields    = [];
+	protected $allowedFields    = [
+		'ESTADOID', 'MUNICIPIOID','LOCALIDADID', 'COLONIAID','COLONIADESCR'
+	];
 }

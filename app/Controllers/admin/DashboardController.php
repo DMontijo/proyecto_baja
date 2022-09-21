@@ -1700,8 +1700,10 @@ class DashboardController extends BaseController
 
     public function updateFolio()
     {
+        $colonia = $this->_coloniasModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $this->request->getPost('municipio_delito'))->where('LOCALIDADID', $this->request->getPost('localidad_delito'))->where('COLONIAID',$this->request->getPost('colonia_delito_select'))->first();
+
         try {
-            $localidad = $this->_localidadesModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $this->request->getPost('municipio_delito'))->where('LOCALIDADID', $this->request->getPost('localidad_delito'))->first();
+
 
             $folio = trim($this->request->getPost('folio'));
             $year = trim($this->request->getPost('year'));
@@ -1721,15 +1723,19 @@ class DashboardController extends BaseController
                 'HECHONUMEROCASAINT' => $this->request->getPost('interior_delito'),
                 'HECHONARRACION' => $this->request->getPost('narracion_delito'),
                 'HECHODELITO' => $this->request->getPost('delito_delito'),
-                'HECHOZONA' => $localidad->ZONA,
             );
 
             if ($dataFolio['HECHOCOLONIAID'] == '0') {
                 $dataFolio['HECHOCOLONIAID'] = null;
                 $dataFolio['HECHOCOLONIADESCR'] = $this->request->getPost('colonia_delito');
+                $localidad = $this->_localidadesModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $this->request->getPost('municipio_delito'))->where('LOCALIDADID', $this->request->getPost('localidad_delito'))->first();
+                $dataFolio['HECHOZONA'] = $localidad->ZONA;
+
             } else {
                 $dataFolio['HECHOCOLONIAID'] = (int) $this->request->getPost('colonia_delito_select');
                 $dataFolio['HECHOCOLONIADESCR'] = null;
+                $dataFolio['HECHOZONA'] = $colonia->ZONA;
+
             }
             $update = $this->_folioModel->set($dataFolio)->where('FOLIOID', $folio)->where('ANO', $year)->update();
             if ($update) {

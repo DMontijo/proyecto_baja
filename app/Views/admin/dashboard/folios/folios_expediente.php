@@ -83,7 +83,7 @@
 		}).done(function(data) {
 			let grabacion = "";
 			let enlace = 'https://fgebc-records.s3.amazonaws.com/'
-			if (data.data.length > 0) {
+			if (data.length > 0) {
 				array = data.data.reverse();
 				array.forEach(element => {
 					if (element.Grabación != '') {
