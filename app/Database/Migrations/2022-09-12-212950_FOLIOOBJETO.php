@@ -90,12 +90,12 @@ class FOLIOOBJETO extends Migration
     $this->forge->addKey('ANO', true);
     $this->forge->addKey('OBJETOID', true);
 
-    $this->forge->createTable('FOLIOEDIENTEOBJETO');
+    $this->forge->createTable('FOLIOOBJETO');
     }
 
 public function down()
 {
-    $this->forge->dropTable('FOLIOEDIENTEOBJETO');
+    $this->forge->dropTable('FOLIOOBJETO');
 
 }
 }
