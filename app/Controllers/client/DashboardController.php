@@ -216,13 +216,14 @@ class DashboardController extends BaseController
 
                 $foto_des = $this->request->getFile('foto_des');
                 $foto_data = null;
-                if ($foto_des) {
+                if ($_FILES['foto_des']['full_path']!='') {
                     try {
                         $foto_data = file_get_contents($foto_des);
                     } catch (\Exception$e) {
                         $foto_data = null;
                     }
                 }
+                
 
                 $dataDesaparecido = array(
                     'NOMBRE' => $this->request->getPost('nombre_des'),
