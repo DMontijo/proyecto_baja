@@ -345,13 +345,13 @@
 
 	function llenarTablaImpDel(impDelito) {
 		for (let i = 0; i < impDelito.length; i++) {
-			var btn = `<button type='button'  class='btn btn-primary' onclick='eliminarImputadoDelito(${impDelito[i].PERSONAFISICAID},${impDelito[i].DELITOMODALIDADID})'><i class='fa fa-trash'></i></button>`
+			// var btn = `<button type='button'  class='btn btn-primary' onclick='eliminarImputadoDelito(${impDelito[i].PERSONAFISICAID},${impDelito[i].DELITOMODALIDADID})'><i class='fa fa-trash'></i></button>`
 
 			var fila =
 				`<tr id="row${i}">` +
 				`<td class="text-center" value="${impDelito[i].PERSONAFISICAID}">${impDelito[i].NOMBRE}</td>` +
 				`<td class="text-center" value="${impDelito[i].DELITOMODALIDADID}">${impDelito[i].DELITOMODALIDADDESCR}</td>` +
-				`<td class="text-center">${btn}</td>` +
+				// `<td class="text-center">${btn}</td>` +
 				`</tr>`;
 
 			$('#table-delito-cometidos tr:first').after(fila);
@@ -421,14 +421,14 @@
 					document.querySelector('#delito_dash').value = folio.HECHODELITO;
 					document.querySelector('#delito_descr_dash').value = folio.HECHONARRACION;
 					//SELECT CON DELITOS DEL IMPUTADO
-					$('#delito_cometido').empty();
-					let select_delitos_imputado = document.querySelector("#delito_cometido")
-					delitosModalidadFiltro.forEach(modalidad => {
-						const option = document.createElement('option');
-						option.value = modalidad.DELITOMODALIDADID;
-						option.text = modalidad.DELITOMODALIDADDESCR;
-						select_delitos_imputado.add(option, null);
-					});
+					// $('#delito_cometido').empty();
+					// let select_delitos_imputado = document.querySelector("#delito_cometido")
+					// delitosModalidadFiltro.forEach(modalidad => {
+					// 	const option = document.createElement('option');
+					// 	option.value = modalidad.DELITOMODALIDADID;
+					// 	option.text = modalidad.DELITOMODALIDADDESCR;
+					// 	select_delitos_imputado.add(option, null);
+					// });
 					$('#victima_ofendido').empty();
 					let select_victima_ofendido = document.querySelector("#victima_ofendido")
 					victimas.forEach(victima => {
@@ -1118,7 +1118,7 @@
 					document.querySelector('#exterior_pfd').value = domicilio.NUMEROCASA ? domicilio.NUMEROCASA : '';
 					document.querySelector('#interior_pfd').value = domicilio.NUMEROINTERIOR ? domicilio.NUMEROINTERIOR : '';
 					document.querySelector('#referencia_pfd').value = domicilio.REFERENCIA ? domicilio.REFERENCIA : '';
-					document.querySelector('#zona_pfd').value = domicilio.ZONA ? domicilio.ZONA : '';
+					// document.querySelector('#zona_pfd').value = domicilio.ZONA ? domicilio.ZONA : '';
 
 					$('#folio_persona_fisica_modal').modal('show');
 
@@ -1281,7 +1281,7 @@
 			var btn_insertar_parentesco = document.querySelector('#insertParentescoModal');
 			var btn_insertar_persona_fisica = document.querySelector('#insertPersonaFisicaModal');
 			var btn_asignar_delitos = document.querySelector('#insertArbolDelictual');
-			var btn_delito_imputado = document.querySelector('#insertDelitoImputado');
+			// var btn_delito_imputado = document.querySelector('#insertDelitoImputado');
 			var btn_delito_cometido = document.querySelector('#insertDelitoCometido');
 
 
@@ -1405,9 +1405,9 @@
 			btn_asignar_delitos.addEventListener('click', (event) => {
 				$('#insert_asignar_arbol_delictual_modal').modal('show');
 			}, false);
-			btn_delito_imputado.addEventListener('click', (event) => {
-				$('#insert_asignar_delitos_cometidos_modal').modal('show');
-			}, false);
+			// btn_delito_imputado.addEventListener('click', (event) => {
+			// 	$('#insert_asignar_delitos_cometidos_modal').modal('show');
+			// }, false);
 
 
 			form_parentesco_insert.addEventListener('submit', (event) => {
@@ -1476,21 +1476,22 @@
 					event.preventDefault();
 					event.stopPropagation();
 					form_relacion_ido_insert.classList.remove('was-validated')
+					insertar_impdelito();
 					insertarRelacionIDO();
 				}
 			}, false);
-			form_fisimpdelito.addEventListener('submit', (event) => {
-				if (!form_fisimpdelito.checkValidity()) {
-					event.preventDefault();
-					event.stopPropagation();
-					form_fisimpdelito.classList.add('was-validated')
-				} else {
-					event.preventDefault();
-					event.stopPropagation();
-					form_fisimpdelito.classList.remove('was-validated')
-					insertar_impdelito();
-				}
-			}, false);
+			// form_fisimpdelito.addEventListener('submit', (event) => {
+			// 	if (!form_fisimpdelito.checkValidity()) {
+			// 		event.preventDefault();
+			// 		event.stopPropagation();
+			// 		form_fisimpdelito.classList.add('was-validated')
+			// 	} else {
+			// 		event.preventDefault();
+			// 		event.stopPropagation();
+			// 		form_fisimpdelito.classList.remove('was-validated')
+			// 		insertar_impdelito();
+			// 	}
+			// }, false);
 
 
 			//DENUNCIA
@@ -2188,6 +2189,8 @@
 					method: "POST",
 					dataType: "json",
 					success: function(response) {
+						const imputados = response.imputados;
+						const victimas = response.victimas;
 						if (response.status == 1) {
 							let tabla_personas = document.querySelectorAll('#table-personas tr');
 							tabla_personas.forEach(row => {
@@ -2197,7 +2200,23 @@
 							});
 
 							llenarTablaPersonas(response.personas);
+							$('#imputado_arbol').empty();
+							let select_imputado_mputado = document.querySelector("#imputado_arbol");
+							imputados.forEach(imputado => {
+								const option = document.createElement('option');
+								option.value = imputado.PERSONAFISICAID;
+								option.text = imputado.NOMBRE + ' ' + imputado.PRIMERAPELLIDO;
+								select_imputado_mputado.add(option, null);
 
+							});
+							$('#victima_ofendido').empty();
+							let select_victima_ofendido = document.querySelector("#victima_ofendido");
+							victimas.forEach(victima => {
+								const option = document.createElement('option');
+								option.value = victima.PERSONAFISICAID;
+								option.text = victima.NOMBRE + ' ' + victima.PRIMERAPELLIDO;
+								select_victima_ofendido.add(option, null);
+							});
 							Swal.fire({
 								icon: 'success',
 								text: 'Persona física actualizada correctamente',
@@ -2495,7 +2514,6 @@
 					'exterior_pfd': document.querySelector('#exterior_pfd').value,
 					'interior_pfd': document.querySelector('#interior_pfd').value,
 					'referencia_pfd': document.querySelector('#referencia_pfd').value,
-					'zona_pfd': document.querySelector('#zona_pfd').value,
 				};
 
 				$.ajax({
@@ -2781,7 +2799,7 @@
 					'segundo_apellido': document.querySelector('#apellido_materno_new').value,
 					'fecha_nacimiento': document.querySelector('#fecha_nacimiento_new').value,
 					'edad': document.querySelector('#edad_new').value,
-					'sexo': document.querySelector('#sexo_new').value,
+					'sexo': document.querySelector('#sexo_new').checked ? document.querySelector('#sexo_new').value : null,
 					'codigo_pais_pfc': document.querySelector('#codigo_pais_new').value,
 					'codigo_pais_pfc_2': document.querySelector('#codigo_pais_2_new').value,
 					'calidad_juridica': document.querySelector('#calidad_juridica_new').value,
@@ -2846,15 +2864,15 @@
 							const personas = response.personas;
 
 							//SELECT CON DELITOS DEL IMPUTADO
-							$('#delito_cometido').empty();
-							let select_delitos_imputado = document.querySelector("#delito_cometido")
-							delitosModalidadFiltro.forEach(modalidad => {
-								const option = document.createElement('option');
-								option.value = modalidad.DELITOMODALIDADID;
-								option.text = modalidad.DELITOMODALIDADDESCR;
-								select_delitos_imputado.add(option, null);
+							// $('#delito_cometido').empty();
+							// let select_delitos_imputado = document.querySelector("#delito_cometido")
+							// delitosModalidadFiltro.forEach(modalidad => {
+							// 	const option = document.createElement('option');
+							// 	option.value = modalidad.DELITOMODALIDADID;
+							// 	option.text = modalidad.DELITOMODALIDADDESCR;
+							// 	select_delitos_imputado.add(option, null);
 
-							});
+							// });
 							$('#victima_ofendido').empty();
 							let select_victima_ofendido = document.querySelector("#victima_ofendido")
 							victimas.forEach(victima => {
@@ -2980,8 +2998,8 @@
 				const data = {
 					'folio': document.querySelector('#input_folio_atencion').value,
 					'year': document.querySelector('#year_select').value,
-					'delito': document.querySelector('#delito_cometido_fisimpdelito').value,
-					'imputado': document.querySelector('#imputado_delito_cometido').value,
+					'delito': document.querySelector('#delito_cometido').value,
+					'imputado': document.querySelector('#imputado_arbol').value,
 				};
 				$.ajax({
 					data: data,
@@ -3011,18 +3029,18 @@
 								text: 'Relacion IMPUTADO-DELITO ingresado correctamente',
 								confirmButtonColor: '#bf9b55',
 							});
-							$('#insert_asignar_delitos_cometidos_modal').modal('hide');
-							document.getElementById("form_delitos_cometidos_insert").reset();
-							const delitosModalidadFiltro = response.delitosModalidadFiltro;
-							$('#delito_cometido').empty();
-							let select_delitos_imputado = document.querySelector("#delito_cometido")
-							delitosModalidadFiltro.forEach(modalidad => {
-								const option = document.createElement('option');
-								option.value = modalidad.DELITOMODALIDADID;
-								option.text = modalidad.DELITOMODALIDADDESCR;
-								select_delitos_imputado.add(option, null);
+							// $('#insert_asignar_delitos_cometidos_modal').modal('hide');
+							// document.getElementById("form_delitos_cometidos_insert").reset();
+							// const delitosModalidadFiltro = response.delitosModalidadFiltro;
+							// $('#delito_cometido').empty();
+							// let select_delitos_imputado = document.querySelector("#delito_cometido")
+							// delitosModalidadFiltro.forEach(modalidad => {
+							// 	const option = document.createElement('option');
+							// 	option.value = modalidad.DELITOMODALIDADID;
+							// 	option.text = modalidad.DELITOMODALIDADDESCR;
+							// 	select_delitos_imputado.add(option, null);
 
-							});
+							// });
 
 						} else if (response.status == 0) {
 							Swal.fire({
@@ -3037,6 +3055,7 @@
 					}
 				});
 			}
+
 			function dateToString(_date) {
 				let date = new Date(_date);
 				let dateToTijuanaString = date.toLocaleString('en-US', {

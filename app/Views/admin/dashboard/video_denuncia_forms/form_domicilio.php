@@ -67,16 +67,6 @@
 		<label for="referencia_pfd" class="form-label font-weight-bold">Referencia</label>
 		<input type="text" class="form-control" id="referencia_pfd" name="referencia_pfd" maxlength="300">
 	</div>
-
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="zona_pfd" class="form-label font-weight-bold">Zona</label>
-		<select class="form-control" id="zona_pfd" name="zona_pfd">
-			<option selected value=""></option>
-			<option value="R">RURAL</option>
-			<option value="U">URBANA</option>
-		</select>
-	</div>
-
 	<div class="col-12 my-4 text-center">
 		<button type="submit" class="btn btn-primary font-weight-bold">ACTUALIZAR DOMICILIO</button>
 	</div>

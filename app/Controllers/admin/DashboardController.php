@@ -1939,6 +1939,8 @@ class DashboardController extends BaseController
             if ($update) {
 
                 $personas = $this->_folioPersonaFisicaModel->get_by_folio($folio, $year);
+                $imputados = $this->_folioPersonaFisicaModel->get_imputados($folio, $year);
+                $victimas = $this->_folioPersonaFisicaModel->get_victimas($folio, $year);
                 $datosBitacora = [
                     'ACCION' => 'Ha actualizado a una persona fisica',
                     'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year . ' PERSONAFISICAID: ' . $id,
@@ -1946,7 +1948,7 @@ class DashboardController extends BaseController
 
                 $this->_bitacoraActividad($datosBitacora);
 
-                return json_encode(['status' => 1, 'personas' => $personas]);
+                return json_encode(['status' => 1, 'personas' => $personas,'imputados'=> $imputados, 'victimas'=> $victimas]);
             } else {
                 return json_encode(['status' => 0]);
             }
@@ -1971,7 +1973,6 @@ class DashboardController extends BaseController
                 'ESTADOID' => $this->request->getPost('estado_pfd'),
                 'MUNICIPIOID' => $this->request->getPost('municipio_pfd'),
                 'LOCALIDADID' => $this->request->getPost('localidad_pfd'),
-                'ZONA' => $this->request->getPost('zona_pfd'),
                 'COLONIAID' => $this->request->getPost('colonia_pfd_select'),
                 'COLONIADESCR' => $this->request->getPost('colonia_pfd'),
                 'CALLE' => $this->request->getPost('calle_pfd'),
@@ -1979,10 +1980,16 @@ class DashboardController extends BaseController
                 'NUMEROINTERIOR' => $this->request->getPost('interior_pfd'),
                 'REFERENCIA' => $this->request->getPost('referencia_pfd'),
             );
+            $colonia = $this->_coloniasModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $this->request->getPost('municipio_pfd'))->where('LOCALIDADID', $this->request->getPost('localidad_pfd'))->where('COLONIAID', $this->request->getPost('colonia_pfd_select'))->first();
+            $localidad = $this->_localidadesModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $this->request->getPost('municipio_pfd'))->where('LOCALIDADID', $this->request->getPost('localidad_pfd'))->first();
             if ((int)$data['COLONIAID'] == 0) {
                 $data['COLONIAID'] = null;
+                $data['ZONA'] = $localidad->ZONA;
+
             } else {
                 $data['COLONIADESCR'] = null;
+                $data['ZONA'] = $colonia->ZONA;
+
             }
 
             $update = $this->_folioPersonaFisicaDomicilioModel->set($data)->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $id)->where('DOMICILIOID', $id_domicilio)->update();
@@ -2294,7 +2301,7 @@ class DashboardController extends BaseController
             'SEGUNDOAPELLIDO' => $this->request->getPost('segundo_apellido'),
             'FECHANACIMIENTO' => $this->request->getPost('fecha_nacimiento'),
             'EDADCANTIDAD' => $this->request->getPost('edad'),
-            'SEXO' => $this->request->getPost('sexo'),
+            'SEXO' => $this->request->getPost('sexo') != null ?  $this->request->getPost('sexo') : NULL,
             'TELEFONO' => $this->request->getPost('telefono'),
             'TELEFONO2' => $this->request->getPost('telefono_adicional'),
             'CALIDADJURIDICAID' => $this->request->getPost('calidad_juridica'),
@@ -2524,7 +2531,7 @@ class DashboardController extends BaseController
 
         if (isset($insertFisImpDelito)) {
             $fisicaImpDelito = $this->_imputadoDelitoModel->get_by_folio($folio, $year);
-            $delitosModalidadFiltro = $this->_delitoModalidadModel->get_delitodescr($folio, $year);
+            // $delitosModalidadFiltro = $this->_delitoModalidadModel->get_delitodescr($folio, $year);
             $datosBitacora = [
                 'ACCION' => 'Ha ingresado una nuevo delito en un imputado',
                 'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
@@ -2532,7 +2539,7 @@ class DashboardController extends BaseController
 
             $this->_bitacoraActividad($datosBitacora);
 
-            return json_encode(['status' => 1, 'fisicaImpDelito' => $fisicaImpDelito, 'delitosModalidadFiltro' => $delitosModalidadFiltro]);
+            return json_encode(['status' => 1, 'fisicaImpDelito' => $fisicaImpDelito]);
         } else {
             return json_encode(['status' => 0]);
         }

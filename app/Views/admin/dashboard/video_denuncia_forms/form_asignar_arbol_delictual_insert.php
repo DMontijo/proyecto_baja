@@ -14,6 +14,10 @@
 		<label for="delito_cometido" class="form-label font-weight-bold">Delito cometido</label>
 		<select class="form-control" id="delito_cometido" name="delito_cometido" required>
 			<option selected value="" disabled></option>
+			<?php
+			foreach ($body_data->delitosModalidad as $index => $delitoModalidad) { ?>
+				<option value="<?= $delitoModalidad->DELITOMODALIDADID ?>"> <?= $delitoModalidad->DELITOMODALIDADDESCR ?></option>
+			<?php } ?>
 			
 		</select>
 	</div>

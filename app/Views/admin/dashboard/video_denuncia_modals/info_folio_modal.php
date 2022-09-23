@@ -68,14 +68,12 @@
 										<tr>
 											<th class="text-center bg-primary text-white" id="nombreImputado" name="nombreImputado">IMPUTADO</th>
 											<th class="text-center bg-primary text-white" id="delitoCometido" name="delitoCometido">DELITO COMETIDO</th>
-											<th class="text-center bg-primary text-white">ELIMINAR</th>
+											<!-- <th class="text-center bg-primary text-white">ELIMINAR</th> -->
 
 										</tr>
 									</table>
 								</div>
-								<div class="col-12 mb-3 text-center">
-									<button type="button" id="insertDelitoImputado" name="insertDelitoImputado" class="btn btn-primary font-weight-bold">AÑADIR DELITO</button>
-								</div>
+							
 							</div>
 							<div class="tab-pane fade" id="v-pills-asignar-delitos" role="tabpanel" aria-labelledby="v-pills-delitos-tab">
 								<div id="adicionados" class="d-none"></div>
