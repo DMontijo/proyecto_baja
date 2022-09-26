@@ -219,7 +219,7 @@
 
 		for (let i = 0; i < relacion_parentesco.length; i++) {
 
-			var btn = `<button type='button'  class='btn btn-primary' onclick='view_form_parentesco(${relacion_parentesco[i].PERSONAFISICAID1})'><i class="fas fa-trash"></i></button>`
+			var btn = `<button type='button'  class='btn btn-primary' onclick='view_form_parentesco(${relacion_parentesco[i].PERSONAFISICAID1})'><i class="fas fa-eye"></i></button>`
 
 
 			var fila2 =

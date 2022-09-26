@@ -950,10 +950,12 @@ class DashboardController extends BaseController
                         $personaFolio = [];
                         $imputadoFolio = [];
                         $personafisica1 = [];
-                        $personafisica2=[];
+                        $personafisica2 = [];
                         $ultimorecorrido = [];
                         $ultmorecorridoImputado = [];
                         $personafisicavictima = [];
+                        $personafisicaimputado =[];
+                        $personafisicaimputadorelacion =[];
                         // $_persona=[];
                         try {
 
@@ -987,7 +989,6 @@ class DashboardController extends BaseController
                                     $ultmorecorridoImputado = array_pop($imputadoFolio);
                                     var_dump("IMPUTADO");
                                     var_dump($ultmorecorridoImputado);
-                                  
                                 }
 
                                 foreach ($domicilios as $key => $domicilio) {
@@ -997,65 +998,65 @@ class DashboardController extends BaseController
                                 $_mediaFiliacion = $this->_createPersonaFisicaMediaFilicacion($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $mediaFiliacion, $folioRow['HECHOMUNICIPIOID']);
                                 // var_dump($_mediaFiliacion);
                                 // exit;
-                               
+
 
                                 // var_dump($relacionp[0], $fisimpdelito[0], $relacionff[0]);
-                                     //RELACION PARENTESCO
-                             $relacionp = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
-                             $tamrelacionparentesco = count($relacionp);
-                             for ($i = 0; $i < $tamrelacionparentesco; $i++) {
-                                 if ($relacionp[$i]['PERSONAFISICAID1'] == $ultimorecorrido[0]) {
-                                     $personafisica1 = $ultimorecorrido[1];
-                                     var_dump("p1");
-                                     var_dump($personafisica1);
-                                 }
-                                 if ($relacionp[$i]['PERSONAFISICAID2'] == $ultimorecorrido[0]) {
-                                     $personafisica2 = $ultimorecorrido[1];
-                                     var_dump("p2");
+                                //RELACION PARENTESCO
+                                $relacionp = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
+                                $tamrelacionparentesco = count($relacionp);
+                                for ($i = 0; $i < $tamrelacionparentesco; $i++) {
+                                    if ($relacionp[$i]['PERSONAFISICAID1'] == $ultimorecorrido[0]) {
+                                        $personafisica1 = $ultimorecorrido[1];
+                                        var_dump("p1");
+                                        var_dump($personafisica1);
+                                    }
+                                    if ($relacionp[$i]['PERSONAFISICAID2'] == $ultimorecorrido[0]) {
+                                        $personafisica2 = $ultimorecorrido[1];
+                                        var_dump("p2");
 
-                                     var_dump($personafisica2);
-
-                                 }
-                             }
-                             foreach ($relacionp as $key => $relacionparentesco) {
-                                 $_relacionParentesco = $this->_createRelacionParentesco($expedienteCreado->EXPEDIENTEID, $relacionparentesco, $personafisica1, $personafisica2, $folioRow['HECHOMUNICIPIOID']);
-                             }
-                             var_dump($_relacionParentesco);
+                                        var_dump($personafisica2);
+                                    }
+                                }
 
                                 var_dump($expedienteCreado, $_persona);
                             }
-                        
-                              //FISIMPDELITO
-                              $fisimpdelito = $this->_imputadoDelitoModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
-                              // var_dump("FISIMPDELITO");
-                              // var_dump($ultmorecorridoImputado[0]);
-                              $tamfis = count($fisimpdelito);
-                              for ($i = 0; $i < $tamfis; $i++) {
-                                  if ($fisimpdelito[$i]['PERSONAFISICAID'] == $ultmorecorridoImputado[0]) {
-                                      $personafisicaimputado = $ultmorecorridoImputado[1];
-                                      // var_dump($personafisicaimputado);
-                                  }
-                              }
-                              foreach ($fisimpdelito as $key => $imputadodelito) {
-                                  $_fisimpdelito = $this->_createFisImpDelito($expedienteCreado->EXPEDIENTEID, $imputadodelito, $personafisicaimputado, $folioRow['HECHOMUNICIPIOID']);
-                              }
-                              var_dump($_fisimpdelito);
+                            //RELACION PARENTESCO
+                            foreach ($relacionp as $key => $relacionparentesco) {
+                                $_relacionParentesco = $this->_createRelacionParentesco($expedienteCreado->EXPEDIENTEID, $relacionparentesco, $personafisica1, $personafisica2, $folioRow['HECHOMUNICIPIOID']);
+                            }
+                            var_dump($_relacionParentesco);
 
-                              //RELACION FISFIS
-                              $relacionff = $this->_relacionIDOModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
-                              $tamfisfis = count($relacionff);
-                              for ($i = 0; $i < $tamfisfis; $i++) {
-                                  if ($relacionff[$i]['PERSONAFISICAIDIMPUTADO'] == $ultmorecorridoImputado[0]) {
-                                      $personafisicaimputadorelacion = $ultmorecorridoImputado[1];
-                                  }
-                              }
-                              // var_dump("FISFIS");
-                              // var_dump($personafisicavictima);
-                              // var_dump($personafisicaimputadorelacion);
-                              foreach ($relacionff as $key => $fisfis) {
-                                  $_relacionfisfis = $this->_createRelacionFisFis($expedienteCreado->EXPEDIENTEID, $fisfis, $personafisicavictima, $personafisicaimputadorelacion, $folioRow['HECHOMUNICIPIOID']);
-                              }
-                              var_dump($_relacionfisfis);
+                            //FISIMPDELITO
+                            $fisimpdelito = $this->_imputadoDelitoModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
+                            // var_dump("FISIMPDELITO");
+                            // var_dump($ultmorecorridoImputado[0]);
+                            $tamfis = count($fisimpdelito);
+                            for ($i = 0; $i < $tamfis; $i++) {
+                                if ($fisimpdelito[$i]['PERSONAFISICAID'] == $ultmorecorridoImputado[0]) {
+                                    $personafisicaimputado = $ultmorecorridoImputado[1];
+                                    // var_dump($personafisicaimputado);
+                                }
+                            }
+                            foreach ($fisimpdelito as $key => $imputadodelito) {
+                                $_fisimpdelito = $this->_createFisImpDelito($expedienteCreado->EXPEDIENTEID, $imputadodelito, $personafisicaimputado, $folioRow['HECHOMUNICIPIOID']);
+                            }
+                            var_dump($_fisimpdelito);
+
+                            //RELACION FISFIS
+                            $relacionff = $this->_relacionIDOModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
+                            $tamfisfis = count($relacionff);
+                            for ($i = 0; $i < $tamfisfis; $i++) {
+                                if ($relacionff[$i]['PERSONAFISICAIDIMPUTADO'] == $ultmorecorridoImputado[0]) {
+                                    $personafisicaimputadorelacion = $ultmorecorridoImputado[1];
+                                }
+                            }
+                            // var_dump("FISFIS");
+                            // var_dump($personafisicavictima);
+                            // var_dump($personafisicaimputadorelacion);
+                            foreach ($relacionff as $key => $fisfis) {
+                                $_relacionfisfis = $this->_createRelacionFisFis($expedienteCreado->EXPEDIENTEID, $fisfis, $personafisicavictima, $personafisicaimputadorelacion, $folioRow['HECHOMUNICIPIOID']);
+                            }
+                            var_dump($_relacionfisfis);
                         } catch (\Exception $e) {
                             throw new \Exception($e->getMessage());
                         }
@@ -1959,7 +1960,7 @@ class DashboardController extends BaseController
 
                 $this->_bitacoraActividad($datosBitacora);
 
-                return json_encode(['status' => 1, 'personas' => $personas,'imputados'=> $imputados, 'victimas'=> $victimas]);
+                return json_encode(['status' => 1, 'personas' => $personas, 'imputados' => $imputados, 'victimas' => $victimas]);
             } else {
                 return json_encode(['status' => 0]);
             }
@@ -1996,11 +1997,9 @@ class DashboardController extends BaseController
             if ((int)$data['COLONIAID'] == 0) {
                 $data['COLONIAID'] = null;
                 $data['ZONA'] = $localidad->ZONA;
-
             } else {
                 $data['COLONIADESCR'] = null;
                 $data['ZONA'] = $colonia->ZONA;
-
             }
 
             $update = $this->_folioPersonaFisicaDomicilioModel->set($data)->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $id)->where('DOMICILIOID', $id_domicilio)->update();
@@ -2503,14 +2502,14 @@ class DashboardController extends BaseController
             $personafisicavictima = trim($this->request->getPost('personafisicavictima'));
             $delitomodalidad = trim($this->request->getPost('delito'));
             $personafisicaimputado = trim($this->request->getPost('personafisicaimputado'));
-        
+
             $countImpDelito = $this->_imputadoDelitoModel->count_delitos($folio, $year, $delitomodalidad);
 
             if ($countImpDelito[0]->DELITOMODALIDADID == 1) {
-                return json_encode(['status' => 3, 'count'=>$countImpDelito[0]->DELITOMODALIDADID]);
+                return json_encode(['status' => 3, 'count' => $countImpDelito[0]->DELITOMODALIDADID]);
             }
             $deleteArbol = $this->_relacionIDOModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAIDVICTIMA', $personafisicavictima)->where('DELITOMODALIDADID', $delitomodalidad)->where('PERSONAFISICAIDIMPUTADO', $personafisicaimputado)->delete();
-          
+
             // $deleteImpDelito = $this->_imputadoDelitoModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $personafisicaimputado)->where('DELITOMODALIDADID', $delitomodalidad)->delete();
             if ($deleteArbol) {
                 $relacionFisFis = $this->_relacionIDOModel->get_by_folio($folio, $year);
@@ -2550,17 +2549,17 @@ class DashboardController extends BaseController
                     'ACCION' => 'Ha eliminado el delito de un imputado',
                     'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
                 ];
-                
+
                 $datosBitacora2 = [
                     'ACCION' => 'Ha eliminado un árbol delictivo',
                     'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
                 ];
-                
+
                 $this->_bitacoraActividad($datosBitacora1);
                 $this->_bitacoraActividad($datosBitacora2);
 
 
-                return json_encode(['status' => 1, 'fisicaImpDelito' => $fisicaImpDelito,'relacionFisFis' => $relacionFisFis]);
+                return json_encode(['status' => 1, 'fisicaImpDelito' => $fisicaImpDelito, 'relacionFisFis' => $relacionFisFis]);
             } else {
                 return json_encode(['status' => 0]);
             }
@@ -2599,7 +2598,7 @@ class DashboardController extends BaseController
             return json_encode(['status' => 0]);
         }
     }
- 
+
     private function _bitacoraActividad($data)
     {
         $data = $data;
