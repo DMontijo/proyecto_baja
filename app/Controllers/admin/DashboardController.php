@@ -940,12 +940,12 @@ class DashboardController extends BaseController
                     $folioRow['ESTADOJURIDICOEXPEDIENTEID'] = (string) 2;
                     $folioRow['TIPOEXPEDIENTEID'] = 4;
 
-                    // $expedienteCreado = $this->_createExpediente($folioRow);
+                    $expedienteCreado = $this->_createExpediente($folioRow);
 
-                    $expedienteCreado = (object)array(
-                        'status' => 201,
-                        'EXPEDIENTEID' => '402002202200323'
-                    );
+                    // $expedienteCreado = (object)array(
+                    //     'status' => 201,
+                    //     'EXPEDIENTEID' => '402002202200323'
+                    // );
                     // return json_encode(['info' => $expedienteCreado]);
 
                     unset($folioRow['OFICINAIDRESPONSABLE']);
@@ -963,14 +963,13 @@ class DashboardController extends BaseController
                         $folioRow['EXPEDIENTEID'] = $expedienteCreado->EXPEDIENTEID;
                         $folioRow['FECHASALIDA'] = date('Y-m-d H:i:s');
 
-                        // $update = $this->_folioModel->set($folioRow)->where('FOLIOID', $folio)->where('ANO', $year)->update();
-                        $update = false;
+                        $update = $this->_folioModel->set($folioRow)->where('FOLIOID', $folio)->where('ANO', $year)->update();
                         $personasRelacionMysqlOracle = array();
                         try {
 
                             foreach ($personas as $key => $persona) {
 
-                                $_persona = $this->_createPersonaFisica($expedienteCreado->EXPEDIENTEID, $persona, $folioRow['HECHOMUNICIPIOID']);
+                                $_persona = $this->_createPersonaFisica($expedienteCreado->EXPEDIENTEID, $persona, $municipio);
                                 if ($_persona->status == 201) {
 
                                     $domicilios = $this->_folioPersonaFisicaDomicilioModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->where('PERSONAFISICAID', $persona['PERSONAFISICAID'])->findAll();
@@ -979,14 +978,14 @@ class DashboardController extends BaseController
                                     $personasRelacionMysqlOracle[$persona['PERSONAFISICAID']] = ['calidad' => $persona['CALIDADJURIDICAID'], 'id_mysql' => $persona['PERSONAFISICAID'], 'id_oracle' => $_persona->PERSONAFISICAID];
 
                                     if ($persona['CALIDADJURIDICAID'] == '2') {
-                                        $_imputado = $this->_createExpImputado($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $folioRow['HECHOMUNICIPIOID']);
+                                        $_imputado = $this->_createExpImputado($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $municipio);
                                     }
 
                                     foreach ($domicilios as $key => $domicilio) {
-                                        $_domicilio = $this->_createDomicilioPersonaFisica($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $domicilio, $folioRow['HECHOMUNICIPIOID']);
+                                        $_domicilio = $this->_createDomicilioPersonaFisica($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $domicilio, $municipio);
                                     }
 
-                                    $_mediaFiliacion = $this->_createPersonaFisicaMediaFilicacion($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $mediaFiliacion, $folioRow['HECHOMUNICIPIOID']);
+                                    $_mediaFiliacion = $this->_createPersonaFisicaMediaFilicacion($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $mediaFiliacion, $municipio);
                                 }
                             }
 
@@ -995,7 +994,7 @@ class DashboardController extends BaseController
                                 foreach ($fisImpDelito as $imputadodelito) {
                                     try {
                                         $relacion = $personasRelacionMysqlOracle[$imputadodelito['PERSONAFISICAID']];
-                                        $_fisimpdelito = $this->_createFisImpDelito($expedienteCreado->EXPEDIENTEID, $imputadodelito, $relacion['id_oracle'], $folioRow['HECHOMUNICIPIOID']);
+                                        $_fisimpdelito = $this->_createFisImpDelito($expedienteCreado->EXPEDIENTEID, $imputadodelito, $relacion['id_oracle'], $municipio);
                                     } catch (\Error $e) {
                                     }
                                 }
@@ -1007,7 +1006,7 @@ class DashboardController extends BaseController
                                     try {
                                         $victima = $personasRelacionMysqlOracle[$fisFis['PERSONAFISICAIDVICTIMA']];
                                         $imputado = $personasRelacionMysqlOracle[$fisFis['PERSONAFISICAIDIMPUTADO']];
-                                        $_relacionFisFis = $this->_createRelacionFisFis($expedienteCreado->EXPEDIENTEID, $fisFis, $victima['id_oracle'], $imputado['id_oracle'], $folioRow['HECHOMUNICIPIOID']);
+                                        $_relacionFisFis = $this->_createRelacionFisFis($expedienteCreado->EXPEDIENTEID, $fisFis, $victima['id_oracle'], $imputado['id_oracle'], $municipio);
                                     } catch (\Error $e) {
                                     }
                                 }
@@ -1019,7 +1018,7 @@ class DashboardController extends BaseController
                                     try {
                                         $persona1 = $personasRelacionMysqlOracle[$parentesco['PERSONAFISICAID1']];
                                         $persona2 = $personasRelacionMysqlOracle[$parentesco['PERSONAFISICAID2']];
-                                        $_relacionParentesco = $this->_createRelacionParentesco($expedienteCreado->EXPEDIENTEID, $parentesco, $persona1['id_oracle'], $persona2['id_oracle'], $folioRow['HECHOMUNICIPIOID']);
+                                        $_relacionParentesco = $this->_createRelacionParentesco($expedienteCreado->EXPEDIENTEID, $parentesco, $persona1['id_oracle'], $persona2['id_oracle'], $municipio);
                                     } catch (\Error $e) {
                                     }
                                 }
@@ -1660,7 +1659,7 @@ class DashboardController extends BaseController
         $data['min'] = !empty($this->request->getPost('min')) ? $this->request->getPost('min') : '2000-01-01';
         $data['max'] = !empty($this->request->getPost('max')) ? $this->request->getPost('max') : date("Y-m-d");
 
-        $response = $this->_curlPostDataEncrypt($endpoint, $data);
+        $response = $this->_curlPost($endpoint, $data);
 
         return json_encode($response);
     }
