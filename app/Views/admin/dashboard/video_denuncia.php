@@ -219,7 +219,7 @@
 
 		for (let i = 0; i < relacion_parentesco.length; i++) {
 
-			var btn = `<button type='button'  class='btn btn-primary' onclick='view_form_parentesco(${relacion_parentesco[i].PERSONAFISICAID1})'><i class="fas fa-pen"></i></button>`
+			var btn = `<button type='button'  class='btn btn-primary' onclick='view_form_parentesco(${relacion_parentesco[i].PERSONAFISICAID1})'><i class="fas fa-trash"></i></button>`
 
 
 			var fila2 =
@@ -257,10 +257,11 @@
 		}
 	}
 
-	function eliminarImputadoDelito(personafisica, delitoModalidadId) {
+	function eliminarImputadoDelito(personafisicavictima,personafisicaimputado, delitoModalidadId) {
 		$.ajax({
 			data: {
-				'personafisica': personafisica,
+				'personafisicavictima': personafisicavictima,
+				'personafisicaimputado': personafisicaimputado,
 				'delito': delitoModalidadId,
 				'folio': inputFolio.value,
 				'year': year_select.value,
@@ -274,7 +275,7 @@
 				if (response.status == 1) {
 					Swal.fire({
 						icon: 'success',
-						text: 'Delito del imputado eliminado correctamente',
+						text: 'Delito del imputado y árbol delicitivo eliminado correctamente',
 						confirmButtonColor: '#bf9b55',
 					});
 					let tabla_impdelito = document.querySelectorAll('#table-delito-cometidos tr');
@@ -285,6 +286,14 @@
 					});
 					let fisicaImpDelito = response.fisicaImpDelito;
 					llenarTablaImpDel(fisicaImpDelito);
+					let tabla_arbol = document.querySelectorAll('#table-delitos tr');
+					tabla_arbol.forEach(row => {
+						if (row.id !== '') {
+							row.remove();
+						}
+					});
+					let relacionFisFis = response.relacionFisFis;
+					llenarTablaFisFis(relacionFisFis);
 				} else {
 					Swal.fire({
 						icon: 'error',
@@ -312,7 +321,24 @@
 			method: "POST",
 			dataType: "json",
 			success: function(response) {
-
+				console.log(response);
+				if (response.status == 3) {
+					Swal.fire({
+						title: 'Este es el ultimo registro, se eliminará el delito cometido de la denuncia',
+						showDenyButton: true,
+						showCancelButton: true,
+						confirmButtonText: 'Aceptar',
+						confirmButtonColor: '#bf9b55',
+						denyButtonText: 'Cancelar',
+					}).then((result) => {
+						/* Read more about isConfirmed, isDenied below */
+						if (result.isConfirmed) {
+							eliminarImputadoDelito(personafisicavictima,personafisicaimputado, delitoModalidadId);
+						} else if (result.isDenied) {
+							Swal.fire('Changes are not saved', '', 'info')
+						}
+					})
+				}
 
 				if (response.status == 1) {
 					Swal.fire({
@@ -328,7 +354,7 @@
 					});
 					let relacionFisFis = response.relacionFisFis;
 					llenarTablaFisFis(relacionFisFis);
-				} else {
+				} else if (response.status == 0) {
 					Swal.fire({
 						icon: 'error',
 						text: 'No se elimino el árbol delictivo',
@@ -2881,14 +2907,7 @@
 								option.text = victima.NOMBRE + ' ' + victima.PRIMERAPELLIDO;
 								select_victima_ofendido.add(option, null);
 							});
-							$('#imputado_delito_cometido').empty();
-							let select_imputado_delito_cometido = document.querySelector("#imputado_delito_cometido")
-							imputados.forEach(imputado => {
-								const option = document.createElement('option');
-								option.value = imputado.PERSONAFISICAID;
-								option.text = imputado.NOMBRE + ' ' + imputado.PRIMERAPELLIDO;
-								select_imputado_delito_cometido.add(option, null);
-							});
+							
 							$('#imputado_arbol').empty();
 							let select_imputado_mputado = document.querySelector("#imputado_arbol")
 							imputados.forEach(imputado => {

@@ -25,5 +25,21 @@ class FolioPersonaFisImpDelitoModel extends Model
 		$query = $builder->get();
 		return $query->getResult('array');
 	}
+	public function count_delitos($folio, $year, $delito)
+	{
+
+		// $sql = 'SELECT COUNT(DELITOMODALIDADID) FROM FOLIOPERSONAFISIMPDELITO WHERE FOLIOID =' . $folio .'AND ANO='. $year;
+		// $query =  $this->db->query($sql);
+
+		// return $query->getRow();
+		$builder = $this->db->table($this->table);
+		$builder->selectCount('DELITOMODALIDADID');
+		$builder->where('FOLIOID', $folio);
+		$builder->where('ANO', $year);
+		$builder->where('DELITOMODALIDADID', $delito);
+
+		$query = $builder->get();
+		return $query->getResult();
+	}
 
 }
