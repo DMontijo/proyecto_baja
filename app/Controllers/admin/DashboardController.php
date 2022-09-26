@@ -902,6 +902,23 @@ class DashboardController extends BaseController
                 if ($folioRow) {
                     $empleadoRow = $this->_empleadosModel->asObject()->where('MUNICIPIOID', $municipio)->where('OFICINAID', $oficina)->where('EMPLEADOID', $empleado)->first();
                     $personas = $this->_folioPersonaFisicaModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->orderBy('PERSONAFISICAID', 'asc')->findAll();
+                    $fisImpDelito = $this->_imputadoDelitoModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
+                    $relacionFisFis = $this->_relacionIDOModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
+                    $parentescos = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
+                    $imputados_con_delito = array();
+                    $imputados = $this->_folioPersonaFisicaModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->orderBy('PERSONAFISICAID', 'asc')->where('CALIDADJURIDICAID', 2)->findAll();
+
+                    foreach ($fisImpDelito as $value) {
+                        if (!in_array($value['PERSONAFISICAID'], $imputados_con_delito)) {
+                            array_push($imputados_con_delito, $value['PERSONAFISICAID']);
+                        }
+                    }
+
+                    if (count($imputados_con_delito) != count($imputados)) {
+                        throw new \Exception('Todos los imputados deben tener al menos 1 delito asignado');
+                    }
+
+
                     $narracion = $folioRow['HECHONARRACION'];
                     $fecha = $folioRow['HECHOFECHA'];
 
@@ -947,50 +964,22 @@ class DashboardController extends BaseController
                         $folioRow['FECHASALIDA'] = date('Y-m-d H:i:s');
 
                         // $update = $this->_folioModel->set($folioRow)->where('FOLIOID', $folio)->where('ANO', $year)->update();
-                        $personaFolio = [];
-                        $imputadoFolio = [];
-                        $personafisica1 = [];
-                        $personafisica2 = [];
-                        $ultimorecorrido = [];
-                        $ultmorecorridoImputado = [];
-                        $personafisicavictima = [];
-                        $personafisicaimputado = [];
-                        $personafisicaimputadorelacion = [];
-                        // $_persona=[];
+                        $update = false;
+                        $personasRelacionMysqlOracle = array();
                         try {
 
                             foreach ($personas as $key => $persona) {
 
                                 $_persona = $this->_createPersonaFisica($expedienteCreado->EXPEDIENTEID, $persona, $folioRow['HECHOMUNICIPIOID']);
-
                                 if ($_persona->status == 201) {
-                                    array_push($personaFolio, [$persona['PERSONAFISICAID'], $_persona->PERSONAFISICAID]);
-                                    $ultimorecorrido = array_pop($personaFolio);
-                                    var_dump("PERSONAS");
-                                    var_dump($ultimorecorrido);
 
                                     $domicilios = $this->_folioPersonaFisicaDomicilioModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->where('PERSONAFISICAID', $persona['PERSONAFISICAID'])->findAll();
                                     $mediaFiliacion = $this->_folioMediaFiliacion->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->where('PERSONAFISICAID', $persona['PERSONAFISICAID'])->first();
-                                    $relacionff = $this->_relacionIDOModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
-                                    $tamfisfis = count($relacionff);
-                                    for ($i = 0; $i < $tamfisfis; $i++) {
-                                        if ($relacionff[$i]['PERSONAFISICAIDVICTIMA'] == $ultimorecorrido[0]) {
-                                            $personafisicavictima = $ultimorecorrido[1];
-                                        }
-                                    }
-                                    // //ARCHIVO EXTERNO
-                                    // $archivos = $this->_archivosExternosModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
-                                    // $archivoext = $this->_createArchivosExternos($expedienteCreado->EXPEDIENTEID, $archivos, $folioRow['HECHOMUNICIPIOID']);
-                                    // //DOCUMENTOS
-                                    // $documentos = $this->_documentosModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
-                                    // $foliodocumentos = $this->_createFolioDocumentos($expedienteCreado->EXPEDIENTEID, $documentos, $folioRow['HECHOMUNICIPIOID']);
+
+                                    $personasRelacionMysqlOracle[$persona['PERSONAFISICAID']] = ['calidad' => $persona['CALIDADJURIDICAID'], 'id_mysql' => $persona['PERSONAFISICAID'], 'id_oracle' => $_persona->PERSONAFISICAID];
 
                                     if ($persona['CALIDADJURIDICAID'] == '2') {
                                         $_imputado = $this->_createExpImputado($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $folioRow['HECHOMUNICIPIOID']);
-                                        array_push($imputadoFolio, [$persona['PERSONAFISICAID'], $_imputado->PERSONAFISICAID]);
-                                        $ultmorecorridoImputado = array_pop($imputadoFolio);
-                                        var_dump("IMPUTADO");
-                                        var_dump($ultmorecorridoImputado);
                                     }
 
                                     foreach ($domicilios as $key => $domicilio) {
@@ -998,69 +987,43 @@ class DashboardController extends BaseController
                                     }
 
                                     $_mediaFiliacion = $this->_createPersonaFisicaMediaFilicacion($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $mediaFiliacion, $folioRow['HECHOMUNICIPIOID']);
-                                    // var_dump($_mediaFiliacion);
-                                    // exit;
+                                }
+                            }
 
-
-                                    // var_dump($relacionp[0], $fisimpdelito[0], $relacionff[0]);
-                                    //RELACION PARENTESCO
-                                    $relacionp = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
-                                    $tamrelacionparentesco = count($relacionp);
-                                    for ($i = 0; $i < $tamrelacionparentesco; $i++) {
-                                        if ($relacionp[$i]['PERSONAFISICAID1'] == $ultimorecorrido[0]) {
-                                            $personafisica1 = $ultimorecorrido[1];
-                                            var_dump("p1");
-                                            var_dump($personafisica1);
-                                        }
-                                        if ($relacionp[$i]['PERSONAFISICAID2'] == $ultimorecorrido[0]) {
-                                            $personafisica2 = $ultimorecorrido[1];
-                                            var_dump("p2");
-
-                                            var_dump($personafisica2);
-                                        }
+                            // // Relacion Persona Física Imputado delito
+                            if (count($fisImpDelito) > 0) {
+                                foreach ($fisImpDelito as $imputadodelito) {
+                                    try {
+                                        $relacion = $personasRelacionMysqlOracle[$imputadodelito['PERSONAFISICAID']];
+                                        $_fisimpdelito = $this->_createFisImpDelito($expedienteCreado->EXPEDIENTEID, $imputadodelito, $relacion['id_oracle'], $folioRow['HECHOMUNICIPIOID']);
+                                    } catch (\Error $e) {
                                     }
-
-                                    var_dump($expedienteCreado, $_persona);
-                                }
-
-                            }
-                            //RELACION PARENTESCO
-                            foreach ($relacionp as $key => $relacionparentesco) {
-                                $_relacionParentesco = $this->_createRelacionParentesco($expedienteCreado->EXPEDIENTEID, $relacionparentesco, $personafisica1, $personafisica2, $folioRow['HECHOMUNICIPIOID']);
-                            }
-                            var_dump($_relacionParentesco);
-
-                            //FISIMPDELITO
-                            $fisimpdelito = $this->_imputadoDelitoModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
-                            // var_dump("FISIMPDELITO");
-                            // var_dump($ultmorecorridoImputado[0]);
-                            $tamfis = count($fisimpdelito);
-                            for ($i = 0; $i < $tamfis; $i++) {
-                                if ($fisimpdelito[$i]['PERSONAFISICAID'] == $ultmorecorridoImputado[0]) {
-                                    $personafisicaimputado = $ultmorecorridoImputado[1];
-                                    // var_dump($personafisicaimputado);
                                 }
                             }
-                            foreach ($fisimpdelito as $key => $imputadodelito) {
-                                $_fisimpdelito = $this->_createFisImpDelito($expedienteCreado->EXPEDIENTEID, $imputadodelito, $personafisicaimputado, $folioRow['HECHOMUNICIPIOID']);
-                            }
-                            var_dump($_fisimpdelito);
 
-                            //RELACION FISFIS
-                            $relacionff = $this->_relacionIDOModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
-                            $tamfisfis = count($relacionff);
-                            for ($i = 0; $i < $tamfisfis; $i++) {
-                                if ($relacionff[$i]['PERSONAFISICAIDIMPUTADO'] == $ultmorecorridoImputado[0]) {
-                                    $personafisicaimputadorelacion = $ultmorecorridoImputado[1];
+                            // // Relacion Victima Imputado
+                            if (count($relacionFisFis) > 0) {
+                                foreach ($relacionFisFis as $fisFis) {
+                                    try {
+                                        $victima = $personasRelacionMysqlOracle[$fisFis['PERSONAFISICAIDVICTIMA']];
+                                        $imputado = $personasRelacionMysqlOracle[$fisFis['PERSONAFISICAIDIMPUTADO']];
+                                        $_relacionFisFis = $this->_createRelacionFisFis($expedienteCreado->EXPEDIENTEID, $fisFis, $victima['id_oracle'], $imputado['id_oracle'], $folioRow['HECHOMUNICIPIOID']);
+                                    } catch (\Error $e) {
+                                    }
                                 }
                             }
-                            // var_dump("FISFIS");
-                            // var_dump($personafisicavictima);
-                            // var_dump($personafisicaimputadorelacion);
-                            foreach ($relacionff as $key => $fisfis) {
-                                $_relacionfisfis = $this->_createRelacionFisFis($expedienteCreado->EXPEDIENTEID, $fisfis, $personafisicavictima, $personafisicaimputadorelacion, $folioRow['HECHOMUNICIPIOID']);
+
+                            // Relacion Persona Física Imputado delito
+                            if (count($parentescos) > 0) {
+                                foreach ($parentescos as $parentesco) {
+                                    try {
+                                        $persona1 = $personasRelacionMysqlOracle[$parentesco['PERSONAFISICAID1']];
+                                        $persona2 = $personasRelacionMysqlOracle[$parentesco['PERSONAFISICAID2']];
+                                        $_relacionParentesco = $this->_createRelacionParentesco($expedienteCreado->EXPEDIENTEID, $parentesco, $persona1['id_oracle'], $persona2['id_oracle'], $folioRow['HECHOMUNICIPIOID']);
+                                    } catch (\Error $e) {
+                                    }
+                                }
                             }
-                            var_dump($_relacionfisfis);
                         } catch (\Exception $e) {
                             throw new \Exception($e->getMessage());
                         }
@@ -1619,6 +1582,7 @@ class DashboardController extends BaseController
 
         return $this->_curlPostDataEncrypt($endpoint, $data);
     }
+
     private function _curlPost($endpoint, $data)
     {
         $ch = curl_init();
