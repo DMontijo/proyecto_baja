@@ -97,6 +97,8 @@ use App\Models\DienteTipoModel;
 use App\Models\EstomagoModel;
 use App\Models\CabelloPeculiarModel;
 use App\Models\DelitoModalidadModel;
+use App\Models\FolioArchivoExternoModel;
+use App\Models\FolioDocumentoModel;
 use App\Models\FolioPersonaFisImpDelitoModel;
 use App\Models\FolioRelacionFisFisModel;
 
@@ -204,6 +206,9 @@ class DashboardController extends BaseController
         $this->_delitoModalidadModel = new DelitoModalidadModel();
         $this->_imputadoDelitoModel = new FolioPersonaFisImpDelitoModel();
         $this->_relacionIDOModel = new FolioRelacionFisFisModel();
+        $this->_archivoExternoModel = new FolioArchivoExternoModel();
+        $this->_folioDocumentosModel = new FolioDocumentoModel();
+
 
         // $this->protocol = 'http://';
         // $this->ip = "10.144.244.223";
@@ -482,6 +487,17 @@ class DashboardController extends BaseController
                 $data->preguntas_iniciales = $this->_folioPreguntasModel->where('FOLIOID', $numfolio)->where('ANO', $year)->first();
                 $data->personas = $this->_folioPersonaFisicaModel->get_by_folio($numfolio, $year);
                 $data->vehiculos = $this->_folioVehiculoModel->get_by_folio($numfolio, $year);
+                $data->parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $numfolio)->where('ANO', $year)->findAll();
+                $data->personaiduno = $this->_parentescoPersonaFisicaModel->get_personaFisicaUno($numfolio, $year);
+                $data->personaidDos = $this->_parentescoPersonaFisicaModel->get_personaFisicaDos($numfolio, $year);
+                $data->parentesco = $this->_parentescoPersonaFisicaModel->get_Parentesco($numfolio, $year);
+                $data->relacionFisFis = $this->_relacionIDOModel->get_by_folio($numfolio, $year);
+                $data->vehiculos = $this->_folioVehiculoModel->get_by_folio($numfolio, $year);
+                $data->fisicaImpDelito = $this->_imputadoDelitoModel->get_by_folio($numfolio, $year);
+                $data->delitosModalidadFiltro = $this->_delitoModalidadModel->get_delitodescr($numfolio, $year);
+                // $data->personafisica = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->findAll();
+                $data->imputados = $this->_folioPersonaFisicaModel->get_imputados($numfolio, $year);
+                $data->victimas = $this->_folioPersonaFisicaModel->get_victimas($numfolio, $year);
 
                 if ($data->folio->STATUS == 'ABIERTO' || $data->folio->STATUS == 'EN PROCESO') {
                     $data->agente = $this->_usuariosModel->asObject()->where('ID', $data->folio->AGENTEATENCIONID)->first();
@@ -908,6 +924,9 @@ class DashboardController extends BaseController
                     $imputados_con_delito = array();
                     $imputados = $this->_folioPersonaFisicaModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->orderBy('PERSONAFISICAID', 'asc')->where('CALIDADJURIDICAID', 2)->findAll();
 
+                    if ($municipio != $folioRow['HECHOMUNICIPIOID']) {
+                        throw new \Exception('El municipio no coincide con la base registrada');
+                    }
                     foreach ($fisImpDelito as $value) {
                         if (!in_array($value['PERSONAFISICAID'], $imputados_con_delito)) {
                             array_push($imputados_con_delito, $value['PERSONAFISICAID']);
@@ -1051,6 +1070,45 @@ class DashboardController extends BaseController
         }
     }
 
+    public function crearArchivo()
+    {
+        $folio = $this->request->getPost('folio');
+        $year = $this->request->getPost('year');
+        $municipio = $this->request->getPost('municipio');
+
+        $folioRow = $this->_folioModel->where('ANO', $year)->where('FOLIOID', $folio)->first();
+        if ($folioRow) {
+            $archivosexternos = $this->_archivoExternoModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
+            if (count($archivosexternos) > 0) {
+                foreach ($archivosexternos as $archivos) {
+                    try {
+                        $_archivosExternos = $this->_createArchivosExternos($folioRow['EXPEDIENTEID'], $archivos, $municipio);
+                    } catch (\Error $e) {
+                    }
+                }
+            }
+        }
+    }
+    public function crearDocumento()
+    {
+        $folio = $this->request->getPost('folio');
+        $year = $this->request->getPost('year');
+        $municipio = $this->request->getPost('municipio');
+
+        $folioRow = $this->_folioModel->where('ANO', $year)->where('FOLIOID', $folio)->first();
+        if ($folioRow) {
+            $foliodocumentos = $this->_folioDocumentosModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
+            //Documentos
+            if (count($foliodocumentos) > 0) {
+                foreach ($foliodocumentos as $folioDoc) {
+                    try {
+                        $_folioDocumentos = $this->_createFolioDocumentos($folioRow['EXPEDIENTEID'], $folioDoc, $municipio);
+                    } catch (\Error $e) {
+                    }
+                }
+            }
+        }
+    }
     private function _createExpediente($folioRow)
     {
         $function = '/expediente.php?process=crear';

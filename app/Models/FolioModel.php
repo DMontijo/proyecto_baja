@@ -61,15 +61,18 @@ class FolioModel extends Model
 			}
 		}
 
+		
 		$strQuery =
 			$strQuery . ' AND ' .
 			'FOLIO.FECHASALIDA BETWEEN CAST("' .
 			(isset($obj['fechaInicio']) ? date("Y-m-d", strtotime($obj['fechaInicio'])) : date("Y-m-d")) . ' ' .
 			(isset($obj['horaInicio']) ? (date('H:i:s', strtotime($obj['horaInicio']))) : '00:00:00') . '" AS DATETIME)' . ' AND ' . 'CAST("' .
 			(isset($obj['fechaFin']) ? (isset($obj['horaFin']) ? date("Y-m-d", strtotime($obj['fechaFin'])) : date("Y-m-d", strtotime(date("Y-m-d", strtotime($obj['fechaFin']))))) : date("Y-m-d")) . ' ' .
-			(isset($obj['horaFin']) ? (date('H:i:s', strtotime($obj['horaFin']))) : '00:00:00') . '" AS DATETIME)';
+			(isset($obj['horaFin']) ? (date('H:i:s', strtotime($obj['horaFin']))) : '23:59:59') . '" AS DATETIME)';
 
+			
 		$result = $this->db->query($strQuery)->getResult();
+
 		$dataView = (object)array();
 		$dataView->result = $result;
 		// $dataView->strQuery = $strQuery;

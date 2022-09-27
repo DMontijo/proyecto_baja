@@ -46,6 +46,11 @@
 	</div>
 </div>
 <script>
+	$("input").prop('disabled', true);
+	$("select").prop('disabled', true);
+	$("textarea").prop('disabled', true);
+</script>
+<script>
 	const inputFolio = document.querySelector('#input_folio_atencion');
 	const buscar_btn = document.querySelector('#buscar-btn');
 	const buscar_nuevo_btn = document.querySelector('#buscar-nuevo-btn');
@@ -80,7 +85,18 @@
 					const personas = response.personas;
 					const domicilios = response.domicilios;
 					const vehiculos = response.vehiculos;
+					const relacion_parentesco = response.parentescoRelacion;
+					const parentesco = response.parentesco;
+					const personaiduno = response.personaiduno;
+					const personaidDos = response.personaidDos;
+					const relacionFisFis = response.relacionFisFis;
+					const fisicaImpDelito = response.fisicaImpDelito;
+					const delitosModalidadFiltro = response.delitosModalidadFiltro;
+					const personafisica = response.personafisica;
+					const imputados = response.imputados;
+					const victimas = response.victimas;
 
+					console.log(relacion_parentesco);
 					inputFolio.classList.add('d-none');
 					buscar_btn.classList.add('d-none');
 					year_select.classList.add('d-none');
@@ -201,7 +217,7 @@
 
 					//PERSONAS
 					for (let i = 0; i < personas.length; i++) {
-						var btn = `<button type='button'  class='btn btn-primary' onclick='viewPersonaFisica(${personas[i].PERSONAFISICAID},${personas[i].CALIDADJURIDICAID})'><i class='fas fa-eye'></i></button>`
+						var btn = `<button type='button'  class='btn btn-primary' onclick='viewPersonaFisica(${personas[i].PERSONAFISICAID})'><i class='fas fa-eye'></i></button>`
 
 						var fila =
 							`<tr id="row${i}">` +
@@ -233,6 +249,57 @@
 						var nFilas = $("#vehiculos tr").length;
 						$("#vehiculos").append(nFilas - 1);
 					}
+					for (let i = 0; i < relacion_parentesco.length; i++) {
+
+						// var btn = `<button type='button'  class='btn btn-primary' onclick='view_form_parentesco(${relacion_parentesco[i].PERSONAFISICAID1})'><i class="fas fa-eye"></i></button>`
+
+
+						var fila2 =
+							`<tr id="row${i}">` +
+							`<td class="text-center">${personaiduno[i].NOMBRE}</td>` +
+							`<td class="text-center">${parentesco[i].PERSONAPARENTESCODESCR}</td>` +
+							`<td class="text-center">${personaidDos[i].NOMBRE}</td>` +
+							// `<td class="text-center">${btn}</td>` +
+							`</tr>`;
+
+						$('#table-parentesco tr:first').after(fila2);
+						$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
+						var nFilas = $("#parentesco tr").length;
+						$("#adicionados").append(nFilas - 1);
+
+					}
+					for (let i = 0; i < relacionFisFis.length; i++) {
+						// var btn = `<button type='button'  class='btn btn-primary' onclick='eliminarArbolDelictivo(${relacionFisFis[i].PERSONAFISICAIDVICTIMA},${relacionFisFis[i].PERSONAFISICAIDIMPUTADO},${relacionFisFis[i].DELITOMODALIDADID})'><i class='fa fa-trash'></i></button>`
+
+						var fila =
+							`<tr id="row${i}">` +
+							`<td class="text-center">${relacionFisFis[i].NOMBREI}</td>` +
+							`<td class="text-center">${relacionFisFis[i].DELITOMODALIDADDESCR}</td>` +
+							`<td class="text-center">${relacionFisFis[i].NOMBREV}</td>` +
+							// `<td class="text-center">${btn}</td>` +
+							`</tr>`;
+
+						$('#table-delitos tr:first').after(fila);
+						$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
+						var nFilas = $("#delitos tr").length;
+						$("#adicionados").append(nFilas - 1);
+					}
+					for (let i = 0; i < fisicaImpDelito.length; i++) {
+						// var btn = `<button type='button'  class='btn btn-primary' onclick='eliminarImputadoDelito(${impDelito[i].PERSONAFISICAID},${impDelito[i].DELITOMODALIDADID})'><i class='fa fa-trash'></i></button>`
+
+						var fila =
+							`<tr id="row${i}">` +
+							`<td class="text-center" value="${fisicaImpDelito[i].PERSONAFISICAID}">${fisicaImpDelito[i].NOMBRE}</td>` +
+							`<td class="text-center" value="${fisicaImpDelito[i].DELITOMODALIDADID}">${fisicaImpDelito[i].DELITOMODALIDADDESCR}</td>` +
+							// `<td class="text-center">${btn}</td>` +
+							`</tr>`;
+
+						$('#table-delito-cometidos tr:first').after(fila);
+						$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
+						var nFilas = $("#delito-cometidos tr").length;
+						$("#adicionados").append(nFilas - 1);
+					}
+
 
 				} else if (response.status === 2) {
 					Swal.fire({
@@ -280,6 +347,10 @@
 
 		tabla_personas = document.querySelectorAll('#table-personas tr');
 		tabla_vehiculos = document.querySelectorAll('#table-vehiculos tr');
+		tabla_parentesco = document.querySelectorAll('#table-parentesco tr');
+		tabla_relacion_fis_fis = document.querySelectorAll('#table-delitos tr');
+		tabla_delito_cometido = document.querySelectorAll('#table-delito-cometidos tr');
+
 
 		tabla_personas.forEach(row => {
 			if (row.id !== '') {
@@ -292,9 +363,25 @@
 				row.remove();
 			}
 		});
-
+		tabla_parentesco.forEach(row => {
+			if (row.id !== '') {
+				row.remove();
+			}
+		});
+		tabla_relacion_fis_fis.forEach(row => {
+			if (row.id !== '') {
+				row.remove();
+			}
+		});
+		tabla_delito_cometido.forEach(row => {
+			if (row.id !== '') {
+				row.remove();
+			}
+		});
 		card2.classList.add('d-none');
 		card3.classList.add('d-none');
+		card4.classList.add('d-none');
+		card5.classList.add('d-none');
 
 		document.querySelector('#delito_dash').value = '';
 		document.querySelector('#delito_descr_dash').value = '';
@@ -326,6 +413,81 @@
 		clearSelect(document.querySelector('#colonia_delito_select'));
 		clearSelect(document.querySelector('#localidad_delito'));
 
+		//PERSONA FISICA
+		document.querySelectorAll('#pf_id').forEach(element => {
+			element.value = '';
+		});
+		document.querySelector('#tipo_identificacion_pf').value = '';
+		document.querySelector('#numero_identidad_pf').value = '';
+		document.querySelector('#nombre_pf').value = '';
+		document.querySelector('#apellido_paterno_pf').value = '';
+		document.querySelector('#apellido_materno_pf').value = '';
+		document.querySelector('#nacionalidad_pf').value = '';
+		document.querySelector('#idioma_pf').value = '';
+		document.querySelector('#edoorigen_pf').value = '';
+		document.querySelector('#munorigen_pf').value = '';
+		document.querySelector('#telefono_pf').value = '';
+		document.querySelector('#codigo_pais_pf').value = '';
+		document.querySelector('#telefono_pf_2').value = '';
+		document.querySelector('#codigo_pais_pf_2').value = '';
+		document.querySelector('#correo_pf').value = '';
+		document.querySelector('#fecha_nacimiento_pf').value = '';
+		document.querySelector('#edad_pf').value = '';
+		document.querySelector('#edoc_pf').value = '';
+		document.querySelector('#sexo_pf').value = '';
+		document.querySelector('#ocupacion_pf').value = '';
+		document.querySelector('#escolaridad_pf').value = '';
+		document.querySelector('#descripcionFisica_pf').value = '';
+		document.querySelector('#calidad_juridica_pf').value = '';
+		document.querySelector('#apodo_pf').value = '';
+		document.querySelector('#denunciante_pf').value = '';
+		document.querySelector('#facebook_pf').value = '';
+		document.querySelector('#instagram_pf').value = '';
+		document.querySelector('#twitter_pf').value = '';
+		clearSelect(document.querySelector('#munorigen_pf'));
+
+		//DOMICILIO PERSONA FISICA
+		document.querySelector('#pfd_id').value = '';
+		document.querySelector('#pais_pfd').value = '';
+		document.querySelector('#estado_pfd').value = '';
+		document.querySelector('#municipio_pfd').value = '';
+		document.querySelector('#localidad_pfd').value = '';
+		document.querySelector('#colonia_pfd_select').value = '';
+		document.querySelector('#colonia_pfd').value = '';
+		document.querySelector('#cp_pfd').value = '';
+		document.querySelector('#calle_pfd').value = '';
+		document.querySelector('#exterior_pfd').value = '';
+		document.querySelector('#interior_pfd').value = '';
+		document.querySelector('#referencia_pfd').value = '';
+		document.querySelector('#zona_pfd').value = '';
+		clearSelect(document.querySelector('#municipio_pfd'));
+		clearSelect(document.querySelector('#localidad_pfd'));
+		clearSelect(document.querySelector('#colonia_pfd_select'));
+
+		//PARENTESCO
+		document.querySelector('#parentesco_mf_I').value = '';
+		document.querySelector('#personaFisica1_I').value = '';
+		document.querySelector('#personaFisica2_I').value = '';
+		document.querySelector('#parentesco_mf').value = '';
+		document.querySelector('#personaFisica1').value = '';
+		document.querySelector('#personaFisica2').value = '';
+
+		//ARBOL DELICTUAL
+		document.querySelector('#imputado_arbol').value = '';
+		document.querySelector('#delito_cometido').value = '';
+		document.querySelector('#victima_ofendido').value = '';
+
+		//DELITOS COMETIDOS
+
+		document.querySelector('#imputado_delito_cometido').value = '';
+		document.querySelector('#delito_cometido_fisimpdelito').value = '';
+
+		//RESET FORM
+		document.getElementById("form_asignar_arbol_delictual_insert").reset();
+		document.getElementById("form_parentesco_insert").reset();
+		document.getElementById("form_delitos_cometidos_insert").reset();
+
+
 		$('#v-pills-vehiculos-tab').css('display', 'NONE');
 	}
 
@@ -333,49 +495,34 @@
 		history.back();
 	});
 
-	function viewPersonaFisica(id, calidadId) {
+	function viewPersonaFisica(id) {
 		$.ajax({
 			data: {
 				'id': id,
 				'folio': inputFolio.value,
 				'year': year_select.value,
-				'calidadId': calidadId
 			},
 			url: "<?= base_url('/data/get-persona-fisica-by-id') ?>",
 			method: "POST",
 			dataType: "json",
 			success: function(response) {
-				// console.log(response);
 				if (response.status == 1) {
-
-					//PERSONA
-					let calidad = response.calidadjuridica;
-					let personaid = response.personaid;
-					let tipoi = response.tipoidentificacion;
-					let nacionalidad = response.nacionalidad;
-					let edocivil = response.edocivil;
-					let pidioma = response.idioma;
-					let desaparecida = response.personaDesaparecida;
-					let edoOrigen = response.estadoOrigen;
-					let munOrigen = response.municipioOrigen;
-					let ocupacion = response.ocupacion;
-					let escolaridad = response.escolaridad;
-					let figura = response.figura;
-					let cabelloColor = response.cabelloColor;
-					let cabelloTamano = response.cabelloTamano;
-					let frenteForma = response.frenteForma;
-					let ojoColor = response.ojoColor;
-					let cabelloEstilo = response.cabelloEstilo;
-					let cejaForma = response.cejaForma;
-					let pielColor = response.pielColor;
-					let parentesco = response.parentesco;
+					//PERSONA FISICA
+					let personaFisica = response.personaFisica;
+					//mediafiliacion 
+					let mediaFiliacion = response.personaFisicaMediaFiliacion;
 					let folio = response.folio;
-
-					if (personaid.DENUNCIANTE == 'S' && personaid.FOTO) {
-						document.querySelector('#fisica_foto').setAttribute('src', personaid.FOTO);
-						extension = (((personaid.FOTO.split(';'))[0]).split('/'))[1];
-						document.querySelector('#fisica_foto_download').setAttribute('href', personaid.FOTO);
-						document.querySelector('#fisica_foto_download').setAttribute('download', personaid.NOMBRE ? personaid.NOMBRE + '_' + personaid.PERSONAFISICAID + '_' + personaid.FOLIOID + '_' + personaid.ANO + '.' + extension : personaid.PERSONAFISICAID + '_' + personaid.FOLIOID + '_' + personaid.ANO + '.' + extension);
+					let parentesco = response.parentesco;
+					let relacion_parentesco = response.parentescoRelacion;
+					let idPersonaFisica = response.idPersonaFisica;
+					document.querySelectorAll('#pf_id').forEach(element => {
+						element.value = id;
+					});
+					if (personaFisica.FOTO) {
+						document.querySelector('#fisica_foto').setAttribute('src', personaFisica.FOTO);
+						extension = (((personaFisica.FOTO.split(';'))[0]).split('/'))[1];
+						document.querySelector('#fisica_foto_download').setAttribute('href', personaFisica.FOTO);
+						document.querySelector('#fisica_foto_download').setAttribute('download', personaFisica.NOMBRE ? personaFisica.NOMBRE + '_' + personaFisica.PERSONAFISICAID + '_' + personaFisica.FOLIOID + '_' + personaFisica.ANO + '.' + extension : personaFisica.PERSONAFISICAID + '_' + personaFisica.FOLIOID + '_' + personaFisica.ANO + '.' + extension);
 						document.querySelector('#contenedor_fisica_foto').classList.remove('d-none');
 					} else {
 						document.querySelector('#fisica_foto').setAttribute('src', '');
@@ -383,168 +530,294 @@
 						document.querySelector('#fisica_foto_download').setAttribute('download', '');
 						document.querySelector('#contenedor_fisica_foto').classList.add('d-none');
 					}
+					document.querySelector('#calidad_juridica_pf').value = personaFisica.CALIDADJURIDICAID ? personaFisica.CALIDADJURIDICAID : '';
+					document.querySelector('#nombre_pf').value = personaFisica.NOMBRE ? personaFisica.NOMBRE : '';
+					document.querySelector('#apellido_paterno_pf').value = personaFisica.PRIMERAPELLIDO ? personaFisica.PRIMERAPELLIDO : '';
+					document.querySelector('#apellido_materno_pf').value = personaFisica.SEGUNDOAPELLIDO ? personaFisica.SEGUNDOAPELLIDO : '';
+					document.querySelector('#sexo_pf').value = personaFisica.SEXO ? personaFisica.SEXO : '';
+					document.querySelector('#tipo_identificacion_pf').value = personaFisica.TIPOIDENTIFICACIONID ? personaFisica.TIPOIDENTIFICACIONID : '';
+					document.querySelector('#nacionalidad_pf').value = personaFisica.NACIONALIDADID ? personaFisica.NACIONALIDADID : '';
+					document.querySelector('#edoc_pf').value = personaFisica.ESTADOCIVILID ? personaFisica.ESTADOCIVILID : '';
+					document.querySelector('#idioma_pf').value = personaFisica.PERSONAIDIOMAID ? personaFisica.PERSONAIDIOMAID : '';
+					document.querySelector('#fecha_nacimiento_pf').value = personaFisica.FECHANACIMIENTO ? personaFisica.FECHANACIMIENTO : '';
+					document.querySelector('#edad_pf').value = personaFisica.EDADCANTIDAD ? personaFisica.EDADCANTIDAD : '';
+					document.querySelector('#numero_identidad_pf').value = personaFisica.NUMEROIDENTIFICACION ? personaFisica.NUMEROIDENTIFICACION : '';
+					document.querySelector('#codigo_pais_pf').value = personaFisica.CODIGOPAISTEL ? personaFisica.CODIGOPAISTEL : '52';
+					document.querySelector('#codigo_pais_pf_2').value = personaFisica.CODIGOPAISTEL2 ? personaFisica.CODIGOPAISTEL2 : '52';
 
-					document.querySelector('#calidad_juridicaP').value = calidad.PERSONACALIDADJURIDICADESCR ? calidad.PERSONACALIDADJURIDICADESCR : '';
-					document.querySelector('#nombrePersona').value = personaid.NOMBRE ? personaid.NOMBRE : '';
-					document.querySelector('#apellido_paternoP').value = personaid.PRIMERAPELLIDO ? personaid.PRIMERAPELLIDO : '';
-					document.querySelector('#apellido_maternoP').value = personaid.SEGUNDOAPELLIDO ? personaid.SEGUNDOAPELLIDO : '';
-					document.querySelector('#sexoP').value = personaid.SEXO ? (personaid.SEXO == 'F' ? 'FEMENINO' : 'MASCULINO') : '';
-
-					if (personaid.TIPOIDENTIFICACIONID == null) {
-						document.querySelector('#tipoiP').value = '';
-					} else {
-						document.querySelector('#tipoiP').value = tipoi.PERSONATIPOIDENTIFICACIONDESCR;
-					}
-					if (personaid.NACIONALIDADID == null) {
-						document.querySelector('#nacionalidadp').value = '';
-					} else {
-						document.querySelector('#nacionalidadp').value = nacionalidad.PERSONANACIONALIDADDESCR;
-					}
-					if (personaid.ESTADOCIVILID == null) {
-						document.querySelector('#edocp').value = '';
-					} else {
-						document.querySelector('#edocp').value = edocivil.PERSONAESTADOCIVILDESCR;
-					}
-					if (personaid.PERSONAIDIOMAID == null) {
-						document.querySelector('#idiomap').value = '';
-					} else {
-						document.querySelector('#idiomap').value = pidioma.PERSONAIDIOMADESCR;
-					}
-					if (personaid.FECHANACIMIENTO) {
-						let date = new Date(personaid.FECHANACIMIENTO);
-						let dateToTijuanaString = date.toLocaleString('en-US', {
-							timeZone: 'America/Tijuana'
-						});
-						let dateTijuana = new Date(dateToTijuanaString);
-						dateTijuana.setDate(dateTijuana.getDate() + 1);
-						var options = {
-							year: 'numeric',
-							month: 'long',
-							day: 'numeric'
+					document.querySelector('#telefono_pf').value = personaFisica.TELEFONO ? personaFisica.TELEFONO : '';
+					document.querySelector('#telefono_pf_2').value = personaFisica.TELEFONO2 ? personaFisica.TELEFONO2 : '';
+					document.querySelector('#apodo_pf').value = personaFisica.APODO ? personaFisica.APODO : '';
+					document.querySelector('#correo_pf').value = personaFisica.CORREO ? personaFisica.CORREO : '';
+					document.querySelector('#edoorigen_pf').value = personaFisica.ESTADOORIGENID ? personaFisica.ESTADOORIGENID : '';
+					if (personaFisica.ESTADOORIGENID) {
+						let data = {
+							'estado_id': personaFisica.ESTADOORIGENID
 						};
-						document.querySelector('#fecha_nacimientoP').value = (dateTijuana.toLocaleDateString("es-ES", options)).toUpperCase();
+						$.ajax({
+							data: data,
+							url: "<?= base_url('/data/get-municipios-by-estado') ?>",
+							method: "POST",
+							dataType: "json",
+							success: function(response) {
+								let municipios = response.data;
+								municipios.forEach(municipio => {
+									let option = document.createElement("option");
+									option.text = municipio.MUNICIPIODESCR;
+									option.value = municipio.MUNICIPIOID;
+									document.querySelector('#munorigen_pf').add(option);
+								});
+								document.querySelector('#munorigen_pf').value = personaFisica.MUNICIPIOORIGENID ? personaFisica.MUNICIPIOORIGENID : '';
+							},
+							error: function(jqXHR, textStatus, errorThrown) {}
+						});
 					} else {
-						document.querySelector('#fecha_nacimientoP').value = '';
+						document.querySelector('#munorigen_pf').value = '';
 					}
+					document.querySelector('#escolaridad_pf').value = personaFisica.ESCOLARIDADID ? personaFisica.ESCOLARIDADID : '';
+					document.querySelector('#ocupacion_pf').value = personaFisica.OCUPACIONID ? personaFisica.OCUPACIONID : '';
+					document.querySelector('#descripcionFisica_pf').value = personaFisica.DESCRIPCION_FISICA ? personaFisica.DESCRIPCION_FISICA : '';
+					document.querySelector('#facebook_pf').value = personaFisica.FACEBOOK ? personaFisica.FACEBOOK : '';
+					document.querySelector('#instagram_pf').value = personaFisica.INSTAGRAM ? personaFisica.INSTAGRAM : '';
+					document.querySelector('#twitter_pf').value = personaFisica.TWITTER ? personaFisica.TWITTER : '';
+					document.querySelector('#denunciante_pf').value = personaFisica.DENUNCIANTE ? personaFisica.DENUNCIANTE : '';
+					//PERSONA FISICA END
+					//MEDIAFILIACION
+					if (mediaFiliacion) {
 
-					document.querySelector('#edadP').value = personaid.EDADCANTIDAD ? personaid.EDADCANTIDAD : '';
-					document.querySelector('#numero_identidadP').value = personaid.NUMEROIDENTIFICACION ? personaid.NUMEROIDENTIFICACION : '';
-					document.querySelector('#telefonoP').value = `+${personaid.CODIGOPAISTEL?personaid.CODIGOPAISTEL:''} - ${personaid.TELEFONO ? personaid.TELEFONO : ''}`;
-					document.querySelector('#telefonoP2').value = `+${personaid.CODIGOPAISTEL2?personaid.CODIGOPAISTEL2:''} - ${personaid.TELEFONO2 ? personaid.TELEFONO2 : ''}`;
-					document.querySelector('#apodo').value = personaid.APODO ? personaid.APODO : '';
-					document.querySelector('#correoP').value = personaid.CORREO ? personaid.CORREO : '';
+						document.querySelector('#estatura_mf').value = mediaFiliacion.ESTATURA;
+						document.querySelector('#peso_mf').value = mediaFiliacion.PESO;
 
-					document.querySelector('#edoorigenp').value = edoOrigen ? edoOrigen.ESTADODESCR : '';
-					document.querySelector('#munorigenp').value = munOrigen ? munOrigen.MUNICIPIODESCR : '';
-					document.querySelector('#escolaridadP').value = escolaridad ? escolaridad.PERSONAESCOLARIDADDESCR : '';
-					document.querySelector('#ocupacionP').value = ocupacion ? ocupacion.PERSONAOCUPACIONDESCR : '';
-					document.querySelector('#descripcionFisicaP').value = personaid.DESCRIPCION_FISICA ? personaid.DESCRIPCION_FISICA : '';
+						document.querySelector('#complexion_mf').value = mediaFiliacion.FIGURAID ? mediaFiliacion.FIGURAID : '';
+
+						document.querySelector('#colortez_mf').value = mediaFiliacion.PIELCOLORID ? mediaFiliacion.PIELCOLORID : '';
+						document.querySelector('#senas_mf').value = mediaFiliacion.SENASPARTICULARES;
+						// document.querySelector('#identidadD').value = mediaFiliacion.IDENTIDAD ? mediaFiliacion.IDENTIDAD:'';
+						document.querySelector('#colorC_mf').value = mediaFiliacion.CABELLOCOLORID ? mediaFiliacion.CABELLOCOLORID : '';
+						document.querySelector('#tamanoC_mf').value = mediaFiliacion.CABELLOTAMANOID ? mediaFiliacion.CABELLOTAMANOID : '';
+						document.querySelector('#formaC_mf').value = mediaFiliacion.CABELLOESTILOID ? mediaFiliacion.CABELLOESTILOID : '';
+						document.querySelector('#peculiarC_mf').value = mediaFiliacion.CABELLOPECULIARID ? mediaFiliacion.CABELLOPECULIARID : '';
+
+						document.querySelector('#peculiarC_mf').value = mediaFiliacion.CABELLOPECULIARID ? mediaFiliacion.CABELLOPECULIARID : '';
+						document.querySelector('#cabello_descr_mf').value = mediaFiliacion.CABELLODESCR ? mediaFiliacion.CABELLODESCR : '';
+						document.querySelector('#colocacion_ojos_mf').value = mediaFiliacion.OJOCOLOCACIONID ? mediaFiliacion.OJOCOLOCACIONID : '';
+						document.querySelector('#forma_ojos_mf').value = mediaFiliacion.OJOFORMAID ? mediaFiliacion.OJOFORMAID : '';
+						document.querySelector('#tamano_ojos_mf').value = mediaFiliacion.OJOTAMANOID ? mediaFiliacion.OJOTAMANOID : '';
+						document.querySelector('#colorO_mf').value = mediaFiliacion.OJOCOLORID ? mediaFiliacion.OJOCOLORID : '';
+
+						document.querySelector('#peculiaridad_ojos_mf').value = mediaFiliacion.OJOPECULIARID ? mediaFiliacion.OJOPECULIARID : '';
+						document.querySelector('#frente_altura_mf').value = mediaFiliacion.FRENTEALTURAID ? mediaFiliacion.FRENTEALTURAID : '';
+						document.querySelector('#frente_anchura_ms').value = mediaFiliacion.FRENTEANCHURAID ? mediaFiliacion.FRENTEANCHURAID : '';
+						document.querySelector('#tipoF_mf').value = mediaFiliacion.FRENTEFORMAID ? mediaFiliacion.FRENTEFORMAID : '';
+						document.querySelector('#frente_peculiar_mf').value = mediaFiliacion.FRENTEPECULIARID ? mediaFiliacion.FRENTEPECULIARID : '';
+						document.querySelector('#colocacion_ceja_mf').value = mediaFiliacion.CEJACOLOCACIONID ? mediaFiliacion.CEJACOLOCACIONID : '';
+						document.querySelector('#ceja_mf').value = mediaFiliacion.CEJAFORMAID ? mediaFiliacion.CEJAFORMAID : '';
+
+						document.querySelector('#tamano_ceja_mf').value = mediaFiliacion.CEJATAMANOID ? mediaFiliacion.CEJATAMANOID : '';
+						document.querySelector('#grosor_ceja_mf').value = mediaFiliacion.CEJAGROSORID ? mediaFiliacion.CEJAGROSORID : '';
+						document.querySelector('#nariz_tipo_mf').value = mediaFiliacion.CEJATAMANOID ? mediaFiliacion.CEJATAMANOID : '';
+						document.querySelector('#nariz_tamano_mf').value = mediaFiliacion.NARIZTAMANOID ? mediaFiliacion.NARIZTAMANOID : '';
+						document.querySelector('#nariz_base_mf').value = mediaFiliacion.NARIZBASEID ? mediaFiliacion.NARIZBASEID : '';
+						document.querySelector('#nariz_peculiar_mf').value = mediaFiliacion.NARIZPECULIARID ? mediaFiliacion.NARIZPECULIARID : '';
+						document.querySelector('#nariz_descr_mf').value = mediaFiliacion.NARIZDESCR ? mediaFiliacion.NARIZDESCR : '';
+						document.querySelector('#bigote_forma_mf').value = mediaFiliacion.BIGOTEFORMAID ? mediaFiliacion.BIGOTEFORMAID : '';
+						document.querySelector('#bigote_tamaño_mf').value = mediaFiliacion.BIGOTETAMANOID ? mediaFiliacion.BIGOTETAMANOID : '';
+						document.querySelector('#bigote_grosor_mf').value = mediaFiliacion.BIGOTEGROSORID ? mediaFiliacion.BIGOTEGROSORID : '';
+						document.querySelector('#bigote_peculiar_mf').value = mediaFiliacion.BIGOTEPECULIARID ? mediaFiliacion.BIGOTEPECULIARID : '';
+						document.querySelector('#bigote_descr_mf').value = mediaFiliacion.BIGOTEDESCR ? mediaFiliacion.BIGOTEDESCR : '';
+						document.querySelector('#boca_tamano_mf').value = mediaFiliacion.BOCATAMANOID ? mediaFiliacion.BOCATAMANOID : '';
+						document.querySelector('#boca_peculiar_mf').value = mediaFiliacion.BOCAPECULIARID ? mediaFiliacion.BOCAPECULIARID : '';
+						document.querySelector('#labio_grosor_mf').value = mediaFiliacion.LABIOGROSORID ? mediaFiliacion.LABIOGROSORID : '';
+						document.querySelector('#labio_longitud_mf').value = mediaFiliacion.LABIOLONGITUDID ? mediaFiliacion.LABIOLONGITUDID : '';
+						document.querySelector('#labio_posicion_mf').value = mediaFiliacion.LABIOPOSICIONID ? mediaFiliacion.LABIOPOSICIONID : '';
+						document.querySelector('#labio_peculiar_mf').value = mediaFiliacion.LABIOPECULIARID ? mediaFiliacion.LABIOPECULIARID : '';
+						document.querySelector('#dientes_tamano_mf').value = mediaFiliacion.DIENTETAMANOID ? mediaFiliacion.DIENTETAMANOID : '';
+						document.querySelector('#dientes_tipo_mf').value = mediaFiliacion.DIENTETIPOID ? mediaFiliacion.DIENTETIPOID : '';
+						document.querySelector('#dientes_peculiar_mf').value = mediaFiliacion.DIENTEPECULIARID ? mediaFiliacion.DIENTEPECULIARID : '';
+						document.querySelector('#dientes_descr_mf').value = mediaFiliacion.DIENTEDESCR ? mediaFiliacion.DIENTEDESCR : '';
+						document.querySelector('#barbilla_forma_mf').value = mediaFiliacion.BARBILLAFORMAID ? mediaFiliacion.BARBILLAFORMAID : '';
+						document.querySelector('#barbilla_tamano_mf').value = mediaFiliacion.BARBILLATAMANOID ? mediaFiliacion.BARBILLATAMANOID : '';
+						document.querySelector('#barbilla_inclinacion_mf').value = mediaFiliacion.BARBILLAINCLINACIONID ? mediaFiliacion.BARBILLAINCLINACIONID : '';
+						document.querySelector('#barbilla_peculiar_mf').value = mediaFiliacion.BARBILLAPECULIARID ? mediaFiliacion.BARBILLAPECULIARID : '';
+						document.querySelector('#barbilla_descr_mf').value = mediaFiliacion.BARBILLADESCR ? mediaFiliacion.BARBILLADESCR : '';
+						document.querySelector('#barba_tamano_mf').value = mediaFiliacion.BARBATAMANOID ? mediaFiliacion.BARBATAMANOID : '';
+						document.querySelector('#barba_peculiar_mf').value = mediaFiliacion.BARBAPECULIARID ? mediaFiliacion.BARBAPECULIARID : '';
+						document.querySelector('#barba_descr_mf').value = mediaFiliacion.BARBADESCR ? mediaFiliacion.BARBADESCR : '';
+						document.querySelector('#cuello_tamano_mf').value = mediaFiliacion.CUELLOTAMANOID ? mediaFiliacion.CUELLOTAMANOID : '';
+						document.querySelector('#cuello_grosor_mf').value = mediaFiliacion.CUELLOGROSORID ? mediaFiliacion.CUELLOGROSORID : '';
+						document.querySelector('#cuello_peculiar_mf').value = mediaFiliacion.CUELLOPECULIARID ? mediaFiliacion.CUELLOPECULIARID : '';
+						document.querySelector('#cuello_descr_mf').value = mediaFiliacion.CUELLODESCR ? mediaFiliacion.CUELLODESCR : '';
+						document.querySelector('#hombro_posicion_mf').value = mediaFiliacion.HOMBROPOSICIONID ? mediaFiliacion.HOMBROPOSICIONID : '';
+						document.querySelector('#hombro_tamano_mf').value = mediaFiliacion.HOMBROTAMANOID ? mediaFiliacion.HOMBROTAMANOID : '';
+						document.querySelector('#hombro_grosor_mf').value = mediaFiliacion.HOMBROGROSORID ? mediaFiliacion.HOMBROGROSORID : '';
+						document.querySelector('#estomago_mf').value = mediaFiliacion.ESTOMAGOID ? mediaFiliacion.ESTOMAGOID : '';
+						document.querySelector('#estomago_descr_mf').value = mediaFiliacion.ESTOMAGOID ? mediaFiliacion.ESTOMAGOID : '';
 
 
-					//PERSONA DESAPARECIDA
-					if (personaid.DESAPARECIDA == 'S') {
-						document.querySelector('#estaturaD').value = desaparecida.ESTATURA;
-						document.querySelector('#pesoD').value = desaparecida.PESO;
-						document.querySelector('#complexionD').value = figura.FIGURADESCR;
-						document.querySelector('#colortezD').value = pielColor.PIELCOLORDESCR;
-						document.querySelector('#senasD').value = desaparecida.SENASPARTICULARES;
-						//	document.querySelector('#identidadD').value = desaparecida.IDENTIDAD;
-						document.querySelector('#colorCD').value = cabelloColor.CABELLOCOLORDESCR;
-						document.querySelector('#tamanoCD').value = cabelloTamano.CABELLOTAMANODESCR;
-						document.querySelector('#formaCD').value = cabelloEstilo.CABELLOESTILODESCR;
-						document.querySelector('#colorOD').value = ojoColor.OJOCOLORDESCR;
-						document.querySelector('#tipoFD').value = frenteForma.FRENTEFORMADESCR;
-						document.querySelector('#cejaD').value = cejaForma.CEJAFORMADESCR;
-						document.querySelector('#discapacidadD').value = desaparecida.DISCAPACIDADDESCR;
-						//document.querySelector('#origenD').value = desaparecida.ORIGEN;
-						if (desaparecida.FECHADESAPARICION) {
-							let date = new Date(desaparecida.FECHADESAPARICION);
-							let dateToTijuanaString = date.toLocaleString('en-US', {
-								timeZone: 'America/Tijuana'
-							});
-							let dateTijuana = new Date(dateToTijuanaString);
-							dateTijuana.setDate(dateTijuana.getDate() + 1);
-							var options = {
-								year: 'numeric',
-								month: 'long',
-								day: 'numeric'
-							};
-							document.querySelector('#diaDesaparicion').value = (dateTijuana.toLocaleDateString("es-ES", options)).toUpperCase();
-						} else {
-							document.querySelector('#diaDesaparicion').value = '';
-						}
-						document.querySelector('#lugarDesaparicion').value = desaparecida.LUGARDESAPARICION;
-						document.querySelector('#vestimentaD').value = desaparecida.VESTIMENTA;
-						document.querySelector('#parentescoD').value = parentesco.PERSONAPARENTESCODESCR;
-						if (personaid.FOTO) {
-							document.querySelector('#fisica_foto').setAttribute('src',personaid.FOTO);
-							extension = (((personaid.FOTO.split(';'))[0]).split('/'))[1];
-							document.querySelector('#fisica_foto_download').setAttribute('href', personaid.FOTO);
-							document.querySelector('#fisica_foto_download').setAttribute('download', personaid.NOMBRE ? personaid.NOMBRE + '_' + personaid.PERSONAFISICAID + '_' + personaid.FOLIOID + '_' + personaid.ANO + '.' + extension : personaid.PERSONAFISICAID + '_' + personaid.FOLIOID + '_' + personaid.ANO + '.' + extension);
-							document.querySelector('#contenedor_fisica_foto').classList.remove('d-none');
-						} else {
-							document.querySelector('#fisica_foto').setAttribute('src', '');
-							document.querySelector('#fisica_foto_download').setAttribute('href', '');
-							document.querySelector('#fisica_foto_download').setAttribute('download', '');
-							document.querySelector('#contenedor_fisica_foto').classList.add('d-none');
-						}
-						document.querySelector('#autorizaFoto').value = folio.LOCALIZACIONPERSONAMEDIOS == 'S' ? 'SI' : 'NO';
 
-						document.getElementById("personadesaparecida").style.display = "block";
+						document.querySelector('#discapacidad_mf').value = mediaFiliacion.DISCAPACIDADDESCR;
+						// document.querySelector('#origen_mf').value = mediaFiliacion.ORIGEN;
 
-					} else {
-						document.getElementById("personadesaparecida").style.display = "none";
+						document.querySelector('#diaDesaparicion').value = mediaFiliacion.FECHADESAPARICION ? mediaFiliacion.FECHADESAPARICION : '';
+
+						document.querySelector('#lugarDesaparicion').value = mediaFiliacion.LUGARDESAPARICION;
+						document.querySelector('#vestimenta_mf').value = mediaFiliacion.VESTIMENTADESCR;
+
+						document.querySelector('#autorizaFoto').value = folio.LOCALIZACIONPERSONAMEDIOS == 'S' ? 'S' : 'N';
+						document.querySelector('#escolaridad_mf').value = mediaFiliacion.ESCOLARIDADID ? mediaFiliacion.ESCOLARIDADID : '';
+						document.querySelector('#ocupacion_mf').value = mediaFiliacion.OCUPACIONID ? mediaFiliacion.OCUPACIONID : '';
+
+						document.querySelector('#contextura_ceja_mf').value = mediaFiliacion.CONTEXTURAID ? mediaFiliacion.CONTEXTURAID : '';
+						document.querySelector('#cara_forma_mf').value = mediaFiliacion.CARAFORMAID ? mediaFiliacion.CARAFORMAID : '';
+						document.querySelector('#cara_tamano_mf').value = mediaFiliacion.CARATAMANOID ? mediaFiliacion.CARATAMANOID : '';
+						document.querySelector('#caratez_mf').value = mediaFiliacion.CARATEZID ? mediaFiliacion.CARATEZID : '';
+						document.querySelector('#lobulo_mf').value = mediaFiliacion.OREJALOBULOID ? mediaFiliacion.OREJALOBULOID : '';
+						document.querySelector('#forma_oreja_mf').value = mediaFiliacion.OREJAFORMAID ? mediaFiliacion.OREJAFORMAID : '';
+						document.querySelector('#tamano_oreja_mf').value = mediaFiliacion.OREJATAMANOID ? mediaFiliacion.OREJATAMANOID : '';
+
+						document.querySelector('#hombro_tamano_mf').value = mediaFiliacion.HOMBROLONGITUDID ? mediaFiliacion.HOMBROLONGITUDID : '';
+
+
+
+						document.querySelector('#escolaridad_mf').value = mediaFiliacion.PERSONAESCOLARIDADID ? mediaFiliacion.PERSONAESCOLARIDADID : '';
+
 					}
+					//PARENTESCO
+
+					// if (relacion_parentesco) {
+					// 	document.querySelector('#parentesco_mf').value = parentesco.PERSONAPARENTESCOID ? parentesco.PERSONAPARENTESCOID : '';
+					// 	document.querySelector('#personaFisica1').value = relacion_parentesco.PERSONAFISICAID1 ? relacion_parentesco.PERSONAFISICAID1 : '';
+					// 	document.querySelector('#personaFisica2').value = idPersonaFisica ? idPersonaFisica : '';
+					// 	document.getElementById("updateParentesco").style.display="block";
+					// 	document.getElementById("insertParentesco").style.display="none";
+
+
+					// } 
+					// if(relacion_parentesco == null) {
+					// 	document.querySelector('#parentesco_mf').value = '';
+					// 	document.querySelector('#personaFisica1').value = '';
+					// 	document.querySelector('#personaFisica2').value = idPersonaFisica ? idPersonaFisica : '';
+					// 	document.getElementById("insertParentesco").style.display="block";
+					// 	document.getElementById("updateParentesco").style.display="none";
+
+					// }
 
 					//DOMICILIO
-					if (response.domicilio.persondom) {
-						let domicilio = response.domicilio.persondom;
-						let estadoDom = response.domicilio.estado;
-						let municipioDom = response.domicilio.municipio;
-						let localidadDom = response.domicilio.localidad;
-						let coloniaDom = response.domicilio.colonia;
+					let domicilio = response.personaFisicaDomicilio;
 
-						var qestado = document.querySelector('#estadoper').value;
-						var qmunicipio = document.querySelector('#municipiop').value;
-						var qlocalidad = document.querySelector('#localidadp').value;
+					document.querySelector('#pfd_id').value = domicilio.DOMICILIOID;
 
-						if (estadoDom == null) {
-							document.querySelector('#estadoper').value = '';
-						} else {
-							document.querySelector('#estadoper').value = estadoDom.ESTADODESCR;
-						}
-						if (municipioDom == null) {
-							document.querySelector('#municipiop').value = '';
-						} else {
-							document.querySelector('#municipiop').value = municipioDom.MUNICIPIODESCR;
-						}
-						if (localidadDom == null) {
-							document.querySelector('#localidadp').value = '';
-						} else {
-							document.querySelector('#localidadp').value = localidadDom.LOCALIDADDESCR;
-						}
-
-						document.querySelector('#coloniap').value = domicilio.COLONIAID != 0 ? (coloniaDom ? coloniaDom.COLONIADESCR : '') : domicilio.COLONIADESCR;
-						document.querySelector('#cp').value = domicilio.CP;
-						document.querySelector('#callep').value = domicilio.CALLE;
-						document.querySelector('#exteriorp').value = domicilio.NUMEROCASA;
-						document.querySelector('#interiorp').value = domicilio.NUMEROINTERIOR;
-						document.querySelector('#zonap').value = domicilio.ZONA ? (domicilio.ZONA == 'U' ? 'URBANA' : 'RURAL') : '';
+					document.querySelector('#pais_pfd').value = domicilio.PAIS ? domicilio.PAIS : '';
+					document.querySelector('#estado_pfd').value = domicilio.ESTADOID ? domicilio.ESTADOID : '';
+					if (domicilio.ESTADOID && domicilio.MUNICIPIOID) {
+						let data = {
+							'estado_id': domicilio.ESTADOID
+						};
+						$.ajax({
+							data: data,
+							url: "<?= base_url('/data/get-municipios-by-estado') ?>",
+							method: "POST",
+							dataType: "json",
+							success: function(response) {
+								let municipios = response.data;
+								municipios.forEach(municipio => {
+									let option = document.createElement("option");
+									option.text = municipio.MUNICIPIODESCR;
+									option.value = municipio.MUNICIPIOID;
+									document.querySelector('#municipio_pfd').add(option);
+								});
+								document.querySelector('#municipio_pfd').value = domicilio.MUNICIPIOID ? domicilio.MUNICIPIOID : '';
+							},
+							error: function(jqXHR, textStatus, errorThrown) {}
+						});
 					} else {
-						document.querySelector('#estadoper').value = '';
-						document.querySelector('#estadoper').value = '';
-						document.querySelector('#municipiop').value = '';
-						document.querySelector('#municipiop').value = '';
-						document.querySelector('#localidadp').value = '';
-						document.querySelector('#localidadp').value = '';
-						document.querySelector('#coloniap').value = '';
-						document.querySelector('#cp').value = '';
-						document.querySelector('#callep').value = '';
-						document.querySelector('#exteriorp').value = '';
-						document.querySelector('#interiorp').value = '';
-						document.querySelector('#zonap').value = '';
+						document.querySelector('#municipio_pfd').value = '';
 					}
+
+					if (domicilio.ESTADOID && domicilio.MUNICIPIOID && domicilio.LOCALIDADID) {
+						let data = {
+							'estado_id': domicilio.ESTADOID,
+							'municipio_id': domicilio.MUNICIPIOID
+						};
+
+						$.ajax({
+							data: data,
+							url: "<?= base_url('/data/get-localidades-by-municipio') ?>",
+							method: "POST",
+							dataType: "json",
+							success: function(response) {
+								let localidades = response.data;
+								let select_localidad = document.querySelector('#localidad_pfd');
+
+								localidades.forEach(localidad => {
+									var option = document.createElement("option");
+									option.text = localidad.LOCALIDADDESCR;
+									option.value = localidad.LOCALIDADID;
+									select_localidad.add(option);
+								});
+
+								select_localidad.value = domicilio.LOCALIDADID;
+							},
+							error: function(jqXHR, textStatus, errorThrown) {}
+						});
+					} else {
+						document.querySelector('#localidad_pfd').value = '';
+					}
+
+					if (domicilio.ESTADOID && domicilio.MUNICIPIOID && domicilio.LOCALIDADID && domicilio.COLONIAID) {
+						document.querySelector('#colonia_pfd').classList.add('d-none');
+						document.querySelector('#colonia_pfd_select').classList.remove('d-none');
+						let data = {
+							'estado_id': domicilio.ESTADOID,
+							'municipio_id': domicilio.MUNICIPIOID,
+							'localidad_id': domicilio.LOCALIDADID
+						};
+						$.ajax({
+							data: data,
+							url: "<?= base_url('/data/get-colonias-by-estado-municipio-localidad') ?>",
+							method: "POST",
+							dataType: "json",
+							success: function(response) {
+								let select_colonia = document.querySelector('#colonia_pfd_select');
+								let input_colonia = document.querySelector('#colonia_pfd');
+								let colonias = response.data;
+
+								colonias.forEach(colonia => {
+									var option = document.createElement("option");
+									option.text = colonia.COLONIADESCR;
+									option.value = colonia.COLONIAID;
+									select_colonia.add(option);
+								});
+
+								var option = document.createElement("option");
+								option.text = 'OTRO';
+								option.value = '0';
+								select_colonia.add(option);
+
+								select_colonia.value = domicilio.COLONIAID;
+								input_colonia.value = '-';
+							},
+							error: function(jqXHR, textStatus, errorThrown) {}
+						});
+					} else {
+						document.querySelector('#colonia_pfd').classList.remove('d-none');
+						document.querySelector('#colonia_pfd_select').classList.add('d-none');
+						var option = document.createElement("option");
+						option.text = 'OTRO';
+						option.value = '0';
+						document.querySelector('#colonia_pfd_select').add(option);
+						document.querySelector('#colonia_pfd_select').value = '0';
+						document.querySelector('#colonia_pfd').value = domicilio.COLONIADESCR ? domicilio.COLONIADESCR : '';
+					}
+					document.querySelector('#cp_pfd').value = domicilio.CP ? domicilio.CP : '';
+					document.querySelector('#calle_pfd').value = domicilio.CALLE ? domicilio.CALLE : '';
+					document.querySelector('#exterior_pfd').value = domicilio.NUMEROCASA ? domicilio.NUMEROCASA : '';
+					document.querySelector('#interior_pfd').value = domicilio.NUMEROINTERIOR ? domicilio.NUMEROINTERIOR : '';
+					document.querySelector('#referencia_pfd').value = domicilio.REFERENCIA ? domicilio.REFERENCIA : '';
+					// document.querySelector('#zona_pfd').value = domicilio.ZONA ? domicilio.ZONA : '';
+
 					$('#folio_persona_fisica_modal').modal('show');
+
 				} else {
 					Swal.fire({
 						icon: 'error',
