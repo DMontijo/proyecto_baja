@@ -216,7 +216,7 @@ class DashboardController extends BaseController
 
                 $foto_des = $this->request->getFile('foto_des');
                 $foto_data = null;
-                if ($_FILES['foto_des']['full_path']!='') {
+                if ($foto_des->isValid()) {
                     try {
                         $foto_data = file_get_contents($foto_des);
                     } catch (\Exception$e) {
@@ -490,7 +490,7 @@ class DashboardController extends BaseController
             if ($this->request->getPost('delito') == "ROBO DE VEHÍCULO") {
                 $img_file = $this->request->getFile('foto_vehiculo');
                 $fotoV = null;
-                if ($img_file) {
+                if ($img_file->isValid()) {
                     try {
                         $fotoV = file_get_contents($img_file);
                     } catch (\Exception$e) {
@@ -499,7 +499,7 @@ class DashboardController extends BaseController
                 }
                 $document_file = $this->request->getFile('documento_vehiculo');
                 $docV = null;
-                if ($document_file) {
+                if ($document_file->isValid()) {
                     try {
                         $docV = file_get_contents($document_file);
                     } catch (\Exception$e) {
