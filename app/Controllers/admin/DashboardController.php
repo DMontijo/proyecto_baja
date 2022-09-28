@@ -911,7 +911,6 @@ class DashboardController extends BaseController
         $oficina = $this->request->getPost('oficina');
         $empleado = $this->request->getPost('empleado');
 
-
         try {
             if (!empty($folio) && !empty($municipio) && !empty($estado) && !empty($notas) && !empty($oficina) && !empty($empleado)) {
                 $folioRow = $this->_folioModel->where('ANO', $year)->where('FOLIOID', $folio)->where('STATUS', 'EN PROCESO')->first();
@@ -925,30 +924,18 @@ class DashboardController extends BaseController
                     $imputados_con_delito = array();
                     $imputados = $this->_folioPersonaFisicaModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->orderBy('PERSONAFISICAID', 'asc')->where('CALIDADJURIDICAID', 2)->findAll();
 
-                    $status_municipio = 0;
-
-
-                    if ($folioRow['HECHOMUNICIPIOID'] == 1 || $folioRow['HECHOMUNICIPIOID'] == 6) {
-                        if ($municipio == 1) {
-                            $status_municipio = 1;
-                        } else {
-                            $status_municipio = 0;
-                        }
-                    } else if ($folioRow['HECHOMUNICIPIOID'] == 2 || $folioRow['HECHOMUNICIPIOID'] == 3 || $folioRow['HECHOMUNICIPIOID'] == 7) {
-                        if ($municipio == 2) {
-                            $status_municipio = 1;
-                        } else {
-                            $status_municipio = 0;
-                        }
-                    } else if ($folioRow['HECHOMUNICIPIOID'] == 4 || $folioRow['HECHOMUNICIPIOID'] == 5) {
-                        if ($municipio == 4) {
-                            $status_municipio = 1;
-                        } else {
-                            $status_municipio = 0;
-                        }
-                    }
-                    if ($status_municipio == 0) {
-                        throw new \Exception('El municipio no coincide con la base registrada');
+                    if (($folioRow['HECHOMUNICIPIOID'] == 1 || $folioRow['HECHOMUNICIPIOID'] == 6) &&
+                        !($municipio == 1 || $municipio == 6)
+                    ) {
+                        throw new \Exception('Solo puedes dar salida a Ensenada o San Quintín por el municipio del hecho.');
+                    } else if (($folioRow['HECHOMUNICIPIOID'] == 2 || $folioRow['HECHOMUNICIPIOID'] == 3 || $folioRow['HECHOMUNICIPIOID'] == 7) &&
+                        !($municipio == 2 || $municipio == 3 || $municipio == 7)
+                    ) {
+                        throw new \Exception('Solo puedes dar salida a Tecate, Mexicali y San Felipe por el municipio del hecho.');
+                    } else if (($folioRow['HECHOMUNICIPIOID'] == 4 || $folioRow['HECHOMUNICIPIOID'] == 5) &&
+                        !($municipio == 4 || $municipio == 5)
+                    ) {
+                        throw new \Exception('Solo puedes dar salida a Tijuana o Playas de Rosarito por el municipio del hecho.');
                     }
 
                     foreach ($fisImpDelito as $value) {

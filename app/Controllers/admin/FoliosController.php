@@ -145,7 +145,7 @@ class FoliosController extends BaseController
         $this->_estadoCivilModel = new PersonaEstadoCivilModel();
         $this->_nacionalidadModel = new PersonaNacionalidadModel();
         $this->_bitacoraActividadModel = new BitacoraActividadModel();
-        
+
         $this->_parentescoPersonaFisicaModel = new PersonaFisicaParentescoModel();
         $this->_figuraModel = new FiguraModel();
         $this->_cejaContexturaModel = new CejaContexturaModel();
@@ -206,7 +206,6 @@ class FoliosController extends BaseController
         $this->_etniaModel = new PersonaEtniaModel();
         $this->_parentescoModel = new ParentescoModel();
         $this->_pielColorModel = new PielColorModel();
-
     }
 
     public function index()
@@ -280,7 +279,7 @@ class FoliosController extends BaseController
         $this->_folioModel->set($data)->where('FOLIOID', $folio)->where('ANO', $year)->update();
         $datosBitacora = [
             'ACCION' => 'Ha liberado un folio',
-            'NOTAS'=> 'FOLIO: ' . $folio . ' AÑO: ' . $year
+            'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year
         ];
         $this->_bitacoraActividad($datosBitacora);
         return redirect()->to(base_url('/admin/dashboard/folios_en_proceso'));
@@ -314,7 +313,7 @@ class FoliosController extends BaseController
         $this->_folioModel->set($data)->where('FOLIOID', $folio)->update();
         $datosBitacora = [
             'ACCION' => 'Ha firmado un folio',
-            'NOTAS'=>   'FOLIO: ' . $folio,
+            'NOTAS' =>   'FOLIO: ' . $folio,
         ];
         $this->_bitacoraActividad($datosBitacora);
         return redirect()->to(base_url('/admin/dashboard/folios_sin_firma'));
@@ -332,11 +331,10 @@ class FoliosController extends BaseController
             if (empty($valor)) {
                 unset($data[$clave]);
             }
-
         }
 
         $municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
-        $resultFilter = $this->_folioModel->filterDates($data);
+        $resultFilter = $this->_folioModel->filterAllDates($data);
         $empleado = $this->_usuariosModel->asObject()->where('ROLID', 2)->orderBy('NOMBRE', 'ASC')->findAll();
 
         $dataView = (object) array();
@@ -367,7 +365,6 @@ class FoliosController extends BaseController
             if (empty($valor)) {
                 unset($data[$clave]);
             }
-
         }
         if (count($data) <= 0) {
             $data = [
@@ -377,7 +374,7 @@ class FoliosController extends BaseController
         }
 
         $municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
-        $resultFilter = $this->_folioModel->filterDates($data);
+        $resultFilter = $this->_folioModel->filterAllDates($data);
         $empleado = $this->_usuariosModel->asObject()->where('ROLID', 2)->orderBy('NOMBRE', 'ASC')->findAll();
 
         $dataView = (object) array();
@@ -505,7 +502,7 @@ class FoliosController extends BaseController
         $data = $data;
         $data['ID'] = uniqid();
         $data['USUARIOID'] = session('ID');
-     
+
 
         $this->_bitacoraActividadModel->insert($data);
     }

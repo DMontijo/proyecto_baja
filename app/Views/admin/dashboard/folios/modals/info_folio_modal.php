@@ -51,7 +51,7 @@
 										</tr>
 									</table>
 								</div>
-							
+
 							</div>
 							<div class="tab-pane fade" id="v-pills-delitos-cometido" role="tabpanel" aria-labelledby="v-pills-delitos-cometidos-tab">
 								<div id="adicionados" class="d-none"></div>
@@ -65,7 +65,7 @@
 										</tr>
 									</table>
 								</div>
-							
+
 							</div>
 							<div class="tab-pane fade" id="v-pills-asignar-delitos" role="tabpanel" aria-labelledby="v-pills-delitos-tab">
 								<div id="adicionados" class="d-none"></div>
@@ -79,7 +79,7 @@
 										</tr>
 									</table>
 								</div>
-						
+
 							</div>
 							<div class="tab-pane fade" id="v-pills-vehiculos" role="tabpanel" aria-labelledby="v-pills-vehiculos-tab">
 								<table id="table-vehiculos" class="table table-bordered table-hover table-striped table-light">
