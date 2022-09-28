@@ -27,6 +27,7 @@
 										<option value="CANALIZADO">CANALIZACION</option>
 										<option value="ATENDIDA">DENUNCIA YA ATENDIDA</option>
 										<option value="NAC">NAC</option>
+										<option value="NUC">NUC</option>
 									</select>
 								</div>
 								<div class="row mb-2">
@@ -159,7 +160,7 @@
 		const notas_caso_mp = document.querySelector('#notas_mp');
 		notas_caso_salida.value = notas_caso_mp.value;
 
-		if (e.target.value !== 'NAC') {
+		if (!(e.target.value == 'NAC' || e.target.value == 'NUC')) {
 			document.querySelector('#v-pills-delitos-tab').classList.add('d-none');
 			document.querySelector('#v-pills-documentos-tab').classList.add('d-none');
 
@@ -182,7 +183,7 @@
 	btnFinalizar.addEventListener('click', () => {
 		btnFinalizar.setAttribute('disabled', true);
 
-		if (tipoSalida.value !== 'NAC') {
+		if (!(tipoSalida.value == 'NAC' || tipoSalida.value == 'NUC')) {
 			let salida = tipoSalida.value;
 			let descripcion = document.querySelector('#notas_caso_salida').value;
 			data = {
@@ -264,6 +265,7 @@
 						'notas': descripcion,
 						'oficina': oficina_empleado.value,
 						'empleado': empleado.value,
+						'tipo_expediente': tipoSalida.value == 'NUC' ? 1 : 4
 					}
 
 					$.ajax({

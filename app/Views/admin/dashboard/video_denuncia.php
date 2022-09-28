@@ -215,7 +215,7 @@
 	}
 
 	function eliminarparentesco(personofisica1, personafisica2, parentesco) {
-		console.log(personofisica1,personafisica2);
+		console.log(personofisica1, personafisica2);
 		$.ajax({
 			data: {
 				'personafisica1': personofisica1,
@@ -238,12 +238,12 @@
 						confirmButtonColor: '#bf9b55',
 					});
 					let tabla_parentesco = document.querySelectorAll('#table-parentesco tr');
-							tabla_parentesco.forEach(row => {
-								if (row.id !== '') {
-									row.remove();
-								}
-							});
-							llenarTablaParentesco(response.parentescoRelacion, response.personaiduno, response.personaidDos, response.parentesco);
+					tabla_parentesco.forEach(row => {
+						if (row.id !== '') {
+							row.remove();
+						}
+					});
+					llenarTablaParentesco(response.parentescoRelacion, response.personaiduno, response.personaidDos, response.parentesco);
 				} else {
 					Swal.fire({
 						icon: 'error',
@@ -303,7 +303,7 @@
 		}
 	}
 
-	function eliminarImputadoDelito(personafisicavictima,personafisicaimputado, delitoModalidadId) {
+	function eliminarImputadoDelito(personafisicavictima, personafisicaimputado, delitoModalidadId) {
 		$.ajax({
 			data: {
 				'personafisicavictima': personafisicavictima,
@@ -379,7 +379,7 @@
 					}).then((result) => {
 						/* Read more about isConfirmed, isDenied below */
 						if (result.isConfirmed) {
-							eliminarImputadoDelito(personafisicavictima,personafisicaimputado, delitoModalidadId);
+							eliminarImputadoDelito(personafisicavictima, personafisicaimputado, delitoModalidadId);
 						} else if (result.isDenied) {
 							Swal.fire('Changes are not saved', '', 'info')
 						}
@@ -502,10 +502,10 @@
 					// 	select_delitos_imputado.add(option, null);
 					// });
 					const option_vacio = document.createElement('option');
-								option_vacio.value = '';
-								option_vacio.text = '';
-								option_vacio.disabled = true;
-								option_vacio.selected = true;
+					option_vacio.value = '';
+					option_vacio.text = '';
+					option_vacio.disabled = true;
+					option_vacio.selected = true;
 					$('#victima_ofendido').empty();
 					const option_vacio_vic = document.createElement('option');
 					option_vacio_vic.value = '';
@@ -837,7 +837,7 @@
 		document.querySelector('#exterior_pfd').value = '';
 		document.querySelector('#interior_pfd').value = '';
 		document.querySelector('#referencia_pfd').value = '';
-		document.querySelector('#zona_pfd').value = '';
+		// document.querySelector('#zona_pfd').value = '';
 		clearSelect(document.querySelector('#municipio_pfd'));
 		clearSelect(document.querySelector('#localidad_pfd'));
 		clearSelect(document.querySelector('#colonia_pfd_select'));
@@ -864,7 +864,6 @@
 		document.getElementById("form_asignar_arbol_delictual_insert").reset();
 		document.getElementById("form_parentesco_insert").reset();
 		document.getElementById("form_delitos_cometidos_insert").reset();
-
 
 		$('#v-pills-vehiculos-tab').css('display', 'NONE');
 	}
@@ -2982,7 +2981,7 @@
 								option.text = victima.NOMBRE + ' ' + victima.PRIMERAPELLIDO;
 								select_victima_ofendido.add(option, null);
 							});
-							
+
 							$('#imputado_arbol').empty();
 							let select_imputado_mputado = document.querySelector("#imputado_arbol")
 							imputados.forEach(imputado => {
@@ -2995,12 +2994,12 @@
 							$('#personaFisica1_I').empty();
 
 							const option_vacio = document.createElement('option');
-								option_vacio.value = '';
-								option_vacio.text = '';
-								option_vacio.disabled = true;
-								option_vacio.selected = true;
+							option_vacio.value = '';
+							option_vacio.text = '';
+							option_vacio.disabled = true;
+							option_vacio.selected = true;
 
-								select_personaFisica1_I.add(option_vacio, null);
+							select_personaFisica1_I.add(option_vacio, null);
 
 							personas.forEach(persona => {
 								const option = document.createElement('option');

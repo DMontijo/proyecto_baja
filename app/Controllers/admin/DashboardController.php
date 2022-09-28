@@ -834,7 +834,7 @@ class DashboardController extends BaseController
         $municipio = $this->request->getPost('municipio');
 
         if (!empty($municipio)) {
-            $data = $this->_oficinasModel->asObject()->where('MUNICIPIOID', $municipio)->findAll();
+            $data = $this->_oficinasModel->asObject()->where('MUNICIPIOID', $municipio)->orderBy('OFICINADESCR', 'asc')->findAll();
             return json_encode($data);
         } else {
             $data = $this->_oficinasModel->asObject()->findAll();
@@ -910,9 +910,10 @@ class DashboardController extends BaseController
         $notas = $this->request->getPost('notas');
         $oficina = $this->request->getPost('oficina');
         $empleado = $this->request->getPost('empleado');
+        $tiposExpedienteId = $this->request->getPost('tipo_expediente');
 
         try {
-            if (!empty($folio) && !empty($municipio) && !empty($estado) && !empty($notas) && !empty($oficina) && !empty($empleado)) {
+            if (!empty($tiposExpedienteId) && !empty($folio) && !empty($municipio) && !empty($estado) && !empty($notas) && !empty($oficina) && !empty($empleado)) {
                 $folioRow = $this->_folioModel->where('ANO', $year)->where('FOLIOID', $folio)->where('STATUS', 'EN PROCESO')->first();
 
                 if ($folioRow) {
@@ -968,7 +969,7 @@ class DashboardController extends BaseController
                     $folioRow['AREAIDREGISTRO'] = $empleadoRow->AREAID;
                     $folioRow['AREAIDRESPONSABLE'] = $empleadoRow->AREAID;
                     $folioRow['ESTADOJURIDICOEXPEDIENTEID'] = (string) 2;
-                    $folioRow['TIPOEXPEDIENTEID'] = 4;
+                    $folioRow['TIPOEXPEDIENTEID'] = (int)$tiposExpedienteId;
 
                     $expedienteCreado = $this->_createExpediente($folioRow);
 
