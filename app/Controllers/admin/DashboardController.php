@@ -925,30 +925,29 @@ class DashboardController extends BaseController
                     $imputados_con_delito = array();
                     $imputados = $this->_folioPersonaFisicaModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->orderBy('PERSONAFISICAID', 'asc')->where('CALIDADJURIDICAID', 2)->findAll();
 
-                    $status_municipio = '';
+                    $status_municipio = 0;
 
 
                     if ($folioRow['HECHOMUNICIPIOID'] == 1 || $folioRow['HECHOMUNICIPIOID'] == 6) {
                         if ($municipio == 1) {
-                            $status_municipio = "Municipio si coincide";
+                            $status_municipio = 1;
                         } else {
-                            $status_municipio = "Municipio no coincide";
+                            $status_municipio = 0;
                         }
                     } else if ($folioRow['HECHOMUNICIPIOID'] == 2 || $folioRow['HECHOMUNICIPIOID'] == 3 || $folioRow['HECHOMUNICIPIOID'] == 7) {
                         if ($municipio == 2) {
-                            $status_municipio = "Municipio si coincide";
+                            $status_municipio = 1;
                         } else {
-                            $status_municipio = "Municipio no coincide";
+                            $status_municipio = 0;
                         }
                     } else if ($folioRow['HECHOMUNICIPIOID'] == 4 || $folioRow['HECHOMUNICIPIOID'] == 5) {
                         if ($municipio == 4) {
-                            $status_municipio = "Municipio si coincide";
+                            $status_municipio = 1;
                         } else {
-                            $status_municipio = "Municipio no coincide";
+                            $status_municipio = 0;
                         }
                     }
-                    $findMunicipio = "Municipio no coincide";
-                    if (strpos($status_municipio, $findMunicipio) !== false) {
+                    if ($status_municipio == 0) {
                         throw new \Exception('El municipio no coincide con la base registrada');
                     }
 
