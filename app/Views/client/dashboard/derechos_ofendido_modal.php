@@ -6,8 +6,8 @@
 				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body text-center">
-				<iframe id="pdfdoc" src="<?= base_url() ?>/assets/documentos/Derechos_De_Victima_Ofendido.pdf" width="100%" height="500px"></iframe>
-				<a class="btn btn-primary my-4" href="<?= base_url() ?>/assets/documentos/Derechos_De_Victima_Ofendido.pdf" download="derechos_victima_u_ofendido.pdf">Descargar</a>
+				<iframe id="pdfdoc" src="<?= base_url() ?>/assets/documentos/DerechosDeVictimaOfendido.pdf" width="100%" height="500px"></iframe>
+				<a class="btn btn-primary my-4" href="<?= base_url() ?>/assets/documentos/DerechosDeVictimaOfendido.pdf" download="derechos_victima_u_ofendido.pdf">Descargar</a>
 			</div>
 		</div>
 	</div>

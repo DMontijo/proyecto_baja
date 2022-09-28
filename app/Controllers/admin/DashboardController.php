@@ -2199,45 +2199,7 @@ class DashboardController extends BaseController
             return json_encode(['status' => 0]);
         }
     }
-    // public function updateParentescoByFolio()
-    // {
-    //     try {
-    //         $idp1 = trim($this->request->getPost('personaFisica1'));
-    //         $idp2 = trim($this->request->getPost('personaFisica2'));
-
-    //         $folio = trim($this->request->getPost('folio'));
-    //         $year = trim($this->request->getPost('year'));
-    //         $dataRelacionParentesco = array(
-    //             'FOLIO' => trim($this->request->getPost('folio')),
-    //             'ANO' => trim($this->request->getPost('year')),
-    //             'PERSONAFISICAID1' => $this->request->getPost('personaFisica1'),
-    //             'PERSONAFISICAID2' => $this->request->getPost('personaFisica2'),
-    //             'PARENTESCOID' => $this->request->getPost('parentesco_mf'),
-    //         );
-
-    //         $updateRelacionParentesco = $this->_parentescoPersonaFisicaModel->set($dataRelacionParentesco)->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID1', $idp1)->where('PERSONAFISICAID2', $idp2)->update();
-
-    //         if ($updateRelacionParentesco) {
-    //             $parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
-    //             $personaiduno = $this->_parentescoPersonaFisicaModel->get_personaFisicaUno($folio, $year);
-    //             $personaidDos = $this->_parentescoPersonaFisicaModel->get_personaFisicaDos($folio, $year);
-    //             $parentesco = $this->_parentescoPersonaFisicaModel->get_Parentesco($folio, $year);
-    //             $datosBitacora = [
-    //                 'ACCION' => 'Ha actualizado el parentesco de una persona fisica',
-    //                 'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
-    //             ];
-
-    //             $this->_bitacoraActividad($datosBitacora);
-
-    //             return json_encode(['status' => 1, 'parentescoRelacion' => $parentescoRelacion, 'personaiduno' => $personaiduno, 'personaidDos' => $personaidDos, 'parentesco' => $parentesco]);
-    //         } else {
-    //             return json_encode(['status' => 0, 'message' => $updateRelacionParentesco]);
-    //         }
-    //     } catch (\Exception $e) {
-    //         return json_encode(['status' => 0]);
-    //     }
-    // }
-    public function deleteParentescoById()
+    public function updateParentescoByFolio()
     {
         try {
             $idp1 = trim($this->request->getPost('personaFisica1'));
@@ -2245,7 +2207,46 @@ class DashboardController extends BaseController
 
             $folio = trim($this->request->getPost('folio'));
             $year = trim($this->request->getPost('year'));
-            $parentescoid = trim($this->request->getPost('parentesco_mf'));
+            $dataRelacionParentesco = array(
+                'FOLIO' => trim($this->request->getPost('folio')),
+                'ANO' => trim($this->request->getPost('year')),
+                'PERSONAFISICAID1' => $this->request->getPost('personaFisica1'),
+                'PERSONAFISICAID2' => $this->request->getPost('personaFisica2'),
+                'PARENTESCOID' => $this->request->getPost('parentesco_mf'),
+            );
+
+            $updateRelacionParentesco = $this->_parentescoPersonaFisicaModel->set($dataRelacionParentesco)->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID1', $idp1)->where('PERSONAFISICAID2', $idp2)->update();
+
+            if ($updateRelacionParentesco) {
+                $parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
+                $personaiduno = $this->_parentescoPersonaFisicaModel->get_personaFisicaUno($folio, $year);
+                $personaidDos = $this->_parentescoPersonaFisicaModel->get_personaFisicaDos($folio, $year);
+                $parentesco = $this->_parentescoPersonaFisicaModel->get_Parentesco($folio, $year);
+                $datosBitacora = [
+                    'ACCION' => 'Ha actualizado el parentesco de una persona fisica',
+                    'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
+                ];
+
+                $this->_bitacoraActividad($datosBitacora);
+
+                return json_encode(['status' => 1, 'parentescoRelacion' => $parentescoRelacion, 'personaiduno' => $personaiduno, 'personaidDos' => $personaidDos, 'parentesco' => $parentesco]);
+            } else {
+                return json_encode(['status' => 0, 'message' => $updateRelacionParentesco]);
+            }
+        } catch (\Exception $e) {
+            return json_encode(['status' => 0]);
+        }
+    }
+    public function deleteParentescoById()
+    {
+
+        try{
+            $idp1 = $this->request->getPost('personafisica1');
+            $idp2 = $this->request->getPost('personafisica2');
+
+            $folio = $this->request->getPost('folio');
+            $year = $this->request->getPost('year');
+            $parentescoid =$this->request->getPost('parentesco_mf');
 
             $deleteRelacionParentesco = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID1', $idp1)->where('PERSONAFISICAID2', $idp2)->where('PARENTESCOID', $parentescoid)->delete();
             if ($deleteRelacionParentesco) {
@@ -2261,13 +2262,14 @@ class DashboardController extends BaseController
 
                 $this->_bitacoraActividad($datosBitacora);
 
-                return json_encode(['status' => 1, 'parentescoRelacion' => $parentescoRelacion, 'personaiduno' => $personaiduno, 'personaidDos' => $personaidDos, 'parentesco' => $parentesco]);
+                return json_encode(['status' => 1, 'parentescoRelacion' => $parentescoRelacion, 'personaiduno' => $personaiduno, 'personaidDos' => $personaidDos, 'parentesco' => $parentesco, 'post'=>$_POST]);
             } else {
                 return json_encode(['status' => 0]);
             }
         } catch (\Exception $e) {
             return json_encode(['status' => 0]);
         }
+      
     }
     public function createParentescoByFolio()
     {

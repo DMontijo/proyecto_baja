@@ -21,7 +21,7 @@
 									<div class="card-body text-center">
 										<h2 class="fw-bolder text-white">¿Necesitas una constancia de extravío?</h2>
 										<a href="<?= base_url() ?>/constancia_extravio/register" class="btn btn-light">
-											REGISTRATE
+											REGÍSTRATE
 										</a>
 									</div>
 								</div>

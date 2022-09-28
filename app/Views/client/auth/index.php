@@ -20,7 +20,7 @@
 									<div class="card-body text-center">
 										<h2 class="fw-bolder text-white">¿Quieres denunciar?</h2>
 										<a href="<?= base_url() ?>/denuncia/denunciante/new" class="btn btn-light">
-											REGISTRATE
+											REGÍSTRATE
 										</a>
 									</div>
 								</div>

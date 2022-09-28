@@ -1,5 +1,5 @@
 <div class="row">
-	<h3 class="fw-bold text-center text-blue pb-3">Datos del delito</h3>
+	<h3 class="fw-bold text-center text-blue pb-3">Lugar del hecho</h3>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="delito" class="form-label fw-bold input-required">Delito a denunciar:</label>
 		<select class="form-select" id="delito" name="delito" required>
@@ -204,6 +204,7 @@
 				var option = document.createElement("option");
 				option.text = 'OTRO';
 				option.value = '0';
+				option.style = 'font-weight: bold;';
 				select_colonia.add(option);
 			},
 			error: function(jqXHR, textStatus, errorThrown) {

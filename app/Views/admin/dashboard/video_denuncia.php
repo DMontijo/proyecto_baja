@@ -214,12 +214,56 @@
 		});
 	}
 
+	function eliminarparentesco(personofisica1, personafisica2, parentesco) {
+		console.log(personofisica1,personafisica2);
+		$.ajax({
+			data: {
+				'personafisica1': personofisica1,
+				'personafisica2': personafisica2,
+				'parentesco_mf': parentesco,
+				'folio': inputFolio.value,
+				'year': year_select.value,
+
+			},
+			url: "<?= base_url('/data/delete-parentesco-by-id') ?>",
+			method: "POST",
+			dataType: "json",
+			success: function(response) {
+
+				console.log(response);
+				if (response.status == 1) {
+					Swal.fire({
+						icon: 'success',
+						text: 'Relación parentesco eliminado correctamente',
+						confirmButtonColor: '#bf9b55',
+					});
+					let tabla_parentesco = document.querySelectorAll('#table-parentesco tr');
+							tabla_parentesco.forEach(row => {
+								if (row.id !== '') {
+									row.remove();
+								}
+							});
+							llenarTablaParentesco(response.parentescoRelacion, response.personaiduno, response.personaidDos, response.parentesco);
+				} else {
+					Swal.fire({
+						icon: 'error',
+						text: 'No se eliminó la relación parentesco correctamente',
+						confirmButtonColor: '#bf9b55',
+					});
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown) {}
+		});
+
+	}
+
+
 	function llenarTablaParentesco(relacion_parentesco, personaiduno, personaidDos, parentesco) {
 
 
 		for (let i = 0; i < relacion_parentesco.length; i++) {
-
 			var btn = `<button type='button'  class='btn btn-primary' onclick='view_form_parentesco(${relacion_parentesco[i].PERSONAFISICAID1})'><i class="fas fa-eye"></i></button>`
+			var btnEliminar = `<button type='button'  class='btn btn-primary' onclick='eliminarparentesco(${personaiduno[i].PERSONAFISICAID1},${personaidDos[i].PERSONAFISICAID2},${relacion_parentesco[i].PARENTESCOID})'><i class="fas fa-trash"></i></button>`
 
 
 			var fila2 =
@@ -228,6 +272,8 @@
 				`<td class="text-center">${parentesco[i].PERSONAPARENTESCODESCR}</td>` +
 				`<td class="text-center">${personaidDos[i].NOMBRE}</td>` +
 				`<td class="text-center">${btn}</td>` +
+				`<td class="text-center">${btnEliminar}</td>` +
+
 				`</tr>`;
 
 			$('#table-parentesco tr:first').after(fila2);
@@ -455,8 +501,20 @@
 					// 	option.text = modalidad.DELITOMODALIDADDESCR;
 					// 	select_delitos_imputado.add(option, null);
 					// });
+					const option_vacio = document.createElement('option');
+								option_vacio.value = '';
+								option_vacio.text = '';
+								option_vacio.disabled = true;
+								option_vacio.selected = true;
 					$('#victima_ofendido').empty();
+					const option_vacio_vic = document.createElement('option');
+					option_vacio_vic.value = '';
+					option_vacio_vic.text = '';
+					option_vacio_vic.disabled = true;
+					option_vacio_vic.selected = true;
+
 					let select_victima_ofendido = document.querySelector("#victima_ofendido")
+					select_victima_ofendido.add(option_vacio_vic, null);
 					victimas.forEach(victima => {
 						const option = document.createElement('option');
 						option.value = victima.PERSONAFISICAID;
@@ -472,7 +530,14 @@
 						select_imputado_delito_cometido.add(option, null);
 					});
 					$('#imputado_arbol').empty();
+					const option_vacio_imp = document.createElement('option');
+					option_vacio_imp.value = '';
+					option_vacio_imp.text = '';
+					option_vacio_imp.disabled = true;
+					option_vacio_imp.selected = true;
+
 					let select_imputado_mputado = document.querySelector("#imputado_arbol")
+					select_imputado_mputado.add(option_vacio_imp, null);
 					imputados.forEach(imputado => {
 						const option = document.createElement('option');
 						option.value = imputado.PERSONAFISICAID;
@@ -481,6 +546,7 @@
 					});
 					$('#personaFisica1_I').empty();
 					let select_personaFisica1_I = document.querySelector("#personaFisica1_I")
+					select_personaFisica1_I.add(option_vacio, null);
 					personas.forEach(persona => {
 						const option = document.createElement('option');
 						option.value = persona.PERSONAFISICAID;
@@ -1423,12 +1489,21 @@
 				}
 			}, false);
 			btn_insertar_parentesco.addEventListener('click', (event) => {
+				document.getElementById("form_media_filiacion_insert").reset();
+				document.querySelector('#personaFisica1_I').value = '';
+				document.querySelector('#personaFisica2_I').value = '';
+
 				$('#relacion_parentesco_modal_insert').modal('show');
 			}, false);
 			btn_insertar_persona_fisica.addEventListener('click', (event) => {
 				$('#insert_persona_fisica_modal').modal('show');
 			}, false);
 			btn_asignar_delitos.addEventListener('click', (event) => {
+				document.getElementById("form_asignar_arbol_delictual_insert").reset();
+				document.querySelector('#imputado_arbol').value = '';
+				document.querySelector('#delito_cometido').value = '';
+				document.querySelector('#victima_ofendido').value = '';
+
 				$('#insert_asignar_arbol_delictual_modal').modal('show');
 			}, false);
 			// btn_delito_imputado.addEventListener('click', (event) => {
@@ -2918,13 +2993,20 @@
 
 							});
 							$('#personaFisica1_I').empty();
-							let select_personaFisica1_I = document.querySelector("#personaFisica1_I")
+
+							const option_vacio = document.createElement('option');
+								option_vacio.value = '';
+								option_vacio.text = '';
+								option_vacio.disabled = true;
+								option_vacio.selected = true;
+
+								select_personaFisica1_I.add(option_vacio, null);
+
 							personas.forEach(persona => {
 								const option = document.createElement('option');
 								option.value = persona.PERSONAFISICAID;
 								option.text = persona.NOMBRE + ' ' + persona.PRIMERAPELLIDO;
 								select_personaFisica1_I.add(option, null);
-
 							});
 							$('#folio_persona_fisica_modal').modal('show');
 							viewPersonaFisica(response.ultimoRegistro.PERSONAFISICAID);

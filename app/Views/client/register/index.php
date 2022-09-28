@@ -252,7 +252,7 @@
 				<div class="col-12 d-none step">
 					<div class="row">
 						<div class="col-12">
-							<h3 class="text-center mb-3 fw-bold">DATOS DE IDENTIFICACION DEL DENUNCIANTE</h3>
+							<h3 class="text-center mb-3 fw-bold">DATOS DE IDENTIFICACIÓN DEL DENUNCIANTE</h3>
 						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="identificacion" class="form-label fw-bold input-required">Identificación</label>

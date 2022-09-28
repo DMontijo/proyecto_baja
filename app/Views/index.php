@@ -31,7 +31,7 @@
 					<div class="row m-0 p-0">
 						<div class="col-12 col-lg-9">
 							<p class="" style="font-size:16px;text-align:justify;">Para realizar una video denuncia ó solicitar constancia de extravío es importante que aceptes los términos y condiciones y aviso de privacidad de datos.
-								<br><br>Puedes consultar los términos y condiciones <a href="<?= base_url() ?>/assets/documentos/Terminos_Y_Condiciones.pdf" target="_blank" class="text-yellow">aquí</a>. Puedes consultar el aviso de privacidad <a href="<?= base_url() ?>/assets/documentos/Aviso_De_Privacidad_De_Datos.pdf" target="_blank" class="text-yellow">aquí</a>.
+								<br><br>Puedes consultar los términos y condiciones <a href="<?= base_url() ?>/assets/documentos/TerminosCondiciones.pdf" target="_blank" class="text-yellow">aquí</a>. Puedes consultar el aviso de privacidad <a href="<?= base_url() ?>/assets/documentos/Aviso_De_Privacidad_De_Datos.pdf" target="_blank" class="text-yellow">aquí</a>.
 							</p>
 						</div>
 						<div class="col-12 col-lg-3 d-flex align-items-center justify-content-lg-end justify-content-center text-center py-4">

@@ -194,6 +194,7 @@ $routes->group('data', function ($routes) {
 	$routes->post('update-vehiculo-by-id', 'admin/DashboardController::updateVehiculoByFolio');
 	$routes->post('delete-parentesco-by-id', 'admin/DashboardController::deleteParentescoById');
 	$routes->post('create-parentesco-by-id', 'admin/DashboardController::createParentescoByFolio');
+	$routes->post('update-parentesco-by-id', 'admin/DashboardController::updateParentescoByFolio');
 	$routes->post('get-parentesco-by-id', 'admin/DashboardController::getRelacionParentesco');
 	$routes->post('get-personafisicofiltro', 'admin/DashboardController::getPersonaFisicaFiltro');
 	$routes->post('create-persona_fisica-by-folio', 'admin/DashboardController::createPersonaFisicaByFolio');

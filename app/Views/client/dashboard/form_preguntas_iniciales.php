@@ -24,7 +24,7 @@
 		</div>
 	</div>
 	<div class="col-12 mb-3 d-none" id="es_ofendido">
-		<label for="es_ofendido" class="form-label fw-bold input-required">¿Eres tu la víctima u ofendido?</label>
+		<label for="es_ofendido" class="form-label fw-bold input-required">¿Eres tú la víctima u ofendido?</label>
 		<br>
 		<div class="form-check form-check-inline">
 			<input class="form-check-input" type="radio" name="es_ofendido" value="SI" required>
@@ -48,7 +48,7 @@
 		</div>
 	</div>
 	<div class="col-12 mb-3">
-		<label for="es_vulnerable" class="form-label fw-bold input-required">¿La víctima u ofendido es de un grupo vulnerable?</label>
+		<label for="es_vulnerable" class="form-label fw-bold input-required">La víctima u ofendido pertenece a algún grupo vulnerable?</label>
 		<br>
 		<div class="form-check form-check-inline">
 			<input class="form-check-input" type="radio" name="es_vulnerable" value="SI" required>

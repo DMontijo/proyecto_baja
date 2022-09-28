@@ -12,7 +12,7 @@
 		<div class="card rounded shadow border-0">
 			<div class="card-body py-5">
 				<div class="container">
-					<h1 class="text-center fw-bolder pb-1 text-blue">CONSTANCIA DE EXTRAVIO</h1>
+					<h1 class="text-center fw-bolder pb-1 text-blue">CONSTANCIA DE EXTRAVÍO</h1>
 				</div>
 			</div>
 			<section class="p-3">

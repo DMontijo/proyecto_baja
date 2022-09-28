@@ -13,7 +13,7 @@ class PersonaFisicaParentescoModel extends Model
 	public function get_personaFisicaUno($folio, $year)
 	{
 		$builder = $this->db->table($this->table);
-		$builder->select(['FOLIOPERSONAFISICA.PRIMERAPELLIDO', 'FOLIOPERSONAFISICA.SEGUNDOAPELLIDO', 'FOLIOPERSONAFISICA.NOMBRE']);
+		$builder->select(['FOLIOPERSONAFISICA.PRIMERAPELLIDO', 'FOLIOPERSONAFISICA.SEGUNDOAPELLIDO', 'FOLIOPERSONAFISICA.NOMBRE','FOLIORELACIONPARENTESCO.PERSONAFISICAID1']);
 		$builder->where('FOLIORELACIONPARENTESCO.FOLIOID', $folio);
 		$builder->where('FOLIORELACIONPARENTESCO.ANO', $year);
 		$builder->where('FOLIOPERSONAFISICA.FOLIOID', $folio);
@@ -28,7 +28,7 @@ class PersonaFisicaParentescoModel extends Model
 	public function get_personaFisicaDos($folio, $year)
 	{
 		$builder = $this->db->table($this->table);
-		$builder->select(['FOLIOPERSONAFISICA.PRIMERAPELLIDO', 'FOLIOPERSONAFISICA.SEGUNDOAPELLIDO', 'FOLIOPERSONAFISICA.NOMBRE']);
+		$builder->select(['FOLIOPERSONAFISICA.PRIMERAPELLIDO', 'FOLIOPERSONAFISICA.SEGUNDOAPELLIDO', 'FOLIOPERSONAFISICA.NOMBRE','FOLIORELACIONPARENTESCO.PERSONAFISICAID2']);
 		$builder->where('FOLIORELACIONPARENTESCO.FOLIOID', $folio);
 		$builder->where('FOLIORELACIONPARENTESCO.ANO', $year);
 		$builder->where('FOLIOPERSONAFISICA.FOLIOID', $folio);
@@ -43,7 +43,7 @@ class PersonaFisicaParentescoModel extends Model
 	public function get_Parentesco($folio, $year)
 	{
 		$builder = $this->db->table($this->table);
-		$builder->select(['PERSONAPARENTESCO.PERSONAPARENTESCODESCR']);
+		$builder->select(['PERSONAPARENTESCO.PERSONAPARENTESCODESCR', 'FOLIORELACIONPARENTESCO.PARENTESCOID']);
 		$builder->where('FOLIORELACIONPARENTESCO.FOLIOID', $folio);
 		$builder->where('FOLIORELACIONPARENTESCO.ANO', $year);
 		$builder->join('PERSONAPARENTESCO', 'PERSONAPARENTESCO.PERSONAPARENTESCOID =' . $this->table . '.PARENTESCOID');

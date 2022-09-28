@@ -40,7 +40,7 @@
 					</div>
 
 					<div class="col-12 col-sm-6 mb-3">
-						<label for="pais_modal" class="form-label fw-bold">Pais: </label>
+						<label for="pais_modal" class="form-label fw-bold">País: </label>
 						<select class="form-select" id="pais_modal" name="pais_modal" required disabled>
 							<option selected disabled value="">Selecciona...</option>
 							<?php foreach ($body_data->paises as $index => $pais) { ?>
@@ -93,7 +93,7 @@
 					</div>
 
 					<div class="col-12 col-sm-6 mb-3">
-						<label for="identificacion_modal" class="form-label fw-bold">Tipo identificacion: </label>
+						<label for="identificacion_modal" class="form-label fw-bold">Tipo identificación: </label>
 						<select class="form-select" id="identificacion_modal" name="identificacion_modal" required disabled>
 							<option selected disabled value="">Selecciona...</option>
 							<?php foreach ($body_data->tiposIdentificaciones as $index => $identificacion) { ?>
@@ -103,7 +103,7 @@
 					</div>
 
 					<div class="col-12 col-sm-6 mb-3">
-						<label for="numero_ide_modal" class="form-label fw-bold">Número de identificacion: </label>
+						<label for="numero_ide_modal" class="form-label fw-bold">Número de identificación: </label>
 						<input type="text" class="form-control" id="numero_ide_modal" name="numero_ide_modal" disabled>
 					</div>
 
@@ -175,7 +175,7 @@
 						<img id="img_firma_modal" class="form-control" />
 					</div>
 					<div class="col-12 text-center mb-4">
-						<button type="submit" id="valid_information_btn" class="btn btn-primary mt-4">Mi información esta correcta</button>
+						<button type="submit" id="valid_information_btn" class="btn btn-primary mt-4">Mi información está correcta</button>
 					</div>
 				</div>
 			</div>

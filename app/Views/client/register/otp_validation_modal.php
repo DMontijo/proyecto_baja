@@ -6,7 +6,7 @@
 			</div>
 			<div id="load" class="modal-body text-center">
 				<div class="mb-3" id="divCorreo">
-					<label for="correo_otp" class="col-form-label">Ingresa el código de 6 dígitos que llego a tu correo electrónico.</label>
+					<label for="correo_otp" class="col-form-label">Ingresa el código de 6 dígitos que llegó a tu correo electrónico.</label>
 					<input type="text" class="form-control text-center" id="correo_otp" name="correo_otp" required pattern="\d{6}" maxlength="6" placeholder="Código de 6 dígitos númericos.">
 				</div>
 				<button id="resend_btn" class="btn btn-secondary" role="button" type="submit"><i class="bi bi-arrow-clockwise"></i> Solicitar de nuevo</button>
