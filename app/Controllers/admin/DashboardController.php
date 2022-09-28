@@ -911,6 +911,7 @@ class DashboardController extends BaseController
         $oficina = $this->request->getPost('oficina');
         $empleado = $this->request->getPost('empleado');
 
+
         try {
             if (!empty($folio) && !empty($municipio) && !empty($estado) && !empty($notas) && !empty($oficina) && !empty($empleado)) {
                 $folioRow = $this->_folioModel->where('ANO', $year)->where('FOLIOID', $folio)->where('STATUS', 'EN PROCESO')->first();
@@ -924,9 +925,33 @@ class DashboardController extends BaseController
                     $imputados_con_delito = array();
                     $imputados = $this->_folioPersonaFisicaModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->orderBy('PERSONAFISICAID', 'asc')->where('CALIDADJURIDICAID', 2)->findAll();
 
-                    if ($municipio != $folioRow['HECHOMUNICIPIOID']) {
+                    $status_municipio = '';
+
+
+                    if ($folioRow['HECHOMUNICIPIOID'] == 1 || $folioRow['HECHOMUNICIPIOID'] == 6) {
+                        if ($municipio == 1) {
+                            $status_municipio = "Municipio si coincide";
+                        } else {
+                            $status_municipio = "Municipio no coincide";
+                        }
+                    } else if ($folioRow['HECHOMUNICIPIOID'] == 2 || $folioRow['HECHOMUNICIPIOID'] == 3 || $folioRow['HECHOMUNICIPIOID'] == 7) {
+                        if ($municipio == 2) {
+                            $status_municipio = "Municipio si coincide";
+                        } else {
+                            $status_municipio = "Municipio no coincide";
+                        }
+                    } else if ($folioRow['HECHOMUNICIPIOID'] == 4 || $folioRow['HECHOMUNICIPIOID'] == 5) {
+                        if ($municipio == 4) {
+                            $status_municipio = "Municipio si coincide";
+                        } else {
+                            $status_municipio = "Municipio no coincide";
+                        }
+                    }
+                    $findMunicipio = "Municipio no coincide";
+                    if (strpos($status_municipio, $findMunicipio) !== false) {
                         throw new \Exception('El municipio no coincide con la base registrada');
                     }
+
                     foreach ($fisImpDelito as $value) {
                         if (!in_array($value['PERSONAFISICAID'], $imputados_con_delito)) {
                             array_push($imputados_con_delito, $value['PERSONAFISICAID']);
@@ -2240,13 +2265,13 @@ class DashboardController extends BaseController
     public function deleteParentescoById()
     {
 
-        try{
+        try {
             $idp1 = $this->request->getPost('personafisica1');
             $idp2 = $this->request->getPost('personafisica2');
 
             $folio = $this->request->getPost('folio');
             $year = $this->request->getPost('year');
-            $parentescoid =$this->request->getPost('parentesco_mf');
+            $parentescoid = $this->request->getPost('parentesco_mf');
 
             $deleteRelacionParentesco = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID1', $idp1)->where('PERSONAFISICAID2', $idp2)->where('PARENTESCOID', $parentescoid)->delete();
             if ($deleteRelacionParentesco) {
@@ -2262,14 +2287,13 @@ class DashboardController extends BaseController
 
                 $this->_bitacoraActividad($datosBitacora);
 
-                return json_encode(['status' => 1, 'parentescoRelacion' => $parentescoRelacion, 'personaiduno' => $personaiduno, 'personaidDos' => $personaidDos, 'parentesco' => $parentesco, 'post'=>$_POST]);
+                return json_encode(['status' => 1, 'parentescoRelacion' => $parentescoRelacion, 'personaiduno' => $personaiduno, 'personaidDos' => $personaidDos, 'parentesco' => $parentesco, 'post' => $_POST]);
             } else {
                 return json_encode(['status' => 0]);
             }
         } catch (\Exception $e) {
             return json_encode(['status' => 0]);
         }
-      
     }
     public function createParentescoByFolio()
     {
