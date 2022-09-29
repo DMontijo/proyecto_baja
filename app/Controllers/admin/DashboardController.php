@@ -2542,27 +2542,46 @@ class DashboardController extends BaseController
             $personafisicaimputado = trim($this->request->getPost('personafisicaimputado'));
 
             $countImpDelito = $this->_imputadoDelitoModel->count_delitos($folio, $year, $delitomodalidad);
-
-            if ($countImpDelito[0]->DELITOMODALIDADID == 1) {
-                return json_encode(['status' => 3, 'count' => $countImpDelito[0]->DELITOMODALIDADID]);
-            }
+            $countdelitoFisFis = $this->_relacionIDOModel->count_delitosFisFis($folio, $year, $delitomodalidad, $personafisicaimputado);
             $deleteArbol = $this->_relacionIDOModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAIDVICTIMA', $personafisicavictima)->where('DELITOMODALIDADID', $delitomodalidad)->where('PERSONAFISICAIDIMPUTADO', $personafisicaimputado)->delete();
 
-            $deleteImpDelito = $this->_imputadoDelitoModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $personafisicaimputado)->where('DELITOMODALIDADID', $delitomodalidad)->delete();
-            if ($deleteArbol && $deleteImpDelito) {
-                $relacionFisFis = $this->_relacionIDOModel->get_by_folio($folio, $year);
-                $fisicaImpDelito = $this->_imputadoDelitoModel->get_by_folio($folio, $year);
+            if ($countdelitoFisFis[0]->DELITOMODALIDADID == 1) {
+                return json_encode(['status' => 3, 'count' => $countImpDelito[0]->DELITOMODALIDADID]);
+            }
+            // if ($countdelitoFisFis[0]->DELITOMODALIDADID == 1) {
+            //     $deleteImpDelito = $this->_imputadoDelitoModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $personafisicaimputado)->where('DELITOMODALIDADID', $delitomodalidad)->delete();
+            //     if ($deleteImpDelito) {
+            //         $relacionFisFis = $this->_relacionIDOModel->get_by_folio($folio, $year);
+            //         $fisicaImpDelito = $this->_imputadoDelitoModel->get_by_folio($folio, $year);
 
-                $datosBitacora = [
-                    'ACCION' => 'Ha eliminado un árbol delictivo',
-                    'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
-                ];
+            //         $datosBitacora = [
+            //             'ACCION' => 'Ha eliminado un delito del imputado',
+            //             'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
+            //         ];
 
-                $this->_bitacoraActividad($datosBitacora);
+            //         $this->_bitacoraActividad($datosBitacora);
 
-                return json_encode(['status' => 1, 'relacionFisFis' => $relacionFisFis, 'fisicaImpDelito' => $fisicaImpDelito]);
-            } else {
-                return json_encode(['status' => 0]);
+            //         return json_encode(['status' => 1, 'relacionFisFis' => $relacionFisFis, 'fisicaImpDelito' => $fisicaImpDelito]);
+            //     } else {
+            //         return json_encode(['status' => 0]);
+            //     }
+            // } else 
+            if ($countdelitoFisFis[0]->DELITOMODALIDADID > 1){
+                if ($deleteArbol) {
+                    $relacionFisFis = $this->_relacionIDOModel->get_by_folio($folio, $year);
+                    $fisicaImpDelito = $this->_imputadoDelitoModel->get_by_folio($folio, $year);
+
+                    $datosBitacora = [
+                        'ACCION' => 'Ha eliminado un árbol delictivo',
+                        'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
+                    ];
+
+                    $this->_bitacoraActividad($datosBitacora);
+
+                    return json_encode(['status' => 1, 'relacionFisFis' => $relacionFisFis, 'fisicaImpDelito' => $fisicaImpDelito]);
+                } else {
+                    return json_encode(['status' => 0]);
+                }
             }
         } catch (\Exception $e) {
             return json_encode(['status' => 0]);
