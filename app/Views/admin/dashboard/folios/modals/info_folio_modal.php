@@ -17,7 +17,7 @@
 							<a class="nav-link" id="v-pills-vehiculos-tab" data-toggle="pill" href="#v-pills-vehiculos" role="tab" aria-controls="v-pills-vehiculos" aria-selected="false" style="display: none;"><i class="fas fa-car"></i> VEHICULOS</a>
 							<a class="nav-link" id="v-pills-parentesco-tab" data-toggle="pill" href="#v-pills-parentesco" role="tab" aria-controls="v-pills-parentesco" aria-selected="false"><i class="fas fa-handshake"></i> PARENTESCO</a>
 							<a class="nav-link" id="v-pills-delitos-cometidos-tab" data-toggle="pill" href="#v-pills-delitos-cometido" role="tab" aria-controls="v-pills-delitos-cometido" aria-selected="false"><i class='fas fa-user-alt-slash'></i> DELITOS COMETIDOS</a>
-							<a class="nav-link" id="v-pills-delitos-tab" data-toggle="pill" href="#v-pills-asignar-delitos" role="tab" aria-controls="v-pills-asignar-delitos" aria-selected="false"><i class='fas fa-handshake-slash'></i> ÁRBOL DELICTUAL</a>
+							<a class="nav-link" id="v-pills-delitos-tab" data-toggle="pill" href="#v-pills-asignar-delitos" role="tab" aria-controls="v-pills-asignar-delitos" aria-selected="false"><i class='fas fa-handshake-slash'></i> DELITOS</a>
 						</div>
 					</div>
 					<div class="col-9">
@@ -34,7 +34,7 @@
 									<tr>
 										<th class="text-center bg-primary text-white"></th>
 										<th class="text-center bg-primary text-white" id="nombreP" name="nombreP">NOMBRE</th>
-										<th class="text-center bg-primary text-white" id="calidadP" name="calidadP">CALIDAD JURIDICA</th>
+										<th class="text-center bg-primary text-white" id="calidadP" name="calidadP">Calidad Jurídica</th>
 										<th class="text-center bg-primary text-white">VER</th>
 									</tr>
 								</table>

@@ -6,7 +6,7 @@
 		</a>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="tipo_identificacion_pf" class="form-label font-weight-bold">Tipo identificacion</label>
+		<label for="tipo_identificacion_pf" class="form-label font-weight-bold">Tipo identificación</label>
 		<select class="form-control" id="tipo_identificacion_pf" name="tipo_identificacion_pf">
 			<option selected value=""></option>
 			<?php foreach ($body_data->tiposIdentificaciones as $index => $identificaciones) { ?>
@@ -144,7 +144,7 @@
 		<hr>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="calidad_juridica_pf" class="form-label font-weight-bold">Calidad Juridica</label>
+		<label for="calidad_juridica_pf" class="form-label font-weight-bold">Calidad Jurídica</label>
 		<select class="form-control" id="calidad_juridica_pf" name="calidad_juridica_pf">
 			<option selected value=""></option>
 			<?php foreach ($body_data->calidadJuridica as $index => $calidadJuridica) { ?>

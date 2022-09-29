@@ -40,7 +40,7 @@
 
 			<li class="c-sidebar-nav-item">
 				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/video-denuncia">
-					<i class="fas fa-video c-sidebar-nav-icon"></i> Video denuncia
+					<i class="fas fa-video c-sidebar-nav-icon"></i> Videodenuncia
 				</a>
 			</li>
 

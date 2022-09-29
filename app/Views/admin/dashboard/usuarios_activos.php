@@ -7,7 +7,7 @@
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-12">
-				<h3 class="mb-4 font-weight-bold text-center">USUARIOS ACTIVOS PARA VIDEOLLAMADA</h3>
+				<h3 class="mb-4 font-weight-bold text-center">USUARIOS ACTIVOS PARA VIDEODENUNCIA</h3>
 				<div class="card shadow border-0 rounded">
 					<div class="card-body">
 						<div class="row">

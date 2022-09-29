@@ -23,7 +23,7 @@
 					</div>
 				</div>
 				<button id="buscar-btn" class="btn btn-secondary btn-block" role="button"><i class="fas fa-search"></i> Buscar</button>
-				<button id="buscar-nuevo-btn" class="btn btn-primary btn-block h-100 d-none m-0 p-0" role="button"><i class="fas fa-search"></i> Buscar nuevo</button>
+				<button id="buscar-nuevo-btn" class="btn btn-primary btn-block h-100 d-none m-0 p-0" role="button"><i class="fas fa-search"></i> BUSCAR NUEVO</button>
 			</div>
 		</div>
 	</div>
@@ -380,8 +380,6 @@
 						/* Read more about isConfirmed, isDenied below */
 						if (result.isConfirmed) {
 							eliminarImputadoDelito(personafisicavictima, personafisicaimputado, delitoModalidadId);
-						} else if (result.isDenied) {
-							Swal.fire('Changes are not saved', '', 'info')
 						}
 					})
 				}
@@ -3054,15 +3052,14 @@
 					method: "POST",
 					dataType: "json",
 					success: function(response) {
-
+						console.log(response);
 						if (response.status == 3) {
 							Swal.fire({
 								icon: 'error',
-								text: 'Este árbol delicitivo ya existe',
+								text: 'Esta relación de delito ya existe',
 								confirmButtonColor: '#bf9b55',
 							});
-						}
-						if (response.status == 1) {
+						} else if (response.status == 1) {
 							let tabla_relacion_fis_fis = document.querySelectorAll('#table-delitos tr');
 							tabla_relacion_fis_fis.forEach(row => {
 								if (row.id !== '') {
@@ -3071,19 +3068,18 @@
 							});
 
 							llenarTablaFisFis(response.relacionFisFis);
-							Swal.fire({
-								icon: 'success',
-								text: 'Árbol delictual ingresado correctamente',
-								confirmButtonColor: '#bf9b55',
-							});
 							$('#insert_asignar_arbol_delictual_modal').modal('hide');
 							document.getElementById("form_asignar_arbol_delictual_insert").reset();
-
+							Swal.fire({
+								icon: 'success',
+								text: 'Delito agregado correctamente',
+								confirmButtonColor: '#bf9b55',
+							});
 
 						} else if (response.status == 0) {
 							Swal.fire({
 								icon: 'error',
-								text: 'No se agregó la información de la relacion',
+								text: 'No se agregó el delito.',
 								confirmButtonColor: '#bf9b55',
 							});
 						}

@@ -12,7 +12,7 @@
 				<h1 class="text-center font-weight-bold">DENUNCIA ANÓNIMA</h1>
 				<div class="row">
 					<div class="col-12 pt-5">
-						<h3 class="font-weight-bold text-center text-blue pb-3">Datos del delito</h3>
+						<h3 class="font-weight-bold text-center text-blue pb-3">INFORMACIÓN DEL HECHO</h3>
 					</div>
 
 					<div class="col-12 col-sm-6 mb-3">

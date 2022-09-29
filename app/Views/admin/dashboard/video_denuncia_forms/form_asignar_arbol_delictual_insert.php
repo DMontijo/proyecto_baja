@@ -1,7 +1,7 @@
 <form id="form_asignar_arbol_delictual_insert" action="" method="post" class="row p-0 m-0 needs-validation" novalidate>
 
 	<div class="col-12">
-		<p class="font-weight-bold text-center mt-3">ÁRBOL DELICTUAL</p>
+		<p class="font-weight-bold text-center mt-3">DELITOS</p>
 	</div>
 	<hr>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -29,7 +29,7 @@
 	</div>
 
 	<div class="col-12 mb-3 text-center">
-		<button type="submit" id="insertArbol" name="insertArbol" class="btn btn-primary font-weight-bold">AGREGAR ÁRBOL DELICTUAL</button>
+		<button type="submit" id="insertArbol" name="insertArbol" class="btn btn-primary font-weight-bold">AGREGAR DELITO</button>
 	</div>
 
 </form>

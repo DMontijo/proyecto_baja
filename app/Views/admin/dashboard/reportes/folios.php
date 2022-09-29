@@ -116,7 +116,7 @@
 									<th class="text-center">ESTADO FOLIO</th>
 									<th class="text-center">NOMBRE DEL DENUNCIANTE</th>
 									<th class="text-center">NOMBRE DEL AGENTE</th>
-									<th class="text-center">MUNICIPIO DE ATENCION</th>
+									<th class="text-center">MUNICIPIO DE ATENCIÓN</th>
 								</tr>
 							</thead>
 							<tbody>

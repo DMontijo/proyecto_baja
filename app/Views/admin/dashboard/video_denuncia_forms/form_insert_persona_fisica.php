@@ -3,7 +3,7 @@
 		<h3 class="font-weight-bold mb-4 text-center">DATOS DE LA PERSONA FÍSICA</h3>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="calidad_juridica_pf" class="form-label font-weight-bold">Calidad Juridica</label>
+		<label for="calidad_juridica_pf" class="form-label font-weight-bold">Calidad Jurídica</label>
 		<select class="form-control" id="calidad_juridica_new" name="calidad_juridica_new" required>
 			<option selected value=""></option>
 			<?php foreach ($body_data->calidadJuridica as $index => $calidadJuridica) { ?>
@@ -216,7 +216,7 @@
 		<input type="text" class="form-control" id="interior_new" name="interior_new" maxlength="10">
 	</div>
 	<div class="col-12">
-		<h3 class="font-weight-bold mb-4 text-center">DATOS DE IDENTIFICACION</h3>
+		<h3 class="font-weight-bold mb-4 text-center">DATOS DE IDENTIFICACIÓN</h3>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="identificacion_new" class="form-label font-weight-bold">Identificación</label>

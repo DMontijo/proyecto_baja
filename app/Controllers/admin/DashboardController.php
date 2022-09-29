@@ -2166,7 +2166,7 @@ class DashboardController extends BaseController
 
             if ($updateMediaFiliacion && $updatePersonaFisica && $updateRelacionParentesco) {
                 $datosBitacora = [
-                    'ACCION' => 'Ha actualizado la media filiacion de una persona fisica',
+                    'ACCION' => 'Ha actualizado la media filiación de una persona fisica',
                     'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year . ' PERSONAFISICAID: ' . $id,
                 ];
 

@@ -18,7 +18,7 @@
 								<tr>
 									<th class="text-center">FOLIO</th>
 									<th class="text-center">DELITO</th>
-									<th class="text-center">EN ATENCION POR</th>
+									<th class="text-center">EN ATENCIÓN POR</th>
 									<th class="text-center"></th>
 								</tr>
 							</thead>

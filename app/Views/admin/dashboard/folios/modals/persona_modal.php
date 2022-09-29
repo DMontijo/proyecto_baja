@@ -16,7 +16,7 @@
 						<a class="nav-link" id="domicilio" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Domicilio</a>
 					</li>
 					<li class="nav-item" role="persona_fisica_mf">
-						<a class="nav-link" id="nav-media-filiacion-tab" data-toggle="tab" href="#nav-media-filiacion" role="tab" aria-controls="nav-media-filiacion" aria-selected="false">Media Filiacion</a>
+						<a class="nav-link" id="nav-media-filiacion-tab" data-toggle="tab" href="#nav-media-filiacion" role="tab" aria-controls="nav-media-filiacion" aria-selected="false">Media Filiación</a>
 					</li>
 
 				</ul>

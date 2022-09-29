@@ -580,7 +580,7 @@
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="lobulo_mf" class="form-label font-weight-bold">Lobulo de la oreja</label>
+		<label for="lobulo_mf" class="form-label font-weight-bold">Lóbulo de la oreja</label>
 		<select class="form-control" id="lobulo_mf" name="lobulo_mf">
 		<option disabled selected value=""></option>
 			<?php

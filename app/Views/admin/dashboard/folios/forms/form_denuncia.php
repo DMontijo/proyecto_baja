@@ -1,6 +1,6 @@
 <form id="denuncia_form" action="" method="post" class="row needs-validation" novalidate>
 	<div class="col-12 mb-3">
-		<h3 class="font-weight-bold mb-4 text-center">DATOS DEL DELITO</h3>
+		<h3 class="font-weight-bold mb-4 text-center">INFORMACIÓN DEL HECHO</h3>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="delito_delito" class="form-label font-weight-bold">Delito:</label>
