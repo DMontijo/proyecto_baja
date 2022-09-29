@@ -95,7 +95,7 @@
 										<tr>
 											<th class="text-center bg-primary text-white">PLACAS</th>
 											<th class="text-center bg-primary text-white">SERIE</th>
-											<th></th>
+											<th class="text-center bg-primary text-white"></th>
 										</tr>
 									</table>
 								</div>

@@ -1,4 +1,4 @@
-<form id="denuncia_form" action="" method="post" class="row needs-validation" novalidate>
+<div class="row">
 	<div class="col-12 mb-3">
 		<h3 class="font-weight-bold mb-4 text-center">INFORMACIÓN DEL HECHO</h3>
 	</div>
@@ -66,4 +66,4 @@
 		<label for="narracion_delito" class="form-label font-weight-bold">Narración:</label>
 		<textarea type="text" class="form-control" id="narracion_delito" name="narracion_delito" rows="5" maxlength="1000" required></textarea>
 	</div>
-</form>
+</div>

@@ -1,4 +1,4 @@
-<form id="preguntas_form" action="" method="post" class="row needs-validation" novalidate>
+	<div class="row">
 	<div class="col-12 mb-4">
 		<h3 class="font-weight-bold mb-3 text-center">PREGUNTAS INICIALES</h3>
 	</div>
@@ -70,4 +70,4 @@
 			<option value="NO">NO</option>
 		</select>
 	</div>
-</form>
+	</div>

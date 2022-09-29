@@ -23,10 +23,10 @@
 					<div class="col-9">
 						<div class="tab-content" id="info_content">
 							<div class="tab-pane fade show active" id="v-pills-denuncia" role="tabpanel" aria-labelledby="v-pills-denuncia-tab">
-								<?php echo view('/admin/dashboard/video_denuncia_forms/form_denuncia'); ?>
+							<?= view('admin/dashboard/folios/forms/form_denuncia') ?>
 							</div>
 							<div class="tab-pane fade" id="v-pills-preguntas-iniciales" role="tabpanel" aria-labelledby="v-pills-preguntas-iniciales-tab">
-								<?php echo view('/admin/dashboard/video_denuncia_forms/form_preguntas_iniciales'); ?>
+							<?= view('admin/dashboard/folios/forms/form_preguntas_iniciales') ?>
 							</div>
 							<div class="tab-pane fade" id="v-pills-personas" role="tabpanel" aria-labelledby="v-pills-personas-tab">
 								<div id="adicionados" class="d-none"></div>
@@ -86,7 +86,7 @@
 									<tr>
 										<th class="text-center bg-primary text-white">PLACAS</th>
 										<th class="text-center bg-primary text-white">SERIE</th>
-										<th></th>
+										<th class="text-center bg-primary text-white"></th>
 									</tr>
 								</table>
 							</div>
