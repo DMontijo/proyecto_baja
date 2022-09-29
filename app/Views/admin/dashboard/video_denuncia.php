@@ -398,6 +398,14 @@
 					});
 					let relacionFisFis = response.relacionFisFis;
 					llenarTablaFisFis(relacionFisFis);
+					let tabla_impdelito = document.querySelectorAll('#table-delito-cometidos tr');
+					tabla_impdelito.forEach(row => {
+						if (row.id !== '') {
+							row.remove();
+						}
+					});
+					let fisicaImpDelito = response.fisicaImpDelito;
+					llenarTablaImpDel(fisicaImpDelito);
 				} else if (response.status == 0) {
 					Swal.fire({
 						icon: 'error',

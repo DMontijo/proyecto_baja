@@ -2548,9 +2548,10 @@ class DashboardController extends BaseController
             }
             $deleteArbol = $this->_relacionIDOModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAIDVICTIMA', $personafisicavictima)->where('DELITOMODALIDADID', $delitomodalidad)->where('PERSONAFISICAIDIMPUTADO', $personafisicaimputado)->delete();
 
-            // $deleteImpDelito = $this->_imputadoDelitoModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $personafisicaimputado)->where('DELITOMODALIDADID', $delitomodalidad)->delete();
-            if ($deleteArbol) {
+            $deleteImpDelito = $this->_imputadoDelitoModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $personafisicaimputado)->where('DELITOMODALIDADID', $delitomodalidad)->delete();
+            if ($deleteArbol && $deleteImpDelito) {
                 $relacionFisFis = $this->_relacionIDOModel->get_by_folio($folio, $year);
+                $fisicaImpDelito = $this->_imputadoDelitoModel->get_by_folio($folio, $year);
 
                 $datosBitacora = [
                     'ACCION' => 'Ha eliminado un árbol delictivo',
@@ -2559,7 +2560,7 @@ class DashboardController extends BaseController
 
                 $this->_bitacoraActividad($datosBitacora);
 
-                return json_encode(['status' => 1, 'relacionFisFis' => $relacionFisFis]);
+                return json_encode(['status' => 1, 'relacionFisFis' => $relacionFisFis, 'fisicaImpDelito' => $fisicaImpDelito]);
             } else {
                 return json_encode(['status' => 0]);
             }
@@ -2615,7 +2616,7 @@ class DashboardController extends BaseController
             'PERSONAFISICAID' => $this->request->getPost('imputado'),
             'DELITOMODALIDADID' => $this->request->getPost('delito'),
         );
-        $checarDelito = $this->_imputadoDelitoModel->where('FOLIOID', $folio)->where('ANO', $year)->where('DELITOMODALIDADID', $this->request->getPost('delito'))->first();
+        $checarDelito = $this->_imputadoDelitoModel->where('FOLIOID', $folio)->where('ANO', $year)->where('DELITOMODALIDADID', $this->request->getPost('delito'))->where('PERSONAFISICAID', $this->request->getPost('imputado'))->first();
         if (isset($checarDelito)) {
             return json_encode(['status' => 3]);
         }
