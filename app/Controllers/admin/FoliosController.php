@@ -102,6 +102,9 @@ use App\Models\FolioArchivoExternoModel;
 use App\Models\FolioDocumentoModel;
 use App\Models\FolioPersonaFisImpDelitoModel;
 use App\Models\FolioRelacionFisFisModel;
+use App\Models\ObjetoClasificacionModel;
+use App\Models\ObjetoSubclasificacionModel;
+use App\Models\TipoMonedaModel;
 
 class FoliosController extends BaseController
 {
@@ -206,6 +209,12 @@ class FoliosController extends BaseController
         $this->_etniaModel = new PersonaEtniaModel();
         $this->_parentescoModel = new ParentescoModel();
         $this->_pielColorModel = new PielColorModel();
+
+
+        $this->_objetoClasificacionModel = new ObjetoClasificacionModel();
+        $this->_objetoSubclasificacionModel = new ObjetoSubclasificacionModel();
+        $this->_tipoMonedaModel = new TipoMonedaModel();
+
     }
 
     public function index()
@@ -484,7 +493,9 @@ class FoliosController extends BaseController
         $data->pielColor = $this->_pielColorModel->asObject()->findAll();
         $data->etnia = $this->_etniaModel->asObject()->findAll();
         $data->parentesco = $this->_parentescoModel->asObject()->findAll();
-
+        $data->objetoclasificacion = $this->_objetoClasificacionModel->asObject()->findAll();
+        $data->objetosubclasificacion = $this->_objetoSubclasificacionModel->asObject()->findAll();
+        $data->tipomoneda = $this->_tipoMonedaModel->asObject()->findAll();
         $this->_loadView('Video denuncia', 'videodenuncia', '', $data, 'ver_folio');
     }
 

@@ -95,8 +95,8 @@
 					const personafisica = response.personafisica;
 					const imputados = response.imputados;
 					const victimas = response.victimas;
+					const objetos = response.objetos;
 
-					console.log(relacion_parentesco);
 					inputFolio.classList.add('d-none');
 					buscar_btn.classList.add('d-none');
 					year_select.classList.add('d-none');
@@ -108,6 +108,14 @@
 					document.querySelector('#delito_dash').value = folio.HECHODELITO;
 					document.querySelector('#delito_descr_dash').value = folio.HECHONARRACION;
 
+					$('#propietario_update').empty();
+					let select_propietario_update = document.querySelector("#propietario_update")
+					personas.forEach(persona => {
+						const option = document.createElement('option');
+						option.value = persona.PERSONAFISICAID;
+						option.text = persona.NOMBRE + ' ' + persona.PRIMERAPELLIDO;
+						select_propietario_update.add(option, null);
+					});
 					//PREGUNTAS INICIALES
 					document.querySelector('#es_menor').value = preguntas.ES_MENOR;
 					document.querySelector('#es_tercera_edad').value = preguntas.ES_TERCERA_EDAD;
@@ -249,6 +257,7 @@
 						var nFilas = $("#vehiculos tr").length;
 						$("#vehiculos").append(nFilas - 1);
 					}
+					//Relacion parentesco
 					for (let i = 0; i < relacion_parentesco.length; i++) {
 
 						// var btn = `<button type='button'  class='btn btn-primary' onclick='view_form_parentesco(${relacion_parentesco[i].PERSONAFISICAID1})'><i class="fas fa-eye"></i></button>`
@@ -268,6 +277,7 @@
 						$("#adicionados").append(nFilas - 1);
 
 					}
+					//Relacions fisfis
 					for (let i = 0; i < relacionFisFis.length; i++) {
 						// var btn = `<button type='button'  class='btn btn-primary' onclick='eliminarArbolDelictivo(${relacionFisFis[i].PERSONAFISICAIDVICTIMA},${relacionFisFis[i].PERSONAFISICAIDIMPUTADO},${relacionFisFis[i].DELITOMODALIDADID})'><i class='fa fa-trash'></i></button>`
 
@@ -284,6 +294,7 @@
 						var nFilas = $("#delitos tr").length;
 						$("#adicionados").append(nFilas - 1);
 					}
+					//Relacion imputado delito
 					for (let i = 0; i < fisicaImpDelito.length; i++) {
 						// var btn = `<button type='button'  class='btn btn-primary' onclick='eliminarImputadoDelito(${impDelito[i].PERSONAFISICAID},${impDelito[i].DELITOMODALIDADID})'><i class='fa fa-trash'></i></button>`
 
@@ -297,6 +308,24 @@
 						$('#table-delito-cometidos tr:first').after(fila);
 						$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
 						var nFilas = $("#delito-cometidos tr").length;
+						$("#adicionados").append(nFilas - 1);
+					}
+
+					//Objetos involucrados
+					console.log(response);
+					for (let i = 0; i < objetos.length; i++) {
+						var btnEditar = `<button type='button'  class='btn btn-primary' onclick='viewObjetoInvolucrado(${objetos[i].OBJETOID})'><i class='fa fa-eye'></i></button>`
+
+						var fila =
+							`<tr id="row${i}">` +
+							`<td class="text-center" value="${objetos[i].CLASIFICACIONID}">${objetos[i].OBJETOCLASIFICACIONDESCR}</td>` +
+							`<td class="text-center" value="${objetos[i].SUBCLASIFICACIONID}">${objetos[i].OBJETOSUBCLASIFICACIONDESCR}</td>` +
+							`<td class="text-center">${btnEditar}</td>` +
+							`</tr>`;
+
+						$('#table-objetos-involucrados tr:first').after(fila);
+						$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
+						var nFilas = $("#objetos-involucrados tr").length;
 						$("#adicionados").append(nFilas - 1);
 					}
 
@@ -494,7 +523,46 @@
 	buscar_nuevo_btn.addEventListener('click', () => {
 		history.back();
 	});
+	function viewObjetoInvolucrado(objetoid) {
+				$('#folio_objetos_ver').modal('show');
+				$.ajax({
+					data: {
+						'objetoid': objetoid,
+						'folio': inputFolio.value,
+						'year': year_select.value,
+					},
+					url: "<?= base_url('/data/get-objeto-involucrado-by-id') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						let objeto = response.objetoInvolucrado;
+						let objeto_sub = response.objetosub;
+						document.querySelector('#objeto_id').value = objeto.OBJETOID ? objeto.OBJETOID : '';
+						document.querySelector('#situacion_objeto_update').value = objeto.SITUACION ? objeto.SITUACION : '';
+						document.querySelector('#objeto_update_clasificacion').value = objeto.CLASIFICACIONID ? objeto.CLASIFICACIONID : '';
+						// document.querySelector('#objeto_update_subclasificacion').value = objeto_sub.OBJETOSUBCLASIFICACIONID ? objeto_sub.OBJETOSUBCLASIFICACIONID : '';
+						$('#objeto_update_subclasificacion').empty();
+						let select_objeto_update_subclasificacion = document.querySelector("#objeto_update_subclasificacion");
 
+						objeto_sub.forEach(objeto_sub => {
+							const option = document.createElement('option');
+							option.value = objeto_sub.SUBCLASIFICACIONID;
+							option.text = objeto_sub.OBJETOSUBCLASIFICACIONDESCR;
+							select_objeto_update_subclasificacion.add(option, null);
+						});
+
+						document.querySelector('#marca_objeto_update').value = objeto.MARCA ? objeto.MARCA : '';
+						document.querySelector('#serie_objeto_update').value = objeto.NUMEROSERIE ? objeto.CANTIDAD : '';
+						document.querySelector('#cantidad_objeto_update').value = objeto.CANTIDAD ? objeto.CANTIDAD : '';
+						document.querySelector('#valor_objeto_update').value = objeto.VALOR ? objeto.VALOR : '';
+						document.querySelector('#tipo_moneda_update').value = objeto.TIPOMONEDAID ? objeto.TIPOMONEDAID : '';
+						document.querySelector('#descripcion_detallada_update').value = objeto.DESCRIPCIONDETALLADA ? objeto.DESCRIPCIONDETALLADA : '';
+						document.querySelector('#propietario_update').value = objeto.PERSONAFISICAIDPROPIETARIO ? objeto.PERSONAFISICAIDPROPIETARIO : '';
+						document.querySelector('#participa_estado_objeto_update').value = objeto.PARTICIPAESTADO ? objeto.PARTICIPAESTADO : '';
+
+					}
+				});
+			}
 	function viewPersonaFisica(id) {
 		$.ajax({
 			data: {
@@ -701,7 +769,7 @@
 					// 	document.getElementById("updateParentesco").style.display="none";
 
 					// }
-
+					
 					//DOMICILIO
 					let domicilio = response.personaFisicaDomicilio;
 
@@ -1184,6 +1252,8 @@
 				});
 			}
 
+			
+
 			function actualizarPreguntas() {
 				const data = {
 					'folio': document.querySelector('#input_folio_atencion').value,
@@ -1238,4 +1308,6 @@
 <?php include('modals/persona_modal.php') ?>
 <?php include('modals/vehiculo_modal.php') ?>
 <?php include('modals/domicilio_modal.php') ?>
+<?php include('modals/objetos_involucrados_modal.php') ?>
+
 <?php $this->endSection() ?>

@@ -588,7 +588,6 @@
 					const imputados = response.imputados;
 					const victimas = response.victimas;
 					const objetos = response.objetos;
-					console.log(objetos);
 					inputFolio.classList.add('d-none');
 					buscar_btn.classList.add('d-none');
 					year_select.classList.add('d-none');

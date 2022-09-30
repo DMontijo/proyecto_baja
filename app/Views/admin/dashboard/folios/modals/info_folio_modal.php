@@ -18,15 +18,17 @@
 							<a class="nav-link" id="v-pills-parentesco-tab" data-toggle="pill" href="#v-pills-parentesco" role="tab" aria-controls="v-pills-parentesco" aria-selected="false"><i class="fas fa-handshake"></i> PARENTESCO</a>
 							<a class="nav-link" id="v-pills-delitos-cometidos-tab" data-toggle="pill" href="#v-pills-delitos-cometido" role="tab" aria-controls="v-pills-delitos-cometido" aria-selected="false"><i class='fas fa-user-alt-slash'></i> DELITOS COMETIDOS</a>
 							<a class="nav-link" id="v-pills-delitos-tab" data-toggle="pill" href="#v-pills-asignar-delitos" role="tab" aria-controls="v-pills-asignar-delitos" aria-selected="false"><i class='fas fa-handshake-slash'></i> DELITOS</a>
+							<a class="nav-link" id="v-pills-objetos-involucrados-tab" data-toggle="pill" href="#v-pills-objetos-involucrados" role="tab" aria-controls="v-pills-objetos-involucrados" aria-selected="false"><i class="fas fa-box"></i> OBJETOS INVOLUCRADOS</a>
+
 						</div>
 					</div>
 					<div class="col-9">
 						<div class="tab-content" id="info_content">
 							<div class="tab-pane fade show active" id="v-pills-denuncia" role="tabpanel" aria-labelledby="v-pills-denuncia-tab">
-							<?= view('admin/dashboard/folios/forms/form_denuncia') ?>
+								<?= view('admin/dashboard/folios/forms/form_denuncia') ?>
 							</div>
 							<div class="tab-pane fade" id="v-pills-preguntas-iniciales" role="tabpanel" aria-labelledby="v-pills-preguntas-iniciales-tab">
-							<?= view('admin/dashboard/folios/forms/form_preguntas_iniciales') ?>
+								<?= view('admin/dashboard/folios/forms/form_preguntas_iniciales') ?>
 							</div>
 							<div class="tab-pane fade" id="v-pills-personas" role="tabpanel" aria-labelledby="v-pills-personas-tab">
 								<div id="adicionados" class="d-none"></div>
@@ -79,7 +81,19 @@
 										</tr>
 									</table>
 								</div>
+							</div>
+							<div class="tab-pane fade" id="v-pills-objetos-involucrados" role="tabpanel" aria-labelledby="v-pills-objetos-involucrados-tab">
+								<div id="adicionados" class="d-none"></div>
+								<div class="table-responsive">
+									<table id="table-objetos-involucrados" class="table table-bordered table-hover table-striped table-light">
+										<tr>
+											<th class="text-center bg-primary text-white" id="objeto" name="objeto">CLASIFICACIÓN</th>
+											<th class="text-center bg-primary text-white" id="clasificacion" name="clasificacion">SUBCLASIFICACIÓN</th>
+											<th class="text-center bg-primary text-white"></th>
 
+										</tr>
+									</table>
+								</div>
 							</div>
 							<div class="tab-pane fade" id="v-pills-vehiculos" role="tabpanel" aria-labelledby="v-pills-vehiculos-tab">
 								<table id="table-vehiculos" class="table table-bordered table-hover table-striped table-light">
