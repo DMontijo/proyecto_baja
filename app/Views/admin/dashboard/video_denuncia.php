@@ -421,6 +421,87 @@
 
 	}
 
+	function eliminarObjetosInvolucrados(objetoid) {
+		$.ajax({
+			data: {
+				'objetoid': objetoid,
+				'folio': inputFolio.value,
+				'year': year_select.value,
+
+			},
+			url: "<?= base_url('/data/delete-objeto-involucrado-by-folio') ?>",
+			method: "POST",
+			dataType: "json",
+			success: function(response) {
+
+				if (response.status == 1) {
+					Swal.fire({
+						icon: 'success',
+						text: 'Objeto involucrado eliminado correctamente',
+						confirmButtonColor: '#bf9b55',
+					});
+					let tabla_objetos_involucrados = document.querySelectorAll('#table-objetos-involucrados tr');
+					tabla_objetos_involucrados.forEach(row => {
+						if (row.id !== '') {
+							row.remove();
+						}
+					});
+
+					llenarTablaObjetosInvolucrados(response.objetos);
+				} else {
+					Swal.fire({
+						icon: 'error',
+						text: 'No se elimino el objeto involucrado',
+						confirmButtonColor: '#bf9b55',
+					});
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown) {}
+		});
+
+	}
+
+	function viewObjetoInvolucrado(objetoid) {
+		$('#folio_objetos_update').modal('show');
+		$.ajax({
+			data: {
+				'objetoid': objetoid,
+				'folio': inputFolio.value,
+				'year': year_select.value,
+			},
+			url: "<?= base_url('/data/get-objeto-involucrado-by-id') ?>",
+			method: "POST",
+			dataType: "json",
+			success: function(response) {
+				let objeto = response.objetoInvolucrado;
+				let objeto_sub = response.objetosub;
+				document.querySelector('#objeto_id').value = objeto.OBJETOID ? objeto.OBJETOID : '';
+				document.querySelector('#situacion_objeto_update').value = objeto.SITUACION ? objeto.SITUACION : '';
+				document.querySelector('#objeto_update_clasificacion').value = objeto.CLASIFICACIONID ? objeto.CLASIFICACIONID : '';
+				// document.querySelector('#objeto_update_subclasificacion').value = objeto_sub.OBJETOSUBCLASIFICACIONID ? objeto_sub.OBJETOSUBCLASIFICACIONID : '';
+				$('#objeto_update_subclasificacion').empty();
+					let select_objeto_update_subclasificacion = document.querySelector("#objeto_update_subclasificacion");
+				
+					objeto_sub.forEach(objeto_sub => {
+						const option = document.createElement('option');
+						option.value = objeto_sub.SUBCLASIFICACIONID;
+						option.text = objeto_sub.OBJETOSUBCLASIFICACIONDESCR;
+						select_objeto_update_subclasificacion.add(option, null);
+					});
+
+				document.querySelector('#marca_objeto_update').value = objeto.MARCA ? objeto.MARCA : '';
+				document.querySelector('#serie_objeto_update').value = objeto.NUMEROSERIE ? objeto.CANTIDAD : '';
+				document.querySelector('#cantidad_objeto_update').value = objeto.CANTIDAD ? objeto.CANTIDAD : '';
+				document.querySelector('#valor_objeto_update').value = objeto.VALOR ? objeto.VALOR : '';
+				document.querySelector('#tipo_moneda_update').value = objeto.TIPOMONEDAID ? objeto.TIPOMONEDAID : '';
+				document.querySelector('#descripcion_detallada_update').value = objeto.DESCRIPCIONDETALLADA ? objeto.DESCRIPCIONDETALLADA : '';
+				document.querySelector('#propietario_update').value = objeto.PERSONAFISICAIDPROPIETARIO ? objeto.PERSONAFISICAIDPROPIETARIO : '';
+				document.querySelector('#participa_estado_objeto_update').value = objeto.PARTICIPAESTADO ? objeto.PARTICIPAESTADO : '';
+
+			}
+		});
+	}
+
 	function llenarTablaImpDel(impDelito) {
 		for (let i = 0; i < impDelito.length; i++) {
 			// var btn = `<button type='button'  class='btn btn-primary' onclick='eliminarImputadoDelito(${impDelito[i].PERSONAFISICAID},${impDelito[i].DELITOMODALIDADID})'><i class='fa fa-trash'></i></button>`
@@ -435,6 +516,26 @@
 			$('#table-delito-cometidos tr:first').after(fila);
 			$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
 			var nFilas = $("#delito-cometidos tr").length;
+			$("#adicionados").append(nFilas - 1);
+		}
+	}
+
+	function llenarTablaObjetosInvolucrados(objetos) {
+		for (let i = 0; i < objetos.length; i++) {
+			var btnEliminar = `<button type='button'  class='btn btn-primary' onclick='eliminarObjetosInvolucrados(${objetos[i].OBJETOID})'><i class='fa fa-trash'></i></button>`
+			var btnEditar = `<button type='button'  class='btn btn-primary' onclick='viewObjetoInvolucrado(${objetos[i].OBJETOID})'><i class='fa fa-eye'></i></button>`
+
+			var fila =
+				`<tr id="row${i}">` +
+				`<td class="text-center" value="${objetos[i].CLASIFICACIONID}">${objetos[i].OBJETOCLASIFICACIONDESCR}</td>` +
+				`<td class="text-center" value="${objetos[i].SUBCLASIFICACIONID}">${objetos[i].OBJETOSUBCLASIFICACIONDESCR}</td>` +
+				`<td class="text-center">${btnEliminar}</td>` +
+				`<td class="text-center">${btnEditar}</td>` +
+				`</tr>`;
+
+			$('#table-objetos-involucrados tr:first').after(fila);
+			$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
+			var nFilas = $("#objetos-involucrados tr").length;
 			$("#adicionados").append(nFilas - 1);
 		}
 	}
@@ -486,6 +587,8 @@
 					const personafisica = response.personafisica;
 					const imputados = response.imputados;
 					const victimas = response.victimas;
+					const objetos = response.objetos;
+					console.log(objetos);
 					inputFolio.classList.add('d-none');
 					buscar_btn.classList.add('d-none');
 					year_select.classList.add('d-none');
@@ -559,6 +662,34 @@
 						option.text = persona.NOMBRE + ' ' + persona.PRIMERAPELLIDO;
 						select_personaFisica1_I.add(option, null);
 					});
+					$('#propietario').empty();
+					let select_propietario = document.querySelector("#propietario")
+					select_propietario.add(option_vacio, null);
+					personas.forEach(persona => {
+						const option = document.createElement('option');
+						option.value = persona.PERSONAFISICAID;
+						option.text = persona.NOMBRE + ' ' + persona.PRIMERAPELLIDO;
+						select_propietario.add(option, null);
+					});
+					$('#propietario_update').empty();
+					let select_propietario_update = document.querySelector("#propietario_update")
+					select_propietario_update.add(option_vacio, null);
+					personas.forEach(persona => {
+						const option = document.createElement('option');
+						option.value = persona.PERSONAFISICAID;
+						option.text = persona.NOMBRE + ' ' + persona.PRIMERAPELLIDO;
+						select_propietario_update.add(option, null);
+					});
+					$('#objeto_update_subclasificacion').empty();
+					let select_objeto_update_subclasificacion = document.querySelector("#objeto_update_subclasificacion")
+					select_objeto_update_subclasificacion.add(option_vacio, null);
+					objetos.forEach(objetos => {
+						const option = document.createElement('option');
+						option.value = objetos.SUBCLASIFICACIONID;
+						option.text = objetos.OBJETOSUBCLASIFICACIONDESCR;
+						select_objeto_update_subclasificacion.add(option, null);
+					});
+
 					//PREGUNTAS INICIALES
 					document.querySelector('#es_menor').value = preguntas.ES_MENOR;
 					document.querySelector('#es_tercera_edad').value = preguntas.ES_TERCERA_EDAD;
@@ -680,6 +811,9 @@
 					//DELITOS COMETIDOS
 					llenarTablaImpDel(fisicaImpDelito);
 
+					//OBJETOS INVOLUCRADOS
+					llenarTablaObjetosInvolucrados(objetos);
+
 
 				} else if (response.status === 2) {
 					Swal.fire({
@@ -734,6 +868,7 @@
 		tabla_parentesco = document.querySelectorAll('#table-parentesco tr');
 		tabla_relacion_fis_fis = document.querySelectorAll('#table-delitos tr');
 		tabla_delito_cometido = document.querySelectorAll('#table-delito-cometidos tr');
+		tabla_objetos_involucrados = document.querySelectorAll('#table-objetos-involucradoss tr');
 
 
 		tabla_personas.forEach(row => {
@@ -758,6 +893,11 @@
 			}
 		});
 		tabla_delito_cometido.forEach(row => {
+			if (row.id !== '') {
+				row.remove();
+			}
+		});
+		tabla_objetos_involucrados.forEach(row => {
 			if (row.id !== '') {
 				row.remove();
 			}
@@ -870,6 +1010,7 @@
 		document.getElementById("form_asignar_arbol_delictual_insert").reset();
 		document.getElementById("form_parentesco_insert").reset();
 		document.getElementById("form_delitos_cometidos_insert").reset();
+		document.getElementById("form_objetos_involucrados").reset();
 
 		$('#v-pills-vehiculos-tab').css('display', 'NONE');
 	}
@@ -1364,23 +1505,25 @@
 			var form_persona_fisica_domicilio = document.querySelector('#persona_fisica_domicilio_form');
 			var form_media_filiacion = document.querySelector('#form_media_filiacion');
 			var form_media_filiacion_insert = document.querySelector('#form_media_filiacion_insert');
-
 			var form_vehiculo = document.querySelector('#form_vehiculo');
 			var form_parentesco = document.querySelector('#form_parentesco');
 			var form_parentesco_insert = document.querySelector('#form_parentesco_insert');
 			var form_relacion_ido_insert = document.querySelector('#form_asignar_arbol_delictual_insert');
 			var form_fisimpdelito = document.querySelector('#form_delitos_cometidos_insert');
+			var form_objetosinvolucrados = document.querySelector('#form_objetos_involucrados');
+			var form_objetosinvolucrados_update = document.querySelector('#form_objetos_involucrados_update');
 
 			var selectPersonaFisica1 = document.querySelector('#personaFisica1_I');
 			var form_persona_fisica_insert = document.querySelector('#persona_fisica_form_insert');
-
+			var selectObjetoClasificacion = document.querySelector('#objeto_clasificacion');
+			var selectObjetoClasificacionUpdate = document.querySelector('#objeto_update_clasificacion');
 
 			var btn_insertar_parentesco = document.querySelector('#insertParentescoModal');
 			var btn_insertar_persona_fisica = document.querySelector('#insertPersonaFisicaModal');
 			var btn_asignar_delitos = document.querySelector('#insertArbolDelictual');
 			// var btn_delito_imputado = document.querySelector('#insertDelitoImputado');
 			var btn_delito_cometido = document.querySelector('#insertDelitoCometido');
-
+			var btn_objeto_involucrado_modal = document.querySelector('#modalObjetoInvolucrado');
 
 			var inputsText = document.querySelectorAll('input[type="text"]');
 			var inputsEmail = document.querySelectorAll('input[type="email"]');
@@ -1467,8 +1610,6 @@
 				}
 			}, false);
 
-
-
 			form_vehiculo.addEventListener('submit', (event) => {
 				if (!form_vehiculo.checkValidity()) {
 					event.preventDefault();
@@ -1493,6 +1634,32 @@
 					actualizarParentesco();
 				}
 			}, false);
+			form_objetosinvolucrados.addEventListener('submit', (event) => {
+				if (!form_objetosinvolucrados.checkValidity()) {
+					event.preventDefault();
+					event.stopPropagation();
+					form_objetosinvolucrados.classList.add('was-validated')
+				} else {
+					event.preventDefault();
+					event.stopPropagation();
+					form_objetosinvolucrados.classList.remove('was-validated')
+					agregarObjetosInvolucrados();
+				}
+			}, false);
+			form_objetosinvolucrados_update.addEventListener('submit', (event) => {
+				if (!form_objetosinvolucrados_update.checkValidity()) {
+					event.preventDefault();
+					event.stopPropagation();
+					form_objetosinvolucrados_update.classList.add('was-validated')
+				} else {
+					event.preventDefault();
+					event.stopPropagation();
+					form_objetosinvolucrados_update.classList.remove('was-validated')
+					let objeto_id = document.querySelector('#objeto_id').value;
+
+					actualizarObjetosInvolucrados(objeto_id);
+				}
+			}, false);
 			btn_insertar_parentesco.addEventListener('click', (event) => {
 				document.getElementById("form_media_filiacion_insert").reset();
 				document.querySelector('#personaFisica1_I').value = '';
@@ -1510,6 +1677,14 @@
 				document.querySelector('#victima_ofendido').value = '';
 
 				$('#insert_asignar_arbol_delictual_modal').modal('show');
+			}, false);
+			btn_objeto_involucrado_modal.addEventListener('click', (event) => {
+				// document.getElementById("form_asignar_arbol_delictual_insert").reset();
+				// document.querySelector('#imputado_arbol').value = '';
+				// document.querySelector('#delito_cometido').value = '';
+				// document.querySelector('#victima_ofendido').value = '';
+
+				$('#folio_objetos').modal('show');
 			}, false);
 			// btn_delito_imputado.addEventListener('click', (event) => {
 			// 	$('#insert_asignar_delitos_cometidos_modal').modal('show');
@@ -1572,7 +1747,64 @@
 					},
 				});
 			});
+			selectObjetoClasificacion.addEventListener("change", function() {
+				let objetoSubclasificacion = document.querySelector("#objeto_subclasificacion")
 
+				var datos = {
+					"objeto_clasificacion_id": selectObjetoClasificacion.value,
+				}
+
+				$.ajax({
+					method: 'POST',
+					url: "<?= base_url('/data/get-objeto-sub-by-cat') ?>",
+					data: datos,
+					dataType: 'JSON',
+					//data: {nombre:n},
+					success: function(response) {
+						const objetoSub = response.objetoSub;
+						if (response.status == 1) {
+							$('#objeto_subclasificacion').empty();
+
+							objetoSub.forEach(element => {
+								const option = document.createElement('option');
+								option.value = element.OBJETOSUBCLASIFICACIONID;
+								option.text = element.OBJETOSUBCLASIFICACIONDESCR;
+								objetoSubclasificacion.add(option, null);
+							});
+						}
+					},
+				});
+			});
+
+			selectObjetoClasificacionUpdate.addEventListener("change", function() {
+				let objetoSubclasificacionUpdate = document.querySelector("#objeto_update_subclasificacion")
+				$('#objeto_update_subclasificacion').empty();
+
+				var datos = {
+					"objeto_clasificacion_id": selectObjetoClasificacionUpdate.value,
+				}
+
+				$.ajax({
+					method: 'POST',
+					url: "<?= base_url('/data/get-objeto-sub-by-cat') ?>",
+					data: datos,
+					dataType: 'JSON',
+					//data: {nombre:n},
+					success: function(response) {
+						const objetoSub = response.objetoSub;
+						if (response.status == 1) {
+							$('#objeto_update_subclasificacion').empty();
+
+							objetoSub.forEach(element => {
+								const option = document.createElement('option');
+								option.value = element.OBJETOSUBCLASIFICACIONID;
+								option.text = element.OBJETOSUBCLASIFICACIONDESCR;
+								objetoSubclasificacionUpdate.add(option, null);
+							});
+						}
+					},
+				});
+			});
 			form_relacion_ido_insert.addEventListener('submit', (event) => {
 				if (!form_relacion_ido_insert.checkValidity()) {
 					event.preventDefault();
@@ -2327,6 +2559,24 @@
 								icon: 'success',
 								text: 'Persona física actualizada correctamente',
 								confirmButtonColor: '#bf9b55',
+							});
+							$('#propietario').empty();
+							let select_propietario = document.querySelector("#propietario")
+							select_propietario.add(option_vacio, null);
+							personas.forEach(persona => {
+								const option = document.createElement('option');
+								option.value = persona.PERSONAFISICAID;
+								option.text = persona.NOMBRE + ' ' + persona.PRIMERAPELLIDO;
+								select_propietario.add(option, null);
+							});
+							$('#propietario_update').empty();
+							let select_propietario_update = document.querySelector("#propietario_update")
+							select_propietario_update.add(option_vacio, null);
+							personas.forEach(persona => {
+								const option = document.createElement('option');
+								option.value = persona.PERSONAFISICAID;
+								option.text = persona.NOMBRE + ' ' + persona.PRIMERAPELLIDO;
+								select_propietario_update.add(option, null);
 							});
 						} else {
 							Swal.fire({
@@ -3160,6 +3410,168 @@
 				});
 			}
 
+			function agregarObjetosInvolucrados() {
+
+				const data = {
+					'folio': document.querySelector('#input_folio_atencion').value,
+					'year': document.querySelector('#year_select').value,
+					'situacion': document.querySelector('#situacion_objeto').value,
+					'clasificacionid': document.querySelector('#objeto_clasificacion').value,
+					'subclasificacionid': document.querySelector('#objeto_subclasificacion').value,
+					'marca': document.querySelector('#marca_objeto').value,
+					'numserie': document.querySelector('#serie_objeto').value,
+					'cantidad': document.querySelector('#cantidad_objeto').value,
+					'valor': document.querySelector('#valor_objeto').value,
+					'moneda': document.querySelector('#tipo_moneda').value,
+					'descripciondetallada': document.querySelector('#descripcion_detallada').value,
+					'propietario': document.querySelector('#propietario').value,
+					'participaestado': document.querySelector('#participa_estado_objeto').value,
+				};
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/create-objeto-involucrado-by-folio') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						const objetos = response.objetos;
+						if (response.status == 1) {
+							document.getElementById("form_objetos_involucrados").reset();
+							$('#objeto_subclasificacion').empty();
+							$('#propietario').empty();
+							let tabla_objetos_involucrados = document.querySelectorAll('#table-objetos-involucrados tr');
+							tabla_objetos_involucrados.forEach(row => {
+								if (row.id !== '') {
+									row.remove();
+								}
+							});
+
+							llenarTablaObjetosInvolucrados(response.objetos);
+
+							Swal.fire({
+								icon: 'success',
+								text: 'Objeto añadido correctamente',
+								confirmButtonColor: '#bf9b55',
+							});
+							$('#folio_objetos').modal('hide');
+							
+						} else if (response.status == 0) {
+							Swal.fire({
+								icon: 'error',
+								text: 'No se agregó el objeto involucrado',
+								confirmButtonColor: '#bf9b55',
+							});
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						console.log(textStatus);
+					}
+				});
+			}
+
+			function actualizarObjetosInvolucrados(objetoid) {
+
+				const data = {
+					'folio': document.querySelector('#input_folio_atencion').value,
+					'year': document.querySelector('#year_select').value,
+					'objetoid': objetoid,
+					'situacion': document.querySelector('#situacion_objeto_update').value,
+					'clasificacionid': document.querySelector('#objeto_update_clasificacion').value,
+					'subclasificacionid': document.querySelector('#objeto_update_subclasificacion').value,
+					'marca': document.querySelector('#marca_objeto_update').value,
+					'numserie': document.querySelector('#serie_objeto_update').value,
+					'cantidad': document.querySelector('#cantidad_objeto_update').value,
+					'valor': document.querySelector('#valor_objeto_update').value,
+					'moneda': document.querySelector('#tipo_moneda_update').value,
+					'descripciondetallada': document.querySelector('#descripcion_detallada_update').value,
+					'propietario': document.querySelector('#propietario_update').value,
+					'participaestado': document.querySelector('#participa_estado_objeto_update').value,
+				};
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/update-objeto-involucrado-by-id') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						const objetos = response.objetos;
+						let objeto_sub = response.objetosub;
+						if (response.status == 1) {
+							document.getElementById("form_objetos_involucrados_update").reset();
+
+							let tabla_objetos_involucrados = document.querySelectorAll('#table-objetos-involucrados tr');
+							tabla_objetos_involucrados.forEach(row => {
+								if (row.id !== '') {
+									row.remove();
+								}
+							});
+
+							llenarTablaObjetosInvolucrados(objetos);
+							Swal.fire({
+								icon: 'success',
+								text: 'Objeto actualizado correctamente',
+								confirmButtonColor: '#bf9b55',
+							});
+							$('#folio_objetos_update').modal('hide');
+							$('#objeto_update_subclasificacion').empty();
+						
+						} else if (response.status == 0) {
+							Swal.fire({
+								icon: 'error',
+								text: 'No se agregó el objeto involucrado',
+								confirmButtonColor: '#bf9b55',
+							});
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						console.log(textStatus);
+					}
+				});
+			}
+
+			function actualizarParentesco() {
+				const data = {
+					'folio': document.querySelector('#input_folio_atencion').value,
+					'year': document.querySelector('#year_select').value,
+					'personaFisica1': document.querySelector('#personaFisica1').value,
+					'personaFisica2': document.querySelector('#personaFisica2').value,
+					'parentesco_mf': document.querySelector('#parentesco_mf').value,
+				};
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/update-parentesco-by-id') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						if (response.status == 1) {
+							let tabla_parentesco = document.querySelectorAll('#table-parentesco tr');
+							tabla_parentesco.forEach(row => {
+								if (row.id !== '') {
+									row.remove();
+								}
+							});
+							llenarTablaParentesco(response.parentescoRelacion, response.personaiduno, response.personaidDos, response.parentesco);
+
+							Swal.fire({
+								icon: 'success',
+								text: 'Parentesco actualizado correctamente',
+								confirmButtonColor: '#bf9b55',
+							});
+							$('#relacion_parentesco_modal').modal('hide');
+
+						} else {
+							Swal.fire({
+								icon: 'error',
+								text: 'No se actualizó la información del parentesco',
+								confirmButtonColor: '#bf9b55',
+							});
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						console.log(textStatus);
+					}
+				});
+			}
+
+
 			function dateToString(_date) {
 				let date = new Date(_date);
 				let dateToTijuanaString = date.toLocaleString('en-US', {
@@ -3189,5 +3601,7 @@
 <?php include 'video_denuncia_modals/domicilio_modal.php' ?>
 <?php include 'video_denuncia_modals/insert_asignar_arbol_delictual_modal.php' ?>
 <?php include 'video_denuncia_modals/insert_asignar_delitos_cometidos_modal.php' ?>
+<?php include 'video_denuncia_modals/objetos_involucrados_modal.php' ?>
+<?php include 'video_denuncia_modals/objetos_involucrados_modal_update.php' ?>
 
 <?php $this->endSection() ?>

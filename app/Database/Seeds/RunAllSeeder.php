@@ -100,6 +100,7 @@ class RunAllSeeder extends Seeder
 		$this->call('ObjetoClasificacionSeeder');
 		$this->call('ObjetoSubclasificacionSeeder');
 		$this->call('DelitosModalidadSeeder');
+		$this->call('TipoMonedaSeeder');
 
 	}
 }

@@ -176,6 +176,13 @@ $routes->group('data', function ($routes) {
 	$routes->post('get-modelo-by-marca', 'client/DashboardController::getModeloByMarca');
 	$routes->post('get-version-by-modelo', 'client/DashboardController::getVersionByModelo');
 
+	//OBJETOS
+	$routes->post('get-objeto-sub-by-cat', 'admin/DashboardController::getObjetoSubclasificacion');
+	$routes->post('create-objeto-involucrado-by-folio', 'admin/DashboardController::createObjetoInvolucradoByFolio');
+	$routes->post('delete-objeto-involucrado-by-folio', 'admin/DashboardController::deleteObjetoInvolucrado');
+	$routes->post('get-objeto-involucrado-by-id', 'admin/DashboardController::getObjetoInvolucrado');
+	$routes->post('update-objeto-involucrado-by-id', 'admin/DashboardController::updateObjetosInvolucradosById');
+
 	//SAVE IN JUSTICIA DATABASE
 	$routes->post('save-in-justicia', 'admin/DashboardController::saveInJusticia');
 	$routes->post('restore-folio', 'admin/DashboardController::restoreFolio');

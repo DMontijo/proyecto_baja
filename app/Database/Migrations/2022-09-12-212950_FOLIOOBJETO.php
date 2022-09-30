@@ -62,7 +62,7 @@ class FOLIOOBJETO extends Migration
         ],
         'DESCRIPCIONDETALLADA' => [
             'type' => 'VARCHAR',
-            'constraint' => '100',
+            'constraint' => '500',
             'null' => true,
         ],
         'PERSONAFISICAIDPROPIETARIO' => [

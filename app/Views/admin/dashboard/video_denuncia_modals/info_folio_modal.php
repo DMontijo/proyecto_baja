@@ -18,6 +18,8 @@
 							<a class="nav-link" id="v-pills-parentesco-tab" data-toggle="pill" href="#v-pills-parentesco" role="tab" aria-controls="v-pills-parentesco" aria-selected="false"><i class="fas fa-people-arrows"></i> PARENTESCOS</a>
 							<a class="nav-link" id="v-pills-delitos-cometidos-tab" data-toggle="pill" href="#v-pills-delitos-cometido" role="tab" aria-controls="v-pills-delitos-cometido" aria-selected="false"><i class='fas fa-user-alt-slash'></i> DELITOS COMETIDOS</a>
 							<a class="nav-link" id="v-pills-delitos-tab" data-toggle="pill" href="#v-pills-asignar-delitos" role="tab" aria-controls="v-pills-asignar-delitos" aria-selected="false"><i class="fas fa-user-ninja"></i> DELITOS</a>
+							<a class="nav-link" id="v-pills-objetos-involucrados-tab" data-toggle="pill" href="#v-pills-objetos-involucrados" role="tab" aria-controls="v-pills-objetos-involucrados" aria-selected="false"><i class="fas fa-box"></i> OBJETOS INVOLUCRADOS</a>
+
 						</div>
 					</div>
 					<div class="col-9">
@@ -85,6 +87,23 @@
 											<th class="text-center bg-primary text-white" id="delitoCometido" name="delitoCometido">DELITO COMETIDO</th>
 											<th class="text-center bg-primary text-white" id="nombreVictima" name="nombreVictima">VÍCTIMA / OFENDIDO</th>
 											<th class="text-center bg-primary text-white"></th>
+										</tr>
+									</table>
+								</div>
+							</div>
+							<div class="tab-pane fade" id="v-pills-objetos-involucrados" role="tabpanel" aria-labelledby="v-pills-objetos-involucrados-tab">
+								<div id="adicionados" class="d-none"></div>
+								<div class="col-12 mb-2 p-0 text-right">
+									<button type="button" id="modalObjetoInvolucrado" name="modalObjetoInvolucrado" class="btn btn-primary font-weight-bold"><i class="fas fa-plus mr-3"></i> OBJETO INVOLUCRADO</button>
+								</div>
+								<div class="table-responsive">
+									<table id="table-objetos-involucrados" class="table table-bordered table-hover table-striped table-light">
+										<tr>
+											<th class="text-center bg-primary text-white" id="objeto" name="objeto">CLASIFICACIÓN</th>
+											<th class="text-center bg-primary text-white" id="clasificacion" name="clasificacion">SUBCLASIFICACIÓN</th>
+											<th class="text-center bg-primary text-white"></th>
+											<th class="text-center bg-primary text-white"></th>
+
 										</tr>
 									</table>
 								</div>

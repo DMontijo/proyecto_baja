@@ -99,8 +99,12 @@ use App\Models\CabelloPeculiarModel;
 use App\Models\DelitoModalidadModel;
 use App\Models\FolioArchivoExternoModel;
 use App\Models\FolioDocumentoModel;
+use App\Models\FolioObjetoModel;
 use App\Models\FolioPersonaFisImpDelitoModel;
 use App\Models\FolioRelacionFisFisModel;
+use App\Models\ObjetoClasificacionModel;
+use App\Models\ObjetoSubclasificacionModel;
+use App\Models\TipoMonedaModel;
 
 class DashboardController extends BaseController
 {
@@ -208,6 +212,10 @@ class DashboardController extends BaseController
         $this->_relacionIDOModel = new FolioRelacionFisFisModel();
         $this->_archivoExternoModel = new FolioArchivoExternoModel();
         $this->_folioDocumentosModel = new FolioDocumentoModel();
+        $this->_objetoClasificacionModel = new ObjetoClasificacionModel();
+        $this->_objetoSubclasificacionModel = new ObjetoSubclasificacionModel();
+        $this->_folioObjetoInvolucradoModel = new FolioObjetoModel();
+        $this->_tipoMonedaModel = new TipoMonedaModel();
 
 
         // $this->protocol = 'http://';
@@ -461,6 +469,7 @@ class DashboardController extends BaseController
                     $data->vehiculos = $this->_folioVehiculoModel->get_by_folio($numfolio, $year);
                     $data->fisicaImpDelito = $this->_imputadoDelitoModel->get_by_folio($numfolio, $year);
                     $data->delitosModalidadFiltro = $this->_delitoModalidadModel->get_delitodescr($numfolio, $year);
+                    $data->objetos = $this->_folioObjetoInvolucradoModel->get_descripcion($numfolio, $year);
                     // $data->personafisica = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->findAll();
                     $data->imputados = $this->_folioPersonaFisicaModel->get_imputados($numfolio, $year);
                     $data->victimas = $this->_folioPersonaFisicaModel->get_victimas($numfolio, $year);
@@ -747,6 +756,9 @@ class DashboardController extends BaseController
         $data->pielColor = $this->_pielColorModel->asObject()->findAll();
         $data->etnia = $this->_etniaModel->asObject()->findAll();
         $data->parentesco = $this->_parentescoModel->asObject()->findAll();
+        $data->objetoclasificacion = $this->_objetoClasificacionModel->asObject()->findAll();
+        $data->objetosubclasificacion = $this->_objetoSubclasificacionModel->asObject()->findAll();
+        $data->tipomoneda = $this->_tipoMonedaModel->asObject()->findAll();
         $data->personafisica = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->findAll();
         $data->imputados = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->where('CALIDADJURIDICAID', 2)->findAll();
         $data->victimas = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->where('CALIDADJURIDICAID= 1 OR CALIDADJURIDICAID=6')->findAll();
@@ -2566,7 +2578,7 @@ class DashboardController extends BaseController
             //         return json_encode(['status' => 0]);
             //     }
             // } else 
-            if ($countdelitoFisFis[0]->DELITOMODALIDADID > 1){
+            if ($countdelitoFisFis[0]->DELITOMODALIDADID > 1) {
                 if ($deleteArbol) {
                     $relacionFisFis = $this->_relacionIDOModel->get_by_folio($folio, $year);
                     $fisicaImpDelito = $this->_imputadoDelitoModel->get_by_folio($folio, $year);
@@ -2657,6 +2669,159 @@ class DashboardController extends BaseController
         }
     }
 
+    public function getObjetoSubclasificacion()
+    {
+        $data = (object) array();
+        $clasificacionID = $this->request->getPost('objeto_clasificacion_id');
+
+        $data->objetoSubclasificacion = $this->_objetoSubclasificacionModel->asObject()->where('OBJETOCLASIFICACIONID', $clasificacionID)->orderBy('OBJETOSUBCLASIFICACIONDESCR', 'asc')->findAll();
+
+        if ($data->objetoSubclasificacion) {
+            return json_encode(['status' => 1, 'objetoSub' => $data->objetoSubclasificacion]);
+        } else {
+            return json_encode(['status' => 0]);
+        }
+    }
+    public function createObjetoInvolucradoByFolio()
+    {
+
+        $folio = trim($this->request->getPost('folio'));
+        $year = trim($this->request->getPost('year'));
+
+        $dataObjetoInvolucrado = array(
+            'FOLIOID' => $this->request->getPost('folio'),
+            'ANO' => $this->request->getPost('year'),
+            'SITUACION' => $this->request->getPost('situacion'),
+            'CLASIFICACIONID' => $this->request->getPost('clasificacionid'),
+            'SUBCLASIFICACIONID' => $this->request->getPost('subclasificacionid'),
+            'MARCA' => $this->request->getPost('marca'),
+            'NUMEROSERIE' => $this->request->getPost('numserie'),
+            'CANTIDAD' => $this->request->getPost('cantidad'),
+            'VALOR' => $this->request->getPost('valor'),
+            'TIPOMONEDAID' => $this->request->getPost('moneda'),
+            'DESCRIPCIONDETALLADA' => $this->request->getPost('descripciondetallada'),
+            'PERSONAFISICAIDPROPIETARIO' => $this->request->getPost('propietario'),
+            'PARTICIPAESTADO' => $this->request->getPost('participaestado'),
+        );
+        $objetoInvolucrado = $this->_folioObjetoInvolucrado($dataObjetoInvolucrado, $folio, $year);
+        if ($objetoInvolucrado) {
+            $objetos = $this->_folioObjetoInvolucradoModel->get_descripcion($folio, $year);
+            $datosBitacora = [
+                'ACCION' => 'Ha ingresado un nuevo objeto involucrado',
+                'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
+            ];
+
+            $this->_bitacoraActividad($datosBitacora);
+            return json_encode(['status' => 1, 'objetos' => $objetos]);
+        }
+    }
+    public function deleteObjetoInvolucrado()
+    {
+
+        try {
+            $folio = trim($this->request->getPost('folio'));
+            $year = trim($this->request->getPost('year'));
+            $objetoid = trim($this->request->getPost('objetoid'));
+
+            $deleteObjetoInvolucrado = $this->_folioObjetoInvolucradoModel->where('FOLIOID', $folio)->where('ANO', $year)->where('OBJETOID', $objetoid)->delete();
+
+            if ($deleteObjetoInvolucrado) {
+                $objetos = $this->_folioObjetoInvolucradoModel->get_descripcion($folio, $year);
+
+                $datosBitacora1 = [
+                    'ACCION' => 'Ha eliminado un objeto involucrado',
+                    'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
+                ];
+
+                $this->_bitacoraActividad($datosBitacora1);
+
+                return json_encode(['status' => 1, 'objetos' => $objetos]);
+            } else {
+                return json_encode(['status' => 0]);
+            }
+        } catch (\Exception $e) {
+            return json_encode(['status' => 0]);
+        }
+    }
+    public function getObjetoInvolucrado()
+    {
+        $objetoid = trim($this->request->getPost('objetoid'));
+        $folio = trim($this->request->getPost('folio'));
+        $year = trim($this->request->getPost('year'));
+
+        $data = (object) array();
+        $data->objetoInvolucrado = $this->_folioObjetoInvolucradoModel->where('FOLIOID', $folio)->where('ANO', $year)->where('OBJETOID', $objetoid)->first();
+        $data->objetosub = $this->_folioObjetoInvolucradoModel->get_objetosub($folio, $year,$objetoid,$data->objetoInvolucrado['CLASIFICACIONID']);
+        if ($data->objetoInvolucrado) {
+            $data->status = 1;
+            return json_encode($data);
+        } else {
+            $data = (object)['status' => 0];
+            return json_encode($data);
+        }
+    }
+    public function updateObjetosInvolucradosById()
+    {
+        try {
+            $objetoid = trim($this->request->getPost('objetoid'));
+            $folio = trim($this->request->getPost('folio'));
+            $year = trim($this->request->getPost('year'));
+            $dataObjetoInvolucrado = array(
+                'FOLIO' => trim($this->request->getPost('folio')),
+                'ANO' => trim($this->request->getPost('year')),
+                'OBJETOID' => $this->request->getPost('objetoid'),
+                'SITUACION' => $this->request->getPost('situacion'),
+                'CLASIFICACIONID' => $this->request->getPost('clasificacionid'),
+                'SUBCLASIFICACIONID' => $this->request->getPost('subclasificacionid'),
+                'MARCA' => $this->request->getPost('marca'),
+                'NUMEROSERIE' => $this->request->getPost('numserie'),
+                'CANTIDAD' => $this->request->getPost('cantidad'),
+                'VALOR' => $this->request->getPost('valor'),
+                'TIPOMONEDAID' => $this->request->getPost('moneda'),
+                'DESCRIPCIONDETALLADA' => $this->request->getPost('descripciondetallada'),
+                'PERSONAFISICAIDPROPIETARIO' => $this->request->getPost('propietario'),
+                'PARTICIPAESTADO' => $this->request->getPost('participaestado'),
+            );
+
+            $updateObjetoInvolucrado = $this->_folioObjetoInvolucradoModel->set($dataObjetoInvolucrado)->where('FOLIOID', $folio)->where('ANO', $year)->where('OBJETOID', $objetoid)->update();
+
+            if ($updateObjetoInvolucrado) {
+                $objetos = $this->_folioObjetoInvolucradoModel->get_descripcion($folio, $year);
+                
+        
+                $datosBitacora = [
+                    'ACCION' => 'Ha actualizado el objeto involucrado',
+                    'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year . 'OBJETOID: ' . $objetoid,
+                ];
+
+                $this->_bitacoraActividad($datosBitacora);
+
+                return json_encode(['status' => 1, 'objetos' => $objetos]);
+            } else {
+                return json_encode(['status' => 0]);
+            }
+        } catch (\Exception $e) {
+            return json_encode(['status' => 0]);
+        }
+    }
+    private function _folioObjetoInvolucrado($data, $folio, $year)
+    {
+        $data = $data;
+        $data['FOLIOID'] = $folio;
+        $data['ANO'] = $year;
+
+        $objetoInvolucrado = $this->_folioObjetoInvolucradoModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->orderBy('OBJETOID', 'desc')->first();
+
+        if ($objetoInvolucrado) {
+            $data['OBJETOID'] = ((int) $objetoInvolucrado->OBJETOID) + 1;
+            $objetoInvolucrado = $this->_folioObjetoInvolucradoModel->insert($data);
+            return $data['OBJETOID'];
+        } else {
+            $data['OBJETOID'] = 1;
+            $objetoInvolucrado = $this->_folioObjetoInvolucradoModel->insert($data);
+            return $data['OBJETOID'];
+        }
+    }
     private function _bitacoraActividad($data)
     {
         $data = $data;
