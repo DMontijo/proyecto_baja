@@ -2319,6 +2319,8 @@ class DashboardController extends BaseController
         $insertRelacionParentesco = $this->_parentescoPersonaFisicaModel->insert($dataRelacionParentesco);
 
         if (!$insertRelacionParentesco) {
+            $personas = $this->_folioPersonaFisicaModel->get_by_folio($folio, $year);
+
             $parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
             $personaiduno = $this->_parentescoPersonaFisicaModel->get_personaFisicaUno($folio, $year);
             $personaidDos = $this->_parentescoPersonaFisicaModel->get_personaFisicaDos($folio, $year);
@@ -2330,7 +2332,7 @@ class DashboardController extends BaseController
 
             $this->_bitacoraActividad($datosBitacora);
 
-            return json_encode(['status' => 1, 'parentescoRelacion' => $parentescoRelacion, 'personaiduno' => $personaiduno, 'personaidDos' => $personaidDos, 'parentesco' => $parentesco]);
+            return json_encode(['status' => 1, 'personas'=>$personas,'parentescoRelacion' => $parentescoRelacion, 'personaiduno' => $personaiduno, 'personaidDos' => $personaidDos, 'parentesco' => $parentesco]);
         } else {
             return json_encode(['status' => 0]);
         }
@@ -2827,10 +2829,14 @@ class DashboardController extends BaseController
         }
     }
     public function get_Plantillas(){
-        $titulo =$this->request->getPost('titulo');
+        $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
 
+        $titulo =$this->request->getPost('titulo');
         $data = (object) array();
+
         $data->plantilla = $this->_plantillasModel->where('TITULO', $titulo)->first();
+        $data->plantilla = str_replace('[EXPEDIENTE_NOMBRE_DEL_RESPONSABLE]', session('NOMBRE') . ' ' . session('APELLIDO_PATERNO') . ' '. session('APELLIDO_MATERNO'), $data->plantilla);
+        $data->plantilla = str_replace('[DOCUMENTO_FECHA]',date('d') . ' de '.$meses[date('n')-1]. " del ".date('Y'), $data->plantilla);
 
         if ($data->plantilla) {
             $data->status = 1;

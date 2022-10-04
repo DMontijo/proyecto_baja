@@ -9,7 +9,7 @@
 			</div>
 			<div class="modal-body bg-light" style="height:70vh;overflow-y:auto;">
 			
-				<div class="tab-content pt-3" id="persona_content">
+				<div class="tab-content pt-3" id="objetos_content">
 					<div class="tab-pane fade show active" id="nav-objetos_involucrados_update" role="tabpanel" aria-labelledby="nav-objetos_involucrados_update-tab">
 						<?= view('admin/dashboard/video_denuncia_forms/form_objetos_involucrados_update') ?>
 					</div>

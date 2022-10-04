@@ -621,7 +621,7 @@
 					option_vacio_vic.disabled = true;
 					option_vacio_vic.selected = true;
 
-					let select_victima_ofendido = document.querySelector("#victima_ofendido")
+					let select_victima_ofendido = document.querySelector("#victima_ofendido");
 					select_victima_ofendido.add(option_vacio_vic, null);
 					victimas.forEach(victima => {
 						const option = document.createElement('option');
@@ -630,7 +630,7 @@
 						select_victima_ofendido.add(option, null);
 					});
 					$('#imputado_delito_cometido').empty();
-					let select_imputado_delito_cometido = document.querySelector("#imputado_delito_cometido")
+					let select_imputado_delito_cometido = document.querySelector("#imputado_delito_cometido");
 					imputados.forEach(imputado => {
 						const option = document.createElement('option');
 						option.value = imputado.PERSONAFISICAID;
@@ -644,7 +644,7 @@
 					option_vacio_imp.disabled = true;
 					option_vacio_imp.selected = true;
 
-					let select_imputado_mputado = document.querySelector("#imputado_arbol")
+					let select_imputado_mputado = document.querySelector("#imputado_arbol");
 					select_imputado_mputado.add(option_vacio_imp, null);
 					imputados.forEach(imputado => {
 						const option = document.createElement('option');
@@ -653,7 +653,7 @@
 						select_imputado_mputado.add(option, null);
 					});
 					$('#personaFisica1_I').empty();
-					let select_personaFisica1_I = document.querySelector("#personaFisica1_I")
+					let select_personaFisica1_I = document.querySelector("#personaFisica1_I");
 					select_personaFisica1_I.add(option_vacio, null);
 					personas.forEach(persona => {
 						const option = document.createElement('option');
@@ -662,7 +662,7 @@
 						select_personaFisica1_I.add(option, null);
 					});
 					$('#propietario').empty();
-					let select_propietario = document.querySelector("#propietario")
+					let select_propietario = document.querySelector("#propietario");
 					select_propietario.add(option_vacio, null);
 					personas.forEach(persona => {
 						const option = document.createElement('option');
@@ -671,7 +671,7 @@
 						select_propietario.add(option, null);
 					});
 					$('#propietario_update').empty();
-					let select_propietario_update = document.querySelector("#propietario_update")
+					let select_propietario_update = document.querySelector("#propietario_update");
 					select_propietario_update.add(option_vacio, null);
 					personas.forEach(persona => {
 						const option = document.createElement('option');
@@ -680,7 +680,7 @@
 						select_propietario_update.add(option, null);
 					});
 					$('#objeto_update_subclasificacion').empty();
-					let select_objeto_update_subclasificacion = document.querySelector("#objeto_update_subclasificacion")
+					let select_objeto_update_subclasificacion = document.querySelector("#objeto_update_subclasificacion");
 					select_objeto_update_subclasificacion.add(option_vacio, null);
 					objetos.forEach(objetos => {
 						const option = document.createElement('option');
@@ -1685,11 +1685,6 @@
 				$('#insert_asignar_arbol_delictual_modal').modal('show');
 			}, false);
 			btn_objeto_involucrado_modal.addEventListener('click', (event) => {
-				// document.getElementById("form_asignar_arbol_delictual_insert").reset();
-				// document.querySelector('#imputado_arbol').value = '';
-				// document.querySelector('#delito_cometido').value = '';
-				// document.querySelector('#victima_ofendido').value = '';
-
 				$('#folio_objetos').modal('show');
 			}, false);
 			// btn_delito_imputado.addEventListener('click', (event) => {
@@ -2561,6 +2556,7 @@
 					method: "POST",
 					dataType: "json",
 					success: function(response) {
+						const personas = response.personas;
 						const imputados = response.imputados;
 						const victimas = response.victimas;
 						if (response.status == 1) {
@@ -2572,6 +2568,29 @@
 							});
 
 							llenarTablaPersonas(response.personas);
+							$('#personaFisica1_I').empty();
+							let select_personaFisica1_I = document.querySelector("#personaFisica1_I")
+							const option_vacio = document.createElement('option');
+							option_vacio.value = '';
+							option_vacio.text = '';
+							option_vacio.disabled = true;
+							option_vacio.selected = true;
+							select_personaFisica1_I.add(option_vacio, null);
+							personas.forEach(persona => {
+								const option = document.createElement('option');
+								option.value = persona.PERSONAFISICAID;
+								option.text = persona.NOMBRE + ' ' + persona.PRIMERAPELLIDO;
+								select_personaFisica1_I.add(option, null);
+							});
+							$('#propietario').empty();
+							let select_propietario = document.querySelector("#propietario");
+							select_propietario.add(option_vacio, null);
+							personas.forEach(persona => {
+								const option = document.createElement('option');
+								option.value = persona.PERSONAFISICAID;
+								option.text = persona.NOMBRE + ' ' + persona.PRIMERAPELLIDO;
+								select_propietario.add(option, null);
+							});
 							$('#imputado_arbol').empty();
 							let select_imputado_mputado = document.querySelector("#imputado_arbol");
 							imputados.forEach(imputado => {
@@ -2594,24 +2613,15 @@
 								text: 'Persona física actualizada correctamente',
 								confirmButtonColor: '#bf9b55',
 							});
-							$('#propietario').empty();
-							let select_propietario = document.querySelector("#propietario")
-							select_propietario.add(option_vacio, null);
-							personas.forEach(persona => {
-								const option = document.createElement('option');
-								option.value = persona.PERSONAFISICAID;
-								option.text = persona.NOMBRE + ' ' + persona.PRIMERAPELLIDO;
-								select_propietario.add(option, null);
-							});
-							$('#propietario_update').empty();
-							let select_propietario_update = document.querySelector("#propietario_update")
-							select_propietario_update.add(option_vacio, null);
-							personas.forEach(persona => {
-								const option = document.createElement('option');
-								option.value = persona.PERSONAFISICAID;
-								option.text = persona.NOMBRE + ' ' + persona.PRIMERAPELLIDO;
-								select_propietario_update.add(option, null);
-							});
+							// $('#propietario_update').empty();
+							// let select_propietario_update = document.querySelector("#propietario_update");
+							// select_propietario_update.add(option_vacio, null);
+							// personas.forEach(persona => {
+							// 	const option = document.createElement('option');
+							// 	option.value = persona.PERSONAFISICAID;
+							// 	option.text = persona.NOMBRE + ' ' + persona.PRIMERAPELLIDO;
+							// 	select_propietario_update.add(option, null);
+							// });
 						} else {
 							Swal.fire({
 								icon: 'error',
@@ -3282,21 +3292,29 @@
 
 							});
 							$('#personaFisica1_I').empty();
-
+							let select_personaFisica1_I = document.querySelector("#personaFisica1_I")
 							const option_vacio = document.createElement('option');
 							option_vacio.value = '';
 							option_vacio.text = '';
 							option_vacio.disabled = true;
 							option_vacio.selected = true;
-
 							select_personaFisica1_I.add(option_vacio, null);
-
 							personas.forEach(persona => {
 								const option = document.createElement('option');
 								option.value = persona.PERSONAFISICAID;
 								option.text = persona.NOMBRE + ' ' + persona.PRIMERAPELLIDO;
 								select_personaFisica1_I.add(option, null);
 							});
+							$('#propietario').empty();
+							let select_propietario = document.querySelector("#propietario");
+							personas.forEach(persona => {
+								const option = document.createElement('option');
+								option.value = persona.PERSONAFISICAID;
+								option.text = persona.NOMBRE + ' ' + persona.PRIMERAPELLIDO;
+								select_propietario.add(option, null);
+							});
+
+
 							$('#folio_persona_fisica_modal').modal('show');
 							viewPersonaFisica(response.ultimoRegistro.PERSONAFISICAID);
 							// form_media_filiacion_insert.addEventListener('submit', (event) => {
