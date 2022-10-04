@@ -104,6 +104,7 @@ use App\Models\FolioPersonaFisImpDelitoModel;
 use App\Models\FolioRelacionFisFisModel;
 use App\Models\ObjetoClasificacionModel;
 use App\Models\ObjetoSubclasificacionModel;
+use App\Models\PlantillasModel;
 use App\Models\TipoMonedaModel;
 
 class DashboardController extends BaseController
@@ -216,6 +217,8 @@ class DashboardController extends BaseController
         $this->_objetoSubclasificacionModel = new ObjetoSubclasificacionModel();
         $this->_folioObjetoInvolucradoModel = new FolioObjetoModel();
         $this->_tipoMonedaModel = new TipoMonedaModel();
+
+        $this->_plantillasModel = new PlantillasModel();
 
 
         // $this->protocol = 'http://';
@@ -2823,6 +2826,20 @@ class DashboardController extends BaseController
             return $data['OBJETOID'];
         }
     }
+    public function get_Plantillas(){
+        $titulo =$this->request->getPost('titulo');
+
+        $data = (object) array();
+        $data->plantilla = $this->_plantillasModel->where('TITULO', $titulo)->first();
+
+        if ($data->plantilla) {
+            $data->status = 1;
+            return json_encode($data);
+        } else {
+            $data = (object)['status' => 0];
+            return json_encode($data);
+        }
+    }
     private function _bitacoraActividad($data)
     {
         $data = $data;
@@ -2847,6 +2864,8 @@ class DashboardController extends BaseController
         $decrypted = openssl_decrypt($encodedInitialData, 'AES-128-CBC', hex2bin($key128), 1, $iv);
         return $decrypted;
     }
+    
+	
 }
 
 /* End of file DashboardController.php */

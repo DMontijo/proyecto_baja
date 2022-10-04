@@ -104,6 +104,15 @@ $routes->group('admin', function ($routes) {
 
 		$routes->post('generar_excel_folios', 'admin/ReportesController::createFoliosXlsx');
 		$routes->post('generar_excel_constancias', 'admin/ReportesController::createConstanciasXlsx');
+
+		$routes->get('documentos', 'admin/DocumentosController::index');
+		$routes->get('documentos_abiertos', 'admin/DocumentosController::documentos_abiertas');
+		$routes->get('documentos_show', 'admin/DocumentosController::documentos_show');
+		$routes->post('firmar_documentos', 'admin/FirmaController::firmar_documentos');
+
+		$routes->post('insert-documentosWSYWSG', 'admin/DocumentosController::insertFolioDoc');
+
+
 	});
 });
 
@@ -210,6 +219,7 @@ $routes->group('data', function ($routes) {
 	$routes->post('get-fisimpdelito-by-folio', 'admin/DashboardController::getImputadoDelito');
 	$routes->post('delete-fisimpdelito-by-folio', 'admin/DashboardController::deleteImpDelitoByFolio');
 	$routes->post('delete-arbol_delictivo-by-folio', 'admin/DashboardController::deleteArbolByFolio');
+	$routes->post('get-plantilla', 'admin/DashboardController::get_Plantillas');
 
 
 });

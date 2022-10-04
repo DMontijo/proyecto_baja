@@ -13,6 +13,7 @@ use App\Models\MunicipiosModel;
 use App\Models\EstadosModel;
 use App\Models\ConstanciaExtravioModel;
 use App\Models\DenunciantesModel;
+use App\Models\FolioDocModel;
 use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelLow;
@@ -32,6 +33,7 @@ class FirmaController extends BaseController
 		$this->_estadosModel = new EstadosModel();
 		$this->_constanciaExtravioModel = new ConstanciaExtravioModel();
 		$this->_bitacoraActividadModel = new BitacoraActividadModel();
+		$this->_folioDocModel = new FolioDocModel();
 
 	}
 
@@ -293,7 +295,78 @@ class FirmaController extends BaseController
 			return redirect()->to(base_url('/admin/dashboard/constancia_extravio_show?folio=' . $numfolio . '&year=' . $year))->with('message_error', $e->getMessage());
 		}
 	}
+	public function firmar_documentos()
+	{
+		$numfolio = trim($this->request->getPost('folio'));
+		$foliodoc = trim($this->request->getPost('foliodoc'));
+		$tipodoc = trim($this->request->getPost('tipodoc'));
 
+		$folio = $numfolio;
+		$year = trim($this->request->getPost('year'));
+		$password = str_replace(' ', '', trim($this->request->getPost('contrasena')));
+		$user_id = session('ID');
+
+		$documento = $this->_folioDocModel->asObject()->where('FOLIOID', $numfolio)->where('FOLIODOCID', $foliodoc)->where('ANO', $year)->first();
+
+		$meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
+
+		$FECHAFIRMA = date("Y-m-d");
+		$HORAFIRMA = date("H:i");
+
+		try {
+
+			if ($this->_crearArchivosPEMText($user_id, $password)) {
+				if ($this->_validarFiel($user_id)) {
+					$fiel_user = $this->_extractData($user_id);
+					$razon_social = $fiel_user['razon_social'];
+					$rfc = $fiel_user['rfc'];
+					$num_certificado = $fiel_user['num_certificado'];
+					$signature = $this->_generateSignature($user_id, $tipodoc, $documento->PLACEHOLDER, $folio, $FECHAFIRMA, $HORAFIRMA);
+
+					if ($signature->status == 1) {
+						$datosInsert = [
+							'AGENTEID' => $user_id,
+							'NUMEROIDENTIFICADOR' => $documento->FOLIODOCID . '/' . $documento->ANO,
+							'RAZONSOCIALFIRMA' => $razon_social,
+							'RFCFIRMA' => $rfc,
+							'NCERTIFICADOFIRMA' => $num_certificado,
+							'FECHAFIRMA' => $FECHAFIRMA,
+							'HORAFIRMA' => $HORAFIRMA,
+							// 'LUGARFIRMA' => $municipio->MUNICIPIODESCR . ", " . $estado->ESTADODESCR,
+							'FIRMAELECTRONICA' => base64_decode($signature->signature),
+							'CADENAFIRMADA' => $signature->signed_chain,
+
+							'STATUS' => 'FIRMADO'
+						];
+
+						$update = $this->_folioDocModel->set($datosInsert)->where('FOLIOID', $numfolio)->where('FOLIODOCID', $foliodoc)->where('ANO', $year)->update();
+
+						if ($update) {
+							$datosBitacora = [
+								'ACCION' => 'Ha firmado un documento',
+								'NOTAS'=> 'CONSTANCIA: '.$numfolio . ' AÑO: ' . $year,
+							];
+							$this->_bitacoraActividad($datosBitacora);
+							// if ($this->_sendEmailConstanciaFirmada($solicitante->CORREO, $numfolio, $year, $xml, $pdf)) {
+								return redirect()->to(base_url('/admin/dashboard/documentos_abiertos'))->with('message_success', 'Documento firmada correctamente.');
+							// } else {
+							// 	return redirect()->to(base_url('/admin/dashboard/constancias_extravio_abiertas'))->with('message_success', 'Constancia firmada correctamente.');
+							// }
+							
+						} else {
+							return redirect()->to(base_url('/admin/dashboard/documentos_show?folio=' . $documento->FOLIOID .'&foliodoc=' . $documento->FOLIODOCID . '&year=' . $documento->ANO. '&tipodoc=' . $documento->TIPODOC))->with('message_error', 'Hubo un error al guardar la firma electrónica. Intentelo de nuevo.');
+						}
+					} else {
+						return redirect()->to(base_url('/admin/dashboard/documentos_show?folio=' . $documento->FOLIOID .'&foliodoc=' . $documento->FOLIODOCID . '&year=' . $documento->ANO. '&tipodoc=' . $documento->TIPODOC))->with('message_error', 'Fallo al firmar el documento. Intentelo de nuevo.');
+					}
+				} else {
+					return redirect()->to(base_url('/admin/dashboard/documentos_show?folio=' . $documento->FOLIOID .'&foliodoc=' . $documento->FOLIODOCID . '&year=' . $documento->ANO. '&tipodoc=' . $documento->TIPODOC))->with('message_error', 'La FIEL no es válida o está vencida');
+				}
+			}
+		} catch (\Exception $e) {
+			return redirect()->to(base_url('/admin/dashboard/documentos_show?folio=' . $documento->FOLIOID .'&foliodoc=' . $documento->FOLIODOCID . '&year=' . $documento->ANO. '&tipodoc=' . $documento->TIPODOC))->with('message_error', $e->getMessage());
+		}
+	}
 	private function _crearArchivosPEMText($agenteId, $pass)
 	{
 		$user_id = $agenteId;

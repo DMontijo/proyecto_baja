@@ -22,6 +22,9 @@
 	<link rel="stylesheet" href="<?= base_url() ?>/assets/DataTables/datatables-responsive/css/responsive.bootstrap4.min.css">
 	<link rel="stylesheet" href="<?= base_url() ?>/assets/DataTables/datatables-buttons/css/buttons.bootstrap4.min.css">
 	<script src="<?= base_url() ?>/assets/DataTables/jquery/jquery.min.js"></script>
+	<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+	<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
 </head>
 
 <body class="c-app c-legacy-theme">
@@ -70,6 +73,11 @@
 				</a>
 			</li>
 
+			<li class="c-sidebar-nav-item">
+				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/documentos">
+					<i class="fas fa-file-invoice c-sidebar-nav-icon"></i> Documentos
+				</a>
+			</li>
 			<!-- <li class="c-sidebar-nav-item">
 				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/firmas">
 					<i class="fas fa-file-alt c-sidebar-nav-icon"></i> Firmar documentos

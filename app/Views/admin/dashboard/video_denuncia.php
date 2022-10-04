@@ -480,14 +480,14 @@
 				document.querySelector('#objeto_update_clasificacion').value = objeto.CLASIFICACIONID ? objeto.CLASIFICACIONID : '';
 				// document.querySelector('#objeto_update_subclasificacion').value = objeto_sub.OBJETOSUBCLASIFICACIONID ? objeto_sub.OBJETOSUBCLASIFICACIONID : '';
 				$('#objeto_update_subclasificacion').empty();
-					let select_objeto_update_subclasificacion = document.querySelector("#objeto_update_subclasificacion");
-				
-					objeto_sub.forEach(objeto_sub => {
-						const option = document.createElement('option');
-						option.value = objeto_sub.SUBCLASIFICACIONID;
-						option.text = objeto_sub.OBJETOSUBCLASIFICACIONDESCR;
-						select_objeto_update_subclasificacion.add(option, null);
-					});
+				let select_objeto_update_subclasificacion = document.querySelector("#objeto_update_subclasificacion");
+
+				objeto_sub.forEach(objeto_sub => {
+					const option = document.createElement('option');
+					option.value = objeto_sub.SUBCLASIFICACIONID;
+					option.text = objeto_sub.OBJETOSUBCLASIFICACIONDESCR;
+					select_objeto_update_subclasificacion.add(option, null);
+				});
 
 				document.querySelector('#marca_objeto_update').value = objeto.MARCA ? objeto.MARCA : '';
 				document.querySelector('#serie_objeto_update').value = objeto.NUMEROSERIE ? objeto.CANTIDAD : '';
@@ -1523,6 +1523,13 @@
 			// var btn_delito_imputado = document.querySelector('#insertDelitoImputado');
 			var btn_delito_cometido = document.querySelector('#insertDelitoCometido');
 			var btn_objeto_involucrado_modal = document.querySelector('#modalObjetoInvolucrado');
+			var btn_certificadoMedico = document.querySelector('#certificadoM');
+			var btn_recepcionV = document.querySelector('#recepcionV');
+			var btn_proteccionA = document.querySelector('#proteccionA');
+			var btn_proteccionPer = document.querySelector('#proteccionPer');
+			var btn_proteccionRon = document.querySelector('#proteccionRon');
+
+			var btn_guardarFolioDoc = document.querySelector('#guardarFolioDoc');
 
 			var inputsText = document.querySelectorAll('input[type="text"]');
 			var inputsEmail = document.querySelectorAll('input[type="email"]');
@@ -1714,6 +1721,34 @@
 					insertarPersonaFisica();
 				}
 			}, false);
+
+			btn_certificadoMedico.addEventListener("click", (event) => {
+				jQuery('.ql-toolbar').remove();
+				$('#documentos_modal').modal('show');
+				obtenerPlantillas("CERTIFICADO MEDICO");
+			}, false);
+			btn_recepcionV.addEventListener("click", (event) => {
+				jQuery('.ql-toolbar').remove();
+				$('#documentos_modal').modal('show');
+				obtenerPlantillas("CONSTANCIA DE RECEPCIÓN DE VIDEO DENUNCIA");
+			}, false);
+			btn_proteccionA.addEventListener("click", (event) => {
+				jQuery('.ql-toolbar').remove();
+				$('#documentos_modal').modal('show');
+				obtenerPlantillas("ORDEN DE PROTECCION ALBERGUE");
+			}, false);
+			btn_proteccionPer.addEventListener("click", (event) => {
+				jQuery('.ql-toolbar').remove();
+				$('#documentos_modal').modal('show');
+				obtenerPlantillas("ORDEN DE PROTECCION RECOGER PERTENENCIAS");
+			}, false);
+			btn_proteccionRon.addEventListener("click", (event) => {
+				jQuery('.ql-toolbar').remove();
+				$('#documentos_modal').modal('show');
+				obtenerPlantillas("ORDEN DE PROTECCION RONDINES");
+			}, false);
+
+
 			selectPersonaFisica1.addEventListener("change", function() {
 				let personaFisica2_I = document.querySelector("#personaFisica2_I")
 
@@ -3452,7 +3487,7 @@
 								confirmButtonColor: '#bf9b55',
 							});
 							$('#folio_objetos').modal('hide');
-							
+
 						} else if (response.status == 0) {
 							Swal.fire({
 								icon: 'error',
@@ -3511,7 +3546,7 @@
 							});
 							$('#folio_objetos_update').modal('hide');
 							$('#objeto_update_subclasificacion').empty();
-						
+
 						} else if (response.status == 0) {
 							Swal.fire({
 								icon: 'error',
@@ -3571,6 +3606,59 @@
 			}
 
 
+			function obtenerPlantillas(tipoPlantilla) {
+				const data = {
+					'titulo': tipoPlantilla,
+				};
+				$.ajax({
+					method: 'POST',
+					url: "<?= base_url('/data/get-plantilla') ?>",
+					data: data,
+					dataType: 'JSON',
+					success: function(response) {
+						var quill = new Quill('#documento', {
+							theme: 'snow'
+						});
+						const plantillas = response.plantilla;
+						quill.root.innerHTML = plantillas.PLACEHOLDER;
+
+						btn_guardarFolioDoc.addEventListener("click", (event) => {
+
+							let contenidoModificado = quill.container.firstChild.innerHTML;
+							const data = {
+								'folio': document.querySelector('#input_folio_atencion').value,
+								'year': document.querySelector('#year_select').value,
+								'placeholder': contenidoModificado,
+								'titulo': tipoPlantilla,
+							};
+							$.ajax({
+								data: data,
+								url: "<?= base_url('/admin/dashboard/insert-documentosWSYWSG') ?>",
+								method: "POST",
+								dataType: "json",
+								success: function(response) {
+									if (response.status == 1) {
+										Swal.fire({
+											icon: 'success',
+											text: 'Documento ingresado correctamente',
+											confirmButtonColor: '#bf9b55',
+										});
+										quill.history.clear();
+
+
+										$('#documentos_modal').modal('hide');
+									}
+
+
+
+								},
+								error: function(jqXHR, textStatus, errorThrown) {}
+							});
+						}, false);
+					},
+				});
+			}
+
 			function dateToString(_date) {
 				let date = new Date(_date);
 				let dateToTijuanaString = date.toLocaleString('en-US', {
@@ -3602,5 +3690,6 @@
 <?php include 'video_denuncia_modals/insert_asignar_delitos_cometidos_modal.php' ?>
 <?php include 'video_denuncia_modals/objetos_involucrados_modal.php' ?>
 <?php include 'video_denuncia_modals/objetos_involucrados_modal_update.php' ?>
+<?php include 'video_denuncia_modals/documentos_modal.php' ?>
 
 <?php $this->endSection() ?>
