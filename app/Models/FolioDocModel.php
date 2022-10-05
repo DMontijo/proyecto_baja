@@ -43,4 +43,34 @@ class FolioDocModel extends Model
         'PDF',
         'STATUS',
     ];
+    public function get_by_folio($folio, $year)
+	{
+		$builder = $this->db->table($this->table);
+		$builder->select(['FOLIOID', 'FOLIODOCID', 'ANO', 'TIPODOC', 'STATUS', 'PLACEHOLDER']);
+		$builder->where('FOLIOID', $folio);
+		$builder->where('ANO', $year);
+		$builder->orderBy('FOLIODOCID ASC');
+		$query = $builder->get();
+		return $query->getResult('array');
+	}
+    public function get_by_expediente($folio, $year)
+	{
+		$builder = $this->db->table($this->table);
+		$builder->select(['FOLIOID', 'FOLIODOCID', 'ANO', 'TIPODOC', 'STATUS', 'PLACEHOLDER','NUMEROEXPEDIENTE']);
+		$builder->where('NUMEROEXPEDIENTE', $folio);
+		$builder->where('ANO', $year);
+		$builder->orderBy('FOLIODOCID ASC');
+		$query = $builder->get();
+		return $query->getResult('array');
+	}
+    public function get_folio_abierto()
+	{
+		$builder = $this->db->table($this->table);
+		$builder->select(['NUMEROEXPEDIENTE', 'FECHAREGISTRO','STATUS','ANO']);
+		$builder->where('STATUS', 'ABIERTO');
+		$builder->orderBy('NUMEROEXPEDIENTE ASC');
+        $builder->groupBy('NUMEROEXPEDIENTE');
+		$query = $builder->get();
+		return $query->getResult('array');
+	}
 }

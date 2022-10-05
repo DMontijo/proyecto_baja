@@ -10,11 +10,18 @@
 		<div class="row">
 			<div class="col-12">
 				<button type="button" class="btn btn-primary mb-3" data-toggle="modal" id="firmarDocumento" data-target="#contrasena_modal_doc"><i class="fas fa-file-signature"></i> Firmar documento</button>
-				<div class="card shadow border-0">
-					<div class="card-body" name="document" id="document" style="margin: 2%;">
-						<h5><?php echo $body_data->documento->PLACEHOLDER ?></h5>
+				<?php
+				foreach ($body_data->documentos as $key => $documento) { ?>
+					<h5 class="card-title"><?php echo $documento->TIPODOC ?></h5>
+					<div class="card shadow border-0">
+						<div class="card-body" name="document" id="document" style="margin: 2%;">
+							<p class="card-text">
+								<?php echo $documento->PLACEHOLDER ?>
+							</p>
+						
+						</div>
 					</div>
-				</div>
+					<?php } ?>
 			</div>
 		</div>
 	</div>

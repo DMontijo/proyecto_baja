@@ -34,7 +34,6 @@ class FirmaController extends BaseController
 		$this->_constanciaExtravioModel = new ConstanciaExtravioModel();
 		$this->_bitacoraActividadModel = new BitacoraActividadModel();
 		$this->_folioDocModel = new FolioDocModel();
-
 	}
 
 	public function firmar_constancia_extravio()
@@ -272,7 +271,7 @@ class FirmaController extends BaseController
 						if ($update) {
 							$datosBitacora = [
 								'ACCION' => 'Ha firmado una constancia',
-								'NOTAS'=> 'CONSTANCIA: '.$numfolio . ' AÑO: ' . $year,
+								'NOTAS' => 'CONSTANCIA: ' . $numfolio . ' AÑO: ' . $year,
 							];
 							$this->_bitacoraActividad($datosBitacora);
 							if ($this->_sendEmailConstanciaFirmada($solicitante->CORREO, $numfolio, $year, $xml, $pdf)) {
@@ -280,7 +279,6 @@ class FirmaController extends BaseController
 							} else {
 								return redirect()->to(base_url('/admin/dashboard/constancias_extravio_abiertas'))->with('message_success', 'Constancia firmada correctamente.');
 							}
-							
 						} else {
 							return redirect()->to(base_url('/admin/dashboard/constancia_extravio_show?folio=' . $numfolio . '&year=' . $year))->with('message_error', 'Hubo un error al guardar la firma electrónica. Intentelo de nuevo.');
 						}
@@ -297,75 +295,80 @@ class FirmaController extends BaseController
 	}
 	public function firmar_documentos()
 	{
-		$numfolio = trim($this->request->getPost('folio'));
-		$foliodoc = trim($this->request->getPost('foliodoc'));
-		$tipodoc = trim($this->request->getPost('tipodoc'));
+		$numexpediente = trim($this->request->getPost('folio'));
 
-		$folio = $numfolio;
+
+		$folio = $numexpediente;
 		$year = trim($this->request->getPost('year'));
 		$password = str_replace(' ', '', trim($this->request->getPost('contrasena')));
 		$user_id = session('ID');
 
-		$documento = $this->_folioDocModel->asObject()->where('FOLIOID', $numfolio)->where('FOLIODOCID', $foliodoc)->where('ANO', $year)->first();
+		$documento = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $numexpediente)->where('ANO', $year)->where('STATUS', 'ABIERTO')->findAll();
+
 
 		$meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
 
 		$FECHAFIRMA = date("Y-m-d");
 		$HORAFIRMA = date("H:i");
+			try {
 
-		try {
+				if ($this->_crearArchivosPEMText($user_id, $password)) {
+					if ($this->_validarFiel($user_id)) {
+						$fiel_user = $this->_extractData($user_id);
+						$razon_social = $fiel_user['razon_social'];
+						$rfc = $fiel_user['rfc'];
+						$num_certificado = $fiel_user['num_certificado'];
+						for ($i = 0; $i < count($documento); $i++) {
 
-			if ($this->_crearArchivosPEMText($user_id, $password)) {
-				if ($this->_validarFiel($user_id)) {
-					$fiel_user = $this->_extractData($user_id);
-					$razon_social = $fiel_user['razon_social'];
-					$rfc = $fiel_user['rfc'];
-					$num_certificado = $fiel_user['num_certificado'];
-					$signature = $this->_generateSignature($user_id, $tipodoc, $documento->PLACEHOLDER, $folio, $FECHAFIRMA, $HORAFIRMA);
+						$signature = $this->_generateSignature($user_id, "FIRMA DE DOCUMENTOS", $documento[$i]->PLACEHOLDER, $folio, $FECHAFIRMA, $HORAFIRMA);
 
-					if ($signature->status == 1) {
-						$datosInsert = [
-							'AGENTEID' => $user_id,
-							'NUMEROIDENTIFICADOR' => $documento->FOLIODOCID . '/' . $documento->ANO,
-							'RAZONSOCIALFIRMA' => $razon_social,
-							'RFCFIRMA' => $rfc,
-							'NCERTIFICADOFIRMA' => $num_certificado,
-							'FECHAFIRMA' => $FECHAFIRMA,
-							'HORAFIRMA' => $HORAFIRMA,
-							// 'LUGARFIRMA' => $municipio->MUNICIPIODESCR . ", " . $estado->ESTADODESCR,
-							'FIRMAELECTRONICA' => base64_decode($signature->signature),
-							'CADENAFIRMADA' => $signature->signed_chain,
+						if ($signature->status == 1) {
+							$datosInsert = [
+								'AGENTEID' => $user_id,
+								'NUMEROIDENTIFICADOR' => $documento[$i]->FOLIODOCID . '/' . $documento[$i]->ANO,
+								'RAZONSOCIALFIRMA' => $razon_social,
+								'RFCFIRMA' => $rfc,
+								'NCERTIFICADOFIRMA' => $num_certificado,
+								'FECHAFIRMA' => $FECHAFIRMA,
+								'HORAFIRMA' => $HORAFIRMA,
+								// 'LUGARFIRMA' => $municipio->MUNICIPIODESCR . ", " . $estado->ESTADODESCR,
+								'FIRMAELECTRONICA' => base64_decode($signature->signature),
+								'CADENAFIRMADA' => $signature->signed_chain,
 
-							'STATUS' => 'FIRMADO'
-						];
-
-						$update = $this->_folioDocModel->set($datosInsert)->where('FOLIOID', $numfolio)->where('FOLIODOCID', $foliodoc)->where('ANO', $year)->update();
-
-						if ($update) {
-							$datosBitacora = [
-								'ACCION' => 'Ha firmado un documento',
-								'NOTAS'=> 'CONSTANCIA: '.$numfolio . ' AÑO: ' . $year,
+								'STATUS' => 'FIRMADO'
 							];
-							$this->_bitacoraActividad($datosBitacora);
-							// if ($this->_sendEmailConstanciaFirmada($solicitante->CORREO, $numfolio, $year, $xml, $pdf)) {
-								return redirect()->to(base_url('/admin/dashboard/documentos_abiertos'))->with('message_success', 'Documento firmada correctamente.');
+
+							$update = $this->_folioDocModel->set($datosInsert)->where('NUMEROEXPEDIENTE', $numexpediente)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
+
+							// if ($update) {
+								$datosBitacora = [
+									'ACCION' => 'Ha firmado un documento',
+									'NOTAS' => 'DOCUMENTO: ' . $numexpediente . ' AÑO: ' . $year,
+								];
+								$this->_bitacoraActividad($datosBitacora);
+							// 	// if ($this->_sendEmailConstanciaFirmada($solicitante->CORREO, $numfolio, $year, $xml, $pdf)) {
+							// 	return redirect()->to(base_url('/admin/dashboard/documentos_abiertos'))->with('message_success', 'Documento firmada correctamente.');
+							// 	// } else {
+							// 	// 	return redirect()->to(base_url('/admin/dashboard/constancias_extravio_abiertas'))->with('message_success', 'Constancia firmada correctamente.');
+							// 	// }
+
 							// } else {
-							// 	return redirect()->to(base_url('/admin/dashboard/constancias_extravio_abiertas'))->with('message_success', 'Constancia firmada correctamente.');
+							// 	return redirect()->to(base_url('/admin/dashboard/documentos_abiertos'))->with('message_error', 'Hubo un error al guardar la firma electrónica. Intentelo de nuevo.');
 							// }
-							
 						} else {
-							return redirect()->to(base_url('/admin/dashboard/documentos_show?folio=' . $documento->FOLIOID .'&foliodoc=' . $documento->FOLIODOCID . '&year=' . $documento->ANO. '&tipodoc=' . $documento->TIPODOC))->with('message_error', 'Hubo un error al guardar la firma electrónica. Intentelo de nuevo.');
+							return redirect()->to(base_url('/admin/dashboard/documentos_show?folio=' . $numexpediente .'&year='.$year))->with('message_error', 'Fallo al firmar el documento. Intentelo de nuevo.');
 						}
-					} else {
-						return redirect()->to(base_url('/admin/dashboard/documentos_show?folio=' . $documento->FOLIOID .'&foliodoc=' . $documento->FOLIODOCID . '&year=' . $documento->ANO. '&tipodoc=' . $documento->TIPODOC))->with('message_error', 'Fallo al firmar el documento. Intentelo de nuevo.');
 					}
-				} else {
-					return redirect()->to(base_url('/admin/dashboard/documentos_show?folio=' . $documento->FOLIOID .'&foliodoc=' . $documento->FOLIODOCID . '&year=' . $documento->ANO. '&tipodoc=' . $documento->TIPODOC))->with('message_error', 'La FIEL no es válida o está vencida');
+					return redirect()->to(base_url('/admin/dashboard/documentos_abiertos'))->with('message_success', 'Documento firmado correctamente.');
+					} else {
+						return redirect()->to(base_url('/admin/dashboard/documentos_show?folio=' . $numexpediente .'&year='.$year))->with('message_error', 'La FIEL no es válida o está vencida');
+					}
 				}
+			} catch (\Exception $e) {
+				return redirect()->to(base_url('/admin/dashboard/documentos_show?folio=' . $numexpediente .'&year='.$year))->with('message_error', $e->getMessage());
 			}
-		} catch (\Exception $e) {
-			return redirect()->to(base_url('/admin/dashboard/documentos_show?folio=' . $documento->FOLIOID .'&foliodoc=' . $documento->FOLIODOCID . '&year=' . $documento->ANO. '&tipodoc=' . $documento->TIPODOC))->with('message_error', $e->getMessage());
-		}
+		// }
+		// return redirect()->to(base_url('/admin/dashboard/documentos_abiertos'))->with('message_success', 'Documento firmada correctamente.');
 	}
 	private function _crearArchivosPEMText($agenteId, $pass)
 	{
@@ -712,14 +715,14 @@ class FirmaController extends BaseController
 		}
 	}
 	private function _bitacoraActividad($data)
-    {
-        $data = $data;
-        $data['ID'] = uniqid();
-        $data['USUARIOID'] = session('ID');
+	{
+		$data = $data;
+		$data['ID'] = uniqid();
+		$data['USUARIOID'] = session('ID');
 
 
-        $this->_bitacoraActividadModel->insert($data);
-    }
+		$this->_bitacoraActividadModel->insert($data);
+	}
 }
 /* End of file FirmaController.php */
 /* Location: ./app/Controllers/admin/FirmaController.php */

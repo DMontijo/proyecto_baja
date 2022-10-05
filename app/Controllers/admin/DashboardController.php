@@ -98,6 +98,7 @@ use App\Models\EstomagoModel;
 use App\Models\CabelloPeculiarModel;
 use App\Models\DelitoModalidadModel;
 use App\Models\FolioArchivoExternoModel;
+use App\Models\FolioDocModel;
 use App\Models\FolioDocumentoModel;
 use App\Models\FolioObjetoModel;
 use App\Models\FolioPersonaFisImpDelitoModel;
@@ -219,7 +220,7 @@ class DashboardController extends BaseController
         $this->_tipoMonedaModel = new TipoMonedaModel();
 
         $this->_plantillasModel = new PlantillasModel();
-
+        $this->_folioDocModel = new FolioDocModel();
 
         // $this->protocol = 'http://';
         // $this->ip = "10.144.244.223";
@@ -473,6 +474,8 @@ class DashboardController extends BaseController
                     $data->fisicaImpDelito = $this->_imputadoDelitoModel->get_by_folio($numfolio, $year);
                     $data->delitosModalidadFiltro = $this->_delitoModalidadModel->get_delitodescr($numfolio, $year);
                     $data->objetos = $this->_folioObjetoInvolucradoModel->get_descripcion($numfolio, $year);
+                    $data->documentos = $this->_folioDocModel->get_by_folio($numfolio, $year);
+            
                     // $data->personafisica = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->findAll();
                     $data->imputados = $this->_folioPersonaFisicaModel->get_imputados($numfolio, $year);
                     $data->victimas = $this->_folioPersonaFisicaModel->get_victimas($numfolio, $year);
@@ -2830,13 +2833,28 @@ class DashboardController extends BaseController
     }
     public function get_Plantillas(){
         $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
-
+        $folio = trim($this->request->getPost('folio'));
+        $year = trim($this->request->getPost('year'));
         $titulo =$this->request->getPost('titulo');
+       
+
         $data = (object) array();
+        $data->folio = $this->_folioModel->asObject()->where('ANO', $year)->where('EXPEDIENTEID', $folio)->first();
+        $data->municipios = $this->_municipiosModel->asObject()->where('ESTADOID', '2')->where('MUNICIPIOID',  $data->folio->MUNICIPIOID)->first();
 
         $data->plantilla = $this->_plantillasModel->where('TITULO', $titulo)->first();
         $data->plantilla = str_replace('[EXPEDIENTE_NOMBRE_DEL_RESPONSABLE]', session('NOMBRE') . ' ' . session('APELLIDO_PATERNO') . ' '. session('APELLIDO_MATERNO'), $data->plantilla);
         $data->plantilla = str_replace('[DOCUMENTO_FECHA]',date('d') . ' de '.$meses[date('n')-1]. " del ".date('Y'), $data->plantilla);
+        $data->plantilla = str_replace('[EXPEDIENTE_NOMBRE_MP_RESPONSABLE]',session('NOMBRE') . ' ' . session('APELLIDO_PATERNO') . ' '. session('APELLIDO_MATERNO'), $data->plantilla);
+        $data->plantilla = str_replace('[EXPEDIENTE_NUMERO]',$data->folio->EXPEDIENTEID, $data->plantilla);
+        $data->plantilla = str_replace('[DOCUMENTO_MUNICIPIO]',$data->municipios->MUNICIPIODESCR, $data->plantilla);
+        $data->plantilla = str_replace('DOCUMENTO_MUNICIPIO',$data->municipios->MUNICIPIODESCR, $data->plantilla);
+        $data->plantilla = str_replace('[DIA]',date('d'), $data->plantilla);
+        $data->plantilla = str_replace('[MES]',date('m'), $data->plantilla);
+        $data->plantilla = str_replace('[ANO]',date('Y'), $data->plantilla);
+        $data->plantilla = str_replace('[ANO]',date('Y'), $data->plantilla);
+
+
 
         if ($data->plantilla) {
             $data->status = 1;
@@ -2844,6 +2862,48 @@ class DashboardController extends BaseController
         } else {
             $data = (object)['status' => 0];
             return json_encode($data);
+        }
+    }
+    public function insertFolioDoc()
+    {
+        $folio = trim($this->request->getPost('folio'));
+      
+        $year = trim($this->request->getPost('year'));
+        $dataFolioDoc = array(
+            'NUMEROEXPEDIENTE' => $folio,
+            'ANO' => $this->request->getPost('year'),
+            'PLACEHOLDER' => $this->request->getPost('placeholder'),
+            'STATUS'=> 'ABIERTO',
+            'TIPODOC'=>$this->request->getPost('titulo'),
+        );
+        $foliodoc = $this->_folioDoc($dataFolioDoc, $folio, $year);
+
+        if ($foliodoc) {
+            $documentos = $this->_folioDocModel->get_by_folio($folio, $year);
+
+            return json_encode(['status' => 1,'documentos'=> $documentos]);
+        }else{
+            return json_encode(['status' => 0]);
+
+        }
+    }
+    private function _folioDoc($data, $folio, $year)
+    {
+        $data = $data;
+        $data['NUMEROEXPEDIENTE'] = $folio;
+        $data['ANO'] = $year;
+     
+
+        $foliodoc = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $folio)->where('ANO', $year)->orderBy('FOLIODOCID', 'desc')->first();
+
+        if ($foliodoc) {
+            $data['FOLIODOCID'] = ((int) $foliodoc->FOLIODOCID) + 1;
+            $foliodoc = $this->_folioDocModel->insert($data);
+            return $data['FOLIODOCID'];
+        } else {
+            $data['FOLIODOCID'] = 1;
+            $foliodoc = $this->_folioDocModel->insert($data);
+            return $data['FOLIODOCID'];
         }
     }
     private function _bitacoraActividad($data)

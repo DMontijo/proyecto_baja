@@ -110,7 +110,7 @@ $routes->group('admin', function ($routes) {
 		$routes->get('documentos_show', 'admin/DocumentosController::documentos_show');
 		$routes->post('firmar_documentos', 'admin/FirmaController::firmar_documentos');
 
-		$routes->post('insert-documentosWSYWSG', 'admin/DocumentosController::insertFolioDoc');
+		$routes->post('insert-documentosWSYWSG', 'admin/DashboardController::insertFolioDoc');
 
 
 	});

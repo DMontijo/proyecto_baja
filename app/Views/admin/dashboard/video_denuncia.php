@@ -19,6 +19,7 @@
 					<div class="col-12">
 						<div class="input-group mb-1">
 							<input type="text" class="form-control" id="input_folio_atencion" placeholder="Folio" value="<?= isset($body_data->folio) ? $body_data->folio : '' ?>">
+							<input type="text" class="form-control" id="input_expediente" hidden>
 						</div>
 					</div>
 				</div>
@@ -27,6 +28,7 @@
 			</div>
 		</div>
 	</div>
+
 	<div id="card2" class="col-12 col-sm-6 col-md-4 col-lg-3 d-none">
 		<div class="card rounded bg-white shadow" style="min-height: 190px;">
 			<div class="card-body">
@@ -51,7 +53,15 @@
 			</div>
 		</div>
 	</div>
+	<div id="card6" class="col-12 col-sm-6 col-md-4 col-lg-3 d-none">
+		<div class="card rounded bg-white shadow" style="height: 190px;">
+			<div class="card-body">
+				<button id="generar-doc-btn" class="btn btn-primary btn-block h-100" role="button" data-toggle="modal" data-target="#documentos_modal_wyswyg"><i class="fas fa-file-archive"></i> GENERAR DOCUMENTOS</button>
+			</div>
+		</div>
+	</div>
 </div>
+
 <div class="row">
 	<div class="col">
 		<?php if (session('USUARIOVIDEO') && session('TOKENVIDEO')) { ?>
@@ -99,10 +109,16 @@
 				<textarea class="form-control" id="notas_mp" placeholder="Descripción del caso..." rows="10" required maxlength="300" oninput="mayuscTextarea(this)" onkeydown="pulsar(event)"></textarea>
 			</div>
 		</div>
+
 	</div>
+
 </div>
+
 <script>
+	
 	const inputFolio = document.querySelector('#input_folio_atencion');
+	const inputExpediente = document.querySelector('#input_expediente');
+
 	const inputF = document.getElementById('input_folio_atencion').value;
 	const buscar_btn = document.querySelector('#buscar-btn');
 	const buscar_nuevo_btn = document.querySelector('#buscar-nuevo-btn');
@@ -115,6 +131,8 @@
 	const card3 = document.querySelector('#card3');
 	const card4 = document.querySelector('#card4');
 	const card5 = document.querySelector('#card5');
+	const card6 = document.querySelector('#card6');
+
 	var respuesta;
 
 	function startTime() {
@@ -299,6 +317,24 @@
 			$('#table-delitos tr:first').after(fila);
 			$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
 			var nFilas = $("#delitos tr").length;
+			$("#adicionados").append(nFilas - 1);
+		}
+	}
+
+	function llenarTablaDocumentos(documentos) {
+		for (let i = 0; i < documentos.length; i++) {
+			// var btn = `<button type='button'  class='btn btn-primary' onclick='viewPersonaFisica(${documentos[i].PERSONAFISICAID})'><i class='fas fa-eye'></i></button>`
+
+			var fila =
+				`<tr id="row${i}">` +
+				`<td class="text-center">${documentos[i].TIPODOC}</td>` +
+				`<td class="text-center">${documentos[i].STATUS}</td>` +
+				// `<td class="text-center">${btn}</td>` +
+				`</tr>`;
+
+			$('#table-documentos tr:first').after(fila);
+			$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
+			var nFilas = $("#documentos tr").length;
 			$("#adicionados").append(nFilas - 1);
 		}
 	}
@@ -588,6 +624,7 @@
 					const imputados = response.imputados;
 					const victimas = response.victimas;
 					const objetos = response.objetos;
+					const documentos = response.documentos;
 					inputFolio.classList.add('d-none');
 					buscar_btn.classList.add('d-none');
 					year_select.classList.add('d-none');
@@ -597,6 +634,7 @@
 					card3.classList.remove('d-none');
 					card4.classList.remove('d-none');
 					card5.classList.remove('d-none');
+					// card6.classList.remove('d-none');
 
 					document.querySelector('#delito_dash').value = folio.HECHODELITO;
 					document.querySelector('#delito_descr_dash').value = folio.HECHONARRACION;
@@ -812,6 +850,8 @@
 
 					//OBJETOS INVOLUCRADOS
 					llenarTablaObjetosInvolucrados(objetos);
+					//DOCUMENTOS
+					llenarTablaDocumentos(documentos);
 
 
 				} else if (response.status === 2) {
@@ -825,6 +865,8 @@
 					card3.classList.add('d-none');
 					card4.classList.add('d-none');
 					card5.classList.add('d-none');
+					card6.classList.add('d-none');
+
 					let texto = 'El folio ya fue atentido por el agente<br><strong>' + response.agente + '</strong><br><br><strong>' + response.motivo + '</strong>';
 					if (response.motivo == 'EXPEDIENTE') {
 						texto = texto + '<br><strong>' + response.expediente + '</strong>';
@@ -839,6 +881,8 @@
 					card3.classList.add('d-none');
 					card4.classList.add('d-none');
 					card5.classList.add('d-none');
+					card6.classList.add('d-none');
+
 					Swal.fire({
 						icon: 'error',
 						text: 'El folio no existe, verificalo de nuevo.',
@@ -858,6 +902,7 @@
 		buscar_nuevo_btn.classList.add('d-none');
 		inputFolio.classList.remove('d-none');
 		inputFolio.value = "";
+		inputExpediente.value = "";
 		year_select.classList.remove('d-none');
 		year_select.value = year;
 		buscar_btn.classList.remove('d-none');
@@ -905,6 +950,7 @@
 		card3.classList.add('d-none');
 		card4.classList.add('d-none');
 		card5.classList.add('d-none');
+		// card6.classList.remove('d-none');
 
 		document.querySelector('#delito_dash').value = '';
 		document.querySelector('#delito_descr_dash').value = '';
@@ -1690,8 +1736,7 @@
 			// btn_delito_imputado.addEventListener('click', (event) => {
 			// 	$('#insert_asignar_delitos_cometidos_modal').modal('show');
 			// }, false);
-
-
+			
 			form_parentesco_insert.addEventListener('submit', (event) => {
 				if (!form_parentesco_insert.checkValidity()) {
 					event.preventDefault();
@@ -1717,30 +1762,41 @@
 				}
 			}, false);
 
+			let tipoPlantilla = '';
 			btn_certificadoMedico.addEventListener("click", (event) => {
-				jQuery('.ql-toolbar').remove();
+				$('#documentos_modal_wyswyg').modal('hide');
+
 				$('#documentos_modal').modal('show');
-				obtenerPlantillas("CERTIFICADO MEDICO");
+				tipoPlantilla ="CERTIFICADO MEDICO";
+				obtenerPlantillas(tipoPlantilla);
 			}, false);
 			btn_recepcionV.addEventListener("click", (event) => {
-				jQuery('.ql-toolbar').remove();
+				$('#documentos_modal_wyswyg').modal('hide');
 				$('#documentos_modal').modal('show');
-				obtenerPlantillas("CONSTANCIA DE RECEPCIÓN DE VIDEO DENUNCIA");
+				tipoPlantilla ="CONSTANCIA DE RECEPCIÓN DE VIDEO DENUNCIA";
+				obtenerPlantillas(tipoPlantilla);
 			}, false);
 			btn_proteccionA.addEventListener("click", (event) => {
-				jQuery('.ql-toolbar').remove();
+				$('#documentos_modal_wyswyg').modal('hide');
 				$('#documentos_modal').modal('show');
-				obtenerPlantillas("ORDEN DE PROTECCION ALBERGUE");
+				tipoPlantilla ="ORDEN DE PROTECCION ALBERGUE";
+				obtenerPlantillas(tipoPlantilla);
 			}, false);
 			btn_proteccionPer.addEventListener("click", (event) => {
-				jQuery('.ql-toolbar').remove();
+				$('#documentos_modal_wyswyg').modal('hide');
 				$('#documentos_modal').modal('show');
-				obtenerPlantillas("ORDEN DE PROTECCION RECOGER PERTENENCIAS");
+				tipoPlantilla = "ORDEN DE PROTECCION RECOGER PERTENENCIAS";
+				obtenerPlantillas(tipoPlantilla);
 			}, false);
 			btn_proteccionRon.addEventListener("click", (event) => {
-				jQuery('.ql-toolbar').remove();
+				$('#documentos_modal_wyswyg').modal('hide');
 				$('#documentos_modal').modal('show');
-				obtenerPlantillas("ORDEN DE PROTECCION RONDINES");
+				tipoPlantilla = "ORDEN DE PROTECCION RONDINES";
+				obtenerPlantillas(tipoPlantilla);
+			}, false);
+			btn_guardarFolioDoc.addEventListener('click', (event) => {
+				let contenidoModificado = quill.container.firstChild.innerHTML;
+				insertarDocumento(contenidoModificado, tipoPlantilla);
 			}, false);
 
 
@@ -3623,9 +3679,14 @@
 				});
 			}
 
-
+			var quill = new Quill('#documento', {
+							theme: 'snow'
+						});
 			function obtenerPlantillas(tipoPlantilla) {
+			
 				const data = {
+					'folio': document.querySelector('#input_expediente').value,
+					'year': document.querySelector('#year_select').value,
 					'titulo': tipoPlantilla,
 				};
 				$.ajax({
@@ -3634,46 +3695,50 @@
 					data: data,
 					dataType: 'JSON',
 					success: function(response) {
-						var quill = new Quill('#documento', {
-							theme: 'snow'
-						});
 						const plantillas = response.plantilla;
 						quill.root.innerHTML = plantillas.PLACEHOLDER;
 
-						btn_guardarFolioDoc.addEventListener("click", (event) => {
-
-							let contenidoModificado = quill.container.firstChild.innerHTML;
-							const data = {
-								'folio': document.querySelector('#input_folio_atencion').value,
-								'year': document.querySelector('#year_select').value,
-								'placeholder': contenidoModificado,
-								'titulo': tipoPlantilla,
-							};
-							$.ajax({
-								data: data,
-								url: "<?= base_url('/admin/dashboard/insert-documentosWSYWSG') ?>",
-								method: "POST",
-								dataType: "json",
-								success: function(response) {
-									if (response.status == 1) {
-										Swal.fire({
-											icon: 'success',
-											text: 'Documento ingresado correctamente',
-											confirmButtonColor: '#bf9b55',
-										});
-										quill.history.clear();
-
-
-										$('#documentos_modal').modal('hide');
-									}
-
-
-
-								},
-								error: function(jqXHR, textStatus, errorThrown) {}
-							});
-						}, false);
+				
 					},
+				});
+			}
+
+			function insertarDocumento(contenido, tipoPlantilla) {
+				const data = {
+					'folio': document.querySelector('#input_expediente').value,
+					'year': document.querySelector('#year_select').value,
+					'placeholder': contenido,
+					'titulo': tipoPlantilla,
+				};
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/admin/dashboard/insert-documentosWSYWSG') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						if (response.status == 1) {
+							const documentos = response.documentos;
+							Swal.fire({
+								icon: 'success',
+								text: 'Documento ingresado correctamente',
+								confirmButtonColor: '#bf9b55',
+							});
+
+							$('#documentos_modal').modal('hide');
+							let tabla_documentos = document.querySelectorAll('#table-documentos tr');
+							tabla_documentos.forEach(row => {
+								if (row.id !== '') {
+									row.remove();
+								}
+							});
+							llenarTablaDocumentos(documentos);
+
+						}
+
+
+
+					},
+					error: function(jqXHR, textStatus, errorThrown) {}
 				});
 			}
 
@@ -3709,5 +3774,6 @@
 <?php include 'video_denuncia_modals/objetos_involucrados_modal.php' ?>
 <?php include 'video_denuncia_modals/objetos_involucrados_modal_update.php' ?>
 <?php include 'video_denuncia_modals/documentos_modal.php' ?>
+<?php include 'video_denuncia_modals/documentos_modal_wyswyg.php' ?>
 
 <?php $this->endSection() ?>

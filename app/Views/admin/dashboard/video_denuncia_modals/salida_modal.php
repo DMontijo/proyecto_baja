@@ -303,6 +303,10 @@
 								notas_mp.value = '';
 								inputFolio.value = '';
 								borrarTodo();
+
+								inputExpediente.value = data.expediente;
+								card6.classList.remove('d-none');
+								
 							});
 						} else {
 							Swal.fire({

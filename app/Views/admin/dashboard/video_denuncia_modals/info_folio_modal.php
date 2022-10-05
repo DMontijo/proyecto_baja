@@ -19,7 +19,7 @@
 							<a class="nav-link" id="v-pills-delitos-cometidos-tab" data-toggle="pill" href="#v-pills-delitos-cometido" role="tab" aria-controls="v-pills-delitos-cometido" aria-selected="false"><i class='fas fa-user-alt-slash'></i> DELITOS COMETIDOS</a>
 							<a class="nav-link" id="v-pills-delitos-tab" data-toggle="pill" href="#v-pills-asignar-delitos" role="tab" aria-controls="v-pills-asignar-delitos" aria-selected="false"><i class="fas fa-user-ninja"></i> DELITOS</a>
 							<a class="nav-link" id="v-pills-objetos-involucrados-tab" data-toggle="pill" href="#v-pills-objetos-involucrados" role="tab" aria-controls="v-pills-objetos-involucrados" aria-selected="false"><i class="fas fa-box"></i> OBJETOS INVOLUCRADOS</a>
-							<a class="nav-link" id="v-pills-documentos-tab" data-toggle="pill" href="#v-pills-documentos" role="tab" aria-controls="v-pills-documentos" aria-selected="false"><i class="fas fa-file-archive"></i> DOCUMENTOS</a>
+							<!-- <a class="nav-link" id="v-pills-documentos-tab" data-toggle="pill" href="#v-pills-documentos" role="tab" aria-controls="v-pills-documentos" aria-selected="false"><i class="fas fa-file-archive"></i> DOCUMENTOS</a> -->
 
 						</div>
 					</div>
@@ -120,9 +120,21 @@
 									</table>
 								</div>
 							</div>
-							<div class="tab-pane fade" id="v-pills-documentos" role="tabpanel" aria-labelledby="v-pills-documentos-tab">
-								<?php echo view('/admin/dashboard/video_denuncia_forms/form_documentos'); ?>
-							</div>
+							<!-- <div class="tab-pane fade" id="v-pills-documentos" role="tabpanel" aria-labelledby="v-pills-documentos-tab">
+								<?php //echo view('/admin/dashboard/video_denuncia_forms/form_documentos'); ?>
+								<div id="adicionados" class="d-none"></div>
+								
+								<div class="table-responsive">
+									<table id="table-documentos" class="table table-bordered table-hover table-striped table-light">
+										<tr>
+											<th class="text-center bg-primary text-white" id="tipodoc" name="tipodoc">TIPO DE DOCUMENTO</th>
+											<th class="text-center bg-primary text-white">STATUS</th>
+											<th class="text-center bg-primary text-white"></th>
+
+										</tr>
+									</table>
+								</div>
+							</div> -->
 
 						</div>
 					</div>

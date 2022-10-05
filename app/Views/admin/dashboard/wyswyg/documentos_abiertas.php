@@ -16,22 +16,20 @@
 						<table id="extravios_abiertos" class="table table-bordered table-striped">
 							<thead>
 								<tr>
-									<th class="text-center">ID</th>
+									<th class="text-center">EXPEDIENTE ID</th>
 									<th class="text-center">FECHA</th>
-									<th class="text-center">TIPO DE DOCUMENTO</th>
 									<th class="text-center">ESTADO</th>
 									<th class="text-center"></th>
 								</tr>
 							</thead>
 							<tbody>
+								
 								<?php foreach ($body_data as $index => $documentos) { ?>
 									<tr>
-										<td class="text-center font-weight-bold"><?= $documentos->FOLIODOCID  ?></td>
-										<td class="text-center"><?= $documentos->FECHAREGISTRO ?></td>
-										<td class="text-center"><?= $documentos->TIPODOC ?></td>
-
-										<td class="text-center"><?= $documentos->STATUS ?></td>
-										<td class="text-center"><a type="button" href="<?= base_url('/admin/dashboard/documentos_show?folio=' . $documentos->FOLIOID .'&foliodoc=' . $documentos->FOLIODOCID . '&year=' . $documentos->ANO. '&tipodoc=' . $documentos->TIPODOC) ?>" class="btn btn-primary text-white"><i class="fas fa-eye"></i> VER SOLICITUD</a></td>
+										<td class="text-center font-weight-bold"><?= $documentos['NUMEROEXPEDIENTE']  ?></td>
+										<td class="text-center"><?= $documentos['FECHAREGISTRO'] ?></td>
+										<td class="text-center"><?= $documentos['STATUS'] ?></td>
+										<td class="text-center"><a type="button" href="<?= base_url('/admin/dashboard/documentos_show?folio=' . $documentos['NUMEROEXPEDIENTE'] . '&year=' . $documentos['ANO']) ?>" class="btn btn-primary text-white"><i class="fas fa-eye"></i> VER SOLICITUD</a></td>
 									</tr>
 								<?php } ?>
 							</tbody>
