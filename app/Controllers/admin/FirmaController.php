@@ -306,7 +306,7 @@ class FirmaController extends BaseController
 		if ($year == null) {
 			$year = $this->request->getPost('year');
 		}
-		$password = str_replace(' ', '', trim($this->request->getPost('contrasena_modal')));
+		$password = str_replace(' ', '', trim($this->request->getPost('contrasena')));
 		$user_id = session('ID');
 
 		$documento = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $numexpediente)->where('ANO', $year)->where('STATUS', 'ABIERTO')->findAll();

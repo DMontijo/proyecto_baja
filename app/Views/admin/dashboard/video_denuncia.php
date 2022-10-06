@@ -1147,6 +1147,7 @@
 	});
 
 	function viewDocumento(foliodocid) {
+		jQuery('.ql-toolbar').remove();
 		$('#documentos_generados_modal').modal('hide');
 		$('#documentos_modal_editar').modal('show');
 		$.ajax({

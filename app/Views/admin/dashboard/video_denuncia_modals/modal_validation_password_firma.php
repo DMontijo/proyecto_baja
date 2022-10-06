@@ -12,7 +12,7 @@
 					<div class="col-12 mb-3">
 						<input type="text" class="form-control d-none" id="expediente_modal" name="expediente_modal" required>
 						<input type="text" class="form-control d-none" id="year_modal" name="year_modal" required>
-						<input type="password" class="form-control" id="constrasena_modal" name="constrasena_modal" autocomplete="off" required>
+						<input type="password" class="form-control" id="contrasena" name="contrasena" autocomplete="off" required>
 						<div class="invalid-feedback">
 							La contraseña es obligatoria
 						</div>
