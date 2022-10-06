@@ -9,7 +9,13 @@
             </div>
             <div class="modal-body bg-light">
 
-            <?php echo view('/admin/dashboard/video_denuncia_forms/form_documentos'); ?>
+            <select class="form-control" id="plantilla" name="plantilla">
+			<option disabled selected value=""></option>
+			<?php
+			foreach ($body_data->plantillas as $index => $plantilla) { ?>
+				<option value="<?= $plantilla->TITULO  ?>"> <?= $plantilla->TITULO ?></option>
+			<?php } ?>
+		</select>
             </div>
         </div>
     </div>

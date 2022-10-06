@@ -221,6 +221,8 @@ $routes->group('data', function ($routes) {
 	$routes->post('delete-arbol_delictivo-by-folio', 'admin/DashboardController::deleteArbolByFolio');
 	$routes->post('get-plantilla', 'admin/DashboardController::get_Plantillas');
 
+	$routes->post('get-documento-by-id', 'admin/DashboardController::getDocumentoById');
+	$routes->post('update-documento-by-id', 'admin/DashboardController::updateDocumentoByFolio');
 
 });
 

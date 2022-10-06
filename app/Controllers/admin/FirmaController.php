@@ -295,17 +295,23 @@ class FirmaController extends BaseController
 	}
 	public function firmar_documentos()
 	{
-		$numexpediente = trim($this->request->getPost('folio'));
+		$numexpediente = $this->request->getPost('expediente_modal');
 
+		if ($numexpediente == null) {
+			$numexpediente = $this->request->getPost('folio');
+		}
 
-		$folio = $numexpediente;
-		$year = trim($this->request->getPost('year'));
-		$password = str_replace(' ', '', trim($this->request->getPost('contrasena')));
+		$expediente = $numexpediente;
+		$year = $this->request->getPost('year_modal');
+		if ($year == null) {
+			$year = $this->request->getPost('year');
+		}
+		$password = str_replace(' ', '', trim($this->request->getPost('contrasena_modal')));
 		$user_id = session('ID');
 
 		$documento = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $numexpediente)->where('ANO', $year)->where('STATUS', 'ABIERTO')->findAll();
 
-
+	
 		$meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
 
 		$FECHAFIRMA = date("Y-m-d");
@@ -320,8 +326,13 @@ class FirmaController extends BaseController
 						$num_certificado = $fiel_user['num_certificado'];
 						for ($i = 0; $i < count($documento); $i++) {
 
-						$signature = $this->_generateSignature($user_id, "FIRMA DE DOCUMENTOS", $documento[$i]->PLACEHOLDER, $folio, $FECHAFIRMA, $HORAFIRMA);
-
+						$signature = $this->_generateSignature($user_id, "FIRMA DE DOCUMENTOS", $documento[$i]->PLACEHOLDER, $expediente, $FECHAFIRMA, $HORAFIRMA);
+						$pdf = $this->_generatePDFDocumentos($documento[$i]->PLACEHOLDER,base64_decode($signature->signature));
+						$municipio = (object)[];
+						
+						$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $documento[$i]->MUNICIPIOID)->where('ESTADOID', $documento[$i]->ESTADOID)->first();
+						
+						$estado = $this->_estadosModel->asObject()->where('ESTADOID', $documento[$i]->ESTADOID)->first();
 						if ($signature->status == 1) {
 							$datosInsert = [
 								'AGENTEID' => $user_id,
@@ -331,10 +342,10 @@ class FirmaController extends BaseController
 								'NCERTIFICADOFIRMA' => $num_certificado,
 								'FECHAFIRMA' => $FECHAFIRMA,
 								'HORAFIRMA' => $HORAFIRMA,
-								// 'LUGARFIRMA' => $municipio->MUNICIPIODESCR . ", " . $estado->ESTADODESCR,
+								'LUGARFIRMA' => $municipio->MUNICIPIODESCR . ", " . $estado->ESTADODESCR,
 								'FIRMAELECTRONICA' => base64_decode($signature->signature),
 								'CADENAFIRMADA' => $signature->signed_chain,
-
+								'PDF' => $pdf,
 								'STATUS' => 'FIRMADO'
 							];
 
@@ -677,7 +688,44 @@ class FirmaController extends BaseController
 		});
 		return $dompdf->output();
 	}
+	private function _generatePDFDocumentos($placeholder, $firmaelectronica)
+	{
+		$arrContextOptions = array(
+			"ssl" => array(
+				"verify_peer" => false,
+				"verify_peer_name" => false,
+			),
+		);
 
+		$data = (object)array();
+
+		$data->placeholder = $placeholder;
+		$data->firmaelectronica = $firmaelectronica;
+
+		$data->image1 = base64_encode(file_get_contents(base_url('assets/img/logo_fgebc.jpg'), false, stream_context_create($arrContextOptions)));
+		$data->image2 = base64_encode(file_get_contents(base_url('assets/img/logo_sejap.jpg'), false, stream_context_create($arrContextOptions)));
+
+		$options = new Options();
+		$options->set('isRemoteEnabled', true);
+		$options->set('isPhpEnabled', true);
+		$options->set('defaultFont', 'Arial');
+		$dompdf = new Dompdf($options);
+		$dompdf->loadHtml(view('doc_template/document', ['data' => $data]));
+		$dompdf->setPaper('A4', 'portrait');
+		$dompdf->render();
+		$canvas = $dompdf->getCanvas();
+
+		$canvas->page_script(function ($pageNumber, $pageCount, $canvas, $fontMetrics) {
+			$font = $fontMetrics->getFont('arial', 'regular');
+			$text = "PÁGINA $pageNumber DE $pageCount";
+			$size = 8;
+			$x = $canvas->get_width();
+			$y = $canvas->get_height();
+			$width = $fontMetrics->getTextWidth($text, $font, $size);
+			$canvas->text($x - 60 - $width, $y - 50, $text, $font, $size, array(0, 0, 0));
+		});
+		return $dompdf->output();
+	}
 	private function _generateQR($info)
 	{
 		$writer = new PngWriter();

@@ -19,7 +19,11 @@
 					<div class="col-12">
 						<div class="input-group mb-1">
 							<input type="text" class="form-control" id="input_folio_atencion" placeholder="Folio" value="<?= isset($body_data->folio) ? $body_data->folio : '' ?>">
-							<input type="text" class="form-control" id="input_expediente" hidden>
+						</div>
+					</div>
+					<div class="col-12">
+						<div class="input-group mb-1">
+							<input type="text" class="form-control d-none" id="input_expediente">
 						</div>
 					</div>
 				</div>
@@ -57,6 +61,20 @@
 		<div class="card rounded bg-white shadow" style="height: 190px;">
 			<div class="card-body">
 				<button id="generar-doc-btn" class="btn btn-primary btn-block h-100" role="button" data-toggle="modal" data-target="#documentos_modal_wyswyg"><i class="fas fa-file-archive"></i> GENERAR DOCUMENTOS</button>
+			</div>
+		</div>
+	</div>
+	<div id="card7" class="col-12 col-sm-6 col-md-4 col-lg-3 d-none">
+		<div class="card rounded bg-white shadow" style="height: 190px;">
+			<div class="card-body">
+				<button id="firmar-doc-btn" class="btn btn-primary btn-block h-100" role="button" data-toggle="modal" data-target="#contrasena_modal_firma_doc"><i class="fas fa-file-signature"></i> FIRMAR DOCUMENTOS</button>
+			</div>
+		</div>
+	</div>
+	<div id="card8" class="col-12 col-sm-6 col-md-4 col-lg-3 d-none">
+		<div class="card rounded bg-white shadow" style="height: 190px;">
+			<div class="card-body">
+				<button id="firmar-doc-btn" class="btn btn-primary btn-block h-100" role="button" data-toggle="modal" data-target="#documentos_generados_modal"><i class="fas fa-pencil"></i> EDITAR DOCUMENTOS</button>
 			</div>
 		</div>
 	</div>
@@ -115,7 +133,6 @@
 </div>
 
 <script>
-	
 	const inputFolio = document.querySelector('#input_folio_atencion');
 	const inputExpediente = document.querySelector('#input_expediente');
 
@@ -132,6 +149,9 @@
 	const card4 = document.querySelector('#card4');
 	const card5 = document.querySelector('#card5');
 	const card6 = document.querySelector('#card6');
+	const card7 = document.querySelector('#card7');
+	const card8 = document.querySelector('#card8');
+
 
 	var respuesta;
 
@@ -192,6 +212,24 @@
 			$('#table-personas tr:first').after(fila);
 			$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
 			var nFilas = $("#personas tr").length;
+			$("#adicionados").append(nFilas - 1);
+		}
+	}
+
+	function llenarTablaDocumentos(documentos) {
+		for (let i = 0; i < documentos.length; i++) {
+			var btn = `<button type='button'  class='btn btn-primary' onclick='viewDocumento(${documentos[i].FOLIODOCID})'><i class="fas fa-eye"></i></button>`
+
+			var fila =
+				`<tr id="row${i}">` +
+				`<td class="text-center">${documentos[i].TIPODOC}</td>` +
+				`<td class="text-center">${documentos[i].STATUS}</td>` +
+				`<td class="text-center">${btn}</td>` +
+				`</tr>`;
+
+			$('#table-documentos tr:first').after(fila);
+			$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
+			var nFilas = $("#documentos tr").length;
 			$("#adicionados").append(nFilas - 1);
 		}
 	}
@@ -275,6 +313,51 @@
 
 	}
 
+	function actualizarDocumento(placeholder) {
+
+		const data = {
+			'folio': document.querySelector('#input_folio_atencion').value,
+			'year': document.querySelector('#year_select').value,
+			'foliodocid': document.querySelector('#docid').value,
+			'placeholder': placeholder
+		};
+		$.ajax({
+			data: data,
+			url: "<?= base_url('/data/update-documento-by-id') ?>",
+			method: "POST",
+			dataType: "json",
+			success: function(response) {
+				if (response.status == 1) {
+					const documentos = response.documentos;
+					let tabla_documentos = document.querySelectorAll('#table-documentos tr');
+					tabla_documentos.forEach(row => {
+						if (row.id !== '') {
+							row.remove();
+						}
+					});
+					llenarTablaDocumentos(documentos);
+
+
+					Swal.fire({
+						icon: 'success',
+						text: 'Documento actualizado correctamente',
+						confirmButtonColor: '#bf9b55',
+					});
+
+				} else {
+					Swal.fire({
+						icon: 'error',
+						text: 'No se actualizó el documento',
+						confirmButtonColor: '#bf9b55',
+					});
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				console.log(textStatus);
+			}
+		});
+
+	}
 
 	function llenarTablaParentesco(relacion_parentesco, personaiduno, personaidDos, parentesco) {
 
@@ -321,23 +404,6 @@
 		}
 	}
 
-	function llenarTablaDocumentos(documentos) {
-		for (let i = 0; i < documentos.length; i++) {
-			// var btn = `<button type='button'  class='btn btn-primary' onclick='viewPersonaFisica(${documentos[i].PERSONAFISICAID})'><i class='fas fa-eye'></i></button>`
-
-			var fila =
-				`<tr id="row${i}">` +
-				`<td class="text-center">${documentos[i].TIPODOC}</td>` +
-				`<td class="text-center">${documentos[i].STATUS}</td>` +
-				// `<td class="text-center">${btn}</td>` +
-				`</tr>`;
-
-			$('#table-documentos tr:first').after(fila);
-			$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
-			var nFilas = $("#documentos tr").length;
-			$("#adicionados").append(nFilas - 1);
-		}
-	}
 
 	function eliminarImputadoDelito(personafisicavictima, personafisicaimputado, delitoModalidadId) {
 		$.ajax({
@@ -608,6 +674,7 @@
 				document.getElementById("form_parentesco_insert").reset();
 
 				if (response.status === 1) {
+
 					const folio = response.folio;
 					const preguntas = response.preguntas_iniciales;
 					const personas = response.personas;
@@ -635,7 +702,6 @@
 					card4.classList.remove('d-none');
 					card5.classList.remove('d-none');
 					// card6.classList.remove('d-none');
-
 					document.querySelector('#delito_dash').value = folio.HECHODELITO;
 					document.querySelector('#delito_descr_dash').value = folio.HECHONARRACION;
 					//SELECT CON DELITOS DEL IMPUTADO
@@ -850,8 +916,7 @@
 
 					//OBJETOS INVOLUCRADOS
 					llenarTablaObjetosInvolucrados(objetos);
-					//DOCUMENTOS
-					llenarTablaDocumentos(documentos);
+
 
 
 				} else if (response.status === 2) {
@@ -1080,6 +1145,32 @@
 		});
 		borrarTodo();
 	});
+
+	function viewDocumento(foliodocid) {
+		$('#documentos_generados_modal').modal('hide');
+		$('#documentos_modal_editar').modal('show');
+		$.ajax({
+			data: {
+				'docid': foliodocid,
+				'folio': inputFolio.value,
+				'year': year_select.value,
+			},
+			url: "<?= base_url('/data/get-documento-by-id') ?>",
+			method: "POST",
+			dataType: "json",
+			success: function(response) {
+				let documentos = response.documentos;
+				let documento_id = response.documentoporid;
+				console.log(documento_id);
+				console.log(documentos);
+				var quill2 = new Quill('#documento_editar', {
+					theme: 'snow'
+				});
+				quill2.root.innerHTML = documento_id.PLACEHOLDER;
+				document.querySelector('#docid').value = foliodocid;
+			}
+		});
+	}
 
 	function viewPersonaFisica(id) {
 		$.ajax({
@@ -1560,6 +1651,7 @@
 
 			var selectPersonaFisica1 = document.querySelector('#personaFisica1_I');
 			var form_persona_fisica_insert = document.querySelector('#persona_fisica_form_insert');
+			var selectPlantilla = document.querySelector('#plantilla');
 			var selectObjetoClasificacion = document.querySelector('#objeto_clasificacion');
 			var selectObjetoClasificacionUpdate = document.querySelector('#objeto_update_clasificacion');
 
@@ -1576,9 +1668,20 @@
 			var btn_proteccionRon = document.querySelector('#proteccionRon');
 
 			var btn_guardarFolioDoc = document.querySelector('#guardarFolioDoc');
+			var btn_actualizarFolioDoc = document.querySelector('#actualizarFolioDoc');
 
 			var inputsText = document.querySelectorAll('input[type="text"]');
 			var inputsEmail = document.querySelectorAll('input[type="email"]');
+			var expediente_modal = document.querySelector('#expediente_modal');
+			var year_modal = document.querySelector('#year_modal');
+
+
+			var quill = new Quill('#documento', {
+				theme: 'snow'
+			});
+			var quill2 = new Quill('#documento_editar', {
+					theme: 'snow'
+				});
 
 			inputsText.forEach((input) => {
 				input.addEventListener('input', (event) => {
@@ -1736,7 +1839,7 @@
 			// btn_delito_imputado.addEventListener('click', (event) => {
 			// 	$('#insert_asignar_delitos_cometidos_modal').modal('show');
 			// }, false);
-			
+
 			form_parentesco_insert.addEventListener('submit', (event) => {
 				if (!form_parentesco_insert.checkValidity()) {
 					event.preventDefault();
@@ -1762,42 +1865,39 @@
 				}
 			}, false);
 
-			let tipoPlantilla = '';
-			btn_certificadoMedico.addEventListener("click", (event) => {
-				$('#documentos_modal_wyswyg').modal('hide');
+			// let tipoPlantilla = '';
+			// btn_certificadoMedico.addEventListener("click", (event) => {
+			// 	$('#documentos_modal_wyswyg').modal('hide');
 
-				$('#documentos_modal').modal('show');
-				tipoPlantilla ="CERTIFICADO MEDICO";
-				obtenerPlantillas(tipoPlantilla);
-			}, false);
-			btn_recepcionV.addEventListener("click", (event) => {
-				$('#documentos_modal_wyswyg').modal('hide');
-				$('#documentos_modal').modal('show');
-				tipoPlantilla ="CONSTANCIA DE RECEPCIÓN DE VIDEO DENUNCIA";
-				obtenerPlantillas(tipoPlantilla);
-			}, false);
-			btn_proteccionA.addEventListener("click", (event) => {
-				$('#documentos_modal_wyswyg').modal('hide');
-				$('#documentos_modal').modal('show');
-				tipoPlantilla ="ORDEN DE PROTECCION ALBERGUE";
-				obtenerPlantillas(tipoPlantilla);
-			}, false);
-			btn_proteccionPer.addEventListener("click", (event) => {
-				$('#documentos_modal_wyswyg').modal('hide');
-				$('#documentos_modal').modal('show');
-				tipoPlantilla = "ORDEN DE PROTECCION RECOGER PERTENENCIAS";
-				obtenerPlantillas(tipoPlantilla);
-			}, false);
-			btn_proteccionRon.addEventListener("click", (event) => {
-				$('#documentos_modal_wyswyg').modal('hide');
-				$('#documentos_modal').modal('show');
-				tipoPlantilla = "ORDEN DE PROTECCION RONDINES";
-				obtenerPlantillas(tipoPlantilla);
-			}, false);
-			btn_guardarFolioDoc.addEventListener('click', (event) => {
-				let contenidoModificado = quill.container.firstChild.innerHTML;
-				insertarDocumento(contenidoModificado, tipoPlantilla);
-			}, false);
+			// 	$('#documentos_modal').modal('show');
+			// 	tipoPlantilla = "CERTIFICADO MEDICO";
+			// 	obtenerPlantillas(tipoPlantilla);
+			// }, false);
+			// btn_recepcionV.addEventListener("click", (event) => {
+			// 	$('#documentos_modal_wyswyg').modal('hide');
+			// 	$('#documentos_modal').modal('show');
+			// 	tipoPlantilla = "CONSTANCIA DE RECEPCIÓN DE VIDEO DENUNCIA";
+			// 	obtenerPlantillas(tipoPlantilla);
+			// }, false);
+			// btn_proteccionA.addEventListener("click", (event) => {
+			// 	$('#documentos_modal_wyswyg').modal('hide');
+			// 	$('#documentos_modal').modal('show');
+			// 	tipoPlantilla = "ORDEN DE PROTECCION ALBERGUE";
+			// 	obtenerPlantillas(tipoPlantilla);
+			// }, false);
+			// btn_proteccionPer.addEventListener("click", (event) => {
+			// 	$('#documentos_modal_wyswyg').modal('hide');
+			// 	$('#documentos_modal').modal('show');
+			// 	tipoPlantilla = "ORDEN DE PROTECCION RECOGER PERTENENCIAS";
+			// 	obtenerPlantillas(tipoPlantilla);
+			// }, false);
+			// btn_proteccionRon.addEventListener("click", (event) => {
+			// 	$('#documentos_modal_wyswyg').modal('hide');
+			// 	$('#documentos_modal').modal('show');
+			// 	tipoPlantilla = "ORDEN DE PROTECCION RONDINES";
+			// 	obtenerPlantillas(tipoPlantilla);
+			// }, false);
+
 
 
 			selectPersonaFisica1.addEventListener("change", function() {
@@ -1832,6 +1932,25 @@
 					},
 				});
 			});
+			let plantilla = document.querySelector("#plantilla");
+
+			selectPlantilla.addEventListener("change", function() {
+				$('#documentos_modal_wyswyg').modal('hide');
+				$('#documentos_modal').modal('show');
+
+
+				obtenerPlantillas(plantilla.value);
+
+			});
+			btn_guardarFolioDoc.addEventListener('click', (event) => {
+				let contenidoModificado = quill.container.firstChild.innerHTML;
+				insertarDocumento(contenidoModificado, plantilla.value);
+			}, false);
+			btn_actualizarFolioDoc.addEventListener('click', (event) => {
+				let contenidoModificado = quill2.container.firstChild.innerHTML;
+				actualizarDocumento(contenidoModificado);
+			}, false);
+
 			selectObjetoClasificacion.addEventListener("change", function() {
 				let objetoSubclasificacion = document.querySelector("#objeto_subclasificacion")
 
@@ -3679,13 +3798,13 @@
 				});
 			}
 
-			var quill = new Quill('#documento', {
-							theme: 'snow'
-						});
+
+
 			function obtenerPlantillas(tipoPlantilla) {
-			
+
 				const data = {
-					'folio': document.querySelector('#input_expediente').value,
+					'folio': document.querySelector('#input_folio_atencion').value,
+					'expediente': document.querySelector('#input_expediente').value,
 					'year': document.querySelector('#year_select').value,
 					'titulo': tipoPlantilla,
 				};
@@ -3698,16 +3817,23 @@
 						const plantillas = response.plantilla;
 						quill.root.innerHTML = plantillas.PLACEHOLDER;
 
-				
+
 					},
 				});
 			}
 
+
+
+
+
+
 			function insertarDocumento(contenido, tipoPlantilla) {
 				const data = {
-					'folio': document.querySelector('#input_expediente').value,
+					'folio': document.querySelector('#input_folio_atencion').value,
+					'expediente': document.querySelector('#input_expediente').value,
 					'year': document.querySelector('#year_select').value,
 					'placeholder': contenido,
+					'municipio': document.querySelector('#municipio_empleado').value,
 					'titulo': tipoPlantilla,
 				};
 				$.ajax({
@@ -3774,6 +3900,10 @@
 <?php include 'video_denuncia_modals/objetos_involucrados_modal.php' ?>
 <?php include 'video_denuncia_modals/objetos_involucrados_modal_update.php' ?>
 <?php include 'video_denuncia_modals/documentos_modal.php' ?>
+<?php include 'video_denuncia_modals/documentos_modal_editar.php' ?>
+
 <?php include 'video_denuncia_modals/documentos_modal_wyswyg.php' ?>
+<?php include 'video_denuncia_modals/modal_validation_password_firma.php' ?>
+<?php include 'video_denuncia_modals/documentos_generados_modal.php' ?>
 
 <?php $this->endSection() ?>

@@ -291,21 +291,34 @@
 								$('.modal-backdrop').remove();
 								buscar_nuevo_btn.classList.add('d-none');
 								inputFolio.classList.remove('d-none');
-								buscar_btn.classList.remove('d-none');
-								municipio_empleado.value = '';
-								oficina_empleado.value = '';
-								empleado.value = '';
+								inputExpediente.classList.remove('d-none');
+								let currentTime = new Date();
+								let year = currentTime.getFullYear()
+
+								year_select.classList.remove('d-none');
+								year_select.value = year;
+								year_select.disabled = true;
+								inputFolio.disabled = true;
+								inputExpediente.disabled = true;
+								// buscar_btn.classList.remove('d-none');
+								// municipio_empleado.value = '';
+								// oficina_empleado.value = '';
+								// empleado.value = '';
 
 								card2.classList.add('d-none');
 								card3.classList.add('d-none');
 								card4.classList.add('d-none');
 								card5.classList.add('d-none');
-								notas_mp.value = '';
-								inputFolio.value = '';
-								borrarTodo();
-
+								// notas_mp.value = '';
+								// inputFolio.value = '';
+								// borrarTodo();
 								inputExpediente.value = data.expediente;
+								expediente_modal.value = data.expediente;
+								year_modal.value = year;
 								card6.classList.remove('d-none');
+								card7.classList.remove('d-none');
+								card8.classList.remove('d-none');
+
 								
 							});
 						} else {
