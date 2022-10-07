@@ -315,11 +315,13 @@
 								inputExpediente.value = data.expediente;
 								expediente_modal.value = data.expediente;
 								year_modal.value = year;
+								expediente_modal_correo.value = data.expediente;
+								year_modal_correo.value = year;
 								card6.classList.remove('d-none');
 								card7.classList.remove('d-none');
 								card8.classList.remove('d-none');
-
-								
+								card9.classList.remove('d-none');
+	
 							});
 						} else {
 							Swal.fire({

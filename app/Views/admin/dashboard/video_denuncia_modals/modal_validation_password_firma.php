@@ -4,11 +4,13 @@
 			<div class="modal-header bg-primary justify-content-center">
 				<h5 class="modal-title text-white font-weight-bold" id="password_modalLabel">Contraseña de FIEL</h5>
 				<h5 class="modal-title text-white font-weight-bold d-none" id="password_verifying">Firmando documento</h5>
+				<button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+					<i class="fas fa-times"></i>
+				</button>
 			</div>
 
 			<div class="modal-body text-center" id="load">
 				
-			<form method="POST" action="<?php echo base_url('admin/dashboard/firmar_documentos') ?>" class="needs-validation row" novalidate>
 					<div class="col-12 mb-3">
 						<input type="text" class="form-control d-none" id="expediente_modal" name="expediente_modal" required>
 						<input type="text" class="form-control d-none" id="year_modal" name="year_modal" required>
@@ -18,9 +20,8 @@
 						</div>
 					</div>
 					<div class="col-12">
-						<button type="submit" class="btn btn-secondary font-weight-bold">FIRMAR DOCUMENTOS</button>
+						<button type="button" id="btn-firmar-doc" name="btn-firmar-doc" class="btn btn-secondary font-weight-bold">FIRMAR DOCUMENTOS</button>
 					</div>
-				</form>
 			</div>
 			<div id="loading" class="modal-body text-center d-none" style="min-height:170px;">
 				<div class="d-flex justify-content-center">

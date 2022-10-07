@@ -465,6 +465,8 @@ class DashboardController extends BaseController
                     $data->status = 1;
                     $data->preguntas_iniciales = $this->_folioPreguntasModel->where('FOLIOID', $numfolio)->where('ANO', $year)->first();
                     $data->personas = $this->_folioPersonaFisicaModel->get_by_folio($numfolio, $year);
+                    $data->correos = $this->_folioPersonaFisicaModel->get_correos_persona($numfolio, $year);
+
                     $data->parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $numfolio)->where('ANO', $year)->findAll();
                     $data->personaiduno = $this->_parentescoPersonaFisicaModel->get_personaFisicaUno($numfolio, $year);
                     $data->personaidDos = $this->_parentescoPersonaFisicaModel->get_personaFisicaDos($numfolio, $year);

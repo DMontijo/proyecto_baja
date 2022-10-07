@@ -109,8 +109,8 @@ $routes->group('admin', function ($routes) {
 		$routes->get('documentos_abiertos', 'admin/DocumentosController::documentos_abiertas');
 		$routes->get('documentos_show', 'admin/DocumentosController::documentos_show');
 		$routes->post('firmar_documentos', 'admin/FirmaController::firmar_documentos');
-
 		$routes->post('insert-documentosWSYWSG', 'admin/DashboardController::insertFolioDoc');
+		$routes->post('send-documentos-correo', 'admin/FirmaController::sendEmailDocumentos');
 
 
 	});

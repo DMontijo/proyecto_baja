@@ -74,7 +74,14 @@
 	<div id="card8" class="col-12 col-sm-6 col-md-4 col-lg-3 d-none">
 		<div class="card rounded bg-white shadow" style="height: 190px;">
 			<div class="card-body">
-				<button id="firmar-doc-btn" class="btn btn-primary btn-block h-100" role="button" data-toggle="modal" data-target="#documentos_generados_modal"><i class="fas fa-pencil"></i> EDITAR DOCUMENTOS</button>
+				<button id="firmar-doc-btn" class="btn btn-primary btn-block h-100" role="button" data-toggle="modal" data-target="#documentos_generados_modal"><i class="fas fa-pencil-alt"></i> EDITAR DOCUMENTOS</button>
+			</div>
+		</div>
+	</div>
+	<div id="card9" class="col-12 col-sm-6 col-md-4 col-lg-3 d-none">
+		<div class="card rounded bg-white shadow" style="height: 190px;">
+			<div class="card-body">
+				<button id="enviar-mail-btn" class="btn btn-primary btn-block h-100" role="button" data-toggle="modal" data-target="#sendEmailDocModal"><i class="fa fa-mail-forward"></i> ENVIAR CORREOS</button>
 			</div>
 		</div>
 	</div>
@@ -151,6 +158,7 @@
 	const card6 = document.querySelector('#card6');
 	const card7 = document.querySelector('#card7');
 	const card8 = document.querySelector('#card8');
+	const card9 = document.querySelector('#card9');
 
 
 	var respuesta;
@@ -343,7 +351,7 @@
 						text: 'Documento actualizado correctamente',
 						confirmButtonColor: '#bf9b55',
 					});
-
+					$('#documentos_modal_editar').modal('hide');
 				} else {
 					Swal.fire({
 						icon: 'error',
@@ -692,6 +700,7 @@
 					const victimas = response.victimas;
 					const objetos = response.objetos;
 					const documentos = response.documentos;
+					const correos = response.correos;
 					inputFolio.classList.add('d-none');
 					buscar_btn.classList.add('d-none');
 					year_select.classList.add('d-none');
@@ -701,6 +710,7 @@
 					card3.classList.remove('d-none');
 					card4.classList.remove('d-none');
 					card5.classList.remove('d-none');
+
 					// card6.classList.remove('d-none');
 					document.querySelector('#delito_dash').value = folio.HECHODELITO;
 					document.querySelector('#delito_descr_dash').value = folio.HECHONARRACION;
@@ -713,6 +723,15 @@
 					// 	option.text = modalidad.DELITOMODALIDADDESCR;
 					// 	select_delitos_imputado.add(option, null);
 					// });
+					$('#send_mail_select').empty();
+					let select_mail_send = document.querySelector("#send_mail_select");
+					correos.forEach(correo => {
+						const option = document.createElement('option');
+						option.value = correo.CORREO;
+						option.text = correo.CORREO;
+						select_mail_send.add(option, null);
+					});
+
 					const option_vacio = document.createElement('option');
 					option_vacio.value = '';
 					option_vacio.text = '';
@@ -971,6 +990,11 @@
 		year_select.classList.remove('d-none');
 		year_select.value = year;
 		buscar_btn.classList.remove('d-none');
+		expediente_modal_correo.value="";
+		year_modal_correo.value="";
+		$('#send_mail_select').empty();
+		// quill.root.innerHTML ='';
+		// quill2.root.innerHTML='';
 
 		tabla_personas = document.querySelectorAll('#table-personas tr');
 		tabla_vehiculos = document.querySelectorAll('#table-vehiculos tr');
@@ -978,6 +1002,7 @@
 		tabla_relacion_fis_fis = document.querySelectorAll('#table-delitos tr');
 		tabla_delito_cometido = document.querySelectorAll('#table-delito-cometidos tr');
 		tabla_objetos_involucrados = document.querySelectorAll('#table-objetos-involucradoss tr');
+		let tabla_documentos = document.querySelectorAll('#table-documentos tr');
 
 
 		tabla_personas.forEach(row => {
@@ -1011,10 +1036,20 @@
 				row.remove();
 			}
 		});
+		tabla_documentos.forEach(row => {
+			if (row.id !== '') {
+				row.remove();
+			}
+		});
 		card2.classList.add('d-none');
 		card3.classList.add('d-none');
 		card4.classList.add('d-none');
 		card5.classList.add('d-none');
+		card6.classList.add('d-none');
+		card7.classList.add('d-none');
+		card8.classList.add('d-none');
+		card9.classList.add('d-none');
+
 		// card6.classList.remove('d-none');
 
 		document.querySelector('#delito_dash').value = '';
@@ -1116,6 +1151,8 @@
 		document.querySelector('#imputado_delito_cometido').value = '';
 		document.querySelector('#delito_cometido_fisimpdelito').value = '';
 
+
+
 		//RESET FORM
 		document.getElementById("form_asignar_arbol_delictual_insert").reset();
 		document.getElementById("form_parentesco_insert").reset();
@@ -1162,8 +1199,6 @@
 			success: function(response) {
 				let documentos = response.documentos;
 				let documento_id = response.documentoporid;
-				console.log(documento_id);
-				console.log(documentos);
 				var quill2 = new Quill('#documento_editar', {
 					theme: 'snow'
 				});
@@ -1671,18 +1706,23 @@
 			var btn_guardarFolioDoc = document.querySelector('#guardarFolioDoc');
 			var btn_actualizarFolioDoc = document.querySelector('#actualizarFolioDoc');
 
+			var btn_enviarcorreoDoc = document.querySelector('#enviarcorreoDoc');
+			var btn_firmar_doc = document.querySelector('#btn-firmar-doc');
+
 			var inputsText = document.querySelectorAll('input[type="text"]');
 			var inputsEmail = document.querySelectorAll('input[type="email"]');
 			var expediente_modal = document.querySelector('#expediente_modal');
 			var year_modal = document.querySelector('#year_modal');
 
+			var expediente_modal_correo = document.querySelector('#expediente_modal_correo');
+			var year_modal_correo = document.querySelector('#year_modal_correo');
 
 			var quill = new Quill('#documento', {
 				theme: 'snow'
 			});
 			var quill2 = new Quill('#documento_editar', {
-					theme: 'snow'
-				});
+				theme: 'snow'
+			});
 
 			inputsText.forEach((input) => {
 				input.addEventListener('input', (event) => {
@@ -1865,7 +1905,64 @@
 					insertarPersonaFisica();
 				}
 			}, false);
+			btn_enviarcorreoDoc.addEventListener('click', (event) => {
+				$.ajax({
+					data: {
+						'expediente_modal_correo': document.querySelector('#expediente_modal_correo').value,
+						'send_mail_select': document.querySelector('#send_mail_select').value,
+						'year_modal_correo': document.querySelector('#year_modal_correo').value,
+					},
+					url: "<?= base_url('/admin/dashboard/send-documentos-correo') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						if (response.status == 1) {
+							Swal.fire({
+								icon: 'success',
+								text: 'Correo enviado correctamente',
+								confirmButtonColor: '#bf9b55',
+							});
+							$('#sendEmailDocModal').modal('hide');
 
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {}
+				});
+			}, false);
+			btn_firmar_doc.addEventListener('click', (event) => {
+				$.ajax({
+					data: {
+						'expediente_modal': document.querySelector('#expediente_modal').value,
+						'contrasena': document.querySelector('#contrasena').value,
+						'year_modal': document.querySelector('#year_modal').value,
+					},
+					url: "<?= base_url('/admin/dashboard/firmar_documentos') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						if (response.status == 1) {
+							const documentos = response.documentos;
+							let tabla_documentos = document.querySelectorAll('#table-documentos tr');
+							tabla_documentos.forEach(row => {
+								if (row.id !== '') {
+									row.remove();
+								}
+							});
+							llenarTablaDocumentos(documentos);
+
+							Swal.fire({
+								icon: 'success',
+								text: 'Documento firmado correctamente',
+								confirmButtonColor: '#bf9b55',
+							});
+							document.querySelector('#contrasena').value = '';
+							$('#contrasena_modal_firma_doc').modal('hide');
+
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {}
+				});
+			}, false);
 			// let tipoPlantilla = '';
 			// btn_certificadoMedico.addEventListener("click", (event) => {
 			// 	$('#documentos_modal_wyswyg').modal('hide');
@@ -3886,7 +3983,7 @@
 		})();
 	};
 </script>
-
+<?php include 'video_denuncia_modals/send_email_modal.php' ?>
 <?php include 'video_denuncia_modals/info_folio_modal.php' ?>
 <?php include 'video_denuncia_modals/salida_modal.php' ?>
 <?php include 'video_denuncia_modals/persona_modal.php' ?>
@@ -3902,7 +3999,6 @@
 <?php include 'video_denuncia_modals/objetos_involucrados_modal_update.php' ?>
 <?php include 'video_denuncia_modals/documentos_modal.php' ?>
 <?php include 'video_denuncia_modals/documentos_modal_editar.php' ?>
-
 <?php include 'video_denuncia_modals/documentos_modal_wyswyg.php' ?>
 <?php include 'video_denuncia_modals/modal_validation_password_firma.php' ?>
 <?php include 'video_denuncia_modals/documentos_generados_modal.php' ?>
