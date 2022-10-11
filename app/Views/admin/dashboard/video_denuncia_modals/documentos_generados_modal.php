@@ -31,5 +31,3 @@
 			</div>
 		</div>
 	</div>
-	<?php include('persona_modal.php') ?>
-	<?php include('vehiculo_modal.php') ?>

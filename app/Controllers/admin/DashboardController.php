@@ -1911,7 +1911,7 @@ class DashboardController extends BaseController
                 $dataFolio['HECHOZONA'] = $localidad->ZONA;
             } else {
                 $dataFolio['HECHOCOLONIAID'] = (int) $this->request->getPost('colonia_delito_select');
-                $dataFolio['HECHOCOLONIADESCR'] = null;
+                $dataFolio['HECHOCOLONIADESCR'] = $colonia->COLONIADESCR;
                 $dataFolio['HECHOZONA'] = $colonia->ZONA;
             }
             $update = $this->_folioModel->set($dataFolio)->where('FOLIOID', $folio)->where('ANO', $year)->update();
@@ -2057,7 +2057,7 @@ class DashboardController extends BaseController
                 $data['COLONIAID'] = null;
                 $data['ZONA'] = $localidad->ZONA;
             } else {
-                $data['COLONIADESCR'] = null;
+                $data['COLONIADESCR'] = $colonia->COLONIADESCR;
                 $data['ZONA'] = $colonia->ZONA;
             }
 
@@ -2882,6 +2882,7 @@ class DashboardController extends BaseController
             'MUNICIPIOID' =>$this->request->getPost('municipio'),
             'ESTADOID'=> 2,
             'TIPODOC'=>$this->request->getPost('titulo'),
+            'STATUSENVIO'=>$this->request->getPost('statusenvio'),
         );
         $foliodoc = $this->_folioDoc($dataFolioDoc, $expediente, $year);
 

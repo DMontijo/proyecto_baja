@@ -312,6 +312,7 @@
 								// notas_mp.value = '';
 								// inputFolio.value = '';
 								// borrarTodo();
+								folio_modal.value =inputFolio.value; 
 								inputExpediente.value = data.expediente;
 								expediente_modal.value = data.expediente;
 								year_modal.value = year;

@@ -107,6 +107,8 @@ $routes->group('admin', function ($routes) {
 
 		$routes->get('documentos', 'admin/DocumentosController::index');
 		$routes->get('documentos_abiertos', 'admin/DocumentosController::documentos_abiertas');
+		$routes->get('documentos_firmados', 'admin/DocumentosController::documentos_firmados');
+
 		$routes->get('documentos_show', 'admin/DocumentosController::documentos_show');
 		$routes->post('firmar_documentos', 'admin/FirmaController::firmar_documentos');
 		$routes->post('insert-documentosWSYWSG', 'admin/DashboardController::insertFolioDoc');
@@ -220,6 +222,7 @@ $routes->group('data', function ($routes) {
 	$routes->post('delete-fisimpdelito-by-folio', 'admin/DashboardController::deleteImpDelitoByFolio');
 	$routes->post('delete-arbol_delictivo-by-folio', 'admin/DashboardController::deleteArbolByFolio');
 	$routes->post('get-plantilla', 'admin/DashboardController::get_Plantillas');
+	$routes->post('get-plantilla-doc', 'admin/DocumentosController::obtenPlantillas');
 
 	$routes->post('get-documento-by-id', 'admin/DashboardController::getDocumentoById');
 	$routes->post('update-documento-by-id', 'admin/DashboardController::updateDocumentoByFolio');

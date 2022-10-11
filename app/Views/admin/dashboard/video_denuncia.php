@@ -990,8 +990,8 @@
 		year_select.classList.remove('d-none');
 		year_select.value = year;
 		buscar_btn.classList.remove('d-none');
-		expediente_modal_correo.value="";
-		year_modal_correo.value="";
+		expediente_modal_correo.value = "";
+		year_modal_correo.value = "";
 		$('#send_mail_select').empty();
 		// quill.root.innerHTML ='';
 		// quill2.root.innerHTML='';
@@ -1713,6 +1713,7 @@
 			var inputsEmail = document.querySelectorAll('input[type="email"]');
 			var expediente_modal = document.querySelector('#expediente_modal');
 			var year_modal = document.querySelector('#year_modal');
+			var folio_modal = document.querySelector('#folio_modal');
 
 			var expediente_modal_correo = document.querySelector('#expediente_modal_correo');
 			var year_modal_correo = document.querySelector('#year_modal_correo');
@@ -1932,6 +1933,7 @@
 			btn_firmar_doc.addEventListener('click', (event) => {
 				$.ajax({
 					data: {
+						'folio' : document.querySelector('#folio_modal').value,
 						'expediente_modal': document.querySelector('#expediente_modal').value,
 						'contrasena': document.querySelector('#contrasena').value,
 						'year_modal': document.querySelector('#year_modal').value,
@@ -3926,20 +3928,55 @@
 
 
 			function insertarDocumento(contenido, tipoPlantilla) {
-				const data = {
-					'folio': document.querySelector('#input_folio_atencion').value,
-					'expediente': document.querySelector('#input_expediente').value,
-					'year': document.querySelector('#year_select').value,
-					'placeholder': contenido,
-					'municipio': document.querySelector('#municipio_empleado').value,
-					'titulo': tipoPlantilla,
-				};
+				Swal.fire({
+					title: '¿Este documento tiene que ser enviado?',
+					showDenyButton: true,
+					showCancelButton: true,
+					confirmButtonText: 'Si',
+					confirmButtonColor: '#bf9b55',
+					denyButtonText: 'No',
+					cancelButtonText:'No',
+				}).then((result) => {
+					/* Read more about isConfirmed, isDenied below */
+					if (result.isConfirmed) {
+						const data = {
+							'folio': document.querySelector('#input_folio_atencion').value,
+							'expediente': document.querySelector('#input_expediente').value,
+							'year': document.querySelector('#year_select').value,
+							'placeholder': contenido,
+							'municipio': document.querySelector('#municipio_empleado').value,
+							'titulo': tipoPlantilla,
+							'statusenvio': 1
+						};
+						insertarDoc(data);
+
+					} else {
+						const data = {
+							'folio': document.querySelector('#input_folio_atencion').value,
+							'expediente': document.querySelector('#input_expediente').value,
+							'year': document.querySelector('#year_select').value,
+							'placeholder': contenido,
+							'municipio': document.querySelector('#municipio_empleado').value,
+							'titulo': tipoPlantilla,
+							'statusenvio': 0
+						};
+						insertarDoc(data);
+
+					}
+				})
+
+			
+			}
+
+			function insertarDoc(data){
 				$.ajax({
 					data: data,
 					url: "<?= base_url('/admin/dashboard/insert-documentosWSYWSG') ?>",
 					method: "POST",
 					dataType: "json",
 					success: function(response) {
+
+
 						if (response.status == 1) {
 							const documentos = response.documentos;
 							Swal.fire({
@@ -3965,7 +4002,6 @@
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
 			}
-
 			function dateToString(_date) {
 				let date = new Date(_date);
 				let dateToTijuanaString = date.toLocaleString('en-US', {

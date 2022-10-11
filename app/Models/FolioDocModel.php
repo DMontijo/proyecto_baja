@@ -17,16 +17,6 @@ class FolioDocModel extends Model
         'ESTADOID',
         'MUNICIPIOID',
         'NUMEROEXPEDIENTE',
-        'VICTIMANOMBRE',
-        'VICTIMAEDAD',
-        'VICTIMATELEFONO',
-        'VICTIMADOMICILIO',
-        'RELACIONDELITO',
-        'IMPUTADONOMBRE',
-        'IMPUTADOEDAD',
-        'HECHO',
-        'NUMDELITO',
-        'ZONASEJAP',
         'TIPODOC',
         'PLACEHOLDER',
         'OFICINAID',
@@ -42,6 +32,8 @@ class FolioDocModel extends Model
         'FIRMAELECTRONICA',
         'PDF',
         'STATUS',
+        'STATUSENVIO',
+
     ];
     public function get_by_folio($folio, $year)
 	{
@@ -68,6 +60,16 @@ class FolioDocModel extends Model
 		$builder = $this->db->table($this->table);
 		$builder->select(['NUMEROEXPEDIENTE', 'FECHAREGISTRO','STATUS','ANO']);
 		$builder->where('STATUS', 'ABIERTO');
+		$builder->orderBy('NUMEROEXPEDIENTE ASC');
+        $builder->groupBy('NUMEROEXPEDIENTE');
+		$query = $builder->get();
+		return $query->getResult('array');
+	}
+    public function get_folio_firmado()
+	{
+		$builder = $this->db->table($this->table);
+		$builder->select(['FOLIOID','NUMEROEXPEDIENTE', 'FECHAREGISTRO','STATUS','ANO']);
+		$builder->where('STATUS', 'FIRMADO');
 		$builder->orderBy('NUMEROEXPEDIENTE ASC');
         $builder->groupBy('NUMEROEXPEDIENTE');
 		$query = $builder->get();

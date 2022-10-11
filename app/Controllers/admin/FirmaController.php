@@ -296,9 +296,10 @@ class FirmaController extends BaseController
 	public function firmar_documentos()
 	{
 		$numexpediente = $this->request->getPost('expediente_modal');
+		$folio = $this->request->getPost('folio');
 
 		if ($numexpediente == null) {
-			$numexpediente = $this->request->getPost('folio');
+			$numexpediente = $this->request->getPost('expediente');
 		}
 
 		$expediente = $numexpediente;
@@ -361,7 +362,7 @@ class FirmaController extends BaseController
 							// 	return redirect()->to(base_url('/admin/dashboard/documentos_abiertos'))->with('message_error', 'Hubo un error al guardar la firma electrónica. Intentelo de nuevo.');
 							// }
 						} else {
-							return redirect()->to(base_url('/admin/dashboard/documentos_show?folio=' . $numexpediente . '&year=' . $year))->with('message_error', 'Fallo al firmar el documento. Intentelo de nuevo.');
+							return redirect()->to(base_url('/admin/dashboard/documentos_show?expediente=' . $numexpediente . '&year=' . $year. '&folio=' . $folio))->with('message_error', 'Fallo al firmar el documento. Intentelo de nuevo.');
 						}
 					}
 					$documentosExp = $this->_folioDocModel->get_by_expediente($numexpediente, $year);
@@ -375,11 +376,11 @@ class FirmaController extends BaseController
 						return json_encode((object)['status' => 1, 'documentos'=> $documentosExp]);
 					}
 				} else {
-					return redirect()->to(base_url('/admin/dashboard/documentos_show?folio=' . $numexpediente . '&year=' . $year))->with('message_error', 'La FIEL no es válida o está vencida');
+					return redirect()->to(base_url('/admin/dashboard/documentos_show?expediente=' . $numexpediente . '&year=' . $year. '&folio=' . $folio))->with('message_error', 'La FIEL no es válida o está vencida');
 				}
 			}
 		} catch (\Exception $e) {
-			return redirect()->to(base_url('/admin/dashboard/documentos_show?folio=' . $numexpediente . '&year=' . $year))->with('message_error', $e->getMessage());
+			return redirect()->to(base_url('/admin/dashboard/documentos_show?expediente=' . $numexpediente . '&year=' . $year. '&folio=' . $folio))->with('message_error', $e->getMessage());
 		}
 		// }
 		// return redirect()->to(base_url('/admin/dashboard/documentos_abiertos'))->with('message_success', 'Documento firmada correctamente.');
@@ -771,7 +772,7 @@ class FirmaController extends BaseController
 		$to = $this->request->getPost('send_mail_select');
 		$expediente = $this->request->getPost('expediente_modal_correo');
 		$year = $this->request->getPost('year_modal_correo');
-		$documento = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente)->where('ANO', $year)->where('STATUS', 'FIRMADO')->findAll();
+		$documento = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente)->where('ANO', $year)->where('STATUS', 'FIRMADO')->where('STATUSENVIO', 1)->findAll();
 
 		$email = \Config\Services::email();
 		$email->setTo($to);

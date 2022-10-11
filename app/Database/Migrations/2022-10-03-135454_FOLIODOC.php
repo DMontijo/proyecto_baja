@@ -21,10 +21,7 @@ class FOLIODOC extends Migration
 				'type' => 'INT',
 				'constraint' => '4',
 			],
-            'DENUNCIANTEID' => [
-				'type' => 'INT',
-				'unsigned' => TRUE,
-			],
+           
             'ESTADOID' => [ //DONDE SE FIRMA
 				'type' => 'INT',
 				'unsigned' => TRUE,
@@ -40,56 +37,7 @@ class FOLIODOC extends Migration
 				'constraint' => '16',
 				'null' => TRUE,
 			],
-            'VICTIMANOMBRE' => [
-				'type' => 'VARCHAR',
-				'constraint' => '100',
-				'null' => TRUE,
-			],
-            'VICTIMAEDAD' => [
-				'type' => 'INT',
-				'constraint' => '5',
-				'null' => TRUE,
-			],
-            'VICTIMATELEFONO' => [
-				'type' => 'VARCHAR',
-				'constraint' => '20',
-				'null' => TRUE,
-			],
-            'VICTIMADOMICILIO' => [
-				'type' => 'VARCHAR',
-				'constraint' => '200',
-				'null' => TRUE,
-			],
-            'RELACIONDELITO' => [
-				'type' => 'VARCHAR',
-				'constraint' => '100',
-				'null' => TRUE,
-			],
-            'IMPUTADONOMBRE' => [
-				'type' => 'VARCHAR',
-				'constraint' => '100',
-				'null' => TRUE,
-			],
-            'IMPUTADOEDAD' => [
-				'type' => 'INT',
-				'constraint' => '5',
-				'null' => TRUE,
-			],
-            'HECHO' => [
-				'type' => 'TEXT',
-				'null' => TRUE,
-			],
-            'NUMDELITO' => [
-				'type' => 'INT',
-				'constraint' => '5',
-				'null' => TRUE,
-			],
-            'ZONASEJAP' => [
-				'type' => 'VARCHAR',
-				'constraint' => '100',
-				'null' => TRUE,
-			],
-            //
+           
 			'TIPODOC' => [
 				'type' => 'TEXT',
 				'null' => TRUE,
@@ -100,11 +48,7 @@ class FOLIODOC extends Migration
 			],
 
             //DATOS FIRMA
-            'OFICINAID' => [
-				'type' => 'INT',
-				'constraint' => '5',
-				'null' => TRUE,
-			],
+            
             'AGENTEID' => [
 				'type' => 'INT',
 				'constraint' => '5',
@@ -159,6 +103,11 @@ class FOLIODOC extends Migration
 			'STATUS' => [
 				'type' => 'VARCHAR',
 				'constraint' => '15',
+				'null' => TRUE,
+			],
+			'STATUSENVIO' => [
+				'type' => 'CHAR',
+				'constraint' => '1',
 				'null' => TRUE,
 			],
 			'FECHAREGISTRO DATETIME DEFAULT CURRENT_TIMESTAMP',

@@ -179,13 +179,14 @@ class DashboardController extends BaseController
             'HECHONARRACION' => $this->request->getPost('descripcion_breve'),
             'HECHODELITO' => $this->request->getPost('delito'),
         ];
+        $colonia = $this->_coloniasModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $this->request->getPost('municipio'))->where('LOCALIDADID', $this->request->getPost('localidad'))->where('COLONIAID', $this->request->getPost('colonia_select'))->first();
 
         if ((int) $this->request->getPost('colonia_select') == 0) {
             $dataFolio['HECHOCOLONIAID'] = null;
             $dataFolio['HECHOCOLONIADESCR'] = $this->request->getPost('colonia');
         } else {
             $dataFolio['HECHOCOLONIAID'] = (int) $this->request->getPost('colonia_select');
-            $dataFolio['HECHOCOLONIADESCR'] = null;
+            $dataFolio['HECHOCOLONIADESCR'] = $colonia->COLONIADESCR;
         }
         if ($this->request->getPost('esta_desaparecido') == "SI") {
             $dataFolio['LOCALIZACIONPERSONA'] = 'S';
@@ -602,20 +603,23 @@ class DashboardController extends BaseController
     private function _folioPersonaFisicaDomicilio($data, $folio, $personaFisicaID, $year)
     {
         $data = $data;
+      
         $data['FOLIOID'] = $folio;
         $data['ANO'] = $year;
         $data['PERSONAFISICAID'] = $personaFisicaID;
+        $colonia = $this->_coloniasModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data['MUNICIPIOID'])->where('LOCALIDADID',  $data['LOCALIDADID'])->where('COLONIAID', $data['COLONIAID'])->first();
 
         if ((int) $data['COLONIAID'] == 0 || $data['COLONIAID'] == null) {
             $data['COLONIAID'] = null;
             $data['COLONIADESCR'] = $data['COLONIADESCR'];
         } else {
-            $data['COLONIAID'] = $data['COLONIAID'];
-            $data['COLONIADESCR'] = null;
+            $data['COLONIAID'] = $colonia->COLONIAID;
+            $data['COLONIADESCR'] = $colonia->COLONIADESCR;
         }
-
-        if ($data['COLONIAID'] = null) {
+  ;
+        if ($data['COLONIAID'] == null) {
             $data['LOCALIDADID'] = null;
+     
         } else {
             if ($data['MUNICIPIOID']) {
                 try {
@@ -628,7 +632,7 @@ class DashboardController extends BaseController
                 $data['LOCALIDADID'] = null;
             }
         }
-
+      
         if ($data['LOCALIDADID'] != null) {
             if ($data['MUNICIPIOID']) {
                 try {

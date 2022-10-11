@@ -6,9 +6,10 @@
 				<h5 class="modal-title text-white font-weight-bold d-none" id="password_verifying">Firmando documento</h5>
 			</div>
 			<div class="modal-body text-center" id="load">
-				<form method="POST" action="<?php echo base_url('admin/dashboard/firmar_documentos') ?>" class="needs-validation row" novalidate>
 					<div class="col-12 mb-3">
 						<input type="text" class="form-control" id="folio" name="folio" value="<?= $body_data->folio ?>" hidden required>
+						<input type="text" class="form-control" id="expediente" name="expediente" value="<?= $body_data->expediente ?>" hidden required>
+
 						<input type="text" class="form-control" id="year" name="year" value="<?= $body_data->year ?>" hidden required>
 						<input class="form-control" id="contrasena" name="contrasena" type="text" autocomplete="off" required>
 						<div class="invalid-feedback">
@@ -16,9 +17,8 @@
 						</div>
 					</div>
 					<div class="col-12">
-						<button type="submit" class="btn btn-secondary font-weight-bold">Firmar documento</button>
+						<button type="button" id="firmar_documento_modal"  name="firmar_documento_modal" class="btn btn-secondary font-weight-bold">Firmar documento</button>
 					</div>
-				</form>
 			</div>
 			<div id="loading" class="modal-body text-center d-none" style="min-height:170px;">
 				<div class="d-flex justify-content-center">
