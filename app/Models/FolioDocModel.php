@@ -75,4 +75,17 @@ class FolioDocModel extends Model
 		$query = $builder->get();
 		return $query->getResult('array');
 	}
+	public function get_folio_by_first($folio, $year, $docid)
+	{
+		$builder = $this->db->table($this->table);
+		$builder->select(['FOLIOID','NUMEROEXPEDIENTE', 'FECHAREGISTRO','STATUS','ANO', 'PLACEHOLDER']);
+		$builder->where('FOLIOID', $folio);
+		$builder->where('ANO', $year);
+		$builder->where('FOLIODOCID', $docid);
+		$query = $builder->get();
+		foreach ($query->getResult() as $row) {
+			$result = $row->PLACEHOLDER;
+		}
+		return $result;
+	}
 }

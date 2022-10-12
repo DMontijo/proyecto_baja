@@ -312,6 +312,9 @@ class FirmaController extends BaseController
 
 		$documento = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $numexpediente)->where('ANO', $year)->where('STATUS', 'ABIERTO')->findAll();
 
+		if ($documento == null) {
+			return json_encode((object)['status' => 0, 'message_error'=> "Debes generar documentos antes de firmar"]);
+		}
 
 		$meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
 
@@ -352,6 +355,13 @@ class FirmaController extends BaseController
 
 							$update = $this->_folioDocModel->set($datosInsert)->where('NUMEROEXPEDIENTE', $numexpediente)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
 
+							if ($update) {
+								$datosBitacora = [
+									'ACCION' => 'Ha firmado un documento',
+									'NOTAS' => 'DOCUMENTO: ' . $numexpediente . ' AÑO: ' . $year,
+								];
+								$this->_bitacoraActividad($datosBitacora);
+							}
 							// 	// if ($this->_sendEmailConstanciaFirmada($solicitante->CORREO, $numfolio, $year, $xml, $pdf)) {
 							// 	return redirect()->to(base_url('/admin/dashboard/documentos_abiertos'))->with('message_success', 'Documento firmada correctamente.');
 							// 	// } else {
@@ -362,25 +372,25 @@ class FirmaController extends BaseController
 							// 	return redirect()->to(base_url('/admin/dashboard/documentos_abiertos'))->with('message_error', 'Hubo un error al guardar la firma electrónica. Intentelo de nuevo.');
 							// }
 						} else {
-							return redirect()->to(base_url('/admin/dashboard/documentos_show?expediente=' . $numexpediente . '&year=' . $year. '&folio=' . $folio))->with('message_error', 'Fallo al firmar el documento. Intentelo de nuevo.');
+							// return redirect()->to(base_url('/admin/dashboard/documentos_show?expediente=' . $numexpediente . '&year=' . $year. '&folio=' . $folio))->with('message_error', 'Fallo al firmar el documento. Intentelo de nuevo.');
+							return json_encode((object)['status' => 0, 'message_error'=> "Fallo al firmar el documento. Intentelo de nuevo."]);
+
 						}
 					}
 					$documentosExp = $this->_folioDocModel->get_by_expediente($numexpediente, $year);
 
-					if ($update) {
-						$datosBitacora = [
-							'ACCION' => 'Ha firmado un documento',
-							'NOTAS' => 'DOCUMENTO: ' . $numexpediente . ' AÑO: ' . $year,
-						];
-						$this->_bitacoraActividad($datosBitacora);
 						return json_encode((object)['status' => 1, 'documentos'=> $documentosExp]);
-					}
+					
 				} else {
-					return redirect()->to(base_url('/admin/dashboard/documentos_show?expediente=' . $numexpediente . '&year=' . $year. '&folio=' . $folio))->with('message_error', 'La FIEL no es válida o está vencida');
+					// return redirect()->to(base_url('/admin/dashboard/documentos_show?expediente=' . $numexpediente . '&year=' . $year. '&folio=' . $folio))->with('message_error', 'La FIEL no es válida o está vencida');
+					return json_encode((object)['status' => 0, 'message_error'=> "La FIEL no es válida o está vencida"]);
+
 				}
 			}
 		} catch (\Exception $e) {
-			return redirect()->to(base_url('/admin/dashboard/documentos_show?expediente=' . $numexpediente . '&year=' . $year. '&folio=' . $folio))->with('message_error', $e->getMessage());
+			// return redirect()->to(base_url('/admin/dashboard/documentos_show?expediente=' . $numexpediente . '&year=' . $year. '&folio=' . $folio))->with('message_error', $e->getMessage());
+			return json_encode((object)['status' => 0, 'message_error'=> $e->getMessage()]);
+
 		}
 		// }
 		// return redirect()->to(base_url('/admin/dashboard/documentos_abiertos'))->with('message_success', 'Documento firmada correctamente.');

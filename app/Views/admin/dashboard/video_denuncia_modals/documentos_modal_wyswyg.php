@@ -9,13 +9,31 @@
             </div>
             <div class="modal-body bg-light">
 
-            <select class="form-control" id="plantilla" name="plantilla">
-			<option disabled selected value=""></option>
-			<?php
-			foreach ($body_data->plantillas as $index => $plantilla) { ?>
-				<option value="<?= $plantilla->TITULO  ?>"> <?= $plantilla->TITULO ?></option>
-			<?php } ?>
-		</select>
+            <label for="plantilla" class="form-label font-weight-bold">Plantilla:</label>
+
+                <select class="form-control" id="plantilla" name="plantilla">
+                    <option disabled selected value=""></option>
+                    <?php
+                    foreach ($body_data->plantillas as $index => $plantilla) { ?>
+                        <option value="<?= $plantilla->TITULO  ?>"> <?= $plantilla->TITULO ?></option>
+                    <?php } ?>
+                </select>
+                <br>
+                <div id="involucrados" name="involucrados" style="display: none;">
+                <label for="victima_modal_documento" class="form-label font-weight-bold" >Víctima:</label>
+
+                <select class="form-control" id="victima_modal_documento" name="victima_modal_documento">
+                    <option disabled selected value=""></option>
+                   
+                </select>
+                <br>
+                <label for="imputado_modal_documento" class="form-label font-weight-bold">Imputado:</label>
+
+                <select class="form-control" id="imputado_modal_documento" name="imputado_modal_documento">
+                    <option disabled selected value=""></option>
+                   
+                </select>
+                </div>
             </div>
         </div>
     </div>

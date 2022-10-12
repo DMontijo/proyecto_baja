@@ -113,8 +113,6 @@ $routes->group('admin', function ($routes) {
 		$routes->post('firmar_documentos', 'admin/FirmaController::firmar_documentos');
 		$routes->post('insert-documentosWSYWSG', 'admin/DashboardController::insertFolioDoc');
 		$routes->post('send-documentos-correo', 'admin/FirmaController::sendEmailDocumentos');
-
-
 	});
 });
 
@@ -222,12 +220,15 @@ $routes->group('data', function ($routes) {
 	$routes->post('delete-fisimpdelito-by-folio', 'admin/DashboardController::deleteImpDelitoByFolio');
 	$routes->post('delete-arbol_delictivo-by-folio', 'admin/DashboardController::deleteArbolByFolio');
 	$routes->post('get-plantilla', 'admin/DashboardController::get_Plantillas');
-	$routes->post('get-plantilla-doc', 'admin/DocumentosController::obtenPlantillas');
 
 	$routes->post('get-documento-by-id', 'admin/DashboardController::getDocumentoById');
 	$routes->post('update-documento-by-id', 'admin/DashboardController::updateDocumentoByFolio');
+	$routes->post('get-documentos', 'admin/DocumentosController::obtenDocumentos');
+	$routes->post('get-documento-tabla', 'admin/DocumentosController::getDocumento');
+
 
 });
+
 
 
 /**

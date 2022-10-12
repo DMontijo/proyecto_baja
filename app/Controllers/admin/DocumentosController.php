@@ -6,6 +6,7 @@ use Dompdf\Dompdf;
 use Dompdf\Options;
 use App\Controllers\BaseController;
 use App\Models\FolioDocModel;
+use App\Models\FolioPersonaFisicaModel;
 use App\Models\PlantillasModel;
 
 class DocumentosController extends BaseController
@@ -14,6 +15,8 @@ class DocumentosController extends BaseController
     {
         $this->_folioDocModel = new FolioDocModel();
         $this->_plantillasModel = new PlantillasModel();
+        $this->_folioPersonaFisicaModel = new FolioPersonaFisicaModel();
+
     }
     public function index()
     {
@@ -50,7 +53,8 @@ class DocumentosController extends BaseController
         $data->year = $this->request->getGet('year');
         // $data->documento = $this->_plantillasModel->asObject()->where('TITULO', $data->tipodoc)->first();
         $data->documentos = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $data->expediente)->where('ANO', $data->year)->findAll();
-        $data->plantillas = $this->_plantillasModel->asObject()->findAll();
+
+        $data->plantillas = $this->_plantillasModel->asObject()->where('TITULO !=','CONSTANCIA DE EXTRAVÍO')->findAll();
 
         $data2 = [
             'header_data' => (object)['title' => 'DOCUMENTOS'],
@@ -58,27 +62,40 @@ class DocumentosController extends BaseController
         ];
         echo view("admin/dashboard/documentos/documentos_generados", $data2);
     }
-    public function obtenPlantillas(){
-        var_dump($this->request->getGet('folio'));
-        exit;
-        $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
-      
-        $titulo =$this->request->getPost('titulo');
-       
+    public function obtenDocumentos()
+    {
+        $expediente = trim($this->request->getPost('expediente'));
+        $folio = trim($this->request->getPost('folio'));
+        $year = trim($this->request->getPost('year'));
+        if ($expediente) {
+            $documentos = $this->_folioDocModel->get_by_folio($folio, $year);
+            $imputados = $this->_folioPersonaFisicaModel->get_imputados($folio, $year);
+            $victimas = $this->_folioPersonaFisicaModel->get_victimas($folio, $year);
+            $correos = $this->_folioPersonaFisicaModel->get_correos_persona($folio, $year);
 
+            return json_encode(['status' => 1,'documentos'=> $documentos, 'victimas'=>$victimas, "imputados"=>$imputados, 'correos'=>$correos]);
+        }else{
+            return json_encode(['status' => 0]);
+        }
+    }
+    public function getDocumento()
+    {
+        $docid = trim($this->request->getPost('docid'));
+        $folio = trim($this->request->getPost('folio'));
+        $year = trim($this->request->getPost('year'));
+
+     
         $data = (object) array();
 
+        // $data->documento = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $docid)->first();
+        $data->documento = $this->_folioDocModel->get_folio_by_first($folio, $year, $docid);
 
-        $data->plantilla = $this->_plantillasModel->where('TITULO', $titulo)->first();
-       
-
-
-        if ($data->plantilla) {
-            $data->status = 1;
-            return json_encode($data);
+        if ($data->documento) {
+            $documentos = $this->_folioDocModel->get_by_folio($folio, $year);
+            return json_encode(['status' => 1, 'documentos'=> $documentos, 'documentoporid'=> $data->documento]);
         } else {
-            $data = (object)['status' => 0];
-            return json_encode($data);
+            return json_encode(['status' => 0]);
+
         }
     }
     private function _loadView($title, $data, $view)
