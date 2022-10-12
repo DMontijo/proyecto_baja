@@ -3,7 +3,7 @@
 		<div class="modal-content border-0">
 			<div class="modal-header bg-primary justify-content-center">
 				<h5 class="modal-title text-white font-weight-bold" id="password_modalLabel">Contraseña de FIEL</h5>
-				<h5 class="modal-title text-white font-weight-bold d-none" id="password_verifying">Firmando documento</h5>
+				<h5 class="modal-title text-white font-weight-bold d-none" id="password_verifying">Firmando documento...</h5>
 			</div>
 			<div class="modal-body text-center" id="load">
 					<div class="col-12 mb-3">
@@ -29,26 +29,3 @@
 		</div>
 	</div>
 </div>
-
-<script>
-	(function() {
-		'use strict'
-		var forms = document.querySelectorAll('.needs-validation')
-		Array.prototype.slice.call(forms)
-			.forEach(function(form) {
-				form.addEventListener('submit', function(event) {
-
-					if (!form.checkValidity()) {
-						event.preventDefault()
-						event.stopPropagation()
-					} else {
-						document.querySelector('#load').classList.add('d-none');
-						document.querySelector('#password_modalLabel').classList.add('d-none');
-						document.querySelector('#loading').classList.remove('d-none');
-						document.querySelector('#password_verifying').classList.remove('d-none');
-					}
-					form.classList.add('was-validated')
-				}, false)
-			})
-	})()
-</script>

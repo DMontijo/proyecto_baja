@@ -184,17 +184,21 @@ class DashboardController extends BaseController
         if ((int) $this->request->getPost('colonia_select') == 0) {
             $dataFolio['HECHOCOLONIAID'] = null;
             $dataFolio['HECHOCOLONIADESCR'] = $this->request->getPost('colonia');
+            $localidad = $this->_localidadesModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $dataFolio['HECHOMUNICIPIOID'])->where('LOCALIDADID', $dataFolio['HECHOLOCALIDADID'])->first();
+            $dataFolio['HECHOZONA'] = $localidad->ZONA;
         } else {
             $dataFolio['HECHOCOLONIAID'] = (int) $this->request->getPost('colonia_select');
             $dataFolio['HECHOCOLONIADESCR'] = $colonia->COLONIADESCR;
+            $dataFolio['HECHOZONA'] = $colonia->ZONA;
+
         }
         if ($this->request->getPost('esta_desaparecido') == "SI") {
             $dataFolio['LOCALIZACIONPERSONA'] = 'S';
             $dataFolio['LOCALIZACIONPERSONAMEDIOS'] = $this->request->getPost('autorization_photo_des') == 'on' ? 'S' : 'N';
         }
 
-        $localidad = $this->_localidadesModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $dataFolio['HECHOMUNICIPIOID'])->where('LOCALIDADID', $dataFolio['HECHOLOCALIDADID'])->first();
-        $localidad ? $dataFolio['HECHOZONA'] = $localidad->ZONA : $dataFolio['HECHOZONA'] = null;
+        // $localidad = $this->_localidadesModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $dataFolio['HECHOMUNICIPIOID'])->where('LOCALIDADID', $dataFolio['HECHOLOCALIDADID'])->first();
+        // $localidad ? $dataFolio['HECHOZONA'] = $localidad->ZONA : $dataFolio['HECHOZONA'] = null;
 
         if ($this->_folioModel->save($dataFolio)) {
             $dataPreguntas = array(

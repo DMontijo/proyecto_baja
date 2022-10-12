@@ -2841,26 +2841,39 @@ class DashboardController extends BaseController
         $titulo =$this->request->getPost('titulo');
         $victima =$this->request->getPost('victima');
         $imputado =$this->request->getPost('imputado');
-
+        
         $data = (object) array();
 
         $data->expediente = $this->_folioModel->asObject()->where('ANO', $year)->where('EXPEDIENTEID', $expediente)->first();
         $data->estado = $this->_estadosModel->asObject()->where('ESTADOID', $data->expediente->ESTADOID)->first();
-
+        $data->plantilla = $this->_plantillasModel->where('TITULO', $titulo)->first();
+        
         $data->municipios = $this->_municipiosModel->asObject()->where('ESTADOID', '2')->where('MUNICIPIOID',  $data->expediente->MUNICIPIOID)->first();
         $data->victima = $this->_folioPersonaFisicaModel->get_by_personas($data->expediente->FOLIOID,$data->expediente->ANO, $victima );
         $data->imputado = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->expediente->FOLIOID)->where('ANO',$data->expediente->ANO)->where('PERSONAFISICAID',$imputado)->first();
+        $data->victimaDom = $this->_folioPersonaFisicaDomicilioModel->asObject()->where('FOLIOID', $data->expediente->FOLIOID)->where('ANO',$data->expediente->ANO)->where('PERSONAFISICAID',$imputado)->first();
+        $data->estadoVictima = $this->_estadosModel->asObject()->where('ESTADOID',  $data->victimaDom->ESTADOID)->first();
+
         $relacionfisfis= $this->_relacionIDOModel->asObject()->where('FOLIOID', $data->expediente->FOLIOID)->where('ANO',$data->expediente->ANO)->where('PERSONAFISICAIDVICTIMA', $victima)->where('PERSONAFISICAIDIMPUTADO', $imputado)->first();
-        if ($relacionfisfis) {
-            $data->relacion_delitodescr = $this->_delitoModalidadModel->asObject()->where('DELITOMODALIDADID', $relacionfisfis->DELITOMODALIDADID)->first();
+        if ($relacionfisfis != null) {
+           $relacion_delitodescr = $this->_delitoModalidadModel->asObject()->where('DELITOMODALIDADID', $relacionfisfis->DELITOMODALIDADID)->first();
+            $data->plantilla = str_replace('[DELITO]',$relacion_delitodescr->DELITOMODALIDADDESCR ?$relacion_delitodescr->DELITOMODALIDADDESCR: 'N/A', $data->plantilla);
+            $data->plantilla = str_replace('[NUMERO_DELITO]',$relacion_delitodescr->DELITOMODALIDADID  ?$relacion_delitodescr->DELITOMODALIDADID : 'N/A', $data->plantilla);
+            $data->plantilla = str_replace('[NUMERO_DELITO]',$relacion_delitodescr->DELITOMODALIDADARTICULO  ?$relacion_delitodescr->DELITOMODALIDADARTICULO : 'N/A', $data->plantilla);
+            $data->plantilla = str_replace('[RELACION_DELITO]',$relacion_delitodescr->DELITOMODALIDADDESCR ?$relacion_delitodescr->DELITOMODALIDADDESCR: 'N/A', $data->plantilla);
+
         }
-        $data->plantilla = $this->_plantillasModel->where('TITULO', $titulo)->first();
+        // else if ($relacionfisfis == null) {
+        //     // var_dump("es null");
+        // }
         $data->plantilla = str_replace('[EXPEDIENTE_NOMBRE_DEL_RESPONSABLE]', session('NOMBRE') . ' ' . session('APELLIDO_PATERNO') . ' '. session('APELLIDO_MATERNO'), $data->plantilla);
+        $data->plantilla = str_replace('EXPEDIENTE_NOMBRE_DEL_RESPONSABLE', session('NOMBRE') . ' ' . session('APELLIDO_PATERNO') . ' '. session('APELLIDO_MATERNO'), $data->plantilla);
         $data->plantilla = str_replace('[NOMBRE_LICENCIADO]', session('NOMBRE') . ' ' . session('APELLIDO_PATERNO') . ' '. session('APELLIDO_MATERNO'), $data->plantilla);
         $data->plantilla = str_replace('[DOCUMENTO_FECHA]',date('d') . ' de '.$meses[date('n')-1]. " del ".date('Y'), $data->plantilla);
         $data->plantilla = str_replace('[EXPEDIENTE_NOMBRE_MP_RESPONSABLE]',session('NOMBRE') . ' ' . session('APELLIDO_PATERNO') . ' '. session('APELLIDO_MATERNO'), $data->plantilla);
         $data->plantilla = str_replace('[EXPEDIENTE_NUMERO]',$data->expediente->EXPEDIENTEID, $data->plantilla);
         $data->plantilla = str_replace('[DOCUMENTO_MUNICIPIO]',$data->municipios->MUNICIPIODESCR, $data->plantilla);
+        $data->plantilla = str_replace('[DOCUMENTO_CIUDAD]',$data->municipios->MUNICIPIODESCR, $data->plantilla);
         $data->plantilla = str_replace('DOCUMENTO_MUNICIPIO',$data->municipios->MUNICIPIODESCR, $data->plantilla);
         $data->plantilla = str_replace('[VICTIMA]',$data->victima[0]['NOMBRE'] .' '.($data->victima[0]['PRIMERAPELLIDO'] ?$data->victima[0]['PRIMERAPELLIDO']:'' ).' '. ($data->victima[0]['SEGUNDOAPELLIDO']?$data->victima[0]['SEGUNDOAPELLIDO']:''), $data->plantilla);
         $data->plantilla = str_replace('[VICTIMA_NOMBRE]',$data->victima[0]['NOMBRE'] .' '.($data->victima[0]['PRIMERAPELLIDO'] ?$data->victima[0]['PRIMERAPELLIDO']:'' ).' '. ($data->victima[0]['SEGUNDOAPELLIDO']?$data->victima[0]['SEGUNDOAPELLIDO']:''), $data->plantilla);
@@ -2870,16 +2883,16 @@ class DashboardController extends BaseController
         $data->plantilla = str_replace('[PERSONA]',$data->imputado->NOMBRE .' '.($data->imputado->PRIMERAPELLIDO ?$data->imputado->PRIMERAPELLIDO:'' ).' '. ($data->imputado->SEGUNDOAPELLIDO?$data->imputado->SEGUNDOAPELLIDO:''), $data->plantilla);
         $data->plantilla = str_replace('[IMPUTADO_NOMBRE]',$data->imputado->NOMBRE .' '.($data->imputado->PRIMERAPELLIDO ?$data->imputado->PRIMERAPELLIDO:'' ).' '. ($data->imputado->SEGUNDOAPELLIDO?$data->imputado->SEGUNDOAPELLIDO:''), $data->plantilla);
         $data->plantilla = str_replace('[IMPUTADO_EDAD]',$data->imputado->EDADCANTIDAD ? $data->imputado->EDADCANTIDAD: 'N/A', $data->plantilla);
-        $data->plantilla = str_replace('[RELACION_DELITO]',$data->relacion_delitodescr->DELITOMODALIDADDESCR ? $data->relacion_delitodescr->DELITOMODALIDADDESCR: 'N/A', $data->plantilla);
+        $data->plantilla = str_replace('[DIA]',date('d'), $data->plantilla);
+        $data->plantilla = str_replace('[MES]',$meses[date('n')-1], $data->plantilla);
         $data->plantilla = str_replace('[ANO]',date('Y'), $data->plantilla);
         $data->plantilla = str_replace('[HORA]',date('H'), $data->plantilla);
         $data->plantilla = str_replace('[MINUTOS]',date('i'), $data->plantilla);
-        $data->plantilla = str_replace('[ESTADO]',$data->estado->ESTADODESCR, $data->plantilla);
+        $data->plantilla = str_replace('[ESTADO]',$data->municipios->MUNICIPIODESCR, $data->plantilla);
         $data->plantilla = str_replace('[HECHO]',$data->expediente->HECHONARRACION, $data->plantilla);
-        $data->plantilla = str_replace('[DELITO]',$data->relacion_delitodescr->DELITOMODALIDADDESCR ? $data->relacion_delitodescr->DELITOMODALIDADDESCR: 'N/A', $data->plantilla);
-        $data->plantilla = str_replace('[NUMERO_DELITO]',$data->relacion_delitodescr->DELITOMODALIDADID  ? $data->relacion_delitodescr->DELITOMODALIDADID : 'N/A', $data->plantilla);
-        $data->plantilla = str_replace('[NUMERO_DELITO]',$data->relacion_delitodescr->DELITOMODALIDADARTICULO  ? $data->relacion_delitodescr->DELITOMODALIDADARTICULO : 'N/A', $data->plantilla);
         $data->plantilla = str_replace('[DETALLE_INTERVENCIONES]',$data->expediente->HECHONARRACION, $data->plantilla);
+        $data->plantilla = str_replace('[VICTIMA_DOMICILIO]','en la calle: ' .$data->victimaDom->CALLE .' en la colonia: ' .$data->victimaDom->COLONIADESCR, $data->plantilla);
+        $data->plantilla = str_replace('tijuana',$data->estadoVictima->ESTADODESCR, $data->plantilla);
 
 
 
@@ -2976,7 +2989,7 @@ class DashboardController extends BaseController
         $year = trim($this->request->getPost('year'));
 
         $data = (object) array();
-        $data->documento = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $docid)->first();
+        $data->documento = $this->_folioDocModel->get_folio_by_first($folio, $year, $docid);
 
         if ($data->documento) {
             $documentos = $this->_folioDocModel->get_by_folio($folio, $year);

@@ -331,7 +331,7 @@ class FirmaController extends BaseController
 					for ($i = 0; $i < count($documento); $i++) {
 
 						$signature = $this->_generateSignature($user_id, "FIRMA DE DOCUMENTOS", $documento[$i]->PLACEHOLDER, $expediente, $FECHAFIRMA, $HORAFIRMA);
-						$pdf = $this->_generatePDFDocumentos($documento[$i]->PLACEHOLDER, base64_decode($signature->signature));
+						$pdf = $this->_generatePDFDocumentos($documento[$i]->PLACEHOLDER, $signature->signature);
 						$municipio = (object)[];
 
 						$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $documento[$i]->MUNICIPIOID)->where('ESTADOID', $documento[$i]->ESTADOID)->first();
@@ -724,7 +724,7 @@ class FirmaController extends BaseController
 		$options->set('isPhpEnabled', true);
 		$options->set('defaultFont', 'Arial');
 		$dompdf = new Dompdf($options);
-		$dompdf->loadHtml(view('doc_template/document', ['data' => $data]));
+		$dompdf->loadHtml(view('doc_template/template_document_generado', ['data' => $data]));
 		$dompdf->setPaper('A4', 'portrait');
 		$dompdf->render();
 		$canvas = $dompdf->getCanvas();
@@ -787,7 +787,7 @@ class FirmaController extends BaseController
 		$email = \Config\Services::email();
 		$email->setTo($to);
 		$email->setSubject('Documentos firmados');
-		$body = view('email_template/constancia_firmada_email_template.php');
+		$body = view('email_template/documentos_firmados_email_template.php');
 		$email->setMessage($body);
 
 		for ($i = 0; $i < count($documento); $i++) {

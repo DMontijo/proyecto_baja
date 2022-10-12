@@ -723,6 +723,38 @@
 					// 	option.text = modalidad.DELITOMODALIDADDESCR;
 					// 	select_delitos_imputado.add(option, null);
 					// });
+					const option_vacio_vm = document.createElement('option');
+					option_vacio_vm.value = '';
+					option_vacio_vm.text = '';
+					option_vacio_vm.disabled = true;
+					option_vacio_vm.selected = true;
+					const option_vacio_im = document.createElement('option');
+					option_vacio_im.value = '';
+					option_vacio_im.text = '';
+					option_vacio_im.disabled = true;
+					option_vacio_im.selected = true;
+					$('#victima_modal_documento').empty();
+					let select_victima_documento = document.querySelector("#victima_modal_documento");
+					let select_imputado_documento = document.querySelector("#imputado_modal_documento");
+
+					select_victima_documento.add(option_vacio_vm, null);
+					victimas.forEach(victima => {
+						const option = document.createElement('option');
+						option.value = victima.PERSONAFISICAID;
+						option.text = victima.NOMBRE + ' ' + victima.PRIMERAPELLIDO;
+						select_victima_documento.add(option, null);
+					});
+					$('#imputado_modal_documento').empty();
+					select_imputado_documento.add(option_vacio_im, null);
+
+					imputados.forEach(imputado => {
+						const option = document.createElement('option');
+						option.value = imputado.PERSONAFISICAID;
+						option.text = imputado.NOMBRE + ' ' + imputado.PRIMERAPELLIDO;
+						select_imputado_documento.add(option, null);
+					});
+
+
 					$('#send_mail_select').empty();
 					let select_mail_send = document.querySelector("#send_mail_select");
 					correos.forEach(correo => {
@@ -1202,7 +1234,7 @@
 				var quill2 = new Quill('#documento_editar', {
 					theme: 'snow'
 				});
-				quill2.root.innerHTML = documento_id.PLACEHOLDER;
+				quill2.root.innerHTML = documento_id;
 				document.querySelector('#docid').value = foliodocid;
 			}
 		});
@@ -1916,6 +1948,13 @@
 					url: "<?= base_url('/admin/dashboard/send-documentos-correo') ?>",
 					method: "POST",
 					dataType: "json",
+					beforeSend: function() {
+						document.querySelector('#load_mail').classList.add('d-none');
+						document.querySelector('#enviar_modalLabel').classList.add('d-none');
+						document.querySelector('#loading_mail').classList.remove('d-none');
+						document.querySelector('#password_verifying_mail').classList.remove('d-none');
+						btn_enviarcorreoDoc.disabled = true;
+					},
 					success: function(response) {
 						if (response.status == 1) {
 							Swal.fire({
@@ -1933,7 +1972,7 @@
 			btn_firmar_doc.addEventListener('click', (event) => {
 				$.ajax({
 					data: {
-						'folio' : document.querySelector('#folio_modal').value,
+						'folio': document.querySelector('#folio_modal').value,
 						'expediente_modal': document.querySelector('#expediente_modal').value,
 						'contrasena': document.querySelector('#contrasena').value,
 						'year_modal': document.querySelector('#year_modal').value,
@@ -1941,6 +1980,13 @@
 					url: "<?= base_url('/admin/dashboard/firmar_documentos') ?>",
 					method: "POST",
 					dataType: "json",
+					beforeSend: function() {
+						document.querySelector('#load').classList.add('d-none');
+						document.querySelector('#password_modalLabel').classList.add('d-none');
+						document.querySelector('#loading').classList.remove('d-none');
+						document.querySelector('#password_verifying').classList.remove('d-none');
+						btn_firmar_doc.disabled = true;
+					},
 					success: function(response) {
 						if (response.status == 1) {
 							const documentos = response.documentos;
@@ -1959,6 +2005,19 @@
 							});
 							document.querySelector('#contrasena').value = '';
 							$('#contrasena_modal_firma_doc').modal('hide');
+
+						} else if (response.status == 0) {
+
+							Swal.fire({
+								icon: 'error',
+								text: response.message_error,
+								confirmButtonColor: '#bf9b55',
+							});
+							document.querySelector('#load').classList.remove('d-none');
+							document.querySelector('#password_modalLabel').classList.remove('d-none');
+							document.querySelector('#loading').classList.add('d-none');
+							document.querySelector('#password_verifying').classList.add('d-none');
+							btn_firmar_doc.disabled = false;
 
 						}
 					},
@@ -2033,13 +2092,26 @@
 				});
 			});
 			let plantilla = document.querySelector("#plantilla");
-
+			let select_victima_documento = document.querySelector("#victima_modal_documento");
+			let select_imputado_documento = document.querySelector("#imputado_modal_documento");
+			$('#documentos_modal_wyswyg').on('show.bs.modal', function (event) {
+				$("#documentos_modal_wyswyg select").val("");
+				document.getElementById("involucrados").style.display = "none";
+				// quill.root.innerHTML = '';
+			});
 			selectPlantilla.addEventListener("change", function() {
-				$('#documentos_modal_wyswyg').modal('hide');
-				$('#documentos_modal').modal('show');
+				if (plantilla.value != "CONSTANCIA DE EXTRAVÍO") {
+					document.getElementById("involucrados").style.display = "block";
+					select_imputado_documento.addEventListener("change", function() {
+						$('#documentos_modal_wyswyg').modal('hide');
+						$('#documentos_modal').modal('show');
+						obtenerPlantillas(plantilla.value, select_victima_documento.value, select_imputado_documento.value);
 
+					})
 
-				obtenerPlantillas(plantilla.value);
+				} else {
+					document.getElementById("involucrados").style.display = "none";
+				}
 
 			});
 			btn_guardarFolioDoc.addEventListener('click', (event) => {
@@ -3900,13 +3972,15 @@
 
 
 
-			function obtenerPlantillas(tipoPlantilla) {
+			function obtenerPlantillas(tipoPlantilla, victima, imputado) {
 
 				const data = {
 					'folio': document.querySelector('#input_folio_atencion').value,
 					'expediente': document.querySelector('#input_expediente').value,
 					'year': document.querySelector('#year_select').value,
 					'titulo': tipoPlantilla,
+					'victima': victima,
+					'imputado': imputado,
 				};
 				$.ajax({
 					method: 'POST',
@@ -3916,7 +3990,9 @@
 					success: function(response) {
 						const plantillas = response.plantilla;
 						quill.root.innerHTML = plantillas.PLACEHOLDER;
-
+						document.querySelector("#victima_modal_documento").value = '';
+						document.querySelector("#imputado_modal_documento").value = '';
+						document.getElementById("involucrados").style.display = "none";
 
 					},
 				});
@@ -3935,7 +4011,7 @@
 					confirmButtonText: 'Si',
 					confirmButtonColor: '#bf9b55',
 					denyButtonText: 'No',
-					cancelButtonText:'No',
+					cancelButtonText: 'No',
 				}).then((result) => {
 					/* Read more about isConfirmed, isDenied below */
 					if (result.isConfirmed) {
@@ -3965,10 +4041,10 @@
 					}
 				})
 
-			
+
 			}
 
-			function insertarDoc(data){
+			function insertarDoc(data) {
 				$.ajax({
 					data: data,
 					url: "<?= base_url('/admin/dashboard/insert-documentosWSYWSG') ?>",
@@ -3993,6 +4069,7 @@
 								}
 							});
 							llenarTablaDocumentos(documentos);
+							document.querySelector("#plantilla").value = '';
 
 						}
 
@@ -4002,6 +4079,7 @@
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
 			}
+
 			function dateToString(_date) {
 				let date = new Date(_date);
 				let dateToTijuanaString = date.toLocaleString('en-US', {

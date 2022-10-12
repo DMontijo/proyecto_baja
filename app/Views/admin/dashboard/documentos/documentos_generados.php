@@ -241,12 +241,6 @@
 				console.log(plantilla.value);
 				insertarDocumento(contenidoModificado, plantilla.value);
 			}, false);
-			// btn_actualizarFolioDocGen.addEventListener('click', (event) => {
-			// 	alert("hola");
-			// 	let contenidoModificado = quill2.container.firstChild.innerHTML;
-
-			// 	// actualizarDocumento(contenidoModificado);
-			// }, false);
 
 			function insertarDocumento(contenido, tipoPlantilla) {
 				Swal.fire({
@@ -337,6 +331,13 @@
 					url: "<?= base_url('/admin/dashboard/firmar_documentos') ?>",
 					method: "POST",
 					dataType: "json",
+					beforeSend: function() {
+						document.querySelector('#load').classList.add('d-none');
+						document.querySelector('#password_modalLabel').classList.add('d-none');
+						document.querySelector('#loading').classList.remove('d-none');
+						document.querySelector('#password_verifying').classList.remove('d-none');
+						btn_firmar_doc.disabled = true;
+					},
 					success: function(response) {
 						if (response.status == 1) {
 
@@ -356,9 +357,15 @@
 								text: response.message_error,
 								confirmButtonColor: '#bf9b55',
 							});
+							document.querySelector('#load').classList.remove('d-none');
+							document.querySelector('#password_modalLabel').classList.remove('d-none');
+							document.querySelector('#loading').classList.add('d-none');
+							document.querySelector('#password_verifying').classList.add('d-none');
+							btn_firmar_doc.disabled = false;
 
 						}
 					},
+
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
 			}, false);
@@ -372,6 +379,13 @@
 					url: "<?= base_url('/admin/dashboard/send-documentos-correo') ?>",
 					method: "POST",
 					dataType: "json",
+					beforeSend: function() {
+						document.querySelector('#load_mail').classList.add('d-none');
+						document.querySelector('#enviar_modalLabel').classList.add('d-none');
+						document.querySelector('#loading_mail').classList.remove('d-none');
+						document.querySelector('#password_verifying_mail').classList.remove('d-none');
+						btn_enviarcorreoDoc.disabled = true;
+					},
 					success: function(response) {
 						if (response.status == 1) {
 							Swal.fire({
