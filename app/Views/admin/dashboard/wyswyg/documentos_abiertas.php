@@ -29,7 +29,7 @@
 										<td class="text-center font-weight-bold"><?= $documentos['NUMEROEXPEDIENTE']  ?></td>
 										<td class="text-center"><?= $documentos['FECHAREGISTRO'] ?></td>
 										<td class="text-center"><?= $documentos['STATUS'] ?></td>
-										<td class="text-center"><a type="button" href="<?= base_url('/admin/dashboard/documentos_show?folio=' . $documentos['NUMEROEXPEDIENTE'] . '&year=' . $documentos['ANO']) ?>" class="btn btn-primary text-white"><i class="fas fa-eye"></i> VER SOLICITUD</a></td>
+										<td class="text-center"><a type="button" href="<?= base_url('/admin/dashboard/documentos_show?expediente=' . $documentos['NUMEROEXPEDIENTE'] . '&year=' . $documentos['ANO'] . '&folio=' . $documentos['FOLIOID']) ?>" class="btn btn-primary text-white"><i class="fas fa-eye"></i> VER SOLICITUD</a></td>
 									</tr>
 								<?php } ?>
 							</tbody>

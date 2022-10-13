@@ -59,7 +59,7 @@ class FolioDocModel extends Model
     public function get_folio_abierto()
 	{
 		$builder = $this->db->table($this->table);
-		$builder->select(['NUMEROEXPEDIENTE', 'FECHAREGISTRO','STATUS','ANO']);
+		$builder->select(['FOLIOID','NUMEROEXPEDIENTE', 'FECHAREGISTRO','STATUS','ANO']);
 		$builder->where('STATUS', 'ABIERTO');
 		$builder->orderBy('NUMEROEXPEDIENTE ASC');
         $builder->groupBy('NUMEROEXPEDIENTE');

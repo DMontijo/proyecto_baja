@@ -7,6 +7,12 @@ use CodeIgniter\Model;
 class TipoExpedienteModel extends Model
 {
 	protected $DBGroup          = 'default';
-	protected $table            = 'CATEGORIA_TIPOEXPEDIENTE';
-	protected $allowedFields    = [];
+	protected $table            = 'TIPOEXPEDIENTE';
+	protected $allowedFields    = [
+		'TIPOEXPEDIENTEID',
+		'TIPOEXPEDIENTEDESCR',
+		'TIPOEXPEDIENTECLAVE',
+		'EDOJURIDICOIMPINICIALID',
+		'PERMITECONCLUIR'
+];
 }

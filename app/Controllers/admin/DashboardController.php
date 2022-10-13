@@ -106,6 +106,7 @@ use App\Models\FolioRelacionFisFisModel;
 use App\Models\ObjetoClasificacionModel;
 use App\Models\ObjetoSubclasificacionModel;
 use App\Models\PlantillasModel;
+use App\Models\TipoExpedienteModel;
 use App\Models\TipoMonedaModel;
 
 class DashboardController extends BaseController
@@ -221,6 +222,7 @@ class DashboardController extends BaseController
 
         $this->_plantillasModel = new PlantillasModel();
         $this->_folioDocModel = new FolioDocModel();
+        $this->_tipoExpedienteModel = new TipoExpedienteModel();
 
         // $this->protocol = 'http://';
         // $this->ip = "10.144.244.223";
@@ -771,7 +773,7 @@ class DashboardController extends BaseController
         $data->personafisica = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->findAll();
         $data->imputados = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->where('CALIDADJURIDICAID', 2)->findAll();
         $data->victimas = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->where('CALIDADJURIDICAID= 1 OR CALIDADJURIDICAID=6')->findAll();
-        $data->plantillas = $this->_plantillasModel->asObject()->findAll();
+        $data->plantillas = $this->_plantillasModel->asObject()->where('ID !=',6)->findAll();
         // $data->delitosModalidad = $this->_delitoModalidadModel->asObject()->orderBy('DELITOMODALIDADDESCR', 'asc')->findAll();
         $delitosM = $this->_delitoModalidadModel->orderBy('DELITOMODALIDADDESCR', 'ASC')->findAll();
         $delitos_vacios = [];
@@ -884,6 +886,7 @@ class DashboardController extends BaseController
         $motivo = $this->request->getPost('motivo');
         $folio = $this->request->getPost('folio');
         $year = $this->request->getPost('year');
+
         $agenteId = session('ID') ? session('ID') : 1;
 
         $data = [
@@ -1006,7 +1009,7 @@ class DashboardController extends BaseController
                     unset($folioRow['AREAIDREGISTRO']);
                     unset($folioRow['AREAIDRESPONSABLE']);
                     unset($folioRow['ESTADOJURIDICOEXPEDIENTEID']);
-                    unset($folioRow['TIPOEXPEDIENTEID']);
+                    // unset($folioRow['TIPOEXPEDIENTEID']);
 
                     $folioRow['HECHONARRACION'] = $narracion;
                     $folioRow['HECHOFECHA'] = $fecha;
@@ -2849,13 +2852,13 @@ class DashboardController extends BaseController
         $data->estado = $this->_estadosModel->asObject()->where('ESTADOID', $data->expediente->ESTADOID)->first();
         $data->plantilla = $this->_plantillasModel->where('TITULO', $titulo)->first();
         $data->folioDoc = $this->_folioDocModel->get_by_expediente($expediente, $data->expediente->ANO);
+        $data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->where('TIPOEXPEDIENTEID',  $data->expediente->TIPOEXPEDIENTEID)->first();
 
         $data->municipios = $this->_municipiosModel->asObject()->where('ESTADOID', '2')->where('MUNICIPIOID',  $data->expediente->MUNICIPIOID)->first();
         $data->victima = $this->_folioPersonaFisicaModel->get_by_personas($data->expediente->FOLIOID, $data->expediente->ANO, $victima);
         $data->imputado = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->expediente->FOLIOID)->where('ANO', $data->expediente->ANO)->where('PERSONAFISICAID', $imputado)->first();
         $data->victimaDom = $this->_folioPersonaFisicaDomicilioModel->asObject()->where('FOLIOID', $data->expediente->FOLIOID)->where('ANO', $data->expediente->ANO)->where('PERSONAFISICAID', $imputado)->first();
         $data->estadoVictima = $this->_estadosModel->asObject()->where('ESTADOID',  $data->victimaDom->ESTADOID)->first();
-
         $relacionfisfis = $this->_relacionIDOModel->asObject()->where('FOLIOID', $data->expediente->FOLIOID)->where('ANO', $data->expediente->ANO)->where('PERSONAFISICAIDVICTIMA', $victima)->where('PERSONAFISICAIDIMPUTADO', $imputado)->first();
         if ($relacionfisfis != null) {
             $data->relacion_delitodescr = $this->_delitoModalidadModel->asObject()->where('DELITOMODALIDADID', $relacionfisfis->DELITOMODALIDADID)->first();
@@ -2864,8 +2867,7 @@ class DashboardController extends BaseController
             $data->plantilla = str_replace('[NUMERO_DELITO]',  $data->relacion_delitodescr->DELITOMODALIDADARTICULO  ?  $data->relacion_delitodescr->DELITOMODALIDADARTICULO : 'N/A', $data->plantilla);
             $data->plantilla = str_replace('[RELACION_DELITO]',  $data->relacion_delitodescr->DELITOMODALIDADDESCR ?  $data->relacion_delitodescr->DELITOMODALIDADDESCR : 'N/A', $data->plantilla);
             $data->plantilla = str_replace('[</span>RELACION_DELITO]',  $data->relacion_delitodescr->DELITOMODALIDADDESCR ?  $data->relacion_delitodescr->DELITOMODALIDADDESCR : 'N/A', $data->plantilla);
-            $data->plantilla = str_replace('[NUMERO_CODIGO_PENAL]',  ($data->relacion_delitodescr->DELITOMODALIDADARTICULO ?  $data->relacion_delitodescr->DELITOMODALIDADARTICULO : 'N/A'), $data->plantilla);
-
+            $data->plantilla = str_replace('[NUMERO_CODIGO_PENAL]', ($data->relacion_delitodescr->DELITOMODALIDADARTICULO ?  $data->relacion_delitodescr->DELITOMODALIDADARTICULO : 'N/A'), $data->plantilla);
         }
         // var_dump($expediente);
         // var_dump($data->expediente->ANO);
@@ -2875,14 +2877,13 @@ class DashboardController extends BaseController
             $data->plantilla = str_replace('[EXPEDIENTE_NOMBRE_DEL_RESPONSABLE]', $data->folioDoc[0]['RAZONSOCIALFIRMA'], $data->plantilla);
             $data->plantilla = str_replace('EXPEDIENTE_NOMBRE_DEL_RESPONSABLE', $data->folioDoc[0]['RAZONSOCIALFIRMA'], $data->plantilla);
             $data->plantilla = str_replace('[NOMBRE_LICENCIADO]', $data->folioDoc[0]['RAZONSOCIALFIRMA'], $data->plantilla);
-            $data->plantilla = str_replace('[EXPEDIENTE_NOMBRE_MP_RESPONSABLE]',$data->folioDoc[0]['RAZONSOCIALFIRMA'], $data->plantilla);
-
+            $data->plantilla = str_replace('[EXPEDIENTE_NOMBRE_MP_RESPONSABLE]', $data->folioDoc[0]['RAZONSOCIALFIRMA'], $data->plantilla);
         }
         // else if ($relacionfisfis == null) {
         //     // var_dump("es null");
         // }
 
-        $data->plantilla = str_replace('[DOCUMENTO_FECHA]',date('d') . ' de '.$meses[date('n')-1]. " del ".date('Y'), $data->plantilla);
+        $data->plantilla = str_replace('[DOCUMENTO_FECHA]', date('d') . ' de ' . $meses[date('n') - 1] . " del " . date('Y'), $data->plantilla);
         $data->plantilla = str_replace('[EXPEDIENTE_NUMERO]', $data->expediente->EXPEDIENTEID, $data->plantilla);
         $data->plantilla = str_replace('[DOCUMENTO_MUNICIPIO]', $data->municipios->MUNICIPIODESCR, $data->plantilla);
         $data->plantilla = str_replace('[DOCUMENTO_CIUDAD]', $data->municipios->MUNICIPIODESCR, $data->plantilla);
@@ -2905,6 +2906,8 @@ class DashboardController extends BaseController
         $data->plantilla = str_replace('[HECHO]', $data->expediente->HECHONARRACION, $data->plantilla);
         $data->plantilla = str_replace('[DETALLE_INTERVENCIONES]', $data->expediente->HECHONARRACION, $data->plantilla);
         $data->plantilla = str_replace('[HECHO_NARRACION]', $data->expediente->HECHONARRACION, $data->plantilla);
+        $data->plantilla = str_replace('[TIPO_EXPEDIENTE]',  $data->tipoExpediente->TIPOEXPEDIENTEDESCR, $data->plantilla);
+
         $data->plantilla = str_replace('[VICTIMA_DOMICILIO]', 'en la calle: ' . $data->victimaDom->CALLE . ' en la colonia: ' . $data->victimaDom->COLONIADESCR, $data->plantilla);
         // $data->plantilla = str_replace('tijuana',$data->estadoVictima->ESTADODESCR, $data->plantilla);
 
