@@ -48,7 +48,7 @@ class FolioDocModel extends Model
     public function get_by_expediente($folio, $year)
 	{
 		$builder = $this->db->table($this->table);
-		$builder->select(['FOLIOID', 'FOLIODOCID', 'ANO', 'TIPODOC', 'STATUS', 'PLACEHOLDER','NUMEROEXPEDIENTE']);
+		$builder->select(['FOLIOID', 'FOLIODOCID', 'ANO', 'TIPODOC', 'STATUS', 'PLACEHOLDER','NUMEROEXPEDIENTE','RAZONSOCIALFIRMA']);
 		$builder->where('NUMEROEXPEDIENTE', $folio);
 		$builder->where('ANO', $year);
 		$builder->orderBy('FOLIODOCID ASC');

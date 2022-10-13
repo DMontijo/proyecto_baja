@@ -98,6 +98,23 @@ class DocumentosController extends BaseController
 
         }
     }
+    public function validar_documento()
+    {
+        $year = date('Y');
+        $expediente = $this->request->getGet('expediente');
+        $year = $this->request->getGet('year');
+        $foliodocid =$this->request->getGet('foliodoc');
+        $documento = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', base64_decode($expediente))->where('ANO', $year)->where('FOLIODOCID', base64_decode($foliodocid))->first();
+        if ($documento) {
+            // $solicitante = $this->_folioPersonaFisicaModel->asObject()->where('PERSONAFISICAID', $documento->PERSONAFISICAID)->where('NUMEROEXPEDIENTE',$expediente)->where('ANO', $year)->first();
+            // $documento->NOMBRESOLICITANTE = $solicitante->NOMBRE . ' ' . $solicitante->PRIMERAPELLIDO . ' ' . $solicitante->SEGUNDOAPELLIDO;
+        }
+        $data2 = [
+            'header_data' => (object) ['title' => 'Validar documento', 'menu' => 'documento', 'submenu' => ''],
+            'body_data' => (object) ['documento' => $documento],
+        ];
+        echo view("admin/dashboard/wyswyg/validar_documento", $data2);
+    }
     private function _loadView($title, $data, $view)
     {
         $data = [

@@ -83,18 +83,71 @@
 	<main>
 		<br>
 		<?= $data->placeholder ?>
+		<div>
+			<p class="p7" style="margin: 0px; text-align: center; color: #000000; background-color: #959393; padding: 10px;">
+				<span style="color: #ffffff;"><strong>DATOS FIRMA ELECTR&Oacute;NICA</strong></span>
+			</p>
+		</div>
+		<div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+			<div style="width: 75%; float: left;">
+				<br>
+				<p style="margin: 0px; text-align: left;">
+					<strong>IDENTIFICADOR ELECTR&Oacute;NICO:</strong>
+					<?= $data->numidenficador ?>
+				</p>
+				<p style="margin: 0px; text-align: left;">
+					<strong>AGENTE DEL MINISTERIO P&Uacute;BLICO:</strong>
+					<?= $data->agentefirma ?>
+				</p>
+				<p style="margin: 0px; text-align: left;">
+					<strong>RFC AGENTE DEL MINISTERIO P&Uacute;BLICO:</strong>
+					<?= $data->rfcfirma ?>
+				</p>
+				<p style="margin: 0px; text-align: left;">
+					<strong>NO. DE CERTIFICACI&Oacute;N DE FIRMA
+						ELECTR&Oacute;NICA:</strong>
+						<?= $data->ncertificadofirma ?>
+				</p>
+				<p style="margin: 0px; text-align: left;">
+					<strong>FECHA DE FIRMA:</strong> <?= $data->fechaf ?>
+				</p>
+				<p style="margin: 0px; text-align: left;">
+					<strong>HORA DE FIRMA:</strong> <?= $data->horaf ?>
+				</p>
+				<p style="margin: 0px; text-align: left;">
+					<strong>LUGAR DE FIRMA:</strong> <?= $data->lugarf ?>
+				</p>
+				<p style="margin: 0px; text-align: left;">
+					&nbsp;
+				</p>
+			</div>
+			<div style="width: 25%; float: right; word-wrap: break-word;">
+				<br>
+				<p style="margin: 0px; text-align: center;">
+				<img src="<?= 'data:image/jpg;base64,' . $data->qrurl ?>"  width="50px" height="50px"/>
+				</p>
+				<p style="margin: 0px; text-align: center;">
+				<?= $data->url ?>
+				</p>
+			</div>
+		</div>
 		<div style="display: flex; flex-direction: row; flex-wrap: wrap; word-wrap: break-word;">
-				<div style="width: 30%;">
-					<p style="margin: 0px; text-align: justify;">
-						<strong>FIRMA ELECTR&Oacute;NICA</strong>
-					</p>
-				</div>
-				<div style="width: 100%;">
-					<p style="margin: 0px; text-align: justify;">
+			<div style="width: 30%;">
+				<p style="margin: 0px; text-align: justify;">
+					<strong>FIRMA ELECTR&Oacute;NICA</strong>
+				</p>
+			</div>
+			<div style="width: 100%;">
+				<p style="margin: 0px; text-align: justify;">
 					<?= $data->firmaelectronica ?>
-					</p>
-				</div>
-			</div>		
+				</p>
+			</div>
+		</div>
+		<div style="float: left;">
+                <p style="margin: 0px; text-align: left;">
+				<img src="<?= 'data:image/jpg;base64,' . $data->qr3 ?>"  width="120px" height="120px"/>
+                </p>
+            </div>
 	</main>
 </body>
 

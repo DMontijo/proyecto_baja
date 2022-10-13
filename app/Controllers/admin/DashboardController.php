@@ -2847,6 +2847,7 @@ class DashboardController extends BaseController
         $data->expediente = $this->_folioModel->asObject()->where('ANO', $year)->where('EXPEDIENTEID', $expediente)->first();
         $data->estado = $this->_estadosModel->asObject()->where('ESTADOID', $data->expediente->ESTADOID)->first();
         $data->plantilla = $this->_plantillasModel->where('TITULO', $titulo)->first();
+        $data->folioDoc = $this->_folioDocModel->get_by_expediente($expediente,$data->expediente->ANO);
         
         $data->municipios = $this->_municipiosModel->asObject()->where('ESTADOID', '2')->where('MUNICIPIOID',  $data->expediente->MUNICIPIOID)->first();
         $data->victima = $this->_folioPersonaFisicaModel->get_by_personas($data->expediente->FOLIOID,$data->expediente->ANO, $victima );
@@ -2866,11 +2867,11 @@ class DashboardController extends BaseController
         // else if ($relacionfisfis == null) {
         //     // var_dump("es null");
         // }
-        $data->plantilla = str_replace('[EXPEDIENTE_NOMBRE_DEL_RESPONSABLE]', session('NOMBRE') . ' ' . session('APELLIDO_PATERNO') . ' '. session('APELLIDO_MATERNO'), $data->plantilla);
-        $data->plantilla = str_replace('EXPEDIENTE_NOMBRE_DEL_RESPONSABLE', session('NOMBRE') . ' ' . session('APELLIDO_PATERNO') . ' '. session('APELLIDO_MATERNO'), $data->plantilla);
-        $data->plantilla = str_replace('[NOMBRE_LICENCIADO]', session('NOMBRE') . ' ' . session('APELLIDO_PATERNO') . ' '. session('APELLIDO_MATERNO'), $data->plantilla);
+        $data->plantilla = str_replace('[EXPEDIENTE_NOMBRE_DEL_RESPONSABLE]', $data->folioDoc[0]['RAZONSOCIALFIRMA'], $data->plantilla);
+        $data->plantilla = str_replace('EXPEDIENTE_NOMBRE_DEL_RESPONSABLE', $data->folioDoc[0]['RAZONSOCIALFIRMA'], $data->plantilla);
+        $data->plantilla = str_replace('[NOMBRE_LICENCIADO]', $data->folioDoc[0]['RAZONSOCIALFIRMA'], $data->plantilla);
         $data->plantilla = str_replace('[DOCUMENTO_FECHA]',date('d') . ' de '.$meses[date('n')-1]. " del ".date('Y'), $data->plantilla);
-        $data->plantilla = str_replace('[EXPEDIENTE_NOMBRE_MP_RESPONSABLE]',session('NOMBRE') . ' ' . session('APELLIDO_PATERNO') . ' '. session('APELLIDO_MATERNO'), $data->plantilla);
+        $data->plantilla = str_replace('[EXPEDIENTE_NOMBRE_MP_RESPONSABLE]',$data->folioDoc[0]['RAZONSOCIALFIRMA'], $data->plantilla);
         $data->plantilla = str_replace('[EXPEDIENTE_NUMERO]',$data->expediente->EXPEDIENTEID, $data->plantilla);
         $data->plantilla = str_replace('[DOCUMENTO_MUNICIPIO]',$data->municipios->MUNICIPIODESCR, $data->plantilla);
         $data->plantilla = str_replace('[DOCUMENTO_CIUDAD]',$data->municipios->MUNICIPIODESCR, $data->plantilla);
@@ -2892,7 +2893,7 @@ class DashboardController extends BaseController
         $data->plantilla = str_replace('[HECHO]',$data->expediente->HECHONARRACION, $data->plantilla);
         $data->plantilla = str_replace('[DETALLE_INTERVENCIONES]',$data->expediente->HECHONARRACION, $data->plantilla);
         $data->plantilla = str_replace('[VICTIMA_DOMICILIO]','en la calle: ' .$data->victimaDom->CALLE .' en la colonia: ' .$data->victimaDom->COLONIADESCR, $data->plantilla);
-        $data->plantilla = str_replace('tijuana',$data->estadoVictima->ESTADODESCR, $data->plantilla);
+        // $data->plantilla = str_replace('tijuana',$data->estadoVictima->ESTADODESCR, $data->plantilla);
 
 
 

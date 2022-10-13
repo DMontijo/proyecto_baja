@@ -329,14 +329,32 @@ class FirmaController extends BaseController
 					$rfc = $fiel_user['rfc'];
 					$num_certificado = $fiel_user['num_certificado'];
 					for ($i = 0; $i < count($documento); $i++) {
-
-						$signature = $this->_generateSignature($user_id, "FIRMA DE DOCUMENTOS", $documento[$i]->PLACEHOLDER, $expediente, $FECHAFIRMA, $HORAFIRMA);
-						$pdf = $this->_generatePDFDocumentos($documento[$i]->PLACEHOLDER, $signature->signature);
 						$municipio = (object)[];
 
 						$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $documento[$i]->MUNICIPIOID)->where('ESTADOID', $documento[$i]->ESTADOID)->first();
 
 						$estado = $this->_estadosModel->asObject()->where('ESTADOID', $documento[$i]->ESTADOID)->first();
+						$signature = $this->_generateSignature($user_id, "FIRMA DE DOCUMENTOS", $documento[$i]->PLACEHOLDER, $expediente, $FECHAFIRMA, $HORAFIRMA);
+						// $qr3 = $this->_generateQR($signature->signed_chain);
+						$urldoc = base_url('/validar_documento?expediente=' . base64_encode($numexpediente) . '&year=' . $year. '&foliodoc=' . base64_encode($documento[$i]->FOLIODOCID));
+
+											$datapdf = array(
+												'placeholder' => $documento[$i]->PLACEHOLDER,
+												'firma' => $signature->signature,
+												'numeroident' => $documento[$i]->FOLIODOCID . '/' . $documento[$i]->ANO,
+												'agente' => $razon_social,
+												'rfc' => $rfc,
+												'certificado' => $num_certificado,
+												'fecha' => $FECHAFIRMA,
+												'hora' => $HORAFIRMA,
+												'lugar' => $municipio->MUNICIPIODESCR . ", " . $estado->ESTADODESCR,
+												'qr3'=> $this->_generateQR($signature->signature),
+												'url'=> $urldoc,
+												'qrurl'=>$this->_generateQR($urldoc)
+											
+											);
+						$pdf = $this->_generatePDFDocumentos($datapdf);
+						
 						if ($signature->status == 1) {
 							$datosInsert = [
 								'AGENTEID' => $user_id,
@@ -702,8 +720,9 @@ class FirmaController extends BaseController
 		});
 		return $dompdf->output();
 	}
-	private function _generatePDFDocumentos($placeholder, $firmaelectronica)
+	private function _generatePDFDocumentos($datapdf)
 	{
+
 		$arrContextOptions = array(
 			"ssl" => array(
 				"verify_peer" => false,
@@ -713,8 +732,24 @@ class FirmaController extends BaseController
 
 		$data = (object)array();
 
-		$data->placeholder = $placeholder;
-		$data->firmaelectronica = $firmaelectronica;
+		$data->placeholder = $datapdf['placeholder'];
+		$data->firmaelectronica = $datapdf['firma'];
+		$data->numidenficador = $datapdf['numeroident'];
+
+		$data->agentefirma = $datapdf['agente'];
+
+		$data->rfcfirma = $datapdf['rfc'];
+		$data->ncertificadofirma = $datapdf['certificado'];
+		$data->fechaf = $datapdf['fecha'];
+
+		$data->horaf = $datapdf['hora'];
+		$data->lugarf = $datapdf['lugar'];
+		$data->url = $datapdf['url'];
+
+		$data->qr3 =  base64_encode(file_get_contents($datapdf['qr3'], false, stream_context_create($arrContextOptions)));
+		$data->qrurl =  base64_encode(file_get_contents($datapdf['qrurl'], false, stream_context_create($arrContextOptions)));
+
+
 
 		$data->image1 = base64_encode(file_get_contents(base_url('assets/img/logo_fgebc.jpg'), false, stream_context_create($arrContextOptions)));
 		$data->image2 = base64_encode(file_get_contents(base_url('assets/img/logo_sejap.jpg'), false, stream_context_create($arrContextOptions)));
