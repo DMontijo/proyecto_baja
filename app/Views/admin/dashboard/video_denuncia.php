@@ -1963,6 +1963,11 @@
 								confirmButtonColor: '#bf9b55',
 							});
 							$('#sendEmailDocModal').modal('hide');
+							document.querySelector('#load_mail').classList.remove('d-none');
+							document.querySelector('#enviar_modalLabel').classList.remove('d-none');
+							document.querySelector('#loading_mail').classList.add('d-none');
+							document.querySelector('#password_verifying_mail').classList.add('d-none');
+							btn_enviarcorreoDoc.disabled = false;
 
 						}
 					},
@@ -2005,6 +2010,10 @@
 							});
 							document.querySelector('#contrasena').value = '';
 							$('#contrasena_modal_firma_doc').modal('hide');
+							document.querySelector('#load').classList.remove('d-none');
+							document.querySelector('#password_modalLabel').classList.remove('d-none');
+							document.querySelector('#loading').classList.add('d-none');
+							document.querySelector('#password_verifying').classList.add('d-none');
 
 						} else if (response.status == 0) {
 
@@ -2094,7 +2103,7 @@
 			let plantilla = document.querySelector("#plantilla");
 			let select_victima_documento = document.querySelector("#victima_modal_documento");
 			let select_imputado_documento = document.querySelector("#imputado_modal_documento");
-			$('#documentos_modal_wyswyg').on('show.bs.modal', function (event) {
+			$('#documentos_modal_wyswyg').on('show.bs.modal', function(event) {
 				$("#documentos_modal_wyswyg select").val("");
 				document.getElementById("involucrados").style.display = "none";
 				// quill.root.innerHTML = '';
