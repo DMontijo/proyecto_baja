@@ -2014,6 +2014,8 @@
 							document.querySelector('#password_modalLabel').classList.remove('d-none');
 							document.querySelector('#loading').classList.add('d-none');
 							document.querySelector('#password_verifying').classList.add('d-none');
+							btn_firmar_doc.disabled = false;
+
 
 						} else if (response.status == 0) {
 

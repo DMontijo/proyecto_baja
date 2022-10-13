@@ -334,6 +334,12 @@ class FirmaController extends BaseController
 						$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $documento[$i]->MUNICIPIOID)->where('ESTADOID', $documento[$i]->ESTADOID)->first();
 
 						$estado = $this->_estadosModel->asObject()->where('ESTADOID', $documento[$i]->ESTADOID)->first();
+						$documento[$i]->PLACEHOLDER= str_replace('[EXPEDIENTE_NOMBRE_DEL_RESPONSABLE]', $razon_social, $documento[$i]->PLACEHOLDER);
+						$documento[$i]->PLACEHOLDER= str_replace('EXPEDIENTE_NOMBRE_DEL_RESPONSABLE', $razon_social, $documento[$i]->PLACEHOLDER);
+						$documento[$i]->PLACEHOLDER= str_replace('[NOMBRE_LICENCIADO]', $razon_social, $documento[$i]->PLACEHOLDER);
+						$documento[$i]->PLACEHOLDER= str_replace('[EXPEDIENTE_NOMBRE_MP_RESPONSABLE]', $razon_social, $documento[$i]->PLACEHOLDER);
+
+
 						$signature = $this->_generateSignature($user_id, "FIRMA DE DOCUMENTOS", $documento[$i]->PLACEHOLDER, $expediente, $FECHAFIRMA, $HORAFIRMA);
 						// $qr3 = $this->_generateQR($signature->signed_chain);
 						$urldoc = base_url('/validar_documento?expediente=' . base64_encode($numexpediente) . '&year=' . $year. '&foliodoc=' . base64_encode($documento[$i]->FOLIODOCID));
@@ -354,6 +360,7 @@ class FirmaController extends BaseController
 											
 											);
 						$pdf = $this->_generatePDFDocumentos($datapdf);
+					
 						
 						if ($signature->status == 1) {
 							$datosInsert = [
@@ -368,7 +375,8 @@ class FirmaController extends BaseController
 								'FIRMAELECTRONICA' => base64_decode($signature->signature),
 								'CADENAFIRMADA' => $signature->signed_chain,
 								'PDF' => $pdf,
-								'STATUS' => 'FIRMADO'
+								'STATUS' => 'FIRMADO',
+								'PLACEHOLDER' => $documento[$i]->PLACEHOLDER,
 							];
 
 							$update = $this->_folioDocModel->set($datosInsert)->where('NUMEROEXPEDIENTE', $numexpediente)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
@@ -817,7 +825,7 @@ class FirmaController extends BaseController
 		$to = $this->request->getPost('send_mail_select');
 		$expediente = $this->request->getPost('expediente_modal_correo');
 		$year = $this->request->getPost('year_modal_correo');
-		$documento = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente)->where('ANO', $year)->where('STATUS', 'FIRMADO')->where('STATUSENVIO', 1)->findAll();
+		$documento = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente)->where('ANO', $year)->where('STATUS', 'FIRMADO')->where('STATUSENVIO', 1)->where('ENVIADO', 'N')->findAll();
 
 		$email = \Config\Services::email();
 		$email->setTo($to);
@@ -830,6 +838,12 @@ class FirmaController extends BaseController
 			$email->attach($pdf, 'attachment', 'Documento_' . $expediente . '_' . $year . '.pdf', 'application/pdf');
 		}
 		if ($email->send()) {
+			$datosUpdate = [
+				'ENVIADO' => 'S',
+			];
+			for ($i = 0; $i < count($documento); $i++) {
+			$update = $this->_folioDocModel->set($datosUpdate)->where('NUMEROEXPEDIENTE', $expediente)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
+			}
 			return json_encode((object)['status' => 1]);
 		} else {
 			return json_encode((object)['status' => 0]);

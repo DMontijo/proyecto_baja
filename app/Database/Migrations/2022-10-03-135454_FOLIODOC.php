@@ -110,6 +110,11 @@ class FOLIODOC extends Migration
 				'constraint' => '1',
 				'null' => TRUE,
 			],
+			'ENVIADO'=>[
+				'type' => 'CHAR',
+				'constraint' => '1',
+				'null' => TRUE,
+			],
 			'FECHAREGISTRO DATETIME DEFAULT CURRENT_TIMESTAMP',
 			'FECHAACTUALIZACION DATETIME ON UPDATE CURRENT_TIMESTAMP',
 

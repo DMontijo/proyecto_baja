@@ -2858,11 +2858,14 @@ class DashboardController extends BaseController
 
         $relacionfisfis = $this->_relacionIDOModel->asObject()->where('FOLIOID', $data->expediente->FOLIOID)->where('ANO', $data->expediente->ANO)->where('PERSONAFISICAIDVICTIMA', $victima)->where('PERSONAFISICAIDIMPUTADO', $imputado)->first();
         if ($relacionfisfis != null) {
-            $relacion_delitodescr = $this->_delitoModalidadModel->asObject()->where('DELITOMODALIDADID', $relacionfisfis->DELITOMODALIDADID)->first();
-            $data->plantilla = str_replace('[DELITO]', $relacion_delitodescr->DELITOMODALIDADDESCR ? $relacion_delitodescr->DELITOMODALIDADDESCR : 'N/A', $data->plantilla);
-            $data->plantilla = str_replace('[NUMERO_DELITO]', $relacion_delitodescr->DELITOMODALIDADID  ? $relacion_delitodescr->DELITOMODALIDADID : 'N/A', $data->plantilla);
-            $data->plantilla = str_replace('[NUMERO_DELITO]', $relacion_delitodescr->DELITOMODALIDADARTICULO  ? $relacion_delitodescr->DELITOMODALIDADARTICULO : 'N/A', $data->plantilla);
-            $data->plantilla = str_replace('[RELACION_DELITO]', $relacion_delitodescr->DELITOMODALIDADDESCR ? $relacion_delitodescr->DELITOMODALIDADDESCR : 'N/A', $data->plantilla);
+            $data->relacion_delitodescr = $this->_delitoModalidadModel->asObject()->where('DELITOMODALIDADID', $relacionfisfis->DELITOMODALIDADID)->first();
+            $data->plantilla = str_replace('[DELITO]',  $data->relacion_delitodescr->DELITOMODALIDADDESCR ?  $data->relacion_delitodescr->DELITOMODALIDADDESCR : 'N/A', $data->plantilla);
+            $data->plantilla = str_replace('[NUMERO_DELITO]',  $data->relacion_delitodescr->DELITOMODALIDADID  ?  $data->relacion_delitodescr->DELITOMODALIDADID : 'N/A', $data->plantilla);
+            $data->plantilla = str_replace('[NUMERO_DELITO]',  $data->relacion_delitodescr->DELITOMODALIDADARTICULO  ?  $data->relacion_delitodescr->DELITOMODALIDADARTICULO : 'N/A', $data->plantilla);
+            $data->plantilla = str_replace('[RELACION_DELITO]',  $data->relacion_delitodescr->DELITOMODALIDADDESCR ?  $data->relacion_delitodescr->DELITOMODALIDADDESCR : 'N/A', $data->plantilla);
+            $data->plantilla = str_replace('[</span>RELACION_DELITO]',  $data->relacion_delitodescr->DELITOMODALIDADDESCR ?  $data->relacion_delitodescr->DELITOMODALIDADDESCR : 'N/A', $data->plantilla);
+            $data->plantilla = str_replace('[NUMERO_CODIGO_PENAL]',  ($data->relacion_delitodescr->DELITOMODALIDADARTICULO ?  $data->relacion_delitodescr->DELITOMODALIDADARTICULO : 'N/A'), $data->plantilla);
+
         }
         // var_dump($expediente);
         // var_dump($data->expediente->ANO);
@@ -2879,7 +2882,6 @@ class DashboardController extends BaseController
         //     // var_dump("es null");
         // }
 
-       
         $data->plantilla = str_replace('[DOCUMENTO_FECHA]',date('d') . ' de '.$meses[date('n')-1]. " del ".date('Y'), $data->plantilla);
         $data->plantilla = str_replace('[EXPEDIENTE_NUMERO]', $data->expediente->EXPEDIENTEID, $data->plantilla);
         $data->plantilla = str_replace('[DOCUMENTO_MUNICIPIO]', $data->municipios->MUNICIPIODESCR, $data->plantilla);
@@ -2887,6 +2889,7 @@ class DashboardController extends BaseController
         $data->plantilla = str_replace('DOCUMENTO_MUNICIPIO', $data->municipios->MUNICIPIODESCR, $data->plantilla);
         $data->plantilla = str_replace('[VICTIMA]', $data->victima[0]['NOMBRE'] . ' ' . ($data->victima[0]['PRIMERAPELLIDO'] ? $data->victima[0]['PRIMERAPELLIDO'] : '') . ' ' . ($data->victima[0]['SEGUNDOAPELLIDO'] ? $data->victima[0]['SEGUNDOAPELLIDO'] : ''), $data->plantilla);
         $data->plantilla = str_replace('[VICTIMA_NOMBRE]', $data->victima[0]['NOMBRE'] . ' ' . ($data->victima[0]['PRIMERAPELLIDO'] ? $data->victima[0]['PRIMERAPELLIDO'] : '') . ' ' . ($data->victima[0]['SEGUNDOAPELLIDO'] ? $data->victima[0]['SEGUNDOAPELLIDO'] : ''), $data->plantilla);
+        $data->plantilla = str_replace('[</span>VICTIMA_NOMBRE]', $data->victima[0]['NOMBRE'] . ' ' . ($data->victima[0]['PRIMERAPELLIDO'] ? $data->victima[0]['PRIMERAPELLIDO'] : '') . ' ' . ($data->victima[0]['SEGUNDOAPELLIDO'] ? $data->victima[0]['SEGUNDOAPELLIDO'] : ''), $data->plantilla);
         $data->plantilla = str_replace('[VICTIMAS_NOMBRE]', $data->victima[0]['NOMBRE'] . ' ' . ($data->victima[0]['PRIMERAPELLIDO'] ? $data->victima[0]['PRIMERAPELLIDO'] : '') . ' ' . ($data->victima[0]['SEGUNDOAPELLIDO'] ? $data->victima[0]['SEGUNDOAPELLIDO'] : ''), $data->plantilla);
         $data->plantilla = str_replace('[VICTIMA_EDAD]', $data->victima[0]['EDADCANTIDAD'] ? $data->victima[0]['EDADCANTIDAD'] : 'N/A', $data->plantilla);
         $data->plantilla = str_replace('[VICTIMA_TELEFONO]', $data->victima[0]['TELEFONO'] ? $data->victima[0]['TELEFONO'] : 'N/A', $data->plantilla);
@@ -2901,6 +2904,7 @@ class DashboardController extends BaseController
         $data->plantilla = str_replace('[ESTADO]', $data->municipios->MUNICIPIODESCR, $data->plantilla);
         $data->plantilla = str_replace('[HECHO]', $data->expediente->HECHONARRACION, $data->plantilla);
         $data->plantilla = str_replace('[DETALLE_INTERVENCIONES]', $data->expediente->HECHONARRACION, $data->plantilla);
+        $data->plantilla = str_replace('[HECHO_NARRACION]', $data->expediente->HECHONARRACION, $data->plantilla);
         $data->plantilla = str_replace('[VICTIMA_DOMICILIO]', 'en la calle: ' . $data->victimaDom->CALLE . ' en la colonia: ' . $data->victimaDom->COLONIADESCR, $data->plantilla);
         // $data->plantilla = str_replace('tijuana',$data->estadoVictima->ESTADODESCR, $data->plantilla);
 
@@ -2929,6 +2933,8 @@ class DashboardController extends BaseController
             'ESTADOID' => 2,
             'TIPODOC' => $this->request->getPost('titulo'),
             'STATUSENVIO' => $this->request->getPost('statusenvio'),
+            'ENVIADO' => 'N',
+
         );
         $foliodoc = $this->_folioDoc($dataFolioDoc, $expediente, $year);
 
