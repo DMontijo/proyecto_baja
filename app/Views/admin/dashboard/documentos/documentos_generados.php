@@ -11,6 +11,7 @@
 <?php include 'app/Views/admin/dashboard/video_denuncia_modals/documentos_modal_editar.php' ?>
 <?php include 'app/Views/admin/dashboard/video_denuncia_modals/documentos_modal_wyswyg.php' ?>
 <?php include 'app/Views/admin/dashboard/video_denuncia_modals/send_email_modal.php' ?>
+<?php include 'app/Views/admin/dashboard/video_denuncia_modals/prueba.php' ?>
 
 <section class="content">
 	<div class="container-fluid">
@@ -20,7 +21,7 @@
 				<button type="button" class="btn btn-primary mb-3" data-toggle="modal" id="generarDocumento" data-target="#documentos_modal_wyswyg"><i class="fas fa-file-archive"></i> Agregar documentos</button>
 				<button type="button" class="btn btn-primary mb-3" data-toggle="modal" id="edtarDocumento" data-target="#documentos_generados_modal_v"><i class="fas fa-pencil-alt"></i> Editar documentos</button>
 				<button type="button" class="btn btn-primary mb-3" data-toggle="modal" id="enviarDocumento" data-target="#sendEmailDocModal"><i class="fas fa-mail-bulk"></i> Enviar documentos pendientes</button>
-
+				<button type="button" class="btn btn-primary mb-3" id="subirDocumento" name="subirDocumento" data-toggle="modal" data-target="#subirDocumentosModal"><i class="fas fa-archive"></i> Subir documentos</button>
 
 				<?php
 				foreach ($body_data->documentos as $key => $documento) { ?>
@@ -106,6 +107,7 @@
 			let select_victima_documento = document.querySelector("#victima_modal_documento");
 			let select_imputado_documento = document.querySelector("#imputado_modal_documento");
 			let btn_enviarcorreoDoc = document.querySelector('#enviarcorreoDoc');
+			let btn_archivos_externos = document.querySelector('#subirDocumento');
 
 			const data = {
 				'folio': <?php echo $_GET['folio'] ?>,
@@ -234,6 +236,9 @@
 
 
 					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						console.log(textStatus);
+					}
 				});
 			}
 			btn_guardarFolioDoc.addEventListener('click', (event) => {
@@ -405,6 +410,48 @@
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
 			}, false);
+			btn_archivos_externos.addEventListener('click', (event) => {
+				$.ajax({
+					data: {
+						'folio':<?php echo $_GET['folio'] ?>,
+						'expediente': <?php echo $_GET['expediente'] ?>,
+						'year':<?php echo $_GET['year'] ?>,
+					},
+					url: "<?= base_url('/data/save-archivos-externos') ?>",
+					method: "POST",
+					dataType: "json",
+					beforeSend: function() {
+						document.querySelector('#loading_sub_doc').classList.remove('d-none');
+						document.querySelector('#verifying_documentos').classList.remove('d-none');
+						btn_archivos_externos.disabled = true;
+					},
+					success: function(response) {
+						if (response.status == 1) {
+							$('#subirDocumentosModal').modal('hide');
+							$('#subirDocumentosModal').hide();
+							document.querySelector('#loading_sub_doc').classList.add('d-none');
+							document.querySelector('#verifying_documentos').classList.add('d-none');
+							btn_archivos_externos.disabled = false;
+							Swal.fire({
+								icon: 'success',
+								text: 'Archivos externos subidos correctamente',
+								confirmButtonColor: '#bf9b55',
+							});
+							
+						} else if (response.status == 0) {
+
+							Swal.fire({
+								icon: 'error',
+								text: "No se subieron los archivos",
+								confirmButtonColor: '#bf9b55',
+							});
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {}
+				});
+			}, false);
+
+
 
 			function actualizarDocumento(placeholder) {
 				const data = {

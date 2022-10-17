@@ -322,6 +322,8 @@
 								card7.classList.remove('d-none');
 								card8.classList.remove('d-none');
 								card9.classList.remove('d-none');
+								card10.classList.remove('d-none');
+
 	
 							});
 						} else {

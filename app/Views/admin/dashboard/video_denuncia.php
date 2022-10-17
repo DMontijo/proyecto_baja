@@ -85,6 +85,13 @@
 			</div>
 		</div>
 	</div>
+	<div id="card10" class="col-12 col-sm-6 col-md-4 col-lg-3 d-none">
+		<div class="card rounded bg-white shadow" style="height: 190px;">
+			<div class="card-body">
+				<button id="enviar-archivos-externos-btn" class="btn btn-primary btn-block h-100" role="button" data-toggle="modal" data-target="#subirDocumentosModal"><i class="fas fa-archive"></i> SUBIR ARCHIVOS</button>
+			</div>
+		</div>
+	</div>
 </div>
 
 <div class="row">
@@ -159,6 +166,7 @@
 	const card7 = document.querySelector('#card7');
 	const card8 = document.querySelector('#card8');
 	const card9 = document.querySelector('#card9');
+	const card10 = document.querySelector('#card10');
 
 
 	var respuesta;
@@ -1740,6 +1748,8 @@
 
 			var btn_enviarcorreoDoc = document.querySelector('#enviarcorreoDoc');
 			var btn_firmar_doc = document.querySelector('#btn-firmar-doc');
+			var btn_archivos_externos = document.querySelector('#enviar-archivos-externos-btn');
+
 
 			var inputsText = document.querySelectorAll('input[type="text"]');
 			var inputsEmail = document.querySelectorAll('input[type="email"]');
@@ -2002,7 +2012,6 @@
 								}
 							});
 							llenarTablaDocumentos(documentos);
-
 							Swal.fire({
 								icon: 'success',
 								text: 'Documento firmado correctamente',
@@ -2015,10 +2024,7 @@
 							document.querySelector('#loading').classList.add('d-none');
 							document.querySelector('#password_verifying').classList.add('d-none');
 							btn_firmar_doc.disabled = false;
-
-
 						} else if (response.status == 0) {
-
 							Swal.fire({
 								icon: 'error',
 								text: response.message_error,
@@ -2035,6 +2041,49 @@
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
 			}, false);
+
+			btn_archivos_externos.addEventListener('click', (event) => {
+				$.ajax({
+					data: {
+						'folio': inputFolio.value,
+						'expediente': inputExpediente.value,
+						'year': year_select.value,
+					},
+					url: "<?= base_url('/data/save-archivos-externos') ?>",
+					method: "POST",
+					dataType: "json",
+					beforeSend: function() {
+						document.querySelector('#loading_sub_doc').classList.remove('d-none');
+						document.querySelector('#verifying_documentos').classList.remove('d-none');
+						btn_archivos_externos.disabled = true;
+					},
+					success: function(response) {
+						if (response.status == 1) {
+							$('#subirDocumentosModal').modal('hide');
+							$('#subirDocumentosModal').hide();
+							document.querySelector('#loading_sub_doc').classList.add('d-none');
+							document.querySelector('#verifying_documentos').classList.add('d-none');
+							btn_archivos_externos.disabled = false;
+							Swal.fire({
+								icon: 'success',
+								text: 'Archivos externos subidos correctamente',
+								confirmButtonColor: '#bf9b55',
+							});
+							
+						} else if (response.status == 0) {
+
+							Swal.fire({
+								icon: 'error',
+								text: "No se subieron los archivos",
+								confirmButtonColor: '#bf9b55',
+							});
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {}
+				});
+			}, false);
+
+
 			// let tipoPlantilla = '';
 			// btn_certificadoMedico.addEventListener("click", (event) => {
 			// 	$('#documentos_modal_wyswyg').modal('hide');
@@ -4109,6 +4158,7 @@
 	};
 </script>
 <?php include 'video_denuncia_modals/send_email_modal.php' ?>
+<?php include 'video_denuncia_modals/prueba.php' ?>
 <?php include 'video_denuncia_modals/info_folio_modal.php' ?>
 <?php include 'video_denuncia_modals/salida_modal.php' ?>
 <?php include 'video_denuncia_modals/persona_modal.php' ?>

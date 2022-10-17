@@ -773,7 +773,7 @@ class DashboardController extends BaseController
         $data->personafisica = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->findAll();
         $data->imputados = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->where('CALIDADJURIDICAID', 2)->findAll();
         $data->victimas = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->where('CALIDADJURIDICAID= 1 OR CALIDADJURIDICAID=6')->findAll();
-        $data->plantillas = $this->_plantillasModel->asObject()->where('ID !=',6)->findAll();
+        $data->plantillas = $this->_plantillasModel->asObject()->where('ID !=', 6)->findAll();
         // $data->delitosModalidad = $this->_delitoModalidadModel->asObject()->orderBy('DELITOMODALIDADDESCR', 'asc')->findAll();
         $delitosM = $this->_delitoModalidadModel->orderBy('DELITOMODALIDADDESCR', 'ASC')->findAll();
         $delitos_vacios = [];
@@ -1111,18 +1111,24 @@ class DashboardController extends BaseController
     {
         $folio = $this->request->getPost('folio');
         $year = $this->request->getPost('year');
-        $municipio = $this->request->getPost('municipio');
+        $expediente = $this->request->getPost('expediente');
+        $data = (object) array();
+        // $folioDoc = $this->_folioDocModel->get_by_expediente($expediente, $year);
+        $folioDoc = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('NUMEROEXPEDIENTE', $expediente)->orderBy('FOLIODOCID', 'asc')->findAll();
 
-        $folioRow = $this->_folioModel->where('ANO', $year)->where('FOLIOID', $folio)->first();
-        if ($folioRow) {
-            $archivosexternos = $this->_archivoExternoModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
-            if (count($archivosexternos) > 0) {
-                foreach ($archivosexternos as $archivos) {
-                    try {
-                        $_archivosExternos = $this->_createArchivosExternos($folioRow['EXPEDIENTEID'], $archivos, $municipio);
-                    } catch (\Error $e) {
-                    }
+        if ($folioDoc) {
+            try {
+                foreach ($folioDoc as $key => $doc) {
+                    $_archivosExternos = $this->_createArchivosExternos($expediente, $doc);
+
                 }
+                if ($_archivosExternos->status == 201) {
+                    return json_encode(['status' => 1]);
+                } else {
+                    return json_encode(['status' => 0]);
+                }
+            } catch (\Exception $e) {
+                return json_encode(['status' => 0, 'error' => $e->getMessage()]);
             }
         }
     }
@@ -1560,7 +1566,7 @@ class DashboardController extends BaseController
 
         return $this->_curlPostDataEncrypt($endpoint, $data);
     }
-    private function _createArchivosExternos($expedienteId, $archivos, $municipio)
+    private function _createArchivosExternos($expedienteId, $archivos)
     {
         $function = '/archivoExt.php?process=crear';
         $array = [
@@ -1580,8 +1586,10 @@ class DashboardController extends BaseController
             'EXPORTAR',
         ];
         $endpoint = $this->endpoint . $function;
-        $conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
+        $conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $archivos['MUNICIPIOID'])->where('TYPE', ENVIRONMENT)->first();
         $data = $archivos;
+
+
         foreach ($data as $clave => $valor) {
             if (empty($valor)) {
                 unset($data[$clave]);
@@ -1593,7 +1601,10 @@ class DashboardController extends BaseController
                 unset($data[$clave]);
             }
         }
+
         $data['EXPEDIENTEID'] = $expedienteId;
+        $data['ARCHIVODESCR'] = $archivos['TIPODOC'];
+        $data['ARCHIVO'] = base64_encode($archivos['PDF']);
         $data['userDB'] = $conexion->USER;
         $data['pwdDB'] = $conexion->PASSWORD;
         $data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;

@@ -198,6 +198,7 @@ $routes->group('data', function ($routes) {
 	$routes->post('save-in-justicia', 'admin/DashboardController::saveInJusticia');
 	$routes->post('restore-folio', 'admin/DashboardController::restoreFolio');
 	$routes->post('restore-folio-to-process', 'admin/DashboardController::restoreFolioProcess');
+	$routes->post('save-archivos-externos', 'admin/DashboardController::crearArchivo');
 
 	//GET, UPDATE, INSERT WITH AJAX
 	$routes->post('get-persona-fisica-by-id', 'admin/DashboardController::getPersonaFisicaById');
