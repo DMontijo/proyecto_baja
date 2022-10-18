@@ -837,6 +837,11 @@ class FirmaController extends BaseController
 			$pdf = $documento[$i]->PDF;
 			$email->attach($pdf, 'attachment', 'Documento_' . $expediente . '_' . $year . '.pdf', 'application/pdf');
 		}
+		$terminos = base_url('/assets/documentos/TerminosCondiciones.pdf');
+		$avisop = base_url('/assets/documentos/Aviso_De_Privacidad_De_Datos.pdf');
+		$email->attach($terminos, 'attachment', 'Terminos_Y_Condiciones.pdf');
+		$email->attach($avisop, 'attachment', 'Aviso_De_Privacidad.pdf');
+
 		if ($email->send()) {
 			$datosUpdate = [
 				'ENVIADO' => 'S',
