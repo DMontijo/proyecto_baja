@@ -100,6 +100,10 @@ class FOLIODOC extends Migration
 				'type' => 'LONGBLOB',
 				'null' => TRUE,
 			],
+			'XML' => [
+				'type' => 'LONGBLOB',
+				'null' => TRUE,
+			],
 			'STATUS' => [
 				'type' => 'VARCHAR',
 				'constraint' => '15',

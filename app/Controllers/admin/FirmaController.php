@@ -363,6 +363,8 @@ class FirmaController extends BaseController
 					
 						
 						if ($signature->status == 1) {
+							$xmldocumentos = $this->_createXMLSignature($signature->signed_chain, $signature->signature, $expediente, $year);
+
 							$datosInsert = [
 								'AGENTEID' => $user_id,
 								'NUMEROIDENTIFICADOR' => $documento[$i]->FOLIODOCID . '/' . $documento[$i]->ANO,
@@ -375,6 +377,7 @@ class FirmaController extends BaseController
 								'FIRMAELECTRONICA' => base64_decode($signature->signature),
 								'CADENAFIRMADA' => $signature->signed_chain,
 								'PDF' => $pdf,
+								'XML'=> $xmldocumentos,
 								'STATUS' => 'FIRMADO',
 								'PLACEHOLDER' => $documento[$i]->PLACEHOLDER,
 							];
@@ -835,7 +838,10 @@ class FirmaController extends BaseController
 
 		for ($i = 0; $i < count($documento); $i++) {
 			$pdf = $documento[$i]->PDF;
+			$xml =$documento[$i]->XML;
 			$email->attach($pdf, 'attachment', 'Documento_' . $expediente . '_' . $year . '.pdf', 'application/pdf');
+			$email->attach($xml, 'attachment', 'Documento' . $expediente . '_' . $year . '.xml', 'application/xml');
+
 		}
 		$terminos = base_url('/assets/documentos/TerminosCondiciones.pdf');
 		$avisop = base_url('/assets/documentos/Aviso_De_Privacidad_De_Datos.pdf');

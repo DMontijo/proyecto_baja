@@ -229,6 +229,8 @@ $routes->group('data', function ($routes) {
 	$routes->post('get-documentos', 'admin/DocumentosController::obtenDocumentos');
 	$routes->post('get-documento-tabla', 'admin/DocumentosController::getDocumento');
 
+	$routes->post('download-pdf-documento', 'admin/DocumentosController::download_documento_pdf');
+	$routes->post('download-xml-documento', 'admin/DocumentosController::download_documento_xml');
 
 });
 

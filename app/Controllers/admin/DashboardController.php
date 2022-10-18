@@ -2905,7 +2905,7 @@ class DashboardController extends BaseController
         // var_dump($expediente);
         // var_dump($data->expediente->ANO);
         // var_dump($data->folioDoc);
-        if (empty($data->folioDoc)) {
+        if (empty($data->folioDoc) ||empty($data->folioDoc[0]['RAZONSOCIALFIRMA'])) {
         } else {
             $data->plantilla = str_replace('[EXPEDIENTE_NOMBRE_DEL_RESPONSABLE]', $data->folioDoc[0]['RAZONSOCIALFIRMA'], $data->plantilla);
             $data->plantilla = str_replace('EXPEDIENTE_NOMBRE_DEL_RESPONSABLE', $data->folioDoc[0]['RAZONSOCIALFIRMA'], $data->plantilla);

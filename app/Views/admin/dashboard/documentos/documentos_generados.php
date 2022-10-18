@@ -63,6 +63,8 @@
 										<th class="text-center bg-primary text-white" id="tipodoc" name="tipodoc">TIPO DE DOCUMENTO</th>
 										<th class="text-center bg-primary text-white">STATUS</th>
 										<th class="text-center bg-primary text-white"></th>
+										<th class="text-center bg-primary text-white"></th>
+										<th class="text-center bg-primary text-white"></th>
 
 									</tr>
 								</table>
@@ -522,6 +524,25 @@
 			for (let i = 0; i < documentos.length; i++) {
 				if (documentos[i].STATUS == 'FIRMADO') {
 					var btn = `<button type='button'  class='btn btn-primary' onclick='viewDocumento(${documentos[i].FOLIODOCID})' disabled><i class="fas fa-eye"></i></button>`
+					var btnpdf = `<form class="d-inline-block" method="POST" action="<?php echo base_url('/data/download-pdf-documento') ?>">
+													<input type="text" class="form-control" id="folio" name="folio" value="<?= $_GET['folio'] ?>" hidden>
+													<input type="text" class="form-control" id="year" name="year" value="<?= $_GET['year'] ?>" hidden>
+													<input type="text" class="form-control" id="docid" name="docid" value="${documentos[i].FOLIODOCID}" hidden>
+
+													<button type="submit" class="btn btn-primary mb-3">
+														PDF
+													</button>
+												</form>`
+					var btnxml = `<form class="d-inline-block" method="POST" action="<?php echo base_url('/data/download-xml-documento') ?>">
+													<input type="text" class="form-control" id="folio" name="folio" value="<?= $_GET['folio'] ?>" hidden>
+													<input type="text" class="form-control" id="year" name="year" value="<?= $_GET['year'] ?>" hidden>
+													<input type="text" class="form-control" id="docid" name="docid" value="${documentos[i].FOLIODOCID}" hidden>
+
+													<button type="submit" class="btn btn-primary mb-3">
+														XML
+													</button>
+												</form>`
+
 				} else {
 					var btn = `<button type='button'  class='btn btn-primary' onclick='viewDocumento(${documentos[i].FOLIODOCID})'><i class="fas fa-eye"></i></button>`
 				}
@@ -530,6 +551,9 @@
 					`<td class="text-center">${documentos[i].TIPODOC}</td>` +
 					`<td class="text-center">${documentos[i].STATUS}</td>` +
 					`<td class="text-center">${btn}</td>` +
+					`<td class="text-center">${btnpdf}</td>` +
+					`<td class="text-center">${btnxml}</td>` +
+
 					`</tr>`;
 
 				$('#table-documentos tr:first').after(fila);

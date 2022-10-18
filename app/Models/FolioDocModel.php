@@ -31,6 +31,7 @@ class FolioDocModel extends Model
         'CADENAFIRMADA',
         'FIRMAELECTRONICA',
         'PDF',
+		'XML',
         'STATUS',
         'STATUSENVIO',
 		'ENVIADO',
