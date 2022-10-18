@@ -323,6 +323,7 @@
 								card8.classList.remove('d-none');
 								card9.classList.remove('d-none');
 								card10.classList.remove('d-none');
+								card11.classList.remove('d-none');
 
 	
 							});

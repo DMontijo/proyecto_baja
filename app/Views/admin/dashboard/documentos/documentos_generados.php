@@ -400,10 +400,10 @@
 							});
 							$('#sendEmailDocModal').modal('hide');
 							document.querySelector('#load_mail').classList.remove('d-none');
-						document.querySelector('#enviar_modalLabel').classList.remove('d-none');
-						document.querySelector('#loading_mail').classList.add('d-none');
-						document.querySelector('#password_verifying_mail').classList.add('d-none');
-						btn_enviarcorreoDoc.disabled = false;
+							document.querySelector('#enviar_modalLabel').classList.remove('d-none');
+							document.querySelector('#loading_mail').classList.add('d-none');
+							document.querySelector('#password_verifying_mail').classList.add('d-none');
+							btn_enviarcorreoDoc.disabled = false;
 
 						}
 					},
@@ -411,11 +411,13 @@
 				});
 			}, false);
 			btn_archivos_externos.addEventListener('click', (event) => {
+				$('#subirDocumentosModal').modal('show');
+				$('#subirDocumentosModal').show();
 				$.ajax({
 					data: {
-						'folio':<?php echo $_GET['folio'] ?>,
+						'folio': <?php echo $_GET['folio'] ?>,
 						'expediente': <?php echo $_GET['expediente'] ?>,
-						'year':<?php echo $_GET['year'] ?>,
+						'year': <?php echo $_GET['year'] ?>,
 					},
 					url: "<?= base_url('/data/save-archivos-externos') ?>",
 					method: "POST",
@@ -437,7 +439,7 @@
 								text: 'Archivos externos subidos correctamente',
 								confirmButtonColor: '#bf9b55',
 							});
-							
+
 						} else if (response.status == 0) {
 
 							Swal.fire({
@@ -445,6 +447,22 @@
 								text: "No se subieron los archivos",
 								confirmButtonColor: '#bf9b55',
 							});
+							$('#subirDocumentosModal').modal('hide');
+							$('#subirDocumentosModal').hide();
+							document.querySelector('#loading_sub_doc').classList.add('d-none');
+							document.querySelector('#verifying_documentos').classList.add('d-none');
+							btn_archivos_externos.disabled = false;
+						} else if (response.status == 3) {
+							Swal.fire({
+								icon: 'success',
+								text: "Los archivos ya estan registrados",
+								confirmButtonColor: '#bf9b55',
+							});
+							$('#subirDocumentosModal').modal('hide');
+							$('#subirDocumentosModal').hide();
+							document.querySelector('#loading_sub_doc').classList.add('d-none');
+							document.querySelector('#verifying_documentos').classList.add('d-none');
+							btn_archivos_externos.disabled = false;
 						}
 					},
 					error: function(jqXHR, textStatus, errorThrown) {}
@@ -502,8 +520,11 @@
 
 		function llenarTablaDocumentos(documentos) {
 			for (let i = 0; i < documentos.length; i++) {
-				var btn = `<button type='button'  class='btn btn-primary' onclick='viewDocumento(${documentos[i].FOLIODOCID})'><i class="fas fa-eye"></i></button>`
-
+				if (documentos[i].STATUS == 'FIRMADO') {
+					var btn = `<button type='button'  class='btn btn-primary' onclick='viewDocumento(${documentos[i].FOLIODOCID})' disabled><i class="fas fa-eye"></i></button>`
+				} else {
+					var btn = `<button type='button'  class='btn btn-primary' onclick='viewDocumento(${documentos[i].FOLIODOCID})'><i class="fas fa-eye"></i></button>`
+				}
 				var fila =
 					`<tr id="row${i}">` +
 					`<td class="text-center">${documentos[i].TIPODOC}</td>` +

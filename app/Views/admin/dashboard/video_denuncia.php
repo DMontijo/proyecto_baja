@@ -92,6 +92,13 @@
 			</div>
 		</div>
 	</div>
+	<div id="card11" class="col-12 col-sm-6 col-md-4 col-lg-3 d-none">
+		<div class="card rounded bg-white shadow" style="height: 190px;">
+			<div class="card-body">
+				<button id="refresh-btn" class="btn btn-primary btn-block h-100" role="button"><i class="fas fa-search"></i> BUSCAR NUEVO</button>
+			</div>
+		</div>
+	</div>
 </div>
 
 <div class="row">
@@ -167,6 +174,7 @@
 	const card8 = document.querySelector('#card8');
 	const card9 = document.querySelector('#card9');
 	const card10 = document.querySelector('#card10');
+	const card11 = document.querySelector('#card11');
 
 
 	var respuesta;
@@ -234,8 +242,11 @@
 
 	function llenarTablaDocumentos(documentos) {
 		for (let i = 0; i < documentos.length; i++) {
-			var btn = `<button type='button'  class='btn btn-primary' onclick='viewDocumento(${documentos[i].FOLIODOCID})'><i class="fas fa-eye"></i></button>`
-
+			if (documentos[i].STATUS == 'FIRMADO') {
+				var btn = `<button type='button'  class='btn btn-primary' onclick='viewDocumento(${documentos[i].FOLIODOCID})' disabled><i class="fas fa-eye"></i></button>`
+			} else {
+				var btn = `<button type='button'  class='btn btn-primary' onclick='viewDocumento(${documentos[i].FOLIODOCID})'><i class="fas fa-eye"></i></button>`
+			}
 			var fila =
 				`<tr id="row${i}">` +
 				`<td class="text-center">${documentos[i].TIPODOC}</td>` +
@@ -1750,6 +1761,7 @@
 			var btn_firmar_doc = document.querySelector('#btn-firmar-doc');
 			var btn_archivos_externos = document.querySelector('#enviar-archivos-externos-btn');
 
+			var refresh_btn = document.querySelector('#refresh-btn');
 
 			var inputsText = document.querySelectorAll('input[type="text"]');
 			var inputsEmail = document.querySelectorAll('input[type="email"]');
@@ -2043,6 +2055,8 @@
 			}, false);
 
 			btn_archivos_externos.addEventListener('click', (event) => {
+				$('#subirDocumentosModal').modal('show');
+				$('#subirDocumentosModal').show();
 				$.ajax({
 					data: {
 						'folio': inputFolio.value,
@@ -2069,7 +2083,7 @@
 								text: 'Archivos externos subidos correctamente',
 								confirmButtonColor: '#bf9b55',
 							});
-							
+
 						} else if (response.status == 0) {
 
 							Swal.fire({
@@ -2077,10 +2091,29 @@
 								text: "No se subieron los archivos",
 								confirmButtonColor: '#bf9b55',
 							});
+							$('#subirDocumentosModal').modal('hide');
+							$('#subirDocumentosModal').hide();
+							document.querySelector('#loading_sub_doc').classList.add('d-none');
+							document.querySelector('#verifying_documentos').classList.add('d-none');
+							btn_archivos_externos.disabled = false;
+						} else if (response.status == 3) {
+							Swal.fire({
+								icon: 'success',
+								text: "Los archivos ya estan registrados",
+								confirmButtonColor: '#bf9b55',
+							});
+							$('#subirDocumentosModal').modal('hide');
+							$('#subirDocumentosModal').hide();
+							document.querySelector('#loading_sub_doc').classList.add('d-none');
+							document.querySelector('#verifying_documentos').classList.add('d-none');
+							btn_archivos_externos.disabled = false;
 						}
 					},
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
+			}, false);
+			refresh_btn.addEventListener('click', (event) => {
+				location.reload();
 			}, false);
 
 

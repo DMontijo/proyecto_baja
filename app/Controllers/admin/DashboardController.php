@@ -106,6 +106,7 @@ use App\Models\FolioRelacionFisFisModel;
 use App\Models\ObjetoClasificacionModel;
 use App\Models\ObjetoSubclasificacionModel;
 use App\Models\PlantillasModel;
+use App\Models\RelacionFolioDocModel;
 use App\Models\TipoExpedienteModel;
 use App\Models\TipoMonedaModel;
 
@@ -223,6 +224,7 @@ class DashboardController extends BaseController
         $this->_plantillasModel = new PlantillasModel();
         $this->_folioDocModel = new FolioDocModel();
         $this->_tipoExpedienteModel = new TipoExpedienteModel();
+        $this->_relacionFolioDocModel = new RelacionFolioDocModel();
 
         // $this->protocol = 'http://';
         // $this->ip = "10.144.244.223";
@@ -1112,15 +1114,35 @@ class DashboardController extends BaseController
         $folio = $this->request->getPost('folio');
         $year = $this->request->getPost('year');
         $expediente = $this->request->getPost('expediente');
-        $data = (object) array();
+       
         // $folioDoc = $this->_folioDocModel->get_by_expediente($expediente, $year);
-        $folioDoc = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('NUMEROEXPEDIENTE', $expediente)->orderBy('FOLIODOCID', 'asc')->findAll();
-
+        $folioDoc = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOCID', 'asc')->findAll();
         if ($folioDoc) {
             try {
                 foreach ($folioDoc as $key => $doc) {
-                    $_archivosExternos = $this->_createArchivosExternos($expediente, $doc);
+                    $relacionDoc = $this->_relacionFolioDocModel->where('FOLIOID', $doc['FOLIOID'])->where('ANO', $doc['ANO'])->where('EXPEDIENTEID', $doc['NUMEROEXPEDIENTE'])->where('FOLIODOCID', $doc['FOLIODOCID'])->orderBy('FOLIODOCID', 'asc')->first();
 
+                   
+                    if (isset($relacionDoc)) {
+                        $data = (object) array();
+                        $data =['exist'=> 'los archivos ya estan registrados'];
+                    } else {
+                        $_archivosExternos = $this->_createArchivosExternos($expediente, $doc);
+                        // var_dump($doc['FOLIOID'],$doc['ANO'],$doc['NUMEROEXPEDIENTE'], $doc['FOLIODOCID']);
+                        // var_dump($_archivosExternos->EXPEDIENTEID);
+                        // exit;
+                        $datosRelacionFolio = [
+                            'FOLIODOCID' => $doc['FOLIODOCID'],
+                            'FOLIOID' =>  $doc['FOLIOID'],
+                            'ANO' => $doc['ANO'],
+                            'EXPEDIENTEID' => $_archivosExternos->EXPEDIENTEID,
+                            'EXPEDIENTEARCHIVOID' => $_archivosExternos->ARCHIVOID,
+                        ];
+                        $this->_relacionFolioDocModel->insert($datosRelacionFolio);
+                    }
+                }
+                if (isset($data)) {
+                    return json_encode(['status' => 3]);
                 }
                 if ($_archivosExternos->status == 201) {
                     return json_encode(['status' => 1]);
