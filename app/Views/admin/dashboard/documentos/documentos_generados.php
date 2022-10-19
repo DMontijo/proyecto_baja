@@ -17,12 +17,11 @@
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-12">
-				<button type="button" class="btn btn-primary mb-3" data-toggle="modal" id="firmarDocumento" data-target="#contrasena_modal_doc"><i class="fas fa-file-signature"></i> Firmar documento</button>
-				<button type="button" class="btn btn-primary mb-3" data-toggle="modal" id="generarDocumento" data-target="#documentos_modal_wyswyg"><i class="fas fa-file-archive"></i> Agregar documentos</button>
-				<button type="button" class="btn btn-primary mb-3" data-toggle="modal" id="edtarDocumento" data-target="#documentos_generados_modal_v"><i class="fas fa-pencil-alt"></i> Editar documentos</button>
-				<button type="button" class="btn btn-primary mb-3" data-toggle="modal" id="enviarDocumento" data-target="#sendEmailDocModal"><i class="fas fa-mail-bulk"></i> Enviar documentos pendientes</button>
-				<button type="button" class="btn btn-primary mb-3" id="subirDocumento" name="subirDocumento" data-toggle="modal" data-target="#subirDocumentosModal"><i class="fas fa-archive"></i> Subir documentos</button>
-
+				<button type="button" class="btn btn-primary col-12 col-sm-3 col-md-3 col-lg-4 mb-3" data-toggle="modal" id="firmarDocumento" data-target="#contrasena_modal_doc"><i class="fas fa-file-signature"></i> Firmar documento</button>
+				<button type="button" class="btn btn-primary col-12 col-sm-3 col-md-3 col-lg-4 mb-3" data-toggle="modal" id="generarDocumento" data-target="#documentos_modal_wyswyg"><i class="fas fa-file-archive"></i> Agregar documentos</button>
+				<button type="button" class="btn btn-primary col-12 col-sm-3 col-md-6 col-lg-4 mb-3" data-toggle="modal" id="edtarDocumento" data-target="#documentos_generados_modal_v"><i class="fas fa-pencil-alt"></i> Editar documentos</button>
+				<button type="button" class="btn btn-primary col-12 col-sm-3 col-md-6 col-lg-4 mb-3" data-toggle="modal" id="enviarDocumento" data-target="#sendEmailDocModal"><i class="fas fa-mail-bulk"></i> Enviar documentos pendientes</button>
+				<button type="button" class="btn btn-primary col-12 col-sm-3 col-md-6 col-lg-4 mb-3" id="subirDocumento" name="subirDocumento" data-toggle="modal" data-target="#subirDocumentosModal"><i class="fas fa-archive"></i> Subir documentos</button>
 				<?php
 				foreach ($body_data->documentos as $key => $documento) { ?>
 					<h5 class="card-title"><?php echo $documento->TIPODOC ?> | <?php echo $documento->STATUS ?></h5>
