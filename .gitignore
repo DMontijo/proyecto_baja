@@ -1,7 +1,7 @@
 firmar_documento/Documentos_Firmados/*
 *.pem
 *.txt
-
+uploads/FIEL/*
 
 #-------------------------
 # Operating Specific Junk Files
