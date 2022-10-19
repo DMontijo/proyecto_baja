@@ -839,8 +839,8 @@ class FirmaController extends BaseController
 		for ($i = 0; $i < count($documento); $i++) {
 			$pdf = $documento[$i]->PDF;
 			$xml =$documento[$i]->XML;
-			$email->attach($pdf, 'attachment', 'Documento_' . $expediente . '_' . $year . '.pdf', 'application/pdf');
-			$email->attach($xml, 'attachment', 'Documento' . $expediente . '_' . $year . '.xml', 'application/xml');
+			$email->attach($pdf, 'attachment', 'Documento_' . $expediente . '_' . $year . '_' . $documento[$i]->FOLIODOCID . '.pdf', 'application/pdf');
+			$email->attach($xml, 'attachment', 'Documento' . $expediente . '_' . $year . '_' . $documento[$i]->FOLIODOCID . '.xml', 'application/xml');
 
 		}
 		$terminos = base_url('/assets/documentos/TerminosCondiciones.pdf');
