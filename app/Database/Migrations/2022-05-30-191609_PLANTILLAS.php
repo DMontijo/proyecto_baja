@@ -14,11 +14,11 @@ class PLANTILLAS extends Migration
 				'unsigned' => TRUE,
 				'auto_increment' => TRUE
 			],
-			'DESCRIPCION' => [
+			'TITULO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
 			],
-			'TITULO' => [
+			'DESCRIPCION' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
 			],
@@ -27,7 +27,15 @@ class PLANTILLAS extends Migration
 			],
 			'TEXTO' => [
 				'type' => 'TEXT',
-			]
+			],
+			'PLANTILLAJUSTICIAID' => [
+				'type' => 'INT',
+				'null' => TRUE,
+			],
+			'CLASIFICACIONDOCTOID' => [
+				'type' => 'INT',
+				'null' => TRUE,
+			],
 		]);
 		$this->forge->addKey('ID', TRUE);
 		$this->forge->createTable('PLANTILLAS');
