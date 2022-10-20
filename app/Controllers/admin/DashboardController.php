@@ -2887,7 +2887,7 @@ class DashboardController extends BaseController
 		$data->plantilla = $this->_plantillasModel->where('TITULO', $titulo)->first();
 		$data->folioDoc = $this->_folioDocModel->get_by_expediente($expediente, $data->expediente->ANO);
 		$data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->where('TIPOEXPEDIENTEID',  $data->expediente->TIPOEXPEDIENTEID)->first();
-
+		
 		$data->municipios = $this->_municipiosModel->asObject()->where('ESTADOID', '2')->where('MUNICIPIOID',  $data->expediente->MUNICIPIOID)->first();
 		$data->victima = $this->_folioPersonaFisicaModel->get_by_personas($data->expediente->FOLIOID, $data->expediente->ANO, $victima);
 		$data->imputado = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->expediente->FOLIOID)->where('ANO', $data->expediente->ANO)->where('PERSONAFISICAID', $imputado)->first();
@@ -2916,9 +2916,26 @@ class DashboardController extends BaseController
 		// else if ($relacionfisfis == null) {
 		//     // var_dump("es null");
 		// }
-
+		$arrayExpediente =str_split($data->expediente->EXPEDIENTEID);
+		$expedienteConsecutivo = $arrayExpediente[10].$arrayExpediente[11].$arrayExpediente[12].$arrayExpediente[13].$arrayExpediente[14];
+		// $expedienteConsecutivo= (int)'00534';
+		$expedienteConsecutivo =str_split($expedienteConsecutivo);
+		
+		unset($arrayExpediente[0]);
+		for ($i=0; $i < count($expedienteConsecutivo); $i++) { 
+			if ($expedienteConsecutivo[$i]==0 && $expedienteConsecutivo[$i++]!=0) {
+				unset($expedienteConsecutivo[$i]);
+			}
+		}
+		
+		$expedienteMunicipioEstado = $arrayExpediente[1].$arrayExpediente[2].$arrayExpediente[4].$arrayExpediente[5];
+		$expedienteYear = $arrayExpediente[6].$arrayExpediente[7].$arrayExpediente[8].$arrayExpediente[9];
+		$expedienteConsecutivo = (isset($arrayExpediente[10])?$arrayExpediente[10]:'').(isset($arrayExpediente[11])?$arrayExpediente[11]:'').(isset($arrayExpediente[12])?$arrayExpediente[12]:'').(isset($arrayExpediente[13])?$arrayExpediente[13]:'').(isset($arrayExpediente[14])?$arrayExpediente[14]:'');
+		$expedienteid = $expedienteMunicipioEstado . '-'.$expedienteYear .'-'. $expedienteConsecutivo;
+		// var_dump("EXPEDIENTE ORIGINAL: " . $data->expediente->EXPEDIENTEID);
+		// var_dump("EXPEDIENTE MODIFICADO: ".$expedienteid);
 		$data->plantilla = str_replace('[DOCUMENTO_FECHA]', date('d') . ' de ' . $meses[date('n') - 1] . " del " . date('Y'), $data->plantilla);
-		$data->plantilla = str_replace('[EXPEDIENTE_NUMERO]', $data->expediente->EXPEDIENTEID, $data->plantilla);
+		$data->plantilla = str_replace('[EXPEDIENTE_NUMERO]', $expedienteid, $data->plantilla);
 		$data->plantilla = str_replace('[DOCUMENTO_MUNICIPIO]', $data->municipios->MUNICIPIODESCR, $data->plantilla);
 		$data->plantilla = str_replace('[DOCUMENTO_CIUDAD]', $data->municipios->MUNICIPIODESCR, $data->plantilla);
 		$data->plantilla = str_replace('DOCUMENTO_MUNICIPIO', $data->municipios->MUNICIPIODESCR, $data->plantilla);
@@ -2943,6 +2960,7 @@ class DashboardController extends BaseController
 		$data->plantilla = str_replace('[DETALLE_INTERVENCIONES]', $data->expediente->HECHONARRACION, $data->plantilla);
 		$data->plantilla = str_replace('[HECHO_NARRACION]', $data->expediente->HECHONARRACION, $data->plantilla);
 		$data->plantilla = str_replace('[TIPO_EXPEDIENTE]',  $data->tipoExpediente->TIPOEXPEDIENTEDESCR, $data->plantilla);
+		$data->plantilla = str_replace('[ZONA_SEJAP]',  'CDT', $data->plantilla);
 
 		$data->plantilla = str_replace('[VICTIMA_DOMICILIO]', 'en la calle: ' . $data->victimaDom->CALLE . ' en la colonia: ' . $data->victimaDom->COLONIADESCR, $data->plantilla);
 		// $data->plantilla = str_replace('tijuana',$data->estadoVictima->ESTADODESCR, $data->plantilla);

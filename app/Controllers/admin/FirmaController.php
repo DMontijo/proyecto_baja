@@ -845,8 +845,11 @@ class FirmaController extends BaseController
 		}
 		$terminos = base_url('/assets/documentos/TerminosCondiciones.pdf');
 		$avisop = base_url('/assets/documentos/Aviso_De_Privacidad_De_Datos.pdf');
+		$derechos_victima_ofendido = base_url('/assets/documentos/DerechosDeVictimaOfendido.pdf');
+
 		$email->attach($terminos, 'attachment', 'Terminos_Y_Condiciones.pdf');
 		$email->attach($avisop, 'attachment', 'Aviso_De_Privacidad.pdf');
+		$email->attach($derechos_victima_ofendido, 'attachment', 'Derechos_De_Victima_Ofendido.pdf');
 
 		if ($email->send()) {
 			$datosUpdate = [
