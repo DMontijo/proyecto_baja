@@ -11,6 +11,7 @@ use App\Models\ColoniasModel;
 use App\Models\DelitosUsuariosModel;
 use App\Models\DenunciantesModel;
 use App\Models\EscolaridadModel;
+use App\Models\EstadoExtranjeroModel;
 use App\Models\EstadosModel;
 use App\Models\FiguraModel;
 use App\Models\FolioConsecutivoModel;
@@ -33,7 +34,12 @@ use App\Models\PersonaIdiomaModel;
 use App\Models\PersonaNacionalidadModel;
 use App\Models\PielColorModel;
 use App\Models\VehiculoColorModel;
+use App\Models\VehiculoDistribuidorModel;
+use App\Models\VehiculoMarcaModel;
+use App\Models\VehiculoModeloModel;
+use App\Models\VehiculoServicioModel;
 use App\Models\VehiculoTipoModel;
+use App\Models\VehiculoVersionModel;
 
 class DashboardController extends BaseController
 {
@@ -74,6 +80,13 @@ class DashboardController extends BaseController
         $this->_pielColorModel = new PielColorModel();
         $this->_parentescoModel = new ParentescoModel();
         $this->_parentescoPersonaFisicaModel = new PersonaFisicaParentescoModel();
+        $this->_vehiculoDistribuidorModel = new VehiculoDistribuidorModel();
+		$this->_vehiculoMarcaModel = new VehiculoMarcaModel();
+		$this->_vehiculoModeloModel = new VehiculoModeloModel();
+		$this->_vehiculoVersionModel = new VehiculoVersionModel();
+		$this->_vehiculoServicioModel = new VehiculoServicioModel();
+        $this->_estadosExtranjeros = new EstadoExtranjeroModel();
+
     }
 
     public function index()
@@ -81,6 +94,8 @@ class DashboardController extends BaseController
         $data = (object) array();
         $data->paises = $this->_paisesModel->asObject()->findAll();
         $data->estados = $this->_estadosModel->asObject()->findAll();
+        $data->estadosExtranjeros = $this->_estadosExtranjeros->asObject()->findAll();
+
         $data->municipios = $this->_municipiosModel->asObject()->where('ESTADOID', '2')->findAll();
         $data->nacionalidades = $this->_nacionalidadModel->asObject()->findAll();
         $lugares = $this->_hechoLugarModel->orderBy('HECHODESCR', 'ASC')->findAll();
@@ -101,7 +116,7 @@ class DashboardController extends BaseController
         }
         $data->lugares = [];
         $data->lugares = (object) array_merge($lugares_sin, $lugares_blanca, $lugares_fuego);
-
+      
         $data->colorVehiculo = $this->_coloresVehiculoModel->asObject()->findAll();
         $data->tipoVehiculo = $this->_tipoVehiculoModel->asObject()->orderBy('VEHICULOTIPODESCR', 'ASC')->findAll();
         $data->delitosUsuarios = $this->_delitosUsuariosModel->asObject()->orderBy('DELITO', 'ASC')->findAll();
@@ -116,7 +131,11 @@ class DashboardController extends BaseController
         $data->cejaForma = $this->_cejaFormaModel->asObject()->findAll();
         $data->pielColor = $this->_pielColorModel->asObject()->findAll();
         $data->parentesco = $this->_parentescoModel->asObject()->findAll();
-
+        $data->distribuidorVehiculo = $this->_vehiculoDistribuidorModel->asObject()->findAll();
+		$data->marcaVehiculo = $this->_vehiculoMarcaModel->asObject()->findAll();
+		$data->lineaVehiculo = $this->_vehiculoModeloModel->asObject()->findAll();
+		$data->versionVehiculo = $this->_vehiculoVersionModel->asObject()->findAll();
+		$data->servicioVehiculo = $this->_vehiculoServicioModel->asObject()->findAll();
         $this->_loadView('Dashboard', 'dashboard', '', $data, 'index');
     }
 
@@ -511,11 +530,32 @@ class DashboardController extends BaseController
                         $docV = null;
                     }
                 }
+                $distribuidorpost = trim($this->request->getPost('distribuidor_vehiculo'));
+                $marcapost = trim($this->request->getPost('marca'));
+                $modelopost = trim($this->request->getPost('linea_vehiculo'));
 
+                $modelodescr = $this->_vehiculoModeloModel->asObject()->where('VEHICULODISTRIBUIDORID', $distribuidorpost)->where('VEHICULOMARCAID', $marcapost)->where('VEHICULOMODELOID', $modelopost)->first();
+                $marcadescr = $this->_vehiculoMarcaModel->asObject()->where('VEHICULODISTRIBUIDORID', $distribuidorpost)->where('VEHICULOMARCAID',$marcapost)->first();
                 $dataVehiculo = array(
+                    'TIPOPLACA' => $this->request->getPost('tipo_placas_vehiculo'),
+                    'PLACAS' => $this->request->getPost('placas_vehiculo'),
+                    'ESTADOIDPLACA' => $this->request->getPost('estado_vehiculo'),
+                    'ESTADOEXTRANJEROIDPLACA' => $this->request->getPost('estado_extranjero_vehiculo'),
+                    'NUMEROSERIE' => $this->request->getPost('serie_vehiculo'),
+                    'VEHICULODISTRIBUIDORID' => $this->request->getPost('distribuidor_vehiculo'),
+                    'MARCAID' => $this->request->getPost('marca'),
+                    'MARCADESCR' => $marcadescr->VEHICULOMARCADESCR,
+                    'MODELODESCR' => $modelodescr->VEHICULOMODELODESCR,
+                    'MODELOID' => $this->request->getPost('linea_vehiculo'),
+                    'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo'),
+                    'VEHICULOSERVICIOID' => $this->request->getPost('servicio_vehiculo'),
+                    'SEGUROVIGENTE' => $this->request->getPost('seguro_vigente_vehiculo'),
+                    'TRANSMISION' => $this->request->getPost('transmision_vehiculo'),
+                    'TRACCION' => $this->request->getPost('traccion_vehiculo'),
                     'TIPOID' => $this->request->getPost('tipo_vehiculo'),
                     'PRIMERCOLORID' => $this->request->getPost('color_vehiculo'),
                     'SENASPARTICULARES' => $this->request->getPost('description_vehiculo'),
+                    'NUMEROCHASIS' => $this->request->getPost('num_chasis_vehiculo'),
                     'FOTO' => $fotoV,
                     'DOCUMENTO' => $docV,
                 );
@@ -785,6 +825,24 @@ class DashboardController extends BaseController
         } else {
             return json_encode((object) ['status' => 0, 'error' => 'No hay data disponible']);
         }
+    }
+    public function getMarcaByDist(){
+        $distribuidor = trim($this->request->getPost('distribuidor_vehiculo'));
+        $marca = $this->_vehiculoMarcaModel->asObject()->where('VEHICULODISTRIBUIDORID', $distribuidor)->findAll();
+        return json_encode((object) ['data' => $marca]);
+    }
+    public function getModeloByMarca(){
+        $distribuidor = trim($this->request->getPost('dist'));
+        $marca = trim($this->request->getPost('marca'));
+        $modelo = $this->_vehiculoModeloModel->asObject()->where('VEHICULODISTRIBUIDORID', $distribuidor)->where('VEHICULOMARCAID', $marca)->findAll();
+        return json_encode((object) ['data' => $modelo]);
+    }
+    public function getVersionByModelo(){
+        $distribuidor = trim($this->request->getPost('dist'));
+        $marca = trim($this->request->getPost('marca'));
+        $modelo = trim($this->request->getPost('linea_vehiculo'));
+        $version = $this->_vehiculoVersionModel->asObject()->where('VEHICULODISTRIBUIDORID', $distribuidor)->where('VEHICULOMARCAID', $marca)->where('VEHICULOMODELOID', $modelo)->findAll();
+        return json_encode((object) ['data' => $version]);
     }
 
     private function imprimirArray($array)
