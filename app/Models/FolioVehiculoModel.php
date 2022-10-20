@@ -47,7 +47,7 @@ class FolioVehiculoModel extends Model
 	public function get_by_folio($folio, $year)
 	{
 		$builder = $this->db->table($this->table);
-		$builder->select(['FOLIOID', 'VEHICULOID', 'ANO']);
+		$builder->select(['FOLIOID', 'VEHICULOID', 'ANO','PLACAS','NUMEROSERIE']);
 		$builder->where('FOLIOID', $folio);
 		$builder->where('ANO', $year);
 		$query = $builder->get();

@@ -4,6 +4,7 @@ namespace App\Controllers\admin;
 
 use App\Controllers\BaseController;
 use App\Database\Migrations\DELITOMODALIDAD;
+use App\Database\Seeds\EstadoExtranjeroSeeder;
 use App\Models\CabelloColorModel;
 use App\Models\CabelloEstiloModel;
 use App\Models\CabelloTamanoModel;
@@ -98,13 +99,20 @@ use App\Models\EstomagoModel;
 use App\Models\CabelloPeculiarModel;
 use App\Models\ConstanciaExtravioModel;
 use App\Models\DelitoModalidadModel;
+use App\Models\EstadoExtranjeroModel;
 use App\Models\FolioArchivoExternoModel;
 use App\Models\FolioDocumentoModel;
 use App\Models\FolioPersonaFisImpDelitoModel;
 use App\Models\FolioRelacionFisFisModel;
 use App\Models\ObjetoClasificacionModel;
 use App\Models\ObjetoSubclasificacionModel;
+use App\Models\TipoExpedienteModel;
 use App\Models\TipoMonedaModel;
+use App\Models\VehiculoDistribuidorModel;
+use App\Models\VehiculoMarcaModel;
+use App\Models\VehiculoModeloModel;
+use App\Models\VehiculoServicioModel;
+use App\Models\VehiculoVersionModel;
 
 class FoliosController extends BaseController
 {
@@ -214,6 +222,13 @@ class FoliosController extends BaseController
         $this->_objetoClasificacionModel = new ObjetoClasificacionModel();
         $this->_objetoSubclasificacionModel = new ObjetoSubclasificacionModel();
         $this->_tipoMonedaModel = new TipoMonedaModel();
+        $this->_vehiculoDistribuidorModel = new VehiculoDistribuidorModel();
+		$this->_vehiculoMarcaModel = new VehiculoMarcaModel();
+		$this->_vehiculoModeloModel = new VehiculoModeloModel();
+		$this->_vehiculoVersionModel = new VehiculoVersionModel();
+		$this->_vehiculoServicioModel = new VehiculoServicioModel();
+        $this->_estadosExtranjeros = new EstadoExtranjeroModel();
+        $this->_tipoExpedienteModel = new TipoExpedienteModel();
 
     }
 
@@ -496,6 +511,14 @@ class FoliosController extends BaseController
         $data->objetoclasificacion = $this->_objetoClasificacionModel->asObject()->findAll();
         $data->objetosubclasificacion = $this->_objetoSubclasificacionModel->asObject()->findAll();
         $data->tipomoneda = $this->_tipoMonedaModel->asObject()->findAll();
+        $data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->findAll();
+		$data->distribuidorVehiculo = $this->_vehiculoDistribuidorModel->asObject()->findAll();
+		$data->marcaVehiculo = $this->_vehiculoMarcaModel->asObject()->findAll();
+		$data->lineaVehiculo = $this->_vehiculoModeloModel->asObject()->findAll();
+		$data->versionVehiculo = $this->_vehiculoVersionModel->asObject()->findAll();
+		$data->servicioVehiculo = $this->_vehiculoServicioModel->asObject()->findAll();
+        $data->estadosExtranjeros = $this->_estadosExtranjeros->asObject()->findAll();
+
         $this->_loadView('Video denuncia', 'videodenuncia', '', $data, 'ver_folio');
     }
 

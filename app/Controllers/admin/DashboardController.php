@@ -97,6 +97,7 @@ use App\Models\DienteTipoModel;
 use App\Models\EstomagoModel;
 use App\Models\CabelloPeculiarModel;
 use App\Models\DelitoModalidadModel;
+use App\Models\EstadoExtranjeroModel;
 use App\Models\FolioArchivoExternoModel;
 use App\Models\FolioDocModel;
 use App\Models\FolioDocumentoModel;
@@ -109,6 +110,11 @@ use App\Models\PlantillasModel;
 use App\Models\RelacionFolioDocModel;
 use App\Models\TipoExpedienteModel;
 use App\Models\TipoMonedaModel;
+use App\Models\VehiculoDistribuidorModel;
+use App\Models\VehiculoMarcaModel;
+use App\Models\VehiculoModeloModel;
+use App\Models\VehiculoServicioModel;
+use App\Models\VehiculoVersionModel;
 
 class DashboardController extends BaseController
 {
@@ -225,6 +231,13 @@ class DashboardController extends BaseController
 		$this->_folioDocModel = new FolioDocModel();
 		$this->_tipoExpedienteModel = new TipoExpedienteModel();
 		$this->_relacionFolioDocModel = new RelacionFolioDocModel();
+        $this->_vehiculoDistribuidorModel = new VehiculoDistribuidorModel();
+		$this->_vehiculoMarcaModel = new VehiculoMarcaModel();
+		$this->_vehiculoModeloModel = new VehiculoModeloModel();
+		$this->_vehiculoVersionModel = new VehiculoVersionModel();
+		$this->_vehiculoServicioModel = new VehiculoServicioModel();
+        $this->_estadosExtranjeros = new EstadoExtranjeroModel();
+
 
 		// $this->protocol = 'http://';
 		// $this->ip = "10.144.244.223";
@@ -659,6 +672,7 @@ class DashboardController extends BaseController
 
 				$data->color = $this->_coloresVehiculoModel->where('VEHICULOCOLORID', $data->vehiculo['PRIMERCOLORID'])->first();
 				$data->tipov = $this->_tipoVehiculoModel->where('VEHICULOTIPOID', $data->vehiculo['TIPOID'])->first();
+				$data->dist = $this->_vehiculoDistribuidorModel->where('VEHICULODISTRIBUIDORID', $data->vehiculo['VEHICULODISTRIBUIDORID'])->first();
 
 				$data->status = 1;
 				return json_encode($data);
@@ -703,6 +717,8 @@ class DashboardController extends BaseController
 		$data->municipios = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
 		$data->paises = $this->_paisesModel->asObject()->findAll();
 		$data->estados = $this->_estadosModel->asObject()->findAll();
+		$data->estadosExtranjeros = $this->_estadosExtranjeros->asObject()->findAll();
+
 		$data->tiposIdentificaciones = $this->_tipoIdentificacionModel->asObject()->findAll();
 		$data->escolaridades = $this->_escolaridadModel->asObject()->findAll();
 		$data->ocupaciones = $this->_ocupacionModel->asObject()->findAll();
@@ -777,6 +793,14 @@ class DashboardController extends BaseController
 		$data->victimas = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->where('CALIDADJURIDICAID= 1 OR CALIDADJURIDICAID=6')->findAll();
 		$data->plantillas = $this->_plantillasModel->asObject()->where('ID !=', 6)->findAll();
 		$data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->findAll();
+		$data->distribuidorVehiculo = $this->_vehiculoDistribuidorModel->asObject()->findAll();
+		$data->marcaVehiculo = $this->_vehiculoMarcaModel->asObject()->findAll();
+		$data->lineaVehiculo = $this->_vehiculoModeloModel->asObject()->findAll();
+		$data->versionVehiculo = $this->_vehiculoVersionModel->asObject()->findAll();
+		$data->tipoVehiculo = $this->_tipoVehiculoModel->asObject()->findAll();
+		$data->servicioVehiculo = $this->_vehiculoServicioModel->asObject()->findAll();
+		$data->colorVehiculo = $this->_coloresVehiculoModel->asObject()->findAll();
+
 		// $data->delitosModalidad = $this->_delitoModalidadModel->asObject()->orderBy('DELITOMODALIDADDESCR', 'asc')->findAll();
 		$delitosM = $this->_delitoModalidadModel->orderBy('DELITOMODALIDADDESCR', 'ASC')->findAll();
 		$delitos_vacios = [];
@@ -2244,17 +2268,41 @@ class DashboardController extends BaseController
 
 			$folio = trim($this->request->getPost('folio'));
 			$year = trim($this->request->getPost('year'));
+			$distribuidorpost = trim($this->request->getPost('distribuidor_vehiculo_ad'));
+			$marcapost = trim($this->request->getPost('marca_ad'));
+			$modelopost = trim($this->request->getPost('linea_vehiculo_ad'));
+
+			$modelodescr = $this->_vehiculoModeloModel->asObject()->where('VEHICULODISTRIBUIDORID', $distribuidorpost)->where('VEHICULOMARCAID', $marcapost)->where('VEHICULOMODELOID', $modelopost)->first();
+			$marcadescr = $this->_vehiculoMarcaModel->asObject()->where('VEHICULODISTRIBUIDORID', $distribuidorpost)->where('VEHICULOMARCAID',$marcapost)->first();
 			$data = array(
 				'folio' => trim($this->request->getPost('folio')),
 				'year' => trim($this->request->getPost('year')),
 				'TIPOID' => $this->request->getPost('tipo_vehiculo'),
 				'PRIMERCOLORID' => $this->request->getPost('color_vehiculo'),
 				'SENASPARTICULARES' => $this->request->getPost('description_vehiculo'),
+				'TIPOPLACA' => $this->request->getPost('tipo_placas_vehiculo'),
+				'PLACAS' => $this->request->getPost('placas_vehiculo'),
+				'ESTADOIDPLACA' => $this->request->getPost('estado_vehiculo_ad'),
+				'ESTADOEXTRANJEROIDPLACA' => $this->request->getPost('estado_extranjero_vehiculo_ad'),
+				'NUMEROSERIE' => $this->request->getPost('serie_vehiculo'),
+				'VEHICULODISTRIBUIDORID' => $this->request->getPost('distribuidor_vehiculo_ad'),
+				'MARCAID' => $this->request->getPost('marca_ad'),
+				'MARCADESCR' => $marcadescr->VEHICULOMARCADESCR,
+				'MODELODESCR' => $modelodescr->VEHICULOMODELODESCR,
+				'MODELOID' => $this->request->getPost('linea_vehiculo_ad'),
+				'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad'),
+				'VEHICULOSERVICIOID' => $this->request->getPost('servicio_vehiculo_ad'),
+				'SEGUROVIGENTE' => $this->request->getPost('seguro_vigente_vehiculo'),
+				'TRANSMISION' => $this->request->getPost('transmision_vehiculo'),
+				'TRACCION' => $this->request->getPost('traccion_vehiculo'),
+				'NUMEROCHASIS' => $this->request->getPost('num_chasis_vehiculo'),
 			);
 
 			$update = $this->_folioVehiculoModel->set($data)->where('FOLIOID', $folio)->where('ANO', $year)->update();
 
 			if ($update) {
+				$vehiculos = $this->_folioVehiculoModel->get_by_folio($folio, $year);
+
 				$datosBitacora = [
 					'ACCION' => 'Ha actualizado el vehículo de una persona fisica',
 					'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
@@ -2262,7 +2310,7 @@ class DashboardController extends BaseController
 
 				$this->_bitacoraActividad($datosBitacora);
 
-				return json_encode(['status' => 1]);
+				return json_encode(['status' => 1, 'vehiculos'=>$vehiculos]);
 			} else {
 				return json_encode(['status' => 0, 'message' => $update]);
 			}

@@ -247,8 +247,8 @@
 
 						var fila3 =
 							`<tr id="row${i}">` +
-							`<td class="text-center">DESCONOCIDO</td>` +
-							`<td class="text-center">DESCONOCIDO</td>` +
+							`<td class="text-center">${vehiculos[i].PLACAS}</td>` +
+							`<td class="text-center">${vehiculos[i].NUMEROSERIE}</td>` +
 							`<td class="text-center">${btnVehiculo}</td>` +
 							`</tr>`;
 
@@ -961,12 +961,31 @@
 					const vehiculo = response.vehiculo;
 					const color = response.color;
 					const tipov = response.tipov;
+					document.querySelector('#tipo_placas_vehiculo').value = vehiculo.TIPOPLACA ? vehiculo.TIPOPLACA : '';
+					document.querySelector('#placas_vehiculo').value = vehiculo.PLACAS ? vehiculo.PLACAS : '';
+					document.querySelector('#estado_vehiculo_ad').value = vehiculo.ESTADOIDPLACA ? vehiculo.ESTADOIDPLACA : '';
+					if (vehiculo.ESTADOEXTRANJEROIDPLACA) {
+						document.getElementById("estado_extranjero_vehiculo_ad").style.display = "block";
+						document.getElementById("estado_vehiculo_ad").style.display = "none";
+						document.querySelector('#estado_extranjero_vehiculo_ad').value = vehiculo.ESTADOEXTRANJEROIDPLACA ? vehiculo.ESTADOEXTRANJEROIDPLACA : '';
+					}
+					document.querySelector('#serie_vehiculo').value = vehiculo.NUMEROSERIE ? vehiculo.NUMEROSERIE : '';
+					document.querySelector('#num_chasis_vehiculo').value = vehiculo.NUMEROCHASIS ? vehiculo.NUMEROCHASIS : '';
+					document.querySelector('#distribuidor_vehiculo_ad').value = vehiculo.VEHICULODISTRIBUIDORID ? vehiculo.VEHICULODISTRIBUIDORID : '';
+					document.querySelector('#marca_ad').value = vehiculo.MARCAID ? vehiculo.VEHICULODISTRIBUIDORID + ' ' + vehiculo.MARCAID : '';
+					document.querySelector('#linea_vehiculo_ad').value = vehiculo.MODELOID ? vehiculo.VEHICULODISTRIBUIDORID + ' ' + vehiculo.MARCAID + ' ' + vehiculo.MODELOID : '';
+					document.querySelector('#version_vehiculo_ad').value = vehiculo.VEHICULOVERSIONID ? vehiculo.VEHICULODISTRIBUIDORID + ' ' + vehiculo.MARCAID + ' ' + vehiculo.MODELOID + ' ' + vehiculo.VEHICULOVERSIONID : '';
+					document.querySelector('#transmision_vehiculo').value = vehiculo.TRANSMISION ? vehiculo.TRANSMISION : '';
+					document.querySelector('#traccion_vehiculo').value = vehiculo.TRACCION ? vehiculo.TRACCION : '';
+					document.querySelector('#seguro_vigente_vehiculo').value = vehiculo.SEGUROVIGENTE ? vehiculo.SEGUROVIGENTE : '';
+					document.querySelector('#servicio_vehiculo_ad').value = vehiculo.VEHICULOSERVICIOID ? vehiculo.VEHICULOSERVICIOID : '';
+
 					if (vehiculo.TIPOID == null) {
 						document.querySelector('#tipo_vehiculo').value = "";
 					} else {
-						document.querySelector('#tipo_vehiculo').value = tipov.VEHICULOTIPODESCR;
+						document.querySelector('#tipo_vehiculo').value = tipov.VEHICULOTIPOID;
 					}
-					document.querySelector('#color_vehiculo').value = color ? color.VEHICULOCOLORDESCR : '';
+					document.querySelector('#color_vehiculo').value = color ? color.VEHICULOCOLORID : '';
 					document.querySelector('#description_vehiculo').value = vehiculo.SENASPARTICULARES;
 
 					if (vehiculo.FOTO) {
