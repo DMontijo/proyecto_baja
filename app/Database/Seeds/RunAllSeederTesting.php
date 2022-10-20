@@ -101,6 +101,15 @@ class RunAllSeederTesting extends Seeder
 		$this->call('ObjetoSubclasificacionSeeder');
 		$this->call('DelitosModalidadSeeder');
 		$this->call('TipoMonedaSeeder');
+		$this->call('VehiculoDistribuidorSeeder');
+		$this->call('VehiculoMarcaSeeder');
+		$this->call('VehiculoModeloSeeder');
+		$this->call('VehiculoPaisSeeder');
+		$this->call('VehiculoServicioSeeder');
+		$this->call('VehiculoSituacionSeeder');
+		$this->call('VehiculoStatusSeeder');
+		$this->call('VehiculoVersionSeeder');
+
 
 	}
 }

@@ -1,0 +1,24 @@
+<?php
+
+namespace App\Database\Seeds;
+
+use CodeIgniter\Database\Seeder;
+
+class VehiculoSituacionSeeder extends Seeder
+{
+    public function run()
+    {
+        $data = [
+            array('VEHICULOSITUACIONID'=>'1','VEHICULOSITUACIONDESCR'=>'PUESTO A DISPOSICION','VEHICULOSITUACIONACCION'=>'D'),
+            array('VEHICULOSITUACIONID'=>'2','VEHICULOSITUACIONDESCR'=>'REPORTADO ROBADO','VEHICULOSITUACIONACCION'=>'R'),
+            array('VEHICULOSITUACIONID'=>'3','VEHICULOSITUACIONDESCR'=>'UTILIZADO PARA COMETER EL DELITO','VEHICULOSITUACIONACCION'=>'O'),
+            array('VEHICULOSITUACIONID'=>'5','VEHICULOSITUACIONDESCR'=>'SOSPECHOSO','VEHICULOSITUACIONACCION'=>'S'),
+            array('VEHICULOSITUACIONID'=>'6','VEHICULOSITUACIONDESCR'=>'A DISPOSICION DE OTROS','VEHICULOSITUACIONACCION'=>'D'),
+            array('VEHICULOSITUACIONID'=>'7','VEHICULOSITUACIONDESCR'=>'EN PROCEDIMIENTO DE MEDIACION','VEHICULOSITUACIONACCION'=>'D'),
+            
+            
+        ];
+        $this->db->table('VEHICULOSITUACION')->insertBatch($data);
+
+    }
+}
