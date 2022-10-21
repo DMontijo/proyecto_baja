@@ -265,7 +265,6 @@
 							'expediente': <?php echo $_GET['expediente'] ?>,
 							'year': <?php echo $_GET['year'] ?>,
 							'placeholder': contenido,
-							'municipio': 2,
 							'titulo': tipoPlantilla,
 							'statusenvio': 1
 						};
@@ -277,7 +276,6 @@
 							'expediente': <?php echo $_GET['expediente'] ?>,
 							'year': <?php echo $_GET['year'] ?>,
 							'placeholder': contenido,
-							'municipio': 2,
 							'titulo': tipoPlantilla,
 							'statusenvio': 0
 						};

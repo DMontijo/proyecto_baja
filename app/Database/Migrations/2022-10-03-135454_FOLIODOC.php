@@ -53,6 +53,15 @@ class FOLIODOC extends Migration
 				'type' => 'INT',
 				'constraint' => '5',
 				'null' => TRUE,
+			], 
+			'OFICINAID' => [
+				'type' => 'INT',
+				'constraint' => '5',
+				'null' => TRUE,
+			],
+			'CLASIFICACIONDOCTOID' => [
+				'type' => 'INT',
+				'null' => TRUE,
 			],
 			'NUMEROIDENTIFICADOR' => [
 				'type' => 'VARCHAR',

@@ -21,6 +21,8 @@ class FolioDocModel extends Model
         'PLACEHOLDER',
         'OFICINAID',
         'AGENTEID',
+		'OFICINAID',
+		'CLASIFICACIONDOCTOID',
         'NUMEROIDENTIFICADOR',
         'RAZONSOCIALFIRMA',
         'RFCFIRMA',

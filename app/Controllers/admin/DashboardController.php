@@ -231,12 +231,12 @@ class DashboardController extends BaseController
 		$this->_folioDocModel = new FolioDocModel();
 		$this->_tipoExpedienteModel = new TipoExpedienteModel();
 		$this->_relacionFolioDocModel = new RelacionFolioDocModel();
-        $this->_vehiculoDistribuidorModel = new VehiculoDistribuidorModel();
+		$this->_vehiculoDistribuidorModel = new VehiculoDistribuidorModel();
 		$this->_vehiculoMarcaModel = new VehiculoMarcaModel();
 		$this->_vehiculoModeloModel = new VehiculoModeloModel();
 		$this->_vehiculoVersionModel = new VehiculoVersionModel();
 		$this->_vehiculoServicioModel = new VehiculoServicioModel();
-        $this->_estadosExtranjeros = new EstadoExtranjeroModel();
+		$this->_estadosExtranjeros = new EstadoExtranjeroModel();
 
 
 		// $this->protocol = 'http://';
@@ -1648,8 +1648,14 @@ class DashboardController extends BaseController
 				unset($data[$clave]);
 			}
 		}
-
 		$data['EXPEDIENTEID'] = $expedienteId;
+		$data['EXTENSION'] = '.pdf';
+		$data['AUTOR'] = $archivos['AGENTEID'];
+		$data['OFICINAIDAUTOR'] = $archivos['OFICINAID'];
+		$data['CLASIFICACIONDOCTOID'] = $archivos['CLASIFICACIONDOCTOID'];
+		$data['ESTADOACCESO'] = 'M';
+		$data['PUBLICADO'] = 'N';
+		$data['EXPORTAR'] = 'NNEW';
 		$data['ARCHIVODESCR'] = $archivos['TIPODOC'];
 		$data['ARCHIVO'] = base64_encode($archivos['PDF']);
 		$data['userDB'] = $conexion->USER;
@@ -2273,7 +2279,7 @@ class DashboardController extends BaseController
 			$modelopost = trim($this->request->getPost('linea_vehiculo_ad'));
 
 			$modelodescr = $this->_vehiculoModeloModel->asObject()->where('VEHICULODISTRIBUIDORID', $distribuidorpost)->where('VEHICULOMARCAID', $marcapost)->where('VEHICULOMODELOID', $modelopost)->first();
-			$marcadescr = $this->_vehiculoMarcaModel->asObject()->where('VEHICULODISTRIBUIDORID', $distribuidorpost)->where('VEHICULOMARCAID',$marcapost)->first();
+			$marcadescr = $this->_vehiculoMarcaModel->asObject()->where('VEHICULODISTRIBUIDORID', $distribuidorpost)->where('VEHICULOMARCAID', $marcapost)->first();
 			$data = array(
 				'folio' => trim($this->request->getPost('folio')),
 				'year' => trim($this->request->getPost('year')),
@@ -2310,7 +2316,7 @@ class DashboardController extends BaseController
 
 				$this->_bitacoraActividad($datosBitacora);
 
-				return json_encode(['status' => 1, 'vehiculos'=>$vehiculos]);
+				return json_encode(['status' => 1, 'vehiculos' => $vehiculos]);
 			} else {
 				return json_encode(['status' => 0, 'message' => $update]);
 			}
@@ -2935,12 +2941,18 @@ class DashboardController extends BaseController
 		$data->plantilla = $this->_plantillasModel->where('TITULO', $titulo)->first();
 		$data->folioDoc = $this->_folioDocModel->get_by_expediente($expediente, $data->expediente->ANO);
 		$data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->where('TIPOEXPEDIENTEID',  $data->expediente->TIPOEXPEDIENTEID)->first();
-		
+
 		$data->municipios = $this->_municipiosModel->asObject()->where('ESTADOID', '2')->where('MUNICIPIOID',  $data->expediente->MUNICIPIOID)->first();
 		$data->victima = $this->_folioPersonaFisicaModel->get_by_personas($data->expediente->FOLIOID, $data->expediente->ANO, $victima);
 		$data->imputado = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->expediente->FOLIOID)->where('ANO', $data->expediente->ANO)->where('PERSONAFISICAID', $imputado)->first();
-		$data->victimaDom = $this->_folioPersonaFisicaDomicilioModel->asObject()->where('FOLIOID', $data->expediente->FOLIOID)->where('ANO', $data->expediente->ANO)->where('PERSONAFISICAID', $imputado)->first();
+		$data->victimaDom = $this->_folioPersonaFisicaDomicilioModel->asObject()->where('FOLIOID', $data->expediente->FOLIOID)->where('ANO', $data->expediente->ANO)->where('PERSONAFISICAID', $victima)->first();
 		$data->estadoVictima = $this->_estadosModel->asObject()->where('ESTADOID',  $data->victimaDom->ESTADOID)->first();
+		$data->tipoIdentificacionVictima = $this->_tipoIdentificacionModel->asObject()->where('PERSONATIPOIDENTIFICACIONID',   $data->victima[0]['TIPOIDENTIFICACIONID'])->first();
+		$data->ocupacionVictima = $this->_ocupacionModel->asObject()->where('PERSONAOCUPACIONID',   $data->victima[0]['OCUPACIONID'])->first();
+		$data->nacionalidadVictima = $this->_nacionalidadModel->asObject()->where('PERSONANACIONALIDADID',   $data->victima[0]['NACIONALIDADID'])->first();
+		$data->edoCivilVictima = $this->_estadoCivilModel->asObject()->where('PERSONAESTADOCIVILID',   $data->victima[0]['ESTADOCIVILID'])->first();
+
+
 		$relacionfisfis = $this->_relacionIDOModel->asObject()->where('FOLIOID', $data->expediente->FOLIOID)->where('ANO', $data->expediente->ANO)->where('PERSONAFISICAIDVICTIMA', $victima)->where('PERSONAFISICAIDIMPUTADO', $imputado)->first();
 		if ($relacionfisfis != null) {
 			$data->relacion_delitodescr = $this->_delitoModalidadModel->asObject()->where('DELITOMODALIDADID', $relacionfisfis->DELITOMODALIDADID)->first();
@@ -2964,22 +2976,27 @@ class DashboardController extends BaseController
 		// else if ($relacionfisfis == null) {
 		//     // var_dump("es null");
 		// }
-		$arrayExpediente =str_split($data->expediente->EXPEDIENTEID);
-		$expedienteConsecutivo = $arrayExpediente[10].$arrayExpediente[11].$arrayExpediente[12].$arrayExpediente[13].$arrayExpediente[14];
-		// $expedienteConsecutivo= (int)'00534';
-		$expedienteConsecutivo =str_split($expedienteConsecutivo);
-		
+		$arrayExpediente = str_split($data->expediente->EXPEDIENTEID);
+		$expedienteConsecutivo = $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
+	
+		// $expedienteConsecutivo= (int)'00005';
+
+		$expedienteConsecutivo = str_split($expedienteConsecutivo);
+
 		unset($arrayExpediente[0]);
-		for ($i=0; $i < count($expedienteConsecutivo); $i++) { 
-			if ($expedienteConsecutivo[$i]==0 && $expedienteConsecutivo[$i++]!=0) {
-				unset($expedienteConsecutivo[$i]);
+		foreach ($expedienteConsecutivo as $key => $value) {
+			if ($value == 0) {
+				unset($expedienteConsecutivo[$key]);
+			}else{
+				break;
 			}
 		}
 		
-		$expedienteMunicipioEstado = $arrayExpediente[1].$arrayExpediente[2].$arrayExpediente[4].$arrayExpediente[5];
-		$expedienteYear = $arrayExpediente[6].$arrayExpediente[7].$arrayExpediente[8].$arrayExpediente[9];
-		$expedienteConsecutivo = (isset($arrayExpediente[10])?$arrayExpediente[10]:'').(isset($arrayExpediente[11])?$arrayExpediente[11]:'').(isset($arrayExpediente[12])?$arrayExpediente[12]:'').(isset($arrayExpediente[13])?$arrayExpediente[13]:'').(isset($arrayExpediente[14])?$arrayExpediente[14]:'');
-		$expedienteid = $expedienteMunicipioEstado . '-'.$expedienteYear .'-'. $expedienteConsecutivo;
+		$expedienteMunicipioEstado = $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5];
+		$expedienteYear = $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9];
+		// $expedienteConsecutivo = (isset($arrayExpediente[10]) ? $arrayExpediente[10] : '') . (isset($arrayExpediente[11]) ? $arrayExpediente[11] : '') . (isset($arrayExpediente[12]) ? $arrayExpediente[12] : '') . (isset($arrayExpediente[13]) ? $arrayExpediente[13] : '') . (isset($arrayExpediente[14]) ? $arrayExpediente[14] : '');
+		$expedienteid = $expedienteMunicipioEstado . '-' . $expedienteYear . '-' . implode($expedienteConsecutivo);
+
 		// var_dump("EXPEDIENTE ORIGINAL: " . $data->expediente->EXPEDIENTEID);
 		// var_dump("EXPEDIENTE MODIFICADO: ".$expedienteid);
 		$data->plantilla = str_replace('[DOCUMENTO_FECHA]', date('d') . ' de ' . $meses[date('n') - 1] . " del " . date('Y'), $data->plantilla);
@@ -2993,7 +3010,7 @@ class DashboardController extends BaseController
 		$data->plantilla = str_replace('[VICTIMAS_NOMBRE]', $data->victima[0]['NOMBRE'] . ' ' . ($data->victima[0]['PRIMERAPELLIDO'] ? $data->victima[0]['PRIMERAPELLIDO'] : '') . ' ' . ($data->victima[0]['SEGUNDOAPELLIDO'] ? $data->victima[0]['SEGUNDOAPELLIDO'] : ''), $data->plantilla);
 		$data->plantilla = str_replace('[VICTIMA_EDAD]', $data->victima[0]['EDADCANTIDAD'] ? $data->victima[0]['EDADCANTIDAD'] : 'N/A', $data->plantilla);
 		$data->plantilla = str_replace('[VICTIMA_TELEFONO]', $data->victima[0]['TELEFONO'] ? $data->victima[0]['TELEFONO'] : 'N/A', $data->plantilla);
-        $data->plantilla = str_replace('[</span>VICTIMA_TELEFONO]', $data->victima[0]['TELEFONO'] ? $data->victima[0]['TELEFONO'] : 'N/A', $data->plantilla);
+		$data->plantilla = str_replace('[</span>VICTIMA_TELEFONO]', $data->victima[0]['TELEFONO'] ? $data->victima[0]['TELEFONO'] : 'N/A', $data->plantilla);
 
 		$data->plantilla = str_replace('[PERSONA]', $data->imputado->NOMBRE . ' ' . ($data->imputado->PRIMERAPELLIDO ? $data->imputado->PRIMERAPELLIDO : '') . ' ' . ($data->imputado->SEGUNDOAPELLIDO ? $data->imputado->SEGUNDOAPELLIDO : ''), $data->plantilla);
 		$data->plantilla = str_replace('[IMPUTADO_NOMBRE]', $data->imputado->NOMBRE . ' ' . ($data->imputado->PRIMERAPELLIDO ? $data->imputado->PRIMERAPELLIDO : '') . ' ' . ($data->imputado->SEGUNDOAPELLIDO ? $data->imputado->SEGUNDOAPELLIDO : ''), $data->plantilla);
@@ -3008,10 +3025,14 @@ class DashboardController extends BaseController
 		$data->plantilla = str_replace('[DETALLE_INTERVENCIONES]', $data->expediente->HECHONARRACION, $data->plantilla);
 		$data->plantilla = str_replace('[HECHO_NARRACION]', $data->expediente->HECHONARRACION, $data->plantilla);
 		$data->plantilla = str_replace('[TIPO_EXPEDIENTE]',  $data->tipoExpediente->TIPOEXPEDIENTEDESCR, $data->plantilla);
-		$data->plantilla = str_replace('[ZONA_SEJAP]',  'CDT', $data->plantilla);
-
+		$data->plantilla = str_replace('[ZONA_SEJAP]',  'Centro de Denuncia Tecnológico', $data->plantilla);
 		$data->plantilla = str_replace('[VICTIMA_DOMICILIO]', 'en la calle: ' . $data->victimaDom->CALLE . ' en la colonia: ' . $data->victimaDom->COLONIADESCR, $data->plantilla);
-		// $data->plantilla = str_replace('tijuana',$data->estadoVictima->ESTADODESCR, $data->plantilla);
+		$data->plantilla = str_replace('[VICTIMA_TIPO_IDENTIFICACION]', $data->tipoIdentificacionVictima->PERSONATIPOIDENTIFICACIONDESCR , $data->plantilla);
+		$data->plantilla = str_replace('[VICTIMA_NUMERO_IDENTIFICACION]', $data->victima[0]['NUMEROIDENTIFICACION'], $data->plantilla);
+		$data->plantilla = str_replace('[VICTIMA_TELEFONO_CELULAR]', $data->victima[0]['TELEFONO'], $data->plantilla);
+		$data->plantilla = str_replace('[VICTIMA_OCUPACION]', $data->ocupacionVictima->PERSONAOCUPACIONDESCR, $data->plantilla);
+		$data->plantilla = str_replace('[VICTIMA_NACIONALIDAD]',$data->nacionalidadVictima->PERSONANACIONALIDADDESCR , $data->plantilla);
+		$data->plantilla = str_replace('[VICTIMA_ESTADO_CIVIL]',$data->edoCivilVictima->PERSONAESTADOCIVILDESCR , $data->plantilla);
 
 
 
@@ -3026,6 +3047,11 @@ class DashboardController extends BaseController
 	{
 		$expediente = trim($this->request->getPost('expediente'));
 		$folio = trim($this->request->getPost('folio'));
+		$plantilla = $this->_plantillasModel->where('TITULO', $this->request->getPost('titulo'))->first();
+		$folioDoc = $this->_folioDocModel->asObject()->where('FOLIOID',  $folio)->where('ANO', $this->request->getPost('year'))->first();
+		$municipio = $folioDoc->MUNICIPIOID;
+		$agente= $folioDoc->AGENTEID;
+		$oficina = $folioDoc->OFICINAID;
 
 		$year = trim($this->request->getPost('year'));
 		$dataFolioDoc = array(
@@ -3034,11 +3060,15 @@ class DashboardController extends BaseController
 			'ANO' => $this->request->getPost('year'),
 			'PLACEHOLDER' => $this->request->getPost('placeholder'),
 			'STATUS' => 'ABIERTO',
-			'MUNICIPIOID' => $this->request->getPost('municipio'),
+			'MUNICIPIOID' => $this->request->getPost('municipio')?$this->request->getPost('municipio'): $municipio,
 			'ESTADOID' => 2,
 			'TIPODOC' => $this->request->getPost('titulo'),
 			'STATUSENVIO' => $this->request->getPost('statusenvio'),
 			'ENVIADO' => 'N',
+			'CLASIFICACIONDOCTOID' => $plantilla['CLASIFICACIONDOCTOID'],
+			'AGENTEID' => $this->request->getPost('empleado')?$this->request->getPost('empleado'):$agente,
+			'OFICINAID' => $this->request->getPost('oficina')? $this->request->getPost('oficina'):$oficina,
+
 
 		);
 		$foliodoc = $this->_folioDoc($dataFolioDoc, $expediente, $year);

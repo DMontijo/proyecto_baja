@@ -14,6 +14,9 @@ use App\Models\EstadosModel;
 use App\Models\ConstanciaExtravioModel;
 use App\Models\DenunciantesModel;
 use App\Models\FolioDocModel;
+use App\Models\FolioModel;
+use App\Models\FolioPersonaFisicaModel;
+use App\Models\TipoExpedienteModel;
 use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelLow;
@@ -34,6 +37,11 @@ class FirmaController extends BaseController
 		$this->_constanciaExtravioModel = new ConstanciaExtravioModel();
 		$this->_bitacoraActividadModel = new BitacoraActividadModel();
 		$this->_folioDocModel = new FolioDocModel();
+		$this->_folioModel = new FolioModel();
+		$this->_folioPersonaFisicaModel = new FolioPersonaFisicaModel();
+		$this->_tipoExpedienteModel = new TipoExpedienteModel();
+
+
 	}
 
 	public function firmar_constancia_extravio()
@@ -366,7 +374,7 @@ class FirmaController extends BaseController
 							$xmldocumentos = $this->_createXMLSignature($signature->signed_chain, $signature->signature, $expediente, $year);
 
 							$datosInsert = [
-								'AGENTEID' => $user_id,
+								// 'AGENTEID' => $user_id,
 								'NUMEROIDENTIFICADOR' => $documento[$i]->FOLIODOCID . '/' . $documento[$i]->ANO,
 								'RAZONSOCIALFIRMA' => $razon_social,
 								'RFCFIRMA' => $rfc,
@@ -829,11 +837,19 @@ class FirmaController extends BaseController
 		$expediente = $this->request->getPost('expediente_modal_correo');
 		$year = $this->request->getPost('year_modal_correo');
 		$documento = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente)->where('ANO', $year)->where('STATUS', 'FIRMADO')->where('STATUSENVIO', 1)->where('ENVIADO', 'N')->findAll();
+		$folioM = $this->_folioModel->asObject()->where('ANO', $year)->where('EXPEDIENTEID', $expediente)->first();
+		$imputado = $this->_folioPersonaFisicaModel->asObject()->where('ANO', $year)->where('FOLIOID', $folioM->FOLIOID)->where('CALIDADJURIDICAID',2)->first();
 
+		$tipoExpediente = $this->_tipoExpedienteModel->asObject()->where('TIPOEXPEDIENTEID',  $folioM->TIPOEXPEDIENTEID)->first();
+
+		$agente = $documento[0]->RAZONSOCIALFIRMA;
+		$folio= $folioM->FOLIOID;
+		$delito =  $folioM->HECHODELITO;
+		$imputado = $imputado->NOMBRE . ' ' . $imputado->PRIMERAPELLIDO .' '.  $imputado->SEGUNDOAPELLIDO;		
 		$email = \Config\Services::email();
 		$email->setTo($to);
 		$email->setSubject('Documentos firmados');
-		$body = view('email_template/documentos_firmados_email_template.php');
+		$body = view('email_template/documentos_firmados_email_template.php',['agente' => $agente, 'expediente'=>$expediente, 'folio'=>$folio, 'tipoexpediente'=> $tipoExpediente->TIPOEXPEDIENTEDESCR,'delito'=>$delito,'imputado'=>$imputado]);
 		$email->setMessage($body);
 
 		for ($i = 0; $i < count($documento); $i++) {

@@ -4294,6 +4294,8 @@
 							'year': document.querySelector('#year_select').value,
 							'placeholder': contenido,
 							'municipio': document.querySelector('#municipio_empleado').value,
+							'oficina': document.querySelector('#oficina_empleado').value,
+							'empleado': document.querySelector('#empleado').value,
 							'titulo': tipoPlantilla,
 							'statusenvio': 1
 						};
@@ -4306,6 +4308,8 @@
 							'year': document.querySelector('#year_select').value,
 							'placeholder': contenido,
 							'municipio': document.querySelector('#municipio_empleado').value,
+							'oficina': document.querySelector('#oficina_empleado').value,
+							'empleado': document.querySelector('#empleado').value,
 							'titulo': tipoPlantilla,
 							'statusenvio': 0
 						};
