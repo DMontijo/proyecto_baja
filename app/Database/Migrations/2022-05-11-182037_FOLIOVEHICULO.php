@@ -51,6 +51,11 @@ class FOLIOVEHICULO extends Migration
 				'constraint' => '50',
 				'null' => TRUE,
 			],
+			'ANOVEHICULO' => [
+				'type' => 'VARCHAR',
+				'constraint' => '50',
+				'null' => TRUE,
+			],
 			'PLACAS' => [
 				'type' => 'VARCHAR',
 				'constraint' => '10',

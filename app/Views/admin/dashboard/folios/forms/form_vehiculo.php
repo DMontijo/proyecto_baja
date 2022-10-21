@@ -58,6 +58,15 @@
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="color_tapiceria_vehiculo" class="form-label font-weight-bold">Color tapiceria:</label>
+		<select class="form-control" id="color_tapiceria_vehiculo" name="color_tapiceria_vehiculo">
+			<option selected disabled value="">Selecciona el color de tapiceria</option>
+			<?php foreach ($body_data->colorVehiculo as $index => $color_vehiculo) { ?>
+				<option value="<?= $color_vehiculo->VEHICULOCOLORID ?>"> <?= $color_vehiculo->VEHICULOCOLORDESCR ?> </option>
+			<?php } ?>
+		</select>
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="num_chasis_vehiculo" class="form-label font-weight-bold">No. Chasis:</label>
 		<input type="text" class="form-control" id="num_chasis_vehiculo" name="num_chasis_vehiculo">
 	</div>
@@ -143,7 +152,7 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="modelo_vehiculo" class="form-label font-weight-bold">Año:</label>
-		<select class="form-control" name="modelo_vehiculo" id="modelo_vehiculo"></select>
+		<input class="form-control" name="modelo_vehiculo" id="modelo_vehiculo">
 
 	</div>
 	<div class="col-12 col-sm-12 col-md-12 col-lg-8 mb-3">

@@ -2302,6 +2302,8 @@ class DashboardController extends BaseController
 				'TRANSMISION' => $this->request->getPost('transmision_vehiculo'),
 				'TRACCION' => $this->request->getPost('traccion_vehiculo'),
 				'NUMEROCHASIS' => $this->request->getPost('num_chasis_vehiculo'),
+				'SEGUNDOCOLORID' => $this->request->getPost('color_tapiceria_vehiculo'),
+				'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo'),
 			);
 
 			$update = $this->_folioVehiculoModel->set($data)->where('FOLIOID', $folio)->where('ANO', $year)->update();

@@ -556,6 +556,8 @@ class DashboardController extends BaseController
                     'PRIMERCOLORID' => $this->request->getPost('color_vehiculo'),
                     'SENASPARTICULARES' => $this->request->getPost('description_vehiculo'),
                     'NUMEROCHASIS' => $this->request->getPost('num_chasis_vehiculo'),
+                    'SEGUNDOCOLORID' => $this->request->getPost('color_tapiceria_vehiculo'),
+                    'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo'),
                     'FOTO' => $fotoV,
                     'DOCUMENTO' => $docV,
                 );

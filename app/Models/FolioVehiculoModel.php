@@ -42,6 +42,7 @@ class FolioVehiculoModel extends Model
 		'VEHICULOSTATUSID',
 		'PROVIENEPADRON',
 		'SEGUROVIGENTE',
+		'ANOVEHICULO'
 	];
 
 	public function get_by_folio($folio, $year)

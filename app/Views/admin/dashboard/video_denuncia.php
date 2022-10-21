@@ -1612,6 +1612,9 @@
 					document.querySelector('#tipo_placas_vehiculo').value = vehiculo.TIPOPLACA ? vehiculo.TIPOPLACA : '';
 					document.querySelector('#placas_vehiculo').value = vehiculo.PLACAS ? vehiculo.PLACAS : '';
 					document.querySelector('#estado_vehiculo_ad').value = vehiculo.ESTADOIDPLACA ? vehiculo.ESTADOIDPLACA : '';
+					document.querySelector('#color_tapiceria_vehiculo').value = vehiculo.SEGUNDOCOLORID ? vehiculo.SEGUNDOCOLORID : '';
+					document.querySelector('#modelo_vehiculo').value = vehiculo.ANOVEHICULO ? vehiculo.ANOVEHICULO : '';
+
 					if (vehiculo.ESTADOEXTRANJEROIDPLACA) {
 						document.getElementById("estado_extranjero_vehiculo_ad").style.display = "block";
 						document.getElementById("estado_vehiculo_ad").style.display = "none";
@@ -2169,6 +2172,11 @@
 			// 	obtenerPlantillas(tipoPlantilla);
 			// }, false);
 
+			let startYear = 1800;
+			let endYear = new Date().getFullYear();
+			for (let i = endYear; i > startYear; i--) {
+				$('#modelo_vehiculo').append($('<option />').val(i).html(i));
+			}
 
 
 			selectPersonaFisica1.addEventListener("change", function() {
@@ -2219,12 +2227,12 @@
 				}
 			});
 			let select_estado_extr = document.querySelector('#estado_extranjero_vehiculo_ad');
-				var option = document.createElement("option");
-				option.text = 'Nacional';
-				option.value = '0';
-				option.style = "font-weight:bold"
-				select_estado_extr.add(option);
-				document.querySelector('#estado_extranjero_vehiculo_ad').addEventListener('change', (e) => {
+			var option = document.createElement("option");
+			option.text = 'Nacional';
+			option.value = '0';
+			option.style = "font-weight:bold"
+			select_estado_extr.add(option);
+			document.querySelector('#estado_extranjero_vehiculo_ad').addEventListener('change', (e) => {
 				console.log(select_estado_extr.value);
 				if (select_estado_extr.value == 0) {
 					let select_estado = document.querySelector('#estado_vehiculo_ad');
@@ -3772,6 +3780,8 @@
 					'seguro_vigente_vehiculo': document.querySelector('#seguro_vigente_vehiculo').value,
 					'servicio_vehiculo_ad': document.querySelector('#servicio_vehiculo_ad').value,
 					'description_vehiculo': document.querySelector('#description_vehiculo').value,
+					'modelo_vehiculo': document.querySelector('#modelo_vehiculo').value,
+					'color_tapiceria_vehiculo': document.querySelector('#color_tapiceria_vehiculo').value,
 
 
 				};

@@ -964,6 +964,8 @@
 					document.querySelector('#tipo_placas_vehiculo').value = vehiculo.TIPOPLACA ? vehiculo.TIPOPLACA : '';
 					document.querySelector('#placas_vehiculo').value = vehiculo.PLACAS ? vehiculo.PLACAS : '';
 					document.querySelector('#estado_vehiculo_ad').value = vehiculo.ESTADOIDPLACA ? vehiculo.ESTADOIDPLACA : '';
+					document.querySelector('#color_tapiceria_vehiculo').value = vehiculo.SEGUNDOCOLORID ? vehiculo.SEGUNDOCOLORID : '';
+					document.querySelector('#modelo_vehiculo').value = vehiculo.ANOVEHICULO ? vehiculo.ANOVEHICULO : '';
 					if (vehiculo.ESTADOEXTRANJEROIDPLACA) {
 						document.getElementById("estado_extranjero_vehiculo_ad").style.display = "block";
 						document.getElementById("estado_vehiculo_ad").style.display = "none";
