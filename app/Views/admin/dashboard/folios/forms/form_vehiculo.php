@@ -83,7 +83,7 @@
 		<select class="form-control" id="traccion_vehiculo" name="traccion_vehiculo">
 		<option selected  value="D">Doble</option>
 		<option selected  value="S">Sencilla</option>
-		<option selected  value="U">Dual</option>
+		<option selected  value="O">Dual</option>
 		</select>
 	</div>
 	<div class="col-12 mb-3">

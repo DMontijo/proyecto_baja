@@ -185,7 +185,7 @@
 			<label class="form-check-label" for="flexRadioDefault2">Sencilla</label>
 		</div>
 		<div class="form-check">
-			<input class="form-check-input" type="radio" name="traccion_vehiculo" id="DUAL" value="U">
+			<input class="form-check-input" type="radio" name="traccion_vehiculo" id="DUAL" value="O">
 			<label class="form-check-label" for="flexRadioDefault2">Dual</label>
 		</div>
 	</div>
