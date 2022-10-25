@@ -530,34 +530,11 @@ class DashboardController extends BaseController
                         $docV = null;
                     }
                 }
-                $distribuidorpost = trim($this->request->getPost('distribuidor_vehiculo'));
-                $marcapost = trim($this->request->getPost('marca'));
-                $modelopost = trim($this->request->getPost('linea_vehiculo'));
-
-                $modelodescr = $this->_vehiculoModeloModel->asObject()->where('VEHICULODISTRIBUIDORID', $distribuidorpost)->where('VEHICULOMARCAID', $marcapost)->where('VEHICULOMODELOID', $modelopost)->first();
-                $marcadescr = $this->_vehiculoMarcaModel->asObject()->where('VEHICULODISTRIBUIDORID', $distribuidorpost)->where('VEHICULOMARCAID',$marcapost)->first();
+              
                 $dataVehiculo = array(
-                    'TIPOPLACA' => $this->request->getPost('tipo_placas_vehiculo'),
-                    'PLACAS' => $this->request->getPost('placas_vehiculo'),
-                    'ESTADOIDPLACA' => $this->request->getPost('estado_vehiculo'),
-                    'ESTADOEXTRANJEROIDPLACA' => $this->request->getPost('estado_extranjero_vehiculo'),
-                    'NUMEROSERIE' => $this->request->getPost('serie_vehiculo'),
-                    'VEHICULODISTRIBUIDORID' => $this->request->getPost('distribuidor_vehiculo'),
-                    'MARCAID' => $this->request->getPost('marca'),
-                    'MARCADESCR' => $marcadescr->VEHICULOMARCADESCR,
-                    'MODELODESCR' => $modelodescr->VEHICULOMODELODESCR,
-                    'MODELOID' => $this->request->getPost('linea_vehiculo'),
-                    'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo'),
-                    'VEHICULOSERVICIOID' => $this->request->getPost('servicio_vehiculo'),
-                    'SEGUROVIGENTE' => $this->request->getPost('seguro_vigente_vehiculo'),
-                    'TRANSMISION' => $this->request->getPost('transmision_vehiculo'),
-                    'TRACCION' => $this->request->getPost('traccion_vehiculo'),
                     'TIPOID' => $this->request->getPost('tipo_vehiculo'),
                     'PRIMERCOLORID' => $this->request->getPost('color_vehiculo'),
                     'SENASPARTICULARES' => $this->request->getPost('description_vehiculo'),
-                    'NUMEROCHASIS' => $this->request->getPost('num_chasis_vehiculo'),
-                    'SEGUNDOCOLORID' => $this->request->getPost('color_tapiceria_vehiculo'),
-                    'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo'),
                     'FOTO' => $fotoV,
                     'DOCUMENTO' => $docV,
                 );

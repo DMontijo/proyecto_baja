@@ -1664,14 +1664,14 @@ class DashboardController extends BaseController
 		}
 		$data['EXPEDIENTEID'] = $expedienteId;
 		$data['EXTENSION'] = '.pdf';
-		$data['AUTOR'] = $archivos['AGENTEID'];
-		$data['OFICINAIDAUTOR'] = $archivos['OFICINAID'];
-		$data['CLASIFICACIONDOCTOID'] = $archivos['CLASIFICACIONDOCTOID'];
+		$data['AUTOR'] = isset($archivos['AGENTEID']) ? $archivos['AGENTEID'] : session('ID');
+		$data['OFICINAIDAUTOR'] = isset($archivos['OFICINAID']) ? $archivos['OFICINAID'] : '394';
+		$data['CLASIFICACIONDOCTOID'] = isset($archivos['CLASIFICACIONDOCTOID']) ? $archivos['CLASIFICACIONDOCTOID'] : 1;
 		$data['ESTADOACCESO'] = 'M';
 		$data['PUBLICADO'] = 'N';
 		$data['EXPORTAR'] = 'NNEW';
-		$data['ARCHIVODESCR'] = $archivos['TIPODOC'];
-		$data['ARCHIVO'] = base64_encode($archivos['PDF']);
+		$data['ARCHIVODESCR'] = isset($archivos['TIPODOC']) ? $archivos['TIPODOC'] : 'ROBO DE VEHÍCULO';
+		$data['ARCHIVO'] = isset($archivos['PDF']) ? base64_encode($archivos['PDF']) : $archivos['DOCUMENTO'];
 		$data['userDB'] = $conexion->USER;
 		$data['pwdDB'] = $conexion->PASSWORD;
 		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
@@ -1814,6 +1814,7 @@ class DashboardController extends BaseController
 		isset($vehiculos['FOTO'])
 			? $data['FOTO'] = base64_encode($vehiculos['FOTO'])
 			: null;
+		$_archivosExternos = $this->_createArchivosExternos($expedienteId, $vehiculos);
 
 		$data['userDB'] = $conexion->USER;
 		$data['pwdDB'] = $conexion->PASSWORD;
