@@ -1049,6 +1049,7 @@ class DashboardController extends BaseController
 						$folioRow['FECHASALIDA'] = date('Y-m-d H:i:s');
 
 						$update = $this->_folioModel->set($folioRow)->where('FOLIOID', $folio)->where('ANO', $year)->update();
+						// $update = TRUE;
 						$personasRelacionMysqlOracle = array();
 						try {
 
@@ -1111,11 +1112,10 @@ class DashboardController extends BaseController
 							// Expediente vehiculo
 							if (count($vehiculos) > 0) {
 								foreach ($vehiculos as $vehiculo) {
-
 									try {
 										$_expedienteVehiculo = $this->_createExpVehiculo($expedienteCreado->EXPEDIENTEID, $vehiculo, $municipio);
-										var_dump($_expedienteVehiculo->status);
-										exit;
+										// var_dump($_expedienteVehiculo);
+										// exit;
 									} catch (\Error $e) {
 									}
 								}
@@ -1790,7 +1790,6 @@ class DashboardController extends BaseController
 			'FECHAREGISTRO',
 			'PROVIENEPADRON',
 			'SEGUROVIGENTE',
-
 		];
 
 		$endpoint = $this->endpoint . $function;
@@ -1820,9 +1819,10 @@ class DashboardController extends BaseController
 		$data['pwdDB'] = $conexion->PASSWORD;
 		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
 		$data['schema'] = $conexion->SCHEMA;
-		// return $data;
+
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
+
 	private function _curlPost($endpoint, $data)
 	{
 		$ch = curl_init();
@@ -1884,10 +1884,6 @@ class DashboardController extends BaseController
             }";
 		}
 		curl_close($ch);
-		var_dump($endpoint);
-		var_dump($data);
-		var_dump($result);
-
 		return json_decode($result);
 	}
 
@@ -2331,12 +2327,6 @@ class DashboardController extends BaseController
 			$updatePersonaFisica = $this->_folioPersonaFisicaModel->set($dataPersonaFisica)->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $id)->update();
 
 			$updateRelacionParentesco = $this->_parentescoPersonaFisicaModel->set($dataRelacionParentesco)->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID2', $id)->update();
-
-			//  var_dump($personaFisica);
-			// exit;
-
-			// // $this->_parentescoPersonaFisica($dataRelacionParentesco, $folio, $desaparecido, $year);
-
 
 			if ($updateMediaFiliacion && $updatePersonaFisica && $updateRelacionParentesco) {
 				$datosBitacora = [
