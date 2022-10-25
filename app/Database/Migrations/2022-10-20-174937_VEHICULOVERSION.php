@@ -24,7 +24,6 @@ class VEHICULOVERSION extends Migration
             'VEHICULOVERSIONID' => [ 
 				'type' => 'INT',
 				'unsigned' => TRUE,
-				'null' => TRUE,
 			],
            
             'VEHICULOVERSIONDESCR' => [
