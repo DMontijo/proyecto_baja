@@ -6,9 +6,9 @@ use CodeIgniter\Database\Migration;
 
 class VEHICULOMODELO extends Migration
 {
-    public function up()
-    {
-        $this->forge->addField([
+	public function up()
+	{
+		$this->forge->addField([
 			'VEHICULODISTRIBUIDORID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
@@ -21,23 +21,20 @@ class VEHICULOMODELO extends Migration
 				'type' => 'INT',
 				'constraint' => '4',
 			],
-            'VEHICULOMODELODESCR' => [
+			'VEHICULOMODELODESCR' => [
 				'type' => 'VARCHAR',
 				'constraint' => '255',
 				'null' => TRUE,
 			],
-          
-
-        ]);
+		]);
 		$this->forge->addKey('VEHICULODISTRIBUIDORID', TRUE);
-        $this->forge->addKey('VEHICULOMARCAID', TRUE);
+		$this->forge->addKey('VEHICULOMARCAID', TRUE);
 		$this->forge->addKey('VEHICULOMODELOID', TRUE);
 		$this->forge->createTable('VEHICULOMODELO');
-    }
+	}
 
-    public function down()
-    {
-        $this->forge->dropTable('VEHICULOMODELO');
-
-    }
+	public function down()
+	{
+		$this->forge->dropTable('VEHICULOMODELO');
+	}
 }
