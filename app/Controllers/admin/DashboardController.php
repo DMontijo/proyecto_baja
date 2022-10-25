@@ -1671,7 +1671,7 @@ class DashboardController extends BaseController
 		$data['PUBLICADO'] = 'N';
 		$data['EXPORTAR'] = 'NNEW';
 		$data['ARCHIVODESCR'] = isset($archivos['TIPODOC']) ? $archivos['TIPODOC'] : 'ROBO DE VEHÍCULO';
-		$data['ARCHIVO'] = isset($archivos['PDF']) ? base64_encode($archivos['PDF']) : $archivos['DOCUMENTO'];
+		$data['ARCHIVO'] = isset($archivos['PDF']) ? base64_encode($archivos['PDF']) : isset($archivos['DOCUMENTO']);
 		$data['userDB'] = $conexion->USER;
 		$data['pwdDB'] = $conexion->PASSWORD;
 		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
