@@ -1647,7 +1647,9 @@ class DashboardController extends BaseController
 			'EXPORTAR',
 		];
 		$endpoint = $this->endpoint . $function;
-		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $archivos['MUNICIPIOID'])->where('TYPE', ENVIRONMENT)->first();
+		$folioRow = $this->_folioModel->where('ANO', $archivos['ANO'])->where('FOLIOID', $archivos['FOLIOID'])->first();
+
+		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) isset($archivos['MUNICIPIOID']) ? $archivos['MUNICIPIOID'] : $folioRow['MUNICIPIOID'])->where('TYPE', ENVIRONMENT)->first();
 		$data = $archivos;
 
 
