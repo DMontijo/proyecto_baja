@@ -1049,7 +1049,6 @@ class DashboardController extends BaseController
 						$folioRow['FECHASALIDA'] = date('Y-m-d H:i:s');
 
 						$update = $this->_folioModel->set($folioRow)->where('FOLIOID', $folio)->where('ANO', $year)->update();
-						// $update = TRUE;
 						$personasRelacionMysqlOracle = array();
 						try {
 
@@ -1112,10 +1111,11 @@ class DashboardController extends BaseController
 							// Expediente vehiculo
 							if (count($vehiculos) > 0) {
 								foreach ($vehiculos as $vehiculo) {
+
 									try {
 										$_expedienteVehiculo = $this->_createExpVehiculo($expedienteCreado->EXPEDIENTEID, $vehiculo, $municipio);
-										// var_dump($_expedienteVehiculo);
-										// exit;
+										var_dump($_expedienteVehiculo->status);
+										exit;
 									} catch (\Error $e) {
 									}
 								}
@@ -1629,60 +1629,55 @@ class DashboardController extends BaseController
 	}
 	private function _createArchivosExternos($expedienteId, $archivos)
 	{
-		if (isset($archivos['PDF']) || isset($archivos['DOCUMENTO'])) {
-
-			$function = '/archivoExt.php?process=crear';
-			$array = [
-				'EXPEDIENTEID',
-				'EXPEDIENTEARCHIVOID',
-				'ARCHIVODESCR',
-				'ARCHIVO',
-				'EXTENSION',
-				'FECHAACTUALIZACION',
-				'AUTOR',
-				'OFICINAIDAUTOR',
-				'CLASIFICACIONDOCTOID',
-				'ESTADOACCESO',
-				'PUBLICADO',
-				'RUTAALMACENAMIENTOID',
-				'STATUSALMACENID',
-				'EXPORTAR',
-			];
-			$endpoint = $this->endpoint . $function;
-			$folioRow = $this->_folioModel->where('ANO', $archivos['ANO'])->where('FOLIOID', $archivos['FOLIOID'])->first();
-
-			$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) isset($archivos['MUNICIPIOID']) ? $archivos['MUNICIPIOID'] : $folioRow['MUNICIPIOID'])->where('TYPE', ENVIRONMENT)->first();
-			$data = $archivos;
+		$function = '/archivoExt.php?process=crear';
+		$array = [
+			'EXPEDIENTEID',
+			'EXPEDIENTEARCHIVOID',
+			'ARCHIVODESCR',
+			'ARCHIVO',
+			'EXTENSION',
+			'FECHAACTUALIZACION',
+			'AUTOR',
+			'OFICINAIDAUTOR',
+			'CLASIFICACIONDOCTOID',
+			'ESTADOACCESO',
+			'PUBLICADO',
+			'RUTAALMACENAMIENTOID',
+			'STATUSALMACENID',
+			'EXPORTAR',
+		];
+		$endpoint = $this->endpoint . $function;
+		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $archivos['MUNICIPIOID'])->where('TYPE', ENVIRONMENT)->first();
+		$data = $archivos;
 
 
-			foreach ($data as $clave => $valor) {
-				if (empty($valor)) {
-					unset($data[$clave]);
-				}
+		foreach ($data as $clave => $valor) {
+			if (empty($valor)) {
+				unset($data[$clave]);
 			}
-
-			foreach ($data as $clave => $valor) {
-				if (!in_array($clave, $array)) {
-					unset($data[$clave]);
-				}
-			}
-			$data['EXPEDIENTEID'] = $expedienteId;
-			$data['EXTENSION'] = '.pdf';
-			$data['AUTOR'] = isset($archivos['AGENTEID']) ? $archivos['AGENTEID'] : session('ID');
-			$data['OFICINAIDAUTOR'] = isset($archivos['OFICINAID']) ? $archivos['OFICINAID'] : '394';
-			$data['CLASIFICACIONDOCTOID'] = isset($archivos['CLASIFICACIONDOCTOID']) ? $archivos['CLASIFICACIONDOCTOID'] : 1;
-			$data['ESTADOACCESO'] = 'M';
-			$data['PUBLICADO'] = 'N';
-			$data['EXPORTAR'] = 'NNEW';
-			$data['ARCHIVODESCR'] = isset($archivos['TIPODOC']) ? $archivos['TIPODOC'] : 'ROBO DE VEHÍCULO';
-			$data['ARCHIVO'] = isset($archivos['PDF']) ? base64_encode($archivos['PDF']) : isset($archivos['DOCUMENTO']);
-			$data['userDB'] = $conexion->USER;
-			$data['pwdDB'] = $conexion->PASSWORD;
-			$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
-			$data['schema'] = $conexion->SCHEMA;
-
-			return $this->_curlPostDataEncrypt($endpoint, $data);
 		}
+
+		foreach ($data as $clave => $valor) {
+			if (!in_array($clave, $array)) {
+				unset($data[$clave]);
+			}
+		}
+		$data['EXPEDIENTEID'] = $expedienteId;
+		$data['EXTENSION'] = '.pdf';
+		$data['AUTOR'] = $archivos['AGENTEID'];
+		$data['OFICINAIDAUTOR'] = $archivos['OFICINAID'];
+		$data['CLASIFICACIONDOCTOID'] = $archivos['CLASIFICACIONDOCTOID'];
+		$data['ESTADOACCESO'] = 'M';
+		$data['PUBLICADO'] = 'N';
+		$data['EXPORTAR'] = 'NNEW';
+		$data['ARCHIVODESCR'] = $archivos['TIPODOC'];
+		$data['ARCHIVO'] = base64_encode($archivos['PDF']);
+		$data['userDB'] = $conexion->USER;
+		$data['pwdDB'] = $conexion->PASSWORD;
+		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
+		$data['schema'] = $conexion->SCHEMA;
+
+		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
 	private function _createFolioDocumentos($expedienteId, $documentos, $municipio)
 	{
@@ -1795,6 +1790,7 @@ class DashboardController extends BaseController
 			'FECHAREGISTRO',
 			'PROVIENEPADRON',
 			'SEGUROVIGENTE',
+
 		];
 
 		$endpoint = $this->endpoint . $function;
@@ -1818,16 +1814,14 @@ class DashboardController extends BaseController
 		isset($vehiculos['FOTO'])
 			? $data['FOTO'] = base64_encode($vehiculos['FOTO'])
 			: null;
-		$_archivosExternos = $this->_createArchivosExternos($expedienteId, $vehiculos);
 
 		$data['userDB'] = $conexion->USER;
 		$data['pwdDB'] = $conexion->PASSWORD;
 		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
 		$data['schema'] = $conexion->SCHEMA;
-
+		// return $data;
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
-
 	private function _curlPost($endpoint, $data)
 	{
 		$ch = curl_init();
@@ -1889,6 +1883,10 @@ class DashboardController extends BaseController
             }";
 		}
 		curl_close($ch);
+		var_dump($endpoint);
+		var_dump($data);
+		var_dump($result);
+
 		return json_decode($result);
 	}
 
@@ -2332,6 +2330,12 @@ class DashboardController extends BaseController
 			$updatePersonaFisica = $this->_folioPersonaFisicaModel->set($dataPersonaFisica)->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $id)->update();
 
 			$updateRelacionParentesco = $this->_parentescoPersonaFisicaModel->set($dataRelacionParentesco)->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID2', $id)->update();
+
+			//  var_dump($personaFisica);
+			// exit;
+
+			// // $this->_parentescoPersonaFisica($dataRelacionParentesco, $folio, $desaparecido, $year);
+
 
 			if ($updateMediaFiliacion && $updatePersonaFisica && $updateRelacionParentesco) {
 				$datosBitacora = [
