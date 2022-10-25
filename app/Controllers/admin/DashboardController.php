@@ -1114,7 +1114,7 @@ class DashboardController extends BaseController
 
 									try {
 										$_expedienteVehiculo = $this->_createExpVehiculo($expedienteCreado->EXPEDIENTEID, $vehiculo, $municipio);
-										var_dump($_expedienteVehiculo);
+										var_dump($_expedienteVehiculo->status);
 										exit;
 									} catch (\Error $e) {
 									}
@@ -1810,10 +1810,10 @@ class DashboardController extends BaseController
 
 		$data['EXPEDIENTEID'] = $expedienteId;
 		$data['ANO'] = $vehiculos['ANOVEHICULO'];
-		
-	 isset($vehiculos['FOTO'])
-	  ? $data['FOTO'] = base64_encode(isset($vehiculos['FOTO']))
-		: null;
+
+		isset($vehiculos['FOTO'])
+			? $data['FOTO'] = base64_encode($vehiculos['FOTO'])
+			: null;
 
 		$data['userDB'] = $conexion->USER;
 		$data['pwdDB'] = $conexion->PASSWORD;
