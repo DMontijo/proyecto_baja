@@ -674,8 +674,8 @@
 			var btnVehiculo = `<button type='button' class='btn btn-primary' onclick='viewVehiculo(${vehiculos[i].VEHICULOID})'><i class='fas fa-eye'></i></button>`;
 			var fila3 =
 				`<tr id="row${i}">` +
-				`<td class="text-center">${vehiculos[i].PLACAS}</td>` +
-				`<td class="text-center">${vehiculos[i].NUMEROSERIE}</td>` +
+				`<td class="text-center">${vehiculos[i].PLACAS?vehiculos[i].PLACAS:'DESCONOCIDO'}</td>` +
+				`<td class="text-center">${vehiculos[i].NUMEROSERIE?vehiculos[i].NUMEROSERIE:'DESCONOCIDO'}</td>` +
 				`<td class="text-center">${btnVehiculo}</td>` +
 				`</tr>`;
 

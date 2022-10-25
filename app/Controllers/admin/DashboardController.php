@@ -1114,8 +1114,8 @@ class DashboardController extends BaseController
 
 									try {
 										$_expedienteVehiculo = $this->_createExpVehiculo($expedienteCreado->EXPEDIENTEID, $vehiculo, $municipio);
-										var_dump($_expedienteVehiculo->status);
-										exit;
+										// var_dump($_expedienteVehiculo->status);
+										// exit;
 									} catch (\Error $e) {
 									}
 								}
@@ -1883,9 +1883,9 @@ class DashboardController extends BaseController
             }";
 		}
 		curl_close($ch);
-		var_dump($endpoint);
-		var_dump($data);
-		var_dump($result);
+		// var_dump($endpoint);
+		// var_dump($data);
+		// var_dump($result);
 
 		return json_decode($result);
 	}
@@ -3135,9 +3135,9 @@ class DashboardController extends BaseController
 		$folio = trim($this->request->getPost('folio'));
 		$plantilla = $this->_plantillasModel->where('TITULO', $this->request->getPost('titulo'))->first();
 		$folioDoc = $this->_folioDocModel->asObject()->where('FOLIOID',  $folio)->where('ANO', $this->request->getPost('year'))->first();
-		$municipio = $folioDoc->MUNICIPIOID;
-		$agente = $folioDoc->AGENTEID;
-		$oficina = $folioDoc->OFICINAID;
+		$municipio = isset($folioDoc->MUNICIPIOID);
+		$agente = isset($folioDoc->AGENTEID);
+		$oficina = isset($folioDoc->OFICINAID);
 
 		$year = trim($this->request->getPost('year'));
 		$dataFolioDoc = array(
