@@ -1115,6 +1115,7 @@ class DashboardController extends BaseController
 									try {
 										$_expedienteVehiculo = $this->_createExpVehiculo($expedienteCreado->EXPEDIENTEID, $vehiculo, $municipio);
 										var_dump($_expedienteVehiculo);
+										exit;
 									} catch (\Error $e) {
 									}
 								}
@@ -1809,7 +1810,10 @@ class DashboardController extends BaseController
 
 		$data['EXPEDIENTEID'] = $expedienteId;
 		$data['ANO'] = $vehiculos['ANOVEHICULO'];
-		$data['FOTO'] = isset($vehiculos['FOTO']) ? base64_encode(($vehiculos['FOTO'])) : null;
+		
+	 isset($vehiculos['FOTO'])
+	  ? $data['FOTO'] = base64_encode(isset($vehiculos['FOTO']))
+		: null;
 
 		$data['userDB'] = $conexion->USER;
 		$data['pwdDB'] = $conexion->PASSWORD;
@@ -1879,6 +1883,9 @@ class DashboardController extends BaseController
             }";
 		}
 		curl_close($ch);
+		var_dump($endpoint);
+		var_dump($data);
+		var_dump($result);
 
 		return json_decode($result);
 	}
