@@ -1629,55 +1629,58 @@ class DashboardController extends BaseController
 	}
 	private function _createArchivosExternos($expedienteId, $archivos)
 	{
-		$function = '/archivoExt.php?process=crear';
-		$array = [
-			'EXPEDIENTEID',
-			'EXPEDIENTEARCHIVOID',
-			'ARCHIVODESCR',
-			'ARCHIVO',
-			'EXTENSION',
-			'FECHAACTUALIZACION',
-			'AUTOR',
-			'OFICINAIDAUTOR',
-			'CLASIFICACIONDOCTOID',
-			'ESTADOACCESO',
-			'PUBLICADO',
-			'RUTAALMACENAMIENTOID',
-			'STATUSALMACENID',
-			'EXPORTAR',
-		];
-		$endpoint = $this->endpoint . $function;
-		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $archivos['MUNICIPIOID'])->where('TYPE', ENVIRONMENT)->first();
-		$data = $archivos;
+		if (isset($archivos['PDF']) || isset($archivos['DOCUMENTO'])) {
+			$function = '/archivoExt.php?process=crear';
+			$array = [
+				'EXPEDIENTEID',
+				'EXPEDIENTEARCHIVOID',
+				'ARCHIVODESCR',
+				'ARCHIVO',
+				'EXTENSION',
+				'FECHAACTUALIZACION',
+				'AUTOR',
+				'OFICINAIDAUTOR',
+				'CLASIFICACIONDOCTOID',
+				'ESTADOACCESO',
+				'PUBLICADO',
+				'RUTAALMACENAMIENTOID',
+				'STATUSALMACENID',
+				'EXPORTAR',
+			];
+			$endpoint = $this->endpoint . $function;
+			$folioRow = $this->_folioModel->where('ANO', $archivos['ANO'])->where('FOLIOID', $archivos['FOLIOID'])->first();
+			$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) isset($archivos['MUNICIPIOID']) ? $archivos['MUNICIPIOID'] : $folioRow['MUNICIPIOID'])->where('TYPE', ENVIRONMENT)->first();
+			$data = $archivos;
 
 
-		foreach ($data as $clave => $valor) {
-			if (empty($valor)) {
-				unset($data[$clave]);
+			foreach ($data as $clave => $valor) {
+				if (empty($valor)) {
+					unset($data[$clave]);
+				}
 			}
-		}
 
-		foreach ($data as $clave => $valor) {
-			if (!in_array($clave, $array)) {
-				unset($data[$clave]);
+			foreach ($data as $clave => $valor) {
+				if (!in_array($clave, $array)) {
+					unset($data[$clave]);
+				}
 			}
-		}
-		$data['EXPEDIENTEID'] = $expedienteId;
-		$data['EXTENSION'] = '.pdf';
-		$data['AUTOR'] = $archivos['AGENTEID'];
-		$data['OFICINAIDAUTOR'] = $archivos['OFICINAID'];
-		$data['CLASIFICACIONDOCTOID'] = $archivos['CLASIFICACIONDOCTOID'];
-		$data['ESTADOACCESO'] = 'M';
-		$data['PUBLICADO'] = 'N';
-		$data['EXPORTAR'] = 'NNEW';
-		$data['ARCHIVODESCR'] = $archivos['TIPODOC'];
-		$data['ARCHIVO'] = base64_encode($archivos['PDF']);
-		$data['userDB'] = $conexion->USER;
-		$data['pwdDB'] = $conexion->PASSWORD;
-		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
-		$data['schema'] = $conexion->SCHEMA;
+			$data['EXPEDIENTEID'] = $expedienteId;
+			$data['EXTENSION'] = '.pdf';
+			// $data['AUTOR'] = isset($archivos['AGENTEID']) ? $archivos['AGENTEID'] : session('ID');
+			// $data['OFICINAIDAUTOR'] = isset($archivos['OFICINAID']) ? $archivos['OFICINAID'] : '394';
+			$data['CLASIFICACIONDOCTOID'] = isset($archivos['CLASIFICACIONDOCTOID']) ? $archivos['CLASIFICACIONDOCTOID'] : 53;
+			$data['ESTADOACCESO'] = 'M';
+			$data['PUBLICADO'] = 'N';
+			$data['EXPORTAR'] = 'NNEW';
+			$data['ARCHIVODESCR'] = isset($archivos['TIPODOC']) ? $archivos['TIPODOC'] : 'ROBO DE VEHÍCULO';
+			$data['ARCHIVO'] = isset($archivos['PDF']) ? base64_encode($archivos['PDF']) : isset($archivos['DOCUMENTO']);
+			$data['userDB'] = $conexion->USER;
+			$data['pwdDB'] = $conexion->PASSWORD;
+			$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
+			$data['schema'] = $conexion->SCHEMA;
 
-		return $this->_curlPostDataEncrypt($endpoint, $data);
+			return $this->_curlPostDataEncrypt($endpoint, $data);
+		}
 	}
 	private function _createFolioDocumentos($expedienteId, $documentos, $municipio)
 	{
@@ -1814,7 +1817,7 @@ class DashboardController extends BaseController
 		isset($vehiculos['FOTO'])
 			? $data['FOTO'] = base64_encode($vehiculos['FOTO'])
 			: null;
-
+		$_archivosExternos = $this->_createArchivosExternos($expedienteId, $vehiculos);
 		$data['userDB'] = $conexion->USER;
 		$data['pwdDB'] = $conexion->PASSWORD;
 		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
@@ -2377,8 +2380,8 @@ class DashboardController extends BaseController
 				'NUMEROSERIE' => $this->request->getPost('serie_vehiculo'),
 				'VEHICULODISTRIBUIDORID' => $this->request->getPost('distribuidor_vehiculo_ad'),
 				'MARCAID' => $this->request->getPost('marca_ad'),
-				'MARCADESCR' => $marcadescr->VEHICULOMARCADESCR,
-				'MODELODESCR' => $modelodescr->VEHICULOMODELODESCR,
+				'MARCADESCR' => isset($marcadescr->VEHICULOMARCADESCR),
+				'MODELODESCR' => isset($modelodescr->VEHICULOMODELODESCR),
 				'MODELOID' => $this->request->getPost('linea_vehiculo_ad'),
 				'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad'),
 				'VEHICULOSERVICIOID' => $this->request->getPost('servicio_vehiculo_ad'),
