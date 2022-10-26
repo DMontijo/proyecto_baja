@@ -247,8 +247,8 @@
 
 						var fila3 =
 							`<tr id="row${i}">` +
-							`<td class="text-center">${vehiculos[i].PLACAS}</td>` +
-							`<td class="text-center">${vehiculos[i].NUMEROSERIE}</td>` +
+							`<td class="text-center">${vehiculos[i].PLACAS?vehiculos[i].PLACAS:'DESCONOCIDO'}</td>` +
+							`<td class="text-center">${vehiculos[i].NUMEROSERIE?vehiculos[i].NUMEROSERIE:'DESCONOCIDO'}</td>` +
 							`<td class="text-center">${btnVehiculo}</td>` +
 							`</tr>`;
 
@@ -523,46 +523,48 @@
 	buscar_nuevo_btn.addEventListener('click', () => {
 		history.back();
 	});
+
 	function viewObjetoInvolucrado(objetoid) {
-				$('#folio_objetos_ver').modal('show');
-				$.ajax({
-					data: {
-						'objetoid': objetoid,
-						'folio': inputFolio.value,
-						'year': year_select.value,
-					},
-					url: "<?= base_url('/data/get-objeto-involucrado-by-id') ?>",
-					method: "POST",
-					dataType: "json",
-					success: function(response) {
-						let objeto = response.objetoInvolucrado;
-						let objeto_sub = response.objetosub;
-						document.querySelector('#objeto_id').value = objeto.OBJETOID ? objeto.OBJETOID : '';
-						document.querySelector('#situacion_objeto_update').value = objeto.SITUACION ? objeto.SITUACION : '';
-						document.querySelector('#objeto_update_clasificacion').value = objeto.CLASIFICACIONID ? objeto.CLASIFICACIONID : '';
-						// document.querySelector('#objeto_update_subclasificacion').value = objeto_sub.OBJETOSUBCLASIFICACIONID ? objeto_sub.OBJETOSUBCLASIFICACIONID : '';
-						$('#objeto_update_subclasificacion').empty();
-						let select_objeto_update_subclasificacion = document.querySelector("#objeto_update_subclasificacion");
+		$('#folio_objetos_ver').modal('show');
+		$.ajax({
+			data: {
+				'objetoid': objetoid,
+				'folio': inputFolio.value,
+				'year': year_select.value,
+			},
+			url: "<?= base_url('/data/get-objeto-involucrado-by-id') ?>",
+			method: "POST",
+			dataType: "json",
+			success: function(response) {
+				let objeto = response.objetoInvolucrado;
+				let objeto_sub = response.objetosub;
+				document.querySelector('#objeto_id').value = objeto.OBJETOID ? objeto.OBJETOID : '';
+				document.querySelector('#situacion_objeto_update').value = objeto.SITUACION ? objeto.SITUACION : '';
+				document.querySelector('#objeto_update_clasificacion').value = objeto.CLASIFICACIONID ? objeto.CLASIFICACIONID : '';
+				// document.querySelector('#objeto_update_subclasificacion').value = objeto_sub.OBJETOSUBCLASIFICACIONID ? objeto_sub.OBJETOSUBCLASIFICACIONID : '';
+				$('#objeto_update_subclasificacion').empty();
+				let select_objeto_update_subclasificacion = document.querySelector("#objeto_update_subclasificacion");
 
-						objeto_sub.forEach(objeto_sub => {
-							const option = document.createElement('option');
-							option.value = objeto_sub.SUBCLASIFICACIONID;
-							option.text = objeto_sub.OBJETOSUBCLASIFICACIONDESCR;
-							select_objeto_update_subclasificacion.add(option, null);
-						});
-
-						document.querySelector('#marca_objeto_update').value = objeto.MARCA ? objeto.MARCA : '';
-						document.querySelector('#serie_objeto_update').value = objeto.NUMEROSERIE ? objeto.CANTIDAD : '';
-						document.querySelector('#cantidad_objeto_update').value = objeto.CANTIDAD ? objeto.CANTIDAD : '';
-						document.querySelector('#valor_objeto_update').value = objeto.VALOR ? objeto.VALOR : '';
-						document.querySelector('#tipo_moneda_update').value = objeto.TIPOMONEDAID ? objeto.TIPOMONEDAID : '';
-						document.querySelector('#descripcion_detallada_update').value = objeto.DESCRIPCIONDETALLADA ? objeto.DESCRIPCIONDETALLADA : '';
-						document.querySelector('#propietario_update').value = objeto.PERSONAFISICAIDPROPIETARIO ? objeto.PERSONAFISICAIDPROPIETARIO : '';
-						document.querySelector('#participa_estado_objeto_update').value = objeto.PARTICIPAESTADO ? objeto.PARTICIPAESTADO : '';
-
-					}
+				objeto_sub.forEach(objeto_sub => {
+					const option = document.createElement('option');
+					option.value = objeto_sub.SUBCLASIFICACIONID;
+					option.text = objeto_sub.OBJETOSUBCLASIFICACIONDESCR;
+					select_objeto_update_subclasificacion.add(option, null);
 				});
+
+				document.querySelector('#marca_objeto_update').value = objeto.MARCA ? objeto.MARCA : '';
+				document.querySelector('#serie_objeto_update').value = objeto.NUMEROSERIE ? objeto.CANTIDAD : '';
+				document.querySelector('#cantidad_objeto_update').value = objeto.CANTIDAD ? objeto.CANTIDAD : '';
+				document.querySelector('#valor_objeto_update').value = objeto.VALOR ? objeto.VALOR : '';
+				document.querySelector('#tipo_moneda_update').value = objeto.TIPOMONEDAID ? objeto.TIPOMONEDAID : '';
+				document.querySelector('#descripcion_detallada_update').value = objeto.DESCRIPCIONDETALLADA ? objeto.DESCRIPCIONDETALLADA : '';
+				document.querySelector('#propietario_update').value = objeto.PERSONAFISICAIDPROPIETARIO ? objeto.PERSONAFISICAIDPROPIETARIO : '';
+				document.querySelector('#participa_estado_objeto_update').value = objeto.PARTICIPAESTADO ? objeto.PARTICIPAESTADO : '';
+
 			}
+		});
+	}
+
 	function viewPersonaFisica(id) {
 		$.ajax({
 			data: {
@@ -769,7 +771,7 @@
 					// 	document.getElementById("updateParentesco").style.display="none";
 
 					// }
-					
+
 					//DOMICILIO
 					let domicilio = response.personaFisicaDomicilio;
 
@@ -1273,7 +1275,7 @@
 				});
 			}
 
-			
+
 
 			function actualizarPreguntas() {
 				const data = {
