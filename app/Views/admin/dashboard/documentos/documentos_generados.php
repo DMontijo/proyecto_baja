@@ -526,7 +526,7 @@
 													<input type="text" class="form-control" id="year" name="year" value="<?= $_GET['year'] ?>" hidden>
 													<input type="text" class="form-control" id="docid" name="docid" value="${documentos[i].FOLIODOCID}" hidden>
 
-													<button type="submit" class="btn btn-primary mb-3">
+													<button type="submit" class="btn btn-primary mb-3" id="download-pdf-documento">
 														PDF
 													</button>
 												</form>`
@@ -535,13 +535,33 @@
 													<input type="text" class="form-control" id="year" name="year" value="<?= $_GET['year'] ?>" hidden>
 													<input type="text" class="form-control" id="docid" name="docid" value="${documentos[i].FOLIODOCID}" hidden>
 
-													<button type="submit" class="btn btn-primary mb-3">
+													<button type="submit" class="btn btn-primary mb-3" id="download-xml-documento">
 														XML
 													</button>
 												</form>`
 
 				} else {
 					var btn = `<button type='button'  class='btn btn-primary' onclick='viewDocumento(${documentos[i].FOLIODOCID})'><i class="fas fa-eye"></i></button>`
+					var btnpdf = `<form class="d-inline-block" method="POST" action="<?php echo base_url('/data/download-pdf-documento') ?>">
+													<input type="text" class="form-control" id="folio" name="folio" value="<?= $_GET['folio'] ?>" hidden>
+													<input type="text" class="form-control" id="year" name="year" value="<?= $_GET['year'] ?>" hidden>
+													<input type="text" class="form-control" id="docid" name="docid" value="${documentos[i].FOLIODOCID}" hidden>
+
+													<button type="submit" class="btn btn-primary mb-3" id="download-pdf-documento" disabled>
+														PDF
+													</button>
+												</form>`
+					var btnxml = `<form class="d-inline-block" method="POST" action="<?php echo base_url('/data/download-xml-documento') ?>">
+													<input type="text" class="form-control" id="folio" name="folio" value="<?= $_GET['folio'] ?>" hidden>
+													<input type="text" class="form-control" id="year" name="year" value="<?= $_GET['year'] ?>" hidden>
+													<input type="text" class="form-control" id="docid" name="docid" value="${documentos[i].FOLIODOCID}" hidden>
+
+													<button type="submit" class="btn btn-primary mb-3" id="download-xml-documento" disabled>
+														XML
+													</button>
+												</form>`
+
+
 				}
 				var fila =
 					`<tr id="row${i}">` +

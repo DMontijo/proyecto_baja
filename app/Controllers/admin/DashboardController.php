@@ -1168,7 +1168,7 @@ class DashboardController extends BaseController
 					} else {
 						$_archivosExternos = $this->_createArchivosExternos($expediente, $doc);
 						// var_dump($doc['FOLIOID'],$doc['ANO'],$doc['NUMEROEXPEDIENTE'], $doc['FOLIODOCID']);
-						// var_dump($_archivosExternos->EXPEDIENTEID);
+						// var_dump($_archivosExternos);
 						// exit;
 						$datosRelacionFolio = [
 							'FOLIODOCID' => $doc['FOLIODOCID'],
@@ -1886,9 +1886,9 @@ class DashboardController extends BaseController
             }";
 		}
 		curl_close($ch);
-		// var_dump($endpoint);
-		// var_dump($data);
-		// var_dump($result);
+			// var_dump($endpoint);
+			// var_dump($data);
+			// var_dump($result);
 
 		return json_decode($result);
 	}
@@ -3138,9 +3138,11 @@ class DashboardController extends BaseController
 		$folio = trim($this->request->getPost('folio'));
 		$plantilla = $this->_plantillasModel->where('TITULO', $this->request->getPost('titulo'))->first();
 		$folioDoc = $this->_folioDocModel->asObject()->where('FOLIOID',  $folio)->where('ANO', $this->request->getPost('year'))->first();
-		$municipio = isset($folioDoc->MUNICIPIOID);
-		$agente = isset($folioDoc->AGENTEID);
-		$oficina = isset($folioDoc->OFICINAID);
+		
+		$municipio = isset($folioDoc->MUNICIPIOID)?$folioDoc->MUNICIPIOID:NULL;
+		$agente = isset($folioDoc->AGENTEID)?$folioDoc->AGENTEID:NULL;
+		$oficina = isset($folioDoc->OFICINAID)?$folioDoc->OFICINAID:NULL;
+		// var_dump($municipio);
 
 		$year = trim($this->request->getPost('year'));
 		$dataFolioDoc = array(
