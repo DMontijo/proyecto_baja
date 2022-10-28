@@ -50,7 +50,7 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="descripcion_detallada" class="form-label font-weight-bold">Descripción detallada</label>
-		<textarea class="form-control" id="descripcion_detallada" name="descripcion_detallada" maxlength="500"></textarea>
+		<textarea class="form-control" id="descripcion_detallada" name="descripcion_detallada" maxlength="500"  oninput="mayuscTextarea(this)"></textarea>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="propietario" class="form-label font-weight-bold">Propietario</label>
