@@ -4145,9 +4145,11 @@
 							$('#propietario').empty();
 							let select_propietario = document.querySelector("#propietario");
 							const option_vacio = document.createElement('option');
-							option.value = "";
-							option.text = "";
-							select_propietario.add(option, null);
+							option_vacio.value = "";
+							option_vacio.text = "";
+							option_vacio_pro.disabled = true;
+							option_vacio_pro.selected = true;
+							select_propietario.add(option_vacio, null);
 							personas.forEach(persona => {
 								const option = document.createElement('option');
 								option.value = persona.PERSONAFISICAID;
