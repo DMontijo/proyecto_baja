@@ -6,31 +6,40 @@
 <section class="content">
 	<div class="container-fluid">
 		<div class="row">
+			<div class="col-12 text-center mb-4">
+				<h1 class="mb-4 text-center font-weight-bold">DOCUMENTOS </h1>
+			</div>
 			<div class="col-12">
-				<h1 class="mb-4 text-center font-weight-bold">DOCUMENTOS</h1>
-			</div>
-			<div class="col-12 col-sm-6 col-md-4 col-lg-3">
-				<div class="card shadow border-0 text-center">
-					<div class="card-body p-2" style="height:200px;">
-						<a href="<?= base_url('admin/dashboard/documentos_abiertos') ?>" class="btn btn-primary btn-block h-100 d-flex flex-column justify-content-center align-items-center">
-							<i class="fas fa-file-alt"></i> Abiertas<br><br> <span class="font-weight-bold" style="font-size:20px;"><?= $body_data->abiertas ?></span>
-						</a>
+				<div class="card shadow border-0" style="overflow-x:auto;">
+					<div class="card-body">
+						<table id="extravios_abiertos" class="table table-bordered table-striped">
+							<thead>
+								<tr>
+									<th class="text-center">EXPEDIENTE ID</th>
+									<th class="text-center">FECHA</th>
+									<th class="text-center">ESTADO</th>
+									<th class="text-center"></th>
+								</tr>
+							</thead>
+							<tbody>
+								
+								<?php foreach ($body_data->documento as $index => $documentos) { ?>
+									<tr>
+										<td class="text-center font-weight-bold"><?= $documentos['EXPEDIENTEID']  ?></td>
+										<td class="text-center"><?= $documentos['FECHAREGISTRO'] ?></td>
+										<td class="text-center"><?= $documentos['STATUS'] ?></td>
+										<td class="text-center"><a type="button" href="<?= base_url('/admin/dashboard/documentos_show?expediente=' . $documentos['EXPEDIENTEID'] . '&year=' . $documentos['ANO'] . '&folio=' . $documentos['FOLIOID']) ?>" class="btn btn-primary text-white"><i class="fas fa-eye"></i> VER SOLICITUD</a></td>
+									</tr>
+								<?php } ?>
+							</tbody>
+						</table>
 					</div>
 				</div>
 			</div>
-			<div class="col-12 col-sm-6 col-md-4 col-lg-3">
-				<div class="card shadow border-0 text-center">
-					<div class="card-body p-2" style="height:200px;">
-						<a href="<?= base_url('admin/dashboard/documentos_firmados') ?>" class="btn btn-primary btn-block h-100 d-flex flex-column justify-content-center align-items-center">
-							<i class="fas fa-file-alt"></i> Expedientes<br><br> <span class="font-weight-bold" style="font-size:20px;"><?= $body_data->expediente ?></span>
-						</a>
-					</div>
-				</div>
-			</div>
-		
 		</div>
 	</div>
 </section>
+
 <?php if (session()->getFlashdata('message_error')) : ?>
 	<script>
 		Swal.fire({
@@ -58,4 +67,27 @@
 		})
 	</script>
 <?php endif; ?>
+<script>
+	$(function() {
+		$("#extravios_abiertos").DataTable({
+			responsive: false,
+			lengthChange: false,
+			autoWidth: true,
+			ordering: true,
+			order: [
+				[0, 'asc'],
+			],
+			searching: true,
+			pageLength: 100,
+			// dom: 'Bfrtip',
+			// buttons: [
+			// 	'copy', 'excel', 'pdf'
+			// ],
+			language: {
+				url: '//cdn.datatables.net/plug-ins/1.12.1/i18n/es-MX.json'
+			}
+		});
+	});
+</script>
+
 <?= $this->endSection() ?>

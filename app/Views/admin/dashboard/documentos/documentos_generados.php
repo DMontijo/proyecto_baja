@@ -19,44 +19,10 @@
 			<div class="col-12">
 				<button type="button" class="btn btn-primary col-12 col-sm-3 col-md-3 col-lg-4 mb-3" data-toggle="modal" id="firmarDocumento" data-target="#contrasena_modal_doc"><i class="fas fa-file-signature"></i> Firmar documento</button>
 				<button type="button" class="btn btn-primary col-12 col-sm-3 col-md-3 col-lg-4 mb-3" data-toggle="modal" id="generarDocumento" data-target="#documentos_modal_wyswyg"><i class="fas fa-file-archive"></i> Agregar documentos</button>
-				<button type="button" class="btn btn-primary col-12 col-sm-3 col-md-6 col-lg-4 mb-3" data-toggle="modal" id="edtarDocumento" data-target="#documentos_generados_modal_v"><i class="fas fa-pencil-alt"></i> Editar documentos</button>
+				<!-- <button type="button" class="btn btn-primary col-12 col-sm-3 col-md-6 col-lg-4 mb-3" data-toggle="modal" id="edtarDocumento" data-target="#documentos_generados_modal_v"><i class="fas fa-pencil-alt"></i> Editar documentos</button> -->
 				<button type="button" class="btn btn-primary col-12 col-sm-3 col-md-6 col-lg-4 mb-3" data-toggle="modal" id="enviarDocumento" data-target="#sendEmailDocModal"><i class="fas fa-mail-bulk"></i> Enviar documentos pendientes</button>
 				<button type="button" class="btn btn-primary col-12 col-sm-3 col-md-6 col-lg-4 mb-3" id="subirDocumento" name="subirDocumento" data-toggle="modal" data-target="#subirDocumentosModal"><i class="fas fa-archive"></i> Subir documentos</button>
-				<?php
-				foreach ($body_data->documentos as $key => $documento) { ?>
-					<h5 class="card-title"><?php echo $documento->TIPODOC ?> | <?php echo $documento->STATUS ?></h5>
-					<div class="card shadow border-0">
-						<div class="card-body" name="document" id="document" style="margin: 2%;">
-							<div class="card-text" id="documentos-show-edit-<?= $key ?>" name="documentos-show-edit" data-id="<?= $documento->FOLIODOCID ?>">
-								<?php echo $documento->PLACEHOLDER ?>
-							</div>
-						</div>
-
-
-
-					</div>
-				<?php } ?>
-			</div>
-		</div>
-	</div>
-</section>
-<div class="modal fade" id="documentos_generados_modal_v" role="dialog" aria-labelledby="documentosGeneradosvModal" aria-hidden="true" data-backdrop="false">
-	<div class="modal-dialog modal-dialog-centered mw-100 w-75">
-		<div class="modal-content" style="box-shadow: 0px 0px 55px 9px rgba(0,0,0,0.66)!important;">
-			<div class="modal-header bg-primary text-white">
-				<h5 class="modal-title font-weight-bold">DOCUMENTOS GENERADOS</h5>
-				<button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-					<i class="fas fa-times"></i>
-				</button>
-			</div>
-			<div class="modal-body bg-light">
-				<div class="row">
-					<div class="col-12">
-						<div class="tab-content">
-
-
-
-							<div class="table-responsive">
+				<div class="table-responsive">
 								<table id="table-documentos" class="table table-bordered table-hover table-striped table-light">
 									<tr>
 										<th class="text-center bg-primary text-white" id="tipodoc" name="tipodoc">TIPO DE DOCUMENTO</th>
@@ -68,13 +34,11 @@
 									</tr>
 								</table>
 							</div>
-
-						</div>
-					</div>
-				</div>
 			</div>
 		</div>
 	</div>
+</section>
+
 	<?php if (session()->getFlashdata('message_error')) : ?>
 		<script>
 			Swal.fire({
