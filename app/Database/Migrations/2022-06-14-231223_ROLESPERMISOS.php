@@ -9,23 +9,20 @@ class ROLESPERMISOS extends Migration
 	public function up()
 	{
 		$this->forge->addField([
-			'ID' => [
-				'type' => 'INT',
-				'unsigned' => TRUE,
-				'auto_increment' => TRUE
-			],
 			'ROLID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 			],
-			'PERMISO' => [
+			'PERMISOID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 			],
 			'FECHA DATETIME DEFAULT CURRENT_TIMESTAMP',
 		]);
 
-		$this->forge->addKey('ID', TRUE);
+		$this->forge->addKey('ROLID', TRUE);
+		$this->forge->addKey('PERMISOID', TRUE);
+
 		$this->forge->createTable('ROLESPERMISOS');
 	}
 

@@ -109,6 +109,8 @@ class RunAllSeederTesting extends Seeder
 		$this->call('VehiculoSituacionSeeder');
 		$this->call('VehiculoStatusSeeder');
 		$this->call('VehiculoVersionSeeder');
+		$this->call('RolesPermisosSeeder');
+		$this->call('PermisosSeeder');
 
 
 	}
