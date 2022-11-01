@@ -1,7 +1,8 @@
 firmar_documento/Documentos_Firmados/*
 *.pem
 *.txt
-
+*.cer
+*.key
 #-------------------------
 # Operating Specific Junk Files
 #-------------------------
