@@ -6,6 +6,7 @@ use Dompdf\Dompdf;
 use Dompdf\Options;
 use App\Controllers\BaseController;
 use App\Models\FolioDocModel;
+use App\Models\FolioModel;
 use App\Models\FolioPersonaFisicaModel;
 use App\Models\PlantillasModel;
 use App\Models\RolesPermisosModel;
@@ -18,6 +19,7 @@ class DocumentosController extends BaseController
         $this->_plantillasModel = new PlantillasModel();
         $this->_folioPersonaFisicaModel = new FolioPersonaFisicaModel();
         $this->_rolesPermisosModel = new RolesPermisosModel();
+        $this->_folioModel = new FolioModel();
 
 
     }
@@ -26,7 +28,9 @@ class DocumentosController extends BaseController
         $data = (object)array();
 
         $data->abiertas = count($this->_folioDocModel->asObject()->where('STATUS', 'ABIERTO')->findAll());
-        $data->expediente = count($this->_folioDocModel->asObject()->where('STATUS', 'FIRMADO')->where('NUMEROEXPEDIENTE <>', null)->findAll());
+        // $data->expediente = count($this->_folioDocModel->asObject()->where('STATUS', 'FIRMADO')->where('NUMEROEXPEDIENTE <>', null)->findAll());
+        $data->expediente = count($this->_folioModel->asObject()->where('STATUS', 'EXPEDIENTE')->where('EXPEDIENTEID <>', null)->findAll());
+
         $data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 
@@ -45,7 +49,8 @@ class DocumentosController extends BaseController
     {
         $data = (object)array();
         // $data = $this->_folioDocModel->asObject()->where('STATUS', 'ABIERTO')->distinct('NUMEROEXPEDIENTE')->first();
-        $data->documento = $this->_folioDocModel->get_folio_firmado();
+        // $data->documento = $this->_folioDocModel->get_folio_firmado();
+        $data->documento = $this->_folioModel->get_folio_expediente();
         $data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
         $this->_loadView('Documentos abiertos', $data, 'documentos_firmados');
@@ -62,6 +67,7 @@ class DocumentosController extends BaseController
         $data->year = $this->request->getGet('year');
         // $data->documento = $this->_plantillasModel->asObject()->where('TITULO', $data->tipodoc)->first();
         $data->documentos = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $data->expediente)->where('ANO', $data->year)->findAll();
+        $data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
         $data->plantillas = $this->_plantillasModel->asObject()->where('TITULO !=','CONSTANCIA DE EXTRAVÍO')->findAll();
 

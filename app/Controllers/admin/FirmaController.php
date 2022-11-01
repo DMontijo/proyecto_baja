@@ -837,6 +837,10 @@ class FirmaController extends BaseController
 		$expediente = $this->request->getPost('expediente_modal_correo');
 		$year = $this->request->getPost('year_modal_correo');
 		$documento = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente)->where('ANO', $year)->where('STATUS', 'FIRMADO')->where('STATUSENVIO', 1)->where('ENVIADO', 'N')->findAll();
+		if (empty($documento)) {
+			return json_encode((object)['status' => 3]);
+
+		}
 		$folioM = $this->_folioModel->asObject()->where('ANO', $year)->where('EXPEDIENTEID', $expediente)->first();
 		$imputado = $this->_folioPersonaFisicaModel->asObject()->where('ANO', $year)->where('FOLIOID', $folioM->FOLIOID)->where('CALIDADJURIDICAID',2)->first();
 

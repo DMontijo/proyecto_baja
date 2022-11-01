@@ -2020,6 +2020,20 @@
 							btn_enviarcorreoDoc.disabled = false;
 
 						}
+						if (response.status == 3) {
+							Swal.fire({
+								icon: 'error',
+								text: 'No hay documentos a enviar',
+								confirmButtonColor: '#bf9b55',
+							});
+							$('#sendEmailDocModal').modal('hide');
+							document.querySelector('#load_mail').classList.remove('d-none');
+							document.querySelector('#enviar_modalLabel').classList.remove('d-none');
+							document.querySelector('#loading_mail').classList.add('d-none');
+							document.querySelector('#password_verifying_mail').classList.add('d-none');
+							btn_enviarcorreoDoc.disabled = false;
+
+						}
 					},
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});

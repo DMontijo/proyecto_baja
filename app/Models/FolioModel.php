@@ -108,4 +108,14 @@ class FolioModel extends Model
 		// $dataView->strQuery = $strQuery;
 		return $dataView;
 	}
+	public function get_folio_expediente()
+	{
+		$builder = $this->db->table($this->table);
+		$builder->select(['FOLIOID','EXPEDIENTEID', 'FECHAREGISTRO','STATUS','ANO']);
+		$builder->where('STATUS', 'EXPEDIENTE');
+		$builder->orderBy('EXPEDIENTEID ASC');
+        $builder->groupBy('EXPEDIENTEID');
+		$query = $builder->get();
+		return $query->getResult('array');
+	}
 }
