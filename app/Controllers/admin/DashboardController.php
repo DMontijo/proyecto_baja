@@ -108,6 +108,7 @@ use App\Models\ObjetoClasificacionModel;
 use App\Models\ObjetoSubclasificacionModel;
 use App\Models\PlantillasModel;
 use App\Models\RelacionFolioDocModel;
+use App\Models\RolesPermisosModel;
 use App\Models\TipoExpedienteModel;
 use App\Models\TipoMonedaModel;
 use App\Models\VehiculoDistribuidorModel;
@@ -237,6 +238,8 @@ class DashboardController extends BaseController
 		$this->_vehiculoVersionModel = new VehiculoVersionModel();
 		$this->_vehiculoServicioModel = new VehiculoServicioModel();
 		$this->_estadosExtranjeros = new EstadoExtranjeroModel();
+		$this->_rolesPermisosModel = new RolesPermisosModel();
+
 
 
 		// $this->protocol = 'http://';
@@ -260,6 +263,8 @@ class DashboardController extends BaseController
 			$data->cantidad_canalizados = count($this->_folioModel->asObject()->where('STATUS', 'CANALIZADO')->findAll());
 			$data->cantidad_expedientes = count($this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('AGENTEFIRMAID !=', null)->findAll());
 			$data->cantidad_expedientes_no_firmados = count($this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('AGENTEFIRMAID', null)->findAll());
+			$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+
 		} else {
 			$data->cantidad_folios = count($this->_folioModel->asObject()->where('AGENTEATENCIONID', session('ID'))->findAll());
 			$data->cantidad_abiertos = count($this->_folioModel->asObject()->where('AGENTEATENCIONID', session('ID'))->where('STATUS', 'ABIERTO')->findAll());
@@ -267,6 +272,8 @@ class DashboardController extends BaseController
 			$data->cantidad_canalizados = count($this->_folioModel->asObject()->where('AGENTEATENCIONID', session('ID'))->where('STATUS', 'CANALIZADO')->findAll());
 			$data->cantidad_expedientes = count($this->_folioModel->asObject()->where('AGENTEATENCIONID', session('ID'))->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('AGENTEFIRMAID !=', null)->findAll());
 			$data->cantidad_expedientes_no_firmados = count($this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('AGENTEFIRMAID', null)->findAll());
+			$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+
 		}
 		$this->_loadView('Principal', 'dashboard', '', $data, 'index');
 	}
@@ -280,12 +287,16 @@ class DashboardController extends BaseController
 			->join('ZONAS_USUARIOS', 'ZONAS_USUARIOS.ID_ZONA = USUARIOS.ZONAID')
 			->where('ROLID !=', 1)
 			->findAll();
+		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+
 		$this->_loadView('Usuarios', 'usuarios', '', $data, 'users/users');
 	}
 
 	public function usuarios_activos()
 	{
 		$data = (object) array();
+		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+
 		$this->_loadView('Usuarios activos', 'usuarios_activos', '', $data, 'usuarios_activos');
 	}
 
@@ -293,6 +304,8 @@ class DashboardController extends BaseController
 	{
 		$data = (object) array();
 		$data = $this->_usuariosModel->asObject()->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->join('ZONAS_USUARIOS', 'ZONAS_USUARIOS.ID_ZONA = USUARIOS.ZONAID')->findAll();
+		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+
 		$this->_loadView('Firmar documentos', 'firmar', '', $data, 'signs');
 	}
 
@@ -301,6 +314,8 @@ class DashboardController extends BaseController
 		$data = (object) array();
 		$data->zonas = $this->_zonasUsuariosModel->asObject()->where('NOMBRE_ZONA !=', 'SUPERUSUARIO')->findAll();
 		$data->roles = $this->_rolesUsuariosModel->asObject()->where('NOMBRE_ROL !=', 'SUPERUSUARIO')->findAll();
+		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+
 		$this->_loadView('Nuevo usuario', '', '', $data, 'users/new_user');
 	}
 
@@ -317,6 +332,8 @@ class DashboardController extends BaseController
 			->where('NOMBRE_ROL !=', 'SUPERUSUARIO')
 			->findAll();
 		$data->usuario = $this->_usuariosModel->asObject()->where('ID', $id)->first();
+		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+
 		$this->_loadView('Nuevo usuario', '', '', $data, 'users/edit_user');
 	}
 
@@ -332,6 +349,8 @@ class DashboardController extends BaseController
 		$data->colorVehiculo = $this->_coloresVehiculoModel->asObject()->findAll();
 		$data->tipoVehiculo = $this->_tipoVehiculoModel->asObject()->orderBy('VEHICULOTIPODESCR', 'ASC')->findAll();
 		$data->delitosUsuarios = $this->_delitosUsuariosModel->asObject()->orderBy('DELITO', 'ASC')->findAll();
+		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+
 		$this->_loadView('Denuncia anónima', 'denuncia_anonima', '', $data, 'denuncia_anonima');
 	}
 
@@ -401,6 +420,8 @@ class DashboardController extends BaseController
 	{
 		$data = (object) array();
 		$data = $this->_folioModel->asObject()->findAll();
+		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+
 		$this->_loadView('Folios no atendidos', 'folios', '', $data, 'folios');
 	}
 
@@ -409,6 +430,8 @@ class DashboardController extends BaseController
 		$data = (object) array();
 		$data->zonas = $this->_zonasUsuariosModel->asObject()->findAll();
 		$data->roles = $this->_rolesUsuariosModel->asObject()->findAll();
+		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+
 		$this->_loadView('Perfil', 'perfil', '', $data, 'perfil');
 	}
 
@@ -800,6 +823,9 @@ class DashboardController extends BaseController
 		$data->tipoVehiculo = $this->_tipoVehiculoModel->asObject()->findAll();
 		$data->servicioVehiculo = $this->_vehiculoServicioModel->asObject()->findAll();
 		$data->colorVehiculo = $this->_coloresVehiculoModel->asObject()->findAll();
+		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+
+
 
 		// $data->delitosModalidad = $this->_delitoModalidadModel->asObject()->orderBy('DELITOMODALIDADDESCR', 'asc')->findAll();
 		$delitosM = $this->_delitoModalidadModel->orderBy('DELITOMODALIDADDESCR', 'ASC')->findAll();
