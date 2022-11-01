@@ -4147,8 +4147,8 @@
 							const option_vacio = document.createElement('option');
 							option_vacio.value = "";
 							option_vacio.text = "";
-							option_vacio_pro.disabled = true;
-							option_vacio_pro.selected = true;
+							option_vacio.disabled = true;
+							option_vacio.selected = true;
 							select_propietario.add(option_vacio, null);
 							personas.forEach(persona => {
 								const option = document.createElement('option');
