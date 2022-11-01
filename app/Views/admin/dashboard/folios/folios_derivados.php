@@ -28,7 +28,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<?php foreach ($body_data as $index => $folio) { ?>
+								<?php foreach ($body_data->folio as $index => $folio) { ?>
 									<tr>
 										<td class="text-center"><?= $folio->FOLIOID ?></th>
 										<td class="text-center"><?= $folio->FECHAREGISTRO ?></td>

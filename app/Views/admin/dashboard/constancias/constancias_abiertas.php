@@ -24,7 +24,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<?php foreach ($body_data as $index => $constancia) { ?>
+								<?php foreach ($body_data->constancia as $index => $constancia) { ?>
 									<tr>
 										<td class="text-center font-weight-bold"><?= $constancia->CONSTANCIAEXTRAVIOID ?></td>
 										<td class="text-center"><?= $constancia->FECHAREGISTRO ?></td>

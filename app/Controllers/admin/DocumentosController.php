@@ -8,6 +8,7 @@ use App\Controllers\BaseController;
 use App\Models\FolioDocModel;
 use App\Models\FolioPersonaFisicaModel;
 use App\Models\PlantillasModel;
+use App\Models\RolesPermisosModel;
 
 class DocumentosController extends BaseController
 {
@@ -16,6 +17,8 @@ class DocumentosController extends BaseController
         $this->_folioDocModel = new FolioDocModel();
         $this->_plantillasModel = new PlantillasModel();
         $this->_folioPersonaFisicaModel = new FolioPersonaFisicaModel();
+        $this->_rolesPermisosModel = new RolesPermisosModel();
+
 
     }
     public function index()
@@ -24,6 +27,8 @@ class DocumentosController extends BaseController
 
         $data->abiertas = count($this->_folioDocModel->asObject()->where('STATUS', 'ABIERTO')->findAll());
         $data->expediente = count($this->_folioDocModel->asObject()->where('STATUS', 'FIRMADO')->where('NUMEROEXPEDIENTE <>', null)->findAll());
+        $data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+
 
         $this->_loadView('Documentos', $data, 'index');
     }
@@ -31,14 +36,18 @@ class DocumentosController extends BaseController
     {
         $data = (object)array();
         // $data = $this->_folioDocModel->asObject()->where('STATUS', 'ABIERTO')->distinct('NUMEROEXPEDIENTE')->first();
-        $data = $this->_folioDocModel->get_folio_abierto();
+        $data->documento = $this->_folioDocModel->get_folio_abierto();
+        $data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+
         $this->_loadView('Documentos abiertos', $data, 'documentos_abiertas');
     }
     public function documentos_firmados()
     {
         $data = (object)array();
         // $data = $this->_folioDocModel->asObject()->where('STATUS', 'ABIERTO')->distinct('NUMEROEXPEDIENTE')->first();
-        $data = $this->_folioDocModel->get_folio_firmado();
+        $data->documento = $this->_folioDocModel->get_folio_firmado();
+        $data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+
         $this->_loadView('Documentos abiertos', $data, 'documentos_firmados');
     }
 

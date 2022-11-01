@@ -13,6 +13,7 @@ use App\Models\PlantillasModel;
 use App\Models\HechoLugarModel;
 use App\Models\MunicipiosModel;
 use App\Models\EstadosModel;
+use App\Models\RolesPermisosModel;
 
 class ConstanciasController extends BaseController
 {
@@ -29,6 +30,8 @@ class ConstanciasController extends BaseController
 		$this->_hechoLugarModel = new HechoLugarModel();
 		$this->_municipiosModel = new MunicipiosModel();
 		$this->_estadosModel = new EstadosModel();
+		$this->_rolesPermisosModel = new RolesPermisosModel();
+
 	}
 
 	public function index()
@@ -36,20 +39,25 @@ class ConstanciasController extends BaseController
 		$data = (object)array();
 		$data->abiertas = count($this->_constanciaExtravioModel->asObject()->where('STATUS', 'ABIERTO')->findAll());
 		$data->firmadas = count($this->_constanciaExtravioModel->asObject()->where('STATUS', 'FIRMADO')->findAll());
+		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+
 		$this->_loadView('Constancias extravío', 'constancias', '', $data, 'index');
 	}
 
 	public function constancias_abiertas()
 	{
 		$data = (object)array();
-		$data = $this->_constanciaExtravioModel->asObject()->where('STATUS', 'ABIERTO')->findAll();
+		$data->constancia = $this->_constanciaExtravioModel->asObject()->where('STATUS', 'ABIERTO')->findAll();
+		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+
 		$this->_loadView('Constancias extraviadas abiertos', 'constancias', '', $data, 'constancias_abiertas');
 	}
 
 	public function constancias_firmadas()
 	{
 		$data = (object)array();
-		$data = $this->_constanciaExtravioModel->get_constancias_with_joins();
+		$data->constancia = $this->_constanciaExtravioModel->get_constancias_with_joins();
+		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 		$this->_loadView('Constancias extraviadas abiertos', 'constancias', '', $data, 'constancias_firmadas');
 	}

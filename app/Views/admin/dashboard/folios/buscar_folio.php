@@ -118,6 +118,8 @@
 										<td class="text-center">
 											<form action="<?= base_url('/admin/dashboard/ver_folio') ?>" method="post">
 												<input type="hidden" name="folio" value="<?= $folio->FOLIOID ?>">
+												<input type="hidden" name="ano" value="<?= $folio->ANO ?>">
+
 												<button type="submit" class="btn btn-primary text-white"><i class="fas fa-eye"></i></button>
 											</form>
 										</td>

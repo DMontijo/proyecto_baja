@@ -6,9 +6,11 @@ use App\Models\FolioModel;
 use App\Controllers\BaseController;
 use App\Models\ConstanciaExtravioModel;
 use App\Models\MunicipiosModel;
+use App\Models\RolesPermisosModel;
 use App\Models\UsuariosModel;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 
 class ReportesController extends BaseController
 {
@@ -18,15 +20,21 @@ class ReportesController extends BaseController
 		$this->_municipiosModel = new MunicipiosModel();
 		$this->_usuariosModel = new UsuariosModel();
 		$this->_constanciaExtravioModel = new ConstanciaExtravioModel();
+		$this->_rolesPermisosModel = new RolesPermisosModel();
+
 	}
 
 	public function index()
 	{
-		$this->_loadView('Reportes', 'Reportes', '', '', 'index');
+		$dataView = (object)array();
+		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+
+		$this->_loadView('Reportes', 'Reportes', '', $dataView, 'index');
 	}
 
 	public function getFolios()
 	{
+
 		$data = [
 			'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
 			'fechaFin' => date("Y-m-d"),
@@ -41,6 +49,8 @@ class ReportesController extends BaseController
 		$dataView->municipios = $municipio;
 		$dataView->empleados = $empleado;
 		$dataView->filterParams = (object)$data;
+		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+
 
 		$this->_loadView('Folios generados', 'folios', '', $dataView, 'folios');
 	}
@@ -265,6 +275,8 @@ class ReportesController extends BaseController
 		$dataView->municipios = $municipio;
 		$dataView->empleados = $empleado;
 		$dataView->filterParams = (object)$data;
+		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+
 		$this->_loadView('Constancias generadas', 'constancias', '', $dataView, 'constancias');
 	}
 

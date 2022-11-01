@@ -29,7 +29,7 @@ $meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "
 								</tr>
 							</thead>
 							<tbody>
-								<?php foreach ($body_data as $index => $constancia) { ?>
+								<?php foreach ($body_data->constancia as $index => $constancia) { ?>
 									<tr>
 										<td class="text-center font-weight-bold"><?= $constancia->CONSTANCIAEXTRAVIOID . '/' . $constancia->ANO ?></td>
 										<td class="text-center"><?= date("d-m-Y", strtotime($constancia->FECHAFIRMA)) ?></td>

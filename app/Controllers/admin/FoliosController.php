@@ -106,6 +106,7 @@ use App\Models\FolioPersonaFisImpDelitoModel;
 use App\Models\FolioRelacionFisFisModel;
 use App\Models\ObjetoClasificacionModel;
 use App\Models\ObjetoSubclasificacionModel;
+use App\Models\RolesPermisosModel;
 use App\Models\TipoExpedienteModel;
 use App\Models\TipoMonedaModel;
 use App\Models\VehiculoDistribuidorModel;
@@ -229,6 +230,8 @@ class FoliosController extends BaseController
 		$this->_vehiculoServicioModel = new VehiculoServicioModel();
         $this->_estadosExtranjeros = new EstadoExtranjeroModel();
         $this->_tipoExpedienteModel = new TipoExpedienteModel();
+        $this->_rolesPermisosModel = new RolesPermisosModel();
+
 
     }
 
@@ -244,20 +247,28 @@ class FoliosController extends BaseController
             $data->expedientes = count($this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('AGENTEFIRMAID !=', null)->findAll());
             $data->proceso = count($this->_folioModel->asObject()->where('STATUS', 'EN PROCESO')->findAll());
             $data->expedientes_no_firmados = count($this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('AGENTEFIRMAID', null)->findAll());
+            $data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+
         } else {
+            
             $data->derivados = count($this->_folioModel->asObject()->where('AGENTEATENCIONID', session('ID'))->where('STATUS', 'DERIVADO')->findAll());
             $data->canalizados = count($this->_folioModel->asObject()->where('AGENTEATENCIONID', session('ID'))->where('STATUS', 'CANALIZADO')->findAll());
             $data->expedientes = count($this->_folioModel->asObject()->where('AGENTEATENCIONID', session('ID'))->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('AGENTEFIRMAID !=', null)->findAll());
             $data->proceso = count($this->_folioModel->asObject()->where('STATUS', 'EN PROCESO')->findAll());
             $data->expedientes_no_firmados = count($this->_folioModel->asObject()->where('AGENTEATENCIONID', session('ID'))->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('AGENTEFIRMAID', null)->findAll());
+            $data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+
         }
+
         $this->_loadView('Folios', 'folios', '', $data, 'index');
     }
 
     public function folios_abiertos()
     {
         $data = (object) array();
-        $data = $this->_folioModel->asObject()->where('STATUS', 'ABIERTO')->join('DENUNCIANTES', 'DENUNCIANTES.DENUNCIANTEID = FOLIO.DENUNCIANTEID')->findAll();
+        $data->folio = $this->_folioModel->asObject()->where('STATUS', 'ABIERTO')->join('DENUNCIANTES', 'DENUNCIANTES.DENUNCIANTEID = FOLIO.DENUNCIANTEID')->findAll();
+        $data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+
         $this->_loadView('Folios abiertos', 'folios', '', $data, 'folios_abiertos');
     }
 
@@ -267,10 +278,12 @@ class FoliosController extends BaseController
         $agente = $this->_usuariosModel->asObject()->where('ID', session('ID'))->first();
         $roles = [1, 3];
         if (in_array($agente->ROLID, $roles)) {
-            $data = $this->_folioModel->asObject()->where('STATUS', 'DERIVADO')->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->findAll();
+            $data->folio = $this->_folioModel->asObject()->where('STATUS', 'DERIVADO')->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->findAll();
         } else {
-            $data = $this->_folioModel->asObject()->where('STATUS', 'DERIVADO')->where('AGENTEATENCIONID', session('ID'))->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->findAll();
+            $data->folio = $this->_folioModel->asObject()->where('STATUS', 'DERIVADO')->where('AGENTEATENCIONID', session('ID'))->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->findAll();
         }
+        $data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+
         $this->_loadView('Folios derivados', 'folios', '', $data, 'folios_derivados');
     }
 
@@ -280,17 +293,21 @@ class FoliosController extends BaseController
         $agente = $this->_usuariosModel->asObject()->where('ID', session('ID'))->first();
         $roles = [1, 3];
         if (in_array($agente->ROLID, $roles)) {
-            $data = $this->_folioModel->asObject()->where('STATUS', 'CANALIZADO')->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->findAll();
+            $data->folio = $this->_folioModel->asObject()->where('STATUS', 'CANALIZADO')->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->findAll();
         } else {
-            $data = $this->_folioModel->asObject()->where('STATUS', 'CANALIZADO')->where('AGENTEATENCIONID', session('ID'))->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->findAll();
+            $data->folio = $this->_folioModel->asObject()->where('STATUS', 'CANALIZADO')->where('AGENTEATENCIONID', session('ID'))->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->findAll();
         }
+        $data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+
         $this->_loadView('Folios canalizados', 'folios', '', $data, 'folios_canalizados');
     }
 
     public function folios_en_proceso()
     {
         $data = (object) array();
-        $data = $this->_folioModel->asObject()->where('STATUS', 'EN PROCESO')->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')->findAll();
+        $data->folio = $this->_folioModel->asObject()->where('STATUS', 'EN PROCESO')->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')->findAll();
+        $data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+
         $this->_loadView('Folios en proceso', 'folios', '', $data, 'folios_en_proceso');
     }
 
@@ -315,10 +332,11 @@ class FoliosController extends BaseController
         $agente = $this->_usuariosModel->asObject()->where('ID', session('ID'))->first();
         $roles = [1, 3];
         if (in_array($agente->ROLID, $roles)) {
-            $data = $this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('AGENTEFIRMAID !=', null)->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->findAll();
+            $data->folio = $this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('AGENTEFIRMAID !=', null)->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->findAll();
         } else {
-            $data = $this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID', session('ID'))->where('AGENTEFIRMAID !=', null)->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->findAll();
+            $data->folio = $this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID', session('ID'))->where('AGENTEFIRMAID !=', null)->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->findAll();
         }
+        $data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
         $this->_loadView('Folios expediente', 'folios', '', $data, 'folios_expediente');
     }
@@ -326,7 +344,9 @@ class FoliosController extends BaseController
     public function folios_sin_firma()
     {
         $data = (object) array();
-        $data = $this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('AGENTEFIRMAID', null)->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->findAll();
+        $data->folio = $this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('AGENTEFIRMAID', null)->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->findAll();
+        $data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+
         $this->_loadView('Expedientes sin firmar', 'folios', '', $data, 'folios_sin_firma');
     }
 
@@ -366,6 +386,8 @@ class FoliosController extends BaseController
         $dataView->municipios = $municipio;
         $dataView->empleados = $empleado;
         $dataView->filterParams = (object) $data;
+        $dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+
 
         $this->_loadView('Folios', 'folios', '', $dataView, 'buscar_folio');
     }
@@ -406,6 +428,7 @@ class FoliosController extends BaseController
         $dataView->municipios = $municipio;
         $dataView->empleados = $empleado;
         $dataView->filterParams = (object) $data;
+        $dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
         $this->_loadView('Folios', 'folios', '', $dataView, 'buscar_folio');
     }
@@ -518,6 +541,7 @@ class FoliosController extends BaseController
 		$data->versionVehiculo = $this->_vehiculoVersionModel->asObject()->findAll();
 		$data->servicioVehiculo = $this->_vehiculoServicioModel->asObject()->findAll();
         $data->estadosExtranjeros = $this->_estadosExtranjeros->asObject()->findAll();
+        $data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
         $this->_loadView('Video denuncia', 'videodenuncia', '', $data, 'ver_folio');
     }

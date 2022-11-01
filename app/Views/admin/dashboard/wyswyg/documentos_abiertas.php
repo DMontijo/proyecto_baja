@@ -24,7 +24,7 @@
 							</thead>
 							<tbody>
 								
-								<?php foreach ($body_data as $index => $documentos) { ?>
+								<?php foreach ($body_data->documento as $index => $documentos) { ?>
 									<tr>
 										<td class="text-center font-weight-bold"><?= $documentos['NUMEROEXPEDIENTE']  ?></td>
 										<td class="text-center"><?= $documentos['FECHAREGISTRO'] ?></td>

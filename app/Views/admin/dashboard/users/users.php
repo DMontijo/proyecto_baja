@@ -30,7 +30,7 @@
 										</tr>
 									</thead>
 									<tbody>
-										<?php foreach ($body_data as $index => $user) { ?>
+										<?php foreach ($body_data->usuario as $index => $user) { ?>
 											<tr>
 												<td class="text-center"><?= $user->NOMBRE_ROL ?></td>
 												<td class="text-center"><?= $user->NOMBRE ?> <?= $user->APELLIDO_PATERNO ?>
