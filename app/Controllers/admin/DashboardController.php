@@ -824,19 +824,7 @@ class DashboardController extends BaseController
 		$data->servicioVehiculo = $this->_vehiculoServicioModel->asObject()->findAll();
 		$data->colorVehiculo = $this->_coloresVehiculoModel->asObject()->findAll();
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
-
-
-
-		// $data->delitosModalidad = $this->_delitoModalidadModel->asObject()->orderBy('DELITOMODALIDADDESCR', 'asc')->findAll();
-		$delitosM = $this->_delitoModalidadModel->orderBy('DELITOMODALIDADDESCR', 'ASC')->findAll();
-		$delitos_vacios = [];
-		foreach ($delitosM as $delitos) {
-			if ($delitos['DELITOMODALIDADDESCR'] != null) {
-				array_push($delitos_vacios, (object) $delitos);
-			}
-		}
-		$data->delitosModalidad = [];
-		$data->delitosModalidad = (object) array_merge($delitos_vacios);
+		$data->delitosModalidad = $this->_delitoModalidadModel->asObject()->orderBy('DELITOMODALIDADDESCR', 'ASC')->where('DELITOMODALIDADDESCR IS NOT NULL')->findAll();
 		$this->_loadView('Video denuncia', 'videodenuncia', '', $data, 'video_denuncia');
 	}
 
@@ -2924,13 +2912,15 @@ class DashboardController extends BaseController
 		$objetoInvolucrado = $this->_folioObjetoInvolucrado($dataObjetoInvolucrado, $folio, $year);
 		if ($objetoInvolucrado) {
 			$objetos = $this->_folioObjetoInvolucradoModel->get_descripcion($folio, $year);
+			$personas = $this->_folioPersonaFisicaModel->get_by_folio($folio, $year);
+
 			$datosBitacora = [
 				'ACCION' => 'Ha ingresado un nuevo objeto involucrado',
 				'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
 			];
 
 			$this->_bitacoraActividad($datosBitacora);
-			return json_encode(['status' => 1, 'objetos' => $objetos]);
+			return json_encode(['status' => 1, 'objetos' => $objetos, 'personas'=>$personas]);
 		}
 	}
 	public function deleteObjetoInvolucrado()

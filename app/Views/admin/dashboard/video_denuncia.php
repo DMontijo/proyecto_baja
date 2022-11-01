@@ -836,7 +836,13 @@
 					});
 					$('#propietario').empty();
 					let select_propietario = document.querySelector("#propietario");
-					select_propietario.add(option_vacio, null);
+					const option_vacio_prop = document.createElement('option');
+					option_vacio_prop.value = '';
+					option_vacio_prop.text = '';
+					option_vacio_prop.disabled = true;
+					option_vacio_prop.selected = true;
+
+					select_propietario.add(option_vacio_prop, null);
 					personas.forEach(persona => {
 						const option = document.createElement('option');
 						option.value = persona.PERSONAFISICAID;
@@ -3937,11 +3943,26 @@
 							});
 							$('#propietario').empty();
 							let select_propietario = document.querySelector("#propietario");
+							const option_vacio_pro = document.createElement('option');
+							option_vacio_pro.value = '';
+							option_vacio_pro.text = '';
+							option_vacio_pro.disabled = true;
+							option_vacio_pro.selected = true;
+							select_propietario.add(option_vacio_pro, null);
+
 							personas.forEach(persona => {
 								const option = document.createElement('option');
 								option.value = persona.PERSONAFISICAID;
 								option.text = persona.NOMBRE + ' ' + persona.PRIMERAPELLIDO;
 								select_propietario.add(option, null);
+							});
+							$('#propietario_update').empty();
+							let select_propietario_update = document.querySelector("#propietario_update");
+							personas.forEach(persona => {
+								const option = document.createElement('option');
+								option.value = persona.PERSONAFISICAID;
+								option.text = persona.NOMBRE + ' ' + persona.PRIMERAPELLIDO;
+								select_propietario_update.add(option, null);
 							});
 
 
@@ -4116,10 +4137,23 @@
 					dataType: "json",
 					success: function(response) {
 						const objetos = response.objetos;
+						const personas = response.personas;
 						if (response.status == 1) {
 							document.getElementById("form_objetos_involucrados").reset();
 							$('#objeto_subclasificacion').empty();
+							// $('#propietario').empty();
 							$('#propietario').empty();
+							let select_propietario = document.querySelector("#propietario");
+							const option_vacio = document.createElement('option');
+							option.value = "";
+							option.text = "";
+							select_propietario.add(option, null);
+							personas.forEach(persona => {
+								const option = document.createElement('option');
+								option.value = persona.PERSONAFISICAID;
+								option.text = persona.NOMBRE + ' ' + persona.PRIMERAPELLIDO;
+								select_propietario.add(option, null);
+							});
 							let tabla_objetos_involucrados = document.querySelectorAll('#table-objetos-involucrados tr');
 							tabla_objetos_involucrados.forEach(row => {
 								if (row.id !== '') {
