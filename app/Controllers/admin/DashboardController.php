@@ -297,15 +297,15 @@ class DashboardController extends BaseController
 		$rol = array();
 
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
-		foreach (session('permisos') as $permiso) {
-			if ($permiso['PERMISO'] == 8) {
-				array_push($rol, $permiso);
-			}
-			if (sizeof($rol) == 0) {
-				unset($rol);
-			}
-			if (isset($roL)) {
-				if ($rol[0]['PERMISO'] == 8) {
+		// foreach (session('permisos') as $permiso) {
+		// 	if ($permiso['PERMISO'] == 8) {
+		// 		array_push($rol, $permiso);
+		// 	}
+		// 	if (sizeof($rol) == 0) {
+		// 		unset($rol);
+		// 	}
+		// 	if (isset($roL)) {
+		// 		if ($rol[0]['PERMISO'] == 8) {
 					$data->rolPermisoDescr = $this->_rolesPermisosModel->get_rol_permiso();
 
 					$data->roles = $this->_rolesUsuariosModel->asObject()->findAll();
@@ -313,13 +313,13 @@ class DashboardController extends BaseController
 
 
 					$this->_loadView('Roles', 'roles', '', $data, 'roles/roles');
-				}else{
-					return redirect()->to(base_url('/admin/dashboard'))->with('acceso_denegado', 'Acceso denegado a esta pagina, solicita a soporte');
-				}
-			} else {
-				return redirect()->to(base_url('/admin/dashboard'))->with('acceso_denegado', 'Acceso denegado a esta pagina, solicita a soporte');
-			}
-		}
+			// 	}else{
+			// 		return redirect()->to(base_url('/admin/dashboard'))->with('acceso_denegado', 'Acceso denegado a esta pagina, solicita a soporte');
+			// 	}
+			// } else {
+			// 	return redirect()->to(base_url('/admin/dashboard'))->with('acceso_denegado', 'Acceso denegado a esta pagina, solicita a soporte');
+			// }
+		// }
 	}
 
 	public function nuevo_rol()
