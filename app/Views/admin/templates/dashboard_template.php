@@ -37,80 +37,80 @@
 		<ul class="c-sidebar-nav">
 
 
-					<li class="c-sidebar-nav-item" id="nav-inicio" name="nav-inicio">
-						<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard">
-							<i class="fas fa-tachometer-alt c-sidebar-nav-icon"></i> Inicio
-						</a>
-					</li>
-					<?php foreach ($body_data->rolPermiso as $permiso) { ?>
+			<li class="c-sidebar-nav-item" id="nav-inicio" name="nav-inicio">
+				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard">
+					<i class="fas fa-tachometer-alt c-sidebar-nav-icon"></i> Inicio
+				</a>
+			</li>
+			<?php foreach ($body_data->rolPermiso as $permiso) { ?>
 
 				<?php if ($permiso->PERMISOID == 1) { ?>
 
-				<li class="c-sidebar-nav-item" id="nav-videodenuncia" name="nav-videodenuncia">
-					<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/video-denuncia">
-						<i class="fas fa-video c-sidebar-nav-icon"></i> Videodenuncia
-					</a>
-				</li>
-				<?php } ?>
-				<?php } ?>
-
-				<?php if (false) : ?>
-					<li class="c-sidebar-nav-item" id="nav-denuncia-anonima" name="nav-denuncia-anonima">
-						<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/denuncia-anonima">
-							<i class="fas fa-phone-alt c-sidebar-nav-icon"></i> Denuncia anónima
+					<li class="c-sidebar-nav-item" id="nav-videodenuncia" name="nav-videodenuncia">
+						<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/video-denuncia">
+							<i class="fas fa-video c-sidebar-nav-icon"></i> Videodenuncia
 						</a>
 					</li>
-				<?php endif; ?>
-				<?php foreach ($body_data->rolPermiso as $permiso) { ?>
+				<?php } ?>
+			<?php } ?>
+
+			<?php if (false) : ?>
+				<li class="c-sidebar-nav-item" id="nav-denuncia-anonima" name="nav-denuncia-anonima">
+					<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/denuncia-anonima">
+						<i class="fas fa-phone-alt c-sidebar-nav-icon"></i> Denuncia anónima
+					</a>
+				</li>
+			<?php endif; ?>
+			<?php foreach ($body_data->rolPermiso as $permiso) { ?>
 
 				<?php if ($permiso->PERMISOID == 2) { ?>
 
-				<li class="c-sidebar-nav-item" id="nav-buscar-folio" name="nav-buscar-folio">
-					<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url('admin/dashboard/buscar_folio') ?>">
-						<i class="fas fa-search c-sidebar-nav-icon"></i> Buscar folio
-					</a>
-				</li>
-				
-				<?php } ?>
-				<?php } ?>
+					<li class="c-sidebar-nav-item" id="nav-buscar-folio" name="nav-buscar-folio">
+						<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url('admin/dashboard/buscar_folio') ?>">
+							<i class="fas fa-search c-sidebar-nav-icon"></i> Buscar folio
+						</a>
+					</li>
 
-				<?php foreach ($body_data->rolPermiso as $permiso) { ?>
+				<?php } ?>
+			<?php } ?>
+
+			<?php foreach ($body_data->rolPermiso as $permiso) { ?>
 
 				<?php if ($permiso->PERMISOID == 3) { ?>
 
-				<li class="c-sidebar-nav-item" id="nav-folios" name="nav-folios">
-					<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/folios">
-						<i class="fas fa-archive c-sidebar-nav-icon"></i> Folios
-					</a>
-				</li>
+					<li class="c-sidebar-nav-item" id="nav-folios" name="nav-folios">
+						<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/folios">
+							<i class="fas fa-archive c-sidebar-nav-icon"></i> Folios
+						</a>
+					</li>
 				<?php } ?>
-				<?php } ?>
+			<?php } ?>
 
-				<?php foreach ($body_data->rolPermiso as $permiso) { ?>
+			<?php foreach ($body_data->rolPermiso as $permiso) { ?>
 
 				<?php if ($permiso->PERMISOID == 4) { ?>
-				<li class="c-sidebar-nav-item" id="nav-constancias" name="nav-constancias">
-					<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/constancias">
-						<i class="fas fa-folder c-sidebar-nav-icon"></i> Constancias de extravío
-					</a>
-				</li>
+					<li class="c-sidebar-nav-item" id="nav-constancias" name="nav-constancias">
+						<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/constancias">
+							<i class="fas fa-folder c-sidebar-nav-icon"></i> Constancias de extravío
+						</a>
+					</li>
 				<?php } ?>
-				<?php } ?>
+			<?php } ?>
 
-				<?php foreach ($body_data->rolPermiso as $permiso) { ?>
+			<?php foreach ($body_data->rolPermiso as $permiso) { ?>
 
 				<?php if ($permiso->PERMISOID == 5) { ?>
-				<li class="c-sidebar-nav-item" id="nav-documentos" name="nav-documentos">
-					<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/documentos">
-						<i class="fas fa-file-invoice c-sidebar-nav-icon"></i> Documentos
-					</a>
-				</li>
-				<!-- <li class="c-sidebar-nav-item">
+					<li class="c-sidebar-nav-item" id="nav-documentos" name="nav-documentos">
+						<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/documentos">
+							<i class="fas fa-file-invoice c-sidebar-nav-icon"></i> Documentos
+						</a>
+					</li>
+					<!-- <li class="c-sidebar-nav-item">
 				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/firmas">
 					<i class="fas fa-file-alt c-sidebar-nav-icon"></i> Firmar documentos
 				</a>
 			</li> -->
-			<?php } ?>
+				<?php } ?>
 			<?php } ?>
 
 			<?php foreach ($body_data->rolPermiso as $permiso) { ?>
@@ -122,21 +122,30 @@
 						</a>
 					</li>
 
-				<!-- <li class="c-sidebar-nav-item">
+					<!-- <li class="c-sidebar-nav-item">
 				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url('admin/dashboard/perfil') ?>">
 					<i class="fas fa-address-card c-sidebar-nav-icon"></i> Perfil
 				</a>
 			</li> -->
-			<?php } ?>
+				<?php } ?>
 			<?php } ?>
 
 			<?php foreach ($body_data->rolPermiso as $permiso) { ?>
 				<?php if ($permiso->PERMISOID == 7) { ?>
-				<li class="c-sidebar-nav-item" id="nav-reportes" name="nav-reportes">
-					<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url('admin/dashboard/reportes') ?>">
-						<i class="fas fa-folder-open c-sidebar-nav-icon"></i> Reportes
-					</a>
-				</li>
+					<li class="c-sidebar-nav-item" id="nav-reportes" name="nav-reportes">
+						<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url('admin/dashboard/reportes') ?>">
+							<i class="fas fa-folder-open c-sidebar-nav-icon"></i> Reportes
+						</a>
+					</li>
+				<?php } ?>
+			<?php } ?>
+			<?php foreach ($body_data->rolPermiso as $permiso) { ?>
+				<?php if ($permiso->PERMISOID == 8) { ?>
+					<li class="c-sidebar-nav-item" id="nav-roles" name="nav-roles">
+						<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url('admin/dashboard/roles') ?>">
+							<i class="fas fa-user-cog c-sidebar-nav-icon"></i> Roles
+						</a>
+					</li>
 				<?php } ?>
 			<?php } ?>
 			<li class="c-sidebar-nav-item" id="nav-salir" name="nav-salir">
@@ -144,6 +153,7 @@
 					<i class="fas fa-sign-out-alt c-sidebar-nav-icon"></i> Salir
 				</a>
 			</li>
+
 
 		</ul>
 		<button class="c-sidebar-minimizer c-class-toggler" type="button" data-target="_parent" data-class="c-sidebar-minimized"></button>

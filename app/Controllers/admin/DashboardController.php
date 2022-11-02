@@ -106,6 +106,7 @@ use App\Models\FolioPersonaFisImpDelitoModel;
 use App\Models\FolioRelacionFisFisModel;
 use App\Models\ObjetoClasificacionModel;
 use App\Models\ObjetoSubclasificacionModel;
+use App\Models\PermisosModel;
 use App\Models\PlantillasModel;
 use App\Models\RelacionFolioDocModel;
 use App\Models\RolesPermisosModel;
@@ -239,6 +240,7 @@ class DashboardController extends BaseController
 		$this->_vehiculoServicioModel = new VehiculoServicioModel();
 		$this->_estadosExtranjeros = new EstadoExtranjeroModel();
 		$this->_rolesPermisosModel = new RolesPermisosModel();
+		$this->_permisosModel = new PermisosModel();
 
 
 
@@ -264,7 +266,6 @@ class DashboardController extends BaseController
 			$data->cantidad_expedientes = count($this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('AGENTEFIRMAID !=', null)->findAll());
 			$data->cantidad_expedientes_no_firmados = count($this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('AGENTEFIRMAID', null)->findAll());
 			$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
-
 		} else {
 			$data->cantidad_folios = count($this->_folioModel->asObject()->where('AGENTEATENCIONID', session('ID'))->findAll());
 			$data->cantidad_abiertos = count($this->_folioModel->asObject()->where('AGENTEATENCIONID', session('ID'))->where('STATUS', 'ABIERTO')->findAll());
@@ -273,7 +274,6 @@ class DashboardController extends BaseController
 			$data->cantidad_expedientes = count($this->_folioModel->asObject()->where('AGENTEATENCIONID', session('ID'))->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('AGENTEFIRMAID !=', null)->findAll());
 			$data->cantidad_expedientes_no_firmados = count($this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('AGENTEFIRMAID', null)->findAll());
 			$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
-
 		}
 		$this->_loadView('Principal', 'dashboard', '', $data, 'index');
 	}
@@ -291,7 +291,45 @@ class DashboardController extends BaseController
 
 		$this->_loadView('Usuarios', 'usuarios', '', $data, 'users/users');
 	}
+	public function roles()
+	{
+		$data = (object) array();
+		$rol = array();
 
+		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+		foreach (session('permisos') as $permiso) {
+			if ($permiso['PERMISO'] == 8) {
+				array_push($rol, $permiso);
+			}
+			if (sizeof($rol) == 0) {
+				unset($rol);
+			}
+			if (isset($roL)) {
+				if ($rol[0]['PERMISO'] == 8) {
+					$data->rolPermisoDescr = $this->_rolesPermisosModel->get_rol_permiso();
+
+					$data->roles = $this->_rolesUsuariosModel->asObject()->findAll();
+					$data->permisos = $this->_permisosModel->asObject()->findAll();
+
+
+					$this->_loadView('Roles', 'roles', '', $data, 'roles/roles');
+				}else{
+					return redirect()->to(base_url('/admin/dashboard'))->with('acceso_denegado', 'Acceso denegado a esta pagina, solicita a soporte');
+				}
+			} else {
+				return redirect()->to(base_url('/admin/dashboard'))->with('acceso_denegado', 'Acceso denegado a esta pagina, solicita a soporte');
+			}
+		}
+	}
+
+	public function nuevo_rol()
+	{
+		$data = (object) array();
+		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+		$data->roles = $this->_rolesUsuariosModel->asObject()->findAll();
+		$data->permisos = $this->_permisosModel->asObject()->findAll();
+		$this->_loadView('Nuevo rol', '', '', $data, 'roles/new_rol');
+	}
 	public function usuarios_activos()
 	{
 		$data = (object) array();
@@ -318,7 +356,52 @@ class DashboardController extends BaseController
 
 		$this->_loadView('Nuevo usuario', '', '', $data, 'users/new_user');
 	}
+	public function create_rol()
+	{
+		$data = (object) array();
+		$data = [
+			'ROLID' => $this->request->getPost('rol_usuario'),
+			'PERMISOID' => $this->request->getPost('permiso_rol'),
+		];
+		$datosBitacora = [
+			'ACCION' => 'Ha creado un nuevo rol',
+			'NOTAS' => 'ROL CREADO: ' . $this->request->getPost('rol_usuario') . 'PERMISO: ' .  $this->request->getPost('permiso_rol'),
+		];
+		$insert = $this->_rolesPermisosModel->insert($data);
+		if (!$insert) {
+			$this->_bitacoraActividad($datosBitacora);
+			$dataView = (object) array();
+			$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+			$dataView->rolPermisoDescr = $this->_rolesPermisosModel->get_rol_permiso();
+			$dataView->roles = $this->_rolesUsuariosModel->asObject()->findAll();
+			$dataView->permisos = $this->_permisosModel->asObject()->findAll();
+			return redirect()->to(base_url('/admin/dashboard/roles'))->with('message_success', 'Rol creado correctamente.');
+		} else {
+			return redirect()->to(base_url('/admin/dashboard/roles'))->with('message_error', 'Rol no creado.');
+		}
+	}
+	public function eliminar_rol()
+	{
+		$rolid = $this->request->getGet('rol');
+		$permisoid = $this->request->getGet('permiso');
+		$deleteRol = $this->_rolesPermisosModel->where('ROLID', $rolid)->where('PERMISOID', $permisoid)->delete();
+		if ($deleteRol) {
+			$datosBitacora = [
+				'ACCION' => 'Ha eliminado un  rol',
+				'NOTAS' => 'ROL ELIMINADO: ' . $rolid . 'PERMISO: ' . $permisoid,
+			];
+			$this->_bitacoraActividad($datosBitacora);
+			$dataView = (object) array();
+			$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+			$dataView->roles = $this->_rolesUsuariosModel->asObject()->findAll();
+			$dataView->permisos = $this->_permisosModel->asObject()->findAll();
+			$dataView->rolPermisoDescr = $this->_rolesPermisosModel->get_rol_permiso();
 
+			return redirect()->to(base_url('/admin/dashboard/roles'))->with('message_success', 'Rol eliminado correctamente.');
+		} else {
+			return redirect()->to(base_url('/admin/dashboard/roles'))->with('message_error', 'Rol no eliminado.');
+		}
+	}
 	public function editar_usuario()
 	{
 		$id = $this->request->getGet('id');
@@ -1900,9 +1983,9 @@ class DashboardController extends BaseController
             }";
 		}
 		curl_close($ch);
-			// var_dump($endpoint);
-			// var_dump($data);
-			// var_dump($result);
+		// var_dump($endpoint);
+		// var_dump($data);
+		// var_dump($result);
 
 		return json_decode($result);
 	}
@@ -2920,7 +3003,7 @@ class DashboardController extends BaseController
 			];
 
 			$this->_bitacoraActividad($datosBitacora);
-			return json_encode(['status' => 1, 'objetos' => $objetos, 'personas'=>$personas]);
+			return json_encode(['status' => 1, 'objetos' => $objetos, 'personas' => $personas]);
 		}
 	}
 	public function deleteObjetoInvolucrado()
@@ -3154,10 +3237,10 @@ class DashboardController extends BaseController
 		$folio = trim($this->request->getPost('folio'));
 		$plantilla = $this->_plantillasModel->where('TITULO', $this->request->getPost('titulo'))->first();
 		$folioDoc = $this->_folioDocModel->asObject()->where('FOLIOID',  $folio)->where('ANO', $this->request->getPost('year'))->first();
-		
-		$municipio = isset($folioDoc->MUNICIPIOID)?$folioDoc->MUNICIPIOID:NULL;
-		$agente = isset($folioDoc->AGENTEID)?$folioDoc->AGENTEID:NULL;
-		$oficina = isset($folioDoc->OFICINAID)?$folioDoc->OFICINAID:NULL;
+
+		$municipio = isset($folioDoc->MUNICIPIOID) ? $folioDoc->MUNICIPIOID : NULL;
+		$agente = isset($folioDoc->AGENTEID) ? $folioDoc->AGENTEID : NULL;
+		$oficina = isset($folioDoc->OFICINAID) ? $folioDoc->OFICINAID : NULL;
 		// var_dump($municipio);
 
 		$year = trim($this->request->getPost('year'));

@@ -78,5 +78,15 @@
 			}
 		});
 	}
+
 </script>
+<?php if (session()->getFlashdata('acceso_denegado')) : ?>
+	<script>
+		Swal.fire({
+			icon: 'error',
+			html: '<strong><?= session()->getFlashdata('acceso_denegado') ?></strong>',
+			confirmButtonColor: '#bf9b55',
+		})
+	</script>
+<?php endif; ?>
 <?= $this->endSection() ?>

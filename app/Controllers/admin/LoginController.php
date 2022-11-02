@@ -7,6 +7,8 @@ use App\Controllers\BaseController;
 use App\Models\UsuariosModel;
 use App\Models\SesionesModel;
 use App\Models\BitacoraActividadModel;
+use App\Models\RolesPermisosModel;
+
 class LoginController extends BaseController
 {
 	function __construct()
@@ -14,6 +16,7 @@ class LoginController extends BaseController
 		$this->_usuariosModel = new UsuariosModel();
 		$this->_sesionesModel = new SesionesModel();
 		$this->_bitacoraActividadModel = new BitacoraActividadModel();
+		$this->_rolesPermisosModel = new rolesPermisosModel();
 	}
 
 	public function index()
@@ -35,6 +38,7 @@ class LoginController extends BaseController
 		$password = trim($password);
 		$data = $this->_usuariosModel->where('CORREO', $email)->first();
 		if ($data && validatePassword($password, $data['PASSWORD'])) {
+			$data['permisos'] = $this->_rolesPermisosModel->select('ROLESPERMISOS.permisoid as PERMISO,PERMISOS.PERMISODESCR AS NOMBRE')->where('ROLID', $data['ROLID'])->join('PERMISOS', 'PERMISOS.PERMISOID = ROLESPERMISOS.PERMISOID', 'left')->findAll();
 			$data['logged_in'] = TRUE;
 			$data['type'] = 'admin';
 			$session->set($data);
@@ -125,14 +129,14 @@ class LoginController extends BaseController
 		return $externalIp;
 	}
 	private function _bitacoraActividad($data)
-    {
-        $data = $data;
-        $data['ID'] = uniqid();
-        $data['USUARIOID'] = session('ID');
+	{
+		$data = $data;
+		$data['ID'] = uniqid();
+		$data['USUARIOID'] = session('ID');
 
 
-        $this->_bitacoraActividadModel->insert($data);
-    }
+		$this->_bitacoraActividadModel->insert($data);
+	}
 }
 /* End of file LoginController.php */
-/* Location: ./app/Controllers/admin/LoginController.php */
+/* Location: ./app/Controllers/admin/LoginController.php */

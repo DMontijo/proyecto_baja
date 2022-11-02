@@ -10,6 +10,7 @@ use CodeIgniter\Filters\Honeypot;
 use App\Filters\DenunciantesAuthFilter;
 use App\Filters\ConstanciasExtravioAuthFilter;
 use App\Filters\AdminAuthFilter;
+use App\Filters\PageFilter;
 
 class Filters extends BaseConfig
 {
@@ -26,6 +27,8 @@ class Filters extends BaseConfig
 		'adminAuth' => AdminAuthFilter::class,
 		'denuciantesAuth' => DenunciantesAuthFilter::class,
 		'constanciasExtravioAuth' => ConstanciasExtravioAuthFilter::class,
+		'pageValidation' => PageFilter::class,
+
 	];
 
 	/**

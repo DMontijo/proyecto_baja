@@ -17,6 +17,8 @@ class PermisosSeeder extends Seeder
 			array('PERMISOID' => '5', 'PERMISODESCR'=>'DOCUMENTOS'),
             array('PERMISOID' => '6', 'PERMISODESCR'=>'USUARIOS'),
 			array('PERMISOID' => '7', 'PERMISODESCR'=>'REPORTES'),
+			array('PERMISOID' => '8', 'PERMISODESCR'=>'ROLES'),
+
 
 
 
