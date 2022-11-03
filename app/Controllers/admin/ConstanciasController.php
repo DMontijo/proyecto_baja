@@ -37,6 +37,9 @@ class ConstanciasController extends BaseController
 	public function index()
 	{
 		$data = (object)array();
+		if (!$this->permisos('CONSTANCIAS DE EXTRAVIOS')) {
+			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
+		}
 		$data->abiertas = count($this->_constanciaExtravioModel->asObject()->where('STATUS', 'ABIERTO')->findAll());
 		$data->firmadas = count($this->_constanciaExtravioModel->asObject()->where('STATUS', 'FIRMADO')->findAll());
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
@@ -197,6 +200,10 @@ class ConstanciasController extends BaseController
 		];
 
 		echo view("admin/dashboard/constancias/$view", $data2);
+	}
+	private function permisos($permiso)
+	{
+		return in_array($permiso, session('permisos'));
 	}
 }
 

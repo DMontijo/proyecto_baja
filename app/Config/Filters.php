@@ -27,8 +27,6 @@ class Filters extends BaseConfig
 		'adminAuth' => AdminAuthFilter::class,
 		'denuciantesAuth' => DenunciantesAuthFilter::class,
 		'constanciasExtravioAuth' => ConstanciasExtravioAuthFilter::class,
-		'pageValidation' => PageFilter::class,
-
 	];
 
 	/**

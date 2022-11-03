@@ -50,8 +50,15 @@ $routes->group('admin', function ($routes) {
 	$routes->group('dashboard', ['filter' => 'adminAuth'], function ($routes) {
 		$routes->get('/', 'admin/DashboardController::index');
 
-		$routes->get('usuarios', 'admin/DashboardController::usuarios',['filter' => 'pageValidation']);
-		$routes->get('roles', 'admin/DashboardController::roles',['filter' => 'pageValidation']);
+		$routes->get('usuarios', 'admin/DashboardController::usuarios');
+		$routes->get('asignacion_permisos', 'admin/DashboardController::asignacion_permisos');
+		$routes->get('nuevo_asignacion_permisos', 'admin/DashboardController::nuevo_asignacion_permiso');
+		$routes->post('create_asignacion_permiso', 'admin/DashboardController::create_asignacion_permiso');
+		$routes->post('create_rol', 'admin/DashboardController::create_rol');
+
+		$routes->get('eliminar_asignacion_permiso', 'admin/DashboardController::eliminar_asignacion_permiso');
+		$routes->get('nuevo_rol', 'admin/DashboardController::nuevo_rol');
+
 
 		$routes->get('generarqr', 'admin/FirmaController::generarqr');
 		$routes->get('usuarios_activos', 'admin/DashboardController::usuarios_activos');
@@ -62,14 +69,12 @@ $routes->group('admin', function ($routes) {
 		$routes->get('editar_usuario', 'admin/DashboardController::editar_usuario');
 		$routes->post('nuevo_usuario', 'admin/DashboardController::crear_usuario');
 		$routes->post('editar_usuario', 'admin/DashboardController::update_usuario');
-		$routes->get('nuevo_rol', 'admin/DashboardController::nuevo_rol');
-		$routes->post('create_rol', 'admin/DashboardController::create_rol');
-		$routes->get('eliminar_rol', 'admin/DashboardController::eliminar_rol');
+		
 
-		$routes->get('video-denuncia', 'admin/DashboardController::video_denuncia',['filter' => 'pageValidation']);
+		$routes->get('video-denuncia', 'admin/DashboardController::video_denuncia');
 		$routes->get('denuncia-anonima', 'admin/DashboardController::denuncia_anonima');
 
-		$routes->get('folios', 'admin/FoliosController::index',['filter' => 'pageValidation']);
+		$routes->get('folios', 'admin/FoliosController::index');
 		$routes->get('folios_abiertos', 'admin/FoliosController::folios_abiertos');
 		$routes->get('folios_derivados', 'admin/FoliosController::folios_derivados');
 		$routes->get('folios_canalizados', 'admin/FoliosController::folios_canalizados');
@@ -83,7 +88,7 @@ $routes->group('admin', function ($routes) {
 		$routes->post('buscar_folio', 'admin/FoliosController::getFilterFolios');
 		$routes->post('ver_folio', 'admin/FoliosController::viewFolio');
 
-		$routes->get('constancias', 'admin/ConstanciasController::index',['filter' => 'pageValidation']);
+		$routes->get('constancias', 'admin/ConstanciasController::index');
 		$routes->post('firmar_constancia_extravio', 'admin/FirmaController::firmar_constancia_extravio');
 		$routes->get('constancias_extravio_abiertas', 'admin/ConstanciasController::constancias_abiertas');
 		$routes->get('constancias_extravio_firmadas', 'admin/ConstanciasController::constancias_firmadas');
@@ -103,7 +108,7 @@ $routes->group('admin', function ($routes) {
 
 		$routes->get('constanciaFirmada', 'admin/FoliosController::constanciaExtravioFirmado');
 
-		$routes->get('reportes', 'admin/ReportesController::index',['filter' => 'pageValidation']);
+		$routes->get('reportes', 'admin/ReportesController::index');
 		$routes->get('reportes_folios', 'admin/ReportesController::getFolios');
 		$routes->post('reportes_folios', 'admin/ReportesController::postFolios');
 		$routes->get('reportes_constancias', 'admin/ReportesController::getConstancias');
@@ -112,7 +117,7 @@ $routes->group('admin', function ($routes) {
 		$routes->post('generar_excel_folios', 'admin/ReportesController::createFoliosXlsx');
 		$routes->post('generar_excel_constancias', 'admin/ReportesController::createConstanciasXlsx');
 
-		$routes->get('documentos', 'admin/DocumentosController::index',['filter' => 'pageValidation']);
+		$routes->get('documentos', 'admin/DocumentosController::index');
 		$routes->get('documentos_abiertos', 'admin/DocumentosController::documentos_abiertas');
 		$routes->get('documentos_firmados', 'admin/DocumentosController::documentos_firmados');
 

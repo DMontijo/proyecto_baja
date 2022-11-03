@@ -26,6 +26,9 @@ class ReportesController extends BaseController
 
 	public function index()
 	{
+		if (!$this->permisos('REPORTES')) {
+			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
+		}
 		$dataView = (object)array();
 		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
@@ -495,5 +498,9 @@ class ReportesController extends BaseController
 		];
 
 		echo view("admin/dashboard/reportes/$view", $data2);
+	}
+	private function permisos($permiso)
+	{
+		return in_array($permiso, session('permisos'));
 	}
 }

@@ -26,7 +26,9 @@ class DocumentosController extends BaseController
     public function index()
     {
         $data = (object)array();
-
+        if (!$this->permisos('DOCUMENTOS')) {
+			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
+		}
         // $data->abiertas = count($this->_folioDocModel->asObject()->where('STATUS', 'ABIERTO')->findAll());
         // // $data->expediente = count($this->_folioDocModel->asObject()->where('STATUS', 'FIRMADO')->where('NUMEROEXPEDIENTE <>', null)->findAll());
         // $data->expediente = count($this->_folioModel->asObject()->where('STATUS', 'EXPEDIENTE')->where('EXPEDIENTEID <>', null)->findAll());
@@ -164,4 +166,8 @@ class DocumentosController extends BaseController
 
         echo view("admin/dashboard/wyswyg/$view", $data);
     }
+    private function permisos($permiso)
+	{
+		return in_array($permiso, session('permisos'));
+	}
 }

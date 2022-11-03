@@ -281,6 +281,9 @@ class DashboardController extends BaseController
 	public function usuarios()
 	{
 		$data = (object) array();
+		if (!$this->permisos('USUARIOS')) {
+			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
+		}
 		$data->usuario = $this->_usuariosModel->asObject()
 			->select('USUARIOS.ID,USUARIOS.NOMBRE, USUARIOS.APELLIDO_PATERNO, USUARIOS.APELLIDO_MATERNO, USUARIOS.SEXO, USUARIOS.CORREO, USUARIOS.PASSWORD, USUARIOS.USUARIOVIDEO, USUARIOS.TOKENVIDEO, USUARIOS.HUELLA_DIGITAL, USUARIOS.CERTIFICADOFIRMA, USUARIOS.KEYFIRMA, USUARIOS.FRASEFIRMA, ZONAS_USUARIOS.NOMBRE_ZONA, ROLES.NOMBRE_ROL')
 			->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')
@@ -291,44 +294,42 @@ class DashboardController extends BaseController
 
 		$this->_loadView('Usuarios', 'usuarios', '', $data, 'users/users');
 	}
-	public function roles()
+	public function asignacion_permisos()
 	{
+
 		$data = (object) array();
-		$rol = array();
 
+		if (!$this->permisos('ROLES')) {
+			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
+		}
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
-		// foreach (session('permisos') as $permiso) {
-		// 	if ($permiso['PERMISO'] == 8) {
-		// 		array_push($rol, $permiso);
-		// 	}
-		// 	if (sizeof($rol) == 0) {
-		// 		unset($rol);
-		// 	}
-		// 	if (isset($roL)) {
-		// 		if ($rol[0]['PERMISO'] == 8) {
-					$data->rolPermisoDescr = $this->_rolesPermisosModel->get_rol_permiso();
 
-					$data->roles = $this->_rolesUsuariosModel->asObject()->findAll();
-					$data->permisos = $this->_permisosModel->asObject()->findAll();
+		$data->rolPermisoDescr = $this->_rolesPermisosModel->get_rol_permiso();
+
+		$data->roles = $this->_rolesUsuariosModel->asObject()->findAll();
+		$data->permisos = $this->_permisosModel->asObject()->findAll();
 
 
-					$this->_loadView('Roles', 'roles', '', $data, 'roles/roles');
-			// 	}else{
-			// 		return redirect()->to(base_url('/admin/dashboard'))->with('acceso_denegado', 'Acceso denegado a esta pagina, solicita a soporte');
-			// 	}
-			// } else {
-			// 	return redirect()->to(base_url('/admin/dashboard'))->with('acceso_denegado', 'Acceso denegado a esta pagina, solicita a soporte');
-			// }
-		// }
+		$this->_loadView('Asignación de permisos', 'asignacion de permisos', '', $data, 'roles/asignacion_permisos');
 	}
 
-	public function nuevo_rol()
+
+	public function nuevo_asignacion_permiso()
 	{
 		$data = (object) array();
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 		$data->roles = $this->_rolesUsuariosModel->asObject()->findAll();
 		$data->permisos = $this->_permisosModel->asObject()->findAll();
-		$this->_loadView('Nuevo rol', '', '', $data, 'roles/new_rol');
+		$this->_loadView('Nuevo asignacion de permisos', '', '', $data, 'roles/nueva_asignacion_rol');
+	}
+	public function nuevo_rol()
+	{
+		$data = (object) array();
+		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+		$data->roles = $this->_rolesUsuariosModel->asObject()->findAll();
+
+		$data->permisos = $this->_permisosModel->asObject()->findAll();
+		$this->_loadView('Nuevo rol', '', '', $data, 'roles/nuevo_rol');
 	}
 	public function usuarios_activos()
 	{
@@ -356,7 +357,7 @@ class DashboardController extends BaseController
 
 		$this->_loadView('Nuevo usuario', '', '', $data, 'users/new_user');
 	}
-	public function create_rol()
+	public function create_asignacion_permiso()
 	{
 		$data = (object) array();
 		$data = [
@@ -364,9 +365,13 @@ class DashboardController extends BaseController
 			'PERMISOID' => $this->request->getPost('permiso_rol'),
 		];
 		$datosBitacora = [
-			'ACCION' => 'Ha creado un nuevo rol',
+			'ACCION' => 'Ha creado una nueva asignacion de permisos',
 			'NOTAS' => 'ROL CREADO: ' . $this->request->getPost('rol_usuario') . 'PERMISO: ' .  $this->request->getPost('permiso_rol'),
 		];
+		$rolesPermiso = $this->_rolesPermisosModel->where('ROLID',$this->request->getPost('rol_usuario'))->where('PERMISOID', $this->request->getPost('permiso_rol'))->first();
+		if ($rolesPermiso) {
+			return redirect()->to(base_url('/admin/dashboard/nuevo_asignacion_permisos'))->with('message_error', 'Esta asignación de permisos ya existe.');
+		}
 		$insert = $this->_rolesPermisosModel->insert($data);
 		if (!$insert) {
 			$this->_bitacoraActividad($datosBitacora);
@@ -375,19 +380,48 @@ class DashboardController extends BaseController
 			$dataView->rolPermisoDescr = $this->_rolesPermisosModel->get_rol_permiso();
 			$dataView->roles = $this->_rolesUsuariosModel->asObject()->findAll();
 			$dataView->permisos = $this->_permisosModel->asObject()->findAll();
-			return redirect()->to(base_url('/admin/dashboard/roles'))->with('message_success', 'Rol creado correctamente.');
+			return redirect()->to(base_url('/admin/dashboard/asignacion_permisos'))->with('message_success', 'Asignación de permisos creado correctamente.');
 		} else {
-			return redirect()->to(base_url('/admin/dashboard/roles'))->with('message_error', 'Rol no creado.');
+			return redirect()->to(base_url('/admin/dashboard/asignacion_permisos'))->with('message_error', 'Asignación de permisos no creado.');
 		}
 	}
-	public function eliminar_rol()
+	public function create_rol()
+	{
+		$data = (object) array();
+		$data = [
+			'NOMBRE_ROL' => $this->request->getPost('rol_input'),
+		];
+		$datosBitacora = [
+			'ACCION' => 'Ha creado una nuevo rol',
+			'NOTAS' => 'ROL CREADO: ' . $this->request->getPost('rol_input'),
+		];
+		$roles = $this->_rolesUsuariosModel->where('NOMBRE_ROL',$this->request->getPost('rol_input'))->first();
+	
+		if ($roles) {
+			return redirect()->to(base_url('/admin/dashboard/nuevo_rol'))->with('message_error', 'Rol ya existe.');
+		}
+		$insert = $this->_rolesUsuariosModel->insert($data);
+		
+		if ($insert) {
+			$this->_bitacoraActividad($datosBitacora);
+			$dataView = (object) array();
+			$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+			$dataView->rolPermisoDescr = $this->_rolesPermisosModel->get_rol_permiso();
+			$dataView->roles = $this->_rolesUsuariosModel->asObject()->findAll();
+			$dataView->permisos = $this->_permisosModel->asObject()->findAll();
+			return redirect()->to(base_url('/admin/dashboard/asignacion_permisos'))->with('message_success', 'Rol creado correctamente.');
+		} else {
+			return redirect()->to(base_url('/admin/dashboard/asignacion_permisos'))->with('message_error', 'Rol no creado.');
+		}
+	}
+	public function eliminar_asignacion_permiso()
 	{
 		$rolid = $this->request->getGet('rol');
 		$permisoid = $this->request->getGet('permiso');
 		$deleteRol = $this->_rolesPermisosModel->where('ROLID', $rolid)->where('PERMISOID', $permisoid)->delete();
 		if ($deleteRol) {
 			$datosBitacora = [
-				'ACCION' => 'Ha eliminado un  rol',
+				'ACCION' => 'Ha eliminado un asignacion de permiso',
 				'NOTAS' => 'ROL ELIMINADO: ' . $rolid . 'PERMISO: ' . $permisoid,
 			];
 			$this->_bitacoraActividad($datosBitacora);
@@ -397,9 +431,9 @@ class DashboardController extends BaseController
 			$dataView->permisos = $this->_permisosModel->asObject()->findAll();
 			$dataView->rolPermisoDescr = $this->_rolesPermisosModel->get_rol_permiso();
 
-			return redirect()->to(base_url('/admin/dashboard/roles'))->with('message_success', 'Rol eliminado correctamente.');
+			return redirect()->to(base_url('/admin/dashboard/asignacion_permisos'))->with('message_success', 'Rol eliminado correctamente.');
 		} else {
-			return redirect()->to(base_url('/admin/dashboard/roles'))->with('message_error', 'Rol no eliminado.');
+			return redirect()->to(base_url('/admin/dashboard/asignacion_permisos'))->with('message_error', 'Rol no eliminado.');
 		}
 	}
 	public function editar_usuario()
@@ -3363,6 +3397,10 @@ class DashboardController extends BaseController
 		$encodedInitialData = substr($encodedInitialData, 16);
 		$decrypted = openssl_decrypt($encodedInitialData, 'AES-128-CBC', hex2bin($key128), 1, $iv);
 		return $decrypted;
+	}
+	private function permisos($permiso)
+	{
+		return in_array($permiso, session('permisos'));
 	}
 }
 

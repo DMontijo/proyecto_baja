@@ -241,6 +241,9 @@ class FoliosController extends BaseController
         $agente = $this->_usuariosModel->asObject()->where('ID', session('ID'))->first();
         $roles = [1, 3];
         $data->abiertos = count($this->_folioModel->where('STATUS', 'ABIERTO')->findAll());
+        if (!$this->permisos('FOLIOS')) {
+			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
+		}
         if (in_array($agente->ROLID, $roles)) {
             $data->derivados = count($this->_folioModel->asObject()->where('STATUS', 'DERIVADO')->findAll());
             $data->canalizados = count($this->_folioModel->asObject()->where('STATUS', 'CANALIZADO')->findAll());
@@ -365,6 +368,9 @@ class FoliosController extends BaseController
 
     public function getAllFolios()
     {
+        if (!$this->permisos('BUSQUEDA DE FOLIO')) {
+			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
+		}
         $data = (object) array();
         $data = [
             'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
@@ -564,6 +570,10 @@ class FoliosController extends BaseController
 
         $this->_bitacoraActividadModel->insert($data);
     }
+    private function permisos($permiso)
+	{
+		return in_array($permiso, session('permisos'));
+	}
 }
 
 /* End of file FoliosController.php */
