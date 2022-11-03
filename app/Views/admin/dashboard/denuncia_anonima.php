@@ -34,6 +34,17 @@
 							</select>
 						</div>
 					</div>
+					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+						<div class="form-group">
+							<label for="localidad" class="form-label font-weight-bold">Localidad:</label>
+							<select class="form-control" id="localidad" name="localidad">
+								<option selected disabled value="">Elige la localidad</option>
+								<?php foreach ($body_data->localidades as $index => $localidad) { ?>
+									<option value="<?= $localidad->LOCALIDADID ?>"> <?= $localidad->LOCALIDADDESCR ?> </option>
+								<?php } ?>
+							</select>
+						</div>
+					</div>
 
 					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 						<div class="form-group">
@@ -84,8 +95,78 @@
 						<textarea class="form-control" id="notas" name="notas" row="10" oninput="mayuscTextarea(this)"></textarea>
 					</div>
 				</div>
+				<div class="row">
+					<div class="col-12 pt-5">
+						<h3 class="font-weight-bold text-center text-blue pb-3">DELITOS COMETIDOS</h3>
+					</div>
+					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+						<div class="form-group">
+							<label for="delito" class="form-label font-weight-bold">Delito:</label>
+							<select class="form-control" id="delito" name="delito">
+								<option selected disabled value="">Elige el delito</option>
+								<?php foreach ($body_data->delitosUsuarios as $index => $delito) { ?>
+									<option value="<?= $delito->ID ?>"> <?= $delito->DELITO ?> </option>
+								<?php } ?>
+							</select>
+						</div>
+					</div>
+					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+						<div class="form-group">
+							<br>
+							<button class="btn btn-primary" id="habilitar-delito" name="habilitar-delito">+</button>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-12 pt-5">
+						<h3 class="font-weight-bold text-center text-blue pb-3">PERSONAS INVOLUCRADAS</h3>
+					</div>
+					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+						<div class="form-group">
+							<label for="victima_conocido" class="form-label font-weight-bold">¿Se conoce a la victima?:</label>
+							<select class="form-control" id="victima_conocido" name="victima_conocido">
+								<option selected disabled value=""></option>
+								<option value="1">Si </option>
+								<option value="2">No </option>
+							</select>
+						</div>
+					</div>
+					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+						<div class="form-group">
+							<label for="victima_nombre" class="form-label font-weight-bold">Nombre:</label>
+							<select class="form-control" id="victima_nombre" name="victima_nombre">
+							<option selected disabled value=""></option>
+								<option value="1">Si </option>
+								<option value="2">No </option>
+							</select>
+						</div>
+					</div>
+					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+						<div class="form-group">
+							<label for="victima_ap1" class="form-label font-weight-bold">Apellido paterno:</label>
+							<input class="form-control" id="victima_ap1" name="victima_ap1">
+							
+							</input>
+						</div>
+					</div>
+					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+						<div class="form-group">
+							<label for="victia_ap2" class="form-label font-weight-bold">Apellido materno:</label>
+							<input class="form-control" id="victia_ap2" name="victia_ap2">
+							
+							</input>
+						</div>
+					</div>
+					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+						<div class="form-group">
+							<br>
+							<button class="btn btn-primary" id="habilitar-delito" name="habilitar-delito">+</button>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
+
 	</div>
 </div>
 <script>

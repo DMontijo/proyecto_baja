@@ -99,6 +99,7 @@ class ReportesController extends BaseController
 		$dataView->municipios = $municipio;
 		$dataView->empleados = $empleado;
 		$dataView->filterParams = (object)$data;
+		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 		$this->_loadView('Folios generados', 'folios', '', $dataView, 'folios');
 	}
@@ -324,6 +325,7 @@ class ReportesController extends BaseController
 		$dataView->municipios = $municipio;
 		$dataView->empleados = $empleado;
 		$dataView->filterParams = (object)$data;
+		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 		// var_dump($dataView->filterParams);
 		// exit;
