@@ -319,7 +319,7 @@ class FirmaController extends BaseController
 		$user_id = session('ID');
 
 		$documento = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $numexpediente)->where('ANO', $year)->where('STATUS', 'ABIERTO')->findAll();
-
+		$folioRow = $this->_folioModel->asObject()->where('FOLIOID',$folio)->where('ANO', $year)->first();
 		if ($documento == null) {
 			return json_encode((object)['status' => 0, 'message_error'=> "Debes generar documentos antes de firmar"]);
 		}
@@ -340,7 +340,9 @@ class FirmaController extends BaseController
 						$municipio = (object)[];
 
 						$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $documento[$i]->MUNICIPIOID)->where('ESTADOID', $documento[$i]->ESTADOID)->first();
-
+						if (isset($municipio)==false) {
+							$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $folioRow->MUNICIPIOID)->where('ESTADOID', $folioRow->ESTADOID)->first();
+						}
 						$estado = $this->_estadosModel->asObject()->where('ESTADOID', $documento[$i]->ESTADOID)->first();
 						$documento[$i]->PLACEHOLDER= str_replace('[EXPEDIENTE_NOMBRE_DEL_RESPONSABLE]', $razon_social, $documento[$i]->PLACEHOLDER);
 						$documento[$i]->PLACEHOLDER= str_replace('EXPEDIENTE_NOMBRE_DEL_RESPONSABLE', $razon_social, $documento[$i]->PLACEHOLDER);

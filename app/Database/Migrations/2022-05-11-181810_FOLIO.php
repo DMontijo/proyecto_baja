@@ -52,6 +52,11 @@ class FOLIO extends Migration
                 'unsigned' => true,
                 'null' => true,
             ],
+            'TIPODENUNCIA' => [
+                'type' => 'VARCHAR',
+                'constraint' => '2',
+                'null' => true,
+            ],
             'ESTADOID' => [
                 'type' => 'INT',
                 'unsigned' => true,

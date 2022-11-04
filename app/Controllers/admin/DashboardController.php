@@ -99,6 +99,7 @@ use App\Models\CabelloPeculiarModel;
 use App\Models\DelitoModalidadModel;
 use App\Models\EstadoExtranjeroModel;
 use App\Models\FolioArchivoExternoModel;
+use App\Models\FolioConsecutivoModel;
 use App\Models\FolioDocModel;
 use App\Models\FolioDocumentoModel;
 use App\Models\FolioObjetoModel;
@@ -242,6 +243,7 @@ class DashboardController extends BaseController
 		$this->_rolesPermisosModel = new RolesPermisosModel();
 		$this->_permisosModel = new PermisosModel();
 
+		$this->_folioConsecutivoModel = new FolioConsecutivoModel();
 
 
 		// $this->protocol = 'http://';
@@ -368,7 +370,7 @@ class DashboardController extends BaseController
 			'ACCION' => 'Ha creado una nueva asignacion de permisos',
 			'NOTAS' => 'ROL CREADO: ' . $this->request->getPost('rol_usuario') . 'PERMISO: ' .  $this->request->getPost('permiso_rol'),
 		];
-		$rolesPermiso = $this->_rolesPermisosModel->where('ROLID',$this->request->getPost('rol_usuario'))->where('PERMISOID', $this->request->getPost('permiso_rol'))->first();
+		$rolesPermiso = $this->_rolesPermisosModel->where('ROLID', $this->request->getPost('rol_usuario'))->where('PERMISOID', $this->request->getPost('permiso_rol'))->first();
 		if ($rolesPermiso) {
 			return redirect()->to(base_url('/admin/dashboard/nuevo_asignacion_permisos'))->with('message_error', 'Esta asignación de permisos ya existe.');
 		}
@@ -395,13 +397,13 @@ class DashboardController extends BaseController
 			'ACCION' => 'Ha creado una nuevo rol',
 			'NOTAS' => 'ROL CREADO: ' . $this->request->getPost('rol_input'),
 		];
-		$roles = $this->_rolesUsuariosModel->where('NOMBRE_ROL',$this->request->getPost('rol_input'))->first();
-	
+		$roles = $this->_rolesUsuariosModel->where('NOMBRE_ROL', $this->request->getPost('rol_input'))->first();
+
 		if ($roles) {
 			return redirect()->to(base_url('/admin/dashboard/nuevo_rol'))->with('message_error', 'Rol ya existe.');
 		}
 		$insert = $this->_rolesUsuariosModel->insert($data);
-		
+
 		if ($insert) {
 			$this->_bitacoraActividad($datosBitacora);
 			$dataView = (object) array();
@@ -457,17 +459,115 @@ class DashboardController extends BaseController
 	public function denuncia_anonima()
 	{
 		$data = (object) array();
+		$data->delitosUsuarios = $this->_delitosUsuariosModel->asObject()->orderBy('DELITO', 'ASC')->findAll();
+		$lugares = $this->_hechoLugarModel->orderBy('HECHODESCR', 'ASC')->findAll();
+		$lugares_sin = [];
+		$lugares_fuego = [];
+		$lugares_blanca = [];
+		foreach ($lugares as $lugar) {
+			if (strpos($lugar['HECHODESCR'], 'ARMA DE FUEGO')) {
+				array_push($lugares_fuego, (object) $lugar);
+			}
+			if (strpos($lugar['HECHODESCR'], 'ARMA BLANCA')) {
+				array_push($lugares_blanca, (object) $lugar);
+			}
+			if (!strpos($lugar['HECHODESCR'], 'ARMA BLANCA') && !strpos($lugar['HECHODESCR'], 'ARMA DE FUEGO')) {
+				array_push($lugares_sin, (object) $lugar);
+			}
+		}
+		$data->lugares = [];
+		$data->lugares = (object) array_merge($lugares_sin, $lugares_blanca, $lugares_fuego);
+
+		$data->edoCiviles = $this->_estadoCivilModel->asObject()->findAll();
+		$data->nacionalidades = $this->_nacionalidadModel->asObject()->findAll();
+		$data->calidadJuridica = $this->_folioPersonaCalidadJuridica->asObject()->findAll();
+		$data->idiomas = $this->_idiomaModel->asObject()->findAll();
+		$data->municipios = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
 		$data->paises = $this->_paisesModel->asObject()->findAll();
 		$data->estados = $this->_estadosModel->asObject()->findAll();
-		$data->municipios = $this->_municipiosModel->asObject()->where('ESTADOID', '2')->findAll();
-		$data->localidades = $this->_localidadesModel->asObject()->findAll();
-		$data->colonias = $this->_coloniasModel->asObject()->findAll();
-		$data->lugares = $this->_hechoLugarModel->asObject()->findAll();
+		$data->estadosExtranjeros = $this->_estadosExtranjeros->asObject()->findAll();
+
+		$data->tiposIdentificaciones = $this->_tipoIdentificacionModel->asObject()->findAll();
+		$data->escolaridades = $this->_escolaridadModel->asObject()->findAll();
+		$data->ocupaciones = $this->_ocupacionModel->asObject()->findAll();
 		$data->colorVehiculo = $this->_coloresVehiculoModel->asObject()->findAll();
 		$data->tipoVehiculo = $this->_tipoVehiculoModel->asObject()->orderBy('VEHICULOTIPODESCR', 'ASC')->findAll();
-		$data->delitosUsuarios = $this->_delitosUsuariosModel->asObject()->orderBy('DELITO', 'ASC')->findAll();
-		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
+		$data->parentesco = $this->_parentescoModel->asObject()->findAll();
+		$data->figura = $this->_figuraModel->asObject()->findAll();
+
+		$data->cejaContextura = $this->_cejaContexturaModel->asObject()->findAll();
+		$data->caraForma = $this->_caraFormaModel->asObject()->findAll();
+		$data->caraTamano = $this->_caraTamanoModel->asObject()->findAll();
+		$data->caraTez = $this->_caraTezModel->asObject()->findAll();
+		$data->orejaLobulo = $this->_orejaLobuloModel->asObject()->findAll();
+		$data->orejaForma = $this->_orejaFomaModel->asObject()->findAll();
+		$data->orejaTamano = $this->_orejaTamanoModel->asObject()->findAll();
+		$data->cabelloColor = $this->_cabelloColorModel->asObject()->findAll();
+		$data->cabelloEstilo = $this->_cabelloEstiloModel->asObject()->findAll();
+		$data->cabelloTamano = $this->_cabelloTamanoModel->asObject()->findAll();
+		$data->cabelloPeculiar = $this->_cabelloPeculiarModel->asObject()->findAll();
+		$data->frenteAltura = $this->_frenteAlturaModel->asObject()->findAll();
+		$data->frenteAnchura = $this->_frenteAnchuraModel->asObject()->findAll();
+		$data->frenteForma = $this->_frenteFormaModel->asObject()->findAll();
+		$data->frentePeculiar = $this->_frentePeculiarModel->asObject()->findAll();
+		$data->cejaColocacion = $this->_cejaColocacionModel->asObject()->findAll();
+		$data->cejaForma = $this->_cejaFormaModel->asObject()->findAll();
+		$data->cejaTamano = $this->_cejaTamanoModel->asObject()->findAll();
+		$data->cejaGrosor = $this->_cejaGrosorModel->asObject()->findAll();
+		$data->ojoColocacion = $this->_ojoColocacionModel->asObject()->findAll();
+		$data->ojoForma = $this->_ojoFormaModel->asObject()->findAll();
+		$data->ojoTamano = $this->_ojoTamanoModel->asObject()->findAll();
+		$data->ojoColor = $this->_ojoColorModel->asObject()->findAll();
+		$data->ojoPeculiar = $this->_ojoPeculiarModel->asObject()->findAll();
+		$data->narizTipo = $this->_narizTipoModel->asObject()->findAll();
+		$data->narizTamano = $this->_narizTamanoModel->asObject()->findAll();
+		$data->narizBase = $this->_narizBaseModel->asObject()->findAll();
+		$data->narizPeculiar = $this->_narizPeculiarModel->asObject()->findAll();
+		$data->bigoteForma = $this->_bigoteFormaModel->asObject()->findAll();
+		$data->bigoteTamano = $this->_bigoteTamanoModel->asObject()->findAll();
+		$data->bigoteGrosor = $this->_bigoteGrosorModel->asObject()->findAll();
+		$data->bigotePeculiar = $this->_bigotePeculiarModel->asObject()->findAll();
+		$data->bocaTamano = $this->_bocaTamanoModel->asObject()->findAll();
+		$data->bocaPeculiar = $this->_bocaPeculiarModel->asObject()->findAll();
+		$data->labioGrosor = $this->_labioGrosorModel->asObject()->findAll();
+		$data->labioLongitud = $this->_labioLongitudModel->asObject()->findAll();
+		$data->labioPeculiar = $this->_labioPeculiarModel->asObject()->findAll();
+		$data->labioPosicion = $this->_labioPosicionModel->asObject()->findAll();
+		$data->dienteTamano = $this->_dienteTamanoModel->asObject()->findAll();
+		$data->dienteTipo = $this->_dienteTipoModel->asObject()->findAll();
+		$data->dientePeculiar = $this->_dientePeculiarModel->asObject()->findAll();
+		$data->barbillaForma = $this->_barbillaFormaModel->asObject()->findAll();
+		$data->barbillaTamano = $this->_barbillaTamanoModel->asObject()->findAll();
+		$data->barbillaInclinacion = $this->_barbillaInclinacionModel->asObject()->findAll();
+		$data->barbillaPeculiar = $this->_barbillaPeculiarModel->asObject()->findAll();
+		$data->barbaTamano = $this->_barbaTamanoModel->asObject()->findAll();
+		$data->barbaPeculiar = $this->_barbaPeculiarModel->asObject()->findAll();
+		$data->cuelloTamano = $this->_cuelloTamanoModel->asObject()->findAll();
+		$data->cuelloGrosor = $this->_cuelloGrosorModel->asObject()->findAll();
+		$data->cuelloPeculiar = $this->_cuelloPeculiarModel->asObject()->findAll();
+		$data->hombroPosicion = $this->_hombroPosicionModel->asObject()->findAll();
+		$data->hombroLongitud = $this->_hombroLongitudModel->asObject()->findAll();
+		$data->hombroGrosor = $this->_hombroGrosorModel->asObject()->findAll();
+		$data->estomago = $this->_estomagoModel->asObject()->findAll();
+		$data->pielColor = $this->_pielColorModel->asObject()->findAll();
+		$data->etnia = $this->_etniaModel->asObject()->findAll();
+		$data->parentesco = $this->_parentescoModel->asObject()->findAll();
+		$data->objetoclasificacion = $this->_objetoClasificacionModel->asObject()->findAll();
+		$data->objetosubclasificacion = $this->_objetoSubclasificacionModel->asObject()->findAll();
+		$data->tipomoneda = $this->_tipoMonedaModel->asObject()->findAll();
+
+		$data->plantillas = $this->_plantillasModel->asObject()->where('ID !=', 6)->findAll();
+		$data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->findAll();
+		$data->distribuidorVehiculo = $this->_vehiculoDistribuidorModel->asObject()->findAll();
+		$data->marcaVehiculo = $this->_vehiculoMarcaModel->asObject()->findAll();
+		$data->lineaVehiculo = $this->_vehiculoModeloModel->asObject()->findAll();
+		$data->versionVehiculo = $this->_vehiculoVersionModel->asObject()->findAll();
+		$data->tipoVehiculo = $this->_tipoVehiculoModel->asObject()->findAll();
+		$data->servicioVehiculo = $this->_vehiculoServicioModel->asObject()->findAll();
+		$data->colorVehiculo = $this->_coloresVehiculoModel->asObject()->findAll();
+		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+		$data->delitosModalidad = $this->_delitoModalidadModel->asObject()->orderBy('DELITOMODALIDADDESCR', 'ASC')->where('DELITOMODALIDADDESCR IS NOT NULL')->findAll();
 		$this->_loadView('Denuncia anónima', 'denuncia_anonima', '', $data, 'denuncia_anonima');
 	}
 
@@ -1256,11 +1356,15 @@ class DashboardController extends BaseController
 						}
 
 						if ($update) {
-							$denunciante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', $folioRow['DENUNCIANTEID'])->first();
-							if ($this->_sendEmailExpediente($denunciante->CORREO, $folio, $expedienteCreado->EXPEDIENTEID)) {
+							if ($folioRow['TIPODENUNCIA'] == 'VD') {
+								$denunciante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', $folioRow['DENUNCIANTEID'])->first();
+								if ($this->_sendEmailExpediente($denunciante->CORREO, $folio, $expedienteCreado->EXPEDIENTEID)) {
+									return json_encode(['status' => 1, 'expediente' => $expedienteCreado->EXPEDIENTEID]);
+								} else {
+									return json_encode(['status' => 1, 'expediente' => $expedienteCreado->EXPEDIENTEID, 'message' => 'Correo no enviado']);
+								}
+							} else if ($folioRow['TIPODENUNCIA'] == 'DA') {
 								return json_encode(['status' => 1, 'expediente' => $expedienteCreado->EXPEDIENTEID]);
-							} else {
-								return json_encode(['status' => 1, 'expediente' => $expedienteCreado->EXPEDIENTEID, 'message' => 'Correo no enviado']);
 							}
 						} else {
 							throw new \Exception('No hizo el update.');
@@ -2544,6 +2648,63 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
+	public function createVehiculoByFolio()
+	{
+
+
+			$folio = trim($this->request->getPost('folio'));
+			$year = trim($this->request->getPost('year'));
+			$distribuidorpost = trim($this->request->getPost('distribuidor_vehiculo_ad'));
+			$marcapost = trim($this->request->getPost('marca_ad'));
+			$modelopost = trim($this->request->getPost('linea_vehiculo_ad'));
+
+			$modelodescr = $this->_vehiculoModeloModel->asObject()->where('VEHICULODISTRIBUIDORID', $distribuidorpost)->where('VEHICULOMARCAID', $marcapost)->where('VEHICULOMODELOID', $modelopost)->first();
+			$marcadescr = $this->_vehiculoMarcaModel->asObject()->where('VEHICULODISTRIBUIDORID', $distribuidorpost)->where('VEHICULOMARCAID', $marcapost)->first();
+			$data = array(
+				'folio' => trim($this->request->getPost('folio')),
+				'year' => trim($this->request->getPost('year')),
+				'TIPOID' => $this->request->getPost('tipo_vehiculo'),
+				'PRIMERCOLORID' => $this->request->getPost('color_vehiculo'),
+				'SENASPARTICULARES' => $this->request->getPost('description_vehiculo'),
+				'TIPOPLACA' => $this->request->getPost('tipo_placas_vehiculo'),
+				'PLACAS' => $this->request->getPost('placas_vehiculo'),
+				'ESTADOIDPLACA' => $this->request->getPost('estado_vehiculo_ad'),
+				'ESTADOEXTRANJEROIDPLACA' => $this->request->getPost('estado_extranjero_vehiculo_ad'),
+				'NUMEROSERIE' => $this->request->getPost('serie_vehiculo'),
+				'VEHICULODISTRIBUIDORID' => $this->request->getPost('distribuidor_vehiculo_ad'),
+				'MARCAID' => $this->request->getPost('marca_ad'),
+				'MARCADESCR' => isset($marcadescr->VEHICULOMARCADESCR),
+				'MODELODESCR' => isset($modelodescr->VEHICULOMODELODESCR),
+				'MODELOID' => $this->request->getPost('linea_vehiculo_ad'),
+				'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad'),
+				'VEHICULOSERVICIOID' => $this->request->getPost('servicio_vehiculo_ad'),
+				'SEGUROVIGENTE' => $this->request->getPost('seguro_vigente_vehiculo'),
+				'TRANSMISION' => $this->request->getPost('transmision_vehiculo'),
+				'TRACCION' => $this->request->getPost('traccion_vehiculo'),
+				'NUMEROCHASIS' => $this->request->getPost('num_chasis_vehiculo'),
+				'SEGUNDOCOLORID' => $this->request->getPost('color_tapiceria_vehiculo'),
+				'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo'),
+			);
+			// $insert = $this->_folioVehiculoModel->insert($data);
+			// $update = $this->_folioVehiculoModel->set($data)->where('FOLIOID', $folio)->where('ANO', $year)->update();
+			$insert =$this->_folioVehiculo($data, $folio, $year);
+
+			if (!$insert) {
+				$vehiculos = $this->_folioVehiculoModel->get_by_folio($folio, $year);
+
+				$datosBitacora = [
+					'ACCION' => 'Ha agregado el vehículo de una persona fisica',
+					'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
+				];
+
+				$this->_bitacoraActividad($datosBitacora);
+
+				return json_encode(['status' => 1, 'vehiculos' => $vehiculos]);
+			} else {
+				return json_encode(['status' => 0, 'message' => $insert]);
+			}
+		
+	}
 	public function updateParentescoByFolio()
 	{
 		try {
@@ -2725,6 +2886,169 @@ class DashboardController extends BaseController
 
 		$personaFisica = $this->_folioPersonaFisica($dataNewPersonaFisica, $folio, $year);
 		$mediaFiliacion = $this->_folioPersonaFisicaMediaFiliacion($dataNewPersonaFisica, $folio, $personaFisica, $year);
+		$domicilio = $this->_folioPersonaFisicaDomicilio($dataNewPersonaFisicaDomicilio, $folio, $personaFisica, $year);
+
+
+		if ($personaFisica) {
+			$personas = $this->_folioPersonaFisicaModel->get_by_folio($folio, $year);
+			$personaFisicaID = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->orderBy('PERSONAFISICAID', 'desc')->first();
+			$imputados = $this->_folioPersonaFisicaModel->get_imputados($folio, $year);
+			$victimas = $this->_folioPersonaFisicaModel->get_victimas($folio, $year);
+			$delitosModalidadFiltro = $this->_delitoModalidadModel->get_delitodescr($folio, $year);
+
+			$datosBitacora = [
+				'ACCION' => 'Ha ingresado una nueva persona fisica',
+				'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
+			];
+
+			$this->_bitacoraActividad($datosBitacora);
+
+			return json_encode(['status' => 1, 'personas' => $personas, 'ultimoRegistro' => $personaFisicaID, 'imputados' => $imputados, 'victimas' => $victimas, 'delitosModalidadFiltro' => $delitosModalidadFiltro]);
+		} else {
+			return json_encode(['status' => 0, 'message' => $_POST]);
+		}
+	}
+	public function createPersonaFisicaByDenunciaAnonima()
+	{
+
+		if ($this->request->getPost('victima_conocido') == 1) {
+			$nombre = $this->request->getPost('nombre');
+		} else if ($this->request->getPost('victima_conocido') == 2) {
+			$nombre = 'QRO';
+		}
+		if ($this->request->getPost('imputado_conocido') == 1) {
+			$nombre = $this->request->getPost('nombre');
+		} else if ($this->request->getPost('imputado_conocido') == 2) {
+			$nombre = 'QRR';
+		}
+
+		$folio = trim($this->request->getPost('folio'));
+		$year = trim($this->request->getPost('year'));
+		$dataNewPersonaFisica = array(
+			'FOLIOID' => $this->request->getPost('folio'),
+			'ANO' => $this->request->getPost('year'),
+			'NOMBRE' => $nombre,
+			'PRIMERAPELLIDO' => $this->request->getPost('primer_apellido'),
+			'SEGUNDOAPELLIDO' => $this->request->getPost('segundo_apellido'),
+			'FECHANACIMIENTO' => $this->request->getPost('fecha_nacimiento'),
+			'EDADCANTIDAD' => $this->request->getPost('edad'),
+			'SEXO' => $this->request->getPost('sexo') != null ?  $this->request->getPost('sexo') : NULL,
+			'TELEFONO' => $this->request->getPost('telefono'),
+			'TELEFONO2' => $this->request->getPost('telefono_adicional'),
+			'CALIDADJURIDICAID' => $this->request->getPost('calidad_juridica'),
+			'TIPOIDENTIFICACIONID' => $this->request->getPost('identificacion'),
+			'CODIGOPAISTEL' => $this->request->getPost('codigo_pais_pfc'),
+			'CODIGOPAISTEL2' => $this->request->getPost('codigo_pais_pfc_2'),
+			'NUMEROIDENTIFICACION' => $this->request->getPost('numero_identificacion'),
+			'NACIONALIDADID' => $this->request->getPost('nacionalidad_origen'),
+			'PERSONAIDIOMAID' => $this->request->getPost('idioma'),
+			'ESCOLARIDADID' => $this->request->getPost('escolaridad'),
+			'OCUPACIONID' => $this->request->getPost('ocupacion'),
+			'ESTADOCIVILID' => $this->request->getPost('estado_civil'),
+			'ESTADOORIGENID' => $this->request->getPost('estado_origen'),
+			'MUNICIPIOORIGENID' => $this->request->getPost('municipio_origen'),
+			'FACEBOOK' => $this->request->getPost('facebook'),
+			'INSTAGRAM' => $this->request->getPost('instagram'),
+			'TWITTER' => $this->request->getPost('twitter'),
+			'LEER' => $this->request->getPost('leer'),
+			'ESCRIBIR' => $this->request->getPost('escribir'),
+			'PAIS' => $this->request->getPost('pais_actual'),
+			'CORREO' => $this->request->getPost('correo'),
+			'DESAPARECIDA' => $this->request->getPost('desaparecida'),
+
+		);
+
+		$dataNewPersonaFisicaDomicilio = array(
+			'PAIS' => $this->request->getPost('pais_actual'),
+			'ESTADOID' => $this->request->getPost('estado_actual'),
+			'MUNICIPIOID' => $this->request->getPost('municipio_actual'),
+			'LOCALIDADID' => $this->request->getPost('localidad_actual'),
+			'COLONIAID' => $this->request->getPost('colonia_actual'),
+			'COLONIADESCR' => $this->request->getPost('colonia_actual_descr'),
+			'CALLE' => $this->request->getPost('calle'),
+			'NUMEROCASA' => $this->request->getPost('num_exterior'),
+			'NUMEROINTERIOR' => $this->request->getPost('num_interior'),
+			'CP' => $this->request->getPost('codigo_postal'),
+		);
+		$dataNewPersonaFisicaMediaFiliacion = [
+			'OCUPACIONID' => $this->request->getPost('ocupacion_mf') == '0' || empty($this->request->getPost('ocupacion_mf')) ? null : $this->request->getPost('ocupacion_mf'),
+			'ESTATURA' => $this->request->getPost('estatura_mf') == '0' || empty($this->request->getPost('estatura_mf')) ? null : $this->request->getPost('estatura_mf'),
+			'PESO' => $this->request->getPost('peso_mf') == '0' || empty($this->request->getPost('peso_mf')) ? null : $this->request->getPost('peso_mf'),
+			'SENASPARTICULARES' => $this->request->getPost('senas_mf') == '0' || empty($this->request->getPost('senas_mf')) ? null : $this->request->getPost('senas_mf'),
+			'PIELCOLORID' => $this->request->getPost('colortez_mf') == '0' || empty($this->request->getPost('colortez_mf')) ? null : $this->request->getPost('colortez_mf'),
+			'FIGURAID' => $this->request->getPost('complexion_mf') == '0' || empty($this->request->getPost('complexion_mf')) ? null : $this->request->getPost('complexion_mf'),
+			'CONTEXTURAID' => $this->request->getPost('contextura_ceja_mf') == '0' || empty($this->request->getPost('contextura_ceja_mf')) ? null : $this->request->getPost('contextura_ceja_mf'),
+			'CARAFORMAID' => $this->request->getPost('cara_forma_mf') == '0' || empty($this->request->getPost('cara_forma_mf')) ? null : $this->request->getPost('cara_forma_mf'),
+			'CARATAMANOID' => $this->request->getPost('cara_tamano_mf') == '0' || empty($this->request->getPost('cara_tamano_mf')) ? null : $this->request->getPost('cara_tamano_mf'),
+			'CARATEZID' => $this->request->getPost('caratez_mf') == '0' || empty($this->request->getPost('caratez_mf')) ? null : $this->request->getPost('caratez_mf'),
+			'OREJALOBULOID' => $this->request->getPost('lobulo_mf') == '0' || empty($this->request->getPost('lobulo_mf')) ? null : $this->request->getPost('lobulo_mf'),
+			'OREJAFORMAID' => $this->request->getPost('forma_oreja_mf') == '0' || empty($this->request->getPost('forma_oreja_mf')) ? null : $this->request->getPost('forma_oreja_mf'),
+			'OREJATAMANOID' => $this->request->getPost('tamano_oreja_mf') == '0' || empty($this->request->getPost('tamano_oreja_mf')) ? null : $this->request->getPost('tamano_oreja_mf'),
+			'CABELLOCOLORID' => $this->request->getPost('colorC_mf') == '0' || empty($this->request->getPost('colorC_mf')) ? null : $this->request->getPost('colorC_mf'),
+			'CABELLOESTILOID' => $this->request->getPost('formaC_mf') == '0' || empty($this->request->getPost('formaC_mf')) ? null : $this->request->getPost('formaC_mf'),
+			'CABELLOTAMANOID' => $this->request->getPost('tamanoC_mf') == '0' || empty($this->request->getPost('tamanoC_mf')) ? null : $this->request->getPost('tamanoC_mf'),
+			'CABELLOPECULIARID' => $this->request->getPost('peculiarC_mf') == '0' || empty($this->request->getPost('peculiarC_mf')) ? null : $this->request->getPost('peculiarC_mf'),
+			'CABELLODESCR' => $this->request->getPost('cabello_descr_mf') == '0' || empty($this->request->getPost('cabello_descr_mf')) ? null : $this->request->getPost('cabello_descr_mf'),
+			'FRENTEALTURAID' => $this->request->getPost('frente_altura_mf') == '0' || empty($this->request->getPost('frente_altura_mf')) ? null : $this->request->getPost('frente_altura_mf'),
+			'FRENTEANCHURAID' => $this->request->getPost('frente_anchura_ms') == '0' || empty($this->request->getPost('frente_anchura_ms')) ? null : $this->request->getPost('frente_anchura_ms'),
+			'FRENTEFORMAID' => $this->request->getPost('tipoF_mf') == '0' || empty($this->request->getPost('tipoF_mf')) ? null : $this->request->getPost('tipoF_mf'),
+			'FRENTEPECULIARID' => $this->request->getPost('frente_peculiar_mf') == '0' || empty($this->request->getPost('frente_peculiar_mf')) ? null : $this->request->getPost('frente_peculiar_mf'),
+			'CEJACOLOCACIONID' => $this->request->getPost('colocacion_ceja_mf') == '0' || empty($this->request->getPost('colocacion_ceja_mf')) ? null : $this->request->getPost('colocacion_ceja_mf'),
+			'CEJAFORMAID' => $this->request->getPost('ceja_mf') == '0' || empty($this->request->getPost('ceja_mf')) ? null : $this->request->getPost('ceja_mf'),
+			'CEJATAMANOID' => $this->request->getPost('tamano_ceja_mf') == '0' || empty($this->request->getPost('tamano_ceja_mf')) ? null : $this->request->getPost('tamano_ceja_mf'),
+			'CEJAGROSORID' => $this->request->getPost('grosor_ceja_mf') == '0' || empty($this->request->getPost('grosor_ceja_mf')) ? null : $this->request->getPost('grosor_ceja_mf'),
+			'OJOCOLOCACIONID' => $this->request->getPost('colocacion_ojos_mf') == '0' || empty($this->request->getPost('colocacion_ojos_mf')) ? null : $this->request->getPost('colocacion_ojos_mf'),
+			'OJOFORMAID' => $this->request->getPost('forma_ojos_mf') == '0' || empty($this->request->getPost('forma_ojos_mf')) ? null : $this->request->getPost('forma_ojos_mf'),
+			'OJOTAMANOID' => $this->request->getPost('tamano_ojos_mf') == '0' || empty($this->request->getPost('tamano_ojos_mf')) ? null : $this->request->getPost('tamano_ojos_mf'),
+			'OJOCOLORID' => $this->request->getPost('colorO_mf') == '0' || empty($this->request->getPost('colorO_mf')) ? null : $this->request->getPost('colorO_mf'),
+			'OJOPECULIARID' => $this->request->getPost('peculiaridad_ojos_mf') == '0' || empty($this->request->getPost('peculiaridad_ojos_mf')) ? null : $this->request->getPost('peculiaridad_ojos_mf'),
+			'NARIZTIPOID' => $this->request->getPost('nariz_tipo_mf') == '0' || empty($this->request->getPost('nariz_tipo_mf')) ? null : $this->request->getPost('nariz_tipo_mf'),
+			'NARIZTAMANOID' => $this->request->getPost('nariz_tamano_mf') == '0' || empty($this->request->getPost('nariz_tamano_mf')) ? null : $this->request->getPost('nariz_tamano_mf'),
+			'NARIZBASEID' => $this->request->getPost('nariz_base_mf') == '0' || empty($this->request->getPost('nariz_base_mf')) ? null : $this->request->getPost('nariz_base_mf'),
+			'NARIZPECULIARID' => $this->request->getPost('nariz_peculiar_mf') == '0' || empty($this->request->getPost('nariz_peculiar_mf')) ? null : $this->request->getPost('nariz_peculiar_mf'),
+			'NARIZDESCR' => $this->request->getPost('nariz_descr_mf') == '0' || empty($this->request->getPost('nariz_descr_mf')) ? null : $this->request->getPost('nariz_descr_mf'),
+			'BIGOTEFORMAID' => $this->request->getPost('bigote_forma_mf') == '0' || empty($this->request->getPost('bigote_forma_mf')) ? null : $this->request->getPost('bigote_forma_mf'),
+			'BIGOTETAMANOID' => $this->request->getPost('bigote_tamaño_mf') == '0' || empty($this->request->getPost('bigote_tamaño_mf')) ? null : $this->request->getPost('bigote_tamaño_mf'),
+			'BIGOTEGROSORID' => $this->request->getPost('bigote_grosor_mf') == '0' || empty($this->request->getPost('bigote_grosor_mf')) ? null : $this->request->getPost('bigote_grosor_mf'),
+			'BIGOTEPECULIARID' => $this->request->getPost('bigote_peculiar_mf') == '0' || empty($this->request->getPost('bigote_peculiar_mf')) ? null : $this->request->getPost('bigote_peculiar_mf'),
+			'BIGOTEDESCR' => $this->request->getPost('bigote_descr_mf') == '0' || empty($this->request->getPost('bigote_descr_mf')) ? null : $this->request->getPost('bigote_descr_mf'),
+			'BOCATAMANOID' => $this->request->getPost('boca_tamano_mf') == '0' || empty($this->request->getPost('boca_tamano_mf')) ? null : $this->request->getPost('boca_tamano_mf'),
+			'BOCAPECULIARID' => $this->request->getPost('boca_peculiar_mf') == '0' || empty($this->request->getPost('boca_peculiar_mf')) ? null : $this->request->getPost('boca_peculiar_mf'),
+			'LABIOGROSORID' => $this->request->getPost('labio_grosor_mf') == '0' || empty($this->request->getPost('labio_grosor_mf')) ? null : $this->request->getPost('labio_grosor_mf'),
+			'LABIOLONGITUDID' => $this->request->getPost('labio_longitud_mf') == '0' || empty($this->request->getPost('labio_longitud_mf')) ? null : $this->request->getPost('labio_longitud_mf'),
+			'LABIOPOSICIONID' => $this->request->getPost('labio_posicion_mf') == '0' || empty($this->request->getPost('labio_posicion_mf')) ? null : $this->request->getPost('labio_posicion_mf'),
+			'LABIOPECULIARID' => $this->request->getPost('labio_peculiar_mf') == '0' || empty($this->request->getPost('labio_peculiar_mf')) ? null : $this->request->getPost('labio_peculiar_mf'),
+			'DIENTETAMANOID' => $this->request->getPost('dientes_tamano_mf') == '0' || empty($this->request->getPost('dientes_tamano_mf')) ? null : $this->request->getPost('dientes_tamano_mf'),
+			'DIENTETIPOID' => $this->request->getPost('dientes_tipo_mf') == '0' || empty($this->request->getPost('dientes_tipo_mf')) ? null : $this->request->getPost('dientes_tipo_mf'),
+			'DIENTEPECULIARID' => $this->request->getPost('dientes_peculiar_mf') == '0' || empty($this->request->getPost('dientes_peculiar_mf')) ? null : $this->request->getPost('dientes_peculiar_mf'),
+			'DIENTEDESCR' => $this->request->getPost('dientes_descr_mf') == '0' || empty($this->request->getPost('dientes_descr_mf')) ? null : $this->request->getPost('dientes_descr_mf'),
+			'BARBILLAFORMAID' => $this->request->getPost('barbilla_forma_mf') == '0' || empty($this->request->getPost('barbilla_forma_mf')) ? null : $this->request->getPost('barbilla_forma_mf'),
+			'BARBILLATAMANOID' => $this->request->getPost('barbilla_tamano_mf') == '0' || empty($this->request->getPost('barbilla_tamano_mf')) ? null : $this->request->getPost('barbilla_tamano_mf'),
+			'BARBILLAINCLINACIONID' => $this->request->getPost('barbilla_inclinacion_mf') == '0' || empty($this->request->getPost('barbilla_inclinacion_mf')) ? null : $this->request->getPost('barbilla_inclinacion_mf'),
+			'BARBILLAPECULIARID' => $this->request->getPost('barbilla_peculiar_mf') == '0' || empty($this->request->getPost('barbilla_peculiar_mf')) ? null : $this->request->getPost('barbilla_peculiar_mf'),
+			'BARBILLADESCR' => $this->request->getPost('barbilla_descr_mf') == '0' || empty($this->request->getPost('barbilla_descr_mf')) ? null : $this->request->getPost('barbilla_descr_mf'),
+			'BARBATAMANOID' => $this->request->getPost('barba_tamano_mf') == '0' || empty($this->request->getPost('barba_tamano_mf')) ? null : $this->request->getPost('barba_tamano_mf'),
+			'BARBAPECULIARID' => $this->request->getPost('barba_peculiar_mf') == '0' || empty($this->request->getPost('barba_peculiar_mf')) ? null : $this->request->getPost('barba_peculiar_mf'),
+			'BARBADESCR' => $this->request->getPost('barba_descr_mf') == '0' || empty($this->request->getPost('barba_descr_mf')) ? null : $this->request->getPost('barba_descr_mf'),
+			'CUELLOTAMANOID' => $this->request->getPost('cuello_tamano_mf') == '0' || empty($this->request->getPost('cuello_tamano_mf')) ? null : $this->request->getPost('cuello_tamano_mf'),
+			'CUELLOGROSORID' => $this->request->getPost('cuello_grosor_mf') == '0' || empty($this->request->getPost('cuello_grosor_mf')) ? null : $this->request->getPost('cuello_grosor_mf'),
+			'CUELLOPECULIARID' => $this->request->getPost('cuello_peculiar_mf') == '0' || empty($this->request->getPost('cuello_peculiar_mf')) ? null : $this->request->getPost('cuello_peculiar_mf'),
+			'CUELLODESCR' => $this->request->getPost('cuello_descr_mf') == '0' || empty($this->request->getPost('cuello_descr_mf')) ? null : $this->request->getPost('cuello_descr_mf'),
+			'HOMBROPOSICIONID' => $this->request->getPost('hombro_posicion_mf') == '0' || empty($this->request->getPost('hombro_posicion_mf')) ? null : $this->request->getPost('hombro_posicion_mf'),
+			'HOMBROLONGITUDID' => $this->request->getPost('hombro_tamano_mf') == '0' || empty($this->request->getPost('hombro_tamano_mf')) ? null : $this->request->getPost('hombro_tamano_mf'),
+			'HOMBROGROSORID' => $this->request->getPost('hombro_grosor_mf') == '0' || empty($this->request->getPost('hombro_grosor_mf')) ? null : $this->request->getPost('hombro_grosor_mf'),
+			'ESTOMAGOID' => $this->request->getPost('estomago_mf') == '0' || empty($this->request->getPost('estomago_mf')) ? null : $this->request->getPost('estomago_mf'),
+			'PERSONAESCOLARIDADID' => $this->request->getPost('escolaridad_mf') == '0' || empty($this->request->getPost('escolaridad_mf')) ? null : $this->request->getPost('escolaridad_mf'),
+			'PERSONAETNIAID' => $this->request->getPost('etnia_mf') == '0' || empty($this->request->getPost('etnia_mf')) ? null : $this->request->getPost('etnia_mf'),
+			'ESTOMAGODESCR' => $this->request->getPost('estomago_descr_mf') == '0' || empty($this->request->getPost('estomago_descr_mf')) ? null : $this->request->getPost('estomago_descr_mf'),
+			'DISCAPACIDADDESCR' => $this->request->getPost('discapacidad_mf') == '0' || empty($this->request->getPost('discapacidad_mf')) ? null : $this->request->getPost('discapacidad_mf'),
+			'FECHADESAPARICION' => $this->request->getPost('diaDesaparicion') == '0' || empty($this->request->getPost('diaDesaparicion')) ? null : $this->request->getPost('diaDesaparicion'),
+			'LUGARDESAPARICION' => $this->request->getPost('lugarDesaparicion') == '0' || empty($this->request->getPost('lugarDesaparicion')) ? null : $this->request->getPost('lugarDesaparicion'),
+			'VESTIMENTADESCR' => $this->request->getPost('vestimenta_mf') == '0' || empty($this->request->getPost('vestimenta_mf')) ? null : $this->request->getPost('vestimenta_mf'),
+		];
+
+		$personaFisica = $this->_folioPersonaFisica($dataNewPersonaFisica, $folio, $year);
+		$mediaFiliacion = $this->_folioPersonaFisicaMediaFiliacion($dataNewPersonaFisicaMediaFiliacion, $folio, $personaFisica, $year);
 		$domicilio = $this->_folioPersonaFisicaDomicilio($dataNewPersonaFisicaDomicilio, $folio, $personaFisica, $year);
 
 
@@ -3173,8 +3497,6 @@ class DashboardController extends BaseController
 		$data->ocupacionVictima = $this->_ocupacionModel->asObject()->where('PERSONAOCUPACIONID',   $data->victima[0]['OCUPACIONID'])->first();
 		$data->nacionalidadVictima = $this->_nacionalidadModel->asObject()->where('PERSONANACIONALIDADID',   $data->victima[0]['NACIONALIDADID'])->first();
 		$data->edoCivilVictima = $this->_estadoCivilModel->asObject()->where('PERSONAESTADOCIVILID',   $data->victima[0]['ESTADOCIVILID'])->first();
-
-
 		$relacionfisfis = $this->_relacionIDOModel->asObject()->where('FOLIOID', $data->expediente->FOLIOID)->where('ANO', $data->expediente->ANO)->where('PERSONAFISICAIDVICTIMA', $victima)->where('PERSONAFISICAIDIMPUTADO', $imputado)->first();
 		if ($relacionfisfis != null) {
 			$data->relacion_delitodescr = $this->_delitoModalidadModel->asObject()->where('DELITOMODALIDADID', $relacionfisfis->DELITOMODALIDADID)->first();
@@ -3243,18 +3565,18 @@ class DashboardController extends BaseController
 		$data->plantilla = str_replace('[HORA]', date('H'), $data->plantilla);
 		$data->plantilla = str_replace('[MINUTOS]', date('i'), $data->plantilla);
 		$data->plantilla = str_replace('[ESTADO]', $data->municipios->MUNICIPIODESCR, $data->plantilla);
-		$data->plantilla = str_replace('[HECHO]', $data->expediente->HECHONARRACION, $data->plantilla);
-		$data->plantilla = str_replace('[DETALLE_INTERVENCIONES]', $data->expediente->HECHONARRACION, $data->plantilla);
-		$data->plantilla = str_replace('[HECHO_NARRACION]', $data->expediente->HECHONARRACION, $data->plantilla);
+		$data->plantilla = str_replace('[HECHO]', $data->expediente->HECHONARRACION ? $data->expediente->HECHONARRACION : 'SIN NARRACIÓN', $data->plantilla);
+		$data->plantilla = str_replace('[DETALLE_INTERVENCIONES]', $data->expediente->HECHONARRACION ? $data->expediente->HECHONARRACION : 'SIN NARRACIÓN', $data->plantilla);
+		$data->plantilla = str_replace('[HECHO_NARRACION]', $data->expediente->HECHONARRACION ? $data->expediente->HECHONARRACION : 'SIN NARRACIÓN', $data->plantilla);
 		$data->plantilla = str_replace('[TIPO_EXPEDIENTE]',  $data->tipoExpediente->TIPOEXPEDIENTEDESCR, $data->plantilla);
 		$data->plantilla = str_replace('[ZONA_SEJAP]',  'Centro de Denuncia Tecnológico', $data->plantilla);
 		$data->plantilla = str_replace('[VICTIMA_DOMICILIO]', 'en la calle: ' . $data->victimaDom->CALLE . ' en la colonia: ' . $data->victimaDom->COLONIADESCR, $data->plantilla);
-		$data->plantilla = str_replace('[VICTIMA_TIPO_IDENTIFICACION]', $data->tipoIdentificacionVictima->PERSONATIPOIDENTIFICACIONDESCR, $data->plantilla);
-		$data->plantilla = str_replace('[VICTIMA_NUMERO_IDENTIFICACION]', $data->victima[0]['NUMEROIDENTIFICACION'], $data->plantilla);
-		$data->plantilla = str_replace('[VICTIMA_TELEFONO_CELULAR]', $data->victima[0]['TELEFONO'], $data->plantilla);
-		$data->plantilla = str_replace('[VICTIMA_OCUPACION]', $data->ocupacionVictima->PERSONAOCUPACIONDESCR, $data->plantilla);
-		$data->plantilla = str_replace('[VICTIMA_NACIONALIDAD]', $data->nacionalidadVictima->PERSONANACIONALIDADDESCR, $data->plantilla);
-		$data->plantilla = str_replace('[VICTIMA_ESTADO_CIVIL]', $data->edoCivilVictima->PERSONAESTADOCIVILDESCR, $data->plantilla);
+		$data->plantilla = str_replace('[VICTIMA_TIPO_IDENTIFICACION]', isset($data->tipoIdentificacionVictima) == true ? $data->tipoIdentificacionVictima->PERSONATIPOIDENTIFICACIONDESCR : 'SIN TIPO DE IDENTIFICACIÓN', $data->plantilla);
+		$data->plantilla = str_replace('[VICTIMA_NUMERO_IDENTIFICACION]', $data->victima[0]['NUMEROIDENTIFICACION'] ? $data->victima[0]['NUMEROIDENTIFICACION'] : 'SIN NÚMERO DE IDENTIFICACIÓN', $data->plantilla);
+		$data->plantilla = str_replace('[VICTIMA_TELEFONO_CELULAR]', $data->victima[0]['TELEFONO'] ? $data->victima[0]['TELEFONO'] : 'SIN TELEFONO REGISTRADO', $data->plantilla);
+		$data->plantilla = str_replace('[VICTIMA_OCUPACION]', isset($data->ocupacionVictima) == true ? $data->ocupacionVictima->PERSONAOCUPACIONDESCR : 'SIN OCUPACIÓN REGISTRADA', $data->plantilla);
+		$data->plantilla = str_replace('[VICTIMA_NACIONALIDAD]', isset($data->nacionalidadVictima) == true ? $data->nacionalidadVictima->PERSONANACIONALIDADDESCR : 'SIN NACIONALIDAD REGISTRADA', $data->plantilla);
+		$data->plantilla = str_replace('[VICTIMA_ESTADO_CIVIL]', isset($data->edoCivilVictima) == true ? $data->edoCivilVictima->PERSONAESTADOCIVILDESCR : 'SIN ESTADO CIVIL', $data->plantilla);
 
 
 
@@ -3402,6 +3724,68 @@ class DashboardController extends BaseController
 	{
 		return in_array($permiso, session('permisos'));
 	}
+	public function crearFolioDenunciaAnonima()
+	{
+
+		list($FOLIOID, $year) = $this->_folioConsecutivoModel->get_consecutivo();
+		$dataFolio = [
+			'FOLIOID' => $FOLIOID,
+			'ANO' => $year,
+			'HECHOFECHA' => $this->request->getPost('fecha_delito'),
+			'HECHOHORA' => $this->request->getPost('hora_delito'),
+			'HECHOLUGARID' => $this->request->getPost('lugar_delito'),
+			'ESTADOID' => 2,
+			'MUNICIPIOID' => $this->request->getPost('municipio_delito'),
+			'HECHOESTADOID' => 2,
+			'HECHOMUNICIPIOID' => $this->request->getPost('municipio_delito'),
+			'HECHOLOCALIDADID' => $this->request->getPost('localidad_delito'),
+			'HECHOCOLONIAID' => $this->request->getPost('colonia_delito_select'),
+			'HECHOCOLONIADESCR' => $this->request->getPost('colonia_delito'),
+			'HECHOCALLE' => $this->request->getPost('calle_delito'),
+			'HECHONUMEROCASA' => $this->request->getPost('exterior_delito'),
+			'HECHONUMEROCASAINT' => $this->request->getPost('interior_delito'),
+			'HECHONARRACION' => $this->request->getPost('narracion_delito'),
+			'HECHODELITO' => $this->request->getPost('delito_cometido'),
+			'HECHOREFERENCIA' => $this->request->getPost('referencia_delito'),
+			'TIPODENUNCIA' => 'DA',
+			'STATUS' => 'EN PROCESO',
+
+		];
+		$colonia = $this->_coloniasModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $this->request->getPost('municipio_delito'))->where('LOCALIDADID', $this->request->getPost('localidad_delito'))->where('COLONIAID', $this->request->getPost('colonia_delito_select'))->first();
+
+		if ((int) $this->request->getPost('colonia_delito_select') == 0) {
+			$dataFolio['HECHOCOLONIAID'] = null;
+			$dataFolio['HECHOCOLONIADESCR'] = $this->request->getPost('colonia_delito');
+			$localidad = $this->_localidadesModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $dataFolio['HECHOMUNICIPIOID'])->where('LOCALIDADID', $dataFolio['HECHOLOCALIDADID'])->first();
+			$dataFolio['HECHOZONA'] = $localidad->ZONA;
+		} else {
+			$dataFolio['HECHOCOLONIAID'] = (int) $this->request->getPost('colonia_delito_select');
+			$dataFolio['HECHOCOLONIADESCR'] = $colonia->COLONIADESCR;
+			$dataFolio['HECHOZONA'] = $colonia->ZONA;
+		}
+		if ($this->_folioModel->save($dataFolio)) {
+			return json_encode(['status' => 1, 'folio' => $FOLIOID, 'year' => $year]);
+		} else {
+			return json_encode(['status' => 1]);
+		}
+	}
+	private function _folioVehiculo($data, $folio, $year)
+    {
+        $data = $data;
+        $data['FOLIOID'] = $folio;
+        $data['ANO'] = $year;
+
+        $vehiculo = $this->_folioVehiculoModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->orderBy('VEHICULOID', 'desc')->first();
+
+        if ($vehiculo) {
+            $data['VEHICULOID'] = ((int) $vehiculo->VEHICULOID) + 1;
+            $this->_folioVehiculoModel->insert($data);
+        } else {
+            $data['VEHICULOID'] = 1;
+            $this->_folioVehiculoModel->insert($data);
+        }
+    }
+
 }
 
 /* End of file DashboardController.php */

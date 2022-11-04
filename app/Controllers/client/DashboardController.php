@@ -197,6 +197,9 @@ class DashboardController extends BaseController
             'HECHONUMEROCASAINT' => $this->request->getPost('interior'),
             'HECHONARRACION' => $this->request->getPost('descripcion_breve'),
             'HECHODELITO' => $this->request->getPost('delito'),
+            'TIPODENUNCIA'=>'VD',
+
+
         ];
         $colonia = $this->_coloniasModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $this->request->getPost('municipio'))->where('LOCALIDADID', $this->request->getPost('localidad'))->where('COLONIAID', $this->request->getPost('colonia_select'))->first();
 

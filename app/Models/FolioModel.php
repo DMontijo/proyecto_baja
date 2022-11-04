@@ -18,6 +18,7 @@ class FolioModel extends Model
 		'STATUS',
 		'NOTASAGENTE',
 		'TIPOEXPEDIENTEID',
+		'TIPODENUNCIA',
 		'ESTADOID',
 		'MUNICIPIOID',
 		'HECHODELITO',

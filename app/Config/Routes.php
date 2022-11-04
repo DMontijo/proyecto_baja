@@ -221,6 +221,8 @@ $routes->group('data', function ($routes) {
 	$routes->post('update-persona-fisica-domicilio-by-id', 'admin/DashboardController::updatePersonaFisicaDomicilioById');
 	$routes->post('update-media-filiacion-by-id', 'admin/DashboardController::updateMediaFiliacionById');
 	$routes->post('update-vehiculo-by-id', 'admin/DashboardController::updateVehiculoByFolio');
+	$routes->post('create-vehiculo-by-id', 'admin/DashboardController::createVehiculoByFolio');
+
 	$routes->post('delete-parentesco-by-id', 'admin/DashboardController::deleteParentescoById');
 	$routes->post('create-parentesco-by-id', 'admin/DashboardController::createParentescoByFolio');
 	$routes->post('update-parentesco-by-id', 'admin/DashboardController::updateParentescoByFolio');
@@ -241,6 +243,9 @@ $routes->group('data', function ($routes) {
 
 	$routes->post('download-pdf-documento', 'admin/DocumentosController::download_documento_pdf');
 	$routes->post('download-xml-documento', 'admin/DocumentosController::download_documento_xml');
+	$routes->post('create-folio-denuncia-anonima', 'admin/DashboardController::crearFolioDenunciaAnonima');
+	$routes->post('create-persona_fisica-by-denuncia-anonima', 'admin/DashboardController::createPersonaFisicaByDenunciaAnonima');
+
 
 });
 
