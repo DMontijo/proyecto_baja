@@ -115,7 +115,6 @@ class FolioModel extends Model
 		$builder->select(['FOLIOID','EXPEDIENTEID', 'FECHAREGISTRO','STATUS','ANO']);
 		$builder->where('STATUS', 'EXPEDIENTE');
 		$builder->orderBy('EXPEDIENTEID ASC');
-        $builder->groupBy('EXPEDIENTEID');
 		$query = $builder->get();
 		return $query->getResult('array');
 	}
