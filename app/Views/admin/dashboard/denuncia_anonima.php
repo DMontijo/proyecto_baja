@@ -152,27 +152,27 @@
 						<h3 class="font-weight-bold text-center text-blue pb-3">PERSONAS INVOLUCRADAS</h3>
 					</div>
 					<div class="row p-0 m-0">
-					<div class="col-12 col-sm-6 mb-3">
-						<div class="form-group">
-							<label for="victima_conocido" class="form-label font-weight-bold">¿Se conoce a la victima?</label>
-							<select class="form-control" id="victima_conocido" name="victima_conocido" required>
-								<option selected disabled value=""></option>
-								<option value="1">Si </option>
-								<option value="2">No </option>
-							</select>
+						<div class="col-12 col-sm-6 mb-3">
+							<div class="form-group">
+								<label for="victima_conocido" class="form-label font-weight-bold">¿Se conoce a la victima?</label>
+								<select class="form-control" id="victima_conocido" name="victima_conocido" required>
+									<option selected disabled value=""></option>
+									<option value="1">Si </option>
+									<option value="2">No </option>
+								</select>
+							</div>
 						</div>
-					</div>
 
-					<div class="col-12 col-sm-6 mb-3">
-						<div class="form-group">
-							<label for="imputado_conocido" class="form-label font-weight-bold">¿Se conoce al imputado?</label>
-							<select class="form-control" id="imputado_conocido" name="imputado_conocido" required>
-								<option selected disabled value=""></option>
-								<option value="1">Si </option>
-								<option value="2">No </option>
-							</select>
+						<div class="col-12 col-sm-6 mb-3">
+							<div class="form-group">
+								<label for="imputado_conocido" class="form-label font-weight-bold">¿Se conoce al imputado?</label>
+								<select class="form-control" id="imputado_conocido" name="imputado_conocido" required>
+									<option selected disabled value=""></option>
+									<option value="1">Si </option>
+									<option value="2">No </option>
+								</select>
+							</div>
 						</div>
-					</div>
 					</div>
 					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 						<div class="form-group">
@@ -527,12 +527,13 @@
 	}
 
 	function clearText(text) {
-		text
+		return text
 			.normalize('NFD')
-			.replace(/([^n\u0300-\u036f]|n(?!\u0303(?![\u0300-\u036f])))[\u0300-\u036f]+/gi, "$1")
-			.normalize();
-		return text.replaceAll('´', '');
+			.replaceAll(/([^n\u0300-\u036f]|n(?!\u0303(?![\u0300-\u036f])))[\u0300-\u036f]+/gi, "$1")
+			.normalize()
+			.replaceAll('´', '');
 	}
+
 
 	document.querySelector('#municipio').addEventListener('change', (e) => {
 		let select_localidad = document.querySelector('#localidad');
