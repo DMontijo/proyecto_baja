@@ -521,8 +521,9 @@
 	}
 
 	buscar_nuevo_btn.addEventListener('click', () => {
-		history.back();
-		window.reload();
+		// history.back();
+		// window.reload();
+		window.location.href= `<?= base_url('/admin/dashboard/buscar_folio')?>`;
 	});
 
 	function viewObjetoInvolucrado(objetoid) {
