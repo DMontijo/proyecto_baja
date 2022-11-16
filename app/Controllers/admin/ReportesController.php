@@ -689,10 +689,17 @@ class ReportesController extends BaseController
 		$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
 
 		$row++;
-
 		foreach ($resultFilter->result as $index => $folio) {
-			$sheet->setCellValue('A' . $row, $folio->FECHAREGISTRO);
-			$sheet->setCellValue('B' . $row, $folio->FECHAREGISTRO);
+			$fecharegistro = strtotime($folio->FECHAREGISTRO);
+			$fechasalida = strtotime($folio->FECHASALIDA);
+
+			$dateregistro =date('d-m-Y',$fecharegistro);
+			$datesalida =date('d-m-Y',$fechasalida);
+
+			$horaregistro= date('H:i:s', $fecharegistro);
+
+			$sheet->setCellValue('A' . $row, $dateregistro);
+			$sheet->setCellValue('B' . $row, $horaregistro);
 			$sheet->setCellValue('C' . $row, $folio->EXPEDIENTEID!=null?$folio->EXPEDIENTEID:$folio->FOLIOID);
 			$sheet->setCellValue('D' . $row, 'ELECTRÓNICA');
 			$sheet->setCellValue('E' . $row, $folio->MUNICIPIODESCR);
@@ -706,7 +713,8 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('M' . $row, $folio->NOTASAGENTE);
 			$sheet->setCellValue('N' . $row, $folio->TIPOEXPEDIENTEDESCR);
 			$sheet->setCellValue('O' . $row, $folio->EXPEDIENTEID);
-			$sheet->setCellValue('P' . $row, 'PRUEBA');
+			$sheet->setCellValue('P' . $row, $datesalida);
+			$sheet->setCellValue('Q' . $row, 'PRUEBA');
 
 
 			$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
