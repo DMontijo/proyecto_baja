@@ -20,7 +20,7 @@
 								<th scope="col">DELITO MENCIONADO</th>
 								<th scope="col">ESTADO</th>
 								<th scope="col">EXPEDIENTE</th>
-								<th scope="col">VIDEO</th>
+								<!-- <th scope="col">VIDEO</th> -->
 							</tr>
 						</thead>
 						<tbody>
@@ -32,13 +32,13 @@
 									<td class="text-center"><?= $folio->HECHODELITO ?></td>
 									<td class="text-center"><?= $folio->STATUS ?></td>
 									<td class="text-center"><?= $folio->EXPEDIENTEID ? $folio->EXPEDIENTEID : '-' ?></td>
-									<td class="text-center">
-										<?php if ($folio->EXPEDIENTEID) : ?>
+									<!-- <td class="text-center">
+										<?php //if ($folio->EXPEDIENTEID) : ?>
 											<button type="button" class="btn btn-primary" onclick="viewVideo(<?= $folio->ANO ?>,<?= $folio->FOLIOID ?>)"><i class="bi bi-play-btn"></i></button>
-										<?php else : ?>
+										<?php //else : ?>
 											-
-										<?php endif; ?>
-									</td>
+										<?php //endif; ?>
+									</td> -->
 								</tr>
 							<?php } ?>
 						</tbody>
@@ -50,53 +50,5 @@
 		</div>
 	</div>
 </div>
-<script>
-	function viewVideo(year, folio) {
-		data = {
-			'folio': year + '-' + folio,
-			'min': '2000-01-01',
-			'max': '<?= date("Y-m-d") ?>'
-		};
-		// console.log(data);
-		$.ajax({
-			data: data,
-			url: "<?= base_url('/data/get-video-link') ?>",
-			method: "POST",
-			dataType: "json",
-		}).done(function(data) {
-			let grabacion = "";
-			let enlace = 'https://fgebc-records.s3.amazonaws.com/'
-			if (data.data.length > 0) {
-				array = data.data.reverse();
-				array.forEach(element => {
-					if (element.Grabación != '') {
-						grabacion = element.Grabación
-					}
-				});
-				if (grabacion == '') {
-					Swal.fire({
-						icon: 'error',
-						title: 'No hay video grabado',
-						confirmButtonColor: '#bf9b55',
-					})
-				} else {
-					window.open(enlace + grabacion, "_blank");
-				}
-			} else {
-				Swal.fire({
-					icon: 'error',
-					title: 'No hay video grabado',
-					confirmButtonColor: '#bf9b55',
-				})
-			}
-		}).fail(function(jqXHR, textStatus) {
-			Swal.fire({
-				icon: 'error',
-				title: 'Hubo un error',
-				text: 'Contácte con soporte técnico',
-				confirmButtonColor: '#bf9b55',
-			})
-		});
-	}
-</script>
+
 <?= $this->endSection() ?>

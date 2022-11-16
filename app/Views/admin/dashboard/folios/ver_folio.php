@@ -522,6 +522,7 @@
 
 	buscar_nuevo_btn.addEventListener('click', () => {
 		history.back();
+		window.reload();
 	});
 
 	function viewObjetoInvolucrado(objetoid) {
