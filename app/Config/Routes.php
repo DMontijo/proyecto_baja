@@ -49,6 +49,7 @@ $routes->group('admin', function ($routes) {
 
 	$routes->group('dashboard', ['filter' => 'adminAuth'], function ($routes) {
 		$routes->get('/', 'admin/DashboardController::index');
+		$routes->get('videos', 'admin/DashboardController::videos_expediente');
 
 		$routes->get('usuarios', 'admin/DashboardController::usuarios');
 		$routes->get('asignacion_permisos', 'admin/DashboardController::asignacion_permisos');

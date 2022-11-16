@@ -14,6 +14,7 @@ class RolesUsuariosSeeder extends Seeder
 			array('NOMBRE_ROL' => 'FACILITADOR'),
 			array('NOMBRE_ROL' => 'NOTIFICADOR'),
 			array('NOMBRE_ROL' => 'SECRETARIO DE ACUERDOS'),
+			array('NOMBRE_ROL' => 'AGENTE DEL MINISTERIO PÚBLICO EXTERNO'),
 		];
 		$this->db->table('ROLES')->insertBatch($data);
 	}

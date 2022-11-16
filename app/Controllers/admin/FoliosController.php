@@ -268,6 +268,9 @@ class FoliosController extends BaseController
 
     public function folios_abiertos()
     {
+        if (!$this->permisos('FOLIOS')) {
+			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
+		}
         $data = (object) array();
         $data->folio = $this->_folioModel->asObject()->where('STATUS', 'ABIERTO')->join('DENUNCIANTES', 'DENUNCIANTES.DENUNCIANTEID = FOLIO.DENUNCIANTEID')->findAll();
         $data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
@@ -277,6 +280,9 @@ class FoliosController extends BaseController
 
     public function folios_derivados()
     {
+        if (!$this->permisos('FOLIOS')) {
+			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
+		}
         $data = (object) array();
         $agente = $this->_usuariosModel->asObject()->where('ID', session('ID'))->first();
         $roles = [1, 3];
@@ -292,6 +298,9 @@ class FoliosController extends BaseController
 
     public function folios_canalizados()
     {
+        if (!$this->permisos('FOLIOS')) {
+			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
+		}
         $data = (object) array();
         $agente = $this->_usuariosModel->asObject()->where('ID', session('ID'))->first();
         $roles = [1, 3];
@@ -307,6 +316,9 @@ class FoliosController extends BaseController
 
     public function folios_en_proceso()
     {
+        if (!$this->permisos('FOLIOS')) {
+			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
+		}
         $data = (object) array();
         $data->folio = $this->_folioModel->asObject()->where('STATUS', 'EN PROCESO')->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')->findAll();
         $data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
@@ -331,6 +343,9 @@ class FoliosController extends BaseController
 
     public function folios_expediente()
     {
+        if (!$this->permisos('FOLIOS')) {
+			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
+		}
         $data = (object) array();
         $agente = $this->_usuariosModel->asObject()->where('ID', session('ID'))->first();
         $roles = [1, 3];
@@ -344,8 +359,12 @@ class FoliosController extends BaseController
         $this->_loadView('Folios expediente', 'folios', '', $data, 'folios_expediente');
     }
 
+
     public function folios_sin_firma()
     {
+        if (!$this->permisos('FOLIOS')) {
+			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
+		}
         $data = (object) array();
         $data->folio = $this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('AGENTEFIRMAID', null)->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->findAll();
         $data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();

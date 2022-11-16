@@ -595,13 +595,20 @@ class DashboardController extends BaseController
 		];
 
 		if ($this->validate(['correo_usuario' => 'required|valid_email|is_unique[USUARIOS.CORREO]'])) {
-			$videoUser = $this->_updateUserVideo($usuario->ID, 'LIC. ' . $data['NOMBRE'], $data['APELLIDO_PATERNO'] . ' ' . $data['APELLIDO_MATERNO'], $data['CORREO'], $data['SEXO'], 'agente');
-			$data['USUARIOVIDEO'] = $videoUser->ID;
-			$data['TOKENVIDEO'] = $videoUser->Token;
-			$this->_usuariosModel->insert($data);
-			$this->_bitacoraActividad($datosBitacora);
-			$this->_sendEmailPassword($data['CORREO'], $this->request->getPost('password'));
-			return redirect()->to(base_url('/admin/dashboard/usuarios'))->with('message_success', 'Usuario registrado correctamente.');
+			if ($this->request->getPost('rol_usuario') == 6) {
+				$this->_usuariosModel->insert($data);
+				$this->_bitacoraActividad($datosBitacora);
+				$this->_sendEmailPassword($data['CORREO'], $this->request->getPost('password'));
+				return redirect()->to(base_url('/admin/dashboard/usuarios'))->with('message_success', 'Usuario registrado correctamente en videodenuncia.');
+			} else {
+				$videoUser = $this->_updateUserVideo($usuario->ID, 'LIC. ' . $data['NOMBRE'], $data['APELLIDO_PATERNO'] . ' ' . $data['APELLIDO_MATERNO'], $data['CORREO'], $data['SEXO'], 'agente');
+				$data['USUARIOVIDEO'] = $videoUser->ID;
+				$data['TOKENVIDEO'] = $videoUser->Token;
+				$this->_usuariosModel->insert($data);
+				$this->_bitacoraActividad($datosBitacora);
+				$this->_sendEmailPassword($data['CORREO'], $this->request->getPost('password'));
+				return redirect()->to(base_url('/admin/dashboard/usuarios'))->with('message_success', 'Usuario registrado correctamente.');
+			}
 		} else {
 			return redirect()->back()->with('message_error', 'Usuario no creado, ya existe el correo ingresado.');
 		}
@@ -2652,58 +2659,57 @@ class DashboardController extends BaseController
 	{
 
 
-			$folio = trim($this->request->getPost('folio'));
-			$year = trim($this->request->getPost('year'));
-			$distribuidorpost = trim($this->request->getPost('distribuidor_vehiculo_ad'));
-			$marcapost = trim($this->request->getPost('marca_ad'));
-			$modelopost = trim($this->request->getPost('linea_vehiculo_ad'));
+		$folio = trim($this->request->getPost('folio'));
+		$year = trim($this->request->getPost('year'));
+		$distribuidorpost = trim($this->request->getPost('distribuidor_vehiculo_ad'));
+		$marcapost = trim($this->request->getPost('marca_ad'));
+		$modelopost = trim($this->request->getPost('linea_vehiculo_ad'));
 
-			$modelodescr = $this->_vehiculoModeloModel->asObject()->where('VEHICULODISTRIBUIDORID', $distribuidorpost)->where('VEHICULOMARCAID', $marcapost)->where('VEHICULOMODELOID', $modelopost)->first();
-			$marcadescr = $this->_vehiculoMarcaModel->asObject()->where('VEHICULODISTRIBUIDORID', $distribuidorpost)->where('VEHICULOMARCAID', $marcapost)->first();
-			$data = array(
-				'folio' => trim($this->request->getPost('folio')),
-				'year' => trim($this->request->getPost('year')),
-				'TIPOID' => $this->request->getPost('tipo_vehiculo'),
-				'PRIMERCOLORID' => $this->request->getPost('color_vehiculo'),
-				'SENASPARTICULARES' => $this->request->getPost('description_vehiculo'),
-				'TIPOPLACA' => $this->request->getPost('tipo_placas_vehiculo'),
-				'PLACAS' => $this->request->getPost('placas_vehiculo'),
-				'ESTADOIDPLACA' => $this->request->getPost('estado_vehiculo_ad'),
-				'ESTADOEXTRANJEROIDPLACA' => $this->request->getPost('estado_extranjero_vehiculo_ad'),
-				'NUMEROSERIE' => $this->request->getPost('serie_vehiculo'),
-				'VEHICULODISTRIBUIDORID' => $this->request->getPost('distribuidor_vehiculo_ad'),
-				'MARCAID' => $this->request->getPost('marca_ad'),
-				'MARCADESCR' => isset($marcadescr->VEHICULOMARCADESCR),
-				'MODELODESCR' => isset($modelodescr->VEHICULOMODELODESCR),
-				'MODELOID' => $this->request->getPost('linea_vehiculo_ad'),
-				'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad'),
-				'VEHICULOSERVICIOID' => $this->request->getPost('servicio_vehiculo_ad'),
-				'SEGUROVIGENTE' => $this->request->getPost('seguro_vigente_vehiculo'),
-				'TRANSMISION' => $this->request->getPost('transmision_vehiculo'),
-				'TRACCION' => $this->request->getPost('traccion_vehiculo'),
-				'NUMEROCHASIS' => $this->request->getPost('num_chasis_vehiculo'),
-				'SEGUNDOCOLORID' => $this->request->getPost('color_tapiceria_vehiculo'),
-				'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo'),
-			);
-			// $insert = $this->_folioVehiculoModel->insert($data);
-			// $update = $this->_folioVehiculoModel->set($data)->where('FOLIOID', $folio)->where('ANO', $year)->update();
-			$insert =$this->_folioVehiculo($data, $folio, $year);
+		$modelodescr = $this->_vehiculoModeloModel->asObject()->where('VEHICULODISTRIBUIDORID', $distribuidorpost)->where('VEHICULOMARCAID', $marcapost)->where('VEHICULOMODELOID', $modelopost)->first();
+		$marcadescr = $this->_vehiculoMarcaModel->asObject()->where('VEHICULODISTRIBUIDORID', $distribuidorpost)->where('VEHICULOMARCAID', $marcapost)->first();
+		$data = array(
+			'folio' => trim($this->request->getPost('folio')),
+			'year' => trim($this->request->getPost('year')),
+			'TIPOID' => $this->request->getPost('tipo_vehiculo'),
+			'PRIMERCOLORID' => $this->request->getPost('color_vehiculo'),
+			'SENASPARTICULARES' => $this->request->getPost('description_vehiculo'),
+			'TIPOPLACA' => $this->request->getPost('tipo_placas_vehiculo'),
+			'PLACAS' => $this->request->getPost('placas_vehiculo'),
+			'ESTADOIDPLACA' => $this->request->getPost('estado_vehiculo_ad'),
+			'ESTADOEXTRANJEROIDPLACA' => $this->request->getPost('estado_extranjero_vehiculo_ad'),
+			'NUMEROSERIE' => $this->request->getPost('serie_vehiculo'),
+			'VEHICULODISTRIBUIDORID' => $this->request->getPost('distribuidor_vehiculo_ad'),
+			'MARCAID' => $this->request->getPost('marca_ad'),
+			'MARCADESCR' => isset($marcadescr->VEHICULOMARCADESCR),
+			'MODELODESCR' => isset($modelodescr->VEHICULOMODELODESCR),
+			'MODELOID' => $this->request->getPost('linea_vehiculo_ad'),
+			'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad'),
+			'VEHICULOSERVICIOID' => $this->request->getPost('servicio_vehiculo_ad'),
+			'SEGUROVIGENTE' => $this->request->getPost('seguro_vigente_vehiculo'),
+			'TRANSMISION' => $this->request->getPost('transmision_vehiculo'),
+			'TRACCION' => $this->request->getPost('traccion_vehiculo'),
+			'NUMEROCHASIS' => $this->request->getPost('num_chasis_vehiculo'),
+			'SEGUNDOCOLORID' => $this->request->getPost('color_tapiceria_vehiculo'),
+			'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo'),
+		);
+		// $insert = $this->_folioVehiculoModel->insert($data);
+		// $update = $this->_folioVehiculoModel->set($data)->where('FOLIOID', $folio)->where('ANO', $year)->update();
+		$insert = $this->_folioVehiculo($data, $folio, $year);
 
-			if (!$insert) {
-				$vehiculos = $this->_folioVehiculoModel->get_by_folio($folio, $year);
+		if (!$insert) {
+			$vehiculos = $this->_folioVehiculoModel->get_by_folio($folio, $year);
 
-				$datosBitacora = [
-					'ACCION' => 'Ha agregado el vehículo de una persona fisica',
-					'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
-				];
+			$datosBitacora = [
+				'ACCION' => 'Ha agregado el vehículo de una persona fisica',
+				'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
+			];
 
-				$this->_bitacoraActividad($datosBitacora);
+			$this->_bitacoraActividad($datosBitacora);
 
-				return json_encode(['status' => 1, 'vehiculos' => $vehiculos]);
-			} else {
-				return json_encode(['status' => 0, 'message' => $insert]);
-			}
-		
+			return json_encode(['status' => 1, 'vehiculos' => $vehiculos]);
+		} else {
+			return json_encode(['status' => 0, 'message' => $insert]);
+		}
 	}
 	public function updateParentescoByFolio()
 	{
@@ -3769,23 +3775,32 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 1]);
 		}
 	}
-	private function _folioVehiculo($data, $folio, $year)
+	public function videos_expediente()
     {
-        $data = $data;
-        $data['FOLIOID'] = $folio;
-        $data['ANO'] = $year;
+        $data = (object) array();
+        $agente = $this->_usuariosModel->asObject()->where('ID', session('ID'))->first();
+        $data->folio = $this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('AGENTEFIRMAID !=', null)->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->findAll();
+    
+        $data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
-        $vehiculo = $this->_folioVehiculoModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->orderBy('VEHICULOID', 'desc')->first();
-
-        if ($vehiculo) {
-            $data['VEHICULOID'] = ((int) $vehiculo->VEHICULOID) + 1;
-            $this->_folioVehiculoModel->insert($data);
-        } else {
-            $data['VEHICULOID'] = 1;
-            $this->_folioVehiculoModel->insert($data);
-        }
+        $this->_loadView('Videos expediente', 'videos', '', $data, 'videos_expediente');
     }
+	private function _folioVehiculo($data, $folio, $year)
+	{
+		$data = $data;
+		$data['FOLIOID'] = $folio;
+		$data['ANO'] = $year;
 
+		$vehiculo = $this->_folioVehiculoModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->orderBy('VEHICULOID', 'desc')->first();
+
+		if ($vehiculo) {
+			$data['VEHICULOID'] = ((int) $vehiculo->VEHICULOID) + 1;
+			$this->_folioVehiculoModel->insert($data);
+		} else {
+			$data['VEHICULOID'] = 1;
+			$this->_folioVehiculoModel->insert($data);
+		}
+	}
 }
 
 /* End of file DashboardController.php */

@@ -146,6 +146,16 @@
 					</li>
 				<?php } ?>
 			<?php } ?>
+
+			<?php foreach ($body_data->rolPermiso as $permiso) { ?>
+				<?php if ($permiso->PERMISOID == 9) { ?>
+					<li class="c-sidebar-nav-item" id="nav-roles" name="nav-roles">
+						<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url('admin/dashboard/videos') ?>">
+							<i class="fas fa-user-cog c-sidebar-nav-icon"></i> Videos
+						</a>
+					</li>
+				<?php } ?>
+			<?php } ?>
 			<li class="c-sidebar-nav-item" id="nav-salir" name="nav-salir">
 				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url('admin/logout') ?>">
 					<i class="fas fa-sign-out-alt c-sidebar-nav-icon"></i> Salir

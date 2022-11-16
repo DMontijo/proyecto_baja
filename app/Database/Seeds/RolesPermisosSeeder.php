@@ -32,6 +32,9 @@ class RolesPermisosSeeder extends Seeder
 
             array('ROLID' => '5', 'PERMISOID'=>'6'),
 
+            array('ROLID' => '6', 'PERMISOID'=>'9'),
+
+
 
 		];
 		$this->db->table('ROLESPERMISOS')->insertBatch($data);
