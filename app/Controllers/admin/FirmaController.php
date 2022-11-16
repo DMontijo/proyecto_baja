@@ -40,8 +40,6 @@ class FirmaController extends BaseController
 		$this->_folioModel = new FolioModel();
 		$this->_folioPersonaFisicaModel = new FolioPersonaFisicaModel();
 		$this->_tipoExpedienteModel = new TipoExpedienteModel();
-
-
 	}
 
 	public function firmar_constancia_extravio()
@@ -319,9 +317,9 @@ class FirmaController extends BaseController
 		$user_id = session('ID');
 
 		$documento = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $numexpediente)->where('ANO', $year)->where('STATUS', 'ABIERTO')->findAll();
-		$folioRow = $this->_folioModel->asObject()->where('FOLIOID',$folio)->where('ANO', $year)->first();
+		$folioRow = $this->_folioModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->first();
 		if ($documento == null) {
-			return json_encode((object)['status' => 0, 'message_error'=> "Debes generar documentos antes de firmar"]);
+			return json_encode((object)['status' => 0, 'message_error' => "Debes generar documentos antes de firmar"]);
 		}
 
 		$meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
@@ -340,38 +338,38 @@ class FirmaController extends BaseController
 						$municipio = (object)[];
 
 						$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $documento[$i]->MUNICIPIOID)->where('ESTADOID', $documento[$i]->ESTADOID)->first();
-						if (isset($municipio)==false) {
+						if (isset($municipio) == false) {
 							$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $folioRow->MUNICIPIOID)->where('ESTADOID', $folioRow->ESTADOID)->first();
 						}
 						$estado = $this->_estadosModel->asObject()->where('ESTADOID', $documento[$i]->ESTADOID)->first();
-						$documento[$i]->PLACEHOLDER= str_replace('[EXPEDIENTE_NOMBRE_DEL_RESPONSABLE]', $razon_social, $documento[$i]->PLACEHOLDER);
-						$documento[$i]->PLACEHOLDER= str_replace('EXPEDIENTE_NOMBRE_DEL_RESPONSABLE', $razon_social, $documento[$i]->PLACEHOLDER);
-						$documento[$i]->PLACEHOLDER= str_replace('[NOMBRE_LICENCIADO]', $razon_social, $documento[$i]->PLACEHOLDER);
-						$documento[$i]->PLACEHOLDER= str_replace('[EXPEDIENTE_NOMBRE_MP_RESPONSABLE]', $razon_social, $documento[$i]->PLACEHOLDER);
+						$documento[$i]->PLACEHOLDER = str_replace('[EXPEDIENTE_NOMBRE_DEL_RESPONSABLE]', $razon_social, $documento[$i]->PLACEHOLDER);
+						$documento[$i]->PLACEHOLDER = str_replace('EXPEDIENTE_NOMBRE_DEL_RESPONSABLE', $razon_social, $documento[$i]->PLACEHOLDER);
+						$documento[$i]->PLACEHOLDER = str_replace('[NOMBRE_LICENCIADO]', $razon_social, $documento[$i]->PLACEHOLDER);
+						$documento[$i]->PLACEHOLDER = str_replace('[EXPEDIENTE_NOMBRE_MP_RESPONSABLE]', $razon_social, $documento[$i]->PLACEHOLDER);
 
 
 						$signature = $this->_generateSignature($user_id, "FIRMA DE DOCUMENTOS", $documento[$i]->PLACEHOLDER, $expediente, $FECHAFIRMA, $HORAFIRMA);
 						// $qr3 = $this->_generateQR($signature->signed_chain);
-						$urldoc = base_url('/validar_documento?expediente=' . base64_encode($numexpediente) . '&year=' . $year. '&foliodoc=' . base64_encode($documento[$i]->FOLIODOCID));
+						$urldoc = base_url('/validar_documento?expediente=' . base64_encode($numexpediente) . '&year=' . $year . '&foliodoc=' . base64_encode($documento[$i]->FOLIODOCID));
 
-											$datapdf = array(
-												'placeholder' => $documento[$i]->PLACEHOLDER,
-												'firma' => $signature->signature,
-												'numeroident' => $documento[$i]->FOLIODOCID . '/' . $documento[$i]->ANO,
-												'agente' => $razon_social,
-												'rfc' => $rfc,
-												'certificado' => $num_certificado,
-												'fecha' => $FECHAFIRMA,
-												'hora' => $HORAFIRMA,
-												'lugar' => $municipio->MUNICIPIODESCR . ", " . $estado->ESTADODESCR,
-												'qr3'=> $this->_generateQR($signature->signature),
-												'url'=> $urldoc,
-												'qrurl'=>$this->_generateQR($urldoc)
-											
-											);
+						$datapdf = array(
+							'placeholder' => $documento[$i]->PLACEHOLDER,
+							'firma' => $signature->signature,
+							'numeroident' => $documento[$i]->FOLIODOCID . '/' . $documento[$i]->ANO,
+							'agente' => $razon_social,
+							'rfc' => $rfc,
+							'certificado' => $num_certificado,
+							'fecha' => $FECHAFIRMA,
+							'hora' => $HORAFIRMA,
+							'lugar' => $municipio->MUNICIPIODESCR . ", " . $estado->ESTADODESCR,
+							'qr3' => $this->_generateQR($signature->signature),
+							'url' => $urldoc,
+							'qrurl' => $this->_generateQR($urldoc)
+
+						);
 						$pdf = $this->_generatePDFDocumentos($datapdf);
-					
-						
+
+
 						if ($signature->status == 1) {
 							$xmldocumentos = $this->_createXMLSignature($signature->signed_chain, $signature->signature, $expediente, $year);
 
@@ -387,7 +385,7 @@ class FirmaController extends BaseController
 								'FIRMAELECTRONICA' => base64_decode($signature->signature),
 								'CADENAFIRMADA' => $signature->signed_chain,
 								'PDF' => $pdf,
-								'XML'=> $xmldocumentos,
+								'XML' => $xmldocumentos,
 								'STATUS' => 'FIRMADO',
 								'PLACEHOLDER' => $documento[$i]->PLACEHOLDER,
 							];
@@ -412,24 +410,20 @@ class FirmaController extends BaseController
 							// }
 						} else {
 							// return redirect()->to(base_url('/admin/dashboard/documentos_show?expediente=' . $numexpediente . '&year=' . $year. '&folio=' . $folio))->with('message_error', 'Fallo al firmar el documento. Intentelo de nuevo.');
-							return json_encode((object)['status' => 0, 'message_error'=> "Fallo al firmar el documento. Intentelo de nuevo."]);
-
+							return json_encode((object)['status' => 0, 'message_error' => "Fallo al firmar el documento. Intentelo de nuevo."]);
 						}
 					}
 					$documentosExp = $this->_folioDocModel->get_by_expediente($numexpediente, $year);
 
-						return json_encode((object)['status' => 1, 'documentos'=> $documentosExp]);
-					
+					return json_encode((object)['status' => 1, 'documentos' => $documentosExp]);
 				} else {
 					// return redirect()->to(base_url('/admin/dashboard/documentos_show?expediente=' . $numexpediente . '&year=' . $year. '&folio=' . $folio))->with('message_error', 'La FIEL no es válida o está vencida');
-					return json_encode((object)['status' => 0, 'message_error'=> "La FIEL no es válida o está vencida"]);
-
+					return json_encode((object)['status' => 0, 'message_error' => "La FIEL no es válida o está vencida"]);
 				}
 			}
 		} catch (\Exception $e) {
 			// return redirect()->to(base_url('/admin/dashboard/documentos_show?expediente=' . $numexpediente . '&year=' . $year. '&folio=' . $folio))->with('message_error', $e->getMessage());
-			return json_encode((object)['status' => 0, 'message_error'=> $e->getMessage()]);
-
+			return json_encode((object)['status' => 0, 'message_error' => $e->getMessage()]);
 		}
 		// }
 		// return redirect()->to(base_url('/admin/dashboard/documentos_abiertos'))->with('message_success', 'Documento firmada correctamente.');
@@ -841,29 +835,27 @@ class FirmaController extends BaseController
 		$documento = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente)->where('ANO', $year)->where('STATUS', 'FIRMADO')->where('STATUSENVIO', 1)->where('ENVIADO', 'N')->findAll();
 		if (empty($documento)) {
 			return json_encode((object)['status' => 3]);
-
 		}
 		$folioM = $this->_folioModel->asObject()->where('ANO', $year)->where('EXPEDIENTEID', $expediente)->first();
-		$imputado = $this->_folioPersonaFisicaModel->asObject()->where('ANO', $year)->where('FOLIOID', $folioM->FOLIOID)->where('CALIDADJURIDICAID',2)->first();
+		$imputado = $this->_folioPersonaFisicaModel->asObject()->where('ANO', $year)->where('FOLIOID', $folioM->FOLIOID)->where('CALIDADJURIDICAID', 2)->first();
 
 		$tipoExpediente = $this->_tipoExpedienteModel->asObject()->where('TIPOEXPEDIENTEID',  $folioM->TIPOEXPEDIENTEID)->first();
 
 		$agente = $documento[0]->RAZONSOCIALFIRMA;
-		$folio= $folioM->FOLIOID;
+		$folio = $folioM->FOLIOID;
 		$delito =  $folioM->HECHODELITO;
-		$imputado = $imputado->NOMBRE . ' ' . $imputado->PRIMERAPELLIDO .' '.  $imputado->SEGUNDOAPELLIDO;		
+		$imputado = $imputado->NOMBRE . ' ' . $imputado->PRIMERAPELLIDO . ' ' .  $imputado->SEGUNDOAPELLIDO;
 		$email = \Config\Services::email();
 		$email->setTo($to);
 		$email->setSubject('Documentos firmados');
-		$body = view('email_template/documentos_firmados_email_template.php',['agente' => $agente, 'expediente'=>$expediente, 'folio'=>$folio, 'tipoexpediente'=> $tipoExpediente->TIPOEXPEDIENTEDESCR,'delito'=>$delito,'imputado'=>$imputado]);
+		$body = view('email_template/documentos_firmados_email_template.php', ['agente' => $agente, 'expediente' => $expediente, 'folio' => $folio, 'tipoexpediente' => $tipoExpediente->TIPOEXPEDIENTEDESCR, 'delito' => $delito, 'imputado' => $imputado]);
 		$email->setMessage($body);
 
 		for ($i = 0; $i < count($documento); $i++) {
 			$pdf = $documento[$i]->PDF;
-			$xml =$documento[$i]->XML;
-			$email->attach($pdf, 'attachment', 'Documento_' . $expediente . '_' . $year . '_' . $documento[$i]->FOLIODOCID . '.pdf', 'application/pdf');
-			$email->attach($xml, 'attachment', 'Documento' . $expediente . '_' . $year . '_' . $documento[$i]->FOLIODOCID . '.xml', 'application/xml');
-
+			$xml = $documento[$i]->XML;
+			$email->attach($pdf, 'attachment', 'Documento_' . $documento[$i]->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento[$i]->FOLIODOCID . '.pdf', 'application/pdf');
+			$email->attach($xml, 'attachment', 'Documento' . $documento[$i]->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento[$i]->FOLIODOCID . '.xml', 'application/xml');
 		}
 		$terminos = base_url('/assets/documentos/TerminosCondiciones.pdf');
 		$avisop = base_url('/assets/documentos/Aviso_De_Privacidad_De_Datos.pdf');
@@ -878,7 +870,7 @@ class FirmaController extends BaseController
 				'ENVIADO' => 'S',
 			];
 			for ($i = 0; $i < count($documento); $i++) {
-			$update = $this->_folioDocModel->set($datosUpdate)->where('NUMEROEXPEDIENTE', $expediente)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
+				$update = $this->_folioDocModel->set($datosUpdate)->where('NUMEROEXPEDIENTE', $expediente)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
 			}
 			return json_encode((object)['status' => 1]);
 		} else {

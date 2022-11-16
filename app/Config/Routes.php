@@ -114,8 +114,13 @@ $routes->group('admin', function ($routes) {
 		$routes->get('reportes_constancias', 'admin/ReportesController::getConstancias');
 		$routes->post('reportes_constancias', 'admin/ReportesController::postConstancias');
 
+		$routes->get('registro_diario', 'admin/ReportesController::getRegistroDiario');
+		$routes->post('registro_diario', 'admin/ReportesController::postRegistroDiario');
+
 		$routes->post('generar_excel_folios', 'admin/ReportesController::createFoliosXlsx');
 		$routes->post('generar_excel_constancias', 'admin/ReportesController::createConstanciasXlsx');
+		$routes->post('generar_excel_registro_diario', 'admin/ReportesController::createRegistroDiarioXlsx');
+
 
 		$routes->get('documentos', 'admin/DocumentosController::index');
 		$routes->get('documentos_abiertos', 'admin/DocumentosController::documentos_abiertas');
