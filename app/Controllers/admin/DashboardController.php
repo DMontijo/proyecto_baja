@@ -458,6 +458,9 @@ class DashboardController extends BaseController
 
 	public function denuncia_anonima()
 	{
+		if (!$this->permisos('DENUNCIA ANONIMA')) {
+			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
+		}
 		$data = (object) array();
 		$data->delitosUsuarios = $this->_delitosUsuariosModel->asObject()->orderBy('DELITO', 'ASC')->findAll();
 		$lugares = $this->_hechoLugarModel->orderBy('HECHODESCR', 'ASC')->findAll();
@@ -3504,6 +3507,7 @@ class DashboardController extends BaseController
 		$data->nacionalidadVictima = $this->_nacionalidadModel->asObject()->where('PERSONANACIONALIDADID',   $data->victima[0]['NACIONALIDADID'])->first();
 		$data->edoCivilVictima = $this->_estadoCivilModel->asObject()->where('PERSONAESTADOCIVILID',   $data->victima[0]['ESTADOCIVILID'])->first();
 		$relacionfisfis = $this->_relacionIDOModel->asObject()->where('FOLIOID', $data->expediente->FOLIOID)->where('ANO', $data->expediente->ANO)->where('PERSONAFISICAIDVICTIMA', $victima)->where('PERSONAFISICAIDIMPUTADO', $imputado)->first();
+
 		if ($relacionfisfis != null) {
 			$data->relacion_delitodescr = $this->_delitoModalidadModel->asObject()->where('DELITOMODALIDADID', $relacionfisfis->DELITOMODALIDADID)->first();
 			$data->plantilla = str_replace('[DELITO]',  $data->relacion_delitodescr->DELITOMODALIDADDESCR ?  $data->relacion_delitodescr->DELITOMODALIDADDESCR : 'N/A', $data->plantilla);

@@ -493,9 +493,8 @@ class ReportesController extends BaseController
 	}
 	public function getRegistroDiario()
 	{
-
 		$data = [
-			'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
+			'fechaInicio' => date("Y-m-d"),
 			'fechaFin' => date("Y-m-d"),
 		];
 

@@ -754,7 +754,6 @@
 					$('#victima_modal_documento').empty();
 					let select_victima_documento = document.querySelector("#victima_modal_documento");
 					let select_imputado_documento = document.querySelector("#imputado_modal_documento");
-
 					select_victima_documento.add(option_vacio_vm, null);
 					victimas.forEach(victima => {
 						const option = document.createElement('option');
@@ -762,6 +761,7 @@
 						option.text = victima.NOMBRE + ' ' + victima.PRIMERAPELLIDO;
 						select_victima_documento.add(option, null);
 					});
+
 					$('#imputado_modal_documento').empty();
 					select_imputado_documento.add(option_vacio_im, null);
 
@@ -2234,25 +2234,15 @@
 			});
 			document.querySelector('#estado_vehiculo_ad').addEventListener('change', (e) => {
 				let select_estado = document.querySelector('#estado_vehiculo_ad');
-				console.log(select_estado.value);
+				let select_estado_extr = document.querySelector('#estado_extranjero_vehiculo_ad');
 				if (select_estado.value == 33) {
 					let select_estado = document.querySelector('#estado_vehiculo_ad');
-					let select_estado_extr = document.querySelector('#estado_extranjero_vehiculo_ad');
 					document.getElementById("estado_extranjero_vehiculo_ad").style.display = "block";
 					document.getElementById("estado_vehiculo_ad").style.display = "none";
-					var option = document.createElement("option");
-					option.text = 'Nacional';
-					option.value = '0';
-					option.style = "font-weight:bold"
-					select_estado_extr.add(option);
 				}
 			});
 			let select_estado_extr = document.querySelector('#estado_extranjero_vehiculo_ad');
-			var option = document.createElement("option");
-			option.text = 'Nacional';
-			option.value = '0';
-			option.style = "font-weight:bold"
-			select_estado_extr.add(option);
+
 			document.querySelector('#estado_extranjero_vehiculo_ad').addEventListener('change', (e) => {
 				console.log(select_estado_extr.value);
 				if (select_estado_extr.value == 0) {
@@ -2260,7 +2250,6 @@
 					let select_estado_extr = document.querySelector('#estado_extranjero_vehiculo_ad');
 					document.getElementById("estado_vehiculo_ad").style.display = "block";
 					document.getElementById("estado_extranjero_vehiculo_ad").style.display = "none";
-
 				}
 			});
 
@@ -3233,6 +3222,8 @@
 								option.text = victima.NOMBRE + ' ' + victima.PRIMERAPELLIDO;
 								select_victima_ofendido.add(option, null);
 							});
+
+							
 							Swal.fire({
 								icon: 'success',
 								text: 'Persona física actualizada correctamente',
@@ -3932,7 +3923,35 @@
 								option.text = victima.NOMBRE + ' ' + victima.PRIMERAPELLIDO;
 								select_victima_ofendido.add(option, null);
 							});
+							const option_vacio_vd = document.createElement('option');
+							option_vacio_vd.value = '';
+							option_vacio_vd.text = '';
+							option_vacio_vd.disabled = true;
+							option_vacio_vd.selected = true;
+							$('#victima_modal_documento').empty();
+							let select_victima_documento = document.querySelector("#victima_modal_documento");
+							select_victima_documento.add(option_vacio_vd);
 
+							victimas.forEach(victima => {
+								const option = document.createElement('option');
+								option.value = victima.PERSONAFISICAID;
+								option.text = victima.NOMBRE + ' ' + victima.PRIMERAPELLIDO;
+								select_victima_documento.add(option, null);
+							});
+							const option_vacio_id = document.createElement('option');
+							option_vacio_id.value = '';
+							option_vacio_id.text = '';
+							option_vacio_id.disabled = true;
+							option_vacio_id.selected = true;
+							$('#imputado_modal_documento').empty();
+							let select_imputado_documento = document.querySelector("#imputado_modal_documento");
+							select_imputado_documento.add(option_vacio_id);
+							imputados.forEach(imputado => {
+								const option = document.createElement('option');
+								option.value = imputado.PERSONAFISICAID;
+								option.text = imputado.NOMBRE + ' ' + imputado.PRIMERAPELLIDO;
+								select_imputado_documento.add(option, null);
+							});
 							$('#imputado_arbol').empty();
 							let select_imputado_mputado = document.querySelector("#imputado_arbol")
 							imputados.forEach(imputado => {

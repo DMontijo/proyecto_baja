@@ -53,12 +53,17 @@
 					</li>
 				<?php } ?>
 			<?php } ?>
+			<?php foreach ($body_data->rolPermiso as $permiso) { ?>
 
-				<li class="c-sidebar-nav-item" id="nav-denuncia-anonima" name="nav-denuncia-anonima">
-					<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/denuncia-anonima">
-						<i class="fas fa-phone-alt c-sidebar-nav-icon"></i> Denuncia anónima
-					</a>
-				</li>
+				<?php if ($permiso->PERMISOID == 10) { ?>
+
+					<li class="c-sidebar-nav-item" id="nav-denuncia-anonima" name="nav-denuncia-anonima">
+						<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/denuncia-anonima">
+							<i class="fas fa-phone-alt c-sidebar-nav-icon"></i> Denuncia anónima
+						</a>
+					</li>
+				<?php } ?>
+			<?php } ?>
 			<?php foreach ($body_data->rolPermiso as $permiso) { ?>
 
 				<?php if ($permiso->PERMISOID == 2) { ?>

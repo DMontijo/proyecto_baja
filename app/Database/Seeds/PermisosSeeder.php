@@ -19,10 +19,7 @@ class PermisosSeeder extends Seeder
 			array('PERMISOID' => '7', 'PERMISODESCR'=>'REPORTES'),
 			array('PERMISOID' => '8', 'PERMISODESCR'=>'ROLES'),
 			array('PERMISOID' => '9', 'PERMISODESCR'=>'VIDEOS'),
-
-
-
-
+			array('PERMISOID' => '10', 'PERMISODESCR'=>'DENUNCIA ANONIMA'),
 		];
 		$this->db->table('PERMISOS')->insertBatch($data);
     }

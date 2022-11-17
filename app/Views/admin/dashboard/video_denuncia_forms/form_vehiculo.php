@@ -18,7 +18,7 @@
 		<input type="text" class="form-control" id="placas_vehiculo" name="placas_vehiculo">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="estado_vehiculo" class="form-label font-weight-bold">Estado de origen:</label>
+		<label for="estado_vehiculo" class="form-label font-weight-bold">Estado:</label>
 		<select class="form-control" id="estado_vehiculo_ad" name="estado_vehiculo_ad">
 			<option selected disabled value="">Selecciona el estado</option>
 			<?php foreach ($body_data->estados as $index => $estado) { ?>
@@ -28,8 +28,10 @@
 		<select class="form-control" id="estado_extranjero_vehiculo_ad" name="estado_extranjero_vehiculo_ad" style="display: none;">
 			<option selected disabled value="">Selecciona el estado</option>
 			<?php foreach ($body_data->estadosExtranjeros as $index => $estado_extranjero) { ?>
-				<option value="<?= $estado_extranjero->ESTADOEXTRANJEROID ?>"> <?= $estado_extranjero->ESTADOEXTRANJERODESCR ?></option>
+				<option value="<?= $estado_extranjero->ESTADOEXTRANJEROID ?>"> <?= strtoupper($estado_extranjero->ESTADOEXTRANJERODESCR) ?></option>
 			<?php } ?>
+			<option value="0" style="font-weight:bold">NACIONAL</option>
+
 		</select>
 		<!-- <input type="text" class="form-control" id="estado_vehiculo" name="estado_vehiculo"> -->
 	</div>

@@ -111,9 +111,6 @@ class RunAllSeeder extends Seeder
 		$this->call('VehiculoVersionSeeder');
 		$this->call('RolesPermisosSeeder');
 		$this->call('PermisosSeeder');
-
-
-
-
+		$this->call('EstadoExtranjeroSeeder');
 	}
 }

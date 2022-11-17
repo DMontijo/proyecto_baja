@@ -114,7 +114,7 @@ class FolioModel extends Model
 	{
 		if (isset($obj['STATUS'])) {
 			if ($obj['STATUS'] == "CON") {
-				
+
 				$strQuery = 'SELECT FOLIO.FOLIOID, FOLIO.ANO, FOLIO.EXPEDIENTEID, FOLIO.STATUS, FOLIO.FECHASALIDA,FOLIO.FECHAREGISTRO, FOLIO.HECHODELITO, FOLIO.NOTASAGENTE,
 				DENUNCIANTES.NOMBRE AS "N_DENUNCIANTE", DENUNCIANTES.APELLIDO_PATERNO AS "APP_DENUNCIANTE", DENUNCIANTES.APELLIDO_MATERNO AS "APM_DENUNCIANTE",DENUNCIANTES.TELEFONO AS "TELEFONODENUNCIANTE",DENUNCIANTES.CORREO AS "CORREODENUNCIANTE", 
 		USUARIOS.NOMBRE AS "N_AGENT", USUARIOS.APELLIDO_PATERNO AS "APP_AGENT", USUARIOS.APELLIDO_MATERNO AS "APM_AGENT", 
@@ -175,16 +175,16 @@ class FolioModel extends Model
 		INNER JOIN ESTADO ON ESTADO.ESTADOID = FOLIO.ESTADOID
 		INNER JOIN MUNICIPIO ON MUNICIPIO.MUNICIPIOID = FOLIO.MUNICIPIOID AND MUNICIPIO.ESTADOID = FOLIO.ESTADOID
 		WHERE FOLIO.AGENTEATENCIONID= ' . session('ID');
-			// $strQuery= $strQuery . ' AND '.'WHERE FOLIO.AGENTEATENCIONID= ' .$objusuario['agenteatencion'];
+				// $strQuery= $strQuery . ' AND '.'WHERE FOLIO.AGENTEATENCIONID= ' .$objusuario['agenteatencion'];
 
 
-			$strQuery =
-				$strQuery . ' AND ' .
-				'FOLIO.FECHASALIDA BETWEEN CAST("' .
-				(isset($obj['fechaInicio']) ? date("Y-m-d", strtotime($obj['fechaInicio'])) : date("Y-m-d")) . ' ' .
-				(isset($obj['horaInicio']) ? (date('H:i:s', strtotime($obj['horaInicio']))) : '00:00:00') . '" AS DATETIME)' . ' AND ' . 'CAST("' .
-				(isset($obj['fechaFin']) ? (isset($obj['horaFin']) ? date("Y-m-d", strtotime($obj['fechaFin'])) : date("Y-m-d", strtotime(date("Y-m-d", strtotime($obj['fechaFin']))))) : date("Y-m-d")) . ' ' .
-				(isset($obj['horaFin']) ? (date('H:i:s', strtotime($obj['horaFin']))) : '23:59:59') . '" AS DATETIME)';
+				$strQuery =
+					$strQuery . ' AND ' .
+					'FOLIO.FECHASALIDA BETWEEN CAST("' .
+					(isset($obj['fechaInicio']) ? date("Y-m-d", strtotime($obj['fechaInicio'])) : date("Y-m-d")) . ' ' .
+					(isset($obj['horaInicio']) ? (date('H:i:s', strtotime($obj['horaInicio']))) : '00:00:00') . '" AS DATETIME)' . ' AND ' . 'CAST("' .
+					(isset($obj['fechaFin']) ? (isset($obj['horaFin']) ? date("Y-m-d", strtotime($obj['fechaFin'])) : date("Y-m-d", strtotime(date("Y-m-d", strtotime($obj['fechaFin']))))) : date("Y-m-d")) . ' ' .
+					(isset($obj['horaFin']) ? (date('H:i:s', strtotime($obj['horaFin']))) : '23:59:59') . '" AS DATETIME)';
 			}
 		} else {
 			$strQuery = 'SELECT FOLIO.FOLIOID, FOLIO.ANO, FOLIO.EXPEDIENTEID, FOLIO.STATUS, FOLIO.FECHASALIDA,FOLIO.FECHAREGISTRO, FOLIO.HECHODELITO, FOLIO.NOTASAGENTE,
@@ -221,7 +221,7 @@ class FolioModel extends Model
 
 		$dataView = (object)array();
 		$dataView->result = $result;
-		
+
 		// var_dump($dataView);
 		// exit;
 		// $dataView->strQuery = $strQuery;
