@@ -143,7 +143,7 @@ class DocumentosController extends BaseController
         $documento = $this->_folioDocModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID',$docid)->first();
 
 		header("Content-type: application/pdf");
-		header("Content-Disposition: attachment; filename=Documento" . $folio . '_' . $year .  '_' . $docid. '.pdf');
+		header("Content-Disposition: attachment; filename=" . $documento->TIPODOC .'_'. $folio . '_' . $year .  '_' . $docid. '.pdf');
 		echo $documento->PDF;
 	}
 
@@ -155,7 +155,7 @@ class DocumentosController extends BaseController
 
         $documento = $this->_folioDocModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID',$docid)->first();
 		header("Content-type: application/xml");
-		header("Content-Disposition: attachment; filename=Documento" . $folio . '_' . $year .  '_' . $docid . '.xml');
+		header("Content-Disposition: attachment; filename=".$documento->TIPODOC . $folio . '_' . $year .  '_' . $docid . '.xml');
 		echo $documento->XML;
 	}
     private function _loadView($title, $data, $view)
