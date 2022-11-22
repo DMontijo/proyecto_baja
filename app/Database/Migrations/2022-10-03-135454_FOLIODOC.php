@@ -113,6 +113,18 @@ class FOLIODOC extends Migration
 				'type' => 'LONGBLOB',
 				'null' => TRUE,
 			],
+			'TERMINOS' => [
+				'type' => 'LONGBLOB',
+				'null' => TRUE,
+			],
+			'DERECHOS' => [
+				'type' => 'LONGBLOB',
+				'null' => TRUE,
+			],
+			'PRIVACIDAD' => [
+				'type' => 'LONGBLOB',
+				'null' => TRUE,
+			],
 			'STATUS' => [
 				'type' => 'VARCHAR',
 				'constraint' => '15',
