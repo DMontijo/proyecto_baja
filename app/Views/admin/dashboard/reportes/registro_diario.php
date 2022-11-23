@@ -29,7 +29,7 @@
 									<div class="card-body">
 										<form action="<?= base_url() ?>/admin/dashboard/registro_diario" method="post" enctype="multipart/form-data" class="row needs-validation" novalidate>
 
-											
+
 
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
 												<label for="agente_registro" class="form-label font-weight-bold">Agente:</label>
@@ -47,7 +47,7 @@
 
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
 												<label for="fecha" class="form-label font-weight-bold">Fecha de cierre:</label>
-												<input type="date" class="form-control" id="fechaFin" name="fechaFin" max="<?= date("Y-m-d") ?>">
+												<input type="date" class="form-control" id="fechaFin" name="fechaFin" max="<?= date("Y-m-d") ?>" value="<?= isset($body_data->filterParams->fechaFin) ? $body_data->filterParams->fechaFin : '' ?>">
 											</div>
 
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
@@ -63,9 +63,10 @@
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
 												<label for="status" class="form-label font-weight-bold">Expediente:</label>
 												<select class="form-control" id="status" name="status" required>
-													<option selected value="TODOS">Todos los estatus</option>
-													<option value="SIN">SIN EXPEDIENTE</option>
-													<option value="CON">CON EXPEDIENTE</option>
+													<option selected disabled value=""></option>
+													<option <?= isset($body_data->filterParams->STATUS) ? ($body_data->filterParams->STATUS == 'TODOS' ? 'selected' : '') : null ?> value="TODOS">Todos los estatus</option>
+													<option <?= isset($body_data->filterParams->STATUS) ? ($body_data->filterParams->STATUS == 'SIN' ? 'selected' : '') : null ?> value="SIN">SIN EXPEDIENTE</option>
+													<option <?= isset($body_data->filterParams->STATUS) ? ($body_data->filterParams->STATUS == 'CON' ? 'selected' : '') : null ?> value="CON">CON EXPEDIENTE</option>
 
 
 												</select>
@@ -104,7 +105,7 @@
 						<table id="registro_diario" class="table table-bordered table-striped">
 							<thead>
 								<tr>
-								<th class="text-center">FOLIO</th>
+									<th class="text-center">FOLIO</th>
 									<th class="text-center">AÑO</th>
 									<th class="text-center">EXPEDIENTE</th>
 									<th class="text-center">FECHA DE SALIDA</th>
@@ -116,7 +117,7 @@
 							</thead>
 							<tbody>
 
-							<?php
+								<?php
 								foreach ($body_data->result as $index => $folio) { ?>
 									<tr>
 										<td class="text-center font-weight-bold"><?= $folio->FOLIOID ?></td>
@@ -193,12 +194,12 @@
 	}
 </script>
 <?php if (isset($body_data->filterParams)) { ?>
-	
+
 
 	<script>
-			// alert(document.getElementById('agente_registro').innerHTML);
+		// alert(document.getElementById('agente_registro').innerHTML);
 		let form = document.querySelector('#formExcel');
-		let agente =document.getElementById('agente_registro').innerHTML;
+		let agente = document.getElementById('agente_registro').innerHTML;
 		form.addEventListener('submit', function(event) {
 			event.preventDefault();
 			text = `
@@ -210,7 +211,7 @@
 						<li><span style="font-weight:bold;">Fecha cierre:</span> <?= isset($body_data->filterParams->fechaFin) ? $body_data->filterParams->fechaFin : '' ?></li>
 						<li><span style="font-weight:bold;">Hora inicio:</span> <?= isset($body_data->filterParams->horaInicio) ? $body_data->filterParams->horaInicio : '' ?></li>
 						<li><span style="font-weight:bold;">Hora fin:</span> <?= isset($body_data->filterParams->horaFin) ? $body_data->filterParams->horaFin : '' ?></li>
-						<li><span style="font-weight:bold;">Estatus:</span> <?= isset($body_data->filterParams->STATUS) ? ($body_data->filterParams->STATUS=='CON'?'CON EXPEDIENTE':($body_data->filterParams->STATUS=='SIN'?'SIN EXPEDIENTE':'TODOS LOS EXPEDIENTES')) : '' ?></li>
+						<li><span style="font-weight:bold;">Estatus:</span> <?= isset($body_data->filterParams->STATUS) ? ($body_data->filterParams->STATUS == 'CON' ? 'CON EXPEDIENTE' : ($body_data->filterParams->STATUS == 'SIN' ? 'SIN EXPEDIENTE' : 'TODOS LOS EXPEDIENTES')) : '' ?></li>
 				</ul>
 			</p>
 			`
@@ -228,26 +229,6 @@
 
 				}
 			})
-		});
-	</script>
-	<script>
-		$(document).on('change', '#status', function() {
-			var fechaFin = document.getElementById('fechaFin');
-			var horaFin = document.getElementById('horaFin');
-
-			var seleccion = $(this).val();
-			switch (seleccion) {
-				case 'ABIERTO':
-					fechaFin.disabled = true;
-					horaFin.disabled = true;
-
-					break;
-				case 'FIRMADO':
-					fechaFin.disabled = false;
-					horaFin.disabled = false;
-					break;
-
-			}
 		});
 	</script>
 <?php } ?>
