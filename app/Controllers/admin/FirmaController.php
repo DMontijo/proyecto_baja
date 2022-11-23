@@ -372,9 +372,9 @@ class FirmaController extends BaseController
 
 						if ($signature->status == 1) {
 							$xmldocumentos = $this->_createXMLSignature($signature->signed_chain, $signature->signature, $expediente, $year);
-							$terminos = file_get_contents(base_url('/assets/documentos/TerminosCondiciones.pdf'));
-							$avisop = file_get_contents(base_url('/assets/documentos/Aviso_De_Privacidad_De_Datos.pdf'));
-							$derechos_victima_ofendido = file_get_contents(base_url('/assets/documentos/DerechosDeVictimaOfendido.pdf'));
+							// $terminos = file_get_contents(base_url('/assets/documentos/TerminosCondiciones.pdf'));
+							// $avisop = file_get_contents(base_url('/assets/documentos/Aviso_De_Privacidad_De_Datos.pdf'));
+							// $derechos_victima_ofendido = file_get_contents(base_url('/assets/documentos/DerechosDeVictimaOfendido.pdf'));
 							$datosInsert = [
 								// 'AGENTEID' => $user_id,
 								'NUMEROIDENTIFICADOR' => $documento[$i]->FOLIODOCID . '/' . $documento[$i]->ANO,
@@ -388,9 +388,9 @@ class FirmaController extends BaseController
 								'CADENAFIRMADA' => $signature->signed_chain,
 								'PDF' => $pdf,
 								'XML' => $xmldocumentos,
-								'TERMINOS' => $terminos,
-								'DERECHOS' => $derechos_victima_ofendido,
-								'PRIVACIDAD' => $avisop,
+								// 'TERMINOS' => $terminos,
+								// 'DERECHOS' => $derechos_victima_ofendido,
+								// 'PRIVACIDAD' => $avisop,
 								'STATUS' => 'FIRMADO',
 								'PLACEHOLDER' => $documento[$i]->PLACEHOLDER,
 							];
@@ -850,6 +850,17 @@ class FirmaController extends BaseController
 		$folio = $folioM->FOLIOID;
 		$delito =  $folioM->HECHODELITO;
 		$imputado = $imputado->NOMBRE . ' ' . $imputado->PRIMERAPELLIDO . ' ' .  $imputado->SEGUNDOAPELLIDO;
+		$directory = FCPATH . 'assets/documentos';
+		$aviso  = "Aviso_De_Privacidad_De_Datos.pdf";
+		$ofendido  = "DerechosDeVictimaOfendido.pdf";
+		$terminos  = "TerminosCondiciones.pdf";
+
+
+		$aviso_privacidad = file_get_contents($directory . '/' . $aviso);
+
+		$derecho_ofendido = file_get_contents($directory . '/' . $ofendido);
+		$termino_condiciones = file_get_contents($directory . '/' . $terminos);
+
 		$email = \Config\Services::email();
 		$email->setTo($to);
 		$email->setSubject('Documentos firmados');
@@ -859,15 +870,15 @@ class FirmaController extends BaseController
 		for ($i = 0; $i < count($documento); $i++) {
 			$pdf = $documento[$i]->PDF;
 			$xml = $documento[$i]->XML;
-			$terminos = $documento[$i]->TERMINOS;
-			$derechos = $documento[$i]->DERECHOS;
-			$privacidad = $documento[$i]->PRIVACIDAD;
+			// $terminos = $documento[$i]->TERMINOS;
+			// $derechos = $documento[$i]->DERECHOS;
+			// $privacidad = $documento[$i]->PRIVACIDAD;
 
 			$email->attach($pdf, 'attachment',  $documento[$i]->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento[$i]->FOLIODOCID . '.pdf', 'application/pdf');
 			$email->attach($xml, 'attachment', $documento[$i]->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento[$i]->FOLIODOCID . '.xml', 'application/xml');
-			$email->attach($terminos, 'attachment','TerminosCondiciones.pdf', 'application/pdf');
-			$email->attach($derechos, 'attachment','DerechosDeVictimaOfendido.pdf', 'application/pdf');
-			$email->attach($privacidad, 'attachment','AvisoDePrivacidad.pdf', 'application/pdf');
+			// $email->attach($terminos, 'attachment','TerminosCondiciones.pdf', 'application/pdf');
+			// $email->attach($derechos, 'attachment','DerechosDeVictimaOfendido.pdf', 'application/pdf');
+			// $email->attach($privacidad, 'attachment','AvisoDePrivacidad.pdf', 'application/pdf');
 
 
 
@@ -876,9 +887,9 @@ class FirmaController extends BaseController
 		// $avisop = base_url('/assets/documentos/Aviso_De_Privacidad_De_Datos.pdf');
 		// $derechos_victima_ofendido = base_url('/assets/documentos/DerechosDeVictimaOfendido.pdf');
 
-		// $email->attach($terminos, 'attachment', 'Terminos_Y_Condiciones.pdf');
-		// $email->attach($avisop, 'attachment', 'Aviso_De_Privacidad.pdf');
-		// $email->attach($derechos_victima_ofendido, 'attachment', 'Derechos_De_Victima_Ofendido.pdf');
+		$email->attach($termino_condiciones, 'attachment', 'Terminos_Y_Condiciones.pdf','application/pdf');
+		$email->attach($aviso_privacidad, 'attachment', 'Aviso_De_Privacidad.pdf','application/pdf');
+		$email->attach($derecho_ofendido, 'attachment', 'Derechos_De_Victima_Ofendido.pdf','application/pdf');
 
 		if ($email->send()) {
 			$datosUpdate = [
