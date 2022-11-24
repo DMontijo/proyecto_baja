@@ -64,7 +64,7 @@
 												<label for="status" class="form-label font-weight-bold">Expediente:</label>
 												<select class="form-control" id="status" name="status" required>
 													<option selected disabled value=""></option>
-													<option <?= isset($body_data->filterParams->STATUS) ? ($body_data->filterParams->STATUS == 'TODOS' ? 'selected' : '') : null ?> value="TODOS">Todos los estatus</option>
+													<option <?= isset($body_data->filterParams->STATUS) ? ($body_data->filterParams->STATUS == 'TODOS' ? 'selected' : '') : null ?> value="TODOS">TODOS LOS FOLIOS/EXPEDIENTES</option>
 													<option <?= isset($body_data->filterParams->STATUS) ? ($body_data->filterParams->STATUS == 'SIN' ? 'selected' : '') : null ?> value="SIN">SIN EXPEDIENTE</option>
 													<option <?= isset($body_data->filterParams->STATUS) ? ($body_data->filterParams->STATUS == 'CON' ? 'selected' : '') : null ?> value="CON">CON EXPEDIENTE</option>
 
