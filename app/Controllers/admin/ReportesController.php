@@ -21,7 +21,6 @@ class ReportesController extends BaseController
 		$this->_usuariosModel = new UsuariosModel();
 		$this->_constanciaExtravioModel = new ConstanciaExtravioModel();
 		$this->_rolesPermisosModel = new RolesPermisosModel();
-
 	}
 
 	public function index()
@@ -473,7 +472,7 @@ class ReportesController extends BaseController
 				$sheet->setCellValue('G' . $row, $constancia->MUNICIPIODESCRCITA);
 			}
 			if ($constancia->MUNICIPIOIDCITA == null) {
-			$sheet->setCellValue('G' . $row, $constancia->MUNICIPIODESCR);
+				$sheet->setCellValue('G' . $row, $constancia->MUNICIPIODESCR);
 			}
 			$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
 
@@ -525,7 +524,7 @@ class ReportesController extends BaseController
 			'horaInicio' => $this->request->getPost('horaInicio'),
 			'horaFin' => $this->request->getPost('horaFin')
 		];
-		
+
 		foreach ($data as $clave => $valor) {
 			//Recorre el array y elimina los valores que nulos o vacíos
 			if (empty($valor)) unset($data[$clave]);
@@ -538,14 +537,14 @@ class ReportesController extends BaseController
 		}
 
 		$resultFilter = $this->_folioModel->filterDatesRegistroDiario($data);
-		
+
 		$empleado = $this->_usuariosModel->asObject()->where('ID',	session('ID'))->orderBy('NOMBRE', 'ASC')->findAll();
 
 		// if (isset($data['AGENTEATENCIONID'])) {
 		// 	$agente = $this->_usuariosModel->asObject()->where('ROLID', 2)->where('ID', $data['AGENTEATENCIONID'])->orderBy('NOMBRE', 'ASC')->first();
 		// 	$data['AGENTENOMBRE'] = $agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' . $agente->APELLIDO_MATERNO;
 		// }
-		
+
 
 		$dataView = (object)array();
 		$dataView->result = $resultFilter->result;
@@ -594,6 +593,7 @@ class ReportesController extends BaseController
 			->setCategory("Reportes");
 		$sheet = $spreadSheet->getActiveSheet();
 
+
 		$styleHeaders = [
 			'font' => [
 				'bold' => true,
@@ -621,6 +621,20 @@ class ReportesController extends BaseController
 					'argb' => '511229',
 				],
 			],
+		];
+
+		$styleCab = [
+			'font' => [
+				'bold' => true,
+				'color' => ['argb' => '000000'],
+				'name' => 'Arial',
+				'size' => '12'
+			],
+			'alignment' => [
+				'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+
+			],
+
 		];
 
 		$styleCells = [
@@ -651,7 +665,7 @@ class ReportesController extends BaseController
 				],
 			],
 		];
-		$row = 1;
+		$row = 3;
 
 		$columns = [
 			'A', 'B', 'C', 'D', 'E',
@@ -661,6 +675,7 @@ class ReportesController extends BaseController
 			'U', 'V', 'W', 'X', 'Y', 'Z'
 		];
 		$headers = [
+			'NO.',
 			'FECHA RECEPCIÓN',
 			'HORA',
 			'FOLIO WEB',
@@ -681,49 +696,77 @@ class ReportesController extends BaseController
 		];
 
 		for ($i = 0; $i < count($headers); $i++) {
-			$sheet->setCellValue($columns[$i] . 1, $headers[$i]);
+			$sheet->setCellValue($columns[$i] . 3, $headers[$i]);
 			$sheet->getColumnDimension($columns[$i])->setAutoSize(true);
 		}
 
 		$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
 
 		$row++;
+
+
 		foreach ($resultFilter->result as $index => $folio) {
+			// $row++;
+
 			$fecharegistro = strtotime($folio->FECHAREGISTRO);
 			$fechasalida = strtotime($folio->FECHASALIDA);
+			$dateregistro = date('d-m-Y', $fecharegistro);
+			$datesalida = date('d-m-Y', $fechasalida);
+			$horaregistro = date('H:i:s', $fecharegistro);
+			$sheet->setCellValue('A1', "CENTRO TELEFÓNICO Y EN LÍNEA DE ATENCIÓN Y ORIENTACIÓN TEMPRANA");
+			$sheet->setCellValue('A2', "REGISTRO ESTATAL DE PRE DENUNCIA TELEFÓNICA Y EN LÍNEA");
 
-			$dateregistro =date('d-m-Y',$fecharegistro);
-			$datesalida =date('d-m-Y',$fechasalida);
+			$sheet->setCellValue('A' . $row, $row - 3);
 
-			$horaregistro= date('H:i:s', $fecharegistro);
-
-			$sheet->setCellValue('A' . $row, $dateregistro);
-			$sheet->setCellValue('B' . $row, $horaregistro);
-			$sheet->setCellValue('C' . $row, $folio->EXPEDIENTEID!=null?$folio->EXPEDIENTEID:$folio->FOLIOID);
-			$sheet->setCellValue('D' . $row, 'ELECTRÓNICA');
-			$sheet->setCellValue('E' . $row, $folio->MUNICIPIODESCR);
-			$sheet->setCellValue('F' . $row, $folio->N_DENUNCIANTE);
-			$sheet->setCellValue('G' . $row, $folio->APP_DENUNCIANTE );
-			$sheet->setCellValue('H' . $row, $folio->APM_DENUNCIANTE);
-			$sheet->setCellValue('I' . $row, $folio->TELEFONODENUNCIANTE);
-			$sheet->setCellValue('J' . $row, $folio->CORREODENUNCIANTE);
-			$sheet->setCellValue('K' . $row, $folio->HECHODELITO);
-			$sheet->setCellValue('L' . $row, $folio->N_AGENT . ' ' . $folio->APP_AGENT . ' ' . $folio->APM_AGENT);
-			$sheet->setCellValue('M' . $row, $folio->NOTASAGENTE);
-			$sheet->setCellValue('N' . $row, $folio->TIPOEXPEDIENTEDESCR);
-			$sheet->setCellValue('O' . $row, $folio->EXPEDIENTEID);
-			$sheet->setCellValue('P' . $row, $datesalida);
-			$sheet->setCellValue('Q' . $row, 'PRUEBA');
+			$sheet->setCellValue('B' . $row, $dateregistro);
+			$sheet->setCellValue('C' . $row, $horaregistro);
+			$sheet->setCellValue('D' . $row, $folio->FOLIOID);
+			$sheet->setCellValue('E' . $row, 'ELECTRÓNICA');
+			$sheet->setCellValue('F' . $row, $folio->MUNICIPIODESCR);
+			$sheet->setCellValue('G' . $row, $folio->N_DENUNCIANTE);
+			$sheet->setCellValue('H' . $row, $folio->APP_DENUNCIANTE);
+			$sheet->setCellValue('I' . $row, $folio->APM_DENUNCIANTE);
+			$sheet->setCellValue('J' . $row, $folio->TELEFONODENUNCIANTE);
+			$sheet->setCellValue('K' . $row, $folio->CORREODENUNCIANTE);
+			$sheet->setCellValue('L' . $row, $folio->HECHODELITO);
+			$sheet->setCellValue('M' . $row, $folio->N_AGENT . ' ' . $folio->APP_AGENT . ' ' . $folio->APM_AGENT);
+			$sheet->setCellValue('N' . $row, $folio->NOTASAGENTE);
+			$sheet->setCellValue('O' . $row, $folio->TIPOEXPEDIENTEDESCR);
+			$sheet->setCellValue('P' . $row, $folio->EXPEDIENTEID);
+			$sheet->setCellValue('Q' . $row, $datesalida);
+			$sheet->setCellValue('R' . $row, '');
 
 
 			$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
 
-			if (!(($row - 1) >= count($resultFilter->result))) $row++;
+			if (!(($row - 3) >= count($resultFilter->result))) $row++;
 		}
+		$sheet->getStyle('A1:R1')->applyFromArray($styleCab);
+		$sheet->getStyle('A2:R2')->applyFromArray($styleCab);
 
-		$sheet->getStyle('A1:Q1')->applyFromArray($styleHeaders);
-		$sheet->getStyle('A2:Q' . $row)->applyFromArray($styleCells);
+		$sheet->getStyle('A3:R3')->applyFromArray($styleHeaders);
+		$sheet->getStyle('A4:R' . $row)->applyFromArray($styleCells);
 
+		$sheet->mergeCells('A1:R1');
+		$sheet->mergeCells('A2:R2');
+		$drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+		$drawing->setName('FGEBC');
+		$drawing->setDescription('LOGO');
+		$drawing->setPath(FCPATH . 'assets/img/fgeb_demo.png'); // put your path and image here
+		$drawing->setHeight(36);
+		$drawing->setCoordinates('A1');
+		$drawing->setOffsetX(10);
+		$drawing->setWorksheet($spreadSheet->getActiveSheet());
+		$drawing2 = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+		$drawing2->setName('FGEBC');
+		$drawing2->setDescription('LOGO');
+		$drawing2->setPath(FCPATH . 'assets/img/estado_baja.png'); // put your path and image here
+		$drawing2->setHeight(36);
+		$drawing2->setCoordinates('R1');
+		$drawing2->setOffsetX(10);
+		$drawing2->setWorksheet($spreadSheet->getActiveSheet());
+		// $drawing->setOffsetX(110);
+		// $drawing->setRotation(25);
 		$writer = new Xlsx($spreadSheet);
 
 		header('Content-Type: application/vnd.ms-excel');
