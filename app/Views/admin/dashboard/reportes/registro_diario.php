@@ -211,7 +211,7 @@
 						<li><span style="font-weight:bold;">Fecha cierre:</span> <?= isset($body_data->filterParams->fechaFin) ? $body_data->filterParams->fechaFin : '' ?></li>
 						<li><span style="font-weight:bold;">Hora inicio:</span> <?= isset($body_data->filterParams->horaInicio) ? $body_data->filterParams->horaInicio : '' ?></li>
 						<li><span style="font-weight:bold;">Hora fin:</span> <?= isset($body_data->filterParams->horaFin) ? $body_data->filterParams->horaFin : '' ?></li>
-						<li><span style="font-weight:bold;">Estatus:</span> <?= isset($body_data->filterParams->STATUS) ? ($body_data->filterParams->STATUS == 'CON' ? 'CON EXPEDIENTE' : ($body_data->filterParams->STATUS == 'SIN' ? 'SIN EXPEDIENTE' : 'TODOS LOS EXPEDIENTES')) : '' ?></li>
+						<li><span style="font-weight:bold;">Estatus:</span> <?= isset($body_data->filterParams->STATUS) ? ($body_data->filterParams->STATUS == 'CON' ? 'CON EXPEDIENTE' : ($body_data->filterParams->STATUS == 'SIN' ? 'SIN EXPEDIENTE' : 'TODOS LOS FOLIOS/EXPEDIENTES')) : '' ?></li>
 				</ul>
 			</p>
 			`

@@ -731,7 +731,7 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('L' . $row, $folio->HECHODELITO);
 			$sheet->setCellValue('M' . $row, $folio->N_AGENT . ' ' . $folio->APP_AGENT . ' ' . $folio->APM_AGENT);
 			$sheet->setCellValue('N' . $row, $folio->NOTASAGENTE);
-			$sheet->setCellValue('O' . $row, $folio->TIPOEXPEDIENTEDESCR);
+			$sheet->setCellValue('O' . $row, isset($folio->TIPOEXPEDIENTEDESCR)? $folio->TIPOEXPEDIENTEDESCR: $folio->STATUS);
 			$sheet->setCellValue('P' . $row, $folio->EXPEDIENTEID);
 			$sheet->setCellValue('Q' . $row, $datesalida);
 			$sheet->setCellValue('R' . $row, '');
