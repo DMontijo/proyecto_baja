@@ -665,7 +665,7 @@ class ReportesController extends BaseController
 				],
 			],
 		];
-		$row = 3;
+		$row = 4;
 
 		$columns = [
 			'A', 'B', 'C', 'D', 'E',
@@ -696,7 +696,7 @@ class ReportesController extends BaseController
 		];
 
 		for ($i = 0; $i < count($headers); $i++) {
-			$sheet->setCellValue($columns[$i] . 3, $headers[$i]);
+			$sheet->setCellValue($columns[$i] . 4, $headers[$i]);
 			$sheet->getColumnDimension($columns[$i])->setAutoSize(true);
 		}
 
@@ -716,7 +716,7 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('A1', "CENTRO TELEFÓNICO Y EN LÍNEA DE ATENCIÓN Y ORIENTACIÓN TEMPRANA");
 			$sheet->setCellValue('A2', "REGISTRO ESTATAL DE PRE DENUNCIA TELEFÓNICA Y EN LÍNEA");
 
-			$sheet->setCellValue('A' . $row, $row - 3);
+			$sheet->setCellValue('A' . $row, $row - 4);
 
 			$sheet->setCellValue('B' . $row, $dateregistro);
 			$sheet->setCellValue('C' . $row, $horaregistro);
@@ -739,31 +739,31 @@ class ReportesController extends BaseController
 
 			$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
 
-			if (!(($row - 3) >= count($resultFilter->result))) $row++;
+			if (!(($row - 4) >= count($resultFilter->result))) $row++;
 		}
 		$sheet->getStyle('A1:R1')->applyFromArray($styleCab);
 		$sheet->getStyle('A2:R2')->applyFromArray($styleCab);
 
-		$sheet->getStyle('A3:R3')->applyFromArray($styleHeaders);
-		$sheet->getStyle('A4:R' . $row)->applyFromArray($styleCells);
+		$sheet->getStyle('A4:R4')->applyFromArray($styleHeaders);
+		$sheet->getStyle('A5:R' . $row)->applyFromArray($styleCells);
 
 		$sheet->mergeCells('A1:R1');
 		$sheet->mergeCells('A2:R2');
 		$drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
 		$drawing->setName('FGEBC');
 		$drawing->setDescription('LOGO');
-		$drawing->setPath(FCPATH . 'assets/img/fgeb_demo.png'); // put your path and image here
-		$drawing->setHeight(36);
+		$drawing->setPath(FCPATH . 'assets/img/FGEBC_recortada.png'); // put your path and image here
+		$drawing->setHeight(60);
 		$drawing->setCoordinates('A1');
 		$drawing->setOffsetX(10);
 		$drawing->setWorksheet($spreadSheet->getActiveSheet());
 		$drawing2 = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
 		$drawing2->setName('FGEBC');
 		$drawing2->setDescription('LOGO');
-		$drawing2->setPath(FCPATH . 'assets/img/estado_baja.png'); // put your path and image here
-		$drawing2->setHeight(36);
+		$drawing2->setPath(FCPATH . 'assets/img/logo_sejap.jpg'); // put your path and image here
+		$drawing2->setHeight(45);
 		$drawing2->setCoordinates('R1');
-		$drawing2->setOffsetX(10);
+		$drawing2->setOffsetX(-30);
 		$drawing2->setWorksheet($spreadSheet->getActiveSheet());
 		// $drawing->setOffsetX(110);
 		// $drawing->setRotation(25);
