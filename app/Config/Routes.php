@@ -70,7 +70,7 @@ $routes->group('admin', function ($routes) {
 		$routes->get('editar_usuario', 'admin/DashboardController::editar_usuario');
 		$routes->post('nuevo_usuario', 'admin/DashboardController::crear_usuario');
 		$routes->post('editar_usuario', 'admin/DashboardController::update_usuario');
-		
+
 
 		$routes->get('video-denuncia', 'admin/DashboardController::video_denuncia');
 		$routes->get('denuncia-anonima', 'admin/DashboardController::denuncia_anonima');
@@ -251,8 +251,6 @@ $routes->group('data', function ($routes) {
 	$routes->post('download-xml-documento', 'admin/DocumentosController::download_documento_xml');
 	$routes->post('create-folio-denuncia-anonima', 'admin/DashboardController::crearFolioDenunciaAnonima');
 	$routes->post('create-persona_fisica-by-denuncia-anonima', 'admin/DashboardController::createPersonaFisicaByDenunciaAnonima');
-
-
 });
 
 

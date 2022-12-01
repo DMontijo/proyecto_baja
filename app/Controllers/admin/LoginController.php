@@ -39,7 +39,7 @@ class LoginController extends BaseController
 		$data = $this->_usuariosModel->where('CORREO', $email)->first();
 		if ($data && validatePassword($password, $data['PASSWORD'])) {
 			$data['permisos'] = $this->_rolesPermisosModel->select('PERMISOS.PERMISODESCR AS NOMBRE')->where('ROLID', $data['ROLID'])->join('PERMISOS', 'PERMISOS.PERMISOID = ROLESPERMISOS.PERMISOID', 'left')->findAll();
-			$data['permisos'] = array_column($data['permisos'],('NOMBRE'));		
+			$data['permisos'] = array_column($data['permisos'], ('NOMBRE'));
 			$data['logged_in'] = TRUE;
 			$data['type'] = 'admin';
 			$session->set($data);

@@ -31,7 +31,6 @@ class ConstanciasController extends BaseController
 		$this->_municipiosModel = new MunicipiosModel();
 		$this->_estadosModel = new EstadosModel();
 		$this->_rolesPermisosModel = new RolesPermisosModel();
-
 	}
 
 	public function index()
