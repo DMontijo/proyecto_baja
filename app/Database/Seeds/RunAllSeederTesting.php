@@ -32,7 +32,7 @@ class RunAllSeederTesting extends Seeder
 		$this->call('DelitosUsuariosSeeder');
 		$this->call('PlantillasSeeder');
 		$this->call('EmpleadosTestingSeeder');
-		$this->call('ConexionesDBSeeder');
+		$this->call('ConexionesDBSeederTesting');
 		$this->call('EscolaridadSeeder');
 		$this->call('OcupacionSeeder');
 		$this->call('DocumentosExtravioSeeder');
@@ -112,7 +112,5 @@ class RunAllSeederTesting extends Seeder
 		$this->call('RolesPermisosSeeder');
 		$this->call('PermisosSeeder');
 		$this->call('EstadoExtranjeroSeeder');
-
-
 	}
 }
