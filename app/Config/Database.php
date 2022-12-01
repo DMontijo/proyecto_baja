@@ -54,6 +54,32 @@ class Database extends Config
 
 	/**
 	 * This database connection is used when
+	 * enviroment is development
+	 * @var array
+	 */
+
+	public $development = [
+		'DSN'      => '',
+		'hostname' => 'database-video-denuncia-baja-california-instance-1.cenwfxggsegs.us-east-1.rds.amazonaws.com',
+		'username' => 'fgebc_admin',
+		'password' => 'fgebc_dba0wner',
+		'database' => 'CDT_DB_TESTING',
+		'DBDriver' => 'MySQLi',
+		'DBPrefix' => '',
+		'pConnect' => false,
+		'DBDebug'  => (ENVIRONMENT !== 'production'),
+		'charset'  => 'utf8',
+		'DBCollat' => 'utf8_general_ci',
+		'swapPre'  => '',
+		'encrypt'  => false,
+		'compress' => false,
+		'strictOn' => false,
+		'failover' => [],
+		'port'     => 3306,
+	];
+
+	/**
+	 * This database connection is used when
 	 * running PHPUnit database tests.
 	 *
 	 * @var array
@@ -89,6 +115,10 @@ class Database extends Config
 		// we don't overwrite live data on accident.
 		if (ENVIRONMENT === 'testing') {
 			$this->defaultGroup = 'tests';
+		}
+
+		if (ENVIRONMENT === 'development') {
+			$this->defaultGroup = 'development';
 		}
 	}
 
