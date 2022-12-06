@@ -560,7 +560,7 @@ class DashboardController extends BaseController
 		$data->tipomoneda = $this->_tipoMonedaModel->asObject()->findAll();
 
 		$data->plantillas = $this->_plantillasModel->asObject()->where('ID !=', 6)->findAll();
-		$data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->findAll();
+		$data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->like('TIPOEXPEDIENTECLAVE', 'NUC')->orLike('TIPOEXPEDIENTECLAVE', 'NAC')->orLike('TIPOEXPEDIENTECLAVE', 'RAC')->findAll();
 		$data->distribuidorVehiculo = $this->_vehiculoDistribuidorModel->asObject()->findAll();
 		$data->marcaVehiculo = $this->_vehiculoMarcaModel->asObject()->findAll();
 		$data->lineaVehiculo = $this->_vehiculoModeloModel->asObject()->findAll();
@@ -1043,7 +1043,7 @@ class DashboardController extends BaseController
 		$data->imputados = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->where('CALIDADJURIDICAID', 2)->findAll();
 		$data->victimas = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->where('CALIDADJURIDICAID= 1 OR CALIDADJURIDICAID=6')->findAll();
 		$data->plantillas = $this->_plantillasModel->asObject()->where('ID !=', 6)->findAll();
-		$data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->findAll();
+		$data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->like('TIPOEXPEDIENTECLAVE', 'NUC')->orLike('TIPOEXPEDIENTECLAVE', 'NAC')->orLike('TIPOEXPEDIENTECLAVE', 'RAC')->findAll();
 		$data->distribuidorVehiculo = $this->_vehiculoDistribuidorModel->asObject()->findAll();
 		$data->marcaVehiculo = $this->_vehiculoMarcaModel->asObject()->findAll();
 		$data->lineaVehiculo = $this->_vehiculoModeloModel->asObject()->findAll();
