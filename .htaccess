@@ -16,6 +16,9 @@ Options All -Indexes
 	# http://httpd.apache.org/docs/current/mod/mod_rewrite.html#rewritebase
 	# RewriteBase /
 
+	RewriteCond %{SERVER_PORT} 80
+	RewriteRule ^(.*)$ https://www.yourdomain.com/$1 [R,L]
+
 	# Redirect Trailing Slashes...
 	RewriteCond %{REQUEST_FILENAME} !-d
     	RewriteRule ^(.*)/$ /$1 [L,R=301]
