@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class MedioConocimientoModel extends Model
 {
-	protected $DBGroup          = 'default';
+
 	protected $table            = 'MEDIOCONOCIMIENTO';
 	protected $allowedFields    = [];
 }

@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class FolioConsecutivoModel extends Model
 {
-	protected $DBGroup          = 'default';
+
 	protected $table            = 'FOLIOCONSECUTIVO';
 	protected $primaryKey       = 'ANO';
 	protected $allowedFields    = [

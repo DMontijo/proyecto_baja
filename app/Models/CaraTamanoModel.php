@@ -6,8 +6,8 @@ use CodeIgniter\Model;
 
 class CaraTamanoModel extends Model
 {
-    protected $DBGroup          = 'default';
+
     protected $table            = 'CARATAMANO';
     protected $primaryKey       = 'CARATAMANOID';
-    protected $allowedFields    = ['CARATAMANOID','CARATAMANODESCR'];
+    protected $allowedFields    = ['CARATAMANOID', 'CARATAMANODESCR'];
 }

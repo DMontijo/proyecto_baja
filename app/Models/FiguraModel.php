@@ -6,8 +6,8 @@ use CodeIgniter\Model;
 
 class FiguraModel extends Model
 {
-    protected $DBGroup          = 'default';
+
     protected $table            = 'FIGURA';
     protected $primaryKey       = 'FIGURAID';
-    protected $allowedFields    = ['FIGURAID','FIGURADESCR'];
+    protected $allowedFields    = ['FIGURAID', 'FIGURADESCR'];
 }

@@ -6,8 +6,8 @@ use CodeIgniter\Model;
 
 class CejaContexturaModel extends Model
 {
-    protected $DBGroup          = 'default';
+
     protected $table            = 'CEJACONTEXTURA';
     protected $primaryKey       = 'CONTEXTURAID';
-    protected $allowedFields    = ['CONTEXTURAID','CONTEXTURADESCR'];
+    protected $allowedFields    = ['CONTEXTURAID', 'CONTEXTURADESCR'];
 }

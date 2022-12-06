@@ -9,13 +9,9 @@ class ZonasUsuariosSeeder extends Seeder
 	public function run()
 	{
 		$data = [
-			array('NOMBRE_ZONA' => 'SUPERUSUARIO'),
-			array('NOMBRE_ZONA' => 'DIRECCION GENERAL DE SEJAP'),
-			array('NOMBRE_ZONA' => 'CDT'),
-			array('NOMBRE_ZONA' => 'ZONA COSTA - LA MESA'),
-			array('NOMBRE_ZONA' => 'ZONA COSTA - MARIANO'),
-			array('NOMBRE_ZONA' => 'ZONA ENSENADA'),
-			array('NOMBRE_ZONA' => 'ZONA MEXICALI'),
+			array('NOMBRE_ZONA' => 'CDT TIJUANA'),
+			array('NOMBRE_ZONA' => 'CDT MEXICALI'),
+			array('NOMBRE_ZONA' => 'CDT ENSENADA'),
 		];
 		$this->db->table('ZONAS_USUARIOS')->insertBatch($data);
 	}

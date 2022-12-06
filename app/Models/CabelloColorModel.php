@@ -6,9 +6,8 @@ use CodeIgniter\Model;
 
 class CabelloColorModel extends Model
 {
-    protected $DBGroup          = 'default';
+
     protected $table            = 'CABELLOCOLOR';
     protected $primaryKey       = 'CABELLOCOLORID';
-    protected $allowedFields    = ['CABELLOCOLORID','CABELLOCOLORDESCR'];
-
+    protected $allowedFields    = ['CABELLOCOLORID', 'CABELLOCOLORDESCR'];
 }

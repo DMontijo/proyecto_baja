@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class DocumentosExtravioTipoModel extends Model
 {
-	protected $DBGroup          = 'default';
+
 	protected $table            = 'DOCUMENTOSEXTRAVIOTIPO';
 	protected $primarykey 		= "DOCUMENTOEXTRAVIOTIPOID";
 	protected $allowedFields    = [

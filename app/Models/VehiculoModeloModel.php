@@ -6,9 +6,8 @@ use CodeIgniter\Model;
 
 class VehiculoModeloModel extends Model
 {
-    protected $DBGroup          = 'default';
-    protected $table            = 'VEHICULOMODELO';
- 
-    protected $allowedFields    = ['VEHICULODISTRIBUIDORID','VEHICULOMARCAID','VEHICULOMODELOID','VEHICULOMODELODESCR'];
 
+    protected $table            = 'VEHICULOMODELO';
+
+    protected $allowedFields    = ['VEHICULODISTRIBUIDORID', 'VEHICULOMARCAID', 'VEHICULOMODELOID', 'VEHICULOMODELODESCR'];
 }

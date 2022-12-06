@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class FolioPersonaFisicaMediaFiliacionModel extends Model
 {
-	protected $DBGroup          = 'default';
+
 	protected $table            = 'FOLIOPERSONAFISICAMEDIAFILIACION';
 	protected $allowedFields    = [
 		'FOLIOID',
@@ -87,5 +87,4 @@ class FolioPersonaFisicaMediaFiliacionModel extends Model
 		'LUGARDESAPARICION',
 		'VESTIMENTADESCR',
 	];
-	
 }

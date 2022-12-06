@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class ConexionesDBModel extends Model
 {
-	protected $DBGroup          = 'default';
+
 	protected $table            = 'CONEXIONESDB';
 	protected $allowedFields    = [
 		'TYPE',

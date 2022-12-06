@@ -6,8 +6,8 @@ use CodeIgniter\Model;
 
 class HombroPosicionModel extends Model
 {
-    protected $DBGroup          = 'default';
+
     protected $table            = 'HOMBROPOSICION';
     protected $primaryKey       = 'HOMBROPOSICIONID';
-    protected $allowedFields    = ['HOMBROPOSICIONID','HOMBROPOSICIONDESCR'];
+    protected $allowedFields    = ['HOMBROPOSICIONID', 'HOMBROPOSICIONDESCR'];
 }

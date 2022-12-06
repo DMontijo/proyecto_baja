@@ -6,8 +6,8 @@ use CodeIgniter\Model;
 
 class OrejaLobuloModel extends Model
 {
-    protected $DBGroup          = 'default';
+
     protected $table            = 'OREJALOBULO';
     protected $primaryKey       = 'OREJALOBULOID';
-    protected $allowedFields    = ['OREJALOBULOID','OREJALOBULODESCR'];
+    protected $allowedFields    = ['OREJALOBULOID', 'OREJALOBULODESCR'];
 }

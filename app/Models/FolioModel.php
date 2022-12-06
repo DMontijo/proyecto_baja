@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class FolioModel extends Model
 {
-	protected $DBGroup          = 'default';
+
 	protected $table            = 'FOLIO';
 	protected $allowedFields    = [
 		'FOLIOID',

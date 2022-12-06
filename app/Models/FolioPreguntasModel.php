@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class FolioPreguntasModel extends Model
 {
-	protected $DBGroup          = 'default';
+
 	protected $table            = 'FOLIOPREGUNTASDENUNCIA';
 	protected $allowedFields    = [
 		'FOLIOID',

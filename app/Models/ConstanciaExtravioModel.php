@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class ConstanciaExtravioModel extends Model
 {
-	protected $DBGroup          = 'default';
+
 	protected $table            = 'CONSTANCIAEXTRAVIO';
 	protected $allowedFields    = [
 		'CONSTANCIAEXTRAVIOID',

@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class BitacoraActividadModel extends Model
 {
-	protected $DBGroup          = 'default';
+
 	protected $table            = 'BITACORAACTIVIDAD';
 	protected $allowedFields    = [
 		'ID',

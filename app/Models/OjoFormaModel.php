@@ -6,8 +6,8 @@ use CodeIgniter\Model;
 
 class OjoFormaModel extends Model
 {
-    protected $DBGroup          = 'default';
+
     protected $table            = 'OJOFORMA';
     protected $primaryKey       = 'OJOFORMAID';
-    protected $allowedFields    = ['OJOFORMAID','OJOFORMADESCR'];
+    protected $allowedFields    = ['OJOFORMAID', 'OJOFORMADESCR'];
 }

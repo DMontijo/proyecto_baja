@@ -6,10 +6,8 @@ use CodeIgniter\Model;
 
 class EstadoExtranjeroModel extends Model
 {
-    protected $DBGroup          = 'default';
-    protected $table            = 'ESTADOEXTRANJERO';
-   
-    protected $allowedFields    = ['ESTADOEXTRANJEROID','PAISID','ESTADOEXTRANJERODESCR'];
 
-    
+    protected $table            = 'ESTADOEXTRANJERO';
+
+    protected $allowedFields    = ['ESTADOEXTRANJEROID', 'PAISID', 'ESTADOEXTRANJERODESCR'];
 }

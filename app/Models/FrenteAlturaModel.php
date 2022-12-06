@@ -6,8 +6,8 @@ use CodeIgniter\Model;
 
 class FrenteAlturaModel extends Model
 {
-    protected $DBGroup          = 'default';
+
     protected $table            = 'FRENTEALTURA';
     protected $primaryKey       = 'FRENTEALTURAID';
-    protected $allowedFields    = ['FRENTEALTURAID','FRENTEALTURADESCR'];
+    protected $allowedFields    = ['FRENTEALTURAID', 'FRENTEALTURADESCR'];
 }

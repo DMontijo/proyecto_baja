@@ -3,7 +3,6 @@
 namespace App\Controllers\admin;
 
 use App\Controllers\BaseController;
-use App\Database\Migrations\DELITOMODALIDAD;
 use App\Models\CabelloColorModel;
 use App\Models\CabelloEstiloModel;
 use App\Models\CabelloTamanoModel;
@@ -634,6 +633,8 @@ class DashboardController extends BaseController
 
 		if ($usuario) {
 			$videoUser = $this->_updateUserVideo($usuario->USUARIOVIDEO, 'LIC. ' . $data['NOMBRE'], $data['APELLIDO_PATERNO'] . ' ' . $data['APELLIDO_MATERNO'], $data['CORREO'], $data['SEXO'], 'agente');
+			var_dump($videoUser);
+			exit;
 			$data['USUARIOVIDEO'] = $videoUser->ID;
 			$data['TOKENVIDEO'] = $videoUser->Token;
 			$this->_usuariosModel->set($data)->where('ID', $id)->update();
@@ -2214,6 +2215,8 @@ class DashboardController extends BaseController
 			$data['st'] = 'r';
 
 			$response = $this->_curlPost($endpoint, $data);
+			var_dump($response);
+			exit;
 
 			return $response;
 		} else {

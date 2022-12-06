@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class SesionesModel extends Model
 {
-	protected $DBGroup          = 'default';
+
 	protected $table            = 'SESIONES';
 	protected $allowedFields    = [
 		'ID',

@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class PlantillasModel extends Model
 {
-	protected $DBGroup          = 'default';
+
 	protected $table            = 'PLANTILLAS';
 	protected $primaryKey       = 'ID';
 	protected $allowedFields    = [
