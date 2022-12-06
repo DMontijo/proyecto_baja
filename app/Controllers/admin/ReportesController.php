@@ -580,6 +580,8 @@ class ReportesController extends BaseController
 		}
 
 		$resultFilter = $this->_folioModel->filterDatesRegistroDiario($data);
+		// var_dump($resultFilter);
+		// exit;
 		$spreadSheet = new Spreadsheet();
 		$spreadSheet->getProperties()
 			->setCreator("Fiscalía General del Estado de Baja California")
@@ -706,8 +708,15 @@ class ReportesController extends BaseController
 
 
 		foreach ($resultFilter->result as $index => $folio) {
+			// var_dump($folio);
+			// exit;
 			// $row++;
-
+			// if(isset($folio->DELITOMODALIDADDESCR)){
+			// 	foreach ($folio->DELITOMODALIDADDESCR as $key => $delito){
+			// 		var_dump($delito);
+			// 		exit;
+			// 	}
+			// }
 			$fecharegistro = strtotime($folio->FECHAREGISTRO);
 			$fechasalida = strtotime($folio->FECHASALIDA);
 			$dateregistro = date('d-m-Y', $fecharegistro);
@@ -721,21 +730,20 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('B' . $row, $dateregistro);
 			$sheet->setCellValue('C' . $row, $horaregistro);
 			$sheet->setCellValue('D' . $row, $folio->FOLIOID);
-			$sheet->setCellValue('E' . $row, $folio->TIPODENUNCIA == 'DA' ? 'TELEFÓNICA': 'CDI');
+			$sheet->setCellValue('E' . $row, $folio->TIPODENUNCIA == 'DA' ? 'ANÓNIMA': 'CDT');
 			$sheet->setCellValue('F' . $row, $folio->MUNICIPIODESCR);
 			$sheet->setCellValue('G' . $row, $folio->N_DENUNCIANTE);
 			$sheet->setCellValue('H' . $row, $folio->APP_DENUNCIANTE);
 			$sheet->setCellValue('I' . $row, $folio->APM_DENUNCIANTE);
 			$sheet->setCellValue('J' . $row, $folio->TELEFONODENUNCIANTE);
 			$sheet->setCellValue('K' . $row, $folio->CORREODENUNCIANTE);
-			$sheet->setCellValue('L' . $row, $folio->HECHODELITO);
+			$sheet->setCellValue('L' . $row, isset($folio->DELITOMODALIDADDESCR)? $folio->DELITOMODALIDADDESCR : 'NO EXISTE');
 			$sheet->setCellValue('M' . $row, $folio->N_AGENT . ' ' . $folio->APP_AGENT . ' ' . $folio->APM_AGENT);
 			$sheet->setCellValue('N' . $row, $folio->NOTASAGENTE);
 			$sheet->setCellValue('O' . $row, isset($folio->TIPOEXPEDIENTEDESCR) ? $folio->TIPOEXPEDIENTEDESCR : $folio->STATUS);
 			$sheet->setCellValue('P' . $row, $folio->EXPEDIENTEID);
 			$sheet->setCellValue('Q' . $row, $datesalida);
 			$sheet->setCellValue('R' . $row, '');
-
 
 			$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
 

@@ -118,12 +118,15 @@ $routes->group('admin', function ($routes) {
 		$routes->get('registro_diario', 'admin/ReportesController::getRegistroDiario');
 		$routes->post('registro_diario', 'admin/ReportesController::postRegistroDiario');
 
+
 		$routes->post('generar_excel_folios', 'admin/ReportesController::createFoliosXlsx');
 		$routes->post('generar_excel_constancias', 'admin/ReportesController::createConstanciasXlsx');
 		$routes->post('generar_excel_registro_diario', 'admin/ReportesController::createRegistroDiarioXlsx');
 
 
 		$routes->get('documentos', 'admin/DocumentosController::index');
+		$routes->post('documentos', 'admin/DocumentosController::postDocumentos');
+
 		$routes->get('documentos_abiertos', 'admin/DocumentosController::documentos_abiertas');
 		$routes->get('documentos_firmados', 'admin/DocumentosController::documentos_firmados');
 
@@ -186,7 +189,10 @@ $routes->group('data', function ($routes) {
 	$routes->post('get-link-videodenuncia', 'client/DashboardController::getLinkVideodenuncia');
 
 	$routes->post('get-folio-information', 'admin/DashboardController::getFolioInformation');
+	$routes->post('get-folio-information-denuncia', 'admin/DashboardController::getFolioInformationDenunciaAnonima');
+
 	$routes->post('update-status-folio', 'admin/DashboardController::updateStatusFolio');
+	$routes->post('update-salida-folio', 'admin/DashboardController::updateFolioSalida');
 
 	$routes->post('get-oficinas-by-municipio', 'admin/DashboardController::getOficinasByMunicipio');
 	$routes->post('get-empleados-by-municipio-and-oficina', 'admin/DashboardController::getEmpleadosByMunicipioAndOficina');
@@ -222,6 +228,8 @@ $routes->group('data', function ($routes) {
 	$routes->post('get-persona-vehiculo-by-id', 'admin/DashboardController::findPersonadVehiculoById');
 
 	$routes->post('update-denuncia-by-id', 'admin/DashboardController::updateFolio');
+	$routes->post('update-denuncia-by-id-anonima', 'admin/DashboardController::updateFolioDenuncia');
+
 	$routes->post('update-preguntas-by-id', 'admin/DashboardController::updatePreguntasIniciales');
 	$routes->post('update-persona-fisica-by-id', 'admin/DashboardController::updatePersonaFisicaById');
 	$routes->post('update-persona-fisica-domicilio-by-id', 'admin/DashboardController::updatePersonaFisicaDomicilioById');

@@ -38,10 +38,8 @@
 					</div>
 					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 						<label for="apellido_paterno_new" class="form-label font-weight-bold">Apellido paterno</label>
-						<input type="text" class="form-control" id="apellido_paterno_new" name="apellido_paterno_new" maxlength="50">
-						<div class="invalid-feedback">
-							El apellido paterno es obligatorio
-						</div>
+						<input type="text" class="form-control" id="apellido_paterno_new" name="apellido_paterno_new" maxlength="50" >
+			
 					</div>
 					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 						<label for="apellido_materno_new" class="form-label font-weight-bold">Apellido materno</label>
@@ -50,9 +48,7 @@
 					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 						<label for="fecha_nacimiento_new" class="form-label font-weight-bold">Fecha de nacimiento</label>
 						<input type="date" class="form-control" id="fecha_nacimiento_new" name="fecha_nacimiento_new" max="<?= ((int)date("Y")) - 18 . '-' . date("m") . '-' . date("d") ?>">
-						<div class="invalid-feedback">
-							La fecha de nacimiento es obligatoria
-						</div>
+				
 					</div>
 					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 						<label for="edad_new" class="form-label font-weight-bold">Edad aproximada</label>

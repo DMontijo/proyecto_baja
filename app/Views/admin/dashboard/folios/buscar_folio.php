@@ -103,6 +103,9 @@
 									<th class="text-center">EXPEDIENTE</th>
 									<th class="text-center">ESTADO</th>
 									<th class="text-center">NOMBRE DEL DENUNCIANTE</th>
+									<th class="text-center">AGENTE DE ATENCIÓN</th>
+									<th class="text-center">AGENTE ASIGNADO</th>
+
 									<th class="text-center"></th>
 								</tr>
 							</thead>
@@ -115,6 +118,10 @@
 										<td class="text-center"><?= $folio->EXPEDIENTEID ?></td>
 										<td class="text-center"><?= $folio->STATUS ?></td>
 										<td class="text-center"><?= $folio->N_DENUNCIANTE . ' ' . $folio->APP_DENUNCIANTE . ' ' . $folio->APM_DENUNCIANTE ?></td>
+										<td class="text-center"><?= $folio->N_AGENT . ' ' . $folio->APP_AGENT . ' ' . $folio->APM_AGENT ?></td>
+										<td class="text-center"><?= $folio->N_EMPL . ' ' . $folio->APP_EMPL . ' ' . $folio->APM_EMPL ?></td>
+
+
 										<td class="text-center">
 											<form action="<?= base_url('/admin/dashboard/ver_folio') ?>" method="post">
 												<input type="hidden" name="folio" value="<?= $folio->FOLIOID ?>">

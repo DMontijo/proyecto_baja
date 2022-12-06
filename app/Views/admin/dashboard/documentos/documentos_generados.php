@@ -470,6 +470,18 @@
 						document.querySelector('#verifying_documentos').classList.add('d-none');
 						btn_archivos_externos.disabled = false;
 					}
+					else if (response.status == 4) {
+						Swal.fire({
+							icon: 'error',
+							text: "Hay archivos sin firmar",
+							confirmButtonColor: '#bf9b55',
+						});
+						$('#subirDocumentosModal').modal('hide');
+						$('#subirDocumentosModal').hide();
+						document.querySelector('#loading_sub_doc').classList.add('d-none');
+						document.querySelector('#verifying_documentos').classList.add('d-none');
+						btn_archivos_externos.disabled = false;
+					}
 				},
 				error: function(jqXHR, textStatus, errorThrown) {}
 			});

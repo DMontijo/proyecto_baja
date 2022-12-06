@@ -268,7 +268,23 @@
 						'empleado': empleado.value,
 						'tipo_expediente': Number(tipoSalida.value)
 					}
+					const dataFolio = {
+						'folio': inputFolio.value,
+						'year': year_select.value,
+						'empleado': empleado.value,
 
+					};
+					$.ajax({
+
+						data: dataFolio,
+						url: "<?= base_url('/data/update-salida-folio') ?>",
+						method: "POST",
+						dataType: "json",
+						success: function(response) {
+							console.log(response);
+						},
+						error: function(jqXHR, textStatus, errorThrown) {}
+					});
 					$.ajax({
 						data: data,
 						url: "<?= base_url('/data/save-in-justicia') ?>",
@@ -370,6 +386,7 @@
 						confirmButtonColor: '#bf9b55',
 					});
 				}
+
 
 			} else {
 				btnFinalizar.removeAttribute('disabled');

@@ -555,7 +555,9 @@ class FoliosController extends BaseController
 		$data->objetoclasificacion = $this->_objetoClasificacionModel->asObject()->findAll();
 		$data->objetosubclasificacion = $this->_objetoSubclasificacionModel->asObject()->findAll();
 		$data->tipomoneda = $this->_tipoMonedaModel->asObject()->findAll();
-		$data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->findAll();
+		// $data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->findAll();
+		$data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->where('TIPOEXPEDIENTEID <= 5')->findAll();
+
 		$data->distribuidorVehiculo = $this->_vehiculoDistribuidorModel->asObject()->findAll();
 		$data->marcaVehiculo = $this->_vehiculoMarcaModel->asObject()->findAll();
 		$data->lineaVehiculo = $this->_vehiculoModeloModel->asObject()->findAll();

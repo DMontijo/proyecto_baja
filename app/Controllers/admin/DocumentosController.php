@@ -8,8 +8,10 @@ use App\Controllers\BaseController;
 use App\Models\FolioDocModel;
 use App\Models\FolioModel;
 use App\Models\FolioPersonaFisicaModel;
+use App\Models\MunicipiosModel;
 use App\Models\PlantillasModel;
 use App\Models\RolesPermisosModel;
+use App\Models\UsuariosModel;
 
 class DocumentosController extends BaseController
 {
@@ -20,6 +22,10 @@ class DocumentosController extends BaseController
 		$this->_folioPersonaFisicaModel = new FolioPersonaFisicaModel();
 		$this->_rolesPermisosModel = new RolesPermisosModel();
 		$this->_folioModel = new FolioModel();
+		$this->_usuariosModel = new UsuariosModel();
+		$this->_municipiosModel = new MunicipiosModel();
+
+
 	}
 	public function index()
 	{
@@ -30,12 +36,74 @@ class DocumentosController extends BaseController
 		// $data->abiertas = count($this->_folioDocModel->asObject()->where('STATUS', 'ABIERTO')->findAll());
 		// // $data->expediente = count($this->_folioDocModel->asObject()->where('STATUS', 'FIRMADO')->where('NUMEROEXPEDIENTE <>', null)->findAll());
 		// $data->expediente = count($this->_folioModel->asObject()->where('STATUS', 'EXPEDIENTE')->where('EXPEDIENTEID <>', null)->findAll());
-		$data->documento = $this->_folioModel->get_folio_expediente();
+		// $data->documento = $this->_folioModel->get_folio_expediente();
+		// $data->empleados = $this->_usuariosModel->asObject()->where('ROLID', 2)->orderBy('NOMBRE', 'ASC')->findAll();
 
-		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+		// $data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+		$data = [
+			'fechaInicio' => date("Y-m-d"),
+			'fechaFin' => date("Y-m-d"),
+		];
+
+		foreach ($data as $clave => $valor) {
+			if (empty($valor)) unset($data[$clave]);
+		}
+
+		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
+		$resultFilter = $this->_folioModel->filterDatesDocumentos($data);
+		$empleado = $this->_usuariosModel->asObject()->where('ID',	session('ID'))->orderBy('NOMBRE', 'ASC')->findAll();
+
+		$dataView = (object)array();
+		$dataView->result = $resultFilter->result;
+		$dataView->municipios = $municipio;
+		$dataView->empleados = $empleado;
+		$dataView->filterParams = (object)$data;
+		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 
-		$this->_loadView('Documentos', $data, 'index');
+		$this->_loadView('Documentos', $dataView, 'index');
+	}
+	public function postDocumentos()
+	{
+		$data = [
+			'AGENTEATENCIONID' => session('ID'),
+			'STATUS' => $this->request->getPost('status'),
+			'fechaInicio' => $this->request->getPost('fechaInicio'),
+			'fechaFin' => $this->request->getPost('fechaFin'),
+			'horaInicio' => $this->request->getPost('horaInicio'),
+			'horaFin' => $this->request->getPost('horaFin')
+		];
+
+		foreach ($data as $clave => $valor) {
+			//Recorre el array y elimina los valores que nulos o vacíos
+			if (empty($valor)) unset($data[$clave]);
+		}
+		if (count($data) <= 0) {
+			$data = [
+				'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
+				'fechaFin' => date("Y-m-d"),
+			];
+		}
+
+		$resultFilter = $this->_folioModel->filterDatesDocumentos($data);
+
+		$empleado = $this->_usuariosModel->asObject()->where('ID',	session('ID'))->orderBy('NOMBRE', 'ASC')->findAll();
+
+		// if (isset($data['AGENTEATENCIONID'])) {
+		// 	$agente = $this->_usuariosModel->asObject()->where('ROLID', 2)->where('ID', $data['AGENTEATENCIONID'])->orderBy('NOMBRE', 'ASC')->first();
+		// 	$data['AGENTENOMBRE'] = $agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' . $agente->APELLIDO_MATERNO;
+		// }
+
+
+		$dataView = (object)array();
+		$dataView->result = $resultFilter->result;
+		$dataView->empleados = $empleado;
+		$dataView->filterParams = (object)$data;
+		$dataView->documento = $this->_folioModel->get_folio_expediente();
+
+		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+
+		$this->_loadView('Documentos', $dataView, 'index');
 	}
 	public function documentos_abiertas()
 	{

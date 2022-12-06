@@ -10,6 +10,8 @@
 <?php include 'modals_denuncia_anonima/insert_objetos_involucrados_modal.php' ?>
 <?php include 'modals_denuncia_anonima/salida_modal_denuncia_anonima.php' ?>
 <?php include 'modals_denuncia_anonima/insert_vehiculo_modal.php' ?>
+<?php include 'modals_denuncia_anonima/form_denuncia.php' ?>
+
 
 <div class="row">
 	<div class="col-12">
@@ -108,17 +110,7 @@
 							<label for="notas_denuncia" class="form-label font-weight-bold">Notas:</label>
 							<textarea class="form-control" id="notas_denuncia" name="notas_denuncia" row="10" oninput="mayuscTextarea(this)"></textarea>
 						</div>
-						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<div class="form-group">
-								<label for="delito_cometido_folio" class="form-label font-weight-bold">Delito cometido</label>
-								<select class="form-control" id="delito_cometido_folio" name="delito_cometido_folio" required>
-									<option selected disabled value="">Elige el delito</option>
-									<?php foreach ($body_data->delitosUsuarios as $index => $delitos) { ?>
-										<option value="<?= $delitos->DELITO ?>"> <?= $delitos->DELITO ?> </option>
-									<?php } ?>
-								</select>
-							</div>
-						</div>
+
 
 						<div class="col-12 mb-3 text-center">
 							<button type="submit" id="insertFolio" name="insertFolio" class="btn btn-primary font-weight-bold btn-lg">AGREGAR FOLIO</button>
@@ -147,7 +139,14 @@
 				</div>
 
 				<div class="row " id="personasInvolucradas" name="personasInvolucradas" style="display: none;">
-
+					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+						<div class="form-group">
+							<br>
+							<button type="button"  class="btn btn-primary font-weight-bold btn-lg" id="btn_update_folio">
+								Actualizar folio
+							</button>
+						</div>
+					</div>
 					<div class="col-12 pt-5">
 						<h3 class="font-weight-bold text-center text-blue pb-3">PERSONAS INVOLUCRADAS</h3>
 					</div>
@@ -248,11 +247,34 @@
 	</div>
 </div>
 <script>
+	
+	(function() {
+		'use strict'
+
+		// Fetch all the forms we want to apply custom Bootstrap validation styles to
+		var forms = document.querySelectorAll('.needs-validation')
+
+		// Loop over them and prevent submission
+		Array.prototype.slice.call(forms)
+			.forEach(function(form) {
+				form.addEventListener('submit', function(event) {
+					if (!form.checkValidity()) {
+						event.preventDefault()
+						event.stopPropagation()
+					}
+
+					form.classList.add('was-validated')
+				}, false)
+			})
+	})()
+</script>
+<script>
 	var inputsText = document.querySelectorAll('input[type="text"]');
 	var inputsEmail = document.querySelectorAll('input[type="email"]');
 	var btn_agregar_victima = document.getElementById('habilitar-victima');
 	var btn_agregar_objetos = document.getElementById('habilitar-objetos-involucrados');
 	var btn_salida = document.getElementById('habilitar-salida');
+	var btn_update_folio = document.getElementById('btn_update_folio');
 
 	var btn_vehiculo = document.getElementById('habilitar-vehiculos');
 	var notas_caso_mp = document.getElementById('notas_denuncia');
@@ -264,6 +286,7 @@
 	var form_objetosinvolucrados = document.querySelector('#form_objetos_involucrados');
 	var form_fis_fis = document.querySelector('#form_fisfis_insert');
 	var form_vehiculo = document.querySelector('#form_vehiculo');
+	var form_update_folio = document.querySelector('#update_denuncia_form_da');
 
 	var inputFolio = document.querySelector('#folio');
 	var year_select = document.querySelector('#year');
@@ -435,6 +458,108 @@
 	btn_salida.addEventListener('click', (event) => {
 		$('#salida_modal_denuncia_anonima').modal('show');
 	}, false);
+	btn_update_folio.addEventListener('click', (event) => {
+		$.ajax({
+			data: {
+				'folio': document.querySelector('#folio').value,
+				'year': document.querySelector('#year').value,
+			},
+			url: "<?= base_url('/data/get-folio-information-denuncia') ?>",
+			method: "POST",
+			dataType: "json",
+			success: function(response) {
+				//DENUNCIA
+				const folio = response.folio;
+				document.querySelector('#municipio_delito_da').value = folio.HECHOMUNICIPIOID;
+				if (folio.HECHOLOCALIDADID) {
+						let data = {
+							'estado_id': 2,
+							'municipio_id': folio.HECHOMUNICIPIOID
+						};
+
+						$.ajax({
+							data: data,
+							url: "<?= base_url('/data/get-localidades-by-municipio') ?>",
+							method: "POST",
+							dataType: "json",
+							success: function(response) {
+								let localidades = response.data;
+								let select_localidad = document.querySelector('#localidad_delito_da');
+
+								localidades.forEach(localidad => {
+									var option = document.createElement("option");
+									option.text = localidad.LOCALIDADDESCR;
+									option.value = localidad.LOCALIDADID;
+									select_localidad.add(option);
+								});
+
+								select_localidad.value = folio.HECHOLOCALIDADID;
+							},
+							error: function(jqXHR, textStatus, errorThrown) {}
+						});
+					} else {
+						document.querySelector('#localidad_delito_da').value = '';
+					}
+
+					if (folio.HECHOCOLONIAID) {
+						document.querySelector('#colonia_delito_da').classList.add('d-none');
+						document.querySelector('#colonia_delito_select_da').classList.remove('d-none');
+						let data = {
+							'estado_id': 2,
+							'municipio_id': folio.HECHOMUNICIPIOID,
+							'localidad_id': folio.HECHOLOCALIDADID
+						};
+						$.ajax({
+							data: data,
+							url: "<?= base_url('/data/get-colonias-by-estado-municipio-localidad') ?>",
+							method: "POST",
+							dataType: "json",
+							success: function(response) {
+								let select_colonia = document.querySelector('#colonia_delito_select_da');
+								let input_colonia = document.querySelector('#colonia_delito_da');
+								let colonias = response.data;
+
+								colonias.forEach(colonia => {
+									var option = document.createElement("option");
+									option.text = colonia.COLONIADESCR;
+									option.value = colonia.COLONIAID;
+									select_colonia.add(option);
+								});
+
+								var option = document.createElement("option");
+								option.text = 'OTRO';
+								option.value = '0';
+								select_colonia.add(option);
+
+								select_colonia.value = folio.HECHOCOLONIAID;
+								input_colonia.value = '-';
+							},
+							error: function(jqXHR, textStatus, errorThrown) {
+
+							}
+						});
+					} else {
+						document.querySelector('#colonia_delito_da').classList.remove('d-none');
+						document.querySelector('#colonia_delito_select_da').classList.add('d-none');
+						var option = document.createElement("option");
+						option.text = 'OTRO';
+						option.value = '0';
+						document.querySelector('#colonia_delito_select_da').add(option);
+						document.querySelector('#colonia_delito_select_da').value = '0';
+						document.querySelector('#colonia_delito_da').value = folio.HECHOCOLONIADESCR;
+					}
+					document.querySelector('#calle_delito_da').value = folio.HECHOCALLE;
+					document.querySelector('#exterior_delito_da').value = folio.HECHONUMEROCASA;
+					document.querySelector('#interior_delito_da').value = folio.HECHONUMEROCASAINT;
+					document.querySelector('#lugar_delito_da').value = folio.HECHOLUGARID;
+					document.querySelector('#hora_delito_da').value = folio.HECHOHORA;
+					document.querySelector('#fecha_delito_da').value = folio.HECHOFECHA;
+					document.querySelector('#narracion_delito_da').value = folio.HECHONARRACION;
+
+			}
+		});
+		$('#update_denuncia').modal('show');
+	}, false);
 	btn_agregar_objetos.addEventListener('click', (event) => {
 		$('#insert_objetos_modal_denuncia').modal('show');
 	}, false);
@@ -466,6 +591,18 @@
 			event.stopPropagation();
 			form_persona_fisica.classList.remove('was-validated')
 			agregarPersonaFisica();
+		}
+	}, false);
+
+	form_update_folio.addEventListener('submit', (event) => {
+		if (!form_update_folio.checkValidity()) {
+			event.preventDefault();
+			event.stopPropagation();
+		} else {
+			event.preventDefault();
+			event.stopPropagation();
+			form_update_folio.classList.remove('was-validated')
+			updateFolio();
 		}
 	}, false);
 	form_fis_fis.addEventListener('submit', (event) => {
@@ -624,10 +761,96 @@
 			input_colonia.value = e.target.value;
 		}
 	});
+	document.querySelector('#municipio_delito_da').addEventListener('change', (e) => {
+		let select_localidad = document.querySelector('#localidad_delito_da');
+
+		let estado = 2;
+		let municipio = e.target.value;
+
+		clearSelect(select_localidad);
+
+		let data = {
+			'estado_id': estado,
+			'municipio_id': municipio
+		};
+		$.ajax({
+			data: data,
+			url: "<?= base_url('/data/get-localidades-by-municipio') ?>",
+			method: "POST",
+			dataType: "json",
+			success: function(response) {
+				let localidades = response.data;
+				clearSelect(select_localidad);
+				localidades.forEach(localidad => {
+					var option = document.createElement("option");
+					option.text = localidad.LOCALIDADDESCR;
+					option.value = localidad.LOCALIDADID;
+					select_localidad.add(option);
+				});
+			},
+			error: function(jqXHR, textStatus, errorThrown) {}
+		});
+
+	});
+	document.querySelector('#localidad_delito_da').addEventListener('change', (e) => {
+		document.querySelector('#colonia_delito_da').classList.add('d-none');
+		document.querySelector('#colonia_delito_select_da').classList.remove('d-none');
+		let select_colonia = document.querySelector('#colonia_delito_select_da');
+		let input_colonia = document.querySelector('#colonia_delito_da');
+
+		let estado = 2;
+		let municipio = document.querySelector('#municipio_delito_da').value;
+		let localidad = e.target.value;
+		clearSelect(select_colonia);
+		select_colonia.value = '';
+		input_colonia.value = '';
+		let data = {
+			'estado_id': estado,
+			'municipio_id': municipio,
+			'localidad_id': localidad
+		};
+		$.ajax({
+			data: data,
+			url: "<?= base_url('/data/get-colonias-by-estado-municipio-localidad') ?>",
+			method: "POST",
+			dataType: "json",
+			success: function(response) {
+				clearSelect(select_colonia);
+				let colonias = response.data;
+				colonias.forEach(colonia => {
+					var option = document.createElement("option");
+					option.text = colonia.COLONIADESCR;
+					option.value = colonia.COLONIAID;
+					select_colonia.add(option);
+				});
+
+				var option = document.createElement("option");
+				option.text = 'OTRO';
+				option.value = '0';
+				select_colonia.add(option);
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+
+			}
+		});
+
+	});
+	document.querySelector('#colonia_delito_select_da').addEventListener('change', (e) => {
+		let select_colonia = document.querySelector('#colonia_delito_select_da');
+		let input_colonia = document.querySelector('#colonia_delito_da');
+
+		if (e.target.value === '0') {
+			select_colonia.classList.add('d-none');
+			input_colonia.classList.remove('d-none');
+			input_colonia.focus();
+		} else {
+			input_colonia.value = e.target.value;
+		}
+	});
 
 	function agregarFolio() {
 		const data = {
-			'delito_cometido': document.querySelector('#delito_cometido_folio').value,
+			// 'delito_cometido': document.querySelector('#delito_cometido_folio').value,
 			'municipio_delito': document.querySelector('#municipio').value,
 			'localidad_delito': document.querySelector('#localidad').value,
 			'colonia_delito': document.querySelector('#colonia').value,
@@ -650,15 +873,10 @@
 			dataType: "json",
 			success: function(response) {
 				if (response.status == 1) {
-					Swal.fire({
-						icon: 'success',
-						text: 'Denuncia agregada correctamente',
-						confirmButtonColor: '#bf9b55',
-					});
-					if (document.querySelector('#delito_cometido_folio').value == "ROBO DE VEHÍCULO") {
-						document.getElementById("roboVehiculo").style.display = "block";
+					// if (document.querySelector('#delito_cometido_folio').value == "ROBO DE VEHÍCULO") {
+					// 	document.getElementById("roboVehiculo").style.display = "block";
 
-					}
+					// }
 					document.getElementById("personasInvolucradas").style.display = "block";
 
 					document.getElementById("foliodiv").style.display = "none";
@@ -670,8 +888,15 @@
 					document.getElementById("objetosInvolucrados").style.display = "block";
 					document.getElementById("delitosInvolucrados").style.display = "block";
 					document.getElementById("salida").style.display = "block";
+					Swal.fire({
+						icon: 'success',
+						text: 'Denuncia agregada correctamente',
+						confirmButtonColor: '#bf9b55',
+					});
 
 
+
+	
 
 				} else {
 					Swal.fire({
@@ -1213,6 +1438,54 @@
 			$("#vehiculos").append(nFilas - 1);
 		}
 	}
+	
+	function updateFolio() {
+				const data = {
+					'folio': document.querySelector('#folio').value,
+				'year': document.querySelector('#year').value,
+					'municipio_delito': document.querySelector('#municipio_delito_da').value,
+					'localidad_delito': document.querySelector('#localidad_delito_da').value,
+					'colonia_delito': document.querySelector('#colonia_delito_da').value,
+					'colonia_delito_select': document.querySelector('#colonia_delito_select_da').value,
+					'calle_delito': document.querySelector('#calle_delito_da').value,
+					'exterior_delito': document.querySelector('#exterior_delito_da').value,
+					'interior_delito': document.querySelector('#interior_delito_da').value,
+					'lugar_delito': document.querySelector('#lugar_delito_da').value,
+					'fecha_delito': document.querySelector('#fecha_delito_da').value,
+					'hora_delito': document.querySelector('#hora_delito_da').value,
+					'narracion_delito': document.querySelector('#narracion_delito_da').value,
+				};
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/update-denuncia-by-id-anonima') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						if (response.status == 1) {
+							Swal.fire({
+								icon: 'success',
+								text: 'Denuncia actualizada correctamente',
+								confirmButtonColor: '#bf9b55',
+							});
+							$('#update_denuncia').modal('hide');
+
+						} else {
+							Swal.fire({
+								icon: 'error',
+								text: 'No se actualizó la denuncia',
+								confirmButtonColor: '#bf9b55',
+							});
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						Swal.fire({
+							icon: 'error',
+							text: 'No se actualizó la denuncia',
+							confirmButtonColor: '#bf9b55',
+						});
+					}
+				});
+			}
 </script>
 
 

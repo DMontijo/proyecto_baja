@@ -561,7 +561,7 @@ class DashboardController extends BaseController
 		$data->tipomoneda = $this->_tipoMonedaModel->asObject()->findAll();
 
 		$data->plantillas = $this->_plantillasModel->asObject()->where('ID !=', 6)->findAll();
-		$data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->findAll();
+		$data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->where('TIPOEXPEDIENTEID <= 5')->findAll();
 		$data->distribuidorVehiculo = $this->_vehiculoDistribuidorModel->asObject()->findAll();
 		$data->marcaVehiculo = $this->_vehiculoMarcaModel->asObject()->findAll();
 		$data->lineaVehiculo = $this->_vehiculoModeloModel->asObject()->findAll();
@@ -571,6 +571,8 @@ class DashboardController extends BaseController
 		$data->colorVehiculo = $this->_coloresVehiculoModel->asObject()->findAll();
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 		$data->delitosModalidad = $this->_delitoModalidadModel->asObject()->orderBy('DELITOMODALIDADDESCR', 'ASC')->where('DELITOMODALIDADDESCR IS NOT NULL')->findAll();
+
+
 		$this->_loadView('Denuncia anónima', 'denuncia_anonima', '', $data, 'denuncia_anonima');
 	}
 
@@ -792,6 +794,22 @@ class DashboardController extends BaseController
 				return json_encode(['status' => 0, 'motivo' => 'El folio ' . $numfolio . ' del año ' . $year . ' no existe.']);
 			}
 		}
+	}
+	public function getFolioInformationDenunciaAnonima()
+	{
+		$data = (object) array();
+		$numfolio = trim($this->request->getPost('folio'));
+		$year = trim($this->request->getPost('year'));
+
+			$data->folio = $this->_folioModel->asObject()->where('ANO', $year)->where('FOLIOID', $numfolio)->first();
+			if ($data->folio) {
+					$data->status = 1;
+					return json_encode($data);
+				
+			} else {
+				return json_encode(['status' => 0]);
+			}
+
 	}
 
 	public function getPersonaFisicaById()
@@ -1042,7 +1060,9 @@ class DashboardController extends BaseController
 		$data->imputados = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->where('CALIDADJURIDICAID', 2)->findAll();
 		$data->victimas = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->where('CALIDADJURIDICAID= 1 OR CALIDADJURIDICAID=6')->findAll();
 		$data->plantillas = $this->_plantillasModel->asObject()->where('ID !=', 6)->findAll();
-		$data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->findAll();
+		// $data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->findAll();
+		$data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->where('TIPOEXPEDIENTEID <= 5')->findAll();
+
 		$data->distribuidorVehiculo = $this->_vehiculoDistribuidorModel->asObject()->findAll();
 		$data->marcaVehiculo = $this->_vehiculoMarcaModel->asObject()->findAll();
 		$data->lineaVehiculo = $this->_vehiculoModeloModel->asObject()->findAll();
@@ -1399,14 +1419,24 @@ class DashboardController extends BaseController
 		$year = $this->request->getPost('year');
 		$expediente = $this->request->getPost('expediente');
 
+
 		// $folioDoc = $this->_folioDocModel->get_by_expediente($expediente, $year);
 		$folioDoc = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOCID', 'asc')->findAll();
+		$folioDocSinFirmar = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'ABIERTO')->orderBy('FOLIODOCID', 'asc')->findAll();
+		if ($folioDocSinFirmar) {
+			$data3 = (object) array();
+			$data3 = ['exist' => 'Hay archivos sin firmar'];
+			if (isset($data3)) {
+				return json_encode(['status' => 4]);
+			}
+		}
 		if ($folioDoc) {
 			try {
 				foreach ($folioDoc as $key => $doc) {
+
 					$relacionDoc = $this->_relacionFolioDocModel->where('FOLIOID', $doc['FOLIOID'])->where('ANO', $doc['ANO'])->where('EXPEDIENTEID', $doc['NUMEROEXPEDIENTE'])->where('FOLIODOCID', $doc['FOLIODOCID'])->orderBy('FOLIODOCID', 'asc')->first();
 
-
+		
 					if (isset($relacionDoc)) {
 						$data = (object) array();
 						$data = ['exist' => 'los archivos ya estan registrados'];
@@ -1424,9 +1454,15 @@ class DashboardController extends BaseController
 						];
 						$this->_relacionFolioDocModel->insert($datosRelacionFolio);
 					}
-				}
+						
+					
+					}
+				
 				if (isset($data)) {
 					return json_encode(['status' => 3]);
+				}
+				if (isset($data2)) {
+					return json_encode(['status' => 4]);
 				}
 				if ($_archivosExternos->status == 201) {
 					return json_encode(['status' => 1]);
@@ -1437,6 +1473,7 @@ class DashboardController extends BaseController
 				return json_encode(['status' => 0, 'error' => $e->getMessage()]);
 			}
 		}
+	
 	}
 	public function crearDocumento()
 	{
@@ -2279,7 +2316,6 @@ class DashboardController extends BaseController
 	public function updateFolio()
 	{
 		$colonia = $this->_coloniasModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $this->request->getPost('municipio_delito'))->where('LOCALIDADID', $this->request->getPost('localidad_delito'))->where('COLONIAID', $this->request->getPost('colonia_delito_select'))->first();
-
 		try {
 
 
@@ -2313,6 +2349,95 @@ class DashboardController extends BaseController
 				$dataFolio['HECHOCOLONIADESCR'] = $colonia->COLONIADESCR;
 				$dataFolio['HECHOZONA'] = $colonia->ZONA;
 			}
+			$update = $this->_folioModel->set($dataFolio)->where('FOLIOID', $folio)->where('ANO', $year)->update();
+			if ($update) {
+				$datosBitacora = [
+					'ACCION' => 'Ha actualizado un folio',
+					'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
+				];
+
+				$this->_bitacoraActividad($datosBitacora);
+
+				return json_encode(['status' => 1]);
+			} else {
+				return json_encode(['status' => 0]);
+			}
+		} catch (\Exception $e) {
+			return json_encode(['status' => 0]);
+		}
+	}
+	public function updateFolioDenuncia()
+	{
+
+		$colonia = $this->_coloniasModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $this->request->getPost('municipio_delito'))->where('LOCALIDADID', $this->request->getPost('localidad_delito'))->where('COLONIAID', $this->request->getPost('colonia_delito_select'))->first();
+		try {
+
+
+			$folio = trim($this->request->getPost('folio'));
+			$year = trim($this->request->getPost('year'));
+			$dataFolio = array(
+				'HECHOFECHA' => $this->request->getPost('fecha_delito'),
+				'HECHOHORA' => $this->request->getPost('hora_delito'),
+				'HECHOLUGARID' => $this->request->getPost('lugar_delito'),
+				'ESTADOID' => 2,
+				'MUNICIPIOID' => $this->request->getPost('municipio_delito'),
+				'HECHOESTADOID' => 2,
+				'HECHOMUNICIPIOID' => $this->request->getPost('municipio_delito'),
+				'HECHOLOCALIDADID' => $this->request->getPost('localidad_delito'),
+				'HECHOCOLONIAID' => $this->request->getPost('colonia_delito_select'),
+				'HECHOCOLONIADESCR' => $this->request->getPost('colonia_delito'),
+				'HECHOCALLE' => $this->request->getPost('calle_delito'),
+				'HECHONUMEROCASA' => $this->request->getPost('exterior_delito'),
+				'HECHONUMEROCASAINT' => $this->request->getPost('interior_delito'),
+				'HECHONARRACION' => $this->request->getPost('narracion_delito'),
+			);
+
+			if ($dataFolio['HECHOCOLONIAID'] == '0') {
+				$dataFolio['HECHOCOLONIAID'] = null;
+				$dataFolio['HECHOCOLONIADESCR'] = $this->request->getPost('colonia_delito');
+				$localidad = $this->_localidadesModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $this->request->getPost('municipio_delito'))->where('LOCALIDADID', $this->request->getPost('localidad_delito'))->first();
+				$dataFolio['HECHOZONA'] = $localidad->ZONA;
+			} else {
+				$dataFolio['HECHOCOLONIAID'] = (int) $this->request->getPost('colonia_delito_select');
+				$dataFolio['HECHOCOLONIADESCR'] = $colonia->COLONIADESCR;
+				$dataFolio['HECHOZONA'] = $colonia->ZONA;
+			}
+			$update = $this->_folioModel->set($dataFolio)->where('FOLIOID', $folio)->where('ANO', $year)->update();
+			if ($update) {
+				$datosBitacora = [
+					'ACCION' => 'Ha actualizado un folio',
+					'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
+				];
+
+				$this->_bitacoraActividad($datosBitacora);
+
+				return json_encode(['status' => 1]);
+			} else {
+				return json_encode(['status' => 0]);
+			}
+		} catch (\Exception $e) {
+			return json_encode(['status' => 0]);
+		}
+	}
+
+	public function updateFolioSalida()
+	{
+
+		if ($this->request->getPost('empleado') !=null) {
+			$empleado = $this->request->getPost('empleado');
+		}else{
+			$empleado = null;
+		}
+		try {
+
+
+			$folio = trim($this->request->getPost('folio'));
+			$year = trim($this->request->getPost('year'));
+			$dataFolio = array(
+				'AGENTEASIGNADOID' => $empleado,
+				
+			);
+
 			$update = $this->_folioModel->set($dataFolio)->where('FOLIOID', $folio)->where('ANO', $year)->update();
 			if ($update) {
 				$datosBitacora = [
@@ -3761,7 +3886,7 @@ class DashboardController extends BaseController
 			'HECHONUMEROCASA' => $this->request->getPost('exterior_delito'),
 			'HECHONUMEROCASAINT' => $this->request->getPost('interior_delito'),
 			'HECHONARRACION' => $this->request->getPost('narracion_delito'),
-			'HECHODELITO' => $this->request->getPost('delito_cometido'),
+			// 'HECHODELITO' => $this->request->getPost('delito_cometido'),
 			'HECHOREFERENCIA' => $this->request->getPost('referencia_delito'),
 			'TIPODENUNCIA' => 'DA',
 			'STATUS' => 'EN PROCESO',
