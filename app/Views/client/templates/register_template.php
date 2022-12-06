@@ -4,6 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="robots" content="noindex">
 	<link rel="icon" href="<?= base_url() ?>/assets/img/FGEBC.png" type="image/x-icon">
 	<link rel="shortcut icon" href="<?= base_url() ?>/assets/img/FGEBC.png" type="image/x-icon">
 	<!-- Lada Telefonica -->
@@ -24,7 +25,7 @@
 	<link rel="stylesheet" href="<?= base_url() ?>/assets/styles/global.css">
 	<link rel="stylesheet" href="<?= base_url() ?>/assets/styles/client/style.css">
 
-	<title>FGEBC - <?= $this->renderSection('title') ?></title>
+	<title><?= $this->renderSection('title') ?> - Centro de Denuncia Tecnológica.</title>
 </head>
 
 <body>
@@ -36,7 +37,7 @@
 					<div class="col-12">
 						<a href="<?= base_url() ?>">
 
-							<img src="<?= base_url() ?>/assets/img/FGEBC_SEJAP_LOGO.png"  class="img-fluid c-sidebar-brand-minimized" alt="FGEBC Logo" style="width:30%;">
+							<img src="<?= base_url() ?>/assets/img/FGEBC_SEJAP_LOGO.png" class="img-fluid c-sidebar-brand-minimized" alt="FGEBC Logo" style="width:30%;">
 						</a>
 					</div>
 				</div>
