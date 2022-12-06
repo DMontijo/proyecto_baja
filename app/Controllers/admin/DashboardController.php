@@ -2922,11 +2922,17 @@ class DashboardController extends BaseController
 
 		if ($this->request->getPost('victima_conocido') == 1) {
 			$nombre = $this->request->getPost('nombre');
+			if ($nombre == null) {
+				$nombre = 'QRO';
+			}
 		} else if ($this->request->getPost('victima_conocido') == 2) {
 			$nombre = 'QRO';
 		}
 		if ($this->request->getPost('imputado_conocido') == 1) {
 			$nombre = $this->request->getPost('nombre');
+			if ($nombre == null) {
+				$nombre = 'QRR';
+			}
 		} else if ($this->request->getPost('imputado_conocido') == 2) {
 			$nombre = 'QRR';
 		}

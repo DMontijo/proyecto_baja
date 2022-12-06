@@ -281,7 +281,9 @@
 			btn_agregar_objetos.disabled = false;
 			btn_salida.disabled = false;
 			btn_arbol.disabled = false;
-
+			$("#insert_persona_victima_modal_denuncia").one("hidden.bs.modal", function() {
+				agregarPersonaFisica();
+			});
 
 		} else {
 			// btn_agregar_victima.disabled = true;
@@ -307,6 +309,9 @@
 			btn_agregar_objetos.disabled = false;
 			btn_salida.disabled = false;
 			btn_arbol.disabled = false;
+			$("#insert_persona_victima_modal_denuncia").one("hidden.bs.modal", function() {
+				agregarPersonaFisica();
+			});
 
 		} else {
 			select_imputado.disabled = true;

@@ -721,7 +721,7 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('B' . $row, $dateregistro);
 			$sheet->setCellValue('C' . $row, $horaregistro);
 			$sheet->setCellValue('D' . $row, $folio->FOLIOID);
-			$sheet->setCellValue('E' . $row, 'ELECTRÓNICA');
+			$sheet->setCellValue('E' . $row, $folio->TIPODENUNCIA == 'DA' ? 'TELEFÓNICA': 'CDI');
 			$sheet->setCellValue('F' . $row, $folio->MUNICIPIODESCR);
 			$sheet->setCellValue('G' . $row, $folio->N_DENUNCIANTE);
 			$sheet->setCellValue('H' . $row, $folio->APP_DENUNCIANTE);
