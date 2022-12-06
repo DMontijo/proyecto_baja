@@ -636,8 +636,8 @@
 			'narracion_delito': document.querySelector('#narracion').value,
 			'referencia_delito': document.querySelector('#referencias').value,
 			'notas': document.querySelector('#notas').value,
-
 		};
+
 		$.ajax({
 			data: data,
 			url: "<?= base_url('/data/create-folio-denuncia-anonima') ?>",
@@ -652,8 +652,8 @@
 					});
 					if (document.querySelector('#delito_cometido_folio').value == "ROBO DE VEHÍCULO") {
 						document.getElementById("roboVehiculo").style.display = "block";
-
 					}
+
 					document.getElementById("personasInvolucradas").style.display = "block";
 
 					document.getElementById("foliodiv").style.display = "none";
@@ -665,9 +665,6 @@
 					document.getElementById("objetosInvolucrados").style.display = "block";
 					document.getElementById("delitosInvolucrados").style.display = "block";
 					document.getElementById("salida").style.display = "block";
-
-
-
 				} else {
 					Swal.fire({
 						icon: 'error',

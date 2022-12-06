@@ -3760,10 +3760,11 @@ class DashboardController extends BaseController
 			'HECHONARRACION' => $this->request->getPost('narracion_delito'),
 			'HECHODELITO' => $this->request->getPost('delito_cometido'),
 			'HECHOREFERENCIA' => $this->request->getPost('referencia_delito'),
+			'AGENTEATENCIONID' => session('ID'),
 			'TIPODENUNCIA' => 'DA',
 			'STATUS' => 'EN PROCESO',
-
 		];
+
 		$colonia = $this->_coloniasModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $this->request->getPost('municipio_delito'))->where('LOCALIDADID', $this->request->getPost('localidad_delito'))->where('COLONIAID', $this->request->getPost('colonia_delito_select'))->first();
 
 		if ((int) $this->request->getPost('colonia_delito_select') == 0) {
