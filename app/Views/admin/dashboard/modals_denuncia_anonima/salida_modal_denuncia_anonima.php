@@ -247,8 +247,21 @@
 						'empleado': empleado.value,
 						'tipo_expediente': Number(tipoSalida.value)
 					}
+					const dataFolio = {
+						'folio': inputFolio.value,
+						'year': year_select.value,
+						'empleado': empleado.value,
 
+					};
 					$.ajax({
+
+						data: dataFolio,
+						url: "<?= base_url('/data/update-salida-folio') ?>",
+						method: "POST",
+						dataType: "json",
+						success: function(response) {
+							// console.log(response);
+							$.ajax({
 						data: data,
 						url: "<?= base_url('/data/save-in-justicia') ?>",
 						method: "POST",
@@ -269,7 +282,7 @@
 								$("#salida_modal_denuncia_anonima").modal("hide");
 								$('body').removeClass('modal-open');
 								$('.modal-backdrop').remove();
-								window.location.href= `<?=base_url('/admin/dashboard/documentos_show?expediente=')?>` + data.expediente +'&year=' +  year_select.value+  '&folio=' + inputFolio.value;
+								window.location.href = `<?= base_url('/admin/dashboard/documentos_show?expediente=') ?>` + data.expediente + '&year=' + year_select.value + '&folio=' + inputFolio.value;
 								document.getElementById("form_folio").reset();
 
 							});
@@ -309,6 +322,11 @@
 							btnFinalizar.removeAttribute('disabled');
 						});
 					});
+						},
+						error: function(jqXHR, textStatus, errorThrown) {}
+					});
+				
+		
 				} else {
 					btnFinalizar.removeAttribute('disabled');
 					Swal.fire({
