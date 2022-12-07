@@ -260,8 +260,13 @@
 						method: "POST",
 						dataType: "json",
 						success: function(response) {
-							// console.log(response);
-							$.ajax({
+							console.log(response);
+				
+						},
+						error: function(jqXHR, textStatus, errorThrown) {}
+					});
+				
+					$.ajax({
 						data: data,
 						url: "<?= base_url('/data/save-in-justicia') ?>",
 						method: "POST",
@@ -322,11 +327,6 @@
 							btnFinalizar.removeAttribute('disabled');
 						});
 					});
-						},
-						error: function(jqXHR, textStatus, errorThrown) {}
-					});
-				
-		
 				} else {
 					btnFinalizar.removeAttribute('disabled');
 					Swal.fire({
