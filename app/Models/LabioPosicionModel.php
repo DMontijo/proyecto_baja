@@ -6,8 +6,8 @@ use CodeIgniter\Model;
 
 class LabioPosicionModel extends Model
 {
-    protected $DBGroup          = 'default';
+
     protected $table            = 'LABIOPOSICION';
     protected $primaryKey       = 'LABIOPOSICIONID';
-    protected $allowedFields    = ['LABIOPOSICIONID','LABIOPOSICIONDESCR'];
+    protected $allowedFields    = ['LABIOPOSICIONID', 'LABIOPOSICIONDESCR'];
 }

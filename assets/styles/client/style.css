@@ -1,9 +1,6 @@
 /*Global*/
 .main {
-  min-height: calc(100vh - 150px) !important;
-}
-.main-constancia {
-	min-height: calc(100vh - 127px) !important;
+  min-height: calc(100vh - 127px) !important;
 }
 .header {
   height: 100px;

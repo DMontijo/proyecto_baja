@@ -6,8 +6,8 @@ use CodeIgniter\Model;
 
 class CaraFormaModel extends Model
 {
-    protected $DBGroup          = 'default';
+
     protected $table            = 'CARAFORMA';
     protected $primaryKey       = 'CARAFORMAID';
-    protected $allowedFields    = ['CARAFORMAID','CARAFORMADESCR'];
+    protected $allowedFields    = ['CARAFORMAID', 'CARAFORMADESCR'];
 }

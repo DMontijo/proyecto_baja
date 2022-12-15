@@ -6,9 +6,8 @@ use CodeIgniter\Model;
 
 class BarbillaTamanoModel extends Model
 {
-    protected $DBGroup          = 'default';
+
     protected $table            = 'BARBILLATAMANO';
     protected $primaryKey       = 'BARBILLATAMANOID';
-    protected $allowedFields    = ['BARBILLATAMANOID','BARBILLATAMANODESCR'];
-
+    protected $allowedFields    = ['BARBILLATAMANOID', 'BARBILLATAMANODESCR'];
 }

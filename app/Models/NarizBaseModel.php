@@ -6,8 +6,8 @@ use CodeIgniter\Model;
 
 class NarizBaseModel extends Model
 {
-    protected $DBGroup          = 'default';
+
     protected $table            = 'NARIZBASE';
     protected $primaryKey       = 'NARIZBASEID';
-    protected $allowedFields    = ['NARIZBASEID','NARIZBASEDESCR'];
+    protected $allowedFields    = ['NARIZBASEID', 'NARIZBASEDESCR'];
 }

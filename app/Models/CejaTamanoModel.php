@@ -6,8 +6,8 @@ use CodeIgniter\Model;
 
 class CejaTamanoModel extends Model
 {
-    protected $DBGroup          = 'default';
+
     protected $table            = 'CEJATAMANO';
     protected $primaryKey       = 'CEJATAMANOID';
-    protected $allowedFields    = ['CEJATAMANOID','CEJATAMANODESCR'];
+    protected $allowedFields    = ['CEJATAMANOID', 'CEJATAMANODESCR'];
 }

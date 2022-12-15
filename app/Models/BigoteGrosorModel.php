@@ -6,9 +6,8 @@ use CodeIgniter\Model;
 
 class BigoteGrosorModel extends Model
 {
-    protected $DBGroup          = 'default';
+
     protected $table            = 'BIGOTEGROSOR';
     protected $primaryKey       = 'BIGOTEGROSORID';
-    protected $allowedFields    = ['BIGOTEGROSORID','BIGOTEGROSORDESCR'];
-
+    protected $allowedFields    = ['BIGOTEGROSORID', 'BIGOTEGROSORDESCR'];
 }

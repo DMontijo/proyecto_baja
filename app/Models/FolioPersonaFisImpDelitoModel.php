@@ -6,16 +6,16 @@ use CodeIgniter\Model;
 
 class FolioPersonaFisImpDelitoModel extends Model
 {
-    protected $DBGroup          = 'default';
+
 	protected $table            = 'FOLIOPERSONAFISIMPDELITO';
-	protected $allowedFields    = ['FOLIOID','ANO','PERSONAFISICAID','DELITOMODALIDADID','DELITOCARACTERISTICAID','TENTATIVA'];
+	protected $allowedFields    = ['FOLIOID', 'ANO', 'PERSONAFISICAID', 'DELITOMODALIDADID', 'DELITOCARACTERISTICAID', 'TENTATIVA'];
 	public function get_by_folio($folio, $year)
 	{
 		$builder = $this->db->table($this->table);
-		$builder->select(['FOLIOPERSONAFISICA.FOLIOID', 'FOLIOPERSONAFISICA.ANO', 'FOLIOPERSONAFISICA.PERSONAFISICAID', 'FOLIOPERSONAFISIMPDELITO.DELITOMODALIDADID', 'NOMBRE', 'PRIMERAPELLIDO','DELITOMODALIDADDESCR']);
+		$builder->select(['FOLIOPERSONAFISICA.FOLIOID', 'FOLIOPERSONAFISICA.ANO', 'FOLIOPERSONAFISICA.PERSONAFISICAID', 'FOLIOPERSONAFISIMPDELITO.DELITOMODALIDADID', 'NOMBRE', 'PRIMERAPELLIDO', 'DELITOMODALIDADDESCR']);
 		$builder->where('FOLIOPERSONAFISICA.FOLIOID', $folio);
 		$builder->where('FOLIOPERSONAFISICA.ANO', $year);
-		$builder->where('FOLIOPERSONAFISICA.CALIDADJURIDICAID',2);
+		$builder->where('FOLIOPERSONAFISICA.CALIDADJURIDICAID', 2);
 		$builder->where('FOLIOPERSONAFISIMPDELITO.FOLIOID', $folio);
 		$builder->where('FOLIOPERSONAFISIMPDELITO.ANO', $year);
 		$builder->join('FOLIOPERSONAFISICA', 'FOLIOPERSONAFISICA.PERSONAFISICAID =' . $this->table . '.PERSONAFISICAID');
@@ -41,5 +41,4 @@ class FolioPersonaFisImpDelitoModel extends Model
 		$query = $builder->get();
 		return $query->getResult();
 	}
-
 }

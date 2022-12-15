@@ -6,8 +6,8 @@ use CodeIgniter\Model;
 
 class CuelloPeculiarModel extends Model
 {
-    protected $DBGroup          = 'default';
+
     protected $table            = 'CUELLOPECULIAR';
     protected $primaryKey       = 'CUELLOPECULIARID';
-    protected $allowedFields    = ['CUELLOPECULIARID','CUELLOPECULIARDESCR'];
+    protected $allowedFields    = ['CUELLOPECULIARID', 'CUELLOPECULIARDESCR'];
 }

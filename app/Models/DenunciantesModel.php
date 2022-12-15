@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class DenunciantesModel extends Model
 {
-	protected $DBGroup          = 'default';
+
 	protected $table            = 'DENUNCIANTES';
 	protected $primaryKey       = 'DENUNCIANTEID';
 	protected $allowedFields    = [

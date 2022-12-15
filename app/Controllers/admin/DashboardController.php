@@ -3,7 +3,6 @@
 namespace App\Controllers\admin;
 
 use App\Controllers\BaseController;
-use App\Database\Migrations\DELITOMODALIDAD;
 use App\Models\CabelloColorModel;
 use App\Models\CabelloEstiloModel;
 use App\Models\CabelloTamanoModel;
@@ -561,7 +560,7 @@ class DashboardController extends BaseController
 		$data->tipomoneda = $this->_tipoMonedaModel->asObject()->findAll();
 
 		$data->plantillas = $this->_plantillasModel->asObject()->where('ID !=', 6)->findAll();
-		$data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->where('TIPOEXPEDIENTEID <= 5')->findAll();
+		$data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->like('TIPOEXPEDIENTECLAVE', 'NUC')->orLike('TIPOEXPEDIENTECLAVE', 'NAC')->orLike('TIPOEXPEDIENTECLAVE', 'RAC')->findAll();
 		$data->distribuidorVehiculo = $this->_vehiculoDistribuidorModel->asObject()->findAll();
 		$data->marcaVehiculo = $this->_vehiculoMarcaModel->asObject()->findAll();
 		$data->lineaVehiculo = $this->_vehiculoModeloModel->asObject()->findAll();
@@ -636,6 +635,8 @@ class DashboardController extends BaseController
 
 		if ($usuario) {
 			$videoUser = $this->_updateUserVideo($usuario->USUARIOVIDEO, 'LIC. ' . $data['NOMBRE'], $data['APELLIDO_PATERNO'] . ' ' . $data['APELLIDO_MATERNO'], $data['CORREO'], $data['SEXO'], 'agente');
+			var_dump($videoUser);
+			exit;
 			$data['USUARIOVIDEO'] = $videoUser->ID;
 			$data['TOKENVIDEO'] = $videoUser->Token;
 			$this->_usuariosModel->set($data)->where('ID', $id)->update();
@@ -801,15 +802,13 @@ class DashboardController extends BaseController
 		$numfolio = trim($this->request->getPost('folio'));
 		$year = trim($this->request->getPost('year'));
 
-			$data->folio = $this->_folioModel->asObject()->where('ANO', $year)->where('FOLIOID', $numfolio)->first();
-			if ($data->folio) {
-					$data->status = 1;
-					return json_encode($data);
-				
-			} else {
-				return json_encode(['status' => 0]);
-			}
-
+		$data->folio = $this->_folioModel->asObject()->where('ANO', $year)->where('FOLIOID', $numfolio)->first();
+		if ($data->folio) {
+			$data->status = 1;
+			return json_encode($data);
+		} else {
+			return json_encode(['status' => 0]);
+		}
 	}
 
 	public function getPersonaFisicaById()
@@ -1060,9 +1059,7 @@ class DashboardController extends BaseController
 		$data->imputados = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->where('CALIDADJURIDICAID', 2)->findAll();
 		$data->victimas = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->where('CALIDADJURIDICAID= 1 OR CALIDADJURIDICAID=6')->findAll();
 		$data->plantillas = $this->_plantillasModel->asObject()->where('ID !=', 6)->findAll();
-		// $data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->findAll();
-		$data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->where('TIPOEXPEDIENTEID <= 5')->findAll();
-
+		$data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->like('TIPOEXPEDIENTECLAVE', 'NUC')->orLike('TIPOEXPEDIENTECLAVE', 'NAC')->orLike('TIPOEXPEDIENTECLAVE', 'RAC')->findAll();
 		$data->distribuidorVehiculo = $this->_vehiculoDistribuidorModel->asObject()->findAll();
 		$data->marcaVehiculo = $this->_vehiculoMarcaModel->asObject()->findAll();
 		$data->lineaVehiculo = $this->_vehiculoModeloModel->asObject()->findAll();
@@ -1436,7 +1433,7 @@ class DashboardController extends BaseController
 
 					$relacionDoc = $this->_relacionFolioDocModel->where('FOLIOID', $doc['FOLIOID'])->where('ANO', $doc['ANO'])->where('EXPEDIENTEID', $doc['NUMEROEXPEDIENTE'])->where('FOLIODOCID', $doc['FOLIODOCID'])->orderBy('FOLIODOCID', 'asc')->first();
 
-		
+
 					if (isset($relacionDoc)) {
 						$data = (object) array();
 						$data = ['exist' => 'los archivos ya estan registrados'];
@@ -1454,10 +1451,8 @@ class DashboardController extends BaseController
 						];
 						$this->_relacionFolioDocModel->insert($datosRelacionFolio);
 					}
-						
-					
-					}
-				
+				}
+
 				if (isset($data)) {
 					return json_encode(['status' => 3]);
 				}
@@ -1473,7 +1468,6 @@ class DashboardController extends BaseController
 				return json_encode(['status' => 0, 'error' => $e->getMessage()]);
 			}
 		}
-	
 	}
 	public function crearDocumento()
 	{
@@ -2423,9 +2417,9 @@ class DashboardController extends BaseController
 	public function updateFolioSalida()
 	{
 
-		if ($this->request->getPost('empleado') !=null) {
+		if ($this->request->getPost('empleado') != null) {
 			$empleado = $this->request->getPost('empleado');
-		}else{
+		} else {
 			$empleado = null;
 		}
 		try {
@@ -2435,7 +2429,7 @@ class DashboardController extends BaseController
 			$year = trim($this->request->getPost('year'));
 			$dataFolio = array(
 				'AGENTEASIGNADOID' => $empleado,
-				
+
 			);
 
 			$update = $this->_folioModel->set($dataFolio)->where('FOLIOID', $folio)->where('ANO', $year)->update();
@@ -3888,10 +3882,11 @@ class DashboardController extends BaseController
 			'HECHONARRACION' => $this->request->getPost('narracion_delito'),
 			// 'HECHODELITO' => $this->request->getPost('delito_cometido'),
 			'HECHOREFERENCIA' => $this->request->getPost('referencia_delito'),
+			'AGENTEATENCIONID' => session('ID'),
 			'TIPODENUNCIA' => 'DA',
 			'STATUS' => 'EN PROCESO',
-
 		];
+
 		$colonia = $this->_coloniasModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $this->request->getPost('municipio_delito'))->where('LOCALIDADID', $this->request->getPost('localidad_delito'))->where('COLONIAID', $this->request->getPost('colonia_delito_select'))->first();
 
 		if ((int) $this->request->getPost('colonia_delito_select') == 0) {

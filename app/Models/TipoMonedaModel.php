@@ -6,8 +6,8 @@ use CodeIgniter\Model;
 
 class TipoMonedaModel extends Model
 {
-    protected $DBGroup          = 'default';
+
     protected $table            = 'TIPOMONEDA';
     protected $primaryKey       = 'TIPOMONEDAID';
-    protected $allowedFields    = ['TIPOMONEDAID','TIPOMONEDADESCR'];
+    protected $allowedFields    = ['TIPOMONEDAID', 'TIPOMONEDADESCR'];
 }

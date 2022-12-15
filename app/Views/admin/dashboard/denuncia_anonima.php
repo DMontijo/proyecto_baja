@@ -142,8 +142,8 @@
 					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 						<div class="form-group">
 							<br>
-							<button type="button"  class="btn btn-primary font-weight-bold btn-lg" id="btn_update_folio">
-								Actualizar folio
+							<button type="button" class="btn btn-primary font-weight-bold btn-lg" id="btn_update_folio">
+								Actualizar hecho
 							</button>
 						</div>
 					</div>
@@ -247,7 +247,6 @@
 	</div>
 </div>
 <script>
-	
 	(function() {
 		'use strict'
 
@@ -472,89 +471,89 @@
 				const folio = response.folio;
 				document.querySelector('#municipio_delito_da').value = folio.HECHOMUNICIPIOID;
 				if (folio.HECHOLOCALIDADID) {
-						let data = {
-							'estado_id': 2,
-							'municipio_id': folio.HECHOMUNICIPIOID
-						};
+					let data = {
+						'estado_id': 2,
+						'municipio_id': folio.HECHOMUNICIPIOID
+					};
 
-						$.ajax({
-							data: data,
-							url: "<?= base_url('/data/get-localidades-by-municipio') ?>",
-							method: "POST",
-							dataType: "json",
-							success: function(response) {
-								let localidades = response.data;
-								let select_localidad = document.querySelector('#localidad_delito_da');
+					$.ajax({
+						data: data,
+						url: "<?= base_url('/data/get-localidades-by-municipio') ?>",
+						method: "POST",
+						dataType: "json",
+						success: function(response) {
+							let localidades = response.data;
+							let select_localidad = document.querySelector('#localidad_delito_da');
 
-								localidades.forEach(localidad => {
-									var option = document.createElement("option");
-									option.text = localidad.LOCALIDADDESCR;
-									option.value = localidad.LOCALIDADID;
-									select_localidad.add(option);
-								});
-
-								select_localidad.value = folio.HECHOLOCALIDADID;
-							},
-							error: function(jqXHR, textStatus, errorThrown) {}
-						});
-					} else {
-						document.querySelector('#localidad_delito_da').value = '';
-					}
-
-					if (folio.HECHOCOLONIAID) {
-						document.querySelector('#colonia_delito_da').classList.add('d-none');
-						document.querySelector('#colonia_delito_select_da').classList.remove('d-none');
-						let data = {
-							'estado_id': 2,
-							'municipio_id': folio.HECHOMUNICIPIOID,
-							'localidad_id': folio.HECHOLOCALIDADID
-						};
-						$.ajax({
-							data: data,
-							url: "<?= base_url('/data/get-colonias-by-estado-municipio-localidad') ?>",
-							method: "POST",
-							dataType: "json",
-							success: function(response) {
-								let select_colonia = document.querySelector('#colonia_delito_select_da');
-								let input_colonia = document.querySelector('#colonia_delito_da');
-								let colonias = response.data;
-
-								colonias.forEach(colonia => {
-									var option = document.createElement("option");
-									option.text = colonia.COLONIADESCR;
-									option.value = colonia.COLONIAID;
-									select_colonia.add(option);
-								});
-
+							localidades.forEach(localidad => {
 								var option = document.createElement("option");
-								option.text = 'OTRO';
-								option.value = '0';
+								option.text = localidad.LOCALIDADDESCR;
+								option.value = localidad.LOCALIDADID;
+								select_localidad.add(option);
+							});
+
+							select_localidad.value = folio.HECHOLOCALIDADID;
+						},
+						error: function(jqXHR, textStatus, errorThrown) {}
+					});
+				} else {
+					document.querySelector('#localidad_delito_da').value = '';
+				}
+
+				if (folio.HECHOCOLONIAID) {
+					document.querySelector('#colonia_delito_da').classList.add('d-none');
+					document.querySelector('#colonia_delito_select_da').classList.remove('d-none');
+					let data = {
+						'estado_id': 2,
+						'municipio_id': folio.HECHOMUNICIPIOID,
+						'localidad_id': folio.HECHOLOCALIDADID
+					};
+					$.ajax({
+						data: data,
+						url: "<?= base_url('/data/get-colonias-by-estado-municipio-localidad') ?>",
+						method: "POST",
+						dataType: "json",
+						success: function(response) {
+							let select_colonia = document.querySelector('#colonia_delito_select_da');
+							let input_colonia = document.querySelector('#colonia_delito_da');
+							let colonias = response.data;
+
+							colonias.forEach(colonia => {
+								var option = document.createElement("option");
+								option.text = colonia.COLONIADESCR;
+								option.value = colonia.COLONIAID;
 								select_colonia.add(option);
+							});
 
-								select_colonia.value = folio.HECHOCOLONIAID;
-								input_colonia.value = '-';
-							},
-							error: function(jqXHR, textStatus, errorThrown) {
+							var option = document.createElement("option");
+							option.text = 'OTRO';
+							option.value = '0';
+							select_colonia.add(option);
 
-							}
-						});
-					} else {
-						document.querySelector('#colonia_delito_da').classList.remove('d-none');
-						document.querySelector('#colonia_delito_select_da').classList.add('d-none');
-						var option = document.createElement("option");
-						option.text = 'OTRO';
-						option.value = '0';
-						document.querySelector('#colonia_delito_select_da').add(option);
-						document.querySelector('#colonia_delito_select_da').value = '0';
-						document.querySelector('#colonia_delito_da').value = folio.HECHOCOLONIADESCR;
-					}
-					document.querySelector('#calle_delito_da').value = folio.HECHOCALLE;
-					document.querySelector('#exterior_delito_da').value = folio.HECHONUMEROCASA;
-					document.querySelector('#interior_delito_da').value = folio.HECHONUMEROCASAINT;
-					document.querySelector('#lugar_delito_da').value = folio.HECHOLUGARID;
-					document.querySelector('#hora_delito_da').value = folio.HECHOHORA;
-					document.querySelector('#fecha_delito_da').value = folio.HECHOFECHA;
-					document.querySelector('#narracion_delito_da').value = folio.HECHONARRACION;
+							select_colonia.value = folio.HECHOCOLONIAID;
+							input_colonia.value = '-';
+						},
+						error: function(jqXHR, textStatus, errorThrown) {
+
+						}
+					});
+				} else {
+					document.querySelector('#colonia_delito_da').classList.remove('d-none');
+					document.querySelector('#colonia_delito_select_da').classList.add('d-none');
+					var option = document.createElement("option");
+					option.text = 'OTRO';
+					option.value = '0';
+					document.querySelector('#colonia_delito_select_da').add(option);
+					document.querySelector('#colonia_delito_select_da').value = '0';
+					document.querySelector('#colonia_delito_da').value = folio.HECHOCOLONIADESCR;
+				}
+				document.querySelector('#calle_delito_da').value = folio.HECHOCALLE;
+				document.querySelector('#exterior_delito_da').value = folio.HECHONUMEROCASA;
+				document.querySelector('#interior_delito_da').value = folio.HECHONUMEROCASAINT;
+				document.querySelector('#lugar_delito_da').value = folio.HECHOLUGARID;
+				document.querySelector('#hora_delito_da').value = folio.HECHOHORA;
+				document.querySelector('#fecha_delito_da').value = folio.HECHOFECHA;
+				document.querySelector('#narracion_delito_da').value = folio.HECHONARRACION;
 
 			}
 		});
@@ -864,8 +863,8 @@
 			'narracion_delito': document.querySelector('#narracion').value,
 			'referencia_delito': document.querySelector('#referencias').value,
 			'notas': document.querySelector('#notas').value,
-
 		};
+
 		$.ajax({
 			data: data,
 			url: "<?= base_url('/data/create-folio-denuncia-anonima') ?>",
@@ -875,7 +874,6 @@
 				if (response.status == 1) {
 					// if (document.querySelector('#delito_cometido_folio').value == "ROBO DE VEHÍCULO") {
 					// 	document.getElementById("roboVehiculo").style.display = "block";
-
 					// }
 					document.getElementById("personasInvolucradas").style.display = "block";
 
@@ -893,10 +891,6 @@
 						text: 'Denuncia agregada correctamente',
 						confirmButtonColor: '#bf9b55',
 					});
-
-
-
-	
 
 				} else {
 					Swal.fire({
@@ -1438,54 +1432,54 @@
 			$("#vehiculos").append(nFilas - 1);
 		}
 	}
-	
-	function updateFolio() {
-				const data = {
-					'folio': document.querySelector('#folio').value,
-				'year': document.querySelector('#year').value,
-					'municipio_delito': document.querySelector('#municipio_delito_da').value,
-					'localidad_delito': document.querySelector('#localidad_delito_da').value,
-					'colonia_delito': document.querySelector('#colonia_delito_da').value,
-					'colonia_delito_select': document.querySelector('#colonia_delito_select_da').value,
-					'calle_delito': document.querySelector('#calle_delito_da').value,
-					'exterior_delito': document.querySelector('#exterior_delito_da').value,
-					'interior_delito': document.querySelector('#interior_delito_da').value,
-					'lugar_delito': document.querySelector('#lugar_delito_da').value,
-					'fecha_delito': document.querySelector('#fecha_delito_da').value,
-					'hora_delito': document.querySelector('#hora_delito_da').value,
-					'narracion_delito': document.querySelector('#narracion_delito_da').value,
-				};
-				$.ajax({
-					data: data,
-					url: "<?= base_url('/data/update-denuncia-by-id-anonima') ?>",
-					method: "POST",
-					dataType: "json",
-					success: function(response) {
-						if (response.status == 1) {
-							Swal.fire({
-								icon: 'success',
-								text: 'Denuncia actualizada correctamente',
-								confirmButtonColor: '#bf9b55',
-							});
-							$('#update_denuncia').modal('hide');
 
-						} else {
-							Swal.fire({
-								icon: 'error',
-								text: 'No se actualizó la denuncia',
-								confirmButtonColor: '#bf9b55',
-							});
-						}
-					},
-					error: function(jqXHR, textStatus, errorThrown) {
-						Swal.fire({
-							icon: 'error',
-							text: 'No se actualizó la denuncia',
-							confirmButtonColor: '#bf9b55',
-						});
-					}
+	function updateFolio() {
+		const data = {
+			'folio': document.querySelector('#folio').value,
+			'year': document.querySelector('#year').value,
+			'municipio_delito': document.querySelector('#municipio_delito_da').value,
+			'localidad_delito': document.querySelector('#localidad_delito_da').value,
+			'colonia_delito': document.querySelector('#colonia_delito_da').value,
+			'colonia_delito_select': document.querySelector('#colonia_delito_select_da').value,
+			'calle_delito': document.querySelector('#calle_delito_da').value,
+			'exterior_delito': document.querySelector('#exterior_delito_da').value,
+			'interior_delito': document.querySelector('#interior_delito_da').value,
+			'lugar_delito': document.querySelector('#lugar_delito_da').value,
+			'fecha_delito': document.querySelector('#fecha_delito_da').value,
+			'hora_delito': document.querySelector('#hora_delito_da').value,
+			'narracion_delito': document.querySelector('#narracion_delito_da').value,
+		};
+		$.ajax({
+			data: data,
+			url: "<?= base_url('/data/update-denuncia-by-id-anonima') ?>",
+			method: "POST",
+			dataType: "json",
+			success: function(response) {
+				if (response.status == 1) {
+					Swal.fire({
+						icon: 'success',
+						text: 'Denuncia actualizada correctamente',
+						confirmButtonColor: '#bf9b55',
+					});
+					$('#update_denuncia').modal('hide');
+
+				} else {
+					Swal.fire({
+						icon: 'error',
+						text: 'No se actualizó la denuncia',
+						confirmButtonColor: '#bf9b55',
+					});
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				Swal.fire({
+					icon: 'error',
+					text: 'No se actualizó la denuncia',
+					confirmButtonColor: '#bf9b55',
 				});
 			}
+		});
+	}
 </script>
 
 

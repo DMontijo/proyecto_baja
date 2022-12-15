@@ -6,9 +6,8 @@ use CodeIgniter\Model;
 
 class VehiculoServicioModel extends Model
 {
-    protected $DBGroup          = 'default';
+
     protected $table            = 'VEHICULOSERVICIO';
     protected $primaryKey       = 'VEHICULOSERVICIOID';
-    protected $allowedFields    = ['VEHICULOSERVICIOID','VEHICULOSERVICIODESCR'];
-
+    protected $allowedFields    = ['VEHICULOSERVICIOID', 'VEHICULOSERVICIODESCR'];
 }

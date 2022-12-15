@@ -6,8 +6,8 @@ use CodeIgniter\Model;
 
 class OjoTamanoModel extends Model
 {
-    protected $DBGroup          = 'default';
+
     protected $table            = 'OJOTAMANO';
     protected $primaryKey       = 'OJOTAMANOID';
-    protected $allowedFields    = ['OJOTAMANOID','OJOTAMANODESCR'];
+    protected $allowedFields    = ['OJOTAMANOID', 'OJOTAMANODESCR'];
 }

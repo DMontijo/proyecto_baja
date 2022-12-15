@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class FolioVehiculoModel extends Model
 {
-	protected $DBGroup          = 'default';
+
 	protected $table            = 'FOLIOVEHICULO';
 	protected $allowedFields    = [
 		'FOLIOID',
@@ -48,7 +48,7 @@ class FolioVehiculoModel extends Model
 	public function get_by_folio($folio, $year)
 	{
 		$builder = $this->db->table($this->table);
-		$builder->select(['FOLIOID', 'VEHICULOID', 'ANO','PLACAS','NUMEROSERIE']);
+		$builder->select(['FOLIOID', 'VEHICULOID', 'ANO', 'PLACAS', 'NUMEROSERIE']);
 		$builder->where('FOLIOID', $folio);
 		$builder->where('ANO', $year);
 		$query = $builder->get();

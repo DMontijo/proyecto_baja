@@ -177,6 +177,7 @@
 				method: "POST",
 				dataType: "json",
 			}).done((response) => {
+				console.log(response);
 				if (response.length > 0) {
 					document.querySelector('#open_folios_modal #folio_num_span').innerHTML = response[0].FOLIOID;
 					document.querySelector('#open_folios_modal #folio_delito_span').innerHTML = response[0].HECHODELITO;

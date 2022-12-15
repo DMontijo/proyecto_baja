@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class ConstanciaExtravioConsecutivoModel extends Model
 {
-	protected $DBGroup          = 'default';
+
 	protected $table            = 'CONSTANCIAEXTRAVIOCONSECUTIVO';
 	protected $primaryKey       = 'ANO';
 	protected $allowedFields    = [

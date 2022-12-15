@@ -6,8 +6,8 @@ use CodeIgniter\Model;
 
 class OjoColorModel extends Model
 {
-    protected $DBGroup          = 'default';
+
     protected $table            = 'OJOCOLOR';
     protected $primaryKey       = 'OJOCOLORID';
-    protected $allowedFields    = ['OJOCOLORID','OJOCOLORDESCR'];
+    protected $allowedFields    = ['OJOCOLORID', 'OJOCOLORDESCR'];
 }

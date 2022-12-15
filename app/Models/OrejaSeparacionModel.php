@@ -6,8 +6,8 @@ use CodeIgniter\Model;
 
 class OrejaSeparacionModel extends Model
 {
-    protected $DBGroup          = 'default';
+
     protected $table            = 'OREJASEPARACION';
     protected $primaryKey       = 'OREJASEPARACIONID';
-    protected $allowedFields    = ['OREJASEPARACIONID','OREJASEPARACIONDESCR'];
+    protected $allowedFields    = ['OREJASEPARACIONID', 'OREJASEPARACIONDESCR'];
 }

@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class FolioPersonaFisicaModel extends Model
 {
-	protected $DBGroup          = 'default';
+
 	protected $table            = 'FOLIOPERSONAFISICA';
 	protected $allowedFields    = [
 		'FOLIOID',
@@ -86,7 +86,7 @@ class FolioPersonaFisicaModel extends Model
 	public function get_by_persona_fisica_filtro($folio, $year, $idpersonafisica)
 	{
 		$builder = $this->db->table($this->table);
-		$builder->select(['FOLIOID', 'PERSONAFISICAID', 'ANO','NOMBRE', 'PRIMERAPELLIDO', 'SEGUNDOAPELLIDO']);
+		$builder->select(['FOLIOID', 'PERSONAFISICAID', 'ANO', 'NOMBRE', 'PRIMERAPELLIDO', 'SEGUNDOAPELLIDO']);
 		$builder->where('FOLIOID', $folio);
 		$builder->where('ANO', $year);
 		$builder->where('PERSONAFISICAID <>', $idpersonafisica);
@@ -108,7 +108,7 @@ class FolioPersonaFisicaModel extends Model
 	public function get_victimas($folio, $year)
 	{
 		$builder = $this->db->table($this->table);
-		$builder->select(['FOLIOID', 'PERSONAFISICAID', 'ANO','NOMBRE', 'PRIMERAPELLIDO', 'SEGUNDOAPELLIDO']);
+		$builder->select(['FOLIOID', 'PERSONAFISICAID', 'ANO', 'NOMBRE', 'PRIMERAPELLIDO', 'SEGUNDOAPELLIDO']);
 		$builder->where('FOLIOID', $folio);
 		$builder->where('ANO', $year);
 		$builder->where('(CALIDADJURIDICAID= 1 OR CALIDADJURIDICAID=6)');
@@ -119,10 +119,10 @@ class FolioPersonaFisicaModel extends Model
 	public function get_imputados($folio, $year)
 	{
 		$builder = $this->db->table($this->table);
-		$builder->select(['FOLIOID', 'PERSONAFISICAID', 'ANO','NOMBRE', 'PRIMERAPELLIDO', 'SEGUNDOAPELLIDO']);
+		$builder->select(['FOLIOID', 'PERSONAFISICAID', 'ANO', 'NOMBRE', 'PRIMERAPELLIDO', 'SEGUNDOAPELLIDO']);
 		$builder->where('FOLIOID', $folio);
 		$builder->where('ANO', $year);
-		$builder->where('CALIDADJURIDICAID',2);
+		$builder->where('CALIDADJURIDICAID', 2);
 
 		$query = $builder->get();
 		return $query->getResult('array');
@@ -130,7 +130,7 @@ class FolioPersonaFisicaModel extends Model
 	public function get_by_personas($folio, $year, $idpersonafisica)
 	{
 		$builder = $this->db->table($this->table);
-		$builder->select(['FOLIOID', 'PERSONAFISICAID', 'ANO','NOMBRE', 'PRIMERAPELLIDO', 'SEGUNDOAPELLIDO', 'EDADCANTIDAD','TELEFONO','TIPOIDENTIFICACIONID','NUMEROIDENTIFICACION','OCUPACIONID','NACIONALIDADID','ESTADOCIVILID']);
+		$builder->select(['FOLIOID', 'PERSONAFISICAID', 'ANO', 'NOMBRE', 'PRIMERAPELLIDO', 'SEGUNDOAPELLIDO', 'EDADCANTIDAD', 'TELEFONO', 'TIPOIDENTIFICACIONID', 'NUMEROIDENTIFICACION', 'OCUPACIONID', 'NACIONALIDADID', 'ESTADOCIVILID']);
 		$builder->where('FOLIOID', $folio);
 		$builder->where('ANO', $year);
 		$builder->where('PERSONAFISICAID', $idpersonafisica);
@@ -138,5 +138,4 @@ class FolioPersonaFisicaModel extends Model
 		$query = $builder->get();
 		return $query->getResult('array');
 	}
-
 }

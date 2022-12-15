@@ -6,8 +6,8 @@ use CodeIgniter\Model;
 
 class FrenteFormaModel extends Model
 {
-    protected $DBGroup          = 'default';
+
     protected $table            = 'FRENTEFORMA';
     protected $primaryKey       = 'FRENTEFORMAID';
-    protected $allowedFields    = ['FRENTEFORMAID','FRENTEFORMADESCR'];
+    protected $allowedFields    = ['FRENTEFORMAID', 'FRENTEFORMADESCR'];
 }

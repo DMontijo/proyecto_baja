@@ -6,8 +6,8 @@ use CodeIgniter\Model;
 
 class NarizTamanoModel extends Model
 {
-    protected $DBGroup          = 'default';
+
     protected $table            = 'NARIZTAMANO';
     protected $primaryKey       = 'NARIZTAMANOID';
-    protected $allowedFields    = ['NARIZTAMANOID','NARIZTAMANODESCR'];
+    protected $allowedFields    = ['NARIZTAMANOID', 'NARIZTAMANODESCR'];
 }

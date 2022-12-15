@@ -6,8 +6,8 @@ use CodeIgniter\Model;
 
 class EstomagoModel extends Model
 {
-    protected $DBGroup          = 'default';
+
     protected $table            = 'ESTOMAGO';
     protected $primaryKey       = 'ESTOMAGOID';
-    protected $allowedFields    = ['ESTOMAGOID','ESTOMAGODESCR'];
+    protected $allowedFields    = ['ESTOMAGOID', 'ESTOMAGODESCR'];
 }

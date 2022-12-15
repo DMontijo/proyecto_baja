@@ -6,9 +6,9 @@ use CodeIgniter\Model;
 
 class BarbaTamanoModel extends Model
 {
-    protected $DBGroup          = 'default';
+
     protected $table            = 'BARBATAMANO';
     protected $primaryKey       = 'BARBATAMANOID';
-    
-    protected $allowedFields    = ['BARBATAMANOID','BARBATAMANODESCR'];
+
+    protected $allowedFields    = ['BARBATAMANOID', 'BARBATAMANODESCR'];
 }

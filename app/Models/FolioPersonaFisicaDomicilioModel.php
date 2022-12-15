@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class FolioPersonaFisicaDomicilioModel extends Model
 {
-	protected $DBGroup          = 'default';
+
 	protected $table            = 'FOLIOPERSONAFISDOMICILIO';
 	protected $allowedFields    = [
 		'FOLIOID',

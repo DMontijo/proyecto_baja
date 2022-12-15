@@ -6,8 +6,8 @@ use CodeIgniter\Model;
 
 class CaraTezModel extends Model
 {
-    protected $DBGroup          = 'default';
+
     protected $table            = 'CARATEZ';
     protected $primaryKey       = 'CARATEZID';
-    protected $allowedFields    = ['CARATEZID','CARATEZDESCR'];
+    protected $allowedFields    = ['CARATEZID', 'CARATEZDESCR'];
 }

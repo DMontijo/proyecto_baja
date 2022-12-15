@@ -749,7 +749,7 @@ class DashboardController extends BaseController
 		$folioId = $this->request->getPost('folio');
 		$denuncianteId = $this->request->getPost('id');
 		$year = $this->request->getPost('year');
-		$folio = $this->_folioModel->asObject()->where('FOLIOID', $folioId,)->where('ANO', $year)->where('STATUS', 'ABIERTO')->first();
+		$folio = $this->_folioModel->asObject()->where('FOLIOID', $folioId,)->where('ANO', $year)->where('STATUS', 'ABIERTO')->where('DENUNCIANTEID', $denuncianteId)->first();
 
 		if ($folioId && $folio && $denuncianteId && $year) {
 

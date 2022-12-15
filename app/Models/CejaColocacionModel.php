@@ -6,8 +6,8 @@ use CodeIgniter\Model;
 
 class CejaColocacionModel extends Model
 {
-    protected $DBGroup          = 'default';
+
     protected $table            = 'CEJACOLOCACION';
     protected $primaryKey       = 'CEJACOLOCACIONID';
-    protected $allowedFields    = ['CEJACOLOCACIONID','CEJACOLOCACIONDESCR'];
+    protected $allowedFields    = ['CEJACOLOCACIONID', 'CEJACOLOCACIONDESCR'];
 }

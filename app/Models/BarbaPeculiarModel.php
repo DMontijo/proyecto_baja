@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class BarbaPeculiarModel extends Model
 {
-    protected $DBGroup          = 'default';
+     
     protected $table            = 'BARBAPECULIAR';
     protected $primaryKey       = 'BARBAPECULIARID';
     

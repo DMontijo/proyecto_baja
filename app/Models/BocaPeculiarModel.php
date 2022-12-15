@@ -6,10 +6,8 @@ use CodeIgniter\Model;
 
 class BocaPeculiarModel extends Model
 {
-    protected $DBGroup          = 'default';
+
     protected $table            = 'BOCAPECULIAR';
     protected $primaryKey       = 'BOCAPECULIARID';
-    protected $allowedFields    = ['BOCAPECULIARID','BOCAPECULIARDESCR'];
-
-
+    protected $allowedFields    = ['BOCAPECULIARID', 'BOCAPECULIARDESCR'];
 }

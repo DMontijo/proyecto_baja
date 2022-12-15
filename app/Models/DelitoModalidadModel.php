@@ -7,9 +7,9 @@ use CodeIgniter\Model;
 
 class DelitoModalidadModel extends Model
 {
-	protected $DBGroup          = 'default';
+
 	protected $table            = 'DELITOMODALIDAD';
-	protected $allowedFields    = ['DELITOMODALIDADID','DELITOMODALIDADDESCR','DELITOMODALIDADARTICULO','DELITOCAPITULOID','DELITOCLASIFICACION','DELITOPERSONAL','HABILITADO','DELITOPESO','INTENCIONALIDADID','TIPOQUERELLA'];
+	protected $allowedFields    = ['DELITOMODALIDADID', 'DELITOMODALIDADDESCR', 'DELITOMODALIDADARTICULO', 'DELITOCAPITULOID', 'DELITOCLASIFICACION', 'DELITOPERSONAL', 'HABILITADO', 'DELITOPESO', 'INTENCIONALIDADID', 'TIPOQUERELLA'];
 	public function get_delitodescr($folio, $year)
 	{
 		$builder = $this->db->table($this->table);

@@ -6,8 +6,8 @@ use CodeIgniter\Model;
 
 class PersonaEtniaModel extends Model
 {
-    protected $DBGroup          = 'default';
+
     protected $table            = 'PERSONAETNIA';
     protected $primaryKey       = 'PERSONAETNIAID';
-    protected $allowedFields    = ['PERSONAETNIAID','PERSONAETNIADESCR'];
+    protected $allowedFields    = ['PERSONAETNIAID', 'PERSONAETNIADESCR'];
 }

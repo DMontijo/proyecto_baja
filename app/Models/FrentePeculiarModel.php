@@ -6,8 +6,8 @@ use CodeIgniter\Model;
 
 class FrentePeculiarModel extends Model
 {
-    protected $DBGroup          = 'default';
+
     protected $table            = 'FRENTEPECULIAR';
     protected $primaryKey       = 'FRENTEPECULIARID';
-    protected $allowedFields    = ['FRENTEPECULIARID','FRENTEPECULIARDESCR'];
+    protected $allowedFields    = ['FRENTEPECULIARID', 'FRENTEPECULIARDESCR'];
 }

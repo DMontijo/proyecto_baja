@@ -6,9 +6,9 @@ use CodeIgniter\Model;
 
 class ColoniasModel extends Model
 {
-	protected $DBGroup          = 'default';
+
 	protected $table            = 'COLONIA';
 	protected $allowedFields    = [
-		'ESTADOID', 'MUNICIPIOID','LOCALIDADID', 'COLONIAID','COLONIADESCR'
+		'ESTADOID', 'MUNICIPIOID', 'LOCALIDADID', 'COLONIAID', 'COLONIADESCR'
 	];
 }

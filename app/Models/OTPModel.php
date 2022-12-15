@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class OTPModel extends Model
 {
-	protected $DBGroup          = 'default';
+
 	protected $table            = 'OTP';
 	protected $allowedFields = [
 		'CODIGO_OTP',

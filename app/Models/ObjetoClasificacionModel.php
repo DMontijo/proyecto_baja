@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class ObjetoClasificacionModel extends Model
 {
-    protected $DBGroup          = 'default';
+
 	protected $table            = 'OBJETOCLASIFICACION';
-	protected $allowedFields    = ['OBJETOCLASIFICACIONID','OBJETOCLASIFICACIONDESCR'];
+	protected $allowedFields    = ['OBJETOCLASIFICACIONID', 'OBJETOCLASIFICACIONDESCR'];
 }

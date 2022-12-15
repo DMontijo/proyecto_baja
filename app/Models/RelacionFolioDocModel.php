@@ -6,8 +6,7 @@ use CodeIgniter\Model;
 
 class RelacionFolioDocModel extends Model
 {
-    protected $DBGroup          = 'default';
-    protected $table            = 'RELACIONFOLIODOC';
-    protected $allowedFields    = ['FOLIODOCID','FOLIOID','ANO','EXPEDIENTEID','EXPEDIENTEARCHIVOID'];
 
+    protected $table            = 'RELACIONFOLIODOC';
+    protected $allowedFields    = ['FOLIODOCID', 'FOLIOID', 'ANO', 'EXPEDIENTEID', 'EXPEDIENTEARCHIVOID'];
 }

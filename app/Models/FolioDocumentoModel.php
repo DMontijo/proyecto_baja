@@ -6,30 +6,30 @@ use CodeIgniter\Model;
 
 class FolioDocumentoModel extends Model
 {
-    protected $DBGroup          = 'default';
+
     protected $table            = 'FOLIODOCUMENTO';
     protected $allowedFields    = [
         'FOLIOID',
-		'ANO',
+        'ANO',
         'EXPEDIENTEDOCTOID',
-		'DOCTODESCR',
+        'DOCTODESCR',
         'DOCUMENTO',
-		'FECHAACTUALIZACION',
+        'FECHAACTUALIZACION',
         'FECHACREACION',
-		'FECHAIMPRESODEFINITIVA',
+        'FECHAIMPRESODEFINITIVA',
         'CLASIFICACIONDOCTOID',
-		'AUTOR',
+        'AUTOR',
         'OFICINAIDAUTOR',
-		'STATUSDOCUMENTOID',
+        'STATUSDOCUMENTOID',
         'PLANTILLAID',
-		'CALIFICACION',
+        'CALIFICACION',
         'ESTADOACCESO',
-		'EMPLEADORESPONSABLE',
+        'EMPLEADORESPONSABLE',
         'EXPAREAIDRESPONSABLE',
-		'EXPEMPIDRESPONSABLE',
+        'EXPEMPIDRESPONSABLE',
         'PUBLICADO',
-		'RUTAALMACENAMIENTOID',
+        'RUTAALMACENAMIENTOID',
         'STATUSALMACENID',
-		'EXPORTAR',
+        'EXPORTAR',
     ];
 }

@@ -4,6 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="robots" content="noindex">
 	<link rel="icon" href="<?= base_url() ?>/assets/img/FGEBC.png" type="image/x-icon">
 	<link rel="shortcut icon" href="<?= base_url() ?>/assets/img/FGEBC.png" type="image/x-icon">
 	<!--Bootstrap 5-->
@@ -18,7 +19,7 @@
 	<link rel="stylesheet" href="<?= base_url() ?>/assets/styles/global.css">
 	<link rel="stylesheet" href="<?= base_url() ?>/assets/styles/client/style.css">
 
-	<title>FGEBC - <?= $this->renderSection('title') ?></title>
+	<title><?= $this->renderSection('title') ?> - Centro de Denuncia Tecnológica.</title>
 </head>
 
 <body>
@@ -26,7 +27,7 @@
 	<div class="container-fluid p-0 main">
 
 		<?= $this->renderSection('content') ?>
-		
+
 	</div>
 	<script src="<?= base_url() ?>/assets/bootstrap/js/bootstrap.bundle.min.js"></script>
 	<script>

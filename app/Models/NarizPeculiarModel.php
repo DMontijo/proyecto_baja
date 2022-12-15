@@ -6,8 +6,8 @@ use CodeIgniter\Model;
 
 class NarizPeculiarModel extends Model
 {
-    protected $DBGroup          = 'default';
+
     protected $table            = 'NARIZPECULIAR';
     protected $primaryKey       = 'NARIZPECULIARID';
-    protected $allowedFields    = ['NARIZPECULIARID','NARIZPECULIARDESCR'];
+    protected $allowedFields    = ['NARIZPECULIARID', 'NARIZPECULIARDESCR'];
 }

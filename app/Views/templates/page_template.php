@@ -18,7 +18,7 @@
 	<link rel="stylesheet" href="<?= base_url() ?>/assets/styles/global.css">
 	<link rel="stylesheet" href="<?= base_url() ?>/assets/styles/style.css">
 
-	<title>FGEBC - <?= $this->renderSection('title') ?></title>
+	<title><?= $this->renderSection('title') ?> - Centro de Denuncia Tecnológica.</title>
 </head>
 
 <body>
@@ -36,7 +36,7 @@
 	<div class="container-fluid bg-white p-0 py-5" style="min-height:calc(100vh - 242px);">
 
 		<?= $this->renderSection('content') ?>
-		
+
 	</div>
 	<footer class="container-fluid text-center text-white bg-primary d-flex align-items-center justify-content-center footer py-3" style="min-height:80px">
 		<span>© <?= date("Y") ?> Fiscalía General del Estado de Baja California</span>

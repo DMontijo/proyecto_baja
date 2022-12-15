@@ -6,9 +6,8 @@ use CodeIgniter\Model;
 
 class VehiculoPaisModel extends Model
 {
-    protected $DBGroup          = 'default';
+
     protected $table            = 'VEHICULOPAIS';
     protected $primaryKey       = 'PAISID';
-    protected $allowedFields    = ['PAISID','PAISDESCR'];
-
+    protected $allowedFields    = ['PAISID', 'PAISDESCR'];
 }
