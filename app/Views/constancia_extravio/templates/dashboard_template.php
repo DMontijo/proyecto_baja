@@ -55,7 +55,7 @@
 			</div>
 		</div>
 	</nav>
-	<div class="container-fluid main bg-light py-3">
+	<div class="container-fluid main-constancia bg-light py-3">
 		<div class="container p-0">
 			<?= $this->renderSection('content') ?>
 		</div>
