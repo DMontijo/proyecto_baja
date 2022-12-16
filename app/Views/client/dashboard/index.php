@@ -65,6 +65,9 @@
 						<div id="datos_robo_vehiculo" class="col-12 d-none step">
 							<?php include('form_robo_vehiculo.php') ?>
 						</div>
+						<div id="datos_robo_vehiculo_completo" class="col-12 d-none step">
+							<?php include('form_robo_vehiculo_completo.php') ?>
+						</div>
 
 						<!-- PASO FINAL -->
 						<div id="paso_final" class="col-12 step d-none step">
@@ -334,12 +337,29 @@
 					radio.removeAttribute('required');
 				});
 			}
+			$('#delito').change(function(){
 
 			if (document.querySelector("#delito").value == "ROBO DE VEHÍCULO") {
-				document.getElementById('datos_robo_vehiculo').classList.add('step');
-			} else {
-				document.getElementById('datos_robo_vehiculo').classList.remove('step');
-			}
+				Swal.fire({
+					title: '¿Cuentas con algún documento en ese momento para verificar la serie y las placas del auto?',
+					showCancelButton: true,
+					confirmButtonText: 'Si',
+					cancelButtonText: `No`,
+				}).then((result) => {
+					/* Read more about isConfirmed, isDenied below */
+					if (result.isConfirmed) {
+						document.getElementById('datos_robo_vehiculo_completo').classList.add('step');
+						document.getElementById('datos_robo_vehiculo').classList.remove('step');
+					
+
+					} else {
+						document.getElementById('datos_robo_vehiculo').classList.add('step');
+						document.getElementById('datos_robo_vehiculo_completo').classList.remove('step');
+						
+					}
+				})
+			} 
+		})
 
 			if (document.querySelector('input[name="responsable"]:checked').value == "NO") {
 				document.getElementById('datos_imputado').classList.remove('step');

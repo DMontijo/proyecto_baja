@@ -51,7 +51,13 @@ class DocumentosController extends BaseController
 
 		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
 		$resultFilter = $this->_folioModel->filterDatesDocumentos($data);
-		$empleado = $this->_usuariosModel->asObject()->where('ID',	session('ID'))->orderBy('NOMBRE', 'ASC')->findAll();
+		if (session('ROLID') == '2' || session('ROLID') == '3' || session('ROLID') == '6') {
+			$empleado = $this->_usuariosModel->asObject()->where('ID',	session('ID'))->orderBy('NOMBRE', 'ASC')->findAll();
+
+		}else{
+			$empleado = $this->_usuariosModel->asObject()->orderBy('NOMBRE', 'ASC')->findAll();
+
+		}
 
 		$dataView = (object)array();
 		$dataView->result = $resultFilter->result;

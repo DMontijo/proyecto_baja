@@ -59,26 +59,26 @@ class FolioDocModel extends Model
 		$query = $builder->get();
 		return $query->getResult('array');
 	}
-	public function get_folio_abierto()
-	{
-		$builder = $this->db->table($this->table);
-		$builder->select(['FOLIOID', 'NUMEROEXPEDIENTE', 'FECHAREGISTRO', 'STATUS', 'ANO']);
-		$builder->where('STATUS', 'ABIERTO');
-		$builder->orderBy('NUMEROEXPEDIENTE ASC');
-		$builder->groupBy('NUMEROEXPEDIENTE');
-		$query = $builder->get();
-		return $query->getResult('array');
-	}
-	public function get_folio_firmado()
-	{
-		$builder = $this->db->table($this->table);
-		$builder->select(['FOLIOID', 'NUMEROEXPEDIENTE', 'FECHAREGISTRO', 'STATUS', 'ANO']);
-		$builder->where('STATUS', 'FIRMADO');
-		$builder->orderBy('NUMEROEXPEDIENTE ASC');
-		$builder->groupBy('NUMEROEXPEDIENTE');
-		$query = $builder->get();
-		return $query->getResult('array');
-	}
+	// public function get_folio_abierto()
+	// {
+	// 	$builder = $this->db->table($this->table);
+	// 	$builder->select(['FOLIOID', 'NUMEROEXPEDIENTE', 'FECHAREGISTRO', 'STATUS', 'ANO']);
+	// 	$builder->where('STATUS', 'ABIERTO');
+	// 	$builder->orderBy('NUMEROEXPEDIENTE ASC');
+	// 	$builder->groupBy('NUMEROEXPEDIENTE');
+	// 	$query = $builder->get();
+	// 	return $query->getResult('array');
+	// }
+	// public function get_folio_firmado()
+	// {
+	// 	$builder = $this->db->table($this->table);
+	// 	$builder->select(['FOLIOID', 'NUMEROEXPEDIENTE', 'FECHAREGISTRO', 'STATUS', 'ANO']);
+	// 	$builder->where('STATUS', 'FIRMADO');
+	// 	$builder->orderBy('NUMEROEXPEDIENTE ASC');
+	// 	$builder->groupBy('NUMEROEXPEDIENTE');
+	// 	$query = $builder->get();
+	// 	return $query->getResult('array');
+	// }
 	public function get_folio_by_first($folio, $year, $docid)
 	{
 		$builder = $this->db->table($this->table);

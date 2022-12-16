@@ -41,6 +41,11 @@ class FOLIOVEHICULO extends Migration
 				'constraint' => '50',
 				'null' => TRUE,
 			],
+			'MARCADEXAC' => [
+				'type' => 'VARCHAR',
+				'constraint' => '50',
+				'null' => TRUE,
+			],
 			'MODELOID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,

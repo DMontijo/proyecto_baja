@@ -1,4 +1,4 @@
-<form id="form_vehiculo" action="" method="post"  enctype="multipart/form-data" class="row p-0 m-0 needs-validation" novalidate>
+<form id="form_vehiculo" action="" method="post" class="row p-0 m-0 needs-validation" novalidate>
 
 	<div class="col-12">
 		<p class="font-weight-bold text-center mt-3">GENERALES</p>
@@ -99,7 +99,6 @@
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="doc_vehiculo" class="form-label font-weight-bold">Documento del vehículo:</label>
 		<a class="btn btn-primary btn-block mb-4 font-weight-bold" id="downloadDoc" download="">Descargar documento</a>
-		<input class="form-control" type="file" id="subirDoc" name="subirDoc" accept="image/jpeg, image/jpg, image/png, .doc, .pdf">Subir documento </input>
 		<img class="img-fluid mb-3" id="doc_vehiculo" name="doc_vehiculo" src="" alt="">
 	</div>
 	
@@ -119,24 +118,13 @@
 		<label for="marca_ad" class="form-label font-weight-bold">Marca:</label>
 		<select class="form-control" id="marca_ad" name="marca_ad">
 			<option selected disabled value="">Selecciona la marca</option>
-			<?php foreach ($body_data->marcaVehiculo as $index => $marcaVehiculo) { ?>
-				<option value="<?= $marcaVehiculo->VEHICULODISTRIBUIDORID  .' '. $marcaVehiculo->VEHICULOMARCAID  ?>"> <?= $marcaVehiculo->VEHICULOMARCADESCR ?></option>
-			<?php } ?>
+			
 		</select>
-
-	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="marca_ad_exacta" class="form-label font-weight-bold">Marca exacta:</label>
-		<input class="form-control" id="marca_ad_exacta" name="marca_ad_exacta">
-
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="linea_vehiculo" class="form-label font-weight-bold">Modelo:</label>
 		<select class="form-control" id="linea_vehiculo_ad" name="linea_vehiculo_ad">
 			<option selected disabled value="">Selecciona el modelo</option>
-			<?php foreach ($body_data->lineaVehiculo as $index => $lineaVehiculo) { ?>
-				<option value="<?= $lineaVehiculo->VEHICULODISTRIBUIDORID  .' '. $lineaVehiculo->VEHICULOMARCAID  . ' ' . $lineaVehiculo->VEHICULOMODELOID  ?>"> <?= $lineaVehiculo->VEHICULOMODELODESCR  ?></option>
-			<?php } ?>
 			
 		</select>
 	</div>
@@ -144,9 +132,7 @@
 		<label for="version_vehiculo" class="form-label font-weight-bold">Versión:</label>
 		<select class="form-control" id="version_vehiculo_ad" name="version_vehiculo_ad">
 			<option selected disabled value="">Selecciona la versión</option>
-			<?php foreach ($body_data->versionVehiculo as $index => $versionVehiculo) { ?>
-				<option value="<?= $versionVehiculo->VEHICULODISTRIBUIDORID  .' '. $versionVehiculo->VEHICULOMARCAID  . ' ' . $versionVehiculo->VEHICULOMODELOID  .' ' .$versionVehiculo->VEHICULOVERSIONID  ?>"> <?= $versionVehiculo->VEHICULOVERSIONDESCR ?></option>
-			<?php } ?>
+			
 		</select>
 	</div>
 

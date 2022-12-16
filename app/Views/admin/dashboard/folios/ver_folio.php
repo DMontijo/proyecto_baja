@@ -117,7 +117,8 @@
 						select_propietario_update.add(option, null);
 					});
 					//PREGUNTAS INICIALES
-					document.querySelector('#es_menor').value = preguntas.ES_MENOR;
+					if (preguntas) {
+						document.querySelector('#es_menor').value = preguntas.ES_MENOR;
 					document.querySelector('#es_tercera_edad').value = preguntas.ES_TERCERA_EDAD;
 					document.querySelector('#tiene_discapacidad').value = preguntas.TIENE_DISCAPACIDAD;
 					document.querySelector('#es_vulnerable').value = preguntas.ES_GRUPO_VULNERABLE;
@@ -127,6 +128,8 @@
 					document.querySelector('#esta_desaparecido').value = preguntas.ESTA_DESAPARECIDO;
 					document.querySelector('#lesiones').value = preguntas.LESIONES;
 					document.querySelector('#lesiones_visibles').value = preguntas.LESIONES_VISIBLES;
+					}
+					
 
 					//DENUNCIA
 					document.querySelector('#delito_delito').value = folio.HECHODELITO;

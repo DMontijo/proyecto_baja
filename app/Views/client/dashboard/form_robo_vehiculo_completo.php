@@ -152,15 +152,15 @@
 		<label for="transmision_vehiculo" class="form-label fw-bold ">Caja / Transmisión:</label>
 		<br>
 		<div class="form-check">
-			<input class="form-check-input" type="radio" name="transmision_vehiculo" id="AUTOMATICA">
+			<input class="form-check-input" type="radio" name="transmision_vehiculo" id="A" value="A"> 
 			<label class="form-check-label" for="flexRadioDefault1">Automática</label>
 		</div>
 		<div class="form-check">
-			<input class="form-check-input" type="radio" name="transmision_vehiculo" id="MANUAL">
+			<input class="form-check-input" type="radio" name="transmision_vehiculo" id="M" value="M">
 			<label class="form-check-label" for="flexRadioDefault2">Manual</label>
 		</div>
 		<div class="form-check">
-			<input class="form-check-input" type="radio" name="transmision_vehiculo" id="DUAL">
+			<input class="form-check-input" type="radio" name="transmision_vehiculo" id="D" value="D">
 			<label class="form-check-label" for="flexRadioDefault2">Dual</label>
 		</div>
 	</div>
@@ -168,15 +168,15 @@
 		<label for="traccion_vehiculo" class="form-label fw-bold ">Tracción:</label>
 		<br>
 		<div class="form-check">
-			<input class="form-check-input" type="radio" name="traccion_vehiculo" id="DOBLE">
+			<input class="form-check-input" type="radio" name="traccion_vehiculo" id="D" value="D">
 			<label class="form-check-label" for="flexRadioDefault1">Doble</label>
 		</div>
 		<div class="form-check">
-			<input class="form-check-input" type="radio" name="traccion_vehiculo" id="SENCILLA">
+			<input class="form-check-input" type="radio" name="traccion_vehiculo" id="S" value="S">
 			<label class="form-check-label" for="flexRadioDefault2">Sencilla</label>
 		</div>
 		<div class="form-check">
-			<input class="form-check-input" type="radio" name="traccion_vehiculo" id="DUAL">
+			<input class="form-check-input" type="radio" name="traccion_vehiculo" id="O" value="O">
 			<label class="form-check-label" for="flexRadioDefault2">Dual</label>
 		</div>
 	</div>

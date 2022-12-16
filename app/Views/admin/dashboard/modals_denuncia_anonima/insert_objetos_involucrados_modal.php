@@ -20,7 +20,7 @@
 					</div>
 					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 						<label for="objeto_clasificacion" class="form-label font-weight-bold">Clasificación del objeto</label>
-						<select class="form-control" id="objeto_clasificacion" name="objeto_clasificacion">
+						<select class="form-control" id="objeto_clasificacion" name="objeto_clasificacion" required>
 							<option disabled selected value=""></option>
 							<?php foreach ($body_data->objetoclasificacion as $index => $objetoclasificacion) { ?>
 								<option value="<?= $objetoclasificacion->OBJETOCLASIFICACIONID ?>"> <?= $objetoclasificacion->OBJETOCLASIFICACIONDESCR ?> </option>
@@ -29,7 +29,7 @@
 					</div>
 					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 						<label for="objeto_subclasificacion" class="form-label font-weight-bold">Subclasificación del objeto</label>
-						<select class="form-control" id="objeto_subclasificacion" name="objeto_subclasificacion">
+						<select class="form-control" id="objeto_subclasificacion" name="objeto_subclasificacion" required>
 							<option disabled selected value=""></option>
 						</select>
 					</div>

@@ -384,10 +384,10 @@
 						<label for="senas_mf1" class="form-label font-weight-bold">Señas particulares</label>
 						<input type="text" class="form-control" id="senas_mf1" name="senas_mf1" maxlength="200">
 					</div>
-					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+					<!-- <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 						<label for="identidad_mf1" class="form-label font-weight-bold">Identidad</label>
 						<input type="text" class="form-control" id="identidad_mf1" name="identidad_mf1" maxlength="200">
-					</div>
+					</div> -->
 					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 						<label for="colorC_mf1" class="form-label font-weight-bold">Color del cabello</label>
 						<select class="form-control" id="colorC_mf1" name="colorC_mf1">
@@ -959,10 +959,10 @@
 						<label for="discapacidad_mf1" class="form-label font-weight-bold">Discapacidad</label>
 						<input type="text" class="form-control" id="discapacidad_mf1" name="discapacidad_mf1" maxlength="200">
 					</div>
-					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+					<!-- <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 						<label for="origen_mf1" class="form-label font-weight-bold">Origen</label>
 						<input type="text" class="form-control" id="origen_mf1" name="origen_mf1">
-					</div>
+					</div> -->
 					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 						<label for="diaDesaparicion1" class="form-label font-weight-bold">Dia de desaparición</label>
 						<input type="date" class="form-control" id="diaDesaparicion1" name="diaDesaparicion1" max="<?= date("Y-m-d") ?>">

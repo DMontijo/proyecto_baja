@@ -11,6 +11,11 @@
 <?php include 'modals_denuncia_anonima/salida_modal_denuncia_anonima.php' ?>
 <?php include 'modals_denuncia_anonima/insert_vehiculo_modal.php' ?>
 <?php include 'modals_denuncia_anonima/form_denuncia.php' ?>
+<?php include 'modals_denuncia_anonima/persona_modal_da.php' ?>
+
+<?php include 'modals_denuncia_anonima/objetos_involucrados_modal_update.php' ?>
+
+
 
 
 <div class="row">
@@ -185,6 +190,8 @@
 							<tr>
 								<th class="text-center bg-primary text-white" id="nombreP" name="nombreP">NOMBRE</th>
 								<th class="text-center bg-primary text-white" id="calidadP" name="calidadP">CALIDAD JURÍDICA</th>
+								<th class="text-center bg-primary text-white"></th>
+
 							</tr>
 						</table>
 					</div>
@@ -206,6 +213,8 @@
 							<tr>
 								<th class="text-center bg-primary text-white" id="objeto" name="objeto">CLASIFICACIÓN</th>
 								<th class="text-center bg-primary text-white" id="clasificacion" name="clasificacion">SUBCLASIFICACIÓN</th>
+								<th class="text-center bg-primary text-white"></th>
+								<th class="text-center bg-primary text-white"></th>
 
 							</tr>
 						</table>
@@ -224,10 +233,28 @@
 						</div>
 					</div>
 					<div class="table-responsive">
-						<table id="table-delitos" class="table table-bordered table-hover table-striped table-light">
+						<table id="table-delito-cometidos" class="table table-bordered table-hover table-striped table-light">
 							<tr>
 								<th class="text-center bg-primary text-white" id="nombreImputado" name="nombreImputado">IMPUTADO</th>
 								<th class="text-center bg-primary text-white" id="delitoCometido" name="delitoCometido">DELITO COMETIDO</th>
+
+							</tr>
+						</table>
+					</div>
+				</div>
+
+				<div class="row" id="fisfis" name="fisfis" style="display: none;">
+					<div class="col-12 pt-5">
+						<h3 class="font-weight-bold text-center text-blue pb-3">ÁRBOL DELICTIVO</h3>
+					</div>
+
+					<div class="table-responsive">
+						<table id="table-delitos-arbol" class="table table-bordered table-hover table-striped table-light">
+							<tr>
+								<th class="text-center bg-primary text-white" id="nombreImputado" name="nombreImputado">IMPUTADO</th>
+								<th class="text-center bg-primary text-white" id="delitoCometido" name="delitoCometido">DELITO COMETIDO</th>
+								<th class="text-center bg-primary text-white" id="nombreVictima" name="nombreVictima">VÍCTIMA / OFENDIDO</th>
+								<th class="text-center bg-primary text-white"></th>
 							</tr>
 						</table>
 					</div>
@@ -290,6 +317,10 @@
 	var inputFolio = document.querySelector('#folio');
 	var year_select = document.querySelector('#year');
 
+	var form_persona_fisica_update = document.querySelector('#persona_fisica_form_da');
+	var form_objetosinvolucrados_update = document.querySelector('#form_objetos_involucrados_update');
+	var form_persona_fisica_domicilio = document.querySelector('#persona_fisica_domicilio_form_da');
+	var form_media_filiacion = document.querySelector('#form_media_filiacion_da');
 
 	var select_victima = document.getElementById('victima_conocido');
 	var select_imputado = document.getElementById('imputado_conocido');
@@ -321,6 +352,58 @@
 
 		}
 	});
+	form_persona_fisica_update.addEventListener('submit', (event) => {
+		if (!form_persona_fisica_update.checkValidity()) {
+			event.preventDefault();
+			event.stopPropagation();
+			form_persona_fisica_update.classList.add('was-validated')
+		} else {
+			event.preventDefault();
+			event.stopPropagation();
+			form_persona_fisica_update.classList.remove('was-validated')
+			actualizarPersona();
+		}
+	}, false);
+	form_persona_fisica_domicilio.addEventListener('submit', (event) => {
+				if (!form_persona_fisica_domicilio.checkValidity()) {
+					event.preventDefault();
+					event.stopPropagation();
+					form_persona_fisica_domicilio.classList.add('was-validated')
+				} else {
+					event.preventDefault();
+					event.stopPropagation();
+					form_persona_fisica_domicilio.classList.remove('was-validated')
+					actualizarDomicilio();
+				}
+			}, false);
+			form_media_filiacion.addEventListener('submit', (event) => {
+				if (!form_media_filiacion.checkValidity()) {
+					event.preventDefault();
+					event.stopPropagation();
+					form_media_filiacion.classList.add('was-validated')
+				} else {
+					event.preventDefault();
+					event.stopPropagation();
+					form_media_filiacion.classList.remove('was-validated')
+					let id_personafisica = document.querySelector('#pf_id').value;
+
+					actualizarPersonaMediaAfiliacion(id_personafisica);
+				}
+			}, false);
+	form_objetosinvolucrados_update.addEventListener('submit', (event) => {
+		if (!form_objetosinvolucrados_update.checkValidity()) {
+			event.preventDefault();
+			event.stopPropagation();
+			form_objetosinvolucrados_update.classList.add('was-validated')
+		} else {
+			event.preventDefault();
+			event.stopPropagation();
+			form_objetosinvolucrados_update.classList.remove('was-validated')
+			let objeto_id = document.querySelector('#objeto_id').value;
+
+			actualizarObjetosInvolucrados(objeto_id);
+		}
+	}, false);
 
 	document.querySelector('#imputado_conocido').addEventListener('change', (e) => {
 		if (e.target.value == 1) {
@@ -375,6 +458,11 @@
 					select_marca.add(option);
 				});
 				select_marca.value = '1';
+				var option_otro = document.createElement("option");
+				option_otro.text = 'OTRO';
+				option_otro.value = '00';
+							select_marca.add(option_otro);
+
 			},
 			error: function(jqXHR, textStatus, errorThrown) {}
 		});
@@ -762,6 +850,7 @@
 	});
 	document.querySelector('#municipio_delito_da').addEventListener('change', (e) => {
 		let select_localidad = document.querySelector('#localidad_delito_da');
+		let select_colonia = document.querySelector('#colonia_delito_select_da');
 
 		let estado = 2;
 		let municipio = e.target.value;
@@ -780,6 +869,8 @@
 			success: function(response) {
 				let localidades = response.data;
 				clearSelect(select_localidad);
+				clearSelect(select_colonia);
+
 				localidades.forEach(localidad => {
 					var option = document.createElement("option");
 					option.text = localidad.LOCALIDADDESCR;
@@ -885,6 +976,8 @@
 					document.getElementById('year').disabled = true;
 					document.getElementById("objetosInvolucrados").style.display = "block";
 					document.getElementById("delitosInvolucrados").style.display = "block";
+					document.getElementById("fisfis").style.display = "block";
+
 					document.getElementById("salida").style.display = "block";
 					Swal.fire({
 						icon: 'success',
@@ -1066,6 +1159,14 @@
 						select_imputado_mputado.add(option, null);
 
 					});
+					$('#propietario_update').empty();
+					let select_propietario_update = document.querySelector("#propietario_update");
+					personas.forEach(persona => {
+						const option = document.createElement('option');
+						option.value = persona.PERSONAFISICAID;
+						option.text = persona.NOMBRE + ' ' + persona.PRIMERAPELLIDO;
+						select_propietario_update.add(option, null);
+					});
 					let tabla_personas = document.querySelectorAll('#table-personas tr');
 					tabla_personas.forEach(row => {
 						if (row.id !== '') {
@@ -1074,20 +1175,7 @@
 					});
 
 					llenarTablaPersonas(response.personas);
-					// $('#personaFisica1_I').empty();
-					// let select_personaFisica1_I = document.querySelector("#personaFisica1_I")
-					// const option_vacio = document.createElement('option');
-					// option_vacio.value = '';
-					// option_vacio.text = '';
-					// option_vacio.disabled = true;
-					// option_vacio.selected = true;
-					// select_personaFisica1_I.add(option_vacio, null);
-					// personas.forEach(persona => {
-					// 	const option = document.createElement('option');
-					// 	option.value = persona.PERSONAFISICAID;
-					// 	option.text = persona.NOMBRE + ' ' + persona.PRIMERAPELLIDO;
-					// 	select_personaFisica1_I.add(option, null);
-					// });
+
 					$('#propietario').empty();
 					let select_propietario = document.querySelector("#propietario");
 					const option_vacio_pro = document.createElement('option');
@@ -1228,6 +1316,15 @@
 						text: 'Delito agregado correctamente',
 						confirmButtonColor: '#bf9b55',
 					});
+					let tabla_relacion_fis_fis = document.querySelectorAll('#table-delitos-arbol tr');
+							tabla_relacion_fis_fis.forEach(row => {
+								if (row.id !== '') {
+									row.remove();
+								}
+							});
+
+					llenarTablaFisFis(response.relacionFisFis);
+
 
 				} else if (response.status == 0) {
 					Swal.fire({
@@ -1265,12 +1362,12 @@
 					});
 				}
 				if (response.status == 1) {
-					let tabla_fisimpdelito = document.querySelectorAll('#table-delitos tr');
-					tabla_fisimpdelito.forEach(row => {
-						if (row.id !== '') {
-							row.remove();
-						}
-					});
+					let tabla_fisimpdelito = document.querySelectorAll('#table-delito-cometidos tr');
+							tabla_fisimpdelito.forEach(row => {
+								if (row.id !== '') {
+									row.remove();
+								}
+							});
 
 					llenarTablaImpDel(response.fisicaImpDelito);
 					Swal.fire({
@@ -1280,18 +1377,6 @@
 					});
 					$('#insert_fisfis_modal_denuncia').modal('hide');
 					document.getElementById("form_fisfis_insert").reset();
-
-					// document.getElementById("form_delitos_cometidos_insert").reset();
-					// const delitosModalidadFiltro = response.delitosModalidadFiltro;
-					// $('#delito_cometido').empty();
-					// let select_delitos_imputado = document.querySelector("#delito_cometido")
-					// delitosModalidadFiltro.forEach(modalidad => {
-					// 	const option = document.createElement('option');
-					// 	option.value = modalidad.DELITOMODALIDADID;
-					// 	option.text = modalidad.DELITOMODALIDADDESCR;
-					// 	select_delitos_imputado.add(option, null);
-
-					// });
 
 				} else if (response.status == 0) {
 					Swal.fire({
@@ -1337,7 +1422,6 @@
 			method: "POST",
 			dataType: "json",
 			success: function(response) {
-				// console.log(respobse.idcalidad);
 				if (response.status == 1) {
 					const vehiculos = response.vehiculos;
 					Swal.fire({
@@ -1367,14 +1451,833 @@
 			}
 		});
 	}
+	function actualizarDomicilio() {
+				const data = {
+					'folio': document.querySelector('#input_folio_atencion').value,
+					'year': document.querySelector('#year_select').value,
+					'pf_id': document.querySelector('#pf_id').value,
+					'pfd_id': document.querySelector('#pfd_id').value,
+					'pais_pfd': document.querySelector('#pais_pfd').value,
+					'estado_pfd': document.querySelector('#estado_pfd').value,
+					'municipio_pfd_da': document.querySelector('#municipio_pfd_da').value,
+					'localidad_pfd': document.querySelector('#localidad_pfd').value,
+					'colonia_pfd_select': document.querySelector('#colonia_pfd_select').value,
+					'colonia_pfd': document.querySelector('#colonia_pfd').value,
+					'cp_pfd': document.querySelector('#cp_pfd').value,
+					'calle_pfd': document.querySelector('#calle_pfd').value,
+					'exterior_pfd': document.querySelector('#exterior_pfd').value,
+					'interior_pfd': document.querySelector('#interior_pfd').value,
+					'referencia_pfd': document.querySelector('#referencia_pfd').value,
+				};
+
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/update-persona-fisica-domicilio-by-id') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						console.log(response);
+						if (response.status == 1) {
+							Swal.fire({
+								icon: 'success',
+								text: 'Domicilio actualizado correctamente',
+								confirmButtonColor: '#bf9b55',
+							});
+						} else {
+							Swal.fire({
+								icon: 'error',
+								text: 'No se actualizó el domicilio',
+								confirmButtonColor: '#bf9b55',
+							});
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						Swal.fire({
+							icon: 'error',
+							text: 'No se actualizó el domicilio',
+							confirmButtonColor: '#bf9b55',
+						});
+					}
+				});
+			}
+
+			function actualizarPersonaMediaAfiliacion(id) {
+				const data = {
+					'folio': document.querySelector('#input_folio_atencion').value,
+					'year': document.querySelector('#year_select').value,
+					'pf_id': id,
+					'ocupacion_mf': document.querySelector('#ocupacion_mf').value ? document.querySelector('#ocupacion_mf').value : document.querySelector('#ocupacion_mf1').value,
+					'estatura_mf': document.querySelector('#estatura_mf').value ? document.querySelector('#estatura_mf').value : document.querySelector('#estatura_mf1').value,
+					'peso_mf': document.querySelector('#peso_mf').value ? document.querySelector('#peso_mf').value : document.querySelector('#peso_mf1').value,
+					'senas_mf': document.querySelector('#senas_mf').value ? document.querySelector('#senas_mf').value : document.querySelector('#senas_mf1').value,
+					'colortez_mf': document.querySelector('#colortez_mf').value ? document.querySelector('#colortez_mf').value : document.querySelector('#colortez_mf1').value,
+					'complexion_mf': document.querySelector('#complexion_mf').value ? document.querySelector('#complexion_mf').value : document.querySelector('#complexion_mf1').value,
+					'contextura_ceja_mf': document.querySelector('#contextura_ceja_mf').value ? document.querySelector('#contextura_ceja_mf').value : document.querySelector('#contextura_ceja_mf1').value,
+					'cara_forma_mf': document.querySelector('#cara_forma_mf').value ? document.querySelector('#cara_forma_mf').value : document.querySelector('#cara_forma_mf1').value,
+					'cara_tamano_mf': document.querySelector('#cara_tamano_mf').value ? document.querySelector('#cara_tamano_mf').value : document.querySelector('#cara_tamano_mf1').value,
+					'caratez_mf': document.querySelector('#caratez_mf').value ? document.querySelector('#caratez_mf').value : document.querySelector('#caratez_mf1').value,
+					'lobulo_mf': document.querySelector('#lobulo_mf').value ? document.querySelector('#lobulo_mf').value : document.querySelector('#lobulo_mf1').value,
+					'forma_oreja_mf': document.querySelector('#forma_oreja_mf').value ? document.querySelector('#forma_oreja_mf').value : document.querySelector('#forma_oreja_mf1').value,
+					'tamano_oreja_mf': document.querySelector('#tamano_oreja_mf').value ? document.querySelector('#tamano_oreja_mf').value : document.querySelector('#tamano_oreja_mf1').value,
+					'colorC_mf': document.querySelector('#colorC_mf').value ? document.querySelector('#colorC_mf').value : document.querySelector('#colorC_mf1').value,
+					'formaC_mf': document.querySelector('#formaC_mf').value ? document.querySelector('#formaC_mf').value : document.querySelector('#formaC_mf1').value,
+					'tamanoC_mf': document.querySelector('#tamanoC_mf').value ? document.querySelector('#tamanoC_mf').value : document.querySelector('#tamanoC_mf1').value,
+					'peculiarC_mf': document.querySelector('#peculiarC_mf').value ? document.querySelector('#peculiarC_mf').value : document.querySelector('#peculiarC_mf1').value,
+					'cabello_descr_mf': document.querySelector('#cabello_descr_mf').value ? document.querySelector('#cabello_descr_mf').value : document.querySelector('#cabello_descr_mf1').value,
+					'frente_altura_mf': document.querySelector('#frente_altura_mf').value ? document.querySelector('#frente_altura_mf').value : document.querySelector('#frente_altura_mf1').value,
+					'frente_anchura_ms': document.querySelector('#frente_anchura_ms').value ? document.querySelector('#frente_anchura_ms').value : document.querySelector('#frente_anchura_mf1').value,
+					'tipoF_mf': document.querySelector('#tipoF_mf').value ? document.querySelector('#tipoF_mf').value : document.querySelector('#tipoF_mf1').value,
+					'frente_peculiar_mf': document.querySelector('#frente_peculiar_mf').value ? document.querySelector('#frente_peculiar_mf').value : document.querySelector('#frente_peculiar_mf1').value,
+					'colocacion_ceja_mf': document.querySelector('#colocacion_ceja_mf').value ? document.querySelector('#colocacion_ceja_mf').value : document.querySelector('#colocacion_ceja_mf1').value,
+					'ceja_mf': document.querySelector('#ceja_mf').value ? document.querySelector('#ceja_mf').value : document.querySelector('#ceja_mf1').value,
+					'tamano_ceja_mf': document.querySelector('#tamano_ceja_mf').value ? document.querySelector('#tamano_ceja_mf').value : document.querySelector('#tamano_ceja_mf1').value,
+					'grosor_ceja_mf': document.querySelector('#grosor_ceja_mf').value ? document.querySelector('#grosor_ceja_mf').value : document.querySelector('#grosor_ceja_mf1').value,
+					'colocacion_ojos_mf': document.querySelector('#colocacion_ojos_mf').value ? document.querySelector('#colocacion_ojos_mf').value : document.querySelector('#colocacion_ojos_mf1').value,
+					'forma_ojos_mf': document.querySelector('#forma_ojos_mf').value ? document.querySelector('#forma_ojos_mf').value : document.querySelector('#forma_ojos_mf1').value,
+					'tamano_ojos_mf': document.querySelector('#tamano_ojos_mf').value ? document.querySelector('#tamano_ojos_mf').value : document.querySelector('#tamano_ojos_mf1').value,
+					'colorO_mf': document.querySelector('#colorO_mf').value ? document.querySelector('#colorO_mf').value : document.querySelector('#colorO_mf1').value,
+					'peculiaridad_ojos_mf': document.querySelector('#peculiaridad_ojos_mf').value ? document.querySelector('#peculiaridad_ojos_mf').value : document.querySelector('#peculiaridad_ojos_mf1').value,
+					'nariz_tipo_mf': document.querySelector('#nariz_tipo_mf').value ? document.querySelector('#nariz_tipo_mf').value : document.querySelector('#nariz_tipo_mf1').value,
+					'nariz_tamano_mf': document.querySelector('#nariz_tamano_mf').value ? document.querySelector('#nariz_tamano_mf').value : document.querySelector('#nariz_tamano_mf1').value,
+					'nariz_base_mf': document.querySelector('#nariz_base_mf').value ? document.querySelector('#nariz_base_mf').value : document.querySelector('#nariz_base_mf1').value,
+					'nariz_peculiar_mf': document.querySelector('#nariz_peculiar_mf').value ? document.querySelector('#nariz_peculiar_mf').value : document.querySelector('#nariz_peculiar_mf1').value,
+					'nariz_descr_mf': document.querySelector('#nariz_descr_mf').value ? document.querySelector('#nariz_descr_mf').value : document.querySelector('#nariz_descr_mf1').value,
+					'bigote_forma_mf': document.querySelector('#bigote_forma_mf').value ? document.querySelector('#bigote_forma_mf').value : document.querySelector('#bigote_forma_mf1').value,
+					'bigote_tamaño_mf': document.querySelector('#bigote_tamaño_mf').value ? document.querySelector('#bigote_tamaño_mf').value : document.querySelector('#bigote_tamaño_mf1').value,
+					'bigote_grosor_mf': document.querySelector('#bigote_grosor_mf').value ? document.querySelector('#bigote_grosor_mf').value : document.querySelector('#bigote_grosor_mf1').value,
+					'bigote_peculiar_mf': document.querySelector('#bigote_peculiar_mf').value ? document.querySelector('#bigote_peculiar_mf').value : document.querySelector('#bigote_peculiar_mf1').value,
+					'bigote_descr_mf': document.querySelector('#bigote_descr_mf').value ? document.querySelector('#bigote_descr_mf').value : document.querySelector('#bigote_descr_mf1').value,
+					'boca_tamano_mf': document.querySelector('#boca_tamano_mf').value ? document.querySelector('#boca_tamano_mf').value : document.querySelector('#boca_tamano_mf1').value,
+					'boca_peculiar_mf': document.querySelector('#boca_peculiar_mf').value ? document.querySelector('#boca_peculiar_mf').value : document.querySelector('#boca_peculiar_mf1').value,
+					'labio_longitud_mf': document.querySelector('#labio_longitud_mf').value ? document.querySelector('#labio_longitud_mf').value : document.querySelector('#labio_longitud_mf1').value,
+					'labio_posicion_mf': document.querySelector('#labio_posicion_mf').value ? document.querySelector('#labio_posicion_mf').value : document.querySelector('#labio_posicion_mf1').value,
+					'labio_peculiar_mf': document.querySelector('#labio_peculiar_mf').value ? document.querySelector('#labio_peculiar_mf').value : document.querySelector('#labio_peculiar_mf1').value,
+					'labio_grosor_mf': document.querySelector('#labio_grosor_mf').value ? document.querySelector('#labio_grosor_mf').value : document.querySelector('#labio_grosor_mf1').value,
+					'dientes_tamano_mf': document.querySelector('#dientes_tamano_mf').value ? document.querySelector('#dientes_tamano_mf').value : document.querySelector('#dientes_tamano_mf1').value,
+					'dientes_tipo_mf': document.querySelector('#dientes_tipo_mf').value ? document.querySelector('#dientes_tipo_mf').value : document.querySelector('#dientes_tipo_mf1').value,
+					'dientes_peculiar_mf': document.querySelector('#dientes_peculiar_mf').value ? document.querySelector('#dientes_peculiar_mf').value : document.querySelector('#dientes_peculiar_mf1').value,
+					'dientes_descr_mf': document.querySelector('#dientes_descr_mf').value ? document.querySelector('#dientes_descr_mf').value : document.querySelector('#dientes_descr_mf1').value,
+					'barbilla_forma_mf': document.querySelector('#barbilla_forma_mf').value ? document.querySelector('#barbilla_forma_mf').value : document.querySelector('#barbilla_forma_mf1').value,
+					'barbilla_tamano_mf': document.querySelector('#barbilla_tamano_mf').value ? document.querySelector('#barbilla_tamano_mf').value : document.querySelector('#barbilla_tamano_mf1').value,
+					'barbilla_inclinacion_mf': document.querySelector('#barbilla_inclinacion_mf').value ? document.querySelector('#barbilla_inclinacion_mf').value : document.querySelector('#barbilla_inclinacion_mf1').value,
+					'barbilla_peculiar_mf': document.querySelector('#barbilla_peculiar_mf').value ? document.querySelector('#barbilla_peculiar_mf').value : document.querySelector('#barbilla_peculiar_mf1').value,
+					'barbilla_descr_mf': document.querySelector('#barbilla_descr_mf').value ? document.querySelector('#barbilla_descr_mf').value : document.querySelector('#barbilla_descr_mf1').value,
+					'barba_tamano_mf': document.querySelector('#barba_tamano_mf').value ? document.querySelector('#barba_tamano_mf').value : document.querySelector('#barba_tamano_mf1').value,
+					'barba_peculiar_mf': document.querySelector('#barba_peculiar_mf').value ? document.querySelector('#barba_peculiar_mf').value : document.querySelector('#barba_peculiar_mf1').value,
+					'barba_descr_mf': document.querySelector('#barba_descr_mf').value ? document.querySelector('#barba_descr_mf').value : document.querySelector('#barba_descr_mf1').value,
+					'cuello_tamano_mf': document.querySelector('#cuello_tamano_mf').value ? document.querySelector('#cuello_tamano_mf').value : document.querySelector('#cuello_tamano_mf1').value,
+					'cuello_grosor_mf': document.querySelector('#cuello_grosor_mf').value ? document.querySelector('#cuello_grosor_mf').value : document.querySelector('#cuello_grosor_mf1').value,
+					'cuello_peculiar_mf': document.querySelector('#cuello_peculiar_mf').value ? document.querySelector('#cuello_peculiar_mf').value : document.querySelector('#cuello_peculiar_mf1').value,
+					'cuello_descr_mf': document.querySelector('#cuello_descr_mf').value ? document.querySelector('#cuello_descr_mf').value : document.querySelector('#cuello_descr_mf1').value,
+					'hombro_posicion_mf': document.querySelector('#hombro_posicion_mf').value ? document.querySelector('#hombro_posicion_mf').value : document.querySelector('#hombro_posicion_mf1').value,
+					'hombro_tamano_mf': document.querySelector('#hombro_tamano_mf').value ? document.querySelector('#hombro_tamano_mf').value : document.querySelector('#hombro_tamano_mf1').value,
+					'hombro_grosor_mf': document.querySelector('#hombro_grosor_mf').value ? document.querySelector('#hombro_grosor_mf').value : document.querySelector('#hombro_grosor_mf1').value,
+					'estomago_mf': document.querySelector('#estomago_mf').value ? document.querySelector('#estomago_mf').value : document.querySelector('#estomago_mf1').value,
+					'escolaridad_mf': document.querySelector('#escolaridad_mf').value ? document.querySelector('#escolaridad_mf').value : document.querySelector('#escolaridad_mf1').value,
+					'etnia_mf': document.querySelector('#etnia_mf').value ? document.querySelector('#etnia_mf').value : document.querySelector('#etnia_mf1').value,
+					'estomago_descr_mf': document.querySelector('#estomago_descr_mf').value ? document.querySelector('#estomago_descr_mf').value : document.querySelector('#estomago_descr_mf1').value,
+					'discapacidad_mf': document.querySelector('#discapacidad_mf').value ? document.querySelector('#discapacidad_mf').value : document.querySelector('#discapacidad_mf1').value,
+					'diaDesaparicion': document.querySelector('#diaDesaparicion').value ? document.querySelector('#diaDesaparicion').value : document.querySelector('#diaDesaparicion1').value,
+					'lugarDesaparicion': document.querySelector('#lugarDesaparicion').value ? document.querySelector('#lugarDesaparicion').value : document.querySelector('#lugarDesaparicion1').value,
+					'vestimenta_mf': document.querySelector('#vestimenta_mf').value ? document.querySelector('#vestimenta_mf').value : document.querySelector('#vestimenta_mf1').value,
+					// 'parentesco_mf': document.querySelector('#parentesco_mf').value?document.querySelector('#parentesco_mf').value:document.querySelector('#parentesco_mf1').value,
+
+				};
+				// console.log(id);
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/update-media-filiacion-by-id') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						// console.log(respobse.idcalidad);
+						if (response.status == 1) {
+							Swal.fire({
+								icon: 'success',
+								text: 'Persona media afiliación actualizada correctamente',
+								confirmButtonColor: '#bf9b55',
+							});
+							document.getElementById("form_media_filiacion_insert").reset();
+							$('#media_filiacion_modal').modal('hide');
+
+
+						} else {
+							Swal.fire({
+								icon: 'error',
+								text: 'No se actualizó la información de la persona media afiliación',
+								confirmButtonColor: '#bf9b55',
+							});
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						console.log(textStatus);
+					}
+				});
+			}
+
+
+	function actualizarPersona() {
+		const data = {
+			'folio': inputFolio.value,
+			'year': year_select.value,
+			'pf_id': document.querySelector('#pf_id').value,
+			'tipo_identificacion_pf': document.querySelector('#tipo_identificacion_pf').value,
+			'numero_identidad_pf': document.querySelector('#numero_identidad_pf').value,
+			'nombre_pf': document.querySelector('#nombre_pf').value,
+			'apellido_paterno_pf': document.querySelector('#apellido_paterno_pf').value,
+			'apellido_materno_pf': document.querySelector('#apellido_materno_pf').value,
+			'nacionalidad_pf': document.querySelector('#nacionalidad_pf').value,
+			'idioma_pf': document.querySelector('#idioma_pf').value,
+			'edoorigen_pf': document.querySelector('#edoorigen_pf').value,
+			'munorigen_pf': document.querySelector('#munorigen_pf').value,
+			'telefono_pf': document.querySelector('#telefono_pf').value,
+			'codigo_pais_pf': document.querySelector('#codigo_pais_pf').value,
+			'telefono_pf_2': document.querySelector('#telefono_pf_2').value,
+			'codigo_pais_pf_2': document.querySelector('#codigo_pais_pf_2').value,
+			'correo_pf': document.querySelector('#correo_pf').value,
+			'fecha_nacimiento_pf': document.querySelector('#fecha_nacimiento_pf').value,
+			'edad_pf': document.querySelector('#edad_pf').value,
+			'edoc_pf': document.querySelector('#edoc_pf').value,
+			'sexo_pf': document.querySelector('#sexo_pf').value,
+			'ocupacion_pf': document.querySelector('#ocupacion_pf').value,
+			'escolaridad_pf': document.querySelector('#escolaridad_pf').value,
+			'descripcionFisica_pf': document.querySelector('#descripcionFisica_pf').value,
+			'calidad_juridica_pf': document.querySelector('#calidad_juridica_pf').value,
+			'apodo_pf': document.querySelector('#apodo_pf').value,
+			'denunciante_pf': document.querySelector('#denunciante_pf').value,
+			'facebook_pf': document.querySelector('#facebook_pf').value,
+			'instagram_pf': document.querySelector('#instagram_pf').value,
+			'twitter_pf': document.querySelector('#twitter_pf').value,
+		};
+
+		$.ajax({
+			data: data,
+			url: "<?= base_url('/data/update-persona-fisica-by-id') ?>",
+			method: "POST",
+			dataType: "json",
+			success: function(response) {
+				const personas = response.personas;
+				const imputados = response.imputados;
+				const victimas = response.victimas;
+				if (response.status == 1) {
+					let tabla_personas = document.querySelectorAll('#table-personas tr');
+					tabla_personas.forEach(row => {
+						if (row.id !== '') {
+							row.remove();
+						}
+					});
+
+					llenarTablaPersonas(response.personas);
+
+					$('#imputado_arbol').empty();
+					let select_imputado_mputado = document.querySelector("#imputado_arbol");
+					imputados.forEach(imputado => {
+						const option = document.createElement('option');
+						option.value = imputado.PERSONAFISICAID;
+						option.text = imputado.NOMBRE + ' ' + imputado.PRIMERAPELLIDO;
+						select_imputado_mputado.add(option, null);
+
+					});
+					$('#victima_ofendido').empty();
+					let select_victima_ofendido = document.querySelector("#victima_ofendido");
+					victimas.forEach(victima => {
+						const option = document.createElement('option');
+						option.value = victima.PERSONAFISICAID;
+						option.text = victima.NOMBRE + ' ' + victima.PRIMERAPELLIDO;
+						select_victima_ofendido.add(option, null);
+					});
+
+
+					Swal.fire({
+						icon: 'success',
+						text: 'Persona física actualizada correctamente',
+						confirmButtonColor: '#bf9b55',
+					});
+
+				} else {
+					Swal.fire({
+						icon: 'error',
+						text: 'No se actualizó la información de la persona',
+						confirmButtonColor: '#bf9b55',
+					});
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				Swal.fire({
+					icon: 'error',
+					text: 'No se actualizó la información de la persona',
+					confirmButtonColor: '#bf9b55',
+				});
+			}
+		});
+	}
+
+	function actualizarObjetosInvolucrados(objetoid) {
+
+		const data = {
+			'folio': inputFolio.value,
+			'year': year_select.value,
+			'objetoid': objetoid,
+			'situacion': document.querySelector('#situacion_objeto_update').value,
+			'clasificacionid': document.querySelector('#objeto_update_clasificacion').value,
+			'subclasificacionid': document.querySelector('#objeto_update_subclasificacion').value,
+			'marca': document.querySelector('#marca_objeto_update').value,
+			'numserie': document.querySelector('#serie_objeto_update').value,
+			'cantidad': document.querySelector('#cantidad_objeto_update').value,
+			'valor': document.querySelector('#valor_objeto_update').value,
+			'moneda': document.querySelector('#tipo_moneda_update').value,
+			'descripciondetallada': document.querySelector('#descripcion_detallada_update').value,
+			'propietario': document.querySelector('#propietario_update').value,
+			'participaestado': document.querySelector('#participa_estado_objeto_update').value,
+		};
+		$.ajax({
+			data: data,
+			url: "<?= base_url('/data/update-objeto-involucrado-by-id') ?>",
+			method: "POST",
+			dataType: "json",
+			success: function(response) {
+				const objetos = response.objetos;
+				let objeto_sub = response.objetosub;
+				if (response.status == 1) {
+					document.getElementById("form_objetos_involucrados_update").reset();
+
+					let tabla_objetos_involucrados = document.querySelectorAll('#table-objetos-involucrados tr');
+					tabla_objetos_involucrados.forEach(row => {
+						if (row.id !== '') {
+							row.remove();
+						}
+					});
+
+					llenarTablaObjetosInvolucrados(objetos);
+					Swal.fire({
+						icon: 'success',
+						text: 'Objeto actualizado correctamente',
+						confirmButtonColor: '#bf9b55',
+					});
+					$('#folio_objetos_update').modal('hide');
+					$('#objeto_update_subclasificacion').empty();
+
+				} else if (response.status == 0) {
+					Swal.fire({
+						icon: 'error',
+						text: 'No se agregó el objeto involucrado',
+						confirmButtonColor: '#bf9b55',
+					});
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				console.log(textStatus);
+			}
+		});
+	}
+
+	function viewPersonaFisica(id) {
+		$.ajax({
+			data: {
+				'id': id,
+				'folio': inputFolio.value,
+				'year': year_select.value,
+			},
+			url: "<?= base_url('/data/get-persona-fisica-by-id') ?>",
+			method: "POST",
+			dataType: "json",
+			success: function(response) {
+				if (response.status == 1) {
+					//PERSONA FISICA
+					let personaFisica = response.personaFisica;
+					//mediafiliacion 
+					let mediaFiliacion = response.personaFisicaMediaFiliacion;
+					let folio = response.folio;
+					let parentesco = response.parentesco;
+					let relacion_parentesco = response.parentescoRelacion;
+					let idPersonaFisica = response.idPersonaFisica;
+					document.querySelectorAll('#pf_id').forEach(element => {
+						element.value = id;
+					});
+
+					document.querySelector('#calidad_juridica_pf').value = personaFisica.CALIDADJURIDICAID ? personaFisica.CALIDADJURIDICAID : '';
+					document.querySelector('#nombre_pf').value = personaFisica.NOMBRE ? personaFisica.NOMBRE : '';
+					document.querySelector('#apellido_paterno_pf').value = personaFisica.PRIMERAPELLIDO ? personaFisica.PRIMERAPELLIDO : '';
+					document.querySelector('#apellido_materno_pf').value = personaFisica.SEGUNDOAPELLIDO ? personaFisica.SEGUNDOAPELLIDO : '';
+					document.querySelector('#sexo_pf').value = personaFisica.SEXO ? personaFisica.SEXO : '';
+					document.querySelector('#tipo_identificacion_pf').value = personaFisica.TIPOIDENTIFICACIONID ? personaFisica.TIPOIDENTIFICACIONID : '';
+					document.querySelector('#nacionalidad_pf').value = personaFisica.NACIONALIDADID ? personaFisica.NACIONALIDADID : '';
+					document.querySelector('#edoc_pf').value = personaFisica.ESTADOCIVILID ? personaFisica.ESTADOCIVILID : '';
+					document.querySelector('#idioma_pf').value = personaFisica.PERSONAIDIOMAID ? personaFisica.PERSONAIDIOMAID : '';
+					document.querySelector('#fecha_nacimiento_pf').value = personaFisica.FECHANACIMIENTO ? personaFisica.FECHANACIMIENTO : '';
+					document.querySelector('#edad_pf').value = personaFisica.EDADCANTIDAD ? personaFisica.EDADCANTIDAD : '';
+					document.querySelector('#numero_identidad_pf').value = personaFisica.NUMEROIDENTIFICACION ? personaFisica.NUMEROIDENTIFICACION : '';
+					document.querySelector('#codigo_pais_pf').value = personaFisica.CODIGOPAISTEL ? personaFisica.CODIGOPAISTEL : '52';
+					document.querySelector('#codigo_pais_pf_2').value = personaFisica.CODIGOPAISTEL2 ? personaFisica.CODIGOPAISTEL2 : '52';
+					document.querySelector('#telefono_pf').value = personaFisica.TELEFONO ? personaFisica.TELEFONO : '';
+					document.querySelector('#telefono_pf_2').value = personaFisica.TELEFONO2 ? personaFisica.TELEFONO2 : '';
+					document.querySelector('#apodo_pf').value = personaFisica.APODO ? personaFisica.APODO : '';
+					document.querySelector('#correo_pf').value = personaFisica.CORREO ? personaFisica.CORREO : '';
+					document.querySelector('#edoorigen_pf').value = personaFisica.ESTADOORIGENID ? personaFisica.ESTADOORIGENID : '';
+					if (personaFisica.ESTADOORIGENID) {
+						let data = {
+							'estado_id': personaFisica.ESTADOORIGENID
+						};
+						$.ajax({
+							data: data,
+							url: "<?= base_url('/data/get-municipios-by-estado') ?>",
+							method: "POST",
+							dataType: "json",
+							success: function(response) {
+								let municipios = response.data;
+								municipios.forEach(municipio => {
+									let option = document.createElement("option");
+									option.text = municipio.MUNICIPIODESCR;
+									option.value = municipio.MUNICIPIOID;
+									document.querySelector('#munorigen_pf').add(option);
+								});
+								document.querySelector('#munorigen_pf').value = personaFisica.MUNICIPIOORIGENID ? personaFisica.MUNICIPIOORIGENID : '';
+							},
+							error: function(jqXHR, textStatus, errorThrown) {}
+						});
+					} else {
+						document.querySelector('#munorigen_pf').value = '';
+					}
+					document.querySelector('#escolaridad_pf').value = personaFisica.ESCOLARIDADID ? personaFisica.ESCOLARIDADID : '';
+					document.querySelector('#ocupacion_pf').value = personaFisica.OCUPACIONID ? personaFisica.OCUPACIONID : '';
+					document.querySelector('#descripcionFisica_pf').value = personaFisica.DESCRIPCION_FISICA ? personaFisica.DESCRIPCION_FISICA : '';
+					document.querySelector('#facebook_pf').value = personaFisica.FACEBOOK ? personaFisica.FACEBOOK : '';
+					document.querySelector('#instagram_pf').value = personaFisica.INSTAGRAM ? personaFisica.INSTAGRAM : '';
+					document.querySelector('#twitter_pf').value = personaFisica.TWITTER ? personaFisica.TWITTER : '';
+					document.querySelector('#denunciante_pf').value = personaFisica.DENUNCIANTE ? personaFisica.DENUNCIANTE : '';
+					//PERSONA FISICA END
+					//MEDIAFILIACION
+					if (mediaFiliacion) {
+						document.querySelector('#etnia_mf').value = mediaFiliacion.PERSONAETNIAID;
+
+						document.querySelector('#estatura_mf').value = mediaFiliacion.ESTATURA;
+						document.querySelector('#peso_mf').value = mediaFiliacion.PESO;
+
+						document.querySelector('#complexion_mf').value = mediaFiliacion.FIGURAID ? mediaFiliacion.FIGURAID : '';
+
+						document.querySelector('#colortez_mf').value = mediaFiliacion.PIELCOLORID ? mediaFiliacion.PIELCOLORID : '';
+						document.querySelector('#senas_mf').value = mediaFiliacion.SENASPARTICULARES;
+						// document.querySelector('#identidadD').value = mediaFiliacion.IDENTIDAD ? mediaFiliacion.IDENTIDAD:'';
+						document.querySelector('#colorC_mf').value = mediaFiliacion.CABELLOCOLORID ? mediaFiliacion.CABELLOCOLORID : '';
+						document.querySelector('#tamanoC_mf').value = mediaFiliacion.CABELLOTAMANOID ? mediaFiliacion.CABELLOTAMANOID : '';
+						document.querySelector('#formaC_mf').value = mediaFiliacion.CABELLOESTILOID ? mediaFiliacion.CABELLOESTILOID : '';
+						document.querySelector('#peculiarC_mf').value = mediaFiliacion.CABELLOPECULIARID ? mediaFiliacion.CABELLOPECULIARID : '';
+
+						document.querySelector('#peculiarC_mf').value = mediaFiliacion.CABELLOPECULIARID ? mediaFiliacion.CABELLOPECULIARID : '';
+						document.querySelector('#cabello_descr_mf').value = mediaFiliacion.CABELLODESCR ? mediaFiliacion.CABELLODESCR : '';
+						document.querySelector('#colocacion_ojos_mf').value = mediaFiliacion.OJOCOLOCACIONID ? mediaFiliacion.OJOCOLOCACIONID : '';
+						document.querySelector('#forma_ojos_mf').value = mediaFiliacion.OJOFORMAID ? mediaFiliacion.OJOFORMAID : '';
+						document.querySelector('#tamano_ojos_mf').value = mediaFiliacion.OJOTAMANOID ? mediaFiliacion.OJOTAMANOID : '';
+						document.querySelector('#colorO_mf').value = mediaFiliacion.OJOCOLORID ? mediaFiliacion.OJOCOLORID : '';
+
+						document.querySelector('#peculiaridad_ojos_mf').value = mediaFiliacion.OJOPECULIARID ? mediaFiliacion.OJOPECULIARID : '';
+						document.querySelector('#frente_altura_mf').value = mediaFiliacion.FRENTEALTURAID ? mediaFiliacion.FRENTEALTURAID : '';
+						document.querySelector('#frente_anchura_ms').value = mediaFiliacion.FRENTEANCHURAID ? mediaFiliacion.FRENTEANCHURAID : '';
+						document.querySelector('#tipoF_mf').value = mediaFiliacion.FRENTEFORMAID ? mediaFiliacion.FRENTEFORMAID : '';
+						document.querySelector('#frente_peculiar_mf').value = mediaFiliacion.FRENTEPECULIARID ? mediaFiliacion.FRENTEPECULIARID : '';
+						document.querySelector('#colocacion_ceja_mf').value = mediaFiliacion.CEJACOLOCACIONID ? mediaFiliacion.CEJACOLOCACIONID : '';
+						document.querySelector('#ceja_mf').value = mediaFiliacion.CEJAFORMAID ? mediaFiliacion.CEJAFORMAID : '';
+
+						document.querySelector('#tamano_ceja_mf').value = mediaFiliacion.CEJATAMANOID ? mediaFiliacion.CEJATAMANOID : '';
+						document.querySelector('#grosor_ceja_mf').value = mediaFiliacion.CEJAGROSORID ? mediaFiliacion.CEJAGROSORID : '';
+						document.querySelector('#nariz_tipo_mf').value = mediaFiliacion.CEJATAMANOID ? mediaFiliacion.CEJATAMANOID : '';
+						document.querySelector('#nariz_tamano_mf').value = mediaFiliacion.NARIZTAMANOID ? mediaFiliacion.NARIZTAMANOID : '';
+						document.querySelector('#nariz_base_mf').value = mediaFiliacion.NARIZBASEID ? mediaFiliacion.NARIZBASEID : '';
+						document.querySelector('#nariz_peculiar_mf').value = mediaFiliacion.NARIZPECULIARID ? mediaFiliacion.NARIZPECULIARID : '';
+						document.querySelector('#nariz_descr_mf').value = mediaFiliacion.NARIZDESCR ? mediaFiliacion.NARIZDESCR : '';
+						document.querySelector('#bigote_forma_mf').value = mediaFiliacion.BIGOTEFORMAID ? mediaFiliacion.BIGOTEFORMAID : '';
+						document.querySelector('#bigote_tamaño_mf').value = mediaFiliacion.BIGOTETAMANOID ? mediaFiliacion.BIGOTETAMANOID : '';
+						document.querySelector('#bigote_grosor_mf').value = mediaFiliacion.BIGOTEGROSORID ? mediaFiliacion.BIGOTEGROSORID : '';
+						document.querySelector('#bigote_peculiar_mf').value = mediaFiliacion.BIGOTEPECULIARID ? mediaFiliacion.BIGOTEPECULIARID : '';
+						document.querySelector('#bigote_descr_mf').value = mediaFiliacion.BIGOTEDESCR ? mediaFiliacion.BIGOTEDESCR : '';
+						document.querySelector('#boca_tamano_mf').value = mediaFiliacion.BOCATAMANOID ? mediaFiliacion.BOCATAMANOID : '';
+						document.querySelector('#boca_peculiar_mf').value = mediaFiliacion.BOCAPECULIARID ? mediaFiliacion.BOCAPECULIARID : '';
+						document.querySelector('#labio_grosor_mf').value = mediaFiliacion.LABIOGROSORID ? mediaFiliacion.LABIOGROSORID : '';
+						document.querySelector('#labio_longitud_mf').value = mediaFiliacion.LABIOLONGITUDID ? mediaFiliacion.LABIOLONGITUDID : '';
+						document.querySelector('#labio_posicion_mf').value = mediaFiliacion.LABIOPOSICIONID ? mediaFiliacion.LABIOPOSICIONID : '';
+						document.querySelector('#labio_peculiar_mf').value = mediaFiliacion.LABIOPECULIARID ? mediaFiliacion.LABIOPECULIARID : '';
+						document.querySelector('#dientes_tamano_mf').value = mediaFiliacion.DIENTETAMANOID ? mediaFiliacion.DIENTETAMANOID : '';
+						document.querySelector('#dientes_tipo_mf').value = mediaFiliacion.DIENTETIPOID ? mediaFiliacion.DIENTETIPOID : '';
+						document.querySelector('#dientes_peculiar_mf').value = mediaFiliacion.DIENTEPECULIARID ? mediaFiliacion.DIENTEPECULIARID : '';
+						document.querySelector('#dientes_descr_mf').value = mediaFiliacion.DIENTEDESCR ? mediaFiliacion.DIENTEDESCR : '';
+						document.querySelector('#barbilla_forma_mf').value = mediaFiliacion.BARBILLAFORMAID ? mediaFiliacion.BARBILLAFORMAID : '';
+						document.querySelector('#barbilla_tamano_mf').value = mediaFiliacion.BARBILLATAMANOID ? mediaFiliacion.BARBILLATAMANOID : '';
+						document.querySelector('#barbilla_inclinacion_mf').value = mediaFiliacion.BARBILLAINCLINACIONID ? mediaFiliacion.BARBILLAINCLINACIONID : '';
+						document.querySelector('#barbilla_peculiar_mf').value = mediaFiliacion.BARBILLAPECULIARID ? mediaFiliacion.BARBILLAPECULIARID : '';
+						document.querySelector('#barbilla_descr_mf').value = mediaFiliacion.BARBILLADESCR ? mediaFiliacion.BARBILLADESCR : '';
+						document.querySelector('#barba_tamano_mf').value = mediaFiliacion.BARBATAMANOID ? mediaFiliacion.BARBATAMANOID : '';
+						document.querySelector('#barba_peculiar_mf').value = mediaFiliacion.BARBAPECULIARID ? mediaFiliacion.BARBAPECULIARID : '';
+						document.querySelector('#barba_descr_mf').value = mediaFiliacion.BARBADESCR ? mediaFiliacion.BARBADESCR : '';
+						document.querySelector('#cuello_tamano_mf').value = mediaFiliacion.CUELLOTAMANOID ? mediaFiliacion.CUELLOTAMANOID : '';
+						document.querySelector('#cuello_grosor_mf').value = mediaFiliacion.CUELLOGROSORID ? mediaFiliacion.CUELLOGROSORID : '';
+						document.querySelector('#cuello_peculiar_mf').value = mediaFiliacion.CUELLOPECULIARID ? mediaFiliacion.CUELLOPECULIARID : '';
+						document.querySelector('#cuello_descr_mf').value = mediaFiliacion.CUELLODESCR ? mediaFiliacion.CUELLODESCR : '';
+						document.querySelector('#hombro_posicion_mf').value = mediaFiliacion.HOMBROPOSICIONID ? mediaFiliacion.HOMBROPOSICIONID : '';
+						document.querySelector('#hombro_tamano_mf').value = mediaFiliacion.HOMBROTAMANOID ? mediaFiliacion.HOMBROTAMANOID : '';
+						document.querySelector('#hombro_grosor_mf').value = mediaFiliacion.HOMBROGROSORID ? mediaFiliacion.HOMBROGROSORID : '';
+						document.querySelector('#estomago_mf').value = mediaFiliacion.ESTOMAGOID ? mediaFiliacion.ESTOMAGOID : '';
+						document.querySelector('#estomago_descr_mf').value = mediaFiliacion.ESTOMAGOID ? mediaFiliacion.ESTOMAGOID : '';
+
+
+
+						document.querySelector('#discapacidad_mf').value = mediaFiliacion.DISCAPACIDADDESCR;
+						// document.querySelector('#origen_mf').value = mediaFiliacion.ORIGEN;
+
+						document.querySelector('#diaDesaparicion').value = mediaFiliacion.FECHADESAPARICION ? mediaFiliacion.FECHADESAPARICION : '';
+
+						document.querySelector('#lugarDesaparicion').value = mediaFiliacion.LUGARDESAPARICION;
+						document.querySelector('#vestimenta_mf').value = mediaFiliacion.VESTIMENTADESCR;
+
+						document.querySelector('#autorizaFoto').value = folio.LOCALIZACIONPERSONAMEDIOS == 'S' ? 'S' : 'N';
+						document.querySelector('#escolaridad_mf').value = mediaFiliacion.ESCOLARIDADID ? mediaFiliacion.ESCOLARIDADID : '';
+						document.querySelector('#ocupacion_mf').value = mediaFiliacion.OCUPACIONID ? mediaFiliacion.OCUPACIONID : '';
+
+						document.querySelector('#contextura_ceja_mf').value = mediaFiliacion.CONTEXTURAID ? mediaFiliacion.CONTEXTURAID : '';
+						document.querySelector('#cara_forma_mf').value = mediaFiliacion.CARAFORMAID ? mediaFiliacion.CARAFORMAID : '';
+						document.querySelector('#cara_tamano_mf').value = mediaFiliacion.CARATAMANOID ? mediaFiliacion.CARATAMANOID : '';
+						document.querySelector('#caratez_mf').value = mediaFiliacion.CARATEZID ? mediaFiliacion.CARATEZID : '';
+						document.querySelector('#lobulo_mf').value = mediaFiliacion.OREJALOBULOID ? mediaFiliacion.OREJALOBULOID : '';
+						document.querySelector('#forma_oreja_mf').value = mediaFiliacion.OREJAFORMAID ? mediaFiliacion.OREJAFORMAID : '';
+						document.querySelector('#tamano_oreja_mf').value = mediaFiliacion.OREJATAMANOID ? mediaFiliacion.OREJATAMANOID : '';
+
+						document.querySelector('#hombro_tamano_mf').value = mediaFiliacion.HOMBROLONGITUDID ? mediaFiliacion.HOMBROLONGITUDID : '';
+
+
+
+						document.querySelector('#escolaridad_mf').value = mediaFiliacion.PERSONAESCOLARIDADID ? mediaFiliacion.PERSONAESCOLARIDADID : '';
+
+					}
+
+					let domicilio = response.personaFisicaDomicilio;
+
+					document.querySelector('#pfd_id').value = domicilio.DOMICILIOID;
+
+					document.querySelector('#pais_pfd').value = domicilio.PAIS ? domicilio.PAIS : '';
+					document.querySelector('#estado_pfd').value = domicilio.ESTADOID ? domicilio.ESTADOID : '';
+					if (domicilio.ESTADOID && domicilio.MUNICIPIOID) {
+						let data = {
+							'estado_id': domicilio.ESTADOID
+						};
+						$.ajax({
+							data: data,
+							url: "<?= base_url('/data/get-municipios-by-estado') ?>",
+							method: "POST",
+							dataType: "json",
+							success: function(response) {
+								let municipios = response.data;
+								municipios.forEach(municipio => {
+									let option = document.createElement("option");
+									option.text = municipio.MUNICIPIODESCR;
+									option.value = municipio.MUNICIPIOID;
+									document.querySelector('#municipio_pfd_da').add(option);
+								});
+								document.querySelector('#municipio_pfd_da').value = domicilio.MUNICIPIOID ? domicilio.MUNICIPIOID : '';
+							},
+							error: function(jqXHR, textStatus, errorThrown) {}
+						});
+					} else {
+						document.querySelector('#municipio_pfd_da').value = '';
+					}
+
+					if (domicilio.ESTADOID && domicilio.MUNICIPIOID && domicilio.LOCALIDADID) {
+						let data = {
+							'estado_id': domicilio.ESTADOID,
+							'municipio_id': domicilio.MUNICIPIOID
+						};
+
+						$.ajax({
+							data: data,
+							url: "<?= base_url('/data/get-localidades-by-municipio') ?>",
+							method: "POST",
+							dataType: "json",
+							success: function(response) {
+								let localidades = response.data;
+								let select_localidad = document.querySelector('#localidad_pfd');
+
+								localidades.forEach(localidad => {
+									var option = document.createElement("option");
+									option.text = localidad.LOCALIDADDESCR;
+									option.value = localidad.LOCALIDADID;
+									select_localidad.add(option);
+								});
+
+								select_localidad.value = domicilio.LOCALIDADID;
+							},
+							error: function(jqXHR, textStatus, errorThrown) {}
+						});
+					} else {
+						document.querySelector('#localidad_pfd').value = '';
+					}
+
+					if (domicilio.ESTADOID && domicilio.MUNICIPIOID && domicilio.LOCALIDADID && domicilio.COLONIAID) {
+						document.querySelector('#colonia_pfd').classList.add('d-none');
+						document.querySelector('#colonia_pfd_select').classList.remove('d-none');
+						let data = {
+							'estado_id': domicilio.ESTADOID,
+							'municipio_id': domicilio.MUNICIPIOID,
+							'localidad_id': domicilio.LOCALIDADID
+						};
+						$.ajax({
+							data: data,
+							url: "<?= base_url('/data/get-colonias-by-estado-municipio-localidad') ?>",
+							method: "POST",
+							dataType: "json",
+							success: function(response) {
+								let select_colonia = document.querySelector('#colonia_pfd_select');
+								let input_colonia = document.querySelector('#colonia_pfd');
+								let colonias = response.data;
+
+								colonias.forEach(colonia => {
+									var option = document.createElement("option");
+									option.text = colonia.COLONIADESCR;
+									option.value = colonia.COLONIAID;
+									select_colonia.add(option);
+								});
+
+								var option = document.createElement("option");
+								option.text = 'OTRO';
+								option.value = '0';
+								select_colonia.add(option);
+
+								select_colonia.value = domicilio.COLONIAID;
+								input_colonia.value = '-';
+							},
+							error: function(jqXHR, textStatus, errorThrown) {}
+						});
+					} else {
+						document.querySelector('#colonia_pfd').classList.remove('d-none');
+						document.querySelector('#colonia_pfd_select').classList.add('d-none');
+						var option = document.createElement("option");
+						option.text = 'OTRO';
+						option.value = '0';
+						document.querySelector('#colonia_pfd_select').add(option);
+						document.querySelector('#colonia_pfd_select').value = '0';
+						document.querySelector('#colonia_pfd').value = domicilio.COLONIADESCR ? domicilio.COLONIADESCR : '';
+					}
+					document.querySelector('#cp_pfd').value = domicilio.CP ? domicilio.CP : '';
+					document.querySelector('#calle_pfd').value = domicilio.CALLE ? domicilio.CALLE : '';
+					document.querySelector('#exterior_pfd').value = domicilio.NUMEROCASA ? domicilio.NUMEROCASA : '';
+					document.querySelector('#interior_pfd').value = domicilio.NUMEROINTERIOR ? domicilio.NUMEROINTERIOR : '';
+					document.querySelector('#referencia_pfd').value = domicilio.REFERENCIA ? domicilio.REFERENCIA : '';
+					$('#folio_persona_fisica_modal_da').modal('show');
+
+				} else {
+					Swal.fire({
+						icon: 'error',
+						html: 'No se encontro a la persona física',
+						confirmButtonColor: '#bf9b55',
+					})
+				}
+			}
+		});
+	}
+	function eliminarImputadoDelito(personafisicavictima, personafisicaimputado, delitoModalidadId) {
+		$.ajax({
+			data: {
+				'personafisicavictima': personafisicavictima,
+				'personafisicaimputado': personafisicaimputado,
+				'delito': delitoModalidadId,
+				'folio': inputFolio.value,
+				'year': year_select.value,
+
+			},
+			url: "<?= base_url('/data/delete-fisimpdelito-by-folio') ?>",
+			method: "POST",
+			dataType: "json",
+			success: function(response) {
+
+				if (response.status == 1) {
+					Swal.fire({
+						icon: 'success',
+						text: 'Delito del imputado y árbol delicitivo eliminado correctamente',
+						confirmButtonColor: '#bf9b55',
+					});
+					let tabla_impdelito = document.querySelectorAll('#table-delito-cometidos tr');
+					tabla_impdelito.forEach(row => {
+						if (row.id !== '') {
+							row.remove();
+						}
+					});
+					let fisicaImpDelito = response.fisicaImpDelito;
+					llenarTablaImpDel(fisicaImpDelito);
+					let tabla_arbol = document.querySelectorAll('#table-delitos-arbol tr');
+					tabla_arbol.forEach(row => {
+						if (row.id !== '') {
+							row.remove();
+						}
+					});
+					let relacionFisFis = response.relacionFisFis;
+					llenarTablaFisFis(relacionFisFis);
+				} else {
+					Swal.fire({
+						icon: 'error',
+						text: 'No se elimino el delito del imputado',
+						confirmButtonColor: '#bf9b55',
+					});
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown) {}
+		});
+
+	}
+	function eliminarArbolDelictivo(personafisicavictima, personafisicaimputado, delitoModalidadId) {
+		$.ajax({
+			data: {
+				'personafisicavictima': personafisicavictima,
+				'personafisicaimputado': personafisicaimputado,
+				'delito': delitoModalidadId,
+				'folio': inputFolio.value,
+				'year': year_select.value,
+
+			},
+			url: "<?= base_url('/data/delete-arbol_delictivo-by-folio') ?>",
+			method: "POST",
+			dataType: "json",
+			success: function(response) {
+				console.log(response);
+				if (response.status == 3) {
+					Swal.fire({
+						title: 'Este es el ultimo registro, se eliminará el delito cometido de la denuncia',
+						showDenyButton: true,
+						showCancelButton: true,
+						confirmButtonText: 'Aceptar',
+						confirmButtonColor: '#bf9b55',
+						denyButtonText: 'Cancelar',
+					}).then((result) => {
+						/* Read more about isConfirmed, isDenied below */
+						if (result.isConfirmed) {
+							eliminarImputadoDelito(personafisicavictima, personafisicaimputado, delitoModalidadId);
+						}
+					})
+				}
+
+				if (response.status == 1) {
+					Swal.fire({
+						icon: 'success',
+						text: 'Árbol delictivo eliminado correctamente',
+						confirmButtonColor: '#bf9b55',
+					});
+					let tabla_arbol = document.querySelectorAll('#table-delitos-arbol tr');
+					tabla_arbol.forEach(row => {
+						if (row.id !== '') {
+							row.remove();
+						}
+					});
+					let relacionFisFis = response.relacionFisFis;
+					llenarTablaFisFis(relacionFisFis);
+					let tabla_impdelito = document.querySelectorAll('#table-delito-cometidos tr');
+					tabla_impdelito.forEach(row => {
+						if (row.id !== '') {
+							row.remove();
+						}
+					});
+					let fisicaImpDelito = response.fisicaImpDelito;
+					llenarTablaImpDel(fisicaImpDelito);
+				} else if (response.status == 0) {
+					Swal.fire({
+						icon: 'error',
+						text: 'No se elimino el árbol delictivo',
+						confirmButtonColor: '#bf9b55',
+					});
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				console.log(textStatus);
+			}
+		});
+
+	}
+
+	function eliminarObjetosInvolucrados(objetoid) {
+		$.ajax({
+			data: {
+				'objetoid': objetoid,
+				'folio': inputFolio.value,
+				'year': year_select.value,
+
+			},
+			url: "<?= base_url('/data/delete-objeto-involucrado-by-folio') ?>",
+			method: "POST",
+			dataType: "json",
+			success: function(response) {
+
+				if (response.status == 1) {
+					Swal.fire({
+						icon: 'success',
+						text: 'Objeto involucrado eliminado correctamente',
+						confirmButtonColor: '#bf9b55',
+					});
+					let tabla_objetos_involucrados = document.querySelectorAll('#table-objetos-involucrados tr');
+					tabla_objetos_involucrados.forEach(row => {
+						if (row.id !== '') {
+							row.remove();
+						}
+					});
+
+					llenarTablaObjetosInvolucrados(response.objetos);
+				} else {
+					Swal.fire({
+						icon: 'error',
+						text: 'No se elimino el objeto involucrado',
+						confirmButtonColor: '#bf9b55',
+					});
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown) {}
+		});
+
+	}
+
+	function viewObjetoInvolucrado(objetoid) {
+		$('#folio_objetos_update').modal('show');
+		$.ajax({
+			data: {
+				'objetoid': objetoid,
+				'folio': inputFolio.value,
+				'year': year_select.value,
+			},
+			url: "<?= base_url('/data/get-objeto-involucrado-by-id') ?>",
+			method: "POST",
+			dataType: "json",
+			success: function(response) {
+				let objeto = response.objetoInvolucrado;
+				let objeto_sub = response.objetosub;
+				document.querySelector('#objeto_id').value = objeto.OBJETOID ? objeto.OBJETOID : '';
+				document.querySelector('#situacion_objeto_update').value = objeto.SITUACION ? objeto.SITUACION : '';
+				document.querySelector('#objeto_update_clasificacion').value = objeto.CLASIFICACIONID ? objeto.CLASIFICACIONID : '';
+				// document.querySelector('#objeto_update_subclasificacion').value = objeto_sub.OBJETOSUBCLASIFICACIONID ? objeto_sub.OBJETOSUBCLASIFICACIONID : '';
+				$('#objeto_update_subclasificacion').empty();
+				let select_objeto_update_subclasificacion = document.querySelector("#objeto_update_subclasificacion");
+
+				objeto_sub.forEach(objeto_sub => {
+					const option = document.createElement('option');
+					option.value = objeto_sub.SUBCLASIFICACIONID;
+					option.text = objeto_sub.OBJETOSUBCLASIFICACIONDESCR;
+					select_objeto_update_subclasificacion.add(option, null);
+				});
+
+				document.querySelector('#marca_objeto_update').value = objeto.MARCA ? objeto.MARCA : '';
+				document.querySelector('#serie_objeto_update').value = objeto.NUMEROSERIE ? objeto.CANTIDAD : '';
+				document.querySelector('#cantidad_objeto_update').value = objeto.CANTIDAD ? objeto.CANTIDAD : '';
+				document.querySelector('#valor_objeto_update').value = objeto.VALOR ? objeto.VALOR : '';
+				document.querySelector('#tipo_moneda_update').value = objeto.TIPOMONEDAID ? objeto.TIPOMONEDAID : '';
+				document.querySelector('#descripcion_detallada_update').value = objeto.DESCRIPCIONDETALLADA ? objeto.DESCRIPCIONDETALLADA : '';
+				document.querySelector('#propietario_update').value = objeto.PERSONAFISICAIDPROPIETARIO ? objeto.PERSONAFISICAIDPROPIETARIO : '';
+				document.querySelector('#participa_estado_objeto_update').value = objeto.PARTICIPAESTADO ? objeto.PARTICIPAESTADO : '';
+
+			}
+		});
+	}
 
 	function llenarTablaPersonas(personas) {
 		for (let i = 0; i < personas.length; i++) {
+			var btn = `<button type='button'  class='btn btn-primary' onclick='viewPersonaFisica(${personas[i].PERSONAFISICAID})'><i class='fas fa-eye'></i></button>`
 
 			var fila =
 				`<tr id="row${i}">` +
 				`<td class="text-center">${personas[i].NOMBRE}</td>` +
 				`<td class="text-center">${personas[i].PERSONACALIDADJURIDICADESCR}</td>` +
+				`<td class="text-center">${btn}</td>` +
 				`</tr>`;
 
 			$('#table-personas tr:first').after(fila);
@@ -1384,13 +2287,35 @@
 		}
 	}
 
+	function llenarTablaFisFis(relacionFisFis) {
+		for (let i = 0; i < relacionFisFis.length; i++) {
+			var btn = `<button type='button'  class='btn btn-primary' onclick='eliminarArbolDelictivo(${relacionFisFis[i].PERSONAFISICAIDVICTIMA},${relacionFisFis[i].PERSONAFISICAIDIMPUTADO},${relacionFisFis[i].DELITOMODALIDADID})'><i class='fa fa-trash'></i></button>`
+
+			var fila =
+				`<tr id="row${i}">` +
+				`<td class="text-center">${relacionFisFis[i].NOMBREI}</td>` +
+				`<td class="text-center">${relacionFisFis[i].DELITOMODALIDADDESCR}</td>` +
+				`<td class="text-center">${relacionFisFis[i].NOMBREV}</td>` +
+				`<td class="text-center">${btn}</td>` +
+				`</tr>`;
+
+			$('#table-delitos-arbol tr:first').after(fila);
+			$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
+			var nFilas = $("#delitos tr").length;
+			$("#adicionados").append(nFilas - 1);
+		}
+	}
+
 	function llenarTablaObjetosInvolucrados(objetos) {
 		for (let i = 0; i < objetos.length; i++) {
-
+			var btnEliminar = `<button type='button'  class='btn btn-primary' onclick='eliminarObjetosInvolucrados(${objetos[i].OBJETOID})'><i class='fa fa-trash'></i></button>`
+			var btnEditar = `<button type='button'  class='btn btn-primary' onclick='viewObjetoInvolucrado(${objetos[i].OBJETOID})'><i class='fa fa-eye'></i></button>`
 			var fila =
 				`<tr id="row${i}">` +
 				`<td class="text-center" value="${objetos[i].CLASIFICACIONID}">${objetos[i].OBJETOCLASIFICACIONDESCR}</td>` +
 				`<td class="text-center" value="${objetos[i].SUBCLASIFICACIONID}">${objetos[i].OBJETOSUBCLASIFICACIONDESCR}</td>` +
+				`<td class="text-center">${btnEliminar}</td>` +
+				`<td class="text-center">${btnEditar}</td>` +
 				`</tr>`;
 
 			$('#table-objetos-involucrados tr:first').after(fila);
@@ -1411,7 +2336,7 @@
 				// `<td class="text-center">${btn}</td>` +
 				`</tr>`;
 
-			$('#table-delitos tr:first').after(fila);
+			$('#table-delito-cometidos tr:first').after(fila);
 			$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
 			var nFilas = $("#delito-cometidos tr").length;
 			$("#adicionados").append(nFilas - 1);

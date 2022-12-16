@@ -9,9 +9,9 @@
 			<div class="col-12 text-center mb-4">
 				<h1 class="mb-4 text-center font-weight-bold">DOCUMENTOS </h1>
 			</div>
-			
+
 			<div class="col-12">
-			<div class="card shadow border-0 p-0">
+				<div class="card shadow border-0 p-0">
 					<div class="card-body">
 						<div id="accordion">
 							<div class="card m-0">
@@ -27,17 +27,16 @@
 								<div id="filtros" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
 									<div class="card-body">
 										<form action="<?= base_url() ?>/admin/dashboard/documentos" method="post" enctype="multipart/form-data" class="row needs-validation" novalidate>
-
-
-
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
 												<label for="agente_registro" class="form-label font-weight-bold">Agente:</label>
-												<select class="form-control" id="agente_registro" name="agente_registro" required disabled>
+												<select class="form-control" id="agente_registro" name="agente_registro" required>
 													<?php foreach ($body_data->empleados as $index => $empleado) { ?>
 														<option <?= isset($body_data->filterParams->AGENTEID) ? ($body_data->filterParams->AGENTEID == $empleado->ID ? 'selected' : '') : null ?> value="<?= $empleado->ID ?>"> <?= $empleado->NOMBRE . ' ' . $empleado->APELLIDO_PATERNO . ' ' . $empleado->APELLIDO_MATERNO ?> </option>
 													<?php } ?>
 												</select>
 											</div>
+
+
 
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
 												<label for="fecha" class="form-label font-weight-bold">Fecha de inicio:</label>
@@ -93,7 +92,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								
+
 								<?php foreach ($body_data->result as $index => $documentos) { ?>
 									<tr>
 										<td class="text-center font-weight-bold"><?= $documentos->EXPEDIENTEID ?></td>
@@ -161,7 +160,6 @@
 	});
 </script>
 <script>
-	
 	function collapse_filter() {
 		if (document.querySelector('#filtros').classList.contains('show')) {
 			document.querySelector('#filtros').classList.remove('show');

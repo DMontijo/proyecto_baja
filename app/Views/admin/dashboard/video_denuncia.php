@@ -145,7 +145,9 @@
 		<div class="card rounded bg-white shadow">
 			<div class="card-body">
 				<label class="font-weight-bold" for="notas">Breve descripción del caso:</label>
-				<textarea class="form-control" id="notas_mp" placeholder="Descripción del caso..." rows="10" required maxlength="300" oninput="mayuscTextarea(this)" onkeydown="pulsar(event)"></textarea>
+				<textarea class="form-control" id="notas_mp" placeholder="Descripción del caso..." rows="10" required maxlength="300" oninput="mayuscTextarea(this)" onkeydown="pulsar(event)" onkeyup="contarCaracteres(this)"></textarea>
+				<small id="numCaracter">300 caracteres restantes</small>
+
 			</div>
 		</div>
 
@@ -157,6 +159,7 @@
 	const inputFolio = document.querySelector('#input_folio_atencion');
 	const inputExpediente = document.querySelector('#input_expediente');
 
+	var charRemain;
 	const inputF = document.getElementById('input_folio_atencion').value;
 	const buscar_btn = document.querySelector('#buscar-btn');
 	const buscar_nuevo_btn = document.querySelector('#buscar-nuevo-btn');
@@ -218,6 +221,18 @@
 		if (e.which === 13 && !e.shiftKey) {
 			e.preventDefault();
 			return false;
+		}
+	}
+
+	function contarCaracteres(obj) {
+		var maxLength = 300;
+		var strLength = obj.value.length;
+		charRemain = (maxLength - strLength);
+
+		if (charRemain < 0) {
+			document.getElementById("numCaracter").innerHTML = '<span style="color: red;">Has superado el límite de ' + maxLength + ' caracteres </span>';
+		} else {
+			document.getElementById("numCaracter").innerHTML = charRemain + ' caracteres restantes';
 		}
 	}
 
@@ -424,7 +439,7 @@
 				`<td class="text-center">${btn}</td>` +
 				`</tr>`;
 
-			$('#table-delitos tr:first').after(fila);
+			$('#table-delitos-video tr:first').after(fila);
 			$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
 			var nFilas = $("#delitos tr").length;
 			$("#adicionados").append(nFilas - 1);
@@ -461,7 +476,7 @@
 					});
 					let fisicaImpDelito = response.fisicaImpDelito;
 					llenarTablaImpDel(fisicaImpDelito);
-					let tabla_arbol = document.querySelectorAll('#table-delitos tr');
+					let tabla_arbol = document.querySelectorAll('#table-delitos-video tr');
 					tabla_arbol.forEach(row => {
 						if (row.id !== '') {
 							row.remove();
@@ -519,7 +534,7 @@
 						text: 'Árbol delictivo eliminado correctamente',
 						confirmButtonColor: '#bf9b55',
 					});
-					let tabla_arbol = document.querySelectorAll('#table-delitos tr');
+					let tabla_arbol = document.querySelectorAll('#table-delitos-video tr');
 					tabla_arbol.forEach(row => {
 						if (row.id !== '') {
 							row.remove();
@@ -756,9 +771,11 @@
 					let select_imputado_documento = document.querySelector("#imputado_modal_documento");
 					select_victima_documento.add(option_vacio_vm, null);
 					victimas.forEach(victima => {
+						let primer_apellido = victima.PRIMERAPELLIDO ? victima.PRIMERAPELLIDO : '';
+
 						const option = document.createElement('option');
 						option.value = victima.PERSONAFISICAID;
-						option.text = victima.NOMBRE + ' ' + victima.PRIMERAPELLIDO;
+						option.text = victima.NOMBRE + ' ' + primer_apellido;
 						select_victima_documento.add(option, null);
 					});
 
@@ -766,9 +783,11 @@
 					select_imputado_documento.add(option_vacio_im, null);
 
 					imputados.forEach(imputado => {
+						let primer_apellido = imputado.PRIMERAPELLIDO ? imputado.PRIMERAPELLIDO : '';
+
 						const option = document.createElement('option');
 						option.value = imputado.PERSONAFISICAID;
-						option.text = imputado.NOMBRE + ' ' + imputado.PRIMERAPELLIDO;
+						option.text = imputado.NOMBRE + ' ' + primer_apellido;
 						select_imputado_documento.add(option, null);
 					});
 
@@ -797,17 +816,21 @@
 					let select_victima_ofendido = document.querySelector("#victima_ofendido");
 					select_victima_ofendido.add(option_vacio_vic, null);
 					victimas.forEach(victima => {
+						let primer_apellido = victima.PRIMERAPELLIDO ? victima.PRIMERAPELLIDO : '';
+
 						const option = document.createElement('option');
 						option.value = victima.PERSONAFISICAID;
-						option.text = victima.NOMBRE + ' ' + victima.PRIMERAPELLIDO;
+						option.text = victima.NOMBRE + ' ' + primer_apellido;
 						select_victima_ofendido.add(option, null);
 					});
 					$('#imputado_delito_cometido').empty();
 					let select_imputado_delito_cometido = document.querySelector("#imputado_delito_cometido");
 					imputados.forEach(imputado => {
+						let primer_apellido = imputado.PRIMERAPELLIDO ? imputado.PRIMERAPELLIDO : '';
+
 						const option = document.createElement('option');
 						option.value = imputado.PERSONAFISICAID;
-						option.text = imputado.NOMBRE + ' ' + imputado.PRIMERAPELLIDO;
+						option.text = imputado.NOMBRE + ' ' + primer_apellido;
 						select_imputado_delito_cometido.add(option, null);
 					});
 					$('#imputado_arbol').empty();
@@ -820,18 +843,22 @@
 					let select_imputado_mputado = document.querySelector("#imputado_arbol");
 					select_imputado_mputado.add(option_vacio_imp, null);
 					imputados.forEach(imputado => {
+						let primer_apellido = imputado.PRIMERAPELLIDO ? imputado.PRIMERAPELLIDO : '';
+
 						const option = document.createElement('option');
 						option.value = imputado.PERSONAFISICAID;
-						option.text = imputado.NOMBRE + ' ' + imputado.PRIMERAPELLIDO;
+						option.text = imputado.NOMBRE + ' ' + primer_apellido;
 						select_imputado_mputado.add(option, null);
 					});
 					$('#personaFisica1_I').empty();
 					let select_personaFisica1_I = document.querySelector("#personaFisica1_I");
 					select_personaFisica1_I.add(option_vacio, null);
 					personas.forEach(persona => {
+						let primer_apellido = persona.PRIMERAPELLIDO ? persona.PRIMERAPELLIDO : '';
+
 						const option = document.createElement('option');
 						option.value = persona.PERSONAFISICAID;
-						option.text = persona.NOMBRE + ' ' + persona.PRIMERAPELLIDO;
+						option.text = persona.NOMBRE + ' ' + primer_apellido;
 						select_personaFisica1_I.add(option, null);
 					});
 					$('#propietario').empty();
@@ -844,18 +871,22 @@
 
 					select_propietario.add(option_vacio_prop, null);
 					personas.forEach(persona => {
+						let primer_apellido = persona.PRIMERAPELLIDO ? persona.PRIMERAPELLIDO : '';
+
 						const option = document.createElement('option');
 						option.value = persona.PERSONAFISICAID;
-						option.text = persona.NOMBRE + ' ' + persona.PRIMERAPELLIDO;
+						option.text = persona.NOMBRE + ' ' + primer_apellido;
 						select_propietario.add(option, null);
 					});
 					$('#propietario_update').empty();
 					let select_propietario_update = document.querySelector("#propietario_update");
 					select_propietario_update.add(option_vacio, null);
 					personas.forEach(persona => {
+						let primer_apellido = persona.PRIMERAPELLIDO ? persona.PRIMERAPELLIDO : '';
+
 						const option = document.createElement('option');
 						option.value = persona.PERSONAFISICAID;
-						option.text = persona.NOMBRE + ' ' + persona.PRIMERAPELLIDO;
+						option.text = persona.NOMBRE + ' ' + primer_apellido;
 						select_propietario_update.add(option, null);
 					});
 					$('#objeto_update_subclasificacion').empty();
@@ -1055,7 +1086,7 @@
 		tabla_personas = document.querySelectorAll('#table-personas tr');
 		tabla_vehiculos = document.querySelectorAll('#table-vehiculos tr');
 		tabla_parentesco = document.querySelectorAll('#table-parentesco tr');
-		tabla_relacion_fis_fis = document.querySelectorAll('#table-delitos tr');
+		tabla_relacion_fis_fis = document.querySelectorAll('#table-delitos-video tr');
 		tabla_delito_cometido = document.querySelectorAll('#table-delito-cometidos tr');
 		tabla_objetos_involucrados = document.querySelectorAll('#table-objetos-involucradoss tr');
 		let tabla_documentos = document.querySelectorAll('#table-documentos tr');
@@ -1628,6 +1659,8 @@
 					}
 					document.querySelector('#serie_vehiculo').value = vehiculo.NUMEROSERIE ? vehiculo.NUMEROSERIE : '';
 					document.querySelector('#num_chasis_vehiculo').value = vehiculo.NUMEROCHASIS ? vehiculo.NUMEROCHASIS : '';
+					document.querySelector('#marca_ad_exacta').value = vehiculo.MARCADEXACT ? vehiculo.MARCADEXACT : '';
+
 					document.querySelector('#distribuidor_vehiculo_ad').value = vehiculo.VEHICULODISTRIBUIDORID ? vehiculo.VEHICULODISTRIBUIDORID : '';
 					document.querySelector('#marca_ad').value = vehiculo.MARCAID ? vehiculo.VEHICULODISTRIBUIDORID + ' ' + vehiculo.MARCAID : '';
 					document.querySelector('#linea_vehiculo_ad').value = vehiculo.MODELOID ? vehiculo.VEHICULODISTRIBUIDORID + ' ' + vehiculo.MARCAID + ' ' + vehiculo.MODELOID : '';
@@ -2282,6 +2315,7 @@
 							select_marca.add(option);
 						});
 						select_marca.value = '1';
+
 					},
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
@@ -3173,6 +3207,9 @@
 						const personas = response.personas;
 						const imputados = response.imputados;
 						const victimas = response.victimas;
+						let relacionFisFis = response.relacionFisFis;
+						let fisicaImpDelito = response.fisicaImpDelito;
+
 						if (response.status == 1) {
 							let tabla_personas = document.querySelectorAll('#table-personas tr');
 							tabla_personas.forEach(row => {
@@ -3191,44 +3228,75 @@
 							option_vacio.selected = true;
 							select_personaFisica1_I.add(option_vacio, null);
 							personas.forEach(persona => {
+								let primer_apellido = persona.PRIMERAPELLIDO ? persona.PRIMERAPELLIDO : '';
+
 								const option = document.createElement('option');
 								option.value = persona.PERSONAFISICAID;
-								option.text = persona.NOMBRE + ' ' + persona.PRIMERAPELLIDO;
+								option.text = persona.NOMBRE + ' ' + primer_apellido;
 								select_personaFisica1_I.add(option, null);
 							});
 							$('#propietario').empty();
 							let select_propietario = document.querySelector("#propietario");
 							select_propietario.add(option_vacio, null);
 							personas.forEach(persona => {
+								let primer_apellido = persona.PRIMERAPELLIDO ? persona.PRIMERAPELLIDO : '';
+
 								const option = document.createElement('option');
 								option.value = persona.PERSONAFISICAID;
-								option.text = persona.NOMBRE + ' ' + persona.PRIMERAPELLIDO;
+								option.text = persona.NOMBRE + ' ' + primer_apellido;
 								select_propietario.add(option, null);
 							});
 							$('#imputado_arbol').empty();
 							let select_imputado_mputado = document.querySelector("#imputado_arbol");
 							imputados.forEach(imputado => {
+								let primer_apellido = imputado.PRIMERAPELLIDO ? imputado.PRIMERAPELLIDO : '';
+
 								const option = document.createElement('option');
 								option.value = imputado.PERSONAFISICAID;
-								option.text = imputado.NOMBRE + ' ' + imputado.PRIMERAPELLIDO;
+								option.text = imputado.NOMBRE + ' ' + primer_apellido;
 								select_imputado_mputado.add(option, null);
 
 							});
 							$('#victima_ofendido').empty();
 							let select_victima_ofendido = document.querySelector("#victima_ofendido");
 							victimas.forEach(victima => {
+								let primer_apellido = victima.PRIMERAPELLIDO ? victima.PRIMERAPELLIDO : '';
+
 								const option = document.createElement('option');
 								option.value = victima.PERSONAFISICAID;
-								option.text = victima.NOMBRE + ' ' + victima.PRIMERAPELLIDO;
+								option.text = victima.NOMBRE + ' ' + primer_apellido;
 								select_victima_ofendido.add(option, null);
 							});
 
-							
+
 							Swal.fire({
 								icon: 'success',
 								text: 'Persona física actualizada correctamente',
 								confirmButtonColor: '#bf9b55',
 							});
+							let tabla_arbol = document.querySelectorAll('#table-delitos-video tr');
+							tabla_arbol.forEach(row => {
+								if (row.id !== '') {
+									row.remove();
+								}
+							});
+							llenarTablaFisFis(relacionFisFis);
+							let tabla_fisimpdelito = document.querySelectorAll('#table-delito-cometidos tr');
+							tabla_fisimpdelito.forEach(row => {
+								if (row.id !== '') {
+									row.remove();
+								}
+							});
+							llenarTablaImpDel(fisicaImpDelito);
+							let tabla_parentesco = document.querySelectorAll('#table-parentesco tr');
+							tabla_parentesco.forEach(row => {
+								if (row.id !== '') {
+									row.remove();
+								}
+							});
+							llenarTablaParentesco(response.parentescoRelacion, response.personaiduno, response.personaidDos, response.parentesco);
+
+
 							// $('#propietario_update').empty();
 							// let select_propietario_update = document.querySelector("#propietario_update");
 							// select_propietario_update.add(option_vacio, null);
@@ -3772,36 +3840,41 @@
 			}
 
 			function actualizarVehiculo() {
-				const data = {
-					'folio': document.querySelector('#input_folio_atencion').value,
-					'year': document.querySelector('#year_select').value,
-					'tipo_vehiculo': document.querySelector('#tipo_vehiculo').value,
-					'color_vehiculo': document.querySelector('#color_vehiculo').value,
-					'tipo_placas_vehiculo': document.querySelector('#tipo_placas_vehiculo').value,
-					'placas_vehiculo': document.querySelector('#placas_vehiculo').value,
-					'estado_vehiculo_ad': document.querySelector('#estado_vehiculo_ad').value,
-					'estado_extranjero_vehiculo_ad': document.querySelector('#estado_extranjero_vehiculo_ad').value,
-					'serie_vehiculo': document.querySelector('#serie_vehiculo').value,
-					'num_chasis_vehiculo': document.querySelector('#num_chasis_vehiculo').value,
-					'distribuidor_vehiculo_ad': document.querySelector('#distribuidor_vehiculo_ad').value,
-					'marca_ad': document.querySelector('#marca_ad').value,
-					'linea_vehiculo_ad': document.querySelector('#linea_vehiculo_ad').value,
-					'version_vehiculo_ad': document.querySelector('#version_vehiculo_ad').value,
-					'transmision_vehiculo': document.querySelector('#transmision_vehiculo').value,
-					'traccion_vehiculo': document.querySelector('#traccion_vehiculo').value,
-					'seguro_vigente_vehiculo': document.querySelector('#seguro_vigente_vehiculo').value,
-					'servicio_vehiculo_ad': document.querySelector('#servicio_vehiculo_ad').value,
-					'description_vehiculo': document.querySelector('#description_vehiculo').value,
-					'modelo_vehiculo': document.querySelector('#modelo_vehiculo').value,
-					'color_tapiceria_vehiculo': document.querySelector('#color_tapiceria_vehiculo').value,
+				var packetData = new FormData();
+				packetData.append("subirDoc", $("#subirDoc")[0].files[0]);
+				packetData.append("folio", document.querySelector('#input_folio_atencion').value);
+				packetData.append("year", document.querySelector('#year_select').value);
+
+				packetData.append("tipo_vehiculo", document.querySelector('#tipo_vehiculo').value);
+				packetData.append("color_vehiculo", document.querySelector('#color_vehiculo').value);
+				packetData.append("tipo_placas_vehiculo", document.querySelector('#tipo_placas_vehiculo').value);
+				packetData.append("placas_vehiculo", document.querySelector('#placas_vehiculo').value);
+				packetData.append("estado_vehiculo_ad", document.querySelector('#estado_vehiculo_ad').value);
+				packetData.append("estado_extranjero_vehiculo_ad", document.querySelector('#estado_extranjero_vehiculo_ad').value);
+				packetData.append("serie_vehiculo", document.querySelector('#serie_vehiculo').value);
+				packetData.append("num_chasis_vehiculo", document.querySelector('#num_chasis_vehiculo').value);
+				packetData.append("distribuidor_vehiculo_ad", document.querySelector('#distribuidor_vehiculo_ad').value);
+				packetData.append("marca_ad", document.querySelector('#marca_ad').value);
+				packetData.append("linea_vehiculo_ad", document.querySelector('#linea_vehiculo_ad').value);
+				packetData.append("version_vehiculo_ad", document.querySelector('#version_vehiculo_ad').value);
+				packetData.append("transmision_vehiculo", document.querySelector('#transmision_vehiculo').value);
+				packetData.append("traccion_vehiculo", document.querySelector('#traccion_vehiculo').value);
+				packetData.append("seguro_vigente_vehiculo", document.querySelector('#seguro_vigente_vehiculo').value);
+				packetData.append("servicio_vehiculo_ad", document.querySelector('#servicio_vehiculo_ad').value);
+				packetData.append("description_vehiculo", document.querySelector('#description_vehiculo').value);
+				packetData.append("modelo_vehiculo", document.querySelector('#modelo_vehiculo').value);
+				packetData.append("color_tapiceria_vehiculo", document.querySelector('#color_tapiceria_vehiculo').value);
+				packetData.append("marca_exacta", document.querySelector('#marca_ad_exacta').value);
 
 
-				};
 				$.ajax({
-					data: data,
 					url: "<?= base_url('/data/update-vehiculo-by-id') ?>",
 					method: "POST",
-					dataType: "json",
+					dataType: 'json',
+					contentType: false,
+					data: packetData,
+					processData: false,
+					cache: false,
 					success: function(response) {
 						// console.log(respobse.idcalidad);
 						if (response.status == 1) {
@@ -3818,6 +3891,8 @@
 								}
 							});
 							llenarTablaVehiculos(vehiculos);
+							$('#folio_vehiculo_modal').modal('hide');
+
 						} else {
 							Swal.fire({
 								icon: 'error',
@@ -3918,9 +3993,11 @@
 							$('#victima_ofendido').empty();
 							let select_victima_ofendido = document.querySelector("#victima_ofendido")
 							victimas.forEach(victima => {
+								let primer_apellido = victima.PRIMERAPELLIDO ? victima.PRIMERAPELLIDO : '';
+
 								const option = document.createElement('option');
 								option.value = victima.PERSONAFISICAID;
-								option.text = victima.NOMBRE + ' ' + victima.PRIMERAPELLIDO;
+								option.text = victima.NOMBRE + ' ' + primer_apellido;
 								select_victima_ofendido.add(option, null);
 							});
 							const option_vacio_vd = document.createElement('option');
@@ -3933,9 +4010,11 @@
 							select_victima_documento.add(option_vacio_vd);
 
 							victimas.forEach(victima => {
+								let primer_apellido = victima.PRIMERAPELLIDO ? victima.PRIMERAPELLIDO : '';
+
 								const option = document.createElement('option');
 								option.value = victima.PERSONAFISICAID;
-								option.text = victima.NOMBRE + ' ' + victima.PRIMERAPELLIDO;
+								option.text = victima.NOMBRE + ' ' + primer_apellido;
 								select_victima_documento.add(option, null);
 							});
 							const option_vacio_id = document.createElement('option');
@@ -3947,17 +4026,21 @@
 							let select_imputado_documento = document.querySelector("#imputado_modal_documento");
 							select_imputado_documento.add(option_vacio_id);
 							imputados.forEach(imputado => {
+								let primer_apellido = imputado.PRIMERAPELLIDO ? imputado.PRIMERAPELLIDO : '';
+
 								const option = document.createElement('option');
 								option.value = imputado.PERSONAFISICAID;
-								option.text = imputado.NOMBRE + ' ' + imputado.PRIMERAPELLIDO;
+								option.text = imputado.NOMBRE + ' ' + primer_apellido;
 								select_imputado_documento.add(option, null);
 							});
 							$('#imputado_arbol').empty();
 							let select_imputado_mputado = document.querySelector("#imputado_arbol")
 							imputados.forEach(imputado => {
+								let primer_apellido = imputado.PRIMERAPELLIDO ? imputado.PRIMERAPELLIDO : '';
+
 								const option = document.createElement('option');
 								option.value = imputado.PERSONAFISICAID;
-								option.text = imputado.NOMBRE + ' ' + imputado.PRIMERAPELLIDO;
+								option.text = imputado.NOMBRE + ' ' + primer_apellido;
 								select_imputado_mputado.add(option, null);
 
 							});
@@ -3970,9 +4053,11 @@
 							option_vacio.selected = true;
 							select_personaFisica1_I.add(option_vacio, null);
 							personas.forEach(persona => {
+								let primer_apellido = persona.PRIMERAPELLIDO ? persona.PRIMERAPELLIDO : '';
+
 								const option = document.createElement('option');
 								option.value = persona.PERSONAFISICAID;
-								option.text = persona.NOMBRE + ' ' + persona.PRIMERAPELLIDO;
+								option.text = persona.NOMBRE + ' ' + primer_apellido;
 								select_personaFisica1_I.add(option, null);
 							});
 							$('#propietario').empty();
@@ -3985,17 +4070,21 @@
 							select_propietario.add(option_vacio_pro, null);
 
 							personas.forEach(persona => {
+								let primer_apellido = persona.PRIMERAPELLIDO ? persona.PRIMERAPELLIDO : '';
+
 								const option = document.createElement('option');
 								option.value = persona.PERSONAFISICAID;
-								option.text = persona.NOMBRE + ' ' + persona.PRIMERAPELLIDO;
+								option.text = persona.NOMBRE + ' '.primer_apellido;
 								select_propietario.add(option, null);
 							});
 							$('#propietario_update').empty();
 							let select_propietario_update = document.querySelector("#propietario_update");
 							personas.forEach(persona => {
+								let primer_apellido = persona.PRIMERAPELLIDO ? persona.PRIMERAPELLIDO : '';
+
 								const option = document.createElement('option');
 								option.value = persona.PERSONAFISICAID;
-								option.text = persona.NOMBRE + ' ' + persona.PRIMERAPELLIDO;
+								option.text = persona.NOMBRE + ' ' + primer_apellido;
 								select_propietario_update.add(option, null);
 							});
 
@@ -4055,7 +4144,7 @@
 								confirmButtonColor: '#bf9b55',
 							});
 						} else if (response.status == 1) {
-							let tabla_relacion_fis_fis = document.querySelectorAll('#table-delitos tr');
+							let tabla_relacion_fis_fis = document.querySelectorAll('#table-delitos-video tr');
 							tabla_relacion_fis_fis.forEach(row => {
 								if (row.id !== '') {
 									row.remove();
@@ -4185,9 +4274,11 @@
 							option_vacio.selected = true;
 							select_propietario.add(option_vacio, null);
 							personas.forEach(persona => {
+								let primer_apellido = persona.PRIMERAPELLIDO ? persona.PRIMERAPELLIDO : '';
+
 								const option = document.createElement('option');
 								option.value = persona.PERSONAFISICAID;
-								option.text = persona.NOMBRE + ' ' + persona.PRIMERAPELLIDO;
+								option.text = persona.NOMBRE + ' ' + primer_apellido;
 								select_propietario.add(option, null);
 							});
 							let tabla_objetos_involucrados = document.querySelectorAll('#table-objetos-involucrados tr');

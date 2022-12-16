@@ -16,6 +16,7 @@ class FolioVehiculoModel extends Model
 		'TIPOID',
 		'MARCAID',
 		'MARCADESCR',
+		'MARCADEXAC',
 		'MODELOID',
 		'MODELODESCR',
 		'ANO',

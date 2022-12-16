@@ -59,7 +59,9 @@
 								</div>
 								<div id="notas" class="form-group">
 									<label for="notas_caso_salida">Notas</label>
-									<textarea id="notas_caso_salida" class="form-control" placeholder="Notas..." rows="10" maxlength="300" oninput="mayuscTextarea(this)" onkeydown="pulsar(event)"></textarea>
+									<textarea id="notas_caso_salida" class="form-control" placeholder="Notas..." rows="10" maxlength="300" oninput="mayuscTextarea(this)" onkeydown="pulsar(event)" onkeyup="contarCaracteresSalida(this)"></textarea>
+									<small id="numCaracterSalida"> </small>
+
 								</div>
 								<button type="button" id="btn-finalizar-derivacion" class="btn btn-primary">FINALIZAR</button>
 							</div>
@@ -160,6 +162,8 @@
 		const notas_caso_salida = document.querySelector('#notas_caso_salida');
 		const notas_caso_mp = document.querySelector('#notas_mp');
 		notas_caso_salida.value = notas_caso_mp.value;
+		document.getElementById("numCaracterSalida").innerHTML = charRemain + ' caracteres restantes';
+
 
 		if (!(e.target.value == '1' || e.target.value == '4' || e.target.value == '5' || e.target.value == '6' || e.target.value == '7' || e.target.value == '8' || e.target.value == '9')) {
 			document.querySelector('#v-pills-delitos-tab').classList.add('d-none');
@@ -403,6 +407,17 @@
 	function clearSelect(select_element) {
 		for (let i = select_element.options.length; i >= 1; i--) {
 			select_element.remove(i);
+		}
+	}
+	function contarCaracteresSalida(obj) {
+		var maxLength = charRemain;
+		var strLength = obj.value.length;
+		var charRemainSalida = (maxLength - strLength);
+
+		if (charRemainSalida < 0) {
+			document.getElementById("numCaracterSalida").innerHTML = '<span style="color: red;">Has superado el límite de ' + maxLength + ' caracteres </span>';
+		} else {
+			document.getElementById("numCaracterSalida").innerHTML = charRemainSalida + ' caracteres restantes';
 		}
 	}
 </script>
