@@ -113,5 +113,6 @@ class RunAllSeederTesting extends Seeder
 		$this->call('PermisosSeeder');
 		$this->call('EstadoExtranjeroSeeder');
 		$this->call('FolioConsecutivoSeeder');
+		$this->call('ConstanciaConsecutivoSeeder');
 	}
 }
