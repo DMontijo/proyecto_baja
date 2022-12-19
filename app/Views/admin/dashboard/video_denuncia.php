@@ -766,6 +766,7 @@
 					option_vacio_im.text = '';
 					option_vacio_im.disabled = true;
 					option_vacio_im.selected = true;
+					if(victimas || imputados ||correos || personas){
 					$('#victima_modal_documento').empty();
 					let select_victima_documento = document.querySelector("#victima_modal_documento");
 					let select_imputado_documento = document.querySelector("#imputado_modal_documento");
@@ -898,8 +899,9 @@
 						option.text = objetos.OBJETOSUBCLASIFICACIONDESCR;
 						select_objeto_update_subclasificacion.add(option, null);
 					});
-
+				}
 					//PREGUNTAS INICIALES
+					if(preguntas){
 					document.querySelector('#es_menor').value = preguntas.ES_MENOR;
 					document.querySelector('#es_tercera_edad').value = preguntas.ES_TERCERA_EDAD;
 					document.querySelector('#tiene_discapacidad').value = preguntas.TIENE_DISCAPACIDAD;
@@ -911,6 +913,8 @@
 					document.querySelector('#lesiones').value = preguntas.LESIONES;
 					document.querySelector('#lesiones_visibles').value = preguntas.LESIONES_VISIBLES;
 
+					}
+					
 					//DENUNCIA
 					document.querySelector('#delito_delito').value = folio.HECHODELITO;
 					document.querySelector('#municipio_delito').value = folio.HECHOMUNICIPIOID;
@@ -1004,24 +1008,21 @@
 					} else {
 						$('#v-pills-vehiculos-tab').css('display', 'NONE');
 					}
-
-					//PERSONAS
+					//PERSONAS	
+					if (personas) 
 					llenarTablaPersonas(personas);
-
 					//VEHICULOS
-					llenarTablaVehiculos(vehiculos);
-
+					if (vehiculos) llenarTablaVehiculos(vehiculos);
 					//PARENTESCO
-					llenarTablaParentesco(relacion_parentesco, personaiduno, personaidDos, parentesco);
-
+					if(relacion_parentesco) llenarTablaParentesco(relacion_parentesco, personaiduno, personaidDos, parentesco);
 					//ARBOL DELICTUAL
-					llenarTablaFisFis(relacionFisFis);
+					if(relacionFisFis) llenarTablaFisFis(relacionFisFis);
 
 					//DELITOS COMETIDOS
-					llenarTablaImpDel(fisicaImpDelito);
+					if(fisicaImpDelito) llenarTablaImpDel(fisicaImpDelito);
 
 					//OBJETOS INVOLUCRADOS
-					llenarTablaObjetosInvolucrados(objetos);
+					if(objetos) llenarTablaObjetosInvolucrados(objetos);
 
 
 

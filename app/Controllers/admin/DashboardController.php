@@ -723,6 +723,7 @@ class DashboardController extends BaseController
 
 	public function getFolioInformation()
 	{
+		
 		$data = (object) array();
 		$numfolio = trim($this->request->getPost('folio'));
 		$year = trim($this->request->getPost('year'));
@@ -758,9 +759,12 @@ class DashboardController extends BaseController
 					];
 					$this->_bitacoraActividad($datosBitacora);
 					return json_encode($data);
-				} else if ($data->folio->STATUS == 'EN PROCESO') {
+				} else if ($data->folio->STATUS == 'EN PROCESO' && $data->folio->TIPODENUNCIA =="VD") {
 					return json_encode(['status' => 2, 'motivo' => 'EL FOLIO YA ESTA SIENDO ATENDIDO']);
-				} else {
+				} else if ($data->folio->STATUS == 'EN PROCESO' && $data->folio->TIPODENUNCIA =="DA") {
+					$data->status = 1;
+					return json_encode($data);
+				}else {
 					$agente = $this->_usuariosModel->asObject()->where('ID', $data->folio->AGENTEATENCIONID)->first();
 					return json_encode(['status' => 3, 'motivo' => $data->folio->STATUS, 'expediente' => $data->folio->EXPEDIENTEID, 'agente' => $agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' . $agente->APELLIDO_MATERNO]);
 				}
@@ -769,6 +773,7 @@ class DashboardController extends BaseController
 			}
 		} else {
 			$data->folio = $this->_folioModel->asObject()->where('ANO', $year)->where('FOLIOID', $numfolio)->first();
+
 			if ($data->folio) {
 				$data->status = 1;
 				$data->preguntas_iniciales = $this->_folioPreguntasModel->where('FOLIOID', $numfolio)->where('ANO', $year)->first();
@@ -789,6 +794,9 @@ class DashboardController extends BaseController
 
 				if ($data->folio->STATUS == 'ABIERTO' || $data->folio->STATUS == 'EN PROCESO') {
 					$data->agente = $this->_usuariosModel->asObject()->where('ID', $data->folio->AGENTEATENCIONID)->first();
+				}else if ($data->folio->STATUS == 'EN PROCESO' && $data->folio->TIPODENUNCIA =="DA") {
+					$data->status = 1;
+					return json_encode($data);
 				}
 				return json_encode($data);
 			} else {
@@ -2422,10 +2430,10 @@ class DashboardController extends BaseController
 	public function updateFolioSalida()
 	{
 
-		if ($this->request->getPost('empleado') != null) {
-			$empleado = $this->request->getPost('empleado');
+		if ($this->request->getPost('municipio_empleado') != null) {
+			$municipio_empleado = $this->request->getPost('municipio_empleado');
 		} else {
-			$empleado = null;
+			$municipio_empleado = null;
 		}
 		try {
 
@@ -2433,8 +2441,7 @@ class DashboardController extends BaseController
 			$folio = trim($this->request->getPost('folio'));
 			$year = trim($this->request->getPost('year'));
 			$dataFolio = array(
-				'AGENTEASIGNADOID' => $empleado,
-
+				'MUNICIPIOASIGNADOID' => $municipio_empleado,
 			);
 
 			$update = $this->_folioModel->set($dataFolio)->where('FOLIOID', $folio)->where('ANO', $year)->update();
@@ -3923,6 +3930,7 @@ class DashboardController extends BaseController
 		list($FOLIOID, $year) = $this->_folioConsecutivoModel->get_consecutivo();
 		$dataFolio = [
 			'FOLIOID' => $FOLIOID,
+			'DENUNCIANTEID' => 1,
 			'ANO' => $year,
 			'HECHOFECHA' => $this->request->getPost('fecha_delito'),
 			'HECHOHORA' => $this->request->getPost('hora_delito'),

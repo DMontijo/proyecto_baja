@@ -275,7 +275,7 @@
 					const dataFolio = {
 						'folio': inputFolio.value,
 						'year': year_select.value,
-						'empleado': empleado.value,
+						'municipio_empleado': municipio_empleado.value,
 
 					};
 					$.ajax({

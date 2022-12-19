@@ -104,7 +104,7 @@
 									<th class="text-center">ESTADO</th>
 									<th class="text-center">NOMBRE DEL DENUNCIANTE</th>
 									<th class="text-center">AGENTE DE ATENCIÓN</th>
-									<th class="text-center">AGENTE ASIGNADO</th>
+									<th class="text-center">MUNICIPIO ASIGNADO</th>
 
 									<th class="text-center"></th>
 								</tr>
@@ -112,6 +112,7 @@
 							<tbody>
 								<?php
 								foreach ($body_data->result as $index => $folio) { ?>
+								
 									<tr>
 										<td class="text-center font-weight-bold"><?= $folio->FOLIOID ?></td>
 										<td class="text-center"><?= $folio->ANO ?></td>
@@ -119,7 +120,7 @@
 										<td class="text-center"><?= $folio->STATUS ?></td>
 										<td class="text-center"><?= $folio->N_DENUNCIANTE . ' ' . $folio->APP_DENUNCIANTE . ' ' . $folio->APM_DENUNCIANTE ?></td>
 										<td class="text-center"><?= $folio->N_AGENT . ' ' . $folio->APP_AGENT . ' ' . $folio->APM_AGENT ?></td>
-										<td class="text-center"><?= $folio->N_EMPL . ' ' . $folio->APP_EMPL . ' ' . $folio->APM_EMPL ?></td>
+										<td class="text-center"><?= $folio->MUNICIPIOASIGNADO ?></td>
 
 
 										<td class="text-center">
