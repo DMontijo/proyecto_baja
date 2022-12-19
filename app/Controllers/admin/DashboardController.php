@@ -123,7 +123,6 @@ class DashboardController extends BaseController
 	public function __construct()
 	{
 		//Models
-
 		$this->_paisesModel = new PaisesModel();
 		$this->_estadosModel = new EstadosModel();
 		$this->_municipiosModel = new MunicipiosModel();
@@ -257,7 +256,7 @@ class DashboardController extends BaseController
 	{
 		$data = (object) array();
 		$agente = $this->_usuariosModel->asObject()->where('ID', session('ID'))->first();
-		$roles = [1, 3];
+		$roles = [1, 2, 6, 7, 8, 9, 10, 11];
 
 		if (in_array($agente->ROLID, $roles)) {
 			$data->cantidad_folios = count($this->_folioModel->asObject()->findAll());
@@ -297,7 +296,6 @@ class DashboardController extends BaseController
 	}
 	public function asignacion_permisos()
 	{
-
 		$data = (object) array();
 
 		if (!$this->permisos('ROLES')) {
@@ -309,7 +307,6 @@ class DashboardController extends BaseController
 
 		$data->roles = $this->_rolesUsuariosModel->asObject()->findAll();
 		$data->permisos = $this->_permisosModel->asObject()->findAll();
-
 
 		$this->_loadView('Asignación de permisos', 'asignacion de permisos', '', $data, 'roles/asignacion_permisos');
 	}
@@ -441,6 +438,9 @@ class DashboardController extends BaseController
 	public function editar_usuario()
 	{
 		$id = $this->request->getGet('id');
+		if (!$id) {
+			return redirect()->back()->with('message_error', 'No se envío el parámeto id.');
+		}
 		$data = (object) array();
 		$data->zonas = $this->_zonasUsuariosModel
 			->asObject()
@@ -451,9 +451,12 @@ class DashboardController extends BaseController
 			->where('NOMBRE_ROL !=', 'SUPERUSUARIO')
 			->findAll();
 		$data->usuario = $this->_usuariosModel->asObject()->where('ID', $id)->first();
+		if (!$data->usuario) {
+			return redirect()->back()->with('message_error', 'No existe el usuario a editar.');
+		}
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
-		$this->_loadView('Nuevo usuario', '', '', $data, 'users/edit_user');
+		$this->_loadView('Editar usuario', '', '', $data, 'users/edit_user');
 	}
 
 	public function denuncia_anonima()
@@ -592,28 +595,21 @@ class DashboardController extends BaseController
 			'KEYFIRMA' => null,
 			'FRASEFIRMA' => null,
 		];
-		$usuario = ($this->_getUnusedUsersVideo())[0];
 
 		$datosBitacora = [
 			'ACCION' => 'Ha creado un usuario',
-			'NOTAS' => 'CORREO CREADO: ' . $this->request->getPost('correo'),
+			'NOTAS' => 'USUARIO CREADO: ' . $this->request->getPost('correo'),
 		];
 
 		if ($this->validate(['correo_usuario' => 'required|valid_email|is_unique[USUARIOS.CORREO]'])) {
-			if ($this->request->getPost('rol_usuario') == 6) {
-				$this->_usuariosModel->insert($data);
-				$this->_bitacoraActividad($datosBitacora);
-				$this->_sendEmailPassword($data['CORREO'], $this->request->getPost('password'));
-				return redirect()->to(base_url('/admin/dashboard/usuarios'))->with('message_success', 'Usuario registrado correctamente en videodenuncia.');
-			} else {
-				$videoUser = $this->_updateUserVideo($usuario->ID, 'LIC. ' . $data['NOMBRE'], $data['APELLIDO_PATERNO'] . ' ' . $data['APELLIDO_MATERNO'], $data['CORREO'], $data['SEXO'], 'agente');
-				$data['USUARIOVIDEO'] = $videoUser->ID;
-				$data['TOKENVIDEO'] = $videoUser->Token;
-				$this->_usuariosModel->insert($data);
-				$this->_bitacoraActividad($datosBitacora);
-				$this->_sendEmailPassword($data['CORREO'], $this->request->getPost('password'));
-				return redirect()->to(base_url('/admin/dashboard/usuarios'))->with('message_success', 'Usuario registrado correctamente.');
-			}
+			$usuario = ($this->_getUnusedUsersVideo())[0];
+			$videoUser = $this->_updateUserVideo($usuario->ID, 'LIC. ' . $data['NOMBRE'], $data['APELLIDO_PATERNO'] . ' ' . $data['APELLIDO_MATERNO'], $data['CORREO'], $data['SEXO'], 'agente');
+			$data['USUARIOVIDEO'] = $videoUser->ID;
+			$data['TOKENVIDEO'] = $videoUser->Token;
+			$this->_usuariosModel->insert($data);
+			$this->_bitacoraActividad($datosBitacora);
+			$this->_sendEmailPassword($data['CORREO'], $this->request->getPost('password'));
+			return redirect()->to(base_url('/admin/dashboard/usuarios'))->with('message_success', 'Usuario registrado correctamente.');
 		} else {
 			return redirect()->back()->with('message_error', 'Usuario no creado, ya existe el correo ingresado.');
 		}
@@ -623,7 +619,6 @@ class DashboardController extends BaseController
 	{
 		$id = $this->request->getPost('id');
 		$usuario = $this->_usuariosModel->asObject()->where('ID', $id)->first();
-
 		$data = [
 			'NOMBRE' => $this->request->getPost('nombre_usuario'),
 			'APELLIDO_PATERNO' => $this->request->getPost('apellido_paterno_usuario'),
@@ -636,8 +631,6 @@ class DashboardController extends BaseController
 
 		if ($usuario) {
 			$videoUser = $this->_updateUserVideo($usuario->USUARIOVIDEO, 'LIC. ' . $data['NOMBRE'], $data['APELLIDO_PATERNO'] . ' ' . $data['APELLIDO_MATERNO'], $data['CORREO'], $data['SEXO'], 'agente');
-			var_dump($videoUser);
-			exit;
 			$data['USUARIOVIDEO'] = $videoUser->ID;
 			$data['TOKENVIDEO'] = $videoUser->Token;
 			$this->_usuariosModel->set($data)->where('ID', $id)->update();
@@ -2250,7 +2243,6 @@ class DashboardController extends BaseController
 			$data['st'] = 'r';
 
 			$response = $this->_curlPost($endpoint, $data);
-
 			return $response;
 		} else {
 			return false;
