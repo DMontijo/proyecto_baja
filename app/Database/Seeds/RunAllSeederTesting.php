@@ -112,5 +112,6 @@ class RunAllSeederTesting extends Seeder
 		$this->call('RolesPermisosSeeder');
 		$this->call('PermisosSeeder');
 		$this->call('EstadoExtranjeroSeeder');
+		$this->call('FolioConsecutivoSeeder');
 	}
 }

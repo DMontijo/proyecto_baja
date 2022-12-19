@@ -20,24 +20,28 @@ $meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "
 							<thead>
 								<tr>
 									<th class="text-center">FOLIO</th>
+									<th class="text-center">AÑO</th>
 									<th class="text-center">FECHA FIRMA</th>
 									<th class="text-center">HORA FIRMA</th>
 									<th class="text-center">LUGAR FIRMA</th>
-									<th class="text-center">TIPO DE CONSTANCIA</th>
-									<th class="text-center">AGENTE QUE FIRMÓ</th>
-									<th class="text-center"></th>
+									<th class="text-center">TIPO</th>
+									<th class="text-center">SOLICITANTE</th>
+									<th class="text-center">AGENTE</th>
+									<th class="text-center">DOCUMENTO</th>
 								</tr>
 							</thead>
 							<tbody>
 								<?php foreach ($body_data->constancia as $index => $constancia) { ?>
 									<tr>
-										<td class="text-center font-weight-bold"><?= $constancia->CONSTANCIAEXTRAVIOID . '/' . $constancia->ANO ?></td>
+										<td class="text-center font-weight-bold"><?= $constancia->CONSTANCIAEXTRAVIOID ?></td>
+										<td class="text-center font-weight-bold"><?= $constancia->ANO ?></td>
 										<td class="text-center"><?= date("d-m-Y", strtotime($constancia->FECHAFIRMA)) ?></td>
 										<td class="text-center"><?= date("H:i", strtotime($constancia->HORAFIRMA)) ?></td>
 										<td class="text-center"><?= $constancia->LUGARFIRMA ?></td>
 										<td class="text-center"><?= $constancia->EXTRAVIO == 'DOCUMENTOS'
 																	? $constancia->TIPODOCUMENTO
 																	: $constancia->EXTRAVIO ?></td>
+										<td class="text-center"><?= $constancia->NOMBRE ?></td>
 										<td class="text-center"><?= $constancia->RAZONSOCIALFIRMA ?></td>
 										<?php if ($constancia->STATUS == 'ABIERTO') { ?>
 											<td class="text-center"><a type="button" href="<?= base_url('/admin/dashboard/constancia_extravio_show?folio=' . $constancia->CONSTANCIAEXTRAVIOID . '&year=' . $constancia->ANO) ?>" class="btn btn-primary text-white"><i class="fas fa-eye"></i> VER SOLICITUD</a></td>
