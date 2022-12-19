@@ -6,7 +6,3 @@
 		</select>
 	</div>
 </div>
-
-<script>
-	
-</script>
