@@ -43,19 +43,6 @@
 											<option value="5">PLAYAS DE ROSARITO</option>
 										</select>
 									</div>
-									<div id="oficina_empleado_container" class="col-4 d-none">
-										<label for="oficina_empleado" class="form-label font-weight-bold">Oficina</label>
-										<select class="form-control" name="oficina_empleado" id="oficina_empleado">
-											<option value="" selected disabled>Selecciona...</option>
-											<option value="792">CENTRO DE DENUNCIA TECNOLÓGICA</option>
-										</select>
-									</div>
-									<div id="empleado_container" class="col-4 d-none">
-										<label for="empleado" class="form-label font-weight-bold">Asignar a</label>
-										<select class="form-control" name="empleado" id="empleado">
-											<option value="" selected disabled>Selecciona...</option>
-										</select>
-									</div>
 								</div>
 								<div id="notas" class="form-group">
 									<label for="notas_caso_salida">Notas</label>
@@ -101,68 +88,18 @@
 	const btnAgregarDelito = document.querySelector('#btn-agregar-delito');
 
 	const municipio_empleado_container = document.querySelector('#municipio_empleado_container');
-	const oficina_empleado_container = document.querySelector('#oficina_empleado_container');
-	const empleado_container = document.querySelector('#empleado_container');
-
 	const municipio_empleado = document.querySelector('#municipio_empleado');
-	const oficina_empleado = document.querySelector('#oficina_empleado');
-	const empleado = document.querySelector('#empleado');
-
-	municipio_empleado.addEventListener('change', (e) => {
-		clearSelect(oficina_empleado);
-		clearSelect(empleado);
-		oficina_empleado.value = '';
-		empleado.value = '';
-
-		$.ajax({
-			data: {
-				'municipio': e.target.value
-			},
-			url: "<?= base_url('/data/get-oficinas-by-municipio') ?>",
-			method: "POST",
-			dataType: "json",
-		}).done(function(data) {
-			clearSelect(oficina_empleado);
-			data.forEach(oficina => {
-				let option = document.createElement("option");
-				option.text = oficina.OFICINADESCR;
-				option.value = oficina.OFICINAID;
-				oficina_empleado.add(option);
-			});
-			oficina_empleado.value = '';
-		}).fail(function(jqXHR, textStatus) {
-			clearSelect(oficina_empleado);
-		});
-	});
-
-	oficina_empleado.addEventListener('change', (e) => {
-		$.ajax({
-			data: {
-				'municipio': municipio_empleado.value,
-				'oficina': e.target.value,
-			},
-			url: "<?= base_url('/data/get-empleados-by-municipio-and-oficina') ?>",
-			method: "POST",
-			dataType: "json",
-		}).done(function(data) {
-			clearSelect(empleado);
-			data.forEach(emp => {
-				let option = document.createElement("option");
-				option.text = emp.NOMBRE + ' ' + emp.PRIMERAPELLIDO + ' ' + emp.SEGUNDOAPELLIDO;
-				option.value = emp.EMPLEADOID;
-				empleado.add(option);
-			});
-			empleado.value = '';
-		}).fail(function(jqXHR, textStatus) {
-			clearSelect(empleado);
-		});
-	});
-
+	
 	tipoSalida.addEventListener('change', (e) => {
 		const notas_caso_salida = document.querySelector('#notas_caso_salida');
 		const notas_caso_mp = document.querySelector('#notas_mp');
 		notas_caso_salida.value = notas_caso_mp.value;
-		document.getElementById("numCaracterSalida").innerHTML = charRemain + ' caracteres restantes';
+		if (charRemain < 300) {
+			document.getElementById("numCaracterSalida").innerHTML = charRemain + ' caracteres restantes';
+		}else{
+			document.getElementById("numCaracterSalida").innerHTML = '300 caracteres restantes';
+
+		}
 
 
 		if (!(e.target.value == '1' || e.target.value == '4' || e.target.value == '5' || e.target.value == '6' || e.target.value == '7' || e.target.value == '8' || e.target.value == '9')) {
@@ -170,13 +107,9 @@
 			document.querySelector('#v-pills-documentos-tab').classList.add('d-none');
 
 			municipio_empleado_container.classList.add('d-none');
-			oficina_empleado_container.classList.add('d-none');
-			empleado_container.classList.add('d-none');
 
 		} else {
 			municipio_empleado_container.classList.remove('d-none');
-			oficina_empleado_container.classList.remove('d-none');
-			empleado_container.classList.remove('d-none');
 		}
 	});
 
@@ -253,23 +186,19 @@
 				});
 			}
 		} else {
-			if (municipio_empleado.value != '' && oficina_empleado.value != '' && empleado.value != '') {
+			if (municipio_empleado.value != '') {
 				let descripcion = document.querySelector('#notas_caso_salida').value;
 
 				if (
 					descripcion &&
 					inputFolio.value != '' &&
-					municipio_empleado.value != '' &&
-					oficina_empleado.value != '' &&
-					empleado.value != '') {
+					municipio_empleado.value != '') {
 					data = {
 						'folio': inputFolio.value,
 						'year': year_select.value,
 						'municipio': municipio_empleado.value,
 						'estado': 2,
 						'notas': descripcion,
-						'oficina': oficina_empleado.value,
-						'empleado': empleado.value,
 						'tipo_expediente': Number(tipoSalida.value)
 					}
 					const dataFolio = {
@@ -410,7 +339,11 @@
 		}
 	}
 	function contarCaracteresSalida(obj) {
-		var maxLength = charRemain;
+		if (charRemain < 300) {
+			var maxLength = charRemain;
+		}else{
+			var maxLength = 300;
+		}
 		var strLength = obj.value.length;
 		var charRemainSalida = (maxLength - strLength);
 

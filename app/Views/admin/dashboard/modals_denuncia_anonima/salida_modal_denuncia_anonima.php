@@ -59,7 +59,9 @@
 								</div>
 								<div id="notas" class="form-group">
 									<label for="notas_caso_salida">Notas</label>
-									<textarea id="notas_caso_salida" class="form-control" placeholder="Notas..." rows="10" maxlength="300" oninput="mayuscTextarea(this)" onkeydown="pulsar(event)"></textarea>
+									<textarea id="notas_caso_salida" class="form-control" placeholder="Notas..." rows="10" maxlength="300" oninput="mayuscTextarea(this)" onkeydown="pulsar(event)" onkeyup="contarCaracteresSalidaDa(this)"></textarea>
+									<small id="numCaracterSalidaDa"> </small>
+
 								</div>
 								<button type="button" id="btn-finalizar-derivacion" class="btn btn-primary">FINALIZAR</button>
 							</div>
@@ -97,77 +99,28 @@
 	const btnAgregarDelito = document.querySelector('#btn-agregar-delito');
 
 	const municipio_empleado_container = document.querySelector('#municipio_empleado_container');
-	const oficina_empleado_container = document.querySelector('#oficina_empleado_container');
-	const empleado_container = document.querySelector('#empleado_container');
 
 	const municipio_empleado = document.querySelector('#municipio_empleado');
-	const oficina_empleado = document.querySelector('#oficina_empleado');
-	const empleado = document.querySelector('#empleado');
 
-	municipio_empleado.addEventListener('change', (e) => {
-		clearSelect(oficina_empleado);
-		clearSelect(empleado);
-		oficina_empleado.value = '';
-		empleado.value = '';
 
-		$.ajax({
-			data: {
-				'municipio': e.target.value
-			},
-			url: "<?= base_url('/data/get-oficinas-by-municipio') ?>",
-			method: "POST",
-			dataType: "json",
-		}).done(function(data) {
-			clearSelect(oficina_empleado);
-			data.forEach(oficina => {
-				let option = document.createElement("option");
-				option.text = oficina.OFICINADESCR;
-				option.value = oficina.OFICINAID;
-				oficina_empleado.add(option);
-			});
-			oficina_empleado.value = '';
-		}).fail(function(jqXHR, textStatus) {
-			clearSelect(oficina_empleado);
-		});
-	});
-
-	oficina_empleado.addEventListener('change', (e) => {
-		$.ajax({
-			data: {
-				'municipio': municipio_empleado.value,
-				'oficina': e.target.value,
-			},
-			url: "<?= base_url('/data/get-empleados-by-municipio-and-oficina') ?>",
-			method: "POST",
-			dataType: "json",
-		}).done(function(data) {
-			clearSelect(empleado);
-			data.forEach(emp => {
-				let option = document.createElement("option");
-				option.text = emp.NOMBRE + ' ' + emp.PRIMERAPELLIDO + ' ' + emp.SEGUNDOAPELLIDO;
-				option.value = emp.EMPLEADOID;
-				empleado.add(option);
-			});
-			empleado.value = '';
-		}).fail(function(jqXHR, textStatus) {
-			clearSelect(empleado);
-		});
-	});
+	
 
 	tipoSalida.addEventListener('change', (e) => {
 		const notas_caso_salida = document.querySelector('#notas_caso_salida');
 		notas_caso_salida.value = notas_caso_mp.value;
 
+		if (charRemain < 300) {
+			document.getElementById("numCaracterSalidaDa").innerHTML = charRemain + ' caracteres restantes';
+		}else{
+			document.getElementById("numCaracterSalidaDa").innerHTML = '300 caracteres restantes';
+
+		}
 		if (!(e.target.value == '1' || e.target.value == '4' || e.target.value == '5' || e.target.value == '6' || e.target.value == '7' || e.target.value == '8' || e.target.value == '9')) {
 			document.querySelector('#v-pills-delitos-tab').classList.add('d-none');
 			document.querySelector('#v-pills-documentos-tab').classList.add('d-none');
 			municipio_empleado_container.classList.add('d-none');
-			oficina_empleado_container.classList.add('d-none');
-			empleado_container.classList.add('d-none');
 		} else {
 			municipio_empleado_container.classList.remove('d-none');
-			oficina_empleado_container.classList.remove('d-none');
-			empleado_container.classList.remove('d-none');
 		}
 	});
 
@@ -228,23 +181,19 @@
 				});
 			}
 		} else {
-			if (municipio_empleado.value != '' && oficina_empleado.value != '' && empleado.value != '') {
+			if (municipio_empleado.value != '') {
 				let descripcion = document.querySelector('#notas_caso_salida').value;
 
 				if (
 					descripcion &&
 					inputFolio.value != '' &&
-					municipio_empleado.value != '' &&
-					oficina_empleado.value != '' &&
-					empleado.value != '') {
+					municipio_empleado.value != '') {
 					data = {
 						'folio': inputFolio.value,
 						'year': year_select.value,
 						'municipio': municipio_empleado.value,
 						'estado': 2,
 						'notas': descripcion,
-						'oficina': oficina_empleado.value,
-						'empleado': empleado.value,
 						'tipo_expediente': Number(tipoSalida.value)
 					}
 					const dataFolio = {
@@ -352,6 +301,21 @@
 	function clearSelect(select_element) {
 		for (let i = select_element.options.length; i >= 1; i--) {
 			select_element.remove(i);
+		}
+	}
+	function contarCaracteresSalidaDa(obj) {
+		if (charRemain < 300) {
+			var maxLength = charRemain;
+		}else{
+			var maxLength = 300;
+		}
+		var strLength = obj.value.length;
+		var charRemainSalidaDa = (maxLength - strLength);
+
+		if (charRemainSalidaDa < 0) {
+			document.getElementById("numCaracterSalidaDa").innerHTML = '<span style="color: red;">Has superado el límite de ' + maxLength + ' caracteres </span>';
+		} else {
+			document.getElementById("numCaracterSalidaDa").innerHTML = charRemainSalidaDa + ' caracteres restantes';
 		}
 	}
 </script>

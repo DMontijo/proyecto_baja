@@ -250,7 +250,7 @@ class DashboardController extends BaseController
 		// $this->endpoint = $this->protocol . $this->ip . '/webServiceVD';
 		$this->protocol = 'https://';
 		$this->ip = "ws.fgebc.gob.mx";
-		$this->endpoint = $this->protocol . $this->ip . '/wsJusticia';
+		$this->endpoint = $this->protocol . $this->ip . '/webServiceVD';
 	}
 
 	public function index()
@@ -1231,16 +1231,19 @@ class DashboardController extends BaseController
 		$municipio = $this->request->getPost('municipio');
 		$estado = empty($this->request->getPost('estado')) ? 2 : $this->request->getPost('estado');
 		$notas = $this->request->getPost('notas');
-		$oficina = $this->request->getPost('oficina');
-		$empleado = $this->request->getPost('empleado');
+		// $oficina = $this->request->getPost('oficina');
+		// $empleado = $this->request->getPost('empleado');
+		$oficina = 394;
+		$empleado = 3938;
+		$area= 3231;
 		$tiposExpedienteId = $this->request->getPost('tipo_expediente');
 
 		try {
-			if (!empty($tiposExpedienteId) && !empty($folio) && !empty($municipio) && !empty($estado) && !empty($notas) && !empty($oficina) && !empty($empleado)) {
+			if (!empty($tiposExpedienteId) && !empty($folio) && !empty($municipio) && !empty($estado) && !empty($notas)) {
 				$folioRow = $this->_folioModel->where('ANO', $year)->where('FOLIOID', $folio)->where('STATUS', 'EN PROCESO')->first();
 
 				if ($folioRow) {
-					$empleadoRow = $this->_empleadosModel->asObject()->where('MUNICIPIOID', $municipio)->where('OFICINAID', $oficina)->where('EMPLEADOID', $empleado)->first();
+					// $empleadoRow = $this->_empleadosModel->asObject()->where('MUNICIPIOID', $municipio)->where('OFICINAID', $oficina)->where('EMPLEADOID', $empleado)->first();
 					$personas = $this->_folioPersonaFisicaModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->orderBy('PERSONAFISICAID', 'asc')->findAll();
 					$fisImpDelito = $this->_imputadoDelitoModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
 					$relacionFisFis = $this->_relacionIDOModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
@@ -1289,14 +1292,15 @@ class DashboardController extends BaseController
 					$folioRow['HECHOFECHA'] = $folioRow['HECHOFECHA'] . ' ' . $folioRow['HECHOHORA'];
 					$folioRow['HECHONARRACION'] = $notas;
 
-					$folioRow['OFICINAIDRESPONSABLE'] = $oficina;
-					$folioRow['EMPLEADOIDREGISTRO'] = $empleado;
-					$folioRow['AREAIDREGISTRO'] = $empleadoRow->AREAID;
-					$folioRow['AREAIDRESPONSABLE'] = $empleadoRow->AREAID;
+					// $folioRow['OFICINAIDRESPONSABLE'] = $oficina;
+					// $folioRow['EMPLEADOIDREGISTRO'] = $empleado;
+					// $folioRow['AREAIDREGISTRO'] = $area;
+					// $folioRow['AREAIDRESPONSABLE'] = $area;
 					$folioRow['ESTADOJURIDICOEXPEDIENTEID'] = (string) 2;
 					$folioRow['TIPOEXPEDIENTEID'] = (int)$tiposExpedienteId;
 
 					$expedienteCreado = $this->_createExpediente($folioRow);
+					// var_dump($expedienteCreado);exit;
 
 					// $expedienteCreado = (object)array(
 					//     'status' => 201,
@@ -1529,8 +1533,8 @@ class DashboardController extends BaseController
 			"HECHONARRACION",
 			"TIPOEXPEDIENTEID",
 			"PARTICIPAESTADO",
-			"EMPLEADOIDREGISTRO",
-			"OFICINAIDRESPONSABLE",
+			// "EMPLEADOIDREGISTRO",
+			// "OFICINAIDRESPONSABLE",
 			"CONFIDENCIAL",
 			"ESTADOJURIDICOEXPEDIENTEID",
 			"RELACIONDOCUMENTOS",
@@ -1545,8 +1549,8 @@ class DashboardController extends BaseController
 			"EXHORTOESTADOID",
 			"EXHORTOMUNICIPIOID",
 			"EXHORTOOFICINAID",
-			"AREAIDREGISTRO",
-			"AREAIDRESPONSABLE",
+			// "AREAIDREGISTRO",
+			// "AREAIDRESPONSABLE",
 			"LOCALIZACIONPERSONA",
 			"CONCLUIDO",
 			"EXHORTOAUTORIDADID",

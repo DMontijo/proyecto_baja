@@ -113,7 +113,9 @@
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="notas_denuncia" class="form-label font-weight-bold">Notas:</label>
-							<textarea class="form-control" id="notas_denuncia" name="notas_denuncia" row="10" oninput="mayuscTextarea(this)"></textarea>
+							<textarea class="form-control" id="notas_denuncia" name="notas_denuncia" row="10" oninput="mayuscTextarea(this)" onkeyup="contarCaracteresDa(this)"></textarea>
+							<small id="numCaracterDa">300 caracteres restantes</small>
+
 						</div>
 
 
@@ -324,6 +326,8 @@
 
 	var select_victima = document.getElementById('victima_conocido');
 	var select_imputado = document.getElementById('imputado_conocido');
+	var charRemain;
+
 
 	document.querySelector('#victima_conocido').addEventListener('change', (e) => {
 		if (e.target.value == 1) {
@@ -2404,6 +2408,23 @@
 				});
 			}
 		});
+	}
+	function pulsar(e) {
+		if (e.which === 13 && !e.shiftKey) {
+			e.preventDefault();
+			return false;
+		}
+	}
+	function contarCaracteresDa(obj) {
+		var maxLength = 300;
+		var strLength = obj.value.length;
+		 charRemain = (maxLength - strLength);
+
+		if (charRemain < 0) {
+			document.getElementById("numCaracterDa").innerHTML = '<span style="color: red;">Has superado el límite de ' + maxLength + ' caracteres </span>';
+		} else {
+			document.getElementById("numCaracterDa").innerHTML = charRemain + ' caracteres restantes';
+		}
 	}
 </script>
 
