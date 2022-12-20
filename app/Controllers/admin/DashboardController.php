@@ -2742,14 +2742,16 @@ class DashboardController extends BaseController
 	}
 	public function updateVehiculoByFolio()
 	{
-		// try {
-
+	
 			$folio = $this->request->getPost('folio');
 			$year = $this->request->getPost('year');
 			$document_file = $this->request->getFile('subirDoc');
 			$docV = null;
+
+			$foto_file = $this->request->getFile('subirFotoV');
+			$fotoV = null;
 				
-			
+	
 
 			$distribuidorpost = trim($this->request->getPost('distribuidor_vehiculo_ad'));
 			$marcapost = trim($this->request->getPost('marca_ad'));
@@ -2757,7 +2759,48 @@ class DashboardController extends BaseController
 
 			$modelodescr = $this->_vehiculoModeloModel->asObject()->where('VEHICULODISTRIBUIDORID', $distribuidorpost)->where('VEHICULOMARCAID', $marcapost)->where('VEHICULOMODELOID', $modelopost)->first();
 			$marcadescr = $this->_vehiculoMarcaModel->asObject()->where('VEHICULODISTRIBUIDORID', $distribuidorpost)->where('VEHICULOMARCAID', $marcapost)->first();
-			if ($document_file) {
+			
+			if (isset($document_file) && isset($foto_file)) {
+				
+				try {
+					$fotoV = file_get_contents($foto_file);
+					$docV = file_get_contents($document_file);
+					$data = array(
+						'folio' => trim($this->request->getPost('folio')),
+						'year' => trim($this->request->getPost('year')),
+						'TIPOID' => $this->request->getPost('tipo_vehiculo'),
+						'PRIMERCOLORID' => $this->request->getPost('color_vehiculo'),
+						'SENASPARTICULARES' => $this->request->getPost('description_vehiculo'),
+						'TIPOPLACA' => $this->request->getPost('tipo_placas_vehiculo'),
+						'PLACAS' => $this->request->getPost('placas_vehiculo'),
+						'ESTADOIDPLACA' => $this->request->getPost('estado_vehiculo_ad'),
+						'ESTADOEXTRANJEROIDPLACA' => $this->request->getPost('estado_extranjero_vehiculo_ad'),
+						'NUMEROSERIE' => $this->request->getPost('serie_vehiculo'),
+						'VEHICULODISTRIBUIDORID' => $this->request->getPost('distribuidor_vehiculo_ad'),
+						'MARCAID' => $this->request->getPost('marca_ad'),
+						'MARCADESCR' => isset($marcadescr->VEHICULOMARCADESCR) ?$marcadescr->VEHICULOMARCADESCR :NULL,
+						'MODELODESCR' => isset($modelodescr->VEHICULOMODELODESCR)?$modelodescr->VEHICULOMODELODESCR:NULL,
+						'MARCADESCR' => $this->request->getPost('linea_vehiculo_ad'),
+						'MODELOID' => $this->request->getPost('linea_vehiculo_ad'),
+						'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad'),
+						'VEHICULOSERVICIOID' => $this->request->getPost('servicio_vehiculo_ad'),
+						'SEGUROVIGENTE' => $this->request->getPost('seguro_vigente_vehiculo'),
+						'TRANSMISION' => $this->request->getPost('transmision_vehiculo'),
+						'TRACCION' => $this->request->getPost('traccion_vehiculo'),
+						'NUMEROCHASIS' => $this->request->getPost('num_chasis_vehiculo'),
+						'SEGUNDOCOLORID' => $this->request->getPost('color_tapiceria_vehiculo'),
+						'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo'),
+						'FOTO' => $fotoV,
+						'DOCUMENTO' => $docV,
+
+					);
+					
+				} catch (\Exception $e) {
+					
+				}		
+			}
+
+			if (isset($document_file) && empty($foto_file)) {
 				try {
 					$docV = file_get_contents($document_file);
 					$data = array(
@@ -2793,7 +2836,45 @@ class DashboardController extends BaseController
 				} catch (\Exception $e) {
 					
 				}
-			}else{
+			}
+			elseif (isset($foto_file) && empty($document_file)) {
+				try {
+					$fotoV = file_get_contents($foto_file);
+					$data = array(
+						'folio' => trim($this->request->getPost('folio')),
+						'year' => trim($this->request->getPost('year')),
+						'TIPOID' => $this->request->getPost('tipo_vehiculo'),
+						'PRIMERCOLORID' => $this->request->getPost('color_vehiculo'),
+						'SENASPARTICULARES' => $this->request->getPost('description_vehiculo'),
+						'TIPOPLACA' => $this->request->getPost('tipo_placas_vehiculo'),
+						'PLACAS' => $this->request->getPost('placas_vehiculo'),
+						'ESTADOIDPLACA' => $this->request->getPost('estado_vehiculo_ad'),
+						'ESTADOEXTRANJEROIDPLACA' => $this->request->getPost('estado_extranjero_vehiculo_ad'),
+						'NUMEROSERIE' => $this->request->getPost('serie_vehiculo'),
+						'VEHICULODISTRIBUIDORID' => $this->request->getPost('distribuidor_vehiculo_ad'),
+						'MARCAID' => $this->request->getPost('marca_ad'),
+						'MARCADESCR' => isset($marcadescr->VEHICULOMARCADESCR) ?$marcadescr->VEHICULOMARCADESCR :NULL,
+						'MODELODESCR' => isset($modelodescr->VEHICULOMODELODESCR)?$modelodescr->VEHICULOMODELODESCR:NULL,
+						'MARCADESCR' => $this->request->getPost('linea_vehiculo_ad'),
+
+						'MODELOID' => $this->request->getPost('linea_vehiculo_ad'),
+						'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad'),
+						'VEHICULOSERVICIOID' => $this->request->getPost('servicio_vehiculo_ad'),
+						'SEGUROVIGENTE' => $this->request->getPost('seguro_vigente_vehiculo'),
+						'TRANSMISION' => $this->request->getPost('transmision_vehiculo'),
+						'TRACCION' => $this->request->getPost('traccion_vehiculo'),
+						'NUMEROCHASIS' => $this->request->getPost('num_chasis_vehiculo'),
+						'SEGUNDOCOLORID' => $this->request->getPost('color_tapiceria_vehiculo'),
+						'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo'),
+						'FOTO' => $fotoV,
+		
+					);
+					
+				} catch (\Exception $e) {
+					
+				}
+			}
+			elseif(empty($document_file) && empty($foto_file)){
 				$data = array(
 					'folio' => trim($this->request->getPost('folio')),
 					'year' => trim($this->request->getPost('year')),

@@ -94,6 +94,7 @@
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="foto_vehiculo" class="form-label font-weight-bold">Fotografía del vehículo:</label>
 		<a class="btn btn-primary btn-block mb-4 font-weight-bold" id="downloadImage" download="">Descargar imagen</a>
+		<input class="form-control" type="file" id="subirFotoV" name="subirFotoV" accept="image/jpeg, image/jpg, image/png, .doc, .pdf">Subir documento </input>
 		<img class="img-fluid mb-3" id="foto_vehiculo" name="foto_vehiculo" src="" alt="">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">

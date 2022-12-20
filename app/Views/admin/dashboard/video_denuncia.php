@@ -3842,7 +3842,11 @@
 
 			function actualizarVehiculo() {
 				var packetData = new FormData();
+			
 				packetData.append("subirDoc", $("#subirDoc")[0].files[0]);
+				packetData.append("subirFotoV", $("#subirFotoV")[0].files[0]);
+				
+
 				packetData.append("folio", document.querySelector('#input_folio_atencion').value);
 				packetData.append("year", document.querySelector('#year_select').value);
 
@@ -3892,6 +3896,9 @@
 								}
 							});
 							llenarTablaVehiculos(vehiculos);
+							document.getElementById('subirFotoV').value ='';
+							document.getElementById('subirDoc').value ='';
+
 							$('#folio_vehiculo_modal').modal('hide');
 
 						} else {
