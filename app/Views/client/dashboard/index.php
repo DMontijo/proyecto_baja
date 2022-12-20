@@ -337,29 +337,58 @@
 					radio.removeAttribute('required');
 				});
 			}
-			$('#delito').change(function(){
+			$('#delito').change(function() {
 
-			if (document.querySelector("#delito").value == "ROBO DE VEHÍCULO") {
-				Swal.fire({
-					title: '¿Cuentas con algún documento en ese momento para verificar la serie y las placas del auto?',
-					showCancelButton: true,
-					confirmButtonText: 'Si',
-					cancelButtonText: `No`,
-				}).then((result) => {
-					/* Read more about isConfirmed, isDenied below */
-					if (result.isConfirmed) {
-						document.getElementById('datos_robo_vehiculo_completo').classList.add('step');
+				if (document.querySelector("#delito").value == "ROBO DE VEHÍCULO") {
+					var radio_doc_vehiculo = document.getElementById("radio_documentos_vehiculo");
+
+					radio_doc_vehiculo.classList.remove('d-none');
+					// document.querySelector('input[name="documentos_vehiculo"]:checked').value = 'N';
+					// document.querySelector('#documentos_vehiculo > [value="N"]').checked = true;	
+					// $("input[name=documentos_vehiculo][value='N']").prop("checked",true);
+
+					$('input[type=radio][name=documentos_vehiculo]').change(function() {
+						if (this.value == 'S') {
+							document.getElementById('datos_robo_vehiculo_completo').classList.add('step');
 						document.getElementById('datos_robo_vehiculo').classList.remove('step');
+						} else if (this.value == 'N') {
+							document.getElementById('datos_robo_vehiculo').classList.add('step');
+						document.getElementById('datos_robo_vehiculo_completo').classList.remove('step');
+					}
+						
+					});
 					
 
-					} else {
-						document.getElementById('datos_robo_vehiculo').classList.add('step');
-						document.getElementById('datos_robo_vehiculo_completo').classList.remove('step');
-						
-					}
-				})
-			} 
-		})
+					// Swal.fire({
+					// 	title: '¿Cuentas con algún documento en ese momento para verificar la serie y las placas del auto?',
+					// 	showCancelButton: true,
+					// 	confirmButtonText: 'Si',
+					// 	cancelButtonText: `No`,
+					// }).then((result) => {
+					// 	/* Read more about isConfirmed, isDenied below */
+					// 	if (result.isConfirmed) {
+					// 		document.getElementById('datos_robo_vehiculo_completo').classList.add('step');
+					// 		document.getElementById('datos_robo_vehiculo').classList.remove('step');
+
+
+					// 	} else {
+					// 		document.getElementById('datos_robo_vehiculo').classList.add('step');
+					// 		document.getElementById('datos_robo_vehiculo_completo').classList.remove('step');
+
+					// 	}
+					// })
+				} else {
+					var radio_doc_vehiculo = document.getElementById("radio_documentos_vehiculo");
+
+					radio_doc_vehiculo.classList.add('d-none');
+					$("input[name=documentos_vehiculo][value='O']").prop("checked", true);
+					document.getElementById('datos_robo_vehiculo').classList.remove('step');
+					document.getElementById('datos_robo_vehiculo_completo').classList.remove('step');
+
+
+
+				}
+			})
 
 			if (document.querySelector('input[name="responsable"]:checked').value == "NO") {
 				document.getElementById('datos_imputado').classList.remove('step');

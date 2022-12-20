@@ -12,6 +12,23 @@
 			Selecciona el delito
 		</div>
 	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3 d-none" id="radio_documentos_vehiculo" >
+		<label for="documentos_vehiculo" class="form-label font-weight-bold">¿Cuentas con algún documento en ese momento para verificar la serie y las placas del auto?</label>
+		<br>
+		<div class="form-check form-check-inline">
+			<input class="form-check-input" type="radio" name="documentos_vehiculo" id="documentos_vehiculo" value="S">
+			<label class="form-check-label" for="documentos_vehiculo">SÍ</label>
+		</div>
+		<div class="form-check form-check-inline">
+			<input class="form-check-input" type="radio" name="documentos_vehiculo" id="documentos_vehiculo" value="N">
+			<label class="form-check-label" for="documentos_vehiculo">NO</label>
+		</div>
+
+		<div class="form-check form-check-inline d-none">
+			<input class="form-check-input" type="radio" name="documentos_vehiculo" id="documentos_vehiculo" value="O">
+			<label class="form-check-label" for="documentos_vehiculo">OTRO</label>
+		</div>
+	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="municipio" class="form-label fw-bold input-required">Municipio del delito:</label>
