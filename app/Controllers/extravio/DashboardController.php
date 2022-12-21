@@ -59,8 +59,7 @@ class DashboardController extends BaseController
 		$data->estados = $this->_estadosModel->asObject()->findAll();
 		$data->municipios = $this->_municipiosModel->asObject()->where('ESTADOID', '2')->findAll();
 		$data->lugares = $this->_hechoLugarModel->asObject()->orderBy('HECHODESCR', 'asc')->findAll();
-		$data->identificacion = $this->_documentosExtravioTipoModel->asObject()->orderBy('DOCUMENTOEXTRAVIOTIPODESCR', 'asc')->findAll();
-
+		$data->identificacion = $this->_documentosExtravioTipoModel->asObject()->orderBy('DOCUMENTOEXTRAVIOTIPODESCR', 'asc')->where('VISIBLE', '1')->findAll();
 		$data->denunciante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', session('DENUNCIANTEID'))->first();
 		$this->_loadView('Generar constancias', $data, 'index');
 	}

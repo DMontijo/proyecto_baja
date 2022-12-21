@@ -16,10 +16,12 @@
 						<table id="extravios_abiertos" class="table table-bordered table-striped">
 							<thead>
 								<tr>
-									<th class="text-center">ID</th>
+									<th class="text-center">FOLIO</th>
+									<th class="text-center">AÑO</th>
 									<th class="text-center">FECHA</th>
+									<th class="text-center">HORA</th>
+									<th class="text-center">SOLICITANTE</th>
 									<th class="text-center">TIPO DE CONSTANCIA</th>
-									<th class="text-center">ESTADO</th>
 									<th class="text-center"></th>
 								</tr>
 							</thead>
@@ -27,12 +29,14 @@
 								<?php foreach ($body_data->constancia as $index => $constancia) { ?>
 									<tr>
 										<td class="text-center font-weight-bold"><?= $constancia->CONSTANCIAEXTRAVIOID ?></td>
-										<td class="text-center"><?= $constancia->FECHAREGISTRO ?></td>
+										<td class="text-center"><?= $constancia->ANO ?></td>
+										<td class="text-center"><?= $constancia->FECHA ?></td>
+										<td class="text-center"><?= $constancia->HORA ?></td>
+										<td class="text-center"><?= $constancia->NOMBRE ?></td>
 										<td class="text-center"><?= $constancia->EXTRAVIO == 'DOCUMENTOS'
 																	? $constancia->TIPODOCUMENTO
 																	: $constancia->EXTRAVIO ?></td>
-										<td class="text-center"><?= $constancia->STATUS ?></td>
-										<td class="text-center"><a type="button" href="<?= base_url('/admin/dashboard/constancia_extravio_show?folio=' . $constancia->CONSTANCIAEXTRAVIOID . '&year=' . $constancia->ANO) ?>" class="btn btn-primary text-white"><i class="fas fa-eye"></i> VER SOLICITUD</a></td>
+										<td class="text-center"><a type="button" href="<?= base_url('/admin/dashboard/constancia_extravio_show?folio=' . $constancia->CONSTANCIAEXTRAVIOID . '&year=' . $constancia->ANO) ?>" class="btn btn-primary text-white"><i class="fas fa-signature" style="margin-right:10px;"></i> FIRMAR</a></td>
 									</tr>
 								<?php } ?>
 							</tbody>
