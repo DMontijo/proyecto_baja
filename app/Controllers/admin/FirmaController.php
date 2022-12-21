@@ -327,7 +327,6 @@ class FirmaController extends BaseController
 		$FECHAFIRMA = date("Y-m-d");
 		$HORAFIRMA = date("H:i");
 		try {
-
 			if ($this->_crearArchivosPEMText($user_id, $password)) {
 				if ($this->_validarFiel($user_id)) {
 					$fiel_user = $this->_extractData($user_id);

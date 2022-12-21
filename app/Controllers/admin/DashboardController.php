@@ -959,6 +959,20 @@ class DashboardController extends BaseController
 		}
 	}
 
+	public function bandeja_salida(){
+		if (!$this->permisos('BANDEJA')) {
+			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
+		}
+		$data = (object) array();
+		$data->folio = $this->_folioModel->bandeja_salida();
+		// $data->imputado_delito = $this->_imputadoDelitoModel->where('FOLIOID', $data->folio)->where('ANO', $year)->where('PERSONAFISICAID', $id)->where('DELITOMODALIDADID', $delitomodalidadid)->first();
+
+
+		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+
+		$this->_loadView('Bandeja de salida', 'bandeja de salida', '', $data, 'bandeja/bandeja_salida');
+
+	}
 	public function video_denuncia()
 	{
 		$data = (object) array();
@@ -2465,7 +2479,74 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
+	public function updateFolioAsignacion()
+	{
+try{
+			$expediente = trim($this->request->getPost('expediente'));
+			$oficina = trim($this->request->getPost('oficina'));
+			$empleado = trim($this->request->getPost('empleado'));
 
+			$area = $this->_empleadosModel->asObject()->where('EMPLEADOID', $empleado)->first();
+			$dataFolio = array(
+				'AGENTEASIGNADOID' => $empleado,
+				'OFICINAASIGNADOID'=> $oficina,
+				'AREAASIGNADOID'=> $area->AREAID
+			);
+
+		
+			$update = $this->_folioModel->set($dataFolio)->where('EXPEDIENTEID', $expediente)->update();
+			if ($update) {
+
+				$datosBitacora = [
+					'ACCION' => 'Ha actualizado un folio para su asignacion',
+					'NOTAS' => 'Exp: ' . $expediente . ' oficina: ' . $oficina,
+				];
+
+				$this->_bitacoraActividad($datosBitacora);
+				$bandeja = $this->_folioModel->where('EXPEDIENTEID', $expediente)->first();
+				$_bandeja_creada = $this->_createBandeja($bandeja);
+				if ($_bandeja_creada->status == 201) {
+					return json_encode(['status' => 1]);
+				}
+			} else {
+				return json_encode(['status' => 0]);
+			}
+		} catch (\Exception $e) {
+			return json_encode(['status' => 0]);
+		}
+	}
+	private function _createBandeja($bandeja){
+		$function = '/expediente.php?process=bandeja';
+		$endpoint = $this->endpoint . $function;
+		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $bandeja['MUNICIPIOASIGNADOID'])->where('TYPE', ENVIRONMENT)->first();
+		$array = [
+			"AREAIDREGISTRO",
+			"EXPEDIENTEID"
+		];
+
+		$data = $bandeja;
+
+		foreach ($data as $clave => $valor) {
+			if (empty($valor)) {
+				unset($data[$clave]);
+			}
+		}
+		foreach ($data as $clave => $valor) {
+			if (!in_array($clave, $array)) {
+				unset($data[$clave]);
+			}
+		}
+		$data['AREAIDREGISTRO'] = $bandeja['AREAASIGNADOID'];
+		$data['EXPEDIENTEID'] = $bandeja['EXPEDIENTEID'];
+		$data['userDB'] = $conexion->USER;
+		$data['pwdDB'] = $conexion->PASSWORD;
+		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
+		$data['schema'] = $conexion->SCHEMA;
+
+		return $this->_curlPostDataEncrypt($endpoint, $data);
+
+
+	}
 	public function updatePreguntasIniciales()
 	{
 		try {
@@ -3880,8 +3961,8 @@ class DashboardController extends BaseController
 		$folioDoc = $this->_folioDocModel->asObject()->where('FOLIOID',  $folio)->where('ANO', $this->request->getPost('year'))->first();
 
 		$municipio = isset($folioDoc->MUNICIPIOID) ? $folioDoc->MUNICIPIOID : NULL;
-		$agente = isset($folioDoc->AGENTEID) ? $folioDoc->AGENTEID : NULL;
-		$oficina = isset($folioDoc->OFICINAID) ? $folioDoc->OFICINAID : NULL;
+		// $agente = isset($folioDoc->AGENTEID) ? $folioDoc->AGENTEID : NULL;
+		// $oficina = isset($folioDoc->OFICINAID) ? $folioDoc->OFICINAID : NULL;
 		// var_dump($municipio);
 
 		$year = trim($this->request->getPost('year'));
@@ -3897,8 +3978,8 @@ class DashboardController extends BaseController
 			'STATUSENVIO' => $this->request->getPost('statusenvio'),
 			'ENVIADO' => 'N',
 			'CLASIFICACIONDOCTOID' => $plantilla['CLASIFICACIONDOCTOID'],
-			'AGENTEID' => $this->request->getPost('empleado') ? $this->request->getPost('empleado') : $agente,
-			'OFICINAID' => $this->request->getPost('oficina') ? $this->request->getPost('oficina') : $oficina,
+			// 'AGENTEID' => $this->request->getPost('empleado') ? $this->request->getPost('empleado') : $agente,
+			// 'OFICINAID' => $this->request->getPost('oficina') ? $this->request->getPost('oficina') : $oficina,
 
 
 		);

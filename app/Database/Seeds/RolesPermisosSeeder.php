@@ -21,6 +21,7 @@ class RolesPermisosSeeder extends Seeder
 			array('ROLID' => '1', 'PERMISOID' => '8'),
 			array('ROLID' => '1', 'PERMISOID' => '9'),
 			array('ROLID' => '1', 'PERMISOID' => '10'),
+			array('ROLID' => '1', 'PERMISOID' => '11'),
 
 			//DIRECTOR SEJAP
 			array('ROLID' => '2', 'PERMISOID' => '1'),

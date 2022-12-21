@@ -439,7 +439,7 @@
 				`<td class="text-center">${btn}</td>` +
 				`</tr>`;
 
-			$('#table-delitos-video tr:first').after(fila);
+			$('#table-delitos-videodenuncia tr:first').after(fila);
 			$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
 			var nFilas = $("#delitos tr").length;
 			$("#adicionados").append(nFilas - 1);
@@ -476,7 +476,7 @@
 					});
 					let fisicaImpDelito = response.fisicaImpDelito;
 					llenarTablaImpDel(fisicaImpDelito);
-					let tabla_arbol = document.querySelectorAll('#table-delitos-video tr');
+					let tabla_arbol = document.querySelectorAll('#table-delitos-videodenuncia tr');
 					tabla_arbol.forEach(row => {
 						if (row.id !== '') {
 							row.remove();
@@ -534,7 +534,7 @@
 						text: 'Árbol delictivo eliminado correctamente',
 						confirmButtonColor: '#bf9b55',
 					});
-					let tabla_arbol = document.querySelectorAll('#table-delitos-video tr');
+					let tabla_arbol = document.querySelectorAll('#table-delitos-videodenuncia tr');
 					tabla_arbol.forEach(row => {
 						if (row.id !== '') {
 							row.remove();
@@ -1087,7 +1087,7 @@
 		tabla_personas = document.querySelectorAll('#table-personas tr');
 		tabla_vehiculos = document.querySelectorAll('#table-vehiculos tr');
 		tabla_parentesco = document.querySelectorAll('#table-parentesco tr');
-		tabla_relacion_fis_fis = document.querySelectorAll('#table-delitos-video tr');
+		tabla_relacion_fis_fis = document.querySelectorAll('#table-delitos-videodenuncia tr');
 		tabla_delito_cometido = document.querySelectorAll('#table-delito-cometidos tr');
 		tabla_objetos_involucrados = document.querySelectorAll('#table-objetos-involucradoss tr');
 		let tabla_documentos = document.querySelectorAll('#table-documentos tr');
@@ -3275,7 +3275,7 @@
 								text: 'Persona física actualizada correctamente',
 								confirmButtonColor: '#bf9b55',
 							});
-							let tabla_arbol = document.querySelectorAll('#table-delitos-video tr');
+							let tabla_arbol = document.querySelectorAll('#table-delitos-videodenuncia tr');
 							tabla_arbol.forEach(row => {
 								if (row.id !== '') {
 									row.remove();
@@ -4152,7 +4152,7 @@
 								confirmButtonColor: '#bf9b55',
 							});
 						} else if (response.status == 1) {
-							let tabla_relacion_fis_fis = document.querySelectorAll('#table-delitos-video tr');
+							let tabla_relacion_fis_fis = document.querySelectorAll('#table-delitos-videodenuncia tr');
 							tabla_relacion_fis_fis.forEach(row => {
 								if (row.id !== '') {
 									row.remove();
@@ -4473,8 +4473,8 @@
 							'year': document.querySelector('#year_select').value,
 							'placeholder': contenido,
 							'municipio': document.querySelector('#municipio_empleado').value,
-							'oficina': document.querySelector('#oficina_empleado').value,
-							'empleado': document.querySelector('#empleado').value,
+							// 'oficina': document.querySelector('#oficina_empleado').value,
+							// 'empleado': document.querySelector('#empleado').value,
 							'titulo': tipoPlantilla,
 							'statusenvio': 1
 						};
@@ -4487,8 +4487,8 @@
 							'year': document.querySelector('#year_select').value,
 							'placeholder': contenido,
 							'municipio': document.querySelector('#municipio_empleado').value,
-							'oficina': document.querySelector('#oficina_empleado').value,
-							'empleado': document.querySelector('#empleado').value,
+							// 'oficina': document.querySelector('#oficina_empleado').value,
+							// 'empleado': document.querySelector('#empleado').value,
 							'titulo': tipoPlantilla,
 							'statusenvio': 0
 						};

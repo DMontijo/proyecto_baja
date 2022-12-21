@@ -50,6 +50,7 @@ $routes->group('admin', function ($routes) {
 	$routes->group('dashboard', ['filter' => 'adminAuth'], function ($routes) {
 		$routes->get('/', 'admin/DashboardController::index');
 		$routes->get('videos', 'admin/DashboardController::videos_expediente');
+		$routes->get('bandeja', 'admin/DashboardController::bandeja_salida');
 
 		$routes->get('usuarios', 'admin/DashboardController::usuarios');
 		$routes->get('asignacion_permisos', 'admin/DashboardController::asignacion_permisos');
@@ -193,6 +194,8 @@ $routes->group('data', function ($routes) {
 
 	$routes->post('update-status-folio', 'admin/DashboardController::updateStatusFolio');
 	$routes->post('update-salida-folio', 'admin/DashboardController::updateFolioSalida');
+	$routes->post('update-folio-asignacion', 'admin/DashboardController::updateFolioAsignacion');
+
 
 	$routes->post('get-oficinas-by-municipio', 'admin/DashboardController::getOficinasByMunicipio');
 	$routes->post('get-empleados-by-municipio-and-oficina', 'admin/DashboardController::getEmpleadosByMunicipioAndOficina');

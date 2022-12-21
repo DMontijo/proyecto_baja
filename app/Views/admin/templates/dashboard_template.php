@@ -43,6 +43,7 @@
 					<i class="fas fa-tachometer-alt c-sidebar-nav-icon"></i> Inicio
 				</a>
 			</li>
+
 			<?php foreach ($body_data->rolPermiso as $permiso) { ?>
 
 				<?php if ($permiso->PERMISOID == 1) { ?>
@@ -65,6 +66,17 @@
 					</li>
 				<?php } ?>
 			<?php } ?>
+			<?php foreach ($body_data->rolPermiso as $permiso) { ?>
+
+				<?php if ($permiso->PERMISOID == 11) { ?>
+					<li class="c-sidebar-nav-item" id="nav-bandeja" name="nav-bandeja">
+						<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url('admin/dashboard/bandeja') ?>">
+							<i class="fas fa-solid fa-inbox c-sidebar-nav-icon"></i> Bandeja
+						</a>
+					</li>
+				<?php } ?>
+			<?php } ?>
+
 			<?php foreach ($body_data->rolPermiso as $permiso) { ?>
 
 				<?php if ($permiso->PERMISOID == 2) { ?>
@@ -162,6 +174,8 @@
 					</li>
 				<?php } ?>
 			<?php } ?>
+
+
 			<li class="c-sidebar-nav-item" id="nav-salir" name="nav-salir">
 				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url('admin/logout') ?>">
 					<i class="fas fa-sign-out-alt c-sidebar-nav-icon"></i> Salir

@@ -26,10 +26,12 @@
 								</tr>
 							</thead>
 							<tbody>
-								<?php foreach ($body_data->folio as $index => $folio) { ?>
+								<?php foreach ($body_data->folio as $index => $folio) { 
+									$arrayExpediente = str_split($folio->EXPEDIENTEID);
+									$expedienteid = $arrayExpediente[0] . '-' . $arrayExpediente[1] . $arrayExpediente[2] . '-' .  $arrayExpediente[3] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] .$arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] .$arrayExpediente[13] .$arrayExpediente[14] ;?>
 									<tr>
 										<td class="text-center"><?= $folio->FOLIOID ?></td>
-										<td class="text-center"><?= $folio->EXPEDIENTEID ?></td>
+										<td class="text-center"><?= $expedienteid ?></td>
 										<td class="text-center"><?= $folio->FECHAREGISTRO ?></td>
 										<td class="text-center"><?= $folio->HECHODELITO ?></td>
 										<td class="text-center"><?= $folio->NOMBRE ?> <?= $folio->APELLIDO_PATERNO ?> <?= $folio->APELLIDO_MATERNO ?></td>

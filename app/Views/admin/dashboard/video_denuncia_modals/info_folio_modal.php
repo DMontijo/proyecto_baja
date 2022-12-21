@@ -82,7 +82,7 @@
 									<button type="button" id="insertArbolDelictual" name="insertArbolDelictual" class="btn btn-primary font-weight-bold"><i class="fas fa-plus mr-3"></i>AGREGAR DELITO</button>
 								</div>
 								<div class="table-responsive">
-									<table id="table-delitos-video" class="table table-bordered table-hover table-striped table-light">
+									<table id="table-delitos-videodenuncia" class="table table-bordered table-hover table-striped table-light">
 										<tr>
 											<th class="text-center bg-primary text-white" id="nombreImputado" name="nombreImputado">IMPUTADO</th>
 											<th class="text-center bg-primary text-white" id="delitoCometido" name="delitoCometido">DELITO COMETIDO</th>

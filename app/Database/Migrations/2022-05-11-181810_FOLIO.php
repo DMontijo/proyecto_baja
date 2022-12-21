@@ -32,6 +32,21 @@ class FOLIO extends Migration
                 'unsigned' => true,
                 'null' => true,
             ],
+            'AGENTEASIGNADOID' => [
+                'type' => 'INT',
+                'unsigned' => true,
+                'null' => true,
+            ],
+            'OFICINAASIGNADOID' => [
+                'type' => 'INT',
+                'unsigned' => true,
+                'null' => true,
+            ],
+            'AREAASIGNADOID' => [
+                'type' => 'INT',
+                'unsigned' => true,
+                'null' => true,
+            ],
             'MUNICIPIOASIGNADOID' => [
                 'type' => 'INT',
                 'unsigned' => true,

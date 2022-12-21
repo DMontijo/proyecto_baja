@@ -14,6 +14,9 @@ class FolioModel extends Model
 		'EXPEDIENTEID',
 		'DENUNCIANTEID',
 		'AGENTEATENCIONID',
+		'AGENTEASIGNADOID',
+		'OFICINAASIGNADOID',
+		'AREAASIGNADOID',
 		'MUNICIPIOASIGNADOID',
 		'AGENTEFIRMAID',
 		'STATUS',
@@ -53,11 +56,13 @@ class FolioModel extends Model
 	{
 		$strQuery = 'SELECT FOLIO.FOLIOID, FOLIO.ANO, FOLIO.EXPEDIENTEID, FOLIO.STATUS, FOLIO.FECHASALIDA,DENUNCIANTES.NOMBRE AS "N_DENUNCIANTE", DENUNCIANTES.APELLIDO_PATERNO AS "APP_DENUNCIANTE", DENUNCIANTES.APELLIDO_MATERNO AS "APM_DENUNCIANTE", USUARIOS.NOMBRE AS "N_AGENT", 
 		USUARIOS.APELLIDO_PATERNO AS "APP_AGENT", USUARIOS.APELLIDO_MATERNO AS "APM_AGENT", ESTADO.ESTADODESCR,MUNICIPIO.MUNICIPIODESCR,
-		MUNICIPIOASIGNADO.MUNICIPIODESCR AS MUNICIPIOASIGNADO
+		MUNICIPIOASIGNADO.MUNICIPIODESCR AS MUNICIPIOASIGNADO, TIPOEXPEDIENTE.TIPOEXPEDIENTEDESCR, EMPLEADOS.AREADESCR
 		FROM FOLIO 
 		INNER JOIN USUARIOS ON USUARIOS.ID = FOLIO.AGENTEATENCIONID
 		LEFT JOIN MUNICIPIO AS MUNICIPIOASIGNADO ON MUNICIPIOASIGNADO.MUNICIPIOID = FOLIO.MUNICIPIOASIGNADOID AND MUNICIPIOASIGNADO.ESTADOID = 2
 		LEFT JOIN DENUNCIANTES ON DENUNCIANTES.DENUNCIANTEID = FOLIO.DENUNCIANTEID
+		LEFT JOIN TIPOEXPEDIENTE ON TIPOEXPEDIENTE.TIPOEXPEDIENTEID = FOLIO.TIPOEXPEDIENTEID
+		LEFT JOIN EMPLEADOS ON EMPLEADOS.EMPLEADOID = FOLIO.AGENTEASIGNADOID
 		INNER JOIN ESTADO ON ESTADO.ESTADOID = FOLIO.ESTADOID
 		INNER JOIN MUNICIPIO ON MUNICIPIO.MUNICIPIOID = FOLIO.MUNICIPIOID AND MUNICIPIO.ESTADOID = FOLIO.ESTADOID WHERE NOT FOLIO.STATUS = "ABIERTO" AND NOT FOLIO.STATUS = "EN PROCESO"';
 
@@ -88,11 +93,14 @@ class FolioModel extends Model
 	{
 		$strQuery = 'SELECT FOLIO.*,DENUNCIANTES.NOMBRE AS "N_DENUNCIANTE", DENUNCIANTES.APELLIDO_PATERNO AS "APP_DENUNCIANTE", DENUNCIANTES.APELLIDO_MATERNO AS "APM_DENUNCIANTE", ESTADO.ESTADODESCR,MUNICIPIO.MUNICIPIODESCR,
 		USUARIOS.NOMBRE AS "N_AGENT", USUARIOS.APELLIDO_PATERNO AS "APP_AGENT", USUARIOS.APELLIDO_MATERNO AS "APM_AGENT",
-		MUNICIPIOASIGNADO.MUNICIPIODESCR AS MUNICIPIOASIGNADO
+		MUNICIPIOASIGNADO.MUNICIPIODESCR AS MUNICIPIOASIGNADO, TIPOEXPEDIENTE.TIPOEXPEDIENTEDESCR,EMPLEADOS.AREADESCR
 		FROM FOLIO
 		INNER JOIN USUARIOS ON USUARIOS.ID = FOLIO.AGENTEATENCIONID 
 		LEFT JOIN MUNICIPIO AS MUNICIPIOASIGNADO ON MUNICIPIOASIGNADO.MUNICIPIOID = FOLIO.MUNICIPIOASIGNADOID AND MUNICIPIOASIGNADO.ESTADOID = 2
 		LEFT JOIN DENUNCIANTES ON DENUNCIANTES.DENUNCIANTEID = FOLIO.DENUNCIANTEID
+		LEFT JOIN TIPOEXPEDIENTE ON TIPOEXPEDIENTE.TIPOEXPEDIENTEID = FOLIO. TIPOEXPEDIENTEID
+		LEFT JOIN EMPLEADOS ON EMPLEADOS.EMPLEADOID = FOLIO.AGENTEASIGNADOID
+
 		INNER JOIN ESTADO ON ESTADO.ESTADOID = FOLIO.ESTADOID
 		INNER JOIN MUNICIPIO ON MUNICIPIO.MUNICIPIOID = FOLIO.MUNICIPIOID AND MUNICIPIO.ESTADOID = FOLIO.ESTADOID';
 
@@ -119,6 +127,37 @@ class FolioModel extends Model
 		return $dataView;
 	}
 
+	public function bandeja_salida()
+	{
+		$strQuery = 'SELECT FOLIO.FOLIOID, FOLIO.ANO, FOLIO.EXPEDIENTEID, FOLIO.STATUS, FOLIO.FECHASALIDA,FOLIO.FECHAREGISTRO, FOLIO.HECHODELITO, FOLIO.NOTASAGENTE, FOLIO.HECHOCALLE,
+ESTADO.ESTADODESCR,MUNICIPIO.MUNICIPIODESCR,MUNICIPIO.MUNICIPIOID,FOLIO.TIPODENUNCIA  AS "DELITOMODALIDADDESCR"
+FROM FOLIO 
+INNER JOIN ESTADO ON ESTADO.ESTADOID = FOLIO.ESTADOID
+INNER JOIN MUNICIPIO ON MUNICIPIO.MUNICIPIOID = FOLIO.MUNICIPIOASIGNADOID AND MUNICIPIO.ESTADOID = FOLIO.ESTADOID
+WHERE NOT FOLIO.EXPEDIENTEID IS NULL AND FOLIO.AGENTEASIGNADOID IS NULL';
+
+
+		$result = $this->db->query($strQuery)->getResult();
+
+		if ($result) {
+			$strQueryM = 'SELECT FOLIO.FOLIOID, FOLIO.ANO, FOLIO.EXPEDIENTEID, FOLIO.STATUS, FOLIO.FECHASALIDA,FOLIO.FECHAREGISTRO, FOLIO.HECHODELITO, FOLIO.NOTASAGENTE, FOLIO.HECHOCALLE,
+			ESTADO.ESTADODESCR,MUNICIPIO.MUNICIPIODESCR,MUNICIPIO.MUNICIPIOID,FOLIO.TIPODENUNCIA,  GROUP_CONCAT(DELITOMODALIDAD.DELITOMODALIDADDESCR) AS "DELITOMODALIDADDESCR"
+			FROM FOLIO 
+			INNER JOIN ESTADO ON ESTADO.ESTADOID = FOLIO.ESTADOID
+			INNER JOIN MUNICIPIO ON MUNICIPIO.MUNICIPIOID = FOLIO.MUNICIPIOASIGNADOID AND MUNICIPIO.ESTADOID = FOLIO.ESTADOID
+			INNER JOIN FOLIORELACIONFISFIS ON FOLIORELACIONFISFIS.FOLIOID = FOLIO.FOLIOID AND FOLIORELACIONFISFIS.ANO = FOLIO.ANO 
+			INNER JOIN DELITOMODALIDAD ON DELITOMODALIDAD.DELITOMODALIDADID = FOLIORELACIONFISFIS.DELITOMODALIDADID 
+			WHERE NOT FOLIO.EXPEDIENTEID IS NULL AND FOLIO.AGENTEASIGNADOID IS NULL';
+			$resultM = $this->db->query($strQueryM)->getResult();
+			$dataView = (object)array();
+			$dataView->result = $resultM;
+			return $dataView;
+		}else{
+			$dataView = (object)array();
+			$dataView->result = $result;
+			return $dataView;
+		}
+	}
 	public function filterDatesRegistroDiario($obj)
 	{
 		if (isset($obj['STATUS'])) {
@@ -145,8 +184,7 @@ class FolioModel extends Model
 					(isset($obj['horaInicio']) ? (date('H:i:s', strtotime($obj['horaInicio']))) : '00:00:00') . '" AS DATETIME)' . ' AND ' . 'CAST("' .
 					(isset($obj['fechaFin']) ? (isset($obj['horaFin']) ? date("Y-m-d", strtotime($obj['fechaFin'])) : date("Y-m-d", strtotime(date("Y-m-d", strtotime($obj['fechaFin']))))) : date("Y-m-d")) . ' ' .
 					(isset($obj['horaFin']) ? (date('H:i:s', strtotime($obj['horaFin']))) : '23:59:59') . '" AS DATETIME)';
-					$strQuery = $strQuery . ' GROUP BY  FOLIO.FOLIOID';
-
+				$strQuery = $strQuery . ' GROUP BY  FOLIO.FOLIOID';
 			}
 			if ($obj['STATUS'] == "SIN") {
 				$strQuery = 'SELECT FOLIO.FOLIOID, FOLIO.ANO, FOLIO.EXPEDIENTEID, FOLIO.STATUS, FOLIO.FECHASALIDA,FOLIO.FECHAREGISTRO, FOLIO.HECHODELITO, FOLIO.NOTASAGENTE,
@@ -176,8 +214,7 @@ class FolioModel extends Model
 					(isset($obj['horaInicio']) ? (date('H:i:s', strtotime($obj['horaInicio']))) : '00:00:00') . '" AS DATETIME)' . ' AND ' . 'CAST("' .
 					(isset($obj['fechaFin']) ? (isset($obj['horaFin']) ? date("Y-m-d", strtotime($obj['fechaFin'])) : date("Y-m-d", strtotime(date("Y-m-d", strtotime($obj['fechaFin']))))) : date("Y-m-d")) . ' ' .
 					(isset($obj['horaFin']) ? (date('H:i:s', strtotime($obj['horaFin']))) : '23:59:59') . '" AS DATETIME)';
-					$strQuery = $strQuery . ' GROUP BY  FOLIO.FOLIOID';
-
+				$strQuery = $strQuery . ' GROUP BY  FOLIO.FOLIOID';
 			}
 			if ($obj['STATUS'] == "TODOS") {
 				$strQuery = 'SELECT FOLIO.FOLIOID, FOLIO.ANO, FOLIO.EXPEDIENTEID, FOLIO.STATUS, FOLIO.FECHASALIDA,FOLIO.FECHAREGISTRO, FOLIO.HECHODELITO, FOLIO.NOTASAGENTE,
@@ -204,7 +241,7 @@ class FolioModel extends Model
 					(isset($obj['horaInicio']) ? (date('H:i:s', strtotime($obj['horaInicio']))) : '00:00:00') . '" AS DATETIME)' . ' AND ' . 'CAST("' .
 					(isset($obj['fechaFin']) ? (isset($obj['horaFin']) ? date("Y-m-d", strtotime($obj['fechaFin'])) : date("Y-m-d", strtotime(date("Y-m-d", strtotime($obj['fechaFin']))))) : date("Y-m-d")) . ' ' .
 					(isset($obj['horaFin']) ? (date('H:i:s', strtotime($obj['horaFin']))) : '23:59:59') . '" AS DATETIME)';
-					$strQuery = $strQuery . ' GROUP BY  FOLIO.FOLIOID';
+				$strQuery = $strQuery . ' GROUP BY  FOLIO.FOLIOID';
 			}
 		} else {
 			$strQuery = 'SELECT FOLIO.FOLIOID, FOLIO.ANO, FOLIO.EXPEDIENTEID, FOLIO.STATUS, FOLIO.FECHASALIDA,FOLIO.FECHAREGISTRO, FOLIO.HECHODELITO, FOLIO.NOTASAGENTE,
@@ -237,41 +274,40 @@ class FolioModel extends Model
 				(isset($obj['horaInicio']) ? (date('H:i:s', strtotime($obj['horaInicio']))) : '00:00:00') . '" AS DATETIME)' . ' AND ' . 'CAST("' .
 				(isset($obj['fechaFin']) ? (isset($obj['horaFin']) ? date("Y-m-d", strtotime($obj['fechaFin'])) : date("Y-m-d", strtotime(date("Y-m-d", strtotime($obj['fechaFin']))))) : date("Y-m-d")) . ' ' .
 				(isset($obj['horaFin']) ? (date('H:i:s', strtotime($obj['horaFin']))) : '23:59:59') . '" AS DATETIME)';
-				$strQuery = $strQuery . ' GROUP BY  FOLIO.FOLIOID';
-
+			$strQuery = $strQuery . ' GROUP BY  FOLIO.FOLIOID';
 		}
-	// var_dump($strQuery);
-	// 	exit;
+		// var_dump($strQuery);
+		// 	exit;
 		$result = $this->db->query($strQuery)->getResult();
 
 		$dataView = (object)array();
 		$dataView->result = $result;
-
-	
-		// $dataView->strQuery = $strQuery;
 		return $dataView;
+
+		// $dataView->strQuery = $strQuery;
+
 	}
 	public function filterDatesDocumentos($obj)
 	{
-		
-			
-			$strQuery = 'SELECT FOLIO.FOLIOID, FOLIO.ANO, FOLIO.EXPEDIENTEID, FOLIO.FECHAREGISTRO, FOLIO.FECHASALIDA,FOLIO.STATUS, FOLIO.ANO
+
+
+		$strQuery = 'SELECT FOLIO.FOLIOID, FOLIO.ANO, FOLIO.EXPEDIENTEID, FOLIO.FECHAREGISTRO, FOLIO.FECHASALIDA,FOLIO.STATUS, FOLIO.ANO
 			FROM FOLIO  ';
-					$strQuery =
-						$strQuery . 'WHERE '.
-						'FOLIO.FECHASALIDA BETWEEN CAST("' .
-						(isset($obj['fechaInicio']) ? date("Y-m-d", strtotime($obj['fechaInicio'])) : date("Y-m-d")) . ' ' .
-						(isset($obj['horaInicio']) ? (date('H:i:s', strtotime($obj['horaInicio']))) : '00:00:00') . '" AS DATETIME)' . ' AND ' . 'CAST("' .
-						(isset($obj['fechaFin']) ? (isset($obj['horaFin']) ? date("Y-m-d", strtotime($obj['fechaFin'])) : date("Y-m-d", strtotime(date("Y-m-d", strtotime($obj['fechaFin']))))) : date("Y-m-d")) . ' ' .
-						(isset($obj['horaFin']) ? (date('H:i:s', strtotime($obj['horaFin']))) : '23:59:59') . '" AS DATETIME)';
-						// var_dump($strQuery);
-						// exit;
+		$strQuery =
+			$strQuery . 'WHERE ' .
+			'FOLIO.FECHASALIDA BETWEEN CAST("' .
+			(isset($obj['fechaInicio']) ? date("Y-m-d", strtotime($obj['fechaInicio'])) : date("Y-m-d")) . ' ' .
+			(isset($obj['horaInicio']) ? (date('H:i:s', strtotime($obj['horaInicio']))) : '00:00:00') . '" AS DATETIME)' . ' AND ' . 'CAST("' .
+			(isset($obj['fechaFin']) ? (isset($obj['horaFin']) ? date("Y-m-d", strtotime($obj['fechaFin'])) : date("Y-m-d", strtotime(date("Y-m-d", strtotime($obj['fechaFin']))))) : date("Y-m-d")) . ' ' .
+			(isset($obj['horaFin']) ? (date('H:i:s', strtotime($obj['horaFin']))) : '23:59:59') . '" AS DATETIME)';
+		// var_dump($strQuery);
+		// exit;
 		$result = $this->db->query($strQuery)->getResult();
 
 		$dataView = (object)array();
 		$dataView->result = $result;
 
-	
+
 		// $dataView->strQuery = $strQuery;
 		return $dataView;
 	}
