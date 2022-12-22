@@ -3,8 +3,6 @@
 namespace App\Controllers\admin;
 
 use App\Controllers\BaseController;
-use App\Database\Migrations\DELITOMODALIDAD;
-use App\Database\Seeds\EstadoExtranjeroSeeder;
 use App\Models\CabelloColorModel;
 use App\Models\CabelloEstiloModel;
 use App\Models\CabelloTamanoModel;
@@ -237,7 +235,7 @@ class FoliosController extends BaseController
 	{
 		$data = (object) array();
 		$agente = $this->_usuariosModel->asObject()->where('ID', session('ID'))->first();
-		$roles = [1, 3];
+		$roles = [1, 2, 6, 7, 8, 9, 10, 11];
 		$data->abiertos = count($this->_folioModel->where('STATUS', 'ABIERTO')->findAll());
 		if (!$this->permisos('FOLIOS')) {
 			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
@@ -281,7 +279,7 @@ class FoliosController extends BaseController
 		}
 		$data = (object) array();
 		$agente = $this->_usuariosModel->asObject()->where('ID', session('ID'))->first();
-		$roles = [1, 3];
+		$roles = [1, 2, 6, 7, 8, 9, 10, 11];
 		if (in_array($agente->ROLID, $roles)) {
 			$data->folio = $this->_folioModel->asObject()->where('STATUS', 'DERIVADO')->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->findAll();
 		} else {
@@ -299,7 +297,7 @@ class FoliosController extends BaseController
 		}
 		$data = (object) array();
 		$agente = $this->_usuariosModel->asObject()->where('ID', session('ID'))->first();
-		$roles = [1, 3];
+		$roles = [1, 2, 6, 7, 8, 9, 10, 11];
 		if (in_array($agente->ROLID, $roles)) {
 			$data->folio = $this->_folioModel->asObject()->where('STATUS', 'CANALIZADO')->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->findAll();
 		} else {
@@ -344,7 +342,7 @@ class FoliosController extends BaseController
 		}
 		$data = (object) array();
 		$agente = $this->_usuariosModel->asObject()->where('ID', session('ID'))->first();
-		$roles = [1, 3];
+		$roles = [1, 2, 6, 7, 8, 9, 10, 11];
 		if (in_array($agente->ROLID, $roles)) {
 			$data->folio = $this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('AGENTEFIRMAID !=', null)->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->join('TIPOEXPEDIENTE', 'TIPOEXPEDIENTE.TIPOEXPEDIENTEID = FOLIO.TIPOEXPEDIENTEID')->join('EMPLEADOS', 'EMPLEADOS.EMPLEADOID = FOLIO.AGENTEASIGNADOID')->findAll();
 		} else {

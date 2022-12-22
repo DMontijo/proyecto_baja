@@ -75,6 +75,7 @@ class ConstanciaExtravioModel extends Model
 			->get();
 		return $query->getResult('object');
 	}
+
 	public function filterDates($obj)
 	{
 

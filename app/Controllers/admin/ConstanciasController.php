@@ -49,7 +49,7 @@ class ConstanciasController extends BaseController
 	public function constancias_abiertas()
 	{
 		$data = (object)array();
-		$data->constancia = $this->_constanciaExtravioModel->asObject()->where('STATUS', 'ABIERTO')->findAll();
+		$data->constancia = $this->_constanciaExtravioModel->asObject()->select('CONSTANCIAEXTRAVIO.*, CONCAT(EXTRACT(DAY FROM CONSTANCIAEXTRAVIO.FECHAREGISTRO),"-",EXTRACT(MONTH FROM CONSTANCIAEXTRAVIO.FECHAREGISTRO),"-",EXTRACT(YEAR FROM CONSTANCIAEXTRAVIO.FECHAREGISTRO)) AS FECHA,TIME(CONSTANCIAEXTRAVIO.FECHAREGISTRO) AS HORA,CONCAT (DENUNCIANTES.NOMBRE," ",DENUNCIANTES.APELLIDO_PATERNO," ",DENUNCIANTES.APELLIDO_MATERNO) AS NOMBRE')->join('DENUNCIANTES', 'DENUNCIANTES.DENUNCIANTEID = CONSTANCIAEXTRAVIO.DENUNCIANTEID')->where('STATUS', 'ABIERTO')->findAll();
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 		$this->_loadView('Constancias extraviadas abiertos', 'constancias', '', $data, 'constancias_abiertas');
@@ -58,7 +58,7 @@ class ConstanciasController extends BaseController
 	public function constancias_firmadas()
 	{
 		$data = (object)array();
-		$data->constancia = $this->_constanciaExtravioModel->get_constancias_with_joins();
+		$data->constancia = $this->_constanciaExtravioModel->asObject()->select('CONSTANCIAEXTRAVIO.*, CONCAT(EXTRACT(DAY FROM CONSTANCIAEXTRAVIO.FECHAREGISTRO),"-",EXTRACT(MONTH FROM CONSTANCIAEXTRAVIO.FECHAREGISTRO),"-",EXTRACT(YEAR FROM CONSTANCIAEXTRAVIO.FECHAREGISTRO)) AS FECHA,TIME(CONSTANCIAEXTRAVIO.FECHAREGISTRO) AS HORA,CONCAT (DENUNCIANTES.NOMBRE," ",DENUNCIANTES.APELLIDO_PATERNO," ",DENUNCIANTES.APELLIDO_MATERNO) AS NOMBRE')->join('DENUNCIANTES', 'DENUNCIANTES.DENUNCIANTEID = CONSTANCIAEXTRAVIO.DENUNCIANTEID')->where('STATUS', 'FIRMADO')->findAll();
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 		$this->_loadView('Constancias extraviadas abiertos', 'constancias', '', $data, 'constancias_firmadas');
@@ -70,8 +70,14 @@ class ConstanciasController extends BaseController
 		$data->folio = $this->request->getGet('folio');
 		$data->year = $this->request->getGet('year');
 		$year = $this->request->getGet('year');
+		if (!$this->request->getGet('folio') || !$this->request->getGet('year')) {
+			return redirect()->back()->with('message_error', 'La constancia no existe o no enviaste todos los parámetros.');
+		}
 		$data->constanciaExtravio = $this->_plantillasModel->asObject()->where('TITULO', 'CONSTANCIA DE EXTRAVÍO')->first();
 		$constancia = $this->_constanciaExtravioModel->asObject()->where('CONSTANCIAEXTRAVIOID', $data->folio)->where('ANO', $year)->first();
+		if (!$constancia) {
+			return redirect()->back()->with('message_error', 'La constancia no existe.');
+		}
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 		$solicitante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID ', $constancia->DENUNCIANTEID)->first();
