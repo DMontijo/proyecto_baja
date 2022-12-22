@@ -513,7 +513,12 @@ class DashboardController extends BaseController
 			}
 
 			if ($this->request->getPost('delito') == "ROBO DE VEHÍCULO") {
-				$img_file = $this->request->getFile('foto_vehiculo');
+				if ($_FILES['foto_vehiculo_nc']['name'] != null ) {
+					$img_file = $this->request->getFile('foto_vehiculo_nc');
+				}else{
+					$img_file = $this->request->getFile('foto_vehiculo_c');
+
+				}
 				$fotoV = null;
 				if ($img_file->isValid()) {
 					try {
@@ -522,7 +527,8 @@ class DashboardController extends BaseController
 						$fotoV = null;
 					}
 				}
-				$document_file = $this->request->getFile('documento_vehiculo');
+				// var_dump($_FILES['foto_vehiculo_nc']['name'] != null);exit;
+				$document_file = $this->request->getFile('documento_vehiculo_nc');
 				$docV = null;
 				if ($document_file->isValid()) {
 					try {

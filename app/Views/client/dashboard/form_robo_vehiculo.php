@@ -28,13 +28,13 @@
 	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="foto_vehiculo" class="form-label fw-bold">Fotografía del vehículo:</label>
-		<input class="form-control" type="file" id="foto_vehiculo" name="foto_vehiculo" accept="image/jpeg, image/jpg, image/png">
+		<label for="foto_vehiculo_nc" class="form-label fw-bold">Fotografía del vehículo:</label>
+		<input class="form-control" type="file" id="foto_vehiculo_nc" name="foto_vehiculo_nc" accept="image/jpeg, image/jpg, image/png">
 	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="documento_vehiculo" class="form-label fw-bold">Documento del vehículo:</label>
-		<input class="form-control" type="file" id="documento_vehiculo" name="documento_vehiculo" accept="image/jpeg, image/jpg, image/png, .doc, .pdf">
+		<label for="documento_vehiculo_nc" class="form-label fw-bold">Documento del vehículo:</label>
+		<input class="form-control" type="file" id="documento_vehiculo_nc" name="documento_vehiculo_nc" accept="image/jpeg, image/jpg, image/png, .doc, .pdf">
 	</div>
 </div>
 <script>

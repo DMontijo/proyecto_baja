@@ -723,7 +723,7 @@ class DashboardController extends BaseController
 
 	public function getFolioInformation()
 	{
-		
+
 		$data = (object) array();
 		$numfolio = trim($this->request->getPost('folio'));
 		$year = trim($this->request->getPost('year'));
@@ -759,12 +759,12 @@ class DashboardController extends BaseController
 					];
 					$this->_bitacoraActividad($datosBitacora);
 					return json_encode($data);
-				} else if ($data->folio->STATUS == 'EN PROCESO' && $data->folio->TIPODENUNCIA =="VD") {
+				} else if ($data->folio->STATUS == 'EN PROCESO' && $data->folio->TIPODENUNCIA == "VD") {
 					return json_encode(['status' => 2, 'motivo' => 'EL FOLIO YA ESTA SIENDO ATENDIDO']);
-				} else if ($data->folio->STATUS == 'EN PROCESO' && $data->folio->TIPODENUNCIA =="DA") {
+				} else if ($data->folio->STATUS == 'EN PROCESO' && $data->folio->TIPODENUNCIA == "DA") {
 					$data->status = 1;
 					return json_encode($data);
-				}else {
+				} else {
 					$agente = $this->_usuariosModel->asObject()->where('ID', $data->folio->AGENTEATENCIONID)->first();
 					return json_encode(['status' => 3, 'motivo' => $data->folio->STATUS, 'expediente' => $data->folio->EXPEDIENTEID, 'agente' => $agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' . $agente->APELLIDO_MATERNO]);
 				}
@@ -794,7 +794,7 @@ class DashboardController extends BaseController
 
 				if ($data->folio->STATUS == 'ABIERTO' || $data->folio->STATUS == 'EN PROCESO') {
 					$data->agente = $this->_usuariosModel->asObject()->where('ID', $data->folio->AGENTEATENCIONID)->first();
-				}else if ($data->folio->STATUS == 'EN PROCESO' && $data->folio->TIPODENUNCIA =="DA") {
+				} else if ($data->folio->STATUS == 'EN PROCESO' && $data->folio->TIPODENUNCIA == "DA") {
 					$data->status = 1;
 					return json_encode($data);
 				}
@@ -959,7 +959,8 @@ class DashboardController extends BaseController
 		}
 	}
 
-	public function bandeja_salida(){
+	public function bandeja_salida()
+	{
 		if (!$this->permisos('BANDEJA')) {
 			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
 		}
@@ -971,7 +972,6 @@ class DashboardController extends BaseController
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 		$this->_loadView('Bandeja de salida', 'bandeja de salida', '', $data, 'bandeja/bandeja_salida');
-
 	}
 	public function video_denuncia()
 	{
@@ -1219,14 +1219,14 @@ class DashboardController extends BaseController
 					$denunciante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', $folio->DENUNCIANTEID)->first();
 					if ($folio->TIPODENUNCIA == 'VD') {
 
-					if ($this->_sendEmailDerivacionCanalizacion($denunciante->CORREO, $folio->FOLIOID, $status)) {
-						return json_encode(['status' => 1]);
-					} else {
+						if ($this->_sendEmailDerivacionCanalizacion($denunciante->CORREO, $folio->FOLIOID, $status)) {
+							return json_encode(['status' => 1]);
+						} else {
+							return json_encode(['status' => 1]);
+						}
+					} else if ($folio->TIPODENUNCIA == 'DA') {
 						return json_encode(['status' => 1]);
 					}
-				} else if ($folio->TIPODENUNCIA == 'DA') {
-					return json_encode(['status' => 1]);
-				}
 				} else {
 					return json_encode(['status' => 0, 'error' => 'No hizo el update']);
 				}
@@ -1249,7 +1249,7 @@ class DashboardController extends BaseController
 		// $empleado = $this->request->getPost('empleado');
 		$oficina = 394;
 		$empleado = 3938;
-		$area= 3231;
+		$area = 3231;
 		$tiposExpedienteId = $this->request->getPost('tipo_expediente');
 
 		try {
@@ -1263,6 +1263,7 @@ class DashboardController extends BaseController
 					$relacionFisFis = $this->_relacionIDOModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
 					$parentescos = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
 					$vehiculos = $this->_folioVehiculoModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
+
 
 					$imputados_con_delito = array();
 					$imputados = $this->_folioPersonaFisicaModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->orderBy('PERSONAFISICAID', 'asc')->where('CALIDADJURIDICAID', 2)->findAll();
@@ -1381,6 +1382,17 @@ class DashboardController extends BaseController
 										$victima = $personasRelacionMysqlOracle[$fisFis['PERSONAFISICAIDVICTIMA']];
 										$imputado = $personasRelacionMysqlOracle[$fisFis['PERSONAFISICAIDIMPUTADO']];
 										$_relacionFisFis = $this->_createRelacionFisFis($expedienteCreado->EXPEDIENTEID, $fisFis, $victima['id_oracle'], $imputado['id_oracle'], $municipio);
+										// Expediente vehiculo
+										if ($fisFis['DELITOMODALIDADID'] == 178 || $fisFis['DELITOMODALIDADID'] == 179) {
+											if (count($vehiculos) > 0) {
+												foreach ($vehiculos as $vehiculo) {
+													try {
+														$_expedienteVehiculo = $this->_createExpVehiculo($expedienteCreado->EXPEDIENTEID, $vehiculo, $municipio);
+													} catch (\Error $e) {
+													}
+												}
+											}
+										}
 									} catch (\Error $e) {
 									}
 								}
@@ -1397,17 +1409,7 @@ class DashboardController extends BaseController
 									}
 								}
 							}
-							// Expediente vehiculo
-							if (count($vehiculos) > 0) {
-								foreach ($vehiculos as $vehiculo) {
-
-									try {
-										$_expedienteVehiculo = $this->_createExpVehiculo($expedienteCreado->EXPEDIENTEID, $vehiculo, $municipio);
-
-									} catch (\Error $e) {
-									}
-								}
-							}
+					
 						} catch (\Exception $e) {
 							throw new \Exception($e->getMessage());
 						}
@@ -2481,7 +2483,7 @@ class DashboardController extends BaseController
 	}
 	public function updateFolioAsignacion()
 	{
-try{
+		try {
 			$expediente = trim($this->request->getPost('expediente'));
 			$oficina = trim($this->request->getPost('oficina'));
 			$empleado = trim($this->request->getPost('empleado'));
@@ -2489,11 +2491,11 @@ try{
 			$area = $this->_empleadosModel->asObject()->where('EMPLEADOID', $empleado)->first();
 			$dataFolio = array(
 				'AGENTEASIGNADOID' => $empleado,
-				'OFICINAASIGNADOID'=> $oficina,
-				'AREAASIGNADOID'=> $area->AREAID
+				'OFICINAASIGNADOID' => $oficina,
+				'AREAASIGNADOID' => $area->AREAID
 			);
 
-		
+
 			$update = $this->_folioModel->set($dataFolio)->where('EXPEDIENTEID', $expediente)->update();
 			if ($update) {
 
@@ -2515,7 +2517,8 @@ try{
 			return json_encode(['status' => 0]);
 		}
 	}
-	private function _createBandeja($bandeja){
+	private function _createBandeja($bandeja)
+	{
 		$function = '/expediente.php?process=bandeja';
 		$endpoint = $this->endpoint . $function;
 		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $bandeja['MUNICIPIOASIGNADOID'])->where('TYPE', ENVIRONMENT)->first();
@@ -2544,8 +2547,6 @@ try{
 		$data['schema'] = $conexion->SCHEMA;
 
 		return $this->_curlPostDataEncrypt($endpoint, $data);
-
-
 	}
 	public function updatePreguntasIniciales()
 	{
@@ -2643,7 +2644,7 @@ try{
 
 				$this->_bitacoraActividad($datosBitacora);
 
-				return json_encode(['status' => 1, 'personas' => $personas, 'imputados' => $imputados, 'victimas' => $victimas,'parentescoRelacion' => $parentescoRelacion, 'personaiduno' => $personaiduno, 'personaidDos' => $personaidDos, 'parentesco' => $parentesco,'fisicaImpDelito' => $fisicaImpDelito,'relacionFisFis' => $relacionFisFis]);
+				return json_encode(['status' => 1, 'personas' => $personas, 'imputados' => $imputados, 'victimas' => $victimas, 'parentescoRelacion' => $parentescoRelacion, 'personaiduno' => $personaiduno, 'personaidDos' => $personaidDos, 'parentesco' => $parentesco, 'fisicaImpDelito' => $fisicaImpDelito, 'relacionFisFis' => $relacionFisFis]);
 			} else {
 				return json_encode(['status' => 0]);
 			}
@@ -2827,139 +2828,29 @@ try{
 	}
 	public function updateVehiculoByFolio()
 	{
-	
-			$folio = $this->request->getPost('folio');
-			$year = $this->request->getPost('year');
-			$document_file = $this->request->getFile('subirDoc');
-			$docV = null;
 
-			$foto_file = $this->request->getFile('subirFotoV');
-			$fotoV = null;
-				
-	
+		$folio = $this->request->getPost('folio');
+		$year = $this->request->getPost('year');
+		$document_file = $this->request->getFile('subirDoc');
+		$docV = null;
 
-			$distribuidorpost = trim($this->request->getPost('distribuidor_vehiculo_ad'));
-			$marcapost = trim($this->request->getPost('marca_ad'));
-			$modelopost = trim($this->request->getPost('linea_vehiculo_ad'));
+		$foto_file = $this->request->getFile('subirFotoV');
+		$fotoV = null;
 
-			$modelodescr = $this->_vehiculoModeloModel->asObject()->where('VEHICULODISTRIBUIDORID', $distribuidorpost)->where('VEHICULOMARCAID', $marcapost)->where('VEHICULOMODELOID', $modelopost)->first();
-			$marcadescr = $this->_vehiculoMarcaModel->asObject()->where('VEHICULODISTRIBUIDORID', $distribuidorpost)->where('VEHICULOMARCAID', $marcapost)->first();
-			
-			if (isset($document_file) && isset($foto_file)) {
-				
-				try {
-					$fotoV = file_get_contents($foto_file);
-					$docV = file_get_contents($document_file);
-					$data = array(
-						'folio' => trim($this->request->getPost('folio')),
-						'year' => trim($this->request->getPost('year')),
-						'TIPOID' => $this->request->getPost('tipo_vehiculo'),
-						'PRIMERCOLORID' => $this->request->getPost('color_vehiculo'),
-						'SENASPARTICULARES' => $this->request->getPost('description_vehiculo'),
-						'TIPOPLACA' => $this->request->getPost('tipo_placas_vehiculo'),
-						'PLACAS' => $this->request->getPost('placas_vehiculo'),
-						'ESTADOIDPLACA' => $this->request->getPost('estado_vehiculo_ad'),
-						'ESTADOEXTRANJEROIDPLACA' => $this->request->getPost('estado_extranjero_vehiculo_ad'),
-						'NUMEROSERIE' => $this->request->getPost('serie_vehiculo'),
-						'VEHICULODISTRIBUIDORID' => $this->request->getPost('distribuidor_vehiculo_ad'),
-						'MARCAID' => $this->request->getPost('marca_ad'),
-						'MARCADESCR' => isset($marcadescr->VEHICULOMARCADESCR) ?$marcadescr->VEHICULOMARCADESCR :NULL,
-						'MODELODESCR' => isset($modelodescr->VEHICULOMODELODESCR)?$modelodescr->VEHICULOMODELODESCR:NULL,
-						'MARCADESCR' => $this->request->getPost('linea_vehiculo_ad'),
-						'MODELOID' => $this->request->getPost('linea_vehiculo_ad'),
-						'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad'),
-						'VEHICULOSERVICIOID' => $this->request->getPost('servicio_vehiculo_ad'),
-						'SEGUROVIGENTE' => $this->request->getPost('seguro_vigente_vehiculo'),
-						'TRANSMISION' => $this->request->getPost('transmision_vehiculo'),
-						'TRACCION' => $this->request->getPost('traccion_vehiculo'),
-						'NUMEROCHASIS' => $this->request->getPost('num_chasis_vehiculo'),
-						'SEGUNDOCOLORID' => $this->request->getPost('color_tapiceria_vehiculo'),
-						'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo'),
-						'FOTO' => $fotoV,
-						'DOCUMENTO' => $docV,
 
-					);
-					
-				} catch (\Exception $e) {
-					
-				}		
-			}
 
-			if (isset($document_file) && empty($foto_file)) {
-				try {
-					$docV = file_get_contents($document_file);
-					$data = array(
-						'folio' => trim($this->request->getPost('folio')),
-						'year' => trim($this->request->getPost('year')),
-						'TIPOID' => $this->request->getPost('tipo_vehiculo'),
-						'PRIMERCOLORID' => $this->request->getPost('color_vehiculo'),
-						'SENASPARTICULARES' => $this->request->getPost('description_vehiculo'),
-						'TIPOPLACA' => $this->request->getPost('tipo_placas_vehiculo'),
-						'PLACAS' => $this->request->getPost('placas_vehiculo'),
-						'ESTADOIDPLACA' => $this->request->getPost('estado_vehiculo_ad'),
-						'ESTADOEXTRANJEROIDPLACA' => $this->request->getPost('estado_extranjero_vehiculo_ad'),
-						'NUMEROSERIE' => $this->request->getPost('serie_vehiculo'),
-						'VEHICULODISTRIBUIDORID' => $this->request->getPost('distribuidor_vehiculo_ad'),
-						'MARCAID' => $this->request->getPost('marca_ad'),
-						'MARCADESCR' => isset($marcadescr->VEHICULOMARCADESCR) ?$marcadescr->VEHICULOMARCADESCR :NULL,
-						'MODELODESCR' => isset($modelodescr->VEHICULOMODELODESCR)?$modelodescr->VEHICULOMODELODESCR:NULL,
-						'MARCADESCR' => $this->request->getPost('linea_vehiculo_ad'),
+		$distribuidorpost = trim($this->request->getPost('distribuidor_vehiculo_ad'));
+		$marcapost = trim($this->request->getPost('marca_ad'));
+		$modelopost = trim($this->request->getPost('linea_vehiculo_ad'));
 
-						'MODELOID' => $this->request->getPost('linea_vehiculo_ad'),
-						'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad'),
-						'VEHICULOSERVICIOID' => $this->request->getPost('servicio_vehiculo_ad'),
-						'SEGUROVIGENTE' => $this->request->getPost('seguro_vigente_vehiculo'),
-						'TRANSMISION' => $this->request->getPost('transmision_vehiculo'),
-						'TRACCION' => $this->request->getPost('traccion_vehiculo'),
-						'NUMEROCHASIS' => $this->request->getPost('num_chasis_vehiculo'),
-						'SEGUNDOCOLORID' => $this->request->getPost('color_tapiceria_vehiculo'),
-						'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo'),
-						'DOCUMENTO' => $docV,
-		
-					);
-					
-				} catch (\Exception $e) {
-					
-				}
-			}
-			elseif (isset($foto_file) && empty($document_file)) {
-				try {
-					$fotoV = file_get_contents($foto_file);
-					$data = array(
-						'folio' => trim($this->request->getPost('folio')),
-						'year' => trim($this->request->getPost('year')),
-						'TIPOID' => $this->request->getPost('tipo_vehiculo'),
-						'PRIMERCOLORID' => $this->request->getPost('color_vehiculo'),
-						'SENASPARTICULARES' => $this->request->getPost('description_vehiculo'),
-						'TIPOPLACA' => $this->request->getPost('tipo_placas_vehiculo'),
-						'PLACAS' => $this->request->getPost('placas_vehiculo'),
-						'ESTADOIDPLACA' => $this->request->getPost('estado_vehiculo_ad'),
-						'ESTADOEXTRANJEROIDPLACA' => $this->request->getPost('estado_extranjero_vehiculo_ad'),
-						'NUMEROSERIE' => $this->request->getPost('serie_vehiculo'),
-						'VEHICULODISTRIBUIDORID' => $this->request->getPost('distribuidor_vehiculo_ad'),
-						'MARCAID' => $this->request->getPost('marca_ad'),
-						'MARCADESCR' => isset($marcadescr->VEHICULOMARCADESCR) ?$marcadescr->VEHICULOMARCADESCR :NULL,
-						'MODELODESCR' => isset($modelodescr->VEHICULOMODELODESCR)?$modelodescr->VEHICULOMODELODESCR:NULL,
-						'MARCADESCR' => $this->request->getPost('linea_vehiculo_ad'),
+		$modelodescr = $this->_vehiculoModeloModel->asObject()->where('VEHICULODISTRIBUIDORID', $distribuidorpost)->where('VEHICULOMARCAID', $marcapost)->where('VEHICULOMODELOID', $modelopost)->first();
+		$marcadescr = $this->_vehiculoMarcaModel->asObject()->where('VEHICULODISTRIBUIDORID', $distribuidorpost)->where('VEHICULOMARCAID', $marcapost)->first();
 
-						'MODELOID' => $this->request->getPost('linea_vehiculo_ad'),
-						'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad'),
-						'VEHICULOSERVICIOID' => $this->request->getPost('servicio_vehiculo_ad'),
-						'SEGUROVIGENTE' => $this->request->getPost('seguro_vigente_vehiculo'),
-						'TRANSMISION' => $this->request->getPost('transmision_vehiculo'),
-						'TRACCION' => $this->request->getPost('traccion_vehiculo'),
-						'NUMEROCHASIS' => $this->request->getPost('num_chasis_vehiculo'),
-						'SEGUNDOCOLORID' => $this->request->getPost('color_tapiceria_vehiculo'),
-						'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo'),
-						'FOTO' => $fotoV,
-		
-					);
-					
-				} catch (\Exception $e) {
-					
-				}
-			}
-			elseif(empty($document_file) && empty($foto_file)){
+		if (isset($document_file) && isset($foto_file)) {
+
+			try {
+				$fotoV = file_get_contents($foto_file);
+				$docV = file_get_contents($document_file);
 				$data = array(
 					'folio' => trim($this->request->getPost('folio')),
 					'year' => trim($this->request->getPost('year')),
@@ -2973,8 +2864,9 @@ try{
 					'NUMEROSERIE' => $this->request->getPost('serie_vehiculo'),
 					'VEHICULODISTRIBUIDORID' => $this->request->getPost('distribuidor_vehiculo_ad'),
 					'MARCAID' => $this->request->getPost('marca_ad'),
-					'MARCADESCR' => isset($marcadescr->VEHICULOMARCADESCR),
-					'MODELODESCR' => isset($modelodescr->VEHICULOMODELODESCR),
+					'MARCADESCR' => isset($marcadescr->VEHICULOMARCADESCR) ? $marcadescr->VEHICULOMARCADESCR : NULL,
+					'MODELODESCR' => isset($modelodescr->VEHICULOMODELODESCR) ? $modelodescr->VEHICULOMODELODESCR : NULL,
+					'MARCADESCR' => $this->request->getPost('linea_vehiculo_ad'),
 					'MODELOID' => $this->request->getPost('linea_vehiculo_ad'),
 					'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad'),
 					'VEHICULOSERVICIOID' => $this->request->getPost('servicio_vehiculo_ad'),
@@ -2983,27 +2875,128 @@ try{
 					'TRACCION' => $this->request->getPost('traccion_vehiculo'),
 					'NUMEROCHASIS' => $this->request->getPost('num_chasis_vehiculo'),
 					'SEGUNDOCOLORID' => $this->request->getPost('color_tapiceria_vehiculo'),
-					'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo'),	
+					'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo'),
+					'FOTO' => $fotoV,
+					'DOCUMENTO' => $docV,
+
 				);
+			} catch (\Exception $e) {
 			}
-			
+		}
 
-			$update = $this->_folioVehiculoModel->set($data)->where('FOLIOID', $folio)->where('ANO', $year)->update();
+		if (isset($document_file) && empty($foto_file)) {
+			try {
+				$docV = file_get_contents($document_file);
+				$data = array(
+					'folio' => trim($this->request->getPost('folio')),
+					'year' => trim($this->request->getPost('year')),
+					'TIPOID' => $this->request->getPost('tipo_vehiculo'),
+					'PRIMERCOLORID' => $this->request->getPost('color_vehiculo'),
+					'SENASPARTICULARES' => $this->request->getPost('description_vehiculo'),
+					'TIPOPLACA' => $this->request->getPost('tipo_placas_vehiculo'),
+					'PLACAS' => $this->request->getPost('placas_vehiculo'),
+					'ESTADOIDPLACA' => $this->request->getPost('estado_vehiculo_ad'),
+					'ESTADOEXTRANJEROIDPLACA' => $this->request->getPost('estado_extranjero_vehiculo_ad'),
+					'NUMEROSERIE' => $this->request->getPost('serie_vehiculo'),
+					'VEHICULODISTRIBUIDORID' => $this->request->getPost('distribuidor_vehiculo_ad'),
+					'MARCAID' => $this->request->getPost('marca_ad'),
+					'MARCADESCR' => isset($marcadescr->VEHICULOMARCADESCR) ? $marcadescr->VEHICULOMARCADESCR : NULL,
+					'MODELODESCR' => isset($modelodescr->VEHICULOMODELODESCR) ? $modelodescr->VEHICULOMODELODESCR : NULL,
+					'MARCADESCR' => $this->request->getPost('linea_vehiculo_ad'),
 
-			if ($update) {
-				$vehiculos = $this->_folioVehiculoModel->get_by_folio($folio, $year);
+					'MODELOID' => $this->request->getPost('linea_vehiculo_ad'),
+					'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad'),
+					'VEHICULOSERVICIOID' => $this->request->getPost('servicio_vehiculo_ad'),
+					'SEGUROVIGENTE' => $this->request->getPost('seguro_vigente_vehiculo'),
+					'TRANSMISION' => $this->request->getPost('transmision_vehiculo'),
+					'TRACCION' => $this->request->getPost('traccion_vehiculo'),
+					'NUMEROCHASIS' => $this->request->getPost('num_chasis_vehiculo'),
+					'SEGUNDOCOLORID' => $this->request->getPost('color_tapiceria_vehiculo'),
+					'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo'),
+					'DOCUMENTO' => $docV,
 
-				$datosBitacora = [
-					'ACCION' => 'Ha actualizado el vehículo de una persona fisica',
-					'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
-				];
-
-				$this->_bitacoraActividad($datosBitacora);
-
-				return json_encode(['status' => 1, 'vehiculos' => $vehiculos]);
-			} else {
-				return json_encode(['status' => 0, 'message' => $update]);
+				);
+			} catch (\Exception $e) {
 			}
+		} elseif (isset($foto_file) && empty($document_file)) {
+			try {
+				$fotoV = file_get_contents($foto_file);
+				$data = array(
+					'folio' => trim($this->request->getPost('folio')),
+					'year' => trim($this->request->getPost('year')),
+					'TIPOID' => $this->request->getPost('tipo_vehiculo'),
+					'PRIMERCOLORID' => $this->request->getPost('color_vehiculo'),
+					'SENASPARTICULARES' => $this->request->getPost('description_vehiculo'),
+					'TIPOPLACA' => $this->request->getPost('tipo_placas_vehiculo'),
+					'PLACAS' => $this->request->getPost('placas_vehiculo'),
+					'ESTADOIDPLACA' => $this->request->getPost('estado_vehiculo_ad'),
+					'ESTADOEXTRANJEROIDPLACA' => $this->request->getPost('estado_extranjero_vehiculo_ad'),
+					'NUMEROSERIE' => $this->request->getPost('serie_vehiculo'),
+					'VEHICULODISTRIBUIDORID' => $this->request->getPost('distribuidor_vehiculo_ad'),
+					'MARCAID' => $this->request->getPost('marca_ad'),
+					'MARCADESCR' => isset($marcadescr->VEHICULOMARCADESCR) ? $marcadescr->VEHICULOMARCADESCR : NULL,
+					'MODELODESCR' => isset($modelodescr->VEHICULOMODELODESCR) ? $modelodescr->VEHICULOMODELODESCR : NULL,
+					'MARCADESCR' => $this->request->getPost('linea_vehiculo_ad'),
+
+					'MODELOID' => $this->request->getPost('linea_vehiculo_ad'),
+					'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad'),
+					'VEHICULOSERVICIOID' => $this->request->getPost('servicio_vehiculo_ad'),
+					'SEGUROVIGENTE' => $this->request->getPost('seguro_vigente_vehiculo'),
+					'TRANSMISION' => $this->request->getPost('transmision_vehiculo'),
+					'TRACCION' => $this->request->getPost('traccion_vehiculo'),
+					'NUMEROCHASIS' => $this->request->getPost('num_chasis_vehiculo'),
+					'SEGUNDOCOLORID' => $this->request->getPost('color_tapiceria_vehiculo'),
+					'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo'),
+					'FOTO' => $fotoV,
+
+				);
+			} catch (\Exception $e) {
+			}
+		} elseif (empty($document_file) && empty($foto_file)) {
+			$data = array(
+				'folio' => trim($this->request->getPost('folio')),
+				'year' => trim($this->request->getPost('year')),
+				'TIPOID' => $this->request->getPost('tipo_vehiculo'),
+				'PRIMERCOLORID' => $this->request->getPost('color_vehiculo'),
+				'SENASPARTICULARES' => $this->request->getPost('description_vehiculo'),
+				'TIPOPLACA' => $this->request->getPost('tipo_placas_vehiculo'),
+				'PLACAS' => $this->request->getPost('placas_vehiculo'),
+				'ESTADOIDPLACA' => $this->request->getPost('estado_vehiculo_ad'),
+				'ESTADOEXTRANJEROIDPLACA' => $this->request->getPost('estado_extranjero_vehiculo_ad'),
+				'NUMEROSERIE' => $this->request->getPost('serie_vehiculo'),
+				'VEHICULODISTRIBUIDORID' => $this->request->getPost('distribuidor_vehiculo_ad'),
+				'MARCAID' => $this->request->getPost('marca_ad'),
+				'MARCADESCR' => isset($marcadescr->VEHICULOMARCADESCR),
+				'MODELODESCR' => isset($modelodescr->VEHICULOMODELODESCR),
+				'MODELOID' => $this->request->getPost('linea_vehiculo_ad'),
+				'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad'),
+				'VEHICULOSERVICIOID' => $this->request->getPost('servicio_vehiculo_ad'),
+				'SEGUROVIGENTE' => $this->request->getPost('seguro_vigente_vehiculo'),
+				'TRANSMISION' => $this->request->getPost('transmision_vehiculo'),
+				'TRACCION' => $this->request->getPost('traccion_vehiculo'),
+				'NUMEROCHASIS' => $this->request->getPost('num_chasis_vehiculo'),
+				'SEGUNDOCOLORID' => $this->request->getPost('color_tapiceria_vehiculo'),
+				'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo'),
+			);
+		}
+
+
+		$update = $this->_folioVehiculoModel->set($data)->where('FOLIOID', $folio)->where('ANO', $year)->update();
+
+		if ($update) {
+			$vehiculos = $this->_folioVehiculoModel->get_by_folio($folio, $year);
+
+			$datosBitacora = [
+				'ACCION' => 'Ha actualizado el vehículo de una persona fisica',
+				'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
+			];
+
+			$this->_bitacoraActividad($datosBitacora);
+
+			return json_encode(['status' => 1, 'vehiculos' => $vehiculos]);
+		} else {
+			return json_encode(['status' => 0, 'message' => $update]);
+		}
 		// } catch (\Exception $e) {
 		// 	return json_encode(['status' => 0]);
 		// }
