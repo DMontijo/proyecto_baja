@@ -1239,11 +1239,6 @@ class DashboardController extends BaseController
 		$municipio = $this->request->getPost('municipio');
 		$estado = empty($this->request->getPost('estado')) ? 2 : $this->request->getPost('estado');
 		$notas = $this->request->getPost('notas');
-		// $oficina = $this->request->getPost('oficina');
-		// $empleado = $this->request->getPost('empleado');
-		$oficina = 394;
-		$empleado = 3938;
-		$area = 3231;
 		$tiposExpedienteId = $this->request->getPost('tipo_expediente');
 
 		try {
@@ -1251,7 +1246,6 @@ class DashboardController extends BaseController
 				$folioRow = $this->_folioModel->where('ANO', $year)->where('FOLIOID', $folio)->where('STATUS', 'EN PROCESO')->first();
 
 				if ($folioRow) {
-					// $empleadoRow = $this->_empleadosModel->asObject()->where('MUNICIPIOID', $municipio)->where('OFICINAID', $oficina)->where('EMPLEADOID', $empleado)->first();
 					$personas = $this->_folioPersonaFisicaModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->orderBy('PERSONAFISICAID', 'asc')->findAll();
 					$fisImpDelito = $this->_imputadoDelitoModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
 					$relacionFisFis = $this->_relacionIDOModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
@@ -1301,10 +1295,6 @@ class DashboardController extends BaseController
 					$folioRow['HECHOFECHA'] = $folioRow['HECHOFECHA'] . ' ' . $folioRow['HECHOHORA'];
 					$folioRow['HECHONARRACION'] = $notas;
 
-					// $folioRow['OFICINAIDRESPONSABLE'] = $oficina;
-					// $folioRow['EMPLEADOIDREGISTRO'] = $empleado;
-					// $folioRow['AREAIDREGISTRO'] = $area;
-					// $folioRow['AREAIDRESPONSABLE'] = $area;
 					$folioRow['ESTADOJURIDICOEXPEDIENTEID'] = (string) 2;
 					$folioRow['TIPOEXPEDIENTEID'] = (int)$tiposExpedienteId;
 

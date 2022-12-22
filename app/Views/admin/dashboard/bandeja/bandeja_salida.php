@@ -28,10 +28,13 @@
 							</thead>
 							<tbody>
 								<?php foreach ($body_data->folio->result as $index => $folio) {
-									$arrayExpediente = str_split($folio->EXPEDIENTEID);
-									$expedienteid = $arrayExpediente[0] . '-' . $arrayExpediente[1] . $arrayExpediente[2] . '-' .  $arrayExpediente[3] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] .$arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] .$arrayExpediente[13] .$arrayExpediente[14] ; ?>
+									$expedienteid = '';
+									if (isset($folio->EXPEDIENTEID)) {
+										$arrayExpediente = str_split($folio->EXPEDIENTEID);
+										$expedienteid = $arrayExpediente[0] . '-' . $arrayExpediente[1] . $arrayExpediente[2] . '-' .  $arrayExpediente[3] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
+									} ?>
 									<tr>
-										<td class="text-center" id="expediente"><?= $expedienteid ?></td>
+										<td class="text-center" id="expediente"><?= $expedienteid ? $expedienteid : '' ?></td>
 										<td class="text-center" id="municipioasignado"><?= $folio->MUNICIPIODESCR ?></td>
 										<td class="text-center d-none" id="municipioasignadoid"><?= $folio->MUNICIPIOID ?></td>
 										<td class="text-center" id="domiciliodelito"><?= $folio->HECHOCALLE ?></td>
@@ -64,7 +67,7 @@
 		document.querySelector('#domicilioh').value = domiciliodelito.innerHTML;
 		document.querySelector('#delitosa').value = delitosmodalidad.innerHTML;
 		$('#bandeja_modal').modal('show');
-		
+
 	});
 	(function() {
 		'use strict'
@@ -106,7 +109,7 @@
 		});
 	});
 
-	
+
 	function clearSelect(select_element) {
 		for (let i = select_element.options.length; i >= 1; i--) {
 			select_element.remove(i);

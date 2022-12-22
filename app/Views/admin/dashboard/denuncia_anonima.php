@@ -34,11 +34,11 @@
 					</div>
 					<form id="form_folio" action="" method="post" class="row p-0 m-0 needs-validation">
 
-						<div class="col-12 col-sm-6 mb-3">
+						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="fecha" class="form-label font-weight-bold">Fecha del delito:</label>
 							<input type="date" class="form-control" id="fecha" name="fecha" max="<?= date("Y-m-d") ?>" required>
 						</div>
-						<div class="col-12 col-sm-6 mb-3">
+						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="hora" class="form-label font-weight-bold">Hora del delito:</label>
 							<input type="time" class="form-control" id="hora" name="hora" required>
 						</div>
@@ -69,29 +69,29 @@
 								<select class="form-control" id="colonia_select" name="colonia_select" required>
 									<option selected disabled value="">Selecciona la colonia</option>
 								</select>
-								<input type="text" class="form-control d-none" id="colonia" name="colonia" maxlength="100">
+								<input type="text" class="form-control d-none" id="colonia" name="colonia" maxlength="50">
 							</div>
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="calle" class="form-label font-weight-bold">Calle o avenida:</label>
-							<input type="text" class="form-control" id="calle" name="calle" required>
+							<input type="text" class="form-control" id="calle" name="calle" maxlength="50" required>
 						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="exterior" class="form-label font-weight-bold">No. exterior:</label>
-							<input type="text" class="form-control" id="exterior" name="exterior" required>
+							<input type="text" class="form-control" id="exterior" name="exterior" maxlength="10" required>
 						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="interior" class="form-label font-weight-bold">No. interior:</label>
-							<input type="text" class="form-control" id="interior" name="interior">
+							<input type="text" class="form-control" id="interior" name="interior" maxlength="10">
 						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="referencias" class="form-label font-weight-bold">Referencias</label>
-							<input type="text" class="form-control" id="referencias" name="referencias">
+							<input type="text" class="form-control" id="referencias" name="referencias" maxlength="300">
 						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="narracion" class="form-label font-weight-bold">Narración del delito</label>
-							<input type="text" class="form-control" id="narracion" name="narracion">
+							<input type="text" class="form-control" id="narracion" name="narracion" maxlength="300">
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -113,9 +113,8 @@
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="notas_denuncia" class="form-label font-weight-bold">Notas:</label>
-							<textarea class="form-control" id="notas_denuncia" name="notas_denuncia" row="10" oninput="mayuscTextarea(this)" onkeyup="contarCaracteresDa(this)"></textarea>
+							<textarea class="form-control" id="notas_denuncia" name="notas_denuncia" row="10" oninput="mayuscTextarea(this)" onkeyup="contarCaracteresDa(this)" maxlength="300"></textarea>
 							<small id="numCaracterDa">300 caracteres restantes</small>
-
 						</div>
 
 
@@ -369,31 +368,31 @@
 		}
 	}, false);
 	form_persona_fisica_domicilio.addEventListener('submit', (event) => {
-				if (!form_persona_fisica_domicilio.checkValidity()) {
-					event.preventDefault();
-					event.stopPropagation();
-					form_persona_fisica_domicilio.classList.add('was-validated')
-				} else {
-					event.preventDefault();
-					event.stopPropagation();
-					form_persona_fisica_domicilio.classList.remove('was-validated')
-					actualizarDomicilio();
-				}
-			}, false);
-			form_media_filiacion.addEventListener('submit', (event) => {
-				if (!form_media_filiacion.checkValidity()) {
-					event.preventDefault();
-					event.stopPropagation();
-					form_media_filiacion.classList.add('was-validated')
-				} else {
-					event.preventDefault();
-					event.stopPropagation();
-					form_media_filiacion.classList.remove('was-validated')
-					let id_personafisica = document.querySelector('#pf_id').value;
+		if (!form_persona_fisica_domicilio.checkValidity()) {
+			event.preventDefault();
+			event.stopPropagation();
+			form_persona_fisica_domicilio.classList.add('was-validated')
+		} else {
+			event.preventDefault();
+			event.stopPropagation();
+			form_persona_fisica_domicilio.classList.remove('was-validated')
+			actualizarDomicilio();
+		}
+	}, false);
+	form_media_filiacion.addEventListener('submit', (event) => {
+		if (!form_media_filiacion.checkValidity()) {
+			event.preventDefault();
+			event.stopPropagation();
+			form_media_filiacion.classList.add('was-validated')
+		} else {
+			event.preventDefault();
+			event.stopPropagation();
+			form_media_filiacion.classList.remove('was-validated')
+			let id_personafisica = document.querySelector('#pf_id').value;
 
-					actualizarPersonaMediaAfiliacion(id_personafisica);
-				}
-			}, false);
+			actualizarPersonaMediaAfiliacion(id_personafisica);
+		}
+	}, false);
 	form_objetosinvolucrados_update.addEventListener('submit', (event) => {
 		if (!form_objetosinvolucrados_update.checkValidity()) {
 			event.preventDefault();
@@ -465,7 +464,7 @@
 				var option_otro = document.createElement("option");
 				option_otro.text = 'OTRO';
 				option_otro.value = '00';
-							select_marca.add(option_otro);
+				select_marca.add(option_otro);
 
 			},
 			error: function(jqXHR, textStatus, errorThrown) {}
@@ -1126,8 +1125,6 @@
 			'diaDesaparicion': document.querySelector('#diaDesaparicion1').value,
 			'lugarDesaparicion': document.querySelector('#lugarDesaparicion1').value,
 			'vestimenta_mf': document.querySelector('#vestimenta_mf1').value,
-
-
 		};
 		$.ajax({
 			data: data,
@@ -1321,11 +1318,11 @@
 						confirmButtonColor: '#bf9b55',
 					});
 					let tabla_relacion_fis_fis = document.querySelectorAll('#table-delitos-arbol tr');
-							tabla_relacion_fis_fis.forEach(row => {
-								if (row.id !== '') {
-									row.remove();
-								}
-							});
+					tabla_relacion_fis_fis.forEach(row => {
+						if (row.id !== '') {
+							row.remove();
+						}
+					});
 
 					llenarTablaFisFis(response.relacionFisFis);
 
@@ -1367,11 +1364,11 @@
 				}
 				if (response.status == 1) {
 					let tabla_fisimpdelito = document.querySelectorAll('#table-delito-cometidos tr');
-							tabla_fisimpdelito.forEach(row => {
-								if (row.id !== '') {
-									row.remove();
-								}
-							});
+					tabla_fisimpdelito.forEach(row => {
+						if (row.id !== '') {
+							row.remove();
+						}
+					});
 
 					llenarTablaImpDel(response.fisicaImpDelito);
 					Swal.fire({
@@ -1455,169 +1452,170 @@
 			}
 		});
 	}
+
 	function actualizarDomicilio() {
-				const data = {
-					'folio': document.querySelector('#input_folio_atencion').value,
-					'year': document.querySelector('#year_select').value,
-					'pf_id': document.querySelector('#pf_id').value,
-					'pfd_id': document.querySelector('#pfd_id').value,
-					'pais_pfd': document.querySelector('#pais_pfd').value,
-					'estado_pfd': document.querySelector('#estado_pfd').value,
-					'municipio_pfd_da': document.querySelector('#municipio_pfd_da').value,
-					'localidad_pfd': document.querySelector('#localidad_pfd').value,
-					'colonia_pfd_select': document.querySelector('#colonia_pfd_select').value,
-					'colonia_pfd': document.querySelector('#colonia_pfd').value,
-					'cp_pfd': document.querySelector('#cp_pfd').value,
-					'calle_pfd': document.querySelector('#calle_pfd').value,
-					'exterior_pfd': document.querySelector('#exterior_pfd').value,
-					'interior_pfd': document.querySelector('#interior_pfd').value,
-					'referencia_pfd': document.querySelector('#referencia_pfd').value,
-				};
+		const data = {
+			'folio': document.querySelector('#input_folio_atencion').value,
+			'year': document.querySelector('#year_select').value,
+			'pf_id': document.querySelector('#pf_id').value,
+			'pfd_id': document.querySelector('#pfd_id').value,
+			'pais_pfd': document.querySelector('#pais_pfd').value,
+			'estado_pfd': document.querySelector('#estado_pfd').value,
+			'municipio_pfd_da': document.querySelector('#municipio_pfd_da').value,
+			'localidad_pfd': document.querySelector('#localidad_pfd').value,
+			'colonia_pfd_select': document.querySelector('#colonia_pfd_select').value,
+			'colonia_pfd': document.querySelector('#colonia_pfd').value,
+			'cp_pfd': document.querySelector('#cp_pfd').value,
+			'calle_pfd': document.querySelector('#calle_pfd').value,
+			'exterior_pfd': document.querySelector('#exterior_pfd').value,
+			'interior_pfd': document.querySelector('#interior_pfd').value,
+			'referencia_pfd': document.querySelector('#referencia_pfd').value,
+		};
 
-				$.ajax({
-					data: data,
-					url: "<?= base_url('/data/update-persona-fisica-domicilio-by-id') ?>",
-					method: "POST",
-					dataType: "json",
-					success: function(response) {
-						console.log(response);
-						if (response.status == 1) {
-							Swal.fire({
-								icon: 'success',
-								text: 'Domicilio actualizado correctamente',
-								confirmButtonColor: '#bf9b55',
-							});
-						} else {
-							Swal.fire({
-								icon: 'error',
-								text: 'No se actualizó el domicilio',
-								confirmButtonColor: '#bf9b55',
-							});
-						}
-					},
-					error: function(jqXHR, textStatus, errorThrown) {
-						Swal.fire({
-							icon: 'error',
-							text: 'No se actualizó el domicilio',
-							confirmButtonColor: '#bf9b55',
-						});
-					}
+		$.ajax({
+			data: data,
+			url: "<?= base_url('/data/update-persona-fisica-domicilio-by-id') ?>",
+			method: "POST",
+			dataType: "json",
+			success: function(response) {
+				console.log(response);
+				if (response.status == 1) {
+					Swal.fire({
+						icon: 'success',
+						text: 'Domicilio actualizado correctamente',
+						confirmButtonColor: '#bf9b55',
+					});
+				} else {
+					Swal.fire({
+						icon: 'error',
+						text: 'No se actualizó el domicilio',
+						confirmButtonColor: '#bf9b55',
+					});
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				Swal.fire({
+					icon: 'error',
+					text: 'No se actualizó el domicilio',
+					confirmButtonColor: '#bf9b55',
 				});
 			}
+		});
+	}
 
-			function actualizarPersonaMediaAfiliacion(id) {
-				const data = {
-					'folio': document.querySelector('#input_folio_atencion').value,
-					'year': document.querySelector('#year_select').value,
-					'pf_id': id,
-					'ocupacion_mf': document.querySelector('#ocupacion_mf').value ? document.querySelector('#ocupacion_mf').value : document.querySelector('#ocupacion_mf1').value,
-					'estatura_mf': document.querySelector('#estatura_mf').value ? document.querySelector('#estatura_mf').value : document.querySelector('#estatura_mf1').value,
-					'peso_mf': document.querySelector('#peso_mf').value ? document.querySelector('#peso_mf').value : document.querySelector('#peso_mf1').value,
-					'senas_mf': document.querySelector('#senas_mf').value ? document.querySelector('#senas_mf').value : document.querySelector('#senas_mf1').value,
-					'colortez_mf': document.querySelector('#colortez_mf').value ? document.querySelector('#colortez_mf').value : document.querySelector('#colortez_mf1').value,
-					'complexion_mf': document.querySelector('#complexion_mf').value ? document.querySelector('#complexion_mf').value : document.querySelector('#complexion_mf1').value,
-					'contextura_ceja_mf': document.querySelector('#contextura_ceja_mf').value ? document.querySelector('#contextura_ceja_mf').value : document.querySelector('#contextura_ceja_mf1').value,
-					'cara_forma_mf': document.querySelector('#cara_forma_mf').value ? document.querySelector('#cara_forma_mf').value : document.querySelector('#cara_forma_mf1').value,
-					'cara_tamano_mf': document.querySelector('#cara_tamano_mf').value ? document.querySelector('#cara_tamano_mf').value : document.querySelector('#cara_tamano_mf1').value,
-					'caratez_mf': document.querySelector('#caratez_mf').value ? document.querySelector('#caratez_mf').value : document.querySelector('#caratez_mf1').value,
-					'lobulo_mf': document.querySelector('#lobulo_mf').value ? document.querySelector('#lobulo_mf').value : document.querySelector('#lobulo_mf1').value,
-					'forma_oreja_mf': document.querySelector('#forma_oreja_mf').value ? document.querySelector('#forma_oreja_mf').value : document.querySelector('#forma_oreja_mf1').value,
-					'tamano_oreja_mf': document.querySelector('#tamano_oreja_mf').value ? document.querySelector('#tamano_oreja_mf').value : document.querySelector('#tamano_oreja_mf1').value,
-					'colorC_mf': document.querySelector('#colorC_mf').value ? document.querySelector('#colorC_mf').value : document.querySelector('#colorC_mf1').value,
-					'formaC_mf': document.querySelector('#formaC_mf').value ? document.querySelector('#formaC_mf').value : document.querySelector('#formaC_mf1').value,
-					'tamanoC_mf': document.querySelector('#tamanoC_mf').value ? document.querySelector('#tamanoC_mf').value : document.querySelector('#tamanoC_mf1').value,
-					'peculiarC_mf': document.querySelector('#peculiarC_mf').value ? document.querySelector('#peculiarC_mf').value : document.querySelector('#peculiarC_mf1').value,
-					'cabello_descr_mf': document.querySelector('#cabello_descr_mf').value ? document.querySelector('#cabello_descr_mf').value : document.querySelector('#cabello_descr_mf1').value,
-					'frente_altura_mf': document.querySelector('#frente_altura_mf').value ? document.querySelector('#frente_altura_mf').value : document.querySelector('#frente_altura_mf1').value,
-					'frente_anchura_ms': document.querySelector('#frente_anchura_ms').value ? document.querySelector('#frente_anchura_ms').value : document.querySelector('#frente_anchura_mf1').value,
-					'tipoF_mf': document.querySelector('#tipoF_mf').value ? document.querySelector('#tipoF_mf').value : document.querySelector('#tipoF_mf1').value,
-					'frente_peculiar_mf': document.querySelector('#frente_peculiar_mf').value ? document.querySelector('#frente_peculiar_mf').value : document.querySelector('#frente_peculiar_mf1').value,
-					'colocacion_ceja_mf': document.querySelector('#colocacion_ceja_mf').value ? document.querySelector('#colocacion_ceja_mf').value : document.querySelector('#colocacion_ceja_mf1').value,
-					'ceja_mf': document.querySelector('#ceja_mf').value ? document.querySelector('#ceja_mf').value : document.querySelector('#ceja_mf1').value,
-					'tamano_ceja_mf': document.querySelector('#tamano_ceja_mf').value ? document.querySelector('#tamano_ceja_mf').value : document.querySelector('#tamano_ceja_mf1').value,
-					'grosor_ceja_mf': document.querySelector('#grosor_ceja_mf').value ? document.querySelector('#grosor_ceja_mf').value : document.querySelector('#grosor_ceja_mf1').value,
-					'colocacion_ojos_mf': document.querySelector('#colocacion_ojos_mf').value ? document.querySelector('#colocacion_ojos_mf').value : document.querySelector('#colocacion_ojos_mf1').value,
-					'forma_ojos_mf': document.querySelector('#forma_ojos_mf').value ? document.querySelector('#forma_ojos_mf').value : document.querySelector('#forma_ojos_mf1').value,
-					'tamano_ojos_mf': document.querySelector('#tamano_ojos_mf').value ? document.querySelector('#tamano_ojos_mf').value : document.querySelector('#tamano_ojos_mf1').value,
-					'colorO_mf': document.querySelector('#colorO_mf').value ? document.querySelector('#colorO_mf').value : document.querySelector('#colorO_mf1').value,
-					'peculiaridad_ojos_mf': document.querySelector('#peculiaridad_ojos_mf').value ? document.querySelector('#peculiaridad_ojos_mf').value : document.querySelector('#peculiaridad_ojos_mf1').value,
-					'nariz_tipo_mf': document.querySelector('#nariz_tipo_mf').value ? document.querySelector('#nariz_tipo_mf').value : document.querySelector('#nariz_tipo_mf1').value,
-					'nariz_tamano_mf': document.querySelector('#nariz_tamano_mf').value ? document.querySelector('#nariz_tamano_mf').value : document.querySelector('#nariz_tamano_mf1').value,
-					'nariz_base_mf': document.querySelector('#nariz_base_mf').value ? document.querySelector('#nariz_base_mf').value : document.querySelector('#nariz_base_mf1').value,
-					'nariz_peculiar_mf': document.querySelector('#nariz_peculiar_mf').value ? document.querySelector('#nariz_peculiar_mf').value : document.querySelector('#nariz_peculiar_mf1').value,
-					'nariz_descr_mf': document.querySelector('#nariz_descr_mf').value ? document.querySelector('#nariz_descr_mf').value : document.querySelector('#nariz_descr_mf1').value,
-					'bigote_forma_mf': document.querySelector('#bigote_forma_mf').value ? document.querySelector('#bigote_forma_mf').value : document.querySelector('#bigote_forma_mf1').value,
-					'bigote_tamaño_mf': document.querySelector('#bigote_tamaño_mf').value ? document.querySelector('#bigote_tamaño_mf').value : document.querySelector('#bigote_tamaño_mf1').value,
-					'bigote_grosor_mf': document.querySelector('#bigote_grosor_mf').value ? document.querySelector('#bigote_grosor_mf').value : document.querySelector('#bigote_grosor_mf1').value,
-					'bigote_peculiar_mf': document.querySelector('#bigote_peculiar_mf').value ? document.querySelector('#bigote_peculiar_mf').value : document.querySelector('#bigote_peculiar_mf1').value,
-					'bigote_descr_mf': document.querySelector('#bigote_descr_mf').value ? document.querySelector('#bigote_descr_mf').value : document.querySelector('#bigote_descr_mf1').value,
-					'boca_tamano_mf': document.querySelector('#boca_tamano_mf').value ? document.querySelector('#boca_tamano_mf').value : document.querySelector('#boca_tamano_mf1').value,
-					'boca_peculiar_mf': document.querySelector('#boca_peculiar_mf').value ? document.querySelector('#boca_peculiar_mf').value : document.querySelector('#boca_peculiar_mf1').value,
-					'labio_longitud_mf': document.querySelector('#labio_longitud_mf').value ? document.querySelector('#labio_longitud_mf').value : document.querySelector('#labio_longitud_mf1').value,
-					'labio_posicion_mf': document.querySelector('#labio_posicion_mf').value ? document.querySelector('#labio_posicion_mf').value : document.querySelector('#labio_posicion_mf1').value,
-					'labio_peculiar_mf': document.querySelector('#labio_peculiar_mf').value ? document.querySelector('#labio_peculiar_mf').value : document.querySelector('#labio_peculiar_mf1').value,
-					'labio_grosor_mf': document.querySelector('#labio_grosor_mf').value ? document.querySelector('#labio_grosor_mf').value : document.querySelector('#labio_grosor_mf1').value,
-					'dientes_tamano_mf': document.querySelector('#dientes_tamano_mf').value ? document.querySelector('#dientes_tamano_mf').value : document.querySelector('#dientes_tamano_mf1').value,
-					'dientes_tipo_mf': document.querySelector('#dientes_tipo_mf').value ? document.querySelector('#dientes_tipo_mf').value : document.querySelector('#dientes_tipo_mf1').value,
-					'dientes_peculiar_mf': document.querySelector('#dientes_peculiar_mf').value ? document.querySelector('#dientes_peculiar_mf').value : document.querySelector('#dientes_peculiar_mf1').value,
-					'dientes_descr_mf': document.querySelector('#dientes_descr_mf').value ? document.querySelector('#dientes_descr_mf').value : document.querySelector('#dientes_descr_mf1').value,
-					'barbilla_forma_mf': document.querySelector('#barbilla_forma_mf').value ? document.querySelector('#barbilla_forma_mf').value : document.querySelector('#barbilla_forma_mf1').value,
-					'barbilla_tamano_mf': document.querySelector('#barbilla_tamano_mf').value ? document.querySelector('#barbilla_tamano_mf').value : document.querySelector('#barbilla_tamano_mf1').value,
-					'barbilla_inclinacion_mf': document.querySelector('#barbilla_inclinacion_mf').value ? document.querySelector('#barbilla_inclinacion_mf').value : document.querySelector('#barbilla_inclinacion_mf1').value,
-					'barbilla_peculiar_mf': document.querySelector('#barbilla_peculiar_mf').value ? document.querySelector('#barbilla_peculiar_mf').value : document.querySelector('#barbilla_peculiar_mf1').value,
-					'barbilla_descr_mf': document.querySelector('#barbilla_descr_mf').value ? document.querySelector('#barbilla_descr_mf').value : document.querySelector('#barbilla_descr_mf1').value,
-					'barba_tamano_mf': document.querySelector('#barba_tamano_mf').value ? document.querySelector('#barba_tamano_mf').value : document.querySelector('#barba_tamano_mf1').value,
-					'barba_peculiar_mf': document.querySelector('#barba_peculiar_mf').value ? document.querySelector('#barba_peculiar_mf').value : document.querySelector('#barba_peculiar_mf1').value,
-					'barba_descr_mf': document.querySelector('#barba_descr_mf').value ? document.querySelector('#barba_descr_mf').value : document.querySelector('#barba_descr_mf1').value,
-					'cuello_tamano_mf': document.querySelector('#cuello_tamano_mf').value ? document.querySelector('#cuello_tamano_mf').value : document.querySelector('#cuello_tamano_mf1').value,
-					'cuello_grosor_mf': document.querySelector('#cuello_grosor_mf').value ? document.querySelector('#cuello_grosor_mf').value : document.querySelector('#cuello_grosor_mf1').value,
-					'cuello_peculiar_mf': document.querySelector('#cuello_peculiar_mf').value ? document.querySelector('#cuello_peculiar_mf').value : document.querySelector('#cuello_peculiar_mf1').value,
-					'cuello_descr_mf': document.querySelector('#cuello_descr_mf').value ? document.querySelector('#cuello_descr_mf').value : document.querySelector('#cuello_descr_mf1').value,
-					'hombro_posicion_mf': document.querySelector('#hombro_posicion_mf').value ? document.querySelector('#hombro_posicion_mf').value : document.querySelector('#hombro_posicion_mf1').value,
-					'hombro_tamano_mf': document.querySelector('#hombro_tamano_mf').value ? document.querySelector('#hombro_tamano_mf').value : document.querySelector('#hombro_tamano_mf1').value,
-					'hombro_grosor_mf': document.querySelector('#hombro_grosor_mf').value ? document.querySelector('#hombro_grosor_mf').value : document.querySelector('#hombro_grosor_mf1').value,
-					'estomago_mf': document.querySelector('#estomago_mf').value ? document.querySelector('#estomago_mf').value : document.querySelector('#estomago_mf1').value,
-					'escolaridad_mf': document.querySelector('#escolaridad_mf').value ? document.querySelector('#escolaridad_mf').value : document.querySelector('#escolaridad_mf1').value,
-					'etnia_mf': document.querySelector('#etnia_mf').value ? document.querySelector('#etnia_mf').value : document.querySelector('#etnia_mf1').value,
-					'estomago_descr_mf': document.querySelector('#estomago_descr_mf').value ? document.querySelector('#estomago_descr_mf').value : document.querySelector('#estomago_descr_mf1').value,
-					'discapacidad_mf': document.querySelector('#discapacidad_mf').value ? document.querySelector('#discapacidad_mf').value : document.querySelector('#discapacidad_mf1').value,
-					'diaDesaparicion': document.querySelector('#diaDesaparicion').value ? document.querySelector('#diaDesaparicion').value : document.querySelector('#diaDesaparicion1').value,
-					'lugarDesaparicion': document.querySelector('#lugarDesaparicion').value ? document.querySelector('#lugarDesaparicion').value : document.querySelector('#lugarDesaparicion1').value,
-					'vestimenta_mf': document.querySelector('#vestimenta_mf').value ? document.querySelector('#vestimenta_mf').value : document.querySelector('#vestimenta_mf1').value,
-					// 'parentesco_mf': document.querySelector('#parentesco_mf').value?document.querySelector('#parentesco_mf').value:document.querySelector('#parentesco_mf1').value,
+	function actualizarPersonaMediaAfiliacion(id) {
+		const data = {
+			'folio': document.querySelector('#input_folio_atencion').value,
+			'year': document.querySelector('#year_select').value,
+			'pf_id': id,
+			'ocupacion_mf': document.querySelector('#ocupacion_mf').value ? document.querySelector('#ocupacion_mf').value : document.querySelector('#ocupacion_mf1').value,
+			'estatura_mf': document.querySelector('#estatura_mf').value ? document.querySelector('#estatura_mf').value : document.querySelector('#estatura_mf1').value,
+			'peso_mf': document.querySelector('#peso_mf').value ? document.querySelector('#peso_mf').value : document.querySelector('#peso_mf1').value,
+			'senas_mf': document.querySelector('#senas_mf').value ? document.querySelector('#senas_mf').value : document.querySelector('#senas_mf1').value,
+			'colortez_mf': document.querySelector('#colortez_mf').value ? document.querySelector('#colortez_mf').value : document.querySelector('#colortez_mf1').value,
+			'complexion_mf': document.querySelector('#complexion_mf').value ? document.querySelector('#complexion_mf').value : document.querySelector('#complexion_mf1').value,
+			'contextura_ceja_mf': document.querySelector('#contextura_ceja_mf').value ? document.querySelector('#contextura_ceja_mf').value : document.querySelector('#contextura_ceja_mf1').value,
+			'cara_forma_mf': document.querySelector('#cara_forma_mf').value ? document.querySelector('#cara_forma_mf').value : document.querySelector('#cara_forma_mf1').value,
+			'cara_tamano_mf': document.querySelector('#cara_tamano_mf').value ? document.querySelector('#cara_tamano_mf').value : document.querySelector('#cara_tamano_mf1').value,
+			'caratez_mf': document.querySelector('#caratez_mf').value ? document.querySelector('#caratez_mf').value : document.querySelector('#caratez_mf1').value,
+			'lobulo_mf': document.querySelector('#lobulo_mf').value ? document.querySelector('#lobulo_mf').value : document.querySelector('#lobulo_mf1').value,
+			'forma_oreja_mf': document.querySelector('#forma_oreja_mf').value ? document.querySelector('#forma_oreja_mf').value : document.querySelector('#forma_oreja_mf1').value,
+			'tamano_oreja_mf': document.querySelector('#tamano_oreja_mf').value ? document.querySelector('#tamano_oreja_mf').value : document.querySelector('#tamano_oreja_mf1').value,
+			'colorC_mf': document.querySelector('#colorC_mf').value ? document.querySelector('#colorC_mf').value : document.querySelector('#colorC_mf1').value,
+			'formaC_mf': document.querySelector('#formaC_mf').value ? document.querySelector('#formaC_mf').value : document.querySelector('#formaC_mf1').value,
+			'tamanoC_mf': document.querySelector('#tamanoC_mf').value ? document.querySelector('#tamanoC_mf').value : document.querySelector('#tamanoC_mf1').value,
+			'peculiarC_mf': document.querySelector('#peculiarC_mf').value ? document.querySelector('#peculiarC_mf').value : document.querySelector('#peculiarC_mf1').value,
+			'cabello_descr_mf': document.querySelector('#cabello_descr_mf').value ? document.querySelector('#cabello_descr_mf').value : document.querySelector('#cabello_descr_mf1').value,
+			'frente_altura_mf': document.querySelector('#frente_altura_mf').value ? document.querySelector('#frente_altura_mf').value : document.querySelector('#frente_altura_mf1').value,
+			'frente_anchura_ms': document.querySelector('#frente_anchura_ms').value ? document.querySelector('#frente_anchura_ms').value : document.querySelector('#frente_anchura_mf1').value,
+			'tipoF_mf': document.querySelector('#tipoF_mf').value ? document.querySelector('#tipoF_mf').value : document.querySelector('#tipoF_mf1').value,
+			'frente_peculiar_mf': document.querySelector('#frente_peculiar_mf').value ? document.querySelector('#frente_peculiar_mf').value : document.querySelector('#frente_peculiar_mf1').value,
+			'colocacion_ceja_mf': document.querySelector('#colocacion_ceja_mf').value ? document.querySelector('#colocacion_ceja_mf').value : document.querySelector('#colocacion_ceja_mf1').value,
+			'ceja_mf': document.querySelector('#ceja_mf').value ? document.querySelector('#ceja_mf').value : document.querySelector('#ceja_mf1').value,
+			'tamano_ceja_mf': document.querySelector('#tamano_ceja_mf').value ? document.querySelector('#tamano_ceja_mf').value : document.querySelector('#tamano_ceja_mf1').value,
+			'grosor_ceja_mf': document.querySelector('#grosor_ceja_mf').value ? document.querySelector('#grosor_ceja_mf').value : document.querySelector('#grosor_ceja_mf1').value,
+			'colocacion_ojos_mf': document.querySelector('#colocacion_ojos_mf').value ? document.querySelector('#colocacion_ojos_mf').value : document.querySelector('#colocacion_ojos_mf1').value,
+			'forma_ojos_mf': document.querySelector('#forma_ojos_mf').value ? document.querySelector('#forma_ojos_mf').value : document.querySelector('#forma_ojos_mf1').value,
+			'tamano_ojos_mf': document.querySelector('#tamano_ojos_mf').value ? document.querySelector('#tamano_ojos_mf').value : document.querySelector('#tamano_ojos_mf1').value,
+			'colorO_mf': document.querySelector('#colorO_mf').value ? document.querySelector('#colorO_mf').value : document.querySelector('#colorO_mf1').value,
+			'peculiaridad_ojos_mf': document.querySelector('#peculiaridad_ojos_mf').value ? document.querySelector('#peculiaridad_ojos_mf').value : document.querySelector('#peculiaridad_ojos_mf1').value,
+			'nariz_tipo_mf': document.querySelector('#nariz_tipo_mf').value ? document.querySelector('#nariz_tipo_mf').value : document.querySelector('#nariz_tipo_mf1').value,
+			'nariz_tamano_mf': document.querySelector('#nariz_tamano_mf').value ? document.querySelector('#nariz_tamano_mf').value : document.querySelector('#nariz_tamano_mf1').value,
+			'nariz_base_mf': document.querySelector('#nariz_base_mf').value ? document.querySelector('#nariz_base_mf').value : document.querySelector('#nariz_base_mf1').value,
+			'nariz_peculiar_mf': document.querySelector('#nariz_peculiar_mf').value ? document.querySelector('#nariz_peculiar_mf').value : document.querySelector('#nariz_peculiar_mf1').value,
+			'nariz_descr_mf': document.querySelector('#nariz_descr_mf').value ? document.querySelector('#nariz_descr_mf').value : document.querySelector('#nariz_descr_mf1').value,
+			'bigote_forma_mf': document.querySelector('#bigote_forma_mf').value ? document.querySelector('#bigote_forma_mf').value : document.querySelector('#bigote_forma_mf1').value,
+			'bigote_tamaño_mf': document.querySelector('#bigote_tamaño_mf').value ? document.querySelector('#bigote_tamaño_mf').value : document.querySelector('#bigote_tamaño_mf1').value,
+			'bigote_grosor_mf': document.querySelector('#bigote_grosor_mf').value ? document.querySelector('#bigote_grosor_mf').value : document.querySelector('#bigote_grosor_mf1').value,
+			'bigote_peculiar_mf': document.querySelector('#bigote_peculiar_mf').value ? document.querySelector('#bigote_peculiar_mf').value : document.querySelector('#bigote_peculiar_mf1').value,
+			'bigote_descr_mf': document.querySelector('#bigote_descr_mf').value ? document.querySelector('#bigote_descr_mf').value : document.querySelector('#bigote_descr_mf1').value,
+			'boca_tamano_mf': document.querySelector('#boca_tamano_mf').value ? document.querySelector('#boca_tamano_mf').value : document.querySelector('#boca_tamano_mf1').value,
+			'boca_peculiar_mf': document.querySelector('#boca_peculiar_mf').value ? document.querySelector('#boca_peculiar_mf').value : document.querySelector('#boca_peculiar_mf1').value,
+			'labio_longitud_mf': document.querySelector('#labio_longitud_mf').value ? document.querySelector('#labio_longitud_mf').value : document.querySelector('#labio_longitud_mf1').value,
+			'labio_posicion_mf': document.querySelector('#labio_posicion_mf').value ? document.querySelector('#labio_posicion_mf').value : document.querySelector('#labio_posicion_mf1').value,
+			'labio_peculiar_mf': document.querySelector('#labio_peculiar_mf').value ? document.querySelector('#labio_peculiar_mf').value : document.querySelector('#labio_peculiar_mf1').value,
+			'labio_grosor_mf': document.querySelector('#labio_grosor_mf').value ? document.querySelector('#labio_grosor_mf').value : document.querySelector('#labio_grosor_mf1').value,
+			'dientes_tamano_mf': document.querySelector('#dientes_tamano_mf').value ? document.querySelector('#dientes_tamano_mf').value : document.querySelector('#dientes_tamano_mf1').value,
+			'dientes_tipo_mf': document.querySelector('#dientes_tipo_mf').value ? document.querySelector('#dientes_tipo_mf').value : document.querySelector('#dientes_tipo_mf1').value,
+			'dientes_peculiar_mf': document.querySelector('#dientes_peculiar_mf').value ? document.querySelector('#dientes_peculiar_mf').value : document.querySelector('#dientes_peculiar_mf1').value,
+			'dientes_descr_mf': document.querySelector('#dientes_descr_mf').value ? document.querySelector('#dientes_descr_mf').value : document.querySelector('#dientes_descr_mf1').value,
+			'barbilla_forma_mf': document.querySelector('#barbilla_forma_mf').value ? document.querySelector('#barbilla_forma_mf').value : document.querySelector('#barbilla_forma_mf1').value,
+			'barbilla_tamano_mf': document.querySelector('#barbilla_tamano_mf').value ? document.querySelector('#barbilla_tamano_mf').value : document.querySelector('#barbilla_tamano_mf1').value,
+			'barbilla_inclinacion_mf': document.querySelector('#barbilla_inclinacion_mf').value ? document.querySelector('#barbilla_inclinacion_mf').value : document.querySelector('#barbilla_inclinacion_mf1').value,
+			'barbilla_peculiar_mf': document.querySelector('#barbilla_peculiar_mf').value ? document.querySelector('#barbilla_peculiar_mf').value : document.querySelector('#barbilla_peculiar_mf1').value,
+			'barbilla_descr_mf': document.querySelector('#barbilla_descr_mf').value ? document.querySelector('#barbilla_descr_mf').value : document.querySelector('#barbilla_descr_mf1').value,
+			'barba_tamano_mf': document.querySelector('#barba_tamano_mf').value ? document.querySelector('#barba_tamano_mf').value : document.querySelector('#barba_tamano_mf1').value,
+			'barba_peculiar_mf': document.querySelector('#barba_peculiar_mf').value ? document.querySelector('#barba_peculiar_mf').value : document.querySelector('#barba_peculiar_mf1').value,
+			'barba_descr_mf': document.querySelector('#barba_descr_mf').value ? document.querySelector('#barba_descr_mf').value : document.querySelector('#barba_descr_mf1').value,
+			'cuello_tamano_mf': document.querySelector('#cuello_tamano_mf').value ? document.querySelector('#cuello_tamano_mf').value : document.querySelector('#cuello_tamano_mf1').value,
+			'cuello_grosor_mf': document.querySelector('#cuello_grosor_mf').value ? document.querySelector('#cuello_grosor_mf').value : document.querySelector('#cuello_grosor_mf1').value,
+			'cuello_peculiar_mf': document.querySelector('#cuello_peculiar_mf').value ? document.querySelector('#cuello_peculiar_mf').value : document.querySelector('#cuello_peculiar_mf1').value,
+			'cuello_descr_mf': document.querySelector('#cuello_descr_mf').value ? document.querySelector('#cuello_descr_mf').value : document.querySelector('#cuello_descr_mf1').value,
+			'hombro_posicion_mf': document.querySelector('#hombro_posicion_mf').value ? document.querySelector('#hombro_posicion_mf').value : document.querySelector('#hombro_posicion_mf1').value,
+			'hombro_tamano_mf': document.querySelector('#hombro_tamano_mf').value ? document.querySelector('#hombro_tamano_mf').value : document.querySelector('#hombro_tamano_mf1').value,
+			'hombro_grosor_mf': document.querySelector('#hombro_grosor_mf').value ? document.querySelector('#hombro_grosor_mf').value : document.querySelector('#hombro_grosor_mf1').value,
+			'estomago_mf': document.querySelector('#estomago_mf').value ? document.querySelector('#estomago_mf').value : document.querySelector('#estomago_mf1').value,
+			'escolaridad_mf': document.querySelector('#escolaridad_mf').value ? document.querySelector('#escolaridad_mf').value : document.querySelector('#escolaridad_mf1').value,
+			'etnia_mf': document.querySelector('#etnia_mf').value ? document.querySelector('#etnia_mf').value : document.querySelector('#etnia_mf1').value,
+			'estomago_descr_mf': document.querySelector('#estomago_descr_mf').value ? document.querySelector('#estomago_descr_mf').value : document.querySelector('#estomago_descr_mf1').value,
+			'discapacidad_mf': document.querySelector('#discapacidad_mf').value ? document.querySelector('#discapacidad_mf').value : document.querySelector('#discapacidad_mf1').value,
+			'diaDesaparicion': document.querySelector('#diaDesaparicion').value ? document.querySelector('#diaDesaparicion').value : document.querySelector('#diaDesaparicion1').value,
+			'lugarDesaparicion': document.querySelector('#lugarDesaparicion').value ? document.querySelector('#lugarDesaparicion').value : document.querySelector('#lugarDesaparicion1').value,
+			'vestimenta_mf': document.querySelector('#vestimenta_mf').value ? document.querySelector('#vestimenta_mf').value : document.querySelector('#vestimenta_mf1').value,
+			// 'parentesco_mf': document.querySelector('#parentesco_mf').value?document.querySelector('#parentesco_mf').value:document.querySelector('#parentesco_mf1').value,
 
-				};
-				// console.log(id);
-				$.ajax({
-					data: data,
-					url: "<?= base_url('/data/update-media-filiacion-by-id') ?>",
-					method: "POST",
-					dataType: "json",
-					success: function(response) {
-						// console.log(respobse.idcalidad);
-						if (response.status == 1) {
-							Swal.fire({
-								icon: 'success',
-								text: 'Persona media afiliación actualizada correctamente',
-								confirmButtonColor: '#bf9b55',
-							});
-							document.getElementById("form_media_filiacion_insert").reset();
-							$('#media_filiacion_modal').modal('hide');
+		};
+		// console.log(id);
+		$.ajax({
+			data: data,
+			url: "<?= base_url('/data/update-media-filiacion-by-id') ?>",
+			method: "POST",
+			dataType: "json",
+			success: function(response) {
+				// console.log(respobse.idcalidad);
+				if (response.status == 1) {
+					Swal.fire({
+						icon: 'success',
+						text: 'Persona media afiliación actualizada correctamente',
+						confirmButtonColor: '#bf9b55',
+					});
+					document.getElementById("form_media_filiacion_insert").reset();
+					$('#media_filiacion_modal').modal('hide');
 
 
-						} else {
-							Swal.fire({
-								icon: 'error',
-								text: 'No se actualizó la información de la persona media afiliación',
-								confirmButtonColor: '#bf9b55',
-							});
-						}
-					},
-					error: function(jqXHR, textStatus, errorThrown) {
-						console.log(textStatus);
-					}
-				});
+				} else {
+					Swal.fire({
+						icon: 'error',
+						text: 'No se actualizó la información de la persona media afiliación',
+						confirmButtonColor: '#bf9b55',
+					});
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				console.log(textStatus);
 			}
+		});
+	}
 
 
 	function actualizarPersona() {
@@ -2075,6 +2073,7 @@
 			}
 		});
 	}
+
 	function eliminarImputadoDelito(personafisicavictima, personafisicaimputado, delitoModalidadId) {
 		$.ajax({
 			data: {
@@ -2124,6 +2123,7 @@
 		});
 
 	}
+
 	function eliminarArbolDelictivo(personafisicavictima, personafisicaimputado, delitoModalidadId) {
 		$.ajax({
 			data: {
@@ -2409,16 +2409,18 @@
 			}
 		});
 	}
+
 	function pulsar(e) {
 		if (e.which === 13 && !e.shiftKey) {
 			e.preventDefault();
 			return false;
 		}
 	}
+
 	function contarCaracteresDa(obj) {
 		var maxLength = 300;
 		var strLength = obj.value.length;
-		 charRemain = (maxLength - strLength);
+		charRemain = (maxLength - strLength);
 
 		if (charRemain < 0) {
 			document.getElementById("numCaracterDa").innerHTML = '<span style="color: red;">Has superado el límite de ' + maxLength + ' caracteres </span>';

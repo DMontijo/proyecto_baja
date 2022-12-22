@@ -112,20 +112,20 @@
 							</thead>
 							<tbody>
 								<?php
-								foreach ($body_data->result as $index => $folio) { 
-									if ($folio->EXPEDIENTEID) {
+								foreach ($body_data->result as $index => $folio) {
+									$expedienteid = '';
+									if (isset($folio->EXPEDIENTEID)) {
 										$arrayExpediente = str_split($folio->EXPEDIENTEID);
-										$expedienteid = $arrayExpediente[0] . '-' . $arrayExpediente[1] . $arrayExpediente[2] . '-' .  $arrayExpediente[3] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] .$arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] .$arrayExpediente[13] .$arrayExpediente[14];
-									}
-									?>
-								
+										$expedienteid = $arrayExpediente[0] . '-' . $arrayExpediente[1] . $arrayExpediente[2] . '-' .  $arrayExpediente[3] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
+									} ?>
+
 									<tr>
 										<td class="text-center font-weight-bold"><?= $folio->FOLIOID ?></td>
 										<td class="text-center"><?= $folio->ANO ?></td>
-										<td class="text-center"><?= $folio->EXPEDIENTEID ? $expedienteid : ''   ?></td>
-										<td class="text-center"><?= $folio->STATUS . ' '. $folio->TIPOEXPEDIENTEDESCR ?></td>
+										<td class="text-center"><?= $expedienteid ? $expedienteid : '' ?></td>
+										<td class="text-center"><?= $folio->STATUS . ' ' . $folio->TIPOEXPEDIENTEDESCR ?></td>
 										<td class="text-center"><?= $folio->N_DENUNCIANTE . ' ' . $folio->APP_DENUNCIANTE . ' ' . $folio->APM_DENUNCIANTE ?></td>
-										<td class="text-center"><?= $folio->N_AGENT . ' ' . $folio->APP_AGENT . ' ' . $folio->APM_AGENT?></td>
+										<td class="text-center"><?= $folio->N_AGENT . ' ' . $folio->APP_AGENT . ' ' . $folio->APM_AGENT ?></td>
 										<td class="text-center"><?= $folio->MUNICIPIOASIGNADO ?></td>
 										<td class="text-center"><?= $folio->AREADESCR ?></td>
 
