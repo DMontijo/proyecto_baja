@@ -103,7 +103,7 @@
 	const municipio_empleado = document.querySelector('#municipio_empleado');
 
 
-	
+
 
 	tipoSalida.addEventListener('change', (e) => {
 		const notas_caso_salida = document.querySelector('#notas_caso_salida');
@@ -111,7 +111,7 @@
 
 		if (charRemain < 300) {
 			document.getElementById("numCaracterSalidaDa").innerHTML = charRemain + ' caracteres restantes';
-		}else{
+		} else {
 			document.getElementById("numCaracterSalidaDa").innerHTML = '300 caracteres restantes';
 
 		}
@@ -210,11 +210,11 @@
 						dataType: "json",
 						success: function(response) {
 							console.log(response);
-				
+
 						},
 						error: function(jqXHR, textStatus, errorThrown) {}
 					});
-				
+
 					$.ajax({
 						data: data,
 						url: "<?= base_url('/data/save-in-justicia') ?>",
@@ -223,6 +223,8 @@
 
 					}).done(function(data) {
 						btnFinalizar.removeAttribute('disabled');
+
+						console.log(data);
 
 						if (data.status == 1) {
 							document.querySelector('#tipo_salida').value = "";
@@ -303,10 +305,11 @@
 			select_element.remove(i);
 		}
 	}
+
 	function contarCaracteresSalidaDa(obj) {
 		if (charRemain < 300) {
 			var maxLength = charRemain;
-		}else{
+		} else {
 			var maxLength = 300;
 		}
 		var strLength = obj.value.length;

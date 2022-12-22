@@ -137,7 +137,7 @@
 				<div class="row">
 					<div class="col-12 overflow-auto">
 						<a class="btn btn-primary btn-block" target="_blank" href="https://www.diputados.gob.mx/LeyesBiblio/ref/cpf.htm"><i class="fas fa-file-alt"></i> Código Penal Federal</a>
-						<a class="btn btn-primary btn-block" target="_blank" href="https://www.congresobc.gob.mx/Contenido/Actividades_Legislativas/Leyes_Codigos.aspx"><i class="fas fa-file-alt"></i> Código Penal Estatal</a>
+						<a class="btn btn-primary btn-block" target="_blank" href="https://www.congresobc.gob.mx/TrabajoLegislativo/Leyes"><i class="fas fa-file-alt"></i> Código Penal Estatal</a>
 					</div>
 				</div>
 			</div>
@@ -766,155 +766,155 @@
 					option_vacio_im.text = '';
 					option_vacio_im.disabled = true;
 					option_vacio_im.selected = true;
-					if(victimas || imputados ||correos || personas){
-					$('#victima_modal_documento').empty();
-					let select_victima_documento = document.querySelector("#victima_modal_documento");
-					let select_imputado_documento = document.querySelector("#imputado_modal_documento");
-					select_victima_documento.add(option_vacio_vm, null);
-					victimas.forEach(victima => {
-						let primer_apellido = victima.PRIMERAPELLIDO ? victima.PRIMERAPELLIDO : '';
+					if (victimas || imputados || correos || personas) {
+						$('#victima_modal_documento').empty();
+						let select_victima_documento = document.querySelector("#victima_modal_documento");
+						let select_imputado_documento = document.querySelector("#imputado_modal_documento");
+						select_victima_documento.add(option_vacio_vm, null);
+						victimas.forEach(victima => {
+							let primer_apellido = victima.PRIMERAPELLIDO ? victima.PRIMERAPELLIDO : '';
 
-						const option = document.createElement('option');
-						option.value = victima.PERSONAFISICAID;
-						option.text = victima.NOMBRE + ' ' + primer_apellido;
-						select_victima_documento.add(option, null);
-					});
+							const option = document.createElement('option');
+							option.value = victima.PERSONAFISICAID;
+							option.text = victima.NOMBRE + ' ' + primer_apellido;
+							select_victima_documento.add(option, null);
+						});
 
-					$('#imputado_modal_documento').empty();
-					select_imputado_documento.add(option_vacio_im, null);
+						$('#imputado_modal_documento').empty();
+						select_imputado_documento.add(option_vacio_im, null);
 
-					imputados.forEach(imputado => {
-						let primer_apellido = imputado.PRIMERAPELLIDO ? imputado.PRIMERAPELLIDO : '';
+						imputados.forEach(imputado => {
+							let primer_apellido = imputado.PRIMERAPELLIDO ? imputado.PRIMERAPELLIDO : '';
 
-						const option = document.createElement('option');
-						option.value = imputado.PERSONAFISICAID;
-						option.text = imputado.NOMBRE + ' ' + primer_apellido;
-						select_imputado_documento.add(option, null);
-					});
+							const option = document.createElement('option');
+							option.value = imputado.PERSONAFISICAID;
+							option.text = imputado.NOMBRE + ' ' + primer_apellido;
+							select_imputado_documento.add(option, null);
+						});
 
 
-					$('#send_mail_select').empty();
-					let select_mail_send = document.querySelector("#send_mail_select");
-					correos.forEach(correo => {
-						const option = document.createElement('option');
-						option.value = correo.CORREO;
-						option.text = correo.CORREO;
-						select_mail_send.add(option, null);
-					});
+						$('#send_mail_select').empty();
+						let select_mail_send = document.querySelector("#send_mail_select");
+						correos.forEach(correo => {
+							const option = document.createElement('option');
+							option.value = correo.CORREO;
+							option.text = correo.CORREO;
+							select_mail_send.add(option, null);
+						});
 
-					const option_vacio = document.createElement('option');
-					option_vacio.value = '';
-					option_vacio.text = '';
-					option_vacio.disabled = true;
-					option_vacio.selected = true;
-					$('#victima_ofendido').empty();
-					const option_vacio_vic = document.createElement('option');
-					option_vacio_vic.value = '';
-					option_vacio_vic.text = '';
-					option_vacio_vic.disabled = true;
-					option_vacio_vic.selected = true;
+						const option_vacio = document.createElement('option');
+						option_vacio.value = '';
+						option_vacio.text = '';
+						option_vacio.disabled = true;
+						option_vacio.selected = true;
+						$('#victima_ofendido').empty();
+						const option_vacio_vic = document.createElement('option');
+						option_vacio_vic.value = '';
+						option_vacio_vic.text = '';
+						option_vacio_vic.disabled = true;
+						option_vacio_vic.selected = true;
 
-					let select_victima_ofendido = document.querySelector("#victima_ofendido");
-					select_victima_ofendido.add(option_vacio_vic, null);
-					victimas.forEach(victima => {
-						let primer_apellido = victima.PRIMERAPELLIDO ? victima.PRIMERAPELLIDO : '';
+						let select_victima_ofendido = document.querySelector("#victima_ofendido");
+						select_victima_ofendido.add(option_vacio_vic, null);
+						victimas.forEach(victima => {
+							let primer_apellido = victima.PRIMERAPELLIDO ? victima.PRIMERAPELLIDO : '';
 
-						const option = document.createElement('option');
-						option.value = victima.PERSONAFISICAID;
-						option.text = victima.NOMBRE + ' ' + primer_apellido;
-						select_victima_ofendido.add(option, null);
-					});
-					$('#imputado_delito_cometido').empty();
-					let select_imputado_delito_cometido = document.querySelector("#imputado_delito_cometido");
-					imputados.forEach(imputado => {
-						let primer_apellido = imputado.PRIMERAPELLIDO ? imputado.PRIMERAPELLIDO : '';
+							const option = document.createElement('option');
+							option.value = victima.PERSONAFISICAID;
+							option.text = victima.NOMBRE + ' ' + primer_apellido;
+							select_victima_ofendido.add(option, null);
+						});
+						$('#imputado_delito_cometido').empty();
+						let select_imputado_delito_cometido = document.querySelector("#imputado_delito_cometido");
+						imputados.forEach(imputado => {
+							let primer_apellido = imputado.PRIMERAPELLIDO ? imputado.PRIMERAPELLIDO : '';
 
-						const option = document.createElement('option');
-						option.value = imputado.PERSONAFISICAID;
-						option.text = imputado.NOMBRE + ' ' + primer_apellido;
-						select_imputado_delito_cometido.add(option, null);
-					});
-					$('#imputado_arbol').empty();
-					const option_vacio_imp = document.createElement('option');
-					option_vacio_imp.value = '';
-					option_vacio_imp.text = '';
-					option_vacio_imp.disabled = true;
-					option_vacio_imp.selected = true;
+							const option = document.createElement('option');
+							option.value = imputado.PERSONAFISICAID;
+							option.text = imputado.NOMBRE + ' ' + primer_apellido;
+							select_imputado_delito_cometido.add(option, null);
+						});
+						$('#imputado_arbol').empty();
+						const option_vacio_imp = document.createElement('option');
+						option_vacio_imp.value = '';
+						option_vacio_imp.text = '';
+						option_vacio_imp.disabled = true;
+						option_vacio_imp.selected = true;
 
-					let select_imputado_mputado = document.querySelector("#imputado_arbol");
-					select_imputado_mputado.add(option_vacio_imp, null);
-					imputados.forEach(imputado => {
-						let primer_apellido = imputado.PRIMERAPELLIDO ? imputado.PRIMERAPELLIDO : '';
+						let select_imputado_mputado = document.querySelector("#imputado_arbol");
+						select_imputado_mputado.add(option_vacio_imp, null);
+						imputados.forEach(imputado => {
+							let primer_apellido = imputado.PRIMERAPELLIDO ? imputado.PRIMERAPELLIDO : '';
 
-						const option = document.createElement('option');
-						option.value = imputado.PERSONAFISICAID;
-						option.text = imputado.NOMBRE + ' ' + primer_apellido;
-						select_imputado_mputado.add(option, null);
-					});
-					$('#personaFisica1_I').empty();
-					let select_personaFisica1_I = document.querySelector("#personaFisica1_I");
-					select_personaFisica1_I.add(option_vacio, null);
-					personas.forEach(persona => {
-						let primer_apellido = persona.PRIMERAPELLIDO ? persona.PRIMERAPELLIDO : '';
+							const option = document.createElement('option');
+							option.value = imputado.PERSONAFISICAID;
+							option.text = imputado.NOMBRE + ' ' + primer_apellido;
+							select_imputado_mputado.add(option, null);
+						});
+						$('#personaFisica1_I').empty();
+						let select_personaFisica1_I = document.querySelector("#personaFisica1_I");
+						select_personaFisica1_I.add(option_vacio, null);
+						personas.forEach(persona => {
+							let primer_apellido = persona.PRIMERAPELLIDO ? persona.PRIMERAPELLIDO : '';
 
-						const option = document.createElement('option');
-						option.value = persona.PERSONAFISICAID;
-						option.text = persona.NOMBRE + ' ' + primer_apellido;
-						select_personaFisica1_I.add(option, null);
-					});
-					$('#propietario').empty();
-					let select_propietario = document.querySelector("#propietario");
-					const option_vacio_prop = document.createElement('option');
-					option_vacio_prop.value = '';
-					option_vacio_prop.text = '';
-					option_vacio_prop.disabled = true;
-					option_vacio_prop.selected = true;
+							const option = document.createElement('option');
+							option.value = persona.PERSONAFISICAID;
+							option.text = persona.NOMBRE + ' ' + primer_apellido;
+							select_personaFisica1_I.add(option, null);
+						});
+						$('#propietario').empty();
+						let select_propietario = document.querySelector("#propietario");
+						const option_vacio_prop = document.createElement('option');
+						option_vacio_prop.value = '';
+						option_vacio_prop.text = '';
+						option_vacio_prop.disabled = true;
+						option_vacio_prop.selected = true;
 
-					select_propietario.add(option_vacio_prop, null);
-					personas.forEach(persona => {
-						let primer_apellido = persona.PRIMERAPELLIDO ? persona.PRIMERAPELLIDO : '';
+						select_propietario.add(option_vacio_prop, null);
+						personas.forEach(persona => {
+							let primer_apellido = persona.PRIMERAPELLIDO ? persona.PRIMERAPELLIDO : '';
 
-						const option = document.createElement('option');
-						option.value = persona.PERSONAFISICAID;
-						option.text = persona.NOMBRE + ' ' + primer_apellido;
-						select_propietario.add(option, null);
-					});
-					$('#propietario_update').empty();
-					let select_propietario_update = document.querySelector("#propietario_update");
-					select_propietario_update.add(option_vacio, null);
-					personas.forEach(persona => {
-						let primer_apellido = persona.PRIMERAPELLIDO ? persona.PRIMERAPELLIDO : '';
+							const option = document.createElement('option');
+							option.value = persona.PERSONAFISICAID;
+							option.text = persona.NOMBRE + ' ' + primer_apellido;
+							select_propietario.add(option, null);
+						});
+						$('#propietario_update').empty();
+						let select_propietario_update = document.querySelector("#propietario_update");
+						select_propietario_update.add(option_vacio, null);
+						personas.forEach(persona => {
+							let primer_apellido = persona.PRIMERAPELLIDO ? persona.PRIMERAPELLIDO : '';
 
-						const option = document.createElement('option');
-						option.value = persona.PERSONAFISICAID;
-						option.text = persona.NOMBRE + ' ' + primer_apellido;
-						select_propietario_update.add(option, null);
-					});
-					$('#objeto_update_subclasificacion').empty();
-					let select_objeto_update_subclasificacion = document.querySelector("#objeto_update_subclasificacion");
-					select_objeto_update_subclasificacion.add(option_vacio, null);
-					objetos.forEach(objetos => {
-						const option = document.createElement('option');
-						option.value = objetos.SUBCLASIFICACIONID;
-						option.text = objetos.OBJETOSUBCLASIFICACIONDESCR;
-						select_objeto_update_subclasificacion.add(option, null);
-					});
-				}
+							const option = document.createElement('option');
+							option.value = persona.PERSONAFISICAID;
+							option.text = persona.NOMBRE + ' ' + primer_apellido;
+							select_propietario_update.add(option, null);
+						});
+						$('#objeto_update_subclasificacion').empty();
+						let select_objeto_update_subclasificacion = document.querySelector("#objeto_update_subclasificacion");
+						select_objeto_update_subclasificacion.add(option_vacio, null);
+						objetos.forEach(objetos => {
+							const option = document.createElement('option');
+							option.value = objetos.SUBCLASIFICACIONID;
+							option.text = objetos.OBJETOSUBCLASIFICACIONDESCR;
+							select_objeto_update_subclasificacion.add(option, null);
+						});
+					}
 					//PREGUNTAS INICIALES
-					if(preguntas){
-					document.querySelector('#es_menor').value = preguntas.ES_MENOR;
-					document.querySelector('#es_tercera_edad').value = preguntas.ES_TERCERA_EDAD;
-					document.querySelector('#tiene_discapacidad').value = preguntas.TIENE_DISCAPACIDAD;
-					document.querySelector('#es_vulnerable').value = preguntas.ES_GRUPO_VULNERABLE;
-					document.querySelector('#vulnerable_descripcion').value = preguntas.ES_GRUPO_VULNERABLE_DESCR;
-					document.querySelector('#tiene_discapacidad').value = preguntas.TIENE_DISCAPACIDAD;
-					document.querySelector('#fue_con_arma').value = preguntas.FUE_CON_ARMA;
-					document.querySelector('#esta_desaparecido').value = preguntas.ESTA_DESAPARECIDO;
-					document.querySelector('#lesiones').value = preguntas.LESIONES;
-					document.querySelector('#lesiones_visibles').value = preguntas.LESIONES_VISIBLES;
+					if (preguntas) {
+						document.querySelector('#es_menor').value = preguntas.ES_MENOR;
+						document.querySelector('#es_tercera_edad').value = preguntas.ES_TERCERA_EDAD;
+						document.querySelector('#tiene_discapacidad').value = preguntas.TIENE_DISCAPACIDAD;
+						document.querySelector('#es_vulnerable').value = preguntas.ES_GRUPO_VULNERABLE;
+						document.querySelector('#vulnerable_descripcion').value = preguntas.ES_GRUPO_VULNERABLE_DESCR;
+						document.querySelector('#tiene_discapacidad').value = preguntas.TIENE_DISCAPACIDAD;
+						document.querySelector('#fue_con_arma').value = preguntas.FUE_CON_ARMA;
+						document.querySelector('#esta_desaparecido').value = preguntas.ESTA_DESAPARECIDO;
+						document.querySelector('#lesiones').value = preguntas.LESIONES;
+						document.querySelector('#lesiones_visibles').value = preguntas.LESIONES_VISIBLES;
 
 					}
-					
+
 					//DENUNCIA
 					document.querySelector('#delito_delito').value = folio.HECHODELITO;
 					document.querySelector('#municipio_delito').value = folio.HECHOMUNICIPIOID;
@@ -1009,20 +1009,20 @@
 						$('#v-pills-vehiculos-tab').css('display', 'NONE');
 					}
 					//PERSONAS	
-					if (personas) 
-					llenarTablaPersonas(personas);
+					if (personas)
+						llenarTablaPersonas(personas);
 					//VEHICULOS
 					if (vehiculos) llenarTablaVehiculos(vehiculos);
 					//PARENTESCO
-					if(relacion_parentesco) llenarTablaParentesco(relacion_parentesco, personaiduno, personaidDos, parentesco);
+					if (relacion_parentesco) llenarTablaParentesco(relacion_parentesco, personaiduno, personaidDos, parentesco);
 					//ARBOL DELICTUAL
-					if(relacionFisFis) llenarTablaFisFis(relacionFisFis);
+					if (relacionFisFis) llenarTablaFisFis(relacionFisFis);
 
 					//DELITOS COMETIDOS
-					if(fisicaImpDelito) llenarTablaImpDel(fisicaImpDelito);
+					if (fisicaImpDelito) llenarTablaImpDel(fisicaImpDelito);
 
 					//OBJETOS INVOLUCRADOS
-					if(objetos) llenarTablaObjetosInvolucrados(objetos);
+					if (objetos) llenarTablaObjetosInvolucrados(objetos);
 
 
 
@@ -3842,10 +3842,10 @@
 
 			function actualizarVehiculo() {
 				var packetData = new FormData();
-			
+
 				packetData.append("subirDoc", $("#subirDoc")[0].files[0]);
 				packetData.append("subirFotoV", $("#subirFotoV")[0].files[0]);
-				
+
 
 				packetData.append("folio", document.querySelector('#input_folio_atencion').value);
 				packetData.append("year", document.querySelector('#year_select').value);
@@ -3896,8 +3896,8 @@
 								}
 							});
 							llenarTablaVehiculos(vehiculos);
-							document.getElementById('subirFotoV').value ='';
-							document.getElementById('subirDoc').value ='';
+							document.getElementById('subirFotoV').value = '';
+							document.getElementById('subirDoc').value = '';
 
 							$('#folio_vehiculo_modal').modal('hide');
 
