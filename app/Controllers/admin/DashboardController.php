@@ -2487,7 +2487,6 @@ class DashboardController extends BaseController
 				'AREAASIGNADOID' => $area->AREAID
 			);
 
-
 			$update = $this->_folioModel->set($dataFolio)->where('EXPEDIENTEID', $expediente)->update();
 			if ($update) {
 

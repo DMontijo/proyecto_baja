@@ -282,7 +282,7 @@ class UserController extends BaseController
 	{
 		$id = $this->request->getPost('id');
 		$data = (object)array();
-		$data = $this->_folioModel->asObject()->where('DENUNCIANTEID', $id)->where('STATUS', 'ABIERTO')->where('STATUS', 'EN PROCESO')->findAll();
+		$data = $this->_folioModel->asObject()->where('DENUNCIANTEID', $id)->where('STATUS', 'ABIERTO')->orWhere('STATUS', 'EN PROCESO')->findAll();
 		return json_encode($data);
 	}
 

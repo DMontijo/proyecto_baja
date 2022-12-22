@@ -53,7 +53,7 @@
   const oficina_empleado = document.querySelector('#oficina_empleado');
   const empleado = document.querySelector('#empleado');
   const expedienteid = document.querySelector('#expedienteid');
-
+  
   var form_asignar_salida = document.querySelector('#bandeja_form');
 
   $.ajax({
@@ -113,7 +113,7 @@
   function actualizarSalida() {
     if (oficina_empleado.value != '' && empleado.value != '') {
       data = {
-        'expediente': expedienteid.value,
+        'expediente': expedienteid.value.replaceAll('-',''),
         'oficina': oficina_empleado.value,
         'empleado': empleado.value,
       }

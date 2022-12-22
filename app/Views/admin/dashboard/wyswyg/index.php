@@ -93,9 +93,13 @@
 							</thead>
 							<tbody>
 
-								<?php foreach ($body_data->result as $index => $documentos) { ?>
+								<?php foreach ($body_data->result as $index => $documentos) { 
+										if ($documentos->EXPEDIENTEID) {
+											$arrayExpediente = str_split($documentos->EXPEDIENTEID);
+											$expedienteid = $arrayExpediente[0] . '-' . $arrayExpediente[1] . $arrayExpediente[2] . '-' .  $arrayExpediente[3] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] .$arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] .$arrayExpediente[13] .$arrayExpediente[14];
+										}?>
 									<tr>
-										<td class="text-center font-weight-bold"><?= $documentos->EXPEDIENTEID ?></td>
+									<td class="text-center"><?= $documentos->EXPEDIENTEID ? $expedienteid : ''   ?></td>
 										<td class="text-center"><?= $documentos->FECHAREGISTRO ?></td>
 										<td class="text-center"><?= $documentos->STATUS ?></td>
 										<td class="text-center"><a type="button" href="<?= base_url('/admin/dashboard/documentos_show?expediente=' . $documentos->EXPEDIENTEID . '&year=' . $documentos->ANO . '&folio=' . $documentos->FOLIOID) ?>" class="btn btn-primary text-white"><i class="fas fa-eye"></i> VER SOLICITUD</a></td>
