@@ -3,18 +3,21 @@
 <?= $this->section('title') ?>
 <?php echo $header_data->title ?>
 <?= $this->endSection() ?>
+<?php $rolesToMonitor = [1, 2, 6, 7, 11]; ?>
 
 <?= $this->section('content') ?>
 <div class="row">
-	<div class="col-4">
-		<div class="card shadow" style="border-radius:10px;">
-			<div class="card-body text-center">
-				<h5 class="card-title">USUARIOS ACTIVOS</h5>
-				<h4 class="font-weight-bold" id="card_active_users">0</h4>
-				<a type="button" href="<?= base_url('admin/dashboard/usuarios_activos') ?>" class="btn btn-primary font-weight-bold mt-4 text-white">VER MÁS</a>
+	<?php if (in_array(session('ROLID'), $rolesToMonitor)) { ?>
+		<div class="col-4">
+			<div class="card shadow" style="border-radius:10px;">
+				<div class="card-body text-center">
+					<h5 class="card-title">USUARIOS ACTIVOS</h5>
+					<h4 class="font-weight-bold" id="card_active_users">0</h4>
+					<a type="button" href="<?= base_url('admin/dashboard/usuarios_activos') ?>" class="btn btn-primary font-weight-bold mt-4 text-white">VER MÁS</a>
+				</div>
 			</div>
 		</div>
-	</div>
+	<?php }; ?>
 	<div class="col-4">
 		<div class="card shadow" style="border-radius:10px;">
 			<div class="card-body text-center">
@@ -78,7 +81,6 @@
 			}
 		});
 	}
-
 </script>
 <?php if (session()->getFlashdata('acceso_denegado')) : ?>
 	<script>

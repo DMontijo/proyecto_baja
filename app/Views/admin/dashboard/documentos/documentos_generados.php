@@ -169,9 +169,7 @@
 					$('#documentos_modal_wyswyg').modal('hide');
 					$('#documentos_modal').modal('show');
 					obtenerPlantillas(plantilla.value, select_victima_documento.value, select_imputado_documento.value);
-
 				})
-
 			} else {
 				document.getElementById("involucrados").style.display = "none";
 			}
@@ -197,6 +195,7 @@
 				data: data,
 				dataType: 'JSON',
 				success: function(response) {
+					console.log(response);
 					const plantillas = response.plantilla;
 					quill.root.innerHTML = plantillas.PLACEHOLDER;
 					document.querySelector("#victima_modal_documento").value = '';
@@ -469,8 +468,7 @@
 						document.querySelector('#loading_sub_doc').classList.add('d-none');
 						document.querySelector('#verifying_documentos').classList.add('d-none');
 						btn_archivos_externos.disabled = false;
-					}
-					else if (response.status == 4) {
+					} else if (response.status == 4) {
 						Swal.fire({
 							icon: 'error',
 							text: "Hay archivos sin firmar",

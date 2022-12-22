@@ -119,17 +119,17 @@
 					//PREGUNTAS INICIALES
 					if (preguntas) {
 						document.querySelector('#es_menor').value = preguntas.ES_MENOR;
-					document.querySelector('#es_tercera_edad').value = preguntas.ES_TERCERA_EDAD;
-					document.querySelector('#tiene_discapacidad').value = preguntas.TIENE_DISCAPACIDAD;
-					document.querySelector('#es_vulnerable').value = preguntas.ES_GRUPO_VULNERABLE;
-					document.querySelector('#vulnerable_descripcion').value = preguntas.ES_GRUPO_VULNERABLE_DESCR;
-					document.querySelector('#tiene_discapacidad').value = preguntas.TIENE_DISCAPACIDAD;
-					document.querySelector('#fue_con_arma').value = preguntas.FUE_CON_ARMA;
-					document.querySelector('#esta_desaparecido').value = preguntas.ESTA_DESAPARECIDO;
-					document.querySelector('#lesiones').value = preguntas.LESIONES;
-					document.querySelector('#lesiones_visibles').value = preguntas.LESIONES_VISIBLES;
+						document.querySelector('#es_tercera_edad').value = preguntas.ES_TERCERA_EDAD;
+						document.querySelector('#tiene_discapacidad').value = preguntas.TIENE_DISCAPACIDAD;
+						document.querySelector('#es_vulnerable').value = preguntas.ES_GRUPO_VULNERABLE;
+						document.querySelector('#vulnerable_descripcion').value = preguntas.ES_GRUPO_VULNERABLE_DESCR;
+						document.querySelector('#tiene_discapacidad').value = preguntas.TIENE_DISCAPACIDAD;
+						document.querySelector('#fue_con_arma').value = preguntas.FUE_CON_ARMA;
+						document.querySelector('#esta_desaparecido').value = preguntas.ESTA_DESAPARECIDO;
+						document.querySelector('#lesiones').value = preguntas.LESIONES;
+						document.querySelector('#lesiones_visibles').value = preguntas.LESIONES_VISIBLES;
 					}
-					
+
 
 					//DENUNCIA
 					document.querySelector('#delito_delito').value = folio.HECHODELITO;
@@ -220,11 +220,11 @@
 					document.querySelector('#fecha_delito').value = folio.HECHOFECHA;
 					document.querySelector('#narracion_delito').value = folio.HECHONARRACION;
 
-					if (folio.HECHODELITO == "ROBO DE VEHÍCULO") {
-						$('#v-pills-vehiculos-tab').css('display', 'block');
-					} else {
-						$('#v-pills-vehiculos-tab').css('display', 'NONE');
-					}
+					// if (folio.HECHODELITO == "ROBO DE VEHÍCULO") {
+					// 	$('#v-pills-vehiculos-tab').css('display', 'block');
+					// } else {
+					// 	$('#v-pills-vehiculos-tab').css('display', 'NONE');
+					// }
 
 					//PERSONAS
 					for (let i = 0; i < personas.length; i++) {
@@ -520,13 +520,13 @@
 		document.getElementById("form_delitos_cometidos_insert").reset();
 
 
-		$('#v-pills-vehiculos-tab').css('display', 'NONE');
+		// $('#v-pills-vehiculos-tab').css('display', 'NONE');
 	}
 
 	buscar_nuevo_btn.addEventListener('click', () => {
 		// history.back();
 		// window.reload();
-		window.location.href= `<?= base_url('/admin/dashboard/buscar_folio')?>`;
+		window.location.href = `<?= base_url('/admin/dashboard/buscar_folio') ?>`;
 	});
 
 	function viewObjetoInvolucrado(objetoid) {

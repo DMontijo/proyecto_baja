@@ -36,8 +36,6 @@
 												</select>
 											</div>
 
-
-
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
 												<label for="fecha" class="form-label font-weight-bold">Fecha de inicio:</label>
 												<input type="date" class="form-control" id="fechaInicio" name="fechaInicio" max="<?= date("Y-m-d") ?>" value="<?= isset($body_data->filterParams->fechaInicio) ? $body_data->filterParams->fechaInicio : '' ?>">
@@ -57,16 +55,6 @@
 												<label for="hora" class="form-label font-weight-bold">Hora de cierre:</label>
 												<input type="time" class="form-control" id="horaFin" name="horaFin" value="<?= isset($body_data->filterParams->horaFin) ? $body_data->filterParams->horaFin : '' ?>">
 											</div>
-
-											<!-- <div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
-												<label for="status" class="form-label font-weight-bold">Expediente:</label>
-												<select class="form-control" id="status" name="status" required>
-													<option selected disabled value=""></option>
-												
-
-
-												</select>
-											</div> -->
 
 											<div class="col-12 text-right">
 												<a href="<?= base_url('admin/dashboard/documentos') ?>" class="btn btn-secondary font-weight-bold" id="btnFiltroDoc" name="btnFiltroDoc">Borrar filtro</a>
@@ -93,16 +81,16 @@
 							</thead>
 							<tbody>
 
-								<?php foreach ($body_data->result as $index => $documentos) { 
-										if ($documentos->EXPEDIENTEID) {
-											$arrayExpediente = str_split($documentos->EXPEDIENTEID);
-											$expedienteid = $arrayExpediente[0] . '-' . $arrayExpediente[1] . $arrayExpediente[2] . '-' .  $arrayExpediente[3] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] .$arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] .$arrayExpediente[13] .$arrayExpediente[14];
-										}?>
+								<?php foreach ($body_data->result as $index => $documentos) {
+									if ($documentos->EXPEDIENTEID) {
+										$arrayExpediente = str_split($documentos->EXPEDIENTEID);
+										$expedienteid = $arrayExpediente[0] . '-' . $arrayExpediente[1] . $arrayExpediente[2] . '-' .  $arrayExpediente[3] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
+									} ?>
 									<tr>
-									<td class="text-center"><?= $documentos->EXPEDIENTEID ? $expedienteid : ''   ?></td>
+										<td class="text-center"><?= $documentos->EXPEDIENTEID ? $expedienteid : ''   ?></td>
 										<td class="text-center"><?= $documentos->FECHAREGISTRO ?></td>
 										<td class="text-center"><?= $documentos->STATUS ?></td>
-										<td class="text-center"><a type="button" href="<?= base_url('/admin/dashboard/documentos_show?expediente=' . $documentos->EXPEDIENTEID . '&year=' . $documentos->ANO . '&folio=' . $documentos->FOLIOID) ?>" class="btn btn-primary text-white"><i class="fas fa-eye"></i> VER SOLICITUD</a></td>
+										<td class="text-center"><a type="button" href="<?= base_url('/admin/dashboard/documentos_show?expediente=' . $documentos->EXPEDIENTEID . '&year=' . $documentos->ANO . '&folio=' . $documentos->FOLIOID) ?>" class="btn btn-primary text-white"><i class="fas fa-folder-open"></i> DOCUMENTOS</a></td>
 									</tr>
 								<?php } ?>
 							</tbody>

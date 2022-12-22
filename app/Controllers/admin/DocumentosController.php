@@ -2,8 +2,6 @@
 
 namespace App\Controllers\admin;
 
-use Dompdf\Dompdf;
-use Dompdf\Options;
 use App\Controllers\BaseController;
 use App\Models\FolioDocModel;
 use App\Models\FolioModel;
@@ -24,8 +22,6 @@ class DocumentosController extends BaseController
 		$this->_folioModel = new FolioModel();
 		$this->_usuariosModel = new UsuariosModel();
 		$this->_municipiosModel = new MunicipiosModel();
-
-
 	}
 	public function index()
 	{
@@ -33,13 +29,6 @@ class DocumentosController extends BaseController
 		if (!$this->permisos('DOCUMENTOS')) {
 			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
 		}
-		// $data->abiertas = count($this->_folioDocModel->asObject()->where('STATUS', 'ABIERTO')->findAll());
-		// // $data->expediente = count($this->_folioDocModel->asObject()->where('STATUS', 'FIRMADO')->where('NUMEROEXPEDIENTE <>', null)->findAll());
-		// $data->expediente = count($this->_folioModel->asObject()->where('STATUS', 'EXPEDIENTE')->where('EXPEDIENTEID <>', null)->findAll());
-		// $data->documento = $this->_folioModel->get_folio_expediente();
-		// $data->empleados = $this->_usuariosModel->asObject()->where('ROLID', 2)->orderBy('NOMBRE', 'ASC')->findAll();
-
-		// $data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 		$data = [
 			'fechaInicio' => date("Y-m-d"),
 			'fechaFin' => date("Y-m-d"),
@@ -53,10 +42,8 @@ class DocumentosController extends BaseController
 		$resultFilter = $this->_folioModel->filterDatesDocumentos($data);
 		if (session('ROLID') == '2' || session('ROLID') == '3' || session('ROLID') == '6') {
 			$empleado = $this->_usuariosModel->asObject()->where('ID',	session('ID'))->orderBy('NOMBRE', 'ASC')->findAll();
-
-		}else{
+		} else {
 			$empleado = $this->_usuariosModel->asObject()->orderBy('NOMBRE', 'ASC')->findAll();
-
 		}
 
 		$dataView = (object)array();
@@ -65,7 +52,6 @@ class DocumentosController extends BaseController
 		$dataView->empleados = $empleado;
 		$dataView->filterParams = (object)$data;
 		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
-
 
 		$this->_loadView('Documentos', $dataView, 'index');
 	}

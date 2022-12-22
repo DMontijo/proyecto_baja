@@ -32,7 +32,7 @@
 									</select>
 								</div>
 								<div class="row mb-2">
-									<div id="municipio_empleado_container" class="col-4 d-none">
+									<div id="municipio_empleado_container" class="col-12 d-none">
 										<label for="municipio_empleado" class="form-label font-weight-bold">Municipio</label>
 										<select class="form-control" name="municipio_empleado" id="municipio_empleado">
 											<option value="" selected disabled>Selecciona...</option>
@@ -43,7 +43,7 @@
 											<option value="5">PLAYAS DE ROSARITO</option>
 										</select>
 									</div>
-									<div id="oficina_empleado_container" class="col-4 d-none">
+									<!-- <div id="oficina_empleado_container" class="col-4 d-none">
 										<label for="oficina_empleado" class="form-label font-weight-bold">Oficina</label>
 										<select class="form-control" name="oficina_empleado" id="oficina_empleado">
 											<option value="" selected disabled>Selecciona...</option>
@@ -55,7 +55,7 @@
 										<select class="form-control" name="empleado" id="empleado">
 											<option value="" selected disabled>Selecciona...</option>
 										</select>
-									</div>
+									</div> -->
 								</div>
 								<div id="notas" class="form-group">
 									<label for="notas_caso_salida">Notas</label>
@@ -158,6 +158,7 @@
 							$("#salida_modal_denuncia_anonima").modal("hide");
 							$('body').removeClass('modal-open');
 							$('.modal-backdrop').remove();
+							location.reload();
 						})
 					} else {
 						Swal.fire({
@@ -240,7 +241,6 @@
 								$('.modal-backdrop').remove();
 								window.location.href = `<?= base_url('/admin/dashboard/documentos_show?expediente=') ?>` + data.expediente + '&year=' + year_select.value + '&folio=' + inputFolio.value;
 								document.getElementById("form_folio").reset();
-
 							});
 						} else {
 							Swal.fire({
@@ -291,7 +291,7 @@
 				btnFinalizar.removeAttribute('disabled');
 				Swal.fire({
 					icon: 'error',
-					text: 'Debes seleccionar un municipio, una oficina y una asignación',
+					text: 'Debes seleccionar un municipio.',
 					confirmButtonColor: '#bf9b55',
 				});
 			}

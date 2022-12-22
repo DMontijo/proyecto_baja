@@ -181,10 +181,20 @@
 				dataType: "json",
 			}).done((response) => {
 				console.log(response);
-				if (response.length > 0) {
-					document.querySelector('#open_folios_modal #folio_num_span').innerHTML = response[0].FOLIOID;
-					document.querySelector('#open_folios_modal #folio_delito_span').innerHTML = response[0].HECHODELITO;
-					document.querySelector('#open_input_year').value = response[0].ANO;
+				if (response.abiertos.length > 0) {
+					document.querySelector('#open_folios_modal #title_span').innerHTML = 'ABIERTO'
+					document.querySelector('#open_folios_modal #folio_num_span').innerHTML = response.abiertos[0].FOLIOID;
+					document.querySelector('#open_folios_modal #folio_delito_span').innerHTML = response.abiertos[0].HECHODELITO;
+					document.querySelector('#open_folios_modal #folio_estatus').innerHTML = 'aún no ha sido atendido.'
+					document.querySelector('#open_input_year').value = response.abiertos[0].ANO;
+					$('#open_folios_modal').modal('show');
+				} else if (response.proceso.length > 0) {
+					document.querySelector('#open_folios_modal #title_span').innerHTML = 'EN PROCESO'
+					document.querySelector('#open_folios_modal #folio_num_span').innerHTML = response.proceso[0].FOLIOID;
+					document.querySelector('#open_folios_modal #folio_delito_span').innerHTML = response.proceso[0].HECHODELITO;
+					document.querySelector('#open_folios_modal #folio_estatus').innerHTML = 'esta en proceso de atención.'
+					document.querySelector('#open_input_year').value = response.proceso[0].ANO;
+					document.querySelector('#open_folios_modal #btn-inicia-denuncia').classList.add('d-none');
 					$('#open_folios_modal').modal('show');
 				}
 			}).fail(function(jqXHR, textStatus) {});
@@ -350,14 +360,14 @@
 					$('input[type=radio][name=documentos_vehiculo]').change(function() {
 						if (this.value == 'S') {
 							document.getElementById('datos_robo_vehiculo_completo').classList.add('step');
-						document.getElementById('datos_robo_vehiculo').classList.remove('step');
+							document.getElementById('datos_robo_vehiculo').classList.remove('step');
 						} else if (this.value == 'N') {
 							document.getElementById('datos_robo_vehiculo').classList.add('step');
-						document.getElementById('datos_robo_vehiculo_completo').classList.remove('step');
-					}
-						
+							document.getElementById('datos_robo_vehiculo_completo').classList.remove('step');
+						}
+
 					});
-					
+
 
 					// Swal.fire({
 					// 	title: '¿Cuentas con algún documento en ese momento para verificar la serie y las placas del auto?',

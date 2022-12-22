@@ -152,7 +152,7 @@ WHERE NOT FOLIO.EXPEDIENTEID IS NULL AND FOLIO.AGENTEASIGNADOID IS NULL';
 			$dataView = (object)array();
 			$dataView->result = $resultM;
 			return $dataView;
-		}else{
+		} else {
 			$dataView = (object)array();
 			$dataView->result = $result;
 			return $dataView;
@@ -289,26 +289,20 @@ WHERE NOT FOLIO.EXPEDIENTEID IS NULL AND FOLIO.AGENTEASIGNADOID IS NULL';
 	}
 	public function filterDatesDocumentos($obj)
 	{
-
-
 		$strQuery = 'SELECT FOLIO.FOLIOID, FOLIO.ANO, FOLIO.EXPEDIENTEID, FOLIO.FECHAREGISTRO, FOLIO.FECHASALIDA,FOLIO.STATUS, FOLIO.ANO
-			FROM FOLIO  ';
+			FROM FOLIO ';
 		$strQuery =
-			$strQuery . 'WHERE ' .
+			$strQuery . 'WHERE  FOLIO.EXPEDIENTEID IS NOT NULL AND ' .
 			'FOLIO.FECHASALIDA BETWEEN CAST("' .
 			(isset($obj['fechaInicio']) ? date("Y-m-d", strtotime($obj['fechaInicio'])) : date("Y-m-d")) . ' ' .
 			(isset($obj['horaInicio']) ? (date('H:i:s', strtotime($obj['horaInicio']))) : '00:00:00') . '" AS DATETIME)' . ' AND ' . 'CAST("' .
 			(isset($obj['fechaFin']) ? (isset($obj['horaFin']) ? date("Y-m-d", strtotime($obj['fechaFin'])) : date("Y-m-d", strtotime(date("Y-m-d", strtotime($obj['fechaFin']))))) : date("Y-m-d")) . ' ' .
 			(isset($obj['horaFin']) ? (date('H:i:s', strtotime($obj['horaFin']))) : '23:59:59') . '" AS DATETIME)';
-		// var_dump($strQuery);
-		// exit;
 		$result = $this->db->query($strQuery)->getResult();
 
 		$dataView = (object)array();
 		$dataView->result = $result;
 
-
-		// $dataView->strQuery = $strQuery;
 		return $dataView;
 	}
 

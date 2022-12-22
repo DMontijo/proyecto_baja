@@ -60,7 +60,7 @@
 	<div id="card6" class="col-12 col-sm-6 col-md-4 col-lg-3 d-none">
 		<div class="card rounded bg-white shadow" style="height: 190px;">
 			<div class="card-body">
-				<button id="generar-doc-btn" class="btn btn-primary btn-block h-100" role="button" data-toggle="modal" data-target="#documentos_modal_wyswyg"><i class="fas fa-file-archive"></i> GENERAR DOCUMENTOS</button>
+				<button id="generar-doc-btn" class="btn btn-primary btn-block h-100" role="button" data-toggle="modal" data-target="#documentos_modal_wyswyg"><i class="fas fa-file-archive"></i> AGREGAR DOCUMENTOS</button>
 			</div>
 		</div>
 	</div>
@@ -1003,11 +1003,11 @@
 					document.querySelector('#fecha_delito').value = folio.HECHOFECHA;
 					document.querySelector('#narracion_delito').value = folio.HECHONARRACION;
 
-					if (folio.HECHODELITO == "ROBO DE VEHÍCULO") {
-						$('#v-pills-vehiculos-tab').css('display', 'block');
-					} else {
-						$('#v-pills-vehiculos-tab').css('display', 'NONE');
-					}
+					// if (folio.HECHODELITO == "ROBO DE VEHÍCULO") {
+					// 	$('#v-pills-vehiculos-tab').css('display', 'block');
+					// } else {
+					// 	$('#v-pills-vehiculos-tab').css('display', 'NONE');
+					// }
 					//PERSONAS	
 					if (personas)
 						llenarTablaPersonas(personas);
@@ -1248,7 +1248,7 @@
 		document.getElementById("form_objetos_involucrados").reset();
 		document.getElementById("form_vehiculo").reset();
 
-		$('#v-pills-vehiculos-tab').css('display', 'NONE');
+		// $('#v-pills-vehiculos-tab').css('display', 'NONE');
 	}
 
 	buscar_nuevo_btn.addEventListener('click', () => {
