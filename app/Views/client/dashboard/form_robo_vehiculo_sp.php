@@ -31,23 +31,12 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="placas_vehiculo" class="form-label fw-bold">Placas:</label>
-		<input type="text" class="form-control" id="placas_vehiculo" name="placas_vehiculo" onkeyup="verificarPlacas()">
+		<input type="text" class="form-control" id="placas_vehiculo" name="placas_vehiculo">
 	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="confirm_placas_vehiculo" class="form-label fw-bold">Confirma las placas:</label>
-		<input type="text" class="form-control" id="confirm_placas_vehiculo" name="confirm_placas_vehiculo" onkeyup="verificarPlacas()">
-		<label for="mensajeok" id="mensajeok" name="mensajeok" class="form-label fw-bold d-none" style="color: #009130; font-size: 12px; text-align:center;">Las placas coinciden </label>
-		<label for="mensaje" id="mensaje" name="mensaje" class="form-label fw-bold d-none" style="color: #D52600; font-size: 12px; text-align:center;">Las placas no coinciden</label>
-	</div>
+	
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="serie_vehiculo" class="form-label fw-bold">No. Serie:</label>
 		<input type="text" class="form-control" id="serie_vehiculo" name="serie_vehiculo">
-	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="confirm_serie_vehiculo" class="form-label fw-bold">Confirmar serie</label>
-		<input type="text" class="form-control" id="confirm_serie_vehiculo" name="confirm_serie_vehiculo" onkeyup="verificarSerie()">
-		<label for="coinciden" id="coinciden" name="coinciden" class="form-label fw-bold d-none" style="color: #009130; font-size: 12px; text-align:center;">La serie coincide </label>
-		<label for="nocoinciden" id="nocoinciden" name="nocoinciden" class="form-label fw-bold d-none" style="color: #D52600; font-size: 12px; text-align:center;">La serie no coincide</label>
 	</div>
 
 	<div class="col-12 mb-3">
@@ -79,39 +68,5 @@
 		}
 	}
 	
-	function verificarPlacas() {
 
-placas = document.getElementById('placas_vehiculo');
-confirm_placas = document.getElementById('confirm_placas_vehiculo');
-
-if (placas.value != confirm_placas.value) {
-
-	document.getElementById("mensaje").classList.remove("d-none")
-	document.getElementById("mensajeok").classList.add("d-none")
-
-
-} else {
-	document.getElementById("mensaje").classList.add("d-none")
-	document.getElementById("mensajeok").classList.remove("d-none")
-}
-
-}
-
-function verificarSerie() {
-
-serie = document.getElementById('serie_vehiculo');
-confirm_serie = document.getElementById('confirm_serie_vehiculo');
-
-if (serie.value != confirm_serie.value) {
-
-	document.getElementById("nocoinciden").classList.remove("d-none")
-	document.getElementById("coinciden").classList.add("d-none")
-
-
-} else {
-	document.getElementById("nocoinciden").classList.add("d-none")
-	document.getElementById("coinciden").classList.remove("d-none")
-}
-
-}
 </script>

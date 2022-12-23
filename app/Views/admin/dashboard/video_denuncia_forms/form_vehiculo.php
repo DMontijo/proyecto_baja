@@ -141,7 +141,6 @@
 		<label for="version_vehiculo" class="form-label font-weight-bold">Versión:</label>
 		<select class="form-control" id="version_vehiculo_ad" name="version_vehiculo_ad">
 			<option selected disabled value="">Selecciona la versión</option>
-
 		</select>
 	</div>
 
