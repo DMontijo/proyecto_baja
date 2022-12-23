@@ -89,14 +89,14 @@
 
 	const municipio_empleado_container = document.querySelector('#municipio_empleado_container');
 	const municipio_empleado = document.querySelector('#municipio_empleado');
-	
+
 	tipoSalida.addEventListener('change', (e) => {
 		const notas_caso_salida = document.querySelector('#notas_caso_salida');
 		const notas_caso_mp = document.querySelector('#notas_mp');
 		notas_caso_salida.value = notas_caso_mp.value;
 		if (charRemain < 300) {
 			document.getElementById("numCaracterSalida").innerHTML = charRemain + ' caracteres restantes';
-		}else{
+		} else {
 			document.getElementById("numCaracterSalida").innerHTML = '300 caracteres restantes';
 
 		}
@@ -207,17 +207,17 @@
 						'municipio_empleado': municipio_empleado.value,
 
 					};
-					$.ajax({
+					// $.ajax({
 
-						data: dataFolio,
-						url: "<?= base_url('/data/update-salida-folio') ?>",
-						method: "POST",
-						dataType: "json",
-						success: function(response) {
-							console.log(response);
-						},
-						error: function(jqXHR, textStatus, errorThrown) {}
-					});
+					// 	data: dataFolio,
+					// 	url: "<?= base_url('/data/update-salida-folio') ?>",
+					// 	method: "POST",
+					// 	dataType: "json",
+					// 	success: function(response) {
+					// 		console.log(response);
+					// 	},
+					// 	error: function(jqXHR, textStatus, errorThrown) {}
+					// });
 					$.ajax({
 						data: data,
 						url: "<?= base_url('/data/save-in-justicia') ?>",
@@ -338,10 +338,11 @@
 			select_element.remove(i);
 		}
 	}
+
 	function contarCaracteresSalida(obj) {
 		if (charRemain < 300) {
 			var maxLength = charRemain;
-		}else{
+		} else {
 			var maxLength = 300;
 		}
 		var strLength = obj.value.length;

@@ -51,6 +51,8 @@ $routes->group('admin', function ($routes) {
 		$routes->get('/', 'admin/DashboardController::index');
 		$routes->get('videos', 'admin/DashboardController::videos_expediente');
 		$routes->get('bandeja', 'admin/DashboardController::bandeja_salida');
+		$routes->get('bandeja_remision', 'admin/DashboardController::bandeja_remision');
+		$routes->post('bandeja_remision', 'admin/DashboardController::bandeja_remision_post');
 
 		$routes->get('usuarios', 'admin/DashboardController::usuarios');
 		$routes->get('asignacion_permisos', 'admin/DashboardController::asignacion_permisos');

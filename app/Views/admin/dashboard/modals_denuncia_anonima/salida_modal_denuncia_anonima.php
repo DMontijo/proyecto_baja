@@ -203,18 +203,18 @@
 						'municipio_empleado': municipio_empleado.value,
 
 					};
-					$.ajax({
+					// $.ajax({
 
-						data: dataFolio,
-						url: "<?= base_url('/data/update-salida-folio') ?>",
-						method: "POST",
-						dataType: "json",
-						success: function(response) {
-							console.log(response);
+					// 	data: dataFolio,
+					// 	url: "<?= base_url('/data/update-salida-folio') ?>",
+					// 	method: "POST",
+					// 	dataType: "json",
+					// 	success: function(response) {
+					// 		console.log(response);
 
-						},
-						error: function(jqXHR, textStatus, errorThrown) {}
-					});
+					// 	},
+					// 	error: function(jqXHR, textStatus, errorThrown) {}
+					// });
 
 					$.ajax({
 						data: data,

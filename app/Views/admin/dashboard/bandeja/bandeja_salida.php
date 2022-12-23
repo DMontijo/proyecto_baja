@@ -13,39 +13,180 @@
 			<div class="col-12">
 				<div class="card shadow border-0" style="overflow-x:auto;">
 					<div class="card-body">
-						<table id="bandeja_salida" class="table table-bordered table-striped">
-							<thead>
-								<tr>
-
-									<th class="text-center">EXPEDIENTEID</th>
-									<th class="text-center">MUNICIPIO ASIGNADO</th>
-									<th class="text-center  d-none">MUNICIPIO ID</th>
-
-									<th class="text-center">DOMICILIO DEL HECHO</th>
-									<th class="text-center">DELITOS INVOLUCRADOS</th>
-									<th class="text-center"></th>
-								</tr>
-							</thead>
-							<tbody>
-								<?php foreach ($body_data->folio->result as $index => $folio) {
-									$expedienteid = '';
-									if (isset($folio->EXPEDIENTEID)) {
-										$arrayExpediente = str_split($folio->EXPEDIENTEID);
-										$expedienteid = $arrayExpediente[0] . '-' . $arrayExpediente[1] . $arrayExpediente[2] . '-' .  $arrayExpediente[3] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
-									} ?>
-									<tr>
-										<td class="text-center" id="expediente"><?= $expedienteid ? $expedienteid : '' ?></td>
-										<td class="text-center" id="municipioasignado"><?= $folio->MUNICIPIODESCR ?></td>
-										<td class="text-center d-none" id="municipioasignadoid"><?= $folio->MUNICIPIOID ?></td>
-										<td class="text-center" id="domiciliodelito"><?= $folio->HECHOCALLE ?></td>
-										<td class="text-center" id="delitosmodalidad"><?= $folio->DELITOMODALIDADDESCR ?></td>
-										<td class="text-center">
-											<a type="button" class="btn btn-primary" id="asignar_salida" name="asignar_salida"><i class="fas fa-eye"></i></a>
-										</td>
-									</tr>
-								<?php } ?>
-							</tbody>
-						</table>
+						<ul class="nav nav-tabs" id="myTab" role="tablist">
+							<li class="nav-item">
+								<a class="nav-link active" id="ensenada-tab" data-toggle="tab" href="#ensenada" role="tab" aria-controls="ensenada" aria-selected="true">Ensenada - <?= count($body_data->ensenada->result) ?></a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" id="mexicali-tab" data-toggle="tab" href="#mexicali" role="tab" aria-controls="mexicali" aria-selected="false">Mexicali - <?= count($body_data->mexicali->result) ?></a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" id="tecate-tab" data-toggle="tab" href="#tecate" role="tab" aria-controls="tecate" aria-selected="false">Tecate - <?= count($body_data->tecate->result) ?></a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" id="Tijuana-tab" data-toggle="tab" href="#Tijuana" role="tab" aria-controls="Tijuana" aria-selected="false">Tijuana - <?= count($body_data->tijuana->result) ?></a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" id="rosarito-tab" data-toggle="tab" href="#rosarito" role="tab" aria-controls="rosarito" aria-selected="false">Playas de Rosarito - <?= count($body_data->rosarito->result) ?></a>
+							</li>
+						</ul>
+						<div class="tab-content" id="myTabContent">
+							<div class="tab-pane fade show active" id="ensenada" role="tabpanel" aria-labelledby="ensenada-tab">
+								<table id="table-ensenada" class="table table-bordered table-striped">
+									<thead>
+										<tr>
+											<th class="text-center">EXPEDIENTEID</th>
+											<th class="text-center">MUNICIPIO ASIGNADO</th>
+											<th class="text-center">DOMICILIO DEL HECHO</th>
+											<th class="text-center">DELITOS INVOLUCRADOS</th>
+											<th class="text-center"></th>
+										</tr>
+									</thead>
+									<tbody>
+										<?php foreach ($body_data->ensenada->result as $index => $folio) {
+											$expedienteid = '';
+											if (isset($folio->EXPEDIENTEID)) {
+												$arrayExpediente = str_split($folio->EXPEDIENTEID);
+												$expedienteid = $arrayExpediente[0] . '-' . $arrayExpediente[1] . $arrayExpediente[2] . '-' .  $arrayExpediente[3] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
+											} ?>
+											<tr>
+												<td class="text-center"><?= $expedienteid ? $expedienteid : '' ?></td>
+												<td class="text-center"><?= $folio->MUNICIPIODESCR ?></td>
+												<td class="text-center"><?= $folio->HECHOCALLE ?></td>
+												<td class="text-center"><?= $folio->DELITOMODALIDADDESCR ?></td>
+												<td class="text-center">
+													<a type="button" href="<?= base_url('/admin/dashboard/bandeja_remision?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO . '&municipioasignado=' . $folio->MUNICIPIOASIGNADOID . '&expediente=' . $folio->EXPEDIENTEID ?>" class="btn btn-primary text-white">REMITIR</a>
+												</td>
+											</tr>
+										<?php } ?>
+									</tbody>
+								</table>
+							</div>
+							<div class="tab-pane fade" id="mexicali" role="tabpanel" aria-labelledby="mexicali-tab">
+								<table id="table-mexicali" class="table table-bordered table-striped">
+									<thead>
+										<tr>
+											<th class="text-center">EXPEDIENTEID</th>
+											<th class="text-center">MUNICIPIO ASIGNADO</th>
+											<th class="text-center">DOMICILIO DEL HECHO</th>
+											<th class="text-center">DELITOS INVOLUCRADOS</th>
+											<th class="text-center"></th>
+										</tr>
+									</thead>
+									<tbody>
+										<?php foreach ($body_data->mexicali->result as $index => $folio) {
+											$expedienteid = '';
+											if (isset($folio->EXPEDIENTEID)) {
+												$arrayExpediente = str_split($folio->EXPEDIENTEID);
+												$expedienteid = $arrayExpediente[0] . '-' . $arrayExpediente[1] . $arrayExpediente[2] . '-' .  $arrayExpediente[3] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
+											} ?>
+											<tr>
+												<td class="text-center"><?= $expedienteid ? $expedienteid : '' ?></td>
+												<td class="text-center"><?= $folio->MUNICIPIODESCR ?></td>
+												<td class="text-center"><?= $folio->HECHOCALLE ?></td>
+												<td class="text-center"><?= $folio->DELITOMODALIDADDESCR ?></td>
+												<td class="text-center">
+													<a type="button" href="<?= base_url('/admin/dashboard/bandeja_remision?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO . '&municipioasignado=' . $folio->MUNICIPIOASIGNADOID . '&expediente=' . $folio->EXPEDIENTEID ?>" class="btn btn-primary text-white">REMITIR</a>
+												</td>
+											</tr>
+										<?php } ?>
+									</tbody>
+								</table>
+							</div>
+							<div class="tab-pane fade" id="tecate" role="tabpanel" aria-labelledby="tecate-tab">
+								<table id="table-tecate" class="table table-bordered table-striped">
+									<thead>
+										<tr>
+											<th class="text-center">EXPEDIENTEID</th>
+											<th class="text-center">MUNICIPIO ASIGNADO</th>
+											<th class="text-center">DOMICILIO DEL HECHO</th>
+											<th class="text-center">DELITOS INVOLUCRADOS</th>
+											<th class="text-center"></th>
+										</tr>
+									</thead>
+									<tbody>
+										<?php foreach ($body_data->tecate->result as $index => $folio) {
+											$expedienteid = '';
+											if (isset($folio->EXPEDIENTEID)) {
+												$arrayExpediente = str_split($folio->EXPEDIENTEID);
+												$expedienteid = $arrayExpediente[0] . '-' . $arrayExpediente[1] . $arrayExpediente[2] . '-' .  $arrayExpediente[3] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
+											} ?>
+											<tr>
+												<td class="text-center"><?= $expedienteid ? $expedienteid : '' ?></td>
+												<td class="text-center"><?= $folio->MUNICIPIODESCR ?></td>
+												<td class="text-center"><?= $folio->HECHOCALLE ?></td>
+												<td class="text-center"><?= $folio->DELITOMODALIDADDESCR ?></td>
+												<td class="text-center">
+													<a type="button" href="<?= base_url('/admin/dashboard/bandeja_remision?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO . '&municipioasignado=' . $folio->MUNICIPIOASIGNADOID . '&expediente=' . $folio->EXPEDIENTEID ?>" class="btn btn-primary text-white">REMITIR</a>
+												</td>
+											</tr>
+										<?php } ?>
+									</tbody>
+								</table>
+							</div>
+							<div class="tab-pane fade" id="tijuana" role="tabpanel" aria-labelledby="tijuana-tab">
+								<table id="table-tijuana" class="table table-bordered table-striped">
+									<thead>
+										<tr>
+											<th class="text-center">EXPEDIENTEID</th>
+											<th class="text-center">MUNICIPIO ASIGNADO</th>
+											<th class="text-center">DOMICILIO DEL HECHO</th>
+											<th class="text-center">DELITOS INVOLUCRADOS</th>
+											<th class="text-center"></th>
+										</tr>
+									</thead>
+									<tbody>
+										<?php foreach ($body_data->tijuana->result as $index => $folio) {
+											$expedienteid = '';
+											if (isset($folio->EXPEDIENTEID)) {
+												$arrayExpediente = str_split($folio->EXPEDIENTEID);
+												$expedienteid = $arrayExpediente[0] . '-' . $arrayExpediente[1] . $arrayExpediente[2] . '-' .  $arrayExpediente[3] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
+											} ?>
+											<tr>
+												<td class="text-center"><?= $expedienteid ? $expedienteid : '' ?></td>
+												<td class="text-center"><?= $folio->MUNICIPIODESCR ?></td>
+												<td class="text-center"><?= $folio->HECHOCALLE ?></td>
+												<td class="text-center"><?= $folio->DELITOMODALIDADDESCR ?></td>
+												<td class="text-center">
+													<a type="button" href="<?= base_url('/admin/dashboard/bandeja_remision?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO . '&municipioasignado=' . $folio->MUNICIPIOASIGNADOID . '&expediente=' . $folio->EXPEDIENTEID ?>" class="btn btn-primary text-white">REMITIR</a>
+												</td>
+											</tr>
+										<?php } ?>
+									</tbody>
+								</table>
+							</div>
+							<div class="tab-pane fade" id="rosarito" role="tabpanel" aria-labelledby="rosarito-tab">
+								<table id="table-rosarito" class="table table-bordered table-striped">
+									<thead>
+										<tr>
+											<th class="text-center">EXPEDIENTEID</th>
+											<th class="text-center">MUNICIPIO ASIGNADO</th>
+											<th class="text-center">DOMICILIO DEL HECHO</th>
+											<th class="text-center">DELITOS INVOLUCRADOS</th>
+											<th class="text-center"></th>
+										</tr>
+									</thead>
+									<tbody>
+										<?php foreach ($body_data->rosarito->result as $index => $folio) {
+											$expedienteid = '';
+											if (isset($folio->EXPEDIENTEID)) {
+												$arrayExpediente = str_split($folio->EXPEDIENTEID);
+												$expedienteid = $arrayExpediente[0] . '-' . $arrayExpediente[1] . $arrayExpediente[2] . '-' .  $arrayExpediente[3] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
+											} ?>
+											<tr>
+												<td class="text-center"><?= $expedienteid ? $expedienteid : '' ?></td>
+												<td class="text-center"><?= $folio->MUNICIPIODESCR ?></td>
+												<td class="text-center"><?= $folio->HECHOCALLE ?></td>
+												<td class="text-center"><?= $folio->DELITOMODALIDADDESCR ?></td>
+												<td class="text-center">
+													<a type="button" href="<?= base_url('/admin/dashboard/bandeja_remision?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO . '&municipioasignado=' . $folio->MUNICIPIOASIGNADOID . '&expediente=' . $folio->EXPEDIENTEID ?>" class="btn btn-primary text-white">REMITIR</a>
+												</td>
+											</tr>
+										<?php } ?>
+									</tbody>
+								</table>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -53,43 +194,8 @@
 	</div>
 </section>
 <script>
-	const asignar_salida = document.querySelector('#asignar_salida');
-	const expediente = document.querySelector('#expediente');
-	const municipioasignado = document.querySelector('#municipioasignado');
-	const municipioasignadoid = document.querySelector('#municipioasignadoid');
-
-	const domiciliodelito = document.querySelector('#domiciliodelito');
-	const delitosmodalidad = document.querySelector('#delitosmodalidad');
-
-	asignar_salida.addEventListener('click', (e) => {
-		document.querySelector('#expedienteid').value = expediente.innerHTML;
-		document.querySelector('#municipioa').value = municipioasignado.innerHTML;
-		document.querySelector('#domicilioh').value = domiciliodelito.innerHTML;
-		document.querySelector('#delitosa').value = delitosmodalidad.innerHTML;
-		$('#bandeja_modal').modal('show');
-
-	});
-	(function() {
-		'use strict'
-
-		// Fetch all the forms we want to apply custom Bootstrap validation styles to
-		var forms = document.querySelectorAll('.needs-validation')
-
-		// Loop over them and prevent submission
-		Array.prototype.slice.call(forms)
-			.forEach(function(form) {
-				form.addEventListener('submit', function(event) {
-					if (!form.checkValidity()) {
-						event.preventDefault()
-						event.stopPropagation()
-					}
-
-					form.classList.add('was-validated')
-				}, false)
-			})
-	})()
 	$(function() {
-		$("#bandeja_salida").DataTable({
+		$("#table-ensenada").DataTable({
 			responsive: false,
 			lengthChange: false,
 			autoWidth: true,
@@ -108,14 +214,85 @@
 			}
 		});
 	});
-
-
-	function clearSelect(select_element) {
-		for (let i = select_element.options.length; i >= 1; i--) {
-			select_element.remove(i);
-		}
-	}
+	$(function() {
+		$("#table-mexicali").DataTable({
+			responsive: false,
+			lengthChange: false,
+			autoWidth: true,
+			ordering: true,
+			order: [
+				[0, 'asc'],
+			],
+			searching: true,
+			pageLength: 100,
+			// dom: 'Bfrtip',
+			// buttons: [
+			// 	'copy', 'excel', 'pdf'
+			// ],
+			language: {
+				url: '//cdn.datatables.net/plug-ins/1.12.1/i18n/es-MX.json'
+			}
+		});
+	});
+	$(function() {
+		$("#table-tecate").DataTable({
+			responsive: false,
+			lengthChange: false,
+			autoWidth: true,
+			ordering: true,
+			order: [
+				[0, 'asc'],
+			],
+			searching: true,
+			pageLength: 100,
+			// dom: 'Bfrtip',
+			// buttons: [
+			// 	'copy', 'excel', 'pdf'
+			// ],
+			language: {
+				url: '//cdn.datatables.net/plug-ins/1.12.1/i18n/es-MX.json'
+			}
+		});
+	});
+	$(function() {
+		$("#table-tijuana").DataTable({
+			responsive: false,
+			lengthChange: false,
+			autoWidth: true,
+			ordering: true,
+			order: [
+				[0, 'asc'],
+			],
+			searching: true,
+			pageLength: 100,
+			// dom: 'Bfrtip',
+			// buttons: [
+			// 	'copy', 'excel', 'pdf'
+			// ],
+			language: {
+				url: '//cdn.datatables.net/plug-ins/1.12.1/i18n/es-MX.json'
+			}
+		});
+	});
+	$(function() {
+		$("#table-rosarito").DataTable({
+			responsive: false,
+			lengthChange: false,
+			autoWidth: true,
+			ordering: true,
+			order: [
+				[0, 'asc'],
+			],
+			searching: true,
+			pageLength: 100,
+			// dom: 'Bfrtip',
+			// buttons: [
+			// 	'copy', 'excel', 'pdf'
+			// ],
+			language: {
+				url: '//cdn.datatables.net/plug-ins/1.12.1/i18n/es-MX.json'
+			}
+		});
+	});
 </script>
-<?php include 'bandeja_modal.php' ?>
-
 <?= $this->endSection() ?>
