@@ -15,11 +15,8 @@
 						<table id="folios_expediente" class="table table-bordered table-striped">
 							<thead>
 								<tr>
-									<th class="text-center">FOLIO</th>
-									<th class="text-center">FECHA FOLIO</th>
+									<th class="text-center">TIPO</th>
 									<th class="text-center">EXPEDIENTE</th>
-									<th class="text-center">DELITO</th>
-									<th class="text-center">ESTADO</th>
 									<th class="text-center">ATENDIDO POR</th>
 									<th class="text-center">VIDEO</th>
 								</tr>
@@ -29,14 +26,11 @@
 									$expedienteid = '';
 									if (isset($folio->EXPEDIENTEID)) {
 										$arrayExpediente = str_split($folio->EXPEDIENTEID);
-										$expedienteid = $arrayExpediente[0] . '-' . $arrayExpediente[1] . $arrayExpediente[2] . '-' .  $arrayExpediente[3] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
+										$expedienteid =  $arrayExpediente[1] . $arrayExpediente[2] . '-' .  $arrayExpediente[3] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
 									} ?>
 									<tr>
-										<td class="text-center"><?= $folio->FOLIOID ?></td>
-										<td class="text-center"><?= $folio->FECHAREGISTRO ?></td>
+										<td class="text-center"><?= $folio->TIPOEXPEDIENTECLAVE ?></td>
 										<td class="text-center"><?= $expedienteid ? $expedienteid : '' ?></td>
-										<td class="text-center"><?= $folio->HECHODELITO ?></td>
-										<td class="text-center"><?= $folio->STATUS ?></td>
 										<td class="text-center"><?= $folio->NOMBRE ?> <?= $folio->APELLIDO_PATERNO ?> <?= $folio->APELLIDO_MATERNO ?></td>
 										<td class="text-center"><button type="button" class="btn btn-primary" onclick="viewVideo(<?= $folio->ANO ?>,<?= $folio->FOLIOID ?>)"><i class="fas fa-video"></i></button></td>
 									</tr>

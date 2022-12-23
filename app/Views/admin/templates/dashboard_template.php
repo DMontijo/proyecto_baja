@@ -169,7 +169,7 @@
 				<?php if ($permiso->PERMISOID == 9) { ?>
 					<li class="c-sidebar-nav-item" id="nav-roles" name="nav-roles">
 						<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url('admin/dashboard/videos') ?>">
-							<i class="fas fa-user-cog c-sidebar-nav-icon"></i> Videos
+							<i class="fas fa-video c-sidebar-nav-icon"></i> Videos
 						</a>
 					</li>
 				<?php } ?>
