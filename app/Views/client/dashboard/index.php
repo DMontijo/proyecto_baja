@@ -66,7 +66,7 @@
 							<?php include('form_robo_vehiculo.php') ?>
 						</div>
 						<div id="datos_robo_vehiculo_completo" class="col-12 d-none step">
-							<?php include('form_robo_vehiculo_completo.php') ?>
+							<?php include('form_robo_vehiculo_sp.php') ?>
 						</div>
 
 						<!-- PASO FINAL -->

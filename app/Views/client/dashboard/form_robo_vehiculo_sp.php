@@ -1,0 +1,117 @@
+<div class="row" method="POST">
+	<h3 class="fw-bold text-center text-blue pb-3">Datos del vehículo robado</h3>
+
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="tipo_vehiculo" class="form-label fw-bold">Tipo de vehículo:</label>
+		<select class="form-select" id="tipo_vehiculo" name="tipo_vehiculo">
+			<option selected disabled value="">Selecciona el tipo de vehículo</option>
+			<?php foreach ($body_data->tipoVehiculo as $index => $tipo_vehiculo) { ?>
+				<option value="<?= $tipo_vehiculo->VEHICULOTIPOID ?>"> <?= $tipo_vehiculo->VEHICULOTIPODESCR ?></option>
+			<?php } ?>
+		</select>
+	</div>
+
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="color_vehiculo" class="form-label fw-bold">Color:</label>
+		<select class="form-select" id="color_vehiculo" name="color_vehiculo">
+			<option selected disabled value="">Selecciona el color</option>
+			<?php foreach ($body_data->colorVehiculo as $index => $color_vehiculo) { ?>
+				<option value="<?= $color_vehiculo->VEHICULOCOLORID ?>"> <?= $color_vehiculo->VEHICULOCOLORDESCR ?> </option>
+			<?php } ?>
+		</select>
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="tipo_placas_vehiculo" class="form-label fw-bold">Tipo de placas:</label>
+		<select class="form-select" id="tipo_placas_vehiculo" name="tipo_placas_vehiculo">
+			<option selected disabled value="">Selecciona el tipo de placas</option>
+			<option value="N">NACIONAL</option>
+			<option value="F">FRONTERIZO</option>
+			<option value="E">EXTRANJERO</option>
+		</select>
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="placas_vehiculo" class="form-label fw-bold">Placas:</label>
+		<input type="text" class="form-control" id="placas_vehiculo" name="placas_vehiculo" onkeyup="verificarPlacas()">
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="confirm_placas_vehiculo" class="form-label fw-bold">Confirma las placas:</label>
+		<input type="text" class="form-control" id="confirm_placas_vehiculo" name="confirm_placas_vehiculo" onkeyup="verificarPlacas()">
+		<label for="mensajeok" id="mensajeok" name="mensajeok" class="form-label fw-bold d-none" style="color: #009130; font-size: 12px; text-align:center;">Las placas coinciden </label>
+		<label for="mensaje" id="mensaje" name="mensaje" class="form-label fw-bold d-none" style="color: #D52600; font-size: 12px; text-align:center;">Las placas no coinciden</label>
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="serie_vehiculo" class="form-label fw-bold">No. Serie:</label>
+		<input type="text" class="form-control" id="serie_vehiculo" name="serie_vehiculo">
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="confirm_serie_vehiculo" class="form-label fw-bold">Confirmar serie</label>
+		<input type="text" class="form-control" id="confirm_serie_vehiculo" name="confirm_serie_vehiculo" onkeyup="verificarSerie()">
+		<label for="coinciden" id="coinciden" name="coinciden" class="form-label fw-bold d-none" style="color: #009130; font-size: 12px; text-align:center;">La serie coincide </label>
+		<label for="nocoinciden" id="nocoinciden" name="nocoinciden" class="form-label fw-bold d-none" style="color: #D52600; font-size: 12px; text-align:center;">La serie no coincide</label>
+	</div>
+
+	<div class="col-12 mb-3">
+		<label for="description_vehiculo" class="form-label fw-bold">Otras características que permitan identificar el vehículo:</label>
+		<textarea class="form-control" id="description_vehiculo" name="description_vehiculo" rows="10" maxlength="300" onkeyup="contarCaracteresVehiculo(this)"></textarea>
+		<small id="numCaracterVehiculo">300 caracteres restantes</small>
+	</div>
+
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="foto_vehiculo_nc" class="form-label fw-bold">Fotografía del vehículo:</label>
+		<input class="form-control" type="file" id="foto_vehiculo_sp" name="foto_vehiculo_sp" accept="image/jpeg, image/jpg, image/png">
+	</div>
+
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="documento_vehiculo_nc" class="form-label fw-bold">Documento del vehículo:</label>
+		<input class="form-control" type="file" id="documento_vehiculo_sp" name="documento_vehiculo_sp" accept="image/jpeg, image/jpg, image/png, .doc, .pdf">
+	</div>
+</div>
+<script>
+	function contarCaracteresVehiculo(obj) {
+		var maxLength = 300;
+		var strLength = obj.value.length;
+		var charRemain = (maxLength - strLength);
+
+		if (charRemain < 0) {
+			document.getElementById("numCaracterVehiculo").innerHTML = '<span style="color: red;">Has superado el límite de ' + maxLength + ' caracteres </span>';
+		} else {
+			document.getElementById("numCaracterVehiculo").innerHTML = charRemain + ' caracteres restantes';
+		}
+	}
+	
+	function verificarPlacas() {
+
+placas = document.getElementById('placas_vehiculo');
+confirm_placas = document.getElementById('confirm_placas_vehiculo');
+
+if (placas.value != confirm_placas.value) {
+
+	document.getElementById("mensaje").classList.remove("d-none")
+	document.getElementById("mensajeok").classList.add("d-none")
+
+
+} else {
+	document.getElementById("mensaje").classList.add("d-none")
+	document.getElementById("mensajeok").classList.remove("d-none")
+}
+
+}
+
+function verificarSerie() {
+
+serie = document.getElementById('serie_vehiculo');
+confirm_serie = document.getElementById('confirm_serie_vehiculo');
+
+if (serie.value != confirm_serie.value) {
+
+	document.getElementById("nocoinciden").classList.remove("d-none")
+	document.getElementById("coinciden").classList.add("d-none")
+
+
+} else {
+	document.getElementById("nocoinciden").classList.add("d-none")
+	document.getElementById("coinciden").classList.remove("d-none")
+}
+
+}
+</script>
