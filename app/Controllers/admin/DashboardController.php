@@ -941,8 +941,10 @@ class DashboardController extends BaseController
 
 				$data->color = $this->_coloresVehiculoModel->where('VEHICULOCOLORID', $data->vehiculo['PRIMERCOLORID'])->first();
 				$data->tipov = $this->_tipoVehiculoModel->where('VEHICULOTIPOID', $data->vehiculo['TIPOID'])->first();
-				$data->dist = $this->_vehiculoDistribuidorModel->where('VEHICULODISTRIBUIDORID', $data->vehiculo['VEHICULODISTRIBUIDORID'])->first();
-
+				$data->distribuidorVehiculo = $this->_vehiculoDistribuidorModel->where('VEHICULODISTRIBUIDORID', $data->vehiculo['VEHICULODISTRIBUIDORID'])->first();
+				$data->marcaVehiculo = $this->_vehiculoMarcaModel->where('VEHICULODISTRIBUIDORID', $data->vehiculo['VEHICULODISTRIBUIDORID'])->where('VEHICULOMARCAID', $data->vehiculo['MARCAID'])->first();
+				$data->lineaVehiculo = $this->_vehiculoModeloModel->where('VEHICULODISTRIBUIDORID', $data->vehiculo['VEHICULODISTRIBUIDORID'])->where('VEHICULOMARCAID', $data->vehiculo['MARCAID'])->where('VEHICULOMODELOID', $data->vehiculo['MODELOID'])->first();
+				$data->versionVehiculo = $this->_vehiculoVersionModel->where('VEHICULODISTRIBUIDORID', $data->vehiculo['VEHICULODISTRIBUIDORID'])->where('VEHICULOMARCAID', $data->vehiculo['MARCAID'])->where('VEHICULOMODELOID', $data->vehiculo['MODELOID'])->where('VEHICULOVERSIONID', $data->vehiculo['VEHICULOVERSIONID'])->first();
 				$data->status = 1;
 				return json_encode($data);
 			} catch (\Exception $e) {
@@ -1449,23 +1451,35 @@ class DashboardController extends BaseController
 
 					$relacionDoc = $this->_relacionFolioDocModel->where('FOLIOID', $doc['FOLIOID'])->where('ANO', $doc['ANO'])->where('EXPEDIENTEID', $doc['NUMEROEXPEDIENTE'])->where('FOLIODOCID', $doc['FOLIODOCID'])->orderBy('FOLIODOCID', 'asc')->first();
 
-
 					if (isset($relacionDoc)) {
 						$data = (object) array();
 						$data = ['exist' => 'los archivos ya estan registrados'];
 					} else {
-						$_archivosExternos = $this->_createArchivosExternos($expediente, $doc);
+						if (isset($doc['MUNICIPIOID'])) {
+							$municipioid = $doc['MUNICIPIOID'];
+						}else{
+							$municipioid = '';
+						}
+						$_archivosExternos = $this->_createArchivosExternos($expediente, $folio, $year,  $municipioid, $doc['CLASIFICACIONDOCTOID'], $doc['TIPODOC'], $doc['PDF'], '');
+						if ($_archivosExternos->status == 201) {
+							$datosRelacionFolio = [
+								'FOLIODOCID' => $doc['FOLIODOCID'],
+								'FOLIOID' =>  $doc['FOLIOID'],
+								'ANO' => $doc['ANO'],
+								'EXPEDIENTEID' => $_archivosExternos->EXPEDIENTEID,
+								'EXPEDIENTEARCHIVOID' => $_archivosExternos->ARCHIVOID,
+							];
+							$this->_relacionFolioDocModel->insert($datosRelacionFolio);
+							return json_encode(['status' => 1]);
+
+						}else{
+							return json_encode(['status' => 0]);
+
+						}
 						// var_dump($doc['FOLIOID'],$doc['ANO'],$doc['NUMEROEXPEDIENTE'], $doc['FOLIODOCID']);
 						// var_dump($_archivosExternos);
 						// exit;
-						$datosRelacionFolio = [
-							'FOLIODOCID' => $doc['FOLIODOCID'],
-							'FOLIOID' =>  $doc['FOLIOID'],
-							'ANO' => $doc['ANO'],
-							'EXPEDIENTEID' => $_archivosExternos->EXPEDIENTEID,
-							'EXPEDIENTEARCHIVOID' => $_archivosExternos->ARCHIVOID,
-						];
-						$this->_relacionFolioDocModel->insert($datosRelacionFolio);
+						
 					}
 				}
 
@@ -1475,11 +1489,11 @@ class DashboardController extends BaseController
 				if (isset($data2)) {
 					return json_encode(['status' => 4]);
 				}
-				if ($_archivosExternos->status == 201) {
-					return json_encode(['status' => 1]);
-				} else {
-					return json_encode(['status' => 0]);
-				}
+				// if ($_archivosExternos->status == 201) {
+				// 	return json_encode(['status' => 1]);
+				// } else {
+				// 	return json_encode(['status' => 0]);
+				// }
 			} catch (\Exception $e) {
 				return json_encode(['status' => 0, 'error' => $e->getMessage()]);
 			}
@@ -1919,9 +1933,10 @@ class DashboardController extends BaseController
 
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
-	private function _createArchivosExternos($expedienteId, $archivos)
-	{
-		if (isset($archivos['PDF']) || isset($archivos['DOCUMENTO'])) {
+	private function _createArchivosExternos($expedienteId, $folioid, $ano, $municipioid, $clasificaciondoctoid, $tipodoc, $doc, $foto){
+		// $doc -> pdf de documentos o documento del vehiculo
+		
+		if ($doc != '' || $foto !='') {
 			$function = '/archivoExt.php?process=crear';
 			$array = [
 				'EXPEDIENTEID',
@@ -1940,36 +1955,41 @@ class DashboardController extends BaseController
 				'EXPORTAR',
 			];
 			$endpoint = $this->endpoint . $function;
-			$folioRow = $this->_folioModel->where('ANO', $archivos['ANO'])->where('FOLIOID', $archivos['FOLIOID'])->first();
-			$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) isset($archivos['MUNICIPIOID']) ? $archivos['MUNICIPIOID'] : $folioRow['MUNICIPIOID'])->where('TYPE', ENVIRONMENT)->first();
-			$data = $archivos;
+			$folioRow = $this->_folioModel->where('ANO', $ano)->where('FOLIOID', $folioid)->first();
+			$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipioid != '' ? $municipioid : $folioRow['MUNICIPIOID'])->where('TYPE', ENVIRONMENT)->first();
+
+			$data = array();
+			// $data = $archivos;
 
 
-			foreach ($data as $clave => $valor) {
-				if (empty($valor)) {
-					unset($data[$clave]);
-				}
-			}
+			// foreach ($data as $clave => $valor) {
+			// 	if (empty($valor)) {
+			// 		unset($data[$clave]);
+			// 	}
+			// }
 
-			foreach ($data as $clave => $valor) {
-				if (!in_array($clave, $array)) {
-					unset($data[$clave]);
-				}
-			}
+			// foreach ($data as $clave => $valor) {
+			// 	if (!in_array($clave, $array)) {
+			// 		unset($data[$clave]);
+			// 	}
+			// }
 			$data['EXPEDIENTEID'] = $expedienteId;
+
 			$data['EXTENSION'] = '.pdf';
 			// $data['AUTOR'] = isset($archivos['AGENTEID']) ? $archivos['AGENTEID'] : session('ID');
 			// $data['OFICINAIDAUTOR'] = isset($archivos['OFICINAID']) ? $archivos['OFICINAID'] : '394';
-			$data['CLASIFICACIONDOCTOID'] = isset($archivos['CLASIFICACIONDOCTOID']) ? $archivos['CLASIFICACIONDOCTOID'] : 53;
+			$data['CLASIFICACIONDOCTOID'] = $clasificaciondoctoid;
 			$data['ESTADOACCESO'] = 'M';
 			$data['PUBLICADO'] = 'N';
 			$data['EXPORTAR'] = 'NNEW';
-			$data['ARCHIVODESCR'] = isset($archivos['TIPODOC']) ? $archivos['TIPODOC'] : 'ROBO DE VEHÍCULO';
-			$data['ARCHIVO'] = isset($archivos['PDF']) ? base64_encode($archivos['PDF']) : base64_encode($archivos['DOCUMENTO']);
+			$data['ARCHIVODESCR'] = $tipodoc;
+			$data['ARCHIVO'] = $doc  != '' ? base64_encode($doc) : base64_encode($foto);
+
 			$data['userDB'] = $conexion->USER;
 			$data['pwdDB'] = $conexion->PASSWORD;
 			$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
 			$data['schema'] = $conexion->SCHEMA;
+
 
 			return $this->_curlPostDataEncrypt($endpoint, $data);
 		}
@@ -2109,7 +2129,13 @@ class DashboardController extends BaseController
 		isset($vehiculos['FOTO'])
 			? $data['FOTO'] = base64_encode($vehiculos['FOTO'])
 			: null;
-		$_archivosExternos = $this->_createArchivosExternos($expedienteId, $vehiculos);
+		if (isset($vehiculos['FOTO'])) {
+			$_archivosExternos = $this->_createArchivosExternos($expedienteId, $vehiculos['FOLIOID'], $vehiculos['ANO'], '', 53, 'ROBO DE VEHÍCULO', '', $vehiculos['FOTO']);
+		}
+		if(isset($vehiculos['DOCUMENTO'])){
+			$_archivosExternos = $this->_createArchivosExternos($expedienteId, $vehiculos['FOLIOID'], $vehiculos['ANO'], '', 53, 'ROBO DE VEHÍCULO', $vehiculos['DOCUMENTO'],'' );
+
+		}
 		$data['userDB'] = $conexion->USER;
 		$data['pwdDB'] = $conexion->PASSWORD;
 		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
@@ -2432,6 +2458,7 @@ class DashboardController extends BaseController
 	public function updateFolioSalida()
 	{
 
+		var_dump($_POST);exit;
 		if ($this->request->getPost('municipio_empleado') != null) {
 			$municipio_empleado = $this->request->getPost('municipio_empleado');
 		} else {
@@ -2848,7 +2875,7 @@ class DashboardController extends BaseController
 					'MARCAID' => $this->request->getPost('marca_ad'),
 					'MARCADESCR' => isset($marcadescr->VEHICULOMARCADESCR) ? $marcadescr->VEHICULOMARCADESCR : NULL,
 					'MODELODESCR' => isset($modelodescr->VEHICULOMODELODESCR) ? $modelodescr->VEHICULOMODELODESCR : NULL,
-					'MARCADESCR' => $this->request->getPost('linea_vehiculo_ad'),
+					'MARCADESCR' => $this->request->getPost('marca_exacta'),
 					'MODELOID' => $this->request->getPost('linea_vehiculo_ad'),
 					'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad'),
 					'VEHICULOSERVICIOID' => $this->request->getPost('servicio_vehiculo_ad'),
@@ -2884,7 +2911,7 @@ class DashboardController extends BaseController
 					'MARCAID' => $this->request->getPost('marca_ad'),
 					'MARCADESCR' => isset($marcadescr->VEHICULOMARCADESCR) ? $marcadescr->VEHICULOMARCADESCR : NULL,
 					'MODELODESCR' => isset($modelodescr->VEHICULOMODELODESCR) ? $modelodescr->VEHICULOMODELODESCR : NULL,
-					'MARCADESCR' => $this->request->getPost('linea_vehiculo_ad'),
+					'MARCADESCR' => $this->request->getPost('marca_exacta'),
 
 					'MODELOID' => $this->request->getPost('linea_vehiculo_ad'),
 					'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad'),
@@ -2918,7 +2945,7 @@ class DashboardController extends BaseController
 					'MARCAID' => $this->request->getPost('marca_ad'),
 					'MARCADESCR' => isset($marcadescr->VEHICULOMARCADESCR) ? $marcadescr->VEHICULOMARCADESCR : NULL,
 					'MODELODESCR' => isset($modelodescr->VEHICULOMODELODESCR) ? $modelodescr->VEHICULOMODELODESCR : NULL,
-					'MARCADESCR' => $this->request->getPost('linea_vehiculo_ad'),
+					'MARCADESCR' => $this->request->getPost('marca_exacta'),
 
 					'MODELOID' => $this->request->getPost('linea_vehiculo_ad'),
 					'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad'),
@@ -2948,8 +2975,9 @@ class DashboardController extends BaseController
 				'NUMEROSERIE' => $this->request->getPost('serie_vehiculo'),
 				'VEHICULODISTRIBUIDORID' => $this->request->getPost('distribuidor_vehiculo_ad'),
 				'MARCAID' => $this->request->getPost('marca_ad'),
-				'MARCADESCR' => isset($marcadescr->VEHICULOMARCADESCR),
-				'MODELODESCR' => isset($modelodescr->VEHICULOMODELODESCR),
+				'MARCADESCR' => isset($marcadescr->VEHICULOMARCADESCR) ? $marcadescr->VEHICULOMARCADESCR : NULL,
+				'MODELODESCR' => isset($modelodescr->VEHICULOMODELODESCR) ? $modelodescr->VEHICULOMODELODESCR : NULL,
+				'MARCADEXAC' => $this->request->getPost('marca_exacta'),
 				'MODELOID' => $this->request->getPost('linea_vehiculo_ad'),
 				'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad'),
 				'VEHICULOSERVICIOID' => $this->request->getPost('servicio_vehiculo_ad'),

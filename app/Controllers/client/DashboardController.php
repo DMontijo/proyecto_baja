@@ -553,7 +553,7 @@ class DashboardController extends BaseController
 					'TIPOPLACA' => $this->request->getPost('tipo_placas_vehiculo'),
 					'PLACAS' => $this->request->getPost('placas_vehiculo'),
 					// 'ESTADOIDPLACA' => $this->request->getPost('estado_vehiculo'),
-					// 'NUMEROSERIE' => $this->request->getPost('serie_vehiculo'),
+					'NUMEROSERIE' => $this->request->getPost('serie_vehiculo'),
 					// 'VEHICULODISTRIBUIDORID' => $this->request->getPost('distribuidor_vehiculo'),
 					// 'MARCAID' => $this->request->getPost('marca'),
 					// 'MODELOID' => $this->request->getPost('linea_vehiculo'),

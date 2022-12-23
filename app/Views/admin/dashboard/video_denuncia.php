@@ -900,6 +900,17 @@
 							select_objeto_update_subclasificacion.add(option, null);
 						});
 					}
+
+					//LIMPIAR SELECT
+
+					let select_marca = document.querySelector('#marca_ad');
+					let select_linea = document.querySelector('#linea_vehiculo_ad');
+					let select_version = document.querySelector('#version_vehiculo_ad');
+
+					clearSelect(select_marca);
+					clearSelect(select_linea);
+					clearSelect(select_version);
+
 					//PREGUNTAS INICIALES
 					if (preguntas) {
 						document.querySelector('#es_menor').value = preguntas.ES_MENOR;
@@ -1645,6 +1656,10 @@
 			success: function(response) {
 				if (response.status == 1) {
 					const vehiculo = response.vehiculo;
+					const distribuidorVehiculo = response.distribuidorVehiculo;
+					const marcaVehiculo = response.marcaVehiculo;
+					const lineaVehiculo = response.lineaVehiculo;
+					const versionVehiculo = response.versionVehiculo;
 					const color = response.color;
 					const tipov = response.tipov;
 					document.querySelector('#tipo_placas_vehiculo').value = vehiculo.TIPOPLACA ? vehiculo.TIPOPLACA : '';
@@ -1660,7 +1675,7 @@
 					}
 					document.querySelector('#serie_vehiculo').value = vehiculo.NUMEROSERIE ? vehiculo.NUMEROSERIE : '';
 					document.querySelector('#num_chasis_vehiculo').value = vehiculo.NUMEROCHASIS ? vehiculo.NUMEROCHASIS : '';
-					document.querySelector('#marca_ad_exacta').value = vehiculo.MARCADEXACT ? vehiculo.MARCADEXACT : '';
+					document.querySelector('#marca_ad_exacta').value = vehiculo.MARCADEXAC ? vehiculo.MARCADEXAC : '';
 
 					document.querySelector('#distribuidor_vehiculo_ad').value = vehiculo.VEHICULODISTRIBUIDORID ? vehiculo.VEHICULODISTRIBUIDORID : '';
 					document.querySelector('#marca_ad').value = vehiculo.MARCAID ? vehiculo.VEHICULODISTRIBUIDORID + ' ' + vehiculo.MARCAID : '';
@@ -1707,6 +1722,33 @@
 						document.querySelector('#downloadDoc').setAttribute('download', '');
 						document.querySelector('#downloadDoc').classList.add('d-none');
 					}
+					let select_distribuidor = document.querySelector('#distribuidor_vehiculo_ad');
+
+					if (marcaVehiculo) {
+						let select_marca = document.querySelector('#marca_ad');
+						const option_marca = document.createElement('option');
+						option_marca.value = marcaVehiculo.VEHICULOMARCAID;
+						option_marca.text = marcaVehiculo.VEHICULOMARCADESCR;
+						select_marca.add(option_marca, null);
+					}
+					if (lineaVehiculo) {
+						let select_linea = document.querySelector('#linea_vehiculo_ad');
+						const option_modelo = document.createElement('option');
+						option_modelo.value = lineaVehiculo.VEHICULOMODELOID;
+						option_modelo.text = lineaVehiculo.VEHICULOMODELODESCR;
+						select_linea.add(option_modelo, null);
+					}
+					if (versionVehiculo) {
+						let select_version = document.querySelector('#version_vehiculo_ad');
+
+
+						const option_version = document.createElement('option');
+						option_version.value = versionVehiculo.VEHICULOVERSIONID;
+						option_version.text = versionVehiculo.VEHICULOVERSIONDESCR;
+						select_version.add(option_version, null);
+					}
+
+
 					$('#folio_vehiculo_modal').modal('show');
 				} else {
 					Swal.fire({
