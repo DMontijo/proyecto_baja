@@ -964,10 +964,69 @@ class DashboardController extends BaseController
 		$data->tecate = $this->_folioModel->bandeja_salida(3);
 		$data->tijuana = $this->_folioModel->bandeja_salida(4);
 		$data->rosarito = $this->_folioModel->bandeja_salida(5);
-		var_dump($data);
-		exit;
+		// var_dump($data->mexicali);
+		// exit;
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 		$this->_loadView('Bandeja de salida', 'bandeja de salida', '', $data, 'bandeja/bandeja_salida');
+	}
+
+	public function bandeja_remision()
+	{
+		if (!$this->permisos('BANDEJA')) {
+			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
+		}
+		$data = (object) array();
+		$data->municipio = $this->request->getGet('municipioasignado');
+		$data->folio = $this->request->getGet('folio');
+		$data->year = $this->request->getGet('year');
+		$data->expedienteid = $this->request->getGet('expediente');
+		$data->oficinas = $this->_oficinasModel->asObject()->where('MUNICIPIOID', $data->municipio)->orderBy('OFICINADESCR', 'asc')->findAll();
+
+		$data->expediente = $this->_folioModel->where('FOLIOID', $data->folio)->where('ANO', $data->year)->where('MUNICIPIOASIGNADOID', $data->municipio)->where('EXPEDIENTEID', $data->expedienteid)->first();
+		if (!$data->expediente) {
+			return redirect()->back()->with('message_error', 'No se encontro el folio a remitir.');
+		}
+		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+		$this->_loadView('Bandeja remisión', 'remision', '', $data, 'bandeja/bandeja_remision');
+	}
+
+	public function bandeja_remision_post()
+	{
+		try {
+			$expediente = trim($this->request->getPost('expediente'));
+			$oficina = trim($this->request->getPost('oficina'));
+			$empleado = trim($this->request->getPost('empleado'));
+			$municipio = trim($this->request->getPost('municipio'));
+
+			$area = $this->_empleadosModel->asObject()->where('EMPLEADOID', $empleado)->where('MUNICIPIOID', $municipio)->first();
+
+			$dataFolio = array(
+				'AGENTEASIGNADOID' => $empleado,
+				'OFICINAASIGNADOID' => $oficina,
+				'AREAASIGNADOID' => $area->AREAID
+			);
+			$update = $this->_folioModel->set($dataFolio)->where('EXPEDIENTEID', $expediente)->update();
+			if ($update) {
+
+				$datosBitacora = [
+					'ACCION' => 'Ha actualizado un folio para su asignacion',
+					'NOTAS' => 'Exp: ' . $expediente . ' oficina: ' . $oficina,
+				];
+
+				$this->_bitacoraActividad($datosBitacora);
+				$bandeja = $this->_folioModel->where('EXPEDIENTEID', $expediente)->first();
+				$updateExpediente = $this->_updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area->AREAID);
+				$_bandeja_creada = $this->_createBandeja($bandeja);
+
+				if ($_bandeja_creada->status == 201) {
+					return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_success', 'Remitido correctamente');
+				}
+			} else {
+				return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_error', 'No se actualizo el folio');
+			}
+		} catch (\Exception $e) {
+			return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_error', 'No se actualizo el folio');
+		}
 	}
 
 	public function video_denuncia()
@@ -1319,7 +1378,7 @@ class DashboardController extends BaseController
 
 					$folioRow['HECHONARRACION'] = $narracion;
 					$folioRow['HECHOFECHA'] = $fecha;
-
+					$folioRow['MUNICIPIOASIGNADOID'] = $municipio;
 
 					if ($expedienteCreado->status == 201) {
 						$folioRow['EXPEDIENTEID'] = $expedienteCreado->EXPEDIENTEID;
@@ -2433,40 +2492,40 @@ class DashboardController extends BaseController
 		}
 	}
 
-	public function updateFolioSalida()
-	{
+	// public function updateFolioSalida()
+	// {
 
-		if ($this->request->getPost('municipio_empleado') != null) {
-			$municipio_empleado = $this->request->getPost('municipio_empleado');
-		} else {
-			$municipio_empleado = null;
-		}
-		try {
+	// 	if ($this->request->getPost('municipio_empleado') != null) {
+	// 		$municipio_empleado = $this->request->getPost('municipio_empleado');
+	// 	} else {
+	// 		$municipio_empleado = null;
+	// 	}
+	// 	try {
 
 
-			$folio = trim($this->request->getPost('folio'));
-			$year = trim($this->request->getPost('year'));
-			$dataFolio = array(
-				'MUNICIPIOASIGNADOID' => $municipio_empleado,
-			);
+	// 		$folio = trim($this->request->getPost('folio'));
+	// 		$year = trim($this->request->getPost('year'));
+	// 		$dataFolio = array(
+	// 			'MUNICIPIOASIGNADOID' => $municipio_empleado,
+	// 		);
 
-			$update = $this->_folioModel->set($dataFolio)->where('FOLIOID', $folio)->where('ANO', $year)->update();
-			if ($update) {
-				$datosBitacora = [
-					'ACCION' => 'Ha actualizado un folio',
-					'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
-				];
+	// 		$update = $this->_folioModel->set($dataFolio)->where('FOLIOID', $folio)->where('ANO', $year)->update();
+	// 		if ($update) {
+	// 			$datosBitacora = [
+	// 				'ACCION' => 'Ha actualizado un folio',
+	// 				'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
+	// 			];
 
-				$this->_bitacoraActividad($datosBitacora);
+	// 			$this->_bitacoraActividad($datosBitacora);
 
-				return json_encode(['status' => 1]);
-			} else {
-				return json_encode(['status' => 0]);
-			}
-		} catch (\Exception $e) {
-			return json_encode(['status' => 0]);
-		}
-	}
+	// 			return json_encode(['status' => 1]);
+	// 		} else {
+	// 			return json_encode(['status' => 0]);
+	// 		}
+	// 	} catch (\Exception $e) {
+	// 		return json_encode(['status' => 0]);
+	// 	}
+	// }
 	public function updateFolioAsignacion()
 	{
 		try {
@@ -2502,6 +2561,45 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
+
+	private function _updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area)
+	{
+		$function = '/expediente.php?process=updateArea';
+		$endpoint = $this->endpoint . $function;
+		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
+		$array = [
+			'EMPLEADOIDREGISTRO',
+			'EXPEDIENTEID',
+			'OFICINAIDRESPONSABLE',
+			'AREAIDREGISTRO',
+			'AREAIDRESPONSABLE',
+		];
+
+		$data = array();
+		$data['OFICINAIDRESPONSABLE'] = '';
+		$data['EMPLEADOIDREGISTRO'] = $empleado;
+		$data['AREAIDREGISTRO'] = $area;
+		$data['AREAIDRESPONSABLE'] = $empleado;
+		$data['EXPEDIENTEID'] = $expediente;
+
+		foreach ($data as $clave => $valor) {
+			if (empty($valor)) {
+				unset($data[$clave]);
+			}
+		}
+		foreach ($data as $clave => $valor) {
+			if (!in_array($clave, $array)) {
+				unset($data[$clave]);
+			}
+		}
+		$data['userDB'] = $conexion->USER;
+		$data['pwdDB'] = $conexion->PASSWORD;
+		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
+		$data['schema'] = $conexion->SCHEMA;
+
+		return $this->_curlPostDataEncrypt($endpoint, $data);
+	}
+
 	private function _createBandeja($bandeja)
 	{
 		$function = '/expediente.php?process=bandeja';
@@ -2533,6 +2631,7 @@ class DashboardController extends BaseController
 
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
+
 	public function updatePreguntasIniciales()
 	{
 		try {
