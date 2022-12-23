@@ -959,14 +959,17 @@ class DashboardController extends BaseController
 			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
 		}
 		$data = (object) array();
-		$data->folio = $this->_folioModel->bandeja_salida();
-		// $data->imputado_delito = $this->_imputadoDelitoModel->where('FOLIOID', $data->folio)->where('ANO', $year)->where('PERSONAFISICAID', $id)->where('DELITOMODALIDADID', $delitomodalidadid)->first();
-
-
+		$data->ensenada = $this->_folioModel->bandeja_salida(1);
+		$data->mexicali = $this->_folioModel->bandeja_salida(2);
+		$data->tecate = $this->_folioModel->bandeja_salida(3);
+		$data->tijuana = $this->_folioModel->bandeja_salida(4);
+		$data->rosarito = $this->_folioModel->bandeja_salida(5);
+		var_dump($data);
+		exit;
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
-
 		$this->_loadView('Bandeja de salida', 'bandeja de salida', '', $data, 'bandeja/bandeja_salida');
 	}
+
 	public function video_denuncia()
 	{
 		$data = (object) array();
@@ -2375,6 +2378,7 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
+
 	public function updateFolioDenuncia()
 	{
 
