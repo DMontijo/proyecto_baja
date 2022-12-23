@@ -2455,16 +2455,12 @@ class DashboardController extends BaseController
 
 	public function updateFolioSalida()
 	{
-
-		var_dump($_POST);
-		exit;
-		if ($this->request->getPost('municipio_empleado') != null) {
-			$municipio_empleado = $this->request->getPost('municipio_empleado');
-		} else {
-			$municipio_empleado = null;
-		}
 		try {
-
+			if ($this->request->getPost('municipio_empleado') != null) {
+				$municipio_empleado = trim($this->request->getPost('municipio_empleado'));
+			} else {
+				$municipio_empleado = null;
+			}
 
 			$folio = trim($this->request->getPost('folio'));
 			$year = trim($this->request->getPost('year'));
