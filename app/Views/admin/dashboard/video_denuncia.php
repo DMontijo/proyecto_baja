@@ -901,16 +901,6 @@
 						});
 					}
 
-					//LIMPIAR SELECT
-
-					let select_marca = document.querySelector('#marca_ad');
-					let select_linea = document.querySelector('#linea_vehiculo_ad');
-					let select_version = document.querySelector('#version_vehiculo_ad');
-
-					clearSelect(select_marca);
-					clearSelect(select_linea);
-					clearSelect(select_version);
-
 					//PREGUNTAS INICIALES
 					if (preguntas) {
 						document.querySelector('#es_menor').value = preguntas.ES_MENOR;

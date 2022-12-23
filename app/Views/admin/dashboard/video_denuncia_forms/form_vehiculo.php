@@ -120,9 +120,7 @@
 		<label for="marca_ad" class="form-label font-weight-bold">Marca:</label>
 		<select class="form-control" id="marca_ad" name="marca_ad">
 			<option selected disabled value="">Selecciona la marca</option>
-			<?php foreach ($body_data->marcaVehiculo as $index => $marcaVehiculo) { ?>
-				<option value="<?= $marcaVehiculo->VEHICULODISTRIBUIDORID  .' '. $marcaVehiculo->VEHICULOMARCAID  ?>"> <?= $marcaVehiculo->VEHICULOMARCADESCR ?></option>
-			<?php } ?>
+	
 		</select>
 
 	</div>
@@ -135,9 +133,7 @@
 		<label for="linea_vehiculo" class="form-label font-weight-bold">Modelo:</label>
 		<select class="form-control" id="linea_vehiculo_ad" name="linea_vehiculo_ad">
 			<option selected disabled value="">Selecciona el modelo</option>
-			<?php foreach ($body_data->lineaVehiculo as $index => $lineaVehiculo) { ?>
-				<option value="<?= $lineaVehiculo->VEHICULODISTRIBUIDORID  .' '. $lineaVehiculo->VEHICULOMARCAID  . ' ' . $lineaVehiculo->VEHICULOMODELOID  ?>"> <?= $lineaVehiculo->VEHICULOMODELODESCR  ?></option>
-			<?php } ?>
+
 			
 		</select>
 	</div>
@@ -145,9 +141,7 @@
 		<label for="version_vehiculo" class="form-label font-weight-bold">Versión:</label>
 		<select class="form-control" id="version_vehiculo_ad" name="version_vehiculo_ad">
 			<option selected disabled value="">Selecciona la versión</option>
-			<?php foreach ($body_data->versionVehiculo as $index => $versionVehiculo) { ?>
-				<option value="<?= $versionVehiculo->VEHICULODISTRIBUIDORID  .' '. $versionVehiculo->VEHICULOMARCAID  . ' ' . $versionVehiculo->VEHICULOMODELOID  .' ' .$versionVehiculo->VEHICULOVERSIONID  ?>"> <?= $versionVehiculo->VEHICULOVERSIONDESCR ?></option>
-			<?php } ?>
+
 		</select>
 	</div>
 
