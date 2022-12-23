@@ -8,7 +8,7 @@
 				</button>
 			</div>
 			<div class="modal-body bg-light" style="height:70vh;overflow-y:auto;">
-				<form id="form_vehiculo" action="" method="post" class="row p-0 m-0 needs-validation" novalidate>
+				<form id="form_vehiculo_da_da" action="" method="post" enctype="multipart/form-data"  class="row p-0 m-0 needs-validation" novalidate>
 
 					<div class="col-12">
 						<p class="font-weight-bold text-center mt-3">GENERALES</p>
@@ -82,24 +82,28 @@
 					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 						<label for="transmision_vehiculo" class="form-label font-weight-bold ">Caja / Transmisión:</label>
 						<select class="form-control" id="transmision_vehiculo" name="transmision_vehiculo">
-							<option selected value="A">Automática</option>
-							<option selected value="M">Manual</option>
-							<option selected value="D">Dual</option>
+						<option selected disabled value="">Selecciona la transmisión</option>
+
+							<option  value="A">Automática</option>
+							<option  value="M">Manual</option>
+							<option  value="D">Dual</option>
 						</select>
 					</div>
 					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 						<label for="traccion_vehiculo" class="form-label font-weight-bold ">Tracción:</label>
 						<select class="form-control" id="traccion_vehiculo" name="traccion_vehiculo">
-							<option selected value="D">Doble</option>
-							<option selected value="S">Sencilla</option>
-							<option selected value="O">Dual</option>
+						<option selected disabled value="">Selecciona la tracción</option>
+
+							<option  value="D">Doble</option>
+							<option  value="S">Sencilla</option>
+							<option  value="O">Dual</option>
 						</select>
 					</div>
 					<div class="col-12 mb-3">
 						<label for="description_vehiculo" class="form-label font-weight-bold">Otras características que permitan identificar el vehiculo:</label>
 						<textarea class="form-control" id="description_vehiculo" name="description_vehiculo" rows="10" oninput="mayuscTextarea(this)"></textarea>
 					</div>
-					
+
 					<div class="col-12">
 						<p class="font-weight-bold text-center mt-3">FABRICANTE</p>
 					</div>
@@ -118,6 +122,11 @@
 							<option selected disabled value="">Selecciona la marca</option>
 
 						</select>
+					</div>
+					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+						<label for="marca_ad_exacta" class="form-label font-weight-bold">Marca exacta:</label>
+						<input class="form-control" id="marca_ad_exacta" name="marca_ad_exacta">
+
 					</div>
 					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 						<label for="linea_vehiculo" class="form-label font-weight-bold">Modelo:</label>
@@ -151,12 +160,24 @@
 					<div class="col-12 col-sm-12 col-md-12 col-lg-8 mb-3">
 						<label for="seguro_vigente_vehiculo" class="form-label font-weight-bold ">¿Cuenta con seguro vigente?</label>
 						<select class="form-control" id="seguro_vigente_vehiculo" name="seguro_vigente_vehiculo">
-							<option selected value="S">Si</option>
-							<option selected value="N">No</option>
-							<option selected value="D">Se desconoce</option>
+							<option  value="S">Si</option>
+							<option  value="N">No</option>
+							<option  value="D">Se desconoce</option>
 						</select>
 
 					</div>
+				
+					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+						<label for="foto_vehiculo" class="form-label font-weight-bold">Fotografía del vehículo:</label>
+						<input class="form-control" type="file" id="subirFotoV" name="subirFotoV" accept="image/jpeg, image/jpg, image/png, .doc, .pdf"> </input>
+						<img class="img-fluid mb-3" id="foto_vehiculo" name="foto_vehiculo" src="" alt="">
+					</div>
+					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+						<label for="doc_vehiculo" class="form-label font-weight-bold">Documento del vehículo:</label>
+						<input class="form-control" type="file" id="subirDoc" name="subirDoc" accept="image/jpeg, image/jpg, image/png, .doc, .pdf"></input>
+						<img class="img-fluid mb-3" id="doc_vehiculo" name="doc_vehiculo" src="" alt="">
+					</div>
+
 					<div class="col-12 mb-3 text-center">
 						<button type="submit" class="btn btn-primary font-weight-bold">AGREGAR VEHÍCULO</button>
 					</div>
@@ -167,3 +188,32 @@
 		</div>
 	</div>
 </div>
+<script>
+
+let startYear = 1800;
+			let endYear = new Date().getFullYear();
+			for (let i = endYear; i > startYear; i--) {
+				$('#modelo_vehiculo').append($('<option />').val(i).html(i));
+			}
+	document.querySelector('#subirFotoV').addEventListener('change', (e) => {
+		let preview = document.querySelector('#foto_vehiculo');
+		if (e.target.files && e.target.files[0]) {
+			let reader = new FileReader();
+			reader.onload = function(e) {
+				preview.setAttribute('src', e.target.result);
+			}
+			reader.readAsDataURL(e.target.files[0]);
+		}
+	});
+
+	document.querySelector('#subirDoc').addEventListener('change', (e) => {
+		let preview = document.querySelector('#doc_vehiculo');
+		if (e.target.files && e.target.files[0]) {
+			let reader = new FileReader();
+			reader.onload = function(e) {
+				preview.setAttribute('src', e.target.result);
+			}
+			reader.readAsDataURL(e.target.files[0]);
+		}
+	});
+</script>

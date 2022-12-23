@@ -1740,15 +1740,11 @@
 					}
 					if (versionVehiculo) {
 						let select_version = document.querySelector('#version_vehiculo_ad');
-
-
 						const option_version = document.createElement('option');
 						option_version.value = versionVehiculo.VEHICULOVERSIONID;
 						option_version.text = versionVehiculo.VEHICULOVERSIONDESCR;
 						select_version.add(option_version, null);
 					}
-
-
 					$('#folio_vehiculo_modal').modal('show');
 				} else {
 					Swal.fire({

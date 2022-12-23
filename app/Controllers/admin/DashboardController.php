@@ -1457,7 +1457,7 @@ class DashboardController extends BaseController
 					} else {
 						if (isset($doc['MUNICIPIOID'])) {
 							$municipioid = $doc['MUNICIPIOID'];
-						}else{
+						} else {
 							$municipioid = '';
 						}
 						$_archivosExternos = $this->_createArchivosExternos($expediente, $folio, $year,  $municipioid, $doc['CLASIFICACIONDOCTOID'], $doc['TIPODOC'], $doc['PDF'], '');
@@ -1471,15 +1471,13 @@ class DashboardController extends BaseController
 							];
 							$this->_relacionFolioDocModel->insert($datosRelacionFolio);
 							return json_encode(['status' => 1]);
-
-						}else{
+						} else {
 							return json_encode(['status' => 0]);
-
 						}
 						// var_dump($doc['FOLIOID'],$doc['ANO'],$doc['NUMEROEXPEDIENTE'], $doc['FOLIODOCID']);
 						// var_dump($_archivosExternos);
 						// exit;
-						
+
 					}
 				}
 
@@ -1933,10 +1931,11 @@ class DashboardController extends BaseController
 
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
-	private function _createArchivosExternos($expedienteId, $folioid, $ano, $municipioid, $clasificaciondoctoid, $tipodoc, $doc, $foto){
+	private function _createArchivosExternos($expedienteId, $folioid, $ano, $municipioid, $clasificaciondoctoid, $tipodoc, $doc, $foto)
+	{
 		// $doc -> pdf de documentos o documento del vehiculo
-		
-		if ($doc != '' || $foto !='') {
+
+		if ($doc != '' || $foto != '') {
 			$function = '/archivoExt.php?process=crear';
 			$array = [
 				'EXPEDIENTEID',
@@ -2132,9 +2131,8 @@ class DashboardController extends BaseController
 		if (isset($vehiculos['FOTO'])) {
 			$_archivosExternos = $this->_createArchivosExternos($expedienteId, $vehiculos['FOLIOID'], $vehiculos['ANO'], '', 53, 'ROBO DE VEHÍCULO', '', $vehiculos['FOTO']);
 		}
-		if(isset($vehiculos['DOCUMENTO'])){
-			$_archivosExternos = $this->_createArchivosExternos($expedienteId, $vehiculos['FOLIOID'], $vehiculos['ANO'], '', 53, 'ROBO DE VEHÍCULO', $vehiculos['DOCUMENTO'],'' );
-
+		if (isset($vehiculos['DOCUMENTO'])) {
+			$_archivosExternos = $this->_createArchivosExternos($expedienteId, $vehiculos['FOLIOID'], $vehiculos['ANO'], '', 53, 'ROBO DE VEHÍCULO', $vehiculos['DOCUMENTO'], '');
 		}
 		$data['userDB'] = $conexion->USER;
 		$data['pwdDB'] = $conexion->PASSWORD;
@@ -2458,7 +2456,8 @@ class DashboardController extends BaseController
 	public function updateFolioSalida()
 	{
 
-		var_dump($_POST);exit;
+		var_dump($_POST);
+		exit;
 		if ($this->request->getPost('municipio_empleado') != null) {
 			$municipio_empleado = $this->request->getPost('municipio_empleado');
 		} else {
@@ -2863,28 +2862,27 @@ class DashboardController extends BaseController
 				$data = array(
 					'folio' => trim($this->request->getPost('folio')),
 					'year' => trim($this->request->getPost('year')),
-					'TIPOID' => $this->request->getPost('tipo_vehiculo'),
-					'PRIMERCOLORID' => $this->request->getPost('color_vehiculo'),
-					'SENASPARTICULARES' => $this->request->getPost('description_vehiculo'),
-					'TIPOPLACA' => $this->request->getPost('tipo_placas_vehiculo'),
-					'PLACAS' => $this->request->getPost('placas_vehiculo'),
-					'ESTADOIDPLACA' => $this->request->getPost('estado_vehiculo_ad'),
-					'ESTADOEXTRANJEROIDPLACA' => $this->request->getPost('estado_extranjero_vehiculo_ad'),
-					'NUMEROSERIE' => $this->request->getPost('serie_vehiculo'),
-					'VEHICULODISTRIBUIDORID' => $this->request->getPost('distribuidor_vehiculo_ad'),
-					'MARCAID' => $this->request->getPost('marca_ad'),
+					'TIPOID' => $this->request->getPost('tipo_vehiculo') != '' ? $this->request->getPost('tipo_vehiculo') : NULL,
+					'PRIMERCOLORID' => $this->request->getPost('color_vehiculo') != '' ? $this->request->getPost('color_vehiculo') : NULL,
+					'SENASPARTICULARES' => $this->request->getPost('description_vehiculo') != '' ? $this->request->getPost('description_vehiculo') : NULL,
+					'TIPOPLACA' => $this->request->getPost('tipo_placas_vehiculo') != '' ? $this->request->getPost('tipo_placas_vehiculo') : NULL,
+					'PLACAS' => $this->request->getPost('placas_vehiculo') ? $this->request->getPost('placas_vehiculo') : NULL,
+					'ESTADOIDPLACA' => $this->request->getPost('estado_vehiculo_ad') ? $this->request->getPost('estado_vehiculo_ad') : NULL,
+					'ESTADOEXTRANJEROIDPLACA' => $this->request->getPost('estado_extranjero_vehiculo_ad') ? $this->request->getPost('estado_extranjero_vehiculo_ad') : NULL,
+					'NUMEROSERIE' => $this->request->getPost('serie_vehiculo') ? $this->request->getPost('serie_vehiculo') : NULL,
+					'VEHICULODISTRIBUIDORID' => $this->request->getPost('distribuidor_vehiculo_ad') ? $this->request->getPost('distribuidor_vehiculo_ad') : NULL,
+					'MARCAID' => $this->request->getPost('marca_ad') ? $this->request->getPost('marca_ad') : NULL,
 					'MARCADESCR' => isset($marcadescr->VEHICULOMARCADESCR) ? $marcadescr->VEHICULOMARCADESCR : NULL,
 					'MODELODESCR' => isset($modelodescr->VEHICULOMODELODESCR) ? $modelodescr->VEHICULOMODELODESCR : NULL,
-					'MARCADESCR' => $this->request->getPost('marca_exacta'),
-					'MODELOID' => $this->request->getPost('linea_vehiculo_ad'),
-					'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad'),
-					'VEHICULOSERVICIOID' => $this->request->getPost('servicio_vehiculo_ad'),
-					'SEGUROVIGENTE' => $this->request->getPost('seguro_vigente_vehiculo'),
-					'TRANSMISION' => $this->request->getPost('transmision_vehiculo'),
-					'TRACCION' => $this->request->getPost('traccion_vehiculo'),
-					'NUMEROCHASIS' => $this->request->getPost('num_chasis_vehiculo'),
-					'SEGUNDOCOLORID' => $this->request->getPost('color_tapiceria_vehiculo'),
-					'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo'),
+					'MODELOID' => $this->request->getPost('linea_vehiculo_ad') ? $this->request->getPost('linea_vehiculo_ad') : NULL,
+					'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad') ? $this->request->getPost('version_vehiculo_ad') : NULL,
+					'VEHICULOSERVICIOID' => $this->request->getPost('servicio_vehiculo_ad') ? $this->request->getPost('servicio_vehiculo_ad') : NULL,
+					'SEGUROVIGENTE' => $this->request->getPost('seguro_vigente_vehiculo') ? $this->request->getPost('seguro_vigente_vehiculo') : NULL,
+					'TRANSMISION' => $this->request->getPost('transmision_vehiculo') ? $this->request->getPost('transmision_vehiculo') : NULL,
+					'TRACCION' => $this->request->getPost('traccion_vehiculo') ? $this->request->getPost('traccion_vehiculo') : NULL,
+					'NUMEROCHASIS' => $this->request->getPost('num_chasis_vehiculo') ? $this->request->getPost('num_chasis_vehiculo') : NULL,
+					'SEGUNDOCOLORID' => $this->request->getPost('color_tapiceria_vehiculo') ? $this->request->getPost('color_tapiceria_vehiculo') : NULL,
+					'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo') ? $this->request->getPost('modelo_vehiculo') : NULL,
 					'FOTO' => $fotoV,
 					'DOCUMENTO' => $docV,
 
@@ -2899,29 +2897,28 @@ class DashboardController extends BaseController
 				$data = array(
 					'folio' => trim($this->request->getPost('folio')),
 					'year' => trim($this->request->getPost('year')),
-					'TIPOID' => $this->request->getPost('tipo_vehiculo'),
-					'PRIMERCOLORID' => $this->request->getPost('color_vehiculo'),
-					'SENASPARTICULARES' => $this->request->getPost('description_vehiculo'),
-					'TIPOPLACA' => $this->request->getPost('tipo_placas_vehiculo'),
-					'PLACAS' => $this->request->getPost('placas_vehiculo'),
-					'ESTADOIDPLACA' => $this->request->getPost('estado_vehiculo_ad'),
-					'ESTADOEXTRANJEROIDPLACA' => $this->request->getPost('estado_extranjero_vehiculo_ad'),
-					'NUMEROSERIE' => $this->request->getPost('serie_vehiculo'),
-					'VEHICULODISTRIBUIDORID' => $this->request->getPost('distribuidor_vehiculo_ad'),
-					'MARCAID' => $this->request->getPost('marca_ad'),
+					'TIPOID' => $this->request->getPost('tipo_vehiculo') != '' ? $this->request->getPost('tipo_vehiculo') : NULL,
+					'PRIMERCOLORID' => $this->request->getPost('color_vehiculo') != '' ? $this->request->getPost('color_vehiculo') : NULL,
+					'SENASPARTICULARES' => $this->request->getPost('description_vehiculo') != '' ? $this->request->getPost('description_vehiculo') : NULL,
+					'TIPOPLACA' => $this->request->getPost('tipo_placas_vehiculo') != '' ? $this->request->getPost('tipo_placas_vehiculo') : NULL,
+					'PLACAS' => $this->request->getPost('placas_vehiculo') ? $this->request->getPost('placas_vehiculo') : NULL,
+					'ESTADOIDPLACA' => $this->request->getPost('estado_vehiculo_ad') ? $this->request->getPost('estado_vehiculo_ad') : NULL,
+					'ESTADOEXTRANJEROIDPLACA' => $this->request->getPost('estado_extranjero_vehiculo_ad') ? $this->request->getPost('estado_extranjero_vehiculo_ad') : NULL,
+					'NUMEROSERIE' => $this->request->getPost('serie_vehiculo') ? $this->request->getPost('serie_vehiculo') : NULL,
+					'VEHICULODISTRIBUIDORID' => $this->request->getPost('distribuidor_vehiculo_ad') ? $this->request->getPost('distribuidor_vehiculo_ad') : NULL,
+					'MARCAID' => $this->request->getPost('marca_ad') ? $this->request->getPost('marca_ad') : NULL,
 					'MARCADESCR' => isset($marcadescr->VEHICULOMARCADESCR) ? $marcadescr->VEHICULOMARCADESCR : NULL,
 					'MODELODESCR' => isset($modelodescr->VEHICULOMODELODESCR) ? $modelodescr->VEHICULOMODELODESCR : NULL,
-					'MARCADESCR' => $this->request->getPost('marca_exacta'),
-
-					'MODELOID' => $this->request->getPost('linea_vehiculo_ad'),
-					'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad'),
-					'VEHICULOSERVICIOID' => $this->request->getPost('servicio_vehiculo_ad'),
-					'SEGUROVIGENTE' => $this->request->getPost('seguro_vigente_vehiculo'),
-					'TRANSMISION' => $this->request->getPost('transmision_vehiculo'),
-					'TRACCION' => $this->request->getPost('traccion_vehiculo'),
-					'NUMEROCHASIS' => $this->request->getPost('num_chasis_vehiculo'),
-					'SEGUNDOCOLORID' => $this->request->getPost('color_tapiceria_vehiculo'),
-					'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo'),
+					'MARCADEXAC' => $this->request->getPost('marca_exacta') ? $this->request->getPost('modelo_vehiculo') : NULL,
+					'MODELOID' => $this->request->getPost('linea_vehiculo_ad') ? $this->request->getPost('linea_vehiculo_ad') : NULL,
+					'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad') ? $this->request->getPost('version_vehiculo_ad') : NULL,
+					'VEHICULOSERVICIOID' => $this->request->getPost('servicio_vehiculo_ad') ? $this->request->getPost('servicio_vehiculo_ad') : NULL,
+					'SEGUROVIGENTE' => $this->request->getPost('seguro_vigente_vehiculo') ? $this->request->getPost('seguro_vigente_vehiculo') : NULL,
+					'TRANSMISION' => $this->request->getPost('transmision_vehiculo') ? $this->request->getPost('transmision_vehiculo') : NULL,
+					'TRACCION' => $this->request->getPost('traccion_vehiculo') ? $this->request->getPost('traccion_vehiculo') : NULL,
+					'NUMEROCHASIS' => $this->request->getPost('num_chasis_vehiculo') ? $this->request->getPost('num_chasis_vehiculo') : NULL,
+					'SEGUNDOCOLORID' => $this->request->getPost('color_tapiceria_vehiculo') ? $this->request->getPost('color_tapiceria_vehiculo') : NULL,
+					'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo') ? $this->request->getPost('modelo_vehiculo') : NULL,
 					'DOCUMENTO' => $docV,
 
 				);
@@ -2933,29 +2930,28 @@ class DashboardController extends BaseController
 				$data = array(
 					'folio' => trim($this->request->getPost('folio')),
 					'year' => trim($this->request->getPost('year')),
-					'TIPOID' => $this->request->getPost('tipo_vehiculo'),
-					'PRIMERCOLORID' => $this->request->getPost('color_vehiculo'),
-					'SENASPARTICULARES' => $this->request->getPost('description_vehiculo'),
-					'TIPOPLACA' => $this->request->getPost('tipo_placas_vehiculo'),
-					'PLACAS' => $this->request->getPost('placas_vehiculo'),
-					'ESTADOIDPLACA' => $this->request->getPost('estado_vehiculo_ad'),
-					'ESTADOEXTRANJEROIDPLACA' => $this->request->getPost('estado_extranjero_vehiculo_ad'),
-					'NUMEROSERIE' => $this->request->getPost('serie_vehiculo'),
-					'VEHICULODISTRIBUIDORID' => $this->request->getPost('distribuidor_vehiculo_ad'),
-					'MARCAID' => $this->request->getPost('marca_ad'),
+					'TIPOID' => $this->request->getPost('tipo_vehiculo') != '' ? $this->request->getPost('tipo_vehiculo') : NULL,
+					'PRIMERCOLORID' => $this->request->getPost('color_vehiculo') != '' ? $this->request->getPost('color_vehiculo') : NULL,
+					'SENASPARTICULARES' => $this->request->getPost('description_vehiculo') != '' ? $this->request->getPost('description_vehiculo') : NULL,
+					'TIPOPLACA' => $this->request->getPost('tipo_placas_vehiculo') != '' ? $this->request->getPost('tipo_placas_vehiculo') : NULL,
+					'PLACAS' => $this->request->getPost('placas_vehiculo') ? $this->request->getPost('placas_vehiculo') : NULL,
+					'ESTADOIDPLACA' => $this->request->getPost('estado_vehiculo_ad') ? $this->request->getPost('estado_vehiculo_ad') : NULL,
+					'ESTADOEXTRANJEROIDPLACA' => $this->request->getPost('estado_extranjero_vehiculo_ad') ? $this->request->getPost('estado_extranjero_vehiculo_ad') : NULL,
+					'NUMEROSERIE' => $this->request->getPost('serie_vehiculo') ? $this->request->getPost('serie_vehiculo') : NULL,
+					'VEHICULODISTRIBUIDORID' => $this->request->getPost('distribuidor_vehiculo_ad') ? $this->request->getPost('distribuidor_vehiculo_ad') : NULL,
+					'MARCAID' => $this->request->getPost('marca_ad') ? $this->request->getPost('marca_ad') : NULL,
 					'MARCADESCR' => isset($marcadescr->VEHICULOMARCADESCR) ? $marcadescr->VEHICULOMARCADESCR : NULL,
 					'MODELODESCR' => isset($modelodescr->VEHICULOMODELODESCR) ? $modelodescr->VEHICULOMODELODESCR : NULL,
-					'MARCADESCR' => $this->request->getPost('marca_exacta'),
-
-					'MODELOID' => $this->request->getPost('linea_vehiculo_ad'),
-					'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad'),
-					'VEHICULOSERVICIOID' => $this->request->getPost('servicio_vehiculo_ad'),
-					'SEGUROVIGENTE' => $this->request->getPost('seguro_vigente_vehiculo'),
-					'TRANSMISION' => $this->request->getPost('transmision_vehiculo'),
-					'TRACCION' => $this->request->getPost('traccion_vehiculo'),
-					'NUMEROCHASIS' => $this->request->getPost('num_chasis_vehiculo'),
-					'SEGUNDOCOLORID' => $this->request->getPost('color_tapiceria_vehiculo'),
-					'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo'),
+					'MARCADEXAC' => $this->request->getPost('marca_exacta') ? $this->request->getPost('modelo_vehiculo') : NULL,
+					'MODELOID' => $this->request->getPost('linea_vehiculo_ad') ? $this->request->getPost('linea_vehiculo_ad') : NULL,
+					'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad') ? $this->request->getPost('version_vehiculo_ad') : NULL,
+					'VEHICULOSERVICIOID' => $this->request->getPost('servicio_vehiculo_ad') ? $this->request->getPost('servicio_vehiculo_ad') : NULL,
+					'SEGUROVIGENTE' => $this->request->getPost('seguro_vigente_vehiculo') ? $this->request->getPost('seguro_vigente_vehiculo') : NULL,
+					'TRANSMISION' => $this->request->getPost('transmision_vehiculo') ? $this->request->getPost('transmision_vehiculo') : NULL,
+					'TRACCION' => $this->request->getPost('traccion_vehiculo') ? $this->request->getPost('traccion_vehiculo') : NULL,
+					'NUMEROCHASIS' => $this->request->getPost('num_chasis_vehiculo') ? $this->request->getPost('num_chasis_vehiculo') : NULL,
+					'SEGUNDOCOLORID' => $this->request->getPost('color_tapiceria_vehiculo') ? $this->request->getPost('color_tapiceria_vehiculo') : NULL,
+					'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo') ? $this->request->getPost('modelo_vehiculo') : NULL,
 					'FOTO' => $fotoV,
 
 				);
@@ -2965,28 +2961,28 @@ class DashboardController extends BaseController
 			$data = array(
 				'folio' => trim($this->request->getPost('folio')),
 				'year' => trim($this->request->getPost('year')),
-				'TIPOID' => $this->request->getPost('tipo_vehiculo'),
-				'PRIMERCOLORID' => $this->request->getPost('color_vehiculo'),
-				'SENASPARTICULARES' => $this->request->getPost('description_vehiculo'),
-				'TIPOPLACA' => $this->request->getPost('tipo_placas_vehiculo'),
-				'PLACAS' => $this->request->getPost('placas_vehiculo'),
-				'ESTADOIDPLACA' => $this->request->getPost('estado_vehiculo_ad'),
-				'ESTADOEXTRANJEROIDPLACA' => $this->request->getPost('estado_extranjero_vehiculo_ad'),
-				'NUMEROSERIE' => $this->request->getPost('serie_vehiculo'),
-				'VEHICULODISTRIBUIDORID' => $this->request->getPost('distribuidor_vehiculo_ad'),
-				'MARCAID' => $this->request->getPost('marca_ad'),
+				'TIPOID' => $this->request->getPost('tipo_vehiculo') != '' ? $this->request->getPost('tipo_vehiculo') : NULL,
+				'PRIMERCOLORID' => $this->request->getPost('color_vehiculo') != '' ? $this->request->getPost('color_vehiculo') : NULL,
+				'SENASPARTICULARES' => $this->request->getPost('description_vehiculo') != '' ? $this->request->getPost('description_vehiculo') : NULL,
+				'TIPOPLACA' => $this->request->getPost('tipo_placas_vehiculo') != '' ? $this->request->getPost('tipo_placas_vehiculo') : NULL,
+				'PLACAS' => $this->request->getPost('placas_vehiculo') ? $this->request->getPost('placas_vehiculo') : NULL,
+				'ESTADOIDPLACA' => $this->request->getPost('estado_vehiculo_ad') ? $this->request->getPost('estado_vehiculo_ad') : NULL,
+				'ESTADOEXTRANJEROIDPLACA' => $this->request->getPost('estado_extranjero_vehiculo_ad') ? $this->request->getPost('estado_extranjero_vehiculo_ad') : NULL,
+				'NUMEROSERIE' => $this->request->getPost('serie_vehiculo') ? $this->request->getPost('serie_vehiculo') : NULL,
+				'VEHICULODISTRIBUIDORID' => $this->request->getPost('distribuidor_vehiculo_ad') ? $this->request->getPost('distribuidor_vehiculo_ad') : NULL,
+				'MARCAID' => $this->request->getPost('marca_ad') ? $this->request->getPost('marca_ad') : NULL,
 				'MARCADESCR' => isset($marcadescr->VEHICULOMARCADESCR) ? $marcadescr->VEHICULOMARCADESCR : NULL,
 				'MODELODESCR' => isset($modelodescr->VEHICULOMODELODESCR) ? $modelodescr->VEHICULOMODELODESCR : NULL,
-				'MARCADEXAC' => $this->request->getPost('marca_exacta'),
-				'MODELOID' => $this->request->getPost('linea_vehiculo_ad'),
-				'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad'),
-				'VEHICULOSERVICIOID' => $this->request->getPost('servicio_vehiculo_ad'),
-				'SEGUROVIGENTE' => $this->request->getPost('seguro_vigente_vehiculo'),
-				'TRANSMISION' => $this->request->getPost('transmision_vehiculo'),
-				'TRACCION' => $this->request->getPost('traccion_vehiculo'),
-				'NUMEROCHASIS' => $this->request->getPost('num_chasis_vehiculo'),
-				'SEGUNDOCOLORID' => $this->request->getPost('color_tapiceria_vehiculo'),
-				'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo'),
+				'MARCADEXAC' => $this->request->getPost('marca_exacta') ? $this->request->getPost('modelo_vehiculo') : NULL,
+				'MODELOID' => $this->request->getPost('linea_vehiculo_ad') ? $this->request->getPost('linea_vehiculo_ad') : NULL,
+				'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad') ? $this->request->getPost('version_vehiculo_ad') : NULL,
+				'VEHICULOSERVICIOID' => $this->request->getPost('servicio_vehiculo_ad') ? $this->request->getPost('servicio_vehiculo_ad') : NULL,
+				'SEGUROVIGENTE' => $this->request->getPost('seguro_vigente_vehiculo') ? $this->request->getPost('seguro_vigente_vehiculo') : NULL,
+				'TRANSMISION' => $this->request->getPost('transmision_vehiculo') ? $this->request->getPost('transmision_vehiculo') : NULL,
+				'TRACCION' => $this->request->getPost('traccion_vehiculo') ? $this->request->getPost('traccion_vehiculo') : NULL,
+				'NUMEROCHASIS' => $this->request->getPost('num_chasis_vehiculo') ? $this->request->getPost('num_chasis_vehiculo') : NULL,
+				'SEGUNDOCOLORID' => $this->request->getPost('color_tapiceria_vehiculo') ? $this->request->getPost('color_tapiceria_vehiculo') : NULL,
+				'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo') ? $this->request->getPost('modelo_vehiculo') : NULL,
 			);
 		}
 
@@ -3015,7 +3011,7 @@ class DashboardController extends BaseController
 	public function createVehiculoByFolio()
 	{
 
-
+		// var_dump($_POST);exit;
 		$folio = trim($this->request->getPost('folio'));
 		$year = trim($this->request->getPost('year'));
 		$distribuidorpost = trim($this->request->getPost('distribuidor_vehiculo_ad'));
@@ -3024,31 +3020,144 @@ class DashboardController extends BaseController
 
 		$modelodescr = $this->_vehiculoModeloModel->asObject()->where('VEHICULODISTRIBUIDORID', $distribuidorpost)->where('VEHICULOMARCAID', $marcapost)->where('VEHICULOMODELOID', $modelopost)->first();
 		$marcadescr = $this->_vehiculoMarcaModel->asObject()->where('VEHICULODISTRIBUIDORID', $distribuidorpost)->where('VEHICULOMARCAID', $marcapost)->first();
-		$data = array(
-			'folio' => trim($this->request->getPost('folio')),
-			'year' => trim($this->request->getPost('year')),
-			'TIPOID' => $this->request->getPost('tipo_vehiculo'),
-			'PRIMERCOLORID' => $this->request->getPost('color_vehiculo'),
-			'SENASPARTICULARES' => $this->request->getPost('description_vehiculo'),
-			'TIPOPLACA' => $this->request->getPost('tipo_placas_vehiculo'),
-			'PLACAS' => $this->request->getPost('placas_vehiculo'),
-			'ESTADOIDPLACA' => $this->request->getPost('estado_vehiculo_ad'),
-			'ESTADOEXTRANJEROIDPLACA' => $this->request->getPost('estado_extranjero_vehiculo_ad'),
-			'NUMEROSERIE' => $this->request->getPost('serie_vehiculo'),
-			'VEHICULODISTRIBUIDORID' => $this->request->getPost('distribuidor_vehiculo_ad'),
-			'MARCAID' => $this->request->getPost('marca_ad'),
-			'MARCADESCR' => isset($marcadescr->VEHICULOMARCADESCR),
-			'MODELODESCR' => isset($modelodescr->VEHICULOMODELODESCR),
-			'MODELOID' => $this->request->getPost('linea_vehiculo_ad'),
-			'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad'),
-			'VEHICULOSERVICIOID' => $this->request->getPost('servicio_vehiculo_ad'),
-			'SEGUROVIGENTE' => $this->request->getPost('seguro_vigente_vehiculo'),
-			'TRANSMISION' => $this->request->getPost('transmision_vehiculo'),
-			'TRACCION' => $this->request->getPost('traccion_vehiculo'),
-			'NUMEROCHASIS' => $this->request->getPost('num_chasis_vehiculo'),
-			'SEGUNDOCOLORID' => $this->request->getPost('color_tapiceria_vehiculo'),
-			'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo'),
-		);
+		$document_file = $this->request->getFile('subirDoc');
+		$docV = null;
+
+		$foto_file = $this->request->getFile('subirFotoV');
+		$fotoV = null;
+
+		if (isset($document_file) && isset($foto_file)) {
+
+			try {
+				$fotoV = file_get_contents($foto_file);
+				$docV = file_get_contents($document_file);
+				$data = array(
+					'folio' => trim($this->request->getPost('folio')),
+					'year' => trim($this->request->getPost('year')),
+					'TIPOID' => $this->request->getPost('tipo_vehiculo') != '' ? $this->request->getPost('tipo_vehiculo') : NULL,
+					'PRIMERCOLORID' => $this->request->getPost('color_vehiculo') != '' ? $this->request->getPost('color_vehiculo') : NULL,
+					'SENASPARTICULARES' => $this->request->getPost('description_vehiculo') != '' ? $this->request->getPost('description_vehiculo') : NULL,
+					'TIPOPLACA' => $this->request->getPost('tipo_placas_vehiculo') != '' ? $this->request->getPost('tipo_placas_vehiculo') : NULL,
+					'PLACAS' => $this->request->getPost('placas_vehiculo') ? $this->request->getPost('placas_vehiculo') : NULL,
+					'ESTADOIDPLACA' => $this->request->getPost('estado_vehiculo_ad') ? $this->request->getPost('estado_vehiculo_ad') : NULL,
+					'ESTADOEXTRANJEROIDPLACA' => $this->request->getPost('estado_extranjero_vehiculo_ad') ? $this->request->getPost('estado_extranjero_vehiculo_ad') : NULL,
+					'NUMEROSERIE' => $this->request->getPost('serie_vehiculo') ? $this->request->getPost('serie_vehiculo') : NULL,
+					'VEHICULODISTRIBUIDORID' => $this->request->getPost('distribuidor_vehiculo_ad') ? $this->request->getPost('distribuidor_vehiculo_ad') : NULL,
+					'MARCAID' => $this->request->getPost('marca_ad') ? $this->request->getPost('marca_ad') : NULL,
+					'MARCADESCR' => isset($marcadescr->VEHICULOMARCADESCR) ? $marcadescr->VEHICULOMARCADESCR : NULL,
+					'MODELODESCR' => isset($modelodescr->VEHICULOMODELODESCR) ? $modelodescr->VEHICULOMODELODESCR : NULL,
+					'MODELOID' => $this->request->getPost('linea_vehiculo_ad') ? $this->request->getPost('linea_vehiculo_ad') : NULL,
+					'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad') ? $this->request->getPost('version_vehiculo_ad') : NULL,
+					'VEHICULOSERVICIOID' => $this->request->getPost('servicio_vehiculo_ad') ? $this->request->getPost('servicio_vehiculo_ad') : NULL,
+					'SEGUROVIGENTE' => $this->request->getPost('seguro_vigente_vehiculo') ? $this->request->getPost('seguro_vigente_vehiculo') : NULL,
+					'TRANSMISION' => $this->request->getPost('transmision_vehiculo') ? $this->request->getPost('transmision_vehiculo') : NULL,
+					'TRACCION' => $this->request->getPost('traccion_vehiculo') ? $this->request->getPost('traccion_vehiculo') : NULL,
+					'NUMEROCHASIS' => $this->request->getPost('num_chasis_vehiculo') ? $this->request->getPost('num_chasis_vehiculo') : NULL,
+					'SEGUNDOCOLORID' => $this->request->getPost('color_tapiceria_vehiculo') ? $this->request->getPost('color_tapiceria_vehiculo') : NULL,
+					'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo') ? $this->request->getPost('modelo_vehiculo') : NULL,
+					'FOTO' => $fotoV,
+					'DOCUMENTO' => $docV,
+
+				);
+			} catch (\Exception $e) {
+			}
+		}
+
+		if (isset($document_file) && empty($foto_file)) {
+			try {
+				$docV = file_get_contents($document_file);
+				$data = array(
+					'folio' => trim($this->request->getPost('folio')),
+					'year' => trim($this->request->getPost('year')),
+					'TIPOID' => $this->request->getPost('tipo_vehiculo') != '' ? $this->request->getPost('tipo_vehiculo') : NULL,
+					'PRIMERCOLORID' => $this->request->getPost('color_vehiculo') != '' ? $this->request->getPost('color_vehiculo') : NULL,
+					'SENASPARTICULARES' => $this->request->getPost('description_vehiculo') != '' ? $this->request->getPost('description_vehiculo') : NULL,
+					'TIPOPLACA' => $this->request->getPost('tipo_placas_vehiculo') != '' ? $this->request->getPost('tipo_placas_vehiculo') : NULL,
+					'PLACAS' => $this->request->getPost('placas_vehiculo') ? $this->request->getPost('placas_vehiculo') : NULL,
+					'ESTADOIDPLACA' => $this->request->getPost('estado_vehiculo_ad') ? $this->request->getPost('estado_vehiculo_ad') : NULL,
+					'ESTADOEXTRANJEROIDPLACA' => $this->request->getPost('estado_extranjero_vehiculo_ad') ? $this->request->getPost('estado_extranjero_vehiculo_ad') : NULL,
+					'NUMEROSERIE' => $this->request->getPost('serie_vehiculo') ? $this->request->getPost('serie_vehiculo') : NULL,
+					'VEHICULODISTRIBUIDORID' => $this->request->getPost('distribuidor_vehiculo_ad') ? $this->request->getPost('distribuidor_vehiculo_ad') : NULL,
+					'MARCAID' => $this->request->getPost('marca_ad') ? $this->request->getPost('marca_ad') : NULL,
+					'MARCADESCR' => isset($marcadescr->VEHICULOMARCADESCR) ? $marcadescr->VEHICULOMARCADESCR : NULL,
+					'MODELODESCR' => isset($modelodescr->VEHICULOMODELODESCR) ? $modelodescr->VEHICULOMODELODESCR : NULL,
+					'MARCADEXAC' => $this->request->getPost('marca_exacta') ? $this->request->getPost('modelo_vehiculo') : NULL,
+					'MODELOID' => $this->request->getPost('linea_vehiculo_ad') ? $this->request->getPost('linea_vehiculo_ad') : NULL,
+					'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad') ? $this->request->getPost('version_vehiculo_ad') : NULL,
+					'VEHICULOSERVICIOID' => $this->request->getPost('servicio_vehiculo_ad') ? $this->request->getPost('servicio_vehiculo_ad') : NULL,
+					'SEGUROVIGENTE' => $this->request->getPost('seguro_vigente_vehiculo') ? $this->request->getPost('seguro_vigente_vehiculo') : NULL,
+					'TRANSMISION' => $this->request->getPost('transmision_vehiculo') ? $this->request->getPost('transmision_vehiculo') : NULL,
+					'TRACCION' => $this->request->getPost('traccion_vehiculo') ? $this->request->getPost('traccion_vehiculo') : NULL,
+					'NUMEROCHASIS' => $this->request->getPost('num_chasis_vehiculo') ? $this->request->getPost('num_chasis_vehiculo') : NULL,
+					'SEGUNDOCOLORID' => $this->request->getPost('color_tapiceria_vehiculo') ? $this->request->getPost('color_tapiceria_vehiculo') : NULL,
+					'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo') ? $this->request->getPost('modelo_vehiculo') : NULL,
+					'DOCUMENTO' => $docV,
+
+				);
+			} catch (\Exception $e) {
+			}
+		} elseif (isset($foto_file) && empty($document_file)) {
+			try {
+				$fotoV = file_get_contents($foto_file);
+				$data = array(
+					'folio' => trim($this->request->getPost('folio')),
+					'year' => trim($this->request->getPost('year')),
+					'TIPOID' => $this->request->getPost('tipo_vehiculo') != '' ? $this->request->getPost('tipo_vehiculo') : NULL,
+					'PRIMERCOLORID' => $this->request->getPost('color_vehiculo') != '' ? $this->request->getPost('color_vehiculo') : NULL,
+					'SENASPARTICULARES' => $this->request->getPost('description_vehiculo') != '' ? $this->request->getPost('description_vehiculo') : NULL,
+					'TIPOPLACA' => $this->request->getPost('tipo_placas_vehiculo') != '' ? $this->request->getPost('tipo_placas_vehiculo') : NULL,
+					'PLACAS' => $this->request->getPost('placas_vehiculo') ? $this->request->getPost('placas_vehiculo') : NULL,
+					'ESTADOIDPLACA' => $this->request->getPost('estado_vehiculo_ad') ? $this->request->getPost('estado_vehiculo_ad') : NULL,
+					'ESTADOEXTRANJEROIDPLACA' => $this->request->getPost('estado_extranjero_vehiculo_ad') ? $this->request->getPost('estado_extranjero_vehiculo_ad') : NULL,
+					'NUMEROSERIE' => $this->request->getPost('serie_vehiculo') ? $this->request->getPost('serie_vehiculo') : NULL,
+					'VEHICULODISTRIBUIDORID' => $this->request->getPost('distribuidor_vehiculo_ad') ? $this->request->getPost('distribuidor_vehiculo_ad') : NULL,
+					'MARCAID' => $this->request->getPost('marca_ad') ? $this->request->getPost('marca_ad') : NULL,
+					'MARCADESCR' => isset($marcadescr->VEHICULOMARCADESCR) ? $marcadescr->VEHICULOMARCADESCR : NULL,
+					'MODELODESCR' => isset($modelodescr->VEHICULOMODELODESCR) ? $modelodescr->VEHICULOMODELODESCR : NULL,
+					'MARCADEXAC' => $this->request->getPost('marca_exacta') ? $this->request->getPost('modelo_vehiculo') : NULL,
+					'MODELOID' => $this->request->getPost('linea_vehiculo_ad') ? $this->request->getPost('linea_vehiculo_ad') : NULL,
+					'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad') ? $this->request->getPost('version_vehiculo_ad') : NULL,
+					'VEHICULOSERVICIOID' => $this->request->getPost('servicio_vehiculo_ad') ? $this->request->getPost('servicio_vehiculo_ad') : NULL,
+					'SEGUROVIGENTE' => $this->request->getPost('seguro_vigente_vehiculo') ? $this->request->getPost('seguro_vigente_vehiculo') : NULL,
+					'TRANSMISION' => $this->request->getPost('transmision_vehiculo') ? $this->request->getPost('transmision_vehiculo') : NULL,
+					'TRACCION' => $this->request->getPost('traccion_vehiculo') ? $this->request->getPost('traccion_vehiculo') : NULL,
+					'NUMEROCHASIS' => $this->request->getPost('num_chasis_vehiculo') ? $this->request->getPost('num_chasis_vehiculo') : NULL,
+					'SEGUNDOCOLORID' => $this->request->getPost('color_tapiceria_vehiculo') ? $this->request->getPost('color_tapiceria_vehiculo') : NULL,
+					'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo') ? $this->request->getPost('modelo_vehiculo') : NULL,
+					'FOTO' => $fotoV,
+
+				);
+			} catch (\Exception $e) {
+			}
+		} elseif (empty($document_file) && empty($foto_file)) {
+
+			$data = array(
+				'folio' => trim($this->request->getPost('folio')),
+				'year' => trim($this->request->getPost('year')),
+				'TIPOID' => $this->request->getPost('tipo_vehiculo') != '' ? $this->request->getPost('tipo_vehiculo') : NULL,
+				'PRIMERCOLORID' => $this->request->getPost('color_vehiculo') != '' ? $this->request->getPost('color_vehiculo') : NULL,
+				'SENASPARTICULARES' => $this->request->getPost('description_vehiculo') != '' ? $this->request->getPost('description_vehiculo') : NULL,
+				'TIPOPLACA' => $this->request->getPost('tipo_placas_vehiculo') != '' ? $this->request->getPost('tipo_placas_vehiculo') : NULL,
+				'PLACAS' => $this->request->getPost('placas_vehiculo') ? $this->request->getPost('placas_vehiculo') : NULL,
+				'ESTADOIDPLACA' => $this->request->getPost('estado_vehiculo_ad') ? $this->request->getPost('estado_vehiculo_ad') : NULL,
+				'ESTADOEXTRANJEROIDPLACA' => $this->request->getPost('estado_extranjero_vehiculo_ad') ? $this->request->getPost('estado_extranjero_vehiculo_ad') : NULL,
+				'NUMEROSERIE' => $this->request->getPost('serie_vehiculo') ? $this->request->getPost('serie_vehiculo') : NULL,
+				'VEHICULODISTRIBUIDORID' => $this->request->getPost('distribuidor_vehiculo_ad') ? $this->request->getPost('distribuidor_vehiculo_ad') : NULL,
+				'MARCAID' => $this->request->getPost('marca_ad') ? $this->request->getPost('marca_ad') : NULL,
+				'MARCADESCR' => isset($marcadescr->VEHICULOMARCADESCR) ? $marcadescr->VEHICULOMARCADESCR : NULL,
+				'MODELODESCR' => isset($modelodescr->VEHICULOMODELODESCR) ? $modelodescr->VEHICULOMODELODESCR : NULL,
+				'MARCADEXAC' => $this->request->getPost('marca_exacta') ? $this->request->getPost('modelo_vehiculo') : NULL,
+				'MODELOID' => $this->request->getPost('linea_vehiculo_ad') ? $this->request->getPost('linea_vehiculo_ad') : NULL,
+				'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad') ? $this->request->getPost('version_vehiculo_ad') : NULL,
+				'VEHICULOSERVICIOID' => $this->request->getPost('servicio_vehiculo_ad') ? $this->request->getPost('servicio_vehiculo_ad') : NULL,
+				'SEGUROVIGENTE' => $this->request->getPost('seguro_vigente_vehiculo') ? $this->request->getPost('seguro_vigente_vehiculo') : NULL,
+				'TRANSMISION' => $this->request->getPost('transmision_vehiculo') ? $this->request->getPost('transmision_vehiculo') : NULL,
+				'TRACCION' => $this->request->getPost('traccion_vehiculo') ? $this->request->getPost('traccion_vehiculo') : NULL,
+				'NUMEROCHASIS' => $this->request->getPost('num_chasis_vehiculo') ? $this->request->getPost('num_chasis_vehiculo') : NULL,
+				'SEGUNDOCOLORID' => $this->request->getPost('color_tapiceria_vehiculo') ? $this->request->getPost('color_tapiceria_vehiculo') : NULL,
+				'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo') ? $this->request->getPost('modelo_vehiculo') : NULL,
+			);
+		}
 		// $insert = $this->_folioVehiculoModel->insert($data);
 		// $update = $this->_folioVehiculoModel->set($data)->where('FOLIOID', $folio)->where('ANO', $year)->update();
 		$insert = $this->_folioVehiculo($data, $folio, $year);
