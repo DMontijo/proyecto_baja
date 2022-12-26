@@ -1522,7 +1522,7 @@ class DashboardController extends BaseController
 						} else {
 							$municipioid = '';
 						}
-						$_archivosExternos = $this->_createArchivosExternos($expediente, $folio, $year,  $municipioid, $doc['CLASIFICACIONDOCTOID'], $doc['TIPODOC'], $doc['PDF'], '');
+						$_archivosExternos = $this->_createArchivosExternos($expediente, $folio, $year,  $municipioid, $doc['CLASIFICACIONDOCTOID'], $doc['TIPODOC'], $doc['PDF'], '', 'pdf');
 						if ($_archivosExternos->status == 201) {
 							$datosRelacionFolio = [
 								'FOLIODOCID' => $doc['FOLIODOCID'],
@@ -1993,7 +1993,7 @@ class DashboardController extends BaseController
 
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
-	private function _createArchivosExternos($expedienteId, $folioid, $ano, $municipioid, $clasificaciondoctoid, $tipodoc, $doc, $foto)
+	private function _createArchivosExternos($expedienteId, $folioid, $ano, $municipioid, $clasificaciondoctoid, $tipodoc, $doc, $foto, $extension)
 	{
 		// $doc -> pdf de documentos o documento del vehiculo
 
@@ -2036,7 +2036,7 @@ class DashboardController extends BaseController
 			// }
 			$data['EXPEDIENTEID'] = $expedienteId;
 
-			$data['EXTENSION'] = '.pdf';
+			$data['EXTENSION'] = $extension;
 			// $data['AUTOR'] = isset($archivos['AGENTEID']) ? $archivos['AGENTEID'] : session('ID');
 			// $data['OFICINAIDAUTOR'] = isset($archivos['OFICINAID']) ? $archivos['OFICINAID'] : '394';
 			$data['CLASIFICACIONDOCTOID'] = $clasificaciondoctoid;
@@ -2191,10 +2191,16 @@ class DashboardController extends BaseController
 			? $data['FOTO'] = base64_encode($vehiculos['FOTO'])
 			: null;
 		if (isset($vehiculos['FOTO'])) {
-			$_archivosExternos = $this->_createArchivosExternos($expedienteId, $vehiculos['FOLIOID'], $vehiculos['ANO'], '', 53, 'ROBO DE VEHÍCULO', '', $vehiculos['FOTO']);
+			$f = finfo_open();
+			$mime_type = finfo_buffer($f, $vehiculos['FOTO'], FILEINFO_MIME_TYPE);
+			$extension = explode('/', $mime_type)[1];
+			$_archivosExternos = $this->_createArchivosExternos($expedienteId, $vehiculos['FOLIOID'], $vehiculos['ANO'], '', 53, 'ROBO DE VEHÍCULO', '', $vehiculos['FOTO'], $extension);
 		}
 		if (isset($vehiculos['DOCUMENTO'])) {
-			$_archivosExternos = $this->_createArchivosExternos($expedienteId, $vehiculos['FOLIOID'], $vehiculos['ANO'], '', 53, 'ROBO DE VEHÍCULO', $vehiculos['DOCUMENTO'], '');
+			$f = finfo_open();
+			$mime_type = finfo_buffer($f, $vehiculos['DOCUMENTO'], FILEINFO_MIME_TYPE);
+			$extension = explode('/', $mime_type)[1];
+			$_archivosExternos = $this->_createArchivosExternos($expedienteId, $vehiculos['FOLIOID'], $vehiculos['ANO'], '', 53, 'ROBO DE VEHÍCULO', $vehiculos['DOCUMENTO'], '', $extension);
 		}
 		$data['userDB'] = $conexion->USER;
 		$data['pwdDB'] = $conexion->PASSWORD;
