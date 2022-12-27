@@ -17,16 +17,16 @@
 			</div>
 			<section class="p-3">
 				<div class="row d-md-flex">
-					<div class="col-12 col-md-6 col-lg-4 text-center">
+					<!-- <div class="col-12 col-md-6 col-lg-4 text-center">
 						<div class="card text-center bg-transparent border-0">
 							<div class="card-body">
 								<a href="" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#boletos_modal">
 									<img src="<?= base_url() ?>/assets/img/icons/boleto.png" class="w-75" alt="Video Denuncia">
-									<!-- <p class="fw-bold fs-5 mt-2  text-dark ">Boleto de sorteo</p> -->
+									<p class="fw-bold fs-5 mt-2  text-dark ">Boleto de sorteo</p>
 								</a>
 							</div>
 						</div>
-					</div>
+					</div> -->
 					<div class="col-12 col-md-6 col-lg-4 text-center">
 						<div class="card text-center bg-transparent border-0">
 							<div class="card-body">

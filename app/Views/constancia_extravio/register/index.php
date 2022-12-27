@@ -6,7 +6,7 @@
 
 <?= $this->section('content') ?>
 
-<section class="container-fluid bg-blue d-flex align-items-center justify-content-center" style="min-height: 100vh;background:url(<?= base_url() ?>/assets/img/lineas_background.png);background-repeat: no-repeat;background-attachment: fixed;background-size: cover !important;">
+<section class="container-fluid bg-primary d-flex align-items-center justify-content-center" style="min-height: 100vh;background:url(<?= base_url() ?>/assets/img/lineas_background.png);background-repeat: no-repeat;background-attachment: fixed;background-size: cover !important;">
 	<div class="container">
 		<div class="row py-5">
 			<div class="col-12 col-md-6 d-flex justify-content-center align-items-center">
@@ -17,7 +17,7 @@
 					<div class="col-12">
 						<div class="row align-items-center justify-content-center mb-3">
 							<div class="col-12 col-lg-10 offset-lg-1">
-								<div class="card bg-yellow shadow-lg">
+								<div class="card bg-blue shadow-lg">
 									<div class="card-body text-center">
 										<h2 class="fw-bolder text-white">¿Necesitas una constancia de extravío?</h2>
 										<a href="<?= base_url() ?>/constancia_extravio/register" class="btn btn-light">
