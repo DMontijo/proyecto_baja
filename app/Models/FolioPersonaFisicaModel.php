@@ -130,7 +130,7 @@ class FolioPersonaFisicaModel extends Model
 	public function get_by_personas($folio, $year, $idpersonafisica)
 	{
 		$builder = $this->db->table($this->table);
-		$builder->select(['FOLIOID', 'PERSONAFISICAID', 'ANO', 'NOMBRE', 'PRIMERAPELLIDO', 'SEGUNDOAPELLIDO', 'EDADCANTIDAD', 'TELEFONO', 'TIPOIDENTIFICACIONID', 'NUMEROIDENTIFICACION', 'OCUPACIONID', 'NACIONALIDADID', 'ESTADOCIVILID']);
+		$builder->select('*');
 		$builder->where('FOLIOID', $folio);
 		$builder->where('ANO', $year);
 		$builder->where('PERSONAFISICAID', $idpersonafisica);

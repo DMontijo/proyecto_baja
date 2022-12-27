@@ -563,7 +563,7 @@ class DashboardController extends BaseController
 		$data->objetosubclasificacion = $this->_objetoSubclasificacionModel->asObject()->findAll();
 		$data->tipomoneda = $this->_tipoMonedaModel->asObject()->findAll();
 
-		$data->plantillas = $this->_plantillasModel->asObject()->where('ID !=', 6)->findAll();
+		$data->plantillas = $this->_plantillasModel->asObject()->where('TITULO !=', 'CONSTANCIA DE EXTRAVIO')->findAll();
 		$data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->like('TIPOEXPEDIENTECLAVE', 'NUC')->orLike('TIPOEXPEDIENTECLAVE', 'NAC')->orLike('TIPOEXPEDIENTECLAVE', 'RAC')->findAll();
 		$data->distribuidorVehiculo = $this->_vehiculoDistribuidorModel->asObject()->findAll();
 		$data->marcaVehiculo = $this->_vehiculoMarcaModel->asObject()->findAll();
@@ -1138,7 +1138,7 @@ class DashboardController extends BaseController
 		$data->personafisica = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->findAll();
 		$data->imputados = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->where('CALIDADJURIDICAID', 2)->findAll();
 		$data->victimas = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->where('CALIDADJURIDICAID= 1 OR CALIDADJURIDICAID=6')->findAll();
-		$data->plantillas = $this->_plantillasModel->asObject()->where('ID !=', 6)->findAll();
+		$data->plantillas = $this->_plantillasModel->asObject()->where('TITULO !=', 'CONSTANCIA DE EXTRAVIO')->findAll();
 		$data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->like('TIPOEXPEDIENTECLAVE', 'NUC')->orLike('TIPOEXPEDIENTECLAVE', 'NAC')->orLike('TIPOEXPEDIENTECLAVE', 'RAC')->findAll();
 		$data->distribuidorVehiculo = $this->_vehiculoDistribuidorModel->asObject()->findAll();
 		$data->marcaVehiculo = $this->_vehiculoMarcaModel->asObject()->findAll();
@@ -4062,7 +4062,7 @@ class DashboardController extends BaseController
 
 	public function get_Plantillas()
 	{
-		$meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
+		$meses = array("ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE");
 		$expediente = trim($this->request->getPost('expediente'));
 		$year = trim($this->request->getPost('year'));
 		$titulo = $this->request->getPost('titulo');
@@ -4079,6 +4079,7 @@ class DashboardController extends BaseController
 		$data->plantilla = $this->_plantillasModel->where('TITULO', $titulo)->first();
 		$data->folioDoc = $this->_folioDocModel->get_by_expediente($expediente, $data->expediente->ANO);
 		$data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->where('TIPOEXPEDIENTEID',  $data->expediente->TIPOEXPEDIENTEID)->first();
+		$data->lugar_hecho = $data->expediente->HECHOLUGARID ? $this->_hechoLugarModel->asObject()->where('HECHOLUGARID', $data->expediente->HECHOLUGARID)->first() : (object)['HECHOLUGARDESCR' => 'NO ESPECIFICADO'];
 
 		$data->municipios = $this->_municipiosModel->asObject()->where('ESTADOID', '2')->where('MUNICIPIOID',  $data->expediente->MUNICIPIOID)->first();
 		$data->victima = $this->_folioPersonaFisicaModel->get_by_personas($data->expediente->FOLIOID, $data->expediente->ANO, $victima);
@@ -4093,12 +4094,13 @@ class DashboardController extends BaseController
 
 		if ($relacionfisfis != null) {
 			$data->relacion_delitodescr = $this->_delitoModalidadModel->asObject()->where('DELITOMODALIDADID', $relacionfisfis->DELITOMODALIDADID)->first();
-			$data->plantilla = str_replace('[DELITO]',  $data->relacion_delitodescr->DELITOMODALIDADDESCR ?  $data->relacion_delitodescr->DELITOMODALIDADDESCR : 'N/A', $data->plantilla);
-			// $data->plantilla = str_replace('[NUMERO_DELITO]',  $data->relacion_delitodescr->DELITOMODALIDADID  ?  $data->relacion_delitodescr->DELITOMODALIDADID : 'N/A', $data->plantilla);
-			$data->plantilla = str_replace('[NUMERO_DELITO]',  $data->relacion_delitodescr->DELITOMODALIDADARTICULO  ?  $data->relacion_delitodescr->DELITOMODALIDADARTICULO : 'N/A', $data->plantilla);
-			$data->plantilla = str_replace('[RELACION_DELITO]',  $data->relacion_delitodescr->DELITOMODALIDADDESCR ?  $data->relacion_delitodescr->DELITOMODALIDADDESCR : 'N/A', $data->plantilla);
-			$data->plantilla = str_replace('[</span>RELACION_DELITO]',  $data->relacion_delitodescr->DELITOMODALIDADDESCR ?  $data->relacion_delitodescr->DELITOMODALIDADDESCR : 'N/A', $data->plantilla);
-			$data->plantilla = str_replace('[NUMERO_CODIGO_PENAL]', ($data->relacion_delitodescr->DELITOMODALIDADARTICULO ?  $data->relacion_delitodescr->DELITOMODALIDADARTICULO : 'N/A'), $data->plantilla);
+			$data->plantilla = str_replace('[DELITO]',  $data->relacion_delitodescr->DELITOMODALIDADDESCR ?  $data->relacion_delitodescr->DELITOMODALIDADDESCR : '-', $data->plantilla);
+			// $data->plantilla = str_replace('[NUMERO_DELITO]',  $data->relacion_delitodescr->DELITOMODALIDADID  ?  $data->relacion_delitodescr->DELITOMODALIDADID : '-', $data->plantilla);
+			$data->plantilla = str_replace('[NUMERO_DELITO]',  $data->relacion_delitodescr->DELITOMODALIDADARTICULO  ?  $data->relacion_delitodescr->DELITOMODALIDADARTICULO : '-', $data->plantilla);
+			$data->plantilla = str_replace('[RELACION_DELITO]',  $data->relacion_delitodescr->DELITOMODALIDADDESCR ?  $data->relacion_delitodescr->DELITOMODALIDADDESCR : '-', $data->plantilla);
+			$data->plantilla = str_replace('[</span>RELACION_DELITO]',  $data->relacion_delitodescr->DELITOMODALIDADDESCR ?  $data->relacion_delitodescr->DELITOMODALIDADDESCR : '-', $data->plantilla);
+			$data->plantilla = str_replace('[DELITO_NOMBRE]',  $data->relacion_delitodescr->DELITOMODALIDADDESCR ?  $data->relacion_delitodescr->DELITOMODALIDADDESCR : '-', $data->plantilla);
+			$data->plantilla = str_replace('[NUMERO_CODIGO_PENAL]', ($data->relacion_delitodescr->DELITOMODALIDADARTICULO ?  $data->relacion_delitodescr->DELITOMODALIDADARTICULO : '-'), $data->plantilla);
 		}
 
 		if (empty($data->folioDoc) || empty($data->folioDoc[0]['RAZONSOCIALFIRMA'])) {
@@ -4127,7 +4129,7 @@ class DashboardController extends BaseController
 		$expedienteYear = $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9];
 		$expedienteid = $expedienteMunicipioEstado . '-' . $expedienteYear . '-' . implode($expedienteConsecutivo);
 
-		$data->plantilla = str_replace('[DOCUMENTO_FECHA]', date('d') . ' de ' . $meses[date('n') - 1] . " del " . date('Y'), $data->plantilla);
+		$data->plantilla = str_replace('[DOCUMENTO_FECHA]', date('d') . ' DE ' . $meses[date('n') - 1] . " DEL " . date('Y'), $data->plantilla);
 		$data->plantilla = str_replace('[EXPEDIENTE_NUMERO]', $expedienteid, $data->plantilla);
 		$data->plantilla = str_replace('[DOCUMENTO_MUNICIPIO]', $data->municipios->MUNICIPIODESCR, $data->plantilla);
 		$data->plantilla = str_replace('[DOCUMENTO_CIUDAD]', $data->municipios->MUNICIPIODESCR, $data->plantilla);
@@ -4136,13 +4138,15 @@ class DashboardController extends BaseController
 		$data->plantilla = str_replace('[VICTIMA_NOMBRE]', $data->victima[0]['NOMBRE'] . ' ' . ($data->victima[0]['PRIMERAPELLIDO'] ? $data->victima[0]['PRIMERAPELLIDO'] : '') . ' ' . ($data->victima[0]['SEGUNDOAPELLIDO'] ? $data->victima[0]['SEGUNDOAPELLIDO'] : ''), $data->plantilla);
 		$data->plantilla = str_replace('[</span>VICTIMA_NOMBRE]', $data->victima[0]['NOMBRE'] . ' ' . ($data->victima[0]['PRIMERAPELLIDO'] ? $data->victima[0]['PRIMERAPELLIDO'] : '') . ' ' . ($data->victima[0]['SEGUNDOAPELLIDO'] ? $data->victima[0]['SEGUNDOAPELLIDO'] : ''), $data->plantilla);
 		$data->plantilla = str_replace('[VICTIMAS_NOMBRE]', $data->victima[0]['NOMBRE'] . ' ' . ($data->victima[0]['PRIMERAPELLIDO'] ? $data->victima[0]['PRIMERAPELLIDO'] : '') . ' ' . ($data->victima[0]['SEGUNDOAPELLIDO'] ? $data->victima[0]['SEGUNDOAPELLIDO'] : ''), $data->plantilla);
-		$data->plantilla = str_replace('[VICTIMA_EDAD]', $data->victima[0]['EDADCANTIDAD'] ? $data->victima[0]['EDADCANTIDAD'] : 'N/A', $data->plantilla);
-		$data->plantilla = str_replace('[VICTIMA_TELEFONO]', $data->victima[0]['TELEFONO'] ? $data->victima[0]['TELEFONO'] : 'N/A', $data->plantilla);
-		$data->plantilla = str_replace('[</span>VICTIMA_TELEFONO]', $data->victima[0]['TELEFONO'] ? $data->victima[0]['TELEFONO'] : 'N/A', $data->plantilla);
+		$data->plantilla = str_replace('[VICTIMA_EDAD]', $data->victima[0]['EDADCANTIDAD'] ? $data->victima[0]['EDADCANTIDAD'] : '-', $data->plantilla);
+		$data->plantilla = str_replace('[VICTIMA_TELEFONO]', $data->victima[0]['TELEFONO'] ? $data->victima[0]['TELEFONO'] : '-', $data->plantilla);
+		$data->plantilla = str_replace('[VICTIMA_CORREO]', $data->victima[0]['CORREO'] ? $data->victima[0]['CORREO'] : '-', $data->plantilla);
+		$data->plantilla = str_replace('[VICTIMA_SEXO]', $data->victima[0]['SEXO'] ? ($data->victima[0]['SEXO'] == 'F' ? 'FEMENINO' : 'MASCULINO') : '-', $data->plantilla);
+		$data->plantilla = str_replace('[</span>VICTIMA_TELEFONO]', $data->victima[0]['TELEFONO'] ? $data->victima[0]['TELEFONO'] : '-', $data->plantilla);
 
 		$data->plantilla = str_replace('[PERSONA]', $data->imputado->NOMBRE . ' ' . ($data->imputado->PRIMERAPELLIDO ? $data->imputado->PRIMERAPELLIDO : '') . ' ' . ($data->imputado->SEGUNDOAPELLIDO ? $data->imputado->SEGUNDOAPELLIDO : ''), $data->plantilla);
 		$data->plantilla = str_replace('[IMPUTADO_NOMBRE]', $data->imputado->NOMBRE . ' ' . ($data->imputado->PRIMERAPELLIDO ? $data->imputado->PRIMERAPELLIDO : '') . ' ' . ($data->imputado->SEGUNDOAPELLIDO ? $data->imputado->SEGUNDOAPELLIDO : ''), $data->plantilla);
-		$data->plantilla = str_replace('[IMPUTADO_EDAD]', $data->imputado->EDADCANTIDAD ? $data->imputado->EDADCANTIDAD : 'N/A', $data->plantilla);
+		$data->plantilla = str_replace('[IMPUTADO_EDAD]', $data->imputado->EDADCANTIDAD ? $data->imputado->EDADCANTIDAD : '-', $data->plantilla);
 		$data->plantilla = str_replace('[DIA]', date('d'), $data->plantilla);
 		$data->plantilla = str_replace('[MES]', $meses[date('n') - 1], $data->plantilla);
 		$data->plantilla = str_replace('[ANO]', date('Y'), $data->plantilla);
@@ -4150,11 +4154,15 @@ class DashboardController extends BaseController
 		$data->plantilla = str_replace('[MINUTOS]', date('i'), $data->plantilla);
 		$data->plantilla = str_replace('[ESTADO]', $data->municipios->MUNICIPIODESCR, $data->plantilla);
 		$data->plantilla = str_replace('[HECHO]', $data->expediente->HECHONARRACION ? $data->expediente->HECHONARRACION : 'SIN NARRACIÓN', $data->plantilla);
+		$data->plantilla = str_replace('[HECHO_LUGAR]', $data->lugar_hecho->HECHODESCR ? $data->lugar_hecho->HECHODESCR : '-', $data->plantilla);
+		$data->plantilla = str_replace('[HECHO_FECHA]', $data->expediente->HECHOFECHA ? $data->expediente->HECHOFECHA : '-', $data->plantilla);
+		$data->plantilla = str_replace('[HECHO_HORA]', $data->expediente->HECHOHORA ? $data->expediente->HECHOHORA : '-', $data->plantilla);
 		$data->plantilla = str_replace('[DETALLE_INTERVENCIONES]', $data->expediente->HECHONARRACION ? $data->expediente->HECHONARRACION : 'SIN NARRACIÓN', $data->plantilla);
 		$data->plantilla = str_replace('[HECHO_NARRACION]', $data->expediente->HECHONARRACION ? $data->expediente->HECHONARRACION : 'SIN NARRACIÓN', $data->plantilla);
-		$data->plantilla = str_replace('[TIPO_EXPEDIENTE]',  $data->tipoExpediente->TIPOEXPEDIENTEDESCR, $data->plantilla);
+		$data->plantilla = str_replace('[TIPO_EXPEDIENTE]',  $data->tipoExpediente->TIPOEXPEDIENTECLAVE, $data->plantilla);
 		$data->plantilla = str_replace('[ZONA_SEJAP]',  'CENTRO DE DENUNCIA TECNOLÓGICA', $data->plantilla);
 		$data->plantilla = str_replace('[VICTIMA_DOMICILIO]', 'en la calle: ' . $data->victimaDom->CALLE . ' en la colonia: ' . $data->victimaDom->COLONIADESCR, $data->plantilla);
+		$data->plantilla = str_replace('[VICTIMA_DOMICILIO_COMPLETO]', ($data->victimaDom->CALLE ? $data->victimaDom->CALLE : 'DESCONOCIDO') . ' EXT. ' . ($data->victimaDom->NUMEROCASA ? $data->victimaDom->NUMEROCASA : '') . ' INT. ' . ($data->victimaDom->NUMEROINTERIOR ? $data->victimaDom->NUMEROINTERIOR : '') . ' ' . $data->victimaDom->COLONIADESCR, $data->plantilla);
 		$data->plantilla = str_replace('[VICTIMA_TIPO_IDENTIFICACION]', isset($data->tipoIdentificacionVictima) == true ? $data->tipoIdentificacionVictima->PERSONATIPOIDENTIFICACIONDESCR : 'SIN TIPO DE IDENTIFICACIÓN', $data->plantilla);
 		$data->plantilla = str_replace('[VICTIMA_NUMERO_IDENTIFICACION]', $data->victima[0]['NUMEROIDENTIFICACION'] ? $data->victima[0]['NUMEROIDENTIFICACION'] : 'SIN NÚMERO DE IDENTIFICACIÓN', $data->plantilla);
 		$data->plantilla = str_replace('[VICTIMA_TELEFONO_CELULAR]', $data->victima[0]['TELEFONO'] ? $data->victima[0]['TELEFONO'] : 'SIN TELEFONO REGISTRADO', $data->plantilla);
@@ -4194,6 +4202,7 @@ class DashboardController extends BaseController
 			return json_encode($data);
 		}
 	}
+
 	public function insertFolioDoc()
 	{
 		$expediente = trim($this->request->getPost('expediente'));

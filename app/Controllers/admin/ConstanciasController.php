@@ -73,7 +73,7 @@ class ConstanciasController extends BaseController
 		if (!$this->request->getGet('folio') || !$this->request->getGet('year')) {
 			return redirect()->back()->with('message_error', 'La constancia no existe o no enviaste todos los parámetros.');
 		}
-		$data->constanciaExtravio = $this->_plantillasModel->asObject()->where('TITULO', 'CONSTANCIA DE EXTRAVÍO')->first();
+		$data->constanciaExtravio = $this->_plantillasModel->asObject()->where('TITULO', 'CONSTANCIA DE EXTRAVIO')->first();
 		$constancia = $this->_constanciaExtravioModel->asObject()->where('CONSTANCIAEXTRAVIOID', $data->folio)->where('ANO', $year)->first();
 		if (!$constancia) {
 			return redirect()->back()->with('message_error', 'La constancia no existe.');
