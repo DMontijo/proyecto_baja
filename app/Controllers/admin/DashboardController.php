@@ -969,7 +969,7 @@ class DashboardController extends BaseController
 		// var_dump($data->mexicali);
 		// exit;
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
-		$this->_loadView('Bandeja de salida', 'bandeja de salida', '', $data, 'bandeja/bandeja_salida');
+		$this->_loadView('Bandeja de remisión', 'bandeja de remision', '', $data, 'bandeja/bandeja_salida');
 	}
 
 	public function bandeja_remision()

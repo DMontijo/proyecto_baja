@@ -8,7 +8,7 @@
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-12 text-center mb-4">
-				<h1 class="mb-4 text-center font-weight-bold">Bandeja de salida</h1>
+				<h1 class="mb-4 text-center font-weight-bold">Bandeja de remisión</h1>
 			</div>
 			<div class="col-12">
 				<div class="card shadow border-0" style="overflow-x:auto;">
