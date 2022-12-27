@@ -2,7 +2,7 @@
 <?= $this->section('body') ?>
 <?php
 $expediente_guiones = '';
-$arrayExpediente = str_split($expedienteid);
+$arrayExpediente = str_split($expediente);
 $expediente_guiones =  $arrayExpediente[1] . $arrayExpediente[2] . '-' .  $arrayExpediente[3] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
 ?>
 

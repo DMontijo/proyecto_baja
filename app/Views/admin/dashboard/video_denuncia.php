@@ -1866,6 +1866,7 @@
 			var quill = new Quill('#documento', {
 				theme: 'snow'
 			});
+
 			var quill2 = new Quill('#documento_editar', {
 				theme: 'snow'
 			});
@@ -4468,13 +4469,22 @@
 					data: data,
 					dataType: 'JSON',
 					success: function(response) {
-						const plantillas = response.plantilla;
-						quill.root.innerHTML = plantillas.PLACEHOLDER;
-						document.querySelector("#victima_modal_documento").value = '';
-						document.querySelector("#imputado_modal_documento").value = '';
-						document.getElementById("involucrados").style.display = "none";
-
+						if (response.status == 1) {
+							const plantilla = response.plantilla;
+							quill.root.innerHTML = plantilla.PLACEHOLDER;
+							document.querySelector("#victima_modal_documento").value = '';
+							document.querySelector("#imputado_modal_documento").value = '';
+							document.getElementById("involucrados").style.display = "none";
+						} else {
+							quill.root.innerHTML = 'PLANTLLA VACÍA O CON ERROR';
+							document.querySelector("#victima_modal_documento").value = '';
+							document.querySelector("#imputado_modal_documento").value = '';
+							document.getElementById("involucrados").style.display = "none";
+						}
 					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						console.error(textStatus);
+					}
 				});
 			}
 

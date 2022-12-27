@@ -32,7 +32,7 @@
 									</select>
 								</div>
 								<div class="row mb-2">
-									<div id="municipio_empleado_container" class="col-4 d-none">
+									<div id="municipio_empleado_container" class="col-12 d-none">
 										<label for="municipio_empleado" class="form-label font-weight-bold">Municipio</label>
 										<select class="form-control" name="municipio_empleado" id="municipio_empleado">
 											<option value="" selected disabled>Selecciona...</option>
@@ -233,7 +233,7 @@
 
 							Swal.fire({
 								icon: 'success',
-								html: 'EXPEDIENTE <strong>' + data.expediente + '</strong> CREADO CORRECTAMENTE',
+								html: 'EXPEDIENTE <strong>' + expedienteConGuiones(data.expediente) + '</strong> CREADO CORRECTAMENTE',
 								confirmButtonColor: '#bf9b55',
 							}).then((e) => {
 								$("#salida_modal").modal("hide");
@@ -337,6 +337,11 @@
 		for (let i = select_element.options.length; i >= 1; i--) {
 			select_element.remove(i);
 		}
+	}
+
+	function expedienteConGuiones(expediente) {
+		const array = expediente.trim().split('');
+		return array[0] + '-' + array[1] + array[2] + '-' + array[3] + array[4] + array[5] + '-' + array[6] + array[7] + array[8] + array[9] + '-' + array[10] + array[11] + array[12] + array[13] + array[14]
 	}
 
 	function contarCaracteresSalida(obj) {

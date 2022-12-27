@@ -1366,8 +1366,8 @@ class DashboardController extends BaseController
 					// var_dump($expedienteCreado);exit;
 
 					// $expedienteCreado = (object)array(
-					//     'status' => 201,
-					//     'EXPEDIENTEID' => '402002202200323'
+					// 	'status' => 201,
+					// 	'EXPEDIENTEID' => '402002202200323'
 					// );
 					// return json_encode(['info' => $expedienteCreado]);
 
@@ -1389,7 +1389,6 @@ class DashboardController extends BaseController
 						$update = $this->_folioModel->set($folioRow)->where('FOLIOID', $folio)->where('ANO', $year)->update();
 						$personasRelacionMysqlOracle = array();
 						try {
-
 							foreach ($personas as $key => $persona) {
 
 								$_persona = $this->_createPersonaFisica($expedienteCreado->EXPEDIENTEID, $persona, $municipio);
@@ -1412,7 +1411,7 @@ class DashboardController extends BaseController
 								}
 							}
 
-							// // Relacion Persona Física Imputado delito
+							//Relacion Persona Física Imputado delito
 							if (count($fisImpDelito) > 0) {
 								foreach ($fisImpDelito as $imputadodelito) {
 									try {
@@ -1423,7 +1422,7 @@ class DashboardController extends BaseController
 								}
 							}
 
-							// // Relacion Victima Imputado
+							//Relacion Victima Imputado
 							if (count($relacionFisFis) > 0) {
 								foreach ($relacionFisFis as $fisFis) {
 									try {
@@ -1496,8 +1495,6 @@ class DashboardController extends BaseController
 		$year = $this->request->getPost('year');
 		$expediente = $this->request->getPost('expediente');
 
-
-		// $folioDoc = $this->_folioDocModel->get_by_expediente($expediente, $year);
 		$folioDoc = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOCID', 'asc')->findAll();
 		$folioDocSinFirmar = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'ABIERTO')->orderBy('FOLIODOCID', 'asc')->findAll();
 		if ($folioDocSinFirmar) {
@@ -1522,7 +1519,7 @@ class DashboardController extends BaseController
 						} else {
 							$municipioid = '';
 						}
-						$_archivosExternos = $this->_createArchivosExternos($expediente, $folio, $year,  $municipioid, $doc['CLASIFICACIONDOCTOID'], $doc['TIPODOC'], $doc['PDF'], '', 'pdf');
+						$_archivosExternos = $this->_createArchivosExternos($expediente, $folio, $year,  $municipioid, $doc['CLASIFICACIONDOCTOID'], $doc['TIPODOC'], $doc['PDF'], 'pdf');
 						if ($_archivosExternos->status == 201) {
 							$datosRelacionFolio = [
 								'FOLIODOCID' => $doc['FOLIODOCID'],
@@ -1539,7 +1536,6 @@ class DashboardController extends BaseController
 						// var_dump($doc['FOLIOID'],$doc['ANO'],$doc['NUMEROEXPEDIENTE'], $doc['FOLIODOCID']);
 						// var_dump($_archivosExternos);
 						// exit;
-
 					}
 				}
 
@@ -1559,6 +1555,7 @@ class DashboardController extends BaseController
 			}
 		}
 	}
+
 	public function crearDocumento()
 	{
 		$folio = $this->request->getPost('folio');
@@ -1579,6 +1576,7 @@ class DashboardController extends BaseController
 			}
 		}
 	}
+
 	private function _createExpediente($folioRow)
 	{
 		$function = '/expediente.php?process=crear';
@@ -1761,9 +1759,9 @@ class DashboardController extends BaseController
 
 			$data['EXPEDIENTEID'] = $expedienteId;
 			$data['PERSONAFISICAID'] = $personaFisicaId;
-			if ($data['COLONIAID'] != 0) {
-				unset($data['COLONIADESCR']);
-			}
+			// if ($data['COLONIAID'] != 0) {
+			// 	unset($data['COLONIADESCR']);
+			// }
 			unset($data['DOMICILIOID']);
 
 			foreach ($data as $clave => $valor) {
@@ -1993,13 +1991,12 @@ class DashboardController extends BaseController
 
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
-	private function _createArchivosExternos($expedienteId, $folioid, $ano, $municipioid, $clasificaciondoctoid, $tipodoc, $doc, $foto, $extension)
-	{
-		// $doc -> pdf de documentos o documento del vehiculo
 
-		if ($doc != '' || $foto != '') {
+	private function _createArchivosExternos($expedienteId, $folioid, $ano, $municipioid, $clasificaciondoctoid, $tipodoc, $archivo, $extension)
+	{
+		if ($archivo != '' && $archivo) {
 			$function = '/archivoExt.php?process=crear';
-			$array = [
+			$data = [
 				'EXPEDIENTEID',
 				'EXPEDIENTEARCHIVOID',
 				'ARCHIVODESCR',
@@ -2019,42 +2016,39 @@ class DashboardController extends BaseController
 			$folioRow = $this->_folioModel->where('ANO', $ano)->where('FOLIOID', $folioid)->first();
 			$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipioid != '' ? $municipioid : $folioRow['MUNICIPIOID'])->where('TYPE', ENVIRONMENT)->first();
 
-			$data = array();
-			// $data = $archivos;
-
-
-			// foreach ($data as $clave => $valor) {
-			// 	if (empty($valor)) {
-			// 		unset($data[$clave]);
-			// 	}
-			// }
-
-			// foreach ($data as $clave => $valor) {
-			// 	if (!in_array($clave, $array)) {
-			// 		unset($data[$clave]);
-			// 	}
-			// }
 			$data['EXPEDIENTEID'] = $expedienteId;
 
-			$data['EXTENSION'] = $extension;
+			$data['EXTENSION'] = '.' . $extension;
 			// $data['AUTOR'] = isset($archivos['AGENTEID']) ? $archivos['AGENTEID'] : session('ID');
 			// $data['OFICINAIDAUTOR'] = isset($archivos['OFICINAID']) ? $archivos['OFICINAID'] : '394';
-			$data['CLASIFICACIONDOCTOID'] = $clasificaciondoctoid;
+			$data['CLASIFICACIONDOCTOID'] = $clasificaciondoctoid ? $clasificaciondoctoid : 53;
 			$data['ESTADOACCESO'] = 'M';
 			$data['PUBLICADO'] = 'N';
 			$data['EXPORTAR'] = 'NNEW';
 			$data['ARCHIVODESCR'] = $tipodoc;
-			$data['ARCHIVO'] = $doc  != '' ? base64_encode($doc) : base64_encode($foto);
+			$data['ARCHIVO'] = $archivo;
+
+			foreach ($data as $clave => $valor) {
+				if (empty($valor)) {
+					unset($data[$clave]);
+				}
+			}
+
+			foreach ($data as $clave => $valor) {
+				if (!in_array($clave, $data)) {
+					unset($data[$clave]);
+				}
+			}
 
 			$data['userDB'] = $conexion->USER;
 			$data['pwdDB'] = $conexion->PASSWORD;
 			$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
 			$data['schema'] = $conexion->SCHEMA;
 
-
 			return $this->_curlPostDataEncrypt($endpoint, $data);
 		}
 	}
+
 	private function _createFolioDocumentos($expedienteId, $documentos, $municipio)
 	{
 		$function = '/documento.php?process=crear';
@@ -2096,6 +2090,7 @@ class DashboardController extends BaseController
 
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
+
 	private function _createFisImpDelito($expedienteId, $fisimpdelito, $imputado, $municipio)
 	{
 		$function = '/imputadoDelito.php?process=crear';
@@ -2130,6 +2125,7 @@ class DashboardController extends BaseController
 
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
+
 	private function _createExpVehiculo($expedienteId, $vehiculos, $municipio)
 	{
 
@@ -2194,13 +2190,13 @@ class DashboardController extends BaseController
 			$f = finfo_open();
 			$mime_type = finfo_buffer($f, $vehiculos['FOTO'], FILEINFO_MIME_TYPE);
 			$extension = explode('/', $mime_type)[1];
-			$_archivosExternos = $this->_createArchivosExternos($expedienteId, $vehiculos['FOLIOID'], $vehiculos['ANO'], '', 53, 'ROBO DE VEHÍCULO', '', $vehiculos['FOTO'], $extension);
+			$_archivosExternos = $this->_createArchivosExternos($expedienteId, $vehiculos['FOLIOID'], $vehiculos['ANO'], '', 53, 'ROBO DE VEHÍCULO',  $vehiculos['FOTO'], $extension);
 		}
 		if (isset($vehiculos['DOCUMENTO'])) {
 			$f = finfo_open();
 			$mime_type = finfo_buffer($f, $vehiculos['DOCUMENTO'], FILEINFO_MIME_TYPE);
 			$extension = explode('/', $mime_type)[1];
-			$_archivosExternos = $this->_createArchivosExternos($expedienteId, $vehiculos['FOLIOID'], $vehiculos['ANO'], '', 53, 'ROBO DE VEHÍCULO', $vehiculos['DOCUMENTO'], '', $extension);
+			$_archivosExternos = $this->_createArchivosExternos($expedienteId, $vehiculos['FOLIOID'], $vehiculos['ANO'], '', 53, 'ROBO DE VEHÍCULO', $vehiculos['DOCUMENTO'], $extension);
 		}
 		$data['userDB'] = $conexion->USER;
 		$data['pwdDB'] = $conexion->PASSWORD;
@@ -2273,6 +2269,7 @@ class DashboardController extends BaseController
 		// var_dump($endpoint);
 		// var_dump($data);
 		// var_dump($result);
+		//exit;
 
 		return json_decode($result);
 	}
@@ -2607,10 +2604,10 @@ class DashboardController extends BaseController
 		];
 
 		$data = array();
-		$data['OFICINAIDRESPONSABLE'] = '';
+		$data['OFICINAIDRESPONSABLE'] = $oficina;
 		$data['EMPLEADOIDREGISTRO'] = $empleado;
 		$data['AREAIDREGISTRO'] = $area;
-		$data['AREAIDRESPONSABLE'] = $empleado;
+		$data['AREAIDRESPONSABLE'] = $area;
 		$data['EXPEDIENTEID'] = $expediente;
 
 		foreach ($data as $clave => $valor) {
@@ -4095,7 +4092,6 @@ class DashboardController extends BaseController
 		if ($relacionfisfis != null) {
 			$data->relacion_delitodescr = $this->_delitoModalidadModel->asObject()->where('DELITOMODALIDADID', $relacionfisfis->DELITOMODALIDADID)->first();
 			$data->plantilla = str_replace('[DELITO]',  $data->relacion_delitodescr->DELITOMODALIDADDESCR ?  $data->relacion_delitodescr->DELITOMODALIDADDESCR : '-', $data->plantilla);
-			// $data->plantilla = str_replace('[NUMERO_DELITO]',  $data->relacion_delitodescr->DELITOMODALIDADID  ?  $data->relacion_delitodescr->DELITOMODALIDADID : '-', $data->plantilla);
 			$data->plantilla = str_replace('[NUMERO_DELITO]',  $data->relacion_delitodescr->DELITOMODALIDADARTICULO  ?  $data->relacion_delitodescr->DELITOMODALIDADARTICULO : '-', $data->plantilla);
 			$data->plantilla = str_replace('[RELACION_DELITO]',  $data->relacion_delitodescr->DELITOMODALIDADDESCR ?  $data->relacion_delitodescr->DELITOMODALIDADDESCR : '-', $data->plantilla);
 			$data->plantilla = str_replace('[</span>RELACION_DELITO]',  $data->relacion_delitodescr->DELITOMODALIDADDESCR ?  $data->relacion_delitodescr->DELITOMODALIDADDESCR : '-', $data->plantilla);
@@ -4117,15 +4113,15 @@ class DashboardController extends BaseController
 		$expedienteConsecutivo = str_split($expedienteConsecutivo);
 
 		unset($arrayExpediente[0]);
-		foreach ($expedienteConsecutivo as $key => $value) {
-			if ($value == 0) {
-				unset($expedienteConsecutivo[$key]);
-			} else {
-				break;
-			}
-		}
+		// foreach ($expedienteConsecutivo as $key => $value) {
+		// 	if ($value == 0) {
+		// 		unset($expedienteConsecutivo[$key]);
+		// 	} else {
+		// 		break;
+		// 	}
+		// }
 
-		$expedienteMunicipioEstado = $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5];
+		$expedienteMunicipioEstado = $arrayExpediente[1] . $arrayExpediente[2] . '-' . $arrayExpediente[3] . $arrayExpediente[4] . $arrayExpediente[5];
 		$expedienteYear = $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9];
 		$expedienteid = $expedienteMunicipioEstado . '-' . $expedienteYear . '-' . implode($expedienteConsecutivo);
 
@@ -4190,13 +4186,11 @@ class DashboardController extends BaseController
 				$data->plantilla = str_replace('[DIRECCION_NOMBRE]', 'SEGURIDAD PUBLICA MUNICIPAL', $data->plantilla);
 				break;
 		}
-
 		$hecho_info = '<p><b>FOLIO:</b> ' . $data->expediente->FOLIOID . '</p><p><b>AÑO:</b> ' . $data->expediente->ANO . '</p><p><b>FECHA DEL HECHO:</b> ' . $data->expediente->HECHOFECHA . '</p><p><b>HORA DEL HECHO:</b> ' . $data->expediente->HECHOHORA . '</p><p><b>CALLE DEL HECHO:</b> ' . $data->expediente->HECHOCALLE . ' EXT.' . $data->expediente->HECHONUMEROCASA . ' INT.' . $data->expediente->HECHONUMEROCASAINT . ' ' . $data->municipios->MUNICIPIODESCR . '</p><p><b>NARRACIÓN DEL HECHO:</b> ' . $data->expediente->HECHONARRACION . '</p><p><b>NOTAS DEL AGENTE:</b> ' . $data->expediente->NOTASAGENTE . '</p>';
 
 		$data->plantilla = str_replace('[INFORMACION_DEL_HECHO]', $hecho_info, $data->plantilla);
-
 		if ($data->plantilla) {
-			return json_encode($data);
+			return json_encode(['status' => 1, 'plantilla' => $data->plantilla]);
 		} else {
 			$data = (object)['status' => 0];
 			return json_encode($data);
