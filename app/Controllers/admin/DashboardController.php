@@ -1497,59 +1497,49 @@ class DashboardController extends BaseController
 
 		$folioDoc = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOCID', 'asc')->findAll();
 		$folioDocSinFirmar = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'ABIERTO')->orderBy('FOLIODOCID', 'asc')->findAll();
+
 		if ($folioDocSinFirmar) {
-			$data3 = (object) array();
-			$data3 = ['exist' => 'Hay archivos sin firmar'];
-			if (isset($data3)) {
-				return json_encode(['status' => 4]);
-			}
+			return json_encode((object)['status' => 4]);
 		}
+
 		if ($folioDoc) {
 			try {
 				foreach ($folioDoc as $key => $doc) {
 
 					$relacionDoc = $this->_relacionFolioDocModel->where('FOLIOID', $doc['FOLIOID'])->where('ANO', $doc['ANO'])->where('EXPEDIENTEID', $doc['NUMEROEXPEDIENTE'])->where('FOLIODOCID', $doc['FOLIODOCID'])->orderBy('FOLIODOCID', 'asc')->first();
-
+					// var_dump(isset($relacionDoc));
 					if (isset($relacionDoc)) {
 						$data = (object) array();
 						$data = ['exist' => 'los archivos ya estan registrados'];
 					} else {
-						if (isset($doc['MUNICIPIOID'])) {
-							$municipioid = $doc['MUNICIPIOID'];
-						} else {
-							$municipioid = '';
+						isset($doc['MUNICIPIOID']) ? $municipioid = $doc['MUNICIPIOID'] : $municipioid = '';
+
+						// $_archivosExternos = (object)['status' => 400];
+
+						try {
+							$_archivosExternos = $this->_createArchivosExternos($expediente, $folio, $year,  $municipioid, $doc['CLASIFICACIONDOCTOID'], $doc['TIPODOC'], $doc['PDF'], 'pdf');
+							var_dump($_archivosExternos);
+							if ($_archivosExternos->status == 201) {
+								$datosRelacionFolio = [
+									'FOLIODOCID' => $doc['FOLIODOCID'],
+									'FOLIOID' =>  $doc['FOLIOID'],
+									'ANO' => $doc['ANO'],
+									'EXPEDIENTEID' => $_archivosExternos->EXPEDIENTEID,
+									'EXPEDIENTEARCHIVOID' => $_archivosExternos->ARCHIVOID,
+								];
+
+								$this->_relacionFolioDocModel->insert($datosRelacionFolio);
+							}
+						} catch (\Exception $e) {
 						}
-						$_archivosExternos = $this->_createArchivosExternos($expediente, $folio, $year,  $municipioid, $doc['CLASIFICACIONDOCTOID'], $doc['TIPODOC'], $doc['PDF'], 'pdf');
-						if ($_archivosExternos->status == 201) {
-							$datosRelacionFolio = [
-								'FOLIODOCID' => $doc['FOLIODOCID'],
-								'FOLIOID' =>  $doc['FOLIOID'],
-								'ANO' => $doc['ANO'],
-								'EXPEDIENTEID' => $_archivosExternos->EXPEDIENTEID,
-								'EXPEDIENTEARCHIVOID' => $_archivosExternos->ARCHIVOID,
-							];
-							$this->_relacionFolioDocModel->insert($datosRelacionFolio);
-							return json_encode(['status' => 1]);
-						} else {
-							return json_encode(['status' => 0]);
-						}
-						// var_dump($doc['FOLIOID'],$doc['ANO'],$doc['NUMEROEXPEDIENTE'], $doc['FOLIODOCID']);
-						// var_dump($_archivosExternos);
-						// exit;
 					}
 				}
 
-				if (isset($data)) {
-					return json_encode(['status' => 3]);
-				}
-				if (isset($data2)) {
-					return json_encode(['status' => 4]);
-				}
-				// if ($_archivosExternos->status == 201) {
-				// 	return json_encode(['status' => 1]);
-				// } else {
-				// 	return json_encode(['status' => 0]);
+				// if (isset($data)) {
+				// 	return json_encode(['status' => 3]);
 				// }
+
+				return json_encode(['status' => 1]);
 			} catch (\Exception $e) {
 				return json_encode(['status' => 0, 'error' => $e->getMessage()]);
 			}
