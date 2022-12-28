@@ -2176,13 +2176,19 @@ class DashboardController extends BaseController
 			$f = finfo_open();
 			$mime_type = finfo_buffer($f, $vehiculos['FOTO'], FILEINFO_MIME_TYPE);
 			$extension = explode('/', $mime_type)[1];
-			$_archivosExternos = $this->_createArchivosExternos($expedienteId, $vehiculos['FOLIOID'], $vehiculos['ANO'], '', 53, 'ROBO DE VEHÍCULO',  $vehiculos['FOTO'], $extension);
+			try {
+				$_archivosExternos = $this->_createArchivosExternos($expedienteId, $vehiculos['FOLIOID'], $vehiculos['ANO'], '', 53, 'ROBO DE VEHÍCULO',  $vehiculos['FOTO'], $extension);
+			} catch (\Throwable $th) {
+			}
 		}
 		if (isset($vehiculos['DOCUMENTO'])) {
 			$f = finfo_open();
 			$mime_type = finfo_buffer($f, $vehiculos['DOCUMENTO'], FILEINFO_MIME_TYPE);
 			$extension = explode('/', $mime_type)[1];
-			$_archivosExternos = $this->_createArchivosExternos($expedienteId, $vehiculos['FOLIOID'], $vehiculos['ANO'], '', 53, 'ROBO DE VEHÍCULO', $vehiculos['DOCUMENTO'], $extension);
+			try {
+				$_archivosExternos = $this->_createArchivosExternos($expedienteId, $vehiculos['FOLIOID'], $vehiculos['ANO'], '', 53, 'ROBO DE VEHÍCULO', $vehiculos['DOCUMENTO'], $extension);
+			} catch (\Throwable $th) {
+			}
 		}
 		$data['userDB'] = $conexion->USER;
 		$data['pwdDB'] = $conexion->PASSWORD;
