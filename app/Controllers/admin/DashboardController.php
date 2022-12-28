@@ -1507,7 +1507,6 @@ class DashboardController extends BaseController
 				foreach ($folioDoc as $key => $doc) {
 
 					$relacionDoc = $this->_relacionFolioDocModel->where('FOLIOID', $doc['FOLIOID'])->where('ANO', $doc['ANO'])->where('EXPEDIENTEID', $doc['NUMEROEXPEDIENTE'])->where('FOLIODOCID', $doc['FOLIODOCID'])->orderBy('FOLIODOCID', 'asc')->first();
-					// var_dump(isset($relacionDoc));
 					if (isset($relacionDoc)) {
 						$data = (object) array();
 						$data = ['exist' => 'los archivos ya estan registrados'];
@@ -1518,7 +1517,6 @@ class DashboardController extends BaseController
 
 						try {
 							$_archivosExternos = $this->_createArchivosExternos($expediente, $folio, $year,  $municipioid, $doc['CLASIFICACIONDOCTOID'], $doc['TIPODOC'], $doc['PDF'], 'pdf');
-							var_dump($_archivosExternos);
 							if ($_archivosExternos->status == 201) {
 								$datosRelacionFolio = [
 									'FOLIODOCID' => $doc['FOLIODOCID'],
@@ -1527,7 +1525,6 @@ class DashboardController extends BaseController
 									'EXPEDIENTEID' => $_archivosExternos->EXPEDIENTEID,
 									'EXPEDIENTEARCHIVOID' => $_archivosExternos->ARCHIVOID,
 								];
-
 								$this->_relacionFolioDocModel->insert($datosRelacionFolio);
 							}
 						} catch (\Exception $e) {
@@ -1986,7 +1983,7 @@ class DashboardController extends BaseController
 	{
 		if ($archivo != '' && $archivo) {
 			$function = '/archivoExt.php?process=crear';
-			$data = [
+			$array = [
 				'EXPEDIENTEID',
 				'EXPEDIENTEARCHIVOID',
 				'ARCHIVODESCR',
@@ -2005,6 +2002,18 @@ class DashboardController extends BaseController
 			$endpoint = $this->endpoint . $function;
 			$folioRow = $this->_folioModel->where('ANO', $ano)->where('FOLIOID', $folioid)->first();
 			$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipioid != '' ? $municipioid : $folioRow['MUNICIPIOID'])->where('TYPE', ENVIRONMENT)->first();
+			$data = array();
+			// foreach ($data as $clave => $valor) {
+			// 	if (empty($valor)) {
+			// 		unset($data[$clave]);
+			// 	}
+			// }
+
+			// foreach ($data as $clave => $valor) {
+			// 	if (!in_array($clave, $array)) {
+			// 		unset($data[$clave]);
+			// 	}
+			// }
 
 			$data['EXPEDIENTEID'] = $expedienteId;
 
@@ -2016,25 +2025,12 @@ class DashboardController extends BaseController
 			$data['PUBLICADO'] = 'N';
 			$data['EXPORTAR'] = 'NNEW';
 			$data['ARCHIVODESCR'] = $tipodoc;
-			$data['ARCHIVO'] = $archivo;
-
-			foreach ($data as $clave => $valor) {
-				if (empty($valor)) {
-					unset($data[$clave]);
-				}
-			}
-
-			foreach ($data as $clave => $valor) {
-				if (!in_array($clave, $data)) {
-					unset($data[$clave]);
-				}
-			}
+			$data['ARCHIVO'] = base64_encode($archivo);
 
 			$data['userDB'] = $conexion->USER;
 			$data['pwdDB'] = $conexion->PASSWORD;
 			$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
 			$data['schema'] = $conexion->SCHEMA;
-
 			return $this->_curlPostDataEncrypt($endpoint, $data);
 		}
 	}
@@ -2259,7 +2255,7 @@ class DashboardController extends BaseController
 		// var_dump($endpoint);
 		// var_dump($data);
 		// var_dump($result);
-		//exit;
+		// exit;
 
 		return json_decode($result);
 	}
