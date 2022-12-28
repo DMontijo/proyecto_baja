@@ -8,6 +8,10 @@
 <?php $session = session(); ?>
 <div class="container-fluid">
 	<div class="row">
+		<div class="col-12 text-center" style="font-size:10px;">
+			Para un correcto funcionamiento utilice <a href="https://www.google.com/chrome/" target="_blank">google chrome</a>.<br>
+			Si esta utilizando un dispositivo móvil de clic en <b>iniciar en el navegador</b>.
+		</div>
 		<div class="col-12 p-0 m-0">
 			<div class="card text-center">
 				<div class="card-body p-0 m-0">
