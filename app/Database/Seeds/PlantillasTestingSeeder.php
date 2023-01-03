@@ -4,7 +4,7 @@ namespace App\Database\Seeds;
 
 use CodeIgniter\Database\Seeder;
 
-class PlantillasSeeder extends Seeder
+class PlantillasTestingSeeder extends Seeder
 {
 	public function run()
 	{
@@ -15,10 +15,6 @@ class PlantillasSeeder extends Seeder
 				'TEXTO' => 'En [DOCUMENTO_CIUDAD], Baja California, a [DOCUMENTO_FECHA], (él) (la) C. [VICTIMA_NOMBRE] quien se identifica con: [VICTIMA_TIPO_IDENTIFICACION], con número [VICTIMA_NUMERO_IDENTIFICACION], con domicilio en [VICTIMA_DOMICILIO], Teléfono casa: [VICTIMA_TELEFONO], Cel. [VICTIMA_TELEFONO_CELULAR], Trabajo [VICTIMA_TELEFONO_CELULAR], edad [VICTIMA_EDAD], Oficio [VICTIMA_OCUPACION], Nacionalidad [VICTIMA_NACIONALIDAD], Estado Civil [VICTIMA_ESTADO_CIVIL], manifiesto: Que entiendo y acepto los servicios que me ofrece el CENTRO DE DENUNCIA TECNOLÓGICA; con la finalidad de llevar a cabo el procedimiento de mediación, ACEPTO participar voluntariamente al mismo, para abordar un conflicto con: [IMPUTADO_NOMBRE]. Asimismo, manifiesto que se me ha informado acerca de los derechos, obligaciones, características y reglas del procedimiento, mismos que se encuentran establecidos en la Ley Nacional de Mecanismos Alternativos de Solución de Controversias en Materia Penal y Código Nacional de Procedimientos Penales, habiendo recibido a demás copia simple del presente documento; De igual forma manifiesto mi obligación  de INFORMAR INMEDIATAMENTE CUANDO DESEE dar por concluido el Procedimiento Alterno, según el artículo 32 de la Ley Nacional de Mecanismos Alternativos de Solución de Controversias en Materia Penal.',
 				'PLANTILLAJUSTICIAMEXICALIID' => 1614,
 				'CLASIFICACIONDOCTOMEXICALIID' => 1508,
-				'PLANTILLAJUSTICIATIJUANAID' => 1614,
-				'CLASIFICACIONDOCTOTIJUANAID' => 1508,
-				'PLANTILLAJUSTICIAENSENADAID' => 1614,
-				'CLASIFICACIONDOCTOENSENADAID' => 1508
 			),
 			array(
 				'DESCRIPCION' => '', 'TITULO' => 'AUTORIZACION DE LA APLICACION DEL CRITERIO DE OPORTUNIDAD',
@@ -26,10 +22,6 @@ class PlantillasSeeder extends Seeder
 				'TEXTO' => 'En [DOCUMENTO_CIUDAD], BAJA CALIFORNIA siendo las [HORA]: [MINUTOS], del día [DIA] DIAS DEL MES DE [MES] DEL AÑO [ANO],  analizadas las actuaciones que obran en la presente carpeta de investigación iniciada por el delito de [DELITO_NOMBRE], (el) (la) suscrita (o)  Lic.[EXPEDIENTE_NOMBRE_MP_RESPONSABLE], AGENTE DEL MINISTERIO PÚBLICO DEL CENTRO DE DENUNCIA TECNOLÓGICA, determina que resulta procedente aplicar un Criterio de Oportunidad con fundamento en lo establecido en la fracción (    )  del artículo 256 del Código Nacional de Procedimientos Penales, además de que se deberá contar con la autorización del Fiscal o por el servidor público en quien esté delegada dicha facultad, por lo que de conformidad a lo establecido en el Acuerdo  número 01/2017, emitido para tal efecto por la C. Procuradora General de Justicia del Estado publicado en fecha  19 de Mayo  de  2017 en el Periódico Oficial del Estado de Baja California;  se delega dicha facultad en (la) (el) C. LIC. ___________,  ENCARGADA DEL CENTRO DE DENUNCIA TECNOLÓGICA, atento a lo anterior, se solicita de no existir impedimento legal alguno, la autorización correspondiente.',
 				'PLANTILLAJUSTICIAMEXICALIID' => 1695,
 				'CLASIFICACIONDOCTOMEXICALIID' => 1573,
-				'PLANTILLAJUSTICIATIJUANAID' => 1695,
-				'CLASIFICACIONDOCTOTIJUANAID' => 1573,
-				'PLANTILLAJUSTICIAENSENADAID' => 1644,
-				'CLASIFICACIONDOCTOENSENADAID' => 1567
 			),
 			array(
 				'DESCRIPCION' => '', 'TITULO' => 'CONSTANCIA DE EXTRAVIO',
@@ -37,10 +29,6 @@ class PlantillasSeeder extends Seeder
 				'TEXTO' => 'El C.AGENTE DEL MINISTERIO PÚBLICO [NOMBRE_AGENTE_FIRMA]|HACE CONSTAR QUE EN EL CONTROL DE REPORTES QUE SE LLEVÓ A CABO EN ESTA OFICINA, HA QUEDADO LA PERDIDA DE: [NOMBRE_CERTIFICADO], OCURRIENDO BAJO LAS SIGUIENTES CIRCUNSTANCIAS|MANIFIESTA EL COMPARECIENTE HABER EXTRAVIADO EL ORIGINAL DE [NOMBRE_CERTIFICADO], NÚMERO: [NO_DOCUMENTO], A NOMBRE DE: [NOMBRE_DUENO]|COMPARECIENTE [NOMBRE_COMPARECIENTE]|DOMICILIO [DOMICILIO_COMPARECIENTE]|LUGAR DE EXTRAVÍO [LUGAR_EXTRAVIO]|FECHA DE EXTRAVÍO [FECHA_EXTRAVIO]|DESCRIPCION [DESCRIPCION_EXTRAVIO]|SE EXPIDE LA PRESENTE CONSTANCIA EN LA CIUDAD DE: [NOMBRE_CIUDAD] A LOS [DIA] DÍAS DEL MES DE [MES] DEL AÑO [ANIO_FIRMA] A LAS [HORA]; LA CUAL NO SUSTITUYE EL DOCUMENTO ORIGINAL NI VALIDA LA PREEXISTENCIA DEL DOCUMENTO U OBJETO',
 				'PLANTILLAJUSTICIAMEXICALIID' => NULL,
 				'CLASIFICACIONDOCTOMEXICALIID' => NULL,
-				'PLANTILLAJUSTICIATIJUANAID' => NULL,
-				'CLASIFICACIONDOCTOTIJUANAID' => NULL,
-				'PLANTILLAJUSTICIAENSENADAID' => NULL,
-				'CLASIFICACIONDOCTOENSENADAID' => NULL
 			),
 			array(
 				'DESCRIPCION' => '', 'TITULO' => 'COMISION EJECUTIVA ESTATAL DE ATENCION A VICTIMAS',
@@ -48,21 +36,13 @@ class PlantillasSeeder extends Seeder
 				'TEXTO' => '1.- DATOS GENERALESNOMBRE: [VICTIMA_NOMBRE]EDAD: [VICTIMA_EDAD] AÑOS DE EDADDOMICILIO: [VICTIMA_DOMICILIO_COMPLETO]TELÉFONO: [VICTIMA_TELEFONO]NUC: [EXPEDIENTE_NUMERO]DELITO: [DELITO_NOMBRE]2.- INSTITUCIÓN QUE CANALIZA: CENTRO DE DENUNCIA TECNOLÓGICAMOTIVO DE LA CANALIZACIÓN: [DELITO_NOMBRE]NOMBRE DEL QUE REFIERE: [EXPEDIENTE_NOMBRE_MP_RESPONSABLE]3.- DOMICILIO:[REMISION_DOMICILIO]',
 				'PLANTILLAJUSTICIAMEXICALIID' => NULL,
 				'CLASIFICACIONDOCTOMEXICALIID' => NULL,
-				'PLANTILLAJUSTICIATIJUANAID' => NULL,
-				'CLASIFICACIONDOCTOTIJUANAID' => NULL,
-				'PLANTILLAJUSTICIAENSENADAID' => NULL,
-				'CLASIFICACIONDOCTOENSENADAID' => NULL
 			),
 			array(
 				'DESCRIPCION' => '', 'TITULO' => 'CONSTANCIA DE RECEPCION DE VIDEO DENUNCIA',
 				'PLACEHOLDER' => '<p class="p1" style="text-align: center;"><b>CONSTANCIA DE RECEPCI&Oacute;N DE VIDEO DENUNCIA</b></p><p class="p1" style="text-align: center;"><b></b></p><p class="p3" style="text-align: justify;">En [DOCUMENTO_MUNICIPIO], Baja California, a los [DIA] d&iacute;as del mes de [MES] del a&ntilde;o [ANO], siendo las [HORA] horas con [MINUTOS] minutos, la/el suscrita (o) Licenciada(o) [EXPEDIENTE_NOMBRE_DEL_RESPONSABLE], Agente del Ministerio P&uacute;blico adscrita(o) al Centro de Denuncia Tecnol&oacute;gica, hace constar que se inicia video denuncia interpuesta por la/el ciudadana (o) (VICTIMA Y/U OFENDIDO), quien manifiesta en su entrevista que &ldquo;(REDACTAR_HECHO)&ldquo;, motivo por el que refiere es su deseo presentar denuncia/querella por el delito de [RELACION_DELITO], previsto en el art&iacute;culo [NUMERO_CODIGO_PENAL] del C&oacute;digo Penal vigente en el Estado [ORDENAMIENTO_LEGAL] en contra de [IMPUTADO_NOMBRE], por tanto se genera [TIPO_EXPEDIENTE] [EXPEDIENTE_NUMERO], misma que ser&aacute; remitida a la Direcci&oacute;n de Zona [ZONA_SEJAP] para su debida remisi&oacute;n. Lo anterior de conformidad con el Art&iacute;culo 20 inciso C de la Constituci&oacute;n Pol&iacute;tica de los Estados Unidos Mexicanos, Art&iacute;culo 131 fracci&oacute;n II del C&oacute;digo Nacional de Procedimientos Penales,&nbsp; as&iacute; como el Art&iacute;culo 22, fracci&oacute;n II y dem&aacute;s aplicables de la Ley Org&aacute;nica de la Fiscal&iacute;a General del Estado de Baja California. CONSTE.</p><p class="p3">[INFORMACION_DEL_HECHO]</p>',
 				'TEXTO' => 'En [DOCUMENTO_MUNICIPIO], Baja California, a los [DIA] días del mes de [MES] del año [ANO], siendo las [HORA] horas con [MINUTOS] minutos, la/el suscrita (o) Licenciada(o) [EXPEDIENTE_NOMBRE_DEL_RESPONSABLE], Agente del Ministerio Público adscrita(o) al Centro de Denuncia Tecnológica, hace constar que se inicia video denuncia interpuesta por la/el ciudadana (o) (VICTIMA Y/U OFENDIDO), quien manifiesta en su entrevista que “(REDACTAR_HECHO)“, motivo por el que refiere es su deseo presentar denuncia/querella por el delito de [RELACION_DELITO], previsto en el artículo [NUMERO_CODIGO_PENAL] del Código Penal vigente en el Estado [ORDENAMIENTO_LEGAL] en contra de [IMPUTADO_NOMBRE], por tanto se genera [TIPO_EXPEDIENTE] [EXPEDIENTE_NUMERO], misma que será remitida a la Dirección de Zona [ZONA_SEJAP] para su debida remisión. Lo anterior de conformidad con el Artículo 20 inciso C de la Constitución Política de los Estados Unidos Mexicanos, Artículo 131 fracción II del Código Nacional de Procedimientos Penales,  así como el Artículo 22, fracción II y demás aplicables de la Ley Orgánica de la Fiscalía General del Estado de Baja California. CONSTE.',
-				'PLANTILLAJUSTICIAMEXICALIID' => 1767,
-				'CLASIFICACIONDOCTOMEXICALIID' => 1655,
-				'PLANTILLAJUSTICIATIJUANAID' => 1767,
-				'CLASIFICACIONDOCTOTIJUANAID' => 1655,
-				'PLANTILLAJUSTICIAENSENADAID' => 1712,
-				'CLASIFICACIONDOCTOENSENADAID' => 1636
+				'PLANTILLAJUSTICIAMEXICALIID' => 1763,
+				'CLASIFICACIONDOCTOMEXICALIID' => 1646,
 			),
 			array(
 				'DESCRIPCION' => '', 'TITULO' => 'CRITERIO DE OPORTUNIDAD',
@@ -70,10 +50,6 @@ class PlantillasSeeder extends Seeder
 				'TEXTO' => '(La) (El) Ciudadana (o) Agente del Ministerio Público, Lic. [EXPEDIENTE_NOMBRE_DEL_RESPONSABLE], con fundamento en lo dispuesto por el párrafo séptimo del articulo 21 de la Constitución Política de los Estados Unidos Mexicanos, en relación con el artículo 131 Fracción XIV, 256, 257 y 258 del Código Nacional de Procedimientos Penales, así como el artículo 22 fracción XIV de la Ley Orgánica de la Fiscalía General del Estado y conforme a los criterios generales dictados por el Procurador General de Justicia del Estado en el mes de mayo del año del dos mil diecisiete, para la aplicación de criterios de oportunidad, procede a consideración del suscrito a llevar a cabo la aplicación del mismo a favor de [IMPUTADO_NOMBRE], por la comisión del delito de [DELITO_NOMBRE], previsto por el artículo [NUMERO_CODIGO_PENAL] del Código Penal en vigor en el Estado, cometido en agravio del de nombre [VICTIMA_NOMBRE]. Lo anterior, toda vez que encuadra dentro del supuesto previsto en la fracción (  ) del artículo 256 del Código Nacional de Procedimientos Penales, el cual establece: Articulo 256.- Iniciada la Investigación y previo análisis objetivo de los datos que consten en la misma, conforme a las disposiciones normativas de cada Procuraduría, el Ministerio Publico, podrá abstenerse de ejercer la acción penal con base en la aplicación de los criterios de oportunidad, siempre que, en su caso, se hayan reparado o garantizado los daños causados a la víctima u ofendido. La aplicación de los criterios de oportunidad será procedente en cualquiera de los siguientes supuestos: La aplicación de los criterios de oportunidad será procedente en cualquiera de los siguientes supuestos: I. Se trate de un delito que no tenga pena privativa de libertad, tenga pena alternativa o tenga pena privativa de libertad cuya punibilidad máxima sea de cinco años de prisión, siempre que el delito no se haya cometido con violencia; II. Se trate de delitos de contenido patrimonial cometidos sin violencia sobre las personas o de delitos culposos, siempre que el imputado no hubiere actuado en estado de ebriedad, bajo el influjo de narcóticos o de cualquier otra sustancia que produzca efectos similares; III. Cuando el imputado haya sufrido como consecuencia directa del hecho delictivo un daño físico o psicoemocional grave, o cuando el imputado haya contraído una enfermedad terminal que torne notoriamente innecesaria o desproporcional la aplicación de una pena; IV. La pena o medida de seguridad que pudiera imponerse por el hecho delictivo que carezca de importancia en consideración a la pena o medida de seguridad ya impuesta o a la que podría imponerse por otro delito por el que esté siendo procesado con independencia del fuero; V. Cuando el imputado aporte información esencial y eficaz para la persecución de un delito más grave del que se le imputa, y se comprometa a comparecer en juicio; VI. Cuando, a razón de las causas o circunstancias que rodean la comisión de la conducta punible, resulte desproporcionada o irrazonable la persecución penal. Señalando que de los hechos narrados por el denunciante [VICTIMA_NOMBRE],  se desprende que:  [HECHO] (Narración Breve de los hechos denunciados y motivación de la determinación) Aunado a lo expuesto y tomando en consideración que hasta este momento no se ha dictado auto de apertura a juicio y valoradas que fueron las manifestaciones de la víctima del presente caso en particular, a juicio del suscrito existen elementos suficientes para determinar en el presente caso prescindir de la acción penal a favor de [IMPUTADO_NOMBRE]. Lo anterior se le hace de conocimiento al denunciante [VICTIMA_NOMBRE], además se le informa que cuenta con un plazo de Diez Días posteriores a partir de la presente notificación para efectos de comparecer ante el Juez de Control, en caso de que considere que la presente determinación no se encuentra ajustada a derecho o constituye una discriminación hacia su persona, lo anterior con fundamento en lo dispuesto por el artículo 258 del Código Nacional de Procedimientos Penales. Finalmente, con fundamento en lo dispuesto en el último párrafo del artículo 256 del Código Nacional de Procedimientos Penales, previa autorización de ______ (nombre de quien autoriza.',
 				'PLANTILLAJUSTICIAMEXICALIID' => 1598,
 				'CLASIFICACIONDOCTOMEXICALIID' => 1528,
-				'PLANTILLAJUSTICIATIJUANAID' => 1598,
-				'CLASIFICACIONDOCTOTIJUANAID' => 1528,
-				'PLANTILLAJUSTICIAENSENADAID' => 1598,
-				'CLASIFICACIONDOCTOENSENADAID' => 1528
 			),
 			array(
 				'DESCRIPCION' => '', 'TITULO' => 'FACULTAD DE ABSTENERSE DE INVESTIGAR (NO DELITO)',
@@ -81,10 +57,6 @@ class PlantillasSeeder extends Seeder
 				'TEXTO' => 'Vistos y analizados todos y cada uno de los antecedentes que conforman  la presente carpeta de investigación y toda vez que no se ha celebrado la audiencia inicial referida en el artículo 307 del Código Nacional de Procedimientos Penales en vigor ni se ha formulado imputación por parte de esta Representación Social, con fundamento en el artículo 253 del Código Nacional de Procedimientos Penales, la/el suscrita (o) Agente del Ministerio Público licenciada (o) [EXPEDIENTE_NOMBRE_MP_RESPONSABLE],  procede aplicar la Facultad de Abstenerse de Investigar en el caso que nos ocupa, en relación con lo dispuesto en el artículo 485  Fracción  VII del Código adjetivo de la materia, toda vez que de los hechos narrados por el ofendido (nombre) se desprende que: [HECHO], En virtud de lo antes expuesto se decreta el no ejercicio penal en favor del imputado [IMPUTADO_NOMBRE], por la comisión del delito de [DELITO_NOMBRE], previsto y sancionado en el artículo [NUMERO_CODIGO_PENAL] del Código Penal vigente en el Estado, por tanto se ordena que la presente carpeta de investigación se remita al archivo definitivo como asunto total y definitivamente concluido. No obstante se le hace del conocimiento al denunciante [VICTIMA_NOMBRE] que cuenta con un plazo de Diez Días posteriores a partir de que surta efectos la notificación, para comparecer ante el Juez de Control, en caso de considerar que la presente determinación no se encuentra ajustada a derecho o constituye una discriminación hacia su persona, esto con fundamente en lo dispuesto por el artículo 258 del Código Nacional de Procedimientos Penales.',
 				'PLANTILLAJUSTICIAMEXICALIID' => 1638,
 				'CLASIFICACIONDOCTOMEXICALIID' => 1555,
-				'PLANTILLAJUSTICIATIJUANAID' => 1638,
-				'CLASIFICACIONDOCTOTIJUANAID' => 1555,
-				'PLANTILLAJUSTICIAENSENADAID' => 1638,
-				'CLASIFICACIONDOCTOENSENADAID' => 1555
 			),
 			array(
 				'DESCRIPCION' => '', 'TITULO' => 'FACULTAD DE ABSTENERSE DE INVESTIGAR (PRESCRIPCIÓN)',
@@ -92,10 +64,6 @@ class PlantillasSeeder extends Seeder
 				'TEXTO' => 'Vistos y analizados todos y cada uno de los antecedentes que conforman  la presente carpeta de investigación y toda vez que no se ha celebrado la audiencia inicial referida en el artículo 307 del Código Nacional de Procedimientos Penales en vigor ni se ha formulado imputación por parte de esta Representación Social, con fundamento en el artículo 253 del Código Nacional de Procedimientos Penales, la/el suscrito Agente del Ministerio Público licenciada (o) [EXPEDIENTE_NOMBRE_MP_RESPONSABLE],  procede aplicar la Facultad de Abstenerse de Investigar en el caso que nos ocupa, en relación con lo dispuesto en el artículo 485  Fracción  VII del Código adjetivo de la materia, toda vez que de los hechos narrados por la parte ofendida  (nombre de denunciante) se desprende que: (NARRACION BREVE DE LOS HECHOS DENUNCIADOS, Y MOTIVACION DE LA DETERMINACION), En virtud de lo anterior se advierte que  desde la fecha en que ocurrieron los hechos materia de la presente investigación y la fecha en que se actúa, ya pasaron más de (AÑOS  y DIAS TRANSCURRIDOS),  sin que se haya presentado formal querella de parte ofendida, por lo que ha pasado en exceso el plazo para la interposición de la  misma en el caso que nos ocupa, siendo un requisito fundamental para este tipo de delitos, como lo es un año a partir de la comisión del delito,  lo anterior en apego a los numerales 113 Fracción I  en relación con el 115  del Código Penal para el Estado de Baja California, resultando procedente determinar que se ha extinguido la pretensión punitiva a favor del imputado  [IMPUTADO_NOMBRE], ordenando se remita la presente carpeta de investigación al Archivo Definitivo como asunto total y definitivamente concluido; debiéndose notificar a la víctima o el ofendido en la presente carpeta de investigación la resolución respectiva. Lo anterior se le hace de conocimiento al denunciante [VICTIMA_NOMBRE], además se le informa que cuenta con un plazo de Diez Días posteriores a partir de que surta efectos la notificación, para comparecer ante el Juez de Control, en caso de que considere que la presente determinación no se encuentra ajustada a derecho o constituye una discriminación hacia su persona, lo anterior con fundamento en lo dispuesto por el artículo 258 del Código Nacional de Procedimientos Penales.',
 				'PLANTILLAJUSTICIAMEXICALIID' => 1637,
 				'CLASIFICACIONDOCTOMEXICALIID' => 1554,
-				'PLANTILLAJUSTICIATIJUANAID' => 1637,
-				'CLASIFICACIONDOCTOTIJUANAID' => 1554,
-				'PLANTILLAJUSTICIAENSENADAID' => 1637,
-				'CLASIFICACIONDOCTOENSENADAID' => 1554
 			),
 			array(
 				'DESCRIPCION' => '', 'TITULO' => 'NOTIFICACION DE DETERMINACION',
@@ -103,10 +71,6 @@ class PlantillasSeeder extends Seeder
 				'TEXTO' => 'Por medio del presente se le notifica que en relación al caso denunciado por usted dentro de la carpeta de investigación [EXPEDIENTE_NUMERO], por el delito de [DELITO_NOMBRE] previsto en el artículo [NUMERO_CODIGO_PENAL] del Código Penal vigente en el Estado, se determinó la aplicación de un CRITERIO DE OPORTUNIDAD, lo anterior con fundamento en lo dispuesto por el párrafo séptimo del artículo 21 de la Constitución Política de los Estados Unidos Mexicanos, en relación con los artículos 253, 255, 256, 258 y demás relativas del Código Nacional de Procedimientos Penales, así como el diverso 22 fracción XIII y XIV de la Ley Orgánica de la Fiscalía General del Estado de Baja California. Se adjunta al presente una copia de la determinación en comento, informándole que en caso considerar que tal resolución no se ajuste a los requisitos formales o constituye discriminación, podrá impugnarla para lo cual cuenta con un plazo de diez días posteriores a la recepción de este correo para comparecer ante el Juez de Control. Sin otro particular por el momento, quedo a sus apreciables órdenes.',
 				'PLANTILLAJUSTICIAMEXICALIID' => 1639,
 				'CLASIFICACIONDOCTOMEXICALIID' => 1556,
-				'PLANTILLAJUSTICIATIJUANAID' => 1639,
-				'CLASIFICACIONDOCTOTIJUANAID' => 1556,
-				'PLANTILLAJUSTICIAENSENADAID' => 1636,
-				'CLASIFICACIONDOCTOENSENADAID' => 1553
 			),
 			array(
 				'DESCRIPCION' => '', 'TITULO' => 'ORDEN DE PROTECCION (ALBERGUE TEMPORAL HOMBRE)',
@@ -114,10 +78,6 @@ class PlantillasSeeder extends Seeder
 				'TEXTO' => 'Por medio del presente, con fundamento en el artículo 8 Fracc. VII de la Ley de Atención y protección a la Víctima u Ofendido del Delito para el estado de Baja California,  articulo 109 fracciones XVI, XVIII y XIX y artículo 137  en sus Fracc. IV, V, VI, VII, VIII, IX y X  del Código Nacional de Procedimientos Penales vigente en el estado de Baja California, y como medida de protección a la víctima, se solicita su apoyo para designar personal a su digno cargo para efectos de prestar auxilio inmediato a la víctima de nombre  [VICTIMA_NOMBRE] de [VICTIMA_EDAD] , con teléfono de contacto  [VICTIMA_TELEFONO] , para ser trasladada a las instalaciones del albergue temporal de CAVIM de esta ciudad, lo anterior con la finalidad de salvaguardar en todo momento su integridad física, ya que presento denuncia por el delito de  [RELACION_DELITO] al imputado de nombre [IMPUTADO_NOMBRE]  de [IMPUTADO_EDAD]. Sin más por el momento se agradecen las atenciones brindadas a la presente, solicitando sea informado a la Unidad de Investigación correspondiente sobre las diligencias realizadas al respecto.',
 				'PLANTILLAJUSTICIAMEXICALIID' => 1624,
 				'CLASIFICACIONDOCTOMEXICALIID' => 1540,
-				'PLANTILLAJUSTICIATIJUANAID' => 1624,
-				'CLASIFICACIONDOCTOTIJUANAID' => 1540,
-				'PLANTILLAJUSTICIAENSENADAID' => 1624,
-				'CLASIFICACIONDOCTOENSENADAID' => 1540
 			),
 			array(
 				'DESCRIPCION' => '', 'TITULO' => 'ORDEN DE PROTECCION (ALBERGUE TEMPORAL MUJER)',
@@ -125,10 +85,6 @@ class PlantillasSeeder extends Seeder
 				'TEXTO' => 'Por medio del presente, con fundamento en los artículos 21, 22, 23, 24, 25, 26 de la Ley de Acceso a las Mujeres a una Vida Libre de Violencia para el Estado de Baja California, art. 8 Fracc. VII  de la Ley de Atención y protección a la Víctimas u Ofendido  del Delito para el estado de Baja California,  articulo 109 fracciones XVI, XVIII y XIX y artículo 137  en sus Fracc. IV, V, VI, VII, VIII, IX y X  del Código Nacional de Procedimientos Penales vigente en el estado de Baja California, y como medida de protección a la víctima, se solicita su apoyo para designar personal a su digno cargo para efectos de prestar auxilio inmediato a la víctima de nombre  [VICTIMA_NOMBRE] de [VICTIMA_EDAD] , con teléfono de contacto  [VICTIMA_TELEFONO] , para ser trasladada a las instalaciones del albergue temporal de CAVIM de esta ciudad, lo anterior con la finalidad de salvaguardar en todo momento su integridad física, ya que presento denuncia por el delito de  [RELACION_DELITO] al imputado de nombre [IMPUTADO_NOMBRE]  de [IMPUTADO_EDAD]. Sin más por el momento se agradecen las atenciones brindadas a la presente, solicitando sea informado a la Unidad de Investigación correspondiente sobre las diligencias realizadas al respecto.',
 				'PLANTILLAJUSTICIAMEXICALIID' => 1624,
 				'CLASIFICACIONDOCTOMEXICALIID' => 1540,
-				'PLANTILLAJUSTICIATIJUANAID' => 1624,
-				'CLASIFICACIONDOCTOTIJUANAID' => 1540,
-				'PLANTILLAJUSTICIAENSENADAID' => 1624,
-				'CLASIFICACIONDOCTOENSENADAID' => 1540
 			),
 			array(
 				'DESCRIPCION' => '', 'TITULO' => 'ORDEN DE PROTECCION (RECOGER PERTENENCIAS HOMBRE)',
@@ -136,10 +92,6 @@ class PlantillasSeeder extends Seeder
 				'TEXTO' => 'Por medio del presente, con fundamento en el artículo 8 Fracc. VII de la Ley de Atención y protección a la Víctima u Ofendido  del Delito para el estado de Baja California,  articulo 109 fracciones XVI, XVIII y XIX y artículo 137  en sus Fracc. IV, V, VI, VII, VIII, IX y X  del Código Nacional de Procedimientos Penales vigente en el estado de Baja California, y como medida de protección a la víctima, se solicita su apoyo para designar personal a su digno cargo para efectos de prestar auxilio inmediato a la victima de nombre  [VICTIMA_NOMBRE] de [VICTIMA_EDAD] , con telefono de contacto  [VICTIMA_TELEFONO] , para ser trasladada al domicilio ubicado [VICTIMA_DOMICILIO] y se encuentre en la posibilidad de recoger pertenencias, lo anterior con la finalidad de salvaguardar en todo momento su integridad física, ya que presento denuncia por el delito de  [RELACION_DELITO] al imputado de nombre [IMPUTADO_NOMBRE]  de [IMPUTADO_EDAD]. Sin más por el momento se agradecen las atenciones brindadas a la presente, solicitando sea informado a la Unidad de Investigación correspondiente sobre las diligencias realizadas al respecto.',
 				'PLANTILLAJUSTICIAMEXICALIID' => 1670,
 				'CLASIFICACIONDOCTOMEXICALIID' => 1647,
-				'PLANTILLAJUSTICIATIJUANAID' => 1670,
-				'CLASIFICACIONDOCTOTIJUANAID' => 1647,
-				'PLANTILLAJUSTICIAENSENADAID' => 1705,
-				'CLASIFICACIONDOCTOENSENADAID' => 1627
 			),
 			array(
 				'DESCRIPCION' => '', 'TITULO' => 'ORDEN DE PROTECCION (RECOGER PERTENENCIAS MUJER)',
@@ -147,10 +99,6 @@ class PlantillasSeeder extends Seeder
 				'TEXTO' => 'Por medio del presente, con fundamento en los artículos 21, 22, 23, 24, 25, 26 de la Ley de Acceso a las Mujeres a una Vida Libre de Violencia para el Estado de Baja California, art. 8 Fracc. VII  de la Ley de Atención y protección a la Víctimas u Ofendido  del Delito para el estado de Baja California,  articulo 109 fracciones XVI, XVIII y XIX y artículo 137  en sus Fracc. IV, V, VI, VII, VIII, IX y X  del Código Nacional de Procedimientos Penales vigente en el estado de Baja California, y como medida de protección a la víctima, se solicita su apoyo para designar personal a su digno cargo para efectos de prestar auxilio inmediato a la victima de nombre  [VICTIMA_NOMBRE] de [VICTIMA_EDAD] , con telefono de contacto  [VICTIMA_TELEFONO] , para ser trasladada al domicilio ubicado [VICTIMA_DOMICILIO] y se encuentre en la posibilidad de recoger pertenencias, lo anterior con la finalidad de salvaguardar en todo momento su integridad física, ya que presento denuncia por el delito de  [RELACION_DELITO] al imputado de nombre [IMPUTADO_NOMBRE]  de [IMPUTADO_EDAD]. Sin más por el momento se agradecen las atenciones brindadas a la presente, solicitando sea informado a la Unidad de Investigación correspondiente sobre las diligencias realizadas al respecto.',
 				'PLANTILLAJUSTICIAMEXICALIID' => 1622,
 				'CLASIFICACIONDOCTOMEXICALIID' => 1541,
-				'PLANTILLAJUSTICIATIJUANAID' => 1622,
-				'CLASIFICACIONDOCTOTIJUANAID' => 1541,
-				'PLANTILLAJUSTICIAENSENADAID' => 1622,
-				'CLASIFICACIONDOCTOENSENADAID' => 1541
 			),
 			array(
 				'DESCRIPCION' => '', 'TITULO' => 'ORDEN DE PROTECCION (REALICEN RONDINES HOMBRE)',
@@ -158,10 +106,6 @@ class PlantillasSeeder extends Seeder
 				'TEXTO' => 'Por medio del presente, con fundamento en el artículo 8 Fracc. VII de la Ley de Atención y protección a la Víctima u Ofendido del Delito para el Estado de Baja California, articulo 109 fracciones XVI, XVIII y XIX y artículo 137 en sus Fracc. IV, V, VI, VII, VIII, IX y X del Código Nacional de Procedimientos Penales vigente en el Estado de Baja California, y como medida de protección a la víctima, se solicita su apoyo para designar personal a su digno cargo para efectos de prestar auxilio inmediato a la víctima de nombre [VICTIMA_NOMBRE] de [VICTIMA_EDAD], a efectos de que realicen rondines de vigilancia por 72 horas en el domicilio ubicado en[VICTIMA_DOMICILIO] de esta ciudad, con teléfono de contacto el [VICTIMA_TELEFONO], con la finalidad de salvaguardar en todo momento su integridad física, ya que presento denuncia por el delito de [RELACION_DELITO] al imputado de nombre [IMPUTADO_NOMBRE]  de [IMPUTADO_EDAD]. Sin más por el momento se agradecen las atenciones brindadas a la presente, solicitando sea informado a la Unidad de Investigación correspondiente sobre las diligencias realizadas al respecto.',
 				'PLANTILLAJUSTICIAMEXICALIID' => 1761,
 				'CLASIFICACIONDOCTOMEXICALIID' => 1646,
-				'PLANTILLAJUSTICIATIJUANAID' => 1761,
-				'CLASIFICACIONDOCTOTIJUANAID' => 1646,
-				'PLANTILLAJUSTICIAENSENADAID' => 1704,
-				'CLASIFICACIONDOCTOENSENADAID' => 1626
 			),
 			array(
 				'DESCRIPCION' => '', 'TITULO' => 'ORDEN DE PROTECCION (REALICEN RONDINES MUJER)',
@@ -169,10 +113,6 @@ class PlantillasSeeder extends Seeder
 				'TEXTO' => 'Por medio del presente, con fundamento en los artículos 21, 22, 23, 24, 25, 26 de la Ley de Acceso a las Mujeres a una Vida Libre de Violencia para el Estado de Baja California, art. 8 Fracc. VII  de la Ley de Atención y protección a la Víctima u Ofendido  del Delito para el estado de Baja California,  articulo 109 fracciones XVI, XVIII y XIX y artículo 137  en sus Fracc. IV, V, VI, VII, VIII, IX y X  del Código Nacional de Procedimientos Penales vigente en el estado de Baja California, y como medida de protección a la víctima, se solicita su apoyo para designar personal a su digno cargo para efectos de prestar auxilio inmediato a la víctima de nombre [VICTIMA_NOMBRE] de [VICTIMA_EDAD], a efectos de que realicen rondines de vigilancia por 72 horas en el domicilio ubicado en[VICTIMA_DOMICILIO] de esta ciudad, con teléfono de contacto el [VICTIMA_TELEFONO], con la finalidad de salvaguardar en todo momento su integridad física, ya que presento denuncia por el delito de [RELACION_DELITO] al imputado de nombre [IMPUTADO_NOMBRE]  de [IMPUTADO_EDAD]. Sin más por el momento se agradecen las atenciones brindadas a la presente, solicitando sea informado a la Unidad de Investigación correspondiente sobre las diligencias realizadas al respecto.',
 				'PLANTILLAJUSTICIAMEXICALIID' => 1621,
 				'CLASIFICACIONDOCTOMEXICALIID' => 1539,
-				'PLANTILLAJUSTICIATIJUANAID' => 1621,
-				'CLASIFICACIONDOCTOTIJUANAID' => 1539,
-				'PLANTILLAJUSTICIAENSENADAID' => 1621,
-				'CLASIFICACIONDOCTOENSENADAID' => 1539
 			),
 			array(
 				'DESCRIPCION' => '', 'TITULO' => 'SOLICITUD DE PERITAJE (CERTIFICADO DE HOSPITAL)',
@@ -180,10 +120,6 @@ class PlantillasSeeder extends Seeder
 				'TEXTO' => 'Por este conducto, solicito se sirva designar los peritos que se requieran, a fin de que dictamine(n) o informe(n), según sea el caso, respecto de la(s) siguiente(s) solicitud(es) pericial(es): 1 CERTIFICADO DE INTEGRIDAD FÍSICA EN HOSPITAL que deberá practicarse a: [VICTIMA_NOMBRE] de [VICTIMA_EDAD] años de edad, sexo: [VICTIMA_SEXO], estatura aproximada: _________ metros, tez:_____, color de ojos: _______, cabello: _____, cejas:__________, señas particulares: ________, quien en fecha: [HECHO_FECHA], hora aproximada: [HECHO_HORA] en: [HECHO_LUGAR] fue lesionado/herido:____________ (tipo de hecho, tránsito, atropellamiento, herido por arma de fuego, herido por arma blanca), motivo por el que se le trasladó por parte de: ________ al hospital _______________ con domicilio en la ciudad de___________, Baja California, en donde se encuentra internado en el  área de _____________( ejemplo: área de urgencias, primer piso, segundo piso, numero de cama ), por tanto, con el objeto de esclarecer los hechos correspondientes a la carpeta de investigación Numero [EXPEDIENTE_NUMERO], se solicita que el perito asignado se traslade a las instalaciones de tal hospital debiendo determinar el tipo de lesiones que presenta la persona internada, así como su descripción y clasificación médico legal En el caso de niños, niñas o adolescentes, solicitar: SÍNDROME DE NIÑO MALTRATADO. Lo anterior con fundamento en los artículos 127, fracciones III y IX, 131 del código Nacional de Procedimientos Penales vigente en el Estado; 272, 368 y demás aplicables del código Penal para el estado de baja California, así como relativos a la Ley Orgánica de la Fiscalía del estado y su Reglamento.',
 				'PLANTILLAJUSTICIAMEXICALIID' => 1298,
 				'CLASIFICACIONDOCTOMEXICALIID' => 1283,
-				'PLANTILLAJUSTICIATIJUANAID' => 1298,
-				'CLASIFICACIONDOCTOTIJUANAID' => 1283,
-				'PLANTILLAJUSTICIAENSENADAID' => 1298,
-				'CLASIFICACIONDOCTOENSENADAID' => 1283
 			),
 			array(
 				'DESCRIPCION' => '', 'TITULO' => 'SOLICITUD DE PERITAJE (CERTIFICADO DE INTEGRIDAD FÍSICA)',
@@ -191,10 +127,6 @@ class PlantillasSeeder extends Seeder
 				'TEXTO' => 'Por este conducto, solicito se sirva designar los peritos que se requieran, a fin de que dictamine(n) o informe(n), según sea el caso, respecto de la(s) siguiente(s) solicitud(es) pericial(es): 1 CERTIFICADOS DE INTEGRIDAD FÍSICA, que deberá practicarse a quien indica llamarse [VICTIMA_NOMBRE], de [VICTIMA_EDAD] años de edad, con número telefónico [VICTIMA_TELEFONO], correo electrónico [VICTIMA_CORREO], con la finalidad de determinar si presenta lesiones y en caso afirmativo se describa a detalle cada una de ellas así como la clasificación médica que corresponda. Asimismo, en el caso de niñas, niños o adolescentes especificar se presente el síndrome de Niño Maltratado. Lo anterior con el objeto de esclarecer los hechos correspondientes a la Carpeta de Investigación número [EXPEDIENTE_NUMERO]. Lo anterior, con fundamento en los artículos 127, fracciones III y IX, 131 del Código Nacional de Procedimientos Penales vigente en el Estado; 272, 368 y demás aplicables del Código Penal para el Estado de Baja California, así como demás relativos a la Ley Orgánica de la Fiscalía General del Estado y su Reglamento.',
 				'PLANTILLAJUSTICIAMEXICALIID' => 1583,
 				'CLASIFICACIONDOCTOMEXICALIID' => 1478,
-				'PLANTILLAJUSTICIATIJUANAID' => 1583,
-				'CLASIFICACIONDOCTOTIJUANAID' => 1478,
-				'PLANTILLAJUSTICIAENSENADAID' => 1583,
-				'CLASIFICACIONDOCTOENSENADAID' => 1478
 			),
 			array(
 				'DESCRIPCION' => '', 'TITULO' => 'SOLICITUD DE PERITAJE (CERTIFICADO GINECOLOGICO)',
@@ -202,10 +134,6 @@ class PlantillasSeeder extends Seeder
 				'TEXTO' => 'Por este conducto, solicito se sirva designar los peritos que se requieran, a fin de que dictamine o informe, según sea el caso, respecto de la siguiente solicitud pericial: 1 CERTIFICADO MÉDICO PARA LA INVESTIGACIÓN DE DELITOS SEXUALES que deberá practicase a quien indica llamarse [VICTIMA_NOMBRE], de [VICTIMA_EDAD] años de edad, con número telefónico [VICTIMA_TELEFONO], correo electrónico [VICTIMA_CORREO], quien es acompañada por:_________ Lo anterior con el objeto de esclarecer los hechos correspondientes a la Carpeta de Investigación número [EXPEDIENTE_NUMERO], iniciada por el delito de [DELITO_NOMBRE], por tanto es necesario se determine lo siguiente: I.-Tipo de Himen, II.- Si el Himen se encuentra integro o desgarrado, III.- De encontrarse desgarre en el himen, si éste o éstos son o no recientes. IV.-Si presenta lesiones describir las zonas y tiempos que tardan en sanar, V.- Si está o no embarazada clínicamente. VI.- Fecha de ultima menstruación, VII.- Si presenta signos de contagio venéreo. VIII Si presenta lesión anal, IX.- De encontrarse lesión anal, si esta es o no reciente. X.- De requerirse se practique el muestreo necesario, y en su momento emita el dictamen médico correspondiente a la Unidad de Investigación de Delitos Sexuales. Determinando si es Víctima de Violación o Abuso Sexual. Lo anterior con fundamento en los artículos 127, fracciones III y IX del artículo 131, 272, 368 y demás aplicables del Código Nacional de Procedimientos Penales vigente en el Estado, así como demás relativos a la Ley Orgánica de la Procuraduría General de Justicia del Estado y su Reglamento.',
 				'PLANTILLAJUSTICIAMEXICALIID' => 1296,
 				'CLASIFICACIONDOCTOMEXICALIID' => 1279,
-				'PLANTILLAJUSTICIATIJUANAID' => 1296,
-				'CLASIFICACIONDOCTOTIJUANAID' => 1279,
-				'PLANTILLAJUSTICIAENSENADAID' => 1296,
-				'CLASIFICACIONDOCTOENSENADAID' => 1279
 			),
 			array(
 				'DESCRIPCION' => '', 'TITULO' => 'SOLICITUD DE PERITAJE (CERTIFICADO PROCTOLOGICO)',
@@ -213,10 +141,6 @@ class PlantillasSeeder extends Seeder
 				'TEXTO' => 'Por este conducto, solicito se sirva designar los peritos que se requieran, a fin de que dictamine(n) o informe(n), según sea el caso, respecto de la(s) siguiente(s) solicitud(es) pericial(es): 1 CERTIFICADOS MÉDICO PARA LA INVESTIGACIÓN DE DELITOS SEXUALES, que deberá practicarse a quien indica llamarse [VICTIMA_NOMBRE], de [VICTIMA_EDAD] años de edad, con número telefónico [VICTIMA_TELEFONO], correo electrónico [VICTIMA_CORREO], quien  comparece en compañía de: __________________. Tal petición es con el objeto de esclarecer los hechos correspondientes a la Carpeta de Investigación número [EXPEDIENTE_NUMERO], debiendo determinar lo siguiente: Si presenta lesión anal, en caso afirmativo señalar si la misma es reciente o no; si presenta lesiones describir las zonas y tiempo en sanar; si presenta signos de contagio venéreo; en caso de ser necesario se proceda a recabar muestras biológicas para su posterior análisis y elaboración de los dictámenes correspondientes. Lo anterior con fundamento en los artículos 127, fracciones III y IX del artículo 131, 272, 368 y demás aplicables del Código Nacional de Procedimientos Penales vigente en el Estado, así como demás relativos a la Ley Orgánica de la Procuraduría General de Justicia del Estado y su Reglamento.',
 				'PLANTILLAJUSTICIAMEXICALIID' => 1744,
 				'CLASIFICACIONDOCTOMEXICALIID' => 1631,
-				'PLANTILLAJUSTICIATIJUANAID' => 1744,
-				'CLASIFICACIONDOCTOTIJUANAID' => 1631,
-				'PLANTILLAJUSTICIAENSENADAID' => 1686,
-				'CLASIFICACIONDOCTOENSENADAID' => 1611
 			),
 		];
 

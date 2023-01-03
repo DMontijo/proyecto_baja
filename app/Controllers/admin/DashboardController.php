@@ -155,7 +155,6 @@ class DashboardController extends BaseController
 		$this->_nacionalidadModel = new PersonaNacionalidadModel();
 		$this->_folioMediaFiliacion = new FolioPersonaFisicaMediaFiliacionModel();
 
-
 		$this->_parentescoPersonaFisicaModel = new PersonaFisicaParentescoModel();
 		$this->_figuraModel = new FiguraModel();
 		$this->_cejaContexturaModel = new CejaContexturaModel();
@@ -201,7 +200,6 @@ class DashboardController extends BaseController
 		$this->_dientePeculiarModel = new DientePeculiarModel();
 		$this->_barbillaFormaModel = new BarbillaFormaModel();
 		$this->_barbillaTamanoModel = new BarbillaTamanoModel();
-
 		$this->_barbillaInclinacionModel = new BarbillaInclinacionModel();
 		$this->_barbillaPeculiarModel = new BarbillaPeculiarModel();
 		$this->_barbaTamanoModel = new BarbaTamanoModel();
@@ -244,12 +242,12 @@ class DashboardController extends BaseController
 		$this->_folioConsecutivoModel = new FolioConsecutivoModel();
 
 
-		// $this->protocol = 'http://';
-		// $this->ip = "10.144.244.223";
-		// $this->endpoint = $this->protocol . $this->ip . '/webServiceVD';
-		$this->protocol = 'https://';
-		$this->ip = "ws.fgebc.gob.mx";
+		$this->protocol = 'http://';
+		$this->ip = "10.144.244.223";
 		$this->endpoint = $this->protocol . $this->ip . '/webServiceVD';
+		// $this->protocol = 'https://';
+		// $this->ip = "ws.fgebc.gob.mx";
+		// $this->endpoint = $this->protocol . $this->ip . '/webServiceVD';
 	}
 
 	public function index()
@@ -294,6 +292,7 @@ class DashboardController extends BaseController
 
 		$this->_loadView('Usuarios', 'usuarios', '', $data, 'users/users');
 	}
+
 	public function asignacion_permisos()
 	{
 		$data = (object) array();
@@ -320,6 +319,7 @@ class DashboardController extends BaseController
 		$data->permisos = $this->_permisosModel->asObject()->findAll();
 		$this->_loadView('Nuevo asignacion de permisos', '', '', $data, 'roles/nueva_asignacion_rol');
 	}
+
 	public function nuevo_rol()
 	{
 		$data = (object) array();
@@ -329,6 +329,7 @@ class DashboardController extends BaseController
 		$data->permisos = $this->_permisosModel->asObject()->findAll();
 		$this->_loadView('Nuevo rol', '', '', $data, 'roles/nuevo_rol');
 	}
+
 	public function usuarios_activos()
 	{
 		$data = (object) array();
@@ -384,6 +385,7 @@ class DashboardController extends BaseController
 			return redirect()->to(base_url('/admin/dashboard/asignacion_permisos'))->with('message_error', 'Asignación de permisos no creado.');
 		}
 	}
+
 	public function create_rol()
 	{
 		$data = (object) array();
@@ -413,6 +415,7 @@ class DashboardController extends BaseController
 			return redirect()->to(base_url('/admin/dashboard/asignacion_permisos'))->with('message_error', 'Rol no creado.');
 		}
 	}
+
 	public function eliminar_asignacion_permiso()
 	{
 		$rolid = $this->request->getGet('rol');
@@ -435,6 +438,7 @@ class DashboardController extends BaseController
 			return redirect()->to(base_url('/admin/dashboard/asignacion_permisos'))->with('message_error', 'Rol no eliminado.');
 		}
 	}
+
 	public function editar_usuario()
 	{
 		$id = $this->request->getGet('id');
@@ -782,6 +786,7 @@ class DashboardController extends BaseController
 				$data->fisicaImpDelito = $this->_imputadoDelitoModel->get_by_folio($numfolio, $year);
 				$data->delitosModalidadFiltro = $this->_delitoModalidadModel->get_delitodescr($numfolio, $year);
 				$data->objetos = $this->_folioObjetoInvolucradoModel->get_descripcion($numfolio, $year);
+
 				// $data->personafisica = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->findAll();
 				$data->imputados = $this->_folioPersonaFisicaModel->get_imputados($numfolio, $year);
 				$data->victimas = $this->_folioPersonaFisicaModel->get_victimas($numfolio, $year);
@@ -798,6 +803,7 @@ class DashboardController extends BaseController
 			}
 		}
 	}
+
 	public function getFolioInformationDenunciaAnonima()
 	{
 		$data = (object) array();
@@ -854,6 +860,7 @@ class DashboardController extends BaseController
 			return json_encode($data);
 		}
 	}
+
 	public function getRelacionParentesco()
 	{
 		$id = trim($this->request->getPost('personafisica1'));
@@ -882,6 +889,7 @@ class DashboardController extends BaseController
 			return json_encode($data);
 		}
 	}
+
 	public function getImputadoDelito()
 	{
 		$id = trim($this->request->getPost('personafisica'));
@@ -900,6 +908,7 @@ class DashboardController extends BaseController
 			return json_encode($data);
 		}
 	}
+
 	public function findPersonadDomicilioById()
 	{
 		$id = $this->request->getPost('id');
@@ -1007,18 +1016,19 @@ class DashboardController extends BaseController
 				'OFICINAASIGNADOID' => $oficina,
 				'AREAASIGNADOID' => $area->AREAID
 			);
+
 			$update = $this->_folioModel->set($dataFolio)->where('EXPEDIENTEID', $expediente)->update();
 			if ($update) {
 
 				$datosBitacora = [
-					'ACCION' => 'Ha actualizado un folio para su asignacion',
-					'NOTAS' => 'Exp: ' . $expediente . ' oficina: ' . $oficina,
+					'ACCION' => 'Remitio un expediente.',
+					'NOTAS' => 'Exp: ' . $expediente . ' oficina: ' . $oficina . ' empleado:' . $empleado . ' area:' . $area->AREAID,
 				];
 
-				$this->_bitacoraActividad($datosBitacora);
 				$bandeja = $this->_folioModel->where('EXPEDIENTEID', $expediente)->first();
-				$updateExpediente = $this->_updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area->AREAID);
+				$updateExpediente = $this->_updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area->AREAID, 2);
 				$_bandeja_creada = $this->_createBandeja($bandeja);
+				$this->_bitacoraActividad($datosBitacora);
 
 				if ($_bandeja_creada->status == 201) {
 					return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_success', 'Remitido correctamente');
@@ -1359,7 +1369,7 @@ class DashboardController extends BaseController
 					$folioRow['HECHOFECHA'] = $folioRow['HECHOFECHA'] . ' ' . $folioRow['HECHOHORA'];
 					$folioRow['HECHONARRACION'] = $notas;
 
-					$folioRow['ESTADOJURIDICOEXPEDIENTEID'] = (string) 2;
+					$folioRow['ESTADOJURIDICOEXPEDIENTEID'] = (string) 13;
 					$folioRow['TIPOEXPEDIENTEID'] = (int)$tiposExpedienteId;
 
 					$expedienteCreado = $this->_createExpediente($folioRow);
@@ -1494,48 +1504,38 @@ class DashboardController extends BaseController
 		$folio = $this->request->getPost('folio');
 		$year = $this->request->getPost('year');
 		$expediente = $this->request->getPost('expediente');
-
-		$folioDoc = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOCID', 'asc')->findAll();
+		
 		$folioDocSinFirmar = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'ABIERTO')->orderBy('FOLIODOCID', 'asc')->findAll();
-
 		if ($folioDocSinFirmar) {
 			return json_encode((object)['status' => 4]);
 		}
 
+		$folioDoc = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOCID', 'asc')->findAll();
+
 		if ($folioDoc) {
 			try {
-				foreach ($folioDoc as $key => $doc) {
 
+				foreach ($folioDoc as $key => $doc) {	
 					$relacionDoc = $this->_relacionFolioDocModel->where('FOLIOID', $doc['FOLIOID'])->where('ANO', $doc['ANO'])->where('EXPEDIENTEID', $doc['NUMEROEXPEDIENTE'])->where('FOLIODOCID', $doc['FOLIODOCID'])->orderBy('FOLIODOCID', 'asc')->first();
-					if (isset($relacionDoc)) {
-						$data = (object) array();
-						$data = ['exist' => 'los archivos ya estan registrados'];
-					} else {
-						isset($doc['MUNICIPIOID']) ? $municipioid = $doc['MUNICIPIOID'] : $municipioid = '';
-
-						// $_archivosExternos = (object)['status' => 400];
-
+					
+					if ($relacionDoc == NULL) {
+						$municipioid = $doc['MUNICIPIOID'] ? $doc['MUNICIPIOID']: NULL;
+						
 						try {
-							$_archivosExternos = $this->_createArchivosExternos($expediente, $folio, $year,  $municipioid, $doc['CLASIFICACIONDOCTOID'], $doc['TIPODOC'], $doc['PDF'], 'pdf');
-							if ($_archivosExternos->status == 201) {
+							$_archivo = $this->_createArchivosExternos($expediente, $folio, $year,  $municipioid, $doc['CLASIFICACIONDOCTOID'], $doc['TIPODOC'], $doc['PDF'], 'pdf');
+							if ($_archivo->status == 201) {
 								$datosRelacionFolio = [
 									'FOLIODOCID' => $doc['FOLIODOCID'],
 									'FOLIOID' =>  $doc['FOLIOID'],
 									'ANO' => $doc['ANO'],
-									'EXPEDIENTEID' => $_archivosExternos->EXPEDIENTEID,
-									'EXPEDIENTEARCHIVOID' => $_archivosExternos->ARCHIVOID,
+									'EXPEDIENTEID' => $_archivo->EXPEDIENTEID,
+									'EXPEDIENTEARCHIVOID' => $_archivo->ARCHIVOID,
 								];
 								$this->_relacionFolioDocModel->insert($datosRelacionFolio);
 							}
-						} catch (\Exception $e) {
-						}
+						} catch (\Exception $e) {}
 					}
 				}
-
-				// if (isset($data)) {
-				// 	return json_encode(['status' => 3]);
-				// }
-
 				return json_encode(['status' => 1]);
 			} catch (\Exception $e) {
 				return json_encode(['status' => 0, 'error' => $e->getMessage()]);
@@ -2002,21 +2002,9 @@ class DashboardController extends BaseController
 			$endpoint = $this->endpoint . $function;
 			$folioRow = $this->_folioModel->where('ANO', $ano)->where('FOLIOID', $folioid)->first();
 			$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipioid != '' ? $municipioid : $folioRow['MUNICIPIOID'])->where('TYPE', ENVIRONMENT)->first();
+			
 			$data = array();
-			// foreach ($data as $clave => $valor) {
-			// 	if (empty($valor)) {
-			// 		unset($data[$clave]);
-			// 	}
-			// }
-
-			// foreach ($data as $clave => $valor) {
-			// 	if (!in_array($clave, $array)) {
-			// 		unset($data[$clave]);
-			// 	}
-			// }
-
 			$data['EXPEDIENTEID'] = $expedienteId;
-
 			$data['EXTENSION'] = '.' . $extension;
 			// $data['AUTOR'] = isset($archivos['AGENTEID']) ? $archivos['AGENTEID'] : session('ID');
 			// $data['OFICINAIDAUTOR'] = isset($archivos['OFICINAID']) ? $archivos['OFICINAID'] : '394';
@@ -2219,13 +2207,11 @@ class DashboardController extends BaseController
 		$result = curl_exec($ch);
 
 		if ($result === false) {
-			// die('Curl failed: ' . curl_error($ch));
 			$result = "{
                 'status' => 401,
                 'error' => 'Curl failed: '" . curl_error($ch) . "
             }";
 		}
-
 		curl_close($ch);
 
 		return json_decode($result);
@@ -2258,11 +2244,8 @@ class DashboardController extends BaseController
             }";
 		}
 		curl_close($ch);
-		// var_dump($endpoint);
-		// var_dump($data);
-		// var_dump($result);
-		// exit;
-
+		
+		// return $result;
 		return json_decode($result);
 	}
 
@@ -2582,7 +2565,7 @@ class DashboardController extends BaseController
 		}
 	}
 
-	private function _updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area)
+	private function _updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area, $estadojuridicoid = null)
 	{
 		$function = '/expediente.php?process=updateArea';
 		$endpoint = $this->endpoint . $function;
@@ -2593,6 +2576,7 @@ class DashboardController extends BaseController
 			'OFICINAIDRESPONSABLE',
 			'AREAIDREGISTRO',
 			'AREAIDRESPONSABLE',
+			'ESTADOJURIDICOEXPEDIENTEID'
 		];
 
 		$data = array();
@@ -2601,6 +2585,7 @@ class DashboardController extends BaseController
 		$data['AREAIDREGISTRO'] = $area;
 		$data['AREAIDRESPONSABLE'] = $area;
 		$data['EXPEDIENTEID'] = $expediente;
+		$data['ESTADOJURIDICOEXPEDIENTEID'] = (string) $estadojuridicoid;
 
 		foreach ($data as $clave => $valor) {
 			if (empty($valor)) {
@@ -3276,6 +3261,7 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0, 'message' => $insert]);
 		}
 	}
+
 	public function updateParentescoByFolio()
 	{
 		try {
@@ -3314,6 +3300,7 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
+
 	public function deleteParentescoById()
 	{
 
@@ -3347,6 +3334,7 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
+
 	public function createParentescoByFolio()
 	{
 		$folio = trim($this->request->getPost('folio'));
@@ -3386,6 +3374,7 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
+
 	public function getPersonaFisicaFiltro()
 	{
 
@@ -3479,6 +3468,7 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0, 'message' => $_POST]);
 		}
 	}
+
 	public function createPersonaFisicaByDenunciaAnonima()
 	{
 
@@ -3648,6 +3638,7 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0, 'message' => $_POST]);
 		}
 	}
+
 	private function _folioPersonaFisica($data, $folio, $year)
 	{
 		$data = $data;
@@ -3669,6 +3660,7 @@ class DashboardController extends BaseController
 			return $data['PERSONAFISICAID'];
 		}
 	}
+
 	private function _folioPersonaFisicaDomicilio($data, $folio, $personaFisicaID, $year)
 	{
 		$data = $data;
@@ -3768,6 +3760,7 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0, 'message' => $_POST]);
 		}
 	}
+
 	public function deleteArbolByFolio()
 	{
 		try {
@@ -3823,6 +3816,7 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
+
 	public function deleteImpDelitoByFolio()
 	{
 		try {
@@ -3861,6 +3855,7 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
+
 	public function createFisImpDelitoByFolio()
 	{
 		$folio = trim($this->request->getPost('folio'));
@@ -3906,6 +3901,7 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
+
 	public function createObjetoInvolucradoByFolio()
 	{
 
@@ -3941,6 +3937,7 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 1, 'objetos' => $objetos, 'personas' => $personas]);
 		}
 	}
+
 	public function deleteObjetoInvolucrado()
 	{
 
@@ -3969,6 +3966,7 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
+
 	public function getObjetoInvolucrado()
 	{
 		$objetoid = trim($this->request->getPost('objetoid'));
@@ -3986,6 +3984,7 @@ class DashboardController extends BaseController
 			return json_encode($data);
 		}
 	}
+
 	public function updateObjetosInvolucradosById()
 	{
 		try {
@@ -4030,6 +4029,7 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
+
 	private function _folioObjetoInvolucrado($data, $folio, $year)
 	{
 		$data = $data;
@@ -4090,28 +4090,20 @@ class DashboardController extends BaseController
 			$data->plantilla = str_replace('[DELITO_NOMBRE]',  $data->relacion_delitodescr->DELITOMODALIDADDESCR ?  $data->relacion_delitodescr->DELITOMODALIDADDESCR : '-', $data->plantilla);
 			$data->plantilla = str_replace('[NUMERO_CODIGO_PENAL]', ($data->relacion_delitodescr->DELITOMODALIDADARTICULO ?  $data->relacion_delitodescr->DELITOMODALIDADARTICULO : '-'), $data->plantilla);
 		}
-
-		if (empty($data->folioDoc) || empty($data->folioDoc[0]['RAZONSOCIALFIRMA'])) {
-		} else {
-			$data->plantilla = str_replace('[EXPEDIENTE_NOMBRE_DEL_RESPONSABLE]', $data->folioDoc[0]['RAZONSOCIALFIRMA'], $data->plantilla);
-			$data->plantilla = str_replace('EXPEDIENTE_NOMBRE_DEL_RESPONSABLE', $data->folioDoc[0]['RAZONSOCIALFIRMA'], $data->plantilla);
-			$data->plantilla = str_replace('[NOMBRE_LICENCIADO]', $data->folioDoc[0]['RAZONSOCIALFIRMA'], $data->plantilla);
-			$data->plantilla = str_replace('[EXPEDIENTE_NOMBRE_MP_RESPONSABLE]', $data->folioDoc[0]['RAZONSOCIALFIRMA'], $data->plantilla);
-		}
+		
+		// if (empty($data->folioDoc) || empty($data->folioDoc[0]['RAZONSOCIALFIRMA'])) {
+		// } else {
+		// 	$data->plantilla = str_replace('[EXPEDIENTE_NOMBRE_DEL_RESPONSABLE]', $data->folioDoc[0]['RAZONSOCIALFIRMA'], $data->plantilla);
+		// 	$data->plantilla = str_replace('EXPEDIENTE_NOMBRE_DEL_RESPONSABLE', $data->folioDoc[0]['RAZONSOCIALFIRMA'], $data->plantilla);
+		// 	$data->plantilla = str_replace('[NOMBRE_LICENCIADO]', $data->folioDoc[0]['RAZONSOCIALFIRMA'], $data->plantilla);
+		// 	$data->plantilla = str_replace('[EXPEDIENTE_NOMBRE_MP_RESPONSABLE]', $data->folioDoc[0]['RAZONSOCIALFIRMA'], $data->plantilla);
+		// }
 
 		$arrayExpediente = str_split($data->expediente->EXPEDIENTEID);
 		$expedienteConsecutivo = $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
-
 		$expedienteConsecutivo = str_split($expedienteConsecutivo);
 
 		unset($arrayExpediente[0]);
-		// foreach ($expedienteConsecutivo as $key => $value) {
-		// 	if ($value == 0) {
-		// 		unset($expedienteConsecutivo[$key]);
-		// 	} else {
-		// 		break;
-		// 	}
-		// }
 
 		$expedienteMunicipioEstado = $arrayExpediente[1] . $arrayExpediente[2] . '-' . $arrayExpediente[3] . $arrayExpediente[4] . $arrayExpediente[5];
 		$expedienteYear = $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9];
@@ -4131,7 +4123,6 @@ class DashboardController extends BaseController
 		$data->plantilla = str_replace('[VICTIMA_CORREO]', $data->victima[0]['CORREO'] ? $data->victima[0]['CORREO'] : '-', $data->plantilla);
 		$data->plantilla = str_replace('[VICTIMA_SEXO]', $data->victima[0]['SEXO'] ? ($data->victima[0]['SEXO'] == 'F' ? 'FEMENINO' : 'MASCULINO') : '-', $data->plantilla);
 		$data->plantilla = str_replace('[</span>VICTIMA_TELEFONO]', $data->victima[0]['TELEFONO'] ? $data->victima[0]['TELEFONO'] : '-', $data->plantilla);
-
 		$data->plantilla = str_replace('[PERSONA]', $data->imputado->NOMBRE . ' ' . ($data->imputado->PRIMERAPELLIDO ? $data->imputado->PRIMERAPELLIDO : '') . ' ' . ($data->imputado->SEGUNDOAPELLIDO ? $data->imputado->SEGUNDOAPELLIDO : ''), $data->plantilla);
 		$data->plantilla = str_replace('[IMPUTADO_NOMBRE]', $data->imputado->NOMBRE . ' ' . ($data->imputado->PRIMERAPELLIDO ? $data->imputado->PRIMERAPELLIDO : '') . ' ' . ($data->imputado->SEGUNDOAPELLIDO ? $data->imputado->SEGUNDOAPELLIDO : ''), $data->plantilla);
 		$data->plantilla = str_replace('[IMPUTADO_EDAD]', $data->imputado->EDADCANTIDAD ? $data->imputado->EDADCANTIDAD : '-', $data->plantilla);
@@ -4158,7 +4149,7 @@ class DashboardController extends BaseController
 		$data->plantilla = str_replace('[VICTIMA_NACIONALIDAD]', isset($data->nacionalidadVictima) == true ? $data->nacionalidadVictima->PERSONANACIONALIDADDESCR : 'SIN NACIONALIDAD REGISTRADA', $data->plantilla);
 		$data->plantilla = str_replace('[VICTIMA_ESTADO_CIVIL]', isset($data->edoCivilVictima) == true ? $data->edoCivilVictima->PERSONAESTADOCIVILDESCR : 'SIN ESTADO CIVIL', $data->plantilla);
 
-		switch ($data->expediente->MUNICIPIOID) {
+		switch ($data->expediente->MUNICIPIOASIGNADOID) {
 			case '1':
 				$data->plantilla = str_replace('[DIRECCION_NOMBRE]', 'DIRECTOR DE SEGURIDAD PÚBLICA MUNICIPAL', $data->plantilla);
 				break;
@@ -4193,48 +4184,70 @@ class DashboardController extends BaseController
 	{
 		$expediente = trim($this->request->getPost('expediente'));
 		$folio = trim($this->request->getPost('folio'));
-		$plantilla = $this->_plantillasModel->where('TITULO', $this->request->getPost('titulo'))->first();
-		$folioDoc = $this->_folioDocModel->asObject()->where('FOLIOID',  $folio)->where('ANO', $this->request->getPost('year'))->first();
-
-		$municipio = isset($folioDoc->MUNICIPIOID) ? $folioDoc->MUNICIPIOID : NULL;
-		// $agente = isset($folioDoc->AGENTEID) ? $folioDoc->AGENTEID : NULL;
-		// $oficina = isset($folioDoc->OFICINAID) ? $folioDoc->OFICINAID : NULL;
-		// var_dump($municipio);
-
 		$year = trim($this->request->getPost('year'));
-		$dataFolioDoc = array(
-			'FOLIOID' => $folio,
-			'NUMEROEXPEDIENTE' => $expediente,
-			'ANO' => $this->request->getPost('year'),
-			'PLACEHOLDER' => $this->request->getPost('placeholder'),
-			'STATUS' => 'ABIERTO',
-			'MUNICIPIOID' => $this->request->getPost('municipio') ? $this->request->getPost('municipio') : $municipio,
-			'ESTADOID' => 2,
-			'TIPODOC' => $this->request->getPost('titulo'),
-			'STATUSENVIO' => $this->request->getPost('statusenvio'),
-			'ENVIADO' => 'N',
-			'CLASIFICACIONDOCTOID' => $plantilla['CLASIFICACIONDOCTOID'],
-			// 'AGENTEID' => $this->request->getPost('empleado') ? $this->request->getPost('empleado') : $agente,
-			// 'OFICINAID' => $this->request->getPost('oficina') ? $this->request->getPost('oficina') : $oficina,
+		$placeholder = $this->request->getPost('placeholder');
+		$municipio = $this->request->getPost('municipio');
 
+		$plantilla = $this->_plantillasModel->where('TITULO', $this->request->getPost('titulo'))->first();
+		$folioRow = $this->_folioModel->where('ANO', $year)->where('FOLIOID', $folio)->first();
 
-		);
-		$foliodoc = $this->_folioDoc($dataFolioDoc, $expediente, $year);
+		if($folioRow){
+			$clasificaciondoctoid = '';
 
-		if ($foliodoc) {
-			$documentos = $this->_folioDocModel->get_by_folio($folio, $year);
-
-			return json_encode(['status' => 1, 'documentos' => $documentos]);
-		} else {
+			switch ($municipio) {
+				case '1':
+					$clasificaciondoctoid = $plantilla['CLASIFICACIONDOCTOENSENADAID'];
+					break;
+				case '2':
+					$clasificaciondoctoid = $plantilla['CLASIFICACIONDOCTOMEXICALIID'];
+					break;
+				case '3':
+					$clasificaciondoctoid = $plantilla['CLASIFICACIONDOCTOMEXICALIID'];
+					break;
+				case '4':
+					$clasificaciondoctoid = $plantilla['CLASIFICACIONDOCTOTIJUANAID'];
+					break;
+				case '5':
+					$clasificaciondoctoid = $plantilla['CLASIFICACIONDOCTOTIJUANAID'];
+					break;
+				default:
+				$clasificaciondoctoid = $plantilla['CLASIFICACIONDOCTOMEXICALIID'];
+					break;
+			}
+	
+			$dataFolioDoc = array(
+				'FOLIOID' => $folio,
+				'NUMEROEXPEDIENTE' => $expediente,
+				'ANO' => $year,
+				'PLACEHOLDER' => $placeholder,
+				'STATUS' => 'ABIERTO',
+				'MUNICIPIOID' => $folioRow['MUNICIPIOASIGNADOID'],
+				'ESTADOID' => 2,
+				'TIPODOC' => $this->request->getPost('titulo'),
+				'STATUSENVIO' => $this->request->getPost('statusenvio'),
+				'ENVIADO' => 'N',
+				'CLASIFICACIONDOCTOID' => $clasificaciondoctoid
+			);
+	
+			$foliodoc = $this->_folioDoc($dataFolioDoc, $expediente, $year);
+	
+			if ($foliodoc) {
+				$documentos = $this->_folioDocModel->get_by_folio($folio, $year);
+	
+				return json_encode(['status' => 1, 'documentos' => $documentos]);
+			} else {
+				return json_encode(['status' => 0]);
+			}
+		}else{
 			return json_encode(['status' => 0]);
 		}
 	}
+
 	private function _folioDoc($data, $expediente, $year)
 	{
 		$data = $data;
 		$data['NUMEROEXPEDIENTE'] = $expediente;
 		$data['ANO'] = $year;
-
 
 		$foliodoc = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente)->where('ANO', $year)->orderBy('FOLIODOCID', 'desc')->first();
 
@@ -4248,6 +4261,7 @@ class DashboardController extends BaseController
 			return $data['FOLIODOCID'];
 		}
 	}
+
 	public function updateDocumentoByFolio()
 	{
 		try {
@@ -4280,6 +4294,7 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
+
 	public function getDocumentoById()
 	{
 		$docid = trim($this->request->getPost('docid'));
@@ -4298,6 +4313,7 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
+
 	private function _bitacoraActividad($data)
 	{
 		$data = $data;
@@ -4322,10 +4338,12 @@ class DashboardController extends BaseController
 		$decrypted = openssl_decrypt($encodedInitialData, 'AES-128-CBC', hex2bin($key128), 1, $iv);
 		return $decrypted;
 	}
+
 	private function permisos($permiso)
 	{
 		return in_array($permiso, session('permisos'));
 	}
+
 	public function crearFolioDenunciaAnonima()
 	{
 
@@ -4373,6 +4391,7 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 1]);
 		}
 	}
+
 	public function videos_expediente()
 	{
 		$data = (object) array();
@@ -4381,6 +4400,7 @@ class DashboardController extends BaseController
 
 		$this->_loadView('Videos expediente', 'videos', '', $data, 'videos_expediente');
 	}
+
 	private function _folioVehiculo($data, $folio, $year)
 	{
 		$data = $data;

@@ -30,7 +30,7 @@ class RunAllSeederTesting extends Seeder
 		$this->call('UsuariosSeeder');
 		$this->call('HechoLugarSeeder');
 		$this->call('DelitosUsuariosSeeder');
-		$this->call('PlantillasSeeder');
+		$this->call('PlantillasTestingSeeder');
 		$this->call('EmpleadosTestingSeeder');
 		$this->call('ConexionesDBSeederTesting');
 		$this->call('EscolaridadSeeder');

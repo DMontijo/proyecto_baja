@@ -28,11 +28,27 @@ class PLANTILLAS extends Migration
 			'TEXTO' => [
 				'type' => 'TEXT',
 			],
-			'PLANTILLAJUSTICIAID' => [
+			'PLANTILLAJUSTICIAMEXICALIID' => [
 				'type' => 'INT',
 				'null' => TRUE,
 			],
-			'CLASIFICACIONDOCTOID' => [
+			'CLASIFICACIONDOCTOMEXICALIID' => [
+				'type' => 'INT',
+				'null' => TRUE,
+			],
+			'PLANTILLAJUSTICIATIJUANAID' => [
+				'type' => 'INT',
+				'null' => TRUE,
+			],
+			'CLASIFICACIONDOCTOTIJUANAID' => [
+				'type' => 'INT',
+				'null' => TRUE,
+			],
+			'PLANTILLAJUSTICIAENSENADAID' => [
+				'type' => 'INT',
+				'null' => TRUE,
+			],
+			'CLASIFICACIONDOCTOENSENADAID' => [
 				'type' => 'INT',
 				'null' => TRUE,
 			],

@@ -2456,10 +2456,12 @@
 				}
 
 			});
+
 			btn_guardarFolioDoc.addEventListener('click', (event) => {
 				let contenidoModificado = quill.container.firstChild.innerHTML;
 				insertarDocumento(contenidoModificado, plantilla.value);
 			}, false);
+
 			btn_actualizarFolioDoc.addEventListener('click', (event) => {
 				let contenidoModificado = quill2.container.firstChild.innerHTML;
 				actualizarDocumento(contenidoModificado);
@@ -4557,7 +4559,6 @@
 					dataType: "json",
 					success: function(response) {
 
-
 						if (response.status == 1) {
 							const documentos = response.documentos;
 							Swal.fire({
@@ -4575,7 +4576,12 @@
 							});
 							llenarTablaDocumentos(documentos);
 							document.querySelector("#plantilla").value = '';
-
+						}else{
+							Swal.fire({
+								icon: 'error',
+								text: 'Documento no agregado',
+								confirmButtonColor: '#bf9b55',
+							});
 						}
 
 

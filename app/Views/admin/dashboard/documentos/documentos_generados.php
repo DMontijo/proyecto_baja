@@ -311,6 +311,12 @@
 						llenarTablaDocumentos(documentos);
 						document.querySelector("#plantilla").value = '';
 						location.reload();
+					}else{
+							Swal.fire({
+								icon: 'error',
+								text: 'Documento no agregado',
+								confirmButtonColor: '#bf9b55',
+							});
 					}
 
 
