@@ -1506,12 +1506,12 @@ class DashboardController extends BaseController
 		$expediente = $this->request->getPost('expediente');
 		
 		$folioDocSinFirmar = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'ABIERTO')->orderBy('FOLIODOCID', 'asc')->findAll();
+		
 		if ($folioDocSinFirmar) {
 			return json_encode((object)['status' => 4]);
 		}
 
 		$folioDoc = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOCID', 'asc')->findAll();
-
 		if ($folioDoc) {
 			try {
 
@@ -1536,10 +1536,13 @@ class DashboardController extends BaseController
 						} catch (\Exception $e) {}
 					}
 				}
+
 				return json_encode(['status' => 1]);
 			} catch (\Exception $e) {
 				return json_encode(['status' => 0, 'error' => $e->getMessage()]);
 			}
+		}else{
+			return json_encode(['status' => 1]);
 		}
 	}
 
