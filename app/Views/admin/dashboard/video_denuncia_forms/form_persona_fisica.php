@@ -1,8 +1,10 @@
-<form id="persona_fisica_form" action="" method="post" class="row p-0 m-0 needs-validation" novalidate>
+<form id="persona_fisica_form" action="" method="post" enctype="multipart/form-data" class="row p-0 m-0 needs-validation" novalidate>
 	<input type="hidden" class="form-control" id="pf_id" name="pf_id">
 	<div id="contenedor_fisica_foto" class="col-12 mb-5 d-none">
 		<a id="fisica_foto_download" dowload="" href="">
 			<img id="fisica_foto" class="img-fluid" src="" style="max-width:300px;">
+			<br>
+			<input class="form-control" type="file" id="subirFotoPersona" name="subirFotoPersona" accept="image/jpeg, image/jpg, image/png"></input>
 		</a>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">

@@ -2696,11 +2696,45 @@ class DashboardController extends BaseController
 
 	public function updatePersonaFisicaById()
 	{
-		try {
-			$id = trim($this->request->getPost('pf_id'));
-			$folio = trim($this->request->getPost('folio'));
-			$year = trim($this->request->getPost('year'));
-
+		// try {
+			$id = $this->request->getPost('pf_id');
+			$folio = $this->request->getPost('folio');
+			$year = $this->request->getPost('year');
+			$fotoPersona = $this->request->getFile('subirFotoPersona');
+			$fotoP = null;
+			if ($_FILES) {
+				$fotoP = file_get_contents($fotoPersona);
+			$data = array(
+				'NOMBRE' => $this->request->getPost('nombre_pf'),
+				'PRIMERAPELLIDO' => $this->request->getPost('apellido_paterno_pf'),
+				'SEGUNDOAPELLIDO' => $this->request->getPost('apellido_materno_pf'),
+				'FECHANACIMIENTO' => $this->request->getPost('fecha_nacimiento_pf'),
+				'EDADCANTIDAD' => $this->request->getPost('edad_pf'),
+				'SEXO' => $this->request->getPost('sexo_pf'),
+				'TELEFONO' => $this->request->getPost('telefono_pf'),
+				'TELEFONO2' => $this->request->getPost('telefono_pf_2'),
+				'CODIGOPAISTEL' => $this->request->getPost('codigo_pais_pf'),
+				'CODIGOPAISTEL2' => $this->request->getPost('codigo_pais_pf_2'),
+				'CORREO' => $this->request->getPost('correo_pf'),
+				'TIPOIDENTIFICACIONID' => $this->request->getPost('tipo_identificacion_pf'),
+				'NUMEROIDENTIFICACION' => $this->request->getPost('numero_identidad_pf'),
+				'NACIONALIDADID' => $this->request->getPost('nacionalidad_pf'),
+				'PERSONAIDIOMAID' => $this->request->getPost('idioma_pf'),
+				'ESCOLARIDADID' => $this->request->getPost('escolaridad_pf'),
+				'OCUPACIONID' => $this->request->getPost('ocupacion_pf'),
+				'ESTADOCIVILID' => $this->request->getPost('edoc_pf'),
+				'ESTADOORIGENID' => $this->request->getPost('edoorigen_pf'),
+				'MUNICIPIOORIGENID' => $this->request->getPost('munorigen_pf'),
+				'CALIDADJURIDICAID' => $this->request->getPost('calidad_juridica_pf'),
+				'DESCRIPCION_FISICA' => $this->request->getPost('descripcionFisica_pf'),
+				'APODO' => $this->request->getPost('apodo_pf'),
+				'DENUNCIANTE' => $this->request->getPost('denunciante_pf'),
+				'FACEBOOK' => $this->request->getPost('facebook_pf'),
+				'INSTAGRAM' => $this->request->getPost('instagram_pf'),
+				'TWITTER' => $this->request->getPost('twitter_pf'),
+				'FOTO'=>  $fotoP
+			);
+		}else{
 			$data = array(
 				'NOMBRE' => $this->request->getPost('nombre_pf'),
 				'PRIMERAPELLIDO' => $this->request->getPost('apellido_paterno_pf'),
@@ -2730,6 +2764,8 @@ class DashboardController extends BaseController
 				'INSTAGRAM' => $this->request->getPost('instagram_pf'),
 				'TWITTER' => $this->request->getPost('twitter_pf'),
 			);
+		}			
+		// var_dump($data);exit;
 
 			$update = $this->_folioPersonaFisicaModel->set($data)->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $id)->update();
 
@@ -2758,9 +2794,9 @@ class DashboardController extends BaseController
 			} else {
 				return json_encode(['status' => 0]);
 			}
-		} catch (\Exception $e) {
-			return json_encode(['status' => 0]);
-		}
+		// } catch (\Exception $e) {
+		// 	return json_encode(['status' => 0]);
+		// }
 	}
 
 	public function updatePersonaFisicaDomicilioById()
