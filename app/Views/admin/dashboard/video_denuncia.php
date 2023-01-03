@@ -1882,7 +1882,16 @@
 					event.target.value = clearText(event.target.value).toLowerCase();
 				}, false)
 			});
-
+			document.querySelector('#subirFotoPersona').addEventListener('change', (e) => {
+		let preview = document.querySelector('#fisica_foto');
+		if (e.target.files && e.target.files[0]) {
+			let reader = new FileReader();
+			reader.onload = function(e) {
+				preview.setAttribute('src', e.target.result);
+			}
+			reader.readAsDataURL(e.target.files[0]);
+		}
+	});
 			form_delito.addEventListener('submit', (event) => {
 				if (!form_delito.checkValidity()) {
 					event.preventDefault();
@@ -3208,44 +3217,79 @@
 
 
 			function actualizarPersona() {
-				const data = {
-					'folio': document.querySelector('#input_folio_atencion').value,
-					'year': document.querySelector('#year_select').value,
-					'pf_id': document.querySelector('#pf_id').value,
-					'tipo_identificacion_pf': document.querySelector('#tipo_identificacion_pf').value,
-					'numero_identidad_pf': document.querySelector('#numero_identidad_pf').value,
-					'nombre_pf': document.querySelector('#nombre_pf').value,
-					'apellido_paterno_pf': document.querySelector('#apellido_paterno_pf').value,
-					'apellido_materno_pf': document.querySelector('#apellido_materno_pf').value,
-					'nacionalidad_pf': document.querySelector('#nacionalidad_pf').value,
-					'idioma_pf': document.querySelector('#idioma_pf').value,
-					'edoorigen_pf': document.querySelector('#edoorigen_pf').value,
-					'munorigen_pf': document.querySelector('#munorigen_pf').value,
-					'telefono_pf': document.querySelector('#telefono_pf').value,
-					'codigo_pais_pf': document.querySelector('#codigo_pais_pf').value,
-					'telefono_pf_2': document.querySelector('#telefono_pf_2').value,
-					'codigo_pais_pf_2': document.querySelector('#codigo_pais_pf_2').value,
-					'correo_pf': document.querySelector('#correo_pf').value,
-					'fecha_nacimiento_pf': document.querySelector('#fecha_nacimiento_pf').value,
-					'edad_pf': document.querySelector('#edad_pf').value,
-					'edoc_pf': document.querySelector('#edoc_pf').value,
-					'sexo_pf': document.querySelector('#sexo_pf').value,
-					'ocupacion_pf': document.querySelector('#ocupacion_pf').value,
-					'escolaridad_pf': document.querySelector('#escolaridad_pf').value,
-					'descripcionFisica_pf': document.querySelector('#descripcionFisica_pf').value,
-					'calidad_juridica_pf': document.querySelector('#calidad_juridica_pf').value,
-					'apodo_pf': document.querySelector('#apodo_pf').value,
-					'denunciante_pf': document.querySelector('#denunciante_pf').value,
-					'facebook_pf': document.querySelector('#facebook_pf').value,
-					'instagram_pf': document.querySelector('#instagram_pf').value,
-					'twitter_pf': document.querySelector('#twitter_pf').value,
-				};
+					var packetData = new FormData();
+					packetData.append("subirFotoPersona", $("#subirFotoPersona")[0].files[0]);
+					packetData.append("folio", document.querySelector('#input_folio_atencion').value);
+				packetData.append("year", document.querySelector('#year_select').value);
+				packetData.append("tipo_identificacion_pf", document.querySelector('#tipo_identificacion_pf').value);
+				packetData.append("numero_identidad_pf", document.querySelector('#numero_identidad_pf').value);
+				packetData.append("nombre_pf", document.querySelector('#nombre_pf').value);
+				packetData.append("apellido_paterno_pf", document.querySelector('#apellido_paterno_pf').value);
+				packetData.append("apellido_materno_pf", document.querySelector('#apellido_materno_pf').value);
+				packetData.append("nacionalidad_pf", document.querySelector('#nacionalidad_pf').value);
+				packetData.append("idioma_pf", document.querySelector('#idioma_pf').value);
+				packetData.append("edoorigen_pf", document.querySelector('#edoorigen_pf').value);
+				packetData.append("munorigen_pf", document.querySelector('#munorigen_pf').value);
+				packetData.append("telefono_pf", document.querySelector('#telefono_pf').value);
+				packetData.append("codigo_pais_pf", document.querySelector('#codigo_pais_pf').value);
+				packetData.append("codigo_pais_pf_2", document.querySelector('#codigo_pais_pf_2').value);
+				packetData.append("telefono_pf_2", document.querySelector('#telefono_pf_2').value);
+				packetData.append("correo_pf", document.querySelector('#correo_pf').value);
+				packetData.append("fecha_nacimiento_pf", document.querySelector('#fecha_nacimiento_pf').value);
+				packetData.append("edad_pf", document.querySelector('#edad_pf').value);
+				packetData.append("sexo_pf", document.querySelector('#sexo_pf').value);
+				packetData.append("ocupacion_pf", document.querySelector('#ocupacion_pf').value);
+				packetData.append("escolaridad_pf", document.querySelector('#escolaridad_pf').value);
+				packetData.append("descripcionFisica_pf", document.querySelector('#descripcionFisica_pf').value);
+				packetData.append("calidad_juridica_pf", document.querySelector('#calidad_juridica_pf').value);
+				packetData.append("apodo_pf", document.querySelector('#apodo_pf').value);
+				packetData.append("denunciante_pf", document.querySelector('#denunciante_pf').value);
+				packetData.append("facebook_pf", document.querySelector('#facebook_pf').value);
+				packetData.append("instagram_pf", document.querySelector('#instagram_pf').value);
+				packetData.append("twitter_pf", document.querySelector('#twitter_pf').value);
+				packetData.append("pf_id", document.querySelector('#pf_id').value);
+
+				// const data = {
+				// 	'folio': document.querySelector('#input_folio_atencion').value,
+				// 	'year': document.querySelector('#year_select').value,
+				// 	'pf_id': document.querySelector('#pf_id').value,
+				// 	'tipo_identificacion_pf': document.querySelector('#tipo_identificacion_pf').value,
+				// 	'numero_identidad_pf': document.querySelector('#numero_identidad_pf').value,
+				// 	'nombre_pf': document.querySelector('#nombre_pf').value,
+				// 	'apellido_paterno_pf': document.querySelector('#apellido_paterno_pf').value,
+				// 	'apellido_materno_pf': document.querySelector('#apellido_materno_pf').value,
+				// 	'nacionalidad_pf': document.querySelector('#nacionalidad_pf').value,
+				// 	'idioma_pf': document.querySelector('#idioma_pf').value,
+				// 	'edoorigen_pf': document.querySelector('#edoorigen_pf').value,
+				// 	'munorigen_pf': document.querySelector('#munorigen_pf').value,
+				// 	'telefono_pf': document.querySelector('#telefono_pf').value,
+				// 	'codigo_pais_pf': document.querySelector('#codigo_pais_pf').value,
+				// 	'telefono_pf_2': document.querySelector('#telefono_pf_2').value,
+				// 	'codigo_pais_pf_2': document.querySelector('#codigo_pais_pf_2').value,
+				// 	'correo_pf': document.querySelector('#correo_pf').value,
+				// 	'fecha_nacimiento_pf': document.querySelector('#fecha_nacimiento_pf').value,
+				// 	'edad_pf': document.querySelector('#edad_pf').value,
+				// 	'edoc_pf': document.querySelector('#edoc_pf').value,
+				// 	'sexo_pf': document.querySelector('#sexo_pf').value,
+				// 	'ocupacion_pf': document.querySelector('#ocupacion_pf').value,
+				// 	'escolaridad_pf': document.querySelector('#escolaridad_pf').value,
+				// 	'descripcionFisica_pf': document.querySelector('#descripcionFisica_pf').value,
+				// 	'calidad_juridica_pf': document.querySelector('#calidad_juridica_pf').value,
+				// 	'apodo_pf': document.querySelector('#apodo_pf').value,
+				// 	'denunciante_pf': document.querySelector('#denunciante_pf').value,
+				// 	'facebook_pf': document.querySelector('#facebook_pf').value,
+				// 	'instagram_pf': document.querySelector('#instagram_pf').value,
+				// 	'twitter_pf': document.querySelector('#twitter_pf').value,
+				// };
 
 				$.ajax({
-					data: data,
+					data: packetData,
 					url: "<?= base_url('/data/update-persona-fisica-by-id') ?>",
 					method: "POST",
 					dataType: "json",
+					contentType: false,
+					processData: false,
+					cache: false,
 					success: function(response) {
 						const personas = response.personas;
 						const imputados = response.imputados;
@@ -3310,6 +3354,7 @@
 								option.text = victima.NOMBRE + ' ' + primer_apellido;
 								select_victima_ofendido.add(option, null);
 							});
+							document.getElementById('subirFotoPersona').value = '';
 
 
 							Swal.fire({
@@ -3462,7 +3507,7 @@
 					input_colonia.classList.add('d-none');
 				}
 			});
-
+	
 			document.querySelector('#estado_pfd').addEventListener('change', (e) => {
 				let select_municipio = document.querySelector('#municipio_pfd');
 				let select_localidad = document.querySelector('#localidad_pfd');
