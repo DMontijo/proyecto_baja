@@ -118,6 +118,8 @@ use App\Models\VehiculoModeloModel;
 use App\Models\VehiculoServicioModel;
 use App\Models\VehiculoVersionModel;
 
+use \Mpdf\Mpdf;
+
 class DashboardController extends BaseController
 {
 	public function __construct()
@@ -1504,9 +1506,9 @@ class DashboardController extends BaseController
 		$folio = $this->request->getPost('folio');
 		$year = $this->request->getPost('year');
 		$expediente = $this->request->getPost('expediente');
-		
+
 		$folioDocSinFirmar = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'ABIERTO')->orderBy('FOLIODOCID', 'asc')->findAll();
-		
+
 		if ($folioDocSinFirmar) {
 			return json_encode((object)['status' => 4]);
 		}
@@ -1515,12 +1517,12 @@ class DashboardController extends BaseController
 		if ($folioDoc) {
 			try {
 
-				foreach ($folioDoc as $key => $doc) {	
+				foreach ($folioDoc as $key => $doc) {
 					$relacionDoc = $this->_relacionFolioDocModel->where('FOLIOID', $doc['FOLIOID'])->where('ANO', $doc['ANO'])->where('EXPEDIENTEID', $doc['NUMEROEXPEDIENTE'])->where('FOLIODOCID', $doc['FOLIODOCID'])->orderBy('FOLIODOCID', 'asc')->first();
-					
+
 					if ($relacionDoc == NULL) {
 						$municipioid = $doc['MUNICIPIOID'] ? $doc['MUNICIPIOID']: NULL;
-						
+
 						try {
 							$_archivo = $this->_createArchivosExternos($expediente, $folio, $year,  $municipioid, $doc['CLASIFICACIONDOCTOID'], $doc['TIPODOC'], $doc['PDF'], 'pdf');
 							if ($_archivo->status == 201) {
@@ -1541,7 +1543,7 @@ class DashboardController extends BaseController
 			} catch (\Exception $e) {
 				return json_encode(['status' => 0, 'error' => $e->getMessage()]);
 			}
-		}else{
+		} else {
 			return json_encode(['status' => 1]);
 		}
 	}
@@ -2005,7 +2007,7 @@ class DashboardController extends BaseController
 			$endpoint = $this->endpoint . $function;
 			$folioRow = $this->_folioModel->where('ANO', $ano)->where('FOLIOID', $folioid)->first();
 			$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipioid != '' ? $municipioid : $folioRow['MUNICIPIOID'])->where('TYPE', ENVIRONMENT)->first();
-			
+
 			$data = array();
 			$data['EXPEDIENTEID'] = $expedienteId;
 			$data['EXTENSION'] = '.' . $extension;
@@ -2247,7 +2249,7 @@ class DashboardController extends BaseController
             }";
 		}
 		curl_close($ch);
-		
+
 		// return $result;
 		return json_decode($result);
 	}
@@ -4093,7 +4095,7 @@ class DashboardController extends BaseController
 			$data->plantilla = str_replace('[DELITO_NOMBRE]',  $data->relacion_delitodescr->DELITOMODALIDADDESCR ?  $data->relacion_delitodescr->DELITOMODALIDADDESCR : '-', $data->plantilla);
 			$data->plantilla = str_replace('[NUMERO_CODIGO_PENAL]', ($data->relacion_delitodescr->DELITOMODALIDADARTICULO ?  $data->relacion_delitodescr->DELITOMODALIDADARTICULO : '-'), $data->plantilla);
 		}
-		
+
 		// if (empty($data->folioDoc) || empty($data->folioDoc[0]['RAZONSOCIALFIRMA'])) {
 		// } else {
 		// 	$data->plantilla = str_replace('[EXPEDIENTE_NOMBRE_DEL_RESPONSABLE]', $data->folioDoc[0]['RAZONSOCIALFIRMA'], $data->plantilla);
@@ -4194,7 +4196,7 @@ class DashboardController extends BaseController
 		$plantilla = $this->_plantillasModel->where('TITULO', $this->request->getPost('titulo'))->first();
 		$folioRow = $this->_folioModel->where('ANO', $year)->where('FOLIOID', $folio)->first();
 
-		if($folioRow){
+		if ($folioRow) {
 			$clasificaciondoctoid = '';
 
 			switch ($municipio) {
@@ -4214,10 +4216,10 @@ class DashboardController extends BaseController
 					$clasificaciondoctoid = $plantilla['CLASIFICACIONDOCTOTIJUANAID'];
 					break;
 				default:
-				$clasificaciondoctoid = $plantilla['CLASIFICACIONDOCTOMEXICALIID'];
+					$clasificaciondoctoid = $plantilla['CLASIFICACIONDOCTOMEXICALIID'];
 					break;
 			}
-	
+
 			$dataFolioDoc = array(
 				'FOLIOID' => $folio,
 				'NUMEROEXPEDIENTE' => $expediente,
@@ -4231,17 +4233,17 @@ class DashboardController extends BaseController
 				'ENVIADO' => 'N',
 				'CLASIFICACIONDOCTOID' => $clasificaciondoctoid
 			);
-	
+
 			$foliodoc = $this->_folioDoc($dataFolioDoc, $expediente, $year);
-	
+
 			if ($foliodoc) {
 				$documentos = $this->_folioDocModel->get_by_folio($folio, $year);
-	
+
 				return json_encode(['status' => 1, 'documentos' => $documentos]);
 			} else {
 				return json_encode(['status' => 0]);
 			}
-		}else{
+		} else {
 			return json_encode(['status' => 0]);
 		}
 	}
