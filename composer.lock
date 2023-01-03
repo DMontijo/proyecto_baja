@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8a6fde47888ef854ee033b3242188fd7",
+    "content-hash": "e03f4d97b6018cbe732743849bfa726f",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -408,6 +408,53 @@
                 "source": "https://github.com/ezyang/htmlpurifier/tree/v4.14.0"
             },
             "time": "2021-12-25T01:21:49+00:00"
+        },
+        {
+            "name": "henck/rtf-to-html",
+            "version": "1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/henck/rtf-html-php.git",
+                "reference": "ff984a1d44fa359c85c0cffa0d66e991bf4dc967"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/henck/rtf-html-php/zipball/ff984a1d44fa359c85c0cffa0d66e991bf4dc967",
+                "reference": "ff984a1d44fa359c85c0cffa0d66e991bf4dc967",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "RtfHtmlPhp\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Alexander van Oostenrijk",
+                    "email": "alex.vanoostenrijk@gmail.com"
+                }
+            ],
+            "description": "RTF to HTML converter in PHP",
+            "keywords": [
+                "converter",
+                "rtf"
+            ],
+            "support": {
+                "issues": "https://github.com/henck/rtf-html-php/issues",
+                "source": "https://github.com/henck/rtf-html-php/tree/v1.2"
+            },
+            "time": "2021-09-10T15:19:14+00:00"
         },
         {
             "name": "kint-php/kint",
