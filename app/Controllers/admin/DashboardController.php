@@ -2696,14 +2696,14 @@ class DashboardController extends BaseController
 
 	public function updatePersonaFisicaById()
 	{
-		// try {
-			$id = $this->request->getPost('pf_id');
-			$folio = $this->request->getPost('folio');
-			$year = $this->request->getPost('year');
-			$fotoPersona = $this->request->getFile('subirFotoPersona');
-			$fotoP = null;
-			if ($_FILES) {
-				$fotoP = file_get_contents($fotoPersona);
+		try {
+		$id = $this->request->getPost('pf_id');
+		$folio = $this->request->getPost('folio');
+		$year = $this->request->getPost('year');
+		$fotoPersona = $this->request->getFile('subirFotoPersona');
+		$fotoP = null;
+		if ($_FILES) {
+			$fotoP = file_get_contents($fotoPersona);
 			$data = array(
 				'NOMBRE' => $this->request->getPost('nombre_pf'),
 				'PRIMERAPELLIDO' => $this->request->getPost('apellido_paterno_pf'),
@@ -2794,9 +2794,9 @@ class DashboardController extends BaseController
 			} else {
 				return json_encode(['status' => 0]);
 			}
-		// } catch (\Exception $e) {
-		// 	return json_encode(['status' => 0]);
-		// }
+		} catch (\Exception $e) {
+			return json_encode(['status' => 0]);
+		}
 	}
 
 	public function updatePersonaFisicaDomicilioById()
