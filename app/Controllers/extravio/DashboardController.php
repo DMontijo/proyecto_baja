@@ -90,9 +90,9 @@ class DashboardController extends BaseController
 
 			'TIPODOCUMENTO' => $this->request->getPost('tipodoc'),
 			'NDOCUMENTO' => $this->request->getPost('nodocumento'),
-			'DUENONOMBREDOC' => $this->request->getPost('duenonamedoc'),
-			'DUENOAPELLIDOPDOC' => $this->request->getPost('duenoapdoc'),
-			'DUENOAPELLIDOMDOC' => $this->request->getPost('duenoamdoc'),
+			'DUENONOMBREDOC' => $this->request->getPost('duenonamedoc') ?$this->request->getPost('duenonamedoc'):null ,
+			'DUENOAPELLIDOPDOC' => $this->request->getPost('duenoapdoc') ? $this->request->getPost('duenoapdoc'):null,
+			'DUENOAPELLIDOMDOC' => $this->request->getPost('duenoamdoc')? $this->request->getPost('duenoamdoc'):null,
 
 			'SERIEVEHICULO' => $this->request->getPost('serieV'),
 			'NPLACA' => $this->request->getPost('noplaca'),
