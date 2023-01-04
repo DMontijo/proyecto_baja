@@ -119,6 +119,8 @@ use App\Models\VehiculoServicioModel;
 use App\Models\VehiculoVersionModel;
 
 use \Mpdf\Mpdf;
+use RtfHtmlPhp\Document;
+use RtfHtmlPhp\Html\HtmlFormatter;
 
 class DashboardController extends BaseController
 {
@@ -1537,6 +1539,20 @@ class DashboardController extends BaseController
 							}
 						} catch (\Exception $e) {}
 					}
+
+					// $mpdf = new mPDF();
+					// $mpdf->WriteHTML($doc['PLACEHOLDER']);
+					// $pdf = $mpdf->Output('file.rtf', 'S');
+					// var_dump(base64_encode($rtf));
+					// exit;
+					
+					// $rtf = file_get_contents(FCPATH . 'assets/test.rtf'); 
+					// $document = new Document($rtf);
+					// var_dump($document);
+					// $formatter = new HtmlFormatter('UTF-8');
+					// $html = $formatter->Format($document);
+					// var_dump($html);
+					// exit;
 				}
 
 				return json_encode(['status' => 1]);
@@ -2680,14 +2696,14 @@ class DashboardController extends BaseController
 
 	public function updatePersonaFisicaById()
 	{
-		// try {
-			$id = $this->request->getPost('pf_id');
-			$folio = $this->request->getPost('folio');
-			$year = $this->request->getPost('year');
-			$fotoPersona = $this->request->getFile('subirFotoPersona');
-			$fotoP = null;
-			if ($_FILES) {
-				$fotoP = file_get_contents($fotoPersona);
+		try {
+		$id = $this->request->getPost('pf_id');
+		$folio = $this->request->getPost('folio');
+		$year = $this->request->getPost('year');
+		$fotoPersona = $this->request->getFile('subirFotoPersona');
+		$fotoP = null;
+		if ($_FILES) {
+			$fotoP = file_get_contents($fotoPersona);
 			$data = array(
 				'NOMBRE' => $this->request->getPost('nombre_pf'),
 				'PRIMERAPELLIDO' => $this->request->getPost('apellido_paterno_pf'),
@@ -2778,9 +2794,9 @@ class DashboardController extends BaseController
 			} else {
 				return json_encode(['status' => 0]);
 			}
-		// } catch (\Exception $e) {
-		// 	return json_encode(['status' => 0]);
-		// }
+		} catch (\Exception $e) {
+			return json_encode(['status' => 0]);
+		}
 	}
 
 	public function updatePersonaFisicaDomicilioById()
@@ -3009,7 +3025,6 @@ class DashboardController extends BaseController
 					'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo') ? $this->request->getPost('modelo_vehiculo') : NULL,
 					'FOTO' => $fotoV,
 					'DOCUMENTO' => $docV,
-
 				);
 			} catch (\Exception $e) {
 			}

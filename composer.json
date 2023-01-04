@@ -11,7 +11,8 @@
 		"dompdf/dompdf": "^2.0",
 		"endroid/qr-code": "^4.4",
 		"phpoffice/phpspreadsheet": "^1.24",
-		"mpdf/mpdf": "^8.1"
+		"mpdf/mpdf": "^8.1",
+		"henck/rtf-to-html": "^1.2"
 	},
 	"autoload-dev": {
 		"psr-4": {
