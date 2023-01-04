@@ -120,6 +120,9 @@ use App\Models\VehiculoVersionModel;
 use \Mpdf\Mpdf;
 use RtfHtmlPhp\Document;
 use RtfHtmlPhp\Html\HtmlFormatter;
+use PHPRtfLite;
+use PHPRtfLite_Font;
+use PHPRtfLite_ParFormat;
 
 class DashboardController extends BaseController
 {
@@ -244,12 +247,12 @@ class DashboardController extends BaseController
 		$this->_folioConsecutivoModel = new FolioConsecutivoModel();
 
 
-		$this->protocol = 'http://';
-		$this->ip = "10.144.244.223";
-		$this->endpoint = $this->protocol . $this->ip . '/webServiceVD';
-		// $this->protocol = 'https://';
-		// $this->ip = "ws.fgebc.gob.mx";
+		// $this->protocol = 'http://';
+		// $this->ip = "10.144.244.223";
 		// $this->endpoint = $this->protocol . $this->ip . '/webServiceVD';
+		$this->protocol = 'https://';
+		$this->ip = "ws.fgebc.gob.mx";
+		$this->endpoint = $this->protocol . $this->ip . '/webServiceVD';
 	}
 
 	public function index()
@@ -1012,17 +1015,19 @@ class DashboardController extends BaseController
 			$municipio = trim($this->request->getPost('municipio'));
 
 			$area = $this->_empleadosModel->asObject()->where('EMPLEADOID', $empleado)->where('MUNICIPIOID', $municipio)->first();
-			$documents = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE',$expediente.'1')->findAll();
+			$documents = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente . '1')->findAll();
 			$status = 2;
-			
+
 			foreach ($documents as $key => $document) {
-				if($document->TIPODOC == 'CRITERIO DE OPORTUNIDAD'||
-				$document->TIPODOC == 'FACULTAD DE ABSTENERSE DE INVESTIGAR (NO DELITO)'||
-				$document->TIPODOC == 'FACULTAD DE ABSTENERSE DE INVESTIGAR (PRESCRIPCION)'){
+				if (
+					$document->TIPODOC == 'CRITERIO DE OPORTUNIDAD' ||
+					$document->TIPODOC == 'FACULTAD DE ABSTENERSE DE INVESTIGAR (NO DELITO)' ||
+					$document->TIPODOC == 'FACULTAD DE ABSTENERSE DE INVESTIGAR (PRESCRIPCION)'
+				) {
 					$status = 4;
 				}
 			}
-			
+
 			$dataFolio = array(
 				'AGENTEASIGNADOID' => $empleado,
 				'OFICINAASIGNADOID' => $oficina,
@@ -1529,7 +1534,7 @@ class DashboardController extends BaseController
 					$relacionDoc = $this->_relacionFolioDocModel->where('FOLIOID', $doc['FOLIOID'])->where('ANO', $doc['ANO'])->where('EXPEDIENTEID', $doc['NUMEROEXPEDIENTE'])->where('FOLIODOCID', $doc['FOLIODOCID'])->orderBy('FOLIODOCID', 'asc')->first();
 
 					if ($relacionDoc == NULL) {
-						$municipioid = $doc['MUNICIPIOID'] ? $doc['MUNICIPIOID']: NULL;
+						$municipioid = $doc['MUNICIPIOID'] ? $doc['MUNICIPIOID'] : NULL;
 
 						try {
 							$_archivo = $this->_createArchivosExternos($expediente, $folio, $year,  $municipioid, $doc['CLASIFICACIONDOCTOID'], $doc['TIPODOC'], $doc['PDF'], 'pdf');
@@ -1543,15 +1548,56 @@ class DashboardController extends BaseController
 								];
 								$this->_relacionFolioDocModel->insert($datosRelacionFolio);
 							}
-						} catch (\Exception $e) {}
+						} catch (\Exception $e) {
+						}
 					}
+					PHPRtfLite::registerAutoloader();
+					// instancia de documento rtf 
+					$rtf = new PHPRtfLite();
+					$sect = $rtf->addSection();
+					$sinetiqueta = strip_tags($doc['PLACEHOLDER']); //placeolder sin etiquetas html
+					//escribe el texto del rtf
+					$sect->writeText($sinetiqueta, new PHPRtfLite_Font(12, 'Courier New'), new PHPRtfLite_ParFormat(PHPRtfLite_ParFormat::TEXT_ALIGN_JUSTIFY));
+					// save rtf document
+					$rtf->save('assets/' . $doc['NUMEROEXPEDIENTE'] . '_' . $doc['FOLIODOCID'] . '.rtf');
+					$tarjet = FCPATH  . 'assets/' . $doc['NUMEROEXPEDIENTE'] . "_" . $doc['FOLIODOCID'] . ".rtf";
+					// var_dump($rtf);
+					
+					//contenido del rtf guardado
+					$data = file_get_contents($tarjet);
+					//creacion del documento rtf
+					$document = new Document($data);
+					
+					// $espacio = wordwrap($data,1,chr(0),1);
+					//espacio entre cada caracter
+					$espacio = implode(chr(0),str_split($document));
+					
+					// $rtf2 = new PHPRtfLite();
+					// $sect2 = $rtf2->addSection();
+					// $sect2->writeText($espacio);
+					// $rtf2->save('assets/' . $doc['NUMEROEXPEDIENTE'] . '_' . $doc['FOLIODOCID'] . 'prueba.rtf');
+					var_dump($document->rtF);
+					exit;
+				
+
+
+					// $documentos = new DOCUMENTOSCONVERT();
+					// $data = [
+					// 	'DOCUMENTO' => $content,
+					// ];
+					// $documentos->insert($data);
+					// //print correc
+					// echo  "Convertido a base64: " . $content . "</br>";
+					// echo 'create ok,and download <a href="' . base_url() . 'pruebas.rtf">here</a>';
+
+
 
 					// $mpdf = new mPDF();
 					// $mpdf->WriteHTML($doc['PLACEHOLDER']);
 					// $pdf = $mpdf->Output('file.rtf', 'S');
 					// var_dump(base64_encode($rtf));
 					// exit;
-					
+
 					// $rtf = file_get_contents(FCPATH . 'assets/test.rtf'); 
 					// $document = new Document($rtf);
 					// var_dump($document);
@@ -2034,19 +2080,27 @@ class DashboardController extends BaseController
 		$function = '/documento.php?process=crear';
 		$array = [
 			'EXPEDIENTEID',
-			'EXPEDIENTEARCHIVOID',
-			'ARCHIVODESCR',
-			'ARCHIVO',
-			'EXTENSION',
+			'EXPEDIENTEDOCTOID',
+			'DOCTODESCR',
+			'DOCUMENTO',
 			'FECHAACTUALIZACION',
+			'FECHACREACION',
+			'FECHAIMPRESODEFINITIVA',
+			'CLASIFICACIONDOCTOID',
 			'AUTOR',
 			'OFICINAIDAUTOR',
-			'CLASIFICACIONDOCTOID',
+			'STATUSDOCUMENTOID',
+			'PLANTILLAID',
+			'CALIFICACION',
 			'ESTADOACCESO',
+			'EMPLEADORESPONSABLE',
+			'EXPAREAIDRESPONSABLE',
+			'EXPEMPIDRESPONSABLE',
 			'PUBLICADO',
 			'RUTAALMACENAMIENTOID',
 			'STATUSALMACENID',
 			'EXPORTAR',
+		
 		];
 		$endpoint = $this->endpoint . $function;
 		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
@@ -2250,7 +2304,6 @@ class DashboardController extends BaseController
             }";
 		}
 		curl_close($ch);
-
 		// return $result;
 		return json_decode($result);
 	}
@@ -2682,75 +2735,75 @@ class DashboardController extends BaseController
 	public function updatePersonaFisicaById()
 	{
 		try {
-		$id = $this->request->getPost('pf_id');
-		$folio = $this->request->getPost('folio');
-		$year = $this->request->getPost('year');
-		$fotoPersona = $this->request->getFile('subirFotoPersona');
-		$fotoP = null;
-		if ($_FILES) {
-			$fotoP = file_get_contents($fotoPersona);
-			$data = array(
-				'NOMBRE' => $this->request->getPost('nombre_pf'),
-				'PRIMERAPELLIDO' => $this->request->getPost('apellido_paterno_pf'),
-				'SEGUNDOAPELLIDO' => $this->request->getPost('apellido_materno_pf'),
-				'FECHANACIMIENTO' => $this->request->getPost('fecha_nacimiento_pf'),
-				'EDADCANTIDAD' => $this->request->getPost('edad_pf'),
-				'SEXO' => $this->request->getPost('sexo_pf'),
-				'TELEFONO' => $this->request->getPost('telefono_pf'),
-				'TELEFONO2' => $this->request->getPost('telefono_pf_2'),
-				'CODIGOPAISTEL' => $this->request->getPost('codigo_pais_pf'),
-				'CODIGOPAISTEL2' => $this->request->getPost('codigo_pais_pf_2'),
-				'CORREO' => $this->request->getPost('correo_pf'),
-				'TIPOIDENTIFICACIONID' => $this->request->getPost('tipo_identificacion_pf'),
-				'NUMEROIDENTIFICACION' => $this->request->getPost('numero_identidad_pf'),
-				'NACIONALIDADID' => $this->request->getPost('nacionalidad_pf'),
-				'PERSONAIDIOMAID' => $this->request->getPost('idioma_pf'),
-				'ESCOLARIDADID' => $this->request->getPost('escolaridad_pf'),
-				'OCUPACIONID' => $this->request->getPost('ocupacion_pf'),
-				'ESTADOCIVILID' => $this->request->getPost('edoc_pf'),
-				'ESTADOORIGENID' => $this->request->getPost('edoorigen_pf'),
-				'MUNICIPIOORIGENID' => $this->request->getPost('munorigen_pf'),
-				'CALIDADJURIDICAID' => $this->request->getPost('calidad_juridica_pf'),
-				'DESCRIPCION_FISICA' => $this->request->getPost('descripcionFisica_pf'),
-				'APODO' => $this->request->getPost('apodo_pf'),
-				'DENUNCIANTE' => $this->request->getPost('denunciante_pf'),
-				'FACEBOOK' => $this->request->getPost('facebook_pf'),
-				'INSTAGRAM' => $this->request->getPost('instagram_pf'),
-				'TWITTER' => $this->request->getPost('twitter_pf'),
-				'FOTO'=>  $fotoP
-			);
-		}else{
-			$data = array(
-				'NOMBRE' => $this->request->getPost('nombre_pf'),
-				'PRIMERAPELLIDO' => $this->request->getPost('apellido_paterno_pf'),
-				'SEGUNDOAPELLIDO' => $this->request->getPost('apellido_materno_pf'),
-				'FECHANACIMIENTO' => $this->request->getPost('fecha_nacimiento_pf'),
-				'EDADCANTIDAD' => $this->request->getPost('edad_pf'),
-				'SEXO' => $this->request->getPost('sexo_pf'),
-				'TELEFONO' => $this->request->getPost('telefono_pf'),
-				'TELEFONO2' => $this->request->getPost('telefono_pf_2'),
-				'CODIGOPAISTEL' => $this->request->getPost('codigo_pais_pf'),
-				'CODIGOPAISTEL2' => $this->request->getPost('codigo_pais_pf_2'),
-				'CORREO' => $this->request->getPost('correo_pf'),
-				'TIPOIDENTIFICACIONID' => $this->request->getPost('tipo_identificacion_pf'),
-				'NUMEROIDENTIFICACION' => $this->request->getPost('numero_identidad_pf'),
-				'NACIONALIDADID' => $this->request->getPost('nacionalidad_pf'),
-				'PERSONAIDIOMAID' => $this->request->getPost('idioma_pf'),
-				'ESCOLARIDADID' => $this->request->getPost('escolaridad_pf'),
-				'OCUPACIONID' => $this->request->getPost('ocupacion_pf'),
-				'ESTADOCIVILID' => $this->request->getPost('edoc_pf'),
-				'ESTADOORIGENID' => $this->request->getPost('edoorigen_pf'),
-				'MUNICIPIOORIGENID' => $this->request->getPost('munorigen_pf'),
-				'CALIDADJURIDICAID' => $this->request->getPost('calidad_juridica_pf'),
-				'DESCRIPCION_FISICA' => $this->request->getPost('descripcionFisica_pf'),
-				'APODO' => $this->request->getPost('apodo_pf'),
-				'DENUNCIANTE' => $this->request->getPost('denunciante_pf'),
-				'FACEBOOK' => $this->request->getPost('facebook_pf'),
-				'INSTAGRAM' => $this->request->getPost('instagram_pf'),
-				'TWITTER' => $this->request->getPost('twitter_pf'),
-			);
-		}			
-		// var_dump($data);exit;
+			$id = $this->request->getPost('pf_id');
+			$folio = $this->request->getPost('folio');
+			$year = $this->request->getPost('year');
+			$fotoPersona = $this->request->getFile('subirFotoPersona');
+			$fotoP = null;
+			if ($_FILES) {
+				$fotoP = file_get_contents($fotoPersona);
+				$data = array(
+					'NOMBRE' => $this->request->getPost('nombre_pf'),
+					'PRIMERAPELLIDO' => $this->request->getPost('apellido_paterno_pf'),
+					'SEGUNDOAPELLIDO' => $this->request->getPost('apellido_materno_pf'),
+					'FECHANACIMIENTO' => $this->request->getPost('fecha_nacimiento_pf'),
+					'EDADCANTIDAD' => $this->request->getPost('edad_pf'),
+					'SEXO' => $this->request->getPost('sexo_pf'),
+					'TELEFONO' => $this->request->getPost('telefono_pf'),
+					'TELEFONO2' => $this->request->getPost('telefono_pf_2'),
+					'CODIGOPAISTEL' => $this->request->getPost('codigo_pais_pf'),
+					'CODIGOPAISTEL2' => $this->request->getPost('codigo_pais_pf_2'),
+					'CORREO' => $this->request->getPost('correo_pf'),
+					'TIPOIDENTIFICACIONID' => $this->request->getPost('tipo_identificacion_pf'),
+					'NUMEROIDENTIFICACION' => $this->request->getPost('numero_identidad_pf'),
+					'NACIONALIDADID' => $this->request->getPost('nacionalidad_pf'),
+					'PERSONAIDIOMAID' => $this->request->getPost('idioma_pf'),
+					'ESCOLARIDADID' => $this->request->getPost('escolaridad_pf'),
+					'OCUPACIONID' => $this->request->getPost('ocupacion_pf'),
+					'ESTADOCIVILID' => $this->request->getPost('edoc_pf'),
+					'ESTADOORIGENID' => $this->request->getPost('edoorigen_pf'),
+					'MUNICIPIOORIGENID' => $this->request->getPost('munorigen_pf'),
+					'CALIDADJURIDICAID' => $this->request->getPost('calidad_juridica_pf'),
+					'DESCRIPCION_FISICA' => $this->request->getPost('descripcionFisica_pf'),
+					'APODO' => $this->request->getPost('apodo_pf'),
+					'DENUNCIANTE' => $this->request->getPost('denunciante_pf'),
+					'FACEBOOK' => $this->request->getPost('facebook_pf'),
+					'INSTAGRAM' => $this->request->getPost('instagram_pf'),
+					'TWITTER' => $this->request->getPost('twitter_pf'),
+					'FOTO' =>  $fotoP
+				);
+			} else {
+				$data = array(
+					'NOMBRE' => $this->request->getPost('nombre_pf'),
+					'PRIMERAPELLIDO' => $this->request->getPost('apellido_paterno_pf'),
+					'SEGUNDOAPELLIDO' => $this->request->getPost('apellido_materno_pf'),
+					'FECHANACIMIENTO' => $this->request->getPost('fecha_nacimiento_pf'),
+					'EDADCANTIDAD' => $this->request->getPost('edad_pf'),
+					'SEXO' => $this->request->getPost('sexo_pf'),
+					'TELEFONO' => $this->request->getPost('telefono_pf'),
+					'TELEFONO2' => $this->request->getPost('telefono_pf_2'),
+					'CODIGOPAISTEL' => $this->request->getPost('codigo_pais_pf'),
+					'CODIGOPAISTEL2' => $this->request->getPost('codigo_pais_pf_2'),
+					'CORREO' => $this->request->getPost('correo_pf'),
+					'TIPOIDENTIFICACIONID' => $this->request->getPost('tipo_identificacion_pf'),
+					'NUMEROIDENTIFICACION' => $this->request->getPost('numero_identidad_pf'),
+					'NACIONALIDADID' => $this->request->getPost('nacionalidad_pf'),
+					'PERSONAIDIOMAID' => $this->request->getPost('idioma_pf'),
+					'ESCOLARIDADID' => $this->request->getPost('escolaridad_pf'),
+					'OCUPACIONID' => $this->request->getPost('ocupacion_pf'),
+					'ESTADOCIVILID' => $this->request->getPost('edoc_pf'),
+					'ESTADOORIGENID' => $this->request->getPost('edoorigen_pf'),
+					'MUNICIPIOORIGENID' => $this->request->getPost('munorigen_pf'),
+					'CALIDADJURIDICAID' => $this->request->getPost('calidad_juridica_pf'),
+					'DESCRIPCION_FISICA' => $this->request->getPost('descripcionFisica_pf'),
+					'APODO' => $this->request->getPost('apodo_pf'),
+					'DENUNCIANTE' => $this->request->getPost('denunciante_pf'),
+					'FACEBOOK' => $this->request->getPost('facebook_pf'),
+					'INSTAGRAM' => $this->request->getPost('instagram_pf'),
+					'TWITTER' => $this->request->getPost('twitter_pf'),
+				);
+			}
+			// var_dump($data);exit;
 
 			$update = $this->_folioPersonaFisicaModel->set($data)->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $id)->update();
 
