@@ -244,12 +244,12 @@ class DashboardController extends BaseController
 		$this->_folioConsecutivoModel = new FolioConsecutivoModel();
 
 
-		$this->protocol = 'http://';
-		$this->ip = "10.144.244.223";
-		$this->endpoint = $this->protocol . $this->ip . '/webServiceVD';
-		// $this->protocol = 'https://';
-		// $this->ip = "ws.fgebc.gob.mx";
+		// $this->protocol = 'http://';
+		// $this->ip = "10.144.244.223";
 		// $this->endpoint = $this->protocol . $this->ip . '/webServiceVD';
+		$this->protocol = 'https://';
+		$this->ip = "ws.fgebc.gob.mx";
+		$this->endpoint = $this->protocol . $this->ip . '/webServiceVD';
 	}
 
 	public function index()
