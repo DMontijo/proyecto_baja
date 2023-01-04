@@ -62,7 +62,6 @@
 		})
 	</script>
 <?php endif; ?>
-<?php include('modal_form_boletos.php') ?>
 <?php include('modal_form_documentos.php') ?>
 <?php include('modal_form_vehiculo.php') ?>
 <script>
