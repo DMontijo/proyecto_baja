@@ -99,7 +99,6 @@ use App\Models\ConstanciaExtravioModel;
 use App\Models\DelitoModalidadModel;
 use App\Models\EstadoExtranjeroModel;
 use App\Models\FolioArchivoExternoModel;
-use App\Models\FolioDocumentoModel;
 use App\Models\FolioPersonaFisImpDelitoModel;
 use App\Models\FolioRelacionFisFisModel;
 use App\Models\ObjetoClasificacionModel;

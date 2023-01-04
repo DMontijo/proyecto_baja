@@ -100,7 +100,6 @@ use App\Models\EstadoExtranjeroModel;
 use App\Models\FolioArchivoExternoModel;
 use App\Models\FolioConsecutivoModel;
 use App\Models\FolioDocModel;
-use App\Models\FolioDocumentoModel;
 use App\Models\FolioObjetoModel;
 use App\Models\FolioPersonaFisImpDelitoModel;
 use App\Models\FolioRelacionFisFisModel;
@@ -224,7 +223,6 @@ class DashboardController extends BaseController
 		$this->_imputadoDelitoModel = new FolioPersonaFisImpDelitoModel();
 		$this->_relacionIDOModel = new FolioRelacionFisFisModel();
 		$this->_archivoExternoModel = new FolioArchivoExternoModel();
-		$this->_folioDocumentosModel = new FolioDocumentoModel();
 		$this->_objetoClasificacionModel = new ObjetoClasificacionModel();
 		$this->_objetoSubclasificacionModel = new ObjetoSubclasificacionModel();
 		$this->_folioObjetoInvolucradoModel = new FolioObjetoModel();
@@ -1569,27 +1567,6 @@ class DashboardController extends BaseController
 			}
 		} else {
 			return json_encode(['status' => 1]);
-		}
-	}
-
-	public function crearDocumento()
-	{
-		$folio = $this->request->getPost('folio');
-		$year = $this->request->getPost('year');
-		$municipio = $this->request->getPost('municipio');
-
-		$folioRow = $this->_folioModel->where('ANO', $year)->where('FOLIOID', $folio)->first();
-		if ($folioRow) {
-			$foliodocumentos = $this->_folioDocumentosModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
-			//Documentos
-			if (count($foliodocumentos) > 0) {
-				foreach ($foliodocumentos as $folioDoc) {
-					try {
-						$_folioDocumentos = $this->_createFolioDocumentos($folioRow['EXPEDIENTEID'], $folioDoc, $municipio);
-					} catch (\Error $e) {
-					}
-				}
-			}
 		}
 	}
 
