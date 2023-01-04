@@ -91,10 +91,58 @@
 							Por favor, selecciona un tipo de documento.
 						</div>
 					</div>
-					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+
+					<div id="boletos_container" class=" col-12 m-0 p-0 d-none">
+						<div class="row m-0 p-0">
+
+							<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+								<label for="apellido_m" class="form-label fw-bold input-required">No. boleto:</label>
+								<input class="form-control" type="text" id="noboletos" name="noboletos">
+								<div class="invalid-feedback">
+									El número de boleto es obligatorio
+								</div>
+							</div>
+							<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+								<label for="apellido_m" class="form-label fw-bold input-required">No. talon:</label>
+								<input class="form-control" type="text" id="notalon" name="notalon">
+								<div class="invalid-feedback">
+									El número de talon es obligatorio
+								</div>
+							</div>
+							<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+								<label for="apellido_m" class="form-label fw-bold input-required">Nombre del sorteo:</label>
+								<input class="form-control" type="text" id="nombreSorteo" name="nombreSorteo">
+								<div class="invalid-feedback">
+									El nombre del sorteo es obligatorio
+								</div>
+							</div>
+							<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+								<label for="fecha" class="form-label fw-bold input-required">Fecha del sorteo:</label>
+								<input type="date" class="form-control" id="fechaSorteo" name="fechaSorteo">
+								<div class="invalid-feedback">
+									La fecha del sorteo es obligatoria
+								</div>
+							</div>
+							<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+								<label for="apellido_m" class="form-label fw-bold input-required">Permiso de gobernación:</label>
+								<input class="form-control" type="text" id="permisoGobernacion" name="permisoGobernacion">
+								<div class="invalid-feedback">
+									El permiso de gobernación es obligatorio
+								</div>
+							</div>
+							<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+								<label for="apellido_m" class="form-label fw-bold ">Permiso gobernación de colaboradores:</label>
+								<input class="form-control" type="text" id="permisoGColaboradores" name="permisoGColaboradores">
+							</div>
+						</div>
+					</div>
+
+					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3" id="numerodocumento_container">
 						<label for="nodocumento" class="form-label fw-bold">No. documento:</label>
 						<input class="form-control" type="text" id="nodocumento" name="nodocumento">
 					</div>
+
+
 					<div id="pasaporte_container" class="col-12 m-0 p-0 d-none">
 						<div class="row m-0 p-0">
 							<hr>
@@ -124,10 +172,11 @@
 							</div>
 						</div>
 					</div>
+
 					<div class="col-12">
 						<hr>
 					</div>
-					<div class="col-12 m-0 p-0">
+					<div id="documentos_container" class="col-12 m-0 p-0">
 						<div class="row m-0 p-0">
 							<div class="col-12 mb-3">
 								<label for="solicitante" class="form-label fw-bold">¿El documento está a nombre del solicitante?</label>
@@ -154,7 +203,7 @@
 						<button type="submit" class="btn btn-secondary">Solicitar constancia</button>
 					</div>
 					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-						<input class="form-control" id="extravio" name="extravio" value="DOCUMENTOS" hidden>
+						<input class="form-control" id="extravio" name="extravio" hidden>
 					</div>
 				</form>
 			</div>
@@ -162,6 +211,12 @@
 	</div>
 </div>
 <script>
+	let select_tipo_doc = document.querySelector("#tipodoc")
+
+	const option = document.createElement('option');
+	option.value = 'BOLETOS DE SORTEO';
+	option.text = 'BOLETOS DE SORTEO';
+	select_tipo_doc.add(option, null);
 	var solicitante = document.querySelector("input[name=solicitante]");
 
 	solicitante.addEventListener('change', function(e) {
@@ -177,13 +232,57 @@
 	});
 
 	document.querySelector('#tipodoc').addEventListener('change', (e) => {
-		if (e.target.value == 'PASAPORTE MEXICANO') {
+		if (e.target.value == 'BOLETOS DE SORTEO') {
+			document.getElementById('extravio').value = 'BOLETOS DE SORTEO';
+			document.querySelector('#boletos_container').classList.remove('d-none');
+			document.querySelector('#numerodocumento_container').classList.add('d-none');
+			document.querySelector('#documentos_container').classList.add('d-none');
+			document.querySelector('#pasaporte_container').classList.add('d-none');
+
+			document.querySelector('#permisoGobernacion').setAttribute('required', true)
+			document.querySelector('#fechaSorteo').setAttribute('required', true)
+			document.querySelector('#nombreSorteo').setAttribute('required', true)
+			document.querySelector('#notalon').setAttribute('required', true)
+			document.querySelector('#noboletos').setAttribute('required', true)
+
+			// document.querySelector('#duenonamedoc').setAttribute('required', false)
+			// document.querySelector('#duenoapdoc').setAttribute('required', false)
+			document.querySelector('#duenonamedoc').required = false;
+			document.querySelector('#duenoapdoc').required = false;
+
+
+			document.getElementById('duenonamedoc').value = '';
+			document.getElementById('duenoapdoc').value = '';
+			document.getElementById('duenoamdoc').value = '';
+
+			document.getElementById('nodocumento').value = '';
+
+			document.querySelectorAll('input[name="cita"]').forEach((cita) => {
+				cita.removeAttribute('required');
+			});
+			document.querySelector('#municipio_cita-container').classList.add('d-none');
+			document.querySelector('#municipio_cita').removeAttribute('required');
+			document.querySelector('#municipio_cita').value = '';
+		} else if (e.target.value == 'PASAPORTE MEXICANO') {
+			document.getElementById('extravio').value = 'DOCUMENTOS';
+
 			document.querySelector('#pasaporte_container').classList.remove('d-none');
+			document.querySelector('#boletos_container').classList.add('d-none');
+
 			document.querySelectorAll('input[name="cita"]').forEach((cita) => {
 				cita.setAttribute('required', true);
 			});
 			document.querySelector('input[name="cita"]:checked').checked = false;
+			document.querySelector('#permisoGobernacion').setAttribute('required', false)
+			document.querySelector('#fechaSorteo').setAttribute('required', false)
+			document.querySelector('#nombreSorteo').setAttribute('required', false)
+			document.querySelector('#notalon').setAttribute('required', false)
+			document.querySelector('#noboletos').setAttribute('required', false)
 		} else {
+			document.getElementById('extravio').value = 'DOCUMENTOS';
+
+			document.querySelector('#boletos_container').classList.add('d-none');
+
 			document.querySelector('#pasaporte_container').classList.add('d-none');
 			document.querySelectorAll('input[name="cita"]').forEach((cita) => {
 				cita.removeAttribute('required');
@@ -192,6 +291,11 @@
 			document.querySelector('#municipio_cita').removeAttribute('required');
 			document.querySelector('#municipio_cita').value = '';
 			document.querySelector('input[name="cita"]:checked').checked = false;
+			document.querySelector('#permisoGobernacion').setAttribute('required', false)
+			document.querySelector('#fechaSorteo').setAttribute('required', false)
+			document.querySelector('#nombreSorteo').setAttribute('required', false)
+			document.querySelector('#notalon').setAttribute('required', false)
+			document.querySelector('#noboletos').setAttribute('required', false)
 		}
 	});
 
