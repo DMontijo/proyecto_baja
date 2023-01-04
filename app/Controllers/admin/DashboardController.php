@@ -1014,7 +1014,17 @@ class DashboardController extends BaseController
 			$municipio = trim($this->request->getPost('municipio'));
 
 			$area = $this->_empleadosModel->asObject()->where('EMPLEADOID', $empleado)->where('MUNICIPIOID', $municipio)->first();
-
+			$documents = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE',$expediente.'1')->findAll();
+			$status = 2;
+			
+			foreach ($documents as $key => $document) {
+				if($document->TIPODOC == 'CRITERIO DE OPORTUNIDAD'||
+				$document->TIPODOC == 'FACULTAD DE ABSTENERSE DE INVESTIGAR (NO DELITO)'||
+				$document->TIPODOC == 'FACULTAD DE ABSTENERSE DE INVESTIGAR (PRESCRIPCION)'){
+					$status = 4;
+				}
+			}
+			
 			$dataFolio = array(
 				'AGENTEASIGNADOID' => $empleado,
 				'OFICINAASIGNADOID' => $oficina,
@@ -1023,17 +1033,15 @@ class DashboardController extends BaseController
 
 			$update = $this->_folioModel->set($dataFolio)->where('EXPEDIENTEID', $expediente)->update();
 			if ($update) {
-
 				$datosBitacora = [
 					'ACCION' => 'Remitio un expediente.',
 					'NOTAS' => 'Exp: ' . $expediente . ' oficina: ' . $oficina . ' empleado:' . $empleado . ' area:' . $area->AREAID,
 				];
 
 				$bandeja = $this->_folioModel->where('EXPEDIENTEID', $expediente)->first();
-				$updateExpediente = $this->_updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area->AREAID, 2);
+				$updateExpediente = $this->_updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area->AREAID, $status);
 				$_bandeja_creada = $this->_createBandeja($bandeja);
 				$this->_bitacoraActividad($datosBitacora);
-
 				if ($_bandeja_creada->status == 201) {
 					return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_success', 'Remitido correctamente');
 				}
