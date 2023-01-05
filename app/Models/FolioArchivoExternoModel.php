@@ -12,7 +12,7 @@ class FolioArchivoExternoModel extends Model
     protected $allowedFields = [
         'FOLIOID',
 		'ANO',
-		'EXPEDIENTEARCHIVOID',
+		'FOLIOARCHIVOID',
 		'ARCHIVODESCR',
 		'ARCHIVO',
         'EXTENSION',

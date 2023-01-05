@@ -167,6 +167,7 @@ $routes->group('denuncia', function ($routes) {
 		$routes->get('denuncias', 'client/DashboardController::denuncias');
 
 		$routes->post('create', 'client/DashboardController::create');
+
 		$routes->post('descargarPDF', 'client/DashboardController::descargar_pdf');
 	});
 });
@@ -264,6 +265,11 @@ $routes->group('data', function ($routes) {
 	$routes->post('download-xml-documento', 'admin/DocumentosController::download_documento_xml');
 	$routes->post('create-folio-denuncia-anonima', 'admin/DashboardController::crearFolioDenunciaAnonima');
 	$routes->post('create-persona_fisica-by-denuncia-anonima', 'admin/DashboardController::createPersonaFisicaByDenunciaAnonima');
+
+	//Archivos externos
+
+	$routes->post('create_archivos', 'client/DashboardController::crear_archivos_externos');
+
 });
 
 

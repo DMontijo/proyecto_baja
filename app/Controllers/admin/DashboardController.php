@@ -1570,14 +1570,28 @@ class DashboardController extends BaseController
 					
 					// $espacio = wordwrap($data,1,chr(0),1);
 					//espacio entre cada caracter
-					$espacio = implode(chr(0),str_split($document));
-					
-					// $rtf2 = new PHPRtfLite();
-					// $sect2 = $rtf2->addSection();
-					// $sect2->writeText($espacio);
-					// $rtf2->save('assets/' . $doc['NUMEROEXPEDIENTE'] . '_' . $doc['FOLIODOCID'] . 'prueba.rtf');
-					var_dump($document->rtF);
-					exit;
+					$tarjet2 = FCPATH  . 'assets/' . $doc['NUMEROEXPEDIENTE'] . "_" . $doc['FOLIODOCID'] . "prueba2.bin";
+
+					$fh = fopen($tarjet2, 'w') or die("Se produjo un error al crear el archivo");
+
+					$espacio = implode(chr(0),str_split($data));
+					fwrite($fh, $espacio) or die("No se pudo escribir en el archivo");
+					// var_dump($espacio);
+					$data2 = file_get_contents($tarjet2);
+					// var_dump($data2);
+					// fwrite($tarjet2, $espacio);
+					$documentos = array();
+					$documentos['DOCUMENTO']= base64_encode($data2);
+					$documentos['DOCTODESCR'] = "prueba rtf";
+					// // $documentos['EXPEDIENTEDOCTOID'] = 1;
+					$expedienteDocumento = $this->_createFolioDocumentos($expediente, $documentos, $doc['MUNICIPIOID']);
+					// if ($expedienteDocumento->status == 201) {
+					// 	var_dump("hola");
+					// }else{
+					// 	var_dump("no se que paso");
+					// }
+					// var_dump($expedienteDocumento);
+					// exit;
 				
 
 
@@ -2077,7 +2091,7 @@ class DashboardController extends BaseController
 
 	private function _createFolioDocumentos($expedienteId, $documentos, $municipio)
 	{
-		$function = '/documento.php?process=crear';
+		$function = '/testing/documento.php?process=crear';
 		$array = [
 			'EXPEDIENTEID',
 			'EXPEDIENTEDOCTOID',
@@ -2117,6 +2131,9 @@ class DashboardController extends BaseController
 			}
 		}
 		$data['EXPEDIENTEID'] = $expedienteId;
+
+		// var_dump($data);exit;
+
 		$data['userDB'] = $conexion->USER;
 		$data['pwdDB'] = $conexion->PASSWORD;
 		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
@@ -2297,6 +2314,7 @@ class DashboardController extends BaseController
 		);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 		$result = curl_exec($ch);
+
 		if ($result === false) {
 			$result = "{
                 'status' => 401,
@@ -2304,6 +2322,7 @@ class DashboardController extends BaseController
             }";
 		}
 		curl_close($ch);
+		// var_dump($result);
 		// return $result;
 		return json_decode($result);
 	}
