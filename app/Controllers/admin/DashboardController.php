@@ -1604,6 +1604,8 @@ class DashboardController extends BaseController
 							$documentos = array();
 							$documentos['DOCUMENTO'] = base64_encode($espacio);
 							$documentos['DOCTODESCR'] = $doc['TIPODOC'];
+							$documentos['STATUSDOCUMENTOID'] = 4;
+
 							$expedienteDocumento = $this->_createFolioDocumentos($expediente, $documentos, $doc['MUNICIPIOID']);
 							if ($expedienteDocumento->status == 201) {
 								unlink( FCPATH  . 'assets/' . $doc['NUMEROEXPEDIENTE'] . "_" . $doc['FOLIODOCID'] . ".rtf");						
@@ -2125,9 +2127,6 @@ class DashboardController extends BaseController
 			}
 		}
 		$data['EXPEDIENTEID'] = $expedienteId;
-
-		// var_dump($data);exit;
-
 		$data['userDB'] = $conexion->USER;
 		$data['pwdDB'] = $conexion->PASSWORD;
 		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
