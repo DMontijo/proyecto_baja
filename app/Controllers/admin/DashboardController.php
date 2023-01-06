@@ -751,6 +751,17 @@ class DashboardController extends BaseController
 					$data->delitosModalidadFiltro = $this->_delitoModalidadModel->get_delitodescr($numfolio, $year);
 					$data->objetos = $this->_folioObjetoInvolucradoModel->get_descripcion($numfolio, $year);
 					$data->documentos = $this->_folioDocModel->get_by_folio($numfolio, $year);
+					$data->archivosexternos = $this->_archivoExternoModel->asObject()->where('FOLIOID', $numfolio)->where('ANO', $year)->findAll();
+
+					if ($data->archivosexternos) {
+						foreach ($data->archivosexternos as $key => $archivos) {
+							$file_info = new \finfo(FILEINFO_MIME_TYPE);
+							$type = $file_info->buffer($archivos->ARCHIVO);
+
+							$archivos->ARCHIVO = 'data:' . $type . ';base64,' . base64_encode($archivos->ARCHIVO);
+						}
+					}
+
 
 					// $data->personafisica = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->findAll();
 					$data->imputados = $this->_folioPersonaFisicaModel->get_imputados($numfolio, $year);
@@ -791,6 +802,7 @@ class DashboardController extends BaseController
 				$data->fisicaImpDelito = $this->_imputadoDelitoModel->get_by_folio($numfolio, $year);
 				$data->delitosModalidadFiltro = $this->_delitoModalidadModel->get_delitodescr($numfolio, $year);
 				$data->objetos = $this->_folioObjetoInvolucradoModel->get_descripcion($numfolio, $year);
+				$data->archivosexternos = $this->_archivoExternoModel->get_by_folio($numfolio, $year);
 
 				// $data->personafisica = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->findAll();
 				$data->imputados = $this->_folioPersonaFisicaModel->get_imputados($numfolio, $year);
@@ -928,6 +940,26 @@ class DashboardController extends BaseController
 		$data->localidad = $this->_localidadesModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data->persondom['MUNICIPIOID'])->where('LOCALIDADID', $data->persondom['LOCALIDADID'])->first();
 		$data->colonia = $this->_coloniasModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data->persondom['MUNICIPIOID'])->where('COLONIAID', $data->persondom['COLONIAID'])->first();
 
+		return json_encode($data);
+	}
+
+
+	public function refreshArchivosExternos()
+	{
+		$folio = $this->request->getPost('folio');
+		$year = $this->request->getPost('year');
+
+		$data = (object) array();
+
+		$data->archivosexternos = $this->_archivoExternoModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
+		if ($data->archivosexternos) {
+			foreach ($data->archivosexternos as $key => $archivos) {
+				$file_info = new \finfo(FILEINFO_MIME_TYPE);
+				$type = $file_info->buffer($archivos->ARCHIVO);
+
+				$archivos->ARCHIVO = 'data:' . $type . ';base64,' . base64_encode($archivos->ARCHIVO);
+			}
+		}
 		return json_encode($data);
 	}
 
@@ -1550,75 +1582,37 @@ class DashboardController extends BaseController
 							}
 						} catch (\Exception $e) {
 						}
+						try {
+							PHPRtfLite::registerAutoloader();
+							// instancia de documento rtf 
+							$rtf = new PHPRtfLite();
+							$sect = $rtf->addSection();
+							$sinetiqueta = strip_tags($doc['PLACEHOLDER']); //placeolder sin etiquetas html
+							//escribe el texto del rtf
+							$sect->writeText($sinetiqueta, new PHPRtfLite_Font(12, 'Courier New'), new PHPRtfLite_ParFormat(PHPRtfLite_ParFormat::TEXT_ALIGN_JUSTIFY));
+							// save rtf document
+							$rtf->save('assets/' . $doc['NUMEROEXPEDIENTE'] . '_' . $doc['FOLIODOCID'] . '.rtf');
+							$tarjet = FCPATH  . 'assets/' . $doc['NUMEROEXPEDIENTE'] . "_" . $doc['FOLIODOCID'] . ".rtf";		
+							//contenido del rtf guardado
+							$data = file_get_contents($tarjet);
+							//creacion del documento rtf
+							$document = new Document($data);
+							$espacio = implode(chr(0), str_split($data));
+							// fwrite($fh, $espacio) or die("No se pudo escribir en el archivo");
+							// $data2 = file_get_contents($tarjet2);
+							// fwrite($tarjet2, $espacio);
+							$documentos = array();
+							$documentos['DOCUMENTO'] = base64_encode($espacio);
+							$documentos['DOCTODESCR'] = $doc['TIPODOC'];
+							$expedienteDocumento = $this->_createFolioDocumentos($expediente, $documentos, $doc['MUNICIPIOID']);
+							if ($expedienteDocumento->status == 201) {
+								unlink( FCPATH  . 'assets/' . $doc['NUMEROEXPEDIENTE'] . "_" . $doc['FOLIODOCID'] . ".rtf");						
+								// unlink(FCPATH  . 'assets/' . $doc['NUMEROEXPEDIENTE'] . "_" . $doc['FOLIODOCID'] . ".bin");						
+							}
+						} catch (\Throwable $th) {
+						}
 					}
-					PHPRtfLite::registerAutoloader();
-					// instancia de documento rtf 
-					$rtf = new PHPRtfLite();
-					$sect = $rtf->addSection();
-					$sinetiqueta = strip_tags($doc['PLACEHOLDER']); //placeolder sin etiquetas html
-					//escribe el texto del rtf
-					$sect->writeText($sinetiqueta, new PHPRtfLite_Font(12, 'Courier New'), new PHPRtfLite_ParFormat(PHPRtfLite_ParFormat::TEXT_ALIGN_JUSTIFY));
-					// save rtf document
-					$rtf->save('assets/' . $doc['NUMEROEXPEDIENTE'] . '_' . $doc['FOLIODOCID'] . '.rtf');
-					$tarjet = FCPATH  . 'assets/' . $doc['NUMEROEXPEDIENTE'] . "_" . $doc['FOLIODOCID'] . ".rtf";
-					// var_dump($rtf);
-					
-					//contenido del rtf guardado
-					$data = file_get_contents($tarjet);
-					//creacion del documento rtf
-					$document = new Document($data);
-					
-					// $espacio = wordwrap($data,1,chr(0),1);
-					//espacio entre cada caracter
-					$tarjet2 = FCPATH  . 'assets/' . $doc['NUMEROEXPEDIENTE'] . "_" . $doc['FOLIODOCID'] . "prueba2.bin";
 
-					$fh = fopen($tarjet2, 'w') or die("Se produjo un error al crear el archivo");
-
-					$espacio = implode(chr(0),str_split($data));
-					fwrite($fh, $espacio) or die("No se pudo escribir en el archivo");
-					// var_dump($espacio);
-					$data2 = file_get_contents($tarjet2);
-					// var_dump($data2);
-					// fwrite($tarjet2, $espacio);
-					$documentos = array();
-					$documentos['DOCUMENTO']= base64_encode($data2);
-					$documentos['DOCTODESCR'] = "prueba rtf";
-					// // $documentos['EXPEDIENTEDOCTOID'] = 1;
-					$expedienteDocumento = $this->_createFolioDocumentos($expediente, $documentos, $doc['MUNICIPIOID']);
-					// if ($expedienteDocumento->status == 201) {
-					// 	var_dump("hola");
-					// }else{
-					// 	var_dump("no se que paso");
-					// }
-					// var_dump($expedienteDocumento);
-					// exit;
-				
-
-
-					// $documentos = new DOCUMENTOSCONVERT();
-					// $data = [
-					// 	'DOCUMENTO' => $content,
-					// ];
-					// $documentos->insert($data);
-					// //print correc
-					// echo  "Convertido a base64: " . $content . "</br>";
-					// echo 'create ok,and download <a href="' . base_url() . 'pruebas.rtf">here</a>';
-
-
-
-					// $mpdf = new mPDF();
-					// $mpdf->WriteHTML($doc['PLACEHOLDER']);
-					// $pdf = $mpdf->Output('file.rtf', 'S');
-					// var_dump(base64_encode($rtf));
-					// exit;
-
-					// $rtf = file_get_contents(FCPATH . 'assets/test.rtf'); 
-					// $document = new Document($rtf);
-					// var_dump($document);
-					// $formatter = new HtmlFormatter('UTF-8');
-					// $html = $formatter->Format($document);
-					// var_dump($html);
-					// exit;
 				}
 
 				return json_encode(['status' => 1]);
@@ -2114,7 +2108,7 @@ class DashboardController extends BaseController
 			'RUTAALMACENAMIENTOID',
 			'STATUSALMACENID',
 			'EXPORTAR',
-		
+
 		];
 		$endpoint = $this->endpoint . $function;
 		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();

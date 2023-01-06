@@ -5,6 +5,7 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
+
 <?php $session = session(); ?>
 <div class="container-fluid">
 	<div class="row">
@@ -24,10 +25,9 @@
 			<br>
 			<div class="card ">
 				<form id="form_archivos_externos" method="post" enctype="multipart/form-data">
-					<input type="text" class="form-control" id="folio" name="folio">
-					<input type="text" class="form-control" id="year" name="year">
-					<input type="text" class="form-control" id="autor" name="autor">
-					<input type="text" class="form-control" id="archivodescr" name="archivodescr">
+					<input type="text" class="form-control" id="folio" name="folio" hidden>
+					<input type="text" class="form-control" id="year" name="year" hidden>
+					<input type="text" class="form-control" id="autor" name="autor" hidden>
 
 					<div class="row ">
 
@@ -52,8 +52,6 @@
 </div>
 <script>
 	const folio_get = `<?php echo $_GET['folio'] ?>`;
-	const autor_get = `<?php echo $session->NOMBRE . ' ' . $session->APELLIDO_PATERNO . ' ' . $session->APELLIDO_MATERNO ?>`;
-	const archivodescr_get = `<?php echo $_GET['delito'] ?>`;
 
 	let arr = folio_get.split('-')
 	const year = arr[0];
@@ -61,8 +59,6 @@
 
 	document.getElementById('folio').value = folio;
 	document.getElementById('year').value = year;
-	document.getElementById('autor').value = autor_get;
-	document.getElementById('archivodescr').value = archivodescr_get;
 
 	document.querySelector('#documentoArchivo').addEventListener('change', (e) => {
 		let preview = document.querySelector('#viewDocumentoArchivo');
@@ -84,8 +80,6 @@
 		packetData.append("documentoArchivo", $("#documentoArchivo")[0].files[0]);
 		packetData.append("folio", document.getElementById('folio').value);
 		packetData.append("year", document.getElementById('year').value);
-		packetData.append("autor", document.getElementById('autor').value);
-		packetData.append("archivodescr", document.getElementById('archivodescr').value);
 		$.ajax({
 			url: "<?= base_url('/data/create_archivos') ?>",
 			method: "POST",
@@ -95,8 +89,9 @@
                 processData: false,
                 cache: false,
 			success: function(response) {
-				console.log(response);
+				const archivos = response.archivos;
 				if (response.status == 1) {
+					console.log(document.querySelectorAll('#table-archivos'));
 					Swal.fire({
 						icon: 'success',
 						text: 'Archivo agregado correctamente',
@@ -127,6 +122,8 @@
 		});
 
 	}
+
+
 </script>
 
 <?= $this->endSection() ?>

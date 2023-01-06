@@ -269,6 +269,7 @@ $routes->group('data', function ($routes) {
 	//Archivos externos
 
 	$routes->post('create_archivos', 'client/DashboardController::crear_archivos_externos');
+	$routes->post('refresh_archivos', 'admin/DashboardController::refreshArchivosExternos');
 
 });
 

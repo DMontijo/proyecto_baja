@@ -26,4 +26,15 @@ class FolioArchivoExternoModel extends Model
 		'STATUSALMACENID',
 		'EXPORTAR'
     ];
+	public function get_by_folio($folio, $year)
+	{
+		$builder = $this->db->table($this->table);
+		$builder->select(['FOLIOID', 'FOLIOARCHIVOID', 'ANO', 'ARCHIVODESCR', 'FECHAREGISTRO','EXTENSION','ARCHIVO']);
+		$builder->where('FOLIOID', $folio);
+		$builder->where('ANO', $year);
+		$builder->orderBy('FECHAREGISTRO ASC');
+		$query = $builder->get();
+		return $query->getResult('array');
+	}
+	
 }

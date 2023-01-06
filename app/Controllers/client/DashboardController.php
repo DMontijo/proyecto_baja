@@ -178,20 +178,33 @@ class DashboardController extends BaseController
 		$mime_type = finfo_buffer($f, $doc, FILEINFO_MIME_TYPE);
 		$extension = explode('/', $mime_type)[1];
 
+		$archivo = $_FILES['documentoArchivo']['name'];
+		$nombre = explode('.', $archivo)[0];
+
+
 		$data = (object) array();
 		$folio=$this->request->getPost('folio');
 		$year = $this->request->getPost('year');
 		$data = [
 			'FOLIOID' => $this->request->getPost('folio'),
 			'ANO' => $this->request->getPost('year'),
-			'ARCHIVODESCR' => $this->request->getPost('archivodescr'),
+			'ARCHIVODESCR' => $nombre,
 			'ARCHIVO' => $doc,
 			'EXTENSION' => $extension,
-			'AUTOR' => $this->request->getPost('autor'),
 		];
 		$archivoExterno = $this->_folioExpArchivo($data,$folio,$year);
 		if ($archivoExterno) {
-			return json_encode(['status' => 1]);
+			$datados = (object) array();
+
+			$datados->archivosexternos = $this->_archivoExternoModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
+			if ($datados->archivosexternos) {
+				foreach ($datados->archivosexternos as $key => $archivos) {
+						$file_info = new \finfo(FILEINFO_MIME_TYPE);
+						$type = $file_info->buffer($archivos->ARCHIVO);
+						$archivos->ARCHIVO = 'data:' . $type . ';base64,' . base64_encode($archivos->ARCHIVO);
+			}
+		}
+			return json_encode(['status' => 1, $datados]);
 		}else{
 			return json_encode(['status' => 0]);
 		}
