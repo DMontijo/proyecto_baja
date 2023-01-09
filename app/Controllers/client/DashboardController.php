@@ -188,7 +188,7 @@ class DashboardController extends BaseController
 		$data = [
 			'FOLIOID' => $this->request->getPost('folio'),
 			'ANO' => $this->request->getPost('year'),
-			'ARCHIVODESCR' => $nombre,
+			'ARCHIVODESCR' => strtoupper($nombre),
 			'ARCHIVO' => $doc,
 			'EXTENSION' => $extension,
 		];

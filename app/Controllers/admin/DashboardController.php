@@ -107,6 +107,7 @@ use App\Models\ObjetoClasificacionModel;
 use App\Models\ObjetoSubclasificacionModel;
 use App\Models\PermisosModel;
 use App\Models\PlantillasModel;
+use App\Models\RelacionFolioDocExpDocModel;
 use App\Models\RelacionFolioDocModel;
 use App\Models\RolesPermisosModel;
 use App\Models\TipoExpedienteModel;
@@ -245,6 +246,7 @@ class DashboardController extends BaseController
 		$this->_permisosModel = new PermisosModel();
 
 		$this->_folioConsecutivoModel = new FolioConsecutivoModel();
+		$this->_relacionFolioDocExpDoc = new RelacionFolioDocExpDocModel();
 
 
 		// $this->protocol = 'http://';
@@ -1582,6 +1584,11 @@ class DashboardController extends BaseController
 							}
 						} catch (\Exception $e) {
 						}
+					}
+					$relacionDocExpDoc = $this->_relacionFolioDocExpDoc->where('FOLIOID', $doc['FOLIOID'])->where('ANO', $doc['ANO'])->where('EXPEDIENTEID', $doc['NUMEROEXPEDIENTE'])->where('FOLIODOCID', $doc['FOLIODOCID'])->orderBy('FOLIODOCID', 'asc')->first();
+
+					if ($relacionDocExpDoc == null) {
+
 						try {
 							PHPRtfLite::registerAutoloader();
 							// instancia de documento rtf 
@@ -1592,7 +1599,7 @@ class DashboardController extends BaseController
 							$sect->writeText($sinetiqueta, new PHPRtfLite_Font(12, 'Courier New'), new PHPRtfLite_ParFormat(PHPRtfLite_ParFormat::TEXT_ALIGN_JUSTIFY));
 							// save rtf document
 							$rtf->save('assets/' . $doc['NUMEROEXPEDIENTE'] . '_' . $doc['FOLIODOCID'] . '.rtf');
-							$tarjet = FCPATH  . 'assets/' . $doc['NUMEROEXPEDIENTE'] . "_" . $doc['FOLIODOCID'] . ".rtf";		
+							$tarjet = FCPATH  . 'assets/' . $doc['NUMEROEXPEDIENTE'] . "_" . $doc['FOLIODOCID'] . ".rtf";
 							//contenido del rtf guardado
 							$data = file_get_contents($tarjet);
 							//creacion del documento rtf
@@ -1601,19 +1608,33 @@ class DashboardController extends BaseController
 							// fwrite($fh, $espacio) or die("No se pudo escribir en el archivo");
 							// $data2 = file_get_contents($tarjet2);
 							// fwrite($tarjet2, $espacio);
+
 							$documentos = array();
 							$documentos['DOCUMENTO'] = base64_encode($espacio);
 							$documentos['DOCTODESCR'] = $doc['TIPODOC'];
 							$documentos['STATUSDOCUMENTOID'] = 4;
 
 							$expedienteDocumento = $this->_createFolioDocumentos($expediente, $documentos, $doc['MUNICIPIOID']);
+
 							if ($expedienteDocumento->status == 201) {
-								unlink( FCPATH  . 'assets/' . $doc['NUMEROEXPEDIENTE'] . "_" . $doc['FOLIODOCID'] . ".rtf");						
-								// unlink(FCPATH  . 'assets/' . $doc['NUMEROEXPEDIENTE'] . "_" . $doc['FOLIODOCID'] . ".bin");						
+								unlink(FCPATH  . 'assets/' . $doc['NUMEROEXPEDIENTE'] . "_" . $doc['FOLIODOCID'] . ".rtf");
+								// unlink(FCPATH  . 'assets/' . $doc['NUMEROEXPEDIENTE'] . "_" . $doc['FOLIODOCID'] . ".bin");	
+								$datosRelacionFolioExpDoc = [
+									'FOLIODOCID' => $doc['FOLIODOCID'],
+									'FOLIOID' =>  $doc['FOLIOID'],
+									'ANO' => $doc['ANO'],
+									'EXPEDIENTEID' => $expedienteDocumento->EXPEDIENTEID,
+									'EXPEDIENTEDOCID' => $expedienteDocumento->DOCUMENTOID,
+								];
+
+								$this->_relacionFolioDocExpDoc->insert($datosRelacionFolioExpDoc);
 							}
 						} catch (\Throwable $th) {
 						}
 					}
+					// if ($doc['TIPODOC']== 'SOLICITUD DE PERITAJE (CERTIFICADO DE HOSPITAL)' || $doc['TIPODOC']== 'SOLICITUD DE PERITAJE (CERTIFICADO DE INTEGRIDAD FÍSICA)' || $doc['TIPODOC']== 'SOLICITUD DE PERITAJE (CERTIFICADO GINECOLOGICO)'||$doc['TIPODOC']== 'SOLICITUD DE PERITAJE (CERTIFICADO PROCTOLOGICO)' ) {
+					// 	$_solicitudPericial == $this->_createSolicitudesPericiales($expediente, $documento, $doc['MUNICIPIOID']);
+					// }
 
 				}
 
@@ -2135,6 +2156,52 @@ class DashboardController extends BaseController
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
 
+
+	private function _createSolicitudesPericiales($expedienteId, $solicitud)
+	{
+		$function = 'testing/solicitudPericial.php?process=crear';
+		$array = [
+			'SOLICITUDID',
+			'ESTADOID',
+			'MUNICIPIOID',
+			'ANO',
+			'CORRELATIVO',
+			'FECHAREGISTRO',
+			'EMPLEADOIDREGISTRO',
+			'OFICINAIDRESPONSABLE',
+			'ESTADOSOLICITUDPERICIALID',
+			'CORRELATIVOSERVICIO',
+			'OFICINAIDREGISTRO',
+			'AREAIDREGISTRO',
+			'FECHAASIGNACIONCOORDINACION',
+			'TIPOREGISTRO',
+			'TITULO',
+			'DESCRIPCION',
+			'NOMBREENTREGA',
+			'OBSERVACIONESENTREGA'
+		];
+		$endpoint = $this->endpoint . $function;
+		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $solicitud['MUNICIPIOID'])->where('TYPE', ENVIRONMENT)->first();
+		$data = $solicitud;
+		foreach ($data as $clave => $valor) {
+			if (empty($valor)) {
+				unset($data[$clave]);
+			}
+		}
+
+		foreach ($data as $clave => $valor) {
+			if (!in_array($clave, $array)) {
+				unset($data[$clave]);
+			}
+		}
+		$data['EXPEDIENTEID'] = $expedienteId;
+		$data['userDB'] = $conexion->USER;
+		$data['pwdDB'] = $conexion->PASSWORD;
+		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
+		$data['schema'] = $conexion->SCHEMA;
+
+		return $this->_curlPostDataEncrypt($endpoint, $data);
+	}
 	private function _createFisImpDelito($expedienteId, $fisimpdelito, $imputado, $municipio)
 	{
 		$function = '/imputadoDelito.php?process=crear';
@@ -2625,6 +2692,24 @@ class DashboardController extends BaseController
 				$this->_bitacoraActividad($datosBitacora);
 				$bandeja = $this->_folioModel->where('EXPEDIENTEID', $expediente)->first();
 				$_bandeja_creada = $this->_createBandeja($bandeja);
+				$folioDoc = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOCID', 'asc')->findAll();
+				if ($folioDoc) {
+					foreach ($folioDoc as $key => $doc) {
+						if ($doc['TIPODOC'] == 'SOLICITUD DE PERITAJE (CERTIFICADO DE HOSPITAL)' || $doc['TIPODOC'] == 'SOLICITUD DE PERITAJE (CERTIFICADO DE INTEGRIDAD FÍSICA)' || $doc['TIPODOC'] == 'SOLICITUD DE PERITAJE (CERTIFICADO GINECOLOGICO)' || $doc['TIPODOC'] == 'SOLICITUD DE PERITAJE (CERTIFICADO PROCTOLOGICO)') {
+							$solicitudp = array();
+							$solicitudp['ESTADOID'] = 2;
+							$solicitudp['MUNICIPIOID'] = $bandeja['MUNICIPIOASIGNADOID'];
+							$solicitudp['EMPLEADOIDREGISTRO'] = $bandeja['AGENTEASIGNADOID'];
+							$solicitudp['OFICINAIDRESPONSABLE'] = $bandeja['OFICINAASIGNADOID'];
+							$solicitudp['TITULO'] =$doc['TIPODOC'];
+
+
+
+							$_solicitudPericial == $this->_createSolicitudesPericiales($expediente, $solicitudp);
+						}
+					}
+				}
+
 				if ($_bandeja_creada->status == 201) {
 					return json_encode(['status' => 1]);
 				}
