@@ -1051,30 +1051,7 @@ class DashboardController extends BaseController
 			$area = $this->_empleadosModel->asObject()->where('EMPLEADOID', $empleado)->where('MUNICIPIOID', $municipio)->first();
 			$documents = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente . '1')->findAll();
 			$status = 2;
-			$folioDoc = $this->_folioDocModel->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOCID', 'asc')->findAll();
-			if ($folioDoc) {
-				foreach ($folioDoc as $key => $doc) {
-					if ($doc['TIPODOC'] == 'SOLICITUD DE PERITAJE (CERTIFICADO DE HOSPITAL)' || $doc['TIPODOC'] == 'SOLICITUD DE PERITAJE (CERTIFICADO DE INTEGRIDAD FÍSICA)' || $doc['TIPODOC'] == 'SOLICITUD DE PERITAJE (CERTIFICADO GINECOLOGICO)' || $doc['TIPODOC'] == 'SOLICITUD DE PERITAJE (CERTIFICADO PROCTOLOGICO)') {
-						$solicitudp = array();
-						$solicitudp['ESTADOID'] = 2;
-						// $solicitudp['MUNICIPIOID'] = $bandeja['MUNICIPIOASIGNADOID'];
-						// $solicitudp['EMPLEADOIDREGISTRO'] = $bandeja['AGENTEASIGNADOID'];
-						// $solicitudp['OFICINAIDREGISTRO'] = $bandeja['OFICINAASIGNADOID'];
-						// $solicitudp['AREAIDREGISTRO'] = $bandeja['AREAASIGNADOID'];
-						// $solicitudp['ANO'] = $bandeja['ANO'];
-						// $solicitudp['TITULO'] = $doc['TIPODOC'];
 
-						$solicitudp['MUNICIPIOID'] = $municipio;
-						$solicitudp['EMPLEADOIDREGISTRO'] = $empleado;
-						$solicitudp['OFICINAIDREGISTRO'] = $oficina;
-						$solicitudp['AREAIDREGISTRO'] = $area;
-						$solicitudp['ANO'] = '2023';
-						$solicitudp['TITULO'] = $doc['TIPODOC'];
-						$_solicitudPericial = $this->_createSolicitudesPericiales($expediente, $solicitudp);
-						var_dump($_solicitudPericial);exit;
-					}
-				}
-			}
 			foreach ($documents as $key => $document) {
 				if (
 					$document->TIPODOC == 'CRITERIO DE OPORTUNIDAD' ||
@@ -1102,7 +1079,34 @@ class DashboardController extends BaseController
 				$updateExpediente = $this->_updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area->AREAID, $status);
 				$_bandeja_creada = $this->_createBandeja($bandeja);
 				$this->_bitacoraActividad($datosBitacora);
-				
+				$folioDoc = $this->_folioDocModel->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOCID', 'asc')->findAll();
+				if ($folioDoc) {
+					foreach ($folioDoc as $key => $doc) {
+						if ($doc['TIPODOC'] == 'SOLICITUD DE PERITAJE (CERTIFICADO DE HOSPITAL)' || $doc['TIPODOC'] == 'SOLICITUD DE PERITAJE (CERTIFICADO DE INTEGRIDAD FÍSICA)' || $doc['TIPODOC'] == 'SOLICITUD DE PERITAJE (CERTIFICADO GINECOLOGICO)' || $doc['TIPODOC'] == 'SOLICITUD DE PERITAJE (CERTIFICADO PROCTOLOGICO)') {
+							$solicitudp = array();
+							$solicitudp['ESTADOID'] = 2;
+							$solicitudp['MUNICIPIOID'] = $municipio;
+							$solicitudp['EMPLEADOIDREGISTRO'] = $empleado;
+							$solicitudp['OFICINAIDREGISTRO'] = $oficina;
+							$solicitudp['AREAIDREGISTRO'] = $area;
+							$solicitudp['ANO'] = $doc['ANO'];
+							$solicitudp['TITULO'] = $doc['TIPODOC'];
+							$_solicitudPericial = $this->_createSolicitudesPericiales($solicitudp);
+							if ($_solicitudPericial->status == 201) {
+								$relacionDocto = $this->_relacionFolioDocExpDoc->where('EXPEDIENTEID', $expediente)->orderBy('FOLIODOCID', 'asc')->findAll();
+								if($relacionDocto){
+									foreach ($relacionDocto as $key => $relacionDocumento) {
+
+										$_solicitudDocto = $this->_createSolicitudDocto($expediente, $_solicitudPericial->SOLICITUDID, $relacionDocumento['EXPEDIENTEDOCTOID']);
+										var_dump($_solicitudDocto);exit;
+
+									}
+								}
+							}
+						}
+					}
+				}
+
 				if ($_bandeja_creada->status == 201) {
 					return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_success', 'Remitido correctamente');
 				}
@@ -1656,10 +1660,6 @@ class DashboardController extends BaseController
 						} catch (\Throwable $th) {
 						}
 					}
-					// if ($doc['TIPODOC']== 'SOLICITUD DE PERITAJE (CERTIFICADO DE HOSPITAL)' || $doc['TIPODOC']== 'SOLICITUD DE PERITAJE (CERTIFICADO DE INTEGRIDAD FÍSICA)' || $doc['TIPODOC']== 'SOLICITUD DE PERITAJE (CERTIFICADO GINECOLOGICO)'||$doc['TIPODOC']== 'SOLICITUD DE PERITAJE (CERTIFICADO PROCTOLOGICO)' ) {
-					// 	$_solicitudPericial == $this->_createSolicitudesPericiales($expediente, $documento, $doc['MUNICIPIOID']);
-					// }
-
 				}
 
 				return json_encode(['status' => 1]);
@@ -2181,7 +2181,7 @@ class DashboardController extends BaseController
 	}
 
 
-	private function _createSolicitudesPericiales($expedienteId, $solicitud)
+	private function _createSolicitudesPericiales($solicitud)
 	{
 		$function = '/testing/solicitudPericial.php?process=crear';
 		$array = [
@@ -2218,7 +2218,62 @@ class DashboardController extends BaseController
 				unset($data[$clave]);
 			}
 		}
+		$data['userDB'] = $conexion->USER;
+		$data['pwdDB'] = $conexion->PASSWORD;
+		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
+		$data['schema'] = $conexion->SCHEMA;
+		return $this->_curlPostDataEncrypt($endpoint, $data);
+	}
+
+	private function _createSolicitudExpediente($expedienteId, $solicitudExp)
+	{
+		$function = '/testing/solicitudPericial.php?process=solicitudExpediente';
+		$array = [
+			'SOLICITUDID',
+			'EXPEDIENTEID',
+
+		];
+		$endpoint = $this->endpoint . $function;
+		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $solicitud['MUNICIPIOID'])->where('TYPE', ENVIRONMENT)->first();
+		$data = array();
+
 		$data['EXPEDIENTEID'] = $expedienteId;
+		$data['SOLICITUDID'] = $solicitudExp;
+		$data['userDB'] = $conexion->USER;
+		$data['pwdDB'] = $conexion->PASSWORD;
+		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
+		$data['schema'] = $conexion->SCHEMA;
+		return $this->_curlPostDataEncrypt($endpoint, $data);
+	}
+
+	private function _createSolicitudDocto($expedienteId, $solicitudid,$solicitudDocto)
+	{
+		var_dump($expedienteId);exit;
+		$function = '/testing/solicitudPericial.php?process=solicitudDocto';
+		$array = [
+			'SOLICITUDID',
+			'EXPEDIENTEID',
+			'DOCTOID',
+			'MAPSBC',
+
+		];
+		$endpoint = $this->endpoint . $function;
+		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $solicitudDocto['MUNICIPIOID'])->where('TYPE', ENVIRONMENT)->first();
+		$data = array();
+		// foreach ($data as $clave => $valor) {
+		// 	if (empty($valor)) {
+		// 		unset($data[$clave]);
+		// 	}
+		// }
+
+		// foreach ($data as $clave => $valor) {
+		// 	if (!in_array($clave, $array)) {
+		// 		unset($data[$clave]);
+		// 	}
+		// }
+		$data['EXPEDIENTEID'] = $expedienteId;
+		$data['SOLICITUDID'] = $solicitudid;
+		$data['DOCTOID'] = $solicitudDocto;
 		$data['userDB'] = $conexion->USER;
 		$data['pwdDB'] = $conexion->PASSWORD;
 		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
@@ -2405,9 +2460,9 @@ class DashboardController extends BaseController
             }";
 		}
 		curl_close($ch);
-		var_dump($result);exit;
+		// var_dump($result);exit;
 		// return $result;
-		// return json_decode($result);
+		return json_decode($result);
 	}
 
 	public function getVideoLink()
