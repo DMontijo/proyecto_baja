@@ -8,20 +8,11 @@ class USUARIOS extends Migration
 {
 	public function up()
 	{
-
 		$this->forge->addField([
 			'ID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
 				'auto_increment' => TRUE,
-			],
-			'ROLID' => [
-				'type' => 'INT',
-				'unsigned' => TRUE,
-			],
-			'ZONAID' => [
-				'type' => 'INT',
-				'unsigned' => TRUE,
 			],
 			'NOMBRE' => [
 				'type' => 'VARCHAR',
@@ -49,6 +40,18 @@ class USUARIOS extends Migration
 				'type' => 'VARCHAR',
 				'constraint' => '255',
 			],
+			'ROLID' => [
+				'type' => 'INT',
+			],
+			'ZONAID' => [
+				'type' => 'INT',
+			],
+			'MUNICIPIOID' => [
+				'type' => 'INT',
+			],
+			'OFICINAID' => [
+				'type' => 'INT',
+			],
 			'USUARIOVIDEO' => [
 				'type' => 'INT',
 			],
@@ -56,22 +59,12 @@ class USUARIOS extends Migration
 				'type' => 'VARCHAR',
 				'constraint' => '255',
 			],
-			'HUELLA_DIGITAL' => [
-				'type' => 'VARCHAR',
-				'constraint' => '255',
-				'null' => TRUE,
-			],
 			'CERTIFICADOFIRMA' => [
 				'type' => 'LONGBLOB',
 				'null' => TRUE,
 			],
 			'KEYFIRMA' => [
 				'type' => 'LONGBLOB',
-				'null' => TRUE,
-			],
-			'FRASEFIRMA' => [
-				'type' => 'VARCHAR',
-				'constraint' => '200',
 				'null' => TRUE,
 			],
 		]);

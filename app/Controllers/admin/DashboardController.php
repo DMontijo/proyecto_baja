@@ -288,9 +288,11 @@ class DashboardController extends BaseController
 			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
 		}
 		$data->usuario = $this->_usuariosModel->asObject()
-			->select('USUARIOS.ID,USUARIOS.NOMBRE, USUARIOS.APELLIDO_PATERNO, USUARIOS.APELLIDO_MATERNO, USUARIOS.SEXO, USUARIOS.CORREO, USUARIOS.PASSWORD, USUARIOS.USUARIOVIDEO, USUARIOS.TOKENVIDEO, USUARIOS.HUELLA_DIGITAL, USUARIOS.CERTIFICADOFIRMA, USUARIOS.KEYFIRMA, USUARIOS.FRASEFIRMA, ZONAS_USUARIOS.NOMBRE_ZONA, ROLES.NOMBRE_ROL')
-			->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')
-			->join('ZONAS_USUARIOS', 'ZONAS_USUARIOS.ID_ZONA = USUARIOS.ZONAID')
+			->select('USUARIOS.*, ROLES.NOMBRE_ROL, ZONAS_USUARIOS.NOMBRE_ZONA, MUNICIPIO.MUNICIPIODESCR,OFICINA.OFICINADESCR')
+			->join('ROLES', 'ROLES.ID = USUARIOS.ROLID','LEFT')
+			->join('ZONAS_USUARIOS', 'ZONAS_USUARIOS.ID_ZONA = USUARIOS.ZONAID','LEFT')
+			->join('MUNICIPIO', 'MUNICIPIO.MUNICIPIOID = USUARIOS.MUNICIPIOID AND MUNICIPIO.ESTADOID = 2','LEFT')
+			->join('OFICINA', 'OFICINA.OFICINAID = USUARIOS.OFICINAID AND OFICINA.MUNICIPIOID = USUARIOS.MUNICIPIOID AND OFICINA.ESTADOID = 2','LEFT')
 			->where('ROLID !=', 1)
 			->findAll();
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
@@ -357,6 +359,7 @@ class DashboardController extends BaseController
 		$data = (object) array();
 		$data->zonas = $this->_zonasUsuariosModel->asObject()->where('NOMBRE_ZONA !=', 'SUPERUSUARIO')->findAll();
 		$data->roles = $this->_rolesUsuariosModel->asObject()->where('NOMBRE_ROL !=', 'SUPERUSUARIO')->findAll();
+		$data->municipios = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 		$this->_loadView('Nuevo usuario', '', '', $data, 'users/new_user');
@@ -603,6 +606,8 @@ class DashboardController extends BaseController
 			'CERTIFICADOFIRMA' => null,
 			'KEYFIRMA' => null,
 			'FRASEFIRMA' => null,
+			'MUNICIPIOID'=> $this->request->getPost('municipio'),
+			'OFICINAID'=> $this->request->getPost('oficina'),
 		];
 
 		$datosBitacora = [
