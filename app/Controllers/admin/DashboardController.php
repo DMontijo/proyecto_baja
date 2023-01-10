@@ -454,18 +454,14 @@ class DashboardController extends BaseController
 			return redirect()->back()->with('message_error', 'No se envío el parámeto id.');
 		}
 		$data = (object) array();
-		$data->zonas = $this->_zonasUsuariosModel
-			->asObject()
-			->where('NOMBRE_ZONA !=', 'SUPERUSUARIO')
-			->findAll();
-		$data->roles = $this->_rolesUsuariosModel
-			->asObject()
-			->where('NOMBRE_ROL !=', 'SUPERUSUARIO')
-			->findAll();
+		$data->zonas = $this->_zonasUsuariosModel->asObject()->where('NOMBRE_ZONA !=', 'SUPERUSUARIO')->findAll();
+		$data->roles = $this->_rolesUsuariosModel->asObject()->where('NOMBRE_ROL !=', 'SUPERUSUARIO')->findAll();
+		$data->municipios = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
 		$data->usuario = $this->_usuariosModel->asObject()->where('ID', $id)->first();
 		if (!$data->usuario) {
 			return redirect()->back()->with('message_error', 'No existe el usuario a editar.');
 		}
+		$data->oficinas = $this->_oficinasModel->asObject()->where('MUNICIPIOID',$data->usuario->MUNICIPIOID)->orderBy('OFICINADESCR', 'asc')->findAll();
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 		$this->_loadView('Editar usuario', '', '', $data, 'users/edit_user');
@@ -602,10 +598,6 @@ class DashboardController extends BaseController
 			'SEXO' => $this->request->getPost('sexo_usuario'),
 			'ROLID' => $this->request->getPost('rol_usuario'),
 			'ZONAID' => $this->request->getPost('zona_usuario'),
-			'HUELLA_DIGITAL' => null,
-			'CERTIFICADOFIRMA' => null,
-			'KEYFIRMA' => null,
-			'FRASEFIRMA' => null,
 			'MUNICIPIOID'=> $this->request->getPost('municipio'),
 			'OFICINAID'=> $this->request->getPost('oficina'),
 		];
@@ -616,11 +608,21 @@ class DashboardController extends BaseController
 		];
 
 		if ($this->validate(['correo_usuario' => 'required|valid_email|is_unique[USUARIOS.CORREO]'])) {
-			$usuario = ($this->_getUnusedUsersVideo())[0];
-			$videoUser = $this->_updateUserVideo($usuario->ID, 'LIC. ' . $data['NOMBRE'], $data['APELLIDO_PATERNO'] . ' ' . $data['APELLIDO_MATERNO'], $data['CORREO'], $data['SEXO'], 'agente');
+			try {
+				$usuario = ($this->_getUnusedUsersVideo())[0];
+				$videoUser = $this->_updateUserVideo($usuario->ID, 'LIC. ' . $data['NOMBRE'], $data['APELLIDO_PATERNO'] . ' ' . $data['APELLIDO_MATERNO'], $data['CORREO'], $data['SEXO'], 'agente');
+			} catch (\Throwable $th) {
+				return redirect()->back()->with('message_error', 'Usuario no creado, hubo un error.');
+			}
+			
 			$data['USUARIOVIDEO'] = $videoUser->ID;
 			$data['TOKENVIDEO'] = $videoUser->Token;
-			$this->_usuariosModel->insert($data);
+			try{
+				$usuario = $this->_usuariosModel->insert($data);
+			}catch (\Throwable $th) {
+				return redirect()->back()->with('message_error', 'Usuario no creado, ya existe el correo ingresado.');
+			}
+
 			$this->_bitacoraActividad($datosBitacora);
 			$this->_sendEmailPassword($data['CORREO'], $this->request->getPost('password'));
 			return redirect()->to(base_url('/admin/dashboard/usuarios'))->with('message_success', 'Usuario registrado correctamente.');
@@ -641,13 +643,20 @@ class DashboardController extends BaseController
 			'SEXO' => $this->request->getPost('sexo_usuario'),
 			'ROLID' => $this->request->getPost('rol_usuario'),
 			'ZONAID' => $this->request->getPost('zona_usuario'),
+			'MUNICIPIOID'=> $this->request->getPost('municipio'),
+			'OFICINAID'=> $this->request->getPost('oficina'),
 		];
 
 		if ($usuario) {
-			$videoUser = $this->_updateUserVideo($usuario->USUARIOVIDEO, 'LIC. ' . $data['NOMBRE'], $data['APELLIDO_PATERNO'] . ' ' . $data['APELLIDO_MATERNO'], $data['CORREO'], $data['SEXO'], 'agente');
-			$data['USUARIOVIDEO'] = $videoUser->ID;
-			$data['TOKENVIDEO'] = $videoUser->Token;
-			$this->_usuariosModel->set($data)->where('ID', $id)->update();
+			try {
+				$videoUser = $this->_updateUserVideo($usuario->USUARIOVIDEO, 'LIC. ' . $data['NOMBRE'], $data['APELLIDO_PATERNO'] . ' ' . $data['APELLIDO_MATERNO'], $data['CORREO'], $data['SEXO'], 'agente');
+				$data['USUARIOVIDEO'] = $videoUser->ID;
+				$data['TOKENVIDEO'] = $videoUser->Token;
+				$this->_usuariosModel->set($data)->where('ID', $id)->update();
+			} catch (\Throwable $th) {
+				return redirect()->back()->with('message_error', 'Usuario no actualizado.');
+			}
+			
 			return redirect()->to(base_url('/admin/dashboard/usuarios'))->with('message_success', 'Usuario actualizado correctamente.');
 		} else {
 			return redirect()->back()->with('message_error', 'Usuario no actualizado.');
@@ -1256,7 +1265,7 @@ class DashboardController extends BaseController
 			$data = $this->_oficinasModel->asObject()->where('MUNICIPIOID', $municipio)->orderBy('OFICINADESCR', 'asc')->findAll();
 			return json_encode($data);
 		} else {
-			$data = $this->_oficinasModel->asObject()->findAll();
+			$data = $this->_oficinasModel->asObject()->orderBy('OFICINADESCR', 'asc')->findAll();
 			return json_encode($data);
 		}
 	}
