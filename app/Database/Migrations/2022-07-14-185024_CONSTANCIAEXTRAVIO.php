@@ -112,6 +112,11 @@ class CONSTANCIAEXTRAVIO extends Migration
 				'constraint' => '100',
 				'null' => TRUE,
 			],
+			'DUENOFECHANACIMIENTODOC' => [
+				'type' => 'VARCHAR',
+				'constraint' => '100',
+				'null' => TRUE,
+			],
 			'SERIEVEHICULO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',
