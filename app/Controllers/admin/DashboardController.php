@@ -2131,7 +2131,7 @@ class DashboardController extends BaseController
 
 	private function _createFolioDocumentos($expedienteId, $documentos, $municipio)
 	{
-		$function = '/testing/documento.php?process=crear';
+		$function = '/documento.php?process=crear';
 		$array = [
 			'EXPEDIENTEID',
 			'EXPEDIENTEDOCTOID',
@@ -2182,7 +2182,7 @@ class DashboardController extends BaseController
 
 	private function _createSolicitudesPericiales($solicitud)
 	{
-		$function = '/testing/solicitudPericial.php?process=crear';
+		$function = '/solicitudPericial.php?process=crear';
 		$array = [
 			'SOLICITUDID',
 			'ESTADOID',
@@ -2226,7 +2226,7 @@ class DashboardController extends BaseController
 
 	private function _createSolicitudExpediente($expedienteId, $solicitudExp, $municipio)
 	{
-		$function = '/testing/solicitudPericial.php?process=solicitudExpediente';
+		$function = '/solicitudPericial.php?process=solicitudExpediente';
 		$array = [
 			'SOLICITUDID',
 			'EXPEDIENTEID',
@@ -2249,7 +2249,7 @@ class DashboardController extends BaseController
 	private function _createSolicitudDocto($expedienteId, $solicitudid, $solicitudDocto, $municipio)
 	{
 
-		$function = '/testing/solicitudPericial.php?process=solicitudDocto';
+		$function = '/solicitudPericial.php?process=solicitudDocto';
 		$array = [
 			'SOLICITUDID',
 			'EXPEDIENTEID',

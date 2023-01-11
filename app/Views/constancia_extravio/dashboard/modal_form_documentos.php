@@ -161,7 +161,7 @@
 							<div id="municipio_cita-container" class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3 d-none">
 								<label for="municipio_cita" class="form-label fw-bold input-required">Municipio de la cita:</label>
 								<select class="form-select" id="municipio_cita" name="municipio_cita">
-									<option selected disabled value="">Elige el municipio del extravío</option>
+									<option selected disabled value="">Elige el municipio de la cita</option>
 									<?php foreach ($body_data->municipios as $index => $municipio) { ?>
 										<option value="<?= $municipio->MUNICIPIOID ?>"> <?= $municipio->MUNICIPIODESCR ?> </option>
 									<?php } ?>
