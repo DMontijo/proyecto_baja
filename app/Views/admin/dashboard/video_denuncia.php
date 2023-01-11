@@ -1000,7 +1000,7 @@
 
                     //DENUNCIA
                     document.querySelector('#delito_delito').value = folio.HECHODELITO;
-                    document.querySelector('#municipio_delito').value = folio.HECHOMUNICIPIOID;
+                    document.querySelector('#municipio_delito').value = folio.HECHOMUNICIPIOID ? folio.HECHOMUNICIPIOID:'';
                     if (folio.HECHOLOCALIDADID) {
                         let data = {
                             'estado_id': 2,
@@ -1081,13 +1081,13 @@
                         document.querySelector('#colonia_delito_select').value = '0';
                         document.querySelector('#colonia_delito').value = folio.HECHOCOLONIADESCR;
                     }
-                    document.querySelector('#calle_delito').value = folio.HECHOCALLE;
-                    document.querySelector('#exterior_delito').value = folio.HECHONUMEROCASA;
-                    document.querySelector('#interior_delito').value = folio.HECHONUMEROCASAINT;
-                    document.querySelector('#lugar_delito').value = folio.HECHOLUGARID;
-                    document.querySelector('#hora_delito').value = folio.HECHOHORA;
-                    document.querySelector('#fecha_delito').value = folio.HECHOFECHA;
-                    document.querySelector('#narracion_delito').value = folio.HECHONARRACION;
+                    document.querySelector('#calle_delito').value = folio.HECHOCALLE  ?folio.HECHOCALLE: '';
+                    document.querySelector('#exterior_delito').value = folio.HECHONUMEROCASA  ?folio.HECHONUMEROCASA:'';
+                    document.querySelector('#interior_delito').value = folio.HECHONUMEROCASAINT  ?folio.HECHONUMEROCASAINT:'';
+                    document.querySelector('#lugar_delito').value = folio.HECHOLUGARID ?folio.HECHOLUGARID:'';
+                    document.querySelector('#hora_delito').value = folio.HECHOHORA  ?folio.HECHOHORA: '';
+                    document.querySelector('#fecha_delito').value = folio.HECHOFECHA  ?folio.HECHOFECHA :'';
+                    document.querySelector('#narracion_delito').value = folio.HECHONARRACION ? folio.HECHONARRACION :'';
 
                     // if (folio.HECHODELITO == "ROBO DE VEHÍCULO") {
                     // 	$('#v-pills-vehiculos-tab').css('display', 'block');
@@ -1717,6 +1717,7 @@
                             dataType: "json",
                             success: function(response) {
                                 let municipios = response.data;
+                                console.log(municipios);
                                 municipios.forEach(municipio => {
                                     let option = document.createElement("option");
                                     option.text = municipio.MUNICIPIODESCR;
@@ -1780,7 +1781,6 @@
                                 let select_colonia = document.querySelector('#colonia_pfd_select');
                                 let input_colonia = document.querySelector('#colonia_pfd');
                                 let colonias = response.data;
-
                                 colonias.forEach(colonia => {
                                     var option = document.createElement("option");
                                     option.text = colonia.COLONIADESCR;
@@ -1792,8 +1792,8 @@
                                 option.text = 'OTRO';
                                 option.value = '0';
                                 select_colonia.add(option);
-
                                 select_colonia.value = domicilio.COLONIAID;
+
                                 input_colonia.value = '-';
                             },
                             error: function(jqXHR, textStatus, errorThrown) {}
@@ -4453,7 +4453,7 @@
                     'desaparecida': document.querySelector('#desaparecida_new').value
 
                 };
-                // console.log(data);
+                console.log(data);
                 $.ajax({
                     data: data,
                     url: "<?= base_url('/data/create-persona_fisica-by-folio') ?>",
@@ -4599,7 +4599,9 @@
                                 option.text = persona.NOMBRE + ' ' + primer_apellido;
                                 select_propietario_update.add(option, null);
                             });
+                            $('#municipio_pfd').empty();
 
+                            $('#localidad_pfd').empty();
 
                             $('#folio_persona_fisica_modal').modal('show');
                             viewPersonaFisica(response.ultimoRegistro.PERSONAFISICAID);

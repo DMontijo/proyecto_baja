@@ -774,6 +774,7 @@ class DashboardController extends BaseController
 						'NOTAS' => 'FOLIO: ' . $numfolio . ' AÑO: ' . $year,
 					];
 					$this->_bitacoraActividad($datosBitacora);
+					// var_dump($data);exit;
 					return json_encode($data);
 				} else if ($data->folio->STATUS == 'EN PROCESO' && $data->folio->TIPODENUNCIA == "VD") {
 					return json_encode(['status' => 2, 'motivo' => 'EL FOLIO YA ESTA SIENDO ATENDIDO']);
@@ -3021,6 +3022,7 @@ class DashboardController extends BaseController
 				'NUMEROINTERIOR' => $this->request->getPost('interior_pfd'),
 				'REFERENCIA' => $this->request->getPost('referencia_pfd'),
 			);
+
 			$colonia = $this->_coloniasModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $this->request->getPost('municipio_pfd'))->where('LOCALIDADID', $this->request->getPost('localidad_pfd'))->where('COLONIAID', $this->request->getPost('colonia_pfd_select'))->first();
 			$localidad = $this->_localidadesModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $this->request->getPost('municipio_pfd'))->where('LOCALIDADID', $this->request->getPost('localidad_pfd'))->first();
 			if ((int)$data['COLONIAID'] == 0) {
@@ -3030,6 +3032,7 @@ class DashboardController extends BaseController
 				$data['COLONIADESCR'] = $colonia->COLONIADESCR;
 				$data['ZONA'] = $colonia->ZONA;
 			}
+			// var_dump($data);exit;
 
 			$update = $this->_folioPersonaFisicaDomicilioModel->set($data)->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $id)->where('DOMICILIOID', $id_domicilio)->update();
 
@@ -3698,7 +3701,7 @@ class DashboardController extends BaseController
 			'NUMEROINTERIOR' => $this->request->getPost('num_interior'),
 			'CP' => $this->request->getPost('codigo_postal'),
 		);
-
+		// var_dump($dataNewPersonaFisicaDomicilio);exit;
 		$personaFisica = $this->_folioPersonaFisica($dataNewPersonaFisica, $folio, $year);
 		$mediaFiliacion = $this->_folioPersonaFisicaMediaFiliacion($dataNewPersonaFisica, $folio, $personaFisica, $year);
 		$domicilio = $this->_folioPersonaFisicaDomicilio($dataNewPersonaFisicaDomicilio, $folio, $personaFisica, $year);
@@ -3923,25 +3926,31 @@ class DashboardController extends BaseController
 		$data['ANO'] = $year;
 		$data['PERSONAFISICAID'] = $personaFisicaID;
 
-		if ((int) $data['COLONIAID'] == 0 || $data['COLONIAID'] == null) {
+		$colonia = $this->_coloniasModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data['MUNICIPIOID'])->where('LOCALIDADID',  $data['LOCALIDADID'])->where('COLONIAID', $data['COLONIAID'])->first();
+		// if ((int) $data['COLONIAID'] == 0 || $data['COLONIAID'] == null) {
+
+		if ($data['COLONIAID'] == null) {
+			$data['LOCALIDADID'] = null;
+		}
+		if ((int) $data['COLONIAID'] == 0) {
 			$data['COLONIAID'] = null;
 			$data['COLONIADESCR'] = $data['COLONIADESCR'];
-			$data['LOCALIDADID'] = null;
-		}
-		if ($data['COLONIAID']) {
-			$data['COLONIAID'] = $data['COLONIAID'];
-			$data['COLONIADESCR'] = null;
-		}
+		} else {
+			$data['COLONIAID'] = $colonia->COLONIAID;
+			$data['COLONIADESCR'] = $colonia->COLONIADESCR;
+		};
 
-		if ($data['MUNICIPIOID']) {
-			try {
-				$colonia = $this->_coloniasModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data['MUNICIPIOID'])->first();
-				$colonia ? $data['LOCALIDADID'] = $colonia->LOCALIDADID : $data['LOCALIDADID'] = null;
-			} catch (\Exception $e) {
+		if ($data['COLONIAID'] != null) {
+			
+			if ($data['MUNICIPIOID']) {
+				try {
+					$colonia ? $data['LOCALIDADID'] = $colonia->LOCALIDADID : $data['LOCALIDADID'] = null;
+				} catch (\Exception $e) {
+					$data['LOCALIDADID'] = null;
+				}
+			} else {
 				$data['LOCALIDADID'] = null;
 			}
-		} else {
-			$data['LOCALIDADID'] = null;
 		}
 
 		if ($data['LOCALIDADID'] != null) {
@@ -3953,6 +3962,8 @@ class DashboardController extends BaseController
 				}
 			}
 		}
+
+
 
 		$personaDomicilio = $this->_folioPersonaFisicaDomicilioModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $personaFisicaID)->orderBy('DOMICILIOID', 'desc')->first();
 

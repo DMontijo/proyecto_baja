@@ -584,7 +584,7 @@
 				) {
 					return true;
 				} else {
-					return false;
+					return true;
 				}
 				break;
 			case 'datos_robo_vehiculo':

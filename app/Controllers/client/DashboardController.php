@@ -171,7 +171,6 @@ class DashboardController extends BaseController
 		$documento = $this->request->getFile('documentoArchivo');
 		if (empty($documento)) {
 			return json_encode(['status' => 2]);
-
 		}
 		$doc = file_get_contents($documento);
 		$f = finfo_open();
@@ -183,7 +182,7 @@ class DashboardController extends BaseController
 
 
 		$data = (object) array();
-		$folio=$this->request->getPost('folio');
+		$folio = $this->request->getPost('folio');
 		$year = $this->request->getPost('year');
 		$data = [
 			'FOLIOID' => $this->request->getPost('folio'),
@@ -192,20 +191,20 @@ class DashboardController extends BaseController
 			'ARCHIVO' => $doc,
 			'EXTENSION' => $extension,
 		];
-		$archivoExterno = $this->_folioExpArchivo($data,$folio,$year);
+		$archivoExterno = $this->_folioExpArchivo($data, $folio, $year);
 		if ($archivoExterno) {
 			$datados = (object) array();
 
 			$datados->archivosexternos = $this->_archivoExternoModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
 			if ($datados->archivosexternos) {
 				foreach ($datados->archivosexternos as $key => $archivos) {
-						$file_info = new \finfo(FILEINFO_MIME_TYPE);
-						$type = $file_info->buffer($archivos->ARCHIVO);
-						$archivos->ARCHIVO = 'data:' . $type . ';base64,' . base64_encode($archivos->ARCHIVO);
+					$file_info = new \finfo(FILEINFO_MIME_TYPE);
+					$type = $file_info->buffer($archivos->ARCHIVO);
+					$archivos->ARCHIVO = 'data:' . $type . ';base64,' . base64_encode($archivos->ARCHIVO);
+				}
 			}
-		}
 			return json_encode(['status' => 1, $datados]);
-		}else{
+		} else {
 			return json_encode(['status' => 0]);
 		}
 		// return json_encode(['status' => 1, 'extension' => $_POST]);
@@ -222,7 +221,7 @@ class DashboardController extends BaseController
 		$data = $data;
 		$data['FOLIOID'] = $folio;
 		$data['ANO'] = $year;
-		
+
 
 		$archivoExterno = $this->_archivoExternoModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->orderBy('FOLIOARCHIVOID ', 'desc')->first();
 
@@ -247,6 +246,7 @@ class DashboardController extends BaseController
 
 	public function create()
 	{
+		// var_dump($_POST);exit;
 		$session = session();
 		list($FOLIOID, $year) = $this->_folioConsecutivoModel->get_consecutivo();
 
@@ -254,8 +254,8 @@ class DashboardController extends BaseController
 			'FOLIOID' => $FOLIOID,
 			'ANO' => $year,
 			'DENUNCIANTEID' => $session->get('DENUNCIANTEID'),
-			'HECHOFECHA' => $this->request->getPost('fecha'),
-			'HECHOHORA' => $this->request->getPost('hora'),
+			'HECHOFECHA' => $this->request->getPost('fecha') != '' ?$this->request->getPost('fecha'):NULL,
+			'HECHOHORA' => $this->request->getPost('hora') !=''?$this->request->getPost('hora'):NULL,
 			'HECHOLUGARID' => $this->request->getPost('lugar'),
 			'ESTADOID' => 2,
 			'MUNICIPIOID' => $this->request->getPost('municipio'),
@@ -263,11 +263,11 @@ class DashboardController extends BaseController
 			'HECHOMUNICIPIOID' => $this->request->getPost('municipio'),
 			'HECHOLOCALIDADID' => $this->request->getPost('localidad'),
 			'HECHOCOLONIAID' => $this->request->getPost('colonia_select'),
-			'HECHOCOLONIADESCR' => $this->request->getPost('colonia'),
-			'HECHOCALLE' => $this->request->getPost('calle'),
-			'HECHONUMEROCASA' => $this->request->getPost('exterior'),
-			'HECHONUMEROCASAINT' => $this->request->getPost('interior'),
-			'HECHONARRACION' => $this->request->getPost('descripcion_breve'),
+			'HECHOCOLONIADESCR' => $this->request->getPost('colonia') !=''?$this->request->getPost('colonia'):NULL,
+			'HECHOCALLE' => $this->request->getPost('calle') !=''?$this->request->getPost('calle'):NULL,
+			'HECHONUMEROCASA' => $this->request->getPost('exterior') != '' ?$this->request->getPost('exterior'):NULL,
+			'HECHONUMEROCASAINT' => $this->request->getPost('interior')!=''?$this->request->getPost('interior'):NULL,
+			'HECHONARRACION' => $this->request->getPost('descripcion_breve') !=''?$this->request->getPost('descripcion_breve'):NULL,
 			'HECHODELITO' => $this->request->getPost('delito'),
 			'TIPODENUNCIA' => 'VD',
 
@@ -275,15 +275,18 @@ class DashboardController extends BaseController
 		];
 		$colonia = $this->_coloniasModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $this->request->getPost('municipio'))->where('LOCALIDADID', $this->request->getPost('localidad'))->where('COLONIAID', $this->request->getPost('colonia_select'))->first();
 
-		if ((int) $this->request->getPost('colonia_select') == 0) {
-			$dataFolio['HECHOCOLONIAID'] = null;
-			$dataFolio['HECHOCOLONIADESCR'] = $this->request->getPost('colonia');
-			$localidad = $this->_localidadesModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $dataFolio['HECHOMUNICIPIOID'])->where('LOCALIDADID', $dataFolio['HECHOLOCALIDADID'])->first();
-			$dataFolio['HECHOZONA'] = $localidad->ZONA;
-		} else {
-			$dataFolio['HECHOCOLONIAID'] = (int) $this->request->getPost('colonia_select');
-			$dataFolio['HECHOCOLONIADESCR'] = $colonia->COLONIADESCR;
-			$dataFolio['HECHOZONA'] = $colonia->ZONA;
+		if ($this->request->getPost('colonia_select')) {
+
+			if ((int) $this->request->getPost('colonia_select') == 0) {
+				$dataFolio['HECHOCOLONIAID'] = null;
+				$dataFolio['HECHOCOLONIADESCR'] = $this->request->getPost('colonia');
+				$localidad = $this->_localidadesModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $dataFolio['HECHOMUNICIPIOID'])->where('LOCALIDADID', $dataFolio['HECHOLOCALIDADID'])->first();
+				$dataFolio['HECHOZONA'] = $localidad->ZONA;
+			} else {
+				$dataFolio['HECHOCOLONIAID'] = (int) $this->request->getPost('colonia_select');
+				$dataFolio['HECHOCOLONIADESCR'] = $colonia->COLONIADESCR;
+				$dataFolio['HECHOZONA'] = $colonia->ZONA;
+			}
 		}
 		if ($this->request->getPost('esta_desaparecido') == "SI") {
 			$dataFolio['LOCALIZACIONPERSONA'] = 'S';
@@ -750,7 +753,7 @@ class DashboardController extends BaseController
 		} else {
 			if ($data['MUNICIPIOID']) {
 				try {
-					$colonia = $this->_coloniasModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data['MUNICIPIOID'])->first();
+					$colonia = $this->_coloniasModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data['MUNICIPIOID'])->where('LOCALIDADID', $data['LOCALIDADID'])->first();
 					$colonia ? $data['LOCALIDADID'] = $colonia->LOCALIDADID : $data['LOCALIDADID'] = null;
 				} catch (\Exception $e) {
 					$data['LOCALIDADID'] = null;
