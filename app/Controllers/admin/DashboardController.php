@@ -1042,9 +1042,7 @@ class DashboardController extends BaseController
 
 	public function bandeja_remision_post()
 	{
-		
 		try {
-	
 			$expediente = trim($this->request->getPost('expediente'));
 			$oficina = trim($this->request->getPost('oficina'));
 			$empleado = trim($this->request->getPost('empleado'));
@@ -1053,7 +1051,7 @@ class DashboardController extends BaseController
 			$area = $this->_empleadosModel->asObject()->where('EMPLEADOID', $empleado)->where('MUNICIPIOID', $municipio)->first();
 			$documents = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente . '1')->findAll();
 			$status = 2;
-		
+
 			foreach ($documents as $key => $document) {
 				if (
 					$document->TIPODOC == 'CRITERIO DE OPORTUNIDAD' ||
@@ -1081,37 +1079,29 @@ class DashboardController extends BaseController
 				$updateExpediente = $this->_updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area->AREAID, $status);
 				$_bandeja_creada = $this->_createBandeja($bandeja);
 				$this->_bitacoraActividad($datosBitacora);
-				$folioDoc = $this->_folioDocModel->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOCID', 'asc')->like('TIPODOC','SOLICITUD DE PERITAJE')->findAll();
+				$folioDoc = $this->_folioDocModel->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->join('RELACIONFOLIODOCEXPDOC', 'FOLIODOC.NUMEROEXPEDIENTE = RELACIONFOLIODOCEXPDOC.EXPEDIENTEID  AND FOLIODOC.FOLIODOCID = RELACIONFOLIODOCEXPDOC.FOLIODOCID')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('TIPODOC', 'SOLICITUD DE PERITAJE')->findAll();
 				if ($folioDoc) {
 					foreach ($folioDoc as $key => $doc) {
-							$solicitudp = array();
-							$solicitudp['ESTADOID'] = 2;
-							$solicitudp['MUNICIPIOID'] = $municipio;
-							$solicitudp['EMPLEADOIDREGISTRO'] = $empleado;
-							$solicitudp['OFICINAIDREGISTRO'] = $oficina;
-							$solicitudp['AREAIDREGISTRO'] = $area;
-							$solicitudp['ANO'] = $doc['ANO'];
-							// $solicitudp['TITULO'] = $doc['TIPODOC'];
-							$_solicitudPericial = $this->_createSolicitudesPericiales($solicitudp);
-							if ($_solicitudPericial->status == 201) {
-								$relacionDocto = $this->_relacionFolioDocExpDoc->where('EXPEDIENTEID', $expediente)->join('FOLIODOC', 'FOLIODOC.NUMEROEXPEDIENTE = RELACIONFOLIODOCEXPDOC.EXPEDIENTEID  AND FOLIODOC.FOLIODOCID = RELACIONFOLIODOCEXPDOC.FOLIODOCID')->like('TIPODOC','SOLICITUD DE PERITAJE')->findAll();
-								if($relacionDocto){
-									foreach ($relacionDocto as $key => $relacionDocumento) {
-										$_solicitudDocto = $this->_createSolicitudDocto($expediente, $_solicitudPericial->SOLICITUDID, $relacionDocumento['EXPEDIENTEDOCID'], $bandeja['MUNICIPIOASIGNADOID']);
-										if ($_solicitudDocto->status ==201) {
-											$_solicitudExpediente = $this->_createSolicitudExpediente($expediente, $_solicitudPericial->SOLICITUDID, $municipio);
-											$datosBitacora = [
-												'ACCION' => 'Se envio una solicitud perital.',
-												'NOTAS' => 'Exp: ' . $expediente . ' Solicitud: ' . $_solicitudPericial->SOLICITUDID ,
-											];
-											$this->_bitacoraActividad($datosBitacora);
-
-										}
-										
-
-									}
-								}
+						$solicitudp = array();
+						$solicitudp['ESTADOID'] = 2;
+						$solicitudp['MUNICIPIOID'] = $municipio;
+						$solicitudp['EMPLEADOIDREGISTRO'] = $empleado;
+						$solicitudp['OFICINAIDREGISTRO'] = $oficina;
+						$solicitudp['AREAIDREGISTRO'] = $area;
+						$solicitudp['ANO'] = $doc['ANO'];
+						$solicitudp['TITULO'] = $doc['TIPODOC'];
+						$_solicitudPericial = $this->_createSolicitudesPericiales($solicitudp);
+						if ($_solicitudPericial->status == 201) {
+							$_solicitudDocto = $this->_createSolicitudDocto($expediente, $_solicitudPericial->SOLICITUDID, $doc['EXPEDIENTEDOCID'], $bandeja['MUNICIPIOASIGNADOID']);
+							if ($_solicitudDocto->status == 201) {
+								$_solicitudExpediente = $this->_createSolicitudExpediente($expediente, $_solicitudPericial->SOLICITUDID, $municipio);
+								$datosBitacora = [
+									'ACCION' => 'Se envio una solicitud perital.',
+									'NOTAS' => 'Exp: ' . $expediente . ' Solicitud: ' . $_solicitudPericial->SOLICITUDID,
+								];
+								$this->_bitacoraActividad($datosBitacora);
 							}
+						}
 					}
 				}
 
@@ -2255,7 +2245,7 @@ class DashboardController extends BaseController
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
 
-	private function _createSolicitudDocto($expedienteId, $solicitudid,$solicitudDocto, $municipio)
+	private function _createSolicitudDocto($expedienteId, $solicitudid, $solicitudDocto, $municipio)
 	{
 
 		$function = '/testing/solicitudPericial.php?process=solicitudDocto';
