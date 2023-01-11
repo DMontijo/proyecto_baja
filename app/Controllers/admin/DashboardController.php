@@ -107,6 +107,7 @@ use App\Models\ObjetoClasificacionModel;
 use App\Models\ObjetoSubclasificacionModel;
 use App\Models\PermisosModel;
 use App\Models\PlantillasModel;
+use App\Models\RelacionFolioDocExpDocModel;
 use App\Models\RelacionFolioDocModel;
 use App\Models\RolesPermisosModel;
 use App\Models\TipoExpedienteModel;
@@ -245,6 +246,7 @@ class DashboardController extends BaseController
 		$this->_permisosModel = new PermisosModel();
 
 		$this->_folioConsecutivoModel = new FolioConsecutivoModel();
+		$this->_relacionFolioDocExpDoc = new RelacionFolioDocExpDocModel();
 
 
 		// $this->protocol = 'http://';
@@ -765,6 +767,17 @@ class DashboardController extends BaseController
 					$data->delitosModalidadFiltro = $this->_delitoModalidadModel->get_delitodescr($numfolio, $year);
 					$data->objetos = $this->_folioObjetoInvolucradoModel->get_descripcion($numfolio, $year);
 					$data->documentos = $this->_folioDocModel->get_by_folio($numfolio, $year);
+					$data->archivosexternos = $this->_archivoExternoModel->asObject()->where('FOLIOID', $numfolio)->where('ANO', $year)->findAll();
+
+					if ($data->archivosexternos) {
+						foreach ($data->archivosexternos as $key => $archivos) {
+							$file_info = new \finfo(FILEINFO_MIME_TYPE);
+							$type = $file_info->buffer($archivos->ARCHIVO);
+
+							$archivos->ARCHIVO = 'data:' . $type . ';base64,' . base64_encode($archivos->ARCHIVO);
+						}
+					}
+
 
 					// $data->personafisica = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->findAll();
 					$data->imputados = $this->_folioPersonaFisicaModel->get_imputados($numfolio, $year);
@@ -805,6 +818,7 @@ class DashboardController extends BaseController
 				$data->fisicaImpDelito = $this->_imputadoDelitoModel->get_by_folio($numfolio, $year);
 				$data->delitosModalidadFiltro = $this->_delitoModalidadModel->get_delitodescr($numfolio, $year);
 				$data->objetos = $this->_folioObjetoInvolucradoModel->get_descripcion($numfolio, $year);
+				$data->archivosexternos = $this->_archivoExternoModel->get_by_folio($numfolio, $year);
 
 				// $data->personafisica = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->findAll();
 				$data->imputados = $this->_folioPersonaFisicaModel->get_imputados($numfolio, $year);
@@ -945,6 +959,26 @@ class DashboardController extends BaseController
 		return json_encode($data);
 	}
 
+
+	public function refreshArchivosExternos()
+	{
+		$folio = $this->request->getPost('folio');
+		$year = $this->request->getPost('year');
+
+		$data = (object) array();
+
+		$data->archivosexternos = $this->_archivoExternoModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
+		if ($data->archivosexternos) {
+			foreach ($data->archivosexternos as $key => $archivos) {
+				$file_info = new \finfo(FILEINFO_MIME_TYPE);
+				$type = $file_info->buffer($archivos->ARCHIVO);
+
+				$archivos->ARCHIVO = 'data:' . $type . ';base64,' . base64_encode($archivos->ARCHIVO);
+			}
+		}
+		return json_encode($data);
+	}
+
 	public function findPersonadVehiculoById()
 	{
 		$data = (object) array();
@@ -1059,6 +1093,34 @@ class DashboardController extends BaseController
 				$updateExpediente = $this->_updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area->AREAID, $status);
 				$_bandeja_creada = $this->_createBandeja($bandeja);
 				$this->_bitacoraActividad($datosBitacora);
+				$folioDoc = $this->_folioDocModel->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOCID', 'asc')->findAll();
+				if ($folioDoc) {
+					foreach ($folioDoc as $key => $doc) {
+						if ($doc['TIPODOC'] == 'SOLICITUD DE PERITAJE (CERTIFICADO DE HOSPITAL)' || $doc['TIPODOC'] == 'SOLICITUD DE PERITAJE (CERTIFICADO DE INTEGRIDAD FÍSICA)' || $doc['TIPODOC'] == 'SOLICITUD DE PERITAJE (CERTIFICADO GINECOLOGICO)' || $doc['TIPODOC'] == 'SOLICITUD DE PERITAJE (CERTIFICADO PROCTOLOGICO)') {
+							$solicitudp = array();
+							$solicitudp['ESTADOID'] = 2;
+							$solicitudp['MUNICIPIOID'] = $municipio;
+							$solicitudp['EMPLEADOIDREGISTRO'] = $empleado;
+							$solicitudp['OFICINAIDREGISTRO'] = $oficina;
+							$solicitudp['AREAIDREGISTRO'] = $area;
+							$solicitudp['ANO'] = $doc['ANO'];
+							$solicitudp['TITULO'] = $doc['TIPODOC'];
+							$_solicitudPericial = $this->_createSolicitudesPericiales($solicitudp);
+							if ($_solicitudPericial->status == 201) {
+								$relacionDocto = $this->_relacionFolioDocExpDoc->where('EXPEDIENTEID', $expediente)->orderBy('FOLIODOCID', 'asc')->findAll();
+								if($relacionDocto){
+									foreach ($relacionDocto as $key => $relacionDocumento) {
+
+										$_solicitudDocto = $this->_createSolicitudDocto($expediente, $_solicitudPericial->SOLICITUDID, $relacionDocumento['EXPEDIENTEDOCTOID']);
+										var_dump($_solicitudDocto);exit;
+
+									}
+								}
+							}
+						}
+					}
+				}
+
 				if ($_bandeja_creada->status == 201) {
 					return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_success', 'Remitido correctamente');
 				}
@@ -1565,60 +1627,53 @@ class DashboardController extends BaseController
 						} catch (\Exception $e) {
 						}
 					}
-					PHPRtfLite::registerAutoloader();
-					// instancia de documento rtf 
-					$rtf = new PHPRtfLite();
-					$sect = $rtf->addSection();
-					$sinetiqueta = strip_tags($doc['PLACEHOLDER']); //placeolder sin etiquetas html
-					//escribe el texto del rtf
-					$sect->writeText($sinetiqueta, new PHPRtfLite_Font(12, 'Courier New'), new PHPRtfLite_ParFormat(PHPRtfLite_ParFormat::TEXT_ALIGN_JUSTIFY));
-					// save rtf document
-					$rtf->save('assets/' . $doc['NUMEROEXPEDIENTE'] . '_' . $doc['FOLIODOCID'] . '.rtf');
-					$tarjet = FCPATH  . 'assets/' . $doc['NUMEROEXPEDIENTE'] . "_" . $doc['FOLIODOCID'] . ".rtf";
-					// var_dump($rtf);
-					
-					//contenido del rtf guardado
-					$data = file_get_contents($tarjet);
-					//creacion del documento rtf
-					$document = new Document($data);
-					
-					// $espacio = wordwrap($data,1,chr(0),1);
-					//espacio entre cada caracter
-					$espacio = implode(chr(0),str_split($document));
-					
-					// $rtf2 = new PHPRtfLite();
-					// $sect2 = $rtf2->addSection();
-					// $sect2->writeText($espacio);
-					// $rtf2->save('assets/' . $doc['NUMEROEXPEDIENTE'] . '_' . $doc['FOLIODOCID'] . 'prueba.rtf');
-					var_dump($document->rtF);
-					exit;
-				
+					$relacionDocExpDoc = $this->_relacionFolioDocExpDoc->where('FOLIOID', $doc['FOLIOID'])->where('ANO', $doc['ANO'])->where('EXPEDIENTEID', $doc['NUMEROEXPEDIENTE'])->where('FOLIODOCID', $doc['FOLIODOCID'])->orderBy('FOLIODOCID', 'asc')->first();
 
+					if ($relacionDocExpDoc == null) {
 
-					// $documentos = new DOCUMENTOSCONVERT();
-					// $data = [
-					// 	'DOCUMENTO' => $content,
-					// ];
-					// $documentos->insert($data);
-					// //print correc
-					// echo  "Convertido a base64: " . $content . "</br>";
-					// echo 'create ok,and download <a href="' . base_url() . 'pruebas.rtf">here</a>';
+						try {
+							PHPRtfLite::registerAutoloader();
+							// instancia de documento rtf 
+							$rtf = new PHPRtfLite();
+							$sect = $rtf->addSection();
+							$sinetiqueta = strip_tags($doc['PLACEHOLDER']); //placeolder sin etiquetas html
+							//escribe el texto del rtf
+							$sect->writeText($sinetiqueta, new PHPRtfLite_Font(12, 'Courier New'), new PHPRtfLite_ParFormat(PHPRtfLite_ParFormat::TEXT_ALIGN_JUSTIFY));
+							// save rtf document
+							$rtf->save('assets/' . $doc['NUMEROEXPEDIENTE'] . '_' . $doc['FOLIODOCID'] . '.rtf');
+							$tarjet = FCPATH  . 'assets/' . $doc['NUMEROEXPEDIENTE'] . "_" . $doc['FOLIODOCID'] . ".rtf";
+							//contenido del rtf guardado
+							$data = file_get_contents($tarjet);
+							//creacion del documento rtf
+							$document = new Document($data);
+							$espacio = implode(chr(0), str_split($data));
+							// fwrite($fh, $espacio) or die("No se pudo escribir en el archivo");
+							// $data2 = file_get_contents($tarjet2);
+							// fwrite($tarjet2, $espacio);
 
+							$documentos = array();
+							$documentos['DOCUMENTO'] = base64_encode($espacio);
+							$documentos['DOCTODESCR'] = $doc['TIPODOC'];
+							$documentos['STATUSDOCUMENTOID'] = 4;
 
+							$expedienteDocumento = $this->_createFolioDocumentos($expediente, $documentos, $doc['MUNICIPIOID']);
 
-					// $mpdf = new mPDF();
-					// $mpdf->WriteHTML($doc['PLACEHOLDER']);
-					// $pdf = $mpdf->Output('file.rtf', 'S');
-					// var_dump(base64_encode($rtf));
-					// exit;
+							if ($expedienteDocumento->status == 201) {
+								unlink(FCPATH  . 'assets/' . $doc['NUMEROEXPEDIENTE'] . "_" . $doc['FOLIODOCID'] . ".rtf");
+								// unlink(FCPATH  . 'assets/' . $doc['NUMEROEXPEDIENTE'] . "_" . $doc['FOLIODOCID'] . ".bin");	
+								$datosRelacionFolioExpDoc = [
+									'FOLIODOCID' => $doc['FOLIODOCID'],
+									'FOLIOID' =>  $doc['FOLIOID'],
+									'ANO' => $doc['ANO'],
+									'EXPEDIENTEID' => $expedienteDocumento->EXPEDIENTEID,
+									'EXPEDIENTEDOCID' => $expedienteDocumento->DOCUMENTOID,
+								];
 
-					// $rtf = file_get_contents(FCPATH . 'assets/test.rtf'); 
-					// $document = new Document($rtf);
-					// var_dump($document);
-					// $formatter = new HtmlFormatter('UTF-8');
-					// $html = $formatter->Format($document);
-					// var_dump($html);
-					// exit;
+								$this->_relacionFolioDocExpDoc->insert($datosRelacionFolioExpDoc);
+							}
+						} catch (\Throwable $th) {
+						}
+					}
 				}
 
 				return json_encode(['status' => 1]);
@@ -2091,7 +2146,7 @@ class DashboardController extends BaseController
 
 	private function _createFolioDocumentos($expedienteId, $documentos, $municipio)
 	{
-		$function = '/documento.php?process=crear';
+		$function = '/testing/documento.php?process=crear';
 		$array = [
 			'EXPEDIENTEID',
 			'EXPEDIENTEDOCTOID',
@@ -2114,7 +2169,7 @@ class DashboardController extends BaseController
 			'RUTAALMACENAMIENTOID',
 			'STATUSALMACENID',
 			'EXPORTAR',
-		
+
 		];
 		$endpoint = $this->endpoint . $function;
 		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
@@ -2139,6 +2194,106 @@ class DashboardController extends BaseController
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
 
+
+	private function _createSolicitudesPericiales($solicitud)
+	{
+		$function = '/testing/solicitudPericial.php?process=crear';
+		$array = [
+			'SOLICITUDID',
+			'ESTADOID',
+			'MUNICIPIOID',
+			'ANO',
+			'CORRELATIVO',
+			'FECHAREGISTRO',
+			'EMPLEADOIDREGISTRO',
+			'OFICINAIDRESPONSABLE',
+			'ESTADOSOLICITUDPERICIALID',
+			'CORRELATIVOSERVICIO',
+			'OFICINAIDREGISTRO',
+			'AREAIDREGISTRO',
+			'FECHAASIGNACIONCOORDINACION',
+			'TIPOREGISTRO',
+			'TITULO',
+			'DESCRIPCION',
+			'NOMBREENTREGA',
+			'OBSERVACIONESENTREGA'
+		];
+		$endpoint = $this->endpoint . $function;
+		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $solicitud['MUNICIPIOID'])->where('TYPE', ENVIRONMENT)->first();
+		$data = $solicitud;
+		foreach ($data as $clave => $valor) {
+			if (empty($valor)) {
+				unset($data[$clave]);
+			}
+		}
+
+		foreach ($data as $clave => $valor) {
+			if (!in_array($clave, $array)) {
+				unset($data[$clave]);
+			}
+		}
+		$data['userDB'] = $conexion->USER;
+		$data['pwdDB'] = $conexion->PASSWORD;
+		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
+		$data['schema'] = $conexion->SCHEMA;
+		return $this->_curlPostDataEncrypt($endpoint, $data);
+	}
+
+	private function _createSolicitudExpediente($expedienteId, $solicitudExp)
+	{
+		$function = '/testing/solicitudPericial.php?process=solicitudExpediente';
+		$array = [
+			'SOLICITUDID',
+			'EXPEDIENTEID',
+
+		];
+		$endpoint = $this->endpoint . $function;
+		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $solicitud['MUNICIPIOID'])->where('TYPE', ENVIRONMENT)->first();
+		$data = array();
+
+		$data['EXPEDIENTEID'] = $expedienteId;
+		$data['SOLICITUDID'] = $solicitudExp;
+		$data['userDB'] = $conexion->USER;
+		$data['pwdDB'] = $conexion->PASSWORD;
+		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
+		$data['schema'] = $conexion->SCHEMA;
+		return $this->_curlPostDataEncrypt($endpoint, $data);
+	}
+
+	private function _createSolicitudDocto($expedienteId, $solicitudid,$solicitudDocto)
+	{
+		var_dump($expedienteId);exit;
+		$function = '/testing/solicitudPericial.php?process=solicitudDocto';
+		$array = [
+			'SOLICITUDID',
+			'EXPEDIENTEID',
+			'DOCTOID',
+			'MAPSBC',
+
+		];
+		$endpoint = $this->endpoint . $function;
+		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $solicitudDocto['MUNICIPIOID'])->where('TYPE', ENVIRONMENT)->first();
+		$data = array();
+		// foreach ($data as $clave => $valor) {
+		// 	if (empty($valor)) {
+		// 		unset($data[$clave]);
+		// 	}
+		// }
+
+		// foreach ($data as $clave => $valor) {
+		// 	if (!in_array($clave, $array)) {
+		// 		unset($data[$clave]);
+		// 	}
+		// }
+		$data['EXPEDIENTEID'] = $expedienteId;
+		$data['SOLICITUDID'] = $solicitudid;
+		$data['DOCTOID'] = $solicitudDocto;
+		$data['userDB'] = $conexion->USER;
+		$data['pwdDB'] = $conexion->PASSWORD;
+		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
+		$data['schema'] = $conexion->SCHEMA;
+		return $this->_curlPostDataEncrypt($endpoint, $data);
+	}
 	private function _createFisImpDelito($expedienteId, $fisimpdelito, $imputado, $municipio)
 	{
 		$function = '/imputadoDelito.php?process=crear';
@@ -2311,6 +2466,7 @@ class DashboardController extends BaseController
 		);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 		$result = curl_exec($ch);
+
 		if ($result === false) {
 			$result = "{
                 'status' => 401,
@@ -2318,6 +2474,7 @@ class DashboardController extends BaseController
             }";
 		}
 		curl_close($ch);
+		// var_dump($result);exit;
 		// return $result;
 		return json_decode($result);
 	}
@@ -2627,6 +2784,8 @@ class DashboardController extends BaseController
 				$this->_bitacoraActividad($datosBitacora);
 				$bandeja = $this->_folioModel->where('EXPEDIENTEID', $expediente)->first();
 				$_bandeja_creada = $this->_createBandeja($bandeja);
+
+
 				if ($_bandeja_creada->status == 201) {
 					return json_encode(['status' => 1]);
 				}

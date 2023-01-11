@@ -40,6 +40,7 @@ use App\Models\VehiculoModeloModel;
 use App\Models\VehiculoServicioModel;
 use App\Models\VehiculoTipoModel;
 use App\Models\VehiculoVersionModel;
+use App\Models\FolioArchivoExternoModel;
 
 class DashboardController extends BaseController
 {
@@ -86,6 +87,7 @@ class DashboardController extends BaseController
 		$this->_vehiculoVersionModel = new VehiculoVersionModel();
 		$this->_vehiculoServicioModel = new VehiculoServicioModel();
 		$this->_estadosExtranjeros = new EstadoExtranjeroModel();
+		$this->_archivoExternoModel = new FolioArchivoExternoModel();
 	}
 
 	public function index()
@@ -161,6 +163,77 @@ class DashboardController extends BaseController
 			$this->_loadView('Video denuncia', 'video-denuncia', '', $data, 'video_denuncia');
 		} else {
 			return redirect()->to(base_url('denuncia/dashboard'));
+		}
+	}
+	public function crear_archivos_externos()
+	{
+
+		$documento = $this->request->getFile('documentoArchivo');
+		if (empty($documento)) {
+			return json_encode(['status' => 2]);
+
+		}
+		$doc = file_get_contents($documento);
+		$f = finfo_open();
+		$mime_type = finfo_buffer($f, $doc, FILEINFO_MIME_TYPE);
+		$extension = explode('/', $mime_type)[1];
+
+		$archivo = $_FILES['documentoArchivo']['name'];
+		$nombre = explode('.', $archivo)[0];
+
+
+		$data = (object) array();
+		$folio=$this->request->getPost('folio');
+		$year = $this->request->getPost('year');
+		$data = [
+			'FOLIOID' => $this->request->getPost('folio'),
+			'ANO' => $this->request->getPost('year'),
+			'ARCHIVODESCR' => strtoupper($nombre),
+			'ARCHIVO' => $doc,
+			'EXTENSION' => $extension,
+		];
+		$archivoExterno = $this->_folioExpArchivo($data,$folio,$year);
+		if ($archivoExterno) {
+			$datados = (object) array();
+
+			$datados->archivosexternos = $this->_archivoExternoModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
+			if ($datados->archivosexternos) {
+				foreach ($datados->archivosexternos as $key => $archivos) {
+						$file_info = new \finfo(FILEINFO_MIME_TYPE);
+						$type = $file_info->buffer($archivos->ARCHIVO);
+						$archivos->ARCHIVO = 'data:' . $type . ';base64,' . base64_encode($archivos->ARCHIVO);
+			}
+		}
+			return json_encode(['status' => 1, $datados]);
+		}else{
+			return json_encode(['status' => 0]);
+		}
+		// return json_encode(['status' => 1, 'extension' => $_POST]);
+
+		// $insert = $this->_archivoExternoModel->insert($data);
+		// if (!$insert) {
+		// 	return json_encode(['status' => 1]);
+		// } else {
+		// 	return json_encode(['status' => 0]);
+		// }
+	}
+	private function _folioExpArchivo($data, $folio, $year)
+	{
+		$data = $data;
+		$data['FOLIOID'] = $folio;
+		$data['ANO'] = $year;
+		
+
+		$archivoExterno = $this->_archivoExternoModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->orderBy('FOLIOARCHIVOID ', 'desc')->first();
+
+		if ($archivoExterno) {
+			$data['FOLIOARCHIVOID'] = ((int) $archivoExterno->FOLIOARCHIVOID) + 1;
+			$archivoExterno = $this->_archivoExternoModel->insert($data);
+			return $data['FOLIOARCHIVOID'];
+		} else {
+			$data['FOLIOARCHIVOID'] = 1;
+			$archivoExterno = $this->_archivoExternoModel->insert($data);
+			return $data['FOLIOARCHIVOID'];
 		}
 	}
 
@@ -513,9 +586,9 @@ class DashboardController extends BaseController
 			}
 
 			if ($this->request->getPost('delito') == "ROBO DE VEHÍCULO") {
-				if ($_FILES['foto_vehiculo_nc']['name'] != null ) {
+				if ($_FILES['foto_vehiculo_nc']['name'] != null) {
 					$img_file = $this->request->getFile('foto_vehiculo_nc');
-				}else{
+				} else {
 					$img_file = $this->request->getFile('foto_vehiculo_sp');
 				}
 				$fotoV = null;
@@ -526,11 +599,10 @@ class DashboardController extends BaseController
 						$fotoV = null;
 					}
 				}
-				if ($_FILES['documento_vehiculo_nc']['name'] != null ) {
+				if ($_FILES['documento_vehiculo_nc']['name'] != null) {
 					$document_file = $this->request->getFile('documento_vehiculo_nc');
-				}else{
+				} else {
 					$document_file = $this->request->getFile('documento_vehiculo_sp');
-
 				}
 				$docV = null;
 				if ($document_file->isValid()) {
@@ -543,10 +615,10 @@ class DashboardController extends BaseController
 				// $distribuidorpost = $this->request->getPost('distribuidor_vehiculo') ?trim($this->request->getPost('distribuidor_vehiculo')):null;
 				// $marcapost = $this->request->getPost('marca') ?trim($this->request->getPost('marca')):null;
 				// $modelopost = $this->request->getPost('linea_vehiculo') ?trim($this->request->getPost('linea_vehiculo')):null;
-	
+
 				// $modelodescr = $this->_vehiculoModeloModel->asObject()->where('VEHICULODISTRIBUIDORID', $distribuidorpost)->where('VEHICULOMARCAID', $marcapost)->where('VEHICULOMODELOID', $modelopost)->first();
 				// $marcadescr = $this->_vehiculoMarcaModel->asObject()->where('VEHICULODISTRIBUIDORID', $distribuidorpost)->where('VEHICULOMARCAID', $marcapost)->first();
-				
+
 				$dataVehiculo = array(
 					'TIPOID' => $this->request->getPost('tipo_vehiculo'),
 					'PRIMERCOLORID' => $this->request->getPost('color_vehiculo'),

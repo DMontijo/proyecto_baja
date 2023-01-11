@@ -19,6 +19,7 @@
 							<a class="nav-link" id="v-pills-delitos-cometidos-tab" data-toggle="pill" href="#v-pills-delitos-cometido" role="tab" aria-controls="v-pills-delitos-cometido" aria-selected="false"><i class='fas fa-user-alt-slash'></i> DELITOS COMETIDOS</a>
 							<a class="nav-link" id="v-pills-delitos-tab" data-toggle="pill" href="#v-pills-asignar-delitos" role="tab" aria-controls="v-pills-asignar-delitos" aria-selected="false"><i class="fas fa-user-ninja"></i> DELITOS</a>
 							<a class="nav-link" id="v-pills-objetos-involucrados-tab" data-toggle="pill" href="#v-pills-objetos-involucrados" role="tab" aria-controls="v-pills-objetos-involucrados" aria-selected="false"><i class="fas fa-box"></i> OBJETOS INVOLUCRADOS</a>
+							<a class="nav-link" id="v-pills-objetos-involucrados-tab" data-toggle="pill" href="#v-pills-archivos-externos" role="tab" aria-controls="v-pills-archivos-externo" aria-selected="false"><i class="fas fa-file"></i> ARCHIVOS EXTERNOS</a>
 							<!-- <a class="nav-link" id="v-pills-documentos-tab" data-toggle="pill" href="#v-pills-documentos" role="tab" aria-controls="v-pills-documentos" aria-selected="false"><i class="fas fa-file-archive"></i> DOCUMENTOS</a> -->
 
 						</div>
@@ -120,6 +121,30 @@
 									</table>
 								</div>
 							</div>
+							<div class="tab-pane fade" id="v-pills-archivos-externos" role="tabpanel" aria-labelledby="v-pills-archivos-externos-tab">
+								<div id="adicionados" class="d-none"></div>
+								
+								<div class="col-12 mb-2 p-0 text-right">
+								<div id="loading_archivos" name="loading_archivos" class="text-center d-none" style="min-height:50px;">
+									<div class="justify-content-center">
+										<div class="spinner-border text-primary" role="status">
+										</div>
+									</div>
+								</div>
+									<button type="button" id="refrescarArchivos" name="refrescarArchivos" class="btn btn-primary font-weight-bold"><i class="fas fa-arrows-rotate mr-3"></i> ACTUALIZAR ARCHIVOS</button>
+								</div>
+								<div class="table-responsive">
+									<table id="table-archivos" class="table table-bordered table-hover table-striped table-light">
+										<tr>
+											<th class="text-center bg-primary text-white">DESCRIPCIÓN</th>
+											<th class="text-center bg-primary text-white">DOCUMENTO</th>
+											<th class="text-center bg-primary text-white"></th>
+										</tr>
+									</table>
+								</div>
+
+							</div>
+
 							<!-- <div class="tab-pane fade" id="v-pills-documentos" role="tabpanel" aria-labelledby="v-pills-documentos-tab">
 								<?php //echo view('/admin/dashboard/video_denuncia_forms/form_documentos'); 
 								?>

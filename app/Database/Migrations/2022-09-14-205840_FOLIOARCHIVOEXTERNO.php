@@ -17,7 +17,7 @@ class FOLIOARCHIVOEXTERNO extends Migration
                 'type' => 'INT',
                 'constraint' => '4',
             ],
-            'EXPEDIENTEARCHIVOID' => [
+            'FOLIOARCHIVOID' => [
                 'type' => 'INT',
                 'constraint' => '4',
             ],
@@ -68,11 +68,12 @@ class FOLIOARCHIVOEXTERNO extends Migration
                 'constraint' => '20',
                 'null' => true,
             ],
+            'FECHAREGISTRO DATETIME DEFAULT CURRENT_TIMESTAMP',
             'FECHAACTUALIZACION DATETIME ON UPDATE CURRENT_TIMESTAMP',
         ]);
         $this->forge->addKey('FOLIOID', true);
         $this->forge->addKey('ANO', true);
-        $this->forge->addKey('EXPEDIENTEARCHIVOID', true);
+        $this->forge->addKey('FOLIOARCHIVOID', true);
 
         $this->forge->createTable('FOLIOARCHIVOEXTERNO');
     }
