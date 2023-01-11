@@ -1042,7 +1042,9 @@ class DashboardController extends BaseController
 
 	public function bandeja_remision_post()
 	{
+		
 		try {
+	
 			$expediente = trim($this->request->getPost('expediente'));
 			$oficina = trim($this->request->getPost('oficina'));
 			$empleado = trim($this->request->getPost('empleado'));
@@ -1051,7 +1053,7 @@ class DashboardController extends BaseController
 			$area = $this->_empleadosModel->asObject()->where('EMPLEADOID', $empleado)->where('MUNICIPIOID', $municipio)->first();
 			$documents = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente . '1')->findAll();
 			$status = 2;
-
+		
 			foreach ($documents as $key => $document) {
 				if (
 					$document->TIPODOC == 'CRITERIO DE OPORTUNIDAD' ||
@@ -1079,10 +1081,9 @@ class DashboardController extends BaseController
 				$updateExpediente = $this->_updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area->AREAID, $status);
 				$_bandeja_creada = $this->_createBandeja($bandeja);
 				$this->_bitacoraActividad($datosBitacora);
-				$folioDoc = $this->_folioDocModel->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOCID', 'asc')->findAll();
+				$folioDoc = $this->_folioDocModel->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOCID', 'asc')->like('TIPODOC','SOLICITUD DE PERITAJE')->findAll();
 				if ($folioDoc) {
 					foreach ($folioDoc as $key => $doc) {
-						if ($doc['TIPODOC'] == 'SOLICITUD DE PERITAJE (CERTIFICADO DE HOSPITAL)' || $doc['TIPODOC'] == 'SOLICITUD DE PERITAJE (CERTIFICADO DE INTEGRIDAD FÍSICA)' || $doc['TIPODOC'] == 'SOLICITUD DE PERITAJE (CERTIFICADO GINECOLOGICO)' || $doc['TIPODOC'] == 'SOLICITUD DE PERITAJE (CERTIFICADO PROCTOLOGICO)') {
 							$solicitudp = array();
 							$solicitudp['ESTADOID'] = 2;
 							$solicitudp['MUNICIPIOID'] = $municipio;
@@ -1090,20 +1091,27 @@ class DashboardController extends BaseController
 							$solicitudp['OFICINAIDREGISTRO'] = $oficina;
 							$solicitudp['AREAIDREGISTRO'] = $area;
 							$solicitudp['ANO'] = $doc['ANO'];
-							$solicitudp['TITULO'] = $doc['TIPODOC'];
+							// $solicitudp['TITULO'] = $doc['TIPODOC'];
 							$_solicitudPericial = $this->_createSolicitudesPericiales($solicitudp);
 							if ($_solicitudPericial->status == 201) {
-								$relacionDocto = $this->_relacionFolioDocExpDoc->where('EXPEDIENTEID', $expediente)->orderBy('FOLIODOCID', 'asc')->findAll();
+								$relacionDocto = $this->_relacionFolioDocExpDoc->where('EXPEDIENTEID', $expediente)->join('FOLIODOC', 'FOLIODOC.NUMEROEXPEDIENTE = RELACIONFOLIODOCEXPDOC.EXPEDIENTEID  AND FOLIODOC.FOLIODOCID = RELACIONFOLIODOCEXPDOC.FOLIODOCID')->like('TIPODOC','SOLICITUD DE PERITAJE')->findAll();
 								if($relacionDocto){
 									foreach ($relacionDocto as $key => $relacionDocumento) {
+										$_solicitudDocto = $this->_createSolicitudDocto($expediente, $_solicitudPericial->SOLICITUDID, $relacionDocumento['EXPEDIENTEDOCID'], $bandeja['MUNICIPIOASIGNADOID']);
+										if ($_solicitudDocto->status ==201) {
+											$_solicitudExpediente = $this->_createSolicitudExpediente($expediente, $_solicitudPericial->SOLICITUDID, $municipio);
+											$datosBitacora = [
+												'ACCION' => 'Se envio una solicitud perital.',
+												'NOTAS' => 'Exp: ' . $expediente . ' Solicitud: ' . $_solicitudPericial->SOLICITUDID ,
+											];
+											$this->_bitacoraActividad($datosBitacora);
 
-										$_solicitudDocto = $this->_createSolicitudDocto($expediente, $_solicitudPericial->SOLICITUDID, $relacionDocumento['EXPEDIENTEDOCTOID']);
-										var_dump($_solicitudDocto);exit;
+										}
+										
 
 									}
 								}
 							}
-						}
 					}
 				}
 
@@ -2225,7 +2233,7 @@ class DashboardController extends BaseController
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
 
-	private function _createSolicitudExpediente($expedienteId, $solicitudExp)
+	private function _createSolicitudExpediente($expedienteId, $solicitudExp, $municipio)
 	{
 		$function = '/testing/solicitudPericial.php?process=solicitudExpediente';
 		$array = [
@@ -2234,11 +2242,12 @@ class DashboardController extends BaseController
 
 		];
 		$endpoint = $this->endpoint . $function;
-		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $solicitud['MUNICIPIOID'])->where('TYPE', ENVIRONMENT)->first();
+		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
 		$data = array();
 
 		$data['EXPEDIENTEID'] = $expedienteId;
 		$data['SOLICITUDID'] = $solicitudExp;
+		// var_dump($data);exit;
 		$data['userDB'] = $conexion->USER;
 		$data['pwdDB'] = $conexion->PASSWORD;
 		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
@@ -2246,9 +2255,9 @@ class DashboardController extends BaseController
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
 
-	private function _createSolicitudDocto($expedienteId, $solicitudid,$solicitudDocto)
+	private function _createSolicitudDocto($expedienteId, $solicitudid,$solicitudDocto, $municipio)
 	{
-		var_dump($expedienteId);exit;
+
 		$function = '/testing/solicitudPericial.php?process=solicitudDocto';
 		$array = [
 			'SOLICITUDID',
@@ -2257,9 +2266,11 @@ class DashboardController extends BaseController
 			'MAPSBC',
 
 		];
+
 		$endpoint = $this->endpoint . $function;
-		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $solicitudDocto['MUNICIPIOID'])->where('TYPE', ENVIRONMENT)->first();
+		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
 		$data = array();
+
 		// foreach ($data as $clave => $valor) {
 		// 	if (empty($valor)) {
 		// 		unset($data[$clave]);
@@ -2278,6 +2289,7 @@ class DashboardController extends BaseController
 		$data['pwdDB'] = $conexion->PASSWORD;
 		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
 		$data['schema'] = $conexion->SCHEMA;
+
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
 	private function _createFisImpDelito($expedienteId, $fisimpdelito, $imputado, $municipio)
