@@ -68,7 +68,13 @@ class OTPController extends BaseController
 				'VENCIMIENTO' => $convert,
 			];
 
-			$this->_OTPModel->insert($data);
+			$otpRegister = $this->_OTPModel->asObject()->where('CORREO',$to)->first();
+			
+			if($otpRegister){
+				$newOTP = $this->_OTPModel->set($data)->where('CORREO',$to)->update();
+			}else{
+				$newOTP = $this->_OTPModel->insert($data);
+			}
 
 			if ($email->send()) {
 				return json_encode((object)['status' => 200]);
@@ -82,10 +88,43 @@ class OTPController extends BaseController
 		}
 	}
 
+	public function validateOTP()
+	{
+		date_default_timezone_set('America/Tijuana');
+		$email = trim($this->request->getPost('email'));
+		$otp = trim($this->request->getPost('codigo'));
+		$now = date("Y-m-d H:i:s");
+		
+		if ($email && $otp) {
+			$data = $this->_OTPModel->asObject()->where('CORREO', $email)->where('CODIGO_OTP',$otp)->orderBy('IDOTP', 'desc')->first();
+			
+			if(!$data){
+				return json_encode((object)['status' => 500,'message' => 'El código ingresado es incorrecto.']);
+			}
+			
+			$expire = $data->VENCIMIENTO;
+			$today_t = strtotime($now);
+			$expire_t = strtotime($expire);
+
+			if ($expire_t < $today_t) {
+				return json_encode((object)['status' => 200,'valid' => false]);
+			}else{
+				return json_encode((object)['status' => 200,'valid' => true]);
+			}
+			
+		} else {
+			return json_encode((object)['status' => 500, 'message' => 'Verifica que estás enviando todos los campos.']);
+		}
+	}
+
 	public function getLastOTP()
 	{
-		$email = $this->request->getPost('email');
-		$data = $this->_OTPModel->asObject()->where('CORREO', $email)->orderBy('IDOTP', 'desc')->first();
-		return json_encode((object)['data' => $data]);
+		$email = trim($this->request->getPost('email'));
+		if ($email) {
+			$data = $this->_OTPModel->asObject()->where('CORREO', $email)->orderBy('IDOTP', 'desc')->first();
+			return json_encode((object)['data' => $data]);
+		}else{
+			return json_encode((object)['status' => 500, 'data' => ['message' => 'No existe el email.']]);
+		}
 	}
 }

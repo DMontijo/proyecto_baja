@@ -206,6 +206,7 @@ $routes->group('data', function ($routes) {
 	$routes->post('get-empleados-by-municipio-and-oficina', 'admin/DashboardController::getEmpleadosByMunicipioAndOficina');
 
 	$routes->post('sendOTP', 'OTPController::sendEmailOTP');
+	$routes->post('validateOTP', 'OTPController::validateOTP');
 	$routes->post('getLastOTP', 'OTPController::getLastOTP');
 
 	//Link
