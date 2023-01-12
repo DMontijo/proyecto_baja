@@ -95,7 +95,9 @@ $routes->group('admin', function ($routes) {
 		$routes->get('constancias', 'admin/ConstanciasController::index');
 		$routes->post('firmar_constancia_extravio', 'admin/FirmaController::firmar_constancia_extravio');
 		$routes->get('constancias_extravio_abiertas', 'admin/ConstanciasController::constancias_abiertas');
+		$routes->get('constancias_extravio_proceso', 'admin/ConstanciasController::constancias_proceso');
 		$routes->get('constancias_extravio_firmadas', 'admin/ConstanciasController::constancias_firmadas');
+		$routes->post('constancia_extravio_liberar', 'admin/ConstanciasController::constancia_extravio_liberar');
 		$routes->get('constancia_extravio_show', 'admin/ConstanciasController::constancia_extravio_show');
 		$routes->post('download_constancia_pdf', 'admin/ConstanciasController::download_constancia_pdf');
 		$routes->post('download_constancia_xml', 'admin/ConstanciasController::download_constancia_xml');

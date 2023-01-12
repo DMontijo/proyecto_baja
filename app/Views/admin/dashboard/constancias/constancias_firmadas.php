@@ -126,7 +126,7 @@ $(function() {
         autoWidth: true,
         ordering: true,
         order: [
-            [0, 'asc'],
+            // [0, 'asc'],
         ],
         searching: true,
         pageLength: 100,

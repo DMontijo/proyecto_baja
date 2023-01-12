@@ -35,12 +35,13 @@ class ConstanciasController extends BaseController
 
 	public function index()
 	{
-		$data = (object)array();
 		if (!$this->permisos('CONSTANCIAS DE EXTRAVIOS')) {
 			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
 		}
+		$data = (object)array();
 		$data->abiertas = count($this->_constanciaExtravioModel->asObject()->where('STATUS', 'ABIERTO')->findAll());
 		$data->firmadas = count($this->_constanciaExtravioModel->asObject()->where('STATUS', 'FIRMADO')->findAll());
+		$data->proceso = count($this->_constanciaExtravioModel->asObject()->where('STATUS', 'EN PROCESO')->findAll());
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 		$this->_loadView('Constancias extravío', 'constancias', '', $data, 'index');
@@ -48,36 +49,121 @@ class ConstanciasController extends BaseController
 
 	public function constancias_abiertas()
 	{
+		if (!$this->permisos('CONSTANCIAS DE EXTRAVIOS')) {
+			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
+		}
 		$data = (object)array();
-		$data->constancia = $this->_constanciaExtravioModel->asObject()->select('CONSTANCIAEXTRAVIO.*, CONCAT(EXTRACT(DAY FROM CONSTANCIAEXTRAVIO.FECHAREGISTRO),"-",EXTRACT(MONTH FROM CONSTANCIAEXTRAVIO.FECHAREGISTRO),"-",EXTRACT(YEAR FROM CONSTANCIAEXTRAVIO.FECHAREGISTRO)) AS FECHA,TIME(CONSTANCIAEXTRAVIO.FECHAREGISTRO) AS HORA,CONCAT (DENUNCIANTES.NOMBRE," ",DENUNCIANTES.APELLIDO_PATERNO," ",DENUNCIANTES.APELLIDO_MATERNO) AS NOMBRE,DENUNCIANTES.CORREO,DENUNCIANTES.TELEFONO')->join('DENUNCIANTES', 'DENUNCIANTES.DENUNCIANTEID = CONSTANCIAEXTRAVIO.DENUNCIANTEID')->where('STATUS', 'ABIERTO')->findAll();
+		$data->constancia = $this->_constanciaExtravioModel
+							->asObject()
+							->select(
+								'CONSTANCIAEXTRAVIO.*,
+								CONCAT(EXTRACT(DAY FROM CONSTANCIAEXTRAVIO.FECHAREGISTRO),"-",EXTRACT(MONTH FROM CONSTANCIAEXTRAVIO.FECHAREGISTRO),"-",EXTRACT(YEAR FROM CONSTANCIAEXTRAVIO.FECHAREGISTRO)) AS FECHA,
+								TIME(CONSTANCIAEXTRAVIO.FECHAREGISTRO) AS HORA,
+								CONCAT (DENUNCIANTES.NOMBRE," ",DENUNCIANTES.APELLIDO_PATERNO," ",DENUNCIANTES.APELLIDO_MATERNO) AS NOMBRE,
+								DENUNCIANTES.CORREO,
+								DENUNCIANTES.TELEFONO')
+							->join('DENUNCIANTES', 'DENUNCIANTES.DENUNCIANTEID = CONSTANCIAEXTRAVIO.DENUNCIANTEID')
+							->where('STATUS', 'ABIERTO')
+							->orderBy('CONSTANCIAEXTRAVIO.FECHAREGISTRO','ASC')
+							->findAll();
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
-		$this->_loadView('Constancias extraviadas abiertos', 'constancias', '', $data, 'constancias_abiertas');
+		$this->_loadView('Constancias extravío abiertas', 'constancias', '', $data, 'constancias_abiertas');
+	}
+
+	public function constancias_proceso()
+	{
+		if (!$this->permisos('CONSTANCIAS DE EXTRAVIOS')) {
+			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
+		}
+		$data = (object)array();
+		$data->constancia = $this->_constanciaExtravioModel
+							->asObject()
+							->select(
+								'CONSTANCIAEXTRAVIO.*,
+								CONCAT(EXTRACT(DAY FROM CONSTANCIAEXTRAVIO.FECHAREGISTRO),"-",EXTRACT(MONTH FROM CONSTANCIAEXTRAVIO.FECHAREGISTRO),"-",EXTRACT(YEAR FROM CONSTANCIAEXTRAVIO.FECHAREGISTRO)) AS FECHA,
+								TIME(CONSTANCIAEXTRAVIO.FECHAREGISTRO) AS HORA,
+								CONCAT (DENUNCIANTES.NOMBRE," ",DENUNCIANTES.APELLIDO_PATERNO," ",DENUNCIANTES.APELLIDO_MATERNO) AS NOMBRE,
+								DENUNCIANTES.CORREO,
+								DENUNCIANTES.TELEFONO')
+							->join('DENUNCIANTES', 'DENUNCIANTES.DENUNCIANTEID = CONSTANCIAEXTRAVIO.DENUNCIANTEID')
+							->where('STATUS', 'EN PROCESO')
+							->orderBy('CONSTANCIAEXTRAVIO.FECHAREGISTRO','ASC')
+							->findAll();
+		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+
+		$this->_loadView('Constancias extravío en proceso', 'constancias', '', $data, 'constancias_proceso');
 	}
 
 	public function constancias_firmadas()
 	{
+		if (!$this->permisos('CONSTANCIAS DE EXTRAVIOS')) {
+			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
+		}
 		$data = (object)array();
-		$data->constancia = $this->_constanciaExtravioModel->asObject()->select('CONSTANCIAEXTRAVIO.*, CONCAT(EXTRACT(DAY FROM CONSTANCIAEXTRAVIO.FECHAREGISTRO),"-",EXTRACT(MONTH FROM CONSTANCIAEXTRAVIO.FECHAREGISTRO),"-",EXTRACT(YEAR FROM CONSTANCIAEXTRAVIO.FECHAREGISTRO)) AS FECHA,TIME(CONSTANCIAEXTRAVIO.FECHAREGISTRO) AS HORA,CONCAT (DENUNCIANTES.NOMBRE," ",DENUNCIANTES.APELLIDO_PATERNO," ",DENUNCIANTES.APELLIDO_MATERNO) AS NOMBRE,DENUNCIANTES.CORREO,DENUNCIANTES.TELEFONO')->join('DENUNCIANTES', 'DENUNCIANTES.DENUNCIANTEID = CONSTANCIAEXTRAVIO.DENUNCIANTEID')->where('STATUS', 'FIRMADO')->findAll();
+		$data->constancia = $this->_constanciaExtravioModel
+							->asObject()
+							->select(
+								'CONSTANCIAEXTRAVIO.*, 
+								CONCAT(EXTRACT(DAY FROM CONSTANCIAEXTRAVIO.FECHAREGISTRO),"-",EXTRACT(MONTH FROM CONSTANCIAEXTRAVIO.FECHAREGISTRO),"-",EXTRACT(YEAR FROM CONSTANCIAEXTRAVIO.FECHAREGISTRO)) AS FECHA,
+								TIME(CONSTANCIAEXTRAVIO.FECHAREGISTRO) AS HORA,
+								CONCAT (DENUNCIANTES.NOMBRE," ",DENUNCIANTES.APELLIDO_PATERNO," ",DENUNCIANTES.APELLIDO_MATERNO) AS NOMBRE,
+								DENUNCIANTES.CORREO,
+								DENUNCIANTES.TELEFONO')
+								->join('DENUNCIANTES', 'DENUNCIANTES.DENUNCIANTEID = CONSTANCIAEXTRAVIO.DENUNCIANTEID')
+								->where('STATUS', 'FIRMADO')
+								->orderBy('CONSTANCIAEXTRAVIO.FECHAFIRMA','DESC')
+								->findAll();
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
-		$this->_loadView('Constancias extraviadas abiertos', 'constancias', '', $data, 'constancias_firmadas');
+		$this->_loadView('Constancias extravío firmadas', 'constancias', '', $data, 'constancias_firmadas');
+	}
+
+	public function constancia_extravio_liberar()
+	{
+		if (!$this->permisos('CONSTANCIAS DE EXTRAVIOS')) {
+			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
+		}
+		
+		$folio = $this->request->getPost('folio');
+		$year = $this->request->getPost('year');
+		if (!$this->request->getPost('folio') || !$this->request->getPost('year')) {
+			return redirect()->back()->with('message_error', 'La constancia no existe o no enviaste todos los parámetros.');
+		}
+
+		$constancia = $this->_constanciaExtravioModel->asObject()->where('CONSTANCIAEXTRAVIOID', $folio)->where('ANO', $year)->first();
+		if(!$constancia){
+			return redirect()->back()->with('message_error', 'Constancia no liberada.');
+		}
+		$update = $this->_constanciaExtravioModel->set(['STATUS'=>'ABIERTO'])->where('CONSTANCIAEXTRAVIOID', $folio)->where('ANO', $year)->where('STATUS','EN PROCESO')->update();
+		if($update){
+			return redirect()->back()->with('message_success', 'Constancia liberada con éxito.');
+		}
+		return redirect()->back()->with('message_error', 'Constancia no liberada.');
 	}
 
 	public function constancia_extravio_show()
 	{
+		if (!$this->permisos('CONSTANCIAS DE EXTRAVIOS')) {
+			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
+		}
 		$data = (object)array();
 		$data->folio = $this->request->getGet('folio');
 		$data->year = $this->request->getGet('year');
 		$year = $this->request->getGet('year');
+
 		if (!$this->request->getGet('folio') || !$this->request->getGet('year')) {
 			return redirect()->back()->with('message_error', 'La constancia no existe o no enviaste todos los parámetros.');
 		}
-		$data->constanciaExtravio = $this->_plantillasModel->asObject()->where('TITULO', 'CONSTANCIA DE EXTRAVIO')->first();
+
 		$constancia = $this->_constanciaExtravioModel->asObject()->where('CONSTANCIAEXTRAVIOID', $data->folio)->where('ANO', $year)->first();
+		$constancia_update = $this->_constanciaExtravioModel->set(['STATUS'=>'EN PROCESO'])->where('CONSTANCIAEXTRAVIOID', $data->folio)->where('ANO', $year)->update();
+
 		if (!$constancia) {
 			return redirect()->back()->with('message_error', 'La constancia no existe.');
 		}
+
+		$data->constanciaExtravio = $this->_plantillasModel->asObject()->where('TITULO', 'CONSTANCIA DE EXTRAVIO')->first();
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 		$solicitante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID ', $constancia->DENUNCIANTEID)->first();

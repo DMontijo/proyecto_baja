@@ -140,7 +140,6 @@
                         <input class="form-control" type="text" id="nodocumento" name="nodocumento">
                     </div>
 
-
                     <div id="pasaporte_container" class="col-12 m-0 p-0 d-none">
                         <div class="row m-0 p-0">
                             <hr>
