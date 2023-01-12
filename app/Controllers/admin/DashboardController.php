@@ -1596,17 +1596,49 @@ class DashboardController extends BaseController
 		$expediente = $this->request->getPost('expediente');
 
 		$folioDocSinFirmar = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'ABIERTO')->orderBy('FOLIODOCID', 'asc')->findAll();
+		$foliovd = $this->_folioModel->where('FOLIOID', $folio)->where('ANO', $year)->where('EXPEDIENTEID', $expediente)->where('STATUS', 'EXPEDIENTE')->first();
 
 		if ($folioDocSinFirmar) {
 			return json_encode((object)['status' => 4]);
 		}
 
 		$folioDoc = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOCID', 'asc')->findAll();
+		$archivosExternosVD = $this->_archivoExternoModel->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
+
+		if ($archivosExternosVD) {
+			try {
+
+				foreach ($archivosExternosVD as $key => $arch) {
+					$relacionDocArc = $this->_relacionFolioDocModel->where('FOLIOID', $arch['FOLIOID'])->where('ANO', $arch['ANO'])->where('FOLIODOCID', $arch['FOLIOARCHIVOID'])->where('TIPO', 'ARCHIVO')->orderBy('FOLIODOCID', 'asc')->first();
+					if ($relacionDocArc == NULL) {
+						$municipioid = $foliovd['MUNICIPIOID'] ? $foliovd['MUNICIPIOID'] : NULL;
+
+						try {
+							$_archivo = $this->_createArchivosExternos($expediente, $folio, $year,  $municipioid, 53, $arch['ARCHIVODESCR'], $arch['ARCHIVO'], $arch['EXTENSION']);
+							if ($_archivo->status == 201) {
+								$datosRelacionFolio = [
+									'FOLIODOCID' => $arch['FOLIOARCHIVOID'],
+									'FOLIOID' =>  $arch['FOLIOID'],
+									'ANO' => $arch['ANO'],
+									'EXPEDIENTEID' => $_archivo->EXPEDIENTEID,
+									'EXPEDIENTEARCHIVOID' => $_archivo->ARCHIVOID,
+									'TIPO' => 'ARCHIVO',
+
+								];
+								$this->_relacionFolioDocModel->insert($datosRelacionFolio);
+							}
+						} catch (\Exception $e) {
+						}
+					}
+				}
+			} catch (\Throwable $th) {
+			}
+		}
 		if ($folioDoc) {
 			try {
 
 				foreach ($folioDoc as $key => $doc) {
-					$relacionDoc = $this->_relacionFolioDocModel->where('FOLIOID', $doc['FOLIOID'])->where('ANO', $doc['ANO'])->where('EXPEDIENTEID', $doc['NUMEROEXPEDIENTE'])->where('FOLIODOCID', $doc['FOLIODOCID'])->orderBy('FOLIODOCID', 'asc')->first();
+					$relacionDoc = $this->_relacionFolioDocModel->where('FOLIOID', $doc['FOLIOID'])->where('ANO', $doc['ANO'])->where('EXPEDIENTEID', $doc['NUMEROEXPEDIENTE'])->where('FOLIODOCID', $doc['FOLIODOCID'])->where('TIPO', 'DOCUMENTO')->orderBy('FOLIODOCID', 'asc')->first();
 
 					if ($relacionDoc == NULL) {
 						$municipioid = $doc['MUNICIPIOID'] ? $doc['MUNICIPIOID'] : NULL;
@@ -1620,6 +1652,8 @@ class DashboardController extends BaseController
 									'ANO' => $doc['ANO'],
 									'EXPEDIENTEID' => $_archivo->EXPEDIENTEID,
 									'EXPEDIENTEARCHIVOID' => $_archivo->ARCHIVOID,
+									'TIPO' => 'DOCUMENTO',
+
 								];
 								$this->_relacionFolioDocModel->insert($datosRelacionFolio);
 							}

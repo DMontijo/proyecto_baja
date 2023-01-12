@@ -8,5 +8,5 @@ class RelacionFolioDocModel extends Model
 {
 
 	protected $table            = 'RELACIONFOLIODOC';
-	protected $allowedFields    = ['FOLIODOCID', 'FOLIOID', 'ANO', 'EXPEDIENTEID', 'EXPEDIENTEARCHIVOID'];
+	protected $allowedFields    = ['FOLIODOCID', 'FOLIOID', 'ANO', 'EXPEDIENTEID', 'EXPEDIENTEARCHIVOID', 'TIPO'];
 }

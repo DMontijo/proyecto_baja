@@ -29,6 +29,10 @@ class RELACIONFOLIODOC extends Migration
 				'type' => 'INT',
 				'constraint' => '10',
 			],
+			'TIPO' => [
+				'type' => 'VARCHAR',
+                'constraint' => '20',
+			],
         ]);
         $this->forge->addKey('FOLIOID', TRUE);
         $this->forge->addKey('FOLIODOCID', TRUE);
