@@ -14,7 +14,6 @@ class DelitosUsuariosSeeder extends Seeder
 			array('DELITO' => 'ABUSO SEXUAL', 'IMPORTANCIA' => '2'),
 			array('DELITO' => 'AMENAZAS', 'IMPORTANCIA' => '2'),
 			array('DELITO' => 'ALLANAMIENTO DE MORADA', 'IMPORTANCIA' => '2'),
-			array('DELITO' => 'CORRUPCIÓN', 'IMPORTANCIA' => '2'),
 			array('DELITO' => 'CORRUPCIÓN DE MENORES', 'IMPORTANCIA' => '2'),
 			array('DELITO' => 'DAÑO A PROPIEDAD AJENA', 'IMPORTANCIA' => '1'),
 			array('DELITO' => 'DAÑO A PROPIEDAD AJENA AGRAVADO POR INCENDIO', 'IMPORTANCIA' => '2'),

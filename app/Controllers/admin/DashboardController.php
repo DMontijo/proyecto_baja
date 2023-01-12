@@ -1127,7 +1127,7 @@ class DashboardController extends BaseController
 				return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_error', 'No se actualizo el folio');
 			}
 		} catch (\Exception $e) {
-			return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_error', 'No se actualizo el folio');
+			return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_error', 'Hubo un error e n la remisión, verifica el expediente en justicia.');
 		}
 	}
 
