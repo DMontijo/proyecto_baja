@@ -44,37 +44,42 @@ class FirmaController extends BaseController
 
 	public function firmar_constancia_extravio()
 	{
-		$numfolio = trim($this->request->getPost('folio'));
-		$folio = $numfolio;
-		$year = trim($this->request->getPost('year'));
-		$password = str_replace(' ', '', trim($this->request->getPost('contrasena')));
-		$user_id = session('ID');
-
-		$constancia = $this->_constanciaExtravioModel->asObject()->where('CONSTANCIAEXTRAVIOID', $numfolio)->where('ANO', $year)->first();
-		$plantilla = $this->_plantillasModel->asObject()->where('TITULO', 'CONSTANCIA DE EXTRAVIO')->first();
-
-		$solicitante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', $constancia->DENUNCIANTEID)->first();
-
-		$lugar = $this->_hechoLugarModel->asObject()->where('HECHOLUGARID', $constancia->HECHOLUGARID)->first();
-		$municipio = (object)[];
-		if ($constancia->MUNICIPIOIDCITA) {
-			$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $constancia->MUNICIPIOIDCITA)->where('ESTADOID', $constancia->ESTADOID)->first();
-		} else {
-			$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $constancia->MUNICIPIOID)->where('ESTADOID', $constancia->ESTADOID)->first();
-		}
-		$estado = $this->_estadosModel->asObject()->where('ESTADOID', $constancia->ESTADOID)->first();
-		$meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
-
-		$timestamp = strtotime($constancia->HECHOFECHA);
-		$dia_extravio = date('d', $timestamp);
-		$mes_extravio = $meses[date('n') - 1];
-		$ano_extravio = date('Y', $timestamp);
-
-		$document_name = $plantilla->TITULO;
-		$FECHAFIRMA = date("Y-m-d");
-		$HORAFIRMA = date("H:i");
-
 		try {
+			$numfolio = trim($this->request->getPost('folio'));
+			$folio = $numfolio;
+			$year = trim($this->request->getPost('year'));
+			$password = str_replace(' ', '', trim($this->request->getPost('contrasena')));
+			$user_id = session('ID');
+
+			$constancia = $this->_constanciaExtravioModel->asObject()->where('CONSTANCIAEXTRAVIOID', $numfolio)->where('ANO', $year)->where('STATUS !=','FIRMADO')->first();
+			if(!$constancia){
+				return redirect()->to(base_url('/admin/dashboard/constancias_extravio_abiertas'))->with('message_error', 'No existe la constancia o ya fue firmada.');
+			}
+			
+			$plantilla = $this->_plantillasModel->asObject()->where('TITULO', 'CONSTANCIA DE EXTRAVIO')->first();
+
+			$solicitante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', $constancia->DENUNCIANTEID)->first();
+
+			$lugar = $this->_hechoLugarModel->asObject()->where('HECHOLUGARID', $constancia->HECHOLUGARID)->first();
+			$municipio = (object)[];
+			if ($constancia->MUNICIPIOIDCITA) {
+				$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $constancia->MUNICIPIOIDCITA)->where('ESTADOID', $constancia->ESTADOID)->first();
+			} else {
+				$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $constancia->MUNICIPIOID)->where('ESTADOID', $constancia->ESTADOID)->first();
+			}
+			$estado = $this->_estadosModel->asObject()->where('ESTADOID', $constancia->ESTADOID)->first();
+			$meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
+
+			$timestamp = strtotime($constancia->HECHOFECHA);
+			$dia_extravio = date('d', $timestamp);
+			$mes_extravio = $meses[date('n') - 1];
+			$ano_extravio = date('Y', $timestamp);
+
+			$document_name = $plantilla->TITULO;
+			$FECHAFIRMA = date("Y-m-d");
+			$HORAFIRMA = date("H:i");
+
+		
 			if ($this->_crearArchivosPEMText($user_id, $password)) {
 				if ($this->_validarFiel($user_id)) {
 					$fiel_user = $this->_extractData($user_id);
@@ -270,7 +275,11 @@ class FirmaController extends BaseController
 							'PDF' => $pdf,
 							'STATUS' => 'FIRMADO'
 						];
-
+						
+						$constancia = $this->_constanciaExtravioModel->asObject()->where('CONSTANCIAEXTRAVIOID', $numfolio)->where('ANO', $year)->where('STATUS !=','FIRMADO')->first();
+						if(!$constancia){
+							return redirect()->to(base_url('/admin/dashboard/constancias_extravio_abiertas'))->with('message_error', 'No existe la constancia o ya fue firmada.');
+						}
 						$update = $this->_constanciaExtravioModel->set($datosInsert)->where('CONSTANCIAEXTRAVIOID ', $numfolio)->where('ANO', $year)->update();
 
 						if ($update) {
@@ -307,7 +316,6 @@ class FirmaController extends BaseController
 		if ($numexpediente == null) {
 			$numexpediente = $this->request->getPost('expediente');
 		}
-
 		$expediente = $numexpediente;
 		$year = $this->request->getPost('year_modal');
 		if ($year == null) {
@@ -318,14 +326,15 @@ class FirmaController extends BaseController
 
 		$documento = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $numexpediente)->where('ANO', $year)->where('STATUS', 'ABIERTO')->findAll();
 		$folioRow = $this->_folioModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->first();
-		if ($documento == null) {
-			return json_encode((object)['status' => 0, 'message_error' => "Debes generar documentos antes de firmar"]);
+		if ($documento == null || count($documento) <= 0) {
+			return json_encode((object)['status' => 0, 'message_error' => "No hay documentos por firmar"]);
 		}
 
 		$meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
 
 		$FECHAFIRMA = date("Y-m-d");
 		$HORAFIRMA = date("H:i");
+		
 		try {
 			if ($this->_crearArchivosPEMText($user_id, $password)) {
 				if ($this->_validarFiel($user_id)) {
@@ -335,18 +344,23 @@ class FirmaController extends BaseController
 					$num_certificado = $fiel_user['num_certificado'];
 					for ($i = 0; $i < count($documento); $i++) {
 						$municipio = (object)[];
-
+						$documento[$i]->PLACEHOLDER = str_replace('[EXPEDIENTE_NOMBRE_DEL_RESPONSABLE]', $razon_social, $documento[$i]->PLACEHOLDER);
+						$documento[$i]->PLACEHOLDER = str_replace('EXPEDIENTE_NOMBRE_DEL_RESPONSABLE', $razon_social, $documento[$i]->PLACEHOLDER);
+						$documento[$i]->PLACEHOLDER = str_replace('[NOMBRE_LICENCIADO]', $razon_social, $documento[$i]->PLACEHOLDER);
+						$documento[$i]->PLACEHOLDER = str_replace('[EXPEDIENTE_NOMBRE_MP_RESPONSABLE]', $razon_social, $documento[$i]->PLACEHOLDER);
+						$text = $documento[$i]->PLACEHOLDER;
+						$text = str_replace( '<', ' <',$text);
+						$text= strip_tags( $text);
+						$text = str_replace(chr(13), ' ' ,$text);
+						$text = str_replace(chr(10), ' ' ,$text);
+						$text = str_replace( '  ', ' ', trim($text) );
 						$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $documento[$i]->MUNICIPIOID)->where('ESTADOID', $documento[$i]->ESTADOID)->first();
 						if (isset($municipio) == false) {
 							$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $folioRow->MUNICIPIOID)->where('ESTADOID', $folioRow->ESTADOID)->first();
 						}
 						$estado = $this->_estadosModel->asObject()->where('ESTADOID', $documento[$i]->ESTADOID)->first();
-						$documento[$i]->PLACEHOLDER = str_replace('[EXPEDIENTE_NOMBRE_DEL_RESPONSABLE]', $razon_social, $documento[$i]->PLACEHOLDER);
-						$documento[$i]->PLACEHOLDER = str_replace('EXPEDIENTE_NOMBRE_DEL_RESPONSABLE', $razon_social, $documento[$i]->PLACEHOLDER);
-						$documento[$i]->PLACEHOLDER = str_replace('[NOMBRE_LICENCIADO]', $razon_social, $documento[$i]->PLACEHOLDER);
-						$documento[$i]->PLACEHOLDER = str_replace('[EXPEDIENTE_NOMBRE_MP_RESPONSABLE]', $razon_social, $documento[$i]->PLACEHOLDER);
 
-						$signature = $this->_generateSignature($user_id, "FIRMA DE DOCUMENTOS", $documento[$i]->PLACEHOLDER, $expediente, $FECHAFIRMA, $HORAFIRMA);
+						$signature = $this->_generateSignature($user_id, "FIRMA DE DOCUMENTOS", $text, $expediente, $FECHAFIRMA, $HORAFIRMA);
 						$urldoc = base_url('/validar_documento?expediente=' . base64_encode($numexpediente) . '&year=' . $year . '&foliodoc=' . base64_encode($documento[$i]->FOLIODOCID));
 
 						$datapdf = array(
@@ -359,13 +373,12 @@ class FirmaController extends BaseController
 							'fecha' => $FECHAFIRMA,
 							'hora' => $HORAFIRMA,
 							'lugar' => $municipio->MUNICIPIODESCR . ", " . $estado->ESTADODESCR,
-							'qr3' => $this->_generateQR($signature->signature),
+							'qr3' => $this->_generateQR($signature->signed_chain),
 							'url' => $urldoc,
 							'qrurl' => $this->_generateQR($urldoc)
-
 						);
+						
 						$pdf = $this->_generatePDFDocumentos($datapdf);
-
 
 						if ($signature->status == 1) {
 							$xmldocumentos = $this->_createXMLSignature($signature->signed_chain, $signature->signature, $expediente, $year);

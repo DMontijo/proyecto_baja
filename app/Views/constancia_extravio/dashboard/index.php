@@ -57,16 +57,6 @@
         </div>
     </div>
 </div>
-
-<?php if (session()->getFlashdata('peticion')) : ?>
-<script>
-Swal.fire({
-    icon: 'success',
-    text: '<?= session()->getFlashdata('peticion') ?>',
-    confirmButtonColor: '#bf9b55',
-})
-</script>
-<?php endif; ?>
 <?php include('modal_form_documentos.php') ?>
 <?php include('modal_form_vehiculo.php') ?>
 <script>
@@ -95,20 +85,6 @@ Swal.fire({
             .normalize()
             .replaceAll('´', '');
     }
-
-
-    // Loop over them and prevent submission
-    Array.prototype.slice.call(forms)
-        .forEach(function(form) {
-            form.addEventListener('submit', function(event) {
-                if (!form.checkValidity()) {
-                    event.preventDefault()
-                    event.stopPropagation()
-                }
-
-                form.classList.add('was-validated')
-            }, false)
-        })
 })();
 </script>
 <?= $this->endSection() ?>

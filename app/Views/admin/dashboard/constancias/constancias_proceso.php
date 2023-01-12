@@ -7,7 +7,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-12 text-center mb-4">
-                <h1 class="mb-4 text-center font-weight-bold">CONSTANCIAS DE EXTRAVÍO ABIERTAS</h1>
+                <h1 class="mb-4 text-center font-weight-bold">CONSTANCIAS DE EXTRAVÍO EN PROCESO</h1>
                 <a class="link link-primary" href="<?= base_url('admin/dashboard/constancias') ?>" role="button"><i
                         class="fas fa-reply"></i> REGRESAR A CONSTANCIAS</a>
             </div>
@@ -42,10 +42,17 @@
                                     <td class="text-center"><?= $constancia->EXTRAVIO == 'DOCUMENTOS'
 																	? $constancia->TIPODOCUMENTO
 																	: $constancia->EXTRAVIO ?></td>
-                                    <td class="text-center"><a type="button"
-                                            href="<?= base_url('/admin/dashboard/constancia_extravio_show?folio=' . $constancia->CONSTANCIAEXTRAVIOID . '&year=' . $constancia->ANO) ?>"
-                                            class="btn btn-primary text-white"><i class="fas fa-signature"
-                                                style="margin-right:10px;"></i> FIRMAR</a></td>
+                                    <td class="text-center">
+                                        <form action="<?= base_url('/admin/dashboard/constancia_extravio_liberar')?>"
+                                            method="post">
+                                            <input type="text" hidden name="folio"
+                                                value="<?=$constancia->CONSTANCIAEXTRAVIOID ?>">
+                                            <input type="text" hidden name="year" value="<?=$constancia->ANO ?>">
+                                            <button class="btn btn-primary text-white" type="submit">
+                                                LIBERAR
+                                            </button>
+                                        </form>
+                                    </td>
                                 </tr>
                                 <?php } ?>
                             </tbody>

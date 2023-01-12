@@ -66,10 +66,7 @@ class DashboardController extends BaseController
 
 	public function solicitar_constancia()
 	{
-		list($CONSECUTIVO, $year) = $this->_constanciaExtravioConsecutivoModel->get_consecutivo();
 		$data = [
-			'CONSTANCIAEXTRAVIOID' => $CONSECUTIVO,
-			'ANO' => $year,
 			'DENUNCIANTEID' => session('DENUNCIANTEID'),
 
 			'EXTRAVIO' => $this->request->getPost('extravio'),
@@ -84,7 +81,7 @@ class DashboardController extends BaseController
 			'NBOLETO' => $this->request->getPost('noboletos'),
 			'NTALON' => $this->request->getPost('notalon'),
 			'NOMBRESORTEO' => $this->request->getPost('nombreSorteo'),
-			'SORTEOFECHA' => $this->request->getPost('fechaSorteo'),
+			'SORTEOFECHA' => empty($this->request->getPost('fechaSorteo'))?null:$this->request->getPost('fechaSorteo'),
 			'PERMISOGOBERNACION' => $this->request->getPost('permisoGobernacion'),
 			'PERMISOGOBCOLABORADORES' => $this->request->getPost('permisoGColaboradores'),
 
@@ -93,6 +90,7 @@ class DashboardController extends BaseController
 			'DUENONOMBREDOC' => $this->request->getPost('duenonamedoc') ?$this->request->getPost('duenonamedoc'):null ,
 			'DUENOAPELLIDOPDOC' => $this->request->getPost('duenoapdoc') ? $this->request->getPost('duenoapdoc'):null,
 			'DUENOAPELLIDOMDOC' => $this->request->getPost('duenoamdoc')? $this->request->getPost('duenoamdoc'):null,
+			'DUENOFECHANACIMIENTODOC' => empty($this->request->getPost('fecha_duenodoc'))? null:$this->request->getPost('fecha_duenodoc'),
 
 			'SERIEVEHICULO' => $this->request->getPost('serieV'),
 			'NPLACA' => $this->request->getPost('noplaca'),
@@ -104,10 +102,26 @@ class DashboardController extends BaseController
 			'STATUS' => 'ABIERTO',
 		];
 
+		if(isset($data['EXTRAVIO']) && $data['EXTRAVIO']=='DOCUMENTOS' || $data['EXTRAVIO']=='BOLETOS DE SORTEO'){
+			$constancias_abiertas = $this->_constanciaExtravioModel->asObject()->where('DENUNCIANTEID',session('DENUNCIANTEID'))->where('TIPODOCUMENTO',$data['TIPODOCUMENTO'])->where('STATUS','ABIERTO')->findAll();
+			$constancias_proceso = $this->_constanciaExtravioModel->asObject()->where('DENUNCIANTEID',session('DENUNCIANTEID'))->where('TIPODOCUMENTO',$data['TIPODOCUMENTO'])->where('STATUS','EN PROCESO')->findAll();
+			$constancias = (object) array_merge($constancias_abiertas, $constancias_proceso);
+			if(isset($constancias) && $constancias){
+				foreach ($constancias as $key => $constancia) {
+					if($constancia->DUENONOMBREDOC == $data['DUENONOMBREDOC'] && $constancia->DUENOAPELLIDOPDOC == $data['DUENOAPELLIDOPDOC'] && $constancia->DUENOAPELLIDOMDOC == $data['DUENOAPELLIDOMDOC'] && $constancia->DUENOFECHANACIMIENTODOC == $data['DUENOFECHANACIMIENTODOC']){
+						return redirect()->to(base_url('/constancia_extravio/dashboard'))->with('message_warning', 'Ya existe una solicitud de "'.$data['TIPODOCUMENTO'].'" con la misma información.');
+					};
+				}
+			}
+		}
+		
+		list($CONSECUTIVO, $year) = $this->_constanciaExtravioConsecutivoModel->get_consecutivo();
+		$data['CONSTANCIAEXTRAVIOID'] = $CONSECUTIVO;
+		$data['ANO'] = $year;
 		if ($this->_constanciaExtravioModel->save($data)) {
-			return redirect()->to(base_url('/constancia_extravio/dashboard'))->with('peticion', 'Se ha enviado la solicitud de constancia de extravío.');
+			return redirect()->to(base_url('/constancia_extravio/dashboard'))->with('message_success', 'Se ha enviado la solicitud de constancia de extravío.');
 		} else {
-			return redirect()->back()->with('message', 'Hubo un error en los datos y no se guardo, intentalo de nuevo.');
+			return redirect()->back()->with('message_error', 'Hubo un error en los datos y no se guardo, intentalo de nuevo.');
 		}
 	}
 
