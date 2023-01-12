@@ -287,10 +287,11 @@ document.querySelector('#tipodoc').addEventListener('change', (e) => {
         document.querySelector('#fecha_duenodoc').required = false;
 
 
+        solicitante.checked = false;
         document.getElementById('duenonamedoc').value = '';
         document.getElementById('duenoapdoc').value = '';
         document.getElementById('duenoamdoc').value = '';
-
+        document.getElementById('fecha_duenodoc').value = '';
         document.getElementById('nodocumento').value = '';
 
         document.querySelectorAll('input[name="cita"]').forEach((cita) => {
@@ -323,13 +324,12 @@ document.querySelector('#tipodoc').addEventListener('change', (e) => {
         document.querySelector('#duenoapdoc').setAttribute('required', true);
         document.querySelector('#fecha_duenodoc').setAttribute('required', true);
 
-
+        solicitante.checked = false;
         document.getElementById('duenonamedoc').value = '';
         document.getElementById('duenoapdoc').value = '';
         document.getElementById('duenoamdoc').value = '';
-
+        document.getElementById('fecha_duenodoc').value = '';
         document.getElementById('nodocumento').value = '';
-
     } else {
 
         document.getElementById('extravio').value = 'DOCUMENTOS';
@@ -357,10 +357,11 @@ document.querySelector('#tipodoc').addEventListener('change', (e) => {
         document.querySelector('#duenoapdoc').setAttribute('required', true);
         document.querySelector('#fecha_duenodoc').setAttribute('required', true);
 
+        solicitante.checked = false;
         document.getElementById('duenonamedoc').value = '';
         document.getElementById('duenoapdoc').value = '';
         document.getElementById('duenoamdoc').value = '';
-
+        document.getElementById('fecha_duenodoc').value = '';
         document.getElementById('nodocumento').value = '';
     }
 });
