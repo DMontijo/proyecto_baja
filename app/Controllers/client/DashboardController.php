@@ -275,6 +275,7 @@ class DashboardController extends BaseController
 		];
 		$colonia = $this->_coloniasModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $this->request->getPost('municipio'))->where('LOCALIDADID', $this->request->getPost('localidad'))->where('COLONIAID', $this->request->getPost('colonia_select'))->first();
 
+		if ($this->request->getPost('colonia_select')) {
 
 			if ((int) $this->request->getPost('colonia_select') == 0) {
 				$dataFolio['HECHOCOLONIAID'] = null;
@@ -286,7 +287,7 @@ class DashboardController extends BaseController
 				$dataFolio['HECHOCOLONIADESCR'] = $colonia->COLONIADESCR;
 				$dataFolio['HECHOZONA'] = $colonia->ZONA;
 			}
-		
+		}
 		if ($this->request->getPost('esta_desaparecido') == "SI") {
 			$dataFolio['LOCALIZACIONPERSONA'] = 'S';
 			$dataFolio['LOCALIZACIONPERSONAMEDIOS'] = $this->request->getPost('autorization_photo_des') == 'on' ? 'S' : 'N';

@@ -347,6 +347,12 @@
 					radio.removeAttribute('required');
 				});
 			}
+
+			if (document.querySelector("#delito").value == "PERSONA DESAPARECIDA") {
+				$("input[name=documentos_vehiculo][value='O']").prop("checked", true);
+				document.getElementById('datos_robo_vehiculo').classList.remove('step');
+				document.getElementById('datos_robo_vehiculo_completo').classList.remove('step');
+			}
 			$('#delito').change(function() {
 
 				if (document.querySelector("#delito").value == "ROBO DE VEHÍCULO") {
@@ -367,26 +373,6 @@
 						}
 
 					});
-
-
-					// Swal.fire({
-					// 	title: '¿Cuentas con algún documento en ese momento para verificar la serie y las placas del auto?',
-					// 	showCancelButton: true,
-					// 	confirmButtonText: 'Si',
-					// 	cancelButtonText: `No`,
-					// }).then((result) => {
-					// 	/* Read more about isConfirmed, isDenied below */
-					// 	if (result.isConfirmed) {
-					// 		document.getElementById('datos_robo_vehiculo_completo').classList.add('step');
-					// 		document.getElementById('datos_robo_vehiculo').classList.remove('step');
-
-
-					// 	} else {
-					// 		document.getElementById('datos_robo_vehiculo').classList.add('step');
-					// 		document.getElementById('datos_robo_vehiculo_completo').classList.remove('step');
-
-					// 	}
-					// })
 				} else {
 					var radio_doc_vehiculo = document.getElementById("radio_documentos_vehiculo");
 

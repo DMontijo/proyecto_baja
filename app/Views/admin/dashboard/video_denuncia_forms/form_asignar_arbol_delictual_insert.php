@@ -6,7 +6,7 @@
 	<hr>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="imputado_arbol" class="form-label font-weight-bold">Imputado</label>
-		<select class="form-control" id="imputado_arbol" name="imputado_arbol" required> 
+		<select class="form-control" id="imputado_arbol" name="imputado_arbol" required>
 			<option selected value="" disabled></option>
 		</select>
 	</div>
@@ -18,7 +18,7 @@
 			foreach ($body_data->delitosModalidad as $index => $delitoModalidad) { ?>
 				<option value="<?= $delitoModalidad->DELITOMODALIDADID ?>"> <?= $delitoModalidad->DELITOMODALIDADDESCR ?></option>
 			<?php } ?>
-			
+
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -27,30 +27,47 @@
 			<option selected value="" disabled></option>
 		</select>
 	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="tentativa" class="form-label font-weight-bold">TENTATIVA</label>
+		<select class="form-control" id="tentativa" name="tentativa" required>
+			<option selected value="" disabled></option>
+			<option value="S">SI</option>
+			<option value="N">NO</option>
 
+		</select>
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="conviolencia" class="form-label font-weight-bold">CON VIOLENCIA</label>
+		<select class="form-control" id="conviolencia" name="conviolencia" required>
+			<option selected value="" disabled></option>
+			<option value="S">SI</option>
+			<option value="N">NO</option>
+
+		</select>
+	</div>
 	<div class="col-12 mb-3 text-center">
 		<button type="submit" id="insertArbol" name="insertArbol" class="btn btn-primary font-weight-bold">AGREGAR DELITO</button>
 	</div>
 
 </form>
 <script>
-	(function () {
-  'use strict'
+	(function() {
+		'use strict'
 
-  // Fetch all the forms we want to apply custom Bootstrap validation styles to
-  var forms = document.querySelectorAll('.needs-validation')
+		// Fetch all the forms we want to apply custom Bootstrap validation styles to
+		var forms = document.querySelectorAll('.needs-validation')
 
-  // Loop over them and prevent submission
-  Array.prototype.slice.call(forms)
-    .forEach(function (form) {
-      form.addEventListener('submit', function (event) {
-        if (!form.checkValidity()) {
-          event.preventDefault()
-          event.stopPropagation()
-        }
+		// Loop over them and prevent submission
+		Array.prototype.slice.call(forms)
+			.forEach(function(form) {
+				form.addEventListener('submit', function(event) {
+					if (!form.checkValidity()) {
+						event.preventDefault()
+						event.stopPropagation()
+					}
 
-        form.classList.add('was-validated')
-      }, false)
-    })
-})()
+					form.classList.add('was-validated')
+				}, false)
+			})
+	})()
 </script>

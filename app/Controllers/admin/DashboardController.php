@@ -4051,6 +4051,9 @@ class DashboardController extends BaseController
 			'PERSONAFISICAIDVICTIMA' => $this->request->getPost('victima'),
 			'DELITOMODALIDADID' => $this->request->getPost('delito'),
 			'PERSONAFISICAIDIMPUTADO' => $this->request->getPost('imputado'),
+			'TENTATIVA' => $this->request->getPost('tentativa'),
+			'CONVIOLENCIA' => $this->request->getPost('conviolencia'),
+
 		);
 		$checarDelito = $this->_relacionIDOModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAIDVICTIMA', $this->request->getPost('victima'))->where('PERSONAFISICAIDIMPUTADO', $this->request->getPost('imputado'))->where('DELITOMODALIDADID', $this->request->getPost('delito'))->first();
 		if (isset($checarDelito)) {
