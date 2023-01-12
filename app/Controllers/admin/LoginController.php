@@ -8,6 +8,7 @@ use App\Models\UsuariosModel;
 use App\Models\SesionesModel;
 use App\Models\BitacoraActividadModel;
 use App\Models\RolesPermisosModel;
+use App\Models\RolesUsuariosModel;
 
 class LoginController extends BaseController
 {
@@ -17,6 +18,7 @@ class LoginController extends BaseController
 		$this->_sesionesModel = new SesionesModel();
 		$this->_bitacoraActividadModel = new BitacoraActividadModel();
 		$this->_rolesPermisosModel = new rolesPermisosModel();
+		$this->_rolesUsuariosModel = new RolesUsuariosModel();
 	}
 
 	public function index()
@@ -40,6 +42,7 @@ class LoginController extends BaseController
 		if ($data && validatePassword($password, $data['PASSWORD'])) {
 			$data['permisos'] = $this->_rolesPermisosModel->select('PERMISOS.PERMISODESCR AS NOMBRE')->where('ROLID', $data['ROLID'])->join('PERMISOS', 'PERMISOS.PERMISOID = ROLESPERMISOS.PERMISOID', 'left')->findAll();
 			$data['permisos'] = array_column($data['permisos'], ('NOMBRE'));
+			$data['rol'] = $this->_rolesUsuariosModel->asObject()->where('ID',$data['ROLID'])->first();
 			$data['logged_in'] = TRUE;
 			$data['type'] = 'admin';
 			$session->set($data);
