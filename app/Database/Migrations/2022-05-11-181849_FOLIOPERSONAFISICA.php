@@ -237,6 +237,11 @@ class FOLIOPERSONAFISICA extends Migration
 				'type' => 'INT',
 				'null' => TRUE,
 			],
+			'OCUPACIONDESCR' => [
+				'type' => 'VARCHAR',
+				'constraint' => '100',
+				'null' => TRUE,
+			],
 			'DESCRIPCION_FISICA' => [
 				'type' => 'VARCHAR',
 				'constraint' => '300',

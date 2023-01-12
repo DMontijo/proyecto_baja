@@ -56,6 +56,7 @@ class FolioPersonaFisicaModel extends Model
 		'TIEMPORESIDEDIAS',
 		'ESCOLARIDADID',
 		'OCUPACIONID',
+		'OCUPACIONDESCR',
 		'DESCRIPCION_FISICA',
 		'FACEBOOK',
 		'INSTAGRAM',

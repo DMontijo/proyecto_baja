@@ -2970,6 +2970,7 @@ class DashboardController extends BaseController
 					'PERSONAIDIOMAID' => $this->request->getPost('idioma_pf'),
 					'ESCOLARIDADID' => $this->request->getPost('escolaridad_pf'),
 					'OCUPACIONID' => $this->request->getPost('ocupacion_pf'),
+					'OCUPACIONDESCR' => $this->request->getPost('ocupacion_descr'),
 					'ESTADOCIVILID' => $this->request->getPost('edoc_pf'),
 					'ESTADOORIGENID' => $this->request->getPost('edoorigen_pf'),
 					'MUNICIPIOORIGENID' => $this->request->getPost('munorigen_pf'),
@@ -3001,6 +3002,7 @@ class DashboardController extends BaseController
 					'PERSONAIDIOMAID' => $this->request->getPost('idioma_pf'),
 					'ESCOLARIDADID' => $this->request->getPost('escolaridad_pf'),
 					'OCUPACIONID' => $this->request->getPost('ocupacion_pf'),
+					'OCUPACIONDESCR' => $this->request->getPost('ocupacion_descr'),
 					'ESTADOCIVILID' => $this->request->getPost('edoc_pf'),
 					'ESTADOORIGENID' => $this->request->getPost('edoorigen_pf'),
 					'MUNICIPIOORIGENID' => $this->request->getPost('munorigen_pf'),
@@ -3069,17 +3071,25 @@ class DashboardController extends BaseController
 				'NUMEROCASA' => $this->request->getPost('exterior_pfd'),
 				'NUMEROINTERIOR' => $this->request->getPost('interior_pfd'),
 				'REFERENCIA' => $this->request->getPost('referencia_pfd'),
-			);
+				'MANZANA' => $this->request->getPost('manzana_pfd'),
+				'LOTE' => $this->request->getPost('lote_pfd'),
 
-			$colonia = $this->_coloniasModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $this->request->getPost('municipio_pfd'))->where('LOCALIDADID', $this->request->getPost('localidad_pfd'))->where('COLONIAID', $this->request->getPost('colonia_pfd_select'))->first();
-			$localidad = $this->_localidadesModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $this->request->getPost('municipio_pfd'))->where('LOCALIDADID', $this->request->getPost('localidad_pfd'))->first();
+			);
 			if ((int)$data['COLONIAID'] == 0) {
 				$data['COLONIAID'] = null;
-				$data['ZONA'] = $localidad->ZONA;
-			} else {
-				$data['COLONIADESCR'] = $colonia->COLONIADESCR;
-				$data['ZONA'] = $colonia->ZONA;
 			}
+			if ($this->request->getPost('municipio_pfd') && $this->request->getPost('localidad_pfd') && $this->request->getPost('colonia_pfd_select')) {
+				$colonia = $this->_coloniasModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $this->request->getPost('municipio_pfd'))->where('LOCALIDADID', $this->request->getPost('localidad_pfd'))->where('COLONIAID', $this->request->getPost('colonia_pfd_select'))->first();
+				$localidad = $this->_localidadesModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $this->request->getPost('municipio_pfd'))->where('LOCALIDADID', $this->request->getPost('localidad_pfd'))->first();
+				if ((int)$data['COLONIAID'] == 0) {
+					$data['COLONIAID'] = null;
+					$data['ZONA'] = $localidad->ZONA;
+				} else {
+					$data['COLONIADESCR'] = $colonia->COLONIADESCR;
+					$data['ZONA'] = $colonia->ZONA;
+				}
+			}
+		
 			// var_dump($data);exit;
 
 			$update = $this->_folioPersonaFisicaDomicilioModel->set($data)->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $id)->where('DOMICILIOID', $id_domicilio)->update();
@@ -3748,7 +3758,17 @@ class DashboardController extends BaseController
 			'NUMEROCASA' => $this->request->getPost('num_exterior'),
 			'NUMEROINTERIOR' => $this->request->getPost('num_interior'),
 			'CP' => $this->request->getPost('codigo_postal'),
+			'MANZANA' => $this->request->getPost('manzana'),
+			'LOTE' => $this->request->getPost('lote'),
+
 		);
+		if ((int)$this->request->getPost('ocupacion') == 999) {
+			$dataNewPersonaFisica['OCUPACIONID'] = (int)$this->request->getPost('ocupacion');
+			$dataNewPersonaFisica['OCUPACIONDESCR'] = $this->request->getPost('ocupacion_descr');
+		} else {
+			$dataNewPersonaFisica['OCUPACIONID'] = (int)$this->request->getPost('ocupacion');
+			$dataNewPersonaFisica['OCUPACIONDESCR'] = NULL;
+		}
 		// var_dump($dataNewPersonaFisicaDomicilio);exit;
 		$personaFisica = $this->_folioPersonaFisica($dataNewPersonaFisica, $folio, $year);
 		$mediaFiliacion = $this->_folioPersonaFisicaMediaFiliacion($dataNewPersonaFisica, $folio, $personaFisica, $year);

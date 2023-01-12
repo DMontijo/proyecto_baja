@@ -38,8 +38,8 @@
 					</div>
 					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 						<label for="apellido_paterno_new" class="form-label font-weight-bold">Apellido paterno</label>
-						<input type="text" class="form-control" id="apellido_paterno_new" name="apellido_paterno_new" maxlength="50" >
-			
+						<input type="text" class="form-control" id="apellido_paterno_new" name="apellido_paterno_new" maxlength="50">
+
 					</div>
 					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 						<label for="apellido_materno_new" class="form-label font-weight-bold">Apellido materno</label>
@@ -48,7 +48,7 @@
 					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 						<label for="fecha_nacimiento_new" class="form-label font-weight-bold">Fecha de nacimiento</label>
 						<input type="date" class="form-control" id="fecha_nacimiento_new" name="fecha_nacimiento_new" max="<?= ((int)date("Y")) - 18 . '-' . date("m") . '-' . date("d") ?>">
-				
+
 					</div>
 					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 						<label for="edad_new" class="form-label font-weight-bold">Edad aproximada</label>
@@ -221,6 +221,14 @@
 						<label for="interior_new" class="form-label font-weight-bold">Número interior</label>
 						<input type="text" class="form-control" id="interior_new" name="interior_new" maxlength="10">
 					</div>
+					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+						<label for="manzana_new" class="form-label font-weight-bold">Manzana</label>
+						<input type="text" class="form-control" id="manzana_new" name="manzana_new" maxlength="100">
+					</div>
+					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+						<label for="lote_new" class="form-label font-weight-bold">Lote</label>
+						<input type="text" class="form-control" id="lote_new" name="lote_new" maxlength="100">
+					</div>
 					<div class="col-12">
 						<h3 class="font-weight-bold mb-4 text-center">DATOS DE IDENTIFICACIÓN</h3>
 					</div>
@@ -276,6 +284,8 @@
 								<option value="<?= $ocupacion->PERSONAOCUPACIONID ?>"> <?= $ocupacion->PERSONAOCUPACIONDESCR ?> </option>
 							<?php } ?>
 						</select>
+						<input type="text" class="form-control d-none" id="ocupacion_descr_new" name="ocupacion_descr_new" maxlength="100">
+						<small id="ocupacion-new-message" class="text-primary fw-bold d-none">Si no encuentras tu ocupación selecciona otro</small>
 					</div>
 
 					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -1005,6 +1015,19 @@
 	</div>
 </div>
 <script>
+	document.querySelector('#ocupacion_new').addEventListener('change', (e) => {
+		let select_ocupacion = document.querySelector('#ocupacion_new');
+		let input_ocupacion = document.querySelector('#ocupacion_descr_new');
+
+		if (e.target.value === '999') {
+			select_ocupacion.classList.add('d-none');
+			input_ocupacion.classList.remove('d-none');
+			input_ocupacion.value = "";
+			input_ocupacion.focus();
+		} else {
+			input_ocupacion.value = e.target.value;
+		}
+	});
 	document.querySelector('#estado_select_origen_new').addEventListener('change', (e) => {
 		let select_municipio = document.querySelector('#municipio_select_origen_new');
 

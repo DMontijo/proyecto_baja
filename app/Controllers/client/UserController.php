@@ -104,6 +104,7 @@ class UserController extends BaseController
 			'NUMEROIDENTIFICACION' => $this->request->getPost('numero_ide'),
 			'ESTADOCIVILID' => $this->request->getPost('e_civil'),
 			'OCUPACIONID' => $this->request->getPost('ocupacion'),
+			'OCUPACIONDESCR' => $this->request->getPost('ocupacion_descr'),
 			'IDENTIDADGENERO' => $this->request->getPost('iden_genero'),
 			'DISCAPACIDAD' => $this->request->getPost('discapacidad'),
 			'NACIONALIDADID' => (int)$this->request->getPost('nacionalidad'),
@@ -175,6 +176,9 @@ class UserController extends BaseController
 			'CALLE' => $this->request->getPost('calle'),
 			'NUM_EXT' => $this->request->getPost('exterior'),
 			'NUM_INT' => $this->request->getPost('interior'),
+			'MANZANA' => $this->request->getPost('manzana'),
+			'LOTE' => $this->request->getPost('lote'),
+
 			'TIPOIDENTIFICACIONID' => $this->request->getPost('identificacion'),
 			'NUMEROIDENTIFICACION' => $this->request->getPost('numero_ide'),
 			'ESTADOCIVILID' => $this->request->getPost('e_civil'),
@@ -201,6 +205,13 @@ class UserController extends BaseController
 			$data['COLONIA'] = NULL;
 		}
 
+		if ((int)$this->request->getPost('ocupacion') ==999) {
+			$data['OCUPACIONID'] = NULL;
+			$data['OCUPACIONDESCR'] = $this->request->getPost('ocupacion_descr');
+		} else {
+			$data['OCUPACIONID'] = (int)$this->request->getPost('ocupacion');
+			$data['OCUPACIONDESCR'] = NULL;
+		}
 		try {
 			if (!session()->has('DENUNCIANTEID')) throw new \Exception();
 			$update = $this->_denunciantesModel->set($data)->where('DENUNCIANTEID', session('DENUNCIANTEID'))->update();

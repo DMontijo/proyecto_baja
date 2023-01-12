@@ -97,6 +97,15 @@ class FOLIOPERSONAFISDOMICILIO extends Migration
 				'constraint' => '300',
 				'null' => TRUE,
 			],
+			'MANZANA' => [
+				'type' => 'VARCHAR',
+				'constraint' => '100',
+				'null' => TRUE,
+			],'LOTE' => [
+				'type' => 'VARCHAR',
+				'constraint' => '100',
+				'null' => TRUE,
+			],
 		]);
 		$this->forge->addKey('FOLIOID', TRUE);
 		$this->forge->addKey('PERSONAFISICAID', TRUE);

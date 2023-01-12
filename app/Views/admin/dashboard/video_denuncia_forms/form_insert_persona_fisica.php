@@ -39,7 +39,7 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="fecha_nacimiento_new" class="form-label font-weight-bold">Fecha de nacimiento</label>
-		<input type="date" class="form-control" id="fecha_nacimiento_new" name="fecha_nacimiento_new"  max="<?= ((int)date("Y")) - 18 . '-' . date("m") . '-' . date("d") ?>">
+		<input type="date" class="form-control" id="fecha_nacimiento_new" name="fecha_nacimiento_new" max="<?= ((int)date("Y")) - 18 . '-' . date("m") . '-' . date("d") ?>">
 		<div class="invalid-feedback">
 			La fecha de nacimiento es obligatoria
 		</div>
@@ -52,7 +52,7 @@
 		<label for="sexo_new" class="form-label font-weight-bold">Sexo</label>
 		<br>
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="radio" name="sexo_new" id="sexo_new" value="M" >
+			<input class="form-check-input" type="radio" name="sexo_new" id="sexo_new" value="M">
 			<label class="form-check-label" for="sexo_new">MASCULINO</label>
 		</div>
 		<div class="form-check form-check-inline">
@@ -62,7 +62,7 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="telefono_new" class="form-label font-weight-bold">Número de télefono</label>
-		<input type="number" class="form-control" id="telefono_new" name="telefono_new"  max="99999999999999999999" minlenght="6" maxlength="20" oninput="clearInputPhone(event);">
+		<input type="number" class="form-control" id="telefono_new" name="telefono_new" max="99999999999999999999" minlenght="6" maxlength="20" oninput="clearInputPhone(event);">
 		<!-- <small>Mínimo 6 digitos</small> -->
 		<input type="number" id="codigo_pais_new" name="codigo_pais_new" maxlength="3" hidden>
 	</div>
@@ -76,7 +76,7 @@
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="correo_new" class="form-label font-weight-bold">Correo electrónico</label>
 		<div class="input-group">
-			<input type="email" class="form-control" name="correo_new" id="correo_new" maxlength="100" >
+			<input type="email" class="form-control" name="correo_new" id="correo_new" maxlength="100">
 		</div>
 		<div class="invalid-feedback">
 			El correo esta erroneo
@@ -87,7 +87,7 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="nacionalidad_new" class="form-label font-weight-bold">Nacionalidad</label>
-		<select class="form-control" id="nacionalidad_new" name="nacionalidad_new" >
+		<select class="form-control" id="nacionalidad_new" name="nacionalidad_new">
 			<option selected disabled value="">Selecciona la nacionalidad</option>
 			<?php foreach ($body_data->nacionalidades as $index => $nac) { ?>
 				<option value="<?= $nac->PERSONANACIONALIDADID ?>" <?= $nac->PERSONANACIONALIDADDESCR == 'MEXICANA' ? 'selected' : '' ?>> <?= $nac->PERSONANACIONALIDADDESCR ?> </option>
@@ -100,7 +100,7 @@
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="estado_select_origen_new" class="form-label font-weight-bold">Estado origen</label>
-		<select class="form-control" id="estado_select_origen_new" name="estado_select_origen_new" >
+		<select class="form-control" id="estado_select_origen_new" name="estado_select_origen_new">
 			<option selected disabled value="">Selecciona el estado</option>
 			<?php foreach ($body_data->estados as $index => $estado) { ?>
 				<option value="<?= $estado->ESTADOID ?>"> <?= $estado->ESTADODESCR ?> </option>
@@ -113,7 +113,7 @@
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="municipio_select_origen_new" class="form-label font-weight-bold">Municipio origen</label>
-		<select class="form-control" id="municipio_select_origen_new" name="municipio_select_origen_new" >
+		<select class="form-control" id="municipio_select_origen_new" name="municipio_select_origen_new">
 			<option selected disabled value="">Selecciona el municipio</option>
 		</select>
 		<div class="invalid-feedback">
@@ -123,7 +123,7 @@
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="idioma_new" class="form-label font-weight-bold">Idioma</label>
-		<select class="form-control" id="idioma_new" name="idioma_new" >
+		<select class="form-control" id="idioma_new" name="idioma_new">
 			<option selected disabled value="">Selecciona el idioma</option>
 			<?php foreach ($body_data->idiomas as $index => $nac) { ?>
 				<option value="<?= $nac->PERSONAIDIOMAID ?>" <?= $nac->PERSONAIDIOMADESCR == 'ESPAÑOL' ? 'selected' : '' ?>> <?= $nac->PERSONAIDIOMADESCR ?> </option>
@@ -138,7 +138,7 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="pais_select_new" class="form-label font-weight-bold">País</label>
-		<select class="form-control" id="pais_select_new" name="pais_select_new" >
+		<select class="form-control" id="pais_select_new" name="pais_select_new">
 			<?php foreach ($body_data->paises as $index => $pais) { ?>
 				<option value="<?= $pais->ISO_2 ?>" <?= $pais->ISO_2 == 'MX' ? 'selected' : '' ?>> <?= mb_strtoupper($pais->NAME, 'UTF-8') ?> </option>
 			<?php } ?>
@@ -150,7 +150,7 @@
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="estado_select_new" class="form-label font-weight-bold">Estado</label>
-		<select class="form-control" id="estado_select_new" name="estado_select_new" >
+		<select class="form-control" id="estado_select_new" name="estado_select_new">
 			<option selected disabled value="">Selecciona el estado</option>
 			<?php foreach ($body_data->estados as $index => $estado) { ?>
 				<option value="<?= $estado->ESTADOID ?>"> <?= $estado->ESTADODESCR ?> </option>
@@ -163,7 +163,7 @@
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="municipio_select_new" class="form-label font-weight-bold">Municipio</label>
-		<select class="form-control" id="municipio_select_new" name="municipio_select_new" >
+		<select class="form-control" id="municipio_select_new" name="municipio_select_new">
 			<option selected disabled value="">Selecciona el municipio</option>
 		</select>
 		<div class="invalid-feedback">
@@ -173,7 +173,7 @@
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="localidad_select_new" class="form-label font-weight-bold">Localidad</label>
-		<select class="form-control" id="localidad_select_new" name="localidad_select_new" >
+		<select class="form-control" id="localidad_select_new" name="localidad_select_new">
 			<option selected disabled value="">Selecciona la localidad</option>
 		</select>
 	</div>
@@ -214,6 +214,14 @@
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="interior_new" class="form-label font-weight-bold">Número interior</label>
 		<input type="text" class="form-control" id="interior_new" name="interior_new" maxlength="10">
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="manzana_new" class="form-label font-weight-bold">Manzana</label>
+		<input type="text" class="form-control" id="manzana_new" name="manzana_new" maxlength="100">
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="lote_new" class="form-label font-weight-bold">Lote</label>
+		<input type="text" class="form-control" id="lote_new" name="lote_new" maxlength="100">
 	</div>
 	<div class="col-12">
 		<h3 class="font-weight-bold mb-4 text-center">DATOS DE IDENTIFICACIÓN</h3>
@@ -270,6 +278,8 @@
 				<option value="<?= $ocupacion->PERSONAOCUPACIONID ?>"> <?= $ocupacion->PERSONAOCUPACIONDESCR ?> </option>
 			<?php } ?>
 		</select>
+		<input type="text" class="form-control d-none" id="ocupacion_descr_new" name="ocupacion_descr_new" maxlength="100">
+		<small id="ocupacion-new-message" class="text-primary fw-bold d-none">Si no encuentras tu ocupación selecciona otro</small>
 	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -324,30 +334,43 @@
 		</div>
 	</div>
 
-	
+
 	<div class="col-12 mb-3 text-center">
 		<button type="submit" id="insertPersonaFisica" name="insertPersonaFisica" class="btn btn-primary font-weight-bold">AGREGAR PERSONA FÍSICA</button>
 	</div>
 </form>
 
 <script>
-	(function () {
-  'use strict'
+	(function() {
+		'use strict'
 
-  // Fetch all the forms we want to apply custom Bootstrap validation styles to
-  var forms = document.querySelectorAll('.needs-validation')
+		// Fetch all the forms we want to apply custom Bootstrap validation styles to
+		var forms = document.querySelectorAll('.needs-validation')
 
-  // Loop over them and prevent submission
-  Array.prototype.slice.call(forms)
-    .forEach(function (form) {
-      form.addEventListener('submit', function (event) {
-        if (!form.checkValidity()) {
-          event.preventDefault()
-          event.stopPropagation()
-        }
+		// Loop over them and prevent submission
+		Array.prototype.slice.call(forms)
+			.forEach(function(form) {
+				form.addEventListener('submit', function(event) {
+					if (!form.checkValidity()) {
+						event.preventDefault()
+						event.stopPropagation()
+					}
 
-        form.classList.add('was-validated')
-      }, false)
-    })
-})()
+					form.classList.add('was-validated')
+				}, false)
+			})
+	})()
+	document.querySelector('#ocupacion_new').addEventListener('change', (e) => {
+		let select_ocupacion = document.querySelector('#ocupacion_new');
+		let input_ocupacion = document.querySelector('#ocupacion_descr_new');
+
+		if (e.target.value === '999') {
+			select_ocupacion.classList.add('d-none');
+			input_ocupacion.classList.remove('d-none');
+			input_ocupacion.value = "";
+			input_ocupacion.focus();
+		} else {
+			input_ocupacion.value = e.target.value;
+		}
+	});
 </script>

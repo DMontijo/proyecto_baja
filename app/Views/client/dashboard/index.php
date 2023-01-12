@@ -241,6 +241,9 @@
 				document.querySelector('#nacionalidad_menor').removeAttribute('required');
 				document.querySelector('#estado_origen_menor').removeAttribute('required');
 				document.querySelector('#municipio_origen_menor').removeAttribute('required');
+				document.querySelector('#ocupacion_menor').removeAttribute('required');
+				document.querySelector('#ocupacion_descr_menor').removeAttribute('required');
+
 
 				let radiosSexoMenor = document.querySelectorAll('input[name="sexo_menor"]');
 				radiosSexoMenor.forEach((radio) => {
@@ -270,6 +273,8 @@
 				document.querySelector('#nacionalidad_menor').setAttribute('required', true);
 				document.querySelector('#estado_origen_menor').setAttribute('required', true);
 				document.querySelector('#municipio_origen_menor').setAttribute('required', true);
+				document.querySelector('#ocupacion_menor').setAttribute('required', true);
+				document.querySelector('#ocupacion_descr_menor').setAttribute('required', true);
 
 				let radiosSexoMenor = document.querySelectorAll('input[name="sexo_menor"]');
 				radiosSexoMenor.forEach((radio) => {
@@ -293,7 +298,8 @@
 				document.querySelector('#nacionalidad_menor').removeAttribute('required');
 				document.querySelector('#estado_origen_menor').removeAttribute('required');
 				document.querySelector('#municipio_origen_menor').removeAttribute('required');
-
+				document.querySelector('#ocupacion_menor').removeAttribute('required');
+				document.querySelector('#ocupacion_descr_menor').removeAttribute('required');
 				let radiosSexoMenor = document.querySelectorAll('input[name="sexo_menor"]');
 				radiosSexoMenor.forEach((radio) => {
 					radio.removeAttribute('required');
@@ -317,6 +323,9 @@
 				document.querySelector('#nacionalidad_des').setAttribute('required', true);
 				document.querySelector('#estado_origen_des').setAttribute('required', true);
 				document.querySelector('#municipio_origen_des').setAttribute('required', true);
+				document.querySelector('#ocupacion_des').setAttribute('required', true);
+				document.querySelector('#ocupacion_descr_des').setAttribute('required', true);
+
 
 				let radiosSexoDes = document.querySelectorAll('input[name="sexo_des"]');
 				radiosSexoDes.forEach((radio) => {
@@ -341,6 +350,8 @@
 				document.querySelector('#estado_origen_des').removeAttribute('required');
 				document.querySelector('#municipio_origen_des').removeAttribute('required');
 				document.querySelector('#fecha_nacimiento_des').removeAttribute('required');
+				document.querySelector('#ocupacion_des').removeAttribute('required');
+				document.querySelector('#ocupacion_descr_des').removeAttribute('required');
 
 				let radiosSexoDes = document.querySelectorAll('input[name="sexo_des"]');
 				radiosSexoDes.forEach((radio) => {

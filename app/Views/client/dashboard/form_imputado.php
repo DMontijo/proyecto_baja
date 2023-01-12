@@ -135,6 +135,15 @@
 		<input type="text" class="form-control" id="numero_int_imputado" name="numero_int_imputado" maxlength="10">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="manzana_imputado" class="form-label fw-bold">Manzana</label>
+		<input type="text" class="form-control" id="manzana_imputado" name="manzana_imputado" maxlength="100">
+	</div>
+
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="lote_imputado" class="form-label fw-bold">Lote</label>
+		<input type="text" class="form-control" id="lote_imputado" name="lote_imputado" maxlength="100">
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="tel_imputado" class="form-label fw-bold">Teléfono</label>
 		<input type="text" class="form-control" id="tel_imputado" name="tel_imputado" maxlength="20">
 	</div>
@@ -155,6 +164,11 @@
 				<option value="<?= $ocupacion->PERSONAOCUPACIONID ?>"> <?= $ocupacion->PERSONAOCUPACIONDESCR ?> </option>
 			<?php } ?>
 		</select>
+		<input type="text" class="form-control d-none" id="ocupacion_descr_imputado" name="ocupacion_descr_imputado" maxlength="100">
+		<small id="ocupacion-imputado-message" class="text-primary fw-bold d-none">Si no encuentras tu ocupación selecciona otro</small>
+		<div class="invalid-feedback">
+			La ocupación es obligatoria
+		</div>
 	</div>
 	<div class="col-12">
 		<hr>
@@ -203,7 +217,19 @@
 			document.getElementById("numCaracterImp").innerHTML = charRemain + ' caracteres restantes';
 		}
 	}
+	document.querySelector('#ocupacion_imputado').addEventListener('change', (e) => {
+		let select_ocupacion = document.querySelector('#ocupacion_imputado');
+		let input_ocupacion = document.querySelector('#ocupacion_descr_imputado');
 
+		if (e.target.value === '999') {
+			select_ocupacion.classList.add('d-none');
+			input_ocupacion.classList.remove('d-none');
+			input_ocupacion.value = "";
+			input_ocupacion.focus();
+		} else {
+			input_ocupacion.value = e.target.value;
+		}
+	});
 	document.querySelector('#fecha_nacimiento_imputado').addEventListener('change', (e) => {
 		let fecha = e.target.value;
 		let hoy = new Date();

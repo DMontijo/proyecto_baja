@@ -27,5 +27,8 @@ class FolioPersonaFisicaDomicilioModel extends Model
 		'NUMEROCASA',
 		'NUMEROINTERIOR',
 		'REFERENCIA',
+		'MANZANA',
+		'LOTE',
+
 	];
 }

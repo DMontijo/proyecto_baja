@@ -1000,7 +1000,7 @@
 
                     //DENUNCIA
                     document.querySelector('#delito_delito').value = folio.HECHODELITO;
-                    document.querySelector('#municipio_delito').value = folio.HECHOMUNICIPIOID ? folio.HECHOMUNICIPIOID:'';
+                    document.querySelector('#municipio_delito').value = folio.HECHOMUNICIPIOID ? folio.HECHOMUNICIPIOID : '';
                     if (folio.HECHOLOCALIDADID) {
                         let data = {
                             'estado_id': 2,
@@ -1081,13 +1081,13 @@
                         document.querySelector('#colonia_delito_select').value = '0';
                         document.querySelector('#colonia_delito').value = folio.HECHOCOLONIADESCR;
                     }
-                    document.querySelector('#calle_delito').value = folio.HECHOCALLE  ?folio.HECHOCALLE: '';
-                    document.querySelector('#exterior_delito').value = folio.HECHONUMEROCASA  ?folio.HECHONUMEROCASA:'';
-                    document.querySelector('#interior_delito').value = folio.HECHONUMEROCASAINT  ?folio.HECHONUMEROCASAINT:'';
-                    document.querySelector('#lugar_delito').value = folio.HECHOLUGARID ?folio.HECHOLUGARID:'';
-                    document.querySelector('#hora_delito').value = folio.HECHOHORA  ?folio.HECHOHORA: '';
-                    document.querySelector('#fecha_delito').value = folio.HECHOFECHA  ?folio.HECHOFECHA :'';
-                    document.querySelector('#narracion_delito').value = folio.HECHONARRACION ? folio.HECHONARRACION :'';
+                    document.querySelector('#calle_delito').value = folio.HECHOCALLE ? folio.HECHOCALLE : '';
+                    document.querySelector('#exterior_delito').value = folio.HECHONUMEROCASA ? folio.HECHONUMEROCASA : '';
+                    document.querySelector('#interior_delito').value = folio.HECHONUMEROCASAINT ? folio.HECHONUMEROCASAINT : '';
+                    document.querySelector('#lugar_delito').value = folio.HECHOLUGARID ? folio.HECHOLUGARID : '';
+                    document.querySelector('#hora_delito').value = folio.HECHOHORA ? folio.HECHOHORA : '';
+                    document.querySelector('#fecha_delito').value = folio.HECHOFECHA ? folio.HECHOFECHA : '';
+                    document.querySelector('#narracion_delito').value = folio.HECHONARRACION ? folio.HECHONARRACION : '';
 
                     // if (folio.HECHODELITO == "ROBO DE VEHÍCULO") {
                     // 	$('#v-pills-vehiculos-tab').css('display', 'block');
@@ -1497,6 +1497,7 @@
                         personaFisica.ESCOLARIDADID : '';
                     document.querySelector('#ocupacion_pf').value = personaFisica.OCUPACIONID ? personaFisica
                         .OCUPACIONID : '';
+
                     document.querySelector('#descripcionFisica_pf').value = personaFisica.DESCRIPCION_FISICA ?
                         personaFisica.DESCRIPCION_FISICA : '';
                     document.querySelector('#facebook_pf').value = personaFisica.FACEBOOK ? personaFisica
@@ -1507,6 +1508,10 @@
                         .TWITTER : '';
                     document.querySelector('#denunciante_pf').value = personaFisica.DENUNCIANTE ? personaFisica
                         .DENUNCIANTE : '';
+                    if (personaFisica.OCUPACIONDESCR) {
+                        document.querySelector('#ocupacion_pf_m').classList.remove('d-none');
+                        document.querySelector('#ocupacion_pf_m').value = personaFisica.OCUPACIONDESCR;
+                    }
                     //PERSONA FISICA END
                     //MEDIAFILIACION
                     if (mediaFiliacion) {
@@ -1817,6 +1822,10 @@
                         .NUMEROINTERIOR : '';
                     document.querySelector('#referencia_pfd').value = domicilio.REFERENCIA ? domicilio
                         .REFERENCIA : '';
+                    document.querySelector('#manzana_pfd').value = domicilio.MANZANA ? domicilio
+                        .MANZANA : '';
+                    document.querySelector('#lote_pfd').value = domicilio.LOTE ? domicilio
+                        .LOTE : '';
                     // document.querySelector('#zona_pfd').value = domicilio.ZONA ? domicilio.ZONA : '';
 
                     $('#folio_persona_fisica_modal').modal('show');
@@ -2105,6 +2114,19 @@
                     event.target.value = clearText(event.target.value).toLowerCase();
                 }, false)
             });
+            document.querySelector('#ocupacion_pf').addEventListener('change', (e) => {
+                let select_ocupacion = document.querySelector('#ocupacion_pf');
+                let input_ocupacion = document.querySelector('#ocupacion_pf_m');
+
+                if (e.target.value === '999') {
+                    input_ocupacion.classList.remove('d-none');
+                    input_ocupacion.value = "";
+                    input_ocupacion.focus();
+                } else {
+                    input_ocupacion.classList.add('d-none');
+                    input_ocupacion.value ='';
+                }
+            });
             document.querySelector('#subirFotoPersona').addEventListener('change', (e) => {
                 let preview = document.querySelector('#fisica_foto');
                 if (e.target.files && e.target.files[0]) {
@@ -2115,6 +2137,10 @@
                     reader.readAsDataURL(e.target.files[0]);
                 }
             });
+            $('#delito_cometido').select2({
+                theme: "bootstrap"
+            });
+
             form_delito.addEventListener('submit', (event) => {
                 if (!form_delito.checkValidity()) {
                     event.preventDefault();
@@ -3524,7 +3550,7 @@
                 packetData.append("instagram_pf", document.querySelector('#instagram_pf').value);
                 packetData.append("twitter_pf", document.querySelector('#twitter_pf').value);
                 packetData.append("pf_id", document.querySelector('#pf_id').value);
-
+                packetData.append("ocupacion_descr", document.querySelector('#ocupacion_pf_m').value);
                 // const data = {
                 // 	'folio': document.querySelector('#input_folio_atencion').value,
                 // 	'year': document.querySelector('#year_select').value,
@@ -3969,6 +3995,9 @@
                     'exterior_pfd': document.querySelector('#exterior_pfd').value,
                     'interior_pfd': document.querySelector('#interior_pfd').value,
                     'referencia_pfd': document.querySelector('#referencia_pfd').value,
+                    'manzana_pfd': document.querySelector('#manzana_pfd').value,
+                    'lote_pfd': document.querySelector('#lote_pfd').value,
+
                 };
 
                 $.ajax({
@@ -4450,7 +4479,10 @@
                     'twitter': document.querySelector('#twitter_new').value,
                     'instagram': document.querySelector('#instagram_new').value,
                     'correo': document.querySelector('#correo_new').value,
-                    'desaparecida': document.querySelector('#desaparecida_new').value
+                    'desaparecida': document.querySelector('#desaparecida_new').value,
+                    'ocupacion_descr': document.querySelector('#ocupacion_descr_new').value,
+                    'manzana': document.querySelector('#manzana_new').value,
+                    'lote': document.querySelector('#lote_new').value,
 
                 };
                 console.log(data);

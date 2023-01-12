@@ -161,6 +161,11 @@ class DENUNCIANTES extends Migration
 				'type' => 'INT',
 				'null' => TRUE
 			],
+			'OCUPACIONDESCR' => [
+				'type' => 'VARCHAR',
+				'constraint' => '100',
+				'null' => TRUE,
+			],
 			'FACEBOOK' => [
 				'type' => 'VARCHAR',
 				'constraint' => '250',
@@ -216,6 +221,15 @@ class DENUNCIANTES extends Migration
 				'type' => 'TINYINT',
 				'constraint' => '1',
 				'null' => TRUE
+			],
+			'MANZANA' => [
+				'type' => 'VARCHAR',
+				'constraint' => '100',
+				'null' => TRUE,
+			],'LOTE' => [
+				'type' => 'VARCHAR',
+				'constraint' => '100',
+				'null' => TRUE,
 			],
 			'FECHAREGISTRO DATETIME DEFAULT CURRENT_TIMESTAMP',
 			'FECHAACTUALIZACION DATETIME ON UPDATE CURRENT_TIMESTAMP',

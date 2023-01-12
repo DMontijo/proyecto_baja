@@ -246,7 +246,6 @@ class DashboardController extends BaseController
 
 	public function create()
 	{
-		// var_dump($_POST);exit;
 		$session = session();
 		list($FOLIOID, $year) = $this->_folioConsecutivoModel->get_consecutivo();
 
@@ -254,8 +253,8 @@ class DashboardController extends BaseController
 			'FOLIOID' => $FOLIOID,
 			'ANO' => $year,
 			'DENUNCIANTEID' => $session->get('DENUNCIANTEID'),
-			'HECHOFECHA' => $this->request->getPost('fecha') != '' ?$this->request->getPost('fecha'):NULL,
-			'HECHOHORA' => $this->request->getPost('hora') !=''?$this->request->getPost('hora'):NULL,
+			'HECHOFECHA' => $this->request->getPost('fecha') != '' ? $this->request->getPost('fecha') : NULL,
+			'HECHOHORA' => $this->request->getPost('hora') != '' ? $this->request->getPost('hora') : NULL,
 			'HECHOLUGARID' => $this->request->getPost('lugar'),
 			'ESTADOID' => 2,
 			'MUNICIPIOID' => $this->request->getPost('municipio'),
@@ -263,11 +262,11 @@ class DashboardController extends BaseController
 			'HECHOMUNICIPIOID' => $this->request->getPost('municipio'),
 			'HECHOLOCALIDADID' => $this->request->getPost('localidad'),
 			'HECHOCOLONIAID' => $this->request->getPost('colonia_select'),
-			'HECHOCOLONIADESCR' => $this->request->getPost('colonia') !=''?$this->request->getPost('colonia'):NULL,
-			'HECHOCALLE' => $this->request->getPost('calle') !=''?$this->request->getPost('calle'):NULL,
-			'HECHONUMEROCASA' => $this->request->getPost('exterior') != '' ?$this->request->getPost('exterior'):NULL,
-			'HECHONUMEROCASAINT' => $this->request->getPost('interior')!=''?$this->request->getPost('interior'):NULL,
-			'HECHONARRACION' => $this->request->getPost('descripcion_breve') !=''?$this->request->getPost('descripcion_breve'):NULL,
+			'HECHOCOLONIADESCR' => $this->request->getPost('colonia') != '' ? $this->request->getPost('colonia') : NULL,
+			'HECHOCALLE' => $this->request->getPost('calle') != '' ? $this->request->getPost('calle') : NULL,
+			'HECHONUMEROCASA' => $this->request->getPost('exterior') != '' ? $this->request->getPost('exterior') : NULL,
+			'HECHONUMEROCASAINT' => $this->request->getPost('interior') != '' ? $this->request->getPost('interior') : NULL,
+			'HECHONARRACION' => $this->request->getPost('descripcion_breve') != '' ? $this->request->getPost('descripcion_breve') : NULL,
 			'HECHODELITO' => $this->request->getPost('delito'),
 			'TIPODENUNCIA' => 'VD',
 
@@ -375,8 +374,17 @@ class DashboardController extends BaseController
 					'NUMEROCASA' => $this->request->getPost('numero_ext_des'),
 					'NUMEROINTERIOR' => $this->request->getPost('numero_int_des'),
 					'CP' => $this->request->getPost('cp_des'),
-				);
+					'MANZANA' => $this->request->getPost('manzana_des'),
+					'LOTE' => $this->request->getPost('lote_des'),
 
+				);
+				if ((int)$this->request->getPost('ocupacion_des') == 999) {
+					$dataDesaparecido['OCUPACIONID'] = (int)$this->request->getPost('ocupacion_des');
+					$dataDesaparecido['OCUPACIONDESCR'] = $this->request->getPost('ocupacion_descr_des');
+				} else {
+					$dataDesaparecido['OCUPACIONID'] = (int)$this->request->getPost('ocupacion_des');
+					$dataDesaparecido['OCUPACIONDESCR'] = NULL;
+				}
 				$desaparecido = $this->_folioPersonaFisica($dataDesaparecido, $FOLIOID, 1, $year);
 				$this->_folioPersonaFisicaMediaFiliacion($dataDesaparecido, $FOLIOID, $desaparecido, $year);
 				$this->_folioPersonaFisicaDomicilio($dataDesaparecidoDomicilio, $FOLIOID, $desaparecido, $year);
@@ -414,8 +422,17 @@ class DashboardController extends BaseController
 					'NUMEROCASA' => $this->request->getPost('numero_ext_menor'),
 					'NUMEROINTERIOR' => $this->request->getPost('numero_int_menor'),
 					'CP' => $this->request->getPost('cp_menor'),
-				);
+					'MANZANA' => $this->request->getPost('manzana_menor'),
+					'LOTE' => $this->request->getPost('lote_menor'),
 
+				);
+				if ((int)$this->request->getPost('ocupacion_menor') == 999) {
+					$dataMenor['OCUPACIONID'] = (int)$this->request->getPost('ocupacion_menor');
+					$dataMenor['OCUPACIONDESCR'] = $this->request->getPost('ocupacion_descr_menor');
+				} else {
+					$dataMenor['OCUPACIONID'] = (int)$this->request->getPost('ocupacion_menor');
+					$dataMenor['OCUPACIONDESCR'] = NULL;
+				}
 				$menor = $this->_folioPersonaFisica($dataMenor, $FOLIOID, 1, $year);
 				$this->_folioPersonaFisicaMediaFiliacion($dataMenor, $FOLIOID, $menor, $year);
 				$this->_folioPersonaFisicaDomicilio($dataMenorDomicilio, $FOLIOID, $menor, $year);
@@ -438,6 +455,9 @@ class DashboardController extends BaseController
 					'NUMEROCASA' => null,
 					'NUMEROINTERIOR' => null,
 					'CP' => null,
+					'MANZANA' => null,
+					'LOTE' => null,
+
 				);
 
 				$ofendidoId = $this->_folioPersonaFisica($dataOfendido, $FOLIOID, 1, $year);
@@ -489,6 +509,7 @@ class DashboardController extends BaseController
 				'PERSONAIDIOMAID' => $denunciante->IDIOMAID,
 				'ESCOLARIDADID' => $denunciante->ESCOLARIDADID,
 				'OCUPACIONID' => $denunciante->OCUPACIONID,
+				'OCUPACIONDESCR' => $denunciante->OCUPACIONDESCR,
 				'ESTADOCIVILID' => $denunciante->ESTADOCIVILID,
 				'ESTADOORIGENID' => $denunciante->ESTADOORIGENID,
 				'MUNICIPIOORIGENID' => $denunciante->MUNICIPIOORIGENID,
@@ -514,6 +535,9 @@ class DashboardController extends BaseController
 				'NUMEROCASA' => $denunciante->NUM_EXT,
 				'NUMEROINTERIOR' => $denunciante->NUM_INT,
 				'CP' => $denunciante->CODIGOPOSTAL,
+				'MANZANA' => $denunciante->MANZANA ? $denunciante->MANZANA : NULL,
+				'LOTE' => $denunciante->LOTE ? $denunciante->LOTE: NULL,
+
 			);
 
 			$denuncianteCalidad = $this->request->getPost('es_menor') == "SI" || $this->request->getPost('esta_desaparecido') == "SI" || $this->request->getPost('es_ofendido') === "NO" ? 3 : 1;
@@ -546,6 +570,7 @@ class DashboardController extends BaseController
 					'NACIONALIDADID' => $this->request->getPost('nacionalidad_imputado'),
 					'ESCOLARIDADID' => $this->request->getPost('escolaridad_imputado'),
 					'OCUPACIONID' => $this->request->getPost('ocupacion_imputado'),
+
 				);
 
 				$dataImputadoDomicilio = array(
@@ -559,8 +584,17 @@ class DashboardController extends BaseController
 					'NUMEROCASA' => $this->request->getPost('numero_ext_imputado'),
 					'NUMEROINTERIOR' => $this->request->getPost('numero_int_imputado'),
 					'CP' => $this->request->getPost('cp_imputado'),
-				);
+					'MANZANA' => $this->request->getPost('manzana_imputado'),
+					'LOTE' => $this->request->getPost('lote_imputado'),
 
+				);
+				if ((int)$this->request->getPost('ocupacion_imputado') == 999) {
+					$dataImputado['OCUPACIONID'] =  (int)$this->request->getPost('ocupacion_imputado');
+					$dataImputado['OCUPACIONDESCR'] = $this->request->getPost('ocupacion_descr_imputado');
+				} else {
+					$dataImputado['OCUPACIONID'] = (int)$this->request->getPost('ocupacion_imputado');
+					$dataImputado['OCUPACIONDESCR'] = NULL;
+				}
 				$imputadoId = $this->_folioPersonaFisica($dataImputado, $FOLIOID, 2, $year);
 				$this->_folioPersonaFisicaMediaFiliacion($dataImputado, $FOLIOID, $imputadoId, $year);
 				$this->_folioPersonaFisicaDomicilio($dataImputadoDomicilio, $FOLIOID, $imputadoId, $year);
@@ -581,6 +615,9 @@ class DashboardController extends BaseController
 					'NUMEROCASA' => null,
 					'NUMEROINTERIOR' => null,
 					'CP' => null,
+					'MANZANA' => null,
+					'LOTE' => null,
+
 				);
 
 				$imputadoId = $this->_folioPersonaFisica($dataImputado, $FOLIOID, 2, $year);

@@ -67,6 +67,14 @@
 		<label for="referencia_pfd" class="form-label font-weight-bold">Referencia</label>
 		<input type="text" class="form-control" id="referencia_pfd" name="referencia_pfd" maxlength="300">
 	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="manzana_pfd" class="form-label font-weight-bold">Manzana</label>
+		<input type="text" class="form-control" id="manzana_pfd" name="manzana_pfd" maxlength="300">
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="lote_pfd" class="form-label font-weight-bold">Lote</label>
+		<input type="text" class="form-control" id="lote_pfd" name="lote_pfd" maxlength="300">
+	</div>
 	<div class="col-12 my-4 text-center">
 		<button type="submit" class="btn btn-primary font-weight-bold">ACTUALIZAR DOMICILIO</button>
 	</div>

@@ -42,6 +42,7 @@ class DenunciantesModel extends Model
 		'NACIONALIDADID',
 		'ESCOLARIDADID',
 		'OCUPACIONID',
+		'OCUPACIONDESCR',
 		'FACEBOOK',
 		'INSTAGRAM',
 		'TWITTER',
@@ -53,5 +54,7 @@ class DenunciantesModel extends Model
 		'ESCRIBIR',
 		'APOYO',
 		'TIPO',
+		'MANZANA',
+		'LOTE',
 	];
 }

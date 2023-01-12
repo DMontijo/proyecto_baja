@@ -120,6 +120,8 @@
 				<option value="<?= $ocupaciones->PERSONAOCUPACIONID ?>"> <?= $ocupaciones->PERSONAOCUPACIONDESCR ?> </option>
 			<?php } ?>
 		</select>
+		<input type="text" class="form-control d-none" id="ocupacion_pf_m" name="ocupacion_pf_m" maxlength="100">
+
 	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">

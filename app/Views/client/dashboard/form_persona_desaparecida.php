@@ -133,6 +133,15 @@
 		<label for="numero_int_des" class="form-label fw-bold">Número interior</label>
 		<input type="text" class="form-control" id="numero_int_des" name="numero_int_des" maxlength="10">
 	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="manzana_des" class="form-label fw-bold">Manzana</label>
+		<input type="text" class="form-control" id="manzana_des" name="manzana_des" maxlength="100">
+	</div>
+
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="lote_des" class="form-label fw-bold">Lote</label>
+		<input type="text" class="form-control" id="lote_des" name="lote_des" maxlength="100">
+	</div>
 	<div class="col-12">
 		<hr>
 	</div>
@@ -259,7 +268,7 @@
 			<?php } ?>
 		</select>
 	</div>
-	
+
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="escolaridad_des" class="form-label fw-bold">Escolaridad</label>
 		<select class="form-select" id="escolaridad_des" name="escolaridad_des">
@@ -281,6 +290,11 @@
 				<option value="<?= $ocupacion->PERSONAOCUPACIONID ?>"> <?= $ocupacion->PERSONAOCUPACIONDESCR ?> </option>
 			<?php } ?>
 		</select>
+		<input type="text" class="form-control d-none" id="ocupacion_descr_des" name="ocupacion_descr_des" maxlength="100" required>
+		<small id="ocupacion-des-message" class="text-primary fw-bold d-none">Si no encuentras tu ocupación selecciona otro</small>
+		<div class="invalid-feedback">
+			La ocupación es obligatoria
+		</div>
 	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -329,6 +343,19 @@
 </div>
 
 <script>
+	document.querySelector('#ocupacion_des').addEventListener('change', (e) => {
+		let select_ocupacion = document.querySelector('#ocupacion_des');
+		let input_ocupacion = document.querySelector('#ocupacion_descr_des');
+
+		if (e.target.value === '999') {
+			select_ocupacion.classList.add('d-none');
+			input_ocupacion.classList.remove('d-none');
+			input_ocupacion.value = "";
+			input_ocupacion.focus();
+		} else {
+			input_ocupacion.value = e.target.value;
+		}
+	});
 	document.querySelector('#fecha_nacimiento_des').addEventListener('change', (e) => {
 		let fecha = e.target.value;
 		let hoy = new Date();

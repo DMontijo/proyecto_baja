@@ -171,6 +171,16 @@
 							<label for="interior" class="form-label fw-bold">Número interior</label>
 							<input type="text" class="form-control" id="interior" name="interior" maxlength="10">
 						</div>
+						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+							<label for="manzana" class="form-label fw-bold">Manzana</label>
+							<input type="text" class="form-control" id="manzana" name="manzana" maxlength="100">
+						</div>
+
+						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+							<label for="lote" class="form-label fw-bold">Lote</label>
+							<input type="text" class="form-control" id="lote" name="lote" maxlength="100">
+						</div>
+
 					</div>
 				</div>
 
@@ -231,6 +241,11 @@
 									<option value="<?= $ocupacion->PERSONAOCUPACIONID ?>"> <?= $ocupacion->PERSONAOCUPACIONDESCR ?> </option>
 								<?php } ?>
 							</select>
+							<input type="text" class="form-control d-none" id="ocupacion_descr" name="ocupacion_descr" maxlength="100" required>
+							<small id="ocupacion-message" class="text-primary fw-bold d-none">Si no encuentras tu ocupación selecciona otro</small>
+							<div class="invalid-feedback">
+								La ocupación es obligatoria
+							</div>
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -548,6 +563,19 @@
 			}
 		})
 
+		document.querySelector('#ocupacion').addEventListener('change', (e) => {
+		let select_ocupacion = document.querySelector('#ocupacion');
+		let input_ocupacion = document.querySelector('#ocupacion_descr');
+
+		if (e.target.value === '999') {
+			select_ocupacion.classList.add('d-none');
+			input_ocupacion.classList.remove('d-none');
+			input_ocupacion.value = "";
+			input_ocupacion.focus();
+		} else {
+			input_ocupacion.value = e.target.value;
+		}
+	});
 		document.querySelector('#nacionalidad').addEventListener('change', (e) => {
 			let select_estado = document.querySelector('#estado_select_origen');
 			let select_municipio = document.querySelector('#municipio_select_origen');
@@ -924,11 +952,15 @@
 		let calle = document.querySelector("#calle").value ? document.querySelector("#calle").value : '';
 		let nexterior = document.querySelector("#exterior").value ? document.querySelector("#exterior").value : '';
 		let ninterior = document.querySelector("#interior").value ? document.querySelector("#interior").value : '';
+		let manzana = document.querySelector("#manzana").value ? document.querySelector("#manzana").value : '';
+		let lote = document.querySelector("#lote").value ? document.querySelector("#lote").value : '';
 
 		let tipo = document.querySelector("#identificacion").value ? document.querySelector("#identificacion").value : '';
 		let numeroid = document.querySelector("#numero_ide").value ? document.querySelector("#numero_ide").value : '';
 		let edoc = document.querySelector("#e_civil").value ? document.querySelector("#e_civil").value : '';
 		let ocupacion = document.querySelector("#ocupacion").value ? document.querySelector("#ocupacion").options[document.querySelector("#ocupacion").selectedIndex].text : '';
+		let ocupacion_descr = document.querySelector("#ocupacion_descr").value ? document.querySelector("#ocupacion_descr").value :'' ;
+
 		let escolaridad = document.querySelector("#escolaridad").value ? document.querySelector("#escolaridad").options[document.querySelector("#escolaridad").selectedIndex].text : '';
 		let discapacidad = document.querySelector("#discapacidad").value ? document.querySelector("#discapacidad").value : '';
 		let firma_url = document.querySelector("#firma_url").value ? document.querySelector("#firma_url").value : '';
@@ -955,6 +987,8 @@
 		document.querySelector('#calle_modal').value = calle;
 		document.querySelector('#exterior_modal').value = nexterior;
 		document.querySelector('#interior_modal').value = ninterior;
+		document.querySelector('#manzana_modal').value = manzana;
+		document.querySelector('#lote_modal').value = lote;
 
 		document.querySelector('#facebook_modal').value = facebook;
 		document.querySelector('#instagram_modal').value = instagram;
@@ -962,11 +996,10 @@
 
 		document.querySelector('#leer_modal').value = leer == 'S' ? 'SI' : 'NO';
 		document.querySelector('#escribir_modal').value = escribir == 'S' ? 'SI' : 'NO';
-
 		document.querySelector('#identificacion_modal').value = tipo;
 		document.querySelector('#numero_ide_modal').value = numeroid;
 		document.querySelector('#e_civil_modal').value = edoc;
-		document.querySelector('#ocupacion_modal').value = ocupacion;
+		document.querySelector('#ocupacion_modal').value = ocupacion == 'OTRA' ? ocupacion_descr: ocupacion;
 		document.querySelector('#discapacidad_modal').value = discapacidad;
 		document.querySelector('#idioma_modal').value = idioma;
 		document.querySelector('#img_firma_modal').setAttribute("src", firma_url);

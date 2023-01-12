@@ -331,6 +331,19 @@
 	var select_imputado = document.getElementById('imputado_conocido');
 	var charRemain;
 
+	document.querySelector('#ocupacion_pf').addEventListener('change', (e) => {
+                let select_ocupacion = document.querySelector('#ocupacion_pf');
+                let input_ocupacion = document.querySelector('#ocupacion_pf_m');
+
+                if (e.target.value === '999') {
+                    input_ocupacion.classList.remove('d-none');
+                    input_ocupacion.value = "";
+                    input_ocupacion.focus();
+                } else {
+                    input_ocupacion.classList.add('d-none');
+                    input_ocupacion.value ='';
+                }
+            });
 	document.querySelector('#victima_conocido').addEventListener('change', (e) => {
 		if (e.target.value == 1) {
 			$('#insert_persona_victima_modal_denuncia').modal('show');
@@ -1278,6 +1291,8 @@
 			'estado_civil': document.querySelector('#e_civil_new').value,
 			'escolaridad': document.querySelector('#escolaridad_new').value,
 			'ocupacion': document.querySelector('#ocupacion_new').value,
+			'ocupacion_descr': document.querySelector('#ocupacion_descr_new').value,
+
 			'discapacidad': document.querySelector('#discapacidad_new').value,
 			'leer': document.querySelector('#leer_new').value,
 			'escribir': document.querySelector('#escribir_new').value,
@@ -1718,6 +1733,10 @@
 			'exterior_pfd': document.querySelector('#exterior_pfd').value,
 			'interior_pfd': document.querySelector('#interior_pfd').value,
 			'referencia_pfd': document.querySelector('#referencia_pfd').value,
+			'manzana_pfd': document.querySelector('#manzana_pfd').value,
+            'lote_pfd': document.querySelector('#lote_pfd').value,
+
+
 		};
 
 		$.ajax({
@@ -1898,6 +1917,8 @@
 			'facebook_pf': document.querySelector('#facebook_pf').value,
 			'instagram_pf': document.querySelector('#instagram_pf').value,
 			'twitter_pf': document.querySelector('#twitter_pf').value,
+			'ocupacion_descr': document.querySelector('#ocupacion_pf_m').value,
+
 		};
 
 		$.ajax({
@@ -2095,6 +2116,10 @@
 					document.querySelector('#instagram_pf').value = personaFisica.INSTAGRAM ? personaFisica.INSTAGRAM : '';
 					document.querySelector('#twitter_pf').value = personaFisica.TWITTER ? personaFisica.TWITTER : '';
 					document.querySelector('#denunciante_pf').value = personaFisica.DENUNCIANTE ? personaFisica.DENUNCIANTE : '';
+					if (personaFisica.OCUPACIONDESCR) {
+                        document.querySelector('#ocupacion_pf_m').classList.remove('d-none');
+                        document.querySelector('#ocupacion_pf_m').value = personaFisica.OCUPACIONDESCR;
+                    }
 					//PERSONA FISICA END
 					//MEDIAFILIACION
 					if (mediaFiliacion) {
@@ -2309,6 +2334,10 @@
 					document.querySelector('#exterior_pfd').value = domicilio.NUMEROCASA ? domicilio.NUMEROCASA : '';
 					document.querySelector('#interior_pfd').value = domicilio.NUMEROINTERIOR ? domicilio.NUMEROINTERIOR : '';
 					document.querySelector('#referencia_pfd').value = domicilio.REFERENCIA ? domicilio.REFERENCIA : '';
+					document.querySelector('#manzana_pfd').value = domicilio.MANZANA ? domicilio
+                        .MANZANA : '';
+                    document.querySelector('#lote_pfd').value = domicilio.LOTE ? domicilio
+                        .LOTE : '';
 					$('#folio_persona_fisica_modal_da').modal('show');
 
 				} else {
