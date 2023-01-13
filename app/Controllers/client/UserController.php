@@ -133,7 +133,6 @@ class UserController extends BaseController
 			$data['OCUPACIONID'] = (int)$this->request->getPost('ocupacion');
 			$data['OCUPACIONDESCR'] = NULL;
 		}
-		var_dump($data);exit;
 
 		if ($this->validate(['correo' => 'required|is_unique[DENUNCIANTES.CORREO]'])) {
 			$this->_denunciantesModel->insert($data);
