@@ -370,7 +370,7 @@
 			input_ocupacion.value = "";
 			input_ocupacion.focus();
 		} else {
-			input_ocupacion.value = e.target.value;
+			input_ocupacion.value = "";
 		}
 	});
 </script>

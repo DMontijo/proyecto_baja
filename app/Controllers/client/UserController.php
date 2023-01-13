@@ -126,6 +126,14 @@ class UserController extends BaseController
 			$data['COLONIAID'] = (int)$this->request->getPost('colonia_select');
 			$data['COLONIA'] = NULL;
 		}
+		if ((int)$this->request->getPost('ocupacion') ==999) {
+			$data['OCUPACIONID'] = NULL;
+			$data['OCUPACIONDESCR'] = $this->request->getPost('ocupacion_descr');
+		} else {
+			$data['OCUPACIONID'] = (int)$this->request->getPost('ocupacion');
+			$data['OCUPACIONDESCR'] = NULL;
+		}
+		var_dump($data);exit;
 
 		if ($this->validate(['correo' => 'required|is_unique[DENUNCIANTES.CORREO]'])) {
 			$this->_denunciantesModel->insert($data);

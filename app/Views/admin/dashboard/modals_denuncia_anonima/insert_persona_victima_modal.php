@@ -1025,7 +1025,7 @@
 			input_ocupacion.value = "";
 			input_ocupacion.focus();
 		} else {
-			input_ocupacion.value = e.target.value;
+			input_ocupacion.value = "";
 		}
 	});
 	document.querySelector('#estado_select_origen_new').addEventListener('change', (e) => {

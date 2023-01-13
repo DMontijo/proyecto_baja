@@ -693,6 +693,20 @@
 			}
 		});
 
+	
+		document.querySelector('#ocupacion').addEventListener('change', (e) => {
+		let select_ocupacion = document.querySelector('#ocupacion');
+		let input_ocupacion = document.querySelector('#ocupacion_descr');
+
+		if (e.target.value === '999') {
+			select_ocupacion.classList.add('d-none');
+			input_ocupacion.classList.remove('d-none');
+			input_ocupacion.value = "";
+			input_ocupacion.focus();
+		} else {
+			input_ocupacion.value = "";
+		}
+	});
 		document.querySelector('#idioma').addEventListener('change', (e) => {
 			let alert = document.querySelector('#idioma_alert');
 			if (e.target.value !== '22') {
@@ -1121,6 +1135,7 @@
 		let numeroid = document.querySelector("#numero_ide").value ? document.querySelector("#numero_ide").value : '';
 		let edoc = document.querySelector("#e_civil").value ? document.querySelector("#e_civil").value : '';
 		let ocupacion = document.querySelector("#ocupacion").value ? document.querySelector("#ocupacion").options[document.querySelector("#ocupacion").selectedIndex].text : '';
+		let ocupacion_descr = document.querySelector("#ocupacion_descr").value ? document.querySelector("#ocupacion_descr").value :'' ;
 		let escolaridad = document.querySelector("#escolaridad").value ? document.querySelector("#escolaridad").options[document.querySelector("#escolaridad").selectedIndex].text : '';
 		let discapacidad = document.querySelector("#discapacidad").value ? document.querySelector("#discapacidad").value : '';
 		let firma_url = document.querySelector("#firma_url").value ? document.querySelector("#firma_url").value : '';
@@ -1166,7 +1181,7 @@
 		document.querySelector('#identificacion_modal').value = tipo;
 		document.querySelector('#numero_ide_modal').value = numeroid;
 		document.querySelector('#e_civil_modal').value = edoc;
-		document.querySelector('#ocupacion_modal').value = ocupacion;
+		document.querySelector('#ocupacion_modal').value = ocupacion == 'OTRA' ? ocupacion_descr: ocupacion;
 		document.querySelector('#discapacidad_modal').value = discapacidad;
 		document.querySelector('#idioma_modal').value = idioma;
 		document.querySelector('#img_firma_modal').setAttribute("src", firma_url);
