@@ -241,6 +241,10 @@ class ConstanciasController extends BaseController
 				break;
 			case 'DOCUMENTOS':
 				$descr = 'EXTRAVÍO ORIGINAL DE: [TIPODOCUMENTO] A NOMBRE DE: [NOMBRE_DUENO] CON NÚMERO DE FOLIO: [NDOCUMENTO]';
+				if(!$constancia->NDOCUMENTO){
+					$descr = str_replace('CON NÚMERO DE FOLIO: [NDOCUMENTO]', '', $descr);
+					$data->constanciaExtravio->PLACEHOLDER = str_replace(', N&Uacute;MERO: <strong>[NO_DOCUMENTO]</strong>,', '', $data->constanciaExtravio->PLACEHOLDER);
+				}
 				$descr = str_replace('[TIPODOCUMENTO]', $constancia->TIPODOCUMENTO, $descr);
 				$descr = str_replace('[NOMBRE_DUENO]', $constancia->DUENONOMBREDOC . " " . $constancia->DUENOAPELLIDOPDOC . " " . $constancia->DUENOAPELLIDOMDOC, $descr);
 				$descr = str_replace('[NDOCUMENTO]', $constancia->NDOCUMENTO, $descr);
