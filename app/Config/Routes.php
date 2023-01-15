@@ -205,9 +205,13 @@ $routes->group('data', function ($routes) {
 	$routes->post('get-oficinas-by-municipio', 'admin/DashboardController::getOficinasByMunicipio');
 	$routes->post('get-empleados-by-municipio-and-oficina', 'admin/DashboardController::getEmpleadosByMunicipioAndOficina');
 
+	//OTP
 	$routes->post('sendOTP', 'OTPController::sendEmailOTP');
 	$routes->post('validateOTP', 'OTPController::validateOTP');
 	$routes->post('getLastOTP', 'OTPController::getLastOTP');
+
+	//Constancias extravío
+	$routes->post('get-all-constancias-abiertas', 'admin/ConstanciasController::getAllConstanciasAbiertas');
 
 	//Link
 	$routes->post('get-video-link', 'admin/DashboardController::getVideoLink');
