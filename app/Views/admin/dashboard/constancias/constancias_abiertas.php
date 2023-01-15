@@ -14,7 +14,7 @@
             <div class="col-12">
                 <div class="card shadow border-0" style="overflow-x:auto;">
                     <div class="card-body">
-                        <table id="extravios_abiertos" class="table table-bordered table-striped">
+                        <table id="constancias_abiertas" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
                                     <th class="text-center">FOLIO</th>
@@ -86,7 +86,7 @@ Swal.fire({
 <?php endif; ?>
 <script>
 $(function() {
-    $("#extravios_abiertos").DataTable({
+    $("#constancias_abiertas").DataTable({
         responsive: false,
         lengthChange: false,
         autoWidth: true,
@@ -105,6 +105,61 @@ $(function() {
         }
     });
 });
+
+window.onload = function() {
+    setInterval(() => {
+        getConstanciasAbiertas();
+    }, 60000);
+    setInterval(() => {
+        location.reload();
+    }, 300000);
+}
+
+const getConstanciasAbiertas = () => {
+    $.ajax({
+        url: "<?= base_url('/data/get-all-constancias-abiertas') ?>",
+        method: "POST",
+        dataType: "json",
+        success: function(response) {
+            llenarTabla(response);
+        },
+        error: function(jqXHR, textStatus, errorThrown) {}
+    });
+}
+
+const llenarTabla = (constancias) => {
+    const tbody = document.querySelector('#constancias_abiertas tbody');
+    const filas = document.querySelectorAll('#constancias_abiertas tbody > tr');
+
+    for (let i = 0; i < filas.length; i++) {
+        tbody.removeChild(filas[i]);
+    }
+
+    let base_url_firmar = '<?= base_url('/admin/dashboard/constancia_extravio_show').'?folio='?>';
+    for (let i = 0; i < constancias.length; i++) {
+        let url = base_url_firmar + constancias[i].CONSTANCIAEXTRAVIOID + '&year=' + constancias[i].ANO
+
+        let row = `
+        <tr>
+        	<td class="text-center font-weight-bold">${constancias[i].CONSTANCIAEXTRAVIOID}</td>
+        	<td class="text-center">${constancias[i].ANO}</td>
+        	<td class="text-center">${constancias[i].FECHA}</td>
+        	<td class="text-center">${constancias[i].HORA}</td>
+        	<td class="text-center">${constancias[i].NOMBRE}</td>
+        	<td class="text-center">${constancias[i].CORREO}</td>
+        	<td class="text-center">${constancias[i].TELEFONO}</td>
+        	<td class="text-center">${constancias[i].EXTRAVIO == 'DOCUMENTOS'?constancias[i].TIPODOCUMENTO:constancias[i].EXTRAVIO}</td>
+        	<td class="text-center">
+        		<a type="button" href="${url}" class="btn btn-primary text-white">
+        			<i class="fas fa-signature" style="margin-right:10px;"></i> FIRMAR
+        		</a>
+        	</td>
+        </tr>
+        `
+
+        $('#constancias_abiertas > tbody').append(row);
+    }
+}
 </script>
 
 <?= $this->endSection() ?>

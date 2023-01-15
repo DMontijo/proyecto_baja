@@ -150,6 +150,10 @@ class FirmaController extends BaseController
 							break;
 						case 'DOCUMENTOS':
 							$descr = 'EXTRAVÍO ORIGINAL DE: [TIPODOCUMENTO] A NOMBRE DE: [NOMBRE_DUENO] CON NÚMERO DE FOLIO: [NDOCUMENTO]';
+							if(!$constancia->NDOCUMENTO){
+								$descr = str_replace('CON NÚMERO DE FOLIO: [NDOCUMENTO]', '', $descr);
+								$plantilla->TEXTO = str_replace(', N&Uacute;MERO: <strong>[NO_DOCUMENTO]</strong>,', '', $plantilla->TEXTO);
+							}
 							$descr = str_replace('[TIPODOCUMENTO]', $constancia->TIPODOCUMENTO, $descr);
 							$descr = str_replace('[NOMBRE_DUENO]', $constancia->DUENONOMBREDOC . " " . $constancia->DUENOAPELLIDOPDOC . " " . $constancia->DUENOAPELLIDOMDOC, $descr);
 							$descr = str_replace('[NDOCUMENTO]', $constancia->NDOCUMENTO, $descr);
@@ -227,6 +231,10 @@ class FirmaController extends BaseController
 							break;
 						case 'DOCUMENTOS':
 							$descr = 'EXTRAVÍO ORIGINAL DE: [TIPODOCUMENTO] A NOMBRE DE: [NOMBRE_DUENO] CON NÚMERO DE FOLIO: [NDOCUMENTO]';
+							if(!$constancia->NDOCUMENTO){
+								$descr = str_replace('CON NÚMERO DE FOLIO: [NDOCUMENTO]', '', $descr);
+								$plantilla->PLACEHOLDER = str_replace(', N&Uacute;MERO: <strong>[NO_DOCUMENTO]</strong>,', '', $plantilla->PLACEHOLDER);
+							}
 							$descr = str_replace('[TIPODOCUMENTO]', $constancia->TIPODOCUMENTO, $descr);
 							$descr = str_replace('[NOMBRE_DUENO]', $constancia->DUENONOMBREDOC . " " . $constancia->DUENOAPELLIDOPDOC . " " . $constancia->DUENOAPELLIDOMDOC, $descr);
 							$descr = str_replace('[NDOCUMENTO]', $constancia->NDOCUMENTO, $descr);
@@ -794,7 +802,7 @@ class FirmaController extends BaseController
 			->setEncoding(new Encoding('UTF-8'))
 			->setErrorCorrectionLevel(new ErrorCorrectionLevelLow())
 			->setSize(300)
-			->setMargin(2)
+			->setMargin(1)
 			->setRoundBlockSizeMode(new RoundBlockSizeModeMargin())
 			->setForegroundColor(new Color(0, 0, 0))
 			->setBackgroundColor(new Color(255, 255, 255));
