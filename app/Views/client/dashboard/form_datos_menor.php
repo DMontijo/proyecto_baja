@@ -158,7 +158,7 @@
 				<option value="<?= $ocupacion->PERSONAOCUPACIONID ?>"> <?= $ocupacion->PERSONAOCUPACIONDESCR ?> </option>
 			<?php } ?>
 		</select>
-		<input type="text" class="form-control d-none" id="ocupacion_descr_menor" name="ocupacion_descr_menor" maxlength="100" required>
+		<input type="text" class="form-control d-none" id="ocupacion_descr_menor" name="ocupacion_descr_menor" maxlength="100">
 		<small id="ocupacion-menor-message" class="text-primary fw-bold d-none">Si no encuentras tu ocupación selecciona otro</small>
 		<div class="invalid-feedback">
 			La ocupación es obligatoria
