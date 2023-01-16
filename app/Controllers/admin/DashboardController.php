@@ -319,7 +319,6 @@ class DashboardController extends BaseController
 		$this->_loadView('Asignación de permisos', 'asignacion de permisos', '', $data, 'roles/asignacion_permisos');
 	}
 
-
 	public function nuevo_asignacion_permiso()
 	{
 		$data = (object) array();

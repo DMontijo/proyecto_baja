@@ -165,11 +165,12 @@ $routes->group('denuncia', function ($routes) {
 	$routes->group('dashboard', ['filter' => 'denuciantesAuth'], function ($routes) {
 		$routes->get('/', 'client/DashboardController::index');
 		$routes->get('video-denuncia', 'client/DashboardController::video_denuncia');
+		
+		$routes->get('perfil', 'client/DashboardController::profile');
+		$routes->post('actualizar-perfil', 'client/DashboardController::update_profile');
 
 		$routes->get('denuncias', 'client/DashboardController::denuncias');
-
 		$routes->post('create', 'client/DashboardController::create');
-
 		$routes->post('descargarPDF', 'client/DashboardController::descargar_pdf');
 	});
 });
@@ -303,6 +304,9 @@ $routes->group('constancia_extravio', function ($routes) {
 		$routes->get('constancias', 'extravio/DashboardController::constancias');
 		$routes->post('download_constancia_pdf', 'extravio/DashboardController::download_constancia_pdf');
 		$routes->post('download_constancia_xml', 'extravio/DashboardController::download_constancia_xml');
+
+		$routes->get('perfil', 'extravio/ExtravioController::profile');
+		$routes->post('actualizar-perfil', 'extravio/ExtravioController::update_profile');
 	});
 });
 /**

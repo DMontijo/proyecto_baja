@@ -13,6 +13,9 @@
     <link rel="stylesheet" href="<?= base_url() ?>/assets/bootstrap/css/bootstrap.css">
     <!--Bootstrap Icons-->
     <link rel="stylesheet" href="<?= base_url() ?>/assets/bootstrap/icons/bootstrap-icons.css">
+    <!-- Lada Telefonica -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
     <!--Font-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -44,27 +47,41 @@
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     <li class="nav-item">
                         <a class="nav-link <?php if ('' === 'constancias') echo 'active'; ?>"
-                            href="<?= base_url() ?>/constancia_extravio/dashboard"><i class="bi-bookmark-plus-fill"></i>
+                            href="<?= base_url() ?>/constancia_extravio/dashboard"><i class="bi bi-file-earmark"></i>
                             Generar constancia</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link <?php if ('' === 'constancias') echo 'active'; ?>"
                             href="<?= base_url() ?>/constancia_extravio/dashboard/constancias"><i
-                                class="bi-inboxes-fill"></i> Mis constancias</a>
+                                class="bi bi-archive"></i> Mis constancias</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link <?php if ('' === 'dashboard' || '' === 'video-denuncia') echo 'active'; ?>"
-                            href="<?= base_url() ?>/denuncia/dashboard"><i class="bi bi-camera-video-fill"></i>
-                            Denunciar</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="options" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-three-dots-vertical"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="options">
+                            <li><a class="dropdown-item" href="#!" onclick="javascript:toggleFullScreen()"><i
+                                        class="bi bi-fullscreen"></i> Expandir</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="<?= base_url() ?>/denuncia/dashboard"><i
+                                        class="bi bi-camera-video"></i> Denunciar</a></li>
+                            <li><a class="dropdown-item"
+                                    href="<?= base_url() ?>/constancia_extravio/dashboard/perfil"><i
+                                        class="bi bi-person"></i> Perfil</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="<?= base_url('denuncia/logout') ?>"><i
+                                        class="bi bi-box-arrow-left"></i> Salir</a></a></li>
+                        </ul>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?= base_url('denuncia/logout') ?>"><i
-                                class="bi bi-box-arrow-left"></i> Salir</a>
-                    </li>
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <a class="nav-link" href="#!" onclick="javascript:toggleFullScreen()"><i
                                 class="bi bi-fullscreen"></i></a>
-                    </li>
+                    </li> -->
                 </ul>
             </div>
         </div>

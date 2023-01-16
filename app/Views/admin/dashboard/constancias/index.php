@@ -31,7 +31,7 @@
                     </div>
                 </div>
             </div>
-            <?php if(session('rol')->NOMBRE_ROL == 'SUPERUSUARIO' || session('rol')->NOMBRE_ROL == 'ENCARGADO TURNO'){?>
+            <!-- <?php if(session('rol')->NOMBRE_ROL == 'SUPERUSUARIO' || session('rol')->NOMBRE_ROL == 'ENCARGADO TURNO'){?> -->
             <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                 <div class="card shadow border-0 text-center">
                     <div class="card-body p-2" style="height:200px;">
@@ -43,7 +43,7 @@
                     </div>
                 </div>
             </div>
-            <?php } ?>
+            <!-- <?php } ?> -->
         </div>
     </div>
 </section>
@@ -74,4 +74,11 @@ Swal.fire({
 })
 </script>
 <?php endif; ?>
+<script>
+window.onload = function() {
+    setInterval(() => {
+        location.reload();
+    }, 120000);
+}
+</script>
 <?= $this->endSection() ?>

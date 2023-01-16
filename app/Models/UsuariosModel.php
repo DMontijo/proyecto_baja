@@ -11,6 +11,8 @@ class UsuariosModel extends Model
 	protected $allowedFields = [
 		'ROLID',
 		'ZONAID',
+		'MUNICIPIOID',
+		'OFICINAID',
 		'NOMBRE',
 		'APELLIDO_PATERNO',
 		'APELLIDO_MATERNO',
