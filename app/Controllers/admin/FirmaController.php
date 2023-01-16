@@ -51,11 +51,11 @@ class FirmaController extends BaseController
 			$password = str_replace(' ', '', trim($this->request->getPost('contrasena')));
 			$user_id = session('ID');
 
-			$constancia = $this->_constanciaExtravioModel->asObject()->where('CONSTANCIAEXTRAVIOID', $numfolio)->where('ANO', $year)->where('STATUS !=','FIRMADO')->first();
-			if(!$constancia){
+			$constancia = $this->_constanciaExtravioModel->asObject()->where('CONSTANCIAEXTRAVIOID', $numfolio)->where('ANO', $year)->where('STATUS !=', 'FIRMADO')->first();
+			if (!$constancia) {
 				return redirect()->to(base_url('/admin/dashboard/constancias_extravio_abiertas'))->with('message_error', 'No existe la constancia o ya fue firmada.');
 			}
-			
+
 			$plantilla = $this->_plantillasModel->asObject()->where('TITULO', 'CONSTANCIA DE EXTRAVIO')->first();
 
 			$solicitante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', $constancia->DENUNCIANTEID)->first();
@@ -79,7 +79,7 @@ class FirmaController extends BaseController
 			$FECHAFIRMA = date("Y-m-d");
 			$HORAFIRMA = date("H:i");
 
-		
+
 			if ($this->_crearArchivosPEMText($user_id, $password)) {
 				if ($this->_validarFiel($user_id)) {
 					$fiel_user = $this->_extractData($user_id);
@@ -150,7 +150,7 @@ class FirmaController extends BaseController
 							break;
 						case 'DOCUMENTOS':
 							$descr = 'EXTRAVÍO ORIGINAL DE: [TIPODOCUMENTO] A NOMBRE DE: [NOMBRE_DUENO] CON NÚMERO DE FOLIO: [NDOCUMENTO]';
-							if(!$constancia->NDOCUMENTO){
+							if (!$constancia->NDOCUMENTO) {
 								$descr = str_replace('CON NÚMERO DE FOLIO: [NDOCUMENTO]', '', $descr);
 								$plantilla->TEXTO = str_replace(', N&Uacute;MERO: <strong>[NO_DOCUMENTO]</strong>,', '', $plantilla->TEXTO);
 							}
@@ -231,7 +231,7 @@ class FirmaController extends BaseController
 							break;
 						case 'DOCUMENTOS':
 							$descr = 'EXTRAVÍO ORIGINAL DE: [TIPODOCUMENTO] A NOMBRE DE: [NOMBRE_DUENO] CON NÚMERO DE FOLIO: [NDOCUMENTO]';
-							if(!$constancia->NDOCUMENTO){
+							if (!$constancia->NDOCUMENTO) {
 								$descr = str_replace('CON NÚMERO DE FOLIO: [NDOCUMENTO]', '', $descr);
 								$plantilla->PLACEHOLDER = str_replace(', N&Uacute;MERO: <strong>[NO_DOCUMENTO]</strong>,', '', $plantilla->PLACEHOLDER);
 							}
@@ -283,9 +283,9 @@ class FirmaController extends BaseController
 							'PDF' => $pdf,
 							'STATUS' => 'FIRMADO'
 						];
-						
-						$constancia = $this->_constanciaExtravioModel->asObject()->where('CONSTANCIAEXTRAVIOID', $numfolio)->where('ANO', $year)->where('STATUS !=','FIRMADO')->first();
-						if(!$constancia){
+
+						$constancia = $this->_constanciaExtravioModel->asObject()->where('CONSTANCIAEXTRAVIOID', $numfolio)->where('ANO', $year)->where('STATUS !=', 'FIRMADO')->first();
+						if (!$constancia) {
 							return redirect()->to(base_url('/admin/dashboard/constancias_extravio_abiertas'))->with('message_error', 'No existe la constancia o ya fue firmada.');
 						}
 						$update = $this->_constanciaExtravioModel->set($datosInsert)->where('CONSTANCIAEXTRAVIOID ', $numfolio)->where('ANO', $year)->update();
@@ -342,7 +342,7 @@ class FirmaController extends BaseController
 
 		$FECHAFIRMA = date("Y-m-d");
 		$HORAFIRMA = date("H:i");
-		
+
 		try {
 			if ($this->_crearArchivosPEMText($user_id, $password)) {
 				if ($this->_validarFiel($user_id)) {
@@ -357,11 +357,11 @@ class FirmaController extends BaseController
 						$documento[$i]->PLACEHOLDER = str_replace('[NOMBRE_LICENCIADO]', $razon_social, $documento[$i]->PLACEHOLDER);
 						$documento[$i]->PLACEHOLDER = str_replace('[EXPEDIENTE_NOMBRE_MP_RESPONSABLE]', $razon_social, $documento[$i]->PLACEHOLDER);
 						$text = $documento[$i]->PLACEHOLDER;
-						$text = str_replace( '<', ' <',$text);
-						$text= strip_tags( $text);
-						$text = str_replace(chr(13), ' ' ,$text);
-						$text = str_replace(chr(10), ' ' ,$text);
-						$text = str_replace( '  ', ' ', trim($text) );
+						$text = str_replace('<', ' <', $text);
+						$text = strip_tags($text);
+						$text = str_replace(chr(13), ' ', $text);
+						$text = str_replace(chr(10), ' ', $text);
+						$text = str_replace('  ', ' ', trim($text));
 						$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $documento[$i]->MUNICIPIOID)->where('ESTADOID', $documento[$i]->ESTADOID)->first();
 						if (isset($municipio) == false) {
 							$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $folioRow->MUNICIPIOID)->where('ESTADOID', $folioRow->ESTADOID)->first();
@@ -371,6 +371,9 @@ class FirmaController extends BaseController
 						$signature = $this->_generateSignature($user_id, "FIRMA DE DOCUMENTOS", $text, $expediente, $FECHAFIRMA, $HORAFIRMA);
 						$urldoc = base_url('/validar_documento?expediente=' . base64_encode($numexpediente) . '&year=' . $year . '&foliodoc=' . base64_encode($documento[$i]->FOLIODOCID));
 
+						if (strlen($signature->signed_chain) > 2930) {
+							$signature->signed_chain = substr($signature->signed_chain, 0, 2930) . '...';
+						}
 						$datapdf = array(
 							'placeholder' => $documento[$i]->PLACEHOLDER,
 							'firma' => $signature->signature,
@@ -385,7 +388,7 @@ class FirmaController extends BaseController
 							'url' => $urldoc,
 							'qrurl' => $this->_generateQR($urldoc)
 						);
-						
+
 						$pdf = $this->_generatePDFDocumentos($datapdf);
 
 						if ($signature->status == 1) {
@@ -806,8 +809,8 @@ class FirmaController extends BaseController
 			->setRoundBlockSizeMode(new RoundBlockSizeModeMargin())
 			->setForegroundColor(new Color(0, 0, 0))
 			->setBackgroundColor(new Color(255, 255, 255));
-
 		$result = $writer->write($qrCode);
+
 		header('Content-Type: ' . $result->getMimeType());
 		return $result->getDataUri();
 	}

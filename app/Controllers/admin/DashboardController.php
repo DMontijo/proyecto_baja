@@ -1604,6 +1604,7 @@ class DashboardController extends BaseController
 
 		$folioDoc = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOCID', 'asc')->findAll();
 		$archivosExternosVD = $this->_archivoExternoModel->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
+		$folioDocPeritaje = $this->_folioDocModel->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('TIPODOC', 'SOLICITUD DE PERITAJE')->findAll();
 
 		if ($archivosExternosVD) {
 			try {
@@ -1636,15 +1637,13 @@ class DashboardController extends BaseController
 		}
 		if ($folioDoc) {
 			try {
-
 				foreach ($folioDoc as $key => $doc) {
-					$relacionDoc = $this->_relacionFolioDocModel->where('FOLIOID', $doc['FOLIOID'])->where('ANO', $doc['ANO'])->where('EXPEDIENTEID', $doc['NUMEROEXPEDIENTE'])->where('FOLIODOCID', $doc['FOLIODOCID'])->where('TIPO', 'DOCUMENTO')->orderBy('FOLIODOCID', 'asc')->first();
-
-					if ($relacionDoc == NULL) {
-						$municipioid = $doc['MUNICIPIOID'] ? $doc['MUNICIPIOID'] : NULL;
+					$relacionDocArc = $this->_relacionFolioDocModel->where('FOLIOID', $doc['FOLIOID'])->where('ANO', $doc['ANO'])->where('FOLIODOCID', $doc['FOLIODOCID'])->where('TIPO', 'ARCHIVO DOC')->orderBy('FOLIODOCID', 'asc')->first();
+					if ($relacionDocArc == NULL) {
+						$municipioid = $foliovd['MUNICIPIOID'] ? $foliovd['MUNICIPIOID'] : NULL;
 
 						try {
-							$_archivo = $this->_createArchivosExternos($expediente, $folio, $year,  $municipioid, $doc['CLASIFICACIONDOCTOID'], $doc['TIPODOC'], $doc['PDF'], 'pdf');
+							$_archivo = $this->_createArchivosExternos($expediente, $folio, $year,  $municipioid, 53, $doc['TIPODOC'], $doc['PDF'], 'pdf');
 							if ($_archivo->status == 201) {
 								$datosRelacionFolio = [
 									'FOLIODOCID' => $doc['FOLIODOCID'],
@@ -1652,7 +1651,7 @@ class DashboardController extends BaseController
 									'ANO' => $doc['ANO'],
 									'EXPEDIENTEID' => $_archivo->EXPEDIENTEID,
 									'EXPEDIENTEARCHIVOID' => $_archivo->ARCHIVOID,
-									'TIPO' => 'DOCUMENTO',
+									'TIPO' => 'ARCHIVO DOC',
 
 								];
 								$this->_relacionFolioDocModel->insert($datosRelacionFolio);
@@ -1660,7 +1659,40 @@ class DashboardController extends BaseController
 						} catch (\Exception $e) {
 						}
 					}
-					$relacionDocExpDoc = $this->_relacionFolioDocExpDoc->where('FOLIOID', $doc['FOLIOID'])->where('ANO', $doc['ANO'])->where('EXPEDIENTEID', $doc['NUMEROEXPEDIENTE'])->where('FOLIODOCID', $doc['FOLIODOCID'])->orderBy('FOLIODOCID', 'asc')->first();
+				}
+				
+				
+			} catch (\Exception $e) {
+				return json_encode(['status' => 0, 'error' => $e->getMessage()]);
+			}
+		}
+		if ($folioDocPeritaje) {
+			try {
+
+				foreach ($folioDocPeritaje as $key => $docP) {
+					// $relacionDoc = $this->_relacionFolioDocModel->where('FOLIOID', $docP['FOLIOID'])->where('ANO', $docP['ANO'])->where('EXPEDIENTEID', $docP['NUMEROEXPEDIENTE'])->where('FOLIODOCID', $docP['FOLIODOCID'])->where('TIPO', 'DOCUMENTO PERITAJE')->orderBy('FOLIODOCID', 'asc')->first();
+
+					// if ($relacionDoc == NULL) {
+					// 	$municipioid = $docP['MUNICIPIOID'] ? $docP['MUNICIPIOID'] : NULL;
+
+					// 	try {
+					// 		$_archivo = $this->_createArchivosExternos($expediente, $folio, $year,  $municipioid, $docP['CLASIFICACIONDOCTOID'], $docP['TIPODOC'], $docP['PDF'], 'pdf');
+					// 		if ($_archivo->status == 201) {
+					// 			$datosRelacionFolio = [
+					// 				'FOLIODOCID' => $docP['FOLIODOCID'],
+					// 				'FOLIOID' =>  $docP['FOLIOID'],
+					// 				'ANO' => $docP['ANO'],
+					// 				'EXPEDIENTEID' => $_archivo->EXPEDIENTEID,
+					// 				'EXPEDIENTEARCHIVOID' => $_archivo->ARCHIVOID,
+					// 				'TIPO' => 'DOCUMENTO PERITAJE',
+
+					// 			];
+					// 			$this->_relacionFolioDocModel->insert($datosRelacionFolio);
+					// 		}
+					// 	} catch (\Exception $e) {
+					// 	}
+					// }
+					$relacionDocExpDoc = $this->_relacionFolioDocExpDoc->where('FOLIOID', $docP['FOLIOID'])->where('ANO', $docP['ANO'])->where('EXPEDIENTEID', $docP['NUMEROEXPEDIENTE'])->where('FOLIODOCID', $docP['FOLIODOCID'])->orderBy('FOLIODOCID', 'asc')->first();
 
 					if ($relacionDocExpDoc == null) {
 
@@ -1669,12 +1701,12 @@ class DashboardController extends BaseController
 							// instancia de documento rtf 
 							$rtf = new PHPRtfLite();
 							$sect = $rtf->addSection();
-							$sinetiqueta = strip_tags($doc['PLACEHOLDER']); //placeolder sin etiquetas html
+							$sinetiqueta = strip_tags($docP['PLACEHOLDER']); //placeolder sin etiquetas html
 							//escribe el texto del rtf
 							$sect->writeText($sinetiqueta, new PHPRtfLite_Font(12, 'Courier New'), new PHPRtfLite_ParFormat(PHPRtfLite_ParFormat::TEXT_ALIGN_JUSTIFY));
 							// save rtf document
-							$rtf->save('assets/' . $doc['NUMEROEXPEDIENTE'] . '_' . $doc['FOLIODOCID'] . '.rtf');
-							$tarjet = FCPATH  . 'assets/' . $doc['NUMEROEXPEDIENTE'] . "_" . $doc['FOLIODOCID'] . ".rtf";
+							$rtf->save('assets/' . $docP['NUMEROEXPEDIENTE'] . '_' . $docP['FOLIODOCID'] . '.rtf');
+							$tarjet = FCPATH  . 'assets/' . $docP['NUMEROEXPEDIENTE'] . "_" . $docP['FOLIODOCID'] . ".rtf";
 							//contenido del rtf guardado
 							$data = file_get_contents($tarjet);
 							//creacion del documento rtf
@@ -1686,18 +1718,18 @@ class DashboardController extends BaseController
 
 							$documentos = array();
 							$documentos['DOCUMENTO'] = base64_encode($espacio);
-							$documentos['DOCTODESCR'] = $doc['TIPODOC'];
+							$documentos['DOCTODESCR'] = $docP['TIPODOC'];
 							$documentos['STATUSDOCUMENTOID'] = 4;
 
-							$expedienteDocumento = $this->_createFolioDocumentos($expediente, $documentos, $doc['MUNICIPIOID']);
+							$expedienteDocumento = $this->_createFolioDocumentos($expediente, $documentos, $docP['MUNICIPIOID']);
 
 							if ($expedienteDocumento->status == 201) {
-								unlink(FCPATH  . 'assets/' . $doc['NUMEROEXPEDIENTE'] . "_" . $doc['FOLIODOCID'] . ".rtf");
+								unlink(FCPATH  . 'assets/' . $docP['NUMEROEXPEDIENTE'] . "_" . $docP['FOLIODOCID'] . ".rtf");
 								// unlink(FCPATH  . 'assets/' . $doc['NUMEROEXPEDIENTE'] . "_" . $doc['FOLIODOCID'] . ".bin");	
 								$datosRelacionFolioExpDoc = [
-									'FOLIODOCID' => $doc['FOLIODOCID'],
-									'FOLIOID' =>  $doc['FOLIOID'],
-									'ANO' => $doc['ANO'],
+									'FOLIODOCID' => $docP['FOLIODOCID'],
+									'FOLIOID' =>  $docP['FOLIOID'],
+									'ANO' => $docP['ANO'],
 									'EXPEDIENTEID' => $expedienteDocumento->EXPEDIENTEID,
 									'EXPEDIENTEDOCID' => $expedienteDocumento->DOCUMENTOID,
 								];
