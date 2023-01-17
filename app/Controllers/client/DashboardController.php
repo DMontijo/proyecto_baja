@@ -44,6 +44,45 @@ use App\Models\FolioArchivoExternoModel;
 
 class DashboardController extends BaseController
 {
+	private $_paisesModel;
+	private $_estadosModel;
+	private $_municipiosModel;
+	private $_localidadesModel;
+	private $_coloniasModel;
+	private $_hechoLugarModel;
+	private $_coloresVehiculoModel;
+	private $_tipoVehiculoModel;
+	private $_delitosUsuariosModel;
+	private $_denunciantesModel;
+	private $_personaIdiomaModel;
+	private $_nacionalidadModel;
+	private $_folioModel;
+	private $_folioConsecutivoModel;
+	private $_folioPreguntasModel;
+	private $_folioPersonaFisicaModel;
+	private $_folioPersonaFisicaDomicilioModel;
+	private $_folioVehiculoModel;
+	private $_folioMediaFiliacion;
+	private $_escolaridadModel;
+	private $_ocupacionModel;
+	private $_cabelloColorModel;
+	private $_cabelloTamanoModel;
+	private $_cabelloEstiloModel;
+	private $_frenteFormaModel;
+	private $_ojoColorModel;
+	private $_cejaFormaModel;
+	private $_figuraModel;
+	private $_pielColorModel;
+	private $_parentescoModel;
+	private $_parentescoPersonaFisicaModel;
+	private $_vehiculoDistribuidorModel;
+	private $_vehiculoMarcaModel;
+	private $_vehiculoModeloModel;
+	private $_vehiculoVersionModel;
+	private $_vehiculoServicioModel;
+	private $_estadosExtranjeros;
+	private $_archivoExternoModel;
+	
 	public function __construct()
 	{
 		//Models

@@ -26,6 +26,20 @@ use Endroid\QrCode\Writer\PngWriter;
 
 class FirmaController extends BaseController
 {
+
+	private $_plantillasModel;
+	private $_usuariosModel;
+	private $_denunciantesModel;
+	private $_hechoLugarModel;
+	private $_municipiosModel;
+	private $_estadosModel;
+	private $_constanciaExtravioModel;
+	private $_bitacoraActividadModel;
+	private $_folioDocModel;
+	private $_folioModel;
+	private $_folioPersonaFisicaModel;
+	private $_tipoExpedienteModel;
+	
 	function __construct()
 	{
 		$this->_plantillasModel = new PlantillasModel();
