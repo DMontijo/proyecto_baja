@@ -114,6 +114,37 @@ class ExtravioController extends BaseController
 		}
 	}
 
+	public function profile(){
+		$data = (object) array();
+		$data->user = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID',session('DENUNCIANTEID'))->first();
+		$this->_loadView('Perfil', $data, 'perfil');
+	}
+
+	public function update_profile(){
+		$session = session();
+		$data = [
+			'NOMBRE' => $this->request->getPost('nombre'),
+			'APELLIDO_PATERNO' => $this->request->getPost('apellido_paterno'),
+			'APELLIDO_MATERNO' => $this->request->getPost('apellido_materno'),
+			'TELEFONO' => $this->request->getPost('telefono'),
+			'TELEFONO2' => $this->request->getPost('telefono2'),
+			'FECHANACIMIENTO' => $this->request->getPost('fecha_nacimiento'),
+			'SEXO' => $this->request->getPost('sexo'),
+		];
+		$update = $this->_denunciantesModel->set($data)->where('DENUNCIANTEID',session('DENUNCIANTEID'))->update();
+		if($update){
+			$session->set('NOMBRE', $data['NOMBRE']);
+			$session->set('APELLIDO_PATERNO', $data['APELLIDO_PATERNO']);
+			$session->set('APELLIDO_MATERNO', $data['APELLIDO_MATERNO']);
+			$session->set('TELEFONO', $data['TELEFONO']);
+			$session->set('TELEFONO2', $data['TELEFONO2']);
+			$session->set('FECHANACIMIENTO', $data['FECHANACIMIENTO']);
+			$session->set('SEXO', $data['SEXO']);
+			return redirect()->back()->with('message_success', 'Actualizado correctamente.');
+		}
+		return redirect()->back()->with('message_error', 'No se pudo actualizar el registro.');
+	}
+
 	private function _generatePassword($length)
 	{
 		$password = "";

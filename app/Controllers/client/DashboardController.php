@@ -44,6 +44,45 @@ use App\Models\FolioArchivoExternoModel;
 
 class DashboardController extends BaseController
 {
+	private $_paisesModel;
+	private $_estadosModel;
+	private $_municipiosModel;
+	private $_localidadesModel;
+	private $_coloniasModel;
+	private $_hechoLugarModel;
+	private $_coloresVehiculoModel;
+	private $_tipoVehiculoModel;
+	private $_delitosUsuariosModel;
+	private $_denunciantesModel;
+	private $_personaIdiomaModel;
+	private $_nacionalidadModel;
+	private $_folioModel;
+	private $_folioConsecutivoModel;
+	private $_folioPreguntasModel;
+	private $_folioPersonaFisicaModel;
+	private $_folioPersonaFisicaDomicilioModel;
+	private $_folioVehiculoModel;
+	private $_folioMediaFiliacion;
+	private $_escolaridadModel;
+	private $_ocupacionModel;
+	private $_cabelloColorModel;
+	private $_cabelloTamanoModel;
+	private $_cabelloEstiloModel;
+	private $_frenteFormaModel;
+	private $_ojoColorModel;
+	private $_cejaFormaModel;
+	private $_figuraModel;
+	private $_pielColorModel;
+	private $_parentescoModel;
+	private $_parentescoPersonaFisicaModel;
+	private $_vehiculoDistribuidorModel;
+	private $_vehiculoMarcaModel;
+	private $_vehiculoModeloModel;
+	private $_vehiculoVersionModel;
+	private $_vehiculoServicioModel;
+	private $_estadosExtranjeros;
+	private $_archivoExternoModel;
+	
 	public function __construct()
 	{
 		//Models
@@ -980,6 +1019,37 @@ class DashboardController extends BaseController
 		}
 		echo '<br>';
 		echo '<br>';
+	}
+
+	public function profile(){
+		$data = (object) array();
+		$data->user = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID',session('DENUNCIANTEID'))->first();
+		$this->_loadView('Perfil', '','',$data ,'perfil/perfil');
+	}
+
+	public function update_profile(){
+		$session = session();
+		$data = [
+			'NOMBRE' => $this->request->getPost('nombre'),
+			'APELLIDO_PATERNO' => $this->request->getPost('apellido_paterno'),
+			'APELLIDO_MATERNO' => $this->request->getPost('apellido_materno'),
+			'TELEFONO' => $this->request->getPost('telefono'),
+			'TELEFONO2' => $this->request->getPost('telefono2'),
+			'FECHANACIMIENTO' => $this->request->getPost('fecha_nacimiento'),
+			'SEXO' => $this->request->getPost('sexo'),
+		];
+		$update = $this->_denunciantesModel->set($data)->where('DENUNCIANTEID',session('DENUNCIANTEID'))->update();
+		if($update){
+			$session->set('NOMBRE', $data['NOMBRE']);
+			$session->set('APELLIDO_PATERNO', $data['APELLIDO_PATERNO']);
+			$session->set('APELLIDO_MATERNO', $data['APELLIDO_MATERNO']);
+			$session->set('TELEFONO', $data['TELEFONO']);
+			$session->set('TELEFONO2', $data['TELEFONO2']);
+			$session->set('FECHANACIMIENTO', $data['FECHANACIMIENTO']);
+			$session->set('SEXO', $data['SEXO']);
+			return redirect()->back()->with('message_success', 'Actualizado correctamente.');
+		}
+		return redirect()->back()->with('message_error', 'No se pudo actualizar el registro.');
 	}
 }
 
