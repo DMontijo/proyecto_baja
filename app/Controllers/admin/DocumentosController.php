@@ -141,10 +141,10 @@ class DocumentosController extends BaseController
 	}
 	public function obtenDocumentos()
 	{
-		$expediente = trim($this->request->getPost('expediente'));
-		$folio = trim($this->request->getPost('folio'));
-		$year = trim($this->request->getPost('year'));
-		if (isset($folio) && isset($year)) {
+		$expediente = $this->request->getPost('expediente');
+		$folio = $this->request->getPost('folio');
+		$year = $this->request->getPost('year');
+		if (isset($folio) && isset($year) && empty($expediente)) {
 			$documentos = $this->_folioDocModel->get_by_folio($folio, $year);
 			$imputados = $this->_folioPersonaFisicaModel->get_imputados($folio, $year);
 			$victimas = $this->_folioPersonaFisicaModel->get_victimas($folio, $year);
@@ -188,7 +188,14 @@ class DocumentosController extends BaseController
 		$expediente = $this->request->getGet('expediente');
 		$year = $this->request->getGet('year');
 		$foliodocid = $this->request->getGet('foliodoc');
-		$documento = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', base64_decode($expediente))->where('ANO', $year)->where('FOLIODOCID', base64_decode($foliodocid))->first();
+		$folio = $this->request->getGet('folio');
+
+		if ($expediente) {
+			$documento = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', base64_decode($expediente))->where('ANO', $year)->where('FOLIODOCID', base64_decode($foliodocid))->first();
+		}else{
+			$documento = $this->_folioDocModel->asObject()->where('FOLIOID', base64_decode($folio))->where('ANO', $year)->where('FOLIODOCID', base64_decode($foliodocid))->first();
+
+		}
 		if ($documento) {
 			// $solicitante = $this->_folioPersonaFisicaModel->asObject()->where('PERSONAFISICAID', $documento->PERSONAFISICAID)->where('NUMEROEXPEDIENTE',$expediente)->where('ANO', $year)->first();
 			// $documento->NOMBRESOLICITANTE = $solicitante->NOMBRE . ' ' . $solicitante->PRIMERAPELLIDO . ' ' . $solicitante->SEGUNDOAPELLIDO;

@@ -171,6 +171,10 @@
 			event.target.value = clearText(event.target.value).toUpperCase();
 		}, false)
 
+		document.querySelector('#description_vehiculo_sp').addEventListener('input', (event) => {
+			event.target.value = clearText(event.target.value).toUpperCase();
+		}, false)
+
 		document.querySelector('#aviso_modal').addEventListener('hidden.bs.modal', (event) => {
 			$.ajax({
 				data: {

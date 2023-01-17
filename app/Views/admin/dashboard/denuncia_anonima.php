@@ -330,20 +330,22 @@
 	var select_victima = document.getElementById('victima_conocido');
 	var select_imputado = document.getElementById('imputado_conocido');
 	var charRemain;
-
+	$('#delito_cometido').select2({
+		theme: "bootstrap"
+	});
 	document.querySelector('#ocupacion_pf').addEventListener('change', (e) => {
-                let select_ocupacion = document.querySelector('#ocupacion_pf');
-                let input_ocupacion = document.querySelector('#ocupacion_pf_m');
+		let select_ocupacion = document.querySelector('#ocupacion_pf');
+		let input_ocupacion = document.querySelector('#ocupacion_pf_m');
 
-                if (e.target.value === '999') {
-                    input_ocupacion.classList.remove('d-none');
-                    input_ocupacion.value = "";
-                    input_ocupacion.focus();
-                } else {
-                    input_ocupacion.classList.add('d-none');
-                    input_ocupacion.value ='';
-                }
-            });
+		if (e.target.value === '999') {
+			input_ocupacion.classList.remove('d-none');
+			input_ocupacion.value = "";
+			input_ocupacion.focus();
+		} else {
+			input_ocupacion.classList.add('d-none');
+			input_ocupacion.value = '';
+		}
+	});
 	document.querySelector('#victima_conocido').addEventListener('change', (e) => {
 		if (e.target.value == 1) {
 			$('#insert_persona_victima_modal_denuncia').modal('show');
@@ -1734,7 +1736,7 @@
 			'interior_pfd': document.querySelector('#interior_pfd').value,
 			'referencia_pfd': document.querySelector('#referencia_pfd').value,
 			'manzana_pfd': document.querySelector('#manzana_pfd').value,
-            'lote_pfd': document.querySelector('#lote_pfd').value,
+			'lote_pfd': document.querySelector('#lote_pfd').value,
 
 
 		};
@@ -2117,9 +2119,9 @@
 					document.querySelector('#twitter_pf').value = personaFisica.TWITTER ? personaFisica.TWITTER : '';
 					document.querySelector('#denunciante_pf').value = personaFisica.DENUNCIANTE ? personaFisica.DENUNCIANTE : '';
 					if (personaFisica.OCUPACIONDESCR) {
-                        document.querySelector('#ocupacion_pf_m').classList.remove('d-none');
-                        document.querySelector('#ocupacion_pf_m').value = personaFisica.OCUPACIONDESCR;
-                    }
+						document.querySelector('#ocupacion_pf_m').classList.remove('d-none');
+						document.querySelector('#ocupacion_pf_m').value = personaFisica.OCUPACIONDESCR;
+					}
 					//PERSONA FISICA END
 					//MEDIAFILIACION
 					if (mediaFiliacion) {
@@ -2335,9 +2337,9 @@
 					document.querySelector('#interior_pfd').value = domicilio.NUMEROINTERIOR ? domicilio.NUMEROINTERIOR : '';
 					document.querySelector('#referencia_pfd').value = domicilio.REFERENCIA ? domicilio.REFERENCIA : '';
 					document.querySelector('#manzana_pfd').value = domicilio.MANZANA ? domicilio
-                        .MANZANA : '';
-                    document.querySelector('#lote_pfd').value = domicilio.LOTE ? domicilio
-                        .LOTE : '';
+						.MANZANA : '';
+					document.querySelector('#lote_pfd').value = domicilio.LOTE ? domicilio
+						.LOTE : '';
 					$('#folio_persona_fisica_modal_da').modal('show');
 
 				} else {

@@ -74,6 +74,8 @@
 							<thead>
 								<tr>
 									<th class="text-center">EXPEDIENTE ID</th>
+									<th class="text-center">FOLIO ID</th>
+
 									<th class="text-center">FECHA</th>
 									<th class="text-center">ESTADO</th>
 									<th class="text-center"></th>
@@ -88,9 +90,11 @@
 									} ?>
 									<tr>
 										<td class="text-center"><?= $documentos->EXPEDIENTEID ? $expedienteid : ''   ?></td>
+										<td class="text-center"><?= $documentos->FOLIOID?></td>
+
 										<td class="text-center"><?= $documentos->FECHAREGISTRO ?></td>
 										<td class="text-center"><?= $documentos->STATUS ?></td>
-										<td class="text-center"><a type="button" href="<?= base_url('/admin/dashboard/documentos_show?expediente=' . $documentos->EXPEDIENTEID . '&year=' . $documentos->ANO . '&folio=' . $documentos->FOLIOID) ?>" class="btn btn-primary text-white"><i class="fas fa-folder-open"></i> DOCUMENTOS</a></td>
+										<td class="text-center"><a type="button" href="<?= $documentos->EXPEDIENTEID ? base_url('/admin/dashboard/documentos_show?expediente=' . $documentos->EXPEDIENTEID . '&year=' . $documentos->ANO . '&folio=' . $documentos->FOLIOID) : base_url('/admin/dashboard/documentos_show?folio=' . $documentos->FOLIOID . '&year=' . $documentos->ANO) ?>" class="btn btn-primary text-white"><i class="fas fa-folder-open"></i> DOCUMENTOS</a></td>
 									</tr>
 								<?php } ?>
 							</tbody>

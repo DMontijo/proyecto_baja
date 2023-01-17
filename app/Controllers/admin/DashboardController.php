@@ -4420,8 +4420,8 @@ class DashboardController extends BaseController
 	{
 
 		$meses = array("ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE");
-		$expediente = trim($this->request->getPost('expediente'));
-		$year = trim($this->request->getPost('year'));
+		$expediente = $this->request->getPost('expediente');
+		$year = $this->request->getPost('year');
 		$titulo = $this->request->getPost('titulo');
 		$victima = $this->request->getPost('victima');
 		$imputado = $this->request->getPost('imputado');
@@ -4630,9 +4630,9 @@ class DashboardController extends BaseController
 	public function insertFolioDoc()
 	{
 
-		$expediente = trim($this->request->getPost('expediente'));
-		$folio = trim($this->request->getPost('folio'));
-		$year = trim($this->request->getPost('year'));
+		$expediente = $this->request->getPost('expediente');
+		$folio = $this->request->getPost('folio');
+		$year = $this->request->getPost('year');
 		$placeholder = $this->request->getPost('placeholder');
 		$municipio = $this->request->getPost('municipio');
 

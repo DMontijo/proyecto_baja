@@ -678,7 +678,7 @@ class DashboardController extends BaseController
 					// 'NUMEROCHASIS' => $this->request->getPost('num_chasis_vehiculo'),
 					// 'TRANSMISION' => $this->request->getPost('transmision_vehiculo'),
 					// 'TRACCION' => $this->request->getPost('traccion_vehiculo'),
-					// 'SENASPARTICULARES' => $this->request->getPost('description_vehiculo'),
+					'SENASPARTICULARES' => $this->request->getPost('description_vehiculo') ? $this->request->getPost('description_vehiculo') : $this->request->getPost('description_vehiculo_sp'),
 					// 'MARCADESCR' => isset($marcadescr->VEHICULOMARCADESCR) ? $marcadescr->VEHICULOMARCADESCR : null,
 					// 'MODELODESCR' => isset($modelodescr->VEHICULOMODELODESCR) ? $modelodescr->VEHICULOMODELODESCR : null,
 					'FOTO' => $fotoV,
