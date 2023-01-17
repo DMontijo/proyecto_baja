@@ -371,8 +371,14 @@
 
 				if (document.querySelector("#delito").value == "ROBO DE VEHÍCULO") {
 					var radio_doc_vehiculo = document.getElementById("radio_documentos_vehiculo");
-
 					radio_doc_vehiculo.classList.remove('d-none');
+					if (document.getElementById('documentos_vehiculo').value == 'S') {
+							document.getElementById('datos_robo_vehiculo_completo').classList.add('step');
+							document.getElementById('datos_robo_vehiculo').classList.remove('step');
+						} else if (document.getElementById('documentos_vehiculo').value == 'N') {
+							document.getElementById('datos_robo_vehiculo').classList.add('step');
+							document.getElementById('datos_robo_vehiculo_completo').classList.remove('step');
+						}
 					// document.querySelector('input[name="documentos_vehiculo"]:checked').value = 'N';
 					// document.querySelector('#documentos_vehiculo > [value="N"]').checked = true;	
 					// $("input[name=documentos_vehiculo][value='N']").prop("checked",true);
