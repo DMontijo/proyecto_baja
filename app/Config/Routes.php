@@ -119,9 +119,9 @@ $routes->group('admin', function ($routes) {
 		$routes->post('reportes_folios', 'admin/ReportesController::postFolios');
 		$routes->get('reportes_constancias', 'admin/ReportesController::getConstancias');
 		$routes->post('reportes_constancias', 'admin/ReportesController::postConstancias');
-
 		$routes->get('registro_diario', 'admin/ReportesController::getRegistroDiario');
 		$routes->post('registro_diario', 'admin/ReportesController::postRegistroDiario');
+		$routes->get('reporte_fiel', 'admin/ReportesController::getFielReport');
 
 
 		$routes->post('generar_excel_folios', 'admin/ReportesController::createFoliosXlsx');

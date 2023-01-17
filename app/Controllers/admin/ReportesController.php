@@ -14,6 +14,12 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class ReportesController extends BaseController
 {
+	private $_folioModel;
+	private $_municipiosModel;
+	private $_usuariosModel;
+	private $_constanciaExtravioModel;
+	private $_rolesPermisosModel;
+	
 	function __construct()
 	{
 		$this->_folioModel = new FolioModel();
@@ -44,7 +50,8 @@ class ReportesController extends BaseController
 
 		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
 		$resultFilter = $this->_folioModel->filterDates($data);
-		$empleado = $this->_usuariosModel->asObject()->where('ROLID', 2)->orderBy('NOMBRE', 'ASC')->findAll();
+		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7";
+		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
 
 		$dataView = (object)array();
 		$dataView->result = $resultFilter->result;
@@ -82,7 +89,8 @@ class ReportesController extends BaseController
 
 		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
 		$resultFilter = $this->_folioModel->filterDates($data);
-		$empleado = $this->_usuariosModel->asObject()->where('ROLID', 2)->orderBy('NOMBRE', 'ASC')->findAll();
+		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7";
+		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
 
 		if (isset($data['AGENTEATENCIONID'])) {
 			$agente = $this->_usuariosModel->asObject()->where('ROLID', 2)->where('ID', $data['AGENTEATENCIONID'])->orderBy('NOMBRE', 'ASC')->first();
@@ -259,7 +267,6 @@ class ReportesController extends BaseController
 
 	public function getConstancias()
 	{
-
 		$data = [
 			'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
 			'fechaFin' => date("Y-m-d"),
@@ -271,7 +278,8 @@ class ReportesController extends BaseController
 
 		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
 		$resultFilter = $this->_constanciaExtravioModel->filterDates($data);
-		$empleado = $this->_usuariosModel->asObject()->where('ROLID', 2)->orderBy('NOMBRE', 'ASC')->findAll();
+		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7";
+		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
 
 		$dataView = (object)array();
 		$dataView->result = $resultFilter->result;
@@ -282,6 +290,7 @@ class ReportesController extends BaseController
 
 		$this->_loadView('Constancias generadas', 'constancias', '', $dataView, 'constancias');
 	}
+
 
 	public function postConstancias()
 	{
@@ -308,7 +317,8 @@ class ReportesController extends BaseController
 
 		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
 		$resultFilter = $this->_constanciaExtravioModel->filterDates($data);
-		$empleado = $this->_usuariosModel->asObject()->where('ROLID', 2)->orderBy('NOMBRE', 'ASC')->findAll();
+		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7";
+		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
 
 		if (isset($data['AGENTEID'])) {
 			$agente = $this->_usuariosModel->asObject()->where('ROLID', 2)->where('ID', $data['AGENTEID'])->orderBy('NOMBRE', 'ASC')->first();
@@ -326,11 +336,9 @@ class ReportesController extends BaseController
 		$dataView->filterParams = (object)$data;
 		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
-		// var_dump($dataView->filterParams);
-		// exit;
-
 		$this->_loadView('Constancias generadas', 'constancias', '', $dataView, 'constancias');
 	}
+
 
 	public function createConstanciasXlsx()
 	{
@@ -490,6 +498,7 @@ class ReportesController extends BaseController
 		header('Cache-Control: max-age=0');
 		$writer->save("php://output");
 	}
+
 	public function getRegistroDiario()
 	{
 		$data = [
@@ -514,6 +523,7 @@ class ReportesController extends BaseController
 
 		$this->_loadView('Registro diario', 'registro diario', '', $dataView, 'registro_diario');
 	}
+
 	public function postRegistroDiario()
 	{
 		$data = [
@@ -555,6 +565,7 @@ class ReportesController extends BaseController
 
 		$this->_loadView('Registro diario', 'registro diario', '', $dataView, 'registro_diario');
 	}
+
 	public function createRegistroDiarioXlsx()
 	{
 
@@ -783,6 +794,25 @@ class ReportesController extends BaseController
 		$writer->save("php://output");
 	}
 
+	public function getFielReport(){
+		$data = (object) array();
+		if (!$this->permisos('USUARIOS')) {
+			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
+		}
+		$data->usuario = $this->_usuariosModel->asObject()
+			->select('USUARIOS.*, ROLES.NOMBRE_ROL, ZONAS_USUARIOS.NOMBRE_ZONA, MUNICIPIO.MUNICIPIODESCR,OFICINA.OFICINADESCR')
+			->join('ROLES', 'ROLES.ID = USUARIOS.ROLID','LEFT')
+			->join('ZONAS_USUARIOS', 'ZONAS_USUARIOS.ID_ZONA = USUARIOS.ZONAID','LEFT')
+			->join('MUNICIPIO', 'MUNICIPIO.MUNICIPIOID = USUARIOS.MUNICIPIOID AND MUNICIPIO.ESTADOID = 2','LEFT')
+			->join('OFICINA', 'OFICINA.OFICINAID = USUARIOS.OFICINAID AND OFICINA.MUNICIPIOID = USUARIOS.MUNICIPIOID AND OFICINA.ESTADOID = 2','LEFT')
+			->where('ROLID !=', 1)
+			->orderBy('ROLES.NOMBRE_ROL', 'ASC')
+			->orderBy('USUARIOS.NOMBRE', 'ASC')
+			->findAll();
+		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+
+		$this->_loadView('FIEL', 'fiel', '', $data, 'fiel');
+	}
 
 	private function _loadView($title, $menu, $submenu, $data, $view)
 	{
@@ -793,6 +823,7 @@ class ReportesController extends BaseController
 
 		echo view("admin/dashboard/reportes/$view", $data2);
 	}
+	
 	private function permisos($permiso)
 	{
 		return in_array($permiso, session('permisos'));
