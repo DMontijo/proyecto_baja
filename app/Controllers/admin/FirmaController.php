@@ -332,7 +332,12 @@ class FirmaController extends BaseController
 		$password = str_replace(' ', '', trim($this->request->getPost('contrasena')));
 		$user_id = session('ID');
 
-		$documento = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $numexpediente)->where('ANO', $year)->where('STATUS', 'ABIERTO')->findAll();
+		if ($numexpediente != null && $numexpediente != "undefined") {
+			$documento = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $numexpediente)->where('ANO', $year)->where('STATUS', 'ABIERTO')->findAll();
+		} else {
+			$documento = $this->_folioDocModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'ABIERTO')->findAll();
+		}
+
 		$folioRow = $this->_folioModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->first();
 		if ($documento == null || count($documento) <= 0) {
 			return json_encode((object)['status' => 0, 'message_error' => "No hay documentos por firmar"]);
@@ -408,9 +413,13 @@ class FirmaController extends BaseController
 								'STATUS' => 'FIRMADO',
 								'PLACEHOLDER' => $documento[$i]->PLACEHOLDER,
 							];
+							if ($numexpediente != null && $numexpediente != "undefined") {
 
-							$update = $this->_folioDocModel->set($datosInsert)->where('NUMEROEXPEDIENTE', $numexpediente)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
+								$update = $this->_folioDocModel->set($datosInsert)->where('NUMEROEXPEDIENTE', $numexpediente)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
+							} else {
+								$update = $this->_folioDocModel->set($datosInsert)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
 
+							}
 							if ($update) {
 								$datosBitacora = [
 									'ACCION' => 'Ha firmado un documento',
@@ -422,8 +431,12 @@ class FirmaController extends BaseController
 							return json_encode((object)['status' => 0, 'message_error' => "Fallo al firmar el documento. Intentelo de nuevo."]);
 						}
 					}
-					$documentosExp = $this->_folioDocModel->get_by_expediente($numexpediente, $year);
+					if ($numexpediente != null && $numexpediente != "undefined") {
 
+						$documentosExp = $this->_folioDocModel->get_by_expediente($numexpediente, $year);
+					} else {
+						$documentosExp = $this->_folioDocModel->get_by_folio($folio, $year);
+					}
 					return json_encode((object)['status' => 1, 'documentos' => $documentosExp]);
 				} else {
 					return json_encode((object)['status' => 0, 'message_error' => "La FIEL no es válida o está vencida"]);

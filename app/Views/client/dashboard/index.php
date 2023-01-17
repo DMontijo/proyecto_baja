@@ -323,8 +323,7 @@
 				document.querySelector('#nacionalidad_des').setAttribute('required', true);
 				document.querySelector('#estado_origen_des').setAttribute('required', true);
 				document.querySelector('#municipio_origen_des').setAttribute('required', true);
-				document.querySelector('#ocupacion_des').setAttribute('required', true);
-				document.querySelector('#ocupacion_descr_des').setAttribute('required', true);
+
 
 
 				let radiosSexoDes = document.querySelectorAll('input[name="sexo_des"]');

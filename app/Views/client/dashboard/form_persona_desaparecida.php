@@ -292,9 +292,7 @@
 		</select>
 		<input type="text" class="form-control d-none" id="ocupacion_descr_des" name="ocupacion_descr_des" maxlength="100">
 		<small id="ocupacion-des-message" class="text-primary fw-bold d-none">Si no encuentras tu ocupación selecciona otro</small>
-		<div class="invalid-feedback">
-			La ocupación es obligatoria
-		</div>
+	
 	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">

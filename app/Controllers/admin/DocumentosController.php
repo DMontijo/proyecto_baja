@@ -144,6 +144,14 @@ class DocumentosController extends BaseController
 		$expediente = trim($this->request->getPost('expediente'));
 		$folio = trim($this->request->getPost('folio'));
 		$year = trim($this->request->getPost('year'));
+		if (isset($folio) && isset($year)) {
+			$documentos = $this->_folioDocModel->get_by_folio($folio, $year);
+			$imputados = $this->_folioPersonaFisicaModel->get_imputados($folio, $year);
+			$victimas = $this->_folioPersonaFisicaModel->get_victimas($folio, $year);
+			$correos = $this->_folioPersonaFisicaModel->get_correos_persona($folio, $year);
+
+			return json_encode(['status' => 1, 'documentos' => $documentos, 'victimas' => $victimas, "imputados" => $imputados, 'correos' => $correos]);
+		}
 		if ($expediente) {
 			$documentos = $this->_folioDocModel->get_by_folio($folio, $year);
 			$imputados = $this->_folioPersonaFisicaModel->get_imputados($folio, $year);

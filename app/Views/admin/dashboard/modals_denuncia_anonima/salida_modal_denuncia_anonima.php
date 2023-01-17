@@ -158,7 +158,9 @@
 							$("#salida_modal_denuncia_anonima").modal("hide");
 							$('body').removeClass('modal-open');
 							$('.modal-backdrop').remove();
-							location.reload();
+							// location.reload();
+							window.location.href = `<?= base_url('/admin/dashboard/documentos_show?folio=') ?>` + inputFolio.value + '&year=' + year_select.value;
+								document.getElementById("form_folio").reset();
 						})
 					} else {
 						Swal.fire({

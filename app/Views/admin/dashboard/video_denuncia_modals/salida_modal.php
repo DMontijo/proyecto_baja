@@ -154,15 +154,30 @@
 							$('.modal-backdrop').remove();
 							buscar_nuevo_btn.classList.add('d-none');
 							inputFolio.classList.remove('d-none');
-							buscar_btn.classList.remove('d-none');
+							// buscar_btn.classList.remove('d-none');
+							let currentTime = new Date();
+							let year = currentTime.getFullYear()
+
+							year_select.classList.remove('d-none');
+							year_select.value = year;
+							year_select.disabled = true;
+							inputFolio.disabled = true;
 
 							card2.classList.add('d-none');
 							card3.classList.add('d-none');
 							card4.classList.add('d-none');
 							card5.classList.add('d-none');
-							notas_mp.value = '';
-							inputFolio.value = '';
-							borrarTodo();
+
+							folio_modal.value = inputFolio.value;
+							expediente_modal.value = data.expediente;
+							year_modal.value = year;
+							expediente_modal_correo.value = data.expediente;
+							year_modal_correo.value = year;
+							card6.classList.remove('d-none');
+							card7.classList.remove('d-none');
+							card8.classList.remove('d-none');
+							card9.classList.remove('d-none');
+							card11.classList.remove('d-none');
 						})
 					} else {
 						Swal.fire({
