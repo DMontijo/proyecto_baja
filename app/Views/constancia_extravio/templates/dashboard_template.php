@@ -78,10 +78,6 @@
                                         class="bi bi-box-arrow-left"></i> Salir</a></a></li>
                         </ul>
                     </li>
-                    <!-- <li class="nav-item">
-                        <a class="nav-link" href="#!" onclick="javascript:toggleFullScreen()"><i
-                                class="bi bi-fullscreen"></i></a>
-                    </li> -->
                 </ul>
             </div>
         </div>
