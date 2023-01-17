@@ -54,6 +54,11 @@
 
     </script>
 <?php } ?>
+<?php if ($body_data->foliorow[0]->STATUS != "EXPEDIENTE" && $body_data->foliorow[0]->TIPODENUNCIA == "VD") { ?>
+    <script>
+        document.getElementById('enviarDocumento').disabled = false;
+    </script>
+<?php } ?>
 <?php if (session()->getFlashdata('message_error')) : ?>
     <script>
         Swal.fire({
@@ -380,6 +385,8 @@
                                 'titulo': tipoPlantilla,
                                 'statusenvio': 1
                             };
+                            insertarDoc(data);
+
                         }
                     } else {
                         if (isParameterByName('expediente')) {
@@ -400,6 +407,8 @@
                                 'titulo': tipoPlantilla,
                                 'statusenvio': 0
                             };
+                            insertarDoc(data);
+
                         }
 
                     }
@@ -501,11 +510,12 @@
         });
     }, false);
     btn_enviarcorreoDoc.addEventListener('click', (event) => {
-        if (isParameterByName('expediente')) {
             const data = {
                 'send_mail_select': document.querySelector('#send_mail_select').value,
                 'expediente_modal_correo': getParameterByName('expediente'),
                 'year_modal_correo': getParameterByName('year'),
+                'folio': getParameterByName('folio'),
+
             };
         $.ajax({
             data: data,
@@ -554,7 +564,7 @@
             error: function(jqXHR, textStatus, errorThrown) {}
         });
 
-    }
+    
     }, false);
 
     btn_archivos_externos.addEventListener('click', (event) => {

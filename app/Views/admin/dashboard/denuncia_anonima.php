@@ -1550,6 +1550,9 @@
 			'victima': document.querySelector('#victima_ofendido').value,
 			'delito': document.querySelector('#delito_cometido').value,
 			'imputado': document.querySelector('#imputado_arbol').value,
+			'tentativa': document.querySelector('#tentativa').value,
+			'conviolencia': document.querySelector('#conviolencia').value,
+
 		};
 		// console.log(data);
 		$.ajax({

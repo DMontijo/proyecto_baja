@@ -857,14 +857,27 @@ class FirmaController extends BaseController
 		$to = $this->request->getPost('send_mail_select');
 		$expediente = $this->request->getPost('expediente_modal_correo');
 		$year = $this->request->getPost('year_modal_correo');
-		$documento = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente)->where('ANO', $year)->where('STATUS', 'FIRMADO')->where('STATUSENVIO', 1)->where('ENVIADO', 'N')->findAll();
+		$folio = $this->request->getPost('folio');
+
+		if ($expediente != "undefined" && $expediente !='') {
+			$documento = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente)->where('ANO', $year)->where('STATUS', 'FIRMADO')->where('STATUSENVIO', 1)->where('ENVIADO', 'N')->findAll();
+		}else{
+			$documento = $this->_folioDocModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'FIRMADO')->where('STATUSENVIO', 1)->where('ENVIADO', 'N')->findAll();
+		}
 		if (empty($documento)) {
 			return json_encode((object)['status' => 3]);
 		}
+		
+		if ($expediente != "undefined" && $expediente !='') {
 		$folioM = $this->_folioModel->asObject()->where('ANO', $year)->where('EXPEDIENTEID', $expediente)->first();
+		$tipoExpediente = $this->_tipoExpedienteModel->asObject()->where('TIPOEXPEDIENTEID',  $folioM->TIPOEXPEDIENTEID)->first();
+
+		}else{
+			$folioM = $this->_folioModel->asObject()->where('ANO', $year)->where('FOLIOID', $folio)->first();
+
+		}
 		$imputado = $this->_folioPersonaFisicaModel->asObject()->where('ANO', $year)->where('FOLIOID', $folioM->FOLIOID)->where('CALIDADJURIDICAID', 2)->first();
 
-		$tipoExpediente = $this->_tipoExpedienteModel->asObject()->where('TIPOEXPEDIENTEID',  $folioM->TIPOEXPEDIENTEID)->first();
 
 		$agente = $documento[0]->RAZONSOCIALFIRMA;
 		$folio = $folioM->FOLIOID;
@@ -884,7 +897,7 @@ class FirmaController extends BaseController
 		$email = \Config\Services::email();
 		$email->setTo($to);
 		$email->setSubject('Documentos firmados');
-		$body = view('email_template/documentos_firmados_email_template.php', ['agente' => $agente, 'expediente' => $expediente, 'folio' => $folio, 'tipoexpediente' => $tipoExpediente->TIPOEXPEDIENTEDESCR, 'delito' => $delito, 'imputado' => $imputado]);
+		$body = view('email_template/documentos_firmados_email_template.php', ['agente' => $agente, 'expediente' => $folioM->EXPEDIENTEID ?$expediente : 'SIN EXPEDIENTE', 'folio' => $folio, 'tipoexpediente' => $folioM->TIPOEXPEDIENTEID ? $tipoExpediente->TIPOEXPEDIENTEDESCR : $folioM->STATUS, 'delito' => $delito, 'imputado' => $imputado]);
 		$email->setMessage($body);
 
 		for ($i = 0; $i < count($documento); $i++) {

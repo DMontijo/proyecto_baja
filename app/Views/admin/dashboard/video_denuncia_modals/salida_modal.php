@@ -176,8 +176,14 @@
 							card6.classList.remove('d-none');
 							card7.classList.remove('d-none');
 							card8.classList.remove('d-none');
-							card9.classList.remove('d-none');
 							card11.classList.remove('d-none');
+
+							if (inputDenuncia.value == 'DA') {
+								card9.classList.add('d-none');
+							}else{
+								card9.classList.remove('d-none');
+
+							}
 						})
 					} else {
 						Swal.fire({

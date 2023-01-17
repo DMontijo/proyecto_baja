@@ -23,6 +23,11 @@
                     </div>
                     <div class="col-12">
                         <div class="input-group mb-1">
+                            <input type="text" class="form-control d-none" id="input_denuncia">
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="input-group mb-1">
                             <input type="text" class="form-control d-none" id="input_expediente">
                         </div>
                     </div>
@@ -164,6 +169,7 @@
 <script>
     const inputFolio = document.querySelector('#input_folio_atencion');
     const inputExpediente = document.querySelector('#input_expediente');
+    const inputDenuncia = document.querySelector('#input_denuncia');
 
     var charRemain;
     const inputF = document.getElementById('input_folio_atencion').value;
@@ -812,6 +818,8 @@
                     // card6.classList.remove('d-none');
                     document.querySelector('#delito_dash').value = folio.HECHODELITO;
                     document.querySelector('#delito_descr_dash').value = folio.HECHONARRACION;
+                    document.querySelector('#input_denuncia').value = folio.TIPODENUNCIA;
+
                     //SELECT CON DELITOS DEL IMPUTADO
                     // $('#delito_cometido').empty();
                     // let select_delitos_imputado = document.querySelector("#delito_cometido")
@@ -2124,7 +2132,7 @@
                     input_ocupacion.focus();
                 } else {
                     input_ocupacion.classList.add('d-none');
-                    input_ocupacion.value ='';
+                    input_ocupacion.value = '';
                 }
             });
             document.querySelector('#subirFotoPersona').addEventListener('change', (e) => {
@@ -2346,10 +2354,11 @@
             btn_enviarcorreoDoc.addEventListener('click', (event) => {
                 $.ajax({
                     data: {
-                        'expediente_modal_correo': document.querySelector(
-                            '#expediente_modal_correo').value,
+                        'expediente_modal_correo': document.querySelector('#expediente_modal_correo').value,
                         'send_mail_select': document.querySelector('#send_mail_select').value,
                         'year_modal_correo': document.querySelector('#year_modal_correo').value,
+                        'folio': inputFolio.value,
+
                     },
                     url: "<?= base_url('/admin/dashboard/send-documentos-correo') ?>",
                     method: "POST",
@@ -5012,48 +5021,128 @@
 
 
             function insertarDocumento(contenido, tipoPlantilla) {
-                Swal.fire({
-                    title: '¿Este documento tiene que ser enviado?',
-                    showDenyButton: true,
-                    showCancelButton: true,
-                    confirmButtonText: 'Si',
-                    confirmButtonColor: '#bf9b55',
-                    denyButtonText: 'No',
-                    cancelButtonText: 'No',
-                }).then((result) => {
-                    /* Read more about isConfirmed, isDenied below */
-                    if (result.isConfirmed) {
-                        const data = {
-                            'folio': document.querySelector('#input_folio_atencion').value,
-                            'expediente': document.querySelector('#input_expediente').value,
-                            'year': document.querySelector('#year_select').value,
-                            'placeholder': contenido,
-                            'municipio': document.querySelector('#municipio_empleado').value,
-                            // 'oficina': document.querySelector('#oficina_empleado').value,
-                            // 'empleado': document.querySelector('#empleado').value,
-                            'titulo': tipoPlantilla,
-                            'statusenvio': 1
-                        };
-                        insertarDoc(data);
-
-                    } else {
-                        const data = {
-                            'folio': document.querySelector('#input_folio_atencion').value,
-                            'expediente': document.querySelector('#input_expediente').value,
-                            'year': document.querySelector('#year_select').value,
-                            'placeholder': contenido,
-                            'municipio': document.querySelector('#municipio_empleado').value,
-                            // 'oficina': document.querySelector('#oficina_empleado').value,
-                            // 'empleado': document.querySelector('#empleado').value,
-                            'titulo': tipoPlantilla,
-                            'statusenvio': 0
-                        };
-                        insertarDoc(data);
-
-                    }
-                })
+             
+                if (document.getElementById('input_denuncia').value == "DA") {
+                    Swal.fire({
+                        title: 'Este documento no será enviado',
+                        showDenyButton: true,
+                        showCancelButton: false,
+                        confirmButtonText: 'Confirmar',
+                        confirmButtonColor: '#bf9b55',
+                    }).then((result) => {
+                        /* Read more about isConfirmed, isDenied below */
 
 
+                        if (result.isConfirmed) {
+                            if (document.querySelector('#input_expediente').value != '') {
+
+                                const data = {
+                                    'folio': document.querySelector('#input_folio_atencion').value,
+                                    'expediente': document.querySelector('#input_expediente').value,
+                                    'year': document.querySelector('#year_select').value,
+                                    'placeholder': contenido,
+                                    'titulo': tipoPlantilla,
+                                    'statusenvio': 0
+                                };
+                                insertarDoc(data);
+                            } else {
+                                const data = {
+                                    'folio': document.querySelector('#input_folio_atencion').value,
+                                    'year': document.querySelector('#year_select').value,
+                                    'placeholder': contenido,
+                                    'titulo': tipoPlantilla,
+                                    'statusenvio': 0
+                                };
+                                insertarDoc(data);
+                            }
+                        }
+                    })
+                }else{
+                 
+           
+
+                    Swal.fire({
+                        title: '¿Este documento tiene que ser enviado?',
+                        showDenyButton: true,
+                        showCancelButton: true,
+                        confirmButtonText: 'Si',
+                        confirmButtonColor: '#bf9b55',
+                        denyButtonText: 'No',
+                        cancelButtonText: 'No',
+                    }).then((result) => {
+                        /* Read more about isConfirmed, isDenied below */
+                        if (result.isConfirmed) {
+                            if (document.querySelector('#input_expediente').value != '') {
+                                const data = {
+                                    'folio': document.querySelector('#input_folio_atencion').value,
+                                    'expediente': document.querySelector('#input_expediente').value,
+                                    'year': document.querySelector('#year_select').value,
+                                    'placeholder': contenido,
+                                    'municipio': document.querySelector('#municipio_empleado').value,
+                                    // 'oficina': document.querySelector('#oficina_empleado').value,
+                                    // 'empleado': document.querySelector('#empleado').value,
+                                    'titulo': tipoPlantilla,
+                                    'statusenvio': 1
+                                };
+                                insertarDoc(data);
+                            } else if (document.querySelector('#input_expediente').value == '') {
+
+                                const data = {
+                                    'folio': document.querySelector('#input_folio_atencion').value,
+                                    'year': document.querySelector('#year_select').value,
+                                    'placeholder': contenido,
+                                    'municipio': document.querySelector('#municipio_empleado').value,
+                                    'titulo': tipoPlantilla,
+                                    'statusenvio': 1
+                                };
+                                insertarDoc(data);
+
+                            }
+
+                        } else {
+                            if (document.querySelector('#input_expediente').value != '') {
+
+                                const data = {
+                                    'folio': document.querySelector('#input_folio_atencion').value,
+                                    'expediente': document.querySelector('#input_expediente').value,
+                                    'year': document.querySelector('#year_select').value,
+                                    'placeholder': contenido,
+                                    'municipio': document.querySelector('#municipio_empleado').value,
+                                    // 'oficina': document.querySelector('#oficina_empleado').value,
+                                    // 'empleado': document.querySelector('#empleado').value,
+                                    'titulo': tipoPlantilla,
+                                    'statusenvio': 0
+                                };
+                                insertarDoc(data);
+                            } else if (document.querySelector('#input_expediente').value == '') {
+                                const data = {
+                                    'folio': document.querySelector('#input_folio_atencion').value,
+                                    'year': document.querySelector('#year_select').value,
+                                    'placeholder': contenido,
+                                    'municipio': document.querySelector('#municipio_empleado').value,
+                                    'titulo': tipoPlantilla,
+                                    'statusenvio': 0
+                                };
+                                insertarDoc(data);
+                            }
+                        }
+                    })
+                }
+
+            }
+
+            function getParameterByName(name, url = window.location.href) {
+                name = name.replace(/[\[\]]/g, "\\$&");
+                var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                    results = regex.exec(url);
+                if (!results) return null;
+                if (!results[2]) return '';
+                return decodeURIComponent(results[2].replace(/\+/g, " "));
+            }
+
+            function isParameterByName(name) {
+                let regex = new RegExp('[?&]' + name + '=');
+                return regex.test(window.location.href);
             }
 
             function insertarDoc(data) {
