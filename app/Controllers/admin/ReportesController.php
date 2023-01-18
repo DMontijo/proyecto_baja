@@ -70,6 +70,7 @@ class ReportesController extends BaseController
 			'MUNICIPIOID' => $this->request->getPost('municipio'),
 			'AGENTEATENCIONID' => $this->request->getPost('agente'),
 			'STATUS' => $this->request->getPost('status'),
+			'TIPODENUNCIA' => $this->request->getPost('tipo'),
 			'fechaInicio' => $this->request->getPost('fechaInicio'),
 			'fechaFin' => $this->request->getPost('fechaFin'),
 			'horaInicio' => $this->request->getPost('horaInicio'),
@@ -114,10 +115,12 @@ class ReportesController extends BaseController
 	public function createFoliosXlsx()
 	{
 
+	
 		$data = [
 			'MUNICIPIOID' => $this->request->getPost('municipio'),
 			'AGENTEATENCIONID' => $this->request->getPost('agente'),
 			'STATUS' => $this->request->getPost('status'),
+			'TIPODENUNCIA' => $this->request->getPost('TIPODENUNCIA'),
 			'fechaInicio' => $this->request->getPost('fechaInicio'),
 			'fechaFin' => $this->request->getPost('fechaFin'),
 			'horaInicio' => $this->request->getPost('horaInicio'),
@@ -138,6 +141,7 @@ class ReportesController extends BaseController
 		}
 
 		$resultFilter = $this->_folioModel->filterDates($data);
+
 		$spreadSheet = new Spreadsheet();
 		$spreadSheet->getProperties()
 			->setCreator("Fiscalía General del Estado de Baja California")
@@ -220,6 +224,7 @@ class ReportesController extends BaseController
 		$headers = [
 			'FOLIO',
 			'AÑO',
+			'TIPO',
 			'EXPEDIENTE',
 			'FECHA DE SALIDA',
 			'NOMBRE DEL DENUNCIANTE',
@@ -241,21 +246,22 @@ class ReportesController extends BaseController
 		foreach ($resultFilter->result as $index => $folio) {
 			$sheet->setCellValue('A' . $row, $folio->FOLIOID);
 			$sheet->setCellValue('B' . $row, $folio->ANO);
-			$sheet->setCellValue('C' . $row, $folio->EXPEDIENTEID);
-			$sheet->setCellValue('D' . $row, $folio->FECHASALIDA);
-			$sheet->setCellValue('E' . $row, $folio->N_DENUNCIANTE . ' ' . $folio->APP_DENUNCIANTE . ' ' . $folio->APM_DENUNCIANTE);
-			$sheet->setCellValue('F' . $row, $folio->N_AGENT . ' ' . $folio->APP_AGENT . ' ' . $folio->APM_AGENT);
-			$sheet->setCellValue('G' . $row, $folio->ESTADODESCR);
-			$sheet->setCellValue('H' . $row, $folio->MUNICIPIODESCR);
-			$sheet->setCellValue('I' . $row, $folio->STATUS);
+			$sheet->setCellValue('C' . $row, $folio->TIPODENUNCIA == 'VD' ? 'CDT': 'ANÓNIMA');
+			$sheet->setCellValue('D' . $row, $folio->EXPEDIENTEID);
+			$sheet->setCellValue('E' . $row, $folio->FECHASALIDA);
+			$sheet->setCellValue('F' . $row, $folio->N_DENUNCIANTE . ' ' . $folio->APP_DENUNCIANTE . ' ' . $folio->APM_DENUNCIANTE);
+			$sheet->setCellValue('G' . $row, $folio->N_AGENT . ' ' . $folio->APP_AGENT . ' ' . $folio->APM_AGENT);
+			$sheet->setCellValue('H' . $row, $folio->ESTADODESCR);
+			$sheet->setCellValue('I' . $row, $folio->MUNICIPIODESCR);
+			$sheet->setCellValue('J' . $row, $folio->STATUS);
 
 			$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
 
 			if (!(($row - 1) >= count($resultFilter->result))) $row++;
 		}
 
-		$sheet->getStyle('A1:I1')->applyFromArray($styleHeaders);
-		$sheet->getStyle('A2:I' . $row)->applyFromArray($styleCells);
+		$sheet->getStyle('A1:J1')->applyFromArray($styleHeaders);
+		$sheet->getStyle('A2:J' . $row)->applyFromArray($styleCells);
 
 		$writer = new Xlsx($spreadSheet);
 
@@ -529,6 +535,7 @@ class ReportesController extends BaseController
 		$data = [
 			'AGENTEATENCIONID' => session('ID'),
 			'STATUS' => $this->request->getPost('status'),
+			'TIPODENUNCIA' => $this->request->getPost('tipo'),
 			'fechaInicio' => $this->request->getPost('fechaInicio'),
 			'fechaFin' => $this->request->getPost('fechaFin'),
 			'horaInicio' => $this->request->getPost('horaInicio'),
@@ -572,6 +579,7 @@ class ReportesController extends BaseController
 		$data = [
 			'AGENTEATENCIONID' => session('ID'),
 			'STATUS' => $this->request->getPost('STATUS'),
+			'TIPODENUNCIA' => $this->request->getPost('TIPODENUNCIA'),
 			'fechaInicio' => $this->request->getPost('fechaInicio'),
 			'fechaFin' => $this->request->getPost('fechaFin'),
 			'horaInicio' => $this->request->getPost('horaInicio'),

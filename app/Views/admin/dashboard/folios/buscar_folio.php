@@ -82,6 +82,14 @@
 												</select>
 											</div>
 
+											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
+												<label for="status" class="form-label font-weight-bold">Tipo:</label>
+												<select class="form-control" id="tipo" name="tipo" required>
+													<option selected value="">CDT Y DENUNCIA ANÓNIMA</option>
+													<option <?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'VD' ? 'selected' : '') : null ?> value="VD">CDT</option>
+													<option <?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'DA' ? 'selected' : '') : null ?> value="DA">DENUNCIA ANÓNIMA</option>
+												</select>
+											</div>
 											<div class="col-12 text-right">
 												<a href="<?= base_url('admin/dashboard/buscar_folio') ?>" class="btn btn-secondary font-weight-bold" id="btnFiltroFolio" name="btnFiltroFolio">Borrar filtro</a>
 												<button type="submit" class="btn btn-primary font-weight-bold" id="btnFiltroFolio" name="btnFiltroFolio">Filtrar</button>
@@ -102,6 +110,7 @@
 									<th class="text-center">AÑO</th>
 									<th class="text-center">EXPEDIENTE</th>
 									<th class="text-center">ESTADO</th>
+									<th class="text-center">TIPO</th>
 									<th class="text-center">NOMBRE DEL DENUNCIANTE</th>
 									<th class="text-center">AGENTE DE ATENCIÓN</th>
 									<th class="text-center">MUNICIPIO ASIGNADO</th>
@@ -124,6 +133,8 @@
 										<td class="text-center"><?= $folio->ANO ?></td>
 										<td class="text-center"><?= $expedienteid ? $expedienteid : '' ?></td>
 										<td class="text-center"><?= $folio->STATUS . ' ' . $folio->TIPOEXPEDIENTEDESCR ?></td>
+										<td class="text-center"><?= $folio->TIPODENUNCIA == 'VD' ? 'CDT' : 'ANÓNIMA' ?></td>
+
 										<td class="text-center"><?= $folio->N_DENUNCIANTE . ' ' . $folio->APP_DENUNCIANTE . ' ' . $folio->APM_DENUNCIANTE ?></td>
 										<td class="text-center"><?= $folio->N_AGENT . ' ' . $folio->APP_AGENT . ' ' . $folio->APM_AGENT ?></td>
 										<td class="text-center"><?= $folio->MUNICIPIOASIGNADO ?></td>
