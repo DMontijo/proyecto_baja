@@ -1173,7 +1173,9 @@ class DashboardController extends BaseController
 
 	public function bandeja_remision_post()
 	{
+		
 		try {
+
 			$expediente = trim($this->request->getPost('expediente'));
 			$oficina = trim($this->request->getPost('oficina'));
 			$empleado = trim($this->request->getPost('empleado'));
@@ -1198,7 +1200,7 @@ class DashboardController extends BaseController
 				'OFICINAASIGNADOID' => $oficina,
 				'AREAASIGNADOID' => $area->AREAID
 			);
-
+	
 			$update = $this->_folioModel->set($dataFolio)->where('EXPEDIENTEID', $expediente)->update();
 			if ($update) {
 				$datosBitacora = [
@@ -1226,6 +1228,9 @@ class DashboardController extends BaseController
 							$_solicitudDocto = $this->_createSolicitudDocto($expediente, $_solicitudPericial->SOLICITUDID, $doc['EXPEDIENTEDOCID'], $bandeja['MUNICIPIOASIGNADOID']);
 							if ($_solicitudDocto->status == 201) {
 								$_solicitudExpediente = $this->_createSolicitudExpediente($expediente, $_solicitudPericial->SOLICITUDID, $municipio);
+								
+								$dataInter =  array('SOLICITUDID'=>$_solicitudPericial->SOLICITUDID, 'INTERVENCIONID'=>1);
+								$_intervencionPericial = $this->_createIntervencionPericial($dataInter, $municipio);
 								$datosBitacora = [
 									'ACCION' => 'Se envio una solicitud perital.',
 									'NOTAS' => 'Exp: ' . $expediente . ' Solicitud: ' . $_solicitudPericial->SOLICITUDID,
@@ -1243,7 +1248,7 @@ class DashboardController extends BaseController
 				return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_error', 'No se actualizo el folio');
 			}
 		} catch (\Exception $e) {
-			return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_error', 'Hubo un error e n la remisión, verifica el expediente en justicia.');
+			return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_error', 'Hubo un error en la remisión, verifica el expediente en justicia.');
 		}
 	}
 
@@ -2374,7 +2379,42 @@ class DashboardController extends BaseController
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
 
+	private function _createIntervencionPericial($solicitud, $municipio)
+	{
+		$function = '/testing/intervencionPericial.php?process=crear';
+		$array = [
+			'SOLICITUDID',
+			'INTERVENCIONID',
+			'CANTIDAD',
+			'PERSONAFISICAID',
+			'VEHICULOID',
+			'OBJETOID',
+			'EDOINTPERID',
+			'OFICINAIDRESPONSABLE',
+			'AREAIDRESPONSABLE',
+			'FECHAASIGNACIONPERITO'
 
+		];
+		$endpoint = $this->endpoint . $function;
+		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
+		$data = $solicitud;
+		foreach ($data as $clave => $valor) {
+			if (empty($valor)) {
+				unset($data[$clave]);
+			}
+		}
+
+		foreach ($data as $clave => $valor) {
+			if (!in_array($clave, $array)) {
+				unset($data[$clave]);
+			}
+		}
+		$data['userDB'] = $conexion->USER;
+		$data['pwdDB'] = $conexion->PASSWORD;
+		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
+		$data['schema'] = $conexion->SCHEMA;
+		return $this->_curlPostDataEncrypt($endpoint, $data);
+	}
 	private function _createSolicitudesPericiales($solicitud)
 	{
 		$function = '/solicitudPericial.php?process=crear';
