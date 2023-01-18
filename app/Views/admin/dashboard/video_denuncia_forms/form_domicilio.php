@@ -53,13 +53,13 @@
 		<input type="text" class="form-control" id="calle_pfd" name="calle_pfd" maxlength="100">
 	</div>
 
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="exterior_pfd" class="form-label font-weight-bold">Número exterior</label>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3"> 
+		<label for="exterior_pfd" class="form-label font-weight-bold" id="lblExterior_pfd">Número exterior</label>
 		<input type="text" class="form-control" id="exterior_pfd" name="exterior_pfd" maxlength="10">
 	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="interior_pfd" class="form-label font-weight-bold">Número interior</label>
+		<label for="interior_pfd" class="form-label font-weight-bold" id="lblInterior_pfd">Número interior</label>
 		<input type="text" class="form-control" id="interior_pfd" name="interior_pfd" maxlength="10">
 	</div>
 
@@ -67,13 +67,11 @@
 		<label for="referencia_pfd" class="form-label font-weight-bold">Referencia</label>
 		<input type="text" class="form-control" id="referencia_pfd" name="referencia_pfd" maxlength="300">
 	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="manzana_pfd" class="form-label font-weight-bold">Manzana</label>
-		<input type="text" class="form-control" id="manzana_pfd" name="manzana_pfd" maxlength="300">
-	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="lote_pfd" class="form-label font-weight-bold">Lote</label>
-		<input type="text" class="form-control" id="lote_pfd" name="lote_pfd" maxlength="300">
+	<div class="col-12 mt-4 mb-4">
+		<input class="form-check-input" type="checkbox" id="checkML_pfd" name="checkML_pfd">
+		<label class="form-check-label fw-bold" for="checkML_pfd">
+			¿La dirección contiene manzana y lote?
+		</label>
 	</div>
 	<div class="col-12 my-4 text-center">
 		<button type="submit" class="btn btn-primary font-weight-bold">ACTUALIZAR DOMICILIO</button>

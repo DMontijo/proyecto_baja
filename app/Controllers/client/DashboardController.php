@@ -363,7 +363,14 @@ class DashboardController extends BaseController
 					}
 				}
 
-
+				$interior_des = $this->request->getPost('numero_int_des');
+				if ($interior_des == '') {
+					$interior_des = NULL;
+				}
+				$exterior_des = $this->request->getPost('numero_ext_des');
+				if ($exterior_des == '') {
+					$exterior_des = NULL;
+				}
 				$dataDesaparecido = array(
 					'NOMBRE' => $this->request->getPost('nombre_des'),
 					'PRIMERAPELLIDO' => $this->request->getPost('apellido_paterno_des'),
@@ -410,11 +417,9 @@ class DashboardController extends BaseController
 					'COLONIAID' => $this->request->getPost('colonia_des'),
 					'COLONIADESCR' => $this->request->getPost('colonia_des_input'),
 					'CALLE' => $this->request->getPost('calle_des'),
-					'NUMEROCASA' => $this->request->getPost('numero_ext_des'),
-					'NUMEROINTERIOR' => $this->request->getPost('numero_int_des'),
+					'NUMEROCASA' => $this->request->getPost('checkML_des') == 'on'  && $exterior_des ?  'M.' . $exterior_des : $exterior_des,
+					'NUMEROINTERIOR' => $this->request->getPost('checkML_des') == 'on' && $interior_des?  'L.' . $interior_des : $exterior_des,
 					'CP' => $this->request->getPost('cp_des'),
-					'MANZANA' => $this->request->getPost('manzana_des'),
-					'LOTE' => $this->request->getPost('lote_des'),
 
 				);
 				if ((int)$this->request->getPost('ocupacion_des') == 999) {
@@ -449,7 +454,14 @@ class DashboardController extends BaseController
 					'ESCOLARIDADID' => $this->request->getPost('escolaridad_menor'),
 					'OCUPACIONID' => $this->request->getPost('ocupacion_menor'),
 				);
-
+				$interior_menor = $this->request->getPost('numero_int_menor');
+				if ($interior_menor == '') {
+					$interior_menor = NULL;
+				}
+				$exterior_menor = $this->request->getPost('numero_ext_menor');
+				if ($exterior_menor == '') {
+					$exterior_menor = NULL;
+				}
 				$dataMenorDomicilio = array(
 					'PAIS' => $this->request->getPost('pais_menor'),
 					'ESTADOID' => $this->request->getPost('estado_menor'),
@@ -458,12 +470,9 @@ class DashboardController extends BaseController
 					'COLONIAID' => $this->request->getPost('colonia_menor'),
 					'COLONIADESCR' => $this->request->getPost('colonia_menor_input'),
 					'CALLE' => $this->request->getPost('calle_menor'),
-					'NUMEROCASA' => $this->request->getPost('numero_ext_menor'),
-					'NUMEROINTERIOR' => $this->request->getPost('numero_int_menor'),
+					'NUMEROCASA' => $this->request->getPost('checkML_menor') == 'on'  && $exterior_menor ?  'M.' . $exterior_menor : $exterior_menor,
+					'NUMEROINTERIOR' => $this->request->getPost('checkML_menor') == 'on' && $interior_menor?  'L.' . $interior_menor : $interior_menor,
 					'CP' => $this->request->getPost('cp_menor'),
-					'MANZANA' => $this->request->getPost('manzana_menor'),
-					'LOTE' => $this->request->getPost('lote_menor'),
-
 				);
 				if ((int)$this->request->getPost('ocupacion_menor') == 999) {
 					$dataMenor['OCUPACIONID'] = (int)$this->request->getPost('ocupacion_menor');
@@ -494,8 +503,6 @@ class DashboardController extends BaseController
 					'NUMEROCASA' => null,
 					'NUMEROINTERIOR' => null,
 					'CP' => null,
-					'MANZANA' => null,
-					'LOTE' => null,
 
 				);
 
@@ -574,9 +581,6 @@ class DashboardController extends BaseController
 				'NUMEROCASA' => $denunciante->NUM_EXT,
 				'NUMEROINTERIOR' => $denunciante->NUM_INT,
 				'CP' => $denunciante->CODIGOPOSTAL,
-				'MANZANA' => $denunciante->MANZANA ? $denunciante->MANZANA : NULL,
-				'LOTE' => $denunciante->LOTE ? $denunciante->LOTE: NULL,
-
 			);
 
 			$denuncianteCalidad = $this->request->getPost('es_menor') == "SI" || $this->request->getPost('esta_desaparecido') == "SI" || $this->request->getPost('es_ofendido') === "NO" ? 3 : 1;
@@ -611,7 +615,14 @@ class DashboardController extends BaseController
 					'OCUPACIONID' => $this->request->getPost('ocupacion_imputado'),
 
 				);
-
+				$interior_imputado = $this->request->getPost('numero_int_imputado');
+				if ($interior_imputado == '') {
+					$interior_imputado = NULL;
+				}
+				$exterior_imputado = $this->request->getPost('numero_ext_imputado');
+				if ($exterior_imputado == '') {
+					$exterior_imputado = NULL;
+				}
 				$dataImputadoDomicilio = array(
 					'PAIS' => $this->request->getPost('pais_imputado'),
 					'ESTADOID' => $this->request->getPost('estado_imputado'),
@@ -620,12 +631,9 @@ class DashboardController extends BaseController
 					'COLONIAID' => $this->request->getPost('colonia_imputado'),
 					'COLONIADESCR' => $this->request->getPost('colonia_imputado_input'),
 					'CALLE' => $this->request->getPost('calle_imputado'),
-					'NUMEROCASA' => $this->request->getPost('numero_ext_imputado'),
-					'NUMEROINTERIOR' => $this->request->getPost('numero_int_imputado'),
+					'NUMEROCASA' => $this->request->getPost('checkML_imputado') == 'on'  && $exterior_imputado ?  'M.' . $exterior_imputado : $exterior_imputado,
+					'NUMEROINTERIOR' => $this->request->getPost('checkML_imputado') == 'on' && $interior_imputado?  'L.' . $interior_imputado : $interior_imputado,
 					'CP' => $this->request->getPost('cp_imputado'),
-					'MANZANA' => $this->request->getPost('manzana_imputado'),
-					'LOTE' => $this->request->getPost('lote_imputado'),
-
 				);
 				if ((int)$this->request->getPost('ocupacion_imputado') == 999) {
 					$dataImputado['OCUPACIONID'] =  (int)$this->request->getPost('ocupacion_imputado');
@@ -654,8 +662,6 @@ class DashboardController extends BaseController
 					'NUMEROCASA' => null,
 					'NUMEROINTERIOR' => null,
 					'CP' => null,
-					'MANZANA' => null,
-					'LOTE' => null,
 
 				);
 

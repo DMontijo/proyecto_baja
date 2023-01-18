@@ -84,16 +84,10 @@
 						<input type="text" class="form-control" id="exterior_modal" name="exterior_modal" disabled>
 					</div>
 					<div class="col-12 col-sm-6 mb-3">
-						<label for="interior_modal" class="form-label fw-bold">Número interior: </label>
+						<label for="interior_modal" class="form-label fw-bold" >Número interior: </label>
 						<input type="text" class="form-control" id="interior_modal" name="interior_modal" disabled>
 					</div>
-					<div class="col-12 col-sm-6 mb-3">
-						<label for="manzana_modal" class="form-label fw-bold">Manzana: </label>
-						<input type="text" class="form-control" id="manzana_modal" name="manzana_modal" disabled>
-					</div><div class="col-12 col-sm-6 mb-3">
-						<label for="lote_modal" class="form-label fw-bold">Lote: </label>
-						<input type="text" class="form-control" id="lote_modal" name="lote_modal" disabled>
-					</div>
+				
 					<div class="col-12">
 						<hr>
 					</div>

@@ -115,7 +115,37 @@
 	var stepCount = steps.length - 1;
 	var width = 100 / stepCount;
 	var currentStep = 0;
+	var checkML_menor = document.getElementById('checkML_menor');
+	var checkML_imputado = document.getElementById('checkML_imputado');
+	var checkML_des = document.getElementById('checkML_des');
 
+	checkML_menor.addEventListener('click', function() {
+		if (checkML_menor.checked) {
+			document.getElementById('lblExterior_menor').innerHTML = "Manzana";
+			document.getElementById('lblInterior_menor').innerHTML = "Lote";
+		} else {
+			document.getElementById('lblExterior_menor').innerHTML = "Número exterior";
+			document.getElementById('lblInterior_menor').innerHTML = "Número interior";
+		}
+	});
+	checkML_imputado.addEventListener('click', function() {
+		if (checkML_imputado.checked) {
+			document.getElementById('lblExterior_imputado').innerHTML = "Manzana";
+			document.getElementById('lblInterior_imputado').innerHTML = "Lote";
+		} else {
+			document.getElementById('lblExterior_imputado').innerHTML = "Número exterior";
+			document.getElementById('lblInterior_imputado').innerHTML = "Número interior";
+		}
+	});
+	checkML_des.addEventListener('click', function() {
+		if (checkML_des.checked) {
+			document.getElementById('lblExterior_des').innerHTML = "Manzana";
+			document.getElementById('lblInterior_des').innerHTML = "Lote";
+		} else {
+			document.getElementById('lblExterior_des').innerHTML = "Número exterior";
+			document.getElementById('lblInterior_des').innerHTML = "Número interior";
+		}
+	});
 	$(document).ready(() => {
 		$('#aviso_modal').modal('show');
 	});
@@ -373,12 +403,12 @@
 					var radio_doc_vehiculo = document.getElementById("radio_documentos_vehiculo");
 					radio_doc_vehiculo.classList.remove('d-none');
 					if (document.getElementById('documentos_vehiculo').value == 'S') {
-							document.getElementById('datos_robo_vehiculo_completo').classList.add('step');
-							document.getElementById('datos_robo_vehiculo').classList.remove('step');
-						} else if (document.getElementById('documentos_vehiculo').value == 'N') {
-							document.getElementById('datos_robo_vehiculo').classList.add('step');
-							document.getElementById('datos_robo_vehiculo_completo').classList.remove('step');
-						}
+						document.getElementById('datos_robo_vehiculo_completo').classList.add('step');
+						document.getElementById('datos_robo_vehiculo').classList.remove('step');
+					} else if (document.getElementById('documentos_vehiculo').value == 'N') {
+						document.getElementById('datos_robo_vehiculo').classList.add('step');
+						document.getElementById('datos_robo_vehiculo_completo').classList.remove('step');
+					}
 					// document.querySelector('input[name="documentos_vehiculo"]:checked').value = 'N';
 					// document.querySelector('#documentos_vehiculo > [value="N"]').checked = true;	
 					// $("input[name=documentos_vehiculo][value='N']").prop("checked",true);

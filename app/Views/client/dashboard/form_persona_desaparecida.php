@@ -126,21 +126,18 @@
 		<input type="text" class="form-control" id="calle_des" name="calle_des" maxlength="100">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="numero_ext_des" class="form-label fw-bold input-required">Número exterior</label>
+		<label for="numero_ext_des" class="form-label fw-bold input-required" id="lblExterior_des">Número exterior</label>
 		<input type="text" class="form-control" id="numero_ext_des" name="numero_ext_des" maxlength="10">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="numero_int_des" class="form-label fw-bold">Número interior</label>
+		<label for="numero_int_des" class="form-label fw-bold" id="lblInterior_des">Número interior</label>
 		<input type="text" class="form-control" id="numero_int_des" name="numero_int_des" maxlength="10">
 	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="manzana_des" class="form-label fw-bold">Manzana</label>
-		<input type="text" class="form-control" id="manzana_des" name="manzana_des" maxlength="100">
-	</div>
-
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="lote_des" class="form-label fw-bold">Lote</label>
-		<input type="text" class="form-control" id="lote_des" name="lote_des" maxlength="100">
+	<div class="col-12 mt-4 mb-4">
+		<input class="form-check-input" type="checkbox" id="checkML_des" name="checkML_des">
+		<label class="form-check-label fw-bold" for="checkML_des">
+			¿La dirección contiene manzana y lote?
+		</label>
 	</div>
 	<div class="col-12">
 		<hr>
@@ -292,7 +289,7 @@
 		</select>
 		<input type="text" class="form-control d-none" id="ocupacion_descr_des" name="ocupacion_descr_des" maxlength="100">
 		<small id="ocupacion-des-message" class="text-primary fw-bold d-none">Si no encuentras tu ocupación selecciona otro</small>
-	
+
 	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">

@@ -127,21 +127,19 @@
 		<input type="text" class="form-control" id="calle_imputado" name="calle_imputado" maxlength="50">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="numero_ext_imputado" class="form-label fw-bold">Número exterior</label>
+		<label for="numero_ext_imputado" class="form-label fw-bold" id="lblExterior_imputado">Número exterior</label>
 		<input type="text" class="form-control" id="numero_ext_imputado" name="numero_ext_imputado" maxlength="10">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="numero_int_imputado" class="form-label fw-bold">Número interior</label>
+		<label for="numero_int_imputado" class="form-label fw-bold" id="lblInterior_imputado">Número interior</label>
 		<input type="text" class="form-control" id="numero_int_imputado" name="numero_int_imputado" maxlength="10">
 	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="manzana_imputado" class="form-label fw-bold">Manzana</label>
-		<input type="text" class="form-control" id="manzana_imputado" name="manzana_imputado" maxlength="100">
-	</div>
 
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="lote_imputado" class="form-label fw-bold">Lote</label>
-		<input type="text" class="form-control" id="lote_imputado" name="lote_imputado" maxlength="100">
+	<div class="col-12 mt-4 mb-4">
+		<input class="form-check-input" type="checkbox" id="checkML_imputado" name="checkML_imputado">
+		<label class="form-check-label fw-bold" for="checkML_imputado">
+			¿La dirección contiene manzana y lote?
+		</label>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="tel_imputado" class="form-label fw-bold">Teléfono</label>

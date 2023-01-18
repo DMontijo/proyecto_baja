@@ -93,6 +93,11 @@ class UserController extends BaseController
 		list(, $firma) = explode(',', $firma);
 		$firma = base64_decode($firma);
 
+		$interior = $this->request->getPost('interior');
+		if ($interior == '') {
+			$interior = NULL;
+		}
+
 		$data = [
 			'NOMBRE' => $this->request->getPost('nombre'),
 			'APELLIDO_PATERNO' => $this->request->getPost('apellido_paterno'),
@@ -109,8 +114,8 @@ class UserController extends BaseController
 			'MUNICIPIOORIGENID' => (int)$this->request->getPost('municipio_select_origen'),
 			'LOCALIDADID' => (int)$this->request->getPost('localidad_select'),
 			'CALLE' => $this->request->getPost('calle'),
-			'NUM_EXT' => $this->request->getPost('exterior'),
-			'NUM_INT' => $this->request->getPost('interior'),
+			'NUM_EXT' =>  $this->request->getPost('checkML') == 'on' ?  'M.' . $this->request->getPost('exterior') : $this->request->getPost('exterior'),
+			'NUM_INT' =>  $this->request->getPost('checkML') == 'on' && $interior ?  'L.' . $this->request->getPost('interior') : $interior,
 			'TELEFONO' => $this->request->getPost('telefono'),
 			'TELEFONO2' => $this->request->getPost('telefono2'),
 			'CODIGO_PAIS' => $this->request->getPost('codigo_pais'),
@@ -141,7 +146,7 @@ class UserController extends BaseController
 			$data['COLONIAID'] = (int)$this->request->getPost('colonia_select');
 			$data['COLONIA'] = NULL;
 		}
-		if ((int)$this->request->getPost('ocupacion') ==999) {
+		if ((int)$this->request->getPost('ocupacion') == 999) {
 			$data['OCUPACIONID'] = NULL;
 			$data['OCUPACIONDESCR'] = $this->request->getPost('ocupacion_descr');
 		} else {
@@ -187,6 +192,11 @@ class UserController extends BaseController
 		list(, $firma) = explode(',', $firma);
 		$firma = base64_decode($firma);
 
+		$interior = $this->request->getPost('interior');
+		if ($interior == '') {
+			$interior = NULL;
+		}
+
 		$data = [
 			'CODIGOPOSTAL' => $this->request->getPost('cp'),
 			'PAIS' => $this->request->getPost('pais_select'),
@@ -196,11 +206,8 @@ class UserController extends BaseController
 			'MUNICIPIOORIGENID' => (int)$this->request->getPost('municipio_select_origen'),
 			'LOCALIDADID' => (int)$this->request->getPost('localidad_select'),
 			'CALLE' => $this->request->getPost('calle'),
-			'NUM_EXT' => $this->request->getPost('exterior'),
-			'NUM_INT' => $this->request->getPost('interior'),
-			'MANZANA' => $this->request->getPost('manzana'),
-			'LOTE' => $this->request->getPost('lote'),
-
+			'NUM_EXT' =>  $this->request->getPost('checkML') == 'on' ?  'M.' . $this->request->getPost('exterior') : $this->request->getPost('exterior'),
+			'NUM_INT' =>  $this->request->getPost('checkML') == 'on' && $interior ?  'L.' . $this->request->getPost('interior') : $interior,
 			'TIPOIDENTIFICACIONID' => $this->request->getPost('identificacion'),
 			'NUMEROIDENTIFICACION' => $this->request->getPost('numero_ide'),
 			'ESTADOCIVILID' => $this->request->getPost('e_civil'),
@@ -227,7 +234,7 @@ class UserController extends BaseController
 			$data['COLONIA'] = NULL;
 		}
 
-		if ((int)$this->request->getPost('ocupacion') ==999) {
+		if ((int)$this->request->getPost('ocupacion') == 999) {
 			$data['OCUPACIONID'] = NULL;
 			$data['OCUPACIONDESCR'] = $this->request->getPost('ocupacion_descr');
 		} else {

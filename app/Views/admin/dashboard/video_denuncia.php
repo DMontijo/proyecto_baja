@@ -1824,16 +1824,20 @@
                     }
                     document.querySelector('#cp_pfd').value = domicilio.CP ? domicilio.CP : '';
                     document.querySelector('#calle_pfd').value = domicilio.CALLE ? domicilio.CALLE : '';
+                    if (domicilio.NUMEROCASA && domicilio.NUMEROCASA.includes('M.')) {
+                        document.getElementById('lblExterior_pfd').innerHTML = "Manzana";
+                        document.getElementById('lblInterior_pfd').innerHTML = "Lote";
+                        document.querySelector('#checkML_pfd').checked = true;
+                        document.querySelector('#checkML_pfd').value = "on";
+
+                    }
                     document.querySelector('#exterior_pfd').value = domicilio.NUMEROCASA ? domicilio
-                        .NUMEROCASA : '';
+                        .NUMEROCASA.replace('M.', '') : '';
                     document.querySelector('#interior_pfd').value = domicilio.NUMEROINTERIOR ? domicilio
-                        .NUMEROINTERIOR : '';
+                        .NUMEROINTERIOR.replace('L.', '') : '';
                     document.querySelector('#referencia_pfd').value = domicilio.REFERENCIA ? domicilio
                         .REFERENCIA : '';
-                    document.querySelector('#manzana_pfd').value = domicilio.MANZANA ? domicilio
-                        .MANZANA : '';
-                    document.querySelector('#lote_pfd').value = domicilio.LOTE ? domicilio
-                        .LOTE : '';
+
                     // document.querySelector('#zona_pfd').value = domicilio.ZONA ? domicilio.ZONA : '';
 
                     $('#folio_persona_fisica_modal').modal('show');
@@ -2351,6 +2355,40 @@
                     insertarPersonaFisica();
                 }
             }, false);
+
+            //CHECK MANZANA-LOTE
+            document.querySelector('#checkML_new').value = "off";
+            document.querySelector('#checkML_pfd').value = "off";
+
+            var checkML_pfd = document.getElementById('checkML_pfd');
+            checkML_pfd.addEventListener('click', function() {
+                if (checkML_pfd.checked) {
+                    document.getElementById('lblExterior_pfd').innerHTML = "Manzana";
+                    document.getElementById('lblInterior_pfd').innerHTML = "Lote";
+                    document.querySelector('#checkML_pfd').value = "on";
+
+                } else {
+                    document.getElementById('lblExterior_pfd').innerHTML = "Número exterior";
+                    document.getElementById('lblInterior_pfd').innerHTML = "Número interior";
+                    document.querySelector('#checkML_pfd').value = "off";
+
+
+                }
+            });
+            var checkML_new = document.getElementById('checkML_new');
+            checkML_new.addEventListener('click', function() {
+                if (checkML_new.checked) {
+                    document.getElementById('lblExterior_new').innerHTML = "Manzana";
+                    document.getElementById('lblInterior_new').innerHTML = "Lote";
+                    document.querySelector('#checkML_new').value = "on";
+
+                } else {
+                    document.getElementById('lblExterior_new').innerHTML = "Número exterior";
+                    document.getElementById('lblInterior_new').innerHTML = "Número interior";
+                    document.querySelector('#checkML_new').value = "off";
+
+                }
+            });
             btn_enviarcorreoDoc.addEventListener('click', (event) => {
                 $.ajax({
                     data: {
@@ -4004,9 +4042,7 @@
                     'exterior_pfd': document.querySelector('#exterior_pfd').value,
                     'interior_pfd': document.querySelector('#interior_pfd').value,
                     'referencia_pfd': document.querySelector('#referencia_pfd').value,
-                    'manzana_pfd': document.querySelector('#manzana_pfd').value,
-                    'lote_pfd': document.querySelector('#lote_pfd').value,
-
+                    'checkML_pfd': document.querySelector('#checkML_pfd').value,
                 };
 
                 $.ajax({
@@ -4022,6 +4058,11 @@
                                 text: 'Domicilio actualizado correctamente',
                                 confirmButtonColor: '#bf9b55',
                             });
+                            document.getElementById('lblExterior_pfd').innerHTML = "Número exterior";
+                            document.getElementById('lblInterior_pfd').innerHTML = "Número interior";
+                            document.querySelector('#checkML_pfd').value = "off";
+                            $('#folio_persona_fisica_modal').modal('hide');
+
                         } else {
                             Swal.fire({
                                 icon: 'error',
@@ -4490,8 +4531,8 @@
                     'correo': document.querySelector('#correo_new').value,
                     'desaparecida': document.querySelector('#desaparecida_new').value,
                     'ocupacion_descr': document.querySelector('#ocupacion_descr_new').value,
-                    'manzana': document.querySelector('#manzana_new').value,
-                    'lote': document.querySelector('#lote_new').value,
+                    'checkML_new': document.querySelector('#checkML_new').value,
+
 
                 };
                 console.log(data);
@@ -4643,7 +4684,9 @@
                             $('#municipio_pfd').empty();
 
                             $('#localidad_pfd').empty();
-
+                            document.getElementById('lblExterior_new').innerHTML = "Número exterior";
+                            document.getElementById('lblInterior_new').innerHTML = "Número interior";
+                            document.querySelector('#checkML_new').value = "off";
                             $('#folio_persona_fisica_modal').modal('show');
                             viewPersonaFisica(response.ultimoRegistro.PERSONAFISICAID);
                             // form_media_filiacion_insert.addEventListener('submit', (event) => {
@@ -5021,7 +5064,7 @@
 
 
             function insertarDocumento(contenido, tipoPlantilla) {
-             
+
                 if (document.getElementById('input_denuncia').value == "DA") {
                     Swal.fire({
                         title: 'Este documento no será enviado',
@@ -5057,9 +5100,9 @@
                             }
                         }
                     })
-                }else{
-                 
-           
+                } else {
+
+
 
                     Swal.fire({
                         title: '¿Este documento tiene que ser enviado?',
