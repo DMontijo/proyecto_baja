@@ -4061,6 +4061,8 @@
                             document.getElementById('lblExterior_pfd').innerHTML = "Número exterior";
                             document.getElementById('lblInterior_pfd').innerHTML = "Número interior";
                             document.querySelector('#checkML_pfd').value = "off";
+                            $('#folio_persona_fisica_modal').modal('hide');
+
                         } else {
                             Swal.fire({
                                 icon: 'error',
