@@ -25,6 +25,22 @@ use Dompdf\Options;
 class ExtravioController extends BaseController
 {
 
+	private $_denunciantesModel;
+	private $_nacionalidadModel;
+	private $_estadosCivilesModel;
+	private $_personaIdiomaModel;
+	private $_estadosModel;
+	private $_municipiosModel;
+	private $_localidadesModel;
+	private $_coloniasModel;
+	private $_tipoIdentificacionModel;
+	private $_paisesModel;
+	private $_clasificacionLugarModel;
+	private $_folioModel;
+	private $_constanciaExtravioModel;
+	private $_usuariosModel;
+	private $_hechoLugarModel;
+	private $db;
 
 	function __construct()
 	{

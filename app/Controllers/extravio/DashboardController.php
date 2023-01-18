@@ -27,6 +27,29 @@ use App\Models\VehiculoTipoModel;
 
 class DashboardController extends BaseController
 {
+
+	private $_paisesModel;
+	private $_estadosModel;
+	private $_municipiosModel;
+	private $_localidadesModel;
+	private $_coloniasModel;
+	private $_hechoLugarModel;
+	private $_coloresVehiculoModel;
+	private $_tipoVehiculoModel;
+	private $_delitosUsuariosModel;
+	private $_denunciantesModel;
+	private $_personaIdiomaModel;
+	private $_documentosExtravioTipoModel;
+	private $_folioModel;
+	private $_folioPreguntasModel;
+	private $_folioPersonaFisicaModel;
+	private $_folioPersonaFisicaDomicilioModel;
+	private $_folioVehiculoModel;
+	private $_constanciaExtravioModel;
+	private $_plantillasModel;
+	private $_usuariosModel;
+	private $_constanciaExtravioConsecutivoModel;
+
 	public function __construct()
 	{
 		//Models
