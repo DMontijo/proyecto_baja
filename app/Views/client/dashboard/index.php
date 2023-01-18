@@ -307,8 +307,7 @@
 				document.querySelector('#nacionalidad_menor').setAttribute('required', true);
 				document.querySelector('#estado_origen_menor').setAttribute('required', true);
 				document.querySelector('#municipio_origen_menor').setAttribute('required', true);
-				document.querySelector('#ocupacion_menor').setAttribute('required', true);
-				document.querySelector('#ocupacion_descr_menor').setAttribute('required', true);
+				
 
 				let radiosSexoMenor = document.querySelectorAll('input[name="sexo_menor"]');
 				radiosSexoMenor.forEach((radio) => {
@@ -606,12 +605,6 @@
 			case 'datos_delito':
 				if (
 					document.querySelector('#delito').value != '' &&
-					document.querySelector('#municipio').value != '' &&
-					document.querySelector('#calle').value != '' &&
-					document.querySelector('#exterior').value != '' &&
-					document.querySelector('#colonia').value != '' &&
-					document.querySelector('#colonia_select').value != '' &&
-					document.querySelector('#localidad').value != '' &&
 					document.querySelector('#lugar').value != '' &&
 					document.querySelector('#fecha').value != '' &&
 					document.querySelector('#hora').value != '' &&
@@ -620,7 +613,7 @@
 				) {
 					return true;
 				} else {
-					return true;
+					return false;
 				}
 				break;
 			case 'datos_robo_vehiculo':

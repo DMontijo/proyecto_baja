@@ -88,8 +88,8 @@
 		</div>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="lugar" class="form-label fw-bold">Lugar del delito:</label>
-		<select class="form-select" id="lugar" name="lugar">
+		<label for="lugar" class="form-label fw-bold input-required">Lugar del delito:</label>
+		<select class="form-select" id="lugar" name="lugar" required>
 			<option selected disabled value="">Elige el lugar del delito</option>
 			<?php foreach ($body_data->lugares as $index => $lugar) { ?>
 				<option value="<?= $lugar->HECHOLUGARID ?>"> <?= $lugar->HECHODESCR ?> </option>
@@ -106,15 +106,15 @@
 		</select>
 	</div> -->
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="fecha" class="form-label fw-bold">Fecha del delito:</label>
-		<input type="date" class="form-control" id="fecha" name="fecha" max="<?= date("Y-m-d") ?>">
+		<label for="fecha" class="form-label fw-bold input-required">Fecha del delito:</label>
+		<input type="date" class="form-control" id="fecha" name="fecha" max="<?= date("Y-m-d") ?>" required>
 		<div class="invalid-feedback">
 			La fecha del delito es obligatoria
 		</div>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="hora" class="form-label fw-bold">Hora del delito:</label>
-		<input type="time" class="form-control" id="hora" name="hora">
+		<label for="hora" class="form-label fw-bold input-required">Hora del delito:</label>
+		<input type="time" class="form-control" id="hora" name="hora" required>
 		<small>Debe estar en formato de 24 horas.</small>
 		<div class="invalid-feedback">
 			La hora del delito es obligatoria
@@ -133,8 +133,8 @@
 		</div>
 	</div>
 	<div class="col-12">
-		<label for="descripcion_breve" class="form-label fw-bold">Descripción breve del delito</label>
-		<textarea class="form-control" id="descripcion_breve" name="descripcion_breve" rows="10" maxlength="1000" onkeyup="contarCaracteres(this)"></textarea>
+		<label for="descripcion_breve" class="form-label fw-bold input-required">Descripción breve del delito</label>
+		<textarea class="form-control" id="descripcion_breve" name="descripcion_breve" rows="10" maxlength="1000" onkeyup="contarCaracteres(this)" required></textarea>
 		<small id="numCaracter">1000 caracteres restantes</small>
 	</div>
 </div>
