@@ -125,21 +125,19 @@
 		<input type="text" class="form-control" id="calle_menor" name="calle_menor" maxlength="100">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="numero_ext_menor" class="form-label fw-bold input-required">Número exterior</label>
+		<label for="numero_ext_menor" class="form-label fw-bold input-required" id="lblExterior_menor">Número exterior</label>
 		<input type="text" class="form-control" id="numero_ext_menor" name="numero_ext_menor" maxlength="10">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="numero_int_menor" class="form-label fw-bold">Número interior</label>
+		<label for="numero_int_menor" class="form-label fw-bold" id="lblInterior_menor">Número interior</label>
 		<input type="text" class="form-control" id="numero_int_menor" name="numero_int_menor" maxlength="10">
 	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="manzana_menor" class="form-label fw-bold">Manzana</label>
-		<input type="text" class="form-control" id="manzana_menor" name="manzana_menor" maxlength="100">
-	</div>
 
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="lote_menor" class="form-label fw-bold">Lote</label>
-		<input type="text" class="form-control" id="lote_menor" name="lote_menor" maxlength="100">
+	<div class="col-12 mt-4 mb-4">
+		<input class="form-check-input" type="checkbox" id="checkML_menor" name="checkML_menor">
+		<label class="form-check-label fw-bold" for="checkML_menor">
+			¿La dirección contiene manzana y lote?
+		</label>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="escolaridad_menor" class="form-label fw-bold">Escolaridad</label>
@@ -193,7 +191,7 @@
 </div>
 
 <script>
-		document.querySelector('#ocupacion_menor').addEventListener('change', (e) => {
+	document.querySelector('#ocupacion_menor').addEventListener('change', (e) => {
 		let select_ocupacion = document.querySelector('#ocupacion_menor');
 		let input_ocupacion = document.querySelector('#ocupacion_descr_menor');
 

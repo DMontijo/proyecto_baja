@@ -204,7 +204,7 @@
 	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="exterior_new" class="form-label font-weight-bold">Número exterior</label>
+		<label for="exterior_new" class="form-label font-weight-bold" id="lblExterior_new">Número exterior</label>
 		<input type="text" class="form-control" id="exterior_new" name="exterior_new" maxlength="10">
 		<div class="invalid-feedback">
 			El número exterior es obligatorio
@@ -212,16 +212,14 @@
 	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="interior_new" class="form-label font-weight-bold">Número interior</label>
+		<label for="interior_new" class="form-label font-weight-bold" id="lblInterior_new">Número interior</label>
 		<input type="text" class="form-control" id="interior_new" name="interior_new" maxlength="10">
 	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="manzana_new" class="form-label font-weight-bold">Manzana</label>
-		<input type="text" class="form-control" id="manzana_new" name="manzana_new" maxlength="100">
-	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="lote_new" class="form-label font-weight-bold">Lote</label>
-		<input type="text" class="form-control" id="lote_new" name="lote_new" maxlength="100">
+	<div class="col-12 mt-4 mb-4">
+		<input class="form-check-input" type="checkbox" id="checkML_new" name="checkML_new">
+		<label class="form-check-label fw-bold" for="checkML_new">
+			¿La dirección contiene manzana y lote?
+		</label>
 	</div>
 	<div class="col-12">
 		<h3 class="font-weight-bold mb-4 text-center">DATOS DE IDENTIFICACIÓN</h3>
@@ -360,6 +358,7 @@
 				}, false)
 			})
 	})()
+	
 	document.querySelector('#ocupacion_new').addEventListener('change', (e) => {
 		let select_ocupacion = document.querySelector('#ocupacion_new');
 		let input_ocupacion = document.querySelector('#ocupacion_descr_new');

@@ -235,7 +235,7 @@
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="exterior" class="form-label fw-bold input-required">Número exterior</label>
+							<label for="exterior" class="form-label fw-bold input-required" id="lblExterior">Número exterior</label>
 							<input type="text" class="form-control" id="exterior" name="exterior" maxlength="10" required>
 							<div class="invalid-feedback">
 								El número exterior es obligatorio
@@ -243,9 +243,17 @@
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="interior" class="form-label fw-bold">Número interior</label>
+							<label for="interior" class="form-label fw-bold" id="lblInterior">Número interior</label>
 							<input type="text" class="form-control" id="interior" name="interior" maxlength="10">
 						</div>
+
+						<div class="col-12 mt-4 mb-4">
+							<input class="form-check-input" type="checkbox" id="checkML" name="checkML">
+							<label class="form-check-label fw-bold" for="checkML">
+								¿Tu dirección contiene manzana y lote?
+							</label>
+						</div>
+
 					</div>
 				</div>
 
@@ -431,9 +439,27 @@
 	const nextBtn = document.querySelector('#next-btn');
 	const submitBtn = document.querySelector('#submit-btn');
 	const progress = document.querySelector('#progress-bar');
+	var checkML = document.getElementById('checkML');
+
 	let stepCount = steps.length - 1;
 	let width = 100 / stepCount;
 	let currentStep = 0;
+
+	checkML.addEventListener('click', function() {
+		if (checkML.checked) {
+			document.getElementById('lblExterior').innerHTML = "Manzana";
+			document.getElementById('lblInterior').innerHTML = "Lote";
+			// document.getElementById('exterior').value = 'M.' + document.getElementById('exterior').value;
+			// document.getElementById('interior').value = 'L.' + document.getElementById('interior').value;
+		} else {
+			document.getElementById('lblExterior').innerHTML = "Número exterior";
+			document.getElementById('lblInterior').innerHTML = "Número interior";
+			// document.getElementById('exterior').value = '';
+			// document.getElementById('interior').value = '';
+		}
+	});
+
+
 
 	function clearInputPhone(e) {
 		e.target.value = e.target.value.replace(/-/g, "");
@@ -693,20 +719,20 @@
 			}
 		});
 
-	
-		document.querySelector('#ocupacion').addEventListener('change', (e) => {
-		let select_ocupacion = document.querySelector('#ocupacion');
-		let input_ocupacion = document.querySelector('#ocupacion_descr');
 
-		if (e.target.value === '999') {
-			select_ocupacion.classList.add('d-none');
-			input_ocupacion.classList.remove('d-none');
-			input_ocupacion.value = "";
-			input_ocupacion.focus();
-		} else {
-			input_ocupacion.value = "";
-		}
-	});
+		document.querySelector('#ocupacion').addEventListener('change', (e) => {
+			let select_ocupacion = document.querySelector('#ocupacion');
+			let input_ocupacion = document.querySelector('#ocupacion_descr');
+
+			if (e.target.value === '999') {
+				select_ocupacion.classList.add('d-none');
+				input_ocupacion.classList.remove('d-none');
+				input_ocupacion.value = "";
+				input_ocupacion.focus();
+			} else {
+				input_ocupacion.value = "";
+			}
+		});
 		document.querySelector('#idioma').addEventListener('change', (e) => {
 			let alert = document.querySelector('#idioma_alert');
 			if (e.target.value !== '22') {
@@ -1130,12 +1156,12 @@
 		let calle = document.querySelector("#calle").value ? document.querySelector("#calle").value : '';
 		let nexterior = document.querySelector("#exterior").value ? document.querySelector("#exterior").value : '';
 		let ninterior = document.querySelector("#interior").value ? document.querySelector("#interior").value : '';
-
+		
 		let tipo = document.querySelector("#identificacion").value ? document.querySelector("#identificacion").value : '';
 		let numeroid = document.querySelector("#numero_ide").value ? document.querySelector("#numero_ide").value : '';
 		let edoc = document.querySelector("#e_civil").value ? document.querySelector("#e_civil").value : '';
 		let ocupacion = document.querySelector("#ocupacion").value ? document.querySelector("#ocupacion").options[document.querySelector("#ocupacion").selectedIndex].text : '';
-		let ocupacion_descr = document.querySelector("#ocupacion_descr").value ? document.querySelector("#ocupacion_descr").value :'' ;
+		let ocupacion_descr = document.querySelector("#ocupacion_descr").value ? document.querySelector("#ocupacion_descr").value : '';
 		let escolaridad = document.querySelector("#escolaridad").value ? document.querySelector("#escolaridad").options[document.querySelector("#escolaridad").selectedIndex].text : '';
 		let discapacidad = document.querySelector("#discapacidad").value ? document.querySelector("#discapacidad").value : '';
 		let firma_url = document.querySelector("#firma_url").value ? document.querySelector("#firma_url").value : '';
@@ -1166,7 +1192,7 @@
 		document.querySelector('#localidad_modal').value = localidad;
 		document.querySelector('#colonia_modal').value = colonia;
 		document.querySelector('#calle_modal').value = calle;
-		document.querySelector('#exterior_modal').value = nexterior;
+		document.querySelector('#exterior_modal').value =nexterior;
 		document.querySelector('#interior_modal').value = ninterior;
 		document.querySelector('#telefono_modal').value = telefono;
 		document.querySelector('#telefono2_modal').value = telefono2;
@@ -1181,7 +1207,7 @@
 		document.querySelector('#identificacion_modal').value = tipo;
 		document.querySelector('#numero_ide_modal').value = numeroid;
 		document.querySelector('#e_civil_modal').value = edoc;
-		document.querySelector('#ocupacion_modal').value = ocupacion == 'OTRA' ? ocupacion_descr: ocupacion;
+		document.querySelector('#ocupacion_modal').value = ocupacion == 'OTRA' ? ocupacion_descr : ocupacion;
 		document.querySelector('#discapacidad_modal').value = discapacidad;
 		document.querySelector('#idioma_modal').value = idioma;
 		document.querySelector('#img_firma_modal').setAttribute("src", firma_url);

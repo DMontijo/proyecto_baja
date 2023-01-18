@@ -160,27 +160,26 @@
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="exterior" class="form-label fw-bold input-required">Número exterior</label>
+						<label for="exterior" class="form-label fw-bold input-required" id="lblExterior">Número exterior</label>
 							<input type="text" class="form-control" id="exterior" name="exterior" maxlength="10" required>
 							<div class="invalid-feedback">
 								El número exterior es obligatorio
 							</div>
 						</div>
-
+						
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="interior" class="form-label fw-bold">Número interior</label>
+						<label for="interior" class="form-label fw-bold" id="lblInterior">Número interior</label>
 							<input type="text" class="form-control" id="interior" name="interior" maxlength="10">
 						</div>
-						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="manzana" class="form-label fw-bold">Manzana</label>
-							<input type="text" class="form-control" id="manzana" name="manzana" maxlength="100">
+						
+						<div class="col-12 mt-4 mb-4">
+							<input class="form-check-input" type="checkbox" id="checkML" name="checkML" >
+							<label class="form-check-label fw-bold" for="checkML">
+								¿Tu dirección contiene manzana y lote?
+							</label>
 						</div>
-
-						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="lote" class="form-label fw-bold">Lote</label>
-							<input type="text" class="form-control" id="lote" name="lote" maxlength="100">
-						</div>
-
+					
+						
 					</div>
 				</div>
 
@@ -367,6 +366,17 @@
 	let stepCount = steps.length - 1;
 	let width = 100 / stepCount;
 	let currentStep = 0;
+	var checkML = document.getElementById('checkML');
+
+	checkML.addEventListener('click', function() {
+		if (checkML.checked) {
+			document.getElementById('lblExterior').innerHTML = "Manzana";
+			document.getElementById('lblInterior').innerHTML = "Lote";
+		} else {
+			document.getElementById('lblExterior').innerHTML = "Número exterior";
+			document.getElementById('lblInterior').innerHTML = "Número interior";
+		}
+	});
 
 	function clearInputPhone(e) {
 		e.target.value = e.target.value.replace(/-/g, "");
@@ -952,9 +962,7 @@
 		let calle = document.querySelector("#calle").value ? document.querySelector("#calle").value : '';
 		let nexterior = document.querySelector("#exterior").value ? document.querySelector("#exterior").value : '';
 		let ninterior = document.querySelector("#interior").value ? document.querySelector("#interior").value : '';
-		let manzana = document.querySelector("#manzana").value ? document.querySelector("#manzana").value : '';
-		let lote = document.querySelector("#lote").value ? document.querySelector("#lote").value : '';
-
+		
 		let tipo = document.querySelector("#identificacion").value ? document.querySelector("#identificacion").value : '';
 		let numeroid = document.querySelector("#numero_ide").value ? document.querySelector("#numero_ide").value : '';
 		let edoc = document.querySelector("#e_civil").value ? document.querySelector("#e_civil").value : '';
@@ -987,8 +995,7 @@
 		document.querySelector('#calle_modal').value = calle;
 		document.querySelector('#exterior_modal').value = nexterior;
 		document.querySelector('#interior_modal').value = ninterior;
-		document.querySelector('#manzana_modal').value = manzana;
-		document.querySelector('#lote_modal').value = lote;
+
 
 		document.querySelector('#facebook_modal').value = facebook;
 		document.querySelector('#instagram_modal').value = instagram;

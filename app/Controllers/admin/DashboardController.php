@@ -3086,6 +3086,14 @@ class DashboardController extends BaseController
 			$id_domicilio = trim($this->request->getPost('pfd_id'));
 			$folio = trim($this->request->getPost('folio'));
 			$year = trim($this->request->getPost('year'));
+			$interior_pfd = $this->request->getPost('interior_pfd');
+			if ($interior_pfd == '') {
+				$interior_pfd = NULL;
+			}
+			$exterior_pfd = $this->request->getPost('exterior_pfd');
+			if ($exterior_pfd == '') {
+				$exterior_pfd = NULL;
+			}
 			$data = array(
 				'id' => trim($this->request->getPost('pf_id')),
 				'folio' => trim($this->request->getPost('folio')),
@@ -3098,12 +3106,9 @@ class DashboardController extends BaseController
 				'COLONIAID' => $this->request->getPost('colonia_pfd_select'),
 				'COLONIADESCR' => $this->request->getPost('colonia_pfd'),
 				'CALLE' => $this->request->getPost('calle_pfd'),
-				'NUMEROCASA' => $this->request->getPost('exterior_pfd'),
-				'NUMEROINTERIOR' => $this->request->getPost('interior_pfd'),
+				'NUMEROCASA' => $this->request->getPost('checkML_pfd') == 'on'  && $exterior_pfd ?  'M.' . $exterior_pfd : $exterior_pfd,
+				'NUMEROINTERIOR' => $this->request->getPost('checkML_pfd') == 'on' && $interior_pfd ?  'L.' . $interior_pfd : $interior_pfd,
 				'REFERENCIA' => $this->request->getPost('referencia_pfd'),
-				'MANZANA' => $this->request->getPost('manzana_pfd'),
-				'LOTE' => $this->request->getPost('lote_pfd'),
-
 			);
 			if ((int)$data['COLONIAID'] == 0) {
 				$data['COLONIAID'] = null;
@@ -3776,7 +3781,14 @@ class DashboardController extends BaseController
 			'DESAPARECIDA' => $this->request->getPost('desaparecida'),
 
 		);
-
+		$interior_new = $this->request->getPost('num_interior');
+		if ($interior_new == '') {
+			$interior_new = NULL;
+		}
+		$exterior_new = $this->request->getPost('num_exterior');
+		if ($exterior_new == '') {
+			$exterior_new = NULL;
+		}
 		$dataNewPersonaFisicaDomicilio = array(
 			'PAIS' => $this->request->getPost('pais_actual'),
 			'ESTADOID' => $this->request->getPost('estado_actual'),
@@ -3785,11 +3797,9 @@ class DashboardController extends BaseController
 			'COLONIAID' => $this->request->getPost('colonia_actual'),
 			'COLONIADESCR' => $this->request->getPost('colonia_actual_descr'),
 			'CALLE' => $this->request->getPost('calle'),
-			'NUMEROCASA' => $this->request->getPost('num_exterior'),
-			'NUMEROINTERIOR' => $this->request->getPost('num_interior'),
+			'NUMEROCASA' => $this->request->getPost('checkML_new') == 'on'  && $exterior_new ?  'M.' . $exterior_new : $exterior_new,
+			'NUMEROINTERIOR' => $this->request->getPost('checkML_new') == 'on' && $interior_new ?  'L.' . $interior_new : $interior_new,
 			'CP' => $this->request->getPost('codigo_postal'),
-			'MANZANA' => $this->request->getPost('manzana'),
-			'LOTE' => $this->request->getPost('lote'),
 
 		);
 		if ((int)$this->request->getPost('ocupacion') == 999) {
@@ -4624,7 +4634,6 @@ class DashboardController extends BaseController
 				return json_encode($data);
 			}
 		}
-		
 	}
 
 	public function insertFolioDoc()
@@ -4663,10 +4672,10 @@ class DashboardController extends BaseController
 					break;
 			}
 
-			
+
 			$dataFolioDoc = array(
 				'FOLIOID' => $folio,
-				'NUMEROEXPEDIENTE' => $expediente ?$expediente: null,
+				'NUMEROEXPEDIENTE' => $expediente ? $expediente : null,
 				'ANO' => $year,
 				'PLACEHOLDER' => $placeholder,
 				'STATUS' => 'ABIERTO',

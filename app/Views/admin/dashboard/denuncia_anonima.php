@@ -1738,10 +1738,6 @@
 			'exterior_pfd': document.querySelector('#exterior_pfd').value,
 			'interior_pfd': document.querySelector('#interior_pfd').value,
 			'referencia_pfd': document.querySelector('#referencia_pfd').value,
-			'manzana_pfd': document.querySelector('#manzana_pfd').value,
-			'lote_pfd': document.querySelector('#lote_pfd').value,
-
-
 		};
 
 		$.ajax({
@@ -2339,10 +2335,7 @@
 					document.querySelector('#exterior_pfd').value = domicilio.NUMEROCASA ? domicilio.NUMEROCASA : '';
 					document.querySelector('#interior_pfd').value = domicilio.NUMEROINTERIOR ? domicilio.NUMEROINTERIOR : '';
 					document.querySelector('#referencia_pfd').value = domicilio.REFERENCIA ? domicilio.REFERENCIA : '';
-					document.querySelector('#manzana_pfd').value = domicilio.MANZANA ? domicilio
-						.MANZANA : '';
-					document.querySelector('#lote_pfd').value = domicilio.LOTE ? domicilio
-						.LOTE : '';
+					
 					$('#folio_persona_fisica_modal_da').modal('show');
 
 				} else {
