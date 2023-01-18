@@ -168,6 +168,7 @@ $routes->group('denuncia', function ($routes) {
 		
 		$routes->get('perfil', 'client/DashboardController::profile');
 		$routes->post('actualizar-perfil', 'client/DashboardController::update_profile');
+		$routes->post('actualizar-password', 'client/DashboardController::update_password');
 
 		$routes->get('denuncias', 'client/DashboardController::denuncias');
 		$routes->post('create', 'client/DashboardController::create');
@@ -307,6 +308,7 @@ $routes->group('constancia_extravio', function ($routes) {
 
 		$routes->get('perfil', 'extravio/ExtravioController::profile');
 		$routes->post('actualizar-perfil', 'extravio/ExtravioController::update_profile');
+		$routes->post('actualizar-password', 'extravio/ExtravioController::update_password');
 	});
 });
 /**
