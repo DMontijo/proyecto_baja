@@ -12,6 +12,13 @@ use App\Models\RolesUsuariosModel;
 
 class LoginController extends BaseController
 {
+
+	private $_usuariosModel;
+	private $_sesionesModel;
+	private $_bitacoraActividadModel;
+	private $_rolesPermisosModel;
+	private $_rolesUsuariosModel;
+	
 	function __construct()
 	{
 		$this->_usuariosModel = new UsuariosModel();

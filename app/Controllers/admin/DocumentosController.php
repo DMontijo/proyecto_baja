@@ -13,6 +13,15 @@ use App\Models\UsuariosModel;
 
 class DocumentosController extends BaseController
 {
+
+	private $_folioDocModel;
+	private $_plantillasModel;
+	private $_folioPersonaFisicaModel;
+	private $_rolesPermisosModel;
+	private $_folioModel;
+	private $_usuariosModel;
+	private $_municipiosModel;
+	
 	function __construct()
 	{
 		$this->_folioDocModel = new FolioDocModel();

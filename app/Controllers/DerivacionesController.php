@@ -9,6 +9,8 @@ use App\Models\CanalizacionesModel;
 
 class DerivacionesController extends Controller
 {
+	private $_derivacionesModel;
+	private $_canalizacionesModel;
 
 	function __construct()
 	{

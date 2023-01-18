@@ -15,6 +15,16 @@ use App\Models\ConstanciaExtravioModel;
 
 class PDFController extends BaseController
 {
+	private $_plantillasModel;
+	private $_folioModel;
+	private $_usuariosModel;
+	private $_hechoLugarModel;
+	private $_municipiosModel;
+	private $_estadosModel;
+	private $_constanciaExtravioModel;
+	private $_tipoIdentificacionModel;
+	private $db;
+	
 	function __construct()
 	{
 		$this->_plantillasModel = new PlantillasModel();
@@ -24,9 +34,7 @@ class PDFController extends BaseController
 		$this->_municipiosModel = new MunicipiosModel();
 		$this->_estadosModel = new EstadosModel();
 		$this->_constanciaExtravioModel = new ConstanciaExtravioModel();
-
 		$this->_tipoIdentificacionModel = new PersonaTipoIdentificacionModel();
-
 		$this->db = \Config\Database::connect();
 	}
 	public function certificadoMedico()

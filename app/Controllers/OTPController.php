@@ -7,6 +7,8 @@ use App\Models\OTPModel;
 
 class OTPController extends BaseController
 {
+	private $_OTPModel;
+	
 	public function __construct()
 	{
 		$this->_OTPModel = new OTPModel();

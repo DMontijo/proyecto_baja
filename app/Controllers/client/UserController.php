@@ -22,6 +22,22 @@ use App\Models\OcupacionModel;
 
 class UserController extends BaseController
 {
+
+	private $_nacionalidadModel;
+	private $_estadosCivilesModel;
+	private $_personaIdiomaModel;
+	private $_estadosModel;
+	private $_municipiosModel;
+	private $_localidadesModel;
+	private $_coloniasModel;
+	private $_denunciantesModel;
+	private $_tipoIdentificacionModel;
+	private $_paisesModel;
+	private $_clasificacionLugarModel;
+	private $_folioModel;
+	private $_escolaridadModel;
+	private $_ocupacionModel;
+
 	function __construct()
 	{
 		//Models
@@ -37,7 +53,6 @@ class UserController extends BaseController
 		$this->_paisesModel = new PaisesModel();
 		$this->_clasificacionLugarModel = new HechoClasificacionLugarModel();
 		$this->_folioModel = new FolioModel();
-
 		$this->_escolaridadModel = new EscolaridadModel();
 		$this->_ocupacionModel = new OcupacionModel();
 	}

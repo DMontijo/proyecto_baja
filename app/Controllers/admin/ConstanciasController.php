@@ -17,6 +17,17 @@ use App\Models\RolesPermisosModel;
 
 class ConstanciasController extends BaseController
 {
+	private $_constanciaExtravioModel;
+	private $_usuariosModel;
+	private $_zonasUsuariosModel;
+	private $_rolesUsuariosModel;
+	private $_plantillasModel;
+	private $_denunciantesModel;
+	private $_hechoLugarModel;
+	private $_municipiosModel;
+	private $_estadosModel;
+	private $_rolesPermisosModel;
+
 	function __construct()
 	{
 		//Models
