@@ -830,12 +830,11 @@ class DashboardController extends BaseController
 			$data['COLONIAID'] = $colonia->COLONIAID;
 			$data['COLONIADESCR'] = $colonia->COLONIADESCR;
 		};
-		if ($data['COLONIAID'] == null) {
-			$data['LOCALIDADID'] = null;
-		} else {
+		if ($data['COLONIAID'] != null) {
+		
 			if ($data['MUNICIPIOID']) {
 				try {
-					$colonia = $this->_coloniasModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data['MUNICIPIOID'])->where('LOCALIDADID', $data['LOCALIDADID'])->first();
+					$colonia = $this->_coloniasModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data['MUNICIPIOID'])->where('LOCALIDADID',  $data['LOCALIDADID'])->where('COLONIAID', $data['COLONIAID'])->first();
 					$colonia ? $data['LOCALIDADID'] = $colonia->LOCALIDADID : $data['LOCALIDADID'] = null;
 				} catch (\Exception $e) {
 					$data['LOCALIDADID'] = null;

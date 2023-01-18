@@ -4194,9 +4194,9 @@ class DashboardController extends BaseController
 		$colonia = $this->_coloniasModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data['MUNICIPIOID'])->where('LOCALIDADID',  $data['LOCALIDADID'])->where('COLONIAID', $data['COLONIAID'])->first();
 		// if ((int) $data['COLONIAID'] == 0 || $data['COLONIAID'] == null) {
 
-		if ($data['COLONIAID'] == null) {
-			$data['LOCALIDADID'] = null;
-		}
+		// if ($data['COLONIAID'] == null) {
+		// 	$data['LOCALIDADID'] = null;
+		// }
 		if ((int) $data['COLONIAID'] == 0) {
 			$data['COLONIAID'] = null;
 			$data['COLONIADESCR'] = $data['COLONIADESCR'];
