@@ -11,7 +11,6 @@
 <?php include 'app/Views/admin/dashboard/video_denuncia_modals/documentos_modal_editar.php' ?>
 <?php include 'app/Views/admin/dashboard/video_denuncia_modals/documentos_modal_wyswyg.php' ?>
 <?php include 'app/Views/admin/dashboard/video_denuncia_modals/send_email_modal.php' ?>
-<?php include 'app/Views/admin/dashboard/video_denuncia_modals/prueba.php' ?>
 
 <section class="content">
     <div class="container-fluid">
