@@ -43,7 +43,7 @@
 											<option value="5">PLAYAS DE ROSARITO</option>
 										</select>
 									</div>
-								
+
 									<!-- <div id="oficina_empleado_container" class="col-4 d-none">
 										<label for="oficina_empleado" class="form-label font-weight-bold">Oficina</label>
 										<select class="form-control" name="oficina_empleado" id="oficina_empleado">
@@ -125,7 +125,7 @@
 			document.getElementById("numCaracterSalidaDa").innerHTML = '300 caracteres restantes';
 
 		}
-		if (!e.target.value == 'DERIVADO' || e.target.value == 'CANALIZADO'||(e.target.value == '1' || e.target.value == '4' || e.target.value == '5' || e.target.value == '6' || e.target.value == '7' || e.target.value == '8' || e.target.value == '9')) {
+		if (!e.target.value == 'DERIVADO' || e.target.value == 'CANALIZADO' || (e.target.value == '1' || e.target.value == '4' || e.target.value == '5' || e.target.value == '6' || e.target.value == '7' || e.target.value == '8' || e.target.value == '9')) {
 			document.querySelector('#v-pills-delitos-tab').classList.add('d-none');
 			document.querySelector('#v-pills-documentos-tab').classList.add('d-none');
 			municipio_empleado_container.classList.add('d-none');
@@ -135,7 +135,7 @@
 		if (e.target.value == 'DERIVADO') {
 			derivaciones_container.classList.remove('d-none');
 			document.querySelector('#municipio_empleado').addEventListener('change', (e) => {
-	
+
 				let select_derivacion = document.querySelector('#derivaciones');
 				clearSelect(select_derivacion);
 				select_derivacion.value = '';
@@ -151,6 +151,13 @@
 				}).done(function(response) {
 					clearSelect(select_derivacion);
 					let derivacion = response;
+					if (derivacion == '') {
+						Swal.fire({
+							icon: 'error',
+							text: 'No se puede derivar en este municipio.',
+							confirmButtonColor: '#bf9b55',
+						});
+					}
 
 					derivacion.forEach(derivacion => {
 						var option = document.createElement("option");
@@ -164,34 +171,45 @@
 
 
 			});
-		}else{
+		} else {
 			derivaciones_container.classList.add('d-none');
-			municipio_empleado.value='';
+			municipio_empleado.value = '';
 		}
 	});
 
 	btnFinalizar.addEventListener('click', () => {
 		btnFinalizar.setAttribute('disabled', true);
-
+	
 		if (!(tipoSalida.value == '1' || tipoSalida.value == '4' || tipoSalida.value == '5' || tipoSalida.value == '6' || tipoSalida.value == '7' || tipoSalida.value == '8' || tipoSalida.value == '9')) {
 			let salida = tipoSalida.value;
 			let descripcion = document.querySelector('#notas_caso_salida').value;
-			if (tipoSalida.value=='DERIVADO') {
+	
+			if (tipoSalida.value == 'DERIVADO') {
+				if (derivaciones.value == '') {
+					Swal.fire({
+						icon: 'error',
+						text: 'No se puede derivar sin una oficina.',
+						confirmButtonColor: '#bf9b55',
+					});
+					btnFinalizar.disabled= false;
+
+				}else{
+					data = {
+					'folio': inputFolio.value,
+					'year': year_select.value,
+					'status': salida,
+					'motivo': descripcion,
+					'institutomunicipio': municipio_empleado.value,
+					'institutoremision': derivaciones.value,
+				}}
+				
+			} else {
 				data = {
-				'folio': inputFolio.value,
-				'year': year_select.value,
-				'status': salida,
-				'motivo': descripcion,
-				'institutomunicipio': municipio_empleado.value,
-				'institutoremision': derivaciones.value,
-			}
-			}else{
-				data = {
-				'folio': inputFolio.value,
-				'year': year_select.value,
-				'status': salida,
-				'motivo': descripcion,
-			}
+					'folio': inputFolio.value,
+					'year': year_select.value,
+					'status': salida,
+					'motivo': descripcion,
+				}
 
 			}
 			if (descripcion) {
@@ -217,7 +235,7 @@
 							$('.modal-backdrop').remove();
 							// location.reload();
 							window.location.href = `<?= base_url('/admin/dashboard/documentos_show?folio=') ?>` + inputFolio.value + '&year=' + year_select.value;
-								document.getElementById("form_folio").reset();
+							document.getElementById("form_folio").reset();
 						})
 					} else {
 						Swal.fire({
@@ -229,6 +247,7 @@
 				}).fail(function(jqXHR, textStatus) {
 					btnFinalizar.removeAttribute('disabled');
 				});
+				
 			} else {
 				btnFinalizar.removeAttribute('disabled');
 				Swal.fire({

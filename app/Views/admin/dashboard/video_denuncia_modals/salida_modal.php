@@ -52,6 +52,14 @@
 										</select>
 									</div>
 								</div>
+								<div class="row mb-2">
+									<div id="canalizaciones_container" class="col-12 d-none">
+										<label for="canalizaciones" class="form-label font-weight-bold">Canalizaciones</label>
+										<select class="form-control" name="canalizaciones" id="canalizaciones">
+											<option value="" selected disabled>Selecciona...</option>
+										</select>
+									</div>
+								</div>
 								<div id="notas" class="form-group">
 									<label for="notas_caso_salida">Notas</label>
 									<textarea id="notas_caso_salida" class="form-control" placeholder="Notas..." rows="10" maxlength="300" oninput="mayuscTextarea(this)" onkeydown="pulsar(event)" onkeyup="contarCaracteresSalida(this)"></textarea>
@@ -140,6 +148,13 @@
 				}).done(function(response) {
 					clearSelect(select_derivacion);
 					let derivacion = response;
+					if (derivacion == '') {
+						Swal.fire({
+							icon: 'error',
+							text: 'No se puede derivar en este municipio.',
+							confirmButtonColor: '#bf9b55',
+						});
+					}
 
 					derivacion.forEach(derivacion => {
 						var option = document.createElement("option");
@@ -170,14 +185,24 @@
 			let salida = tipoSalida.value;
 			let descripcion = document.querySelector('#notas_caso_salida').value;
 			if (tipoSalida.value=='DERIVADO') {
-				data = {
-				'folio': inputFolio.value,
-				'year': year_select.value,
-				'status': salida,
-				'motivo': descripcion,
-				'institutomunicipio': municipio_empleado.value,
-				'institutoremision': derivaciones.value,
-			}
+				if (derivaciones.value == '') {
+					Swal.fire({
+						icon: 'error',
+						text: 'No se puede derivar sin una oficina.',
+						confirmButtonColor: '#bf9b55',
+					});
+					btnFinalizar.disabled= false;
+
+				}else{
+					data = {
+					'folio': inputFolio.value,
+					'year': year_select.value,
+					'status': salida,
+					'motivo': descripcion,
+					'institutomunicipio': municipio_empleado.value,
+					'institutoremision': derivaciones.value,
+				}}
+				
 			}else{
 				data = {
 				'folio': inputFolio.value,
