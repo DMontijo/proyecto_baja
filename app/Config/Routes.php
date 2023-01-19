@@ -73,6 +73,7 @@ $routes->group('admin', function ($routes) {
 		$routes->post('nuevo_usuario', 'admin/DashboardController::crear_usuario');
 		$routes->get('editar_usuario', 'admin/DashboardController::editar_usuario');
 		$routes->post('editar_usuario', 'admin/DashboardController::update_usuario');
+		$routes->post('editar_password', 'admin/DashboardController::editar_password');
 
 
 		$routes->get('video-denuncia', 'admin/DashboardController::video_denuncia');
@@ -168,6 +169,7 @@ $routes->group('denuncia', function ($routes) {
 		
 		$routes->get('perfil', 'client/DashboardController::profile');
 		$routes->post('actualizar-perfil', 'client/DashboardController::update_profile');
+		$routes->post('actualizar-password', 'client/DashboardController::update_password');
 
 		$routes->get('denuncias', 'client/DashboardController::denuncias');
 		$routes->post('create', 'client/DashboardController::create');
@@ -310,6 +312,7 @@ $routes->group('constancia_extravio', function ($routes) {
 
 		$routes->get('perfil', 'extravio/ExtravioController::profile');
 		$routes->post('actualizar-perfil', 'extravio/ExtravioController::update_profile');
+		$routes->post('actualizar-password', 'extravio/ExtravioController::update_password');
 	});
 });
 /**

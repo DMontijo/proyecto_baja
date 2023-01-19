@@ -130,13 +130,15 @@ class ExtravioController extends BaseController
 		}
 	}
 
-	public function profile(){
+	public function profile()
+	{
 		$data = (object) array();
-		$data->user = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID',session('DENUNCIANTEID'))->first();
+		$data->user = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', session('DENUNCIANTEID'))->first();
 		$this->_loadView('Perfil', $data, 'perfil');
 	}
 
-	public function update_profile(){
+	public function update_profile()
+	{
 		$session = session();
 		$data = [
 			'NOMBRE' => $this->request->getPost('nombre'),
@@ -147,8 +149,8 @@ class ExtravioController extends BaseController
 			'FECHANACIMIENTO' => $this->request->getPost('fecha_nacimiento'),
 			'SEXO' => $this->request->getPost('sexo'),
 		];
-		$update = $this->_denunciantesModel->set($data)->where('DENUNCIANTEID',session('DENUNCIANTEID'))->update();
-		if($update){
+		$update = $this->_denunciantesModel->set($data)->where('DENUNCIANTEID', session('DENUNCIANTEID'))->update();
+		if ($update) {
 			$session->set('NOMBRE', $data['NOMBRE']);
 			$session->set('APELLIDO_PATERNO', $data['APELLIDO_PATERNO']);
 			$session->set('APELLIDO_MATERNO', $data['APELLIDO_MATERNO']);
@@ -159,6 +161,17 @@ class ExtravioController extends BaseController
 			return redirect()->back()->with('message_success', 'Actualizado correctamente.');
 		}
 		return redirect()->back()->with('message_error', 'No se pudo actualizar el registro.');
+	}
+
+	public function update_password()
+	{
+		$password = trim($this->request->getPost('password'));
+		$data = [
+			'PASSWORD' => hashPassword($password),
+		];
+		$this->_denunciantesModel->set($data)->where('DENUNCIANTEID', session('DENUNCIANTEID'))->update();
+
+		return redirect()->back()->with('message_success', 'Contraseña actualizada correctamente');
 	}
 
 	private function _generatePassword($length)

@@ -82,7 +82,7 @@ class DashboardController extends BaseController
 	private $_vehiculoServicioModel;
 	private $_estadosExtranjeros;
 	private $_archivoExternoModel;
-	
+
 	public function __construct()
 	{
 		//Models
@@ -418,7 +418,7 @@ class DashboardController extends BaseController
 					'COLONIADESCR' => $this->request->getPost('colonia_des_input'),
 					'CALLE' => $this->request->getPost('calle_des'),
 					'NUMEROCASA' => $this->request->getPost('checkML_des') == 'on'  && $exterior_des ?  'M.' . $exterior_des : $exterior_des,
-					'NUMEROINTERIOR' => $this->request->getPost('checkML_des') == 'on' && $interior_des?  'L.' . $interior_des : $exterior_des,
+					'NUMEROINTERIOR' => $this->request->getPost('checkML_des') == 'on' && $interior_des ?  'L.' . $interior_des : $exterior_des,
 					'CP' => $this->request->getPost('cp_des'),
 
 				);
@@ -471,7 +471,7 @@ class DashboardController extends BaseController
 					'COLONIADESCR' => $this->request->getPost('colonia_menor_input'),
 					'CALLE' => $this->request->getPost('calle_menor'),
 					'NUMEROCASA' => $this->request->getPost('checkML_menor') == 'on'  && $exterior_menor ?  'M.' . $exterior_menor : $exterior_menor,
-					'NUMEROINTERIOR' => $this->request->getPost('checkML_menor') == 'on' && $interior_menor?  'L.' . $interior_menor : $interior_menor,
+					'NUMEROINTERIOR' => $this->request->getPost('checkML_menor') == 'on' && $interior_menor ?  'L.' . $interior_menor : $interior_menor,
 					'CP' => $this->request->getPost('cp_menor'),
 				);
 				if ((int)$this->request->getPost('ocupacion_menor') == 999) {
@@ -632,7 +632,7 @@ class DashboardController extends BaseController
 					'COLONIADESCR' => $this->request->getPost('colonia_imputado_input'),
 					'CALLE' => $this->request->getPost('calle_imputado'),
 					'NUMEROCASA' => $this->request->getPost('checkML_imputado') == 'on'  && $exterior_imputado ?  'M.' . $exterior_imputado : $exterior_imputado,
-					'NUMEROINTERIOR' => $this->request->getPost('checkML_imputado') == 'on' && $interior_imputado?  'L.' . $interior_imputado : $interior_imputado,
+					'NUMEROINTERIOR' => $this->request->getPost('checkML_imputado') == 'on' && $interior_imputado ?  'L.' . $interior_imputado : $interior_imputado,
 					'CP' => $this->request->getPost('cp_imputado'),
 				);
 				if ((int)$this->request->getPost('ocupacion_imputado') == 999) {
@@ -1026,13 +1026,15 @@ class DashboardController extends BaseController
 		echo '<br>';
 	}
 
-	public function profile(){
+	public function profile()
+	{
 		$data = (object) array();
-		$data->user = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID',session('DENUNCIANTEID'))->first();
-		$this->_loadView('Perfil', '','',$data ,'perfil/perfil');
+		$data->user = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', session('DENUNCIANTEID'))->first();
+		$this->_loadView('Perfil', '', '', $data, 'perfil/perfil');
 	}
 
-	public function update_profile(){
+	public function update_profile()
+	{
 		$session = session();
 		$data = [
 			'NOMBRE' => $this->request->getPost('nombre'),
@@ -1043,8 +1045,8 @@ class DashboardController extends BaseController
 			'FECHANACIMIENTO' => $this->request->getPost('fecha_nacimiento'),
 			'SEXO' => $this->request->getPost('sexo'),
 		];
-		$update = $this->_denunciantesModel->set($data)->where('DENUNCIANTEID',session('DENUNCIANTEID'))->update();
-		if($update){
+		$update = $this->_denunciantesModel->set($data)->where('DENUNCIANTEID', session('DENUNCIANTEID'))->update();
+		if ($update) {
 			$session->set('NOMBRE', $data['NOMBRE']);
 			$session->set('APELLIDO_PATERNO', $data['APELLIDO_PATERNO']);
 			$session->set('APELLIDO_MATERNO', $data['APELLIDO_MATERNO']);
@@ -1055,6 +1057,17 @@ class DashboardController extends BaseController
 			return redirect()->back()->with('message_success', 'Actualizado correctamente.');
 		}
 		return redirect()->back()->with('message_error', 'No se pudo actualizar el registro.');
+	}
+
+	public function update_password()
+	{
+		$password = trim($this->request->getPost('password'));
+		$data = [
+			'PASSWORD' => hashPassword($password),
+		];
+		$this->_denunciantesModel->set($data)->where('DENUNCIANTEID', session('DENUNCIANTEID'))->update();
+
+		return redirect()->back()->with('message_success', 'Contraseña actualizada correctamente');
 	}
 }
 

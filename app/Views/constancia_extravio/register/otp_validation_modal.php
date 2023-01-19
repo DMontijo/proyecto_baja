@@ -44,11 +44,10 @@ document.querySelector('#validate_btn').addEventListener('click', (e) => {
         url: "<?php echo base_url('/data/validateOTP'); ?>",
         dataType: "json",
         success: function(response) {
-            console.log(response);
             if (response.status == 200) {
                 if (response.valid) {
                     const form = document.querySelector('#form_perfil');
-                    form.submit();
+                    form_datos.submit();
                 } else {
                     Swal.fire({
                         icon: 'error',

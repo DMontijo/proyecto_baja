@@ -728,7 +728,7 @@ class DashboardController extends BaseController
 
 		$datosBitacora = [
 			'ACCION' => 'Ha creado un usuario',
-			'NOTAS' => 'USUARIO CREADO: ' . $this->request->getPost('correo'),
+			'NOTAS' => 'NUEVO USUARIO CREADO: ' . $this->request->getPost('correo'),
 		];
 
 		if ($this->validate(['correo_usuario' => 'required|valid_email|is_unique[USUARIOS.CORREO]'])) {
@@ -760,23 +760,38 @@ class DashboardController extends BaseController
 		$id = $this->request->getPost('id');
 		$usuario = $this->_usuariosModel->asObject()->where('ID', $id)->first();
 		$data = [
-			'NOMBRE' => $this->request->getPost('nombre_usuario'),
-			'APELLIDO_PATERNO' => $this->request->getPost('apellido_paterno_usuario'),
-			'APELLIDO_MATERNO' => $this->request->getPost('apellido_materno_usuario'),
-			'CORREO' => $this->request->getPost('correo_usuario'),
-			'SEXO' => $this->request->getPost('sexo_usuario'),
-			'ROLID' => $this->request->getPost('rol_usuario'),
-			'ZONAID' => $this->request->getPost('zona_usuario'),
-			'MUNICIPIOID' => $this->request->getPost('municipio'),
-			'OFICINAID' => $this->request->getPost('oficina'),
+			'NOMBRE' => trim($this->request->getPost('nombre_usuario')),
+			'APELLIDO_PATERNO' => trim($this->request->getPost('apellido_paterno_usuario')),
+			'APELLIDO_MATERNO' => trim($this->request->getPost('apellido_materno_usuario')),
+			'CORREO' => trim($this->request->getPost('correo_usuario')),
+			'SEXO' => trim($this->request->getPost('sexo_usuario')),
+			'ROLID' => trim($this->request->getPost('rol_usuario')),
+			'ZONAID' => trim($this->request->getPost('zona_usuario')),
+			'MUNICIPIOID' => trim($this->request->getPost('municipio')),
+			'OFICINAID' => trim($this->request->getPost('oficina')),
 		];
+
+		if (!($data['CORREO'] === $usuario->CORREO)) {
+			if (!$this->validate(['correo_usuario' => 'required|valid_email|is_unique[USUARIOS.CORREO]'])) {
+				return redirect()->back()->with('message_error', 'Usuario no actualizado, el correo electrónico ya existe.');
+			}
+		}
 
 		if ($usuario) {
 			try {
 				$videoUser = $this->_updateUserVideo($usuario->USUARIOVIDEO, 'LIC. ' . $data['NOMBRE'], $data['APELLIDO_PATERNO'] . ' ' . $data['APELLIDO_MATERNO'], $data['CORREO'], $data['SEXO'], 'agente');
-				$data['USUARIOVIDEO'] = $videoUser->ID;
-				$data['TOKENVIDEO'] = $videoUser->Token;
-				$this->_usuariosModel->set($data)->where('ID', $id)->update();
+				if ($videoUser) {
+					$data['USUARIOVIDEO'] = $videoUser->ID;
+					$data['TOKENVIDEO'] = $videoUser->Token;
+					try {
+						$this->_usuariosModel->set($data)->where('ID', $id)->update();
+					} catch (\Throwable $th) {
+						$videoUser = $this->_updateUserVideo($usuario->USUARIOVIDEO, 'LIC. ' . $usuario->NOMBRE, $usuario->APELLIDO_PATERNO . ' ' . $usuario->APELLIDO_MATERNO, $usuario->CORREO, $usuario->SEXO, 'agente');
+						throw new \Exception('No se actualizo en base de datos.');
+					}
+				} else {
+					throw new \Exception('No se actualizo en servidor de videodenuncia');
+				}
 			} catch (\Throwable $th) {
 				return redirect()->back()->with('message_error', 'Usuario no actualizado.');
 			}
@@ -785,6 +800,22 @@ class DashboardController extends BaseController
 		} else {
 			return redirect()->back()->with('message_error', 'Usuario no actualizado.');
 		}
+	}
+
+	public function editar_password()
+	{
+		$id = $this->request->getPost('id');
+		$password = trim($this->request->getPost('password'));
+		$data = [
+			'PASSWORD' => hashPassword($password),
+		];
+		$this->_usuariosModel->set($data)->where('ID', $id)->update();
+		$datosBitacora = [
+			'ACCION' => 'Edito la contraseña del usuario ' . $id,
+		];
+		$this->_bitacoraActividad($datosBitacora);
+
+		return redirect()->back()->with('message_success', 'Contraseña actualizada correctamente');
 	}
 
 	public function folios()
