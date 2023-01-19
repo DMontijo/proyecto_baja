@@ -83,7 +83,7 @@ class FolioModel extends Model
 			(isset($obj['horaInicio']) ? (date('H:i:s', strtotime($obj['horaInicio']))) : '00:00:00') . '" AS DATETIME)' . ' AND ' . 'CAST("' .
 			(isset($obj['fechaFin']) ? (isset($obj['horaFin']) ? date("Y-m-d", strtotime($obj['fechaFin'])) : date("Y-m-d", strtotime(date("Y-m-d", strtotime($obj['fechaFin']))))) : date("Y-m-d")) . ' ' .
 			(isset($obj['horaFin']) ? (date('H:i:s', strtotime($obj['horaFin']))) : '23:59:59') . '" AS DATETIME)';
-			$result = $this->db->query($strQuery)->getResult();
+		$result = $this->db->query($strQuery)->getResult();
 
 		$dataView = (object)array();
 		$dataView->result = $result;
@@ -280,14 +280,36 @@ class FolioModel extends Model
 	{
 		$strQuery = 'SELECT FOLIO.FOLIOID, FOLIO.ANO, FOLIO.EXPEDIENTEID, FOLIO.FECHAREGISTRO, FOLIO.FECHASALIDA,FOLIO.STATUS, FOLIO.ANO
 			FROM FOLIO ';
-		$strQuery =
+		$count = 0;
+		foreach ($obj as $clave => $valor) {
+			if ($clave != 'fechaInicio' && $clave != 'fechaFin' && $clave != 'horaInicio' && $clave != 'horaFin') {
+				if ($count == 0) {
+					$strQuery = $strQuery . 'WHERE ';
+					$strQuery = $strQuery . 'FOLIO.' . $clave . ' = ' . '"' . $valor . '"';
+				} else {
+					$strQuery = $strQuery . 'AND ';
+					$strQuery = $strQuery . 'FOLIO.' . $clave . ' = ' . '"' . $valor . '"';
+				}
+				$count++;
+			}
+		}
+		if ($count ==0) {
+			$strQuery =
 			$strQuery .
 			'WHERE FOLIO.FECHASALIDA BETWEEN CAST("' .
 			(isset($obj['fechaInicio']) ? date("Y-m-d", strtotime($obj['fechaInicio'])) : date("Y-m-d")) . ' ' .
 			(isset($obj['horaInicio']) ? (date('H:i:s', strtotime($obj['horaInicio']))) : '00:00:00') . '" AS DATETIME)' . ' AND ' . 'CAST("' .
 			(isset($obj['fechaFin']) ? (isset($obj['horaFin']) ? date("Y-m-d", strtotime($obj['fechaFin'])) : date("Y-m-d", strtotime(date("Y-m-d", strtotime($obj['fechaFin']))))) : date("Y-m-d")) . ' ' .
 			(isset($obj['horaFin']) ? (date('H:i:s', strtotime($obj['horaFin']))) : '23:59:59') . '" AS DATETIME)';
-			$result = $this->db->query($strQuery)->getResult();
+		}
+		$strQuery =
+			$strQuery .
+			'AND FOLIO.FECHASALIDA BETWEEN CAST("' .
+			(isset($obj['fechaInicio']) ? date("Y-m-d", strtotime($obj['fechaInicio'])) : date("Y-m-d")) . ' ' .
+			(isset($obj['horaInicio']) ? (date('H:i:s', strtotime($obj['horaInicio']))) : '00:00:00') . '" AS DATETIME)' . ' AND ' . 'CAST("' .
+			(isset($obj['fechaFin']) ? (isset($obj['horaFin']) ? date("Y-m-d", strtotime($obj['fechaFin'])) : date("Y-m-d", strtotime(date("Y-m-d", strtotime($obj['fechaFin']))))) : date("Y-m-d")) . ' ' .
+			(isset($obj['horaFin']) ? (date('H:i:s', strtotime($obj['horaFin']))) : '23:59:59') . '" AS DATETIME)';
+		$result = $this->db->query($strQuery)->getResult();
 
 		$dataView = (object)array();
 		$dataView->result = $result;
@@ -307,7 +329,7 @@ class FolioModel extends Model
 	public function get_denunciante($folio, $year)
 	{
 		$builder = $this->db->table($this->table);
-		$builder->select(['*', 'FOLIO.ESTADOID AS FOLIOESTADO','FOLIO.MUNICIPIOID AS FOLIOMUNICIPIO','DENUNCIANTES.MUNICIPIOID AS DENUNCIANTEMUNICIPIO', 'DENUNCIANTES.ESTADOID AS DENUNCIANTEESTADO', 'DENUNCIANTES.NOMBRE', 'DENUNCIANTES.APELLIDO_PATERNO','DENUNCIANTES.APELLIDO_MATERNO']);
+		$builder->select(['*', 'FOLIO.ESTADOID AS FOLIOESTADO', 'FOLIO.MUNICIPIOID AS FOLIOMUNICIPIO', 'DENUNCIANTES.MUNICIPIOID AS DENUNCIANTEMUNICIPIO', 'DENUNCIANTES.ESTADOID AS DENUNCIANTEESTADO', 'DENUNCIANTES.NOMBRE', 'DENUNCIANTES.APELLIDO_PATERNO', 'DENUNCIANTES.APELLIDO_MATERNO']);
 		$builder->where('FOLIOID', $folio);
 		$builder->where('ANO', $year);
 		$builder->join('DENUNCIANTES', 'DENUNCIANTES.DENUNCIANTEID = FOLIO.DENUNCIANTEID');

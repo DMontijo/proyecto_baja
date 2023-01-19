@@ -28,6 +28,10 @@
 									<div class="card-body">
 										<form action="<?= base_url() ?>/admin/dashboard/documentos" method="post" enctype="multipart/form-data" class="row needs-validation" novalidate>
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
+												<label for="expediente" class="form-label font-weight-bold">Expediente:</label>
+												<input type="texr" class="form-control" id="expediente" name="expediente" value="<?= isset($body_data->filterParams->EXPEDIENTEID) ? $body_data->filterParams->EXPEDIENTEID : '' ?>">
+											</div>
+											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
 												<label for="agente_registro" class="form-label font-weight-bold">Agente:</label>
 												<select class="form-control" id="agente_registro" name="agente_registro" required>
 													<?php foreach ($body_data->empleados as $index => $empleado) { ?>
@@ -75,7 +79,6 @@
 								<tr>
 									<th class="text-center">EXPEDIENTE ID</th>
 									<th class="text-center">FOLIO ID</th>
-
 									<th class="text-center">FECHA</th>
 									<th class="text-center">ESTADO</th>
 									<th class="text-center"></th>
@@ -90,7 +93,7 @@
 									} ?>
 									<tr>
 										<td class="text-center"><?= $documentos->EXPEDIENTEID ? $expedienteid : ''   ?></td>
-										<td class="text-center"><?= $documentos->FOLIOID?></td>
+										<td class="text-center"><?= $documentos->FOLIOID ?></td>
 
 										<td class="text-center"><?= $documentos->FECHAREGISTRO ?></td>
 										<td class="text-center"><?= $documentos->STATUS ?></td>
@@ -156,6 +159,22 @@
 	});
 </script>
 <script>
+	$(function() {
+
+		$('#expediente').keypress(function(e) {
+			if (isNaN(this.value + String.fromCharCode(e.charCode)))
+				return false;
+		})
+		.bind('paste', function(e){
+			var pastedData = e.originalEvent.clipboardData.getData('text');
+			document.getElementById('expediente').value = pastedData.replaceAll('-','').trim();
+			e.preventDefault();
+		})
+	
+
+	});
+
+
 	function collapse_filter() {
 		if (document.querySelector('#filtros').classList.contains('show')) {
 			document.querySelector('#filtros').classList.remove('show');

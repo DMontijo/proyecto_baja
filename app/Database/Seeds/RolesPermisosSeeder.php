@@ -49,7 +49,6 @@ class RolesPermisosSeeder extends Seeder
 			array('ROLID' => '4', 'PERMISOID' => '2'),
 			array('ROLID' => '4', 'PERMISOID' => '3'),
 			array('ROLID' => '4', 'PERMISOID' => '4'),
-			array('ROLID' => '4', 'PERMISOID' => '5'),
 			array('ROLID' => '4', 'PERMISOID' => '7'),
 			array('ROLID' => '4', 'PERMISOID' => '10'),
 			array('ROLID' => '4', 'PERMISOID' => '11'),

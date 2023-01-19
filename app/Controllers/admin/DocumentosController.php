@@ -66,9 +66,11 @@ class DocumentosController extends BaseController
 	}
 	public function postDocumentos()
 	{
+
 		$data = [
 			'AGENTEATENCIONID' => session('ID'),
 			'STATUS' => $this->request->getPost('status'),
+			'EXPEDIENTEID' => $this->request->getPost('expediente'),
 			'fechaInicio' => $this->request->getPost('fechaInicio'),
 			'fechaFin' => $this->request->getPost('fechaFin'),
 			'horaInicio' => $this->request->getPost('horaInicio'),
@@ -128,6 +130,9 @@ class DocumentosController extends BaseController
 
 	public function documentos_show()
 	{
+		if (!$this->permisos('DOCUMENTOS')) {
+			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
+		}
 		$data = (object)array();
 		$data->folio = $this->request->getGet('folio');
 		$data->expediente = $this->request->getGet('expediente');
