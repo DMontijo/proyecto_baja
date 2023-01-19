@@ -66,6 +66,14 @@
 										</select>
 									</div>
 								</div>
+								<div class="row mb-2">
+									<div id="canalizaciones_container" class="col-12 d-none">
+										<label for="canalizaciones" class="form-label font-weight-bold">Canalizaciones</label>
+										<select class="form-control" name="canalizaciones" id="canalizaciones">
+											<option value="" selected disabled>Selecciona...</option>
+										</select>
+									</div>
+								</div>
 								<div id="notas" class="form-group">
 									<label for="notas_caso_salida">Notas</label>
 									<textarea id="notas_caso_salida" class="form-control" placeholder="Notas..." rows="10" maxlength="300" oninput="mayuscTextarea(this)" onkeydown="pulsar(event)" onkeyup="contarCaracteresSalidaDa(this)"></textarea>
@@ -112,7 +120,8 @@
 	const municipio_empleado = document.querySelector('#municipio_empleado');
 	const derivaciones_container = document.querySelector('#derivaciones_container');
 	const derivaciones = document.querySelector('#derivaciones');
-
+	const canalizaciones_container = document.querySelector('#canalizaciones_container');
+	const canalizaciones = document.querySelector('#canalizaciones');
 
 
 	tipoSalida.addEventListener('change', (e) => {
@@ -125,13 +134,57 @@
 			document.getElementById("numCaracterSalidaDa").innerHTML = '300 caracteres restantes';
 
 		}
-		if (!e.target.value == 'DERIVADO' || e.target.value == 'CANALIZADO' || (e.target.value == '1' || e.target.value == '4' || e.target.value == '5' || e.target.value == '6' || e.target.value == '7' || e.target.value == '8' || e.target.value == '9')) {
+		if (!(e.target.value == 'DERIVADO' || e.target.value == 'CANALIZADO' || e.target.value == '1' || e.target.value == '4' || e.target.value == '5' || e.target.value == '6' || e.target.value == '7' || e.target.value == '8' || e.target.value == '9')) {
 			document.querySelector('#v-pills-delitos-tab').classList.add('d-none');
 			document.querySelector('#v-pills-documentos-tab').classList.add('d-none');
 			municipio_empleado_container.classList.add('d-none');
 		} else {
 			municipio_empleado_container.classList.remove('d-none');
 		}
+		if (e.target.value == 'CANALIZADO') {
+			canalizaciones_container.classList.remove('d-none');
+			document.querySelector('#municipio_empleado').addEventListener('change', (e) => {
+
+				let select_canalizacion = document.querySelector('#canalizaciones');
+				clearSelect(select_canalizacion);
+				select_canalizacion.value = '';
+
+				let data = {
+					'municipio': e.target.value,
+				}
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/get-canalizacion-by-municipio') ?>",
+					method: "POST",
+					dataType: "json",
+				}).done(function(response) {
+					clearSelect(select_canalizacion);
+					let canalizacion = response;
+					if (canalizacion == '') {
+						Swal.fire({
+							icon: 'error',
+							text: 'No se puede canalizar en este municipio.',
+							confirmButtonColor: '#bf9b55',
+						});
+					}
+
+					canalizacion.forEach(canalizacion => {
+						var option = document.createElement("option");
+						option.text = canalizacion.INSTITUCIONREMISIONDESCR;
+						option.value = canalizacion.INSTITUCIONREMISIONID;
+						select_canalizacion.add(option);
+					});
+				}).fail(function(jqXHR, textStatus) {
+					clearSelect(select_canalizacion);
+				});
+
+
+			});
+		} else {
+			canalizaciones_container.classList.add('d-none');
+			municipio_empleado.value = '';
+		}
+
 		if (e.target.value == 'DERIVADO') {
 			derivaciones_container.classList.remove('d-none');
 			document.querySelector('#municipio_empleado').addEventListener('change', (e) => {
@@ -184,11 +237,11 @@
 			let salida = tipoSalida.value;
 			let descripcion = document.querySelector('#notas_caso_salida').value;
 	
-			if (tipoSalida.value == 'DERIVADO') {
-				if (derivaciones.value == '') {
+			if (tipoSalida.value == 'DERIVADO' || tipoSalida.value == 'CANALIZADO') {
+				if (derivaciones.value == '' && tipoSalida.value == 'DERIVADO' || canalizaciones.value == '' &&  tipoSalida.value == 'CANALIZADO' ) {
 					Swal.fire({
 						icon: 'error',
-						text: 'No se puede derivar sin una oficina.',
+						text: 'No se puede derivar ó canalizar sin una oficina.',
 						confirmButtonColor: '#bf9b55',
 					});
 					btnFinalizar.disabled= false;
@@ -200,7 +253,7 @@
 					'status': salida,
 					'motivo': descripcion,
 					'institutomunicipio': municipio_empleado.value,
-					'institutoremision': derivaciones.value,
+					'institutoremision': derivaciones.value != '' && tipoSalida.value == 'DERIVADO'  ? derivaciones.value: canalizaciones.value,
 				}}
 				
 			} else {

@@ -95,6 +95,7 @@ use App\Models\DienteTamanoModel;
 use App\Models\DienteTipoModel;
 use App\Models\EstomagoModel;
 use App\Models\CabelloPeculiarModel;
+use App\Models\CanalizacionesModel;
 use App\Models\DelitoModalidadModel;
 use App\Models\DerivacionesModel;
 use App\Models\EstadoExtranjeroModel;
@@ -366,6 +367,7 @@ class DashboardController extends BaseController
 		$this->_relacionFolioDocExpDoc = new RelacionFolioDocExpDocModel();
 
 		$this->_derivacionesAtencionesModel = new DerivacionesModel();
+		$this->_canalizacionesAtencionesModel = new CanalizacionesModel();
 
 
 		// $this->protocol = 'http://';
@@ -1466,6 +1468,12 @@ class DashboardController extends BaseController
 		return json_encode($data);
 	}
 
+	public function getCanalizacionByMunicipio()
+	{
+		$municipio = $this->request->getPost('municipio');
+		$data = $this->_canalizacionesAtencionesModel->asObject()->where('MUNICIPIO', $municipio)->orderBy('INSTITUCIONREMISIONDESCR', 'asc')->findAll();
+		return json_encode($data);
+	}
 	public function getEmpleadosByMunicipioAndOficina()
 	{
 		$municipio = $this->request->getPost('municipio');
@@ -1492,7 +1500,7 @@ class DashboardController extends BaseController
 
 		$agenteId = session('ID') ? session('ID') : 1;
 
-		if ($status == 'DERIVADO') {
+		if ($status == 'DERIVADO' || $status=='CANALIZADO') {
 			$data = [
 				'STATUS' => $status,
 				'NOTASAGENTE' => $motivo,
@@ -4631,6 +4639,8 @@ class DashboardController extends BaseController
 			$data->folioDoc = $this->_folioDocModel->get_by_folio($folio, $data->folio->ANO);
 			$data->lugar_hecho = $data->folio->HECHOLUGARID ? $this->_hechoLugarModel->asObject()->where('HECHOLUGARID', $data->folio->HECHOLUGARID)->first() : (object)['HECHOLUGARDESCR' => 'NO ESPECIFICADO'];
 			$data->derivacion = $this->_derivacionesAtencionesModel->asObject()->where('MUNICIPIOID', $data->folio->INSTITUCIONREMISIONMUNICIPIOID)->where('INSTITUCIONREMISIONID',  $data->folio->INSTITUCIONREMISIONID)->first();
+			$data->canalizacion = $this->_canalizacionesAtencionesModel->asObject()->where('MUNICIPIO', $data->folio->INSTITUCIONREMISIONMUNICIPIOID)->where('INSTITUCIONREMISIONID',  $data->folio->INSTITUCIONREMISIONID)->first();
+
 			$data->municipios = $this->_municipiosModel->asObject()->where('ESTADOID', '2')->where('MUNICIPIOID',  $data->folio->MUNICIPIOID)->first();
 			$data->victima = $this->_folioPersonaFisicaModel->get_by_personas($data->folio->FOLIOID, $data->folio->ANO, $victima);
 			$data->imputado = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio->FOLIOID)->where('ANO', $data->folio->ANO)->where('PERSONAFISICAID', $imputado)->first();
@@ -4657,6 +4667,11 @@ class DashboardController extends BaseController
 				$data->plantilla = str_replace('[DENUNCIANTE_NOMBRE]', $data->denunciantes->NOMBRE . ' ' . ($data->denunciantes->APELLIDO_PATERNO ? $data->denunciantes->APELLIDO_PATERNO : '') . ' ' . ($data->denunciantes->APELLIDO_MATERNO ? $data->denunciantes->APELLIDO_MATERNO : ''), $data->plantilla);
 				$data->plantilla = str_replace('[OFICINA_NOMBRE]', $data->derivacion->INSTITUCIONREMISIONDESCR, $data->plantilla);
 				$data->plantilla = str_replace('[OFICINA_DOMICILIO]', $data->derivacion->DOMICILIO, $data->plantilla);
+			}else if ($data->canalizacion) {
+				$data->plantilla = str_replace('[FOLIO_ATENCION]', $folio . '/' . $year, $data->plantilla);
+				$data->plantilla = str_replace('[DENUNCIANTE_NOMBRE]', $data->denunciantes->NOMBRE . ' ' . ($data->denunciantes->APELLIDO_PATERNO ? $data->denunciantes->APELLIDO_PATERNO : '') . ' ' . ($data->denunciantes->APELLIDO_MATERNO ? $data->denunciantes->APELLIDO_MATERNO : ''), $data->plantilla);
+				$data->plantilla = str_replace('[OFICINA_NOMBRE]', $data->canalizacion->INSTITUCIONREMISIONDESCR, $data->plantilla);
+				$data->plantilla = str_replace('[OFICINA_DOMICILIO]', $data->canalizacion->DOMICILIO, $data->plantilla);
 			}
 
 

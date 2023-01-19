@@ -107,6 +107,8 @@
 	const municipio_empleado = document.querySelector('#municipio_empleado');
 	const derivaciones_container = document.querySelector('#derivaciones_container');
 	const derivaciones = document.querySelector('#derivaciones');
+	const canalizaciones_container = document.querySelector('#canalizaciones_container');
+	const canalizaciones = document.querySelector('#canalizaciones');
 
 	tipoSalida.addEventListener('change', (e) => {
 		const notas_caso_salida = document.querySelector('#notas_caso_salida');
@@ -129,10 +131,54 @@
 		} else {
 			municipio_empleado_container.classList.remove('d-none');
 		}
+		if (e.target.value == 'CANALIZADO') {
+			canalizaciones_container.classList.remove('d-none');
+			document.querySelector('#municipio_empleado').addEventListener('change', (e) => {
+
+				let select_canalizacion = document.querySelector('#canalizaciones');
+				clearSelect(select_canalizacion);
+				select_canalizacion.value = '';
+
+				let data = {
+					'municipio': e.target.value,
+				}
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/get-canalizacion-by-municipio') ?>",
+					method: "POST",
+					dataType: "json",
+				}).done(function(response) {
+					clearSelect(select_canalizacion);
+					let canalizacion = response;
+					if (canalizacion == '') {
+						Swal.fire({
+							icon: 'error',
+							text: 'No se puede canalizar en este municipio.',
+							confirmButtonColor: '#bf9b55',
+						});
+					}
+
+					canalizacion.forEach(canalizacion => {
+						var option = document.createElement("option");
+						option.text = canalizacion.INSTITUCIONREMISIONDESCR;
+						option.value = canalizacion.INSTITUCIONREMISIONID;
+						select_canalizacion.add(option);
+					});
+				}).fail(function(jqXHR, textStatus) {
+					clearSelect(select_canalizacion);
+				});
+
+
+			});
+		} else {
+			canalizaciones_container.classList.add('d-none');
+			municipio_empleado.value = '';
+		}
+
 		if (e.target.value == 'DERIVADO') {
 			derivaciones_container.classList.remove('d-none');
 			document.querySelector('#municipio_empleado').addEventListener('change', (e) => {
-	
+
 				let select_derivacion = document.querySelector('#derivaciones');
 				clearSelect(select_derivacion);
 				select_derivacion.value = '';
@@ -168,9 +214,9 @@
 
 
 			});
-		}else{
+		} else {
 			derivaciones_container.classList.add('d-none');
-			municipio_empleado.value='';
+			municipio_empleado.value = '';
 		}
 	});
 
@@ -184,32 +230,34 @@
 		if (!(tipoSalida.value == '1' || tipoSalida.value == '4' || tipoSalida.value == '5' || tipoSalida.value == '6' || tipoSalida.value == '7' || tipoSalida.value == '8' || tipoSalida.value == '9')) {
 			let salida = tipoSalida.value;
 			let descripcion = document.querySelector('#notas_caso_salida').value;
-			if (tipoSalida.value=='DERIVADO') {
-				if (derivaciones.value == '') {
+
+			if (tipoSalida.value == 'DERIVADO' || tipoSalida.value == 'CANALIZADO') {
+				if (derivaciones.value == '' && tipoSalida.value == 'DERIVADO' || canalizaciones.value == '' &&  tipoSalida.value == 'CANALIZADO' ) {
 					Swal.fire({
 						icon: 'error',
-						text: 'No se puede derivar sin una oficina.',
+						text: 'No se puede derivar ó canalizar sin una oficina.',
 						confirmButtonColor: '#bf9b55',
 					});
-					btnFinalizar.disabled= false;
+					btnFinalizar.disabled = false;
 
-				}else{
+				}else {
 					data = {
+						'folio': inputFolio.value,
+						'year': year_select.value,
+						'status': salida,
+						'motivo': descripcion,
+						'institutomunicipio': municipio_empleado.value,
+						'institutoremision': derivaciones.value != '' && tipoSalida.value == 'DERIVADO'  ? derivaciones.value: canalizaciones.value,
+					}
+				}
+
+			} else {
+				data = {
 					'folio': inputFolio.value,
 					'year': year_select.value,
 					'status': salida,
 					'motivo': descripcion,
-					'institutomunicipio': municipio_empleado.value,
-					'institutoremision': derivaciones.value,
-				}}
-				
-			}else{
-				data = {
-				'folio': inputFolio.value,
-				'year': year_select.value,
-				'status': salida,
-				'motivo': descripcion,
-			}
+				}
 
 			}
 
@@ -284,8 +332,14 @@
 					text: 'Debes colocar un motivo de derivación o canalización para continuar.',
 					confirmButtonColor: '#bf9b55',
 				}).then((e) => {
-					tipoSalida.value = 'DERIVADO';
-					descripcion.value = '';
+					if (tipoSalida.value == 'DERIVADO') {
+						tipoSalida.value = 'DERIVADO';
+						descripcion.value = '';
+					} else if (tipoSalida.value == 'CANALIZADO') {
+						tipoSalida.value = 'CANALIZADO';
+						descripcion.value = '';
+					}
+
 				});
 			}
 		} else {
