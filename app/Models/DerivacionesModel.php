@@ -9,7 +9,7 @@ class DerivacionesModel extends Model
 	protected $table = "DERIVACIONES_ATENCION";
 	protected $primarykey = "ID";
 	protected $allowedFields    = [
-		'MUNICIPIO',
+		'MUNICIPIOID',
 		'INSTITUCIONREMISIONID',
 		'INSTITUCIONREMISIONDESCR',
 		'DOMICILIO',

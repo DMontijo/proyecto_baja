@@ -96,6 +96,7 @@ use App\Models\DienteTipoModel;
 use App\Models\EstomagoModel;
 use App\Models\CabelloPeculiarModel;
 use App\Models\DelitoModalidadModel;
+use App\Models\DerivacionesModel;
 use App\Models\EstadoExtranjeroModel;
 use App\Models\FolioArchivoExternoModel;
 use App\Models\FolioConsecutivoModel;
@@ -363,6 +364,8 @@ class DashboardController extends BaseController
 
 		$this->_folioConsecutivoModel = new FolioConsecutivoModel();
 		$this->_relacionFolioDocExpDoc = new RelacionFolioDocExpDocModel();
+
+		$this->_derivacionesAtencionesModel = new DerivacionesModel();
 
 
 		// $this->protocol = 'http://';
@@ -690,6 +693,8 @@ class DashboardController extends BaseController
 
 		$data->plantillas = $this->_plantillasModel->asObject()->where('TITULO !=', 'CONSTANCIA DE EXTRAVIO')->findAll();
 		$data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->like('TIPOEXPEDIENTECLAVE', 'NUC')->orLike('TIPOEXPEDIENTECLAVE', 'NAC')->orLike('TIPOEXPEDIENTECLAVE', 'RAC')->findAll();
+		$data->derivaciones = $this->_derivacionesAtencionesModel->asObject()->findAll();
+
 		$data->distribuidorVehiculo = $this->_vehiculoDistribuidorModel->asObject()->findAll();
 		$data->marcaVehiculo = $this->_vehiculoMarcaModel->asObject()->findAll();
 		$data->lineaVehiculo = $this->_vehiculoModeloModel->asObject()->findAll();
@@ -1173,7 +1178,7 @@ class DashboardController extends BaseController
 
 	public function bandeja_remision_post()
 	{
-		
+
 		try {
 
 			$expediente = trim($this->request->getPost('expediente'));
@@ -1200,7 +1205,7 @@ class DashboardController extends BaseController
 				'OFICINAASIGNADOID' => $oficina,
 				'AREAASIGNADOID' => $area->AREAID
 			);
-	
+
 			$update = $this->_folioModel->set($dataFolio)->where('EXPEDIENTEID', $expediente)->update();
 			if ($update) {
 				$datosBitacora = [
@@ -1228,8 +1233,8 @@ class DashboardController extends BaseController
 							$_solicitudDocto = $this->_createSolicitudDocto($expediente, $_solicitudPericial->SOLICITUDID, $doc['EXPEDIENTEDOCID'], $bandeja['MUNICIPIOASIGNADOID']);
 							if ($_solicitudDocto->status == 201) {
 								$_solicitudExpediente = $this->_createSolicitudExpediente($expediente, $_solicitudPericial->SOLICITUDID, $municipio);
-								
-								$dataInter =  array('SOLICITUDID'=>$_solicitudPericial->SOLICITUDID, 'INTERVENCIONID'=>1);
+
+								$dataInter =  array('SOLICITUDID' => $_solicitudPericial->SOLICITUDID, 'INTERVENCIONID' => 1);
 								$_intervencionPericial = $this->_createIntervencionPericial($dataInter, $municipio);
 								$datosBitacora = [
 									'ACCION' => 'Se envio una solicitud perital.',
@@ -1453,6 +1458,14 @@ class DashboardController extends BaseController
 		}
 	}
 
+
+	public function getDerivacionByMunicipio()
+	{
+		$municipio = $this->request->getPost('municipio');
+		$data = $this->_derivacionesAtencionesModel->asObject()->where('MUNICIPIOID', $municipio)->orderBy('INSTITUCIONREMISIONDESCR', 'asc')->findAll();
+		return json_encode($data);
+	}
+
 	public function getEmpleadosByMunicipioAndOficina()
 	{
 		$municipio = $this->request->getPost('municipio');
@@ -1473,15 +1486,30 @@ class DashboardController extends BaseController
 		$motivo = $this->request->getPost('motivo');
 		$folio = $this->request->getPost('folio');
 		$year = $this->request->getPost('year');
+		$institutomunicipio = $this->request->getPost('institutomunicipio');
+		$institutoremision = $this->request->getPost('institutoremision');
+
 
 		$agenteId = session('ID') ? session('ID') : 1;
 
-		$data = [
-			'STATUS' => $status == 'ATENDIDA' ? 'CANALIZADO' : $status,
-			'NOTASAGENTE' => $motivo,
-			'AGENTEATENCIONID' => $agenteId,
-			'FECHASALIDA' => date('Y-m-d H:i:s'),
-		];
+		if ($status == 'DERIVADO') {
+			$data = [
+				'STATUS' => $status,
+				'NOTASAGENTE' => $motivo,
+				'AGENTEATENCIONID' => $agenteId,
+				'FECHASALIDA' => date('Y-m-d H:i:s'),
+				'INSTITUCIONREMISIONMUNICIPIOID' => $institutomunicipio,
+				'INSTITUCIONREMISIONID' => $institutoremision
+			];
+		} else {
+			$data = [
+				'STATUS' => $status == 'ATENDIDA' ? 'CANALIZADO' : $status,
+				'NOTASAGENTE' => $motivo,
+				'AGENTEATENCIONID' => $agenteId,
+				'FECHASALIDA' => date('Y-m-d H:i:s'),
+			];
+		}
+
 		if (!empty($status) && !empty($motivo) && !empty($year) && !empty($folio) && !empty($agenteId)) {
 			$folioRow = $this->_folioModel->where('ANO', $year)->where('FOLIOID', $folio)->where('STATUS', 'EN PROCESO')->first();
 			if ($folioRow) {
@@ -4594,13 +4622,15 @@ class DashboardController extends BaseController
 		$imputado = $this->request->getPost('imputado');
 		$folio = $this->request->getPost('folio');
 
-		if (empty($expediente) || isset($year) || isset($titulo) || isset($victima) || isset($imputado)) {
+		if (empty($expediente) && isset($year)&& isset($titulo) && isset($victima) && isset($imputado) && isset($folio)) {
 			$data = (object) array();
 			$data->folio = $this->_folioModel->asObject()->where('ANO', $year)->where('FOLIOID', $folio)->first();
+			$data->denunciantes = $this->_folioModel->get_denunciante($folio, $year);
 			$data->estado = $this->_estadosModel->asObject()->where('ESTADOID', $data->folio->ESTADOID)->first();
 			$data->plantilla = $this->_plantillasModel->where('TITULO', $titulo)->first();
 			$data->folioDoc = $this->_folioDocModel->get_by_folio($folio, $data->folio->ANO);
 			$data->lugar_hecho = $data->folio->HECHOLUGARID ? $this->_hechoLugarModel->asObject()->where('HECHOLUGARID', $data->folio->HECHOLUGARID)->first() : (object)['HECHOLUGARDESCR' => 'NO ESPECIFICADO'];
+			$data->derivacion = $this->_derivacionesAtencionesModel->asObject()->where('MUNICIPIOID', $data->folio->INSTITUCIONREMISIONMUNICIPIOID)->where('INSTITUCIONREMISIONID',  $data->folio->INSTITUCIONREMISIONID)->first();
 			$data->municipios = $this->_municipiosModel->asObject()->where('ESTADOID', '2')->where('MUNICIPIOID',  $data->folio->MUNICIPIOID)->first();
 			$data->victima = $this->_folioPersonaFisicaModel->get_by_personas($data->folio->FOLIOID, $data->folio->ANO, $victima);
 			$data->imputado = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio->FOLIOID)->where('ANO', $data->folio->ANO)->where('PERSONAFISICAID', $imputado)->first();
@@ -4621,7 +4651,18 @@ class DashboardController extends BaseController
 				$data->plantilla = str_replace('[DELITO_NOMBRE]',  $data->relacion_delitodescr->DELITOMODALIDADDESCR ?  $data->relacion_delitodescr->DELITOMODALIDADDESCR : '-', $data->plantilla);
 				$data->plantilla = str_replace('[NUMERO_CODIGO_PENAL]', ($data->relacion_delitodescr->DELITOMODALIDADARTICULO ?  $data->relacion_delitodescr->DELITOMODALIDADARTICULO : '-'), $data->plantilla);
 			}
+			// CARTA DERIVACION
+			if ($data->derivacion) {
+				$data->plantilla = str_replace('[FOLIO_ATENCION]', $folio . '/' . $year, $data->plantilla);
+				$data->plantilla = str_replace('[DENUNCIANTE_NOMBRE]', $data->denunciantes->NOMBRE . ' ' . ($data->denunciantes->APELLIDO_PATERNO ? $data->denunciantes->APELLIDO_PATERNO : '') . ' ' . ($data->denunciantes->APELLIDO_MATERNO ? $data->denunciantes->APELLIDO_MATERNO : ''), $data->plantilla);
+				$data->plantilla = str_replace('[OFICINA_NOMBRE]', $data->derivacion->INSTITUCIONREMISIONDESCR, $data->plantilla);
+				$data->plantilla = str_replace('[OFICINA_DOMICILIO]', $data->derivacion->DOMICILIO, $data->plantilla);
+			}
+
+
 			$data->plantilla = str_replace('[DOCUMENTO_FECHA]', date('d') . ' DE ' . $meses[date('n') - 1] . " DEL " . date('Y'), $data->plantilla);
+
+
 			$data->plantilla = str_replace('[EXPEDIENTE_NUMERO]', $folio, $data->plantilla);
 			$data->plantilla = str_replace('[DOCUMENTO_MUNICIPIO]', $data->municipios->MUNICIPIODESCR, $data->plantilla);
 			$data->plantilla = str_replace('[DOCUMENTO_CIUDAD]', $data->municipios->MUNICIPIODESCR, $data->plantilla);

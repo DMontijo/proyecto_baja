@@ -14,9 +14,8 @@ class DERIVACIONESATENCION extends Migration
 				'unsigned' => TRUE,
 				'auto_increment' => TRUE
 			],
-			'MUNICIPIO' => [
-				'type' => 'VARCHAR',
-				'constraint' => '250',
+			'MUNICIPIOID' => [
+				'type' => 'INT',
 				'null' => TRUE,
 			],
 			'INSTITUCIONREMISIONID' => [

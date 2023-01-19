@@ -44,6 +44,14 @@
 										</select>
 									</div>
 								</div>
+								<div class="row mb-2">
+									<div id="derivaciones_container" class="col-12 d-none">
+										<label for="derivaciones" class="form-label font-weight-bold">Derivaciones</label>
+										<select class="form-control" name="derivaciones" id="derivaciones">
+											<option value="" selected disabled>Selecciona...</option>
+										</select>
+									</div>
+								</div>
 								<div id="notas" class="form-group">
 									<label for="notas_caso_salida">Notas</label>
 									<textarea id="notas_caso_salida" class="form-control" placeholder="Notas..." rows="10" maxlength="300" oninput="mayuscTextarea(this)" onkeydown="pulsar(event)" onkeyup="contarCaracteresSalida(this)"></textarea>
@@ -89,6 +97,8 @@
 
 	const municipio_empleado_container = document.querySelector('#municipio_empleado_container');
 	const municipio_empleado = document.querySelector('#municipio_empleado');
+	const derivaciones_container = document.querySelector('#derivaciones_container');
+	const derivaciones = document.querySelector('#derivaciones');
 
 	tipoSalida.addEventListener('change', (e) => {
 		const notas_caso_salida = document.querySelector('#notas_caso_salida');
@@ -102,7 +112,7 @@
 		}
 
 
-		if (!(e.target.value == '1' || e.target.value == '4' || e.target.value == '5' || e.target.value == '6' || e.target.value == '7' || e.target.value == '8' || e.target.value == '9')) {
+		if (!(e.target.value == 'DERIVADO' || e.target.value == 'CANALIZADO' || e.target.value == '1' || e.target.value == '4' || e.target.value == '5' || e.target.value == '6' || e.target.value == '7' || e.target.value == '8' || e.target.value == '9')) {
 			document.querySelector('#v-pills-delitos-tab').classList.add('d-none');
 			document.querySelector('#v-pills-documentos-tab').classList.add('d-none');
 
@@ -110,6 +120,42 @@
 
 		} else {
 			municipio_empleado_container.classList.remove('d-none');
+		}
+		if (e.target.value == 'DERIVADO') {
+			derivaciones_container.classList.remove('d-none');
+			document.querySelector('#municipio_empleado').addEventListener('change', (e) => {
+	
+				let select_derivacion = document.querySelector('#derivaciones');
+				clearSelect(select_derivacion);
+				select_derivacion.value = '';
+
+				let data = {
+					'municipio': e.target.value,
+				}
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/get-derivacion-by-municipio') ?>",
+					method: "POST",
+					dataType: "json",
+				}).done(function(response) {
+					clearSelect(select_derivacion);
+					let derivacion = response;
+
+					derivacion.forEach(derivacion => {
+						var option = document.createElement("option");
+						option.text = derivacion.INSTITUCIONREMISIONDESCR;
+						option.value = derivacion.INSTITUCIONREMISIONID;
+						select_derivacion.add(option);
+					});
+				}).fail(function(jqXHR, textStatus) {
+					clearSelect(select_derivacion);
+				});
+
+
+			});
+		}else{
+			derivaciones_container.classList.add('d-none');
+			municipio_empleado.value='';
 		}
 	});
 
@@ -120,15 +166,26 @@
 
 	btnFinalizar.addEventListener('click', () => {
 		btnFinalizar.setAttribute('disabled', true);
-
 		if (!(tipoSalida.value == '1' || tipoSalida.value == '4' || tipoSalida.value == '5' || tipoSalida.value == '6' || tipoSalida.value == '7' || tipoSalida.value == '8' || tipoSalida.value == '9')) {
 			let salida = tipoSalida.value;
 			let descripcion = document.querySelector('#notas_caso_salida').value;
-			data = {
+			if (tipoSalida.value=='DERIVADO') {
+				data = {
 				'folio': inputFolio.value,
 				'year': year_select.value,
 				'status': salida,
 				'motivo': descripcion,
+				'institutomunicipio': municipio_empleado.value,
+				'institutoremision': derivaciones.value,
+			}
+			}else{
+				data = {
+				'folio': inputFolio.value,
+				'year': year_select.value,
+				'status': salida,
+				'motivo': descripcion,
+			}
+
 			}
 
 			if (descripcion) {
@@ -180,7 +237,7 @@
 
 							if (inputDenuncia.value == 'DA') {
 								card9.classList.add('d-none');
-							}else{
+							} else {
 								card9.classList.remove('d-none');
 
 							}

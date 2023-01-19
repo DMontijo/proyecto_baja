@@ -50,6 +50,8 @@ class FolioModel extends Model
 		'LOCALIZACIONPERSONAMEDIOS',
 		'DERECHOSOFENDIDO',
 		'FECHASALIDA',
+		'INSTITUCIONREMISIONMUNICIPIOID',
+		'INSTITUCIONREMISIONID'
 	];
 
 	public function filterDates($obj)
@@ -301,5 +303,15 @@ class FolioModel extends Model
 		$builder->orderBy('EXPEDIENTEID ASC');
 		$query = $builder->get();
 		return $query->getResult('array');
+	}
+	public function get_denunciante($folio, $year)
+	{
+		$builder = $this->db->table($this->table);
+		$builder->select(['*', 'FOLIO.ESTADOID AS FOLIOESTADO','FOLIO.MUNICIPIOID AS FOLIOMUNICIPIO','DENUNCIANTES.MUNICIPIOID AS DENUNCIANTEMUNICIPIO', 'DENUNCIANTES.ESTADOID AS DENUNCIANTEESTADO', 'DENUNCIANTES.NOMBRE', 'DENUNCIANTES.APELLIDO_PATERNO','DENUNCIANTES.APELLIDO_MATERNO']);
+		$builder->where('FOLIOID', $folio);
+		$builder->where('ANO', $year);
+		$builder->join('DENUNCIANTES', 'DENUNCIANTES.DENUNCIANTEID = FOLIO.DENUNCIANTEID');
+		$query = $builder->get();
+		return $query->getRow();
 	}
 }

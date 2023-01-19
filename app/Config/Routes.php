@@ -206,6 +206,8 @@ $routes->group('data', function ($routes) {
 	$routes->post('get-oficinas-by-municipio', 'admin/DashboardController::getOficinasByMunicipio');
 	$routes->post('get-empleados-by-municipio-and-oficina', 'admin/DashboardController::getEmpleadosByMunicipioAndOficina');
 
+	$routes->post('get-derivacion-by-municipio', 'admin/DashboardController::getDerivacionByMunicipio');
+
 	//OTP
 	$routes->post('sendOTP', 'OTPController::sendEmailOTP');
 	$routes->post('validateOTP', 'OTPController::validateOTP');
