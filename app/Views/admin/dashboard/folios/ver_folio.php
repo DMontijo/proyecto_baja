@@ -4,6 +4,34 @@
 <?= $this->endSection() ?>
 <?= $this->section('content') ?>
 <?php $session = session(); ?>
+<?php if($body_data->datosFolio->STATUS == 'EN PROCESO' || $body_data->datosFolio->STATUS == 'ABIERTO'){?>
+			<div class="alert alert-warning text-right font-weight-bold" role="alert">
+			ESTATUS:  <?= $body_data->datosFolio->STATUS ?> 
+			</div>
+		<?php }?>
+		<?php if($body_data->datosFolio->STATUS != 'EN PROCESO' && $body_data->datosFolio->STATUS != 'ABIERTO' ){?>
+			<div class="alert alert-warning text-right font-weight-bold" role="alert">
+			ESTATUS:  <?=  $body_data->datosFolio->TIPOEXPEDIENTEID ?  $body_data->datosFolio->STATUS  .' '. $body_data->datosFolio->TIPOEXPEDIENTEDESCR :$body_data->datosFolio->STATUS ?>  <br>
+
+            MUNICIPIO ASIGNADO O REMITIDO:  <?= $body_data->datosFolio->MUNICIPIODESCR ?> <br>
+		<?php }if($body_data->datosFolio->INSTITUCIONREMISIONID){?>
+			INSTITUTO REMITIDO:  <?= $body_data->datosFolio->INSTITUCIONREMISIONDESCR ?> <br>
+			<?php }
+			if($body_data->datosFolio->AGENTEASIGNADOID){?>
+				AGENTE ASIGNADO: <?= $body_data->datosFolio->NOMBRE .' '.$body_data->datosFolio->PRIMERAPELLIDO.' '.$body_data->datosFolio->SEGUNDOAPELLIDO  ?><br>
+				OFICINA ASIGNADA:  <?= $body_data->datosFolio->OFICINADESCR ?><br>
+				AREA ASIGNADA:  <?= $body_data->datosFolio->AREADESCR ?><br>
+				<?php }?>	
+        </div>
+		<?php if(!$body_data->datosFolio->AGENTEASIGNADOID && $body_data->datosFolio->MUNICIPIOASIGNADOID){?>
+			<div class="alert alert-danger text-right font-weight-bold" role="alert">
+				NO SE HA REMITIDO
+			</div>
+		<?php } ?>
+	
+		
+
+	
 <div class="row" id="videoDen">
 	<div id="card1" class="col-12 col-sm-6 col-md-4">
 		<div class="card rounded bg-white shadow" style="height: 240px;">
