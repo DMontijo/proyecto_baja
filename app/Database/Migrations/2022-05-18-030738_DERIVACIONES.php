@@ -11,12 +11,10 @@ class DERIVACIONES extends Migration
 		$this->forge->addField([
 			'MUNICIPIOID' => [
 				'type' => 'INT',
-				'null' => TRUE,
 			],
 			'INSTITUCIONREMISIONID' => [
 				'type' => 'SMALLINT',
 				'constrait' => '3',
-				'null' => TRUE,
 			],
 			'INSTITUCIONREMISIONDESCR' => [
 				'type' => 'VARCHAR',
