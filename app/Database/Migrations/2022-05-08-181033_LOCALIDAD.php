@@ -30,11 +30,6 @@ class LOCALIDAD extends Migration
 				'constraint' => '1',
 				'null' => TRUE,
 			],
-			'LOCALIDADIDEXTERNO' => [
-				'type' => 'INT',
-				'unsigned' => TRUE,
-				'null' => TRUE,
-			]
 		]);
 		$this->forge->addKey('ESTADOID', TRUE);
 		$this->forge->addKey('MUNICIPIOID', TRUE);

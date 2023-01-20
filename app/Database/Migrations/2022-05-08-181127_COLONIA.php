@@ -8,7 +8,6 @@ class COLONIA extends Migration
 {
 	public function up()
 	{
-
 		$this->forge->addField([
 			'ESTADOID' => [
 				'type' => 'INT',
