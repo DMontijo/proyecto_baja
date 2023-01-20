@@ -60,6 +60,7 @@
 	const card1 = document.querySelector('#card1');
 	const card2 = document.querySelector('#card2');
 	const card3 = document.querySelector('#card3');
+
 	var respuesta;
 
 	const mayuscTextarea = (e) => {
@@ -96,6 +97,7 @@
 					const imputados = response.imputados;
 					const victimas = response.victimas;
 					const objetos = response.objetos;
+                    const archivos = response.archivosexternos;
 
 					inputFolio.classList.add('d-none');
 					buscar_btn.classList.add('d-none');
@@ -332,6 +334,34 @@
 						$("#adicionados").append(nFilas - 1);
 					}
 
+					//archivos externos
+					for (let i = 0; i < archivos.length; i++) {
+
+						if (archivos[i].EXTENSION == 'pdf' || archivos[i].EXTENSION == 'doc') {
+							var img = `<a id="downloadArchivo" download=""><img src='<?= base_url() ?>/assets/img/file.png'));'  width="200px" height="200px"></img></a>`;
+
+
+						} else {
+							var img = `<a id="downloadArchivo" download=""><img src='${archivos[i].ARCHIVO}');' width="200px" height="200px"></img></a>`;
+
+						}
+						var fila =
+							`<tr id="row${i}">` +
+							`<td class="text-center" value="${archivos[i].FOLIOARCHIVOID}">${archivos[i].ARCHIVODESCR}</td>` +
+							`<td class="text-center" value="${archivos[i].FOLIOARCHIVOID}">${img}</td>` +
+
+							`</tr>`;
+
+						$('#table-archivos tr:first').after(fila);
+						$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
+						var nFilas = $("#archivos tr").length;
+						$("#adicionados").append(nFilas - 1);
+
+						document.querySelector('#downloadArchivo').setAttribute('href', archivos[i].ARCHIVO);
+						document.querySelector('#downloadArchivo').setAttribute('download', archivos[i].FOLIOID + '_' +
+							archivos[i].ANO + '_' + archivos[i].FOLIOARCHIVOID + '.' + archivos[i].EXTENSION);
+					}
+
 
 				} else if (response.status === 2) {
 					Swal.fire({
@@ -522,7 +552,6 @@
 
 		// $('#v-pills-vehiculos-tab').css('display', 'NONE');
 	}
-
 	buscar_nuevo_btn.addEventListener('click', () => {
 		// history.back();
 		// window.reload();

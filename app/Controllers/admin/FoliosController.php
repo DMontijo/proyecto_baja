@@ -553,7 +553,10 @@ class FoliosController extends BaseController
 	public function viewFolio()
 	{
 		$data = (object) array();
-		$data->folio = $this->request->getPost('folio');
+		if ( $this->request->getPost('folio')) {
+			$data->folio = $this->request->getPost('folio');
+		}else{
+		$data->folio = $this->request->getGet('folio');}
 
 		// Catálogos
 		$data->delitosUsuarios = $this->_delitosUsuariosModel->asObject()->orderBy('DELITO', 'ASC')->findAll();

@@ -92,6 +92,7 @@ $routes->group('admin', function ($routes) {
 		$routes->get('buscar_folio', 'admin/FoliosController::getAllFolios');
 		$routes->post('buscar_folio', 'admin/FoliosController::getFilterFolios');
 		$routes->post('ver_folio', 'admin/FoliosController::viewFolio');
+		$routes->get('ver_folio', 'admin/FoliosController::viewFolio');
 
 		$routes->get('constancias', 'admin/ConstanciasController::index');
 		$routes->post('firmar_constancia_extravio', 'admin/FirmaController::firmar_constancia_extravio');
@@ -140,6 +141,7 @@ $routes->group('admin', function ($routes) {
 		$routes->post('firmar_documentos', 'admin/FirmaController::firmar_documentos');
 		$routes->post('insert-documentosWSYWSG', 'admin/DashboardController::insertFolioDoc');
 		$routes->post('send-documentos-correo', 'admin/FirmaController::sendEmailDocumentos');
+
 	});
 });
 
@@ -274,6 +276,9 @@ $routes->group('data', function ($routes) {
 	$routes->post('get-documentos', 'admin/DocumentosController::obtenDocumentos');
 	$routes->post('get-documento-tabla', 'admin/DocumentosController::getDocumento');
 
+	$routes->post('get-denunciante-folio-by-id', 'admin/DashboardController::getFolioDenunciante');
+
+
 	$routes->post('download-pdf-documento', 'admin/DocumentosController::download_documento_pdf');
 	$routes->post('download-xml-documento', 'admin/DocumentosController::download_documento_xml');
 	$routes->post('create-folio-denuncia-anonima', 'admin/DashboardController::crearFolioDenunciaAnonima');
@@ -283,6 +288,9 @@ $routes->group('data', function ($routes) {
 
 	$routes->post('create_archivos', 'client/DashboardController::crear_archivos_externos');
 	$routes->post('refresh_archivos', 'admin/DashboardController::refreshArchivosExternos');
+
+	//delitos 
+	$routes->post('delitos-iterado', 'admin/DashboardController::getDelitosModalidad');
 
 });
 

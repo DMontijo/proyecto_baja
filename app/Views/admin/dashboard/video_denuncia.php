@@ -161,7 +161,11 @@
 
             </div>
         </div>
-
+        <div class="card rounded bg-white shadow" style="height: 190px;">
+            <div class="card-body">
+                <button id="folios-atendidos-btn" class="btn btn-primary btn-block h-100" role="button" data-toggle="modal" data-target="#folios_atendidos_modal"><i class="fas fa-file-alt"></i> FOLIOS YA ATENDIDOS</button>
+            </div>
+        </div>
     </div>
 
 </div>
@@ -272,6 +276,53 @@
         }
     }
 
+    function llenarTablaFolioDenunciantes(folioDenunciantes) {
+
+        for (let i = 0; i < folioDenunciantes.length; i++) {
+            $.ajax({
+                data: {
+                    'folio': folioDenunciantes[i].FOLIOID,
+                    'year': folioDenunciantes[i].ANO
+                },
+                url: "<?= base_url('/data/delitos-iterado') ?>",
+                method: "POST",
+                dataType: "json",
+                success: function(response) {
+                    console.log(response);
+                    let delito_descr = '';
+                    for (let index = 0; index < response.length; index++) {
+                        if (index == response.length - 1) {
+                            delito_descr += response[index].DELITOMODALIDADDESCR + '.';
+                        }
+                        if (index != response.length - 1) {
+                            delito_descr += response[index].DELITOMODALIDADDESCR + ',';
+
+                        }
+                    }
+                    var btn =
+
+                        `<button type='button'  class='btn btn-primary' onclick='viewFoliosDenunciantes(${folioDenunciantes[i].FOLIOID}, ${folioDenunciantes[i].ANO})'><i class='fas fa-eye'></i></button>`
+                   var fila =
+                        `<tr id="row${i}">` +
+                        `<td class="text-center">${folioDenunciantes[i].FOLIOID}</td>` +
+                        `<td class="text-center">${folioDenunciantes[i].ANO}</td>` +
+                        `<td class="text-center">${folioDenunciantes[i].EXPEDIENTEID ? folioDenunciantes[i].EXPEDIENTEID: ''}</td>` +
+                        `<td class="text-center">${folioDenunciantes[i].HECHODELITO ? folioDenunciantes[i].HECHODELITO : 'NO SELECCIONÓ NINGÚN DELITO'}</td>` +
+                        `<td class="text-center">${delito_descr ?delito_descr:''}</td>` +
+                        `<td class="text-center">${btn}</td>` +
+                        `</tr>`;
+
+
+                    $('#table-folios-atendidos tr:first').after(fila);
+                    $("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
+                    var nFilas = $("#folios-atendidos tr").length;
+                    $("#adicionados").append(nFilas - 1);
+                }
+            });
+
+        }
+    }
+
     function llenarTablaDocumentos(documentos) {
         for (let i = 0; i < documentos.length; i++) {
             if (documentos[i].STATUS == 'FIRMADO') {
@@ -335,7 +386,6 @@
     }
 
     function eliminarparentesco(personofisica1, personafisica2, parentesco) {
-        console.log(personofisica1, personafisica2);
         $.ajax({
             data: {
                 'personafisica1': personofisica1,
@@ -349,8 +399,6 @@
             method: "POST",
             dataType: "json",
             success: function(response) {
-
-                console.log(response);
                 if (response.status == 1) {
                     Swal.fire({
                         icon: 'success',
@@ -537,7 +585,6 @@
             method: "POST",
             dataType: "json",
             success: function(response) {
-                console.log(response);
                 if (response.status == 3) {
                     Swal.fire({
                         title: 'Este es el ultimo registro, se eliminará el delito cometido de la denuncia',
@@ -804,6 +851,7 @@
                     const documentos = response.documentos;
                     const correos = response.correos;
                     const archivos = response.archivosexternos;
+                    const folioDenunciantes = response.folioDenunciantes;
 
                     inputFolio.classList.add('d-none');
                     buscar_btn.classList.add('d-none');
@@ -1122,6 +1170,9 @@
                     //ARCHIVOS EXTERNOS
                     if (archivos) llenarTablaArchivosExternos(archivos);
 
+                    //FOLIO DENUNCIANTES
+                    llenarTablaFolioDenunciantes(folioDenunciantes);
+
 
 
                 } else if (response.status === 2) {
@@ -1394,6 +1445,12 @@
                 document.querySelector('#docid').value = foliodocid;
             }
         });
+    }
+
+    function viewFoliosDenunciantes(folio, year) {
+   
+         window.open(`<?= base_url('/admin/dashboard/ver_folio?folio=') ?>` + folio+ '&year=' + year, '_blank');
+
     }
 
     function viewPersonaFisica(id) {
@@ -1730,7 +1787,6 @@
                             dataType: "json",
                             success: function(response) {
                                 let municipios = response.data;
-                                console.log(municipios);
                                 municipios.forEach(municipio => {
                                     let option = document.createElement("option");
                                     option.text = municipio.MUNICIPIODESCR;
@@ -2107,38 +2163,54 @@
             var expediente_modal_correo = document.querySelector('#expediente_modal_correo');
             var year_modal_correo = document.querySelector('#year_modal_correo');
             var toolbarOptions = [
-			  ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
-			  ['blockquote', 'code-block'],
+                ['bold', 'italic', 'underline', 'strike'], // toggled buttons
+                ['blockquote', 'code-block'],
 
-			//   [{ 'header': 1 }, { 'header': 2 }],               // custom button values
-			  [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-			//   [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
-			//   [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
-			  [{ 'direction': 'rtl' }],                         // text direction
+                //   [{ 'header': 1 }, { 'header': 2 }],               // custom button values
+                [{
+                    'list': 'ordered'
+                }, {
+                    'list': 'bullet'
+                }],
+                //   [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+                //   [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+                [{
+                    'direction': 'rtl'
+                }], // text direction
 
-			//   [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
-            [{ 'size': ['small'] }],  // custom dropdown
+                //   [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+                [{
+                    'size': ['small']
+                }], // custom dropdown
 
-			  [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                [{
+                    'header': [1, 2, 3, 4, 5, 6, false]
+                }],
 
-			  [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
-			//   [{ 'font': [] }],
-			  [{ 'align': [] }],
+                [{
+                    'color': []
+                }, {
+                    'background': []
+                }], // dropdown with defaults from theme
+                //   [{ 'font': [] }],
+                [{
+                    'align': []
+                }],
 
-			//   ['clean']                                         // remove formatting button
-			];
+                //   ['clean']                                         // remove formatting button
+            ];
             var quill = new Quill('#documento', {
                 modules: {
-				toolbar: toolbarOptions,				
-			  },
-			  theme: 'snow'  // or 'bubble'
+                    toolbar: toolbarOptions,
+                },
+                theme: 'snow' // or 'bubble'
             });
 
             var quill2 = new Quill('#documento_editar', {
                 modules: {
-				toolbar: toolbarOptions,				
-			  },
-			  theme: 'snow'  // or 'bubble'
+                    toolbar: toolbarOptions,
+                },
+                theme: 'snow' // or 'bubble'
             });
 
             inputsText.forEach((input) => {
@@ -2244,8 +2316,6 @@
 
                     actualizarPersonaMediaAfiliacion(id_personafisica);
 
-                    // console.log('Item:', ultimoid);
-                    // alert(ultimoid);
                 }
             }, false);
 
@@ -2700,7 +2770,6 @@
             let select_estado_extr = document.querySelector('#estado_extranjero_vehiculo_ad');
 
             document.querySelector('#estado_extranjero_vehiculo_ad').addEventListener('change', (e) => {
-                console.log(select_estado_extr.value);
                 if (select_estado_extr.value == 0) {
                     let select_estado = document.querySelector('#estado_vehiculo_ad');
                     let select_estado_extr = document.querySelector('#estado_extranjero_vehiculo_ad');
@@ -5271,6 +5340,7 @@
         })();
     };
 </script>
+<?php include 'video_denuncia_modals/folios_atendidos_modal.php' ?>
 <?php include 'video_denuncia_modals/send_email_modal.php' ?>
 <?php include 'video_denuncia_modals/prueba.php' ?>
 <?php include 'video_denuncia_modals/info_folio_modal.php' ?>

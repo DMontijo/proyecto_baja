@@ -19,6 +19,7 @@
 							<a class="nav-link" id="v-pills-delitos-cometidos-tab" data-toggle="pill" href="#v-pills-delitos-cometido" role="tab" aria-controls="v-pills-delitos-cometido" aria-selected="false"><i class='fas fa-user-alt-slash'></i> DELITOS COMETIDOS</a>
 							<a class="nav-link" id="v-pills-delitos-tab" data-toggle="pill" href="#v-pills-asignar-delitos" role="tab" aria-controls="v-pills-asignar-delitos" aria-selected="false"><i class='fas fa-handshake-slash'></i> DELITOS</a>
 							<a class="nav-link" id="v-pills-objetos-involucrados-tab" data-toggle="pill" href="#v-pills-objetos-involucrados" role="tab" aria-controls="v-pills-objetos-involucrados" aria-selected="false"><i class="fas fa-box"></i> OBJETOS INVOLUCRADOS</a>
+							<a class="nav-link" id="v-pills-archivos-externos-tab" data-toggle="pill" href="#v-pills-archivos-externos" role="tab" aria-controls="v-pills-archivos-externo" aria-selected="false"><i class="fas fa-file"></i> ARCHIVOS EXTERNOS</a>
 
 						</div>
 					</div>
@@ -103,6 +104,19 @@
 										<th class="text-center bg-primary text-white"></th>
 									</tr>
 								</table>
+							</div>
+							<div class="tab-pane fade" id="v-pills-archivos-externos" role="tabpanel" aria-labelledby="v-pills-archivos-externos-tab">
+								<div id="adicionados" class="d-none"></div>
+								<div class="table-responsive">
+									<table id="table-archivos" class="table table-bordered table-hover table-striped table-light">
+										<tr>
+											<th class="text-center bg-primary text-white">DESCRIPCIÓN</th>
+											<th class="text-center bg-primary text-white">DOCUMENTO</th>
+											<th class="text-center bg-primary text-white"></th>
+										</tr>
+									</table>
+								</div>
+
 							</div>
 						</div>
 					</div>

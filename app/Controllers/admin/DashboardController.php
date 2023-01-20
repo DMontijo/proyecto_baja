@@ -241,6 +241,9 @@ class DashboardController extends BaseController
 	private $_permisosModel;
 	private $_folioConsecutivoModel;
 	private $_relacionFolioDocExpDoc;
+	private $_derivacionesAtencionesModel;
+	private $_canalizacionesAtencionesModel;
+
 	private $protocol;
 	private $ip;
 	private $endpoint;
@@ -897,20 +900,22 @@ class DashboardController extends BaseController
 	public function getFolioInformation()
 	{
 
+	
 		$data = (object) array();
 		$numfolio = trim($this->request->getPost('folio'));
 		$year = trim($this->request->getPost('year'));
 		$search = $this->request->getPost('search');
-
+		
 		if ($search != 'true') {
 			$data->folio = $this->_folioModel->asObject()->where('ANO', $year)->where('FOLIOID', $numfolio)->first();
+
 			if ($data->folio) {
 				if ($data->folio->STATUS == 'ABIERTO') {
 					$data->status = 1;
+					$data->folioDenunciantes = $this->_folioModel->get_folio_denunciante($data->folio->DENUNCIANTEID);
 					$data->preguntas_iniciales = $this->_folioPreguntasModel->where('FOLIOID', $numfolio)->where('ANO', $year)->first();
 					$data->personas = $this->_folioPersonaFisicaModel->get_by_folio($numfolio, $year);
 					$data->correos = $this->_folioPersonaFisicaModel->get_correos_persona($numfolio, $year);
-
 					$data->parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $numfolio)->where('ANO', $year)->findAll();
 					$data->personaiduno = $this->_parentescoPersonaFisicaModel->get_personaFisicaUno($numfolio, $year);
 					$data->personaidDos = $this->_parentescoPersonaFisicaModel->get_personaFisicaDos($numfolio, $year);
@@ -923,6 +928,7 @@ class DashboardController extends BaseController
 					$data->documentos = $this->_folioDocModel->get_by_folio($numfolio, $year);
 					$data->archivosexternos = $this->_archivoExternoModel->asObject()->where('FOLIOID', $numfolio)->where('ANO', $year)->findAll();
 
+			
 					if ($data->archivosexternos) {
 						foreach ($data->archivosexternos as $key => $archivos) {
 							$file_info = new \finfo(FILEINFO_MIME_TYPE);
@@ -974,6 +980,7 @@ class DashboardController extends BaseController
 				$data->delitosModalidadFiltro = $this->_delitoModalidadModel->get_delitodescr($numfolio, $year);
 				$data->objetos = $this->_folioObjetoInvolucradoModel->get_descripcion($numfolio, $year);
 				$data->archivosexternos = $this->_archivoExternoModel->get_by_folio($numfolio, $year);
+				$data->folioDenunciantes = $this->_folioModel->get_folio_denunciante($data->folio->DENUNCIANTEID);
 
 				// $data->personafisica = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->findAll();
 				$data->imputados = $this->_folioPersonaFisicaModel->get_imputados($numfolio, $year);
@@ -1498,6 +1505,15 @@ class DashboardController extends BaseController
 		$data = $this->_derivacionesAtencionesModel->asObject()->where('MUNICIPIOID', $municipio)->orderBy('INSTITUCIONREMISIONDESCR', 'asc')->findAll();
 		return json_encode($data);
 	}
+	public function getDelitosModalidad()
+	{
+		$folio = $this->request->getPost('folio');
+		$year = $this->request->getPost('year');
+		$data =  $this->_relacionIDOModel->get_by_folio($folio, $year);
+
+		return json_encode($data);
+	}
+
 
 	public function getCanalizacionByMunicipio()
 	{
@@ -5011,6 +5027,20 @@ class DashboardController extends BaseController
 
 			$data->status = 1;
 			return json_encode(['status' => 1, 'documentos' => $documentos, 'documentoporid' => $data->documento]);
+		} else {
+			return json_encode(['status' => 0]);
+		}
+	}
+
+	public function getFolioDenunciante()
+	{
+		$folio = trim($this->request->getPost('folio'));
+		$year = trim($this->request->getPost('year'));
+		$data = (object) array();
+		$data->folioDenunciante = $this->_folioModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->first();
+
+		if ($data->folioDenunciante) {
+			return json_encode(['status' => 1, 'folioDenunciante' => $data->folioDenunciante]);
 		} else {
 			return json_encode(['status' => 0]);
 		}
