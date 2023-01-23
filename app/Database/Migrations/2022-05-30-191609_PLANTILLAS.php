@@ -52,6 +52,30 @@ class PLANTILLAS extends Migration
 				'type' => 'INT',
 				'null' => TRUE,
 			],
+			'AREAPERICIALMEXICALIID' => [
+				'type' => 'INT',
+				'null' => TRUE,
+			],
+			'INTERVENCIONMEXICALIID' => [
+				'type' => 'INT',
+				'null' => TRUE,
+			],
+			'AREAPERICIALTIJUANAID' => [
+				'type' => 'INT',
+				'null' => TRUE,
+			],
+			'INTERVENCIONTIJUANAID' => [
+				'type' => 'INT',
+				'null' => TRUE,
+			],
+			'AREAPERICIALENSENADAID' => [
+				'type' => 'INT',
+				'null' => TRUE,
+			],
+			'INTERVENCIONENSENADAID' => [
+				'type' => 'INT',
+				'null' => TRUE,
+			],
 		]);
 		$this->forge->addKey('ID', TRUE);
 		$this->forge->createTable('PLANTILLAS');
