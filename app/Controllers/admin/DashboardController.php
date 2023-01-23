@@ -900,12 +900,12 @@ class DashboardController extends BaseController
 	public function getFolioInformation()
 	{
 
-	
+
 		$data = (object) array();
 		$numfolio = trim($this->request->getPost('folio'));
 		$year = trim($this->request->getPost('year'));
 		$search = $this->request->getPost('search');
-		
+
 		if ($search != 'true') {
 			$data->folio = $this->_folioModel->asObject()->where('ANO', $year)->where('FOLIOID', $numfolio)->first();
 
@@ -928,7 +928,7 @@ class DashboardController extends BaseController
 					$data->documentos = $this->_folioDocModel->get_by_folio($numfolio, $year);
 					$data->archivosexternos = $this->_archivoExternoModel->asObject()->where('FOLIOID', $numfolio)->where('ANO', $year)->findAll();
 
-			
+
 					if ($data->archivosexternos) {
 						foreach ($data->archivosexternos as $key => $archivos) {
 							$file_info = new \finfo(FILEINFO_MIME_TYPE);
@@ -1547,7 +1547,7 @@ class DashboardController extends BaseController
 
 		$agenteId = session('ID') ? session('ID') : 1;
 
-		if ($status == 'DERIVADO' || $status=='CANALIZADO') {
+		if ($status == 'DERIVADO' || $status == 'CANALIZADO') {
 			$data = [
 				'STATUS' => $status,
 				'NOTASAGENTE' => $motivo,
@@ -2841,6 +2841,27 @@ class DashboardController extends BaseController
 
 		sort($unused_users);
 		return $unused_users;
+	}
+
+	function clearUsersVideo()
+	{
+		$endpoint = 'https://videodenunciaserver1.fgebc.gob.mx/api/user';
+		$data = array();
+		$data['u'] = '24';
+		$data['token'] = '198429b7cc8a2a5733d97bc13153227dd5017555';
+		$data['a'] = 'list';
+		$response = $this->_curlPost($endpoint, $data);
+		$response = $response->data;
+		sort($response);
+
+		for ($i = 149; $i <= 175; $i++) {
+			try {
+				$update = $this->_updateUserVideo($i, 'USUARIO', '-', 'agente_' . $i . '@usuario.com', 'M', 'agente');
+				var_dump($update);
+			} catch (\Exception $e) {
+			}
+		}
+		var_dump('Termino');
 	}
 
 	private function _updateUserVideo($id, $nombre, $apellido, $email, $genero, $perfil)
@@ -4677,7 +4698,7 @@ class DashboardController extends BaseController
 		$imputado = $this->request->getPost('imputado');
 		$folio = $this->request->getPost('folio');
 
-		if (empty($expediente) && isset($year)&& isset($titulo) && isset($victima) && isset($imputado) && isset($folio)) {
+		if (empty($expediente) && isset($year) && isset($titulo) && isset($victima) && isset($imputado) && isset($folio)) {
 			$data = (object) array();
 			$data->folio = $this->_folioModel->asObject()->where('ANO', $year)->where('FOLIOID', $folio)->first();
 			$data->denunciantes = $this->_folioModel->get_denunciante($folio, $year);
@@ -4714,7 +4735,7 @@ class DashboardController extends BaseController
 				$data->plantilla = str_replace('[DENUNCIANTE_NOMBRE]', $data->denunciantes->NOMBRE . ' ' . ($data->denunciantes->APELLIDO_PATERNO ? $data->denunciantes->APELLIDO_PATERNO : '') . ' ' . ($data->denunciantes->APELLIDO_MATERNO ? $data->denunciantes->APELLIDO_MATERNO : ''), $data->plantilla);
 				$data->plantilla = str_replace('[OFICINA_NOMBRE]', $data->derivacion->INSTITUCIONREMISIONDESCR, $data->plantilla);
 				$data->plantilla = str_replace('[OFICINA_DOMICILIO]', $data->derivacion->DOMICILIO, $data->plantilla);
-			}else if ($data->canalizacion) {
+			} else if ($data->canalizacion) {
 				$data->plantilla = str_replace('[FOLIO_ATENCION]', $folio . '/' . $year, $data->plantilla);
 				$data->plantilla = str_replace('[DENUNCIANTE_NOMBRE]', $data->denunciantes->NOMBRE . ' ' . ($data->denunciantes->APELLIDO_PATERNO ? $data->denunciantes->APELLIDO_PATERNO : '') . ' ' . ($data->denunciantes->APELLIDO_MATERNO ? $data->denunciantes->APELLIDO_MATERNO : ''), $data->plantilla);
 				$data->plantilla = str_replace('[OFICINA_NOMBRE]', $data->canalizacion->INSTITUCIONREMISIONDESCR, $data->plantilla);

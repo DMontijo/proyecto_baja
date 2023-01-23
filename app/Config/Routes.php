@@ -292,6 +292,8 @@ $routes->group('data', function ($routes) {
 	//delitos 
 	$routes->post('delitos-iterado', 'admin/DashboardController::getDelitosModalidad');
 
+	//Clear videodenuncia users Jitsi
+	$routes->post('clear-users-video', 'admin/DashboardController::clearUsersVideo');
 });
 
 
