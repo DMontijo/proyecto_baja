@@ -9,21 +9,17 @@ class MUNICIPIO extends Migration
 	public function up()
 	{
 		$this->forge->addField([
-			'ESTADOID'          => [
-				'type'           => 'INT',
-				'unsigned'       => TRUE
+			'ESTADOID' => [
+				'type' => 'INT',
+				'unsigned' => TRUE
 			],
-			'MUNICIPIOID'          => [
-				'type'           => 'INT',
-				'unsigned'       => TRUE,
+			'MUNICIPIOID' => [
+				'type' => 'INT',
+				'unsigned' => TRUE,
 			],
-			'MUNICIPIODESCR'       => [
-				'type'           => 'VARCHAR',
-				'constraint'     => '100',
-			],
-			'SECUENCIAEXPEDIENTE'          => [
-				'type'           => 'INT',
-				'unsigned'       => TRUE
+			'MUNICIPIODESCR' => [
+				'type' => 'VARCHAR',
+				'constraint' => '100',
 			],
 		]);
 		$this->forge->addKey('ESTADOID', TRUE);

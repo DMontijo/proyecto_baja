@@ -4,25 +4,17 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class CANALIZACIONESATENCION extends Migration
+class CANALIZACIONES extends Migration
 {
 	public function up()
 	{
 		$this->forge->addField([
-			'ID' => [
+			'MUNICIPIOID' => [
 				'type' => 'INT',
-				'unsigned' => TRUE,
-				'auto_increment' => TRUE
-			],
-			'MUNICIPIO' => [
-				'type' => 'VARCHAR',
-				'constraint' => '250',
-				'null' => TRUE,
 			],
 			'INSTITUCIONREMISIONID' => [
 				'type' => 'SMALLINT',
 				'constrait' => '3',
-				'null' => TRUE,
 			],
 			'INSTITUCIONREMISIONDESCR' => [
 				'type' => 'VARCHAR',
@@ -40,12 +32,13 @@ class CANALIZACIONESATENCION extends Migration
 				'null' => TRUE,
 			],
 		]);
-		$this->forge->addKey('ID', TRUE);
-		$this->forge->createTable('CANALIZACIONES_ATENCION');
+		$this->forge->addKey('MUNICIPIOID', TRUE);
+		$this->forge->addKey('INSTITUCIONREMISIONID', TRUE);
+		$this->forge->createTable('CANALIZACIONES');
 	}
 
 	public function down()
 	{
-		$this->forge->dropTable('CANALIZACIONES_ATENCION');
+		$this->forge->dropTable('CANALIZACIONES');
 	}
 }

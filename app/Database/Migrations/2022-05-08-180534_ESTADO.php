@@ -9,13 +9,13 @@ class ESTADO extends Migration
 	public function up()
 	{
 		$this->forge->addField([
-			'ESTADOID'          => [
-				'type'           => 'INT',
-				'unsigned'       => TRUE,
+			'ESTADOID' => [
+				'type' => 'INT',
+				'unsigned' => TRUE,
 			],
-			'ESTADODESCR'       => [
-				'type'           => 'VARCHAR',
-				'constraint'     => '100',
+			'ESTADODESCR' => [
+				'type' => 'VARCHAR',
+				'constraint' => '100',
 			],
 		]);
 		$this->forge->addKey('ESTADOID', TRUE);

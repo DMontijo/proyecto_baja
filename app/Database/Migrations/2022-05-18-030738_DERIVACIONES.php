@@ -4,24 +4,17 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class DERIVACIONESATENCION extends Migration
+class DERIVACIONES extends Migration
 {
 	public function up()
 	{
 		$this->forge->addField([
-			'ID' => [
-				'type' => 'INT',
-				'unsigned' => TRUE,
-				'auto_increment' => TRUE
-			],
 			'MUNICIPIOID' => [
 				'type' => 'INT',
-				'null' => TRUE,
 			],
 			'INSTITUCIONREMISIONID' => [
 				'type' => 'SMALLINT',
-				'constrait'		 => '3',
-				'null' => TRUE,
+				'constrait' => '3',
 			],
 			'INSTITUCIONREMISIONDESCR' => [
 				'type' => 'VARCHAR',
@@ -39,12 +32,13 @@ class DERIVACIONESATENCION extends Migration
 				'null' => TRUE,
 			],
 		]);
-		$this->forge->addKey('ID', TRUE);
-		$this->forge->createTable('DERIVACIONES_ATENCION');
+		$this->forge->addKey('MUNICIPIOID', TRUE);
+		$this->forge->addKey('INSTITUCIONREMISIONID', TRUE);
+		$this->forge->createTable('DERIVACIONES');
 	}
 
 	public function down()
 	{
-		$this->forge->dropTable('DERIVACIONES_ATENCION');
+		$this->forge->dropTable('DERIVACIONES');
 	}
 }

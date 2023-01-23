@@ -6,10 +6,9 @@ use CodeIgniter\Model;
 
 class CanalizacionesModel extends Model
 {
-	protected $table = "CANALIZACIONES_ATENCION";
-	protected $primarykey = "ID";
+	protected $table = "CANALIZACIONES";
 	protected $allowedFields    = [
-		'MUNICIPIO',
+		'MUNICIPIOID',
 		'INSTITUCIONREMISIONID',
 		'INSTITUCIONREMISIONDESCR',
 		'DOMICILIO',

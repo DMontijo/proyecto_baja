@@ -7,13 +7,12 @@ use CodeIgniter\Model;
 class LocalidadesModel extends Model
 {
 
-	protected $table            = 'LOCALIDAD';
-	protected $allowedFields    = [
+	protected $table = 'LOCALIDAD';
+	protected $allowedFields = [
 		'ESTADOID',
 		'MUNICIPIOID',
 		'LOCALIDADID',
 		'LOCALIDADDESCR',
 		'ZONA',
-		'LOCALIDADIDEXTERNO',
 	];
 }
