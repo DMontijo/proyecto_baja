@@ -2885,6 +2885,27 @@ class DashboardController extends BaseController
 		return $unused_users;
 	}
 
+	function clearUsersVideo()
+	{
+		$endpoint = 'https://videodenunciaserver1.fgebc.gob.mx/api/user';
+		$data = array();
+		$data['u'] = '24';
+		$data['token'] = '198429b7cc8a2a5733d97bc13153227dd5017555';
+		$data['a'] = 'list';
+		$response = $this->_curlPost($endpoint, $data);
+		$response = $response->data;
+		sort($response);
+
+		for ($i = 149; $i <= 175; $i++) {
+			try {
+				$update = $this->_updateUserVideo($i, 'USUARIO', '-', 'agente_' . $i . '@usuario.com', 'M', 'agente');
+				var_dump($update);
+			} catch (\Exception $e) {
+			}
+		}
+		var_dump('Termino');
+	}
+
 	private function _updateUserVideo($id, $nombre, $apellido, $email, $genero, $perfil)
 	{
 		if ($id && $nombre && $apellido && $email && $genero && $perfil) {
