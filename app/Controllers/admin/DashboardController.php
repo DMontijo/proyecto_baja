@@ -900,12 +900,12 @@ class DashboardController extends BaseController
 	public function getFolioInformation()
 	{
 
-	
+
 		$data = (object) array();
 		$numfolio = trim($this->request->getPost('folio'));
 		$year = trim($this->request->getPost('year'));
 		$search = $this->request->getPost('search');
-		
+
 		if ($search != 'true') {
 			$data->folio = $this->_folioModel->asObject()->where('ANO', $year)->where('FOLIOID', $numfolio)->first();
 
@@ -928,7 +928,7 @@ class DashboardController extends BaseController
 					$data->documentos = $this->_folioDocModel->get_by_folio($numfolio, $year);
 					$data->archivosexternos = $this->_archivoExternoModel->asObject()->where('FOLIOID', $numfolio)->where('ANO', $year)->findAll();
 
-			
+
 					if ($data->archivosexternos) {
 						foreach ($data->archivosexternos as $key => $archivos) {
 							$file_info = new \finfo(FILEINFO_MIME_TYPE);
@@ -1218,14 +1218,13 @@ class DashboardController extends BaseController
 
 	public function bandeja_remision_post()
 	{
-
 		try {
 
 			$expediente = trim($this->request->getPost('expediente'));
 			$oficina = trim($this->request->getPost('oficina'));
 			$empleado = trim($this->request->getPost('empleado'));
 			$municipio = trim($this->request->getPost('municipio'));
-
+		
 			$area = $this->_empleadosModel->asObject()->where('EMPLEADOID', $empleado)->where('MUNICIPIOID', $municipio)->first();
 			$documents = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente . '1')->findAll();
 			$status = 2;
@@ -1273,14 +1272,29 @@ class DashboardController extends BaseController
 							$_solicitudDocto = $this->_createSolicitudDocto($expediente, $_solicitudPericial->SOLICITUDID, $doc['EXPEDIENTEDOCID'], $bandeja['MUNICIPIOASIGNADOID']);
 							if ($_solicitudDocto->status == 201) {
 								$_solicitudExpediente = $this->_createSolicitudExpediente($expediente, $_solicitudPericial->SOLICITUDID, $municipio);
+								$plantilla = (object) array();
 
-								$dataInter =  array('SOLICITUDID' => $_solicitudPericial->SOLICITUDID, 'INTERVENCIONID' => 1);
+								$plantilla = $this->_plantillasModel->where('TITULO',  $doc['TIPODOC'])->first();
+								if ($municipio == 1 ||  $municipio == 6) {
+									$intervencion = $plantilla['INTERVENCIONENSENADAID'];
+
+								} else if ($municipio == 2 || $municipio == 3 || $municipio == 7) {
+									$intervencion = $plantilla['INTERVENCIONMEXICALIID'];
+
+								} else if ($municipio == 4 || $municipio == 5) {
+									$intervencion = $plantilla['INTERVENCIONTIJUANAID'];
+
+								} 
+								$dataInter =  array('SOLICITUDID' => $_solicitudPericial->SOLICITUDID, 'INTERVENCIONID' => $intervencion);
+				
 								$_intervencionPericial = $this->_createIntervencionPericial($dataInter, $municipio);
-								$datosBitacora = [
-									'ACCION' => 'Se envio una solicitud perital.',
-									'NOTAS' => 'Exp: ' . $expediente . ' Solicitud: ' . $_solicitudPericial->SOLICITUDID,
-								];
-								$this->_bitacoraActividad($datosBitacora);
+									$datosBitacora = [
+										'ACCION' => 'Se envio una solicitud perital.',
+										'NOTAS' => 'Exp: ' . $expediente . ' Solicitud: ' . $_solicitudPericial->SOLICITUDID . 'Intervencion' . $intervencion,
+									];
+									$this->_bitacoraActividad($datosBitacora);
+								
+								
 							}
 						}
 					}
@@ -1518,7 +1532,7 @@ class DashboardController extends BaseController
 	public function getCanalizacionByMunicipio()
 	{
 		$municipio = $this->request->getPost('municipio');
-		$data = $this->_canalizacionesAtencionesModel->asObject()->where('MUNICIPIO', $municipio)->orderBy('INSTITUCIONREMISIONDESCR', 'asc')->findAll();
+		$data = $this->_canalizacionesAtencionesModel->asObject()->where('MUNICIPIOID', $municipio)->orderBy('INSTITUCIONREMISIONDESCR', 'asc')->findAll();
 		return json_encode($data);
 	}
 	public function getEmpleadosByMunicipioAndOficina()
@@ -1547,7 +1561,7 @@ class DashboardController extends BaseController
 
 		$agenteId = session('ID') ? session('ID') : 1;
 
-		if ($status == 'DERIVADO' || $status=='CANALIZADO') {
+		if ($status == 'DERIVADO' || $status == 'CANALIZADO') {
 			$data = [
 				'STATUS' => $status,
 				'NOTASAGENTE' => $motivo,
@@ -1918,11 +1932,39 @@ class DashboardController extends BaseController
 							// fwrite($fh, $espacio) or die("No se pudo escribir en el archivo");
 							// $data2 = file_get_contents($tarjet2);
 							// fwrite($tarjet2, $espacio);
+							$plantilla = (object) array();
+
+							$plantilla = $this->_plantillasModel->where('TITULO', $docP['TIPODOC'])->first();
 
 							$documentos = array();
 							$documentos['DOCUMENTO'] = base64_encode($espacio);
 							$documentos['DOCTODESCR'] = $docP['TIPODOC'];
 							$documentos['STATUSDOCUMENTOID'] = 4;
+							if ($foliovd['MUNICIPIOASIGNADOID'] == 1) {
+								$documentos['CLASIFICACIONDOCTOID'] = $plantilla['CLASIFICACIONDOCTOENSENADAID'];
+								$documentos['PLANTILLAID'] = $plantilla['PLANTILLAJUSTICIAENSENADAID'];
+							} else if ($foliovd['MUNICIPIOASIGNADOID'] == 2) {
+								$documentos['CLASIFICACIONDOCTOID'] = $plantilla['CLASIFICACIONDOCTOMEXICALIID'];
+								$documentos['PLANTILLAID'] = $plantilla['PLANTILLAJUSTICIAMEXICALIID'];
+							} else if ($foliovd['MUNICIPIOASIGNADOID'] == 3) {
+								$documentos['CLASIFICACIONDOCTOID'] = $plantilla['CLASIFICACIONDOCTOMEXICALIID'];
+								$documentos['PLANTILLAID'] = $plantilla['PLANTILLAJUSTICIAMEXICALIID'];
+							} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4) {
+								$documentos['CLASIFICACIONDOCTOID'] = $plantilla['CLASIFICACIONDOCTOTIJUANAID'];
+								$documentos['PLANTILLAID'] = $plantilla['PLANTILLAJUSTICIATIJUANAID'];
+							} else if ($foliovd['MUNICIPIOASIGNADOID'] == 5) {
+								$documentos['CLASIFICACIONDOCTOID'] = $plantilla['CLASIFICACIONDOCTOTIJUANAID'];
+								$documentos['PLANTILLAID'] = $plantilla['PLANTILLAJUSTICIATIJUANAID'];
+							} else if ($foliovd['MUNICIPIOASIGNADOID'] == 6) {
+								$documentos['CLASIFICACIONDOCTOID'] = $plantilla['CLASIFICACIONDOCTOENSENADAID'];
+								$documentos['PLANTILLAID'] = $plantilla['PLANTILLAJUSTICIAENSENADAID'];
+							} else if ($foliovd['MUNICIPIOASIGNADOID'] == 7) {
+								$documentos['CLASIFICACIONDOCTOID'] = $plantilla['CLASIFICACIONDOCTOMEXICALIID'];
+								$documentos['PLANTILLAID'] = $plantilla['pLANTILLAJUSTICIAMEXICALIID'];
+							}
+
+
+
 
 							$expedienteDocumento = $this->_createFolioDocumentos($expediente, $documentos, $docP['MUNICIPIOID']);
 
@@ -4677,7 +4719,7 @@ class DashboardController extends BaseController
 		$imputado = $this->request->getPost('imputado');
 		$folio = $this->request->getPost('folio');
 
-		if (empty($expediente) && isset($year)&& isset($titulo) && isset($victima) && isset($imputado) && isset($folio)) {
+		if (empty($expediente) && isset($year) && isset($titulo) && isset($victima) && isset($imputado) && isset($folio)) {
 			$data = (object) array();
 			$data->folio = $this->_folioModel->asObject()->where('ANO', $year)->where('FOLIOID', $folio)->first();
 			$data->denunciantes = $this->_folioModel->get_denunciante($folio, $year);
@@ -4686,7 +4728,7 @@ class DashboardController extends BaseController
 			$data->folioDoc = $this->_folioDocModel->get_by_folio($folio, $data->folio->ANO);
 			$data->lugar_hecho = $data->folio->HECHOLUGARID ? $this->_hechoLugarModel->asObject()->where('HECHOLUGARID', $data->folio->HECHOLUGARID)->first() : (object)['HECHOLUGARDESCR' => 'NO ESPECIFICADO'];
 			$data->derivacion = $this->_derivacionesAtencionesModel->asObject()->where('MUNICIPIOID', $data->folio->INSTITUCIONREMISIONMUNICIPIOID)->where('INSTITUCIONREMISIONID',  $data->folio->INSTITUCIONREMISIONID)->first();
-			$data->canalizacion = $this->_canalizacionesAtencionesModel->asObject()->where('MUNICIPIO', $data->folio->INSTITUCIONREMISIONMUNICIPIOID)->where('INSTITUCIONREMISIONID',  $data->folio->INSTITUCIONREMISIONID)->first();
+			$data->canalizacion = $this->_canalizacionesAtencionesModel->asObject()->where('MUNICIPIOID', $data->folio->INSTITUCIONREMISIONMUNICIPIOID)->where('INSTITUCIONREMISIONID',  $data->folio->INSTITUCIONREMISIONID)->first();
 
 			$data->municipios = $this->_municipiosModel->asObject()->where('ESTADOID', '2')->where('MUNICIPIOID',  $data->folio->MUNICIPIOID)->first();
 			$data->victima = $this->_folioPersonaFisicaModel->get_by_personas($data->folio->FOLIOID, $data->folio->ANO, $victima);
@@ -4714,7 +4756,7 @@ class DashboardController extends BaseController
 				$data->plantilla = str_replace('[DENUNCIANTE_NOMBRE]', $data->denunciantes->NOMBRE . ' ' . ($data->denunciantes->APELLIDO_PATERNO ? $data->denunciantes->APELLIDO_PATERNO : '') . ' ' . ($data->denunciantes->APELLIDO_MATERNO ? $data->denunciantes->APELLIDO_MATERNO : ''), $data->plantilla);
 				$data->plantilla = str_replace('[OFICINA_NOMBRE]', $data->derivacion->INSTITUCIONREMISIONDESCR, $data->plantilla);
 				$data->plantilla = str_replace('[OFICINA_DOMICILIO]', $data->derivacion->DOMICILIO, $data->plantilla);
-			}else if ($data->canalizacion) {
+			} else if ($data->canalizacion) {
 				$data->plantilla = str_replace('[FOLIO_ATENCION]', $folio . '/' . $year, $data->plantilla);
 				$data->plantilla = str_replace('[DENUNCIANTE_NOMBRE]', $data->denunciantes->NOMBRE . ' ' . ($data->denunciantes->APELLIDO_PATERNO ? $data->denunciantes->APELLIDO_PATERNO : '') . ' ' . ($data->denunciantes->APELLIDO_MATERNO ? $data->denunciantes->APELLIDO_MATERNO : ''), $data->plantilla);
 				$data->plantilla = str_replace('[OFICINA_NOMBRE]', $data->canalizacion->INSTITUCIONREMISIONDESCR, $data->plantilla);
