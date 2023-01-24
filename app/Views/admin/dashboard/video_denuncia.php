@@ -4821,11 +4821,10 @@
                     'victima': document.querySelector('#victima_ofendido').value,
                     'delito': document.querySelector('#delito_cometido').value,
                     'imputado': document.querySelector('#imputado_arbol').value,
-                    'tentativa': document.querySelector('#tentativa').value,
-                    'conviolencia': document.querySelector('#conviolencia').value,
+                    'tentativa': document.querySelector('#tentativa').checked ? document.querySelector('#tentativa').value : null,
+                    'conviolencia': document.querySelector('#conviolencia').checked ? document.querySelector('#conviolencia').value : null,
 
                 };
-                // console.log(data);
                 $.ajax({
                     data: data,
                     url: "<?= base_url('/data/create-relacion_ido-by-folio') ?>",

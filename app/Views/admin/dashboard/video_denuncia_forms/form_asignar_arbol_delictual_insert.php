@@ -27,23 +27,27 @@
 			<option selected value="" disabled></option>
 		</select>
 	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="tentativa" class="form-label font-weight-bold">TENTATIVA</label>
-		<select class="form-control" id="tentativa" name="tentativa" required>
-			<option selected value="" disabled></option>
-			<option value="S">SI</option>
-			<option value="N">NO</option>
 
-		</select>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<br>
+		<div class="form-check form-check-inline">
+			<input class="form-check-input" type="checkbox" id="tentativa" name="tentativa" value="S">
+			<label class="form-check-label font-weight-bold" for="tentativa">
+					Tentativa
+			</label>
+		</div>
+
 	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="conviolencia" class="form-label font-weight-bold">CON VIOLENCIA</label>
-		<select class="form-control" id="conviolencia" name="conviolencia" required>
-			<option selected value="" disabled></option>
-			<option value="S">SI</option>
-			<option value="N">NO</option>
 
-		</select>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<br>
+		<div class="form-check form-check-inline">
+			<input class="form-check-input" type="checkbox" id="conviolencia" name="conviolencia" value="S">
+			<label class="form-check-label font-weight-bold" for="conviolencia">
+				Con violencia
+			</label>
+		</div>
+
 	</div>
 	<div class="col-12 mb-3 text-center">
 		<button type="submit" id="insertArbol" name="insertArbol" class="btn btn-primary font-weight-bold">AGREGAR DELITO</button>
@@ -70,5 +74,4 @@
 				}, false)
 			})
 	})()
-
 </script>
