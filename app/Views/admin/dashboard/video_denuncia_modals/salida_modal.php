@@ -122,19 +122,11 @@
 			document.getElementById("numCaracterSalida").innerHTML = '300 caracteres restantes';
 
 		}
-
-
-		if (!(e.target.value == 'DERIVADO' || e.target.value == 'CANALIZADO' || e.target.value == '1' || e.target.value == '4' || e.target.value == '5' || e.target.value == '6' || e.target.value == '7' || e.target.value == '8' || e.target.value == '9')) {
-			document.querySelector('#v-pills-delitos-tab').classList.add('d-none');
-			document.querySelector('#v-pills-documentos-tab').classList.add('d-none');
-
-			municipio_empleado_container.classList.add('d-none');
-
-		} else {
-			municipio_empleado_container.classList.remove('d-none');
-		}
 		if (e.target.value == 'CANALIZADO') {
 			canalizaciones_container.classList.remove('d-none');
+			municipio_empleado_container.classList.remove('d-none');
+			municipio_empleado.value = '';
+
 			document.querySelector('#municipio_empleado').addEventListener('change', (e) => {
 
 				let select_canalizacion = document.querySelector('#canalizaciones');
@@ -172,13 +164,11 @@
 
 
 			});
-		} else {
-			canalizaciones_container.classList.add('d-none');
-			municipio_empleado.value = '';
-		}
-
-		if (e.target.value == 'DERIVADO') {
+		} else if (e.target.value == 'DERIVADO') {
 			derivaciones_container.classList.remove('d-none');
+			municipio_empleado_container.classList.remove('d-none');
+			municipio_empleado.value = '';
+
 			document.querySelector('#municipio_empleado').addEventListener('change', (e) => {
 
 				let select_derivacion = document.querySelector('#derivaciones');
@@ -216,10 +206,21 @@
 
 
 			});
+		}
+		
+		else if (!(e.target.value == '1' || e.target.value == '4' || e.target.value == '5' || e.target.value == '6' || e.target.value == '7' || e.target.value == '8' || e.target.value == '9')) {
+			document.querySelector('#v-pills-delitos-tab').classList.add('d-none');
+			document.querySelector('#v-pills-documentos-tab').classList.add('d-none');
+
+			// municipio_empleado_container.classList.add('d-none');
+
 		} else {
+			municipio_empleado_container.classList.remove('d-none');
+			canalizaciones_container.classList.add('d-none');
 			derivaciones_container.classList.add('d-none');
 			municipio_empleado.value = '';
 		}
+		
 	});
 
 	btnAgregarDelito.addEventListener('click', (e) => {
