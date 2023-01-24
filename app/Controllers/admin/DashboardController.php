@@ -1224,7 +1224,7 @@ class DashboardController extends BaseController
 			$oficina = trim($this->request->getPost('oficina'));
 			$empleado = trim($this->request->getPost('empleado'));
 			$municipio = trim($this->request->getPost('municipio'));
-		
+
 			$area = $this->_empleadosModel->asObject()->where('EMPLEADOID', $empleado)->where('MUNICIPIOID', $municipio)->first();
 			$documents = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente . '1')->findAll();
 			$status = 2;
@@ -1244,8 +1244,14 @@ class DashboardController extends BaseController
 				'OFICINAASIGNADOID' => $oficina,
 				'AREAASIGNADOID' => $area->AREAID
 			);
+			// $dataFolioDoc = array(
+			// 	'AGENTEID' => $empleado,
+			// 	'OFICINAID' => $oficina,
+			// 	'AREAASIGNADOID' => $area->AREAID
+			// );
 
 			$update = $this->_folioModel->set($dataFolio)->where('EXPEDIENTEID', $expediente)->update();
+
 			if ($update) {
 				$datosBitacora = [
 					'ACCION' => 'Remitio un expediente.',
@@ -1267,6 +1273,7 @@ class DashboardController extends BaseController
 						$solicitudp['AREAIDREGISTRO'] = $area;
 						$solicitudp['ANO'] = $doc['ANO'];
 						$solicitudp['TITULO'] = $doc['TIPODOC'];
+
 						$_solicitudPericial = $this->_createSolicitudesPericiales($solicitudp);
 						if ($_solicitudPericial->status == 201) {
 							$_solicitudDocto = $this->_createSolicitudDocto($expediente, $_solicitudPericial->SOLICITUDID, $doc['EXPEDIENTEDOCID'], $bandeja['MUNICIPIOASIGNADOID']);
@@ -1277,24 +1284,19 @@ class DashboardController extends BaseController
 								$plantilla = $this->_plantillasModel->where('TITULO',  $doc['TIPODOC'])->first();
 								if ($municipio == 1 ||  $municipio == 6) {
 									$intervencion = $plantilla['INTERVENCIONENSENADAID'];
-
 								} else if ($municipio == 2 || $municipio == 3 || $municipio == 7) {
 									$intervencion = $plantilla['INTERVENCIONMEXICALIID'];
-
 								} else if ($municipio == 4 || $municipio == 5) {
 									$intervencion = $plantilla['INTERVENCIONTIJUANAID'];
-
-								} 
+								}
 								$dataInter =  array('SOLICITUDID' => $_solicitudPericial->SOLICITUDID, 'INTERVENCIONID' => $intervencion);
-				
+
 								$_intervencionPericial = $this->_createIntervencionPericial($dataInter, $municipio);
-									$datosBitacora = [
-										'ACCION' => 'Se envio una solicitud perital.',
-										'NOTAS' => 'Exp: ' . $expediente . ' Solicitud: ' . $_solicitudPericial->SOLICITUDID . 'Intervencion' . $intervencion,
-									];
-									$this->_bitacoraActividad($datosBitacora);
-								
-								
+								$datosBitacora = [
+									'ACCION' => 'Se envio una solicitud perital.',
+									'NOTAS' => 'Exp: ' . $expediente . ' Solicitud: ' . $_solicitudPericial->SOLICITUDID . 'Intervencion' . $intervencion,
+								];
+								$this->_bitacoraActividad($datosBitacora);
 							}
 						}
 					}
@@ -1834,7 +1836,7 @@ class DashboardController extends BaseController
 						$municipioid = $foliovd['MUNICIPIOID'] ? $foliovd['MUNICIPIOID'] : NULL;
 
 						try {
-							$_archivo = $this->_createArchivosExternos($expediente, $folio, $year,  $municipioid, 53, $arch['ARCHIVODESCR'], $arch['ARCHIVO'], $arch['EXTENSION']);
+							$_archivo = $this->_createArchivosExternos($expediente, $folio, $year,  $municipioid, 53, $arch['ARCHIVODESCR'], $arch['ARCHIVO'], $arch['EXTENSION'] ,7 ,99);
 							if ($_archivo->status == 201) {
 								$datosRelacionFolio = [
 									'FOLIODOCID' => $arch['FOLIOARCHIVOID'],
@@ -1862,7 +1864,7 @@ class DashboardController extends BaseController
 						$municipioid = $foliovd['MUNICIPIOID'] ? $foliovd['MUNICIPIOID'] : NULL;
 
 						try {
-							$_archivo = $this->_createArchivosExternos($expediente, $folio, $year,  $municipioid, 53, $doc['TIPODOC'], $doc['PDF'], 'pdf');
+							$_archivo = $this->_createArchivosExternos($expediente, $folio, $year,  $municipioid, 53, $doc['TIPODOC'], $doc['PDF'], 'pdf',7,99);
 							if ($_archivo->status == 201) {
 								$datosRelacionFolio = [
 									'FOLIODOCID' => $doc['FOLIODOCID'],
@@ -1939,6 +1941,10 @@ class DashboardController extends BaseController
 							$documentos = array();
 							$documentos['DOCUMENTO'] = base64_encode($espacio);
 							$documentos['DOCTODESCR'] = $docP['TIPODOC'];
+							$documentos['AUTOR'] = 7;
+							$documentos['OFICINAIDAUTOR'] = 99;
+
+
 							$documentos['STATUSDOCUMENTOID'] = 4;
 							if ($foliovd['MUNICIPIOASIGNADOID'] == 1) {
 								$documentos['CLASIFICACIONDOCTOID'] = $plantilla['CLASIFICACIONDOCTOENSENADAID'];
@@ -2410,7 +2416,7 @@ class DashboardController extends BaseController
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
 
-	private function _createArchivosExternos($expedienteId, $folioid, $ano, $municipioid, $clasificaciondoctoid, $tipodoc, $archivo, $extension)
+	private function _createArchivosExternos($expedienteId, $folioid, $ano, $municipioid, $clasificaciondoctoid, $tipodoc, $archivo, $extension, $autor, $oficina)
 	{
 		if ($archivo != '' && $archivo) {
 			$function = '/archivoExt.php?process=crear';
@@ -2444,6 +2450,8 @@ class DashboardController extends BaseController
 			$data['PUBLICADO'] = 'N';
 			$data['EXPORTAR'] = 'NNEW';
 			$data['ARCHIVODESCR'] = $tipodoc;
+			$data['AUTOR'] = $autor;
+			$data['OFICINAIDAUTOR'] = $oficina;
 			$data['ARCHIVO'] = base64_encode($archivo);
 
 			$data['userDB'] = $conexion->USER;
@@ -2743,7 +2751,7 @@ class DashboardController extends BaseController
 			$mime_type = finfo_buffer($f, $vehiculos['FOTO'], FILEINFO_MIME_TYPE);
 			$extension = explode('/', $mime_type)[1];
 			try {
-				$_archivosExternos = $this->_createArchivosExternos($expedienteId, $vehiculos['FOLIOID'], $vehiculos['ANO'], '', 53, 'ROBO DE VEHÍCULO',  $vehiculos['FOTO'], $extension);
+				$_archivosExternos = $this->_createArchivosExternos($expedienteId, $vehiculos['FOLIOID'], $vehiculos['ANO'], '', 53, 'ROBO DE VEHÍCULO',  $vehiculos['FOTO'], $extension,7,99);
 			} catch (\Throwable $th) {
 			}
 		}
@@ -2752,7 +2760,7 @@ class DashboardController extends BaseController
 			$mime_type = finfo_buffer($f, $vehiculos['DOCUMENTO'], FILEINFO_MIME_TYPE);
 			$extension = explode('/', $mime_type)[1];
 			try {
-				$_archivosExternos = $this->_createArchivosExternos($expedienteId, $vehiculos['FOLIOID'], $vehiculos['ANO'], '', 53, 'ROBO DE VEHÍCULO', $vehiculos['DOCUMENTO'], $extension);
+				$_archivosExternos = $this->_createArchivosExternos($expedienteId, $vehiculos['FOLIOID'], $vehiculos['ANO'], '', 53, 'ROBO DE VEHÍCULO', $vehiculos['DOCUMENTO'], $extension,7,99);
 			} catch (\Throwable $th) {
 			}
 		}
