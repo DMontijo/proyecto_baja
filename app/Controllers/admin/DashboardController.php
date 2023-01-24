@@ -1836,7 +1836,7 @@ class DashboardController extends BaseController
 						$municipioid = $foliovd['MUNICIPIOID'] ? $foliovd['MUNICIPIOID'] : NULL;
 
 						try {
-							$_archivo = $this->_createArchivosExternos($expediente, $folio, $year,  $municipioid, 53, $arch['ARCHIVODESCR'], $arch['ARCHIVO'], $arch['EXTENSION'] ,7 ,99);
+							$_archivo = $this->_createArchivosExternos($expediente, $folio, $year,  $municipioid, 53, $arch['ARCHIVODESCR'], $arch['ARCHIVO'], $arch['EXTENSION'] ,3947 ,394);
 							if ($_archivo->status == 201) {
 								$datosRelacionFolio = [
 									'FOLIODOCID' => $arch['FOLIOARCHIVOID'],
@@ -1864,7 +1864,7 @@ class DashboardController extends BaseController
 						$municipioid = $foliovd['MUNICIPIOID'] ? $foliovd['MUNICIPIOID'] : NULL;
 
 						try {
-							$_archivo = $this->_createArchivosExternos($expediente, $folio, $year,  $municipioid, 53, $doc['TIPODOC'], $doc['PDF'], 'pdf',7,99);
+							$_archivo = $this->_createArchivosExternos($expediente, $folio, $year,  $municipioid, 53, $doc['TIPODOC'], $doc['PDF'], 'pdf',3947,  394);
 							if ($_archivo->status == 201) {
 								$datosRelacionFolio = [
 									'FOLIODOCID' => $doc['FOLIODOCID'],
@@ -1941,8 +1941,8 @@ class DashboardController extends BaseController
 							$documentos = array();
 							$documentos['DOCUMENTO'] = base64_encode($espacio);
 							$documentos['DOCTODESCR'] = $docP['TIPODOC'];
-							$documentos['AUTOR'] = 7;
-							$documentos['OFICINAIDAUTOR'] = 99;
+							$documentos['AUTOR'] = 3947;
+							$documentos['OFICINAIDAUTOR'] = 394;
 
 
 							$documentos['STATUSDOCUMENTOID'] = 4;
@@ -2751,7 +2751,7 @@ class DashboardController extends BaseController
 			$mime_type = finfo_buffer($f, $vehiculos['FOTO'], FILEINFO_MIME_TYPE);
 			$extension = explode('/', $mime_type)[1];
 			try {
-				$_archivosExternos = $this->_createArchivosExternos($expedienteId, $vehiculos['FOLIOID'], $vehiculos['ANO'], '', 53, 'ROBO DE VEHÍCULO',  $vehiculos['FOTO'], $extension,7,99);
+				$_archivosExternos = $this->_createArchivosExternos($expedienteId, $vehiculos['FOLIOID'], $vehiculos['ANO'], '', 53, 'ROBO DE VEHÍCULO',  $vehiculos['FOTO'], $extension,3947,  394);
 			} catch (\Throwable $th) {
 			}
 		}
@@ -2760,7 +2760,7 @@ class DashboardController extends BaseController
 			$mime_type = finfo_buffer($f, $vehiculos['DOCUMENTO'], FILEINFO_MIME_TYPE);
 			$extension = explode('/', $mime_type)[1];
 			try {
-				$_archivosExternos = $this->_createArchivosExternos($expedienteId, $vehiculos['FOLIOID'], $vehiculos['ANO'], '', 53, 'ROBO DE VEHÍCULO', $vehiculos['DOCUMENTO'], $extension,7,99);
+				$_archivosExternos = $this->_createArchivosExternos($expedienteId, $vehiculos['FOLIOID'], $vehiculos['ANO'], '', 53, 'ROBO DE VEHÍCULO', $vehiculos['DOCUMENTO'], $extension,3947,  394);
 			} catch (\Throwable $th) {
 			}
 		}
