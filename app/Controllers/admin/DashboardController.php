@@ -2981,6 +2981,42 @@ class DashboardController extends BaseController
 
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
+
+	private function _createJusticiaAlterna($expedienteId,$procedimientoid, $municipio)
+	{
+		$function = '/testing/justiciaAlterna.php?process=crear';
+		$array = [
+			'EXPEDIENTEID',
+			'TIPOPROCEDIMIENTOID',
+			'VALIDADO',
+			'EMPLEADOIDVALIDO',
+			'AREAIDVALIDO',
+			'FECHAVALIDADO',
+			
+
+		];
+		$endpoint = $this->endpoint . $function;
+		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
+		// $data = $solicitud;
+		// foreach ($data as $clave => $valor) {
+		// 	if (empty($valor)) {
+		// 		unset($data[$clave]);
+		// 	}
+		// }
+
+		// foreach ($data as $clave => $valor) {
+		// 	if (!in_array($clave, $array)) {
+		// 		unset($data[$clave]);
+		// 	}
+		// }
+		$data['EXPEDIENTEID'] = $expedienteId;
+		$data['TIPOPROCEDIMIENTOID'] = $procedimientoid;
+		$data['userDB'] = $conexion->USER;
+		$data['pwdDB'] = $conexion->PASSWORD;
+		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
+		$data['schema'] = $conexion->SCHEMA;
+		return $this->_curlPostDataEncrypt($endpoint, $data);
+	}
 	private function _createFisImpDelito($expedienteId, $fisimpdelito, $imputado, $municipio)
 	{
 		$function = '/imputadoDelito.php?process=crear';
