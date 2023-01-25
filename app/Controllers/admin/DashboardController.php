@@ -2228,9 +2228,11 @@ class DashboardController extends BaseController
 							// instancia de documento rtf 
 							$rtf = new PHPRtfLite();
 							$sect = $rtf->addSection();
-							$sinetiqueta = strip_tags($docP['PLACEHOLDER']); //placeolder sin etiquetas html
+							$docP['PLACEHOLDER'] = str_replace('</p>', '<br>', $docP['PLACEHOLDER']);
+
+							$sinetiqueta = strip_tags($docP['PLACEHOLDER'],['strong', 'br']); //placeolder sin etiquetas html
 							//escribe el texto del rtf
-							$sect->writeText($sinetiqueta, new PHPRtfLite_Font(12, 'Courier New'), new PHPRtfLite_ParFormat(PHPRtfLite_ParFormat::TEXT_ALIGN_JUSTIFY));
+							$sect->writeText($sinetiqueta, new PHPRtfLite_Font(11, 'Arial'), new PHPRtfLite_ParFormat(PHPRtfLite_ParFormat::TEXT_ALIGN_JUSTIFY));
 							// save rtf document
 							$rtf->save('assets/' . $docP['NUMEROEXPEDIENTE'] . '_' . $docP['FOLIODOCID'] . '.rtf');
 							$tarjet = FCPATH  . 'assets/' . $docP['NUMEROEXPEDIENTE'] . "_" . $docP['FOLIODOCID'] . ".rtf";
