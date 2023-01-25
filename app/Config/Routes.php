@@ -141,7 +141,7 @@ $routes->group('admin', function ($routes) {
 		$routes->post('firmar_documentos', 'admin/FirmaController::firmar_documentos');
 		$routes->post('insert-documentosWSYWSG', 'admin/DashboardController::insertFolioDoc');
 		$routes->post('send-documentos-correo', 'admin/FirmaController::sendEmailDocumentos');
-
+		
 	});
 });
 

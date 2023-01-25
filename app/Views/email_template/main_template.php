@@ -134,18 +134,10 @@
 						<td style="padding: 0px 50px 50px 50px; background-color: #ffffff!important;" bgcolor="#ffffff">
 							<table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:500px;">
 								<tr>
-									<td class="body" bgcolor="#E5E4E3">
+									<td class="body" bgcolor="#E5E4E3" style="padding: 10px;">
 										<?= $this->renderSection('body') ?>
 									</td>
 								</tr>
-								<!-- <tr>
-									<td class="footer" bgcolor="#E5E4E3">
-										<p>
-											Si usted no ha realizado esta
-											acción ignore este mensaje.
-										</p>
-									</td>
-								</tr> -->
 							</table>
 						</td>
 					</tr>

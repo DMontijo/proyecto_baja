@@ -17,6 +17,7 @@ use App\Models\FolioDocModel;
 use App\Models\FolioModel;
 use App\Models\FolioPersonaFisicaModel;
 use App\Models\TipoExpedienteModel;
+use App\Models\FolioRelacionFisFisModel;
 use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelLow;
@@ -39,7 +40,8 @@ class FirmaController extends BaseController
 	private $_folioModel;
 	private $_folioPersonaFisicaModel;
 	private $_tipoExpedienteModel;
-	
+	private $_folioRelacionFisFisModel;
+
 	function __construct()
 	{
 		$this->_plantillasModel = new PlantillasModel();
@@ -54,6 +56,7 @@ class FirmaController extends BaseController
 		$this->_folioModel = new FolioModel();
 		$this->_folioPersonaFisicaModel = new FolioPersonaFisicaModel();
 		$this->_tipoExpedienteModel = new TipoExpedienteModel();
+		$this->_folioRelacionFisFisModel = new FolioRelacionFisFisModel();
 	}
 
 	public function firmar_constancia_extravio()
@@ -388,13 +391,12 @@ class FirmaController extends BaseController
 						$estado = $this->_estadosModel->asObject()->where('ESTADOID', $documento[$i]->ESTADOID)->first();
 
 						$signature = $this->_generateSignature($user_id, "FIRMA DE DOCUMENTOS", $text, $expediente, $FECHAFIRMA, $HORAFIRMA);
-					
+
 						if ($numexpediente != null && $numexpediente != "undefined") {
 
-						$urldoc = base_url('/validar_documento?expediente=' . base64_encode($numexpediente) . '&year=' . $year . '&foliodoc=' . base64_encode($documento[$i]->FOLIODOCID));
-						}else{
+							$urldoc = base_url('/validar_documento?expediente=' . base64_encode($numexpediente) . '&year=' . $year . '&foliodoc=' . base64_encode($documento[$i]->FOLIODOCID));
+						} else {
 							$urldoc = base_url('/validar_documento?folio=' . base64_encode($folio) . '&year=' . $year . '&foliodoc=' . base64_encode($documento[$i]->FOLIODOCID));
-
 						}
 						if (strlen($signature->signed_chain) > 2930) {
 							$signature->signed_chain = substr($signature->signed_chain, 0, 2930) . '...';
@@ -438,7 +440,6 @@ class FirmaController extends BaseController
 								$update = $this->_folioDocModel->set($datosInsert)->where('NUMEROEXPEDIENTE', $numexpediente)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
 							} else {
 								$update = $this->_folioDocModel->set($datosInsert)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
-
 							}
 							if ($update) {
 								$datosBitacora = [
@@ -774,6 +775,7 @@ class FirmaController extends BaseController
 		});
 		return $dompdf->output();
 	}
+
 	private function _generatePDFDocumentos($datapdf)
 	{
 
@@ -829,6 +831,7 @@ class FirmaController extends BaseController
 		});
 		return $dompdf->output();
 	}
+
 	private function _generateQR($info)
 	{
 		$writer = new PngWriter();
@@ -868,88 +871,73 @@ class FirmaController extends BaseController
 
 	public function sendEmailDocumentos()
 	{
-		$to = $this->request->getPost('send_mail_select');
+		$to = trim($this->request->getPost('send_mail_select'));
 		$expediente = $this->request->getPost('expediente_modal_correo');
 		$year = $this->request->getPost('year_modal_correo');
 		$folio = $this->request->getPost('folio');
 
-		if ($expediente != "undefined" && $expediente !='') {
-			$documento = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente)->where('ANO', $year)->where('STATUS', 'FIRMADO')->where('STATUSENVIO', 1)->where('ENVIADO', 'N')->findAll();
-		}else{
-			$documento = $this->_folioDocModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'FIRMADO')->where('STATUSENVIO', 1)->where('ENVIADO', 'N')->findAll();
-		}
-		if (empty($documento)) {
+		if ($to && $year && $folio) {
+			if ($expediente != "undefined" && $expediente != '') {
+				$documento = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente)->where('ANO', $year)->where('STATUS', 'FIRMADO')->where('STATUSENVIO', 1)->where('ENVIADO', 'N')->findAll();
+				$folioM = $this->_folioModel->asObject()->where('ANO', $year)->where('EXPEDIENTEID', $expediente)->first();
+				$tipoExpediente = $this->_tipoExpedienteModel->asObject()->where('TIPOEXPEDIENTEID',  $folioM->TIPOEXPEDIENTEID)->first();
+				$delito = $this->_folioRelacionFisFisModel->get_by_folio($folio, $year);
+				$delito =  $delito[0]['DELITOMODALIDADDESCR'];
+			} else {
+				$documento = $this->_folioDocModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'FIRMADO')->where('STATUSENVIO', 1)->where('ENVIADO', 'N')->findAll();
+				$folioM = $this->_folioModel->asObject()->where('ANO', $year)->where('FOLIOID', $folio)->first();
+				$tipoExpediente = '';
+				$delito = '';
+			}
+
+			if (empty($documento)) {
+				return json_encode((object)['status' => 3]);
+			}
+
+			$imputado = $this->_folioPersonaFisicaModel->asObject()->where('ANO', $year)->where('FOLIOID', $folioM->FOLIOID)->where('CALIDADJURIDICAID', 2)->first();
+			$agente = $this->_usuariosModel->asObject()->where('ID', session('ID'))->first();
+
+			$folio = $folioM->FOLIOID;
+			$agente = trim($agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' .  $agente->APELLIDO_MATERNO);
+			$imputado = trim($imputado->NOMBRE . ' ' . $imputado->PRIMERAPELLIDO . ' ' .  $imputado->SEGUNDOAPELLIDO);
+
+			$aviso_privacidad = file_get_contents(FCPATH . 'assets/documentos/Aviso_De_Privacidad_De_Datos.pdf');
+			$derecho_ofendido = file_get_contents(FCPATH . 'assets/documentos/DerechosDeVictimaOfendido.pdf');
+			$termino_condiciones = file_get_contents(FCPATH . 'assets/documentos/TerminosCondiciones.pdf');
+
+			$email = \Config\Services::email();
+			$email->setTo($to);
+			$email->setSubject('Documentos firmados - ' . $folio . '/' . $folioM->ANO);
+			$body = view('email_template/documentos_firmados_email_template.php', ['agente' => $agente, 'expediente' => $folioM->EXPEDIENTEID ? $expediente : 'SIN EXPEDIENTE', 'folio' => $folio, 'year' => $folioM->ANO, 'tipoexpediente' => $folioM->TIPOEXPEDIENTEID ? $tipoExpediente->TIPOEXPEDIENTEDESCR : $folioM->STATUS, 'status' => $folioM->STATUS, 'delito' => $delito, 'imputado' => $imputado]);
+			$email->setMessage($body);
+
+			for ($i = 0; $i < count($documento); $i++) {
+				$pdf = $documento[$i]->PDF;
+				$xml = $documento[$i]->XML;
+				$email->attach($pdf, 'attachment',  $documento[$i]->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento[$i]->FOLIODOCID . '.pdf', 'application/pdf');
+				$email->attach($xml, 'attachment', $documento[$i]->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento[$i]->FOLIODOCID . '.xml', 'application/xml');
+			}
+
+			$email->attach($termino_condiciones, 'attachment', 'Terminos_Y_Condiciones.pdf', 'application/pdf');
+			$email->attach($aviso_privacidad, 'attachment', 'Aviso_De_Privacidad.pdf', 'application/pdf');
+			$email->attach($derecho_ofendido, 'attachment', 'Derechos_De_Victima_Ofendido.pdf', 'application/pdf');
+
+			if ($email->send()) {
+				$datosUpdate = [
+					'ENVIADO' => 'S',
+				];
+				for ($i = 0; $i < count($documento); $i++) {
+					$update = $this->_folioDocModel->set($datosUpdate)->where('NUMEROEXPEDIENTE', $expediente)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
+				}
+				return json_encode((object)['status' => 1]);
+			} else {
+				return json_encode((object)['status' => 0]);
+			}
+		} else {
 			return json_encode((object)['status' => 3]);
 		}
-		
-		if ($expediente != "undefined" && $expediente !='') {
-		$folioM = $this->_folioModel->asObject()->where('ANO', $year)->where('EXPEDIENTEID', $expediente)->first();
-		$tipoExpediente = $this->_tipoExpedienteModel->asObject()->where('TIPOEXPEDIENTEID',  $folioM->TIPOEXPEDIENTEID)->first();
-
-		}else{
-			$folioM = $this->_folioModel->asObject()->where('ANO', $year)->where('FOLIOID', $folio)->first();
-
-		}
-		$imputado = $this->_folioPersonaFisicaModel->asObject()->where('ANO', $year)->where('FOLIOID', $folioM->FOLIOID)->where('CALIDADJURIDICAID', 2)->first();
-
-
-		$agente = $documento[0]->RAZONSOCIALFIRMA;
-		$folio = $folioM->FOLIOID;
-		$delito =  $folioM->HECHODELITO;
-		$imputado = $imputado->NOMBRE . ' ' . $imputado->PRIMERAPELLIDO . ' ' .  $imputado->SEGUNDOAPELLIDO;
-		$directory = FCPATH . 'assets/documentos';
-		$aviso  = "Aviso_De_Privacidad_De_Datos.pdf";
-		$ofendido  = "DerechosDeVictimaOfendido.pdf";
-		$terminos  = "TerminosCondiciones.pdf";
-
-
-		$aviso_privacidad = file_get_contents($directory . '/' . $aviso);
-
-		$derecho_ofendido = file_get_contents($directory . '/' . $ofendido);
-		$termino_condiciones = file_get_contents($directory . '/' . $terminos);
-
-		$email = \Config\Services::email();
-		$email->setTo($to);
-		$email->setSubject('Documentos firmados');
-		$body = view('email_template/documentos_firmados_email_template.php', ['agente' => $agente, 'expediente' => $folioM->EXPEDIENTEID ?$expediente : 'SIN EXPEDIENTE', 'folio' => $folio, 'tipoexpediente' => $folioM->TIPOEXPEDIENTEID ? $tipoExpediente->TIPOEXPEDIENTEDESCR : $folioM->STATUS, 'delito' => $delito, 'imputado' => $imputado]);
-		$email->setMessage($body);
-
-		for ($i = 0; $i < count($documento); $i++) {
-			$pdf = $documento[$i]->PDF;
-			$xml = $documento[$i]->XML;
-			// $terminos = $documento[$i]->TERMINOS;
-			// $derechos = $documento[$i]->DERECHOS;
-			// $privacidad = $documento[$i]->PRIVACIDAD;
-
-			$email->attach($pdf, 'attachment',  $documento[$i]->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento[$i]->FOLIODOCID . '.pdf', 'application/pdf');
-			$email->attach($xml, 'attachment', $documento[$i]->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento[$i]->FOLIODOCID . '.xml', 'application/xml');
-			// $email->attach($terminos, 'attachment','TerminosCondiciones.pdf', 'application/pdf');
-			// $email->attach($derechos, 'attachment','DerechosDeVictimaOfendido.pdf', 'application/pdf');
-			// $email->attach($privacidad, 'attachment','AvisoDePrivacidad.pdf', 'application/pdf');
-
-
-
-		}
-		// $terminos = base_url('/assets/documentos/TerminosCondiciones.pdf');
-		// $avisop = base_url('/assets/documentos/Aviso_De_Privacidad_De_Datos.pdf');
-		// $derechos_victima_ofendido = base_url('/assets/documentos/DerechosDeVictimaOfendido.pdf');
-
-		$email->attach($termino_condiciones, 'attachment', 'Terminos_Y_Condiciones.pdf', 'application/pdf');
-		$email->attach($aviso_privacidad, 'attachment', 'Aviso_De_Privacidad.pdf', 'application/pdf');
-		$email->attach($derecho_ofendido, 'attachment', 'Derechos_De_Victima_Ofendido.pdf', 'application/pdf');
-
-		if ($email->send()) {
-			$datosUpdate = [
-				'ENVIADO' => 'S',
-			];
-			for ($i = 0; $i < count($documento); $i++) {
-				$update = $this->_folioDocModel->set($datosUpdate)->where('NUMEROEXPEDIENTE', $expediente)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
-			}
-			return json_encode((object)['status' => 1]);
-		} else {
-			return json_encode((object)['status' => 0]);
-		}
 	}
+
 	private function _bitacoraActividad($data)
 	{
 		$data = $data;

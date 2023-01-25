@@ -27,13 +27,9 @@ class FolioRelacionFisFisModel extends Model
 		$query = $builder->get();
 		return $query->getResult('array');
 	}
+
 	public function count_delitosFisFis($folio, $year, $delito, $imputado)
 	{
-
-		// $sql = 'SELECT COUNT(DELITOMODALIDADID) FROM FOLIOPERSONAFISIMPDELITO WHERE FOLIOID =' . $folio .'AND ANO='. $year;
-		// $query =  $this->db->query($sql);
-
-		// return $query->getRow();
 		$builder = $this->db->table($this->table);
 		$builder->selectCount('DELITOMODALIDADID');
 		$builder->where('FOLIOID', $folio);
