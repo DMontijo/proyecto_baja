@@ -113,6 +113,7 @@
 	const canalizaciones = document.querySelector('#canalizaciones');
 
 	tipoSalida.addEventListener('change', (e) => {
+		
 		const notas_caso_salida = document.querySelector('#notas_caso_salida');
 		const notas_caso_mp = document.querySelector('#notas_mp');
 		notas_caso_salida.value = notas_caso_mp.value;
@@ -122,12 +123,22 @@
 			document.getElementById("numCaracterSalida").innerHTML = '300 caracteres restantes';
 
 		}
+
+
+		if (!(e.target.value == 'DERIVADO' || e.target.value == 'CANALIZADO' || e.target.value == '1' || e.target.value == '4' || e.target.value == '5' || e.target.value == '6' || e.target.value == '7' || e.target.value == '8' || e.target.value == '9')) {
+			document.querySelector('#v-pills-delitos-tab').classList.add('d-none');
+			document.querySelector('#v-pills-documentos-tab').classList.add('d-none');
+
+			municipio_empleado_container.classList.add('d-none');
+
+		} else {
+			municipio_empleado_container.classList.remove('d-none');
+		}
 		if (e.target.value == 'CANALIZADO') {
 			canalizaciones_container.classList.remove('d-none');
-			municipio_empleado_container.classList.remove('d-none');
-			municipio_empleado.value = '';
 
 			document.querySelector('#municipio_empleado').addEventListener('change', (e) => {
+				// if (tipoSalida.value == "CANALIZADO") {
 
 				let select_canalizacion = document.querySelector('#canalizaciones');
 				clearSelect(select_canalizacion);
@@ -144,13 +155,6 @@
 				}).done(function(response) {
 					clearSelect(select_canalizacion);
 					let canalizacion = response;
-					if (canalizacion == '') {
-						Swal.fire({
-							icon: 'error',
-							text: 'No se puede canalizar en este municipio.',
-							confirmButtonColor: '#bf9b55',
-						});
-					}
 
 					canalizacion.forEach(canalizacion => {
 						var option = document.createElement("option");
@@ -161,15 +165,21 @@
 				}).fail(function(jqXHR, textStatus) {
 					clearSelect(select_canalizacion);
 				});
-
-
+			// }
 			});
-		} else if (e.target.value == 'DERIVADO') {
-			derivaciones_container.classList.remove('d-none');
-			municipio_empleado_container.classList.remove('d-none');
+	
+		} else {
+			canalizaciones_container.classList.add('d-none');
 			municipio_empleado.value = '';
+			canalizaciones.value = '';
+
+		}
+
+		if (e.target.value == 'DERIVADO') {
+			derivaciones_container.classList.remove('d-none');
 
 			document.querySelector('#municipio_empleado').addEventListener('change', (e) => {
+				// if (tipoSalida.value == "DERIVADO") {
 
 				let select_derivacion = document.querySelector('#derivaciones');
 				clearSelect(select_derivacion);
@@ -178,6 +188,7 @@
 				let data = {
 					'municipio': e.target.value,
 				}
+				console.log(e);
 				$.ajax({
 					data: data,
 					url: "<?= base_url('/data/get-derivacion-by-municipio') ?>",
@@ -185,14 +196,7 @@
 					dataType: "json",
 				}).done(function(response) {
 					clearSelect(select_derivacion);
-					let derivacion = response;
-					if (derivacion == '') {
-						Swal.fire({
-							icon: 'error',
-							text: 'No se puede derivar en este municipio.',
-							confirmButtonColor: '#bf9b55',
-						});
-					}
+					 let derivacion = response;
 
 					derivacion.forEach(derivacion => {
 						var option = document.createElement("option");
@@ -203,24 +207,15 @@
 				}).fail(function(jqXHR, textStatus) {
 					clearSelect(select_derivacion);
 				});
-
-
+			// }
 			});
-		}
-		
-		else if (!(e.target.value == '1' || e.target.value == '4' || e.target.value == '5' || e.target.value == '6' || e.target.value == '7' || e.target.value == '8' || e.target.value == '9')) {
-			document.querySelector('#v-pills-delitos-tab').classList.add('d-none');
-			document.querySelector('#v-pills-documentos-tab').classList.add('d-none');
-
-			// municipio_empleado_container.classList.add('d-none');
-
+	
 		} else {
-			municipio_empleado_container.classList.remove('d-none');
-			canalizaciones_container.classList.add('d-none');
 			derivaciones_container.classList.add('d-none');
 			municipio_empleado.value = '';
+			derivaciones.value = '';
+
 		}
-		
 	});
 
 	btnAgregarDelito.addEventListener('click', (e) => {

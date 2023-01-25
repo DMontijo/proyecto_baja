@@ -27,6 +27,7 @@ class FolioRelacionFisFisModel extends Model
 		$query = $builder->get();
 		return $query->getResult('array');
 	}
+
 	public function count_delitosFisFis($folio, $year, $delito, $imputado)
 	{
 

@@ -14,6 +14,8 @@
 							<a class="nav-link active" id="v-pills-salida-tab" data-toggle="pill" href="#v-pills-salida" role="tab" aria-controls="v-pills-salida" aria-selected="true"><i class="fas fa-sign-out-alt"></i> Salida</a>
 							<a class="nav-link d-none" id="v-pills-delitos-tab" data-toggle="pill" href="#v-pills-delitos" role="tab" aria-controls="v-pills-delitos" aria-selected="false"><i class="fas fa-people-arrows"></i> Delitos</a>
 							<a class="nav-link d-none" id="v-pills-documentos-tab" data-toggle="pill" href="#v-pills-documentos" role="tab" aria-controls="v-pills-documentos" aria-selected="false"><i class="fas fa-file-alt"></i> Documentos</a>
+							<a target="_blank" href="https://www.google.com.mx/maps" class="nav-link active"><i class="fas fa-map"></i> Google Maps</a>
+
 						</div>
 					</div>
 					<div class="col-9">
@@ -145,49 +147,51 @@
 			canalizaciones_container.classList.remove('d-none');
 			document.querySelector('#municipio_empleado').addEventListener('change', (e) => {
 
-				let select_canalizacion = document.querySelector('#canalizaciones');
-				clearSelect(select_canalizacion);
-				select_canalizacion.value = '';
 
-				let data = {
-					'municipio': e.target.value,
-				}
-				$.ajax({
-					data: data,
-					url: "<?= base_url('/data/get-canalizacion-by-municipio') ?>",
-					method: "POST",
-					dataType: "json",
-				}).done(function(response) {
+				if (tipoSalida.value == "CANALIZADO") {
+
+					let select_canalizacion = document.querySelector('#canalizaciones');
 					clearSelect(select_canalizacion);
-					let canalizacion = response;
-					if (canalizacion == '') {
-						Swal.fire({
-							icon: 'error',
-							text: 'No se puede canalizar en este municipio.',
-							confirmButtonColor: '#bf9b55',
-						});
+					select_canalizacion.value = '';
+
+					let data = {
+						'municipio': e.target.value,
 					}
 
-					canalizacion.forEach(canalizacion => {
-						var option = document.createElement("option");
-						option.text = canalizacion.INSTITUCIONREMISIONDESCR;
-						option.value = canalizacion.INSTITUCIONREMISIONID;
-						select_canalizacion.add(option);
+					$.ajax({
+						data: data,
+						url: "<?= base_url('/data/get-canalizacion-by-municipio') ?>",
+						method: "POST",
+						dataType: "json",
+					}).done(function(response) {
+						clearSelect(select_canalizacion);
+						let canalizacion = response;
+					
+
+						canalizacion.forEach(canalizacion => {
+							var option = document.createElement("option");
+							option.text = canalizacion.INSTITUCIONREMISIONDESCR;
+							option.value = canalizacion.INSTITUCIONREMISIONID;
+							select_canalizacion.add(option);
+						});
+					}).fail(function(jqXHR, textStatus) {
+						clearSelect(select_canalizacion);
 					});
-				}).fail(function(jqXHR, textStatus) {
-					clearSelect(select_canalizacion);
-				});
+				}
 
 
 			});
 		} else {
 			canalizaciones_container.classList.add('d-none');
 			municipio_empleado.value = '';
+
+			canalizaciones.value = '';
 		}
 
 		if (e.target.value == 'DERIVADO') {
 			derivaciones_container.classList.remove('d-none');
 			document.querySelector('#municipio_empleado').addEventListener('change', (e) => {
+				if (tipoSalida.value == "DERIVADO") {
 
 				let select_derivacion = document.querySelector('#derivaciones');
 				clearSelect(select_derivacion);
@@ -204,13 +208,7 @@
 				}).done(function(response) {
 					clearSelect(select_derivacion);
 					let derivacion = response;
-					if (derivacion == '') {
-						Swal.fire({
-							icon: 'error',
-							text: 'No se puede derivar en este municipio.',
-							confirmButtonColor: '#bf9b55',
-						});
-					}
+					
 
 					derivacion.forEach(derivacion => {
 						var option = document.createElement("option");
@@ -221,41 +219,44 @@
 				}).fail(function(jqXHR, textStatus) {
 					clearSelect(select_derivacion);
 				});
-
+			}
 
 			});
 		} else {
 			derivaciones_container.classList.add('d-none');
 			municipio_empleado.value = '';
+			derivaciones.value = '';
+
 		}
 	});
 
 	btnFinalizar.addEventListener('click', () => {
 		btnFinalizar.setAttribute('disabled', true);
-	
+
 		if (!(tipoSalida.value == '1' || tipoSalida.value == '4' || tipoSalida.value == '5' || tipoSalida.value == '6' || tipoSalida.value == '7' || tipoSalida.value == '8' || tipoSalida.value == '9')) {
 			let salida = tipoSalida.value;
 			let descripcion = document.querySelector('#notas_caso_salida').value;
-	
+
 			if (tipoSalida.value == 'DERIVADO' || tipoSalida.value == 'CANALIZADO') {
-				if (derivaciones.value == '' && tipoSalida.value == 'DERIVADO' || canalizaciones.value == '' &&  tipoSalida.value == 'CANALIZADO' ) {
+				if (derivaciones.value == '' && tipoSalida.value == 'DERIVADO' || canalizaciones.value == '' && tipoSalida.value == 'CANALIZADO') {
 					Swal.fire({
 						icon: 'error',
 						text: 'No se puede derivar ó canalizar sin una oficina.',
 						confirmButtonColor: '#bf9b55',
 					});
-					btnFinalizar.disabled= false;
+					btnFinalizar.disabled = false;
 
-				}else{
+				} else {
 					data = {
-					'folio': inputFolio.value,
-					'year': year_select.value,
-					'status': salida,
-					'motivo': descripcion,
-					'institutomunicipio': municipio_empleado.value,
-					'institutoremision': derivaciones.value != '' && tipoSalida.value == 'DERIVADO'  ? derivaciones.value: canalizaciones.value,
-				}}
-				
+						'folio': inputFolio.value,
+						'year': year_select.value,
+						'status': salida,
+						'motivo': descripcion,
+						'institutomunicipio': municipio_empleado.value,
+						'institutoremision': derivaciones.value != '' && tipoSalida.value == 'DERIVADO' ? derivaciones.value : canalizaciones.value,
+					}
+				}
+
 			} else {
 				data = {
 					'folio': inputFolio.value,
@@ -300,7 +301,7 @@
 				}).fail(function(jqXHR, textStatus) {
 					btnFinalizar.removeAttribute('disabled');
 				});
-				
+
 			} else {
 				btnFinalizar.removeAttribute('disabled');
 				Swal.fire({
