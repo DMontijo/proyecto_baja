@@ -133,6 +133,7 @@ class DocumentosController extends BaseController
 		if (!$this->permisos('DOCUMENTOS')) {
 			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
 		}
+		
 		$data = (object)array();
 		$data->folio = $this->request->getGet('folio');
 		$data->expediente = $this->request->getGet('expediente');

@@ -18,9 +18,6 @@ use App\Models\RolesPermisosModel;
 class ConstanciasController extends BaseController
 {
 	private $_constanciaExtravioModel;
-	private $_usuariosModel;
-	private $_zonasUsuariosModel;
-	private $_rolesUsuariosModel;
 	private $_plantillasModel;
 	private $_denunciantesModel;
 	private $_hechoLugarModel;
@@ -33,9 +30,6 @@ class ConstanciasController extends BaseController
 		//Models
 		$this->_constanciaExtravioModel = new ConstanciaExtravioModel();
 
-		$this->_usuariosModel = new UsuariosModel();
-		$this->_zonasUsuariosModel = new ZonasUsuariosModel();
-		$this->_rolesUsuariosModel = new RolesUsuariosModel();
 		$this->_plantillasModel = new PlantillasModel();
 		$this->_denunciantesModel = new DenunciantesModel();
 		$this->_hechoLugarModel = new HechoLugarModel();

@@ -42,7 +42,6 @@ class ReportesController extends BaseController
 
 	public function getFolios()
 	{
-
 		$data = [
 			'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
 			'fechaFin' => date("Y-m-d"),
@@ -59,7 +58,6 @@ class ReportesController extends BaseController
 		$dataView->empleados = $empleado;
 		$dataView->filterParams = (object)$data;
 		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
-
 
 		$this->_loadView('Folios generados', 'folios', '', $dataView, 'folios');
 	}
@@ -97,6 +95,7 @@ class ReportesController extends BaseController
 			$agente = $this->_usuariosModel->asObject()->where('ROLID', 2)->where('ID', $data['AGENTEATENCIONID'])->orderBy('NOMBRE', 'ASC')->first();
 			$data['AGENTENOMBRE'] = $agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' . $agente->APELLIDO_MATERNO;
 		}
+		
 		if (isset($data['MUNICIPIOID'])) {
 			$mun = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data['MUNICIPIOID'])->first();
 			$data['MUNICIPIONOMBRE'] = $mun->MUNICIPIODESCR;
@@ -330,6 +329,7 @@ class ReportesController extends BaseController
 			$agente = $this->_usuariosModel->asObject()->where('ROLID', 2)->where('ID', $data['AGENTEID'])->orderBy('NOMBRE', 'ASC')->first();
 			$data['AGENTENOMBRE'] = $agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' . $agente->APELLIDO_MATERNO;
 		}
+		
 		if (isset($data['MUNICIPIOID'])) {
 			$mun = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data['MUNICIPIOID'])->first();
 			$data['MUNICIPIONOMBRE'] = $mun->MUNICIPIODESCR;
