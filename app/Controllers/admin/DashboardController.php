@@ -1340,12 +1340,15 @@ class DashboardController extends BaseController
 
 			$documents = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente . '1')->findAll();
 
-			// $updateDoc = $this->_folioDocModel->set($dataFolioDoc)->where('NUMEROEXPEDIENTE', $expediente)->update();
-
 			$bandeja = $this->_folioModel->where('EXPEDIENTEID', $expediente)->first();
+			$existRac = $this->_bandejaRacModel->where('EXPEDIENTEID', $expediente);
+			if ($existRac) {
+				return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_error', 'Ya existe este RAC');
+			}
+			
 			$getMediador = $this->getMediador($municipio, $modulo);
 
-			$_bandeja_rac = $this->_createJusticiaAlterna($expediente, $procedimiento, $municipio);
+			$_bandeja_rac = $this->_createJusticiaAlterna($expediente, $procedimiento, $municipio, $getMediador->data->EMPLEADOID_MEDIADOR);
 
 
 			if ($_bandeja_rac->status == 201) {
@@ -1361,49 +1364,48 @@ class DashboardController extends BaseController
 	
 				$bandejaRac = $this->_bandejaRacModel->insert($dataBandeja);
 
+			
+				$subirArchivos = $this->subirArchivosRemision($bandeja['FOLIOID'], $bandeja['ANO'], $expediente);
+				$folioDoc = $this->_folioDocModel->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->join('RELACIONFOLIODOCEXPDOC', 'FOLIODOC.NUMEROEXPEDIENTE = RELACIONFOLIODOCEXPDOC.EXPEDIENTEID  AND FOLIODOC.FOLIODOCID = RELACIONFOLIODOCEXPDOC.FOLIODOCID')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('TIPODOC', 'SOLICITUD DE PERITAJE')->findAll();
+				if ($folioDoc) {
+					foreach ($folioDoc as $key => $doc) {
+						$solicitudp = array();
+						$solicitudp['ESTADOID'] = 2;
+						$solicitudp['MUNICIPIOID'] = $municipio;
+						$solicitudp['EMPLEADOIDREGISTRO'] = $_bandeja_rac->empleado;
+						$solicitudp['ANO'] = $doc['ANO'];
+						$solicitudp['TITULO'] = $doc['TIPODOC'];
+
+						$_solicitudPericial = $this->_createSolicitudesPericiales($solicitudp);
+						if ($_solicitudPericial->status == 201) {
+							$_solicitudDocto = $this->_createSolicitudDocto($expediente, $_solicitudPericial->SOLICITUDID, $doc['EXPEDIENTEDOCID'], $bandeja['MUNICIPIOASIGNADOID']);
+							if ($_solicitudDocto->status == 201) {
+								$_solicitudExpediente = $this->_createSolicitudExpediente($expediente, $_solicitudPericial->SOLICITUDID, $municipio);
+								$plantilla = (object) array();
+
+								$plantilla = $this->_plantillasModel->where('TITULO',  $doc['TIPODOC'])->first();
+								if ($municipio == 1 ||  $municipio == 6) {
+									$intervencion = $plantilla['INTERVENCIONENSENADAID'];
+								} else if ($municipio == 2 || $municipio == 3 || $municipio == 7) {
+									$intervencion = $plantilla['INTERVENCIONMEXICALIID'];
+								} else if ($municipio == 4 || $municipio == 5) {
+									$intervencion = $plantilla['INTERVENCIONTIJUANAID'];
+								}
+								$dataInter =  array('SOLICITUDID' => $_solicitudPericial->SOLICITUDID, 'INTERVENCIONID' => $intervencion);
+
+								$_intervencionPericial = $this->_createIntervencionPericial($dataInter, $municipio);
+								$datosBitacora = [
+									'ACCION' => 'Se envio una solicitud perital.',
+									'NOTAS' => 'Exp: ' . $expediente . ' Solicitud: ' . $_solicitudPericial->SOLICITUDID . 'Intervencion' . $intervencion,
+								];
+								$this->_bitacoraActividad($datosBitacora);
+							}
+						}
+					}
+				}
 				if (!$bandejaRac) {
 					return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_success', 'Remitido correctamente');
 				}
-				// $subirArchivos = $this->subirArchivosRemision($bandeja['FOLIOID'], $bandeja['ANO'], $expediente);
-				// $folioDoc = $this->_folioDocModel->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->join('RELACIONFOLIODOCEXPDOC', 'FOLIODOC.NUMEROEXPEDIENTE = RELACIONFOLIODOCEXPDOC.EXPEDIENTEID  AND FOLIODOC.FOLIODOCID = RELACIONFOLIODOCEXPDOC.FOLIODOCID')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('TIPODOC', 'SOLICITUD DE PERITAJE')->findAll();
-				// if ($folioDoc) {
-				// 	foreach ($folioDoc as $key => $doc) {
-				// 		$solicitudp = array();
-				// 		$solicitudp['ESTADOID'] = 2;
-				// 		$solicitudp['MUNICIPIOID'] = $municipio;
-				// 		$solicitudp['EMPLEADOIDREGISTRO'] = $_bandeja_rac->empleado;
-				// 		$solicitudp['OFICINAIDREGISTRO'] = $oficina;
-				// 		$solicitudp['AREAIDREGISTRO'] = $area;
-				// 		$solicitudp['ANO'] = $doc['ANO'];
-				// 		$solicitudp['TITULO'] = $doc['TIPODOC'];
-
-				// 		$_solicitudPericial = $this->_createSolicitudesPericiales($solicitudp);
-				// 		if ($_solicitudPericial->status == 201) {
-				// 			$_solicitudDocto = $this->_createSolicitudDocto($expediente, $_solicitudPericial->SOLICITUDID, $doc['EXPEDIENTEDOCID'], $bandeja['MUNICIPIOASIGNADOID']);
-				// 			if ($_solicitudDocto->status == 201) {
-				// 				$_solicitudExpediente = $this->_createSolicitudExpediente($expediente, $_solicitudPericial->SOLICITUDID, $municipio);
-				// 				$plantilla = (object) array();
-
-				// 				$plantilla = $this->_plantillasModel->where('TITULO',  $doc['TIPODOC'])->first();
-				// 				if ($municipio == 1 ||  $municipio == 6) {
-				// 					$intervencion = $plantilla['INTERVENCIONENSENADAID'];
-				// 				} else if ($municipio == 2 || $municipio == 3 || $municipio == 7) {
-				// 					$intervencion = $plantilla['INTERVENCIONMEXICALIID'];
-				// 				} else if ($municipio == 4 || $municipio == 5) {
-				// 					$intervencion = $plantilla['INTERVENCIONTIJUANAID'];
-				// 				}
-				// 				$dataInter =  array('SOLICITUDID' => $_solicitudPericial->SOLICITUDID, 'INTERVENCIONID' => $intervencion);
-
-				// 				$_intervencionPericial = $this->_createIntervencionPericial($dataInter, $municipio);
-				// 				$datosBitacora = [
-				// 					'ACCION' => 'Se envio una solicitud perital.',
-				// 					'NOTAS' => 'Exp: ' . $expediente . ' Solicitud: ' . $_solicitudPericial->SOLICITUDID . 'Intervencion' . $intervencion,
-				// 				];
-				// 				$this->_bitacoraActividad($datosBitacora);
-				// 			}
-				// 		}
-				// 	}
-				// }
 			}
 		} catch (\Exception $e) {
 			return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_error', 'Hubo un error en la remisión, verifica el expediente en justicia.');
@@ -3072,7 +3074,7 @@ class DashboardController extends BaseController
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
 
-	private function _createJusticiaAlterna($expedienteId, $procedimientoid, $municipio)
+	private function _createJusticiaAlterna($expedienteId, $procedimientoid, $municipio, $empleadoid)
 	{
 		$function = '/testing/justiciaAlterna.php?process=crear';
 		$array = [
@@ -3090,6 +3092,7 @@ class DashboardController extends BaseController
 
 		$data['EXPEDIENTEID'] = $expedienteId;
 		$data['TIPOPROCEDIMIENTOID'] = $procedimientoid;
+		// $data['EMPLEADOIDVALIDO'] = $empleadoid;
 		$data['userDB'] = $conexion->USER;
 		$data['pwdDB'] = $conexion->PASSWORD;
 		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
