@@ -481,6 +481,7 @@ class FoliosController extends BaseController
 		if (!$this->permisos('BUSQUEDA DE FOLIO')) {
 			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
 		}
+
 		$data = (object) array();
 		$data = [
 			'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
@@ -494,8 +495,10 @@ class FoliosController extends BaseController
 		}
 
 		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
+		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7";
+		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
+		
 		$resultFilter = $this->_folioModel->filterAllDates($data);
-		$empleado = $this->_usuariosModel->asObject()->where('ROLID', 2)->orderBy('NOMBRE', 'ASC')->findAll();
 
 		$dataView = (object) array();
 		$dataView->result = $resultFilter->result;
@@ -529,6 +532,7 @@ class FoliosController extends BaseController
 				unset($data[$clave]);
 			}
 		}
+
 		if (count($data) <= 0) {
 			$data = [
 				'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
@@ -552,6 +556,10 @@ class FoliosController extends BaseController
 
 	public function viewFolio()
 	{
+		if (!$this->permisos('BUSQUEDA DE FOLIO')) {
+			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
+		}
+
 		$data = (object) array();
 		if ($this->request->getPost('folio')) {
 			$data->folio = $this->request->getPost('folio');
@@ -559,7 +567,7 @@ class FoliosController extends BaseController
 			$data->folio = $this->request->getGet('folio');
 		}
 		if ($this->request->getPost('ano')) {
-			$data->year = $this->request->getPost('ano');
+			$data->year = $this->request->getPost('year');
 		} else {
 			$data->year = $this->request->getGet('year');
 		}
@@ -660,7 +668,6 @@ class FoliosController extends BaseController
 		$data->objetoclasificacion = $this->_objetoClasificacionModel->asObject()->findAll();
 		$data->objetosubclasificacion = $this->_objetoSubclasificacionModel->asObject()->findAll();
 		$data->tipomoneda = $this->_tipoMonedaModel->asObject()->findAll();
-		// $data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->findAll();
 		$data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->where('TIPOEXPEDIENTEID <= 5')->findAll();
 
 		$data->distribuidorVehiculo = $this->_vehiculoDistribuidorModel->asObject()->findAll();
@@ -682,6 +689,7 @@ class FoliosController extends BaseController
 		}
 
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+
 		$this->_loadView('Video denuncia', 'videodenuncia', '', $data, 'ver_folio');
 	}
 

@@ -76,7 +76,18 @@
 				<?php if ($permiso->PERMISOID == 11) { ?>
 					<li class="c-sidebar-nav-item" id="nav-bandeja" name="nav-bandeja">
 						<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url('admin/dashboard/bandeja') ?>">
-							<i class="fas fa-solid fa-inbox c-sidebar-nav-icon"></i> Bandeja
+							<i class="fas fa-solid fa-inbox c-sidebar-nav-icon"></i> Bandeja remisión
+						</a>
+					</li>
+				<?php } ?>
+			<?php } ?>
+			<?php foreach ($body_data->rolPermiso as $permiso) { ?>
+
+				<?php if ($permiso->PERMISOID == 3) { ?>
+
+					<li class="c-sidebar-nav-item" id="nav-folios" name="nav-folios">
+						<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/folios">
+							<i class="fas fa-archive c-sidebar-nav-icon"></i> Bandeja folios
 						</a>
 					</li>
 				<?php } ?>
@@ -88,22 +99,10 @@
 
 					<li class="c-sidebar-nav-item" id="nav-buscar-folio" name="nav-buscar-folio">
 						<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url('admin/dashboard/buscar_folio') ?>">
-							<i class="fas fa-search c-sidebar-nav-icon"></i> Buscar folio
+							<i class="fas fa-search c-sidebar-nav-icon"></i> Consultar folios
 						</a>
 					</li>
 
-				<?php } ?>
-			<?php } ?>
-
-			<?php foreach ($body_data->rolPermiso as $permiso) { ?>
-
-				<?php if ($permiso->PERMISOID == 3) { ?>
-
-					<li class="c-sidebar-nav-item" id="nav-folios" name="nav-folios">
-						<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/folios">
-							<i class="fas fa-archive c-sidebar-nav-icon"></i> Folios
-						</a>
-					</li>
 				<?php } ?>
 			<?php } ?>
 
@@ -118,21 +117,15 @@
 				<?php } ?>
 			<?php } ?>
 
-			<?php foreach ($body_data->rolPermiso as $permiso) { ?>
-
+			<!-- <?php foreach ($body_data->rolPermiso as $permiso) { ?>
 				<?php if ($permiso->PERMISOID == 5) { ?>
 					<li class="c-sidebar-nav-item" id="nav-documentos" name="nav-documentos">
 						<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/documentos">
 							<i class="fas fa-file-invoice c-sidebar-nav-icon"></i> Documentos
 						</a>
 					</li>
-					<!-- <li class="c-sidebar-nav-item">
-				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/firmas">
-					<i class="fas fa-file-alt c-sidebar-nav-icon"></i> Firmar documentos
-				</a>
-			</li> -->
 				<?php } ?>
-			<?php } ?>
+			<?php } ?> -->
 
 			<?php foreach ($body_data->rolPermiso as $permiso) { ?>
 
@@ -142,12 +135,6 @@
 							<i class="fas fa-users c-sidebar-nav-icon"></i> Usuarios
 						</a>
 					</li>
-
-					<!-- <li class="c-sidebar-nav-item">
-				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url('admin/dashboard/perfil') ?>">
-					<i class="fas fa-address-card c-sidebar-nav-icon"></i> Perfil
-				</a>
-			</li> -->
 				<?php } ?>
 			<?php } ?>
 
@@ -179,7 +166,6 @@
 					</li>
 				<?php } ?>
 			<?php } ?>
-
 
 			<li class="c-sidebar-nav-item" id="nav-salir" name="nav-salir">
 				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url('admin/logout') ?>">
