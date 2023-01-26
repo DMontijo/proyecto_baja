@@ -53,6 +53,8 @@ $routes->group('admin', function ($routes) {
 		$routes->get('bandeja', 'admin/DashboardController::bandeja_salida');
 		$routes->get('bandeja_remision', 'admin/DashboardController::bandeja_remision');
 		$routes->post('bandeja_remision', 'admin/DashboardController::bandeja_remision_post');
+		$routes->post('bandeja_rac', 'admin/DashboardController::bandeja_rac');
+
 
 		$routes->get('usuarios', 'admin/DashboardController::usuarios');
 		$routes->get('asignacion_permisos', 'admin/DashboardController::asignacion_permisos');
@@ -294,6 +296,10 @@ $routes->group('data', function ($routes) {
 
 	//Clear videodenuncia users Jitsi
 	$routes->post('clear-users-video', 'admin/DashboardController::clearUsersVideo');
+
+	//RAC
+	$routes->post('get-modulos', 'admin/DashboardController::getModulos');
+
 });
 
 
