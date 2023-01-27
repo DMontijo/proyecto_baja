@@ -3361,6 +3361,7 @@ class DashboardController extends BaseController
 	public function getLinkFromCall()
 	{
 		$folio = $this->request->getPost('folio');
+		$year = $this->request->getPost('year');
 
 		if ($folio) {
 			$endpoint = 'https://videodenunciaserver1.fgebc.gob.mx/api/vc';
@@ -3368,7 +3369,7 @@ class DashboardController extends BaseController
 			$data['u'] = '24';
 			$data['token'] = '198429b7cc8a2a5733d97bc13153227dd5017555';
 			$data['a'] = 'getRepo';
-			$data['folio'] = $folio;
+			$data['folio'] = $year . '-' . $folio;
 			$data['min'] = !empty($this->request->getPost('min')) ? $this->request->getPost('min') : '2000-01-01';
 			$data['max'] = !empty($this->request->getPost('max')) ? $this->request->getPost('max') : date("Y-m-d");
 
@@ -3379,6 +3380,10 @@ class DashboardController extends BaseController
 				if ($call->Grabación != '') {
 					array_push($calls, $call);
 				}
+			}
+
+			if (count($calls) == 0) {
+				return json_encode(['status' => 1, 'data' => $calls]);
 			}
 			return json_encode(['status' => 1, 'data' => $calls]);
 		} else {
