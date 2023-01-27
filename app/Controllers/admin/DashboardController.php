@@ -905,8 +905,6 @@ class DashboardController extends BaseController
 
 	public function getFolioInformation()
 	{
-
-
 		$data = (object) array();
 		$numfolio = trim($this->request->getPost('folio'));
 		$year = trim($this->request->getPost('year'));
@@ -954,7 +952,6 @@ class DashboardController extends BaseController
 						'NOTAS' => 'FOLIO: ' . $numfolio . ' AÑO: ' . $year,
 					];
 					$this->_bitacoraActividad($datosBitacora);
-					// var_dump($data);exit;
 					return json_encode($data);
 				} else if ($data->folio->STATUS == 'EN PROCESO' && $data->folio->TIPODENUNCIA == "VD") {
 					return json_encode(['status' => 2, 'motivo' => 'EL FOLIO YA ESTA SIENDO ATENDIDO']);
@@ -1196,8 +1193,6 @@ class DashboardController extends BaseController
 		$data->tecate = $this->_folioModel->bandeja_salida(3);
 		$data->tijuana = $this->_folioModel->bandeja_salida(4);
 		$data->rosarito = $this->_folioModel->bandeja_salida(5);
-		// var_dump($data->mexicali);
-		// exit;
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 		$this->_loadView('Bandeja de remisión', 'bandeja de remision', '', $data, 'bandeja/bandeja_salida');
 	}
@@ -1227,17 +1222,17 @@ class DashboardController extends BaseController
 			$this->_loadView('Bandeja remisión', 'remision', '', $data, 'bandeja/bandeja_remision');
 		}
 	}
+
 	public function bandeja_remision_post()
 	{
 		try {
-
 			$expediente = trim($this->request->getPost('expediente'));
 			$oficina = trim($this->request->getPost('oficina'));
 			$empleado = trim($this->request->getPost('empleado'));
 			$municipio = trim($this->request->getPost('municipio'));
 
 			$area = $this->_empleadosModel->asObject()->where('EMPLEADOID', $empleado)->where('MUNICIPIOID', $municipio)->first();
-			$documents = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente . '1')->findAll();
+			$documents = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente)->findAll();
 			$status = 2;
 
 			foreach ($documents as $key => $document) {
@@ -1340,16 +1335,14 @@ class DashboardController extends BaseController
 			$procedimiento = trim($this->request->getPost('procedimiento'));
 			$municipio = trim($this->request->getPost('municipio'));
 
-			$documents = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente . '1')->findAll();
-
-			$bandeja = $this->_folioModel->where('EXPEDIENTEID', $expediente)->first();
-			$existRac = $this->_bandejaRacModel->where('EXPEDIENTEID', $expediente)->first();
+			$existRac = $this->_bandejaRacModel->asObject()->where('EXPEDIENTEID', $expediente)->findAll();
 			if ($existRac) {
-				return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_error', 'Ya existe este RAC');
+				return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_error', 'Ya fue remitido este RAC.');
 			}
-			$documents = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente . '1')->findAll();
-			$status = 2;
 
+			$status = 2;
+			$bandeja = $this->_folioModel->where('EXPEDIENTEID', $expediente)->first();
+			$documents = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente)->findAll();
 			foreach ($documents as $key => $document) {
 				if (
 					$document->TIPODOC == 'CRITERIO DE OPORTUNIDAD' ||
@@ -1366,14 +1359,28 @@ class DashboardController extends BaseController
 				'OFICINAASIGNADOID' => $modulo,
 				'AREAASIGNADOID' => $getMediador->data->AREA_MEDIADOR
 			);
-			$update = $this->_folioModel->set($dataFolio)->where('EXPEDIENTEID', $expediente)->update();
+			try {
+				$_bandeja_rac = $this->_createJusticiaAlterna($expediente, $procedimiento, $municipio);
 
-			$updateExpediente = $this->_updateExpedienteByBandeja($expediente, $municipio, $modulo, $getMediador->data->EMPLEADOID_MEDIADOR, $getMediador->data->AREA_MEDIADOR, $status);
-
-			$_bandeja_rac = $this->_createJusticiaAlterna($expediente, $procedimiento, $municipio);
-
+				if ($_bandeja_rac->status == 401) {
+					return redirect()->back()->with('message_error', 'Hay un error en la tabla expedientejusticiaalterna por lo tanto no se puede remitir.');
+				}
+			} catch (\Exception $e) {
+				return redirect()->back()->with('message_error', 'No se esta guardando en tabla expedientejusticiaalterna por lo tanto no se puede remitir.');
+			}
+			try {
+				$updateExpediente = $this->_updateExpedienteByBandeja($expediente, $municipio, $modulo, $getMediador->data->EMPLEADOID_MEDIADOR, $getMediador->data->AREA_MEDIADOR, $status);
+				if ($updateExpediente->status == 401) {
+					return redirect()->back()->with('message_error', 'No se actualizo el expediente en justicia por lo tanto no se puede remitir.');
+				}
+			} catch (\Exception $e) {
+				return redirect()->back()->with('message_error', 'No se actualizo el expediente en justicia por lo tanto no se puede remitir.');
+			}
 
 			if ($updateExpediente->status == 201 && $_bandeja_rac->status == 201) {
+
+				$this->_folioModel->set($dataFolio)->where('EXPEDIENTEID', $expediente)->update();
+
 				$dataBandeja = array(
 					'FOLIOID' =>	$bandeja['FOLIOID'],
 					'ANO' =>	$bandeja['ANO'],
@@ -1383,11 +1390,9 @@ class DashboardController extends BaseController
 					'MEDIADORID' => $getMediador->data->EMPLEADOID_MEDIADOR
 				);
 
-
 				$bandejaRac = $this->_bandejaRacModel->insert($dataBandeja);
 
-
-				$subirArchivos = $this->subirArchivosRemision($bandeja['FOLIOID'], $bandeja['ANO'], $expediente);
+				$this->subirArchivosRemision($bandeja['FOLIOID'], $bandeja['ANO'], $expediente);
 				$folioDoc = $this->_folioDocModel->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->join('RELACIONFOLIODOCEXPDOC', 'FOLIODOC.NUMEROEXPEDIENTE = RELACIONFOLIODOCEXPDOC.EXPEDIENTEID  AND FOLIODOC.FOLIODOCID = RELACIONFOLIODOCEXPDOC.FOLIODOCID')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('TIPODOC', 'SOLICITUD DE PERITAJE')->findAll();
 
 				if ($folioDoc) {
@@ -1428,6 +1433,7 @@ class DashboardController extends BaseController
 						}
 					}
 				}
+
 				if (!$bandejaRac) {
 					$datosBitacora = [
 						'ACCION' => 'Remitio un expediente.',
@@ -1437,6 +1443,8 @@ class DashboardController extends BaseController
 
 					return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_success', 'Remitido correctamente');
 				}
+			} else {
+				return redirect()->back()->with('message_error', 'No se actualizo la bandeja RAC o el expediente, verifique con informática.');
 			}
 		} catch (\Exception $e) {
 			return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_error', 'Hubo un error en la remisión, verifica el expediente en justicia.');
@@ -2224,7 +2232,6 @@ class DashboardController extends BaseController
 
 	public function subirArchivosRemision($folio, $year, $expediente)
 	{
-
 		$folioDocSinFirmar = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'ABIERTO')->orderBy('FOLIODOCID', 'asc')->findAll();
 		$foliovd = $this->_folioModel->where('FOLIOID', $folio)->where('ANO', $year)->where('EXPEDIENTEID', $expediente)->where('STATUS', 'EXPEDIENTE')->first();
 
@@ -3107,6 +3114,7 @@ class DashboardController extends BaseController
 		// 		unset($data[$clave]);
 		// 	}
 		// }
+
 		$data['EXPEDIENTEID'] = $expedienteId;
 		$data['SOLICITUDID'] = $solicitudid;
 		$data['DOCTOID'] = $solicitudDocto;
@@ -3121,6 +3129,7 @@ class DashboardController extends BaseController
 	private function _createJusticiaAlterna($expedienteId, $procedimientoid, $municipio)
 	{
 		$function = '/testing/justiciaAlterna.php?process=crear';
+
 		$array = [
 			'EXPEDIENTEID',
 			'TIPOPROCEDIMIENTOID',
@@ -3128,9 +3137,8 @@ class DashboardController extends BaseController
 			'EMPLEADOIDVALIDO',
 			'AREAIDVALIDO',
 			'FECHAVALIDADO',
-
-
 		];
+
 		$endpoint = $this->endpoint . $function;
 		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
 
@@ -3746,10 +3754,18 @@ class DashboardController extends BaseController
 		$data['OFICINAIDRESPONSABLE'] = $oficina;
 		$data['EMPLEADOIDREGISTRO'] = $empleado;
 		$data['AREAIDREGISTRO'] = $area;
-		if ($oficina == 394 || $oficina == 792 || $oficina == 924) {
-			$data['AREAIDRESPONSABLE'] = $area;
+		if (ENVIRONMENT == 'production') {
+			if ($oficina == 409 || $oficina == 793 || $oficina == 924) {
+				$data['AREAIDRESPONSABLE'] = $area;
+			} else {
+				$data['AREAIDRESPONSABLE'] = null;
+			}
 		} else {
-			$data['AREAIDRESPONSABLE'] = null;
+			if ($oficina == 394 || $oficina == 792 || $oficina == 924) {
+				$data['AREAIDRESPONSABLE'] = $area;
+			} else {
+				$data['AREAIDRESPONSABLE'] = null;
+			}
 		}
 		$data['EXPEDIENTEID'] = $expediente;
 		$data['ESTADOJURIDICOEXPEDIENTEID'] = (string) $estadojuridicoid;
