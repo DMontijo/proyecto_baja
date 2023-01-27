@@ -433,6 +433,28 @@ if ($body_data->datosFolio->AGENTEASIGNADOID) { ?>
 			window.location.href = `<?= base_url('/admin/dashboard/documentos_show?folio=') ?>${inputFolio.value}&year=${year_select.value}`;
 		});
 
+		videos_folio_btn.addEventListener('click', () => {
+			data = {
+				'folio': inputFolio.value,
+				'year': year_select.value,
+			};
+			$.ajax({
+				data: data,
+				url: "<?= base_url('/data/get-link-from-call') ?>",
+				method: "POST",
+				dataType: "json",
+			}).done(function(data) {
+				console.log(data);
+			}).fail(function(jqXHR, textStatus) {
+				Swal.fire({
+					icon: 'error',
+					title: 'Hubo un error',
+					text: 'Contácte con soporte técnico',
+					confirmButtonColor: '#bf9b55',
+				})
+			});
+		});
+
 		function viewObjetoInvolucrado(objetoid) {
 			$('#folio_objetos_ver').modal('show');
 			$.ajax({

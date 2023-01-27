@@ -1345,7 +1345,7 @@ class DashboardController extends BaseController
 			if ($existRac) {
 				return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_error', 'Ya existe este RAC');
 			}
-			
+
 			$getMediador = $this->getMediador($municipio, $modulo);
 
 			$_bandeja_rac = $this->_createJusticiaAlterna($expediente, $procedimiento, $municipio, $getMediador->data->EMPLEADOID_MEDIADOR);
@@ -1353,18 +1353,18 @@ class DashboardController extends BaseController
 
 			if ($_bandeja_rac->status == 201) {
 				$dataBandeja = array(
-					'FOLIOID'=>	$bandeja['FOLIOID'],
-					'ANO'=>	$bandeja['ANO'],
-					'EXPEDIENTEID'=>$expediente,
+					'FOLIOID' =>	$bandeja['FOLIOID'],
+					'ANO' =>	$bandeja['ANO'],
+					'EXPEDIENTEID' => $expediente,
 					'TIPOPROCEDIMIENTOID' => $procedimiento,
 					'MODULOID' => $modulo,
 					'MEDIADORID' => $getMediador->data->EMPLEADOID_MEDIADOR
 				);
-			
-	
+
+
 				$bandejaRac = $this->_bandejaRacModel->insert($dataBandeja);
 
-			
+
 				$subirArchivos = $this->subirArchivosRemision($bandeja['FOLIOID'], $bandeja['ANO'], $expediente);
 				$folioDoc = $this->_folioDocModel->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->join('RELACIONFOLIODOCEXPDOC', 'FOLIODOC.NUMEROEXPEDIENTE = RELACIONFOLIODOCEXPDOC.EXPEDIENTEID  AND FOLIODOC.FOLIODOCID = RELACIONFOLIODOCEXPDOC.FOLIODOCID')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('TIPODOC', 'SOLICITUD DE PERITAJE')->findAll();
 				if ($folioDoc) {
@@ -3099,7 +3099,7 @@ class DashboardController extends BaseController
 		$data['schema'] = $conexion->SCHEMA;
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
-	
+
 	public function getModulos()
 	{
 		$municipio = $this->request->getPost('municipio');
@@ -3113,7 +3113,8 @@ class DashboardController extends BaseController
 		$data['schema'] = $conexion->SCHEMA;
 		return json_encode($this->_curlPostDataEncrypt($endpoint, $data)->data);
 	}
-	private function getMediador($municipio, $modulo){
+	private function getMediador($municipio, $modulo)
+	{
 		$function = '/testing/consumoVistas.php?process=getMediador';
 		$endpoint = $this->endpoint . $function;
 		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
@@ -3124,7 +3125,6 @@ class DashboardController extends BaseController
 		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
 		$data['schema'] = $conexion->SCHEMA;
 		return $this->_curlPostDataEncrypt($endpoint, $data);
-
 	}
 	private function _createFisImpDelito($expedienteId, $fisimpdelito, $imputado, $municipio)
 	{
@@ -3332,15 +3332,17 @@ class DashboardController extends BaseController
 
 	public function getLinkFromCall()
 	{
+
 		$folio = $this->request->getPost('folio');
-		
+		$year = $this->request->getPost('year');
+
 		if ($folio) {
 			$endpoint = 'https://videodenunciaserver1.fgebc.gob.mx/api/vc';
 			$data = array();
 			$data['u'] = '24';
 			$data['token'] = '198429b7cc8a2a5733d97bc13153227dd5017555';
 			$data['a'] = 'getRepo';
-			$data['folio'] = $folio;
+			$data['folio'] = $year . '-' . $folio;
 			$data['min'] = !empty($this->request->getPost('min')) ? $this->request->getPost('min') : '2000-01-01';
 			$data['max'] = !empty($this->request->getPost('max')) ? $this->request->getPost('max') : date("Y-m-d");
 
@@ -3351,6 +3353,10 @@ class DashboardController extends BaseController
 				if ($call->Grabación != '') {
 					array_push($calls, $call);
 				}
+			}
+
+			if (count($calls) == 0) {
+				return json_encode(['status' => 1, 'data' => $calls]);
 			}
 			return json_encode(['status' => 1, 'data' => $calls]);
 		} else {
