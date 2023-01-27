@@ -1983,7 +1983,7 @@ class DashboardController extends BaseController
 							$sect = $rtf->addSection();
 							$docP['PLACEHOLDER'] = str_replace('</p>', '<br>', $docP['PLACEHOLDER']);
 
-							$sinetiqueta = strip_tags($docP['PLACEHOLDER'],['strong', 'br']); //placeolder sin etiquetas html
+							$sinetiqueta = strip_tags($docP['PLACEHOLDER'], ['strong', 'br']); //placeolder sin etiquetas html
 							//escribe el texto del rtf
 							$sect->writeText($sinetiqueta, new PHPRtfLite_Font(11, 'Arial'), new PHPRtfLite_ParFormat(PHPRtfLite_ParFormat::TEXT_ALIGN_JUSTIFY));
 							// save rtf document
@@ -2230,7 +2230,7 @@ class DashboardController extends BaseController
 							$sect = $rtf->addSection();
 							$docP['PLACEHOLDER'] = str_replace('</p>', '<br>', $docP['PLACEHOLDER']);
 
-							$sinetiqueta = strip_tags($docP['PLACEHOLDER'],['strong', 'br']); //placeolder sin etiquetas html
+							$sinetiqueta = strip_tags($docP['PLACEHOLDER'], ['strong', 'br']); //placeolder sin etiquetas html
 							//escribe el texto del rtf
 							$sect->writeText($sinetiqueta, new PHPRtfLite_Font(11, 'Arial'), new PHPRtfLite_ParFormat(PHPRtfLite_ParFormat::TEXT_ALIGN_JUSTIFY));
 							// save rtf document
@@ -2982,7 +2982,7 @@ class DashboardController extends BaseController
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
 
-	private function _createJusticiaAlterna($expedienteId,$procedimientoid, $municipio)
+	private function _createJusticiaAlterna($expedienteId, $procedimientoid, $municipio)
 	{
 		$function = '/testing/justiciaAlterna.php?process=crear';
 		$array = [
@@ -2992,7 +2992,7 @@ class DashboardController extends BaseController
 			'EMPLEADOIDVALIDO',
 			'AREAIDVALIDO',
 			'FECHAVALIDADO',
-			
+
 
 		];
 		$endpoint = $this->endpoint . $function;
@@ -3218,6 +3218,34 @@ class DashboardController extends BaseController
 		$response = $this->_curlPost($endpoint, $data);
 
 		return json_encode($response);
+	}
+
+	public function getLinkFromCall()
+	{
+		$folio = $this->request->getPost('folio');
+		
+		if ($folio) {
+			$endpoint = 'https://videodenunciaserver1.fgebc.gob.mx/api/vc';
+			$data = array();
+			$data['u'] = '24';
+			$data['token'] = '198429b7cc8a2a5733d97bc13153227dd5017555';
+			$data['a'] = 'getRepo';
+			$data['folio'] = $folio;
+			$data['min'] = !empty($this->request->getPost('min')) ? $this->request->getPost('min') : '2000-01-01';
+			$data['max'] = !empty($this->request->getPost('max')) ? $this->request->getPost('max') : date("Y-m-d");
+
+			$response = $this->_curlPost($endpoint, $data);
+			$calls = [];
+
+			foreach ($response->data as $call) {
+				if ($call->Grabación != '') {
+					array_push($calls, $call);
+				}
+			}
+			return json_encode(['status' => 1, 'data' => $calls]);
+		} else {
+			return json_encode(['status' => 0]);
+		}
 	}
 
 	public function getActiveUsers()
@@ -3560,11 +3588,10 @@ class DashboardController extends BaseController
 		$data['OFICINAIDRESPONSABLE'] = $oficina;
 		$data['EMPLEADOIDREGISTRO'] = $empleado;
 		$data['AREAIDREGISTRO'] = $area;
-		if($oficina == 394 || $oficina == 792 || $oficina==924){
+		if ($oficina == 394 || $oficina == 792 || $oficina == 924) {
 			$data['AREAIDRESPONSABLE'] = $area;
-		}else{
+		} else {
 			$data['AREAIDRESPONSABLE'] = null;
-
 		}
 		$data['EXPEDIENTEID'] = $expediente;
 		$data['ESTADOJURIDICOEXPEDIENTEID'] = (string) $estadojuridicoid;

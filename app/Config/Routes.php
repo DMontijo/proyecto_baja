@@ -141,7 +141,6 @@ $routes->group('admin', function ($routes) {
 		$routes->post('firmar_documentos', 'admin/FirmaController::firmar_documentos');
 		$routes->post('insert-documentosWSYWSG', 'admin/DashboardController::insertFolioDoc');
 		$routes->post('send-documentos-correo', 'admin/FirmaController::sendEmailDocumentos');
-		
 	});
 });
 
@@ -168,7 +167,7 @@ $routes->group('denuncia', function ($routes) {
 	$routes->group('dashboard', ['filter' => 'denuciantesAuth'], function ($routes) {
 		$routes->get('/', 'client/DashboardController::index');
 		$routes->get('video-denuncia', 'client/DashboardController::video_denuncia');
-		
+
 		$routes->get('perfil', 'client/DashboardController::profile');
 		$routes->post('actualizar-perfil', 'client/DashboardController::update_profile');
 		$routes->post('actualizar-password', 'client/DashboardController::update_password');
@@ -223,6 +222,7 @@ $routes->group('data', function ($routes) {
 
 	//Link
 	$routes->post('get-video-link', 'admin/DashboardController::getVideoLink');
+	$routes->post('get-link-from-call', 'admin/DashboardController::getLinkFromCall');
 	$routes->post('get-active-users', 'admin/DashboardController::getActiveUsers');
 
 	//VEHÍCULOS

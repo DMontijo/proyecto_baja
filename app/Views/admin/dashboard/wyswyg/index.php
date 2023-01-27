@@ -94,7 +94,6 @@
 									<tr>
 										<td class="text-center"><?= $documentos->EXPEDIENTEID ? $expedienteid : ''   ?></td>
 										<td class="text-center"><?= $documentos->FOLIOID ?></td>
-
 										<td class="text-center"><?= $documentos->FECHAREGISTRO ?></td>
 										<td class="text-center"><?= $documentos->STATUS ?></td>
 										<td class="text-center"><a type="button" href="<?= $documentos->EXPEDIENTEID ? base_url('/admin/dashboard/documentos_show?expediente=' . $documentos->EXPEDIENTEID . '&year=' . $documentos->ANO . '&folio=' . $documentos->FOLIOID) : base_url('/admin/dashboard/documentos_show?folio=' . $documentos->FOLIOID . '&year=' . $documentos->ANO) ?>" class="btn btn-primary text-white"><i class="fas fa-folder-open"></i> DOCUMENTOS</a></td>

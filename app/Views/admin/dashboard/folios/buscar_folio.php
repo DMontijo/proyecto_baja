@@ -90,10 +90,12 @@
 													<option <?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'DA' ? 'selected' : '') : null ?> value="DA">DENUNCIA ANÓNIMA</option>
 												</select>
 											</div>
+
 											<div class="col-12 text-right">
 												<a href="<?= base_url('admin/dashboard/buscar_folio') ?>" class="btn btn-secondary font-weight-bold" id="btnFiltroFolio" name="btnFiltroFolio">Borrar filtro</a>
 												<button type="submit" class="btn btn-primary font-weight-bold" id="btnFiltroFolio" name="btnFiltroFolio">Filtrar</button>
 											</div>
+											
 										</form>
 									</div>
 								</div>
