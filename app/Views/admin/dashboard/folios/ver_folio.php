@@ -63,7 +63,14 @@ if ($body_data->datosFolio->AGENTEASIGNADOID) { ?>
 		<div class="col-12 col-sm-6 col-md-4">
 			<div class="card rounded bg-white shadow" style="height: 240px;">
 				<div class="card-body">
-					<button id="documentos-folio-btn" class="btn btn-primary btn-block h-100 text-center" role="button"><i class="fas fa-file-alt fa-3x"></i><br><br> DOCUMENTOS</button>
+					<button id="documentos-folio-btn" class="btn btn-primary btn-block h-100" role="button"><i class="fas fa-file-alt fa-3x"></i><br><br> DOCUMENTOS</button>
+				</div>
+			</div>
+		</div>
+		<div class="col-12 col-sm-6 col-md-4">
+			<div class="card rounded bg-white shadow" style="height: 240px;">
+				<div class="card-body">
+					<button id="videos-folio-btn" class="btn btn-primary btn-block h-100" role="button"><i class="fas fa-video fa-3x"></i><br><br> VIDEOS</button>
 				</div>
 			</div>
 		</div>
@@ -79,6 +86,7 @@ if ($body_data->datosFolio->AGENTEASIGNADOID) { ?>
 		const buscar_nuevo_btn = document.querySelector('#buscar-nuevo-btn');
 		const info_folio_btn = document.querySelector('#info-folio-btn');
 		const documentos_folio_btn = document.querySelector('#documentos-folio-btn');
+		const videos_folio_btn = document.querySelector('#videos-folio-btn');
 		const year_select = document.querySelector('#year_select');
 
 		const card1 = document.querySelector('#card1');
@@ -1227,6 +1235,7 @@ if ($body_data->datosFolio->AGENTEASIGNADOID) { ?>
 	</script>
 
 	<?php include('modals/info_folio_modal.php') ?>
+	<?php include('modals/videos_folio_modal.php') ?>
 	<?php include('modals/persona_modal.php') ?>
 	<?php include('modals/vehiculo_modal.php') ?>
 	<?php include('modals/domicilio_modal.php') ?>
