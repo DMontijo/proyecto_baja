@@ -54,9 +54,6 @@
 	}, false)
 
 
-	$("#modulo").on("click", function() {
-
-	});
 	$.ajax({
 		data: {
 			'municipio': '<?= $body_data->municipio ?>',

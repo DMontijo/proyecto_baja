@@ -1332,7 +1332,6 @@ class DashboardController extends BaseController
 	public function bandeja_rac()
 	{
 		try {
-
 			$expediente = trim($this->request->getPost('expediente'));
 			$modulo = trim($this->request->getPost('modulo'));
 			$procedimiento = trim($this->request->getPost('procedimiento'));
@@ -1341,38 +1340,61 @@ class DashboardController extends BaseController
 			$documents = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente . '1')->findAll();
 
 			$bandeja = $this->_folioModel->where('EXPEDIENTEID', $expediente)->first();
-			$existRac = $this->_bandejaRacModel->where('EXPEDIENTEID', $expediente);
+			$existRac = $this->_bandejaRacModel->where('EXPEDIENTEID', $expediente)->first();
 			if ($existRac) {
 				return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_error', 'Ya existe este RAC');
 			}
-			
+			$documents = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente . '1')->findAll();
+			$status = 2;
+
+			foreach ($documents as $key => $document) {
+				if (
+					$document->TIPODOC == 'CRITERIO DE OPORTUNIDAD' ||
+					$document->TIPODOC == 'FACULTAD DE ABSTENERSE DE INVESTIGAR (NO DELITO)' ||
+					$document->TIPODOC == 'FACULTAD DE ABSTENERSE DE INVESTIGAR (PRESCRIPCION)'
+				) {
+					$status = 4;
+				}
+			}
+
 			$getMediador = $this->getMediador($municipio, $modulo);
+			$dataFolio = array(
+				'AGENTEASIGNADOID' =>  $getMediador->data->EMPLEADOID_MEDIADOR,
+				'OFICINAASIGNADOID' => $modulo,
+				'AREAASIGNADOID' => $getMediador->data->AREA_MEDIADOR
+			);
+			$update = $this->_folioModel->set($dataFolio)->where('EXPEDIENTEID', $expediente)->update();
 
-			$_bandeja_rac = $this->_createJusticiaAlterna($expediente, $procedimiento, $municipio, $getMediador->data->EMPLEADOID_MEDIADOR);
+			$updateExpediente = $this->_updateExpedienteByBandeja($expediente, $municipio, $modulo, $getMediador->data->EMPLEADOID_MEDIADOR, $getMediador->data->AREA_MEDIADOR, $status);
+
+			$_bandeja_rac = $this->_createJusticiaAlterna($expediente, $procedimiento, $municipio);
 
 
-			if ($_bandeja_rac->status == 201) {
+			if ($updateExpediente->status == 201 && $_bandeja_rac->status == 201) {
 				$dataBandeja = array(
-					'FOLIOID'=>	$bandeja['FOLIOID'],
-					'ANO'=>	$bandeja['ANO'],
-					'EXPEDIENTEID'=>$expediente,
+					'FOLIOID' =>	$bandeja['FOLIOID'],
+					'ANO' =>	$bandeja['ANO'],
+					'EXPEDIENTEID' => $expediente,
 					'TIPOPROCEDIMIENTOID' => $procedimiento,
 					'MODULOID' => $modulo,
 					'MEDIADORID' => $getMediador->data->EMPLEADOID_MEDIADOR
 				);
-			
-	
+
+
 				$bandejaRac = $this->_bandejaRacModel->insert($dataBandeja);
 
-			
+
 				$subirArchivos = $this->subirArchivosRemision($bandeja['FOLIOID'], $bandeja['ANO'], $expediente);
 				$folioDoc = $this->_folioDocModel->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->join('RELACIONFOLIODOCEXPDOC', 'FOLIODOC.NUMEROEXPEDIENTE = RELACIONFOLIODOCEXPDOC.EXPEDIENTEID  AND FOLIODOC.FOLIODOCID = RELACIONFOLIODOCEXPDOC.FOLIODOCID')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('TIPODOC', 'SOLICITUD DE PERITAJE')->findAll();
+
 				if ($folioDoc) {
 					foreach ($folioDoc as $key => $doc) {
 						$solicitudp = array();
 						$solicitudp['ESTADOID'] = 2;
 						$solicitudp['MUNICIPIOID'] = $municipio;
-						$solicitudp['EMPLEADOIDREGISTRO'] = $_bandeja_rac->empleado;
+						$solicitudp['EMPLEADOIDREGISTRO'] = $getMediador->data->EMPLEADOID_MEDIADOR;
+						$solicitudp['OFICINAIDREGISTRO'] = $modulo;
+						$solicitudp['AREAIDREGISTRO'] =  $getMediador->data->AREA_MEDIADOR;
 						$solicitudp['ANO'] = $doc['ANO'];
 						$solicitudp['TITULO'] = $doc['TIPODOC'];
 
@@ -1404,6 +1426,12 @@ class DashboardController extends BaseController
 					}
 				}
 				if (!$bandejaRac) {
+					$datosBitacora = [
+						'ACCION' => 'Remitio un expediente.',
+						'NOTAS' => 'Exp: ' . $expediente . ' moeulo: ' . $modulo . ' empleado:' . $getMediador->data->EMPLEADOID_MEDIADOR  . ' area:' . $getMediador->data->AREA_MEDIADOR,
+					];
+					$this->_bitacoraActividad($datosBitacora);
+
 					return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_success', 'Remitido correctamente');
 				}
 			}
@@ -2316,7 +2344,7 @@ class DashboardController extends BaseController
 					if ($relacionDocExpDoc == null) {
 
 						try {
-							PHPRtfLite::registerAutoloader();
+							// PHPRtfLite::registerAutoloader();
 							// instancia de documento rtf 
 							$rtf = new PHPRtfLite();
 							$sect = $rtf->addSection();
@@ -2390,6 +2418,7 @@ class DashboardController extends BaseController
 								$documentos['CLASIFICACIONDOCTOID'] = $plantilla['CLASIFICACIONDOCTOMEXICALIID'];
 								$documentos['PLANTILLAID'] = $plantilla['pLANTILLAJUSTICIAMEXICALIID'];
 							}
+
 
 
 
@@ -3074,7 +3103,7 @@ class DashboardController extends BaseController
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
 
-	private function _createJusticiaAlterna($expedienteId, $procedimientoid, $municipio, $empleadoid)
+	private function _createJusticiaAlterna($expedienteId, $procedimientoid, $municipio)
 	{
 		$function = '/testing/justiciaAlterna.php?process=crear';
 		$array = [
@@ -3092,14 +3121,13 @@ class DashboardController extends BaseController
 
 		$data['EXPEDIENTEID'] = $expedienteId;
 		$data['TIPOPROCEDIMIENTOID'] = $procedimientoid;
-		// $data['EMPLEADOIDVALIDO'] = $empleadoid;
 		$data['userDB'] = $conexion->USER;
 		$data['pwdDB'] = $conexion->PASSWORD;
 		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
 		$data['schema'] = $conexion->SCHEMA;
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
-	
+
 	public function getModulos()
 	{
 		$municipio = $this->request->getPost('municipio');
@@ -3113,7 +3141,8 @@ class DashboardController extends BaseController
 		$data['schema'] = $conexion->SCHEMA;
 		return json_encode($this->_curlPostDataEncrypt($endpoint, $data)->data);
 	}
-	private function getMediador($municipio, $modulo){
+	private function getMediador($municipio, $modulo)
+	{
 		$function = '/testing/consumoVistas.php?process=getMediador';
 		$endpoint = $this->endpoint . $function;
 		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
@@ -3124,7 +3153,6 @@ class DashboardController extends BaseController
 		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
 		$data['schema'] = $conexion->SCHEMA;
 		return $this->_curlPostDataEncrypt($endpoint, $data);
-
 	}
 	private function _createFisImpDelito($expedienteId, $fisimpdelito, $imputado, $municipio)
 	{
@@ -3333,7 +3361,7 @@ class DashboardController extends BaseController
 	public function getLinkFromCall()
 	{
 		$folio = $this->request->getPost('folio');
-		
+
 		if ($folio) {
 			$endpoint = 'https://videodenunciaserver1.fgebc.gob.mx/api/vc';
 			$data = array();
