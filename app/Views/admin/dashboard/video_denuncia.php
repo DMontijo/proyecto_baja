@@ -4567,6 +4567,7 @@
 				packetData.append("color_tapiceria_vehiculo", document.querySelector('#color_tapiceria_vehiculo')
 					.value);
 				packetData.append("marca_exacta", document.querySelector('#marca_ad_exacta').value);
+				packetData.append("situacion", document.querySelector('#situacion_vehiculo').value);
 
 
 				$.ajax({

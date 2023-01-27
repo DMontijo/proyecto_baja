@@ -119,6 +119,7 @@ use App\Models\VehiculoDistribuidorModel;
 use App\Models\VehiculoMarcaModel;
 use App\Models\VehiculoModeloModel;
 use App\Models\VehiculoServicioModel;
+use App\Models\VehiculoSituacionModel;
 use App\Models\VehiculoVersionModel;
 
 use \Mpdf\Mpdf;
@@ -245,6 +246,7 @@ class DashboardController extends BaseController
 	private $_derivacionesAtencionesModel;
 	private $_canalizacionesAtencionesModel;
 	private $_bandejaRacModel;
+	private $_situacionVehiculoModel;
 
 	private $protocol;
 	private $ip;
@@ -368,6 +370,7 @@ class DashboardController extends BaseController
 		$this->_rolesPermisosModel = new RolesPermisosModel();
 		$this->_permisosModel = new PermisosModel();
 
+		$this->_situacionVehiculoModel = new VehiculoSituacionModel();
 		$this->_folioConsecutivoModel = new FolioConsecutivoModel();
 		$this->_relacionFolioDocExpDoc = new RelacionFolioDocExpDocModel();
 
@@ -1550,6 +1553,7 @@ class DashboardController extends BaseController
 		$data->victimas = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->where('CALIDADJURIDICAID= 1 OR CALIDADJURIDICAID=6')->findAll();
 		$data->plantillas = $this->_plantillasModel->asObject()->where('TITULO !=', 'CONSTANCIA DE EXTRAVIO')->findAll();
 		$data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->like('TIPOEXPEDIENTECLAVE', 'NUC')->orLike('TIPOEXPEDIENTECLAVE', 'NAC')->orLike('TIPOEXPEDIENTECLAVE', 'RAC')->findAll();
+		$data->situacionVehiculo = $this->_situacionVehiculoModel->asObject()->findAll();
 
 		$data->distribuidorVehiculo = $this->_vehiculoDistribuidorModel->asObject()->findAll();
 		$data->marcaVehiculo = $this->_vehiculoMarcaModel->asObject()->findAll();
@@ -1839,6 +1843,11 @@ class DashboardController extends BaseController
 						$personasRelacionMysqlOracle = array();
 						try {
 							foreach ($personas as $key => $persona) {
+								if ($persona['NOMBRE'] == 'QRR') {
+									$persona['NOMBRE']= 'QUIEN RESULTE RESPONSABLE';
+								}else if($persona['NOMBRE'] == 'QRO'){
+									$persona['NOMBRE']= 'QUIEN RESULTE OFENDIDO';
+								}
 
 								$_persona = $this->_createPersonaFisica($expedienteCreado->EXPEDIENTEID, $persona, $municipio);
 								if ($_persona->status == 201) {
@@ -1882,6 +1891,12 @@ class DashboardController extends BaseController
 										if ($fisFis['DELITOMODALIDADID'] == 178 || $fisFis['DELITOMODALIDADID'] == 179) {
 											if (count($vehiculos) > 0) {
 												foreach ($vehiculos as $vehiculo) {
+													if ($vehiculo['PLACAS'] == '') {
+														$vehiculo['PLACAS'] = 'VACIO';
+													}
+													if ($vehiculo['NUMEROSERIE'] == '') {
+														$vehiculo['NUMEROSERIE'] = 'VACIO';
+													}
 													try {
 														$_expedienteVehiculo = $this->_createExpVehiculo($expedienteCreado->EXPEDIENTEID, $vehiculo, $municipio);
 													} catch (\Error $e) {
@@ -4175,6 +4190,7 @@ class DashboardController extends BaseController
 					'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo') ? $this->request->getPost('modelo_vehiculo') : NULL,
 					'FOTO' => $fotoV,
 					'DOCUMENTO' => $docV,
+					'SITUACION'=>$this->request->getPost('situacion') ,
 				);
 			} catch (\Exception $e) {
 			}
@@ -4209,6 +4225,8 @@ class DashboardController extends BaseController
 					'SEGUNDOCOLORID' => $this->request->getPost('color_tapiceria_vehiculo') ? $this->request->getPost('color_tapiceria_vehiculo') : NULL,
 					'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo') ? $this->request->getPost('modelo_vehiculo') : NULL,
 					'DOCUMENTO' => $docV,
+					'SITUACION'=>$this->request->getPost('situacion') ,
+
 
 				);
 			} catch (\Exception $e) {
@@ -4242,6 +4260,8 @@ class DashboardController extends BaseController
 					'SEGUNDOCOLORID' => $this->request->getPost('color_tapiceria_vehiculo') ? $this->request->getPost('color_tapiceria_vehiculo') : NULL,
 					'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo') ? $this->request->getPost('modelo_vehiculo') : NULL,
 					'FOTO' => $fotoV,
+					'SITUACION'=>$this->request->getPost('situacion') ,
+
 
 				);
 			} catch (\Exception $e) {
@@ -4272,6 +4292,8 @@ class DashboardController extends BaseController
 				'NUMEROCHASIS' => $this->request->getPost('num_chasis_vehiculo') ? $this->request->getPost('num_chasis_vehiculo') : NULL,
 				'SEGUNDOCOLORID' => $this->request->getPost('color_tapiceria_vehiculo') ? $this->request->getPost('color_tapiceria_vehiculo') : NULL,
 				'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo') ? $this->request->getPost('modelo_vehiculo') : NULL,
+				'SITUACION'=>$this->request->getPost('situacion') ,
+
 			);
 		}
 
