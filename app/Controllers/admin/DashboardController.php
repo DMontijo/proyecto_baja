@@ -1270,7 +1270,7 @@ class DashboardController extends BaseController
 				];
 
 				$bandeja = $this->_folioModel->where('EXPEDIENTEID', $expediente)->first();
-				$updateExpediente = $this->_updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area->AREAID, $status);
+				$updateExpediente = $this->_updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area->AREAID, $status, 'REMISION');
 				$updateArch = $this->_archivoExternoModel->set($dataFolioArc)->where('FOLIOID', $bandeja['FOLIOID'])->where('ANO', $bandeja['ANO'])->update();
 
 				$_bandeja_creada = $this->_createBandeja($bandeja);
@@ -1369,7 +1369,7 @@ class DashboardController extends BaseController
 				return redirect()->back()->with('message_error', 'No se esta guardando en tabla expedientejusticiaalterna por lo tanto no se puede remitir.');
 			}
 			try {
-				$updateExpediente = $this->_updateExpedienteByBandeja($expediente, $municipio, $getMediador->data->OFICINA_MP_MEDIADOR, $getMediador->data->EMPLEADOID_MEDIADOR, $getMediador->data->AREA_MEDIADOR, $status);
+				$updateExpediente = $this->_updateExpedienteByBandeja($expediente, $municipio, $getMediador->data->OFICINA_MP_MEDIADOR, $getMediador->data->EMPLEADOID_MEDIADOR, $getMediador->data->AREA_MEDIADOR, $status, 'RAC');
 				if ($updateExpediente->status == 401) {
 					return redirect()->back()->with('message_error', 'No se actualizo el expediente en justicia por lo tanto no se puede remitir.');
 				}
@@ -1386,7 +1386,7 @@ class DashboardController extends BaseController
 					'ANO' =>	$bandeja['ANO'],
 					'EXPEDIENTEID' => $expediente,
 					'TIPOPROCEDIMIENTOID' => $procedimiento,
-					'MODULOID' => $modulo,
+					'MODULOID' => $getMediador->data->OFICINA_MP_MEDIADOR,
 					'MEDIADORID' => $getMediador->data->EMPLEADOID_MEDIADOR
 				);
 
@@ -3736,7 +3736,7 @@ class DashboardController extends BaseController
 		}
 	}
 
-	private function _updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area, $estadojuridicoid = null)
+	private function _updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area, $estadojuridicoid = null, $tipo)
 	{
 		$function = '/expediente.php?process=updateArea';
 		$endpoint = $this->endpoint . $function;
@@ -3753,20 +3753,25 @@ class DashboardController extends BaseController
 		$data = array();
 		$data['OFICINAIDRESPONSABLE'] = $oficina;
 		$data['EMPLEADOIDREGISTRO'] = $empleado;
-		$data['AREAIDREGISTRO'] = $area;
-		if (ENVIRONMENT == 'production') {
-			if ($oficina == 409 || $oficina == 793 || $oficina == 924) {
-				$data['AREAIDRESPONSABLE'] = $area;
+		if($tipo == 'REMISION'){
+			$data['AREAIDREGISTRO'] = $area;
+			if (ENVIRONMENT == 'production') {
+				if ($oficina == 409 || $oficina == 793 || $oficina == 924) {
+					$data['AREAIDRESPONSABLE'] = $area;
+				} else {
+					$data['AREAIDRESPONSABLE'] = null;
+				}
 			} else {
-				$data['AREAIDRESPONSABLE'] = null;
+				if ($oficina == 394 || $oficina == 792 || $oficina == 924) {
+					$data['AREAIDRESPONSABLE'] = $area;
+				} else {
+					$data['AREAIDRESPONSABLE'] = null;
+				}
 			}
-		} else {
-			if ($oficina == 394 || $oficina == 792 || $oficina == 924) {
-				$data['AREAIDRESPONSABLE'] = $area;
-			} else {
-				$data['AREAIDRESPONSABLE'] = null;
-			}
+		}else{
+			$data['AREAIDRESPONSABLE'] = $area;
 		}
+		
 		$data['EXPEDIENTEID'] = $expediente;
 		$data['ESTADOJURIDICOEXPEDIENTEID'] = (string) $estadojuridicoid;
 
