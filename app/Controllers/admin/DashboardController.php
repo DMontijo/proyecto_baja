@@ -1356,7 +1356,7 @@ class DashboardController extends BaseController
 			$getMediador = $this->getMediador($municipio, $modulo);
 			$dataFolio = array(
 				'AGENTEASIGNADOID' =>  $getMediador->data->EMPLEADOID_MEDIADOR,
-				'OFICINAASIGNADOID' => $modulo,
+				'OFICINAASIGNADOID' => $getMediador->data->OFICINA_MP_MEDIADOR,
 				'AREAASIGNADOID' => $getMediador->data->AREA_MEDIADOR
 			);
 			try {
@@ -1369,7 +1369,7 @@ class DashboardController extends BaseController
 				return redirect()->back()->with('message_error', 'No se esta guardando en tabla expedientejusticiaalterna por lo tanto no se puede remitir.');
 			}
 			try {
-				$updateExpediente = $this->_updateExpedienteByBandeja($expediente, $municipio, $modulo, $getMediador->data->EMPLEADOID_MEDIADOR, $getMediador->data->AREA_MEDIADOR, $status);
+				$updateExpediente = $this->_updateExpedienteByBandeja($expediente, $municipio, $getMediador->data->OFICINA_MP_MEDIADOR, $getMediador->data->EMPLEADOID_MEDIADOR, $getMediador->data->AREA_MEDIADOR, $status);
 				if ($updateExpediente->status == 401) {
 					return redirect()->back()->with('message_error', 'No se actualizo el expediente en justicia por lo tanto no se puede remitir.');
 				}
@@ -1401,7 +1401,7 @@ class DashboardController extends BaseController
 						$solicitudp['ESTADOID'] = 2;
 						$solicitudp['MUNICIPIOID'] = $municipio;
 						$solicitudp['EMPLEADOIDREGISTRO'] = $getMediador->data->EMPLEADOID_MEDIADOR;
-						$solicitudp['OFICINAIDREGISTRO'] = $modulo;
+						$solicitudp['OFICINAIDREGISTRO'] = $getMediador->data->OFICINA_MP_MEDIADOR;
 						$solicitudp['AREAIDREGISTRO'] =  $getMediador->data->AREA_MEDIADOR;
 						$solicitudp['ANO'] = $doc['ANO'];
 						$solicitudp['TITULO'] = $doc['TIPODOC'];
