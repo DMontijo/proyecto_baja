@@ -96,7 +96,6 @@ class LoginController extends BaseController
 			];
 			$this->_bitacoraActividad($datosBitacora);
 			$session->destroy();
-
 			return redirect()->to(base_url('admin'));
 			
 		}
@@ -106,7 +105,6 @@ class LoginController extends BaseController
 	public function cerrar_sesiones()
 	{
 		$session = session();
-		$session->destroy();
 		$id_usuario = $this->request->getPost('id');
 		$sesion_data = [
 			'ACTIVO' => 0,
@@ -114,7 +112,9 @@ class LoginController extends BaseController
 		$update = $this->_sesionesModel->set($sesion_data)->where('ID_USUARIO', $id_usuario)->update();
 		if ($update) {
 			return json_encode(['status' => 1]);
+			$session->destroy();
 		}
+
 	}
 
 	private function _isAuth()
