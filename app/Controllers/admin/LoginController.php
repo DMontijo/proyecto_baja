@@ -46,22 +46,23 @@ class LoginController extends BaseController
 		$email = trim($email);
 		$password = trim($password);
 		$data = $this->_usuariosModel->where('CORREO', $email)->first();
-		$control_session = $this->_sesionesModel->where('ID_USUARIO', $data['ID'])->where('ACTIVO', 1)->first();
+		$control_session = $this->_sesionesModel->asObject()->where('ID_USUARIO', $data['ID'])->where('ACTIVO', 1)->first();
+
 		if ($control_session) {
-			// $session->setFlashdata('message_session', 'Ya tienes sesiones activas, cierralas para continuar');
-			// return redirect()->back();
 			return redirect()->to(base_url('/admin'))->with('message_session', 'Ya tienes sesiones activas, cierralas para continuar.')->with('id',  $data['ID']);
 		}
+
 		if ($data && validatePassword($password, $data['PASSWORD'])) {
 			$data['permisos'] = $this->_rolesPermisosModel->select('PERMISOS.PERMISODESCR AS NOMBRE')->where('ROLID', $data['ROLID'])->join('PERMISOS', 'PERMISOS.PERMISOID = ROLESPERMISOS.PERMISOID', 'left')->findAll();
 			$data['permisos'] = array_column($data['permisos'], ('NOMBRE'));
 			$data['rol'] = $this->_rolesUsuariosModel->asObject()->where('ID', $data['ROLID'])->first();
 			$data['logged_in'] = TRUE;
 			$data['type'] = 'admin';
+			$data['uuid'] = uniqid();
 			$session->set($data);
 			$agent = $this->request->getUserAgent();
 			$sesion_data = [
-				'ID' => session_id(),
+				'ID' => $data['uuid'],
 				'ID_USUARIO' => $data['ID'],
 				'IP_USUARIO' => $this->_get_client_ip(),
 				'IP_PUBLICA' => $this->_get_public_ip(),
@@ -69,8 +70,8 @@ class LoginController extends BaseController
 				'AGENTE_SO' => $agent->getPlatform(),
 				'AGENTE_MOBILE' => $agent->isMobile() ? 1 : 0,
 				'ACTIVO' => 1,
-
 			];
+
 			$this->_sesionesModel->insert($sesion_data);
 			$datosBitacora = [
 				'ACCION' => 'Ha iniciado sesión',
@@ -85,13 +86,14 @@ class LoginController extends BaseController
 
 	public function logout()
 	{
-
 		$session = session();
 		$sesion_data = [
 			'ACTIVO' => 0,
 			'ID_USUARIO' => $session->get('ID'),
 		];
-		$session_user =  $this->_sesionesModel->where('ID_USUARIO', $session->get('ID'))->where('ACTIVO', 1)->orderBy('FECHAINICIO', 'DESC')->first();
+
+		$session_user =  $this->_sesionesModel->where('ID_USUARIO', $session->get('ID'))->where('ID', session('uuid'))->where('ACTIVO', 1)->orderBy('FECHAINICIO', 'DESC')->first();
+
 		if ($session_user) {
 			$update = $this->_sesionesModel->set($sesion_data)->where('ID', $session_user['ID'])->update();
 			if ($update) {
@@ -102,7 +104,7 @@ class LoginController extends BaseController
 				$session->destroy();
 				return redirect()->to(base_url('admin'));
 			}
-		}else{
+		} else {
 			$datosBitacora = [
 				'ACCION' => 'Ha cerrado sesión',
 			];
