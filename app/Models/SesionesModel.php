@@ -14,5 +14,7 @@ class SesionesModel extends Model
 		'IP_USUARIO',
 		'IP_PUBLICA',
 		'AGENTE_HTTP',
+		'ACTIVO',
+
 	];
 }

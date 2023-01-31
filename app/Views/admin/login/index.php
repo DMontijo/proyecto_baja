@@ -24,6 +24,7 @@
 												<?= session()->getFlashdata('message') ?>
 											</div>
 										<?php endif; ?>
+
 										<form action="<?= base_url() ?>/admin/login" method="POST" class="row g-3 needs-validation" novalidate>
 											<div class="col-12">
 												<label for="correo" class="form-label fw-bold">Correo electrónico</label>
@@ -58,5 +59,40 @@
 		</div>
 	</div>
 </section>
-
+<?php if (session()->getFlashdata('message_session')) : ?>
+	<script>
+		Swal.fire({
+			icon: 'error',
+			title: '<?= session()->getFlashdata('message_session') ?>',
+			showDenyButton: true,
+			showCancelButton: true,
+			confirmButtonText: 'Aceptar',
+			confirmButtonColor: '#bf9b55',
+			denyButtonText: 'Cancelar',
+		}).then((result) => {
+			if (result.isConfirmed) {
+				let data = {
+					'id': <?= session()->getFlashdata('id') ?>
+				};
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/admin/cerrar-sesion') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						if (response.status == 1) {
+							Swal.fire({
+							icon: 'success',
+							html: 'Se han cerrado todas las sesiones, por favor inicia sesión de nuevo.',
+							confirmButtonColor: '#bf9b55',
+						})
+						}
+					
+					},
+					error: function(jqXHR, textStatus, errorThrown) {}
+				});
+			}
+		})
+	</script>
+<?php endif; ?>
 <?= $this->endSection() ?>

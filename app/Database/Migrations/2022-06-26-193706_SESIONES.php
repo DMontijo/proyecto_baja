@@ -35,6 +35,11 @@ class SESIONES extends Migration
 				'constraint' => '255',
 				'null' => false
 			],
+			'ACTIVO' => [
+				'type' => 'INT',
+				'constraint' => '8',
+				'null' => false
+			],
 			'FECHAINICIO timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL',
 			'FECHAACTUALIZACION DATETIME ON UPDATE CURRENT_TIMESTAMP',
 		]);

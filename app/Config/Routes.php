@@ -46,6 +46,7 @@ $routes->group('admin', function ($routes) {
 	$routes->get('/', 'admin/LoginController::index');
 	$routes->post('login', 'admin/LoginController::login_auth');
 	$routes->get('logout', 'admin/LoginController::logout');
+	$routes->post('cerrar-sesion', 'admin/LoginController::cerrar_sesiones');
 
 	$routes->group('dashboard', ['filter' => 'adminAuth'], function ($routes) {
 		$routes->get('/', 'admin/DashboardController::index');
@@ -299,6 +300,7 @@ $routes->group('data', function ($routes) {
 
 	//RAC
 	$routes->post('get-modulos', 'admin/DashboardController::getModulos');
+
 
 });
 
