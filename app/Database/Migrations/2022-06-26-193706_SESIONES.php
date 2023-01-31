@@ -35,6 +35,16 @@ class SESIONES extends Migration
 				'constraint' => '255',
 				'null' => false
 			],
+			'AGENTE_SO' => [
+				'type' => 'VARCHAR',
+				'constraint' => '255',
+				'null' => false
+			],
+			'AGENTE_MOBILE' => [
+				'type' => 'VARCHAR',
+				'constraint' => '255',
+				'null' => false
+			],
 			'ACTIVO' => [
 				'type' => 'INT',
 				'constraint' => '8',

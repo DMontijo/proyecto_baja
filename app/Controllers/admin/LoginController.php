@@ -59,12 +59,15 @@ class LoginController extends BaseController
 			$data['logged_in'] = TRUE;
 			$data['type'] = 'admin';
 			$session->set($data);
+			$agent = $this->request->getUserAgent();
 			$sesion_data = [
 				'ID' => session_id(),
 				'ID_USUARIO' => $data['ID'],
 				'IP_USUARIO' => $this->_get_client_ip(),
 				'IP_PUBLICA' => $this->_get_public_ip(),
-				'AGENTE_HTTP' => $_SERVER['HTTP_USER_AGENT'],
+				'AGENTE_HTTP' => $agent->getBrowser(),
+				'AGENTE_SO' => $agent->getPlatform(),
+				'AGENTE_MOBILE' => $agent->isMobile() ? 1 : 0,
 				'ACTIVO' => 1,
 
 			];
@@ -82,22 +85,30 @@ class LoginController extends BaseController
 
 	public function logout()
 	{
-		
+
 		$session = session();
 		$sesion_data = [
 			'ACTIVO' => 0,
-			'ID_USUARIO'=>$session->get('ID'),
+			'ID_USUARIO' => $session->get('ID'),
 		];
-		$session_user =  $this->_sesionesModel->where('ID_USUARIO',$session->get('ID'))->where('ACTIVO', 1)->orderBy('FECHAINICIO','DESC')->first();
-		$update = $this->_sesionesModel->set($sesion_data)->where('ID', $session_user['ID'])->update();
-		if ($update) {
+		$session_user =  $this->_sesionesModel->where('ID_USUARIO', $session->get('ID'))->where('ACTIVO', 1)->orderBy('FECHAINICIO', 'DESC')->first();
+		if ($session_user) {
+			$update = $this->_sesionesModel->set($sesion_data)->where('ID', $session_user['ID'])->update();
+			if ($update) {
+				$datosBitacora = [
+					'ACCION' => 'Ha cerrado sesión',
+				];
+				$this->_bitacoraActividad($datosBitacora);
+				$session->destroy();
+				return redirect()->to(base_url('admin'));
+			}
+		}else{
 			$datosBitacora = [
 				'ACCION' => 'Ha cerrado sesión',
 			];
 			$this->_bitacoraActividad($datosBitacora);
 			$session->destroy();
-			return redirect()->to(base_url('admin'));
-			
+			return redirect()->to(base_url('/admin'))->with('message_error', 'No hay sesiones activas');
 		}
 	}
 
@@ -115,7 +126,6 @@ class LoginController extends BaseController
 			$session->destroy();
 			return json_encode(['status' => 1]);
 		}
-
 	}
 
 	private function _isAuth()

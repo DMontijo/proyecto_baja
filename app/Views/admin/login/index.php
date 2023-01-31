@@ -59,6 +59,15 @@
 		</div>
 	</div>
 </section>
+<?php if (session()->getFlashdata('message_error')) : ?>
+	<script>
+		Swal.fire({
+			icon: 'error',
+			html: '<strong><?= session()->getFlashdata('message_error') ?></strong>',
+			confirmButtonColor: '#bf9b55',
+		})
+	</script>
+<?php endif; ?>
 <?php if (session()->getFlashdata('message_session')) : ?>
 	<script>
 		Swal.fire({
