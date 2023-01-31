@@ -1270,7 +1270,7 @@ class DashboardController extends BaseController
 				];
 
 				$bandeja = $this->_folioModel->where('EXPEDIENTEID', $expediente)->first();
-				$updateExpediente = $this->_updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area->AREAID, $status, 'REMISION');
+				$updateExpediente = $this->_updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area->AREAID,'REMISION', $status);
 				$updateArch = $this->_archivoExternoModel->set($dataFolioArc)->where('FOLIOID', $bandeja['FOLIOID'])->where('ANO', $bandeja['ANO'])->update();
 
 				$_bandeja_creada = $this->_createBandeja($bandeja);
@@ -1369,7 +1369,7 @@ class DashboardController extends BaseController
 				return redirect()->back()->with('message_error', 'No se esta guardando en tabla expedientejusticiaalterna por lo tanto no se puede remitir.');
 			}
 			try {
-				$updateExpediente = $this->_updateExpedienteByBandeja($expediente, $municipio, $getMediador->data->OFICINA_MP_MEDIADOR, $getMediador->data->EMPLEADOID_MEDIADOR, $getMediador->data->AREA_MEDIADOR, $status, 'RAC');
+				$updateExpediente = $this->_updateExpedienteByBandeja($expediente, $municipio, $getMediador->data->OFICINA_MP_MEDIADOR, $getMediador->data->EMPLEADOID_MEDIADOR, $getMediador->data->AREA_MEDIADOR, 'RAC', $status);
 				if ($updateExpediente->status == 401) {
 					return redirect()->back()->with('message_error', 'No se actualizo el expediente en justicia por lo tanto no se puede remitir.');
 				}
@@ -3736,7 +3736,7 @@ class DashboardController extends BaseController
 		}
 	}
 
-	private function _updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area, $estadojuridicoid = null, $tipo)
+	private function _updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area, $tipo, $estadojuridicoid = null)
 	{
 		$function = '/expediente.php?process=updateArea';
 		$endpoint = $this->endpoint . $function;
