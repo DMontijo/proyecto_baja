@@ -111,8 +111,9 @@ class LoginController extends BaseController
 		];
 		$update = $this->_sesionesModel->set($sesion_data)->where('ID_USUARIO', $id_usuario)->update();
 		if ($update) {
-			return json_encode(['status' => 1]);
+
 			$session->destroy();
+			return json_encode(['status' => 1]);
 		}
 
 	}
