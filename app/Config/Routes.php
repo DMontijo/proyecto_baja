@@ -55,6 +55,8 @@ $routes->group('admin', function ($routes) {
 		$routes->get('bandeja_remision', 'admin/DashboardController::bandeja_remision');
 		$routes->post('bandeja_remision', 'admin/DashboardController::bandeja_remision_post');
 		$routes->post('bandeja_rac', 'admin/DashboardController::bandeja_rac');
+		$routes->get('sesiones_activas', 'admin/DashboardController::sesiones_activas');
+		$routes->post('cerrar_sesiones_general', 'admin/DashboardController::cerrar_sesiones_general');
 
 
 		$routes->get('usuarios', 'admin/DashboardController::usuarios');

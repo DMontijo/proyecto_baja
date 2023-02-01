@@ -166,7 +166,15 @@
 					</li>
 				<?php } ?>
 			<?php } ?>
-
+			<?php foreach ($body_data->rolPermiso as $permiso) { ?>
+				<?php if ($permiso->PERMISOID == 12) { ?>
+					<li class="c-sidebar-nav-item" id="nav-sesiones" name="nav-sesiones">
+						<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url('admin/dashboard/sesiones_activas') ?>">
+							<i class="fas fa-users c-sidebar-nav-icon"></i> Sesiones Activas
+						</a>
+					</li>
+				<?php } ?>
+			<?php } ?>
 			<li class="c-sidebar-nav-item" id="nav-salir" name="nav-salir">
 				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url('admin/logout') ?>">
 					<i class="fas fa-sign-out-alt c-sidebar-nav-icon"></i> Salir
