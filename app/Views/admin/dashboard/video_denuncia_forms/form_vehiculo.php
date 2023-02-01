@@ -176,6 +176,14 @@
 		</select>
 		
 	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="propietario_vehiculo" class="form-label font-weight-bold">Propietario:</label>
+		<select class="form-control" id="propietario_vehiculo" name="propietario_vehiculo" required>
+			<option selected disabled value="">Selecciona el propietario</option>
+	
+		</select>
+
+	</div>
 	<div class="col-12 mb-3 text-center">
 		<button type="submit" class="btn btn-primary font-weight-bold">ACTUALIZAR VEHÍCULO</button>
 	</div>

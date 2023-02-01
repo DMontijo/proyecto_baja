@@ -19,6 +19,30 @@
 					<?php } ?>
 				</select>
 				<br>
+				<div id="div_uma" name="div_uma" style="display: none;">
+				<label for="uma" class="form-label font-weight-bold">UMA:</label>
+
+				<select class="form-control" id="uma_select" name="uma_select">
+						<option disabled selected value=""></option>
+						<option value="MEXICALI-CD MORELOS"> MEXICALI-CD MORELOS</option>
+						<option value="MEXICALI-GPE VICTORIA"> MEXICALI-GPE VICTORIA</option>
+						<option value="MEXICALI-ORIENTE"> MEXICALI-ORIENTE</option>
+						<option value="MEXICALI-PONIENTE (ANAHUAC)"> MEXICALI-PONIENTE (ANAHUAC)</option>
+						<option value="MEXICALI-RIO NUEVO"> MEXICALI-RIO NUEVO</option>
+						<option value="MEXICALI-SAN FELIPE"> MEXICALI-SAN FELIPE</option>
+						<option value="ENSENADA-SAN QUINTIN"> ENSENADA-SAN QUINTIN</option>
+						<option value="ENSENADA-PRADERAS DEL CIPRES"> ENSENADA-PRADERAS DEL CIPRES</option>
+
+						<option value="ZONA COSTA-LA MESA"> ZONA COSTA-LA MESA</option>
+						<option value="ZONA COSTA-MARIANO MATAMOROS"> ZONA COSTA-MARIANO MATAMOROS</option>
+						<option value="ZONA COSTA-PLAYAS ROSARITO"> ZONA COSTA-PLAYAS ROSARITO</option>
+						<option value="ZONA COSTA-TECATE"> ZONA COSTA-TECATE</option>
+						<option value="ZONA COSTA-ZONA RIO"> ZONA COSTA-ZONA RIO</option>
+
+
+					</select>
+				</div>
+				<br>
 				<div id="involucrados" name="involucrados" style="display: none;">
 					<label for="victima_modal_documento" class="form-label font-weight-bold">Víctima:</label>
 
@@ -32,6 +56,7 @@
 						<option disabled selected value=""></option>
 					</select>
 				</div>
+			
 			</div>
 		</div>
 	</div>
