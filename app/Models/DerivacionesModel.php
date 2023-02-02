@@ -8,25 +8,18 @@ class DerivacionesModel extends Model
 {
 	protected $table = "DERIVACIONES";
 	protected $allowedFields    = [
-		'MUNICIPIOID',
 		'INSTITUCIONREMISIONID',
 		'INSTITUCIONREMISIONDESCR',
+		'MUNICIPIOID',
 		'DOMICILIO',
 		'TELEFONO',
 	];
 
-	public function get_by_municipioid($id)
+	public function getByMunicipioId($id)
 	{
-		$sql = 'SELECT d.*, m.MUNICIPIODESCR FROM DERIVACIONES d
-			LEFT JOIN MUNICIPIO m ON d.MUNICIPIOID = m.MUNICIPIOID
-			WHERE MUNICIPIOID = ' . $id . '
-			ORDER BY M.INSTITUCIONREMISIONDESCR ASC
-		';
+		$sql = 'SELECT * FROM DERIVACIONES LEFT JOIN MUNICIPIO ON MUNICIPIO.MUNICIPIOID = DERIVACIONES.MUNICIPIOID AND MUNICIPIO.ESTADOID = 2 WHERE DERIVACIONES.MUNICIPIOID = ' . $id;
 		$query =  $this->db->query($sql);
 
-		var_dump($query);
-		exit;
-
-		return $query->getRow();
+		return $query->getResultObject();
 	}
 }

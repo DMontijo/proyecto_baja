@@ -9,29 +9,30 @@
 	<h1 class="text-center mb-5 fw-bolder">CATÁLOGO DE DERIVACIONES</h1>
 	<nav>
 		<div class="nav nav-tabs" id="nav-tab" role="tablist">
-			<button class="nav-link fw-bolder active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-tijuana" type="button" role="tab" aria-controls="nav-home" aria-selected="true">TIJUANA - ROSARITO</button>
-			<button class="nav-link fw-bolder" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-mexicali" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">MEXICALI - TECATE</button>
-			<button class="nav-link fw-bolder" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-ensenada" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">ENSENADA</button>
+			<button class="nav-link fw-bolder active" id="nav-ensenada-tab" data-bs-toggle="tab" data-bs-target="#nav-ensenada" type="button" role="tab" aria-controls="nav-ensenada" aria-selected="false">ENSENADA</button>
+			<button class="nav-link fw-bolder" id="nav-mexicali-tab" data-bs-toggle="tab" data-bs-target="#nav-mexicali" type="button" role="tab" aria-controls="nav-mexicali" aria-selected="false">MEXICALI</button>
+			<button class="nav-link fw-bolder" id="nav-tecate-tab" data-bs-toggle="tab" data-bs-target="#nav-tecate" type="button" role="tab" aria-controls="nav-tecate" aria-selected="false">TECATE</button>
+			<button class="nav-link fw-bolder" id="nav-tijuana-tab" data-bs-toggle="tab" data-bs-target="#nav-tijuana" type="button" role="tab" aria-controls="nav-tijuana" aria-selected="true">TIJUANA</button>
+			<button class="nav-link fw-bolder" id="nav-rosarito-tab" data-bs-toggle="tab" data-bs-target="#nav-rosarito" type="button" role="tab" aria-controls="nav-rosarito" aria-selected="true">ROSARITO</button>
 		</div>
 	</nav>
 	<div class="tab-content" id="nav-tabContent" style="overflow-x: auto;">
-		<div class="tab-pane fade show active" id="nav-tijuana" role="tabpanel" aria-labelledby="nav-tijuana-tab">
-			<table id="table-tijuana" class="table table-striped table-hover mt-2">
+		<div class="tab-pane fade show active" id="nav-ensenada" role="tabpanel" aria-labelledby="nav-ensenada-tab">
+			<table id="table-ensenada" class="table table-striped table-hover mt-2">
 				<thead>
 					<tr class="text-center">
-						<!-- <th>Municipio</th> -->
-						<th>INSTITUCIÓN</th>
-						<th>DOMICILIO</th>
-						<th>TÉLEFONO</th>
+						<th scope="col">INSTITUCIÓN</th>
+						<th scope="col">DOMICILIO</th>
+						<th scope="col">TÉLEFONO</th>
 					</tr>
 				</thead>
 				<tbody>
-					<?php foreach ($body_data->derivacionesTijuana as $index => $derivacion) { ?>
+					<?php foreach ($body_data->derivacionesEnsenada as $index => $derivacion) { ?>
 						<tr>
-							<!-- <td><?= $derivacion->MUNICIPIO ?></td> -->
-							<td class="fw-bold"><?= $derivacion->INSTITUCIONREMISIONDESCR ?></td>
-							<td><a href="https://www.google.com.mx/maps/place/<?= $derivacion->DOMICILIO ?>" target="_blank"><?= $derivacion->DOMICILIO ?></a></td>
-							<td><?= $derivacion->TELEFONO ?></td>
+							<td class="fw-bold col-3"><?= $derivacion->INSTITUCIONREMISIONDESCR ?></td>
+							<!-- <td class="col-6"><a href="https://www.google.com.mx/maps/place/<?= $derivacion->DOMICILIO ?>" target="_blank"><?= $derivacion->DOMICILIO ?></a></td> -->
+							<td class="col-6"><?= $derivacion->DOMICILIO ?></td>
+							<td class="col-3 text-center"><?= $derivacion->TELEFONO ?></td>
 						</tr>
 					<?php } ?>
 				</tbody>
@@ -41,41 +42,81 @@
 			<table id="table-mexicali" class="table table-striped table-hover mt-2">
 				<thead>
 					<tr class="text-center">
-						<!-- <th>Municipio</th> -->
-						<th>INSTITUCIÓN</th>
-						<th>DOMICILIO</th>
-						<th>TÉLEFONO</th>
+						<th scope="col">INSTITUCIÓN</th>
+						<th scope="col">DOMICILIO</th>
+						<th scope="col">TÉLEFONO</th>
 					</tr>
 				</thead>
 				<tbody>
 					<?php foreach ($body_data->derivacionesMexicali as $index => $derivacion) { ?>
 						<tr>
-							<!-- <td><?= $derivacion->MUNICIPIO ?></td> -->
-							<td class="fw-bold"><?= $derivacion->INSTITUCIONREMISIONDESCR ?></td>
-							<td><a href="https://www.google.com.mx/maps/place/<?= $derivacion->DOMICILIO ?>" target="_blank"><?= $derivacion->DOMICILIO ?></a></td>
-							<td><?= $derivacion->TELEFONO ?></td>
+							<td class="fw-bold col-3"><?= $derivacion->INSTITUCIONREMISIONDESCR ?></td>
+							<!-- <td class="col-6"><a href="https://www.google.com.mx/maps/place/<?= $derivacion->DOMICILIO ?>" target="_blank"><?= $derivacion->DOMICILIO ?></a></td> -->
+							<td class="col-6"><?= $derivacion->DOMICILIO ?></td>
+							<td class="col-3 text-center"><?= $derivacion->TELEFONO ?></td>
 						</tr>
 					<?php } ?>
 				</tbody>
 			</table>
 		</div>
-		<div class="tab-pane fade" id="nav-ensenada" role="tabpanel" aria-labelledby="nav-ensenada-tab">
-			<table id="table-ensenada" class="table table-striped table-hover mt-2">
+		<div class="tab-pane fade" id="nav-tecate" role="tabpanel" aria-labelledby="nav-tecate-tab">
+			<table id="table-tecate" class="table table-striped table-hover mt-2">
 				<thead>
 					<tr class="text-center">
-						<!-- <th>Municipio</th> -->
-						<th>INSTITUCIÓN</th>
-						<th>DOMICILIO</th>
-						<th>TÉLEFONO</th>
+						<th scope="col">INSTITUCIÓN</th>
+						<th scope="col">DOMICILIO</th>
+						<th scope="col">TÉLEFONO</th>
 					</tr>
 				</thead>
 				<tbody>
-					<?php foreach ($body_data->derivacionesEnsenada as $index => $derivacion) { ?>
+					<?php foreach ($body_data->derivacionesTecate as $index => $derivacion) { ?>
 						<tr>
-							<!-- <td><?= $derivacion->MUNICIPIO ?></td> -->
-							<td class="fw-bold"><?= $derivacion->INSTITUCIONREMISIONDESCR ?></td>
-							<td><a href="https://www.google.com.mx/maps/place/<?= $derivacion->DOMICILIO ?>" target="_blank"><?= $derivacion->DOMICILIO ?></a></td>
-							<td><?= $derivacion->TELEFONO ?></td>
+							<td class="fw-bold col-3"><?= $derivacion->INSTITUCIONREMISIONDESCR ?></td>
+							<!-- <td class="col-6"><a href="https://www.google.com.mx/maps/place/<?= $derivacion->DOMICILIO ?>" target="_blank"><?= $derivacion->DOMICILIO ?></a></td> -->
+							<td class="col-6"><?= $derivacion->DOMICILIO ?></td>
+							<td class="col-3 text-center"><?= $derivacion->TELEFONO ?></td>
+						</tr>
+					<?php } ?>
+				</tbody>
+			</table>
+		</div>
+		<div class="tab-pane fade" id="nav-tijuana" role="tabpanel" aria-labelledby="nav-tijuana-tab">
+			<table id="table-tijuana" class="table table-striped table-hover mt-2">
+				<thead>
+					<tr class="text-center">
+						<th scope="col">INSTITUCIÓN</th>
+						<th scope="col">DOMICILIO</th>
+						<th scope="col">TÉLEFONO</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php foreach ($body_data->derivacionesTijuana as $index => $derivacion) { ?>
+						<tr>
+							<td class="fw-bold col-3"><?= $derivacion->INSTITUCIONREMISIONDESCR ?></td>
+							<!-- <td class="col-6"><a href="https://www.google.com.mx/maps/place/<?= $derivacion->DOMICILIO ?>" target="_blank"><?= $derivacion->DOMICILIO ?></a></td> -->
+							<td class="col-6"><?= $derivacion->DOMICILIO ?></td>
+							<td class="col-3 text-center"><?= $derivacion->TELEFONO ?></td>
+						</tr>
+					<?php } ?>
+				</tbody>
+			</table>
+		</div>
+		<div class="tab-pane fade" id="nav-rosarito" role="tabpanel" aria-labelledby="nav-rosarito-tab">
+			<table id="table-rosarito" class="table table-striped table-hover mt-2">
+				<thead>
+					<tr class="text-center">
+						<th scope="col">INSTITUCIÓN</th>
+						<th scope="col">DOMICILIO</th>
+						<th scope="col">TÉLEFONO</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php foreach ($body_data->derivacionesRosarito as $index => $derivacion) { ?>
+						<tr>
+							<td class="fw-bold col-3"><?= $derivacion->INSTITUCIONREMISIONDESCR ?></td>
+							<!-- <td class="col-6"><a href="https://www.google.com.mx/maps/place/<?= $derivacion->DOMICILIO ?>" target="_blank"><?= $derivacion->DOMICILIO ?></a></td> -->
+							<td class="col-6"><?= $derivacion->DOMICILIO ?></td>
+							<td class="col-3 text-center"><?= $derivacion->TELEFONO ?></td>
 						</tr>
 					<?php } ?>
 				</tbody>

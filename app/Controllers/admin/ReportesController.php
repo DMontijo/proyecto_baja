@@ -265,7 +265,7 @@ class ReportesController extends BaseController
 		$writer = new Xlsx($spreadSheet);
 
 		header('Content-Type: application/vnd.ms-excel');
-		header('Content-Disposition: attachment; filename="Reporte_Folios_' . $date . '.xls"');
+		header('Content-Disposition: attachment; filename="Reporte_Folios_' . $date . '.xlsx"');
 		header('Cache-Control: max-age=0');
 		$writer->save("php://output");
 	}
@@ -500,7 +500,7 @@ class ReportesController extends BaseController
 		$writer = new Xlsx($spreadSheet);
 
 		header('Content-Type: application/vnd.ms-excel');
-		header('Content-Disposition: attachment; filename="Reporte_Constancias_' . $date . '.xls"');
+		header('Content-Disposition: attachment; filename="Reporte_Constancias_' . $date . '.xlsx"');
 		header('Cache-Control: max-age=0');
 		$writer->save("php://output");
 	}
@@ -797,7 +797,7 @@ class ReportesController extends BaseController
 		$writer = new Xlsx($spreadSheet);
 
 		header('Content-Type: application/vnd.ms-excel');
-		header('Content-Disposition: attachment; filename="REGISTRO_DIARIO_' . session('NOMBRE') . '.xls"');
+		header('Content-Disposition: attachment; filename="REGISTRO_DIARIO_' . session('NOMBRE') . '.xlsx"');
 		header('Cache-Control: max-age=0');
 		$writer->save("php://output");
 	}

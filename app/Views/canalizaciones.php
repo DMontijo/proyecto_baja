@@ -21,17 +21,17 @@
 			<table id="table-tijuana" class="table table-striped table-hover mt-2">
 				<thead>
 					<tr class="text-center">
-						<th>INSTITUCIÓN</th>
-						<th>DOMICILIO</th>
-						<th>TÉLEFONO</th>
+						<th scope="col">INSTITUCIÓN</th>
+						<th scope="col">DOMICILIO</th>
+						<th scope="col">TÉLEFONO</th>
 					</tr>
 				</thead>
 				<tbody>
 					<?php foreach ($body_data->canalizacionesTijuana as $index => $canalizacion) { ?>
 						<tr>
-							<td class="fw-bold"><?= $canalizacion->INSTITUCIONREMISIONDESCR ?></td>
-							<td><?= $canalizacion->DOMICILIO ?></td>
-							<td><?= $canalizacion->TELEFONO ?></td>
+							<td class="fw-bold col-3"><?= $canalizacion->INSTITUCIONREMISIONDESCR ?></td>
+							<td class="col-6"><?= $canalizacion->DOMICILIO ?></td>
+							<td class="col-3 text-center"><?= $canalizacion->TELEFONO ?></td>
 						</tr>
 					<?php } ?>
 				</tbody>
@@ -41,17 +41,17 @@
 			<table id="table-rosarito" class="table table-striped table-hover mt-2">
 				<thead>
 					<tr class="text-center">
-						<th>INSTITUCIÓN</th>
-						<th>DOMICILIO</th>
-						<th>TÉLEFONO</th>
+						<th scope="col">INSTITUCIÓN</th>
+						<th scope="col">DOMICILIO</th>
+						<th scope="col">TÉLEFONO</th>
 					</tr>
 				</thead>
 				<tbody>
 					<?php foreach ($body_data->canalizacionesRosarito as $index => $canalizacion) { ?>
 						<tr>
-							<td class="fw-bold"><?= $canalizacion->INSTITUCIONREMISIONDESCR ?></td>
-							<td><?= $canalizacion->DOMICILIO ?></td>
-							<td><?= $canalizacion->TELEFONO ?></td>
+							<td class="fw-bold col-3"><?= $canalizacion->INSTITUCIONREMISIONDESCR ?></td>
+							<td class="col-6"><?= $canalizacion->DOMICILIO ?></td>
+							<td class="col-3 text-center"><?= $canalizacion->TELEFONO ?></td>
 						</tr>
 					<?php } ?>
 				</tbody>
@@ -61,17 +61,17 @@
 			<table id="table-mexicali" class="table table-striped table-hover mt-2">
 				<thead>
 					<tr class="text-center">
-						<th>INSTITUCIÓN</th>
-						<th>DOMICILIO</th>
-						<th>TÉLEFONO</th>
+						<th scope="col">INSTITUCIÓN</th>
+						<th scope="col">DOMICILIO</th>
+						<th scope="col">TÉLEFONO</th>
 					</tr>
 				</thead>
 				<tbody>
 					<?php foreach ($body_data->canalizacionesMexicali as $index => $canalizacion) { ?>
 						<tr>
-							<td class="fw-bold"><?= $canalizacion->INSTITUCIONREMISIONDESCR ?></td>
-							<td><?= $canalizacion->DOMICILIO ?></td>
-							<td><?= $canalizacion->TELEFONO ?></td>
+							<td class="fw-bold col-3"><?= $canalizacion->INSTITUCIONREMISIONDESCR ?></td>
+							<td class="col-6"><?= $canalizacion->DOMICILIO ?></td>
+							<td class="col-3 text-center"><?= $canalizacion->TELEFONO ?></td>
 						</tr>
 					<?php } ?>
 				</tbody>
@@ -81,17 +81,17 @@
 			<table id="table-tecate" class="table table-striped table-hover mt-2">
 				<thead>
 					<tr class="text-center">
-						<th>INSTITUCIÓN</th>
-						<th>DOMICILIO</th>
-						<th>TÉLEFONO</th>
+						<th scope="col">INSTITUCIÓN</th>
+						<th scope="col">DOMICILIO</th>
+						<th scope="col">TÉLEFONO</th>
 					</tr>
 				</thead>
 				<tbody>
 					<?php foreach ($body_data->canalizacionesTecate as $index => $canalizacion) { ?>
 						<tr>
-							<td class="fw-bold"><?= $canalizacion->INSTITUCIONREMISIONDESCR ?></td>
-							<td><?= $canalizacion->DOMICILIO ?></td>
-							<td><?= $canalizacion->TELEFONO ?></td>
+							<td class="fw-bold col-3"><?= $canalizacion->INSTITUCIONREMISIONDESCR ?></td>
+							<td class="col-6"><?= $canalizacion->DOMICILIO ?></td>
+							<td class="col-3 text-center"><?= $canalizacion->TELEFONO ?></td>
 						</tr>
 					<?php } ?>
 				</tbody>
@@ -101,17 +101,17 @@
 			<table id="table-ensenada" class="table table-striped table-hover mt-2">
 				<thead>
 					<tr class="text-center">
-						<th>INSTITUCIÓN</th>
-						<th>DOMICILIO</th>
-						<th>TÉLEFONO</th>
+						<th scope="col">INSTITUCIÓN</th>
+						<th scope="col">DOMICILIO</th>
+						<th scope="col">TÉLEFONO</th>
 					</tr>
 				</thead>
 				<tbody>
 					<?php foreach ($body_data->canalizacionesEnsenada as $index => $canalizacion) { ?>
 						<tr>
-							<td class="fw-bold"><?= $canalizacion->INSTITUCIONREMISIONDESCR ?></td>
-							<td><?= $canalizacion->DOMICILIO ?></td>
-							<td><?= $canalizacion->TELEFONO ?></td>
+							<td class="fw-bold col-3"><?= $canalizacion->INSTITUCIONREMISIONDESCR ?></td>
+							<td class="col-6"><?= $canalizacion->DOMICILIO ?></td>
+							<td class="col-3 text-center"><?= $canalizacion->TELEFONO ?></td>
 						</tr>
 					<?php } ?>
 				</tbody>
