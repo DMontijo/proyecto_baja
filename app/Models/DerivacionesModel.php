@@ -14,4 +14,19 @@ class DerivacionesModel extends Model
 		'DOMICILIO',
 		'TELEFONO',
 	];
+
+	public function get_by_municipioid($id)
+	{
+		$sql = 'SELECT d.*, m.MUNICIPIODESCR FROM DERIVACIONES d
+			LEFT JOIN MUNICIPIO m ON d.MUNICIPIOID = m.MUNICIPIOID
+			WHERE MUNICIPIOID = ' . $id . '
+			ORDER BY M.INSTITUCIONREMISIONDESCR ASC
+		';
+		$query =  $this->db->query($sql);
+
+		var_dump($query);
+		exit;
+
+		return $query->getRow();
+	}
 }
