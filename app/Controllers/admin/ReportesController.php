@@ -1074,12 +1074,9 @@ class ReportesController extends BaseController
 		$headers = [
 			"Fecha",
             "Folio",
-            "idAgente",
-            "IP",
             "Inicio",
             "Fin",
             "Agente",
-            "Grabación",
             "Cliente",
             "Espera",
             "Duración",
@@ -1097,34 +1094,22 @@ class ReportesController extends BaseController
 		$idAgente = 'id Agente';
 
 		foreach ($llamadas as $index => $llamada) {
-			 var_dump($llamada);
-			// exit;
-			// $row++;
-			// if(isset($folio->DELITOMODALIDADDESCR)){
-			// 	foreach ($folio->DELITOMODALIDADDESCR as $key => $delito){
-			// 		var_dump($delito);
-			// 		exit;
-			// 	}
-			// }
+			 
 			$sheet->setCellValue('A1', "CENTRO TELEFÓNICO Y EN LÍNEA DE ATENCIÓN Y ORIENTACIÓN TEMPRANA");
 			$sheet->setCellValue('A2', "REGISTRO ESTATAL DE PRE DENUNCIA TELEFÓNICA Y EN LÍNEA");
 
-			$sheet->setCellValue('A' . $row, $row - 4);
-
-			$sheet->setCellValue('B' . $row, $llamada->Fecha);
-			$sheet->setCellValue('C' . $row, $llamada->Folio);
-			$sheet->setCellValue('D' . $row, $llamada->$idAgente);
-			$sheet->setCellValue('E' . $row, $llamada->IP);
-			$sheet->setCellValue('F' . $row, $llamada->Inicio);
-			$sheet->setCellValue('G' . $row, $llamada->Fin);
-			$sheet->setCellValue('H' . $row, $llamada->Agente);
-			$sheet->setCellValue('I' . $row, $llamada->Grabación);
-			$sheet->setCellValue('J' . $row, $llamada->Cliente);
-			$sheet->setCellValue('K' . $row, $llamada->Espera);
-			$sheet->setCellValue('L' . $row, $llamada->Duración);
-			$sheet->setCellValue('M' . $row, $llamada->Estatus);
 			
-			$sheet->setCellValue('N' . $row, '');
+			$sheet->setCellValue('A' . $row, $llamada->Fecha);
+			$sheet->setCellValue('B' . $row, $llamada->Folio);
+			$sheet->setCellValue('C' . $row, $llamada->Inicio);
+			$sheet->setCellValue('D' . $row, $llamada->Fin);
+			$sheet->setCellValue('E' . $row, $llamada->Agente);
+			$sheet->setCellValue('F' . $row, $llamada->Cliente);
+			$sheet->setCellValue('G' . $row, $llamada->Espera);
+			$sheet->setCellValue('H' . $row, $llamada->Duración);
+			$sheet->setCellValue('I' . $row, $llamada->Estatus);
+	
+			$sheet->setCellValue('J' . $row, '');
 
 			$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
 
@@ -1159,7 +1144,7 @@ class ReportesController extends BaseController
 		$writer = new Xlsx($spreadSheet);
 
 		header('Content-Type: application/vnd.ms-excel');
-		header('Content-Disposition: attachment; filename="REGISTRO_DIARIO_' . session('NOMBRE') . '.xls"');
+		header('Content-Disposition: attachment; filename="REGISTRO_LLAMADAS_' . session('NOMBRE') . '.xlsx"');
 		header('Cache-Control: max-age=0');
 		$writer->save("php://output");
 
