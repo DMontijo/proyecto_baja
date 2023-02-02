@@ -126,11 +126,13 @@ $routes->group('admin', function ($routes) {
 		$routes->get('registro_diario', 'admin/ReportesController::getRegistroDiario');
 		$routes->post('registro_diario', 'admin/ReportesController::postRegistroDiario');
 		$routes->get('reporte_fiel', 'admin/ReportesController::getFielReport');
-
+		$routes->get('reporte_llamadas', 'admin/ReportesController::getReporteLlamadas');
+		$routes->post('reporte_llamadas', 'admin/ReportesController::postReporteLlamadas');
 
 		$routes->post('generar_excel_folios', 'admin/ReportesController::createFoliosXlsx');
 		$routes->post('generar_excel_constancias', 'admin/ReportesController::createConstanciasXlsx');
 		$routes->post('generar_excel_registro_diario', 'admin/ReportesController::createRegistroDiarioXlsx');
+		$routes->post('generar_excel_llamadas', 'admin/ReportesController::createLlamadasXlsx');
 
 
 		$routes->get('documentos', 'admin/DocumentosController::index');
