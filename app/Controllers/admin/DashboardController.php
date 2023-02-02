@@ -3035,7 +3035,7 @@ class DashboardController extends BaseController
 
 	private function _createIntervencionPericial($solicitud, $municipio)
 	{
-		$function = '/testing/intervencionPericial.php?process=crear';
+		$function = '/intervencionPericial.php?process=crear';
 		$array = [
 			'SOLICITUDID',
 			'INTERVENCIONID',
@@ -3176,7 +3176,7 @@ class DashboardController extends BaseController
 
 	private function _createJusticiaAlterna($expedienteId, $procedimientoid, $municipio)
 	{
-		$function = '/testing/justiciaAlterna.php?process=crear';
+		$function = '/justiciaAlterna.php?process=crear';
 
 		$array = [
 			'EXPEDIENTEID',
@@ -3202,7 +3202,7 @@ class DashboardController extends BaseController
 	public function getModulos()
 	{
 		$municipio = $this->request->getPost('municipio');
-		$function = '/testing/consumoVistas.php?process=mediacion';
+		$function = '/consumoVistas.php?process=mediacion';
 		$endpoint = $this->endpoint . $function;
 		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
 		$data['MUNICIPIOID'] = $municipio;
@@ -3214,7 +3214,7 @@ class DashboardController extends BaseController
 	}
 	private function getMediador($municipio, $modulo)
 	{
-		$function = '/testing/consumoVistas.php?process=getMediador';
+		$function = '/consumoVistas.php?process=getMediador';
 		$endpoint = $this->endpoint . $function;
 		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
 		$data['MUNICIPIOID'] = $municipio;
