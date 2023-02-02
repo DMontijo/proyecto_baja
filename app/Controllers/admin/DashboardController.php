@@ -1705,6 +1705,7 @@ class DashboardController extends BaseController
 		$data = $this->_derivacionesAtencionesModel->asObject()->where('MUNICIPIOID', $municipio)->orderBy('INSTITUCIONREMISIONDESCR', 'asc')->findAll();
 		return json_encode($data);
 	}
+	
 	public function getDelitosModalidad()
 	{
 		$folio = $this->request->getPost('folio');
