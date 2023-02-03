@@ -24,7 +24,6 @@
 						</ul>
 						<div class="tab-content" id="myTabContent">
 							<div class="tab-pane fade show active" id="usuarios" role="tabpanel" aria-labelledby="usuarios-tab">
-								<form id="form_cerrar_usuario" class="needs-validation" action="<?= base_url() ?>/admin/dashboard/cerrar_sesiones_general" method="POST" novalidate>
 
 									<table id="table-usuarios" class="table table-bordered table-striped">
 										<thead>
@@ -38,23 +37,20 @@
 										</thead>
 										<tbody>
 											<?php foreach ($body_data->sesionesAdmin->result as $index => $sesionesAdmin) { ?>
-												<input hidden id="id_usuario" name="id_usuario" value="<?= $sesionesAdmin->ID_USUARIO ?>"> </input>
 												<tr>
 													<td class="text-center"><?= $sesionesAdmin->NOMBRE . ' ' . $sesionesAdmin->APELLIDO_PATERNO ?></td>
 													<td class="text-center"><?= $sesionesAdmin->AGENTE_HTTP ?></td>
 													<td class="text-center"><?= $sesionesAdmin->AGENTE_SO ?></td>
 													<td class="text-center"><?= $sesionesAdmin->FECHAINICIO ?></td>
 													<td class="text-center">
-														<button type="submit" class="btn btn-primary"><i class="fas fa-door-open mr-2"></i> CERRAR SESIÓN </button>
+														<a href="<?= base_url('/admin/dashboard/cerrar_sesiones_general?id_usuario=') . $sesionesAdmin->ID_USUARIO ?>" class="btn btn-primary text-white"> CERRAR SESIÓN</a>
 													</td>
 												</tr>
 											<?php } ?>
 										</tbody>
 									</table>
-								</form>
 							</div>
 							<div class="tab-pane fade" id="denunciantes" role="tabpanel" aria-labelledby="denunciantes-tab">
-								<form id="form_cerrar_denunciante" class="needs-validation" action="<?= base_url() ?>/admin/dashboard/cerrar_sesiones_general" method="POST" novalidate>
 
 									<table id="table-denunciantes" class="table table-bordered table-striped">
 										<thead>
@@ -69,21 +65,19 @@
 										</thead>
 										<tbody>
 											<?php foreach ($body_data->sesionesDenunciantes->result as $index => $sesionesDenunciantes) { ?>
-												<input hidden id="id_denunciante" name="id_denunciante" value="<?= $sesionesDenunciantes->ID_DENUNCIANTE ?>"> </input>
 												<tr>
 													<td class="text-center"><?= $sesionesDenunciantes->NOMBRE . ' ' . $sesionesDenunciantes->APELLIDO_PATERNO ?></td>
 													<td class="text-center"><?= $sesionesDenunciantes->DENUNCIANTE_HTTP ?></td>
 													<td class="text-center"><?= $sesionesDenunciantes->DENUNCIANTE_SO ?></td>
 													<td class="text-center"><?= $sesionesDenunciantes->FECHAINICIO ?></td>
 													<td class="text-center">
-														<button type="submit" class="btn btn-primary"><i class="fas fa-door-open mr-2"></i> CERRAR SESIÓN </button>
+														<a href="<?= base_url('/admin/dashboard/cerrar_sesiones_general?id_denunciante=') . $sesionesDenunciantes->ID_DENUNCIANTE ?>" class="btn btn-primary text-white"> CERRAR SESIÓN</a>
 													</td>
 												</tr>
 
 											<?php } ?>
 										</tbody>
 									</table>
-								</form>
 							</div>
 						</div>
 					</div>

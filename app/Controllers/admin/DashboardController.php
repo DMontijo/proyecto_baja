@@ -469,8 +469,8 @@ class DashboardController extends BaseController
 
 	public function cerrar_sesiones_general()
 	{
-		if (isset($_POST['id_denunciante'])) {
-			$id_denunciante = $this->request->getPost('id_denunciante');
+		if (isset($_GET['id_denunciante'])) {
+			$id_denunciante = $this->request->getGet('id_denunciante');
 			$sesion_data = [
 				'ACTIVO' => 0,
 			];
@@ -479,8 +479,8 @@ class DashboardController extends BaseController
 				return redirect()->to(base_url('/admin/dashboard/sesiones_activas'))->with('message_success', 'Se cerró la sesion correctamente');
 			}
 		}
-		if (isset($_POST['id_usuario'])) {
-			$id_usuario = $this->request->getPost('id_usuario');
+		if (isset($_GET['id_usuario'])) {
+			$id_usuario = $this->request->getGet('id_usuario');
 			$sesion_data = [
 				'ACTIVO' => 0,
 			];
