@@ -31,9 +31,9 @@
 						<tbody>
 							<?php foreach ($body_data->canalizacionesTijuana as $index => $canalizacion) { ?>
 								<tr>
-									<td class="fw-bold col-3"><?= $canalizacion->INSTITUCIONREMISIONDESCR ?></td>
-									<td class="col-6"><?= $canalizacion->DOMICILIO ?></td>
-									<td class="col-3 text-center"><?= $canalizacion->TELEFONO ?></td>
+									<td class="fw-bold col-3 text-center p-3"><?= $canalizacion->INSTITUCIONREMISIONDESCR ?></td>
+									<td class="col-6 text-center p-3"><?= $canalizacion->DOMICILIO ?></td>
+									<td class="col-3 text-center p-3"><?= $canalizacion->TELEFONO ?></td>
 								</tr>
 							<?php } ?>
 						</tbody>
@@ -51,9 +51,9 @@
 						<tbody>
 							<?php foreach ($body_data->canalizacionesRosarito as $index => $canalizacion) { ?>
 								<tr>
-									<td class="fw-bold col-3"><?= $canalizacion->INSTITUCIONREMISIONDESCR ?></td>
-									<td class="col-6"><?= $canalizacion->DOMICILIO ?></td>
-									<td class="col-3 text-center"><?= $canalizacion->TELEFONO ?></td>
+									<td class="fw-bold col-3 text-center p-3"><?= $canalizacion->INSTITUCIONREMISIONDESCR ?></td>
+									<td class="col-6 text-center p-3"><?= $canalizacion->DOMICILIO ?></td>
+									<td class="col-3 text-center p-3"><?= $canalizacion->TELEFONO ?></td>
 								</tr>
 							<?php } ?>
 						</tbody>
@@ -71,9 +71,9 @@
 						<tbody>
 							<?php foreach ($body_data->canalizacionesMexicali as $index => $canalizacion) { ?>
 								<tr>
-									<td class="fw-bold col-3"><?= $canalizacion->INSTITUCIONREMISIONDESCR ?></td>
-									<td class="col-6"><?= $canalizacion->DOMICILIO ?></td>
-									<td class="col-3 text-center"><?= $canalizacion->TELEFONO ?></td>
+									<td class="fw-bold col-3 text-center p-3"><?= $canalizacion->INSTITUCIONREMISIONDESCR ?></td>
+									<td class="col-6 text-center p-3"><?= $canalizacion->DOMICILIO ?></td>
+									<td class="col-3 text-center p-3"><?= $canalizacion->TELEFONO ?></td>
 								</tr>
 							<?php } ?>
 						</tbody>
@@ -91,9 +91,9 @@
 						<tbody>
 							<?php foreach ($body_data->canalizacionesTecate as $index => $canalizacion) { ?>
 								<tr>
-									<td class="fw-bold col-3"><?= $canalizacion->INSTITUCIONREMISIONDESCR ?></td>
-									<td class="col-6"><?= $canalizacion->DOMICILIO ?></td>
-									<td class="col-3 text-center"><?= $canalizacion->TELEFONO ?></td>
+									<td class="fw-bold col-3 text-center p-3"><?= $canalizacion->INSTITUCIONREMISIONDESCR ?></td>
+									<td class="col-6 text-center p-3"><?= $canalizacion->DOMICILIO ?></td>
+									<td class="col-3 text-center p-3"><?= $canalizacion->TELEFONO ?></td>
 								</tr>
 							<?php } ?>
 						</tbody>
@@ -111,9 +111,9 @@
 						<tbody>
 							<?php foreach ($body_data->canalizacionesEnsenada as $index => $canalizacion) { ?>
 								<tr>
-									<td class="fw-bold col-3"><?= $canalizacion->INSTITUCIONREMISIONDESCR ?></td>
-									<td class="col-6"><?= $canalizacion->DOMICILIO ?></td>
-									<td class="col-3 text-center"><?= $canalizacion->TELEFONO ?></td>
+									<td class="fw-bold col-3 text-center p-3"><?= $canalizacion->INSTITUCIONREMISIONDESCR ?></td>
+									<td class="col-6 text-center p-3"><?= $canalizacion->DOMICILIO ?></td>
+									<td class="col-3 text-center p-3"><?= $canalizacion->TELEFONO ?></td>
 								</tr>
 							<?php } ?>
 						</tbody>
@@ -135,7 +135,7 @@
 				[0, 'asc'],
 			],
 			searching: true,
-			pageLength: 100,
+			pageLength: 200,
 			// dom: 'Bfrtip',
 			// buttons: [
 			// 	'copy', 'excel', 'pdf'
@@ -155,7 +155,7 @@
 				[0, 'asc'],
 			],
 			searching: true,
-			pageLength: 100,
+			pageLength: 200,
 			// dom: 'Bfrtip',
 			// buttons: [
 			// 	'copy', 'excel', 'pdf'
@@ -175,7 +175,7 @@
 				[0, 'asc'],
 			],
 			searching: true,
-			pageLength: 100,
+			pageLength: 200,
 			// dom: 'Bfrtip',
 			// buttons: [
 			// 	'copy', 'excel', 'pdf'
@@ -195,7 +195,7 @@
 				[0, 'asc'],
 			],
 			searching: true,
-			pageLength: 100,
+			pageLength: 200,
 			// dom: 'Bfrtip',
 			// buttons: [
 			// 	'copy', 'excel', 'pdf'
@@ -215,7 +215,7 @@
 				[0, 'asc'],
 			],
 			searching: true,
-			pageLength: 100,
+			pageLength: 200,
 			// dom: 'Bfrtip',
 			// buttons: [
 			// 	'copy', 'excel', 'pdf'

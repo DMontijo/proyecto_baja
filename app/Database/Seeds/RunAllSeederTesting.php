@@ -28,7 +28,7 @@ class RunAllSeederTesting extends Seeder
 		$this->call('CanalizacionesSeeder');
 		$this->call('RolesUsuariosSeeder');
 		$this->call('ZonasUsuariosSeeder');
-		$this->call('UsuariosSeeder');
+		$this->call('UsuariosTestingSeeder');
 		$this->call('HechoLugarSeeder');
 		$this->call('DelitosUsuariosSeeder');
 		$this->call('PlantillasTestingSeeder');
