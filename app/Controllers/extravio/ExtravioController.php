@@ -88,16 +88,16 @@ class ExtravioController extends BaseController
 		$email = trim($email);
 		$password = trim($password);
 		$data = $this->_denunciantesModel->where('CORREO', $email)->first();
-		$control_session = $this->_sesionesDenunciantesModel->asObject()->where('ID_DENUNCIANTE', $data['DENUNCIANTEID'])->where('ACTIVO', 1)->first();
-		if ($control_session) {
-			return redirect()->to(base_url('/denuncia'))->with('message_session', 'Ya tienes sesiones activas, cierralas para continuar.')->with('id',  $data['DENUNCIANTEID']);
-		}
 		if ($data) {
+			$control_session = $this->_sesionesDenunciantesModel->asObject()->where('ID_DENUNCIANTE', $data['DENUNCIANTEID'])->where('ACTIVO', 1)->first();
+			if ($control_session) {
+				return redirect()->to(base_url('/denuncia'))->with('message_session', 'Ya tienes sesiones activas, cierralas para continuar.')->with('id',  $data['DENUNCIANTEID']);
+			}
 			if (validatePassword($password, $data['PASSWORD'])) {
 				$data['logged_in'] = TRUE;
 				$data['type'] = 'user_constancias';
 				$data['uuid'] = uniqid();
-			
+
 				$session->set($data);
 				$agent = $this->request->getUserAgent();
 
@@ -115,11 +115,11 @@ class ExtravioController extends BaseController
 				$this->_sesionesDenunciantesModel->insert($sesion_data);
 				return redirect()->to(base_url('/constancia_extravio/dashboard'));
 			} else {
-				$session->setFlashdata('message', 'La contraseña es incorrecta.');
+				$session->setFlashdata('message', 'La contraseña es incorrecta, intentalo de nuevo o da clic en olvide mi contraseña.');
 				return redirect()->back();
 			}
 		} else {
-			$session->setFlashdata('message', 'El correo no está registrado.');
+			$session->setFlashdata('message', 'El correo no está registrado, registrate para continuar.');
 			return redirect()->back();
 		}
 	}

@@ -46,40 +46,44 @@ class LoginController extends BaseController
 		$email = trim($email);
 		$password = trim($password);
 		$data = $this->_usuariosModel->where('CORREO', $email)->first();
-		$control_session = $this->_sesionesModel->asObject()->where('ID_USUARIO', $data['ID'])->where('ACTIVO', 1)->first();
 
-		if ($control_session) {
-			return redirect()->to(base_url('/admin'))->with('message_session', 'Ya tienes sesiones activas, cierralas para continuar.')->with('id',  $data['ID']);
-		}
+		if ($data) {
+			$control_session = $this->_sesionesModel->asObject()->where('ID_USUARIO', $data['ID'])->where('ACTIVO', 1)->first();
+			if ($control_session) {
+				return redirect()->to(base_url('/admin'))->with('message_session', 'Ya tienes sesiones activas, cierralas para continuar.')->with('id',  $data['ID']);
+			}
+			if (validatePassword($password, $data['PASSWORD'])) {
+				$data['permisos'] = $this->_rolesPermisosModel->select('PERMISOS.PERMISODESCR AS NOMBRE')->where('ROLID', $data['ROLID'])->join('PERMISOS', 'PERMISOS.PERMISOID = ROLESPERMISOS.PERMISOID', 'left')->findAll();
+				$data['permisos'] = array_column($data['permisos'], ('NOMBRE'));
+				$data['rol'] = $this->_rolesUsuariosModel->asObject()->where('ID', $data['ROLID'])->first();
+				$data['logged_in'] = TRUE;
+				$data['type'] = 'admin';
+				$data['uuid'] = uniqid();
+				$session->set($data);
+				$agent = $this->request->getUserAgent();
+				$sesion_data = [
+					'ID' => $data['uuid'],
+					'ID_USUARIO' => $data['ID'],
+					'IP_USUARIO' => $this->_get_client_ip(),
+					'IP_PUBLICA' => $this->_get_public_ip(),
+					'AGENTE_HTTP' => $agent->getBrowser(),
+					'AGENTE_SO' => $agent->getPlatform(),
+					'AGENTE_MOBILE' => $agent->isMobile() ? 1 : 0,
+					'ACTIVO' => 1,
+				];
 
-		if ($data && validatePassword($password, $data['PASSWORD'])) {
-			$data['permisos'] = $this->_rolesPermisosModel->select('PERMISOS.PERMISODESCR AS NOMBRE')->where('ROLID', $data['ROLID'])->join('PERMISOS', 'PERMISOS.PERMISOID = ROLESPERMISOS.PERMISOID', 'left')->findAll();
-			$data['permisos'] = array_column($data['permisos'], ('NOMBRE'));
-			$data['rol'] = $this->_rolesUsuariosModel->asObject()->where('ID', $data['ROLID'])->first();
-			$data['logged_in'] = TRUE;
-			$data['type'] = 'admin';
-			$data['uuid'] = uniqid();
-			$session->set($data);
-			$agent = $this->request->getUserAgent();
-			$sesion_data = [
-				'ID' => $data['uuid'],
-				'ID_USUARIO' => $data['ID'],
-				'IP_USUARIO' => $this->_get_client_ip(),
-				'IP_PUBLICA' => $this->_get_public_ip(),
-				'AGENTE_HTTP' => $agent->getBrowser(),
-				'AGENTE_SO' => $agent->getPlatform(),
-				'AGENTE_MOBILE' => $agent->isMobile() ? 1 : 0,
-				'ACTIVO' => 1,
-			];
-
-			$this->_sesionesModel->insert($sesion_data);
-			$datosBitacora = [
-				'ACCION' => 'Ha iniciado sesión',
-			];
-			$this->_bitacoraActividad($datosBitacora);
-			return redirect()->to(base_url('/admin/dashboard'));
+				$this->_sesionesModel->insert($sesion_data);
+				$datosBitacora = [
+					'ACCION' => 'Ha iniciado sesión',
+				];
+				$this->_bitacoraActividad($datosBitacora);
+				return redirect()->to(base_url('/admin/dashboard'));
+			} else {
+				$session->setFlashdata('message', 'La contraseña es incorrecta, verifica con informática.');
+				return redirect()->back();
+			}
 		} else {
-			$session->setFlashdata('message', 'Correo o contraseña incorrectos.');
+			$session->setFlashdata('message', 'El correo no esta registrado, verifica con informática.');
 			return redirect()->back();
 		}
 	}
