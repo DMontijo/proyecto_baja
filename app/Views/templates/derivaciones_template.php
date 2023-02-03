@@ -21,6 +21,7 @@
 	<!--Styles-->
 	<link rel="stylesheet" href="<?= base_url() ?>/assets/styles/global.css">
 	<link rel="stylesheet" href="<?= base_url() ?>/assets/styles/client/style.css">
+	<script src="<?= base_url() ?>/assets/DataTables/jquery/jquery.min.js"></script>
 
 	<title><?= $this->renderSection('title') ?> - Centro de Denuncia Tecnológica.</title>
 </head>
@@ -29,11 +30,12 @@
 	<script src="<?= base_url() ?>/assets/jQuery/jquery.js"></script>
 	<header>
 		<div class="container-fluid bg-primary p-0 m-0 header">
-			<div class="container">
+			<div class="container" style="max-width:900px;">
 				<div class="row">
-					<div class="col-12">
-						<a href="<?= base_url() ?>">
-							<img src="<?= base_url() ?>/assets/img/FGEBC_SEJAP_LOGO.png" class="logo-header" alt="FGEBC Logo">
+					<div class="col-12 text-center">
+						<a class="d-inline-block" href="<?= base_url() ?>">
+							<img src="<?= base_url() ?>/assets/img/FGEBC.png" style="max-height:90px;" alt="FGEBC Logo">
+							<h6 class="fw-bold text-white d-md-inline-block d-none">FISCALÍA GENERAL DEL ESTADO DE BAJA CALIFORNIA</h6>
 						</a>
 					</div>
 				</div>
@@ -49,6 +51,18 @@
 		<span>© <?= date("Y") ?> Fiscalía General del Estado de Baja California</span>
 	</footer>
 	<script src="<?= base_url() ?>/assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/datatables/jquery.dataTables.min.js"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/datatables-responsive/js/dataTables.responsive.min.js"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/datatables-buttons/js/dataTables.buttons.min.js"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/jszip/jszip.min.js"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/pdfmake/pdfmake.min.js"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/pdfmake/vfs_fonts.js"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/datatables-buttons/js/buttons.html5.min.js"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/datatables-buttons/js/buttons.print.min.js"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/datatables-buttons/js/buttons.colVis.min.js"></script>
 </body>
 
 </html>

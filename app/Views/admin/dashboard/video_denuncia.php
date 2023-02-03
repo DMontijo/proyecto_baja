@@ -1010,6 +1010,24 @@
 							option.text = persona.NOMBRE + ' ' + primer_apellido;
 							select_propietario.add(option, null);
 						});
+						$('#propietario_vehiculo').empty();
+						let select_propietario_prop_v = document.querySelector("#propietario_vehiculo");
+						const option_vacio_prop_v = document.createElement('option');
+						option_vacio_prop_v.value = '';
+						option_vacio_prop_v.text = '';
+						option_vacio_prop_v.disabled = true;
+						option_vacio_prop_v.selected = true;
+
+						select_propietario_prop_v.add(option_vacio_prop_v, null);
+						personas.forEach(persona => {
+							let primer_apellido = persona.PRIMERAPELLIDO ? persona
+								.PRIMERAPELLIDO : '';
+
+							const option = document.createElement('option');
+							option.value = persona.PERSONAFISICAID;
+							option.text = persona.NOMBRE + ' ' + primer_apellido;
+							select_propietario_prop_v.add(option, null);
+						});
 						$('#propietario_update').empty();
 						let select_propietario_update = document.querySelector("#propietario_update");
 						select_propietario_update.add(option_vacio, null);
@@ -1958,6 +1976,8 @@
 					const versionVehiculo = response.versionVehiculo;
 					const color = response.color;
 					const tipov = response.tipov;
+					document.querySelector('#situacion_vehiculo').value = vehiculo.SITUACION ?
+						vehiculo.SITUACION : '';
 					document.querySelector('#tipo_placas_vehiculo').value = vehiculo.TIPOPLACA ? vehiculo
 						.TIPOPLACA : '';
 					document.querySelector('#placas_vehiculo').value = vehiculo.PLACAS ? vehiculo.PLACAS : '';
@@ -2917,12 +2937,21 @@
 			let plantilla = document.querySelector("#plantilla");
 			let select_victima_documento = document.querySelector("#victima_modal_documento");
 			let select_imputado_documento = document.querySelector("#imputado_modal_documento");
+			let select_uma = document.querySelector("#uma_select");
+
 			$('#documentos_modal_wyswyg').on('show.bs.modal', function(event) {
 				$("#documentos_modal_wyswyg select").val("");
 				document.getElementById("involucrados").style.display = "none";
 				// quill.root.innerHTML = '';
 			});
 			selectPlantilla.addEventListener("change", function() {
+				if (plantilla.value == "CITATORIO") {
+					document.getElementById("div_uma").style.display = "block";
+				} else {
+					document.getElementById("div_uma").style.display = "none";
+
+				}
+
 				if (plantilla.value != "CONSTANCIA DE EXTRAVÍO") {
 					document.getElementById("involucrados").style.display = "block";
 					select_imputado_documento.addEventListener("change", function() {
@@ -2935,6 +2964,8 @@
 
 				} else {
 					document.getElementById("involucrados").style.display = "none";
+					document.getElementById("div_uma").style.display = "none";
+
 				}
 
 			});
@@ -3809,6 +3840,19 @@
 								option.text = persona.NOMBRE + ' ' + primer_apellido;
 								select_propietario.add(option, null);
 							});
+
+							$('#propietario_vehiculo').empty();
+							let select_propietario_v = document.querySelector("#propietario_vehiculo");
+							select_propietario_v.add(option_vacio, null);
+							personas.forEach(persona => {
+								let primer_apellido = persona.PRIMERAPELLIDO ? persona
+									.PRIMERAPELLIDO : '';
+
+								const option = document.createElement('option');
+								option.value = persona.PERSONAFISICAID;
+								option.text = persona.NOMBRE + ' ' + primer_apellido;
+								select_propietario_v.add(option, null);
+							});
 							$('#imputado_arbol').empty();
 							let select_imputado_mputado = document.querySelector("#imputado_arbol");
 							imputados.forEach(imputado => {
@@ -4567,6 +4611,8 @@
 				packetData.append("color_tapiceria_vehiculo", document.querySelector('#color_tapiceria_vehiculo')
 					.value);
 				packetData.append("marca_exacta", document.querySelector('#marca_ad_exacta').value);
+				packetData.append("situacion", document.querySelector('#situacion_vehiculo').value);
+				packetData.append("propietario_vehiculo", document.querySelector('#propietario_vehiculo').value);
 
 
 				$.ajax({
@@ -4793,6 +4839,24 @@
 								option.value = persona.PERSONAFISICAID;
 								option.text = persona.NOMBRE + ' '.primer_apellido;
 								select_propietario.add(option, null);
+							});
+
+							$('#propietario_vehiculo').empty();
+							let select_propietario_v = document.querySelector("#propietario_vehiculo");
+							const option_vacio_p = document.createElement('option');
+							option_vacio_p.value = '';
+							option_vacio_p.text = '';
+							option_vacio_p.disabled = true;
+							option_vacio_p.selected = true;
+							select_propietario_v.add(option_vacio_p, null);
+							personas.forEach(persona => {
+								let primer_apellido = persona.PRIMERAPELLIDO ? persona
+									.PRIMERAPELLIDO : '';
+
+								const option = document.createElement('option');
+								option.value = persona.PERSONAFISICAID;
+								option.text = persona.NOMBRE + ' ' + primer_apellido;
+								select_propietario_v.add(option, null);
 							});
 							$('#propietario_update').empty();
 							let select_propietario_update = document.querySelector(
@@ -5149,6 +5213,45 @@
 
 			function obtenerPlantillas(tipoPlantilla, victima, imputado) {
 
+				if (select_uma.value) {
+					const data = {
+
+						'folio': document.querySelector('#input_folio_atencion').value,
+						'expediente': document.querySelector('#input_expediente').value,
+						'year': document.querySelector('#year_select').value,
+						'titulo': tipoPlantilla,
+						'victima': victima,
+						'imputado': imputado,
+						'uma': select_uma.value
+
+					};
+					$.ajax({
+						method: 'POST',
+						url: "<?= base_url('/data/get-plantilla') ?>",
+						data: data,
+						dataType: 'JSON',
+						success: function(response) {
+							if (response.status == 1) {
+								const plantilla = response.plantilla;
+								quill.root.innerHTML = plantilla.PLACEHOLDER;
+								document.querySelector("#victima_modal_documento").value = '';
+								document.querySelector("#imputado_modal_documento").value = '';
+								document.getElementById("involucrados").style.display = "none";
+								document.getElementById("div_uma").style.display = "none";
+							} else {
+								quill.root.innerHTML = 'PLANTLLA VACÍA O CON ERROR';
+								document.querySelector("#victima_modal_documento").value = '';
+								document.querySelector("#imputado_modal_documento").value = '';
+								document.getElementById("involucrados").style.display = "none";
+								document.getElementById("div_uma").style.display = "none";
+
+							}
+						},
+						error: function(jqXHR, textStatus, errorThrown) {
+							console.error(textStatus);
+						}
+					});
+				}else{
 				const data = {
 					'folio': document.querySelector('#input_folio_atencion').value,
 					'expediente': document.querySelector('#input_expediente').value,
@@ -5180,6 +5283,7 @@
 						console.error(textStatus);
 					}
 				});
+			}
 			}
 
 

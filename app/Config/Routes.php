@@ -46,6 +46,7 @@ $routes->group('admin', function ($routes) {
 	$routes->get('/', 'admin/LoginController::index');
 	$routes->post('login', 'admin/LoginController::login_auth');
 	$routes->get('logout', 'admin/LoginController::logout');
+	$routes->post('cerrar-sesion', 'admin/LoginController::cerrar_sesiones');
 
 	$routes->group('dashboard', ['filter' => 'adminAuth'], function ($routes) {
 		$routes->get('/', 'admin/DashboardController::index');
@@ -54,6 +55,8 @@ $routes->group('admin', function ($routes) {
 		$routes->get('bandeja_remision', 'admin/DashboardController::bandeja_remision');
 		$routes->post('bandeja_remision', 'admin/DashboardController::bandeja_remision_post');
 		$routes->post('bandeja_rac', 'admin/DashboardController::bandeja_rac');
+		$routes->get('sesiones_activas', 'admin/DashboardController::sesiones_activas');
+		$routes->post('cerrar_sesiones_general', 'admin/DashboardController::cerrar_sesiones_general');
 
 
 		$routes->get('usuarios', 'admin/DashboardController::usuarios');
@@ -156,6 +159,7 @@ $routes->group('denuncia', function ($routes) {
 	$routes->get('/', 'client/AuthController::index');
 	$routes->post('login_auth', 'client/AuthController::login_auth');
 	$routes->get('logout', 'client/AuthController::logout');
+	$routes->post('cerrar-sesion', 'client/AuthController::cerrar_sesiones');
 
 	// $routes->resource('denunciante', ['controller' => 'client/UserController']);
 	$routes->get('denunciante/new', 'client/UserController::new');
@@ -301,6 +305,7 @@ $routes->group('data', function ($routes) {
 
 	//RAC
 	$routes->post('get-modulos', 'admin/DashboardController::getModulos');
+
 
 });
 

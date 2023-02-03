@@ -5,6 +5,15 @@
 	</div>
 	<hr>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="situacion_vehiculo" class="form-label font-weight-bold">Situación:</label>
+		<select class="form-control" id="situacion_vehiculo" name="situacion_vehiculo" required>
+			<option selected disabled value="">Selecciona la situación</option>
+			<?php foreach ($body_data->situacionVehiculo as $index => $situacionVehiculo) { ?>
+				<option value="<?= $situacionVehiculo->VEHICULOSITUACIONID ?>"> <?= $situacionVehiculo->VEHICULOSITUACIONDESCR ?> </option>
+			<?php } ?>
+		</select>
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="tipo_placas_vehiculo" class="form-label font-weight-bold">Tipo de placas:</label>
 		<select class="form-control" id="tipo_placas_vehiculo" name="tipo_placas_vehiculo">
 			<option selected disabled value="">Selecciona el tipo de placas</option>
@@ -19,7 +28,7 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="estado_vehiculo" class="form-label font-weight-bold">Estado:</label>
-		<select class="form-control" id="estado_vehiculo_ad" name="estado_vehiculo_ad">
+		<select class="form-control" id="estado_vehiculo_ad" name="estado_vehiculo_ad" required>
 			<option selected disabled value="">Selecciona el estado</option>
 			<?php foreach ($body_data->estados as $index => $estado) { ?>
 				<option value="<?= $estado->ESTADOID ?>"> <?= $estado->ESTADODESCR ?></option>
@@ -109,7 +118,7 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="distribuidor_vehiculo" class="form-label font-weight-bold">Distribuidor:</label>
-		<select class="form-control" id="distribuidor_vehiculo_ad" name="distribuidor_vehiculo_ad">
+		<select class="form-control" id="distribuidor_vehiculo_ad" name="distribuidor_vehiculo_ad" required>
 			<option selected disabled value="">Selecciona el distribuidor</option>
 			<?php foreach ($body_data->distribuidorVehiculo as $index => $distribuidor_vehiculo) { ?>
 				<option value="<?= $distribuidor_vehiculo->VEHICULODISTRIBUIDORID?>"> <?= $distribuidor_vehiculo->VEHICULODISTRIBUIDORDESCR ?></option>
@@ -118,7 +127,7 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="marca_ad" class="form-label font-weight-bold">Marca:</label>
-		<select class="form-control" id="marca_ad" name="marca_ad">
+		<select class="form-control" id="marca_ad" name="marca_ad" required>
 			<option selected disabled value="">Selecciona la marca</option>
 	
 		</select>
@@ -131,7 +140,7 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="linea_vehiculo" class="form-label font-weight-bold">Modelo:</label>
-		<select class="form-control" id="linea_vehiculo_ad" name="linea_vehiculo_ad">
+		<select class="form-control" id="linea_vehiculo_ad" name="linea_vehiculo_ad" required>
 			<option selected disabled value="">Selecciona el modelo</option>
 
 			
@@ -155,7 +164,7 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="modelo_vehiculo" class="form-label font-weight-bold">Año:</label>
-		<select class="form-control" name="modelo_vehiculo" id="modelo_vehiculo"></select>
+		<select class="form-control" name="modelo_vehiculo" id="modelo_vehiculo" required></select>
 
 	</div>
 	<div class="col-12 col-sm-12 col-md-12 col-lg-8 mb-3">
@@ -166,6 +175,14 @@
 		<option selected  value="D">Se desconoce</option>
 		</select>
 		
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="propietario_vehiculo" class="form-label font-weight-bold">Propietario:</label>
+		<select class="form-control" id="propietario_vehiculo" name="propietario_vehiculo" required>
+			<option selected disabled value="">Selecciona el propietario</option>
+	
+		</select>
+
 	</div>
 	<div class="col-12 mb-3 text-center">
 		<button type="submit" class="btn btn-primary font-weight-bold">ACTUALIZAR VEHÍCULO</button>

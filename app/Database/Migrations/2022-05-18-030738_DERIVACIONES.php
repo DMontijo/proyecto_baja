@@ -9,30 +9,30 @@ class DERIVACIONES extends Migration
 	public function up()
 	{
 		$this->forge->addField([
-			'MUNICIPIOID' => [
-				'type' => 'INT',
-			],
 			'INSTITUCIONREMISIONID' => [
-				'type' => 'SMALLINT',
-				'constrait' => '3',
+				'type' => 'INT',
+				'unsigned' => TRUE,
+				'auto_increment' => TRUE
 			],
 			'INSTITUCIONREMISIONDESCR' => [
 				'type' => 'VARCHAR',
-				'constraint' => '50',
+				'constraint' => '255',
 				'null' => TRUE,
+			],
+			'MUNICIPIOID' => [
+				'type' => 'INT',
 			],
 			'DOMICILIO' => [
 				'type' => 'VARCHAR',
-				'constraint' => '250',
+				'constraint' => '255',
 				'null' => TRUE,
 			],
 			'TELEFONO' => [
 				'type' => 'VARCHAR',
-				'constraint' => '50',
+				'constraint' => '255',
 				'null' => TRUE,
 			],
 		]);
-		$this->forge->addKey('MUNICIPIOID', TRUE);
 		$this->forge->addKey('INSTITUCIONREMISIONID', TRUE);
 		$this->forge->createTable('DERIVACIONES');
 	}

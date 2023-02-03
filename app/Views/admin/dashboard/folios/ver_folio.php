@@ -18,7 +18,7 @@
 if ($body_data->datosFolio->INSTITUCIONREMISIONID) { ?>
 		INSTITUTO REMITIDO: <?= $body_data->datosFolio->INSTITUCIONREMISIONDESCR ?> <br>
 	<?php }
-if ($body_data->datosFolio->AGENTEASIGNADOID) { ?>
+if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->MEDIADORID)) { ?>
 		AGENTE ASIGNADO: <?= $body_data->datosFolio->NOMBRE . ' ' . $body_data->datosFolio->PRIMERAPELLIDO . ' ' . $body_data->datosFolio->SEGUNDOAPELLIDO  ?><br>
 		OFICINA ASIGNADA: <?= $body_data->datosFolio->OFICINADESCR ?><br>
 		AREA ASIGNADA: <?= $body_data->datosFolio->AREADESCR ?><br>
@@ -430,7 +430,34 @@ if ($body_data->datosFolio->AGENTEASIGNADOID) { ?>
 		});
 
 		documentos_folio_btn.addEventListener('click', () => {
+			<?php if ($body_data->datosFolio->EXPEDIENTEID != NULL) { ?>
+				window.location.href = `<?= base_url('/admin/dashboard/documentos_show?folio=') ?>${inputFolio.value}&year=${year_select.value}&expediente=`+`<?=$body_data->datosFolio->EXPEDIENTEID?>`;
+				<?php }else{ ?>
+
 			window.location.href = `<?= base_url('/admin/dashboard/documentos_show?folio=') ?>${inputFolio.value}&year=${year_select.value}`;
+		<?php }?>
+		});
+
+		videos_folio_btn.addEventListener('click', () => {
+			data = {
+				'folio': inputFolio.value,
+				'year': year_select.value,
+			};
+			$.ajax({
+				data: data,
+				url: "<?= base_url('/data/get-link-from-call') ?>",
+				method: "POST",
+				dataType: "json",
+			}).done(function(data) {
+				console.log(data);
+			}).fail(function(jqXHR, textStatus) {
+				Swal.fire({
+					icon: 'error',
+					title: 'Hubo un error',
+					text: 'Contácte con soporte técnico',
+					confirmButtonColor: '#bf9b55',
+				})
+			});
 		});
 
 		function viewObjetoInvolucrado(objetoid) {

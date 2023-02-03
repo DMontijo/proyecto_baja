@@ -24,7 +24,7 @@
 								<a class="nav-link" id="tecate-tab" data-toggle="tab" href="#tecate" role="tab" aria-controls="tecate" aria-selected="false">Tecate - <?= count($body_data->tecate->result) ?></a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" id="Tijuana-tab" data-toggle="tab" href="#Tijuana" role="tab" aria-controls="Tijuana" aria-selected="false">Tijuana - <?= count($body_data->tijuana->result) ?></a>
+								<a class="nav-link" id="tijuana-tab" data-toggle="tab" href="#tijuana" role="tab" aria-controls="tijuana" aria-selected="false">Tijuana - <?= count($body_data->tijuana->result) ?></a>
 							</li>
 							<li class="nav-item">
 								<a class="nav-link" id="rosarito-tab" data-toggle="tab" href="#rosarito" role="tab" aria-controls="rosarito" aria-selected="false">Playas de Rosarito - <?= count($body_data->rosarito->result) ?></a>

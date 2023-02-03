@@ -80,4 +80,50 @@
 		}, false)
 	})();
 </script>
+
+<?php if (session()->getFlashdata('message_error')) : ?>
+	<script>
+		Swal.fire({
+			icon: 'error',
+			html: '<strong><?= session()->getFlashdata('message_error') ?></strong>',
+			confirmButtonColor: '#bf9b55',
+		})
+	</script>
+<?php endif; ?>
+<?php if (session()->getFlashdata('message_session')) : ?>
+	<script>
+		Swal.fire({
+			icon: 'error',
+			title: '<?= session()->getFlashdata('message_session') ?>',
+			showDenyButton: true,
+			showCancelButton: true,
+			confirmButtonText: 'Aceptar',
+			confirmButtonColor: '#bf9b55',
+			denyButtonText: 'Cancelar',
+		}).then((result) => {
+			if (result.isConfirmed) {
+				let data = {
+					'id': <?= session()->getFlashdata('id') ?>
+				};
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/denuncia/cerrar-sesion') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						if (response.status == 1) {
+							Swal.fire({
+							icon: 'success',
+							html: 'Se han cerrado todas las sesiones, por favor inicia sesión de nuevo.',
+							confirmButtonColor: '#bf9b55',
+						})
+						}
+					
+					},
+					error: function(jqXHR, textStatus, errorThrown) {}
+				});
+			}
+		})
+	</script>
+<?php endif; ?>
 <?= $this->endSection() ?>

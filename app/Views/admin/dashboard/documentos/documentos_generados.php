@@ -12,7 +12,6 @@
 <?php include 'app/Views/admin/dashboard/video_denuncia_modals/documentos_modal_wyswyg.php' ?>
 <?php include 'app/Views/admin/dashboard/video_denuncia_modals/send_email_modal.php' ?>
 <?php include 'app/Views/admin/dashboard/video_denuncia_modals/prueba.php' ?>
-
 <section class="content">
 	<div class="container-fluid">
 		<div class="row">
@@ -302,6 +301,12 @@
 		}, false);
 
 		selectPlantilla.addEventListener("change", function() {
+			if (plantilla.value == "CITATORIO") {
+				document.getElementById("div_uma").style.display = "block";
+			}else{
+				document.getElementById("div_uma").style.display = "none";
+
+			}
 
 			if (plantilla.value != "CONSTANCIA DE EXTRAVÍO") {
 				document.getElementById("involucrados").style.display = "block";
@@ -311,24 +316,29 @@
 					obtenerPlantillas(plantilla.value, select_victima_documento.value,
 						select_imputado_documento.value);
 				})
+
 			} else {
 				document.getElementById("involucrados").style.display = "none";
+				document.getElementById("div_uma").style.display = "none";
+
 			}
 
 		});
 
 		function obtenerPlantillas(tipoPlantilla, victima, imputado) {
 
-			const data = {
+			if (document.getElementById('uma_select').value) {
+				const data = {
 
-				'folio': <?php echo $_GET['folio'] ?>,
-				'year': <?php echo $_GET['year'] ?>,
-				'titulo': tipoPlantilla,
-				'victima': victima,
-				'imputado': imputado,
+					'folio': <?php echo $_GET['folio'] ?>,
+					'year': <?php echo $_GET['year'] ?>,
+					'titulo': tipoPlantilla,
+					'victima': victima,
+					'imputado': imputado,
+					'uma':document.getElementById('uma_select').value
 
-			};
-			$.ajax({
+				};
+				$.ajax({
 				method: 'POST',
 				url: "<?= base_url('/data/get-plantilla') ?>",
 				data: data,
@@ -351,6 +361,47 @@
 					console.error(textStatus);
 				}
 			});
+			} else {
+				const data = {
+
+					'folio': <?php echo $_GET['folio'] ?>,
+					'year': <?php echo $_GET['year'] ?>,
+					'titulo': tipoPlantilla,
+					'victima': victima,
+					'imputado': imputado,
+
+				};
+				$.ajax({
+				method: 'POST',
+				url: "<?= base_url('/data/get-plantilla') ?>",
+				data: data,
+				dataType: 'JSON',
+				success: function(response) {
+					if (response.status == 1) {
+						const plantilla = response.plantilla;
+						quill.root.innerHTML = plantilla.PLACEHOLDER;
+						document.querySelector("#victima_modal_documento").value = '';
+						document.querySelector("#imputado_modal_documento").value = '';
+						document.getElementById("involucrados").style.display = "none";
+						document.getElementById("div_uma").style.display = "none";
+
+					} else {
+						quill.root.innerHTML = 'PLANTLLA VACÍA O CON ERROR';
+						document.querySelector("#victima_modal_documento").value = '';
+						document.querySelector("#imputado_modal_documento").value = '';
+						document.getElementById("involucrados").style.display = "none";
+						document.getElementById("div_uma").style.display = "none";
+
+					}
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					console.error(textStatus);
+				}
+			});
+			}
+
+
+		
 		}
 		btn_guardarFolioDoc.addEventListener('click', (event) => {
 			let contenidoModificado = quill.container.firstChild.innerHTML;

@@ -728,6 +728,8 @@ class DashboardController extends BaseController
 					// 'MODELODESCR' => isset($modelodescr->VEHICULOMODELODESCR) ? $modelodescr->VEHICULOMODELODESCR : null,
 					'FOTO' => $fotoV,
 					'DOCUMENTO' => $docV,
+					'SITUACION' => 2,
+
 				);
 
 				$this->_folioVehiculo($dataVehiculo, $FOLIOID, $year);

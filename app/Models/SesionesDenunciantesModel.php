@@ -1,0 +1,34 @@
+<?php
+
+namespace App\Models;
+
+use CodeIgniter\Model;
+
+class SesionesDenunciantesModel extends Model
+{
+    protected $table            = 'SESIONESDENUNCIANTES';
+	protected $allowedFields    = [
+		'ID',
+		'ID_DENUNCIANTE',
+		'IP_DENUNCIANTE',
+		'IP_PUBLICA',
+		'DENUNCIANTE_HTTP',
+		'ACTIVO',
+		'DENUNCIANTE_SO',
+		'DENUNCIANTE_MOBILE',
+	];
+
+	public function sesiones_abiertas(){
+		$strQuery = 'SELECT SESIONESDENUNCIANTES.ID_DENUNCIANTE, SESIONESDENUNCIANTES.DENUNCIANTE_HTTP, SESIONESDENUNCIANTES.DENUNCIANTE_SO, SESIONESDENUNCIANTES.FECHAINICIO, DENUNCIANTES.NOMBRE, DENUNCIANTES.APELLIDO_PATERNO
+		FROM SESIONESDENUNCIANTES 
+		LEFT JOIN DENUNCIANTES ON DENUNCIANTES.DENUNCIANTEID = SESIONESDENUNCIANTES.ID_DENUNCIANTE
+		WHERE SESIONESDENUNCIANTES.ACTIVO = 1
+		ORDER BY SESIONESDENUNCIANTES.FECHAINICIO ASC';
+
+		$result = $this->db->query($strQuery)->getResult();
+
+		$dataView = (object)array();
+		$dataView->result = $result;
+		return $dataView;
+	}
+}

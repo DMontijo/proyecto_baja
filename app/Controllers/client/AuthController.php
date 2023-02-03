@@ -5,15 +5,18 @@ namespace App\Controllers\client;
 use App\Controllers\BaseController;
 
 use App\Models\DenunciantesModel;
+use App\Models\SesionesDenunciantesModel;
 
 class AuthController extends BaseController
 {
 
 	private $_denunciantesModel;
+	private $_sesionesDenunciantesModel;
 
 	function __construct()
 	{
 		$this->_denunciantesModel = new DenunciantesModel();
+		$this->_sesionesDenunciantesModel = new SesionesDenunciantesModel();
 	}
 
 	public function index()
@@ -34,11 +37,29 @@ class AuthController extends BaseController
 		$email = trim($email);
 		$password = trim($password);
 		$data = $this->_denunciantesModel->where('CORREO', $email)->first();
+		$control_session = $this->_sesionesDenunciantesModel->asObject()->where('ID_DENUNCIANTE', $data['DENUNCIANTEID'])->where('ACTIVO', 1)->first();
+		if ($control_session) {
+			return redirect()->to(base_url('/denuncia'))->with('message_session', 'Ya tienes sesiones activas, cierralas para continuar.')->with('id',  $data['DENUNCIANTEID']);
+		}
 		if ($data) {
 			if (validatePassword($password, $data['PASSWORD'])) {
 				$data['logged_in'] = TRUE;
 				$data['type'] = 'user';
+				$data['uuid'] = uniqid();
 				$session->set($data);
+				$agent = $this->request->getUserAgent();
+				$sesion_data = [
+					'ID' => $data['uuid'],
+					'ID_DENUNCIANTE' => $data['DENUNCIANTEID'],
+					'IP_DENUNCIANTE' => $this->_get_client_ip(),
+					'IP_PUBLICA' => $this->_get_public_ip(),
+					'DENUNCIANTE_HTTP' => $agent->getBrowser(),
+					'DENUNCIANTE_SO' => $agent->getPlatform(),
+					'DENUNCIANTE_MOBILE' => $agent->isMobile() ? 1 : 0,
+					'ACTIVO' => 1,
+				];
+
+				$this->_sesionesDenunciantesModel->insert($sesion_data);
 				return redirect()->to(base_url('/denuncia/dashboard'));
 			} else {
 				$session->setFlashdata('message', 'La contraseña es incorrecta.');
@@ -53,8 +74,37 @@ class AuthController extends BaseController
 	public function logout()
 	{
 		$session = session();
+		$sesion_data = [
+			'ACTIVO' => 0,
+			'ID_DENUNCIANTE' => $session->get('ID'),
+		];
+		$session_denunciante =  $this->_sesionesDenunciantesModel->where('ID_DENUNCIANTE', $session->get('DENUNCIANTEID'))->where('ID', session('uuid'))->where('ACTIVO', 1)->orderBy('FECHAINICIO', 'DESC')->first();
+		if ($session_denunciante) {
+			$update = $this->_sesionesDenunciantesModel->set($sesion_data)->where('ID', $session_denunciante['ID'])->update();
+			if ($update) {
+				$session->destroy();
+				return redirect()->to(base_url());
+			}
+		} else {
+			$session->destroy();
+			return redirect()->to(base_url())->with('message_error', 'No hay sesiones activas');
+		}
 		$session->destroy();
 		return redirect()->to(base_url());
+	}
+	public function cerrar_sesiones()
+	{
+		$session = session();
+		$id_denunciante = $this->request->getPost('id');
+		$sesion_data = [
+			'ACTIVO' => 0,
+		];
+		$update = $this->_sesionesDenunciantesModel->set($sesion_data)->where('ID_DENUNCIANTE', $id_denunciante)->update();
+		if ($update) {
+
+			$session->destroy();
+			return json_encode(['status' => 1]);
+		}
 	}
 
 	public function change_password()
@@ -114,7 +164,45 @@ class AuthController extends BaseController
 		}
 		return $password;
 	}
+	private function _get_client_ip()
+	{
+		$ipaddress = '';
+		if (getenv('HTTP_CLIENT_IP'))
+			$ipaddress = getenv('HTTP_CLIENT_IP');
 
+		else if (getenv('HTTP_X_FORWARDED_FOR'))
+			$ipaddress = getenv('HTTP_X_FORWARDED_FOR');
+
+		else if (getenv('HTTP_X_FORWARDED'))
+			$ipaddress = getenv('HTTP_X_FORWARDED');
+
+		else if (getenv('HTTP_FORWARDED_FOR'))
+			$ipaddress = getenv('HTTP_FORWARDED_FOR');
+
+		else if (getenv('HTTP_FORWARDED'))
+			$ipaddress = getenv('HTTP_FORWARDED');
+
+		else if (getenv('REMOTE_ADDR'))
+			$ipaddress = getenv('REMOTE_ADDR');
+		else
+			$ipaddress = 'UNKNOWN';
+		if (strpos($ipaddress, ",") !== false) :
+			$ipaddress = strtok($ipaddress, ",");
+		endif;
+		return $ipaddress;
+	}
+
+	private function _get_public_ip()
+	{
+		try {
+			$externalContent = file_get_contents('http://checkip.dyndns.com/');
+			preg_match('/Current IP Address: \[?([:.0-9a-fA-F]+)\]?/', $externalContent, $m);
+			$externalIp = $m[1];
+		} catch (\Exception $e) {
+			$externalIp = '127.0.0.1';
+		}
+		return $externalIp;
+	}
 	private function _loadView($title, $data, $view)
 	{
 		$data = [

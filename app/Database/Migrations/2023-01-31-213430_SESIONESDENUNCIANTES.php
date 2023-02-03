@@ -4,23 +4,22 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class SESIONES extends Migration
+class SESIONESDENUNCIANTES extends Migration
 {
-
-	public function up()
-	{
-		$this->forge->addField([
+    public function up()
+    {
+        $this->forge->addField([
 			'ID' => [
 				'type' => 'VARCHAR',
 				'constraint' => '255',
 				'null' => false
 			],
-			'ID_USUARIO' => [
+			'ID_DENUNCIANTE' => [
 				'type' => 'VARCHAR',
 				'constraint' => '255',
 				'null' => false
 			],
-			'IP_USUARIO' => [
+			'IP_DENUNCIANTE' => [
 				'type' => 'VARCHAR',
 				'constraint' => '45',
 				'null' => false
@@ -30,17 +29,17 @@ class SESIONES extends Migration
 				'constraint' => '45',
 				'null' => false
 			],
-			'AGENTE_HTTP' => [
+			'DENUNCIANTE_HTTP' => [
 				'type' => 'VARCHAR',
 				'constraint' => '255',
 				'null' => false
 			],
-			'AGENTE_SO' => [
+			'DENUNCIANTE_SO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '255',
 				'null' => false
 			],
-			'AGENTE_MOBILE' => [
+			'DENUNCIANTE_MOBILE' => [
 				'type' => 'VARCHAR',
 				'constraint' => '255',
 				'null' => false
@@ -56,11 +55,11 @@ class SESIONES extends Migration
 
 		$this->forge->addKey('ID', true);
 		$this->forge->addKey('FECHAINICIO');
-		$this->forge->createTable('SESIONES', true);
-	}
+		$this->forge->createTable('SESIONESDENUNCIANTES', true);
+    }
 
-	public function down()
-	{
-		$this->forge->dropTable('SESIONES', true);
-	}
+    public function down()
+    {
+		$this->forge->dropTable('SESIONESDENUNCIANTES', true);
+    }
 }

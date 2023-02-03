@@ -21,21 +21,23 @@ class DerivacionesController extends Controller
 	public function index()
 	{
 		$data = (object) array();
-		$data->derivacionesEnsenada = $this->_derivacionesModel->asObject()->where('MUNICIPIO', 'ENSENADA')->orderBy('INSTITUCIONREMISIONDESCR', 'asc')->findAll();
-		$data->derivacionesTijuana = $this->_derivacionesModel->asObject()->where('MUNICIPIO', 'TIJUANA-RTO')->orderBy('INSTITUCIONREMISIONDESCR', 'asc')->findAll();
-		$data->derivacionesMexicali = $this->_derivacionesModel->asObject()->where('MUNICIPIO', 'MEXICALI-TKT')->orderBy('INSTITUCIONREMISIONDESCR', 'asc')->findAll();
+		$data->derivacionesEnsenada = $this->_derivacionesModel->asObject()->getByMunicipioId(1);
+		$data->derivacionesMexicali = $this->_derivacionesModel->asObject()->getByMunicipioId(2);
+		$data->derivacionesTecate = $this->_derivacionesModel->asObject()->getByMunicipioId(3);
+		$data->derivacionesTijuana = $this->_derivacionesModel->asObject()->getByMunicipioId(4);
+		$data->derivacionesRosarito = $this->_derivacionesModel->asObject()->getByMunicipioId(5);
 		$this->_loadView('Catálogo derivaciones', $data, 'derivaciones');
 	}
 
 	public function canalizaciones()
 	{
 		$data = (object) array();
-		$data->canalizacionesEnsenada = $this->_canalizacionesModel->asObject()->where('MUNICIPIO', 'ENSENADA')->findAll();
-		$data->canalizacionesTijuana = $this->_canalizacionesModel->asObject()->where('MUNICIPIO', 'TIJUANA')->findAll();
-		$data->canalizacionesMexicali = $this->_canalizacionesModel->asObject()->where('MUNICIPIO', 'MEXICALI')->findAll();
-		$data->canalizacionesTecate = $this->_canalizacionesModel->asObject()->where('MUNICIPIO', 'TECATE')->findAll();
-		$data->canalizacionesRosarito = $this->_canalizacionesModel->asObject()->where('MUNICIPIO', 'ROSARITO')->findAll();
-		$this->_loadView('Canalizaciones', $data, 'canalizaciones');
+		$data->canalizacionesEnsenada = $this->_canalizacionesModel->asObject()->getByMunicipioId(1);
+		$data->canalizacionesMexicali = $this->_canalizacionesModel->asObject()->getByMunicipioId(2);
+		$data->canalizacionesTecate = $this->_canalizacionesModel->asObject()->getByMunicipioId(3);
+		$data->canalizacionesTijuana = $this->_canalizacionesModel->asObject()->getByMunicipioId(4);
+		$data->canalizacionesRosarito = $this->_canalizacionesModel->asObject()->getByMunicipioId(5);
+		$this->_loadView('Catálogo canalizaciones', $data, 'canalizaciones');
 	}
 
 	private function _loadView($title, $data, $view)

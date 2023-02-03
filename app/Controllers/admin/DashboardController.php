@@ -113,12 +113,15 @@ use App\Models\PlantillasModel;
 use App\Models\RelacionFolioDocExpDocModel;
 use App\Models\RelacionFolioDocModel;
 use App\Models\RolesPermisosModel;
+use App\Models\SesionesDenunciantesModel;
+use App\Models\SesionesModel;
 use App\Models\TipoExpedienteModel;
 use App\Models\TipoMonedaModel;
 use App\Models\VehiculoDistribuidorModel;
 use App\Models\VehiculoMarcaModel;
 use App\Models\VehiculoModeloModel;
 use App\Models\VehiculoServicioModel;
+use App\Models\VehiculoSituacionModel;
 use App\Models\VehiculoVersionModel;
 
 use \Mpdf\Mpdf;
@@ -245,6 +248,9 @@ class DashboardController extends BaseController
 	private $_derivacionesAtencionesModel;
 	private $_canalizacionesAtencionesModel;
 	private $_bandejaRacModel;
+	private $_situacionVehiculoModel;
+	private $_sesionesModel;
+	private $_sesionesDenunciantesModel;
 
 	private $protocol;
 	private $ip;
@@ -368,6 +374,7 @@ class DashboardController extends BaseController
 		$this->_rolesPermisosModel = new RolesPermisosModel();
 		$this->_permisosModel = new PermisosModel();
 
+		$this->_situacionVehiculoModel = new VehiculoSituacionModel();
 		$this->_folioConsecutivoModel = new FolioConsecutivoModel();
 		$this->_relacionFolioDocExpDoc = new RelacionFolioDocExpDocModel();
 
@@ -375,6 +382,8 @@ class DashboardController extends BaseController
 		$this->_canalizacionesAtencionesModel = new CanalizacionesModel();
 
 		$this->_bandejaRacModel = new BandejaRacModel();
+		$this->_sesionesModel = new SesionesModel();
+		$this->_sesionesDenunciantesModel = new SesionesDenunciantesModel();
 
 		// $this->protocol = 'http://';
 		// $this->ip = "10.144.244.223";
@@ -445,7 +454,42 @@ class DashboardController extends BaseController
 
 		$this->_loadView('Asignación de permisos', 'asignacion de permisos', '', $data, 'roles/asignacion_permisos');
 	}
+	public function sesiones_activas()
+	{
+		if (!$this->permisos('SESIONES')) {
+			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
+		}
+		$data = (object) array();
+		$data->sesionesAdmin = $this->_sesionesModel->sesiones_abiertas();
+		$data->sesionesDenunciantes = $this->_sesionesDenunciantesModel->sesiones_abiertas();
+		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
+		$this->_loadView('Sesiones activas', 'sesiones', '', $data, 'sesiones_activas');
+	}
+
+	public function cerrar_sesiones_general()
+	{
+		if (isset($_POST['id_denunciante'])) {
+			$id_denunciante = $this->request->getPost('id_denunciante');
+			$sesion_data = [
+				'ACTIVO' => 0,
+			];
+			$update = $this->_sesionesDenunciantesModel->set($sesion_data)->where('ID_DENUNCIANTE', $id_denunciante)->update();
+			if ($update) {
+				return redirect()->to(base_url('/admin/dashboard/sesiones_activas'))->with('message_success', 'Se cerró la sesion correctamente');
+			}
+		}
+		if (isset($_POST['id_usuario'])) {
+			$id_usuario = $this->request->getPost('id_usuario');
+			$sesion_data = [
+				'ACTIVO' => 0,
+			];
+			$update = $this->_sesionesModel->set($sesion_data)->where('ID_USUARIO', $id_usuario)->update();
+			if ($update) {
+				return redirect()->to(base_url('/admin/dashboard/sesiones_activas'))->with('message_success', 'Se cerró la sesion correctamente');
+			}
+		}
+	}
 	public function nuevo_asignacion_permiso()
 	{
 		$data = (object) array();
@@ -902,8 +946,6 @@ class DashboardController extends BaseController
 
 	public function getFolioInformation()
 	{
-
-
 		$data = (object) array();
 		$numfolio = trim($this->request->getPost('folio'));
 		$year = trim($this->request->getPost('year'));
@@ -951,7 +993,6 @@ class DashboardController extends BaseController
 						'NOTAS' => 'FOLIO: ' . $numfolio . ' AÑO: ' . $year,
 					];
 					$this->_bitacoraActividad($datosBitacora);
-					// var_dump($data);exit;
 					return json_encode($data);
 				} else if ($data->folio->STATUS == 'EN PROCESO' && $data->folio->TIPODENUNCIA == "VD") {
 					return json_encode(['status' => 2, 'motivo' => 'EL FOLIO YA ESTA SIENDO ATENDIDO']);
@@ -1193,8 +1234,6 @@ class DashboardController extends BaseController
 		$data->tecate = $this->_folioModel->bandeja_salida(3);
 		$data->tijuana = $this->_folioModel->bandeja_salida(4);
 		$data->rosarito = $this->_folioModel->bandeja_salida(5);
-		// var_dump($data->mexicali);
-		// exit;
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 		$this->_loadView('Bandeja de remisión', 'bandeja de remision', '', $data, 'bandeja/bandeja_salida');
 	}
@@ -1224,17 +1263,17 @@ class DashboardController extends BaseController
 			$this->_loadView('Bandeja remisión', 'remision', '', $data, 'bandeja/bandeja_remision');
 		}
 	}
+
 	public function bandeja_remision_post()
 	{
 		try {
-
 			$expediente = trim($this->request->getPost('expediente'));
 			$oficina = trim($this->request->getPost('oficina'));
 			$empleado = trim($this->request->getPost('empleado'));
 			$municipio = trim($this->request->getPost('municipio'));
 
 			$area = $this->_empleadosModel->asObject()->where('EMPLEADOID', $empleado)->where('MUNICIPIOID', $municipio)->first();
-			$documents = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente . '1')->findAll();
+			$documents = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente)->findAll();
 			$status = 2;
 
 			foreach ($documents as $key => $document) {
@@ -1272,7 +1311,7 @@ class DashboardController extends BaseController
 				];
 
 				$bandeja = $this->_folioModel->where('EXPEDIENTEID', $expediente)->first();
-				$updateExpediente = $this->_updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area->AREAID, $status);
+				$updateExpediente = $this->_updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area->AREAID, 'REMISION', $status);
 				$updateArch = $this->_archivoExternoModel->set($dataFolioArc)->where('FOLIOID', $bandeja['FOLIOID'])->where('ANO', $bandeja['ANO'])->update();
 
 				$_bandeja_creada = $this->_createBandeja($bandeja);
@@ -1332,47 +1371,82 @@ class DashboardController extends BaseController
 	public function bandeja_rac()
 	{
 		try {
-
 			$expediente = trim($this->request->getPost('expediente'));
 			$modulo = trim($this->request->getPost('modulo'));
 			$procedimiento = trim($this->request->getPost('procedimiento'));
 			$municipio = trim($this->request->getPost('municipio'));
 
-			$documents = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente . '1')->findAll();
-
-			$bandeja = $this->_folioModel->where('EXPEDIENTEID', $expediente)->first();
-			$existRac = $this->_bandejaRacModel->where('EXPEDIENTEID', $expediente);
+			$existRac = $this->_bandejaRacModel->asObject()->where('EXPEDIENTEID', $expediente)->findAll();
 			if ($existRac) {
-				return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_error', 'Ya existe este RAC');
+				return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_error', 'Ya fue remitido este RAC.');
 			}
-			
+
+			$status = 2;
+			$bandeja = $this->_folioModel->where('EXPEDIENTEID', $expediente)->first();
+
+			$documents = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente)->findAll();
+			foreach ($documents as $key => $document) {
+				if (
+					$document->TIPODOC == 'CRITERIO DE OPORTUNIDAD' ||
+					$document->TIPODOC == 'FACULTAD DE ABSTENERSE DE INVESTIGAR (NO DELITO)' ||
+					$document->TIPODOC == 'FACULTAD DE ABSTENERSE DE INVESTIGAR (PRESCRIPCION)'
+				) {
+					$status = 4;
+				}
+			}
+
 			$getMediador = $this->getMediador($municipio, $modulo);
 
-			$_bandeja_rac = $this->_createJusticiaAlterna($expediente, $procedimiento, $municipio, $getMediador->data->EMPLEADOID_MEDIADOR);
+			$dataFolio = array(
+				'AGENTEASIGNADOID' =>  $getMediador->data->EMPLEADOID_MEDIADOR,
+				'OFICINAASIGNADOID' => $getMediador->data->OFICINA_MP_MEDIADOR,
+				'AREAASIGNADOID' => $getMediador->data->AREA_MEDIADOR
+			);
 
+			try {
+				$_bandeja_rac = $this->_createJusticiaAlterna($expediente, $procedimiento, $municipio);
 
-			if ($_bandeja_rac->status == 201) {
+				if ($_bandeja_rac->status == 401) {
+					return redirect()->back()->with('message_error', 'Hay un error en la tabla expedientejusticiaalterna por lo tanto no se puede remitir.');
+				}
+			} catch (\Exception $e) {
+				return redirect()->back()->with('message_error', 'No se esta guardando en tabla expedientejusticiaalterna por lo tanto no se puede remitir.');
+			}
+			try {
+				$updateExpediente = $this->_updateExpedienteByBandeja($expediente, $municipio, $getMediador->data->OFICINA_MP_MEDIADOR, $getMediador->data->EMPLEADOID_MEDIADOR, $getMediador->data->AREA_MEDIADOR, 'RAC', $status);
+				if ($updateExpediente->status == 401) {
+					return redirect()->back()->with('message_error', 'No se actualizo el expediente en justicia por lo tanto no se puede remitir.');
+				}
+			} catch (\Exception $e) {
+				return redirect()->back()->with('message_error', 'No se actualizo el expediente en justicia por lo tanto no se puede remitir.');
+			}
+
+			if ($updateExpediente->status == 201 && $_bandeja_rac->status == 201) {
+
+				$this->_folioModel->set($dataFolio)->where('EXPEDIENTEID', $expediente)->update();
+
 				$dataBandeja = array(
-					'FOLIOID'=>	$bandeja['FOLIOID'],
-					'ANO'=>	$bandeja['ANO'],
-					'EXPEDIENTEID'=>$expediente,
+					'FOLIOID' =>	$bandeja['FOLIOID'],
+					'ANO' =>	$bandeja['ANO'],
+					'EXPEDIENTEID' => $expediente,
 					'TIPOPROCEDIMIENTOID' => $procedimiento,
-					'MODULOID' => $modulo,
+					'MODULOID' => $getMediador->data->OFICINA_MP_MEDIADOR,
 					'MEDIADORID' => $getMediador->data->EMPLEADOID_MEDIADOR
 				);
-			
-	
-				$bandejaRac = $this->_bandejaRacModel->insert($dataBandeja);
 
-			
-				$subirArchivos = $this->subirArchivosRemision($bandeja['FOLIOID'], $bandeja['ANO'], $expediente);
+				$bandejaRac = $this->_bandejaRacModel->insert($dataBandeja);
+				$this->subirArchivosRemision($bandeja['FOLIOID'], $bandeja['ANO'], $expediente);
+
 				$folioDoc = $this->_folioDocModel->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->join('RELACIONFOLIODOCEXPDOC', 'FOLIODOC.NUMEROEXPEDIENTE = RELACIONFOLIODOCEXPDOC.EXPEDIENTEID  AND FOLIODOC.FOLIODOCID = RELACIONFOLIODOCEXPDOC.FOLIODOCID')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('TIPODOC', 'SOLICITUD DE PERITAJE')->findAll();
+
 				if ($folioDoc) {
 					foreach ($folioDoc as $key => $doc) {
 						$solicitudp = array();
 						$solicitudp['ESTADOID'] = 2;
 						$solicitudp['MUNICIPIOID'] = $municipio;
-						$solicitudp['EMPLEADOIDREGISTRO'] = $_bandeja_rac->empleado;
+						$solicitudp['EMPLEADOIDREGISTRO'] = $getMediador->data->EMPLEADOID_MEDIADOR;
+						$solicitudp['OFICINAIDREGISTRO'] = $getMediador->data->OFICINA_MP_MEDIADOR;
+						$solicitudp['AREAIDREGISTRO'] =  $getMediador->data->AREA_MEDIADOR;
 						$solicitudp['ANO'] = $doc['ANO'];
 						$solicitudp['TITULO'] = $doc['TIPODOC'];
 
@@ -1403,9 +1477,18 @@ class DashboardController extends BaseController
 						}
 					}
 				}
+
 				if (!$bandejaRac) {
+					$datosBitacora = [
+						'ACCION' => 'Remitio un expediente.',
+						'NOTAS' => 'Exp: ' . $expediente . ' moeulo: ' . $modulo . ' empleado:' . $getMediador->data->EMPLEADOID_MEDIADOR  . ' area:' . $getMediador->data->AREA_MEDIADOR,
+					];
+					$this->_bitacoraActividad($datosBitacora);
+
 					return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_success', 'Remitido correctamente');
 				}
+			} else {
+				return redirect()->back()->with('message_error', 'No se actualizo la bandeja RAC o el expediente, verifique con informática.');
 			}
 		} catch (\Exception $e) {
 			return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_error', 'Hubo un error en la remisión, verifica el expediente en justicia.');
@@ -1522,6 +1605,7 @@ class DashboardController extends BaseController
 		$data->victimas = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->where('CALIDADJURIDICAID= 1 OR CALIDADJURIDICAID=6')->findAll();
 		$data->plantillas = $this->_plantillasModel->asObject()->where('TITULO !=', 'CONSTANCIA DE EXTRAVIO')->findAll();
 		$data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->like('TIPOEXPEDIENTECLAVE', 'NUC')->orLike('TIPOEXPEDIENTECLAVE', 'NAC')->orLike('TIPOEXPEDIENTECLAVE', 'RAC')->findAll();
+		$data->situacionVehiculo = $this->_situacionVehiculoModel->asObject()->findAll();
 
 		$data->distribuidorVehiculo = $this->_vehiculoDistribuidorModel->asObject()->findAll();
 		$data->marcaVehiculo = $this->_vehiculoMarcaModel->asObject()->findAll();
@@ -1621,6 +1705,7 @@ class DashboardController extends BaseController
 		$data = $this->_derivacionesAtencionesModel->asObject()->where('MUNICIPIOID', $municipio)->orderBy('INSTITUCIONREMISIONDESCR', 'asc')->findAll();
 		return json_encode($data);
 	}
+
 	public function getDelitosModalidad()
 	{
 		$folio = $this->request->getPost('folio');
@@ -1811,6 +1896,11 @@ class DashboardController extends BaseController
 						$personasRelacionMysqlOracle = array();
 						try {
 							foreach ($personas as $key => $persona) {
+								if ($persona['NOMBRE'] == 'QRR') {
+									$persona['NOMBRE'] = 'QUIEN RESULTE RESPONSABLE';
+								} else if ($persona['NOMBRE'] == 'QRO') {
+									$persona['NOMBRE'] = 'QUIEN RESULTE OFENDIDO';
+								}
 
 								$_persona = $this->_createPersonaFisica($expedienteCreado->EXPEDIENTEID, $persona, $municipio);
 								if ($_persona->status == 201) {
@@ -1854,6 +1944,12 @@ class DashboardController extends BaseController
 										if ($fisFis['DELITOMODALIDADID'] == 178 || $fisFis['DELITOMODALIDADID'] == 179) {
 											if (count($vehiculos) > 0) {
 												foreach ($vehiculos as $vehiculo) {
+													if ($vehiculo['PLACAS'] == '') {
+														$vehiculo['PLACAS'] = 'VACIO';
+													}
+													if ($vehiculo['NUMEROSERIE'] == '') {
+														$vehiculo['NUMEROSERIE'] = 'VACIO';
+													}
 													try {
 														$_expedienteVehiculo = $this->_createExpVehiculo($expedienteCreado->EXPEDIENTEID, $vehiculo, $municipio);
 													} catch (\Error $e) {
@@ -1944,7 +2040,7 @@ class DashboardController extends BaseController
 									$autor = 3947;
 									$oficina = 394;
 								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
-									$autor = 10710;
+									$autor = 10721;
 									$oficina = 924;
 								}
 							}
@@ -1998,7 +2094,7 @@ class DashboardController extends BaseController
 									$autor = 3947;
 									$oficina = 394;
 								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
-									$autor = 10710;
+									$autor = 10721;
 									$oficina = 924;
 								}
 							}
@@ -2105,7 +2201,7 @@ class DashboardController extends BaseController
 									$documentos['AUTOR'] = 3947;
 									$documentos['OFICINAIDAUTOR'] = 394;
 								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
-									$documentos['AUTOR'] = 10710;
+									$documentos['AUTOR'] = 10721;
 									$documentos['OFICINAIDAUTOR'] = 924;
 								}
 							}
@@ -2181,7 +2277,6 @@ class DashboardController extends BaseController
 
 	public function subirArchivosRemision($folio, $year, $expediente)
 	{
-
 		$folioDocSinFirmar = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'ABIERTO')->orderBy('FOLIODOCID', 'asc')->findAll();
 		$foliovd = $this->_folioModel->where('FOLIOID', $folio)->where('ANO', $year)->where('EXPEDIENTEID', $expediente)->where('STATUS', 'EXPEDIENTE')->first();
 
@@ -2210,7 +2305,7 @@ class DashboardController extends BaseController
 									$autor = 3947;
 									$oficina = 394;
 								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
-									$autor = 10710;
+									$autor = 10721;
 									$oficina = 924;
 								}
 							}
@@ -2250,6 +2345,7 @@ class DashboardController extends BaseController
 			}
 		}
 		if ($folioDoc) {
+
 			try {
 				foreach ($folioDoc as $key => $doc) {
 					$relacionDocArc = $this->_relacionFolioDocModel->where('FOLIOID', $doc['FOLIOID'])->where('ANO', $doc['ANO'])->where('FOLIODOCID', $doc['FOLIODOCID'])->where('TIPO', 'ARCHIVO DOC')->orderBy('FOLIODOCID', 'asc')->first();
@@ -2265,7 +2361,7 @@ class DashboardController extends BaseController
 									$autor = 3947;
 									$oficina = 394;
 								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
-									$autor = 10710;
+									$autor = 10721;
 									$oficina = 924;
 								}
 							}
@@ -2283,6 +2379,7 @@ class DashboardController extends BaseController
 									$oficina = 924;
 								}
 							}
+
 							$_archivo = $this->_createArchivosExternos($expediente, $folio, $year,  $municipioid, 53,  $doc['TIPODOC'], $doc['PDF'], 'pdf', $autor, $oficina);
 
 							// $_archivo = $this->_createArchivosExternos($expediente, $folio, $year,  $municipioid, 53, $doc['TIPODOC'], $doc['PDF'], 'pdf',$doc['AGENTEID'],  $doc['OFICINAID']);
@@ -2316,7 +2413,7 @@ class DashboardController extends BaseController
 					if ($relacionDocExpDoc == null) {
 
 						try {
-							PHPRtfLite::registerAutoloader();
+							// PHPRtfLite::registerAutoloader();
 							// instancia de documento rtf 
 							$rtf = new PHPRtfLite();
 							$sect = $rtf->addSection();
@@ -2350,7 +2447,7 @@ class DashboardController extends BaseController
 									$documentos['AUTOR'] = 3947;
 									$documentos['OFICINAIDAUTOR'] = 394;
 								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
-									$documentos['AUTOR'] = 10710;
+									$documentos['AUTOR'] = 10721;
 									$documentos['OFICINAIDAUTOR'] = 924;
 								}
 							}
@@ -2390,6 +2487,7 @@ class DashboardController extends BaseController
 								$documentos['CLASIFICACIONDOCTOID'] = $plantilla['CLASIFICACIONDOCTOMEXICALIID'];
 								$documentos['PLANTILLAID'] = $plantilla['pLANTILLAJUSTICIAMEXICALIID'];
 							}
+
 
 
 
@@ -2570,6 +2668,7 @@ class DashboardController extends BaseController
 		}
 
 		$data['EXPEDIENTEID'] = $expedienteId;
+		$data['EDADTIEMPO'] = 'A';
 		$data['userDB'] = $conexion->USER;
 		$data['pwdDB'] = $conexion->PASSWORD;
 		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
@@ -2936,7 +3035,7 @@ class DashboardController extends BaseController
 
 	private function _createIntervencionPericial($solicitud, $municipio)
 	{
-		$function = '/testing/intervencionPericial.php?process=crear';
+		$function = '/intervencionPericial.php?process=crear';
 		$array = [
 			'SOLICITUDID',
 			'INTERVENCIONID',
@@ -3063,6 +3162,7 @@ class DashboardController extends BaseController
 		// 		unset($data[$clave]);
 		// 	}
 		// }
+
 		$data['EXPEDIENTEID'] = $expedienteId;
 		$data['SOLICITUDID'] = $solicitudid;
 		$data['DOCTOID'] = $solicitudDocto;
@@ -3074,9 +3174,10 @@ class DashboardController extends BaseController
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
 
-	private function _createJusticiaAlterna($expedienteId, $procedimientoid, $municipio, $empleadoid)
+	private function _createJusticiaAlterna($expedienteId, $procedimientoid, $municipio)
 	{
-		$function = '/testing/justiciaAlterna.php?process=crear';
+		$function = '/justiciaAlterna.php?process=crear';
+
 		$array = [
 			'EXPEDIENTEID',
 			'TIPOPROCEDIMIENTOID',
@@ -3084,26 +3185,24 @@ class DashboardController extends BaseController
 			'EMPLEADOIDVALIDO',
 			'AREAIDVALIDO',
 			'FECHAVALIDADO',
-
-
 		];
+
 		$endpoint = $this->endpoint . $function;
 		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
 
 		$data['EXPEDIENTEID'] = $expedienteId;
 		$data['TIPOPROCEDIMIENTOID'] = $procedimientoid;
-		// $data['EMPLEADOIDVALIDO'] = $empleadoid;
 		$data['userDB'] = $conexion->USER;
 		$data['pwdDB'] = $conexion->PASSWORD;
 		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
 		$data['schema'] = $conexion->SCHEMA;
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
-	
+
 	public function getModulos()
 	{
 		$municipio = $this->request->getPost('municipio');
-		$function = '/testing/consumoVistas.php?process=mediacion';
+		$function = '/consumoVistas.php?process=mediacion';
 		$endpoint = $this->endpoint . $function;
 		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
 		$data['MUNICIPIOID'] = $municipio;
@@ -3113,8 +3212,9 @@ class DashboardController extends BaseController
 		$data['schema'] = $conexion->SCHEMA;
 		return json_encode($this->_curlPostDataEncrypt($endpoint, $data)->data);
 	}
-	private function getMediador($municipio, $modulo){
-		$function = '/testing/consumoVistas.php?process=getMediador';
+	private function getMediador($municipio, $modulo)
+	{
+		$function = '/consumoVistas.php?process=getMediador';
 		$endpoint = $this->endpoint . $function;
 		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
 		$data['MUNICIPIOID'] = $municipio;
@@ -3124,7 +3224,6 @@ class DashboardController extends BaseController
 		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
 		$data['schema'] = $conexion->SCHEMA;
 		return $this->_curlPostDataEncrypt($endpoint, $data);
-
 	}
 	private function _createFisImpDelito($expedienteId, $fisimpdelito, $imputado, $municipio)
 	{
@@ -3333,14 +3432,15 @@ class DashboardController extends BaseController
 	public function getLinkFromCall()
 	{
 		$folio = $this->request->getPost('folio');
-		
+		$year = $this->request->getPost('year');
+
 		if ($folio) {
 			$endpoint = 'https://videodenunciaserver1.fgebc.gob.mx/api/vc';
 			$data = array();
 			$data['u'] = '24';
 			$data['token'] = '198429b7cc8a2a5733d97bc13153227dd5017555';
 			$data['a'] = 'getRepo';
-			$data['folio'] = $folio;
+			$data['folio'] = $year . '-' . $folio;
 			$data['min'] = !empty($this->request->getPost('min')) ? $this->request->getPost('min') : '2000-01-01';
 			$data['max'] = !empty($this->request->getPost('max')) ? $this->request->getPost('max') : date("Y-m-d");
 
@@ -3351,6 +3451,10 @@ class DashboardController extends BaseController
 				if ($call->Grabación != '') {
 					array_push($calls, $call);
 				}
+			}
+
+			if (count($calls) == 0) {
+				return json_encode(['status' => 1, 'data' => $calls]);
 			}
 			return json_encode(['status' => 1, 'data' => $calls]);
 		} else {
@@ -3680,7 +3784,7 @@ class DashboardController extends BaseController
 		}
 	}
 
-	private function _updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area, $estadojuridicoid = null)
+	private function _updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area, $tipo, $estadojuridicoid = null)
 	{
 		$function = '/expediente.php?process=updateArea';
 		$endpoint = $this->endpoint . $function;
@@ -3697,12 +3801,25 @@ class DashboardController extends BaseController
 		$data = array();
 		$data['OFICINAIDRESPONSABLE'] = $oficina;
 		$data['EMPLEADOIDREGISTRO'] = $empleado;
-		$data['AREAIDREGISTRO'] = $area;
-		if ($oficina == 394 || $oficina == 792 || $oficina == 924) {
-			$data['AREAIDRESPONSABLE'] = $area;
+		if ($tipo == 'REMISION') {
+			$data['AREAIDREGISTRO'] = $area;
+			if (ENVIRONMENT == 'production') {
+				if ($oficina == 409 || $oficina == 793 || $oficina == 924) {
+					$data['AREAIDRESPONSABLE'] = $area;
+				} else {
+					$data['AREAIDRESPONSABLE'] = null;
+				}
+			} else {
+				if ($oficina == 394 || $oficina == 792 || $oficina == 924) {
+					$data['AREAIDRESPONSABLE'] = $area;
+				} else {
+					$data['AREAIDRESPONSABLE'] = null;
+				}
+			}
 		} else {
-			$data['AREAIDRESPONSABLE'] = null;
+			$data['AREAIDRESPONSABLE'] = $area;
 		}
+
 		$data['EXPEDIENTEID'] = $expediente;
 		$data['ESTADOJURIDICOEXPEDIENTEID'] = (string) $estadojuridicoid;
 
@@ -4142,6 +4259,9 @@ class DashboardController extends BaseController
 					'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo') ? $this->request->getPost('modelo_vehiculo') : NULL,
 					'FOTO' => $fotoV,
 					'DOCUMENTO' => $docV,
+					'SITUACION' => $this->request->getPost('situacion'),
+					'PERSONAFISICAIDPROPIETARIO' => $this->request->getPost('propietario_vehiculo'),
+
 				);
 			} catch (\Exception $e) {
 			}
@@ -4176,6 +4296,9 @@ class DashboardController extends BaseController
 					'SEGUNDOCOLORID' => $this->request->getPost('color_tapiceria_vehiculo') ? $this->request->getPost('color_tapiceria_vehiculo') : NULL,
 					'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo') ? $this->request->getPost('modelo_vehiculo') : NULL,
 					'DOCUMENTO' => $docV,
+					'SITUACION' => $this->request->getPost('situacion'),
+					'PERSONAFISICAIDPROPIETARIO' => $this->request->getPost('propietario_vehiculo'),
+
 
 				);
 			} catch (\Exception $e) {
@@ -4209,6 +4332,9 @@ class DashboardController extends BaseController
 					'SEGUNDOCOLORID' => $this->request->getPost('color_tapiceria_vehiculo') ? $this->request->getPost('color_tapiceria_vehiculo') : NULL,
 					'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo') ? $this->request->getPost('modelo_vehiculo') : NULL,
 					'FOTO' => $fotoV,
+					'SITUACION' => $this->request->getPost('situacion'),
+					'PERSONAFISICAIDPROPIETARIO' => $this->request->getPost('propietario_vehiculo'),
+
 
 				);
 			} catch (\Exception $e) {
@@ -4239,6 +4365,9 @@ class DashboardController extends BaseController
 				'NUMEROCHASIS' => $this->request->getPost('num_chasis_vehiculo') ? $this->request->getPost('num_chasis_vehiculo') : NULL,
 				'SEGUNDOCOLORID' => $this->request->getPost('color_tapiceria_vehiculo') ? $this->request->getPost('color_tapiceria_vehiculo') : NULL,
 				'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo') ? $this->request->getPost('modelo_vehiculo') : NULL,
+				'SITUACION' => $this->request->getPost('situacion'),
+				'PERSONAFISICAIDPROPIETARIO' => $this->request->getPost('propietario_vehiculo'),
+
 			);
 		}
 
@@ -5259,6 +5388,7 @@ class DashboardController extends BaseController
 		$imputado = $this->request->getPost('imputado');
 		$folio = $this->request->getPost('folio');
 
+		$uma =  $this->request->getPost('uma');
 		if (empty($expediente) && isset($year) && isset($titulo) && isset($victima) && isset($imputado) && isset($folio)) {
 			$data = (object) array();
 			$data->folio = $this->_folioModel->asObject()->where('ANO', $year)->where('FOLIOID', $folio)->first();
@@ -5270,10 +5400,13 @@ class DashboardController extends BaseController
 			$data->derivacion = $this->_derivacionesAtencionesModel->asObject()->where('MUNICIPIOID', $data->folio->INSTITUCIONREMISIONMUNICIPIOID)->where('INSTITUCIONREMISIONID',  $data->folio->INSTITUCIONREMISIONID)->first();
 			$data->canalizacion = $this->_canalizacionesAtencionesModel->asObject()->where('MUNICIPIOID', $data->folio->INSTITUCIONREMISIONMUNICIPIOID)->where('INSTITUCIONREMISIONID',  $data->folio->INSTITUCIONREMISIONID)->first();
 
+			$data->bandejaRac = $this->_bandejaRacModel->asObject()->where('ANO', $year)->where('FOLIOID', $folio)->first();
 			$data->municipios = $this->_municipiosModel->asObject()->where('ESTADOID', '2')->where('MUNICIPIOID',  $data->folio->MUNICIPIOID)->first();
 			$data->victima = $this->_folioPersonaFisicaModel->get_by_personas($data->folio->FOLIOID, $data->folio->ANO, $victima);
 			$data->imputado = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio->FOLIOID)->where('ANO', $data->folio->ANO)->where('PERSONAFISICAID', $imputado)->first();
 			$data->victimaDom = $this->_folioPersonaFisicaDomicilioModel->asObject()->where('FOLIOID', $data->folio->FOLIOID)->where('ANO', $data->folio->ANO)->where('PERSONAFISICAID', $victima)->first();
+			$data->imputadoDom = $this->_folioPersonaFisicaDomicilioModel->asObject()->where('FOLIOID', $data->folio->FOLIOID)->where('ANO', $data->folio->ANO)->where('PERSONAFISICAID', $imputado)->first();
+
 			$data->estadoVictima = $this->_estadosModel->asObject()->where('ESTADOID',  $data->victimaDom->ESTADOID)->first();
 			$data->tipoIdentificacionVictima = $this->_tipoIdentificacionModel->asObject()->where('PERSONATIPOIDENTIFICACIONID',   $data->victima[0]['TIPOIDENTIFICACIONID'])->first();
 			$data->ocupacionVictima = $this->_ocupacionModel->asObject()->where('PERSONAOCUPACIONID',   $data->victima[0]['OCUPACIONID'])->first();
@@ -5303,6 +5436,58 @@ class DashboardController extends BaseController
 				$data->plantilla = str_replace('[OFICINA_DOMICILIO]', $data->canalizacion->DOMICILIO, $data->plantilla);
 			}
 
+			//CITATORIO
+			if ($data->bandejaRac && $uma) {
+				if ($data->bandejaRac->TIPOPROCEDIMIENTOID == 1) {
+					$data->plantilla = str_replace('[TIPO_PROCESO]', 'MEDICACION', $data->plantilla);
+				} else if ($data->bandejaRac->TIPOPROCEDIMIENTOID == 2) {
+					$data->plantilla = str_replace('[TIPO_PROCESO]', 'MEDICACION', $data->plantilla);
+				} else {
+					$data->plantilla = str_replace('[TIPO_PROCESO]', 'JUSTICIA RESTAURATIVA', $data->plantilla);
+				}
+				$data->plantilla = str_replace('[IMPUTADO_DOMICILIO_COMPLETO]', ($data->imputadoDom->CALLE ? $data->imputadoDom->CALLE : 'DESCONOCIDO') . ' EXT. ' . ($data->imputadoDom->NUMEROCASA ? $data->imputadoDom->NUMEROCASA : '') . ' INT. ' . ($data->imputadoDom->NUMEROINTERIOR ? $data->imputadoDom->NUMEROINTERIOR : '') . ' ' . $data->imputadoDom->COLONIADESCR, $data->plantilla);
+
+				if ($uma == 'MEXICALI-CD MORELOS') {
+					$data->plantilla = str_replace('[DOMICILIO_INSTALACION]', 'CALZADA LÁZARO CÁRDENAS S/N. A UN COSTADO DE WELTON, EN CIUDAD MORELOS.', $data->plantilla);
+					$data->plantilla = str_replace('[TELEFONO_UMA]', '(658) 514-84-74 EXT. 7530, 7531, 7532, 7533, 7534 Y 7535.(658) 514-83-60 EXT. 7558, 7562, 7568, 7569 Y 7570', $data->plantilla);
+				} else if ($uma == 'MEXICALI-GPE VICTORIA') {
+					$data->plantilla = str_replace('[DOMICILIO_INSTALACION]', 'LOCAL 11 Y 12 DE LA PLAZA DEL CARMEN DE AVENIDA HÉROES DE CHAPULTEPEC Y CALLE 10, GUADALUPE VICTORIA.', $data->plantilla);
+					$data->plantilla = str_replace('[TELEFONO_UMA]', '(658) 516-43-79', $data->plantilla);
+				} else if ($uma == 'MEXICALI-ORIENTE') {
+					$data->plantilla = str_replace('[DOMICILIO_INSTALACION]', 'CENTRO DE JUSTICIA ORIENTE, ANKERITA Y ORTOZA S/N FRAC. PEDREGAL TURQUEZA.', $data->plantilla);
+					$data->plantilla = str_replace('[TELEFONO_UMA]', '(686) 689-00-30 EXT 7446, 7406, 7447', $data->plantilla);
+				} else if ($uma == 'MEXICALI-PONIENTE (ANAHUAC)') {
+					$data->plantilla = str_replace('[DOMICILIO_INSTALACION]', 'CALZADA HÉCTOR TERÁN TERÁN Y BOULEVARD ANÁHUAC S/N.', $data->plantilla);
+					$data->plantilla = str_replace('[TELEFONO_UMA]', '(686) 904-66-00 EXT 7754', $data->plantilla);
+				} else if ($uma == 'MEXICALI-RIO NUEVO') {
+					$data->plantilla = str_replace('[DOMICILIO_INSTALACION]', 'CALZADA DE LOS PRESIDENTES #1185, FRACC. RIO NUEVO.', $data->plantilla);
+					$data->plantilla = str_replace('[TELEFONO_UMA]', '(686) 904-66-01, EXT: 4612, 4703, 4710, 4770, 8782, 4789.', $data->plantilla);
+				} else if ($uma == 'MEXICALI-SAN FELIPE') {
+					$data->plantilla = str_replace('[DOMICILIO_INSTALACION]', 'AVENIDA MAR DE CORTES Y CALLE MANZANILLO SIN NUMERO, ZONA CENTRO, SAN FELIPE, BAJA CALIFORNIA.', $data->plantilla);
+					$data->plantilla = str_replace('[TELEFONO_UMA]', '(686) 577-17-63 EXT: 7477, 4705, 4770, 4702', $data->plantilla);
+				} else if ($uma == 'ENSENADA-SAN QUINTIN') {
+					$data->plantilla = str_replace('[DOMICILIO_INSTALACION]', 'CALLE DECIMA NUMERO 131, FRACC. CIUDAD DE SAN QUINTIN.', $data->plantilla);
+					$data->plantilla = str_replace('[TELEFONO_UMA]', '616 165 2915 EXT. 3910', $data->plantilla);
+				} else if ($uma == 'ENSENADA-PRADERAS DEL CIPRES') {
+					$data->plantilla = str_replace('[DOMICILIO_INSTALACION]', 'AVENIDA MANUEL AVILA CAMACHO S/N PRADERAS DEL CIPRES (ATRAS DE EDIFICIO DE GOBIERNO DEL ESTADO).', $data->plantilla);
+					$data->plantilla = str_replace('[TELEFONO_UMA]', '646 152 27 00 EXT 3854', $data->plantilla);
+				} else if ($uma == 'ZONA COSTA-LA MESA') {
+					$data->plantilla = str_replace('[DOMICILIO_INSTALACION]', 'AV.MURUA MARTINEZ S/N FRACC. CHAPULTEPEC COL. ALAMAR (a un costado de Central Camionera).', $data->plantilla);
+					$data->plantilla = str_replace('[TELEFONO_UMA]', '(664)104-76-00 Y (664)104-76-02 correo electrónico: umacosta@fgebc.gob.mx', $data->plantilla);
+				} else if ($uma == 'ZONA COSTA-MARIANO MATAMOROS') {
+					$data->plantilla = str_replace('[DOMICILIO_INSTALACION]', 'RUTA MARIANO MATAMOROS Y CATALINA GONZALEZ S/N COL. MARIANO MATAMOROS.', $data->plantilla);
+					$data->plantilla = str_replace('[TELEFONO_UMA]', '(664)902-18-18 UMA.COSTA@FGEBC.GOB.MX', $data->plantilla);
+				} else if ($uma == 'ZONA COSTA-PLAYAS ROSARITO') {
+					$data->plantilla = str_replace('[DOMICILIO_INSTALACION]', 'JOSE HAROZ AGUILAR ENTRE EDIFICIO CENTRO DE GOB., FRACC. VILLA TURISTICA.', $data->plantilla);
+					$data->plantilla = str_replace('[TELEFONO_UMA]', '', $data->plantilla);
+				} else if ($uma == 'ZONA COSTA-TECATE') {
+					$data->plantilla = str_replace('[DOMICILIO_INSTALACION]', 'MISION SANTA ROSALIA S/N COL. DESCANSO.', $data->plantilla);
+					$data->plantilla = str_replace('[TELEFONO_UMA]', '(665)655-04-27', $data->plantilla);
+				} else if ($uma == 'ZONA COSTA-ZONA RIO') {
+					$data->plantilla = str_replace('[DOMICILIO_INSTALACION]', 'BLVD. GRAL. RODOLFO SÁNCHEZ TABOADA NO. 10127, ESQUINA CON AV. RÍO TIJUANA. ZONA URBANA RÍO TIJUANA. (EDIFICIO DE CRISTALES NEGROS, PRIMER PISO).', $data->plantilla);
+					$data->plantilla = str_replace('[TELEFONO_UMA]', '664-736-52-96, correo electrónico: umacosta@fgebc.gob.mx', $data->plantilla);
+				}
+			}
 
 			$data->plantilla = str_replace('[DOCUMENTO_FECHA]', date('d') . ' DE ' . $meses[date('n') - 1] . " DEL " . date('Y'), $data->plantilla);
 
@@ -5371,6 +5556,7 @@ class DashboardController extends BaseController
 			$data->victima = $this->_folioPersonaFisicaModel->get_by_personas($data->expediente->FOLIOID, $data->expediente->ANO, $victima);
 			$data->imputado = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->expediente->FOLIOID)->where('ANO', $data->expediente->ANO)->where('PERSONAFISICAID', $imputado)->first();
 			$data->victimaDom = $this->_folioPersonaFisicaDomicilioModel->asObject()->where('FOLIOID', $data->expediente->FOLIOID)->where('ANO', $data->expediente->ANO)->where('PERSONAFISICAID', $victima)->first();
+			$data->imputadoDom = $this->_folioPersonaFisicaDomicilioModel->asObject()->where('FOLIOID', $data->expediente->FOLIOID)->where('ANO', $data->expediente->ANO)->where('PERSONAFISICAID', $imputado)->first();
 			$data->estadoVictima = $this->_estadosModel->asObject()->where('ESTADOID',  $data->victimaDom->ESTADOID)->first();
 			$data->tipoIdentificacionVictima = $this->_tipoIdentificacionModel->asObject()->where('PERSONATIPOIDENTIFICACIONID',   $data->victima[0]['TIPOIDENTIFICACIONID'])->first();
 			$data->ocupacionVictima = $this->_ocupacionModel->asObject()->where('PERSONAOCUPACIONID',   $data->victima[0]['OCUPACIONID'])->first();
@@ -5466,6 +5652,49 @@ class DashboardController extends BaseController
 					$data->plantilla = str_replace('[DIRECCION_NOMBRE]', 'SEGURIDAD PUBLICA MUNICIPAL', $data->plantilla);
 					break;
 			}
+
+			if ($uma == 'MEXICALI-CD MORELOS') {
+				$data->plantilla = str_replace('[DOMICILIO_INSTALACION]', 'CALZADA LÁZARO CÁRDENAS S/N. A UN COSTADO DE WELTON, EN CIUDAD MORELOS.', $data->plantilla);
+				$data->plantilla = str_replace('[TELEFONO_UMA]', '(658) 514-84-74 EXT. 7530, 7531, 7532, 7533, 7534 Y 7535.(658) 514-83-60 EXT. 7558, 7562, 7568, 7569 Y 7570', $data->plantilla);
+			} else if ($uma == 'MEXICALI-GPE VICTORIA') {
+				$data->plantilla = str_replace('[DOMICILIO_INSTALACION]', 'LOCAL 11 Y 12 DE LA PLAZA DEL CARMEN DE AVENIDA HÉROES DE CHAPULTEPEC Y CALLE 10, GUADALUPE VICTORIA.', $data->plantilla);
+				$data->plantilla = str_replace('[TELEFONO_UMA]', '(658) 516-43-79', $data->plantilla);
+			} else if ($uma == 'MEXICALI-ORIENTE') {
+				$data->plantilla = str_replace('[DOMICILIO_INSTALACION]', 'CENTRO DE JUSTICIA ORIENTE, ANKERITA Y ORTOZA S/N FRAC. PEDREGAL TURQUEZA.', $data->plantilla);
+				$data->plantilla = str_replace('[TELEFONO_UMA]', '(686) 689-00-30 EXT 7446, 7406, 7447', $data->plantilla);
+			} else if ($uma == 'MEXICALI-PONIENTE (ANAHUAC)') {
+				$data->plantilla = str_replace('[DOMICILIO_INSTALACION]', 'CALZADA HÉCTOR TERÁN TERÁN Y BOULEVARD ANÁHUAC S/N.', $data->plantilla);
+				$data->plantilla = str_replace('[TELEFONO_UMA]', '(686) 904-66-00 EXT 7754', $data->plantilla);
+			} else if ($uma == 'MEXICALI-RIO NUEVO') {
+				$data->plantilla = str_replace('[DOMICILIO_INSTALACION]', 'CALZADA DE LOS PRESIDENTES #1185, FRACC. RIO NUEVO.', $data->plantilla);
+				$data->plantilla = str_replace('[TELEFONO_UMA]', '(686) 904-66-01, EXT: 4612, 4703, 4710, 4770, 8782, 4789.', $data->plantilla);
+			} else if ($uma == 'MEXICALI-SAN FELIPE') {
+				$data->plantilla = str_replace('[DOMICILIO_INSTALACION]', 'AVENIDA MAR DE CORTES Y CALLE MANZANILLO SIN NUMERO, ZONA CENTRO, SAN FELIPE, BAJA CALIFORNIA.', $data->plantilla);
+				$data->plantilla = str_replace('[TELEFONO_UMA]', '(686) 577-17-63 EXT: 7477, 4705, 4770, 4702', $data->plantilla);
+			} else if ($uma == 'ENSENADA-SAN QUINTIN') {
+				$data->plantilla = str_replace('[DOMICILIO_INSTALACION]', 'CALLE DECIMA NUMERO 131, FRACC. CIUDAD DE SAN QUINTIN.', $data->plantilla);
+				$data->plantilla = str_replace('[TELEFONO_UMA]', '616 165 2915 EXT. 3910', $data->plantilla);
+			} else if ($uma == 'ENSENADA-PRADERAS DEL CIPRES') {
+				$data->plantilla = str_replace('[DOMICILIO_INSTALACION]', 'AVENIDA MANUEL AVILA CAMACHO S/N PRADERAS DEL CIPRES (ATRAS DE EDIFICIO DE GOBIERNO DEL ESTADO).', $data->plantilla);
+				$data->plantilla = str_replace('[TELEFONO_UMA]', '646 152 27 00 EXT 3854', $data->plantilla);
+			} else if ($uma == 'ZONA COSTA-LA MESA') {
+				$data->plantilla = str_replace('[DOMICILIO_INSTALACION]', 'AV.MURUA MARTINEZ S/N FRACC. CHAPULTEPEC COL. ALAMAR (a un costado de Central Camionera).', $data->plantilla);
+				$data->plantilla = str_replace('[TELEFONO_UMA]', '(664)104-76-00 Y (664)104-76-02 correo electrónico: umacosta@fgebc.gob.mx', $data->plantilla);
+			} else if ($uma == 'ZONA COSTA-MARIANO MATAMOROS') {
+				$data->plantilla = str_replace('[DOMICILIO_INSTALACION]', 'RUTA MARIANO MATAMOROS Y CATALINA GONZALEZ S/N COL. MARIANO MATAMOROS.', $data->plantilla);
+				$data->plantilla = str_replace('[TELEFONO_UMA]', '(664)902-18-18 UMA.COSTA@FGEBC.GOB.MX', $data->plantilla);
+			} else if ($uma == 'ZONA COSTA-PLAYAS ROSARITO') {
+				$data->plantilla = str_replace('[DOMICILIO_INSTALACION]', 'JOSE HAROZ AGUILAR ENTRE EDIFICIO CENTRO DE GOB., FRACC. VILLA TURISTICA.', $data->plantilla);
+				$data->plantilla = str_replace('[TELEFONO_UMA]', '', $data->plantilla);
+			} else if ($uma == 'ZONA COSTA-TECATE') {
+				$data->plantilla = str_replace('[DOMICILIO_INSTALACION]', 'MISION SANTA ROSALIA S/N COL. DESCANSO.', $data->plantilla);
+				$data->plantilla = str_replace('[TELEFONO_UMA]', '(665)655-04-27', $data->plantilla);
+			} else if ($uma == 'ZONA COSTA-ZONA RIO') {
+				$data->plantilla = str_replace('[DOMICILIO_INSTALACION]', 'BLVD. GRAL. RODOLFO SÁNCHEZ TABOADA NO. 10127, ESQUINA CON AV. RÍO TIJUANA. ZONA URBANA RÍO TIJUANA. (EDIFICIO DE CRISTALES NEGROS, PRIMER PISO).', $data->plantilla);
+				$data->plantilla = str_replace('[TELEFONO_UMA]', '664-736-52-96, correo electrónico: umacosta@fgebc.gob.mx', $data->plantilla);
+			}
+			$data->plantilla = str_replace('[IMPUTADO_DOMICILIO_COMPLETO]', ($data->imputadoDom->CALLE ? $data->imputadoDom->CALLE : 'DESCONOCIDO') . ' EXT. ' . ($data->imputadoDom->NUMEROCASA ? $data->imputadoDom->NUMEROCASA : '') . ' INT. ' . ($data->imputadoDom->NUMEROINTERIOR ? $data->imputadoDom->NUMEROINTERIOR : '') . ' ' . $data->imputadoDom->COLONIADESCR, $data->plantilla);
+
 			$hecho_info = '<p><b>FOLIO:</b> ' . $data->expediente->FOLIOID . '</p><p><b>AÑO:</b> ' . $data->expediente->ANO . '</p><p><b>FECHA DEL HECHO:</b> ' . $data->expediente->HECHOFECHA . '</p><p><b>HORA DEL HECHO:</b> ' . $data->expediente->HECHOHORA . '</p><p><b>CALLE DEL HECHO:</b> ' . $data->expediente->HECHOCALLE . ' EXT.' . $data->expediente->HECHONUMEROCASA . ' INT.' . $data->expediente->HECHONUMEROCASAINT . ' ' . $data->municipios->MUNICIPIODESCR . '</p><p><b>NARRACIÓN DEL HECHO:</b> ' . $data->expediente->HECHONARRACION . '</p><p><b>NOTAS DEL AGENTE:</b> ' . $data->expediente->NOTASAGENTE . '</p>';
 
 			$data->plantilla = str_replace('[INFORMACION_DEL_HECHO]', $hecho_info, $data->plantilla);
@@ -5709,7 +5938,25 @@ class DashboardController extends BaseController
 	public function videos_expediente()
 	{
 		$data = (object) array();
-		$data->folio = $this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('FOLIO.TIPOEXPEDIENTEID !=', null)->where('AGENTEFIRMAID !=', null)->where('TIPODENUNCIA', 'VD')->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID', 'left')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID', 'left')->join('TIPOEXPEDIENTE', 'TIPOEXPEDIENTE.TIPOEXPEDIENTEID = FOLIO.TIPOEXPEDIENTEID', 'left')->findAll();
+		if (session('ROLID')== 11 || session('ROLID')== 1) {
+			$data->folio = $this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('FOLIO.TIPOEXPEDIENTEID !=', null)->where('AGENTEFIRMAID !=', null)->where('TIPODENUNCIA', 'VD')->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID', 'left')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID', 'left')->join('TIPOEXPEDIENTE', 'TIPOEXPEDIENTE.TIPOEXPEDIENTEID = FOLIO.TIPOEXPEDIENTEID', 'left')->findAll();
+		}else{
+			$data->folio = $this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('FOLIO.TIPOEXPEDIENTEID !=', null)->where('AGENTEFIRMAID !=', null)->where('TIPODENUNCIA', 'VD')->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID', 'left')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID', 'left')->join('TIPOEXPEDIENTE', 'TIPOEXPEDIENTE.TIPOEXPEDIENTEID = FOLIO.TIPOEXPEDIENTEID', 'left')->findAll();
+			foreach ($data->folio as $key => $value) {
+				if ($value->INSTITUCIONREMISIONMUNICIPIOID) {
+					$data->folio = $this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('FOLIO.TIPOEXPEDIENTEID !=', null)->where('AGENTEFIRMAID !=', null)->where('TIPODENUNCIA', 'VD')->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID AND USUARIOS.MUNICIPIOID = FOLIO.INSTITUCIONREMISIONMUNICIPIOID', 'left')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID', 'left')->join('TIPOEXPEDIENTE', 'TIPOEXPEDIENTE.TIPOEXPEDIENTEID = FOLIO.TIPOEXPEDIENTEID', 'left')->findAll();
+				}
+				if ($value->MUNICIPIOASIGNADOID) {
+					$data->folio = $this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('FOLIO.TIPOEXPEDIENTEID !=', null)->where('AGENTEFIRMAID !=', null)->where('TIPODENUNCIA', 'VD')->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID AND USUARIOS.MUNICIPIOID = FOLIO.MUNICIPIOASIGNADOID', 'left')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID', 'left')->join('TIPOEXPEDIENTE', 'TIPOEXPEDIENTE.TIPOEXPEDIENTEID = FOLIO.TIPOEXPEDIENTEID', 'left')->findAll();
+				}
+				if ($value->OFICINAASIGNADOID) {
+					$data->folio = $this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('FOLIO.TIPOEXPEDIENTEID !=', null)->where('AGENTEFIRMAID !=', null)->where('TIPODENUNCIA', 'VD')->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID AND USUARIOS.MUNICIPIOID = FOLIO.MUNICIPIOASIGNADOID', 'left')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID', 'left')->join('TIPOEXPEDIENTE', 'TIPOEXPEDIENTE.TIPOEXPEDIENTEID = FOLIO.TIPOEXPEDIENTEID', 'left')->where('FOLIO.OFICINAASIGNADOID', session('OFICINAID'))->findAll();
+	
+				}
+			}
+	
+		}
+		
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 		$this->_loadView('Videos expediente', 'videos', '', $data, 'videos_expediente');

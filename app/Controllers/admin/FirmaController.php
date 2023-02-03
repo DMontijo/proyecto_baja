@@ -908,7 +908,7 @@ class FirmaController extends BaseController
 			$email = \Config\Services::email();
 			$email->setTo($to);
 			$email->setSubject('Documentos firmados - ' . $folio . '/' . $folioM->ANO);
-			$body = view('email_template/documentos_firmados_email_template.php', ['agente' => $agente, 'expediente' => $folioM->EXPEDIENTEID ? $expediente : 'SIN EXPEDIENTE', 'folio' => $folio, 'year' => $folioM->ANO, 'tipoexpediente' => $folioM->TIPOEXPEDIENTEID ? $tipoExpediente->TIPOEXPEDIENTEDESCR : $folioM->STATUS, 'status' => $folioM->STATUS, 'delito' => $delito, 'imputado' => $imputado]);
+			$body = view('email_template/documentos_firmados_email_template.php', ['agente' => $agente, 'expediente' => $folioM->EXPEDIENTEID ? $expediente : 'SIN EXPEDIENTE', 'folio' => $folio, 'year' => $folioM->ANO, 'tipoexpediente' => $folioM->TIPOEXPEDIENTEID ? ($tipoExpediente  == "" ?$tipoExpediente : $tipoExpediente->TIPOEXPEDIENTEDESCR): $folioM->STATUS, 'status' => $folioM->STATUS, 'delito' => $delito, 'imputado' => $imputado]);
 			$email->setMessage($body);
 
 			for ($i = 0; $i < count($documento); $i++) {
