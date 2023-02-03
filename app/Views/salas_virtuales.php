@@ -52,7 +52,7 @@
 		</div>
 
 		<!--MEXICALI-->
-		<div class="row">
+		<div class="row mt-5">
 			<div class="col-12 text-center bg-blue rounded py-3 mb-3">
 				<h3 class="fw-bold text-center text-white display-6"><i class="bi bi-person-video"></i>&nbsp; MEXICALI</h3>
 			</div>
@@ -103,7 +103,7 @@
 		</div>
 
 		<!--TECATE-->
-		<div class="row">
+		<div class="row mt-5">
 			<div class="col-12 text-center bg-blue rounded py-3 mb-3">
 				<h3 class="fw-bold text-center text-white display-6"><i class="bi bi-person-video"></i>&nbsp; TECATE</h3>
 			</div>
@@ -122,7 +122,7 @@
 		</div>
 
 		<!--TIJUANA-->
-		<div class="row">
+		<div class="row mt-5">
 			<div class="col-12 text-center bg-blue rounded py-3 mb-3">
 				<h3 class="fw-bold text-center text-white display-6"><i class="bi bi-person-video"></i>&nbsp; TIJUANA</h3>
 			</div>
@@ -157,7 +157,7 @@
 		</div>
 
 		<!--ROSARITO-->
-		<div class="row">
+		<div class="row mt-5">
 			<div class="col-12 text-center bg-blue rounded py-3 mb-3">
 				<h3 class="fw-bold text-center text-white display-6"><i class="bi bi-person-video"></i>&nbsp; PLAYAS DE ROSARITO</h3>
 			</div>
@@ -176,7 +176,7 @@
 		</div>
 
 		<!--SAN FELIPE-->
-		<div class="row">
+		<div class="row mt-5">
 			<div class="col-12 text-center bg-blue rounded py-3 mb-3">
 				<h3 class="fw-bold text-center text-white display-6"><i class="bi bi-person-video"></i>&nbsp; SAN FELIPE</h3>
 			</div>
@@ -195,7 +195,7 @@
 		</div>
 
 		<!--SAN QUINTÍN-->
-		<div class="row">
+		<div class="row mt-5">
 			<div class="col-12 text-center bg-blue rounded py-3 mb-3">
 				<h3 class="fw-bold text-center text-white display-6"><i class="bi bi-person-video"></i>&nbsp; SAN QUINTÍN</h3>
 			</div>
