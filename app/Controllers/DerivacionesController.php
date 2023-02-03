@@ -26,7 +26,7 @@ class DerivacionesController extends Controller
 		$data->derivacionesTecate = $this->_derivacionesModel->asObject()->getByMunicipioId(3);
 		$data->derivacionesTijuana = $this->_derivacionesModel->asObject()->getByMunicipioId(4);
 		$data->derivacionesRosarito = $this->_derivacionesModel->asObject()->getByMunicipioId(5);
-		$this->_loadView('Catálogo derivaciones', $data, 'derivaciones');
+		$this->_loadView('Directorio de derivaciones', $data, 'derivaciones');
 	}
 
 	public function canalizaciones()
@@ -37,7 +37,13 @@ class DerivacionesController extends Controller
 		$data->canalizacionesTecate = $this->_canalizacionesModel->asObject()->getByMunicipioId(3);
 		$data->canalizacionesTijuana = $this->_canalizacionesModel->asObject()->getByMunicipioId(4);
 		$data->canalizacionesRosarito = $this->_canalizacionesModel->asObject()->getByMunicipioId(5);
-		$this->_loadView('Catálogo canalizaciones', $data, 'canalizaciones');
+		$this->_loadView('Directorio de canalizaciones', $data, 'canalizaciones');
+	}
+
+	public function salas_virtuales()
+	{
+		$data = (object) array();
+		$this->_loadView('Directorio de salas virtuales', $data, 'salas_virtuales');
 	}
 
 	private function _loadView($title, $data, $view)

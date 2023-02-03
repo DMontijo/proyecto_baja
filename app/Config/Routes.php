@@ -34,6 +34,7 @@ $routes->setAutoRoute(true);
 $routes->get('/', 'HomeController::index');
 $routes->get('derivaciones', 'DerivacionesController::index');
 $routes->get('canalizaciones', 'DerivacionesController::canalizaciones');
+$routes->get('salas_virtuales', 'DerivacionesController::salas_virtuales');
 $routes->get('validar_constancia', 'extravio/DashboardController::validar_constancia');
 $routes->get('validar_documento', 'admin/DocumentosController::validar_documento');
 

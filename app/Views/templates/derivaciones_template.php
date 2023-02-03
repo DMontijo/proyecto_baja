@@ -34,7 +34,7 @@
 				<div class="row">
 					<div class="col-12 text-center">
 						<a class="d-inline-block" href="<?= base_url() ?>">
-							<img src="<?= base_url() ?>/assets/img/FGEBC.png" style="max-height:90px;" alt="FGEBC Logo">
+							<img src="<?= base_url() ?>/assets/img/FGEBC.png" style="max-height:90px;" alt="Logo">
 							<h6 class="fw-bold text-white d-md-inline-block d-none">FISCALÍA GENERAL DEL ESTADO DE BAJA CALIFORNIA</h6>
 						</a>
 					</div>
