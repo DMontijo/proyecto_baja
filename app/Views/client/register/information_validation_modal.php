@@ -50,12 +50,12 @@
 					</div>
 
 					<div class="col-12 col-sm-6 mb-3">
-						<label for="telefono_modal" class="form-label fw-bold">Número de télefono: </label>
+						<label for="telefono_modal" class="form-label fw-bold">Número de teléfono: </label>
 						<input type="text" class="form-control" id="telefono_modal" name="telefono_modal" disabled>
 					</div>
 
 					<div class="col-12 col-sm-6 mb-3">
-						<label for="telefono2_modal" class="form-label fw-bold">Número de télefono adicional: </label>
+						<label for="telefono2_modal" class="form-label fw-bold">Número de teléfono adicional: </label>
 						<input type="text" class="form-control" id="telefono2_modal" name="telefono2_modal" disabled>
 					</div>
 

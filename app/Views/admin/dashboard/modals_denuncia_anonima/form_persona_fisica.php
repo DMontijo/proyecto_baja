@@ -67,13 +67,13 @@
 	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="telefono_pf" class="form-label font-weight-bold">Télefono</label><br>
+		<label for="telefono_pf" class="form-label font-weight-bold">Teléfono</label><br>
 		<input type="number" class="form-control" id="telefono_pf" name="telefono_pf" max="99999999999999999999" minlenght="6" maxlength="20" oninput="clearInputPhone(event);">
 		<input type="number" id="codigo_pais_pf" name="codigo_pais_pf" maxlength="3" hidden>
 	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="telefono_pf_2" class="form-label font-weight-bold">Télefono adicional</label><br>
+		<label for="telefono_pf_2" class="form-label font-weight-bold">Teléfono adicional</label><br>
 		<input type="number" class="form-control" id="telefono_pf_2" name="telefono_pf_2" max="99999999999999999999" minlenght="6" maxlength="20" oninput="clearInputPhone(event);">
 		<input type="number" id="codigo_pais_pf_2" name="codigo_pais_pf_2" maxlength="3" hidden>
 	</div>

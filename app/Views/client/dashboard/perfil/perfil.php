@@ -56,13 +56,13 @@
 							</div>
 							<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 								<label for="telefono" class="form-label fw-bold input-required">Número de
-									télefono</label>
+									teléfono</label>
 								<input type="number" class="form-control" id="telefono" name="telefono" required max="99999999999999999999" minlenght="6" maxlength="20" oninput="clearInputPhone(event);" value="<?= $body_data->user->TELEFONO ?>">
 								<small>Mínimo 6 digitos</small>
 							</div>
 
 							<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-								<label for="telefono2" class="form-label fw-bold">Número de télefono adicional</label>
+								<label for="telefono2" class="form-label fw-bold">Número de teléfono adicional</label>
 								<input type="number" class="form-control" id="telefono2" name="telefono2" max="99999999999999999999" minlenght="6" maxlength="20" oninput="clearInputPhone(event);" value="<?= $body_data->user->TELEFONO2 ?>">
 								<!-- <small>Mínimo 6 digitos</small> -->
 							</div>

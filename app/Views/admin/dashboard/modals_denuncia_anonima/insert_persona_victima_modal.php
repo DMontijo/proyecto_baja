@@ -67,14 +67,14 @@
 						</div>
 					</div>
 					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-						<label for="telefono_new" class="form-label font-weight-bold">Número de télefono</label>
+						<label for="telefono_new" class="form-label font-weight-bold">Número de teléfono</label>
 						<input type="number" class="form-control" id="telefono_new" name="telefono_new" max="99999999999999999999" minlenght="6" maxlength="20" oninput="clearInputPhone(event);">
 						<!-- <small>Mínimo 6 digitos</small> -->
 						<input type="number" id="codigo_pais_new" name="codigo_pais_new" maxlength="3" hidden>
 					</div>
 
 					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-						<label for="telefono_new2" class="form-label font-weight-bold">Número de télefono adicional</label>
+						<label for="telefono_new2" class="form-label font-weight-bold">Número de teléfono adicional</label>
 						<input type="number" class="form-control" id="telefono_new2" name="telefono_new2" max="99999999999999999999" minlenght="6" maxlength="20" oninput="clearInputPhone(event);">
 						<!-- <small>Mínimo 6 digitos</small> -->
 						<input type="number" id="codigo_pais_2_new" name="codigo_pais_2_new" maxlength="3" hidden>

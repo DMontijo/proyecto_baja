@@ -25,7 +25,7 @@
 							<tr class="text-center bg-blue text-white">
 								<th scope="col">INSTITUCIÓN</th>
 								<th scope="col">DOMICILIO</th>
-								<th scope="col">TÉLEFONO</th>
+								<th scope="col">TELÉFONO</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -45,7 +45,7 @@
 							<tr class="text-center bg-blue text-white">
 								<th scope="col">INSTITUCIÓN</th>
 								<th scope="col">DOMICILIO</th>
-								<th scope="col">TÉLEFONO</th>
+								<th scope="col">TELÉFONO</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -65,7 +65,7 @@
 							<tr class="text-center bg-blue text-white">
 								<th scope="col">INSTITUCIÓN</th>
 								<th scope="col">DOMICILIO</th>
-								<th scope="col">TÉLEFONO</th>
+								<th scope="col">TELÉFONO</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -85,7 +85,7 @@
 							<tr class="text-center bg-blue text-white">
 								<th scope="col">INSTITUCIÓN</th>
 								<th scope="col">DOMICILIO</th>
-								<th scope="col">TÉLEFONO</th>
+								<th scope="col">TELÉFONO</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -105,7 +105,7 @@
 							<tr class="text-center bg-blue text-white">
 								<th scope="col">INSTITUCIÓN</th>
 								<th scope="col">DOMICILIO</th>
-								<th scope="col">TÉLEFONO</th>
+								<th scope="col">TELÉFONO</th>
 							</tr>
 						</thead>
 						<tbody>
