@@ -112,7 +112,7 @@
 					<div class="col-12 col-md-6 px-4 pb-3">
 						<div class="row bg-light p-4 rounded justify-content-center justify-content-md-start h-100">
 							<div class="bg-yellow rounded-circle text-white d-flex justify-content-center align-items-center display-6" style="height:70px; width:70px;"><i class="bi bi-geo-fill"></i></div>
-							<h4 class="fw-bold mb-0 mt-3 text-blue text-center text-md-start">SAN FELIPE</h4>
+							<h4 class="fw-bold mb-0 mt-3 text-blue text-center text-md-start">TECATE</h4>
 							<p class="text-center text-md-start m-0">Calle Misión Santa Rosalía s/n El Descaso, Tecate, B. C.</p>
 							<!-- <a class="btn btn-primary" href="#">Ver en mapa</a> -->
 						</div>
