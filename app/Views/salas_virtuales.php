@@ -51,6 +51,25 @@
 			</div>
 		</div>
 
+		<!--SAN QUINTÍN-->
+		<div class="row mt-5">
+			<div class="col-12 text-center bg-blue rounded py-3 mb-3">
+				<h3 class="fw-bold text-center text-white display-6"><i class="bi bi-person-video"></i>&nbsp; SAN QUINTÍN</h3>
+			</div>
+			<div class="col-12">
+				<div class="row">
+					<div class="col-12 col-md-6 px-4 pb-3">
+						<div class="row bg-light p-4 rounded justify-content-center justify-content-md-start h-100">
+							<div class="bg-yellow rounded-circle text-white d-flex justify-content-center align-items-center display-6" style="height:70px; width:70px;"><i class="bi bi-geo-fill"></i></div>
+							<h4 class="fw-bold mb-0 mt-3 text-blue text-center text-md-start">SAN QUINTÍN</h4>
+							<p class="text-center text-md-start m-0">Calle Décima 109 Fraccionamiento San Quintín, San Quintín, B. C.</p>
+							<!-- <a class="btn btn-primary" href="#">Ver en mapa</a> -->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<!--MEXICALI-->
 		<div class="row mt-5">
 			<div class="col-12 text-center bg-blue rounded py-3 mb-3">
@@ -95,6 +114,25 @@
 							<div class="bg-yellow rounded-circle text-white d-flex justify-content-center align-items-center display-6" style="height:70px; width:70px;"><i class="bi bi-geo-fill"></i></div>
 							<h4 class="fw-bold mb-0 mt-3 text-blue text-center text-md-start">CIUDAD MORELOS</h4>
 							<p class="text-center text-md-start m-0">Calzada Lázaro Cárdenas s/n Ejido Ciudad Morelos, Mexicali, B. C.</p>
+							<!-- <a class="btn btn-primary" href="#">Ver en mapa</a> -->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!--SAN FELIPE-->
+		<div class="row mt-5">
+			<div class="col-12 text-center bg-blue rounded py-3 mb-3">
+				<h3 class="fw-bold text-center text-white display-6"><i class="bi bi-person-video"></i>&nbsp; SAN FELIPE</h3>
+			</div>
+			<div class="col-12">
+				<div class="row">
+					<div class="col-12 col-md-6 px-4 pb-3">
+						<div class="row bg-light p-4 rounded justify-content-center justify-content-md-start h-100">
+							<div class="bg-yellow rounded-circle text-white d-flex justify-content-center align-items-center display-6" style="height:70px; width:70px;"><i class="bi bi-geo-fill"></i></div>
+							<h4 class="fw-bold mb-0 mt-3 text-blue text-center text-md-start">SAN FELIPE</h4>
+							<p class="text-center text-md-start m-0">Avenida Mar Cortés esquina con Manzanillo s/n Zona Centro, San Felipe, B. C.</p>
 							<!-- <a class="btn btn-primary" href="#">Ver en mapa</a> -->
 						</div>
 					</div>
@@ -168,44 +206,6 @@
 							<div class="bg-yellow rounded-circle text-white d-flex justify-content-center align-items-center display-6" style="height:70px; width:70px;"><i class="bi bi-geo-fill"></i></div>
 							<h4 class="fw-bold mb-0 mt-3 text-blue text-center text-md-start">PLAYAS DE ROSARITO</h4>
 							<p class="text-center text-md-start m-0">José Haros Aguilar s/n Villa Turística, Playas de Rosarito, B. C.</p>
-							<!-- <a class="btn btn-primary" href="#">Ver en mapa</a> -->
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<!--SAN FELIPE-->
-		<div class="row mt-5">
-			<div class="col-12 text-center bg-blue rounded py-3 mb-3">
-				<h3 class="fw-bold text-center text-white display-6"><i class="bi bi-person-video"></i>&nbsp; SAN FELIPE</h3>
-			</div>
-			<div class="col-12">
-				<div class="row">
-					<div class="col-12 col-md-6 px-4 pb-3">
-						<div class="row bg-light p-4 rounded justify-content-center justify-content-md-start h-100">
-							<div class="bg-yellow rounded-circle text-white d-flex justify-content-center align-items-center display-6" style="height:70px; width:70px;"><i class="bi bi-geo-fill"></i></div>
-							<h4 class="fw-bold mb-0 mt-3 text-blue text-center text-md-start">SAN FELIPE</h4>
-							<p class="text-center text-md-start m-0">Avenida Mar Cortés esquina con Manzanillo s/n Zona Centro, San Felipe, B. C.</p>
-							<!-- <a class="btn btn-primary" href="#">Ver en mapa</a> -->
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<!--SAN QUINTÍN-->
-		<div class="row mt-5">
-			<div class="col-12 text-center bg-blue rounded py-3 mb-3">
-				<h3 class="fw-bold text-center text-white display-6"><i class="bi bi-person-video"></i>&nbsp; SAN QUINTÍN</h3>
-			</div>
-			<div class="col-12">
-				<div class="row">
-					<div class="col-12 col-md-6 px-4 pb-3">
-						<div class="row bg-light p-4 rounded justify-content-center justify-content-md-start h-100">
-							<div class="bg-yellow rounded-circle text-white d-flex justify-content-center align-items-center display-6" style="height:70px; width:70px;"><i class="bi bi-geo-fill"></i></div>
-							<h4 class="fw-bold mb-0 mt-3 text-blue text-center text-md-start">SAN QUINTÍN</h4>
-							<p class="text-center text-md-start m-0">Calle Décima 109 Fraccionamiento San Quintín, San Quintín, B. C.</p>
 							<!-- <a class="btn btn-primary" href="#">Ver en mapa</a> -->
 						</div>
 					</div>
