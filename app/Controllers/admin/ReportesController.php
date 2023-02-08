@@ -851,7 +851,7 @@ class ReportesController extends BaseController
 		$dataView->llamadas = $llamadas;
 		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 		$dataView->empleados = array_unique($empleado, SORT_REGULAR);
-		$dataView->promedio = gmdate('H:i:s',($promedio/count($llamadas)));
+		$dataView->promedio = gmdate('H:i:s',intval($promedio/count($llamadas)));
 		
 		$this->_loadView('Reportes llamadas', 'reportes_llamadas', '', $dataView, 'reportes_llamadas');
 		
