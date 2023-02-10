@@ -3669,6 +3669,8 @@ class DashboardController extends BaseController
 				'HECHONUMEROCASAINT' => $this->request->getPost('interior_delito'),
 				'HECHONARRACION' => $this->request->getPost('narracion_delito'),
 				'HECHODELITO' => $this->request->getPost('delito_delito'),
+				'HECHOCOORDENADAX'=> $this->request->getPost('longitud') !='-117.015543' ?$this->request->getPost('longitud') : NULL,
+				'HECHOCOORDENADAY'=> $this->request->getPost('latitud') !='32.521036' ? $this->request->getPost('latitud') : NULL,
 			);
 
 			if ($dataFolio['HECHOCOLONIAID'] == '0') {

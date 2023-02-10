@@ -285,32 +285,59 @@ class DashboardController extends BaseController
 
 	public function create()
 	{
+
 		$session = session();
 		list($FOLIOID, $year) = $this->_folioConsecutivoModel->get_consecutivo();
 
-		$dataFolio = [
-			'FOLIOID' => $FOLIOID,
-			'ANO' => $year,
-			'DENUNCIANTEID' => $session->get('DENUNCIANTEID'),
-			'HECHOFECHA' => $this->request->getPost('fecha') != '' ? $this->request->getPost('fecha') : NULL,
-			'HECHOHORA' => $this->request->getPost('hora') != '' ? $this->request->getPost('hora') : NULL,
-			'HECHOLUGARID' => $this->request->getPost('lugar'),
-			'ESTADOID' => 2,
-			'MUNICIPIOID' => $this->request->getPost('municipio'),
-			'HECHOESTADOID' => 2,
-			'HECHOMUNICIPIOID' => $this->request->getPost('municipio'),
-			'HECHOLOCALIDADID' => $this->request->getPost('localidad'),
-			'HECHOCOLONIAID' => $this->request->getPost('colonia_select'),
-			'HECHOCOLONIADESCR' => $this->request->getPost('colonia') != '' ? $this->request->getPost('colonia') : NULL,
-			'HECHOCALLE' => $this->request->getPost('calle') != '' ? $this->request->getPost('calle') : NULL,
-			'HECHONUMEROCASA' => $this->request->getPost('exterior') != '' ? $this->request->getPost('exterior') : NULL,
-			'HECHONUMEROCASAINT' => $this->request->getPost('interior') != '' ? $this->request->getPost('interior') : NULL,
-			'HECHONARRACION' => $this->request->getPost('descripcion_breve') != '' ? $this->request->getPost('descripcion_breve') : NULL,
-			'HECHODELITO' => $this->request->getPost('delito'),
-			'TIPODENUNCIA' => 'VD',
+		if ($this->request->getPost('check_ubi') == 'on') {
+			$dataFolio = [
+				'FOLIOID' => $FOLIOID,
+				'ANO' => $year,
+				'DENUNCIANTEID' => $session->get('DENUNCIANTEID'),
+				'HECHOFECHA' => $this->request->getPost('fecha') != '' ? $this->request->getPost('fecha') : NULL,
+				'HECHOHORA' => $this->request->getPost('hora') != '' ? $this->request->getPost('hora') : NULL,
+				'HECHOLUGARID' => $this->request->getPost('lugar'),
+				'ESTADOID' => 2,
+				'MUNICIPIOID' => $this->request->getPost('municipio'),
+				'HECHOESTADOID' => 2,
+				'HECHOMUNICIPIOID' => $this->request->getPost('municipio'),
+				'HECHOLOCALIDADID' => $this->request->getPost('localidad'),
+				'HECHOCOLONIAID' => $this->request->getPost('colonia_select'),
+				'HECHOCOLONIADESCR' => $this->request->getPost('colonia') != '' ? $this->request->getPost('colonia') : NULL,
+				'HECHOCALLE' => $this->request->getPost('calle') != '' ? $this->request->getPost('calle') : NULL,
+				'HECHONUMEROCASA' => $this->request->getPost('exterior') != '' ? $this->request->getPost('exterior') : NULL,
+				'HECHONUMEROCASAINT' => $this->request->getPost('interior') != '' ? $this->request->getPost('interior') : NULL,
+				'HECHONARRACION' => $this->request->getPost('descripcion_breve') != '' ? $this->request->getPost('descripcion_breve') : NULL,
+				'HECHODELITO' => $this->request->getPost('delito'),
+				'TIPODENUNCIA' => 'VD',
+				'HECHOCOORDENADAX'=> $this->request->getPost('longitud'),
+				'HECHOCOORDENADAY'=> $this->request->getPost('latitud'),
 
-
-		];
+			];
+		}else{
+			$dataFolio = [
+				'FOLIOID' => $FOLIOID,
+				'ANO' => $year,
+				'DENUNCIANTEID' => $session->get('DENUNCIANTEID'),
+				'HECHOFECHA' => $this->request->getPost('fecha') != '' ? $this->request->getPost('fecha') : NULL,
+				'HECHOHORA' => $this->request->getPost('hora') != '' ? $this->request->getPost('hora') : NULL,
+				'HECHOLUGARID' => $this->request->getPost('lugar'),
+				'ESTADOID' => 2,
+				'MUNICIPIOID' => $this->request->getPost('municipio'),
+				'HECHOESTADOID' => 2,
+				'HECHOMUNICIPIOID' => $this->request->getPost('municipio'),
+				'HECHOLOCALIDADID' => $this->request->getPost('localidad'),
+				'HECHOCOLONIAID' => $this->request->getPost('colonia_select'),
+				'HECHOCOLONIADESCR' => $this->request->getPost('colonia') != '' ? $this->request->getPost('colonia') : NULL,
+				'HECHOCALLE' => $this->request->getPost('calle') != '' ? $this->request->getPost('calle') : NULL,
+				'HECHONUMEROCASA' => $this->request->getPost('exterior') != '' ? $this->request->getPost('exterior') : NULL,
+				'HECHONUMEROCASAINT' => $this->request->getPost('interior') != '' ? $this->request->getPost('interior') : NULL,
+				'HECHONARRACION' => $this->request->getPost('descripcion_breve') != '' ? $this->request->getPost('descripcion_breve') : NULL,
+				'HECHODELITO' => $this->request->getPost('delito'),
+				'TIPODENUNCIA' => 'VD',
+			];
+		}
+	
 		$colonia = $this->_coloniasModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $this->request->getPost('municipio'))->where('LOCALIDADID', $this->request->getPost('localidad'))->where('COLONIAID', $this->request->getPost('colonia_select'))->first();
 
 		if ($this->request->getPost('colonia_select')) {
