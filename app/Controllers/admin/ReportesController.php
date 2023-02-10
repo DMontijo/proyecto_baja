@@ -8,6 +8,7 @@ use App\Models\ConstanciaExtravioModel;
 use App\Models\MunicipiosModel;
 use App\Models\RolesPermisosModel;
 use App\Models\UsuariosModel;
+use App\Models\PlantillasModel;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
@@ -19,6 +20,7 @@ class ReportesController extends BaseController
 	private $_usuariosModel;
 	private $_constanciaExtravioModel;
 	private $_rolesPermisosModel;
+	private $_plantillasModel;
 	
 	function __construct()
 	{
@@ -27,6 +29,7 @@ class ReportesController extends BaseController
 		$this->_usuariosModel = new UsuariosModel();
 		$this->_constanciaExtravioModel = new ConstanciaExtravioModel();
 		$this->_rolesPermisosModel = new RolesPermisosModel();
+		$this->_plantillasModel = new PlantillasModel();
 	}
 
 	public function index()
@@ -851,7 +854,7 @@ class ReportesController extends BaseController
 		$dataView->llamadas = $llamadas;
 		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 		$dataView->empleados = array_unique($empleado, SORT_REGULAR);
-		$dataView->promedio = gmdate('H:i:s',($promedio/count($llamadas)));
+		$dataView->promedio = gmdate('H:i:s',intval(($promedio/count($llamadas))));
 		
 		$this->_loadView('Reportes llamadas', 'reportes_llamadas', '', $dataView, 'reportes_llamadas');
 		
@@ -1150,6 +1153,296 @@ class ReportesController extends BaseController
 
 	}
 
+	public function getRegistroConavim() {
+		$dataPost = [
+			'MUNICIPIOID' => '',
+			'AGENTEATENCIONID' => '',
+			'GENERO' => '',
+
+			'fechaInicio' => '',
+			'fechaFin' =>'',
+			'horaInicio' => '',
+			'horaFin' => '',
+		];	
+		$documentos = $this->_plantillasModel->filtro_ordenes_proteccion($dataPost);
+		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
+		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7";
+		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
+		$tiposOrden = $this->_plantillasModel->get_tipos_orden();
+		
+		
+		$dataView = (object)array();
+		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+		$dataView->municipios = $municipio;
+		$dataView->empleados = $empleado;
+		$dataView->tiposOrden = (object)$tiposOrden;
+		$dataView->dataOrdenes = $documentos;
+		
+		$this->_loadView('Registro CONAVIM', 'registro_conavim', '', $dataView, 'registro_conavim');
+		
+	}
+
+	public function postRegistroConavim(){
+
+		$dataPost = [
+			'MUNICIPIOID' => $this->request->getPost('MUNICIPIOID'),
+			'AGENTEATENCIONID' => $this->request->getPost('AGENTEATENCIONID'),
+			'GENERO' => $this->request->getPost('GENERO'),
+			'TIPOORDEN' => $this->request->getPost('TIPOORDEN'),
+
+			'fechaInicio' => $this->request->getPost('fechaInicio'),
+			'fechaFin' => $this->request->getPost('fechaFin'),
+			'horaInicio' => $this->request->getPost('horaInicio'),
+			'horaFin' => $this->request->getPost('horaFin'),
+
+			'nombreAgente' => '',
+			'municipioDescr' => ''
+		];	
+
+		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
+		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7";
+		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
+		$tiposOrden = $this->_plantillasModel->get_tipos_orden();
+		$documentos = $this->_plantillasModel->filtro_ordenes_proteccion($dataPost);
+
+		if(!empty($dataPost['AGENTEATENCIONID'])){
+			foreach ($empleado as $index => $dato){
+				//var_dump('info empleado', $dato);
+				if($dato->ID == $dataPost['AGENTEATENCIONID']){
+					//var_dump('info empleado', $dato);
+					$dataPost['nombreAgente'] = $dato->NOMBRE . ' ' . $dato->APELLIDO_PATERNO . ' ' . $dato->APELLIDO_MATERNO;
+				}
+			}
+		}
+		if(!empty($dataPost['MUNICIPIOID'])){
+			foreach ($municipio as $index => $dato){
+				///var_dump('info municipio', $dato);
+				if($dato->MUNICIPIOID == $dataPost['MUNICIPIOID']){
+					$dataPost['municipioDescr'] = $dato->MUNICIPIODESCR;
+				}
+			}
+		}
+		
+		
+		$dataView = (object)array();
+		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+		$dataView->municipios = $municipio;
+		$dataView->empleados = $empleado;
+		$dataView->tiposOrden = (object)$tiposOrden;
+		$dataView->dataOrdenes = $documentos;
+		$dataView->filterParams = (object)$dataPost;
+		
+		$this->_loadView('Registro CONAVIM', 'registro_conavim', '', $dataView, 'registro_conavim');
+		
+	}
+
+	public function createOrdenXlsx(){
+		$dataPost = [
+			'MUNICIPIOID' => $this->request->getPost('MUNICIPIOID'),
+			'AGENTEATENCIONID' => $this->request->getPost('AGENTEATENCIONID'),
+			'GENERO' => $this->request->getPost('GENERO'),
+
+			'fechaInicio' => $this->request->getPost('fechaInicio'),
+			'fechaFin' => $this->request->getPost('fechaFin'),
+			'horaInicio' => $this->request->getPost('horaInicio'),
+			'horaFin' => $this->request->getPost('horaFin'),
+		];
+
+		foreach ($dataPost as $clave => $valor) {
+			//Recorre el array y elimina los valores que nulos o vacíos
+			if (empty($valor)) unset($dataPost[$clave]);
+		}
+		if (count($dataPost) <= 0) {
+			$dataPost = [
+				'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
+				'fechaFin' => date("Y-m-d"),
+			];
+		}
+		$documentos = $this->_plantillasModel->filtro_ordenes_proteccion($dataPost);
+		$date = date("Y_m_d_h_i_s");
+
+		$spreadSheet = new Spreadsheet();
+		$spreadSheet->getProperties()
+			->setCreator("Fiscalía General del Estado de Baja California")
+			->setLastModifiedBy("Fiscalía General del Estado de Baja California")
+			->setTitle("REPORTE_CONAVIM . $date")
+			->setSubject("REPORTE_CONAVIM' . $date")
+			->setDescription(
+				"El presente documento fue generado por el Centro de Denuncia Tecnológica de la Fiscalía General del Estado de Baja California."
+			)
+			->setKeywords("reporte conavim cdt fgebc 2022")
+			->setCategory("Reportes");
+		$sheet = $spreadSheet->getActiveSheet();
+
+
+		$styleHeaders = [
+			'font' => [
+				'bold' => true,
+				'color' => ['argb' => 'FFFFFF'],
+				'name' => 'Arial',
+				'size' => '10'
+			],
+			'alignment' => [
+				'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+				'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+			],
+			'borders' => [
+				'allBorders' => [
+					'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+					'color' => ['argb' => '000000'],
+				],
+			],
+			'fill' => [
+				'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_GRADIENT_LINEAR,
+				'rotation' => 90,
+				'startColor' => [
+					'argb' => '511229',
+				],
+				'endColor' => [
+					'argb' => '511229',
+				],
+			],
+		];
+
+		$styleCab = [
+			'font' => [
+				'bold' => true,
+				'color' => ['argb' => '000000'],
+				'name' => 'Arial',
+				'size' => '12'
+			],
+			'alignment' => [
+				'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+
+			],
+
+		];
+
+		$styleCells = [
+			'font' => [
+				'bold' => false,
+				'color' => ['argb' => '000000'],
+				'name' => 'Arial',
+				'size' => '10'
+			],
+			'alignment' => [
+				'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+				'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+			],
+			'borders' => [
+				'allBorders' => [
+					'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+					'color' => ['argb' => '000000'],
+				],
+			],
+			'fill' => [
+				'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_GRADIENT_LINEAR,
+				'rotation' => 90,
+				'startColor' => [
+					'argb' => 'FFFFFF',
+				],
+				'endColor' => [
+					'argb' => 'FFFFFF',
+				],
+			],
+		];
+		$row = 4;
+
+		$columns = [
+			'A', 'B', 'C', 'D', 'E',
+			'F', 'G', 'H', 'I', 'J',
+			'K', 'L', 'M', 'N', 'O',
+			'P', 'Q', 'R', 'S', 'T',
+			'U', 'V', 'W', 'X', 'Y', 'Z'
+		];
+		$headers = [
+			"Folio",
+			"FECHA DE EXPEDICIÓN",
+			"NO. EXPEDIENTE",
+			"MODULO QUE EXPIDE",
+			"MUNICIPIO QUE ATIENDE",
+			"SERVIDOR PUBLICO SOLICITANTE",
+			"DELITO",
+			"NOMBRE DE LA VICTIMA/OFENDIDO",
+			"APELLIDO PATERNO",
+			"APELLIDO MATERNO",
+			"GENERO",
+			"EDAD",
+			"TIPO DE ORDEN DE PROTECCIÓN",
+			"VÍCTIMA LESIONADA",
+		];
+
+		for ($i = 0; $i < count($headers); $i++) {
+			$sheet->setCellValue($columns[$i] . 4, $headers[$i]);
+			$sheet->getColumnDimension($columns[$i])->setAutoSize(true);
+		}
+
+		$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
+
+		$row++;
+
+		foreach ($documentos as $index => $orden) {
+			$this->separarExpID($orden->EXPEDIENTEID);
+
+			 
+			$sheet->setCellValue('A1', "CENTRO TELEFÓNICO Y EN LÍNEA DE ATENCIÓN Y ORIENTACIÓN TEMPRANA");
+			$sheet->setCellValue('A2', "REGISTRO ORDENES DE PROTECCIÓN");
+
+			
+			$sheet->setCellValue('A' . $row, $orden->FOLIOID );
+			$sheet->setCellValue('B' . $row, $this->formatFecha($orden->FECHAFIRMA));
+			$sheet->setCellValue('C' . $row, $this->separarExpID($orden->EXPEDIENTEID));
+			$sheet->setCellValue('D' . $row, 'CENTRO DE DENUNCIA TECNÓLOGICA');
+			$sheet->setCellValue('E' . $row,  $orden->MUNICIPIODESCR);
+			$sheet->setCellValue('F' . $row,  $orden->NOMBRE_MP.' '.$orden->APATERNO_MP.' '.$orden->AMATERNO_MP);
+			$sheet->setCellValue('G' . $row,  $orden->HECHODELITO);
+			$sheet->setCellValue('H' . $row,  $orden->NOMBRE);
+			$sheet->setCellValue('I' . $row,  $orden->PRIMERAPELLIDO);
+			$sheet->setCellValue('J' . $row,  $orden->SEGUNDOAPELLIDO);
+			$sheet->setCellValue('K' . $row,  $orden->SEXO);
+			$sheet->setCellValue('L' . $row,  $orden->EDADCANTIDAD);
+			$sheet->setCellValue('M' . $row,  $orden->TIPODOC);
+			$sheet->setCellValue('N' . $row,  $orden->LESIONES);
+			$sheet->setCellValue('O' . $row, '');
+
+			$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
+
+			if (!(($row - 4) >= count($documentos))) $row++;
+		}
+		$sheet->getStyle('A1:R1')->applyFromArray($styleCab);
+		$sheet->getStyle('A2:R2')->applyFromArray($styleCab);
+
+		$sheet->getStyle('A4:R4')->applyFromArray($styleHeaders);
+		$sheet->getStyle('A5:R' . $row)->applyFromArray($styleCells);
+
+		$sheet->mergeCells('A1:R1');
+		$sheet->mergeCells('A2:R2');
+		$drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+		$drawing->setName('FGEBC');
+		$drawing->setDescription('LOGO');
+		$drawing->setPath(FCPATH . 'assets/img/FGEBC_recortada.png'); // put your path and image here
+		$drawing->setHeight(60);
+		$drawing->setCoordinates('A1');
+		$drawing->setOffsetX(10);
+		$drawing->setWorksheet($spreadSheet->getActiveSheet());
+		$drawing2 = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+		$drawing2->setName('FGEBC');
+		$drawing2->setDescription('LOGO');
+		$drawing2->setPath(FCPATH . 'assets/img/logo_sejap.jpg'); // put your path and image here
+		$drawing2->setHeight(45);
+		$drawing2->setCoordinates('O1');
+		$drawing2->setOffsetX(-30);
+		$drawing2->setWorksheet($spreadSheet->getActiveSheet());
+		// $drawing->setOffsetX(110);
+		// $drawing->setRotation(25);
+		$writer = new Xlsx($spreadSheet);
+
+		header('Content-Type: application/vnd.ms-excel');
+		header('Content-Disposition: attachment; filename="reporte_conavim_' . session('NOMBRE') . '.xlsx"');
+		header('Cache-Control: max-age=0');
+		$writer->save("php://output");
+
+	}
 
 	private function _curlPost($endpoint, $data)
 	{
@@ -1196,6 +1489,14 @@ class ReportesController extends BaseController
 	private function permisos($permiso)
 	{
 		return in_array($permiso, session('permisos'));
+	}
+
+	public function separarExpID($expId){
+		$array = str_split($expId);
+		return $array[2].$array[4].$array[5].'-'.$array[6].$array[7].$array[8].$array[9].'-'.$array[10].$array[11].$array[12].$array[13].$array[14];
+	}
+	public function formatFecha($date){
+		return date("d/m/Y", strtotime($date));
 	}
 
 
