@@ -12,7 +12,6 @@ use App\Models\PlantillasModel;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
-
 class ReportesController extends BaseController
 {
 	private $_folioModel;
@@ -21,7 +20,7 @@ class ReportesController extends BaseController
 	private $_constanciaExtravioModel;
 	private $_rolesPermisosModel;
 	private $_plantillasModel;
-	
+
 	function __construct()
 	{
 		$this->_folioModel = new FolioModel();
@@ -98,7 +97,7 @@ class ReportesController extends BaseController
 			$agente = $this->_usuariosModel->asObject()->where('ROLID', 2)->where('ID', $data['AGENTEATENCIONID'])->orderBy('NOMBRE', 'ASC')->first();
 			$data['AGENTENOMBRE'] = $agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' . $agente->APELLIDO_MATERNO;
 		}
-		
+
 		if (isset($data['MUNICIPIOID'])) {
 			$mun = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data['MUNICIPIOID'])->first();
 			$data['MUNICIPIONOMBRE'] = $mun->MUNICIPIODESCR;
@@ -117,7 +116,7 @@ class ReportesController extends BaseController
 	public function createFoliosXlsx()
 	{
 
-	
+
 		$data = [
 			'MUNICIPIOID' => $this->request->getPost('municipio'),
 			'AGENTEATENCIONID' => $this->request->getPost('agente'),
@@ -248,7 +247,7 @@ class ReportesController extends BaseController
 		foreach ($resultFilter->result as $index => $folio) {
 			$sheet->setCellValue('A' . $row, $folio->FOLIOID);
 			$sheet->setCellValue('B' . $row, $folio->ANO);
-			$sheet->setCellValue('C' . $row, $folio->TIPODENUNCIA == 'VD' ? 'CDT': 'ANÓNIMA');
+			$sheet->setCellValue('C' . $row, $folio->TIPODENUNCIA == 'VD' ? 'CDT' : 'ANÓNIMA');
 			$sheet->setCellValue('D' . $row, $folio->EXPEDIENTEID);
 			$sheet->setCellValue('E' . $row, $folio->FECHASALIDA);
 			$sheet->setCellValue('F' . $row, $folio->N_DENUNCIANTE . ' ' . $folio->APP_DENUNCIANTE . ' ' . $folio->APM_DENUNCIANTE);
@@ -332,7 +331,7 @@ class ReportesController extends BaseController
 			$agente = $this->_usuariosModel->asObject()->where('ROLID', 2)->where('ID', $data['AGENTEID'])->orderBy('NOMBRE', 'ASC')->first();
 			$data['AGENTENOMBRE'] = $agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' . $agente->APELLIDO_MATERNO;
 		}
-		
+
 		if (isset($data['MUNICIPIOID'])) {
 			$mun = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data['MUNICIPIOID'])->first();
 			$data['MUNICIPIONOMBRE'] = $mun->MUNICIPIODESCR;
@@ -751,14 +750,14 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('B' . $row, $dateregistro);
 			$sheet->setCellValue('C' . $row, $horaregistro);
 			$sheet->setCellValue('D' . $row, $folio->FOLIOID);
-			$sheet->setCellValue('E' . $row, $folio->TIPODENUNCIA == 'DA' ? 'ANÓNIMA': 'CDT');
+			$sheet->setCellValue('E' . $row, $folio->TIPODENUNCIA == 'DA' ? 'ANÓNIMA' : 'CDT');
 			$sheet->setCellValue('F' . $row, $folio->MUNICIPIODESCR);
 			$sheet->setCellValue('G' . $row, $folio->N_DENUNCIANTE);
 			$sheet->setCellValue('H' . $row, $folio->APP_DENUNCIANTE);
 			$sheet->setCellValue('I' . $row, $folio->APM_DENUNCIANTE);
 			$sheet->setCellValue('J' . $row, $folio->TELEFONODENUNCIANTE);
 			$sheet->setCellValue('K' . $row, $folio->CORREODENUNCIANTE);
-			$sheet->setCellValue('L' . $row, isset($folio->DELITOMODALIDADDESCR)? $folio->DELITOMODALIDADDESCR : 'NO EXISTE');
+			$sheet->setCellValue('L' . $row, isset($folio->DELITOMODALIDADDESCR) ? $folio->DELITOMODALIDADDESCR : 'NO EXISTE');
 			$sheet->setCellValue('M' . $row, $folio->N_AGENT . ' ' . $folio->APP_AGENT . ' ' . $folio->APM_AGENT);
 			$sheet->setCellValue('N' . $row, $folio->NOTASAGENTE);
 			$sheet->setCellValue('O' . $row, isset($folio->TIPOEXPEDIENTEDESCR) ? $folio->TIPOEXPEDIENTEDESCR : $folio->STATUS);
@@ -804,17 +803,18 @@ class ReportesController extends BaseController
 		$writer->save("php://output");
 	}
 
-	public function getFielReport(){
+	public function getFielReport()
+	{
 		$data = (object) array();
 		if (!$this->permisos('USUARIOS')) {
 			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
 		}
 		$data->usuario = $this->_usuariosModel->asObject()
 			->select('USUARIOS.*, ROLES.NOMBRE_ROL, ZONAS_USUARIOS.NOMBRE_ZONA, MUNICIPIO.MUNICIPIODESCR,OFICINA.OFICINADESCR')
-			->join('ROLES', 'ROLES.ID = USUARIOS.ROLID','LEFT')
-			->join('ZONAS_USUARIOS', 'ZONAS_USUARIOS.ID_ZONA = USUARIOS.ZONAID','LEFT')
-			->join('MUNICIPIO', 'MUNICIPIO.MUNICIPIOID = USUARIOS.MUNICIPIOID AND MUNICIPIO.ESTADOID = 2','LEFT')
-			->join('OFICINA', 'OFICINA.OFICINAID = USUARIOS.OFICINAID AND OFICINA.MUNICIPIOID = USUARIOS.MUNICIPIOID AND OFICINA.ESTADOID = 2','LEFT')
+			->join('ROLES', 'ROLES.ID = USUARIOS.ROLID', 'LEFT')
+			->join('ZONAS_USUARIOS', 'ZONAS_USUARIOS.ID_ZONA = USUARIOS.ZONAID', 'LEFT')
+			->join('MUNICIPIO', 'MUNICIPIO.MUNICIPIOID = USUARIOS.MUNICIPIOID AND MUNICIPIO.ESTADOID = 2', 'LEFT')
+			->join('OFICINA', 'OFICINA.OFICINAID = USUARIOS.OFICINAID AND OFICINA.MUNICIPIOID = USUARIOS.MUNICIPIOID AND OFICINA.ESTADOID = 2', 'LEFT')
 			->where('ROLID !=', 1)
 			->orderBy('ROLES.NOMBRE_ROL', 'ASC')
 			->orderBy('USUARIOS.NOMBRE', 'ASC')
@@ -824,7 +824,8 @@ class ReportesController extends BaseController
 		$this->_loadView('FIEL', 'fiel', '', $data, 'fiel');
 	}
 
-	public function getReporteLlamadas() {
+	public function getReporteLlamadas()
+	{
 		$endpoint = 'https://videodenunciaserver1.fgebc.gob.mx/api/vc';
 		$data = array();
 		$data['u'] = '24';
@@ -839,28 +840,27 @@ class ReportesController extends BaseController
 		$promedio = 0;
 		foreach ($response->data as $key => $value) {
 			// foreach ($value as $array => $data) {
-				//iterar datos de cada una de las llamadas
+			//iterar datos de cada una de las llamadas
 			// }
-			if($value->Estatus == 'Terminada' && $value->Grabación){
+			if ($value->Estatus == 'Terminada' && $value->Grabación) {
 				$idAgente = 'id Agente';
-				array_push($empleado, (object)['ID'=>$value->$idAgente, 'NOMBRE' => $value->Agente]);
-				array_push($llamadas, $value);	
+				array_push($empleado, (object)['ID' => $value->$idAgente, 'NOMBRE' => $value->Agente]);
+				array_push($llamadas, $value);
 				$promedio += strtotime($value->Duración) - strtotime("TODAY");
 			}
-			
 		}
-		
+
 		$dataView = (object)array();
 		$dataView->llamadas = $llamadas;
 		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 		$dataView->empleados = array_unique($empleado, SORT_REGULAR);
-		$dataView->promedio = gmdate('H:i:s',intval(($promedio/count($llamadas))));
-		
+		$dataView->promedio = gmdate('H:i:s', intval(($promedio / count($llamadas))));
+
 		$this->_loadView('Reportes llamadas', 'reportes_llamadas', '', $dataView, 'reportes_llamadas');
-		
 	}
 
-	public function postReporteLlamadas(){
+	public function postReporteLlamadas()
+	{
 
 		$dataPost = (object) [
 			'fechaInicio' => $this->request->getPost('fechaInicio'),
@@ -868,61 +868,61 @@ class ReportesController extends BaseController
 			'horaInicio' => $this->request->getPost('horaInicio'),
 			'horaFin' => $this->request->getPost('horaFin'),
 			'agenteId' => $this->request->getPost('agenteId'),
-		];	
-			//var_dump($dataPost);
+		];
+		//var_dump($dataPost);
 		$endpoint = 'https://videodenunciaserver1.fgebc.gob.mx/api/vc';
 		$data = array();
 		$data['u'] = '24';
 		$data['token'] = '198429b7cc8a2a5733d97bc13153227dd5017555';
 		$data['a'] = 'getRepo';
-		$data['min'] = $dataPost->fechaInicio ? $dataPost->fechaInicio : '2000-01-01' ;
+		$data['min'] = $dataPost->fechaInicio ? $dataPost->fechaInicio : '2000-01-01';
 		$data['max'] = $dataPost->fechaFin ? $dataPost->fechaFin : date("Y-m-d");
 
 		$response = $this->_curlPost($endpoint, $data);
 		$llamadas = array();
 		$empleado = array();
 		$promedio = 0;
-		if(!isset($dataPost->agenteId)){
+		if (!isset($dataPost->agenteId)) {
 			foreach ($response->data as $key => $value) {
 				// foreach ($value as $array => $data) {
-					//iterar datos de cada una de las llamadas
+				//iterar datos de cada una de las llamadas
 				// }
-				if($value->Estatus == 'Terminada' && $value->Grabación){
+				if ($value->Estatus == 'Terminada' && $value->Grabación) {
 					$idAgente = 'id Agente';
-					array_push($empleado, (object)['ID'=>$value->$idAgente, 'NOMBRE' => $value->Agente]);
+					array_push($empleado, (object)['ID' => $value->$idAgente, 'NOMBRE' => $value->Agente]);
 					array_push($llamadas, $value);
-					$promedio = date('H:i:s',strtotime($value->Duración));	
+					$promedio = date('H:i:s', strtotime($value->Duración));
 				}
 			}
 			//var_dump('promedio de tiempo en llamada', ($promedio));
 		}
-		if(isset($dataPost->agenteId)){
+		if (isset($dataPost->agenteId)) {
 			$idAgente = 'id Agente';
 			foreach ($response->data as $key => $value) {
 				// foreach ($value as $array => $data) {
-					//iterar datos de cada una de las llamadas
+				//iterar datos de cada una de las llamadas
 				// }
-				array_push($empleado, (object)['ID'=>$value->$idAgente, 'NOMBRE' => $value->Agente]);
-				if($value->Estatus == 'Terminada' && $value->Grabación && $value->$idAgente == $dataPost->agenteId){
+				array_push($empleado, (object)['ID' => $value->$idAgente, 'NOMBRE' => $value->Agente]);
+				if ($value->Estatus == 'Terminada' && $value->Grabación && $value->$idAgente == $dataPost->agenteId) {
 					$dataPost->nombreAgente = $value->Agente;
 					array_push($llamadas, $value);
-					$promedio += strtotime($value->Duración) - strtotime("TODAY");		
+					$promedio += strtotime($value->Duración) - strtotime("TODAY");
 				}
 			}
 		}
-	
+
 		$dataView = (object)array();
 		$dataView->llamadas = $llamadas;
 		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 		$dataView->empleados = array_unique($empleado, SORT_REGULAR);
 		$dataView->filterParams = $dataPost;
-		$dataView->promedio = (count($llamadas)>0) ? gmdate('H:i:s',($promedio/count($llamadas))) : '00:00:00';
-		
+		$dataView->promedio = (count($llamadas) > 0) ? gmdate('H:i:s', ($promedio / count($llamadas))) : '00:00:00';
+
 		$this->_loadView('Reportes llamadas', 'reportes_llamadas', '', $dataView, 'reportes_llamadas');
-		
 	}
 
-	public function createLlamadasXlsx(){
+	public function createLlamadasXlsx()
+	{
 		$dataPost = [
 			'fechaInicio' => $this->request->getPost('fechaInicio'),
 			'fechaFin' => $this->request->getPost('fechaFin'),
@@ -948,35 +948,35 @@ class ReportesController extends BaseController
 		$data['u'] = '24';
 		$data['token'] = '198429b7cc8a2a5733d97bc13153227dd5017555';
 		$data['a'] = 'getRepo';
-		$data['min'] = isset($dataPost['fechaInicio']) ? $dataPost['fechaInicio'] : '2000-01-01' ;
+		$data['min'] = isset($dataPost['fechaInicio']) ? $dataPost['fechaInicio'] : '2000-01-01';
 		$data['max'] = isset($dataPost['fechaFin']) ? $dataPost['fechaFin'] : date("Y-m-d");
 
 		$response = $this->_curlPost($endpoint, $data);
 		$llamadas = array();
 		$promedio = 0;
-		if(!isset($dataPost['agenteId'])){
+		if (!isset($dataPost['agenteId'])) {
 			foreach ($response->data as $key => $value) {
 				// foreach ($value as $array => $data) {
-					//iterar datos de cada una de las llamadas
+				//iterar datos de cada una de las llamadas
 				// }
-				if($value->Estatus == 'Terminada' && $value->Grabación){
+				if ($value->Estatus == 'Terminada' && $value->Grabación) {
 					$idAgente = 'id Agente';
 					array_push($llamadas, $value);
-					$promedio = date('H:i:s',strtotime($value->Duración));	
+					$promedio = date('H:i:s', strtotime($value->Duración));
 				}
 			}
 			//var_dump('promedio de tiempo en llamada', ($promedio));
 		}
-		if(isset($dataPost['agenteId'])){
+		if (isset($dataPost['agenteId'])) {
 			$idAgente = 'id Agente';
 			foreach ($response->data as $key => $value) {
 				// foreach ($value as $array => $data) {
-					//iterar datos de cada una de las llamadas
+				//iterar datos de cada una de las llamadas
 				// }
-				if($value->Estatus == 'Terminada' && $value->Grabación && $value->$idAgente == $dataPost['agenteId']){
+				if ($value->Estatus == 'Terminada' && $value->Grabación && $value->$idAgente == $dataPost['agenteId']) {
 					//array_push($empleado, (object)['ID'=>$value->$idAgente, 'NOMBRE' => $value->Agente]);
 					array_push($llamadas, $value);
-					$promedio += strtotime($value->Duración) - strtotime("TODAY");		
+					$promedio += strtotime($value->Duración) - strtotime("TODAY");
 				}
 			}
 		}
@@ -1076,14 +1076,14 @@ class ReportesController extends BaseController
 		];
 		$headers = [
 			"Fecha",
-            "Folio",
-            "Inicio",
-            "Fin",
-            "Agente",
-            "Cliente",
-            "Espera",
-            "Duración",
-            "Estatus"
+			"Folio",
+			"Inicio",
+			"Fin",
+			"Agente",
+			"Cliente",
+			"Espera",
+			"Duración",
+			"Estatus"
 		];
 
 		for ($i = 0; $i < count($headers); $i++) {
@@ -1097,11 +1097,11 @@ class ReportesController extends BaseController
 		$idAgente = 'id Agente';
 
 		foreach ($llamadas as $index => $llamada) {
-			 
+
 			$sheet->setCellValue('A1', "CENTRO TELEFÓNICO Y EN LÍNEA DE ATENCIÓN Y ORIENTACIÓN TEMPRANA");
 			$sheet->setCellValue('A2', "REGISTRO ESTATAL DE PRE DENUNCIA TELEFÓNICA Y EN LÍNEA");
 
-			
+
 			$sheet->setCellValue('A' . $row, $llamada->Fecha);
 			$sheet->setCellValue('B' . $row, $llamada->Folio);
 			$sheet->setCellValue('C' . $row, $llamada->Inicio);
@@ -1111,7 +1111,7 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('G' . $row, $llamada->Espera);
 			$sheet->setCellValue('H' . $row, $llamada->Duración);
 			$sheet->setCellValue('I' . $row, $llamada->Estatus);
-	
+
 			$sheet->setCellValue('J' . $row, '');
 
 			$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
@@ -1150,39 +1150,39 @@ class ReportesController extends BaseController
 		header('Content-Disposition: attachment; filename="REGISTRO_LLAMADAS_' . session('NOMBRE') . '.xlsx"');
 		header('Cache-Control: max-age=0');
 		$writer->save("php://output");
-
 	}
 
-	public function getRegistroConavim() {
+	public function getRegistroConavim()
+	{
 		$dataPost = [
 			'MUNICIPIOID' => '',
 			'AGENTEATENCIONID' => '',
 			'GENERO' => '',
 
 			'fechaInicio' => '',
-			'fechaFin' =>'',
+			'fechaFin' => '',
 			'horaInicio' => '',
 			'horaFin' => '',
-		];	
+		];
 		$documentos = $this->_plantillasModel->filtro_ordenes_proteccion($dataPost);
 		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
 		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7";
 		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
 		$tiposOrden = $this->_plantillasModel->get_tipos_orden();
-		
-		
+
+
 		$dataView = (object)array();
 		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 		$dataView->municipios = $municipio;
 		$dataView->empleados = $empleado;
 		$dataView->tiposOrden = (object)$tiposOrden;
 		$dataView->dataOrdenes = $documentos;
-		
+
 		$this->_loadView('Registro CONAVIM', 'registro_conavim', '', $dataView, 'registro_conavim');
-		
 	}
 
-	public function postRegistroConavim(){
+	public function postRegistroConavim()
+	{
 
 		$dataPost = [
 			'MUNICIPIOID' => $this->request->getPost('MUNICIPIOID'),
@@ -1197,7 +1197,7 @@ class ReportesController extends BaseController
 
 			'nombreAgente' => '',
 			'municipioDescr' => ''
-		];	
+		];
 
 		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
 		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7";
@@ -1205,25 +1205,25 @@ class ReportesController extends BaseController
 		$tiposOrden = $this->_plantillasModel->get_tipos_orden();
 		$documentos = $this->_plantillasModel->filtro_ordenes_proteccion($dataPost);
 
-		if(!empty($dataPost['AGENTEATENCIONID'])){
-			foreach ($empleado as $index => $dato){
+		if (!empty($dataPost['AGENTEATENCIONID'])) {
+			foreach ($empleado as $index => $dato) {
 				//var_dump('info empleado', $dato);
-				if($dato->ID == $dataPost['AGENTEATENCIONID']){
+				if ($dato->ID == $dataPost['AGENTEATENCIONID']) {
 					//var_dump('info empleado', $dato);
 					$dataPost['nombreAgente'] = $dato->NOMBRE . ' ' . $dato->APELLIDO_PATERNO . ' ' . $dato->APELLIDO_MATERNO;
 				}
 			}
 		}
-		if(!empty($dataPost['MUNICIPIOID'])){
-			foreach ($municipio as $index => $dato){
+		if (!empty($dataPost['MUNICIPIOID'])) {
+			foreach ($municipio as $index => $dato) {
 				///var_dump('info municipio', $dato);
-				if($dato->MUNICIPIOID == $dataPost['MUNICIPIOID']){
+				if ($dato->MUNICIPIOID == $dataPost['MUNICIPIOID']) {
 					$dataPost['municipioDescr'] = $dato->MUNICIPIODESCR;
 				}
 			}
 		}
-		
-		
+
+
 		$dataView = (object)array();
 		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 		$dataView->municipios = $municipio;
@@ -1231,12 +1231,12 @@ class ReportesController extends BaseController
 		$dataView->tiposOrden = (object)$tiposOrden;
 		$dataView->dataOrdenes = $documentos;
 		$dataView->filterParams = (object)$dataPost;
-		
+
 		$this->_loadView('Registro CONAVIM', 'registro_conavim', '', $dataView, 'registro_conavim');
-		
 	}
 
-	public function createOrdenXlsx(){
+	public function createOrdenXlsx()
+	{
 		$dataPost = [
 			'MUNICIPIOID' => $this->request->getPost('MUNICIPIOID'),
 			'AGENTEATENCIONID' => $this->request->getPost('AGENTEATENCIONID'),
@@ -1384,17 +1384,17 @@ class ReportesController extends BaseController
 		foreach ($documentos as $index => $orden) {
 			$this->separarExpID($orden->EXPEDIENTEID);
 
-			 
+
 			$sheet->setCellValue('A1', "CENTRO TELEFÓNICO Y EN LÍNEA DE ATENCIÓN Y ORIENTACIÓN TEMPRANA");
 			$sheet->setCellValue('A2', "REGISTRO ORDENES DE PROTECCIÓN");
 
-			
-			$sheet->setCellValue('A' . $row, $orden->FOLIOID );
+
+			$sheet->setCellValue('A' . $row, $orden->FOLIOID);
 			$sheet->setCellValue('B' . $row, $this->formatFecha($orden->FECHAFIRMA));
 			$sheet->setCellValue('C' . $row, $this->separarExpID($orden->EXPEDIENTEID));
 			$sheet->setCellValue('D' . $row, 'CENTRO DE DENUNCIA TECNÓLOGICA');
 			$sheet->setCellValue('E' . $row,  $orden->MUNICIPIODESCR);
-			$sheet->setCellValue('F' . $row,  $orden->NOMBRE_MP.' '.$orden->APATERNO_MP.' '.$orden->AMATERNO_MP);
+			$sheet->setCellValue('F' . $row,  $orden->NOMBRE_MP . ' ' . $orden->APATERNO_MP . ' ' . $orden->AMATERNO_MP);
 			$sheet->setCellValue('G' . $row,  $orden->HECHODELITO);
 			$sheet->setCellValue('H' . $row,  $orden->NOMBRE);
 			$sheet->setCellValue('I' . $row,  $orden->PRIMERAPELLIDO);
@@ -1441,7 +1441,6 @@ class ReportesController extends BaseController
 		header('Content-Disposition: attachment; filename="reporte_conavim_' . session('NOMBRE') . '.xlsx"');
 		header('Cache-Control: max-age=0');
 		$writer->save("php://output");
-
 	}
 
 	private function _curlPost($endpoint, $data)
@@ -1485,19 +1484,19 @@ class ReportesController extends BaseController
 
 		echo view("admin/dashboard/reportes/$view", $data2);
 	}
-	
+
 	private function permisos($permiso)
 	{
 		return in_array($permiso, session('permisos'));
 	}
 
-	public function separarExpID($expId){
+	public function separarExpID($expId)
+	{
 		$array = str_split($expId);
-		return $array[2].$array[4].$array[5].'-'.$array[6].$array[7].$array[8].$array[9].'-'.$array[10].$array[11].$array[12].$array[13].$array[14];
+		return $array[2] . $array[4] . $array[5] . '-' . $array[6] . $array[7] . $array[8] . $array[9] . '-' . $array[10] . $array[11] . $array[12] . $array[13] . $array[14];
 	}
-	public function formatFecha($date){
+	public function formatFecha($date)
+	{
 		return date("d/m/Y", strtotime($date));
 	}
-
-
 }

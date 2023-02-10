@@ -131,6 +131,10 @@ use PHPRtfLite;
 use PHPRtfLite_Font;
 use PHPRtfLite_ParFormat;
 
+use Aws\S3\S3Client;
+use FFMpeg\FFMpeg;
+use FFMpeg\FFProbe;
+
 class DashboardController extends BaseController
 {
 
@@ -3411,7 +3415,43 @@ class DashboardController extends BaseController
 		// return $result;
 		return json_decode($result);
 	}
+	public function getTimeVideo(){
+		// $video = $this->request->getPost('name_video');
 
+		$s3 = new S3Client([
+			'version' => 'latest',
+			'region'  => 'us-east-1',
+			'credentials' => [
+				'key'    => 'your-access-key-id',
+				'secret' => 'your-secret-access-key',
+			],
+		]);
+
+		// $s3 = new S3Client([
+		// 	'version' => 'latest',
+		// 	'region'  => 'us-east-1',
+		// ]);
+		
+		$bucket = 'https://fgebc-records.s3.amazonaws.com/';
+		$key = 'pnx_46_b607792e2c7f837ac04ee95cc607e528_2023-01-26-15-08-07.mp4';
+
+		$result = $s3->getObject(array(
+			'Bucket' => $bucket,
+			'Key'    => $key
+		));
+
+		var_dump($result['Body']);exit;
+
+		$content = $result['Body'];
+
+		$ffmpeg = FFMpeg::create();
+
+		$video = $ffmpeg->open($content);
+		// $duration = $video->getDuration();
+
+		// return json_encode(['tiempo' => $duration]);
+		
+	}
 	public function getVideoLink()
 	{
 		$folio = $this->request->getPost('folio');
@@ -3629,6 +3669,8 @@ class DashboardController extends BaseController
 				'HECHONUMEROCASAINT' => $this->request->getPost('interior_delito'),
 				'HECHONARRACION' => $this->request->getPost('narracion_delito'),
 				'HECHODELITO' => $this->request->getPost('delito_delito'),
+				'HECHOCOORDENADAX'=> $this->request->getPost('longitud') !='-117.015543' ?$this->request->getPost('longitud') : NULL,
+				'HECHOCOORDENADAY'=> $this->request->getPost('latitud') !='32.521036' ? $this->request->getPost('latitud') : NULL,
 			);
 
 			if ($dataFolio['HECHOCOLONIAID'] == '0') {

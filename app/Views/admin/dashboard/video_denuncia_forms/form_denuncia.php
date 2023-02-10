@@ -66,29 +66,34 @@
 		<label for="narracion_delito" class="form-label font-weight-bold">Narración:</label>
 		<textarea type="text" class="form-control" id="narracion_delito" name="narracion_delito" rows="5" maxlength="1000" required></textarea>
 	</div>
+	<div class="col-12 mb-3" id="map_denuncia" name="map_denuncia">
+	</div>
+	<input type="text" class="form-control d-none" id="latitud_denuncia" name="latitud_denuncia">
+
+	<input type="text" class="form-control d-none" id="longitud_denuncia" name="longitud_denuncia">
 	<div class="col-12 mb-3 text-center">
 		<button type="submit" class="btn btn-primary font-weight-bold">ACTUALIZAR HECHO</button>
 	</div>
 </form>
 
 <script>
-	(function () {
-  'use strict'
+	(function() {
+		'use strict'
 
-  // Fetch all the forms we want to apply custom Bootstrap validation styles to
-  var forms = document.querySelectorAll('.needs-validation')
+		// Fetch all the forms we want to apply custom Bootstrap validation styles to
+		var forms = document.querySelectorAll('.needs-validation')
 
-  // Loop over them and prevent submission
-  Array.prototype.slice.call(forms)
-    .forEach(function (form) {
-      form.addEventListener('submit', function (event) {
-        if (!form.checkValidity()) {
-          event.preventDefault()
-          event.stopPropagation()
-        }
+		// Loop over them and prevent submission
+		Array.prototype.slice.call(forms)
+			.forEach(function(form) {
+				form.addEventListener('submit', function(event) {
+					if (!form.checkValidity()) {
+						event.preventDefault()
+						event.stopPropagation()
+					}
 
-        form.classList.add('was-validated')
-      }, false)
-    })
-})()
+					form.classList.add('was-validated')
+				}, false)
+			})
+	})()
 </script>

@@ -198,6 +198,9 @@
 
 
 	var respuesta;
+	let map, infoWindow;
+	let marker = null;
+	let current = null;
 
 	function startTime() {
 		var today = new Date();
@@ -1075,6 +1078,14 @@
 					//DENUNCIA
 					document.querySelector('#delito_delito').value = folio.HECHODELITO;
 					document.querySelector('#municipio_delito').value = folio.HECHOMUNICIPIOID ? folio.HECHOMUNICIPIOID : '';
+					let mapa_denuncia = document.querySelector('#map_denuncia');
+					mapa_denuncia.style.width = '100%';
+					mapa_denuncia.style.height = '400px';
+					if (folio.HECHOCOORDENADAX != null && folio.HECHOCOORDENADAY != null) {
+						initMap(folio.HECHOCOORDENADAY, folio.HECHOCOORDENADAX);
+					}else{
+						initMap(32.521036, -117.015543)
+					}
 					if (folio.HECHOLOCALIDADID) {
 						let data = {
 							'estado_id': 2,
@@ -3191,6 +3202,9 @@
 					'fecha_delito': document.querySelector('#fecha_delito').value,
 					'hora_delito': document.querySelector('#hora_delito').value,
 					'narracion_delito': document.querySelector('#narracion_delito').value,
+					'latitud': document.querySelector('#latitud_denuncia').value,
+					'longitud': document.querySelector('#longitud_denuncia').value
+
 				};
 				$.ajax({
 					data: data,
@@ -5251,39 +5265,39 @@
 							console.error(textStatus);
 						}
 					});
-				}else{
-				const data = {
-					'folio': document.querySelector('#input_folio_atencion').value,
-					'expediente': document.querySelector('#input_expediente').value,
-					'year': document.querySelector('#year_select').value,
-					'titulo': tipoPlantilla,
-					'victima': victima,
-					'imputado': imputado,
-				};
-				$.ajax({
-					method: 'POST',
-					url: "<?= base_url('/data/get-plantilla') ?>",
-					data: data,
-					dataType: 'JSON',
-					success: function(response) {
-						if (response.status == 1) {
-							const plantilla = response.plantilla;
-							quill.root.innerHTML = plantilla.PLACEHOLDER;
-							document.querySelector("#victima_modal_documento").value = '';
-							document.querySelector("#imputado_modal_documento").value = '';
-							document.getElementById("involucrados").style.display = "none";
-						} else {
-							quill.root.innerHTML = 'PLANTLLA VACÍA O CON ERROR';
-							document.querySelector("#victima_modal_documento").value = '';
-							document.querySelector("#imputado_modal_documento").value = '';
-							document.getElementById("involucrados").style.display = "none";
+				} else {
+					const data = {
+						'folio': document.querySelector('#input_folio_atencion').value,
+						'expediente': document.querySelector('#input_expediente').value,
+						'year': document.querySelector('#year_select').value,
+						'titulo': tipoPlantilla,
+						'victima': victima,
+						'imputado': imputado,
+					};
+					$.ajax({
+						method: 'POST',
+						url: "<?= base_url('/data/get-plantilla') ?>",
+						data: data,
+						dataType: 'JSON',
+						success: function(response) {
+							if (response.status == 1) {
+								const plantilla = response.plantilla;
+								quill.root.innerHTML = plantilla.PLACEHOLDER;
+								document.querySelector("#victima_modal_documento").value = '';
+								document.querySelector("#imputado_modal_documento").value = '';
+								document.getElementById("involucrados").style.display = "none";
+							} else {
+								quill.root.innerHTML = 'PLANTLLA VACÍA O CON ERROR';
+								document.querySelector("#victima_modal_documento").value = '';
+								document.querySelector("#imputado_modal_documento").value = '';
+								document.getElementById("involucrados").style.display = "none";
+							}
+						},
+						error: function(jqXHR, textStatus, errorThrown) {
+							console.error(textStatus);
 						}
-					},
-					error: function(jqXHR, textStatus, errorThrown) {
-						console.error(textStatus);
-					}
-				});
-			}
+					});
+				}
 			}
 
 
@@ -5472,6 +5486,128 @@
 			}
 		})();
 	};
+	const initMap = (coordenaday, coordenadax) => {
+		const position = {
+			lat: parseFloat(coordenaday),
+			lng: parseFloat(coordenadax)
+		};
+		const BAJACALIFORNIA_BOUNDS = {
+			north: 32.718754,
+			south: 28,
+			west: -118.407649,
+			east: -112.65424,
+			// 28,-118.407649 – 32.718754,-112.65424
+			// Check bound in https://developers-dot-devsite-v2-prod.appspot.com/maps/documentation/utils/geocoder
+		};
+		map = new google.maps.Map(document.getElementById("map_denuncia"), {
+			center: position,
+			zoom: 15,
+			gestureHandling: "cooperative",
+			// restriction: {
+			//     latLngBounds: BAJACALIFORNIA_BOUNDS,
+			//     strictBounds: false,
+			// },
+		});
+
+		google.maps.event.addListener(map, "click", (event) => {
+			addMarker(event.latLng, map, 'evento');
+		});
+
+		infoWindow = new google.maps.InfoWindow();
+
+		const locationButton = document.createElement("button");
+		locationButton.style.backgroundColor = "#fff";
+		locationButton.style.border = "2px solid #fff";
+		locationButton.style.borderRadius = "3px";
+		locationButton.style.boxShadow = "0 2px 6px rgba(0,0,0,.3)";
+		locationButton.style.color = "rgb(25,25,25)";
+		locationButton.style.cursor = "pointer";
+		locationButton.style.fontFamily = "Roboto,Arial,sans-serif";
+		locationButton.style.fontSize = "16px";
+		locationButton.style.lineHeight = "38px";
+		locationButton.style.margin = "8px 0 22px";
+		locationButton.style.padding = "0 5px";
+		locationButton.style.textAlign = "center";
+		locationButton.textContent = "Mi ubicación";
+		locationButton.title = "Clic para ir a tu ubicación actual.";
+		locationButton.type = "button";
+		locationButton.classList.add("custom-map-control-button");
+		map.controls[google.maps.ControlPosition.TOP_CENTER].push(
+			locationButton
+		);
+		addMarker(position, map, 'denuncia');
+
+		locationButton.addEventListener("click", () => {
+			currentPosition();
+		});
+	};
+	const currentPosition = () => {
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(
+				(position) => {
+					const pos = {
+						lat: position.coords.latitude,
+						lng: position.coords.longitude,
+					};
+
+					map.setCenter(pos);
+					addMarker(pos, map, 'current');
+					map.setZoom(15);
+				},
+				() => {
+					handleLocationError(true, infoWindow, map.getCenter());
+				}
+			);
+		} else {
+			handleLocationError(false, infoWindow, map.getCenter());
+		}
+	};
+
+	const handleLocationError = (browserHasGeolocation, infoWindow, pos) => {
+		infoWindow.setPosition(pos);
+		infoWindow.setContent(
+			browserHasGeolocation ?
+			"Error: The Geolocation service failed." :
+			"Error: Your browser doesn't support geolocation."
+		);
+		infoWindow.open(map);
+	};
+
+	const addMarker = (position, map, prov) => {
+
+		marker ? (marker.setMap(null), (marker = null)) : null;
+		marker = new google.maps.Marker({
+			position,
+		});
+		if (prov == 'current' || prov == 'denuncia') {
+			document.getElementById('longitud_denuncia').value = position['lng'];
+			document.getElementById('latitud_denuncia').value = position['lat'];
+
+		} else {
+			document.getElementById('longitud_denuncia').value = position;
+			let stringpos = document.getElementById('longitud_denuncia').value
+			if (typeof stringpos == 'string') {
+				stringpos = stringpos.replace('(', '');
+				stringpos = stringpos.replace(')', '');
+				stringpos = stringpos.replace(' ', '');
+
+				let arr = stringpos.split(',');
+				const positionMake = {
+					lat: arr[0],
+					lng: arr[1]
+				};
+				document.getElementById('longitud_denuncia').value = positionMake['lng'];
+				document.getElementById('latitud_denuncia').value = positionMake['lat'];
+
+			}
+		}
+
+
+		// map.setCenter(position);
+		marker.setMap(map);
+	};
+
+	window.initMap = initMap;
 </script>
 <?php include 'video_denuncia_modals/folios_atendidos_modal.php' ?>
 <?php include 'video_denuncia_modals/send_email_modal.php' ?>

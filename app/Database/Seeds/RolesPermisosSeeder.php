@@ -93,7 +93,11 @@ class RolesPermisosSeeder extends Seeder
 			array('ROLID' => '9', 'PERMISOID' => '10'),
 
 			//SECREATARIO DE ACUERDOS
+			array('ROLID' => '10', 'PERMISOID' => '2'),
+			array('ROLID' => '10', 'PERMISOID' => '3'),
 			array('ROLID' => '10', 'PERMISOID' => '7'),
+			array('ROLID' => '10', 'PERMISOID' => '9'),
+			array('ROLID' => '10', 'PERMISOID' => '10'),
 
 			//INFORMATICA
 			array('ROLID' => '11', 'PERMISOID' => '2'),

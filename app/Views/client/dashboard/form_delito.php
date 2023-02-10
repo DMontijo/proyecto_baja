@@ -23,7 +23,7 @@
 			<input class="form-check-input" type="radio" name="documentos_vehiculo" id="documentos_vehiculo" value="S" required>
 			<label class="form-check-label" for="documentos_vehiculo">SÍ</label>
 		</div>
-	
+
 
 		<div class="form-check form-check-inline d-none">
 			<input class="form-check-input" type="radio" name="documentos_vehiculo" id="documentos_vehiculo" value="O">
@@ -99,6 +99,20 @@
 			Por favor, selecciona un lugar.
 		</div>
 	</div>
+
+	<div class="col-12 mt-4 mb-4">
+		<input class="form-check-input" type="checkbox" id="check_ubi" name="check_ubi">
+		<label class="form-check-label fw-bold" for="check_ubi">
+			Ubicación exacta
+		</label>
+		<input type="text" class="form-control d-none" id="latitud" name="latitud">
+
+		<input type="text" class="form-control d-none" id="longitud" name="longitud">
+	</div>
+	<div class="col-12 d-none" id="map" name="map">
+
+	</div>
+
 	<!-- <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="clasificacion" class="form-label fw-bold">Clasificación del lugar</label>
 		<select class="form-select" id="clasificacion" name="clasificacion">
@@ -137,6 +151,7 @@
 		<textarea class="form-control" id="descripcion_breve" name="descripcion_breve" rows="10" maxlength="1000" onkeyup="contarCaracteres(this)" required></textarea>
 		<small id="numCaracter">1000 caracteres restantes</small>
 	</div>
+
 </div>
 <script>
 	function clearSelect(select_element) {
@@ -144,6 +159,7 @@
 			select_element.remove(i);
 		}
 	}
+
 
 	document.querySelector('#municipio').addEventListener('change', (e) => {
 		let select_localidad = document.querySelector('#localidad');
@@ -275,6 +291,134 @@
 	// 		error: function(jqXHR, textStatus, errorThrown) {}
 	// 	});
 	// });
+
+	let map, infoWindow;
+	let marker = null;
+	let current = null;
+	const initMap = () => {
+		const position = {
+			lat: 32.521036,
+			lng: -117.015543
+		};
+		const BAJACALIFORNIA_BOUNDS = {
+			north: 32.718754,
+			south: 28,
+			west: -118.407649,
+			east: -112.65424,
+			// 28,-118.407649 – 32.718754,-112.65424
+			// Check bound in https://developers-dot-devsite-v2-prod.appspot.com/maps/documentation/utils/geocoder
+		};
+		map = new google.maps.Map(document.getElementById("map"), {
+			center: position,
+			zoom: 10,
+			gestureHandling: "cooperative",
+			// restriction: {
+			//     latLngBounds: BAJACALIFORNIA_BOUNDS,
+			//     strictBounds: false,
+			// },
+		});
+
+		google.maps.event.addListener(map, "click", (event) => {
+			addMarker(event.latLng, map, 'evento');
+		});
+
+		infoWindow = new google.maps.InfoWindow();
+
+		const locationButton = document.createElement("button");
+		locationButton.style.backgroundColor = "#fff";
+		locationButton.style.border = "2px solid #fff";
+		locationButton.style.borderRadius = "3px";
+		locationButton.style.boxShadow = "0 2px 6px rgba(0,0,0,.3)";
+		locationButton.style.color = "rgb(25,25,25)";
+		locationButton.style.cursor = "pointer";
+		locationButton.style.fontFamily = "Roboto,Arial,sans-serif";
+		locationButton.style.fontSize = "16px";
+		locationButton.style.lineHeight = "38px";
+		locationButton.style.margin = "8px 0 22px";
+		locationButton.style.padding = "0 5px";
+		locationButton.style.textAlign = "center";
+		locationButton.textContent = "Mi ubicación";
+		locationButton.title = "Clic para ir a tu ubicación actual.";
+		locationButton.type = "button";
+		locationButton.classList.add("custom-map-control-button");
+		map.controls[google.maps.ControlPosition.TOP_CENTER].push(
+			locationButton
+		);
+
+		currentPosition();
+
+
+		locationButton.addEventListener("click", () => {
+			currentPosition();
+		});
+	};
+	const currentPosition = () => {
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(
+				(position) => {
+					const pos = {
+						lat: position.coords.latitude,
+						lng: position.coords.longitude,
+					};
+
+					map.setCenter(pos);
+					addMarker(pos, map, 'current');
+					map.setZoom(15);
+				},
+				() => {
+					handleLocationError(true, infoWindow, map.getCenter());
+				}
+			);
+		} else {
+			handleLocationError(false, infoWindow, map.getCenter());
+		}
+	};
+
+	const handleLocationError = (browserHasGeolocation, infoWindow, pos) => {
+		infoWindow.setPosition(pos);
+		infoWindow.setContent(
+			browserHasGeolocation ?
+			"Error: The Geolocation service failed." :
+			"Error: Your browser doesn't support geolocation."
+		);
+		infoWindow.open(map);
+	};
+
+	const addMarker = (position, map, prov) => {
+
+		marker ? (marker.setMap(null), (marker = null)) : null;
+		marker = new google.maps.Marker({
+			position,
+		});
+		if (prov == 'current') {
+			document.getElementById('longitud').value = position['lng'];
+			document.getElementById('latitud').value = position['lat'];
+
+		} else {
+			document.getElementById('longitud').value = position;
+			let stringpos = document.getElementById('longitud').value
+			if (typeof stringpos == 'string') {
+				stringpos = stringpos.replace('(', '');
+				stringpos = stringpos.replace(')', '');
+				stringpos = stringpos.replace(' ', '');
+
+				let arr = stringpos.split(',');
+				const positionMake = {
+					lat: arr[0],
+					lng: arr[1]
+				};
+				document.getElementById('longitud').value = positionMake['lng'];
+				document.getElementById('latitud').value = positionMake['lat'];
+
+			}
+		}
+
+
+		// map.setCenter(position);
+		marker.setMap(map);
+	};
+
+	window.initMap = initMap;
 
 	function contarCaracteres(obj) {
 		var maxLength = 1000;

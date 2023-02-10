@@ -118,7 +118,23 @@
 	var checkML_menor = document.getElementById('checkML_menor');
 	var checkML_imputado = document.getElementById('checkML_imputado');
 	var checkML_des = document.getElementById('checkML_des');
+	var check_ubi = document.getElementById('check_ubi');
+	check_ubi.addEventListener('click', function() {
+		let mapa = document.querySelector('#map');
 
+		if (check_ubi.checked) {
+			mapa.classList.remove('d-none');
+			mapa.style.width = '100%';
+			mapa.style.height = '400px';
+			document.querySelector('#check_ubi').value = "on";
+
+		} else {
+			mapa.classList.add('d-none');
+			document.querySelector('#check_ubi').value = "off";
+
+
+		}
+	});
 	checkML_menor.addEventListener('click', function() {
 		if (checkML_menor.checked) {
 			document.getElementById('lblExterior_menor').innerHTML = "Manzana";
@@ -307,7 +323,7 @@
 				document.querySelector('#nacionalidad_menor').setAttribute('required', true);
 				document.querySelector('#estado_origen_menor').setAttribute('required', true);
 				document.querySelector('#municipio_origen_menor').setAttribute('required', true);
-				
+
 
 				let radiosSexoMenor = document.querySelectorAll('input[name="sexo_menor"]');
 				radiosSexoMenor.forEach((radio) => {
