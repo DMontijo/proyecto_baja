@@ -234,6 +234,7 @@ $routes->group('data', function ($routes) {
 	$routes->post('get-video-link', 'admin/DashboardController::getVideoLink');
 	$routes->post('get-link-from-call', 'admin/DashboardController::getLinkFromCall');
 	$routes->post('get-active-users', 'admin/DashboardController::getActiveUsers');
+	$routes->post('get-duration-video', 'admin/DashboardController::getTimeVideo');
 
 	//VEHÍCULOS
 	$routes->post('get-marca-by-dist', 'client/DashboardController::getMarcaByDist');
@@ -307,8 +308,6 @@ $routes->group('data', function ($routes) {
 
 	//RAC
 	$routes->post('get-modulos', 'admin/DashboardController::getModulos');
-
-
 });
 
 

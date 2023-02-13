@@ -134,6 +134,8 @@ use PHPRtfLite_ParFormat;
 use Aws\S3\S3Client;
 use FFMpeg\FFMpeg;
 use FFMpeg\FFProbe;
+use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\InflateStream;
 
 class DashboardController extends BaseController
 {
@@ -3415,42 +3417,65 @@ class DashboardController extends BaseController
 		// return $result;
 		return json_decode($result);
 	}
-	public function getTimeVideo(){
+	public function getTimeVideo()
+	{
 		// $video = $this->request->getPost('name_video');
 
 		$s3 = new S3Client([
 			'version' => 'latest',
 			'region'  => 'us-east-1',
 			'credentials' => [
-				'key'    => 'your-access-key-id',
-				'secret' => 'your-secret-access-key',
+				'key'    => 'AKIA4VSIIBT2MZIW5HBN',
+				'secret' => '4GoevVq5t8nREWNP79ouZkFocGrWi0b6JTl7rV13',
 			],
 		]);
+		// $s3->listBuckets()
 
-		// $s3 = new S3Client([
-		// 	'version' => 'latest',
-		// 	'region'  => 'us-east-1',
-		// ]);
-		
-		$bucket = 'https://fgebc-records.s3.amazonaws.com/';
+		$bucket = 'fgebc-records';
 		$key = 'pnx_46_b607792e2c7f837ac04ee95cc607e528_2023-01-26-15-08-07.mp4';
 
 		$result = $s3->getObject(array(
 			'Bucket' => $bucket,
-			'Key'    => $key
+			'Key'    => $key,
+			'SaveAs' => FCPATH . '/tmp/video.mp4',
+
 		));
 
-		var_dump($result['Body']);exit;
 
 		$content = $result['Body'];
 
-		$ffmpeg = FFMpeg::create();
 
-		$video = $ffmpeg->open($content);
-		// $duration = $video->getDuration();
+		$ffprobe = FFProbe::create([
+			'ffmpeg.binaries'  => 'C:/ffmpeg/bin/ffmpeg.exe', // the path to the FFMpeg binary
+			'ffprobe.binaries' => 'C:/ffmpeg/bin/ffprobe.exe', // the path to the FFProbe binary
+			'timeout'          => 3600, // the timeout for the underlying process
+			'ffmpeg.threads'   => 12,   // the number of threads that FFMpeg should use
+		]);
+		// $client = new Client();
+
+		// // Crea un stream con el contenido del video desde S3
+		// $response = $client->request('GET', $s3->getObjectUrl($bucket, $key));
+		// $stream = $response->getBody();
+
+
+		// Obtiene la duración del video
+		// $video = $ffprobe->streams($stream)->videos()->first()->get('codec_name');
+		$duration = $ffprobe
+			->streams('https://fgebc-records.s3.amazonaws.com/pnx_46_b607792e2c7f837ac04ee95cc607e528_2023-01-26-15-08-07.mp4')
+			->videos()
+			->first()
+			->get('duration');
+		var_dump($duration);
+		exit;
+		// $duration = $video->get('duration');
+
+		// $ffmpeg = FFMpeg::create();
+
+		// $video = $ffmpeg->open($content);
+		// $duration = $video->get('duration');
 
 		// return json_encode(['tiempo' => $duration]);
-		
+
 	}
 	public function getVideoLink()
 	{
@@ -3669,8 +3694,8 @@ class DashboardController extends BaseController
 				'HECHONUMEROCASAINT' => $this->request->getPost('interior_delito'),
 				'HECHONARRACION' => $this->request->getPost('narracion_delito'),
 				'HECHODELITO' => $this->request->getPost('delito_delito'),
-				'HECHOCOORDENADAX'=> $this->request->getPost('longitud') !='-117.015543' ?$this->request->getPost('longitud') : NULL,
-				'HECHOCOORDENADAY'=> $this->request->getPost('latitud') !='32.521036' ? $this->request->getPost('latitud') : NULL,
+				'HECHOCOORDENADAX' => $this->request->getPost('longitud') != '-117.015543' ? $this->request->getPost('longitud') : NULL,
+				'HECHOCOORDENADAY' => $this->request->getPost('latitud') != '32.521036' ? $this->request->getPost('latitud') : NULL,
 			);
 
 			if ($dataFolio['HECHOCOLONIAID'] == '0') {
@@ -5982,9 +6007,9 @@ class DashboardController extends BaseController
 	public function videos_expediente()
 	{
 		$data = (object) array();
-		if (session('ROLID')== 11 || session('ROLID')== 1) {
+		if (session('ROLID') == 11 || session('ROLID') == 1) {
 			$data->folio = $this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('FOLIO.TIPOEXPEDIENTEID !=', null)->where('AGENTEFIRMAID !=', null)->where('TIPODENUNCIA', 'VD')->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID', 'left')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID', 'left')->join('TIPOEXPEDIENTE', 'TIPOEXPEDIENTE.TIPOEXPEDIENTEID = FOLIO.TIPOEXPEDIENTEID', 'left')->findAll();
-		}else{
+		} else {
 			$data->folio = $this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('FOLIO.TIPOEXPEDIENTEID !=', null)->where('AGENTEFIRMAID !=', null)->where('TIPODENUNCIA', 'VD')->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID', 'left')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID', 'left')->join('TIPOEXPEDIENTE', 'TIPOEXPEDIENTE.TIPOEXPEDIENTEID = FOLIO.TIPOEXPEDIENTEID', 'left')->findAll();
 			foreach ($data->folio as $key => $value) {
 				if ($value->INSTITUCIONREMISIONMUNICIPIOID) {
@@ -5995,12 +6020,10 @@ class DashboardController extends BaseController
 				}
 				if ($value->OFICINAASIGNADOID) {
 					$data->folio = $this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('FOLIO.TIPOEXPEDIENTEID !=', null)->where('AGENTEFIRMAID !=', null)->where('TIPODENUNCIA', 'VD')->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID AND USUARIOS.MUNICIPIOID = FOLIO.MUNICIPIOASIGNADOID', 'left')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID', 'left')->join('TIPOEXPEDIENTE', 'TIPOEXPEDIENTE.TIPOEXPEDIENTEID = FOLIO.TIPOEXPEDIENTEID', 'left')->where('FOLIO.OFICINAASIGNADOID', session('OFICINAID'))->findAll();
-	
 				}
 			}
-	
 		}
-		
+
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 		$this->_loadView('Videos expediente', 'videos', '', $data, 'videos_expediente');
