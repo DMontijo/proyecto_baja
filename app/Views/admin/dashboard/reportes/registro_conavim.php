@@ -146,7 +146,7 @@
 								?>
                                     <tr>
                                         <td class="text-center font-weight-bold"><?= $orden->FOLIOID ?></td>
-                                        <td class="text-center"><?=  date("d/m/Y", strtotime($orden->FECHAFIRMA)) ?></td>
+                                        <td class="text-center"><?= $orden->FECHAFIRMA ?  date("d/m/Y", strtotime($orden->FECHAFIRMA)) : '' ?></td>
                                         <td class="text-center"><?=  $array[2].$array[4].$array[5].'-'.$array[6].$array[7].$array[8].$array[9].'-'.$array[10].$array[11].$array[12].$array[13].$array[14]?></td>
                                         <td class="text-center">CENTRO DE DENUNCIA TECNÓLOGICA</td>
                                         <td class="text-center"><?= $orden->MUNICIPIODESCR ?></td>
