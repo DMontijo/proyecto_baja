@@ -369,4 +369,31 @@ class FolioModel extends Model
 		$query = $builder->get();
 		return $query->getResult('array');
 	}
+
+	public function filtro_canalizaciones_derivaciones($bindParams){
+		
+		$sql = 'SELECT FO.FOLIOID, FO.STATUS, FO.HECHOFECHA, MU.MUNICIPIODESCR, US.NOMBRE AS NOMBRE_MP, US.APELLIDO_PATERNO AS APATERNO_MP, US.APELLIDO_MATERNO AS AMATERNO_MP, FO.HECHODELITO, FO.EXPEDIENTEID, FPS.NOMBRE, FPS.PRIMERAPELLIDO, FPS.SEGUNDOAPELLIDO
+		FROM FOLIO AS FO 
+		LEFT JOIN MUNICIPIO AS MU ON MU.MUNICIPIOID = FO.MUNICIPIOID
+		LEFT JOIN USUARIOS AS US ON US.ID = FO.AGENTEATENCIONID
+		LEFT JOIN FOLIOPERSONAFISICA AS FPS ON FPS.FOLIOID = FO.FOLIOID
+		WHERE MU.ESTADOID = 2 AND FPS.CALIDADJURIDICAID = 1';
+		
+		if(!empty($bindParams['MUNICIPIOID'])) $sql = $sql.' AND MU.MUNICIPIOID = '.$bindParams['MUNICIPIOID'];
+		if(!empty($bindParams['AGENTEATENCIONID'])) $sql = $sql.' AND US.ID = '.$bindParams['AGENTEATENCIONID'];
+		if(!empty($bindParams['SALIDA'])) $sql = $sql.' AND FO.STATUS = '. "'" . $bindParams['SALIDA'] . "'";
+		if(empty($bindParams['SALIDA'])) $sql = $sql.' AND (FO.STATUS = '. "'CANALIZADO' ".' OR FO.STATUS = '. "'DERIVADO') ";
+		
+		if(!empty($bindParams['fechaInicio']) && !empty($bindParams['fechaFin'])) $sql = $sql. ' AND FO.HECHOFECHA BETWEEN '."'".$bindParams['fechaInicio']."'".' AND '."'".$bindParams['fechaFin']."'";
+		if(!empty($bindParams['fechaInicio']) && empty($bindParams['fechaFin'])) $sql = $sql. ' AND FO.HECHOFECHA BETWEEN '."'".$bindParams['fechaInicio']."'".' AND '."'".date("Y-m-d")."'";
+		if(empty($bindParams['fechaInicio']) && !empty($bindParams['fechaFin'])) $sql = $sql. ' AND FOD.HECHOFECHA BETWEEN '."'".'2020-01-01'."'".' AND '."'".$bindParams['fechaFin']."'";
+		
+		if(!empty($bindParams['horaInicio']) && !empty($bindParams['horaFin'])) $sql = $sql. ' AND FO.HECHOHORA BETWEEN '."'".$bindParams['horaInicio']."'".' AND '."'".$bindParams['horaFin']."'";
+		if(!empty($bindParams['horaInicio']) && empty($bindParams['horaFin'])) $sql = $sql. ' AND FO.HECHOHORA BETWEEN '."'".$bindParams['horaInicio']."':00".' AND '."'".'23:59:00'."'";
+		if(empty($bindParams['horaInicio']) && !empty($bindParams['horaFin'])) $sql = $sql. ' AND FO.HECHOHORA BETWEEN '."'".'00:00:00'."'".' AND '."'".$bindParams['horaFin']."':00";
+		
+		$query = $this->db->query($sql);
+
+		return $query->getResult('object');
+	}
 }
