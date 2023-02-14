@@ -113,7 +113,7 @@
 	const canalizaciones = document.querySelector('#canalizaciones');
 
 	tipoSalida.addEventListener('change', (e) => {
-		
+
 		const notas_caso_salida = document.querySelector('#notas_caso_salida');
 		const notas_caso_mp = document.querySelector('#notas_mp');
 		notas_caso_salida.value = notas_caso_mp.value;
@@ -165,9 +165,9 @@
 				}).fail(function(jqXHR, textStatus) {
 					clearSelect(select_canalizacion);
 				});
-			// }
+				// }
 			});
-	
+
 		} else {
 			canalizaciones_container.classList.add('d-none');
 			municipio_empleado.value = '';
@@ -196,7 +196,7 @@
 					dataType: "json",
 				}).done(function(response) {
 					clearSelect(select_derivacion);
-					 let derivacion = response;
+					let derivacion = response;
 
 					derivacion.forEach(derivacion => {
 						var option = document.createElement("option");
@@ -207,9 +207,9 @@
 				}).fail(function(jqXHR, textStatus) {
 					clearSelect(select_derivacion);
 				});
-			// }
+				// }
 			});
-	
+
 		} else {
 			derivaciones_container.classList.add('d-none');
 			municipio_empleado.value = '';
@@ -230,7 +230,7 @@
 			let descripcion = document.querySelector('#notas_caso_salida').value;
 
 			if (tipoSalida.value == 'DERIVADO' || tipoSalida.value == 'CANALIZADO') {
-				if (derivaciones.value == '' && tipoSalida.value == 'DERIVADO' || canalizaciones.value == '' &&  tipoSalida.value == 'CANALIZADO' ) {
+				if (derivaciones.value == '' && tipoSalida.value == 'DERIVADO' || canalizaciones.value == '' && tipoSalida.value == 'CANALIZADO') {
 					Swal.fire({
 						icon: 'error',
 						text: 'No se puede derivar ó canalizar sin una oficina.',
@@ -238,14 +238,14 @@
 					});
 					btnFinalizar.disabled = false;
 
-				}else {
+				} else {
 					data = {
 						'folio': inputFolio.value,
 						'year': year_select.value,
 						'status': salida,
 						'motivo': descripcion,
 						'institutomunicipio': municipio_empleado.value,
-						'institutoremision': derivaciones.value != '' && tipoSalida.value == 'DERIVADO'  ? derivaciones.value: canalizaciones.value,
+						'institutoremision': derivaciones.value != '' && tipoSalida.value == 'DERIVADO' ? derivaciones.value : canalizaciones.value,
 					}
 				}
 
@@ -302,7 +302,10 @@
 							expediente_modal_correo.value = data.expediente;
 							year_modal_correo.value = year;
 							card6.classList.remove('d-none');
-							card7.classList.remove('d-none');
+							<?php if (session('ROLID') != 4) { ?>
+
+								card7.classList.remove('d-none');
+							<?php } ?>
 							card8.classList.remove('d-none');
 							card11.classList.remove('d-none');
 
@@ -424,7 +427,10 @@
 								expediente_modal_correo.value = data.expediente;
 								year_modal_correo.value = year;
 								card6.classList.remove('d-none');
+								<?php if (session('ROLID') != 4) { ?>
+
 								card7.classList.remove('d-none');
+							<?php }?>
 								card8.classList.remove('d-none');
 								card9.classList.remove('d-none');
 								card10.classList.remove('d-none');
