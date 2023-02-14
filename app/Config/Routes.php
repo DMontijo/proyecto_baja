@@ -133,12 +133,15 @@ $routes->group('admin', function ($routes) {
 		$routes->post('reporte_llamadas', 'admin/ReportesController::postReporteLlamadas');
 		$routes->get('registro_conavim', 'admin/ReportesController::getRegistroConavim');
 		$routes->post('registro_conavim', 'admin/ReportesController::postRegistroConavim');
+		$routes->get('registro_candev', 'admin/ReportesController::getRegistroCanDev');
+		$routes->post('registro_candev', 'admin/ReportesController::postRegistroCanDev');
 
 		$routes->post('generar_excel_folios', 'admin/ReportesController::createFoliosXlsx');
 		$routes->post('generar_excel_constancias', 'admin/ReportesController::createConstanciasXlsx');
 		$routes->post('generar_excel_registro_diario', 'admin/ReportesController::createRegistroDiarioXlsx');
 		$routes->post('generar_excel_llamadas', 'admin/ReportesController::createLlamadasXlsx');
 		$routes->post('generar_excel_conavim', 'admin/ReportesController::createOrdenXlsx');
+		$routes->post('generar_excel_canadev', 'admin/ReportesController::createCanaDevXlsx');
 
 		$routes->get('documentos', 'admin/DocumentosController::index');
 		$routes->post('documentos', 'admin/DocumentosController::postDocumentos');
