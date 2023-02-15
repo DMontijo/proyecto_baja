@@ -736,8 +736,8 @@ class ReportesController extends BaseController
 			$data['token'] = '198429b7cc8a2a5733d97bc13153227dd5017555';
 			$data['a'] = 'getRepo';
 			$data['folio'] = $folio->ANO . '-' . $folio->FOLIOID;
-			$data['min'] = !empty($this->request->getPost('min')) ? $this->request->getPost('min') : '2000-01-01';
-			$data['max'] = !empty($this->request->getPost('max')) ? $this->request->getPost('max') : date("Y-m-d");
+			$data['min'] = '2022-01-01';
+			$data['max'] =date('Y-m-d');
 			$duracion = '';
 			$inicio = '';
 			$fin = '';
