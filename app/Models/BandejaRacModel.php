@@ -9,5 +9,5 @@ class BandejaRacModel extends Model
     protected $table            = 'BANDEJARAC';
     
     
-    protected $allowedFields    = ['FOLIOID','ANO', 'EXPEDIENTEID','MODULOID','MEDIADORID','TIPOPROCEDIMIENTOID'];
+    protected $allowedFields    = ['FOLIOID','ANO', 'EXPEDIENTEID','MODULOID','MODULODESCR','MEDIADORID','TIPOPROCEDIMIENTOID'];
 }

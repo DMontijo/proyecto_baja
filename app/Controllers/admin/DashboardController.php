@@ -1439,6 +1439,7 @@ class DashboardController extends BaseController
 					'EXPEDIENTEID' => $expediente,
 					'TIPOPROCEDIMIENTOID' => $procedimiento,
 					'MODULOID' => $getMediador->data->OFICINA_MP_MEDIADOR,
+					'MODULODESCR'=>$getMediador->data->AREA_MP_MEDIADOR_DESCR,
 					'MEDIADORID' => $getMediador->data->EMPLEADOID_MEDIADOR
 				);
 
