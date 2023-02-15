@@ -311,6 +311,9 @@ $routes->group('data', function ($routes) {
 
 	//RAC
 	$routes->post('get-modulos', 'admin/DashboardController::getModulos');
+
+	$routes->post('get-documentos-by-folio', 'admin/DashboardController::getDocumentosByFolio');
+
 });
 
 

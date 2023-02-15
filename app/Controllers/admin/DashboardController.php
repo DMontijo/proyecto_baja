@@ -411,6 +411,7 @@ class DashboardController extends BaseController
 			$data->cantidad_derivados = count($this->_folioModel->asObject()->where('STATUS', 'DERIVADO')->findAll());
 			$data->cantidad_canalizados = count($this->_folioModel->asObject()->where('STATUS', 'CANALIZADO')->findAll());
 			$data->cantidad_expedientes = count($this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('AGENTEFIRMAID !=', null)->findAll());
+			$data->cantidad_documentos = $this->_folioDocModel->countFoliosAsignados(session('ID'));
 			$data->cantidad_expedientes_no_firmados = count($this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('AGENTEFIRMAID', null)->findAll());
 			$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 		} else {
@@ -420,6 +421,7 @@ class DashboardController extends BaseController
 			$data->cantidad_canalizados = count($this->_folioModel->asObject()->where('AGENTEATENCIONID', session('ID'))->where('STATUS', 'CANALIZADO')->findAll());
 			$data->cantidad_expedientes = count($this->_folioModel->asObject()->where('AGENTEATENCIONID', session('ID'))->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('AGENTEFIRMAID !=', null)->findAll());
 			$data->cantidad_expedientes_no_firmados = count($this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('AGENTEFIRMAID', null)->findAll());
+			$data->cantidad_documentos = $this->_folioDocModel->countFoliosAsignados(session('ID'));
 			$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 		}
 		$this->_loadView('Principal', 'dashboard', '', $data, 'index');
@@ -1612,7 +1614,8 @@ class DashboardController extends BaseController
 		$data->plantillas = $this->_plantillasModel->asObject()->where('TITULO !=', 'CONSTANCIA DE EXTRAVIO')->findAll();
 		$data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->like('TIPOEXPEDIENTECLAVE', 'NUC')->orLike('TIPOEXPEDIENTECLAVE', 'NAC')->orLike('TIPOEXPEDIENTECLAVE', 'RAC')->findAll();
 		$data->situacionVehiculo = $this->_situacionVehiculoModel->asObject()->findAll();
-
+		$data->empleados = $this->_usuariosModel->asObject()->orderBy('NOMBRE', 'ASC')->where('ROLID', 3)->findAll();
+		$data->folioDoc = $this->_folioDocModel->asObject()->where('FOLIOID', $data->folio)->first();
 		$data->distribuidorVehiculo = $this->_vehiculoDistribuidorModel->asObject()->findAll();
 		$data->marcaVehiculo = $this->_vehiculoMarcaModel->asObject()->findAll();
 		$data->lineaVehiculo = $this->_vehiculoModeloModel->asObject()->findAll();
@@ -1704,6 +1707,18 @@ class DashboardController extends BaseController
 		}
 	}
 
+	public function getDocumentosByFolio()
+	{
+		$folio = $this->request->getPost('folio');
+		$year = $this->request->getPost('year');
+
+		$data = $this->_folioDocModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('AGENTE_ASIGNADO !=', null)->first();
+		if ($data) {
+			return json_encode(['status' => 1, 'documentos' => $data]);
+		} else {
+			return json_encode(['status' => 0]);
+		}
+	}
 
 	public function getDerivacionByMunicipio()
 	{
@@ -5778,7 +5793,6 @@ class DashboardController extends BaseController
 
 	public function insertFolioDoc()
 	{
-
 		$expediente = $this->request->getPost('expediente');
 		$folio = $this->request->getPost('folio');
 		$year = $this->request->getPost('year');
@@ -5812,24 +5826,51 @@ class DashboardController extends BaseController
 					break;
 			}
 
+			$documentos_folio = $this->_folioDocModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('AGENTE_ASIGNADO !=', null)->first();
+			if ($documentos_folio) {
+				$dataFolioDoc = array(
+					'FOLIOID' => $folio,
+					'NUMEROEXPEDIENTE' => $expediente ? $expediente : null,
+					'ANO' => $year,
+					'PLACEHOLDER' => $placeholder,
+					'STATUS' => 'ABIERTO',
+					'MUNICIPIOID' => $folioRow['MUNICIPIOASIGNADOID'],
+					'ESTADOID' => 2,
+					'TIPODOC' => $this->request->getPost('titulo'),
+					'STATUSENVIO' => $this->request->getPost('statusenvio'),
+					'ENVIADO' => 'N',
+					'CLASIFICACIONDOCTOID' => $clasificaciondoctoid,
+					'AGENTE_ASIGNADO' =>  $documentos_folio->AGENTE_ASIGNADO
+				);
 
-			$dataFolioDoc = array(
-				'FOLIOID' => $folio,
-				'NUMEROEXPEDIENTE' => $expediente ? $expediente : null,
-				'ANO' => $year,
-				'PLACEHOLDER' => $placeholder,
-				'STATUS' => 'ABIERTO',
-				'MUNICIPIOID' => $folioRow['MUNICIPIOASIGNADOID'],
-				'ESTADOID' => 2,
-				'TIPODOC' => $this->request->getPost('titulo'),
-				'STATUSENVIO' => $this->request->getPost('statusenvio'),
-				'ENVIADO' => 'N',
-				'CLASIFICACIONDOCTOID' => $clasificaciondoctoid
-			);
-
-			$foliodoc = $this->_folioDoc($dataFolioDoc, $expediente ? $expediente : null, $year);
+				$foliodoc = $this->_folioDoc($dataFolioDoc, $expediente ? $expediente : null, $year);
+			}else{
+				$dataFolioDoc = array(
+					'FOLIOID' => $folio,
+					'NUMEROEXPEDIENTE' => $expediente ? $expediente : null,
+					'ANO' => $year,
+					'PLACEHOLDER' => $placeholder,
+					'STATUS' => 'ABIERTO',
+					'MUNICIPIOID' => $folioRow['MUNICIPIOASIGNADOID'],
+					'ESTADOID' => 2,
+					'TIPODOC' => $this->request->getPost('titulo'),
+					'STATUSENVIO' => $this->request->getPost('statusenvio'),
+					'ENVIADO' => 'N',
+					'CLASIFICACIONDOCTOID' => $clasificaciondoctoid,
+					'AGENTE_ASIGNADO' =>  $this->request->getPost('agente_asignado') != '' ?  $this->request->getPost('agente_asignado') : null
+				);
+	
+				$foliodoc = $this->_folioDoc($dataFolioDoc, $expediente ? $expediente : null, $year);
+			}
+			
 
 			if ($foliodoc) {
+				if (session('ROLID') == 4) {
+					$dataFolio = array(
+						'AGENTEFIRMAID' => $this->request->getPost('agente_asignado'),
+					);
+					$update = $this->_folioModel->set($dataFolio)->where('FOLIOID', $folio)->where('ANO', $year)->update();
+				}
 				$documentos = $this->_folioDocModel->get_by_folio($folio, $year);
 
 				return json_encode(['status' => 1, 'documentos' => $documentos]);

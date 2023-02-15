@@ -1083,7 +1083,7 @@
 					mapa_denuncia.style.height = '400px';
 					if (folio.HECHOCOORDENADAX != null && folio.HECHOCOORDENADAY != null) {
 						initMap(folio.HECHOCOORDENADAY, folio.HECHOCOORDENADAX);
-					}else{
+					} else {
 						initMap(32.521036, -117.015543)
 					}
 					if (folio.HECHOLOCALIDADID) {
@@ -2950,7 +2950,34 @@
 			let select_imputado_documento = document.querySelector("#imputado_modal_documento");
 			let select_uma = document.querySelector("#uma_select");
 
+		
 			$('#documentos_modal_wyswyg').on('show.bs.modal', function(event) {
+				<?php if (session('ROLID') == 4) { ?>
+				const data = {
+					'folio': document.querySelector('#input_folio_atencion').value,
+					'year': document.querySelector('#year_select').value,
+				};
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/get-documentos-by-folio') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						console.log(response);
+						if (response.status == 1) {
+							Swal.fire({
+							icon: 'warning',
+							text: 'Este folio, ya tiene agente asignado para firmar. Se autoasignará al mismo agente.',
+							confirmButtonColor: '#bf9b55',
+						});
+						} else {
+							const div_usuarios = document.querySelector('#usuarios');
+							div_usuarios.classList.remove('d-none');
+						}
+
+					}
+				});
+			<?php } ?>
 				$("#documentos_modal_wyswyg select").val("");
 				document.getElementById("involucrados").style.display = "none";
 				// quill.root.innerHTML = '';
@@ -5327,7 +5354,8 @@
 									'year': document.querySelector('#year_select').value,
 									'placeholder': contenido,
 									'titulo': tipoPlantilla,
-									'statusenvio': 0
+									'statusenvio': 0,
+									'agente_asignado': document.querySelector('#empleado_asignado').value,
 								};
 								insertarDoc(data);
 							} else {
@@ -5336,7 +5364,9 @@
 									'year': document.querySelector('#year_select').value,
 									'placeholder': contenido,
 									'titulo': tipoPlantilla,
-									'statusenvio': 0
+									'statusenvio': 0,
+									'agente_asignado': document.querySelector('#empleado_asignado').value,
+
 								};
 								insertarDoc(data);
 							}
@@ -5367,7 +5397,9 @@
 									// 'oficina': document.querySelector('#oficina_empleado').value,
 									// 'empleado': document.querySelector('#empleado').value,
 									'titulo': tipoPlantilla,
-									'statusenvio': 1
+									'statusenvio': 1,
+									'agente_asignado': document.querySelector('#empleado_asignado').value,
+
 								};
 								insertarDoc(data);
 							} else if (document.querySelector('#input_expediente').value == '') {
@@ -5378,7 +5410,9 @@
 									'placeholder': contenido,
 									'municipio': document.querySelector('#municipio_empleado').value,
 									'titulo': tipoPlantilla,
-									'statusenvio': 1
+									'statusenvio': 1,
+									'agente_asignado': document.querySelector('#empleado_asignado').value,
+
 								};
 								insertarDoc(data);
 
@@ -5396,7 +5430,9 @@
 									// 'oficina': document.querySelector('#oficina_empleado').value,
 									// 'empleado': document.querySelector('#empleado').value,
 									'titulo': tipoPlantilla,
-									'statusenvio': 0
+									'statusenvio': 0,
+									'agente_asignado': document.querySelector('#empleado_asignado').value,
+
 								};
 								insertarDoc(data);
 							} else if (document.querySelector('#input_expediente').value == '') {
@@ -5406,7 +5442,9 @@
 									'placeholder': contenido,
 									'municipio': document.querySelector('#municipio_empleado').value,
 									'titulo': tipoPlantilla,
-									'statusenvio': 0
+									'statusenvio': 0,
+									'agente_asignado': document.querySelector('#empleado_asignado').value,
+
 								};
 								insertarDoc(data);
 							}

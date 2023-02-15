@@ -106,8 +106,8 @@ class FolioModel extends Model
 
 		$fechaInicio = isset($obj['fechaInicio']) ? $obj['fechaInicio'] : '';
 		$fechaFin = isset($obj['fechaFin']) ? $obj['fechaFin'] : '';
-		$horaInicio = isset($obj['horaInicio']) ? $obj['horaInicio'] : '';
-		$horaFin = isset($obj['horaFin']) ? $obj['horaFin'] : '';
+		$horaInicio = isset($obj['horaInicio']) ? $obj['horaInicio'] : null;
+		$horaFin = isset($obj['horaFin']) ? $obj['horaFin'] : null;
 
 		if (isset($obj['fechaInicio'])) {
 			unset($obj['fechaInicio']);

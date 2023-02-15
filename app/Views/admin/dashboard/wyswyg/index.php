@@ -7,9 +7,8 @@
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-12 text-center mb-4">
-				<h1 class="mb-4 text-center font-weight-bold">DOCUMENTOS </h1>
+				<h1 class="mb-4 text-center font-weight-bold">FOLIOS ASIGNADOS PARAR FIRMA</h1>
 			</div>
-
 			<div class="col-12">
 				<div class="card shadow border-0 p-0">
 					<div class="card-body">
@@ -33,9 +32,9 @@
 											</div>
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
 												<label for="agente_registro" class="form-label font-weight-bold">Agente:</label>
-												<select class="form-control" id="agente_registro" name="agente_registro" required>
+												<select class="form-control" id="agente_registro" name="agente_registro" required disabled>
 													<?php foreach ($body_data->empleados as $index => $empleado) { ?>
-														<option <?= isset($body_data->filterParams->AGENTEID) ? ($body_data->filterParams->AGENTEID == $empleado->ID ? 'selected' : '') : null ?> value="<?= $empleado->ID ?>"> <?= $empleado->NOMBRE . ' ' . $empleado->APELLIDO_PATERNO . ' ' . $empleado->APELLIDO_MATERNO ?> </option>
+														<option  selected value="<?= $empleado->ID ?>"> <?= $empleado->NOMBRE . ' ' . $empleado->APELLIDO_PATERNO . ' ' . $empleado->APELLIDO_MATERNO ?> </option>
 													<?php } ?>
 												</select>
 											</div>
@@ -80,23 +79,22 @@
 									<th class="text-center">EXPEDIENTE ID</th>
 									<th class="text-center">FOLIO ID</th>
 									<th class="text-center">FECHA</th>
-									<th class="text-center">ESTADO</th>
+									<!-- <th class="text-center">ESTADO</th> -->
 									<th class="text-center"></th>
 								</tr>
 							</thead>
 							<tbody>
 
 								<?php foreach ($body_data->result as $index => $documentos) {
-									if ($documentos->EXPEDIENTEID) {
-										$arrayExpediente = str_split($documentos->EXPEDIENTEID);
+									if ($documentos->NUMEROEXPEDIENTE) {
+										$arrayExpediente = str_split($documentos->NUMEROEXPEDIENTE);
 										$expedienteid = $arrayExpediente[0] . '-' . $arrayExpediente[1] . $arrayExpediente[2] . '-' .  $arrayExpediente[3] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
 									} ?>
 									<tr>
-										<td class="text-center"><?= $documentos->EXPEDIENTEID ? $expedienteid : ''   ?></td>
+										<td class="text-center"><?= $documentos->NUMEROEXPEDIENTE ? $expedienteid : ''   ?></td>
 										<td class="text-center"><?= $documentos->FOLIOID ?></td>
 										<td class="text-center"><?= $documentos->FECHAREGISTRO ?></td>
-										<td class="text-center"><?= $documentos->STATUS ?></td>
-										<td class="text-center"><a type="button" href="<?= $documentos->EXPEDIENTEID ? base_url('/admin/dashboard/documentos_show?expediente=' . $documentos->EXPEDIENTEID . '&year=' . $documentos->ANO . '&folio=' . $documentos->FOLIOID) : base_url('/admin/dashboard/documentos_show?folio=' . $documentos->FOLIOID . '&year=' . $documentos->ANO) ?>" class="btn btn-primary text-white"><i class="fas fa-folder-open"></i> DOCUMENTOS</a></td>
+										<td class="text-center"><a type="button" href="<?= $documentos->NUMEROEXPEDIENTE ? base_url('/admin/dashboard/documentos_show?expediente=' . $documentos->NUMEROEXPEDIENTE . '&year=' . $documentos->ANO . '&folio=' . $documentos->FOLIOID) : base_url('/admin/dashboard/documentos_show?folio=' . $documentos->FOLIOID . '&year=' . $documentos->ANO) ?>" class="btn btn-primary text-white"><i class="fas fa-folder-open"></i> DOCUMENTOS</a></td>
 									</tr>
 								<?php } ?>
 							</tbody>
@@ -107,7 +105,6 @@
 		</div>
 	</div>
 </section>
-
 <?php if (session()->getFlashdata('message_error')) : ?>
 	<script>
 		Swal.fire({

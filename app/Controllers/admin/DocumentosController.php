@@ -41,6 +41,7 @@ class DocumentosController extends BaseController
 		$data = [
 			'fechaInicio' => date("Y-m-d"),
 			'fechaFin' => date("Y-m-d"),
+			'AGENTE_ASIGNADO'=> session('ID')
 		];
 
 		foreach ($data as $clave => $valor) {
@@ -48,7 +49,9 @@ class DocumentosController extends BaseController
 		}
 
 		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
-		$resultFilter = $this->_folioModel->filterDatesDocumentos($data);
+		// $resultFilter = $this->_folioModel->filterDatesDocumentos($data);
+		$resultFilter = $this->_folioDocModel->filterDatesDocumentos($data);
+
 		if (session('ROLID') == '2' || session('ROLID') == '3' || session('ROLID') == '6') {
 			$empleado = $this->_usuariosModel->asObject()->where('ID',	session('ID'))->orderBy('NOMBRE', 'ASC')->findAll();
 		} else {
@@ -68,7 +71,7 @@ class DocumentosController extends BaseController
 	{
 
 		$data = [
-			'AGENTEATENCIONID' => session('ID'),
+			'AGENTE_ASIGNADO' => session('ID'),
 			'STATUS' => $this->request->getPost('status'),
 			'EXPEDIENTEID' => $this->request->getPost('expediente'),
 			'fechaInicio' => $this->request->getPost('fechaInicio'),
@@ -88,7 +91,8 @@ class DocumentosController extends BaseController
 			];
 		}
 
-		$resultFilter = $this->_folioModel->filterDatesDocumentos($data);
+		// $resultFilter = $this->_folioModel->filterDatesDocumentos($data);
+		$resultFilter = $this->_folioDocModel->filterDatesDocumentos($data);
 
 		$empleado = $this->_usuariosModel->asObject()->where('ID',	session('ID'))->orderBy('NOMBRE', 'ASC')->findAll();
 
@@ -141,11 +145,12 @@ class DocumentosController extends BaseController
 		$data->foliodoc = $this->request->getGet('foliodoc');
 		$data->tipodoc = $this->request->getGet('tipodoc');
 		$data->year = $this->request->getGet('year');
+
 		// $data->documento = $this->_plantillasModel->asObject()->where('TITULO', $data->tipodoc)->first();
 		$data->documentos = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $data->expediente)->where('ANO', $data->year)->findAll();
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 		$data->foliorow = $this->_folioModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $data->year)->findAll();
-
+		$data->empleados = $this->_usuariosModel->asObject()->orderBy('NOMBRE', 'ASC')->where('ROLID', 3)->findAll();
 		$data->plantillas = $this->_plantillasModel->asObject()->where('TITULO !=', 'CONSTANCIA DE EXTRAVÍO')->findAll();
 
 		$data2 = [
