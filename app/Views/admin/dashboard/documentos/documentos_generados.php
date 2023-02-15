@@ -14,6 +14,10 @@
 <?php include 'app/Views/admin/dashboard/video_denuncia_modals/prueba.php' ?>
 <section class="content">
 	<div class="container-fluid">
+		<div class="col-12 text-center mb-4">
+
+			<a class="link link-primary" href="<?= base_url('admin/dashboard/documentos') ?>" role="button"><i class="fas fa-reply"></i> REGRESAR A DOCUMENTOS ASIGNADOS</a>
+		</div>
 		<div class="row">
 			<div class="col-12">
 				<button type="button" class="btn btn-primary col-12 col-sm-3 col-md-3 col-lg-4 mb-3" data-toggle="modal" id="firmarDocumento" data-target="#contrasena_modal_doc"><i class="fas fa-file-signature"></i>
@@ -303,7 +307,7 @@
 		selectPlantilla.addEventListener("change", function() {
 			if (plantilla.value == "CITATORIO") {
 				document.getElementById("div_uma").style.display = "block";
-			}else{
+			} else {
 				document.getElementById("div_uma").style.display = "none";
 
 			}
@@ -335,32 +339,32 @@
 					'titulo': tipoPlantilla,
 					'victima': victima,
 					'imputado': imputado,
-					'uma':document.getElementById('uma_select').value
+					'uma': document.getElementById('uma_select').value
 
 				};
 				$.ajax({
-				method: 'POST',
-				url: "<?= base_url('/data/get-plantilla') ?>",
-				data: data,
-				dataType: 'JSON',
-				success: function(response) {
-					if (response.status == 1) {
-						const plantilla = response.plantilla;
-						quill.root.innerHTML = plantilla.PLACEHOLDER;
-						document.querySelector("#victima_modal_documento").value = '';
-						document.querySelector("#imputado_modal_documento").value = '';
-						document.getElementById("involucrados").style.display = "none";
-					} else {
-						quill.root.innerHTML = 'PLANTLLA VACÍA O CON ERROR';
-						document.querySelector("#victima_modal_documento").value = '';
-						document.querySelector("#imputado_modal_documento").value = '';
-						document.getElementById("involucrados").style.display = "none";
+					method: 'POST',
+					url: "<?= base_url('/data/get-plantilla') ?>",
+					data: data,
+					dataType: 'JSON',
+					success: function(response) {
+						if (response.status == 1) {
+							const plantilla = response.plantilla;
+							quill.root.innerHTML = plantilla.PLACEHOLDER;
+							document.querySelector("#victima_modal_documento").value = '';
+							document.querySelector("#imputado_modal_documento").value = '';
+							document.getElementById("involucrados").style.display = "none";
+						} else {
+							quill.root.innerHTML = 'PLANTLLA VACÍA O CON ERROR';
+							document.querySelector("#victima_modal_documento").value = '';
+							document.querySelector("#imputado_modal_documento").value = '';
+							document.getElementById("involucrados").style.display = "none";
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						console.error(textStatus);
 					}
-				},
-				error: function(jqXHR, textStatus, errorThrown) {
-					console.error(textStatus);
-				}
-			});
+				});
 			} else {
 				const data = {
 
@@ -372,36 +376,36 @@
 
 				};
 				$.ajax({
-				method: 'POST',
-				url: "<?= base_url('/data/get-plantilla') ?>",
-				data: data,
-				dataType: 'JSON',
-				success: function(response) {
-					if (response.status == 1) {
-						const plantilla = response.plantilla;
-						quill.root.innerHTML = plantilla.PLACEHOLDER;
-						document.querySelector("#victima_modal_documento").value = '';
-						document.querySelector("#imputado_modal_documento").value = '';
-						document.getElementById("involucrados").style.display = "none";
-						document.getElementById("div_uma").style.display = "none";
+					method: 'POST',
+					url: "<?= base_url('/data/get-plantilla') ?>",
+					data: data,
+					dataType: 'JSON',
+					success: function(response) {
+						if (response.status == 1) {
+							const plantilla = response.plantilla;
+							quill.root.innerHTML = plantilla.PLACEHOLDER;
+							document.querySelector("#victima_modal_documento").value = '';
+							document.querySelector("#imputado_modal_documento").value = '';
+							document.getElementById("involucrados").style.display = "none";
+							document.getElementById("div_uma").style.display = "none";
 
-					} else {
-						quill.root.innerHTML = 'PLANTLLA VACÍA O CON ERROR';
-						document.querySelector("#victima_modal_documento").value = '';
-						document.querySelector("#imputado_modal_documento").value = '';
-						document.getElementById("involucrados").style.display = "none";
-						document.getElementById("div_uma").style.display = "none";
+						} else {
+							quill.root.innerHTML = 'PLANTLLA VACÍA O CON ERROR';
+							document.querySelector("#victima_modal_documento").value = '';
+							document.querySelector("#imputado_modal_documento").value = '';
+							document.getElementById("involucrados").style.display = "none";
+							document.getElementById("div_uma").style.display = "none";
 
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						console.error(textStatus);
 					}
-				},
-				error: function(jqXHR, textStatus, errorThrown) {
-					console.error(textStatus);
-				}
-			});
+				});
 			}
 
 
-		
+
 		}
 		btn_guardarFolioDoc.addEventListener('click', (event) => {
 			let contenidoModificado = quill.container.firstChild.innerHTML;

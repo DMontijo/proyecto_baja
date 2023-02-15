@@ -31,6 +31,10 @@ class BANDEJARAC extends Migration
                 'type' => 'INT',
                 'constraint' => '10',
             ],
+            'MODULODESCR' => [
+                'type' => 'VARCHAR',
+                'constraint' => '255',
+            ],
             'MEDIADORID' => [
                 'type' => 'INT',
                 'constraint' => '10',

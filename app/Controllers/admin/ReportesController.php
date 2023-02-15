@@ -699,21 +699,23 @@ class ReportesController extends BaseController
 		$headers = [
 			'NO.',
 			'FECHA RECEPCIÓN',
+			'FOLIO',
 			'HORA',
-			'FOLIO WEB',
-			'TELEFÓNICA / ELECTRÓNICA',
+			'CONCLUSIÓN',
+			'DURACIÓN DE ATENCION',
+			'TIPO DE ATENCIÓN',
 			'MUNICIPIO',
 			'NOMBRE (S)',
 			'APELLIDO PATERNO',
 			'APELLIDO MATERNO',
+			'GENÉRO',
 			'TELEFONO',
 			'CORREO ELECTRÓNICO',
 			'DELITO',
 			'SERVIDOR PÚBLICO QUE ATIENDE',
-			'OBSERVACIONES CENTRO TELEFÓNICO',
-			'RESULTADO CENTRO TELEFÓNICO',
-			'EXPEDIENTE GENERADO CT',
-			'FECHA DE ASIGNACIÓN',
+			'TIPO DE EXPEDIENTE GENERADO',
+			'NO. EXPEDIENTE GENERADO',
+			'REMISIÓN',
 			'PRIORIDAD DE ATENCIÓN',
 		];
 
@@ -728,8 +730,40 @@ class ReportesController extends BaseController
 
 
 		foreach ($resultFilter->result as $index => $folio) {
-			// var_dump($folio);
-			// exit;
+			$endpoint = 'https://videodenunciaserver1.fgebc.gob.mx/api/vc';
+			$data = array();
+			$data['u'] = '24';
+			$data['token'] = '198429b7cc8a2a5733d97bc13153227dd5017555';
+			$data['a'] = 'getRepo';
+			$data['folio'] = $folio->ANO . '-' . $folio->FOLIOID;
+			$data['min'] = '2022-01-01';
+			$data['max'] =date('Y-m-d');
+			$duracion = '';
+			$inicio = '';
+			$fin = '';
+			$remision = '';
+			$response = $this->_curlPost($endpoint, $data);
+			if ($response->data > 0) {
+				foreach ($response->data as $key => $api) {
+					if ($api === end($response->data)) {
+						$duracion = $api->Duración;
+						$inicio = $api->Inicio;
+						$fin = $api->Fin;
+					}
+				}
+			}
+			if ($folio->TIPOEXPEDIENTEID == 1 || $folio->TIPOEXPEDIENTEID == 4) {
+				$remision = $folio->OFICINA_EMP;
+			} else if ($folio->TIPOEXPEDIENTEID == 5) {
+				$remision = $folio->REMISION_RAC;
+			} else if ($folio->STATUS == "DERIVADO") {
+				$remision = $folio->REMISION_DERIVACION;
+			} else if ($folio->STATUS == "CANALIZADO") {
+				$remision = $folio->REMISION_CANALIZACION;
+			}
+		
+
+
 			// $row++;
 			// if(isset($folio->DELITOMODALIDADDESCR)){
 			// 	foreach ($folio->DELITOMODALIDADDESCR as $key => $delito){
@@ -746,37 +780,38 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('A2', "REGISTRO ESTATAL DE PRE DENUNCIA TELEFÓNICA Y EN LÍNEA");
 
 			$sheet->setCellValue('A' . $row, $row - 4);
-
 			$sheet->setCellValue('B' . $row, $dateregistro);
-			$sheet->setCellValue('C' . $row, $horaregistro);
-			$sheet->setCellValue('D' . $row, $folio->FOLIOID);
-			$sheet->setCellValue('E' . $row, $folio->TIPODENUNCIA == 'DA' ? 'ANÓNIMA' : 'CDT');
-			$sheet->setCellValue('F' . $row, $folio->MUNICIPIODESCR);
-			$sheet->setCellValue('G' . $row, $folio->N_DENUNCIANTE);
-			$sheet->setCellValue('H' . $row, $folio->APP_DENUNCIANTE);
-			$sheet->setCellValue('I' . $row, $folio->APM_DENUNCIANTE);
-			$sheet->setCellValue('J' . $row, $folio->TELEFONODENUNCIANTE);
-			$sheet->setCellValue('K' . $row, $folio->CORREODENUNCIANTE);
-			$sheet->setCellValue('L' . $row, isset($folio->DELITOMODALIDADDESCR) ? $folio->DELITOMODALIDADDESCR : 'NO EXISTE');
-			$sheet->setCellValue('M' . $row, $folio->N_AGENT . ' ' . $folio->APP_AGENT . ' ' . $folio->APM_AGENT);
-			$sheet->setCellValue('N' . $row, $folio->NOTASAGENTE);
-			$sheet->setCellValue('O' . $row, isset($folio->TIPOEXPEDIENTEDESCR) ? $folio->TIPOEXPEDIENTEDESCR : $folio->STATUS);
-			$sheet->setCellValue('P' . $row, $folio->EXPEDIENTEID);
-			$sheet->setCellValue('Q' . $row, $datesalida);
-			$sheet->setCellValue('R' . $row, '');
+			$sheet->setCellValue('C' . $row, $folio->FOLIOID);
+			$sheet->setCellValue('D' . $row,  $response->data > 0 ? date("H:i:s", strtotime('-2 hour',strtotime($inicio))) : date("H:i:s", strtotime('-2 hour',strtotime($response->data[0]->Inicio))));
+			$sheet->setCellValue('E' . $row,  $response->data > 0 ? date("H:i:s", strtotime('-2 hour',strtotime($fin))) : date("H:i:s", strtotime('-2 hour',strtotime($response->data[0]->Fin))));
+			$sheet->setCellValue('F' . $row, $response->data > 0 ? $duracion : $response->data[0]->Duración);
+			$sheet->setCellValue('G' . $row, $folio->TIPODENUNCIA == 'DA' ? 'ANÓNIMA' : 'CDT');
+			$sheet->setCellValue('H' . $row, $folio->MUNICIPIODESCR);
+			$sheet->setCellValue('I' . $row, $folio->N_DENUNCIANTE);
+			$sheet->setCellValue('J' . $row, $folio->APP_DENUNCIANTE);
+			$sheet->setCellValue('K' . $row, $folio->APM_DENUNCIANTE);
+			$sheet->setCellValue('L' . $row, $folio->GENERO == "F" ? "FEMENINO" : "MASCULINO");
+			$sheet->setCellValue('M' . $row, $folio->TELEFONODENUNCIANTE);
+			$sheet->setCellValue('N' . $row, $folio->CORREODENUNCIANTE);
+			$sheet->setCellValue('O' . $row, isset($folio->DELITOMODALIDADDESCR) ? $folio->DELITOMODALIDADDESCR : 'NO EXISTE');
+			$sheet->setCellValue('P' . $row, $folio->N_AGENT . ' ' . $folio->APP_AGENT . ' ' . $folio->APM_AGENT);
+			$sheet->setCellValue('Q' . $row, isset($folio->TIPOEXPEDIENTEDESCR) ? $folio->TIPOEXPEDIENTEDESCR : $folio->STATUS);
+			$sheet->setCellValue('R' . $row, $folio->EXPEDIENTEID ? $folio->EXPEDIENTEID : "SIN EXPEDIENTE");
+			$sheet->setCellValue('S' . $row, $remision); //remision
+			$sheet->setCellValue('T' . $row, "");
 
 			$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
 
 			if (!(($row - 4) >= count($resultFilter->result))) $row++;
 		}
-		$sheet->getStyle('A1:R1')->applyFromArray($styleCab);
-		$sheet->getStyle('A2:R2')->applyFromArray($styleCab);
+		$sheet->getStyle('A1:T1')->applyFromArray($styleCab);
+		$sheet->getStyle('A2:T2')->applyFromArray($styleCab);
 
-		$sheet->getStyle('A4:R4')->applyFromArray($styleHeaders);
-		$sheet->getStyle('A5:R' . $row)->applyFromArray($styleCells);
+		$sheet->getStyle('A4:T4')->applyFromArray($styleHeaders);
+		$sheet->getStyle('A5:T' . $row)->applyFromArray($styleCells);
 
-		$sheet->mergeCells('A1:R1');
-		$sheet->mergeCells('A2:R2');
+		$sheet->mergeCells('A1:T1');
+		$sheet->mergeCells('A2:T2');
 		$drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
 		$drawing->setName('FGEBC');
 		$drawing->setDescription('LOGO');
@@ -790,7 +825,7 @@ class ReportesController extends BaseController
 		$drawing2->setDescription('LOGO');
 		$drawing2->setPath(FCPATH . 'assets/img/logo_sejap.jpg'); // put your path and image here
 		$drawing2->setHeight(45);
-		$drawing2->setCoordinates('R1');
+		$drawing2->setCoordinates('T1');
 		$drawing2->setOffsetX(-30);
 		$drawing2->setWorksheet($spreadSheet->getActiveSheet());
 		// $drawing->setOffsetX(110);

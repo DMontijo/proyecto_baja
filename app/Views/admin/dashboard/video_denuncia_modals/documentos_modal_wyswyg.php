@@ -8,7 +8,18 @@
 				</button>
 			</div>
 			<div class="modal-body bg-light">
+				<div id="usuarios" name="usuarios" class="d-none">
+					<label for="empleado_asignado" class="form-label font-weight-bold">Agente:</label>
 
+					<select class="form-control" id="empleado_asignado" name="empleado_asignado">
+						<option disabled selected value=""></option>
+						<?php
+						foreach ($body_data->empleados as $index => $empleado) { ?>
+							<option value="<?= $empleado->ID  ?>"> <?= $empleado->NOMBRE . ' ' . $empleado->APELLIDO_PATERNO . ' ' . $empleado->APELLIDO_MATERNO ?></option>
+						<?php } ?>
+					</select>
+					<br>
+				</div>
 				<label for="plantilla" class="form-label font-weight-bold">Plantilla:</label>
 
 				<select class="form-control" id="plantilla" name="plantilla">
@@ -20,9 +31,9 @@
 				</select>
 				<br>
 				<div id="div_uma" name="div_uma" style="display: none;">
-				<label for="uma" class="form-label font-weight-bold">UMA:</label>
+					<label for="uma" class="form-label font-weight-bold">UMA:</label>
 
-				<select class="form-control" id="uma_select" name="uma_select">
+					<select class="form-control" id="uma_select" name="uma_select">
 						<option disabled selected value=""></option>
 						<option value="MEXICALI-CD MORELOS"> MEXICALI-CD MORELOS</option>
 						<option value="MEXICALI-GPE VICTORIA"> MEXICALI-GPE VICTORIA</option>
@@ -56,10 +67,10 @@
 						<option disabled selected value=""></option>
 					</select>
 				</div>
-			
+
+
 			</div>
 		</div>
 	</div>
 </div>
-
 <?php include 'documentos_modal.php' ?>
