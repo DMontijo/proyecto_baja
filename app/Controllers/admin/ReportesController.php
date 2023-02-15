@@ -782,8 +782,8 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('A' . $row, $row - 4);
 			$sheet->setCellValue('B' . $row, $dateregistro);
 			$sheet->setCellValue('C' . $row, $folio->FOLIOID);
-			$sheet->setCellValue('D' . $row,  $response->data > 0 ? date("H:i:s", strtotime($inicio)) : date("H:i:s", strtotime($response->data[0]->Inicio)));
-			$sheet->setCellValue('E' . $row,  $response->data > 0 ? date("H:i:s", strtotime($fin)) : date("H:i:s", strtotime($response->data[0]->Fin)));
+			$sheet->setCellValue('D' . $row,  $response->data > 0 ? date("H:i:s", strtotime('-2 hour',strtotime($inicio))) : date("H:i:s", strtotime('-2 hour',strtotime($response->data[0]->Inicio))));
+			$sheet->setCellValue('E' . $row,  $response->data > 0 ? date("H:i:s", strtotime('-2 hour',strtotime($fin))) : date("H:i:s", strtotime('-2 hour',strtotime($response->data[0]->Fin))));
 			$sheet->setCellValue('F' . $row, $response->data > 0 ? $duracion : $response->data[0]->Duración);
 			$sheet->setCellValue('G' . $row, $folio->TIPODENUNCIA == 'DA' ? 'ANÓNIMA' : 'CDT');
 			$sheet->setCellValue('H' . $row, $folio->MUNICIPIODESCR);
