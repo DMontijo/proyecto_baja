@@ -50,16 +50,7 @@
 												<label for="fecha" class="form-label font-weight-bold">Fecha de cierre:</label>
 												<input type="date" class="form-control" id="fechaFin" name="fechaFin" max="<?= date("Y-m-d") ?>" value="<?= isset($body_data->filterParams->fechaFin) ? $body_data->filterParams->fechaFin : '' ?>">
 											</div>
-
-											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
-												<label for="hora" class="form-label font-weight-bold">Hora de inicio:</label>
-												<input type="time" class="form-control" id="horaInicio" name="horaInicio" value="<?= isset($body_data->filterParams->horaInicio) ? $body_data->filterParams->horaInicio : '' ?>">
-											</div>
-
-											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
-												<label for="hora" class="form-label font-weight-bold">Hora de cierre:</label>
-												<input type="time" class="form-control" id="horaFin" name="horaFin" value="<?= isset($body_data->filterParams->horaFin) ? $body_data->filterParams->horaFin : '' ?>">
-											</div>
+											
 											<div class="col-12 text-right">
 												<a href="<?= base_url('admin/dashboard/reporte_llamadas') ?>" class="btn btn-secondary font-weight-bold" id="btnFiltroFolio" name="btnFiltroFolio">Borrar filtro</a>
 												<button type="submit" class="btn btn-primary font-weight-bold" id="btnFiltroFolio" name="btnFiltroFolio">Filtrar</button>

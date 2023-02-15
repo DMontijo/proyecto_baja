@@ -845,6 +845,9 @@ class ReportesController extends BaseController
 			if ($value->Estatus == 'Terminada' && $value->Grabación) {
 				$idAgente = 'id Agente';
 				array_push($empleado, (object)['ID' => $value->$idAgente, 'NOMBRE' => $value->Agente]);
+				$value->Fecha = date("Y-m-d H:i:s", strtotime('-2 hour',strtotime($value->Fecha)));
+				$value->Inicio = date("Y-m-d H:i:s", strtotime('-2 hour',strtotime($value->Inicio)));
+				$value->Fin = date("Y-m-d H:i:s", strtotime('-2 hour',strtotime($value->Fin)));
 				array_push($llamadas, $value);
 				$promedio += strtotime($value->Duración) - strtotime("TODAY");
 			}
@@ -890,6 +893,9 @@ class ReportesController extends BaseController
 				if ($value->Estatus == 'Terminada' && $value->Grabación) {
 					$idAgente = 'id Agente';
 					array_push($empleado, (object)['ID' => $value->$idAgente, 'NOMBRE' => $value->Agente]);
+					$value->Fecha = date("Y-m-d H:i:s", strtotime('-2 hour',strtotime($value->Fecha)));
+					$value->Inicio = date("Y-m-d H:i:s", strtotime('-2 hour',strtotime($value->Inicio)));
+					$value->Fin = date("Y-m-d H:i:s", strtotime('-2 hour',strtotime($value->Fin)));
 					array_push($llamadas, $value);
 					$promedio = date('H:i:s', strtotime($value->Duración));
 				}
@@ -961,6 +967,9 @@ class ReportesController extends BaseController
 				// }
 				if ($value->Estatus == 'Terminada' && $value->Grabación) {
 					$idAgente = 'id Agente';
+					$value->Fecha = date("Y-m-d H:i:s", strtotime('-2 hour',strtotime($value->Fecha)));
+					$value->Inicio = date("Y-m-d H:i:s", strtotime('-2 hour',strtotime($value->Inicio)));
+					$value->Fin = date("Y-m-d H:i:s", strtotime('-2 hour',strtotime($value->Fin)));
 					array_push($llamadas, $value);
 					$promedio = date('H:i:s', strtotime($value->Duración));
 				}
@@ -975,6 +984,9 @@ class ReportesController extends BaseController
 				// }
 				if ($value->Estatus == 'Terminada' && $value->Grabación && $value->$idAgente == $dataPost['agenteId']) {
 					//array_push($empleado, (object)['ID'=>$value->$idAgente, 'NOMBRE' => $value->Agente]);
+					$value->Fecha = date("Y-m-d H:i:s", strtotime('-2 hour',strtotime($value->Fecha)));
+					$value->Inicio = date("Y-m-d H:i:s", strtotime('-2 hour',strtotime($value->Inicio)));
+					$value->Fin = date("Y-m-d H:i:s", strtotime('-2 hour',strtotime($value->Fin)));
 					array_push($llamadas, $value);
 					$promedio += strtotime($value->Duración) - strtotime("TODAY");
 				}
