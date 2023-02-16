@@ -2965,11 +2965,14 @@
 					success: function(response) {
 						console.log(response);
 						if (response.status == 1) {
+							const div_usuarios = document.querySelector('#usuarios');
+							div_usuarios.classList.add('d-none');
 							Swal.fire({
 							icon: 'warning',
 							text: 'Este folio, ya tiene agente asignado para firmar. Se autoasignará al mismo agente.',
 							confirmButtonColor: '#bf9b55',
 						});
+						
 						} else {
 							const div_usuarios = document.querySelector('#usuarios');
 							div_usuarios.classList.remove('d-none');

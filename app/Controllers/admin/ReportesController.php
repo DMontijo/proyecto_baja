@@ -11,6 +11,9 @@ use App\Models\UsuariosModel;
 use App\Models\PlantillasModel;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Aws\S3\S3Client;
+use FFMpeg\FFMpeg;
+use FFMpeg\FFProbe;
 
 class ReportesController extends BaseController
 {
@@ -737,18 +740,26 @@ class ReportesController extends BaseController
 			$data['a'] = 'getRepo';
 			$data['folio'] = $folio->ANO . '-' . $folio->FOLIOID;
 			$data['min'] = '2022-01-01';
-			$data['max'] =date('Y-m-d');
+			$data['max'] = date('Y-m-d');
 			$duracion = '';
 			$inicio = '';
 			$fin = '';
 			$remision = '';
+			$grabacion = '';
+			$duration = '';
+			$horas = '';
+			$segundos = '';
+			$minuos = '';
+
 			$response = $this->_curlPost($endpoint, $data);
 			if ($response->data > 0) {
-				foreach ($response->data as $key => $api) {
-					if ($api === end($response->data)) {
-						$duracion = $api->Duración;
-						$inicio = $api->Inicio;
-						$fin = $api->Fin;
+				$array = array_reverse($response->data);
+				foreach ($array as $key => $api) {
+					$duracion = $api->Duración;
+					$inicio = $api->Inicio;
+					$fin = $api->Fin;
+					if ($api->Grabación != '') {
+						$grabacion = $api->Grabación;
 					}
 				}
 			}
@@ -761,8 +772,32 @@ class ReportesController extends BaseController
 			} else if ($folio->STATUS == "CANALIZADO") {
 				$remision = $folio->REMISION_CANALIZACION;
 			}
-		
 
+
+			$ffprobe = FFProbe::create([
+				'ffmpeg.binaries'  => 'C:/ffmpeg/bin/ffmpeg.exe', // the path to the FFMpeg binary
+				'ffprobe.binaries' => 'C:/ffmpeg/bin/ffprobe.exe', // the path to the FFProbe binary
+				'timeout'          => 3600, // the timeout for the underlying process
+				'ffmpeg.threads'   => 12,   // the number of threads that FFMpeg should use
+			]);
+			if ($response->data > 0 && $grabacion != '') {
+				$duration = $ffprobe
+					->streams('https://fgebc-records.s3.amazonaws.com/' . $grabacion)
+					->videos()
+					->first()
+					->get('duration');
+			} else if ($response->data[0]->Grabación) {
+				$duration = $ffprobe
+					->streams('https://fgebc-records.s3.amazonaws.com/' . $response->data[0]->Grabación)
+					->videos()
+					->first()
+					->get('duration');
+			}
+			if ($duration != '') {
+				$horas = floor($duration / 3600);
+				$minutos = floor(($duration - ($horas * 3600)) / 60);
+				$segundos = $duration - ($horas * 3600) - ($minutos * 60);
+			}
 
 			// $row++;
 			// if(isset($folio->DELITOMODALIDADDESCR)){
@@ -782,9 +817,9 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('A' . $row, $row - 4);
 			$sheet->setCellValue('B' . $row, $dateregistro);
 			$sheet->setCellValue('C' . $row, $folio->FOLIOID);
-			$sheet->setCellValue('D' . $row,  $response->data > 0 ? date("H:i:s", strtotime('-2 hour',strtotime($inicio))) : date("H:i:s", strtotime('-2 hour',strtotime($response->data[0]->Inicio))));
-			$sheet->setCellValue('E' . $row,  $response->data > 0 ? date("H:i:s", strtotime('-2 hour',strtotime($fin))) : date("H:i:s", strtotime('-2 hour',strtotime($response->data[0]->Fin))));
-			$sheet->setCellValue('F' . $row, $response->data > 0 ? $duracion : $response->data[0]->Duración);
+			$sheet->setCellValue('D' . $row,  $response->data > 0 && $inicio != '' ? date("H:i:s", strtotime('-2 hour', strtotime($inicio))) : ($inicio != '' ? date("H:i:s", strtotime('-2 hour', strtotime($response->data[0]->Inicio))) : ''));
+			$sheet->setCellValue('E' . $row,  $response->data > 0  && $fin != '' ? date("H:i:s", strtotime('-2 hour', strtotime($fin))) :  ($fin != '' ?date("H:i:s", strtotime('-2 hour', strtotime($response->data[0]->Fin))):''));
+			$sheet->setCellValue('F' . $row,  $horas != '' ? strval($horas)  . ':' . $minutos . ':' . number_format($segundos,0) : 'NO HAY VIDEO GRABADO');
 			$sheet->setCellValue('G' . $row, $folio->TIPODENUNCIA == 'DA' ? 'ANÓNIMA' : 'CDT');
 			$sheet->setCellValue('H' . $row, $folio->MUNICIPIODESCR);
 			$sheet->setCellValue('I' . $row, $folio->N_DENUNCIANTE);
@@ -880,9 +915,9 @@ class ReportesController extends BaseController
 			if ($value->Estatus == 'Terminada' && $value->Grabación) {
 				$idAgente = 'id Agente';
 				array_push($empleado, (object)['ID' => $value->$idAgente, 'NOMBRE' => $value->Agente]);
-				$value->Fecha = date("Y-m-d H:i:s", strtotime('-2 hour',strtotime($value->Fecha)));
-				$value->Inicio = date("Y-m-d H:i:s", strtotime('-2 hour',strtotime($value->Inicio)));
-				$value->Fin = date("Y-m-d H:i:s", strtotime('-2 hour',strtotime($value->Fin)));
+				$value->Fecha = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($value->Fecha)));
+				$value->Inicio = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($value->Inicio)));
+				$value->Fin = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($value->Fin)));
 				array_push($llamadas, $value);
 				$promedio += strtotime($value->Duración) - strtotime("TODAY");
 			}
@@ -928,9 +963,9 @@ class ReportesController extends BaseController
 				if ($value->Estatus == 'Terminada' && $value->Grabación) {
 					$idAgente = 'id Agente';
 					array_push($empleado, (object)['ID' => $value->$idAgente, 'NOMBRE' => $value->Agente]);
-					$value->Fecha = date("Y-m-d H:i:s", strtotime('-2 hour',strtotime($value->Fecha)));
-					$value->Inicio = date("Y-m-d H:i:s", strtotime('-2 hour',strtotime($value->Inicio)));
-					$value->Fin = date("Y-m-d H:i:s", strtotime('-2 hour',strtotime($value->Fin)));
+					$value->Fecha = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($value->Fecha)));
+					$value->Inicio = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($value->Inicio)));
+					$value->Fin = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($value->Fin)));
 					array_push($llamadas, $value);
 					$promedio = date('H:i:s', strtotime($value->Duración));
 				}
@@ -1002,9 +1037,9 @@ class ReportesController extends BaseController
 				// }
 				if ($value->Estatus == 'Terminada' && $value->Grabación) {
 					$idAgente = 'id Agente';
-					$value->Fecha = date("Y-m-d H:i:s", strtotime('-2 hour',strtotime($value->Fecha)));
-					$value->Inicio = date("Y-m-d H:i:s", strtotime('-2 hour',strtotime($value->Inicio)));
-					$value->Fin = date("Y-m-d H:i:s", strtotime('-2 hour',strtotime($value->Fin)));
+					$value->Fecha = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($value->Fecha)));
+					$value->Inicio = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($value->Inicio)));
+					$value->Fin = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($value->Fin)));
 					array_push($llamadas, $value);
 					$promedio = date('H:i:s', strtotime($value->Duración));
 				}
@@ -1019,9 +1054,9 @@ class ReportesController extends BaseController
 				// }
 				if ($value->Estatus == 'Terminada' && $value->Grabación && $value->$idAgente == $dataPost['agenteId']) {
 					//array_push($empleado, (object)['ID'=>$value->$idAgente, 'NOMBRE' => $value->Agente]);
-					$value->Fecha = date("Y-m-d H:i:s", strtotime('-2 hour',strtotime($value->Fecha)));
-					$value->Inicio = date("Y-m-d H:i:s", strtotime('-2 hour',strtotime($value->Inicio)));
-					$value->Fin = date("Y-m-d H:i:s", strtotime('-2 hour',strtotime($value->Fin)));
+					$value->Fecha = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($value->Fecha)));
+					$value->Inicio = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($value->Inicio)));
+					$value->Fin = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($value->Fin)));
 					array_push($llamadas, $value);
 					$promedio += strtotime($value->Duración) - strtotime("TODAY");
 				}
