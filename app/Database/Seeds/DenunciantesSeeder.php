@@ -10,9 +10,9 @@ class DenunciantesSeeder extends Seeder
 	{
 
 		$data = [
-			array('NOMBRE' => 'QRO', 'APELLIDO_PATERNO' => 'ANONIMO', 'APELLIDO_MATERNO' => 'ANONIMO', 'CORREO' => null, 'TIPO' => 2),
-
+			array('NOMBRE' => 'QUIEN RESULTE OFENDIDO', 'APELLIDO_PATERNO' => 'ANONIMO', 'APELLIDO_MATERNO' => 'ANONIMO', 'CORREO' => null, 'TIPO' => 2),
 		];
+		
 		$this->db->table('DENUNCIANTES')->insertBatch($data);
 	}
 }

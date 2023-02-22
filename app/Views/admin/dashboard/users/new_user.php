@@ -73,7 +73,7 @@
 						</div>
 					</div>
 					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-						<label class="font-weight-bold" for="zona_usuario">Zona CDT</label>
+						<label class="font-weight-bold" for="zona_usuario">Zona CDTEC</label>
 						<select class="form-control" id="zona_usuario" name="zona_usuario" required>
 							<option selected disabled value="">Elige la zona</option>
 							<?php foreach ($body_data->zonas as $index => $zonas) { ?>

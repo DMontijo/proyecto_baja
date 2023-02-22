@@ -26,7 +26,7 @@ $Fec1 = date("d/m/Y");
 $Fec2 = date("Y/m/d");
 $Hora = date("H:i:s");
 
-$URL_ValidDoc = "https://cdt.fgebc.gob.mx/firmas/validardocumentos.php";
+$URL_ValidDoc = "https://cdtec.fgebc.gob.mx/firmas/validardocumentos.php";
 
 $Senda_Archs_pem  = "archs_pem/";
 $Senda_Archs_Firmados = "archs_firmados/";

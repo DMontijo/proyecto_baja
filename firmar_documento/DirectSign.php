@@ -247,7 +247,7 @@ $Fec1 = date("d/m/Y");
 $Fec2 = date("Y/m/d");
 $Hora = date("H:i:s");
 
-$URL_ValidDoc = "https://cdt.fgebc.gob.mx/firmar_documento/validar.php";
+$URL_ValidDoc = "https://cdtec.fgebc.gob.mx/firmar_documento/validar.php";
 
 $FechaHora  = $Fec1 . "-" . $Hora; // Se determina fecha y hora del proceso de firmado.
 

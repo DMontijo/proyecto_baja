@@ -2,7 +2,9 @@
 	<div class="col-12" class="m-0 p-0 d-flex justify-content-center" style="max-width:792px;">
 		<div id="documento" style="background-color:white;"></div>
 	</div>
-	<div class="col-12 mt-5 d-flex justify-content-center">
-		<input type="button" id="guardarFolioDoc" name="guardarFolioDoc" class="btn btn-primary font-weight-bold" value="Agregar documento" />
+</div>
+<div class="row">
+	<div class="col-12 text-center" style="margin-top: 6em;">
+		<button type="button" id="guardarFolioDoc" name="guardarFolioDoc" class="btn btn-primary font-weight-bold">Agregar documento</button>
 	</div>
 </div>

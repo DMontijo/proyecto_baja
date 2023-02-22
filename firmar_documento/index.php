@@ -30,7 +30,7 @@
 <body style="font-family: 'Montserrat', sans-serif;">
 	<nav class="navbar" style="background-color:#511229;">
 		<div class="container">
-			<a class="navbar-brand" href="https://cdt.fgebc.gob.mx/admin">
+			<a class="navbar-brand" href="https://cdtec.fgebc.gob.mx/admin">
 				<img src="../assets/img/FGEBC_SEJAP_LOGO.png" alt="" width="270" height="auto">
 			</a>
 		</div>

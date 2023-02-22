@@ -429,8 +429,8 @@
 								card6.classList.remove('d-none');
 								<?php if (session('ROLID') != 4) { ?>
 
-								card7.classList.remove('d-none');
-							<?php }?>
+									card7.classList.remove('d-none');
+								<?php } ?>
 								card8.classList.remove('d-none');
 								card9.classList.remove('d-none');
 								card10.classList.remove('d-none');
@@ -502,7 +502,8 @@
 
 	function expedienteConGuiones(expediente) {
 		const array = expediente.trim().split('');
-		return array[0] + '-' + array[1] + array[2] + '-' + array[3] + array[4] + array[5] + '-' + array[6] + array[7] + array[8] + array[9] + '-' + array[10] + array[11] + array[12] + array[13] + array[14]
+		// return array[0] + '-' + array[1] + array[2] + '-' + array[3] + array[4] + array[5] + '-' + array[6] + array[7] + array[8] + array[9] + '-' + array[10] + array[11] + array[12] + array[13] + array[14];
+		return array[1] + array[2] + array[4] + array[5] + '-' + array[6] + array[7] + array[8] + array[9] + '-' + array[10] + array[11] + array[12] + array[13] + array[14];
 	}
 
 	function contarCaracteresSalida(obj) {

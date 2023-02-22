@@ -12,9 +12,6 @@ class CejaColocacionSeeder extends Seeder
             array('CEJACOLOCACIONDESCR' => 'INTERNAS'),
             array('CEJACOLOCACIONDESCR' => 'EXTERNAS'),
             array('CEJACOLOCACIONDESCR' => 'HORIZONTAL'),
-
-
-
         ];
         $this->db->table('CEJACOLOCACION')->insertBatch($data);
     }

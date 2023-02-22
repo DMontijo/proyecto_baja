@@ -166,7 +166,7 @@
 					}).done(function(response) {
 						clearSelect(select_canalizacion);
 						let canalizacion = response;
-					
+
 
 						canalizacion.forEach(canalizacion => {
 							var option = document.createElement("option");
@@ -193,33 +193,33 @@
 			document.querySelector('#municipio_empleado').addEventListener('change', (e) => {
 				if (tipoSalida.value == "DERIVADO") {
 
-				let select_derivacion = document.querySelector('#derivaciones');
-				clearSelect(select_derivacion);
-				select_derivacion.value = '';
-
-				let data = {
-					'municipio': e.target.value,
-				}
-				$.ajax({
-					data: data,
-					url: "<?= base_url('/data/get-derivacion-by-municipio') ?>",
-					method: "POST",
-					dataType: "json",
-				}).done(function(response) {
+					let select_derivacion = document.querySelector('#derivaciones');
 					clearSelect(select_derivacion);
-					let derivacion = response;
-					
+					select_derivacion.value = '';
 
-					derivacion.forEach(derivacion => {
-						var option = document.createElement("option");
-						option.text = derivacion.INSTITUCIONREMISIONDESCR;
-						option.value = derivacion.INSTITUCIONREMISIONID;
-						select_derivacion.add(option);
+					let data = {
+						'municipio': e.target.value,
+					}
+					$.ajax({
+						data: data,
+						url: "<?= base_url('/data/get-derivacion-by-municipio') ?>",
+						method: "POST",
+						dataType: "json",
+					}).done(function(response) {
+						clearSelect(select_derivacion);
+						let derivacion = response;
+
+
+						derivacion.forEach(derivacion => {
+							var option = document.createElement("option");
+							option.text = derivacion.INSTITUCIONREMISIONDESCR;
+							option.value = derivacion.INSTITUCIONREMISIONID;
+							select_derivacion.add(option);
+						});
+					}).fail(function(jqXHR, textStatus) {
+						clearSelect(select_derivacion);
 					});
-				}).fail(function(jqXHR, textStatus) {
-					clearSelect(select_derivacion);
-				});
-			}
+				}
 
 			});
 		} else {
@@ -440,7 +440,8 @@
 
 	function expedienteConGuiones(expediente) {
 		const array = expediente.trim().split('');
-		return array[0] + '-' + array[1] + array[2] + '-' + array[3] + array[4] + array[5] + '-' + array[6] + array[7] + array[8] + array[9] + '-' + array[10] + array[11] + array[12] + array[13] + array[14]
+		// return array[0] + '-' + array[1] + array[2] + '-' + array[3] + array[4] + array[5] + '-' + array[6] + array[7] + array[8] + array[9] + '-' + array[10] + array[11] + array[12] + array[13] + array[14];
+		return array[1] + array[2] + array[4] + array[5] + '-' + array[6] + array[7] + array[8] + array[9] + '-' + array[10] + array[11] + array[12] + array[13] + array[14];
 	}
 
 	function contarCaracteresSalidaDa(obj) {

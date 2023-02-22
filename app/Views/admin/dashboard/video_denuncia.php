@@ -8,32 +8,32 @@
 	<div id="card1" class="col-12 col-sm-6 col-md-4 col-lg-3">
 		<div class="card rounded bg-white shadow" style="height: 190px;">
 			<div class="card-body p-4">
-				<div class="row">
-					<div class="col-12 mb-1">
+				<div class="row p-0 m-0">
+					<div class="col-12 p-0 m-0">
 						<select class="form-control" id="year_select" name="year_select">
+							<option disabled value="">Selecciona año del folio ...</option>
 							<?php for ($i = date('Y'); $i >= 2020; $i--) { ?>
 								<option <?= $i == date('Y') ? 'selected' : null ?> value="<?= $i ?>"><?= $i ?></option>
 							<?php } ?>
 						</select>
 					</div>
-					<div class="col-12">
+					<div class="col-12 p-0 m-0">
 						<div class="input-group mb-1">
-							<input type="text" class="form-control" id="input_folio_atencion" placeholder="Folio" value="<?= isset($body_data->folio) ? $body_data->folio : '' ?>">
+							<input type="text" class="form-control" id="input_folio_atencion" placeholder="No. de folio" value="<?= isset($body_data->folio) ? $body_data->folio : '' ?>">
 						</div>
 					</div>
-					<div class="col-12">
+					<div class="col-12 p-0 m-0">
 						<div class="input-group mb-1">
 							<input type="text" class="form-control d-none" id="input_denuncia">
 						</div>
 					</div>
-					<div class="col-12">
+					<div class="col-12 p-0 m-0">
 						<div class="input-group mb-1">
 							<input type="text" class="form-control d-none" id="input_expediente">
 						</div>
 					</div>
 				</div>
-				<button id="buscar-btn" class="btn btn-secondary btn-block" role="button"><i class="fas fa-search"></i>
-					Buscar</button>
+				<button id="buscar-btn" class="btn btn-secondary btn-block" role="button"><i class="fas fa-search"></i> Buscar</button>
 				<button id="buscar-nuevo-btn" class="btn btn-primary btn-block h-100 d-none m-0 p-0" role="button"><i class="fas fa-search"></i> BUSCAR NUEVO</button>
 			</div>
 		</div>
@@ -66,39 +66,35 @@
 	<div id="card6" class="col-12 col-sm-6 col-md-4 col-lg-3 d-none">
 		<div class="card rounded bg-white shadow" style="height: 190px;">
 			<div class="card-body">
-				<button id="generar-doc-btn" class="btn btn-primary btn-block h-100" role="button" data-toggle="modal" data-target="#documentos_modal_wyswyg"><i class="fas fa-file-archive"></i> AGREGAR
-					DOCUMENTOS</button>
-			</div>
-		</div>
-	</div>
-	<div id="card7" class="col-12 col-sm-6 col-md-4 col-lg-3 d-none">
-		<div class="card rounded bg-white shadow" style="height: 190px;">
-			<div class="card-body">
-				<button id="firmar-doc-btn" class="btn btn-primary btn-block h-100" role="button" data-toggle="modal" data-target="#contrasena_modal_firma_doc"><i class="fas fa-file-signature"></i> FIRMAR
-					DOCUMENTOS</button>
+				<button id="generar-doc-btn" class="btn btn-primary btn-block h-100" role="button" data-toggle="modal" data-target="#documentos_modal_wyswyg"><i class="fas fa-file"></i> AGREGAR DOCUMENTO</button>
 			</div>
 		</div>
 	</div>
 	<div id="card8" class="col-12 col-sm-6 col-md-4 col-lg-3 d-none">
 		<div class="card rounded bg-white shadow" style="height: 190px;">
 			<div class="card-body">
-				<button id="firmar-doc-btn" class="btn btn-primary btn-block h-100" role="button" data-toggle="modal" data-target="#documentos_generados_modal"><i class="fas fa-pencil-alt"></i> EDITAR
-					DOCUMENTOS</button>
+				<button id="firmar-doc-btn" class="btn btn-primary btn-block h-100" role="button" data-toggle="modal" data-target="#documentos_generados_modal"><i class="fas fa-pencil-alt"></i> EDITAR DOCUMENTO</button>
+			</div>
+		</div>
+	</div>
+	<div id="card7" class="col-12 col-sm-6 col-md-4 col-lg-3 d-none">
+		<div class="card rounded bg-white shadow" style="height: 190px;">
+			<div class="card-body">
+				<button id="firmar-doc-btn" class="btn btn-primary btn-block h-100" role="button" data-toggle="modal" data-target="#contrasena_modal_firma_doc"><i class="fas fa-file-signature"></i> FIRMAR DOCUMENTOS</button>
 			</div>
 		</div>
 	</div>
 	<div id="card9" class="col-12 col-sm-6 col-md-4 col-lg-3 d-none">
 		<div class="card rounded bg-white shadow" style="height: 190px;">
 			<div class="card-body">
-				<button id="enviar-mail-btn" class="btn btn-primary btn-block h-100" role="button" data-toggle="modal" data-target="#sendEmailDocModal"><i class="fa fa-mail-forward"></i> ENVIAR CORREOS</button>
+				<button id="enviar-mail-btn" class="btn btn-primary btn-block h-100" role="button" data-toggle="modal" data-target="#sendEmailDocModal"><i class="fas fa-paper-plane"></i> ENVIAR DOCUMENTOS</button>
 			</div>
 		</div>
 	</div>
 	<div id="card10" class="col-12 col-sm-6 col-md-4 col-lg-3 d-none">
 		<div class="card rounded bg-white shadow" style="height: 190px;">
 			<div class="card-body">
-				<button id="enviar-archivos-externos-btn" class="btn btn-primary btn-block h-100" role="button" data-toggle="modal" data-target="#subirDocumentosModal"><i class="fas fa-archive"></i> SUBIR
-					ARCHIVOS</button>
+				<button id="enviar-archivos-externos-btn" class="btn btn-primary btn-block h-100" role="button" data-toggle="modal" data-target="#subirDocumentosModal"><i class="fas fa-upload"></i> SUBIR A JUSTICIA NET</button>
 			</div>
 		</div>
 	</div>
@@ -142,6 +138,11 @@
 				</div>
 			</div>
 		</div>
+		<div class="card rounded bg-white shadow" style="min-height: 70px;">
+			<div class="card-body">
+				<button id="folios-atendidos-btn" class="btn btn-primary btn-block h-100" role="button" data-toggle="modal" data-target="#folios_atendidos_modal"><i class="fas fa-file-alt"></i> FOLIOS DEL DENUNCIANTE</button>
+			</div>
+		</div>
 		<div class="card rounded bg-white shadow">
 			<div class="card-body">
 				<div class="row">
@@ -159,11 +160,6 @@
 				<textarea class="form-control" id="notas_mp" placeholder="Descripción del caso..." rows="10" required maxlength="300" oninput="mayuscTextarea(this)" onkeydown="pulsar(event)" onkeyup="contarCaracteres(this)"></textarea>
 				<small id="numCaracter">300 caracteres restantes</small>
 
-			</div>
-		</div>
-		<div class="card rounded bg-white shadow" style="height: 190px;">
-			<div class="card-body">
-				<button id="folios-atendidos-btn" class="btn btn-primary btn-block h-100" role="button" data-toggle="modal" data-target="#folios_atendidos_modal"><i class="fas fa-file-alt"></i> FOLIOS YA ATENDIDOS</button>
 			</div>
 		</div>
 	</div>
@@ -882,12 +878,12 @@
 					// });
 					const option_vacio_vm = document.createElement('option');
 					option_vacio_vm.value = '';
-					option_vacio_vm.text = '';
+					option_vacio_vm.text = 'Selecciona ...';
 					option_vacio_vm.disabled = true;
 					option_vacio_vm.selected = true;
 					const option_vacio_im = document.createElement('option');
 					option_vacio_im.value = '';
-					option_vacio_im.text = '';
+					option_vacio_im.text = 'Selecciona ...';
 					option_vacio_im.disabled = true;
 					option_vacio_im.selected = true;
 					if (victimas || imputados || correos || personas) {
@@ -932,13 +928,13 @@
 
 						const option_vacio = document.createElement('option');
 						option_vacio.value = '';
-						option_vacio.text = '';
+						option_vacio.text = 'Selecciona ...';
 						option_vacio.disabled = true;
 						option_vacio.selected = true;
 						$('#victima_ofendido').empty();
 						const option_vacio_vic = document.createElement('option');
 						option_vacio_vic.value = '';
-						option_vacio_vic.text = '';
+						option_vacio_vic.text = 'Selecciona ...';
 						option_vacio_vic.disabled = true;
 						option_vacio_vic.selected = true;
 
@@ -968,7 +964,7 @@
 						$('#imputado_arbol').empty();
 						const option_vacio_imp = document.createElement('option');
 						option_vacio_imp.value = '';
-						option_vacio_imp.text = '';
+						option_vacio_imp.text = 'Selecciona ...';
 						option_vacio_imp.disabled = true;
 						option_vacio_imp.selected = true;
 
@@ -999,7 +995,7 @@
 						let select_propietario = document.querySelector("#propietario");
 						const option_vacio_prop = document.createElement('option');
 						option_vacio_prop.value = '';
-						option_vacio_prop.text = '';
+						option_vacio_prop.text = 'Selecciona ...';
 						option_vacio_prop.disabled = true;
 						option_vacio_prop.selected = true;
 
@@ -1220,7 +1216,7 @@
 					let texto = 'El folio ya fue atentido por el agente<br><strong>' + response.agente +
 						'</strong><br><br><strong>' + response.motivo + '</strong>';
 					if (response.motivo == 'EXPEDIENTE') {
-						texto = texto + '<br><strong>' + response.expediente + '</strong>';
+						texto = texto + '<br><br><strong>' + expedienteConGuiones(response.expediente) + '</strong>';
 					}
 					Swal.fire({
 						icon: 'error',
@@ -1430,6 +1426,12 @@
 		// $('#v-pills-vehiculos-tab').css('display', 'NONE');
 	}
 
+	function expedienteConGuiones(expediente) {
+		const array = expediente.trim().split('');
+		// return array[0] + '-' + array[1] + array[2] + '-' + array[3] + array[4] + array[5] + '-' + array[6] + array[7] + array[8] + array[9] + '-' + array[10] + array[11] + array[12] + array[13] + array[14];
+		return array[1] + array[2] + array[4] + array[5] + '-' + array[6] + array[7] + array[8] + array[9] + '-' + array[10] + array[11] + array[12] + array[13] + array[14];
+	}
+
 	buscar_nuevo_btn.addEventListener('click', () => {
 		data = {
 			'folio': inputFolio.value,
@@ -1471,20 +1473,34 @@
 					['bold', 'italic', 'underline', 'strike'],
 					['blockquote', 'code-block'],
 					[{
+						'header': 1
+					}, {
+						'header': 2
+					}],
+					[{
 						'list': 'ordered'
 					}, {
 						'list': 'bullet'
 					}],
 					[{
+						'script': 'sub'
+					}, {
+						'script': 'super'
+					}],
+					[{
+						'indent': '-1'
+					}, {
+						'indent': '+1'
+					}],
+					[{
 						'direction': 'rtl'
 					}],
 					[{
-						'size': ['small']
+						'size': ['small', false, 'large', 'huge']
 					}],
 					[{
 						'header': [1, 2, 3, 4, 5, 6, false]
 					}],
-
 					[{
 						'color': []
 					}, {
@@ -1493,6 +1509,7 @@
 					[{
 						'align': []
 					}],
+					['clean']
 				];
 				var quill2 = new Quill('#documento_editar', {
 					modules: {
@@ -1507,9 +1524,7 @@
 	}
 
 	function viewFoliosDenunciantes(folio, year) {
-
 		window.open(`<?= base_url('/admin/dashboard/ver_folio?folio=') ?>` + folio + '&year=' + year, '_blank');
-
 	}
 
 	function viewPersonaFisica(id) {
@@ -2224,41 +2239,46 @@
 			var expediente_modal_correo = document.querySelector('#expediente_modal_correo');
 			var year_modal_correo = document.querySelector('#year_modal_correo');
 			var toolbarOptions = [
-				['bold', 'italic', 'underline', 'strike'], // toggled buttons
+				['bold', 'italic', 'underline', 'strike'],
 				['blockquote', 'code-block'],
-
-				//   [{ 'header': 1 }, { 'header': 2 }],               // custom button values
+				[{
+					'header': 1
+				}, {
+					'header': 2
+				}],
 				[{
 					'list': 'ordered'
 				}, {
 					'list': 'bullet'
 				}],
-				//   [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
-				//   [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+				[{
+					'script': 'sub'
+				}, {
+					'script': 'super'
+				}],
+				[{
+					'indent': '-1'
+				}, {
+					'indent': '+1'
+				}],
 				[{
 					'direction': 'rtl'
-				}], // text direction
-
-				//   [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+				}],
 				[{
-					'size': ['small']
-				}], // custom dropdown
-
+					'size': ['small', false, 'large', 'huge']
+				}],
 				[{
 					'header': [1, 2, 3, 4, 5, 6, false]
 				}],
-
 				[{
 					'color': []
 				}, {
 					'background': []
-				}], // dropdown with defaults from theme
-				//   [{ 'font': [] }],
+				}],
 				[{
 					'align': []
 				}],
-
-				//   ['clean']                                         // remove formatting button
+				['clean']
 			];
 			var quill = new Quill('#documento', {
 				modules: {
@@ -2950,37 +2970,37 @@
 			let select_imputado_documento = document.querySelector("#imputado_modal_documento");
 			let select_uma = document.querySelector("#uma_select");
 
-		
+
 			$('#documentos_modal_wyswyg').on('show.bs.modal', function(event) {
 				<?php if (session('ROLID') == 4) { ?>
-				const data = {
-					'folio': document.querySelector('#input_folio_atencion').value,
-					'year': document.querySelector('#year_select').value,
-				};
-				$.ajax({
-					data: data,
-					url: "<?= base_url('/data/get-documentos-by-folio') ?>",
-					method: "POST",
-					dataType: "json",
-					success: function(response) {
-						console.log(response);
-						if (response.status == 1) {
-							const div_usuarios = document.querySelector('#usuarios');
-							div_usuarios.classList.add('d-none');
-							Swal.fire({
-							icon: 'warning',
-							text: 'Este folio, ya tiene agente asignado para firmar. Se autoasignará al mismo agente.',
-							confirmButtonColor: '#bf9b55',
-						});
-						
-						} else {
-							const div_usuarios = document.querySelector('#usuarios');
-							div_usuarios.classList.remove('d-none');
-						}
+					const data = {
+						'folio': document.querySelector('#input_folio_atencion').value,
+						'year': document.querySelector('#year_select').value,
+					};
+					$.ajax({
+						data: data,
+						url: "<?= base_url('/data/get-documentos-by-folio') ?>",
+						method: "POST",
+						dataType: "json",
+						success: function(response) {
+							console.log(response);
+							if (response.status == 1) {
+								const div_usuarios = document.querySelector('#usuarios');
+								div_usuarios.classList.add('d-none');
+								Swal.fire({
+									icon: 'warning',
+									text: 'Este folio, ya tiene agente asignado para firmar. Se autoasignará al mismo agente.',
+									confirmButtonColor: '#bf9b55',
+								});
 
-					}
-				});
-			<?php } ?>
+							} else {
+								const div_usuarios = document.querySelector('#usuarios');
+								div_usuarios.classList.remove('d-none');
+							}
+
+						}
+					});
+				<?php } ?>
 				$("#documentos_modal_wyswyg select").val("");
 				document.getElementById("involucrados").style.display = "none";
 				// quill.root.innerHTML = '';
@@ -3859,7 +3879,7 @@
 							let select_personaFisica1_I = document.querySelector("#personaFisica1_I")
 							const option_vacio = document.createElement('option');
 							option_vacio.value = '';
-							option_vacio.text = '';
+							option_vacio.text = 'Selecciona ...';
 							option_vacio.disabled = true;
 							option_vacio.selected = true;
 							select_personaFisica1_I.add(option_vacio, null);
@@ -3899,6 +3919,7 @@
 							});
 							$('#imputado_arbol').empty();
 							let select_imputado_mputado = document.querySelector("#imputado_arbol");
+							select_imputado_mputado.add(option_vacio, null);
 							imputados.forEach(imputado => {
 								let primer_apellido = imputado.PRIMERAPELLIDO ? imputado
 									.PRIMERAPELLIDO : '';
@@ -3911,6 +3932,7 @@
 							});
 							$('#victima_ofendido').empty();
 							let select_victima_ofendido = document.querySelector("#victima_ofendido");
+							select_victima_ofendido.add(option_vacio, null);
 							victimas.forEach(victima => {
 								let primer_apellido = victima.PRIMERAPELLIDO ? victima
 									.PRIMERAPELLIDO : '';
@@ -5288,7 +5310,6 @@
 								document.querySelector("#imputado_modal_documento").value = '';
 								document.getElementById("involucrados").style.display = "none";
 								document.getElementById("div_uma").style.display = "none";
-
 							}
 						},
 						error: function(jqXHR, textStatus, errorThrown) {

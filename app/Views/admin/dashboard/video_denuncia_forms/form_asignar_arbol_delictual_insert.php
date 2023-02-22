@@ -5,15 +5,15 @@
 	</div>
 	<hr>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="imputado_arbol" class="form-label font-weight-bold">Imputado</label>
-		<select class="form-control" id="imputado_arbol" name="imputado_arbol" required>
+		<label for="victima_ofendido" class="form-label font-weight-bold">Victima u Ofendido</label>
+		<select class="form-control" id="victima_ofendido" name="victima_ofendido" required>
 			<option selected value="" disabled></option>
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="delito_cometido" class="form-label font-weight-bold">Delito cometido</label>
 		<select class="form-control" id="delito_cometido" name="delito_cometido" required>
-			<option selected value="" disabled></option>
+			<option selected value="" disabled>Selecciona ...</option>
 			<?php
 			foreach ($body_data->delitosModalidad as $index => $delitoModalidad) { ?>
 				<option value="<?= $delitoModalidad->DELITOMODALIDADID ?>"> <?= $delitoModalidad->DELITOMODALIDADDESCR ?></option>
@@ -22,8 +22,8 @@
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="victima_ofendido" class="form-label font-weight-bold">Victima / Ofendido</label>
-		<select class="form-control" id="victima_ofendido" name="victima_ofendido" required>
+		<label for="imputado_arbol" class="form-label font-weight-bold">Imputado</label>
+		<select class="form-control" id="imputado_arbol" name="imputado_arbol" required>
 			<option selected value="" disabled></option>
 		</select>
 	</div>
@@ -33,7 +33,7 @@
 		<div class="form-check form-check-inline">
 			<input class="form-check-input" type="checkbox" id="tentativa" name="tentativa" value="S">
 			<label class="form-check-label font-weight-bold" for="tentativa">
-					Tentativa
+				Tentativa
 			</label>
 		</div>
 

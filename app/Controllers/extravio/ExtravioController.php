@@ -294,7 +294,7 @@ class ExtravioController extends BaseController
 
 		$url = base_url('/validar_constancia?folio=' . $numfolio);
 		//replace placeholder
-		$data[5]->PLACEHOLDER = str_replace('https://cdt.fgebc.gob.mx/', ' ', $data[5]->PLACEHOLDER);
+		$data[5]->PLACEHOLDER = str_replace('https://cdtec.fgebc.gob.mx/', ' ', $data[5]->PLACEHOLDER);
 
 		$data[5]->PLACEHOLDER = str_replace('[FOLIO_NUMERO]', $constancias->CONSTANCIAEXTRAVIOID, $data[5]->PLACEHOLDER);
 		$data[5]->PLACEHOLDER = str_replace('[NOMBRE_AGENTE]', $agente->NOMBRE . " " . $agente->APELLIDO_PATERNO . " " . $agente->APELLIDO_MATERNO, $data[5]->PLACEHOLDER);

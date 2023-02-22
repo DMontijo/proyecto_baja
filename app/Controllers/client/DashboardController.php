@@ -515,7 +515,7 @@ class DashboardController extends BaseController
 
 			if ($this->request->getPost('es_menor') === "NO" && $this->request->getPost('es_ofendido') === "NO" && $this->request->getPost('esta_desaparecido') === "NO") {
 				$dataOfendido = array(
-					'NOMBRE' => 'QRO',
+					'NOMBRE' => 'QUIEN RESULTE OFENDIDO',
 					'FECHANACIMIENTO' => null,
 				);
 
@@ -622,7 +622,7 @@ class DashboardController extends BaseController
 			//DATOS DEL POSIBLE RESPONSABLE
 			if (!empty($this->request->getPost('responsable')) && $this->request->getPost('responsable') == 'SI') {
 				$dataImputado = array(
-					'NOMBRE' => $this->request->getPost('nombre_imputado') ? $this->request->getPost('nombre_imputado') : 'QRR',
+					'NOMBRE' => $this->request->getPost('nombre_imputado') ? $this->request->getPost('nombre_imputado') : 'QUIEN RESULTE RESPONSABLE',
 					'PRIMERAPELLIDO' => $this->request->getPost('primer_apellido_imputado'),
 					'SEGUNDOAPELLIDO' => $this->request->getPost('segundo_apellido_imputado'),
 					'FECHANACIMIENTO' => $this->request->getPost('fecha_nacimiento_imputado'),
@@ -674,7 +674,7 @@ class DashboardController extends BaseController
 				$this->_folioPersonaFisicaDomicilio($dataImputadoDomicilio, $FOLIOID, $imputadoId, $year);
 			} else {
 				$dataImputado = array(
-					'NOMBRE' => 'QRR',
+					'NOMBRE' => 'QUIEN RESULTE RESPONSABLE',
 					'FECHANACIMIENTO' => null,
 				);
 

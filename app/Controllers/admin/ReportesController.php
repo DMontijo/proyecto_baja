@@ -11,8 +11,8 @@ use App\Models\UsuariosModel;
 use App\Models\PlantillasModel;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-use Aws\S3\S3Client;
-use FFMpeg\FFMpeg;
+// use Aws\S3\S3Client;
+// use FFMpeg\FFMpeg;
 use FFMpeg\FFProbe;
 
 class ReportesController extends BaseController
@@ -155,7 +155,7 @@ class ReportesController extends BaseController
 			->setDescription(
 				"El presente documento fue generado por el Centro de Denuncia Tecnológica de la Fiscalía General del Estado de Baja California."
 			)
-			->setKeywords("reporte folios cdt fgebc 2022")
+			->setKeywords("reporte folios cdtec fgebc")
 			->setCategory("Reportes");
 		$sheet = $spreadSheet->getActiveSheet();
 
@@ -250,7 +250,7 @@ class ReportesController extends BaseController
 		foreach ($resultFilter->result as $index => $folio) {
 			$sheet->setCellValue('A' . $row, $folio->FOLIOID);
 			$sheet->setCellValue('B' . $row, $folio->ANO);
-			$sheet->setCellValue('C' . $row, $folio->TIPODENUNCIA == 'VD' ? 'CDT' : 'ANÓNIMA');
+			$sheet->setCellValue('C' . $row, $folio->TIPODENUNCIA == 'VD' ? 'CDTEC' : 'ANÓNIMA');
 			$sheet->setCellValue('D' . $row, $folio->EXPEDIENTEID);
 			$sheet->setCellValue('E' . $row, $folio->FECHASALIDA);
 			$sheet->setCellValue('F' . $row, $folio->N_DENUNCIANTE . ' ' . $folio->APP_DENUNCIANTE . ' ' . $folio->APM_DENUNCIANTE);
@@ -389,7 +389,7 @@ class ReportesController extends BaseController
 			->setDescription(
 				"El presente documento fue generado por el Centro de Denuncia Tecnológica de la Fiscalía General del Estado de Baja California."
 			)
-			->setKeywords("reporte constancias extravío cdt fgebc 2022")
+			->setKeywords("reporte constancias extravío cdtec fgebc")
 			->setCategory("Reportes");
 		$sheet = $spreadSheet->getActiveSheet();
 
@@ -614,7 +614,7 @@ class ReportesController extends BaseController
 			->setDescription(
 				"El presente documento fue generado por el Centro de Denuncia Tecnológica de la Fiscalía General del Estado de Baja California."
 			)
-			->setKeywords("registro diario cdt fgebc 2022")
+			->setKeywords("registro diario cdtec fgebc")
 			->setCategory("Reportes");
 		$sheet = $spreadSheet->getActiveSheet();
 
@@ -818,9 +818,9 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('B' . $row, $dateregistro);
 			$sheet->setCellValue('C' . $row, $folio->FOLIOID);
 			$sheet->setCellValue('D' . $row,  $response->data > 0 && $inicio != '' ? date("H:i:s", strtotime('-2 hour', strtotime($inicio))) : ($inicio != '' ? date("H:i:s", strtotime('-2 hour', strtotime($response->data[0]->Inicio))) : ''));
-			$sheet->setCellValue('E' . $row,  $response->data > 0  && $fin != '' ? date("H:i:s", strtotime('-2 hour', strtotime($fin))) :  ($fin != '' ?date("H:i:s", strtotime('-2 hour', strtotime($response->data[0]->Fin))):''));
-			$sheet->setCellValue('F' . $row,  $horas != '' ? strval($horas)  . ':' . $minutos . ':' . number_format($segundos,0) : 'NO HAY VIDEO GRABADO');
-			$sheet->setCellValue('G' . $row, $folio->TIPODENUNCIA == 'DA' ? 'ANÓNIMA' : 'CDT');
+			$sheet->setCellValue('E' . $row,  $response->data > 0  && $fin != '' ? date("H:i:s", strtotime('-2 hour', strtotime($fin))) : ($fin != '' ? date("H:i:s", strtotime('-2 hour', strtotime($response->data[0]->Fin))) : ''));
+			$sheet->setCellValue('F' . $row,  $horas != '' ? strval($horas)  . ':' . $minutos . ':' . number_format($segundos, 0) : 'NO HAY VIDEO GRABADO');
+			$sheet->setCellValue('G' . $row, $folio->TIPODENUNCIA == 'DA' ? 'ANÓNIMA' : 'CDTEC');
 			$sheet->setCellValue('H' . $row, $folio->MUNICIPIODESCR);
 			$sheet->setCellValue('I' . $row, $folio->N_DENUNCIANTE);
 			$sheet->setCellValue('J' . $row, $folio->APP_DENUNCIANTE);
@@ -1071,7 +1071,7 @@ class ReportesController extends BaseController
 			->setDescription(
 				"El presente documento fue generado por el Centro de Denuncia Tecnológica de la Fiscalía General del Estado de Baja California."
 			)
-			->setKeywords("registro llamadas cdt fgebc 2022")
+			->setKeywords("registro llamadas cdtec fgebc")
 			->setCategory("Reportes");
 		$sheet = $spreadSheet->getActiveSheet();
 
@@ -1352,7 +1352,7 @@ class ReportesController extends BaseController
 			->setDescription(
 				"El presente documento fue generado por el Centro de Denuncia Tecnológica de la Fiscalía General del Estado de Baja California."
 			)
-			->setKeywords("reporte conavim cdt fgebc 2022")
+			->setKeywords("reporte conavim cdtec fgebc")
 			->setCategory("Reportes");
 		$sheet = $spreadSheet->getActiveSheet();
 
@@ -1661,7 +1661,7 @@ class ReportesController extends BaseController
 			->setDescription(
 				"El presente documento fue generado por el Centro de Denuncia Tecnológica de la Fiscalía General del Estado de Baja California."
 			)
-			->setKeywords("reporte ceeaiv cdt fgebc 2022")
+			->setKeywords("reporte ceeaiv cdtec fgebc")
 			->setCategory("Reportes");
 		$sheet = $spreadSheet->getActiveSheet();
 

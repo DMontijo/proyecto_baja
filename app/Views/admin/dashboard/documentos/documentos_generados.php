@@ -19,24 +19,25 @@
 			<a class="link link-primary" href="<?= base_url('admin/dashboard/documentos') ?>" role="button"><i class="fas fa-reply"></i> REGRESAR A DOCUMENTOS ASIGNADOS</a>
 		</div>
 		<div class="row">
+			<div class="col-12 col-sm-6 col-md-4 col-lg-3">
+				<button type="button" style="min-height:120px;" class="btn btn-primary mb-3 w-100" data-toggle="modal" id="generarDocumento" data-target="#documentos_modal_wyswyg"><i class="fas fa-file"></i> Agregar documento</button>
+			</div>
+			<div class="col-12 col-sm-6 col-md-4 col-lg-3">
+				<button type="button" style="min-height:120px;" class="btn btn-primary mb-3 w-100" data-toggle="modal" id="firmarDocumento" data-target="#contrasena_modal_doc"><i class="fas fa-file-signature"></i> Firmar documentos</button>
+			</div>
+			<div class="col-12 col-sm-6 col-md-4 col-lg-3">
+				<button type="button" style="min-height:120px;" class="btn btn-primary mb-3 w-100" data-toggle="modal" id="enviarDocumento" data-target="#sendEmailDocModal"><i class="fas fa-paper-plane"></i> Enviar documentos</button>
+			</div>
+			<div class="col-12 col-sm-6 col-md-4 col-lg-3">
+				<button type="button" style="min-height:120px;" class="btn btn-primary mb-3 w-100" id="subirDocumento" name="subirDocumento" data-toggle="modal" data-target="#subirDocumentosModal"><i class="fas fa-upload"></i> Subir a Justicia Net</button>
+			</div>
 			<div class="col-12">
-				<button type="button" class="btn btn-primary col-12 col-sm-3 col-md-3 col-lg-4 mb-3" data-toggle="modal" id="firmarDocumento" data-target="#contrasena_modal_doc"><i class="fas fa-file-signature"></i>
-					Firmar documentos</button>
-				<button type="button" class="btn btn-primary col-12 col-sm-3 col-md-3 col-lg-4 mb-3" data-toggle="modal" id="generarDocumento" data-target="#documentos_modal_wyswyg"><i class="fas fa-file-archive"></i>
-					Agregar documento</button>
-				<button type="button" class="btn btn-primary col-12 col-sm-3 col-md-6 col-lg-4 mb-3" data-toggle="modal" id="enviarDocumento" data-target="#sendEmailDocModal"><i class="fas fa-mail-bulk"></i> Enviar
-					documentos pendientes</button>
-				<button type="button" class="btn btn-primary col-12 col-sm-3 col-md-6 col-lg-4 mb-3" id="subirDocumento" name="subirDocumento" data-toggle="modal" data-target="#subirDocumentosModal"><i class="fas fa-archive"></i> Subir documentos</button>
-				<div class="table-responsive">
+				<div class="table-responsive table-bordered">
 					<table id="table-documentos" class="table table-bordered table-hover table-striped table-light">
 						<tr>
-							<th class="text-center bg-primary text-white" id="tipodoc" name="tipodoc">TIPO DE DOCUMENTO
-							</th>
-							<th class="text-center bg-primary text-white">STATUS</th>
-							<th class="text-center bg-primary text-white"></th>
-							<th class="text-center bg-primary text-white"></th>
-							<th class="text-center bg-primary text-white"></th>
-
+							<th class="text-center bg-primary text-white" id="tipodoc" name="tipodoc">DOCUMENTO</th>
+							<th class="text-center bg-primary text-white">ESTADO</th>
+							<th class="text-center bg-primary text-white">ACCIONES</th>
 						</tr>
 					</table>
 				</div>
@@ -249,42 +250,47 @@
 		var btn_guardarFolioDoc = document.querySelector('#guardarFolioDoc');
 		var btn_actualizarFolioDoc = document.querySelector('#actualizarFolioDoc');
 
-
 		var toolbarOptions = [
-			['bold', 'italic', 'underline', 'strike'], // toggled buttons
+			['bold', 'italic', 'underline', 'strike'],
 			['blockquote', 'code-block'],
-
-			//   [{ 'header': 1 }, { 'header': 2 }],               // custom button values
+			[{
+				'header': 1
+			}, {
+				'header': 2
+			}],
 			[{
 				'list': 'ordered'
 			}, {
 				'list': 'bullet'
 			}],
-			//   [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
-			//   [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+			[{
+				'script': 'sub'
+			}, {
+				'script': 'super'
+			}],
+			[{
+				'indent': '-1'
+			}, {
+				'indent': '+1'
+			}],
 			[{
 				'direction': 'rtl'
-			}], // text direction
-
+			}],
 			[{
-				'size': ['small']
-			}], // custom dropdown
-
+				'size': ['small', false, 'large', 'huge']
+			}],
 			[{
 				'header': [1, 2, 3, 4, 5, 6, false]
 			}],
-
 			[{
 				'color': []
 			}, {
 				'background': []
-			}], // dropdown with defaults from theme
-			//   [{ 'font': [] }],
+			}],
 			[{
 				'align': []
 			}],
-
-			//   ['clean']                                         // remove formatting button
+			['clean']
 		];
 		var quill = new Quill('#documento', {
 			modules: {
@@ -381,6 +387,7 @@
 					data: data,
 					dataType: 'JSON',
 					success: function(response) {
+						console.log('TEST', response);
 						if (response.status == 1) {
 							const plantilla = response.plantilla;
 							quill.root.innerHTML = plantilla.PLACEHOLDER;
@@ -388,14 +395,12 @@
 							document.querySelector("#imputado_modal_documento").value = '';
 							document.getElementById("involucrados").style.display = "none";
 							document.getElementById("div_uma").style.display = "none";
-
 						} else {
 							quill.root.innerHTML = 'PLANTLLA VACÍA O CON ERROR';
 							document.querySelector("#victima_modal_documento").value = '';
 							document.querySelector("#imputado_modal_documento").value = '';
 							document.getElementById("involucrados").style.display = "none";
 							document.getElementById("div_uma").style.display = "none";
-
 						}
 					},
 					error: function(jqXHR, textStatus, errorThrown) {
@@ -788,13 +793,13 @@
 		for (let i = 0; i < documentos.length; i++) {
 			if (documentos[i].STATUS == 'FIRMADO') {
 				var btn =
-					`<button type='button'  class='btn btn-primary' onclick='viewDocumento(${documentos[i].FOLIODOCID})' disabled><i class="fas fa-eye"></i></button>`
+					`<button type='button'  class='btn btn-primary my-2' onclick='viewDocumento(${documentos[i].FOLIODOCID})' disabled><i class="fas fa-edit"></i></button>`
 				var btnpdf = `<form class="d-inline-block" method="POST" action="<?php echo base_url('/data/download-pdf-documento') ?>">
 													<input type="text" class="form-control" name="folio" value="<?= $_GET['folio'] ?>" hidden>
 													<input type="text" class="form-control" name="year" value="<?= $_GET['year'] ?>" hidden>
 													<input type="text" class="form-control" name="docid" value="${documentos[i].FOLIODOCID}" hidden>
 
-													<button type="submit" class="btn btn-primary mb-3">
+													<button type="submit" class="btn btn-primary my-2">
 														PDF
 													</button>
 												</form>`
@@ -803,20 +808,20 @@
 													<input type="text" class="form-control" name="year" value="<?= $_GET['year'] ?>" hidden>
 													<input type="text" class="form-control" name="docid" value="${documentos[i].FOLIODOCID}" hidden>
 
-													<button type="submit" class="btn btn-primary mb-3">
+													<button type="submit" class="btn btn-primary my-2">
 														XML
 													</button>
 												</form>`
 
 			} else {
 				var btn =
-					`<button type='button'  class='btn btn-primary' onclick='viewDocumento(${documentos[i].FOLIODOCID})'><i class="fas fa-eye"></i></button>`
+					`<button type='button'  class='btn btn-primary my-2' onclick='viewDocumento(${documentos[i].FOLIODOCID})'><i class="fas fa-edit"></i></button>`
 				var btnpdf = `<form class="d-inline-block" method="POST" action="<?php echo base_url('/data/download-pdf-documento') ?>">
 													<input type="text" class="form-control" name="folio" value="<?= $_GET['folio'] ?>" hidden>
 													<input type="text" class="form-control" name="year" value="<?= $_GET['year'] ?>" hidden>
 													<input type="text" class="form-control" name="docid" value="${documentos[i].FOLIODOCID}" hidden>
 
-													<button type="submit" class="btn btn-primary mb-3" disabled>
+													<button type="submit" class="btn btn-primary my-2" disabled>
 														PDF
 													</button>
 												</form>`
@@ -825,7 +830,7 @@
 													<input type="text" class="form-control" name="year" value="<?= $_GET['year'] ?>" hidden>
 													<input type="text" class="form-control" name="docid" value="${documentos[i].FOLIODOCID}" hidden>
 
-													<button type="submit" class="btn btn-primary mb-3" disabled>
+													<button type="submit" class="btn btn-primary my-2" disabled>
 														XML
 													</button>
 												</form>`
@@ -836,10 +841,7 @@
 				`<tr id="row${i}">` +
 				`<td class="text-center">${documentos[i].TIPODOC}</td>` +
 				`<td class="text-center">${documentos[i].STATUS}</td>` +
-				`<td class="text-center">${btn}</td>` +
-				`<td class="text-center">${btnpdf}</td>` +
-				`<td class="text-center">${btnxml}</td>` +
-
+				`<td class="text-center">${btn} ${btnpdf} ${btnxml}</td>` +
 				`</tr>`;
 
 			$('#table-documentos tr:first').after(fila);
@@ -869,20 +871,34 @@
 						['bold', 'italic', 'underline', 'strike'],
 						['blockquote', 'code-block'],
 						[{
+							'header': 1
+						}, {
+							'header': 2
+						}],
+						[{
 							'list': 'ordered'
 						}, {
 							'list': 'bullet'
 						}],
 						[{
+							'script': 'sub'
+						}, {
+							'script': 'super'
+						}],
+						[{
+							'indent': '-1'
+						}, {
+							'indent': '+1'
+						}],
+						[{
 							'direction': 'rtl'
 						}],
 						[{
-							'size': ['small']
+							'size': ['small', false, 'large', 'huge']
 						}],
 						[{
 							'header': [1, 2, 3, 4, 5, 6, false]
 						}],
-
 						[{
 							'color': []
 						}, {
@@ -891,6 +907,7 @@
 						[{
 							'align': []
 						}],
+						['clean']
 					];
 					var quill2 = new Quill('#documento_editar', {
 						modules: {

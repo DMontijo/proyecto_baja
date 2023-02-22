@@ -18,7 +18,7 @@
 								<tr>
 									<th class="text-center">FOLIO</th>
 									<th class="text-center">FECHA FOLIO</th>
-									<th class="text-center">EXPEDIENTE</th>
+									<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
 									<th class="text-center">DELITO</th>
 									<th class="text-center">ESTADO</th>
 									<th class="text-center">ÁREA ASIGNADA</th>
@@ -31,7 +31,7 @@
 									$expedienteid = '';
 									if (isset($folio->EXPEDIENTEID)) {
 										$arrayExpediente = str_split($folio->EXPEDIENTEID);
-										$expedienteid = $arrayExpediente[0] . '-' . $arrayExpediente[1] . $arrayExpediente[2] . '-' .  $arrayExpediente[3] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
+										$expedienteid = $arrayExpediente[0] . '-' . $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
 									} ?>
 
 									<tr>

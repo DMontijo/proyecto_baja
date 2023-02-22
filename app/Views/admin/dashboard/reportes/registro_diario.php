@@ -67,15 +67,13 @@
 													<option <?= isset($body_data->filterParams->STATUS) ? ($body_data->filterParams->STATUS == 'TODOS' ? 'selected' : '') : null ?> value="TODOS">TODOS LOS FOLIOS/EXPEDIENTES</option>
 													<option <?= isset($body_data->filterParams->STATUS) ? ($body_data->filterParams->STATUS == 'SIN' ? 'selected' : '') : null ?> value="SIN">SIN EXPEDIENTE</option>
 													<option <?= isset($body_data->filterParams->STATUS) ? ($body_data->filterParams->STATUS == 'CON' ? 'selected' : '') : null ?> value="CON">CON EXPEDIENTE</option>
-
-
 												</select>
 											</div>
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
 												<label for="status" class="form-label font-weight-bold">Tipo:</label>
 												<select class="form-control" id="tipo" name="tipo" required>
-													<option selected value="">CDT Y DENUNCIA ANÓNIMA</option>
-													<option <?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'VD' ? 'selected' : '') : null ?> value="VD">CDT</option>
+													<option selected value="">CDTEC Y DENUNCIA ANÓNIMA</option>
+													<option <?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'VD' ? 'selected' : '') : null ?> value="VD">CDTEC</option>
 													<option <?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'DA' ? 'selected' : '') : null ?> value="DA">DENUNCIA ANÓNIMA</option>
 												</select>
 											</div>
@@ -115,7 +113,7 @@
 									<th class="text-center">FOLIO</th>
 									<th class="text-center">AÑO</th>
 									<th class="text-center">TIPO</th>
-									<th class="text-center">EXPEDIENTE</th>
+									<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
 									<th class="text-center">FECHA DE SALIDA</th>
 									<th class="text-center">ESTADO FOLIO</th>
 									<th class="text-center">NOMBRE DEL DENUNCIANTE</th>
@@ -130,12 +128,12 @@
 									$expedienteid = '';
 									if (isset($folio->EXPEDIENTEID)) {
 										$arrayExpediente = str_split($folio->EXPEDIENTEID);
-										$expedienteid = $arrayExpediente[0] . '-' . $arrayExpediente[1] . $arrayExpediente[2] . '-' .  $arrayExpediente[3] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
+										$expedienteid = $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
 									} ?>
 									<tr>
 										<td class="text-center font-weight-bold"><?= $folio->FOLIOID ?></td>
 										<td class="text-center"><?= $folio->ANO ?></td>
-										<td class="text-center"><?= $folio->TIPODENUNCIA == 'VD' ? 'CDT': 'ANÓNIMA' ?></td>
+										<td class="text-center"><?= $folio->TIPODENUNCIA == 'VD' ? 'CDTEC' : 'ANÓNIMA' ?></td>
 										<td class="text-center"><?= $expedienteid ? $expedienteid : '' ?></td>
 										<td class="text-center"><?= $folio->FECHASALIDA ?></td>
 										<td class="text-center"><?= $folio->STATUS ?></td>
@@ -226,7 +224,7 @@
 						<li><span style="font-weight:bold;">Hora inicio:</span> <?= isset($body_data->filterParams->horaInicio) ? $body_data->filterParams->horaInicio : '' ?></li>
 						<li><span style="font-weight:bold;">Hora fin:</span> <?= isset($body_data->filterParams->horaFin) ? $body_data->filterParams->horaFin : '' ?></li>
 						<li><span style="font-weight:bold;">Estatus:</span> <?= isset($body_data->filterParams->STATUS) ? ($body_data->filterParams->STATUS == 'CON' ? 'CON EXPEDIENTE' : ($body_data->filterParams->STATUS == 'SIN' ? 'SIN EXPEDIENTE' : 'TODOS LOS FOLIOS/EXPEDIENTES')) : '' ?></li>
-						<li><span style="font-weight:bold;">Tipo:</span> <?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'VD' ? 'CDT' : ($body_data->filterParams->TIPODENUNCIA == 'DA' ? 'ANÓNIMA' : 'CDT Y DENUNCIA ANÓNIMA')) : 'CDT Y DENUNCIA ANÓNIMA' ?></li>
+						<li><span style="font-weight:bold;">Tipo:</span> <?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'VD' ? 'CDTEC' : ($body_data->filterParams->TIPODENUNCIA == 'DA' ? 'ANÓNIMA' : 'CDTEC Y DENUNCIA ANÓNIMA')) : 'CDTEC Y DENUNCIA ANÓNIMA' ?></li>
 
 				</ul>
 			</p>

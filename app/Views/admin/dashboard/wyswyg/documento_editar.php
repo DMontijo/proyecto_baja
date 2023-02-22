@@ -3,7 +3,9 @@
 		<div id="documento_editar" style="background-color:white;"></div>
 		<input type="text" id="docid" name="docid" hidden>
 	</div>
-	<div class="col-12 mt-5 d-flex justify-content-center">
-		<input type="button" id="actualizarFolioDoc" name="actualizarFolioDoc" class="btn btn-primary font-weight-bold" value="Actualizar" />
+</div>
+<div class="row">
+	<div class="col-12 text-center" style="margin-top: 6em;">
+		<button type="button" id="actualizarFolioDoc" name="actualizarFolioDoc" class="btn btn-primary font-weight-bold">Actualizar documento</button>
 	</div>
 </div>
