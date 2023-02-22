@@ -8,6 +8,12 @@
 				</button>
 			</div>
 			<div class="modal-body bg-light">
+				<div id="loading_general" name="loading_general" class="text-center d-none" style="min-height:50px;">
+					<div class="justify-content-center">
+						<div class="spinner-border text-primary" role="status">
+						</div>
+					</div>
+				</div>
 				<div class="row">
 					<div class="col-3">
 						<div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
@@ -20,6 +26,7 @@
 					</div>
 					<div class="col-9">
 						<div class="tab-content" id="v-pills-contenido">
+
 							<div class="tab-pane fade show active" id="v-pills-salida" role="tabpanel" aria-labelledby="v-pills-salida-tab">
 								<div class="form-group">
 									<label for="tipo_salida" class="font-weight-bold">Selecciona la salida</label>
@@ -265,9 +272,14 @@
 					url: "<?= base_url('/data/update-status-folio') ?>",
 					method: "POST",
 					dataType: "json",
+					beforeSend: function() {
+						showLoading()
+					},
 
 				}).done(function(data) {
 					btnFinalizar.removeAttribute('disabled');
+					document.querySelector('#loading_general').classList.add('d-none');
+
 					if (data.status == 1) {
 						document.querySelector('#tipo_salida').value = "";
 						document.querySelector('#notas_caso_salida').value = '';
@@ -325,6 +337,8 @@
 					}
 				}).fail(function(jqXHR, textStatus) {
 					btnFinalizar.removeAttribute('disabled');
+					document.querySelector('#loading_general').classList.add('d-none');
+
 				});
 			} else {
 				btnFinalizar.removeAttribute('disabled');
@@ -381,9 +395,13 @@
 						url: "<?= base_url('/data/save-in-justicia') ?>",
 						method: "POST",
 						dataType: "json",
+						beforeSend: function() {
+							showLoading()
+						},
 
 					}).done(function(data) {
 						btnFinalizar.removeAttribute('disabled');
+						document.querySelector('#loading_general').classList.add('d-none');
 
 						if (data.status == 1) {
 							document.querySelector('#tipo_salida').value = "";
@@ -400,6 +418,8 @@
 								buscar_nuevo_btn.classList.add('d-none');
 								inputFolio.classList.remove('d-none');
 								inputExpediente.classList.remove('d-none');
+								input_municipio.classList.remove('d-none');
+
 								let currentTime = new Date();
 								let year = currentTime.getFullYear()
 
@@ -408,6 +428,8 @@
 								year_select.disabled = true;
 								inputFolio.disabled = true;
 								inputExpediente.disabled = true;
+								input_municipio.disabled = true;
+
 								// buscar_btn.classList.remove('d-none');
 								// municipio_empleado.value = '';
 								// oficina_empleado.value = '';
@@ -422,6 +444,7 @@
 								// borrarTodo();
 								folio_modal.value = inputFolio.value;
 								inputExpediente.value = data.expediente;
+								input_municipio.value = municipio_empleado.value;
 								expediente_modal.value = data.expediente;
 								year_modal.value = year;
 								expediente_modal_correo.value = data.expediente;
@@ -435,6 +458,8 @@
 								card9.classList.remove('d-none');
 								card10.classList.remove('d-none');
 								card11.classList.remove('d-none');
+								card12.classList.remove('d-none');
+
 							});
 						} else {
 							Swal.fire({
@@ -470,6 +495,8 @@
 								confirmButtonColor: '#bf9b55',
 							});
 							btnFinalizar.removeAttribute('disabled');
+							document.querySelector('#loading_general').classList.add('d-none');
+
 						});
 					});
 				} else {
@@ -504,6 +531,10 @@
 		const array = expediente.trim().split('');
 		// return array[0] + '-' + array[1] + array[2] + '-' + array[3] + array[4] + array[5] + '-' + array[6] + array[7] + array[8] + array[9] + '-' + array[10] + array[11] + array[12] + array[13] + array[14];
 		return array[1] + array[2] + array[4] + array[5] + '-' + array[6] + array[7] + array[8] + array[9] + '-' + array[10] + array[11] + array[12] + array[13] + array[14];
+	}
+
+	function showLoading() {
+		document.querySelector('#loading_general').classList.remove('d-none');
 	}
 
 	function contarCaracteresSalida(obj) {

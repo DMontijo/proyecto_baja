@@ -31,6 +31,9 @@
 			<div class="col-12 col-sm-6 col-md-4 col-lg-3">
 				<button type="button" style="min-height:120px;" class="btn btn-primary mb-3 w-100" id="subirDocumento" name="subirDocumento" data-toggle="modal" data-target="#subirDocumentosModal"><i class="fas fa-upload"></i> Subir a Justicia Net</button>
 			</div>
+			<div class="col-12 col-sm-6 col-md-4 col-lg-3">
+				<button type="button" style="min-height:120px;" class="btn btn-primary mb-3 w-100" id="btn_remitir" name="btn_remitir" onclick="remitir();"><i class="fas fa-solid fa-inbox"></i> Remitir expediente</button>
+			</div>
 			<div class="col-12">
 				<div class="table-responsive table-bordered">
 					<table id="table-documentos" class="table table-bordered table-hover table-striped table-light">
@@ -97,14 +100,7 @@
 		let btn_archivos_externos = document.querySelector('#subirDocumento');
 		let resultado = getParameterByName('q');
 
-		function getParameterByName(name, url = window.location.href) {
-			name = name.replace(/[\[\]]/g, "\\$&");
-			var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-				results = regex.exec(url);
-			if (!results) return null;
-			if (!results[2]) return '';
-			return decodeURIComponent(results[2].replace(/\+/g, " "));
-		}
+
 
 		function isParameterByName(name) {
 			let regex = new RegExp('[?&]' + name + '=');
@@ -250,63 +246,77 @@
 		var btn_guardarFolioDoc = document.querySelector('#guardarFolioDoc');
 		var btn_actualizarFolioDoc = document.querySelector('#actualizarFolioDoc');
 
-		var toolbarOptions = [
-			['bold', 'italic', 'underline', 'strike'],
-			['blockquote', 'code-block'],
-			[{
-				'header': 1
-			}, {
-				'header': 2
-			}],
-			[{
-				'list': 'ordered'
-			}, {
-				'list': 'bullet'
-			}],
-			[{
-				'script': 'sub'
-			}, {
-				'script': 'super'
-			}],
-			[{
-				'indent': '-1'
-			}, {
-				'indent': '+1'
-			}],
-			[{
-				'direction': 'rtl'
-			}],
-			[{
-				'size': ['small', false, 'large', 'huge']
-			}],
-			[{
-				'header': [1, 2, 3, 4, 5, 6, false]
-			}],
-			[{
-				'color': []
-			}, {
-				'background': []
-			}],
-			[{
-				'align': []
-			}],
-			['clean']
-		];
-		var quill = new Quill('#documento', {
-			modules: {
-				toolbar: toolbarOptions,
-			},
-			theme: 'snow' // or 'bubble'
-		});
-		var quill2 = new Quill('#documento_editar', {
-			modules: {
-				toolbar: toolbarOptions,
-			},
-			theme: 'snow' // or 'bubble'
-		});
+		// var toolbarOptions = [
+		// 	['bold', 'italic', 'underline', 'strike'],
+		// 	['blockquote', 'code-block'],
+		// 	[{
+		// 		'header': 1
+		// 	}, {
+		// 		'header': 2
+		// 	}],
+		// 	[{
+		// 		'list': 'ordered'
+		// 	}, {
+		// 		'list': 'bullet'
+		// 	}],
+		// 	[{
+		// 		'script': 'sub'
+		// 	}, {
+		// 		'script': 'super'
+		// 	}],
+		// 	[{
+		// 		'indent': '-1'
+		// 	}, {
+		// 		'indent': '+1'
+		// 	}],
+		// 	[{
+		// 		'direction': 'rtl'
+		// 	}],
+		// 	[{
+		// 		'size': ['small', false, 'large', 'huge']
+		// 	}],
+		// 	[{
+		// 		'header': [1, 2, 3, 4, 5, 6, false]
+		// 	}],
+		// 	[{
+		// 		'color': []
+		// 	}, {
+		// 		'background': []
+		// 	}],
+		// 	[{
+		// 		'align': []
+		// 	}],
+		// 	['clean']
+		// ];
+		// var quill = new Quill('#documento', {
+		// 	modules: {
+		// 		toolbar: toolbarOptions,
+		// 	},
+		// 	theme: 'snow' // or 'bubble'
+		// });
+		var tiny = tinymce.init({
+        selector: '#documento',
+		width: 900,
+		height: 800,
+		font_size_formats: '11pt'
+
+      });
+	  var tiny2 = tinymce.init({
+        selector: '#documento_editar',
+		width: 800,
+		height: 800,
+		font_size_formats: '11pt'
+
+      });
+		// var quill2 = new Quill('#documento_editar', {
+		// 	modules: {
+		// 		toolbar: toolbarOptions,
+		// 	},
+		// 	theme: 'snow' // or 'bubble'
+		// });
 
 		btn_actualizarFolioDoc.addEventListener('click', (event) => {
-			let contenidoModificado = quill2.container.firstChild.innerHTML;
+			let contenidoModificado =tinymce.get("documento_editar").getContent();
 			actualizarDocumento(contenidoModificado);
 		}, false);
 
@@ -356,12 +366,12 @@
 					success: function(response) {
 						if (response.status == 1) {
 							const plantilla = response.plantilla;
-							quill.root.innerHTML = plantilla.PLACEHOLDER;
+							tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
 							document.querySelector("#victima_modal_documento").value = '';
 							document.querySelector("#imputado_modal_documento").value = '';
 							document.getElementById("involucrados").style.display = "none";
 						} else {
-							quill.root.innerHTML = 'PLANTLLA VACÍA O CON ERROR';
+							tinymce.get("documento").setContent('PLANTLLA VACÍA O CON ERROR');
 							document.querySelector("#victima_modal_documento").value = '';
 							document.querySelector("#imputado_modal_documento").value = '';
 							document.getElementById("involucrados").style.display = "none";
@@ -390,13 +400,14 @@
 						console.log('TEST', response);
 						if (response.status == 1) {
 							const plantilla = response.plantilla;
-							quill.root.innerHTML = plantilla.PLACEHOLDER;
+							tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
 							document.querySelector("#victima_modal_documento").value = '';
 							document.querySelector("#imputado_modal_documento").value = '';
 							document.getElementById("involucrados").style.display = "none";
 							document.getElementById("div_uma").style.display = "none";
 						} else {
-							quill.root.innerHTML = 'PLANTLLA VACÍA O CON ERROR';
+							tinymce.get("documento").setContent('PLANTLLA VACÍA O CON ERROR');
+
 							document.querySelector("#victima_modal_documento").value = '';
 							document.querySelector("#imputado_modal_documento").value = '';
 							document.getElementById("involucrados").style.display = "none";
@@ -413,7 +424,7 @@
 
 		}
 		btn_guardarFolioDoc.addEventListener('click', (event) => {
-			let contenidoModificado = quill.container.firstChild.innerHTML;
+			let contenidoModificado =tinymce.get("documento").getContent();
 			// console.log(plantilla.value);
 			insertarDocumento(contenidoModificado, plantilla.value);
 		}, false);
@@ -867,55 +878,56 @@
 			success: function(response) {
 				if (response.status == 1) {
 					let documento_id = response.documentoporid;
-					var toolbarOptions = [
-						['bold', 'italic', 'underline', 'strike'],
-						['blockquote', 'code-block'],
-						[{
-							'header': 1
-						}, {
-							'header': 2
-						}],
-						[{
-							'list': 'ordered'
-						}, {
-							'list': 'bullet'
-						}],
-						[{
-							'script': 'sub'
-						}, {
-							'script': 'super'
-						}],
-						[{
-							'indent': '-1'
-						}, {
-							'indent': '+1'
-						}],
-						[{
-							'direction': 'rtl'
-						}],
-						[{
-							'size': ['small', false, 'large', 'huge']
-						}],
-						[{
-							'header': [1, 2, 3, 4, 5, 6, false]
-						}],
-						[{
-							'color': []
-						}, {
-							'background': []
-						}],
-						[{
-							'align': []
-						}],
-						['clean']
-					];
-					var quill2 = new Quill('#documento_editar', {
-						modules: {
-							toolbar: toolbarOptions,
-						},
-						theme: 'snow'
-					});
-					quill2.root.innerHTML = documento_id;
+					// var toolbarOptions = [
+					// 	['bold', 'italic', 'underline', 'strike'],
+					// 	['blockquote', 'code-block'],
+					// 	[{
+					// 		'header': 1
+					// 	}, {
+					// 		'header': 2
+					// 	}],
+					// 	[{
+					// 		'list': 'ordered'
+					// 	}, {
+					// 		'list': 'bullet'
+					// 	}],
+					// 	[{
+					// 		'script': 'sub'
+					// 	}, {
+					// 		'script': 'super'
+					// 	}],
+					// 	[{
+					// 		'indent': '-1'
+					// 	}, {
+					// 		'indent': '+1'
+					// 	}],
+					// 	[{
+					// 		'direction': 'rtl'
+					// 	}],
+					// 	[{
+					// 		'size': ['small', false, 'large', 'huge']
+					// 	}],
+					// 	[{
+					// 		'header': [1, 2, 3, 4, 5, 6, false]
+					// 	}],
+					// 	[{
+					// 		'color': []
+					// 	}, {
+					// 		'background': []
+					// 	}],
+					// 	[{
+					// 		'align': []
+					// 	}],
+					// 	['clean']
+					// ];
+					// var quill2 = new Quill('#documento_editar', {
+					// 	modules: {
+					// 		toolbar: toolbarOptions,
+					// 	},
+					// 	theme: 'snow'
+					// });
+					tinymce.get("documento_editar").setContent(documento_id);
+					// quill2.root.innerHTML = documento_id;
 					document.querySelector('#docid').value = foliodocid;
 
 				}
@@ -924,6 +936,19 @@
 				console.log(textStatus);
 			}
 		});
+	}
+
+	function getParameterByName(name, url = window.location.href) {
+		name = name.replace(/[\[\]]/g, "\\$&");
+		var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+			results = regex.exec(url);
+		if (!results) return null;
+		if (!results[2]) return '';
+		return decodeURIComponent(results[2].replace(/\+/g, " "));
+	}
+	
+	function remitir() {
+		window.location.href = `<?= base_url('/admin/dashboard/bandeja_remision?folio=') ?>${getParameterByName('folio')}&year=${getParameterByName('year')}&municipioasignado=${getParameterByName('municipioasignado')}&expediente=${getParameterByName('expediente')}`;
 	}
 </script>
 

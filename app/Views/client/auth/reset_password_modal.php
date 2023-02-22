@@ -6,6 +6,12 @@
 				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
+			<div id="loading_general" name="loading_general" class="text-center d-none" style="min-height:50px;">
+					<div class="justify-content-center">
+						<div class="spinner-border text-primary" role="status">
+						</div>
+					</div>
+				</div>
 				<form id="reset_password" action="<?= base_url("denuncia/send_email_change_password") ?>" method="post" class="needs-validation" novalidate>
 					<div class="mb-3" id="divCorreo">
 						<label for="correo_reset_password" class="col-form-label">Correo electrónico:</label>
@@ -14,7 +20,7 @@
 							Por favor, ingresa tu correo electrónico.
 						</div>
 					</div>
-					<button type="submit" class="btn btn-primary">Recuperar mi contraseña</button>
+					<button type="submit" class="btn btn-primary" id="btn_recuperar">Recuperar mi contraseña</button>
 				</form>
 			</div>
 		</div>
@@ -31,6 +37,8 @@
 				event.preventDefault();
 				event.stopPropagation();
 			} else {
+				document.querySelector('#loading_general').classList.remove('d-none');
+				document.getElementById('btn_recuperar').disabled = true;
 				event.preventDefault();
 				let regex = /\S+@\S+\.\S+/
 				let email = document.querySelector('#correo_reset_password');

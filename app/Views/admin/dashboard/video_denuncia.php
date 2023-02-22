@@ -31,6 +31,9 @@
 						<div class="input-group mb-1">
 							<input type="text" class="form-control d-none" id="input_expediente">
 						</div>
+						<div class="input-group mb-1">
+							<input type="text" class="form-control d-none" id="input_municipio">
+						</div>
 					</div>
 				</div>
 				<button id="buscar-btn" class="btn btn-secondary btn-block" role="button"><i class="fas fa-search"></i> Buscar</button>
@@ -95,6 +98,13 @@
 		<div class="card rounded bg-white shadow" style="height: 190px;">
 			<div class="card-body">
 				<button id="enviar-archivos-externos-btn" class="btn btn-primary btn-block h-100" role="button" data-toggle="modal" data-target="#subirDocumentosModal"><i class="fas fa-upload"></i> SUBIR A JUSTICIA NET</button>
+			</div>
+		</div>
+	</div>
+	<div id="card12" class="col-12 col-sm-6 col-md-4 col-lg-3 d-none">
+		<div class="card rounded bg-white shadow" style="height: 190px;">
+			<div class="card-body">
+				<button id="btn_remitir" class="btn btn-primary btn-block h-100" role="button" onclick="remitir();"><i class="fas fa-solid fa-inbox"></i> &nbsp; REMITIR FOLIO</button>
 			</div>
 		</div>
 	</div>
@@ -170,7 +180,7 @@
 	const inputFolio = document.querySelector('#input_folio_atencion');
 	const inputExpediente = document.querySelector('#input_expediente');
 	const inputDenuncia = document.querySelector('#input_denuncia');
-
+	const input_municipio = document.querySelector('#input_municipio');
 	var charRemain;
 	const inputF = document.getElementById('input_folio_atencion').value;
 	const buscar_btn = document.querySelector('#buscar-btn');
@@ -190,6 +200,7 @@
 	const card9 = document.querySelector('#card9');
 	const card10 = document.querySelector('#card10');
 	const card11 = document.querySelector('#card11');
+	const card12 = document.querySelector('#card12');
 
 
 
@@ -343,6 +354,10 @@
 			var nFilas = $("#documentos tr").length;
 			$("#adicionados").append(nFilas - 1);
 		}
+	}
+
+	function remitir() {
+		window.location.href = `<?= base_url('/admin/dashboard/bandeja_remision?folio=') ?>${inputFolio.value}&year=${year_select.value}&municipioasignado=${input_municipio.value}&expediente=${inputExpediente.value}`;
 	}
 
 	function view_form_parentesco($personafisica) {
@@ -1469,55 +1484,8 @@
 			success: function(response) {
 				let documentos = response.documentos;
 				let documento_id = response.documentoporid;
-				var toolbarOptions = [
-					['bold', 'italic', 'underline', 'strike'],
-					['blockquote', 'code-block'],
-					[{
-						'header': 1
-					}, {
-						'header': 2
-					}],
-					[{
-						'list': 'ordered'
-					}, {
-						'list': 'bullet'
-					}],
-					[{
-						'script': 'sub'
-					}, {
-						'script': 'super'
-					}],
-					[{
-						'indent': '-1'
-					}, {
-						'indent': '+1'
-					}],
-					[{
-						'direction': 'rtl'
-					}],
-					[{
-						'size': ['small', false, 'large', 'huge']
-					}],
-					[{
-						'header': [1, 2, 3, 4, 5, 6, false]
-					}],
-					[{
-						'color': []
-					}, {
-						'background': []
-					}],
-					[{
-						'align': []
-					}],
-					['clean']
-				];
-				var quill2 = new Quill('#documento_editar', {
-					modules: {
-						toolbar: toolbarOptions,
-					},
-					theme: 'snow' // or 'bubble'
-				});
-				quill2.root.innerHTML = documento_id;
+				tinymce.get("documento_editar").setContent(documento_id);
+
 				document.querySelector('#docid').value = foliodocid;
 			}
 		});
@@ -2238,60 +2206,19 @@
 
 			var expediente_modal_correo = document.querySelector('#expediente_modal_correo');
 			var year_modal_correo = document.querySelector('#year_modal_correo');
-			var toolbarOptions = [
-				['bold', 'italic', 'underline', 'strike'],
-				['blockquote', 'code-block'],
-				[{
-					'header': 1
-				}, {
-					'header': 2
-				}],
-				[{
-					'list': 'ordered'
-				}, {
-					'list': 'bullet'
-				}],
-				[{
-					'script': 'sub'
-				}, {
-					'script': 'super'
-				}],
-				[{
-					'indent': '-1'
-				}, {
-					'indent': '+1'
-				}],
-				[{
-					'direction': 'rtl'
-				}],
-				[{
-					'size': ['small', false, 'large', 'huge']
-				}],
-				[{
-					'header': [1, 2, 3, 4, 5, 6, false]
-				}],
-				[{
-					'color': []
-				}, {
-					'background': []
-				}],
-				[{
-					'align': []
-				}],
-				['clean']
-			];
-			var quill = new Quill('#documento', {
-				modules: {
-					toolbar: toolbarOptions,
-				},
-				theme: 'snow' // or 'bubble'
-			});
+			var tiny = tinymce.init({
+				selector: '#documento',
+				width: 900,
+				height: 800,
+				font_size_formats: '11pt'
 
-			var quill2 = new Quill('#documento_editar', {
-				modules: {
-					toolbar: toolbarOptions,
-				},
-				theme: 'snow' // or 'bubble'
+			});
+			var tiny2 = tinymce.init({
+				selector: '#documento_editar',
+				width: 800,
+				height: 800,
+				font_size_formats: '11pt'
+
 			});
 
 			inputsText.forEach((input) => {
@@ -3032,12 +2959,12 @@
 			});
 
 			btn_guardarFolioDoc.addEventListener('click', (event) => {
-				let contenidoModificado = quill.container.firstChild.innerHTML;
+				let contenidoModificado =tinymce.get("documento").getContent();
 				insertarDocumento(contenidoModificado, plantilla.value);
 			}, false);
 
 			btn_actualizarFolioDoc.addEventListener('click', (event) => {
-				let contenidoModificado = quill2.container.firstChild.innerHTML;
+				let contenidoModificado =tinymce.get("documento_editar").getContent();
 				actualizarDocumento(contenidoModificado);
 			}, false);
 
@@ -3930,6 +3857,19 @@
 								select_imputado_mputado.add(option, null);
 
 							});
+							$('#imputado_modal_documento').empty();
+							let select_imputado_modal = document.querySelector("#imputado_modal_documento");
+							select_imputado_modal.add(option_vacio, null);
+							imputados.forEach(imputado => {
+								let primer_apellido = imputado.PRIMERAPELLIDO ? imputado
+									.PRIMERAPELLIDO : '';
+
+								const option = document.createElement('option');
+								option.value = imputado.PERSONAFISICAID;
+								option.text = imputado.NOMBRE + ' ' + primer_apellido;
+								select_imputado_modal.add(option, null);
+
+							});
 							$('#victima_ofendido').empty();
 							let select_victima_ofendido = document.querySelector("#victima_ofendido");
 							select_victima_ofendido.add(option_vacio, null);
@@ -3941,6 +3881,18 @@
 								option.value = victima.PERSONAFISICAID;
 								option.text = victima.NOMBRE + ' ' + primer_apellido;
 								select_victima_ofendido.add(option, null);
+							});
+							$('#victima_modal_documento').empty();
+							let select_victima_modal = document.querySelector("#victima_modal_documento");
+							select_victima_modal.add(option_vacio, null);
+							victimas.forEach(victima => {
+								let primer_apellido = victima.PRIMERAPELLIDO ? victima
+									.PRIMERAPELLIDO : '';
+
+								const option = document.createElement('option');
+								option.value = victima.PERSONAFISICAID;
+								option.text = victima.NOMBRE + ' ' + primer_apellido;
+								select_victima_modal.add(option, null);
 							});
 							document.getElementById('subirFotoPersona').value = '';
 
@@ -5299,13 +5251,13 @@
 						success: function(response) {
 							if (response.status == 1) {
 								const plantilla = response.plantilla;
-								quill.root.innerHTML = plantilla.PLACEHOLDER;
+								tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
 								document.querySelector("#victima_modal_documento").value = '';
 								document.querySelector("#imputado_modal_documento").value = '';
 								document.getElementById("involucrados").style.display = "none";
 								document.getElementById("div_uma").style.display = "none";
 							} else {
-								quill.root.innerHTML = 'PLANTLLA VACÍA O CON ERROR';
+								tinymce.get("documento").setContent('PLANTLLA VACÍA O CON ERROR');
 								document.querySelector("#victima_modal_documento").value = '';
 								document.querySelector("#imputado_modal_documento").value = '';
 								document.getElementById("involucrados").style.display = "none";
@@ -5333,12 +5285,12 @@
 						success: function(response) {
 							if (response.status == 1) {
 								const plantilla = response.plantilla;
-								quill.root.innerHTML = plantilla.PLACEHOLDER;
+								tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
 								document.querySelector("#victima_modal_documento").value = '';
 								document.querySelector("#imputado_modal_documento").value = '';
 								document.getElementById("involucrados").style.display = "none";
 							} else {
-								quill.root.innerHTML = 'PLANTLLA VACÍA O CON ERROR';
+								tinymce.get("documento").setContent('PLANTLLA VACÍA O CON ERROR');
 								document.querySelector("#victima_modal_documento").value = '';
 								document.querySelector("#imputado_modal_documento").value = '';
 								document.getElementById("involucrados").style.display = "none";

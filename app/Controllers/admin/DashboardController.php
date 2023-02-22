@@ -5644,6 +5644,7 @@ class DashboardController extends BaseController
 		if (empty($expediente) || empty($year) || empty($titulo) || empty($victima) || empty($imputado)) {
 			return json_encode((object)['status' => 0]);
 		} else {
+
 			$data = (object) array();
 			$data->expediente = $this->_folioModel->asObject()->where('ANO', $year)->where('EXPEDIENTEID', $expediente)->first();
 			$data->estado = $this->_estadosModel->asObject()->where('ESTADOID', $data->expediente->ESTADOID)->first();
@@ -5684,8 +5685,8 @@ class DashboardController extends BaseController
 
 			$data->plantilla = str_replace('[DOCUMENTO_FECHA]', date('d') . ' DE ' . $meses[date('n') - 1] . " DEL " . date('Y'), $data->plantilla);
 
-			if ($data->folio->STATUS == 'EXPEDIENTE') {
-				$arrayExpediente = str_split($data->folio->EXPEDIENTEID);
+			if ($data->expediente->STATUS == 'EXPEDIENTE') {
+				$arrayExpediente = str_split($data->expediente->EXPEDIENTEID);
 				$expedienteConsecutivo = $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
 				$expedienteConsecutivo = str_split($expedienteConsecutivo);
 
@@ -5696,7 +5697,7 @@ class DashboardController extends BaseController
 				$expedienteid = $expedienteMunicipioEstado . '-' . $expedienteYear . '-' . implode($expedienteConsecutivo);
 				$data->plantilla = str_replace('[EXPEDIENTE_NUMERO]', $expedienteid, $data->plantilla);
 			} else {
-				$data->plantilla = str_replace('[EXPEDIENTE_NUMERO]', $data->folio->FOLIOID, $data->plantilla);
+				$data->plantilla = str_replace('[EXPEDIENTE_NUMERO]', $data->expediente->FOLIOID, $data->plantilla);
 			}
 
 			$data->plantilla = str_replace('[DOCUMENTO_MUNICIPIO]', $data->municipios->MUNICIPIODESCR, $data->plantilla);
@@ -5707,6 +5708,7 @@ class DashboardController extends BaseController
 			$data->plantilla = str_replace('[</span>VICTIMA_NOMBRE]', $data->victima[0]['NOMBRE'] . ' ' . ($data->victima[0]['PRIMERAPELLIDO'] ? $data->victima[0]['PRIMERAPELLIDO'] : '') . ' ' . ($data->victima[0]['SEGUNDOAPELLIDO'] ? $data->victima[0]['SEGUNDOAPELLIDO'] : ''), $data->plantilla);
 			$data->plantilla = str_replace('(VICTIMA Y/U OFENDIDO)', $data->victima[0]['NOMBRE'] . ' ' . ($data->victima[0]['PRIMERAPELLIDO'] ? $data->victima[0]['PRIMERAPELLIDO'] : '') . ' ' . ($data->victima[0]['SEGUNDOAPELLIDO'] ? $data->victima[0]['SEGUNDOAPELLIDO'] : ''), $data->plantilla);
 			$data->plantilla = str_replace('(REDACTAR_HECHO)', $data->expediente->HECHONARRACION ? $data->expediente->HECHONARRACION : 'SIN NARRACIÓN', $data->plantilla);
+
 			$data->plantilla = str_replace('[VICTIMAS_NOMBRE]', $data->victima[0]['NOMBRE'] . ' ' . ($data->victima[0]['PRIMERAPELLIDO'] ? $data->victima[0]['PRIMERAPELLIDO'] : '') . ' ' . ($data->victima[0]['SEGUNDOAPELLIDO'] ? $data->victima[0]['SEGUNDOAPELLIDO'] : ''), $data->plantilla);
 			$data->plantilla = str_replace('[VICTIMA_EDAD]', $data->victima[0]['EDADCANTIDAD'] ? $data->victima[0]['EDADCANTIDAD'] : '-', $data->plantilla);
 			$data->plantilla = str_replace('[VICTIMA_TELEFONO]', $data->victima[0]['TELEFONO'] ? $data->victima[0]['TELEFONO'] : '-', $data->plantilla);

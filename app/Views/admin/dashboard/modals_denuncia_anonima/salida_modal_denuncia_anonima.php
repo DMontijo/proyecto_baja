@@ -8,6 +8,12 @@
 				</button>
 			</div>
 			<div class="modal-body bg-light">
+			<div id="loading_general" name="loading_general" class="text-center d-none" style="min-height:50px;">
+					<div class="justify-content-center">
+						<div class="spinner-border text-primary" role="status">
+						</div>
+					</div>
+				</div>
 				<div class="row">
 					<div class="col-3">
 						<div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
@@ -272,9 +278,13 @@
 					url: "<?= base_url('/data/update-status-folio') ?>",
 					method: "POST",
 					dataType: "json",
-
+					beforeSend: function() {
+						showLoading()
+					},
 				}).done(function(data) {
 					btnFinalizar.removeAttribute('disabled');
+					document.querySelector('#loading_general').classList.add('d-none');
+
 					if (data.status == 1) {
 						document.querySelector('#tipo_salida').value = "";
 						document.querySelector('#notas_caso_salida').value = '';
@@ -300,6 +310,8 @@
 					}
 				}).fail(function(jqXHR, textStatus) {
 					btnFinalizar.removeAttribute('disabled');
+					document.querySelector('#loading_general').classList.add('d-none');
+
 				});
 
 			} else {
@@ -353,9 +365,12 @@
 						url: "<?= base_url('/data/save-in-justicia') ?>",
 						method: "POST",
 						dataType: "json",
-
+						beforeSend: function() {
+							showLoading()
+						},
 					}).done(function(data) {
 						btnFinalizar.removeAttribute('disabled');
+						document.querySelector('#loading_general').classList.add('d-none');
 
 						console.log(data);
 
@@ -371,7 +386,7 @@
 								$("#salida_modal_denuncia_anonima").modal("hide");
 								$('body').removeClass('modal-open');
 								$('.modal-backdrop').remove();
-								window.location.href = `<?= base_url('/admin/dashboard/documentos_show?expediente=') ?>` + data.expediente + '&year=' + year_select.value + '&folio=' + inputFolio.value;
+								window.location.href = `<?= base_url('/admin/dashboard/documentos_show?expediente=') ?>` + data.expediente + '&year=' + year_select.value + '&folio=' + inputFolio.value + '&municipioasignado='+municipio_empleado.value;
 								document.getElementById("form_folio").reset();
 							});
 						} else {
@@ -408,6 +423,8 @@
 								confirmButtonColor: '#bf9b55',
 							});
 							btnFinalizar.removeAttribute('disabled');
+							document.querySelector('#loading_general').classList.add('d-none');
+
 						});
 					});
 				} else {
@@ -442,6 +459,9 @@
 		const array = expediente.trim().split('');
 		// return array[0] + '-' + array[1] + array[2] + '-' + array[3] + array[4] + array[5] + '-' + array[6] + array[7] + array[8] + array[9] + '-' + array[10] + array[11] + array[12] + array[13] + array[14];
 		return array[1] + array[2] + array[4] + array[5] + '-' + array[6] + array[7] + array[8] + array[9] + '-' + array[10] + array[11] + array[12] + array[13] + array[14];
+	}
+	function showLoading() {
+		document.querySelector('#loading_general').classList.remove('d-none');
 	}
 
 	function contarCaracteresSalidaDa(obj) {
