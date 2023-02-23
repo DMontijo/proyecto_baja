@@ -2206,19 +2206,23 @@
 
 			var expediente_modal_correo = document.querySelector('#expediente_modal_correo');
 			var year_modal_correo = document.querySelector('#year_modal_correo');
+
 			var tiny = tinymce.init({
 				selector: '#documento',
-				width: 900,
+				width: 792,
 				height: 800,
-				font_size_formats: '11pt'
-
+				font_size_formats: '11pt',
+				plugins: 'quickbars table image link lists advlist media autoresize code',
+				toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright alignjustify | indent outdent | bullist numlist | code',
 			});
+
 			var tiny2 = tinymce.init({
 				selector: '#documento_editar',
-				width: 800,
+				width: 792,
 				height: 800,
-				font_size_formats: '11pt'
-
+				font_size_formats: '11pt',
+				plugins: 'quickbars table image link lists advlist media autoresize code',
+				toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright alignjustify | indent outdent | bullist numlist | code',
 			});
 
 			inputsText.forEach((input) => {
@@ -2959,12 +2963,12 @@
 			});
 
 			btn_guardarFolioDoc.addEventListener('click', (event) => {
-				let contenidoModificado =tinymce.get("documento").getContent();
+				let contenidoModificado = tinymce.get("documento").getContent();
 				insertarDocumento(contenidoModificado, plantilla.value);
 			}, false);
 
 			btn_actualizarFolioDoc.addEventListener('click', (event) => {
-				let contenidoModificado =tinymce.get("documento_editar").getContent();
+				let contenidoModificado = tinymce.get("documento_editar").getContent();
 				actualizarDocumento(contenidoModificado);
 			}, false);
 
@@ -5254,18 +5258,29 @@
 								tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
 								document.querySelector("#victima_modal_documento").value = '';
 								document.querySelector("#imputado_modal_documento").value = '';
+								plantilla.value = '';
+								select_uma.value = '';
 								document.getElementById("involucrados").style.display = "none";
 								document.getElementById("div_uma").style.display = "none";
 							} else {
-								tinymce.get("documento").setContent('PLANTLLA VACÍA O CON ERROR');
+								tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
 								document.querySelector("#victima_modal_documento").value = '';
 								document.querySelector("#imputado_modal_documento").value = '';
+								plantilla.value = '';
+								select_uma.value = '';
 								document.getElementById("involucrados").style.display = "none";
 								document.getElementById("div_uma").style.display = "none";
 							}
 						},
 						error: function(jqXHR, textStatus, errorThrown) {
 							console.error(textStatus);
+							tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
+							document.querySelector("#victima_modal_documento").value = '';
+							document.querySelector("#imputado_modal_documento").value = '';
+							plantilla.value = '';
+							select_uma.value = '';
+							document.getElementById("involucrados").style.display = "none";
+							document.getElementById("div_uma").style.display = "none";
 						}
 					});
 				} else {
@@ -5288,16 +5303,27 @@
 								tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
 								document.querySelector("#victima_modal_documento").value = '';
 								document.querySelector("#imputado_modal_documento").value = '';
+								plantilla.value = '';
+								select_uma.value = '';
 								document.getElementById("involucrados").style.display = "none";
 							} else {
-								tinymce.get("documento").setContent('PLANTLLA VACÍA O CON ERROR');
+								tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
 								document.querySelector("#victima_modal_documento").value = '';
 								document.querySelector("#imputado_modal_documento").value = '';
+								plantilla.value = '';
+								select_uma.value = '';
 								document.getElementById("involucrados").style.display = "none";
 							}
 						},
 						error: function(jqXHR, textStatus, errorThrown) {
 							console.error(textStatus);
+							tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
+							document.querySelector("#victima_modal_documento").value = '';
+							document.querySelector("#imputado_modal_documento").value = '';
+							plantilla.value = '';
+							select_uma.value = '';
+							document.getElementById("involucrados").style.display = "none";
+							document.getElementById("div_uma").style.display = "none";
 						}
 					});
 				}

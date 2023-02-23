@@ -2,7 +2,7 @@
 	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable mw-100 w-75">
 		<div class="modal-content" style="box-shadow: 0px 0px 55px 9px rgba(0,0,0,0.66)!important;">
 			<div class="modal-header bg-blue text-white">
-				<h5 class="modal-title font-weight-bold">DOCUMENTOS</h5>
+				<h5 class="modal-title font-weight-bold">AGREGAR DOCUMENTO</h5>
 				<button type="button" class="close text-primary" data-dismiss="modal" aria-label="Close">
 					<i class="fas fa-times"></i>
 				</button>

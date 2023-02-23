@@ -31,9 +31,6 @@
 			<div class="col-12 col-sm-6 col-md-4 col-lg-3">
 				<button type="button" style="min-height:120px;" class="btn btn-primary mb-3 w-100" id="subirDocumento" name="subirDocumento" data-toggle="modal" data-target="#subirDocumentosModal"><i class="fas fa-upload"></i> Subir a Justicia Net</button>
 			</div>
-			<div class="col-12 col-sm-6 col-md-4 col-lg-3">
-				<button type="button" style="min-height:120px;" class="btn btn-primary mb-3 w-100" id="btn_remitir" name="btn_remitir" onclick="remitir();"><i class="fas fa-solid fa-inbox"></i> Remitir expediente</button>
-			</div>
 			<div class="col-12">
 				<div class="table-responsive table-bordered">
 					<table id="table-documentos" class="table table-bordered table-hover table-striped table-light">
@@ -295,19 +292,21 @@
 		// 	theme: 'snow' // or 'bubble'
 		// });
 		var tiny = tinymce.init({
-        selector: '#documento',
-		width: 900,
-		height: 800,
-		font_size_formats: '11pt'
-
-      });
-	  var tiny2 = tinymce.init({
-        selector: '#documento_editar',
-		width: 800,
-		height: 800,
-		font_size_formats: '11pt'
-
-      });
+			selector: '#documento',
+			width: 792,
+			height: 800,
+			font_size_formats: '11pt',
+			plugins: 'quickbars table image link lists advlist media autoresize code',
+			toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright alignjustify | indent outdent | bullist numlist | code',
+		});
+		var tiny2 = tinymce.init({
+			selector: '#documento_editar',
+			width: 792,
+			height: 800,
+			font_size_formats: '11pt',
+			plugins: 'quickbars table image link lists advlist media autoresize code',
+			toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright alignjustify | indent outdent | bullist numlist | code',
+		});
 		// var quill2 = new Quill('#documento_editar', {
 		// 	modules: {
 		// 		toolbar: toolbarOptions,
@@ -316,7 +315,7 @@
 		// });
 
 		btn_actualizarFolioDoc.addEventListener('click', (event) => {
-			let contenidoModificado =tinymce.get("documento_editar").getContent();
+			let contenidoModificado = tinymce.get("documento_editar").getContent();
 			actualizarDocumento(contenidoModificado);
 		}, false);
 
@@ -349,73 +348,94 @@
 
 			if (document.getElementById('uma_select').value) {
 				const data = {
-
 					'folio': <?php echo $_GET['folio'] ?>,
 					'year': <?php echo $_GET['year'] ?>,
 					'titulo': tipoPlantilla,
 					'victima': victima,
 					'imputado': imputado,
 					'uma': document.getElementById('uma_select').value
-
 				};
+
 				$.ajax({
 					method: 'POST',
 					url: "<?= base_url('/data/get-plantilla') ?>",
 					data: data,
 					dataType: 'JSON',
 					success: function(response) {
+						console.log(response);
 						if (response.status == 1) {
 							const plantilla = response.plantilla;
 							tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
 							document.querySelector("#victima_modal_documento").value = '';
 							document.querySelector("#imputado_modal_documento").value = '';
+							document.querySelector("#plantilla").value = '';
+							document.getElementById('uma_select').value = ''
 							document.getElementById("involucrados").style.display = "none";
 						} else {
-							tinymce.get("documento").setContent('PLANTLLA VACÍA O CON ERROR');
+							tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
 							document.querySelector("#victima_modal_documento").value = '';
 							document.querySelector("#imputado_modal_documento").value = '';
+							document.querySelector("#plantilla").value = '';
+							document.getElementById('uma_select').value = ''
 							document.getElementById("involucrados").style.display = "none";
 						}
 					},
 					error: function(jqXHR, textStatus, errorThrown) {
 						console.error(textStatus);
+						tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
+						document.querySelector("#victima_modal_documento").value = '';
+						document.querySelector("#imputado_modal_documento").value = '';
+						document.querySelector("#plantilla").value = '';
+						document.getElementById('uma_select').value = ''
+						document.getElementById("involucrados").style.display = "none";
+						document.getElementById("div_uma").style.display = "none";
 					}
 				});
 			} else {
-				const data = {
 
+				const data = {
 					'folio': <?php echo $_GET['folio'] ?>,
 					'year': <?php echo $_GET['year'] ?>,
 					'titulo': tipoPlantilla,
 					'victima': victima,
 					'imputado': imputado,
-
 				};
+				console.log(data);
 				$.ajax({
 					method: 'POST',
 					url: "<?= base_url('/data/get-plantilla') ?>",
 					data: data,
 					dataType: 'JSON',
 					success: function(response) {
-						console.log('TEST', response);
+						console.log(response);
 						if (response.status == 1) {
 							const plantilla = response.plantilla;
 							tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
 							document.querySelector("#victima_modal_documento").value = '';
 							document.querySelector("#imputado_modal_documento").value = '';
+							document.querySelector("#plantilla").value = '';
+							document.getElementById('uma_select').value = ''
 							document.getElementById("involucrados").style.display = "none";
 							document.getElementById("div_uma").style.display = "none";
 						} else {
-							tinymce.get("documento").setContent('PLANTLLA VACÍA O CON ERROR');
-
+							tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
 							document.querySelector("#victima_modal_documento").value = '';
 							document.querySelector("#imputado_modal_documento").value = '';
+							document.querySelector("#plantilla").value = '';
+							document.getElementById('uma_select').value = ''
 							document.getElementById("involucrados").style.display = "none";
 							document.getElementById("div_uma").style.display = "none";
 						}
 					},
 					error: function(jqXHR, textStatus, errorThrown) {
 						console.error(textStatus);
+						tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
+						document.querySelector("#victima_modal_documento").value = '';
+						document.querySelector("#imputado_modal_documento").value = '';
+						document.querySelector("#plantilla").value = '';
+						document.getElementById('uma_select').value = ''
+						document.getElementById("involucrados").style.display = "none";
+						document.getElementById("div_uma").style.display = "none";
 					}
 				});
 			}
@@ -424,7 +444,7 @@
 
 		}
 		btn_guardarFolioDoc.addEventListener('click', (event) => {
-			let contenidoModificado =tinymce.get("documento").getContent();
+			let contenidoModificado = tinymce.get("documento").getContent();
 			// console.log(plantilla.value);
 			insertarDocumento(contenidoModificado, plantilla.value);
 		}, false);
@@ -945,10 +965,6 @@
 		if (!results) return null;
 		if (!results[2]) return '';
 		return decodeURIComponent(results[2].replace(/\+/g, " "));
-	}
-	
-	function remitir() {
-		window.location.href = `<?= base_url('/admin/dashboard/bandeja_remision?folio=') ?>${getParameterByName('folio')}&year=${getParameterByName('year')}&municipioasignado=${getParameterByName('municipioasignado')}&expediente=${getParameterByName('expediente')}`;
 	}
 </script>
 
