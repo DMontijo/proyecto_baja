@@ -65,8 +65,8 @@
 						<input type="time" class="form-control" id="hora_delito_da" name="hora_delito_da">
 					</div>
 					<div class="col-12 mb-3">
-						<label for="narracion_delito_da" class="form-label font-weight-bold">Narración:</label>
-						<textarea type="text" class="form-control" id="narracion_delito_da" name="narracion_delito_da" rows="5" maxlength="1000"></textarea>
+						<label for="notas_da" class="form-label font-weight-bold">Notas:</label>
+						<textarea class="form-control" id="notas_da" name="notas_da" row="10" oninput="mayuscTextarea(this)"  maxlength="300"></textarea>
 					</div>
 					<div class="col-12 mb-3 text-center">
 						<button type="submit" class="btn btn-primary font-weight-bold">ACTUALIZAR HECHO</button>
@@ -76,3 +76,9 @@
 		</div>
 	</div>
 </div>
+<script>
+	function mayuscTextarea(e) {
+		e.value = e.value.toUpperCase();
+	}
+
+</script>

@@ -151,6 +151,8 @@ $routes->group('admin', function ($routes) {
 
 		$routes->get('documentos_show', 'admin/DocumentosController::documentos_show');
 		$routes->post('firmar_documentos', 'admin/FirmaController::firmar_documentos');
+		$routes->post('firmar_documentos_id', 'admin/FirmaController::firmar_documentos_by_id');
+
 		$routes->post('insert-documentosWSYWSG', 'admin/DashboardController::insertFolioDoc');
 		$routes->post('send-documentos-correo', 'admin/FirmaController::sendEmailDocumentos');
 	});
@@ -237,7 +239,7 @@ $routes->group('data', function ($routes) {
 	$routes->post('get-video-link', 'admin/DashboardController::getVideoLink');
 	$routes->post('get-link-from-call', 'admin/DashboardController::getLinkFromCall');
 	$routes->post('get-active-users', 'admin/DashboardController::getActiveUsers');
-	$routes->post('get-duration-video', 'admin/DashboardController::getTimeVideo');
+	$routes->get('get-duration-video', 'admin/DashboardController::getTimeVideo');
 
 	//VEHÍCULOS
 	$routes->post('get-marca-by-dist', 'client/DashboardController::getMarcaByDist');

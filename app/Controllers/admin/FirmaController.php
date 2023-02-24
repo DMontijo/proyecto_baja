@@ -468,6 +468,124 @@ class FirmaController extends BaseController
 		}
 	}
 
+
+	public function firmar_documentos_by_id()
+	{
+		$folio = $this->request->getPost('folio_id');
+
+		$year = $this->request->getPost('year_doc');
+		$documento_id = $this->request->getPost('documento_id');
+
+		$password = str_replace(' ', '', trim($this->request->getPost('contrasena_doc')));
+		$user_id = session('ID');
+
+		$documento = $this->_folioDocModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento_id)->where('STATUS', 'ABIERTO')->findAll();
+
+
+		$folioRow = $this->_folioModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->first();
+		if ($documento == null || count($documento) <= 0) {
+			return json_encode((object)['status' => 0, 'message_error' => "No hay documentos por firmar"]);
+		}
+
+		$meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
+
+		$FECHAFIRMA = date("Y-m-d");
+		$HORAFIRMA = date("H:i");
+
+		try {
+			if ($this->_crearArchivosPEMText($user_id, $password)) {
+				if ($this->_validarFiel($user_id)) {
+					$fiel_user = $this->_extractData($user_id);
+					$razon_social = $fiel_user['razon_social'];
+					$rfc = $fiel_user['rfc'];
+					$num_certificado = $fiel_user['num_certificado'];
+					for ($i = 0; $i < count($documento); $i++) {
+						$municipio = (object)[];
+						$documento[$i]->PLACEHOLDER = str_replace('[EXPEDIENTE_NOMBRE_DEL_RESPONSABLE]', $razon_social, $documento[$i]->PLACEHOLDER);
+						$documento[$i]->PLACEHOLDER = str_replace('EXPEDIENTE_NOMBRE_DEL_RESPONSABLE', $razon_social, $documento[$i]->PLACEHOLDER);
+						$documento[$i]->PLACEHOLDER = str_replace('[NOMBRE_LICENCIADO]', $razon_social, $documento[$i]->PLACEHOLDER);
+						$documento[$i]->PLACEHOLDER = str_replace('[EXPEDIENTE_NOMBRE_MP_RESPONSABLE]', $razon_social, $documento[$i]->PLACEHOLDER);
+						$text = $documento[$i]->PLACEHOLDER;
+						$text = str_replace('<', ' <', $text);
+						$text = strip_tags($text);
+						$text = str_replace(chr(13), ' ', $text);
+						$text = str_replace(chr(10), ' ', $text);
+						$text = str_replace('  ', ' ', trim($text));
+						$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $documento[$i]->MUNICIPIOID)->where('ESTADOID', $documento[$i]->ESTADOID)->first();
+						if (isset($municipio) == false) {
+							$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $folioRow->MUNICIPIOID)->where('ESTADOID', $folioRow->ESTADOID)->first();
+						}
+						$estado = $this->_estadosModel->asObject()->where('ESTADOID', $documento[$i]->ESTADOID)->first();
+
+						$signature = $this->_generateSignature($user_id, "FIRMA DE DOCUMENTOS", $text, $folio, $FECHAFIRMA, $HORAFIRMA);
+
+						if ($folio != null && $folio != "undefined") {
+							$urldoc = base_url('/validar_documento?folio=' . base64_encode($folio) . '&year=' . $year . '&foliodoc=' . base64_encode($documento_id));
+						}
+						if (strlen($signature->signed_chain) > 2930) {
+							$signature->signed_chain = substr($signature->signed_chain, 0, 2930) . '...';
+						}
+						$datapdf = array(
+							'placeholder' => $documento[$i]->PLACEHOLDER,
+							'firma' => $signature->signature,
+							'numeroident' => $documento[$i]->FOLIODOCID . '/' . $documento[$i]->ANO,
+							'agente' => $razon_social,
+							'rfc' => $rfc,
+							'certificado' => $num_certificado,
+							'fecha' => $FECHAFIRMA,
+							'hora' => $HORAFIRMA,
+							'lugar' => $municipio->MUNICIPIODESCR . ", " . $estado->ESTADODESCR,
+							'qr3' => $this->_generateQR($signature->signed_chain),
+							'url' => $urldoc,
+							'qrurl' => $this->_generateQR($urldoc)
+						);
+
+						$pdf = $this->_generatePDFDocumentos($datapdf);
+
+						if ($signature->status == 1) {
+							$xmldocumentos = $this->_createXMLSignature($signature->signed_chain, $signature->signature, $folio, $year);
+							$datosInsert = [
+								'NUMEROIDENTIFICADOR' => $documento[$i]->FOLIODOCID . '/' . $documento[$i]->ANO,
+								'RAZONSOCIALFIRMA' => $razon_social,
+								'RFCFIRMA' => $rfc,
+								'NCERTIFICADOFIRMA' => $num_certificado,
+								'FECHAFIRMA' => $FECHAFIRMA,
+								'HORAFIRMA' => $HORAFIRMA,
+								'LUGARFIRMA' => $municipio->MUNICIPIODESCR . ", " . $estado->ESTADODESCR,
+								'FIRMAELECTRONICA' => base64_decode($signature->signature),
+								'CADENAFIRMADA' => $signature->signed_chain,
+								'PDF' => $pdf,
+								'XML' => $xmldocumentos,
+								'STATUS' => 'FIRMADO',
+								'PLACEHOLDER' => $documento[$i]->PLACEHOLDER,
+							];
+							if ($folio != null && $folio != "undefined") {
+								$update = $this->_folioDocModel->set($datosInsert)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
+
+							} 
+							if ($update) {
+								$datosBitacora = [
+									'ACCION' => 'Ha firmado un documento',
+									'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year . 'DOCUMENTO ID' . $documento_id,
+								];
+								$this->_bitacoraActividad($datosBitacora);
+							}
+						} else {
+							return json_encode((object)['status' => 0, 'message_error' => "Fallo al firmar el documento. Intentelo de nuevo."]);
+						}
+					}
+					if ($folio != null && $folio != "undefined") {
+						$documentosExp = $this->_folioDocModel->get_by_folio($folio, $year);
+					} 
+					return json_encode((object)['status' => 1, 'documentos' => $documentosExp]);
+				} else {
+					return json_encode((object)['status' => 0, 'message_error' => "La FIEL no es válida o está vencida"]);
+				}
+			}
+		} catch (\Exception $e) {
+			return json_encode((object)['status' => 0, 'message_error' => $e->getMessage()]);
+		}
+	}
 	private function _crearArchivosPEMText($agenteId, $pass)
 	{
 		$user_id = $agenteId;
@@ -908,14 +1026,21 @@ class FirmaController extends BaseController
 			$email = \Config\Services::email();
 			$email->setTo($to);
 			$email->setSubject('Documentos firmados - ' . $folio . '/' . $folioM->ANO);
-			$body = view('email_template/documentos_firmados_email_template.php', ['agente' => $agente, 'expediente' => $folioM->EXPEDIENTEID ? $expediente : 'SIN EXPEDIENTE', 'folio' => $folio, 'year' => $folioM->ANO, 'tipoexpediente' => $folioM->TIPOEXPEDIENTEID ? ($tipoExpediente  == "" ?$tipoExpediente : $tipoExpediente->TIPOEXPEDIENTEDESCR): $folioM->STATUS, 'status' => $folioM->STATUS, 'delito' => $delito, 'imputado' => $imputado]);
+			$body = view('email_template/documentos_firmados_email_template.php', ['agente' => $agente, 'expediente' => $folioM->EXPEDIENTEID ? $expediente : 'SIN EXPEDIENTE', 'folio' => $folio, 'year' => $folioM->ANO, 'tipoexpediente' => $folioM->TIPOEXPEDIENTEID ? ($tipoExpediente  == "" ? $tipoExpediente : $tipoExpediente->TIPOEXPEDIENTEDESCR) : $folioM->STATUS, 'status' => $folioM->STATUS, 'delito' => $delito, 'imputado' => $imputado]);
 			$email->setMessage($body);
 
 			for ($i = 0; $i < count($documento); $i++) {
-				$pdf = $documento[$i]->PDF;
-				$xml = $documento[$i]->XML;
-				$email->attach($pdf, 'attachment',  $documento[$i]->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento[$i]->FOLIODOCID . '.pdf', 'application/pdf');
-				$email->attach($xml, 'attachment', $documento[$i]->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento[$i]->FOLIODOCID . '.xml', 'application/xml');
+				if ($documento[$i]->TIPODOC == 'DENUNCIA ANONIMA') {
+					$pdf = $documento[$i]->PDF;
+					$email->attach($pdf, 'attachment',  $documento[$i]->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento[$i]->FOLIODOCID . '.pdf', 'application/pdf');
+
+				}else{
+					$pdf = $documento[$i]->PDF;
+					$xml = $documento[$i]->XML;
+					$email->attach($pdf, 'attachment',  $documento[$i]->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento[$i]->FOLIODOCID . '.pdf', 'application/pdf');
+					$email->attach($xml, 'attachment', $documento[$i]->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento[$i]->FOLIODOCID . '.xml', 'application/xml');
+				}
+			
 			}
 
 			$email->attach($termino_condiciones, 'attachment', 'Terminos_Y_Condiciones.pdf', 'application/pdf');
