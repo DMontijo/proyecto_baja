@@ -5482,6 +5482,7 @@ class DashboardController extends BaseController
 		$expediente = '';
 
 		try {
+
 			if (!isset($year) || !isset($titulo) || !isset($victima) || !isset($imputado) || !isset($folio)) {
 				return json_encode((object)['status' => 0]);
 			}
@@ -6008,6 +6009,7 @@ class DashboardController extends BaseController
 					}
 				}
 			}
+
 			if ($relacionfisfis != null) {
 				$data->relacion_delitodescr = $this->_delitoModalidadModel->asObject()->where('DELITOMODALIDADID', $relacionfisfis->DELITOMODALIDADID)->first();
 				$data->plantilla = str_replace('[DELITO]',  $data->relacion_delitodescr->DELITOMODALIDADDESCR ?  $data->relacion_delitodescr->DELITOMODALIDADDESCR : '-', $data->plantilla);
@@ -6075,7 +6077,6 @@ class DashboardController extends BaseController
 
 			$data->denunciantes = $this->_folioModel->get_denunciante($folio, $year);
 			$data->estado = $this->_estadosModel->asObject()->where('ESTADOID', $data->folio->ESTADOID)->first();
-			$data->folioDoc = $this->_folioDocModel->get_by_expediente($expediente, $data->folio->ANO);
 			$data->lugar_hecho = $data->folio->HECHOLUGARID ? $this->_hechoLugarModel->asObject()->where('HECHOLUGARID', $data->folio->HECHOLUGARID)->first() : (object)['HECHOLUGARDESCR' => 'NO ESPECIFICADO'];
 			$data->derivacion = $this->_derivacionesAtencionesModel->asObject()->where('MUNICIPIOID', $data->folio->INSTITUCIONREMISIONMUNICIPIOID)->where('INSTITUCIONREMISIONID',  $data->folio->INSTITUCIONREMISIONID)->first();
 			$data->canalizacion = $this->_canalizacionesAtencionesModel->asObject()->where('MUNICIPIOID', $data->folio->INSTITUCIONREMISIONMUNICIPIOID)->where('INSTITUCIONREMISIONID',  $data->folio->INSTITUCIONREMISIONID)->first();
@@ -6682,7 +6683,6 @@ class DashboardController extends BaseController
 
 				$data->plantilla = str_replace('[EXPEDIENTE_NUMERO]', $data->folio->FOLIOID, $data->plantilla);
 				$data->plantilla = str_replace('[TIPO_EXPEDIENTE]',  $data->folio->STATUS == "DERIVADO" ? "DERIVACIÓN" : "CANALIZACIÓN", $data->plantilla);
-
 				return json_encode(['status' => 1, 'plantilla' => $data->plantilla]);
 			} else {
 				$data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->where('TIPOEXPEDIENTEID',  $data->folio->TIPOEXPEDIENTEID)->first();
@@ -6695,7 +6695,7 @@ class DashboardController extends BaseController
 				$data->plantilla = str_replace('[VICTIMA_NOMBRE]', $data->victima[0]['NOMBRE'] . ' ' . ($data->victima[0]['PRIMERAPELLIDO'] ? $data->victima[0]['PRIMERAPELLIDO'] : '') . ' ' . ($data->victima[0]['SEGUNDOAPELLIDO'] ? $data->victima[0]['SEGUNDOAPELLIDO'] : ''), $data->plantilla);
 				$data->plantilla = str_replace('[</span>VICTIMA_NOMBRE]', $data->victima[0]['NOMBRE'] . ' ' . ($data->victima[0]['PRIMERAPELLIDO'] ? $data->victima[0]['PRIMERAPELLIDO'] : '') . ' ' . ($data->victima[0]['SEGUNDOAPELLIDO'] ? $data->victima[0]['SEGUNDOAPELLIDO'] : ''), $data->plantilla);
 				$data->plantilla = str_replace('(VICTIMA Y/U OFENDIDO)', $data->victima[0]['NOMBRE'] . ' ' . ($data->victima[0]['PRIMERAPELLIDO'] ? $data->victima[0]['PRIMERAPELLIDO'] : '') . ' ' . ($data->victima[0]['SEGUNDOAPELLIDO'] ? $data->victima[0]['SEGUNDOAPELLIDO'] : ''), $data->plantilla);
-				$data->plantilla = str_replace('(REDACTAR_HECHO)', $data->expediente->HECHONARRACION ? $data->expediente->HECHONARRACION : 'SIN NARRACIÓN', $data->plantilla);
+				$data->plantilla = str_replace('(REDACTAR_HECHO)', $data->folio->HECHONARRACION ? $data->folio->HECHONARRACION : 'SIN NARRACIÓN', $data->plantilla);
 
 				$data->plantilla = str_replace('[VICTIMAS_NOMBRE]', $data->victima[0]['NOMBRE'] . ' ' . ($data->victima[0]['PRIMERAPELLIDO'] ? $data->victima[0]['PRIMERAPELLIDO'] : '') . ' ' . ($data->victima[0]['SEGUNDOAPELLIDO'] ? $data->victima[0]['SEGUNDOAPELLIDO'] : ''), $data->plantilla);
 				$data->plantilla = str_replace('[VICTIMA_EDAD]', $data->victima[0]['EDADCANTIDAD'] ? $data->victima[0]['EDADCANTIDAD'] : '-', $data->plantilla);
@@ -6713,27 +6713,27 @@ class DashboardController extends BaseController
 				$data->plantilla = str_replace('[MINUTOS]', date('i'), $data->plantilla);
 				$data->plantilla = str_replace('[ESTADO]', $data->municipios->MUNICIPIODESCR, $data->plantilla);
 				$data->plantilla = str_replace('[LOCALIDAD_DELITO]', $data->localidad->LOCALIDADDESCR, $data->plantilla);
-				$data->plantilla = str_replace('[COLONIA_DELITO]', $data->expediente->HECHOCOLONIADESCR, $data->plantilla);
-				$data->plantilla = str_replace('[REFERENCIAS]', $data->expediente->HECHOREFERENCIA ? $data->expediente->HECHOREFERENCIA : 'SIN DATOS DE REFERENCIA', $data->plantilla);
-				$data->plantilla = str_replace('[CALLE]', $data->expediente->HECHOCALLE, $data->plantilla);
-				$data->plantilla = str_replace('[EXTERIOR]', $data->expediente->HECHONUMEROCASA, $data->plantilla);
-				$data->plantilla = str_replace('[DIRECCION]', $data->expediente->HECHOCALLE . ' ' . $data->expediente->HECHONUMEROCASA  . ',' . $data->expediente->HECHOCOLONIADESCR . ',' . $data->localidad->LOCALIDADDESCR . ',' . $data->municipio_delito->MUNICIPIODESCR, $data->plantilla);
+				$data->plantilla = str_replace('[COLONIA_DELITO]', $data->folio->HECHOCOLONIADESCR, $data->plantilla);
+				$data->plantilla = str_replace('[REFERENCIAS]', $data->folio->HECHOREFERENCIA ? $data->folio->HECHOREFERENCIA : 'SIN DATOS DE REFERENCIA', $data->plantilla);
+				$data->plantilla = str_replace('[CALLE]', $data->folio->HECHOCALLE, $data->plantilla);
+				$data->plantilla = str_replace('[EXTERIOR]', $data->folio->HECHONUMEROCASA, $data->plantilla);
+				$data->plantilla = str_replace('[DIRECCION]', $data->folio->HECHOCALLE . ' ' . $data->folio->HECHONUMEROCASA  . ',' . $data->folio->HECHOCOLONIADESCR . ',' . $data->localidad->LOCALIDADDESCR . ',' . $data->municipio_delito->MUNICIPIODESCR, $data->plantilla);
 				$data->plantilla = str_replace('[LUGAR_HECHO]', $data->lugar_delito->HECHODESCR, $data->plantilla);
 
 				$data->plantilla = str_replace('[MUNICIPIO_DELITO]', $data->municipio_delito->MUNICIPIODESCR, $data->plantilla);
 				$data->plantilla = str_replace('[LOCALIDAD_DELITO]', $data->localidad->LOCALIDADDESCR, $data->plantilla);
-				$data->plantilla = str_replace('[COLONIA_DELITO]', $data->expediente->HECHOCOLONIADESCR, $data->plantilla);
-				$data->plantilla = str_replace('[REFERENCIAS]', $data->expediente->HECHOREFERENCIA ? $data->expediente->HECHOREFERENCIA : 'SIN DATOS DE REFERENCIA', $data->plantilla);
-				$data->plantilla = str_replace('[CALLE]', $data->expediente->HECHOCALLE, $data->plantilla);
-				$data->plantilla = str_replace('[EXTERIOR]', $data->expediente->HECHONUMEROCASA, $data->plantilla);
-				$data->plantilla = str_replace('[DIRECCION]', $data->expediente->HECHOCALLE . ' ' . $data->expediente->HECHONUMEROCASA  . ',' . $data->expediente->HECHOCOLONIADESCR . ',' . $data->localidad->LOCALIDADDESCR . ',' . $data->municipio_delito->MUNICIPIODESCR, $data->plantilla);
+				$data->plantilla = str_replace('[COLONIA_DELITO]', $data->folio->HECHOCOLONIADESCR, $data->plantilla);
+				$data->plantilla = str_replace('[REFERENCIAS]', $data->folio->HECHOREFERENCIA ? $data->folio->HECHOREFERENCIA : 'SIN DATOS DE REFERENCIA', $data->plantilla);
+				$data->plantilla = str_replace('[CALLE]', $data->folio->HECHOCALLE, $data->plantilla);
+				$data->plantilla = str_replace('[EXTERIOR]', $data->folio->HECHONUMEROCASA, $data->plantilla);
+				$data->plantilla = str_replace('[DIRECCION]', $data->folio->HECHOCALLE . ' ' . $data->folio->HECHONUMEROCASA  . ',' . $data->folio->HECHOCOLONIADESCR . ',' . $data->localidad->LOCALIDADDESCR . ',' . $data->municipio_delito->MUNICIPIODESCR, $data->plantilla);
 				$data->plantilla = str_replace('[LUGAR_HECHO]', $data->lugar_delito->HECHODESCR, $data->plantilla);
-				$data->plantilla = str_replace('[HECHO]', $data->expediente->HECHONARRACION ? $data->expediente->HECHONARRACION : 'SIN NARRACIÓN', $data->plantilla);
+				$data->plantilla = str_replace('[HECHO]', $data->folio->HECHONARRACION ? $data->expedienfoliote->HECHONARRACION : 'SIN NARRACIÓN', $data->plantilla);
 				$data->plantilla = str_replace('[HECHO_LUGAR]', $data->lugar_hecho->HECHODESCR ? $data->lugar_hecho->HECHODESCR : '-', $data->plantilla);
-				$data->plantilla = str_replace('[HECHO_FECHA]', $data->expediente->HECHOFECHA ? $data->expediente->HECHOFECHA : '-', $data->plantilla);
-				$data->plantilla = str_replace('[HECHO_HORA]', $data->expediente->HECHOHORA ? $data->expediente->HECHOHORA : '-', $data->plantilla);
-				$data->plantilla = str_replace('[DETALLE_INTERVENCIONES]', $data->expediente->HECHONARRACION ? $data->expediente->HECHONARRACION : 'SIN NARRACIÓN', $data->plantilla);
-				$data->plantilla = str_replace('[HECHO_NARRACION]', $data->expediente->HECHONARRACION ? $data->expediente->HECHONARRACION : 'SIN NARRACIÓN', $data->plantilla);
+				$data->plantilla = str_replace('[HECHO_FECHA]', $data->folio->HECHOFECHA ? $data->folio->HECHOFECHA : '-', $data->plantilla);
+				$data->plantilla = str_replace('[HECHO_HORA]', $data->folio->HECHOHORA ? $data->folio->HECHOHORA : '-', $data->plantilla);
+				$data->plantilla = str_replace('[DETALLE_INTERVENCIONES]', $data->folio->HECHONARRACION ? $data->folio->HECHONARRACION : 'SIN NARRACIÓN', $data->plantilla);
+				$data->plantilla = str_replace('[HECHO_NARRACION]', $data->folio->HECHONARRACION ? $data->folio->HECHONARRACION : 'SIN NARRACIÓN', $data->plantilla);
 
 				$data->plantilla = str_replace('[TIPO_EXPEDIENTE]',  $data->tipoExpediente->TIPOEXPEDIENTECLAVE, $data->plantilla);
 				$data->plantilla = str_replace('[ZONA_SEJAP]',  'CENTRO DE DENUNCIA TECNOLÓGICA', $data->plantilla);
@@ -6834,6 +6834,7 @@ class DashboardController extends BaseController
 		$folioRow = $this->_folioModel->where('ANO', $year)->where('FOLIOID', $folio)->first();
 
 		if ($folioRow) {
+
 			$clasificaciondoctoid = '';
 
 			switch ($municipio) {
@@ -6858,6 +6859,7 @@ class DashboardController extends BaseController
 			}
 
 			$documentos_folio = $this->_folioDocModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('AGENTE_ASIGNADO !=', null)->first();
+
 			if ($documentos_folio) {
 				$dataFolioDoc = array(
 					'FOLIOID' => $folio,
@@ -6946,6 +6948,40 @@ class DashboardController extends BaseController
 		}
 	}
 
+	public function changeStatusDoc()
+	{
+		try {
+			$docid = trim($this->request->getPost('status_doc_id'));
+			$folio = trim($this->request->getPost('folio_id_doc'));
+			$year = trim($this->request->getPost('ano_doc'));
+			$status_doc_envio = $this->request->getPost('status_doc_envio');
+			$status_req_envio = $this->request->getPost('status_req_envio');
+
+			$dataDocumento = array(
+				'STATUSENVIO' => $status_doc_envio,
+				'ENVIADO' => $status_req_envio,
+
+			);
+
+			$updateDocumento = $this->_folioDocModel->set($dataDocumento)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $docid)->update();
+			if ($updateDocumento) {
+				$documentos = $this->_folioDocModel->get_by_folio($folio, $year);
+
+				$datosBitacora = [
+					'ACCION' => 'Ha actualizado el estatus de un documento',
+					'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
+				];
+
+				$this->_bitacoraActividad($datosBitacora);
+
+				return json_encode(['status' => 1, 'documentos' => $documentos]);
+			} else {
+				return json_encode(['status' => 0, 'message' => $updateDocumento]);
+			}
+		} catch (\Exception $e) {
+			return json_encode(['status' => 0]);
+		}
+	}
 	private function _folioDoc($data, $expediente, $year)
 	{
 		$data = $data;

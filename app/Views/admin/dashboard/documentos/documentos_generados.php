@@ -11,8 +11,12 @@
 
 <?php include('app/Views/admin/dashboard/video_denuncia_modals/documentos_modal.php') ?>
 <?php include 'app/Views/admin/dashboard/video_denuncia_modals/documentos_modal_editar.php' ?>
+<?php include 'app/Views/admin/dashboard/video_denuncia_modals/change_status_doc.php' ?>
+
 <?php include 'app/Views/admin/dashboard/video_denuncia_modals/documentos_modal_wyswyg.php' ?>
 <?php include 'app/Views/admin/dashboard/video_denuncia_modals/send_email_modal.php' ?>
+<?php include 'app/Views/admin/dashboard/video_denuncia_modals/send_email_modal_docunitario.php' ?>
+
 <?php include 'app/Views/admin/dashboard/video_denuncia_modals/prueba.php' ?>
 <section class="content">
 	<div class="container-fluid">
@@ -57,7 +61,6 @@
 		document.getElementById('enviarDocumento').disabled = true;
 		document.getElementById('subirDocumento').disabled = true;
 		document.getElementById('btn_remitir').disabled = true;
-
 	</script>
 <?php } ?>
 <?php if ($body_data->foliorow[0]->STATUS != "EXPEDIENTE" && $body_data->foliorow[0]->TIPODENUNCIA == "VD") { ?>
@@ -98,6 +101,8 @@
 		let select_victima_documento = document.querySelector("#victima_modal_documento");
 		let select_imputado_documento = document.querySelector("#imputado_modal_documento");
 		let btn_enviarcorreoDoc = document.querySelector('#enviarcorreoDoc');
+		let btn_enviarcorreoDocUni = document.querySelector('#enviarcorreoDocUnitario');
+
 		let btn_archivos_externos = document.querySelector('#subirDocumento');
 		let resultado = getParameterByName('q');
 
@@ -169,6 +174,14 @@
 							option.text = correo.CORREO;
 							select_mail_send.add(option, null);
 						});
+						$('#send_mail_select_uni').empty();
+						let send_mail_select_uni = document.querySelector("#send_mail_select_uni");
+						correos.forEach(correo => {
+							const option = document.createElement('option');
+							option.value = correo.CORREO;
+							option.text = correo.CORREO;
+							send_mail_select_uni.add(option, null);
+						});
 
 					}
 				},
@@ -235,7 +248,14 @@
 							option.text = correo.CORREO;
 							select_mail_send.add(option, null);
 						});
-
+						$('#send_mail_select_uni').empty();
+						let send_mail_select_uni = document.querySelector("#send_mail_select_uni");
+						correos.forEach(correo => {
+							const option = document.createElement('option');
+							option.value = correo.CORREO;
+							option.text = correo.CORREO;
+							send_mail_select_uni.add(option, null);
+						});
 					}
 				},
 				error: function(jqXHR, textStatus, errorThrown) {}
@@ -417,16 +437,16 @@
 							tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
 							document.querySelector("#victima_modal_documento").value = '';
 							document.querySelector("#imputado_modal_documento").value = '';
-							document.querySelector("#plantilla").value = '';
 							document.getElementById('uma_select').value = ''
+							document.querySelector("#plantilla").value = '';
 							document.getElementById("involucrados").style.display = "none";
 							document.getElementById("div_uma").style.display = "none";
 						} else {
 							tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
 							document.querySelector("#victima_modal_documento").value = '';
 							document.querySelector("#imputado_modal_documento").value = '';
-							document.querySelector("#plantilla").value = '';
 							document.getElementById('uma_select').value = ''
+							document.querySelector("#plantilla").value = '';
 							document.getElementById("involucrados").style.display = "none";
 							document.getElementById("div_uma").style.display = "none";
 						}
@@ -757,6 +777,65 @@
 
 
 		}, false);
+		btn_enviarcorreoDocUni.addEventListener('click', (event) => {
+			const data = {
+				'send_mail_select': document.querySelector('#send_mail_select_uni').value,
+				'expediente_modal_correo': getParameterByName('expediente'),
+				'year_modal_correo': document.querySelector("#year_modal_correo_uni").value,
+				'folio':document.querySelector("#folio_modal_correo_uni").value,
+				'folio_doc': document.querySelector("#foliodoc_modal_correo_uni").value 
+
+			};
+			$.ajax({
+				data: data,
+				url: "<?= base_url('/admin/dashboard/send-documentos-correo-by-id') ?>",
+				method: "POST",
+				dataType: "json",
+				beforeSend: function() {
+					document.querySelector('#load_mail_uni').classList.add('d-none');
+					document.querySelector('#enviar_modalLabelUni').classList.add('d-none');
+					document.querySelector('#loading_mail_uni').classList.remove('d-none');
+					document.querySelector('#password_verifying_mail_uni').classList.remove(
+						'd-none');
+						btn_enviarcorreoDocUni.disabled = true;
+				},
+				success: function(response) {
+					console.log(response);
+					if (response.status == 1) {
+						Swal.fire({
+							icon: 'success',
+							text: 'Correo enviado correctamente',
+							confirmButtonColor: '#bf9b55',
+						});
+						$('#sendEmailDocModalUni').modal('hide');
+						document.querySelector('#load_mail_uni').classList.remove('d-none');
+						document.querySelector('#enviar_modalLabelUni').classList.remove('d-none');
+						document.querySelector('#loading_mail_uni').classList.add('d-none');
+						document.querySelector('#password_verifying_mail_uni').classList.add(
+							'd-none');
+							btn_enviarcorreoDocUni.disabled = false;
+
+					}
+					if (response.status == 3) {
+						Swal.fire({
+							icon: 'error',
+							text: 'No hay documentos a enviar',
+							confirmButtonColor: '#bf9b55',
+						});
+						$('#sendEmailDocModalUni').modal('hide');
+						document.querySelector('#load_mail_uni').classList.remove('d-none');
+						document.querySelector('#enviar_modalLabelUni').classList.remove('d-none');
+						document.querySelector('#loading_mail_uni').classList.add('d-none');
+						document.querySelector('#password_verifying_mail_uni').classList.add(
+							'd-none');
+							btn_enviarcorreoDocUni.disabled = false;
+					}
+				},
+				error: function(jqXHR, textStatus, errorThrown) {}
+			});
+
+
+		}, false);
 
 		btn_archivos_externos.addEventListener('click', (event) => {
 			$('#subirDocumentosModal').modal('show');
@@ -903,6 +982,8 @@
 														XML
 													</button>
 												</form>`
+				var btnCambiarStatus = `<button type='button'  class='btn btn-primary my-2' onclick='cambiarStatusDoc(${documentos[i].FOLIODOCID}, ${documentos[i].STATUSENVIO}, "${documentos[i].ENVIADO}", ${documentos[i].FOLIOID}, ${documentos[i].ANO})'><i class="fas fa-dice"></i></button>`
+				var btnEnviar = `<button type='button'  class='btn btn-primary my-2' onclick='firmarUnitarioModal(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})'><i class="fas fa-paper-plane"></i></button>`
 
 			} else {
 				var btn =
@@ -927,13 +1008,15 @@
 												</form>`
 				var btnFirmar =
 					`<button type='button'  class='btn btn-primary my-2' onclick='firmarDocumento(${documentos[i].FOLIOID}, ${documentos[i].ANO}, ${documentos[i].FOLIODOCID})'><i class="fas fa-signature"></i></button>`
+				var btnCambiarStatus = `<button type='button'  class='btn btn-primary my-2' onclick='cambiarStatusDoc(${documentos[i].FOLIODOCID}, ${documentos[i].STATUSENVIO}, "${documentos[i].ENVIADO}", ${documentos[i].FOLIOID}, ${documentos[i].ANO})'><i class="fas fa-dice"></i></button>`
+				var btnEnviar = `<button type='button'  class='btn btn-primary my-2' onclick='firmarUnitarioModal(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})' disabled><i class="fas fa-paper-plane"></i></button>`
 
 			}
 			var fila =
 				`<tr id="row${i}">` +
 				`<td class="text-center">${documentos[i].TIPODOC}</td>` +
 				`<td class="text-center">${documentos[i].STATUS}</td>` +
-				`<td class="text-center">${btn} ${btnpdf} ${btnxml} ${btnFirmar}</td>` +
+				`<td class="text-center">${btn} ${btnpdf} ${btnxml} ${btnFirmar} ${btnCambiarStatus} ${btnEnviar}</td>` +
 				`</tr>`;
 
 			$('#table-documentos tr:first').after(fila);
@@ -943,11 +1026,32 @@
 		}
 	}
 
-	function firmarDocumento(folio, ano,foliodocid) {
+	function firmarDocumento(folio, ano, foliodocid) {
 		document.querySelector('#folio_id').value = folio;
 		document.querySelector('#documento_id').value = foliodocid;
-		document.querySelector('#year_doc').value =ano;
+		document.querySelector('#year_doc').value = ano;
 		$('#contrasena_modal_doc_id').modal('show');
+
+	}
+
+	function firmarUnitarioModal(foliodocid, folio, ano) {
+
+		$('#sendEmailDocModalUni').modal('show');
+		document.querySelector("#foliodoc_modal_correo_uni").value = foliodocid;
+		document.querySelector("#folio_modal_correo_uni").value = folio;
+		document.querySelector("#year_modal_correo_uni").value = ano;
+
+	}
+
+	function cambiarStatusDoc(foliodocid, status_envio, enviado, folio, ano) {
+
+		$('#change_status_modal').modal('show');
+		document.querySelector("#status_doc_envio").value = status_envio;
+		document.querySelector("#status_req_envio").value = enviado;
+		console.log(enviado);
+		document.querySelector("#status_doc_id").value = foliodocid;
+		document.querySelector("#folio_id_doc").value = folio;
+		document.querySelector("#ano_doc").value = ano;
 
 	}
 
