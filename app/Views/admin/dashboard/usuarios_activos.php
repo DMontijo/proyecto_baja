@@ -49,6 +49,7 @@
 			method: "POST",
 			dataType: "json",
 			success: function(response) {
+				console.log(response);
 				let message = document.querySelector("#message");
 				let table = document.querySelector("#table-usuarios-activos");
 				let tbody = document.querySelector("#table-usuarios-activos tbody");
@@ -67,7 +68,8 @@
 						let text_1 = document.createTextNode((user.name).toUpperCase());
 						let td_2 = document.createElement("td");
 						td_2.classList.add('text-center');
-						let text_2 = document.createTextNode('ACTIVO');
+						let texto_activo = 'ACTIVO - ' + (user.evento == 'vlon' ? 'DISPONIBLE' : 'NO DISPONIBLE');
+						let text_2 = document.createTextNode(texto_activo);
 						td_2.classList.add('font-weight-bold');
 						td_2.classList.add('text-success');
 
