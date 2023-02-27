@@ -367,6 +367,201 @@ class PlantillasTestingSeeder extends Seeder
 				'AREAPERICIALENSENADAID' => NULL,
 				'INTERVENCIONENSENADAID' => NULL,
 			),
+			array(
+				'DESCRIPCION' => '', 'TITULO' => 'DENUNCIA ANONIMA',
+				'PLACEHOLDER' => '
+				<p style="text-align: right;">&nbsp;</p>
+				<table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-style: solid; border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px">
+					<tbody>
+						<tr>
+						 <td>
+							<p>
+								<span style="color: rgb(0, 0, 0);">Folio: </span>
+								<span style="color: rgb(0, 0, 0);text-decoration: underline;">[FOLIO] </span>
+							</p>
+						</td>
+						<td>
+							<p>
+								<span style="color: rgb(0, 0, 0);">Fecha: </span>
+								<span style="color: rgb(0, 0, 0);text-decoration: underline;">[DIA] / [MES] / [ANO] </span>
+				
+							</p>
+						</td>
+						<td>
+							<p>
+								<span style="color: rgb(0, 0, 0);"> Hora: </span>
+								<span style="color: rgb(0, 0, 0);text-decoration: underline;">[HORA] : [MINUTOS]</span>
+				
+							</p>
+						</td>
+						<td>
+							<p>
+								<span style="color: rgb(0, 0, 0);"> Usuario:</span>
+								<span style="color: rgb(0, 0, 0);text-decoration: underline;">[USUARIO_ID]</span>
+				
+				
+							</p>
+						</td>
+				
+					</tr>
+				</tbody>
+				</table>
+				<br>
+				<p style="text-align: center;"><strong>Datos del Hecho</strong></p>
+				<hr></hr>
+				<table width="100%" border="0" cellspacing="0" cellpadding="0">
+					<tbody>
+						<tr>
+				
+							<td>
+								<p>
+									<span style="color: rgb(0, 0, 0);">Fecha Delito: </span>
+									<span style="color: rgb(0, 0, 0);text-decoration: underline;">[DIA] / [MES] / [ANO] </span>
+				
+								</p>
+							</td>
+							<td>
+								<p>
+									<span style="color: rgb(0, 0, 0);"> Hora Delito: </span>
+									<span style="color: rgb(0, 0, 0);text-decoration: underline;">[HORA] : [MINUTOS]</span>
+				
+								</p>
+							</td>
+							<td>
+								<p>
+									<span style="color: rgb(0, 0, 0);"> Municipio:</span>
+									<span style="color: rgb(0, 0, 0);text-decoration: underline;">[MUNICIPIO_DELITO]</span>        
+				
+				
+				
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<p>
+									<span style="color: rgb(0, 0, 0);"> Delegación:</span>
+									<span style="color: rgb(0, 0, 0);text-decoration: underline;">[LOCALIDAD_DELITO]</span>
+								</p>
+							</td>
+							<td>
+								<p>
+									<span style="color: rgb(0, 0, 0);"> Colonia:</span>
+									<span style="color: rgb(0, 0, 0);text-decoration: underline;">[COLONIA_DELITO]</span>
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<p>
+									<span style="color: rgb(0, 0, 0);"> Dirección:</span>
+									<span style="color: rgb(0, 0, 0);text-decoration: underline;">[DIRECCION]</span>
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<p>
+									<span style="color: rgb(0, 0, 0);"> No. Ext:</span>
+									<span style="color: rgb(0, 0, 0);text-decoration: underline;">[EXTERIOR]</span>
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<p>
+									<span style="color: rgb(0, 0, 0);">Calles:</span>
+									<span style="color: rgb(0, 0, 0);text-decoration: underline;">[CALLE]</span>
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<p>
+									<span style="color: rgb(0, 0, 0);">Lugar:</span>
+									<span style="color: rgb(0, 0, 0);text-decoration: underline;">[LUGAR_HECHO]</span>
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<p>
+									<span style="color: rgb(0, 0, 0);">Referencias:</span>
+									<span style="color: rgb(0, 0, 0);text-decoration: underline;">[REFERENCIAS]</span>
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<p>
+									<span style="color: rgb(0, 0, 0);">Armas:</span>
+									<span style="color: rgb(0, 0, 0);text-decoration: underline;">[ARMAS]</span>
+								</p>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<hr></hr>
+				<br>
+				<p style="text-align: center;"><strong>Delitos</strong></p>
+				[TABLA_DELITOS]
+				<br>
+				<p style="text-align: left; padding-left: 10%;"><strong>Denunciados</strong></p>
+				[TABLA_IMPUTADOS]
+				
+				<br>
+				<p style="text-align: left; padding-left: 10%;"><strong>Vehículos sospechosos</strong></p>
+				[TABLA_VEHICULOS]
+				
+				<br>
+				<p style="text-align: right;">&nbsp;</p>
+				<table width="100%" border="0" cellspacing="0" cellpadding="3"  style="border-style: solid; border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px">    
+					<tbody>
+						<tr style="text-align: center; font-weight: bold;">
+						 <td colspan="5">
+							<p>
+								<span style="color: rgb(0, 0, 0);">Notas </span>
+				
+							</p>
+						</td>
+						<td colspan="5">
+							<p>
+								<span style="color: rgb(0, 0, 0);">Hora </span>
+							</p>
+						</td>
+					   <tr style="text-align: center;">
+						 <td colspan="5">
+							<p>
+								<span style="color: rgb(0, 0, 0);">[NOTAS] </span>
+				
+							</p>
+						</td>
+						<td colspan="5">
+							<p>
+								<span style="color: rgb(0, 0, 0);">[HORA_NOTAS]</span>
+							</p>
+						</td>
+					   </tr>
+				
+					</tr>
+				</tbody>
+				</table>
+				<br>
+				',
+				'TEXTO' => NULL,
+				'PLANTILLAJUSTICIAMEXICALIID' => NULL,
+				'CLASIFICACIONDOCTOMEXICALIID' => NULL,
+				'PLANTILLAJUSTICIATIJUANAID' => NULL,
+				'CLASIFICACIONDOCTOTIJUANAID' => NULL,
+				'PLANTILLAJUSTICIAENSENADAID' => NULL,
+				'CLASIFICACIONDOCTOENSENADAID' => NULL,
+				'AREAPERICIALMEXICALIID' => NULL,
+				'INTERVENCIONMEXICALIID' => NULL,
+				'AREAPERICIALTIJUANAID' => NULL,
+				'INTERVENCIONTIJUANAID' => NULL,
+				'AREAPERICIALENSENADAID' => NULL,
+				'INTERVENCIONENSENADAID' => NULL,
+			),
 		];
 
 		$this->db->table('PLANTILLAS')->insertBatch($data);

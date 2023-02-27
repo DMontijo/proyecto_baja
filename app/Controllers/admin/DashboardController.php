@@ -5481,6 +5481,7 @@ class DashboardController extends BaseController
 		$expediente = '';
 
 		try {
+
 			if (!isset($year) || !isset($titulo) || !isset($victima) || !isset($imputado) || !isset($folio)) {
 				return json_encode((object)['status' => 0]);
 			}
@@ -6007,6 +6008,7 @@ class DashboardController extends BaseController
 					}
 				}
 			}
+
 			if ($relacionfisfis != null) {
 				$data->relacion_delitodescr = $this->_delitoModalidadModel->asObject()->where('DELITOMODALIDADID', $relacionfisfis->DELITOMODALIDADID)->first();
 				$data->plantilla = str_replace('[DELITO]',  $data->relacion_delitodescr->DELITOMODALIDADDESCR ?  $data->relacion_delitodescr->DELITOMODALIDADDESCR : '-', $data->plantilla);
@@ -6019,7 +6021,7 @@ class DashboardController extends BaseController
 
 			$expediente = $data->folio->EXPEDIENTEID ? $data->folio->EXPEDIENTEID : null;
 
-			if ($uma == 'MEXICALI - CD MORELOS') {
+			if ($uma== 'MEXICALI - CD MORELOS') {
 				$data->plantilla = str_replace('[DOMICILIO_INSTALACION]', 'CALZADA LÁZARO CÁRDENAS S/N. A UN COSTADO DE WELTON, EN CIUDAD MORELOS.', $data->plantilla);
 				$data->plantilla = str_replace('[TELEFONO_UMA]', '(658) 514-84-74 EXT. 7530, 7531, 7532, 7533, 7534 Y 7535.(658) 514-83-60 EXT. 7558, 7562, 7568, 7569 Y 7570', $data->plantilla);
 			} else if ($uma == 'MEXICALI - GPE VICTORIA') {
@@ -6074,7 +6076,6 @@ class DashboardController extends BaseController
 
 			$data->denunciantes = $this->_folioModel->get_denunciante($folio, $year);
 			$data->estado = $this->_estadosModel->asObject()->where('ESTADOID', $data->folio->ESTADOID)->first();
-			$data->folioDoc = $this->_folioDocModel->get_by_expediente($expediente, $data->folio->ANO);
 			$data->lugar_hecho = $data->folio->HECHOLUGARID ? $this->_hechoLugarModel->asObject()->where('HECHOLUGARID', $data->folio->HECHOLUGARID)->first() : (object)['HECHOLUGARDESCR' => 'NO ESPECIFICADO'];
 			$data->derivacion = $this->_derivacionesAtencionesModel->asObject()->where('MUNICIPIOID', $data->folio->INSTITUCIONREMISIONMUNICIPIOID)->where('INSTITUCIONREMISIONID',  $data->folio->INSTITUCIONREMISIONID)->first();
 			$data->canalizacion = $this->_canalizacionesAtencionesModel->asObject()->where('MUNICIPIOID', $data->folio->INSTITUCIONREMISIONMUNICIPIOID)->where('INSTITUCIONREMISIONID',  $data->folio->INSTITUCIONREMISIONID)->first();
@@ -6170,508 +6171,8 @@ class DashboardController extends BaseController
 					$data->plantilla = str_replace('[DENUNCIANTE_NOMBRE]', $data->denunciantes->NOMBRE . ' ' . ($data->denunciantes->APELLIDO_PATERNO ? $data->denunciantes->APELLIDO_PATERNO : '') . ' ' . ($data->denunciantes->APELLIDO_MATERNO ? $data->denunciantes->APELLIDO_MATERNO : ''), $data->plantilla);
 					$data->plantilla = str_replace('[OFICINA_NOMBRE]', $data->derivacion->INSTITUCIONREMISIONDESCR, $data->plantilla);
 					$data->plantilla = str_replace('[OFICINA_DOMICILIO]', $data->derivacion->DOMICILIO, $data->plantilla);
-						$data->delitosModalidadFiltro = $this->_delitoModalidadModel->get_delitodescr($data->expediente->FOLIOID, $data->expediente->ANO);
-			$data->imputados_da = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->expediente->FOLIOID)->where('ANO', $data->expediente->ANO)->where('CALIDADJURIDICAID', 2)->findAll();
-			$data->vehiculos_da = $this->_folioVehiculoModel->asObject()->where('FOLIOID', $data->expediente->FOLIOID)->where('ANO', $data->expediente->ANO)->findAll();
-			$data->municipio_delito = $this->_municipiosModel->asObject()->where('ESTADOID',  $data->expediente->HECHOESTADOID)->where('MUNICIPIOID',  $data->expediente->HECHOMUNICIPIOID)->first();
-			$data->localidad = $this->_localidadesModel->asObject()->where('ESTADOID',  $data->expediente->HECHOESTADOID)->where('MUNICIPIOID',  $data->expediente->HECHOMUNICIPIOID)->where('LOCALIDADID', $data->expediente->HECHOLOCALIDADID)->first();
-			$data->lugar_delito = $this->_hechoLugarModel->asObject()->where('HECHOLUGARID', $data->expediente->HECHOLUGARID)->first();
+					
 			
-			if ($data->plantilla['TITULO'] == 'DENUNCIA ANONIMA') {
-				$data->plantilla = str_replace('[FOLIO]',  $data->expediente->FOLIOID, $data->plantilla);
-				$data->plantilla = str_replace('[USUARIO_ID]',  $data->expediente->AGENTEATENCIONID, $data->plantilla);
-				$data->plantilla = str_replace('[NOTAS]',  $data->expediente->NOTASAGENTE, $data->plantilla);
-				$data->plantilla = str_replace('[HORA_NOTAS]',  date('H:i:s', strtotime($data->expediente->FECHASALIDA)), $data->plantilla);
-				$data->plantilla = str_replace('[ARMAS]', '', $data->plantilla);
-
-				if ($data->vehiculos_da) {
-					foreach ($data->vehiculos_da as $key => $vehiculos) {
-						$estadoV = $this->_estadosModel->asObject()->where('ESTADOID',  $vehiculos->ESTADOIDPLACA)->first();
-						$linea = $this->_vehiculoVersionModel->asObject()->where('VEHICULOVERSIONID',  $vehiculos->VEHICULOVERSIONID)->first();
-						$color = $this->_coloresVehiculoModel->asObject()->where('VEHICULOCOLORID',  $vehiculos->PRIMERCOLORID)->first();
-						$tipo = $this->_tipoVehiculoModel->asObject()->where('VEHICULOTIPOID',  $vehiculos->TIPOID)->first();
-
-						$data->plantilla = str_replace(
-							'[TABLA_VEHICULOS]',
-							'[TABLA_VEHICULOS]' . $key,
-							$data->plantilla
-						);
-						if ($vehiculos == end($data->vehiculos_da)) {
-							$data->plantilla = str_replace(
-								'[TABLA_VEHICULOS]' . $key,
-								'<hr></hr><table width="100%" border="0" cellspacing="0" cellpadding="0" >
-								<tbody>
-									<tr>
-									 <td>
-										<p>
-											<span style="color: rgb(0, 0, 0);">Placas:</span>
-											<span style="color: rgb(0, 0, 0);text-decoration: underline;">[VEHICULO_PLACAS] </span>
-										</p>
-									</td>
-									<td>
-										<p>
-											<span style="color: rgb(0, 0, 0);">Serie:</span>
-											<span style="color: rgb(0, 0, 0);text-decoration: underline;">[VEHICULO_SERIE]</span>
-										</p>
-									</td>
-									<td>
-										<p>
-											<span style="color: rgb(0, 0, 0);">Marca:</span>
-											<span style="color: rgb(0, 0, 0);text-decoration: underline;">[VEHICULO_MARCA]</span>
-										</p>
-									</td>
-								</tr>
-								
-								<tr>
-									<td>
-										<p>
-											<span style="color: rgb(0, 0, 0);">Modelo:</span>
-											<span style="color: rgb(0, 0, 0);text-decoration: underline;">[VEHICULO_MODELO] </span>
-										</p>
-									</td>
-									<td>
-										<p>
-											<span style="color: rgb(0, 0, 0);">Estado procedencia:</span>
-											<span style="color: rgb(0, 0, 0);text-decoration: underline;">[VEHICULO_ESTADO]</span>
-										</p>
-									</td>
-									<td>
-										<p>
-											<span style="color: rgb(0, 0, 0);">Linea:</span>
-											<span style="color: rgb(0, 0, 0);text-decoration: underline;">[VEHICULO_LINEA]</span>
-										</p>
-									</td>
-								</tr>
-								<tr>
-								 <td>
-									<p>
-										<span style="color: rgb(0, 0, 0);">Color:</span>
-										<span style="color: rgb(0, 0, 0);text-decoration: underline;">[VEHICULO_COLOR] </span>
-									</p>
-								</td>
-								<td>
-									<p>
-										<span style="color: rgb(0, 0, 0);">Comentarios:</span>
-										<span style="color: rgb(0, 0, 0);text-decoration: underline;">[VEHICULO_COMENTARIOS]</span>
-									</p>
-								</td>
-								</tr>
-								<tr>
-									<td>
-										<p>
-											<span style="color: rgb(0, 0, 0);">Clase:</span>
-											<span style="color: rgb(0, 0, 0);text-decoration: underline;">[VEHICULO_CLASE] </span>
-										</p>
-									</td>
-								
-								</tr>
-								<tr>
-									<td>
-										<p>
-											<span style="color: rgb(0, 0, 0);">Tipo:</span>
-											<span style="color: rgb(0, 0, 0);text-decoration: underline;">[VEHICULO_TIPO] </span>
-										</p>
-									</td>
-								
-								</tr>
-								</tbody>
-								</table><hr></hr>',
-								$data->plantilla
-							);
-						} else {
-							$data->plantilla = str_replace(
-								'[TABLA_VEHICULOS]' . $key,
-								'<hr></hr><table width="100%" border="0" cellspacing="0" cellpadding="0" >
-								<tbody>
-									<tr>
-									 <td>
-										<p>
-											<span style="color: rgb(0, 0, 0);">Placas:</span>
-											<span style="color: rgb(0, 0, 0);text-decoration: underline;">[VEHICULO_PLACAS] </span>
-										</p>
-									</td>
-									<td>
-										<p>
-											<span style="color: rgb(0, 0, 0);">Serie:</span>
-											<span style="color: rgb(0, 0, 0);text-decoration: underline;">[VEHICULO_SERIE]</span>
-										</p>
-									</td>
-									<td>
-										<p>
-											<span style="color: rgb(0, 0, 0);">Marca:</span>
-											<span style="color: rgb(0, 0, 0);text-decoration: underline;">[VEHICULO_MARCA]</span>
-										</p>
-									</td>
-								</tr>
-								
-								<tr>
-									<td>
-										<p>
-											<span style="color: rgb(0, 0, 0);">Modelo:</span>
-											<span style="color: rgb(0, 0, 0);text-decoration: underline;">[VEHICULO_MODELO] </span>
-										</p>
-									</td>
-									<td>
-										<p>
-											<span style="color: rgb(0, 0, 0);">Estado procedencia:</span>
-											<span style="color: rgb(0, 0, 0);text-decoration: underline;">[VEHICULO_ESTADO]</span>
-										</p>
-									</td>
-									<td>
-										<p>
-											<span style="color: rgb(0, 0, 0);">Linea:</span>
-											<span style="color: rgb(0, 0, 0);text-decoration: underline;">[VEHICULO_LINEA]</span>
-										</p>
-									</td>
-								</tr>
-								<tr>
-								 <td>
-									<p>
-										<span style="color: rgb(0, 0, 0);">Color:</span>
-										<span style="color: rgb(0, 0, 0);text-decoration: underline;">[VEHICULO_COLOR] </span>
-									</p>
-								</td>
-								<td>
-									<p>
-										<span style="color: rgb(0, 0, 0);">Comentarios:</span>
-										<span style="color: rgb(0, 0, 0);text-decoration: underline;">[VEHICULO_COMENTARIOS]</span>
-									</p>
-								</td>
-								</tr>
-								<tr>
-									<td>
-										<p>
-											<span style="color: rgb(0, 0, 0);">Clase:</span>
-											<span style="color: rgb(0, 0, 0);text-decoration: underline;">[VEHICULO_CLASE] </span>
-										</p>
-									</td>
-								
-								</tr>
-								<tr>
-									<td>
-										<p>
-											<span style="color: rgb(0, 0, 0);">Tipo:</span>
-											<span style="color: rgb(0, 0, 0);text-decoration: underline;">[VEHICULO_TIPO] </span>
-										</p>
-									</td>
-								
-								</tr>
-								</tbody>
-								</table> [TABLA_VEHICULOS]',
-								$data->plantilla
-							);
-						}
-						$data->plantilla = str_replace('[VEHICULO_PLACAS]', $vehiculos->PLACAS ? $vehiculos->PLACAS : '-', $data->plantilla);
-						$data->plantilla = str_replace('[VEHICULO_SERIE]',  $vehiculos->NUMEROSERIE ? $vehiculos->NUMEROSERIE : '-', $data->plantilla);
-						$data->plantilla = str_replace('[VEHICULO_MARCA]', $vehiculos->MARCADESCR ? $vehiculos->MARCADESCR : '-', $data->plantilla);
-						$data->plantilla = str_replace('[VEHICULO_MODELO]',  $vehiculos->MODELODESCR ? $vehiculos->MODELODESCR : '-', $data->plantilla);
-						$data->plantilla = str_replace('[VEHICULO_ESTADO]', $estadoV ? $estadoV->ESTADODESCR : '-', $data->plantilla);
-						$data->plantilla = str_replace('[VEHICULO_LINEA]',  $vehiculos->ANOVEHICULO ? $vehiculos->ANOVEHICULO : '-', $data->plantilla);
-						$data->plantilla = str_replace('[VEHICULO_COLOR]', $color ? $color->VEHICULOCOLORDESCR : '-', $data->plantilla);
-						$data->plantilla = str_replace('[VEHICULO_COMENTARIOS]',  $vehiculos->SENASPARTICULARES ? $vehiculos->SENASPARTICULARES : '-', $data->plantilla);
-						$data->plantilla = str_replace('[VEHICULO_CLASE]', $linea ? $linea->VEHICULOVERSIONDESCR : '-', $data->plantilla);
-						$data->plantilla = str_replace('[VEHICULO_TIPO]',  $tipo ? $tipo->VEHICULOTIPODESCR : '-', $data->plantilla);
-					}
-				}else{
-					$data->plantilla = str_replace(
-						'[TABLA_VEHICULOS]',
-						'NO HAY VEHÍCULOS SOSPECHOSOS',
-						$data->plantilla
-					);
-				}
-				if ($data->delitosModalidadFiltro) {
-					foreach ($data->delitosModalidadFiltro as $key => $delitos) {
-						$data->plantilla = str_replace(
-							'[TABLA_DELITOS]',
-							'[TABLA_DELITOS]' . $key,
-							$data->plantilla
-						);
-						if ($delitos == end($data->delitosModalidadFiltro)) {
-							$data->plantilla = str_replace(
-								'[TABLA_DELITOS]' . $key,
-								'<hr></hr><table width="100%" border="0" cellspacing="0" cellpadding="0" >
-							<tbody>
-								<tr>
-								 <td>
-									<p>
-										<span style="color: rgb(0, 0, 0);text-decoration: underline;">[DELITO_DESCR] </span>
-									</p>
-								</td>
-								<td>  
-									<p>
-										<span style="color: rgb(0, 0, 0);text-decoration: underline;">[ESTATUS_DELITO]</span>
-							
-									</p>
-								</td>
-							
-							
-							</tr>
-							</tbody>
-							</table><hr></hr>',
-								$data->plantilla
-							);
-						} else {
-							$data->plantilla = str_replace(
-								'[TABLA_DELITOS]' . $key,
-								'<hr></hr><table width="100%" border="0" cellspacing="0" cellpadding="0" >
-							<tbody>
-								<tr>
-								 <td>
-									<p>
-										<span style="color: rgb(0, 0, 0);text-decoration: underline;">[DELITO_DESCR] </span>
-									</p>
-								</td>
-								<td>  
-									<p>
-										<span style="color: rgb(0, 0, 0);text-decoration: underline;">[ESTATUS_DELITO]</span>
-							
-									</p>
-								</td>
-							
-							
-							</tr>
-							</tbody>
-							</table>[TABLA_DELITOS] ',
-								$data->plantilla
-							);
-						}
-						$data->plantilla = str_replace('[DELITO_DESCR]',  $delitos['DELITOMODALIDADDESCR'] ?   $delitos['DELITOMODALIDADDESCR'] : '-', $data->plantilla);
-						$data->plantilla = str_replace('[ESTATUS_DELITO]',  '-', $data->plantilla);
-					}
-				}
-				if ($data->imputados_da) {
-					foreach ($data->imputados_da as $key => $imputados) {
-						$data->mediaFiiacionImp = $this->_folioMediaFiliacion->asObject()->where('FOLIOID', $data->expediente->FOLIOID)->where('PERSONAFISICAID', $imputados->PERSONAFISICAID)->first();
-						$colorOjos = $this->_ojoColorModel->asObject()->where('OJOCOLORID', $data->mediaFiiacionImp->OJOCOLORID)->first();
-						$colorCabello = $this->_cabelloColorModel->asObject()->where('CABELLOCOLORID', $data->mediaFiiacionImp->CABELLOCOLORID)->first();
-						$complexion = $this->_figuraModel->asObject()->where('FIGURAID', $data->mediaFiiacionImp->FIGURAID)->first();
-						$colorPiel = $this->_pielColorModel->asObject()->where('PIELCOLORID', $data->mediaFiiacionImp->PIELCOLORID)->first();
-						$data->plantilla = str_replace(
-							'[TABLA_IMPUTADOS]',
-							'[TABLA_IMPUTADOS]' . $key,
-							$data->plantilla
-						);
-
-						if ($imputados == end($data->imputados_da)) {
-							$data->plantilla = str_replace(
-								'[TABLA_IMPUTADOS]' . $key,
-								'<hr></hr><table width="100%" border="0" cellspacing="0" cellpadding="0" >
-							<tbody>
-								<tr>
-								 <td colspan="2">
-									<p>
-										<span style="color: rgb(0, 0, 0);">Nombre:</span>
-										<span style="color: rgb(0, 0, 0);text-decoration: underline;">[IMPUTADO_NOMBRE_DA] </span>
-									</p>
-								</td>
-								<td colspan="2">
-									<p >
-										<span style="color: rgb(0, 0, 0);">Apodo:</span>
-										<span style="color: rgb(0, 0, 0);text-decoration: underline;">[IMPUTADO_APODO]</span>
-									</p>
-								</td>
-							</tr>
-							
-							<tr>
-							 <td>
-								<p>
-									<span style="color: rgb(0, 0, 0);">Alias:</span>
-									<span style="color: rgb(0, 0, 0);text-decoration: underline;">[IMPUTADO_ALIAS] </span>
-								</p>
-							</td>
-							<td>
-								<p>
-									<span style="color: rgb(0, 0, 0);">Estatura:</span>
-									<span style="color: rgb(0, 0, 0);text-decoration: underline;">[IMPUTADO_ESTATURA]</span>
-								</p>
-							</td>
-							<td>
-								<p>
-									<span style="color: rgb(0, 0, 0);">Sexo:</span>
-									<span style="color: rgb(0, 0, 0);text-decoration: underline;">[IMPUTADO_SEXO]</span>
-								</p>
-							</td>
-							<td>
-								<p>
-									<span style="color: rgb(0, 0, 0);">Usa anteojos:</span>
-									<span style="color: rgb(0, 0, 0);text-decoration: underline;">[IMPUTADO_ANTEOJOS]</span>
-								</p>
-							</td>
-							</tr>
-							<tr>
-							 <td>
-								<p>
-									<span style="color: rgb(0, 0, 0);">Color Ojos:</span>
-									<span style="color: rgb(0, 0, 0);text-decoration: underline;">[IMPUTADO_COLOR_OJOS] </span>
-								</p>
-							</td>
-							<td>
-								<p>
-									<span style="color: rgb(0, 0, 0);">Color Cabello:</span>
-									<span style="color: rgb(0, 0, 0);text-decoration: underline;">[IMPUTADO_COLOR_CABELLO]</span>
-								</p>
-							</td>
-							<td>
-								<p>
-									<span style="color: rgb(0, 0, 0);">Complexión:</span>
-									<span style="color: rgb(0, 0, 0);text-decoration: underline;">[IMPUTADO_COMPLEXION]</span>
-								</p>
-							</td>
-								<td >
-									<p>
-										<span style="color: rgb(0, 0, 0);">Edad:</span>
-										<span style="color: rgb(0, 0, 0);text-decoration: underline;">[IMPUTADO_EDAD_DA]</span>
-									</p>
-								</td>
-							</tr>
-							<tr>
-							 <td colspan="2">
-								<p>
-									<span style="color: rgb(0, 0, 0);">Desc. Fisica:</span>
-									<span style="color: rgb(0, 0, 0);text-decoration: underline;">[IMPUTADO_DESCRIPCION] </span>
-								</p>
-							</td>
-							<td colspan="2">
-								<p>
-									<span style="color: rgb(0, 0, 0);">Color Piel:</span>
-									<span style="color: rgb(0, 0, 0);text-decoration: underline;">[IMPUTADO_COLOR_PIEL] </span>
-								</p>
-							</td>
-							</tr>
-							<tr>
-							
-								<td>
-									<p>
-										<span style="color: rgb(0, 0, 0);">Localización:</span>
-										<span style="color: rgb(0, 0, 0);text-decoration: underline;">[IMPUTADO_LOCALIZACION]</span>
-									</p>
-								</td>
-							</tr>
-							</tbody>
-							</table><hr></hr>',
-								$data->plantilla
-							);
-						} else {
-
-							$data->plantilla = str_replace(
-								'[TABLA_IMPUTADOS]' . $key,
-								'<hr></hr><table width="100%" border="0" cellspacing="0" cellpadding="0">
-						<tbody>
-							<tr>
-							 <td colspan="2">
-								<p>
-									<span style="color: rgb(0, 0, 0);">Nombre:</span>
-									<span style="color: rgb(0, 0, 0);text-decoration: underline;">[IMPUTADO_NOMBRE_DA] </span>
-								</p>
-							</td>
-							<td colspan="2">
-								<p >
-									<span style="color: rgb(0, 0, 0);">Apodo:</span>
-									<span style="color: rgb(0, 0, 0);text-decoration: underline;">[IMPUTADO_APODO]</span>
-								</p>
-							</td>
-						</tr>
-						
-						<tr>
-						 <td>
-							<p>
-								<span style="color: rgb(0, 0, 0);">Alias:</span>
-								<span style="color: rgb(0, 0, 0);text-decoration: underline;">[IMPUTADO_ALIAS] </span>
-							</p>
-						</td>
-						<td>
-							<p>
-								<span style="color: rgb(0, 0, 0);">Estatura:</span>
-								<span style="color: rgb(0, 0, 0);text-decoration: underline;">[IMPUTADO_ESTATURA]</span>
-							</p>
-						</td>
-						<td>
-							<p>
-								<span style="color: rgb(0, 0, 0);">Sexo:</span>
-								<span style="color: rgb(0, 0, 0);text-decoration: underline;">[IMPUTADO_SEXO]</span>
-							</p>
-						</td>
-						<td>
-							<p>
-								<span style="color: rgb(0, 0, 0);">Usa anteojos:</span>
-								<span style="color: rgb(0, 0, 0);text-decoration: underline;">[IMPUTADO_ANTEOJOS]</span>
-							</p>
-						</td>
-						</tr>
-						<tr>
-						 <td>
-							<p>
-								<span style="color: rgb(0, 0, 0);">Color Ojos:</span>
-								<span style="color: rgb(0, 0, 0);text-decoration: underline;">[IMPUTADO_COLOR_OJOS] </span>
-							</p>
-						</td>
-						<td>
-							<p>
-								<span style="color: rgb(0, 0, 0);">Color Cabello:</span>
-								<span style="color: rgb(0, 0, 0);text-decoration: underline;">[IMPUTADO_COLOR_CABELLO]</span>
-							</p>
-						</td>
-						<td>
-							<p>
-								<span style="color: rgb(0, 0, 0);">Complexión:</span>
-								<span style="color: rgb(0, 0, 0);text-decoration: underline;">[IMPUTADO_COMPLEXION]</span>
-							</p>
-						</td>
-						  
-							<td >
-								<p>
-									<span style="color: rgb(0, 0, 0);">Edad:</span>
-									<span style="color: rgb(0, 0, 0);text-decoration: underline;">[IMPUTADO_EDAD_DA]</span>
-								</p>
-							</td>
-						</tr>
-						<tr>
-						 <td colspan="2">
-							<p>
-								<span style="color: rgb(0, 0, 0);">Desc. Fisica:</span>
-								<span style="color: rgb(0, 0, 0);text-decoration: underline;">[IMPUTADO_DESCRIPCION] </span>
-							</p>
-						</td>
-						<td colspan="2">
-							<p>
-								<span style="color: rgb(0, 0, 0);">Color Piel:</span>
-								<span style="color: rgb(0, 0, 0);text-decoration: underline;">[IMPUTADO_COLOR_PIEL] </span>
-							</p>
-						</td>
-						</tr>
-						<tr>
-						
-							<td>
-								<p>
-									<span style="color: rgb(0, 0, 0);">Localización:</span>
-									<span style="color: rgb(0, 0, 0);text-decoration: underline;">[IMPUTADO_LOCALIZACION]</span>
-								</p>
-							</td>
-						</tr>
-						</tbody>
-						</table>
-						[TABLA_IMPUTADOS]',
-								$data->plantilla
-							);
-						}
-						$data->plantilla = str_replace('[IMPUTADO_NOMBRE_DA]',  $imputados->NOMBRE, $data->plantilla);
-						$data->plantilla = str_replace('[IMPUTADO_APODO]',  $imputados->APODO ? $imputados->APODO : '', $data->plantilla);
-						$data->plantilla = str_replace('[IMPUTADO_ALIAS]',  $imputados->APODO ? $imputados->APODO : '', $data->plantilla);
-						$data->plantilla = str_replace('[IMPUTADO_ESTATURA]',  $data->mediaFiiacionImp->ESTATURA ? $data->mediaFiiacionImp->ESTATURA : '', $data->plantilla);
-						$data->plantilla = str_replace('[IMPUTADO_SEXO]',  $imputados->SEXO ? $imputados->SEXO : '', $data->plantilla);
-						$data->plantilla = str_replace('[IMPUTADO_ANTEOJOS]', 'S/N', $data->plantilla);
-						$data->plantilla = str_replace('[IMPUTADO_COLOR_OJOS]',  $colorOjos ? $colorOjos->OJOCOLORDESCR : '', $data->plantilla);
-						$data->plantilla = str_replace('[IMPUTADO_COLOR_CABELLO]',  $colorCabello != null ? $colorCabello->CABELLOCOLORDESCR : '', $data->plantilla);
-						$data->plantilla = str_replace('[IMPUTADO_COMPLEXION]',  $complexion ? $complexion->FIGURADESCR : '', $data->plantilla);
-						$data->plantilla = str_replace('[IMPUTADO_EDAD_DA]',  $imputados->EDADCANTIDAD ? $imputados->EDADCANTIDAD : '', $data->plantilla);
-						$data->plantilla = str_replace('[IMPUTADO_DESCRIPCION]',  '', $data->plantilla);
-						$data->plantilla = str_replace('[IMPUTADO_COLOR_PIEL]',  $colorPiel ? $colorPiel->PIELCOLORDESCR : '', $data->plantilla);
-						$data->plantilla = str_replace('[IMPUTADO_LOCALIZACION]',  '', $data->plantilla);
-						// $plantilla =  $this->_plantillasModel->where('TITULO', $titulo)->first();
-						// $com =	array_push($data->plantilla, $plantilla);
-					}
-				}
-			}
 				} else if ($data->canalizacion && $data->folio->STATUS == 'CANALIZADO') {
 					$data->plantilla = str_replace('[FOLIO_ATENCION]', $folio . '/' . $year, $data->plantilla);
 					$data->plantilla = str_replace('[DENUNCIANTE_NOMBRE]', $data->denunciantes->NOMBRE . ' ' . ($data->denunciantes->APELLIDO_PATERNO ? $data->denunciantes->APELLIDO_PATERNO : '') . ' ' . ($data->denunciantes->APELLIDO_MATERNO ? $data->denunciantes->APELLIDO_MATERNO : ''), $data->plantilla);
@@ -6681,7 +6182,6 @@ class DashboardController extends BaseController
 
 				$data->plantilla = str_replace('[EXPEDIENTE_NUMERO]', $data->folio->FOLIOID, $data->plantilla);
 				$data->plantilla = str_replace('[TIPO_EXPEDIENTE]',  $data->folio->STATUS == "DERIVADO" ? "DERIVACIÓN" : "CANALIZACIÓN", $data->plantilla);
-
 				return json_encode(['status' => 1, 'plantilla' => $data->plantilla]);
 			} else {
 				$data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->where('TIPOEXPEDIENTEID',  $data->folio->TIPOEXPEDIENTEID)->first();
@@ -6694,7 +6194,7 @@ class DashboardController extends BaseController
 			$data->plantilla = str_replace('[VICTIMA_NOMBRE]', $data->victima[0]['NOMBRE'] . ' ' . ($data->victima[0]['PRIMERAPELLIDO'] ? $data->victima[0]['PRIMERAPELLIDO'] : '') . ' ' . ($data->victima[0]['SEGUNDOAPELLIDO'] ? $data->victima[0]['SEGUNDOAPELLIDO'] : ''), $data->plantilla);
 			$data->plantilla = str_replace('[</span>VICTIMA_NOMBRE]', $data->victima[0]['NOMBRE'] . ' ' . ($data->victima[0]['PRIMERAPELLIDO'] ? $data->victima[0]['PRIMERAPELLIDO'] : '') . ' ' . ($data->victima[0]['SEGUNDOAPELLIDO'] ? $data->victima[0]['SEGUNDOAPELLIDO'] : ''), $data->plantilla);
 			$data->plantilla = str_replace('(VICTIMA Y/U OFENDIDO)', $data->victima[0]['NOMBRE'] . ' ' . ($data->victima[0]['PRIMERAPELLIDO'] ? $data->victima[0]['PRIMERAPELLIDO'] : '') . ' ' . ($data->victima[0]['SEGUNDOAPELLIDO'] ? $data->victima[0]['SEGUNDOAPELLIDO'] : ''), $data->plantilla);
-			$data->plantilla = str_replace('(REDACTAR_HECHO)', $data->expediente->HECHONARRACION ? $data->expediente->HECHONARRACION : 'SIN NARRACIÓN', $data->plantilla);
+			$data->plantilla = str_replace('(REDACTAR_HECHO)', $data->folio->HECHONARRACION ? $data->folio->HECHONARRACION : 'SIN NARRACIÓN', $data->plantilla);
 
 			$data->plantilla = str_replace('[VICTIMAS_NOMBRE]', $data->victima[0]['NOMBRE'] . ' ' . ($data->victima[0]['PRIMERAPELLIDO'] ? $data->victima[0]['PRIMERAPELLIDO'] : '') . ' ' . ($data->victima[0]['SEGUNDOAPELLIDO'] ? $data->victima[0]['SEGUNDOAPELLIDO'] : ''), $data->plantilla);
 			$data->plantilla = str_replace('[VICTIMA_EDAD]', $data->victima[0]['EDADCANTIDAD'] ? $data->victima[0]['EDADCANTIDAD'] : '-', $data->plantilla);
@@ -6712,27 +6212,27 @@ class DashboardController extends BaseController
 			$data->plantilla = str_replace('[MINUTOS]', date('i'), $data->plantilla);
 			$data->plantilla = str_replace('[ESTADO]', $data->municipios->MUNICIPIODESCR, $data->plantilla);
 			$data->plantilla = str_replace('[LOCALIDAD_DELITO]', $data->localidad->LOCALIDADDESCR, $data->plantilla);
-			$data->plantilla = str_replace('[COLONIA_DELITO]', $data->expediente->HECHOCOLONIADESCR, $data->plantilla);
-			$data->plantilla = str_replace('[REFERENCIAS]', $data->expediente->HECHOREFERENCIA ? $data->expediente->HECHOREFERENCIA : 'SIN DATOS DE REFERENCIA', $data->plantilla);
-			$data->plantilla = str_replace('[CALLE]', $data->expediente->HECHOCALLE, $data->plantilla);
-			$data->plantilla = str_replace('[EXTERIOR]', $data->expediente->HECHONUMEROCASA, $data->plantilla);
-			$data->plantilla = str_replace('[DIRECCION]', $data->expediente->HECHOCALLE . ' ' . $data->expediente->HECHONUMEROCASA  . ',' . $data->expediente->HECHOCOLONIADESCR . ',' . $data->localidad->LOCALIDADDESCR . ',' . $data->municipio_delito->MUNICIPIODESCR, $data->plantilla);
+			$data->plantilla = str_replace('[COLONIA_DELITO]', $data->folio->HECHOCOLONIADESCR, $data->plantilla);
+			$data->plantilla = str_replace('[REFERENCIAS]', $data->folio->HECHOREFERENCIA ? $data->folio->HECHOREFERENCIA : 'SIN DATOS DE REFERENCIA', $data->plantilla);
+			$data->plantilla = str_replace('[CALLE]', $data->folio->HECHOCALLE, $data->plantilla);
+			$data->plantilla = str_replace('[EXTERIOR]', $data->folio->HECHONUMEROCASA, $data->plantilla);
+			$data->plantilla = str_replace('[DIRECCION]', $data->folio->HECHOCALLE . ' ' . $data->folio->HECHONUMEROCASA  . ',' . $data->folio->HECHOCOLONIADESCR . ',' . $data->localidad->LOCALIDADDESCR . ',' . $data->municipio_delito->MUNICIPIODESCR, $data->plantilla);
 			$data->plantilla = str_replace('[LUGAR_HECHO]', $data->lugar_delito->HECHODESCR, $data->plantilla);
 
 			$data->plantilla = str_replace('[MUNICIPIO_DELITO]', $data->municipio_delito->MUNICIPIODESCR, $data->plantilla);
 			$data->plantilla = str_replace('[LOCALIDAD_DELITO]', $data->localidad->LOCALIDADDESCR, $data->plantilla);
-			$data->plantilla = str_replace('[COLONIA_DELITO]', $data->expediente->HECHOCOLONIADESCR, $data->plantilla);
-			$data->plantilla = str_replace('[REFERENCIAS]', $data->expediente->HECHOREFERENCIA ? $data->expediente->HECHOREFERENCIA : 'SIN DATOS DE REFERENCIA', $data->plantilla);
-			$data->plantilla = str_replace('[CALLE]', $data->expediente->HECHOCALLE, $data->plantilla);
-			$data->plantilla = str_replace('[EXTERIOR]', $data->expediente->HECHONUMEROCASA, $data->plantilla);
-			$data->plantilla = str_replace('[DIRECCION]', $data->expediente->HECHOCALLE . ' ' . $data->expediente->HECHONUMEROCASA  . ',' . $data->expediente->HECHOCOLONIADESCR . ',' . $data->localidad->LOCALIDADDESCR . ',' . $data->municipio_delito->MUNICIPIODESCR, $data->plantilla);
+			$data->plantilla = str_replace('[COLONIA_DELITO]', $data->folio->HECHOCOLONIADESCR, $data->plantilla);
+			$data->plantilla = str_replace('[REFERENCIAS]', $data->folio->HECHOREFERENCIA ? $data->folio->HECHOREFERENCIA : 'SIN DATOS DE REFERENCIA', $data->plantilla);
+			$data->plantilla = str_replace('[CALLE]', $data->folio->HECHOCALLE, $data->plantilla);
+			$data->plantilla = str_replace('[EXTERIOR]', $data->folio->HECHONUMEROCASA, $data->plantilla);
+			$data->plantilla = str_replace('[DIRECCION]', $data->folio->HECHOCALLE . ' ' . $data->folio->HECHONUMEROCASA  . ',' . $data->folio->HECHOCOLONIADESCR . ',' . $data->localidad->LOCALIDADDESCR . ',' . $data->municipio_delito->MUNICIPIODESCR, $data->plantilla);
 			$data->plantilla = str_replace('[LUGAR_HECHO]', $data->lugar_delito->HECHODESCR, $data->plantilla);
-			$data->plantilla = str_replace('[HECHO]', $data->expediente->HECHONARRACION ? $data->expediente->HECHONARRACION : 'SIN NARRACIÓN', $data->plantilla);
+			$data->plantilla = str_replace('[HECHO]', $data->folio->HECHONARRACION ? $data->expedienfoliote->HECHONARRACION : 'SIN NARRACIÓN', $data->plantilla);
 			$data->plantilla = str_replace('[HECHO_LUGAR]', $data->lugar_hecho->HECHODESCR ? $data->lugar_hecho->HECHODESCR : '-', $data->plantilla);
-			$data->plantilla = str_replace('[HECHO_FECHA]', $data->expediente->HECHOFECHA ? $data->expediente->HECHOFECHA : '-', $data->plantilla);
-			$data->plantilla = str_replace('[HECHO_HORA]', $data->expediente->HECHOHORA ? $data->expediente->HECHOHORA : '-', $data->plantilla);
-			$data->plantilla = str_replace('[DETALLE_INTERVENCIONES]', $data->expediente->HECHONARRACION ? $data->expediente->HECHONARRACION : 'SIN NARRACIÓN', $data->plantilla);
-			$data->plantilla = str_replace('[HECHO_NARRACION]', $data->expediente->HECHONARRACION ? $data->expediente->HECHONARRACION : 'SIN NARRACIÓN', $data->plantilla);
+			$data->plantilla = str_replace('[HECHO_FECHA]', $data->folio->HECHOFECHA ? $data->folio->HECHOFECHA : '-', $data->plantilla);
+			$data->plantilla = str_replace('[HECHO_HORA]', $data->folio->HECHOHORA ? $data->folio->HECHOHORA : '-', $data->plantilla);
+			$data->plantilla = str_replace('[DETALLE_INTERVENCIONES]', $data->folio->HECHONARRACION ? $data->folio->HECHONARRACION : 'SIN NARRACIÓN', $data->plantilla);
+			$data->plantilla = str_replace('[HECHO_NARRACION]', $data->folio->HECHONARRACION ? $data->folio->HECHONARRACION : 'SIN NARRACIÓN', $data->plantilla);
 
 			$data->plantilla = str_replace('[TIPO_EXPEDIENTE]',  $data->tipoExpediente->TIPOEXPEDIENTECLAVE, $data->plantilla);
 			$data->plantilla = str_replace('[ZONA_SEJAP]',  'CENTRO DE DENUNCIA TECNOLÓGICA', $data->plantilla);
@@ -6815,9 +6315,11 @@ class DashboardController extends BaseController
 			if ($data->plantilla) {
 				return json_encode(['status' => 1, 'plantilla' => $data->plantilla]);
 			}
+		}
 		} catch (\Exception $e) {
 			return json_encode((object)['status' => 0]);
 		}
+			
 	}
 
 	public function insertFolioDoc()
@@ -6832,6 +6334,7 @@ class DashboardController extends BaseController
 		$folioRow = $this->_folioModel->where('ANO', $year)->where('FOLIOID', $folio)->first();
 
 		if ($folioRow) {
+
 			$clasificaciondoctoid = '';
 
 			switch ($municipio) {
@@ -6856,6 +6359,7 @@ class DashboardController extends BaseController
 			}
 
 			$documentos_folio = $this->_folioDocModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('AGENTE_ASIGNADO !=', null)->first();
+
 			if ($documentos_folio) {
 				$dataFolioDoc = array(
 					'FOLIOID' => $folio,
@@ -6945,6 +6449,39 @@ class DashboardController extends BaseController
 		}
 	}
 
+	public function changeStatusDoc(){
+		try {
+			$docid = trim($this->request->getPost('status_doc_id'));
+			$folio = trim($this->request->getPost('folio_id_doc'));
+			$year = trim($this->request->getPost('ano_doc'));
+			$status_doc_envio = $this->request->getPost('status_doc_envio');
+			$status_req_envio = $this->request->getPost('status_req_envio');
+
+			$dataDocumento = array(
+				'STATUSENVIO' => $status_doc_envio,
+				'ENVIADO' => $status_req_envio,
+
+			);
+
+			$updateDocumento = $this->_folioDocModel->set($dataDocumento)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $docid)->update();
+			if ($updateDocumento) {
+				$documentos = $this->_folioDocModel->get_by_folio($folio, $year);
+
+				$datosBitacora = [
+					'ACCION' => 'Ha actualizado el estatus de un documento',
+					'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
+				];
+
+				$this->_bitacoraActividad($datosBitacora);
+
+				return json_encode(['status' => 1, 'documentos' => $documentos]);
+			} else {
+				return json_encode(['status' => 0, 'message' => $updateDocumento]);
+			}
+		} catch (\Exception $e) {
+			return json_encode(['status' => 0]);
+		}
+	}
 	private function _folioDoc($data, $expediente, $year)
 	{
 		$data = $data;

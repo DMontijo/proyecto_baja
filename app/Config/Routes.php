@@ -155,6 +155,8 @@ $routes->group('admin', function ($routes) {
 
 		$routes->post('insert-documentosWSYWSG', 'admin/DashboardController::insertFolioDoc');
 		$routes->post('send-documentos-correo', 'admin/FirmaController::sendEmailDocumentos');
+
+		$routes->post('send-documentos-correo-by-id', 'admin/FirmaController::sendEmailDocumentoByID');
 	});
 });
 
@@ -313,10 +315,11 @@ $routes->group('data', function ($routes) {
 
 	//RAC
 	$routes->post('get-modulos', 'admin/DashboardController::getModulos');
+	$routes->post('change-status-doc', 'admin/DashboardController::changeStatusDoc');
 
 	$routes->post('get-documentos-by-folio', 'admin/DashboardController::getDocumentosByFolio');
+});	
 
-});
 
 
 

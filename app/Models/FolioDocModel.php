@@ -43,9 +43,21 @@ class FolioDocModel extends Model
 	public function get_by_folio($folio, $year)
 	{
 		$builder = $this->db->table($this->table);
-		$builder->select(['FOLIOID', 'FOLIODOCID', 'ANO', 'TIPODOC', 'STATUS', 'PLACEHOLDER']);
+		$builder->select(['FOLIOID', 'FOLIODOCID', 'ANO', 'TIPODOC', 'STATUS', 'PLACEHOLDER', 'STATUSENVIO', 'ENVIADO']);
 		$builder->where('FOLIOID', $folio);
 		$builder->where('ANO', $year);
+		$builder->orderBy('FOLIODOCID ASC');
+		$query = $builder->get();
+		return $query->getResult('array');
+	}
+
+	public function get_by_folio_doc($folio, $year, $foliodoc)
+	{
+		$builder = $this->db->table($this->table);
+		$builder->select(['FOLIOID', 'FOLIODOCID', 'ANO', 'TIPODOC', 'STATUS', 'PLACEHOLDER', 'STATUSENVIO', 'ENVIADO', 'PDF', 'XML']);
+		$builder->where('FOLIOID', $folio);
+		$builder->where('ANO', $year);
+		$builder->where('FOLIODOCID', $foliodoc);
 		$builder->orderBy('FOLIODOCID ASC');
 		$query = $builder->get();
 		return $query->getResult('array');

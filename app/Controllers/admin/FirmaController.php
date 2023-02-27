@@ -561,8 +561,7 @@ class FirmaController extends BaseController
 							];
 							if ($folio != null && $folio != "undefined") {
 								$update = $this->_folioDocModel->set($datosInsert)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
-
-							} 
+							}
 							if ($update) {
 								$datosBitacora = [
 									'ACCION' => 'Ha firmado un documento',
@@ -576,7 +575,7 @@ class FirmaController extends BaseController
 					}
 					if ($folio != null && $folio != "undefined") {
 						$documentosExp = $this->_folioDocModel->get_by_folio($folio, $year);
-					} 
+					}
 					return json_encode((object)['status' => 1, 'documentos' => $documentosExp]);
 				} else {
 					return json_encode((object)['status' => 0, 'message_error' => "La FIEL no es válida o está vencida"]);
@@ -987,6 +986,83 @@ class FirmaController extends BaseController
 		}
 	}
 
+	public function sendEmailDocumentoByID()
+	{
+		$to = trim($this->request->getPost('send_mail_select'));
+		$year = $this->request->getPost('year_modal_correo');
+		$folio = $this->request->getPost('folio');
+		$expediente = $this->request->getPost('expediente_modal_correo');
+		$folio_doc = $this->request->getPost('folio_doc');
+
+		if ($to && $year && $folio) {
+			if ($expediente != "undefined" && $expediente != '') {
+				$documento = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente)->where('ANO', $year)->where('STATUS', 'FIRMADO')->where('STATUSENVIO', 1)->where('ENVIADO', 'N')->where('FOLIODOCID', $folio_doc)->first();
+
+				$folioM = $this->_folioModel->asObject()->where('ANO', $year)->where('EXPEDIENTEID', $expediente)->first();
+				$tipoExpediente = $this->_tipoExpedienteModel->asObject()->where('TIPOEXPEDIENTEID',  $folioM->TIPOEXPEDIENTEID)->first();
+				$delito = $this->_folioRelacionFisFisModel->get_by_folio($folio, $year);
+				$delito =  $delito[0]['DELITOMODALIDADDESCR'];
+			} else {
+
+				$documento = $this->_folioDocModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'FIRMADO')->where('STATUSENVIO', 1)->where('ENVIADO', 'N')->where('FOLIODOCID', $folio_doc)->first();
+
+				$folioM = $this->_folioModel->asObject()->where('ANO', $year)->where('FOLIOID', $folio)->first();
+				$tipoExpediente = '';
+				$delito = '';
+			}
+			if (empty($documento)) {
+				return json_encode((object)['status' => 3]);
+			}
+
+			$imputado = $this->_folioPersonaFisicaModel->asObject()->where('ANO', $year)->where('FOLIOID', $folioM->FOLIOID)->where('CALIDADJURIDICAID', 2)->first();
+			$agente = $this->_usuariosModel->asObject()->where('ID', session('ID'))->first();
+
+			$folio = $folioM->FOLIOID;
+			$agente = trim($agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' .  $agente->APELLIDO_MATERNO);
+			$imputado = trim($imputado->NOMBRE . ' ' . $imputado->PRIMERAPELLIDO . ' ' .  $imputado->SEGUNDOAPELLIDO);
+
+			$aviso_privacidad = file_get_contents(FCPATH . 'assets/documentos/Aviso_De_Privacidad_De_Datos.pdf');
+			$derecho_ofendido = file_get_contents(FCPATH . 'assets/documentos/DerechosDeVictimaOfendido.pdf');
+			$termino_condiciones = file_get_contents(FCPATH . 'assets/documentos/TerminosCondiciones.pdf');
+
+			$email = \Config\Services::email();
+			$email->setTo($to);
+			$email->setSubject('Documentos firmados - ' . $folio . '/' . $folioM->ANO);
+			$body = view('email_template/documentos_firmados_email_template.php', ['agente' => $agente, 'expediente' => $folioM->EXPEDIENTEID ? $expediente : 'SIN EXPEDIENTE', 'folio' => $folio, 'year' => $folioM->ANO, 'tipoexpediente' => $folioM->TIPOEXPEDIENTEID ? ($tipoExpediente  == "" ? $tipoExpediente : $tipoExpediente->TIPOEXPEDIENTEDESCR) : $folioM->STATUS, 'status' => $folioM->STATUS, 'delito' => $delito, 'imputado' => $imputado]);
+			$email->setMessage($body);
+
+
+			if ($documento->TIPODOC == 'DENUNCIA ANONIMA') {
+				$pdf = $documento->PDF;
+				$email->attach($pdf, 'attachment',  $documento->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento->FOLIODOCID . '.pdf', 'application/pdf');
+			} else {
+				$pdf = $documento->PDF;
+				$xml = $documento->XML;
+				$email->attach($pdf, 'attachment',  $documento->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento->FOLIODOCID . '.pdf', 'application/pdf');
+				$email->attach($xml, 'attachment', $documento->TIPODOC . '_' . $expediente. '_' . $year . '_' . $documento->FOLIODOCID . '.xml', 'application/xml');
+			}
+			$email->attach($termino_condiciones, 'attachment', 'Terminos_Y_Condiciones.pdf', 'application/pdf');
+			$email->attach($aviso_privacidad, 'attachment', 'Aviso_De_Privacidad.pdf', 'application/pdf');
+			$email->attach($derecho_ofendido, 'attachment', 'Derechos_De_Victima_Ofendido.pdf', 'application/pdf');
+
+			if ($email->send()) {
+				$datosUpdate = [
+					'ENVIADO' => 'S',
+				];
+					$update = $this->_folioDocModel->set($datosUpdate)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento->FOLIODOCID)->update();
+				
+				return json_encode((object)['status' => 1]);
+			} else {
+				return json_encode((object)['status' => 0]);
+			}
+		} else {
+			return json_encode((object)['status' => 3]);
+		}
+	}
+
+
+
+
 	public function sendEmailDocumentos()
 	{
 		$to = trim($this->request->getPost('send_mail_select'));
@@ -1033,14 +1109,12 @@ class FirmaController extends BaseController
 				if ($documento[$i]->TIPODOC == 'DENUNCIA ANONIMA') {
 					$pdf = $documento[$i]->PDF;
 					$email->attach($pdf, 'attachment',  $documento[$i]->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento[$i]->FOLIODOCID . '.pdf', 'application/pdf');
-
-				}else{
+				} else {
 					$pdf = $documento[$i]->PDF;
 					$xml = $documento[$i]->XML;
 					$email->attach($pdf, 'attachment',  $documento[$i]->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento[$i]->FOLIODOCID . '.pdf', 'application/pdf');
 					$email->attach($xml, 'attachment', $documento[$i]->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento[$i]->FOLIODOCID . '.xml', 'application/xml');
 				}
-			
 			}
 
 			$email->attach($termino_condiciones, 'attachment', 'Terminos_Y_Condiciones.pdf', 'application/pdf');
@@ -1052,7 +1126,13 @@ class FirmaController extends BaseController
 					'ENVIADO' => 'S',
 				];
 				for ($i = 0; $i < count($documento); $i++) {
+					if ($expediente != "undefined" && $expediente != '') {
+
 					$update = $this->_folioDocModel->set($datosUpdate)->where('NUMEROEXPEDIENTE', $expediente)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
+					}else{
+						$update = $this->_folioDocModel->set($datosUpdate)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
+
+					}
 				}
 				return json_encode((object)['status' => 1]);
 			} else {
