@@ -338,15 +338,19 @@
 			if (documentos[i].STATUS == 'FIRMADO') {
 				var btn =
 					`<button type='button'  class='btn btn-primary' onclick='viewDocumento(${documentos[i].FOLIODOCID})' disabled><i class="fas fa-eye"></i></button>`
+					var btnFirmar =
+					`<button type='button'  class='btn btn-primary my-2' onclick='firmarDocumento(${documentos[i].FOLIOID}, ${documentos[i].ANO}, ${documentos[i].FOLIODOCID})' disabled><i class="fas fa-signature"></i></button>`
 			} else {
 				var btn =
 					`<button type='button'  class='btn btn-primary' onclick='viewDocumento(${documentos[i].FOLIODOCID})'><i class="fas fa-eye"></i></button>`
+					var btnFirmar =
+					`<button type='button'  class='btn btn-primary my-2' onclick='firmarDocumento(${documentos[i].FOLIOID}, ${documentos[i].ANO}, ${documentos[i].FOLIODOCID})'><i class="fas fa-signature"></i></button>`
 			}
 			var fila =
 				`<tr id="row${i}">` +
 				`<td class="text-center">${documentos[i].TIPODOC}</td>` +
 				`<td class="text-center">${documentos[i].STATUS}</td>` +
-				`<td class="text-center">${btn}</td>` +
+				`<td class="text-center">${btn} ${btnFirmar}</td>` +
 				`</tr>`;
 
 			$('#table-documentos tr:first').after(fila);
@@ -1467,6 +1471,13 @@
 		});
 		borrarTodo();
 	});
+function firmarDocumento(folio, ano,foliodocid) {
+		document.querySelector('#folio_id').value = folio;
+		document.querySelector('#documento_id').value = foliodocid;
+		document.querySelector('#year_doc').value =ano;
+		$('#contrasena_modal_doc_id').modal('show');
+
+	}
 
 	function viewDocumento(foliodocid) {
 		jQuery('.ql-toolbar').remove();
@@ -2194,6 +2205,7 @@
 
 			var btn_enviarcorreoDoc = document.querySelector('#enviarcorreoDoc');
 			var btn_firmar_doc = document.querySelector('#btn-firmar-doc');
+			var btn_firmar_doc_id = document.querySelector('#firmar_documento_modal_id');
 			var btn_archivos_externos = document.querySelector('#enviar-archivos-externos-btn');
 
 			var refresh_btn = document.querySelector('#refresh-btn');
@@ -2617,7 +2629,56 @@
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
 			}, false);
+			btn_firmar_doc_id.addEventListener('click', (event) => {
+			$.ajax({
+				data: {
+					'folio_id': document.querySelector('#folio_id').value,
+					'documento_id': document.querySelector('#documento_id').value,
+					'contrasena_doc': document.querySelector('#contrasena_doc').value,
+					'year_doc': document.querySelector('#year_doc').value,
+				},
+				url: "<?= base_url('/admin/dashboard/firmar_documentos_id') ?>",
+				method: "POST",
+				dataType: "json",
+				beforeSend: function() {
+					document.querySelector('#load_doc').classList.add('d-none');
+					document.querySelector('#password_modalLabel_doc_id').classList.add('d-none');
+					document.querySelector('#loading_doc_id').classList.remove('d-none');
+					document.querySelector('#password_verifying_doc_id').classList.remove('d-none');
+					btn_firmar_doc_id.disabled = true;
+				},
+				success: function(response) {
+					// console.log(response);
+					if (response.status == 1) {
 
+						Swal.fire({
+							icon: 'success',
+							text: 'Documento firmado correctamente',
+							confirmButtonColor: '#bf9b55',
+						});
+						document.querySelector('#contrasena_doc').value = '';
+						$('#contrasena_modal_doc_id').modal('hide');
+
+					} else if (response.status == 0) {
+
+						Swal.fire({
+							icon: 'error',
+							text: response.message_error,
+							confirmButtonColor: '#bf9b55',
+						});
+						document.querySelector('#load_doc').classList.remove('d-none');
+						document.querySelector('#password_modalLabel_doc_id').classList.remove(
+							'd-none');
+						document.querySelector('#loading_doc_id').classList.add('d-none');
+						document.querySelector('#password_verifying_doc_id').classList.add('d-none');
+						btn_firmar_doc_id.disabled = false;
+
+					}
+				},
+
+				error: function(jqXHR, textStatus, errorThrown) {}
+			});
+		}, false);
 			btn_archivos_externos.addEventListener('click', (event) => {
 				$('#subirDocumentosModal').modal('show');
 				$('#subirDocumentosModal').show();
@@ -5670,5 +5731,6 @@
 <?php include 'video_denuncia_modals/documentos_modal_wyswyg.php' ?>
 <?php include 'video_denuncia_modals/modal_validation_password_firma.php' ?>
 <?php include 'video_denuncia_modals/documentos_generados_modal.php' ?>
+<?php include 'documentos/modal_validation_password_doc_id.php' ?>
 
 <?php $this->endSection() ?>

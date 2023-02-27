@@ -90,10 +90,10 @@
 							<label for="referencias" class="form-label font-weight-bold">Referencias</label>
 							<input type="text" class="form-control" id="referencias" name="referencias" maxlength="300">
 						</div>
-						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+						<!-- <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="narracion" class="form-label font-weight-bold">Narración del delito</label>
 							<input type="text" class="form-control" id="narracion" name="narracion" maxlength="300">
-						</div>
+						</div> -->
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<div class="form-group">
@@ -153,7 +153,7 @@
 						<div class="col-12 col-sm-6 mb-3">
 							<div class="form-group">
 								<label for="imputado_conocido" class="form-label font-weight-bold">¿Se conoce al imputado?</label>
-								<select class="form-control" id="imputado_conocido" name="imputado_conocido" required>
+								<select class="form-control" id="imputado_conocido" name="imputado_conocido" required disabled>
 									<option selected disabled value=""></option>
 									<option value="1">Si </option>
 									<option value="2">No </option>
@@ -356,6 +356,7 @@
 			btn_salida.disabled = false;
 			btn_arbol.disabled = false;
 			btn_vehiculo.disabled = false;
+			select_imputado.disabled = false;
 
 			$("#insert_persona_victima_modal_denuncia").one("hidden.bs.modal", function() {
 				agregarPersonaFisica();
@@ -369,6 +370,7 @@
 			btn_salida.disabled = false;
 			btn_arbol.disabled = false;
 			btn_vehiculo.disabled = false;
+			select_imputado.disabled = false;
 
 			document.querySelector('#calidad_juridica_new').value = 1;
 			agregarPersonaFisica();
@@ -776,7 +778,7 @@
 				document.querySelector('#lugar_delito_da').value = folio.HECHOLUGARID;
 				document.querySelector('#hora_delito_da').value = folio.HECHOHORA;
 				document.querySelector('#fecha_delito_da').value = folio.HECHOFECHA;
-				document.querySelector('#narracion_delito_da').value = folio.HECHONARRACION;
+				document.querySelector('#notas_da').value = folio.NOTASAGENTE;
 
 			}
 		});
@@ -1205,9 +1207,8 @@
 			'lugar_delito': document.querySelector('#lugar').value,
 			'fecha_delito': document.querySelector('#fecha').value,
 			'hora_delito': document.querySelector('#hora').value,
-			'narracion_delito': document.querySelector('#narracion').value,
 			'referencia_delito': document.querySelector('#referencias').value,
-			'notas': document.querySelector('#notas').value,
+			'notas': document.querySelector('#notas_denuncia').value,
 		};
 
 		$.ajax({
@@ -1260,6 +1261,7 @@
 	}
 
 	function agregarPersonaFisica() {
+		console.log(document.querySelector('#calidad_juridica_new').value);
 		const data = {
 			'folio': document.querySelector('#folio').value,
 			'year': document.querySelector('#year').value,
@@ -1470,7 +1472,6 @@
 			e.target.value = e.target.value.slice(0, e.target.maxLength);
 		};
 	}
-
 	function agregarObjetosInvolucrados() {
 
 		const data = {
@@ -1551,7 +1552,7 @@
 			'delito': document.querySelector('#delito_cometido').value,
 			'imputado': document.querySelector('#imputado_arbol').value,
 			'tentativa': document.querySelector('#tentativa').checked ? document.querySelector('#tentativa').value : null,
-                    'conviolencia': document.querySelector('#conviolencia').checked ? document.querySelector('#conviolencia').value : null,
+			'conviolencia': document.querySelector('#conviolencia').checked ? document.querySelector('#conviolencia').value : null,
 		};
 		// console.log(data);
 		$.ajax({
@@ -2334,7 +2335,7 @@
 					document.querySelector('#exterior_pfd').value = domicilio.NUMEROCASA ? domicilio.NUMEROCASA : '';
 					document.querySelector('#interior_pfd').value = domicilio.NUMEROINTERIOR ? domicilio.NUMEROINTERIOR : '';
 					document.querySelector('#referencia_pfd').value = domicilio.REFERENCIA ? domicilio.REFERENCIA : '';
-					
+
 					$('#folio_persona_fisica_modal_da').modal('show');
 
 				} else {
@@ -2842,7 +2843,7 @@
 			'lugar_delito': document.querySelector('#lugar_delito_da').value,
 			'fecha_delito': document.querySelector('#fecha_delito_da').value,
 			'hora_delito': document.querySelector('#hora_delito_da').value,
-			'narracion_delito': document.querySelector('#narracion_delito_da').value,
+			'notas': document.querySelector('#notas_da').value,
 		};
 		$.ajax({
 			data: data,

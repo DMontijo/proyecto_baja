@@ -1212,4 +1212,8 @@
 			input_colonia.value = '-';
 		}
 	});
+	// $("#insert_persona_victima_modal_denuncia").one("hidden.bs.modal", function() {
+	// 	document.getElementById("persona_fisica_form_insert_denunciaA").reset();
+	// 		});
+
 </script>
