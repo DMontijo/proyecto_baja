@@ -380,6 +380,12 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 								archivos[i].ANO + '_' + archivos[i].FOLIOARCHIVOID + '.' + archivos[i].EXTENSION);
 						}
 
+					}else if (response.status === 2) {
+                        Swal.fire({
+                            icon: 'error',
+                            html: response.status,
+                            confirmButtonColor: '#bf9b55',
+                        });
 					}
 				}
 			});
