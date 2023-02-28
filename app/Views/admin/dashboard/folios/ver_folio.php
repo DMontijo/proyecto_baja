@@ -1023,32 +1023,7 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 
 				document.querySelector('#buscar-btn').click();
 
-				form_delito.addEventListener('submit', (event) => {
-					if (!form_delito.checkValidity()) {
-						event.preventDefault();
-						event.stopPropagation();
-						form_preguntas.classList.add('was-validated')
-					} else {
-						event.preventDefault();
-						event.stopPropagation();
-						form_preguntas.classList.remove('was-validated')
-						actualizarDenuncia();
-					}
-					form_delito.classList.add('was-validated')
-				}, false);
-
-				form_preguntas.addEventListener('submit', (event) => {
-					if (!form_preguntas.checkValidity()) {
-						event.preventDefault();
-						event.stopPropagation();
-						form_preguntas.classList.add('was-validated')
-					} else {
-						event.preventDefault();
-						event.stopPropagation();
-						form_preguntas.classList.remove('was-validated')
-						actualizarPreguntas();
-					}
-				}, false);
+			
 
 				inputsText.forEach((input) => {
 					input.addEventListener('input', (event) => {
