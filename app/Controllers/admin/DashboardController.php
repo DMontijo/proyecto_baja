@@ -1019,7 +1019,6 @@ class DashboardController extends BaseController
 		} else {
 			$data->folio = $this->_folioModel->asObject()->where('ANO', $year)->where('FOLIOID', $numfolio)->first();
 
-			var_dump($_POST);exit;
 			if ($data->folio) {
 				$data->status = 1;
 				$data->preguntas_iniciales = $this->_folioPreguntasModel->where('FOLIOID', $numfolio)->where('ANO', $year)->first();
@@ -1040,6 +1039,7 @@ class DashboardController extends BaseController
 				// $data->personafisica = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->findAll();
 				$data->imputados = $this->_folioPersonaFisicaModel->get_imputados($numfolio, $year);
 				$data->victimas = $this->_folioPersonaFisicaModel->get_victimas($numfolio, $year);
+				var_dump($data);exit;
 
 				if ($data->folio->STATUS == 'ABIERTO' || $data->folio->STATUS == 'EN PROCESO') {
 					$data->agente = $this->_usuariosModel->asObject()->where('ID', $data->folio->AGENTEATENCIONID)->first();
