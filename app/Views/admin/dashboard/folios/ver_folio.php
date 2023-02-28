@@ -301,6 +301,58 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 							$("#adicionados").append(nFilas - 1);
 
 						}
+
+						 //Relacions fisfis
+						 for (let i = 0; i < relacionFisFis.length; i++) {
+                            // var btn = `<button type='button'  class='btn btn-primary' onclick='eliminarArbolDelictivo(${relacionFisFis[i].PERSONAFISICAIDVICTIMA},${relacionFisFis[i].PERSONAFISICAIDIMPUTADO},${relacionFisFis[i].DELITOMODALIDADID})'><i class='fa fa-trash'></i></button>`
+
+                            var fila =
+                                `<tr id="row${i}">` +
+                                `<td class="text-center">${relacionFisFis[i].NOMBREI}</td>` +
+                                `<td class="text-center">${relacionFisFis[i].DELITOMODALIDADDESCR}</td>` +
+                                `<td class="text-center">${relacionFisFis[i].NOMBREV}</td>` +
+                                // `<td class="text-center">${btn}</td>` +
+                                `</tr>`;
+
+                            $('#table-delitos tr:first').after(fila);
+                            $("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
+                            var nFilas = $("#delitos tr").length;
+                            $("#adicionados").append(nFilas - 1);
+                        }
+                        //Relacion imputado delito
+                        for (let i = 0; i < fisicaImpDelito.length; i++) {
+                            // var btn = `<button type='button'  class='btn btn-primary' onclick='eliminarImputadoDelito(${impDelito[i].PERSONAFISICAID},${impDelito[i].DELITOMODALIDADID})'><i class='fa fa-trash'></i></button>`
+
+                            var fila =
+                                `<tr id="row${i}">` +
+                                `<td class="text-center" value="${fisicaImpDelito[i].PERSONAFISICAID}">${fisicaImpDelito[i].NOMBRE}</td>` +
+                                `<td class="text-center" value="${fisicaImpDelito[i].DELITOMODALIDADID}">${fisicaImpDelito[i].DELITOMODALIDADDESCR}</td>` +
+                                // `<td class="text-center">${btn}</td>` +
+                                `</tr>`;
+
+                            $('#table-delito-cometidos tr:first').after(fila);
+                            $("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
+                            var nFilas = $("#delito-cometidos tr").length;
+                            $("#adicionados").append(nFilas - 1);
+                        }
+
+                        //Objetos involucrados
+                        for (let i = 0; i < objetos.length; i++) {
+                            var btnEditar = `<button type='button'  class='btn btn-primary' onclick='viewObjetoInvolucrado(${objetos[i].OBJETOID})'><i class='fa fa-eye'></i></button>`
+
+                            var fila =
+                                `<tr id="row${i}">` +
+                                `<td class="text-center" value="${objetos[i].CLASIFICACIONID}">${objetos[i].OBJETOCLASIFICACIONDESCR}</td>` +
+                                `<td class="text-center" value="${objetos[i].SUBCLASIFICACIONID}">${objetos[i].OBJETOSUBCLASIFICACIONDESCR}</td>` +
+                                `<td class="text-center">${btnEditar}</td>` +
+                                `</tr>`;
+
+                            $('#table-objetos-involucrados tr:first').after(fila);
+                            $("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
+                            var nFilas = $("#objetos-involucrados tr").length;
+                            $("#adicionados").append(nFilas - 1);
+                        }
+
 					}
 				}
 			});
