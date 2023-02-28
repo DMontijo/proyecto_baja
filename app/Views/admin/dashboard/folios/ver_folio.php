@@ -99,6 +99,8 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 			e.value = e.value.toUpperCase();
 		}
 
+		$(document).ready(function() {
+
 		buscar_btn.addEventListener('click', (e) => {
 			$.ajax({
 				data: {
@@ -424,7 +426,7 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 				}
 			});
 		});
-
+	});
 		buscar_nuevo_btn.addEventListener('click', () => {
 			window.location.href = `<?= base_url('/admin/dashboard/buscar_folio') ?>`;
 		});
