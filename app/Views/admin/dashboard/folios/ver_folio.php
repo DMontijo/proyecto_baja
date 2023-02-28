@@ -159,6 +159,95 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 							document.querySelector('#lesiones').value = preguntas.LESIONES;
 							document.querySelector('#lesiones_visibles').value = preguntas.LESIONES_VISIBLES;
 						}
+						   //DENUNCIA
+						   document.querySelector('#delito_delito').value = folio.HECHODELITO;
+                        document.querySelector('#municipio_delito').value = folio.HECHOMUNICIPIOID;
+                        if (folio.HECHOLOCALIDADID) {
+                            let data = {
+                                'estado_id': 2,
+                                'municipio_id': folio.HECHOMUNICIPIOID
+                            };
+
+                            $.ajax({
+                                data: data,
+                                url: "<?= base_url('/data/get-localidades-by-municipio') ?>",
+                                method: "POST",
+                                dataType: "json",
+                                success: function(response) {
+                                    let localidades = response.data;
+                                    let select_localidad = document.querySelector('#localidad_delito');
+
+                                    localidades.forEach(localidad => {
+                                        var option = document.createElement("option");
+                                        option.text = localidad.LOCALIDADDESCR;
+                                        option.value = localidad.LOCALIDADID;
+                                        select_localidad.add(option);
+                                    });
+
+                                    select_localidad.value = folio.HECHOLOCALIDADID;
+                                },
+                                error: function(jqXHR, textStatus, errorThrown) {}
+                            });
+                        } else {
+                            document.querySelector('#localidad_delito').value = '';
+                        }
+
+                        if (folio.HECHOCOLONIAID) {
+                            document.querySelector('#colonia_delito').classList.add('d-none');
+                            document.querySelector('#colonia_delito_select').classList.remove('d-none');
+                            let data = {
+                                'estado_id': 2,
+                                'municipio_id': folio.HECHOMUNICIPIOID,
+                                'localidad_id': folio.HECHOLOCALIDADID
+                            };
+                            $.ajax({
+                                data: data,
+                                url: "<?= base_url('/data/get-colonias-by-estado-municipio-localidad') ?>",
+                                method: "POST",
+                                dataType: "json",
+                                success: function(response) {
+                                    let select_colonia = document.querySelector('#colonia_delito_select');
+                                    let input_colonia = document.querySelector('#colonia_delito');
+                                    let colonias = response.data;
+
+                                    colonias.forEach(colonia => {
+                                        var option = document.createElement("option");
+                                        option.text = colonia.COLONIADESCR;
+                                        option.value = colonia.COLONIAID;
+                                        select_colonia.add(option);
+                                    });
+
+                                    var option = document.createElement("option");
+                                    option.text = 'OTRO';
+                                    option.value = '0';
+                                    select_colonia.add(option);
+
+                                    select_colonia.value = folio.HECHOCOLONIAID;
+                                    input_colonia.value = '-';
+                                },
+                                error: function(jqXHR, textStatus, errorThrown) {
+
+                                }
+                            });
+                        } else {
+                            document.querySelector('#colonia_delito').classList.remove('d-none');
+                            document.querySelector('#colonia_delito_select').classList.add('d-none');
+                            var option = document.createElement("option");
+                            option.text = 'OTRO';
+                            option.value = '0';
+                            document.querySelector('#colonia_delito_select').add(option);
+                            document.querySelector('#colonia_delito_select').value = '0';
+                            document.querySelector('#colonia_delito').value = folio.HECHOCOLONIADESCR;
+                        }
+
+                        document.querySelector('#calle_delito').value = folio.HECHOCALLE;
+                        document.querySelector('#exterior_delito').value = folio.HECHONUMEROCASA;
+                        document.querySelector('#interior_delito').value = folio.HECHONUMEROCASAINT;
+                        document.querySelector('#lugar_delito').value = folio.HECHOLUGARID;
+                        document.querySelector('#hora_delito').value = folio.HECHOHORA;
+                        document.querySelector('#fecha_delito').value = folio.HECHOFECHA;
+                        document.querySelector('#narracion_delito').value = folio.HECHONARRACION;
+
 					}
 				}
 			});
