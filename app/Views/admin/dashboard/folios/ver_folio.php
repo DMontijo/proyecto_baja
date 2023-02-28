@@ -387,7 +387,10 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
                             confirmButtonColor: '#bf9b55',
                         });
 					}
-				}
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+                    console.log('Error');
+                }
 			});
 		});
 
