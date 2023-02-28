@@ -5505,6 +5505,9 @@ class DashboardController extends BaseController
 			$data->imputadoDom = $this->_folioPersonaFisicaDomicilioModel->asObject()->where('FOLIOID', $data->folio->FOLIOID)->where('ANO', $data->folio->ANO)->where('PERSONAFISICAID', $imputado)->first();
 			$data->imputados_da = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio->FOLIOID)->where('ANO', $data->folio->ANO)->where('CALIDADJURIDICAID', 2)->findAll();
 			$data->vehiculos_da = $this->_folioVehiculoModel->asObject()->where('FOLIOID', $data->folio->FOLIOID)->where('ANO', $data->folio->ANO)->findAll();
+			$data->municipio_imp = $this->_municipiosModel->asObject()->where('ESTADOID',  $data->imputadoDom->ESTADOID)->where('MUNICIPIOID',  $data->imputadoDom->MUNICIPIOID)->first();
+			$data->estado_imp = $this->_estadosModel->asObject()->where('ESTADOID',  $data->imputadoDom->ESTADOID)->first();
+
 
 			$data->estadoVictima = $this->_estadosModel->asObject()->where('ESTADOID',  $data->victimaDom->ESTADOID)->first();
 			$data->tipoIdentificacionVictima = $this->_tipoIdentificacionModel->asObject()->where('PERSONATIPOIDENTIFICACIONID',   $data->victima[0]['TIPOIDENTIFICACIONID'])->first();
@@ -6092,7 +6095,8 @@ class DashboardController extends BaseController
 			$data->nacionalidadVictima = $this->_nacionalidadModel->asObject()->where('PERSONANACIONALIDADID',   $data->victima[0]['NACIONALIDADID'])->first();
 			$data->edoCivilVictima = $this->_estadoCivilModel->asObject()->where('PERSONAESTADOCIVILID',   $data->victima[0]['ESTADOCIVILID'])->first();
 			$data->plantilla = str_replace('[DOCUMENTO_FECHA]', date('d') . ' DE ' . $meses[date('n') - 1] . " DEL " . date('Y'), $data->plantilla);
-
+			$data->municipio_imp = $this->_municipiosModel->asObject()->where('ESTADOID',  $data->imputadoDom->ESTADOID)->where('MUNICIPIOID',  $data->imputadoDom->MUNICIPIOID)->first();
+			$data->estado_imp = $this->_estadosModel->asObject()->where('ESTADOID',  $data->imputadoDom->ESTADOID)->first();
 			//CITATORIO
 			if ($data->bandejaRac) {
 				if ($data->bandejaRac->TIPOPROCEDIMIENTOID == 1) {
@@ -6160,7 +6164,7 @@ class DashboardController extends BaseController
 			$data->plantilla = str_replace('[VICTIMA_OCUPACION]', isset($data->ocupacionVictima) == true ? $data->ocupacionVictima->PERSONAOCUPACIONDESCR : 'DESCONOCIDA', $data->plantilla);
 			$data->plantilla = str_replace('[VICTIMA_NACIONALIDAD]', isset($data->nacionalidadVictima) == true ? $data->nacionalidadVictima->PERSONANACIONALIDADDESCR : 'DESCONOCIDA', $data->plantilla);
 			$data->plantilla = str_replace('[VICTIMA_ESTADO_CIVIL]', isset($data->edoCivilVictima) == true ? $data->edoCivilVictima->PERSONAESTADOCIVILDESCR : 'DESCONOCIDO', $data->plantilla);
-			$data->plantilla = str_replace('[IMPUTADO_DOMICILIO_COMPLETO]', ($data->imputadoDom->CALLE ? $data->imputadoDom->CALLE : 'DESCONOCIDO') . ' EXT. ' . ($data->imputadoDom->NUMEROCASA ? $data->imputadoDom->NUMEROCASA : '') . ' INT. ' . ($data->imputadoDom->NUMEROINTERIOR ? $data->imputadoDom->NUMEROINTERIOR : '') . ' ' . $data->imputadoDom->COLONIADESCR, $data->plantilla);
+			$data->plantilla = str_replace('[IMPUTADO_DOMICILIO_COMPLETO]', ($data->imputadoDom->CALLE ? $data->imputadoDom->CALLE : 'DESCONOCIDO') . ' EXT. ' . ($data->imputadoDom->NUMEROCASA ? $data->imputadoDom->NUMEROCASA : '') . ' INT. ' . ($data->imputadoDom->NUMEROINTERIOR ? $data->imputadoDom->NUMEROINTERIOR : '') . ' ' . $data->imputadoDom->COLONIADESCR . ($data->municipio_imp ? $data->municipio_imp->MUNICIPIODESCR :'') . ' ' . ($data->estado_imp ? $data->estado_imp->ESTADODESCR :''), $data->plantilla);
 			$hecho_info = '<p><b>FOLIO:</b> ' . $data->folio->FOLIOID . '</p><p><b>AÑO:</b> ' . $data->folio->ANO . '</p><p><b>FECHA DEL HECHO:</b> ' . $data->folio->HECHOFECHA . '</p><p><b>HORA DEL HECHO:</b> ' . $data->folio->HECHOHORA . '</p><p><b>CALLE DEL HECHO:</b> ' . $data->folio->HECHOCALLE . ' EXT.' . $data->folio->HECHONUMEROCASA . ' INT.' . $data->folio->HECHONUMEROCASAINT . ' ' . $data->municipios->MUNICIPIODESCR . '</p><p><b>NARRACIÓN DEL HECHO:</b> ' . $data->folio->HECHONARRACION . '</p><p><b>NOTAS DEL AGENTE:</b> ' . $data->folio->NOTASAGENTE . '</p>';
 			$data->plantilla = str_replace('[INFORMACION_DEL_HECHO]', $hecho_info, $data->plantilla);
 
@@ -6186,6 +6190,9 @@ class DashboardController extends BaseController
 			} else {
 				$data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->where('TIPOEXPEDIENTEID',  $data->folio->TIPOEXPEDIENTEID)->first();
 				$arrayExpediente = str_split($data->folio->EXPEDIENTEID);
+				$expedienteid =  $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
+
+				$data->plantilla = str_replace('[EXPEDIENTE_NUMERO]', $expedienteid, $data->plantilla);
 
 				$data->plantilla = str_replace('[DOCUMENTO_MUNICIPIO]', $data->municipios->MUNICIPIODESCR, $data->plantilla);
 				$data->plantilla = str_replace('[DOCUMENTO_CIUDAD]', $data->municipios->MUNICIPIODESCR, $data->plantilla);
@@ -6307,7 +6314,7 @@ class DashboardController extends BaseController
 					$data->plantilla = str_replace('[TELEFONO_UMA]', '664-736-52-96, correo electrónico: umacosta@fgebc.gob.mx', $data->plantilla);
 				}
 
-				$data->plantilla = str_replace('[IMPUTADO_DOMICILIO_COMPLETO]', ($data->imputadoDom->CALLE ? $data->imputadoDom->CALLE : 'DESCONOCIDO') . ' EXT. ' . ($data->imputadoDom->NUMEROCASA ? $data->imputadoDom->NUMEROCASA : '') . ' INT. ' . ($data->imputadoDom->NUMEROINTERIOR ? $data->imputadoDom->NUMEROINTERIOR : '') . ' ' . $data->imputadoDom->COLONIADESCR, $data->plantilla);
+				$data->plantilla = str_replace('[IMPUTADO_DOMICILIO_COMPLETO]', ($data->imputadoDom->CALLE ? $data->imputadoDom->CALLE : 'DESCONOCIDO') . ' EXT. ' . ($data->imputadoDom->NUMEROCASA ? $data->imputadoDom->NUMEROCASA : '') . ' INT. ' . ($data->imputadoDom->NUMEROINTERIOR ? $data->imputadoDom->NUMEROINTERIOR : '') . ' ' . $data->imputadoDom->COLONIADESCR . ($data->municipio_imp ? $data->municipio_imp->MUNICIPIODESCR :'') . ' ' . ($data->estado_imp ? $data->estado_imp->ESTADODESCR :''), $data->plantilla);
 
 				$hecho_info = '<p><b>FOLIO:</b> ' . $data->folio->FOLIOID . '</p><p><b>AÑO:</b> ' . $data->folio->ANO . '</p><p><b>FECHA DEL HECHO:</b> ' . $data->folio->HECHOFECHA . '</p><p><b>HORA DEL HECHO:</b> ' . $data->folio->HECHOHORA . '</p><p><b>CALLE DEL HECHO:</b> ' . $data->folio->HECHOCALLE . ' EXT.' . $data->folio->HECHONUMEROCASA . ' INT.' . $data->folio->HECHONUMEROCASAINT . ' ' . $data->municipios->MUNICIPIODESCR . '</p><p><b>NARRACIÓN DEL HECHO:</b> ' . $data->folio->HECHONARRACION . '</p><p><b>NOTAS DEL AGENTE:</b> ' . $data->folio->NOTASAGENTE . '</p>';
 

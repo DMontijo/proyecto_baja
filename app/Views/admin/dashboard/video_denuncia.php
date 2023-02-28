@@ -1132,7 +1132,7 @@
 						document.querySelector('#localidad_delito').value = '';
 					}
 
-					if (folio.HECHOCOLONIAID) {
+					if (folio.HECHOCOLONIAID && folio.HECHOCOLONIAID !='0') {
 						document.querySelector('#colonia_delito').classList.add('d-none');
 						document.querySelector('#colonia_delito_select').classList.remove('d-none');
 						let data = {
@@ -1171,7 +1171,16 @@
 
 							}
 						});
-					} else {
+					} else if(folio.HECHOCOLONIAID =='0'){
+document.querySelector('#colonia_delito').classList.remove('d-none');
+						document.querySelector('#colonia_delito_select').classList.add('d-none');
+						var option = document.createElement("option");
+						option.text = 'OTRO';
+						option.value = '0';
+						document.querySelector('#colonia_delito_select').add(option);
+						document.querySelector('#colonia_delito_select').value = '0';
+						document.querySelector('#colonia_delito').value = folio.HECHOCOLONIADESCR;
+					}else {
 						document.querySelector('#colonia_delito').classList.remove('d-none');
 						document.querySelector('#colonia_delito_select').classList.add('d-none');
 						var option = document.createElement("option");
