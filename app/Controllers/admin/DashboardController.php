@@ -6187,6 +6187,7 @@ class DashboardController extends BaseController
 				$data->plantilla = str_replace('[EXPEDIENTE_NUMERO]', $data->folio->FOLIOID, $data->plantilla);
 				$data->plantilla = str_replace('[TIPO_EXPEDIENTE]',  $data->folio->STATUS == "DERIVADO" ? "DERIVACIÓN" : "CANALIZACIÓN", $data->plantilla);
 				return json_encode(['status' => 1, 'plantilla' => $data->plantilla]);
+				var_dump($data);exit;
 			} else {
 				$data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->where('TIPOEXPEDIENTEID',  $data->folio->TIPOEXPEDIENTEID)->first();
 				$arrayExpediente = str_split($data->folio->EXPEDIENTEID);
