@@ -1040,6 +1040,7 @@ class DashboardController extends BaseController
 				$data->imputados = $this->_folioPersonaFisicaModel->get_imputados($numfolio, $year);
 				$data->victimas = $this->_folioPersonaFisicaModel->get_victimas($numfolio, $year);
 
+				var_dump($data);exit;
 				if ($data->folio->STATUS == 'ABIERTO' || $data->folio->STATUS == 'EN PROCESO') {
 					$data->agente = $this->_usuariosModel->asObject()->where('ID', $data->folio->AGENTEATENCIONID)->first();
 				} else if ($data->folio->STATUS == 'EN PROCESO' && $data->folio->TIPODENUNCIA == "DA") {
