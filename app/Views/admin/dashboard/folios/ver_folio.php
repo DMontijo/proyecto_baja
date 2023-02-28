@@ -159,95 +159,148 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 							document.querySelector('#lesiones').value = preguntas.LESIONES;
 							document.querySelector('#lesiones_visibles').value = preguntas.LESIONES_VISIBLES;
 						}
-						   //DENUNCIA
-						   document.querySelector('#delito_delito').value = folio.HECHODELITO;
-                        document.querySelector('#municipio_delito').value = folio.HECHOMUNICIPIOID;
-                        if (folio.HECHOLOCALIDADID) {
-                            let data = {
-                                'estado_id': 2,
-                                'municipio_id': folio.HECHOMUNICIPIOID
-                            };
+						//DENUNCIA
+						document.querySelector('#delito_delito').value = folio.HECHODELITO;
+						document.querySelector('#municipio_delito').value = folio.HECHOMUNICIPIOID;
+						if (folio.HECHOLOCALIDADID) {
+							let data = {
+								'estado_id': 2,
+								'municipio_id': folio.HECHOMUNICIPIOID
+							};
 
-                            $.ajax({
-                                data: data,
-                                url: "<?= base_url('/data/get-localidades-by-municipio') ?>",
-                                method: "POST",
-                                dataType: "json",
-                                success: function(response) {
-                                    let localidades = response.data;
-                                    let select_localidad = document.querySelector('#localidad_delito');
+							$.ajax({
+								data: data,
+								url: "<?= base_url('/data/get-localidades-by-municipio') ?>",
+								method: "POST",
+								dataType: "json",
+								success: function(response) {
+									let localidades = response.data;
+									let select_localidad = document.querySelector('#localidad_delito');
 
-                                    localidades.forEach(localidad => {
-                                        var option = document.createElement("option");
-                                        option.text = localidad.LOCALIDADDESCR;
-                                        option.value = localidad.LOCALIDADID;
-                                        select_localidad.add(option);
-                                    });
+									localidades.forEach(localidad => {
+										var option = document.createElement("option");
+										option.text = localidad.LOCALIDADDESCR;
+										option.value = localidad.LOCALIDADID;
+										select_localidad.add(option);
+									});
 
-                                    select_localidad.value = folio.HECHOLOCALIDADID;
-                                },
-                                error: function(jqXHR, textStatus, errorThrown) {}
-                            });
-                        } else {
-                            document.querySelector('#localidad_delito').value = '';
-                        }
+									select_localidad.value = folio.HECHOLOCALIDADID;
+								},
+								error: function(jqXHR, textStatus, errorThrown) {}
+							});
+						} else {
+							document.querySelector('#localidad_delito').value = '';
+						}
 
-                        if (folio.HECHOCOLONIAID) {
-                            document.querySelector('#colonia_delito').classList.add('d-none');
-                            document.querySelector('#colonia_delito_select').classList.remove('d-none');
-                            let data = {
-                                'estado_id': 2,
-                                'municipio_id': folio.HECHOMUNICIPIOID,
-                                'localidad_id': folio.HECHOLOCALIDADID
-                            };
-                            $.ajax({
-                                data: data,
-                                url: "<?= base_url('/data/get-colonias-by-estado-municipio-localidad') ?>",
-                                method: "POST",
-                                dataType: "json",
-                                success: function(response) {
-                                    let select_colonia = document.querySelector('#colonia_delito_select');
-                                    let input_colonia = document.querySelector('#colonia_delito');
-                                    let colonias = response.data;
+						if (folio.HECHOCOLONIAID) {
+							document.querySelector('#colonia_delito').classList.add('d-none');
+							document.querySelector('#colonia_delito_select').classList.remove('d-none');
+							let data = {
+								'estado_id': 2,
+								'municipio_id': folio.HECHOMUNICIPIOID,
+								'localidad_id': folio.HECHOLOCALIDADID
+							};
+							$.ajax({
+								data: data,
+								url: "<?= base_url('/data/get-colonias-by-estado-municipio-localidad') ?>",
+								method: "POST",
+								dataType: "json",
+								success: function(response) {
+									let select_colonia = document.querySelector('#colonia_delito_select');
+									let input_colonia = document.querySelector('#colonia_delito');
+									let colonias = response.data;
 
-                                    colonias.forEach(colonia => {
-                                        var option = document.createElement("option");
-                                        option.text = colonia.COLONIADESCR;
-                                        option.value = colonia.COLONIAID;
-                                        select_colonia.add(option);
-                                    });
+									colonias.forEach(colonia => {
+										var option = document.createElement("option");
+										option.text = colonia.COLONIADESCR;
+										option.value = colonia.COLONIAID;
+										select_colonia.add(option);
+									});
 
-                                    var option = document.createElement("option");
-                                    option.text = 'OTRO';
-                                    option.value = '0';
-                                    select_colonia.add(option);
+									var option = document.createElement("option");
+									option.text = 'OTRO';
+									option.value = '0';
+									select_colonia.add(option);
 
-                                    select_colonia.value = folio.HECHOCOLONIAID;
-                                    input_colonia.value = '-';
-                                },
-                                error: function(jqXHR, textStatus, errorThrown) {
+									select_colonia.value = folio.HECHOCOLONIAID;
+									input_colonia.value = '-';
+								},
+								error: function(jqXHR, textStatus, errorThrown) {
 
-                                }
-                            });
-                        } else {
-                            document.querySelector('#colonia_delito').classList.remove('d-none');
-                            document.querySelector('#colonia_delito_select').classList.add('d-none');
-                            var option = document.createElement("option");
-                            option.text = 'OTRO';
-                            option.value = '0';
-                            document.querySelector('#colonia_delito_select').add(option);
-                            document.querySelector('#colonia_delito_select').value = '0';
-                            document.querySelector('#colonia_delito').value = folio.HECHOCOLONIADESCR;
-                        }
+								}
+							});
+						} else {
+							document.querySelector('#colonia_delito').classList.remove('d-none');
+							document.querySelector('#colonia_delito_select').classList.add('d-none');
+							var option = document.createElement("option");
+							option.text = 'OTRO';
+							option.value = '0';
+							document.querySelector('#colonia_delito_select').add(option);
+							document.querySelector('#colonia_delito_select').value = '0';
+							document.querySelector('#colonia_delito').value = folio.HECHOCOLONIADESCR;
+						}
 
-                        document.querySelector('#calle_delito').value = folio.HECHOCALLE;
-                        document.querySelector('#exterior_delito').value = folio.HECHONUMEROCASA;
-                        document.querySelector('#interior_delito').value = folio.HECHONUMEROCASAINT;
-                        document.querySelector('#lugar_delito').value = folio.HECHOLUGARID;
-                        document.querySelector('#hora_delito').value = folio.HECHOHORA;
-                        document.querySelector('#fecha_delito').value = folio.HECHOFECHA;
-                        document.querySelector('#narracion_delito').value = folio.HECHONARRACION;
+						document.querySelector('#calle_delito').value = folio.HECHOCALLE;
+						document.querySelector('#exterior_delito').value = folio.HECHONUMEROCASA;
+						document.querySelector('#interior_delito').value = folio.HECHONUMEROCASAINT;
+						document.querySelector('#lugar_delito').value = folio.HECHOLUGARID;
+						document.querySelector('#hora_delito').value = folio.HECHOHORA;
+						document.querySelector('#fecha_delito').value = folio.HECHOFECHA;
+						document.querySelector('#narracion_delito').value = folio.HECHONARRACION;
+						//PERSONAS
+						for (let i = 0; i < personas.length; i++) {
+							var btn = `<button type='button'  class='btn btn-primary' onclick='viewPersonaFisica(${personas[i].PERSONAFISICAID})'><i class='fas fa-eye'></i></button>`
 
+							var fila =
+								`<tr id="row${i}">` +
+								`<td class="text-center">${personas[i].DENUNCIANTE=='S'?'<strong>DENUNCIANTE</strong>':''}</td>` +
+								`<td class="text-center">${personas[i].NOMBRE}</td>` +
+								`<td class="text-center">${personas[i].PERSONACALIDADJURIDICADESCR}</td>` +
+								`<td class="text-center">${btn}</td>` +
+								`</tr>`;
+
+							$('#table-personas tr:first').after(fila);
+							$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
+							var nFilas = $("#personas tr").length;
+							$("#adicionados").append(nFilas - 1);
+						}
+
+						//VEHICULOS
+						for (let i = 0; i < vehiculos.length; i++) {
+							var btnVehiculo = `<button type='button' class='btn btn-primary' onclick='viewVehiculo(${vehiculos[i].VEHICULOID})'><i class='fas fa-eye'></i></button>`;
+
+							var fila3 =
+								`<tr id="row${i}">` +
+								`<td class="text-center">${vehiculos[i].PLACAS?vehiculos[i].PLACAS:'DESCONOCIDO'}</td>` +
+								`<td class="text-center">${vehiculos[i].NUMEROSERIE?vehiculos[i].NUMEROSERIE:'DESCONOCIDO'}</td>` +
+								`<td class="text-center">${btnVehiculo}</td>` +
+								`</tr>`;
+
+							$('#table-vehiculos tr:first').after(fila3);
+							$("#adicionados").text("");
+							var nFilas = $("#vehiculos tr").length;
+							$("#vehiculos").append(nFilas - 1);
+						}
+						//Relacion parentesco
+						for (let i = 0; i < relacion_parentesco.length; i++) {
+
+							// var btn = `<button type='button'  class='btn btn-primary' onclick='view_form_parentesco(${relacion_parentesco[i].PERSONAFISICAID1})'><i class="fas fa-eye"></i></button>`
+
+
+							var fila2 =
+								`<tr id="row${i}">` +
+								`<td class="text-center">${personaiduno[i].NOMBRE}</td>` +
+								`<td class="text-center">${parentesco[i].PERSONAPARENTESCODESCR}</td>` +
+								`<td class="text-center">${personaidDos[i].NOMBRE}</td>` +
+								// `<td class="text-center">${btn}</td>` +
+								`</tr>`;
+
+							$('#table-parentesco tr:first').after(fila2);
+							$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
+							var nFilas = $("#parentesco tr").length;
+							$("#adicionados").append(nFilas - 1);
+
+						}
 					}
 				}
 			});
