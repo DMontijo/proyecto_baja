@@ -3465,8 +3465,8 @@ class DashboardController extends BaseController
 
 
 		$ffprobe = FFProbe::create([
-			'ffmpeg.binaries'  => 'C:/ffmpeg/bin/ffmpeg.exe', // the path to the FFMpeg binary
-			'ffprobe.binaries' => 'C:/ffmpeg/bin/ffprobe.exe', // the path to the FFProbe binary
+			'ffmpeg.binaries'  => '/usr/local/bin/ffmpeg', //'C:/ffmpeg/bin/ffmpeg.exe', // the path to the FFMpeg binary
+			'ffprobe.binaries' => '/usr/local/bin/ffprobe', //'C:/ffmpeg/bin/ffprobe.exe', // the path to the FFProbe binary
 			'timeout'          => 3600, // the timeout for the underlying process
 			'ffmpeg.threads'   => 12,   // the number of threads that FFMpeg should use
 		]);
