@@ -111,286 +111,304 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 				dataType: "json",
 				success: function(response) {
 					respuesta = response;
-					console.log(respuesta);
-					// if (response.status === 1) {
-					// 	const folio = response.folio;
-					// 	const preguntas = response.preguntas_iniciales;
-					// 	const personas = response.personas;
-					// 	const domicilios = response.domicilios;
-					// 	const vehiculos = response.vehiculos;
-					// 	const relacion_parentesco = response.parentescoRelacion;
-					// 	const parentesco = response.parentesco;
-					// 	const personaiduno = response.personaiduno;
-					// 	const personaidDos = response.personaidDos;
-					// 	const relacionFisFis = response.relacionFisFis;
-					// 	const fisicaImpDelito = response.fisicaImpDelito;
-					// 	const delitosModalidadFiltro = response.delitosModalidadFiltro;
-					// 	const personafisica = response.personafisica;
-					// 	const imputados = response.imputados;
-					// 	const victimas = response.victimas;
-					// 	const objetos = response.objetos;
-					// 	const archivos = response.archivosexternos;
-					// 	buscar_btn.classList.add('d-none');
-					// 	buscar_nuevo_btn.classList.remove('d-none');
+					if (response.status === 1) {
+						const folio = response.folio;
+						const preguntas = response.preguntas_iniciales;
+						const personas = response.personas;
+						const domicilios = response.domicilios;
+						const vehiculos = response.vehiculos;
+						const relacion_parentesco = response.parentescoRelacion;
+						const parentesco = response.parentesco;
+						const personaiduno = response.personaiduno;
+						const personaidDos = response.personaidDos;
+						const relacionFisFis = response.relacionFisFis;
+						const fisicaImpDelito = response.fisicaImpDelito;
+						const delitosModalidadFiltro = response.delitosModalidadFiltro;
+						const personafisica = response.personafisica;
+						const imputados = response.imputados;
+						const victimas = response.victimas;
+						const objetos = response.objetos;
+						const archivos = response.archivosexternos;
+						buscar_btn.classList.add('d-none');
+						buscar_nuevo_btn.classList.remove('d-none');
 
-					// 	// card2.classList.remove('d-none');
-					// 	card3.classList.remove('d-none');
+						// card2.classList.remove('d-none');
+						card3.classList.remove('d-none');
 
-					// 	document.querySelector('#delito_dash').value = folio.HECHODELITO;
-					// 	document.querySelector('#delito_descr_dash').value = folio.HECHONARRACION;
-					// 	$('#propietario_update').empty();
-					// 	let select_propietario_update = document.querySelector("#propietario_update")
-					// 	personas.forEach(persona => {
-					// 		const option = document.createElement('option');
-					// 		option.value = persona.PERSONAFISICAID;
-					// 		option.text = persona.NOMBRE + ' ' + persona.PRIMERAPELLIDO;
-					// 		select_propietario_update.add(option, null);
-					// 	});
-					// 	//PREGUNTAS INICIALES
-					// 	if (preguntas) {
-					// 		document.querySelector('#es_menor').value = preguntas.ES_MENOR;
-					// 		document.querySelector('#es_tercera_edad').value = preguntas.ES_TERCERA_EDAD;
-					// 		document.querySelector('#tiene_discapacidad').value = preguntas.TIENE_DISCAPACIDAD;
-					// 		document.querySelector('#es_vulnerable').value = preguntas.ES_GRUPO_VULNERABLE;
-					// 		document.querySelector('#vulnerable_descripcion').value = preguntas.ES_GRUPO_VULNERABLE_DESCR;
-					// 		document.querySelector('#tiene_discapacidad').value = preguntas.TIENE_DISCAPACIDAD;
-					// 		document.querySelector('#fue_con_arma').value = preguntas.FUE_CON_ARMA;
-					// 		document.querySelector('#esta_desaparecido').value = preguntas.ESTA_DESAPARECIDO;
-					// 		document.querySelector('#lesiones').value = preguntas.LESIONES;
-					// 		document.querySelector('#lesiones_visibles').value = preguntas.LESIONES_VISIBLES;
-					// 	}
-					// 	//DENUNCIA
-					// 	document.querySelector('#delito_delito').value = folio.HECHODELITO;
-					// 	document.querySelector('#municipio_delito').value = folio.HECHOMUNICIPIOID;
-					// 	if (folio.HECHOLOCALIDADID) {
-					// 		let data = {
-					// 			'estado_id': 2,
-					// 			'municipio_id': folio.HECHOMUNICIPIOID
-					// 		};
+						if (personas) {
+							$('#propietario_update').empty();
+							let select_propietario_update = document.querySelector("#propietario_update")
+							personas.forEach(persona => {
+								const option = document.createElement('option');
+								option.value = persona.PERSONAFISICAID;
+								option.text = persona.NOMBRE + ' ' + persona.PRIMERAPELLIDO;
+								select_propietario_update.add(option, null);
+							});
 
-					// 		$.ajax({
-					// 			data: data,
-					// 			url: "<?= base_url('/data/get-localidades-by-municipio') ?>",
-					// 			method: "POST",
-					// 			dataType: "json",
-					// 			success: function(response) {
-					// 				let localidades = response.data;
-					// 				let select_localidad = document.querySelector('#localidad_delito');
+							//PERSONAS
+							for (let i = 0; i < personas.length; i++) {
+								var btn = `<button type='button'  class='btn btn-primary' onclick='viewPersonaFisica(${personas[i].PERSONAFISICAID})'><i class='fas fa-eye'></i></button>`
 
-					// 				localidades.forEach(localidad => {
-					// 					var option = document.createElement("option");
-					// 					option.text = localidad.LOCALIDADDESCR;
-					// 					option.value = localidad.LOCALIDADID;
-					// 					select_localidad.add(option);
-					// 				});
+								var fila =
+									`<tr id="row${i}">` +
+									`<td class="text-center">${personas[i].DENUNCIANTE=='S'?'<strong>DENUNCIANTE</strong>':''}</td>` +
+									`<td class="text-center">${personas[i].NOMBRE}</td>` +
+									`<td class="text-center">${personas[i].PERSONACALIDADJURIDICADESCR}</td>` +
+									`<td class="text-center">${btn}</td>` +
+									`</tr>`;
 
-					// 				select_localidad.value = folio.HECHOLOCALIDADID;
-					// 			},
-					// 			error: function(jqXHR, textStatus, errorThrown) {}
-					// 		});
-					// 	} else {
-					// 		document.querySelector('#localidad_delito').value = '';
-					// 	}
+								$('#table-personas tr:first').after(fila);
+								$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
+								var nFilas = $("#personas tr").length;
+								$("#adicionados").append(nFilas - 1);
+							}
+						}
 
-					// 	if (folio.HECHOCOLONIAID) {
-					// 		document.querySelector('#colonia_delito').classList.add('d-none');
-					// 		document.querySelector('#colonia_delito_select').classList.remove('d-none');
-					// 		let data = {
-					// 			'estado_id': 2,
-					// 			'municipio_id': folio.HECHOMUNICIPIOID,
-					// 			'localidad_id': folio.HECHOLOCALIDADID
-					// 		};
-					// 		$.ajax({
-					// 			data: data,
-					// 			url: "<?= base_url('/data/get-colonias-by-estado-municipio-localidad') ?>",
-					// 			method: "POST",
-					// 			dataType: "json",
-					// 			success: function(response) {
-					// 				let select_colonia = document.querySelector('#colonia_delito_select');
-					// 				let input_colonia = document.querySelector('#colonia_delito');
-					// 				let colonias = response.data;
+						//PREGUNTAS INICIALES
+						if (preguntas) {
+							document.querySelector('#es_menor').value = preguntas.ES_MENOR;
+							document.querySelector('#es_tercera_edad').value = preguntas.ES_TERCERA_EDAD;
+							document.querySelector('#tiene_discapacidad').value = preguntas.TIENE_DISCAPACIDAD;
+							document.querySelector('#es_vulnerable').value = preguntas.ES_GRUPO_VULNERABLE;
+							document.querySelector('#vulnerable_descripcion').value = preguntas.ES_GRUPO_VULNERABLE_DESCR;
+							document.querySelector('#tiene_discapacidad').value = preguntas.TIENE_DISCAPACIDAD;
+							document.querySelector('#fue_con_arma').value = preguntas.FUE_CON_ARMA;
+							document.querySelector('#esta_desaparecido').value = preguntas.ESTA_DESAPARECIDO;
+							document.querySelector('#lesiones').value = preguntas.LESIONES;
+							document.querySelector('#lesiones_visibles').value = preguntas.LESIONES_VISIBLES;
+						}
+						//DENUNCIA
+						document.querySelector('#delito_delito').value = folio.HECHODELITO ? folio.HECHODELITO : '';
+						document.querySelector('#municipio_delito').value = folio.HECHOMUNICIPIOID ? folio.HECHOMUNICIPIOID : '';
+						if (folio.HECHOLOCALIDADID) {
+							let data = {
+								'estado_id': 2,
+								'municipio_id': folio.HECHOMUNICIPIOID
+							};
 
-					// 				colonias.forEach(colonia => {
-					// 					var option = document.createElement("option");
-					// 					option.text = colonia.COLONIADESCR;
-					// 					option.value = colonia.COLONIAID;
-					// 					select_colonia.add(option);
-					// 				});
+							$.ajax({
+								data: data,
+								url: "<?= base_url('/data/get-localidades-by-municipio') ?>",
+								method: "POST",
+								dataType: "json",
+								success: function(response) {
+									let localidades = response.data;
+									let select_localidad = document.querySelector('#localidad_delito');
 
-					// 				var option = document.createElement("option");
-					// 				option.text = 'OTRO';
-					// 				option.value = '0';
-					// 				select_colonia.add(option);
+									localidades.forEach(localidad => {
+										var option = document.createElement("option");
+										option.text = localidad.LOCALIDADDESCR;
+										option.value = localidad.LOCALIDADID;
+										select_localidad.add(option);
+									});
 
-					// 				select_colonia.value = folio.HECHOCOLONIAID;
-					// 				input_colonia.value = '-';
-					// 			},
-					// 			error: function(jqXHR, textStatus, errorThrown) {
+									select_localidad.value = folio.HECHOLOCALIDADID;
+								},
+								error: function(jqXHR, textStatus, errorThrown) {}
+							});
+						} else {
+							document.querySelector('#localidad_delito').value = '';
+						}
 
-					// 			}
-					// 		});
-					// 	} else {
-					// 		document.querySelector('#colonia_delito').classList.remove('d-none');
-					// 		document.querySelector('#colonia_delito_select').classList.add('d-none');
-					// 		var option = document.createElement("option");
-					// 		option.text = 'OTRO';
-					// 		option.value = '0';
-					// 		document.querySelector('#colonia_delito_select').add(option);
-					// 		document.querySelector('#colonia_delito_select').value = '0';
-					// 		document.querySelector('#colonia_delito').value = folio.HECHOCOLONIADESCR;
-					// 	}
+						if (folio.HECHOCOLONIAID) {
+							document.querySelector('#colonia_delito').classList.add('d-none');
+							document.querySelector('#colonia_delito_select').classList.remove('d-none');
+							let data = {
+								'estado_id': 2,
+								'municipio_id': folio.HECHOMUNICIPIOID,
+								'localidad_id': folio.HECHOLOCALIDADID
+							};
+							$.ajax({
+								data: data,
+								url: "<?= base_url('/data/get-colonias-by-estado-municipio-localidad') ?>",
+								method: "POST",
+								dataType: "json",
+								success: function(response) {
+									let select_colonia = document.querySelector('#colonia_delito_select');
+									let input_colonia = document.querySelector('#colonia_delito');
+									let colonias = response.data;
 
-					// 	document.querySelector('#calle_delito').value = folio.HECHOCALLE;
-					// 	document.querySelector('#exterior_delito').value = folio.HECHONUMEROCASA;
-					// 	document.querySelector('#interior_delito').value = folio.HECHONUMEROCASAINT;
-					// 	document.querySelector('#lugar_delito').value = folio.HECHOLUGARID;
-					// 	document.querySelector('#hora_delito').value = folio.HECHOHORA;
-					// 	document.querySelector('#fecha_delito').value = folio.HECHOFECHA;
-					// 	document.querySelector('#narracion_delito').value = folio.HECHONARRACION;
-					// 	//PERSONAS
-					// 	for (let i = 0; i < personas.length; i++) {
-					// 		var btn = `<button type='button'  class='btn btn-primary' onclick='viewPersonaFisica(${personas[i].PERSONAFISICAID})'><i class='fas fa-eye'></i></button>`
+									colonias.forEach(colonia => {
+										var option = document.createElement("option");
+										option.text = colonia.COLONIADESCR;
+										option.value = colonia.COLONIAID;
+										select_colonia.add(option);
+									});
 
-					// 		var fila =
-					// 			`<tr id="row${i}">` +
-					// 			`<td class="text-center">${personas[i].DENUNCIANTE=='S'?'<strong>DENUNCIANTE</strong>':''}</td>` +
-					// 			`<td class="text-center">${personas[i].NOMBRE}</td>` +
-					// 			`<td class="text-center">${personas[i].PERSONACALIDADJURIDICADESCR}</td>` +
-					// 			`<td class="text-center">${btn}</td>` +
-					// 			`</tr>`;
+									var option = document.createElement("option");
+									option.text = 'OTRO';
+									option.value = '0';
+									select_colonia.add(option);
 
-					// 		$('#table-personas tr:first').after(fila);
-					// 		$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
-					// 		var nFilas = $("#personas tr").length;
-					// 		$("#adicionados").append(nFilas - 1);
-					// 	}
+									select_colonia.value = folio.HECHOCOLONIAID;
+									input_colonia.value = '-';
+								},
+								error: function(jqXHR, textStatus, errorThrown) {
 
-					// 	//VEHICULOS
-					// 	for (let i = 0; i < vehiculos.length; i++) {
-					// 		var btnVehiculo = `<button type='button' class='btn btn-primary' onclick='viewVehiculo(${vehiculos[i].VEHICULOID})'><i class='fas fa-eye'></i></button>`;
+								}
+							});
+						} else {
+							document.querySelector('#colonia_delito').classList.remove('d-none');
+							document.querySelector('#colonia_delito_select').classList.add('d-none');
+							var option = document.createElement("option");
+							option.text = 'OTRO';
+							option.value = '0';
+							document.querySelector('#colonia_delito_select').add(option);
+							document.querySelector('#colonia_delito_select').value = '0';
+							document.querySelector('#colonia_delito').value = folio.HECHOCOLONIADESCR;
+						}
 
-					// 		var fila3 =
-					// 			`<tr id="row${i}">` +
-					// 			`<td class="text-center">${vehiculos[i].PLACAS?vehiculos[i].PLACAS:'DESCONOCIDO'}</td>` +
-					// 			`<td class="text-center">${vehiculos[i].NUMEROSERIE?vehiculos[i].NUMEROSERIE:'DESCONOCIDO'}</td>` +
-					// 			`<td class="text-center">${btnVehiculo}</td>` +
-					// 			`</tr>`;
-
-					// 		$('#table-vehiculos tr:first').after(fila3);
-					// 		$("#adicionados").text("");
-					// 		var nFilas = $("#vehiculos tr").length;
-					// 		$("#vehiculos").append(nFilas - 1);
-					// 	}
-					// 	//Relacion parentesco
-					// 	for (let i = 0; i < relacion_parentesco.length; i++) {
-
-					// 		// var btn = `<button type='button'  class='btn btn-primary' onclick='view_form_parentesco(${relacion_parentesco[i].PERSONAFISICAID1})'><i class="fas fa-eye"></i></button>`
+						document.querySelector('#calle_delito').value = folio.HECHOCALLE ? folio.HECHOCALLE : '';
+						document.querySelector('#exterior_delito').value = folio.HECHONUMEROCASA ? folio.HECHONUMEROCASA : '';
+						document.querySelector('#interior_delito').value = folio.HECHONUMEROCASAINT ? folio.HECHONUMEROCASAINT : '';
+						document.querySelector('#lugar_delito').value = folio.HECHOLUGARID ? folio.HECHOLUGARID : '';
+						document.querySelector('#hora_delito').value = folio.HECHOHORA ? folio.HECHOHORA : '';
+						document.querySelector('#fecha_delito').value = folio.HECHOFECHA ? folio.HECHOFECHA : '';
+						document.querySelector('#narracion_delito').value = folio.HECHONARRACION ? folio.HECHONARRACION : '';
 
 
-					// 		var fila2 =
-					// 			`<tr id="row${i}">` +
-					// 			`<td class="text-center">${personaiduno[i].NOMBRE}</td>` +
-					// 			`<td class="text-center">${parentesco[i].PERSONAPARENTESCODESCR}</td>` +
-					// 			`<td class="text-center">${personaidDos[i].NOMBRE}</td>` +
-					// 			// `<td class="text-center">${btn}</td>` +
-					// 			`</tr>`;
+						if (vehiculos) {
+							//VEHICULOS
+							for (let i = 0; i < vehiculos.length; i++) {
+								var btnVehiculo = `<button type='button' class='btn btn-primary' onclick='viewVehiculo(${vehiculos[i].VEHICULOID})'><i class='fas fa-eye'></i></button>`;
 
-					// 		$('#table-parentesco tr:first').after(fila2);
-					// 		$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
-					// 		var nFilas = $("#parentesco tr").length;
-					// 		$("#adicionados").append(nFilas - 1);
+								var fila3 =
+									`<tr id="row${i}">` +
+									`<td class="text-center">${vehiculos[i].PLACAS?vehiculos[i].PLACAS:'DESCONOCIDO'}</td>` +
+									`<td class="text-center">${vehiculos[i].NUMEROSERIE?vehiculos[i].NUMEROSERIE:'DESCONOCIDO'}</td>` +
+									`<td class="text-center">${btnVehiculo}</td>` +
+									`</tr>`;
 
-					// 	}
+								$('#table-vehiculos tr:first').after(fila3);
+								$("#adicionados").text("");
+								var nFilas = $("#vehiculos tr").length;
+								$("#vehiculos").append(nFilas - 1);
+							}
+						}
+						if (relacion_parentesco) {
 
-					// 	//Relacions fisfis
-					// 	for (let i = 0; i < relacionFisFis.length; i++) {
-					// 		// var btn = `<button type='button'  class='btn btn-primary' onclick='eliminarArbolDelictivo(${relacionFisFis[i].PERSONAFISICAIDVICTIMA},${relacionFisFis[i].PERSONAFISICAIDIMPUTADO},${relacionFisFis[i].DELITOMODALIDADID})'><i class='fa fa-trash'></i></button>`
+							//Relacion parentesco
+							for (let i = 0; i < relacion_parentesco.length; i++) {
 
-					// 		var fila =
-					// 			`<tr id="row${i}">` +
-					// 			`<td class="text-center">${relacionFisFis[i].NOMBREI}</td>` +
-					// 			`<td class="text-center">${relacionFisFis[i].DELITOMODALIDADDESCR}</td>` +
-					// 			`<td class="text-center">${relacionFisFis[i].NOMBREV}</td>` +
-					// 			// `<td class="text-center">${btn}</td>` +
-					// 			`</tr>`;
-
-					// 		$('#table-delitos tr:first').after(fila);
-					// 		$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
-					// 		var nFilas = $("#delitos tr").length;
-					// 		$("#adicionados").append(nFilas - 1);
-					// 	}
-					// 	//Relacion imputado delito
-					// 	for (let i = 0; i < fisicaImpDelito.length; i++) {
-					// 		// var btn = `<button type='button'  class='btn btn-primary' onclick='eliminarImputadoDelito(${impDelito[i].PERSONAFISICAID},${impDelito[i].DELITOMODALIDADID})'><i class='fa fa-trash'></i></button>`
-
-					// 		var fila =
-					// 			`<tr id="row${i}">` +
-					// 			`<td class="text-center" value="${fisicaImpDelito[i].PERSONAFISICAID}">${fisicaImpDelito[i].NOMBRE}</td>` +
-					// 			`<td class="text-center" value="${fisicaImpDelito[i].DELITOMODALIDADID}">${fisicaImpDelito[i].DELITOMODALIDADDESCR}</td>` +
-					// 			// `<td class="text-center">${btn}</td>` +
-					// 			`</tr>`;
-
-					// 		$('#table-delito-cometidos tr:first').after(fila);
-					// 		$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
-					// 		var nFilas = $("#delito-cometidos tr").length;
-					// 		$("#adicionados").append(nFilas - 1);
-					// 	}
-
-					// 	//Objetos involucrados
-					// 	for (let i = 0; i < objetos.length; i++) {
-					// 		var btnEditar = `<button type='button'  class='btn btn-primary' onclick='viewObjetoInvolucrado(${objetos[i].OBJETOID})'><i class='fa fa-eye'></i></button>`
-
-					// 		var fila =
-					// 			`<tr id="row${i}">` +
-					// 			`<td class="text-center" value="${objetos[i].CLASIFICACIONID}">${objetos[i].OBJETOCLASIFICACIONDESCR}</td>` +
-					// 			`<td class="text-center" value="${objetos[i].SUBCLASIFICACIONID}">${objetos[i].OBJETOSUBCLASIFICACIONDESCR}</td>` +
-					// 			`<td class="text-center">${btnEditar}</td>` +
-					// 			`</tr>`;
-
-					// 		$('#table-objetos-involucrados tr:first').after(fila);
-					// 		$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
-					// 		var nFilas = $("#objetos-involucrados tr").length;
-					// 		$("#adicionados").append(nFilas - 1);
-					// 	}
-					// 	//archivos externos
-					// 	for (let i = 0; i < archivos.length; i++) {
-
-					// 		if (archivos[i].EXTENSION == 'pdf' || archivos[i].EXTENSION == 'doc') {
-					// 			var img = `<a id="downloadArchivo" download=""><img src='<?= base_url() ?>/assets/img/file.png'));'  width="200px" height="200px"></img></a>`;
+								// var btn = `<button type='button'  class='btn btn-primary' onclick='view_form_parentesco(${relacion_parentesco[i].PERSONAFISICAID1})'><i class="fas fa-eye"></i></button>`
 
 
-					// 		} else {
-					// 			var img = `<a id="downloadArchivo" download=""><img src='${archivos[i].ARCHIVO}');' width="200px" height="200px"></img></a>`;
+								var fila2 =
+									`<tr id="row${i}">` +
+									`<td class="text-center">${personaiduno[i].NOMBRE}</td>` +
+									`<td class="text-center">${parentesco[i].PERSONAPARENTESCODESCR}</td>` +
+									`<td class="text-center">${personaidDos[i].NOMBRE}</td>` +
+									// `<td class="text-center">${btn}</td>` +
+									`</tr>`;
 
-					// 		}
-					// 		var fila =
-					// 			`<tr id="row${i}">` +
-					// 			`<td class="text-center" value="${archivos[i].FOLIOARCHIVOID}">${archivos[i].ARCHIVODESCR}</td>` +
-					// 			`<td class="text-center" value="${archivos[i].FOLIOARCHIVOID}">${img}</td>` +
+								$('#table-parentesco tr:first').after(fila2);
+								$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
+								var nFilas = $("#parentesco tr").length;
+								$("#adicionados").append(nFilas - 1);
 
-					// 			`</tr>`;
+							}
+						}
 
-					// 		$('#table-archivos tr:first').after(fila);
-					// 		$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
-					// 		var nFilas = $("#archivos tr").length;
-					// 		$("#adicionados").append(nFilas - 1);
 
-					// 		document.querySelector('#downloadArchivo').setAttribute('href', archivos[i].ARCHIVO);
-					// 		document.querySelector('#downloadArchivo').setAttribute('download', archivos[i].FOLIOID + '_' +
-					// 			archivos[i].ANO + '_' + archivos[i].FOLIOARCHIVOID + '.' + archivos[i].EXTENSION);
-					// 	}
+						if (relacionFisFis) {
+							//Relacions fisfis
+							for (let i = 0; i < relacionFisFis.length; i++) {
+								// var btn = `<button type='button'  class='btn btn-primary' onclick='eliminarArbolDelictivo(${relacionFisFis[i].PERSONAFISICAIDVICTIMA},${relacionFisFis[i].PERSONAFISICAIDIMPUTADO},${relacionFisFis[i].DELITOMODALIDADID})'><i class='fa fa-trash'></i></button>`
 
-					// }else if (response.status === 2) {
-                    //     Swal.fire({
-                    //         icon: 'error',
-                    //         html: response.status,
-                    //         confirmButtonColor: '#bf9b55',
-                    //     });
-					// }
+								var fila =
+									`<tr id="row${i}">` +
+									`<td class="text-center">${relacionFisFis[i].NOMBREI}</td>` +
+									`<td class="text-center">${relacionFisFis[i].DELITOMODALIDADDESCR}</td>` +
+									`<td class="text-center">${relacionFisFis[i].NOMBREV}</td>` +
+									// `<td class="text-center">${btn}</td>` +
+									`</tr>`;
+
+								$('#table-delitos tr:first').after(fila);
+								$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
+								var nFilas = $("#delitos tr").length;
+								$("#adicionados").append(nFilas - 1);
+							}
+						}
+
+						if (fisicaImpDelito) {
+							//Relacion imputado delito
+							for (let i = 0; i < fisicaImpDelito.length; i++) {
+								// var btn = `<button type='button'  class='btn btn-primary' onclick='eliminarImputadoDelito(${impDelito[i].PERSONAFISICAID},${impDelito[i].DELITOMODALIDADID})'><i class='fa fa-trash'></i></button>`
+
+								var fila =
+									`<tr id="row${i}">` +
+									`<td class="text-center" value="${fisicaImpDelito[i].PERSONAFISICAID}">${fisicaImpDelito[i].NOMBRE}</td>` +
+									`<td class="text-center" value="${fisicaImpDelito[i].DELITOMODALIDADID}">${fisicaImpDelito[i].DELITOMODALIDADDESCR}</td>` +
+									// `<td class="text-center">${btn}</td>` +
+									`</tr>`;
+
+								$('#table-delito-cometidos tr:first').after(fila);
+								$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
+								var nFilas = $("#delito-cometidos tr").length;
+								$("#adicionados").append(nFilas - 1);
+							}
+						}
+						if (objetos) {
+							//Objetos involucrados
+							for (let i = 0; i < objetos.length; i++) {
+								var btnEditar = `<button type='button'  class='btn btn-primary' onclick='viewObjetoInvolucrado(${objetos[i].OBJETOID})'><i class='fa fa-eye'></i></button>`
+
+								var fila =
+									`<tr id="row${i}">` +
+									`<td class="text-center" value="${objetos[i].CLASIFICACIONID}">${objetos[i].OBJETOCLASIFICACIONDESCR}</td>` +
+									`<td class="text-center" value="${objetos[i].SUBCLASIFICACIONID}">${objetos[i].OBJETOSUBCLASIFICACIONDESCR}</td>` +
+									`<td class="text-center">${btnEditar}</td>` +
+									`</tr>`;
+
+								$('#table-objetos-involucrados tr:first').after(fila);
+								$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
+								var nFilas = $("#objetos-involucrados tr").length;
+								$("#adicionados").append(nFilas - 1);
+							}
+						}
+
+						if (archivos) {
+							//archivos externos
+							for (let i = 0; i < archivos.length; i++) {
+
+								if (archivos[i].EXTENSION == 'pdf' || archivos[i].EXTENSION == 'doc') {
+									var img = `<a id="downloadArchivo" download=""><img src='<?= base_url() ?>/assets/img/file.png'));'  width="200px" height="200px"></img></a>`;
+
+
+								} else {
+									var img = `<a id="downloadArchivo" download=""><img src='${archivos[i].ARCHIVO}');' width="200px" height="200px"></img></a>`;
+
+								}
+								var fila =
+									`<tr id="row${i}">` +
+									`<td class="text-center" value="${archivos[i].FOLIOARCHIVOID}">${archivos[i].ARCHIVODESCR}</td>` +
+									`<td class="text-center" value="${archivos[i].FOLIOARCHIVOID}">${img}</td>` +
+
+									`</tr>`;
+
+								$('#table-archivos tr:first').after(fila);
+								$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
+								var nFilas = $("#archivos tr").length;
+								$("#adicionados").append(nFilas - 1);
+
+								document.querySelector('#downloadArchivo').setAttribute('href', archivos[i].ARCHIVO);
+								document.querySelector('#downloadArchivo').setAttribute('download', archivos[i].FOLIOID + '_' +
+									archivos[i].ANO + '_' + archivos[i].FOLIOARCHIVOID + '.' + archivos[i].EXTENSION);
+							}
+						}
+
+
+					} else if (response.status === 2) {
+						Swal.fire({
+							icon: 'error',
+							html: response.status,
+							confirmButtonColor: '#bf9b55',
+						});
+					}
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
-                    console.log('Error');
-                }
+					console.log('Error');
+				}
 			});
 		});
 
