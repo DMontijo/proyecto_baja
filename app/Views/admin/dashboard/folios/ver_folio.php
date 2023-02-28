@@ -138,6 +138,27 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 
 						document.querySelector('#delito_dash').value = folio.HECHODELITO;
 						document.querySelector('#delito_descr_dash').value = folio.HECHONARRACION;
+						$('#propietario_update').empty();
+						let select_propietario_update = document.querySelector("#propietario_update")
+						personas.forEach(persona => {
+							const option = document.createElement('option');
+							option.value = persona.PERSONAFISICAID;
+							option.text = persona.NOMBRE + ' ' + persona.PRIMERAPELLIDO;
+							select_propietario_update.add(option, null);
+						});
+						//PREGUNTAS INICIALES
+						if (preguntas) {
+							document.querySelector('#es_menor').value = preguntas.ES_MENOR;
+							document.querySelector('#es_tercera_edad').value = preguntas.ES_TERCERA_EDAD;
+							document.querySelector('#tiene_discapacidad').value = preguntas.TIENE_DISCAPACIDAD;
+							document.querySelector('#es_vulnerable').value = preguntas.ES_GRUPO_VULNERABLE;
+							document.querySelector('#vulnerable_descripcion').value = preguntas.ES_GRUPO_VULNERABLE_DESCR;
+							document.querySelector('#tiene_discapacidad').value = preguntas.TIENE_DISCAPACIDAD;
+							document.querySelector('#fue_con_arma').value = preguntas.FUE_CON_ARMA;
+							document.querySelector('#esta_desaparecido').value = preguntas.ESTA_DESAPARECIDO;
+							document.querySelector('#lesiones').value = preguntas.LESIONES;
+							document.querySelector('#lesiones_visibles').value = preguntas.LESIONES_VISIBLES;
+						}
 					}
 				}
 			});
