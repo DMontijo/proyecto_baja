@@ -1019,6 +1019,7 @@ class DashboardController extends BaseController
 		} else {
 			$data->folio = $this->_folioModel->asObject()->where('ANO', $year)->where('FOLIOID', $numfolio)->first();
 
+			var_dump($_POST);exit;
 			if ($data->folio) {
 				$data->status = 1;
 				$data->preguntas_iniciales = $this->_folioPreguntasModel->where('FOLIOID', $numfolio)->where('ANO', $year)->first();
@@ -6337,6 +6338,7 @@ class DashboardController extends BaseController
 			$clasificaciondoctoid = '';
 
 			switch ($municipio) {
+				
 				case '1':
 					$clasificaciondoctoid = $plantilla['CLASIFICACIONDOCTOENSENADAID'];
 					break;
