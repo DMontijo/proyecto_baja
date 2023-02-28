@@ -2657,7 +2657,7 @@ function firmarDocumento(folio, ano,foliodocid) {
 					btn_firmar_doc_id.disabled = true;
 				},
 				success: function(response) {
-					// console.log(response);
+					const documentos = response.documentos;
 					if (response.status == 1) {
 
 						Swal.fire({
@@ -2667,6 +2667,13 @@ function firmarDocumento(folio, ano,foliodocid) {
 						});
 						document.querySelector('#contrasena_doc').value = '';
 						$('#contrasena_modal_doc_id').modal('hide');
+						let tabla_documentos = document.querySelectorAll('#table-documentos tr');
+							tabla_documentos.forEach(row => {
+								if (row.id !== '') {
+									row.remove();
+								}
+							});
+							llenarTablaDocumentos(documentos);
 
 					} else if (response.status == 0) {
 
@@ -5547,6 +5554,7 @@ function firmarDocumento(folio, ano,foliodocid) {
 					method: "POST",
 					dataType: "json",
 					success: function(response) {
+					const documentos = response.documentos;
 
 						if (response.status == 1) {
 							const documentos = response.documentos;
