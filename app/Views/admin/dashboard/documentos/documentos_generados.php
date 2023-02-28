@@ -438,7 +438,6 @@
 							document.querySelector("#victima_modal_documento").value = '';
 							document.querySelector("#imputado_modal_documento").value = '';
 							document.getElementById('uma_select').value = ''
-							document.querySelector("#plantilla").value = '';
 							document.getElementById("involucrados").style.display = "none";
 							document.getElementById("div_uma").style.display = "none";
 						} else {
