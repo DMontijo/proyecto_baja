@@ -401,13 +401,13 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 
 
 					} 
-			// else if (response.status === 2) {
-			// 			Swal.fire({
-			// 				icon: 'error',
-			// 				html: response.status,
-			// 				confirmButtonColor: '#bf9b55',
-			// 			});
-			// 		}
+			else if (response.status === 2) {
+						Swal.fire({
+							icon: 'error',
+							html: response.status,
+							confirmButtonColor: '#bf9b55',
+						});
+					}
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
 					console.log('Error');
