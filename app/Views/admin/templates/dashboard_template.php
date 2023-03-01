@@ -202,7 +202,7 @@
 			</button>
 			<button class="c-header-toggler c-class-toggler mfs-3 d-sm-down-none font-weight-bold" type="button" data-target="#sidebar" data-class="c-sidebar-lg-show" responsive="true">
 				<?php $session = session(); ?>
-				BIENVENIDO <?= $session->NOMBRE ?> <?= $session->APELLIDO_PATERNO ?> <?= $session->APELLIDO_MATERNO ?>
+				BIENVENIDO <?= $session->NOMBRE ?> <?= $session->APELLIDO_PATERNO ?> <?= $session->APELLIDO_MATERNO ?> | <?= $session->rol->NOMBRE_ROL?>
 			</button>
 			<ul class="c-header-nav ml-auto mr-2">
 				<!-- <li class="c-header-nav-item dropdown">

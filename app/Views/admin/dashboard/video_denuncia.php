@@ -5,6 +5,10 @@
 <?= $this->section('content') ?>
 <?php $session = session(); ?>
 <div class="row" id="videoDen">
+	<div class="col-12 text-center mb-4 d-none" id="divFolioAtendido" name="divFolioAtendido">
+		<h3 class="mb-4 text-center font-weight-bold" id="folio_atendido" name="folio_atendido"></h3>
+	</div>
+
 	<div id="card1" class="col-12 col-sm-6 col-md-4 col-lg-3">
 		<div class="card rounded bg-white shadow" style="height: 190px;">
 			<div class="card-body p-4">
@@ -201,8 +205,7 @@
 	const card10 = document.querySelector('#card10');
 	const card11 = document.querySelector('#card11');
 	const card12 = document.querySelector('#card12');
-
-
+	const divFolioAtendido = document.querySelector('#divFolioAtendido');
 
 	var respuesta;
 	let map, infoWindow;
@@ -338,12 +341,12 @@
 			if (documentos[i].STATUS == 'FIRMADO') {
 				var btn =
 					`<button type='button'  class='btn btn-primary' onclick='viewDocumento(${documentos[i].FOLIODOCID})' disabled><i class="fas fa-eye"></i></button>`
-					var btnFirmar =
+				var btnFirmar =
 					`<button type='button'  class='btn btn-primary my-2' onclick='firmarDocumento(${documentos[i].FOLIOID}, ${documentos[i].ANO}, ${documentos[i].FOLIODOCID})' disabled><i class="fas fa-signature"></i></button>`
 			} else {
 				var btn =
 					`<button type='button'  class='btn btn-primary' onclick='viewDocumento(${documentos[i].FOLIODOCID})'><i class="fas fa-eye"></i></button>`
-					var btnFirmar =
+				var btnFirmar =
 					`<button type='button'  class='btn btn-primary my-2' onclick='firmarDocumento(${documentos[i].FOLIOID}, ${documentos[i].ANO}, ${documentos[i].FOLIODOCID})'><i class="fas fa-signature"></i></button>`
 			}
 			var fila =
@@ -882,7 +885,10 @@
 					card4.classList.remove('d-none');
 					card5.classList.remove('d-none');
 
+					divFolioAtendido.classList.remove('d-none');
 					// card6.classList.remove('d-none');
+					document.querySelector('#folio_atendido').innerHTML = 'FOLIO ATENDIDO: ' + folio.ANO + '/'+folio.FOLIOID;
+
 					document.querySelector('#delito_dash').value = folio.HECHODELITO;
 					document.querySelector('#delito_descr_dash').value = folio.HECHONARRACION;
 					document.querySelector('#input_denuncia').value = folio.TIPODENUNCIA;
@@ -1133,7 +1139,7 @@
 						document.querySelector('#localidad_delito').value = '';
 					}
 
-					if (folio.HECHOCOLONIAID && folio.HECHOCOLONIAID !='0') {
+					if (folio.HECHOCOLONIAID && folio.HECHOCOLONIAID != '0') {
 						document.querySelector('#colonia_delito').classList.add('d-none');
 						document.querySelector('#colonia_delito_select').classList.remove('d-none');
 						let data = {
@@ -1172,8 +1178,8 @@
 
 							}
 						});
-					} else if(folio.HECHOCOLONIAID =='0'){
-document.querySelector('#colonia_delito').classList.remove('d-none');
+					} else if (folio.HECHOCOLONIAID == '0') {
+						document.querySelector('#colonia_delito').classList.remove('d-none');
 						document.querySelector('#colonia_delito_select').classList.add('d-none');
 						var option = document.createElement("option");
 						option.text = 'OTRO';
@@ -1181,7 +1187,7 @@ document.querySelector('#colonia_delito').classList.remove('d-none');
 						document.querySelector('#colonia_delito_select').add(option);
 						document.querySelector('#colonia_delito_select').value = '0';
 						document.querySelector('#colonia_delito').value = folio.HECHOCOLONIADESCR;
-					}else {
+					} else {
 						document.querySelector('#colonia_delito').classList.remove('d-none');
 						document.querySelector('#colonia_delito_select').classList.add('d-none');
 						var option = document.createElement("option");
@@ -1481,10 +1487,11 @@ document.querySelector('#colonia_delito').classList.remove('d-none');
 		});
 		borrarTodo();
 	});
-function firmarDocumento(folio, ano,foliodocid) {
+
+	function firmarDocumento(folio, ano, foliodocid) {
 		document.querySelector('#folio_id').value = folio;
 		document.querySelector('#documento_id').value = foliodocid;
-		document.querySelector('#year_doc').value =ano;
+		document.querySelector('#year_doc').value = ano;
 		$('#contrasena_modal_doc_id').modal('show');
 
 	}
@@ -1544,11 +1551,11 @@ function firmarDocumento(folio, ano,foliodocid) {
 						if (extension == 'pdf' || extension == 'doc') {
 							document.querySelector('#fisica_foto').setAttribute('src', '<?= base_url() ?>/assets/img/file.png');
 
-						}else{
+						} else {
 							document.querySelector('#fisica_foto').setAttribute('src', personaFisica.FOTO);
 
 						}
-					
+
 						document.querySelector('#fisica_foto_download').setAttribute('href', personaFisica
 							.FOTO);
 						document.querySelector('#fisica_foto_download').setAttribute('download', personaFisica
@@ -2647,35 +2654,35 @@ function firmarDocumento(folio, ano,foliodocid) {
 				});
 			}, false);
 			btn_firmar_doc_id.addEventListener('click', (event) => {
-			$.ajax({
-				data: {
-					'folio_id': document.querySelector('#folio_id').value,
-					'documento_id': document.querySelector('#documento_id').value,
-					'contrasena_doc': document.querySelector('#contrasena_doc').value,
-					'year_doc': document.querySelector('#year_doc').value,
-				},
-				url: "<?= base_url('/admin/dashboard/firmar_documentos_id') ?>",
-				method: "POST",
-				dataType: "json",
-				beforeSend: function() {
-					document.querySelector('#load_doc').classList.add('d-none');
-					document.querySelector('#password_modalLabel_doc_id').classList.add('d-none');
-					document.querySelector('#loading_doc_id').classList.remove('d-none');
-					document.querySelector('#password_verifying_doc_id').classList.remove('d-none');
-					btn_firmar_doc_id.disabled = true;
-				},
-				success: function(response) {
-					const documentos = response.documentos;
-					if (response.status == 1) {
+				$.ajax({
+					data: {
+						'folio_id': document.querySelector('#folio_id').value,
+						'documento_id': document.querySelector('#documento_id').value,
+						'contrasena_doc': document.querySelector('#contrasena_doc').value,
+						'year_doc': document.querySelector('#year_doc').value,
+					},
+					url: "<?= base_url('/admin/dashboard/firmar_documentos_id') ?>",
+					method: "POST",
+					dataType: "json",
+					beforeSend: function() {
+						document.querySelector('#load_doc').classList.add('d-none');
+						document.querySelector('#password_modalLabel_doc_id').classList.add('d-none');
+						document.querySelector('#loading_doc_id').classList.remove('d-none');
+						document.querySelector('#password_verifying_doc_id').classList.remove('d-none');
+						btn_firmar_doc_id.disabled = true;
+					},
+					success: function(response) {
+						const documentos = response.documentos;
+						if (response.status == 1) {
 
-						Swal.fire({
-							icon: 'success',
-							text: 'Documento firmado correctamente',
-							confirmButtonColor: '#bf9b55',
-						});
-						document.querySelector('#contrasena_doc').value = '';
-						$('#contrasena_modal_doc_id').modal('hide');
-						let tabla_documentos = document.querySelectorAll('#table-documentos tr');
+							Swal.fire({
+								icon: 'success',
+								text: 'Documento firmado correctamente',
+								confirmButtonColor: '#bf9b55',
+							});
+							document.querySelector('#contrasena_doc').value = '';
+							$('#contrasena_modal_doc_id').modal('hide');
+							let tabla_documentos = document.querySelectorAll('#table-documentos tr');
 							tabla_documentos.forEach(row => {
 								if (row.id !== '') {
 									row.remove();
@@ -2683,26 +2690,26 @@ function firmarDocumento(folio, ano,foliodocid) {
 							});
 							llenarTablaDocumentos(documentos);
 
-					} else if (response.status == 0) {
+						} else if (response.status == 0) {
 
-						Swal.fire({
-							icon: 'error',
-							text: response.message_error,
-							confirmButtonColor: '#bf9b55',
-						});
-						document.querySelector('#load_doc').classList.remove('d-none');
-						document.querySelector('#password_modalLabel_doc_id').classList.remove(
-							'd-none');
-						document.querySelector('#loading_doc_id').classList.add('d-none');
-						document.querySelector('#password_verifying_doc_id').classList.add('d-none');
-						btn_firmar_doc_id.disabled = false;
+							Swal.fire({
+								icon: 'error',
+								text: response.message_error,
+								confirmButtonColor: '#bf9b55',
+							});
+							document.querySelector('#load_doc').classList.remove('d-none');
+							document.querySelector('#password_modalLabel_doc_id').classList.remove(
+								'd-none');
+							document.querySelector('#loading_doc_id').classList.add('d-none');
+							document.querySelector('#password_verifying_doc_id').classList.add('d-none');
+							btn_firmar_doc_id.disabled = false;
 
-					}
-				},
+						}
+					},
 
-				error: function(jqXHR, textStatus, errorThrown) {}
-			});
-		}, false);
+					error: function(jqXHR, textStatus, errorThrown) {}
+				});
+			}, false);
 			btn_archivos_externos.addEventListener('click', (event) => {
 				$('#subirDocumentosModal').modal('show');
 				$('#subirDocumentosModal').show();
@@ -5562,7 +5569,7 @@ function firmarDocumento(folio, ano,foliodocid) {
 					method: "POST",
 					dataType: "json",
 					success: function(response) {
-					const documentos = response.documentos;
+						const documentos = response.documentos;
 
 						if (response.status == 1) {
 							const documentos = response.documentos;
