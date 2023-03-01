@@ -410,7 +410,7 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 			// 		}
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
-					console.log('Error');
+					console.log(jqXHR, textStatus,errorThrown);
 				}
 			});
 		});
