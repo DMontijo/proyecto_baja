@@ -6180,7 +6180,6 @@ class DashboardController extends BaseController
 			$hecho_info = '<p><b>FOLIO:</b> ' . $data->folio->FOLIOID . '</p><p><b>AÑO:</b> ' . $data->folio->ANO . '</p><p><b>FECHA DEL HECHO:</b> ' . $data->folio->HECHOFECHA . '</p><p><b>HORA DEL HECHO:</b> ' . $data->folio->HECHOHORA . '</p><p><b>CALLE DEL HECHO:</b> ' . $data->folio->HECHOCALLE . ' EXT.' . $data->folio->HECHONUMEROCASA . ' INT.' . $data->folio->HECHONUMEROCASAINT . ' ' . $data->municipios->MUNICIPIODESCR . '</p><p><b>NARRACIÓN DEL HECHO:</b> ' . $data->folio->HECHONARRACION . '</p><p><b>NOTAS DEL AGENTE:</b> ' . $data->folio->NOTASAGENTE . '</p>';
 			$data->plantilla = str_replace('[INFORMACION_DEL_HECHO]', $hecho_info, $data->plantilla);
 
-			var_dump($data->plantilla);exit;
 			if (($expediente == null || $expediente == '') && ($data->folio->STATUS == 'CANALIZADO' || $data->folio->STATUS == 'DERIVADO')) {
 
 				//CARTA DERIVACION
@@ -6216,6 +6215,7 @@ class DashboardController extends BaseController
 				$data->plantilla = str_replace('[</span>VICTIMA_NOMBRE]', $data->victima[0]['NOMBRE'] . ' ' . ($data->victima[0]['PRIMERAPELLIDO'] ? $data->victima[0]['PRIMERAPELLIDO'] : '') . ' ' . ($data->victima[0]['SEGUNDOAPELLIDO'] ? $data->victima[0]['SEGUNDOAPELLIDO'] : ''), $data->plantilla);
 				$data->plantilla = str_replace('(VICTIMA Y/U OFENDIDO)', $data->victima[0]['NOMBRE'] . ' ' . ($data->victima[0]['PRIMERAPELLIDO'] ? $data->victima[0]['PRIMERAPELLIDO'] : '') . ' ' . ($data->victima[0]['SEGUNDOAPELLIDO'] ? $data->victima[0]['SEGUNDOAPELLIDO'] : ''), $data->plantilla);
 				$data->plantilla = str_replace('(REDACTAR_HECHO)', $data->folio->HECHONARRACION ? $data->folio->HECHONARRACION : 'SIN NARRACIÓN', $data->plantilla);
+				var_dump($data->plantilla);exit;
 
 				$data->plantilla = str_replace('[VICTIMAS_NOMBRE]', $data->victima[0]['NOMBRE'] . ' ' . ($data->victima[0]['PRIMERAPELLIDO'] ? $data->victima[0]['PRIMERAPELLIDO'] : '') . ' ' . ($data->victima[0]['SEGUNDOAPELLIDO'] ? $data->victima[0]['SEGUNDOAPELLIDO'] : ''), $data->plantilla);
 				$data->plantilla = str_replace('[VICTIMA_EDAD]', $data->victima[0]['EDADCANTIDAD'] ? $data->victima[0]['EDADCANTIDAD'] : '-', $data->plantilla);
