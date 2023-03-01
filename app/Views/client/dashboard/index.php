@@ -242,7 +242,7 @@
 					document.querySelector('#open_folios_modal #title_span').innerHTML = 'EN PROCESO'
 					document.querySelector('#open_folios_modal #folio_num_span').innerHTML = response.proceso[0].FOLIOID;
 					document.querySelector('#open_folios_modal #folio_delito_span').innerHTML = response.proceso[0].HECHODELITO;
-					document.querySelector('#open_folios_modal #folio_estatus').innerHTML = 'esta en proceso de atención.'
+					document.querySelector('#open_folios_modal #folio_estatus').innerHTML = 'esta en proceso de atención. Una vez tenga una resolución te llegará un correo electrónico con la confirmación del expediente generado.'
 					document.querySelector('#open_input_year').value = response.proceso[0].ANO;
 					document.querySelector('#open_folios_modal #btn-inicia-denuncia').classList.add('d-none');
 					$('#open_folios_modal').modal('show');
