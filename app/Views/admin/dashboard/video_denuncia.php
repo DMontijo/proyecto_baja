@@ -1539,8 +1539,15 @@ function firmarDocumento(folio, ano,foliodocid) {
 						element.value = id;
 					});
 					if (personaFisica.FOTO) {
-						document.querySelector('#fisica_foto').setAttribute('src', personaFisica.FOTO);
 						extension = (((personaFisica.FOTO.split(';'))[0]).split('/'))[1];
+						if (extension == 'pdf' || extension == 'doc') {
+							document.querySelector('#fisica_foto').setAttribute('src', '<?= base_url() ?>/assets/img/file.png');
+
+						}else{
+							document.querySelector('#fisica_foto').setAttribute('src', personaFisica.FOTO);
+
+						}
+					
 						document.querySelector('#fisica_foto_download').setAttribute('href', personaFisica
 							.FOTO);
 						document.querySelector('#fisica_foto_download').setAttribute('download', personaFisica
@@ -1553,7 +1560,7 @@ function firmarDocumento(folio, ano,foliodocid) {
 						document.querySelector('#fisica_foto').setAttribute('src', '');
 						document.querySelector('#fisica_foto_download').setAttribute('href', '');
 						document.querySelector('#fisica_foto_download').setAttribute('download', '');
-						document.querySelector('#contenedor_fisica_foto').classList.add('d-none');
+						document.querySelector('#contenedor_fisica_foto').classList.remove('d-none');
 					}
 					document.querySelector('#calidad_juridica_pf').value = personaFisica.CALIDADJURIDICAID ?
 						personaFisica.CALIDADJURIDICAID : '';

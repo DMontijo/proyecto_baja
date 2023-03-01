@@ -6,7 +6,7 @@
             <img id="fisica_foto" class="img-fluid" src="" style="max-width:300px;">
             <br>
             <input class="form-control" type="file" id="subirFotoPersona" name="subirFotoPersona"
-                accept="image/jpeg, image/jpg, image/png"></input>
+                accept="image/jpeg, image/jpg, image/png, application/pdf"></input>
         </a>
     </div>
     <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
