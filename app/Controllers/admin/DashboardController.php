@@ -5542,10 +5542,10 @@ class DashboardController extends BaseController
 			$cejasForma = $this->_cejaFormaModel->asObject()->where('CEJAFORMAID', $data->mediaFiliacionVictima->CEJAFORMAID)->first();
 
 			$data->plantilla = str_replace('[VICTIMA_ESTATURA]',  $data->mediaFiliacionVictima->ESTATURA ?  $data->mediaFiliacionVictima->ESTATURA : '-', $data->plantilla);
-			$data->plantilla = str_replace('[VICTIMA_PIEL]',  $colorPiel->PIELCOLORDESCR ?  $colorPiel->PIELCOLORDESCR : '-', $data->plantilla);
-			$data->plantilla = str_replace('[VICTIMA_COLOR_OJOS]',  $colorOjos->OJOCOLORDESCR ?  $colorOjos->OJOCOLORDESCR : '-', $data->plantilla);
-			$data->plantilla = str_replace('[VICTIMA_COLOR_CABELLO]',  $colorCabello->CABELLOCOLORDESCR ?  $colorCabello->CABELLOCOLORDESCR : '-', $data->plantilla);
-			$data->plantilla = str_replace('[VICTIMA_CEJAS_FORMAS]',  $cejasForma->CEJAFORMADESCR ?  $cejasForma->CEJAFORMADESCR : '-', $data->plantilla);
+			$data->plantilla = str_replace('[VICTIMA_PIEL]',  $colorPiel ?  $colorPiel->PIELCOLORDESCR : '-', $data->plantilla);
+			$data->plantilla = str_replace('[VICTIMA_COLOR_OJOS]',  $colorOjos ?  $colorOjos->OJOCOLORDESCR : '-', $data->plantilla);
+			$data->plantilla = str_replace('[VICTIMA_COLOR_CABELLO]',  $colorCabello ?  $colorCabello->CABELLOCOLORDESCR : '-', $data->plantilla);
+			$data->plantilla = str_replace('[VICTIMA_CEJAS_FORMAS]',  $cejasForma ?  $cejasForma->CEJAFORMADESCR : '-', $data->plantilla);
 			$data->plantilla = str_replace('[VICTIMA_SENAS]',  $data->mediaFiliacionVictima->SENASPARTICULARES ?  $data->mediaFiliacionVictima->SENASPARTICULARES : '-', $data->plantilla);
 		}
 
@@ -6217,10 +6217,10 @@ class DashboardController extends BaseController
 				$cejasForma = $this->_cejaFormaModel->asObject()->where('CEJAFORMAID', $data->mediaFiliacionVictima->CEJAFORMAID)->first();
 
 				$data->plantilla = str_replace('[VICTIMA_ESTATURA]',  $data->mediaFiliacionVictima->ESTATURA ?  $data->mediaFiliacionVictima->ESTATURA : '-', $data->plantilla);
-				$data->plantilla = str_replace('[VICTIMA_PIEL]',  $colorPiel->PIELCOLORDESCR ?  $colorPiel->PIELCOLORDESCR : '-', $data->plantilla);
-				$data->plantilla = str_replace('[VICTIMA_COLOR_OJOS]',  $colorOjos->OJOCOLORDESCR ?  $colorOjos->OJOCOLORDESCR : '-', $data->plantilla);
-				$data->plantilla = str_replace('[VICTIMA_COLOR_CABELLO]',  $colorCabello->CABELLOCOLORDESCR ?  $colorCabello->CABELLOCOLORDESCR : '-', $data->plantilla);
-				$data->plantilla = str_replace('[VICTIMA_CEJAS_FORMAS]',  $cejasForma->CEJAFORMADESCR ?  $cejasForma->CEJAFORMADESCR : '-', $data->plantilla);
+				$data->plantilla = str_replace('[VICTIMA_PIEL]',  $colorPiel ?  $colorPiel->PIELCOLORDESCR : '-', $data->plantilla);
+				$data->plantilla = str_replace('[VICTIMA_COLOR_OJOS]',  $colorOjos ?  $colorOjos->OJOCOLORDESCR : '-', $data->plantilla);
+				$data->plantilla = str_replace('[VICTIMA_COLOR_CABELLO]',  $colorCabello ?  $colorCabello->CABELLOCOLORDESCR : '-', $data->plantilla);
+				$data->plantilla = str_replace('[VICTIMA_CEJAS_FORMAS]',  $cejasForma ?  $cejasForma->CEJAFORMADESCR : '-', $data->plantilla);
 				$data->plantilla = str_replace('[VICTIMA_SENAS]',  $data->mediaFiliacionVictima->SENASPARTICULARES ?  $data->mediaFiliacionVictima->SENASPARTICULARES : '-', $data->plantilla);
 			}
 
