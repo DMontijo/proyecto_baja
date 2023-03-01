@@ -1038,7 +1038,7 @@ class DashboardController extends BaseController
 
 				if ($data->archivosexternos) {
 					foreach ($data->archivosexternos as $key => $archivos) {
-						var_dump($archivos);exit;
+						var_dump($archivos->ARCHIVO);exit;
 						// $file_info = new \finfo(FILEINFO_MIME_TYPE);
 						// $type = $file_info->buffer($archivos->ARCHIVO);
 
