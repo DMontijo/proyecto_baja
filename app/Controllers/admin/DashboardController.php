@@ -6041,7 +6041,6 @@ class DashboardController extends BaseController
 				$data->plantilla = str_replace('[DELITO_NOMBRE]',  $data->relacion_delitodescr->DELITOMODALIDADDESCR ?  $data->relacion_delitodescr->DELITOMODALIDADDESCR : '-', $data->plantilla);
 				$data->plantilla = str_replace('[NUMERO_CODIGO_PENAL]', ($data->relacion_delitodescr->DELITOMODALIDADARTICULO ?  $data->relacion_delitodescr->DELITOMODALIDADARTICULO : '-'), $data->plantilla);
 			}
-			var_dump($data->plantilla);exit;
 
 			$expediente = $data->folio->EXPEDIENTEID ? $data->folio->EXPEDIENTEID : null;
 
@@ -6097,6 +6096,7 @@ class DashboardController extends BaseController
 				$data->plantilla = str_replace('[DELITO_NOMBRE]',  $data->relacion_delitodescr->DELITOMODALIDADDESCR ?  $data->relacion_delitodescr->DELITOMODALIDADDESCR : '-', $data->plantilla);
 				$data->plantilla = str_replace('[NUMERO_CODIGO_PENAL]', ($data->relacion_delitodescr->DELITOMODALIDADARTICULO ?  $data->relacion_delitodescr->DELITOMODALIDADARTICULO : '-'), $data->plantilla);
 			}
+			var_dump($data->plantilla);exit;
 
 			$data->denunciantes = $this->_folioModel->get_denunciante($folio, $year);
 			$data->estado = $this->_estadosModel->asObject()->where('ESTADOID', $data->folio->ESTADOID)->first();
