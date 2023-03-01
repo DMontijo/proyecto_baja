@@ -5756,12 +5756,7 @@ class DashboardController extends BaseController
 										<span style="color: rgb(0, 0, 0);text-decoration: underline;">[DELITO_DESCR] </span>
 									</p>
 								</td>
-								<td>  
-									<p>
-										<span style="color: rgb(0, 0, 0);text-decoration: underline;">[ESTATUS_DELITO]</span>
 							
-									</p>
-								</td>
 							
 							
 							</tr>
@@ -5778,12 +5773,6 @@ class DashboardController extends BaseController
 								 <td>
 									<p>
 										<span style="color: rgb(0, 0, 0);text-decoration: underline;">[DELITO_DESCR] </span>
-									</p>
-								</td>
-								<td>  
-									<p>
-										<span style="color: rgb(0, 0, 0);text-decoration: underline;">[ESTATUS_DELITO]</span>
-							
 									</p>
 								</td>
 							
