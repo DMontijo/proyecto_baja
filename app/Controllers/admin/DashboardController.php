@@ -1033,17 +1033,19 @@ class DashboardController extends BaseController
 				$data->fisicaImpDelito = $this->_imputadoDelitoModel->get_by_folio($numfolio, $year);
 				$data->delitosModalidadFiltro = $this->_delitoModalidadModel->get_delitodescr($numfolio, $year);
 				$data->objetos = $this->_folioObjetoInvolucradoModel->get_descripcion($numfolio, $year);
-				$data->archivosexternos = $this->_archivoExternoModel->get_by_folio($numfolio, $year);
+				$data->archivosexternos = $this->_archivoExternoModel->asObject()->where('FOLIOID', $numfolio)->where('ANO', $year)->findAll();
+
+
+					if ($data->archivosexternos) {
+						foreach ($data->archivosexternos as $key => $archivos) {
+							$file_info = new \finfo(FILEINFO_MIME_TYPE);
+							$type = $file_info->buffer($archivos->ARCHIVO);
+
+							$archivos->ARCHIVO = 'data:' . $type . ';base64,' . base64_encode($archivos->ARCHIVO);
+						}
+					}
 				$data->folioDenunciantes = $this->_folioModel->get_folio_denunciante($data->folio->DENUNCIANTEID);
 
-				if ($data->archivosexternos) {
-					foreach ($data->archivosexternos as $key => $archivos) {
-						$file_info = new \finfo(FILEINFO_MIME_TYPE);
-						$type = $file_info->buffer($archivos['ARCHIVO']);
-
-						$archivos['ARCHIVO'] = 'data:' . $type . ';base64,' . base64_encode($archivos['ARCHIVO']);
-					}
-				}
 				// $data->personafisica = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->findAll();
 				$data->imputados = $this->_folioPersonaFisicaModel->get_imputados($numfolio, $year);
 				$data->victimas = $this->_folioPersonaFisicaModel->get_victimas($numfolio, $year);
