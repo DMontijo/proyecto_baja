@@ -6206,13 +6206,14 @@ class DashboardController extends BaseController
 				$data->plantilla = str_replace('[EXPEDIENTE_NUMERO]', $data->folio->FOLIOID, $data->plantilla);
 				$data->plantilla = str_replace('[TIPO_EXPEDIENTE]',  $data->folio->STATUS == "DERIVADO" ? "DERIVACIÓN" : "CANALIZACIÓN", $data->plantilla);
 				return json_encode(['status' => 1, 'plantilla' => $data->plantilla]);
+				var_dump($data->plantilla);exit;
+
 			} else {
 				$data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->where('TIPOEXPEDIENTEID',  $data->folio->TIPOEXPEDIENTEID)->first();
 				$arrayExpediente = str_split($data->folio->EXPEDIENTEID);
 				$expedienteid =  $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
 
 				$data->plantilla = str_replace('[EXPEDIENTE_NUMERO]', $expedienteid, $data->plantilla);
-				var_dump($data->plantilla);exit;
 
 				$data->plantilla = str_replace('[DOCUMENTO_MUNICIPIO]', $data->municipios->MUNICIPIODESCR, $data->plantilla);
 				$data->plantilla = str_replace('[DOCUMENTO_CIUDAD]', $data->municipios->MUNICIPIODESCR, $data->plantilla);
