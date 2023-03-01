@@ -1019,6 +1019,8 @@ class DashboardController extends BaseController
 		} else {
 			$data->folio = $this->_folioModel->asObject()->where('ANO', $year)->where('FOLIOID', $numfolio)->first();
 
+			try {
+			
 			if ($data->folio) {
 				$data->status = 1;
 				$data->preguntas_iniciales = $this->_folioPreguntasModel->where('FOLIOID', $numfolio)->where('ANO', $year)->first();
@@ -1047,9 +1049,13 @@ class DashboardController extends BaseController
 					return json_encode($data);
 				}
 				return json_encode($data);
+	
 			} else {
 				return json_encode(['status' => 0, 'motivo' => 'El folio ' . $numfolio . ' del año ' . $year . ' no existe.']);
 			}
+		} catch (\Throwable $th) {
+			//throw $th;
+		}
 		}
 	}
 
