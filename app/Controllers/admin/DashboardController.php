@@ -1038,10 +1038,11 @@ class DashboardController extends BaseController
 
 				if ($data->archivosexternos) {
 					foreach ($data->archivosexternos as $key => $archivos) {
-						$file_info = new \finfo(FILEINFO_MIME_TYPE);
-						$type = $file_info->buffer($archivos->ARCHIVO);
+						var_dump($archivos);exit;
+						// $file_info = new \finfo(FILEINFO_MIME_TYPE);
+						// $type = $file_info->buffer($archivos->ARCHIVO);
 
-						$archivos->ARCHIVO = 'data:' . $type . ';base64,' . base64_encode($archivos->ARCHIVO);
+						// $archivos->ARCHIVO = 'data:' . $type . ';base64,' . base64_encode($archivos->ARCHIVO);
 					}
 				}
 				// $data->personafisica = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->findAll();
