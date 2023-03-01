@@ -6159,17 +6159,6 @@ class DashboardController extends BaseController
 
 			$data->plantilla = str_replace('[EXTERIOR]', $data->folio->HECHONUMEROCASA ? $data->folio->HECHONUMEROCASA : 'S/N', $data->plantilla);
 			$data->plantilla = str_replace('[DIRECCION]', ($data->folio->HECHOCALLE ? $data->folio->HECHOCALLE :'SIN CALLE') . ' ' . ($data->folio->HECHONUMEROCASA? $data->folio->HECHONUMEROCASA :'S/N')  . ',' . ($data->folio->HECHOCOLONIADESCR ? $data->folio->HECHOCOLONIADESCR: 'SIN COLONIA') . ',' . ($data->localidad->LOCALIDADDESCR? $data->localidad->LOCALIDADDESCR : 'SIN LOCALIDAD') . ',' . ($data->municipio_delito->MUNICIPIODESCR?$data->municipio_delito->MUNICIPIODESCR: 'SIN MUNICIPIO'), $data->plantilla);
-			var_dump($data->plantilla);exit;
-
-			$data->plantilla = str_replace('[LUGAR_HECHO]', $data->lugar_delito->HECHODESCR, $data->plantilla);
-
-			$data->plantilla = str_replace('[MUNICIPIO_DELITO]', $data->municipio_delito->MUNICIPIODESCR, $data->plantilla);
-			$data->plantilla = str_replace('[LOCALIDAD_DELITO]', $data->localidad->LOCALIDADDESCR, $data->plantilla);
-			$data->plantilla = str_replace('[COLONIA_DELITO]', $data->folio->HECHOCOLONIADESCR, $data->plantilla);
-			$data->plantilla = str_replace('[REFERENCIAS]', $data->folio->HECHOREFERENCIA ? $data->folio->HECHOREFERENCIA : 'SIN DATOS DE REFERENCIA', $data->plantilla);
-			$data->plantilla = str_replace('[CALLE]', $data->folio->HECHOCALLE, $data->plantilla);
-			$data->plantilla = str_replace('[EXTERIOR]', $data->folio->HECHONUMEROCASA, $data->plantilla);
-			$data->plantilla = str_replace('[DIRECCION]', $data->folio->HECHOCALLE . ' ' . $data->folio->HECHONUMEROCASA  . ',' . $data->folio->HECHOCOLONIADESCR . ',' . $data->localidad->LOCALIDADDESCR . ',' . $data->municipio_delito->MUNICIPIODESCR, $data->plantilla);
 			$data->plantilla = str_replace('[LUGAR_HECHO]', $data->lugar_delito->HECHODESCR, $data->plantilla);
 
 			$data->plantilla = str_replace('[HECHO]', $data->folio->HECHONARRACION ? $data->folio->HECHONARRACION : 'SIN NARRACIÓN', $data->plantilla);
