@@ -622,7 +622,7 @@
 				if (
 					document.querySelector('#delito').value != '' &&
 					document.querySelector('#lugar').value != '' &&
-					document.querySelector('#fecha').value != '' &&
+					document.querySelector('#fecha').value <= "<?= date("Y-m-d") ?>" &&
 					document.querySelector('#hora').value != '' &&
 					document.querySelector('input[name="responsable"]:checked') &&
 					document.querySelector('#descripcion_breve').value != ''
