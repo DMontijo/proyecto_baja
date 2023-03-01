@@ -3892,18 +3892,26 @@ class DashboardController extends BaseController
 		$data['OFICINAIDRESPONSABLE'] = $oficina;
 		$data['EMPLEADOIDREGISTRO'] = $empleado;
 		if ($tipo == 'REMISION') {
-			$data['AREAIDREGISTRO'] = $area;
+			// $data['AREAIDREGISTRO'] = $area;
 			if (ENVIRONMENT == 'production') {
 				if ($oficina == 409 || $oficina == 793 || $oficina == 924) {
 					$data['AREAIDRESPONSABLE'] = $area;
+					$data['AREAIDREGISTRO'] = $area;
+
 				} else {
 					$data['AREAIDRESPONSABLE'] = null;
+					$data['AREAIDREGISTRO'] = null;
+
 				}
 			} else {
 				if ($oficina == 394 || $oficina == 792 || $oficina == 924) {
 					$data['AREAIDRESPONSABLE'] = $area;
+					$data['AREAIDREGISTRO'] = $area;
+
 				} else {
 					$data['AREAIDRESPONSABLE'] = null;
+					$data['AREAIDREGISTRO'] = null;
+
 				}
 			}
 		} else {
