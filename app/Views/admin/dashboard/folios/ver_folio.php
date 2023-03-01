@@ -112,6 +112,7 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 				dataType: "json",
 				success: function(response) {
 					respuesta = response;
+					console.log(respuesta);
 			// 		if (response.status === 1) {
 			// 			const folio = response.folio;
 			// 			const preguntas = response.preguntas_iniciales;
