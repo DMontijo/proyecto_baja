@@ -37,6 +37,11 @@ class FOLIODOC extends Migration
 				'constraint' => '16',
 				'null' => TRUE,
 			],
+			'AGENTE_REGISTRO' => [
+				'type' => 'INT',
+				'unsigned' => TRUE,
+				'null' => TRUE,
+			],
 			'AGENTE_ASIGNADO' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,

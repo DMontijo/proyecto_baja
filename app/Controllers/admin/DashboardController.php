@@ -6390,7 +6390,9 @@ class DashboardController extends BaseController
 					'STATUSENVIO' => $this->request->getPost('statusenvio'),
 					'ENVIADO' => 'N',
 					'CLASIFICACIONDOCTOID' => $clasificaciondoctoid,
-					'AGENTE_ASIGNADO' =>  $documentos_folio->AGENTE_ASIGNADO
+					'AGENTE_ASIGNADO' =>  $documentos_folio->AGENTE_ASIGNADO,
+					'AGENTE_REGISTRO' =>  session('ID')
+
 				);
 				if ($this->request->getPost('titulo') == "DENUNCIA ANONIMA") {
 					$dataFolioDoc = array(
@@ -6405,7 +6407,9 @@ class DashboardController extends BaseController
 						'STATUSENVIO' => $this->request->getPost('statusenvio'),
 						'ENVIADO' => 'N',
 						'CLASIFICACIONDOCTOID' => $clasificaciondoctoid,
-						'AGENTE_ASIGNADO' =>  $documentos_folio->AGENTE_ASIGNADO
+						'AGENTE_ASIGNADO' =>  $documentos_folio->AGENTE_ASIGNADO,
+						'AGENTE_REGISTRO' =>  session('ID')
+
 					);
 				}
 				$foliodoc = $this->_folioDoc($dataFolioDoc, $expediente ? $expediente : null, $year);
@@ -6422,7 +6426,9 @@ class DashboardController extends BaseController
 					'STATUSENVIO' => $this->request->getPost('statusenvio'),
 					'ENVIADO' => 'N',
 					'CLASIFICACIONDOCTOID' => $clasificaciondoctoid,
-					'AGENTE_ASIGNADO' =>  $this->request->getPost('agente_asignado') != '' ?  $this->request->getPost('agente_asignado') : null
+					'AGENTE_ASIGNADO' =>  $this->request->getPost('agente_asignado') != '' ?  $this->request->getPost('agente_asignado') : null,
+					'AGENTE_REGISTRO' =>  session('ID')
+
 				);
 
 				if ($this->request->getPost('titulo') == "DENUNCIA ANONIMA") {
@@ -6440,7 +6446,9 @@ class DashboardController extends BaseController
 						'STATUSENVIO' => $this->request->getPost('statusenvio'),
 						'ENVIADO' => 'N',
 						'CLASIFICACIONDOCTOID' => $clasificaciondoctoid,
-						'AGENTE_ASIGNADO' =>  $this->request->getPost('agente_asignado') != '' ?  $this->request->getPost('agente_asignado') : null
+						'AGENTE_ASIGNADO' =>  $this->request->getPost('agente_asignado') != '' ?  $this->request->getPost('agente_asignado') : null,
+						'AGENTE_REGISTRO' =>  session('ID')
+
 					);
 				}
 				$foliodoc = $this->_folioDoc($dataFolioDoc, $expediente ? $expediente : null, $year);

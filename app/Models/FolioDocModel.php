@@ -37,8 +37,8 @@ class FolioDocModel extends Model
 		'STATUS',
 		'STATUSENVIO',
 		'ENVIADO',
+		'AGENTE_REGISTRO',
 		'AGENTE_ASIGNADO',
-
 	];
 	public function get_by_folio($folio, $year)
 	{
