@@ -6157,7 +6157,7 @@ class DashboardController extends BaseController
 			$data->plantilla = str_replace('[REFERENCIAS]', $data->folio->HECHOREFERENCIA ? $data->folio->HECHOREFERENCIA : 'SIN DATOS DE REFERENCIA', $data->plantilla);
 			$data->plantilla = str_replace('[CALLE]', $data->folio->HECHOCALLE, $data->plantilla);
 
-			$data->plantilla = str_replace('[EXTERIOR]', $data->folio->HECHONUMEROCASA, $data->plantilla);
+			$data->plantilla = str_replace('[EXTERIOR]', $data->folio->HECHONUMEROCASA ? $data->folio->HECHONUMEROCASA : 'S/N', $data->plantilla);
 			$data->plantilla = str_replace('[DIRECCION]', ($data->folio->HECHOCALLE ? $data->folio->HECHOCALLE :'SIN CALLE') . ' ' . ($data->folio->HECHONUMEROCASA? $data->folio->HECHONUMEROCASA :'S/N')  . ',' . ($data->folio->HECHOCOLONIADESCR ? $data->folio->HECHOCOLONIADESCR: 'SIN COLONIA') . ',' . ($data->localidad->LOCALIDADDESCR? $data->localidad->LOCALIDADDESCR : 'SIN LOCALIDAD') . ',' . ($data->municipio_delito->MUNICIPIODESCR?$data->municipio_delito->MUNICIPIODESCR: 'SIN MUNICIPIO'), $data->plantilla);
 			var_dump($data->plantilla);exit;
 
