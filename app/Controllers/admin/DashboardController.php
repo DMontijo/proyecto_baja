@@ -6154,13 +6154,12 @@ class DashboardController extends BaseController
 			$data->plantilla = str_replace('[MUNICIPIO_DELITO]', $data->municipio_delito->MUNICIPIODESCR, $data->plantilla);
 			$data->plantilla = str_replace('[LOCALIDAD_DELITO]', $data->localidad->LOCALIDADDESCR, $data->plantilla);
 			$data->plantilla = str_replace('[COLONIA_DELITO]', $data->folio->HECHOCOLONIADESCR, $data->plantilla);
-			var_dump($data->plantilla);exit;
-
 			$data->plantilla = str_replace('[REFERENCIAS]', $data->folio->HECHOREFERENCIA ? $data->folio->HECHOREFERENCIA : 'SIN DATOS DE REFERENCIA', $data->plantilla);
 			$data->plantilla = str_replace('[CALLE]', $data->folio->HECHOCALLE, $data->plantilla);
 			$data->plantilla = str_replace('[EXTERIOR]', $data->folio->HECHONUMEROCASA, $data->plantilla);
 			$data->plantilla = str_replace('[DIRECCION]', $data->folio->HECHOCALLE . ' ' . $data->folio->HECHONUMEROCASA  . ',' . $data->folio->HECHOCOLONIADESCR . ',' . $data->localidad->LOCALIDADDESCR . ',' . $data->municipio_delito->MUNICIPIODESCR, $data->plantilla);
 			$data->plantilla = str_replace('[LUGAR_HECHO]', $data->lugar_delito->HECHODESCR, $data->plantilla);
+			var_dump($data->plantilla);exit;
 
 			$data->plantilla = str_replace('[MUNICIPIO_DELITO]', $data->municipio_delito->MUNICIPIODESCR, $data->plantilla);
 			$data->plantilla = str_replace('[LOCALIDAD_DELITO]', $data->localidad->LOCALIDADDESCR, $data->plantilla);
