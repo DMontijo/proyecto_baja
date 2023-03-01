@@ -349,6 +349,7 @@
 			var fila =
 				`<tr id="row${i}">` +
 				`<td class="text-center">${documentos[i].TIPODOC}</td>` +
+				`<td class="text-center">${documentos[i].NOMBRE} ${documentos[i].APELLIDO_PATERNO} ${documentos[i].APELLIDO_MATERNO}</td>` +
 				`<td class="text-center">${documentos[i].STATUS}</td>` +
 				`<td class="text-center">${btn} ${btnFirmar}</td>` +
 				`</tr>`;

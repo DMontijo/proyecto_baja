@@ -15,6 +15,7 @@
 								<table id="table-documentos" class="table table-bordered table-hover table-striped table-light">
 									<tr>
 										<th class="text-center bg-primary text-white" id="tipodoc" name="tipodoc">TIPO DE DOCUMENTO</th>
+										<th class="text-center bg-primary text-white">GENERADO POR</th>
 										<th class="text-center bg-primary text-white">STATUS</th>
 										<th class="text-center bg-primary text-white"></th>
 									</tr>

@@ -43,6 +43,7 @@
 						<tr>
 							<th class="text-center bg-primary text-white" id="tipodoc" name="tipodoc">DOCUMENTO</th>
 							<th class="text-center bg-primary text-white">ESTADO</th>
+							<th class="text-center bg-primary text-white">GENERADO POR</th>
 							<th class="text-center bg-primary text-white">ACCIONES</th>
 						</tr>
 					</table>
@@ -1015,6 +1016,8 @@
 				`<tr id="row${i}">` +
 				`<td class="text-center">${documentos[i].TIPODOC}</td>` +
 				`<td class="text-center">${documentos[i].STATUS}</td>` +
+				`<td class="text-center">${documentos[i].NOMBRE} ${documentos[i].APELLIDO_PATERNO} ${documentos[i].APELLIDO_MATERNO}</td>` +
+
 				`<td class="text-center">${btn} ${btnpdf} ${btnxml} ${btnFirmar} ${btnCambiarStatus} ${btnEnviar}</td>` +
 				`</tr>`;
 
