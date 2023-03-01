@@ -1033,7 +1033,7 @@ class DashboardController extends BaseController
 				$data->fisicaImpDelito = $this->_imputadoDelitoModel->get_by_folio($numfolio, $year);
 				$data->delitosModalidadFiltro = $this->_delitoModalidadModel->get_delitodescr($numfolio, $year);
 				$data->objetos = $this->_folioObjetoInvolucradoModel->get_descripcion($numfolio, $year);
-				// $data->archivosexternos = $this->_archivoExternoModel->get_by_folio($numfolio, $year);
+				$data->archivosexternos = $this->_archivoExternoModel->get_by_folio($numfolio, $year);
 				$data->folioDenunciantes = $this->_folioModel->get_folio_denunciante($data->folio->DENUNCIANTEID);
 
 				// $data->personafisica = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->findAll();
