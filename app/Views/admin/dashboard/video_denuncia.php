@@ -1457,6 +1457,7 @@
 		document.getElementById("form_delitos_cometidos_insert").reset();
 		document.getElementById("form_objetos_involucrados").reset();
 		document.getElementById("form_vehiculo").reset();
+		divFolioAtendido.classList.add('d-none');
 
 		// $('#v-pills-vehiculos-tab').css('display', 'NONE');
 	}
