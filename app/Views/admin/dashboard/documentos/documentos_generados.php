@@ -393,14 +393,12 @@
 							tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
 							document.querySelector("#victima_modal_documento").value = '';
 							document.querySelector("#imputado_modal_documento").value = '';
-							document.querySelector("#plantilla").value = '';
 							document.getElementById('uma_select').value = ''
 							document.getElementById("involucrados").style.display = "none";
 						} else {
 							tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
 							document.querySelector("#victima_modal_documento").value = '';
 							document.querySelector("#imputado_modal_documento").value = '';
-							document.querySelector("#plantilla").value = '';
 							document.getElementById('uma_select').value = ''
 							document.getElementById("involucrados").style.display = "none";
 						}
