@@ -6292,6 +6292,8 @@ class DashboardController extends BaseController
 						break;
 				}
 
+				var_dump($data->plantilla);exit;
+
 				if ($uma == 'MEXICALI - CD MORELOS') {
 					$data->plantilla = str_replace('[DOMICILIO_INSTALACION]', 'CALZADA LÁZARO CÁRDENAS S/N. A UN COSTADO DE WELTON, EN CIUDAD MORELOS.', $data->plantilla);
 					$data->plantilla = str_replace('[TELEFONO_UMA]', '(658) 514-84-74 EXT. 7530, 7531, 7532, 7533, 7534 Y 7535.(658) 514-83-60 EXT. 7558, 7562, 7568, 7569 Y 7570', $data->plantilla);
