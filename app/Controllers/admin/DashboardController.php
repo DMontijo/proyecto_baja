@@ -1040,12 +1040,13 @@ class DashboardController extends BaseController
 				$data->imputados = $this->_folioPersonaFisicaModel->get_imputados($numfolio, $year);
 				$data->victimas = $this->_folioPersonaFisicaModel->get_victimas($numfolio, $year);
 
-				// if ($data->folio->STATUS == 'ABIERTO' || $data->folio->STATUS == 'EN PROCESO') {
-				// 	$data->agente = $this->_usuariosModel->asObject()->where('ID', $data->folio->AGENTEATENCIONID)->first();
-				// } else if ($data->folio->STATUS == 'EN PROCESO' && $data->folio->TIPODENUNCIA == "DA") {
-				// 	$data->status = 1;
-				// 	return json_encode($data);
-				// }
+				if ($data->folio->STATUS == 'ABIERTO' || $data->folio->STATUS == 'EN PROCESO') {
+					$data->agente = $this->_usuariosModel->asObject()->where('ID', $data->folio->AGENTEATENCIONID)->first();
+				} else if ($data->folio->STATUS == 'EN PROCESO' && $data->folio->TIPODENUNCIA == "DA") {
+					$data->status = 1;
+					return json_encode($data);
+				}
+				var_dump($data);exit;
 				return json_encode($data);
 			} else {
 				return json_encode(['status' => 0, 'motivo' => 'El folio ' . $numfolio . ' del año ' . $year . ' no existe.']);
