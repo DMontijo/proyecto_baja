@@ -1046,6 +1046,7 @@ class DashboardController extends BaseController
 					$data->status = 1;
 					return json_encode($data);
 				}
+				var_dump($data->archivosexternos);exit;
 				return json_encode($data);
 			} else {
 				return json_encode(['status' => 0, 'motivo' => 'El folio ' . $numfolio . ' del año ' . $year . ' no existe.']);
