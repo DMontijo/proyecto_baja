@@ -101,17 +101,17 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 
 		buscar_btn.addEventListener('click', (e) => {
 			console.log("en el boton");
-			// $.ajax({
-			// 	data: {
-			// 		'folio': inputFolio.value,
-			// 		'year': year_select.value,
-			// 		'search': true
-			// 	},
-			// 	url: "<?= base_url('/data/get-folio-information') ?>",
-			// 	method: "POST",
-			// 	dataType: "json",
-			// 	success: function(response) {
-			// 		respuesta = response;
+			$.ajax({
+				data: {
+					'folio': inputFolio.value,
+					'year': year_select.value,
+					'search': true
+				},
+				url: "<?= base_url('/data/get-folio-information') ?>",
+				method: "POST",
+				dataType: "json",
+				success: function(response) {
+					respuesta = response;
 			// 		if (response.status === 1) {
 			// 			const folio = response.folio;
 			// 			const preguntas = response.preguntas_iniciales;
@@ -406,11 +406,11 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 			// 				confirmButtonColor: '#bf9b55',
 			// 			});
 			// 		}
-			// 	},
-			// 	error: function(jqXHR, textStatus, errorThrown) {
-			// 		console.log('Error');
-			// 	}
-			// });
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					console.log('Error');
+				}
+			});
 		});
 
 		buscar_nuevo_btn.addEventListener('click', () => {
