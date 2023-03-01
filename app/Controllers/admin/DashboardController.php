@@ -5535,11 +5535,11 @@ class DashboardController extends BaseController
 		//VICTIMA RASGOS
 		$data->mediaFiliacionVictima = $this->_folioMediaFiliacion->asObject()->where('FOLIOID', $folio)->where('PERSONAFISICAID', $victima)->first();
 		if ($data->mediaFiliacionVictima) {
-			$colorOjos = $this->_ojoColorModel->asObject()->where('OJOCOLORID', $data->mediaFiiacionImp->OJOCOLORID)->first();
-			$colorCabello = $this->_cabelloColorModel->asObject()->where('CABELLOCOLORID', $data->mediaFiiacionImp->CABELLOCOLORID)->first();
-			$complexion = $this->_figuraModel->asObject()->where('FIGURAID', $data->mediaFiiacionImp->FIGURAID)->first();
-			$colorPiel = $this->_pielColorModel->asObject()->where('PIELCOLORID', $data->mediaFiiacionImp->PIELCOLORID)->first();
-			$cejasForma = $this->_cejaFormaModel->asObject()->where('CEJAFORMAID', $data->mediaFiiacionImp->CEJAFORMAID)->first();
+			$colorOjos = $this->_ojoColorModel->asObject()->where('OJOCOLORID', $data->mediaFiliacionVictima->OJOCOLORID)->first();
+			$colorCabello = $this->_cabelloColorModel->asObject()->where('CABELLOCOLORID', $data->mediaFiliacionVictima->CABELLOCOLORID)->first();
+			$complexion = $this->_figuraModel->asObject()->where('FIGURAID', $data->mediaFiliacionVictima->FIGURAID)->first();
+			$colorPiel = $this->_pielColorModel->asObject()->where('PIELCOLORID', $data->mediaFiliacionVictima->PIELCOLORID)->first();
+			$cejasForma = $this->_cejaFormaModel->asObject()->where('CEJAFORMAID', $data->mediaFiliacionVictima->CEJAFORMAID)->first();
 
 			$data->plantilla = str_replace('[VICTIMA_ESTATURA]',  $data->mediaFiliacionVictima->ESTATURA ?  $data->mediaFiliacionVictima->ESTATURA : '-', $data->plantilla);
 			$data->plantilla = str_replace('[VICTIMA_PIEL]',  $colorPiel->PIELCOLORDESCR ?  $colorPiel->PIELCOLORDESCR : '-', $data->plantilla);
@@ -6210,11 +6210,11 @@ class DashboardController extends BaseController
 			//VICTIMA RASGOS
 			$data->mediaFiliacionVictima = $this->_folioMediaFiliacion->asObject()->where('FOLIOID', $folio)->where('PERSONAFISICAID', $victima)->first();
 			if ($data->mediaFiliacionVictima) {
-				$colorOjos = $this->_ojoColorModel->asObject()->where('OJOCOLORID', $data->mediaFiiacionImp->OJOCOLORID)->first();
-				$colorCabello = $this->_cabelloColorModel->asObject()->where('CABELLOCOLORID', $data->mediaFiiacionImp->CABELLOCOLORID)->first();
-				$complexion = $this->_figuraModel->asObject()->where('FIGURAID', $data->mediaFiiacionImp->FIGURAID)->first();
-				$colorPiel = $this->_pielColorModel->asObject()->where('PIELCOLORID', $data->mediaFiiacionImp->PIELCOLORID)->first();
-				$cejasForma = $this->_cejaFormaModel->asObject()->where('CEJAFORMAID', $data->mediaFiiacionImp->CEJAFORMAID)->first();
+				$colorOjos = $this->_ojoColorModel->asObject()->where('OJOCOLORID', $data->mediaFiliacionVictima->OJOCOLORID)->first();
+				$colorCabello = $this->_cabelloColorModel->asObject()->where('CABELLOCOLORID', $data->mediaFiliacionVictima->CABELLOCOLORID)->first();
+				$complexion = $this->_figuraModel->asObject()->where('FIGURAID', $data->mediaFiliacionVictima->FIGURAID)->first();
+				$colorPiel = $this->_pielColorModel->asObject()->where('PIELCOLORID', $data->mediaFiliacionVictima->PIELCOLORID)->first();
+				$cejasForma = $this->_cejaFormaModel->asObject()->where('CEJAFORMAID', $data->mediaFiliacionVictima->CEJAFORMAID)->first();
 
 				$data->plantilla = str_replace('[VICTIMA_ESTATURA]',  $data->mediaFiliacionVictima->ESTATURA ?  $data->mediaFiliacionVictima->ESTATURA : '-', $data->plantilla);
 				$data->plantilla = str_replace('[VICTIMA_PIEL]',  $colorPiel->PIELCOLORDESCR ?  $colorPiel->PIELCOLORDESCR : '-', $data->plantilla);
