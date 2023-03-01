@@ -22,8 +22,11 @@
 
 				</div>
 			</div>
-			<br>
-			<div class="card ">
+			
+		</div>
+		<br>
+
+		<div class="card col-12 p-0 m-0">
 				<form id="form_archivos_externos" method="post" enctype="multipart/form-data">
 					<input type="text" class="form-control" id="folio" name="folio" hidden>
 					<input type="text" class="form-control" id="year" name="year" hidden>
@@ -31,22 +34,19 @@
 
 					<div class="row ">
 
-						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3 m-3">
+						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3 m-lg-3 m-md-3">
 							<label for="documentoArchivo" class="form-label font-weight-bold" style="font-weight: bold;">Documentos a anexar.</label>
 							<input type="file" class="form-control" id="documentoArchivo" name="documentoArchivo" accept="image/jpeg, image/jpg, image/png, .doc, .pdf">
 							<img id="viewDocumentoArchivo" class="img-fluid m-3" src="" style="max-width:100px;">
 
 						</div>
-						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3 m-4">
-
-							<button type="submit" class="btn-sm btn-primary  m-4" style="width: 100%;">Enviar documentos</button>
+						<div class="col-12 col-sm-4 col-md-4 col-lg-4 mb-3">
+							<button type="submit" class="btn-sm btn-primary m-lg-4 m-md-4" style="width: 100%;">Enviar documentos</button>
 						</div>
 					</div>
 				</form>
 
 			</div>
-
-		</div>
 	</div>
 </div>
 </div>
