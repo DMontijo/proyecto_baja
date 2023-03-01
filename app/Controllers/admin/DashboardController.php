@@ -6096,7 +6096,6 @@ class DashboardController extends BaseController
 				$data->plantilla = str_replace('[DELITO_NOMBRE]',  $data->relacion_delitodescr->DELITOMODALIDADDESCR ?  $data->relacion_delitodescr->DELITOMODALIDADDESCR : '-', $data->plantilla);
 				$data->plantilla = str_replace('[NUMERO_CODIGO_PENAL]', ($data->relacion_delitodescr->DELITOMODALIDADARTICULO ?  $data->relacion_delitodescr->DELITOMODALIDADARTICULO : '-'), $data->plantilla);
 			}
-			var_dump($data->plantilla);exit;
 
 			$data->denunciantes = $this->_folioModel->get_denunciante($folio, $year);
 			$data->estado = $this->_estadosModel->asObject()->where('ESTADOID', $data->folio->ESTADOID)->first();
@@ -6159,6 +6158,7 @@ class DashboardController extends BaseController
 			$data->plantilla = str_replace('[EXTERIOR]', $data->folio->HECHONUMEROCASA, $data->plantilla);
 			$data->plantilla = str_replace('[DIRECCION]', $data->folio->HECHOCALLE . ' ' . $data->folio->HECHONUMEROCASA  . ',' . $data->folio->HECHOCOLONIADESCR . ',' . $data->localidad->LOCALIDADDESCR . ',' . $data->municipio_delito->MUNICIPIODESCR, $data->plantilla);
 			$data->plantilla = str_replace('[LUGAR_HECHO]', $data->lugar_delito->HECHODESCR, $data->plantilla);
+			var_dump($data->plantilla);exit;
 
 			$data->plantilla = str_replace('[MUNICIPIO_DELITO]', $data->municipio_delito->MUNICIPIODESCR, $data->plantilla);
 			$data->plantilla = str_replace('[LOCALIDAD_DELITO]', $data->localidad->LOCALIDADDESCR, $data->plantilla);
