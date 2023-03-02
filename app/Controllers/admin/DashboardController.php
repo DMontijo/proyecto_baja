@@ -6694,7 +6694,7 @@ class DashboardController extends BaseController
 	public function videos_expediente()
 	{
 		$data = (object) array();
-		if (session('ROLID') == 11 || session('ROLID') == 1) {
+		if (session('ROLID') == 11 || session('ROLID') == 1 || session('ROLID')== 7) {
 			$data->folio = $this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('FOLIO.TIPOEXPEDIENTEID !=', null)->where('AGENTEFIRMAID !=', null)->where('TIPODENUNCIA', 'VD')->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID', 'left')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID', 'left')->join('TIPOEXPEDIENTE', 'TIPOEXPEDIENTE.TIPOEXPEDIENTEID = FOLIO.TIPOEXPEDIENTEID', 'left')->findAll();
 		} else {
 			$data->folio = $this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('FOLIO.TIPOEXPEDIENTEID !=', null)->where('AGENTEFIRMAID !=', null)->where('TIPODENUNCIA', 'VD')->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID', 'left')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID', 'left')->join('TIPOEXPEDIENTE', 'TIPOEXPEDIENTE.TIPOEXPEDIENTEID = FOLIO.TIPOEXPEDIENTEID', 'left')->findAll();
