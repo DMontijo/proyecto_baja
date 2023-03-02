@@ -83,7 +83,7 @@
     <main>
         <br>
         <?= $data->placeholder ?>
-        <div style="page-break-after:always;"></div>
+        <!-- <div style="page-break-after:always;"></div> -->
         <br>
         <div>
             <p class="p7"
