@@ -34,7 +34,7 @@
 
 					<div class="row ">
 
-						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3 m-lg-3 m-md-3 m-sm-4 m-xs-4">
+						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3 m-lg-3 m-md-3 mt-sm-6 mt-xs-6">
 							<label for="documentoArchivo" class="form-label font-weight-bold" style="font-weight: bold;">Documentos a anexar.</label>
 							<input type="file" class="form-control" id="documentoArchivo" name="documentoArchivo" accept="image/jpeg, image/jpg, image/png, .doc, .pdf">
 							<img id="viewDocumentoArchivo" class="img-fluid m-3" src="" style="max-width:100px;">
