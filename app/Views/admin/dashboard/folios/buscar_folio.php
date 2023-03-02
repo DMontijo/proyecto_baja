@@ -117,6 +117,8 @@
 									<th class="text-center">AGENTE DE ATENCIÓN</th>
 									<th class="text-center">MUNICIPIO ASIGNADO</th>
 									<th class="text-center">DEPARTAMENTO ASIGNADO</th>
+									<th class="text-center">FECHA REGISTRO</th>
+									<th class="text-center">FECHA SALIDA</th>
 
 									<th class="text-center"></th>
 								</tr>
@@ -141,6 +143,8 @@
 										<td class="text-center"><?= $folio->N_AGENT . ' ' . $folio->APP_AGENT . ' ' . $folio->APM_AGENT ?></td>
 										<td class="text-center"><?= $folio->MUNICIPIOASIGNADO ?></td>
 										<td class="text-center"><?= $folio->OFICINADESCR ?></td>
+										<td class="text-center"><?= $folio->FECHAREGISTRO ?></td>
+										<td class="text-center"><?= $folio->FECHASALIDA ?  $folio->FECHASALIDA : '' ?></td>
 
 										<td class="text-center">
 											<a href="<?= base_url('/admin/dashboard/ver_folio?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO ?>" class="btn btn-primary text-white"><i class="fas fa-folder-open"></i> ABRIR</a>
