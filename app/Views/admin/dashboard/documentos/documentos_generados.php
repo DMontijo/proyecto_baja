@@ -398,7 +398,6 @@
 							tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
 							document.querySelector("#victima_modal_documento").value = '';
 							document.querySelector("#imputado_modal_documento").value = '';
-							document.getElementById('uma_select').value = ''
 							document.getElementById("involucrados").style.display = "none";
 						}
 					},
