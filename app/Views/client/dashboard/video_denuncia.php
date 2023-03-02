@@ -7,7 +7,7 @@
 <?= $this->section('content') ?>
 
 <?php $session = session(); ?>
-<div class="container-fluid">
+<div class="container-fluid mb-3">
 	<div class="row">
 		<div class="col-12 text-center" style="font-size:10px;">
 			Para un correcto funcionamiento utilice <a href="https://www.google.com/chrome/" target="_blank">google chrome</a>.<br>
@@ -25,9 +25,8 @@
 			
 		</div>
 		<br>
-<hr></hr>
 		<div class="card col-12 p-0 m-0">
-				<form id="form_archivos_externos" method="post" enctype="multipart/form-data" class="mt-sm-5">
+				<form id="form_archivos_externos" method="post" enctype="multipart/form-data" >
 					<input type="text" class="form-control" id="folio" name="folio" hidden>
 					<input type="text" class="form-control" id="year" name="year" hidden>
 					<input type="text" class="form-control" id="autor" name="autor" hidden>
