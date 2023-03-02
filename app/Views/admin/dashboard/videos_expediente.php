@@ -17,12 +17,16 @@
 								<tr>
 									<th class="text-center">TIPO</th>
 									<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
+									<th class="text-center">OFENDIDO</th>
+									<th class="text-center">IMPUTADO</th>
 									<th class="text-center">ATENDIDO POR</th>
 									<th class="text-center">VIDEO</th>
+								
 								</tr>
 							</thead>
 							<tbody>
-								<?php foreach ($body_data->folio as $index => $folio) {
+								<?php foreach ($body_data->folio as $index => $folio) 
+								{
 									$expedienteid = '';
 									if (isset($folio->EXPEDIENTEID)) {
 										$arrayExpediente = str_split($folio->EXPEDIENTEID);
@@ -30,11 +34,16 @@
 									} ?>
 									<tr>
 										<td class="text-center"><?= $folio->TIPOEXPEDIENTECLAVE ?></td>
+
 										<td class="text-center"><?= $expedienteid ? $expedienteid : '' ?></td>
+										<td class="text-center"><?= isset($folio->OFENDIDO)?$folio->OFENDIDO:'' ?></td>
+
+										<td class="text-center"><?= isset($folio->IMPUTADO_NOMBRE)?$folio->IMPUTADO_NOMBRE:'' ?></td>
+
 										<td class="text-center"><?= $folio->NOMBRE ?> <?= $folio->APELLIDO_PATERNO ?> <?= $folio->APELLIDO_MATERNO ?></td>
 										<td class="text-center"><button type="button" class="btn btn-primary" onclick="viewVideo(<?= $folio->ANO ?>,<?= $folio->FOLIOID ?>)"><i class="fas fa-video"></i></button></td>
 									</tr>
-								<?php } ?>
+								<?php }?>
 							</tbody>
 						</table>
 					</div>
