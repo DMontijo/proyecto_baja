@@ -25,11 +25,11 @@
 								</tr>
 							</thead>
 							<tbody>
+								<?= 									var_dump($body_data);exit;
+?>
 								<?php foreach ($body_data->folio as $index => $folio) 
 
-								
 								{
-									var_dump($body_data);exit;
 									$expedienteid = '';
 									if (isset($folio->EXPEDIENTEID)) {
 										$arrayExpediente = str_split($folio->EXPEDIENTEID);
