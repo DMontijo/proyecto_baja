@@ -6695,41 +6695,46 @@ class DashboardController extends BaseController
 	{
 		$data = (object) array();
 		if (session('ROLID') == 11 || session('ROLID') == 1 || session('ROLID')== 7) {
-			$data->folio = $this->_folioModel->videos_expediente_model(1);
+			// $data->folio = $this->_folioModel->videos_expediente_model(1);
 			
-			// $this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)
-			// ->where('FOLIO.TIPOEXPEDIENTEID !=', null)->where('AGENTEFIRMAID !=', null)->where('TIPODENUNCIA', 'VD')
-			// ->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID', 'left')
-			// ->join('ROLES', 'ROLES.ID = USUARIOS.ROLID', 'left')
-			// ->join('TIPOEXPEDIENTE', 'TIPOEXPEDIENTE.TIPOEXPEDIENTEID = FOLIO.TIPOEXPEDIENTEID', 'left')
-			// ->findAll();
+			$this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)
+			->where('FOLIO.TIPOEXPEDIENTEID !=', null)->where('AGENTEFIRMAID !=', null)->where('TIPODENUNCIA', 'VD')
+			->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID', 'left')
+			->join('ROLES', 'ROLES.ID = USUARIOS.ROLID', 'left')
+			->join('TIPOEXPEDIENTE', 'TIPOEXPEDIENTE.TIPOEXPEDIENTEID = FOLIO.TIPOEXPEDIENTEID', 'left')
+			->findAll();
 
 		} else {
 			$data->folio = $this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)
 			->where('FOLIO.TIPOEXPEDIENTEID !=', null)->where('AGENTEFIRMAID !=', null)->where('TIPODENUNCIA', 'VD')
 			->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID', 'left')
 			->join('ROLES', 'ROLES.ID = USUARIOS.ROLID', 'left')
-			->join('TIPOEXPEDIENTE', 'TIPOEXPEDIENTE.TIPOEXPEDIENTEID = FOLIO.TIPOEXPEDIENTEID', 'left')			->findAll();
+			->join('TIPOEXPEDIENTE', 'TIPOEXPEDIENTE.TIPOEXPEDIENTEID = FOLIO.TIPOEXPEDIENTEID', 'left')->findAll();
 
 			// $data->folio = $this->_folioModel->videos_expediente_model(1);
 			foreach ($data->folio as $key => $value) {
 				if ($value->INSTITUCIONREMISIONMUNICIPIOID) {
 					// $data->folio = $this->_folioModel->videos_expediente_model(2);
 
-					$data->folio = $this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)
+					$data->folio = $this->_folioModel->asObject()
+					->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)
 					->where('FOLIO.TIPOEXPEDIENTEID !=', null)->where('AGENTEFIRMAID !=', null)->where('TIPODENUNCIA', 'VD')
 					->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID AND USUARIOS.MUNICIPIOID = FOLIO.INSTITUCIONREMISIONMUNICIPIOID', 'left')
 					->join('ROLES', 'ROLES.ID = USUARIOS.ROLID', 'left')
 					->join('TIPOEXPEDIENTE', 'TIPOEXPEDIENTE.TIPOEXPEDIENTEID = FOLIO.TIPOEXPEDIENTEID', 'left'
 					)->findAll();
 				}
+
+				
 				if ($value->MUNICIPIOASIGNADOID) {
 					// $data->folio = $this->_folioModel->videos_expediente_model(3);
 
 					$data->folio = $this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)
 					->where('FOLIO.TIPOEXPEDIENTEID !=', null)->where('AGENTEFIRMAID !=', null)->where('TIPODENUNCIA', 'VD')
 					->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID AND USUARIOS.MUNICIPIOID = FOLIO.MUNICIPIOASIGNADOID', 'left')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID', 'left')->join('TIPOEXPEDIENTE', 'TIPOEXPEDIENTE.TIPOEXPEDIENTEID = FOLIO.TIPOEXPEDIENTEID', 'left')->findAll();
+					
 				}
+			
 				if ($value->OFICINAASIGNADOID) {
 					// $data->folio = $this->_folioModel->videos_expediente_model(4);
 
@@ -6739,7 +6744,6 @@ class DashboardController extends BaseController
 				}
 			}
 		}
-
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 		$this->_loadView('Videos expediente', 'videos', '', $data, 'videos_expediente');
