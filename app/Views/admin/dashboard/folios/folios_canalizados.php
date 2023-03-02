@@ -23,6 +23,8 @@
 									<th class="text-center">COMENTARIOS</th>
 									<th class="text-center">ATENDIDO POR</th>
 									<th class="text-center">ROL</th>
+									<th class="text-center">FECHA REGISTRO</th>
+									<th class="text-center">FECHA SALIDA</th>
 									<!-- <th class="text-center"></th> -->
 								</tr>
 							</thead>
@@ -36,6 +38,8 @@
 										<td class="text-center"><?= $folio->NOTASAGENTE ?></td>
 										<td class="text-center"><?= $folio->NOMBRE ?> <?= $folio->APELLIDO_PATERNO ?> <?= $folio->APELLIDO_MATERNO ?></td>
 										<td class="text-center"><?= $folio->NOMBRE_ROL ?></td>
+										<td class="text-center"><?= $folio->FECHAREGISTRO ?></td>
+										<td class="text-center"><?= $folio->FECHASALIDA ?></td>
 										<!-- <td class="text-center"><button type="button" class="btn btn-primary"><i class="fas fa-eye"></i></button></td> -->
 									</tr>
 								<?php } ?>
