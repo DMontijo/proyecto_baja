@@ -25,10 +25,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<?= 									var_dump($body_data);exit;
-?>
 								<?php foreach ($body_data->folio as $index => $folio) 
-
 								{
 									$expedienteid = '';
 									if (isset($folio->EXPEDIENTEID)) {
