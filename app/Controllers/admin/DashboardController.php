@@ -6711,7 +6711,7 @@ class DashboardController extends BaseController
 			// ->join('ROLES', 'ROLES.ID = USUARIOS.ROLID', 'left')
 			// ->join('TIPOEXPEDIENTE', 'TIPOEXPEDIENTE.TIPOEXPEDIENTEID = FOLIO.TIPOEXPEDIENTEID', 'left')			->findAll();
 
-			$data->folio = $this->_folioModel->videos_expediente_model(1);
+			// $data->folio = $this->_folioModel->videos_expediente_model(1);
 			foreach ($data->folio as $key => $value) {
 				if ($value->INSTITUCIONREMISIONMUNICIPIOID) {
 					$data->folio = $this->_folioModel->videos_expediente_model(2);
