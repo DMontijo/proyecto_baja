@@ -6342,7 +6342,16 @@ class DashboardController extends BaseController
 				$data->plantilla = str_replace('[DOMICILIO_INSTALACION]', 'BLVD. GRAL. RODOLFO SÁNCHEZ TABOADA NO. 10127, ESQUINA CON AV. RÍO TIJUANA. ZONA URBANA RÍO TIJUANA. (EDIFICIO DE CRISTALES NEGROS, PRIMER PISO).', $data->plantilla);
 				$data->plantilla = str_replace('[TELEFONO_UMA]', '664-736-52-96, correo electrónico: umacosta@fgebc.gob.mx', $data->plantilla);
 			}
-
+		//CITATORIO
+		if ($data->bandejaRac) {
+			if ($data->bandejaRac->TIPOPROCEDIMIENTOID == 1) {
+				$data->plantilla = str_replace('[TIPO_PROCESO]', 'MEDICACION', $data->plantilla);
+			} else if ($data->bandejaRac->TIPOPROCEDIMIENTOID == 2) {
+				$data->plantilla = str_replace('[TIPO_PROCESO]', 'MEDICACION', $data->plantilla);
+			} else {
+				$data->plantilla = str_replace('[TIPO_PROCESO]', 'JUSTICIA RESTAURATIVA', $data->plantilla);
+			}
+		}
 			$data->plantilla = str_replace('[IMPUTADO_DOMICILIO_COMPLETO]', ($data->imputadoDom->CALLE ? $data->imputadoDom->CALLE : 'DESCONOCIDO') . ' EXT. ' . ($data->imputadoDom->NUMEROCASA ? $data->imputadoDom->NUMEROCASA : '') . ' INT. ' . ($data->imputadoDom->NUMEROINTERIOR ? $data->imputadoDom->NUMEROINTERIOR : '') . ' ' . $data->imputadoDom->COLONIADESCR . ($data->municipio_imp ? $data->municipio_imp->MUNICIPIODESCR : '') . ' ' . ($data->estado_imp ? $data->estado_imp->ESTADODESCR : ''), $data->plantilla);
 
 			$hecho_info = '<p><b>FOLIO:</b> ' . $data->folio->FOLIOID . '</p><p><b>AÑO:</b> ' . $data->folio->ANO . '</p><p><b>FECHA DEL HECHO:</b> ' . $data->folio->HECHOFECHA . '</p><p><b>HORA DEL HECHO:</b> ' . $data->folio->HECHOHORA . '</p><p><b>CALLE DEL HECHO:</b> ' . $data->folio->HECHOCALLE . ' EXT.' . $data->folio->HECHONUMEROCASA . ' INT.' . $data->folio->HECHONUMEROCASAINT . ' ' . $data->municipios->MUNICIPIODESCR . '</p><p><b>NARRACIÓN DEL HECHO:</b> ' . $data->folio->HECHONARRACION . '</p><p><b>NOTAS DEL AGENTE:</b> ' . $data->folio->NOTASAGENTE . '</p>';
