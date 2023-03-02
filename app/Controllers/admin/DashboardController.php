@@ -6705,11 +6705,11 @@ class DashboardController extends BaseController
 			// ->findAll();
 
 		} else {
-			// $data->folio = $this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)
-			// ->where('FOLIO.TIPOEXPEDIENTEID !=', null)->where('AGENTEFIRMAID !=', null)->where('TIPODENUNCIA', 'VD')
-			// ->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID', 'left')
-			// ->join('ROLES', 'ROLES.ID = USUARIOS.ROLID', 'left')
-			// ->join('TIPOEXPEDIENTE', 'TIPOEXPEDIENTE.TIPOEXPEDIENTEID = FOLIO.TIPOEXPEDIENTEID', 'left')			->findAll();
+			$data->folio = $this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)
+			->where('FOLIO.TIPOEXPEDIENTEID !=', null)->where('AGENTEFIRMAID !=', null)->where('TIPODENUNCIA', 'VD')
+			->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID', 'left')
+			->join('ROLES', 'ROLES.ID = USUARIOS.ROLID', 'left')
+			->join('TIPOEXPEDIENTE', 'TIPOEXPEDIENTE.TIPOEXPEDIENTEID = FOLIO.TIPOEXPEDIENTEID', 'left')			->findAll();
 
 			// $data->folio = $this->_folioModel->videos_expediente_model(1);
 			foreach ($data->folio as $key => $value) {
