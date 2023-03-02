@@ -1327,15 +1327,16 @@ class DashboardController extends BaseController
 
 
 			if ($update) {
-				$datosBitacora = [
-					'ACCION' => 'Remitio un expediente.',
-					'NOTAS' => 'Exp: ' . $expediente . ' oficina: ' . $oficina . ' empleado:' . $empleado . ' area:' . $area->AREAID,
-				];
-
-				$bandeja = $this->_folioModel->where('EXPEDIENTEID', $expediente)->first();
 				$updateExpediente = $this->_updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area->AREAID, 'REMISION', $status);
-				$updateArch = $this->_archivoExternoModel->set($dataFolioArc)->where('FOLIOID', $bandeja['FOLIOID'])->where('ANO', $bandeja['ANO'])->update();
 				if ($updateExpediente->status == 201) {
+					$datosBitacora = [
+						'ACCION' => 'Remitio un expediente.',
+						'NOTAS' => 'Exp: ' . $expediente . ' oficina: ' . $oficina . ' empleado:' . $empleado . ' area:' . $area->AREAID,
+					];
+	
+					$bandeja = $this->_folioModel->where('EXPEDIENTEID', $expediente)->first();
+					$updateArch = $this->_archivoExternoModel->set($dataFolioArc)->where('FOLIOID', $bandeja['FOLIOID'])->where('ANO', $bandeja['ANO'])->update();
+
 					$_bandeja_creada = $this->_createBandeja($bandeja);
 					$this->_bitacoraActividad($datosBitacora);
 					$subirArchivos = $this->subirArchivosRemision($bandeja['FOLIOID'], $bandeja['ANO'], $expediente);
