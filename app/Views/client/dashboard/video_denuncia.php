@@ -26,7 +26,10 @@
 		</div>
 		<br>
 
-		<div class="card col-12 p-0 m-0">
+	</div>
+</div>
+
+<div class="card col-12 p-0 m-0">
 				<form id="form_archivos_externos" method="post" enctype="multipart/form-data" class="mt-sm-5">
 					<input type="text" class="form-control" id="folio" name="folio" hidden>
 					<input type="text" class="form-control" id="year" name="year" hidden>
@@ -47,9 +50,6 @@
 				</form>
 
 			</div>
-	</div>
-</div>
-</div>
 <script>
 	const folio_get = `<?php echo $_GET['folio'] ?>`;
 
