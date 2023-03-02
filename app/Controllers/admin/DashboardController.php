@@ -1322,18 +1322,20 @@ class DashboardController extends BaseController
 				'OFICINAID' => $oficina,
 			);
 
-			$update = $this->_folioModel->set($dataFolio)->where('EXPEDIENTEID', $expediente)->update();
-			$updateDoc = $this->_folioDocModel->set($dataFolioDoc)->where('NUMEROEXPEDIENTE', $expediente)->update();
 
 
-			if ($update) {
-				$updateExpediente = $this->_updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area->AREAID, 'REMISION', $status);
-				if ($updateExpediente->status == 201) {
+			$updateExpediente = $this->_updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area->AREAID, 'REMISION', $status);
+			if ($updateExpediente->status == 201) {
+
+				$update = $this->_folioModel->set($dataFolio)->where('EXPEDIENTEID', $expediente)->update();
+				$updateDoc = $this->_folioDocModel->set($dataFolioDoc)->where('NUMEROEXPEDIENTE', $expediente)->update();
+				if ($update) {
+
 					$datosBitacora = [
 						'ACCION' => 'Remitio un expediente.',
 						'NOTAS' => 'Exp: ' . $expediente . ' oficina: ' . $oficina . ' empleado:' . $empleado . ' area:' . $area->AREAID,
 					];
-	
+
 					$bandeja = $this->_folioModel->where('EXPEDIENTEID', $expediente)->first();
 					$updateArch = $this->_archivoExternoModel->set($dataFolioArc)->where('FOLIOID', $bandeja['FOLIOID'])->where('ANO', $bandeja['ANO'])->update();
 					$_bandeja_creada = $this->_createBandeja($bandeja);
@@ -1351,14 +1353,14 @@ class DashboardController extends BaseController
 								$solicitudp['AREAIDREGISTRO'] = $area;
 								$solicitudp['ANO'] = $doc['ANO'];
 								$solicitudp['TITULO'] = $doc['TIPODOC'];
-	
+
 								$_solicitudPericial = $this->_createSolicitudesPericiales($solicitudp);
 								if ($_solicitudPericial->status == 201) {
 									$_solicitudDocto = $this->_createSolicitudDocto($expediente, $_solicitudPericial->SOLICITUDID, $doc['EXPEDIENTEDOCID'], $bandeja['MUNICIPIOASIGNADOID']);
 									if ($_solicitudDocto->status == 201) {
 										$_solicitudExpediente = $this->_createSolicitudExpediente($expediente, $_solicitudPericial->SOLICITUDID, $municipio);
 										$plantilla = (object) array();
-	
+
 										$plantilla = $this->_plantillasModel->where('TITULO',  $doc['TIPODOC'])->first();
 										if ($municipio == 1 ||  $municipio == 6) {
 											$intervencion = $plantilla['INTERVENCIONENSENADAID'];
@@ -1368,7 +1370,7 @@ class DashboardController extends BaseController
 											$intervencion = $plantilla['INTERVENCIONTIJUANAID'];
 										}
 										$dataInter =  array('SOLICITUDID' => $_solicitudPericial->SOLICITUDID, 'INTERVENCIONID' => $intervencion);
-	
+
 										$_intervencionPericial = $this->_createIntervencionPericial($dataInter, $municipio);
 										if ($_intervencionPericial->status == 201) {
 											$datosBitacora = [
@@ -1377,22 +1379,19 @@ class DashboardController extends BaseController
 											];
 											$this->_bitacoraActividad($datosBitacora);
 										}
-										
 									}
 								}
 							}
 						}
 						return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_success', 'Remitido correctamente');
-					}else{
+					} else {
 						return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_error', 'No se creo la bandeja');
-
 					}
 				} else {
-					return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_error', 'No se actualizo el folio en Justicia Net');
+					return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_error', 'No se actualizo el folio en videodenuncia');
 				}
-
 			} else {
-				return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_error', 'No se actualizo el folio en videodenuncia');
+				return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_error', 'No se actualizo el folio en Justicia Net');
 			}
 		} catch (\Exception $e) {
 			return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_error', 'Hubo un error en la remisión, verifica el expediente en justicia.');
