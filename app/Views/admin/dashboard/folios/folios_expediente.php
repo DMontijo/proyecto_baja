@@ -45,8 +45,8 @@
 										<td class="text-center"><?= $folio->STATUS . ' ' . $folio->TIPOEXPEDIENTEDESCR ?></td>
 										<td class="text-center"><?= $folio->AREADESCR ?></td>
 										<td class="text-center"><?= $folio->NOMBRE ?> <?= $folio->APELLIDO_PATERNO ?> <?= $folio->APELLIDO_MATERNO ?></td>
-										<td class="text-center"><?= date('d-m-Y', strtotime($folio->FECHAREGISTRO)) ?></td>
-										<td class="text-center"><?= date('d-m-Y', strtotime($folio->FECHASALIDA)) ?></td>
+										<td class="text-center"><?= $folio->FECHAREGISTRO ?></td>
+										<td class="text-center"><?= $folio->FECHASALIDA ?></td>
 
 										<td class="text-center"><button type="button" class="btn btn-primary" onclick="viewVideo(<?= $folio->ANO ?>,<?= $folio->FOLIOID ?>)"><i class="fas fa-video"></i></button></td>
 									</tr>
