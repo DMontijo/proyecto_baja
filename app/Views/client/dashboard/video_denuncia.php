@@ -7,7 +7,7 @@
 <?= $this->section('content') ?>
 
 <?php $session = session(); ?>
-<div class="container-fluid mb-3">
+<div class="container-fluid mb-5">
 	<div class="row">
 		<div class="col-12 text-center" style="font-size:10px;">
 			Para un correcto funcionamiento utilice <a href="https://www.google.com/chrome/" target="_blank">google chrome</a>.<br>
