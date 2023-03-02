@@ -25,9 +25,8 @@
 			
 		</div>
 		<br>
-		<div class="col-12 p-0 m-0">
-		</div>
-		<div class="card col-12 p-0 m-0">
+
+		<div class="card col-12 p-0 m-0 p-sm-1">
 				<form id="form_archivos_externos" method="post" enctype="multipart/form-data">
 					<input type="text" class="form-control" id="folio" name="folio" hidden>
 					<input type="text" class="form-control" id="year" name="year" hidden>
