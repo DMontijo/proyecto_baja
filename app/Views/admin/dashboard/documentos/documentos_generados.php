@@ -393,7 +393,6 @@
 							tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
 							document.querySelector("#victima_modal_documento").value = '';
 							document.querySelector("#imputado_modal_documento").value = '';
-							document.getElementById('uma_select').value = ''
 							document.getElementById("involucrados").style.display = "none";
 						} else {
 							tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
@@ -436,7 +435,6 @@
 							tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
 							document.querySelector("#victima_modal_documento").value = '';
 							document.querySelector("#imputado_modal_documento").value = '';
-							document.getElementById('uma_select').value = ''
 							document.getElementById("involucrados").style.display = "none";
 							document.getElementById("div_uma").style.display = "none";
 						} else {
