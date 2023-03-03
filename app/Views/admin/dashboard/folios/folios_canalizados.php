@@ -23,8 +23,8 @@
 									<th class="text-center">COMENTARIOS</th>
 									<th class="text-center">ATENDIDO POR</th>
 									<th class="text-center">ROL</th>
-									<th class="text-center">FECHA REGISTRO</th>
-									<th class="text-center">FECHA SALIDA</th>
+									<th class="text-center" style="min-width:150px;">FECHA REGISTRO</th>
+									<th class="text-center" style="min-width:150px;">FECHA SALIDA</th>
 									<!-- <th class="text-center"></th> -->
 								</tr>
 							</thead>

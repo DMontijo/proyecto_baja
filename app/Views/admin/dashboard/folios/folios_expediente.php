@@ -16,9 +16,9 @@
 						<table id="folios_expediente" class="table table-bordered table-striped">
 							<thead>
 								<tr>
-									<th class="text-center">FOLIO</th>
-									<th class="text-center">FECHA FOLIO</th>
-									<th class="text-center">FECHA SALIDA</th>
+									<th class="text-center" style="min-width:150px;">FOLIO</th>
+									<th class="text-center" style="min-width:150px;">FECHA REGISTRO</th>
+									<th class="text-center" style="min-width:150px;">FECHA SALIDA</th>
 									<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
 									<th class="text-center">DELITO</th>
 									<th class="text-center">ESTADO</th>

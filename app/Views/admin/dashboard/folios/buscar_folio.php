@@ -117,8 +117,8 @@
 									<th class="text-center">AGENTE DE ATENCIÓN</th>
 									<th class="text-center">MUNICIPIO ASIGNADO</th>
 									<th class="text-center">DEPARTAMENTO ASIGNADO</th>
-									<th class="text-center">FECHA REGISTRO</th>
-									<th class="text-center">FECHA SALIDA</th>
+									<th class="text-center" style="min-width:150px;">FECHA REGISTRO</th>
+									<th class="text-center" style="min-width:150px;">FECHA SALIDA</th>
 
 									<th class="text-center"></th>
 								</tr>
