@@ -95,7 +95,7 @@
 												<a href="<?= base_url('admin/dashboard/buscar_folio') ?>" class="btn btn-secondary font-weight-bold" id="btnFiltroFolio" name="btnFiltroFolio">Borrar filtro</a>
 												<button type="submit" class="btn btn-primary font-weight-bold" id="btnFiltroFolio" name="btnFiltroFolio">Filtrar</button>
 											</div>
-											
+
 										</form>
 									</div>
 								</div>
@@ -108,7 +108,7 @@
 						<table id="expedientes_generados" class="table table-bordered table-striped">
 							<thead>
 								<tr>
-									<th class="text-center">ID</th>
+									<th class="text-center">FOLIO</th>
 									<th class="text-center">AÑO</th>
 									<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
 									<th class="text-center">ESTATUS</th>
@@ -133,7 +133,7 @@
 									} ?>
 
 									<tr>
-										<td class="text-center font-weight-bold"><?= $folio->FOLIOID ?></td>
+										<td class="text-center font-weight-bold"><?= $folio->FOLIOID ?>/<?= $folio->ANO ?></td>
 										<td class="text-center"><?= $folio->ANO ?></td>
 										<td class="text-center"><?= $expedienteid ? $folio->TIPOEXPEDIENTECLAVE . ' ' . $expedienteid : '' ?></td>
 										<td class="text-center"><?= $folio->STATUS ?></td>
