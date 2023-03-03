@@ -69,7 +69,7 @@
 									<thead>
 										<tr>
 											<th class="text-center">FOLIO</th>
-											<th class="text-center">EXPEDIENTEID</th>
+											<th class="text-center">EXPEDIENTE</th>
 											<th class="text-center">MUNICIPIO ASIGNADO</th>
 											<th class="text-center">DOMICILIO DEL HECHO</th>
 											<th class="text-center">DELITOS INVOLUCRADOS</th>
@@ -102,7 +102,7 @@
 									<thead>
 										<tr>
 											<th class="text-center">FOLIO</th>
-											<th class="text-center">EXPEDIENTEID</th>
+											<th class="text-center">EXPEDIENTE</th>
 											<th class="text-center">MUNICIPIO ASIGNADO</th>
 											<th class="text-center">DOMICILIO DEL HECHO</th>
 											<th class="text-center">DELITOS INVOLUCRADOS</th>
@@ -135,7 +135,7 @@
 									<thead>
 										<tr>
 											<th class="text-center">FOLIO</th>
-											<th class="text-center">EXPEDIENTEID</th>
+											<th class="text-center">EXPEDIENTE</th>
 											<th class="text-center">MUNICIPIO ASIGNADO</th>
 											<th class="text-center">DOMICILIO DEL HECHO</th>
 											<th class="text-center">DELITOS INVOLUCRADOS</th>
@@ -168,7 +168,7 @@
 									<thead>
 										<tr>
 											<th class="text-center">FOLIO</th>
-											<th class="text-center">EXPEDIENTEID</th>
+											<th class="text-center">EXPEDIENTE</th>
 											<th class="text-center">MUNICIPIO ASIGNADO</th>
 											<th class="text-center">DOMICILIO DEL HECHO</th>
 											<th class="text-center">DELITOS INVOLUCRADOS</th>
