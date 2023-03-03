@@ -18,15 +18,13 @@
 								<tr>
 									<th class="text-center">FOLIO</th>
 									<th class="text-center">FECHA FOLIO</th>
+									<th class="text-center">FECHA SALIDA</th>
 									<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
 									<th class="text-center">DELITO</th>
 									<th class="text-center">ESTADO</th>
 									<th class="text-center">ÁREA ASIGNADA</th>
 									<th class="text-center">ATENDIDO POR</th>
-									<th class="text-center">FECHA REGISTRO</th>
-									<th class="text-center">FECHA SALIDA</th>
-
-									<th class="text-center">VIDEO</th>
+									<!-- <th class="text-center">VIDEO</th> -->
 								</tr>
 							</thead>
 							<tbody>
@@ -40,15 +38,13 @@
 									<tr>
 										<td class="text-center"><?= $folio->FOLIOID ?></td>
 										<td class="text-center"><?= $folio->FECHAREGISTRO ?></td>
+										<td class="text-center"><?= $folio->FECHASALIDA ?></td>
 										<td class="text-center"><?= $expedienteid ? $expedienteid : '' ?></td>
 										<td class="text-center"><?= $folio->HECHODELITO ?></td>
 										<td class="text-center"><?= $folio->STATUS . ' ' . $folio->TIPOEXPEDIENTEDESCR ?></td>
 										<td class="text-center"><?= $folio->AREADESCR ?></td>
 										<td class="text-center"><?= $folio->NOMBRE ?> <?= $folio->APELLIDO_PATERNO ?> <?= $folio->APELLIDO_MATERNO ?></td>
-										<td class="text-center"><?= $folio->FECHAREGISTRO ?></td>
-										<td class="text-center"><?= $folio->FECHASALIDA ?></td>
-
-										<td class="text-center"><button type="button" class="btn btn-primary" onclick="viewVideo(<?= $folio->ANO ?>,<?= $folio->FOLIOID ?>)"><i class="fas fa-video"></i></button></td>
+										<!-- <td class="text-center"><button type="button" class="btn btn-primary" onclick="viewVideo(<?= $folio->ANO ?>,<?= $folio->FOLIOID ?>)"><i class="fas fa-video"></i></button></td> -->
 									</tr>
 								<?php } ?>
 							</tbody>
