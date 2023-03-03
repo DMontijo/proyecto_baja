@@ -68,6 +68,7 @@
 								<table id="table-mexicali" class="table table-bordered table-striped">
 									<thead>
 										<tr>
+											<th class="text-center">FOLIO</th>
 											<th class="text-center">EXPEDIENTEID</th>
 											<th class="text-center">MUNICIPIO ASIGNADO</th>
 											<th class="text-center">DOMICILIO DEL HECHO</th>
@@ -83,6 +84,7 @@
 												$expedienteid = $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
 											} ?>
 											<tr>
+												<td class="text-center"><?= $folio->FOLIOID . '/' . $folio->ANO ?></td>
 												<td class="text-center"><?= $expedienteid ? $expedienteid : '' ?></td>
 												<td class="text-center"><?= $folio->MUNICIPIODESCR ?></td>
 												<td class="text-center"><?= $folio->HECHOCALLE ?></td>
@@ -99,6 +101,7 @@
 								<table id="table-tecate" class="table table-bordered table-striped">
 									<thead>
 										<tr>
+											<th class="text-center">FOLIO</th>
 											<th class="text-center">EXPEDIENTEID</th>
 											<th class="text-center">MUNICIPIO ASIGNADO</th>
 											<th class="text-center">DOMICILIO DEL HECHO</th>
@@ -114,6 +117,7 @@
 												$expedienteid = $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
 											} ?>
 											<tr>
+												<td class="text-center"><?= $folio->FOLIOID . '/' . $folio->ANO ?></td>
 												<td class="text-center"><?= $expedienteid ? $expedienteid : '' ?></td>
 												<td class="text-center"><?= $folio->MUNICIPIODESCR ?></td>
 												<td class="text-center"><?= $folio->HECHOCALLE ?></td>
@@ -130,6 +134,7 @@
 								<table id="table-tijuana" class="table table-bordered table-striped">
 									<thead>
 										<tr>
+											<th class="text-center">FOLIO</th>
 											<th class="text-center">EXPEDIENTEID</th>
 											<th class="text-center">MUNICIPIO ASIGNADO</th>
 											<th class="text-center">DOMICILIO DEL HECHO</th>
@@ -145,6 +150,7 @@
 												$expedienteid = $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
 											} ?>
 											<tr>
+												<td class="text-center"><?= $folio->FOLIOID . '/' . $folio->ANO ?></td>
 												<td class="text-center"><?= $expedienteid ? $expedienteid : '' ?></td>
 												<td class="text-center"><?= $folio->MUNICIPIODESCR ?></td>
 												<td class="text-center"><?= $folio->HECHOCALLE ?></td>
@@ -161,6 +167,7 @@
 								<table id="table-rosarito" class="table table-bordered table-striped">
 									<thead>
 										<tr>
+											<th class="text-center">FOLIO</th>
 											<th class="text-center">EXPEDIENTEID</th>
 											<th class="text-center">MUNICIPIO ASIGNADO</th>
 											<th class="text-center">DOMICILIO DEL HECHO</th>
@@ -176,6 +183,7 @@
 												$expedienteid = $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
 											} ?>
 											<tr>
+												<td class="text-center"><?= $folio->FOLIOID . '/' . $folio->ANO ?></td>
 												<td class="text-center"><?= $expedienteid ? $expedienteid : '' ?></td>
 												<td class="text-center"><?= $folio->MUNICIPIODESCR ?></td>
 												<td class="text-center"><?= $folio->HECHOCALLE ?></td>
