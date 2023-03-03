@@ -32,8 +32,8 @@
 								<?php foreach ($body_data->folio as $index => $folio) { ?>
 									<tr>
 										<td class="text-center"><?= $folio->FOLIOID ?></th>
-										<th class="text-center" style="min-width:150px;">FECHA REGISTRO</th>
-										<th class="text-center" style="min-width:150px;">FECHA SALIDA</th>
+										<th class="text-center" style="min-width:150px;"><?= $folio->FECHAREGISTRO ?></th>
+										<th class="text-center" style="min-width:150px;"><?= $folio->FECHASALIDA ?></th>
 										<td class="text-center"><?= $folio->HECHODELITO ?></td>
 										<td class="text-center"><?= $folio->STATUS ?></td>
 										<td class="text-center"><?= $folio->NOTASAGENTE ?></td>
