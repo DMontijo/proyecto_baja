@@ -1677,10 +1677,12 @@ class DashboardController extends BaseController
 
 	private function _sendEmailExpediente($to, $folio, $expedienteId)
 	{
+		$folioM = $this->_folioModel->asObject()->where('EXPEDIENTEID', $expedienteId)->first();
+		$tipoExpediente = $this->_tipoExpedienteModel->asObject()->where('TIPOEXPEDIENTEID',  $folioM->TIPOEXPEDIENTEID)->first();
 		$email = \Config\Services::email();
 		$email->setTo($to);
 		$email->setSubject('Nuevo expediente creado');
-		$body = view('email_template/expediente_email_template.php', ['expediente' => $expedienteId]);
+		$body = view('email_template/expediente_email_template.php', ['expediente' => $expedienteId, 'tipoexpediente'=> $tipoExpediente->TIPOEXPEDIENTECLAVE]);
 		$email->setMessage($body);
 		if ($email->send()) {
 			return true;
@@ -1691,6 +1693,7 @@ class DashboardController extends BaseController
 
 	private function _sendEmailPassword($to, $password)
 	{
+		
 		$email = \Config\Services::email();
 		$email->setTo($to);
 		$email->setSubject('Nueva cuenta creada');

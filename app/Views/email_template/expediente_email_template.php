@@ -9,7 +9,7 @@ $expediente_guiones =  $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpedie
 <div style="text-align:center;">
 	<p>Se ha generado un nuevo expediente</p>
 	<br>
-	<h2><?= $expediente_guiones ?></h2>
+	<h2><?= $expediente_guiones ?> /<?= $tipoexpediente ?> </h2>
 	<br>
 </div>
 
