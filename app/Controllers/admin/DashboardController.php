@@ -3901,6 +3901,8 @@ class DashboardController extends BaseController
 		$function = '/expediente.php?process=updateArea';
 		$endpoint = $this->endpoint . $function;
 		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
+		$empleado_select = $this->_empleadosModel->asObject()->where('EMPLEADOID', (int) $empleado)->first();
+
 		$array = [
 			'EMPLEADOIDREGISTRO',
 			'EXPEDIENTEID',
@@ -3915,7 +3917,13 @@ class DashboardController extends BaseController
 		$data['EMPLEADOIDREGISTRO'] = $empleado;
 		if ($tipo == 'REMISION') {
 			$data['AREAIDREGISTRO'] = $area;
-			$data['AREAIDRESPONSABLE'] = $area;
+			// $data['AREAIDRESPONSABLE'] = $area;
+
+			if (str_contains($empleado_select->OFICINADESCR, 'COORDINACION') == true || str_contains($empleado_select->OFICINADESCR, 'COORD') == true) {
+				$data['AREAIDRESPONSABLE'] = null;
+			}else{
+				$data['AREAIDRESPONSABLE'] = $area;
+			}
 
 			// if (ENVIRONMENT == 'production') {
 			// 	if ($oficina == 409 || $oficina == 793 || $oficina == 924) {
@@ -3931,6 +3939,7 @@ class DashboardController extends BaseController
 			// 	}
 			// }
 		} else {
+			$data['AREAIDREGISTRO'] = $area;
 			$data['AREAIDRESPONSABLE'] = $area;
 		}
 
