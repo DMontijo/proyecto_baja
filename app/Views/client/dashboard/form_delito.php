@@ -129,7 +129,7 @@
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="hora" class="form-label fw-bold input-required">Hora del delito:</label>
 		<input type="time" class="form-control" id="hora" name="hora" required>
-		<small>Debe estar en formato de 24 horas.</small>
+		<!-- <small>Debe estar en formato de 24 horas.</small> -->
 		<div class="invalid-feedback">
 			La hora del delito es obligatoria
 		</div>
