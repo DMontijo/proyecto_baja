@@ -3919,25 +3919,26 @@ class DashboardController extends BaseController
 			$data['AREAIDREGISTRO'] = $area;
 			// $data['AREAIDRESPONSABLE'] = $area;
 
-			if (str_contains($empleado_select->OFICINADESCR, 'COORDINACION') == true || str_contains($empleado_select->OFICINADESCR, 'COORD') == true) {
-				$data['AREAIDRESPONSABLE'] = null;
-			}else{
-				$data['AREAIDRESPONSABLE'] = $area;
+			// if (str_contains($empleado_select->OFICINADESCR, 'COORDINACION') == true || str_contains($empleado_select->OFICINADESCR, 'COORD') == true) {
+			// 	$data['AREAIDRESPONSABLE'] = null;
+			// }else{
+			// 	$data['AREAIDRESPONSABLE'] = $area;
+			// }
+
+			if (ENVIRONMENT == 'production') {
+				if ($oficina == 409 || $oficina == 793 || $oficina == 924) {
+					$data['AREAIDRESPONSABLE'] = $area;
+				} else {
+					$data['AREAIDRESPONSABLE'] = null;
+				}
+			} else {
+				if ($oficina == 394 || $oficina == 793 || $oficina == 924) {
+					$data['AREAIDRESPONSABLE'] = $area;
+				} else {
+					$data['AREAIDRESPONSABLE'] = null;
+				}
 			}
 
-			// if (ENVIRONMENT == 'production') {
-			// 	if ($oficina == 409 || $oficina == 793 || $oficina == 924) {
-			// 		$data['AREAIDRESPONSABLE'] = $area;
-			// 	} else {
-			// 		$data['AREAIDRESPONSABLE'] = null;
-			// 	}
-			// } else {
-			// 	if ($oficina == 394 || $oficina == 792 || $oficina == 924) {
-			// 		$data['AREAIDRESPONSABLE'] = $area;
-			// 	} else {
-			// 		$data['AREAIDRESPONSABLE'] = null;
-			// 	}
-			// }
 		} else {
 			$data['AREAIDREGISTRO'] = $area;
 			$data['AREAIDRESPONSABLE'] = $area;
