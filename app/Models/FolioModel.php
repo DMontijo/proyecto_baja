@@ -483,6 +483,17 @@ class FolioModel extends Model
 		$query = $builder->get();
 		return $query->getResult('array');
 	}
+	public function get_folios_abiertos()
+	{
+
+		$builder = $this->db->table($this->table);
+		$builder->select(['FOLIO.*', 'DENUNCIANTES.NOMBRE', 'DENUNCIANTES.APELLIDO_PATERNO']);
+		$builder->where('FOLIO.STATUS', 'ABIERTO');
+		$builder->join('DENUNCIANTES', 'DENUNCIANTES.DENUNCIANTEID = FOLIO.DENUNCIANTEID');
+		$builder->orderBy('FOLIO.FECHAREGISTRO ASC');
+		$query = $builder->get();
+		return $query->getResult('object');
+	}
 
 	public function filtro_canalizaciones_derivaciones($bindParams)
 	{
