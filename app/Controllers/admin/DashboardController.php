@@ -1952,23 +1952,23 @@ class DashboardController extends BaseController
 
 								$_persona = $this->_createPersonaFisica($expedienteCreado->EXPEDIENTEID, $persona, $municipio);
 								var_dump($_persona);
-								if ($_persona->status == 201) {
+								// if ($_persona->status == 201) {
 
-									$domicilios = $this->_folioPersonaFisicaDomicilioModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->where('PERSONAFISICAID', $persona['PERSONAFISICAID'])->findAll();
-									$mediaFiliacion = $this->_folioMediaFiliacion->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->where('PERSONAFISICAID', $persona['PERSONAFISICAID'])->first();
+								// 	$domicilios = $this->_folioPersonaFisicaDomicilioModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->where('PERSONAFISICAID', $persona['PERSONAFISICAID'])->findAll();
+								// 	$mediaFiliacion = $this->_folioMediaFiliacion->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->where('PERSONAFISICAID', $persona['PERSONAFISICAID'])->first();
 
-									$personasRelacionMysqlOracle[$persona['PERSONAFISICAID']] = ['calidad' => $persona['CALIDADJURIDICAID'], 'id_mysql' => $persona['PERSONAFISICAID'], 'id_oracle' => $_persona->PERSONAFISICAID];
+								// 	$personasRelacionMysqlOracle[$persona['PERSONAFISICAID']] = ['calidad' => $persona['CALIDADJURIDICAID'], 'id_mysql' => $persona['PERSONAFISICAID'], 'id_oracle' => $_persona->PERSONAFISICAID];
 
-									if ($persona['CALIDADJURIDICAID'] == '2') {
-										$_imputado = $this->_createExpImputado($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $municipio);
-									}
+								// 	if ($persona['CALIDADJURIDICAID'] == '2') {
+								// 		$_imputado = $this->_createExpImputado($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $municipio);
+								// 	}
 
-									foreach ($domicilios as $key => $domicilio) {
-										$_domicilio = $this->_createDomicilioPersonaFisica($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $domicilio, $municipio);
-									}
+								// 	foreach ($domicilios as $key => $domicilio) {
+								// 		$_domicilio = $this->_createDomicilioPersonaFisica($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $domicilio, $municipio);
+								// 	}
 
-									$_mediaFiliacion = $this->_createPersonaFisicaMediaFilicacion($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $mediaFiliacion, $municipio);
-								}
+								// 	$_mediaFiliacion = $this->_createPersonaFisicaMediaFilicacion($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $mediaFiliacion, $municipio);
+								// }
 							}
 							exit;
 
@@ -3458,8 +3458,8 @@ class DashboardController extends BaseController
 		curl_close($ch);
 		// var_dump($data);
 		// var_dump($result);exit;
-		// return $result;
-		return json_decode($result);
+		return $result;
+		// return json_decode($result);
 	}
 	public function getTimeVideo()
 	{
