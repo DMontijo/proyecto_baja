@@ -1951,7 +1951,6 @@ class DashboardController extends BaseController
 								}
 
 								$_persona = $this->_createPersonaFisica($expedienteCreado->EXPEDIENTEID, $persona, $municipio);
-								var_dump($_persona);
 								if ($_persona->status == 201) {
 
 									$domicilios = $this->_folioPersonaFisicaDomicilioModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->where('PERSONAFISICAID', $persona['PERSONAFISICAID'])->findAll();
@@ -1970,7 +1969,6 @@ class DashboardController extends BaseController
 									$_mediaFiliacion = $this->_createPersonaFisicaMediaFilicacion($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $mediaFiliacion, $municipio);
 								}
 							}
-							exit;
 
 							//Relacion Persona Física Imputado delito
 							if (count($fisImpDelito) > 0) {
@@ -1982,6 +1980,7 @@ class DashboardController extends BaseController
 									}
 								}
 							}
+							exit;
 
 							//Relacion Victima Imputado
 							if (count($relacionFisFis) > 0) {
