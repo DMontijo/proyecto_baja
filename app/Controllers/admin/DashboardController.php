@@ -1986,9 +1986,11 @@ class DashboardController extends BaseController
 							if (count($relacionFisFis) > 0) {
 								foreach ($relacionFisFis as $fisFis) {
 									try {
+										var_dump('Dentro de try de fisfis');
 										$victima = $personasRelacionMysqlOracle[$fisFis['PERSONAFISICAIDVICTIMA']];
 										$imputado = $personasRelacionMysqlOracle[$fisFis['PERSONAFISICAIDIMPUTADO']];
 										$_relacionFisFis = $this->_createRelacionFisFis($expedienteCreado->EXPEDIENTEID, $fisFis, $victima['id_oracle'], $imputado['id_oracle'], $municipio);
+										var_dump($_relacionFisFis);
 										// Expediente vehiculo
 										if ($fisFis['DELITOMODALIDADID'] == 178 || $fisFis['DELITOMODALIDADID'] == 179) {
 											if (count($vehiculos) > 0) {
@@ -2006,7 +2008,6 @@ class DashboardController extends BaseController
 												}
 											}
 										}
-										var_dump('Dentro de try de fisfis');
 									} catch (\Error $e) {
 										var_dump('Entro a catch de fisfis');
 									}
