@@ -1915,13 +1915,13 @@ class DashboardController extends BaseController
 					$folioRow['ESTADOJURIDICOEXPEDIENTEID'] = (string) 13;
 					$folioRow['TIPOEXPEDIENTEID'] = (int)$tiposExpedienteId;
 
-					// $expedienteCreado = $this->_createExpediente($folioRow);
+					$expedienteCreado = $this->_createExpediente($folioRow);
 					// var_dump($expedienteCreado);exit;
 
-					$expedienteCreado = (object)array(
-						'status' => 201,
-						'EXPEDIENTEID' => '102004202390035'
-					);
+					// $expedienteCreado = (object)array(
+					// 	'status' => 201,
+					// 	'EXPEDIENTEID' => '402002202200323'
+					// );
 					// return json_encode(['info' => $expedienteCreado]);
 
 					unset($folioRow['OFICINAIDRESPONSABLE']);
@@ -1939,11 +1939,9 @@ class DashboardController extends BaseController
 						$folioRow['EXPEDIENTEID'] = $expedienteCreado->EXPEDIENTEID;
 						$folioRow['FECHASALIDA'] = date('Y-m-d H:i:s');
 
-						// $update = $this->_folioModel->set($folioRow)->where('FOLIOID', $folio)->where('ANO', $year)->update();
-						$update = true;
+						$update = $this->_folioModel->set($folioRow)->where('FOLIOID', $folio)->where('ANO', $year)->update();
 						$personasRelacionMysqlOracle = array();
 						try {
-							
 							foreach ($personas as $key => $persona) {
 								if ($persona['NOMBRE'] == 'QRR') {
 									$persona['NOMBRE'] = 'QUIEN RESULTE RESPONSABLE';
@@ -1988,9 +1986,7 @@ class DashboardController extends BaseController
 									try {
 										$victima = $personasRelacionMysqlOracle[$fisFis['PERSONAFISICAIDVICTIMA']];
 										$imputado = $personasRelacionMysqlOracle[$fisFis['PERSONAFISICAIDIMPUTADO']];
-										var_dump('Dentro de try de fisfis');
 										$_relacionFisFis = $this->_createRelacionFisFis($expedienteCreado->EXPEDIENTEID, $fisFis, $victima['id_oracle'], $imputado['id_oracle'], $municipio);
-										var_dump($_relacionFisFis);
 										// Expediente vehiculo
 										if ($fisFis['DELITOMODALIDADID'] == 178 || $fisFis['DELITOMODALIDADID'] == 179) {
 											if (count($vehiculos) > 0) {
@@ -2009,11 +2005,9 @@ class DashboardController extends BaseController
 											}
 										}
 									} catch (\Error $e) {
-										var_dump('Entro a catch de fisfis');
 									}
 								}
 							}
-							exit;
 
 							// Relacion Persona Física Imputado delito
 							if (count($parentescos) > 0) {
