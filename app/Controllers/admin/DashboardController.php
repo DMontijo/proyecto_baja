@@ -1915,13 +1915,13 @@ class DashboardController extends BaseController
 					$folioRow['ESTADOJURIDICOEXPEDIENTEID'] = (string) 13;
 					$folioRow['TIPOEXPEDIENTEID'] = (int)$tiposExpedienteId;
 
-					$expedienteCreado = $this->_createExpediente($folioRow);
+					// $expedienteCreado = $this->_createExpediente($folioRow);
 					// var_dump($expedienteCreado);exit;
 
-					// $expedienteCreado = (object)array(
-					// 	'status' => 201,
-					// 	'EXPEDIENTEID' => '402002202200323'
-					// );
+					$expedienteCreado = (object)array(
+						'status' => 201,
+						'EXPEDIENTEID' => '102004202390035'
+					);
 					// return json_encode(['info' => $expedienteCreado]);
 
 					unset($folioRow['OFICINAIDRESPONSABLE']);
@@ -1942,6 +1942,7 @@ class DashboardController extends BaseController
 						$update = $this->_folioModel->set($folioRow)->where('FOLIOID', $folio)->where('ANO', $year)->update();
 						$personasRelacionMysqlOracle = array();
 						try {
+							
 							foreach ($personas as $key => $persona) {
 								if ($persona['NOMBRE'] == 'QRR') {
 									$persona['NOMBRE'] = 'QUIEN RESULTE RESPONSABLE';
@@ -1950,6 +1951,7 @@ class DashboardController extends BaseController
 								}
 
 								$_persona = $this->_createPersonaFisica($expedienteCreado->EXPEDIENTEID, $persona, $municipio);
+								var_dump($_persona);
 								if ($_persona->status == 201) {
 
 									$domicilios = $this->_folioPersonaFisicaDomicilioModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->where('PERSONAFISICAID', $persona['PERSONAFISICAID'])->findAll();
@@ -1968,6 +1970,7 @@ class DashboardController extends BaseController
 									$_mediaFiliacion = $this->_createPersonaFisicaMediaFilicacion($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $mediaFiliacion, $municipio);
 								}
 							}
+							exit;
 
 							//Relacion Persona Física Imputado delito
 							if (count($fisImpDelito) > 0) {
