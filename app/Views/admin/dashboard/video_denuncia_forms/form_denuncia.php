@@ -2,6 +2,9 @@
 	<div class="col-12 mb-3">
 		<h3 class="font-weight-bold mb-4 text-center">INFORMACIÓN DEL HECHO</h3>
 	</div>
+	<div class="col-12 mb-3 text-center">
+		<button type="submit" class="btn btn-primary font-weight-bold">ACTUALIZAR HECHO</button>
+	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="delito_delito" class="form-label font-weight-bold">Delito:</label>
 		<select class="form-control" id="delito_delito" name="delito_delito">
@@ -71,9 +74,7 @@
 	<input type="text" class="form-control d-none" id="latitud_denuncia" name="latitud_denuncia">
 
 	<input type="text" class="form-control d-none" id="longitud_denuncia" name="longitud_denuncia">
-	<div class="col-12 mb-3 text-center">
-		<button type="submit" class="btn btn-primary font-weight-bold">ACTUALIZAR HECHO</button>
-	</div>
+	
 </form>
 
 <script>

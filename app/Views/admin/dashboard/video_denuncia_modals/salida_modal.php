@@ -430,6 +430,9 @@
 								inputExpediente.disabled = true;
 								input_municipio.disabled = true;
 
+
+								document.querySelector('#folio_atendido').innerHTML = 'EXPEDIENTE: ' + expedienteConGuiones(data.expediente)
+
 								// buscar_btn.classList.remove('d-none');
 								// municipio_empleado.value = '';
 								// oficina_empleado.value = '';

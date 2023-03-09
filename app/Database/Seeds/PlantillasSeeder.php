@@ -383,6 +383,25 @@ class PlantillasSeeder extends Seeder
 				'AREAPERICIALENSENADAID' => NULL,
 				'INTERVENCIONENSENADAID' => NULL,
 			),
+
+			array(
+				'DESCRIPCION' => '', 'TITULO' => 'PERSONA DESAPARECIDA',
+				'PLACEHOLDER' => '<table width="90%" style="margin-left: auto;
+				margin-right: auto;"> <tr > <td width="40%"> [IMAGEN_DESAPARECIDO] </td> <td width="50%"> <p style="text-align: center; color: #000000; font-size: 14pt;"> <strong>[NOMBRE_DESAPARECIDO] <br> de [ANOS_DESAPARECIDO] años de edad.</strong></p> <p style="text-align: center; color: #000000;">De acuerdo a la informaci&oacute;n proporcionada, fue visto por ultima vez el dia [DIA_DESAPARICION] de [MES_DESAPARICION] de [ANO_DESAPARICION], al [LUGAR_DESAPARICION], desconocido su paradero hasta el momento. </p> <p style="text-align: justify; color: #000000;"></p> <p style="text-align: center; color: #000000; text-decoration: underline; font-size: 14pt;"> <strong>Media filiaci&oacute;n</strong>. </p> <p style="text-align: center; color: #000000;"> Es de [ESTATURA_DESAPARECIDO] metros de estatura, complexi&oacute;n [COMPLEXION_DESAPARECIDO], pesa aproximadamente [PESO_DESAPARECIDO] kg, tez [TEZ_DESAPARECIDO], ceja [TIPOCEJA_DESAPARECIDO], ojos color [OJOSCOLOR_DESAPARECIDO], cabello [TAMANOCABELLO_DESAPARECIDO] color [COLORCABELLO_DESAPARECIDO]; como seña particular [SENAS_PARTICULARES_DESAPARECIDO]. </p> </td> </tr> </table> ',
+				'TEXTO' => '[NOMBRE_DESAPARECIDO] de [ANOS_DESAPARECIDO] años de edad.De acuerdo a la información proporcionada, fue visto por ultima vez el dia [DIA_DESAPARICION] de [MES_DESAPARICION] de [ANO_DESAPARICION], al [LUGAR_DESAPARICION], desconocido su paradero hasta el momento.Media filiación.Es de [ESTATURA_DESAPARECIDO] metros de estatura, complexión [COMPLEXION_DESAPARECIDO], pesa aproximadamente [PESO_DESAPARECIDO] kg, tez [TEZ_DESAPARECIDO], ceja [TIPOCEJA_DESAPARECIDO], ojos color [OJOSCOLOR_DESAPARECIDO], cabello [TAMANOCABELLO_DESAPARECIDO] color [COLORCABELLO_DESAPARECIDO]; como seña particular [SENAS_PARTICULARES_DESAPARECIDO].',
+				'PLANTILLAJUSTICIAMEXICALIID' => NULL,
+				'CLASIFICACIONDOCTOMEXICALIID' => NULL,
+				'PLANTILLAJUSTICIATIJUANAID' => NULL,
+				'CLASIFICACIONDOCTOTIJUANAID' => NULL,
+				'PLANTILLAJUSTICIAENSENADAID' => NULL,
+				'CLASIFICACIONDOCTOENSENADAID' => NULL,
+				'AREAPERICIALMEXICALIID' => NULL,
+				'INTERVENCIONMEXICALIID' => NULL,
+				'AREAPERICIALTIJUANAID' => NULL,
+				'INTERVENCIONTIJUANAID' => NULL,
+				'AREAPERICIALENSENADAID' => NULL,
+				'INTERVENCIONENSENADAID' => NULL,
+			),
 		];
 
 		$this->db->table('PLANTILLAS')->insertBatch($data);

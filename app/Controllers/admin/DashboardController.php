@@ -5553,12 +5553,48 @@ class DashboardController extends BaseController
 		$data->delitosModalidadFiltro = $this->_delitoModalidadModel->get_delitodescr($folio, $year);
 		//VICTIMA RASGOS
 		$data->mediaFiliacionVictima = $this->_folioMediaFiliacion->asObject()->where('FOLIOID', $folio)->where('PERSONAFISICAID', $victima)->first();
+		
+		if ($data->victima[0]['DESAPARECIDA'] == 'S' && $data->mediaFiliacionVictima) {
+			$colorOjos = $this->_ojoColorModel->asObject()->where('OJOCOLORID', $data->mediaFiliacionVictima->OJOCOLORID)->first();
+			$colorCabello = $this->_cabelloColorModel->asObject()->where('CABELLOCOLORID', $data->mediaFiliacionVictima->CABELLOCOLORID)->first();
+			$complexion = $this->_figuraModel->asObject()->where('FIGURAID', $data->mediaFiliacionVictima->FIGURAID)->first();
+			$colorPiel = $this->_pielColorModel->asObject()->where('PIELCOLORID', $data->mediaFiliacionVictima->PIELCOLORID)->first();
+			$cejasForma = $this->_cejaFormaModel->asObject()->where('CEJAFORMAID', $data->mediaFiliacionVictima->CEJAFORMAID)->first();
+			$cabelloTamano = $this->_cabelloTamanoModel->asObject()->where('CABELLOTAMANOID', $data->mediaFiliacionVictima->CABELLOTAMANOID)->first();
+
+			$data->plantilla = str_replace('[NOMBRE_DESAPARECIDO]', $data->victima[0]['NOMBRE'] . ' ' . ($data->victima[0]['PRIMERAPELLIDO'] ? $data->victima[0]['PRIMERAPELLIDO'] : '') . ' ' . ($data->victima[0]['SEGUNDOAPELLIDO'] ? $data->victima[0]['SEGUNDOAPELLIDO'] : ''), $data->plantilla);
+			$data->plantilla = str_replace('[ANOS_DESAPARECIDO]', $data->victima[0]['EDADCANTIDAD'] ? $data->victima[0]['EDADCANTIDAD'] : '-', $data->plantilla);
+			$data->plantilla = str_replace('[DIA_DESAPARICION]', $data->mediaFiliacionVictima->FECHADESAPARICION ? date('d', strtotime($data->mediaFiliacionVictima->FECHADESAPARICION)) :'-', $data->plantilla);
+			$data->plantilla = str_replace('[MES_DESAPARICION]', $data->mediaFiliacionVictima->FECHADESAPARICION ? $meses[date('n', strtotime($data->mediaFiliacionVictima->FECHADESAPARICION)) - 1]:'', $data->plantilla);
+			$data->plantilla = str_replace('[ANO_DESAPARICION]', $data->mediaFiliacionVictima->FECHADESAPARICION?date('Y', strtotime($data->mediaFiliacionVictima->FECHADESAPARICION)): '', $data->plantilla);
+			$data->plantilla = str_replace('[LUGAR_DESAPARICION]',  $data->mediaFiliacionVictima->LUGARDESAPARICION ?  $data->mediaFiliacionVictima->LUGARDESAPARICION : '-', $data->plantilla);
+
+			$data->plantilla = str_replace('[ESTATURA_DESAPARECIDO]',  $data->mediaFiliacionVictima->ESTATURA ?  $data->mediaFiliacionVictima->ESTATURA : '-', $data->plantilla);
+			$data->plantilla = str_replace('[COMPLEXION_DESAPARECIDO]',  $complexion ?  $complexion->FIGURADESCR: '-', $data->plantilla);
+			$data->plantilla = str_replace('[PESO_DESAPARECIDO]',  $data->mediaFiliacionVictima->ESTATURA ?  $data->mediaFiliacionVictima->ESTATURA : '-', $data->plantilla);
+			$data->plantilla = str_replace('[TEZ_DESAPARECIDO]',  $colorPiel ?  $colorPiel->PIELCOLORDESCR : '-', $data->plantilla);
+			$data->plantilla = str_replace('[OJOSCOLOR_DESAPARECIDO]',  $colorOjos ?  $colorOjos->OJOCOLORDESCR : '-', $data->plantilla);
+			$data->plantilla = str_replace('[COLORCABELLO_DESAPARECIDO]',  $colorCabello ?  $colorCabello->CABELLOCOLORDESCR : '-', $data->plantilla);
+			$data->plantilla = str_replace('[TIPOCEJA_DESAPARECIDO]',  $cejasForma ?  $cejasForma->CEJAFORMADESCR : '-', $data->plantilla);
+			$data->plantilla = str_replace('[SENAS_PARTICULARES_DESAPARECIDO]',  $data->mediaFiliacionVictima->SENASPARTICULARES ?  $data->mediaFiliacionVictima->SENASPARTICULARES : '-', $data->plantilla);
+			$data->plantilla = str_replace('[TAMANOCABELLO_DESAPARECIDO]',  $cabelloTamano ?  $cabelloTamano->CABELLOTAMANODESCR : '-', $data->plantilla);
+			
+			if ( $data->victima[0]['FOTO']) {
+				$file_info = new \finfo(FILEINFO_MIME_TYPE);
+				$type = $file_info->buffer($data->victima[0]['FOTO']);
+				$data->victima[0]['FOTO'] = 'data:' . $type . ';base64,' . base64_encode($data->victima[0]['FOTO']);	
+				if ($type == 'image/png' || $type == 'image/jpg' || $type == 'image/jpeg') {
+					$data->plantilla = str_replace('[IMAGEN_DESAPARECIDO]',  "<img src='".$data->victima[0]['FOTO']."'></img>", $data->plantilla);
+				}		
+			}
+		}
 		if ($data->mediaFiliacionVictima) {
 			$colorOjos = $this->_ojoColorModel->asObject()->where('OJOCOLORID', $data->mediaFiliacionVictima->OJOCOLORID)->first();
 			$colorCabello = $this->_cabelloColorModel->asObject()->where('CABELLOCOLORID', $data->mediaFiliacionVictima->CABELLOCOLORID)->first();
 			$complexion = $this->_figuraModel->asObject()->where('FIGURAID', $data->mediaFiliacionVictima->FIGURAID)->first();
 			$colorPiel = $this->_pielColorModel->asObject()->where('PIELCOLORID', $data->mediaFiliacionVictima->PIELCOLORID)->first();
 			$cejasForma = $this->_cejaFormaModel->asObject()->where('CEJAFORMAID', $data->mediaFiliacionVictima->CEJAFORMAID)->first();
+			$cabelloTamano = $this->_cabelloTamanoModel->asObject()->where('CABELLOTAMANOID', $data->mediaFiliacionVictima->CABELLOTAMANOID)->first();
 
 			$data->plantilla = str_replace('[VICTIMA_ESTATURA]',  $data->mediaFiliacionVictima->ESTATURA ?  $data->mediaFiliacionVictima->ESTATURA : '-', $data->plantilla);
 			$data->plantilla = str_replace('[VICTIMA_PIEL]',  $colorPiel ?  $colorPiel->PIELCOLORDESCR : '-', $data->plantilla);
@@ -5566,6 +5602,8 @@ class DashboardController extends BaseController
 			$data->plantilla = str_replace('[VICTIMA_COLOR_CABELLO]',  $colorCabello ?  $colorCabello->CABELLOCOLORDESCR : '-', $data->plantilla);
 			$data->plantilla = str_replace('[VICTIMA_CEJAS_FORMAS]',  $cejasForma ?  $cejasForma->CEJAFORMADESCR : '-', $data->plantilla);
 			$data->plantilla = str_replace('[VICTIMA_SENAS]',  $data->mediaFiliacionVictima->SENASPARTICULARES ?  $data->mediaFiliacionVictima->SENASPARTICULARES : '-', $data->plantilla);
+
+			
 		}
 
 		$relacionfisfis = $this->_relacionIDOModel->asObject()->where('FOLIOID', $data->folio->FOLIOID)->where('ANO', $data->folio->ANO)->where('PERSONAFISICAIDVICTIMA', $victima)->where('PERSONAFISICAIDIMPUTADO', $imputado)->first();
@@ -6228,6 +6266,41 @@ class DashboardController extends BaseController
 
 			//VICTIMA RASGOS
 			$data->mediaFiliacionVictima = $this->_folioMediaFiliacion->asObject()->where('FOLIOID', $folio)->where('PERSONAFISICAID', $victima)->first();
+			if ($data->victima[0]['DESAPARECIDA'] == 'S' && $data->mediaFiliacionVictima) {
+				$colorOjos = $this->_ojoColorModel->asObject()->where('OJOCOLORID', $data->mediaFiliacionVictima->OJOCOLORID)->first();
+				$colorCabello = $this->_cabelloColorModel->asObject()->where('CABELLOCOLORID', $data->mediaFiliacionVictima->CABELLOCOLORID)->first();
+				$complexion = $this->_figuraModel->asObject()->where('FIGURAID', $data->mediaFiliacionVictima->FIGURAID)->first();
+				$colorPiel = $this->_pielColorModel->asObject()->where('PIELCOLORID', $data->mediaFiliacionVictima->PIELCOLORID)->first();
+				$cejasForma = $this->_cejaFormaModel->asObject()->where('CEJAFORMAID', $data->mediaFiliacionVictima->CEJAFORMAID)->first();
+				$cabelloTamano = $this->_cabelloTamanoModel->asObject()->where('CABELLOTAMANOID', $data->mediaFiliacionVictima->CABELLOTAMANOID)->first();
+	
+				$data->plantilla = str_replace('[NOMBRE_DESAPARECIDO]', $data->victima[0]['NOMBRE'] . ' ' . ($data->victima[0]['PRIMERAPELLIDO'] ? $data->victima[0]['PRIMERAPELLIDO'] : '') . ' ' . ($data->victima[0]['SEGUNDOAPELLIDO'] ? $data->victima[0]['SEGUNDOAPELLIDO'] : ''), $data->plantilla);
+				$data->plantilla = str_replace('[ANOS_DESAPARECIDO]', $data->victima[0]['EDADCANTIDAD'] ? $data->victima[0]['EDADCANTIDAD'] : '-', $data->plantilla);
+				$data->plantilla = str_replace('[DIA_DESAPARICION]', $data->mediaFiliacionVictima->FECHADESAPARICION ? date('d', strtotime($data->mediaFiliacionVictima->FECHADESAPARICION)) :'-', $data->plantilla);
+				$data->plantilla = str_replace('[MES_DESAPARICION]', $data->mediaFiliacionVictima->FECHADESAPARICION ? $meses[date('n', strtotime($data->mediaFiliacionVictima->FECHADESAPARICION)) - 1]:'', $data->plantilla);
+				$data->plantilla = str_replace('[ANO_DESAPARICION]', $data->mediaFiliacionVictima->FECHADESAPARICION?date('Y', strtotime($data->mediaFiliacionVictima->FECHADESAPARICION)): '', $data->plantilla);
+				$data->plantilla = str_replace('[LUGAR_DESAPARICION]',  $data->mediaFiliacionVictima->LUGARDESAPARICION ?  $data->mediaFiliacionVictima->LUGARDESAPARICION : '-', $data->plantilla);
+	
+				$data->plantilla = str_replace('[ESTATURA_DESAPARECIDO]',  $data->mediaFiliacionVictima->ESTATURA ?  $data->mediaFiliacionVictima->ESTATURA : '-', $data->plantilla);
+				$data->plantilla = str_replace('[COMPLEXION_DESAPARECIDO]',  $complexion ?  $complexion->FIGURADESCR: '-', $data->plantilla);
+				$data->plantilla = str_replace('[PESO_DESAPARECIDO]',  $data->mediaFiliacionVictima->ESTATURA ?  $data->mediaFiliacionVictima->ESTATURA : '-', $data->plantilla);
+				$data->plantilla = str_replace('[TEZ_DESAPARECIDO]',  $colorPiel ?  $colorPiel->PIELCOLORDESCR : '-', $data->plantilla);
+				$data->plantilla = str_replace('[OJOSCOLOR_DESAPARECIDO]',  $colorOjos ?  $colorOjos->OJOCOLORDESCR : '-', $data->plantilla);
+				$data->plantilla = str_replace('[COLORCABELLO_DESAPARECIDO]',  $colorCabello ?  $colorCabello->CABELLOCOLORDESCR : '-', $data->plantilla);
+				$data->plantilla = str_replace('[TIPOCEJA_DESAPARECIDO]',  $cejasForma ?  $cejasForma->CEJAFORMADESCR : '-', $data->plantilla);
+				$data->plantilla = str_replace('[SENAS_PARTICULARES_DESAPARECIDO]',  $data->mediaFiliacionVictima->SENASPARTICULARES ?  $data->mediaFiliacionVictima->SENASPARTICULARES : '-', $data->plantilla);
+				$data->plantilla = str_replace('[TAMANOCABELLO_DESAPARECIDO]',  $cabelloTamano ?  $cabelloTamano->CABELLOTAMANODESCR : '-', $data->plantilla);
+				
+				if ( $data->victima[0]['FOTO']) {
+					$file_info = new \finfo(FILEINFO_MIME_TYPE);
+					$type = $file_info->buffer($data->victima[0]['FOTO']);
+					$data->victima[0]['FOTO'] = 'data:' . $type . ';base64,' . base64_encode($data->victima[0]['FOTO']);	
+					if ($type == 'image/png' || $type == 'image/jpg' || $type == 'image/jpeg') {
+						$data->plantilla = str_replace('[IMAGEN_DESAPARECIDO]',  "<img src='".$data->victima[0]['FOTO']."'></img>", $data->plantilla);
+					}		
+				}
+			}
+			
 			if ($data->mediaFiliacionVictima) {
 				$colorOjos = $this->_ojoColorModel->asObject()->where('OJOCOLORID', $data->mediaFiliacionVictima->OJOCOLORID)->first();
 				$colorCabello = $this->_cabelloColorModel->asObject()->where('CABELLOCOLORID', $data->mediaFiliacionVictima->CABELLOCOLORID)->first();
@@ -6428,7 +6501,7 @@ class DashboardController extends BaseController
 					'AGENTE_REGISTRO' =>  session('ID')
 
 				);
-				if ($this->request->getPost('titulo') == "DENUNCIA ANONIMA") {
+				if ($this->request->getPost('titulo') == "DENUNCIA ANONIMA" || $this->request->getPost('titulo') == "PERSONA DESAPARECIDA") {
 					$dataFolioDoc = array(
 						'FOLIOID' => $folio,
 						'NUMEROEXPEDIENTE' => $expediente ? $expediente : null,
@@ -6465,8 +6538,8 @@ class DashboardController extends BaseController
 
 				);
 
-				if ($this->request->getPost('titulo') == "DENUNCIA ANONIMA") {
-					$pdf = $this->_generatePDF($placeholder);
+				if ($this->request->getPost('titulo') == "DENUNCIA ANONIMA" || $this->request->getPost('titulo') == "PERSONA DESAPARECIDA") {
+					$this->request->getPost('titulo') == "DENUNCIA ANONIMA" ? $pdf = $this->_generatePDF($placeholder) : $pdf = $this->_generatePDFPersonaFisica($placeholder);
 					$dataFolioDoc = array(
 						'FOLIOID' => $folio,
 						'NUMEROEXPEDIENTE' => $expediente ? $expediente : null,
@@ -6815,6 +6888,30 @@ class DashboardController extends BaseController
 			$width = $fontMetrics->getTextWidth($text, $font, $size);
 			$canvas->text($x - 60 - $width, $y - 50, $text, $font, $size, array(0, 0, 0));
 		});
+		return $dompdf->output();
+	}
+
+	private function _generatePDFPersonaFisica($placeholder)
+	{
+		$arrContextOptions = array(
+			"ssl" => array(
+				"verify_peer" => false,
+				"verify_peer_name" => false,
+			),
+		);
+
+		$data = (object)array();
+		$data->placeholder = $placeholder;
+		$data->image1 = base64_encode(file_get_contents(base_url('assets/img/header_desaparecidos.png'), false, stream_context_create($arrContextOptions)));
+
+		$options = new Options();
+		$options->set('isRemoteEnabled', true);
+		$options->set('isPhpEnabled', true);
+		$options->set('defaultFont', 'Arial');
+		$dompdf = new Dompdf($options);
+		$dompdf->loadHtml(view('doc_template/desaparecido_template', ['data' => $data]));
+		$dompdf->setPaper('A4', 'landscape');
+		$dompdf->render();
 		return $dompdf->output();
 	}
 }

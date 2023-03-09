@@ -52,6 +52,12 @@
 		</div>
 	</div>
 </section>
+<?php if ($body_data->foliorow[0]->AGENTEASIGNADOID != NULL) { ?>
+	<script>
+		document.getElementById('subirDocumento').disabled = true;
+		document.getElementById('generarDocumento').disabled = true;
+	</script>
+<?php } ?>
 <?php if ($body_data->foliorow[0]->TIPODENUNCIA == "DA") { ?>
 	<script>
 		document.getElementById('enviarDocumento').disabled = true;

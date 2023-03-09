@@ -37,8 +37,8 @@
 
 									<tr>
 										<td class="text-center"><?= $folio->FOLIOID ?></td>
-										<td class="text-center"><?= $folio->FECHAREGISTRO ?></td>
-										<td class="text-center"><?= $folio->FECHASALIDA ?></td>
+										<td class="text-center"><?= date('d-m-Y H:i:s', strtotime($folio->FECHAREGISTRO)) ?></td>
+										<td class="text-center"><?= date('d-m-Y H:i:s', strtotime($folio->FECHASALIDA)) ?></td>
 										<td class="text-center"><?= $expedienteid ? $expedienteid : '' ?></td>
 										<td class="text-center"><?= $folio->HECHODELITO ?></td>
 										<td class="text-center"><?= $folio->STATUS . ' ' . $folio->TIPOEXPEDIENTEDESCR ?></td>
