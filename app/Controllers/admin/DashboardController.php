@@ -1915,13 +1915,13 @@ class DashboardController extends BaseController
 					$folioRow['ESTADOJURIDICOEXPEDIENTEID'] = (string) 13;
 					$folioRow['TIPOEXPEDIENTEID'] = (int)$tiposExpedienteId;
 
-					$expedienteCreado = $this->_createExpediente($folioRow);
+					// $expedienteCreado = $this->_createExpediente($folioRow);
 					// var_dump($expedienteCreado);exit;
 
-					// $expedienteCreado = (object)array(
-					// 	'status' => 201,
-					// 	'EXPEDIENTEID' => '402002202200323'
-					// );
+					$expedienteCreado = (object)array(
+						'status' => 201,
+						'EXPEDIENTEID' => '102004202390035'
+					);
 					// return json_encode(['info' => $expedienteCreado]);
 
 					unset($folioRow['OFICINAIDRESPONSABLE']);
@@ -1942,6 +1942,7 @@ class DashboardController extends BaseController
 						$update = $this->_folioModel->set($folioRow)->where('FOLIOID', $folio)->where('ANO', $year)->update();
 						$personasRelacionMysqlOracle = array();
 						try {
+							
 							foreach ($personas as $key => $persona) {
 								if ($persona['NOMBRE'] == 'QRR') {
 									$persona['NOMBRE'] = 'QUIEN RESULTE RESPONSABLE';
@@ -1950,24 +1951,26 @@ class DashboardController extends BaseController
 								}
 
 								$_persona = $this->_createPersonaFisica($expedienteCreado->EXPEDIENTEID, $persona, $municipio);
-								if ($_persona->status == 201) {
+								var_dump($_persona);
+								// if ($_persona->status == 201) {
 
-									$domicilios = $this->_folioPersonaFisicaDomicilioModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->where('PERSONAFISICAID', $persona['PERSONAFISICAID'])->findAll();
-									$mediaFiliacion = $this->_folioMediaFiliacion->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->where('PERSONAFISICAID', $persona['PERSONAFISICAID'])->first();
+								// 	$domicilios = $this->_folioPersonaFisicaDomicilioModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->where('PERSONAFISICAID', $persona['PERSONAFISICAID'])->findAll();
+								// 	$mediaFiliacion = $this->_folioMediaFiliacion->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->where('PERSONAFISICAID', $persona['PERSONAFISICAID'])->first();
 
-									$personasRelacionMysqlOracle[$persona['PERSONAFISICAID']] = ['calidad' => $persona['CALIDADJURIDICAID'], 'id_mysql' => $persona['PERSONAFISICAID'], 'id_oracle' => $_persona->PERSONAFISICAID];
+								// 	$personasRelacionMysqlOracle[$persona['PERSONAFISICAID']] = ['calidad' => $persona['CALIDADJURIDICAID'], 'id_mysql' => $persona['PERSONAFISICAID'], 'id_oracle' => $_persona->PERSONAFISICAID];
 
-									if ($persona['CALIDADJURIDICAID'] == '2') {
-										$_imputado = $this->_createExpImputado($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $municipio);
-									}
+								// 	if ($persona['CALIDADJURIDICAID'] == '2') {
+								// 		$_imputado = $this->_createExpImputado($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $municipio);
+								// 	}
 
-									foreach ($domicilios as $key => $domicilio) {
-										$_domicilio = $this->_createDomicilioPersonaFisica($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $domicilio, $municipio);
-									}
+								// 	foreach ($domicilios as $key => $domicilio) {
+								// 		$_domicilio = $this->_createDomicilioPersonaFisica($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $domicilio, $municipio);
+								// 	}
 
-									$_mediaFiliacion = $this->_createPersonaFisicaMediaFilicacion($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $mediaFiliacion, $municipio);
-								}
+								// 	$_mediaFiliacion = $this->_createPersonaFisicaMediaFilicacion($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $mediaFiliacion, $municipio);
+								// }
 							}
+							exit;
 
 							//Relacion Persona Física Imputado delito
 							if (count($fisImpDelito) > 0) {
@@ -3455,8 +3458,8 @@ class DashboardController extends BaseController
 		curl_close($ch);
 		// var_dump($data);
 		// var_dump($result);exit;
-		// return $result;
-		return json_decode($result);
+		return $result;
+		// return json_decode($result);
 	}
 	public function getTimeVideo()
 	{
