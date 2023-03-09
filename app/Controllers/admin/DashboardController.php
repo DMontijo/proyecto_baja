@@ -1939,7 +1939,8 @@ class DashboardController extends BaseController
 						$folioRow['EXPEDIENTEID'] = $expedienteCreado->EXPEDIENTEID;
 						$folioRow['FECHASALIDA'] = date('Y-m-d H:i:s');
 
-						$update = $this->_folioModel->set($folioRow)->where('FOLIOID', $folio)->where('ANO', $year)->update();
+						// $update = $this->_folioModel->set($folioRow)->where('FOLIOID', $folio)->where('ANO', $year)->update();
+						$update = true;
 						$personasRelacionMysqlOracle = array();
 						try {
 							
@@ -1977,6 +1978,7 @@ class DashboardController extends BaseController
 										$relacion = $personasRelacionMysqlOracle[$imputadodelito['PERSONAFISICAID']];
 										$_fisimpdelito = $this->_createFisImpDelito($expedienteCreado->EXPEDIENTEID, $imputadodelito, $relacion['id_oracle'], $municipio);
 									} catch (\Error $e) {
+										var_dump('Entro al catch de relacion');
 									}
 								}
 							}
