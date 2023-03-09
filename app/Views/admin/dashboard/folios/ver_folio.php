@@ -67,13 +67,13 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 				</div>
 			</div>
 		</div>
-		<!-- <div class="col-12 col-sm-6 col-md-4">
+		<div class="col-12 col-sm-6 col-md-4">
 			<div class="card rounded bg-white shadow" style="height: 240px;">
 				<div class="card-body">
 					<button id="videos-folio-btn" class="btn btn-primary btn-block h-100" role="button"><i class="fas fa-video fa-3x"></i><br><br> VIDEOS</button>
 				</div>
 			</div>
-		</div> -->
+		</div>
 	</div>
 	<script>
 		$("input").prop('disabled', true);
