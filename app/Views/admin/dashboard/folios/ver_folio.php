@@ -67,13 +67,13 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 				</div>
 			</div>
 		</div>
-		<div class="col-12 col-sm-6 col-md-4 d-none">
+		<!-- <div class="col-12 col-sm-6 col-md-4 d-none">
 			<div class="card rounded bg-white shadow" style="height: 240px;">
 				<div class="card-body">
 					<button id="videos-folio-btn" class="btn btn-primary btn-block h-100" role="button"><i class="fas fa-video fa-3x"></i><br><br> VIDEOS</button>
 				</div>
 			</div>
-		</div>
+		</div> -->
 	</div>
 	<script>
 		$("input").prop('disabled', true);
@@ -86,7 +86,7 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 		const buscar_nuevo_btn = document.querySelector('#buscar-nuevo-btn');
 		const info_folio_btn = document.querySelector('#info-folio-btn');
 		const documentos_folio_btn = document.querySelector('#documentos-folio-btn');
-		const videos_folio_btn = document.querySelector('#videos-folio-btn');
+		// const videos_folio_btn = document.querySelector('#videos-folio-btn');
 		const year_select = document.querySelector('#year_select');
 
 		const card1 = document.querySelector('#card1');
@@ -428,27 +428,27 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 			<?php } ?>
 		});
 
-		videos_folio_btn.addEventListener('click', () => {
-			data = {
-				'folio': inputFolio.value,
-				'year': year_select.value,
-			};
-			$.ajax({
-				data: data,
-				url: "<?= base_url('/data/get-link-from-call') ?>",
-				method: "POST",
-				dataType: "json",
-			}).done(function(data) {
-				console.log(data);
-			}).fail(function(jqXHR, textStatus) {
-				Swal.fire({
-					icon: 'error',
-					title: 'Hubo un error',
-					text: 'Contácte con soporte técnico',
-					confirmButtonColor: '#bf9b55',
-				})
-			});
-		});
+		// videos_folio_btn.addEventListener('click', () => {
+		// 	data = {
+		// 		'folio': inputFolio.value,
+		// 		'year': year_select.value,
+		// 	};
+		// 	$.ajax({
+		// 		data: data,
+		// 		url: "<?= base_url('/data/get-link-from-call') ?>",
+		// 		method: "POST",
+		// 		dataType: "json",
+		// 	}).done(function(data) {
+		// 		console.log(data);
+		// 	}).fail(function(jqXHR, textStatus) {
+		// 		Swal.fire({
+		// 			icon: 'error',
+		// 			title: 'Hubo un error',
+		// 			text: 'Contácte con soporte técnico',
+		// 			confirmButtonColor: '#bf9b55',
+		// 		})
+		// 	});
+		// });
 
 		function viewObjetoInvolucrado(objetoid) {
 			$('#folio_objetos_ver').modal('show');
