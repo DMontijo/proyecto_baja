@@ -77,16 +77,6 @@
 			<?php } ?>
 			<?php foreach ($body_data->rolPermiso as $permiso) { ?>
 
-				<?php if ($permiso->PERMISOID == 11) { ?>
-					<li class="c-sidebar-nav-item" id="nav-bandeja" name="nav-bandeja">
-						<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url('admin/dashboard/bandeja') ?>">
-							<i class="fas fa-solid fa-inbox c-sidebar-nav-icon"></i> Bandeja remisión
-						</a>
-					</li>
-				<?php } ?>
-			<?php } ?>
-			<?php foreach ($body_data->rolPermiso as $permiso) { ?>
-
 				<?php if ($permiso->PERMISOID == 3) { ?>
 
 					<li class="c-sidebar-nav-item" id="nav-folios" name="nav-folios">
@@ -96,7 +86,6 @@
 					</li>
 				<?php } ?>
 			<?php } ?>
-
 			<?php foreach ($body_data->rolPermiso as $permiso) { ?>
 
 				<?php if ($permiso->PERMISOID == 2) { ?>
@@ -109,7 +98,16 @@
 
 				<?php } ?>
 			<?php } ?>
+			<?php foreach ($body_data->rolPermiso as $permiso) { ?>
 
+				<?php if ($permiso->PERMISOID == 11) { ?>
+					<li class="c-sidebar-nav-item" id="nav-bandeja" name="nav-bandeja">
+						<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url('admin/dashboard/bandeja') ?>">
+							<i class="fas fa-solid fa-inbox c-sidebar-nav-icon"></i> Bandeja remisión
+						</a>
+					</li>
+				<?php } ?>
+			<?php } ?>
 			<?php foreach ($body_data->rolPermiso as $permiso) { ?>
 
 				<?php if ($permiso->PERMISOID == 4) { ?>
@@ -202,7 +200,7 @@
 			</button>
 			<button class="c-header-toggler c-class-toggler mfs-3 d-sm-down-none font-weight-bold" type="button" data-target="#sidebar" data-class="c-sidebar-lg-show" responsive="true">
 				<?php $session = session(); ?>
-				BIENVENIDO <?= $session->NOMBRE ?> <?= $session->APELLIDO_PATERNO ?> <?= $session->APELLIDO_MATERNO ?> | <?= $session->rol->NOMBRE_ROL?>
+				BIENVENIDO <?= $session->NOMBRE ?> <?= $session->APELLIDO_PATERNO ?> <?= $session->APELLIDO_MATERNO ?> | <?= $session->rol->NOMBRE_ROL ?>
 			</button>
 			<ul class="c-header-nav ml-auto mr-2">
 				<!-- <li class="c-header-nav-item dropdown">
