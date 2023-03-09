@@ -1978,11 +1978,9 @@ class DashboardController extends BaseController
 										$relacion = $personasRelacionMysqlOracle[$imputadodelito['PERSONAFISICAID']];
 										$_fisimpdelito = $this->_createFisImpDelito($expedienteCreado->EXPEDIENTEID, $imputadodelito, $relacion['id_oracle'], $municipio);
 									} catch (\Error $e) {
-										var_dump('Entro al catch de relacion');
 									}
 								}
 							}
-							exit;
 
 							//Relacion Victima Imputado
 							if (count($relacionFisFis) > 0) {
@@ -2008,10 +2006,13 @@ class DashboardController extends BaseController
 												}
 											}
 										}
+										var_dump('Dentro de try de fisfis');
 									} catch (\Error $e) {
+										var_dump('Entro a catch de fisfis');
 									}
 								}
 							}
+							exit;
 
 							// Relacion Persona Física Imputado delito
 							if (count($parentescos) > 0) {
