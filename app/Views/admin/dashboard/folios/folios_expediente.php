@@ -43,7 +43,7 @@
 										<td class="text-center"><?= $folio->HECHODELITO ?></td>
 										<td class="text-center"><?= $folio->STATUS . ' ' . $folio->TIPOEXPEDIENTEDESCR ?></td>
 										<td class="text-center"><?= $folio->AREADESCR ?></td>
-										<td class="text-center"><?= $folio->NOMBRE ?> <?= $folio->APELLIDO_PATERNO ?> <?= $folio->APELLIDO_MATERNO ?></td>
+										<td class="text-center"><?= $folio->USUARIONOMBRE ?> <?= $folio->APELLIDO_PATERNO ?> <?= $folio->APELLIDO_MATERNO ?></td>
 										<!-- <td class="text-center"><button type="button" class="btn btn-primary" onclick="viewVideo(<?= $folio->ANO ?>,<?= $folio->FOLIOID ?>)"><i class="fas fa-video"></i></button></td> -->
 									</tr>
 								<?php } ?>
