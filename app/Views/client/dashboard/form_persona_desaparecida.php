@@ -81,7 +81,7 @@
 		<h5 class="text-center mb-3 fw-bold">DOMICILIO ACTUAL DE LA PERSONA DESAPARECIDA</h5>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="pais_des" class="form-label fw-bold input-required">País</label>
+		<label for="pais_des" class="form-label fw-bold">País</label>
 		<select class="form-select" id="pais_des" name="pais_des">
 			<?php foreach ($body_data->paises as $index => $pais) { ?>
 				<option value="<?= $pais->ISO_2 ?>" <?= $pais->ISO_2 == 'MX' ? 'selected' : '' ?>> <?= mb_strtoupper($pais->NAME, 'UTF-8') ?> </option>
@@ -89,7 +89,7 @@
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="estado_des" class="form-label fw-bold input-required">Estado</label>
+		<label for="estado_des" class="form-label fw-bold">Estado</label>
 		<select class="form-select" id="estado_des" name="estado_des">
 			<option selected disabled value="">Selecciona el estado</option>
 			<?php foreach ($body_data->estados as $index => $estado) { ?>
@@ -98,19 +98,19 @@
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="municipio_des" class="form-label fw-bold input-required">Municipio</label>
+		<label for="municipio_des" class="form-label fw-bold">Municipio</label>
 		<select class="form-select" id="municipio_des" name="municipio_des">
 			<option selected disabled value="">Selecciona el municipio</option>
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="localidad_des" class="form-label fw-bold input-required">Localidad</label>
+		<label for="localidad_des" class="form-label fw-bold">Localidad</label>
 		<select class="form-select" id="localidad_des" name="localidad_des">
 			<option selected disabled value="">Selecciona la localidad</option>
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="colonia_des_input" class="form-label fw-bold input-required">Colonia</label>
+		<label for="colonia_des_input" class="form-label fw-bold">Colonia</label>
 		<select class="form-select" id="colonia_des" name="colonia_des">
 			<option selected disabled value="">Selecciona la colonia</option>
 		</select>
@@ -122,11 +122,11 @@
 		<input type="number" class="form-control" id="cp_des" name="cp_des" maxlength="10">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="calle_des" class="form-label fw-bold input-required">Calle</label>
+		<label for="calle_des" class="form-label fw-bold">Calle</label>
 		<input type="text" class="form-control" id="calle_des" name="calle_des" maxlength="100">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="numero_ext_des" class="form-label fw-bold input-required" id="lblExterior_des">Número exterior</label>
+		<label for="numero_ext_des" class="form-label fw-bold" id="lblExterior_des">Número exterior</label>
 		<input type="text" class="form-control" id="numero_ext_des" name="numero_ext_des" maxlength="10">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">

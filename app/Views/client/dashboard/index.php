@@ -359,15 +359,7 @@
 				document.getElementById('datos_desaparecido').classList.add('step');
 				document.querySelector('#nombre_des').setAttribute('required', true);
 				document.querySelector('#apellido_paterno_des').setAttribute('required', true);
-				document.querySelector('#pais_des').setAttribute('required', true);
-				document.querySelector('#estado_des').setAttribute('required', true);
-				document.querySelector('#municipio_des').setAttribute('required', true);
-				document.querySelector('#colonia_des').setAttribute('required', true);
-				document.querySelector('#colonia_des_input').setAttribute('required', true);
-				document.querySelector('#localidad_des').setAttribute('required', true);
-				document.querySelector('#calle_des').setAttribute('required', true);
 				document.querySelector('#fecha_nacimiento_des').setAttribute('required', true);
-				document.querySelector('#numero_ext_des').setAttribute('required', true);
 				document.querySelector('#edad_des').setAttribute('required', true);
 				document.querySelector('#nacionalidad_des').setAttribute('required', true);
 				document.querySelector('#estado_origen_des').setAttribute('required', true);
@@ -598,14 +590,6 @@
 				if (
 					document.querySelector('#nombre_des').value != '' &&
 					document.querySelector('#apellido_paterno_des').value != '' &&
-					document.querySelector('#pais_des').value != '' &&
-					document.querySelector('#estado_des').value != '' &&
-					document.querySelector('#municipio_des').value != '' &&
-					document.querySelector('#localidad_des').value != '' &&
-					document.querySelector('#colonia_des').value != '' &&
-					document.querySelector('#colonia_des_input').value != '' &&
-					document.querySelector('#calle_des').value != '' &&
-					document.querySelector('#numero_ext_des').value != '' &&
 					document.querySelector('#fecha_nacimiento_des').value != '' &&
 					document.querySelector('#edad_des').value != '' &&
 					document.querySelector('input[name="sexo_des"]:checked') &&
