@@ -7,7 +7,8 @@ $expediente_guiones =  $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpedie
 ?>
 
 <div style="text-align:center;">
-	<p>Se ha generado un nuevo expediente</p>
+<h2>Gracias por denunciar, se te ha generado un nuevo expediente</h2>
+	<!-- <p>Se ha generado un nuevo expediente</p> -->
 	<br>
 	<h2><?= $expediente_guiones ?> /<?= $tipoexpediente ?> </h2>
 	<br>

@@ -2087,7 +2087,7 @@ class DashboardController extends BaseController
 									$autor = 3947;
 									$oficina = 394;
 								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
-									$autor = 10721;
+									$autor = 10872;
 									$oficina = 924;
 								}
 							}
@@ -2101,7 +2101,7 @@ class DashboardController extends BaseController
 									$oficina = 409;
 								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
 
-									$autor = 10721;
+									$autor = 10872;
 									$oficina = 924;
 								}
 							}
@@ -2141,7 +2141,7 @@ class DashboardController extends BaseController
 									$autor = 3947;
 									$oficina = 394;
 								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
-									$autor = 10721;
+									$autor = 10872;
 									$oficina = 924;
 								}
 							}
@@ -2155,7 +2155,7 @@ class DashboardController extends BaseController
 									$oficina = 409;
 								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
 
-									$autor = 10721;
+									$autor = 10872;
 									$oficina = 924;
 								}
 							}
@@ -2248,7 +2248,7 @@ class DashboardController extends BaseController
 									$documentos['AUTOR'] = 3947;
 									$documentos['OFICINAIDAUTOR'] = 394;
 								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
-									$documentos['AUTOR'] = 10721;
+									$documentos['AUTOR'] = 10872;
 									$documentos['OFICINAIDAUTOR'] = 924;
 								}
 							}
@@ -2260,7 +2260,7 @@ class DashboardController extends BaseController
 									$documentos['AUTOR'] = 4101;
 									$documentos['OFICINAIDAUTOR'] = 409;
 								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
-									$documentos['AUTOR'] = 10721;
+									$documentos['AUTOR'] = 10872;
 									$documentos['OFICINAIDAUTOR'] = 924;
 								}
 							}
@@ -2352,7 +2352,7 @@ class DashboardController extends BaseController
 									$autor = 3947;
 									$oficina = 394;
 								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
-									$autor = 10721;
+									$autor = 10872;
 									$oficina = 924;
 								}
 							}
@@ -2366,7 +2366,7 @@ class DashboardController extends BaseController
 									$oficina = 409;
 								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
 
-									$autor = 10721;
+									$autor = 10872;
 									$oficina = 924;
 								}
 							}
@@ -2408,7 +2408,7 @@ class DashboardController extends BaseController
 									$autor = 3947;
 									$oficina = 394;
 								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
-									$autor = 10721;
+									$autor = 10872;
 									$oficina = 924;
 								}
 							}
@@ -2422,7 +2422,7 @@ class DashboardController extends BaseController
 									$oficina = 409;
 								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
 
-									$autor = 10721;
+									$autor = 10872;
 									$oficina = 924;
 								}
 							}
@@ -2494,7 +2494,7 @@ class DashboardController extends BaseController
 									$documentos['AUTOR'] = 3947;
 									$documentos['OFICINAIDAUTOR'] = 394;
 								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
-									$documentos['AUTOR'] = 10721;
+									$documentos['AUTOR'] = 10872;
 									$documentos['OFICINAIDAUTOR'] = 924;
 								}
 							}
@@ -2506,7 +2506,7 @@ class DashboardController extends BaseController
 									$documentos['AUTOR'] = 4101;
 									$documentos['OFICINAIDAUTOR'] = 409;
 								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
-									$documentos['AUTOR'] = 10721;
+									$documentos['AUTOR'] = 10872;
 									$documentos['OFICINAIDAUTOR'] = 924;
 								}
 							}

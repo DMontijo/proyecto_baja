@@ -41,6 +41,7 @@ use App\Models\VehiculoServicioModel;
 use App\Models\VehiculoTipoModel;
 use App\Models\VehiculoVersionModel;
 use App\Models\FolioArchivoExternoModel;
+use App\Models\TipoExpedienteModel;
 
 class DashboardController extends BaseController
 {
@@ -82,6 +83,7 @@ class DashboardController extends BaseController
 	private $_vehiculoServicioModel;
 	private $_estadosExtranjeros;
 	private $_archivoExternoModel;
+	private $_tipoExpedienteModel;
 
 	public function __construct()
 	{
@@ -127,6 +129,7 @@ class DashboardController extends BaseController
 		$this->_vehiculoServicioModel = new VehiculoServicioModel();
 		$this->_estadosExtranjeros = new EstadoExtranjeroModel();
 		$this->_archivoExternoModel = new FolioArchivoExternoModel();
+		$this->_tipoExpedienteModel = new TipoExpedienteModel();
 	}
 
 	public function index()
@@ -143,6 +146,8 @@ class DashboardController extends BaseController
 		$lugares_sin = [];
 		$lugares_fuego = [];
 		$lugares_blanca = [];
+		$lugares_peticion = [];
+
 		foreach ($lugares as $lugar) {
 			if (strpos($lugar['HECHODESCR'], 'ARMA DE FUEGO')) {
 				array_push($lugares_fuego, (object) $lugar);
@@ -150,13 +155,19 @@ class DashboardController extends BaseController
 			if (strpos($lugar['HECHODESCR'], 'ARMA BLANCA')) {
 				array_push($lugares_blanca, (object) $lugar);
 			}
-			if (!strpos($lugar['HECHODESCR'], 'ARMA BLANCA') && !strpos($lugar['HECHODESCR'], 'ARMA DE FUEGO')) {
+			if (!strpos($lugar['HECHODESCR'], 'ARMA BLANCA') && !strpos($lugar['HECHODESCR'], 'ARMA DE FUEGO' )) {
 				array_push($lugares_sin, (object) $lugar);
 			}
-		}
-		$data->lugares = [];
-		$data->lugares = (object) array_merge($lugares_sin, $lugares_blanca, $lugares_fuego);
 
+			if ($lugar['HECHODESCR']=='CASA HABITACION' || $lugar['HECHODESCR']=='DESPOBLADO' ||$lugar['HECHODESCR']=='VIA PUBLICA' || $lugar['HECHODESCR']=='CENTRO ESCOLAR' ) {
+				array_push($lugares_peticion, (object) $lugar);
+			}
+		}
+		// $data->lugares  = [];
+		// $data->lugares =  (object) array_merge($lugares_peticion, $lugares_sin, $lugares_blanca, $lugares_fuego);
+		$lugares_merge = [];
+		$lugares_merge =  array_merge($lugares_peticion, $lugares_sin);
+		$data->lugares = (object)array_unique($lugares_merge,SORT_REGULAR);
 		$data->colorVehiculo = $this->_coloresVehiculoModel->asObject()->findAll();
 		$data->tipoVehiculo = $this->_tipoVehiculoModel->asObject()->orderBy('VEHICULOTIPODESCR', 'ASC')->findAll();
 		$data->delitosUsuarios = $this->_delitosUsuariosModel->asObject()->orderBy('DELITO', 'ASC')->findAll();
@@ -279,7 +290,7 @@ class DashboardController extends BaseController
 	{
 		$session = session();
 		$data = (object) array();
-		$data->folios = $this->_folioModel->asObject()->where('DENUNCIANTEID', $session->get('DENUNCIANTEID'))->findAll();
+		$data->folios = $this->_folioModel->asObject()->join('TIPOEXPEDIENTE','FOLIO.TIPOEXPEDIENTEID = TIPOEXPEDIENTE.TIPOEXPEDIENTEID', 'LEFT')->join('MUNICIPIO','FOLIO.MUNICIPIOASIGNADOID = MUNICIPIO.MUNICIPIOID AND MUNICIPIO.ESTADOID = 2', 'LEFT')->join('EMPLEADOS','FOLIO.OFICINAASIGNADOID = EMPLEADOS.OFICINAID AND FOLIO.AGENTEASIGNADOID = EMPLEADOS.EMPLEADOID AND FOLIO.MUNICIPIOASIGNADOID = EMPLEADOS.MUNICIPIOID', 'LEFT')->where('DENUNCIANTEID', $session->get('DENUNCIANTEID'))->findAll();
 		$this->_loadView('Mis denuncias', 'denuncias', '', $data, 'lista_denuncias');
 	}
 

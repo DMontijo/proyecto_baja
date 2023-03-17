@@ -1,6 +1,6 @@
 <div class="row">
 	<div class="col-12 mb-3">
-		<label for="es_menor" class="form-label fw-bold input-required">¿La víctima u ofendido del delito es menor de edad?</label>
+		<label for="es_menor" class="form-label fw-bold input-required">¿La víctima del delito es menor de edad?</label>
 		<br>
 		<div class="form-check form-check-inline">
 			<input class="form-check-input" type="radio" name="es_menor" value="SI" required>
@@ -12,7 +12,7 @@
 		</div>
 	</div>
 	<div class="col-12 mb-3 d-none" id="es_mayor">
-		<label for="es_tercera_edad" class="form-label fw-bold input-required">¿La víctima u ofendido es de la tercera edad?</label>
+		<label for="es_tercera_edad" class="form-label fw-bold input-required">¿La víctima es de la tercera edad?</label>
 		<br>
 		<div class="form-check form-check-inline">
 			<input class="form-check-input" type="radio" name="es_tercera_edad" value="SI" required>
@@ -24,7 +24,7 @@
 		</div>
 	</div>
 	<div class="col-12 mb-3 d-none" id="es_ofendido">
-		<label for="es_ofendido" class="form-label fw-bold input-required">¿Eres tú la víctima u ofendido?</label>
+		<label for="es_ofendido" class="form-label fw-bold input-required">¿Eres tú la víctima?</label>
 		<br>
 		<div class="form-check form-check-inline">
 			<input class="form-check-input" type="radio" name="es_ofendido" value="SI" required>
@@ -36,7 +36,7 @@
 		</div>
 	</div>
 	<div class="col-12 mb-3">
-		<label for="tiene_discapacidad" class="form-label fw-bold input-required">¿La víctima u ofendido del delito tiene alguna discapacidad?</label>
+		<label for="tiene_discapacidad" class="form-label fw-bold input-required">¿La víctima del delito tiene alguna discapacidad?</label>
 		<br>
 		<div class="form-check form-check-inline">
 			<input class="form-check-input" type="radio" name="tiene_discapacidad" value="SI" required>
@@ -48,7 +48,9 @@
 		</div>
 	</div>
 	<div class="col-12 mb-3">
-		<label for="es_vulnerable" class="form-label fw-bold input-required">La víctima u ofendido pertenece a algún grupo vulnerable?</label>
+		<label for="es_vulnerable" class="form-label fw-bold input-required">La víctima pertenece a algún grupo vulnerable?</label>
+		<a href="#" data-bs-toggle="tooltip" data-toggle="tooltip" data-bs-placement="right" title="Niños, niñas y adolescentes. Personas lesbianas, gays, bisexuales, transgéneros o intersexuales (LGBTI) Personas con algún tipo de discapacidad física o mental. Personas extranjeras."><i class="bi bi-info-circle-fill"></i></a>
+
 		<br>
 		<div class="form-check form-check-inline">
 			<input class="form-check-input" type="radio" name="es_vulnerable" value="SI" required>
@@ -76,7 +78,7 @@
 		</div>
 	</div>
 	<div class="col-12 mb-3">
-		<label for="lesiones" class="form-label fw-bold input-required">¿La víctima u ofendido presenta lesiones?</label>
+		<label for="lesiones" class="form-label fw-bold input-required">¿La víctima presenta lesiones?</label>
 		<br>
 		<div class="form-check form-check-inline">
 			<input class="form-check-input" type="radio" name="lesiones" value="SI" required>
@@ -100,7 +102,7 @@
 		</div>
 	</div>
 	<div class="col-12 mb-3">
-		<label for="esta_desaparecido" class="form-label fw-bold input-required">¿La víctima u ofendido se encuentra desaparecido?</label>
+		<label for="esta_desaparecido" class="form-label fw-bold input-required">¿La víctima se encuentra desaparecido?</label>
 		<br>
 		<div class="form-check form-check-inline">
 			<input class="form-check-input" type="radio" name="esta_desaparecido" value="SI" required>
@@ -113,7 +115,46 @@
 	</div>
 </div>
 
+<style>
+	/* .tooltip {
+		background-color: #092B47;
+		color: #fff;
+		border: none;
+		border-radius: 0;
+		padding: 8px;
+		font-size: 14px;
+		text-align: center !important;
+	}
+	 */
+	.tooltip-inner {
+		background-color: #092B47 !important;
+		color: white;
+		border-radius: 5%;
+		box-shadow: 0 0 5px black;
+	}
 
+	.bs-tooltip-top .arrow::before,
+	.bs-tooltip-auto[x-placement^="top"] .arrow::before {
+		border-top-color: #092B47 !important;
+	}
+
+	.bs-tooltip-right .arrow::before,
+	.bs-tooltip-auto[x-placement^="right"] .arrow::before {
+		border-right-color: #092B47 !important;
+	}
+
+
+	.bs-tooltip-bottom .arrow::before,
+	.bs-tooltip-auto[x-placement^="bottom"] .arrow::before {
+		border-bottom-color: #092B47 !important;
+	}
+
+
+	.bs-tooltip-left .arrow::before,
+	.bs-tooltip-auto[x-placement^="left"] .arrow::before {
+		border-left-color: #092B47 !important;
+	}
+</style>
 
 <script>
 	let radiosMenor = document.querySelectorAll('input[name="es_menor"]');
@@ -122,7 +163,9 @@
 	let radiosLesiones = document.querySelectorAll('input[name="lesiones"]');
 	let radiosVulnerable = document.querySelectorAll('input[name="es_vulnerable"]');
 
-
+	$(function() {
+		$('[data-toggle="tooltip"]').tooltip()
+	})
 	radiosMenor.forEach((radio) => {
 		radio.addEventListener('click', (e) => {
 			if (e.target.value === 'SI') {
@@ -151,17 +194,17 @@
 		})
 	});
 
-	radiosLesiones.forEach((radio) => {
-		radio.addEventListener('click', (e) => {
-			if (e.target.value === 'SI') {
-				document.querySelector('#lesiones_visibles_form').classList.remove('d-none');
-				// document.querySelector('#lesiones_visibles_form [value="NO"]').checked = false;
-			} else {
-				document.querySelector('#lesiones_visibles_form').classList.add('d-none');
-				document.querySelector('#lesiones_visibles_form [value="NO"]').checked = true;
-			}
-		})
-	});
+	// radiosLesiones.forEach((radio) => {
+	// 	radio.addEventListener('click', (e) => {
+	// 		if (e.target.value === 'SI') {
+	// 			document.querySelector('#lesiones_visibles_form').classList.remove('d-none');
+	// 			// document.querySelector('#lesiones_visibles_form [value="NO"]').checked = false;
+	// 		} else {
+	// 			document.querySelector('#lesiones_visibles_form').classList.add('d-none');
+	// 			document.querySelector('#lesiones_visibles_form [value="NO"]').checked = true;
+	// 		}
+	// 	})
+	// });
 
 	radiosVulnerable.forEach((radio) => {
 		radio.addEventListener('click', (e) => {

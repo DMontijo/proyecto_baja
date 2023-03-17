@@ -17,7 +17,7 @@
 			</div>
 			<div class="modal-footer justify-content-center">
 				<div class="d-grid gap-2 d-md-flex col-12 mx-auto justify-content-md-center">
-					<button type="button" class="btn btn-secondary btn-lg" data-bs-dismiss="modal">ACEPTAR</button>
+					<button type="button" class="btn btn-secondary btn-lg" style="background-color: #092B47;" data-bs-dismiss="modal">ACEPTAR</button>
 					<a class="btn btn-primary btn-lg btn-block" href="tel:911" role="button"><i class="bi bi-telephone"></i> 911</a>
 					<a class="btn btn-primary btn-lg btn-block" href="tel:8003432220" role="button"><i class="bi bi-telephone"></i> Anónima</a>
 				</div>

@@ -1,8 +1,13 @@
 <?= $this->extend('email_template/main_template') ?>
 <?= $this->section('body') ?>
+<?php
+$expediente_guiones = '';
+$arrayExpediente = str_split($expediente);
+$expediente_guiones =  $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
+?>
 <div style="font-size: 14px !important; font-weight: normal !important;font-family: Helvetica !important;">
 	<?php if ($status == 'EXPEDIENTE') { ?>
-		<p style="text-align:justify;">Estimado usuario, en la fecha en que se actúa el Centro de Denuncia Tecnológica de la Fiscalía General del Estado de Baja California, tiene por recibido su folio de atención <strong><?= $folio . '/' . $year ?></strong>, respecto del cual se generó <strong><?= $tipoexpediente ?></strong> número <strong><?= $expediente ?></strong>,
+		<p style="text-align:justify;">Estimado usuario, en la fecha en que se actúa el Centro de Denuncia Tecnológica de la Fiscalía General del Estado de Baja California, tiene por recibido su folio de atención <strong><?= $folio . '/' . $year ?></strong>, respecto del cual se generó <strong><?= $tipoexpediente ?></strong> número <strong><?= $expediente_guiones .'/'. $claveexpediente ?></strong>,
 			por el delito de <strong><?= $delito ?></strong> en contra de <strong><?= $imputado ?></strong>, en el que se ordenaron las diligencias consistentes en: <strong><?= $delito ?></strong>.</p>
 		<br>
 		<p style="text-align:justify;">

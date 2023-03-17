@@ -103,7 +103,7 @@
 	<div class="col-12 mt-4 mb-4">
 		<input class="form-check-input" type="checkbox" id="check_ubi" name="check_ubi">
 		<label class="form-check-label fw-bold" for="check_ubi">
-			Ubicación exacta
+			Ubicación exacta del delito
 		</label>
 		<input type="text" class="form-control d-none" id="latitud" name="latitud">
 

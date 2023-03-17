@@ -20,6 +20,9 @@
 								<th scope="col">DELITO MENCIONADO</th>
 								<th scope="col">ESTADO</th>
 								<th scope="col">EXPEDIENTE</th>
+								<th scope="col">MUNICIPIO REMITIDO</th>
+								<th scope="col">OFICINA REMITIDA</th>
+
 								<!-- <th scope="col">VIDEO</th> -->
 							</tr>
 						</thead>
@@ -28,7 +31,7 @@
 								$expedienteid = '';
 								if (isset($folio->EXPEDIENTEID)) {
 									$arrayExpediente = str_split($folio->EXPEDIENTEID);
-									$expedienteid = $arrayExpediente[0] . '-' . $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
+									$expediente_guiones =  $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
 								} ?>
 
 								<tr>
@@ -36,8 +39,11 @@
 									<td class="text-center"><?= $folio->ANO ?></td>
 									<td class="text-center"><?= $folio->FECHAREGISTRO ?></td>
 									<td class="text-center"><?= $folio->HECHODELITO ?></td>
-									<td class="text-center"><?= $folio->STATUS ?></td>
-									<td class="text-center"><?= $folio->EXPEDIENTEID ? ($expedienteid ? $expedienteid : '-') : '-' ?></td>
+									<td class="text-center"><?= $folio->STATUS == 'EXPEDIENTE' ? 'EN INVESTIGACIÓN': $folio->STATUS ?></td>
+									<td class="text-center"><?= $folio->EXPEDIENTEID ? ($expediente_guiones ? $expediente_guiones .'/'. $folio->TIPOEXPEDIENTECLAVE: '-')  : '-' ?></td>
+									<td class="text-center"><?= $folio->EXPEDIENTEID ? $folio->MUNICIPIODESCR : '-' ?></td>
+									<td class="text-center"><?= $folio->OFICINAID ? $folio->OFICINADESCR : '-' ?></td>
+
 									<!-- <td class="text-center">
 										<?php //if ($folio->EXPEDIENTEID) : 
 										?>
