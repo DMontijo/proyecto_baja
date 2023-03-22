@@ -155,19 +155,19 @@ class DashboardController extends BaseController
 			if (strpos($lugar['HECHODESCR'], 'ARMA BLANCA')) {
 				array_push($lugares_blanca, (object) $lugar);
 			}
-			if (!strpos($lugar['HECHODESCR'], 'ARMA BLANCA') && !strpos($lugar['HECHODESCR'], 'ARMA DE FUEGO' )) {
+			if (!strpos($lugar['HECHODESCR'], 'ARMA BLANCA') && !strpos($lugar['HECHODESCR'], 'ARMA DE FUEGO')) {
 				array_push($lugares_sin, (object) $lugar);
 			}
 
-			if ($lugar['HECHODESCR']=='CASA HABITACION' || $lugar['HECHODESCR']=='DESPOBLADO' ||$lugar['HECHODESCR']=='VIA PUBLICA' || $lugar['HECHODESCR']=='CENTRO ESCOLAR' ) {
+			if ($lugar['HECHODESCR'] == 'CASA HABITACION' || $lugar['HECHODESCR'] == 'DESPOBLADO' || $lugar['HECHODESCR'] == 'VIA PUBLICA' || $lugar['HECHODESCR'] == 'CENTRO ESCOLAR') {
 				array_push($lugares_peticion, (object) $lugar);
 			}
 		}
 		// $data->lugares  = [];
 		// $data->lugares =  (object) array_merge($lugares_peticion, $lugares_sin, $lugares_blanca, $lugares_fuego);
 		$lugares_merge = [];
-		$lugares_merge =  array_merge($lugares_peticion, $lugares_sin);
-		$data->lugares = (object)array_unique($lugares_merge,SORT_REGULAR);
+		$lugares_merge =  array_merge($lugares_peticion, $lugares_sin, $lugares_blanca, $lugares_fuego);
+		$data->lugares = (object)array_unique($lugares_merge, SORT_REGULAR);
 		$data->colorVehiculo = $this->_coloresVehiculoModel->asObject()->findAll();
 		$data->tipoVehiculo = $this->_tipoVehiculoModel->asObject()->orderBy('VEHICULOTIPODESCR', 'ASC')->findAll();
 		$data->delitosUsuarios = $this->_delitosUsuariosModel->asObject()->orderBy('DELITO', 'ASC')->findAll();
@@ -290,7 +290,7 @@ class DashboardController extends BaseController
 	{
 		$session = session();
 		$data = (object) array();
-		$data->folios = $this->_folioModel->asObject()->join('TIPOEXPEDIENTE','FOLIO.TIPOEXPEDIENTEID = TIPOEXPEDIENTE.TIPOEXPEDIENTEID', 'LEFT')->join('MUNICIPIO','FOLIO.MUNICIPIOASIGNADOID = MUNICIPIO.MUNICIPIOID AND MUNICIPIO.ESTADOID = 2', 'LEFT')->join('EMPLEADOS','FOLIO.OFICINAASIGNADOID = EMPLEADOS.OFICINAID AND FOLIO.AGENTEASIGNADOID = EMPLEADOS.EMPLEADOID AND FOLIO.MUNICIPIOASIGNADOID = EMPLEADOS.MUNICIPIOID', 'LEFT')->where('DENUNCIANTEID', $session->get('DENUNCIANTEID'))->findAll();
+		$data->folios = $this->_folioModel->asObject()->join('TIPOEXPEDIENTE', 'FOLIO.TIPOEXPEDIENTEID = TIPOEXPEDIENTE.TIPOEXPEDIENTEID', 'LEFT')->join('MUNICIPIO', 'FOLIO.MUNICIPIOASIGNADOID = MUNICIPIO.MUNICIPIOID AND MUNICIPIO.ESTADOID = 2', 'LEFT')->join('EMPLEADOS', 'FOLIO.OFICINAASIGNADOID = EMPLEADOS.OFICINAID AND FOLIO.AGENTEASIGNADOID = EMPLEADOS.EMPLEADOID AND FOLIO.MUNICIPIOASIGNADOID = EMPLEADOS.MUNICIPIOID', 'LEFT')->where('DENUNCIANTEID', $session->get('DENUNCIANTEID'))->findAll();
 		$this->_loadView('Mis denuncias', 'denuncias', '', $data, 'lista_denuncias');
 	}
 
@@ -321,11 +321,11 @@ class DashboardController extends BaseController
 				'HECHONARRACION' => $this->request->getPost('descripcion_breve') != '' ? $this->request->getPost('descripcion_breve') : NULL,
 				'HECHODELITO' => $this->request->getPost('delito'),
 				'TIPODENUNCIA' => 'VD',
-				'HECHOCOORDENADAX'=> $this->request->getPost('longitud'),
-				'HECHOCOORDENADAY'=> $this->request->getPost('latitud'),
+				'HECHOCOORDENADAX' => $this->request->getPost('longitud'),
+				'HECHOCOORDENADAY' => $this->request->getPost('latitud'),
 
 			];
-		}else{
+		} else {
 			$dataFolio = [
 				'FOLIOID' => $FOLIOID,
 				'ANO' => $year,
@@ -348,7 +348,7 @@ class DashboardController extends BaseController
 				'TIPODENUNCIA' => 'VD',
 			];
 		}
-	
+
 		$colonia = $this->_coloniasModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $this->request->getPost('municipio'))->where('LOCALIDADID', $this->request->getPost('localidad'))->where('COLONIAID', $this->request->getPost('colonia_select'))->first();
 
 		if ($this->request->getPost('colonia_select')) {
@@ -871,7 +871,7 @@ class DashboardController extends BaseController
 			$data['COLONIADESCR'] = $colonia->COLONIADESCR;
 		};
 		if ($data['COLONIAID'] != null) {
-		
+
 			if ($data['MUNICIPIOID']) {
 				try {
 					$colonia = $this->_coloniasModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data['MUNICIPIOID'])->where('LOCALIDADID',  $data['LOCALIDADID'])->where('COLONIAID', $data['COLONIAID'])->first();
