@@ -14,7 +14,7 @@
 		<input type="text" class="form-control" id="apellido_materno_des" name="apellido_materno_des" maxlength="50">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="fecha_nacimiento_des" class="form-label fw-bold input-required">Fecha de nacimiento</label>
+		<label for="fecha_nacimiento_des" class="form-label fw-bold">Fecha de nacimiento</label>
 		<input type="date" class="form-control" id="fecha_nacimiento_des" name="fecha_nacimiento_des" max="<?= date("Y-m-d") ?>">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
