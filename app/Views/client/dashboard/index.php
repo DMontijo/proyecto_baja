@@ -312,19 +312,19 @@
 
 				document.querySelector('#nombre_menor').setAttribute('required', true);
 				document.querySelector('#apellido_paterno_menor').setAttribute('required', true);
-				document.querySelector('#pais_menor').setAttribute('required', true);
-				document.querySelector('#estado_menor').setAttribute('required', true);
-				document.querySelector('#municipio_menor').setAttribute('required', true);
-				document.querySelector('#colonia_menor').setAttribute('required', true);
-				document.querySelector('#colonia_menor_input').setAttribute('required', true);
-				document.querySelector('#localidad_menor').setAttribute('required', true);
-				document.querySelector('#calle_menor').setAttribute('required', true);
-				document.querySelector('#numero_ext_menor').setAttribute('required', true);
-				document.querySelector('#fecha_nacimiento_menor').setAttribute('required', true);
-				document.querySelector('#edad_menor').setAttribute('required', true);
-				document.querySelector('#nacionalidad_menor').setAttribute('required', true);
-				document.querySelector('#estado_origen_menor').setAttribute('required', true);
-				document.querySelector('#municipio_origen_menor').setAttribute('required', true);
+				// document.querySelector('#pais_menor').setAttribute('required', true);
+				// document.querySelector('#estado_menor').setAttribute('required', true);
+				// document.querySelector('#municipio_menor').setAttribute('required', true);
+				// document.querySelector('#colonia_menor').setAttribute('required', true);
+				// document.querySelector('#colonia_menor_input').setAttribute('required', true);
+				// document.querySelector('#localidad_menor').setAttribute('required', true);
+				// document.querySelector('#calle_menor').setAttribute('required', true);
+				// document.querySelector('#numero_ext_menor').setAttribute('required', true);
+				// document.querySelector('#fecha_nacimiento_menor').setAttribute('required', true);
+				// document.querySelector('#edad_menor').setAttribute('required', true);
+				// document.querySelector('#nacionalidad_menor').setAttribute('required', true);
+				// document.querySelector('#estado_origen_menor').setAttribute('required', true);
+				// document.querySelector('#municipio_origen_menor').setAttribute('required', true);
 
 
 				let radiosSexoMenor = document.querySelectorAll('input[name="sexo_menor"]');
@@ -568,20 +568,20 @@
 				if (
 					document.querySelector('#nombre_menor').value != '' &&
 					document.querySelector('#apellido_paterno_menor').value != '' &&
-					document.querySelector('#pais_menor').value != '' &&
-					document.querySelector('#estado_menor').value != '' &&
-					document.querySelector('#municipio_menor').value != '' &&
-					document.querySelector('#localidad_menor').value != '' &&
-					document.querySelector('#colonia_menor').value != '' &&
-					document.querySelector('#colonia_menor_input').value != '' &&
-					document.querySelector('#calle_menor').value != '' &&
-					document.querySelector('#numero_ext_menor').value != '' &&
-					document.querySelector('#fecha_nacimiento_menor').value != '' &&
-					document.querySelector('#edad_menor').value != '' &&
-					document.querySelector('input[name="sexo_menor"]:checked') &&
-					document.querySelector('#nacionalidad_menor').value != '' &&
-					document.querySelector('#estado_origen_menor').value != '' &&
-					document.querySelector('#municipio_origen_menor').value != ''
+					// document.querySelector('#pais_menor').value != '' &&
+					// document.querySelector('#estado_menor').value != '' &&
+					// document.querySelector('#municipio_menor').value != '' &&
+					// document.querySelector('#localidad_menor').value != '' &&
+					// document.querySelector('#colonia_menor').value != '' &&
+					// document.querySelector('#colonia_menor_input').value != '' &&
+					// document.querySelector('#calle_menor').value != '' &&
+					// document.querySelector('#numero_ext_menor').value != '' &&
+					// document.querySelector('#fecha_nacimiento_menor').value != '' &&
+					// document.querySelector('#edad_menor').value != '' &&
+					document.querySelector('input[name="sexo_menor"]:checked')
+					// document.querySelector('#nacionalidad_menor').value != '' &&
+					// document.querySelector('#estado_origen_menor').value != '' &&
+					// document.querySelector('#municipio_origen_menor').value != ''
 				) {
 					return true
 				} else {
