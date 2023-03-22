@@ -80,7 +80,7 @@
 
 						<div class="col-12">
 							<div class="alert alert-warning text-center fw-bold d-none mt-2" id="idioma_alert" role="alert">
-								Si tu idioma no es español se recomienda estar acompañado de un traductor.
+								Si tu idioma es diverso español se recomienda estar acompañado de un traductor.
 							</div>
 						</div>
 					</div>
