@@ -887,7 +887,7 @@
 
 					divFolioAtendido.classList.remove('d-none');
 					// card6.classList.remove('d-none');
-					document.querySelector('#folio_atendido').innerHTML = 'FOLIO ATENDIDO: ' + folio.FOLIOID + '/'+folio.ANO;
+					document.querySelector('#folio_atendido').innerHTML = 'FOLIO ATENDIDO: ' + folio.FOLIOID + '/' + folio.ANO;
 
 					document.querySelector('#delito_dash').value = folio.HECHODELITO;
 					document.querySelector('#delito_descr_dash').value = folio.HECHONARRACION;
