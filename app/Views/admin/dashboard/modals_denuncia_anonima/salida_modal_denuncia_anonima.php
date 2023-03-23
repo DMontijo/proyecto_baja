@@ -8,7 +8,7 @@
 				</button>
 			</div>
 			<div class="modal-body bg-light">
-			<div id="loading_general" name="loading_general" class="text-center d-none" style="min-height:50px;">
+				<div id="loading_general" name="loading_general" class="text-center d-none" style="min-height:50px;">
 					<div class="justify-content-center">
 						<div class="spinner-border text-primary" role="status">
 						</div>
@@ -386,7 +386,7 @@
 								$("#salida_modal_denuncia_anonima").modal("hide");
 								$('body').removeClass('modal-open');
 								$('.modal-backdrop').remove();
-								window.location.href = `<?= base_url('/admin/dashboard/documentos_show?expediente=') ?>` + data.expediente + '&year=' + year_select.value + '&folio=' + inputFolio.value + '&municipioasignado='+municipio_empleado.value;
+								window.location.href = `<?= base_url('/admin/dashboard/documentos_show?expediente=') ?>` + data.expediente + '&year=' + year_select.value + '&folio=' + inputFolio.value + '&municipioasignado=' + municipio_empleado.value;
 								document.getElementById("form_folio").reset();
 							});
 						} else {
@@ -458,8 +458,40 @@
 	function expedienteConGuiones(expediente) {
 		const array = expediente.trim().split('');
 		// return array[0] + '-' + array[1] + array[2] + '-' + array[3] + array[4] + array[5] + '-' + array[6] + array[7] + array[8] + array[9] + '-' + array[10] + array[11] + array[12] + array[13] + array[14];
-		return array[1] + array[2] + array[4] + array[5] + '-' + array[6] + array[7] + array[8] + array[9] + '-' + array[10] + array[11] + array[12] + array[13] + array[14];
+		return array[1] + array[2] + array[4] + array[5] + '-' + array[6] + array[7] + array[8] + array[9] + '-' + array[10] + array[11] + array[12] + array[13] + array[14] + '/' + tipoExpedienteClave(array[0]);
 	}
+
+	function tipoExpedienteClave(num) {
+		num = typeof(num) == 'string' ? num : (new String(num)).toString();
+
+		switch (num) {
+			case '1':
+				return 'NUC';
+				break;
+			case '4':
+				return 'NAC';
+				break;
+			case '5':
+				return 'RAC';
+				break;
+			case '6':
+				return 'EXH';
+				break;
+			case '7':
+				return 'NAV';
+				break;
+			case '8':
+				return 'NCE';
+				break;
+			case '9':
+				return 'NUI';
+				break;
+			default:
+				return '';
+				break;
+		}
+	}
+
 	function showLoading() {
 		document.querySelector('#loading_general').classList.remove('d-none');
 	}

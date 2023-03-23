@@ -39,8 +39,8 @@
 									<td class="text-center"><?= $folio->ANO ?></td>
 									<td class="text-center"><?= $folio->FECHAREGISTRO ?></td>
 									<td class="text-center"><?= $folio->HECHODELITO ?></td>
-									<td class="text-center"><?= $folio->STATUS == 'EXPEDIENTE' ? 'EN INVESTIGACIÓN': $folio->STATUS ?></td>
-									<td class="text-center"><?= $folio->EXPEDIENTEID ? ($expediente_guiones ? $expediente_guiones .'/'. $folio->TIPOEXPEDIENTECLAVE: '-')  : '-' ?></td>
+									<td class="text-center"><?= $folio->STATUS == 'EXPEDIENTE' ? 'EXPEDIENTE GENERADO' : ($folio->STATUS == 'ABIERTO' ? 'EN TRAMITE' : $folio->STATUS) ?></td>
+									<td class="text-center"><?= $folio->EXPEDIENTEID ? ($expediente_guiones ? $expediente_guiones . '/' . $folio->TIPOEXPEDIENTECLAVE : '-')  : '-' ?></td>
 									<td class="text-center"><?= $folio->EXPEDIENTEID ? $folio->MUNICIPIODESCR : '-' ?></td>
 									<td class="text-center"><?= $folio->OFICINAID ? $folio->OFICINADESCR : '-' ?></td>
 

@@ -135,7 +135,7 @@
 									<tr>
 										<td class="text-center font-weight-bold"><?= $folio->FOLIOID ?></td>
 										<td class="text-center"><?= $folio->ANO ?></td>
-										<td class="text-center"><?= $expedienteid ? $folio->TIPOEXPEDIENTECLAVE . ' ' . $expedienteid : $folio->FOLIOID . '/' . $folio->ANO ?></td>
+										<td class="text-center"><?= $expedienteid ?  $expedienteid.'/'.$folio->TIPOEXPEDIENTECLAVE : $folio->FOLIOID . '/' . $folio->ANO ?></td>
 										<td class="text-center"><?= $folio->STATUS ?></td>
 										<td class="text-center"><?= $folio->TIPODENUNCIA == 'VD' ? 'VIDEODENUNCIA' : 'ANÓNIMA' ?></td>
 
