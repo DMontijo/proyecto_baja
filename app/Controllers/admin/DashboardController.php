@@ -263,6 +263,7 @@ class DashboardController extends BaseController
 	private $protocol;
 	private $ip;
 	private $endpoint;
+	private $urlApi;
 
 	public function __construct()
 	{
@@ -399,6 +400,7 @@ class DashboardController extends BaseController
 		$this->protocol = 'https://';
 		$this->ip = "ws.fgebc.gob.mx";
 		$this->endpoint = $this->protocol . $this->ip . '/webServiceVD';
+		$this->urlApi = "http://34.229.77.149/agent/";
 	}
 
 	public function index()
@@ -794,22 +796,36 @@ class DashboardController extends BaseController
 		if ($this->validate(['correo_usuario' => 'required|valid_email|is_unique[USUARIOS.CORREO]'])) {
 			try {
 				$usuario = ($this->_getUnusedUsersVideo())[0];
-				$videoUser = $this->_updateUserVideo($usuario->ID, 'LIC. ' . $data['NOMBRE'], $data['APELLIDO_PATERNO'] . ' ' . $data['APELLIDO_MATERNO'], $data['CORREO'], $data['SEXO'], 'agente');
+				// $videoUser = $this->_updateUserVideo($usuario->ID, 'LIC. ' . $data['NOMBRE'], $data['APELLIDO_PATERNO'] . ' ' . $data['APELLIDO_MATERNO'], $data['CORREO'], $data['SEXO'], 'agente');
+				$dataApi = array();
+				$dataApi['names'] = $this->request->getPost('nombre_usuario');
+				$dataApi['lastnames'] = $this->request->getPost('apellido_paterno_usuario') . ' ' .  $this->request->getPost('apellido_materno_usuario');
+				$dataApi['email'] = $this->request->getPost('correo_usuario');
+				$dataApi['role'] = 3;
+				$dataApi['sex'] = $this->request->getPost('sexo_usuario') == 'F' ? "FEMALE" : 'MALE';
+				$dataApi['languages'] = [2];
+				// $urlApi = "http://192.168.0.67:3000/guests";
+				$response = $this->_curlPostService($this->urlApi, $dataApi);
 			} catch (\Throwable $th) {
 				return redirect()->back()->with('message_error', 'Usuario no creado, hubo un error.');
 			}
 
-			$data['USUARIOVIDEO'] = $videoUser->ID;
-			$data['TOKENVIDEO'] = $videoUser->Token;
-			try {
-				$usuario = $this->_usuariosModel->insert($data);
-			} catch (\Throwable $th) {
-				return redirect()->back()->with('message_error', 'Usuario no creado, ya existe el correo ingresado.');
-			}
+			if ($response->uuid) {
+				// $data['USUARIOVIDEO'] = $videoUser->ID;
+				// $data['TOKENVIDEO'] = $videoUser->Token;
+				$data['TOKENVIDEO'] = $response->uuid;
 
-			$this->_bitacoraActividad($datosBitacora);
-			$this->_sendEmailPassword($data['CORREO'], $this->request->getPost('password'));
-			return redirect()->to(base_url('/admin/dashboard/usuarios'))->with('message_success', 'Usuario registrado correctamente.');
+				try {
+					$usuario = $this->_usuariosModel->insert($data);
+				} catch (\Throwable $th) {
+					return redirect()->back()->with('message_error', 'Usuario no creado, ya existe el correo ingresado.');
+				}
+	
+				$this->_bitacoraActividad($datosBitacora);
+				$this->_sendEmailPassword($data['CORREO'], $this->request->getPost('password'));
+				return redirect()->to(base_url('/admin/dashboard/usuarios'))->with('message_success', 'Usuario registrado correctamente.');			
+			}
+			
 		} else {
 			return redirect()->back()->with('message_error', 'Usuario no creado, ya existe el correo ingresado.');
 		}
@@ -1682,7 +1698,7 @@ class DashboardController extends BaseController
 		$email = \Config\Services::email();
 		$email->setTo($to);
 		$email->setSubject('Nuevo expediente creado');
-		$body = view('email_template/expediente_email_template.php', ['expediente' => $expedienteId, 'tipoexpediente'=> $tipoExpediente->TIPOEXPEDIENTECLAVE]);
+		$body = view('email_template/expediente_email_template.php', ['expediente' => $expedienteId, 'tipoexpediente' => $tipoExpediente->TIPOEXPEDIENTECLAVE]);
 		$email->setMessage($body);
 		if ($email->send()) {
 			return true;
@@ -1693,7 +1709,7 @@ class DashboardController extends BaseController
 
 	private function _sendEmailPassword($to, $password)
 	{
-		
+
 		$email = \Config\Services::email();
 		$email->setTo($to);
 		$email->setSubject('Nueva cuenta creada');
@@ -3424,6 +3440,38 @@ class DashboardController extends BaseController
 		return json_decode($result);
 	}
 
+	private function _curlPostService($endpoint, $data)
+	{
+		$ch = curl_init();
+
+		curl_setopt($ch, CURLOPT_URL, $endpoint);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+		$headers = array(
+			'Content-Type: application/json',
+			'Access-Control-Allow-Origin: *',
+			'Access-Control-Allow-Credentials: true',
+			'Access-Control-Allow-Headers: Content-Type',
+			'X_API_KEY' . X_API_KEY
+		);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+		$result = curl_exec($ch);
+
+		if ($result === false) {
+			$result = "{
+                'status' => 401,
+                'error' => 'Curl failed: '" . curl_error($ch) . "
+            }";
+		}
+		curl_close($ch);
+
+		return json_decode($result);
+	}
+
 	private function _curlPostDataEncrypt($endpoint, $data)
 	{
 		// var_dump($data);exit;
@@ -3938,7 +3986,6 @@ class DashboardController extends BaseController
 					$data['AREAIDRESPONSABLE'] = null;
 				}
 			}
-
 		} else {
 			$data['AREAIDREGISTRO'] = $area;
 			$data['AREAIDRESPONSABLE'] = $area;
@@ -5553,7 +5600,7 @@ class DashboardController extends BaseController
 		$data->delitosModalidadFiltro = $this->_delitoModalidadModel->get_delitodescr($folio, $year);
 		//VICTIMA RASGOS
 		$data->mediaFiliacionVictima = $this->_folioMediaFiliacion->asObject()->where('FOLIOID', $folio)->where('PERSONAFISICAID', $victima)->first();
-		
+
 		if ($data->victima[0]['DESAPARECIDA'] == 'S' && $data->mediaFiliacionVictima) {
 			$colorOjos = $this->_ojoColorModel->asObject()->where('OJOCOLORID', $data->mediaFiliacionVictima->OJOCOLORID)->first();
 			$colorCabello = $this->_cabelloColorModel->asObject()->where('CABELLOCOLORID', $data->mediaFiliacionVictima->CABELLOCOLORID)->first();
@@ -5564,13 +5611,13 @@ class DashboardController extends BaseController
 
 			$data->plantilla = str_replace('[NOMBRE_DESAPARECIDO]', $data->victima[0]['NOMBRE'] . ' ' . ($data->victima[0]['PRIMERAPELLIDO'] ? $data->victima[0]['PRIMERAPELLIDO'] : '') . ' ' . ($data->victima[0]['SEGUNDOAPELLIDO'] ? $data->victima[0]['SEGUNDOAPELLIDO'] : ''), $data->plantilla);
 			$data->plantilla = str_replace('[ANOS_DESAPARECIDO]', $data->victima[0]['EDADCANTIDAD'] ? $data->victima[0]['EDADCANTIDAD'] : '-', $data->plantilla);
-			$data->plantilla = str_replace('[DIA_DESAPARICION]', $data->mediaFiliacionVictima->FECHADESAPARICION ? date('d', strtotime($data->mediaFiliacionVictima->FECHADESAPARICION)) :'-', $data->plantilla);
-			$data->plantilla = str_replace('[MES_DESAPARICION]', $data->mediaFiliacionVictima->FECHADESAPARICION ? $meses[date('n', strtotime($data->mediaFiliacionVictima->FECHADESAPARICION)) - 1]:'', $data->plantilla);
-			$data->plantilla = str_replace('[ANO_DESAPARICION]', $data->mediaFiliacionVictima->FECHADESAPARICION?date('Y', strtotime($data->mediaFiliacionVictima->FECHADESAPARICION)): '', $data->plantilla);
+			$data->plantilla = str_replace('[DIA_DESAPARICION]', $data->mediaFiliacionVictima->FECHADESAPARICION ? date('d', strtotime($data->mediaFiliacionVictima->FECHADESAPARICION)) : '-', $data->plantilla);
+			$data->plantilla = str_replace('[MES_DESAPARICION]', $data->mediaFiliacionVictima->FECHADESAPARICION ? $meses[date('n', strtotime($data->mediaFiliacionVictima->FECHADESAPARICION)) - 1] : '', $data->plantilla);
+			$data->plantilla = str_replace('[ANO_DESAPARICION]', $data->mediaFiliacionVictima->FECHADESAPARICION ? date('Y', strtotime($data->mediaFiliacionVictima->FECHADESAPARICION)) : '', $data->plantilla);
 			$data->plantilla = str_replace('[LUGAR_DESAPARICION]',  $data->mediaFiliacionVictima->LUGARDESAPARICION ?  $data->mediaFiliacionVictima->LUGARDESAPARICION : '-', $data->plantilla);
 
 			$data->plantilla = str_replace('[ESTATURA_DESAPARECIDO]',  $data->mediaFiliacionVictima->ESTATURA ?  $data->mediaFiliacionVictima->ESTATURA : '-', $data->plantilla);
-			$data->plantilla = str_replace('[COMPLEXION_DESAPARECIDO]',  $complexion ?  $complexion->FIGURADESCR: '-', $data->plantilla);
+			$data->plantilla = str_replace('[COMPLEXION_DESAPARECIDO]',  $complexion ?  $complexion->FIGURADESCR : '-', $data->plantilla);
 			$data->plantilla = str_replace('[PESO_DESAPARECIDO]',  $data->mediaFiliacionVictima->ESTATURA ?  $data->mediaFiliacionVictima->ESTATURA : '-', $data->plantilla);
 			$data->plantilla = str_replace('[TEZ_DESAPARECIDO]',  $colorPiel ?  $colorPiel->PIELCOLORDESCR : '-', $data->plantilla);
 			$data->plantilla = str_replace('[OJOSCOLOR_DESAPARECIDO]',  $colorOjos ?  $colorOjos->OJOCOLORDESCR : '-', $data->plantilla);
@@ -5578,14 +5625,14 @@ class DashboardController extends BaseController
 			$data->plantilla = str_replace('[TIPOCEJA_DESAPARECIDO]',  $cejasForma ?  $cejasForma->CEJAFORMADESCR : '-', $data->plantilla);
 			$data->plantilla = str_replace('[SENAS_PARTICULARES_DESAPARECIDO]',  $data->mediaFiliacionVictima->SENASPARTICULARES ?  $data->mediaFiliacionVictima->SENASPARTICULARES : '-', $data->plantilla);
 			$data->plantilla = str_replace('[TAMANOCABELLO_DESAPARECIDO]',  $cabelloTamano ?  $cabelloTamano->CABELLOTAMANODESCR : '-', $data->plantilla);
-			
-			if ( $data->victima[0]['FOTO']) {
+
+			if ($data->victima[0]['FOTO']) {
 				$file_info = new \finfo(FILEINFO_MIME_TYPE);
 				$type = $file_info->buffer($data->victima[0]['FOTO']);
-				$data->victima[0]['FOTO'] = 'data:' . $type . ';base64,' . base64_encode($data->victima[0]['FOTO']);	
+				$data->victima[0]['FOTO'] = 'data:' . $type . ';base64,' . base64_encode($data->victima[0]['FOTO']);
 				if ($type == 'image/png' || $type == 'image/jpg' || $type == 'image/jpeg') {
-					$data->plantilla = str_replace('[IMAGEN_DESAPARECIDO]',  "<img src='".$data->victima[0]['FOTO']."'></img>", $data->plantilla);
-				}		
+					$data->plantilla = str_replace('[IMAGEN_DESAPARECIDO]',  "<img src='" . $data->victima[0]['FOTO'] . "'></img>", $data->plantilla);
+				}
 			}
 		}
 		if ($data->mediaFiliacionVictima) {
@@ -5602,8 +5649,6 @@ class DashboardController extends BaseController
 			$data->plantilla = str_replace('[VICTIMA_COLOR_CABELLO]',  $colorCabello ?  $colorCabello->CABELLOCOLORDESCR : '-', $data->plantilla);
 			$data->plantilla = str_replace('[VICTIMA_CEJAS_FORMAS]',  $cejasForma ?  $cejasForma->CEJAFORMADESCR : '-', $data->plantilla);
 			$data->plantilla = str_replace('[VICTIMA_SENAS]',  $data->mediaFiliacionVictima->SENASPARTICULARES ?  $data->mediaFiliacionVictima->SENASPARTICULARES : '-', $data->plantilla);
-
-			
 		}
 
 		$relacionfisfis = $this->_relacionIDOModel->asObject()->where('FOLIOID', $data->folio->FOLIOID)->where('ANO', $data->folio->ANO)->where('PERSONAFISICAIDVICTIMA', $victima)->where('PERSONAFISICAIDIMPUTADO', $imputado)->first();
@@ -6211,8 +6256,8 @@ class DashboardController extends BaseController
 		$data->plantilla = str_replace('[HORA]', date('H'), $data->plantilla);
 		$data->plantilla = str_replace('[MINUTOS]', date('i'), $data->plantilla);
 		$data->plantilla = str_replace('[ESTADO]', $data->municipios->MUNICIPIODESCR, $data->plantilla);
-		$data->plantilla = str_replace('[MUNICIPIO_DELITO]', $data->municipio_delito ? $data->municipio_delito->MUNICIPIODESCR :'', $data->plantilla);
-		$data->plantilla = str_replace('[LOCALIDAD_DELITO]', $data->localidad ?$data->localidad->LOCALIDADDESCR:'', $data->plantilla);
+		$data->plantilla = str_replace('[MUNICIPIO_DELITO]', $data->municipio_delito ? $data->municipio_delito->MUNICIPIODESCR : '', $data->plantilla);
+		$data->plantilla = str_replace('[LOCALIDAD_DELITO]', $data->localidad ? $data->localidad->LOCALIDADDESCR : '', $data->plantilla);
 		$data->plantilla = str_replace('[COLONIA_DELITO]', $data->folio->HECHOCOLONIADESCR ? $data->folio->HECHOCOLONIADESCR : 'SIN COLONIA', $data->plantilla);
 		$data->plantilla = str_replace('[REFERENCIAS]', $data->folio->HECHOREFERENCIA ? $data->folio->HECHOREFERENCIA : 'SIN DATOS DE REFERENCIA', $data->plantilla);
 		$data->plantilla = str_replace('[CALLE]', $data->folio->HECHOCALLE ? $data->folio->HECHOCALLE : 'SIN CALLE', $data->plantilla);
@@ -6273,16 +6318,16 @@ class DashboardController extends BaseController
 				$colorPiel = $this->_pielColorModel->asObject()->where('PIELCOLORID', $data->mediaFiliacionVictima->PIELCOLORID)->first();
 				$cejasForma = $this->_cejaFormaModel->asObject()->where('CEJAFORMAID', $data->mediaFiliacionVictima->CEJAFORMAID)->first();
 				$cabelloTamano = $this->_cabelloTamanoModel->asObject()->where('CABELLOTAMANOID', $data->mediaFiliacionVictima->CABELLOTAMANOID)->first();
-	
+
 				$data->plantilla = str_replace('[NOMBRE_DESAPARECIDO]', $data->victima[0]['NOMBRE'] . ' ' . ($data->victima[0]['PRIMERAPELLIDO'] ? $data->victima[0]['PRIMERAPELLIDO'] : '') . ' ' . ($data->victima[0]['SEGUNDOAPELLIDO'] ? $data->victima[0]['SEGUNDOAPELLIDO'] : ''), $data->plantilla);
 				$data->plantilla = str_replace('[ANOS_DESAPARECIDO]', $data->victima[0]['EDADCANTIDAD'] ? $data->victima[0]['EDADCANTIDAD'] : '-', $data->plantilla);
-				$data->plantilla = str_replace('[DIA_DESAPARICION]', $data->mediaFiliacionVictima->FECHADESAPARICION ? date('d', strtotime($data->mediaFiliacionVictima->FECHADESAPARICION)) :'-', $data->plantilla);
-				$data->plantilla = str_replace('[MES_DESAPARICION]', $data->mediaFiliacionVictima->FECHADESAPARICION ? $meses[date('n', strtotime($data->mediaFiliacionVictima->FECHADESAPARICION)) - 1]:'', $data->plantilla);
-				$data->plantilla = str_replace('[ANO_DESAPARICION]', $data->mediaFiliacionVictima->FECHADESAPARICION?date('Y', strtotime($data->mediaFiliacionVictima->FECHADESAPARICION)): '', $data->plantilla);
+				$data->plantilla = str_replace('[DIA_DESAPARICION]', $data->mediaFiliacionVictima->FECHADESAPARICION ? date('d', strtotime($data->mediaFiliacionVictima->FECHADESAPARICION)) : '-', $data->plantilla);
+				$data->plantilla = str_replace('[MES_DESAPARICION]', $data->mediaFiliacionVictima->FECHADESAPARICION ? $meses[date('n', strtotime($data->mediaFiliacionVictima->FECHADESAPARICION)) - 1] : '', $data->plantilla);
+				$data->plantilla = str_replace('[ANO_DESAPARICION]', $data->mediaFiliacionVictima->FECHADESAPARICION ? date('Y', strtotime($data->mediaFiliacionVictima->FECHADESAPARICION)) : '', $data->plantilla);
 				$data->plantilla = str_replace('[LUGAR_DESAPARICION]',  $data->mediaFiliacionVictima->LUGARDESAPARICION ?  $data->mediaFiliacionVictima->LUGARDESAPARICION : '-', $data->plantilla);
-	
+
 				$data->plantilla = str_replace('[ESTATURA_DESAPARECIDO]',  $data->mediaFiliacionVictima->ESTATURA ?  $data->mediaFiliacionVictima->ESTATURA : '-', $data->plantilla);
-				$data->plantilla = str_replace('[COMPLEXION_DESAPARECIDO]',  $complexion ?  $complexion->FIGURADESCR: '-', $data->plantilla);
+				$data->plantilla = str_replace('[COMPLEXION_DESAPARECIDO]',  $complexion ?  $complexion->FIGURADESCR : '-', $data->plantilla);
 				$data->plantilla = str_replace('[PESO_DESAPARECIDO]',  $data->mediaFiliacionVictima->ESTATURA ?  $data->mediaFiliacionVictima->ESTATURA : '-', $data->plantilla);
 				$data->plantilla = str_replace('[TEZ_DESAPARECIDO]',  $colorPiel ?  $colorPiel->PIELCOLORDESCR : '-', $data->plantilla);
 				$data->plantilla = str_replace('[OJOSCOLOR_DESAPARECIDO]',  $colorOjos ?  $colorOjos->OJOCOLORDESCR : '-', $data->plantilla);
@@ -6290,17 +6335,17 @@ class DashboardController extends BaseController
 				$data->plantilla = str_replace('[TIPOCEJA_DESAPARECIDO]',  $cejasForma ?  $cejasForma->CEJAFORMADESCR : '-', $data->plantilla);
 				$data->plantilla = str_replace('[SENAS_PARTICULARES_DESAPARECIDO]',  $data->mediaFiliacionVictima->SENASPARTICULARES ?  $data->mediaFiliacionVictima->SENASPARTICULARES : '-', $data->plantilla);
 				$data->plantilla = str_replace('[TAMANOCABELLO_DESAPARECIDO]',  $cabelloTamano ?  $cabelloTamano->CABELLOTAMANODESCR : '-', $data->plantilla);
-				
-				if ( $data->victima[0]['FOTO']) {
+
+				if ($data->victima[0]['FOTO']) {
 					$file_info = new \finfo(FILEINFO_MIME_TYPE);
 					$type = $file_info->buffer($data->victima[0]['FOTO']);
-					$data->victima[0]['FOTO'] = 'data:' . $type . ';base64,' . base64_encode($data->victima[0]['FOTO']);	
+					$data->victima[0]['FOTO'] = 'data:' . $type . ';base64,' . base64_encode($data->victima[0]['FOTO']);
 					if ($type == 'image/png' || $type == 'image/jpg' || $type == 'image/jpeg') {
-						$data->plantilla = str_replace('[IMAGEN_DESAPARECIDO]',  "<img src='".$data->victima[0]['FOTO']."'></img>", $data->plantilla);
-					}		
+						$data->plantilla = str_replace('[IMAGEN_DESAPARECIDO]',  "<img src='" . $data->victima[0]['FOTO'] . "'></img>", $data->plantilla);
+					}
 				}
 			}
-			
+
 			if ($data->mediaFiliacionVictima) {
 				$colorOjos = $this->_ojoColorModel->asObject()->where('OJOCOLORID', $data->mediaFiliacionVictima->OJOCOLORID)->first();
 				$colorCabello = $this->_cabelloColorModel->asObject()->where('CABELLOCOLORID', $data->mediaFiliacionVictima->CABELLOCOLORID)->first();
@@ -6346,9 +6391,9 @@ class DashboardController extends BaseController
 			$data->plantilla = str_replace('[DIRECCION]', ($data->folio->HECHOCALLE ? $data->folio->HECHOCALLE : 'SIN CALLE') . ' ' . ($data->folio->HECHONUMEROCASA ? $data->folio->HECHONUMEROCASA : 'S/N')  . ',' . ($data->folio->HECHOCOLONIADESCR ? $data->folio->HECHOCOLONIADESCR : 'SIN COLONIA') . ',' . ($data->localidad->LOCALIDADDESCR ? $data->localidad->LOCALIDADDESCR : 'SIN LOCALIDAD') . ',' . ($data->municipio_delito->MUNICIPIODESCR ? $data->municipio_delito->MUNICIPIODESCR : 'SIN MUNICIPIO'), $data->plantilla);
 			$data->plantilla = str_replace('[LUGAR_HECHO]', $data->lugar_delito->HECHODESCR, $data->plantilla);
 
-			$data->plantilla = str_replace('[MUNICIPIO_DELITO]', $data->municipio_delito ?$data->municipio_delito->MUNICIPIODESCR :'', $data->plantilla);
-			$data->plantilla = str_replace('[LOCALIDAD_DELITO]', $data->localidad ? $data->localidad->LOCALIDADDESCR :'', $data->plantilla);
-			$data->plantilla = str_replace('[COLONIA_DELITO]', $data->folio->HECHOCOLONIADESCR ?$data->folio->HECHOCOLONIADESCR :'', $data->plantilla);
+			$data->plantilla = str_replace('[MUNICIPIO_DELITO]', $data->municipio_delito ? $data->municipio_delito->MUNICIPIODESCR : '', $data->plantilla);
+			$data->plantilla = str_replace('[LOCALIDAD_DELITO]', $data->localidad ? $data->localidad->LOCALIDADDESCR : '', $data->plantilla);
+			$data->plantilla = str_replace('[COLONIA_DELITO]', $data->folio->HECHOCOLONIADESCR ? $data->folio->HECHOCOLONIADESCR : '', $data->plantilla);
 			$data->plantilla = str_replace('[REFERENCIAS]', $data->folio->HECHOREFERENCIA ? $data->folio->HECHOREFERENCIA : 'SIN DATOS DE REFERENCIA', $data->plantilla);
 			$data->plantilla = str_replace('[CALLE]', $data->folio->HECHOCALLE ? $data->folio->HECHOCALLE : 'SIN CALLE', $data->plantilla);
 			$data->plantilla = str_replace('[HECHO]', $data->folio->HECHONARRACION ? $data->folio->HECHONARRACION : 'SIN NARRACIÓN', $data->plantilla);

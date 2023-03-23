@@ -37,6 +37,7 @@ class UserController extends BaseController
 	private $_folioModel;
 	private $_escolaridadModel;
 	private $_ocupacionModel;
+	private $urlApi;
 
 	function __construct()
 	{
@@ -55,6 +56,7 @@ class UserController extends BaseController
 		$this->_folioModel = new FolioModel();
 		$this->_escolaridadModel = new EscolaridadModel();
 		$this->_ocupacionModel = new OcupacionModel();
+		$this->urlApi = "http://34.229.77.149/guests/";
 	}
 
 	public function index()
@@ -155,10 +157,28 @@ class UserController extends BaseController
 		}
 
 		if ($this->validate(['correo' => 'required|is_unique[DENUNCIANTES.CORREO]'])) {
+				
+		$dataApi2 = [
+			'NOMBRE' => $this->request->getPost('nombre'),
+			'APELLIDO_PATERNO' => $this->request->getPost('apellido_paterno'),
+			'APELLIDO_MATERNO' => $this->request->getPost('apellido_materno'),
+			'CORREO' => $this->request->getPost('correo'),
+		];
+		$dataApi = array();
+		$dataApi['name']=$this->request->getPost('nombre') .' ' . $this->request->getPost('apellido_paterno');
+		$dataApi['details']= $dataApi2;
+		$dataApi['gender']= $this->request->getPost('sexo') == 'F' ? "FEMALE": 'MALE';
+		$dataApi['languages']= [(int)$this->request->getPost('idioma')];
+		// $urlApi = "http://34.229.77.149/guests";
+		// $urlApi = "http://192.168.0.67:3000/guests";
+		$response = $this->_curlPost($this->urlApi, $dataApi);
+		$data['UUID'] = $response->uuid;
+		if ($response->uuid) {
 			$this->_denunciantesModel->insert($data);
 			$this->_sendEmailPassword($data['CORREO'], $password);
 			session()->setFlashdata('message', 'Inicia sesión con la contraseña que llegará a tu correo electrónico');
-			return redirect()->to(base_url('/denuncia'))->with('message_success', 'Inicia sesión con la contraseña que llegará a tu correo electrónico y comienza tu denuncia');
+			return redirect()->to(base_url('/denuncia'))->with('message_success', 'Inicia sesión con la contraseña que llegará a tu correo electrónico y comienza tu denuncia');		}
+		
 		} else {
 			return redirect()->back()->with('message', 'Hubo un error en los datos o puede que ya exista un registro con el mismo correo');
 		}
@@ -243,10 +263,17 @@ class UserController extends BaseController
 		}
 		try {
 			if (!session()->has('DENUNCIANTEID')) throw new \Exception();
-			$update = $this->_denunciantesModel->set($data)->where('DENUNCIANTEID', session('DENUNCIANTEID'))->update();
-			if (!$update) throw new \Exception();
-			session()->set('TIPO', '1');
-			return redirect()->to(base_url('/denuncia/dashboard'));
+			$denunciante =$this->_denunciantesModel->asObject()->where('DENUNCIANTEID', session('DENUNCIANTEID'))->first();
+			$endpoint = $this->urlApi. $denunciante->UUID;
+			$dataApi = array('languages'=>[(int)$this->request->getPost('idioma')]);
+			$response = $this->_curlPatch($endpoint, $dataApi);
+			if ($response->status == "sucess") {
+				$update = $this->_denunciantesModel->set($data)->where('DENUNCIANTEID', session('DENUNCIANTEID'))->update();
+				if (!$update) throw new \Exception();
+				session()->set('TIPO', '1');
+				return redirect()->to(base_url('/denuncia/dashboard'));
+			}
+		
 		} catch (\Exception $e) {
 			// var_dump($data);
 			// exit;
@@ -359,6 +386,69 @@ class UserController extends BaseController
 			'body_data' => $data
 		];
 		echo view("client/dashboard/$view", $data);
+	}
+	private function _curlPost($endpoint, $data)
+	{
+		$ch = curl_init();
+
+		curl_setopt($ch, CURLOPT_URL, $endpoint);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+		$headers = array(
+			'Content-Type: application/json',
+			'Access-Control-Allow-Origin: *',
+			'Access-Control-Allow-Credentials: true',
+			'Access-Control-Allow-Headers: Content-Type',
+			'X_API_KEY' . X_API_KEY
+		);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+		$result = curl_exec($ch);
+
+		if ($result === false) {
+			$result = "{
+                'status' => 401,
+                'error' => 'Curl failed: '" . curl_error($ch) . "
+            }";
+		}
+		curl_close($ch);
+
+		return json_decode($result);
+	}
+
+	private function _curlPatch($endpoint, $data)
+	{
+		$ch = curl_init();
+
+		curl_setopt($ch, CURLOPT_URL, $endpoint);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PATCH');
+		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+		$headers = array(
+			'Content-Type: application/json',
+			'Access-Control-Allow-Origin: *',
+			'Access-Control-Allow-Credentials: true',
+			'Access-Control-Allow-Headers: Content-Type',
+			'X_API_KEY' . X_API_KEY
+		);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+		$result = curl_exec($ch);
+
+		if ($result === false) {
+			$result = "{
+                'status' => 401,
+                'error' => 'Curl failed: '" . curl_error($ch) . "
+            }";
+		}
+		curl_close($ch);
+
+		return json_decode($result);
 	}
 }
 

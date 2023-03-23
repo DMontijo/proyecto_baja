@@ -145,9 +145,26 @@ class ExtravioController extends BaseController
 		];
 
 		if ($this->validate(['correo' => 'required|is_unique[DENUNCIANTES.CORREO]'])) {
+			$dataApi2 = [
+				'NOMBRE' => $this->request->getPost('nombre'),
+				'APELLIDO_PATERNO' => $this->request->getPost('apellido_paterno'),
+				'APELLIDO_MATERNO' => $this->request->getPost('apellido_materno'),
+				'CORREO' => $this->request->getPost('correo'),
+			];
+			$dataApi = array();
+			$dataApi['name']=$this->request->getPost('nombre') .' ' . $this->request->getPost('apellido_paterno');
+			$dataApi['details']= $dataApi2;
+			$dataApi['gender']= $this->request->getPost('sexo') == 'F' ? "FEMALE": 'MALE';
+			$dataApi['languages']= [2];
+			$urlApi = "http://34.229.77.149/guests";
+			// $urlApi = "http://192.168.0.67:3000/guests";
+			$response = $this->_curlPost($urlApi, $dataApi);
+			$data['UUID'] = $response->uuid;
+			if ($response->uuid) {
 			$this->_denunciantesModel->insert($data);
 			$this->_sendEmailPassword($data['CORREO'], $password);
 			return redirect()->to(base_url('/constancia_extravio'))->with('message_success', 'Inicia sesión con la contraseña que llegará a tu correo e ingresa.');
+			}
 		} else {
 			return redirect()->back()->with('message_error', 'Hubo un error en los datos o puede que ya exista un registro con el mismo correo');
 		}
@@ -393,5 +410,36 @@ class ExtravioController extends BaseController
 		} else {
 			return json_encode((object)['exist' => 0]);
 		}
+	}
+	private function _curlPost($endpoint, $data)
+	{
+		$ch = curl_init();
+
+		curl_setopt($ch, CURLOPT_URL, $endpoint);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+		$headers = array(
+			'Content-Type: application/json',
+			'Access-Control-Allow-Origin: *',
+			'Access-Control-Allow-Credentials: true',
+			'Access-Control-Allow-Headers: Content-Type',
+			'X_API_KEY' . X_API_KEY
+		);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+		$result = curl_exec($ch);
+
+		if ($result === false) {
+			$result = "{
+                'status' => 401,
+                'error' => 'Curl failed: '" . curl_error($ch) . "
+            }";
+		}
+		curl_close($ch);
+
+		return json_decode($result);
 	}
 }

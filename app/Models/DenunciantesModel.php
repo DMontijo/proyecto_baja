@@ -16,6 +16,7 @@ class DenunciantesModel extends Model
 		'APELLIDO_MATERNO',
 		'CORREO',
 		'PASSWORD',
+		'UUID',
 		'FECHANACIMIENTO',
 		'SEXO',
 		'CODIGOPOSTAL',
