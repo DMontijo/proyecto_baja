@@ -4337,6 +4337,8 @@ class DashboardController extends BaseController
 
 		$folio = $this->request->getPost('folio');
 		$year = $this->request->getPost('year');
+		$vehiculoid = $this->request->getPost('vehiculoid');
+
 		$document_file = $this->request->getFile('subirDoc');
 		$docV = null;
 
@@ -4497,7 +4499,7 @@ class DashboardController extends BaseController
 		}
 
 
-		$update = $this->_folioVehiculoModel->set($data)->where('FOLIOID', $folio)->where('ANO', $year)->update();
+		$update = $this->_folioVehiculoModel->set($data)->where('FOLIOID', $folio)->where('ANO', $year)->where('VEHICULOID', $vehiculoid)->update();
 
 		if ($update) {
 			$vehiculos = $this->_folioVehiculoModel->get_by_folio($folio, $year);

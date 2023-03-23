@@ -2024,6 +2024,7 @@
 					const versionVehiculo = response.versionVehiculo;
 					const color = response.color;
 					const tipov = response.tipov;
+					document.querySelector('#vehiculoid').value = id;
 					document.querySelector('#situacion_vehiculo').value = vehiculo.SITUACION ?
 						vehiculo.SITUACION : '';
 						document.querySelector('#propietario_vehiculo').value = vehiculo.PERSONAFISICAIDPROPIETARIO ?
@@ -4906,6 +4907,7 @@
 				packetData.append("marca_exacta", document.querySelector('#marca_ad_exacta').value);
 				packetData.append("situacion", document.querySelector('#situacion_vehiculo').value);
 				packetData.append("propietario_vehiculo", document.querySelector('#propietario_vehiculo').value);
+				packetData.append("vehiculoid", document.querySelector('#vehiculoid').value);
 
 
 				$.ajax({

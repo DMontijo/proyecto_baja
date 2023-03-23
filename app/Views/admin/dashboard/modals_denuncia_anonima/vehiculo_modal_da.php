@@ -15,6 +15,8 @@
 					</div>
 					<hr>
 					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+					<input type="text" class="form-control" id="vehiculoid" name="vehiculoid" hidden>
+
 						<label for="situacion_vehiculo_den" class="form-label font-weight-bold">Situación:</label>
 						<select class="form-control" id="situacion_vehiculo_den" name="situacion_vehiculo_den" required>
 							<option selected disabled value="">Selecciona la situación</option>

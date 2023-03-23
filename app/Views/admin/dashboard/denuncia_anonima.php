@@ -1739,6 +1739,9 @@
 					});
 					llenarTablaVehiculos(vehiculos);
 					$('#insert_vehiculo_modal_denuncia').modal('hide');
+					document.querySelector('#doc_vehiculo').setAttribute('src','');
+					document.querySelector('#foto_vehiculo').setAttribute('src', '');
+
 					document.getElementById("form_vehiculo_da_da").reset();
 				} else {
 					Swal.fire({
@@ -2729,6 +2732,8 @@
 					const color = response.color;
 					const tipov = response.tipov;
 					console.log(vehiculo);
+					document.querySelector('#vehiculoid').value = id;
+
 					document.querySelector('#tipo_placas_vehiculo_da').value = vehiculo.TIPOPLACA ? vehiculo.TIPOPLACA : '';
 					document.querySelector('#placas_vehiculo_da').value = vehiculo.PLACAS ? vehiculo.PLACAS : '';
 					document.querySelector('#estado_vehiculo_da_ad').value = vehiculo.ESTADOIDPLACA ? vehiculo.ESTADOIDPLACA : '';
@@ -2858,6 +2863,7 @@
 		packetData.append("marca_exacta", document.querySelector('#marca_ad_exacta_da').value);
 		packetData.append("propietario_vehiculo", document.querySelector('#propietario_vehiculo_den').value);
 		packetData.append("situacion", document.querySelector('#situacion_vehiculo_den').value);
+		packetData.append("vehiculoid", document.querySelector('#vehiculoid').value);
 
 
 		$.ajax({
