@@ -323,6 +323,7 @@ class DashboardController extends BaseController
 				'TIPODENUNCIA' => 'VD',
 				'HECHOCOORDENADAX' => $this->request->getPost('longitud'),
 				'HECHOCOORDENADAY' => $this->request->getPost('latitud'),
+				'NOTIFICACIONES' => $this->request->getPost('notificaciones_check') == 'on' ? 'S' : 'N',
 
 			];
 		} else {
@@ -346,6 +347,8 @@ class DashboardController extends BaseController
 				'HECHONARRACION' => $this->request->getPost('descripcion_breve') != '' ? $this->request->getPost('descripcion_breve') : NULL,
 				'HECHODELITO' => $this->request->getPost('delito'),
 				'TIPODENUNCIA' => 'VD',
+				'NOTIFICACIONES' => $this->request->getPost('notificaciones_check') == 'on' ? 'S' : 'N',
+
 			];
 		}
 

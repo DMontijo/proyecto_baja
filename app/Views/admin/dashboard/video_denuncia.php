@@ -3198,20 +3198,27 @@
 			selectPlantilla.addEventListener("change", function() {
 				if (plantilla.value == "CITATORIO") {
 					document.getElementById("div_uma").style.display = "block";
+					document.querySelector('#uma_select').setAttribute('required', true);
+
 				} else {
 					document.getElementById("div_uma").style.display = "none";
+					document.querySelector('#uma_select').setAttribute('required', false);
 
 				}
 
 				if (plantilla.value != "CONSTANCIA DE EXTRAVÍO") {
 					document.getElementById("involucrados").style.display = "block";
+
 					select_imputado_documento.addEventListener("change", function() {
-						$('#documentos_modal_wyswyg').modal('hide');
-						$('#documentos_modal').modal('show');
+
+						// $('#documentos_modal_wyswyg').modal('hide');
+						// $('#documentos_modal').modal('show');
 						obtenerPlantillas(plantilla.value, select_victima_documento.value,
 							select_imputado_documento.value);
 
+
 					})
+
 
 				} else {
 					document.getElementById("involucrados").style.display = "none";
@@ -5608,6 +5615,21 @@
 
 			function obtenerPlantillas(tipoPlantilla, victima, imputado) {
 
+				if (select_uma.getAttribute('required') == "true" && select_uma.value != '' && tipoPlantilla == 'CITATORIO') {
+					$('#documentos_modal_wyswyg').modal('hide');
+					$('#documentos_modal').modal('show');
+				} else if (select_uma.getAttribute('required') == "true" && select_uma.value == '' && tipoPlantilla == 'CITATORIO') {
+
+					Swal.fire({
+						icon: 'error',
+						text: 'UMA obligatorio',
+						confirmButtonColor: '#bf9b55',
+					});
+				}
+				if (select_uma.getAttribute('required') == "false" && tipoPlantilla != 'CITATORIO') {
+					$('#documentos_modal_wyswyg').modal('hide');
+					$('#documentos_modal').modal('show');
+				}
 				if (select_uma.value) {
 					const data = {
 
@@ -5673,19 +5695,36 @@
 						success: function(response) {
 							if (response.status == 1) {
 								const plantilla = response.plantilla;
-								tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
-								document.querySelector("#victima_modal_documento").value = '';
-								document.querySelector("#imputado_modal_documento").value = '';
-								plantilla.value = '';
-								select_uma.value = '';
-								document.getElementById("involucrados").style.display = "none";
+								if (select_uma.getAttribute('required') == "true") {
+									tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
+									document.querySelector("#victima_modal_documento").value = '';
+									document.querySelector("#imputado_modal_documento").value = '';
+									plantilla.value = '';
+									select_uma.value = '';
+								} else {
+									tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
+									document.querySelector("#victima_modal_documento").value = '';
+									document.querySelector("#imputado_modal_documento").value = '';
+									plantilla.value = '';
+									select_uma.value = '';
+									document.getElementById("involucrados").style.display = "none";
+								}
+
 							} else {
-								tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
-								document.querySelector("#victima_modal_documento").value = '';
-								document.querySelector("#imputado_modal_documento").value = '';
-								plantilla.value = '';
-								select_uma.value = '';
-								document.getElementById("involucrados").style.display = "none";
+								if (select_uma.getAttribute('required') == "true") {
+									tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
+									document.querySelector("#victima_modal_documento").value = '';
+									document.querySelector("#imputado_modal_documento").value = '';
+									plantilla.value = '';
+									select_uma.value = '';
+								} else {
+									tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
+									document.querySelector("#victima_modal_documento").value = '';
+									document.querySelector("#imputado_modal_documento").value = '';
+									plantilla.value = '';
+									select_uma.value = '';
+									document.getElementById("involucrados").style.display = "none";
+								}
 							}
 						},
 						error: function(jqXHR, textStatus, errorThrown) {

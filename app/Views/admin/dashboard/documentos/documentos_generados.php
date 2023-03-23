@@ -273,6 +273,7 @@
 		let plantilla = document.querySelector("#plantilla");
 		var btn_guardarFolioDoc = document.querySelector('#guardarFolioDoc');
 		var btn_actualizarFolioDoc = document.querySelector('#actualizarFolioDoc');
+		let select_uma = document.querySelector("#uma_select");
 
 		// var toolbarOptions = [
 		// 	['bold', 'italic', 'underline', 'strike'],
@@ -353,16 +354,20 @@
 		selectPlantilla.addEventListener("change", function() {
 			if (plantilla.value == "CITATORIO") {
 				document.getElementById("div_uma").style.display = "block";
+				document.querySelector('#uma_select').setAttribute('required', true);
+
 			} else {
 				document.getElementById("div_uma").style.display = "none";
+				document.querySelector('#uma_select').setAttribute('required', false);
+
 
 			}
 
 			if (plantilla.value != "CONSTANCIA DE EXTRAVÍO") {
 				document.getElementById("involucrados").style.display = "block";
 				select_imputado_documento.addEventListener("change", function() {
-					$('#documentos_modal_wyswyg').modal('hide');
-					$('#documentos_modal').modal('show');
+					// $('#documentos_modal_wyswyg').modal('hide');
+					// $('#documentos_modal').modal('show');
 					obtenerPlantillas(plantilla.value, select_victima_documento.value,
 						select_imputado_documento.value);
 				})
@@ -377,6 +382,21 @@
 
 		function obtenerPlantillas(tipoPlantilla, victima, imputado) {
 
+			if (select_uma.getAttribute('required') == "true" && select_uma.value != '' && tipoPlantilla == 'CITATORIO') {
+				$('#documentos_modal_wyswyg').modal('hide');
+				$('#documentos_modal').modal('show');
+			} else if (select_uma.getAttribute('required') == "true" && select_uma.value == '' && tipoPlantilla == 'CITATORIO') {
+
+				Swal.fire({
+					icon: 'error',
+					text: 'UMA obligatorio',
+					confirmButtonColor: '#bf9b55',
+				});
+			}
+			if (select_uma.getAttribute('required') == "false" && tipoPlantilla != 'CITATORIO') {
+				$('#documentos_modal_wyswyg').modal('hide');
+				$('#documentos_modal').modal('show');
+			}
 			if (document.getElementById('uma_select').value) {
 				const data = {
 					'folio': <?php echo $_GET['folio'] ?>,
@@ -439,20 +459,35 @@
 						console.log(response);
 						if (response.status == 1) {
 							const plantilla = response.plantilla;
-							tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
-							document.querySelector("#victima_modal_documento").value = '';
-							document.querySelector("#imputado_modal_documento").value = '';
-							document.getElementById('uma_select').value = ''
-							document.getElementById("involucrados").style.display = "none";
-							document.getElementById("div_uma").style.display = "none";
+							if (select_uma.getAttribute('required') == "true") {
+								tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
+								document.querySelector("#victima_modal_documento").value = '';
+								document.querySelector("#imputado_modal_documento").value = '';
+								document.getElementById('uma_select').value = '';
+							} else {
+								tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
+								document.querySelector("#victima_modal_documento").value = '';
+								document.querySelector("#imputado_modal_documento").value = '';
+								document.getElementById('uma_select').value = ''
+								document.getElementById("involucrados").style.display = "none";
+								document.getElementById("div_uma").style.display = "none";
+							}
 						} else {
-							tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
-							document.querySelector("#victima_modal_documento").value = '';
-							document.querySelector("#imputado_modal_documento").value = '';
-							document.getElementById('uma_select').value = ''
-							document.querySelector("#plantilla").value = '';
-							document.getElementById("involucrados").style.display = "none";
-							document.getElementById("div_uma").style.display = "none";
+							if (select_uma.getAttribute('required') == "true") {
+								tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
+								document.querySelector("#victima_modal_documento").value = '';
+								document.querySelector("#imputado_modal_documento").value = '';
+								document.getElementById('uma_select').value = ''
+								document.querySelector("#plantilla").value = '';
+							} else {
+								tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
+								document.querySelector("#victima_modal_documento").value = '';
+								document.querySelector("#imputado_modal_documento").value = '';
+								document.getElementById('uma_select').value = ''
+								document.querySelector("#plantilla").value = '';
+								document.getElementById("involucrados").style.display = "none";
+								document.getElementById("div_uma").style.display = "none";
+							}
 						}
 					},
 					error: function(jqXHR, textStatus, errorThrown) {
@@ -786,8 +821,8 @@
 				'send_mail_select': document.querySelector('#send_mail_select_uni').value,
 				'expediente_modal_correo': getParameterByName('expediente'),
 				'year_modal_correo': document.querySelector("#year_modal_correo_uni").value,
-				'folio':document.querySelector("#folio_modal_correo_uni").value,
-				'folio_doc': document.querySelector("#foliodoc_modal_correo_uni").value 
+				'folio': document.querySelector("#folio_modal_correo_uni").value,
+				'folio_doc': document.querySelector("#foliodoc_modal_correo_uni").value
 
 			};
 			$.ajax({
@@ -801,7 +836,7 @@
 					document.querySelector('#loading_mail_uni').classList.remove('d-none');
 					document.querySelector('#password_verifying_mail_uni').classList.remove(
 						'd-none');
-						btn_enviarcorreoDocUni.disabled = true;
+					btn_enviarcorreoDocUni.disabled = true;
 				},
 				success: function(response) {
 					console.log(response);
@@ -817,7 +852,7 @@
 						document.querySelector('#loading_mail_uni').classList.add('d-none');
 						document.querySelector('#password_verifying_mail_uni').classList.add(
 							'd-none');
-							btn_enviarcorreoDocUni.disabled = false;
+						btn_enviarcorreoDocUni.disabled = false;
 
 					}
 					if (response.status == 3) {
@@ -832,7 +867,7 @@
 						document.querySelector('#loading_mail_uni').classList.add('d-none');
 						document.querySelector('#password_verifying_mail_uni').classList.add(
 							'd-none');
-							btn_enviarcorreoDocUni.disabled = false;
+						btn_enviarcorreoDocUni.disabled = false;
 					}
 				},
 				error: function(jqXHR, textStatus, errorThrown) {}

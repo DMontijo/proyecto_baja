@@ -87,6 +87,15 @@
 											Debes confirmar de leído los derechos de víctima u ofendido para continuar.
 										</div>
 									</div>
+									<div class="form-group">
+										<input class="form-check-input" type="checkbox" id="notificaciones_check" name="notificaciones_check" required>
+										<label class="fw-bold" for="notificaciones_check">
+											Acepto y autorizo como medio de notificaciones: teléfono, correo electrónico y domicilio registrado.
+										</label>
+										<div class="invalid-feedback">
+											Debes aceptar el envío de notificaciones para continuar.
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
