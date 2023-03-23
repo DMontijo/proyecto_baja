@@ -2027,7 +2027,7 @@
 					document.querySelector('#vehiculoid').value = id;
 					document.querySelector('#situacion_vehiculo').value = vehiculo.SITUACION ?
 						vehiculo.SITUACION : '';
-						document.querySelector('#propietario_vehiculo').value = vehiculo.PERSONAFISICAIDPROPIETARIO ?
+					document.querySelector('#propietario_vehiculo').value = vehiculo.PERSONAFISICAIDPROPIETARIO ?
 						vehiculo.PERSONAFISICAIDPROPIETARIO : '';
 					document.querySelector('#tipo_placas_vehiculo').value = vehiculo.TIPOPLACA ? vehiculo
 						.TIPOPLACA : '';
@@ -5017,6 +5017,9 @@
 
 							$('#agregar_vehiculos').modal('hide');
 							document.getElementById("form_vehiculo_agregar").reset();
+							document.querySelector('#doc_vehiculo_add').setAttribute('src', '');
+							document.querySelector('#foto_vehiculo_add').setAttribute('src', '');
+
 
 						} else {
 							Swal.fire({
