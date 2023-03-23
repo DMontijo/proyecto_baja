@@ -458,8 +458,8 @@ class DashboardController extends BaseController
 					'NUMEROCASA' => $this->request->getPost('checkML_des') == 'on'  && $exterior_des ?  'M.' . $exterior_des : $exterior_des,
 					'NUMEROINTERIOR' => $this->request->getPost('checkML_des') == 'on' && $interior_des ?  'L.' . $interior_des : $exterior_des,
 					'CP' => $this->request->getPost('cp_des'),
-
 				);
+
 				if ((int)$this->request->getPost('ocupacion_des') == 999) {
 					$dataDesaparecido['OCUPACIONID'] = (int)$this->request->getPost('ocupacion_des');
 					$dataDesaparecido['OCUPACIONDESCR'] = $this->request->getPost('ocupacion_descr_des');
@@ -541,7 +541,6 @@ class DashboardController extends BaseController
 					'NUMEROCASA' => null,
 					'NUMEROINTERIOR' => null,
 					'CP' => null,
-
 				);
 
 				$ofendidoId = $this->_folioPersonaFisica($dataOfendido, $FOLIOID, 1, $year);
@@ -633,7 +632,7 @@ class DashboardController extends BaseController
 			//DATOS DEL POSIBLE RESPONSABLE
 			if (!empty($this->request->getPost('responsable')) && $this->request->getPost('responsable') == 'SI') {
 				$dataImputado = array(
-					'NOMBRE' => $this->request->getPost('nombre_imputado') ? $this->request->getPost('nombre_imputado') : 'QUIEN RESULTE RESPONSABLE',
+					'NOMBRE' => $this->request->getPost('nombre_imputado') && $this->request->getPost('nombre_imputado') != "" ? $this->request->getPost('nombre_imputado') : 'QUIEN RESULTE RESPONSABLE',
 					'PRIMERAPELLIDO' => $this->request->getPost('primer_apellido_imputado'),
 					'SEGUNDOAPELLIDO' => $this->request->getPost('segundo_apellido_imputado'),
 					'FECHANACIMIENTO' => $this->request->getPost('fecha_nacimiento_imputado'),
@@ -651,7 +650,6 @@ class DashboardController extends BaseController
 					'NACIONALIDADID' => $this->request->getPost('nacionalidad_imputado'),
 					'ESCOLARIDADID' => $this->request->getPost('escolaridad_imputado'),
 					'OCUPACIONID' => $this->request->getPost('ocupacion_imputado'),
-
 				);
 				$interior_imputado = $this->request->getPost('numero_int_imputado');
 				if ($interior_imputado == '') {
@@ -684,6 +682,7 @@ class DashboardController extends BaseController
 				$this->_folioPersonaFisicaMediaFiliacion($dataImputado, $FOLIOID, $imputadoId, $year);
 				$this->_folioPersonaFisicaDomicilio($dataImputadoDomicilio, $FOLIOID, $imputadoId, $year);
 			} else {
+
 				$dataImputado = array(
 					'NOMBRE' => 'QUIEN RESULTE RESPONSABLE',
 					'FECHANACIMIENTO' => null,
@@ -700,7 +699,6 @@ class DashboardController extends BaseController
 					'NUMEROCASA' => null,
 					'NUMEROINTERIOR' => null,
 					'CP' => null,
-
 				);
 
 				$imputadoId = $this->_folioPersonaFisica($dataImputado, $FOLIOID, 2, $year);

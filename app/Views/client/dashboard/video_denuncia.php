@@ -7,8 +7,29 @@
 <?= $this->section('content') ?>
 
 <?php $session = session(); ?>
-<div class="container-fluid mb-5">
-	<div class="row">
+<div class="container-fluid" style="overflow:auto;min-height:100vh;">
+	<div class="row d-block" >
+		<div class="col-12 p-0 m-0">
+			<div class="card">
+				<div class="card-body">
+					<form id="form_archivos_externos" method="post" enctype="multipart/form-data">
+						<input type="text" class="form-control" id="folio" name="folio" hidden>
+						<input type="text" class="form-control" id="year" name="year" hidden>
+						<input type="text" class="form-control" id="autor" name="autor" hidden>
+
+						<div class="row" style="font-size:10px;">
+							<div class="col-12 col-sm-6 offset-sm-3">
+								<p class="p-0 m-0"><strong>Documentos a anexar</strong></p>
+								<small>En caso de requerir subir un documento durante la entrevista favor de subirlo en esta sección</small>
+								<input type="file" class="form-control" id="documentoArchivo" name="documentoArchivo" accept="image/jpeg, image/jpg, image/png, .doc, .pdf">
+								<img id="viewDocumentoArchivo" class="img-fluid" src="" style="max-width:100px;">
+								<button type="submit" class="btn-sm btn-primary" style="width: 100%;">Subir documentos</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
 		<div class="col-12 text-center" style="font-size:10px;">
 			Para un correcto funcionamiento utilice <a href="https://www.google.com/chrome/" target="_blank">google chrome</a>.<br>
 			Si esta utilizando un dispositivo móvil de clic en <b>iniciar en el navegador</b>.
@@ -22,30 +43,8 @@
 
 				</div>
 			</div>
-			
 		</div>
 		<br>
-		<div class="card col-12 p-0 m-0">
-				<form id="form_archivos_externos" method="post" enctype="multipart/form-data" >
-					<input type="text" class="form-control" id="folio" name="folio" hidden>
-					<input type="text" class="form-control" id="year" name="year" hidden>
-					<input type="text" class="form-control" id="autor" name="autor" hidden>
-
-					<div class="row">
-
-						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3 m-lg-3 m-md-3">
-							<label for="documentoArchivo" class="form-label font-weight-bold" style="font-weight: bold;">Documentos a anexar.</label>
-							<input type="file" class="form-control" id="documentoArchivo" name="documentoArchivo" accept="image/jpeg, image/jpg, image/png, .doc, .pdf">
-							<img id="viewDocumentoArchivo" class="img-fluid m-3" src="" style="max-width:100px;">
-
-						</div>
-						<div class="col-12 col-sm-4 col-md-4 col-lg-4 mb-3">
-							<button type="submit" class="btn-sm btn-primary m-lg-4 m-md-4" style="width: 100%;">Enviar documentos</button>
-						</div>
-					</div>
-				</form>
-
-			</div>
 	</div>
 </div>
 </div>
@@ -70,10 +69,11 @@
 		}
 	});
 
-	document.getElementById('form_archivos_externos').addEventListener('submit', function(evt){
-    evt.preventDefault();
-	crearArchivos();
-})
+	document.getElementById('form_archivos_externos').addEventListener('submit', function(evt) {
+		evt.preventDefault();
+		crearArchivos();
+	})
+
 	function crearArchivos() {
 		var packetData = new FormData();
 		packetData.append("documentoArchivo", $("#documentoArchivo")[0].files[0]);
@@ -82,11 +82,11 @@
 		$.ajax({
 			url: "<?= base_url('/data/create_archivos') ?>",
 			method: "POST",
-                dataType: 'json',
-                contentType: false,
-                data: packetData,
-                processData: false,
-                cache: false,
+			dataType: 'json',
+			contentType: false,
+			data: packetData,
+			processData: false,
+			cache: false,
 			success: function(response) {
 				const archivos = response.archivos;
 				if (response.status == 1) {
@@ -101,13 +101,13 @@
 					document.getElementById('documentoArchivo').value = '';
 					preview.setAttribute('src', '');
 
-				} else if(response.status==0){
+				} else if (response.status == 0) {
 					Swal.fire({
 						icon: 'error',
 						text: 'Los archivos no se pudieron subir',
 						confirmButtonColor: '#bf9b55',
 					});
-				}else if(response.status==2){
+				} else if (response.status == 2) {
 					Swal.fire({
 						icon: 'error',
 						text: 'Debes subir un documento',
@@ -121,8 +121,6 @@
 		});
 
 	}
-
-
 </script>
 
 <?= $this->endSection() ?>

@@ -100,7 +100,7 @@
 		</div>
 	</div>
 
-	<div class="col-12 mt-4 mb-4">
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3 d-flex align-items-center">
 		<input class="form-check-input" type="checkbox" id="check_ubi" name="check_ubi">
 		<label class="form-check-label fw-bold" for="check_ubi">
 			Ubicación exacta del delito
@@ -109,10 +109,9 @@
 
 		<input type="text" class="form-control d-none" id="longitud" name="longitud">
 	</div>
-	<div class="col-12 d-none" id="map" name="map">
-
+	<div class="col-12 mb-3">
+		<div class="d-none" id="map" name="map"></div>
 	</div>
-
 	<!-- <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="clasificacion" class="form-label fw-bold">Clasificación del lugar</label>
 		<select class="form-select" id="clasificacion" name="clasificacion">
@@ -134,7 +133,12 @@
 			La hora del delito es obligatoria
 		</div>
 	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+	<div class="col-12 mb-3">
+		<label for="descripcion_breve" class="form-label fw-bold input-required">Descripción breve del delito</label>
+		<textarea class="form-control" id="descripcion_breve" name="descripcion_breve" rows="10" maxlength="1000" onkeyup="contarCaracteres(this)" required></textarea>
+		<small id="numCaracter">1000 caracteres restantes</small>
+	</div>
+	<div class="col-12 mb-3 text-left text-md-center">
 		<label for="responsable" class="form-label fw-bold input-required">¿Identifica al responsable del delito?</label>
 		<br>
 		<div class="form-check form-check-inline">
@@ -146,12 +150,6 @@
 			<label class="form-check-label" for="flexRadioDefault2">NO</label>
 		</div>
 	</div>
-	<div class="col-12">
-		<label for="descripcion_breve" class="form-label fw-bold input-required">Descripción breve del delito</label>
-		<textarea class="form-control" id="descripcion_breve" name="descripcion_breve" rows="10" maxlength="1000" onkeyup="contarCaracteres(this)" required></textarea>
-		<small id="numCaracter">1000 caracteres restantes</small>
-	</div>
-
 </div>
 <script>
 	function clearSelect(select_element) {
