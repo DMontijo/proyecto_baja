@@ -691,6 +691,7 @@ class DashboardController extends BaseController
 
 		$data->parentesco = $this->_parentescoModel->asObject()->findAll();
 		$data->figura = $this->_figuraModel->asObject()->findAll();
+		$data->situacionVehiculo = $this->_situacionVehiculoModel->asObject()->findAll();
 
 		$data->cejaContextura = $this->_cejaContexturaModel->asObject()->findAll();
 		$data->caraForma = $this->_caraFormaModel->asObject()->findAll();
@@ -4567,6 +4568,8 @@ class DashboardController extends BaseController
 					'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo') ? $this->request->getPost('modelo_vehiculo') : NULL,
 					'FOTO' => $fotoV,
 					'DOCUMENTO' => $docV,
+					'SITUACION' => $this->request->getPost('situacion') ? $this->request->getPost('situacion') : 2,
+					'PERSONAFISICAIDPROPIETARIO' => $this->request->getPost('propietario_vehiculo'),
 
 				);
 			} catch (\Exception $e) {
@@ -4602,6 +4605,9 @@ class DashboardController extends BaseController
 					'SEGUNDOCOLORID' => $this->request->getPost('color_tapiceria_vehiculo') ? $this->request->getPost('color_tapiceria_vehiculo') : NULL,
 					'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo') ? $this->request->getPost('modelo_vehiculo') : NULL,
 					'DOCUMENTO' => $docV,
+					'SITUACION' => $this->request->getPost('situacion') ? $this->request->getPost('situacion') : 2,
+					'PERSONAFISICAIDPROPIETARIO' => $this->request->getPost('propietario_vehiculo'),
+
 
 				);
 			} catch (\Exception $e) {
@@ -4635,6 +4641,9 @@ class DashboardController extends BaseController
 					'SEGUNDOCOLORID' => $this->request->getPost('color_tapiceria_vehiculo') ? $this->request->getPost('color_tapiceria_vehiculo') : NULL,
 					'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo') ? $this->request->getPost('modelo_vehiculo') : NULL,
 					'FOTO' => $fotoV,
+					'SITUACION' => $this->request->getPost('situacion') ? $this->request->getPost('situacion') : 2,
+					'PERSONAFISICAIDPROPIETARIO' => $this->request->getPost('propietario_vehiculo'),
+
 
 				);
 			} catch (\Exception $e) {
@@ -4666,6 +4675,9 @@ class DashboardController extends BaseController
 				'NUMEROCHASIS' => $this->request->getPost('num_chasis_vehiculo') ? $this->request->getPost('num_chasis_vehiculo') : NULL,
 				'SEGUNDOCOLORID' => $this->request->getPost('color_tapiceria_vehiculo') ? $this->request->getPost('color_tapiceria_vehiculo') : NULL,
 				'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo') ? $this->request->getPost('modelo_vehiculo') : NULL,
+				'SITUACION' => $this->request->getPost('situacion') ? $this->request->getPost('situacion') : 2,
+				'PERSONAFISICAIDPROPIETARIO' => $this->request->getPost('propietario_vehiculo'),
+
 			);
 		}
 		// $insert = $this->_folioVehiculoModel->insert($data);

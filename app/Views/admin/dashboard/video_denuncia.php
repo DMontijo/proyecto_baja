@@ -1053,6 +1053,24 @@
 							option.text = persona.NOMBRE + ' ' + primer_apellido;
 							select_propietario_prop_v.add(option, null);
 						});
+						$('#propietario_vehiculo_add').empty();
+						let select_propietario_prop_v_add = document.querySelector("#propietario_vehiculo_add");
+						const option_vacio_prop_v_add = document.createElement('option');
+						option_vacio_prop_v_add.value = '';
+						option_vacio_prop_v_add.text = '';
+						option_vacio_prop_v_add.disabled = true;
+						option_vacio_prop_v_add.selected = true;
+
+						select_propietario_prop_v_add.add(option_vacio_prop_v_add, null);
+						personas.forEach(persona => {
+							let primer_apellido = persona.PRIMERAPELLIDO ? persona
+								.PRIMERAPELLIDO : '';
+
+							const option = document.createElement('option');
+							option.value = persona.PERSONAFISICAID;
+							option.text = persona.NOMBRE + ' ' + primer_apellido;
+							select_propietario_prop_v_add.add(option, null);
+						});
 						$('#propietario_update').empty();
 						let select_propietario_update = document.querySelector("#propietario_update");
 						select_propietario_update.add(option_vacio, null);
@@ -2008,6 +2026,8 @@
 					const tipov = response.tipov;
 					document.querySelector('#situacion_vehiculo').value = vehiculo.SITUACION ?
 						vehiculo.SITUACION : '';
+						document.querySelector('#propietario_vehiculo').value = vehiculo.PERSONAFISICAIDPROPIETARIO ?
+						vehiculo.PERSONAFISICAIDPROPIETARIO : '';
 					document.querySelector('#tipo_placas_vehiculo').value = vehiculo.TIPOPLACA ? vehiculo
 						.TIPOPLACA : '';
 					document.querySelector('#placas_vehiculo').value = vehiculo.PLACAS ? vehiculo.PLACAS : '';
@@ -2204,6 +2224,7 @@
 			var form_fisimpdelito = document.querySelector('#form_delitos_cometidos_insert');
 			var form_objetosinvolucrados = document.querySelector('#form_objetos_involucrados');
 			var form_objetosinvolucrados_update = document.querySelector('#form_objetos_involucrados_update');
+			var form_vehiculo_agregar = document.querySelector('#form_vehiculo_agregar');
 
 			var selectPersonaFisica1 = document.querySelector('#personaFisica1_I');
 			var form_persona_fisica_insert = document.querySelector('#persona_fisica_form_insert');
@@ -2216,6 +2237,8 @@
 
 			var btn_insertar_persona_fisica = document.querySelector('#insertPersonaFisicaModal');
 			var btn_asignar_delitos = document.querySelector('#insertArbolDelictual');
+			var btn_m_agregar_vehiculo = document.querySelector('#insertVehiculoModal');
+
 			// var btn_delito_imputado = document.querySelector('#insertDelitoImputado');
 			var btn_delito_cometido = document.querySelector('#insertDelitoCometido');
 			var btn_objeto_involucrado_modal = document.querySelector('#modalObjetoInvolucrado');
@@ -2418,6 +2441,19 @@
 					actualizarObjetosInvolucrados(objeto_id);
 				}
 			}, false);
+
+			form_vehiculo_agregar.addEventListener('submit', (event) => {
+				if (!form_vehiculo_agregar.checkValidity()) {
+					event.preventDefault();
+					event.stopPropagation();
+					form_vehiculo_agregar.classList.add('was-validated')
+				} else {
+					event.preventDefault();
+					event.stopPropagation();
+					form_vehiculo_agregar.classList.remove('was-validated')
+					agregarVehiculo();
+				}
+			}, false);
 			btn_insertar_parentesco.addEventListener('click', (event) => {
 				document.getElementById("form_media_filiacion_insert").reset();
 				document.querySelector('#personaFisica1_I').value = '';
@@ -2471,6 +2507,10 @@
 			}, false);
 			btn_objeto_involucrado_modal.addEventListener('click', (event) => {
 				$('#folio_objetos').modal('show');
+			}, false);
+
+			btn_m_agregar_vehiculo.addEventListener('click', (event) => {
+				$('#agregar_vehiculos').modal('show');
 			}, false);
 			// btn_delito_imputado.addEventListener('click', (event) => {
 			// 	$('#insert_asignar_delitos_cometidos_modal').modal('show');
@@ -2827,6 +2867,8 @@
 			let endYear = new Date().getFullYear();
 			for (let i = endYear; i > startYear; i--) {
 				$('#modelo_vehiculo').append($('<option />').val(i).html(i));
+				$('#modelo_vehiculo_add').append($('<option />').val(i).html(i));
+
 			}
 
 
@@ -2872,7 +2914,17 @@
 					document.getElementById("estado_vehiculo_ad").style.display = "none";
 				}
 			});
+			document.querySelector('#estado_vehiculo_add_ad').addEventListener('change', (e) => {
+				let select_estado_add = document.querySelector('#estado_vehiculo_add_ad');
+				let select_estado_extr_add = document.querySelector('#estado_extranjero_vehiculo_add_ad');
+				if (select_estado_add.value == 33) {
+					let select_estado_add = document.querySelector('#estado_vehiculo_add_ad');
+					document.getElementById("estado_extranjero_vehiculo_add_ad").style.display = "block";
+					document.getElementById("estado_vehiculo_add_ad").style.display = "none";
+				}
+			});
 			let select_estado_extr = document.querySelector('#estado_extranjero_vehiculo_ad');
+			let select_estado_extr_add = document.querySelector('#estado_extranjero_vehiculo_add_ad');
 
 			document.querySelector('#estado_extranjero_vehiculo_ad').addEventListener('change', (e) => {
 				if (select_estado_extr.value == 0) {
@@ -2882,6 +2934,15 @@
 					document.getElementById("estado_extranjero_vehiculo_ad").style.display = "none";
 				}
 			});
+			document.querySelector('#estado_extranjero_vehiculo_add_ad').addEventListener('change', (e) => {
+				if (select_estado_extr_add.value == 0) {
+					let select_estado_add = document.querySelector('#estado_vehiculo_add_ad');
+					let select_estado_extr_add = document.querySelector('#estado_extranjero_vehiculo_add_ad');
+					document.getElementById("estado_vehiculo_add_ad").style.display = "block";
+					document.getElementById("estado_extranjero_vehiculo_ad").style.display = "none";
+				}
+			});
+
 
 			document.querySelector('#distribuidor_vehiculo_ad').addEventListener('change', (e) => {
 
@@ -2918,7 +2979,41 @@
 				});
 
 			});
+			document.querySelector('#distribuidor_vehiculo_add_ad').addEventListener('change', (e) => {
 
+				let select_marca_add = document.querySelector('#marca_add_ad');
+				let select_linea_add = document.querySelector('#linea_vehiculo_add_ad');
+				let select_version_add = document.querySelector('#version_vehiculo_add_ad');
+
+				clearSelect(select_marca_add);
+				clearSelect(select_linea_add);
+				clearSelect(select_version_add);
+
+
+				let data = {
+					'distribuidor_vehiculo': e.target.value,
+				}
+
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/get-marca-by-dist') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						let marcaVehiculo = response.data;
+						marcaVehiculo.forEach(marca_vehiculo => {
+							let option = document.createElement("option");
+							option.text = marca_vehiculo.VEHICULOMARCADESCR;
+							option.value = marca_vehiculo.VEHICULOMARCAID;
+							select_marca_add.add(option);
+						});
+						select_marca_add.value = '1';
+
+					},
+					error: function(jqXHR, textStatus, errorThrown) {}
+				});
+
+			});
 			document.querySelector('#marca_ad').addEventListener('change', (e) => {
 				let select_linea = document.querySelector('#linea_vehiculo_ad');
 				let select_version = document.querySelector('#version_vehiculo_ad');
@@ -2956,6 +3051,43 @@
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
 			});
+			document.querySelector('#marca_add_ad').addEventListener('change', (e) => {
+				let select_linea_add = document.querySelector('#linea_vehiculo_add_ad');
+				let select_version_add = document.querySelector('#version_vehiculo_add_ad');
+				let select_distribuidor_add = document.querySelector('#distribuidor_vehiculo_add_ad');
+
+				clearSelect(select_linea_add);
+				clearSelect(select_version_add);
+
+				// select_linea.value = '';
+				// select_version.value = '';
+
+				// select_version.classList.remove('d-none');
+
+				let data = {
+					'marca': e.target.value,
+					'dist': select_distribuidor_add.value,
+				}
+
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/get-modelo-by-marca') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						let lineaVehiculo = response.data;
+
+						lineaVehiculo.forEach(linea_vehiculo => {
+							var option = document.createElement("option");
+							option.text = linea_vehiculo.VEHICULOMODELODESCR;
+							option.value = linea_vehiculo.VEHICULOMODELOID;
+							select_linea_add.add(option);
+						});
+
+					},
+					error: function(jqXHR, textStatus, errorThrown) {}
+				});
+			});
 
 			document.querySelector('#linea_vehiculo_ad').addEventListener('change', (e) => {
 				let select_version = document.querySelector('#version_vehiculo_ad');
@@ -2983,6 +3115,39 @@
 							option.text = version_vehiculo.VEHICULOVERSIONDESCR;
 							option.value = version_vehiculo.VEHICULOVERSIONID;
 							select_version.add(option);
+						});
+
+					},
+					error: function(jqXHR, textStatus, errorThrown) {}
+				});
+			});
+
+			document.querySelector('#linea_vehiculo_add_ad').addEventListener('change', (e) => {
+				let select_version_add = document.querySelector('#version_vehiculo_add_ad');
+				let select_distribuidor_add = document.querySelector('#distribuidor_vehiculo_add_ad');
+				let select_marca_add = document.querySelector('#marca_add_ad');
+
+				clearSelect(select_version_add);
+
+				let data = {
+					'linea_vehiculo': e.target.value,
+					'dist': select_distribuidor_add.value,
+					'marca': select_marca_add.value,
+				}
+
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/get-version-by-modelo') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						let versionVehiculo = response.data;
+
+						versionVehiculo.forEach(version_vehiculo => {
+							var option = document.createElement("option");
+							option.text = version_vehiculo.VEHICULOVERSIONDESCR;
+							option.value = version_vehiculo.VEHICULOVERSIONID;
+							select_version_add.add(option);
 						});
 
 					},
@@ -3941,6 +4106,19 @@
 								option.text = persona.NOMBRE + ' ' + primer_apellido;
 								select_propietario_v.add(option, null);
 							});
+
+							$('#propietario_vehiculo_add').empty();
+							let select_propietario_v_add = document.querySelector("#propietario_vehiculo_add");
+							select_propietario_v_add.add(option_vacio, null);
+							personas.forEach(persona => {
+								let primer_apellido = persona.PRIMERAPELLIDO ? persona
+									.PRIMERAPELLIDO : '';
+
+								const option = document.createElement('option');
+								option.value = persona.PERSONAFISICAID;
+								option.text = persona.NOMBRE + ' ' + primer_apellido;
+								select_propietario_v_add.add(option, null);
+							});
 							$('#imputado_arbol').empty();
 							let select_imputado_mputado = document.querySelector("#imputado_arbol");
 							select_imputado_mputado.add(option_vacio, null);
@@ -4773,6 +4951,85 @@
 				});
 			}
 
+			function agregarVehiculo() {
+				var packetData = new FormData();
+
+				packetData.append("subirDoc", $("#subirDocAdd")[0].files[0]);
+				packetData.append("subirFotoV", $("#subirFotoVAdd")[0].files[0]);
+				packetData.append("folio", document.querySelector('#input_folio_atencion').value);
+				packetData.append("year", document.querySelector('#year_select').value);
+				packetData.append("tipo_vehiculo", document.querySelector('#tipo_vehiculo_add').value);
+				packetData.append("color_vehiculo", document.querySelector('#color_vehiculo_add').value);
+				packetData.append("tipo_placas_vehiculo", document.querySelector('#tipo_placas_vehiculo_add').value);
+				packetData.append("placas_vehiculo", document.querySelector('#placas_vehiculo_add').value);
+				packetData.append("estado_vehiculo_ad", document.querySelector('#estado_vehiculo_add_ad').value);
+				packetData.append("estado_extranjero_vehiculo_ad", document.querySelector(
+					'#estado_extranjero_vehiculo_add_ad').value);
+				packetData.append("serie_vehiculo", document.querySelector('#serie_vehiculo_add').value);
+				packetData.append("num_chasis_vehiculo", document.querySelector('#num_chasis_vehiculo_add').value);
+				packetData.append("distribuidor_vehiculo_ad", document.querySelector('#distribuidor_vehiculo_add_ad')
+					.value);
+				packetData.append("marca_ad", document.querySelector('#marca_add_ad').value);
+				packetData.append("linea_vehiculo_ad", document.querySelector('#linea_vehiculo_add_ad').value);
+				packetData.append("version_vehiculo_ad", document.querySelector('#version_vehiculo_add_ad').value);
+				packetData.append("transmision_vehiculo", document.querySelector('#transmision_vehiculo_add').value);
+				packetData.append("traccion_vehiculo", document.querySelector('#traccion_vehiculo_add').value);
+				packetData.append("seguro_vigente_vehiculo", document.querySelector('#seguro_vigente_vehiculo_add')
+					.value);
+				packetData.append("servicio_vehiculo_ad", document.querySelector('#servicio_vehiculo_add_ad').value);
+				packetData.append("description_vehiculo", document.querySelector('#description_vehiculo_add').value);
+				packetData.append("modelo_vehiculo", document.querySelector('#modelo_vehiculo_add').value);
+				packetData.append("color_tapiceria_vehiculo", document.querySelector('#color_tapiceria_vehiculo_add')
+					.value);
+				packetData.append("marca_exacta", document.querySelector('#marca_ad_exacta_add').value);
+				packetData.append("situacion", document.querySelector('#situacion_vehiculo_add').value);
+				packetData.append("propietario_vehiculo", document.querySelector('#propietario_vehiculo_add').value);
+
+
+				$.ajax({
+					url: "<?= base_url('/data/create-vehiculo-by-id') ?>",
+					method: "POST",
+					dataType: 'json',
+					contentType: false,
+					data: packetData,
+					processData: false,
+					cache: false,
+					success: function(response) {
+						// console.log(respobse.idcalidad);
+						if (response.status == 1) {
+							const vehiculos = response.vehiculos;
+							Swal.fire({
+								icon: 'success',
+								text: 'Vehículo agregado correctamente',
+								confirmButtonColor: '#bf9b55',
+							});
+							let tabla_vehiculo = document.querySelectorAll('#table-vehiculos tr');
+							tabla_vehiculo.forEach(row => {
+								if (row.id !== '') {
+									row.remove();
+								}
+							});
+							llenarTablaVehiculos(vehiculos);
+							document.getElementById('subirFotoVAdd').value = '';
+							document.getElementById('subirDocAdd').value = '';
+
+							$('#agregar_vehiculos').modal('hide');
+							document.getElementById("form_vehiculo_agregar").reset();
+
+						} else {
+							Swal.fire({
+								icon: 'error',
+								text: 'No se agrego la información del vehículo',
+								confirmButtonColor: '#bf9b55',
+							});
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						console.log(textStatus);
+					}
+				});
+			}
+
 			function insertarPersonaFisica() {
 				const data = {
 					'folio': document.querySelector('#input_folio_atencion').value,
@@ -4972,6 +5229,24 @@
 								option.value = persona.PERSONAFISICAID;
 								option.text = persona.NOMBRE + ' ' + primer_apellido;
 								select_propietario_v.add(option, null);
+							});
+
+							$('#propietario_vehiculo_add').empty();
+							let select_propietario_v_add = document.querySelector("#propietario_vehiculo_add");
+							const option_vacio_p_add = document.createElement('option');
+							option_vacio_p_add.value = '';
+							option_vacio_p_add.text = '';
+							option_vacio_p_add.disabled = true;
+							option_vacio_p_add.selected = true;
+							select_propietario_v_add.add(option_vacio_p_add, null);
+							personas.forEach(persona => {
+								let primer_apellido = persona.PRIMERAPELLIDO ? persona
+									.PRIMERAPELLIDO : '';
+
+								const option = document.createElement('option');
+								option.value = persona.PERSONAFISICAID;
+								option.text = persona.NOMBRE + ' ' + primer_apellido;
+								select_propietario_v_add.add(option, null);
 							});
 							$('#propietario_update').empty();
 							let select_propietario_update = document.querySelector(
@@ -5757,6 +6032,7 @@
 <?php include 'video_denuncia_modals/domicilio_modal.php' ?>
 <?php include 'video_denuncia_modals/insert_asignar_arbol_delictual_modal.php' ?>
 <?php include 'video_denuncia_modals/insert_asignar_delitos_cometidos_modal.php' ?>
+<?php include 'video_denuncia_modals/agregar_vehiculos_modal.php' ?>
 <?php include 'video_denuncia_modals/objetos_involucrados_modal.php' ?>
 <?php include 'video_denuncia_modals/objetos_involucrados_modal_update.php' ?>
 <?php include 'video_denuncia_modals/documentos_modal.php' ?>
@@ -5764,6 +6040,7 @@
 <?php include 'video_denuncia_modals/documentos_modal_wyswyg.php' ?>
 <?php include 'video_denuncia_modals/modal_validation_password_firma.php' ?>
 <?php include 'video_denuncia_modals/documentos_generados_modal.php' ?>
+
 <?php include 'documentos/modal_validation_password_doc_id.php' ?>
 
 <?php $this->endSection() ?>

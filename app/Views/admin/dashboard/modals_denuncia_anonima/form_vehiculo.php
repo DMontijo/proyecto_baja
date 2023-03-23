@@ -159,6 +159,7 @@
 		</select>
 		
 	</div>
+	
 	<div class="col-12 mb-3 text-center">
 		<button type="submit" class="btn btn-primary font-weight-bold">ACTUALIZAR VEHÍCULO</button>
 	</div>
