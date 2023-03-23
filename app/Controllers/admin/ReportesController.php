@@ -251,8 +251,8 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('A' . $row, $folio->FOLIOID);
 			$sheet->setCellValue('B' . $row, $folio->ANO);
 			$sheet->setCellValue('C' . $row, $folio->TIPODENUNCIA == 'VD' ? 'CDTEC' : 'ANÓNIMA');
-			$sheet->setCellValue('D' . $row, $folio->EXPEDIENTEID);
-			$sheet->setCellValue('E' . $row, $folio->FECHASALIDA);
+			$sheet->setCellValue('D' . $row, $folio->EXPEDIENTEID . '/' . $folio->TIPOEXPEDIENTECLAVE);
+			$sheet->setCellValue('E' . $row, date('d-m-Y'), strtotime($folio->FECHASALIDA));
 			$sheet->setCellValue('F' . $row, $folio->N_DENUNCIANTE . ' ' . $folio->APP_DENUNCIANTE . ' ' . $folio->APM_DENUNCIANTE);
 			$sheet->setCellValue('G' . $row, $folio->N_AGENT . ' ' . $folio->APP_AGENT . ' ' . $folio->APM_AGENT);
 			$sheet->setCellValue('H' . $row, $folio->ESTADODESCR);
