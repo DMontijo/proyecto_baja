@@ -68,7 +68,7 @@
                     <p><strong>CONSTANCIA DE EXTRAVÍO</strong></p>
                 </td>
                 <td style="width: 30%;text-align:right;">
-                    <img src="<?= 'data:image/jpg;base64,' . $data->image2 ?>" style="height:1cm;" />
+                    <!-- <img src="<?= 'data:image/jpg;base64,' . $data->image2 ?>" style="height:1cm;" /> -->
                 </td>
             </tr>
         </table>
