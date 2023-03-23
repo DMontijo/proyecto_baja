@@ -34,7 +34,7 @@
 										<option value="" selected disabled>Selecciona...</option>
 										<option value="DERIVADO">DERIVACION</option>
 										<option value="CANALIZADO">CANALIZACION</option>
-										<option value="ATENDIDA">DENUNCIA YA ATENDIDA</option>
+										<!-- <option value="ATENDIDA">DENUNCIA YA ATENDIDA</option> -->
 										<?php foreach ($body_data->tipoExpediente as $index => $expediente) { ?>
 											<option value="<?= $expediente->TIPOEXPEDIENTEID ?>"> <?= $expediente->TIPOEXPEDIENTEDESCR ?> </option>
 										<?php } ?>
