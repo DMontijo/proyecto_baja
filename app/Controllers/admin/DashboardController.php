@@ -4774,6 +4774,42 @@ class DashboardController extends BaseController
 		}
 	}
 
+
+	
+	public function deletePersonaFisicaById()
+	{
+
+		try {
+			$personaf_id = $this->request->getPost('personafisica');
+
+			$folio = $this->request->getPost('folio');
+			$year = $this->request->getPost('year');
+
+			$deletePersonaFisica = $this->_folioPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $personaf_id)->delete();
+			$deletePersonaFisicaDom = $this->_folioPersonaFisicaDomicilioModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $personaf_id)->delete();
+			$deletePersonaFisicaMediaF = $this->_folioMediaFiliacion->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $personaf_id)->delete();
+
+			if ($deletePersonaFisica && $deletePersonaFisicaDom && $deletePersonaFisicaMediaF) {
+				$personas = $this->_folioPersonaFisicaModel->get_by_folio($folio, $year);
+				$imputados = $this->_folioPersonaFisicaModel->get_imputados($folio, $year);
+				$victimas = $this->_folioPersonaFisicaModel->get_victimas($folio, $year);
+				$delitosModalidadFiltro = $this->_delitoModalidadModel->get_delitodescr($folio, $year);
+	
+				$datosBitacora = [
+					'ACCION' => 'Ha eliminado una persona fisica',
+					'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
+				];
+
+				$this->_bitacoraActividad($datosBitacora);
+
+				return json_encode(['status' => 1, 'personas' => $personas, 'imputados' => $imputados, 'victimas' => $victimas]);
+			} else {
+				return json_encode(['status' => 0]);
+			}
+		} catch (\Exception $e) {
+			return json_encode(['status' => 0]);
+		}
+	}
 	public function createParentescoByFolio()
 	{
 		$folio = trim($this->request->getPost('folio'));

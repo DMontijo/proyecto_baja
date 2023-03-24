@@ -277,6 +277,8 @@ $routes->group('data', function ($routes) {
 	$routes->post('create-vehiculo-by-id', 'admin/DashboardController::createVehiculoByFolio');
 
 	$routes->post('delete-parentesco-by-id', 'admin/DashboardController::deleteParentescoById');
+	$routes->post('delete-persona-fisica-by-id', 'admin/DashboardController::deletePersonaFisicaById');
+
 	$routes->post('create-parentesco-by-id', 'admin/DashboardController::createParentescoByFolio');
 	$routes->post('update-parentesco-by-id', 'admin/DashboardController::updateParentescoByFolio');
 	$routes->post('get-parentesco-by-id', 'admin/DashboardController::getRelacionParentesco');
