@@ -92,11 +92,11 @@
 											</div>
 
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
-												<label for="status" class="form-label font-weight-bold">Agente de remisión:</label>
-												<select class="form-control" id="agente_remision" name="agente_remision" required>
-													<option selected value="">Todos los agentes</option>
-													<?php foreach ($body_data->empleados_justicia as $index => $empleados_justicia) { ?>
-														<option <?= isset($body_data->filterParams->AGENTEASIGNADOID) ? ($body_data->filterParams->AGENTEASIGNADOID == $empleados_justicia->EMPLEADOID ? 'selected' : '') : null ?> value="<?= $empleados_justicia->EMPLEADOID ?>"> <?= $empleados_justicia->NOMBRE . ' ' . $empleados_justicia->PRIMERAPELLIDO . ' ' . $empleados_justicia->SEGUNDOAPELLIDO .' '. $empleados_justicia->OFICINADESCR ?> </option>
+												<label for="status" class="form-label font-weight-bold">TIPO DE SALIDA:</label>
+												<select class="form-control" id="tipo_salida" name="tipo_salida" required>
+													<option selected value="">Todos los tipos de salida</option>
+													<?php foreach ($body_data->tipoExpediente as $index => $tipoExpediente) { ?>
+														<option <?= isset($body_data->filterParams->TIPOEXPEDIENTEID) ? ($body_data->filterParams->TIPOEXPEDIENTEID == $tipoExpediente->TIPOEXPEDIENTEID ? 'selected' : '') : null ?> value="<?= $tipoExpediente->TIPOEXPEDIENTEID ?>"> <?= $tipoExpediente->TIPOEXPEDIENTECLAVE  ?> </option>
 													<?php } ?>
 												</select>
 											</div>
@@ -151,7 +151,7 @@
 										<td class="text-center"><?= $expedienteid ?  $expedienteid.'/'.$folio->TIPOEXPEDIENTECLAVE : $folio->FOLIOID . '/' . $folio->ANO ?></td>
 										<td class="text-center"><?= $folio->STATUS ?></td>
 										<td class="text-center"><?= $folio->TIPODENUNCIA == 'VD' ? 'VIDEODENUNCIA' : 'ANÓNIMA' ?></td>
-										<td class="text-center"><?= $folio->HECHODELITO ?></td>
+										<td class="text-center"><?= $folio->DELITOMODALIDADDESCR ?$folio->DELITOMODALIDADDESCR : $folio->HECHODELITO?></td>
 
 										<td class="text-center"><?= $folio->N_DENUNCIANTE . ' ' . $folio->APP_DENUNCIANTE . ' ' . $folio->APM_DENUNCIANTE ?></td>
 										<td class="text-center"><?= $folio->N_AGENT . ' ' . $folio->APP_AGENT . ' ' . $folio->APM_AGENT ?></td>
