@@ -91,6 +91,17 @@
 												</select>
 											</div>
 
+											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
+												<label for="status" class="form-label font-weight-bold">TIPO DE SALIDA:</label>
+												<select class="form-control" id="tipo_salida" name="tipo_salida" required>
+													<option selected value="">Todos los tipos de salida</option>
+													<?php foreach ($body_data->tipoExpediente as $index => $tipoExpediente) { ?>
+														<option <?= isset($body_data->filterParams->TIPOEXPEDIENTEID) ? ($body_data->filterParams->TIPOEXPEDIENTEID == $tipoExpediente->TIPOEXPEDIENTEID ? 'selected' : '') : null ?> value="<?= $tipoExpediente->TIPOEXPEDIENTEID ?>"> <?= $tipoExpediente->TIPOEXPEDIENTECLAVE  ?> </option>
+													<?php } ?>
+												</select>
+											</div>
+
+
 											<div class="col-12 text-right">
 												<a href="<?= base_url('admin/dashboard/buscar_folio') ?>" class="btn btn-secondary font-weight-bold" id="btnFiltroFolio" name="btnFiltroFolio">Borrar filtro</a>
 												<button type="submit" class="btn btn-primary font-weight-bold" id="btnFiltroFolio" name="btnFiltroFolio">Filtrar</button>
@@ -113,6 +124,8 @@
 									<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
 									<th class="text-center">ESTATUS</th>
 									<th class="text-center">TIPO</th>
+									<th class="text-center">DELITO</th>
+
 									<th class="text-center">NOMBRE DEL DENUNCIANTE</th>
 									<th class="text-center">AGENTE DE ATENCIÓN</th>
 									<th class="text-center">MUNICIPIO ASIGNADO</th>
@@ -138,6 +151,7 @@
 										<td class="text-center"><?= $expedienteid ?  $expedienteid.'/'.$folio->TIPOEXPEDIENTECLAVE : $folio->FOLIOID . '/' . $folio->ANO ?></td>
 										<td class="text-center"><?= $folio->STATUS ?></td>
 										<td class="text-center"><?= $folio->TIPODENUNCIA == 'VD' ? 'VIDEODENUNCIA' : 'ANÓNIMA' ?></td>
+										<td class="text-center"><?= $folio->DELITOMODALIDADDESCR ?$folio->DELITOMODALIDADDESCR : $folio->HECHODELITO?></td>
 
 										<td class="text-center"><?= $folio->N_DENUNCIANTE . ' ' . $folio->APP_DENUNCIANTE . ' ' . $folio->APM_DENUNCIANTE ?></td>
 										<td class="text-center"><?= $folio->N_AGENT . ' ' . $folio->APP_AGENT . ' ' . $folio->APM_AGENT ?></td>
