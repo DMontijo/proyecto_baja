@@ -27,14 +27,17 @@
 		background-color: lightseagreen;
 
 	}
-	.colgar{
-		position: relative;
-		z-index: 2;
-		top: 92%;
-		height: 5%;
-	}
+
+	video{
+			width: 100%;
+		}
 </style>
 <div class="container-fluid mb-5">
+	<div class="input-group mb-1">
+		<input type="text" class="form-control d-none" id="input_uuid" value="<?= session('UUID') ?>">
+		<input type="text" class="form-control d-none" id="input_folio" value="<?php echo $_GET['folio'] ?>">
+
+	</div>
 	<div class="row">
 		<div class="col-12 text-center" style="font-size:10px;">
 			Para un correcto funcionamiento utilice <a href="https://www.google.com/chrome/" target="_blank">google chrome</a>.<br>
@@ -47,21 +50,15 @@
 						<!-- <iframe style="min-height:600px;" src="<?= 'https://videodenunciaserver1.fgebc.gob.mx/videollamada?folio=' . $body_data->folio . '&nombre=' . $session->NOMBRE . ' ' . $session->APELLIDO_PATERNO . ' ' . $session->APELLIDO_MATERNO . '&delito=' . $body_data->delito . '&descripcion=' . $body_data->descripcion . '&idioma=' . $body_data->idioma . '&edad=' . $body_data->edad . '&perfil=' . $body_data->perfil . '&sexo=' . $body_data->sexo . '&prioridad=' . $body_data->prioridad . '&sexo_denunciante=' . $body_data->sexo_denunciante ?>" frameborder="0" allowfullscreen allow="camera *;microphone *"></iframe> -->
 
 						<div id="sc1" class="sc mt-50">
-							<div class="video_denunciante">video del denunciante</div>
+							<div class="video_denunciante" id="video_d">video del denunciante</div>
 						</div>
 						<div id="sc2" class="sc">
-							<div class="video_usuario">video del mp
-							
+							<div class="video_usuario" id="video_m">video del mp
+
 							</div>
-							
-						</div>
-						<div id="sc2" class="colgar col-12 col-sm-4 col-md-4 col-lg-4">
-							<button type="button" class="btn btn-primary btn-md btn-block">
-							<i class="bi bi-telephone-minus-fill"></i>
-							</button>
 
 						</div>
-
+					
 					</div>
 
 				</div>
@@ -95,8 +92,12 @@
 	</div>
 </div>
 </div>
+<script type="text/javascript" src="<?= base_url() ?>/assets/agent/assets/openvidu-browser-2.25.0.min.js"></script>
+<script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
+<script src="<?= base_url() ?>/assets/js/video_denuncia_client.js" type="module"></script>
 <script>
 	const folio_get = `<?php echo $_GET['folio'] ?>`;
+
 
 	let arr = folio_get.split('-')
 	const year = arr[0];

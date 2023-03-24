@@ -11,7 +11,6 @@
 			max-width: 50%;
 			min-height: 17vh;
 			position: relative;
-			background-color: coral;
 			top: 0;
 			left: 0;
 			z-index: 1;
@@ -23,7 +22,6 @@
 			width: 100%;
 			min-height: 50vh;
 			position: relative;
-			background-color: lightseagreen;
 		}
 
 		.colgar {
@@ -31,6 +29,9 @@
 			z-index: 2;
 			top: 92%;
 			height: 5%;
+		}
+		video{
+			width: 100%;
 		}
 	</style>
 	<div class="col-12 text-center mb-4 d-none" id="divFolioAtendido" name="divFolioAtendido">
@@ -53,12 +54,21 @@
 						<div class="input-group mb-1">
 							<input type="text" class="form-control" id="input_folio_atencion" placeholder="No. de folio" value="<?= isset($body_data->folio) ? $body_data->folio : '' ?>">
 						</div>
+
+						<div class="input-group mb-1">
+							<input type="text" class="form-control d-none" id="input_api" value="vspk_988a387a-001c-4d80-a456-6debd55dba61">
+						</div>
+
+						<div class="input-group mb-1">
+							<input type="text" class="form-control d-none" id="input_uuid" value="<?= session('TOKENVIDEO') ?>">
+						</div>
 					</div>
 					<div class="col-12 p-0 m-0">
 						<div class="input-group mb-1">
 							<input type="text" class="form-control d-none" id="input_denuncia">
 						</div>
 					</div>
+
 					<div class="col-12 p-0 m-0">
 						<div class="input-group mb-1">
 							<input type="text" class="form-control d-none" id="input_expediente">
@@ -154,11 +164,12 @@
 		<?php if (session('USUARIOVIDEO') && session('TOKENVIDEO')) { ?>
 			<div class="card rounded bg-white shadow">
 				<div class="card-body shadow rounded">
+					<button class="btn btn-success" id="disponible"> Hacerse disponible</button>
 					<div id="sc1" class="sc mt-50">
-						<div class="video_usuario">video del usuario</div>
+						<div class="video_usuario" id="usr_vd"></div>
 					</div>
 					<div id="sc2" class="sc">
-						<div class="video_agente">video del agente
+						<div class="video_agente" id="agn_vf">
 
 						</div>
 						<div id="tools-agent">
@@ -263,8 +274,18 @@
 	</div>
 
 </div>
-
+<script type="text/javascript" src="<?= base_url() ?>/assets/agent/assets/openvidu-browser-2.25.0.min.js"></script>
+<script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
+<script src="<?= base_url() ?>/assets/js/video_denuncia.js" type="module"></script>
 <script>
+	// Service 
+	// const apiKey = 'vspk_988a387a-001c-4d80-a456-6debd55dba61';
+	// const agentUUID = '<?= session('TOKENVIDEO') ?>';
+	// const agentVideoService = new VideoServiceAgent(agentUUID, {
+	// 	apiURI,
+	// 	apiKey
+	// });
+
 	const inputFolio = document.querySelector('#input_folio_atencion');
 	const inputExpediente = document.querySelector('#input_expediente');
 	const inputDenuncia = document.querySelector('#input_denuncia');
@@ -1572,6 +1593,7 @@
 		});
 		borrarTodo();
 	});
+
 
 	function firmarDocumento(folio, ano, foliodocid) {
 		document.querySelector('#folio_id').value = folio;
