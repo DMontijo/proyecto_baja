@@ -139,7 +139,7 @@
 		<small id="numCaracter">1000 caracteres restantes</small>
 	</div>
 	<div class="col-12 mb-3 text-left text-md-center">
-		<label for="responsable" class="form-label fw-bold input-required">¿Identifica al responsable del delito?</label>
+		<label for="responsable" class="form-label fw-bold input-required">¿Conoce al posible responsable del delito?</label>
 		<br>
 		<div class="form-check form-check-inline">
 			<input class="form-check-input" type="radio" name="responsable" value="SI" required>
