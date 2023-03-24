@@ -53,9 +53,9 @@
 		</div>
 	</div>
 	<div class="col-12 mb-3">
-		<label for="es_vulnerable" class="form-label fw-bold input-required">La víctima pertenece a algún grupo vulnerable?</label>
-		<a href="#" data-bs-toggle="tooltip" data-toggle="tooltip" data-bs-placement="right" title="Niños, niñas y adolescentes. Personas lesbianas, gays, bisexuales, transgéneros o intersexuales (LGBTI) Personas con algún tipo de discapacidad física o mental. Personas extranjeras."><i class="bi bi-info-circle-fill"></i></a>
-
+		<label for="es_vulnerable" class="form-label fw-bold input-required">¿La víctima pertenece a algún grupo vulnerable?
+			<a href="#!" data-bs-toggle="tooltip" data-toggle="tooltip" data-bs-placement="right" title="Niños, niñas y adolescentes. Personas lesbianas, gays, bisexuales, transgéneros o intersexuales (LGBTI) Personas con algún tipo de discapacidad física o mental. Personas extranjeras."><i class="bi bi-info-circle-fill"></i></a>
+		</label>
 		<br>
 		<div class="form-check form-check-inline">
 			<input class="form-check-input" type="radio" name="es_vulnerable" value="SI" required>
