@@ -124,7 +124,10 @@
 			<div class="col-12 text-center">
 				<button type="button" class="btn btn-primary mt-4" data-bs-toggle="modal" data-bs-target="#tutorial_modal">
 					<i class="bi bi-play-btn-fill"></i> Ver video tutorial
-				</button>
+				</button><br>
+				<a href="<?= base_url('/salas_virtuales') ?>" type="button" class="btn btn-secondary mt-4">
+					<i class="bi bi-geo-fill"></i> Directorio Salas Virtuales
+				</a>
 			</div>
 		</div>
 	</section>
