@@ -10,7 +10,8 @@ let agn_vf = document.querySelector('#agn_vf');
 console.log(guestUUID);
 
 
-const apiURI = 'http://192.168.0.67:3000';
+// const apiURI = 'http://192.168.0.67:3000';
+const apiURI = 'http://34.229.77.149';
 
 const guestVideoService = new VideoServiceGuest(guestUUID, folio,{ apiURI, apiKey });
 
