@@ -515,6 +515,7 @@ class FoliosController extends BaseController
 		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
 		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7";
 		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
+		$empleados_justicia = $this->_empleadosModel->asObject()->orderBy('NOMBRE', 'ASC')->findAll();
 
 		$resultFilter = $this->_folioModel->filterAllDates($data);
 
@@ -522,6 +523,7 @@ class FoliosController extends BaseController
 		$dataView->result = $resultFilter->result;
 		$dataView->municipios = $municipio;
 		$dataView->empleados = $empleado;
+		$dataView->empleados_justicia = $empleados_justicia;
 		$dataView->filterParams = (object) $data;
 		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
@@ -543,6 +545,7 @@ class FoliosController extends BaseController
 			'fechaFin' => $this->request->getPost('fecha_fin'),
 			'horaInicio' => $this->request->getPost('horaInicio'),
 			'horaFin' => $this->request->getPost('horaFin'),
+			'AGENTEASIGNADOID' => $this->request->getPost('agente_remision'),
 		];
 
 		foreach ($data as $clave => $valor) {
@@ -561,11 +564,13 @@ class FoliosController extends BaseController
 		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
 		$resultFilter = $this->_folioModel->filterAllDates($data);
 		$empleado = $this->_usuariosModel->asObject()->where('ROLID', 2)->orderBy('NOMBRE', 'ASC')->findAll();
+		$empleados_justicia = $this->_empleadosModel->asObject()->orderBy('NOMBRE', 'ASC')->findAll();
 
 		$dataView = (object) array();
 		$dataView->result = $resultFilter->result;
 		$dataView->municipios = $municipio;
 		$dataView->empleados = $empleado;
+		$dataView->empleados_justicia = $empleados_justicia;
 		$dataView->filterParams = (object) $data;
 		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 

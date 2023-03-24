@@ -132,6 +132,10 @@ class FolioModel extends Model
 		foreach ($obj as $clave => $valor) {
 			$count -= 1;
 			if ($clave != 'fechaInicio' && $clave != 'fechaFin' && $clave != 'horaInicio' && $clave != 'horaFin') {
+				if($clave == 'MUNICIPIOID'){
+					$strQuery = $strQuery . 'EMPLEADOS.MUNICIPIOID' . ' = ' . '"' . $valor . '" AND ';
+
+				}
 				$strQuery = $strQuery . 'FOLIO.' . $clave . ' = ' . '"' . $valor . '"';
 
 				if ($count > 0) {
