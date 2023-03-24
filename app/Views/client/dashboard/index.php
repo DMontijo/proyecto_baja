@@ -74,12 +74,27 @@
 							<div class="row">
 								<div class="col-12 text-center">
 									<p class="fw-bold">Haz completado la información</p>
+
+									
 									<p class="text-center">
 										<i class="bi bi-exclamation-triangle"> Es muy importante que antes de iniciar tu video denuncia aceptes los derechos de víctima u ofendido.</i>
 										<br>
 										Para consultar la constancia de Derechos, da clic <a target="_blank" href="" data-bs-toggle="modal" data-bs-target="#exampleModal">aquí</a>
 										<br><br>
 									</p>
+
+
+									<div class="row">
+										<div class="col-12 col-sm-6 offset-sm-3">
+											<p class="p-0 m-0"><strong>Documentos a anexar</strong></p>
+											<small>Si deseas anexar cualquier documento o imagén para la videodenuncia, hazlo aqui.</small>
+											<input type="file" class="form-control" id="documentosArchivo" name="documentosArchivo[]" accept="image/jpeg, image/jpg, image/png, .doc, .pdf" multiple>
+											<img id="viewDocumentoArchivo" class="img-fluid" src="" style="max-width:100px;">
+										</div>
+									</div>
+									<br>
+
+
 									<div class="form-group">
 										<input class="form-check-input" type="checkbox" name="derechos_imputado" id="derechos_imputado" required>
 										<span class="fw-bold">Confirmo que he leído y conozco los derechos de víctima u ofendido</span>

@@ -85,6 +85,7 @@ class DashboardController extends BaseController
 	private $_archivoExternoModel;
 	private $_tipoExpedienteModel;
 
+
 	public function __construct()
 	{
 		//Models
@@ -296,7 +297,6 @@ class DashboardController extends BaseController
 
 	public function create()
 	{
-
 		$session = session();
 		list($FOLIOID, $year) = $this->_folioConsecutivoModel->get_consecutivo();
 
@@ -773,6 +773,51 @@ class DashboardController extends BaseController
 
 				$this->_folioVehiculo($dataVehiculo, $FOLIOID, $year);
 			}
+
+			$documentosArchivosExternos = $this->request->getFiles();
+			$archivos_data = null;
+
+
+			if ($documentosArchivosExternos['documentosArchivo']) {
+				foreach ($documentosArchivosExternos['documentosArchivo'] as $key => $docArc) {
+
+					$doc = file_get_contents($docArc);
+					$f = finfo_open();
+					$mime_type = finfo_buffer($f, $doc, FILEINFO_MIME_TYPE);
+					$extension = explode('/', $mime_type)[1];
+					$archivoNombre = $docArc->getName();
+					$nombre = explode('.', $archivoNombre)[0];
+					if ($docArc->isValid()) {
+						try {
+							$archivos_data = file_get_contents($docArc);
+						} catch (\Exception $e) {
+							$archivos_data = null;
+						}
+					}
+					$data = [
+						'FOLIOID' => $FOLIOID,
+						'ANO' => $year,
+						'ARCHIVODESCR' => strtoupper($nombre),
+						'ARCHIVO' => $archivos_data,
+						'EXTENSION' => $extension,
+					];
+					$archivoExterno = $this->_folioExpArchivo($data, $FOLIOID, $year);
+					if ($archivoExterno) {
+						$datados = (object) array();
+						$datados->archivosexternos = $this->_archivoExternoModel->asObject()->where('FOLIOID', $FOLIOID)->where('ANO', $year)->findAll();
+						if ($datados->archivosexternos) {
+							foreach ($datados->archivosexternos as $key => $archivos) {
+								$file_info = new \finfo(FILEINFO_MIME_TYPE);
+								$type = $file_info->buffer($archivos->ARCHIVO);
+								$archivos->ARCHIVO = 'data:' . $type . ';base64,' . base64_encode($archivos->ARCHIVO);
+							}
+						}
+					}
+
+
+				}
+			}
+
 
 			$denunciante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', $session->get('DENUNCIANTEID'))->first();
 			$idioma = $this->_personaIdiomaModel->asObject()->where('PERSONAIDIOMAID', $denunciante->IDIOMAID)->first();
