@@ -33,8 +33,6 @@
 		top: 92%;
 		height: 5%;
 	}
-
-	
 </style>
 <div class="container-fluid mb-5">
 	<div class="row">
