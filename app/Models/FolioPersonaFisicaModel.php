@@ -117,6 +117,7 @@ class FolioPersonaFisicaModel extends Model
 		$query = $builder->get();
 		return $query->getResult('array');
 	}
+	
 	public function get_imputados($folio, $year)
 	{
 		$builder = $this->db->table($this->table);
@@ -128,6 +129,7 @@ class FolioPersonaFisicaModel extends Model
 		$query = $builder->get();
 		return $query->getResult('array');
 	}
+
 	public function get_by_personas($folio, $year, $idpersonafisica)
 	{
 		$builder = $this->db->table($this->table);

@@ -406,7 +406,7 @@
 					'imputado': imputado,
 					'uma': document.getElementById('uma_select').value
 				};
-
+				console.log(data);
 				$.ajax({
 					method: 'POST',
 					url: "<?= base_url('/data/get-plantilla') ?>",
@@ -430,7 +430,7 @@
 						}
 					},
 					error: function(jqXHR, textStatus, errorThrown) {
-						console.error(textStatus);
+						// console.error(textStatus);
 						tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
 						document.querySelector("#victima_modal_documento").value = '';
 						document.querySelector("#imputado_modal_documento").value = '';
@@ -491,7 +491,7 @@
 						}
 					},
 					error: function(jqXHR, textStatus, errorThrown) {
-						console.error(textStatus);
+						// console.log(jqXHR, textStatus, errorThrown);
 						tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
 						document.querySelector("#victima_modal_documento").value = '';
 						document.querySelector("#imputado_modal_documento").value = '';
