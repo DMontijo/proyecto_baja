@@ -20,8 +20,8 @@
 								<label for="procedimiento" class="form-label font-weight-bold">Tipo procedimiento</label>
 								<select class="form-control" id="procedimiento" name="procedimiento" required>
 									<option selected value=""></option>
-									<option value="1">MEDICACION</option>
-									<option value="2">CONCILIACION</option>
+									<option value="1">MEDIACIÓN</option>
+									<option value="2">CONCILIACIÓN</option>
 									<option value="3">JUSTICIA RESTAURATIVA</option>
 								</select>
 							</div>
