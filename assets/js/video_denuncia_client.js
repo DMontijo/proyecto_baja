@@ -10,7 +10,7 @@ let video_m = document.querySelector("#video_m");
 console.log(guestUUID);
 
 // const apiURI = 'http://192.168.0.67:3000';
-const apiURI = "http://54.85.151.185/";
+const apiURI = "http://54.242.242.114";
 
 const guestVideoService = new VideoServiceGuest(guestUUID, folio, {
 	apiURI,

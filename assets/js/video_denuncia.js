@@ -13,8 +13,9 @@ const stopRecord = document.querySelector('#stop-recording');
 
 let guestUUID = '';
 
-const apiURI = 'http://54.85.151.185/';
+const apiURI = 'http://54.242.242.114';
 
+console.log(startRecord);
 const agentVideoService = new VideoServiceAgent(agentUUID, { apiURI, apiKey });
 
 disponible_connect.addEventListener('click', () => {
@@ -56,6 +57,8 @@ aceptar_llamada.addEventListener('click', () => {
 });
 
 startRecord.addEventListener('click', () => {
+    console.log("pre grabación");
+
     agentVideoService.startRecording(() => {
         console.log("iniciando grabación");
     });
