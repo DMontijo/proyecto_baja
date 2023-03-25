@@ -374,13 +374,11 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 							for (let i = 0; i < archivos.length; i++) {
 
 								if (archivos[i].EXTENSION == 'pdf' || archivos[i].EXTENSION == 'doc') {
-									var img = `<a id="downloadArchivo" download=""><img src='<?= base_url() ?>/assets/img/file.png'));'  width="200px" height="200px"></img></a>`;
-
-
+									var img = `<a id="downloadArchivo" download=""><img src='<?= base_url() ?>/assets/img/file.png'));'  width="50px" height="50px"></img></a>`;
 								} else {
-									var img = `<a id="downloadArchivo" download=""><img src='${archivos[i].ARCHIVO}');' width="200px" height="200px"></img></a>`;
-
+									var img = `<a id="downloadArchivo" download=""><img src='${archivos[i].ARCHIVO}');' width="50px" height="50px"></img></a>`;
 								}
+
 								var fila =
 									`<tr id="row${i}">` +
 									`<td class="text-center" value="${archivos[i].FOLIOARCHIVOID}">${archivos[i].ARCHIVODESCR}</td>` +
@@ -400,8 +398,7 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 						}
 
 
-					} 
-			else if (response.status === 2) {
+					} else if (response.status === 2) {
 						Swal.fire({
 							icon: 'error',
 							html: response.status,
@@ -410,7 +407,7 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 					}
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
-					console.log(jqXHR, textStatus,errorThrown);
+					console.log(jqXHR, textStatus, errorThrown);
 				}
 			});
 		});

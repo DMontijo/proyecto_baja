@@ -797,11 +797,11 @@
 		for (let i = 0; i < archivos.length; i++) {
 
 			if (archivos[i].EXTENSION == 'pdf' || archivos[i].EXTENSION == 'doc') {
-				var img = `<a id="downloadArchivo" download=""><img src='<?= base_url() ?>/assets/img/file.png'));'  width="200px" height="200px"></img></a>`;
+				var img = `<a id="downloadArchivo" download=""><img src='<?= base_url() ?>/assets/img/file.png'));'  width="50px" height="50px"></img></a>`;
 
 
 			} else {
-				var img = `<a id="downloadArchivo" download=""><img src='${archivos[i].ARCHIVO}');' width="200px" height="200px"></img></a>`;
+				var img = `<a id="downloadArchivo" download=""><img src='${archivos[i].ARCHIVO}');' width="50px" height="50px"></img></a>`;
 
 			}
 			var fila =

@@ -21,7 +21,7 @@ class DocumentosController extends BaseController
 	private $_folioModel;
 	private $_usuariosModel;
 	private $_municipiosModel;
-	
+
 	function __construct()
 	{
 		$this->_folioDocModel = new FolioDocModel();
@@ -41,7 +41,7 @@ class DocumentosController extends BaseController
 		$data = [
 			'fechaInicio' => date("Y-m-d"),
 			'fechaFin' => date("Y-m-d"),
-			'AGENTE_ASIGNADO'=> session('ID')
+			'AGENTE_ASIGNADO' => session('ID')
 		];
 
 		foreach ($data as $clave => $valor) {
@@ -137,7 +137,7 @@ class DocumentosController extends BaseController
 		if (!$this->permisos('DOCUMENTOS')) {
 			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
 		}
-		
+
 		$data = (object)array();
 		$data->folio = $this->request->getGet('folio');
 		$data->expediente = $this->request->getGet('expediente');
@@ -212,9 +212,8 @@ class DocumentosController extends BaseController
 
 		if ($expediente) {
 			$documento = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', base64_decode($expediente))->where('ANO', $year)->where('FOLIODOCID', base64_decode($foliodocid))->first();
-		}else{
+		} else {
 			$documento = $this->_folioDocModel->asObject()->where('FOLIOID', base64_decode($folio))->where('ANO', $year)->where('FOLIODOCID', base64_decode($foliodocid))->first();
-
 		}
 		if ($documento) {
 			// $solicitante = $this->_folioPersonaFisicaModel->asObject()->where('PERSONAFISICAID', $documento->PERSONAFISICAID)->where('NUMEROEXPEDIENTE',$expediente)->where('ANO', $year)->first();

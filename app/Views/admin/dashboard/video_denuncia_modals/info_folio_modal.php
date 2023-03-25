@@ -134,7 +134,7 @@
 										</div>
 									</div>
 								</div>
-									<button type="button" id="refrescarArchivos" name="refrescarArchivos" class="btn btn-primary font-weight-bold"><i class="fas fa-arrows-rotate mr-3"></i> ACTUALIZAR ARCHIVOS</button>
+									<button type="button" id="refrescarArchivos" name="refrescarArchivos" class="btn btn-primary font-weight-bold">ACTUALIZAR ARCHIVOS</button>
 								</div>
 								<div class="table-responsive">
 									<table id="table-archivos" class="table table-bordered table-hover table-striped table-light">

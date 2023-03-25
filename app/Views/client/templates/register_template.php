@@ -36,8 +36,7 @@
 				<div class="row">
 					<div class="col-12">
 						<a href="<?= base_url() ?>">
-
-							<img src="<?= base_url() ?>/assets/img/FGEBC_SEJAP_LOGO.png" class="img-fluid c-sidebar-brand-minimized" alt="FGEBC Logo" style="width:30%;">
+							<img src="<?= base_url() ?>/assets/img/FGEBC_SEJAP_LOGO.png" class="img-fluid c-sidebar-brand-minimized" alt="FGEBC Logo" style="max-width:80px;">
 						</a>
 					</div>
 				</div>
