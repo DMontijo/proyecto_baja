@@ -23,6 +23,10 @@
 					<label for="idioma_denunciante" class="form-label font-weight-bold">Idioma del denunciante:</label>
 					<input type="text" class="form-control" id="idioma_denunciante" name="idioma_denunciante" disabled>
 				</div>
+				<div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-3">
+					<label for="delito_denunciante" class="form-label font-weight-bold">Delito:</label>
+					<input type="text" class="form-control" id="delito_denunciante" name="delito_denunciante" disabled>
+				</div>
 				<button class="btn btn-success" id="aceptar"> Aceptar</button>
 
 				<button class="btn btn-danger" id="rechazar"> Rechazar</button>

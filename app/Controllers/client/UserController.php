@@ -158,26 +158,27 @@ class UserController extends BaseController
 
 		if ($this->validate(['correo' => 'required|is_unique[DENUNCIANTES.CORREO]'])) {
 				
-		$dataApi2 = [
-			'NOMBRE' => $this->request->getPost('nombre'),
-			'APELLIDO_PATERNO' => $this->request->getPost('apellido_paterno'),
-			'APELLIDO_MATERNO' => $this->request->getPost('apellido_materno'),
-			'CORREO' => $this->request->getPost('correo'),
-		];
-		$dataApi = array();
-		$dataApi['name']=$this->request->getPost('nombre') .' ' . $this->request->getPost('apellido_paterno');
-		$dataApi['details']= $dataApi2;
-		$dataApi['gender']= $this->request->getPost('sexo') == 'F' ? "FEMALE": 'MALE';
-		$dataApi['languages']= [(int)$this->request->getPost('idioma')];
+		// $dataApi2 = [
+		// 	'NOMBRE' => $this->request->getPost('nombre'),
+		// 	'APELLIDO_PATERNO' => $this->request->getPost('apellido_paterno'),
+		// 	'APELLIDO_MATERNO' => $this->request->getPost('apellido_materno'),
+		// 	'CORREO' => $this->request->getPost('correo'),
+		// ];
+		// $dataApi = array();
+		// $dataApi['name']=$this->request->getPost('nombre') .' ' . $this->request->getPost('apellido_paterno');
+		// $dataApi['details']= $dataApi2;
+		// $dataApi['gender']= $this->request->getPost('sexo') == 'F' ? "FEMALE": 'MALE';
+		// $dataApi['languages']= [(int)$this->request->getPost('idioma')];
 		// $urlApi = "http://34.229.77.149/guests";
 		// $urlApi = "http://192.168.0.67:3000/guests";
-		$response = $this->_curlPost($this->urlApi, $dataApi);
-		$data['UUID'] = $response->uuid;
-		if ($response->uuid) {
+		// $response = $this->_curlPost($this->urlApi, $dataApi);
+		// $data['UUID'] = $response->uuid;
+		// if ($response->uuid) {
 			$this->_denunciantesModel->insert($data);
 			$this->_sendEmailPassword($data['CORREO'], $password);
 			session()->setFlashdata('message', 'Inicia sesión con la contraseña que llegará a tu correo electrónico');
-			return redirect()->to(base_url('/denuncia'))->with('message_success', 'Inicia sesión con la contraseña que llegará a tu correo electrónico y comienza tu denuncia');		}
+			return redirect()->to(base_url('/denuncia'))->with('message_success', 'Inicia sesión con la contraseña que llegará a tu correo electrónico y comienza tu denuncia');	
+			// }
 		
 		} else {
 			return redirect()->back()->with('message', 'Hubo un error en los datos o puede que ya exista un registro con el mismo correo');
@@ -264,15 +265,15 @@ class UserController extends BaseController
 		try {
 			if (!session()->has('DENUNCIANTEID')) throw new \Exception();
 			$denunciante =$this->_denunciantesModel->asObject()->where('DENUNCIANTEID', session('DENUNCIANTEID'))->first();
-			$endpoint = $this->urlApi. $denunciante->UUID;
-			$dataApi = array('languages'=>[(int)$this->request->getPost('idioma')]);
-			$response = $this->_curlPatch($endpoint, $dataApi);
-			if ($response->status == "sucess") {
+			// $endpoint = $this->urlApi. $denunciante->UUID;
+			// $dataApi = array('languages'=>[(int)$this->request->getPost('idioma')]);
+			// $response = $this->_curlPatch($endpoint, $dataApi);
+			// if ($response->status == "sucess") {
 				$update = $this->_denunciantesModel->set($data)->where('DENUNCIANTEID', session('DENUNCIANTEID'))->update();
 				if (!$update) throw new \Exception();
 				session()->set('TIPO', '1');
 				return redirect()->to(base_url('/denuncia/dashboard'));
-			}
+			// }
 		
 		} catch (\Exception $e) {
 			// var_dump($data);

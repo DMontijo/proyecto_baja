@@ -33,10 +33,13 @@ export class VideoServiceAgent {
     #socketConfig = {};
     
     // Audios
-    #phoneRing = new Audio('./assets/sounds/income_call.wav');
-    #loggedInSound = new Audio('./assets/sounds/login.m4a');
-    #loggedOutSound = new Audio('./assets/sounds/logout.m4a');
+    #phoneRing = new Audio('../../assets/agent/assets/sounds/income_call.wav');
+    #loggedInSound = new Audio('../../assets/agent/assets/sounds/login.m4a');
+    #loggedOutSound = new Audio('../../assets/agent/assets/sounds/logout.m4a');
 
+
+    guestAudio = true;
+    guestVideo = true;
 
     #videoCallService;
     #sessionId;
@@ -133,7 +136,13 @@ export class VideoServiceAgent {
      * @param {Function} [callback] - This method is executed after agent is disconnected
      */
     disconnectAgent(callback) {
-        this.#socket.disconnect();
+
+        try {
+            this.#socket.disconnect();
+            this.#videoCallService?.session.disconnect();
+        } catch (e) {
+            console.error(e)
+        }
 
         if (typeof callback === 'function') callback(response);
     }
@@ -146,9 +155,12 @@ export class VideoServiceAgent {
      */
     acceptCall(localVideoSelector, remoteVideoSelector, callback) {
 
+        console.log('acceptCall');
         this.#emit('connect-call', {
             accepted: 'accepted-call'
         }, (response) => {
+
+            console.log(response);
 
             this.#sessionId = response.sessionId;
             this.#connectionId = response.connectionId;
@@ -179,7 +191,146 @@ export class VideoServiceAgent {
     refuseCall(callback) {
         this.#phoneRing.pause();
 
-        if (typeof callback === 'function') callback(response);
+        this.#emit('refuse-call', () => {
+            if (typeof callback === 'function') callback(response);
+        });
+    }
+
+    /**
+     * This function will start the recording and enable the marks
+     * 
+     * @param {Function} [callback] - This method is executed after recording start
+     */
+    startRecording (callback) {
+        const markTime = marksRecording();
+        emitMarkTime(markTime, "start-recording", "3");
+
+        if (typeof callback === 'function') callback();
+    }
+
+    /**
+     * This function will stop the recording and enable the marks
+     * 
+     * @param {Function} [callback] - This method is executed after recording start
+     */
+    stopRecording (callback) {
+        const markTime = marksRecording();
+        emitMarkTime(markTime, "stop-recording", "4");
+
+        if (typeof callback === 'function') callback();
+    }
+
+    /**
+     *
+     * @deprecated
+     */
+    getValuesForm(messageText, selectedMark) {
+        selectedMark = selectedMark.options[selectedMark.selectedIndex].value;
+    
+        emitMarkTime(markTime, messageText, selectedMark);
+    }
+
+    /**
+     * Generates a MarkTime string with the form '00:00:00'
+     * @return {string} MarkTime string
+     */
+    marksRecording() {
+        const now = new Date();
+    
+        const videoMS = (now.getTime() - this.#startVideoCallTime.getTime());
+    
+        const d = new Date(Date.UTC(0,0,0,0,0,0,videoMS)),
+        parts = [
+            d.getUTCHours(),
+            d.getUTCMinutes(),
+            d.getUTCSeconds()
+        ],
+        markTimeAux = parts.map(s => String(s).padStart(2,'0')).join(':');
+        markTime = markTimeAux;
+    
+        return markTime;
+    }
+
+    /**
+     * This function will send a MarkTime to the server
+     * 
+     * @param {string} markTime - MarkTime string
+     * @param {string} messageTextMark - Message text
+     * @param {string} selectedMark - Selected Mark id
+     * @param {function} callback - function to be executed when the MarkTime is sent
+     */
+    emitMarkTime (markTime, messageTextMark, selectedMark, callback = () => {}) {
+        this.#emit('mark-recording', {
+            markTime,
+            messageText: messageTextMark,
+            recordingMarkTypeId: selectedMark,
+            recordingId: this.#recordingId.toString()
+        }, (response) => {
+            if (typeof callback === 'function') callback(response);
+        })
+    }
+
+    /**
+     * This function return marks types
+    */ 
+    async getMarkTypes() {
+        const getRecordingsMarkType = `${this.#apiURI}/recordings-mark-type`;
+        const typeMarks = await fetch(getRecordingsMarkType, {
+            method: 'GET',
+            cache: "no-cache",
+            mode: "cors",
+            headers: { 'X-API-KEY': this.#apiKey }
+        })
+        .then(response => { return response.json(); })
+        .catch(error => { return error.json(); });
+
+        return typeMarks;
+    }
+
+    /**
+     *  Toggle audio for local publisher
+     * 
+     * @param {Function} callback - This function will be called when the audio has been toggled
+     */
+    toggleAudio(callback) {
+        this.#videoCallService.toggleAudio();
+
+        if (typeof callback === 'function') callback();
+    }
+
+    /**
+     *  Toggle video for local publisher
+     * 
+     * @param {Function} callback - This function will be called when the video has been toggled
+     */
+    toggleVideo(callback) {
+        this.#videoCallService.publishVideo();
+
+        if (typeof callback === 'function') callback();
+    }
+
+    /**
+     * Toggle guest audio
+     * 
+     * @param {Function} callback - This function will be called when the audio has been toggled
+     */
+    toggleRemoteAudio(callback) {
+        this.audioGuest = !this.audioGuest;
+        this.#emit('toggle-video-guest', { toogleAudioGuest : this.audioGuest}, () => {
+            if (typeof callback === 'function') callback();
+        })
+    }
+
+    /**
+     * Toggle guest video
+     * 
+     * @param {Function} callback - This function will be called when the video has been toggled
+     */
+    toggleRemoteVideo(callback) {
+        this.videoGuest =!this.videoGuest;
+        this.#emit('toggle-video-guest', { toogleVideoGuest : this.videoGuest}, () => {
+            if (typeof callback === 'function') callback();
+        })
     }
 
     /**

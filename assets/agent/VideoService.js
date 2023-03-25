@@ -5,7 +5,7 @@
  * @author César Arley Ojeda Escobar
  ****************************************/
 
-import { ExceptionOpenViduNotImported, ExceptionMissingParameter, ExceptionConstructorMissingParameter } from "./exceptions.js";
+import { ExceptionOpenViduNotImported, ExceptionMissingParameter, ExceptionConstructorMissingParameter, ExceptionOpenViduSessionNotCreated } from "./exceptions.js";
 
 
 /**
@@ -24,7 +24,7 @@ export default class VideoCall {
     #publishAudio;
     #publishVideo;
 
-    #publisherAgent;
+    #publisher;
 
     /**
      * VideoCall service class, this is used to connect to OpenVidu
@@ -57,7 +57,13 @@ export default class VideoCall {
         this.#session.on('streamCreated', event => {
             this.#session.subscribe(event.stream, this.#remoteVideoSelector);
         });
-    
+    }
+
+    /**
+     * @return {OpenViduSession} instance of OpenViduSession
+     */
+    get session() {
+        return this.#session;
     }
 
     /**
@@ -78,16 +84,16 @@ export default class VideoCall {
      * @param {string} localVideoSelector - Video local - little
      * @param {Function} callback - This method is executed after connection is made
      */
-    connectVideoCall(token,localVideoSelector, callback) {
+    connectVideoCall(token, localVideoSelector, callback) {
         if (!token) throw ExceptionMissingParameter('token', 'connectVideoCall');
         this.#token = token;
 
-        if (!localVideoSelector) throw ExceptionMissingParameter('lovalVideoSelector', 'connectVideoCall');
+        if (!localVideoSelector) throw ExceptionMissingParameter('localVideoSelector', 'connectVideoCall');
         this.#localVideoSelector = localVideoSelector;
 
         this.#session.connect(this.#token)
         .then(() => {
-            this.#publisherAgent = this.#OV.initPublisher(this.#localVideoSelector, {
+            this.#publisher = this.#OV.initPublisher(this.#localVideoSelector, {
                 audioSource: undefined,     // The source of audio. If undefined default microphone
                 videoSource: undefined,     // The source of video. If undefined default webcam
                 publishAudio: this.#publishAudio, // Whether you want to start publishing with your audio unmuted or not
@@ -98,7 +104,7 @@ export default class VideoCall {
                 mirror: false       	        // Whether to mirror your local video or not
             });
 
-            this.#session.publish(this.#publisherAgent);
+            this.#session.publish(this.#publisher);
 
             if (typeof callback === 'function') callback();
         })
@@ -108,4 +114,22 @@ export default class VideoCall {
     }
 
 
+    /**
+     *  Toggle video for local publisher
+     */
+    toggleVideo() {
+        if (!this.#publisher) throw ExceptionOpenViduSessionNotCreated();
+
+        this.#publishVideo = !this.#publishVideo;
+        this.#publisher.publishVideo(this.#publishVideo);
+    }
+
+    /**
+     *  Toggle audio for local publisher
+     */
+    toggleAudio() {
+        if (!this.#publisher) throw ExceptionOpenViduSessionNotCreated();
+        this.#publishAudio =!this.#publishAudio;
+        this.#publisher.publishAudio(this.#publishAudio);
+    }
 }

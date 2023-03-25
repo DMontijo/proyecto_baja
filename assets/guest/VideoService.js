@@ -5,7 +5,7 @@
  * @author César Arley Ojeda Escobar
  ****************************************/
 
-import { ExceptionOpenViduNotImported, ExceptionMissingParameter, ExceptionConstructorMissingParameter } from "./exceptions.js";
+import { ExceptionOpenViduNotImported, ExceptionMissingParameter, ExceptionConstructorMissingParameter, ExceptionOpenViduSessionNotCreated } from "./exceptions.js";
 
 
 /**
@@ -24,7 +24,7 @@ export default class VideoCall {
     #publishAudio;
     #publishVideo;
 
-    #publisherGuest;
+    #publisher;
 
     /**
      * VideoCall service class, this is used to connect to OpenVidu
@@ -60,6 +60,13 @@ export default class VideoCall {
     }
 
     /**
+     * @return {OpenViduSession} instance of OpenViduSession
+     */
+    get session() {
+        return this.#session;
+    }
+
+    /**
      * Register the listener for OpenVidu session disconnected
      *
      * @param {Function} callback - This method is executed after session is disconnected
@@ -86,7 +93,7 @@ export default class VideoCall {
 
         this.#session.connect(this.#token)
         .then(() => {
-            this.#publisherGuest = this.#OV.initPublisher(this.#localVideoSelector, {
+            this.#publisher = this.#OV.initPublisher(this.#localVideoSelector, {
                 audioSource: undefined,             // The source of audio. If undefined default microphone
                 videoSource: undefined,             // The source of video. If undefined default webcam
                 publishAudio: this.#publishAudio,   // Whether you want to start publishing with your audio unmuted or not
@@ -97,20 +104,35 @@ export default class VideoCall {
                 mirror: false       	            // Whether to mirror your local video or not
             });
 
-            this.#session.publish(this.#publisherGuest);
+            this.#session.publish(this.#publisher);
 
             if (typeof callback === 'function') callback();
         })
         .catch(error => {
-            console.log('There was an error connecting to the session:', error);
+            console.log('There was an error connecting to the session:', error.code, error.message);
         });
     }
 
-    publishVideo(toogle) {
-        this.#publisherGuest.publishVideo(toogle);
+    /**
+     *  Toggle video for local publisher
+     * 
+     *  @param {boolean} toggle - Toggle video for local publisher
+     */
+    toggleVideo(toggle) {
+        if (!this.#publisher) throw ExceptionOpenViduSessionNotCreated();
+
+        this.#publishVideo = toggle;
+        this.#publisher.publishVideo(this.#publishVideo);
     }
 
-    publishAudio(toogle) {
-        this.#publisherGuest.publishAudio(toogle);
+    /**
+     *  Toggle audio for local publisher
+     * 
+     *  @param {boolean} toggle - Toggle audio for local publisher
+     */
+    toggleAudio(toggle) {
+        if (!this.#publisher) throw ExceptionOpenViduSessionNotCreated();
+        this.#publishAudio = toggle;
+        this.#publisher.publishAudio(this.#publishAudio);
     }
 }

@@ -26,9 +26,6 @@ export class VideoServiceGuest {
     #folio;
     #apiURI;
     #apiKey;
-    #startVideoCallTime;
-    #areaVideoCall = document.getElementById("area-video-call");
-    #toolsButtons = document.getElementById("tools");
     #socket;
     #socketHeaders = {
         'ngrok-skip-browser-warning': 'true'
@@ -36,18 +33,15 @@ export class VideoServiceGuest {
     #priority;
     #position;
     #socketConfig = {};
-    #guestConnectionId;
     
     // Audios
-    #phoneRing = new Audio('./assets/sounds/income_call.wav');
-    #loggedInSound = new Audio('./assets/sounds/login.m4a');
-    #loggedOutSound = new Audio('./assets/sounds/logout.m4a');
+    #phoneRing = new Audio('../../assets/agent/assets/sounds/income_call.wav');
+    #loggedInSound = new Audio('../../assets/agent/assets/sounds/login.m4a');
+    #loggedOutSound = new Audio('../../assets/agent/assets/sounds/logout.m4a');
 
 
-    videoCallService;
-    #sessionId;
-    #connectionId;
-    #recordingId;
+    #guestDetails;
+    #videoCallService;
 
     /**
      * @param {string} guestUUID - Preexisting guest uuid
@@ -89,10 +83,11 @@ export class VideoServiceGuest {
 
     /**
      * Register the connection of the guest
-     * 
+     * @param {Object} details - Details of the guest
      * @param {Function} callback - This method is executed after guest is connected to socket 
      */
-    connectGuest(callback) {
+    connectGuest(details, callback) {
+        this.#guestDetails = details;
 
         if (this.#socket) {
             this.#socket.disconnect();
@@ -114,11 +109,13 @@ export class VideoServiceGuest {
 
 
         this.#emit('connect-guest', {
+            guest: this.#guestUUID,
             priority: this.#priority,
             folio: this.#folio,
             altitude: this.#position?.coords.altitude,
             latitude: this.#position?.coords.latitude,
             longitude: this.#position?.coords.longitude,
+            details: this.#guestDetails
         }, response => {
             this.#guestConnectionId = response.id;
             this.#loggedInSound.play();
@@ -127,11 +124,11 @@ export class VideoServiceGuest {
         });
 
         this.#socket.on('mute-video', ({toggleVideo}) => {
-            this.videoCallService.publishVideo(toggleVideo.toogleVideoGuest);
+            this.#videoCallService.publishVideo(toggleVideo.toogleVideoGuest);
         });
     
         this.#socket.on('mute-audio', ({toggleAudio}) => {
-            this.videoCallService.publishAudio(toggleAudio.toogleAudioGuest);
+            this.#videoCallService.publishAudio(toggleAudio.toogleAudioGuest);
         });
     }
 
@@ -143,13 +140,11 @@ export class VideoServiceGuest {
      */
     registerOnVideoReady(localVideoSelector, remoteVideoSelector, callback) {
         this.#socket.on('video-ready', function(response) {
-            this.videoCallService = new VideoCall({ remoteVideoSelector });
-            console.log(response);
-            // this.videoCallService = 
-            // this.videoCallService.registerOnVideoReady({ remoteVideoSelector });
+            this.#loggedInSound.play();
+            this.#videoCallService = new VideoCall({ remoteVideoSelector });
 
             if (typeof callback === 'function') callback(response);
-            this.videoCallService.connectVideoCall(response.token, localVideoSelector, () => {})
+            this.#videoCallService.connectVideoCall(response.token, localVideoSelector, () => {})
         });
     }
 
@@ -159,7 +154,13 @@ export class VideoServiceGuest {
      * @param {Function} [callback] - This method is executed after guest is disconnected
      */
     disconnectGuest(callback) {
-        this.#socket.disconnect();
+        try {
+            this.#videoCallService?.session.disconnect();
+            this.#socket.disconnect();
+        } catch (e) {
+            console.error(e)
+        }
+
 
         if (typeof callback === 'function') callback(response);
     }

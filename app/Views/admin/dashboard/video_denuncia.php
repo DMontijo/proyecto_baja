@@ -56,7 +56,7 @@
 						</div>
 
 						<div class="input-group mb-1">
-							<input type="text" class="form-control d-none" id="input_api" value="vspk_988a387a-001c-4d80-a456-6debd55dba61">
+							<input type="text" class="form-control d-none" id="input_api" value="vspk_6258d819-105e-4487-b7f1-be72e892850e">
 						</div>
 
 						<div class="input-group mb-1">
@@ -190,13 +190,13 @@
 									<path d="m9.486 10.607-.748-.748A2 2 0 0 1 6 8v-.878l-1-1V8a3 3 0 0 0 4.486 2.607zm-7.84-9.253 12 12 .708-.708-12-12-.708.708z" />
 								</svg>
 							</button>
-							<button class="btn btn-primary" id="start-recording" onclick="startRecording(this, 'start');">
+							<button class="btn btn-primary" id="start-recording">
 								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-play" viewBox="0 0 16 16">
 									<path d="M6 6.883v4.234a.5.5 0 0 0 .757.429l3.528-2.117a.5.5 0 0 0 0-.858L6.757 6.454a.5.5 0 0 0-.757.43z" />
 									<path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z" />
 								</svg>
 							</button>
-							<button class="btn btn-primary" id="stop-recording" onclick="stopRecording(this, 'stop');">
+							<button class="btn btn-primary" id="stop-recording">
 								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-stop-circle" viewBox="0 0 16 16">
 									<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
 									<path d="M5 6.5A1.5 1.5 0 0 1 6.5 5h3A1.5 1.5 0 0 1 11 6.5v3A1.5 1.5 0 0 1 9.5 11h-3A1.5 1.5 0 0 1 5 9.5v-3z" />

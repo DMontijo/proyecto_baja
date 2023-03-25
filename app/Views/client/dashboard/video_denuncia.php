@@ -28,9 +28,9 @@
 
 	}
 
-	video{
-			width: 100%;
-		}
+	video {
+		width: 100%;
+	}
 </style>
 <div class="container-fluid mb-5">
 	<div class="input-group mb-1">
@@ -49,16 +49,23 @@
 					<div class="ratio ratio-16x9 justify-content-center">
 						<!-- <iframe style="min-height:600px;" src="<?= 'https://videodenunciaserver1.fgebc.gob.mx/videollamada?folio=' . $body_data->folio . '&nombre=' . $session->NOMBRE . ' ' . $session->APELLIDO_PATERNO . ' ' . $session->APELLIDO_MATERNO . '&delito=' . $body_data->delito . '&descripcion=' . $body_data->descripcion . '&idioma=' . $body_data->idioma . '&edad=' . $body_data->edad . '&perfil=' . $body_data->perfil . '&sexo=' . $body_data->sexo . '&prioridad=' . $body_data->prioridad . '&sexo_denunciante=' . $body_data->sexo_denunciante ?>" frameborder="0" allowfullscreen allow="camera *;microphone *"></iframe> -->
 
+
 						<div id="sc1" class="sc mt-50">
-							<div class="video_denunciante" id="video_d">video del denunciante</div>
+							<div id="texto_inicial">¡Tu solicitud se ha registrado con éxito!
+								En unos minutos serás atendido por personal del Centro de Denuncia Tecnológica
+								permanece en línea.
+								De presentarse fallas de conexión recarga la página web o ingresa nuevamente con tu usuario
+								de lo contrario nos pondremos en contacto contigo.
+							</div>
+							<div class="video_denunciante" style="display: none;" id="video_d">video del denunciante</div>
 						</div>
 						<div id="sc2" class="sc">
-							<div class="video_usuario" id="video_m">video del mp
+							<div class="video_usuario" style="display: none;" id="video_m">video del mp
 
 							</div>
 
 						</div>
-					
+
 					</div>
 
 				</div>

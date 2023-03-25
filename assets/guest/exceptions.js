@@ -39,3 +39,10 @@ export function ExceptionMissingParameter(valueName, functionName) {
     error.name = 'ExceptionMissingParameter';
     return error;
 }
+
+export function ExceptionOpenViduSessionNotCreated() {
+    const error = new Error();
+    error.message = 'OpenVidu session has not been created';
+    error.name = 'ExceptionOpenViduSessionNotCreated';
+    return error;
+}

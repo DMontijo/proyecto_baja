@@ -1,42 +1,29 @@
-import { VideoServiceGuest } from '../guest/guest.js';
+import { VideoServiceGuest } from "../guest/guest.js";
 
-const apiKey = 'vspk_988a387a-001c-4d80-a456-6debd55dba61';
-const guestUUID = document.getElementById('input_uuid').value;
-const folio = document.getElementById('input_folio').value;
-const disponible_connect = document.querySelector('#disponible');
-const aceptar_llamada = document.querySelector('#aceptar');
-let usr_vd = document.querySelector('#usr_vd');
-let agn_vf = document.querySelector('#agn_vf');
+const apiKey = "vspk_6258d819-105e-4487-b7f1-be72e892850e";
+const guestUUID = document.getElementById("input_uuid").value;
+const folio = document.getElementById("input_folio").value;
+const texto_inicial = document.querySelector("#texto_inicial");
+const aceptar_llamada = document.querySelector("#aceptar");
+let video_d = document.querySelector("#video_d");
+let video_m = document.querySelector("#video_m");
 console.log(guestUUID);
 
-
 // const apiURI = 'http://192.168.0.67:3000';
-const apiURI = 'http://34.229.77.149';
+const apiURI = "http://54.85.151.185/";
 
-const guestVideoService = new VideoServiceGuest(guestUUID, folio,{ apiURI, apiKey });
+const guestVideoService = new VideoServiceGuest(guestUUID, folio, {
+	apiURI,
+	apiKey
+});
 
 guestVideoService.connectGuest(() => {
-    console.log(document.getElementById('video_m'));
-    guestVideoService.registerOnVideoReady('video_d','video_m',() => {
+	texto_inicial.style.display = "block";
 
-        // incomeCallModal.show();
-        // nameGuest.innerHTML = response.guest.name;
-        // priorityGuest.innerHTML = 'Priority: ' + response.priority;
-    });
+
+	guestVideoService.registerOnVideoReady("video_d", "video_m", () => {
+		texto_inicial.style.display = "none";
+		video_d.style.display = "block";
+		video_m.style.display = "block";
+	});
 });
-    // guestVideoService.connectVideoCall(() => {
-    //     guestVideoService.registerOnVideoReady((response) => {
-    //       console.log(response);
-
-    //         // incomeCallModal.show();
-    //         // nameGuest.innerHTML = response.guest.name;
-    //         // priorityGuest.innerHTML = 'Priority: ' + response.priority;
-    //     });
-    // });
-
-// aceptar_llamada.addEventListener('click', () => {
-//     guestVideoService.acceptCall('agn_vf', 'usr_vd',() => {
-//         $('#llamadaModal').modal('hide');
-
-//     });
-// });

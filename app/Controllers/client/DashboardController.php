@@ -84,6 +84,7 @@ class DashboardController extends BaseController
 	private $_estadosExtranjeros;
 	private $_archivoExternoModel;
 	private $_tipoExpedienteModel;
+	private $urlApi;
 
 	public function __construct()
 	{
@@ -130,6 +131,7 @@ class DashboardController extends BaseController
 		$this->_estadosExtranjeros = new EstadoExtranjeroModel();
 		$this->_archivoExternoModel = new FolioArchivoExternoModel();
 		$this->_tipoExpedienteModel = new TipoExpedienteModel();
+		$this->urlApi = "http://34.229.77.149/guests/";
 	}
 
 	public function index()
@@ -155,11 +157,11 @@ class DashboardController extends BaseController
 			if (strpos($lugar['HECHODESCR'], 'ARMA BLANCA')) {
 				array_push($lugares_blanca, (object) $lugar);
 			}
-			if (!strpos($lugar['HECHODESCR'], 'ARMA BLANCA') && !strpos($lugar['HECHODESCR'], 'ARMA DE FUEGO' )) {
+			if (!strpos($lugar['HECHODESCR'], 'ARMA BLANCA') && !strpos($lugar['HECHODESCR'], 'ARMA DE FUEGO')) {
 				array_push($lugares_sin, (object) $lugar);
 			}
 
-			if ($lugar['HECHODESCR']=='CASA HABITACION' || $lugar['HECHODESCR']=='DESPOBLADO' ||$lugar['HECHODESCR']=='VIA PUBLICA' || $lugar['HECHODESCR']=='CENTRO ESCOLAR' ) {
+			if ($lugar['HECHODESCR'] == 'CASA HABITACION' || $lugar['HECHODESCR'] == 'DESPOBLADO' || $lugar['HECHODESCR'] == 'VIA PUBLICA' || $lugar['HECHODESCR'] == 'CENTRO ESCOLAR') {
 				array_push($lugares_peticion, (object) $lugar);
 			}
 		}
@@ -167,7 +169,7 @@ class DashboardController extends BaseController
 		// $data->lugares =  (object) array_merge($lugares_peticion, $lugares_sin, $lugares_blanca, $lugares_fuego);
 		$lugares_merge = [];
 		$lugares_merge =  array_merge($lugares_peticion, $lugares_sin);
-		$data->lugares = (object)array_unique($lugares_merge,SORT_REGULAR);
+		$data->lugares = (object)array_unique($lugares_merge, SORT_REGULAR);
 		$data->colorVehiculo = $this->_coloresVehiculoModel->asObject()->findAll();
 		$data->tipoVehiculo = $this->_tipoVehiculoModel->asObject()->orderBy('VEHICULOTIPODESCR', 'ASC')->findAll();
 		$data->delitosUsuarios = $this->_delitosUsuariosModel->asObject()->orderBy('DELITO', 'ASC')->findAll();
@@ -290,7 +292,7 @@ class DashboardController extends BaseController
 	{
 		$session = session();
 		$data = (object) array();
-		$data->folios = $this->_folioModel->asObject()->join('TIPOEXPEDIENTE','FOLIO.TIPOEXPEDIENTEID = TIPOEXPEDIENTE.TIPOEXPEDIENTEID', 'LEFT')->join('MUNICIPIO','FOLIO.MUNICIPIOASIGNADOID = MUNICIPIO.MUNICIPIOID AND MUNICIPIO.ESTADOID = 2', 'LEFT')->join('EMPLEADOS','FOLIO.OFICINAASIGNADOID = EMPLEADOS.OFICINAID AND FOLIO.AGENTEASIGNADOID = EMPLEADOS.EMPLEADOID AND FOLIO.MUNICIPIOASIGNADOID = EMPLEADOS.MUNICIPIOID', 'LEFT')->where('DENUNCIANTEID', $session->get('DENUNCIANTEID'))->findAll();
+		$data->folios = $this->_folioModel->asObject()->join('TIPOEXPEDIENTE', 'FOLIO.TIPOEXPEDIENTEID = TIPOEXPEDIENTE.TIPOEXPEDIENTEID', 'LEFT')->join('MUNICIPIO', 'FOLIO.MUNICIPIOASIGNADOID = MUNICIPIO.MUNICIPIOID AND MUNICIPIO.ESTADOID = 2', 'LEFT')->join('EMPLEADOS', 'FOLIO.OFICINAASIGNADOID = EMPLEADOS.OFICINAID AND FOLIO.AGENTEASIGNADOID = EMPLEADOS.EMPLEADOID AND FOLIO.MUNICIPIOASIGNADOID = EMPLEADOS.MUNICIPIOID', 'LEFT')->where('DENUNCIANTEID', $session->get('DENUNCIANTEID'))->findAll();
 		$this->_loadView('Mis denuncias', 'denuncias', '', $data, 'lista_denuncias');
 	}
 
@@ -321,11 +323,11 @@ class DashboardController extends BaseController
 				'HECHONARRACION' => $this->request->getPost('descripcion_breve') != '' ? $this->request->getPost('descripcion_breve') : NULL,
 				'HECHODELITO' => $this->request->getPost('delito'),
 				'TIPODENUNCIA' => 'VD',
-				'HECHOCOORDENADAX'=> $this->request->getPost('longitud'),
-				'HECHOCOORDENADAY'=> $this->request->getPost('latitud'),
+				'HECHOCOORDENADAX' => $this->request->getPost('longitud'),
+				'HECHOCOORDENADAY' => $this->request->getPost('latitud'),
 
 			];
-		}else{
+		} else {
 			$dataFolio = [
 				'FOLIOID' => $FOLIOID,
 				'ANO' => $year,
@@ -348,7 +350,7 @@ class DashboardController extends BaseController
 				'TIPODENUNCIA' => 'VD',
 			];
 		}
-	
+
 		$colonia = $this->_coloniasModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $this->request->getPost('municipio'))->where('LOCALIDADID', $this->request->getPost('localidad'))->where('COLONIAID', $this->request->getPost('colonia_select'))->first();
 
 		if ($this->request->getPost('colonia_select')) {
@@ -783,23 +785,40 @@ class DashboardController extends BaseController
 			} else {
 				$prioridad = $delito->IMPORTANCIA;
 			}
-
-			$data = (object) [
-				'delito' => $this->request->getPost('delito'),
-				'descripcion' => $this->request->getPost('descripcion_breve'),
-				'idioma' => $idioma->PERSONAIDIOMADESCR ? $idioma->PERSONAIDIOMADESCR : 'DESCONOCIDO',
-				'edad' => $edad,
-				'perfil' => $this->request->getPost('delito') == 'VIOLENCIA FAMILIAR' ? 1 : 0,
-				'sexo' => $this->request->getPost('delito') == 'VIOLENCIA FAMILIAR' ? 2 : 0,
+			$dataApi2 = [
+				'NOMBRE' => $denunciante->NOMBRE,
+				'APELLIDO_PATERNO' =>  $denunciante->APELLIDO_PATERNO,
+				'APELLIDO_MATERNO' =>  $denunciante->APELLIDO_MATERNO,
+				'CORREO' =>  $denunciante->CORREO,
+				'DELITO' => $this->request->getPost('delito')
 			];
+			$dataApi = array();
+			$dataApi['name'] = $denunciante->NOMBRE . ' ' . $denunciante->APELLIDO_PATERNO;
+			$dataApi['details'] = $dataApi2;
+			$dataApi['gender'] = $denunciante->SEXO == 'F' ? "FEMALE" : 'MALE';
+			$dataApi['languages'] = [$denunciante->IDIOMAID];
+			$response = $this->_curlPost($this->urlApi, $dataApi);
+			$dataDenuncianteApi['UUID'] = $response->uuid;
+			if ($response->uuid) {
+				$update = $this->_denunciantesModel->set($dataDenuncianteApi)->where('DENUNCIANTEID', session('DENUNCIANTEID'))->update();
+				$data = (object) [
+					'delito' => $this->request->getPost('delito'),
+					'descripcion' => $this->request->getPost('descripcion_breve'),
+					'idioma' => $idioma->PERSONAIDIOMADESCR ? $idioma->PERSONAIDIOMADESCR : 'DESCONOCIDO',
+					'edad' => $edad,
+					'perfil' => $this->request->getPost('delito') == 'VIOLENCIA FAMILIAR' ? 1 : 0,
+					'sexo' => $this->request->getPost('delito') == 'VIOLENCIA FAMILIAR' ? 2 : 0,
+				];
 
-			$sexo_denunciante = $denunciante->SEXO == 'F' ? 'FEMENINO' : 'MASCULINO';
-			$url = "/denuncia/dashboard/video-denuncia?folio=" . $year . '-' . $FOLIOID . "&year=" . $year . "&delito=" . $data->delito . "&descripcion=" . $data->descripcion . "&idioma=" . $data->idioma . "&edad=" . $data->edad . "&perfil=" . $data->perfil . "&sexo=" . $data->sexo . "&prioridad=" . $prioridad . "&sexo_denunciante=" . $sexo_denunciante;
 
-			if ($this->_sendEmailFolio($session->get('CORREO'), $FOLIOID)) {
-				return redirect()->to(base_url($url));
-			} else {
-				return redirect()->to(base_url($url));
+				$sexo_denunciante = $denunciante->SEXO == 'F' ? 'FEMENINO' : 'MASCULINO';
+				$url = "/denuncia/dashboard/video-denuncia?folio=" . $year . '-' . $FOLIOID . "&year=" . $year . "&delito=" . $data->delito . "&descripcion=" . $data->descripcion . "&idioma=" . $data->idioma . "&edad=" . $data->edad . "&perfil=" . $data->perfil . "&sexo=" . $data->sexo . "&prioridad=" . $prioridad . "&sexo_denunciante=" . $sexo_denunciante;
+
+				if ($this->_sendEmailFolio($session->get('CORREO'), $FOLIOID)) {
+					return redirect()->to(base_url($url));
+				} else {
+					return redirect()->to(base_url($url));
+				}
 			}
 		} else {
 			return redirect()->to(base_url('/denuncia/dashboard'));
@@ -871,7 +890,7 @@ class DashboardController extends BaseController
 			$data['COLONIADESCR'] = $colonia->COLONIADESCR;
 		};
 		if ($data['COLONIAID'] != null) {
-		
+
 			if ($data['MUNICIPIOID']) {
 				try {
 					$colonia = $this->_coloniasModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data['MUNICIPIOID'])->where('LOCALIDADID',  $data['LOCALIDADID'])->where('COLONIAID', $data['COLONIAID'])->first();
@@ -1108,6 +1127,37 @@ class DashboardController extends BaseController
 		$this->_denunciantesModel->set($data)->where('DENUNCIANTEID', session('DENUNCIANTEID'))->update();
 
 		return redirect()->back()->with('message_success', 'Contraseña actualizada correctamente');
+	}
+	private function _curlPost($endpoint, $data)
+	{
+		$ch = curl_init();
+
+		curl_setopt($ch, CURLOPT_URL, $endpoint);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+		$headers = array(
+			'Content-Type: application/json',
+			'Access-Control-Allow-Origin: *',
+			'Access-Control-Allow-Credentials: true',
+			'Access-Control-Allow-Headers: Content-Type',
+			'X_API_KEY' . X_API_KEY
+		);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+		$result = curl_exec($ch);
+
+		if ($result === false) {
+			$result = "{
+                'status' => 401,
+                'error' => 'Curl failed: '" . curl_error($ch) . "
+            }";
+		}
+		curl_close($ch);
+
+		return json_decode($result);
 	}
 }
 
