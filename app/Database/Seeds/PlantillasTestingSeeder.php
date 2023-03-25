@@ -8,7 +8,6 @@ class PlantillasTestingSeeder extends Seeder
 {
 	public function run()
 	{
-
 		$data = [
 			array(
 				'DESCRIPCION' => '', 'TITULO' => 'AUTORIZACION DE LA APLICACION DEL CRITERIO DE OPORTUNIDAD',
