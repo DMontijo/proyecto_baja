@@ -76,6 +76,10 @@ class PLANTILLAS extends Migration
 				'type' => 'INT',
 				'null' => TRUE,
 			],
+			'ACTIVO' => [
+				'type' => 'INT',
+				'default' => 1,
+			],
 		]);
 		$this->forge->addKey('ID', TRUE);
 		$this->forge->createTable('PLANTILLAS');
