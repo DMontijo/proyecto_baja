@@ -186,7 +186,7 @@
 			<?php } ?>
 		</select>
 	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+	<!-- <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="tam_cabello_des" class="form-label fw-bold ">Tamaño de cabello</label>
 		<select class="form-select" id="tam_cabello_des" name="tam_cabello_des">
 			<option selected disabled value="">Elige el tamaño del cabello</option>
@@ -195,7 +195,7 @@
 				<option value="<?= $cabelloTamano->CABELLOTAMANOID ?>"> <?= $cabelloTamano->CABELLOTAMANODESCR ?></option>
 			<?php } ?>
 		</select>
-	</div>
+	</div> -->
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="form_cabello_des" class="form-label fw-bold ">Forma de cabello</label>
 		<select class="form-select" id="form_cabello_des" name="form_cabello_des">
