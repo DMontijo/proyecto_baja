@@ -754,7 +754,7 @@ class DashboardController extends BaseController
 		$data->objetosubclasificacion = $this->_objetoSubclasificacionModel->asObject()->findAll();
 		$data->tipomoneda = $this->_tipoMonedaModel->asObject()->findAll();
 
-		$data->plantillas = $this->_plantillasModel->asObject()->where('TITULO !=', 'CONSTANCIA DE EXTRAVIO')->findAll();
+		$data->plantillas = $this->_plantillasModel->asObject()->where('TITULO !=', 'CONSTANCIA DE EXTRAVIO')->orderBy('TITULO', 'ASC')->findAll();
 		$data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->like('TIPOEXPEDIENTECLAVE', 'NUC')->orLike('TIPOEXPEDIENTECLAVE', 'NAC')->orLike('TIPOEXPEDIENTECLAVE', 'RAC')->findAll();
 		$data->derivaciones = $this->_derivacionesAtencionesModel->asObject()->findAll();
 
@@ -1635,7 +1635,7 @@ class DashboardController extends BaseController
 		$data->personafisica = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->findAll();
 		$data->imputados = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->where('CALIDADJURIDICAID', 2)->findAll();
 		$data->victimas = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->where('CALIDADJURIDICAID= 1 OR CALIDADJURIDICAID=6')->findAll();
-		$data->plantillas = $this->_plantillasModel->asObject()->where('TITULO !=', 'CONSTANCIA DE EXTRAVIO')->findAll();
+		$data->plantillas = $this->_plantillasModel->asObject()->where('TITULO !=', 'CONSTANCIA DE EXTRAVIO')->orderBy('TITULO', 'ASC')->findAll();
 		$data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->like('TIPOEXPEDIENTECLAVE', 'NUC')->orLike('TIPOEXPEDIENTECLAVE', 'NAC')->orLike('TIPOEXPEDIENTECLAVE', 'RAC')->findAll();
 		$data->situacionVehiculo = $this->_situacionVehiculoModel->asObject()->findAll();
 		$data->empleados = $this->_usuariosModel->asObject()->orderBy('NOMBRE', 'ASC')->where('ROLID', 3)->findAll();
@@ -4771,7 +4771,7 @@ class DashboardController extends BaseController
 	}
 
 
-	
+
 	public function deletePersonaFisicaById()
 	{
 
@@ -4790,7 +4790,7 @@ class DashboardController extends BaseController
 				$imputados = $this->_folioPersonaFisicaModel->get_imputados($folio, $year);
 				$victimas = $this->_folioPersonaFisicaModel->get_victimas($folio, $year);
 				$delitosModalidadFiltro = $this->_delitoModalidadModel->get_delitodescr($folio, $year);
-	
+
 				$datosBitacora = [
 					'ACCION' => 'Ha eliminado una persona fisica',
 					'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
@@ -6413,7 +6413,7 @@ class DashboardController extends BaseController
 
 			switch ($data->folio->MUNICIPIOASIGNADOID) {
 				case '1':
-					$data->plantilla = str_replace('[DIRECCION_NOMBRE]', 'DIRECTOR DE SEGURIDAD PÚBLICA MUNICIPAL', $data->plantilla);
+					$data->plantilla = str_replace('[DIRECCION_NOMBRE]', 'C. DAVID ARMANDO SÁNCHEZ GONZÁLEZ,<br>MAYOR DE INFANTERÍA DIRECTOR DE SEGURIDAD PÚBLICO MUNICIPAL', $data->plantilla);
 					break;
 				case '2':
 					$data->plantilla = str_replace('[DIRECCION_NOMBRE]', 'DIRECCIÓN DE SEGURIDAD PÚBLICA MUNICIPAL', $data->plantilla);
@@ -6426,6 +6426,12 @@ class DashboardController extends BaseController
 					break;
 				case '5':
 					$data->plantilla = str_replace('[DIRECCION_NOMBRE]', 'SECRETARÍA DE SEGURIDAD Y PROTECCIÓN CIUDADANA', $data->plantilla);
+					break;
+				case '6':
+					$data->plantilla = str_replace('[DIRECCION_NOMBRE]', 'LICENCIADO MARIO MARTÍNEZ MARTÍNEZ,<br>DIRECTOR DE SEGURIDAD PUBLICA MUNICIPAL SAN QUINTÍN', $data->plantilla);
+					break;
+				case '7':
+					$data->plantilla = str_replace('[DIRECCION_NOMBRE]', 'DIRECTOR DE SEGURIDAD PÚBLICA SAN FELIPE', $data->plantilla);
 					break;
 				default:
 					$data->plantilla = str_replace('[DIRECCION_NOMBRE]', 'SEGURIDAD PUBLICA MUNICIPAL', $data->plantilla);
