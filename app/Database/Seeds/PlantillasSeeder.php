@@ -434,6 +434,23 @@ class PlantillasSeeder extends Seeder
 				'AREAPERICIALENSENADAID' => NULL,
 				'INTERVENCIONENSENADAID' => NULL,
 			),
+			array(
+				'DESCRIPCION' => '', 'TITULO' => 'OFICIO DE COLABORACION PARA INGRESO A HOSPITAL',
+				'PLACEHOLDER' => '<p style="text-align: center;"><strong>OFICIO DE COLABORACI&Oacute;N</strong><br><strong>PARA&nbsp;INGRESO A HOSPITAL</strong></p> <p style="text-align: right;">&nbsp;</p> <p style="text-align: right;"><strong>No. de Caso: [EXPEDIENTE_NUMERO]</strong></p> <p>&nbsp;</p> <p><strong>C. DIRECTOR DE HOSPITAL &nbsp;[NOMBRE DEL HOSPITAL]</strong><br>PRESENTE.-</p> <p style="text-align: justify;"><br>&nbsp; &nbsp; &nbsp;Anteponiendo un cordial saludo, por medio del presente solicito su colaboraci&oacute;n a efecto de permitir al Perito M&eacute;dico adscrito al Centro Estatal de Ciencias Forenses de la Fiscal&iacute;a General del Estado de Baja California, portador del presente oficio, acceso a sus instalaciones y al expediente cl&iacute;nico del (los) de&nbsp;nombre(s)______________________, con la finalidad de valorar el estado de Salud actual en b&uacute;squeda de elementos que sustenten la Pericial requerida por esta Autoridad, haciendo menci&oacute;n que dicho (a) paciente se encuentra en calidad de v&iacute;ctima dentro de la carpeta de investigaci&oacute;n al rubro se&ntilde;alada, que se instruye por el delito de [DELITO_NOMBRE]. Lo anterior con fundamento en los art&iacute;culos 20 apartados A, C y 21 de la Constituci&oacute;n Pol&iacute;tica de los Estados Unidos Mexicanos, Art&iacute;culos 109, 127, 131 fracciones III y IX del C&oacute;digo Nacional de Procedimientos Penales en relaci&oacute;n con los diversos numerales 4, 5, 26 y 27 de la Ley General de V&iacute;ctimas.</p> <p style="text-align: center;">[DOCUMENTO_CIUDAD],&nbsp;BAJA CALIFORNIA<br>[DIA] DE [MES] DEL [ANO]<br>LIC. [EXPEDIENTE_NOMBRE_DEL_RESPONSABLE]<br>AGENTE DEL MINISTERIO PUBLICO<br>CON ADSCRIPCI&Oacute;N AL CENTRO DE DENUNCIA TECNOL&Oacute;GICA</p>',
+				'TEXTO' => '',
+				'PLANTILLAJUSTICIAMEXICALIID' => NULL,
+				'CLASIFICACIONDOCTOMEXICALIID' => NULL,
+				'PLANTILLAJUSTICIATIJUANAID' => NULL,
+				'CLASIFICACIONDOCTOTIJUANAID' => NULL,
+				'PLANTILLAJUSTICIAENSENADAID' => NULL,
+				'CLASIFICACIONDOCTOENSENADAID' => NULL,
+				'AREAPERICIALMEXICALIID' => 8,
+				'INTERVENCIONMEXICALIID' => NULL,
+				'AREAPERICIALTIJUANAID' => 8,
+				'INTERVENCIONTIJUANAID' => NULL,
+				'AREAPERICIALENSENADAID' => 8,
+				'INTERVENCIONENSENADAID' => NULL,
+			),
 		];
 
 		$this->db->table('PLANTILLAS')->insertBatch($data);
