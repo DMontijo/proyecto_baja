@@ -3389,6 +3389,7 @@ class DashboardController extends BaseController
 		// return $data;
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
+	
 	private function _curlPost($endpoint, $data)
 	{
 		$ch = curl_init();
@@ -3455,6 +3456,7 @@ class DashboardController extends BaseController
 		// return $result;
 		return json_decode($result);
 	}
+
 	public function getTimeVideo()
 	{
 		// $video = $this->request->getPost('name_video');

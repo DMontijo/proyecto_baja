@@ -42,6 +42,7 @@ use App\Models\VehiculoTipoModel;
 use App\Models\VehiculoVersionModel;
 use App\Models\FolioArchivoExternoModel;
 use App\Models\TipoExpedienteModel;
+use App\Models\ConexionesDBModel;
 
 class DashboardController extends BaseController
 {
@@ -84,7 +85,11 @@ class DashboardController extends BaseController
 	private $_estadosExtranjeros;
 	private $_archivoExternoModel;
 	private $_tipoExpedienteModel;
+	private $_conexionesDBModel;
 
+	private $protocol;
+	private $ip;
+	private $endpoint;
 
 	public function __construct()
 	{
@@ -131,6 +136,14 @@ class DashboardController extends BaseController
 		$this->_estadosExtranjeros = new EstadoExtranjeroModel();
 		$this->_archivoExternoModel = new FolioArchivoExternoModel();
 		$this->_tipoExpedienteModel = new TipoExpedienteModel();
+		$this->_conexionesDBModel = new ConexionesDBModel();
+
+		// $this->protocol = 'http://';
+		// $this->ip = "10.144.244.223";
+		// $this->endpoint = $this->protocol . $this->ip . '/webServiceVD';
+		$this->protocol = 'https://';
+		$this->ip = "ws.fgebc.gob.mx";
+		$this->endpoint = $this->protocol . $this->ip . '/webServiceVD';
 	}
 
 	public function index()
@@ -292,6 +305,20 @@ class DashboardController extends BaseController
 		$session = session();
 		$data = (object) array();
 		$data->folios = $this->_folioModel->asObject()->join('TIPOEXPEDIENTE', 'FOLIO.TIPOEXPEDIENTEID = TIPOEXPEDIENTE.TIPOEXPEDIENTEID', 'LEFT')->join('MUNICIPIO', 'FOLIO.MUNICIPIOASIGNADOID = MUNICIPIO.MUNICIPIOID AND MUNICIPIO.ESTADOID = 2', 'LEFT')->join('EMPLEADOS', 'FOLIO.OFICINAASIGNADOID = EMPLEADOS.OFICINAID AND FOLIO.AGENTEASIGNADOID = EMPLEADOS.EMPLEADOID AND FOLIO.MUNICIPIOASIGNADOID = EMPLEADOS.MUNICIPIOID', 'LEFT')->where('DENUNCIANTEID', $session->get('DENUNCIANTEID'))->findAll();
+		foreach ($data->folios as $key => $folio) {
+			$folio->ESTADOENJUSTICIA = '';
+			$folio->OFICINAENJUSTICIA = '';
+			if ($folio->STATUS == 'EXPEDIENTE') {
+				try {
+					$expediente_estado = $this->_getExpedienteStatusOficina($folio->EXPEDIENTEID, $folio->MUNICIPIOASIGNADOID);
+					if ($expediente_estado->status == 201) {
+						$folio->ESTADOENJUSTICIA = $expediente_estado->data[0]->ESTADOJURIDICOEXPEDIENTEDESCR ? $expediente_estado->data[0]->ESTADOJURIDICOEXPEDIENTEDESCR : '';
+						$folio->OFICINAENJUSTICIA = $expediente_estado->data[0]->OFICINADESCR ? $expediente_estado->data[0]->OFICINADESCR : '';
+					}
+				} catch (\Throwable $th) {
+				}
+			}
+		}
 		$this->_loadView('Mis denuncias', 'denuncias', '', $data, 'lista_denuncias');
 	}
 
@@ -1152,6 +1179,105 @@ class DashboardController extends BaseController
 		$this->_denunciantesModel->set($data)->where('DENUNCIANTEID', session('DENUNCIANTEID'))->update();
 
 		return redirect()->back()->with('message_success', 'Contraseña actualizada correctamente');
+	}
+
+	private function _getExpedienteStatusOficina($expedienteId, $municipio)
+	{
+		$function = '/expediente.php?process=getStatus';
+		$endpoint = $this->endpoint . $function;
+		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
+		$data = array();
+
+		$data['EXPEDIENTEID'] = $expedienteId;
+		$data['userDB'] = $conexion->USER;
+		$data['pwdDB'] = $conexion->PASSWORD;
+		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
+		$data['schema'] = $conexion->SCHEMA;
+
+		return $this->_curlPostDataEncrypt($endpoint, $data);
+	}
+
+	private function _curlPost($endpoint, $data)
+	{
+		$ch = curl_init();
+
+		curl_setopt($ch, CURLOPT_URL, $endpoint);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+		$headers = array(
+			'Content-Type: application/json',
+			'Access-Control-Allow-Origin: *',
+			'Access-Control-Allow-Credentials: true',
+			'Access-Control-Allow-Headers: Content-Type',
+			'Hash-API: ' . password_hash(TOKEN_API, PASSWORD_BCRYPT)
+		);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+		$result = curl_exec($ch);
+
+		if ($result === false) {
+			$result = "{
+                'status' => 401,
+                'error' => 'Curl failed: '" . curl_error($ch) . "
+            }";
+		}
+		curl_close($ch);
+
+		return json_decode($result);
+	}
+
+	private function _curlPostDataEncrypt($endpoint, $data)
+	{
+		// var_dump($data);exit;
+		$ch = curl_init();
+
+		curl_setopt($ch, CURLOPT_URL, $endpoint);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $this->_encriptar(json_encode($data), KEY_128));
+		$headers = array(
+			'Content-Type: application/json',
+			'Access-Control-Allow-Origin: *',
+			'Access-Control-Allow-Credentials: true',
+			'Access-Control-Allow-Headers: Content-Type',
+			'Hash-API: ' . password_hash(TOKEN_API, PASSWORD_BCRYPT),
+			'Key: ' . KEY_128
+		);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		$result = curl_exec($ch);
+
+		if ($result === false) {
+			$result = "{
+                'status' => 401,
+                'error' => 'Curl failed: '" . curl_error($ch) . "
+            }";
+		}
+		curl_close($ch);
+		// var_dump($data);
+		// var_dump($result);exit;
+		// return $result;
+		return json_decode($result);
+	}
+
+	private function _encriptar($plaintext, $key128)
+	{
+		$iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-128-cbc'));
+		$cipherText = openssl_encrypt($plaintext, 'AES-128-CBC', hex2bin($key128), 1, $iv);
+		return base64_encode($iv . $cipherText);
+	}
+
+	private function _desencriptar($encodedInitialData, $key128)
+	{
+		$encodedInitialData = base64_decode($encodedInitialData);
+		$iv = substr($encodedInitialData, 0, 16);
+		$encodedInitialData = substr($encodedInitialData, 16);
+		$decrypted = openssl_decrypt($encodedInitialData, 'AES-128-CBC', hex2bin($key128), 1, $iv);
+		return $decrypted;
 	}
 }
 

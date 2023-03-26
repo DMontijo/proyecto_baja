@@ -15,15 +15,12 @@
 						<thead>
 							<tr>
 								<th scope="col">FOLIO</th>
-								<th scope="col">AÑO</th>
 								<th scope="col">FECHA Y HORA DE LA DENUNCIA</th>
 								<th scope="col">DELITO MENCIONADO</th>
 								<th scope="col">ESTADO</th>
 								<th scope="col">EXPEDIENTE</th>
-								<th scope="col">MUNICIPIO REMITIDO</th>
-								<th scope="col">OFICINA REMITIDA</th>
-
-								<!-- <th scope="col">VIDEO</th> -->
+								<th scope="col">MUNICIPIO</th>
+								<th scope="col">OFICINA</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -33,27 +30,16 @@
 									$arrayExpediente = str_split($folio->EXPEDIENTEID);
 									$expediente_guiones =  $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
 								} ?>
-
+								
 								<tr>
-									<td class="text-center"><?= $folio->FOLIOID ?></td>
-									<td class="text-center"><?= $folio->ANO ?></td>
+									<td class="text-center"><?= $folio->FOLIOID . '/' . $folio->ANO ?></td>
 									<td class="text-center"><?= $folio->FECHAREGISTRO ?></td>
 									<td class="text-center"><?= $folio->HECHODELITO ?></td>
-									<td class="text-center"><?= $folio->STATUS == 'EXPEDIENTE' ? 'EXPEDIENTE GENERADO' : ($folio->STATUS == 'ABIERTO' ? 'EN TRAMITE' : $folio->STATUS) ?></td>
-									<td class="text-center"><?= $folio->EXPEDIENTEID ? ($expediente_guiones ? $expediente_guiones . '/' . $folio->TIPOEXPEDIENTECLAVE : '-')  : '-' ?></td>
+									<td class="text-center"><?= $folio->STATUS == 'EXPEDIENTE' ? ($folio->ESTADOENJUSTICIA != '' ? $folio->ESTADOENJUSTICIA : 'EN TRÁMITE') : ($folio->STATUS == 'ABIERTO' ? 'EN TRÁMITE' : $folio->STATUS) ?></td>
+									<td class="text-center"><?= $folio->EXPEDIENTEID ? ($expediente_guiones ? $expediente_guiones . '/' . $folio->TIPOEXPEDIENTECLAVE : '')  : $folio->FOLIOID . '/' . $folio->ANO ?></td>
 									<td class="text-center"><?= $folio->EXPEDIENTEID ? $folio->MUNICIPIODESCR : '-' ?></td>
 									<td class="text-center"><?= $folio->OFICINAID ? $folio->OFICINADESCR : '-' ?></td>
-
-									<!-- <td class="text-center">
-										<?php //if ($folio->EXPEDIENTEID) : 
-										?>
-											<button type="button" class="btn btn-primary" onclick="viewVideo(<?= $folio->ANO ?>,<?= $folio->FOLIOID ?>)"><i class="bi bi-play-btn"></i></button>
-										<?php //else : 
-										?>
-											-
-										<?php //endif; 
-										?>
-									</td> -->
+									<td class="text-center"><?= $folio->STATUS == 'EXPEDIENTE' ? ($folio->OFICINAENJUSTICIA != '' ? $folio->OFICINAENJUSTICIA : '') : ($folio->OFICINAID ? $folio->OFICINADESCR : '') ?></td>
 								</tr>
 							<?php } ?>
 						</tbody>
