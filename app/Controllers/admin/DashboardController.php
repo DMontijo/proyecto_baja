@@ -5603,7 +5603,6 @@ class DashboardController extends BaseController
 		//Expediente
 		$expediente = $data->folio->EXPEDIENTEID ? $data->folio->EXPEDIENTEID : null;
 
-
 		if ($data->victima[0]['DESAPARECIDA'] == 'S' && $data->mediaFiliacionVictima) {
 			//Victima media filiación
 			$colorOjos = $this->_ojoColorModel->asObject()->where('OJOCOLORID', $data->mediaFiliacionVictima->OJOCOLORID)->first();
@@ -6276,17 +6275,16 @@ class DashboardController extends BaseController
 		$hecho_info = '<p><b>FOLIO:</b> ' . $data->folio->FOLIOID . '</p><p><b>AÑO:</b> ' . $data->folio->ANO . '</p><p><b>FECHA DEL HECHO:</b> ' . $data->folio->HECHOFECHA . '</p><p><b>HORA DEL HECHO:</b> ' . $data->folio->HECHOHORA . '</p><p><b>CALLE DEL HECHO:</b> ' . $data->folio->HECHOCALLE . ' EXT.' . $data->folio->HECHONUMEROCASA . ' INT.' . $data->folio->HECHONUMEROCASAINT . ' ' . $data->municipios->MUNICIPIODESCR . '</p><p><b>NARRACIÓN DEL HECHO:</b> ' . $data->folio->HECHONARRACION . '</p><p><b>NOTAS DEL AGENTE:</b> ' . $data->folio->NOTASAGENTE . '</p>';
 		$data->plantilla = str_replace('[INFORMACION_DEL_HECHO]', $hecho_info, $data->plantilla);
 
+		$data->plantilla = str_replace('[FOLIO_ATENCION]', $data->folio->FOLIOID . '/' . $data->folio->ANO, $data->plantilla);
+		$data->plantilla = str_replace('[DENUNCIANTE_NOMBRE]', $data->denunciante->NOMBRE . ' ' . ($data->denunciante->APELLIDO_PATERNO ? $data->denunciante->APELLIDO_PATERNO : '') . ' ' . ($data->denunciante->APELLIDO_MATERNO ? $data->denunciante->APELLIDO_MATERNO : ''), $data->plantilla);
+
 		if (($expediente == null || $expediente == '') && ($data->folio->STATUS == 'CANALIZADO' || $data->folio->STATUS == 'DERIVADO')) {
 
 			//CARTA DERIVACION
 			if ($data->derivacion && $data->folio->STATUS == 'DERIVADO') {
-				$data->plantilla = str_replace('[FOLIO_ATENCION]', $folio . '/' . $year, $data->plantilla);
-				$data->plantilla = str_replace('[DENUNCIANTE_NOMBRE]', $data->denunciante->NOMBRE . ' ' . ($data->denunciante->APELLIDO_PATERNO ? $data->denunciante->APELLIDO_PATERNO : '') . ' ' . ($data->denunciante->APELLIDO_MATERNO ? $data->denunciante->APELLIDO_MATERNO : ''), $data->plantilla);
 				$data->plantilla = str_replace('[OFICINA_NOMBRE]', $data->derivacion->INSTITUCIONREMISIONDESCR, $data->plantilla);
 				$data->plantilla = str_replace('[OFICINA_DOMICILIO]', $data->derivacion->DOMICILIO, $data->plantilla);
 			} else if ($data->canalizacion && $data->folio->STATUS == 'CANALIZADO') {
-				$data->plantilla = str_replace('[FOLIO_ATENCION]', $folio . '/' . $year, $data->plantilla);
-				$data->plantilla = str_replace('[DENUNCIANTE_NOMBRE]', $data->denunciante->NOMBRE . ' ' . ($data->denunciante->APELLIDO_PATERNO ? $data->denunciante->APELLIDO_PATERNO : '') . ' ' . ($data->denunciante->APELLIDO_MATERNO ? $data->denunciante->APELLIDO_MATERNO : ''), $data->plantilla);
 				$data->plantilla = str_replace('[OFICINA_NOMBRE]', $data->canalizacion->INSTITUCIONREMISIONDESCR, $data->plantilla);
 				$data->plantilla = str_replace('[OFICINA_DOMICILIO]', $data->canalizacion->DOMICILIO, $data->plantilla);
 			}
@@ -6297,7 +6295,7 @@ class DashboardController extends BaseController
 		} else {
 			$data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->where('TIPOEXPEDIENTEID',  $data->folio->TIPOEXPEDIENTEID)->first();
 			$arrayExpediente = str_split($data->folio->EXPEDIENTEID);
-			$expedienteid =  $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14] . '/' . $data->tipoExpediente->TIPOEXPEDIENTECLAVE ? $data->tipoExpediente->TIPOEXPEDIENTECLAVE : '-';
+			$expedienteid =  $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14] . '/' . ($data->tipoExpediente->TIPOEXPEDIENTECLAVE ? $data->tipoExpediente->TIPOEXPEDIENTECLAVE : '-');;
 
 			//VICTIMA RASGOS
 			$data->mediaFiliacionVictima = $this->_folioMediaFiliacion->asObject()->where('FOLIOID', $folio)->where('PERSONAFISICAID', $victima)->first();
