@@ -6420,7 +6420,7 @@ class DashboardController extends BaseController
 			switch ($data->folio->MUNICIPIOASIGNADOID) {
 				case '1':
 					$data->plantilla = str_replace('[DIRECCION_NOMBRE]', 'C. DAVID ARMANDO SÁNCHEZ GONZÁLEZ,<br>MAYOR DE INFANTERÍA DIRECTOR DE SEGURIDAD PÚBLICO MUNICIPAL', $data->plantilla);
-					$data->plantilla = str_replace('[REMISION_DOMICILIO]', 'CEEAIV ZONA ENSENADA<br>Av Manuel Ávila Camacho S/N, Praderas del Ciprés Edificio A Planta Baja.<br>Tel: 646-152-2728 - 646-152-2793', $data->plantilla);
+					$data->plantilla = str_replace('[REMISION_DOMICILIO]', 'Av Manuel Ávila Camacho S/N, Praderas del Ciprés Edificio A Planta Baja.<br>Tel: 646-152-2728 - 646-152-2793', $data->plantilla);
 					break;
 				case '2':
 					$data->plantilla = str_replace('[DIRECCION_NOMBRE]', 'DIRECCIÓN DE SEGURIDAD PÚBLICA MUNICIPAL', $data->plantilla);
@@ -6444,7 +6444,7 @@ class DashboardController extends BaseController
 					break;
 				case '7':
 					$data->plantilla = str_replace('[DIRECCION_NOMBRE]', 'DIRECTOR DE SEGURIDAD PÚBLICA SAN FELIPE', $data->plantilla);
-					$data->plantilla = str_replace('[REMISION_DOMICILIO]', 'CEEAIV ZONA ENSENADA<br>Av Manuel Ávila Camacho S/N, Praderas del Ciprés Edificio A Planta Baja.<br>Tel: 646-152-2728 - 646-152-2793', $data->plantilla);
+					$data->plantilla = str_replace('[REMISION_DOMICILIO]', 'Av Manuel Ávila Camacho S/N, Praderas del Ciprés Edificio A Planta Baja.<br>Tel: 646-152-2728 - 646-152-2793', $data->plantilla);
 					break;
 				default:
 					$data->plantilla = str_replace('[DIRECCION_NOMBRE]', 'SEGURIDAD PUBLICA MUNICIPAL', $data->plantilla);
