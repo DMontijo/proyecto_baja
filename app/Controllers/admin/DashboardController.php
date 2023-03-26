@@ -400,7 +400,7 @@ class DashboardController extends BaseController
 		$this->protocol = 'https://';
 		$this->ip = "ws.fgebc.gob.mx";
 		$this->endpoint = $this->protocol . $this->ip . '/webServiceVD';
-		$this->urlApi = "http://34.229.77.149/agent/";
+		$this->urlApi = "http://54.208.205.251/";
 	}
 
 	public function index()
@@ -805,7 +805,7 @@ class DashboardController extends BaseController
 				$dataApi['sex'] = $this->request->getPost('sexo_usuario') == 'F' ? "FEMALE" : 'MALE';
 				$dataApi['languages'] = [2];
 				// $urlApi = "http://192.168.0.67:3000/guests";
-				$response = $this->_curlPostService($this->urlApi, $dataApi);
+				$response = $this->_curlPostService($this->urlApi . 'agent/', $dataApi);
 			} catch (\Throwable $th) {
 				return redirect()->back()->with('message_error', 'Usuario no creado, hubo un error.');
 			}
@@ -3455,7 +3455,7 @@ class DashboardController extends BaseController
 			'Access-Control-Allow-Origin: *',
 			'Access-Control-Allow-Credentials: true',
 			'Access-Control-Allow-Headers: Content-Type',
-			'X_API_KEY' . X_API_KEY
+			'X-API-KEY:' . X_API_KEY
 		);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
@@ -3568,19 +3568,28 @@ class DashboardController extends BaseController
 	}
 	public function getVideoLink()
 	{
-		$folio = $this->request->getPost('folio');
-		$endpoint = 'https://videodenunciaserver1.fgebc.gob.mx/api/vc';
+
 		$data = array();
-		$data['u'] = '24';
-		$data['token'] = '198429b7cc8a2a5733d97bc13153227dd5017555';
-		$data['a'] = 'getRepo';
+		$folio = $this->request->getPost('folio');
 		$data['folio'] = $folio;
-		$data['min'] = !empty($this->request->getPost('min')) ? $this->request->getPost('min') : '2000-01-01';
-		$data['max'] = !empty($this->request->getPost('max')) ? $this->request->getPost('max') : date("Y-m-d");
 
-		$response = $this->_curlPost($endpoint, $data);
+		$endpoint = $this->urlApi . 'recordings?search=2023-123456864';
 
+		$response = $this->_curlPostService($endpoint, $data);
 		return json_encode($response);
+
+		// $endpoint = 'https://videodenunciaserver1.fgebc.gob.mx/api/vc';
+		// $data = array();
+		// $data['u'] = '24';
+		// $data['token'] = '198429b7cc8a2a5733d97bc13153227dd5017555';
+		// $data['a'] = 'getRepo';
+		// $data['folio'] = $folio;
+		// $data['min'] = !empty($this->request->getPost('min')) ? $this->request->getPost('min') : '2000-01-01';
+		// $data['max'] = !empty($this->request->getPost('max')) ? $this->request->getPost('max') : date("Y-m-d");
+
+		// $response = $this->_curlPost($endpoint, $data);
+
+		// return json_encode($response);
 	}
 
 	public function getLinkFromCall()

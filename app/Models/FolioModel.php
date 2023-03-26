@@ -258,7 +258,6 @@ class FolioModel extends Model
 		}
 
 
-
 		$result = $this->db->query($strQuery)->getResult();
 
 		return $result;

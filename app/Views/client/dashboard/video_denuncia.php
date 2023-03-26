@@ -12,7 +12,6 @@
 		width: 20%;
 		height: 17%;
 		position: relative;
-		background-color: coral;
 		top: 0;
 		left: 0;
 		z-index: 1;
@@ -24,8 +23,6 @@
 		width: 100%;
 		height: 90%;
 		position: relative;
-		background-color: lightseagreen;
-
 	}
 
 	video {
@@ -34,8 +31,9 @@
 </style>
 <div class="container-fluid mb-5">
 	<div class="input-group mb-1">
-		<input type="text" class="form-control d-none" id="input_uuid" value="<?= session('UUID') ?>">
+		<input type="text" class="form-control d-none" id="input_uuid" value="<?= $body_data->UUID ?>">
 		<input type="text" class="form-control d-none" id="input_folio" value="<?php echo $_GET['folio'] ?>">
+		<input type="text" class="form-control d-none" id="input_priority" value="<?php echo $_GET['prioridad'] ?>">
 
 	</div>
 	<div class="row">
@@ -57,10 +55,10 @@
 								De presentarse fallas de conexión recarga la página web o ingresa nuevamente con tu usuario
 								de lo contrario nos pondremos en contacto contigo.
 							</div>
-							<div class="video_denunciante" style="display: none;" id="video_d">video del denunciante</div>
+							<div class="video_denunciante" style="display: none;" id="video_d"></div>
 						</div>
 						<div id="sc2" class="sc">
-							<div class="video_usuario" style="display: none;" id="video_m">video del mp
+							<div class="video_usuario" style="display: none;" id="video_m">
 
 							</div>
 

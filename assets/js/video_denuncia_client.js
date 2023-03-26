@@ -5,25 +5,33 @@ const guestUUID = document.getElementById("input_uuid").value;
 const folio = document.getElementById("input_folio").value;
 const texto_inicial = document.querySelector("#texto_inicial");
 const aceptar_llamada = document.querySelector("#aceptar");
+const priority = document.querySelector("#input_priority").value;
 let video_d = document.querySelector("#video_d");
 let video_m = document.querySelector("#video_m");
-console.log(guestUUID);
-
 // const apiURI = 'http://192.168.0.67:3000';
-const apiURI = "http://54.242.242.114";
+const apiURI = "http://54.208.205.251";
 
-const guestVideoService = new VideoServiceGuest(guestUUID, folio, {
+const guestVideoService = new VideoServiceGuest(guestUUID, folio, priority, {
 	apiURI,
 	apiKey
 });
 
+guestVideoService.registerOnVideoReady("video_d", "video_m", (response) => {
+	console.log(response);
+	texto_inicial.style.display = "none";
+	video_d.style.display = "block";
+	video_m.style.display = "block";
+});
+
+guestVideoService.registerOnDisconnect(() => {
+	console.log("desconectado");
+	video_d.style.display = "none";
+	video_m.style.display = "none";
+	texto_inicial.style.display = "block";
+	texto_inicial.innerHTML= "ESTIMADO (A) USUARIO (A), ¡GRACIAS POR SELECCIONAR EL SERVICIO DE VIDEO DENUNCIA!"+
+	"En la Fiscalía General del Estado de Baja California día a día trabajamos para garantizarte un fácil acceso a la justicia desde cualquier lugar del mundo. "
+})
+
 guestVideoService.connectGuest(() => {
 	texto_inicial.style.display = "block";
-
-
-	guestVideoService.registerOnVideoReady("video_d", "video_m", () => {
-		texto_inicial.style.display = "none";
-		video_d.style.display = "block";
-		video_m.style.display = "block";
-	});
 });

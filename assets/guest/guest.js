@@ -39,13 +39,14 @@ export class VideoServiceGuest {
     #loggedInSound = new Audio('../../assets/agent/assets/sounds/login.m4a');
     #loggedOutSound = new Audio('../../assets/agent/assets/sounds/logout.m4a');
 
-
     #guestDetails;
     #videoCallService;
+    #guestConnectionId;
 
     /**
      * @param {string} guestUUID - Preexisting guest uuid
      * @param {string} folio - Complaint folio
+     * @param {string} priority - Complaint priority
      * @param {Object} config - Basic configuration to use access API
      * @param {string} config.apiURI - URL where video service API is
      * @param {string} config.apiKey - API key to authorize connections
@@ -59,13 +60,16 @@ export class VideoServiceGuest {
      * guestVideoService.disconnectGuest();
      * 
      */
-    constructor(guestUUID, folio, config) {
+    constructor(guestUUID, folio, priority, config) {
 
         if (!guestUUID) throw ExceptionConstructorMissingParameter('guestUUID', 'VideoServiceGuest');
         this.#guestUUID = guestUUID;
 
         if (!folio) throw ExceptionConstructorMissingParameter('folio', 'VideoServiceGuest');
         this.#folio = folio;
+        
+        if (!priority) throw ExceptionConstructorMissingParameter('priority', 'VideoServiceGuest');
+        this.#priority = priority;
 
         if (!config?.apiURI) throw ExceptionConstructorMissingParameter('config.apiURI', 'VideoServiceGuest');
         this.#apiURI = config.apiURI;
@@ -79,6 +83,12 @@ export class VideoServiceGuest {
 
         this.#guestUUID = guestUUID;
         this.#socketConfig = config.socketConfig ?? {};
+
+        try {
+            this.#socket = io(this.#apiURI, { ...this.#socketConfig, extraHeaders: this.#socketHeaders });
+        } catch (err) {
+            throw ExceptionSocketIONotImported();
+        }
     }
 
     /**
@@ -89,24 +99,9 @@ export class VideoServiceGuest {
     connectGuest(details, callback) {
         this.#guestDetails = details;
 
-        if (this.#socket) {
-            this.#socket.disconnect();
-        }
-
-        try {
-            this.#socket = io(this.#apiURI, { ...this.#socketConfig, extraHeaders: this.#socketHeaders });
-        } catch (err) {
-            throw ExceptionSocketIONotImported();
-        }
-
         this.#socket.on('exception', function (data) {
             console.warn('event', data);
         });
-
-        this.#socket.on('disconnect', () => {
-            this.#loggedOutSound.play();
-        });
-
 
         this.#emit('connect-guest', {
             guest: this.#guestUUID,
@@ -117,8 +112,13 @@ export class VideoServiceGuest {
             longitude: this.#position?.coords.longitude,
             details: this.#guestDetails
         }, response => {
+            console.log(response);
             this.#guestConnectionId = response.id;
-            this.#loggedInSound.play();
+            try {
+                // this.#loggedInSound.play();
+            } catch (e) {
+                console.warn(e)
+            }
 
             if (typeof callback === 'function') callback(response);
         });
@@ -133,17 +133,34 @@ export class VideoServiceGuest {
     }
 
     /**
+     * Register callback for call close event
+     * @param {Function} [callback] - This method is executed after call is connected, this will receive the details of guest connection
+     */
+    registerOnDisconnect(callback) {
+        this.#socket.on('disconnect', () => {
+            try {
+                this.#loggedOutSound.play();
+            } catch (e) {
+                console.warn(e)
+            }
+
+            if (typeof callback === 'function') callback();
+        });
+    }
+
+    /**
      * Accept incoming call
      * @param {string} localVideoSelector - Video local - little
      * @param {string} remoteVideoSelector - Video local - little
      * @param {Function} [callback] - This method is executed after call is connected, this will receive the details of guest connection
      */
     registerOnVideoReady(localVideoSelector, remoteVideoSelector, callback) {
-        this.#socket.on('video-ready', function(response) {
-            this.#loggedInSound.play();
-            this.#videoCallService = new VideoCall({ remoteVideoSelector });
-
+        this.#socket.on('video-ready', (response) => {
+            console.log(response);
+            // this.#loggedInSound.play();
             if (typeof callback === 'function') callback(response);
+
+            this.#videoCallService = new VideoCall({ remoteVideoSelector });
             this.#videoCallService.connectVideoCall(response.token, localVideoSelector, () => {})
         });
     }

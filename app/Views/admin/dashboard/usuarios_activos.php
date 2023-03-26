@@ -30,14 +30,17 @@
 		</div>
 	</div>
 </section>
+<script type="text/javascript" src="<?= base_url() ?>/assets/agent/assets/openvidu-browser-2.25.0.min.js"></script>
+<script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
+<script src="<?= base_url() ?>/assets/js/usuarios_activos.js" type="module"></script>
 <script>
-	window.onload = function() {
-		getUsuarios();
-		setInterval(() => {
-			getUsuarios();
-		}, 10000);
+	// window.onload = function() {
+	// 	getUsuarios();
+	// 	setInterval(() => {
+	// 		getUsuarios();
+	// 	}, 10000);
 
-	}
+	// }
 	const getUsuarios = () => {
 		$.ajax({
 			data: {

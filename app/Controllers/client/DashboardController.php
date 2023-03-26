@@ -131,7 +131,7 @@ class DashboardController extends BaseController
 		$this->_estadosExtranjeros = new EstadoExtranjeroModel();
 		$this->_archivoExternoModel = new FolioArchivoExternoModel();
 		$this->_tipoExpedienteModel = new TipoExpedienteModel();
-		$this->urlApi = "http://34.229.77.149/guests/";
+		$this->urlApi = "http://54.208.205.251/guests/";
 	}
 
 	public function index()
@@ -194,6 +194,7 @@ class DashboardController extends BaseController
 
 	public function video_denuncia()
 	{
+		$denunciante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', session('DENUNCIANTEID'))->first();
 		$data = (object) [
 			'folio' => $this->request->getGet('folio'),
 			'year' => $this->request->getGet('year'),
@@ -205,8 +206,8 @@ class DashboardController extends BaseController
 			'sexo' => $this->request->getGet('sexo'),
 			'prioridad' => $this->request->getGet('prioridad'),
 			'sexo_denunciante' => $this->request->getGet('sexo_denunciante') == 'F' ? 'FEMENINO' : 'MASCULINO',
+			'UUID'=> $denunciante->UUID
 		];
-
 		$array = explode("-", $data->folio);
 
 		$folio = $this->_folioModel->where('ANO', $data->year)->where('FOLIOID', $array[1])->where('STATUS', 'ABIERTO')->first();
@@ -790,7 +791,9 @@ class DashboardController extends BaseController
 				'APELLIDO_PATERNO' =>  $denunciante->APELLIDO_PATERNO,
 				'APELLIDO_MATERNO' =>  $denunciante->APELLIDO_MATERNO,
 				'CORREO' =>  $denunciante->CORREO,
-				'DELITO' => $this->request->getPost('delito')
+				'DELITO' => $this->request->getPost('delito'),
+				'FOLIO' => $FOLIOID . '-'. $year
+
 			];
 			$dataApi = array();
 			$dataApi['name'] = $denunciante->NOMBRE . ' ' . $denunciante->APELLIDO_PATERNO;
@@ -798,9 +801,11 @@ class DashboardController extends BaseController
 			$dataApi['gender'] = $denunciante->SEXO == 'F' ? "FEMALE" : 'MALE';
 			$dataApi['languages'] = [$denunciante->IDIOMAID];
 			$response = $this->_curlPost($this->urlApi, $dataApi);
-			$dataDenuncianteApi['UUID'] = $response->uuid;
 			if ($response->uuid) {
-				$update = $this->_denunciantesModel->set($dataDenuncianteApi)->where('DENUNCIANTEID', session('DENUNCIANTEID'))->update();
+				if (empty($denunciante->UUID)) {
+					$dataDenuncianteApi['UUID'] = $response->uuid;
+					$update = $this->_denunciantesModel->set($dataDenuncianteApi)->where('DENUNCIANTEID', session('DENUNCIANTEID'))->update();
+				}
 				$data = (object) [
 					'delito' => $this->request->getPost('delito'),
 					'descripcion' => $this->request->getPost('descripcion_breve'),
@@ -1143,7 +1148,7 @@ class DashboardController extends BaseController
 			'Access-Control-Allow-Origin: *',
 			'Access-Control-Allow-Credentials: true',
 			'Access-Control-Allow-Headers: Content-Type',
-			'X_API_KEY' . X_API_KEY
+			'X-API-KEY:' . X_API_KEY
 		);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 

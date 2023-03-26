@@ -38,7 +38,7 @@ export class VideoServiceAgent {
     #loggedOutSound = new Audio('../../assets/agent/assets/sounds/logout.m4a');
 
 
-    guestAudio = true;
+    guestAudio = false;
     guestVideo = true;
 
     #videoCallService;
@@ -202,8 +202,8 @@ export class VideoServiceAgent {
      * @param {Function} [callback] - This method is executed after recording start
      */
     startRecording (callback) {
-        const markTime = marksRecording();
-        emitMarkTime(markTime, "start-recording", "3");
+        const markTime = this.marksRecording();
+        this.emitMarkTime(markTime, "start-recording", "3");
 
         if (typeof callback === 'function') callback();
     }
@@ -214,8 +214,8 @@ export class VideoServiceAgent {
      * @param {Function} [callback] - This method is executed after recording start
      */
     stopRecording (callback) {
-        const markTime = marksRecording();
-        emitMarkTime(markTime, "stop-recording", "4");
+        const markTime = this.marksRecording();
+        this.emitMarkTime(markTime, "stop-recording", "4");
 
         if (typeof callback === 'function') callback();
     }
@@ -239,16 +239,14 @@ export class VideoServiceAgent {
     
         const videoMS = (now.getTime() - this.#startVideoCallTime.getTime());
     
-        const d = new Date(Date.UTC(0,0,0,0,0,0,videoMS)),
-        parts = [
+        const d = new Date(Date.UTC(0,0,0,0,0,0,videoMS));
+        const parts = [
             d.getUTCHours(),
             d.getUTCMinutes(),
             d.getUTCSeconds()
-        ],
-        markTimeAux = parts.map(s => String(s).padStart(2,'0')).join(':');
-        markTime = markTimeAux;
-    
-        return markTime;
+        ];
+        return parts.map(s => String(s).padStart(2,'0')).join(':');
+
     }
 
     /**
@@ -304,7 +302,7 @@ export class VideoServiceAgent {
      * @param {Function} callback - This function will be called when the video has been toggled
      */
     toggleVideo(callback) {
-        this.#videoCallService.publishVideo();
+        this.#videoCallService.toggleVideo();
 
         if (typeof callback === 'function') callback();
     }
@@ -315,8 +313,8 @@ export class VideoServiceAgent {
      * @param {Function} callback - This function will be called when the audio has been toggled
      */
     toggleRemoteAudio(callback) {
-        this.audioGuest = !this.audioGuest;
-        this.#emit('toggle-video-guest', { toogleAudioGuest : this.audioGuest}, () => {
+        this.guestAudio = !this.guestAudio;
+        this.#emit('toggle-audio-guest', { toogleAudioGuest : this.guestAudio}, () => {
             if (typeof callback === 'function') callback();
         })
     }
@@ -327,8 +325,8 @@ export class VideoServiceAgent {
      * @param {Function} callback - This function will be called when the video has been toggled
      */
     toggleRemoteVideo(callback) {
-        this.videoGuest =!this.videoGuest;
-        this.#emit('toggle-video-guest', { toogleVideoGuest : this.videoGuest}, () => {
+        this.guestVideo =!this.guestVideo;
+        this.#emit('toggle-video-guest', { toogleVideoGuest : this.guestVideo}, () => {
             if (typeof callback === 'function') callback();
         })
     }

@@ -7,6 +7,10 @@
 			</div>
 
 			<div class="modal-body text-center" id="">
+			<div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-3">
+					<label for="folio_llamada" class="form-label font-weight-bold">Folio:</label>
+					<input type="text" class="form-control" id="folio_llamada" name="folio_llamada" disabled>
+				</div>
 				<div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-3">
 					<label for="nombre_denunciante" class="form-label font-weight-bold">Nombre del denunciante:</label>
 					<input type="text" class="form-control" id="nombre_denunciante" name="nombre_denunciante" disabled>
@@ -27,6 +31,8 @@
 					<label for="delito_denunciante" class="form-label font-weight-bold">Delito:</label>
 					<input type="text" class="form-control" id="delito_denunciante" name="delito_denunciante" disabled>
 				</div>
+
+				
 				<button class="btn btn-success" id="aceptar"> Aceptar</button>
 
 				<button class="btn btn-danger" id="rechazar"> Rechazar</button>
