@@ -477,9 +477,9 @@ class FolioModel extends Model
 		$query = $builder->get();
 		return $query->getRow();
 	}
+	
 	public function get_folio_denunciante($denunciante)
 	{
-
 		$builder = $this->db->table($this->table);
 		$builder->select(['FOLIOID', 'EXPEDIENTEID', 'ANO', 'HECHODELITO']);
 		$builder->where('FOLIO.DENUNCIANTEID', $denunciante);
@@ -488,6 +488,7 @@ class FolioModel extends Model
 		$query = $builder->get();
 		return $query->getResult('array');
 	}
+
 	public function get_folios_abiertos()
 	{
 		$builder = $this->db->table($this->table);
