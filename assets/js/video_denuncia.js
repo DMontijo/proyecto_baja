@@ -27,7 +27,7 @@ const desconectar_llamada = document.querySelector("#disconnect-call");
 let guestUUID = "";
 const botones = document.querySelector('#tools-agent');
 // const apiURI = "http://54.208.205.251";
-const apiURI = "https://cad0-2806-2f0-51c0-606f-1a9b-d4c2-4265-827a.ngrok.io";
+const apiURI = "https://b5f7-2806-2f0-51c0-606f-db8c-8b20-9ff3-4448.ngrok.io";
 
 const agentVideoService = new VideoServiceAgent(agentUUID, { apiURI, apiKey });
 
