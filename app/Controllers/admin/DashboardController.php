@@ -3389,7 +3389,7 @@ class DashboardController extends BaseController
 		// return $data;
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
-	
+
 	private function _curlPost($endpoint, $data)
 	{
 		$ch = curl_init();
@@ -6420,24 +6420,31 @@ class DashboardController extends BaseController
 			switch ($data->folio->MUNICIPIOASIGNADOID) {
 				case '1':
 					$data->plantilla = str_replace('[DIRECCION_NOMBRE]', 'C. DAVID ARMANDO SÁNCHEZ GONZÁLEZ,<br>MAYOR DE INFANTERÍA DIRECTOR DE SEGURIDAD PÚBLICO MUNICIPAL', $data->plantilla);
+					$data->plantilla = str_replace('[REMISION_DOMICILIO]', 'CEEAIV ZONA ENSENADA<br>Av Manuel Ávila Camacho S/N, Praderas del Ciprés Edificio A Planta Baja.<br>Tel: 646-152-2728 - 646-152-2793', $data->plantilla);
 					break;
 				case '2':
 					$data->plantilla = str_replace('[DIRECCION_NOMBRE]', 'DIRECCIÓN DE SEGURIDAD PÚBLICA MUNICIPAL', $data->plantilla);
+					$data->plantilla = str_replace('[REMISION_DOMICILIO]', 'Av. Obregón 541 Centro de la Ciudad, Cp 21000, Mexicali Baja California.<br>(Atrás del centro comercial ABSA)<br>Tel: 686 104 1603 - 686 596 4701.', $data->plantilla);
 					break;
 				case '3':
 					$data->plantilla = str_replace('[DIRECCION_NOMBRE]', 'DIRECCIÓN DE SEGURIDAD CIUDADANA Y TRÁNSITO MUNICIPAL', $data->plantilla);
+					$data->plantilla = str_replace('[REMISION_DOMICILIO]', 'Carretera Tecate-Tijuana km 1.5 colonia Paso del Águila, Tecate, B.C.<br>(Edificio de Fiscalía Regional)', $data->plantilla);
 					break;
 				case '4':
 					$data->plantilla = str_replace('[DIRECCION_NOMBRE]', 'SECRETARIO DE SEGURIDAD Y PROTECCIÓN CIUDADANA MUNICIPAL', $data->plantilla);
+					$data->plantilla = str_replace('[REMISION_DOMICILIO]', 'Avenida Mutua Martínez s/n Campestre Murua, Tijuana, B. C.', $data->plantilla);
 					break;
 				case '5':
 					$data->plantilla = str_replace('[DIRECCION_NOMBRE]', 'SECRETARÍA DE SEGURIDAD Y PROTECCIÓN CIUDADANA', $data->plantilla);
+					$data->plantilla = str_replace('[REMISION_DOMICILIO]', 'Jose Haroz Aguilar, parcela 39, Fracc. Villa Turistica, CP 22710 Playas de Rosarito', $data->plantilla);
 					break;
 				case '6':
 					$data->plantilla = str_replace('[DIRECCION_NOMBRE]', 'LICENCIADO MARIO MARTÍNEZ MARTÍNEZ,<br>DIRECTOR DE SEGURIDAD PUBLICA MUNICIPAL SAN QUINTÍN', $data->plantilla);
+					$data->plantilla = str_replace('[REMISION_DOMICILIO]', 'Av. Obregón 541 Centro de la Ciudad, Cp 21000, Mexicali Baja California.<br>(Atrás del centro comercial ABSA)<br>Tel: 686 104 1603 - 686 596 4701.', $data->plantilla);
 					break;
 				case '7':
 					$data->plantilla = str_replace('[DIRECCION_NOMBRE]', 'DIRECTOR DE SEGURIDAD PÚBLICA SAN FELIPE', $data->plantilla);
+					$data->plantilla = str_replace('[REMISION_DOMICILIO]', 'CEEAIV ZONA ENSENADA<br>Av Manuel Ávila Camacho S/N, Praderas del Ciprés Edificio A Planta Baja.<br>Tel: 646-152-2728 - 646-152-2793', $data->plantilla);
 					break;
 				default:
 					$data->plantilla = str_replace('[DIRECCION_NOMBRE]', 'SEGURIDAD PUBLICA MUNICIPAL', $data->plantilla);
