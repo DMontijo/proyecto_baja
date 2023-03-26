@@ -40,6 +40,11 @@ class DENUNCIANTES extends Migration
 				'constraint' => '255',
 				'null' => TRUE
 			],
+			'UUID' => [
+				'type' => 'VARCHAR',
+				'constraint' => '100',
+				'null' => TRUE
+			],
 			'FECHANACIMIENTO' => [
 				'type' => 'DATE',
 				'null' => TRUE
