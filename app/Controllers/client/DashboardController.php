@@ -813,8 +813,6 @@ class DashboardController extends BaseController
 							}
 						}
 					}
-
-
 				}
 			}
 
@@ -842,7 +840,7 @@ class DashboardController extends BaseController
 			$sexo_denunciante = $denunciante->SEXO == 'F' ? 'FEMENINO' : 'MASCULINO';
 			$url = "/denuncia/dashboard/video-denuncia?folio=" . $year . '-' . $FOLIOID . "&year=" . $year . "&delito=" . $data->delito . "&descripcion=" . $data->descripcion . "&idioma=" . $data->idioma . "&edad=" . $data->edad . "&perfil=" . $data->perfil . "&sexo=" . $data->sexo . "&prioridad=" . $prioridad . "&sexo_denunciante=" . $sexo_denunciante;
 
-			if ($this->_sendEmailFolio($session->get('CORREO'), $FOLIOID)) {
+			if ($this->_sendEmailFolio($session->get('CORREO'), $FOLIOID, $year)) {
 				return redirect()->to(base_url($url));
 			} else {
 				return redirect()->to(base_url($url));
@@ -994,12 +992,12 @@ class DashboardController extends BaseController
 		}
 	}
 
-	private function _sendEmailFolio($to, $folio)
+	private function _sendEmailFolio($to, $folio, $year)
 	{
 		$email = \Config\Services::email();
 		$email->setTo($to);
 		$email->setSubject('Nuevo folio generado.');
-		$body = view('email_template/folio_email_template.php', ['folio' => $folio]);
+		$body = view('email_template/folio_email_template.php', ['folio' => $folio . '/' . $year]);
 		$email->setMessage($body);
 
 		if ($email->send()) {
