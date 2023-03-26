@@ -47,6 +47,8 @@ disponible_connect.addEventListener("click", () => {
 		agentVideoService.registerOnGuestConnected(response => {
 			$("#llamadaModal").modal("show");
 			guestUUID = response.guest.uuid;
+			console.log("respuesta aceptada llamada guest");
+			console.log(guestUUID);
             console.log(response);
 			console.log(response.guest.details.DELITO);
 
