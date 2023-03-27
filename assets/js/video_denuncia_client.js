@@ -27,8 +27,7 @@ guestVideoService.registerOnDisconnect(() => {
 	video_d.style.display = "none";
 	video_m.style.display = "none";
 	texto_inicial.style.display = "block";
-	texto_inicial.innerHTML= "ESTIMADO (A) USUARIO (A), ¡GRACIAS POR SELECCIONAR EL SERVICIO DE VIDEO DENUNCIA!"+
-	"En la Fiscalía General del Estado de Baja California día a día trabajamos para garantizarte un fácil acceso a la justicia desde cualquier lugar del mundo. "
+	texto_inicial.innerHTML= '<p class="fw-bold">ESTIMADO (A) USUARIO (A), ¡GRACIAS POR SELECCIONAR EL SERVICIO DE VIDEO DENUNCIA!</p><p>En la Fiscalía General del Estado de Baja California día a día trabajamos para garantizarte un fácil acceso a la justicia desde cualquier lugar del mundo.</p>';
 })
 $(function() {
 	$("#geolocalizacion_modal").modal("show");
