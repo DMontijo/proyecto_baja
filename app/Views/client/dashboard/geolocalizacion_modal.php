@@ -6,9 +6,8 @@
 			</div>
 			<div class="modal-body fs-5 text-center">
 				<p>
-					¡¨Por favor, acepta la geolocalización para continuar!
+					¡Por favor, acepta la geolocalización para continuar!
 				</p>
-			
 			</div>
 			<div class="modal-footer justify-content-center">
 				<div class="d-grid gap-2 d-md-flex col-12 mx-auto justify-content-md-center">
