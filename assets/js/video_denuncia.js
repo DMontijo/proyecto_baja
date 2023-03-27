@@ -26,7 +26,7 @@ const desconectar_llamada = document.querySelector("#disconnect-call");
 let guestUUID = "";
 const botones = document.querySelector("#tools-agent");
 // const apiURI = "http://54.208.205.251";
-const apiURI = "https://a396-2806-2f0-51c0-606f-c0b2-4d9e-e2c9-70e7.ngrok.io/";
+const apiURI = "https://088a-2806-2f0-5021-d560-eea5-61cc-5d04-57a7.ngrok.io";
 
 const agentVideoService = new VideoServiceAgent(agentUUID, { apiURI, apiKey });
 
@@ -118,6 +118,7 @@ audio_denunciante.addEventListener("click", () => {
 marksRecording.addEventListener("click", () => {
 	$("#marksModal").modal("show");
 	agentVideoService.getMarkTypes().then(result => {
+		console.log(result);
 		result.forEach(marcas => {
 			const option = document.createElement("option");
 			option.value = marcas.id;

@@ -10,7 +10,8 @@ let video_d = document.querySelector("#video_d");
 let video_m = document.querySelector("#video_m");
 // const apiURI = 'http://192.168.0.67:3000';
 // const apiURI = "http://54.208.205.251";
-const apiURI ="https://a396-2806-2f0-51c0-606f-c0b2-4d9e-e2c9-70e7.ngrok.io";
+const apiURI ="https://088a-2806-2f0-5021-d560-eea5-61cc-5d04-57a7.ngrok.io";
+
 const guestVideoService = new VideoServiceGuest(guestUUID, folio, priority, {
 	apiURI,
 	apiKey

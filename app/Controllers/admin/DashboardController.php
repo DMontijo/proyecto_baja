@@ -401,7 +401,7 @@ class DashboardController extends BaseController
 		$this->ip = "ws.fgebc.gob.mx";
 		$this->endpoint = $this->protocol . $this->ip . '/webServiceVD';
 		// $this->urlApi = "http://54.208.205.251/";
-		$this->urlApi = "https://a396-2806-2f0-51c0-606f-c0b2-4d9e-e2c9-70e7.ngrok.io/";
+		$this->urlApi = "https://088a-2806-2f0-5021-d560-eea5-61cc-5d04-57a7.ngrok.io/";
 	}
 
 	public function index()
