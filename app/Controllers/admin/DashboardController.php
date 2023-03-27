@@ -401,7 +401,7 @@ class DashboardController extends BaseController
 		$this->ip = "ws.fgebc.gob.mx";
 		$this->endpoint = $this->protocol . $this->ip . '/webServiceVD';
 		// $this->urlApi = "http://54.208.205.251/";
-		$this->urlApi="https://a396-2806-2f0-51c0-606f-c0b2-4d9e-e2c9-70e7.ngrok.io/";
+		$this->urlApi = "https://a396-2806-2f0-51c0-606f-c0b2-4d9e-e2c9-70e7.ngrok.io/";
 	}
 
 	public function index()
@@ -820,12 +820,11 @@ class DashboardController extends BaseController
 				} catch (\Throwable $th) {
 					return redirect()->back()->with('message_error', 'Usuario no creado, ya existe el correo ingresado.');
 				}
-	
+
 				$this->_bitacoraActividad($datosBitacora);
 				$this->_sendEmailPassword($data['CORREO'], $this->request->getPost('password'));
-				return redirect()->to(base_url('/admin/dashboard/usuarios'))->with('message_success', 'Usuario registrado correctamente.');			
+				return redirect()->to(base_url('/admin/dashboard/usuarios'))->with('message_success', 'Usuario registrado correctamente.');
 			}
-			
 		} else {
 			return redirect()->back()->with('message_error', 'Usuario no creado, ya existe el correo ingresado.');
 		}
@@ -3570,7 +3569,7 @@ class DashboardController extends BaseController
 	{
 
 		// $data = array();
-		// $folio = $this->request->getPost('folio');
+		$folio = $this->request->getPost('folio');
 		// $data['folio'] = $folio;
 
 		// $endpoint = $this->urlApi . 'recordings?search=2023-123456864';
