@@ -38,41 +38,41 @@
 
 	</div>
 	<div class="row">
-		<div class="col-12 text-center" style="font-size:10px;">
+		<!-- <div class="col-12 text-center" style="font-size:10px;">
 			Para un correcto funcionamiento utilice <a href="https://www.google.com/chrome/" target="_blank">google chrome</a>.<br>
 			Si esta utilizando un dispositivo móvil de clic en <b>iniciar en el navegador</b>.
-		</div>
+		</div> -->
 		<div class="col-12 p-0 m-0">
 			<div class="card text-center">
 				<div class="card-body p-0 m-0">
-					<div class="ratio ratio-16x9 justify-content-center">
-						<!-- <iframe style="min-height:600px;" src="<?= 'https://videodenunciaserver1.fgebc.gob.mx/videollamada?folio=' . $body_data->folio . '&nombre=' . $session->NOMBRE . ' ' . $session->APELLIDO_PATERNO . ' ' . $session->APELLIDO_MATERNO . '&delito=' . $body_data->delito . '&descripcion=' . $body_data->descripcion . '&idioma=' . $body_data->idioma . '&edad=' . $body_data->edad . '&perfil=' . $body_data->perfil . '&sexo=' . $body_data->sexo . '&prioridad=' . $body_data->prioridad . '&sexo_denunciante=' . $body_data->sexo_denunciante ?>" frameborder="0" allowfullscreen allow="camera *;microphone *"></iframe> -->
+					<!-- <div class="ratio ratio-16x9 justify-content-center"> -->
+					<!-- <iframe style="min-height:600px;" src="<?= 'https://videodenunciaserver1.fgebc.gob.mx/videollamada?folio=' . $body_data->folio . '&nombre=' . $session->NOMBRE . ' ' . $session->APELLIDO_PATERNO . ' ' . $session->APELLIDO_MATERNO . '&delito=' . $body_data->delito . '&descripcion=' . $body_data->descripcion . '&idioma=' . $body_data->idioma . '&edad=' . $body_data->edad . '&perfil=' . $body_data->perfil . '&sexo=' . $body_data->sexo . '&prioridad=' . $body_data->prioridad . '&sexo_denunciante=' . $body_data->sexo_denunciante ?>" frameborder="0" allowfullscreen allow="camera *;microphone *"></iframe> -->
 
 
-						<div id="sc1" class="sc text-center d-flex justify-content-center align-items-center">
-							<div id="texto_inicial" class="p-3 text-center" style="max-width:500px;">
-								<img src="<?= base_url() ?>/assets/img/loader.gif" alt="Loader FGEBC" class="mb-3">
-								<p class="fw-bold">
-									¡Tu solicitud se ha registrado con éxito!
-								</p>
-								<p>En unos minutos serás atendido por personal del Centro de Denuncia Tecnológica,
-									<strong>permanece en línea.</strong>
-								</p>
-								<p>
-									De presentarse fallas de conexión recarga la página web o ingresa nuevamente con tu usuario
-									de lo contrario nos pondremos en contacto contigo.
-								</p>
-							</div>
-							<div class="video_denunciante" style="display: none;" id="video_d"></div>
+					<div id="sc1" class="sc text-center d-flex justify-content-center align-items-center" style="min-height:600px;">
+						<div id="texto_inicial" class="p-3 text-center" style="max-width:500px;">
+							<img src="<?= base_url() ?>/assets/img/loader.gif" alt="Loader FGEBC" class="mb-3">
+							<p class="fw-bold">
+								¡Tu solicitud se ha registrado con éxito!
+							</p>
+							<p>En unos minutos serás atendido por personal del Centro de Denuncia Tecnológica,
+								<strong>permanece en línea.</strong>
+							</p>
+							<p>
+								De presentarse fallas de conexión recarga la página web o ingresa nuevamente con tu usuario
+								de lo contrario nos pondremos en contacto contigo.
+							</p>
 						</div>
-						<div id="sc2" class="sc">
-							<div class="video_usuario" style="display: none;" id="video_m">
-
-							</div>
+						<div class="video_denunciante" style="display: none;" id="video_d"></div>
+					</div>
+					<div id="sc2" class="sc">
+						<div class="video_usuario" style="display: none;" id="video_m">
 
 						</div>
 
 					</div>
+
+					<!-- </div> -->
 
 				</div>
 
