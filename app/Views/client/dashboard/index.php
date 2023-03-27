@@ -14,10 +14,10 @@
 					<div class="col-12">
 						<div class="row">
 							<div class="col-12 col-md-6">
-								<a class="p-0 my-3" href="tel:911" role="button"><img src="<?= base_url('/assets/img/banner/911_BANNER.png') ?>" class="img-fluid"></a>
+								<a class="p-0 my-3" role="button" data-bs-toggle="modal" data-bs-target="#emergency_modal"><img src="<?= base_url('/assets/img/banner/911_BANNER.png') ?>" class="img-fluid"></a>
 							</div>
 							<div class="col-12 col-md-6 mt-4 mt-md-0">
-								<a class="p-0 my-3" href="tel:8003432220" role="button" role="button"><img src="<?= base_url('/assets/img/banner/089_BANNER.png') ?>" class="img-fluid"></a>
+								<a class="p-0 my-3" role="button" data-bs-toggle="modal" data-bs-target="#anonima_modal"><img src="<?= base_url('/assets/img/banner/089_BANNER.png') ?>" class="img-fluid"></a>
 							</div>
 						</div>
 					</div>
@@ -74,17 +74,41 @@
 							<div class="row">
 								<div class="col-12 text-center">
 									<p class="fw-bold">Haz completado la información</p>
+
+									
 									<p class="text-center">
 										<i class="bi bi-exclamation-triangle"> Es muy importante que antes de iniciar tu video denuncia aceptes los derechos de víctima u ofendido.</i>
 										<br>
 										Para consultar la constancia de Derechos, da clic <a target="_blank" href="" data-bs-toggle="modal" data-bs-target="#exampleModal">aquí</a>
 										<br><br>
 									</p>
+
+
+									<div class="row">
+										<div class="col-12 col-sm-6 offset-sm-3">
+											<p class="p-0 m-0"><strong>Documentos a anexar</strong></p>
+											<small>Si deseas anexar cualquier documento o imagén para la videodenuncia, hazlo aqui.</small>
+											<input type="file" class="form-control" id="documentosArchivo" name="documentosArchivo[]" accept="image/jpeg, image/jpg, image/png, .doc, .pdf" multiple>
+											<img id="viewDocumentoArchivo" class="img-fluid" src="" style="max-width:100px;">
+										</div>
+									</div>
+									<br>
+
+
 									<div class="form-group">
 										<input class="form-check-input" type="checkbox" name="derechos_imputado" id="derechos_imputado" required>
 										<span class="fw-bold">Confirmo que he leído y conozco los derechos de víctima u ofendido</span>
 										<div class="invalid-feedback">
 											Debes confirmar de leído los derechos de víctima u ofendido para continuar.
+										</div>
+									</div>
+									<div class="form-group">
+										<input class="form-check-input" type="checkbox" id="notificaciones_check" name="notificaciones_check" required>
+										<label class="fw-bold" for="notificaciones_check">
+											Acepto y autorizo como medio de notificaciones: teléfono, correo electrónico y domicilio registrado.
+										</label>
+										<div class="invalid-feedback">
+											Debes aceptar el envío de notificaciones para continuar.
 										</div>
 									</div>
 								</div>
@@ -103,6 +127,8 @@
 	</div>
 </div>
 <?php include('aviso_modal.php') ?>
+<?php include('911_modal.php') ?>
+<?php include('800_modal.php') ?>
 <?php include('open_folios_modal.php') ?>
 <?php include('derechos_ofendido_modal.php') ?>
 
@@ -310,19 +336,19 @@
 
 				document.querySelector('#nombre_menor').setAttribute('required', true);
 				document.querySelector('#apellido_paterno_menor').setAttribute('required', true);
-				document.querySelector('#pais_menor').setAttribute('required', true);
-				document.querySelector('#estado_menor').setAttribute('required', true);
-				document.querySelector('#municipio_menor').setAttribute('required', true);
-				document.querySelector('#colonia_menor').setAttribute('required', true);
-				document.querySelector('#colonia_menor_input').setAttribute('required', true);
-				document.querySelector('#localidad_menor').setAttribute('required', true);
-				document.querySelector('#calle_menor').setAttribute('required', true);
-				document.querySelector('#numero_ext_menor').setAttribute('required', true);
-				document.querySelector('#fecha_nacimiento_menor').setAttribute('required', true);
-				document.querySelector('#edad_menor').setAttribute('required', true);
-				document.querySelector('#nacionalidad_menor').setAttribute('required', true);
-				document.querySelector('#estado_origen_menor').setAttribute('required', true);
-				document.querySelector('#municipio_origen_menor').setAttribute('required', true);
+				// document.querySelector('#pais_menor').setAttribute('required', true);
+				// document.querySelector('#estado_menor').setAttribute('required', true);
+				// document.querySelector('#municipio_menor').setAttribute('required', true);
+				// document.querySelector('#colonia_menor').setAttribute('required', true);
+				// document.querySelector('#colonia_menor_input').setAttribute('required', true);
+				// document.querySelector('#localidad_menor').setAttribute('required', true);
+				// document.querySelector('#calle_menor').setAttribute('required', true);
+				// document.querySelector('#numero_ext_menor').setAttribute('required', true);
+				// document.querySelector('#fecha_nacimiento_menor').setAttribute('required', true);
+				// document.querySelector('#edad_menor').setAttribute('required', true);
+				// document.querySelector('#nacionalidad_menor').setAttribute('required', true);
+				// document.querySelector('#estado_origen_menor').setAttribute('required', true);
+				// document.querySelector('#municipio_origen_menor').setAttribute('required', true);
 
 
 				let radiosSexoMenor = document.querySelectorAll('input[name="sexo_menor"]');
@@ -359,7 +385,7 @@
 				document.getElementById('datos_desaparecido').classList.add('step');
 				document.querySelector('#nombre_des').setAttribute('required', true);
 				document.querySelector('#apellido_paterno_des').setAttribute('required', true);
-				document.querySelector('#fecha_nacimiento_des').setAttribute('required', true);
+				// document.querySelector('#fecha_nacimiento_des').setAttribute('required', true);
 				document.querySelector('#edad_des').setAttribute('required', true);
 				document.querySelector('#nacionalidad_des').setAttribute('required', true);
 				document.querySelector('#estado_origen_des').setAttribute('required', true);
@@ -566,20 +592,20 @@
 				if (
 					document.querySelector('#nombre_menor').value != '' &&
 					document.querySelector('#apellido_paterno_menor').value != '' &&
-					document.querySelector('#pais_menor').value != '' &&
-					document.querySelector('#estado_menor').value != '' &&
-					document.querySelector('#municipio_menor').value != '' &&
-					document.querySelector('#localidad_menor').value != '' &&
-					document.querySelector('#colonia_menor').value != '' &&
-					document.querySelector('#colonia_menor_input').value != '' &&
-					document.querySelector('#calle_menor').value != '' &&
-					document.querySelector('#numero_ext_menor').value != '' &&
-					document.querySelector('#fecha_nacimiento_menor').value != '' &&
-					document.querySelector('#edad_menor').value != '' &&
-					document.querySelector('input[name="sexo_menor"]:checked') &&
-					document.querySelector('#nacionalidad_menor').value != '' &&
-					document.querySelector('#estado_origen_menor').value != '' &&
-					document.querySelector('#municipio_origen_menor').value != ''
+					// document.querySelector('#pais_menor').value != '' &&
+					// document.querySelector('#estado_menor').value != '' &&
+					// document.querySelector('#municipio_menor').value != '' &&
+					// document.querySelector('#localidad_menor').value != '' &&
+					// document.querySelector('#colonia_menor').value != '' &&
+					// document.querySelector('#colonia_menor_input').value != '' &&
+					// document.querySelector('#calle_menor').value != '' &&
+					// document.querySelector('#numero_ext_menor').value != '' &&
+					// document.querySelector('#fecha_nacimiento_menor').value != '' &&
+					// document.querySelector('#edad_menor').value != '' &&
+					document.querySelector('input[name="sexo_menor"]:checked')
+					// document.querySelector('#nacionalidad_menor').value != '' &&
+					// document.querySelector('#estado_origen_menor').value != '' &&
+					// document.querySelector('#municipio_origen_menor').value != ''
 				) {
 					return true
 				} else {
@@ -590,7 +616,7 @@
 				if (
 					document.querySelector('#nombre_des').value != '' &&
 					document.querySelector('#apellido_paterno_des').value != '' &&
-					document.querySelector('#fecha_nacimiento_des').value != '' &&
+					// document.querySelector('#fecha_nacimiento_des').value != '' &&
 					document.querySelector('#edad_des').value != '' &&
 					document.querySelector('input[name="sexo_des"]:checked') &&
 					document.querySelector('#nacionalidad_des').value != '' &&

@@ -57,7 +57,7 @@ class RolesPermisosSeeder extends Seeder
 			//AGENTE DE MINISTERIO PÚBLICO EXTERNO
 			array('ROLID' => '5', 'PERMISOID' => '9'),
 
-			//ENCARGADO TURNO
+			//ENCARGADO AREA
 			array('ROLID' => '6', 'PERMISOID' => '1'),
 			array('ROLID' => '6', 'PERMISOID' => '2'),
 			array('ROLID' => '6', 'PERMISOID' => '3'),

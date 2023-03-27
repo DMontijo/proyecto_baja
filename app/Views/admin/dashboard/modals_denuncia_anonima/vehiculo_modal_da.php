@@ -1,7 +1,7 @@
 <div class="modal fade shadow" id="folio_vehiculo_modal_da" tabindex="-1" role="dialog" aria-labelledby="VehiculoModal" aria-hidden="true" data-backdrop="false">
 	<div class="modal-dialog modal-dialog-centered mw-100 w-75">
 		<div class="modal-content">
-			<div class="modal-header bg-blue text-white"">
+			<div class="modal-header bg-blue text-white">
 				<h5 class=" modal-title font-weight-bold">VEHICULO</h5>
 				<button type="button" class="close text-white" id="close" data-dismiss="modal" aria-label="Close">
 					<i class="fas fa-times"></i>
@@ -14,6 +14,17 @@
 						<p class="font-weight-bold text-center mt-3">GENERALES</p>
 					</div>
 					<hr>
+					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+					<input type="text" class="form-control" id="vehiculoid" name="vehiculoid" hidden>
+
+						<label for="situacion_vehiculo_den" class="form-label font-weight-bold">Situación:</label>
+						<select class="form-control" id="situacion_vehiculo_den" name="situacion_vehiculo_den" required>
+							<option selected disabled value="">Selecciona la situación</option>
+							<?php foreach ($body_data->situacionVehiculo as $index => $situacionVehiculo) { ?>
+								<option value="<?= $situacionVehiculo->VEHICULOSITUACIONID ?>"> <?= $situacionVehiculo->VEHICULOSITUACIONDESCR ?> </option>
+							<?php } ?>
+						</select>
+					</div>
 					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 						<label for="tipo_placas_vehiculo_da" class="form-label font-weight-bold">Tipo de placas:</label>
 						<select class="form-control" id="tipo_placas_vehiculo_da" name="tipo_placas_vehiculo_da">
@@ -175,6 +186,13 @@
 							<option selected value="S">Si</option>
 							<option selected value="N">No</option>
 							<option selected value="D">Se desconoce</option>
+						</select>
+
+					</div>
+					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+						<label for="propietario_vehiculo_den" class="form-label font-weight-bold">Propietario:</label>
+						<select class="form-control" id="propietario_vehiculo_den" name="propietario_vehiculo_den" required>
+							<option selected disabled value="">Selecciona el propietario</option>
 						</select>
 
 					</div>

@@ -11,6 +11,11 @@
 			<label class="form-check-label" for="flexRadioDefault2">NO</label>
 		</div>
 	</div>
+	<div class="col-12 mb-3 d-none" id="menor_alert">
+		<div class="alert alert-warning" role="alert">
+			El menor debe estar acompañado de un adulto
+		</div>
+	</div>
 	<div class="col-12 mb-3 d-none" id="es_mayor">
 		<label for="es_tercera_edad" class="form-label fw-bold input-required">¿La víctima es de la tercera edad?</label>
 		<br>
@@ -48,9 +53,9 @@
 		</div>
 	</div>
 	<div class="col-12 mb-3">
-		<label for="es_vulnerable" class="form-label fw-bold input-required">La víctima pertenece a algún grupo vulnerable?</label>
-		<a href="#" data-bs-toggle="tooltip" data-toggle="tooltip" data-bs-placement="right" title="Niños, niñas y adolescentes. Personas lesbianas, gays, bisexuales, transgéneros o intersexuales (LGBTI) Personas con algún tipo de discapacidad física o mental. Personas extranjeras."><i class="bi bi-info-circle-fill"></i></a>
-
+		<label for="es_vulnerable" class="form-label fw-bold input-required">¿La víctima pertenece a algún grupo vulnerable?
+			<a href="#!" data-bs-toggle="tooltip" data-toggle="tooltip" data-bs-placement="right" title="Niños, niñas y adolescentes. Personas lesbianas, gays, bisexuales, transgéneros o intersexuales (LGBTI) Personas con algún tipo de discapacidad física o mental. Personas extranjeras."><i class="bi bi-info-circle-fill"></i></a>
+		</label>
 		<br>
 		<div class="form-check form-check-inline">
 			<input class="form-check-input" type="radio" name="es_vulnerable" value="SI" required>
@@ -171,12 +176,14 @@
 			if (e.target.value === 'SI') {
 				document.getElementById('es_mayor').classList.add('d-none');
 				document.getElementById('es_ofendido').classList.add('d-none');
+				document.getElementById('menor_alert').classList.remove('d-none');
 
 				document.querySelector('#es_mayor [value="NO"]').checked = true;
 				document.querySelector('#es_ofendido [value="NO"]').checked = true;
 			} else {
 				document.getElementById('es_mayor').classList.remove('d-none');
 				document.getElementById('es_ofendido').classList.remove('d-none');
+				document.getElementById('menor_alert').classList.add('d-none');
 
 				document.querySelector('#es_mayor [value="NO"]').checked = false;
 				document.querySelector('#es_ofendido [value="NO"]').checked = false;

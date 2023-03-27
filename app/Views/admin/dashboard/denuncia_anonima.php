@@ -1449,6 +1449,37 @@
 						option.text = persona.NOMBRE + ' ' + persona.PRIMERAPELLIDO;
 						select_propietario.add(option, null);
 					});
+
+					$('#propietario_vehiculo_da').empty();
+					let select_propietario_vehiculo_da = document.querySelector("#propietario_vehiculo_da");
+					const option_vacio_pro_da = document.createElement('option');
+					option_vacio_pro_da.value = '';
+					option_vacio_pro_da.text = '';
+					option_vacio_pro_da.disabled = true;
+					option_vacio_pro_da.selected = true;
+					select_propietario_vehiculo_da.add(option_vacio_pro_da, null);
+
+					personas.forEach(persona => {
+						const option = document.createElement('option');
+						option.value = persona.PERSONAFISICAID;
+						option.text = persona.NOMBRE + ' ' + persona.PRIMERAPELLIDO;
+						select_propietario_vehiculo_da.add(option, null);
+					});
+					$('#propietario_vehiculo_den').empty();
+					let select_propietario_vehiculo_den = document.querySelector("#propietario_vehiculo_den");
+					const option_vacio_pro_den = document.createElement('option');
+					option_vacio_pro_den.value = '';
+					option_vacio_pro_den.text = '';
+					option_vacio_pro_den.disabled = true;
+					option_vacio_pro_den.selected = true;
+					select_propietario_vehiculo_den.add(option_vacio_pro_den, null);
+
+					personas.forEach(persona => {
+						const option = document.createElement('option');
+						option.value = persona.PERSONAFISICAID;
+						option.text = persona.NOMBRE + ' ' + persona.PRIMERAPELLIDO;
+						select_propietario_vehiculo_den.add(option, null);
+					});
 					$('#insert_persona_victima_modal_denuncia').modal('hide');
 					document.getElementById("persona_fisica_form_insert_denunciaA").reset();
 
@@ -1681,6 +1712,8 @@
 		packetData.append("modelo_vehiculo", document.querySelector('#modelo_vehiculo').value);
 		packetData.append("color_tapiceria_vehiculo", document.querySelector('#color_tapiceria_vehiculo').value);
 		packetData.append("marca_exacta", document.querySelector('#marca_ad_exacta').value);
+		packetData.append("propietario_vehiculo", document.querySelector('#propietario_vehiculo_da').value);
+		packetData.append("situacion", document.querySelector('#situacion_vehiculo_da').value);
 
 		$.ajax({
 			data: packetData,
@@ -1706,6 +1739,9 @@
 					});
 					llenarTablaVehiculos(vehiculos);
 					$('#insert_vehiculo_modal_denuncia').modal('hide');
+					document.querySelector('#doc_vehiculo').setAttribute('src','');
+					document.querySelector('#foto_vehiculo').setAttribute('src', '');
+
 					document.getElementById("form_vehiculo_da_da").reset();
 				} else {
 					Swal.fire({
@@ -1959,7 +1995,43 @@
 						select_victima_ofendido.add(option, null);
 					});
 
+					$('#propietario_vehiculo_da').empty();
+							let select_propietario_da = document.querySelector("#propietario_vehiculo_da");
+							const option_vacio_pro = document.createElement('option');
+							option_vacio_pro.value = '';
+							option_vacio_pro.text = '';
+							option_vacio_pro.disabled = true;
+							option_vacio_pro.selected = true;
+							select_propietario_da.add(option_vacio_pro, null);
 
+							personas.forEach(persona => {
+								let primer_apellido = persona.PRIMERAPELLIDO ? persona
+									.PRIMERAPELLIDO : '';
+
+								const option = document.createElement('option');
+								option.value = persona.PERSONAFISICAID;
+								option.text = persona.NOMBRE + ' '.primer_apellido;
+								select_propietario_da.add(option, null);
+							});
+
+							$('#propietario_vehiculo_den').empty();
+							let select_propietario_den = document.querySelector("#propietario_vehiculo_den");
+							const option_vacio_pro_den = document.createElement('option');
+							option_vacio_pro_den.value = '';
+							option_vacio_pro_den.text = '';
+							option_vacio_pro_den.disabled = true;
+							option_vacio_pro_den.selected = true;
+							select_propietario_den.add(option_vacio_pro_den, null);
+
+							personas.forEach(persona => {
+								let primer_apellido = persona.PRIMERAPELLIDO ? persona
+									.PRIMERAPELLIDO : '';
+
+								const option = document.createElement('option');
+								option.value = persona.PERSONAFISICAID;
+								option.text = persona.NOMBRE + ' '.primer_apellido;
+								select_propietario_den.add(option, null);
+							});
 					Swal.fire({
 						icon: 'success',
 						text: 'Persona física actualizada correctamente',
@@ -2660,12 +2732,18 @@
 					const color = response.color;
 					const tipov = response.tipov;
 					console.log(vehiculo);
+					document.querySelector('#vehiculoid').value = id;
+
 					document.querySelector('#tipo_placas_vehiculo_da').value = vehiculo.TIPOPLACA ? vehiculo.TIPOPLACA : '';
 					document.querySelector('#placas_vehiculo_da').value = vehiculo.PLACAS ? vehiculo.PLACAS : '';
 					document.querySelector('#estado_vehiculo_da_ad').value = vehiculo.ESTADOIDPLACA ? vehiculo.ESTADOIDPLACA : '';
 					document.querySelector('#color_tapiceria_vehiculo_da').value = vehiculo.SEGUNDOCOLORID ? vehiculo.SEGUNDOCOLORID : '';
 					document.querySelector('#modelo_vehiculo_da').value = vehiculo.ANOVEHICULO ? vehiculo.ANOVEHICULO : '';
 
+					document.querySelector('#situacion_vehiculo_den').value = vehiculo.SITUACION ?
+						vehiculo.SITUACION : '';
+						document.querySelector('#propietario_vehiculo_den').value = vehiculo.PERSONAFISICAIDPROPIETARIO ?
+						vehiculo.PERSONAFISICAIDPROPIETARIO : '';
 					if (vehiculo.ESTADOEXTRANJEROIDPLACA) {
 						document.getElementById("estado_extranjero_vehiculo_da_ad").style.display = "block";
 						document.getElementById("estado_vehiculo_da_ad").style.display = "none";
@@ -2783,6 +2861,9 @@
 		packetData.append("modelo_vehiculo", document.querySelector('#modelo_vehiculo_da').value);
 		packetData.append("color_tapiceria_vehiculo", document.querySelector('#color_tapiceria_vehiculo_da').value);
 		packetData.append("marca_exacta", document.querySelector('#marca_ad_exacta_da').value);
+		packetData.append("propietario_vehiculo", document.querySelector('#propietario_vehiculo_den').value);
+		packetData.append("situacion", document.querySelector('#situacion_vehiculo_den').value);
+		packetData.append("vehiculoid", document.querySelector('#vehiculoid').value);
 
 
 		$.ajax({

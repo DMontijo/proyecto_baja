@@ -2,18 +2,22 @@
 .main {
   min-height: calc(100vh - 127px) !important;
 }
+
 .header {
   height: 100px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
 .footer {
   min-height: 50px;
 }
+
 .logo-header {
-  max-width: 200px;
+  max-width: 80px;
 }
+
 .asterisco-rojo {
   margin-left: 3px;
   color: red;

@@ -12,10 +12,10 @@
 				<div class="col-12">
 					<div class="row">
 						<div class="col-12 col-md-6">
-							<a class="p-0 my-3" href="tel:911" role="button"><img src="<?= base_url('/assets/img/banner/911_BANNER.png') ?>" class="img-fluid"></a>
+							<a class="p-0 my-3" role="button" data-bs-toggle="modal" data-bs-target="#emergency_modal"><img src="<?= base_url('/assets/img/banner/911_BANNER.png') ?>" class="img-fluid"></a>
 						</div>
 						<div class="col-12 col-md-6 mt-4 mt-md-0">
-							<a class="p-0 my-3" href="tel:8003432220" role="button" role="button"><img src="<?= base_url('/assets/img/banner/089_BANNER.png') ?>" class="img-fluid"></a>
+							<a class="p-0 my-3" role="button" data-bs-toggle="modal" data-bs-target="#anonima_modal"><img src="<?= base_url('/assets/img/banner/089_BANNER.png') ?>" class="img-fluid"></a>
 						</div>
 					</div>
 				</div>
@@ -24,7 +24,7 @@
 	</div>
 	<div class="card shadow py-4 px-3 border-0">
 		<div class="card-body">
-			<h1 id="titulo" class="text-center fw-bolder pb-1 text-blue">DATOS DEL DENUNCIANTE</h1>
+			<h1 id="titulo" class="text-center fw-bolder pb-1 text-blue">DATOS DEL USUARIO</h1>
 			<p class="text-center pb-5">Los campos con un <span class="asterisco-rojo">*</span> son obligatorios</p>
 
 			<div class="progress">
@@ -156,7 +156,7 @@
 
 						<div class="col-12">
 							<div class="alert alert-warning text-center fw-bold d-none mt-2" id="idioma_alert" role="alert">
-								Si tu idioma no es español se recomienda estar acompañado de un traductor.
+								Si tu idioma es diverso español se recomienda estar acompañado de un traductor.
 							</div>
 						</div>
 					</div>
@@ -203,6 +203,27 @@
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+							<label for="calle" class="form-label fw-bold input-required">Calle</label>
+							<input type="text" class="form-control" id="calle" name="calle" maxlength="100" required>
+							<div class="invalid-feedback">
+								La calle es obligatoria
+							</div>
+						</div>
+
+						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+							<label for="exterior" class="form-label fw-bold input-required" id="lblExterior">Número exterior</label>
+							<input type="text" class="form-control" id="exterior" name="exterior" maxlength="10" required>
+							<div class="invalid-feedback">
+								El número exterior es obligatorio
+							</div>
+						</div>
+
+						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+							<label for="interior" class="form-label fw-bold" id="lblInterior">Número interior</label>
+							<input type="text" class="form-control" id="interior" name="interior" maxlength="10">
+						</div>
+
+						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="localidad" class="form-label fw-bold input-required">Localidad</label>
 							<select class="form-select" id="localidad_select" name="localidad_select" required>
 								<option selected disabled value="">Selecciona la localidad</option>
@@ -224,27 +245,6 @@
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="cp" class="form-label fw-bold">Código postal</label>
 							<input type="number" class="form-control" id="cp" maxlength="10" oninput="clearInputPhone(event);" name="cp">
-						</div>
-
-						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="calle" class="form-label fw-bold input-required">Calle</label>
-							<input type="text" class="form-control" id="calle" name="calle" maxlength="100" required>
-							<div class="invalid-feedback">
-								La calle es obligatoria
-							</div>
-						</div>
-
-						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="exterior" class="form-label fw-bold input-required" id="lblExterior">Número exterior</label>
-							<input type="text" class="form-control" id="exterior" name="exterior" maxlength="10" required>
-							<div class="invalid-feedback">
-								El número exterior es obligatorio
-							</div>
-						</div>
-
-						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="interior" class="form-label fw-bold" id="lblInterior">Número interior</label>
-							<input type="text" class="form-control" id="interior" name="interior" maxlength="10">
 						</div>
 
 						<div class="col-12 mt-4 mb-4">
@@ -429,6 +429,8 @@
 </div>
 
 <?php include('aviso_modal.php') ?>
+<?php include('911_modal.php') ?>
+<?php include('800_modal.php') ?>
 <?php include('correo_obligatorio_modal.php') ?>
 <?php include('take_photo_modal.php'); ?>
 <?php include('information_validation_modal.php') ?>
@@ -709,9 +711,9 @@
 			}
 			if (edad < 18) {
 				Swal.fire({
-					icon: 'error',
+					icon: 'warning',
 					title: 'No podemos procesar tu solicitud',
-					text: 'Debes ser mayor de edad para realizar tu registro.',
+					text: 'Para poder procesar tu solicitud debes ser mayor de edad.',
 					confirmButtonColor: '#bf9b55',
 				});
 
@@ -1156,7 +1158,7 @@
 		let calle = document.querySelector("#calle").value ? document.querySelector("#calle").value : '';
 		let nexterior = document.querySelector("#exterior").value ? document.querySelector("#exterior").value : '';
 		let ninterior = document.querySelector("#interior").value ? document.querySelector("#interior").value : '';
-		
+
 		let tipo = document.querySelector("#identificacion").value ? document.querySelector("#identificacion").value : '';
 		let numeroid = document.querySelector("#numero_ide").value ? document.querySelector("#numero_ide").value : '';
 		let edoc = document.querySelector("#e_civil").value ? document.querySelector("#e_civil").value : '';
@@ -1192,7 +1194,7 @@
 		document.querySelector('#localidad_modal').value = localidad;
 		document.querySelector('#colonia_modal').value = colonia;
 		document.querySelector('#calle_modal').value = calle;
-		document.querySelector('#exterior_modal').value =nexterior;
+		document.querySelector('#exterior_modal').value = nexterior;
 		document.querySelector('#interior_modal').value = ninterior;
 		document.querySelector('#telefono_modal').value = telefono;
 		document.querySelector('#telefono2_modal').value = telefono2;

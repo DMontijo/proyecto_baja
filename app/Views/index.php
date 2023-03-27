@@ -28,10 +28,10 @@
 					<div class="col-12">
 						<div class="row">
 							<div class="col-12 col-md-6">
-								<a class="p-0 my-3" href="tel:911" role="button"><img src="<?= base_url('/assets/img/banner/911_BANNER.png') ?>" class="img-fluid"></a>
+								<a class="p-0 my-3" role="button" data-bs-toggle="modal" data-bs-target="#emergency_modal"><img src="<?= base_url('/assets/img/banner/911_BANNER.png') ?>" class="img-fluid"></a>
 							</div>
 							<div class="col-12 col-md-6 mt-4 mt-md-0">
-								<a class="p-0 my-3" href="tel:8003432220" role="button" role="button"><img src="<?= base_url('/assets/img/banner/089_BANNER.png') ?>" class="img-fluid"></a>
+								<a class="p-0 my-3" role="button" data-bs-toggle="modal" data-bs-target="#anonima_modal"><img src="<?= base_url('/assets/img/banner/089_BANNER.png') ?>" class="img-fluid"></a>
 							</div>
 						</div>
 					</div>
@@ -124,12 +124,17 @@
 			<div class="col-12 text-center">
 				<button type="button" class="btn btn-primary mt-4" data-bs-toggle="modal" data-bs-target="#tutorial_modal">
 					<i class="bi bi-play-btn-fill"></i> Ver video tutorial
-				</button>
+				</button><br>
+				<a href="<?= base_url('/salas_virtuales') ?>" type="button" class="btn btn-secondary mt-4">
+					<i class="bi bi-geo-fill"></i> Directorio Salas Virtuales
+				</a>
 			</div>
 		</div>
 	</section>
 </div>
 <?php include('tutorial_modal.php') ?>
+<?php include('client/dashboard/911_modal.php') ?>
+<?php include('client/dashboard/800_modal.php') ?>
 
 <script>
 	function handleClickBTN(e) {

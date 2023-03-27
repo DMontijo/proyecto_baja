@@ -244,9 +244,9 @@
 			}
 			if (edad < 18) {
 				Swal.fire({
-					icon: 'error',
+					icon: 'warning',
 					title: 'No podemos procesar tu solicitud',
-					text: 'Debes ser mayor de edad para realizar tu registro.',
+					text: 'Para poder procesar tu solicitud debes ser mayor de edad.',
 					confirmButtonColor: '#bf9b55',
 				});
 

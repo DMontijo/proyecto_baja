@@ -694,6 +694,7 @@ class DashboardController extends BaseController
 
 		$data->parentesco = $this->_parentescoModel->asObject()->findAll();
 		$data->figura = $this->_figuraModel->asObject()->findAll();
+		$data->situacionVehiculo = $this->_situacionVehiculoModel->asObject()->findAll();
 
 		$data->cejaContextura = $this->_cejaContexturaModel->asObject()->findAll();
 		$data->caraForma = $this->_caraFormaModel->asObject()->findAll();
@@ -756,7 +757,7 @@ class DashboardController extends BaseController
 		$data->objetosubclasificacion = $this->_objetoSubclasificacionModel->asObject()->findAll();
 		$data->tipomoneda = $this->_tipoMonedaModel->asObject()->findAll();
 
-		$data->plantillas = $this->_plantillasModel->asObject()->where('TITULO !=', 'CONSTANCIA DE EXTRAVIO')->findAll();
+		$data->plantillas = $this->_plantillasModel->asObject()->where('TITULO !=', 'CONSTANCIA DE EXTRAVIO')->where('ACTIVO', 1)->orderBy('TITULO', 'ASC')->findAll();
 		$data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->like('TIPOEXPEDIENTECLAVE', 'NUC')->orLike('TIPOEXPEDIENTECLAVE', 'NAC')->orLike('TIPOEXPEDIENTECLAVE', 'RAC')->findAll();
 		$data->derivaciones = $this->_derivacionesAtencionesModel->asObject()->findAll();
 
@@ -1357,7 +1358,7 @@ class DashboardController extends BaseController
 					if ($_bandeja_creada->status == 201) {
 						$this->_bitacoraActividad($datosBitacora);
 						$subirArchivos = $this->subirArchivosRemision($bandeja['FOLIOID'], $bandeja['ANO'], $expediente);
-						$folioDoc = $this->_folioDocModel->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->join('RELACIONFOLIODOCEXPDOC', 'FOLIODOC.NUMEROEXPEDIENTE = RELACIONFOLIODOCEXPDOC.EXPEDIENTEID  AND FOLIODOC.FOLIODOCID = RELACIONFOLIODOCEXPDOC.FOLIODOCID')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('TIPODOC', 'SOLICITUD DE PERITAJE')->findAll();
+						$folioDoc = $this->_folioDocModel->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->join('RELACIONFOLIODOCEXPDOC', 'FOLIODOC.NUMEROEXPEDIENTE = RELACIONFOLIODOCEXPDOC.EXPEDIENTEID  AND FOLIODOC.FOLIODOCID = RELACIONFOLIODOCEXPDOC.FOLIODOCID')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('TIPODOC', 'SOLICITUD DE PERITAJE')->orLike('TIPODOC', 'OFICIO DE COLABORACION PARA INGRESO A HOSPITAL')->findAll();
 						if ($folioDoc) {
 							foreach ($folioDoc as $key => $doc) {
 								$solicitudp = array();
@@ -1483,7 +1484,7 @@ class DashboardController extends BaseController
 				$bandejaRac = $this->_bandejaRacModel->insert($dataBandeja);
 				$this->subirArchivosRemision($bandeja['FOLIOID'], $bandeja['ANO'], $expediente);
 
-				$folioDoc = $this->_folioDocModel->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->join('RELACIONFOLIODOCEXPDOC', 'FOLIODOC.NUMEROEXPEDIENTE = RELACIONFOLIODOCEXPDOC.EXPEDIENTEID  AND FOLIODOC.FOLIODOCID = RELACIONFOLIODOCEXPDOC.FOLIODOCID')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('TIPODOC', 'SOLICITUD DE PERITAJE')->findAll();
+				$folioDoc = $this->_folioDocModel->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->join('RELACIONFOLIODOCEXPDOC', 'FOLIODOC.NUMEROEXPEDIENTE = RELACIONFOLIODOCEXPDOC.EXPEDIENTEID  AND FOLIODOC.FOLIODOCID = RELACIONFOLIODOCEXPDOC.FOLIODOCID')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('TIPODOC', 'SOLICITUD DE PERITAJE')->orLike('TIPODOC', 'OFICIO DE COLABORACION PARA INGRESO A HOSPITAL')->findAll();
 
 				if ($folioDoc) {
 					foreach ($folioDoc as $key => $doc) {
@@ -1649,7 +1650,7 @@ class DashboardController extends BaseController
 		$data->personafisica = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->findAll();
 		$data->imputados = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->where('CALIDADJURIDICAID', 2)->findAll();
 		$data->victimas = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->where('CALIDADJURIDICAID= 1 OR CALIDADJURIDICAID=6')->findAll();
-		$data->plantillas = $this->_plantillasModel->asObject()->where('TITULO !=', 'CONSTANCIA DE EXTRAVIO')->findAll();
+		$data->plantillas = $this->_plantillasModel->asObject()->where('TITULO !=', 'CONSTANCIA DE EXTRAVIO')->where('ACTIVO', 1)->orderBy('TITULO', 'ASC')->findAll();
 		$data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->like('TIPOEXPEDIENTECLAVE', 'NUC')->orLike('TIPOEXPEDIENTECLAVE', 'NAC')->orLike('TIPOEXPEDIENTECLAVE', 'RAC')->findAll();
 		$data->situacionVehiculo = $this->_situacionVehiculoModel->asObject()->findAll();
 		$data->empleados = $this->_usuariosModel->asObject()->orderBy('NOMBRE', 'ASC')->where('ROLID', 3)->findAll();
@@ -2083,7 +2084,7 @@ class DashboardController extends BaseController
 
 		$folioDoc = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOCID', 'asc')->findAll();
 		$archivosExternosVD = $this->_archivoExternoModel->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
-		$folioDocPeritaje = $this->_folioDocModel->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('TIPODOC', 'SOLICITUD DE PERITAJE')->findAll();
+		$folioDocPeritaje = $this->_folioDocModel->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('TIPODOC', 'SOLICITUD DE PERITAJE')->orLike('TIPODOC', 'OFICIO DE COLABORACION PARA INGRESO A HOSPITAL')->findAll();
 
 		if ($archivosExternosVD) {
 			try {
@@ -2096,10 +2097,10 @@ class DashboardController extends BaseController
 						try {
 							if (ENVIRONMENT == 'development') {
 								if ($foliovd['MUNICIPIOASIGNADOID'] == 1) {
-									$autor = 8944;
-									$oficina = 792;
+									$autor = 8987;
+									$oficina = 793;
 								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 2 || $foliovd['MUNICIPIOASIGNADOID'] == 3) {
-									$autor = 3947;
+									$autor = 3968;
 									$oficina = 394;
 								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
 									$autor = 10872;
@@ -2109,14 +2110,13 @@ class DashboardController extends BaseController
 
 							if (ENVIRONMENT == 'production') {
 								if ($foliovd['MUNICIPIOASIGNADOID'] == 1) {
-									$autor = 8947;
+									$autor = 8988;
 									$oficina = 793;
 								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 2 || $foliovd['MUNICIPIOASIGNADOID'] == 3) {
-									$autor = 4101;
+									$autor = 4179;
 									$oficina = 409;
 								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
-
-									$autor = 10872;
+									$autor = 10832;
 									$oficina = 924;
 								}
 							}
@@ -2150,10 +2150,10 @@ class DashboardController extends BaseController
 						try {
 							if (ENVIRONMENT == 'development') {
 								if ($foliovd['MUNICIPIOASIGNADOID'] == 1) {
-									$autor = 8944;
-									$oficina = 792;
+									$autor = 8987;
+									$oficina = 793;
 								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 2 || $foliovd['MUNICIPIOASIGNADOID'] == 3) {
-									$autor = 3947;
+									$autor = 3968;
 									$oficina = 394;
 								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
 									$autor = 10872;
@@ -2163,14 +2163,13 @@ class DashboardController extends BaseController
 
 							if (ENVIRONMENT == 'production') {
 								if ($foliovd['MUNICIPIOASIGNADOID'] == 1) {
-									$autor = 8947;
+									$autor = 8988;
 									$oficina = 793;
 								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 2 || $foliovd['MUNICIPIOASIGNADOID'] == 3) {
-									$autor = 4101;
+									$autor = 4179;
 									$oficina = 409;
 								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
-
-									$autor = 10872;
+									$autor = 10832;
 									$oficina = 924;
 								}
 							}
@@ -2257,10 +2256,10 @@ class DashboardController extends BaseController
 
 							if (ENVIRONMENT == 'development') {
 								if ($foliovd['MUNICIPIOASIGNADOID'] == 1) {
-									$documentos['AUTOR'] = 8944;
-									$documentos['OFICINAIDAUTOR'] = 792;
+									$documentos['AUTOR'] = 8987;
+									$documentos['OFICINAIDAUTOR'] = 793;
 								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 2 || $foliovd['MUNICIPIOASIGNADOID'] == 3) {
-									$documentos['AUTOR'] = 3947;
+									$documentos['AUTOR'] = 3968;
 									$documentos['OFICINAIDAUTOR'] = 394;
 								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
 									$documentos['AUTOR'] = 10872;
@@ -2269,13 +2268,13 @@ class DashboardController extends BaseController
 							}
 							if (ENVIRONMENT == 'production') {
 								if ($foliovd['MUNICIPIOASIGNADOID'] == 1) {
-									$documentos['AUTOR'] = 8947;
+									$documentos['AUTOR'] = 8988;
 									$documentos['OFICINAIDAUTOR'] = 793;
 								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 2 || $foliovd['MUNICIPIOASIGNADOID'] == 3) {
-									$documentos['AUTOR'] = 4101;
+									$documentos['AUTOR'] = 4179;
 									$documentos['OFICINAIDAUTOR'] = 409;
 								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
-									$documentos['AUTOR'] = 10872;
+									$documentos['AUTOR'] = 10832;
 									$documentos['OFICINAIDAUTOR'] = 924;
 								}
 							}
@@ -2348,7 +2347,7 @@ class DashboardController extends BaseController
 
 		$folioDoc = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOCID', 'asc')->findAll();
 		$archivosExternosVD = $this->_archivoExternoModel->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
-		$folioDocPeritaje = $this->_folioDocModel->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('TIPODOC', 'SOLICITUD DE PERITAJE')->findAll();
+		$folioDocPeritaje = $this->_folioDocModel->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('TIPODOC', 'SOLICITUD DE PERITAJE')->orLike('TIPODOC', 'OFICIO DE COLABORACION PARA INGRESO A HOSPITAL')->findAll();
 
 		if ($archivosExternosVD) {
 			try {
@@ -2361,10 +2360,10 @@ class DashboardController extends BaseController
 						try {
 							if (ENVIRONMENT == 'development') {
 								if ($foliovd['MUNICIPIOASIGNADOID'] == 1) {
-									$autor = 8944;
-									$oficina = 792;
+									$autor = 8987;
+									$oficina = 793;
 								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 2 || $foliovd['MUNICIPIOASIGNADOID'] == 3) {
-									$autor = 3947;
+									$autor = 3968;
 									$oficina = 394;
 								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
 									$autor = 10872;
@@ -2374,14 +2373,13 @@ class DashboardController extends BaseController
 
 							if (ENVIRONMENT == 'production') {
 								if ($foliovd['MUNICIPIOASIGNADOID'] == 1) {
-									$autor = 8947;
+									$autor = 8988;
 									$oficina = 793;
 								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 2 || $foliovd['MUNICIPIOASIGNADOID'] == 3) {
-									$autor = 4101;
+									$autor = 4179;
 									$oficina = 409;
 								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
-
-									$autor = 10872;
+									$autor = 10832;
 									$oficina = 924;
 								}
 							}
@@ -2417,10 +2415,10 @@ class DashboardController extends BaseController
 						try {
 							if (ENVIRONMENT == 'development') {
 								if ($foliovd['MUNICIPIOASIGNADOID'] == 1) {
-									$autor = 8944;
-									$oficina = 792;
+									$autor = 8987;
+									$oficina = 793;
 								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 2 || $foliovd['MUNICIPIOASIGNADOID'] == 3) {
-									$autor = 3947;
+									$autor = 3968;
 									$oficina = 394;
 								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
 									$autor = 10872;
@@ -2430,14 +2428,13 @@ class DashboardController extends BaseController
 
 							if (ENVIRONMENT == 'production') {
 								if ($foliovd['MUNICIPIOASIGNADOID'] == 1) {
-									$autor = 8947;
+									$autor = 8988;
 									$oficina = 793;
 								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 2 || $foliovd['MUNICIPIOASIGNADOID'] == 3) {
-									$autor = 4101;
+									$autor = 4179;
 									$oficina = 409;
 								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
-
-									$autor = 10872;
+									$autor = 10832;
 									$oficina = 924;
 								}
 							}
@@ -2503,10 +2500,10 @@ class DashboardController extends BaseController
 							$documentos['DOCTODESCR'] = $docP['TIPODOC'];
 							if (ENVIRONMENT == 'development') {
 								if ($foliovd['MUNICIPIOASIGNADOID'] == 1) {
-									$documentos['AUTOR'] = 8944;
-									$documentos['OFICINAIDAUTOR'] = 792;
+									$documentos['AUTOR'] = 8987;
+									$documentos['OFICINAIDAUTOR'] = 793;
 								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 2 || $foliovd['MUNICIPIOASIGNADOID'] == 3) {
-									$documentos['AUTOR'] = 3947;
+									$documentos['AUTOR'] = 3968;
 									$documentos['OFICINAIDAUTOR'] = 394;
 								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
 									$documentos['AUTOR'] = 10872;
@@ -2515,13 +2512,13 @@ class DashboardController extends BaseController
 							}
 							if (ENVIRONMENT == 'production') {
 								if ($foliovd['MUNICIPIOASIGNADOID'] == 1) {
-									$documentos['AUTOR'] = 8947;
+									$documentos['AUTOR'] = 8988;
 									$documentos['OFICINAIDAUTOR'] = 793;
 								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 2 || $foliovd['MUNICIPIOASIGNADOID'] == 3) {
-									$documentos['AUTOR'] = 4101;
+									$documentos['AUTOR'] = 4179;
 									$documentos['OFICINAIDAUTOR'] = 409;
 								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
-									$documentos['AUTOR'] = 10872;
+									$documentos['AUTOR'] = 10832;
 									$documentos['OFICINAIDAUTOR'] = 924;
 								}
 							}
@@ -3407,6 +3404,7 @@ class DashboardController extends BaseController
 		// return $data;
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
+
 	private function _curlPost($endpoint, $data)
 	{
 		$ch = curl_init();
@@ -3505,6 +3503,7 @@ class DashboardController extends BaseController
 		// return $result;
 		return json_decode($result);
 	}
+
 	public function getTimeVideo()
 	{
 		// $video = $this->request->getPost('name_video');
@@ -4391,6 +4390,8 @@ class DashboardController extends BaseController
 
 		$folio = $this->request->getPost('folio');
 		$year = $this->request->getPost('year');
+		$vehiculoid = $this->request->getPost('vehiculoid');
+
 		$document_file = $this->request->getFile('subirDoc');
 		$docV = null;
 
@@ -4551,7 +4552,7 @@ class DashboardController extends BaseController
 		}
 
 
-		$update = $this->_folioVehiculoModel->set($data)->where('FOLIOID', $folio)->where('ANO', $year)->update();
+		$update = $this->_folioVehiculoModel->set($data)->where('FOLIOID', $folio)->where('ANO', $year)->where('VEHICULOID', $vehiculoid)->update();
 
 		if ($update) {
 			$vehiculos = $this->_folioVehiculoModel->get_by_folio($folio, $year);
@@ -4622,6 +4623,8 @@ class DashboardController extends BaseController
 					'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo') ? $this->request->getPost('modelo_vehiculo') : NULL,
 					'FOTO' => $fotoV,
 					'DOCUMENTO' => $docV,
+					'SITUACION' => $this->request->getPost('situacion') ? $this->request->getPost('situacion') : 2,
+					'PERSONAFISICAIDPROPIETARIO' => $this->request->getPost('propietario_vehiculo'),
 
 				);
 			} catch (\Exception $e) {
@@ -4657,6 +4660,9 @@ class DashboardController extends BaseController
 					'SEGUNDOCOLORID' => $this->request->getPost('color_tapiceria_vehiculo') ? $this->request->getPost('color_tapiceria_vehiculo') : NULL,
 					'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo') ? $this->request->getPost('modelo_vehiculo') : NULL,
 					'DOCUMENTO' => $docV,
+					'SITUACION' => $this->request->getPost('situacion') ? $this->request->getPost('situacion') : 2,
+					'PERSONAFISICAIDPROPIETARIO' => $this->request->getPost('propietario_vehiculo'),
+
 
 				);
 			} catch (\Exception $e) {
@@ -4690,6 +4696,9 @@ class DashboardController extends BaseController
 					'SEGUNDOCOLORID' => $this->request->getPost('color_tapiceria_vehiculo') ? $this->request->getPost('color_tapiceria_vehiculo') : NULL,
 					'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo') ? $this->request->getPost('modelo_vehiculo') : NULL,
 					'FOTO' => $fotoV,
+					'SITUACION' => $this->request->getPost('situacion') ? $this->request->getPost('situacion') : 2,
+					'PERSONAFISICAIDPROPIETARIO' => $this->request->getPost('propietario_vehiculo'),
+
 
 				);
 			} catch (\Exception $e) {
@@ -4721,6 +4730,9 @@ class DashboardController extends BaseController
 				'NUMEROCHASIS' => $this->request->getPost('num_chasis_vehiculo') ? $this->request->getPost('num_chasis_vehiculo') : NULL,
 				'SEGUNDOCOLORID' => $this->request->getPost('color_tapiceria_vehiculo') ? $this->request->getPost('color_tapiceria_vehiculo') : NULL,
 				'ANOVEHICULO' => $this->request->getPost('modelo_vehiculo') ? $this->request->getPost('modelo_vehiculo') : NULL,
+				'SITUACION' => $this->request->getPost('situacion') ? $this->request->getPost('situacion') : 2,
+				'PERSONAFISICAIDPROPIETARIO' => $this->request->getPost('propietario_vehiculo'),
+
 			);
 		}
 		// $insert = $this->_folioVehiculoModel->insert($data);
@@ -4816,6 +4828,42 @@ class DashboardController extends BaseController
 		}
 	}
 
+
+
+	public function deletePersonaFisicaById()
+	{
+
+		try {
+			$personaf_id = $this->request->getPost('personafisica');
+
+			$folio = $this->request->getPost('folio');
+			$year = $this->request->getPost('year');
+
+			$deletePersonaFisica = $this->_folioPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $personaf_id)->delete();
+			$deletePersonaFisicaDom = $this->_folioPersonaFisicaDomicilioModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $personaf_id)->delete();
+			$deletePersonaFisicaMediaF = $this->_folioMediaFiliacion->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $personaf_id)->delete();
+
+			if ($deletePersonaFisica && $deletePersonaFisicaDom && $deletePersonaFisicaMediaF) {
+				$personas = $this->_folioPersonaFisicaModel->get_by_folio($folio, $year);
+				$imputados = $this->_folioPersonaFisicaModel->get_imputados($folio, $year);
+				$victimas = $this->_folioPersonaFisicaModel->get_victimas($folio, $year);
+				$delitosModalidadFiltro = $this->_delitoModalidadModel->get_delitodescr($folio, $year);
+
+				$datosBitacora = [
+					'ACCION' => 'Ha eliminado una persona fisica',
+					'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
+				];
+
+				$this->_bitacoraActividad($datosBitacora);
+
+				return json_encode(['status' => 1, 'personas' => $personas, 'imputados' => $imputados, 'victimas' => $victimas]);
+			} else {
+				return json_encode(['status' => 0]);
+			}
+		} catch (\Exception $e) {
+			return json_encode(['status' => 0]);
+		}
+	}
 	public function createParentescoByFolio()
 	{
 		$folio = trim($this->request->getPost('folio'));
@@ -5560,7 +5608,6 @@ class DashboardController extends BaseController
 
 	public function get_Plantillas()
 	{
-
 		$meses = array("ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE");
 		$year = $this->request->getPost('year');
 		$titulo = $this->request->getPost('titulo');
@@ -5585,31 +5632,63 @@ class DashboardController extends BaseController
 		$data->canalizacion = $this->_canalizacionesAtencionesModel->asObject()->where('MUNICIPIOID', $data->folio->INSTITUCIONREMISIONMUNICIPIOID)->where('INSTITUCIONREMISIONID',  $data->folio->INSTITUCIONREMISIONID)->first();
 		$data->bandejaRac = $this->_bandejaRacModel->asObject()->where('ANO', $year)->where('FOLIOID', $folio)->first();
 		$data->municipios = $this->_municipiosModel->asObject()->where('ESTADOID', '2')->where('MUNICIPIOID',  $data->folio->MUNICIPIOID)->first();
-		$data->municipio_delito = $this->_municipiosModel->asObject()->where('ESTADOID',  $data->folio->HECHOESTADOID)->where('MUNICIPIOID',  $data->folio->HECHOMUNICIPIOID)->first();
 		$data->localidad = $this->_localidadesModel->asObject()->where('ESTADOID',  $data->folio->HECHOESTADOID)->where('MUNICIPIOID',  $data->folio->HECHOMUNICIPIOID)->where('LOCALIDADID', $data->folio->HECHOLOCALIDADID)->first();
+
+		//Delito
+		$data->delitosModalidadFiltro = $this->_delitoModalidadModel->get_delitodescr($folio, $year);
+		$data->municipio_delito = $this->_municipiosModel->asObject()->where('ESTADOID',  $data->folio->HECHOESTADOID)->where('MUNICIPIOID',  $data->folio->HECHOMUNICIPIOID)->first();
 		$data->lugar_delito = $this->_hechoLugarModel->asObject()->where('HECHOLUGARID', $data->folio->HECHOLUGARID)->first();
+
+		//Info victima
 		$data->victima = $this->_folioPersonaFisicaModel->get_by_personas($data->folio->FOLIOID, $data->folio->ANO, $victima);
-		$data->imputado = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio->FOLIOID)->where('ANO', $data->folio->ANO)->where('PERSONAFISICAID', $imputado)->first();
 		$data->victimaDom = $this->_folioPersonaFisicaDomicilioModel->asObject()->where('FOLIOID', $data->folio->FOLIOID)->where('ANO', $data->folio->ANO)->where('PERSONAFISICAID', $victima)->first();
+		$data->estadoVictima = $this->_estadosModel->asObject()->where('ESTADOID',  $data->victimaDom->ESTADOID)->first();
+		$data->municipioVictima = $this->_municipiosModel->asObject()->where('ESTADOID',  $data->victimaDom->ESTADOID)->where('MUNICIPIOID',  $data->victimaDom->MUNICIPIOID)->first();
+		$data->tipoIdentificacionVictima = $this->_tipoIdentificacionModel->asObject()->where('PERSONATIPOIDENTIFICACIONID',   $data->victima[0]['TIPOIDENTIFICACIONID'])->first();
+		$data->ocupacionVictima = $this->_ocupacionModel->asObject()->where('PERSONAOCUPACIONID',   $data->victima[0]['OCUPACIONID'])->first();
+		$data->nacionalidadVictima = $this->_nacionalidadModel->asObject()->where('PERSONANACIONALIDADID',   $data->victima[0]['NACIONALIDADID'])->first();
+		$data->edoCivilVictima = $this->_estadoCivilModel->asObject()->where('PERSONAESTADOCIVILID',   $data->victima[0]['ESTADOCIVILID'])->first();
+		//Rasgos de la victima
+		$data->mediaFiliacionVictima = $this->_folioMediaFiliacion->asObject()->where('FOLIOID', $folio)->where('PERSONAFISICAID', $victima)->first();
+
+		//Info imputado
+		$data->imputado = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio->FOLIOID)->where('ANO', $data->folio->ANO)->where('PERSONAFISICAID', $imputado)->first();
 		$data->imputadoDom = $this->_folioPersonaFisicaDomicilioModel->asObject()->where('FOLIOID', $data->folio->FOLIOID)->where('ANO', $data->folio->ANO)->where('PERSONAFISICAID', $imputado)->first();
 		$data->imputados_da = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio->FOLIOID)->where('ANO', $data->folio->ANO)->where('CALIDADJURIDICAID', 2)->findAll();
 		$data->vehiculos_da = $this->_folioVehiculoModel->asObject()->where('FOLIOID', $data->folio->FOLIOID)->where('ANO', $data->folio->ANO)->findAll();
 		$data->municipio_imp = $this->_municipiosModel->asObject()->where('ESTADOID',  $data->imputadoDom->ESTADOID)->where('MUNICIPIOID',  $data->imputadoDom->MUNICIPIOID)->first();
 		$data->estado_imp = $this->_estadosModel->asObject()->where('ESTADOID',  $data->imputadoDom->ESTADOID)->first();
 
+		//Info denunciante
+		$data->denunciante = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio->FOLIOID)->where('ANO', $data->folio->ANO)->where('DENUNCIANTE', 'S')->first();
+		if (!$data->denunciante) {
+			$data->denunciante = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio->FOLIOID)->where('ANO', $data->folio->ANO)->where('PERSONAFISICAID', $victima)->first();
+		}
+		$data->denuncianteDomicilio = $this->_folioPersonaFisicaDomicilioModel->asObject()->where('FOLIOID', $data->folio->FOLIOID)->where('ANO', $data->folio->ANO)->where('PERSONAFISICAID', $data->denunciante->PERSONAFISICAID)->first();
+		$data->denuncianteMunicipio = $this->_municipiosModel->asObject()->where('ESTADOID',  $data->denuncianteDomicilio->ESTADOID)->where('MUNICIPIOID', $data->denuncianteDomicilio->MUNICIPIOID)->first();
+		$data->denuncianteEstado = $this->_estadosModel->asObject()->where('ESTADOID',  $data->denuncianteDomicilio->ESTADOID)->first();
+		$data->denuncianteTipoIdentificacion = $this->_tipoIdentificacionModel->asObject()->where('PERSONATIPOIDENTIFICACIONID',   $data->denunciante->TIPOIDENTIFICACIONID)->first();
+		$data->denuncianteOcupacion = $this->_ocupacionModel->asObject()->where('PERSONAOCUPACIONID',   $data->denunciante->OCUPACIONID)->first();
+		$data->denuncianteNacionalidad = $this->_nacionalidadModel->asObject()->where('PERSONANACIONALIDADID',   $data->denunciante->NACIONALIDADID)->first();
+		$data->denuncianteEdoCivil = $this->_estadoCivilModel->asObject()->where('PERSONAESTADOCIVILID',   $data->denunciante->ESTADOCIVILID)->first();
 
+		//Replaces denunciante
+		$data->plantilla = str_replace('[DENUNCIANTE_NOMBRE]', $data->denunciante->NOMBRE . ' ' . ($data->denunciante->PRIMERAPELLIDO ? $data->denunciante->PRIMERAPELLIDO : '') . ' ' . ($data->denunciante->SEGUNDOAPELLIDO ? $data->denunciante->SEGUNDOAPELLIDO : ''), $data->plantilla);
+		$data->plantilla = str_replace('[DENUNCIANTE_CORREO]', $data->denunciante->CORREO ? $data->denunciante->CORREO : 'DESCONOCIDO', $data->plantilla);
+		$data->plantilla = str_replace('[DENUNCIANTE_EDAD]', $data->denunciante->EDADCANTIDAD ? $data->denunciante->EDADCANTIDAD : 'DESCONOCIDO', $data->plantilla);
+		$data->plantilla = str_replace('[DENUNCIANTE_TELEFONO]', $data->denunciante->TELEFONO ? $data->denunciante->TELEFONO : 'DESCONOCIDO', $data->plantilla);
+		$data->plantilla = str_replace('[DENUNCIANTE_IDENTIFICACION_NUMERO]', $data->denunciante->NUMEROIDENTIFICACION ? $data->denunciante->NUMEROIDENTIFICACION : '', $data->plantilla);
+		$data->plantilla = str_replace('[DENUNCIANTE_IDENTIFICACION]', isset($data->denuncianteTipoIdentificacion) == true ? $data->denuncianteTipoIdentificacion->PERSONATIPOIDENTIFICACIONDESCR : 'NINGUNO', $data->plantilla);
+		$data->plantilla = str_replace('[DENUNCIANTE_OCUPACION]', isset($data->denuncianteOcupacion) == true ? $data->denuncianteOcupacion->PERSONAOCUPACIONDESCR : 'DESCONOCIDO', $data->plantilla);
+		$data->plantilla = str_replace('[DENUNCIANTE_NACIONALIDAD]', isset($data->denuncianteNacionalidad) == true ? $data->denuncianteNacionalidad->PERSONANACIONALIDADDESCR : 'DESCONOCIDA', $data->plantilla);
+		$data->plantilla = str_replace('[DENUNCIANTE_ESTADO_CIVIL]', isset($data->denuncianteEdoCivil) == true ? $data->denuncianteEdoCivil->PERSONAESTADOCIVILDESCR : 'DESCONOCIDO', $data->plantilla);
+		$data->plantilla = str_replace('[DENUNCIANTE_DOMICILIO]', ($data->denuncianteDomicilio->CALLE ? $data->denuncianteDomicilio->CALLE : 'DESCONOCIDO') . ($data->denuncianteDomicilio->NUMEROCASA ? ' Ext. ' . $data->denuncianteDomicilio->NUMEROCASA : '') . ($data->denuncianteDomicilio->NUMEROINTERIOR ? ' Int. ' . $data->denuncianteDomicilio->NUMEROINTERIOR : '') . ($data->denuncianteDomicilio->COLONIADESCR ? ' ' . $data->denuncianteDomicilio->COLONIADESCR : '') . (isset($data->denuncianteMunicipio) == true ? ' ' . $data->denuncianteMunicipio->MUNICIPIODESCR : '') . (isset($data->denuncianteEstado) == true ? ' ' . $data->denuncianteEstado->ESTADODESCR : ''), $data->plantilla);
 
-		$data->estadoVictima = $this->_estadosModel->asObject()->where('ESTADOID',  $data->victimaDom->ESTADOID)->first();
-		$data->tipoIdentificacionVictima = $this->_tipoIdentificacionModel->asObject()->where('PERSONATIPOIDENTIFICACIONID',   $data->victima[0]['TIPOIDENTIFICACIONID'])->first();
-		$data->ocupacionVictima = $this->_ocupacionModel->asObject()->where('PERSONAOCUPACIONID',   $data->victima[0]['OCUPACIONID'])->first();
-		$data->nacionalidadVictima = $this->_nacionalidadModel->asObject()->where('PERSONANACIONALIDADID',   $data->victima[0]['NACIONALIDADID'])->first();
-		$data->edoCivilVictima = $this->_estadoCivilModel->asObject()->where('PERSONAESTADOCIVILID',   $data->victima[0]['ESTADOCIVILID'])->first();
-
-		$data->delitosModalidadFiltro = $this->_delitoModalidadModel->get_delitodescr($folio, $year);
-		//VICTIMA RASGOS
-		$data->mediaFiliacionVictima = $this->_folioMediaFiliacion->asObject()->where('FOLIOID', $folio)->where('PERSONAFISICAID', $victima)->first();
+		//Expediente
+		$expediente = $data->folio->EXPEDIENTEID ? $data->folio->EXPEDIENTEID : null;
 
 		if ($data->victima[0]['DESAPARECIDA'] == 'S' && $data->mediaFiliacionVictima) {
+			//Victima media filiación
 			$colorOjos = $this->_ojoColorModel->asObject()->where('OJOCOLORID', $data->mediaFiliacionVictima->OJOCOLORID)->first();
 			$colorCabello = $this->_cabelloColorModel->asObject()->where('CABELLOCOLORID', $data->mediaFiliacionVictima->CABELLOCOLORID)->first();
 			$complexion = $this->_figuraModel->asObject()->where('FIGURAID', $data->mediaFiliacionVictima->FIGURAID)->first();
@@ -5643,7 +5722,9 @@ class DashboardController extends BaseController
 				}
 			}
 		}
+
 		if ($data->mediaFiliacionVictima) {
+			//Victima media filiación
 			$colorOjos = $this->_ojoColorModel->asObject()->where('OJOCOLORID', $data->mediaFiliacionVictima->OJOCOLORID)->first();
 			$colorCabello = $this->_cabelloColorModel->asObject()->where('CABELLOCOLORID', $data->mediaFiliacionVictima->CABELLOCOLORID)->first();
 			$complexion = $this->_figuraModel->asObject()->where('FIGURAID', $data->mediaFiliacionVictima->FIGURAID)->first();
@@ -6147,16 +6228,11 @@ class DashboardController extends BaseController
 
 		if ($relacionfisfis != null) {
 			$data->relacion_delitodescr = $this->_delitoModalidadModel->asObject()->where('DELITOMODALIDADID', $relacionfisfis->DELITOMODALIDADID)->first();
-			$data->plantilla = str_replace('[DELITO]',  $data->relacion_delitodescr->DELITOMODALIDADDESCR ?  $data->relacion_delitodescr->DELITOMODALIDADDESCR : '-', $data->plantilla);
-			$data->plantilla = str_replace('[NUMERO_DELITO]',  $data->relacion_delitodescr->DELITOMODALIDADARTICULO  ?  $data->relacion_delitodescr->DELITOMODALIDADARTICULO : '-', $data->plantilla);
-			$data->plantilla = str_replace('[RELACION_DELITO]',  $data->relacion_delitodescr->DELITOMODALIDADDESCR ?  $data->relacion_delitodescr->DELITOMODALIDADDESCR : '-', $data->plantilla);
-			$data->plantilla = str_replace('[</span>RELACION_DELITO]',  $data->relacion_delitodescr->DELITOMODALIDADDESCR ?  $data->relacion_delitodescr->DELITOMODALIDADDESCR : '-', $data->plantilla);
 			$data->plantilla = str_replace('[DELITO_NOMBRE]',  $data->relacion_delitodescr->DELITOMODALIDADDESCR ?  $data->relacion_delitodescr->DELITOMODALIDADDESCR : '-', $data->plantilla);
-			$data->plantilla = str_replace('[NUMERO_CODIGO_PENAL]', ($data->relacion_delitodescr->DELITOMODALIDADARTICULO ?  $data->relacion_delitodescr->DELITOMODALIDADARTICULO : '-'), $data->plantilla);
+			$data->plantilla = str_replace('[NUMERO_CODIGO_PENAL]', ($data->relacion_delitodescr->DELITOMODALIDADARTICULO ?  $data->relacion_delitodescr->DELITOMODALIDADARTICULO : '[NUMERO_CODIGO_PENAL]'), $data->plantilla);
 		}
 
-		$expediente = $data->folio->EXPEDIENTEID ? $data->folio->EXPEDIENTEID : null;
-
+		//Info de las umas registradas
 		if ($uma == 'MEXICALI - CD MORELOS') {
 			$data->plantilla = str_replace('[DOMICILIO_INSTALACION]', 'CALZADA LÁZARO CÁRDENAS S/N. A UN COSTADO DE WELTON, EN CIUDAD MORELOS.', $data->plantilla);
 			$data->plantilla = str_replace('[TELEFONO_UMA]', '(658) 514-84-74 EXT. 7530, 7531, 7532, 7533, 7534 Y 7535.(658) 514-83-60 EXT. 7558, 7562, 7568, 7569 Y 7570', $data->plantilla);
@@ -6201,16 +6277,13 @@ class DashboardController extends BaseController
 		$relacionfisfis = $this->_relacionIDOModel->asObject()->where('FOLIOID', $data->folio->FOLIOID)->where('ANO', $data->folio->ANO)->where('PERSONAFISICAIDVICTIMA', $victima)->where('PERSONAFISICAIDIMPUTADO', $imputado)->first();
 
 		if ($relacionfisfis != null) {
+			//Info del delito seleccionado por el MP
 			$data->relacion_delitodescr = $this->_delitoModalidadModel->asObject()->where('DELITOMODALIDADID', $relacionfisfis->DELITOMODALIDADID)->first();
-			$data->plantilla = str_replace('[DELITO]',  $data->relacion_delitodescr->DELITOMODALIDADDESCR ?  $data->relacion_delitodescr->DELITOMODALIDADDESCR : '-', $data->plantilla);
-			$data->plantilla = str_replace('[NUMERO_DELITO]',  $data->relacion_delitodescr->DELITOMODALIDADARTICULO  ?  $data->relacion_delitodescr->DELITOMODALIDADARTICULO : '-', $data->plantilla);
-			$data->plantilla = str_replace('[RELACION_DELITO]',  $data->relacion_delitodescr->DELITOMODALIDADDESCR ?  $data->relacion_delitodescr->DELITOMODALIDADDESCR : '-', $data->plantilla);
-			$data->plantilla = str_replace('[</span>RELACION_DELITO]',  $data->relacion_delitodescr->DELITOMODALIDADDESCR ?  $data->relacion_delitodescr->DELITOMODALIDADDESCR : '-', $data->plantilla);
+
 			$data->plantilla = str_replace('[DELITO_NOMBRE]',  $data->relacion_delitodescr->DELITOMODALIDADDESCR ?  $data->relacion_delitodescr->DELITOMODALIDADDESCR : '-', $data->plantilla);
-			$data->plantilla = str_replace('[NUMERO_CODIGO_PENAL]', ($data->relacion_delitodescr->DELITOMODALIDADARTICULO ?  $data->relacion_delitodescr->DELITOMODALIDADARTICULO : '-'), $data->plantilla);
+			$data->plantilla = str_replace('[NUMERO_CODIGO_PENAL]', ($data->relacion_delitodescr->DELITOMODALIDADARTICULO ?  $data->relacion_delitodescr->DELITOMODALIDADARTICULO : '[NUMERO_CODIGO_PENAL]'), $data->plantilla);
 		}
 
-		$data->denunciantes = $this->_folioModel->get_denunciante($folio, $year);
 		$data->estado = $this->_estadosModel->asObject()->where('ESTADOID', $data->folio->ESTADOID)->first();
 		$data->lugar_hecho = $data->folio->HECHOLUGARID ? $this->_hechoLugarModel->asObject()->where('HECHOLUGARID', $data->folio->HECHOLUGARID)->first() : (object)['HECHOLUGARDESCR' => 'NO ESPECIFICADO'];
 		$data->derivacion = $this->_derivacionesAtencionesModel->asObject()->where('MUNICIPIOID', $data->folio->INSTITUCIONREMISIONMUNICIPIOID)->where('INSTITUCIONREMISIONID',  $data->folio->INSTITUCIONREMISIONID)->first();
@@ -6226,35 +6299,27 @@ class DashboardController extends BaseController
 		$data->ocupacionVictima = $this->_ocupacionModel->asObject()->where('PERSONAOCUPACIONID',   $data->victima[0]['OCUPACIONID'])->first();
 		$data->nacionalidadVictima = $this->_nacionalidadModel->asObject()->where('PERSONANACIONALIDADID',   $data->victima[0]['NACIONALIDADID'])->first();
 		$data->edoCivilVictima = $this->_estadoCivilModel->asObject()->where('PERSONAESTADOCIVILID',   $data->victima[0]['ESTADOCIVILID'])->first();
-		$data->plantilla = str_replace('[DOCUMENTO_FECHA]', date('d') . ' DE ' . $meses[date('n') - 1] . " DEL " . date('Y'), $data->plantilla);
 		$data->municipio_imp = $this->_municipiosModel->asObject()->where('ESTADOID',  $data->imputadoDom->ESTADOID)->where('MUNICIPIOID',  $data->imputadoDom->MUNICIPIOID)->first();
 		$data->estado_imp = $this->_estadosModel->asObject()->where('ESTADOID',  $data->imputadoDom->ESTADOID)->first();
+
 		//CITATORIO
 		if ($data->bandejaRac) {
 			if ($data->bandejaRac->TIPOPROCEDIMIENTOID == 1) {
-				$data->plantilla = str_replace('[TIPO_PROCESO]', 'MEDICACION', $data->plantilla);
+				$data->plantilla = str_replace('[TIPO_PROCESO]', 'MEDIACIÓN', $data->plantilla);
 			} else if ($data->bandejaRac->TIPOPROCEDIMIENTOID == 2) {
-				$data->plantilla = str_replace('[TIPO_PROCESO]', 'MEDICACION', $data->plantilla);
+				$data->plantilla = str_replace('[TIPO_PROCESO]', 'CONCILIACIÓN', $data->plantilla);
 			} else {
 				$data->plantilla = str_replace('[TIPO_PROCESO]', 'JUSTICIA RESTAURATIVA', $data->plantilla);
 			}
 		}
 
-		$data->plantilla = str_replace('[DOCUMENTO_MUNICIPIO]', $data->municipios->MUNICIPIODESCR, $data->plantilla);
+		$data->plantilla = str_replace('[DOCUMENTO_FECHA]', date('d') . ' DE ' . $meses[date('n') - 1] . " DEL " . date('Y'), $data->plantilla);
 		$data->plantilla = str_replace('[DOCUMENTO_CIUDAD]', $data->municipios->MUNICIPIODESCR, $data->plantilla);
-		$data->plantilla = str_replace('DOCUMENTO_MUNICIPIO', $data->municipios->MUNICIPIODESCR, $data->plantilla);
-		$data->plantilla = str_replace('[VICTIMA]', $data->victima[0]['NOMBRE'] . ' ' . ($data->victima[0]['PRIMERAPELLIDO'] ? $data->victima[0]['PRIMERAPELLIDO'] : '') . ' ' . ($data->victima[0]['SEGUNDOAPELLIDO'] ? $data->victima[0]['SEGUNDOAPELLIDO'] : ''), $data->plantilla);
 		$data->plantilla = str_replace('[VICTIMA_NOMBRE]', $data->victima[0]['NOMBRE'] . ' ' . ($data->victima[0]['PRIMERAPELLIDO'] ? $data->victima[0]['PRIMERAPELLIDO'] : '') . ' ' . ($data->victima[0]['SEGUNDOAPELLIDO'] ? $data->victima[0]['SEGUNDOAPELLIDO'] : ''), $data->plantilla);
-		$data->plantilla = str_replace('[</span>VICTIMA_NOMBRE]', $data->victima[0]['NOMBRE'] . ' ' . ($data->victima[0]['PRIMERAPELLIDO'] ? $data->victima[0]['PRIMERAPELLIDO'] : '') . ' ' . ($data->victima[0]['SEGUNDOAPELLIDO'] ? $data->victima[0]['SEGUNDOAPELLIDO'] : ''), $data->plantilla);
-		$data->plantilla = str_replace('(VICTIMA Y/U OFENDIDO)', $data->victima[0]['NOMBRE'] . ' ' . ($data->victima[0]['PRIMERAPELLIDO'] ? $data->victima[0]['PRIMERAPELLIDO'] : '') . ' ' . ($data->victima[0]['SEGUNDOAPELLIDO'] ? $data->victima[0]['SEGUNDOAPELLIDO'] : ''), $data->plantilla);
-		$data->plantilla = str_replace('(REDACTAR_HECHO)', $data->folio->HECHONARRACION ? $data->folio->HECHONARRACION : 'SIN NARRACIÓN', $data->plantilla);
-		$data->plantilla = str_replace('[VICTIMAS_NOMBRE]', $data->victima[0]['NOMBRE'] . ' ' . ($data->victima[0]['PRIMERAPELLIDO'] ? $data->victima[0]['PRIMERAPELLIDO'] : '') . ' ' . ($data->victima[0]['SEGUNDOAPELLIDO'] ? $data->victima[0]['SEGUNDOAPELLIDO'] : ''), $data->plantilla);
 		$data->plantilla = str_replace('[VICTIMA_EDAD]', $data->victima[0]['EDADCANTIDAD'] ? $data->victima[0]['EDADCANTIDAD'] : '-', $data->plantilla);
 		$data->plantilla = str_replace('[VICTIMA_TELEFONO]', $data->victima[0]['TELEFONO'] ? $data->victima[0]['TELEFONO'] : '-', $data->plantilla);
 		$data->plantilla = str_replace('[VICTIMA_CORREO]', $data->victima[0]['CORREO'] ? $data->victima[0]['CORREO'] : '-', $data->plantilla);
 		$data->plantilla = str_replace('[VICTIMA_SEXO]', $data->victima[0]['SEXO'] ? ($data->victima[0]['SEXO'] == 'F' ? 'FEMENINO' : 'MASCULINO') : '-', $data->plantilla);
-		$data->plantilla = str_replace('[</span>VICTIMA_TELEFONO]', $data->victima[0]['TELEFONO'] ? $data->victima[0]['TELEFONO'] : '-', $data->plantilla);
-		$data->plantilla = str_replace('[PERSONA]', $data->imputado->NOMBRE . ' ' . ($data->imputado->PRIMERAPELLIDO ? $data->imputado->PRIMERAPELLIDO : '') . ' ' . ($data->imputado->SEGUNDOAPELLIDO ? $data->imputado->SEGUNDOAPELLIDO : ''), $data->plantilla);
 
 		$data->plantilla = str_replace('[IMPUTADO_NOMBRE]', $data->imputado->NOMBRE . ' ' . ($data->imputado->PRIMERAPELLIDO ? $data->imputado->PRIMERAPELLIDO : '') . ' ' . ($data->imputado->SEGUNDOAPELLIDO ? $data->imputado->SEGUNDOAPELLIDO : ''), $data->plantilla);
 		$data->plantilla = str_replace('[IMPUTADO_EDAD]', $data->imputado->EDADCANTIDAD ? $data->imputado->EDADCANTIDAD : '-', $data->plantilla);
@@ -6281,41 +6346,38 @@ class DashboardController extends BaseController
 		$data->plantilla = str_replace('[DETALLE_INTERVENCIONES]', $data->folio->HECHONARRACION ? $data->folio->HECHONARRACION : 'SIN NARRACIÓN', $data->plantilla);
 		$data->plantilla = str_replace('[HECHO_NARRACION]', $data->folio->HECHONARRACION ? $data->folio->HECHONARRACION : 'SIN NARRACIÓN', $data->plantilla);
 		$data->plantilla = str_replace('[ZONA_SEJAP]',  'CENTRO DE DENUNCIA TECNOLÓGICA', $data->plantilla);
-		$data->plantilla = str_replace('[VICTIMA_DOMICILIO]', 'en la calle: ' . $data->victimaDom->CALLE . ' en la colonia: ' . $data->victimaDom->COLONIADESCR, $data->plantilla);
-		$data->plantilla = str_replace('[VICTIMA_DOMICILIO_COMPLETO]', ($data->victimaDom->CALLE ? $data->victimaDom->CALLE : 'DESCONOCIDO') . ' EXT. ' . ($data->victimaDom->NUMEROCASA ? $data->victimaDom->NUMEROCASA : '') . ' INT. ' . ($data->victimaDom->NUMEROINTERIOR ? $data->victimaDom->NUMEROINTERIOR : '') . ' ' . $data->victimaDom->COLONIADESCR, $data->plantilla);
-		$data->plantilla = str_replace('[VICTIMA_TIPO_IDENTIFICACION]', isset($data->tipoIdentificacionVictima) == true ? $data->tipoIdentificacionVictima->PERSONATIPOIDENTIFICACIONDESCR : 'SIN TIPO DE IDENTIFICACIÓN', $data->plantilla);
-		$data->plantilla = str_replace('[VICTIMA_NUMERO_IDENTIFICACION]', $data->victima[0]['NUMEROIDENTIFICACION'] ? $data->victima[0]['NUMEROIDENTIFICACION'] : 'DESCONOCIDO', $data->plantilla);
+		$data->plantilla = str_replace('[VICTIMA_DOMICILIO]', 'en: ' . ($data->victimaDom->CALLE ? $data->victimaDom->CALLE : 'DESCONOCIDO') . ($data->victimaDom->NUMEROCASA ? ' Ext. ' . $data->victimaDom->NUMEROCASA : '') . ($data->victimaDom->NUMEROINTERIOR ? ' Int. ' . $data->victimaDom->NUMEROINTERIOR : '') . ($data->victimaDom->COLONIADESCR ? ' ' . $data->victimaDom->COLONIADESCR : '') . (isset($data->municipioVictima) == true ? ' ' . $data->municipioVictima->MUNICIPIODESCR : '') . (isset($data->estadoVictima) == true ? ' ' . $data->estadoVictima->ESTADODESCR : ''), $data->plantilla);
+		$data->plantilla = str_replace('[VICTIMA_DOMICILIO_COMPLETO]', ($data->victimaDom->CALLE ? $data->victimaDom->CALLE : 'DESCONOCIDO') . ($data->victimaDom->NUMEROCASA ? ' Ext. ' . $data->victimaDom->NUMEROCASA : '') . ($data->victimaDom->NUMEROINTERIOR ? ' Int. ' . $data->victimaDom->NUMEROINTERIOR : '') . ($data->victimaDom->COLONIADESCR ? ' ' . $data->victimaDom->COLONIADESCR : '') . (isset($data->municipioVictima) == true ? ' ' . $data->municipioVictima->MUNICIPIODESCR : '') . (isset($data->estadoVictima) == true ? ' ' . $data->estadoVictima->ESTADODESCR : ''), $data->plantilla);
+		$data->plantilla = str_replace('[VICTIMA_TIPO_IDENTIFICACION]', isset($data->tipoIdentificacionVictima) == true ? $data->tipoIdentificacionVictima->PERSONATIPOIDENTIFICACIONDESCR : 'DESCONOCIDO', $data->plantilla);
+		$data->plantilla = str_replace('[VICTIMA_NUMERO_IDENTIFICACION]', $data->victima[0]['NUMEROIDENTIFICACION'] ? $data->victima[0]['NUMEROIDENTIFICACION'] : '', $data->plantilla);
 		$data->plantilla = str_replace('[VICTIMA_TELEFONO_CELULAR]', $data->victima[0]['TELEFONO'] ? $data->victima[0]['TELEFONO'] : 'DESCONOCIDO', $data->plantilla);
-		$data->plantilla = str_replace('[VICTIMA_OCUPACION]', isset($data->ocupacionVictima) == true ? $data->ocupacionVictima->PERSONAOCUPACIONDESCR : 'DESCONOCIDA', $data->plantilla);
-		$data->plantilla = str_replace('[VICTIMA_NACIONALIDAD]', isset($data->nacionalidadVictima) == true ? $data->nacionalidadVictima->PERSONANACIONALIDADDESCR : 'DESCONOCIDA', $data->plantilla);
+		$data->plantilla = str_replace('[VICTIMA_OCUPACION]', isset($data->ocupacionVictima) == true ? $data->ocupacionVictima->PERSONAOCUPACIONDESCR : 'DESCONOCIDO', $data->plantilla);
+		$data->plantilla = str_replace('[VICTIMA_NACIONALIDAD]', isset($data->nacionalidadVictima) == true ? $data->nacionalidadVictima->PERSONANACIONALIDADDESCR : 'DESCONOCIDO', $data->plantilla);
 		$data->plantilla = str_replace('[VICTIMA_ESTADO_CIVIL]', isset($data->edoCivilVictima) == true ? $data->edoCivilVictima->PERSONAESTADOCIVILDESCR : 'DESCONOCIDO', $data->plantilla);
 		$data->plantilla = str_replace('[IMPUTADO_DOMICILIO_COMPLETO]', ($data->imputadoDom->CALLE ? $data->imputadoDom->CALLE : 'DESCONOCIDO') . ' EXT. ' . ($data->imputadoDom->NUMEROCASA ? $data->imputadoDom->NUMEROCASA : '') . ' INT. ' . ($data->imputadoDom->NUMEROINTERIOR ? $data->imputadoDom->NUMEROINTERIOR : '') . ' ' . $data->imputadoDom->COLONIADESCR . ($data->municipio_imp ? $data->municipio_imp->MUNICIPIODESCR : '') . ' ' . ($data->estado_imp ? $data->estado_imp->ESTADODESCR : ''), $data->plantilla);
 		$hecho_info = '<p><b>FOLIO:</b> ' . $data->folio->FOLIOID . '</p><p><b>AÑO:</b> ' . $data->folio->ANO . '</p><p><b>FECHA DEL HECHO:</b> ' . $data->folio->HECHOFECHA . '</p><p><b>HORA DEL HECHO:</b> ' . $data->folio->HECHOHORA . '</p><p><b>CALLE DEL HECHO:</b> ' . $data->folio->HECHOCALLE . ' EXT.' . $data->folio->HECHONUMEROCASA . ' INT.' . $data->folio->HECHONUMEROCASAINT . ' ' . $data->municipios->MUNICIPIODESCR . '</p><p><b>NARRACIÓN DEL HECHO:</b> ' . $data->folio->HECHONARRACION . '</p><p><b>NOTAS DEL AGENTE:</b> ' . $data->folio->NOTASAGENTE . '</p>';
 		$data->plantilla = str_replace('[INFORMACION_DEL_HECHO]', $hecho_info, $data->plantilla);
 
+		$data->plantilla = str_replace('[FOLIO_ATENCION]', $data->folio->FOLIOID . '/' . $data->folio->ANO, $data->plantilla);
+
 		if (($expediente == null || $expediente == '') && ($data->folio->STATUS == 'CANALIZADO' || $data->folio->STATUS == 'DERIVADO')) {
 
 			//CARTA DERIVACION
 			if ($data->derivacion && $data->folio->STATUS == 'DERIVADO') {
-				$data->plantilla = str_replace('[FOLIO_ATENCION]', $folio . '/' . $year, $data->plantilla);
-				$data->plantilla = str_replace('[DENUNCIANTE_NOMBRE]', $data->denunciantes->NOMBRE . ' ' . ($data->denunciantes->APELLIDO_PATERNO ? $data->denunciantes->APELLIDO_PATERNO : '') . ' ' . ($data->denunciantes->APELLIDO_MATERNO ? $data->denunciantes->APELLIDO_MATERNO : ''), $data->plantilla);
 				$data->plantilla = str_replace('[OFICINA_NOMBRE]', $data->derivacion->INSTITUCIONREMISIONDESCR, $data->plantilla);
 				$data->plantilla = str_replace('[OFICINA_DOMICILIO]', $data->derivacion->DOMICILIO, $data->plantilla);
 			} else if ($data->canalizacion && $data->folio->STATUS == 'CANALIZADO') {
-				$data->plantilla = str_replace('[FOLIO_ATENCION]', $folio . '/' . $year, $data->plantilla);
-				$data->plantilla = str_replace('[DENUNCIANTE_NOMBRE]', $data->denunciantes->NOMBRE . ' ' . ($data->denunciantes->APELLIDO_PATERNO ? $data->denunciantes->APELLIDO_PATERNO : '') . ' ' . ($data->denunciantes->APELLIDO_MATERNO ? $data->denunciantes->APELLIDO_MATERNO : ''), $data->plantilla);
 				$data->plantilla = str_replace('[OFICINA_NOMBRE]', $data->canalizacion->INSTITUCIONREMISIONDESCR, $data->plantilla);
 				$data->plantilla = str_replace('[OFICINA_DOMICILIO]', $data->canalizacion->DOMICILIO, $data->plantilla);
 			}
 
-			$data->plantilla = str_replace('[EXPEDIENTE_NUMERO]', $data->folio->FOLIOID, $data->plantilla);
+			$data->plantilla = str_replace('[EXPEDIENTE_NUMERO]', $data->folio->FOLIOID . '/' . $data->folio->ANO, $data->plantilla);
 			$data->plantilla = str_replace('[TIPO_EXPEDIENTE]',  $data->folio->STATUS == "DERIVADO" ? "DERIVACIÓN" : "CANALIZACIÓN", $data->plantilla);
 			return json_encode(['status' => 1, 'plantilla' => $data->plantilla]);
 		} else {
 			$data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->where('TIPOEXPEDIENTEID',  $data->folio->TIPOEXPEDIENTEID)->first();
 			$arrayExpediente = str_split($data->folio->EXPEDIENTEID);
-			$expedienteid =  $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
-
+			$expedienteid =  $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14] . '/' . ($data->tipoExpediente->TIPOEXPEDIENTECLAVE ? $data->tipoExpediente->TIPOEXPEDIENTECLAVE : '-');;
 
 			//VICTIMA RASGOS
 			$data->mediaFiliacionVictima = $this->_folioMediaFiliacion->asObject()->where('FOLIOID', $folio)->where('PERSONAFISICAID', $victima)->first();
@@ -6371,22 +6433,12 @@ class DashboardController extends BaseController
 
 			$data->plantilla = str_replace('[EXPEDIENTE_NUMERO]', $expedienteid, $data->plantilla);
 
-			$data->plantilla = str_replace('[DOCUMENTO_MUNICIPIO]', $data->municipios->MUNICIPIODESCR, $data->plantilla);
 			$data->plantilla = str_replace('[DOCUMENTO_CIUDAD]', $data->municipios->MUNICIPIODESCR, $data->plantilla);
-			$data->plantilla = str_replace('DOCUMENTO_MUNICIPIO', $data->municipios->MUNICIPIODESCR, $data->plantilla);
-			$data->plantilla = str_replace('[VICTIMA]', $data->victima[0]['NOMBRE'] . ' ' . ($data->victima[0]['PRIMERAPELLIDO'] ? $data->victima[0]['PRIMERAPELLIDO'] : '') . ' ' . ($data->victima[0]['SEGUNDOAPELLIDO'] ? $data->victima[0]['SEGUNDOAPELLIDO'] : ''), $data->plantilla);
 			$data->plantilla = str_replace('[VICTIMA_NOMBRE]', $data->victima[0]['NOMBRE'] . ' ' . ($data->victima[0]['PRIMERAPELLIDO'] ? $data->victima[0]['PRIMERAPELLIDO'] : '') . ' ' . ($data->victima[0]['SEGUNDOAPELLIDO'] ? $data->victima[0]['SEGUNDOAPELLIDO'] : ''), $data->plantilla);
-			$data->plantilla = str_replace('[</span>VICTIMA_NOMBRE]', $data->victima[0]['NOMBRE'] . ' ' . ($data->victima[0]['PRIMERAPELLIDO'] ? $data->victima[0]['PRIMERAPELLIDO'] : '') . ' ' . ($data->victima[0]['SEGUNDOAPELLIDO'] ? $data->victima[0]['SEGUNDOAPELLIDO'] : ''), $data->plantilla);
-			$data->plantilla = str_replace('(VICTIMA Y/U OFENDIDO)', $data->victima[0]['NOMBRE'] . ' ' . ($data->victima[0]['PRIMERAPELLIDO'] ? $data->victima[0]['PRIMERAPELLIDO'] : '') . ' ' . ($data->victima[0]['SEGUNDOAPELLIDO'] ? $data->victima[0]['SEGUNDOAPELLIDO'] : ''), $data->plantilla);
-			$data->plantilla = str_replace('(REDACTAR_HECHO)', $data->folio->HECHONARRACION ? $data->folio->HECHONARRACION : 'SIN NARRACIÓN', $data->plantilla);
-
-			$data->plantilla = str_replace('[VICTIMAS_NOMBRE]', $data->victima[0]['NOMBRE'] . ' ' . ($data->victima[0]['PRIMERAPELLIDO'] ? $data->victima[0]['PRIMERAPELLIDO'] : '') . ' ' . ($data->victima[0]['SEGUNDOAPELLIDO'] ? $data->victima[0]['SEGUNDOAPELLIDO'] : ''), $data->plantilla);
 			$data->plantilla = str_replace('[VICTIMA_EDAD]', $data->victima[0]['EDADCANTIDAD'] ? $data->victima[0]['EDADCANTIDAD'] : '-', $data->plantilla);
 			$data->plantilla = str_replace('[VICTIMA_TELEFONO]', $data->victima[0]['TELEFONO'] ? $data->victima[0]['TELEFONO'] : '-', $data->plantilla);
 			$data->plantilla = str_replace('[VICTIMA_CORREO]', $data->victima[0]['CORREO'] ? $data->victima[0]['CORREO'] : '-', $data->plantilla);
 			$data->plantilla = str_replace('[VICTIMA_SEXO]', $data->victima[0]['SEXO'] ? ($data->victima[0]['SEXO'] == 'F' ? 'FEMENINO' : 'MASCULINO') : '-', $data->plantilla);
-			$data->plantilla = str_replace('[</span>VICTIMA_TELEFONO]', $data->victima[0]['TELEFONO'] ? $data->victima[0]['TELEFONO'] : '-', $data->plantilla);
-			$data->plantilla = str_replace('[PERSONA]', $data->imputado->NOMBRE . ' ' . ($data->imputado->PRIMERAPELLIDO ? $data->imputado->PRIMERAPELLIDO : '') . ' ' . ($data->imputado->SEGUNDOAPELLIDO ? $data->imputado->SEGUNDOAPELLIDO : ''), $data->plantilla);
 			$data->plantilla = str_replace('[IMPUTADO_NOMBRE]', $data->imputado->NOMBRE . ' ' . ($data->imputado->PRIMERAPELLIDO ? $data->imputado->PRIMERAPELLIDO : '') . ' ' . ($data->imputado->SEGUNDOAPELLIDO ? $data->imputado->SEGUNDOAPELLIDO : ''), $data->plantilla);
 			$data->plantilla = str_replace('[IMPUTADO_EDAD]', $data->imputado->EDADCANTIDAD ? $data->imputado->EDADCANTIDAD : '-', $data->plantilla);
 			$data->plantilla = str_replace('[DIA]', date('d'), $data->plantilla);
@@ -6412,30 +6464,43 @@ class DashboardController extends BaseController
 			$data->plantilla = str_replace('[HECHO_NARRACION]', $data->folio->HECHONARRACION ? $data->folio->HECHONARRACION : 'SIN NARRACIÓN', $data->plantilla);
 			$data->plantilla = str_replace('[TIPO_EXPEDIENTE]',  $data->tipoExpediente->TIPOEXPEDIENTECLAVE, $data->plantilla);
 			$data->plantilla = str_replace('[ZONA_SEJAP]',  'CENTRO DE DENUNCIA TECNOLÓGICA', $data->plantilla);
-			$data->plantilla = str_replace('[VICTIMA_DOMICILIO]', 'en la calle: ' . $data->victimaDom->CALLE . ' en la colonia: ' . $data->victimaDom->COLONIADESCR, $data->plantilla);
-			$data->plantilla = str_replace('[VICTIMA_DOMICILIO_COMPLETO]', ($data->victimaDom->CALLE ? $data->victimaDom->CALLE : 'DESCONOCIDO') . ' EXT. ' . ($data->victimaDom->NUMEROCASA ? $data->victimaDom->NUMEROCASA : '') . ' INT. ' . ($data->victimaDom->NUMEROINTERIOR ? $data->victimaDom->NUMEROINTERIOR : '') . ' ' . $data->victimaDom->COLONIADESCR, $data->plantilla);
-			$data->plantilla = str_replace('[VICTIMA_TIPO_IDENTIFICACION]', isset($data->tipoIdentificacionVictima) == true ? $data->tipoIdentificacionVictima->PERSONATIPOIDENTIFICACIONDESCR : 'SIN TIPO DE IDENTIFICACIÓN', $data->plantilla);
-			$data->plantilla = str_replace('[VICTIMA_NUMERO_IDENTIFICACION]', $data->victima[0]['NUMEROIDENTIFICACION'] ? $data->victima[0]['NUMEROIDENTIFICACION'] : 'SIN NÚMERO DE IDENTIFICACIÓN', $data->plantilla);
-			$data->plantilla = str_replace('[VICTIMA_TELEFONO_CELULAR]', $data->victima[0]['TELEFONO'] ? $data->victima[0]['TELEFONO'] : 'SIN TELEFONO REGISTRADO', $data->plantilla);
-			$data->plantilla = str_replace('[VICTIMA_OCUPACION]', isset($data->ocupacionVictima) == true ? $data->ocupacionVictima->PERSONAOCUPACIONDESCR : 'SIN OCUPACIÓN REGISTRADA', $data->plantilla);
-			$data->plantilla = str_replace('[VICTIMA_NACIONALIDAD]', isset($data->nacionalidadVictima) == true ? $data->nacionalidadVictima->PERSONANACIONALIDADDESCR : 'SIN NACIONALIDAD REGISTRADA', $data->plantilla);
-			$data->plantilla = str_replace('[VICTIMA_ESTADO_CIVIL]', isset($data->edoCivilVictima) == true ? $data->edoCivilVictima->PERSONAESTADOCIVILDESCR : 'SIN ESTADO CIVIL', $data->plantilla);
+			$data->plantilla = str_replace('[VICTIMA_DOMICILIO]', 'en: ' . ($data->victimaDom->CALLE ? $data->victimaDom->CALLE : 'DESCONOCIDO') . ($data->victimaDom->NUMEROCASA ? ' Ext. ' . $data->victimaDom->NUMEROCASA : '') . ($data->victimaDom->NUMEROINTERIOR ? ' Int. ' . $data->victimaDom->NUMEROINTERIOR : '') . ($data->victimaDom->COLONIADESCR ? ' ' . $data->victimaDom->COLONIADESCR : '') . (isset($data->municipioVictima) == true ? ' ' . $data->municipioVictima->MUNICIPIODESCR : '') . (isset($data->estadoVictima) == true ? ' ' . $data->estadoVictima->ESTADODESCR : ''), $data->plantilla);
+			$data->plantilla = str_replace('[VICTIMA_DOMICILIO_COMPLETO]', ($data->victimaDom->CALLE ? $data->victimaDom->CALLE : 'DESCONOCIDO') . ($data->victimaDom->NUMEROCASA ? ' Ext. ' . $data->victimaDom->NUMEROCASA : '') . ($data->victimaDom->NUMEROINTERIOR ? ' Int. ' . $data->victimaDom->NUMEROINTERIOR : '') . ($data->victimaDom->COLONIADESCR ? ' ' . $data->victimaDom->COLONIADESCR : '') . (isset($data->municipioVictima) == true ? ' ' . $data->municipioVictima->MUNICIPIODESCR : '') . (isset($data->estadoVictima) == true ? ' ' . $data->estadoVictima->ESTADODESCR : ''), $data->plantilla);
+			$data->plantilla = str_replace('[VICTIMA_TIPO_IDENTIFICACION]', isset($data->tipoIdentificacionVictima) == true ? $data->tipoIdentificacionVictima->PERSONATIPOIDENTIFICACIONDESCR : 'DESCONOCIDO', $data->plantilla);
+			$data->plantilla = str_replace('[VICTIMA_NUMERO_IDENTIFICACION]', $data->victima[0]['NUMEROIDENTIFICACION'] ? $data->victima[0]['NUMEROIDENTIFICACION'] : '', $data->plantilla);
+			$data->plantilla = str_replace('[VICTIMA_TELEFONO_CELULAR]', $data->victima[0]['TELEFONO'] ? $data->victima[0]['TELEFONO'] : 'DESCONOCIDO', $data->plantilla);
+			$data->plantilla = str_replace('[VICTIMA_OCUPACION]', isset($data->ocupacionVictima) == true ? $data->ocupacionVictima->PERSONAOCUPACIONDESCR : 'DESCONOCIDO', $data->plantilla);
+			$data->plantilla = str_replace('[VICTIMA_NACIONALIDAD]', isset($data->nacionalidadVictima) == true ? $data->nacionalidadVictima->PERSONANACIONALIDADDESCR : 'DESCONOCIDO', $data->plantilla);
+			$data->plantilla = str_replace('[VICTIMA_ESTADO_CIVIL]', isset($data->edoCivilVictima) == true ? $data->edoCivilVictima->PERSONAESTADOCIVILDESCR : 'DESCONOCIDO', $data->plantilla);
 
 			switch ($data->folio->MUNICIPIOASIGNADOID) {
 				case '1':
-					$data->plantilla = str_replace('[DIRECCION_NOMBRE]', 'DIRECTOR DE SEGURIDAD PÚBLICA MUNICIPAL', $data->plantilla);
+					$data->plantilla = str_replace('[DIRECCION_NOMBRE]', 'C. DAVID ARMANDO SÁNCHEZ GONZÁLEZ,<br>MAYOR DE INFANTERÍA DIRECTOR DE SEGURIDAD PÚBLICO MUNICIPAL', $data->plantilla);
+					$data->plantilla = str_replace('[REMISION_DOMICILIO]', 'Av Manuel Ávila Camacho S/N, Praderas del Ciprés Edificio A Planta Baja.<br>Tel: 646-152-2728 - 646-152-2793', $data->plantilla);
 					break;
 				case '2':
 					$data->plantilla = str_replace('[DIRECCION_NOMBRE]', 'DIRECCIÓN DE SEGURIDAD PÚBLICA MUNICIPAL', $data->plantilla);
+					$data->plantilla = str_replace('[REMISION_DOMICILIO]', 'Av. Obregón 541 Centro de la Ciudad, Cp 21000, Mexicali Baja California.<br>(Atrás del centro comercial ABSA)<br>Tel: 686 104 1603 - 686 596 4701.', $data->plantilla);
 					break;
 				case '3':
 					$data->plantilla = str_replace('[DIRECCION_NOMBRE]', 'DIRECCIÓN DE SEGURIDAD CIUDADANA Y TRÁNSITO MUNICIPAL', $data->plantilla);
+					$data->plantilla = str_replace('[REMISION_DOMICILIO]', 'Carretera Tecate-Tijuana km 1.5 colonia Paso del Águila, Tecate, B.C.<br>(Edificio de Fiscalía Regional)', $data->plantilla);
 					break;
 				case '4':
 					$data->plantilla = str_replace('[DIRECCION_NOMBRE]', 'SECRETARIO DE SEGURIDAD Y PROTECCIÓN CIUDADANA MUNICIPAL', $data->plantilla);
+					$data->plantilla = str_replace('[REMISION_DOMICILIO]', 'Avenida Mutua Martínez s/n Campestre Murua, Tijuana, B. C.', $data->plantilla);
 					break;
 				case '5':
 					$data->plantilla = str_replace('[DIRECCION_NOMBRE]', 'SECRETARÍA DE SEGURIDAD Y PROTECCIÓN CIUDADANA', $data->plantilla);
+					$data->plantilla = str_replace('[REMISION_DOMICILIO]', 'Jose Haroz Aguilar, parcela 39, Fracc. Villa Turistica, CP 22710 Playas de Rosarito', $data->plantilla);
+					break;
+				case '6':
+					$data->plantilla = str_replace('[DIRECCION_NOMBRE]', 'LICENCIADO MARIO MARTÍNEZ MARTÍNEZ,<br>DIRECTOR DE SEGURIDAD PUBLICA MUNICIPAL SAN QUINTÍN', $data->plantilla);
+					$data->plantilla = str_replace('[REMISION_DOMICILIO]', 'Av. Obregón 541 Centro de la Ciudad, Cp 21000, Mexicali Baja California.<br>(Atrás del centro comercial ABSA)<br>Tel: 686 104 1603 - 686 596 4701.', $data->plantilla);
+					break;
+				case '7':
+					$data->plantilla = str_replace('[DIRECCION_NOMBRE]', 'DIRECTOR DE SEGURIDAD PÚBLICA SAN FELIPE', $data->plantilla);
+					$data->plantilla = str_replace('[REMISION_DOMICILIO]', 'Av Manuel Ávila Camacho S/N, Praderas del Ciprés Edificio A Planta Baja.<br>Tel: 646-152-2728 - 646-152-2793', $data->plantilla);
 					break;
 				default:
 					$data->plantilla = str_replace('[DIRECCION_NOMBRE]', 'SEGURIDAD PUBLICA MUNICIPAL', $data->plantilla);

@@ -13,7 +13,7 @@
 		<input type="text" class="form-control" id="apellido_materno_menor" name="apellido_materno_menor" maxlength="50">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="fecha_nacimiento_menor" class="form-label fw-bold input-required">Fecha de nacimiento</label>
+		<label for="fecha_nacimiento_menor" class="form-label fw-bold">Fecha de nacimiento</label>
 		<input type="date" class="form-control" id="fecha_nacimiento_menor" name="fecha_nacimiento_menor" min="<?= ((int)date("Y")) - 18 . '-' . date("m") . '-' . date("d") ?>" max="<?= date("Y-m-d") ?>">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3" hidden>
@@ -39,7 +39,7 @@
 		<h5 class="text-center mb-3 fw-bold">DATOS DE ORIGEN DEL MENOR</h5>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="nacionalidad_menor" class="form-label fw-bold input-required">Nacionalidad</label>
+		<label for="nacionalidad_menor" class="form-label fw-bold ">Nacionalidad</label>
 		<select class="form-select" id="nacionalidad_menor" name="nacionalidad_menor">
 			<option selected disabled value="">Selecciona la nacionalidad</option>
 			<?php foreach ($body_data->nacionalidades as $index => $nac) { ?>
@@ -52,7 +52,7 @@
 	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="estado_origen_menor" class="form-label fw-bold input-required">Estado origen</label>
+		<label for="estado_origen_menor" class="form-label fw-bold ">Estado origen</label>
 		<select class="form-select" id="estado_origen_menor" name="estado_origen_menor">
 			<option selected disabled value="">Selecciona el estado</option>
 			<?php foreach ($body_data->estados as $index => $estado) { ?>
@@ -65,7 +65,7 @@
 	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="municipio" class="form-label fw-bold input-required">Municipio origen</label>
+		<label for="municipio" class="form-label fw-bold ">Municipio origen</label>
 		<select class="form-select" id="municipio_origen_menor" name="municipio_origen_menor">
 			<option selected disabled value="">Selecciona el municipio</option>
 		</select>
@@ -80,7 +80,7 @@
 		<h5 class="text-center mb-3 fw-bold">DOMICILIO ACTUAL DEL MENOR</h5>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="pais_menor" class="form-label fw-bold input-required">País</label>
+		<label for="pais_menor" class="form-label fw-bold ">País</label>
 		<select class="form-select" id="pais_menor" name="pais_menor">
 			<?php foreach ($body_data->paises as $index => $pais) { ?>
 				<option value="<?= $pais->ISO_2 ?>" <?= $pais->ISO_2 == 'MX' ? 'selected' : '' ?>> <?= mb_strtoupper($pais->NAME, 'UTF-8') ?> </option>
@@ -88,7 +88,7 @@
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="estado_menor" class="form-label fw-bold input-required">Estado</label>
+		<label for="estado_menor" class="form-label fw-bold ">Estado</label>
 		<select class="form-select" id="estado_menor" name="estado_menor">
 			<option selected disabled value="">Selecciona el estado</option>
 			<?php foreach ($body_data->estados as $index => $estado) { ?>
@@ -97,19 +97,19 @@
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="municipio_menor" class="form-label fw-bold input-required">Municipio</label>
+		<label for="municipio_menor" class="form-label fw-bold ">Municipio</label>
 		<select class="form-select" id="municipio_menor" name="municipio_menor">
 			<option selected disabled value="">Selecciona el municipio</option>
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="localidad_menor" class="form-label fw-bold input-required">Localidad</label>
+		<label for="localidad_menor" class="form-label fw-bold ">Localidad</label>
 		<select class="form-select" id="localidad_menor" name="localidad_menor">
 			<option selected disabled value="">Selecciona la localidad</option>
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="colonia_menor_input" class="form-label fw-bold input-required">Colonia</label>
+		<label for="colonia_menor_input" class="form-label fw-bold ">Colonia</label>
 		<select class="form-select" id="colonia_menor" name="colonia_menor">
 			<option selected disabled value="">Selecciona la colonia</option>
 		</select>
@@ -121,11 +121,11 @@
 		<input type="number" class="form-control" id="cp_menor" name="cp_menor" maxlength="10">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="calle_menor" class="form-label fw-bold input-required">Calle</label>
+		<label for="calle_menor" class="form-label fw-bold ">Calle</label>
 		<input type="text" class="form-control" id="calle_menor" name="calle_menor" maxlength="100">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="numero_ext_menor" class="form-label fw-bold input-required" id="lblExterior_menor">Número exterior</label>
+		<label for="numero_ext_menor" class="form-label fw-bold " id="lblExterior_menor">Número exterior</label>
 		<input type="text" class="form-control" id="numero_ext_menor" name="numero_ext_menor" maxlength="10">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">

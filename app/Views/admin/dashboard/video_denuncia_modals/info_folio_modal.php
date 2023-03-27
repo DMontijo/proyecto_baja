@@ -111,6 +111,9 @@
 								</div>
 							</div>
 							<div class="tab-pane fade" id="v-pills-vehiculos" role="tabpanel" aria-labelledby="v-pills-vehiculos-tab">
+							<div class="col-12 mb-2 p-0 text-right">
+									<button type="button" id="insertVehiculoModal" name="insertVehiculoModal" class="btn btn-primary font-weight-bold"><i class="fas fa-plus mr-3"></i>AGREGAR VEHÍCULO</button>
+								</div>
 								<div class="table-responsive">
 									<table id="table-vehiculos" class="table table-bordered table-hover table-striped table-light">
 										<tr>
@@ -131,7 +134,7 @@
 										</div>
 									</div>
 								</div>
-									<button type="button" id="refrescarArchivos" name="refrescarArchivos" class="btn btn-primary font-weight-bold"><i class="fas fa-arrows-rotate mr-3"></i> ACTUALIZAR ARCHIVOS</button>
+									<button type="button" id="refrescarArchivos" name="refrescarArchivos" class="btn btn-primary font-weight-bold">ACTUALIZAR ARCHIVOS</button>
 								</div>
 								<div class="table-responsive">
 									<table id="table-archivos" class="table table-bordered table-hover table-striped table-light">

@@ -214,6 +214,12 @@ class FOLIO extends Migration
                 'constraint' => '1',
                 'default' => 'N',
             ],
+            'NOTIFICACIONES' => [
+				'type' => 'CHAR',
+				'constraint' => '1',
+				'default' => 'S',
+				'null' => TRUE
+			],
             'FECHASALIDA' => [
                 'type' => 'DATETIME',
                 'null' => true,

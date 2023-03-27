@@ -993,6 +993,7 @@ class FirmaController extends BaseController
 		$folio = $this->request->getPost('folio');
 		$expediente = $this->request->getPost('expediente_modal_correo');
 		$folio_doc = $this->request->getPost('folio_doc');
+		$meses = array("ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE");
 
 		if ($to && $year && $folio) {
 			if ($expediente != "undefined" && $expediente != '') {
@@ -1018,6 +1019,8 @@ class FirmaController extends BaseController
 			$agente = $this->_usuariosModel->asObject()->where('ID', session('ID'))->first();
 
 			$folio = $folioM->FOLIOID;
+			$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $folioM->MUNICIPIOASIGNADOID)->where('ESTADOID', 2)->first();
+			$fecha_actual = date('d') . ' DE ' . $meses[date('n') - 1] . " DEL " . date('Y');
 			$agente = trim($agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' .  $agente->APELLIDO_MATERNO);
 			$imputado = trim($imputado->NOMBRE . ' ' . $imputado->PRIMERAPELLIDO . ' ' .  $imputado->SEGUNDOAPELLIDO);
 
@@ -1028,7 +1031,7 @@ class FirmaController extends BaseController
 			$email = \Config\Services::email();
 			$email->setTo($to);
 			$email->setSubject('Documentos firmados - ' . $folio . '/' . $folioM->ANO);
-			$body = view('email_template/documentos_firmados_email_template.php', ['agente' => $agente, 'expediente' => $folioM->EXPEDIENTEID ? $expediente : 'SIN EXPEDIENTE', 'folio' => $folio, 'year' => $folioM->ANO, 'tipoexpediente' => $folioM->TIPOEXPEDIENTEID ? ($tipoExpediente  == "" ? $tipoExpediente : $tipoExpediente->TIPOEXPEDIENTEDESCR) : $folioM->STATUS, 'status' => $folioM->STATUS, 'delito' => $delito, 'imputado' => $imputado, 'claveexpediente'=>$folioM->TIPOEXPEDIENTEID ? ($tipoExpediente  == "" ? $tipoExpediente : $tipoExpediente->TIPOEXPEDIENTECLAVE) : '']);
+			$body = view('email_template/documentos_firmados_email_template.php', ['municipio' => $municipio, 'fecha' => $fecha_actual, 'agente' => $agente, 'expediente' => $folioM->EXPEDIENTEID ? $expediente : 'SIN EXPEDIENTE', 'folio' => $folio, 'year' => $folioM->ANO, 'tipoexpediente' => $folioM->TIPOEXPEDIENTEID ? ($tipoExpediente  == "" ? $tipoExpediente : $tipoExpediente->TIPOEXPEDIENTEDESCR) : $folioM->STATUS, 'status' => $folioM->STATUS, 'delito' => $delito, 'imputado' => $imputado, 'claveexpediente' => $folioM->TIPOEXPEDIENTEID ? ($tipoExpediente  == "" ? $tipoExpediente : $tipoExpediente->TIPOEXPEDIENTECLAVE) : '']);
 			$email->setMessage($body);
 
 
@@ -1039,7 +1042,7 @@ class FirmaController extends BaseController
 				$pdf = $documento->PDF;
 				$xml = $documento->XML;
 				$email->attach($pdf, 'attachment',  $documento->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento->FOLIODOCID . '.pdf', 'application/pdf');
-				$email->attach($xml, 'attachment', $documento->TIPODOC . '_' . $expediente. '_' . $year . '_' . $documento->FOLIODOCID . '.xml', 'application/xml');
+				$email->attach($xml, 'attachment', $documento->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento->FOLIODOCID . '.xml', 'application/xml');
 			}
 			$email->attach($termino_condiciones, 'attachment', 'Terminos_Y_Condiciones.pdf', 'application/pdf');
 			$email->attach($aviso_privacidad, 'attachment', 'Aviso_De_Privacidad.pdf', 'application/pdf');
@@ -1049,8 +1052,8 @@ class FirmaController extends BaseController
 				$datosUpdate = [
 					'ENVIADO' => 'S',
 				];
-					$update = $this->_folioDocModel->set($datosUpdate)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento->FOLIODOCID)->update();
-				
+				$update = $this->_folioDocModel->set($datosUpdate)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento->FOLIODOCID)->update();
+
 				return json_encode((object)['status' => 1]);
 			} else {
 				return json_encode((object)['status' => 0]);
@@ -1069,6 +1072,7 @@ class FirmaController extends BaseController
 		$expediente = $this->request->getPost('expediente_modal_correo');
 		$year = $this->request->getPost('year_modal_correo');
 		$folio = $this->request->getPost('folio');
+		$meses = array("ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE");
 
 		if ($to && $year && $folio) {
 			if ($expediente != "undefined" && $expediente != '') {
@@ -1092,6 +1096,8 @@ class FirmaController extends BaseController
 			$agente = $this->_usuariosModel->asObject()->where('ID', session('ID'))->first();
 
 			$folio = $folioM->FOLIOID;
+			$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $folioM->MUNICIPIOASIGNADOID)->where('ESTADOID', 2)->first();
+			$fecha_actual = date('d') . ' DE ' . $meses[date('n') - 1] . " DEL " . date('Y');
 			$agente = trim($agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' .  $agente->APELLIDO_MATERNO);
 			$imputado = trim($imputado->NOMBRE . ' ' . $imputado->PRIMERAPELLIDO . ' ' .  $imputado->SEGUNDOAPELLIDO);
 
@@ -1102,7 +1108,7 @@ class FirmaController extends BaseController
 			$email = \Config\Services::email();
 			$email->setTo($to);
 			$email->setSubject('Documentos firmados - ' . $folio . '/' . $folioM->ANO);
-			$body = view('email_template/documentos_firmados_email_template.php', ['agente' => $agente, 'expediente' => $folioM->EXPEDIENTEID ? $expediente : 'SIN EXPEDIENTE', 'folio' => $folio, 'year' => $folioM->ANO, 'tipoexpediente' => $folioM->TIPOEXPEDIENTEID ? ($tipoExpediente  == "" ? $tipoExpediente : $tipoExpediente->TIPOEXPEDIENTEDESCR) : $folioM->STATUS, 'status' => $folioM->STATUS, 'delito' => $delito, 'imputado' => $imputado,'claveexpediente'=>$folioM->TIPOEXPEDIENTEID ? ($tipoExpediente  == "" ? $tipoExpediente : $tipoExpediente->TIPOEXPEDIENTECLAVE) : '']);
+			$body = view('email_template/documentos_firmados_email_template.php', ['municipio' => $municipio, 'fecha' => $fecha_actual, 'agente' => $agente, 'expediente' => $folioM->EXPEDIENTEID ? $expediente : 'SIN EXPEDIENTE', 'folio' => $folio, 'year' => $folioM->ANO, 'tipoexpediente' => $folioM->TIPOEXPEDIENTEID ? ($tipoExpediente  == "" ? $tipoExpediente : $tipoExpediente->TIPOEXPEDIENTEDESCR) : $folioM->STATUS, 'status' => $folioM->STATUS, 'delito' => $delito, 'imputado' => $imputado, 'claveexpediente' => $folioM->TIPOEXPEDIENTEID ? ($tipoExpediente  == "" ? $tipoExpediente : $tipoExpediente->TIPOEXPEDIENTECLAVE) : '']);
 			$email->setMessage($body);
 
 			for ($i = 0; $i < count($documento); $i++) {
@@ -1128,10 +1134,9 @@ class FirmaController extends BaseController
 				for ($i = 0; $i < count($documento); $i++) {
 					if ($expediente != "undefined" && $expediente != '') {
 
-					$update = $this->_folioDocModel->set($datosUpdate)->where('NUMEROEXPEDIENTE', $expediente)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
-					}else{
+						$update = $this->_folioDocModel->set($datosUpdate)->where('NUMEROEXPEDIENTE', $expediente)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
+					} else {
 						$update = $this->_folioDocModel->set($datosUpdate)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
-
 					}
 				}
 				return json_encode((object)['status' => 1]);

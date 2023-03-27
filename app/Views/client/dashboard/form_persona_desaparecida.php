@@ -14,7 +14,7 @@
 		<input type="text" class="form-control" id="apellido_materno_des" name="apellido_materno_des" maxlength="50">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="fecha_nacimiento_des" class="form-label fw-bold input-required">Fecha de nacimiento</label>
+		<label for="fecha_nacimiento_des" class="form-label fw-bold">Fecha de nacimiento</label>
 		<input type="date" class="form-control" id="fecha_nacimiento_des" name="fecha_nacimiento_des" max="<?= date("Y-m-d") ?>">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -171,7 +171,9 @@
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="señas_des" class="form-label fw-bold ">Señas particulares</label>
+		<label for="señas_des" class="form-label fw-bold ">Señas particulares
+			<a href="#!" data-bs-toggle="tooltip" data-toggle="tooltip" data-bs-placement="right" title="Cicatrices, lunares, tatuajes, etc."><i class="bi bi-info-circle-fill"></i></a>
+		</label>
 		<textarea class="form-control" id="señas_des" name="señas_des" maxlength="200"></textarea>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -184,7 +186,7 @@
 			<?php } ?>
 		</select>
 	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+	<!-- <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="tam_cabello_des" class="form-label fw-bold ">Tamaño de cabello</label>
 		<select class="form-select" id="tam_cabello_des" name="tam_cabello_des">
 			<option selected disabled value="">Elige el tamaño del cabello</option>
@@ -193,7 +195,7 @@
 				<option value="<?= $cabelloTamano->CABELLOTAMANOID ?>"> <?= $cabelloTamano->CABELLOTAMANODESCR ?></option>
 			<?php } ?>
 		</select>
-	</div>
+	</div> -->
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="form_cabello_des" class="form-label fw-bold ">Forma de cabello</label>
 		<select class="form-select" id="form_cabello_des" name="form_cabello_des">
@@ -266,7 +268,7 @@
 		</select>
 	</div>
 
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+	<!-- <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="escolaridad_des" class="form-label fw-bold">Escolaridad</label>
 		<select class="form-select" id="escolaridad_des" name="escolaridad_des">
 			<option selected disabled value="">Selecciona la escolaridad</option>
@@ -277,7 +279,7 @@
 		<div class="invalid-feedback">
 			La escolaridad es obligatoria
 		</div>
-	</div>
+	</div> -->
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="ocupacion_des" class="form-label fw-bold">Ocupación</label>
@@ -293,7 +295,9 @@
 	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="foto_des" class="form-label fw-bold ">Fotografía:</label>
+		<label for="foto_des" class="form-label fw-bold ">Fotografía:
+			<a href="#!" data-bs-toggle="tooltip" data-toggle="tooltip" data-bs-placement="right" title="Verificar que sea una fotografía actual"><i class="bi bi-info-circle-fill"></i></a>
+		</label>
 		<input type="file" class="form-control" id="foto_des" name="foto_des">
 	</div>
 	<div class="col-12">

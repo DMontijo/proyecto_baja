@@ -42,6 +42,7 @@ use App\Models\VehiculoTipoModel;
 use App\Models\VehiculoVersionModel;
 use App\Models\FolioArchivoExternoModel;
 use App\Models\TipoExpedienteModel;
+use App\Models\ConexionesDBModel;
 
 class DashboardController extends BaseController
 {
@@ -84,7 +85,12 @@ class DashboardController extends BaseController
 	private $_estadosExtranjeros;
 	private $_archivoExternoModel;
 	private $_tipoExpedienteModel;
+
 	private $urlApi;
+	private $_conexionesDBModel;
+	private $protocol;
+	private $ip;
+	private $endpoint;
 
 	public function __construct()
 	{
@@ -132,6 +138,14 @@ class DashboardController extends BaseController
 		$this->_archivoExternoModel = new FolioArchivoExternoModel();
 		$this->_tipoExpedienteModel = new TipoExpedienteModel();
 		$this->urlApi = "https://a396-2806-2f0-51c0-606f-c0b2-4d9e-e2c9-70e7.ngrok.io/guests/";
+		$this->_conexionesDBModel = new ConexionesDBModel();
+
+		// $this->protocol = 'http://';
+		// $this->ip = "10.144.244.223";
+		// $this->endpoint = $this->protocol . $this->ip . '/webServiceVD';
+		$this->protocol = 'https://';
+		$this->ip = "ws.fgebc.gob.mx";
+		$this->endpoint = $this->protocol . $this->ip . '/webServiceVD';
 	}
 
 	public function index()
@@ -168,7 +182,7 @@ class DashboardController extends BaseController
 		// $data->lugares  = [];
 		// $data->lugares =  (object) array_merge($lugares_peticion, $lugares_sin, $lugares_blanca, $lugares_fuego);
 		$lugares_merge = [];
-		$lugares_merge =  array_merge($lugares_peticion, $lugares_sin);
+		$lugares_merge =  array_merge($lugares_peticion, $lugares_sin, $lugares_blanca, $lugares_fuego);
 		$data->lugares = (object)array_unique($lugares_merge, SORT_REGULAR);
 		$data->colorVehiculo = $this->_coloresVehiculoModel->asObject()->findAll();
 		$data->tipoVehiculo = $this->_tipoVehiculoModel->asObject()->orderBy('VEHICULOTIPODESCR', 'ASC')->findAll();
@@ -206,7 +220,7 @@ class DashboardController extends BaseController
 			'sexo' => $this->request->getGet('sexo'),
 			'prioridad' => $this->request->getGet('prioridad'),
 			'sexo_denunciante' => $this->request->getGet('sexo_denunciante') == 'F' ? 'FEMENINO' : 'MASCULINO',
-			'UUID'=> $denunciante->UUID
+			'UUID' => $denunciante->UUID
 		];
 		$array = explode("-", $data->folio);
 
@@ -294,12 +308,25 @@ class DashboardController extends BaseController
 		$session = session();
 		$data = (object) array();
 		$data->folios = $this->_folioModel->asObject()->join('TIPOEXPEDIENTE', 'FOLIO.TIPOEXPEDIENTEID = TIPOEXPEDIENTE.TIPOEXPEDIENTEID', 'LEFT')->join('MUNICIPIO', 'FOLIO.MUNICIPIOASIGNADOID = MUNICIPIO.MUNICIPIOID AND MUNICIPIO.ESTADOID = 2', 'LEFT')->join('EMPLEADOS', 'FOLIO.OFICINAASIGNADOID = EMPLEADOS.OFICINAID AND FOLIO.AGENTEASIGNADOID = EMPLEADOS.EMPLEADOID AND FOLIO.MUNICIPIOASIGNADOID = EMPLEADOS.MUNICIPIOID', 'LEFT')->where('DENUNCIANTEID', $session->get('DENUNCIANTEID'))->findAll();
+		foreach ($data->folios as $key => $folio) {
+			$folio->ESTADOENJUSTICIA = '';
+			$folio->OFICINAENJUSTICIA = '';
+			if ($folio->STATUS == 'EXPEDIENTE') {
+				try {
+					$expediente_estado = $this->_getExpedienteStatusOficina($folio->EXPEDIENTEID, $folio->MUNICIPIOASIGNADOID);
+					if ($expediente_estado->status == 201) {
+						$folio->ESTADOENJUSTICIA = $expediente_estado->data[0]->ESTADOJURIDICOEXPEDIENTEDESCR ? $expediente_estado->data[0]->ESTADOJURIDICOEXPEDIENTEDESCR : '';
+						$folio->OFICINAENJUSTICIA = $expediente_estado->data[0]->OFICINADESCR ? $expediente_estado->data[0]->OFICINADESCR : '';
+					}
+				} catch (\Throwable $th) {
+				}
+			}
+		}
 		$this->_loadView('Mis denuncias', 'denuncias', '', $data, 'lista_denuncias');
 	}
 
 	public function create()
 	{
-
 		$session = session();
 		list($FOLIOID, $year) = $this->_folioConsecutivoModel->get_consecutivo();
 
@@ -326,7 +353,7 @@ class DashboardController extends BaseController
 				'TIPODENUNCIA' => 'VD',
 				'HECHOCOORDENADAX' => $this->request->getPost('longitud'),
 				'HECHOCOORDENADAY' => $this->request->getPost('latitud'),
-
+				'NOTIFICACIONES' => $this->request->getPost('notificaciones_check') == 'on' ? 'S' : 'N',
 			];
 		} else {
 			$dataFolio = [
@@ -349,6 +376,8 @@ class DashboardController extends BaseController
 				'HECHONARRACION' => $this->request->getPost('descripcion_breve') != '' ? $this->request->getPost('descripcion_breve') : NULL,
 				'HECHODELITO' => $this->request->getPost('delito'),
 				'TIPODENUNCIA' => 'VD',
+				'NOTIFICACIONES' => $this->request->getPost('notificaciones_check') == 'on' ? 'S' : 'N',
+
 			];
 		}
 
@@ -461,8 +490,8 @@ class DashboardController extends BaseController
 					'NUMEROCASA' => $this->request->getPost('checkML_des') == 'on'  && $exterior_des ?  'M.' . $exterior_des : $exterior_des,
 					'NUMEROINTERIOR' => $this->request->getPost('checkML_des') == 'on' && $interior_des ?  'L.' . $interior_des : $exterior_des,
 					'CP' => $this->request->getPost('cp_des'),
-
 				);
+
 				if ((int)$this->request->getPost('ocupacion_des') == 999) {
 					$dataDesaparecido['OCUPACIONID'] = (int)$this->request->getPost('ocupacion_des');
 					$dataDesaparecido['OCUPACIONDESCR'] = $this->request->getPost('ocupacion_descr_des');
@@ -544,7 +573,6 @@ class DashboardController extends BaseController
 					'NUMEROCASA' => null,
 					'NUMEROINTERIOR' => null,
 					'CP' => null,
-
 				);
 
 				$ofendidoId = $this->_folioPersonaFisica($dataOfendido, $FOLIOID, 1, $year);
@@ -636,7 +664,7 @@ class DashboardController extends BaseController
 			//DATOS DEL POSIBLE RESPONSABLE
 			if (!empty($this->request->getPost('responsable')) && $this->request->getPost('responsable') == 'SI') {
 				$dataImputado = array(
-					'NOMBRE' => $this->request->getPost('nombre_imputado') ? $this->request->getPost('nombre_imputado') : 'QUIEN RESULTE RESPONSABLE',
+					'NOMBRE' => $this->request->getPost('nombre_imputado') && $this->request->getPost('nombre_imputado') != "" ? $this->request->getPost('nombre_imputado') : 'QUIEN RESULTE RESPONSABLE',
 					'PRIMERAPELLIDO' => $this->request->getPost('primer_apellido_imputado'),
 					'SEGUNDOAPELLIDO' => $this->request->getPost('segundo_apellido_imputado'),
 					'FECHANACIMIENTO' => $this->request->getPost('fecha_nacimiento_imputado'),
@@ -654,7 +682,6 @@ class DashboardController extends BaseController
 					'NACIONALIDADID' => $this->request->getPost('nacionalidad_imputado'),
 					'ESCOLARIDADID' => $this->request->getPost('escolaridad_imputado'),
 					'OCUPACIONID' => $this->request->getPost('ocupacion_imputado'),
-
 				);
 				$interior_imputado = $this->request->getPost('numero_int_imputado');
 				if ($interior_imputado == '') {
@@ -687,6 +714,7 @@ class DashboardController extends BaseController
 				$this->_folioPersonaFisicaMediaFiliacion($dataImputado, $FOLIOID, $imputadoId, $year);
 				$this->_folioPersonaFisicaDomicilio($dataImputadoDomicilio, $FOLIOID, $imputadoId, $year);
 			} else {
+
 				$dataImputado = array(
 					'NOMBRE' => 'QUIEN RESULTE RESPONSABLE',
 					'FECHANACIMIENTO' => null,
@@ -703,7 +731,6 @@ class DashboardController extends BaseController
 					'NUMEROCASA' => null,
 					'NUMEROINTERIOR' => null,
 					'CP' => null,
-
 				);
 
 				$imputadoId = $this->_folioPersonaFisica($dataImputado, $FOLIOID, 2, $year);
@@ -776,6 +803,49 @@ class DashboardController extends BaseController
 				$this->_folioVehiculo($dataVehiculo, $FOLIOID, $year);
 			}
 
+			$documentosArchivosExternos = $this->request->getFiles();
+			$archivos_data = null;
+
+
+			if ($documentosArchivosExternos['documentosArchivo']) {
+				foreach ($documentosArchivosExternos['documentosArchivo'] as $key => $docArc) {
+
+					$doc = file_get_contents($docArc);
+					$f = finfo_open();
+					$mime_type = finfo_buffer($f, $doc, FILEINFO_MIME_TYPE);
+					$extension = explode('/', $mime_type)[1];
+					$archivoNombre = $docArc->getName();
+					$nombre = explode('.', $archivoNombre)[0];
+					if ($docArc->isValid()) {
+						try {
+							$archivos_data = file_get_contents($docArc);
+						} catch (\Exception $e) {
+							$archivos_data = null;
+						}
+					}
+					$data = [
+						'FOLIOID' => $FOLIOID,
+						'ANO' => $year,
+						'ARCHIVODESCR' => strtoupper($nombre),
+						'ARCHIVO' => $archivos_data,
+						'EXTENSION' => $extension,
+					];
+					$archivoExterno = $this->_folioExpArchivo($data, $FOLIOID, $year);
+					if ($archivoExterno) {
+						$datados = (object) array();
+						$datados->archivosexternos = $this->_archivoExternoModel->asObject()->where('FOLIOID', $FOLIOID)->where('ANO', $year)->findAll();
+						if ($datados->archivosexternos) {
+							foreach ($datados->archivosexternos as $key => $archivos) {
+								$file_info = new \finfo(FILEINFO_MIME_TYPE);
+								$type = $file_info->buffer($archivos->ARCHIVO);
+								$archivos->ARCHIVO = 'data:' . $type . ';base64,' . base64_encode($archivos->ARCHIVO);
+							}
+						}
+					}
+				}
+			}
+
+
 			$denunciante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', $session->get('DENUNCIANTEID'))->first();
 			$idioma = $this->_personaIdiomaModel->asObject()->where('PERSONAIDIOMAID', $denunciante->IDIOMAID)->first();
 			$delito = $this->_delitosUsuariosModel->asObject()->where('DELITO', $this->request->getPost('delito'))->first();
@@ -792,7 +862,7 @@ class DashboardController extends BaseController
 				'APELLIDO_MATERNO' =>  $denunciante->APELLIDO_MATERNO,
 				'CORREO' =>  $denunciante->CORREO,
 				'DELITO' => $this->request->getPost('delito'),
-				'FOLIO' => $FOLIOID . '-'. $year
+				'FOLIO' => $FOLIOID . '-' . $year
 
 			];
 			$dataApi = array();
@@ -815,11 +885,20 @@ class DashboardController extends BaseController
 					'sexo' => $this->request->getPost('delito') == 'VIOLENCIA FAMILIAR' ? 2 : 0,
 				];
 
+				$sexo_denunciante = $denunciante->SEXO == 'F' ? 'FEMENINO' : 'MASCULINO';
+				$url = "/denuncia/dashboard/video-denuncia?folio=" . $year . '-' . $FOLIOID . "&year=" . $year . "&delito=" . $data->delito . "&descripcion=" . $data->descripcion . "&idioma=" . $data->idioma . "&edad=" . $data->edad . "&perfil=" . $data->perfil . "&sexo=" . $data->sexo . "&prioridad=" . $prioridad . "&sexo_denunciante=" . $sexo_denunciante;
+
+				if ($this->_sendEmailFolio($session->get('CORREO'), $FOLIOID, $year)) {
+					return redirect()->to(base_url($url));
+				} else {
+					return redirect()->to(base_url($url));
+				}
+
 
 				$sexo_denunciante = $denunciante->SEXO == 'F' ? 'FEMENINO' : 'MASCULINO';
 				$url = "/denuncia/dashboard/video-denuncia?folio=" . $year . '-' . $FOLIOID . "&year=" . $year . "&delito=" . $data->delito . "&descripcion=" . $data->descripcion . "&idioma=" . $data->idioma . "&edad=" . $data->edad . "&perfil=" . $data->perfil . "&sexo=" . $data->sexo . "&prioridad=" . $prioridad . "&sexo_denunciante=" . $sexo_denunciante;
 
-				if ($this->_sendEmailFolio($session->get('CORREO'), $FOLIOID)) {
+				if ($this->_sendEmailFolio($session->get('CORREO'), $FOLIOID, $year)) {
 					return redirect()->to(base_url($url));
 				} else {
 					return redirect()->to(base_url($url));
@@ -972,12 +1051,12 @@ class DashboardController extends BaseController
 		}
 	}
 
-	private function _sendEmailFolio($to, $folio)
+	private function _sendEmailFolio($to, $folio, $year)
 	{
 		$email = \Config\Services::email();
 		$email->setTo($to);
 		$email->setSubject('Nuevo folio generado.');
-		$body = view('email_template/folio_email_template.php', ['folio' => $folio]);
+		$body = view('email_template/folio_email_template.php', ['folio' => $folio . '/' . $year]);
 		$email->setMessage($body);
 
 		if ($email->send()) {
@@ -1133,6 +1212,23 @@ class DashboardController extends BaseController
 
 		return redirect()->back()->with('message_success', 'Contraseña actualizada correctamente');
 	}
+
+	private function _getExpedienteStatusOficina($expedienteId, $municipio)
+	{
+		$function = '/expediente.php?process=getStatus';
+		$endpoint = $this->endpoint . $function;
+		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
+		$data = array();
+
+		$data['EXPEDIENTEID'] = $expedienteId;
+		$data['userDB'] = $conexion->USER;
+		$data['pwdDB'] = $conexion->PASSWORD;
+		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
+		$data['schema'] = $conexion->SCHEMA;
+
+		return $this->_curlPostDataEncrypt($endpoint, $data);
+	}
+
 	private function _curlPost($endpoint, $data)
 	{
 		$ch = curl_init();
@@ -1148,7 +1244,8 @@ class DashboardController extends BaseController
 			'Access-Control-Allow-Origin: *',
 			'Access-Control-Allow-Credentials: true',
 			'Access-Control-Allow-Headers: Content-Type',
-			'X-API-KEY:' . X_API_KEY
+			'X-API-KEY:' . X_API_KEY,
+			'Hash-API: ' . password_hash(TOKEN_API, PASSWORD_BCRYPT)
 		);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
@@ -1163,6 +1260,57 @@ class DashboardController extends BaseController
 		curl_close($ch);
 
 		return json_decode($result);
+	}
+
+	private function _curlPostDataEncrypt($endpoint, $data)
+	{
+		// var_dump($data);exit;
+		$ch = curl_init();
+
+		curl_setopt($ch, CURLOPT_URL, $endpoint);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $this->_encriptar(json_encode($data), KEY_128));
+		$headers = array(
+			'Content-Type: application/json',
+			'Access-Control-Allow-Origin: *',
+			'Access-Control-Allow-Credentials: true',
+			'Access-Control-Allow-Headers: Content-Type',
+			'Hash-API: ' . password_hash(TOKEN_API, PASSWORD_BCRYPT),
+			'Key: ' . KEY_128
+		);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		$result = curl_exec($ch);
+
+		if ($result === false) {
+			$result = "{
+                'status' => 401,
+                'error' => 'Curl failed: '" . curl_error($ch) . "
+            }";
+		}
+		curl_close($ch);
+		// var_dump($data);
+		// var_dump($result);exit;
+		// return $result;
+		return json_decode($result);
+	}
+
+	private function _encriptar($plaintext, $key128)
+	{
+		$iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-128-cbc'));
+		$cipherText = openssl_encrypt($plaintext, 'AES-128-CBC', hex2bin($key128), 1, $iv);
+		return base64_encode($iv . $cipherText);
+	}
+
+	private function _desencriptar($encodedInitialData, $key128)
+	{
+		$encodedInitialData = base64_decode($encodedInitialData);
+		$iv = substr($encodedInitialData, 0, 16);
+		$encodedInitialData = substr($encodedInitialData, 16);
+		$decrypted = openssl_decrypt($encodedInitialData, 'AES-128-CBC', hex2bin($key128), 1, $iv);
+		return $decrypted;
 	}
 }
 

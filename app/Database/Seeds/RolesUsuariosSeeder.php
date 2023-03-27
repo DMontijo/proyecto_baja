@@ -14,7 +14,7 @@ class RolesUsuariosSeeder extends Seeder
 			array('NOMBRE_ROL' => 'AGENTE DEL MINISTERIO PÚBLICO'),
 			array('NOMBRE_ROL' => 'AUXILIAR DE MINISTERIO PÚBLICO'),
 			array('NOMBRE_ROL' => 'AGENTE DEL MINISTERIO PÚBLICO EXTERNO'),
-			array('NOMBRE_ROL' => 'ENCARGADO TURNO'),
+			array('NOMBRE_ROL' => 'ENCARGADO AREA'),
 			array('NOMBRE_ROL' => 'COORDINADOR'),
 			array('NOMBRE_ROL' => 'FACILITADOR'),
 			array('NOMBRE_ROL' => 'NOTIFICADOR'),

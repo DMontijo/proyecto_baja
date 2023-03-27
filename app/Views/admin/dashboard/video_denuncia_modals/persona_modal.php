@@ -10,7 +10,7 @@
 			<div class="modal-body bg-light" style="height:70vh;overflow-y:auto;">
 				<nav>
 					<div class="nav nav-tabs" id="persona_tabs" role="tablist">
-						<a class="nav-item nav-link active" id="nav-persona-fisica-tab" data-toggle="tab" href="#nav-persona-fisica" role="tab" aria-controls="nav-persona-fisica" aria-selected="true">Person Física</a>
+						<a class="nav-item nav-link active" id="nav-persona-fisica-tab" data-toggle="tab" href="#nav-persona-fisica" role="tab" aria-controls="nav-persona-fisica" aria-selected="true">Persona Física</a>
 						<a class="nav-item nav-link" id="nav-media-filiacion-tab" data-toggle="tab" href="#nav-media-filiacion" role="tab" aria-controls="nav-media-filiacion" aria-selected="false">Media Filiación</a>
 						<a class="nav-item nav-link" id="nav-domicilio-tab" data-toggle="tab" href="#nav-domicilio" role="tab" aria-controls="nav-domicilio" aria-selected="false">Domicilio</a>
 

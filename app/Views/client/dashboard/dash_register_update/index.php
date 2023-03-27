@@ -8,7 +8,7 @@
 <div class="container m-auto">
 	<div class="card shadow py-4 px-3 border-0">
 		<div class="card-body">
-			<h1 id="titulo" class="text-center fw-bolder pb-1 text-blue">DATOS DEL DENUNCIANTE</h1>
+			<h1 id="titulo" class="text-center fw-bolder pb-1 text-blue">DATOS DEL USUARIO</h1>
 			<p class="text-center pb-5">Los campos con un <span class="asterisco-rojo">*</span> son obligatorios</p>
 
 			<div class="progress">
@@ -80,7 +80,7 @@
 
 						<div class="col-12">
 							<div class="alert alert-warning text-center fw-bold d-none mt-2" id="idioma_alert" role="alert">
-								Si tu idioma no es español se recomienda estar acompañado de un traductor.
+								Si tu idioma es diverso español se recomienda estar acompañado de un traductor.
 							</div>
 						</div>
 					</div>
@@ -127,6 +127,27 @@
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+							<label for="calle" class="form-label fw-bold input-required">Calle</label>
+							<input type="text" class="form-control" id="calle" name="calle" maxlength="100" required>
+							<div class="invalid-feedback">
+								La calle es obligatoria
+							</div>
+						</div>
+
+						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+						<label for="exterior" class="form-label fw-bold input-required" id="lblExterior">Número exterior</label>
+							<input type="text" class="form-control" id="exterior" name="exterior" maxlength="10" required>
+							<div class="invalid-feedback">
+								El número exterior es obligatorio
+							</div>
+						</div>
+						
+						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+						<label for="interior" class="form-label fw-bold" id="lblInterior">Número interior</label>
+							<input type="text" class="form-control" id="interior" name="interior" maxlength="10">
+						</div>
+
+						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="localidad" class="form-label fw-bold input-required">Localidad</label>
 							<select class="form-select" id="localidad_select" name="localidad_select" required>
 								<option selected disabled value="">Selecciona la localidad</option>
@@ -151,27 +172,6 @@
 							<input type="number" class="form-control" id="cp" maxlength="10" oninput="clearInputPhone(event);" name="cp">
 						</div>
 
-						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="calle" class="form-label fw-bold input-required">Calle</label>
-							<input type="text" class="form-control" id="calle" name="calle" maxlength="100" required>
-							<div class="invalid-feedback">
-								La calle es obligatoria
-							</div>
-						</div>
-
-						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-						<label for="exterior" class="form-label fw-bold input-required" id="lblExterior">Número exterior</label>
-							<input type="text" class="form-control" id="exterior" name="exterior" maxlength="10" required>
-							<div class="invalid-feedback">
-								El número exterior es obligatorio
-							</div>
-						</div>
-						
-						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-						<label for="interior" class="form-label fw-bold" id="lblInterior">Número interior</label>
-							<input type="text" class="form-control" id="interior" name="interior" maxlength="10">
-						</div>
-						
 						<div class="col-12 mt-4 mb-4">
 							<input class="form-check-input" type="checkbox" id="checkML" name="checkML" >
 							<label class="form-check-label fw-bold" for="checkML">

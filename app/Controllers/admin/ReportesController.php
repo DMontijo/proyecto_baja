@@ -251,8 +251,8 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('A' . $row, $folio->FOLIOID);
 			$sheet->setCellValue('B' . $row, $folio->ANO);
 			$sheet->setCellValue('C' . $row, $folio->TIPODENUNCIA == 'VD' ? 'CDTEC' : 'ANÓNIMA');
-			$sheet->setCellValue('D' . $row, $folio->EXPEDIENTEID);
-			$sheet->setCellValue('E' . $row, $folio->FECHASALIDA);
+			$sheet->setCellValue('D' . $row, $folio->EXPEDIENTEID . '/' . $folio->TIPOEXPEDIENTECLAVE);
+			$sheet->setCellValue('E' . $row, date('d-m-Y'), strtotime($folio->FECHASALIDA));
 			$sheet->setCellValue('F' . $row, $folio->N_DENUNCIANTE . ' ' . $folio->APP_DENUNCIANTE . ' ' . $folio->APM_DENUNCIANTE);
 			$sheet->setCellValue('G' . $row, $folio->N_AGENT . ' ' . $folio->APP_AGENT . ' ' . $folio->APM_AGENT);
 			$sheet->setCellValue('H' . $row, $folio->ESTADODESCR);
@@ -855,14 +855,14 @@ class ReportesController extends BaseController
 		$drawing->setCoordinates('A1');
 		$drawing->setOffsetX(10);
 		$drawing->setWorksheet($spreadSheet->getActiveSheet());
-		$drawing2 = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
-		$drawing2->setName('FGEBC');
-		$drawing2->setDescription('LOGO');
-		$drawing2->setPath(FCPATH . 'assets/img/logo_sejap.jpg'); // put your path and image here
-		$drawing2->setHeight(45);
-		$drawing2->setCoordinates('T1');
-		$drawing2->setOffsetX(-30);
-		$drawing2->setWorksheet($spreadSheet->getActiveSheet());
+		// $drawing2 = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+		// $drawing2->setName('FGEBC');
+		// $drawing2->setDescription('LOGO');
+		// $drawing2->setPath(FCPATH . 'assets/img/logo_sejap.jpg'); // put your path and image here
+		// $drawing2->setHeight(45);
+		// $drawing2->setCoordinates('T1');
+		// $drawing2->setOffsetX(-30);
+		// $drawing2->setWorksheet($spreadSheet->getActiveSheet());
 		// $drawing->setOffsetX(110);
 		// $drawing->setRotation(25);
 		$writer = new Xlsx($spreadSheet);
@@ -1216,14 +1216,14 @@ class ReportesController extends BaseController
 		$drawing->setCoordinates('A1');
 		$drawing->setOffsetX(10);
 		$drawing->setWorksheet($spreadSheet->getActiveSheet());
-		$drawing2 = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
-		$drawing2->setName('FGEBC');
-		$drawing2->setDescription('LOGO');
-		$drawing2->setPath(FCPATH . 'assets/img/logo_sejap.jpg'); // put your path and image here
-		$drawing2->setHeight(45);
-		$drawing2->setCoordinates('O1');
-		$drawing2->setOffsetX(-30);
-		$drawing2->setWorksheet($spreadSheet->getActiveSheet());
+		// $drawing2 = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+		// $drawing2->setName('FGEBC');
+		// $drawing2->setDescription('LOGO');
+		// $drawing2->setPath(FCPATH . 'assets/img/logo_sejap.jpg'); // put your path and image here
+		// $drawing2->setHeight(45);
+		// $drawing2->setCoordinates('O1');
+		// $drawing2->setOffsetX(-30);
+		// $drawing2->setWorksheet($spreadSheet->getActiveSheet());
 		// $drawing->setOffsetX(110);
 		// $drawing->setRotation(25);
 		$writer = new Xlsx($spreadSheet);
@@ -1507,14 +1507,14 @@ class ReportesController extends BaseController
 		$drawing->setCoordinates('A1');
 		$drawing->setOffsetX(10);
 		$drawing->setWorksheet($spreadSheet->getActiveSheet());
-		$drawing2 = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
-		$drawing2->setName('FGEBC');
-		$drawing2->setDescription('LOGO');
-		$drawing2->setPath(FCPATH . 'assets/img/logo_sejap.jpg'); // put your path and image here
-		$drawing2->setHeight(45);
-		$drawing2->setCoordinates('O1');
-		$drawing2->setOffsetX(-30);
-		$drawing2->setWorksheet($spreadSheet->getActiveSheet());
+		// $drawing2 = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+		// $drawing2->setName('FGEBC');
+		// $drawing2->setDescription('LOGO');
+		// $drawing2->setPath(FCPATH . 'assets/img/logo_sejap.jpg'); // put your path and image here
+		// $drawing2->setHeight(45);
+		// $drawing2->setCoordinates('O1');
+		// $drawing2->setOffsetX(-30);
+		// $drawing2->setWorksheet($spreadSheet->getActiveSheet());
 		// $drawing->setOffsetX(110);
 		// $drawing->setRotation(25);
 		$writer = new Xlsx($spreadSheet);
@@ -1810,14 +1810,14 @@ class ReportesController extends BaseController
 		$drawing->setCoordinates('A1');
 		$drawing->setOffsetX(10);
 		$drawing->setWorksheet($spreadSheet->getActiveSheet());
-		$drawing2 = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
-		$drawing2->setName('FGEBC');
-		$drawing2->setDescription('LOGO');
-		$drawing2->setPath(FCPATH . 'assets/img/logo_sejap.jpg'); // put your path and image here
-		$drawing2->setHeight(45);
-		$drawing2->setCoordinates('O1');
-		$drawing2->setOffsetX(-30);
-		$drawing2->setWorksheet($spreadSheet->getActiveSheet());
+		// $drawing2 = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+		// $drawing2->setName('FGEBC');
+		// $drawing2->setDescription('LOGO');
+		// $drawing2->setPath(FCPATH . 'assets/img/logo_sejap.jpg'); // put your path and image here
+		// $drawing2->setHeight(45);
+		// $drawing2->setCoordinates('O1');
+		// $drawing2->setOffsetX(-30);
+		// $drawing2->setWorksheet($spreadSheet->getActiveSheet());
 		// $drawing->setOffsetX(110);
 		// $drawing->setRotation(25);
 		$writer = new Xlsx($spreadSheet);
