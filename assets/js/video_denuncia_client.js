@@ -10,7 +10,7 @@ let video_d = document.querySelector("#video_d");
 let video_m = document.querySelector("#video_m");
 // const apiURI = 'http://192.168.0.67:3000';
 // const apiURI = "http://54.208.205.251";
-const apiURI ="https://b5f7-2806-2f0-51c0-606f-db8c-8b20-9ff3-4448.ngrok.io";
+const apiURI ="https://a396-2806-2f0-51c0-606f-c0b2-4d9e-e2c9-70e7.ngrok.io";
 const guestVideoService = new VideoServiceGuest(guestUUID, folio, priority, {
 	apiURI,
 	apiKey
@@ -24,14 +24,19 @@ guestVideoService.registerOnVideoReady("video_d", "video_m", (response) => {
 });
 
 guestVideoService.registerOnDisconnect(() => {
-	console.log("desconectado");
 	video_d.style.display = "none";
 	video_m.style.display = "none";
 	texto_inicial.style.display = "block";
 	texto_inicial.innerHTML= "ESTIMADO (A) USUARIO (A), ¡GRACIAS POR SELECCIONAR EL SERVICIO DE VIDEO DENUNCIA!"+
 	"En la Fiscalía General del Estado de Baja California día a día trabajamos para garantizarte un fácil acceso a la justicia desde cualquier lugar del mundo. "
 })
-
-guestVideoService.connectGuest(() => {
+$(function() {
+	$("#geolocalizacion_modal").modal("show");
+});
+guestVideoService.saveGeolocation(() => {
 	texto_inicial.style.display = "block";
+	$("#geolocalizacion_modal").modal("hide");
+	guestVideoService.connectGuest(() => {
+	
+	});
 });

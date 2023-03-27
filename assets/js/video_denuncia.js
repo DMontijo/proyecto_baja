@@ -1,7 +1,6 @@
 import { VideoServiceAgent } from "../agent/agent.js";
 import { RoomsSockets } from "../agent/extras.js";
 
-
 const apiKey = document.getElementById("input_api").value;
 
 const agentUUID = document.getElementById("input_uuid").value;
@@ -25,9 +24,9 @@ let coment_marks = document.querySelector("#comentario_marca");
 const enviar_marca = document.querySelector("#enviar_marca");
 const desconectar_llamada = document.querySelector("#disconnect-call");
 let guestUUID = "";
-const botones = document.querySelector('#tools-agent');
+const botones = document.querySelector("#tools-agent");
 // const apiURI = "http://54.208.205.251";
-const apiURI = "https://b5f7-2806-2f0-51c0-606f-db8c-8b20-9ff3-4448.ngrok.io";
+const apiURI = "https://a396-2806-2f0-51c0-606f-c0b2-4d9e-e2c9-70e7.ngrok.io/";
 
 const agentVideoService = new VideoServiceAgent(agentUUID, { apiURI, apiKey });
 
@@ -38,18 +37,12 @@ disponible_connect.addEventListener("click", () => {
 		no_disponible_connect.hidden = false;
 
 		console.log("conectado");
-		// disconnectBtn.hidden = false;
-		// disconnectBtn.disabled = false;
-		// label.textContent = `Agent connected`;
-		// label.classList.toggle('warning', false);
-		// label.classList.toggle('avalible', true);
-
 		agentVideoService.registerOnGuestConnected(response => {
 			$("#llamadaModal").modal("show");
 			guestUUID = response.guest.uuid;
 			console.log("respuesta aceptada llamada guest");
 			console.log(guestUUID);
-            console.log(response);
+			console.log(response);
 			console.log(response.guest.details.DELITO);
 
 			document.querySelector("#nombre_denunciante").value =
@@ -58,13 +51,13 @@ disponible_connect.addEventListener("click", () => {
 				response.guest.gender;
 			document.querySelector("#correo_deunciante").value =
 				response.guest.details.CORREO;
+
+			document.querySelector("#delito_denunciante_llamada").value =
+				response.guest.details.DELITO;
+			document.querySelector("#folio_llamada").value =
+				response.guest.details.FOLIO;
 			document.querySelector("#idioma_denunciante").value =
 				response.guest.languages[0].title;
-			document.querySelector("#delito_denunciante").value =
-				response.guest.details.DELITO;
-                document.querySelector("#folio_llamada").value =
-				response.guest.details.FOLIO;
-
 			// incomeCallModal.show();
 			// nameGuest.innerHTML = response.guest.name;
 			// priorityGuest.innerHTML = 'Priority: ' + response.priority;
@@ -77,7 +70,7 @@ aceptar_llamada.addEventListener("click", () => {
 
 	agentVideoService.acceptCall("agn_vf", "usr_vd", () => {
 		$("#llamadaModal").modal("hide");
-        botones.hidden = false;
+		botones.hidden = false;
 
 		console.log("aceptada");
 	});
@@ -149,9 +142,10 @@ enviar_marca.addEventListener("click", () => {
 });
 
 desconectar_llamada.addEventListener("click", () => {
-	agentVideoService.disconnectAgent(() => {
+	agentVideoService.endVideoCall(() => {
 		disponible_connect.hidden = false;
 		no_disponible_connect.hidden = true;
+		botones.hidden = true;
 	});
 });
 

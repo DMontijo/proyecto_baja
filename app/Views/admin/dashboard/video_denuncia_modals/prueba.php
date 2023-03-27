@@ -28,8 +28,8 @@
 					<input type="text" class="form-control" id="idioma_denunciante" name="idioma_denunciante" disabled>
 				</div>
 				<div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-3">
-					<label for="delito_denunciante" class="form-label font-weight-bold">Delito:</label>
-					<input type="text" class="form-control" id="delito_denunciante" name="delito_denunciante" disabled>
+					<label for="delito_denunciante_llamada" class="form-label font-weight-bold">Delito:</label>
+					<input type="text" class="form-control" id="delito_denunciante_llamada" name="delito_denunciante_llamada" disabled>
 				</div>
 
 				

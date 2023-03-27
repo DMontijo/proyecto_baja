@@ -148,6 +148,21 @@ export class VideoServiceAgent {
     }
 
     /**
+     * Terminates the video call
+     * 
+     * @param {function} callback - This function will be called after the video is closed
+     */
+    endVideoCall(callback) {
+        try {
+            this.#emit('close-video-call');
+        } catch (e) {
+            console.warn(e)
+        } finally {
+            if (typeof callback === 'function') callback();
+        };
+    }
+
+    /**
      * Accept incoming call
      * @param {string} localVideoSelector - Video local - little
      * @param {string} remoteVideoSelector - Video local - little

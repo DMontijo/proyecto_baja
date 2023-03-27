@@ -104,7 +104,7 @@ export class VideoServiceGuest {
         });
 
         this.#emit('connect-guest', {
-            guest: this.#guestUUID,
+            uuid: this.#guestUUID,
             priority: this.#priority,
             folio: this.#folio,
             altitude: this.#position?.coords.altitude,
@@ -124,27 +124,28 @@ export class VideoServiceGuest {
         });
 
         this.#socket.on('mute-video', ({toggleVideo}) => {
-            this.#videoCallService.publishVideo(toggleVideo.toogleVideoGuest);
+            this.#videoCallService.toggleVideo(toggleVideo.toogleVideoGuest);
         });
     
         this.#socket.on('mute-audio', ({toggleAudio}) => {
-            this.#videoCallService.publishAudio(toggleAudio.toogleAudioGuest);
+            this.#videoCallService.toggleAudio(toggleAudio.toogleAudioGuest);
         });
     }
-
+    
     /**
      * Register callback for call close event
      * @param {Function} [callback] - This method is executed after call is connected, this will receive the details of guest connection
-     */
-    registerOnDisconnect(callback) {
-        this.#socket.on('disconnect', () => {
-            try {
+    */
+   registerOnDisconnect(callback) {
+       this.#socket.on('disconnect-guest', (resp) => {
+           try {
+                this.#socket.disconnect();
                 this.#loggedOutSound.play();
             } catch (e) {
                 console.warn(e)
             }
 
-            if (typeof callback === 'function') callback();
+            if (typeof callback === 'function') callback(resp);
         });
     }
 
@@ -156,7 +157,6 @@ export class VideoServiceGuest {
      */
     registerOnVideoReady(localVideoSelector, remoteVideoSelector, callback) {
         this.#socket.on('video-ready', (response) => {
-            console.log(response);
             // this.#loggedInSound.play();
             if (typeof callback === 'function') callback(response);
 
@@ -185,11 +185,16 @@ export class VideoServiceGuest {
     /**
      * Helper to get position
      * 
-     * @param {string} _position - Get position
-     * @param {function} [callback] - Callback that receive the position
+     * @param {function} [callback] - Callback to be called when position is available
      */
-    successCallback = (_position) => {
-        this.#position = _position;
+    saveGeolocation = (callback) => {
+        navigator.geolocation.getCurrentPosition((_position) => {
+            this.#position = _position;
+
+            if (typeof callback === 'function') callback();
+        }, () => {
+            if (typeof callback === 'function') callback();
+        });
     };
 
     /**
