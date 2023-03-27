@@ -123,6 +123,7 @@ export class VideoServiceAgent {
      */
     registerOnGuestConnected(callback) {
         this.#socket.on('guest-connected', (response) => {
+            this.preventUserCloseWindow();
             this.#phoneRing.loop = true;
             this.#phoneRing.play();
 
@@ -284,6 +285,18 @@ export class VideoServiceAgent {
     }
 
     /**
+     * 
+     */
+    preventUserCloseWindow() {
+        var preventClose = function (e) {
+            e.preventDefault();
+            e.returnValue = 'Se cerrara la video llamada si cierras la ventana.';
+        }
+        
+        window.addEventListener('beforeunload', preventClose, true);
+    }
+
+    /**
      * This function return marks types
     */ 
     async getMarkTypes() {
@@ -292,14 +305,13 @@ export class VideoServiceAgent {
             method: 'GET',
             cache: "no-cache",
             mode: "cors",
-            headers: { 'X-API-KEY': this.#apiKey }
+            headers: { 'Content-Type':'application/json','Access-Control-Allow-Origin': '*','Access-Control-Allow-Credentials':'true','Access-Control-Allow-Headers':'*','X-API-KEY': this.#apiKey}
         })
         .then(response => { return response.json(); })
         .catch(error => { return error.json(); });
 
         return typeMarks;
     }
-
     /**
      *  Toggle audio for local publisher
      * 
