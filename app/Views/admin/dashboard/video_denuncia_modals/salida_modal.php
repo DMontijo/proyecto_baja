@@ -106,6 +106,7 @@
 </div>
 <?php include('agregar_delito_modal.php') ?>
 <?php include 'info_folio_modal.php' ?>
+<?php include 'vehiculo_modal.php' ?>
 
 
 <script>
@@ -121,6 +122,7 @@
 	const canalizaciones_container = document.querySelector('#canalizaciones_container');
 	const canalizaciones = document.querySelector('#canalizaciones');
 	const form_delito = document.querySelector('#denuncia_form');
+	const form_vehiculo = document.querySelector('#form_vehiculo');
 
 	tipoSalida.addEventListener('change', (e) => {
 
@@ -234,7 +236,14 @@
 
 
 	btnFinalizar.addEventListener('click', () => {
-		console.log(form_delito[0]);
+		if (document.querySelector('#vehiculoid').value != '' && !form_vehiculo.checkValidity()) {
+			Swal.fire({
+						icon: 'error',
+						text: 'Por favor, completa todos los campos de los vehículos.',
+						confirmButtonColor: '#bf9b55',
+					});
+					return;
+		}
 		if (!form_delito.checkValidity()) {
 			Swal.fire({
 						icon: 'error',
