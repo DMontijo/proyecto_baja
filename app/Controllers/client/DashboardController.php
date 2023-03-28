@@ -354,6 +354,7 @@ class DashboardController extends BaseController
 				'HECHOCOORDENADAX' => $this->request->getPost('longitud'),
 				'HECHOCOORDENADAY' => $this->request->getPost('latitud'),
 				'NOTIFICACIONES' => $this->request->getPost('notificaciones_check') == 'on' ? 'S' : 'N',
+
 			];
 		} else {
 			$dataFolio = [
@@ -807,7 +808,8 @@ class DashboardController extends BaseController
 			$archivos_data = null;
 
 
-			if ($documentosArchivosExternos['documentosArchivo']) {
+
+			if ($documentosArchivosExternos['documentosArchivo'][0]->isValid()) {
 				foreach ($documentosArchivosExternos['documentosArchivo'] as $key => $docArc) {
 
 					$doc = file_get_contents($docArc);
@@ -856,59 +858,28 @@ class DashboardController extends BaseController
 			} else {
 				$prioridad = $delito->IMPORTANCIA;
 			}
-			$dataApi2 = [
-				'NOMBRE' => $denunciante->NOMBRE,
-				'APELLIDO_PATERNO' =>  $denunciante->APELLIDO_PATERNO,
-				'APELLIDO_MATERNO' =>  $denunciante->APELLIDO_MATERNO,
-				'CORREO' =>  $denunciante->CORREO,
-				'DELITO' => $this->request->getPost('delito'),
-				'FOLIO' => $FOLIOID . '-' . $year
 
+			$data = (object) [
+				'delito' => $this->request->getPost('delito'),
+				'descripcion' => $this->request->getPost('descripcion_breve'),
+				'idioma' => $idioma->PERSONAIDIOMADESCR ? $idioma->PERSONAIDIOMADESCR : 'DESCONOCIDO',
+				'edad' => $edad,
+				'perfil' => $this->request->getPost('delito') == 'VIOLENCIA FAMILIAR' ? 1 : 0,
+				'sexo' => $this->request->getPost('delito') == 'VIOLENCIA FAMILIAR' ? 2 : 0,
 			];
-			$dataApi = array();
-			$dataApi['name'] = $denunciante->NOMBRE . ' ' . $denunciante->APELLIDO_PATERNO;
-			$dataApi['details'] = $dataApi2;
-			$dataApi['gender'] = $denunciante->SEXO == 'F' ? "FEMALE" : 'MALE';
-			$dataApi['languages'] = [$denunciante->IDIOMAID];
-			$response = $this->_curlPost($this->urlApi, $dataApi);
-			if ($response->uuid) {
-				if (empty($denunciante->UUID)) {
-					$dataDenuncianteApi['UUID'] = $response->uuid;
-					$update = $this->_denunciantesModel->set($dataDenuncianteApi)->where('DENUNCIANTEID', session('DENUNCIANTEID'))->update();
-				}
-				$data = (object) [
-					'delito' => $this->request->getPost('delito'),
-					'descripcion' => $this->request->getPost('descripcion_breve'),
-					'idioma' => $idioma->PERSONAIDIOMADESCR ? $idioma->PERSONAIDIOMADESCR : 'DESCONOCIDO',
-					'edad' => $edad,
-					'perfil' => $this->request->getPost('delito') == 'VIOLENCIA FAMILIAR' ? 1 : 0,
-					'sexo' => $this->request->getPost('delito') == 'VIOLENCIA FAMILIAR' ? 2 : 0,
-				];
 
-				$sexo_denunciante = $denunciante->SEXO == 'F' ? 'FEMENINO' : 'MASCULINO';
-				$url = "/denuncia/dashboard/video-denuncia?folio=" . $year . '-' . $FOLIOID . "&year=" . $year . "&delito=" . $data->delito . "&descripcion=" . $data->descripcion . "&idioma=" . $data->idioma . "&edad=" . $data->edad . "&perfil=" . $data->perfil . "&sexo=" . $data->sexo . "&prioridad=" . $prioridad . "&sexo_denunciante=" . $sexo_denunciante;
+			$sexo_denunciante = $denunciante->SEXO == 'F' ? 'FEMENINO' : 'MASCULINO';
+			$url = "/denuncia/dashboard/video-denuncia?folio=" . $year . '-' . $FOLIOID . "&year=" . $year . "&delito=" . $data->delito . "&descripcion=" . $data->descripcion . "&idioma=" . $data->idioma . "&edad=" . $data->edad . "&perfil=" . $data->perfil . "&sexo=" . $data->sexo . "&prioridad=" . $prioridad . "&sexo_denunciante=" . $sexo_denunciante;
 
-				if ($this->_sendEmailFolio($session->get('CORREO'), $FOLIOID, $year)) {
-					return redirect()->to(base_url($url));
-				} else {
-					return redirect()->to(base_url($url));
-				}
-
-
-				$sexo_denunciante = $denunciante->SEXO == 'F' ? 'FEMENINO' : 'MASCULINO';
-				$url = "/denuncia/dashboard/video-denuncia?folio=" . $year . '-' . $FOLIOID . "&year=" . $year . "&delito=" . $data->delito . "&descripcion=" . $data->descripcion . "&idioma=" . $data->idioma . "&edad=" . $data->edad . "&perfil=" . $data->perfil . "&sexo=" . $data->sexo . "&prioridad=" . $prioridad . "&sexo_denunciante=" . $sexo_denunciante;
-
-				if ($this->_sendEmailFolio($session->get('CORREO'), $FOLIOID, $year)) {
-					return redirect()->to(base_url($url));
-				} else {
-					return redirect()->to(base_url($url));
-				}
+			if ($this->_sendEmailFolio($session->get('CORREO'), $FOLIOID, $year)) {
+				return redirect()->to(base_url($url));
+			} else {
+				return redirect()->to(base_url($url));
 			}
 		} else {
 			return redirect()->to(base_url('/denuncia/dashboard'));
 		}
 	}
-
 	private function _folioUpdate($id, $data, $year)
 	{
 		$this->_folioModel->set($data)->where('FOLIOID', $id)->where('ANO', $year)->update();
