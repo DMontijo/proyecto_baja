@@ -105,6 +105,8 @@
 	</div>
 </div>
 <?php include('agregar_delito_modal.php') ?>
+<?php include 'info_folio_modal.php' ?>
+
 
 <script>
 	const tipoSalida = document.querySelector('#tipo_salida');
@@ -118,6 +120,7 @@
 	const derivaciones = document.querySelector('#derivaciones');
 	const canalizaciones_container = document.querySelector('#canalizaciones_container');
 	const canalizaciones = document.querySelector('#canalizaciones');
+	const form_delito = document.querySelector('#denuncia_form');
 
 	tipoSalida.addEventListener('change', (e) => {
 
@@ -231,6 +234,15 @@
 
 
 	btnFinalizar.addEventListener('click', () => {
+		console.log(form_delito[0]);
+		if (!form_delito.checkValidity()) {
+			Swal.fire({
+						icon: 'error',
+						text: 'Por favor, completa todos los campos de denuncia.',
+						confirmButtonColor: '#bf9b55',
+					});
+					return;
+		}
 		btnFinalizar.setAttribute('disabled', true);
 		if (!(tipoSalida.value == '1' || tipoSalida.value == '4' || tipoSalida.value == '5' || tipoSalida.value == '6' || tipoSalida.value == '7' || tipoSalida.value == '8' || tipoSalida.value == '9')) {
 			let salida = tipoSalida.value;
