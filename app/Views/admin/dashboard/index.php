@@ -102,7 +102,7 @@ $file_text = $user_id . "_data.txt";
     <div class="col-4">
         <div class="card shadow" style="border-radius:10px;">
             <div class="card-body text-center">
-                <h5 class="card-title">FOLIOS ASIGNADOS PARAR FIRMA</h5>
+                <h5 class="card-title">FOLIOS ASIGNADOS PARA FIRMAR</h5>
                 <h4 class="font-weight-bold"><?= $body_data->cantidad_documentos ?></h4>
                 <a type="button" href="<?= base_url('admin/dashboard/documentos') ?>"
                     class="btn btn-primary font-weight-bold mt-4 text-white">VER MÁS</a>
