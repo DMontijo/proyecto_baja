@@ -84,9 +84,10 @@ export class VideoServiceAgent {
     /**
      * Register the connection of the agent
      * 
-     * @param {Function} callback - This method is executed after agent is connected to socket 
+     * @param {Function} callback - This method is executed after agent is connected to socket
+     * @param {Function} onerrror - This method is executed if an exception occours 
      */
-    connetAgent(callback) {
+    connetAgent(callback, onerror) {
 
         if (this.#socket) {
             this.#socket.disconnect();
@@ -98,8 +99,9 @@ export class VideoServiceAgent {
             throw ExceptionSocketIONotImported();
         }
 
-        this.#socket.on('exception', function (data) {
-            console.warn('event', data);
+        this.#socket.on('exception', function (response) {
+            console.warn('event', response)
+            if (typeof onerror === 'function') onerror(response);
         });
 
         this.#socket.on('disconnect', () => {

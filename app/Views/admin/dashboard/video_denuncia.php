@@ -7,8 +7,8 @@
 <div class="row" id="videoDen">
 	<style>
 		.video_usuario {
-			min-width: 100%;
-			max-width: 50%;
+			min-width: 20%;
+			max-width: 100%;
 			min-height: 17vh;
 			position: relative;
 			top: 0;
@@ -22,6 +22,7 @@
 			width: 20%;
 			min-height: 50vh;
 			position: relative;
+			z-index: 2;
 		}
 
 		video {
@@ -162,11 +163,13 @@
 					<button class="btn btn-danger" id="no_disponible" hidden> Hacerse no disponible</button>
 
 					<div id="sc1" class="sc mt-50">
-						<div class="video_usuario" id="usr_vd"></div>
+						<div class="video_usuario" id="usr_vd">
+							<p class="fw-bold" id="nombre_denunciante"></p>
+						</div>
 					</div>
 					<div id="sc2" class="sc">
 						<div class="video_agente" id="agn_vf">
-
+						<p class="fw-bold" id="nombre_agente"></p>
 						</div>
 						<div id="tools-agent" hidden>
 							<button class="btn btn-danger" id="disconnect-call" title="Colgar llamada">
@@ -222,6 +225,7 @@
 							<div class="alert alert-warning text-right font-weight-bold" role="alert" id="grabacion_stop" style="display: none;">
 								Se esta grabando esta denuncia
 							</div>
+
 						</div>
 					</div>
 				</div>
@@ -276,6 +280,8 @@
 	</div>
 
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.css">
 <script type="text/javascript" src="<?= base_url() ?>/assets/agent/assets/openvidu-browser-2.25.0.min.js"></script>
 <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
 <script src="<?= base_url() ?>/assets/js/video_denuncia.js" type="module"></script>
@@ -2563,7 +2569,6 @@
 
 			var expediente_modal_correo = document.querySelector('#expediente_modal_correo');
 			var year_modal_correo = document.querySelector('#year_modal_correo');
-
 			var tiny = tinymce.init({
 				selector: '#documento',
 				width: 792,

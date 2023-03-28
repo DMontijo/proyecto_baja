@@ -79,10 +79,12 @@
 								de lo contrario nos pondremos en contacto contigo.
 							</p>
 						</div>
-						<div class="video_denunciante" style="display: none;" id="video_d"></div>
+						<div class="video_denunciante" style="display: none;" id="video_d">
+						<p class="fw-bold" id="nombre_denunciante"></p></div>
 					</div>
 					<div id="sc2" class="sc">
 						<div class="video_usuario" style="display: none;" id="video_m">
+						<p class="fw-bold" id="nombre_agente"></p>
 
 						</div>
 
