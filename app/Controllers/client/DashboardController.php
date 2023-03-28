@@ -805,7 +805,8 @@ class DashboardController extends BaseController
 			$archivos_data = null;
 
 
-			if ($documentosArchivosExternos['documentosArchivo']) {
+
+			if ($documentosArchivosExternos['documentosArchivo'][0]->isValid()) {
 				foreach ($documentosArchivosExternos['documentosArchivo'] as $key => $docArc) {
 
 					$doc = file_get_contents($docArc);
