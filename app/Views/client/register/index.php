@@ -228,6 +228,9 @@
 							<select class="form-select" id="localidad_select" name="localidad_select" required>
 								<option selected disabled value="">Selecciona la localidad</option>
 							</select>
+							<div class="invalid-feedback">
+								La localidad es obligatoria
+							</div>
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">

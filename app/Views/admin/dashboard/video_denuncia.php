@@ -14,7 +14,7 @@
 		#secondary_videos_container {
 			max-width: 20vh;
 			min-width: 200px;
-			padding: 20px;
+			padding: 10px;
 			background-color: transparent;
 			height: calc(70vh - 70px);
 			margin-top: -70vh;
@@ -95,17 +95,23 @@
 
 		#tools-group {
 			padding: 10px;
-			background-color: rgba(0, 0, 0, .3);
+			background-color: rgba(0, 0, 0, 0);
 			height: 70px;
 			display: flex;
 			justify-content: center;
 			align-items: center;
 			margin-top: -70px;
 			z-index: 1;
+			transition: 0.5s;
+		}
+
+		#tools-group:hover {
+			background-color: rgba(0, 0, 0, .3);
 		}
 
 		video {
-			width: 100%;
+			width: 100% !important;
+			height: 100% !important;
 		}
 	</style>
 	<div class="col-12 text-center mb-4 d-none" id="divFolioAtendido" name="divFolioAtendido">
@@ -291,7 +297,7 @@
 								<div id="tools" class="row">
 									<div class="col-12">
 										<div id="tools-group">
-											<div class="btn-group btn-group-toggle mr-2" data-toggle="buttons">
+											<div class="btn-group btn-group-toggle mr-2 shadow" data-toggle="buttons">
 												<button class="btn btn-lg btn-light" id="toogle-video-agent" data-toggle="tooltip" data-placement="top" title="Encender cámara del agente">
 													<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-camera-video-off" viewBox="0 0 16 16">
 														<path fill-rule="evenodd" d="M10.961 12.365a1.99 1.99 0 0 0 .522-1.103l3.11 1.382A1 1 0 0 0 16 11.731V4.269a1 1 0 0 0-1.406-.913l-3.111 1.382A2 2 0 0 0 9.5 3H4.272l.714 1H9.5a1 1 0 0 1 1 1v6a1 1 0 0 1-.144.518l.605.847zM1.428 4.18A.999.999 0 0 0 1 5v6a1 1 0 0 0 1 1h5.014l.714 1H2a2 2 0 0 1-2-2V5c0-.675.334-1.272.847-1.634l.58.814zM15 11.73l-3.5-1.555v-4.35L15 4.269v7.462zm-4.407 3.56-10-14 .814-.58 10 14-.814.58z" />
@@ -327,7 +333,7 @@
 													</svg>
 												</button>
 											</div>
-											<div class="btn-group btn-group-toggle" data-toggle="buttons">
+											<div class="btn-group btn-group-toggle shadow" data-toggle="buttons">
 												<button class="btn btn-lg btn-light" id="toogle-video-victim" data-toggle="tooltip" data-placement="top" title="Encender cámara del denunciante">
 													<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-camera-video-off" viewBox="0 0 16 16">
 														<path fill-rule="evenodd" d="M10.961 12.365a1.99 1.99 0 0 0 .522-1.103l3.11 1.382A1 1 0 0 0 16 11.731V4.269a1 1 0 0 0-1.406-.913l-3.111 1.382A2 2 0 0 0 9.5 3H4.272l.714 1H9.5a1 1 0 0 1 1 1v6a1 1 0 0 1-.144.518l.605.847zM1.428 4.18A.999.999 0 0 0 1 5v6a1 1 0 0 0 1 1h5.014l.714 1H2a2 2 0 0 1-2-2V5c0-.675.334-1.272.847-1.634l.58.814zM15 11.73l-3.5-1.555v-4.35L15 4.269v7.462zm-4.407 3.56-10-14 .814-.58 10 14-.814.58z" />
@@ -339,7 +345,6 @@
 														<path d="m9.486 10.607-.748-.748A2 2 0 0 1 6 8v-.878l-1-1V8a3 3 0 0 0 4.486 2.607zm-7.84-9.253 12 12 .708-.708-12-12-.708.708z" />
 													</svg>
 												</button>
-												
 											</div>
 										</div>
 									</div>

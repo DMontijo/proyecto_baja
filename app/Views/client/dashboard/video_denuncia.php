@@ -9,25 +9,119 @@
 
 <?php $session = session(); ?>
 <style>
-	.video_denunciante {
-		width: 20%;
-		height: 17%;
-		position: relative;
-		top: 0;
-		left: 0;
-		z-index: 1;
-		margin: 1%;
-		border-radius: 5%;
+	#video_container {
+		width: 100%;
+		min-height: 70vh;
 	}
 
-	.video_usuario {
+	#secondary_videos_container {
+		max-width: 200px;
+		min-width: 150px;
+		padding: 10px;
+		background-color: transparent;
+		height: calc(70vh - 70px);
+		margin-top: -70vh;
+		margin-left: auto;
+		overflow-y: auto;
+		transition: 0.5s;
+	}
+
+	@media only screen and (max-width: 600px) {
+		#secondary_videos_container {
+			max-width: 150px;
+			min-width: 150px;
+		}
+	}
+
+	#secondary_videos_container:hover {
+		background-color: rgba(0, 0, 0, .3);
+	}
+
+	.secondary_video {
 		width: 100%;
-		height: 90%;
-		position: relative;
+		height: 100px;
+		z-index: 2 !important;
+		margin-bottom: 10px;
+		background-color: aquamarine;
+		box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 0.3);
+		-webkit-box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 0.3);
+		-moz-box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 0.3);
+	}
+
+	#secondary_video_details {
+		background-color: transparent;
+		width: 100%;
+		height: 100px;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+	}
+
+	#secondary_video_details_name {
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		/* max-width: 300px; */
+		font-weight: bold;
+		font-size: 8px;
+		padding: 3px;
+		text-align: center;
+		background-color: rgba(255, 255, 255, .5);
+	}
+
+	#secondary_video_details_devices {
+		display: inline-block;
+		background-color: rgba(255, 255, 255, .5);
+		padding: 3px;
+		margin-left: auto;
+	}
+
+	#main_video {
+		width: 100% !important;
+		min-height: 70vh;
+		background-color: aqua;
+	}
+
+	#main_video_details {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		opacity: .3;
+		transition: 0.5s;
+	}
+
+	#main_video_details:hover {
+		opacity: 1;
+	}
+
+	#main_video_details_name {
+		display: inline-block;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		max-width: 300px;
+		font-weight: bold;
+	}
+
+	#tools-group {
+		padding: 10px;
+		background-color: rgba(0, 0, 0, 0);
+		height: 70px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		margin-top: -70px;
+		z-index: 1;
+		transition: 0.5s;
+	}
+
+	#tools-group:hover {
+		background-color: rgba(0, 0, 0, .3);
 	}
 
 	video {
-		width: 100%;
+		width: 100% !important;
+		height: 100% !important;
 	}
 </style>
 <div class="container-fluid mb-5">
@@ -58,40 +152,80 @@
 				</div>
 			</div>
 		</div>
+		<div class="col-12 p-0 m-0" id="pantalla_inicial">
+			<div class="card text-center">
+				<div class="card-body p-0 m-0 p-5 d-flex justify-content-center align-items-center">
+					<div class="text-center" style="max-width:500px;">
+						<img src="<?= base_url() ?>/assets/img/loader.gif" alt="Loader FGEBC" class="mb-3">
+						<p class="fw-bold">
+							¡Tu solicitud se ha registrado con éxito!
+						</p>
+						<p>En unos minutos serás atendido por personal del Centro de Denuncia Tecnológica,
+							<strong>permanece en línea.</strong>
+						</p>
+						<p>
+							De presentarse fallas de conexión recarga la página web o ingresa nuevamente con tu usuario
+							de lo contrario nos pondremos en contacto contigo.
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-12 p-0 m-0" id="pantalla_final">
+			<div class="card text-center">
+				<div class="card-body p-0 m-0 p-5 d-flex justify-content-center align-items-center">
+					<div class="text-center" style="max-width:500px;">
+						<img src="<?= base_url() ?>/assets/img/FGEBC.png" alt="Loader FGEBC" class="mb-3" style="width:250px;">
+						<p class="fw-bold">ESTIMADO (A) USUARIO (A),<br>¡GRACIAS POR SELECCIONAR EL SERVICIO DE VIDEO DENUNCIA!</p>
+						<p>En la Fiscalía General del Estado de Baja California día a día trabajamos para garantizarte un fácil acceso a la justicia desde cualquier lugar del mundo.</p>
+					</div>
+				</div>
+			</div>
+		</div>
 		<div class="col-12 p-0 m-0">
 			<div class="card text-center">
 				<div class="card-body p-0 m-0">
-					<!-- <div class="ratio ratio-16x9 justify-content-center"> -->
-					<!-- <iframe style="min-height:600px;" src="<?= 'https://videodenunciaserver1.fgebc.gob.mx/videollamada?folio=' . $body_data->folio . '&nombre=' . $session->NOMBRE . ' ' . $session->APELLIDO_PATERNO . ' ' . $session->APELLIDO_MATERNO . '&delito=' . $body_data->delito . '&descripcion=' . $body_data->descripcion . '&idioma=' . $body_data->idioma . '&edad=' . $body_data->edad . '&perfil=' . $body_data->perfil . '&sexo=' . $body_data->sexo . '&prioridad=' . $body_data->prioridad . '&sexo_denunciante=' . $body_data->sexo_denunciante ?>" frameborder="0" allowfullscreen allow="camera *;microphone *"></iframe> -->
-
-
-					<div id="sc1" class="sc text-center d-flex justify-content-center align-items-center" style="min-height:600px;">
-						<div id="texto_inicial" class="p-3 text-center" style="max-width:500px;">
-							<img src="<?= base_url() ?>/assets/img/loader.gif" alt="Loader FGEBC" class="mb-3">
-							<p class="fw-bold">
-								¡Tu solicitud se ha registrado con éxito!
-							</p>
-							<p>En unos minutos serás atendido por personal del Centro de Denuncia Tecnológica,
-								<strong>permanece en línea.</strong>
-							</p>
-							<p>
-								De presentarse fallas de conexión recarga la página web o ingresa nuevamente con tu usuario
-								de lo contrario nos pondremos en contacto contigo.
-							</p>
+					<div class="row">
+						<div class="col-12">
+							<div id="video_container">
+								<div id="main_video">
+									<div id="main_video_details">
+										<div class="btn-group btn-group-toggle mt-3">
+											<button class="btn btn-sm btn-light" id="main_video_details_name">
+												LIC. ALFREDO JIMENEZ PEREZ
+											</button>
+										</div>
+									</div>
+								</div>
+								<div id="tools" class="row">
+									<div class="col-12">
+										<div id="tools-group">
+											<div class="btn-group shadow" role="group">
+												<button class="btn btn-lg btn-secondary" id="toogle-video">
+													<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-camera-video-off" viewBox="0 0 16 16">
+														<path fill-rule="evenodd" d="M10.961 12.365a1.99 1.99 0 0 0 .522-1.103l3.11 1.382A1 1 0 0 0 16 11.731V4.269a1 1 0 0 0-1.406-.913l-3.111 1.382A2 2 0 0 0 9.5 3H4.272l.714 1H9.5a1 1 0 0 1 1 1v6a1 1 0 0 1-.144.518l.605.847zM1.428 4.18A.999.999 0 0 0 1 5v6a1 1 0 0 0 1 1h5.014l.714 1H2a2 2 0 0 1-2-2V5c0-.675.334-1.272.847-1.634l.58.814zM15 11.73l-3.5-1.555v-4.35L15 4.269v7.462zm-4.407 3.56-10-14 .814-.58 10 14-.814.58z" />
+													</svg>
+												</button>
+												<button class="btn btn-lg btn-secondary" id="toogle-audio">
+													<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-mic-mute" viewBox="0 0 16 16">
+														<path d="M13 8c0 .564-.094 1.107-.266 1.613l-.814-.814A4.02 4.02 0 0 0 12 8V7a.5.5 0 0 1 1 0v1zm-5 4c.818 0 1.578-.245 2.212-.667l.718.719a4.973 4.973 0 0 1-2.43.923V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 1 0v1a4 4 0 0 0 4 4zm3-9v4.879l-1-1V3a2 2 0 0 0-3.997-.118l-.845-.845A3.001 3.001 0 0 1 11 3z" />
+														<path d="m9.486 10.607-.748-.748A2 2 0 0 1 6 8v-.878l-1-1V8a3 3 0 0 0 4.486 2.607zm-7.84-9.253 12 12 .708-.708-12-12-.708.708z" />
+													</svg>
+												</button>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div id="secondary_videos_container">
+									<div class="secondary_video" id="agn_vf">
+										<div id="secondary_video_details">
+											<div class="font-weigth-bold" id="secondary_video_details_name">ABDIEL OTONIEL FLORES GONZÁLEZ</div>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
-						<div class="video_denunciante" style="display: none;" id="video_d">
-						<p class="fw-bold" id="nombre_denunciante"></p></div>
 					</div>
-					<div id="sc2" class="sc">
-						<div class="video_usuario" style="display: none;" id="video_m">
-						<p class="fw-bold" id="nombre_agente"></p>
-
-						</div>
-
-					</div>
-
-					<!-- </div> -->
-
 				</div>
 
 			</div>
@@ -107,7 +241,6 @@
 <script src="<?= base_url() ?>/assets/js/video_denuncia_client.js" type="module"></script>
 <script>
 	const folio_get = `<?php echo $_GET['folio'] ?>`;
-
 
 	let arr = folio_get.split('-')
 	const year = arr[0];
