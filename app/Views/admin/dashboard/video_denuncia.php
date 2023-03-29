@@ -6,23 +6,102 @@
 <?php $session = session(); ?>
 <div class="row" id="videoDen">
 	<style>
-		.video_usuario {
-			min-width: 20%;
-			max-width: 100%;
-			min-height: 17vh;
-			position: relative;
-			top: 0;
-			left: 0;
-			z-index: 1;
-			margin: 1%;
-			border-radius: 5%;
+		#video_container {
+			width: 100%;
+			min-height: 70vh;
 		}
 
-		.video_agente {
-			width: 20%;
-			min-height: 50vh;
-			position: relative;
-			z-index: 2;
+		#secondary_videos_container {
+			max-width: 20vh;
+			min-width: 200px;
+			padding: 20px;
+			background-color: transparent;
+			height: calc(70vh - 70px);
+			margin-top: -70vh;
+			margin-left: auto;
+			overflow-y: auto;
+			transition: 0.5s;
+		}
+
+		#secondary_videos_container:hover {
+			background-color: rgba(0, 0, 0, .3);
+		}
+
+		.secondary_video {
+			width: 100%;
+			height: 100px;
+			z-index: 2 !important;
+			margin-bottom: 10px;
+			background-color: aquamarine;
+			box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 0.3);
+			-webkit-box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 0.3);
+			-moz-box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 0.3);
+		}
+
+		#secondary_video_details {
+			background-color: transparent;
+			width: 100%;
+			height: 100px;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+		}
+
+		#secondary_video_details_name {
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			overflow: hidden;
+			/* max-width: 300px; */
+			font-weight: bold;
+			font-size: 8px;
+			padding: 3px;
+			text-align: center;
+			background-color: rgba(255, 255, 255, .5);
+		}
+
+		#secondary_video_details_devices {
+			display: inline-block;
+			background-color: rgba(255, 255, 255, .5);
+			padding: 3px;
+			margin-left: auto;
+		}
+
+		#main_video {
+			width: 100% !important;
+			min-height: 70vh;
+			background-color: aqua;
+		}
+
+		#main_video_details {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			opacity: .3;
+			transition: 0.5s;
+		}
+
+		#main_video_details:hover {
+			opacity: 1;
+		}
+
+		#main_video_details_name {
+			display: inline-block;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			overflow: hidden;
+			max-width: 300px;
+			font-weight: bold;
+		}
+
+		#tools-group {
+			padding: 10px;
+			background-color: rgba(0, 0, 0, .3);
+			height: 70px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			margin-top: -70px;
+			z-index: 1;
 		}
 
 		video {
@@ -158,74 +237,137 @@
 	<div class="col">
 		<?php if (session('TOKENVIDEO')) { ?>
 			<div class="card rounded bg-white shadow">
-				<div class="card-body shadow rounded">
-					<button class="btn btn-success" id="disponible"> Hacerse disponible</button>
-					<button class="btn btn-danger" id="no_disponible" hidden> Hacerse no disponible</button>
-
-					<div id="sc1" class="sc mt-50">
-						<div class="video_usuario" id="usr_vd">
-							<p class="fw-bold" id="nombre_denunciante"></p>
+				<div class="card-body shadow rounded m-0 p-0">
+					<div class="row">
+						<div class="col-12 px-4 py-3">
+							<button class="btn btn-success" id="disponible" data-toggle="tooltip" data-placement="top" title="Conectar para recibir video llamadas"><i class="fas fa-door-open"></i> HACERME DISPONIBLE</button>
+							<button class="btn btn-danger" id="no_disponible" data-toggle="tooltip" data-placement="top"><i class="fas fa-times-circle"></i> DESCONECTARME</button>
+						</div>
+						<div class="col-12 px-4">
+							<p>
+								FOLIO: <span class="font-weight-bold" id="folio_llamada">9/2023</span> - NOMBRE: <span class="font-weight-bold" id="denunciante_nombre_llamada">ABDIEL OTONIEL FLORES GONZÁLEZ</span> - EDAD: <span class="font-weight-bold" id="denunciante_edad_llamada">17 AÑOS</span>
+							</p>
 						</div>
 					</div>
-					<div id="sc2" class="sc">
-						<div class="video_agente" id="agn_vf">
-						<p class="fw-bold" id="nombre_agente"></p>
-						</div>
-						<div id="tools-agent" hidden>
-							<button class="btn btn-danger" id="disconnect-call" title="Colgar llamada">
-								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-telephone-minus" viewBox="0 0 16 16">
-									<path fill-rule="evenodd" d="M10 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5z" />
-									<path d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 0 0 4.168 6.608 17.569 17.569 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
-								</svg>
-							</button>
-							<button class="btn btn-primary" id="toogle-video-agent" title="Encender/Apagar cámara del agente">
-								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-camera-video-off" viewBox="0 0 16 16">
-									<path fill-rule="evenodd" d="M10.961 12.365a1.99 1.99 0 0 0 .522-1.103l3.11 1.382A1 1 0 0 0 16 11.731V4.269a1 1 0 0 0-1.406-.913l-3.111 1.382A2 2 0 0 0 9.5 3H4.272l.714 1H9.5a1 1 0 0 1 1 1v6a1 1 0 0 1-.144.518l.605.847zM1.428 4.18A.999.999 0 0 0 1 5v6a1 1 0 0 0 1 1h5.014l.714 1H2a2 2 0 0 1-2-2V5c0-.675.334-1.272.847-1.634l.58.814zM15 11.73l-3.5-1.555v-4.35L15 4.269v7.462zm-4.407 3.56-10-14 .814-.58 10 14-.814.58z" />
-								</svg>
-							</button>
-							<button class="btn btn-primary" id="toogle-audio-agent" title="Activar/Desactivar audio del agente">
-								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-mic-mute" viewBox="0 0 16 16">
-									<path d="M13 8c0 .564-.094 1.107-.266 1.613l-.814-.814A4.02 4.02 0 0 0 12 8V7a.5.5 0 0 1 1 0v1zm-5 4c.818 0 1.578-.245 2.212-.667l.718.719a4.973 4.973 0 0 1-2.43.923V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 1 0v1a4 4 0 0 0 4 4zm3-9v4.879l-1-1V3a2 2 0 0 0-3.997-.118l-.845-.845A3.001 3.001 0 0 1 11 3z" />
-									<path d="m9.486 10.607-.748-.748A2 2 0 0 1 6 8v-.878l-1-1V8a3 3 0 0 0 4.486 2.607zm-7.84-9.253 12 12 .708-.708-12-12-.708.708z" />
-								</svg>
-							</button>
-							<button class="btn btn-primary" id="start-recording" name="start-recording" title="Empezar grabación">
-								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-play" viewBox="0 0 16 16">
-									<path d="M6 6.883v4.234a.5.5 0 0 0 .757.429l3.528-2.117a.5.5 0 0 0 0-.858L6.757 6.454a.5.5 0 0 0-.757.43z" />
-									<path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z" />
-								</svg>
-							</button>
-							<button class="btn btn-primary" id="stop-recording" title="Detener grabación">
-								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-stop-circle" viewBox="0 0 16 16">
-									<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-									<path d="M5 6.5A1.5 1.5 0 0 1 6.5 5h3A1.5 1.5 0 0 1 11 6.5v3A1.5 1.5 0 0 1 9.5 11h-3A1.5 1.5 0 0 1 5 9.5v-3z" />
-								</svg>
-							</button>
-							<button class="btn btn-primary" id="marks-recording-modal" title="Añadir marca de tiempo" disabled>
-								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmarks" viewBox="0 0 16 16">
-									<path d="M2 4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L7 13.101l-4.223 2.815A.5.5 0 0 1 2 15.5V4zm2-1a1 1 0 0 0-1 1v10.566l3.723-2.482a.5.5 0 0 1 .554 0L11 14.566V4a1 1 0 0 0-1-1H4z" />
-									<path d="M4.268 1H12a1 1 0 0 1 1 1v11.768l.223.148A.5.5 0 0 0 14 13.5V2a2 2 0 0 0-2-2H6a2 2 0 0 0-1.732 1z" />
-								</svg>
-							</button>
-
-							<button class="btn btn-primary" id="toogle-video-victim" title="Encender/Apagar cámara del denunciante">
-								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-camera-video-off" viewBox="0 0 16 16">
-									<path fill-rule="evenodd" d="M10.961 12.365a1.99 1.99 0 0 0 .522-1.103l3.11 1.382A1 1 0 0 0 16 11.731V4.269a1 1 0 0 0-1.406-.913l-3.111 1.382A2 2 0 0 0 9.5 3H4.272l.714 1H9.5a1 1 0 0 1 1 1v6a1 1 0 0 1-.144.518l.605.847zM1.428 4.18A.999.999 0 0 0 1 5v6a1 1 0 0 0 1 1h5.014l.714 1H2a2 2 0 0 1-2-2V5c0-.675.334-1.272.847-1.634l.58.814zM15 11.73l-3.5-1.555v-4.35L15 4.269v7.462zm-4.407 3.56-10-14 .814-.58 10 14-.814.58z" />
-								</svg>
-							</button>
-							<button class="btn btn-primary" id="toogle-audio-victim" title="Activar/Desactivar audio del denunciante">
-								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-mic-mute" viewBox="0 0 16 16">
-									<path d="M13 8c0 .564-.094 1.107-.266 1.613l-.814-.814A4.02 4.02 0 0 0 12 8V7a.5.5 0 0 1 1 0v1zm-5 4c.818 0 1.578-.245 2.212-.667l.718.719a4.973 4.973 0 0 1-2.43.923V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 1 0v1a4 4 0 0 0 4 4zm3-9v4.879l-1-1V3a2 2 0 0 0-3.997-.118l-.845-.845A3.001 3.001 0 0 1 11 3z" />
-									<path d="m9.486 10.607-.748-.748A2 2 0 0 1 6 8v-.878l-1-1V8a3 3 0 0 0 4.486 2.607zm-7.84-9.253 12 12 .708-.708-12-12-.708.708z" />
-								</svg>
-							</button>
-							<div class="alert alert-success text-right font-weight-bold" role="alert" id="grabacion" style="display: none;">
-								Se esta grabando esta denuncia
+					<div class="row">
+						<div class="col-12">
+							<div id="video_container">
+								<div id="main_video">
+									<div id="main_video_details">
+										<div class="btn-group btn-group-toggle mt-3">
+											<button class="btn btn-sm btn-light" id="main_video_details_name">
+												ABDIEL OTONIEL FLORES GONZÁLEZ
+											</button>
+											<button class="btn btn-sm btn-secondary" id="main_video_details_video">
+												<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-camera-video-fill" viewBox="0 0 16 16">
+													<path fill-rule="evenodd" d="M0 5a2 2 0 0 1 2-2h7.5a2 2 0 0 1 1.983 1.738l3.11-1.382A1 1 0 0 1 16 4.269v7.462a1 1 0 0 1-1.406.913l-3.111-1.382A2 2 0 0 1 9.5 13H2a2 2 0 0 1-2-2V5z" />
+												</svg>
+												<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-camera-video-off-fill" viewBox="0 0 16 16">
+													<path fill-rule="evenodd" d="M10.961 12.365a1.99 1.99 0 0 0 .522-1.103l3.11 1.382A1 1 0 0 0 16 11.731V4.269a1 1 0 0 0-1.406-.913l-3.111 1.382A2 2 0 0 0 9.5 3H4.272l6.69 9.365zm-10.114-9A2.001 2.001 0 0 0 0 5v6a2 2 0 0 0 2 2h5.728L.847 3.366zm9.746 11.925-10-14 .814-.58 10 14-.814.58z" />
+												</svg>
+											</button>
+											<button class="btn btn-sm btn-secondary" id="main_video_details_microphone">
+												<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-mic-fill" viewBox="0 0 16 16">
+													<path d="M5 3a3 3 0 0 1 6 0v5a3 3 0 0 1-6 0V3z" />
+													<path d="M3.5 6.5A.5.5 0 0 1 4 7v1a4 4 0 0 0 8 0V7a.5.5 0 0 1 1 0v1a5 5 0 0 1-4.5 4.975V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 .5-.5z" />
+												</svg>
+												<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-mic-mute-fill" viewBox="0 0 16 16">
+													<path d="M13 8c0 .564-.094 1.107-.266 1.613l-.814-.814A4.02 4.02 0 0 0 12 8V7a.5.5 0 0 1 1 0v1zm-5 4c.818 0 1.578-.245 2.212-.667l.718.719a4.973 4.973 0 0 1-2.43.923V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 1 0v1a4 4 0 0 0 4 4zm3-9v4.879L5.158 2.037A3.001 3.001 0 0 1 11 3z" />
+													<path d="M9.486 10.607 5 6.12V8a3 3 0 0 0 4.486 2.607zm-7.84-9.253 12 12 .708-.708-12-12-.708.708z" />
+												</svg>
+											</button>
+											<button class="btn btn-sm btn-danger" id="grabacion">
+												<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-circle-fill" viewBox="0 0 16 16">
+													<circle cx="8" cy="8" r="8" />
+												</svg>
+												REC
+											</button>
+											<button class="btn btn-sm btn-success" id="grabacion_stop">
+												GRABACIÓN FINALIZADA
+											</button>
+										</div>
+									</div>
+								</div>
+								<div id="tools" class="row">
+									<div class="col-12">
+										<div id="tools-group">
+											<div class="btn-group btn-group-toggle mr-2" data-toggle="buttons">
+												<button class="btn btn-lg btn-light" id="toogle-video-agent" data-toggle="tooltip" data-placement="top" title="Encender cámara del agente">
+													<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-camera-video-off" viewBox="0 0 16 16">
+														<path fill-rule="evenodd" d="M10.961 12.365a1.99 1.99 0 0 0 .522-1.103l3.11 1.382A1 1 0 0 0 16 11.731V4.269a1 1 0 0 0-1.406-.913l-3.111 1.382A2 2 0 0 0 9.5 3H4.272l.714 1H9.5a1 1 0 0 1 1 1v6a1 1 0 0 1-.144.518l.605.847zM1.428 4.18A.999.999 0 0 0 1 5v6a1 1 0 0 0 1 1h5.014l.714 1H2a2 2 0 0 1-2-2V5c0-.675.334-1.272.847-1.634l.58.814zM15 11.73l-3.5-1.555v-4.35L15 4.269v7.462zm-4.407 3.56-10-14 .814-.58 10 14-.814.58z" />
+													</svg>
+												</button>
+												<button class="btn btn-lg btn-light" id="toogle-audio-agent" data-toggle="tooltip" data-placement="top" title="Activar audio del agente">
+													<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-mic-mute" viewBox="0 0 16 16">
+														<path d="M13 8c0 .564-.094 1.107-.266 1.613l-.814-.814A4.02 4.02 0 0 0 12 8V7a.5.5 0 0 1 1 0v1zm-5 4c.818 0 1.578-.245 2.212-.667l.718.719a4.973 4.973 0 0 1-2.43.923V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 1 0v1a4 4 0 0 0 4 4zm3-9v4.879l-1-1V3a2 2 0 0 0-3.997-.118l-.845-.845A3.001 3.001 0 0 1 11 3z" />
+														<path d="m9.486 10.607-.748-.748A2 2 0 0 1 6 8v-.878l-1-1V8a3 3 0 0 0 4.486 2.607zm-7.84-9.253 12 12 .708-.708-12-12-.708.708z" />
+													</svg>
+												</button>
+												<button class="btn btn-lg btn-light" id="start-recording" name="start-recording" data-toggle="tooltip" data-placement="top" title="Iniciar grabación">
+													<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
+														<path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z" />
+													</svg>
+												</button>
+												<button class="btn btn-lg btn-light" id="stop-recording" data-toggle="tooltip" data-placement="top" title="Detener grabación">
+													<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-stop-circle" viewBox="0 0 16 16">
+														<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+														<path d="M5 6.5A1.5 1.5 0 0 1 6.5 5h3A1.5 1.5 0 0 1 11 6.5v3A1.5 1.5 0 0 1 9.5 11h-3A1.5 1.5 0 0 1 5 9.5v-3z" />
+													</svg>
+												</button>
+												<!-- <button class="btn btn-lg btn-light" id="marks-recording-modal" data-toggle="tooltip" data-placement="top" title="Añadir marca de tiempo">
+													<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmarks" viewBox="0 0 16 16">
+														<path d="M2 4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L7 13.101l-4.223 2.815A.5.5 0 0 1 2 15.5V4zm2-1a1 1 0 0 0-1 1v10.566l3.723-2.482a.5.5 0 0 1 .554 0L11 14.566V4a1 1 0 0 0-1-1H4z" />
+														<path d="M4.268 1H12a1 1 0 0 1 1 1v11.768l.223.148A.5.5 0 0 0 14 13.5V2a2 2 0 0 0-2-2H6a2 2 0 0 0-1.732 1z" />
+													</svg>
+												</button> -->
+												<button class="btn btn-lg btn-danger" id="disconnect-call" data-toggle="tooltip" data-placement="top" title="Colgar llamada">
+													<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-telephone-minus" viewBox="0 0 16 16">
+														<path fill-rule="evenodd" d="M10 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5z" />
+														<path d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 0 0 4.168 6.608 17.569 17.569 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
+													</svg>
+												</button>
+											</div>
+											<div class="btn-group btn-group-toggle" data-toggle="buttons">
+												<button class="btn btn-lg btn-light" id="toogle-video-victim" data-toggle="tooltip" data-placement="top" title="Encender cámara del denunciante">
+													<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-camera-video-off" viewBox="0 0 16 16">
+														<path fill-rule="evenodd" d="M10.961 12.365a1.99 1.99 0 0 0 .522-1.103l3.11 1.382A1 1 0 0 0 16 11.731V4.269a1 1 0 0 0-1.406-.913l-3.111 1.382A2 2 0 0 0 9.5 3H4.272l.714 1H9.5a1 1 0 0 1 1 1v6a1 1 0 0 1-.144.518l.605.847zM1.428 4.18A.999.999 0 0 0 1 5v6a1 1 0 0 0 1 1h5.014l.714 1H2a2 2 0 0 1-2-2V5c0-.675.334-1.272.847-1.634l.58.814zM15 11.73l-3.5-1.555v-4.35L15 4.269v7.462zm-4.407 3.56-10-14 .814-.58 10 14-.814.58z" />
+													</svg>
+												</button>
+												<button class="btn btn-lg btn-light" id="toogle-audio-victim" data-toggle="tooltip" data-placement="top" title="Activar audio del denunciante">
+													<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-mic-mute" viewBox="0 0 16 16">
+														<path d="M13 8c0 .564-.094 1.107-.266 1.613l-.814-.814A4.02 4.02 0 0 0 12 8V7a.5.5 0 0 1 1 0v1zm-5 4c.818 0 1.578-.245 2.212-.667l.718.719a4.973 4.973 0 0 1-2.43.923V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 1 0v1a4 4 0 0 0 4 4zm3-9v4.879l-1-1V3a2 2 0 0 0-3.997-.118l-.845-.845A3.001 3.001 0 0 1 11 3z" />
+														<path d="m9.486 10.607-.748-.748A2 2 0 0 1 6 8v-.878l-1-1V8a3 3 0 0 0 4.486 2.607zm-7.84-9.253 12 12 .708-.708-12-12-.708.708z" />
+													</svg>
+												</button>
+												
+											</div>
+										</div>
+									</div>
+								</div>
+								<div id="secondary_videos_container">
+									<div class="secondary_video" id="agn_vf">
+										<div id="secondary_video_details">
+											<div class="font-weigth-bold" id="secondary_video_details_name">LIC. ALFREDO JIMENEZ PEREZ</div>
+											<div class="font-weigth-bold" id="secondary_video_details_devices">
+												<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-camera-video-fill" viewBox="0 0 16 16">
+													<path fill-rule="evenodd" d="M0 5a2 2 0 0 1 2-2h7.5a2 2 0 0 1 1.983 1.738l3.11-1.382A1 1 0 0 1 16 4.269v7.462a1 1 0 0 1-1.406.913l-3.111-1.382A2 2 0 0 1 9.5 13H2a2 2 0 0 1-2-2V5z" />
+												</svg>
+												<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-camera-video-off-fill" viewBox="0 0 16 16">
+													<path fill-rule="evenodd" d="M10.961 12.365a1.99 1.99 0 0 0 .522-1.103l3.11 1.382A1 1 0 0 0 16 11.731V4.269a1 1 0 0 0-1.406-.913l-3.111 1.382A2 2 0 0 0 9.5 3H4.272l6.69 9.365zm-10.114-9A2.001 2.001 0 0 0 0 5v6a2 2 0 0 0 2 2h5.728L.847 3.366zm9.746 11.925-10-14 .814-.58 10 14-.814.58z" />
+												</svg>
+												<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-mic-fill" viewBox="0 0 16 16">
+													<path d="M5 3a3 3 0 0 1 6 0v5a3 3 0 0 1-6 0V3z" />
+													<path d="M3.5 6.5A.5.5 0 0 1 4 7v1a4 4 0 0 0 8 0V7a.5.5 0 0 1 1 0v1a5 5 0 0 1-4.5 4.975V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 .5-.5z" />
+												</svg>
+												<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-mic-mute-fill" viewBox="0 0 16 16">
+													<path d="M13 8c0 .564-.094 1.107-.266 1.613l-.814-.814A4.02 4.02 0 0 0 12 8V7a.5.5 0 0 1 1 0v1zm-5 4c.818 0 1.578-.245 2.212-.667l.718.719a4.973 4.973 0 0 1-2.43.923V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 1 0v1a4 4 0 0 0 4 4zm3-9v4.879L5.158 2.037A3.001 3.001 0 0 1 11 3z" />
+													<path d="M9.486 10.607 5 6.12V8a3 3 0 0 0 4.486 2.607zm-7.84-9.253 12 12 .708-.708-12-12-.708.708z" />
+												</svg>
+											</div>
+										</div>
+									</div>
+								</div>
 							</div>
-							<div class="alert alert-warning text-right font-weight-bold" role="alert" id="grabacion_stop" style="display: none;">
-								Se esta grabando esta denuncia
-							</div>
-
 						</div>
 					</div>
 				</div>
@@ -286,6 +428,9 @@
 <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
 <script src="<?= base_url() ?>/assets/js/video_denuncia.js" type="module"></script>
 <script>
+	$(function() {
+		$('[data-toggle="tooltip"]').tooltip()
+	})
 	// Service 
 	// const apiKey = 'vspk_988a387a-001c-4d80-a456-6debd55dba61';
 	// const agentUUID = '<?= session('TOKENVIDEO') ?>';
@@ -6303,7 +6448,6 @@
 						lat: position.coords.latitude,
 						lng: position.coords.longitude,
 					};
-
 					map.setCenter(pos);
 					addMarker(pos, map, 'current');
 					map.setZoom(15);
