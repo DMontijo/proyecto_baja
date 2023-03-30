@@ -17,7 +17,7 @@
 <?php include 'app/Views/admin/dashboard/video_denuncia_modals/send_email_modal.php' ?>
 <?php include 'app/Views/admin/dashboard/video_denuncia_modals/send_email_modal_docunitario.php' ?>
 
-<?php include 'app/Views/admin/dashboard/video_denuncia_modals/prueba.php' ?>
+<?php include 'app/Views/admin/dashboard/video_denuncia_modals/load_save_archivos_modal.php' ?>
 <section class="content">
 	<div class="container-fluid">
 		<div class="col-12 text-center mb-4">
@@ -880,6 +880,7 @@
 			$('#subirDocumentosModal').modal('show');
 			$('#subirDocumentosModal').show();
 			if (isParameterByName('expediente')) {
+
 				const data = {
 					'folio': getParameterByName('folio'),
 					'expediente': getParameterByName('expediente'),

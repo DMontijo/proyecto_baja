@@ -132,4 +132,12 @@ export default class VideoCall {
         this.#publishAudio =!this.#publishAudio;
         this.#publisher.publishAudio(this.#publishAudio);
     }
+
+    get isAudioEnabled() {
+        return this.#publishAudio;
+    }
+
+    get isVideoEnabled() {
+        return this.#publishVideo;
+    }
 }

@@ -38,8 +38,13 @@ export class VideoServiceAgent {
     #loggedOutSound = new Audio('../../assets/agent/assets/sounds/logout.m4a');
 
 
-    guestAudio = false;
+    agentVideo = true;
+    agentAudio = true;
+    guestAudio = true;
     guestVideo = true;
+
+    guestData = {};
+    agentData = {};
 
     #videoCallService;
     #sessionId;
@@ -112,6 +117,7 @@ export class VideoServiceAgent {
         this.#emit('connect-agent', {
             agent: this.#agentUUID
         }, response => {
+            this.agentData = response.agent
             this.#loggedInSound.play();
 
             if (typeof callback === 'function') callback(response);
@@ -124,7 +130,9 @@ export class VideoServiceAgent {
      * @param {Function} [callback] - This method is executed after gest is assigned to agent
      */
     registerOnGuestConnected(callback) {
+        
         this.#socket.on('guest-connected', (response) => {
+            this.guestData = response;
             this.preventUserCloseWindow();
             this.#phoneRing.loop = true;
             this.#phoneRing.play();
@@ -173,19 +181,23 @@ export class VideoServiceAgent {
      */
     acceptCall(localVideoSelector, remoteVideoSelector, callback) {
 
-        console.log('acceptCall');
         this.#emit('connect-call', {
             accepted: 'accepted-call'
         }, (response) => {
-
-            console.log(response);
 
             this.#sessionId = response.sessionId;
             this.#connectionId = response.connectionId;
             this.#recordingId = response.recordingId;
 
             this.#phoneRing.pause();
-            if (typeof callback === 'function') callback(response);
+            console.log(this.agentData);
+
+
+            if (typeof callback === 'function') callback(
+                response,
+                this.agentData,
+                this.guestData,
+            );
 
             
             this.#videoCallService = new VideoCall({ remoteVideoSelector });
@@ -322,7 +334,7 @@ export class VideoServiceAgent {
     toggleAudio(callback) {
         this.#videoCallService.toggleAudio();
 
-        if (typeof callback === 'function') callback();
+        if (typeof callback === 'function') callback(this.#videoCallService.isAudioEnabled);
     }
 
     /**
@@ -333,7 +345,7 @@ export class VideoServiceAgent {
     toggleVideo(callback) {
         this.#videoCallService.toggleVideo();
 
-        if (typeof callback === 'function') callback();
+        if (typeof callback === 'function') callback(this.#videoCallService.isVideoEnabled);
     }
 
     /**
@@ -344,7 +356,7 @@ export class VideoServiceAgent {
     toggleRemoteAudio(callback) {
         this.guestAudio = !this.guestAudio;
         this.#emit('toggle-audio-guest', { toogleAudioGuest : this.guestAudio}, () => {
-            if (typeof callback === 'function') callback();
+            if (typeof callback === 'function') callback(this.guestAudio);
         })
     }
 
@@ -356,7 +368,7 @@ export class VideoServiceAgent {
     toggleRemoteVideo(callback) {
         this.guestVideo =!this.guestVideo;
         this.#emit('toggle-video-guest', { toogleVideoGuest : this.guestVideo}, () => {
-            if (typeof callback === 'function') callback();
+            if (typeof callback === 'function') callback(this.guestVideo);
         })
     }
 

@@ -21,8 +21,8 @@ export default class VideoCall {
     #remoteVideoSelector;
     #localVideoSelector;
     #resolution;
-    #publishAudio;
-    #publishVideo;
+    #publishAudio = true;
+    #publishVideo = true;
 
     #publisher;
 

@@ -426,7 +426,7 @@ class ExtravioController extends BaseController
 			'Access-Control-Allow-Origin: *',
 			'Access-Control-Allow-Credentials: true',
 			'Access-Control-Allow-Headers: Content-Type',
-			'X_API_KEY' . X_API_KEY
+			'X-API-KEY' . X_API_KEY
 		);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 

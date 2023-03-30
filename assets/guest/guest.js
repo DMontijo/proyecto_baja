@@ -33,6 +33,9 @@ export class VideoServiceGuest {
     #priority;
     #position;
     #socketConfig = {};
+
+    agentData = {};
+    guestData = {};
     
     // Audios
     #phoneRing = new Audio('../../assets/agent/assets/sounds/income_call.wav');
@@ -42,6 +45,8 @@ export class VideoServiceGuest {
     #guestDetails;
     #videoCallService;
     #guestConnectionId;
+    
+    isRecording = false;
 
     /**
      * @param {string} guestUUID - Preexisting guest uuid
@@ -112,23 +117,31 @@ export class VideoServiceGuest {
             longitude: this.#position?.coords.longitude,
             details: this.#guestDetails
         }, response => {
-            console.log(response);
-            this.#guestConnectionId = response.id;
-            try {
-                // this.#loggedInSound.play();
-            } catch (e) {
-                console.warn(e)
-            }
+            const { guestConnection, guest } = response;
+            this.#guestConnectionId = guestConnection.id;
 
-            if (typeof callback === 'function') callback(response);
+            this.guestData = guest;
+
+            if (typeof callback === 'function') callback(guest);
         });
 
+        
+    }
+
+    /**
+     * Register media interaction for agent toggling
+     * 
+     * @param {Function} callback - callback function
+     */
+    registerMediaRemoteToggling(callback) {
         this.#socket.on('mute-video', ({toggleVideo}) => {
             this.#videoCallService.toggleVideo(toggleVideo.toogleVideoGuest);
+            if (typeof callback === 'function') callback(toggleVideo);
         });
     
         this.#socket.on('mute-audio', ({toggleAudio}) => {
             this.#videoCallService.toggleAudio(toggleAudio.toogleAudioGuest);
+            if (typeof callback === 'function') callback(toggleAudio);
         });
     }
     
@@ -157,11 +170,23 @@ export class VideoServiceGuest {
      */
     registerOnVideoReady(localVideoSelector, remoteVideoSelector, callback) {
         this.#socket.on('video-ready', (response) => {
-            // this.#loggedInSound.play();
-            if (typeof callback === 'function') callback(response);
+            this.agentData = response.agent;
+            if (typeof callback === 'function') callback(response, this.guestData);
 
             this.#videoCallService = new VideoCall({ remoteVideoSelector });
             this.#videoCallService.connectVideoCall(response.token, localVideoSelector, () => {})
+        });
+    }
+
+
+    /**
+     * Register recording status changes
+     * @param {Function} [callback] - This method is executed after recording status changes
+     */
+    registerVideoRecordingStatus(callback) {
+        this.#socket.on('recording-status', ({ isRecording }) => {
+            this.isRecording = isRecording;
+            if (typeof callback === 'function') callback(isRecording);
         });
     }
 

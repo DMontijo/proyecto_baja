@@ -1339,7 +1339,6 @@ class DashboardController extends BaseController
 			);
 
 
-
 			$updateExpediente = $this->_updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area->AREAID, 'REMISION', $status);
 			if ($updateExpediente->status == 201) {
 
@@ -1355,10 +1354,12 @@ class DashboardController extends BaseController
 					$bandeja = $this->_folioModel->where('EXPEDIENTEID', $expediente)->first();
 					$updateArch = $this->_archivoExternoModel->set($dataFolioArc)->where('FOLIOID', $bandeja['FOLIOID'])->where('ANO', $bandeja['ANO'])->update();
 					$_bandeja_creada = $this->_createBandeja($bandeja);
+
 					if ($_bandeja_creada->status == 201) {
 						$this->_bitacoraActividad($datosBitacora);
 						$subirArchivos = $this->subirArchivosRemision($bandeja['FOLIOID'], $bandeja['ANO'], $expediente);
 						$folioDoc = $this->_folioDocModel->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->join('RELACIONFOLIODOCEXPDOC', 'FOLIODOC.NUMEROEXPEDIENTE = RELACIONFOLIODOCEXPDOC.EXPEDIENTEID  AND FOLIODOC.FOLIODOCID = RELACIONFOLIODOCEXPDOC.FOLIODOCID')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('TIPODOC', 'SOLICITUD DE PERITAJE')->orLike('TIPODOC', 'OFICIO DE COLABORACION PARA INGRESO A HOSPITAL')->findAll();
+
 						if ($folioDoc) {
 							foreach ($folioDoc as $key => $doc) {
 								$solicitudp = array();
@@ -2348,7 +2349,7 @@ class DashboardController extends BaseController
 		$folioDoc = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOCID', 'asc')->findAll();
 		$archivosExternosVD = $this->_archivoExternoModel->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
 		$folioDocPeritaje = $this->_folioDocModel->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('TIPODOC', 'SOLICITUD DE PERITAJE')->orLike('TIPODOC', 'OFICIO DE COLABORACION PARA INGRESO A HOSPITAL')->findAll();
-
+	
 		if ($archivosExternosVD) {
 			try {
 
@@ -3469,6 +3470,38 @@ class DashboardController extends BaseController
 		return json_decode($result);
 	}
 
+	private function _curlGetService($endpoint)
+	{
+		$ch = curl_init();
+
+		curl_setopt($ch, CURLOPT_URL, $endpoint);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+
+		$headers = array(
+			'Content-Type: application/json',
+			'Access-Control-Allow-Origin: *',
+			'Access-Control-Allow-Credentials: true',
+			'Access-Control-Allow-Headers: Content-Type',
+			'X-API-KEY:' . X_API_KEY
+		);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+		$result = curl_exec($ch);
+
+		if ($result === false) {
+			$result = "{
+                'status' => 401,
+                'error' => 'Curl failed: '" . curl_error($ch) . "
+            }";
+		}
+		curl_close($ch);
+
+		return json_decode($result);
+	}
+
+
 	private function _curlPostDataEncrypt($endpoint, $data)
 	{
 		// var_dump($data);exit;
@@ -3567,27 +3600,31 @@ class DashboardController extends BaseController
 	public function getVideoLink()
 	{
 
-		// $data = array();
-		$folio = $this->request->getPost('folio');
-		// $data['folio'] = $folio;
-
-		// $endpoint = $this->urlApi . 'recordings?search=2023-123456864';
-
-		// $response = $this->_curlPostService($endpoint, $data);
-		// return json_encode($response);
-
-		$endpoint = 'https://videodenunciaserver1.fgebc.gob.mx/api/vc';
 		$data = array();
-		$data['u'] = '24';
-		$data['token'] = '198429b7cc8a2a5733d97bc13153227dd5017555';
-		$data['a'] = 'getRepo';
+		$folio = $this->request->getPost('folio');
 		$data['folio'] = $folio;
-		$data['min'] = !empty($this->request->getPost('min')) ? $this->request->getPost('min') : '2000-01-01';
-		$data['max'] = !empty($this->request->getPost('max')) ? $this->request->getPost('max') : date("Y-m-d");
 
-		$response = $this->_curlPost($endpoint, $data);
+		$endpointFolio = $this->urlApi . 'recordings/folio/2023-123456864';
+		return json_encode($endpointFolio);exit;
 
-		return json_encode($response);
+		$responseFolio = $this->_curlGetService($endpointFolio);
+		$endpointId = $this->urlApi . 'recordings/' . $responseFolio->id;
+
+		$responseid = $this->_curlGetService($endpointId);
+		return json_encode($responseFolio);
+
+		// $endpoint = 'https://videodenunciaserver1.fgebc.gob.mx/api/vc';
+		// $data = array();
+		// $data['u'] = '24';
+		// $data['token'] = '198429b7cc8a2a5733d97bc13153227dd5017555';
+		// $data['a'] = 'getRepo';
+		// $data['folio'] = $folio;
+		// $data['min'] = !empty($this->request->getPost('min')) ? $this->request->getPost('min') : '2000-01-01';
+		// $data['max'] = !empty($this->request->getPost('max')) ? $this->request->getPost('max') : date("Y-m-d");
+
+		// $response = $this->_curlPost($endpoint, $data);
+
+		// return json_encode($response);
 	}
 
 	public function getLinkFromCall()

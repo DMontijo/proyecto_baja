@@ -82,45 +82,17 @@
 			'max': '<?= date("Y-m-d") ?>'
 		};
 		console.log(data);
+
 		$.ajax({
-			data: data,
-			url: "<?= base_url('/data/get-video-link') ?>",
-			method: "POST",
-			dataType: "json",
-		}).done(function(data) {
-			let grabacion = "";
-			let enlace = 'https://fgebc-records.s3.amazonaws.com/'
-			if (data.data.length > 0) {
-				array = data.data.reverse();
-				array.forEach(element => {
-					if (element.Grabación != '') {
-						grabacion = element.Grabación
-					}
-				});
-				if (grabacion == '') {
-					Swal.fire({
-						icon: 'error',
-						title: 'No hay video grabado',
-						confirmButtonColor: '#bf9b55',
-					})
-				} else {
-					window.open(enlace + grabacion, "_blank");
+				data: data,
+				url: "<?= base_url('/data/get-video-link') ?>",
+				method: "POST",
+				dataType: "json",
+				success: function(response) {
+					console.log(response);
 				}
-			} else {
-				Swal.fire({
-					icon: 'error',
-					title: 'No hay video grabado',
-					confirmButtonColor: '#bf9b55',
-				})
-			}
-		}).fail(function(jqXHR, textStatus) {
-			Swal.fire({
-				icon: 'error',
-				title: 'Hubo un error',
-				text: 'Contácte con soporte técnico',
-				confirmButtonColor: '#bf9b55',
-			})
-		});
+				});
+		
 	}
 </script>
 
