@@ -12,7 +12,7 @@
 			</div>
 			<div class="col-12">
 				<div class="card shadow border-0">
-					<div class="card-body">
+					<div class="card-body table-responsive">
 						<table id="folios_canalizados" class="table table-bordered table-striped">
 							<thead>
 								<tr>

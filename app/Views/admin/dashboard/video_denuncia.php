@@ -339,7 +339,8 @@
 
 	function llenarTablaDocumentos(documentos) {
 		for (let i = 0; i < documentos.length; i++) {
-			if (documentos[i].STATUS == 'FIRMADO') {
+			console.log(documentos[i]	 );
+			if (documentos[i].STATUS == 'FIRMADO' ) {
 				var btn =
 					`<button type='button'  class='btn btn-primary' onclick='viewDocumento(${documentos[i].FOLIODOCID})' disabled><i class="fas fa-eye"></i></button>`
 				var btnFirmar =
@@ -350,12 +351,17 @@
 				var btnFirmar =
 					`<button type='button'  class='btn btn-primary my-2' onclick='firmarDocumento(${documentos[i].FOLIOID}, ${documentos[i].ANO}, ${documentos[i].FOLIODOCID})'><i class="fas fa-signature"></i></button>`
 			}
+
+			if (documentos[i].ENVIADO == 'N'){
+				var btnBorrar = 
+				`<button type='button'  class='btn btn-primary my-2' onclick='borrarDocumento(${documentos[i].FOLIOID}, ${documentos[i].ANO}, ${documentos[i].FOLIODOCID})'><i class="fas fa-trash"></i></button>`
+			}
 			var fila =
 				`<tr id="row${i}">` +
 				`<td class="text-center">${documentos[i].TIPODOC}</td>` +
 				`<td class="text-center">${documentos[i].NOMBRE} ${documentos[i].APELLIDO_PATERNO} ${documentos[i].APELLIDO_MATERNO}</td>` +
 				`<td class="text-center">${documentos[i].STATUS}</td>` +
-				`<td class="text-center">${btn} ${btnFirmar}</td>` +
+				`<td class="text-center">${btn} ${btnFirmar} ${btnBorrar}</td>` +
 				`</tr>`;
 
 			$('#table-documentos tr:first').after(fila);
@@ -751,6 +757,45 @@
 
 			}
 		});
+	}
+
+	function borrarDocumento(folio, ano, foliodocid) {
+		Swal.fire({
+			title: '¡Estas seguro?',
+			text: "¡Esta operacion es irevertible!",
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#bf9b55',
+			confirmButtonText: '¡Si, borrar!'
+			}).then((result) => {
+			if (result.isConfirmed) {
+				$.ajax({
+					data: {
+						'docid': foliodocid,
+						'folio': <?php echo $_GET['folio'] ?>,
+						'year': <?php echo $_GET['year'] ?>,
+					},
+					url: "<?= base_url('/data/delete-documento') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						if (response.status == 1) {
+							Swal.fire(
+								'¡Borrar!',
+								'El documento se ha borrado.',
+								'success'
+								).then(
+									location.reload()
+								)
+
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						console.log(textStatus);
+					}
+				});
+			}
+		})
 	}
 
 	function llenarTablaImpDel(impDelito) {
