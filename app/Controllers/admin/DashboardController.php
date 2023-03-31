@@ -3608,8 +3608,9 @@ class DashboardController extends BaseController
 		$endpointFolio = $this->urlApi . 'recordings/folio/100_FOLIO_TEST_01';
 
 		$responseFolio = $this->_curlGetService($endpointFolio);
+		return json_encode($responseFolio);
+
 		if ($responseFolio != null) {
-			return json_encode($responseFolio);
 		}	
 		// foreach ($responseFolio as $key => $conections) {
 
