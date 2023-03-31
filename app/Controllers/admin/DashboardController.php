@@ -4108,7 +4108,6 @@ class DashboardController extends BaseController
 					'FOTOGRAFIA_ACTUAL' => $this->request->getPost('fotografia_actual_pf'),
 				);
 			}
-			// var_dump($data);exit;
 
 			$update = $this->_folioPersonaFisicaModel->set($data)->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $id)->update();
 

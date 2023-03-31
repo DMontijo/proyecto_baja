@@ -10,16 +10,12 @@
         </a>
     </div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="fotografia_actual_pf" class="form-label text-bold">¿La fotografía es actual?</label>
-		<br>
-		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="radio" name="fotografia_actual_pf" id="fotografia_actual_pf" value="S">
-			<label class="form-check-label" for="fotografia_actual_pf">SI</label>
-		</div>
-		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="radio" name="fotografia_actual_pf" id="fotografia_actual_pf" value="N">
-			<label class="form-check-label" for="fotografia_actual_pf">NO</label>
-		</div>
+		<label for="fotografia_actual_pf" class="form-label font-weight-bold">¿La fotografía es actual?</label>
+        <select class="form-control" id="fotografia_actual_pf" name="fotografia_actual_pf">
+            <option selected value=""></option>
+            <option value="S">Si</option>
+            <option value="N">No</option>
+        </select>
 	</div>
     <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
         <label for="tipo_identificacion_pf" class="form-label font-weight-bold">Tipo identificación</label>

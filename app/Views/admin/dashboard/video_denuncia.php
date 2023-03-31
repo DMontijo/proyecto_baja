@@ -787,8 +787,13 @@
 								).then(
 									location.reload()
 								)
-
-
+								}
+							}
+						});
+					}
+				});
+			}
+						
 	function llenarTablaImpDel(impDelito) {
 		for (let i = 0; i < impDelito.length; i++) {
 			// var btn = `<button type='button'  class='btn btn-primary' onclick='eliminarImputadoDelito(${impDelito[i].PERSONAFISICAID},${impDelito[i].DELITOMODALIDADID})'><i class='fa fa-trash'></i></button>`
