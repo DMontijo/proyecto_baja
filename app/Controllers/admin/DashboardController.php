@@ -6998,7 +6998,6 @@ class DashboardController extends BaseController
 				}
 			}
 		}
-		var_dump($data);exit;
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 		$this->_loadView('Videos expediente', 'videos', '', $data, 'videos_expediente');
