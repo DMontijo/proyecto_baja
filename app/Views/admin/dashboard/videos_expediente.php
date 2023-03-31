@@ -126,7 +126,7 @@
 
 	function llenarTablaVideos(videos) {
 		for (let i = 0; i < videos.length; i++) {
-			
+			console.log(videos[i]);
 			var fila =
 				`<td class="text-center" value=""><video src="${videos[i].url}" width="100%" height="100%" controls></video></td>` +
 				`</tr>`;
