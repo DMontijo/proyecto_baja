@@ -57,7 +57,7 @@ disponible_connect.addEventListener("click", () => {
 					response.guest.details.FOLIO;
 				document.querySelector("#idioma_denunciante").value = response
 					.guest.languages[0]
-					? response.guest.languages[0].title
+					? response.guest.languages.title
 					: "-";
 			});
 		},
