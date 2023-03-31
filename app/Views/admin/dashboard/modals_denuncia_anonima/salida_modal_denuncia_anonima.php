@@ -84,7 +84,7 @@
 								</div>
 								<div id="notas" class="form-group">
 									<label for="notas_caso_salida">Notas</label>
-									<textarea id="notas_caso_salida" class="form-control" placeholder="Notas..." rows="10" maxlength="300" oninput="mayuscTextarea(this)" onkeydown="pulsar(event)" onkeyup="contarCaracteresSalidaDa(this)"></textarea>
+									<textarea id="notas_caso_salida" class="form-control" placeholder="Notas..." rows="10" maxlength="1000" oninput="mayuscTextarea(this)" onkeydown="pulsar(event)" onkeyup="contarCaracteresSalidaDa(this)"></textarea>
 									<small id="numCaracterSalidaDa"> </small>
 
 								</div>
@@ -497,10 +497,10 @@
 	}
 
 	function contarCaracteresSalidaDa(obj) {
-		if (charRemain < 300) {
+		if (charRemain < 1000) {
 			var maxLength = charRemain;
 		} else {
-			var maxLength = 300;
+			var maxLength = 1000;
 		}
 		var strLength = obj.value.length;
 		var charRemainSalidaDa = (maxLength - strLength);

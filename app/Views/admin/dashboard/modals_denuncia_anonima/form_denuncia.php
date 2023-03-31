@@ -66,7 +66,7 @@
 					</div>
 					<div class="col-12 mb-3">
 						<label for="notas_da" class="form-label font-weight-bold">Notas:</label>
-						<textarea class="form-control" id="notas_da" name="notas_da" row="10" oninput="mayuscTextarea(this)"  maxlength="300"></textarea>
+						<textarea class="form-control" id="notas_da" name="notas_da" row="10" oninput="mayuscTextarea(this)"  maxlength="1000"></textarea>
 					</div>
 					<div class="col-12 mb-3 text-center">
 						<button type="submit" class="btn btn-primary font-weight-bold">ACTUALIZAR HECHO</button>

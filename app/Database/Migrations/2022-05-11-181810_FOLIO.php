@@ -74,7 +74,7 @@ class FOLIO extends Migration
             ],
             'NOTASAGENTE' => [
                 'type' => 'TEXT',
-                'constraint' => '300',
+                'constraint' => '1000',
                 'null' => true,
             ],
             'TIPOEXPEDIENTEID' => [

@@ -60,6 +60,8 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 				</div>
 			</div>
 		</div>
+		<?php if ($body_data->datosFolio->STATUS != 'EN PROCESO' && $body_data->datosFolio->STATUS != 'ABIERTO') { ?>
+
 		<div class="col-12 col-sm-6 col-md-4">
 			<div class="card rounded bg-white shadow" style="height: 240px;">
 				<div class="card-body">
@@ -69,6 +71,7 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 				</div>
 			</div>
 		</div>
+		<?php }?>
 		<!-- <div class="col-12 col-sm-6 col-md-4 d-none">
 			<div class="card rounded bg-white shadow" style="height: 240px;">
 				<div class="card-body">
@@ -417,6 +420,7 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 		buscar_nuevo_btn.addEventListener('click', () => {
 			window.location.href = `<?= base_url('/admin/dashboard/buscar_folio') ?>`;
 		});
+		<?php if ($body_data->datosFolio->STATUS != 'EN PROCESO' && $body_data->datosFolio->STATUS != 'ABIERTO') { ?>
 
 		documentos_folio_btn.addEventListener('click', () => {
 			<?php if ($body_data->datosFolio->EXPEDIENTEID != NULL) { ?>
@@ -426,7 +430,7 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 				window.location.href = `<?= base_url('/admin/dashboard/documentos_show?folio=') ?>${inputFolio.value}&year=${year_select.value}`;
 			<?php } ?>
 		});
-
+		<?php } ?>
 		// videos_folio_btn.addEventListener('click', () => {
 		// 	data = {
 		// 		'folio': inputFolio.value,
