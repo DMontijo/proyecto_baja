@@ -4072,7 +4072,8 @@ class DashboardController extends BaseController
 					'FACEBOOK' => $this->request->getPost('facebook_pf'),
 					'INSTAGRAM' => $this->request->getPost('instagram_pf'),
 					'TWITTER' => $this->request->getPost('twitter_pf'),
-					'FOTO' =>  $fotoP
+					'FOTO' =>  $fotoP,
+					'FOTOGRAFIA_ACTUAL' => $this->request->getPost('fotografia_actual_pf'),
 				);
 			} else {
 				$data = array(
@@ -4104,6 +4105,7 @@ class DashboardController extends BaseController
 					'FACEBOOK' => $this->request->getPost('facebook_pf'),
 					'INSTAGRAM' => $this->request->getPost('instagram_pf'),
 					'TWITTER' => $this->request->getPost('twitter_pf'),
+					'FOTOGRAFIA_ACTUAL' => $this->request->getPost('fotografia_actual_pf'),
 				);
 			}
 			// var_dump($data);exit;

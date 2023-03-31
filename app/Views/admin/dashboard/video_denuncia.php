@@ -502,7 +502,7 @@
 	}
 
 	function llenarTablaParentesco(relacion_parentesco, personaiduno, personaidDos, parentesco) {
-
+		console.log(personaidDos);
 
 		for (let i = 0; i < relacion_parentesco.length; i++) {
 			var btn =
@@ -767,13 +767,13 @@
 			showCancelButton: true,
 			confirmButtonColor: '#bf9b55',
 			confirmButtonText: '¡Si, borrar!'
-		}).then((result) => {
+			}).then((result) => {
 			if (result.isConfirmed) {
 				$.ajax({
 					data: {
 						'docid': foliodocid,
-						'folio': <?php echo $_GET['folio'] ?>,
-						'year': <?php echo $_GET['year'] ?>,
+						'folio': folio,
+						'year': ano,
 					},
 					url: "<?= base_url('/data/delete-documento') ?>",
 					method: "POST",
@@ -784,19 +784,10 @@
 								'¡Borrar!',
 								'El documento se ha borrado.',
 								'success'
-							).then(
-								location.reload()
-							)
+								).then(
+									location.reload()
+								)
 
-						}
-					},
-					error: function(jqXHR, textStatus, errorThrown) {
-						console.log(textStatus);
-					}
-				});
-			}
-		})
-	}
 
 	function llenarTablaImpDel(impDelito) {
 		for (let i = 0; i < impDelito.length; i++) {
@@ -1280,6 +1271,7 @@
 					//VEHICULOS
 					if (vehiculos) llenarTablaVehiculos(vehiculos);
 					//PARENTESCO
+					console.log(relacion_parentesco);
 					if (relacion_parentesco) llenarTablaParentesco(relacion_parentesco, personaiduno,
 						personaidDos, parentesco);
 					//ARBOL DELICTUAL
@@ -1560,6 +1552,45 @@
 		$('#contrasena_modal_doc_id').modal('show');
 
 	}
+function borrarDocumento(folio, ano, foliodocid) {
+		Swal.fire({
+			title: '¡Estas seguro?',
+			text: "¡Esta operacion es irevertible!",
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#bf9b55',
+			confirmButtonText: '¡Si, borrar!'
+			}).then((result) => {
+			if (result.isConfirmed) {
+				$.ajax({
+					data: {
+						'docid': foliodocid,
+						'folio': folio,
+						'year': ano,
+					},
+					url: "<?= base_url('/data/delete-documento') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						if (response.status == 1) {
+							Swal.fire(
+								'¡Borrar!',
+								'El documento se ha borrado.',
+								'success'
+								).then(
+									location.reload()
+								)
+
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						console.log(textStatus);
+					}
+				});
+			}
+		})
+	}
+
 
 	function viewDocumento(foliodocid) {
 		jQuery('.ql-toolbar').remove();
@@ -4289,6 +4320,7 @@
 				packetData.append("twitter_pf", document.querySelector('#twitter_pf').value);
 				packetData.append("pf_id", document.querySelector('#pf_id').value);
 				packetData.append("ocupacion_descr", document.querySelector('#ocupacion_pf_m').value);
+				packetData.append("fotografia_actual_pf", document.querySelector('#fotografia_actual_pf').value);
 				// const data = {
 				// 	'folio': document.querySelector('#input_folio_atencion').value,
 				// 	'year': document.querySelector('#year_select').value,

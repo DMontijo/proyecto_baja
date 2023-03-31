@@ -9,6 +9,18 @@
                 accept="image/jpeg, image/jpg, image/png, application/pdf"></input>
         </a>
     </div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="fotografia_actual_pf" class="form-label text-bold">¿La fotografía es actual?</label>
+		<br>
+		<div class="form-check form-check-inline">
+			<input class="form-check-input" type="radio" name="fotografia_actual_pf" id="fotografia_actual_pf" value="S">
+			<label class="form-check-label" for="fotografia_actual_pf">SI</label>
+		</div>
+		<div class="form-check form-check-inline">
+			<input class="form-check-input" type="radio" name="fotografia_actual_pf" id="fotografia_actual_pf" value="N">
+			<label class="form-check-label" for="fotografia_actual_pf">NO</label>
+		</div>
+	</div>
     <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
         <label for="tipo_identificacion_pf" class="form-label font-weight-bold">Tipo identificación</label>
         <select class="form-control" id="tipo_identificacion_pf" name="tipo_identificacion_pf">
@@ -18,6 +30,10 @@
                 <?= $identificaciones->PERSONATIPOIDENTIFICACIONDESCR ?> </option>
             <?php } ?>
         </select>
+    </div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+        <label for="numero_identidad_pf" class="form-label font-weight-bold">Numero de identificación</label>
+        <input type="text" class="form-control" id="numero_identidad_pf" name="numero_identidad_pf">
     </div>
     <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
         <label for="numero_identidad_pf" class="form-label font-weight-bold">Numero de identificación</label>
