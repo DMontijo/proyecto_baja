@@ -19,6 +19,8 @@
 			VER DIRECTORIO
 		</a>
 	<?php } ?>
+	<br>
+	<br>
 </div>
 
 <?= $this->endSection() ?>

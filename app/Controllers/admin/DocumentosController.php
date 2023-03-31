@@ -249,6 +249,26 @@ class DocumentosController extends BaseController
 		header("Content-Disposition: attachment; filename=" . $documento->TIPODOC . $folio . '_' . $year .  '_' . $docid . '.xml');
 		echo $documento->XML;
 	}
+	public function borrarDocumento()
+	{
+		$docid = trim($this->request->getPost('docid'));
+		$folio = trim($this->request->getPost('folio'));
+		$year = trim($this->request->getPost('year'));
+
+		$data = (object) array();
+
+		// $data->documento = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $docid)->first();
+		// $data->documento = $this->_folioDocModel->delete_doc_by_folio($folio, $year, $docid);
+		$deleteDoc = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $docid)->delete();
+		
+		
+		if ($deleteDoc) {
+			// $documentos = $this->_folioDocModel->get_by_folio($folio, $year);
+			return json_encode(['status' => 1]);
+		} else {
+			return json_encode(['status' => 0]);
+		}
+	}
 	private function _loadView($title, $data, $view)
 	{
 		$data = [

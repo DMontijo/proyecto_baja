@@ -597,6 +597,7 @@
 
 	function llenarTablaDocumentos(documentos) {
 		for (let i = 0; i < documentos.length; i++) {
+			console.log(documentos[i]);
 			if (documentos[i].STATUS == 'FIRMADO') {
 				var btn =
 					`<button type='button'  class='btn btn-primary' onclick='viewDocumento(${documentos[i].FOLIODOCID})' disabled><i class="fas fa-eye"></i></button>`
@@ -608,12 +609,17 @@
 				var btnFirmar =
 					`<button type='button'  class='btn btn-primary my-2' onclick='firmarDocumento(${documentos[i].FOLIOID}, ${documentos[i].ANO}, ${documentos[i].FOLIODOCID})'><i class="fas fa-signature"></i></button>`
 			}
+
+			if (documentos[i].ENVIADO == 'N') {
+				var btnBorrar =
+					`<button type='button'  class='btn btn-primary my-2' onclick='borrarDocumento(${documentos[i].FOLIOID}, ${documentos[i].ANO}, ${documentos[i].FOLIODOCID})'><i class="fas fa-trash"></i></button>`
+			}
 			var fila =
 				`<tr id="row${i}">` +
 				`<td class="text-center">${documentos[i].TIPODOC}</td>` +
 				`<td class="text-center">${documentos[i].NOMBRE} ${documentos[i].APELLIDO_PATERNO} ${documentos[i].APELLIDO_MATERNO}</td>` +
 				`<td class="text-center">${documentos[i].STATUS}</td>` +
-				`<td class="text-center">${btn} ${btnFirmar}</td>` +
+				`<td class="text-center">${btn} ${btnFirmar} ${btnBorrar}</td>` +
 				`</tr>`;
 
 			$('#table-documentos tr:first').after(fila);
@@ -1009,6 +1015,45 @@
 
 			}
 		});
+	}
+
+	function borrarDocumento(folio, ano, foliodocid) {
+		Swal.fire({
+			title: '¡Estas seguro?',
+			text: "¡Esta operacion es irevertible!",
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#bf9b55',
+			confirmButtonText: '¡Si, borrar!'
+		}).then((result) => {
+			if (result.isConfirmed) {
+				$.ajax({
+					data: {
+						'docid': foliodocid,
+						'folio': <?php echo $_GET['folio'] ?>,
+						'year': <?php echo $_GET['year'] ?>,
+					},
+					url: "<?= base_url('/data/delete-documento') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						if (response.status == 1) {
+							Swal.fire(
+								'¡Borrar!',
+								'El documento se ha borrado.',
+								'success'
+							).then(
+								location.reload()
+							)
+
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						console.log(textStatus);
+					}
+				});
+			}
+		})
 	}
 
 	function llenarTablaImpDel(impDelito) {
@@ -3057,8 +3102,7 @@
 								'd-none');
 							btn_enviarcorreoDoc.disabled = false;
 
-						}
-						if (response.status == 3) {
+						} else if (response.status == 2) {
 							Swal.fire({
 								icon: 'error',
 								text: 'No hay documentos a enviar',
@@ -3072,10 +3116,52 @@
 							document.querySelector('#password_verifying_mail').classList.add(
 								'd-none');
 							btn_enviarcorreoDoc.disabled = false;
+						} else if (response.status == 3) {
+							Swal.fire({
+								icon: 'error',
+								text: 'Debes seleccionar un correo para enviar.',
+								confirmButtonColor: '#bf9b55',
+							});
+							$('#sendEmailDocModal').modal('hide');
+							document.querySelector('#load_mail').classList.remove('d-none');
+							document.querySelector('#enviar_modalLabel').classList.remove(
+								'd-none');
+							document.querySelector('#loading_mail').classList.add('d-none');
+							document.querySelector('#password_verifying_mail').classList.add(
+								'd-none');
+							btn_enviarcorreoDoc.disabled = false;
 
+						} else {
+							Swal.fire({
+								icon: 'error',
+								text: 'No fue posible enviar el documento',
+								confirmButtonColor: '#bf9b55',
+							});
+							$('#sendEmailDocModal').modal('hide');
+							document.querySelector('#load_mail').classList.remove('d-none');
+							document.querySelector('#enviar_modalLabel').classList.remove(
+								'd-none');
+							document.querySelector('#loading_mail').classList.add('d-none');
+							document.querySelector('#password_verifying_mail').classList.add(
+								'd-none');
+							btn_enviarcorreoDoc.disabled = false;
 						}
 					},
-					error: function(jqXHR, textStatus, errorThrown) {}
+					error: function(jqXHR, textStatus, errorThrown) {
+						Swal.fire({
+							icon: 'error',
+							text: 'No fue posible enviar el documento',
+							confirmButtonColor: '#bf9b55',
+						});
+						$('#sendEmailDocModal').modal('hide');
+						document.querySelector('#load_mail').classList.remove('d-none');
+						document.querySelector('#enviar_modalLabel').classList.remove(
+							'd-none');
+						document.querySelector('#loading_mail').classList.add('d-none');
+						document.querySelector('#password_verifying_mail').classList.add(
+							'd-none');
+						btn_enviarcorreoDoc.disabled = false;
+					}
 				});
 			}, false);
 			btn_firmar_doc.addEventListener('click', (event) => {

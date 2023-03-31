@@ -60,7 +60,6 @@
 		<center>
 			<img src="<?= 'data:image/png;base64,' . $data->image1 ?>" height="100%" />
 		</center>
-
 	</header>
 
 	<footer>

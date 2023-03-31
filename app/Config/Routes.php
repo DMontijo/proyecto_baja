@@ -296,6 +296,8 @@ $routes->group('data', function ($routes) {
 	$routes->post('get-documentos', 'admin/DocumentosController::obtenDocumentos');
 	$routes->post('get-documento-tabla', 'admin/DocumentosController::getDocumento');
 
+	$routes->post('delete-documento', 'admin/DocumentosController::borrarDocumento');
+
 	$routes->post('get-denunciante-folio-by-id', 'admin/DashboardController::getFolioDenunciante');
 
 

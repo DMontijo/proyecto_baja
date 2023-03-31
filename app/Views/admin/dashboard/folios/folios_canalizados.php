@@ -11,8 +11,8 @@
 				<a class="link link-primary" href="<?= base_url('admin/dashboard/folios') ?>" role="button"><i class="fas fa-reply"></i> REGRESAR A FOLIOS</a>
 			</div>
 			<div class="col-12">
-				<div class="card shadow border-0">
-					<div class="card-body">
+				<div class="card shadow border-0" style="overflow-x:auto;">
+					<div class="card-body table-responsive">
 						<table id="folios_canalizados" class="table table-bordered table-striped">
 							<thead>
 								<tr>

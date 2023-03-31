@@ -7,7 +7,7 @@
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-12 text-center mb-4">
-				<h1 class="mb-4 text-center font-weight-bold">FOLIOS ASIGNADOS PARAR FIRMA</h1>
+				<h1 class="mb-4 text-center font-weight-bold">FOLIOS ASIGNADOS PARA FIRMAR</h1>
 			</div>
 			<div class="col-12">
 				<div class="card shadow border-0 p-0">

@@ -447,6 +447,7 @@ class DashboardController extends BaseController
 					'INSTAGRAM' => $this->request->getPost('instagram_des'),
 					'TWITTER' => $this->request->getPost('twitter_des'),
 					'FOTO' => $foto_data,
+					'FOTOGRAFIA_ACTUAL' => $this->request->getPost('fotografia_actual'),
 					'DESAPARECIDA' => 'S',
 					'ESCOLARIDADID' => $this->request->getPost('escolaridad_des'),
 					'OCUPACIONID' => $this->request->getPost('ocupacion_des'),

@@ -144,6 +144,12 @@ class FOLIOPERSONAFISICA extends Migration
 				'type' => 'LONGBLOB',
 				'null' => TRUE,
 			],
+			'FOTOGRAFIA_ACTUAL' => [
+				'type' => 'CHAR',
+				'constraint' => '1',
+				'default' => 'S',
+				'null' => TRUE,
+			],
 			'ESTADOJURIDICOIMPUTADOID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,

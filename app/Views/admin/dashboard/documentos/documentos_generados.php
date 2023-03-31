@@ -21,7 +21,6 @@
 <section class="content">
 	<div class="container-fluid">
 		<div class="col-12 text-center mb-4">
-
 			<a class="link link-primary" href="<?= base_url('admin/dashboard/documentos') ?>" role="button"><i class="fas fa-reply"></i> REGRESAR A DOCUMENTOS ASIGNADOS</a>
 		</div>
 		<div class="row">
@@ -60,7 +59,7 @@
 <?php } ?>
 <?php if ($body_data->foliorow[0]->TIPODENUNCIA == "DA") { ?>
 	<script>
-		document.getElementById('enviarDocumento').disabled = true;
+		// document.getElementById('enviarDocumento').disabled = true;
 	</script>
 <?php } ?>
 <?php if ($body_data->foliorow[0]->STATUS == "CANALIZADO" || $body_data->foliorow[0]->STATUS == "DERIVADO") { ?>
@@ -112,8 +111,6 @@
 
 		let btn_archivos_externos = document.querySelector('#subirDocumento');
 		let resultado = getParameterByName('q');
-
-
 
 		function isParameterByName(name) {
 			let regex = new RegExp('[?&]' + name + '=');
@@ -175,21 +172,34 @@
 						});
 						$('#send_mail_select').empty();
 						let select_mail_send = document.querySelector("#send_mail_select");
+						let option_sms = document.createElement('option');
+						option_sms.value = '';
+						option_sms.text = 'Seleccionar un correo...';
+						option_sms.disabled = true;
+						option_sms.selected = true;
+						select_mail_send.add(option_sms, null);
 						correos.forEach(correo => {
-							const option = document.createElement('option');
-							option.value = correo.CORREO;
-							option.text = correo.CORREO;
-							select_mail_send.add(option, null);
+							if (correo != '') {
+								const option = document.createElement('option');
+								option.value = correo.CORREO;
+								option.text = correo.CORREO;
+								select_mail_send.add(option, null);
+							}
 						});
 						$('#send_mail_select_uni').empty();
 						let send_mail_select_uni = document.querySelector("#send_mail_select_uni");
+						let option_smsu = document.createElement('option');
+						option_smsu.value = '';
+						option_smsu.text = 'Seleccionar un correo...';
+						option_smsu.disabled = true;
+						option_smsu.selected = true;
+						send_mail_select_uni.add(option_smsu, null);
 						correos.forEach(correo => {
 							const option = document.createElement('option');
 							option.value = correo.CORREO;
 							option.text = correo.CORREO;
 							send_mail_select_uni.add(option, null);
 						});
-
 					}
 				},
 				error: function(jqXHR, textStatus, errorThrown) {}
@@ -795,8 +805,7 @@
 							'd-none');
 						btn_enviarcorreoDoc.disabled = false;
 
-					}
-					if (response.status == 3) {
+					} else if (response.status == 2) {
 						Swal.fire({
 							icon: 'error',
 							text: 'No hay documentos a enviar',
@@ -809,9 +818,48 @@
 						document.querySelector('#password_verifying_mail').classList.add(
 							'd-none');
 						btn_enviarcorreoDoc.disabled = false;
+					} else if (response.status == 3) {
+						Swal.fire({
+							icon: 'error',
+							text: 'Debes seleccionar un correo para enviar',
+							confirmButtonColor: '#bf9b55',
+						});
+						$('#sendEmailDocModal').modal('hide');
+						document.querySelector('#load_mail').classList.remove('d-none');
+						document.querySelector('#enviar_modalLabel').classList.remove('d-none');
+						document.querySelector('#loading_mail').classList.add('d-none');
+						document.querySelector('#password_verifying_mail').classList.add(
+							'd-none');
+						btn_enviarcorreoDoc.disabled = false;
+					} else {
+						Swal.fire({
+							icon: 'error',
+							text: 'No fue posible enviar los documentos',
+							confirmButtonColor: '#bf9b55',
+						});
+						$('#sendEmailDocModal').modal('hide');
+						document.querySelector('#load_mail').classList.remove('d-none');
+						document.querySelector('#enviar_modalLabel').classList.remove('d-none');
+						document.querySelector('#loading_mail').classList.add('d-none');
+						document.querySelector('#password_verifying_mail').classList.add(
+							'd-none');
+						btn_enviarcorreoDoc.disabled = false;
 					}
 				},
-				error: function(jqXHR, textStatus, errorThrown) {}
+				error: function(jqXHR, textStatus, errorThrown) {
+					Swal.fire({
+						icon: 'error',
+						text: 'No fue posible enviar los documentos',
+						confirmButtonColor: '#bf9b55',
+					});
+					$('#sendEmailDocModal').modal('hide');
+					document.querySelector('#load_mail').classList.remove('d-none');
+					document.querySelector('#enviar_modalLabel').classList.remove('d-none');
+					document.querySelector('#loading_mail').classList.add('d-none');
+					document.querySelector('#password_verifying_mail').classList.add(
+						'd-none');
+					btn_enviarcorreoDoc.disabled = false;
+				}
 			});
 
 
@@ -854,8 +902,7 @@
 							'd-none');
 						btn_enviarcorreoDocUni.disabled = false;
 
-					}
-					if (response.status == 3) {
+					} else if (response.status == 2) {
 						Swal.fire({
 							icon: 'error',
 							text: 'No hay documentos a enviar',
@@ -868,9 +915,48 @@
 						document.querySelector('#password_verifying_mail_uni').classList.add(
 							'd-none');
 						btn_enviarcorreoDocUni.disabled = false;
+					} else if (response.status == 3) {
+						Swal.fire({
+							icon: 'error',
+							text: 'Debes seleccionar un correo para enviar',
+							confirmButtonColor: '#bf9b55',
+						});
+						$('#sendEmailDocModal').modal('hide');
+						document.querySelector('#load_mail').classList.remove('d-none');
+						document.querySelector('#enviar_modalLabel').classList.remove('d-none');
+						document.querySelector('#loading_mail').classList.add('d-none');
+						document.querySelector('#password_verifying_mail').classList.add(
+							'd-none');
+						btn_enviarcorreoDoc.disabled = false;
+					} else {
+						Swal.fire({
+							icon: 'error',
+							text: 'No fue posible enviar el documento',
+							confirmButtonColor: '#bf9b55',
+						});
+						$('#sendEmailDocModal').modal('hide');
+						document.querySelector('#load_mail').classList.remove('d-none');
+						document.querySelector('#enviar_modalLabel').classList.remove('d-none');
+						document.querySelector('#loading_mail').classList.add('d-none');
+						document.querySelector('#password_verifying_mail').classList.add(
+							'd-none');
+						btn_enviarcorreoDoc.disabled = false;
 					}
 				},
-				error: function(jqXHR, textStatus, errorThrown) {}
+				error: function(jqXHR, textStatus, errorThrown) {
+					Swal.fire({
+						icon: 'error',
+						text: 'No fue posible enviar el documento',
+						confirmButtonColor: '#bf9b55',
+					});
+					$('#sendEmailDocModal').modal('hide');
+					document.querySelector('#load_mail').classList.remove('d-none');
+					document.querySelector('#enviar_modalLabel').classList.remove('d-none');
+					document.querySelector('#loading_mail').classList.add('d-none');
+					document.querySelector('#password_verifying_mail').classList.add(
+						'd-none');
+					btn_enviarcorreoDoc.disabled = false;
+				}
 			});
 
 
@@ -1050,7 +1136,10 @@
 					`<button type='button'  class='btn btn-primary my-2' onclick='firmarDocumento(${documentos[i].FOLIOID}, ${documentos[i].ANO}, ${documentos[i].FOLIODOCID})'><i class="fas fa-signature"></i></button>`
 				var btnCambiarStatus = `<button type='button'  class='btn btn-primary my-2' onclick='cambiarStatusDoc(${documentos[i].FOLIODOCID}, ${documentos[i].STATUSENVIO}, "${documentos[i].ENVIADO}", ${documentos[i].FOLIOID}, ${documentos[i].ANO})'><i class="fas fa-dice"></i></button>`
 				var btnEnviar = `<button type='button'  class='btn btn-primary my-2' onclick='firmarUnitarioModal(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})' disabled><i class="fas fa-paper-plane"></i></button>`
-
+			}
+			if (documentos[i].ENVIADO == 'N') {
+				var btnBorrar =
+					`<button type='button'  class='btn btn-primary my-2' onclick='borrarDocumento(${documentos[i].FOLIOID}, ${documentos[i].ANO}, ${documentos[i].FOLIODOCID})'><i class="fas fa-trash"></i></button>`
 			}
 			var fila =
 				`<tr id="row${i}">` +
@@ -1058,7 +1147,7 @@
 				`<td class="text-center">${documentos[i].STATUS}</td>` +
 				`<td class="text-center">${documentos[i].NOMBRE} ${documentos[i].APELLIDO_PATERNO} ${documentos[i].APELLIDO_MATERNO}</td>` +
 
-				`<td class="text-center">${btn} ${btnpdf} ${btnxml} ${btnFirmar} ${btnCambiarStatus} ${btnEnviar}</td>` +
+				`<td class="text-center">${btn} ${btnpdf} ${btnxml} ${btnFirmar} ${btnCambiarStatus} ${btnEnviar} ${btnBorrar}</td>` +
 				`</tr>`;
 
 			$('#table-documentos tr:first').after(fila);
@@ -1184,6 +1273,45 @@
 
 	function remitir() {
 		window.location.href = `<?= base_url('/admin/dashboard/bandeja_remision?folio=') ?>${getParameterByName('folio')}&year=${getParameterByName('year')}&municipioasignado=${getParameterByName('municipioasignado')}&expediente=${getParameterByName('expediente')}`;
+	}
+
+	function borrarDocumento(folio, ano, foliodocid) {
+		Swal.fire({
+			title: '¡Estas seguro?',
+			text: "¡Esta operacion es irevertible!",
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#bf9b55',
+			confirmButtonText: '¡Si, borrar!'
+		}).then((result) => {
+			if (result.isConfirmed) {
+				$.ajax({
+					data: {
+						'docid': foliodocid,
+						'folio': <?php echo $_GET['folio'] ?>,
+						'year': <?php echo $_GET['year'] ?>,
+					},
+					url: "<?= base_url('/data/delete-documento') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						if (response.status == 1) {
+							Swal.fire(
+								'¡Borrar!',
+								'El documento se ha borrado.',
+								'success'
+							).then(
+								location.reload()
+							)
+
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						console.log(textStatus);
+					}
+				});
+			}
+		})
 	}
 </script>
 

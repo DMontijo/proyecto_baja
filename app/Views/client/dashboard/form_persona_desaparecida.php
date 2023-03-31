@@ -300,6 +300,18 @@
 		</label>
 		<input type="file" class="form-control" id="foto_des" name="foto_des">
 	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="fotografia_actual" class="form-label fw-bold">¿La fotografía es actual?</label>
+		<br>
+		<div class="form-check form-check-inline">
+			<input class="form-check-input" type="radio" name="fotografia_actual" id="fotografia_actual" value="S">
+			<label class="form-check-label" for="fotografia_actual">SI</label>
+		</div>
+		<div class="form-check form-check-inline">
+			<input class="form-check-input" type="radio" name="fotografia_actual" id="fotografia_actual" value="N">
+			<label class="form-check-label" for="fotografia_actual">NO</label>
+		</div>
+	</div>
 	<div class="col-12">
 		<hr>
 	</div>
