@@ -401,7 +401,7 @@ class DashboardController extends BaseController
 		$this->ip = "ws.fgebc.gob.mx";
 		$this->endpoint = $this->protocol . $this->ip . '/webServiceVD';
 		// $this->urlApi = "http://54.208.205.251/";
-		$this->urlApi = "https://c90e-2806-2f0-51e0-a3f5-739e-1f0c-dee3-67a8.ngrok.io/";
+		$this->urlApi = "https://3455-2806-2f0-51e0-a3f5-6791-6b4d-9cba-8698.ngrok.io/";
 	}
 
 	public function index()
@@ -3490,6 +3490,7 @@ class DashboardController extends BaseController
 
 		$result = curl_exec($ch);
 
+		return json_decode(curl_exec($ch));
 		if ($result === false) {
 			$result = "{
                 'status' => 401,
@@ -3604,10 +3605,11 @@ class DashboardController extends BaseController
 		$folio = $this->request->getPost('folio');
 		$data['folio'] = $folio;
 
-		$endpointFolio = $this->urlApi . 'recordings/folio/2023-123456864';
-		return json_encode($endpointFolio);exit;
+		$endpointFolio = $this->urlApi . 'recordings/folio/100_FOLIO_HELL';
 
 		$responseFolio = $this->_curlGetService($endpointFolio);
+		return json_encode($responseFolio);exit;
+
 		$endpointId = $this->urlApi . 'recordings/' . $responseFolio->id;
 
 		$responseid = $this->_curlGetService($endpointId);
