@@ -1030,8 +1030,8 @@
 				$.ajax({
 					data: {
 						'docid': foliodocid,
-						'folio': <?php echo $_GET['folio'] ?>,
-						'year': <?php echo $_GET['year'] ?>,
+						'folio': folio,
+						'year': ano,
 					},
 					url: "<?= base_url('/data/delete-documento') ?>",
 					method: "POST",

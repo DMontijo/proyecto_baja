@@ -184,6 +184,7 @@ $routes->group('denuncia', function ($routes) {
 	$routes->group('dashboard', ['filter' => 'denuciantesAuth'], function ($routes) {
 		$routes->get('/', 'client/DashboardController::index');
 		$routes->get('video-denuncia', 'client/DashboardController::video_denuncia');
+		$routes->post('video-llamada', 'client/DashboardController::video_llamada');
 
 		$routes->get('perfil', 'client/DashboardController::profile');
 		$routes->post('actualizar-perfil', 'client/DashboardController::update_profile');
@@ -295,8 +296,6 @@ $routes->group('data', function ($routes) {
 	$routes->post('update-documento-by-id', 'admin/DashboardController::updateDocumentoByFolio');
 	$routes->post('get-documentos', 'admin/DocumentosController::obtenDocumentos');
 	$routes->post('get-documento-tabla', 'admin/DocumentosController::getDocumento');
-
-	$routes->post('delete-documento', 'admin/DocumentosController::borrarDocumento');
 
 	$routes->post('get-denunciante-folio-by-id', 'admin/DashboardController::getFolioDenunciante');
 
