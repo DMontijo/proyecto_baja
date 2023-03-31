@@ -155,8 +155,8 @@ class ExtravioController extends BaseController
 			$dataApi['name']=$this->request->getPost('nombre') .' ' . $this->request->getPost('apellido_paterno');
 			$dataApi['details']= $dataApi2;
 			$dataApi['gender']= $this->request->getPost('sexo') == 'F' ? "FEMALE": 'MALE';
-			$dataApi['languages']= [2];
-			$urlApi = "http://34.229.77.149/guests";
+			$dataApi['languages']= [22];
+			$urlApi = "https://videodenunciabalancer.fgebc.gob.mx/guests";
 			// $urlApi = "http://192.168.0.67:3000/guests";
 			$response = $this->_curlPost($urlApi, $dataApi);
 			$data['UUID'] = $response->uuid;
@@ -426,7 +426,7 @@ class ExtravioController extends BaseController
 			'Access-Control-Allow-Origin: *',
 			'Access-Control-Allow-Credentials: true',
 			'Access-Control-Allow-Headers: Content-Type',
-			'X-API-KEY' . X_API_KEY
+			'X-API-KEY: ' . X_API_KEY
 		);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 

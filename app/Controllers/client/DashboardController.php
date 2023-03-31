@@ -131,7 +131,7 @@ class DashboardController extends BaseController
 		$this->_estadosExtranjeros = new EstadoExtranjeroModel();
 		$this->_archivoExternoModel = new FolioArchivoExternoModel();
 		$this->_tipoExpedienteModel = new TipoExpedienteModel();
-		$this->urlApi = "https://f038-2806-2f0-51e0-a3f5-c464-cc6a-3c56-cf7b.ngrok.io/guests/";
+		$this->urlApi = "https://723c-2806-2f0-51e0-a3f5-68e3-b4ca-f58e-7409.ngrok.io/guests/";
 	}
 
 	public function index()

@@ -56,7 +56,7 @@ class UserController extends BaseController
 		$this->_folioModel = new FolioModel();
 		$this->_escolaridadModel = new EscolaridadModel();
 		$this->_ocupacionModel = new OcupacionModel();
-		$this->urlApi = "http://34.229.77.149/guests/";
+		$this->urlApi = "https://videodenunciabalancer.fgebc.gob.mx/guests/";
 	}
 
 	public function index()
@@ -169,8 +169,6 @@ class UserController extends BaseController
 			$dataApi['details'] = $dataApi2;
 			$dataApi['gender'] = $this->request->getPost('sexo') == 'F' ? "FEMALE" : 'MALE';
 			$dataApi['languages'] = [(int)$this->request->getPost('idioma')];
-			$urlApi = "http://34.229.77.149/guests";
-			$urlApi = "http://192.168.0.67:3000/guests";
 			$response = $this->_curlPost($this->urlApi, $dataApi);
 			$data['UUID'] = $response->uuid;
 			if ($response->uuid) {
@@ -264,16 +262,15 @@ class UserController extends BaseController
 		try {
 			if (!session()->has('DENUNCIANTEID')) throw new \Exception();
 			$denunciante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', session('DENUNCIANTEID'))->first();
-			$endpoint = $this->urlApi. $denunciante->UUID;
-			$dataApi = array('languages'=>[(int)$this->request->getPost('idioma')]);
+			$endpoint = $this->urlApi . $denunciante->UUID;
+			$dataApi = array('languages' => [(int)$this->request->getPost('idioma')]);
 			$response = $this->_curlPatch($endpoint, $dataApi);
 			if ($response->status == "sucess") {
-			$update = $this->_denunciantesModel->set($data)->where('DENUNCIANTEID', session('DENUNCIANTEID'))->update();
-			if (!$update) throw new \Exception();
-			session()->set('TIPO', '1');
-			return redirect()->to(base_url('/denuncia/dashboard'));
+				$update = $this->_denunciantesModel->set($data)->where('DENUNCIANTEID', session('DENUNCIANTEID'))->update();
+				if (!$update) throw new \Exception();
+				session()->set('TIPO', '1');
+				return redirect()->to(base_url('/denuncia/dashboard'));
 			}
-
 		} catch (\Exception $e) {
 			// var_dump($data);
 			// exit;
@@ -402,7 +399,7 @@ class UserController extends BaseController
 			'Access-Control-Allow-Origin: *',
 			'Access-Control-Allow-Credentials: true',
 			'Access-Control-Allow-Headers: Content-Type',
-			'X-API-KEY' . X_API_KEY
+			'X-API-KEY: ' . X_API_KEY
 		);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
@@ -434,7 +431,7 @@ class UserController extends BaseController
 			'Access-Control-Allow-Origin: *',
 			'Access-Control-Allow-Credentials: true',
 			'Access-Control-Allow-Headers: Content-Type',
-			'X_API_KEY' . X_API_KEY
+			'X-API-KEY: ' . X_API_KEY
 		);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
