@@ -14,6 +14,8 @@
 	<a class="btn" href="<?= base_url('/denuncia') ?>">
 		INICIAR DENUNCIA
 	</a>
+	<br>
+	<br>
 </div>
 
 <?= $this->endSection() ?>

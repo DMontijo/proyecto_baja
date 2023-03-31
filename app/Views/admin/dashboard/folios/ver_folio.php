@@ -65,7 +65,9 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 		<div class="col-12 col-sm-6 col-md-4">
 			<div class="card rounded bg-white shadow" style="height: 240px;">
 				<div class="card-body">
-					<button id="documentos-folio-btn" class="btn btn-primary btn-block h-100" role="button"><i class="fas fa-file-alt fa-3x"></i><br><br> DOCUMENTOS</button>
+					<button id="documentos-folio-btn" class="btn btn-primary btn-block h-100" role="button" <?php if ($body_data->datosFolio->STATUS == 'ABIERTO' || $body_data->datosFolio->STATUS == 'EN PROCESO') {
+																												echo 'disabled';
+																											} ?>><i class="fas fa-file-alt fa-3x"></i><br><br> DOCUMENTOS</button>
 				</div>
 			</div>
 		</div>

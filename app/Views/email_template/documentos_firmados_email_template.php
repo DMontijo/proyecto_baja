@@ -15,7 +15,7 @@ $expediente_guiones =  $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpedie
 		</p>
 		<br>
 		<p style="text-align:center;">
-			<?= isset($municipio) ? $municipio->MUNICIPIODESCR . ', ' : '' ?>BAJA CALIFORNIA,<?= $fecha ?>
+			<?= isset($municipio) ? $municipio->MUNICIPIODESCR . ', ' : '' ?>BAJA CALIFORNIA, <?= $fecha ?>
 			<strong>LIC. <?= $agente ?></strong><br>
 			AGENTE DEL MINISTERIO PÚBLICO CON ADSCRIPCIÓN<br>
 			CENTRO DE DENUNCIA TECNOLÓGICA DE LA<br>
@@ -27,7 +27,7 @@ $expediente_guiones =  $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpedie
 		</p>
 		<br>
 		<p style="text-align:center;">
-			<?= isset($municipio) ? $municipio->MUNICIPIODESCR . ', ' : '' ?>BAJA CALIFORNIA,<?= $fecha ?><br>
+			<?= isset($municipio) ? $municipio->MUNICIPIODESCR . ', ' : '' ?>BAJA CALIFORNIA, <?= $fecha ?><br>
 			CENTRO DE DENUNCIA TECNOLÓGICA DE LA<br>
 			FISCALÍA GENERAL DEL ESTADO DE BAJA CALIFORNIA
 		</p>

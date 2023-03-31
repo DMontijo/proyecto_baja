@@ -11,7 +11,7 @@
 				<a class="link link-primary" href="<?= base_url('admin/dashboard/folios') ?>" role="button"><i class="fas fa-reply"></i> REGRESAR A FOLIOS</a>
 			</div>
 			<div class="col-12">
-				<div class="card shadow border-0">
+				<div class="card shadow border-0" style="overflow-x:auto;">
 					<div class="card-body">
 						<table id="folios_sin_firma" class="table table-bordered table-striped">
 							<thead>

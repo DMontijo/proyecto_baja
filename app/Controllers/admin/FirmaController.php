@@ -986,6 +986,7 @@ class FirmaController extends BaseController
 		$email->attach($xml, 'attachment', 'Constancia_' . $folio . '_' . $year . '.xml', 'application/xml');
 
 		if ($email->send()) {
+			$email->clear(TRUE);
 			return true;
 		} else {
 			return false;
@@ -1018,7 +1019,7 @@ class FirmaController extends BaseController
 				$delito = '';
 			}
 			if (empty($documento)) {
-				return json_encode((object)['status' => 3]);
+				return json_encode((object)['status' => 2]);
 			}
 
 			$imputado = $this->_folioPersonaFisicaModel->asObject()->where('ANO', $year)->where('FOLIOID', $folioM->FOLIOID)->where('CALIDADJURIDICAID', 2)->first();
@@ -1036,7 +1037,7 @@ class FirmaController extends BaseController
 
 			$email = \Config\Services::email();
 			$email->setTo($to);
-			$email->setSubject('Documentos firmados - ' . $folio . '/' . $folioM->ANO);
+			$email->setSubject('FGEBC - Documentos folio: ' . $folio . '/' . $folioM->ANO);
 			$body = view('email_template/documentos_firmados_email_template.php', ['municipio' => $municipio, 'fecha' => $fecha_actual, 'agente' => $agente, 'expediente' => $folioM->EXPEDIENTEID ? $expediente : 'SIN EXPEDIENTE', 'folio' => $folio, 'year' => $folioM->ANO, 'tipoexpediente' => $folioM->TIPOEXPEDIENTEID ? ($tipoExpediente  == "" ? $tipoExpediente : $tipoExpediente->TIPOEXPEDIENTEDESCR) : $folioM->STATUS, 'status' => $folioM->STATUS, 'delito' => $delito, 'imputado' => $imputado, 'claveexpediente' => $folioM->TIPOEXPEDIENTEID ? ($tipoExpediente  == "" ? $tipoExpediente : $tipoExpediente->TIPOEXPEDIENTECLAVE) : '']);
 			$email->setMessage($body);
 
@@ -1050,9 +1051,9 @@ class FirmaController extends BaseController
 				$email->attach($pdf, 'attachment',  $documento->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento->FOLIODOCID . '.pdf', 'application/pdf');
 				$email->attach($xml, 'attachment', $documento->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento->FOLIODOCID . '.xml', 'application/xml');
 			}
-			$email->attach($termino_condiciones, 'attachment', 'Terminos_Y_Condiciones.pdf', 'application/pdf');
-			$email->attach($aviso_privacidad, 'attachment', 'Aviso_De_Privacidad.pdf', 'application/pdf');
-			$email->attach($derecho_ofendido, 'attachment', 'Derechos_De_Victima_Ofendido.pdf', 'application/pdf');
+			$email->attach($termino_condiciones, 'attachment', 'Terminos y Condiciones.pdf', 'application/pdf');
+			$email->attach($aviso_privacidad, 'attachment', 'Aviso de Privacidad.pdf', 'application/pdf');
+			$email->attach($derecho_ofendido, 'attachment', 'Derechos de Víctima u Ofendido.pdf', 'application/pdf');
 
 			if ($email->send()) {
 				$datosUpdate = [
@@ -1069,9 +1070,6 @@ class FirmaController extends BaseController
 		}
 	}
 
-
-
-
 	public function sendEmailDocumentos()
 	{
 		$to = trim($this->request->getPost('send_mail_select'));
@@ -1079,8 +1077,11 @@ class FirmaController extends BaseController
 		$year = $this->request->getPost('year_modal_correo');
 		$folio = $this->request->getPost('folio');
 		$meses = array("ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE");
+		$sendPolice = false;
+		$ordenesProteccion = [];
 
 		if ($to && $year && $folio) {
+
 			if ($expediente != "undefined" && $expediente != '') {
 				$documento = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente)->where('ANO', $year)->where('STATUS', 'FIRMADO')->where('STATUSENVIO', 1)->where('ENVIADO', 'N')->findAll();
 				$folioM = $this->_folioModel->asObject()->where('ANO', $year)->where('EXPEDIENTEID', $expediente)->first();
@@ -1095,7 +1096,7 @@ class FirmaController extends BaseController
 			}
 
 			if (empty($documento)) {
-				return json_encode((object)['status' => 3]);
+				return json_encode((object)['status' => 2]);
 			}
 
 			$imputado = $this->_folioPersonaFisicaModel->asObject()->where('ANO', $year)->where('FOLIOID', $folioM->FOLIOID)->where('CALIDADJURIDICAID', 2)->first();
@@ -1113,7 +1114,7 @@ class FirmaController extends BaseController
 
 			$email = \Config\Services::email();
 			$email->setTo($to);
-			$email->setSubject('Documentos firmados - ' . $folio . '/' . $folioM->ANO);
+			$email->setSubject('FGEBC - Documentos folio: ' . $folio . '/' . $folioM->ANO);
 			$body = view('email_template/documentos_firmados_email_template.php', ['municipio' => $municipio, 'fecha' => $fecha_actual, 'agente' => $agente, 'expediente' => $folioM->EXPEDIENTEID ? $expediente : 'SIN EXPEDIENTE', 'folio' => $folio, 'year' => $folioM->ANO, 'tipoexpediente' => $folioM->TIPOEXPEDIENTEID ? ($tipoExpediente  == "" ? $tipoExpediente : $tipoExpediente->TIPOEXPEDIENTEDESCR) : $folioM->STATUS, 'status' => $folioM->STATUS, 'delito' => $delito, 'imputado' => $imputado, 'claveexpediente' => $folioM->TIPOEXPEDIENTEID ? ($tipoExpediente  == "" ? $tipoExpediente : $tipoExpediente->TIPOEXPEDIENTECLAVE) : '']);
 			$email->setMessage($body);
 
@@ -1126,31 +1127,118 @@ class FirmaController extends BaseController
 					$xml = $documento[$i]->XML;
 					$email->attach($pdf, 'attachment',  $documento[$i]->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento[$i]->FOLIODOCID . '.pdf', 'application/pdf');
 					$email->attach($xml, 'attachment', $documento[$i]->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento[$i]->FOLIODOCID . '.xml', 'application/xml');
+					if (str_contains($documento[$i]->TIPODOC, "ORDEN DE PROTECCION")) {
+						array_push($ordenesProteccion, $documento[$i]);
+						$sendPolice = true;
+					}
 				}
 			}
 
-			$email->attach($termino_condiciones, 'attachment', 'Terminos_Y_Condiciones.pdf', 'application/pdf');
-			$email->attach($aviso_privacidad, 'attachment', 'Aviso_De_Privacidad.pdf', 'application/pdf');
-			$email->attach($derecho_ofendido, 'attachment', 'Derechos_De_Victima_Ofendido.pdf', 'application/pdf');
+			$email->attach($termino_condiciones, 'attachment', 'Terminos y Condiciones.pdf', 'application/pdf');
+			$email->attach($aviso_privacidad, 'attachment', 'Aviso de Privacidad.pdf', 'application/pdf');
+			$email->attach($derecho_ofendido, 'attachment', 'Derechos de Victima u Ofendido.pdf', 'application/pdf');
 
 			if ($email->send()) {
+				$email->clear(TRUE);
 				$datosUpdate = [
 					'ENVIADO' => 'S',
 				];
 				for ($i = 0; $i < count($documento); $i++) {
 					if ($expediente != "undefined" && $expediente != '') {
-
 						$update = $this->_folioDocModel->set($datosUpdate)->where('NUMEROEXPEDIENTE', $expediente)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
 					} else {
 						$update = $this->_folioDocModel->set($datosUpdate)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
 					}
 				}
+				if ($sendPolice && count($ordenesProteccion) > 0) {
+					try {
+						$this->sendEmailOrdenesProtección($folioM->MUNICIPIOASIGNADOID, $municipio, $fecha_actual, $ordenesProteccion);
+					} catch (\Throwable $th) {
+					}
+				}
 				return json_encode((object)['status' => 1]);
 			} else {
+				$email->clear(TRUE);
 				return json_encode((object)['status' => 0]);
 			}
 		} else {
 			return json_encode((object)['status' => 3]);
+		}
+	}
+
+	public function sendEmailOrdenesProtección($municipioid, $municipiodescr, $fecha, $documentos)
+	{
+		if (ENVIRONMENT == 'development') {
+			switch ($municipioid) {
+				case 1:
+					$to_orden_proteccion = 'otoniel.f@yocontigo-it.com';
+					break;
+				case 2:
+					$to_orden_proteccion = 'otoniel.f@yocontigo-it.com';
+					break;
+				case 3:
+					$to_orden_proteccion = 'otoniel.f@yocontigo-it.com';
+					break;
+				case 4:
+					$to_orden_proteccion = 'otoniel.f@yocontigo-it.com';
+					break;
+				case 5:
+					$to_orden_proteccion = 'otoniel.f@yocontigo-it.com';
+					break;
+				case 6:
+					$to_orden_proteccion = 'otoniel.f@yocontigo-it.com';
+					break;
+				case 7:
+					$to_orden_proteccion = 'otoniel.f@yocontigo-it.com';
+					break;
+				default:
+					$to_orden_proteccion = '';
+					break;
+			}
+		}
+
+		if (ENVIRONMENT == 'production') {
+			switch ($municipioid) {
+				case 1:
+					$to_orden_proteccion = 'victor.ramirez@ensenada.gob.mx';
+					break;
+				case 2:
+					$to_orden_proteccion = 'udai@mexicali.gob.mx';
+					break;
+				case 3:
+					$to_orden_proteccion = 'seguridad.juridico@tecate.gob.mx';
+					break;
+				case 4:
+					$to_orden_proteccion = '';
+					break;
+				case 5:
+					$to_orden_proteccion = 'sub.tecnica.ssc@gmail.com';
+					break;
+				case 6:
+					$to_orden_proteccion = 'dspm-fge@sanquintin.gob.mx';
+					break;
+				case 7:
+					$to_orden_proteccion = 'dspm@sanfelipe.gob.mx';
+					break;
+				default:
+					$to_orden_proteccion = '';
+					break;
+			}
+		}
+		$email = \Config\Services::email();
+		$email->setTo($to_orden_proteccion);
+		$email->setSubject('FGEBC - ORDENES DE PROTECCIÓN');
+		$body = view('email_template/orden_proteccion_email_template.php', ['municipio' => $municipiodescr, 'fecha' => $fecha]);
+		$email->setMessage($body);
+		foreach ($documentos as $key => $documento) {
+			$pdf = $documento->PDF;
+			$email->attach($pdf, 'attachment',  $documento->TIPODOC . '.pdf', 'application/pdf');
+		}
+
+		try {
+			$email->send();
+			$email->clear(TRUE);
+		} catch (\Throwable $th) {
 		}
 	}
 

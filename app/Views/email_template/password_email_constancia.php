@@ -14,6 +14,8 @@
 	<a class="btn" href="<?= base_url('/constancia_extravio') ?>">
 		SOLICITAR CONSTANCIA
 	</a>
+	<br>
+	<br>
 </div>
 
 <?= $this->endSection() ?>
