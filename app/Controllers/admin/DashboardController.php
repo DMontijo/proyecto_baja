@@ -3608,7 +3608,7 @@ class DashboardController extends BaseController
 		$endpointFolio = $this->urlApi . 'recordings/folio/' . $folio;
 
 		$responseFolio = $this->_curlGetService($endpointFolio);
-		// return json_encode($responseFolio);
+		return json_encode($responseFolio);
 
 		if ($responseFolio != null) {
 			foreach ($responseFolio as $key => $conections) {
@@ -6998,6 +6998,7 @@ class DashboardController extends BaseController
 				}
 			}
 		}
+		var_dump($data);exit;
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 		$this->_loadView('Videos expediente', 'videos', '', $data, 'videos_expediente');
