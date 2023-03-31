@@ -114,7 +114,7 @@
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="notas_denuncia" class="form-label font-weight-bold">Notas:</label>
-							<textarea class="form-control" id="notas_denuncia" name="notas_denuncia" row="10" oninput="mayuscTextarea(this)" onkeyup="contarCaracteresDa(this)" maxlength="300"></textarea>
+							<textarea class="form-control" id="notas_denuncia" name="notas_denuncia" row="10" oninput="mayuscTextarea(this)" onkeyup="contarCaracteresDa(this)" maxlength="1000"></textarea>
 							<small id="numCaracterDa">300 caracteres restantes</small>
 						</div>
 
@@ -2966,7 +2966,7 @@
 	}
 
 	function contarCaracteresDa(obj) {
-		var maxLength = 300;
+		var maxLength = 1000;
 		var strLength = obj.value.length;
 		charRemain = (maxLength - strLength);
 

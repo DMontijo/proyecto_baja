@@ -171,7 +171,7 @@
 		<div class="card rounded bg-white shadow">
 			<div class="card-body">
 				<label class="font-weight-bold" for="notas">Breve descripción del caso:</label>
-				<textarea class="form-control" id="notas_mp" placeholder="Descripción del caso..." rows="10" required maxlength="300" oninput="mayuscTextarea(this)" onkeydown="pulsar(event)" onkeyup="contarCaracteres(this)"></textarea>
+				<textarea class="form-control" id="notas_mp" placeholder="Descripción del caso..." rows="10" required maxlength="1000" oninput="mayuscTextarea(this)" onkeydown="pulsar(event)" onkeyup="contarCaracteres(this)"></textarea>
 				<small id="numCaracter">300 caracteres restantes</small>
 
 			</div>
@@ -257,7 +257,7 @@
 	}
 
 	function contarCaracteres(obj) {
-		var maxLength = 300;
+		var maxLength = 1000;
 		var strLength = obj.value.length;
 		charRemain = (maxLength - strLength);
 
