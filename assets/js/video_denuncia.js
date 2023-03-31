@@ -42,6 +42,7 @@ disponible_connect.addEventListener("click", () => {
 				$("#llamadaModal").modal("show");
 				guestUUID = response.guest.uuid;
 				// console.log(guestUUID);
+				console.log("respuesta");
 				console.log(response);
 				// console.log(response.guest.details.DELITO);
 				document.querySelector('#nombre_denunciante').value = response.guest.name;
@@ -56,7 +57,7 @@ disponible_connect.addEventListener("click", () => {
 				document.querySelector("#folio_llamada").value =
 					response.guest.details.FOLIO;
 				document.querySelector("#idioma_denunciante").value = response
-					.guest.languages[0]
+					.guest.languages
 					? response.guest.languages.title
 					: "-";
 			});
