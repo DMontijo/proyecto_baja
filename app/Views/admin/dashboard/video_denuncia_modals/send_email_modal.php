@@ -9,19 +9,14 @@
 					<i class="fas fa-times"></i>
 				</button>
 			</div>
-
 			<div class="modal-body text-center" id="load_mail">
-
 				<input type="text" class="form-control d-none" id="expediente_modal_correo" name="expediente_modal_correo" required>
 				<input type="text" class="form-control d-none" id="year_modal_correo" name="year_modal_correo" required>
-				<select class="form-control" id="send_mail_select" name="send_mail_select" required>
-					<option selected disabled value=""></option>
-
-				</select>
+				<select class="form-control" id="send_mail_select" name="send_mail_select" required></select>
 				<br>
 				<br>
 				<div class="col-12">
-					<button type="button"id="enviarcorreoDoc" name="enviarcorreoDoc"class="btn btn-secondary font-weight-bold">ENVIAR CORREO</button>
+					<button type="button" id="enviarcorreoDoc" name="enviarcorreoDoc" class="btn btn-secondary font-weight-bold">ENVIAR CORREO</button>
 				</div>
 			</div>
 			<div id="loading_mail" class="modal-body text-center d-none" style="min-height:170px;">

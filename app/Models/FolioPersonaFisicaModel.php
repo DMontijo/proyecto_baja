@@ -99,7 +99,7 @@ class FolioPersonaFisicaModel extends Model
 	public function get_correos_persona($folio, $year)
 	{
 		$builder = $this->db->table($this->table);
-		$builder->select(['CORREO']);
+		$builder->select('CORREO');
 		$builder->where('FOLIOID', $folio);
 		$builder->where('ANO', $year);
 		$builder->where('CORREO is NOT NULL');
@@ -118,7 +118,7 @@ class FolioPersonaFisicaModel extends Model
 		$query = $builder->get();
 		return $query->getResult('array');
 	}
-	
+
 	public function get_imputados($folio, $year)
 	{
 		$builder = $this->db->table($this->table);

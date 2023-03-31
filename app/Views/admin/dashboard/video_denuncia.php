@@ -273,7 +273,7 @@
 		for (let i = 0; i < personas.length; i++) {
 			var btn =
 				`<button type='button'  class='btn btn-primary' onclick='viewPersonaFisica(${personas[i].PERSONAFISICAID})'><i class='fas fa-eye'></i></button>`
-				var btnDelete =
+			var btnDelete =
 				`<button type='button'  class='btn btn-primary' onclick='deletePersonaFisicaById(${personas[i].PERSONAFISICAID})'><i class='fas fa-trash'></i></button>`
 			var fila =
 				`<tr id="row${i}">` +
@@ -339,8 +339,8 @@
 
 	function llenarTablaDocumentos(documentos) {
 		for (let i = 0; i < documentos.length; i++) {
-			console.log(documentos[i]	 );
-			if (documentos[i].STATUS == 'FIRMADO' ) {
+			console.log(documentos[i]);
+			if (documentos[i].STATUS == 'FIRMADO') {
 				var btn =
 					`<button type='button'  class='btn btn-primary' onclick='viewDocumento(${documentos[i].FOLIODOCID})' disabled><i class="fas fa-eye"></i></button>`
 				var btnFirmar =
@@ -352,9 +352,9 @@
 					`<button type='button'  class='btn btn-primary my-2' onclick='firmarDocumento(${documentos[i].FOLIOID}, ${documentos[i].ANO}, ${documentos[i].FOLIODOCID})'><i class="fas fa-signature"></i></button>`
 			}
 
-			if (documentos[i].ENVIADO == 'N'){
-				var btnBorrar = 
-				`<button type='button'  class='btn btn-primary my-2' onclick='borrarDocumento(${documentos[i].FOLIOID}, ${documentos[i].ANO}, ${documentos[i].FOLIODOCID})'><i class="fas fa-trash"></i></button>`
+			if (documentos[i].ENVIADO == 'N') {
+				var btnBorrar =
+					`<button type='button'  class='btn btn-primary my-2' onclick='borrarDocumento(${documentos[i].FOLIOID}, ${documentos[i].ANO}, ${documentos[i].FOLIODOCID})'><i class="fas fa-trash"></i></button>`
 			}
 			var fila =
 				`<tr id="row${i}">` +
@@ -767,7 +767,7 @@
 			showCancelButton: true,
 			confirmButtonColor: '#bf9b55',
 			confirmButtonText: '¡Si, borrar!'
-			}).then((result) => {
+		}).then((result) => {
 			if (result.isConfirmed) {
 				$.ajax({
 					data: {
@@ -784,9 +784,9 @@
 								'¡Borrar!',
 								'El documento se ha borrado.',
 								'success'
-								).then(
-									location.reload()
-								)
+							).then(
+								location.reload()
+							)
 
 						}
 					},
@@ -1295,7 +1295,7 @@
 					if (archivos) llenarTablaArchivosExternos(archivos);
 
 					//FOLIO DENUNCIANTES
-					if(folioDenunciantes)llenarTablaFolioDenunciantes(folioDenunciantes);
+					if (folioDenunciantes) llenarTablaFolioDenunciantes(folioDenunciantes);
 
 
 
@@ -1588,192 +1588,193 @@
 		window.open(`<?= base_url('/admin/dashboard/ver_folio?folio=') ?>` + folio + '&year=' + year, '_blank');
 	}
 
-	function deletePersonaFisicaById(personafisicaid){
-				const data = {
-					'folio': document.querySelector('#input_folio_atencion').value,
-					'year': document.querySelector('#year_select').value,
-					'personafisica': personafisicaid
-				}
-				$.ajax({
-					data: data,
-					url: "<?= base_url('/data/delete-persona-fisica-by-id') ?>",
-					method: "POST",
-					dataType: "json",
-					success: function(response) {
-						if (response.status == 1) {
-							let tabla_personas = document.querySelectorAll('#table-personas tr');
-							tabla_personas.forEach(row => {
-								if (row.id !== '') {
-									row.remove();
-								}
-							});
-
-							llenarTablaPersonas(response.personas);
-							Swal.fire({
-								icon: 'success',
-								text: 'Persona fisica eliminada correctamente',
-								confirmButtonColor: '#bf9b55',
-							});
-							const imputados = response.imputados;
-							const victimas = response.victimas;
-							const personas = response.personas;
-
-							$('#victima_ofendido').empty();
-							let select_victima_ofendido = document.querySelector("#victima_ofendido")
-							victimas.forEach(victima => {
-								let primer_apellido = victima.PRIMERAPELLIDO ? victima
-									.PRIMERAPELLIDO : '';
-
-								const option = document.createElement('option');
-								option.value = victima.PERSONAFISICAID;
-								option.text = victima.NOMBRE + ' ' + primer_apellido;
-								select_victima_ofendido.add(option, null);
-							});
-							const option_vacio_vd = document.createElement('option');
-							option_vacio_vd.value = '';
-							option_vacio_vd.text = '';
-							option_vacio_vd.disabled = true;
-							option_vacio_vd.selected = true;
-							$('#victima_modal_documento').empty();
-							let select_victima_documento = document.querySelector(
-								"#victima_modal_documento");
-							select_victima_documento.add(option_vacio_vd);
-
-							victimas.forEach(victima => {
-								let primer_apellido = victima.PRIMERAPELLIDO ? victima
-									.PRIMERAPELLIDO : '';
-
-								const option = document.createElement('option');
-								option.value = victima.PERSONAFISICAID;
-								option.text = victima.NOMBRE + ' ' + primer_apellido;
-								select_victima_documento.add(option, null);
-							});
-							const option_vacio_id = document.createElement('option');
-							option_vacio_id.value = '';
-							option_vacio_id.text = '';
-							option_vacio_id.disabled = true;
-							option_vacio_id.selected = true;
-							$('#imputado_modal_documento').empty();
-							let select_imputado_documento = document.querySelector(
-								"#imputado_modal_documento");
-							select_imputado_documento.add(option_vacio_id);
-							imputados.forEach(imputado => {
-								let primer_apellido = imputado.PRIMERAPELLIDO ? imputado
-									.PRIMERAPELLIDO : '';
-
-								const option = document.createElement('option');
-								option.value = imputado.PERSONAFISICAID;
-								option.text = imputado.NOMBRE + ' ' + primer_apellido;
-								select_imputado_documento.add(option, null);
-							});
-							$('#imputado_arbol').empty();
-							let select_imputado_mputado = document.querySelector("#imputado_arbol")
-							imputados.forEach(imputado => {
-								let primer_apellido = imputado.PRIMERAPELLIDO ? imputado
-									.PRIMERAPELLIDO : '';
-
-								const option = document.createElement('option');
-								option.value = imputado.PERSONAFISICAID;
-								option.text = imputado.NOMBRE + ' ' + primer_apellido;
-								select_imputado_mputado.add(option, null);
-
-							});
-							$('#personaFisica1_I').empty();
-							let select_personaFisica1_I = document.querySelector("#personaFisica1_I")
-							const option_vacio = document.createElement('option');
-							option_vacio.value = '';
-							option_vacio.text = '';
-							option_vacio.disabled = true;
-							option_vacio.selected = true;
-							select_personaFisica1_I.add(option_vacio, null);
-							personas.forEach(persona => {
-								let primer_apellido = persona.PRIMERAPELLIDO ? persona
-									.PRIMERAPELLIDO : '';
-
-								const option = document.createElement('option');
-								option.value = persona.PERSONAFISICAID;
-								option.text = persona.NOMBRE + ' ' + primer_apellido;
-								select_personaFisica1_I.add(option, null);
-							});
-							$('#propietario').empty();
-							let select_propietario = document.querySelector("#propietario");
-							const option_vacio_pro = document.createElement('option');
-							option_vacio_pro.value = '';
-							option_vacio_pro.text = '';
-							option_vacio_pro.disabled = true;
-							option_vacio_pro.selected = true;
-							select_propietario.add(option_vacio_pro, null);
-
-							personas.forEach(persona => {
-								let primer_apellido = persona.PRIMERAPELLIDO ? persona
-									.PRIMERAPELLIDO : '';
-
-								const option = document.createElement('option');
-								option.value = persona.PERSONAFISICAID;
-								option.text = persona.NOMBRE + ' '.primer_apellido;
-								select_propietario.add(option, null);
-							});
-
-							$('#propietario_vehiculo').empty();
-							let select_propietario_v = document.querySelector("#propietario_vehiculo");
-							const option_vacio_p = document.createElement('option');
-							option_vacio_p.value = '';
-							option_vacio_p.text = '';
-							option_vacio_p.disabled = true;
-							option_vacio_p.selected = true;
-							select_propietario_v.add(option_vacio_p, null);
-							personas.forEach(persona => {
-								let primer_apellido = persona.PRIMERAPELLIDO ? persona
-									.PRIMERAPELLIDO : '';
-
-								const option = document.createElement('option');
-								option.value = persona.PERSONAFISICAID;
-								option.text = persona.NOMBRE + ' ' + primer_apellido;
-								select_propietario_v.add(option, null);
-							});
-
-							$('#propietario_vehiculo_add').empty();
-							let select_propietario_v_add = document.querySelector("#propietario_vehiculo_add");
-							const option_vacio_p_add = document.createElement('option');
-							option_vacio_p_add.value = '';
-							option_vacio_p_add.text = '';
-							option_vacio_p_add.disabled = true;
-							option_vacio_p_add.selected = true;
-							select_propietario_v_add.add(option_vacio_p_add, null);
-							personas.forEach(persona => {
-								let primer_apellido = persona.PRIMERAPELLIDO ? persona
-									.PRIMERAPELLIDO : '';
-
-								const option = document.createElement('option');
-								option.value = persona.PERSONAFISICAID;
-								option.text = persona.NOMBRE + ' ' + primer_apellido;
-								select_propietario_v_add.add(option, null);
-							});
-							$('#propietario_update').empty();
-							let select_propietario_update = document.querySelector(
-								"#propietario_update");
-							personas.forEach(persona => {
-								let primer_apellido = persona.PRIMERAPELLIDO ? persona
-									.PRIMERAPELLIDO : '';
-
-								const option = document.createElement('option');
-								option.value = persona.PERSONAFISICAID;
-								option.text = persona.NOMBRE + ' ' + primer_apellido;
-								select_propietario_update.add(option, null);
-							});
-						} else {
-							Swal.fire({
-								icon: 'error',
-								text: 'No se eliminó la información de la persona fisica',
-								confirmButtonColor: '#bf9b55',
-							});
+	function deletePersonaFisicaById(personafisicaid) {
+		const data = {
+			'folio': document.querySelector('#input_folio_atencion').value,
+			'year': document.querySelector('#year_select').value,
+			'personafisica': personafisicaid
+		}
+		$.ajax({
+			data: data,
+			url: "<?= base_url('/data/delete-persona-fisica-by-id') ?>",
+			method: "POST",
+			dataType: "json",
+			success: function(response) {
+				if (response.status == 1) {
+					let tabla_personas = document.querySelectorAll('#table-personas tr');
+					tabla_personas.forEach(row => {
+						if (row.id !== '') {
+							row.remove();
 						}
-					},
-					error: function(jqXHR, textStatus, errorThrown) {
-						console.log(textStatus);
-					}
-				});
+					});
+
+					llenarTablaPersonas(response.personas);
+					Swal.fire({
+						icon: 'success',
+						text: 'Persona fisica eliminada correctamente',
+						confirmButtonColor: '#bf9b55',
+					});
+					const imputados = response.imputados;
+					const victimas = response.victimas;
+					const personas = response.personas;
+
+					$('#victima_ofendido').empty();
+					let select_victima_ofendido = document.querySelector("#victima_ofendido")
+					victimas.forEach(victima => {
+						let primer_apellido = victima.PRIMERAPELLIDO ? victima
+							.PRIMERAPELLIDO : '';
+
+						const option = document.createElement('option');
+						option.value = victima.PERSONAFISICAID;
+						option.text = victima.NOMBRE + ' ' + primer_apellido;
+						select_victima_ofendido.add(option, null);
+					});
+					const option_vacio_vd = document.createElement('option');
+					option_vacio_vd.value = '';
+					option_vacio_vd.text = '';
+					option_vacio_vd.disabled = true;
+					option_vacio_vd.selected = true;
+					$('#victima_modal_documento').empty();
+					let select_victima_documento = document.querySelector(
+						"#victima_modal_documento");
+					select_victima_documento.add(option_vacio_vd);
+
+					victimas.forEach(victima => {
+						let primer_apellido = victima.PRIMERAPELLIDO ? victima
+							.PRIMERAPELLIDO : '';
+
+						const option = document.createElement('option');
+						option.value = victima.PERSONAFISICAID;
+						option.text = victima.NOMBRE + ' ' + primer_apellido;
+						select_victima_documento.add(option, null);
+					});
+					const option_vacio_id = document.createElement('option');
+					option_vacio_id.value = '';
+					option_vacio_id.text = '';
+					option_vacio_id.disabled = true;
+					option_vacio_id.selected = true;
+					$('#imputado_modal_documento').empty();
+					let select_imputado_documento = document.querySelector(
+						"#imputado_modal_documento");
+					select_imputado_documento.add(option_vacio_id);
+					imputados.forEach(imputado => {
+						let primer_apellido = imputado.PRIMERAPELLIDO ? imputado
+							.PRIMERAPELLIDO : '';
+
+						const option = document.createElement('option');
+						option.value = imputado.PERSONAFISICAID;
+						option.text = imputado.NOMBRE + ' ' + primer_apellido;
+						select_imputado_documento.add(option, null);
+					});
+					$('#imputado_arbol').empty();
+					let select_imputado_mputado = document.querySelector("#imputado_arbol")
+					imputados.forEach(imputado => {
+						let primer_apellido = imputado.PRIMERAPELLIDO ? imputado
+							.PRIMERAPELLIDO : '';
+
+						const option = document.createElement('option');
+						option.value = imputado.PERSONAFISICAID;
+						option.text = imputado.NOMBRE + ' ' + primer_apellido;
+						select_imputado_mputado.add(option, null);
+
+					});
+					$('#personaFisica1_I').empty();
+					let select_personaFisica1_I = document.querySelector("#personaFisica1_I")
+					const option_vacio = document.createElement('option');
+					option_vacio.value = '';
+					option_vacio.text = '';
+					option_vacio.disabled = true;
+					option_vacio.selected = true;
+					select_personaFisica1_I.add(option_vacio, null);
+					personas.forEach(persona => {
+						let primer_apellido = persona.PRIMERAPELLIDO ? persona
+							.PRIMERAPELLIDO : '';
+
+						const option = document.createElement('option');
+						option.value = persona.PERSONAFISICAID;
+						option.text = persona.NOMBRE + ' ' + primer_apellido;
+						select_personaFisica1_I.add(option, null);
+					});
+					$('#propietario').empty();
+					let select_propietario = document.querySelector("#propietario");
+					const option_vacio_pro = document.createElement('option');
+					option_vacio_pro.value = '';
+					option_vacio_pro.text = '';
+					option_vacio_pro.disabled = true;
+					option_vacio_pro.selected = true;
+					select_propietario.add(option_vacio_pro, null);
+
+					personas.forEach(persona => {
+						let primer_apellido = persona.PRIMERAPELLIDO ? persona
+							.PRIMERAPELLIDO : '';
+
+						const option = document.createElement('option');
+						option.value = persona.PERSONAFISICAID;
+						option.text = persona.NOMBRE + ' '.primer_apellido;
+						select_propietario.add(option, null);
+					});
+
+					$('#propietario_vehiculo').empty();
+					let select_propietario_v = document.querySelector("#propietario_vehiculo");
+					const option_vacio_p = document.createElement('option');
+					option_vacio_p.value = '';
+					option_vacio_p.text = '';
+					option_vacio_p.disabled = true;
+					option_vacio_p.selected = true;
+					select_propietario_v.add(option_vacio_p, null);
+					personas.forEach(persona => {
+						let primer_apellido = persona.PRIMERAPELLIDO ? persona
+							.PRIMERAPELLIDO : '';
+
+						const option = document.createElement('option');
+						option.value = persona.PERSONAFISICAID;
+						option.text = persona.NOMBRE + ' ' + primer_apellido;
+						select_propietario_v.add(option, null);
+					});
+
+					$('#propietario_vehiculo_add').empty();
+					let select_propietario_v_add = document.querySelector("#propietario_vehiculo_add");
+					const option_vacio_p_add = document.createElement('option');
+					option_vacio_p_add.value = '';
+					option_vacio_p_add.text = '';
+					option_vacio_p_add.disabled = true;
+					option_vacio_p_add.selected = true;
+					select_propietario_v_add.add(option_vacio_p_add, null);
+					personas.forEach(persona => {
+						let primer_apellido = persona.PRIMERAPELLIDO ? persona
+							.PRIMERAPELLIDO : '';
+
+						const option = document.createElement('option');
+						option.value = persona.PERSONAFISICAID;
+						option.text = persona.NOMBRE + ' ' + primer_apellido;
+						select_propietario_v_add.add(option, null);
+					});
+					$('#propietario_update').empty();
+					let select_propietario_update = document.querySelector(
+						"#propietario_update");
+					personas.forEach(persona => {
+						let primer_apellido = persona.PRIMERAPELLIDO ? persona
+							.PRIMERAPELLIDO : '';
+
+						const option = document.createElement('option');
+						option.value = persona.PERSONAFISICAID;
+						option.text = persona.NOMBRE + ' ' + primer_apellido;
+						select_propietario_update.add(option, null);
+					});
+				} else {
+					Swal.fire({
+						icon: 'error',
+						text: 'No se eliminó la información de la persona fisica',
+						confirmButtonColor: '#bf9b55',
+					});
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				console.log(textStatus);
 			}
+		});
+	}
+
 	function viewPersonaFisica(id) {
 		$.ajax({
 			data: {
@@ -2843,8 +2844,7 @@
 								'd-none');
 							btn_enviarcorreoDoc.disabled = false;
 
-						}
-						if (response.status == 3) {
+						} else if (response.status == 2) {
 							Swal.fire({
 								icon: 'error',
 								text: 'No hay documentos a enviar',
@@ -2858,10 +2858,52 @@
 							document.querySelector('#password_verifying_mail').classList.add(
 								'd-none');
 							btn_enviarcorreoDoc.disabled = false;
+						} else if (response.status == 3) {
+							Swal.fire({
+								icon: 'error',
+								text: 'Debes seleccionar un correo para enviar.',
+								confirmButtonColor: '#bf9b55',
+							});
+							$('#sendEmailDocModal').modal('hide');
+							document.querySelector('#load_mail').classList.remove('d-none');
+							document.querySelector('#enviar_modalLabel').classList.remove(
+								'd-none');
+							document.querySelector('#loading_mail').classList.add('d-none');
+							document.querySelector('#password_verifying_mail').classList.add(
+								'd-none');
+							btn_enviarcorreoDoc.disabled = false;
 
+						} else {
+							Swal.fire({
+								icon: 'error',
+								text: 'No fue posible enviar el documento',
+								confirmButtonColor: '#bf9b55',
+							});
+							$('#sendEmailDocModal').modal('hide');
+							document.querySelector('#load_mail').classList.remove('d-none');
+							document.querySelector('#enviar_modalLabel').classList.remove(
+								'd-none');
+							document.querySelector('#loading_mail').classList.add('d-none');
+							document.querySelector('#password_verifying_mail').classList.add(
+								'd-none');
+							btn_enviarcorreoDoc.disabled = false;
 						}
 					},
-					error: function(jqXHR, textStatus, errorThrown) {}
+					error: function(jqXHR, textStatus, errorThrown) {
+						Swal.fire({
+							icon: 'error',
+							text: 'No fue posible enviar el documento',
+							confirmButtonColor: '#bf9b55',
+						});
+						$('#sendEmailDocModal').modal('hide');
+						document.querySelector('#load_mail').classList.remove('d-none');
+						document.querySelector('#enviar_modalLabel').classList.remove(
+							'd-none');
+						document.querySelector('#loading_mail').classList.add('d-none');
+						document.querySelector('#password_verifying_mail').classList.add(
+							'd-none');
+						btn_enviarcorreoDoc.disabled = false;
+					}
 				});
 			}, false);
 			btn_firmar_doc.addEventListener('click', (event) => {
