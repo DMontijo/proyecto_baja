@@ -2349,7 +2349,7 @@ class DashboardController extends BaseController
 		$folioDoc = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOCID', 'asc')->findAll();
 		$archivosExternosVD = $this->_archivoExternoModel->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
 		$folioDocPeritaje = $this->_folioDocModel->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('TIPODOC', 'SOLICITUD DE PERITAJE')->orLike('TIPODOC', 'OFICIO DE COLABORACION PARA INGRESO A HOSPITAL')->findAll();
-	
+
 		if ($archivosExternosVD) {
 			try {
 
@@ -3608,20 +3608,20 @@ class DashboardController extends BaseController
 		$endpointFolio = $this->urlApi . 'recordings/folio/' . $folio;
 
 		$responseFolio = $this->_curlGetService($endpointFolio);
-		return json_encode($responseFolio);
+		// return json_encode($responseFolio);
 
 		if ($responseFolio != null) {
-		}	
-		// foreach ($responseFolio as $key => $conections) {
+			foreach ($responseFolio as $key => $conections) {
 
-		// 	if (isset($conections->url) && $conections->url != null) {
-		// 		$endpointId = $this->urlApi . 'recordings/' . $conections->id;
+				if (isset($conections->url) && $conections->url != null) {
+					$endpointId = $this->urlApi . 'recordings/' . $conections->id;
 
-		// 		$responseid = $this->_curlGetService($endpointId);
+					$responseid = $this->_curlGetService($endpointId);
+				}
+			}
+		}
 
-		// 	}
-		// }
-		// return json_encode($responseid->uri);exit;
+		return json_encode($responseid);;
 
 		// $endpoint = 'https://videodenunciaserver1.fgebc.gob.mx/api/vc';
 		// $data = array();
