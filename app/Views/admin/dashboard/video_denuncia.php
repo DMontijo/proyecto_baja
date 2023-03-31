@@ -3469,6 +3469,8 @@ function borrarDocumento(folio, ano, foliodocid) {
 			let select_victima_documento = document.querySelector("#victima_modal_documento");
 			let select_imputado_documento = document.querySelector("#imputado_modal_documento");
 			let select_uma = document.querySelector("#uma_select");
+			let select_proceso = document.querySelector("#tipoproceso_select");
+			let select_notificacion = document.querySelector("#tiponotificacion_select");
 
 
 			$('#documentos_modal_wyswyg').on('show.bs.modal', function(event) {
@@ -3508,11 +3510,19 @@ function borrarDocumento(folio, ano, foliodocid) {
 			selectPlantilla.addEventListener("change", function() {
 				if (plantilla.value == "CITATORIO") {
 					document.getElementById("div_uma").style.display = "block";
+					document.getElementById("div_noti").style.display = "block";
+					document.getElementById("div_proceso").style.display = "block";
+
 					document.querySelector('#uma_select').setAttribute('required', true);
+					document.querySelector('#tiponotificacion_select').setAttribute('required', true);
+					document.querySelector('#tipoproceso_select').setAttribute('required', true);
+
 
 				} else {
 					document.getElementById("div_uma").style.display = "none";
 					document.querySelector('#uma_select').setAttribute('required', false);
+					document.querySelector('#tiponotificacion_select').setAttribute('required', false);
+					document.querySelector('#tipoproceso_select').setAttribute('required', false);
 
 				}
 
@@ -5926,14 +5936,14 @@ function borrarDocumento(folio, ano, foliodocid) {
 
 			function obtenerPlantillas(tipoPlantilla, victima, imputado) {
 
-				if (select_uma.getAttribute('required') == "true" && select_uma.value != '' && tipoPlantilla == 'CITATORIO') {
+				if (select_uma.getAttribute('required') == "true" && select_uma.value != '' && select_notificacion.getAttribute('required') == "true" && select_notificacion.value != ''&& select_proceso.getAttribute('required') == "true" && select_proceso.value != '' && tipoPlantilla == 'CITATORIO') {
 					$('#documentos_modal_wyswyg').modal('hide');
 					$('#documentos_modal').modal('show');
-				} else if (select_uma.getAttribute('required') == "true" && select_uma.value == '' && tipoPlantilla == 'CITATORIO') {
+				} else if ((select_uma.getAttribute('required') == "true" && select_uma.value == '') || (select_notificacion.getAttribute('required') == "true" && select_notificacion.value == '')  ||(select_proceso.getAttribute('required') == "true" && select_proceso.value == '')&& tipoPlantilla == 'CITATORIO') {
 
 					Swal.fire({
 						icon: 'error',
-						text: 'UMA obligatorio',
+						text: 'Favor de llenar los campos mostrados en la pantalla',
 						confirmButtonColor: '#bf9b55',
 					});
 				}
@@ -5950,7 +5960,10 @@ function borrarDocumento(folio, ano, foliodocid) {
 						'titulo': tipoPlantilla,
 						'victima': victima,
 						'imputado': imputado,
-						'uma': select_uma.value
+						'uma': select_uma.value,
+						'notificacion': select_notificacion.value,
+						'proceso': select_proceso.value
+
 
 					};
 					$.ajax({
