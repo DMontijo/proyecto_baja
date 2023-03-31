@@ -3605,15 +3605,22 @@ class DashboardController extends BaseController
 		$folio = $this->request->getPost('folio');
 		$data['folio'] = $folio;
 
-		$endpointFolio = $this->urlApi . 'recordings/folio/100_FOLIO_HELL';
+		$endpointFolio = $this->urlApi . 'recordings/folio/100_FOLIO_TEST_01';
 
 		$responseFolio = $this->_curlGetService($endpointFolio);
-		return json_encode($responseFolio);exit;
+		if ($responseFolio != null) {
+			return json_encode($responseFolio);
+		}	
+		// foreach ($responseFolio as $key => $conections) {
 
-		$endpointId = $this->urlApi . 'recordings/' . $responseFolio->id;
+		// 	if (isset($conections->url) && $conections->url != null) {
+		// 		$endpointId = $this->urlApi . 'recordings/' . $conections->id;
 
-		$responseid = $this->_curlGetService($endpointId);
-		return json_encode($responseFolio);
+		// 		$responseid = $this->_curlGetService($endpointId);
+
+		// 	}
+		// }
+		// return json_encode($responseid->uri);exit;
 
 		// $endpoint = 'https://videodenunciaserver1.fgebc.gob.mx/api/vc';
 		// $data = array();
