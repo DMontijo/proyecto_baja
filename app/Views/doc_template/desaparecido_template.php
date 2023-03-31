@@ -24,8 +24,8 @@
 			margin-left: 2cm;
 			margin-right: 2cm;
 			margin-bottom: 2cm;
-			/* font-family: 'Montserrat', Arial, Helvetica, sans-serif; */
-			font-family: Arial, Helvetica, sans-serif;
+			font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+			/* font-family: Arial, Helvetica, sans-serif; */
 			font-size: 11pt;
 			color: #000000;
 		}
