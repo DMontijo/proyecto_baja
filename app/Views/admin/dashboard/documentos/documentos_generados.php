@@ -284,6 +284,23 @@
 		var btn_guardarFolioDoc = document.querySelector('#guardarFolioDoc');
 		var btn_actualizarFolioDoc = document.querySelector('#actualizarFolioDoc');
 		let select_uma = document.querySelector("#uma_select");
+		let select_proceso = document.querySelector("#tipoproceso_select");
+		let select_notificacion = document.querySelector("#tiponotificacion_select");
+		var options = select_uma.options;
+
+		for (var i = 0; i < select_uma.options.length; i++) {
+			if (select_uma.options[i].value.toString().includes('MEXICALI - ')) {
+				select_uma.remove(i);
+				// break;
+			}
+		}
+		// for (var i = 0; i < options.length; i++) {
+		// 	var option = options[i];
+		// 	var value = option.value;
+		// 	if (!value.includes("MEXICALI")) {
+
+		// 	}
+		// }
 
 		// var toolbarOptions = [
 		// 	['bold', 'italic', 'underline', 'strike'],
@@ -355,7 +372,11 @@
 		// 	},
 		// 	theme: 'snow' // or 'bubble'
 		// });
-
+		function removeChildAll(parent) {
+			while (parent.firstChild) {
+				parent.removeChild(parent.firstChild);
+			}
+		}
 		btn_actualizarFolioDoc.addEventListener('click', (event) => {
 			let contenidoModificado = tinymce.get("documento_editar").getContent();
 			actualizarDocumento(contenidoModificado);
@@ -364,12 +385,20 @@
 		selectPlantilla.addEventListener("change", function() {
 			if (plantilla.value == "CITATORIO") {
 				document.getElementById("div_uma").style.display = "block";
-				document.querySelector('#uma_select').setAttribute('required', true);
+				document.getElementById("div_proceso").style.display = "block";
+				document.getElementById("div_noti").style.display = "block";
 
+				document.querySelector('#uma_select').setAttribute('required', true);
+				document.querySelector('#tiponotificacion_select').setAttribute('required', true);
+				document.querySelector('#tipoproceso_select').setAttribute('required', true);
 			} else {
 				document.getElementById("div_uma").style.display = "none";
-				document.querySelector('#uma_select').setAttribute('required', false);
+				document.getElementById("div_proceso").style.display = "none";
+				document.getElementById("div_noti").style.display = "none";
 
+				document.querySelector('#uma_select').setAttribute('required', false);
+				document.querySelector('#tiponotificacion_select').setAttribute('required', false);
+				document.querySelector('#tipoproceso_select').setAttribute('required', false);
 
 			}
 
@@ -385,21 +414,22 @@
 			} else {
 				document.getElementById("involucrados").style.display = "none";
 				document.getElementById("div_uma").style.display = "none";
-
+				document.getElementById("div_noti").style.display = "none";
+				document.getElementById("div_proceso").style.display = "none";
 			}
 
 		});
 
 		function obtenerPlantillas(tipoPlantilla, victima, imputado) {
 
-			if (select_uma.getAttribute('required') == "true" && select_uma.value != '' && tipoPlantilla == 'CITATORIO') {
+			if (select_uma.getAttribute('required') == "true" && select_uma.value != '' && select_notificacion.getAttribute('required') == "true" && select_notificacion.value != '' && select_proceso.getAttribute('required') == "true" && select_proceso.value != '' && tipoPlantilla == 'CITATORIO') {
 				$('#documentos_modal_wyswyg').modal('hide');
 				$('#documentos_modal').modal('show');
-			} else if (select_uma.getAttribute('required') == "true" && select_uma.value == '' && tipoPlantilla == 'CITATORIO') {
+			} else if ((select_uma.getAttribute('required') == "true" && select_uma.value == '') || (select_notificacion.getAttribute('required') == "true" && select_notificacion.value == '') || (select_proceso.getAttribute('required') == "true" && select_proceso.value == '') && tipoPlantilla == 'CITATORIO') {
 
 				Swal.fire({
 					icon: 'error',
-					text: 'UMA obligatorio',
+					text: 'Favor de llenar los campos mostrados en la pantalla',
 					confirmButtonColor: '#bf9b55',
 				});
 			}
@@ -414,7 +444,10 @@
 					'titulo': tipoPlantilla,
 					'victima': victima,
 					'imputado': imputado,
-					'uma': document.getElementById('uma_select').value
+					'uma': document.getElementById('uma_select').value,
+					'notificacion': select_notificacion.value,
+					'proceso': select_proceso.value
+
 				};
 				console.log(data);
 				$.ajax({
@@ -430,13 +463,24 @@
 							document.querySelector("#victima_modal_documento").value = '';
 							document.querySelector("#imputado_modal_documento").value = '';
 							document.getElementById('uma_select').value = ''
+							document.getElementById('tiponotificacion_select').value = ''
+							document.getElementById('tipoproceso_select').value = ''
+
 							document.getElementById("involucrados").style.display = "none";
+							document.getElementById("div_uma").style.display = "none";
+							document.getElementById("div_proceso").style.display = "none";
+							document.getElementById("div_noti").style.display = "none";
 						} else {
 							tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
 							document.querySelector("#victima_modal_documento").value = '';
 							document.querySelector("#imputado_modal_documento").value = '';
 							document.getElementById('uma_select').value = ''
+							document.getElementById('tiponotificacion_select').value = ''
+							document.getElementById('tipoproceso_select').value = ''
 							document.getElementById("involucrados").style.display = "none";
+							document.getElementById("div_uma").style.display = "none";
+							document.getElementById("div_proceso").style.display = "none";
+							document.getElementById("div_noti").style.display = "none";
 						}
 					},
 					error: function(jqXHR, textStatus, errorThrown) {
@@ -446,8 +490,13 @@
 						document.querySelector("#imputado_modal_documento").value = '';
 						document.querySelector("#plantilla").value = '';
 						document.getElementById('uma_select').value = ''
+						document.getElementById('tiponotificacion_select').value = ''
+						document.getElementById('tipoproceso_select').value = ''
+						document.getElementById("div_proceso").style.display = "none";
+						document.getElementById("div_noti").style.display = "none";
 						document.getElementById("involucrados").style.display = "none";
 						document.getElementById("div_uma").style.display = "none";
+
 					}
 				});
 			} else {
@@ -474,6 +523,10 @@
 								document.querySelector("#victima_modal_documento").value = '';
 								document.querySelector("#imputado_modal_documento").value = '';
 								document.getElementById('uma_select').value = '';
+								document.getElementById('tiponotificacion_select').value = ''
+								document.getElementById('tipoproceso_select').value = ''
+								document.getElementById("div_proceso").style.display = "none";
+								document.getElementById("div_noti").style.display = "none";
 							} else {
 								tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
 								document.querySelector("#victima_modal_documento").value = '';
@@ -481,6 +534,10 @@
 								document.getElementById('uma_select').value = ''
 								document.getElementById("involucrados").style.display = "none";
 								document.getElementById("div_uma").style.display = "none";
+								document.getElementById('tiponotificacion_select').value = ''
+								document.getElementById('tipoproceso_select').value = ''
+								document.getElementById("div_proceso").style.display = "none";
+								document.getElementById("div_noti").style.display = "none";
 							}
 						} else {
 							if (select_uma.getAttribute('required') == "true") {
@@ -489,6 +546,10 @@
 								document.querySelector("#imputado_modal_documento").value = '';
 								document.getElementById('uma_select').value = ''
 								document.querySelector("#plantilla").value = '';
+								document.getElementById('tiponotificacion_select').value = ''
+								document.getElementById('tipoproceso_select').value = ''
+								document.getElementById("div_proceso").style.display = "none";
+								document.getElementById("div_noti").style.display = "none";
 							} else {
 								tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
 								document.querySelector("#victima_modal_documento").value = '';
@@ -497,6 +558,10 @@
 								document.querySelector("#plantilla").value = '';
 								document.getElementById("involucrados").style.display = "none";
 								document.getElementById("div_uma").style.display = "none";
+								document.getElementById('tiponotificacion_select').value = ''
+								document.getElementById('tipoproceso_select').value = ''
+								document.getElementById("div_proceso").style.display = "none";
+								document.getElementById("div_noti").style.display = "none";
 							}
 						}
 					},
@@ -509,6 +574,10 @@
 						document.getElementById('uma_select').value = ''
 						document.getElementById("involucrados").style.display = "none";
 						document.getElementById("div_uma").style.display = "none";
+						document.getElementById('tiponotificacion_select').value = ''
+						document.getElementById('tipoproceso_select').value = ''
+						document.getElementById("div_proceso").style.display = "none";
+						document.getElementById("div_noti").style.display = "none";
 					}
 				});
 			}

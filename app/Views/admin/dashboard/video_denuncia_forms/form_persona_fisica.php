@@ -31,10 +31,6 @@
         <label for="numero_identidad_pf" class="form-label font-weight-bold">Numero de identificación</label>
         <input type="text" class="form-control" id="numero_identidad_pf" name="numero_identidad_pf">
     </div>
-    <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-        <label for="numero_identidad_pf" class="form-label font-weight-bold">Numero de identificación</label>
-        <input type="text" class="form-control" id="numero_identidad_pf" name="numero_identidad_pf">
-    </div>
     <div class="col-12">
         <hr>
     </div>

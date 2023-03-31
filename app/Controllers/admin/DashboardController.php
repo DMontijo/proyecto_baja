@@ -6223,7 +6223,7 @@ class DashboardController extends BaseController
 		}
 		if($notificacion || $proceso){
 			$data->plantilla = str_replace('[TIPO_PROCESO]',  $proceso ?  $proceso : '-', $data->plantilla);
-			$data->plantilla = str_replace('[(PERSONAL / NOTIFICADOR)]',  $notificacion ?  $notificacion : '-', $data->plantilla);
+			$data->plantilla = str_replace('(PERSONAL / NOTIFICADOR)',  $notificacion ?  $notificacion : '-', $data->plantilla);
 		}
 
 		$relacionfisfis = $this->_relacionIDOModel->asObject()->where('FOLIOID', $data->folio->FOLIOID)->where('ANO', $data->folio->ANO)->where('PERSONAFISICAIDVICTIMA', $victima)->where('PERSONAFISICAIDIMPUTADO', $imputado)->first();

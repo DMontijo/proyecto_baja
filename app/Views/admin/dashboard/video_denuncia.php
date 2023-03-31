@@ -767,7 +767,7 @@
 			showCancelButton: true,
 			confirmButtonColor: '#bf9b55',
 			confirmButtonText: '¡Si, borrar!'
-			}).then((result) => {
+		}).then((result) => {
 			if (result.isConfirmed) {
 				$.ajax({
 					data: {
@@ -784,16 +784,16 @@
 								'¡Borrar!',
 								'El documento se ha borrado.',
 								'success'
-								).then(
-									location.reload()
-								)
-								}
-							}
-						});
+							).then(
+								location.reload()
+							)
+						}
 					}
 				});
 			}
-						
+		});
+	}
+
 	function llenarTablaImpDel(impDelito) {
 		for (let i = 0; i < impDelito.length; i++) {
 			// var btn = `<button type='button'  class='btn btn-primary' onclick='eliminarImputadoDelito(${impDelito[i].PERSONAFISICAID},${impDelito[i].DELITOMODALIDADID})'><i class='fa fa-trash'></i></button>`
@@ -1557,7 +1557,8 @@
 		$('#contrasena_modal_doc_id').modal('show');
 
 	}
-function borrarDocumento(folio, ano, foliodocid) {
+
+	function borrarDocumento(folio, ano, foliodocid) {
 		Swal.fire({
 			title: '¡Estas seguro?',
 			text: "¡Esta operacion es irevertible!",
@@ -1565,7 +1566,7 @@ function borrarDocumento(folio, ano, foliodocid) {
 			showCancelButton: true,
 			confirmButtonColor: '#bf9b55',
 			confirmButtonText: '¡Si, borrar!'
-			}).then((result) => {
+		}).then((result) => {
 			if (result.isConfirmed) {
 				$.ajax({
 					data: {
@@ -1582,9 +1583,9 @@ function borrarDocumento(folio, ano, foliodocid) {
 								'¡Borrar!',
 								'El documento se ha borrado.',
 								'success'
-								).then(
-									location.reload()
-								)
+							).then(
+								location.reload()
+							)
 
 						}
 					},
@@ -3520,6 +3521,9 @@ function borrarDocumento(folio, ano, foliodocid) {
 
 				} else {
 					document.getElementById("div_uma").style.display = "none";
+					document.getElementById("div_noti").style.display = "none";
+					document.getElementById("div_proceso").style.display = "none";
+
 					document.querySelector('#uma_select').setAttribute('required', false);
 					document.querySelector('#tiponotificacion_select').setAttribute('required', false);
 					document.querySelector('#tipoproceso_select').setAttribute('required', false);
@@ -3543,6 +3547,9 @@ function borrarDocumento(folio, ano, foliodocid) {
 				} else {
 					document.getElementById("involucrados").style.display = "none";
 					document.getElementById("div_uma").style.display = "none";
+					document.getElementById("div_noti").style.display = "none";
+					document.getElementById("div_proceso").style.display = "none";
+
 
 				}
 
@@ -5936,10 +5943,10 @@ function borrarDocumento(folio, ano, foliodocid) {
 
 			function obtenerPlantillas(tipoPlantilla, victima, imputado) {
 
-				if (select_uma.getAttribute('required') == "true" && select_uma.value != '' && select_notificacion.getAttribute('required') == "true" && select_notificacion.value != ''&& select_proceso.getAttribute('required') == "true" && select_proceso.value != '' && tipoPlantilla == 'CITATORIO') {
+				if (select_uma.getAttribute('required') == "true" && select_uma.value != '' && select_notificacion.getAttribute('required') == "true" && select_notificacion.value != '' && select_proceso.getAttribute('required') == "true" && select_proceso.value != '' && tipoPlantilla == 'CITATORIO') {
 					$('#documentos_modal_wyswyg').modal('hide');
 					$('#documentos_modal').modal('show');
-				} else if ((select_uma.getAttribute('required') == "true" && select_uma.value == '') || (select_notificacion.getAttribute('required') == "true" && select_notificacion.value == '')  ||(select_proceso.getAttribute('required') == "true" && select_proceso.value == '')&& tipoPlantilla == 'CITATORIO') {
+				} else if ((select_uma.getAttribute('required') == "true" && select_uma.value == '') || (select_notificacion.getAttribute('required') == "true" && select_notificacion.value == '') || (select_proceso.getAttribute('required') == "true" && select_proceso.value == '') && tipoPlantilla == 'CITATORIO') {
 
 					Swal.fire({
 						icon: 'error',
@@ -5979,16 +5986,25 @@ function borrarDocumento(folio, ano, foliodocid) {
 								document.querySelector("#imputado_modal_documento").value = '';
 								plantilla.value = '';
 								select_uma.value = '';
+								select_proceso.value = '';
+								selecct_notificacion.value = '';
 								document.getElementById("involucrados").style.display = "none";
 								document.getElementById("div_uma").style.display = "none";
+								document.getElementById("div_proceso").style.display = "none";
+								document.getElementById("div_noti").style.display = "none";
+
 							} else {
 								tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
 								document.querySelector("#victima_modal_documento").value = '';
 								document.querySelector("#imputado_modal_documento").value = '';
 								plantilla.value = '';
 								select_uma.value = '';
+								select_proceso.value = '';
+								selecct_notificacion.value = '';
 								document.getElementById("involucrados").style.display = "none";
 								document.getElementById("div_uma").style.display = "none";
+								document.getElementById("div_proceso").style.display = "none";
+								document.getElementById("div_noti").style.display = "none";
 							}
 						},
 						error: function(jqXHR, textStatus, errorThrown) {
@@ -5998,8 +6014,12 @@ function borrarDocumento(folio, ano, foliodocid) {
 							document.querySelector("#imputado_modal_documento").value = '';
 							plantilla.value = '';
 							select_uma.value = '';
+							select_proceso.value = '';
+							selecct_notificacion.value = '';
 							document.getElementById("involucrados").style.display = "none";
 							document.getElementById("div_uma").style.display = "none";
+							document.getElementById("div_proceso").style.display = "none";
+							document.getElementById("div_noti").style.display = "none";
 						}
 					});
 				} else {
@@ -6025,12 +6045,16 @@ function borrarDocumento(folio, ano, foliodocid) {
 									document.querySelector("#imputado_modal_documento").value = '';
 									plantilla.value = '';
 									select_uma.value = '';
+									select_proceso.value = '';
+									selecct_notificacion.value = '';
 								} else {
 									tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
 									document.querySelector("#victima_modal_documento").value = '';
 									document.querySelector("#imputado_modal_documento").value = '';
 									plantilla.value = '';
 									select_uma.value = '';
+									select_proceso.value = '';
+									selecct_notificacion.value = '';
 									document.getElementById("involucrados").style.display = "none";
 								}
 
@@ -6041,12 +6065,16 @@ function borrarDocumento(folio, ano, foliodocid) {
 									document.querySelector("#imputado_modal_documento").value = '';
 									plantilla.value = '';
 									select_uma.value = '';
+									select_proceso.value = '';
+									selecct_notificacion.value = '';
 								} else {
 									tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
 									document.querySelector("#victima_modal_documento").value = '';
 									document.querySelector("#imputado_modal_documento").value = '';
 									plantilla.value = '';
 									select_uma.value = '';
+									select_proceso.value = '';
+									selecct_notificacion.value = '';
 									document.getElementById("involucrados").style.display = "none";
 								}
 							}
@@ -6058,17 +6086,16 @@ function borrarDocumento(folio, ano, foliodocid) {
 							document.querySelector("#imputado_modal_documento").value = '';
 							plantilla.value = '';
 							select_uma.value = '';
+							select_proceso.value = '';
+							selecct_notificacion.value = '';
 							document.getElementById("involucrados").style.display = "none";
 							document.getElementById("div_uma").style.display = "none";
+							document.getElementById("div_proceso").style.display = "none";
+							document.getElementById("div_noti").style.display = "none";
 						}
 					});
 				}
 			}
-
-
-
-
-
 
 			function insertarDocumento(contenido, tipoPlantilla) {
 
