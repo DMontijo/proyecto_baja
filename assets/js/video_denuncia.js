@@ -183,19 +183,20 @@ desconectar_llamada.addEventListener("click", () => {
 });
 
 rechazar_llamada.addEventListener("click", () => {
+	console.log("cick en rechazar");
 	agentVideoService.refuseCall(() => {
 		console.log("refuse call");
 	});
 });
 
-function pad(val) {
-	var valString = val + "";
-	if (valString.length < 2) {
-	  return "0" + valString;
-	} else {
-	  return valString;
-	}
-  }
+// function pad(val) {
+// 	var valString = val + "";
+// 	if (valString.length < 2) {
+// 	  return "0" + valString;
+// 	} else {
+// 	  return valString;
+// 	}
+//   }
 //   function setTime() {
 // 	++totalSeconds;
 // 	secondsLabel.innerHTML = pad(totalSeconds % 60);
