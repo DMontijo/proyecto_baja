@@ -807,7 +807,7 @@ class ReportesController extends BaseController
 					if ($videoDuration != '') {
 
 						$timestampInicio = strtotime($videoDuration->callRecordId->sessionStartedAt);
-						$timestampFin = strtotime($videoDuration->callRecordId->sessionFinishedAt);
+						if($videoDuration->callRecordId->sessionFinishedAt)$timestampFin = strtotime($videoDuration->callRecordId->sessionFinishedAt);
 
 						$inicio = date('H:i:s', $timestampInicio);
 						$fin = date('H:i:s', $timestampFin);
