@@ -117,7 +117,8 @@ export class VideoServiceAgent {
         this.#emit('connect-agent', {
             agent: this.#agentUUID
         }, response => {
-            this.agentData = response.agent
+            this.#preventUserCloseWindow();
+            this.agentData = response.agent;
             this.#loggedInSound.play();
 
             if (typeof callback === 'function') callback(response);
@@ -133,7 +134,6 @@ export class VideoServiceAgent {
         
         this.#socket.on('guest-connected', (response) => {
             this.guestData = response;
-            this.preventUserCloseWindow();
             this.#phoneRing.loop = true;
             this.#phoneRing.play();
 
@@ -151,6 +151,7 @@ export class VideoServiceAgent {
         try {
             this.#socket.disconnect();
             this.#videoCallService?.session.disconnect();
+            this.#allowUserToCloseWindow();
         } catch (e) {
             console.error(e)
         }
@@ -299,16 +300,24 @@ export class VideoServiceAgent {
     }
 
     /**
-     * 
+     * Helper to prevent the Agent to close the tab
      */
-    preventUserCloseWindow() {
+    #preventUserCloseWindow() {
         var preventClose = function (e) {
             e.preventDefault();
-            e.returnValue = 'Se cerrara la video llamada si cierras la ventana.';
+            e.returnValue = 'Se cerrara la sesión si cierras la ventana.';
         }
         
         window.addEventListener('beforeunload', preventClose, true);
     }
+
+    /**
+     * Helper to disable function to avoid the Agent to close the window
+     */
+    #allowUserToCloseWindow() {
+        window.addEventListener("beforeunload", () => {});
+    }
+
 
     /**
      * This function return marks types

@@ -138,6 +138,10 @@
 
 		}
 	}
+
+	$('#videos_expediente_modal').on('hidden.bs.modal', function () {
+  $('#videos_expediente_modal .modal-body').find("#table-videos").html("");
+});
 </script>
 
 <?= $this->endSection() ?>

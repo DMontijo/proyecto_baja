@@ -117,6 +117,7 @@ export class VideoServiceGuest {
             longitude: this.#position?.coords.longitude,
             details: this.#guestDetails
         }, response => {
+            this.#preventUserCloseWindow();
             const { guestConnection, guest } = response;
             this.#guestConnectionId = guestConnection.id;
 
@@ -151,6 +152,7 @@ export class VideoServiceGuest {
     */
    registerOnDisconnect(callback) {
        this.#socket.on('disconnect-guest', (resp) => {
+            this.#allowUserToCloseWindow();
            try {
                 this.#socket.disconnect();
                 this.#loggedOutSound.play();
@@ -208,6 +210,25 @@ export class VideoServiceGuest {
     }
 
     /**
+     * Helper to prevent the Agent to close the tab
+     */
+    #preventUserCloseWindow() {
+        var preventClose = function (e) {
+            e.preventDefault();
+            e.returnValue = 'Se perdera la sesión si cierras la ventana.';
+        }
+        
+        window.addEventListener('beforeunload', preventClose, true);
+    }
+
+    /**
+     * Helper to disable function to avoid the Agent to close the window
+     */
+    #allowUserToCloseWindow() {
+        window.addEventListener("beforeunload", () => {});
+    }
+
+    /**
      * Helper to get position
      * 
      * @param {function} [callback] - Callback to be called when position is available
@@ -219,7 +240,7 @@ export class VideoServiceGuest {
             if (typeof callback === 'function') callback();
         }, () => {
             if (typeof callback === 'function') callback();
-        });
+        }, { enableHighAccuracy: true});
     };
 
     /**
