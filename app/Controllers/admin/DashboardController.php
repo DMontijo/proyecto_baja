@@ -1400,6 +1400,7 @@ class DashboardController extends BaseController
 								}
 							}
 						}
+						var_dump("terminado");exit;
 						return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_success', 'Remitido correctamente');
 					} else {
 						return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_error', 'No se creo la bandeja');
