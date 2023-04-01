@@ -3134,7 +3134,6 @@ class DashboardController extends BaseController
 				unset($data[$clave]);
 			}
 		}
-		var_dump($data);exit;
 		$data['userDB'] = $conexion->USER;
 		$data['pwdDB'] = $conexion->PASSWORD;
 		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
@@ -3545,7 +3544,7 @@ class DashboardController extends BaseController
 		}
 		curl_close($ch);
 		// var_dump($data);
-		// var_dump($result);exit;
+		var_dump($result);exit;
 		// return $result;
 		return json_decode($result);
 	}
