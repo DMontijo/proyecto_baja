@@ -1314,10 +1314,7 @@ class DashboardController extends BaseController
 			$documents = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente)->findAll();
 			$status = 2;
 			$dataInter =  array('SOLICITUDID' => 9000600, 'INTERVENCIONID' => 98);
-			$folioDoc = $this->_folioDocModel->expedienteDocumentos($expediente);
-			var_dump($folioDoc);
-			$_intervencionPericial = $this->_createIntervencionPericial($dataInter, $municipio);
-			var_dump($_intervencionPericial);exit;
+			
 			foreach ($documents as $key => $document) {
 				if (
 					$document->TIPODOC == 'CRITERIO DE OPORTUNIDAD' ||
@@ -1385,8 +1382,10 @@ class DashboardController extends BaseController
 										} else if ($municipio == 4 || $municipio == 5) {
 											$intervencion = $plantilla['INTERVENCIONTIJUANAID'];
 										}
+										var_dump($$_solicitudPericial->SOLICITUDID);exit;
 										// $dataInter =  array('SOLICITUDID' => $_solicitudPericial->SOLICITUDID, 'INTERVENCIONID' => $intervencion);
-									
+										$_intervencionPericial = $this->_createIntervencionPericial($dataInter, $municipio);
+
 
 										if ($_intervencionPericial->status == 201) {
 											$datosBitacora = [
@@ -3548,9 +3547,9 @@ class DashboardController extends BaseController
 		}
 		curl_close($ch);
 		// var_dump($data);
-		var_dump($result);exit;
+		// var_dump($result);exit;
 		// return $result;
-		// return json_decode($result);
+		return json_decode($result);
 	}
 
 	public function getTimeVideo()
