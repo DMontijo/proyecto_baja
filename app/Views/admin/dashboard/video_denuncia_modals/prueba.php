@@ -33,9 +33,9 @@
 				</div>
 
 				
-				<button class="btn btn-success" id="aceptar"> Aceptar</button>
+				<button class="btn btn-success" id="aceptar" name="aceptar"> Aceptar</button>
 
-				<button class="btn btn-danger" id="rechazar"> Rechazar</button>
+				<button class="btn btn-danger" id="rechazar" name="rechazar"> Rechazar</button>
 
 			</div>
 			<div id="loading_sub_doc" class="modal-body text-center d-none" style="min-height:170px;">

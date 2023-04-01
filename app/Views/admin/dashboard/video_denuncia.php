@@ -240,8 +240,8 @@
 				<div class="card-body shadow rounded m-0 p-0">
 					<div class="row">
 						<div class="col-12 px-4 py-3">
-							<button class="btn btn-success" id="disponible" data-toggle="tooltip" data-placement="top" title="Conectar para recibir video llamadas"><i class="fas fa-door-open"></i> HACERME DISPONIBLE</button>
-							<button class="btn btn-danger" id="no_disponible" data-toggle="tooltip" data-placement="top"><i class="fas fa-times-circle"></i> DESCONECTARME</button>
+							<button class="btn btn-success" id="disponible"  name="disponible" data-toggle="tooltip" data-placement="top" title="Conectar para recibir video llamadas"><i class="fas fa-door-open"></i> HACERME DISPONIBLE</button>
+							<button class="btn btn-danger" id="no_disponible" name="no_disponible" data-toggle="tooltip" data-placement="top"><i class="fas fa-times-circle"></i> DESCONECTARME</button>
 						</div>
 						<div class="col-12 px-4">
 							<p>
@@ -256,7 +256,7 @@
 									<div id="main_video_details">
 										<div class="btn-group btn-group-toggle mt-3">
 											<button class="btn btn-sm btn-light" id="main_video_details_name">
-												ABDIEL OTONIEL FLORES GONZÁLEZ
+												<!-- ABDIEL OTONIEL FLORES GONZÁLEZ -->
 											</button>
 											<button class="btn btn-sm btn-secondary" id="main_video_details_video">
 												<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-camera-video-fill" id="camara_prendida_denunciante"viewBox="0 0 16 16">
@@ -347,7 +347,9 @@
 								<div id="secondary_videos_container">
 									<div class="secondary_video" id="agn_vf">
 										<div id="secondary_video_details">
-											<div class="font-weigth-bold" id="secondary_video_details_name">LIC. ALFREDO JIMENEZ PEREZ</div>
+											<div class="font-weigth-bold" id="secondary_video_details_name">
+												<!-- LIC. ALFREDO JIMENEZ PEREZ -->
+											</div>
 											<div class="font-weigth-bold" id="secondary_video_details_devices">
 												<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-camera-video-fill" id ="camara_agente_prendida"viewBox="0 0 16 16">
 													<path fill-rule="evenodd" d="M0 5a2 2 0 0 1 2-2h7.5a2 2 0 0 1 1.983 1.738l3.11-1.382A1 1 0 0 1 16 4.269v7.462a1 1 0 0 1-1.406.913l-3.111-1.382A2 2 0 0 1 9.5 13H2a2 2 0 0 1-2-2V5z" />
