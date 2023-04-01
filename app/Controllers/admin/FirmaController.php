@@ -456,7 +456,6 @@ class FirmaController extends BaseController
 						}
 					}
 					if ($numexpediente != null && $numexpediente != "undefined") {
-
 						$documentosExp = $this->_folioDocModel->get_by_expediente($numexpediente, $year);
 					} else {
 						$documentosExp = $this->_folioDocModel->get_by_folio($folio, $year);

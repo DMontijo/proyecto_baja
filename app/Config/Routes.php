@@ -296,10 +296,11 @@ $routes->group('data', function ($routes) {
 	$routes->post('get-documentos', 'admin/DocumentosController::obtenDocumentos');
 	$routes->post('get-documento-tabla', 'admin/DocumentosController::getDocumento');
 
+
 	$routes->post('delete-documento', 'admin/DocumentosController::borrarDocumento');
 
-	$routes->post('get-denunciante-folio-by-id', 'admin/DashboardController::getFolioDenunciante');
 
+	$routes->post('get-denunciante-folio-by-id', 'admin/DashboardController::getFolioDenunciante');
 
 	$routes->post('download-pdf-documento', 'admin/DocumentosController::download_documento_pdf');
 	$routes->post('download-xml-documento', 'admin/DocumentosController::download_documento_xml');
@@ -322,7 +323,7 @@ $routes->group('data', function ($routes) {
 	$routes->post('change-status-doc', 'admin/DashboardController::changeStatusDoc');
 
 	$routes->post('get-documentos-by-folio', 'admin/DashboardController::getDocumentosByFolio');
-});	
+});
 
 
 

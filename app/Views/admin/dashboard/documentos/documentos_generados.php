@@ -1476,12 +1476,12 @@
 
 	function borrarDocumento(folio, ano, foliodocid) {
 		Swal.fire({
-			title: '¡Estas seguro?',
+			title: '¿Estas seguro de eliminar el documento?',
 			text: "¡Esta operacion es irevertible!",
 			icon: 'warning',
 			showCancelButton: true,
 			confirmButtonColor: '#bf9b55',
-			confirmButtonText: '¡Si, borrar!'
+			confirmButtonText: '¡Si, eliminar!'
 		}).then((result) => {
 			if (result.isConfirmed) {
 				$.ajax({
@@ -1496,17 +1496,31 @@
 					success: function(response) {
 						if (response.status == 1) {
 							Swal.fire(
-								'¡Borrar!',
-								'El documento se ha borrado.',
+								'Documento eliminado',
+								'El documento se ha eliminado correctamente.',
 								'success'
 							).then(
 								location.reload()
 							)
-
+						} else {
+							Swal.fire(
+								'¡Borrar!',
+								'El documento no se elimino.',
+								'error'
+							).then(
+								location.reload()
+							)
 						}
 					},
 					error: function(jqXHR, textStatus, errorThrown) {
 						console.log(textStatus);
+						Swal.fire(
+							'¡Borrar!',
+							'El documento no se elimino.',
+							'error'
+						).then(
+							location.reload()
+						)
 					}
 				});
 			}
