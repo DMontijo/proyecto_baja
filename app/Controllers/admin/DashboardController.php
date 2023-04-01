@@ -1340,6 +1340,8 @@ class DashboardController extends BaseController
 
 
 			$updateExpediente = $this->_updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area->AREAID, 'REMISION', $status);
+			var_dump($updateExpediente);exit;
+
 			if ($updateExpediente->status == 201) {
 
 				$update = $this->_folioModel->set($dataFolio)->where('EXPEDIENTEID', $expediente)->update();
@@ -1400,7 +1402,6 @@ class DashboardController extends BaseController
 								}
 							}
 						}
-						var_dump("terminado");exit;
 						return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_success', 'Remitido correctamente');
 					} else {
 						return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_error', 'No se creo la bandeja');
