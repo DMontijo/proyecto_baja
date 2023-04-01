@@ -1313,7 +1313,7 @@ class DashboardController extends BaseController
 			$area = $this->_empleadosModel->asObject()->where('EMPLEADOID', $empleado)->where('MUNICIPIOID', $municipio)->first();
 			$documents = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente)->findAll();
 			$status = 2;
-			$dataInter =  array('SOLICITUDID' => 9000594, 'INTERVENCIONID' => 98);
+			$dataInter =  array('SOLICITUDID' => 9000600, 'INTERVENCIONID' => 98);
 
 			$_intervencionPericial = $this->_createIntervencionPericial($dataInter, $municipio);
 			var_dump($_intervencionPericial);exit;
