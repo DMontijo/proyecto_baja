@@ -72,6 +72,7 @@ disponible_connect.addEventListener("click", () => {
 	);
 });
 no_disponible_connect.addEventListener("click",()=>{
+	console.log("NO DISPONIBLE");
 	agentVideoService.disconnectAgent(
 		() => {
 			console.log("ya no estas disponible");
