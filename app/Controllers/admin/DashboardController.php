@@ -1391,7 +1391,7 @@ class DashboardController extends BaseController
 										$dataInter =  array('SOLICITUDID' => $_solicitudPericial->SOLICITUDID, 'INTERVENCIONID' => $intervencion);
 
 										$_intervencionPericial = $this->_createIntervencionPericial($dataInter, $municipio);
-										var_dump($_intervencionPericial);exit;
+										var_dump($dataInter);exit;
 
 										if ($_intervencionPericial->status == 201) {
 											$datosBitacora = [
