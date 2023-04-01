@@ -149,9 +149,21 @@ class FolioDocModel extends Model
 		}
 		return $result;
 	}
-	public function countFoliosAsignados($agente){
+	public function countFoliosAsignados($agente)
+	{
 		$strQuery = "SELECT COUNT(DISTINCT FOLIOID) as count_folios FROM FOLIODOC WHERE STATUS = 'ABIERTO' AND AGENTE_ASIGNADO =" . $agente;
 		$result = $this->db->query($strQuery)->getResult();
 		return $result[0]->count_folios;
+	}
+
+	public function expedienteDocumentos($expediente)
+	{
+		$strQuery = "SELECT * FROM FOLIODOC  
+		JOIN RELACIONFOLIODOCEXPDOC ON FOLIODOC.NUMEROEXPEDIENTE = RELACIONFOLIODOCEXPDOC.EXPEDIENTEID  AND FOLIODOC.FOLIODOCID = RELACIONFOLIODOCEXPDOC.FOLIODOCID
+		 WHERE (FOLIODOC.TIPODOC LIKE '%SOLICITUD DE PERITAJE%' OR FOLIODOC.TIPODOC LIKE '%OFICIO DE COLABORACION PARA INGRESO A HOSPITAL%')
+		  AND STATUS = 'FIRMADO'
+		   AND FOLIODOC.NUMEROEXPEDIENTE=" . $expediente;
+		$result = $this->db->query($strQuery)->getResult();
+		return $result;
 	}
 }
