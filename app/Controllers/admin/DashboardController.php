@@ -1340,7 +1340,6 @@ class DashboardController extends BaseController
 
 
 			$updateExpediente = $this->_updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area->AREAID, 'REMISION', $status);
-			var_dump($updateExpediente);exit;
 
 			if ($updateExpediente->status == 201) {
 
@@ -1356,6 +1355,7 @@ class DashboardController extends BaseController
 					$bandeja = $this->_folioModel->where('EXPEDIENTEID', $expediente)->first();
 					$updateArch = $this->_archivoExternoModel->set($dataFolioArc)->where('FOLIOID', $bandeja['FOLIOID'])->where('ANO', $bandeja['ANO'])->update();
 					$_bandeja_creada = $this->_createBandeja($bandeja);
+					var_dump($_bandeja_creada);exit;
 
 					if ($_bandeja_creada->status == 201) {
 						$this->_bitacoraActividad($datosBitacora);
