@@ -1360,7 +1360,7 @@ class DashboardController extends BaseController
 						$this->_bitacoraActividad($datosBitacora);
 						$subirArchivos = $this->subirArchivosRemision($bandeja['FOLIOID'], $bandeja['ANO'], $expediente);
 						$folioDoc = $this->_folioDocModel->join('RELACIONFOLIODOCEXPDOC', 'FOLIODOC.NUMEROEXPEDIENTE = RELACIONFOLIODOCEXPDOC.EXPEDIENTEID  AND FOLIODOC.FOLIODOCID = RELACIONFOLIODOCEXPDOC.FOLIODOCID')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('FOLIODOC.TIPODOC', 'SOLICITUD DE PERITAJE')->orLike('FOLIODOC.TIPODOC', 'OFICIO DE COLABORACION PARA INGRESO A HOSPITAL')->where('FOLIODOC.NUMEROEXPEDIENTE', $expediente)->where('FOLIODOC.STATUS', 'FIRMADO')->findAll();
-						var_dump($expediente);exit;
+						var_dump($this->_folioDocModel->join('RELACIONFOLIODOCEXPDOC', 'FOLIODOC.NUMEROEXPEDIENTE = RELACIONFOLIODOCEXPDOC.EXPEDIENTEID  AND FOLIODOC.FOLIODOCID = RELACIONFOLIODOCEXPDOC.FOLIODOCID')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('FOLIODOC.TIPODOC', 'SOLICITUD DE PERITAJE')->orLike('FOLIODOC.TIPODOC', 'OFICIO DE COLABORACION PARA INGRESO A HOSPITAL')->where('FOLIODOC.NUMEROEXPEDIENTE', $expediente)->where('FOLIODOC.STATUS', 'FIRMADO'));exit;
 
 						if ($folioDoc) {
 							foreach ($folioDoc as $key => $doc) {
