@@ -1375,7 +1375,6 @@ class DashboardController extends BaseController
 								$_solicitudPericial = $this->_createSolicitudesPericiales($solicitudp);
 								if ($_solicitudPericial->status == 201) {
 									$_solicitudDocto = $this->_createSolicitudDocto($expediente, $_solicitudPericial->SOLICITUDID, $doc->EXPEDIENTEDOCID, $bandeja['MUNICIPIOASIGNADOID']);
-									var_dump($_solicitudDocto);exit;
 
 									if ($_solicitudDocto->status == 201) {
 										$_solicitudExpediente = $this->_createSolicitudExpediente($expediente, $_solicitudPericial->SOLICITUDID, $municipio);
@@ -1392,6 +1391,8 @@ class DashboardController extends BaseController
 										$dataInter =  array('SOLICITUDID' => $_solicitudPericial->SOLICITUDID, 'INTERVENCIONID' => $intervencion);
 
 										$_intervencionPericial = $this->_createIntervencionPericial($dataInter, $municipio);
+										var_dump($_intervencionPericial);exit;
+
 										if ($_intervencionPericial->status == 201) {
 											$datosBitacora = [
 												'ACCION' => 'Se envio una solicitud perital.',
