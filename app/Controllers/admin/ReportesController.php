@@ -748,7 +748,7 @@ class ReportesController extends BaseController
 			$fin = '';
 			// $remision = '';
 			// $grabacion = '';
-			// $duration = '';
+			$duracion = '';
 			$horas = '';
 			$segundos = '';
 			$minutos = '';
@@ -814,6 +814,7 @@ class ReportesController extends BaseController
 							$fin = date('H:i:s', $timestampFin);
 						}
 					}
+					$duracion = $videoDuration->duration;
 				}
 				// return json_encode($responseFolio);
 				// if ($duration != '') {
@@ -842,7 +843,7 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('C' . $row, $folio->FOLIOID);
 			$sheet->setCellValue('D' . $row, $inicio != '' ? $inicio : '');
 			$sheet->setCellValue('E' . $row, isset($fin) ? $fin : '');
-			$sheet->setCellValue('F' . $row,  $horas != '' ? strval($horas)  . ':' . $minutos . ':' . number_format($segundos, 0) : 'NO HAY VIDEO GRABADO');
+			$sheet->setCellValue('F' . $row,  $duracion != '' ? $duracion : 'NO HAY VIDEO GRABADO');
 			$sheet->setCellValue('G' . $row, $folio->TIPODENUNCIA == 'DA' ? 'ANÓNIMA' : 'CDTEC');
 			$sheet->setCellValue('H' . $row, $folio->MUNICIPIODESCR);
 			$sheet->setCellValue('I' . $row, $folio->N_DENUNCIANTE);
