@@ -1353,14 +1353,7 @@ class DashboardController extends BaseController
 					];
 
 					$bandeja = $this->_folioModel->where('EXPEDIENTEID', $expediente)->first();
-					$updateArch = $this->_archivoExternoModel->set($dataFolioArc)->where('FOLIOID', $bandeja['FOLIOID'])->where('ANO', $bandeja['ANO'])->update();
-					$_bandeja_creada = $this->_createBandeja($bandeja);
-
-					if ($_bandeja_creada->status == 201) {
-						$this->_bitacoraActividad($datosBitacora);
-						$subirArchivos = $this->subirArchivosRemision($bandeja['FOLIOID'], $bandeja['ANO'], $expediente);
-						// $folioDoc = $this->_folioDocModel->where('NUMEROEXPEDIENTE', $expediente)->where('FOLIODOC.FOLIOID',$bandeja['FOLIOID'])->where('STATUS', 'FIRMADO')->join('RELACIONFOLIODOCEXPDOC', 'FOLIODOC.NUMEROEXPEDIENTE = RELACIONFOLIODOCEXPDOC.EXPEDIENTEID  AND FOLIODOC.FOLIODOCID = RELACIONFOLIODOCEXPDOC.FOLIODOCID')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('TIPODOC', 'SOLICITUD DE PERITAJE')->orLike('TIPODOC', 'OFICIO DE COLABORACION PARA INGRESO A HOSPITAL')->findAll();
-						$folioDoc = $this->_folioDocModel->expedienteDocumentos($expediente);
+					$folioDoc = $this->_folioDocModel->expedienteDocumentos($expediente);
 						if ($folioDoc) {
 							foreach ($folioDoc as $key => $doc) {
 								$solicitudp = array();
@@ -1403,6 +1396,14 @@ class DashboardController extends BaseController
 									}
 								}
 							}
+						
+					$updateArch = $this->_archivoExternoModel->set($dataFolioArc)->where('FOLIOID', $bandeja['FOLIOID'])->where('ANO', $bandeja['ANO'])->update();
+					$_bandeja_creada = $this->_createBandeja($bandeja);
+
+					if ($_bandeja_creada->status == 201) {
+						$this->_bitacoraActividad($datosBitacora);
+						$subirArchivos = $this->subirArchivosRemision($bandeja['FOLIOID'], $bandeja['ANO'], $expediente);
+						// $folioDoc = $this->_folioDocModel->where('NUMEROEXPEDIENTE', $expediente)->where('FOLIODOC.FOLIOID',$bandeja['FOLIOID'])->where('STATUS', 'FIRMADO')->join('RELACIONFOLIODOCEXPDOC', 'FOLIODOC.NUMEROEXPEDIENTE = RELACIONFOLIODOCEXPDOC.EXPEDIENTEID  AND FOLIODOC.FOLIODOCID = RELACIONFOLIODOCEXPDOC.FOLIODOCID')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('TIPODOC', 'SOLICITUD DE PERITAJE')->orLike('TIPODOC', 'OFICIO DE COLABORACION PARA INGRESO A HOSPITAL')->findAll();
 						}
 						return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_success', 'Remitido correctamente');
 					} else {
