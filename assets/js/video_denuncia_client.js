@@ -97,7 +97,7 @@ $(function() {
 guestVideoService.saveGeolocation(() => {
 	texto_inicial.style.display = "block";
 	$("#geolocalizacion_modal").modal("hide");
-	guestVideoService.connectGuest({delito}, (guest) => {
+	guestVideoService.connectGuest({'DELITO':delito}, (guest) => {
 
 	});
 });
