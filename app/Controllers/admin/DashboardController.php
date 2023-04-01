@@ -3107,6 +3107,7 @@ class DashboardController extends BaseController
 	private function _createIntervencionPericial($solicitud, $municipio)
 	{
 
+		var_dump($solicitud);
 		$function = '/intervencionPericial.php?process=crear';
 		$array = [
 			'SOLICITUDID',
