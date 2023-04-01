@@ -1373,9 +1373,10 @@ class DashboardController extends BaseController
 								$solicitudp['TITULO'] = $doc->TIPODOC;
 
 								$_solicitudPericial = $this->_createSolicitudesPericiales($solicitudp);
-								var_dump($_solicitudPericial);exit;
 								if ($_solicitudPericial->status == 201) {
 									$_solicitudDocto = $this->_createSolicitudDocto($expediente, $_solicitudPericial->SOLICITUDID, $doc->EXPEDIENTEDOCID, $bandeja['MUNICIPIOASIGNADOID']);
+									var_dump($_solicitudDocto);exit;
+
 									if ($_solicitudDocto->status == 201) {
 										$_solicitudExpediente = $this->_createSolicitudExpediente($expediente, $_solicitudPericial->SOLICITUDID, $municipio);
 										$plantilla = (object) array();
