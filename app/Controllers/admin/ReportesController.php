@@ -752,6 +752,7 @@ class ReportesController extends BaseController
 			$horas = '';
 			$segundos = '';
 			$minutos = '';
+			$timestamp='';
 
 			// $response = $this->_curlPost($endpoint, $data);
 			// if ($response->data > 0) {
@@ -804,6 +805,10 @@ class ReportesController extends BaseController
 			if ($responseFolio != null) {
 				foreach ($responseFolio as $key => $videoDuration) {
 					if ($videoDuration != '') {
+						$timestamp = strtotime($videoDuration->callRecordId->sessionStartedAt);
+
+						var_dump($timestamp);exit;
+
 						$horas = floor($videoDuration->duration / 3600);
 						$minutos = floor(($videoDuration->duration - ($horas * 3600)) / 60);
 						$segundos = $videoDuration->duration - ($horas * 3600) - ($minutos * 60);
@@ -816,7 +821,6 @@ class ReportesController extends BaseController
 				// 	$segundos = $duration - ($horas * 3600) - ($minutos * 60);
 				// }
 			}
-			var_dump($horas, $minutos, $segundos);exit;
 			// $row++;
 			// if(isset($folio->DELITOMODALIDADDESCR)){
 			// 	foreach ($folio->DELITOMODALIDADDESCR as $key => $delito){
