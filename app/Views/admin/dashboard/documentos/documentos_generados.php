@@ -288,12 +288,39 @@
 		let select_notificacion = document.querySelector("#tiponotificacion_select");
 		var options = select_uma.options;
 
-		for (var i = 0; i < select_uma.options.length; i++) {
-			if (select_uma.options[i].value.toString().includes('MEXICALI - ')) {
-				select_uma.remove(i);
-				// break;
+		<?php if ($body_data->foliorow[0]->MUNICIPIOASIGNADOID == 1 || $body_data->foliorow[0]->INSTITUCIONREMISIONMUNICIPIOID	== 1) { ?>
+			eliminarUMAByMunicipio("ENSENADA");
+		<?php } else if ($body_data->foliorow[0]->MUNICIPIOASIGNADOID == 6 || $body_data->foliorow[0]->INSTITUCIONREMISIONMUNICIPIOID	== 6) { ?>
+			eliminarUMAByMunicipio("ENSENADA - SAN QUINTIN");
+		<?php } else if ($body_data->foliorow[0]->MUNICIPIOASIGNADOID == 2 || $body_data->foliorow[0]->INSTITUCIONREMISIONMUNICIPIOID	== 2) { ?>
+			eliminarUMAByMunicipio("MEXICALI");
+		<?php } else if ($body_data->foliorow[0]->MUNICIPIOASIGNADOID == 7 || $body_data->foliorow[0]->INSTITUCIONREMISIONMUNICIPIOID	== 7) { ?>
+			eliminarUMAByMunicipio("MEXICALI - SAN FELIPE");
+		<?php } else if ($body_data->foliorow[0]->MUNICIPIOASIGNADOID == 4 || $body_data->foliorow[0]->INSTITUCIONREMISIONMUNICIPIOID	== 4) { ?>
+			for (var i = options.length - 1; i >= 0; i--) {
+				var option = options[i];
+				var value = option.value;
+				if (!value.includes("ZONA COSTA - LA MESA") && !value.includes("ZONA COSTA - MARIANO MATAMOROS") && !value.includes("ZONA COSTA - ZONA RIO")) {
+					option.parentNode.removeChild(option);
+				}
+			}
+		<?php } else if ($body_data->foliorow[0]->MUNICIPIOASIGNADOID == 5 || $body_data->foliorow[0]->INSTITUCIONREMISIONMUNICIPIOID	== 5) { ?>
+			eliminarUMAByMunicipio("ZONA COSTA - PLAYAS ROSARITO");
+		<?php } else if ($body_data->foliorow[0]->MUNICIPIOASIGNADOID == 3 || $body_data->foliorow[0]->INSTITUCIONREMISIONMUNICIPIOID	== 3) { ?>
+			eliminarUMAByMunicipio("ZONA COSTA - TECATE");
+		<?php } ?>
+
+		function eliminarUMAByMunicipio(uma) {
+			for (var i = options.length - 1; i >= 0; i--) {
+				var option = options[i];
+				var value = option.value;
+				if (!value.includes(uma)) {
+					option.parentNode.removeChild(option);
+				}
 			}
 		}
+
+
 		// for (var i = 0; i < options.length; i++) {
 		// 	var option = options[i];
 		// 	var value = option.value;
@@ -372,11 +399,6 @@
 		// 	},
 		// 	theme: 'snow' // or 'bubble'
 		// });
-		function removeChildAll(parent) {
-			while (parent.firstChild) {
-				parent.removeChild(parent.firstChild);
-			}
-		}
 		btn_actualizarFolioDoc.addEventListener('click', (event) => {
 			let contenidoModificado = tinymce.get("documento_editar").getContent();
 			actualizarDocumento(contenidoModificado);

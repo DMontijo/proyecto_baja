@@ -152,6 +152,8 @@ class DocumentosController extends BaseController
 		$data->foliorow = $this->_folioModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $data->year)->findAll();
 		$data->empleados = $this->_usuariosModel->asObject()->orderBy('NOMBRE', 'ASC')->where('ROLID', 3)->findAll();
 		$data->plantillas = $this->_plantillasModel->asObject()->where('TITULO !=', 'CONSTANCIA DE EXTRAVÍO')->orderBy('TITULO', 'ASC')->findAll();
+		$data->institucionremision = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $data->foliorow[0]->INSTITUCIONREMISIONMUNICIPIOID)->where('ESTADOID',2)->first();
+		$data->municipioasignado = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $data->foliorow[0]->MUNICIPIOASIGNADOID)->where('ESTADOID',2)->first();
 
 		$data2 = [
 			'header_data' => (object)['title' => 'DOCUMENTOS'],
