@@ -243,9 +243,9 @@
 							<button class="btn btn-success" id="disponible"  name="disponible" data-toggle="tooltip" data-placement="top" title="Conectar para recibir video llamadas"><i class="fas fa-door-open"></i> HACERME DISPONIBLE</button>
 							<button class="btn btn-danger" id="no_disponible" name="no_disponible" data-toggle="tooltip" data-placement="top"><i class="fas fa-times-circle"></i> DESCONECTARME</button>
 						</div>
-						<div class="col-12 px-4">
+						<div class="col-12 px-4" id="header-llamada" name="header-llamada"hidden>
 							<p>
-								FOLIO: <span class="font-weight-bold" id="folio_llamada_v"></span> - NOMBRE: <span class="font-weight-bold" id="denunciante_nombre_llamada">ABDIEL OTONIEL FLORES GONZÁLEZ</span> - EDAD: <span class="font-weight-bold" id="denunciante_edad_llamada">17 AÑOS</span>
+								FOLIO: <span class="font-weight-bold" id="folio_llamada_v"></span> - NOMBRE: <span class="font-weight-bold" id="denunciante_nombre_llamada"></span>
 							</p>
 						</div>
 					</div>
@@ -288,7 +288,7 @@
 										</div>
 									</div>
 								</div>
-								<div id="tools" class="row">
+								<div id="tools" class="row" hidden>
 									<div class="col-12">
 										<div id="tools-group">
 											<div class="btn-group btn-group-toggle mr-2" data-toggle="buttons">

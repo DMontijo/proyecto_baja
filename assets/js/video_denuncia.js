@@ -29,6 +29,7 @@ const apiURI = "https://videodenunciabalancer.fgebc.gob.mx";
 var totalSeconds = 0;
 var myInterval;
 const folio_llamada = document.querySelector('#folio_llamada_v');
+const header_llamda = document.querySelector('#header-llamada');
 const agentVideoService = new VideoServiceAgent(agentUUID, { apiURI, apiKey });
 
 disponible_connect.addEventListener("click", () => {
@@ -86,6 +87,8 @@ aceptar_llamada.addEventListener("click", () => {
 		document.querySelector("#secondary_video_details_name").innerHTML = `${agent.names} ${agent.lastnames}`;
 		document.querySelector("#main_video_details_name").innerHTML = guest.name;
 		folio_llamada.innerHTML = guestConnection.folio;
+		botones.hidden = false;
+		header_llamda.hidden= false;
 		denunciante_nombre_llamada.innerHTML = guest.name;
 		console.log("aceptada");
 	});
@@ -179,6 +182,10 @@ desconectar_llamada.addEventListener("click", () => {
 	console.log("click en finalizar");
 	agentVideoService.endVideoCall(() => {
 		disponible_connect.hidden = false;
+		botones.hidden = true;
+		header_llamda.hidden= false;
+
+
 	});
 });
 
