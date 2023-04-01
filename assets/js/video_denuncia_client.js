@@ -3,9 +3,10 @@ import { VideoServiceGuest } from "../guest/guest.js";
 const apiKey = "vspk_6258d819-105e-4487-b7f1-be72e892850e";
 const guestUUID = document.getElementById("input_uuid").value;
 const folio = document.getElementById("input_folio").value;
+const delito = document.getElementById("input_delito").value;
 const texto_inicial = document.querySelector("#pantalla_inicial");
 const aceptar_llamada = document.querySelector("#aceptar");
-const priority = document.querySelector("#input_priority").value;
+const priority = document.querySelector("#D").value;
 let video_container = document.querySelector("#video_container");
 let video_m = document.querySelector("#video_m");
 const pantalla_final = document.querySelector('#pantalla_final');
@@ -96,7 +97,7 @@ $(function() {
 guestVideoService.saveGeolocation(() => {
 	texto_inicial.style.display = "block";
 	$("#geolocalizacion_modal").modal("hide");
-	guestVideoService.connectGuest((guest) => {
+	guestVideoService.connectGuest({delito}, (guest) => {
 
 	});
 });

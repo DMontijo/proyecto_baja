@@ -129,6 +129,8 @@
 		<input type="text" class="form-control d-none" id="input_uuid" value="<?= $body_data->UUID ?>">
 		<input type="text" class="form-control d-none" id="input_folio" value="<?php echo $_GET['folio'] ?>">
 		<input type="text" class="form-control d-none" id="input_priority" value="<?php echo $_GET['prioridad'] ?>">
+		<input type="text" class="form-control d-none" id="input_delito" value="<?php echo $_GET['delito'] ?>">
+
 	</div>
 	<div class="row d-block">
 		<div class="col-12 p-0 m-0 mb-3">
