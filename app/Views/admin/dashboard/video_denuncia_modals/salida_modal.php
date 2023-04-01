@@ -107,6 +107,8 @@
 <?php include('agregar_delito_modal.php') ?>
 <?php include 'info_folio_modal.php' ?>
 <?php include 'vehiculo_modal.php' ?>
+<?php include 'documentos_modal_wyswyg.php' ?>
+
 
 
 <script>
@@ -123,7 +125,8 @@
 	const canalizaciones = document.querySelector('#canalizaciones');
 	const form_delito = document.querySelector('#denuncia_form');
 	const form_vehiculo = document.querySelector('#form_vehiculo');
-
+	let select_uma = document.querySelector("#uma_select");
+								var options = select_uma.options;
 	tipoSalida.addEventListener('change', (e) => {
 
 		const notas_caso_salida = document.querySelector('#notas_caso_salida');
@@ -238,19 +241,19 @@
 	btnFinalizar.addEventListener('click', () => {
 		if (document.querySelector('#vehiculoid').value != '' && !form_vehiculo.checkValidity()) {
 			Swal.fire({
-						icon: 'error',
-						text: 'Por favor, completa todos los campos de los vehículos.',
-						confirmButtonColor: '#bf9b55',
-					});
-					return;
+				icon: 'error',
+				text: 'Por favor, completa todos los campos de los vehículos.',
+				confirmButtonColor: '#bf9b55',
+			});
+			return;
 		}
 		if (!form_delito.checkValidity()) {
 			Swal.fire({
-						icon: 'error',
-						text: 'Por favor, completa todos los campos de denuncia.',
-						confirmButtonColor: '#bf9b55',
-					});
-					return;
+				icon: 'error',
+				text: 'Por favor, completa todos los campos de denuncia.',
+				confirmButtonColor: '#bf9b55',
+			});
+			return;
 		}
 		btnFinalizar.setAttribute('disabled', true);
 		if (!(tipoSalida.value == '1' || tipoSalida.value == '4' || tipoSalida.value == '5' || tipoSalida.value == '6' || tipoSalida.value == '7' || tipoSalida.value == '8' || tipoSalida.value == '9')) {
@@ -469,6 +472,28 @@
 								folio_modal.value = inputFolio.value;
 								inputExpediente.value = data.expediente;
 								input_municipio.value = municipio_empleado.value;
+							
+								if (input_municipio.value == 1) {
+									eliminarUMAByMunicipio("ENSENADA");
+								} else if (input_municipio.value == 6) {
+									eliminarUMAByMunicipio("ENSENADA - SAN QUINTIN");
+								} else if (input_municipio.value == 2) {
+									eliminarUMAByMunicipio("MEXICALI");
+								} else if (input_municipio.value == 7) {
+									eliminarUMAByMunicipio("MEXICALI - SAN FELIPE");
+								} else if (input_municipio.value == 4) {
+									for (var i = options.length - 1; i >= 0; i--) {
+										var option = options[i];
+										var value = option.value;
+										if (!value.includes("ZONA COSTA - LA MESA") && !value.includes("ZONA COSTA - MARIANO MATAMOROS") && !value.includes("ZONA COSTA - ZONA RIO")) {
+											option.parentNode.removeChild(option);
+										}
+									}
+								} else if (input_municipio.value == 5) {
+									eliminarUMAByMunicipio("ZONA COSTA - PLAYAS ROSARITO");
+								} else if (input_municipio.value == 3) {
+									eliminarUMAByMunicipio("ZONA COSTA - TECATE");
+								}
 								expediente_modal.value = data.expediente;
 								year_modal.value = year;
 								expediente_modal_correo.value = data.expediente;
@@ -544,6 +569,15 @@
 		}
 
 	});
+	function eliminarUMAByMunicipio(uma){
+				for (var i = options.length - 1; i >= 0; i--) {
+					var option = options[i];
+					var value = option.value;
+					if (!value.includes(uma)) {
+						option.parentNode.removeChild(option);
+					}
+				}
+			}
 
 	function clearSelect(select_element) {
 		for (let i = select_element.options.length; i >= 1; i--) {

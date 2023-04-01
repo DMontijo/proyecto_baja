@@ -917,6 +917,7 @@
 					const archivos = response.archivosexternos;
 					const folioDenunciantes = response.folioDenunciantes;
 
+					console.log(imputados);
 					inputFolio.classList.add('d-none');
 					buscar_btn.classList.add('d-none');
 					year_select.classList.add('d-none');
@@ -3473,38 +3474,9 @@
 			let select_proceso = document.querySelector("#tipoproceso_select");
 			let select_notificacion = document.querySelector("#tiponotificacion_select");
 			var options = select_uma.options;
-			if (input.municipio.value == 1 ) {
-				eliminarUMAByMunicipio("ENSENADA");
-			}else if(input_municipio.value== 6){
-				eliminarUMAByMunicipio("ENSENADA - SAN QUINTIN");
-			}else if (input.municipio.value == 2 ) {
-						eliminarUMAByMunicipio("MEXICALI");
-			}else if (input.municipio.value == 7 ) {
-				eliminarUMAByMunicipio("MEXICALI - SAN FELIPE");
-			}else if (input.municipio.value == 4 ) {
-				for (var i = options.length - 1; i >= 0; i--) {
-					var option = options[i];
-					var value = option.value;
-					if (!value.includes("ZONA COSTA - LA MESA") && !value.includes("ZONA COSTA - MARIANO MATAMOROS") && !value.includes("ZONA COSTA - ZONA RIO")) {
-						option.parentNode.removeChild(option);
-					}
-				}
-			}else if (input.municipio.value == 5 ) {
-				eliminarUMAByMunicipio("ZONA COSTA - PLAYAS ROSARITO");
-			}else if (input.municipio.value == 3 ) {
-				eliminarUMAByMunicipio("ZONA COSTA - TECATE");
-			}
+			
 
-			function eliminarUMAByMunicipio(uma){
-				for (var i = options.length - 1; i >= 0; i--) {
-					var option = options[i];
-					var value = option.value;
-					if (!value.includes(uma)) {
-						option.parentNode.removeChild(option);
-					}
-				}
-			}
-
+		
 
 			
 
@@ -6021,7 +5993,7 @@
 								plantilla.value = '';
 								select_uma.value = '';
 								select_proceso.value = '';
-								selecct_notificacion.value = '';
+								select_notificacion.value = '';
 								document.getElementById("involucrados").style.display = "none";
 								document.getElementById("div_uma").style.display = "none";
 								document.getElementById("div_proceso").style.display = "none";
@@ -6034,7 +6006,7 @@
 								plantilla.value = '';
 								select_uma.value = '';
 								select_proceso.value = '';
-								selecct_notificacion.value = '';
+								select_notificacion.value = '';
 								document.getElementById("involucrados").style.display = "none";
 								document.getElementById("div_uma").style.display = "none";
 								document.getElementById("div_proceso").style.display = "none";
@@ -6049,7 +6021,7 @@
 							plantilla.value = '';
 							select_uma.value = '';
 							select_proceso.value = '';
-							selecct_notificacion.value = '';
+							select_notificacion.value = '';
 							document.getElementById("involucrados").style.display = "none";
 							document.getElementById("div_uma").style.display = "none";
 							document.getElementById("div_proceso").style.display = "none";
@@ -6080,7 +6052,7 @@
 									plantilla.value = '';
 									select_uma.value = '';
 									select_proceso.value = '';
-									selecct_notificacion.value = '';
+									select_notificacion.value = '';
 								} else {
 									tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
 									document.querySelector("#victima_modal_documento").value = '';
@@ -6088,7 +6060,7 @@
 									plantilla.value = '';
 									select_uma.value = '';
 									select_proceso.value = '';
-									selecct_notificacion.value = '';
+									select_notificacion.value = '';
 									document.getElementById("involucrados").style.display = "none";
 								}
 
@@ -6100,7 +6072,7 @@
 									plantilla.value = '';
 									select_uma.value = '';
 									select_proceso.value = '';
-									selecct_notificacion.value = '';
+									select_notificacion.value = '';
 								} else {
 									tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
 									document.querySelector("#victima_modal_documento").value = '';
@@ -6108,7 +6080,7 @@
 									plantilla.value = '';
 									select_uma.value = '';
 									select_proceso.value = '';
-									selecct_notificacion.value = '';
+									select_notificacion.value = '';
 									document.getElementById("involucrados").style.display = "none";
 								}
 							}
@@ -6121,7 +6093,7 @@
 							plantilla.value = '';
 							select_uma.value = '';
 							select_proceso.value = '';
-							selecct_notificacion.value = '';
+							select_notificacion.value = '';
 							document.getElementById("involucrados").style.display = "none";
 							document.getElementById("div_uma").style.display = "none";
 							document.getElementById("div_proceso").style.display = "none";
