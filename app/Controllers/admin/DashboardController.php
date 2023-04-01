@@ -2574,13 +2574,14 @@ class DashboardController extends BaseController
 					}
 				}
 
-				// return json_encode(['status' => 1]);
+				return json_encode(['status' => 1]);
 			} catch (\Exception $e) {
-				// return json_encode(['status' => 0, 'error' => $e->getMessage()]);
+				return json_encode(['status' => 0, 'error' => $e->getMessage()]);
 			}
 		} else {
-			// return json_encode(['status' => 1]);
+			return json_encode(['status' => 1]);
 		}
+
 	}
 
 	private function _createExpediente($folioRow)
