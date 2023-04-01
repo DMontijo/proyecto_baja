@@ -3481,7 +3481,7 @@
 			
 
 			$('#documentos_modal_wyswyg').on('show.bs.modal', function(event) {
-				<?php if (session('ROLID') == 4) { ?>
+				<?php if (session('ROLID') == 4 || session('ROLID') == 8 || session('ROLID') == 10) { ?>
 					const data = {
 						'folio': document.querySelector('#input_folio_atencion').value,
 						'year': document.querySelector('#year_select').value,

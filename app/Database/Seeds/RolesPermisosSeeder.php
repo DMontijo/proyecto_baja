@@ -79,6 +79,7 @@ class RolesPermisosSeeder extends Seeder
 			array('ROLID' => '7', 'PERMISOID' => '11'),
 
 			//FACILITADOR
+			array('ROLID' => '8', 'PERMISOID' => '1'),
 			array('ROLID' => '8', 'PERMISOID' => '2'),
 			array('ROLID' => '8', 'PERMISOID' => '3'),
 			array('ROLID' => '8', 'PERMISOID' => '7'),
@@ -93,6 +94,7 @@ class RolesPermisosSeeder extends Seeder
 			array('ROLID' => '9', 'PERMISOID' => '10'),
 
 			//SECREATARIO DE ACUERDOS
+			array('ROLID' => '10', 'PERMISOID' => '1'),
 			array('ROLID' => '10', 'PERMISOID' => '2'),
 			array('ROLID' => '10', 'PERMISOID' => '3'),
 			array('ROLID' => '10', 'PERMISOID' => '7'),

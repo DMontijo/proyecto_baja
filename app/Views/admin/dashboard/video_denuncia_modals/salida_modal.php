@@ -318,6 +318,8 @@
 							$('.modal-backdrop').remove();
 							buscar_nuevo_btn.classList.add('d-none');
 							inputFolio.classList.remove('d-none');
+							input_municipio.classList.remove('d-none');
+
 							// buscar_btn.classList.remove('d-none');
 							let currentTime = new Date();
 							let year = currentTime.getFullYear()
@@ -326,6 +328,7 @@
 							year_select.value = year;
 							year_select.disabled = true;
 							inputFolio.disabled = true;
+							input_municipio.disabled = true;
 
 							card2.classList.add('d-none');
 							card3.classList.add('d-none');
@@ -337,8 +340,30 @@
 							year_modal.value = year;
 							expediente_modal_correo.value = data.expediente;
 							year_modal_correo.value = year;
+							input_municipio.value = municipio_empleado.value;
+							if (input_municipio.value == 1) {
+									eliminarUMAByMunicipio("ENSENADA");
+								} else if (input_municipio.value == 6) {
+									eliminarUMAByMunicipio("ENSENADA - SAN QUINTIN");
+								} else if (input_municipio.value == 2) {
+									eliminarUMAByMunicipio("MEXICALI");
+								} else if (input_municipio.value == 7) {
+									eliminarUMAByMunicipio("MEXICALI - SAN FELIPE");
+								} else if (input_municipio.value == 4) {
+									for (var i = options.length - 1; i >= 0; i--) {
+										var option = options[i];
+										var value = option.value;
+										if (!value.includes("ZONA COSTA - LA MESA") && !value.includes("ZONA COSTA - MARIANO MATAMOROS") && !value.includes("ZONA COSTA - ZONA RIO")) {
+											option.parentNode.removeChild(option);
+										}
+									}
+								} else if (input_municipio.value == 5) {
+									eliminarUMAByMunicipio("ZONA COSTA - PLAYAS ROSARITO");
+								} else if (input_municipio.value == 3) {
+									eliminarUMAByMunicipio("ZONA COSTA - TECATE");
+								}
 							card6.classList.remove('d-none');
-							<?php if (session('ROLID') != 4) { ?>
+							<?php if (session('ROLID') != 4 && session('ROLID') != 8 && session('ROLID') != 10) { ?>
 
 								card7.classList.remove('d-none');
 							<?php } ?>
@@ -499,7 +524,7 @@
 								expediente_modal_correo.value = data.expediente;
 								year_modal_correo.value = year;
 								card6.classList.remove('d-none');
-								<?php if (session('ROLID') != 4) { ?>
+								<?php if (session('ROLID') != 4 && session('ROLID') != 8 && session('ROLID') != 10) { ?>
 
 									card7.classList.remove('d-none');
 								<?php } ?>
