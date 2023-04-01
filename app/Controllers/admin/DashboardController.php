@@ -1363,6 +1363,7 @@ class DashboardController extends BaseController
 						$folioDoc = $this->_folioDocModel->expedienteDocumentos($expediente);
 						if ($folioDoc) {
 							foreach ($folioDoc as $key => $doc) {
+								var_dump($doc);exit;
 								$solicitudp = array();
 								$solicitudp['ESTADOID'] = 2;
 								$solicitudp['MUNICIPIOID'] = $municipio;
