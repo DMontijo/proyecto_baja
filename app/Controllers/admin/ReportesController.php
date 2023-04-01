@@ -807,13 +807,12 @@ class ReportesController extends BaseController
 					if ($videoDuration != '') {
 						$timestamp = strtotime($videoDuration->callRecordId->sessionStartedAt);
 
-						var_dump($timestamp);exit;
-
-						$horas = floor($videoDuration->duration / 3600);
-						$minutos = floor(($videoDuration->duration - ($horas * 3600)) / 60);
-						$segundos = $videoDuration->duration - ($horas * 3600) - ($minutos * 60);
+						$horas = date('H', $timestamp);
+						$minutos = date('i', $timestamp);
+						$segundos = date('s', $timestamp);
 					}
 				}
+				var_dump($horas, $minutos, $segundos);exit;
 				// return json_encode($responseFolio);
 				// if ($duration != '') {
 				// 	$horas = floor($duration / 3600);
