@@ -1382,7 +1382,7 @@ class DashboardController extends BaseController
 										} else if ($municipio == 4 || $municipio == 5) {
 											$intervencion = $plantilla['INTERVENCIONTIJUANAID'];
 										}
-										var_dump($$_solicitudPericial->SOLICITUDID);exit;
+										var_dump($_solicitudPericial->SOLICITUDID);exit;
 										// $dataInter =  array('SOLICITUDID' => $_solicitudPericial->SOLICITUDID, 'INTERVENCIONID' => $intervencion);
 										$_intervencionPericial = $this->_createIntervencionPericial($dataInter, $municipio);
 
