@@ -3547,9 +3547,9 @@ class DashboardController extends BaseController
 		}
 		curl_close($ch);
 		// var_dump($data);
-		// var_dump($result);exit;
+		var_dump($result);exit;
 		// return $result;
-		return json_decode($result);
+		// return json_decode($result);
 	}
 
 	public function getTimeVideo()
