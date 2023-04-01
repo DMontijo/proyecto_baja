@@ -744,8 +744,8 @@ class ReportesController extends BaseController
 			// $data['min'] = '2022-01-01';
 			// $data['max'] = date('Y-m-d');
 			// $duracion = '';
-			// $inicio = '';
-			// $fin = '';
+			$inicio = '';
+			$fin = '';
 			// $remision = '';
 			// $grabacion = '';
 			// $duration = '';
@@ -805,11 +805,15 @@ class ReportesController extends BaseController
 			if ($responseFolio != null) {
 				foreach ($responseFolio as $key => $videoDuration) {
 					if ($videoDuration != '') {
-						$timestamp = strtotime($videoDuration->callRecordId->sessionStartedAt);
 
-						$horas = date('H', $timestamp);
-						$minutos = date('i', $timestamp);
-						$segundos = date('s', $timestamp);
+						$timestampInicio = strtotime($videoDuration->callRecordId->sessionStartedAt);
+						$timestampFin = strtotime($videoDuration->callRecordId->sessionFinishedAt);
+
+						$inicio = date('H:i:s', $timestampInicio);
+						$fin = date('H:i:s', $timestampFin);
+
+
+
 					}
 				}
 				var_dump($horas, $minutos, $segundos);exit;
@@ -838,8 +842,8 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('A' . $row, $row - 4);
 			$sheet->setCellValue('B' . $row, $dateregistro);
 			$sheet->setCellValue('C' . $row, $folio->FOLIOID);
-			$sheet->setCellValue('D' . $row,  $response->data > 0 && $inicio != '' ? date("H:i:s", strtotime('-2 hour', strtotime($inicio))) : ($inicio != '' ? date("H:i:s", strtotime('-2 hour', strtotime($response->data[0]->Inicio))) : ''));
-			$sheet->setCellValue('E' . $row,  $response->data > 0  && $fin != '' ? date("H:i:s", strtotime('-2 hour', strtotime($fin))) : ($fin != '' ? date("H:i:s", strtotime('-2 hour', strtotime($response->data[0]->Fin))) : ''));
+			$sheet->setCellValue('D' . $row, $inicio != '' ? $inicio : '');
+			$sheet->setCellValue('E' . $row, $fin != '' ? $fin : '');
 			$sheet->setCellValue('F' . $row,  $horas != '' ? strval($horas)  . ':' . $minutos . ':' . number_format($segundos, 0) : 'NO HAY VIDEO GRABADO');
 			$sheet->setCellValue('G' . $row, $folio->TIPODENUNCIA == 'DA' ? 'ANÓNIMA' : 'CDTEC');
 			$sheet->setCellValue('H' . $row, $folio->MUNICIPIODESCR);
