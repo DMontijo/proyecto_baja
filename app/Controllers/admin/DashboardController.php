@@ -1371,17 +1371,17 @@ class DashboardController extends BaseController
 								$solicitudp['EMPLEADOIDREGISTRO'] = $empleado;
 								$solicitudp['OFICINAIDREGISTRO'] = $oficina;
 								$solicitudp['AREAIDREGISTRO'] = $area;
-								$solicitudp['ANO'] = $doc['ANO'];
-								$solicitudp['TITULO'] = $doc['TIPODOC'];
+								$solicitudp['ANO'] = $doc->ANO;
+								$solicitudp['TITULO'] = $doc->TIPODOC;
 
 								$_solicitudPericial = $this->_createSolicitudesPericiales($solicitudp);
 								if ($_solicitudPericial->status == 201) {
-									$_solicitudDocto = $this->_createSolicitudDocto($expediente, $_solicitudPericial->SOLICITUDID, $doc['EXPEDIENTEDOCID'], $bandeja['MUNICIPIOASIGNADOID']);
+									$_solicitudDocto = $this->_createSolicitudDocto($expediente, $_solicitudPericial->SOLICITUDID, $doc->EXPEDIENTEDOCID, $bandeja['MUNICIPIOASIGNADOID']);
 									if ($_solicitudDocto->status == 201) {
 										$_solicitudExpediente = $this->_createSolicitudExpediente($expediente, $_solicitudPericial->SOLICITUDID, $municipio);
 										$plantilla = (object) array();
 
-										$plantilla = $this->_plantillasModel->where('TITULO',  $doc['TIPODOC'])->first();
+										$plantilla = $this->_plantillasModel->where('TITULO',  $doc->TIPODOC)->first();
 										if ($municipio == 1 ||  $municipio == 6) {
 											$intervencion = $plantilla['INTERVENCIONENSENADAID'];
 										} else if ($municipio == 2 || $municipio == 3 || $municipio == 7) {
@@ -1500,17 +1500,17 @@ class DashboardController extends BaseController
 						$solicitudp['EMPLEADOIDREGISTRO'] = $getMediador->data->EMPLEADOID_MEDIADOR;
 						$solicitudp['OFICINAIDREGISTRO'] = $getMediador->data->OFICINA_MP_MEDIADOR;
 						$solicitudp['AREAIDREGISTRO'] =  $getMediador->data->AREA_MEDIADOR;
-						$solicitudp['ANO'] = $doc['ANO'];
-						$solicitudp['TITULO'] = $doc['TIPODOC'];
+						$solicitudp['ANO'] = $doc->ANO;
+						$solicitudp['TITULO'] = $doc->TIPODOC;
 
 						$_solicitudPericial = $this->_createSolicitudesPericiales($solicitudp);
 						if ($_solicitudPericial->status == 201) {
-							$_solicitudDocto = $this->_createSolicitudDocto($expediente, $_solicitudPericial->SOLICITUDID, $doc['EXPEDIENTEDOCID'], $bandeja['MUNICIPIOASIGNADOID']);
+							$_solicitudDocto = $this->_createSolicitudDocto($expediente, $_solicitudPericial->SOLICITUDID, $doc->EXPEDIENTEDOCID, $bandeja['MUNICIPIOASIGNADOID']);
 							if ($_solicitudDocto->status == 201) {
 								$_solicitudExpediente = $this->_createSolicitudExpediente($expediente, $_solicitudPericial->SOLICITUDID, $municipio);
 								$plantilla = (object) array();
 
-								$plantilla = $this->_plantillasModel->where('TITULO',  $doc['TIPODOC'])->first();
+								$plantilla = $this->_plantillasModel->where('TITULO',  $doc->TIPODOC)->first();
 								if ($municipio == 1 ||  $municipio == 6) {
 									$intervencion = $plantilla['INTERVENCIONENSENADAID'];
 								} else if ($municipio == 2 || $municipio == 3 || $municipio == 7) {
