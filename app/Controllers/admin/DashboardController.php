@@ -3126,7 +3126,7 @@ class DashboardController extends BaseController
 		$endpoint = $this->endpoint . $function;
 		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
 		$data = $solicitud;
-		var_dump($data);
+		var_dump($data);exit;
 
 		foreach ($data as $clave => $valor) {
 			if (empty($valor)) {
