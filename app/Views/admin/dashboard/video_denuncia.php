@@ -3501,6 +3501,7 @@
 									text: 'Este folio, ya tiene agente asignado para firmar. Se autoasignará al mismo agente.',
 									confirmButtonColor: '#bf9b55',
 								});
+								document.querySelector('#empleado_asignado').setAttribute('required', false);
 
 							} else {
 								const div_usuarios = document.querySelector('#usuarios');
@@ -5952,8 +5953,30 @@
 
 
 			function obtenerPlantillas(tipoPlantilla, victima, imputado) {
-				<?php if (session('ROLID') == 4 || session('ROLID') == 8 || session('ROLID') == 10) { ?>
 
+				<?php if (session('ROLID') == 4 || session('ROLID') == 8 || session('ROLID') == 10) { ?>
+				console.log("victima");
+				console.log(document.querySelector('#victima_modal_documento').value == '');
+
+				if (tipoPlantilla == "CITATORIO") {
+					if ((document.querySelector('#victima_modal_documento').value != '') && document.querySelector('#empleado_asignado').getAttribute('required') == "true" && document.querySelector('#empleado_asignado').value != '' && select_uma.getAttribute('required') == "true" && select_uma.value != '' && select_notificacion.getAttribute('required') == "true" && select_notificacion.value != '' && select_proceso.getAttribute('required') == "true" && select_proceso.value != '' && tipoPlantilla == 'CITATORIO') {
+						$('#documentos_modal_wyswyg').modal('hide');
+						$('#documentos_modal').modal('show');
+
+					} else if ((document.querySelector('#victima_modal_documento').value == '') || (document.querySelector('#empleado_asignado').getAttribute('required') == "true" && document.querySelector('#empleado_asignado').value == '') || (select_uma.getAttribute('required') == "true" && select_uma.value == '') || (select_notificacion.getAttribute('required') == "true" && select_notificacion.value == '') || (select_proceso.getAttribute('required') == "true" && select_proceso.value == '') && tipoPlantilla == 'CITATORIO') {
+
+						Swal.fire({
+							icon: 'error',
+							text: 'Favor de llenar los campos mostrados en la pantalla',
+							confirmButtonColor: '#bf9b55',
+						});
+					} else if ((document.querySelector('#victima_modal_documento').value != '') && document.querySelector('#empleado_asignado').getAttribute('required') == "false" && document.querySelector('#empleado_asignado').value == '' && select_uma.getAttribute('required') == "true" && select_uma.value != '' && select_notificacion.getAttribute('required') == "true" && select_notificacion.value != '' && select_proceso.getAttribute('required') == "true" && select_proceso.value != '' && tipoPlantilla == 'CITATORIO') {
+						$('#documentos_modal_wyswyg').modal('hide');
+						$('#documentos_modal').modal('show');
+
+					}
+
+				} else {
 					if (document.querySelector('#empleado_asignado').getAttribute('required') == "true" && document.querySelector('#empleado_asignado').value == '') {
 						Swal.fire({
 							icon: 'error',
@@ -5963,47 +5986,43 @@
 					} else if (document.querySelector('#empleado_asignado').getAttribute('required') == "true" && document.querySelector('#empleado_asignado').value != '') {
 						$('#documentos_modal_wyswyg').modal('hide');
 						$('#documentos_modal').modal('show');
-					}
-
-					if (tipoPlantilla == "CITATORIO") {
-						if (document.querySelector('#empleado_asignado').getAttribute('required') == "true" && document.querySelector('#empleado_asignado').value != '' && select_uma.getAttribute('required') == "true" && select_uma.value != '' && select_notificacion.getAttribute('required') == "true" && select_notificacion.value != '' && select_proceso.getAttribute('required') == "true" && select_proceso.value != '' && tipoPlantilla == 'CITATORIO') {
-							$('#documentos_modal_wyswyg').modal('hide');
-							$('#documentos_modal').modal('show');
-
-						} else if ((document.querySelector('#empleado_asignado').getAttribute('required') == "true" && document.querySelector('#empleado_asignado').value == '') || (select_uma.getAttribute('required') == "true" && select_uma.value == '') || (select_notificacion.getAttribute('required') == "true" && select_notificacion.value == '') || (select_proceso.getAttribute('required') == "true" && select_proceso.value == '') && tipoPlantilla == 'CITATORIO') {
-
-							Swal.fire({
-								icon: 'error',
-								text: 'Favor de llenar los campos mostrados en la pantalla',
-								confirmButtonColor: '#bf9b55',
-							});
-						}
-					}
-
-
-
-
-				<?php } else { ?>
-					if (select_uma.getAttribute('required') == "true" && select_uma.value != '' && select_notificacion.getAttribute('required') == "true" && select_notificacion.value != '' && select_proceso.getAttribute('required') == "true" && select_proceso.value != '' && document.querySelector('#victima_modal_documento').value != '' && tipoPlantilla == 'CITATORIO') {
-						$('#documentos_modal_wyswyg').modal('hide');
-						$('#documentos_modal').modal('show');
-
-					} else if ((document.querySelector('#victima_modal_documento').value == '') || (select_uma.getAttribute('required') == "true" && select_uma.value == '') || (document.querySelector('#victima_modal_documento').value == '') || (select_notificacion.getAttribute('required') == "true" && select_notificacion.value == '') || (select_proceso.getAttribute('required') == "true" && select_proceso.value == '') && tipoPlantilla == 'CITATORIO') {
-
-						Swal.fire({
-							icon: 'error',
-							text: 'Favor de llenar los campos mostrados en la pantalla',
-							confirmButtonColor: '#bf9b55',
-						});
-					}
-
-
-
-					if (select_uma.getAttribute('required') == "false" && tipoPlantilla != 'CITATORIO') {
+					} else if (document.querySelector('#empleado_asignado').getAttribute('required') == "false" && document.querySelector('#empleado_asignado').value == '') {
 						$('#documentos_modal_wyswyg').modal('hide');
 						$('#documentos_modal').modal('show');
 					}
-				<?php } ?>
+
+
+				}
+
+
+
+
+			<?php } else { ?>
+
+				console.log("victima");
+				console.log(document.querySelector('#victima_modal_documento').value == '');
+
+				if (select_uma.getAttribute('required') == "true" && select_uma.value != '' && select_notificacion.getAttribute('required') == "true" && select_notificacion.value != '' && select_proceso.getAttribute('required') == "true" && select_proceso.value != '' && document.querySelector('#victima_modal_documento').value != '' && tipoPlantilla == 'CITATORIO') {
+					$('#documentos_modal_wyswyg').modal('hide');
+					$('#documentos_modal').modal('show');
+
+				} else if ((document.querySelector('#victima_modal_documento').value == '') || (select_uma.getAttribute('required') == "true" && select_uma.value == '') || (document.querySelector('#victima_modal_documento').value == '') || (select_notificacion.getAttribute('required') == "true" && select_notificacion.value == '') || (select_proceso.getAttribute('required') == "true" && select_proceso.value == '') && tipoPlantilla == 'CITATORIO') {
+
+					Swal.fire({
+						icon: 'error',
+						text: 'Favor de llenar los campos mostrados en la pantalla',
+						confirmButtonColor: '#bf9b55',
+					});
+				}
+
+
+
+				if (select_uma.getAttribute('required') == "false" && tipoPlantilla != 'CITATORIO') {
+					$('#documentos_modal_wyswyg').modal('hide');
+					$('#documentos_modal').modal('show');
+				}
+			<?php } ?>
+
 
 				if (select_uma.value) {
 					const data = {

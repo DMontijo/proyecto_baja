@@ -308,6 +308,7 @@
 						console.log(response);
 						if (response.status == 1) {
 							const div_usuarios = document.querySelector('#usuarios');
+							document.querySelector('#empleado_asignado').setAttribute('required', false);
 							div_usuarios.classList.add('d-none');
 							Swal.fire({
 								icon: 'warning',
@@ -487,31 +488,43 @@
 
 
 			<?php if (session('ROLID') == 4 || session('ROLID') == 8 || session('ROLID') == 10) { ?>
-
-				if (document.querySelector('#empleado_asignado').getAttribute('required') == "true" && document.querySelector('#empleado_asignado').value == '') {
-					Swal.fire({
-						icon: 'error',
-						text: 'Favor de asignar a un Agente de Ministerio Público',
-						confirmButtonColor: '#bf9b55',
-					});
-				} else if (document.querySelector('#empleado_asignado').getAttribute('required') == "true" && document.querySelector('#empleado_asignado').value != '') {
-					$('#documentos_modal_wyswyg').modal('hide');
-					$('#documentos_modal').modal('show');
-				}
+				console.log("victima");
+				console.log(document.querySelector('#victima_modal_documento').value == '');
 
 				if (tipoPlantilla == "CITATORIO") {
-					if (document.querySelector('#empleado_asignado').getAttribute('required') == "true" && document.querySelector('#empleado_asignado').value != '' && select_uma.getAttribute('required') == "true" && select_uma.value != '' && select_notificacion.getAttribute('required') == "true" && select_notificacion.value != '' && select_proceso.getAttribute('required') == "true" && select_proceso.value != '' && tipoPlantilla == 'CITATORIO') {
+					if ((document.querySelector('#victima_modal_documento').value != '') && document.querySelector('#empleado_asignado').getAttribute('required') == "true" && document.querySelector('#empleado_asignado').value != '' && select_uma.getAttribute('required') == "true" && select_uma.value != '' && select_notificacion.getAttribute('required') == "true" && select_notificacion.value != '' && select_proceso.getAttribute('required') == "true" && select_proceso.value != '' && tipoPlantilla == 'CITATORIO') {
 						$('#documentos_modal_wyswyg').modal('hide');
 						$('#documentos_modal').modal('show');
 
-					} else if ((document.querySelector('#empleado_asignado').getAttribute('required') == "true" && document.querySelector('#empleado_asignado').value == '') || (select_uma.getAttribute('required') == "true" && select_uma.value == '') || (select_notificacion.getAttribute('required') == "true" && select_notificacion.value == '') || (select_proceso.getAttribute('required') == "true" && select_proceso.value == '') && tipoPlantilla == 'CITATORIO') {
+					} else if ((document.querySelector('#victima_modal_documento').value == '') || (document.querySelector('#empleado_asignado').getAttribute('required') == "true" && document.querySelector('#empleado_asignado').value == '') || (select_uma.getAttribute('required') == "true" && select_uma.value == '') || (select_notificacion.getAttribute('required') == "true" && select_notificacion.value == '') || (select_proceso.getAttribute('required') == "true" && select_proceso.value == '') && tipoPlantilla == 'CITATORIO') {
 
 						Swal.fire({
 							icon: 'error',
 							text: 'Favor de llenar los campos mostrados en la pantalla',
 							confirmButtonColor: '#bf9b55',
 						});
+					} else if ((document.querySelector('#victima_modal_documento').value != '') && document.querySelector('#empleado_asignado').getAttribute('required') == "false" && document.querySelector('#empleado_asignado').value == '' && select_uma.getAttribute('required') == "true" && select_uma.value != '' && select_notificacion.getAttribute('required') == "true" && select_notificacion.value != '' && select_proceso.getAttribute('required') == "true" && select_proceso.value != '' && tipoPlantilla == 'CITATORIO') {
+						$('#documentos_modal_wyswyg').modal('hide');
+						$('#documentos_modal').modal('show');
+
 					}
+
+				} else {
+					if (document.querySelector('#empleado_asignado').getAttribute('required') == "true" && document.querySelector('#empleado_asignado').value == '') {
+						Swal.fire({
+							icon: 'error',
+							text: 'Favor de asignar a un Agente de Ministerio Público',
+							confirmButtonColor: '#bf9b55',
+						});
+					} else if (document.querySelector('#empleado_asignado').getAttribute('required') == "true" && document.querySelector('#empleado_asignado').value != '') {
+						$('#documentos_modal_wyswyg').modal('hide');
+						$('#documentos_modal').modal('show');
+					} else if (document.querySelector('#empleado_asignado').getAttribute('required') == "false" && document.querySelector('#empleado_asignado').value == '') {
+						$('#documentos_modal_wyswyg').modal('hide');
+						$('#documentos_modal').modal('show');
+					}
+
+
 				}
 
 
@@ -519,13 +532,14 @@
 
 			<?php } else { ?>
 
+				console.log("victima");
 				console.log(document.querySelector('#victima_modal_documento').value == '');
 
-				if (select_uma.getAttribute('required') == "true" && select_uma.value != '' && select_notificacion.getAttribute('required') == "true" && select_notificacion.value != '' && select_proceso.getAttribute('required') == "true" && select_proceso.value != '' && document.querySelector('#victima_modal_documento').value != ''&& tipoPlantilla == 'CITATORIO') {
+				if (select_uma.getAttribute('required') == "true" && select_uma.value != '' && select_notificacion.getAttribute('required') == "true" && select_notificacion.value != '' && select_proceso.getAttribute('required') == "true" && select_proceso.value != '' && document.querySelector('#victima_modal_documento').value != '' && tipoPlantilla == 'CITATORIO') {
 					$('#documentos_modal_wyswyg').modal('hide');
 					$('#documentos_modal').modal('show');
 
-				} else if ((document.querySelector('#victima_modal_documento').value == '')||(select_uma.getAttribute('required') == "true" && select_uma.value == '') ||(document.querySelector('#victima_modal_documento').value =='')|| (select_notificacion.getAttribute('required') == "true" && select_notificacion.value == '') || (select_proceso.getAttribute('required') == "true" && select_proceso.value == '') && tipoPlantilla == 'CITATORIO') {
+				} else if ((document.querySelector('#victima_modal_documento').value == '') || (select_uma.getAttribute('required') == "true" && select_uma.value == '') || (document.querySelector('#victima_modal_documento').value == '') || (select_notificacion.getAttribute('required') == "true" && select_notificacion.value == '') || (select_proceso.getAttribute('required') == "true" && select_proceso.value == '') && tipoPlantilla == 'CITATORIO') {
 
 					Swal.fire({
 						icon: 'error',
@@ -717,7 +731,9 @@
 								'year': getParameterByName('year'),
 								'placeholder': contenido,
 								'titulo': tipoPlantilla,
-								'statusenvio': 0
+								'statusenvio': 0,
+								'agente_asignado': document.querySelector('#empleado_asignado').value,
+
 							};
 							insertarDoc(data);
 						} else {
@@ -726,7 +742,9 @@
 								'year': getParameterByName('year'),
 								'placeholder': contenido,
 								'titulo': tipoPlantilla,
-								'statusenvio': 0
+								'statusenvio': 0,
+								'agente_asignado': document.querySelector('#empleado_asignado').value,
+
 							};
 							insertarDoc(data);
 						}
@@ -753,7 +771,9 @@
 								'year': getParameterByName('year'),
 								'placeholder': contenido,
 								'titulo': tipoPlantilla,
-								'statusenvio': 1
+								'statusenvio': 1,
+								'agente_asignado': document.querySelector('#empleado_asignado').value,
+
 							};
 							insertarDoc(data);
 						} else {
@@ -762,7 +782,9 @@
 								'year': getParameterByName('year'),
 								'placeholder': contenido,
 								'titulo': tipoPlantilla,
-								'statusenvio': 1
+								'statusenvio': 1,
+								'agente_asignado': document.querySelector('#empleado_asignado').value,
+
 							};
 							insertarDoc(data);
 
@@ -775,7 +797,9 @@
 								'year': getParameterByName('year'),
 								'placeholder': contenido,
 								'titulo': tipoPlantilla,
-								'statusenvio': 0
+								'statusenvio': 0,
+								'agente_asignado': document.querySelector('#empleado_asignado').value,
+
 							};
 							insertarDoc(data);
 						} else {
@@ -784,7 +808,9 @@
 								'year': getParameterByName('year'),
 								'placeholder': contenido,
 								'titulo': tipoPlantilla,
-								'statusenvio': 0
+								'statusenvio': 0,
+								'agente_asignado': document.querySelector('#empleado_asignado').value,
+
 							};
 							insertarDoc(data);
 
