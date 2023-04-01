@@ -752,7 +752,7 @@ class ReportesController extends BaseController
 			$horas = '';
 			$segundos = '';
 			$minutos = '';
-			$timestamp='';
+			$timestamp = '';
 
 			// $response = $this->_curlPost($endpoint, $data);
 			// if ($response->data > 0) {
@@ -807,18 +807,14 @@ class ReportesController extends BaseController
 					if ($videoDuration != '') {
 
 						$timestampInicio = strtotime($videoDuration->callRecordId->sessionStartedAt);
-						if($videoDuration->callRecordId->sessionFinishedAt){
-							$timestampFin = strtotime($videoDuration->callRecordId->sessionFinishedAt);
-							$fin = date('H:i:s', $timestampFin);
-
-}
 						$inicio = date('H:i:s', $timestampInicio);
 
-
-
+						if ($videoDuration->callRecordId->sessionFinishedAt) {
+							$timestampFin = strtotime($videoDuration->callRecordId->sessionFinishedAt);
+							$fin = date('H:i:s', $timestampFin);
+						}
 					}
 				}
-				var_dump($horas, $minutos, $segundos);exit;
 				// return json_encode($responseFolio);
 				// if ($duration != '') {
 				// 	$horas = floor($duration / 3600);
