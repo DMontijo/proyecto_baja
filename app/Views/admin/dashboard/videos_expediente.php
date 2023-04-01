@@ -102,10 +102,11 @@
 	});
 </script>
 <script>
+	var tabla_videos = document.getElementById('table-videos').innerHTML;
 	function viewVideo(year, folio) {
 		data = {
 			'folio': year + '-' + folio,
-			
+
 		};
 		console.log(data);
 
@@ -139,8 +140,8 @@
 		}
 	}
 
-	$('#videos_expediente_modal').on('hidden.bs.modal', function () {
-  $('#videos_expediente_modal .modal-body').find("#table-videos").html("");
+	$('#videos_expediente_modal').on('hidden.bs.modal', function() {
+		document.getElementById('table-videos').innerHTML = tabla_videos
 });
 </script>
 
