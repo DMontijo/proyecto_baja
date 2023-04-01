@@ -1313,7 +1313,10 @@ class DashboardController extends BaseController
 			$area = $this->_empleadosModel->asObject()->where('EMPLEADOID', $empleado)->where('MUNICIPIOID', $municipio)->first();
 			$documents = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente)->findAll();
 			$status = 2;
+			$dataInter =  array('SOLICITUDID' => 9000594, 'INTERVENCIONID' => 98);
 
+			$_intervencionPericial = $this->_createIntervencionPericial($dataInter, $municipio);
+			var_dump($_intervencionPericial);exit;
 			foreach ($documents as $key => $document) {
 				if (
 					$document->TIPODOC == 'CRITERIO DE OPORTUNIDAD' ||
@@ -1381,10 +1384,8 @@ class DashboardController extends BaseController
 										} else if ($municipio == 4 || $municipio == 5) {
 											$intervencion = $plantilla['INTERVENCIONTIJUANAID'];
 										}
-										$dataInter =  array('SOLICITUDID' => $_solicitudPericial->SOLICITUDID, 'INTERVENCIONID' => $intervencion);
-
-										$_intervencionPericial = $this->_createIntervencionPericial($dataInter, $municipio);
-										var_dump($_intervencionPericial);exit;
+										// $dataInter =  array('SOLICITUDID' => $_solicitudPericial->SOLICITUDID, 'INTERVENCIONID' => $intervencion);
+									
 
 										if ($_intervencionPericial->status == 201) {
 											$datosBitacora = [
