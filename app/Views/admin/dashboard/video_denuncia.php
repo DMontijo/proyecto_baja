@@ -3474,11 +3474,11 @@
 			let select_proceso = document.querySelector("#tipoproceso_select");
 			let select_notificacion = document.querySelector("#tiponotificacion_select");
 			var options = select_uma.options;
-			
 
-		
 
-			
+
+
+
 
 			$('#documentos_modal_wyswyg').on('show.bs.modal', function(event) {
 				<?php if (session('ROLID') == 4 || session('ROLID') == 8 || session('ROLID') == 10) { ?>
@@ -3505,10 +3505,14 @@
 							} else {
 								const div_usuarios = document.querySelector('#usuarios');
 								div_usuarios.classList.remove('d-none');
+								document.querySelector('#empleado_asignado').setAttribute('required', true);
+
 							}
 
 						}
 					});
+				<?php } else { ?>
+					document.querySelector('#empleado_asignado').setAttribute('required', false);
 				<?php } ?>
 				$("#documentos_modal_wyswyg select").val("");
 				document.getElementById("involucrados").style.display = "none";
@@ -5948,22 +5952,59 @@
 
 
 			function obtenerPlantillas(tipoPlantilla, victima, imputado) {
+				<?php if (session('ROLID') == 4 || session('ROLID') == 8 || session('ROLID') == 10) { ?>
 
-				if (select_uma.getAttribute('required') == "true" && select_uma.value != '' && select_notificacion.getAttribute('required') == "true" && select_notificacion.value != '' && select_proceso.getAttribute('required') == "true" && select_proceso.value != '' && tipoPlantilla == 'CITATORIO') {
-					$('#documentos_modal_wyswyg').modal('hide');
-					$('#documentos_modal').modal('show');
-				} else if ((select_uma.getAttribute('required') == "true" && select_uma.value == '') || (select_notificacion.getAttribute('required') == "true" && select_notificacion.value == '') || (select_proceso.getAttribute('required') == "true" && select_proceso.value == '') && tipoPlantilla == 'CITATORIO') {
+					if (document.querySelector('#empleado_asignado').getAttribute('required') == "true" && document.querySelector('#empleado_asignado').value == '') {
+						Swal.fire({
+							icon: 'error',
+							text: 'Favor de asignar a un Agente de Ministerio Público',
+							confirmButtonColor: '#bf9b55',
+						});
+					} else if (document.querySelector('#empleado_asignado').getAttribute('required') == "true" && document.querySelector('#empleado_asignado').value != '') {
+						$('#documentos_modal_wyswyg').modal('hide');
+						$('#documentos_modal').modal('show');
+					}
 
-					Swal.fire({
-						icon: 'error',
-						text: 'Favor de llenar los campos mostrados en la pantalla',
-						confirmButtonColor: '#bf9b55',
-					});
-				}
-				if (select_uma.getAttribute('required') == "false" && tipoPlantilla != 'CITATORIO') {
-					$('#documentos_modal_wyswyg').modal('hide');
-					$('#documentos_modal').modal('show');
-				}
+					if (tipoPlantilla == "CITATORIO") {
+						if (document.querySelector('#empleado_asignado').getAttribute('required') == "true" && document.querySelector('#empleado_asignado').value != '' && select_uma.getAttribute('required') == "true" && select_uma.value != '' && select_notificacion.getAttribute('required') == "true" && select_notificacion.value != '' && select_proceso.getAttribute('required') == "true" && select_proceso.value != '' && tipoPlantilla == 'CITATORIO') {
+							$('#documentos_modal_wyswyg').modal('hide');
+							$('#documentos_modal').modal('show');
+
+						} else if ((document.querySelector('#empleado_asignado').getAttribute('required') == "true" && document.querySelector('#empleado_asignado').value == '') || (select_uma.getAttribute('required') == "true" && select_uma.value == '') || (select_notificacion.getAttribute('required') == "true" && select_notificacion.value == '') || (select_proceso.getAttribute('required') == "true" && select_proceso.value == '') && tipoPlantilla == 'CITATORIO') {
+
+							Swal.fire({
+								icon: 'error',
+								text: 'Favor de llenar los campos mostrados en la pantalla',
+								confirmButtonColor: '#bf9b55',
+							});
+						}
+					}
+
+
+
+
+				<?php } else { ?>
+					if (select_uma.getAttribute('required') == "true" && select_uma.value != '' && select_notificacion.getAttribute('required') == "true" && select_notificacion.value != '' && select_proceso.getAttribute('required') == "true" && select_proceso.value != '' && document.querySelector('#victima_modal_documento').value != '' && tipoPlantilla == 'CITATORIO') {
+						$('#documentos_modal_wyswyg').modal('hide');
+						$('#documentos_modal').modal('show');
+
+					} else if ((document.querySelector('#victima_modal_documento').value == '') || (select_uma.getAttribute('required') == "true" && select_uma.value == '') || (document.querySelector('#victima_modal_documento').value == '') || (select_notificacion.getAttribute('required') == "true" && select_notificacion.value == '') || (select_proceso.getAttribute('required') == "true" && select_proceso.value == '') && tipoPlantilla == 'CITATORIO') {
+
+						Swal.fire({
+							icon: 'error',
+							text: 'Favor de llenar los campos mostrados en la pantalla',
+							confirmButtonColor: '#bf9b55',
+						});
+					}
+
+
+
+					if (select_uma.getAttribute('required') == "false" && tipoPlantilla != 'CITATORIO') {
+						$('#documentos_modal_wyswyg').modal('hide');
+						$('#documentos_modal').modal('show');
+					}
+				<?php } ?>
+
 				if (select_uma.value) {
 					const data = {
 
