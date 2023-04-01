@@ -751,7 +751,7 @@ class ReportesController extends BaseController
 			// $duration = '';
 			$horas = '';
 			$segundos = '';
-			$minuos = '';
+			$minutos = '';
 
 			// $response = $this->_curlPost($endpoint, $data);
 			// if ($response->data > 0) {
@@ -807,6 +807,7 @@ class ReportesController extends BaseController
 
 			if ($responseFolio != null) {
 				foreach ($responseFolio as $key => $videoDuration) {
+					var_dump($videoDuration);
 					if ($videoDuration != '') {
 						$horas = floor($videoDuration->duration / 3600);
 						$minutos = floor(($videoDuration->duration - ($horas * 3600)) / 60);
