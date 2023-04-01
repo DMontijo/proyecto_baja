@@ -2351,6 +2351,7 @@ class DashboardController extends BaseController
 		$folioDoc = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOCID', 'asc')->findAll();
 		$archivosExternosVD = $this->_archivoExternoModel->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
 		$folioDocPeritaje = $this->_folioDocModel->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('TIPODOC', 'SOLICITUD DE PERITAJE')->orLike('TIPODOC', 'OFICIO DE COLABORACION PARA INGRESO A HOSPITAL')->findAll();
+		try {
 
 		if ($archivosExternosVD) {
 			try {
@@ -2580,8 +2581,10 @@ class DashboardController extends BaseController
 			}
 		} else {
 		}
-		return json_encode(['status' => 1]);
-
+		// return json_encode(['status' => 1]);
+	} catch (\Exception $e) {
+		return json_encode(['status' => 0, 'error' => $e->getMessage()]);
+	}
 	}
 
 	private function _createExpediente($folioRow)
