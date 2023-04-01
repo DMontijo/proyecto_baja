@@ -815,6 +815,9 @@ class ReportesController extends BaseController
 						}
 					}
 					$duracion = $videoDuration->duration;
+					$horas = floor($duracion / 3600);
+					$minutos = floor(($duracion - ($horas * 3600)) / 60);
+					$segundos = $duracion - ($horas * 3600) - ($minutos * 60);
 				}
 				// return json_encode($responseFolio);
 				// if ($duration != '') {
@@ -843,7 +846,7 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('C' . $row, $folio->FOLIOID);
 			$sheet->setCellValue('D' . $row, $inicio != '' ? $inicio : '');
 			$sheet->setCellValue('E' . $row, isset($fin) ? $fin : '');
-			$sheet->setCellValue('F' . $row,  $duracion != '' ? $duracion : 'NO HAY VIDEO GRABADO');
+			$sheet->setCellValue('F' . $row,  $horas != '' ? strval($horas)  . ':' . $minutos . ':' . number_format($segundos, 0) : 'NO HAY VIDEO GRABADO');
 			$sheet->setCellValue('G' . $row, $folio->TIPODENUNCIA == 'DA' ? 'ANÓNIMA' : 'CDTEC');
 			$sheet->setCellValue('H' . $row, $folio->MUNICIPIODESCR);
 			$sheet->setCellValue('I' . $row, $folio->N_DENUNCIANTE);
