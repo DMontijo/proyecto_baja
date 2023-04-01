@@ -3126,7 +3126,6 @@ class DashboardController extends BaseController
 		$endpoint = $this->endpoint . $function;
 		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
 		$data = $solicitud;
-		var_dump($data);exit;
 
 		foreach ($data as $clave => $valor) {
 			if (empty($valor)) {
@@ -3143,6 +3142,7 @@ class DashboardController extends BaseController
 		$data['pwdDB'] = $conexion->PASSWORD;
 		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
 		$data['schema'] = $conexion->SCHEMA;
+		var_dump($data);exit;
 
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
