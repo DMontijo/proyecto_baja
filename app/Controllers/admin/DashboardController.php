@@ -3105,6 +3105,7 @@ class DashboardController extends BaseController
 
 	private function _createIntervencionPericial($solicitud, $municipio)
 	{
+
 		$function = '/intervencionPericial.php?process=crear';
 		$array = [
 			'SOLICITUDID',
@@ -3133,6 +3134,7 @@ class DashboardController extends BaseController
 				unset($data[$clave]);
 			}
 		}
+		var_dump($data);exit;
 		$data['userDB'] = $conexion->USER;
 		$data['pwdDB'] = $conexion->PASSWORD;
 		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
