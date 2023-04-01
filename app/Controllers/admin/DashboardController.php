@@ -6633,9 +6633,9 @@ class DashboardController extends BaseController
 
 
 			if ($foliodoc) {
-				if (session('ROLID') == 4) {
+				if (session('ROLID') == 4 || session('ROLID') == 8 || session('ROLID') == 10) {
 					$dataFolio = array(
-						'AGENTEFIRMAID' => $this->request->getPost('agente_asignado'),
+						'AGENTEFIRMAID' => $this->request->getPost('agente_asignado') != '' ?  $this->request->getPost('agente_asignado') : null,
 					);
 					$update = $this->_folioModel->set($dataFolio)->where('FOLIOID', $folio)->where('ANO', $year)->update();
 				}
