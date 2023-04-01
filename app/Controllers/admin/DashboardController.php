@@ -1383,9 +1383,9 @@ class DashboardController extends BaseController
 											$intervencion = $plantilla['INTERVENCIONTIJUANAID'];
 										}
 										$dataInter =  array('SOLICITUDID' => $_solicitudPericial->SOLICITUDID, 'INTERVENCIONID' => $intervencion);
-										var_dump($dataInter, $municipio);exit;
 
 										$_intervencionPericial = $this->_createIntervencionPericial($dataInter, $municipio);
+										var_dump($_intervencionPericial);exit;
 
 
 										if ($_intervencionPericial->status == 201) {
@@ -3109,7 +3109,6 @@ class DashboardController extends BaseController
 	private function _createIntervencionPericial($solicitud, $municipio)
 	{
 
-		var_dump($solicitud);
 		$function = '/intervencionPericial.php?process=crear';
 		$array = [
 			'SOLICITUDID',
@@ -3142,6 +3141,8 @@ class DashboardController extends BaseController
 		$data['pwdDB'] = $conexion->PASSWORD;
 		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
 		$data['schema'] = $conexion->SCHEMA;
+		var_dump($data);
+
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
 	private function _createSolicitudesPericiales($solicitud)
