@@ -807,10 +807,12 @@ class ReportesController extends BaseController
 					if ($videoDuration != '') {
 
 						$timestampInicio = strtotime($videoDuration->callRecordId->sessionStartedAt);
-						if($videoDuration->callRecordId->sessionFinishedAt)$timestampFin = strtotime($videoDuration->callRecordId->sessionFinishedAt);
+						if($videoDuration->callRecordId->sessionFinishedAt){
+							$timestampFin = strtotime($videoDuration->callRecordId->sessionFinishedAt);
+							$fin = date('H:i:s', $timestampFin);
 
+}
 						$inicio = date('H:i:s', $timestampInicio);
-						$fin = date('H:i:s', $timestampFin);
 
 
 
@@ -843,7 +845,7 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('B' . $row, $dateregistro);
 			$sheet->setCellValue('C' . $row, $folio->FOLIOID);
 			$sheet->setCellValue('D' . $row, $inicio != '' ? $inicio : '');
-			$sheet->setCellValue('E' . $row, $fin != '' ? $fin : '');
+			$sheet->setCellValue('E' . $row, isset($fin) ? $fin : '');
 			$sheet->setCellValue('F' . $row,  $horas != '' ? strval($horas)  . ':' . $minutos . ':' . number_format($segundos, 0) : 'NO HAY VIDEO GRABADO');
 			$sheet->setCellValue('G' . $row, $folio->TIPODENUNCIA == 'DA' ? 'ANÓNIMA' : 'CDTEC');
 			$sheet->setCellValue('H' . $row, $folio->MUNICIPIODESCR);
