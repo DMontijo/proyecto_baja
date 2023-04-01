@@ -1314,7 +1314,8 @@ class DashboardController extends BaseController
 			$documents = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente)->findAll();
 			$status = 2;
 			$dataInter =  array('SOLICITUDID' => 9000600, 'INTERVENCIONID' => 98);
-
+			$folioDoc = $this->_folioDocModel->expedienteDocumentos($expediente);
+			var_dump($folioDoc);
 			$_intervencionPericial = $this->_createIntervencionPericial($dataInter, $municipio);
 			var_dump($_intervencionPericial);exit;
 			foreach ($documents as $key => $document) {
