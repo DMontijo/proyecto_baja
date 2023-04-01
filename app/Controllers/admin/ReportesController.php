@@ -796,14 +796,10 @@ class ReportesController extends BaseController
 			// 		->get('duration');
 			// }
 
-			$data = array();
-			$folio = $this->request->getPost('folio');
-			$data['folio'] = $folio;
-
-			$endpointFolio = $this->urlApi . 'recordings/folio/' . $folio;
+			$endpointFolio = $this->urlApi . 'recordings/folio/' . $folio->FOLIOID;
 
 			$responseFolio = $this->_curlGetService($endpointFolio);
-			return json_encode($responseFolio);
+			// return json_encode($responseFolio);
 
 			if ($responseFolio != null) {
 				foreach ($responseFolio as $key => $videoDuration) {
