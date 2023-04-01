@@ -3140,8 +3140,6 @@ class DashboardController extends BaseController
 		$data['pwdDB'] = $conexion->PASSWORD;
 		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
 		$data['schema'] = $conexion->SCHEMA;
-		var_dump($this->_curlPostDataEncrypt($endpoint, $data));exit;
-
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
 	private function _createSolicitudesPericiales($solicitud)
