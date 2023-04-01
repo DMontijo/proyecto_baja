@@ -23,6 +23,7 @@ class ReportesController extends BaseController
 	private $_constanciaExtravioModel;
 	private $_rolesPermisosModel;
 	private $_plantillasModel;
+	private $urlApi;
 
 	function __construct()
 	{
@@ -32,6 +33,7 @@ class ReportesController extends BaseController
 		$this->_constanciaExtravioModel = new ConstanciaExtravioModel();
 		$this->_rolesPermisosModel = new RolesPermisosModel();
 		$this->_plantillasModel = new PlantillasModel();
+		$this->urlApi = "https://videodenunciabalancer.fgebc.gob.mx/";
 	}
 
 	public function index()
@@ -733,36 +735,36 @@ class ReportesController extends BaseController
 
 
 		foreach ($resultFilter->result as $index => $folio) {
-			$endpoint = 'https://videodenunciaserver1.fgebc.gob.mx/api/vc';
-			$data = array();
-			$data['u'] = '24';
-			$data['token'] = '198429b7cc8a2a5733d97bc13153227dd5017555';
-			$data['a'] = 'getRepo';
-			$data['folio'] = $folio->ANO . '-' . $folio->FOLIOID;
-			$data['min'] = '2022-01-01';
-			$data['max'] = date('Y-m-d');
-			$duracion = '';
-			$inicio = '';
-			$fin = '';
-			$remision = '';
-			$grabacion = '';
-			$duration = '';
+			// $endpoint = 'https://videodenunciaserver1.fgebc.gob.mx/api/vc';
+			// $data = array();
+			// $data['u'] = '24';
+			// $data['token'] = '198429b7cc8a2a5733d97bc13153227dd5017555';
+			// $data['a'] = 'getRepo';
+			// $data['folio'] = $folio->ANO . '-' . $folio->FOLIOID;
+			// $data['min'] = '2022-01-01';
+			// $data['max'] = date('Y-m-d');
+			// $duracion = '';
+			// $inicio = '';
+			// $fin = '';
+			// $remision = '';
+			// $grabacion = '';
+			// $duration = '';
 			$horas = '';
 			$segundos = '';
 			$minuos = '';
 
-			$response = $this->_curlPost($endpoint, $data);
-			if ($response->data > 0) {
-				$array = array_reverse($response->data);
-				foreach ($array as $key => $api) {
-					$duracion = $api->Duración;
-					$inicio = $api->Inicio;
-					$fin = $api->Fin;
-					if ($api->Grabación != '') {
-						$grabacion = $api->Grabación;
-					}
-				}
-			}
+			// $response = $this->_curlPost($endpoint, $data);
+			// if ($response->data > 0) {
+			// 	$array = array_reverse($response->data);
+			// 	foreach ($array as $key => $api) {
+			// 		$duracion = $api->Duración;
+			// 		$inicio = $api->Inicio;
+			// 		$fin = $api->Fin;
+			// 		if ($api->Grabación != '') {
+			// 			$grabacion = $api->Grabación;
+			// 		}
+			// 	}
+			// }
 			if ($folio->TIPOEXPEDIENTEID == 1 || $folio->TIPOEXPEDIENTEID == 4) {
 				$remision = $folio->OFICINA_EMP;
 			} else if ($folio->TIPOEXPEDIENTEID == 5) {
@@ -774,31 +776,51 @@ class ReportesController extends BaseController
 			}
 
 
-			$ffprobe = FFProbe::create([
-				'ffmpeg.binaries'  => 'C:/ffmpeg/bin/ffmpeg.exe', // the path to the FFMpeg binary
-				'ffprobe.binaries' => 'C:/ffmpeg/bin/ffprobe.exe', // the path to the FFProbe binary
-				'timeout'          => 3600, // the timeout for the underlying process
-				'ffmpeg.threads'   => 12,   // the number of threads that FFMpeg should use
-			]);
-			if ($response->data > 0 && $grabacion != '') {
-				$duration = $ffprobe
-					->streams('https://fgebc-records.s3.amazonaws.com/' . $grabacion)
-					->videos()
-					->first()
-					->get('duration');
-			} else if ($response->data[0]->Grabación) {
-				$duration = $ffprobe
-					->streams('https://fgebc-records.s3.amazonaws.com/' . $response->data[0]->Grabación)
-					->videos()
-					->first()
-					->get('duration');
-			}
-			if ($duration != '') {
-				$horas = floor($duration / 3600);
-				$minutos = floor(($duration - ($horas * 3600)) / 60);
-				$segundos = $duration - ($horas * 3600) - ($minutos * 60);
-			}
+			// $ffprobe = FFProbe::create([
+			// 	'ffmpeg.binaries'  => 'C:/ffmpeg/bin/ffmpeg.exe', // the path to the FFMpeg binary
+			// 	'ffprobe.binaries' => 'C:/ffmpeg/bin/ffprobe.exe', // the path to the FFProbe binary
+			// 	'timeout'          => 3600, // the timeout for the underlying process
+			// 	'ffmpeg.threads'   => 12,   // the number of threads that FFMpeg should use
+			// ]);
+			// if ($response->data > 0 && $grabacion != '') {
+			// 	$duration = $ffprobe
+			// 		->streams('https://fgebc-records.s3.amazonaws.com/' . $grabacion)
+			// 		->videos()
+			// 		->first()
+			// 		->get('duration');
+			// } else if ($response->data[0]->Grabación) {
+			// 	$duration = $ffprobe
+			// 		->streams('https://fgebc-records.s3.amazonaws.com/' . $response->data[0]->Grabación)
+			// 		->videos()
+			// 		->first()
+			// 		->get('duration');
+			// }
 
+			$data = array();
+			$folio = $this->request->getPost('folio');
+			$data['folio'] = $folio;
+
+			$endpointFolio = $this->urlApi . 'recordings/folio/' . $folio;
+
+			$responseFolio = $this->_curlGetService($endpointFolio);
+			return json_encode($responseFolio);
+
+			if ($responseFolio != null) {
+				foreach ($responseFolio as $key => $videoDuration) {
+					if ($videoDuration != '') {
+						$horas = floor($videoDuration->duration / 3600);
+						$minutos = floor(($videoDuration->duration - ($horas * 3600)) / 60);
+						$segundos = $videoDuration->duration - ($horas * 3600) - ($minutos * 60);
+					}
+				}
+				// return json_encode($responseFolio);
+				// if ($duration != '') {
+				// 	$horas = floor($duration / 3600);
+				// 	$minutos = floor(($duration - ($horas * 3600)) / 60);
+				// 	$segundos = $duration - ($horas * 3600) - ($minutos * 60);
+				// }
+			}
+			var_dump($horas, $minutos, $segundos);exit;
 			// $row++;
 			// if(isset($folio->DELITOMODALIDADDESCR)){
 			// 	foreach ($folio->DELITOMODALIDADDESCR as $key => $delito){
@@ -1827,6 +1849,38 @@ class ReportesController extends BaseController
 		header('Cache-Control: max-age=0');
 		$writer->save("php://output");
 	}
+	private function _curlGetService($endpoint)
+	{
+		$ch = curl_init();
+
+		curl_setopt($ch, CURLOPT_URL, $endpoint);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+
+		$headers = array(
+			'Content-Type: application/json',
+			'Access-Control-Allow-Origin: *',
+			'Access-Control-Allow-Credentials: true',
+			'Access-Control-Allow-Headers: Content-Type',
+			'X-API-KEY:' . X_API_KEY
+		);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+		$result = curl_exec($ch);
+
+		return json_decode(curl_exec($ch));
+		if ($result === false) {
+			$result = "{
+                'status' => 401,
+                'error' => 'Curl failed: '" . curl_error($ch) . "
+            }";
+		}
+		curl_close($ch);
+
+		return json_decode($result);
+	}
+
 	private function _curlPost($endpoint, $data)
 	{
 		$ch = curl_init();
