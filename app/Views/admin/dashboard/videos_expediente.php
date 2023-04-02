@@ -122,29 +122,32 @@
 				const marcas = response.marcasVideo;
 				console.log(videos);
 				console.log(marcas.id);
-				llenarTablaVideos(videos,marcas);
+				llenarTablaVideos(videos, marcas);
 				$('#videos_expediente_modal').modal('show');
 			}
 		});
 
 	}
 
-	function llenarTablaVideos(videos,marcas) {
+	function llenarTablaVideos(videos, marcas) {
 		for (let i = 0; i < videos.length; i++) {
 			// console.log(videos[i],find(marcas.id));
-			if (videos[i]. id == marcas.id) {
+
+			var fila =
+				`<tr id="row${i}">` +
+				`<td class="text-center" value=""><video src="${videos[i].url}" width="100%" height="100%" controls></video></td>`
+
+			if (videos[i].id == marcas.id) {
 				let marcasVideo = marcas.recordingMarks;
 				marcas.recordingMarks.forEach(marcas => {
 					if (marcas.messageText != null) {
 						console.log(marcas.markTime);
+						`<td class="text-center">${marcas.markTime} ${marcas.messageText}</td>`
 
 					}
 				});
-			}
-			var fila =
-				`<tr id="row${i}">` +
-				`<td class="text-center" value=""><video src="${videos[i].url}" width="100%" height="100%" controls></video></td>` +
-				`</tr>`;
+			} +
+			`</tr>`;
 
 			$('#table-videos tr:first').after(fila);
 			$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
