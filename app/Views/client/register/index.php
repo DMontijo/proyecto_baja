@@ -1084,7 +1084,7 @@
 			if (e.target.files && e.target.files[0]) {
 				if (e.target.files[0].size > 2000000) {
 					console.log('Dentro para comprimir', e.target.files[0].size);
-					comprimirImagen(e.target.files[0], 5).then((image) => {
+					comprimirImagen(e.target.files[0], 30).then((image) => {
 						console.log('Dentro de la compresión', image);
 						e.target.files[0] = image;
 						let reader = new FileReader();
