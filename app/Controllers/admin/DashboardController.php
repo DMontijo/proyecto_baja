@@ -3660,7 +3660,13 @@ class DashboardController extends BaseController
 				}
 			}
 		}
-		return json_encode(['status' => 1, 'responseVideos' => $responseFolio, 'marcasVideo'=>$responseid ? $responseid : null]);
+		if(isset($responseid)){
+			return json_encode(['status' => 1, 'responseVideos' => $responseFolio, 'marcasVideo'=>$responseid]);
+
+		}else{
+			return json_encode(['status' => 1, 'responseVideos' => $responseFolio]);
+
+		}
 
 		// return json_encode($endpointId);
 
