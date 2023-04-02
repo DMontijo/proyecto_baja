@@ -84,20 +84,22 @@ class UserController extends BaseController
 		$password = $this->_generatePassword(6);
 
 		$documento = $this->request->getPost('documento_text');
+		var_dump($documento);
+		echo '<br><br>';
 		list($type, $documento) = explode(';', $documento);
 		list(, $extension) = explode('/', $type);
 	
 		list(, $documento) = explode(',', $documento);
 		$documento = base64_decode($documento);
-		var_dump("POST");
-		var_dump($_POST);
-		var_dump("FILES");
+		// var_dump("POST");
+		// var_dump($_POST);
+		// var_dump("FILES");
 
-		var_dump($_FILES);
-		var_dump("EXTENSION");
+		// var_dump($_FILES);
+		// var_dump("EXTENSION");
 
-		var_dump($extension);
-		var_dump("DOCUMENTO");
+		// var_dump($extension);
+		// var_dump("DOCUMENTO");
 
 		var_dump($documento);
 		exit;
