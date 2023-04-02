@@ -156,7 +156,7 @@ export class VideoServiceAgent {
             console.error(e)
         }
 
-        if (typeof callback === 'function') callback(response);
+        if (typeof callback === 'function') callback();
     }
 
     /**
