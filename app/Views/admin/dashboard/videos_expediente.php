@@ -137,18 +137,21 @@
 				marcas.recordingMarks.forEach(marcas => {
 					if (marcas.messageText != null) {
 						console.log(marcas.markTime);
-						`<td class="text-center">${marcas.markTime} ${marcas.messageText}</td>`
+						var fila =
+							`<tr id="row${i}">` +
+							`<td class="text-center" value=""><video src="${videos[i].url}" width="100%" height="100%" controls></video></td>` +
+							`<td class="text-center" value=""><${marcas.markTime} ${marcas.messageText}</td>` +
+
+							`</tr>`;
 
 					}
 				});
-			} 
-			var fila =
-				`<tr id="row${i}">` +
-				`<td class="text-center" value=""><video src="${videos[i].url}" width="100%" height="100%" controls></video></td>`
-
-		+
-			`</tr>`;
-
+			} else {
+				var fila =
+					`<tr id="row${i}">` +
+					`<td class="text-center" value=""><video src="${videos[i].url}" width="100%" height="100%" controls></video></td>` +
+					`</tr>`;
+			}
 			$('#table-videos tr:first').after(fila);
 			$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
 			var nFilas = $("#archvideosivos tr").length;
