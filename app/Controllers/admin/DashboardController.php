@@ -3479,7 +3479,8 @@ class DashboardController extends BaseController
 		}
 		curl_close($ch);
 
-		return json_decode($result);
+		var_dump($result);exit;
+		// return json_decode($result);
 	}
 
 	private function _curlPostService($endpoint, $data)
@@ -3783,7 +3784,6 @@ class DashboardController extends BaseController
 	{
 		if ($uuid && $names && $lastnames && $email && $sex && $rolId) {
 			$data = array();
-			$data['a'] = 'setPars';
 			$data['uuid'] = $uuid;
 			$data['names'] = $names;
 			$data['lastnames'] = $lastnames;
