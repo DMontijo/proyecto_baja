@@ -3659,10 +3659,11 @@ class DashboardController extends BaseController
 			foreach ($responseFolio as $key => $conections) {
 
 				if (isset($conections->url) && $conections->url != null) {
-					return json_encode($conections->id);
 				$endpointId = $this->urlApi . 'recordings/' . $conections->id;
 
 					$responseid = $this->_curlGetService($endpointId);
+					return json_encode($responseid);
+
 				}
 			}
 		}
