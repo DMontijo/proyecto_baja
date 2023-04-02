@@ -123,15 +123,16 @@
 				console.log(videos);
 				console.log(marcas);
 
-				llenarTablaVideos(videos);
+				llenarTablaVideos(videos,marcas);
 				$('#videos_expediente_modal').modal('show');
 			}
 		});
 
 	}
 
-	function llenarTablaVideos(videos) {
+	function llenarTablaVideos(videos,marcas) {
 		for (let i = 0; i < videos.length; i++) {
+			console.log(videos[i],find(marcas.id));
 			var fila =
 				`<tr id="row${i}">` +
 				`<td class="text-center" value=""><video src="${videos[i].url}" width="100%" height="100%" controls></video></td>` +
