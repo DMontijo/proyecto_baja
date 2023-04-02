@@ -212,30 +212,30 @@ rechazar_llamada.addEventListener("click", () => {
 // 	minutesLabel.innerHTML = pad(parseInt(totalSeconds / 60));
 // 	hoursLabel.innerHTML = pad(parseInt(totalSeconds/3600));
 //   }
-// marksRecording.addEventListener("click", () => {
-// 	$("#marksModal").modal("show");
-// 	agentVideoService.getMarkTypes().then(result => {
-// 		console.log(result);
-// 		result.forEach(marcas => {
-// 			const option = document.createElement("option");
-// 			option.value = marcas.id;
-// 			option.text = marcas.typeTitle;
-// 			selectMarks.add(option, null);
-// 		});
-// 	});
-// });
+marksRecording.addEventListener("click", () => {
+	$("#marksModal").modal("show");
+	agentVideoService.getMarkTypes().then(result => {
+		console.log(result);
+		result.forEach(marcas => {
+			const option = document.createElement("option");
+			option.value = marcas.id;
+			option.text = marcas.typeTitle;
+			selectMarks.add(option, null);
+		});
+	});
+});
 
-// enviar_marca.addEventListener("click", () => {
-// 	// console.log(agentVideoService.marksRecording());
+enviar_marca.addEventListener("click", () => {
+	// console.log(agentVideoService.marksRecording());
 
-// 	agentVideoService.emitMarkTime(
-// 		agentVideoService.marksRecording(),
-// 		coment_marks.value,
-// 		selectMarks.value,
-// 		() => {
-// 			selectMarks.value = "";
-// 			coment_marks.value = "";
-// 			$("#marksModal").modal("hide");
-// 		}
-// 	);
-// });
+	agentVideoService.emitMarkTime(
+		agentVideoService.marksRecording(),
+		coment_marks.value,
+		selectMarks.value,
+		() => {
+			selectMarks.value = "";
+			coment_marks.value = "";
+			$("#marksModal").modal("hide");
+		}
+	);
+});

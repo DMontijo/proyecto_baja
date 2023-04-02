@@ -314,12 +314,12 @@
 														<path d="M5 6.5A1.5 1.5 0 0 1 6.5 5h3A1.5 1.5 0 0 1 11 6.5v3A1.5 1.5 0 0 1 9.5 11h-3A1.5 1.5 0 0 1 5 9.5v-3z" />
 													</svg>
 												</button>
-												<!-- <button class="btn btn-lg btn-light" id="marks-recording-modal" data-toggle="tooltip" data-placement="top" title="Añadir marca de tiempo">
+												<button class="btn btn-lg btn-light" id="marks-recording-modal" data-toggle="tooltip" data-placement="top" title="Añadir marca de tiempo">
 													<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmarks" viewBox="0 0 16 16">
 														<path d="M2 4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L7 13.101l-4.223 2.815A.5.5 0 0 1 2 15.5V4zm2-1a1 1 0 0 0-1 1v10.566l3.723-2.482a.5.5 0 0 1 .554 0L11 14.566V4a1 1 0 0 0-1-1H4z" />
 														<path d="M4.268 1H12a1 1 0 0 1 1 1v11.768l.223.148A.5.5 0 0 0 14 13.5V2a2 2 0 0 0-2-2H6a2 2 0 0 0-1.732 1z" />
 													</svg>
-												</button> -->
+												</button>
 												<button class="btn btn-lg btn-danger" id="disconnect-call" name="disconnect-call" data-toggle="tooltip" data-placement="top" title="Colgar llamada">
 													<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-telephone-minus" viewBox="0 0 16 16">
 														<path fill-rule="evenodd" d="M10 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5z" />
