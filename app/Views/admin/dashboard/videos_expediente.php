@@ -117,11 +117,8 @@
 			method: "POST",
 			dataType: "json",
 			success: function(response) {
-				console.log(response);
 				const videos = response.responseVideos;
 				const marcas = response.marcasVideo;
-				console.log(videos);
-				console.log(marcas.id);
 				llenarTablaVideos(videos, marcas);
 				$('#videos_expediente_modal').modal('show');
 			}
@@ -136,10 +133,7 @@
 				let marcasVideo = marcas.recordingMarks;
 				marcas.recordingMarks.forEach(marcas => {
 					if (marcas.messageText != null) {
-						console.log(marcas.markTime + marcas.messageText);
-
 						marcasVideoArray += marcas.markTime + ' ' + marcas.messageText + `<br>`;
-
 					}
 				});
 			} 
@@ -148,7 +142,6 @@
 					`<tr id="row${i}">` +
 					`<td class="text-center" value=""><video src="${videos[i].url}" width="100%" height="100%" controls></video></td>` +
 					`<td class="text-center" value="">${marcasVideoArray}</td>` +
-
 					`</tr>`;
 			
 			$('#table-videos tr:first').after(fila);
