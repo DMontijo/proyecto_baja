@@ -345,6 +345,7 @@ if ($agent->isMobile()) {
 							<textarea id="documento_text" name="documento_text" hidden></textarea>
 							<textarea id="img_text" name="img_text" hidden></textarea>
 							<?php if (strpos($currentAgent, 'iphone') || strpos($currentAgent, 'apple') || strpos($currentAgent, 'ipad')) { ?>
+								<div class="form-text d-none"><button id="photo-btn" class="btn btn-link p-0 m-0" style="font-size:14px;" type="button">Para tomar foto clic aquí <i class="bi bi-camera-fill"></i></button></div>
 							<?php } else { ?>
 								<div class="form-text"><button id="photo-btn" class="btn btn-link p-0 m-0" style="font-size:14px;" type="button">Para tomar foto clic aquí <i class="bi bi-camera-fill"></i></button></div>
 							<?php } ?>
