@@ -109,8 +109,6 @@
 			'folio': year + '-' + folio,
 
 		};
-		console.log(data);
-
 		$.ajax({
 			data: data,
 			url: "<?= base_url('/data/get-video-link') ?>",
@@ -118,7 +116,6 @@
 			dataType: "json",
 			success: function(response) {
 				const videos = response;
-				console.log(response);
 				llenarTablaVideos(videos);
 				$('#videos_expediente_modal').modal('show');
 			}
@@ -128,7 +125,6 @@
 
 	function llenarTablaVideos(videos) {
 		for (let i = 0; i < videos.length; i++) {
-			console.log(videos[i].url);
 			var fila =
 				`<tr id="row${i}">` +
 				`<td class="text-center" value=""><video src="${videos[i].url}" width="100%" height="100%" controls></video></td>` +
