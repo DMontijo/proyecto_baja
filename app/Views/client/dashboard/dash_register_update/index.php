@@ -259,7 +259,7 @@
 							<label for="documento" class="form-label fw-bold input-required">Foto de identificación</label>
 							<img class="img-fluid d-none py-2" src="" id="img_preview" name="img_preview">
 							<input class="form-control" type="file" id="documento" name="documento" accept="image/jpeg, image/jpg, image/png,application/pdf" required>
-							<textarea id="documento_text" name="documento_text" hidden></textarea>
+							<textarea id="documento_text" name="documento_text"></textarea>
 							<textarea id="img_text" name="img_text" hidden></textarea>
 
 							<div class="form-text"><button id="photo-btn" class="btn btn-link p-0 m-0" style="font-size:14px;" type="button">Para tomar foto clic aquí <i class="bi bi-camera-fill"></i></button></div>
