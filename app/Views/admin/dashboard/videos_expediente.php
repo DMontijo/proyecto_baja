@@ -138,7 +138,7 @@
 					if (marcas.messageText != null) {
 						console.log(marcas.markTime + marcas.messageText);
 
-						marcasVideoArray += marcas.markTime + marcas.messageText;
+						marcasVideoArray += marcas.markTime + ' ' + marcas.messageText + `<br>`;
 
 					}
 				});
@@ -147,6 +147,8 @@
 				 var fila =
 					`<tr id="row${i}">` +
 					`<td class="text-center" value=""><video src="${videos[i].url}" width="100%" height="100%" controls></video></td>` +
+					`<td class="text-center" value="">${marcasVideoArray}</td>` +
+
 					`</tr>`;
 			
 			$('#table-videos tr:first').after(fila);
