@@ -1100,6 +1100,10 @@
 						} else {
 							const image = await blobToBase64(blob);
 							console.log(image);
+							documento_identidad.value = image;
+							documento_identidad_modal.setAttribute('src', image);
+							preview.classList.remove('d-none');
+							preview.setAttribute('src', image);
 						}
 					} else {
 						let reader = new FileReader();
