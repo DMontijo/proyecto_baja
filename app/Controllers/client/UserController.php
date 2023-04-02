@@ -81,7 +81,6 @@ class UserController extends BaseController
 
 	public function create()
 	{
-		var_dump($_POST);
 		$password = $this->_generatePassword(6);
 
 		$documento = $this->request->getPost('documento_text');
