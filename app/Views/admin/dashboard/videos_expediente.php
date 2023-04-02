@@ -118,7 +118,11 @@
 			dataType: "json",
 			success: function(response) {
 				console.log(response);
-				const videos = response;
+				const videos = response.responseVideos;
+				const marcas = response.marcasVideo;
+				console.log(videos);
+				console.log(marcas);
+
 				llenarTablaVideos(videos);
 				$('#videos_expediente_modal').modal('show');
 			}
