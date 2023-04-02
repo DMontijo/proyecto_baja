@@ -5,6 +5,15 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
+<?php
+$request = \Config\Services::request();
+$agent = $request->getUserAgent();
+$currentAgent = '';
+
+if ($agent->isMobile()) {
+	$currentAgent = strtolower($agent->getMobile());
+}
+?>
 <div class="container m-auto">
 	<div class="col-12">
 		<div class="card bg-primary shadow mb-4" style="font-size:14px;background:url(<?= base_url('/assets/img/banner/LINEAS_BANNER.png') ?>);background-repeat: no-repeat;background-size: cover !important;background-position-y: top;border-radius:10px;">
@@ -333,10 +342,12 @@
 							<label for="documento" class="form-label fw-bold input-required">Foto de identificación</label>
 							<img class="img-fluid d-none py-2" src="" id="img_preview" name="img_preview">
 							<input class="form-control" type="file" id="documento" name="documento" accept="image/jpeg, image/jpg, image/png, application/pdf" required>
-							<textarea id="documento_text" name="documento_text"></textarea>
+							<textarea id="documento_text" name="documento_text" hidden></textarea>
 							<textarea id="img_text" name="img_text" hidden></textarea>
-
-							<div class="form-text"><button id="photo-btn" class="btn btn-link p-0 m-0" style="font-size:14px;" type="button">Para tomar foto clic aquí <i class="bi bi-camera-fill"></i></button></div>
+							<?php if (strpos($currentAgent, 'iphone') || strpos($currentAgent, 'apple') || strpos($currentAgent, 'ipad')) { ?>
+							<?php } else { ?>
+								<div class="form-text"><button id="photo-btn" class="btn btn-link p-0 m-0" style="font-size:14px;" type="button">Para tomar foto clic aquí <i class="bi bi-camera-fill"></i></button></div>
+							<?php } ?>
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">

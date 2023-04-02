@@ -5,6 +5,15 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
+<?php
+$request = \Config\Services::request();
+$agent = $request->getUserAgent();
+$currentAgent = '';
+
+if ($agent->isMobile()) {
+	$currentAgent = strtolower($agent->getMobile());
+}
+?>
 <div class="container m-auto">
 	<div class="card shadow py-4 px-3 border-0">
 		<div class="card-body">
@@ -262,7 +271,10 @@
 							<textarea id="documento_text" name="documento_text" hidden></textarea>
 							<textarea id="img_text" name="img_text" hidden></textarea>
 
-							<div class="form-text"><button id="photo-btn" class="btn btn-link p-0 m-0" style="font-size:14px;" type="button">Para tomar foto clic aquí <i class="bi bi-camera-fill"></i></button></div>
+							<?php if (strpos($currentAgent, 'iphone') || strpos($currentAgent, 'apple') || strpos($currentAgent, 'ipad')) { ?>
+							<?php } else { ?>
+								<div class="form-text"><button id="photo-btn" class="btn btn-link p-0 m-0" style="font-size:14px;" type="button">Para tomar foto clic aquí <i class="bi bi-camera-fill"></i></button></div>
+							<?php } ?>
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
