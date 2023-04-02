@@ -1082,13 +1082,58 @@
 			let preview = document.querySelector('#img_preview');
 
 			if (e.target.files && e.target.files[0]) {
-				if (e.target.files[0].size > 2000000) {
-					console.log('Dentro para comprimir', e.target.files[0].size);
-					const blob = await comprimirImagen(e.target.files[0], 50);
-					console.log(blob);
-					console.log(URL.createObjectURL(blob));
+				if (e.target.files[0].type == "image/jpeg" || e.target.files[0].type == "image/png" || e.target.files[0].type == "image/jpg") {
+					if (e.target.files[0].size > 2000000) {
+						console.log('Dentro para comprimir', e.target.files[0].size);
+						const blob = await comprimirImagen(e.target.files[0], 50);
+						if (blob.size > 2000000) {
+							e.target.value = '';
+							documento_identidad.value = '';
+							documento_identidad_modal.setAttribute('src', '');
+							preview.classList.add('d-none');
+							preview.setAttribute('src', '');
+							Swal.fire({
+								icon: 'error',
+								text: 'No puedes subir un archivo mayor a 2 mb.',
+								confirmButtonColor: '#bf9b55',
+							});
+							return;
+						}
+						e.target.files[0] = blob;
+
+						let reader = new FileReader();
+						reader.onload = function(e) {
+							documento_identidad.value = e.target.result;
+							documento_identidad_modal.setAttribute('src', e.target.result);
+							preview.classList.remove('d-none');
+							preview.setAttribute('src', e.target.result);
+						}
+						reader.readAsDataURL(e.target.files[0]);
+					} else {
+						let reader = new FileReader();
+						reader.onload = function(e) {
+							documento_identidad.value = e.target.result;
+							documento_identidad_modal.setAttribute('src', e.target.result);
+							preview.classList.remove('d-none');
+							preview.setAttribute('src', e.target.result);
+						}
+						reader.readAsDataURL(e.target.files[0]);
+					}
 				} else {
-					console.log('Fuera de compresión', e.target.files[0].size);
+					if (e.target.files[0].size > 2000000) {
+						e.target.value = '';
+						documento_identidad.value = '';
+						documento_identidad_modal.setAttribute('src', '');
+						preview.classList.add('d-none');
+						preview.setAttribute('src', '');
+						Swal.fire({
+							icon: 'error',
+							text: 'No puedes subir un archivo mayor a 2 mb.',
+							confirmButtonColor: '#bf9b55',
+						});
+
+						return;
+					}
 					let reader = new FileReader();
 					reader.onload = function(e) {
 						documento_identidad.value = e.target.result;
