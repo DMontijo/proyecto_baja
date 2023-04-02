@@ -11,14 +11,14 @@
 
 			<div class="modal-body text-center" id="">
 				<div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-3">
-					<label for="nombre_denunciante" class="form-label font-weight-bold">Registro:</label>
-					<select id="selectMarks">
+					<label for="selectMarks" class="form-label font-weight-bold">Registro:</label>
+					<select id="selectMarks" class="form-control">
 						<option disabled selected value="">Selecciona una marca</option>
 					</select>
 				</div>
 				<div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-3">
 					<label for="genero_denunciante" class="form-label font-weight-bold">Comentario:</label>
-					<textarea id="comentario_marca"></textarea>
+					<textarea class="form-control" id="comentario_marca"></textarea>
 				</div>
 				<button class="btn btn-success" id="enviar_marca"> Enviar</button>
 			</div>

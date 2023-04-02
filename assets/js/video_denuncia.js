@@ -97,7 +97,7 @@ aceptar_llamada.addEventListener("click", () => {
 startRecord.addEventListener("click", () => {
 
 	agentVideoService.startRecording(() => {
-		// marksRecording.disabled = false;
+		marksRecording.disabled = false;
 	
 		// myInterval = setInterval(setTime, 1000);
 
@@ -111,7 +111,7 @@ startRecord.addEventListener("click", () => {
 stopRecord.addEventListener("click", () => {
 
 	agentVideoService.stopRecording(() => {
-		// marksRecording.disabled = true;
+		marksRecording.disabled = true;
 		document.getElementById("grabacion").style.display = "none";
 		document.getElementById("grabacion_stop").style.display = "block";
 		startRecord.style.backgroundColor = "#00000";
