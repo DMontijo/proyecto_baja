@@ -332,7 +332,7 @@
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="documento" class="form-label fw-bold input-required">Foto de identificación</label>
 							<img class="img-fluid d-none py-2" src="" id="img_preview" name="img_preview">
-							<input class="form-control" type="file" id="documento" name="documento" accept="image/jpeg, image/jpg, image/png, application/pdf" required>
+							<input class="form-control" type="file" id="documento" name="documento" accept="image/jpeg, image/jpg, image/png, application/pdf" capture="filesystem" required>
 							<textarea id="documento_text" name="documento_text" hidden></textarea>
 							<textarea id="img_text" name="img_text" hidden></textarea>
 
