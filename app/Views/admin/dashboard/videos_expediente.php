@@ -135,7 +135,10 @@
 			if (videos[i]. id == marcas.id) {
 				let marcasVideo = marcas.recordingMarks;
 				marcas.recordingMarks.forEach(marcas => {
-					console.log(marcas.markTime);
+					if (marcas.messageText != null) {
+						console.log(marcas.markTime);
+
+					}
 				});
 			}
 			var fila =
