@@ -137,7 +137,6 @@
 					}
 				});
 			} 
-			console.log(marcasVideoArray);
 				 var fila =
 					`<tr id="row${i}">` +
 					`<td class="text-center" value=""><video src="${videos[i].url}" width="100%" height="100%" controls></video></td>` +
