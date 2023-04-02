@@ -131,29 +131,23 @@
 
 	function llenarTablaVideos(videos, marcas) {
 		for (let i = 0; i < videos.length; i++) {
-			var fila;
-			// console.log(videos[i],find(marcas.id));
 			if (videos[i].id == marcas.id) {
 				let marcasVideo = marcas.recordingMarks;
 				marcas.recordingMarks.forEach(marcas => {
 					if (marcas.messageText != null) {
 						console.log(marcas.markTime + marcas.messageText);
 
-						 fila =
-							`<tr id="row${i}">` +
-							`<td class="text-center" value=""><video src="${videos[i].url}" width="100%" height="100%" controls></video></td>` +
-							`<td class="text-center" value="">${marcas.markTime} ${marcas.messageText}</td>` +
-
-							`</tr>`;
+						marcasVideoArray += marcas.markTime + marcas.messageText;
 
 					}
 				});
-			} else {
-				 fila =
+			} 
+			console.log(marcasVideoArray);
+				 var fila =
 					`<tr id="row${i}">` +
 					`<td class="text-center" value=""><video src="${videos[i].url}" width="100%" height="100%" controls></video></td>` +
 					`</tr>`;
-			}
+			
 			$('#table-videos tr:first').after(fila);
 			$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
 			var nFilas = $("#archvideosivos tr").length;
