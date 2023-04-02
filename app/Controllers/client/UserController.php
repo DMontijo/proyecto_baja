@@ -83,11 +83,22 @@ class UserController extends BaseController
 	{
 		$password = $this->_generatePassword(6);
 
-		$documento = $this->request->getPost('documento_text');
-		list($type, $documento) = explode(';', $documento);
-		list(, $extension) = explode('/', $type);
-		list(, $documento) = explode(',', $documento);
-		$documento = base64_decode($documento);
+		// $documento = $this->request->getPost('documento_text');
+		// list($type, $documento) = explode(';', $documento);
+		// list(, $extension) = explode('/', $type);
+		// list(, $documento) = explode(',', $documento);
+		// $documento = base64_decode($documento);
+
+		
+		$documento_id = $this->request->getFile('documento');
+		$doc_data = null;
+		if ($documento_id->isValid()) {
+			try {
+				$doc_data = file_get_contents($documento_id);
+			} catch (\Exception $e) {
+				$doc_data = null;
+			}
+		}
 
 		$firma = $this->request->getPost('firma_url');
 		list($type, $firma) = explode(';', $firma);
@@ -136,7 +147,7 @@ class UserController extends BaseController
 			'TWITTER' => $this->request->getPost('twitter'),
 			'IDIOMAID' => (int)$this->request->getPost('idioma'),
 			'NOTIFICACIONES' => $this->request->getPost('notificaciones_check') == 'on' ? 'S' : 'N',
-			'DOCUMENTO' => $documento,
+			'DOCUMENTO' => $doc_data,
 			'FIRMA' => $firma,
 			'TIPO' => 1,
 		];
