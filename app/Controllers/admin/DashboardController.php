@@ -3655,7 +3655,7 @@ class DashboardController extends BaseController
 			foreach ($responseFolio as $key => $conections) {
 
 				if (isset($conections->url) && $conections->url != null) {
-					$endpointId = $this->urlApi . 'recordings/' . 13;
+					$endpointId = $this->urlApi . 'recordings/' . $conections->id;
 
 					$responseid = $this->_curlGetService($endpointId);
 
