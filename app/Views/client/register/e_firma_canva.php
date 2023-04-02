@@ -71,12 +71,12 @@
 			drawText.innerHTML = dataUrl;
 		}, false);
 
-		// canvas.addEventListener("mouseout", function (e) {
-        //         drawing = false;
-        //         canvas.fillStyle = "rgba(0,0,0,.4)";
-        //         let dataUrl = canvas.toDataURL();
-        //         drawText.innerHTML = dataUrl;
-        //     }, false);
+		canvas.addEventListener("mouseout", function(e) {
+			drawing = false;
+			canvas.fillStyle = "rgba(0,0,0,.4)";
+			let dataUrl = canvas.toDataURL();
+			drawText.innerHTML = dataUrl;
+		}, false);
 
 		canvas.addEventListener("mousemove", function(e) {
 			mousePos = getMousePos(canvas, e);
