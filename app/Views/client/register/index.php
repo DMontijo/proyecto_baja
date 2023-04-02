@@ -1075,7 +1075,7 @@
 			}
 		});
 
-		document.querySelector('#documento').addEventListener('change', (e) => {
+		document.querySelector('#documento').addEventListener('change', async (e) => {
 			let documento_identidad = document.querySelector('#documento_text');
 
 			let documento_identidad_modal = document.querySelector('#img_identificacion_modal');
@@ -1084,18 +1084,8 @@
 			if (e.target.files && e.target.files[0]) {
 				if (e.target.files[0].size > 2000000) {
 					console.log('Dentro para comprimir', e.target.files[0].size);
-					comprimirImagen(e.target.files[0], 50).then((image) => {
-						console.log('Dentro de la compresión', image);
-						e.target.files[0] = image;
-						let reader = new FileReader();
-						reader.onload = function(e) {
-							documento_identidad.value = e.target.result;
-							documento_identidad_modal.setAttribute('src', e.target.result);
-							preview.classList.remove('d-none');
-							preview.setAttribute('src', e.target.result);
-						}
-						reader.readAsDataURL(e.target.files[0]);
-					});
+					const blob = await comprimirImagen(e.target.files[0], 50);
+					console.log(blob);
 				} else {
 					console.log('Fuera de compresión', e.target.files[0].size);
 					let reader = new FileReader();
