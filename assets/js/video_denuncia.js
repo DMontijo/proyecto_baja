@@ -54,9 +54,9 @@ disponible_connect.addEventListener("click", () => {
 				document.querySelector("#correo_deunciante").value =
 					response.guest.details.CORREO;
 				document.querySelector("#delito_denunciante_llamada").value =
-					response.details.delito;
+					response.details != null ? response.details.delito :'-'; 
 				document.querySelector("#folio_llamada").value =
-					response.details.folio;
+					response.details != null ?response.details.folio : '-';
 				document.querySelector("#idioma_denunciante").value = response
 					.guest.languages
 					? response.guest.languages[0].title

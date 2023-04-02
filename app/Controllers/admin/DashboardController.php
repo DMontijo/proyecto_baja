@@ -856,7 +856,7 @@ class DashboardController extends BaseController
 		if ($usuario) {
 			try {
 				$videoUser = $this->_updateUserVideo($usuario->TOKENVIDEO, $data['NOMBRE'], $data['APELLIDO_PATERNO'] . ' ' . $data['APELLIDO_MATERNO'], $data['CORREO'], $data['SEXO'], $data['ROLID']);
-				if ($videoUser) {
+				if ($videoUser->status == "sucess") {
 					try {
 						$this->_usuariosModel->set($data)->where('ID', $id)->update();
 					} catch (\Throwable $th) {
@@ -867,7 +867,7 @@ class DashboardController extends BaseController
 					throw new \Exception('No se actualizo en servidor de videodenuncia');
 				}
 			} catch (\Throwable $th) {
-				return redirect()->back()->with('message_error', 'Usuario no actualizado.');
+				return redirect()->back()->with('message_error', 'Usuario no actualizado en el servidor.');
 			}
 
 			return redirect()->to(base_url('/admin/dashboard/usuarios'))->with('message_success', 'Usuario actualizado correctamente.');
@@ -3478,9 +3478,7 @@ class DashboardController extends BaseController
             }";
 		}
 		curl_close($ch);
-
-		var_dump($result);exit;
-		// return json_decode($result);
+		return json_decode($result);
 	}
 
 	private function _curlPostService($endpoint, $data)
@@ -3787,15 +3785,11 @@ class DashboardController extends BaseController
 			$data['names'] = $names;
 			$data['lastnames'] = $lastnames;
 			$data['email'] = $email;
-			$data['sex'] = $sex;
+			$data['sex'] = $sex =='M'? 'MALE': 'FEMALE';
 			$data['role'] = $rolId;
-
-			var_dump($this->urlApi . 'agent/'. $uuid);
-			$response = $this->_curlPatch($this->urlApi . 'agent/'. $uuid, $data);
+			$response = $this->_curlPatch( 'https://ff3b-52-0-63-150.ngrok.io/agent/'. $uuid, $data);
 			return $response;
-		} else {
-			return false;
-		}
+		} 
 	}
 
 	public function restoreFolio()
