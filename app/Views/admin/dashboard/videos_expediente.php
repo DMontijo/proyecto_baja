@@ -137,12 +137,12 @@
 				let marcasVideo = marcas.recordingMarks;
 				marcas.recordingMarks.forEach(marcas => {
 					if (marcas.messageText != null) {
-						console.log(marcas.markTime);
-						
+						console.log(marcas.markTime + marcas.messageText);
+
 						 fila =
 							`<tr id="row${i}">` +
 							`<td class="text-center" value=""><video src="${videos[i].url}" width="100%" height="100%" controls></video></td>` +
-							`<td class="text-center" value=""><${marcas.markTime} ${marcas.messageText}</td>` +
+							`<td class="text-center" value="">${marcas.markTime} ${marcas.messageText}</td>` +
 
 							`</tr>`;
 
