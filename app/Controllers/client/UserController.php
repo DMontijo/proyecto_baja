@@ -81,119 +81,117 @@ class UserController extends BaseController
 
 	public function create()
 	{
-		$password = $this->_generatePassword(6);
+		try {
+			$password = $this->_generatePassword(6);
 
-		$documento = $this->request->getPost('documento_text');
-		var_dump($documento);
-		echo '<br><br>';
-		list($type, $documento) = explode(';', $documento);
-		list(, $extension) = explode('/', $type);
-	
-		list(, $documento) = explode(',', $documento);
-		$documento = base64_decode($documento);
-		// var_dump("POST");
-		// var_dump($_POST);
-		// var_dump("FILES");
+			$documento = $this->request->getPost('documento_text');
+			if ($documento) {
+				list($type, $documento) = explode(';', $documento);
+				list(, $extension) = explode('/', $type);
+				list(, $documento) = explode(',', $documento);
+				$documento = base64_decode($documento);
+			} else {
+				$documento = NULL;
+			}
 
-		// var_dump($_FILES);
-		// var_dump("EXTENSION");
+			$firma = $this->request->getPost('firma_url');
+			if ($firma) {
+				list($type, $firma) = explode(';', $firma);
+				list(, $extension) = explode('/', $type);
+				list(, $firma) = explode(',', $firma);
+				$firma = base64_decode($firma);
+			} else {
+				$firma = NULL;
+			}
 
-		// var_dump($extension);
-		// var_dump("DOCUMENTO");
 
-		var_dump($documento);
-		exit;
-		
-		$firma = $this->request->getPost('firma_url');
-		list($type, $firma) = explode(';', $firma);
-		list(, $extension) = explode('/', $type);
-		list(, $firma) = explode(',', $firma);
-		$firma = base64_decode($firma);
+			$interior = $this->request->getPost('interior');
+			if ($interior == '') {
+				$interior = NULL;
+			}
 
-		$interior = $this->request->getPost('interior');
-		if ($interior == '') {
-			$interior = NULL;
-		}
-
-		$data = [
-			'NOMBRE' => $this->request->getPost('nombre'),
-			'APELLIDO_PATERNO' => $this->request->getPost('apellido_paterno'),
-			'APELLIDO_MATERNO' => $this->request->getPost('apellido_materno'),
-			'CORREO' => $this->request->getPost('correo'),
-			'PASSWORD' => hashPassword($password),
-			'FECHANACIMIENTO' => $this->request->getPost('fecha_nacimiento'),
-			'SEXO' => $this->request->getPost('sexo'),
-			'CODIGOPOSTAL' => $this->request->getPost('cp'),
-			'PAIS' => $this->request->getPost('pais_select'),
-			'ESTADOID' => (int)$this->request->getPost('estado_select'),
-			'ESTADOORIGENID' => (int)$this->request->getPost('estado_select_origen'),
-			'MUNICIPIOID' => (int)$this->request->getPost('municipio_select'),
-			'MUNICIPIOORIGENID' => (int)$this->request->getPost('municipio_select_origen'),
-			'LOCALIDADID' => (int)$this->request->getPost('localidad_select'),
-			'CALLE' => $this->request->getPost('calle'),
-			'NUM_EXT' =>  $this->request->getPost('checkML') == 'on' ?  'M.' . $this->request->getPost('exterior') : $this->request->getPost('exterior'),
-			'NUM_INT' =>  $this->request->getPost('checkML') == 'on' && $interior ?  'L.' . $this->request->getPost('interior') : $interior,
-			'TELEFONO' => $this->request->getPost('telefono'),
-			'TELEFONO2' => $this->request->getPost('telefono2'),
-			'CODIGO_PAIS' => $this->request->getPost('codigo_pais'),
-			'CODIGO_PAIS2' => $this->request->getPost('codigo_pais_2'),
-			'TIPOIDENTIFICACIONID' => $this->request->getPost('identificacion'),
-			'NUMEROIDENTIFICACION' => $this->request->getPost('numero_ide'),
-			'ESTADOCIVILID' => $this->request->getPost('e_civil'),
-			'OCUPACIONID' => $this->request->getPost('ocupacion'),
-			'OCUPACIONDESCR' => $this->request->getPost('ocupacion_descr'),
-			'IDENTIDADGENERO' => $this->request->getPost('iden_genero'),
-			'DISCAPACIDAD' => $this->request->getPost('discapacidad'),
-			'NACIONALIDADID' => (int)$this->request->getPost('nacionalidad'),
-			'ESCOLARIDADID' => $this->request->getPost('escolaridad'),
-			'FACEBOOK' => $this->request->getPost('facebook'),
-			'INSTAGRAM' => $this->request->getPost('instagram'),
-			'TWITTER' => $this->request->getPost('twitter'),
-			'IDIOMAID' => (int)$this->request->getPost('idioma'),
-			'NOTIFICACIONES' => $this->request->getPost('notificaciones_check') == 'on' ? 'S' : 'N',
-			'DOCUMENTO' => $documento,
-			'FIRMA' => $firma,
-			'TIPO' => 1,
-		];
-
-		if ((int)$this->request->getPost('colonia_select') == 0) {
-			$data['COLONIAID'] = NULL;
-			$data['COLONIA'] = $this->request->getPost('colonia');
-		} else {
-			$data['COLONIAID'] = (int)$this->request->getPost('colonia_select');
-			$data['COLONIA'] = NULL;
-		}
-		if ((int)$this->request->getPost('ocupacion') == 999) {
-			$data['OCUPACIONID'] = NULL;
-			$data['OCUPACIONDESCR'] = $this->request->getPost('ocupacion_descr');
-		} else {
-			$data['OCUPACIONID'] = (int)$this->request->getPost('ocupacion');
-			$data['OCUPACIONDESCR'] = NULL;
-		}
-
-		if ($this->validate(['correo' => 'required|is_unique[DENUNCIANTES.CORREO]'])) {
-
-			$dataApi2 = [
+			$data = [
 				'NOMBRE' => $this->request->getPost('nombre'),
 				'APELLIDO_PATERNO' => $this->request->getPost('apellido_paterno'),
 				'APELLIDO_MATERNO' => $this->request->getPost('apellido_materno'),
 				'CORREO' => $this->request->getPost('correo'),
+				'PASSWORD' => hashPassword($password),
+				'FECHANACIMIENTO' => $this->request->getPost('fecha_nacimiento'),
+				'SEXO' => $this->request->getPost('sexo'),
+				'CODIGOPOSTAL' => $this->request->getPost('cp'),
+				'PAIS' => $this->request->getPost('pais_select'),
+				'ESTADOID' => (int)$this->request->getPost('estado_select'),
+				'ESTADOORIGENID' => (int)$this->request->getPost('estado_select_origen'),
+				'MUNICIPIOID' => (int)$this->request->getPost('municipio_select'),
+				'MUNICIPIOORIGENID' => (int)$this->request->getPost('municipio_select_origen'),
+				'LOCALIDADID' => (int)$this->request->getPost('localidad_select'),
+				'CALLE' => $this->request->getPost('calle'),
+				'NUM_EXT' =>  $this->request->getPost('checkML') == 'on' ?  'M.' . $this->request->getPost('exterior') : $this->request->getPost('exterior'),
+				'NUM_INT' =>  $this->request->getPost('checkML') == 'on' && $interior ?  'L.' . $this->request->getPost('interior') : $interior,
+				'TELEFONO' => $this->request->getPost('telefono'),
+				'TELEFONO2' => $this->request->getPost('telefono2'),
+				'CODIGO_PAIS' => $this->request->getPost('codigo_pais'),
+				'CODIGO_PAIS2' => $this->request->getPost('codigo_pais_2'),
+				'TIPOIDENTIFICACIONID' => $this->request->getPost('identificacion'),
+				'NUMEROIDENTIFICACION' => $this->request->getPost('numero_ide'),
+				'ESTADOCIVILID' => $this->request->getPost('e_civil'),
+				'OCUPACIONID' => $this->request->getPost('ocupacion'),
+				'OCUPACIONDESCR' => $this->request->getPost('ocupacion_descr'),
+				'IDENTIDADGENERO' => $this->request->getPost('iden_genero'),
+				'DISCAPACIDAD' => $this->request->getPost('discapacidad'),
+				'NACIONALIDADID' => (int)$this->request->getPost('nacionalidad'),
+				'ESCOLARIDADID' => $this->request->getPost('escolaridad'),
+				'FACEBOOK' => $this->request->getPost('facebook'),
+				'INSTAGRAM' => $this->request->getPost('instagram'),
+				'TWITTER' => $this->request->getPost('twitter'),
+				'IDIOMAID' => (int)$this->request->getPost('idioma'),
+				'NOTIFICACIONES' => $this->request->getPost('notificaciones_check') == 'on' ? 'S' : 'N',
+				'DOCUMENTO' => $documento,
+				'FIRMA' => $firma,
+				'TIPO' => 1,
 			];
-			$dataApi = array();
-			$dataApi['name'] = $this->request->getPost('nombre') . ' ' . $this->request->getPost('apellido_paterno');
-			$dataApi['details'] = $dataApi2;
-			$dataApi['gender'] = $this->request->getPost('sexo') == 'F' ? "FEMALE" : 'MALE';
-			$dataApi['languages'] = [(int)$this->request->getPost('idioma')];
-			$response = $this->_curlPost($this->urlApi, $dataApi);
-			$data['UUID'] = $response->uuid;
-			if ($response->uuid) {
-				$this->_denunciantesModel->insert($data);
-				$this->_sendEmailPassword($data['CORREO'], $password);
-				session()->setFlashdata('message', 'Inicia sesión con la contraseña que llegará a tu correo electrónico');
-				return redirect()->to(base_url('/denuncia'))->with('message_success', 'Inicia sesión con la contraseña que llegará a tu correo electrónico y comienza tu denuncia');
+
+			if ((int)$this->request->getPost('colonia_select') == 0) {
+				$data['COLONIAID'] = NULL;
+				$data['COLONIA'] = $this->request->getPost('colonia');
+			} else {
+				$data['COLONIAID'] = (int)$this->request->getPost('colonia_select');
+				$data['COLONIA'] = NULL;
 			}
-		} else {
-			return redirect()->back()->with('message', 'Hubo un error en los datos o puede que ya exista un registro con el mismo correo');
+			if ((int)$this->request->getPost('ocupacion') == 999) {
+				$data['OCUPACIONID'] = NULL;
+				$data['OCUPACIONDESCR'] = $this->request->getPost('ocupacion_descr');
+			} else {
+				$data['OCUPACIONID'] = (int)$this->request->getPost('ocupacion');
+				$data['OCUPACIONDESCR'] = NULL;
+			}
+
+			if ($this->validate(['correo' => 'required|is_unique[DENUNCIANTES.CORREO]'])) {
+
+				$dataApi2 = [
+					'NOMBRE' => $this->request->getPost('nombre'),
+					'APELLIDO_PATERNO' => $this->request->getPost('apellido_paterno'),
+					'APELLIDO_MATERNO' => $this->request->getPost('apellido_materno'),
+					'CORREO' => $this->request->getPost('correo'),
+				];
+				$dataApi = array();
+				$dataApi['name'] = $this->request->getPost('nombre') . ' ' . $this->request->getPost('apellido_paterno');
+				$dataApi['details'] = $dataApi2;
+				$dataApi['gender'] = $this->request->getPost('sexo') == 'F' ? "FEMALE" : 'MALE';
+				$dataApi['languages'] = [(int)$this->request->getPost('idioma')];
+				$response = $this->_curlPost($this->urlApi, $dataApi);
+				$data['UUID'] = $response->uuid;
+				if ($response->uuid) {
+					$this->_denunciantesModel->insert($data);
+					$this->_sendEmailPassword($data['CORREO'], $password);
+					session()->setFlashdata('message', 'Inicia sesión con la contraseña que llegará a tu correo electrónico');
+					return redirect()->to(base_url('/denuncia'))->with('message_success', 'Inicia sesión con la contraseña que llegará a tu correo electrónico y comienza tu denuncia');
+				}
+			} else {
+				return redirect()->back()->with('message', 'Hubo un error en los datos o puede que ya exista un registro con el mismo correo');
+			}
+		} catch (\Throwable $th) {
+			return redirect()->to(base_url('/denuncia/denunciante/new'))->with('message', 'Hubo un error, no fue posioble crear tu registro.');
 		}
 	}
 
