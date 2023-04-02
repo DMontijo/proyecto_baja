@@ -3656,13 +3656,11 @@ class DashboardController extends BaseController
 
 				if (isset($conections->url) && $conections->url != null) {
 					$endpointId = $this->urlApi . 'recordings/' . $conections->id;
-
 					$responseid = $this->_curlGetService($endpointId);
-
 				}
 			}
 		}
-		return json_encode(['status' => 1, 'responseVideos' => $responseFolio, 'marcasVideo'=>$responseid]);
+		return json_encode(['status' => 1, 'responseVideos' => $responseFolio, 'marcasVideo'=>$responseid ? $responseid : null]);
 
 		// return json_encode($endpointId);
 
