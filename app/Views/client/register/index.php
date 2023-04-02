@@ -1083,19 +1083,30 @@
 
 			if (e.target.files && e.target.files[0]) {
 				if (e.target.files[0].size > 2000000) {
-					comprimirImagen(e.target.files[0], 60).then((image) => {
-						console.log(image);
+					console.log('Dentro para comprimir', e.target.files[0].size);
+					comprimirImagen(e.target.files[0], 10).then((image) => {
+						console.log('Dentro de la compresión', image);
+						e.target.files[0] = image;
+						let reader = new FileReader();
+						reader.onload = function(e) {
+							documento_identidad.value = e.target.result;
+							documento_identidad_modal.setAttribute('src', e.target.result);
+							preview.classList.remove('d-none');
+							preview.setAttribute('src', e.target.result);
+						}
+						reader.readAsDataURL(e.target.files[0]);
 					});
+				} else {
+					console.log('Fuera de compresión', e.target.files[0].size);
+					let reader = new FileReader();
+					reader.onload = function(e) {
+						documento_identidad.value = e.target.result;
+						documento_identidad_modal.setAttribute('src', e.target.result);
+						preview.classList.remove('d-none');
+						preview.setAttribute('src', e.target.result);
+					}
+					reader.readAsDataURL(e.target.files[0]);
 				}
-
-				let reader = new FileReader();
-				reader.onload = function(e) {
-					documento_identidad.value = e.target.result;
-					documento_identidad_modal.setAttribute('src', e.target.result);
-					preview.classList.remove('d-none');
-					preview.setAttribute('src', e.target.result);
-				}
-				reader.readAsDataURL(e.target.files[0]);
 			}
 		});
 
@@ -1115,8 +1126,7 @@
 								resolve(blob);
 							}
 						},
-						"image/jpeg",
-						porcentajeCalidad / 100
+						"image/jpeg", porcentajeCalidad / 100
 					);
 				};
 				imagen.src = URL.createObjectURL(imagenComoArchivo);
