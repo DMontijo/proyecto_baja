@@ -24,9 +24,7 @@ const audio_denunciante_prendido_b = document.querySelector('#audio_denunciante_
 const audio_denunciante_apagado_b = document.querySelector('#audio_denunciante_apagado_b');
 const camara_apagada_denunciante_b = document.querySelector('#camara_apagada_denunciante_b');
 const camara_prendida_denunciante_b = document.querySelector('#camara_prendida_denunciante_b');
-// const apiURI = 'http://192.168.0.67:3000';
-const apiURI = "https://ff3b-52-0-63-150.ngrok.io";
-// const apiURI ="https://videodenunciabalancer.fgebc.gob.mx";
+const apiURI ="https://videodenunciabalancer.fgebc.gob.mx";
 
 const guestVideoService = new VideoServiceGuest(guestUUID, folio, priority, {
 	apiURI,

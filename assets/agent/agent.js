@@ -149,9 +149,9 @@ export class VideoServiceAgent {
     disconnectAgent(callback) {
 
         try {
+            this.#allowUserToCloseWindow();
             this.#socket.disconnect();
             this.#videoCallService?.session.disconnect();
-            this.#allowUserToCloseWindow();
         } catch (e) {
             console.error(e)
         }
@@ -222,7 +222,7 @@ export class VideoServiceAgent {
     refuseCall(callback) {
         this.#phoneRing.pause();
 
-        this.#emit('refuse-call', () => {
+        this.#emit('refuse-call', { requeue : true }, (response) => {
             if (typeof callback === 'function') callback(response);
         });
     }

@@ -3,7 +3,7 @@ import { RoomsSockets } from "../agent/extras.js";
 
 const apiKey = "vspk_6258d819-105e-4487-b7f1-be72e892850e";
 
-const apiURI = "http://3.88.112.126";
+const apiURI = "https://videodenunciabalancer.fgebc.gob.mx";
 
 const roomsSockets = new RoomsSockets( { apiURI, apiKey });
 

@@ -400,7 +400,6 @@ class DashboardController extends BaseController
 		$this->protocol = 'https://';
 		$this->ip = "ws.fgebc.gob.mx";
 		$this->endpoint = $this->protocol . $this->ip . '/webServiceVD';
-		// $this->urlApi = "http://54.208.205.251/";
 		$this->urlApi = "https://videodenunciabalancer.fgebc.gob.mx/";
 	}
 
@@ -3787,7 +3786,7 @@ class DashboardController extends BaseController
 			$data['email'] = $email;
 			$data['sex'] = $sex =='M'? 'MALE': 'FEMALE';
 			$data['role'] = $rolId;
-			$response = $this->_curlPatch( 'https://ff3b-52-0-63-150.ngrok.io/agent/'. $uuid, $data);
+			$response = $this->_curlPatch( $this->urlApi .'agent/'. $uuid, $data);
 			return $response;
 		} 
 	}
