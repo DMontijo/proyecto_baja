@@ -1084,7 +1084,6 @@
 			if (e.target.files && e.target.files[0]) {
 				if (e.target.files[0].type == "image/jpeg" || e.target.files[0].type == "image/png" || e.target.files[0].type == "image/jpg") {
 					if (e.target.files[0].size > 2000000) {
-						console.log('Dentro para comprimir', e.target.files[0].size);
 						const blob = await comprimirImagen(e.target.files[0], 50);
 						if (blob.size > 2000000) {
 							e.target.value = '';
@@ -1098,18 +1097,44 @@
 								confirmButtonColor: '#bf9b55',
 							});
 							return;
+						} else {
+							const image = await blobToBase64(blob);
+							console.log(image);
 						}
-						const image = await blobToBase64(blob);
-						console.log(image);
+					} else {
+						let reader = new FileReader();
+						reader.onload = function(e) {
+							documento_identidad.value = e.target.result;
+							documento_identidad_modal.setAttribute('src', e.target.result);
+							preview.classList.remove('d-none');
+							preview.setAttribute('src', e.target.result);
+						}
+						reader.readAsDataURL(e.target.files[0]);
 					}
-					let reader = new FileReader();
-					reader.onload = function(e) {
-						documento_identidad.value = e.target.result;
-						documento_identidad_modal.setAttribute('src', e.target.result);
-						preview.classList.remove('d-none');
-						preview.setAttribute('src', e.target.result);
+
+				} else {
+					if (e.target.files[0].size > 2000000) {
+						e.target.value = '';
+						documento_identidad.value = '';
+						documento_identidad_modal.setAttribute('src', '');
+						preview.classList.add('d-none');
+						preview.setAttribute('src', '');
+						Swal.fire({
+							icon: 'error',
+							text: 'No puedes subir un archivo mayor a 2 MB.',
+							confirmButtonColor: '#bf9b55',
+						});
+						return;
+					} else {
+						let reader = new FileReader();
+						reader.onload = function(e) {
+							documento_identidad.value = e.target.result;
+							documento_identidad_modal.setAttribute('src', e.target.result);
+							preview.classList.remove('d-none');
+							preview.setAttribute('src', e.target.result);
+						}
+						reader.readAsDataURL(e.target.files[0]);
 					}
-					reader.readAsDataURL(e.target.files[0]);
 				}
 			}
 		});
