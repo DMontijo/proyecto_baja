@@ -131,6 +131,7 @@
 
 	function llenarTablaVideos(videos, marcas) {
 		for (let i = 0; i < videos.length; i++) {
+			marcasVideoArray =[];
 			if (videos[i].id == marcas.id) {
 				let marcasVideo = marcas.recordingMarks;
 				marcas.recordingMarks.forEach(marcas => {
