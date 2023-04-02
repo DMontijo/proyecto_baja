@@ -3662,13 +3662,13 @@ class DashboardController extends BaseController
 					$endpointId = $this->urlApi . 'recordings/' . 13;
 
 					$responseid = $this->_curlGetService($endpointId);
-					// return json_encode($responseid);
+					return json_encode($responseid);
 
 				}
 			}
 		}
 
-		return json_encode($endpointId);
+		// return json_encode($endpointId);
 
 		// $endpoint = 'https://videodenunciaserver1.fgebc.gob.mx/api/vc';
 		// $data = array();
