@@ -855,14 +855,12 @@ class DashboardController extends BaseController
 
 		if ($usuario) {
 			try {
-				$videoUser = $this->_updateUserVideo($usuario->USUARIOVIDEO, 'LIC. ' . $data['NOMBRE'], $data['APELLIDO_PATERNO'] . ' ' . $data['APELLIDO_MATERNO'], $data['CORREO'], $data['SEXO'], 'agente');
+				$videoUser = $this->_updateUserVideo($usuario->TOKENVIDEO, $data['NOMBRE'], $data['APELLIDO_PATERNO'] . ' ' . $data['APELLIDO_MATERNO'], $data['CORREO'], $data['SEXO'], $data['ROLID']);
 				if ($videoUser) {
-					$data['USUARIOVIDEO'] = $videoUser->ID;
-					$data['TOKENVIDEO'] = $videoUser->Token;
 					try {
 						$this->_usuariosModel->set($data)->where('ID', $id)->update();
 					} catch (\Throwable $th) {
-						$videoUser = $this->_updateUserVideo($usuario->USUARIOVIDEO, 'LIC. ' . $usuario->NOMBRE, $usuario->APELLIDO_PATERNO . ' ' . $usuario->APELLIDO_MATERNO, $usuario->CORREO, $usuario->SEXO, 'agente');
+						$videoUser = $this->_updateUserVideo($usuario->TOKENVIDEO,  $usuario->NOMBRE, $usuario->APELLIDO_PATERNO . ' ' . $usuario->APELLIDO_MATERNO, $usuario->CORREO, $usuario->SEXO, $usuario->ROLID);
 						throw new \Exception('No se actualizo en base de datos.');
 					}
 				} else {
@@ -3451,6 +3449,39 @@ class DashboardController extends BaseController
 		return json_decode($result);
 	}
 
+	
+	private function _curlPatch($endpoint, $data)
+	{
+		$ch = curl_init();
+
+		curl_setopt($ch, CURLOPT_URL, $endpoint);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PATCH');
+		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+		$headers = array(
+			'Content-Type: application/json',
+			'Access-Control-Allow-Origin: *',
+			'Access-Control-Allow-Credentials: true',
+			'Access-Control-Allow-Headers: Content-Type',
+			'X-API-KEY: ' . X_API_KEY
+		);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+		$result = curl_exec($ch);
+
+		if ($result === false) {
+			$result = "{
+                'status' => 401,
+                'error' => 'Curl failed: '" . curl_error($ch) . "
+            }";
+		}
+		curl_close($ch);
+
+		return json_decode($result);
+	}
+
 	private function _curlPostService($endpoint, $data)
 	{
 		$ch = curl_init();
@@ -3748,25 +3779,19 @@ class DashboardController extends BaseController
 		// }
 	}
 
-	private function _updateUserVideo($id, $nombre, $apellido, $email, $genero, $perfil)
+	private function _updateUserVideo($uuid, $names, $lastnames, $email, $sex, $rolId)
 	{
-		if ($id && $nombre && $apellido && $email && $genero && $perfil) {
-			$endpoint = 'https://videodenunciaserver1.fgebc.gob.mx/api/user';
+		if ($uuid && $names && $lastnames && $email && $sex && $rolId) {
 			$data = array();
-			$data['u'] = '24';
-			$data['token'] = '198429b7cc8a2a5733d97bc13153227dd5017555';
 			$data['a'] = 'setPars';
-			$data['id'] = $id;
-			$data['nombre'] = $nombre;
-			$data['apellido'] = $apellido;
+			$data['uuid'] = $uuid;
+			$data['names'] = $names;
+			$data['lastnames'] = $lastnames;
 			$data['email'] = $email;
-			$data['genero'] = $genero;
-			$data['perfil'] = $perfil;
-			$data['contra'] = 'Fgebc$123456';
-			$data['rol'] = 'mp';
-			$data['st'] = 'r';
+			$data['sex'] = $sex;
+			$data['rolId'] = $rolId;
 
-			$response = $this->_curlPost($endpoint, $data);
+			$response = $this->_curlPatch($this->urlApi . 'agent/', $data);
 			return $response;
 		} else {
 			return false;
