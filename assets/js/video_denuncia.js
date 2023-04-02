@@ -193,6 +193,8 @@ rechazar_llamada.addEventListener("click", () => {
 	console.log("cick en rechazar");
 	agentVideoService.refuseCall((resp) => {
 		console.log("refuse call", resp);
+		$("#llamadaModal").modal("hide");
+
 	});
 });
 
