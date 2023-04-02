@@ -551,6 +551,8 @@
 	}
 
 	function validarStep(step) {
+		let regex = /\S+@\S+\.\S+/
+
 		switch (step) {
 			case 0:
 				document.querySelector('#correo').blur();
@@ -558,6 +560,7 @@
 					document.querySelector('#nombre').value != '' &&
 					document.querySelector('#apellido_paterno').value != '' &&
 					document.querySelector('#correo').value != '' &&
+					regex.test(document.querySelector('#correo').value) &&
 					document.querySelector('#fecha_nacimiento').value != '' &&
 					document.querySelector('input[name="sexo"]:checked') &&
 					document.querySelector('#telefono').value != ''
