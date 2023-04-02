@@ -103,6 +103,7 @@
 </script>
 <script>
 	var tabla_videos = document.getElementById('table-videos').innerHTML;
+
 	function viewVideo(year, folio) {
 		data = {
 			'folio': year + '-' + folio,
@@ -129,6 +130,7 @@
 		for (let i = 0; i < videos.length; i++) {
 			console.log(videos[i].url);
 			var fila =
+				`<tr id="row${i}">` +
 				`<td class="text-center" value=""><video src="${videos[i].url}" width="100%" height="100%" controls></video></td>` +
 				`</tr>`;
 
@@ -142,7 +144,7 @@
 
 	$('#videos_expediente_modal').on('hidden.bs.modal', function() {
 		document.getElementById('table-videos').innerHTML = tabla_videos
-});
+	});
 </script>
 
 <?= $this->endSection() ?>
