@@ -9,6 +9,14 @@
                 accept="image/jpeg, image/jpg, image/png, application/pdf"></input>
         </a>
     </div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="fotografia_actual_pf" class="form-label font-weight-bold">¿La fotografía es actual?</label>
+        <select class="form-control" id="fotografia_actual_pf" name="fotografia_actual_pf">
+            <option selected value=""></option>
+            <option value="S">Si</option>
+            <option value="N">No</option>
+        </select>
+	</div>
     <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
         <label for="tipo_identificacion_pf" class="form-label font-weight-bold">Tipo identificación</label>
         <select class="form-control" id="tipo_identificacion_pf" name="tipo_identificacion_pf">
@@ -19,7 +27,7 @@
             <?php } ?>
         </select>
     </div>
-    <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
         <label for="numero_identidad_pf" class="form-label font-weight-bold">Numero de identificación</label>
         <input type="text" class="form-control" id="numero_identidad_pf" name="numero_identidad_pf">
     </div>

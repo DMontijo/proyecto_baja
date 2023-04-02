@@ -4190,7 +4190,8 @@ class DashboardController extends BaseController
 					'FACEBOOK' => $this->request->getPost('facebook_pf'),
 					'INSTAGRAM' => $this->request->getPost('instagram_pf'),
 					'TWITTER' => $this->request->getPost('twitter_pf'),
-					'FOTO' =>  $fotoP
+					'FOTO' =>  $fotoP,
+					'FOTOGRAFIA_ACTUAL' => $this->request->getPost('fotografia_actual_pf'),
 				);
 			} else {
 				$data = array(
@@ -4222,9 +4223,9 @@ class DashboardController extends BaseController
 					'FACEBOOK' => $this->request->getPost('facebook_pf'),
 					'INSTAGRAM' => $this->request->getPost('instagram_pf'),
 					'TWITTER' => $this->request->getPost('twitter_pf'),
+					'FOTOGRAFIA_ACTUAL' => $this->request->getPost('fotografia_actual_pf'),
 				);
 			}
-			// var_dump($data);exit;
 
 			$update = $this->_folioPersonaFisicaModel->set($data)->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $id)->update();
 
@@ -5677,6 +5678,9 @@ class DashboardController extends BaseController
 		$imputado = $this->request->getPost('imputado');
 		$folio = $this->request->getPost('folio');
 		$uma =  $this->request->getPost('uma');
+		$notificacion =  $this->request->getPost('notificacion');
+		$proceso =  $this->request->getPost('proceso');
+
 		$expediente = '';
 
 		// try {
@@ -6335,6 +6339,10 @@ class DashboardController extends BaseController
 			$data->plantilla = str_replace('[DOMICILIO_INSTALACION]', 'BLVD. GRAL. RODOLFO SÁNCHEZ TABOADA NO. 10127, ESQUINA CON AV. RÍO TIJUANA. ZONA URBANA RÍO TIJUANA. (EDIFICIO DE CRISTALES NEGROS, PRIMER PISO).', $data->plantilla);
 			$data->plantilla = str_replace('[TELEFONO_UMA]', '664-736-52-96, correo electrónico: umacosta@fgebc.gob.mx', $data->plantilla);
 		}
+		if($notificacion || $proceso){
+			$data->plantilla = str_replace('[TIPO_PROCESO]',  $proceso ?  $proceso : '-', $data->plantilla);
+			$data->plantilla = str_replace('(PERSONAL / NOTIFICADOR)',  $notificacion ?  $notificacion : '-', $data->plantilla);
+		}
 
 		$relacionfisfis = $this->_relacionIDOModel->asObject()->where('FOLIOID', $data->folio->FOLIOID)->where('ANO', $data->folio->ANO)->where('PERSONAFISICAIDVICTIMA', $victima)->where('PERSONAFISICAIDIMPUTADO', $imputado)->first();
 
@@ -6743,9 +6751,9 @@ class DashboardController extends BaseController
 
 
 			if ($foliodoc) {
-				if (session('ROLID') == 4) {
+				if (session('ROLID') == 4 || session('ROLID') == 8 || session('ROLID') == 10) {
 					$dataFolio = array(
-						'AGENTEFIRMAID' => $this->request->getPost('agente_asignado'),
+						'AGENTEFIRMAID' => $this->request->getPost('agente_asignado') != '' ?  $this->request->getPost('agente_asignado') : null,
 					);
 					$update = $this->_folioModel->set($dataFolio)->where('FOLIOID', $folio)->where('ANO', $year)->update();
 				}
