@@ -86,6 +86,7 @@ class UserController extends BaseController
 		$documento = $this->request->getPost('documento_text');
 		list($type, $documento) = explode(';', $documento);
 		list(, $extension) = explode('/', $type);
+		var_dump($extension);exit;
 		list(, $documento) = explode(',', $documento);
 		$documento = base64_decode($documento);
 
