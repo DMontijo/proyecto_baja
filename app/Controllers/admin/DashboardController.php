@@ -3790,6 +3790,7 @@ class DashboardController extends BaseController
 			$data['sex'] = $sex;
 			$data['role'] = $rolId;
 
+			var_dump($this->urlApi . 'agent/'. $uuid);
 			$response = $this->_curlPatch($this->urlApi . 'agent/'. $uuid, $data);
 			return $response;
 		} else {
