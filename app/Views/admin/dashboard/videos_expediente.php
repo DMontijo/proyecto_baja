@@ -132,11 +132,6 @@
 	function llenarTablaVideos(videos, marcas) {
 		for (let i = 0; i < videos.length; i++) {
 			// console.log(videos[i],find(marcas.id));
-
-			var fila =
-				`<tr id="row${i}">` +
-				`<td class="text-center" value=""><video src="${videos[i].url}" width="100%" height="100%" controls></video></td>`
-
 			if (videos[i].id == marcas.id) {
 				let marcasVideo = marcas.recordingMarks;
 				marcas.recordingMarks.forEach(marcas => {
@@ -146,7 +141,12 @@
 
 					}
 				});
-			} +
+			} 
+			var fila =
+				`<tr id="row${i}">` +
+				`<td class="text-center" value=""><video src="${videos[i].url}" width="100%" height="100%" controls></video></td>`
+
+		+
 			`</tr>`;
 
 			$('#table-videos tr:first').after(fila);
