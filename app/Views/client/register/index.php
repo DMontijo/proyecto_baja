@@ -1082,6 +1082,9 @@
 			let preview = document.querySelector('#img_preview');
 
 			if (e.target.files && e.target.files[0]) {
+				alert(e.target.files[0].size);
+				alert(e.target.files.size);
+
 				let reader = new FileReader();
 				reader.onload = function(e) {
 					documento_identidad.value = e.target.result;
