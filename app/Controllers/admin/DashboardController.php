@@ -3650,12 +3650,8 @@ class DashboardController extends BaseController
 		$endpointFolio = $this->urlApi . 'recordings/folio/' . $folio;
 
 		$responseFolio = $this->_curlGetService($endpointFolio);
-		// return json_encode($responseFolio);
 
 		if ($responseFolio != null) {
-
-			// return json_encode($responseFolio);
-
 			foreach ($responseFolio as $key => $conections) {
 
 				if (isset($conections->url) && $conections->url != null) {
@@ -3666,7 +3662,7 @@ class DashboardController extends BaseController
 				}
 			}
 		}
-		return json_encode($responseid);
+		return json_encode(['status' => 1, 'responseVideos' => $responseFolio, 'marcasVideo'=>$responseid]);
 
 		// return json_encode($endpointId);
 
