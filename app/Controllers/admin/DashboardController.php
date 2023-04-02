@@ -3788,7 +3788,7 @@ class DashboardController extends BaseController
 			$data['lastnames'] = $lastnames;
 			$data['email'] = $email;
 			$data['sex'] = $sex;
-			$data['rolId'] = $rolId;
+			$data['role'] = $rolId;
 
 			$response = $this->_curlPatch($this->urlApi . 'agent/'. $uuid, $data);
 			return $response;
