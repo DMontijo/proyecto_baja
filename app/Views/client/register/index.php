@@ -1099,40 +1099,8 @@
 							});
 							return;
 						}
-						e.target.files[0] = blob;
-
-						let reader = new FileReader();
-						reader.onload = function(e) {
-							documento_identidad.value = e.target.result;
-							documento_identidad_modal.setAttribute('src', e.target.result);
-							preview.classList.remove('d-none');
-							preview.setAttribute('src', e.target.result);
-						}
-						reader.readAsDataURL(e.target.files[0]);
-					} else {
-						let reader = new FileReader();
-						reader.onload = function(e) {
-							documento_identidad.value = e.target.result;
-							documento_identidad_modal.setAttribute('src', e.target.result);
-							preview.classList.remove('d-none');
-							preview.setAttribute('src', e.target.result);
-						}
-						reader.readAsDataURL(e.target.files[0]);
-					}
-				} else {
-					if (e.target.files[0].size > 2000000) {
-						e.target.value = '';
-						documento_identidad.value = '';
-						documento_identidad_modal.setAttribute('src', '');
-						preview.classList.add('d-none');
-						preview.setAttribute('src', '');
-						Swal.fire({
-							icon: 'error',
-							text: 'No puedes subir un archivo mayor a 2 mb.',
-							confirmButtonColor: '#bf9b55',
-						});
-
-						return;
+						const image = await blobToBase64(blob);
+						console.log(image);
 					}
 					let reader = new FileReader();
 					reader.onload = function(e) {
@@ -1146,7 +1114,15 @@
 			}
 		});
 
-		const comprimirImagen = (imagenComoArchivo, porcentajeCalidad) => {
+		function blobToBase64(blob) {
+			return new Promise((resolve, _) => {
+				const reader = new FileReader();
+				reader.onloadend = () => resolve(reader.result);
+				reader.readAsDataURL(blob);
+			});
+		}
+
+		function comprimirImagen(imagenComoArchivo, porcentajeCalidad) {
 			return new Promise((resolve, reject) => {
 				const $canvas = document.createElement("canvas");
 				const imagen = new Image();
