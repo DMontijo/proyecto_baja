@@ -762,7 +762,7 @@
 	}
 
 	function llenarTablaParentesco(relacion_parentesco, personaiduno, personaidDos, parentesco) {
-
+		console.log(personaidDos);
 
 		for (let i = 0; i < relacion_parentesco.length; i++) {
 			var btn =
@@ -1019,45 +1019,6 @@
 		});
 	}
 
-	function borrarDocumento(folio, ano, foliodocid) {
-		Swal.fire({
-			title: '¡Estas seguro?',
-			text: "¡Esta operacion es irevertible!",
-			icon: 'warning',
-			showCancelButton: true,
-			confirmButtonColor: '#bf9b55',
-			confirmButtonText: '¡Si, borrar!'
-		}).then((result) => {
-			if (result.isConfirmed) {
-				$.ajax({
-					data: {
-						'docid': foliodocid,
-						'folio': folio,
-						'year': ano,
-					},
-					url: "<?= base_url('/data/delete-documento') ?>",
-					method: "POST",
-					dataType: "json",
-					success: function(response) {
-						if (response.status == 1) {
-							Swal.fire(
-								'¡Borrar!',
-								'El documento se ha borrado.',
-								'success'
-							).then(
-								location.reload()
-							)
-
-						}
-					},
-					error: function(jqXHR, textStatus, errorThrown) {
-						console.log(textStatus);
-					}
-				});
-			}
-		})
-	}
-
 	function llenarTablaImpDel(impDelito) {
 		for (let i = 0; i < impDelito.length; i++) {
 			// var btn = `<button type='button'  class='btn btn-primary' onclick='eliminarImputadoDelito(${impDelito[i].PERSONAFISICAID},${impDelito[i].DELITOMODALIDADID})'><i class='fa fa-trash'></i></button>`
@@ -1181,6 +1142,7 @@
 					const archivos = response.archivosexternos;
 					const folioDenunciantes = response.folioDenunciantes;
 
+					console.log(imputados);
 					inputFolio.classList.add('d-none');
 					buscar_btn.classList.add('d-none');
 					year_select.classList.add('d-none');
@@ -1540,6 +1502,7 @@
 					//VEHICULOS
 					if (vehiculos) llenarTablaVehiculos(vehiculos);
 					//PARENTESCO
+					console.log(relacion_parentesco);
 					if (relacion_parentesco) llenarTablaParentesco(relacion_parentesco, personaiduno,
 						personaidDos, parentesco);
 					//ARBOL DELICTUAL
@@ -1821,6 +1784,63 @@
 		$('#contrasena_modal_doc_id').modal('show');
 
 	}
+
+	function borrarDocumento(folio, ano, foliodocid) {
+		Swal.fire({
+			title: '¿Estas seguro?',
+			text: "¡Esta operacion es irevertible!",
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#bf9b55',
+			confirmButtonText: '¡Si, eliminar!'
+		}).then((result) => {
+			if (result.isConfirmed) {
+				$.ajax({
+					data: {
+						'docid': foliodocid,
+						'folio': folio,
+						'year': ano,
+					},
+					url: "<?= base_url('/data/delete-documento') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						if (response.status == 1) {
+							const documentos = response.documentos;
+							let tabla_documentos = document.querySelectorAll(
+								'#table-documentos tr');
+							tabla_documentos.forEach(row => {
+								if (row.id !== '') {
+									row.remove();
+								}
+							});
+							llenarTablaDocumentos(documentos);
+							Swal.fire(
+								'Documento eliminado',
+								'El documento se ha eliminado correctamente.',
+								'success'
+							);
+						} else {
+							Swal.fire(
+								'¡Borrar!',
+								'El documento no se elimino.',
+								'error'
+							)
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						console.log(textStatus);
+						Swal.fire(
+							'¡Borrar!',
+							'El documento no se elimino.',
+							'error'
+						)
+					}
+				});
+			}
+		});
+	}
+
 
 	function viewDocumento(foliodocid) {
 		jQuery('.ql-toolbar').remove();
@@ -3166,6 +3186,7 @@
 					}
 				});
 			}, false);
+
 			btn_firmar_doc.addEventListener('click', (event) => {
 				$.ajax({
 					data: {
@@ -3693,10 +3714,17 @@
 			let select_victima_documento = document.querySelector("#victima_modal_documento");
 			let select_imputado_documento = document.querySelector("#imputado_modal_documento");
 			let select_uma = document.querySelector("#uma_select");
+			let select_proceso = document.querySelector("#tipoproceso_select");
+			let select_notificacion = document.querySelector("#tiponotificacion_select");
+			var options = select_uma.options;
+
+
+
+
 
 
 			$('#documentos_modal_wyswyg').on('show.bs.modal', function(event) {
-				<?php if (session('ROLID') == 4) { ?>
+				<?php if (session('ROLID') == 4 || session('ROLID') == 8 || session('ROLID') == 10) { ?>
 					const data = {
 						'folio': document.querySelector('#input_folio_atencion').value,
 						'year': document.querySelector('#year_select').value,
@@ -3716,14 +3744,19 @@
 									text: 'Este folio, ya tiene agente asignado para firmar. Se autoasignará al mismo agente.',
 									confirmButtonColor: '#bf9b55',
 								});
+								document.querySelector('#empleado_asignado').setAttribute('required', false);
 
 							} else {
 								const div_usuarios = document.querySelector('#usuarios');
 								div_usuarios.classList.remove('d-none');
+								document.querySelector('#empleado_asignado').setAttribute('required', true);
+
 							}
 
 						}
 					});
+				<?php } else { ?>
+					document.querySelector('#empleado_asignado').setAttribute('required', false);
 				<?php } ?>
 				$("#documentos_modal_wyswyg select").val("");
 				document.getElementById("involucrados").style.display = "none";
@@ -3732,11 +3765,22 @@
 			selectPlantilla.addEventListener("change", function() {
 				if (plantilla.value == "CITATORIO") {
 					document.getElementById("div_uma").style.display = "block";
+					document.getElementById("div_noti").style.display = "block";
+					document.getElementById("div_proceso").style.display = "block";
+
 					document.querySelector('#uma_select').setAttribute('required', true);
+					document.querySelector('#tiponotificacion_select').setAttribute('required', true);
+					document.querySelector('#tipoproceso_select').setAttribute('required', true);
+
 
 				} else {
 					document.getElementById("div_uma").style.display = "none";
+					document.getElementById("div_noti").style.display = "none";
+					document.getElementById("div_proceso").style.display = "none";
+
 					document.querySelector('#uma_select').setAttribute('required', false);
+					document.querySelector('#tiponotificacion_select').setAttribute('required', false);
+					document.querySelector('#tipoproceso_select').setAttribute('required', false);
 
 				}
 
@@ -3757,6 +3801,9 @@
 				} else {
 					document.getElementById("involucrados").style.display = "none";
 					document.getElementById("div_uma").style.display = "none";
+					document.getElementById("div_noti").style.display = "none";
+					document.getElementById("div_proceso").style.display = "none";
+
 
 				}
 
@@ -4549,6 +4596,7 @@
 				packetData.append("twitter_pf", document.querySelector('#twitter_pf').value);
 				packetData.append("pf_id", document.querySelector('#pf_id').value);
 				packetData.append("ocupacion_descr", document.querySelector('#ocupacion_pf_m').value);
+				packetData.append("fotografia_actual_pf", document.querySelector('#fotografia_actual_pf').value);
 				// const data = {
 				// 	'folio': document.querySelector('#input_folio_atencion').value,
 				// 	'year': document.querySelector('#year_select').value,
@@ -6149,21 +6197,76 @@
 
 			function obtenerPlantillas(tipoPlantilla, victima, imputado) {
 
-				if (select_uma.getAttribute('required') == "true" && select_uma.value != '' && tipoPlantilla == 'CITATORIO') {
-					$('#documentos_modal_wyswyg').modal('hide');
-					$('#documentos_modal').modal('show');
-				} else if (select_uma.getAttribute('required') == "true" && select_uma.value == '' && tipoPlantilla == 'CITATORIO') {
+				<?php if (session('ROLID') == 4 || session('ROLID') == 8 || session('ROLID') == 10) { ?>
+					console.log("victima");
+					console.log(document.querySelector('#victima_modal_documento').value == '');
 
-					Swal.fire({
-						icon: 'error',
-						text: 'UMA obligatorio',
-						confirmButtonColor: '#bf9b55',
-					});
-				}
-				if (select_uma.getAttribute('required') == "false" && tipoPlantilla != 'CITATORIO') {
-					$('#documentos_modal_wyswyg').modal('hide');
-					$('#documentos_modal').modal('show');
-				}
+					if (tipoPlantilla == "CITATORIO") {
+						if ((document.querySelector('#victima_modal_documento').value != '') && document.querySelector('#empleado_asignado').getAttribute('required') == "true" && document.querySelector('#empleado_asignado').value != '' && select_uma.getAttribute('required') == "true" && select_uma.value != '' && select_notificacion.getAttribute('required') == "true" && select_notificacion.value != '' && select_proceso.getAttribute('required') == "true" && select_proceso.value != '' && tipoPlantilla == 'CITATORIO') {
+							$('#documentos_modal_wyswyg').modal('hide');
+							$('#documentos_modal').modal('show');
+
+						} else if ((document.querySelector('#victima_modal_documento').value == '') || (document.querySelector('#empleado_asignado').getAttribute('required') == "true" && document.querySelector('#empleado_asignado').value == '') || (select_uma.getAttribute('required') == "true" && select_uma.value == '') || (select_notificacion.getAttribute('required') == "true" && select_notificacion.value == '') || (select_proceso.getAttribute('required') == "true" && select_proceso.value == '') && tipoPlantilla == 'CITATORIO') {
+
+							Swal.fire({
+								icon: 'error',
+								text: 'Favor de llenar los campos mostrados en la pantalla',
+								confirmButtonColor: '#bf9b55',
+							});
+						} else if ((document.querySelector('#victima_modal_documento').value != '') && document.querySelector('#empleado_asignado').getAttribute('required') == "false" && document.querySelector('#empleado_asignado').value == '' && select_uma.getAttribute('required') == "true" && select_uma.value != '' && select_notificacion.getAttribute('required') == "true" && select_notificacion.value != '' && select_proceso.getAttribute('required') == "true" && select_proceso.value != '' && tipoPlantilla == 'CITATORIO') {
+							$('#documentos_modal_wyswyg').modal('hide');
+							$('#documentos_modal').modal('show');
+
+						}
+
+					} else {
+						if (document.querySelector('#empleado_asignado').getAttribute('required') == "true" && document.querySelector('#empleado_asignado').value == '') {
+							Swal.fire({
+								icon: 'error',
+								text: 'Favor de asignar a un Agente de Ministerio Público',
+								confirmButtonColor: '#bf9b55',
+							});
+						} else if (document.querySelector('#empleado_asignado').getAttribute('required') == "true" && document.querySelector('#empleado_asignado').value != '') {
+							$('#documentos_modal_wyswyg').modal('hide');
+							$('#documentos_modal').modal('show');
+						} else if (document.querySelector('#empleado_asignado').getAttribute('required') == "false" && document.querySelector('#empleado_asignado').value == '') {
+							$('#documentos_modal_wyswyg').modal('hide');
+							$('#documentos_modal').modal('show');
+						}
+
+
+					}
+
+
+
+
+				<?php } else { ?>
+
+					console.log("victima");
+					console.log(document.querySelector('#victima_modal_documento').value == '');
+
+					if (select_uma.getAttribute('required') == "true" && select_uma.value != '' && select_notificacion.getAttribute('required') == "true" && select_notificacion.value != '' && select_proceso.getAttribute('required') == "true" && select_proceso.value != '' && document.querySelector('#victima_modal_documento').value != '' && tipoPlantilla == 'CITATORIO') {
+						$('#documentos_modal_wyswyg').modal('hide');
+						$('#documentos_modal').modal('show');
+
+					} else if ((document.querySelector('#victima_modal_documento').value == '') || (select_uma.getAttribute('required') == "true" && select_uma.value == '') || (document.querySelector('#victima_modal_documento').value == '') || (select_notificacion.getAttribute('required') == "true" && select_notificacion.value == '') || (select_proceso.getAttribute('required') == "true" && select_proceso.value == '') && tipoPlantilla == 'CITATORIO') {
+
+						Swal.fire({
+							icon: 'error',
+							text: 'Favor de llenar los campos mostrados en la pantalla',
+							confirmButtonColor: '#bf9b55',
+						});
+					}
+
+
+
+					if (select_uma.getAttribute('required') == "false" && tipoPlantilla != 'CITATORIO') {
+						$('#documentos_modal_wyswyg').modal('hide');
+						$('#documentos_modal').modal('show');
+					}
+				<?php } ?>
+
+
 				if (select_uma.value) {
 					const data = {
 
@@ -6173,7 +6276,10 @@
 						'titulo': tipoPlantilla,
 						'victima': victima,
 						'imputado': imputado,
-						'uma': select_uma.value
+						'uma': select_uma.value,
+						'notificacion': select_notificacion.value,
+						'proceso': select_proceso.value
+
 
 					};
 					$.ajax({
@@ -6189,16 +6295,25 @@
 								document.querySelector("#imputado_modal_documento").value = '';
 								plantilla.value = '';
 								select_uma.value = '';
+								select_proceso.value = '';
+								select_notificacion.value = '';
 								document.getElementById("involucrados").style.display = "none";
 								document.getElementById("div_uma").style.display = "none";
+								document.getElementById("div_proceso").style.display = "none";
+								document.getElementById("div_noti").style.display = "none";
+
 							} else {
 								tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
 								document.querySelector("#victima_modal_documento").value = '';
 								document.querySelector("#imputado_modal_documento").value = '';
 								plantilla.value = '';
 								select_uma.value = '';
+								select_proceso.value = '';
+								select_notificacion.value = '';
 								document.getElementById("involucrados").style.display = "none";
 								document.getElementById("div_uma").style.display = "none";
+								document.getElementById("div_proceso").style.display = "none";
+								document.getElementById("div_noti").style.display = "none";
 							}
 						},
 						error: function(jqXHR, textStatus, errorThrown) {
@@ -6208,8 +6323,12 @@
 							document.querySelector("#imputado_modal_documento").value = '';
 							plantilla.value = '';
 							select_uma.value = '';
+							select_proceso.value = '';
+							select_notificacion.value = '';
 							document.getElementById("involucrados").style.display = "none";
 							document.getElementById("div_uma").style.display = "none";
+							document.getElementById("div_proceso").style.display = "none";
+							document.getElementById("div_noti").style.display = "none";
 						}
 					});
 				} else {
@@ -6235,12 +6354,16 @@
 									document.querySelector("#imputado_modal_documento").value = '';
 									plantilla.value = '';
 									select_uma.value = '';
+									select_proceso.value = '';
+									select_notificacion.value = '';
 								} else {
 									tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
 									document.querySelector("#victima_modal_documento").value = '';
 									document.querySelector("#imputado_modal_documento").value = '';
 									plantilla.value = '';
 									select_uma.value = '';
+									select_proceso.value = '';
+									select_notificacion.value = '';
 									document.getElementById("involucrados").style.display = "none";
 								}
 
@@ -6251,12 +6374,16 @@
 									document.querySelector("#imputado_modal_documento").value = '';
 									plantilla.value = '';
 									select_uma.value = '';
+									select_proceso.value = '';
+									select_notificacion.value = '';
 								} else {
 									tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
 									document.querySelector("#victima_modal_documento").value = '';
 									document.querySelector("#imputado_modal_documento").value = '';
 									plantilla.value = '';
 									select_uma.value = '';
+									select_proceso.value = '';
+									select_notificacion.value = '';
 									document.getElementById("involucrados").style.display = "none";
 								}
 							}
@@ -6268,17 +6395,16 @@
 							document.querySelector("#imputado_modal_documento").value = '';
 							plantilla.value = '';
 							select_uma.value = '';
+							select_proceso.value = '';
+							select_notificacion.value = '';
 							document.getElementById("involucrados").style.display = "none";
 							document.getElementById("div_uma").style.display = "none";
+							document.getElementById("div_proceso").style.display = "none";
+							document.getElementById("div_noti").style.display = "none";
 						}
 					});
 				}
 			}
-
-
-
-
-
 
 			function insertarDocumento(contenido, tipoPlantilla) {
 

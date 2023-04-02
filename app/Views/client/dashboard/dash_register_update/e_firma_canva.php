@@ -75,6 +75,13 @@
 			mousePos = getMousePos(canvas, e);
 		}, false);
 
+		canvas.addEventListener("mouseout", function (e) {
+                drawing = false;
+                canvas.fillStyle = "rgba(0,0,0,.4)";
+                let dataUrl = canvas.toDataURL();
+                drawText.innerHTML = dataUrl;
+            }, false);
+
 		canvas.addEventListener("touchstart", function(e) {
 			mousePos = getTouchPos(canvas, e);
 			e.preventDefault();

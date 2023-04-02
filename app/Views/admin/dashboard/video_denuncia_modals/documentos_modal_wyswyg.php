@@ -51,6 +51,29 @@
 					</select>
 				</div>
 				<br>
+
+				<div id="div_noti" name="div_noti" style="display: none;">
+					<label for="uma" class="form-label font-weight-bold">Tipo de notificación:</label>
+
+					<select class="form-control" id="tiponotificacion_select" name="tiponotificacion_select">
+						<option disabled selected value="">Selecciona un tipo de notificación...</option>
+						<option value="PERSONAL">PERSONAL</option>
+						<option value="NOTIFICADOR">NOTIFICADOR</option>
+					</select>
+				</div>
+				<br>
+				<div id="div_proceso" name="div_proceso" style="display: none;">
+					<label for="uma" class="form-label font-weight-bold">Tipo de proceo:</label>
+
+					<select class="form-control" id="tipoproceso_select" name="tipoproceso_select">
+						<option disabled selected value="">Selecciona un tipo de proceso...</option>
+						<option value="MEDIACION">MEDIACION</option>
+						<option value="CONCILIACION">CONCILIACION</option>
+						<option value="JUSTICIA RESTAURATIVA">JUSTICIA RESTAURATIVA</option>
+
+					</select>
+				</div>
+				<br>
 				<div id="involucrados" name="involucrados" style="display: none;">
 					<label for="victima_modal_documento" class="form-label font-weight-bold">Víctima:</label>
 
