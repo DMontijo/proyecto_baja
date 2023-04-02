@@ -3784,14 +3784,13 @@ class DashboardController extends BaseController
 	{
 		if ($uuid && $names && $lastnames && $email && $sex && $rolId) {
 			$data = array();
-			$data['uuid'] = $uuid;
 			$data['names'] = $names;
 			$data['lastnames'] = $lastnames;
 			$data['email'] = $email;
 			$data['sex'] = $sex;
 			$data['rolId'] = $rolId;
 
-			$response = $this->_curlPatch($this->urlApi . 'agent/', $data);
+			$response = $this->_curlPatch($this->urlApi . 'agent/'. $uuid, $data);
 			return $response;
 		} else {
 			return false;
