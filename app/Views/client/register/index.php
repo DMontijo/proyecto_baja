@@ -1082,8 +1082,11 @@
 			let preview = document.querySelector('#img_preview');
 
 			if (e.target.files && e.target.files[0]) {
-				alert(e.target.files[0].size);
-				alert(e.target.files.size);
+				if (e.target.files[0].size > 2000000) {
+					comprimirImagen(e.target.files[0], 60).then((image) => {
+						console.log(image);
+					});
+				}
 
 				let reader = new FileReader();
 				reader.onload = function(e) {
@@ -1095,6 +1098,30 @@
 				reader.readAsDataURL(e.target.files[0]);
 			}
 		});
+
+		const comprimirImagen = (imagenComoArchivo, porcentajeCalidad) => {
+			return new Promise((resolve, reject) => {
+				const $canvas = document.createElement("canvas");
+				const imagen = new Image();
+				imagen.onload = () => {
+					$canvas.width = imagen.width;
+					$canvas.height = imagen.height;
+					$canvas.getContext("2d").drawImage(imagen, 0, 0);
+					$canvas.toBlob(
+						(blob) => {
+							if (blob === null) {
+								return reject(blob);
+							} else {
+								resolve(blob);
+							}
+						},
+						"image/jpeg",
+						porcentajeCalidad / 100
+					);
+				};
+				imagen.src = URL.createObjectURL(imagenComoArchivo);
+			});
+		};
 
 		document.querySelector('#correo').addEventListener('blur', (e) => {
 			let regex = /\S+@\S+\.\S+/
