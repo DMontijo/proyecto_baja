@@ -115,6 +115,7 @@
 			method: "POST",
 			dataType: "json",
 			success: function(response) {
+				console.log(response);
 				const videos = response;
 				llenarTablaVideos(videos);
 				$('#videos_expediente_modal').modal('show');
