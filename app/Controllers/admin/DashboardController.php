@@ -3653,19 +3653,20 @@ class DashboardController extends BaseController
 		return json_encode($responseFolio);
 
 		if ($responseFolio != null) {
-			return json_encode($responseFolio);
 
-			// foreach ($responseFolio as $key => $conections) {
+			// return json_encode($responseFolio);
 
-			// 	if (isset($conections->url) && $conections->url != null) {
-			// 		$endpointId = $this->urlApi . 'recordings/' . $conections->id;
+			foreach ($responseFolio as $key => $conections) {
 
-			// 		$responseid = $this->_curlGetService($endpointId);
-			// 	}
-			// }
+				if (isset($conections->url) && $conections->url != null) {
+				$endpointId = $this->urlApi . 'recordings/' . $conections->id;
+
+					$responseid = $this->_curlGetService($endpointId);
+				}
+			}
 		}
 
-		// return json_encode($responseid);;
+		return json_encode($responseid);;
 
 		// $endpoint = 'https://videodenunciaserver1.fgebc.gob.mx/api/vc';
 		// $data = array();
