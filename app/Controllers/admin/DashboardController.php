@@ -3662,7 +3662,7 @@ class DashboardController extends BaseController
 				}
 			}
 		}
-		return json_encode(['status' => 1, 'responseVideos' => $responseFolio, 'marcasVideo'=>$responseid->recordingMarks]);
+		return json_encode(['status' => 1, 'responseVideos' => $responseFolio, 'marcasVideo'=>$responseid]);
 
 		// return json_encode($endpointId);
 
