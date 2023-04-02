@@ -1086,6 +1086,7 @@
 					console.log('Dentro para comprimir', e.target.files[0].size);
 					const blob = await comprimirImagen(e.target.files[0], 50);
 					console.log(blob);
+					console.log(URL.createObjectURL(blob));
 				} else {
 					console.log('Fuera de compresión', e.target.files[0].size);
 					let reader = new FileReader();
