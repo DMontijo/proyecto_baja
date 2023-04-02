@@ -76,7 +76,8 @@ no_disponible_connect.addEventListener("click",()=>{
 	console.log("NO DISPONIBLE");
 	agentVideoService.disconnectAgent(
 		() => {
-			console.log("ya no estas disponible");
+			disponible_connect.hidden = false;
+			no_disponible_connect.hidden = true;
 		});
 })
 aceptar_llamada.addEventListener("click", () => {
