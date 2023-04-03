@@ -1350,9 +1350,9 @@ class DashboardController extends BaseController
 					];
 
 					$bandeja = $this->_folioModel->where('EXPEDIENTEID', $expediente)->first();
-					$folioDoc = $this->_folioDocModel->expedienteDocumentos($expediente);
-					if ($folioDoc) {
-						foreach ($folioDoc as $key => $doc) {
+					$folioDocPericiales = $this->_folioDocModel->expedienteDocumentos($expediente);
+					if ($folioDocPericiales) {
+						foreach ($folioDocPericiales as $key => $doc) {
 							$solicitudp = array();
 							$solicitudp['ESTADOID'] = 2;
 							$solicitudp['MUNICIPIOID'] = $municipio;
@@ -1392,18 +1392,17 @@ class DashboardController extends BaseController
 								}
 							}
 						}
+					}
+					$subirArchivos = $this->subirArchivosRemision($bandeja['FOLIOID'], $bandeja['ANO'], $expediente);
+					$_bandeja_creada = $this->_createBandeja($bandeja);
+					$updateArch = $this->_archivoExternoModel->set($dataFolioArc)->where('FOLIOID', $bandeja['FOLIOID'])->where('ANO', $bandeja['ANO'])->update();
 
-						$updateArch = $this->_archivoExternoModel->set($dataFolioArc)->where('FOLIOID', $bandeja['FOLIOID'])->where('ANO', $bandeja['ANO'])->update();
-						$_bandeja_creada = $this->_createBandeja($bandeja);
-
-						if ($_bandeja_creada->status == 201) {
-							$this->_bitacoraActividad($datosBitacora);
-							$subirArchivos = $this->subirArchivosRemision($bandeja['FOLIOID'], $bandeja['ANO'], $expediente);
-							// $folioDoc = $this->_folioDocModel->where('NUMEROEXPEDIENTE', $expediente)->where('FOLIODOC.FOLIOID',$bandeja['FOLIOID'])->where('STATUS', 'FIRMADO')->join('RELACIONFOLIODOCEXPDOC', 'FOLIODOC.NUMEROEXPEDIENTE = RELACIONFOLIODOCEXPDOC.EXPEDIENTEID  AND FOLIODOC.FOLIODOCID = RELACIONFOLIODOCEXPDOC.FOLIODOCID')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('TIPODOC', 'SOLICITUD DE PERITAJE')->orLike('TIPODOC', 'OFICIO DE COLABORACION PARA INGRESO A HOSPITAL')->findAll();
-						}
-						return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_success', 'Remitido correctamente');
+					if ($_bandeja_creada->status == 201) {
+						$this->_bitacoraActividad($datosBitacora);
+						// $folioDoc = $this->_folioDocModel->where('NUMEROEXPEDIENTE', $expediente)->where('FOLIODOC.FOLIOID',$bandeja['FOLIOID'])->where('STATUS', 'FIRMADO')->join('RELACIONFOLIODOCEXPDOC', 'FOLIODOC.NUMEROEXPEDIENTE = RELACIONFOLIODOCEXPDOC.EXPEDIENTEID  AND FOLIODOC.FOLIODOCID = RELACIONFOLIODOCEXPDOC.FOLIODOCID')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('TIPODOC', 'SOLICITUD DE PERITAJE')->orLike('TIPODOC', 'OFICIO DE COLABORACION PARA INGRESO A HOSPITAL')->findAll();
+						return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_success', 'Expediente remitido correctamente.');
 					} else {
-						return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_error', 'No se creo la bandeja');
+						return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_error', 'Se remitio el expediente pero no se creo la bandeja entrada en justicia, de favor comentalo con el área de informática.');
 					}
 				} else {
 					return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_error', 'No se actualizo el folio en videodenuncia');
