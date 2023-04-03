@@ -2,6 +2,10 @@ import { VideoServiceGuest } from "../guest/guest.js";
 
 const apiKey = "vspk_6258d819-105e-4487-b7f1-be72e892850e";
 const guestUUID = document.getElementById("input_uuid").value;
+const apiURI = "https://videodenunciabalancer.fgebc.gob.mx";
+// const apiURI = "https://f246-2806-2f0-5020-1ce6-d91-1913-b56e-ec01.ngrok.io";
+
+
 let folio_completo = document.getElementById("input_folio").value;
 const array = folio_completo.split("-");
 let folio_SY = array[1];
@@ -27,8 +31,6 @@ const pantalla_final = document.querySelector("#pantalla_final");
 // const audio_denunciante_apagado_b = document.querySelector('#audio_denunciante_apagado_b');
 // const camara_apagada_denunciante_b = document.querySelector('#camara_apagada_denunciante_b');
 // const camara_prendida_denunciante_b = document.querySelector('#camara_prendida_denunciante_b');
-const apiURI = "https://videodenunciabalancer.fgebc.gob.mx";
-// const apiURI = "https://f246-2806-2f0-5020-1ce6-d91-1913-b56e-ec01.ngrok.io";
 
 const guestVideoService = new VideoServiceGuest(
 	guestUUID,
@@ -52,12 +54,13 @@ guestVideoService.registerOnVideoReady(
 	}
 );
 
-guestVideoService.registerOnDisconnect(() => {
+guestVideoService.registerOnDisconnect((e) => {
+	console.log('Desconectado', e);
 	pantalla_final.style.display = "block";
 	video_container.style.display = "none";
 	document.querySelector("#documentos_anexar_card").style.display = "none";
-	let url = document.querySelector("#input_base_url_endcall").value;
-	window.location.href = url;
+	// let url = document.querySelector("#input_base_url_endcall").value;
+	// window.location.href = url;
 });
 
 guestVideoService.registerMediaRemoteToggling(response => {
