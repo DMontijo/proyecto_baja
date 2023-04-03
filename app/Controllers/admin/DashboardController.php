@@ -1425,7 +1425,7 @@ class DashboardController extends BaseController
 
 			$existRac = $this->_bandejaRacModel->asObject()->where('EXPEDIENTEID', $expediente)->findAll();
 			if ($existRac) {
-				return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_error', 'Ya fue remitido este RAC.');
+				return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_error', 'Ya fue remitido este expediente.');
 			}
 
 			$status = 2;
