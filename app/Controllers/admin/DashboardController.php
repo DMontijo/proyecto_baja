@@ -1311,7 +1311,7 @@ class DashboardController extends BaseController
 			$documents = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente)->findAll();
 			$status = 2;
 			$dataInter =  array('SOLICITUDID' => 9000600, 'INTERVENCIONID' => 98);
-			
+
 			foreach ($documents as $key => $document) {
 				if (
 					$document->TIPODOC == 'CRITERIO DE OPORTUNIDAD' ||
@@ -1344,7 +1344,6 @@ class DashboardController extends BaseController
 				$update = $this->_folioModel->set($dataFolio)->where('EXPEDIENTEID', $expediente)->update();
 				$updateDoc = $this->_folioDocModel->set($dataFolioDoc)->where('NUMEROEXPEDIENTE', $expediente)->update();
 				if ($update) {
-
 					$datosBitacora = [
 						'ACCION' => 'Remitio un expediente.',
 						'NOTAS' => 'Exp: ' . $expediente . ' oficina: ' . $oficina . ' empleado:' . $empleado . ' area:' . $area->AREAID,
@@ -1352,55 +1351,55 @@ class DashboardController extends BaseController
 
 					$bandeja = $this->_folioModel->where('EXPEDIENTEID', $expediente)->first();
 					$folioDoc = $this->_folioDocModel->expedienteDocumentos($expediente);
-						if ($folioDoc) {
-							foreach ($folioDoc as $key => $doc) {
-								$solicitudp = array();
-								$solicitudp['ESTADOID'] = 2;
-								$solicitudp['MUNICIPIOID'] = $municipio;
-								$solicitudp['EMPLEADOIDREGISTRO'] = $empleado;
-								$solicitudp['OFICINAIDREGISTRO'] = $oficina;
-								$solicitudp['AREAIDREGISTRO'] = $area;
-								$solicitudp['ANO'] = $doc->ANO;
-								$solicitudp['TITULO'] = $doc->TIPODOC;
+					if ($folioDoc) {
+						foreach ($folioDoc as $key => $doc) {
+							$solicitudp = array();
+							$solicitudp['ESTADOID'] = 2;
+							$solicitudp['MUNICIPIOID'] = $municipio;
+							$solicitudp['EMPLEADOIDREGISTRO'] = $empleado;
+							$solicitudp['OFICINAIDREGISTRO'] = $oficina;
+							$solicitudp['AREAIDREGISTRO'] = $area;
+							$solicitudp['ANO'] = $doc->ANO;
+							$solicitudp['TITULO'] = $doc->TIPODOC;
 
-								$_solicitudPericial = $this->_createSolicitudesPericiales($solicitudp);
-								if ($_solicitudPericial->status == 201) {
-									$_solicitudDocto = $this->_createSolicitudDocto($expediente, $_solicitudPericial->SOLICITUDID, $doc->EXPEDIENTEDOCID, $bandeja['MUNICIPIOASIGNADOID']);
+							$_solicitudPericial = $this->_createSolicitudesPericiales($solicitudp);
+							if ($_solicitudPericial->status == 201) {
+								$_solicitudDocto = $this->_createSolicitudDocto($expediente, $_solicitudPericial->SOLICITUDID, $doc->EXPEDIENTEDOCID, $bandeja['MUNICIPIOASIGNADOID']);
 
-									if ($_solicitudDocto->status == 201) {
-										$_solicitudExpediente = $this->_createSolicitudExpediente($expediente, $_solicitudPericial->SOLICITUDID, $municipio);
-										$plantilla = (object) array();
+								if ($_solicitudDocto->status == 201) {
+									$_solicitudExpediente = $this->_createSolicitudExpediente($expediente, $_solicitudPericial->SOLICITUDID, $municipio);
+									$plantilla = (object) array();
 
-										$plantilla = $this->_plantillasModel->where('TITULO',  $doc->TIPODOC)->first();
-										if ($municipio == 1 ||  $municipio == 6) {
-											$intervencion = $plantilla['INTERVENCIONENSENADAID'];
-										} else if ($municipio == 2 || $municipio == 3 || $municipio == 7) {
-											$intervencion = $plantilla['INTERVENCIONMEXICALIID'];
-										} else if ($municipio == 4 || $municipio == 5) {
-											$intervencion = $plantilla['INTERVENCIONTIJUANAID'];
-										}
-										$dataInter =  array('SOLICITUDID' => $_solicitudPericial->SOLICITUDID, 'INTERVENCIONID' => $intervencion);
+									$plantilla = $this->_plantillasModel->where('TITULO',  $doc->TIPODOC)->first();
+									if ($municipio == 1 ||  $municipio == 6) {
+										$intervencion = $plantilla['INTERVENCIONENSENADAID'];
+									} else if ($municipio == 2 || $municipio == 3 || $municipio == 7) {
+										$intervencion = $plantilla['INTERVENCIONMEXICALIID'];
+									} else if ($municipio == 4 || $municipio == 5) {
+										$intervencion = $plantilla['INTERVENCIONTIJUANAID'];
+									}
+									$dataInter =  array('SOLICITUDID' => $_solicitudPericial->SOLICITUDID, 'INTERVENCIONID' => $intervencion);
 
-										$_intervencionPericial = $this->_createIntervencionPericial($dataInter, $municipio);
+									$_intervencionPericial = $this->_createIntervencionPericial($dataInter, $municipio);
 
-										if ($_intervencionPericial->status == 201) {
-											$datosBitacora = [
-												'ACCION' => 'Se envio una solicitud perital.',
-												'NOTAS' => 'Exp: ' . $expediente . ' Solicitud: ' . $_solicitudPericial->SOLICITUDID . 'Intervencion' . $intervencion,
-											];
-											$this->_bitacoraActividad($datosBitacora);
-										}
+									if ($_intervencionPericial->status == 201) {
+										$datosBitacora = [
+											'ACCION' => 'Se envio una solicitud perital.',
+											'NOTAS' => 'Exp: ' . $expediente . ' Solicitud: ' . $_solicitudPericial->SOLICITUDID . 'Intervencion' . $intervencion,
+										];
+										$this->_bitacoraActividad($datosBitacora);
 									}
 								}
 							}
-						
-					$updateArch = $this->_archivoExternoModel->set($dataFolioArc)->where('FOLIOID', $bandeja['FOLIOID'])->where('ANO', $bandeja['ANO'])->update();
-					$_bandeja_creada = $this->_createBandeja($bandeja);
+						}
 
-					if ($_bandeja_creada->status == 201) {
-						$this->_bitacoraActividad($datosBitacora);
-						$subirArchivos = $this->subirArchivosRemision($bandeja['FOLIOID'], $bandeja['ANO'], $expediente);
-						// $folioDoc = $this->_folioDocModel->where('NUMEROEXPEDIENTE', $expediente)->where('FOLIODOC.FOLIOID',$bandeja['FOLIOID'])->where('STATUS', 'FIRMADO')->join('RELACIONFOLIODOCEXPDOC', 'FOLIODOC.NUMEROEXPEDIENTE = RELACIONFOLIODOCEXPDOC.EXPEDIENTEID  AND FOLIODOC.FOLIODOCID = RELACIONFOLIODOCEXPDOC.FOLIODOCID')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('TIPODOC', 'SOLICITUD DE PERITAJE')->orLike('TIPODOC', 'OFICIO DE COLABORACION PARA INGRESO A HOSPITAL')->findAll();
+						$updateArch = $this->_archivoExternoModel->set($dataFolioArc)->where('FOLIOID', $bandeja['FOLIOID'])->where('ANO', $bandeja['ANO'])->update();
+						$_bandeja_creada = $this->_createBandeja($bandeja);
+
+						if ($_bandeja_creada->status == 201) {
+							$this->_bitacoraActividad($datosBitacora);
+							$subirArchivos = $this->subirArchivosRemision($bandeja['FOLIOID'], $bandeja['ANO'], $expediente);
+							// $folioDoc = $this->_folioDocModel->where('NUMEROEXPEDIENTE', $expediente)->where('FOLIODOC.FOLIOID',$bandeja['FOLIOID'])->where('STATUS', 'FIRMADO')->join('RELACIONFOLIODOCEXPDOC', 'FOLIODOC.NUMEROEXPEDIENTE = RELACIONFOLIODOCEXPDOC.EXPEDIENTEID  AND FOLIODOC.FOLIODOCID = RELACIONFOLIODOCEXPDOC.FOLIODOCID')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('TIPODOC', 'SOLICITUD DE PERITAJE')->orLike('TIPODOC', 'OFICIO DE COLABORACION PARA INGRESO A HOSPITAL')->findAll();
 						}
 						return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_success', 'Remitido correctamente');
 					} else {
@@ -1413,7 +1412,7 @@ class DashboardController extends BaseController
 				return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_error', 'No se actualizo el folio en Justicia Net');
 			}
 		} catch (\Exception $e) {
-			return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_error', 'Hubo un error en la remisión, verifica el expediente en justicia.');
+			return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_error', 'Hubo un error en la remisión, verifica el expediente en Justicia Net.');
 		}
 	}
 
@@ -2355,238 +2354,238 @@ class DashboardController extends BaseController
 		$folioDocPeritaje = $this->_folioDocModel->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('TIPODOC', 'SOLICITUD DE PERITAJE')->orLike('TIPODOC', 'OFICIO DE COLABORACION PARA INGRESO A HOSPITAL')->findAll();
 		try {
 
-		if ($archivosExternosVD) {
-			try {
+			if ($archivosExternosVD) {
+				try {
 
-				foreach ($archivosExternosVD as $key => $arch) {
-					$relacionDocArc = $this->_relacionFolioDocModel->where('FOLIOID', $arch['FOLIOID'])->where('ANO', $arch['ANO'])->where('FOLIODOCID', $arch['FOLIOARCHIVOID'])->where('TIPO', 'ARCHIVO')->orderBy('FOLIODOCID', 'asc')->first();
-					if ($relacionDocArc == NULL) {
-						$municipioid = $foliovd['MUNICIPIOID'] ? $foliovd['MUNICIPIOID'] : NULL;
+					foreach ($archivosExternosVD as $key => $arch) {
+						$relacionDocArc = $this->_relacionFolioDocModel->where('FOLIOID', $arch['FOLIOID'])->where('ANO', $arch['ANO'])->where('FOLIODOCID', $arch['FOLIOARCHIVOID'])->where('TIPO', 'ARCHIVO')->orderBy('FOLIODOCID', 'asc')->first();
+						if ($relacionDocArc == NULL) {
+							$municipioid = $foliovd['MUNICIPIOID'] ? $foliovd['MUNICIPIOID'] : NULL;
 
-						try {
-							if (ENVIRONMENT == 'development') {
-								if ($foliovd['MUNICIPIOASIGNADOID'] == 1) {
-									$autor = 8987;
-									$oficina = 793;
-								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 2 || $foliovd['MUNICIPIOASIGNADOID'] == 3) {
-									$autor = 3968;
-									$oficina = 394;
-								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
-									$autor = 10872;
-									$oficina = 924;
+							try {
+								if (ENVIRONMENT == 'development') {
+									if ($foliovd['MUNICIPIOASIGNADOID'] == 1) {
+										$autor = 8987;
+										$oficina = 793;
+									} else if ($foliovd['MUNICIPIOASIGNADOID'] == 2 || $foliovd['MUNICIPIOASIGNADOID'] == 3) {
+										$autor = 3968;
+										$oficina = 394;
+									} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
+										$autor = 10872;
+										$oficina = 924;
+									}
 								}
-							}
 
-							if (ENVIRONMENT == 'production') {
-								if ($foliovd['MUNICIPIOASIGNADOID'] == 1) {
-									$autor = 8988;
-									$oficina = 793;
-								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 2 || $foliovd['MUNICIPIOASIGNADOID'] == 3) {
-									$autor = 4179;
-									$oficina = 409;
-								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
-									$autor = 10832;
-									$oficina = 924;
+								if (ENVIRONMENT == 'production') {
+									if ($foliovd['MUNICIPIOASIGNADOID'] == 1) {
+										$autor = 8988;
+										$oficina = 793;
+									} else if ($foliovd['MUNICIPIOASIGNADOID'] == 2 || $foliovd['MUNICIPIOASIGNADOID'] == 3) {
+										$autor = 4179;
+										$oficina = 409;
+									} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
+										$autor = 10832;
+										$oficina = 924;
+									}
 								}
-							}
 
-							$_archivo = $this->_createArchivosExternos($expediente, $folio, $year,  $municipioid, 53, $arch['ARCHIVODESCR'], $arch['ARCHIVO'], $arch['EXTENSION'], $autor, $oficina);
-							if ($_archivo->status == 201) {
-								$datosRelacionFolio = [
-									'FOLIODOCID' => $arch['FOLIOARCHIVOID'],
-									'FOLIOID' =>  $arch['FOLIOID'],
-									'ANO' => $arch['ANO'],
-									'EXPEDIENTEID' => $_archivo->EXPEDIENTEID,
-									'EXPEDIENTEARCHIVOID' => $_archivo->ARCHIVOID,
-									'TIPO' => 'ARCHIVO',
+								$_archivo = $this->_createArchivosExternos($expediente, $folio, $year,  $municipioid, 53, $arch['ARCHIVODESCR'], $arch['ARCHIVO'], $arch['EXTENSION'], $autor, $oficina);
+								if ($_archivo->status == 201) {
+									$datosRelacionFolio = [
+										'FOLIODOCID' => $arch['FOLIOARCHIVOID'],
+										'FOLIOID' =>  $arch['FOLIOID'],
+										'ANO' => $arch['ANO'],
+										'EXPEDIENTEID' => $_archivo->EXPEDIENTEID,
+										'EXPEDIENTEARCHIVOID' => $_archivo->ARCHIVOID,
+										'TIPO' => 'ARCHIVO',
 
-								];
-								$this->_relacionFolioDocModel->insert($datosRelacionFolio);
+									];
+									$this->_relacionFolioDocModel->insert($datosRelacionFolio);
+								}
+							} catch (\Exception $e) {
 							}
-						} catch (\Exception $e) {
 						}
 					}
+				} catch (\Throwable $th) {
 				}
-			} catch (\Throwable $th) {
 			}
-		}
-		if ($folioDoc) {
+			if ($folioDoc) {
 
-			try {
-				foreach ($folioDoc as $key => $doc) {
-					$relacionDocArc = $this->_relacionFolioDocModel->where('FOLIOID', $doc['FOLIOID'])->where('ANO', $doc['ANO'])->where('FOLIODOCID', $doc['FOLIODOCID'])->where('TIPO', 'ARCHIVO DOC')->orderBy('FOLIODOCID', 'asc')->first();
-					if ($relacionDocArc == NULL) {
-						$municipioid = $foliovd['MUNICIPIOID'] ? $foliovd['MUNICIPIOID'] : NULL;
+				try {
+					foreach ($folioDoc as $key => $doc) {
+						$relacionDocArc = $this->_relacionFolioDocModel->where('FOLIOID', $doc['FOLIOID'])->where('ANO', $doc['ANO'])->where('FOLIODOCID', $doc['FOLIODOCID'])->where('TIPO', 'ARCHIVO DOC')->orderBy('FOLIODOCID', 'asc')->first();
+						if ($relacionDocArc == NULL) {
+							$municipioid = $foliovd['MUNICIPIOID'] ? $foliovd['MUNICIPIOID'] : NULL;
 
-						try {
-							if (ENVIRONMENT == 'development') {
-								if ($foliovd['MUNICIPIOASIGNADOID'] == 1) {
-									$autor = 8987;
-									$oficina = 793;
-								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 2 || $foliovd['MUNICIPIOASIGNADOID'] == 3) {
-									$autor = 3968;
-									$oficina = 394;
-								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
-									$autor = 10872;
-									$oficina = 924;
+							try {
+								if (ENVIRONMENT == 'development') {
+									if ($foliovd['MUNICIPIOASIGNADOID'] == 1) {
+										$autor = 8987;
+										$oficina = 793;
+									} else if ($foliovd['MUNICIPIOASIGNADOID'] == 2 || $foliovd['MUNICIPIOASIGNADOID'] == 3) {
+										$autor = 3968;
+										$oficina = 394;
+									} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
+										$autor = 10872;
+										$oficina = 924;
+									}
 								}
-							}
 
-							if (ENVIRONMENT == 'production') {
-								if ($foliovd['MUNICIPIOASIGNADOID'] == 1) {
-									$autor = 8988;
-									$oficina = 793;
-								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 2 || $foliovd['MUNICIPIOASIGNADOID'] == 3) {
-									$autor = 4179;
-									$oficina = 409;
-								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
-									$autor = 10832;
-									$oficina = 924;
+								if (ENVIRONMENT == 'production') {
+									if ($foliovd['MUNICIPIOASIGNADOID'] == 1) {
+										$autor = 8988;
+										$oficina = 793;
+									} else if ($foliovd['MUNICIPIOASIGNADOID'] == 2 || $foliovd['MUNICIPIOASIGNADOID'] == 3) {
+										$autor = 4179;
+										$oficina = 409;
+									} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
+										$autor = 10832;
+										$oficina = 924;
+									}
 								}
+
+								$_archivo = $this->_createArchivosExternos($expediente, $folio, $year,  $municipioid, 53,  $doc['TIPODOC'], $doc['PDF'], 'pdf', $autor, $oficina);
+
+								// $_archivo = $this->_createArchivosExternos($expediente, $folio, $year,  $municipioid, 53, $doc['TIPODOC'], $doc['PDF'], 'pdf',$doc['AGENTEID'],  $doc['OFICINAID']);
+								if ($_archivo->status == 201) {
+									$datosRelacionFolio = [
+										'FOLIODOCID' => $doc['FOLIODOCID'],
+										'FOLIOID' =>  $doc['FOLIOID'],
+										'ANO' => $doc['ANO'],
+										'EXPEDIENTEID' => $_archivo->EXPEDIENTEID,
+										'EXPEDIENTEARCHIVOID' => $_archivo->ARCHIVOID,
+										'TIPO' => 'ARCHIVO DOC',
+
+									];
+									$this->_relacionFolioDocModel->insert($datosRelacionFolio);
+								}
+							} catch (\Exception $e) {
 							}
-
-							$_archivo = $this->_createArchivosExternos($expediente, $folio, $year,  $municipioid, 53,  $doc['TIPODOC'], $doc['PDF'], 'pdf', $autor, $oficina);
-
-							// $_archivo = $this->_createArchivosExternos($expediente, $folio, $year,  $municipioid, 53, $doc['TIPODOC'], $doc['PDF'], 'pdf',$doc['AGENTEID'],  $doc['OFICINAID']);
-							if ($_archivo->status == 201) {
-								$datosRelacionFolio = [
-									'FOLIODOCID' => $doc['FOLIODOCID'],
-									'FOLIOID' =>  $doc['FOLIOID'],
-									'ANO' => $doc['ANO'],
-									'EXPEDIENTEID' => $_archivo->EXPEDIENTEID,
-									'EXPEDIENTEARCHIVOID' => $_archivo->ARCHIVOID,
-									'TIPO' => 'ARCHIVO DOC',
-
-								];
-								$this->_relacionFolioDocModel->insert($datosRelacionFolio);
-							}
-						} catch (\Exception $e) {
 						}
 					}
+				} catch (\Exception $e) {
+					// return json_encode(['status' => 0, 'error' => $e->getMessage()]);
 				}
-			} catch (\Exception $e) {
-				// return json_encode(['status' => 0, 'error' => $e->getMessage()]);
 			}
-		}
-		if ($folioDocPeritaje) {
-			try {
+			if ($folioDocPeritaje) {
+				try {
 
-				foreach ($folioDocPeritaje as $key => $docP) {
+					foreach ($folioDocPeritaje as $key => $docP) {
 
-					$relacionDocExpDoc = $this->_relacionFolioDocExpDoc->where('FOLIOID', $docP['FOLIOID'])->where('ANO', $docP['ANO'])->where('EXPEDIENTEID', $docP['NUMEROEXPEDIENTE'])->where('FOLIODOCID', $docP['FOLIODOCID'])->orderBy('FOLIODOCID', 'asc')->first();
+						$relacionDocExpDoc = $this->_relacionFolioDocExpDoc->where('FOLIOID', $docP['FOLIOID'])->where('ANO', $docP['ANO'])->where('EXPEDIENTEID', $docP['NUMEROEXPEDIENTE'])->where('FOLIODOCID', $docP['FOLIODOCID'])->orderBy('FOLIODOCID', 'asc')->first();
 
-					if ($relacionDocExpDoc == null) {
+						if ($relacionDocExpDoc == null) {
 
-						try {
-							// PHPRtfLite::registerAutoloader();
-							// instancia de documento rtf 
-							$rtf = new PHPRtfLite();
-							$sect = $rtf->addSection();
-							$docP['PLACEHOLDER'] = str_replace('</p>', '<br>', $docP['PLACEHOLDER']);
+							try {
+								// PHPRtfLite::registerAutoloader();
+								// instancia de documento rtf 
+								$rtf = new PHPRtfLite();
+								$sect = $rtf->addSection();
+								$docP['PLACEHOLDER'] = str_replace('</p>', '<br>', $docP['PLACEHOLDER']);
 
-							$sinetiqueta = strip_tags($docP['PLACEHOLDER'], ['strong', 'br']); //placeolder sin etiquetas html
-							//escribe el texto del rtf
-							$sect->writeText($sinetiqueta, new PHPRtfLite_Font(11, 'Arial'), new PHPRtfLite_ParFormat(PHPRtfLite_ParFormat::TEXT_ALIGN_JUSTIFY));
-							// save rtf document
-							$rtf->save('assets/' . $docP['NUMEROEXPEDIENTE'] . '_' . $docP['FOLIODOCID'] . '.rtf');
-							$tarjet = FCPATH  . 'assets/' . $docP['NUMEROEXPEDIENTE'] . "_" . $docP['FOLIODOCID'] . ".rtf";
-							//contenido del rtf guardado
-							$data = file_get_contents($tarjet);
-							//creacion del documento rtf
-							$document = new Document($data);
-							$espacio = implode(chr(0), str_split($data));
-							// fwrite($fh, $espacio) or die("No se pudo escribir en el archivo");
-							// $data2 = file_get_contents($tarjet2);
-							// fwrite($tarjet2, $espacio);
-							$plantilla = (object) array();
+								$sinetiqueta = strip_tags($docP['PLACEHOLDER'], ['strong', 'br']); //placeolder sin etiquetas html
+								//escribe el texto del rtf
+								$sect->writeText($sinetiqueta, new PHPRtfLite_Font(11, 'Arial'), new PHPRtfLite_ParFormat(PHPRtfLite_ParFormat::TEXT_ALIGN_JUSTIFY));
+								// save rtf document
+								$rtf->save('assets/' . $docP['NUMEROEXPEDIENTE'] . '_' . $docP['FOLIODOCID'] . '.rtf');
+								$tarjet = FCPATH  . 'assets/' . $docP['NUMEROEXPEDIENTE'] . "_" . $docP['FOLIODOCID'] . ".rtf";
+								//contenido del rtf guardado
+								$data = file_get_contents($tarjet);
+								//creacion del documento rtf
+								$document = new Document($data);
+								$espacio = implode(chr(0), str_split($data));
+								// fwrite($fh, $espacio) or die("No se pudo escribir en el archivo");
+								// $data2 = file_get_contents($tarjet2);
+								// fwrite($tarjet2, $espacio);
+								$plantilla = (object) array();
 
-							$plantilla = $this->_plantillasModel->where('TITULO', $docP['TIPODOC'])->first();
-							$documentos = array();
-							$documentos['DOCUMENTO'] = base64_encode($espacio);
-							$documentos['DOCTODESCR'] = $docP['TIPODOC'];
-							if (ENVIRONMENT == 'development') {
-								if ($foliovd['MUNICIPIOASIGNADOID'] == 1) {
-									$documentos['AUTOR'] = 8987;
-									$documentos['OFICINAIDAUTOR'] = 793;
-								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 2 || $foliovd['MUNICIPIOASIGNADOID'] == 3) {
-									$documentos['AUTOR'] = 3968;
-									$documentos['OFICINAIDAUTOR'] = 394;
-								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
-									$documentos['AUTOR'] = 10872;
-									$documentos['OFICINAIDAUTOR'] = 924;
+								$plantilla = $this->_plantillasModel->where('TITULO', $docP['TIPODOC'])->first();
+								$documentos = array();
+								$documentos['DOCUMENTO'] = base64_encode($espacio);
+								$documentos['DOCTODESCR'] = $docP['TIPODOC'];
+								if (ENVIRONMENT == 'development') {
+									if ($foliovd['MUNICIPIOASIGNADOID'] == 1) {
+										$documentos['AUTOR'] = 8987;
+										$documentos['OFICINAIDAUTOR'] = 793;
+									} else if ($foliovd['MUNICIPIOASIGNADOID'] == 2 || $foliovd['MUNICIPIOASIGNADOID'] == 3) {
+										$documentos['AUTOR'] = 3968;
+										$documentos['OFICINAIDAUTOR'] = 394;
+									} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
+										$documentos['AUTOR'] = 10872;
+										$documentos['OFICINAIDAUTOR'] = 924;
+									}
 								}
-							}
-							if (ENVIRONMENT == 'production') {
-								if ($foliovd['MUNICIPIOASIGNADOID'] == 1) {
-									$documentos['AUTOR'] = 8988;
-									$documentos['OFICINAIDAUTOR'] = 793;
-								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 2 || $foliovd['MUNICIPIOASIGNADOID'] == 3) {
-									$documentos['AUTOR'] = 4179;
-									$documentos['OFICINAIDAUTOR'] = 409;
-								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
-									$documentos['AUTOR'] = 10832;
-									$documentos['OFICINAIDAUTOR'] = 924;
+								if (ENVIRONMENT == 'production') {
+									if ($foliovd['MUNICIPIOASIGNADOID'] == 1) {
+										$documentos['AUTOR'] = 8988;
+										$documentos['OFICINAIDAUTOR'] = 793;
+									} else if ($foliovd['MUNICIPIOASIGNADOID'] == 2 || $foliovd['MUNICIPIOASIGNADOID'] == 3) {
+										$documentos['AUTOR'] = 4179;
+										$documentos['OFICINAIDAUTOR'] = 409;
+									} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
+										$documentos['AUTOR'] = 10832;
+										$documentos['OFICINAIDAUTOR'] = 924;
+									}
 								}
+
+								$documentos['STATUSDOCUMENTOID'] = 4;
+								if ($foliovd['MUNICIPIOASIGNADOID'] == 1) {
+									$documentos['CLASIFICACIONDOCTOID'] = $plantilla['CLASIFICACIONDOCTOENSENADAID'];
+									$documentos['PLANTILLAID'] = $plantilla['PLANTILLAJUSTICIAENSENADAID'];
+								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 2) {
+									$documentos['CLASIFICACIONDOCTOID'] = $plantilla['CLASIFICACIONDOCTOMEXICALIID'];
+									$documentos['PLANTILLAID'] = $plantilla['PLANTILLAJUSTICIAMEXICALIID'];
+								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 3) {
+									$documentos['CLASIFICACIONDOCTOID'] = $plantilla['CLASIFICACIONDOCTOMEXICALIID'];
+									$documentos['PLANTILLAID'] = $plantilla['PLANTILLAJUSTICIAMEXICALIID'];
+								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4) {
+									$documentos['CLASIFICACIONDOCTOID'] = $plantilla['CLASIFICACIONDOCTOTIJUANAID'];
+									$documentos['PLANTILLAID'] = $plantilla['PLANTILLAJUSTICIATIJUANAID'];
+								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 5) {
+									$documentos['CLASIFICACIONDOCTOID'] = $plantilla['CLASIFICACIONDOCTOTIJUANAID'];
+									$documentos['PLANTILLAID'] = $plantilla['PLANTILLAJUSTICIATIJUANAID'];
+								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 6) {
+									$documentos['CLASIFICACIONDOCTOID'] = $plantilla['CLASIFICACIONDOCTOENSENADAID'];
+									$documentos['PLANTILLAID'] = $plantilla['PLANTILLAJUSTICIAENSENADAID'];
+								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 7) {
+									$documentos['CLASIFICACIONDOCTOID'] = $plantilla['CLASIFICACIONDOCTOMEXICALIID'];
+									$documentos['PLANTILLAID'] = $plantilla['pLANTILLAJUSTICIAMEXICALIID'];
+								}
+
+
+
+
+
+								$expedienteDocumento = $this->_createFolioDocumentos($expediente, $documentos, $docP['MUNICIPIOID']);
+
+								if ($expedienteDocumento->status == 201) {
+									unlink(FCPATH  . 'assets/' . $docP['NUMEROEXPEDIENTE'] . "_" . $docP['FOLIODOCID'] . ".rtf");
+									// unlink(FCPATH  . 'assets/' . $doc['NUMEROEXPEDIENTE'] . "_" . $doc['FOLIODOCID'] . ".bin");	
+									$datosRelacionFolioExpDoc = [
+										'FOLIODOCID' => $docP['FOLIODOCID'],
+										'FOLIOID' =>  $docP['FOLIOID'],
+										'ANO' => $docP['ANO'],
+										'EXPEDIENTEID' => $expedienteDocumento->EXPEDIENTEID,
+										'EXPEDIENTEDOCID' => $expedienteDocumento->DOCUMENTOID,
+									];
+
+									$this->_relacionFolioDocExpDoc->insert($datosRelacionFolioExpDoc);
+								}
+							} catch (\Throwable $th) {
 							}
-
-							$documentos['STATUSDOCUMENTOID'] = 4;
-							if ($foliovd['MUNICIPIOASIGNADOID'] == 1) {
-								$documentos['CLASIFICACIONDOCTOID'] = $plantilla['CLASIFICACIONDOCTOENSENADAID'];
-								$documentos['PLANTILLAID'] = $plantilla['PLANTILLAJUSTICIAENSENADAID'];
-							} else if ($foliovd['MUNICIPIOASIGNADOID'] == 2) {
-								$documentos['CLASIFICACIONDOCTOID'] = $plantilla['CLASIFICACIONDOCTOMEXICALIID'];
-								$documentos['PLANTILLAID'] = $plantilla['PLANTILLAJUSTICIAMEXICALIID'];
-							} else if ($foliovd['MUNICIPIOASIGNADOID'] == 3) {
-								$documentos['CLASIFICACIONDOCTOID'] = $plantilla['CLASIFICACIONDOCTOMEXICALIID'];
-								$documentos['PLANTILLAID'] = $plantilla['PLANTILLAJUSTICIAMEXICALIID'];
-							} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4) {
-								$documentos['CLASIFICACIONDOCTOID'] = $plantilla['CLASIFICACIONDOCTOTIJUANAID'];
-								$documentos['PLANTILLAID'] = $plantilla['PLANTILLAJUSTICIATIJUANAID'];
-							} else if ($foliovd['MUNICIPIOASIGNADOID'] == 5) {
-								$documentos['CLASIFICACIONDOCTOID'] = $plantilla['CLASIFICACIONDOCTOTIJUANAID'];
-								$documentos['PLANTILLAID'] = $plantilla['PLANTILLAJUSTICIATIJUANAID'];
-							} else if ($foliovd['MUNICIPIOASIGNADOID'] == 6) {
-								$documentos['CLASIFICACIONDOCTOID'] = $plantilla['CLASIFICACIONDOCTOENSENADAID'];
-								$documentos['PLANTILLAID'] = $plantilla['PLANTILLAJUSTICIAENSENADAID'];
-							} else if ($foliovd['MUNICIPIOASIGNADOID'] == 7) {
-								$documentos['CLASIFICACIONDOCTOID'] = $plantilla['CLASIFICACIONDOCTOMEXICALIID'];
-								$documentos['PLANTILLAID'] = $plantilla['pLANTILLAJUSTICIAMEXICALIID'];
-							}
-
-
-
-
-
-							$expedienteDocumento = $this->_createFolioDocumentos($expediente, $documentos, $docP['MUNICIPIOID']);
-
-							if ($expedienteDocumento->status == 201) {
-								unlink(FCPATH  . 'assets/' . $docP['NUMEROEXPEDIENTE'] . "_" . $docP['FOLIODOCID'] . ".rtf");
-								// unlink(FCPATH  . 'assets/' . $doc['NUMEROEXPEDIENTE'] . "_" . $doc['FOLIODOCID'] . ".bin");	
-								$datosRelacionFolioExpDoc = [
-									'FOLIODOCID' => $docP['FOLIODOCID'],
-									'FOLIOID' =>  $docP['FOLIOID'],
-									'ANO' => $docP['ANO'],
-									'EXPEDIENTEID' => $expedienteDocumento->EXPEDIENTEID,
-									'EXPEDIENTEDOCID' => $expedienteDocumento->DOCUMENTOID,
-								];
-
-								$this->_relacionFolioDocExpDoc->insert($datosRelacionFolioExpDoc);
-							}
-						} catch (\Throwable $th) {
 						}
 					}
-				}
 
-				// return json_encode(['status' => 1]);
-			} catch (\Exception $e) {
-				return json_encode(['status' => 0, 'error' => $e->getMessage()]);
+					// return json_encode(['status' => 1]);
+				} catch (\Exception $e) {
+					return json_encode(['status' => 0, 'error' => $e->getMessage()]);
+				}
+			} else {
 			}
-		} else {
+			// return json_encode(['status' => 1]);
+		} catch (\Exception $e) {
+			return json_encode(['status' => 0, 'error' => $e->getMessage()]);
 		}
-		// return json_encode(['status' => 1]);
-	} catch (\Exception $e) {
-		return json_encode(['status' => 0, 'error' => $e->getMessage()]);
-	}
 	}
 
 	private function _createExpediente($folioRow)
@@ -3448,7 +3447,7 @@ class DashboardController extends BaseController
 		return json_decode($result);
 	}
 
-	
+
 	private function _curlPatch($endpoint, $data)
 	{
 		$ch = curl_init();
@@ -3660,12 +3659,10 @@ class DashboardController extends BaseController
 				}
 			}
 		}
-		if(isset($responseid)){
-			return json_encode(['status' => 1, 'responseVideos' => $responseFolio, 'marcasVideo'=>$responseid]);
-
-		}else{
+		if (isset($responseid)) {
+			return json_encode(['status' => 1, 'responseVideos' => $responseFolio, 'marcasVideo' => $responseid]);
+		} else {
 			return json_encode(['status' => 1, 'responseVideos' => $responseFolio]);
-
 		}
 
 		// return json_encode($endpointId);
@@ -3787,11 +3784,11 @@ class DashboardController extends BaseController
 			$data['names'] = $names;
 			$data['lastnames'] = $lastnames;
 			$data['email'] = $email;
-			$data['sex'] = $sex =='M'? 'MALE': 'FEMALE';
+			$data['sex'] = $sex == 'M' ? 'MALE' : 'FEMALE';
 			$data['role'] = $rolId;
-			$response = $this->_curlPatch( $this->urlApi .'agent/'. $uuid, $data);
+			$response = $this->_curlPatch($this->urlApi . 'agent/' . $uuid, $data);
 			return $response;
-		} 
+		}
 	}
 
 	public function restoreFolio()
@@ -6360,7 +6357,7 @@ class DashboardController extends BaseController
 			$data->plantilla = str_replace('[DOMICILIO_INSTALACION]', 'BLVD. GRAL. RODOLFO SÁNCHEZ TABOADA NO. 10127, ESQUINA CON AV. RÍO TIJUANA. ZONA URBANA RÍO TIJUANA. (EDIFICIO DE CRISTALES NEGROS, PRIMER PISO).', $data->plantilla);
 			$data->plantilla = str_replace('[TELEFONO_UMA]', '664-736-52-96, correo electrónico: umacosta@fgebc.gob.mx', $data->plantilla);
 		}
-		if($notificacion || $proceso){
+		if ($notificacion || $proceso) {
 			$data->plantilla = str_replace('[TIPO_PROCESO]',  $proceso ?  $proceso : '-', $data->plantilla);
 			$data->plantilla = str_replace('(PERSONAL / NOTIFICADOR)',  $notificacion ?  $notificacion : '-', $data->plantilla);
 		}
