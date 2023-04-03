@@ -22,7 +22,7 @@ const pantalla_final = document.querySelector("#pantalla_final");
 // const camara_apagada_denunciante = document.querySelector('#camara_apagada_denunciante');
 // const camara_prendida_denunciante = document.querySelector('#camara_prendida_denunciante');
 // const denunciante_name = document.querySelector('#secondary_video_name');
-const agente_name = document.querySelector("#main_video_details_name");
+// const agente_name = document.querySelector("#main_video_details_name");
 // const audio_denunciante_prendido_b = document.querySelector('#audio_denunciante_prendido_b');
 // const audio_denunciante_apagado_b = document.querySelector('#audio_denunciante_apagado_b');
 // const camara_apagada_denunciante_b = document.querySelector('#camara_apagada_denunciante_b');
@@ -46,7 +46,7 @@ guestVideoService.registerOnVideoReady(
 		texto_inicial.style.display = "none";
 		video_container.style.display = "block";
 		document.querySelector("#documentos_anexar_card").style.display = "block";
-		agente_name.innerHTML = "LIC. " + response.agent.name;
+		// agente_name.innerHTML = "LIC. " + response.agent.name;
 		// denunciante_name.innerHTML = guestData.name;
 	}
 );
