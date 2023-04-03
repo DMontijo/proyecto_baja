@@ -44,8 +44,8 @@ guestVideoService.registerOnVideoReady(
 	"main_video",
 	(response, guestData) => {
 		texto_inicial.style.display = "none";
-		document.querySelector("#documentos_anexar_card").style.display = "none"
 		video_container.style.display = "block";
+		document.querySelector("#documentos_anexar_card").style.display = "block";
 		agente_name.innerHTML = "LIC. " + response.agent.name;
 		// denunciante_name.innerHTML = guestData.name;
 	}
@@ -54,6 +54,7 @@ guestVideoService.registerOnVideoReady(
 guestVideoService.registerOnDisconnect(() => {
 	pantalla_final.style.display = "block";
 	video_container.style.display = "none";
+	document.querySelector("#documentos_anexar_card").style.display = "none";
 	let url = document.querySelector("#input_base_url_endcall").value;
 	window.location.href = url;
 });
@@ -106,7 +107,6 @@ $(function () {
 
 guestVideoService.saveGeolocation(() => {
 	texto_inicial.style.display = "block";
-	document.querySelector("#documentos_anexar_card").style.display = "block";
 	$("#geolocalizacion_modal").modal("hide");
 	guestVideoService.connectGuest(
 		{ delito, folio: folio_SY + "/" + year_SF, descripcion },

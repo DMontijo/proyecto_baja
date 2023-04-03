@@ -112,10 +112,10 @@
 		<input type="text" class="form-control d-none" id="input_priority" value="<?php echo $_GET['prioridad'] ?>">
 		<input type="text" class="form-control d-none" id="input_delito" value="<?php echo $_GET['delito'] ?>">
 		<input type="text" class="form-control d-none" id="input_descripcion" value="<?php echo $_GET['descripcion'] ?>">
-		<input type="text" class="form-control d-none" id="input_base_url_endcall" value="<?php base_url('/denuncia/dashboard/end-videocall') ?>">
+		<input type="text" class="form-control d-none" id="input_base_url_endcall" value="<?= base_url('/denuncia/dashboard/end-videocall') ?>">
 	</div>
 	<div class="row d-block">
-		<div class="col-12 p-0 m-0 mb-3">
+		<div class="col-12 p-0 m-0 mb-3" id="documentos_anexar_card" style="display:none;">
 			<div class="card">
 				<div class="card-body">
 					<form id="form_archivos_externos" method="post" enctype="multipart/form-data">
@@ -123,7 +123,7 @@
 						<input type="text" class="form-control" id="year" name="year" hidden>
 						<input type="text" class="form-control" id="autor" name="autor" hidden>
 
-						<div class="row" style="font-size:10px;" id="documentos_anexar_card" style="display:none;">
+						<div class="row" style="font-size:10px;">
 							<div class="col-12 col-sm-6 offset-sm-3">
 								<p class="p-0 m-0"><strong>Documentos a anexar</strong></p>
 								<small>En caso de requerir subir un documento durante la entrevista favor de subirlo en esta sección</small>
@@ -162,6 +162,9 @@
 						<img src="<?= base_url() ?>/assets/img/FGEBC.png" alt="Loader FGEBC" class="mb-3" style="width:250px;">
 						<p class="fw-bold">ESTIMADO (A) USUARIO (A),<br>¡GRACIAS POR SELECCIONAR EL SERVICIO DE VIDEO DENUNCIA!</p>
 						<p>En la Fiscalía General del Estado de Baja California día a día trabajamos para garantizarte un fácil acceso a la justicia desde cualquier lugar del mundo.</p>
+						<div class="d-grid gap-2">
+							<a href="<?= base_url('/denuncia/dashboard/denuncias') ?>" type="button" name="" id="" class="btn btn-primary">IR A MIS DENUNCIAS</a>
+						</div>
 					</div>
 				</div>
 			</div>
