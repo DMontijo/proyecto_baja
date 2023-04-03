@@ -290,6 +290,7 @@ function toogleAudioAgent(isEnable) {
 }
 
 function toogleVideoDenunciante(isEnabled) {
+	console.log('Dentro de toogle video denunciante', isEnable);
 	if (isEnabled == true) {
 		document.getElementById("camara_prendida_denunciante").style.display = "block";
 		document.getElementById("camara_apagada_denunciante").style.display = "none";
@@ -304,6 +305,7 @@ function toogleVideoDenunciante(isEnabled) {
 }
 
 function toogleAudioDenunciante(isEnable) {
+	console.log('Dentro de toogle audio denunciante', isEnable);
 	if (isEnable == true) {
 		document.getElementById("audio_prendido_denunciante").style.display = "block";
 		document.getElementById("audio_apagado_denunciante").style.display = "none";
