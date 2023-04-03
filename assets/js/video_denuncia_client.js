@@ -3,7 +3,7 @@ import { VideoServiceGuest } from "../guest/guest.js";
 const apiKey = "vspk_6258d819-105e-4487-b7f1-be72e892850e";
 const guestUUID = document.getElementById("input_uuid").value;
 let folio_completo = document.getElementById("input_folio").value;
-const array = folio_completo.split('-');
+const array = folio_completo.split("-");
 let folio_SY = array[1];
 let year_SF = array[0];
 const delito = document.getElementById("input_delito").value;
@@ -29,10 +29,15 @@ const agente_name = document.querySelector("#main_video_details_name");
 // const camara_prendida_denunciante_b = document.querySelector('#camara_prendida_denunciante_b');
 const apiURI = "https://videodenunciabalancer.fgebc.gob.mx";
 
-const guestVideoService = new VideoServiceGuest(guestUUID, folio_SY + '/' + year_SF, priority, {
-	apiURI,
-	apiKey
-});
+const guestVideoService = new VideoServiceGuest(
+	guestUUID,
+	folio_SY + "/" + year_SF,
+	priority,
+	{
+		apiURI,
+		apiKey
+	}
+);
 
 guestVideoService.registerOnVideoReady(
 	"secondary_video",
@@ -48,6 +53,8 @@ guestVideoService.registerOnVideoReady(
 guestVideoService.registerOnDisconnect(() => {
 	pantalla_final.style.display = "block";
 	video_container.style.display = "none";
+	let url = document.querySelector("#input_base_url_endcall").value;
+	window.location.href = url;
 });
 
 guestVideoService.registerMediaRemoteToggling(response => {
@@ -92,13 +99,17 @@ guestVideoService.registerVideoRecordingStatus(isRecording => {
 	// }
 });
 
-$(function () {
+$(function() {
 	$("#geolocalizacion_modal").modal("show");
 });
+
 guestVideoService.saveGeolocation(() => {
 	texto_inicial.style.display = "block";
 	$("#geolocalizacion_modal").modal("hide");
-	guestVideoService.connectGuest({ delito, folio: folio_SY + '/' + year_SF, descripcion }, guest => {
-		console.log(guest);
-	});
+	guestVideoService.connectGuest(
+		{ delito, folio: folio_SY + "/" + year_SF, descripcion },
+		guest => {
+			console.log(guest);
+		}
+	);
 });

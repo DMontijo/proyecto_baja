@@ -185,6 +185,7 @@ $routes->group('denuncia', function ($routes) {
 		$routes->get('/', 'client/DashboardController::index');
 		$routes->get('video-denuncia', 'client/DashboardController::video_denuncia');
 		$routes->post('video-llamada', 'client/DashboardController::video_llamada');
+		$routes->get('end-videocall', 'client/DashboardController::endVideoCall');
 
 		$routes->get('perfil', 'client/DashboardController::profile');
 		$routes->post('actualizar-perfil', 'client/DashboardController::update_profile');

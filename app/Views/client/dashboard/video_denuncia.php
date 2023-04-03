@@ -112,6 +112,7 @@
 		<input type="text" class="form-control d-none" id="input_priority" value="<?php echo $_GET['prioridad'] ?>">
 		<input type="text" class="form-control d-none" id="input_delito" value="<?php echo $_GET['delito'] ?>">
 		<input type="text" class="form-control d-none" id="input_descripcion" value="<?php echo $_GET['descripcion'] ?>">
+		<input type="text" class="form-control d-none" id="input_base_url_endcall" value="<?php base_url('/denuncia/dashboard/end-videocall') ?>">
 	</div>
 	<div class="row d-block">
 		<div class="col-12 p-0 m-0 mb-3">

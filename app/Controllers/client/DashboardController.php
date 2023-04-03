@@ -284,6 +284,7 @@ class DashboardController extends BaseController
 		// 	return json_encode(['status' => 0]);
 		// }
 	}
+
 	private function _folioExpArchivo($data, $folio, $year)
 	{
 		$data = $data;
@@ -324,6 +325,13 @@ class DashboardController extends BaseController
 			}
 		}
 		$this->_loadView('Mis denuncias', 'denuncias', '', $data, 'lista_denuncias');
+	}
+
+	public function endVideoCall()
+	{
+		$session = session();
+		$data = (object) array();
+		$this->_loadView('Denuncia finalizada', 'endcall', '', $data, 'end_videocall');
 	}
 
 	public function create()
