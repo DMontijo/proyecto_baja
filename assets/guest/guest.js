@@ -7,6 +7,9 @@
 
 import VideoCall from './VideoService.js';
 import { ExceptionConstructorMissingParameter, ExceptionSocketIONotImported } from './exceptions.js';
+
+const SESSION_RECOVER_KEY = 'session-recover';
+
 /**
  * This is the main class to instanciate a connection with guests
  * 
@@ -108,6 +111,12 @@ export class VideoServiceGuest {
             console.warn('event', data);
         });
 
+        this.#socket.on('disconnect', function () {
+            console.warn('disconnect');
+        });
+
+        const previusSession = JSON.parse(localStorage.getItem(SESSION_RECOVER_KEY));
+
         this.#emit('connect-guest', {
             uuid: this.#guestUUID,
             priority: this.#priority,
@@ -115,7 +124,8 @@ export class VideoServiceGuest {
             altitude: this.#position?.coords.altitude,
             latitude: this.#position?.coords.latitude,
             longitude: this.#position?.coords.longitude,
-            details: this.#guestDetails
+            details: this.#guestDetails,
+            previusSession : this.#diffMinutes(new Date(previusSession.createdAt)) < 180 ? previusSession.sessionId : undefined
         }, response => {
             this.#preventUserCloseWindow();
             const { guestConnection, guest } = response;
@@ -172,6 +182,13 @@ export class VideoServiceGuest {
      */
     registerOnVideoReady(localVideoSelector, remoteVideoSelector, callback) {
         this.#socket.on('video-ready', (response) => {
+            console.log(response);
+
+            localStorage.setItem(SESSION_RECOVER_KEY, JSON.stringify({
+                sessionId: response.sessionId,
+                createdAt: new Date()
+            }));
+
             this.agentData = response.agent;
             if (typeof callback === 'function') callback(response, this.guestData);
 
@@ -255,5 +272,17 @@ export class VideoServiceGuest {
         const _callback = callback ?? function(){};
 
         this.#socket.emit(eventName, _data, _callback);
+    }
+
+    /**
+     * Helper to compare minutes between two dates
+     * 
+     * @param {Date} date1 - The start date of comparison
+     * @param {Date} [date2= new Date()] - The end date of comparison
+     */
+    #diffMinutes(dt1, dt2 = new Date()) {
+        let diff =(dt2.getTime() - dt1.getTime()) / 1000;
+        diff /= 60;
+        return Math.round(diff);
     }
 }
