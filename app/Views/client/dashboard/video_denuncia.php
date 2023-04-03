@@ -123,7 +123,7 @@
 						<input type="text" class="form-control" id="year" name="year" hidden>
 						<input type="text" class="form-control" id="autor" name="autor" hidden>
 
-						<div class="row" style="font-size:10px;">
+						<div class="row" style="font-size:10px;" id="documentos_anexar_card" style="display:none;">
 							<div class="col-12 col-sm-6 offset-sm-3">
 								<p class="p-0 m-0"><strong>Documentos a anexar</strong></p>
 								<small>En caso de requerir subir un documento durante la entrevista favor de subirlo en esta sección</small>

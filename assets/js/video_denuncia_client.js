@@ -44,6 +44,7 @@ guestVideoService.registerOnVideoReady(
 	"main_video",
 	(response, guestData) => {
 		texto_inicial.style.display = "none";
+		document.querySelector("#documentos_anexar_card").style.display = "none"
 		video_container.style.display = "block";
 		agente_name.innerHTML = "LIC. " + response.agent.name;
 		// denunciante_name.innerHTML = guestData.name;
@@ -99,12 +100,13 @@ guestVideoService.registerVideoRecordingStatus(isRecording => {
 	// }
 });
 
-$(function() {
+$(function () {
 	$("#geolocalizacion_modal").modal("show");
 });
 
 guestVideoService.saveGeolocation(() => {
 	texto_inicial.style.display = "block";
+	document.querySelector("#documentos_anexar_card").style.display = "block";
 	$("#geolocalizacion_modal").modal("hide");
 	guestVideoService.connectGuest(
 		{ delito, folio: folio_SY + "/" + year_SF, descripcion },
