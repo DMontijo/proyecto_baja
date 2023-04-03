@@ -69,7 +69,7 @@
 		#main_video {
 			width: 100% !important;
 			min-height: 70vh;
-			background-color: aqua;
+			background-color: black;
 		}
 
 		#main_video_details {
@@ -240,10 +240,10 @@
 				<div class="card-body shadow rounded m-0 p-0">
 					<div class="row">
 						<div class="col-12 px-4 py-3">
-							<button class="btn btn-success" id="disponible"  name="disponible" data-toggle="tooltip" data-placement="top" title="Conectar para recibir video llamadas"><i class="fas fa-door-open"></i> HACERME DISPONIBLE</button>
+							<button class="btn btn-success" id="disponible" name="disponible" data-toggle="tooltip" data-placement="top" title="Conectar para recibir video llamadas"><i class="fas fa-door-open"></i> HACERME DISPONIBLE</button>
 							<button class="btn btn-danger" id="no_disponible" name="no_disponible" data-toggle="tooltip" data-placement="top" hidden><i class="fas fa-times-circle"></i> DESCONECTARME</button>
 						</div>
-						<div class="col-12 px-4" id="header-llamada" name="header-llamada"hidden>
+						<div class="col-12 px-4" id="header-llamada" name="header-llamada" hidden>
 							<p>
 								FOLIO: <span class="font-weight-bold" id="folio_llamada_v"></span> - NOMBRE: <span class="font-weight-bold" id="denunciante_nombre_llamada"></span>
 							</p>
@@ -259,19 +259,19 @@
 												<!-- ABDIEL OTONIEL FLORES GONZÁLEZ -->
 											</button>
 											<button class="btn btn-sm btn-secondary" id="main_video_details_video">
-												<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-camera-video-fill" id="camara_prendida_denunciante"viewBox="0 0 16 16">
+												<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-camera-video-fill" id="camara_prendida_denunciante" viewBox="0 0 16 16">
 													<path fill-rule="evenodd" d="M0 5a2 2 0 0 1 2-2h7.5a2 2 0 0 1 1.983 1.738l3.11-1.382A1 1 0 0 1 16 4.269v7.462a1 1 0 0 1-1.406.913l-3.111-1.382A2 2 0 0 1 9.5 13H2a2 2 0 0 1-2-2V5z" />
 												</svg>
-												<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-camera-video-off-fill" id="camara_apagada_denunciante"viewBox="0 0 16 16"style="display: none;">
+												<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-camera-video-off-fill" id="camara_apagada_denunciante" viewBox="0 0 16 16" style="display: none;">
 													<path fill-rule="evenodd" d="M10.961 12.365a1.99 1.99 0 0 0 .522-1.103l3.11 1.382A1 1 0 0 0 16 11.731V4.269a1 1 0 0 0-1.406-.913l-3.111 1.382A2 2 0 0 0 9.5 3H4.272l6.69 9.365zm-10.114-9A2.001 2.001 0 0 0 0 5v6a2 2 0 0 0 2 2h5.728L.847 3.366zm9.746 11.925-10-14 .814-.58 10 14-.814.58z" />
 												</svg>
 											</button>
 											<button class="btn btn-sm btn-secondary" id="main_video_details_microphone">
-												<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-mic-fill" id="audio_prendido_denunciante"viewBox="0 0 16 16">
+												<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-mic-fill" id="audio_prendido_denunciante" viewBox="0 0 16 16">
 													<path d="M5 3a3 3 0 0 1 6 0v5a3 3 0 0 1-6 0V3z" />
 													<path d="M3.5 6.5A.5.5 0 0 1 4 7v1a4 4 0 0 0 8 0V7a.5.5 0 0 1 1 0v1a5 5 0 0 1-4.5 4.975V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 .5-.5z" />
 												</svg>
-												<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-mic-mute-fill" id="audio_apagado_denunciante"viewBox="0 0 16 16"style="display: none;">
+												<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-mic-mute-fill" id="audio_apagado_denunciante" viewBox="0 0 16 16" style="display: none;">
 													<path d="M13 8c0 .564-.094 1.107-.266 1.613l-.814-.814A4.02 4.02 0 0 0 12 8V7a.5.5 0 0 1 1 0v1zm-5 4c.818 0 1.578-.245 2.212-.667l.718.719a4.973 4.973 0 0 1-2.43.923V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 1 0v1a4 4 0 0 0 4 4zm3-9v4.879L5.158 2.037A3.001 3.001 0 0 1 11 3z" />
 													<path d="M9.486 10.607 5 6.12V8a3 3 0 0 0 4.486 2.607zm-7.84-9.253 12 12 .708-.708-12-12-.708.708z" />
 												</svg>
@@ -292,12 +292,12 @@
 									<div class="col-12">
 										<div id="tools-group">
 											<div class="btn-group btn-group-toggle mr-2" data-toggle="buttons">
-												<button class="btn btn-lg btn-light" id="toogle-video-agent"  name="toogle-video-agent" data-toggle="tooltip" data-placement="top" title="Encender cámara del agente">
+												<button class="btn btn-lg btn-light" id="toogle-video-agent" name="toogle-video-agent" data-toggle="tooltip" data-placement="top" title="Encender cámara del agente">
 													<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-camera-video-off" viewBox="0 0 16 16">
 														<path fill-rule="evenodd" d="M10.961 12.365a1.99 1.99 0 0 0 .522-1.103l3.11 1.382A1 1 0 0 0 16 11.731V4.269a1 1 0 0 0-1.406-.913l-3.111 1.382A2 2 0 0 0 9.5 3H4.272l.714 1H9.5a1 1 0 0 1 1 1v6a1 1 0 0 1-.144.518l.605.847zM1.428 4.18A.999.999 0 0 0 1 5v6a1 1 0 0 0 1 1h5.014l.714 1H2a2 2 0 0 1-2-2V5c0-.675.334-1.272.847-1.634l.58.814zM15 11.73l-3.5-1.555v-4.35L15 4.269v7.462zm-4.407 3.56-10-14 .814-.58 10 14-.814.58z" />
 													</svg>
 												</button>
-												<button class="btn btn-lg btn-light" id="toogle-audio-agent" name="toogle-audio-agent"data-toggle="tooltip" data-placement="top" title="Activar audio del agente">
+												<button class="btn btn-lg btn-light" id="toogle-audio-agent" name="toogle-audio-agent" data-toggle="tooltip" data-placement="top" title="Activar audio del agente">
 													<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-mic-mute" viewBox="0 0 16 16">
 														<path d="M13 8c0 .564-.094 1.107-.266 1.613l-.814-.814A4.02 4.02 0 0 0 12 8V7a.5.5 0 0 1 1 0v1zm-5 4c.818 0 1.578-.245 2.212-.667l.718.719a4.973 4.973 0 0 1-2.43.923V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 1 0v1a4 4 0 0 0 4 4zm3-9v4.879l-1-1V3a2 2 0 0 0-3.997-.118l-.845-.845A3.001 3.001 0 0 1 11 3z" />
 														<path d="m9.486 10.607-.748-.748A2 2 0 0 1 6 8v-.878l-1-1V8a3 3 0 0 0 4.486 2.607zm-7.84-9.253 12 12 .708-.708-12-12-.708.708z" />
@@ -308,7 +308,7 @@
 														<path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z" />
 													</svg>
 												</button>
-												<button class="btn btn-lg btn-light" id="stop-recording"  name="stop-recording" data-toggle="tooltip" data-placement="top" title="Detener grabación">
+												<button class="btn btn-lg btn-light" id="stop-recording" name="stop-recording" data-toggle="tooltip" data-placement="top" title="Detener grabación">
 													<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-stop-circle" viewBox="0 0 16 16">
 														<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
 														<path d="M5 6.5A1.5 1.5 0 0 1 6.5 5h3A1.5 1.5 0 0 1 11 6.5v3A1.5 1.5 0 0 1 9.5 11h-3A1.5 1.5 0 0 1 5 9.5v-3z" />
@@ -339,7 +339,7 @@
 														<path d="m9.486 10.607-.748-.748A2 2 0 0 1 6 8v-.878l-1-1V8a3 3 0 0 0 4.486 2.607zm-7.84-9.253 12 12 .708-.708-12-12-.708.708z" />
 													</svg>
 												</button>
-												
+
 											</div>
 										</div>
 									</div>
@@ -351,17 +351,17 @@
 												<!-- LIC. ALFREDO JIMENEZ PEREZ -->
 											</div>
 											<div class="font-weigth-bold" id="secondary_video_details_devices">
-												<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-camera-video-fill" id ="camara_agente_prendida"viewBox="0 0 16 16">
+												<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-camera-video-fill" id="camara_agente_prendida" viewBox="0 0 16 16">
 													<path fill-rule="evenodd" d="M0 5a2 2 0 0 1 2-2h7.5a2 2 0 0 1 1.983 1.738l3.11-1.382A1 1 0 0 1 16 4.269v7.462a1 1 0 0 1-1.406.913l-3.111-1.382A2 2 0 0 1 9.5 13H2a2 2 0 0 1-2-2V5z" />
 												</svg>
-												<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-camera-video-off-fill" id ="camara_agente_apagada"viewBox="0 0 16 16"style="display: none;">
+												<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-camera-video-off-fill" id="camara_agente_apagada" viewBox="0 0 16 16" style="display: none;">
 													<path fill-rule="evenodd" d="M10.961 12.365a1.99 1.99 0 0 0 .522-1.103l3.11 1.382A1 1 0 0 0 16 11.731V4.269a1 1 0 0 0-1.406-.913l-3.111 1.382A2 2 0 0 0 9.5 3H4.272l6.69 9.365zm-10.114-9A2.001 2.001 0 0 0 0 5v6a2 2 0 0 0 2 2h5.728L.847 3.366zm9.746 11.925-10-14 .814-.58 10 14-.814.58z" />
 												</svg>
-												<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-mic-fill"id ="audio_agente_prendida" viewBox="0 0 16 16">
+												<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-mic-fill" id="audio_agente_prendida" viewBox="0 0 16 16">
 													<path d="M5 3a3 3 0 0 1 6 0v5a3 3 0 0 1-6 0V3z" />
 													<path d="M3.5 6.5A.5.5 0 0 1 4 7v1a4 4 0 0 0 8 0V7a.5.5 0 0 1 1 0v1a5 5 0 0 1-4.5 4.975V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 .5-.5z" />
 												</svg>
-												<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-mic-mute-fill" id ="audio_agente_apagada"viewBox="0 0 16 16"style="display: none;">
+												<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-mic-mute-fill" id="audio_agente_apagada" viewBox="0 0 16 16" style="display: none;">
 													<path d="M13 8c0 .564-.094 1.107-.266 1.613l-.814-.814A4.02 4.02 0 0 0 12 8V7a.5.5 0 0 1 1 0v1zm-5 4c.818 0 1.578-.245 2.212-.667l.718.719a4.973 4.973 0 0 1-2.43.923V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 1 0v1a4 4 0 0 0 4 4zm3-9v4.879L5.158 2.037A3.001 3.001 0 0 1 11 3z" />
 													<path d="M9.486 10.607 5 6.12V8a3 3 0 0 0 4.486 2.607zm-7.84-9.253 12 12 .708-.708-12-12-.708.708z" />
 												</svg>

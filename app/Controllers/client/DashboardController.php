@@ -220,7 +220,7 @@ class DashboardController extends BaseController
 			'sexo' => $this->request->getGet('sexo'),
 			'prioridad' => $this->request->getGet('prioridad'),
 			'sexo_denunciante' => $this->request->getGet('sexo_denunciante') == 'F' ? 'FEMENINO' : 'MASCULINO',
-			'UUID'=> $denunciante->UUID
+			'UUID' => $denunciante->UUID
 		];
 		$array = explode("-", $data->folio);
 
@@ -232,6 +232,7 @@ class DashboardController extends BaseController
 			return redirect()->to(base_url('denuncia/dashboard'));
 		}
 	}
+
 	public function crear_archivos_externos()
 	{
 
@@ -896,7 +897,7 @@ class DashboardController extends BaseController
 			} else {
 				return redirect()->to(base_url($url));
 			}
-		// }
+			// }
 		} else {
 			return redirect()->to(base_url('/denuncia/dashboard'));
 		}
@@ -1219,7 +1220,7 @@ class DashboardController extends BaseController
 		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
 		$data['schema'] = $conexion->SCHEMA;
 
-		return $this->_curlPostDataEncrypt($endpoint,$data);
+		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
 
 	private function _curlPostDataEncrypt($endpoint, $data)
