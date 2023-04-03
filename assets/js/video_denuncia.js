@@ -23,7 +23,7 @@ const audio_agente_on = document.querySelector("#on-audio-agent");
 const audio_agente_off = document.querySelector("#off-audio-agent");
 
 //VIDEO Y AUDIO DENUNCIANTE
-const video_denunciante_on = document.querySelector("#on-videodenunciantet");
+const video_denunciante_on = document.querySelector("#on-video_denunciante");
 const video_denunciante_off = document.querySelector("#off-video-denunciante");
 
 const audio_denunciante_on = document.querySelector("#on-audio-denunciante");
@@ -106,6 +106,7 @@ aceptar_llamada.addEventListener("click", () => {
 			denunciante_nombre_llamada.innerHTML = guest.name;
 			disponible_connect.hidden = true;
 			no_disponible_connect.hidden = true;
+			header_llamda.hidden = false;
 			$("#llamadaModal").modal("hide");
 		}
 	);
