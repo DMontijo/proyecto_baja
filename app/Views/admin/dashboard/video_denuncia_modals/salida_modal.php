@@ -135,7 +135,7 @@
 		if (charRemain < 300) {
 			document.getElementById("numCaracterSalida").innerHTML = charRemain + ' caracteres restantes';
 		} else {
-			document.getElementById("numCaracterSalida").innerHTML = '300 caracteres restantes';
+			document.getElementById("numCaracterSalida").innerHTML = '1000 caracteres restantes';
 
 		}
 

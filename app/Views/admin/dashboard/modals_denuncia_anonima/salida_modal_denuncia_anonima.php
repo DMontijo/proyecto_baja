@@ -139,7 +139,7 @@
 		if (charRemain < 300) {
 			document.getElementById("numCaracterSalidaDa").innerHTML = charRemain + ' caracteres restantes';
 		} else {
-			document.getElementById("numCaracterSalidaDa").innerHTML = '300 caracteres restantes';
+			document.getElementById("numCaracterSalidaDa").innerHTML = '1000 caracteres restantes';
 
 		}
 		if (!(e.target.value == 'DERIVADO' || e.target.value == 'CANALIZADO' || e.target.value == '1' || e.target.value == '4' || e.target.value == '5' || e.target.value == '6' || e.target.value == '7' || e.target.value == '8' || e.target.value == '9')) {

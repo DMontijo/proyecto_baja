@@ -417,7 +417,7 @@
 			<div class="card-body">
 				<label class="font-weight-bold" for="notas">Breve descripción del caso:</label>
 				<textarea class="form-control" id="notas_mp" placeholder="Descripción del caso..." rows="10" required maxlength="1000" oninput="mayuscTextarea(this)" onkeydown="pulsar(event)" onkeyup="contarCaracteres(this)"></textarea>
-				<small id="numCaracter">300 caracteres restantes</small>
+				<small id="numCaracter">1000 caracteres restantes</small>
 
 			</div>
 		</div>
