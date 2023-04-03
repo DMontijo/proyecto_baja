@@ -59,7 +59,9 @@ guestVideoService.registerOnDisconnect((e) => {
 	pantalla_final.style.display = "block";
 	video_container.style.display = "none";
 	document.querySelector("#documentos_anexar_card").style.display = "none";
-	deleteVideoElement();
+	setTimeout(() => {
+		deleteVideoElement();
+	}, 2000);
 });
 
 guestVideoService.registerMediaRemoteToggling(response => {
