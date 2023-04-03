@@ -71,7 +71,7 @@ disponible_connect.addEventListener("click", () => {
 				document.querySelector("#idioma_denunciante").value = response.guest.languages ? response.guest.languages[0].title : "-";
 				$("#llamadaModal").modal("show");
 				disponible_connect.hidden = true;
-				no_disponible_connect.hidden = true;
+				no_disponible_connect.hidden = false;
 			});
 		},
 		response => {
@@ -94,23 +94,19 @@ no_disponible_connect.addEventListener("click", () => {
 });
 
 aceptar_llamada.addEventListener("click", () => {
-	console.log("Clic en aceptar llamada");
+	console.log("Clic en aceptar llamada"); a
 
-	agentVideoService.acceptCall(
-		"agn_vf",
-		"main_video",
+	agentVideoService.acceptCall("agn_vf", "main_video",
 		(response, agent, { guest, guestConnection }) => {
 			clearVideoCall();
 			video_container.style.display = "block";
-			document.querySelector(
-				"#secondary_video_details_name"
-			).innerHTML = `${agent.names} ${agent.lastnames}`;
-			document.querySelector("#main_video_details_name").innerHTML =
-				guest.name;
+			document.querySelector("#secondary_video_details_name").innerHTML = `${agent.names} ${agent.lastnames}`;
+			document.querySelector("#main_video_details_name").innerHTML = guest.name;
 			folio_llamada.innerHTML = guestConnection.folio;
 			denunciante_nombre_llamada.innerHTML = guest.name;
+			disponible_connect.hidden = true;
+			no_disponible_connect.hidden = true;
 			$("#llamadaModal").modal("hide");
-			console.log("Llamada aceptada");
 		}
 	);
 });
