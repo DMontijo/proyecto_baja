@@ -50,6 +50,8 @@ disponible_connect.addEventListener("click", () => {
 		() => {
 			console.log("Se conecto el agente");
 			clearVideoCall();
+			disponible_connect.hidden = true;
+			no_disponible_connect.hidden = false;
 
 			agentVideoService.registerOnGuestConnected(response => {
 				try {
