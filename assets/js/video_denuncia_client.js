@@ -5,18 +5,19 @@ const guestUUID = document.getElementById("input_uuid").value;
 const apiURI = "https://videodenunciabalancer.fgebc.gob.mx";
 // const apiURI = "https://f246-2806-2f0-5020-1ce6-d91-1913-b56e-ec01.ngrok.io";
 
-
-let folio_completo = document.getElementById("input_folio").value;
-const array = folio_completo.split("-");
-let folio_SY = array[1];
-let year_SF = array[0];
 const delito = document.getElementById("input_delito").value;
 const descripcion = document.getElementById("input_descripcion").value;
 const texto_inicial = document.querySelector("#pantalla_inicial");
-// const aceptar_llamada = document.querySelector("#aceptar");
 const priority = document.querySelector("#input_priority").value;
-let video_container = document.querySelector("#video_container");
+const video_container = document.querySelector("#video_container");
 const pantalla_final = document.querySelector("#pantalla_final");
+const agente_name = document.querySelector("#main_video_details_name");
+
+let folio_completo = document.getElementById("input_folio").value;
+let array = folio_completo.split("-");
+let folio_SY = array[1];
+let year_SF = array[0];
+
 // const recording = document.querySelector('#recording');
 // const recording_stop = document.querySelector('#recording_stop');
 // const video = document.querySelector('#togogle-video');
@@ -26,7 +27,6 @@ const pantalla_final = document.querySelector("#pantalla_final");
 // const camara_apagada_denunciante = document.querySelector('#camara_apagada_denunciante');
 // const camara_prendida_denunciante = document.querySelector('#camara_prendida_denunciante');
 // const denunciante_name = document.querySelector('#secondary_video_name');
-// const agente_name = document.querySelector("#main_video_details_name");
 // const audio_denunciante_prendido_b = document.querySelector('#audio_denunciante_prendido_b');
 // const audio_denunciante_apagado_b = document.querySelector('#audio_denunciante_apagado_b');
 // const camara_apagada_denunciante_b = document.querySelector('#camara_apagada_denunciante_b');
@@ -49,7 +49,7 @@ guestVideoService.registerOnVideoReady(
 		texto_inicial.style.display = "none";
 		video_container.style.display = "block";
 		document.querySelector("#documentos_anexar_card").style.display = "block";
-		// agente_name.innerHTML = "LIC. " + response.agent.name;
+		agente_name.innerHTML = "LIC. " + response.agent.name;
 		// denunciante_name.innerHTML = guestData.name;
 	}
 );
@@ -59,8 +59,7 @@ guestVideoService.registerOnDisconnect((e) => {
 	pantalla_final.style.display = "block";
 	video_container.style.display = "none";
 	document.querySelector("#documentos_anexar_card").style.display = "none";
-	// let url = document.querySelector("#input_base_url_endcall").value;
-	// window.location.href = url;
+	deleteVideoElement();
 });
 
 guestVideoService.registerMediaRemoteToggling(response => {
@@ -95,18 +94,6 @@ guestVideoService.registerMediaRemoteToggling(response => {
 
 guestVideoService.registerVideoRecordingStatus(isRecording => {
 	console.log("isRecording", isRecording);
-	// if (isRecording == true) {
-	// 	recording.style.display = "block";
-	// 	recording_stop.style.display = "none";
-
-	// } else {
-	// 	recording.style.display = "none";
-	// 	recording_stop.style.display = "block";
-	// }
-});
-
-$(function () {
-	$("#geolocalizacion_modal").modal("show");
 });
 
 guestVideoService.saveGeolocation(() => {
@@ -118,4 +105,16 @@ guestVideoService.saveGeolocation(() => {
 			console.log(guest);
 		}
 	);
+});
+
+function deleteVideoElement() {
+	const videos_array = document.querySelectorAll("video");
+
+	videos_array.forEach(element => {
+		element.remove();
+	});
+}
+
+$(function () {
+	$("#geolocalizacion_modal").modal("show");
 });
