@@ -19,7 +19,7 @@
 									<th class="text-center">OFENDIDO</th>
 									<th class="text-center">IMPUTADO</th>
 									<th class="text-center">ATENDIDO POR</th>
-									<th class="text-center">VIDEO</th>
+									<th class="text-center">VIDEOS</th>
 								</tr>
 							</thead>
 							<tbody>
