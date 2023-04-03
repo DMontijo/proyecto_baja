@@ -125,7 +125,7 @@ export class VideoServiceGuest {
             latitude: this.#position?.coords.latitude,
             longitude: this.#position?.coords.longitude,
             details: this.#guestDetails,
-            sessionId : this.#diffMinutes(new Date(previusSession.createdAt)) < 180 ? previusSession.sessionId : null
+            sessionId : previusSession && (this.#diffMinutes(new Date(previusSession.createdAt)) < 180) ? previusSession.sessionId : null
         }, response => {
             this.#preventUserCloseWindow();
             const { guestConnection, guest } = response;
