@@ -319,6 +319,7 @@ function toogleAudioDenunciante(isEnable) {
 
 function clearVideoCall() {
 	video_container.style.display = "none";
+	clearToolsBar();
 	document.querySelector("#nombre_denunciante").value = '';
 	document.querySelector("#main_video_details_name").innerHTML = '';
 	document.querySelector("#secondary_video_details_name").innerHTML = "";
@@ -337,12 +338,21 @@ function clearVideoCall() {
 }
 
 function clearToolsBar() {
-	document.getElementById("audio_prendido_denunciante").style.display = "block";
-	document.getElementById("audio_apagado_denunciante").style.display = "none";
 	document.getElementById("audio_agente_prendida").style.display = "block";
 	document.getElementById("audio_agente_apagada").style.display = "none";
-	document.getElementById("camara_prendida_denunciante").style.display = "block";
-	document.getElementById("camara_apagada_denunciante").style.display = "none";
 	document.getElementById("camara_agente_prendida").style.display = "block";
 	document.getElementById("camara_agente_apagada").style.display = "none";
+	video_agente_on.style.display = "block";
+	video_agente_off.style.display = "none";
+	audio_agente_on.style.display = "block";
+	audio_agente_off.style.display = "none";
+
+	document.getElementById("audio_prendido_denunciante").style.display = "block";
+	document.getElementById("audio_apagado_denunciante").style.display = "none";
+	document.getElementById("camara_prendida_denunciante").style.display = "block";
+	document.getElementById("camara_apagada_denunciante").style.display = "none";
+	video_denunciante_on.style.display = "block";
+	video_denunciante_off.style.display = "none";
+	audio_denunciante_on.style.display = "block";
+	audio_denunciante_off.style.display = "none";
 }
