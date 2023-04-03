@@ -24,7 +24,8 @@ const desconectar_llamada = document.querySelector("#disconnect-call");
 let guestUUID = "";
 const denunciante_nombre_llamada = document.querySelector('#denunciante_nombre_llamada')
 const botones = document.querySelector("#tools");
-const apiURI = "https://videodenunciabalancer.fgebc.gob.mx";
+// const apiURI = "https://videodenunciabalancer.fgebc.gob.mx";
+const apiURI = "https://e1df-52-0-63-150.ngrok.io";
 var totalSeconds = 0;
 var myInterval;
 const folio_llamada = document.querySelector('#folio_llamada_v');
