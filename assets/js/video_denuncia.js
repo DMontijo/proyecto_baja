@@ -110,7 +110,7 @@ aceptar_llamada.addEventListener("click", () => {
 			$("#llamadaModal").modal("hide");
 
 			agentVideoService.registerOnGuestDisconnected(() => {
-				alert("Guest disconnected");
+				console.log("Guest disconnected");
 			})
 		}
 	);
