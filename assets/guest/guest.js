@@ -125,7 +125,7 @@ export class VideoServiceGuest {
             latitude: this.#position?.coords.latitude,
             longitude: this.#position?.coords.longitude,
             details: this.#guestDetails,
-            previusSession : this.#diffMinutes(new Date(previusSession.createdAt)) < 180 ? previusSession.sessionId : undefined
+            sessionId : this.#diffMinutes(new Date(previusSession.createdAt)) < 180 ? previusSession.sessionId : null
         }, response => {
             this.#preventUserCloseWindow();
             const { guestConnection, guest } = response;
@@ -206,15 +206,6 @@ export class VideoServiceGuest {
         this.#socket.on('recording-status', ({ isRecording }) => {
             this.isRecording = isRecording;
             if (typeof callback === 'function') callback(isRecording);
-        });
-    }
-
-    /**
-     * Register on guest disconnect event
-     */
-    registerOnGuestDisconnected(callback) {
-        this.#socket.on('guest-disconnected', () => {
-            if (typeof callback === 'function') callback();
         });
     }
 
