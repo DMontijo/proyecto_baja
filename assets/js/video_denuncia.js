@@ -335,3 +335,14 @@ function clearVideoCall() {
 	header_llamda.hidden = true;
 	$("#llamadaModal").modal("hide");
 }
+
+function clearToolsBar() {
+	document.getElementById("audio_prendido_denunciante").style.display = "block";
+	document.getElementById("audio_apagado_denunciante").style.display = "none";
+	document.getElementById("audio_agente_prendida").style.display = "block";
+	document.getElementById("audio_agente_apagada").style.display = "none";
+	document.getElementById("camara_prendida_denunciante").style.display = "block";
+	document.getElementById("camara_apagada_denunciante").style.display = "none";
+	document.getElementById("camara_agente_prendida").style.display = "block";
+	document.getElementById("camara_agente_apagada").style.display = "none";
+}
