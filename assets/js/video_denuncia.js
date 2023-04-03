@@ -195,7 +195,7 @@ desconectar_llamada.addEventListener("click", () => {
 
 rechazar_llamada.addEventListener("click", () => {
 	console.log("cick en transferir");
-	agentVideoService.refuseCall((resp) => {
+	agentVideoService.transferCall((resp) => {
 		console.log("refuse call", resp);
 		$("#llamadaModal").modal("hide");
 
