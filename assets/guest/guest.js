@@ -210,6 +210,15 @@ export class VideoServiceGuest {
     }
 
     /**
+     * Register on guest disconnect event
+     */
+    registerOnGuestDisconnected(callback) {
+        this.#socket.on('guest-disconnected', () => {
+            if (typeof callback === 'function') callback();
+        });
+    }
+
+    /**
      * Close guest socket connection
      * 
      * @param {Function} [callback] - This method is executed after guest is disconnected

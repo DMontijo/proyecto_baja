@@ -108,6 +108,10 @@ aceptar_llamada.addEventListener("click", () => {
 			no_disponible_connect.hidden = true;
 			header_llamda.hidden = false;
 			$("#llamadaModal").modal("hide");
+
+			agentVideoService.registerOnGuestDisconnected(() => {
+				alert("Guest disconnected");
+			})
 		}
 	);
 });
