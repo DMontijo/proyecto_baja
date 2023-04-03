@@ -94,7 +94,7 @@ no_disponible_connect.addEventListener("click", () => {
 });
 
 aceptar_llamada.addEventListener("click", () => {
-	console.log("Clic en aceptar llamada"); a
+	console.log("Clic en aceptar llamada");
 
 	agentVideoService.acceptCall("agn_vf", "main_video",
 		(response, agent, { guest, guestConnection }) => {
