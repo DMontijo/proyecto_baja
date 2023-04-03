@@ -119,6 +119,8 @@
 			success: function(response) {
 				const videos = response.responseVideos;
 				const marcas = response.marcasVideo;
+				console.log(videos);
+				console.log(marcas);
 				llenarTablaVideos(videos, marcas);
 				$('#videos_expediente_modal').modal('show');
 			}
