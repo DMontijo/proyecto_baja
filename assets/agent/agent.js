@@ -153,7 +153,7 @@ export class VideoServiceAgent {
             this.#socket.disconnect();
             this.#videoCallService?.session.disconnect();
         } catch (e) {
-            console.error(e)
+            console.warn(e)
         }
 
         if (typeof callback === 'function') callback();
@@ -222,7 +222,25 @@ export class VideoServiceAgent {
     refuseCall(callback) {
         this.#phoneRing.pause();
 
-        this.#emit('refuse-call', { requeue : true }, (response) => {
+        this.#emit('refuse-call', {
+            requeue: false,
+        }, (response) => {
+            if (typeof callback === 'function') callback(response);
+        });
+    }
+
+    /**
+     * Transfer incoming call, this will put the guest in the priority line again, and free the agent
+     * to receive new calls.
+     * 
+     * @param {Function} [callback] - This method is executed after call is transferred
+     */
+    transferCall(callback) {
+        this.#phoneRing.pause();
+
+        this.#emit('refuse-call', {
+            requeue: true,
+        }, (response) => {
             if (typeof callback === 'function') callback(response);
         });
     }

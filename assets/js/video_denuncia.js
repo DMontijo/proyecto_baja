@@ -185,16 +185,23 @@ desconectar_llamada.addEventListener("click", () => {
 		botones.hidden = true;
 		header_llamda.hidden= false;
 
-
+		agentVideoService.disconnectAgent(() => {
+			disponible_connect.hidden = false;
+			no_disponible_connect.hidden = true;
+		});
 	});
 });
 
 rechazar_llamada.addEventListener("click", () => {
-	console.log("cick en rechazar");
-	agentVideoService.refuseCall((resp) => {
+	console.log("cick en transferir");
+	agentVideoService.transferCall((resp) => {
 		console.log("refuse call", resp);
 		$("#llamadaModal").modal("hide");
 
+		agentVideoService.disconnectAgent(() => {
+			disponible_connect.hidden = false;
+			no_disponible_connect.hidden = true;
+		});
 	});
 });
 
