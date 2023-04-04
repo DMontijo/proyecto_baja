@@ -1445,6 +1445,8 @@ if ($agent->isMobile()) {
 							let documento_identidad = document.querySelector('#documento_text');
 							let documento_identidad_modal = document.querySelector('#img_identificacion_modal');
 							let preview = document.querySelector('#img_preview');
+							
+							clearSelect($listaDeDispositivos);
 
 							documento.removeAttribute('required');
 							documento.value = '';
