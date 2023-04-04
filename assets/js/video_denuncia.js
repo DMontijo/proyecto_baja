@@ -180,9 +180,9 @@ rechazar_llamada.addEventListener("click", () => {
 	agentVideoService.transferCall((resp) => {
 		console.log("Respues de rechazar", resp);
 		$("#llamadaModal").modal("hide");
-		// agentVideoService.disconnectAgent(() => {
-		// 	clearVideoCall();
-		// });
+		agentVideoService.disconnectAgent(() => {
+			clearVideoCall();
+		});
 	});
 });
 

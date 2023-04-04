@@ -1893,11 +1893,11 @@
 						});
 						llenarTablaDocumentos(documentos);
 
-						Swal.fire({
-							icon: 'success',
-							text: 'Encargado asignado correctamente',
-							confirmButtonColor: '#bf9b55',
-						});
+						// Swal.fire({
+						// 	icon: 'success',
+						// 	text: 'Encargado asignado correctamente',
+						// 	confirmButtonColor: '#bf9b55',
+						// });
 						$('#encargadosModal').modal('hide');
 					}
 
