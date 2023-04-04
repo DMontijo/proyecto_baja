@@ -7,7 +7,8 @@
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-12 text-center mb-4">
-				<h1 class="mb-4 text-center font-weight-bold">FOLIOS CON EXPEDIENTE</h1>
+				<h1 class="mb-4 text-center font-weight-bold">FOLIOS CON EXPEDIENTE Y REMITIDOS</h1>
+				<P class="mb-4 text-center"></P>
 				<a class="link link-primary" href="<?= base_url('admin/dashboard/folios') ?>" role="button"><i class="fas fa-reply"></i> REGRESAR A FOLIOS</a>
 			</div>
 			<div class="col-12">

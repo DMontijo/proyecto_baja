@@ -118,6 +118,7 @@
 		<div class="col-12 p-0 m-0 mb-3" id="documentos_anexar_card" style="display:none;">
 			<div class="card">
 				<div class="card-body">
+
 					<form id="form_archivos_externos" method="post" enctype="multipart/form-data">
 						<input type="text" class="form-control" id="folio" name="folio" hidden>
 						<input type="text" class="form-control" id="year" name="year" hidden>
@@ -126,13 +127,23 @@
 						<div class="row" style="font-size:10px;">
 							<div class="col-12 col-sm-6 offset-sm-3">
 								<p class="p-0 m-0"><strong>Documentos a anexar</strong></p>
-								<small>En caso de requerir subir un documento durante la entrevista favor de subirlo en esta sección</small>
+								<small>En caso de requerir subir un documento durante la entrevista favor de subirlo en esta sección.</small>
 								<input type="file" class="form-control" id="documentoArchivo" name="documentoArchivo" accept="image/jpeg, image/jpg, image/png, .doc, .pdf">
 								<img id="viewDocumentoArchivo" class="img-fluid" src="" style="max-width:100px;">
-								<button type="submit" class="btn-sm btn-primary" style="width: 100%;">Subir documentos</button>
+								<button type="submit" class="btn-sm btn-primary" style="width: 100%;">Subir documento</button>
 							</div>
 						</div>
 					</form>
+
+					<div id="documentos_anexar_spinner" class="row text-center d-none" style="font-size:10px;">
+						<div class="col-12 col-sm-6 offset-sm-3">
+							<div class="spinner-border text-primary" role="status">
+								<span class="visually-hidden">Subiendo...</span>
+							</div>
+							<h5 class="text-center">Subiendo</h5>
+						</div>
+					</div>
+
 				</div>
 			</div>
 		</div>
@@ -228,9 +239,29 @@
 		crearArchivos();
 	})
 
-	function crearArchivos() {
+	async function crearArchivos() {
+		document.getElementById('form_archivos_externos').classList.add('d-none');
+		document.getElementById('documentos_anexar_spinner').classList.remove('d-none');
+		let documento;
+		if ($("#documentoArchivo")[0].files && $("#documentoArchivo")[0].files[0]) {
+			if ($("#documentoArchivo")[0].files[0].type == "image/jpeg" || $("#documentoArchivo")[0].files[0].type == "image/png" || $("#documentoArchivo")[0].files[0].type == "image/jpg") {
+				documento = await comprimirImagen($("#documentoArchivo")[0].files[0], 50);
+			} else {
+				documento = $("#documentoArchivo")[0].files[0];
+			}
+		} else {
+			document.getElementById('form_archivos_externos').classList.remove('d-none');
+			document.getElementById('documentos_anexar_spinner').classList.add('d-none');
+			Swal.fire({
+				icon: 'error',
+				text: 'Debes seleccionar un documento.',
+				showConfirmButton: false,
+				timer: 1000
+			});
+			return
+		}
 		var packetData = new FormData();
-		packetData.append("documentoArchivo", $("#documentoArchivo")[0].files[0]);
+		packetData.append("documentoArchivo", documento);
 		packetData.append("folio", document.getElementById('folio').value);
 		packetData.append("year", document.getElementById('year').value);
 		$.ajax({
@@ -243,12 +274,15 @@
 			cache: false,
 			success: function(response) {
 				const archivos = response.archivos;
+				document.getElementById('form_archivos_externos').classList.remove('d-none');
+				document.getElementById('documentos_anexar_spinner').classList.add('d-none');
 				if (response.status == 1) {
 					console.log(document.querySelectorAll('#table-archivos'));
 					Swal.fire({
 						icon: 'success',
-						text: 'Archivo agregado correctamente',
-						confirmButtonColor: '#bf9b55',
+						text: 'Documento agregado correctamente.',
+						showConfirmButton: false,
+						timer: 1000
 					});
 					let preview = document.querySelector('#viewDocumentoArchivo');
 
@@ -258,23 +292,56 @@
 				} else if (response.status == 0) {
 					Swal.fire({
 						icon: 'error',
-						text: 'Los archivos no se pudieron subir',
-						confirmButtonColor: '#bf9b55',
+						text: 'No se subio el documento.',
+						showConfirmButton: false,
+						timer: 1000
 					});
 				} else if (response.status == 2) {
 					Swal.fire({
 						icon: 'error',
-						text: 'Debes subir un documento',
-						confirmButtonColor: '#bf9b55',
+						text: 'Debes seleccionar un documento.',
+						showConfirmButton: false,
+						timer: 1000
 					});
 				}
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 				console.log(textStatus);
+				document.getElementById('form_archivos_externos').classList.remove('d-none');
+				document.getElementById('documentos_anexar_spinner').classList.add('d-none');
+				Swal.fire({
+					icon: 'error',
+					text: 'No se subio el documento.',
+					showConfirmButton: false,
+					timer: 1000
+				});
 			}
 		});
 
 	}
+
+	function comprimirImagen(imagenComoArchivo, porcentajeCalidad) {
+		return new Promise((resolve, reject) => {
+			const $canvas = document.createElement("canvas");
+			const imagen = new Image();
+			imagen.onload = () => {
+				$canvas.width = imagen.width;
+				$canvas.height = imagen.height;
+				$canvas.getContext("2d").drawImage(imagen, 0, 0);
+				$canvas.toBlob(
+					(blob) => {
+						if (blob === null) {
+							return reject(blob);
+						} else {
+							resolve(blob);
+						}
+					},
+					"image/jpeg", porcentajeCalidad / 100
+				);
+			};
+			imagen.src = URL.createObjectURL(imagenComoArchivo);
+		});
+	};
 </script>
 
 <?= $this->endSection() ?>
