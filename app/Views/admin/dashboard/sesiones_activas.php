@@ -3,7 +3,7 @@
 <?php echo $header_data->title ?>
 <?= $this->endSection() ?>
 <?= $this->section('content') ?>
-<?php $rolesToMonitor = [11]; ?>
+<?php $rolesToMonitor = [1, 11]; ?>
 
 <section class="content">
 	<div class="container-fluid">
