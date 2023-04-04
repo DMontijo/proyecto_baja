@@ -2789,6 +2789,7 @@
 
 		(function() {
 			'use strict'
+			window.history.forward();
 			var form_delito = document.querySelector('#denuncia_form');
 			var form_preguntas = document.querySelector('#preguntas_form');
 			var form_persona_fisica = document.querySelector('#persona_fisica_form');
