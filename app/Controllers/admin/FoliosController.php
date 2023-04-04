@@ -338,17 +338,17 @@ class FoliosController extends BaseController
 			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
 		}
 		if (in_array($agente->ROLID, $roles)) {
-			$data->derivados = count($this->_folioModel->asObject()->where('STATUS', 'DERIVADO')->findAll());
-			$data->canalizados = count($this->_folioModel->asObject()->where('STATUS', 'CANALIZADO')->findAll());
-			$data->expedientes = count($this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('AGENTEFIRMAID !=', null)->where('AGENTEASIGNADOID  !=', null)->findAll());
+			$data->derivados = count($this->_folioModel->asObject()->where('STATUS', 'DERIVADO')->where('FECHASALIDA BETWEEN "' . date('Y-m-d') . ' 00:00:00' . '" and "' . date('Y-m-d', strtotime("+ 1 day")) . ' 00:00:00' . '"')->findAll());
+			$data->canalizados = count($this->_folioModel->asObject()->where('STATUS', 'CANALIZADO')->where('FECHASALIDA BETWEEN "' . date('Y-m-d') . ' 00:00:00' . '" and "' . date('Y-m-d', strtotime("+ 1 day")) . ' 00:00:00' . '"')->findAll());
+			$data->expedientes = count($this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('AGENTEFIRMAID !=', null)->where('AGENTEASIGNADOID  !=', null)->where('FECHASALIDA BETWEEN "' . date('Y-m-d') . ' 00:00:00' . '" and "' . date('Y-m-d', strtotime("+ 1 day")) . ' 00:00:00' . '"')->findAll());
 			$data->proceso = count($this->_folioModel->asObject()->where('STATUS', 'EN PROCESO')->findAll());
 			$data->expedientes_no_firmados = count($this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('AGENTEFIRMAID', null)->findAll());
 			$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 		} else {
 
-			$data->derivados = count($this->_folioModel->asObject()->where('AGENTEATENCIONID', session('ID'))->where('STATUS', 'DERIVADO')->findAll());
-			$data->canalizados = count($this->_folioModel->asObject()->where('AGENTEATENCIONID', session('ID'))->where('STATUS', 'CANALIZADO')->findAll());
-			$data->expedientes = count($this->_folioModel->asObject()->where('AGENTEATENCIONID', session('ID'))->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('AGENTEFIRMAID !=', null)->findAll());
+			$data->derivados = count($this->_folioModel->asObject()->where('AGENTEATENCIONID', session('ID'))->where('STATUS', 'DERIVADO')->where('FECHASALIDA BETWEEN "' . date('Y-m-d') . ' 00:00:00' . '" and "' . date('Y-m-d', strtotime("+ 1 day")) . ' 00:00:00' . '"')->findAll());
+			$data->canalizados = count($this->_folioModel->asObject()->where('AGENTEATENCIONID', session('ID'))->where('STATUS', 'CANALIZADO')->where('FECHASALIDA BETWEEN "' . date('Y-m-d') . ' 00:00:00' . '" and "' . date('Y-m-d', strtotime("+ 1 day")) . ' 00:00:00' . '"')->findAll());
+			$data->expedientes = count($this->_folioModel->asObject()->where('AGENTEATENCIONID', session('ID'))->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('AGENTEFIRMAID !=', null)->where('FECHASALIDA BETWEEN "' . date('Y-m-d') . ' 00:00:00' . '" and "' . date('Y-m-d', strtotime("+ 1 day")) . ' 00:00:00' . '"')->findAll());
 			$data->proceso = count($this->_folioModel->asObject()->where('STATUS', 'EN PROCESO')->findAll());
 			$data->expedientes_no_firmados = count($this->_folioModel->asObject()->where('AGENTEATENCIONID', session('ID'))->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('AGENTEFIRMAID', null)->findAll());
 			$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
@@ -379,9 +379,9 @@ class FoliosController extends BaseController
 		$agente = $this->_usuariosModel->asObject()->where('ID', session('ID'))->first();
 		$roles = [1, 2, 6, 7, 8, 9, 10, 11];
 		if (in_array($agente->ROLID, $roles)) {
-			$data->folio = $this->_folioModel->asObject()->where('STATUS', 'DERIVADO')->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->findAll();
+			$data->folio = $this->_folioModel->asObject()->where('STATUS', 'DERIVADO')->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->where('FECHASALIDA BETWEEN "' . date('Y-m-d') . ' 00:00:00' . '" and "' . date('Y-m-d', strtotime("+ 1 day")) . ' 00:00:00' . '"')->findAll();
 		} else {
-			$data->folio = $this->_folioModel->asObject()->where('STATUS', 'DERIVADO')->where('AGENTEATENCIONID', session('ID'))->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->findAll();
+			$data->folio = $this->_folioModel->asObject()->where('STATUS', 'DERIVADO')->where('AGENTEATENCIONID', session('ID'))->where('FECHASALIDA BETWEEN "' . date('Y-m-d') . ' 00:00:00' . '" and "' . date('Y-m-d', strtotime("+ 1 day")) . ' 00:00:00' . '"')->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->findAll();
 		}
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
@@ -397,9 +397,9 @@ class FoliosController extends BaseController
 		$agente = $this->_usuariosModel->asObject()->where('ID', session('ID'))->first();
 		$roles = [1, 2, 6, 7, 8, 9, 10, 11];
 		if (in_array($agente->ROLID, $roles)) {
-			$data->folio = $this->_folioModel->asObject()->where('STATUS', 'CANALIZADO')->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->findAll();
+			$data->folio = $this->_folioModel->asObject()->where('STATUS', 'CANALIZADO')->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->where('FECHASALIDA BETWEEN "' . date('Y-m-d') . ' 00:00:00' . '" and "' . date('Y-m-d', strtotime("+ 1 day")) . ' 00:00:00' . '"')->findAll();
 		} else {
-			$data->folio = $this->_folioModel->asObject()->where('STATUS', 'CANALIZADO')->where('AGENTEATENCIONID', session('ID'))->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->findAll();
+			$data->folio = $this->_folioModel->asObject()->where('STATUS', 'CANALIZADO')->where('AGENTEATENCIONID', session('ID'))->where('FECHASALIDA BETWEEN "' . date('Y-m-d') . ' 00:00:00' . '" and "' . date('Y-m-d', strtotime("+ 1 day")) . ' 00:00:00' . '"')->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->findAll();
 		}
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
@@ -444,24 +444,25 @@ class FoliosController extends BaseController
 		if (in_array($agente->ROLID, $roles)) {
 			// $data->folio = $this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('AGENTEFIRMAID !=', null)->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->join('TIPOEXPEDIENTE', 'TIPOEXPEDIENTE.TIPOEXPEDIENTEID = FOLIO.TIPOEXPEDIENTEID')->join('EMPLEADOS', 'EMPLEADOS.EMPLEADOID = FOLIO.AGENTEASIGNADOID AND EMPLEADOS.MUNICIPIOID = FOLIO.MUNICIPIOASIGNADOID')->findAll();
 			$data->folio = $this->_folioModel->asObject()
-			->select('FOLIO.*,USUARIOS.*,USUARIOS.NOMBRE AS USUARIONOMBRE,ROLES.*,EMPLEADOS.*,TIPOEXPEDIENTE.*')
-			->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')
-			->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')
-			->join('EMPLEADOS', 'EMPLEADOS.EMPLEADOID = FOLIO.AGENTEASIGNADOID AND EMPLEADOS.MUNICIPIOID = FOLIO.MUNICIPIOASIGNADOID')
-			->join('TIPOEXPEDIENTE', 'TIPOEXPEDIENTE.TIPOEXPEDIENTEID = FOLIO.TIPOEXPEDIENTEID')
-			->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('AGENTEFIRMAID !=', null)
-			->findAll();				
+				->select('FOLIO.*,USUARIOS.*,USUARIOS.NOMBRE AS USUARIONOMBRE,ROLES.*,EMPLEADOS.*,TIPOEXPEDIENTE.*')
+				->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')
+				->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')
+				->join('EMPLEADOS', 'EMPLEADOS.EMPLEADOID = FOLIO.AGENTEASIGNADOID AND EMPLEADOS.MUNICIPIOID = FOLIO.MUNICIPIOASIGNADOID')
+				->join('TIPOEXPEDIENTE', 'TIPOEXPEDIENTE.TIPOEXPEDIENTEID = FOLIO.TIPOEXPEDIENTEID')
+				->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('AGENTEFIRMAID !=', null)
+				->where('FECHASALIDA BETWEEN "' . date('Y-m-d') . ' 00:00:00' . '" and "' . date('Y-m-d', strtotime("+ 1 day")) . ' 00:00:00' . '"')
+				->findAll();
 		} else {
 			// $data->folio = $this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID', session('ID'))->where('AGENTEFIRMAID !=', null)->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->join('TIPOEXPEDIENTE', 'TIPOEXPEDIENTE.TIPOEXPEDIENTEID = FOLIO.TIPOEXPEDIENTEID')->join('EMPLEADOS', 'EMPLEADOS.EMPLEADOID = FOLIO.AGENTEASIGNADOID AND EMPLEADOS.MUNICIPIOID = FOLIO.MUNICIPIOASIGNADOID')->findAll();
 			$data->folio = $this->_folioModel->asObject()
-			->select('FOLIO.*,USUARIOS.*,USUARIOS.NOMBRE AS USUARIONOMBRE,ROLES.*,EMPLEADOS.*,TIPOEXPEDIENTE.*')
-			->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')
-			->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')
-			->join('EMPLEADOS', 'EMPLEADOS.EMPLEADOID = FOLIO.AGENTEASIGNADOID AND EMPLEADOS.MUNICIPIOID = FOLIO.MUNICIPIOASIGNADOID')
-			->join('TIPOEXPEDIENTE', 'TIPOEXPEDIENTE.TIPOEXPEDIENTEID = FOLIO.TIPOEXPEDIENTEID')
-			->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID', session('ID'))->where('AGENTEFIRMAID !=', null)
-			->findAll();				
-	
+				->select('FOLIO.*,USUARIOS.*,USUARIOS.NOMBRE AS USUARIONOMBRE,ROLES.*,EMPLEADOS.*,TIPOEXPEDIENTE.*')
+				->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')
+				->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')
+				->join('EMPLEADOS', 'EMPLEADOS.EMPLEADOID = FOLIO.AGENTEASIGNADOID AND EMPLEADOS.MUNICIPIOID = FOLIO.MUNICIPIOASIGNADOID')
+				->join('TIPOEXPEDIENTE', 'TIPOEXPEDIENTE.TIPOEXPEDIENTEID = FOLIO.TIPOEXPEDIENTEID')
+				->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID', session('ID'))->where('AGENTEFIRMAID !=', null)
+				->where('FECHASALIDA BETWEEN "' . date('Y-m-d') . ' 00:00:00' . '" and "' . date('Y-m-d', strtotime("+ 1 day")) . ' 00:00:00' . '"')
+				->findAll();
 		}
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
@@ -715,7 +716,7 @@ class FoliosController extends BaseController
 			}
 		}
 
-	
+
 		if ($data->datosFolio->INSTITUCIONREMISIONMUNICIPIOID) {
 			$data->datosFolio = $this->_folioModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $data->year)->join('MUNICIPIO', 'FOLIO.INSTITUCIONREMISIONMUNICIPIOID = MUNICIPIO.MUNICIPIOID AND MUNICIPIO.ESTADOID =2')->join('DERIVACIONES', 'FOLIO.INSTITUCIONREMISIONID = DERIVACIONES.INSTITUCIONREMISIONID AND FOLIO.INSTITUCIONREMISIONMUNICIPIOID = DERIVACIONES.MUNICIPIOID')->first();
 		}
