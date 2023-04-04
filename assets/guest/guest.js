@@ -232,6 +232,7 @@ export class VideoServiceGuest {
     #preventUserCloseWindow() {
         var preventClose = function (e) {
             e.preventDefault();
+            e.stopPropagation()
             e.returnValue = 'Se perdera la sesión si cierras la ventana.';
         }
         

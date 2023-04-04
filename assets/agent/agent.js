@@ -355,8 +355,14 @@ export class VideoServiceAgent {
         const typeMarks = await fetch(getRecordingsMarkType, {
             method: 'GET',
             cache: "no-cache",
-            mode: "cors",
-            headers: { 'Content-Type':'application/json','Access-Control-Allow-Origin': '*','Access-Control-Allow-Credentials':'true','Access-Control-Allow-Headers':'*','X-API-KEY': this.#apiKey}
+            headers: { 
+                'Content-Type':'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Credentials':'true',
+                'Access-Control-Allow-Headers':'*',
+                'ngrok-skip-browser-warning': 'true',
+                'X-API-KEY': this.#apiKey,
+            }
         })
         .then(response => { return response.json(); })
         .catch(error => { return error.json(); });
