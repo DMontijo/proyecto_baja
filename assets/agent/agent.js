@@ -118,7 +118,7 @@ export class VideoServiceAgent {
 			throw ExceptionSocketIONotImported();
 		}
 
-		this.#socket.on("exception", function (response) {
+		this.#socket.on("exception", function(response) {
 			console.warn("event", response);
 			if (typeof onerror === "function") onerror(response);
 		});
@@ -332,7 +332,7 @@ export class VideoServiceAgent {
 	 * @param {string} selectedMark - Selected Mark id
 	 * @param {function} callback - function to be executed when the MarkTime is sent
 	 */
-	emitMarkTime(markTime, messageTextMark, selectedMark, callback = () => { }) {
+	emitMarkTime(markTime, messageTextMark, selectedMark, callback = () => {}) {
 		this.#emit(
 			"mark-recording",
 			{
@@ -351,12 +351,13 @@ export class VideoServiceAgent {
 	 * Helper to prevent the Agent to close the tab
 	 */
 	#preventUserCloseWindow() {
-		var preventClose = function (e) {
+		var preventClose = function(e) {
 			e.preventDefault();
 			e.stopPropagation();
 			e.returnValue = "Se cerrara la sesión si cierras la ventana.";
+			return "Se cerrara la sesión si cierras la ventana.";
 		};
-
+		window.removeEventListener("beforeunload", null, false);
 		window.addEventListener("beforeunload", preventClose, true);
 	}
 
@@ -364,7 +365,7 @@ export class VideoServiceAgent {
 	 * Helper to disable function to avoid the Agent to close the window
 	 */
 	#allowUserToCloseWindow() {
-		window.addEventListener("beforeunload", () => { });
+		window.addEventListener("beforeunload", () => {});
 	}
 
 	/**
@@ -459,7 +460,7 @@ export class VideoServiceAgent {
 	 */
 	#emit(eventName, data, callback) {
 		const _data = data ?? {};
-		const _callback = callback ?? function () { };
+		const _callback = callback ?? function() {};
 
 		this.#socket.emit(eventName, _data, _callback);
 	}

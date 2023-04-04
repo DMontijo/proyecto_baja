@@ -573,6 +573,7 @@
 	}
 
 	function preventCloseWindow() {
+		window.removeEventListener("beforeunload", null, false);
 		window.addEventListener("beforeunload", (evento) => {
 			evento.preventDefault();
 			evento.returnValue = "Si cierras se perdera todo lo que no hayas guardado o se desconectará la llamada.";
