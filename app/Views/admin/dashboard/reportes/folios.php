@@ -116,15 +116,15 @@
 						<table id="folios_generados" class="table table-bordered table-striped">
 							<thead>
 								<tr>
-									<th class="text-center">FOLIO</th>
-									<th class="text-center">AÑO</th>
-									<th class="text-center">TIPO</th>
+									<th class="text-center" style="min-width:150px;">FOLIO</th>
+									<th class="text-center" style="min-width:150px;">AÑO</th>
+									<th class="text-center" style="min-width:150px;">TIPO</th>
 									<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
-									<th class="text-center">FECHA DE SALIDA</th>
-									<th class="text-center">ESTADO FOLIO</th>
-									<th class="text-center">NOMBRE DEL DENUNCIANTE</th>
-									<th class="text-center">NOMBRE DEL AGENTE</th>
-									<th class="text-center">MUNICIPIO DE ATENCIÓN</th>
+									<th class="text-center" style="min-width:150px;">FECHA DE SALIDA</th>
+									<th class="text-center" style="min-width:150px;">ESTADO FOLIO</th>
+									<th class="text-center" style="min-width:200px;">NOMBRE DEL DENUNCIANTE</th>
+									<th class="text-center" style="min-width:200px;">NOMBRE DEL AGENTE</th>
+									<th class="text-center" style="min-width:150px;">MUNICIPIO DE ATENCIÓN</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -139,8 +139,8 @@
 										<td class="text-center font-weight-bold"><?= $folio->FOLIOID ?></td>
 										<td class="text-center"><?= $folio->ANO ?></td>
 										<td class="text-center"><?= $folio->TIPODENUNCIA == 'VD' ? 'CDTEC' : 'ANÓNIMA' ?></td>
-										<td class="text-center"><?= $expedienteid ? $expedienteid .'/'. $folio->TIPOEXPEDIENTECLAVE  : '' ?></td>
-										<td class="text-center"><?= date('d-m-Y', strtotime($folio->FECHASALIDA) ) ?></td>
+										<td class="text-center"><?= $expedienteid ? $expedienteid . '/' . $folio->TIPOEXPEDIENTECLAVE  : '' ?></td>
+										<td class="text-center"><?= date('d-m-Y', strtotime($folio->FECHASALIDA)) ?></td>
 										<td class="text-center"><?= $folio->STATUS ?></td>
 										<td class="text-center"><?= $folio->N_DENUNCIANTE . ' ' . $folio->APP_DENUNCIANTE . ' ' . $folio->APM_DENUNCIANTE ?></td>
 										<td class="text-center"><?= $folio->N_AGENT . ' ' . $folio->APP_AGENT . ' ' . $folio->APM_AGENT ?></td>

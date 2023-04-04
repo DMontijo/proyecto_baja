@@ -8,7 +8,7 @@
 		<div class="row">
 			<div class="col-12 text-center mb-4">
 				<h1 class="mb-4 text-center font-weight-bold">CONSULTA DE FOLIOS</h1>
-				<a class="link link-primary" href="<?= base_url('admin/dashboard/reportes') ?>" role="button"><i class="fas fa-reply"></i> REGRESAR A REPORTES</a>
+				<!-- <a class="link link-primary" href="<?= base_url('admin/dashboard/reportes') ?>" role="button"><i class="fas fa-reply"></i> REGRESAR A REPORTES</a> -->
 			</div>
 
 			<div class="col-12">

@@ -41,7 +41,7 @@
                         <a href="<?= base_url('admin/dashboard/registro_diario') ?>"
                             class="btn btn-primary btn-block h-100 d-flex flex-column justify-content-center align-items-center d-flex flex-column justify-content-center align-items-center">
                             <i class="far fa-clipboard" style="font-size: 20px;"></i><br><span
-                                class="font-weight-bold">REGISTRO DIARIOS</span>
+                                class="font-weight-bold">REGISTRO DIARIO</span>
                         </a>
                     </div>
                 </div>
