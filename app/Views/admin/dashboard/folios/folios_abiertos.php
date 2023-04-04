@@ -27,7 +27,7 @@
 							<tbody>
 								<?php foreach ($body_data->folio as $index => $folio) { ?>
 									<tr>
-										<td class="text-center font-weigth-bold"><?= $folio->FOLIOID . '/' . $folio->ANO ?></td>
+										<td class="text-center font-weight-bold"><?= $folio->FOLIOID . '/' . $folio->ANO ?></td>
 										<td class="text-center"><?= date('d-m-Y', strtotime($folio->FECHAREGISTRO)) ?></td>
 										<td class="text-center"><?= $folio->HECHODELITO ?></td>
 										<td class="text-center"><?= $folio->NOMBRE ?> <?= $folio->APELLIDO_PATERNO ?> <?= $folio->APELLIDO_MATERNO ? $folio->APELLIDO_MATERNO : '' ?></td>

@@ -31,7 +31,7 @@
 							<tbody>
 								<?php foreach ($body_data->folio as $index => $folio) { ?>
 									<tr>
-										<td class="text-center font-weigth-bold"><?= $folio->FOLIOID . '/' . $folio->ANO ?></td>
+										<td class="text-center font-weight-bold"><?= $folio->FOLIOID . '/' . $folio->ANO ?></td>
 										<td class="text-center"><?= date('d-m-Y H:i:s', strtotime($folio->FECHAREGISTRO)) ?></td>
 										<td class="text-center"><?= date('d-m-Y H:i:s', strtotime($folio->FECHASALIDA)) ?></td>
 										<!-- <td class="text-center"><?= $folio->HECHODELITO ?></td>

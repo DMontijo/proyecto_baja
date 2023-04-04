@@ -412,8 +412,8 @@
 								<div id="secondary_videos_container">
 									<div class="secondary_video" id="agn_vf">
 										<div id="secondary_video_details">
-											<div class="font-weigth-bold d-none" id="secondary_video_details_name"></div>
-											<div class="font-weigth-bold" id="secondary_video_details_devices">
+											<div class="font-weight-bold d-none" id="secondary_video_details_name"></div>
+											<div class="font-weight-bold" id="secondary_video_details_devices">
 												<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-camera-video-fill" id="camara_agente_prendida" viewBox="0 0 16 16">
 													<path fill-rule="evenodd" d="M0 5a2 2 0 0 1 2-2h7.5a2 2 0 0 1 1.983 1.738l3.11-1.382A1 1 0 0 1 16 4.269v7.462a1 1 0 0 1-1.406.913l-3.111-1.382A2 2 0 0 1 9.5 13H2a2 2 0 0 1-2-2V5z" />
 												</svg>
