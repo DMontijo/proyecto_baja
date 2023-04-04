@@ -572,6 +572,16 @@
 		return i;
 	}
 
+	function preventCloseWindow() {
+		let preventClose = function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+			e.returnValue = "Se cerrara la sesión si cierras la ventana.";
+		};
+
+		window.addEventListener("beforeunload", preventClose, true);
+	}
+
 	function pulsar(e) {
 		if (e.which === 13 && !e.shiftKey) {
 			e.preventDefault();
@@ -2839,6 +2849,8 @@
 
 	window.onload = function() {
 		startTime();
+		preventCloseWindow();
+		
 		(function() {
 			'use strict'
 			var form_delito = document.querySelector('#denuncia_form');

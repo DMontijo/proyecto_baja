@@ -355,7 +355,6 @@ export class VideoServiceAgent {
 			e.preventDefault();
 			e.stopPropagation();
 			e.returnValue = "Se cerrara la sesión si cierras la ventana.";
-			return "Se cerrara la sesión si cierras la ventana.";
 		};
 
 		window.addEventListener("beforeunload", preventClose, true);
