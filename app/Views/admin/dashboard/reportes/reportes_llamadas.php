@@ -41,12 +41,12 @@
 
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
 												<label for="fecha" class="form-label font-weight-bold">Fecha de inicio:</label>
-												<input type="date" class="form-control" id="fechaInicio" name="fechaInicio" max="<?= date("Y-m-d") ?>" value="<?= isset($body_data->filterParams->fechaInicio) ? $body_data->filterParams->fechaInicio : '' ?>">
+												<input type="datetime-local" class="form-control" id="fechaInicio" name="fechaInicio" max="<?= date("Y-m-d") ?>" value="<?= isset($body_data->filterParams->fechaInicio) ? $body_data->filterParams->fechaInicio : '' ?>">
 											</div>
 
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
 												<label for="fecha" class="form-label font-weight-bold">Fecha de cierre:</label>
-												<input type="date" class="form-control" id="fechaFin" name="fechaFin" max="<?= date("Y-m-d") ?>" value="<?= isset($body_data->filterParams->fechaFin) ? $body_data->filterParams->fechaFin : '' ?>">
+												<input type="datetime-local" class="form-control" id="fechaFin" name="fechaFin" max="<?= date("Y-m-d") ?>" value="<?= isset($body_data->filterParams->fechaFin) ? $body_data->filterParams->fechaFin : '' ?>">
 											</div>
 
 											<div class="col-12 text-right">
@@ -65,7 +65,6 @@
 					<div class="card-body" style="overflow-x:auto;">
 						<div class="row mb-3">
 							<div class="col-12 d-flex justify-content-center align-items-center">
-								<span class='d-inline-block'>PROMEDIO DE TIEMPO EN LLAMADA: <?= $body_data->promedio ?></span>
 								<?php if (isset($body_data->filterParams)) { ?>
 									<!-- Form para aplicar mismo filtro utilizado para crear el archivo de excel-->
 									<form id="formExcel" action="<?= base_url() ?>/admin/dashboard/generar_excel_llamadas" method="post" enctype="multipart/form-data" class="needs-validation d-inline-block ml-auto" novalidate>
@@ -82,29 +81,21 @@
 							<thead>
 								<tr>
 									<th class="text-center">Folio</th>
-									<th class="text-center">Fecha</th>
 									<th class="text-center">Inicio</th>
 									<th class="text-center">Fin</th>
 									<th class="text-center">Agente</th>
-									<th class="text-center">Espera</th>
-									<th class="text-center">Duración</th>
 									<th class="text-center">Denunciante</th>
-									<th class="text-center">Estatus</th>
 								</tr>
 							</thead>
 							<tbody>
 								<?php
 								foreach ($body_data->llamadas as $index => $llamada) { ?>
 									<tr>
-										<td class="text-center font-weight-bold"><?= $llamada->Folio ?></td>
-										<td class="text-center"><?= $llamada->Fecha ?></td>
-										<td class="text-center"><?= $llamada->Inicio ?></td>
-										<td class="text-center"><?= $llamada->Fin ?></td>
-										<td class="text-center"><?= $llamada->Agente ?></td>
-										<td class="text-center"><?= $llamada->Espera ?></td>
-										<td class="text-center"><?= $llamada->Duración ?></td>
-										<td class="text-center"><?= $llamada->Cliente ?></td>
-										<td class="text-center"><?= $llamada->Estatus ?></td>
+										<td class="text-center font-weight-bold"><?= $llamada->guestConnectionId->folio ?></td>
+										<td class="text-center"><?= date('d-m-Y H:i:s', strtotime($llamada->guestConnectionId->startTimeConnection)) ?></td>
+										<td class="text-center"><?= $llamada->guestConnectionId->endTimeConnection != null ? date('d-m-Y H:i:s',strtotime($llamada->guestConnectionId->endTimeConnection)) :'-' ?></td>
+										<td class="text-center"><?= $llamada->agentConnectionId->agent->fullName ?></td>
+										<td class="text-center"><?= $llamada->guestConnectionId->uuid->details->NOMBRE .' ' . $llamada->guestConnectionId->uuid->details->APELLIDO_PATERNO?></td>
 									</tr>
 								<?php } ?>
 							</tbody>

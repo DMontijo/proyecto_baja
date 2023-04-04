@@ -923,105 +923,154 @@ class ReportesController extends BaseController
 
 	public function getReporteLlamadas()
 	{
-		$endpoint = 'https://videodenunciaserver1.fgebc.gob.mx/api/vc';
-		$data = array();
-		$data['u'] = '24';
-		$data['token'] = '198429b7cc8a2a5733d97bc13153227dd5017555';
-		$data['a'] = 'getRepo';
-		$data['min'] = '2022-01-01';
-		$data['max'] = date('Y-m-d');
 
-		$response = $this->_curlPost($endpoint, $data);
-		$llamadas = array();
-		$empleado = array();
-		$promedio = 0;
-		foreach ($response->data as $key => $value) {
-			// foreach ($value as $array => $data) {
-			//iterar datos de cada una de las llamadas
-			// }
-			if ($value->Estatus == 'Terminada' && $value->Grabación) {
-				$idAgente = 'id Agente';
-				array_push($empleado, (object)['ID' => $value->$idAgente, 'NOMBRE' => $value->Agente]);
-				$value->Fecha = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($value->Fecha)));
-				$value->Inicio = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($value->Inicio)));
-				$value->Fin = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($value->Fin)));
-				array_push($llamadas, $value);
-				$promedio += strtotime($value->Duración) - strtotime("TODAY");
+		$endpoint = "https://ef88-2806-2f0-51e0-a3f5-d1cf-8a97-8917-a925.ngrok.io/call-records?pageSize=0";
+		$response = $this->_curlGetService($endpoint);
+		// var_dump($response->data);exit;
+		if ($response->statusCode == "success") {
+			$dataView = (object)array();
+			$dataView->llamadas = $response->data;
+			$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+			$empleado = array();
+			$llamadas = array();
+
+			foreach ($response->data as $key => $conexion) {
+				array_push($empleado, (object)['ID' => $conexion->agentConnectionId->agent->uuid, 'NOMBRE' => $conexion->agentConnectionId->agent->fullName]);
+				// $conexion->Fecha = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($conexion->Fecha)));
+				// $conexion->Inicio = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($conexion->Inicio)));
+				// $conexion->Fin = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($conexion->Fin)));
+				array_push($llamadas, $conexion);
+				// $promedio += strtotime($value->Duración) - strtotime("TODAY");
+
 			}
+
+			$dataView->empleados = array_unique($empleado, SORT_REGULAR);
+			$dataView->llamadas = array_unique($llamadas, SORT_REGULAR);
+
+
+			$this->_loadView('Reportes llamadas', 'reportes_llamadas', '', $dataView, 'reportes_llamadas');
 		}
-
-		$dataView = (object)array();
-		$dataView->llamadas = $llamadas;
-		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
-		$dataView->empleados = array_unique($empleado, SORT_REGULAR);
-		$dataView->promedio = gmdate('H:i:s', intval(($promedio / count($llamadas))));
-
-		$this->_loadView('Reportes llamadas', 'reportes_llamadas', '', $dataView, 'reportes_llamadas');
 	}
+	// $endpoint = 'https://videodenunciaserver1.fgebc.gob.mx/api/vc';
+	// $data = array();
+	// $data['u'] = '24';
+	// $data['token'] = '198429b7cc8a2a5733d97bc13153227dd5017555';
+	// $data['a'] = 'getRepo';
+	// $data['min'] = '2022-01-01';
+	// $data['max'] = date('Y-m-d');
+
+	// $response = $this->_curlPost($endpoint, $data);
+	// $llamadas = array();
+	// $empleado = array();
+	// $promedio = 0;
+	// foreach ($response->data as $key => $value) {
+	// 	// foreach ($value as $array => $data) {
+	// 	//iterar datos de cada una de las llamadas
+	// 	// }
+	// 	if ($value->Estatus == 'Terminada' && $value->Grabación) {
+	// 		$idAgente = 'id Agente';
+	// 		array_push($empleado, (object)['ID' => $value->$idAgente, 'NOMBRE' => $value->Agente]);
+	// 		$value->Fecha = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($value->Fecha)));
+	// 		$value->Inicio = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($value->Inicio)));
+	// 		$value->Fin = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($value->Fin)));
+	// 		array_push($llamadas, $value);
+	// 		$promedio += strtotime($value->Duración) - strtotime("TODAY");
+	// 	}
+	// }
+
+
 
 	public function postReporteLlamadas()
 	{
 
 		$dataPost = (object) [
-			'fechaInicio' => $this->request->getPost('fechaInicio'),
-			'fechaFin' => $this->request->getPost('fechaFin'),
-			'horaInicio' => $this->request->getPost('horaInicio'),
-			'horaFin' => $this->request->getPost('horaFin'),
-			'agenteId' => $this->request->getPost('agenteId'),
+			'sessionStartedAt' => $this->request->getPost('fechaInicio')  !=''? date('Y-m-d\TH:i:s',strtotime($this->request->getPost('fechaInicio'))) : date('Y-m-d\TH:i:s',strtotime('2000-01-01')),
+			'sessionFinishedAt' => $this->request->getPost('fechaFin')!='' ? date('Y-m-d\TH:i:s',strtotime($this->request->getPost('fechaFin'))) : date('Y-m-d\TH:i:s'),
+			'agentUuid' => $this->request->getPost('agenteId'),
 		];
-		//var_dump($dataPost);
-		$endpoint = 'https://videodenunciaserver1.fgebc.gob.mx/api/vc';
-		$data = array();
-		$data['u'] = '24';
-		$data['token'] = '198429b7cc8a2a5733d97bc13153227dd5017555';
-		$data['a'] = 'getRepo';
-		$data['min'] = $dataPost->fechaInicio ? $dataPost->fechaInicio : '2000-01-01';
-		$data['max'] = $dataPost->fechaFin ? $dataPost->fechaFin : date("Y-m-d");
+		
+		$endpoint = "https://ef88-2806-2f0-51e0-a3f5-d1cf-8a97-8917-a925.ngrok.io/call-records?pageSize=0&agentUuid=" . $dataPost->agentUuid . '&sessionStartedFrom=' . $dataPost->sessionStartedAt . '&sessionFinishedTo=' . $dataPost->sessionFinishedAt;
+		// $endpoint = "https://ef88-2806-2f0-51e0-a3f5-d1cf-8a97-8917-a925.ngrok.io/call-records?pageSize=0&agentUuid=" . $dataPost->agentUuid;
+		var_dump($dataPost);exit;
 
-		$response = $this->_curlPost($endpoint, $data);
-		$llamadas = array();
-		$empleado = array();
-		$promedio = 0;
-		if (!isset($dataPost->agenteId)) {
-			foreach ($response->data as $key => $value) {
-				// foreach ($value as $array => $data) {
-				//iterar datos de cada una de las llamadas
-				// }
-				if ($value->Estatus == 'Terminada' && $value->Grabación) {
-					$idAgente = 'id Agente';
-					array_push($empleado, (object)['ID' => $value->$idAgente, 'NOMBRE' => $value->Agente]);
-					$value->Fecha = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($value->Fecha)));
-					$value->Inicio = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($value->Inicio)));
-					$value->Fin = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($value->Fin)));
-					array_push($llamadas, $value);
-					$promedio = date('H:i:s', strtotime($value->Duración));
-				}
+		$response = $this->_curlGetService($endpoint);
+		// var_dump($response);
+		// exit;
+		if ($response->statusCode == "success") {
+			$dataView = (object)array();
+			$dataView->llamadas = $response->data;
+			$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+			$empleado = array();
+			$llamadas = array();
+
+			foreach ($response->data as $key => $conexion) {
+				array_push($empleado, (object)['ID' => $conexion->agentConnectionId->agent->uuid, 'NOMBRE' => $conexion->agentConnectionId->agent->fullName]);
+				// $conexion->Fecha = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($conexion->Fecha)));
+				// $conexion->Inicio = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($conexion->Inicio)));
+				// $conexion->Fin = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($conexion->Fin)));
+				array_push($llamadas, $conexion);
+				// $promedio += strtotime($value->Duración) - strtotime("TODAY");
+
 			}
-			//var_dump('promedio de tiempo en llamada', ($promedio));
-		}
-		if (isset($dataPost->agenteId)) {
-			$idAgente = 'id Agente';
-			foreach ($response->data as $key => $value) {
-				// foreach ($value as $array => $data) {
-				//iterar datos de cada una de las llamadas
-				// }
-				array_push($empleado, (object)['ID' => $value->$idAgente, 'NOMBRE' => $value->Agente]);
-				if ($value->Estatus == 'Terminada' && $value->Grabación && $value->$idAgente == $dataPost->agenteId) {
-					$dataPost->nombreAgente = $value->Agente;
-					array_push($llamadas, $value);
-					$promedio += strtotime($value->Duración) - strtotime("TODAY");
-				}
-			}
-		}
 
-		$dataView = (object)array();
-		$dataView->llamadas = $llamadas;
-		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
-		$dataView->empleados = array_unique($empleado, SORT_REGULAR);
-		$dataView->filterParams = $dataPost;
-		$dataView->promedio = (count($llamadas) > 0) ? gmdate('H:i:s', ($promedio / count($llamadas))) : '00:00:00';
+			$dataView->empleados = array_unique($empleado, SORT_REGULAR);
+			$dataView->llamadas = array_unique($llamadas, SORT_REGULAR);
 
-		$this->_loadView('Reportes llamadas', 'reportes_llamadas', '', $dataView, 'reportes_llamadas');
+
+			$this->_loadView('Reportes llamadas', 'reportes_llamadas', '', $dataView, 'reportes_llamadas');
+		}
+		// $endpoint = 'https://videodenunciaserver1.fgebc.gob.mx/api/vc';
+		// $data = array();
+		// $data['u'] = '24';
+		// $data['token'] = '198429b7cc8a2a5733d97bc13153227dd5017555';
+		// $data['a'] = 'getRepo';
+		// $data['min'] = $dataPost->fechaInicio ? $dataPost->fechaInicio : '2000-01-01';
+		// $data['max'] = $dataPost->fechaFin ? $dataPost->fechaFin : date("Y-m-d");
+
+		// $response = $this->_curlPost($endpoint, $data);
+		// $llamadas = array();
+		// $empleado = array();
+		// $promedio = 0;
+		// if (!isset($dataPost->agenteId)) {
+		// 	foreach ($response->data as $key => $value) {
+		// 		// foreach ($value as $array => $data) {
+		// 		//iterar datos de cada una de las llamadas
+		// 		// }
+		// 		if ($value->Estatus == 'Terminada' && $value->Grabación) {
+		// 			$idAgente = 'id Agente';
+		// 			array_push($empleado, (object)['ID' => $value->$idAgente, 'NOMBRE' => $value->Agente]);
+		// 			$value->Fecha = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($value->Fecha)));
+		// 			$value->Inicio = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($value->Inicio)));
+		// 			$value->Fin = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($value->Fin)));
+		// 			array_push($llamadas, $value);
+		// 			$promedio = date('H:i:s', strtotime($value->Duración));
+		// 		}
+		// 	}
+		// 	//var_dump('promedio de tiempo en llamada', ($promedio));
+		// }
+		// if (isset($dataPost->agenteId)) {
+		// 	$idAgente = 'id Agente';
+		// 	foreach ($response->data as $key => $value) {
+		// 		// foreach ($value as $array => $data) {
+		// 		//iterar datos de cada una de las llamadas
+		// 		// }
+		// 		array_push($empleado, (object)['ID' => $value->$idAgente, 'NOMBRE' => $value->Agente]);
+		// 		if ($value->Estatus == 'Terminada' && $value->Grabación && $value->$idAgente == $dataPost->agenteId) {
+		// 			$dataPost->nombreAgente = $value->Agente;
+		// 			array_push($llamadas, $value);
+		// 			$promedio += strtotime($value->Duración) - strtotime("TODAY");
+		// 		}
+		// 	}
+		// }
+
+		// $dataView = (object)array();
+		// $dataView->llamadas = $llamadas;
+		// $dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+		// $dataView->empleados = array_unique($empleado, SORT_REGULAR);
+		// $dataView->filterParams = $dataPost;
+		// $dataView->promedio = (count($llamadas) > 0) ? gmdate('H:i:s', ($promedio / count($llamadas))) : '00:00:00';
+
+		// $this->_loadView('Reportes llamadas', 'reportes_llamadas', '', $dataView, 'reportes_llamadas');
 	}
 
 	public function createLlamadasXlsx()
