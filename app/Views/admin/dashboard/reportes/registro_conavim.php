@@ -120,20 +120,20 @@
 						<table id="registro_llamadas" class="table table-bordered table-striped">
 							<thead>
 								<tr>
-									<th class="text-center">Folio</th>
-									<th class="text-center">FECHA DE EXPEDICIÓN</th>
+									<th class="text-center">FOLIO</th>
+									<th class="text-center" style="min-width:150px;">FECHA DE EXPEDICIÓN</th>
 									<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
-									<th class="text-center">MODULO QUE EXPIDE</th>
-									<th class="text-center">MUNICIPIO QUE ATIENDE</th>
-									<th class="text-center">SERVIDOR PUBLICO SOLICITANTE</th>
-									<th class="text-center">DELITO</th>
-									<th class="text-center">NOMBRE DE LA VICTIMA/OFENDIDO</th>
-									<th class="text-center">APELLIDO PATERNO</th>
-									<th class="text-center">APELLIDO MATERNO</th>
-									<th class="text-center">GENERO</th>
-									<th class="text-center">EDAD</th>
-									<th class="text-center">TIPO DE ORDEN DE PROTECCIÓN</th>
-									<th class="text-center">VÍCTIMA LESIONADA</th>
+									<th class="text-center" style="min-width:150px;">MODULO QUE EXPIDE</th>
+									<th class="text-center" style="min-width:150px;">MUNICIPIO QUE ATIENDE</th>
+									<th class="text-center" style="min-width:150px;">SERVIDOR PUBLICO SOLICITANTE</th>
+									<th class="text-center" style="min-width:150px;">DELITO</th>
+									<th class="text-center" style="min-width:150px;">NOMBRE DE LA VICTIMA/OFENDIDO</th>
+									<th class="text-center" style="min-width:150px;">APELLIDO PATERNO</th>
+									<th class="text-center" style="min-width:150px;">APELLIDO MATERNO</th>
+									<th class="text-center" style="min-width:150px;">GENERO</th>
+									<th class="text-center" style="min-width:150px;">EDAD</th>
+									<th class="text-center" style="min-width:150px;">TIPO DE ORDEN DE PROTECCIÓN</th>
+									<th class="text-center" style="min-width:150px;">VÍCTIMA LESIONADA</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -142,7 +142,7 @@
 									$array = str_split($orden->EXPEDIENTEID);
 								?>
 									<tr>
-										<td class="text-center font-weight-bold"><?= $orden->FOLIOID ?></td>
+										<td class="text-center font-weight-bold"><?= $orden->FOLIOID . '/' . $orden->ANO ?></td>
 										<td class="text-center"><?= $orden->FECHAFIRMA ?  date("d/m/Y", strtotime($orden->FECHAFIRMA)) : '' ?></td>
 										<td class="text-center"><?= $array[1] . $array[2] . $array[4] . $array[5] . '-' . $array[6] . $array[7] . $array[8] . $array[9] . '-' . $array[10] . $array[11] . $array[12] . $array[13] . $array[14] ?></td>
 										<td class="text-center">CENTRO DE DENUNCIA TECNÓLOGICA</td>
