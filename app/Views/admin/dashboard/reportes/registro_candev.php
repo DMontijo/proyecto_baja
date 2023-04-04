@@ -111,17 +111,17 @@
 						<table id="registro_candev" class="table table-bordered table-striped">
 							<thead>
 								<tr>
-									<th class="text-center">Folio</th>
+									<th class="text-center">FOLIO</th>
 									<th class="text-center">FECHA DE ATENCIÓN</th>
 									<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
-									<th class="text-center">MODULO QUE EXPIDE</th>
-									<th class="text-center">MUNICIPIO QUE ATIENDE</th>
-									<th class="text-center">SERVIDOR PUBLICO SOLICITANTE</th>
-									<th class="text-center">DELITO</th>
-									<th class="text-center">NOMBRE DE LA VICTIMA/OFENDIDO</th>
-									<th class="text-center">APELLIDO PATERNO</th>
-									<th class="text-center">APELLIDO MATERNO</th>
-									<th class="text-center">SALIDA</th>
+									<th class="text-center" style="min-width:150px;">MODULO QUE EXPIDE</th>
+									<th class="text-center" style="min-width:150px;">MUNICIPIO QUE ATIENDE</th>
+									<th class="text-center" style="min-width:150px;">SERVIDOR PUBLICO SOLICITANTE</th>
+									<th class="text-center" style="min-width:150px;">DELITO</th>
+									<th class="text-center" style="min-width:150px;">NOMBRE DE LA VICTIMA/OFENDIDO</th>
+									<th class="text-center" style="min-width:150px;">APELLIDO PATERNO</th>
+									<th class="text-center" style="min-width:150px;">APELLIDO MATERNO</th>
+									<th class="text-center" style="min-width:150px;">SALIDA</th>
 								</tr>
 							</thead>
 							<tbody>

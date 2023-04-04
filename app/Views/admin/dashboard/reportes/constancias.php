@@ -119,12 +119,12 @@
 						<table id="constancias_generadas" class="table table-bordered table-striped">
 							<thead>
 								<tr>
-									<th class="text-center">CONSTANCIA</th>
+									<th class="text-center" style="min-width:150px;">CONSTANCIA</th>
 									<th class="text-center">AÑO</th>
-									<th class="text-center">FECHA DE FIRMA</th>
-									<th class="text-center">ESTADO CONSTANCIA</th>
-									<th class="text-center">NOMBRE DEL DENUNCIANTE</th>
-									<th class="text-center">NOMBRE DEL AGENTE</th>
+									<th class="text-center" style="min-width:150px;">FECHA DE FIRMA</th>
+									<th class="text-center" style="min-width:150px;">ESTADO CONSTANCIA</th>
+									<th class="text-center" style="min-width:150px;">NOMBRE DEL DENUNCIANTE</th>
+									<th class="text-center" style="min-width:150px;">NOMBRE DEL AGENTE</th>
 
 									<th class="text-center">MUNICIPIO DE ATENCIÓN</th>
 								</tr>
