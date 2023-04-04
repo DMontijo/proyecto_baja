@@ -34,6 +34,7 @@ class RolesPermisosSeeder extends Seeder
 			array('ROLID' => '2', 'PERMISOID' => '9'),
 			array('ROLID' => '2', 'PERMISOID' => '10'),
 			array('ROLID' => '2', 'PERMISOID' => '11'),
+			array('ROLID' => '2', 'PERMISOID' => '12'),
 
 			//AGENTE DE MINISTERIO PÚBLICO
 			array('ROLID' => '3', 'PERMISOID' => '1'),
@@ -67,6 +68,7 @@ class RolesPermisosSeeder extends Seeder
 			array('ROLID' => '6', 'PERMISOID' => '7'),
 			array('ROLID' => '6', 'PERMISOID' => '10'),
 			array('ROLID' => '6', 'PERMISOID' => '11'),
+			array('ROLID' => '6', 'PERMISOID' => '12'),
 
 			//COORDINADOR
 			array('ROLID' => '7', 'PERMISOID' => '1'),
@@ -78,6 +80,7 @@ class RolesPermisosSeeder extends Seeder
 			array('ROLID' => '7', 'PERMISOID' => '9'),
 			array('ROLID' => '7', 'PERMISOID' => '10'),
 			array('ROLID' => '7', 'PERMISOID' => '11'),
+			array('ROLID' => '7', 'PERMISOID' => '12'),
 
 			//FACILITADOR
 			array('ROLID' => '8', 'PERMISOID' => '1'),

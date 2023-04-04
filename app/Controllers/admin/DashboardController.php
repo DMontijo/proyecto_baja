@@ -407,7 +407,7 @@ class DashboardController extends BaseController
 	{
 		$data = (object) array();
 		$agente = $this->_usuariosModel->asObject()->where('ID', session('ID'))->first();
-		$roles = [1, 2, 6, 7, 8, 9, 10, 11];
+		$roles = [1, 2, 6, 7, 9, 11];
 
 		if (in_array($agente->ROLID, $roles)) {
 			$data->cantidad_folios = count($this->_folioModel->asObject()->findAll());
