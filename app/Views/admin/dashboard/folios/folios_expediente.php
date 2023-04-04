@@ -17,9 +17,9 @@
 							<thead>
 								<tr>
 									<th class="text-center" style="min-width:150px;">FOLIO</th>
+									<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
 									<th class="text-center" style="min-width:150px;">FECHA REGISTRO</th>
 									<th class="text-center" style="min-width:150px;">FECHA SALIDA</th>
-									<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
 									<th class="text-center">DELITO</th>
 									<th class="text-center">ESTADO</th>
 									<th class="text-center">OFICINA ASIGNADA</th>
@@ -37,9 +37,9 @@
 
 									<tr>
 										<td class="text-center"><?= $folio->FOLIOID ?></td>
+										<td class="text-center font-weight-bold"><?= $expedienteid ? $expedienteid . '/' . $folio->TIPOEXPEDIENTECLAVE : '' ?></td>
 										<td class="text-center"><?= date('d-m-Y H:i:s', strtotime($folio->FECHAREGISTRO)) ?></td>
 										<td class="text-center"><?= date('d-m-Y H:i:s', strtotime($folio->FECHASALIDA)) ?></td>
-										<td class="text-center"><?= $expedienteid ? $expedienteid . '/' . $folio->TIPOEXPEDIENTECLAVE : '' ?></td>
 										<td class="text-center"><?= $folio->HECHODELITO ?></td>
 										<td class="text-center"><?= $folio->STATUS ?></td>
 										<td class="text-center"><?= $folio->OFICINADESCR ?></td>
