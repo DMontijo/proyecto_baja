@@ -17,7 +17,7 @@
 							<thead>
 								<tr>
 									<th class="text-center">FOLIO</th>
-									<th class="text-center">DELITO</th>
+									<th class="text-center">DELITO COMENTADO</th>
 									<th class="text-center">EN ATENCIÓN POR</th>
 									<th class="text-center"></th>
 								</tr>
@@ -25,7 +25,7 @@
 							<tbody>
 								<?php foreach ($body_data->folio as $index => $folio) { ?>
 									<tr>
-										<td class="text-center"><?= $folio->FOLIOID ?></td>
+										<td class="text-center font-weigth-bold"><?= $folio->FOLIOID . '/' . $folio->ANO ?></td>
 										<td class="text-center"><?= $folio->HECHODELITO ?></td>
 										<td class="text-center"><?= $folio->NOMBRE ?> <?= $folio->APELLIDO_PATERNO ?> <?= $folio->APELLIDO_MATERNO ?></td>
 										<td class="text-center">

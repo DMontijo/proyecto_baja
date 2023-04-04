@@ -20,25 +20,25 @@
 									<th class="text-center">FOLIO</th>
 									<th class="text-center" style="min-width:150px;">FECHA REGISTRO</th>
 									<th class="text-center" style="min-width:150px;">FECHA SALIDA</th>
-									<th class="text-center">DELITO</th>
-									<th class="text-center">ESTADO</th>
+									<!-- <th class="text-center">DELITO</th>
+									<th class="text-center">ESTADO</th> -->
 									<th class="text-center">COMENTARIOS</th>
 									<th class="text-center">ATENDIDO POR</th>
-									<th class="text-center">ROL</th>
+									<!-- <th class="text-center">ROL</th> -->
 									<!-- <th class="text-center"></th> -->
 								</tr>
 							</thead>
 							<tbody>
 								<?php foreach ($body_data->folio as $index => $folio) { ?>
 									<tr>
-										<td class="text-center"><?= $folio->FOLIOID ?></th>
+										<td class="text-center font-weigth-bold"><?= $folio->FOLIOID . '/' . $folio->ANO ?></td>
 										<td class="text-center"><?= date('d-m-Y H:i:s', strtotime($folio->FECHAREGISTRO)) ?></td>
 										<td class="text-center"><?= date('d-m-Y H:i:s', strtotime($folio->FECHASALIDA)) ?></td>
-										<td class="text-center"><?= $folio->HECHODELITO ?></td>
-										<td class="text-center"><?= $folio->STATUS ?></td>
+										<!-- <td class="text-center"><?= $folio->HECHODELITO ?></td>
+										<td class="text-center"><?= $folio->STATUS ?></td> -->
 										<td class="text-center"><?= $folio->NOTASAGENTE ?></td>
 										<td class="text-center"><?= $folio->NOMBRE ?> <?= $folio->APELLIDO_PATERNO ?> <?= $folio->APELLIDO_MATERNO ?></td>
-										<td class="text-center"><?= $folio->NOMBRE_ROL ?></td>
+										<!-- <td class="text-center"><?= $folio->NOMBRE_ROL ?></td> -->
 
 										<!-- <td class="text-center"><button type="button" class="btn btn-primary"><i class="fas fa-eye"></i></button></td> -->
 									</tr>

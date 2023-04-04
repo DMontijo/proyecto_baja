@@ -36,7 +36,7 @@
 									} ?>
 
 									<tr>
-										<td class="text-center"><?= $folio->FOLIOID ?></td>
+										<td class="text-center"><?= $folio->FOLIOID . '/' . $folio->ANO ?></td>
 										<td class="text-center font-weight-bold"><?= $expedienteid ? $expedienteid . '/' . $folio->TIPOEXPEDIENTECLAVE : '' ?></td>
 										<td class="text-center"><?= date('d-m-Y H:i:s', strtotime($folio->FECHAREGISTRO)) ?></td>
 										<td class="text-center"><?= date('d-m-Y H:i:s', strtotime($folio->FECHASALIDA)) ?></td>
