@@ -62,7 +62,7 @@
 						<div class="row bg-light p-4 rounded justify-content-center justify-content-md-start h-100">
 							<div class="bg-yellow rounded-circle text-white d-flex justify-content-center align-items-center display-6" style="height:70px; width:70px;"><i class="bi bi-geo-fill"></i></div>
 							<h4 class="fw-bold mb-0 mt-3 text-blue text-center text-md-start">SAN QUINTÍN</h4>
-							<p class="text-center text-md-start m-0">Calle Décima 109 Fraccionamiento San Quintín, San Quintín, B. C.</p>
+							<p class="text-center text-md-start m-0">Calle Décima 131 Fraccionamiento San Quintín, San Quintín, B. C.</p>
 							<!-- <a class="btn btn-primary" href="#">Ver en mapa</a> -->
 						</div>
 					</div>
