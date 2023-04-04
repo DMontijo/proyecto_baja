@@ -17,21 +17,21 @@
 							<thead>
 								<tr>
 									<th class="text-center">FOLIO</th>
-									<th class="text-center">FECHA</th>
+									<th class="text-center">FECHA REGISTRO</th>
 									<th class="text-center">DELITO</th>
 									<th class="text-center">DENUNCIANTE</th>
-									<th class="text-center">ESTADO</th>
+									<!-- <th class="text-center">ESTADO</th> -->
 									<th class="text-center"></th>
 								</tr>
 							</thead>
 							<tbody>
 								<?php foreach ($body_data->folio as $index => $folio) { ?>
 									<tr>
-										<td class="text-center"><?= $folio->FOLIOID ?></td>
-										<td class="text-center"><?= date('d-m-Y',strtotime($folio->FECHAREGISTRO)) ?></td>
+										<td class="text-center"><?= $folio->FOLIOID . '/' . $folio->ANO ?></td>
+										<td class="text-center"><?= date('d-m-Y', strtotime($folio->FECHAREGISTRO)) ?></td>
 										<td class="text-center"><?= $folio->HECHODELITO ?></td>
 										<td class="text-center"><?= $folio->NOMBRE ?> <?= $folio->APELLIDO_PATERNO ?> <?= $folio->APELLIDO_MATERNO ? $folio->APELLIDO_MATERNO : '' ?></td>
-										<td class="text-center"><?= $folio->STATUS ?></td>
+										<!-- <td class="text-center"><?= $folio->STATUS ?></td> -->
 										<td class="text-center"><a type="button" href="<?= base_url('/admin/dashboard/video-denuncia?folio=') . $folio->FOLIOID ?>" class="btn btn-primary text-white"><i class="fas fa-eye"></i></a></td>
 									</tr>
 								<?php } ?>
