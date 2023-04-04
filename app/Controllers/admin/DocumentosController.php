@@ -57,7 +57,6 @@ class DocumentosController extends BaseController
 		} else {
 			$empleado = $this->_usuariosModel->asObject()->orderBy('NOMBRE', 'ASC')->findAll();
 		}
-
 		$dataView = (object)array();
 		$dataView->result = $resultFilter->result;
 		$dataView->municipios = $municipio;
@@ -154,6 +153,7 @@ class DocumentosController extends BaseController
 		$data->plantillas = $this->_plantillasModel->asObject()->where('TITULO !=', 'CONSTANCIA DE EXTRAVÍO')->orderBy('TITULO', 'ASC')->findAll();
 		$data->institucionremision = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $data->foliorow[0]->INSTITUCIONREMISIONMUNICIPIOID)->where('ESTADOID', 2)->first();
 		$data->municipioasignado = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $data->foliorow[0]->MUNICIPIOASIGNADOID)->where('ESTADOID', 2)->first();
+		$data->encargados =$this->_usuariosModel->asObject()->where('ROLID', 6)->findAll();
 
 		$data2 = [
 			'header_data' => (object)['title' => 'DOCUMENTOS'],
@@ -264,6 +264,27 @@ class DocumentosController extends BaseController
 		$documentos = $this->_folioDocModel->get_by_folio($folio, $year);
 
 		if ($deleteDoc) {
+			return json_encode((object)['status' => 1, 'documentos' => $documentos]);;
+		} else {
+			return json_encode(['status' => 0]);
+		}
+	}
+
+	public function actualizarDocumentoEncargado()
+	{
+		$docid = trim($this->request->getPost('foliodocid'));
+		$folio = trim($this->request->getPost('folio'));
+		$year = trim($this->request->getPost('year'));
+		$encargadoid = trim($this->request->getPost('encargadoid'));
+		$dataEncargado = array(
+			'ENCARGADO_ASIGNADO' => $encargadoid,
+		);
+
+		$updateObjetoInvolucrado = $this->_folioDocModel->set($dataEncargado)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $docid)->update();
+
+		$documentos = $this->_folioDocModel->get_by_folio($folio, $year);
+
+		if ($updateObjetoInvolucrado) {
 			return json_encode((object)['status' => 1, 'documentos' => $documentos]);;
 		} else {
 			return json_encode(['status' => 0]);

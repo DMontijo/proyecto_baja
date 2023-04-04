@@ -12,6 +12,7 @@
 <?php include('app/Views/admin/dashboard/video_denuncia_modals/documentos_modal.php') ?>
 <?php include 'app/Views/admin/dashboard/video_denuncia_modals/documentos_modal_editar.php' ?>
 <?php include 'app/Views/admin/dashboard/video_denuncia_modals/change_status_doc.php' ?>
+<?php include('app/Views/admin/dashboard/video_denuncia_modals/encargados_modal.php') ?>
 
 <?php include 'app/Views/admin/dashboard/video_denuncia_modals/documentos_modal_wyswyg.php' ?>
 <?php include 'app/Views/admin/dashboard/video_denuncia_modals/send_email_modal.php' ?>
@@ -1310,6 +1311,7 @@
 												</form>`
 				var btnCambiarStatus = `<button type='button'  class='btn btn-primary my-2' onclick='cambiarStatusDoc(${documentos[i].FOLIODOCID}, ${documentos[i].STATUSENVIO}, "${documentos[i].ENVIADO}", ${documentos[i].FOLIOID}, ${documentos[i].ANO})'><i class="fas fa-dice"></i></button>`
 				var btnEnviar = `<button type='button'  class='btn btn-primary my-2' onclick='firmarUnitarioModal(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})'><i class="fas fa-paper-plane"></i></button>`
+				var btnAsignarEncargado = `<button type='button'  class='btn btn-primary my-2' onclick='asignarEncargado(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})' disabled><i class="fas fa-user-tag"></i></button>`
 
 			} else {
 				var btn =
@@ -1336,6 +1338,8 @@
 					`<button type='button'  class='btn btn-primary my-2' onclick='firmarDocumento(${documentos[i].FOLIOID}, ${documentos[i].ANO}, ${documentos[i].FOLIODOCID})'><i class="fas fa-signature"></i></button>`
 				var btnCambiarStatus = `<button type='button'  class='btn btn-primary my-2' onclick='cambiarStatusDoc(${documentos[i].FOLIODOCID}, ${documentos[i].STATUSENVIO}, "${documentos[i].ENVIADO}", ${documentos[i].FOLIOID}, ${documentos[i].ANO})'><i class="fas fa-dice"></i></button>`
 				var btnEnviar = `<button type='button'  class='btn btn-primary my-2' onclick='firmarUnitarioModal(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})' disabled><i class="fas fa-paper-plane"></i></button>`
+				var btnAsignarEncargado = `<button type='button'  class='btn btn-primary my-2' onclick='asignarEncargado(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})'><i class="fas fa-user-tag"></i></button>`
+
 			}
 			if (documentos[i].ENVIADO == 'N') {
 				var btnBorrar =
@@ -1347,7 +1351,7 @@
 				`<td class="text-center">${documentos[i].STATUS}</td>` +
 				`<td class="text-center">${documentos[i].NOMBRE} ${documentos[i].APELLIDO_PATERNO} ${documentos[i].APELLIDO_MATERNO}</td>` +
 
-				`<td class="text-center">${btn} ${btnpdf} ${btnxml} ${btnFirmar} ${btnCambiarStatus} ${btnEnviar} ${btnBorrar}</td>` +
+				`<td class="text-center">${btn} ${btnpdf} ${btnxml} ${btnFirmar} ${btnCambiarStatus} ${btnEnviar} ${btnBorrar} ${btnAsignarEncargado}</td>` +
 				`</tr>`;
 
 			$('#table-documentos tr:first').after(fila);
@@ -1355,6 +1359,52 @@
 			var nFilas = $("#documentos tr").length;
 			$("#adicionados").append(nFilas - 1);
 		}
+	}
+
+	function asignarEncargado(documento, folio, ano) {
+		$('#encargadosModal').modal('show');
+		const btn_asignar_encargado = document.querySelector('#enviarEncargado');
+
+		btn_asignar_encargado.addEventListener('click', (e) => {
+			btn_asignar_encargado.disabled = true;
+			$.ajax({
+				data: {
+					'foliodocid': documento,
+					'folio': folio,
+					'year': ano,
+					'encargadoid': document.querySelector('#selectEncargado').value
+				},
+				url: "<?= base_url('/data/update-encargado') ?>",
+				method: "POST",
+				dataType: "json",
+				success: function(response) {
+					const documentos = response.documentos;
+					if (response.status == 1) {
+						btn_asignar_encargado.disabled = false;
+						let tabla_documentos = document.querySelectorAll('#table-documentos tr');
+						tabla_documentos.forEach(row => {
+							if (row.id !== '') {
+								row.remove();
+							}
+						});
+						llenarTablaDocumentos(documentos);
+
+						Swal.fire({
+							icon: 'success',
+							text: 'Encargado asignado correctamente',
+							confirmButtonColor: '#bf9b55',
+						});
+						$('#encargadosModal').modal('hide');
+					}
+
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					btn_asignar_encargado.disabled = false;
+
+				}
+			});
+		});
+
 	}
 
 	function firmarDocumento(folio, ano, foliodocid) {

@@ -1161,7 +1161,7 @@
 		});
 	});
 
-	document.querySelector('#linea_vehiculo__da_ad').addEventListener('change', (e) => {
+	document.querySelector('#linea_vehiculo_da_ad').addEventListener('change', (e) => {
 		let select_version = document.querySelector('#version_vehiculo_da_ad');
 		let select_distribuidor = document.querySelector('#distribuidor_vehiculo_da_ad');
 		let select_marca = document.querySelector('#marca_ad_da');

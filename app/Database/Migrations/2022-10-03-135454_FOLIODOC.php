@@ -47,6 +47,11 @@ class FOLIODOC extends Migration
 				'unsigned' => TRUE,
 				'null' => TRUE,
 			],
+			'ENCARGADO_ASIGNADO' => [
+				'type' => 'INT',
+				'unsigned' => TRUE,
+				'null' => TRUE,
+			],
 			'TIPODOC' => [
 				'type' => 'TEXT',
 				'null' => TRUE,

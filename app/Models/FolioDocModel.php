@@ -39,6 +39,7 @@ class FolioDocModel extends Model
 		'ENVIADO',
 		'AGENTE_REGISTRO',
 		'AGENTE_ASIGNADO',
+		'ENCARGADO_ASIGNADO'
 	];
 	public function get_by_folio($folio, $year)
 	{

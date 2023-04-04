@@ -1666,6 +1666,7 @@ class DashboardController extends BaseController
 		$data->servicioVehiculo = $this->_vehiculoServicioModel->asObject()->findAll();
 		$data->colorVehiculo = $this->_coloresVehiculoModel->asObject()->findAll();
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+		$data->encargados =$this->_usuariosModel->asObject()->where('ROLID', 6)->findAll();
 		$data->delitosModalidad = $this->_delitoModalidadModel->asObject()->orderBy('DELITOMODALIDADDESCR', 'ASC')->where('DELITOMODALIDADDESCR IS NOT NULL')->where('DELITOMODALIDADDESCR !=', '')->findAll();
 		$this->_loadView('Video denuncia', 'videodenuncia', '', $data, 'video_denuncia');
 	}
