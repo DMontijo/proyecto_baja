@@ -2787,8 +2787,10 @@
 	window.onload = function() {
 		startTime();
 		(function() {
+			history.pushState(null, null, window.location.href);
+			history.back();
+			window.onpopstate = () => history.forward();
 			console.log('Previene back');
-			window.history.forward();
 		})()
 
 		(function() {
