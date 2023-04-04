@@ -56,7 +56,7 @@ class ReportesController extends BaseController
 
 		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
 		$resultFilter = $this->_folioModel->filterDates($data);
-		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7";
+		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
 		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
 
 		$dataView = (object)array();
@@ -95,11 +95,11 @@ class ReportesController extends BaseController
 
 		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
 		$resultFilter = $this->_folioModel->filterDates($data);
-		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7";
+		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
 		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
 
 		if (isset($data['AGENTEATENCIONID'])) {
-			$agente = $this->_usuariosModel->asObject()->where('ROLID', 2)->where('ID', $data['AGENTEATENCIONID'])->orderBy('NOMBRE', 'ASC')->first();
+			$agente = $this->_usuariosModel->asObject()->where('ID', $data['AGENTEATENCIONID'])->orderBy('NOMBRE', 'ASC')->first();
 			$data['AGENTENOMBRE'] = $agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' . $agente->APELLIDO_MATERNO;
 		}
 
@@ -290,7 +290,7 @@ class ReportesController extends BaseController
 
 		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
 		$resultFilter = $this->_constanciaExtravioModel->filterDates($data);
-		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7";
+		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
 		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
 
 		$dataView = (object)array();
@@ -329,7 +329,7 @@ class ReportesController extends BaseController
 
 		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
 		$resultFilter = $this->_constanciaExtravioModel->filterDates($data);
-		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7";
+		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
 		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
 
 		if (isset($data['AGENTEID'])) {
@@ -1275,7 +1275,7 @@ class ReportesController extends BaseController
 		];
 		$documentos = $this->_plantillasModel->filtro_ordenes_proteccion($dataPost);
 		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
-		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7";
+		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
 		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
 		$tiposOrden = $this->_plantillasModel->get_tipos_orden();
 
@@ -1309,7 +1309,7 @@ class ReportesController extends BaseController
 		];
 
 		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
-		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7";
+		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
 		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
 		$tiposOrden = $this->_plantillasModel->get_tipos_orden();
 		$documentos = $this->_plantillasModel->filtro_ordenes_proteccion($dataPost);
@@ -1570,7 +1570,7 @@ class ReportesController extends BaseController
 		];
 
 		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
-		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7";
+		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
 		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
 		$dataInfo = $this->_folioModel->filtro_canalizaciones_derivaciones($dataPost);
 
@@ -1619,7 +1619,7 @@ class ReportesController extends BaseController
 		];
 
 		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
-		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7";
+		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
 		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
 		$dataInfo = $this->_folioModel->filtro_canalizaciones_derivaciones($dataPost);
 
