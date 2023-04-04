@@ -378,7 +378,7 @@
 											</div>
 
 											<div class="btn-group btn-group-toggle" data-toggle="buttons">
-												
+
 												<!--VIDEO DENUNCIANTE-->
 												<button class="btn btn-lg btn-danger" id="off-video-denunciante" name="off-video-denunciante" data-toggle="tooltip" data-placement="top" title="Encender cámara del agente" style="display:none;">
 													<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-camera-video-off" viewBox="0 0 16 16">
@@ -2786,10 +2786,13 @@
 
 	window.onload = function() {
 		startTime();
+		(function() {
+			console.log('Previene back');
+			window.history.forward();
+		})()
 
 		(function() {
 			'use strict'
-			window.history.forward();
 			var form_delito = document.querySelector('#denuncia_form');
 			var form_preguntas = document.querySelector('#preguntas_form');
 			var form_persona_fisica = document.querySelector('#persona_fisica_form');
