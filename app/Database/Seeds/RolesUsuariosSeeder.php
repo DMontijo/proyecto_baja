@@ -10,7 +10,7 @@ class RolesUsuariosSeeder extends Seeder
 	{
 		$data = [
 			array('NOMBRE_ROL' => 'SUPERUSUARIO'),
-			array('NOMBRE_ROL' => 'DIRECTOR SEJAP'),
+			array('NOMBRE_ROL' => 'DIRECTOR JAP'),
 			array('NOMBRE_ROL' => 'AGENTE DEL MINISTERIO PÚBLICO'),
 			array('NOMBRE_ROL' => 'AUXILIAR DE MINISTERIO PÚBLICO'),
 			array('NOMBRE_ROL' => 'AGENTE DEL MINISTERIO PÚBLICO EXTERNO'),
