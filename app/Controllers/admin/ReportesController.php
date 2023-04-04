@@ -333,7 +333,7 @@ class ReportesController extends BaseController
 		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
 
 		if (isset($data['AGENTEID'])) {
-			$agente = $this->_usuariosModel->asObject()->where('ROLID', 2)->where('ID', $data['AGENTEID'])->orderBy('NOMBRE', 'ASC')->first();
+			$agente = $this->_usuariosModel->asObject()->where('ID', $data['AGENTEID'])->orderBy('NOMBRE', 'ASC')->first();
 			$data['AGENTENOMBRE'] = $agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' . $agente->APELLIDO_MATERNO;
 		}
 
@@ -564,7 +564,7 @@ class ReportesController extends BaseController
 		$empleado = $this->_usuariosModel->asObject()->where('ID',	session('ID'))->orderBy('NOMBRE', 'ASC')->findAll();
 
 		// if (isset($data['AGENTEATENCIONID'])) {
-		// 	$agente = $this->_usuariosModel->asObject()->where('ROLID', 2)->where('ID', $data['AGENTEATENCIONID'])->orderBy('NOMBRE', 'ASC')->first();
+		// 	$agente = $this->_usuariosModel->asObject()->where('ID', $data['AGENTEATENCIONID'])->orderBy('NOMBRE', 'ASC')->first();
 		// 	$data['AGENTENOMBRE'] = $agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' . $agente->APELLIDO_MATERNO;
 		// }
 
