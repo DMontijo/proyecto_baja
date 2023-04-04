@@ -573,13 +573,11 @@
 	}
 
 	function preventCloseWindow() {
-		let preventClose = function(e) {
-			e.preventDefault();
-			e.stopPropagation();
-			e.returnValue = "Se cerrara la sesión si cierras la ventana.";
-		};
-
-		window.addEventListener("beforeunload", preventClose, true);
+		window.addEventListener("beforeunload", (evento) => {
+			evento.preventDefault();
+			evento.returnValue = "Si cierras se perdera todo lo que no hayas guardado o se desconectará la llamada.";
+			return "Si cierras se perdera todo lo que no hayas guardado o se desconectará la llamada.";
+		});
 	}
 
 	function pulsar(e) {
@@ -1185,6 +1183,7 @@
 	}
 
 	buscar_btn.addEventListener('click', (e) => {
+		preventCloseWindow();
 		$.ajax({
 			data: {
 				'folio': inputFolio.value,
@@ -1867,7 +1866,7 @@
 		$('#documentos_generados_modal').modal('hide');
 		$('#encargadosModal').modal('show');
 		const btn_asignar_encargado = document.querySelector('#enviarEncargado');
-		
+
 		btn_asignar_encargado.addEventListener('click', (e) => {
 			btn_asignar_encargado.disabled = true;
 
@@ -2849,8 +2848,6 @@
 
 	window.onload = function() {
 		startTime();
-		preventCloseWindow();
-		
 		(function() {
 			'use strict'
 			var form_delito = document.querySelector('#denuncia_form');
