@@ -119,21 +119,20 @@
 						<table id="expedientes_generados" class="table table-bordered table-striped">
 							<thead>
 								<tr>
-									<th class="text-center">FOLIO</th>
+									<th class="text-center"></th>
+									<th class="text-center" style="min-width:150px;">FOLIO</th>
 									<th class="text-center">AÑO</th>
 									<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
-									<th class="text-center">ESTATUS</th>
-									<th class="text-center">TIPO</th>
-									<th class="text-center">DELITO</th>
+									<th class="text-center" style="min-width:150px;">ESTATUS</th>
+									<th class="text-center" style="min-width:150px;">TIPO</th>
+									<th class="text-center" style="min-width:150px;">DELITO</th>
 
-									<th class="text-center">NOMBRE DEL DENUNCIANTE</th>
-									<th class="text-center">AGENTE DE ATENCIÓN</th>
-									<th class="text-center">MUNICIPIO ASIGNADO</th>
-									<th class="text-center">DEPARTAMENTO ASIGNADO</th>
+									<th class="text-center" style="min-width:200px;">NOMBRE DEL DENUNCIANTE</th>
+									<th class="text-center" style="min-width:200px;">AGENTE DE ATENCIÓN</th>
+									<th class="text-center" style="min-width:150px;">MUNICIPIO ASIGNADO</th>
+									<th class="text-center" style="min-width:250px;">DEPARTAMENTO ASIGNADO</th>
 									<th class="text-center" style="min-width:150px;">FECHA REGISTRO</th>
 									<th class="text-center" style="min-width:150px;">FECHA SALIDA</th>
-
-									<th class="text-center"></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -146,12 +145,15 @@
 									} ?>
 
 									<tr>
-										<td class="text-center font-weight-bold"><?= $folio->FOLIOID ?></td>
+										<td class="text-center">
+											<a href="<?= base_url('/admin/dashboard/ver_folio?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO ?>" class="btn btn-primary text-white"><i class="fas fa-folder-open"></i> ABRIR</a>
+										</td>
+										<td class="text-center font-weight-bold"><?= $folio->FOLIOID . '/' . $folio->ANO ?></td>
 										<td class="text-center"><?= $folio->ANO ?></td>
-										<td class="text-center"><?= $expedienteid ?  $expedienteid.'/'.$folio->TIPOEXPEDIENTECLAVE : $folio->FOLIOID . '/' . $folio->ANO ?></td>
+										<td class="text-center font-weight-bold"><?= $expedienteid ?  $expedienteid . '/' . $folio->TIPOEXPEDIENTECLAVE : $folio->FOLIOID . '/' . $folio->ANO ?></td>
 										<td class="text-center"><?= $folio->STATUS ?></td>
 										<td class="text-center"><?= $folio->TIPODENUNCIA == 'VD' ? 'VIDEODENUNCIA' : 'ANÓNIMA' ?></td>
-										<td class="text-center"><?= $folio->DELITOMODALIDADDESCR ?$folio->DELITOMODALIDADDESCR : $folio->HECHODELITO?></td>
+										<td class="text-center"><?= $folio->DELITOMODALIDADDESCR ? $folio->DELITOMODALIDADDESCR : $folio->HECHODELITO ?></td>
 
 										<td class="text-center"><?= $folio->N_DENUNCIANTE . ' ' . $folio->APP_DENUNCIANTE . ' ' . $folio->APM_DENUNCIANTE ?></td>
 										<td class="text-center"><?= $folio->N_AGENT . ' ' . $folio->APP_AGENT . ' ' . $folio->APM_AGENT ?></td>
@@ -159,10 +161,6 @@
 										<td class="text-center"><?= $folio->OFICINADESCR ?></td>
 										<td class="text-center"><?= $folio->FECHAREGISTRO ?></td>
 										<td class="text-center"><?= $folio->FECHASALIDA ?  $folio->FECHASALIDA : '' ?></td>
-
-										<td class="text-center">
-											<a href="<?= base_url('/admin/dashboard/ver_folio?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO ?>" class="btn btn-primary text-white"><i class="fas fa-folder-open"></i> ABRIR</a>
-										</td>
 									</tr>
 								<?php } ?>
 							</tbody>
