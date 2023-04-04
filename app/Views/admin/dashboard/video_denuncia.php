@@ -2787,13 +2787,6 @@
 	window.onload = function() {
 		startTime();
 		(function() {
-			history.pushState(null, null, window.location.href);
-			history.back();
-			window.onpopstate = () => history.forward();
-			console.log('Previene back');
-		})()
-
-		(function() {
 			'use strict'
 			var form_delito = document.querySelector('#denuncia_form');
 			var form_preguntas = document.querySelector('#preguntas_form');
