@@ -48,7 +48,7 @@
 
 
 <div class="modal fade shadow" id="videos_expediente_modal" tabindex="-1" role="dialog" aria-labelledby="videosModalLabel" aria-hidden="true" data-backdrop="false">
-	<div class="modal-dialog modal-dialog-centered mw-100 w-75">
+	<div class="modal-dialog modal-dialog-centered mw-100 w-50">
 		<div class="modal-content" style="box-shadow: 0px 0px 55px 9px rgba(0,0,0,0.66)!important;">
 			<div class="modal-header bg-primary justify-content-center">
 				<h5 class="modal-title font-weight-bold text-white">VIDEOS DEL EXPEDIENTE REGISTRADOS</h5>
