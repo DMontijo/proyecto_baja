@@ -117,13 +117,6 @@ export class VideoServiceGuest {
 			this.#socket = io(this.#apiURI, {
 				...this.#socketConfig,
 				extraHeaders: this.#socketHeaders,
-				secure: true,
-				transports: [
-					// "websocket",
-					"xhr-polling",
-					"polling",
-					"flashsocket"
-				]
 			});
 		} catch (err) {
 			throw ExceptionSocketIONotImported();
