@@ -112,6 +112,7 @@
 			success: function(response) {
 				const videos = response.responseVideos;
 				const marcas = response.marcasVideo;
+				console.log(response);
 				console.log(videos);
 				console.log(marcas);
 				llenarTablaVideos(videos, marcas);
