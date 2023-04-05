@@ -3646,19 +3646,21 @@ class DashboardController extends BaseController
 		$responseFolio = $this->_curlGetService($endpointFolio);
 
 		if ($responseFolio != null) {
-			foreach ($responseFolio as $key => $conections) {
-
-				if (isset($conections->url) && $conections->url != null) {
-					$endpointId = $this->urlApi . 'recordings/' . $conections->id;
-					$responseid = $this->_curlGetService($endpointId);
-				}
-			}
-		}
-		if (isset($responseid)) {
-			return json_encode(['status' => 1, 'responseVideos' => $responseFolio, 'marcasVideo' => $responseid]);
-		} else {
 			return json_encode(['status' => 1, 'responseVideos' => $responseFolio]);
+
+			// foreach ($responseFolio as $key => $conections) {
+
+			// 	if (isset($conections->url) && $conections->url != null) {
+			// 		$endpointId = $this->urlApi . 'recordings/' . $conections->id;
+			// 		$responseid = $this->_curlGetService($endpointId);
+			// 	}
+			// }
 		}
+		// if (isset($responseid)) {
+		// 	return json_encode(['status' => 1, 'responseVideos' => $responseFolio, 'marcasVideo' => $responseid]);
+		// } else {
+		// 	return json_encode(['status' => 1, 'responseVideos' => $responseFolio]);
+		// }
 
 		// return json_encode($endpointId);
 
