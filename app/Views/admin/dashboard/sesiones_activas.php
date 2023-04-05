@@ -9,7 +9,7 @@
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-12 text-center mb-4">
-				<h1 class="mb-4 text-center font-weight-bold">Sesiones Activas</h1>
+				<h1 class="mb-4 text-center font-weight-bold">SESIONES ACTIVAS EN EL CDTEC</h1>
 			</div>
 			<div class="col-12">
 				<div class="card shadow border-0" style="overflow-x:auto;">
@@ -18,22 +18,19 @@
 							<li class="nav-item">
 								<a class="nav-link active" id="usuarios-tab" data-toggle="tab" href="#usuarios" role="tab" aria-controls="usuarios" aria-selected="true">Usuarios</a>
 							</li>
-							<?php if (in_array(session('ROLID'), $rolesToMonitor)) { ?>
-								<li class="nav-item">
-									<a class="nav-link" id="denunciantes-tab" data-toggle="tab" href="#denunciantes" role="tab" aria-controls="denunciantes" aria-selected="false">Denunciantes</a>
-								</li>
-							<?php }; ?>
+							<li class="nav-item">
+								<a class="nav-link" id="denunciantes-tab" data-toggle="tab" href="#denunciantes" role="tab" aria-controls="denunciantes" aria-selected="false">Denunciantes</a>
+							</li>
 						</ul>
 						<div class="tab-content" id="myTabContent">
-							<div class="tab-pane fade show active" id="usuarios" role="tabpanel" aria-labelledby="usuarios-tab">
-
+							<div class="tab-pane fade show active mt-4" id="usuarios" role="tabpanel" aria-labelledby="usuarios-tab">
 								<table id="table-usuarios" class="table table-bordered table-striped">
 									<thead>
 										<tr>
-											<th class="text-center">USUARIO</th>
-											<th class="text-center">NAVEGADOR </th>
+											<th class="text-center">AGENTE</th>
+											<th class="text-center">NAVEGADOR</th>
 											<th class="text-center">SISTEMA OPERATIVO</th>
-											<th class="text-center">FECHA INICIO</th>
+											<th class="text-center">FECHA INICIO SESIÓN</th>
 											<?php if (in_array(session('ROLID'), $rolesToMonitor)) { ?>
 												<th class="text-center"></th>
 											<?php }; ?>
@@ -56,17 +53,17 @@
 									</tbody>
 								</table>
 							</div>
-							<div class="tab-pane fade" id="denunciantes" role="tabpanel" aria-labelledby="denunciantes-tab">
-
+							<div class="tab-pane fade mt-4" id="denunciantes" role="tabpanel" aria-labelledby="denunciantes-tab">
 								<table id="table-denunciantes" class="table table-bordered table-striped">
 									<thead>
 										<tr>
 											<th class="text-center">DENUNCIANTE</th>
-											<th class="text-center">NAVEGADOR </th>
+											<th class="text-center">NAVEGADOR</th>
 											<th class="text-center">SISTEMA OPERATIVO</th>
-											<th class="text-center">FECHA INICIO</th>
-											<th class="text-center"></th>
-
+											<th class="text-center">FECHA INICIO SESIÓN</th>
+											<?php if (in_array(session('ROLID'), $rolesToMonitor)) { ?>
+												<th class="text-center"></th>
+											<?php }; ?>
 										</tr>
 									</thead>
 									<tbody>
@@ -76,11 +73,12 @@
 												<td class="text-center"><?= $sesionesDenunciantes->DENUNCIANTE_HTTP ?></td>
 												<td class="text-center"><?= $sesionesDenunciantes->DENUNCIANTE_SO ?></td>
 												<td class="text-center"><?= $sesionesDenunciantes->FECHAINICIO ?></td>
-												<td class="text-center">
-													<a href="<?= base_url('/admin/dashboard/cerrar_sesiones_general?id_denunciante=') . $sesionesDenunciantes->ID_DENUNCIANTE ?>" class="btn btn-primary text-white"> CERRAR SESIÓN</a>
-												</td>
+												<?php if (in_array(session('ROLID'), $rolesToMonitor)) { ?>
+													<td class="text-center">
+														<a href="<?= base_url('/admin/dashboard/cerrar_sesiones_general?id_denunciante=') . $sesionesDenunciantes->ID_DENUNCIANTE ?>" class="btn btn-primary text-white"> CERRAR SESIÓN</a>
+													</td>
+												<?php }; ?>
 											</tr>
-
 										<?php } ?>
 									</tbody>
 								</table>

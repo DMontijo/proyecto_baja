@@ -417,6 +417,8 @@ class DashboardController extends BaseController
 			$data->cantidad_expedientes = count($this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('AGENTEFIRMAID !=', null)->where('FECHASALIDA BETWEEN "' . date('Y-m-d') . ' 00:00:00' . '" and "' . date('Y-m-d', strtotime("+ 1 day")) . ' 00:00:00' . '"')->findAll());
 			$data->cantidad_documentos = $this->_folioDocModel->countFoliosAsignados(session('ID'));
 			$data->cantidad_expedientes_no_firmados = count($this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('AGENTEFIRMAID', null)->findAll());
+			$data->sesiones_admin = count($this->_sesionesModel->sesiones_abiertas()->result);
+			$data->sesiones_denunciantes = count($this->_sesionesDenunciantesModel->sesiones_abiertas()->result);
 			$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 		} else {
 			$data->cantidad_folios = count($this->_folioModel->asObject()->where('AGENTEATENCIONID', session('ID'))->findAll());
@@ -426,6 +428,8 @@ class DashboardController extends BaseController
 			$data->cantidad_expedientes = count($this->_folioModel->asObject()->where('AGENTEATENCIONID', session('ID'))->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('AGENTEFIRMAID !=', null)->where('FECHASALIDA BETWEEN "' . date('Y-m-d') . ' 00:00:00' . '" and "' . date('Y-m-d', strtotime("+ 1 day")) . ' 00:00:00' . '"')->findAll());
 			$data->cantidad_expedientes_no_firmados = count($this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('AGENTEFIRMAID', null)->findAll());
 			$data->cantidad_documentos = $this->_folioDocModel->countFoliosAsignados(session('ID'));
+			$data->sesiones_admin = count($this->_sesionesModel->sesiones_abiertas()->result);
+			$data->sesiones_denunciantes = count($this->_sesionesDenunciantesModel->sesiones_abiertas()->result);
 			$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 		}
 		$this->_loadView('Principal', 'dashboard', '', $data, 'index');
@@ -980,8 +984,8 @@ class DashboardController extends BaseController
 			if ($data->folio) {
 				if ($data->folio->STATUS == 'ABIERTO') {
 					$data->status = 1;
-					
-					$data->respuesta =$this->getDataFolio($numfolio,$year);
+
+					$data->respuesta = $this->getDataFolio($numfolio, $year);
 					$this->_folioModel->set(['STATUS' => 'EN PROCESO', 'AGENTEATENCIONID' => session('ID')])->where('ANO', $year)->where('FOLIOID', $numfolio)->update();
 					$datosBitacora = [
 						'ACCION' => 'Está atendiendo un folio',
@@ -993,7 +997,7 @@ class DashboardController extends BaseController
 					return json_encode(['status' => 2, 'motivo' => 'EL FOLIO YA ESTA SIENDO ATENDIDO']);
 				} else if ($data->folio->STATUS == 'EN PROCESO' && $data->folio->TIPODENUNCIA == "DA") {
 					$data->status = 1;
-					$data->respuesta = $this->getDataFolio($numfolio,$year);
+					$data->respuesta = $this->getDataFolio($numfolio, $year);
 
 					$datosBitacora = [
 						'ACCION' => 'Está atendiendo una denuncia anonima',
@@ -1013,14 +1017,14 @@ class DashboardController extends BaseController
 
 			if ($data->folio) {
 				$data->status = 1;
-				$data->respuesta = $this->getDataFolio($numfolio,$year);
+				$data->respuesta = $this->getDataFolio($numfolio, $year);
 
 
 				if ($data->folio->STATUS == 'ABIERTO' || $data->folio->STATUS == 'EN PROCESO') {
 					$data->agente = $this->_usuariosModel->asObject()->where('ID', $data->folio->AGENTEATENCIONID)->first();
 				} else if ($data->folio->STATUS == 'EN PROCESO' && $data->folio->TIPODENUNCIA == "DA") {
 					$data->status = 1;
-					$data->respuesta = $this->getDataFolio($numfolio,$year);
+					$data->respuesta = $this->getDataFolio($numfolio, $year);
 					return json_encode($data);
 				}
 				// var_dump($data->archivosexternos);exit;

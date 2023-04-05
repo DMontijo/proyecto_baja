@@ -48,17 +48,38 @@ $file_text = $user_id . "_data.txt";
 		<?php } ?>
 	</div>
 	<?php if (in_array(session('ROLID'), $rolesToMonitor)) { ?>
-		<div class="col-4">
-			<div class="card shadow" style="border-radius:10px;">
+		<div class="col-12 col-md-4 mb-4">
+			<div class="card shadow" style="border-radius:5px; height:100%!important;">
 				<div class="card-body text-center">
-					<h5 class="card-title">USUARIOS ACTIVOS</h5>
+					<h5 class="card-title">USUARIOS ACTIVOS PARA VIDEODENUNCIA</h5>
 					<h4 class="font-weight-bold" id="card_active_users">0</h4>
 					<a type="button" href="<?= base_url('admin/dashboard/usuarios_activos') ?>" class="btn btn-primary font-weight-bold mt-4 text-white">VER MÁS</a>
 				</div>
 			</div>
 		</div>
-		<div class="col-4">
-			<div class="card shadow" style="border-radius:10px;">
+		<div class="col-12 col-md-4 mb-4">
+			<div class="card shadow" style="border-radius:5px; height:100%!important;">
+				<div class="card-body text-center">
+					<h5 class="card-title">AGENTES DENTRO DE LA PLATAFORMA</h5>
+					<h4 class="font-weight-bold"><?= $body_data->sesiones_admin ?></h4>
+					<a type="button" href="<?= base_url('admin/dashboard/sesiones_activas') ?>" class="btn btn-primary font-weight-bold mt-4 text-white">VER MÁS</a>
+				</div>
+			</div>
+		</div>
+		<div class="col-12 col-md-4 mb-4">
+			<div class="card shadow" style="border-radius:5px; height:100%!important;">
+				<div class="card-body text-center">
+					<h5 class="card-title">DENUNCIANTES DENTRO DE LA PLATAFORMA</h5>
+					<h4 class="font-weight-bold"><?= $body_data->sesiones_denunciantes ?></h4>
+					<a type="button" href="<?= base_url('admin/dashboard/sesiones_activas') ?>" class="btn btn-primary font-weight-bold mt-4 text-white">VER MÁS</a>
+				</div>
+			</div>
+		</div>
+		<div class="col-12 mb-3">
+			<hr>
+		</div>
+		<div class="col-12 col-md-4 mb-4">
+			<div class="card shadow" style="border-radius:5px; height:100%!important;">
 				<div class="card-body text-center">
 					<h5 class="card-title">FOLIOS ABIERTOS</h5>
 					<h4 class="font-weight-bold"><?= $body_data->cantidad_abiertos ?></h4>
@@ -67,8 +88,8 @@ $file_text = $user_id . "_data.txt";
 			</div>
 		</div>
 	<?php }; ?>
-	<div class="col-4">
-		<div class="card shadow" style="border-radius:10px;">
+	<div class="col-12 col-md-4 mb-4">
+		<div class="card shadow" style="border-radius:5px; height:100%!important;">
 			<div class="card-body text-center">
 				<h5 class="card-title">EXPEDIENTES GENERADOS <br>HOY</h5>
 				<h4 class="font-weight-bold"><?= $body_data->cantidad_expedientes ?></h4>
@@ -76,8 +97,8 @@ $file_text = $user_id . "_data.txt";
 			</div>
 		</div>
 	</div>
-	<div class="col-4">
-		<div class="card shadow" style="border-radius:10px;">
+	<div class="col-12 col-md-4 mb-4">
+		<div class="card shadow" style="border-radius:5px; height:100%!important;">
 			<div class="card-body text-center">
 				<h5 class="card-title">DERIVACIONES GENERADAS <br>HOY</h5>
 				<h4 class="font-weight-bold"><?= $body_data->cantidad_derivados ?></h4>
@@ -85,8 +106,8 @@ $file_text = $user_id . "_data.txt";
 			</div>
 		</div>
 	</div>
-	<div class="col-4">
-		<div class="card shadow" style="border-radius:10px;">
+	<div class="col-12 col-md-4 mb-4">
+		<div class="card shadow" style="border-radius:5px; height:100%!important;">
 			<div class="card-body text-center">
 				<h5 class="card-title">CANALIZACIONES GENERADAS <br>HOY</h5>
 				<h4 class="font-weight-bold"><?= $body_data->cantidad_canalizados ?></h4>
@@ -94,8 +115,8 @@ $file_text = $user_id . "_data.txt";
 			</div>
 		</div>
 	</div>
-	<div class="col-4">
-		<div class="card shadow" style="border-radius:10px;">
+	<div class="col-12 col-md-4 mb-4">
+		<div class="card shadow" style="border-radius:5px; height:100%!important;">
 			<div class="card-body text-center">
 				<h5 class="card-title">DOCUMENTOS ASIGNADOS <br>PARA FIRMAR</h5>
 				<h4 class="font-weight-bold"><?= $body_data->cantidad_documentos ?></h4>
@@ -125,6 +146,7 @@ $file_text = $user_id . "_data.txt";
 				document.querySelector('#card_active_users').innerHTML = response.count;
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
+				console.log('Error');
 				document.querySelector('#card_active_users').innerHTML = 0;
 			}
 		});

@@ -12,7 +12,7 @@
 					<div class="card-body">
 						<div class="row">
 							<div class="col-12 mt-3" style="overflow-x:scroll;">
-								<p id="message" class="mb-3 text-primary font-weight-bold text-center"> No hay ningún usuario conectado</p>
+								<p id="message" class="mb-3 text-primary font-weight-bold text-center"> No hay ningún usuario disponible para videodenuncia</p>
 								<table id="table-usuarios-activos" class="table table-bordered table-hover table-striped d-none">
 									<thead>
 										<tr>
@@ -34,13 +34,13 @@
 <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
 <script src="<?= base_url() ?>/assets/js/usuarios_activos.js" type="module"></script>
 <script>
-	// window.onload = function() {
-	// 	getUsuarios();
-	// 	setInterval(() => {
-	// 		getUsuarios();
-	// 	}, 10000);
+	window.onload = function() {
+		getUsuarios();
+		setInterval(() => {
+			getUsuarios();
+		}, 10000);
 
-	// }
+	}
 	const getUsuarios = () => {
 		$.ajax({
 			data: {
@@ -65,13 +65,12 @@
 					});
 					response.users.forEach((user, i) => {
 						let fila = document.createElement("tr");
-
 						let td_1 = document.createElement("td");
 						td_1.classList.add('text-center');
 						let text_1 = document.createTextNode((user.name).toUpperCase());
 						let td_2 = document.createElement("td");
 						td_2.classList.add('text-center');
-						let texto_activo = 'ACTIVO - ' + (user.evento == 'vlon' ? 'DISPONIBLE' : 'NO DISPONIBLE');
+						let texto_activo = 'DISPONIBLE EN VIDEODENUNCIA';
 						let text_2 = document.createTextNode(texto_activo);
 						td_2.classList.add('font-weight-bold');
 						td_2.classList.add('text-success');
@@ -90,7 +89,13 @@
 					});
 				}
 			},
-			error: function(jqXHR, textStatus, errorThrown) {}
+			error: function(jqXHR, textStatus, errorThrown) {
+				message.classList.remove('d-none');
+				table.classList.add('d-none');
+				filas.forEach(row => {
+					row.remove();
+				});
+			}
 		});
 	}
 </script>
