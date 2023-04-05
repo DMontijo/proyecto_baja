@@ -35,8 +35,8 @@
 					<div class="card-body p-2" style="height:200px;">
 						<a href="<?= base_url('admin/dashboard/constancias_extravio_firmadas') ?>" class="btn btn-primary btn-block h-100 d-flex flex-column justify-content-center align-items-center d-flex flex-column justify-content-center align-items-center font-weight-bold">
 							<i class="fas fa-box-open"></i> Firmadas <br><br>
-							<span class="font-weight-bold" style="font-size:20px;">-
-								<!-- <?= $body_data->firmadas ?> -->
+							<span class="font-weight-bold" style="font-size:20px;">
+								<?= $body_data->firmadas ?>
 							</span>
 						</a>
 					</div>
