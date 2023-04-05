@@ -1163,7 +1163,10 @@ class FirmaController extends BaseController
 				}
 				return json_encode((object)['status' => 1]);
 			} else {
-				$email->clear(TRUE);
+				try {
+					$email->clear(TRUE);
+				} catch (\Throwable $th) {
+				}
 				return json_encode((object)['status' => 0]);
 			}
 		} else {
@@ -1214,7 +1217,7 @@ class FirmaController extends BaseController
 					$to_orden_proteccion = 'seguridad.juridico@tecate.gob.mx';
 					break;
 				case 4:
-					$to_orden_proteccion = '';
+					$to_orden_proteccion = 'enlace.secretaria@tijuana.gob.mx';
 					break;
 				case 5:
 					$to_orden_proteccion = 'sub.tecnica.ssc@gmail.com';
@@ -1242,6 +1245,10 @@ class FirmaController extends BaseController
 
 		try {
 			$email->send();
+		} catch (\Throwable $th) {
+		}
+
+		try {
 			$email->clear(TRUE);
 		} catch (\Throwable $th) {
 		}
