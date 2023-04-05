@@ -45,6 +45,10 @@
 									<td class="fw-bold text-end">HORA FIRMA:</td>
 									<td class="text-start"><?= $body_data->constancia->HORAFIRMA ? $body_data->constancia->HORAFIRMA : '' ?></td>
 								</tr>
+								<tr>
+									<td class="fw-bold text-end">EXTRACTO DEL DOCUMENTO:</td>
+									<td class="text-start"><?= $body_data->constancia->CADENAFIRMADA ? $body_data->constancia->CADENAFIRMADA : '' ?></td>
+								</tr>
 							</table>
 						</div>
 					</div>
