@@ -49,7 +49,7 @@
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
 												<label for="agente" class="form-label font-weight-bold">Género:</label>
 												<select class="form-control" id="GENERO" name="GENERO" required>
-													<?php if (!isset($body_data->filterParams)) { ?>
+													<?php if (!isset($body_data->filterParams->GENERO)) { ?>
 														<option selected value="">Ambos</option>
 														<option value="F">Femenino</option>
 														<option value="M">Masculino</option>

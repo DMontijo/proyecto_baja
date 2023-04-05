@@ -1313,21 +1313,15 @@ class ReportesController extends BaseController
 	public function getRegistroConavim()
 	{
 		$dataPost = [
-			'MUNICIPIOID' => '',
-			'AGENTEATENCIONID' => '',
-			'GENERO' => '',
-
-			'fechaInicio' => '',
-			'fechaFin' => '',
-			'horaInicio' => '',
-			'horaFin' => '',
+			'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
+			'fechaFin' => date("Y-m-d")
 		];
 		$documentos = $this->_plantillasModel->filtro_ordenes_proteccion($dataPost);
 		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
 		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
 		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
 		$tiposOrden = $this->_plantillasModel->get_tipos_orden();
-
+		
 
 		$dataView = (object)array();
 		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
@@ -1335,6 +1329,7 @@ class ReportesController extends BaseController
 		$dataView->empleados = $empleado;
 		$dataView->tiposOrden = (object)$tiposOrden;
 		$dataView->dataOrdenes = $documentos;
+		$dataView->filterParams = (object)$dataPost;
 
 		$this->_loadView('Registro CONAVIM', 'registro_conavim', '', $dataView, 'registro_conavim');
 	}
@@ -1605,17 +1600,8 @@ class ReportesController extends BaseController
 	{
 
 		$dataPost = [
-			'MUNICIPIOID' => '',
-			'AGENTEATENCIONID' => '',
-			'SALIDA' => '',
-
-			'fechaInicio' => '',
-			'fechaFin' => '',
-			'horaInicio' => '',
-			'horaFin' => '',
-
-			'nombreAgente' => '',
-			'municipioDescr' => ''
+			'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
+			'fechaFin' => date("Y-m-d")
 		];
 
 		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
@@ -1647,6 +1633,7 @@ class ReportesController extends BaseController
 		$dataView->municipios = $municipio;
 		$dataView->empleados = $empleado;
 		$dataView->dataInfo = $dataInfo;
+		$dataView->filterParams = (object)$dataPost;
 
 		$this->_loadView('Registro Canalizaciones Derivaciones', 'registro_candev', '', $dataView, 'registro_candev');
 	}

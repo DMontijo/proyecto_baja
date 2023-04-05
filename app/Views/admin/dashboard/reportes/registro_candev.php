@@ -49,7 +49,7 @@
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
 												<label for="agente" class="form-label font-weight-bold">Tipo de salida:</label>
 												<select class="form-control" id="SALIDA" name="SALIDA" required>
-													<?php if (!isset($body_data->filterParams)) { ?>
+													<?php if (!isset($body_data->filterParams->SALIDA)) { ?>
 														<option selected value="">TODOS</option>
 														<option value="CANALIZADO">CANALIZACIÓN</option>
 														<option value="DERIVADO">DERIVACIÓN</option>
