@@ -924,7 +924,7 @@ class ReportesController extends BaseController
 	public function getReporteLlamadas()
 	{
 
-		$endpoint = "https://ef88-2806-2f0-51e0-a3f5-d1cf-8a97-8917-a925.ngrok.io/call-records?pageSize=0";
+		$endpoint = $this->urlApi ."call-records?pageSize=0";
 		$response = $this->_curlGetService($endpoint);
 		// var_dump($response->data);exit;
 		if ($response->statusCode == "success") {
@@ -989,7 +989,7 @@ class ReportesController extends BaseController
 			'agentUuid' => $this->request->getPost('agenteId'),
 		];
 		
-		$endpoint = "https://ef88-2806-2f0-51e0-a3f5-d1cf-8a97-8917-a925.ngrok.io/call-records?pageSize=0&agentUuid=" . $dataPost->agentUuid . '&sessionStartedFrom=' . $dataPost->sessionStartedAt . '&sessionFinishedTo=' . $dataPost->sessionFinishedAt;
+		$endpoint = $this->urlApi . "call-records?pageSize=0&agentUuid=" . $dataPost->agentUuid . '&sessionStartedFrom=' . $dataPost->sessionStartedAt . '&sessionFinishedTo=' . $dataPost->sessionFinishedAt;
 		// $endpoint = "https://ef88-2806-2f0-51e0-a3f5-d1cf-8a97-8917-a925.ngrok.io/call-records?pageSize=0&agentUuid=" . $dataPost->agentUuid;
 		var_dump($dataPost);exit;
 
