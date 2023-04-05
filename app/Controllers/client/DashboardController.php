@@ -1053,12 +1053,12 @@ class DashboardController extends BaseController
 		}
 	}
 
-	private function _sendEmailFolio($to, $folio)
+	private function _sendEmailFolio($to, $folio, $year)
 	{
 		$email = \Config\Services::email();
 		$email->setTo($to);
 		$email->setSubject('Nuevo folio generado.');
-		$body = view('email_template/folio_email_template.php', ['folio' => $folio]);
+		$body = view('email_template/folio_email_template.php', ['folio' => $folio . '/' . $year]);
 		$email->setMessage($body);
 
 		if ($email->send()) {
