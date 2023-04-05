@@ -130,7 +130,7 @@ $file_text = $user_id . "_data.txt";
 		getUsuarios();
 		setInterval(() => {
 			getUsuarios();
-		}, 10000);
+		}, 50000);
 	}
 	const getUsuarios = () => {
 		$.ajax({
