@@ -157,7 +157,7 @@ class FolioModel extends Model
 			(isset($fechaFin) ? (isset($obj['horaFin']) ? date("Y-m-d", strtotime($fechaFin)) : date("Y-m-d", strtotime(date("Y-m-d", strtotime($fechaFin))))) : date("Y-m-d")) . ' ' .
 			(isset($horaFin) ? (date('H:i:s', strtotime($horaFin))) : '23:59:59') . '" AS DATETIME)';
 
-			$strQuery = $strQuery . 'GROUP BY FOLIO.FOLIOID';
+		$strQuery = $strQuery . 'GROUP BY FOLIO.FOLIOID';
 		$result = $this->db->query($strQuery)->getResult();
 
 		$dataView = (object)array();
@@ -472,17 +472,17 @@ class FolioModel extends Model
 		$builder->select(['*', 'FOLIO.ESTADOID AS FOLIOESTADO', 'FOLIO.MUNICIPIOID AS FOLIOMUNICIPIO', 'DENUNCIANTES.MUNICIPIOID AS DENUNCIANTEMUNICIPIO', 'DENUNCIANTES.ESTADOID AS DENUNCIANTEESTADO', 'DENUNCIANTES.NOMBRE', 'DENUNCIANTES.APELLIDO_PATERNO', 'DENUNCIANTES.APELLIDO_MATERNO']);
 		$builder->where('FOLIOID', $folio);
 		$builder->where('ANO', $year);
-		$builder->join('DENUNCIANTES', 'DENUNCIANTES.DENUNCIANTEID = FOLIO.DENUNCIANTEID');
+		$builder->join('DENUNCIANTES', 'DENUNCIANTES.DENUNCIANTEID = FOLIO.DENUNCIANTEID', 'LEFT');
 		$query = $builder->get();
 		return $query->getRow();
 	}
-	
+
 	public function get_folio_denunciante($denunciante)
 	{
 		$builder = $this->db->table($this->table);
 		$builder->select(['FOLIOID', 'EXPEDIENTEID', 'ANO', 'HECHODELITO']);
 		$builder->where('FOLIO.DENUNCIANTEID', $denunciante);
-		$builder->join('DENUNCIANTES', 'DENUNCIANTES.DENUNCIANTEID = FOLIO.DENUNCIANTEID');
+		$builder->join('DENUNCIANTES', 'DENUNCIANTES.DENUNCIANTEID = FOLIO.DENUNCIANTEID', 'LEFT');
 		$builder->orderBy('FOLIO.FECHAREGISTRO ASC');
 		$query = $builder->get();
 		return $query->getResult('array');
@@ -493,7 +493,7 @@ class FolioModel extends Model
 		$builder = $this->db->table($this->table);
 		$builder->select(['FOLIO.*', 'DENUNCIANTES.NOMBRE', 'DENUNCIANTES.APELLIDO_PATERNO', 'DENUNCIANTES.APELLIDO_MATERNO']);
 		$builder->where('FOLIO.STATUS', 'ABIERTO');
-		$builder->join('DENUNCIANTES', 'DENUNCIANTES.DENUNCIANTEID = FOLIO.DENUNCIANTEID');
+		$builder->join('DENUNCIANTES', 'DENUNCIANTES.DENUNCIANTEID = FOLIO.DENUNCIANTEID', 'LEFT');
 		$builder->orderBy('FOLIO.FECHAREGISTRO ASC');
 		$query = $builder->get();
 		return $query->getResult('object');
