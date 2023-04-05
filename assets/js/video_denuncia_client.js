@@ -2,8 +2,8 @@ import { VideoServiceGuest } from "../guest/guest.js";
 
 const apiKey = "vspk_6258d819-105e-4487-b7f1-be72e892850e";
 const guestUUID = document.getElementById("input_uuid").value;
-// const apiURI = "https://videodenunciabalancer.fgebc.gob.mx";
-const apiURI = "https://ef88-2806-2f0-51e0-a3f5-d1cf-8a97-8917-a925.ngrok.io";
+const apiURI = "https://videodenunciabalancer.fgebc.gob.mx";
+// const apiURI = "https://ef88-2806-2f0-51e0-a3f5-d1cf-8a97-8917-a925.ngrok.io";
 
 const delito = document.getElementById("input_delito").value;
 const descripcion = document.getElementById("input_descripcion").value;

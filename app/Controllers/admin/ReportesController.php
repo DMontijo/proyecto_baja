@@ -14,6 +14,8 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 // use Aws\S3\S3Client;
 // use FFMpeg\FFMpeg;
 use FFMpeg\FFProbe;
+use DateTime;
+use DateTimeZone;
 
 class ReportesController extends BaseController
 {
@@ -924,7 +926,7 @@ class ReportesController extends BaseController
 	public function getReporteLlamadas()
 	{
 
-		$endpoint = $this->urlApi ."call-records?pageSize=0";
+		$endpoint = $this->urlApi . "call-records?pageSize=0";
 		$response = $this->_curlGetService($endpoint);
 		// var_dump($response->data);exit;
 		if ($response->statusCode == "success") {
@@ -982,39 +984,45 @@ class ReportesController extends BaseController
 
 	public function postReporteLlamadas()
 	{
-
 		$dataPost = (object) [
-			'sessionStartedAt' => $this->request->getPost('fechaInicio')  !=''? date('Y-m-d\TH:i:s',strtotime($this->request->getPost('fechaInicio'))) : date('Y-m-d\TH:i:s',strtotime('2000-01-01')),
-			'sessionFinishedAt' => $this->request->getPost('fechaFin')!='' ? date('Y-m-d\TH:i:s',strtotime($this->request->getPost('fechaFin'))) : date('Y-m-d\TH:i:s'),
+			'sessionStartedAt' => $this->request->getPost('fechaInicio')  != '' ? date('Y-m-d\TH:i:s\Z', strtotime($this->request->getPost('fechaInicio') . '+7 hours')) : date('Y-m-d\TH:i:s\Z', strtotime('2000-01-01' . '+7 hours')),
+			'sessionFinishedAt' => $this->request->getPost('fechaFin') != '' ? date('Y-m-d\TH:i:s\Z', strtotime($this->request->getPost('fechaFin') . '+7 hours')) : date('Y-m-d\TH:i:s\Z'),
 			'agentUuid' => $this->request->getPost('agenteId'),
 		];
-		
-		$endpoint = $this->urlApi . "call-records?pageSize=0&agentUuid=" . $dataPost->agentUuid . '&sessionStartedFrom=' . $dataPost->sessionStartedAt . '&sessionFinishedTo=' . $dataPost->sessionFinishedAt;
+
+		$endpoint = $this->urlApi . "call-records?pageSize=0&agentUuid=" . $dataPost->agentUuid . '&sessionStartedFrom=' . $dataPost->sessionStartedAt . '&sessionStartedTo=' . $dataPost->sessionFinishedAt;
 		// $endpoint = "https://ef88-2806-2f0-51e0-a3f5-d1cf-8a97-8917-a925.ngrok.io/call-records?pageSize=0&agentUuid=" . $dataPost->agentUuid;
 
 		$response = $this->_curlGetService($endpoint);
-		// var_dump($response);
+		// var_dump($endpoint);
 		// exit;
-		if ($response->statusCode == "success") {
+		$endpointAll = $this->urlApi . "call-records?pageSize=0";
+		$responseAll = $this->_curlGetService($endpointAll);
+		if ($responseAll->statusCode == "success") {
 			$dataView = (object)array();
-			$dataView->llamadas = $response->data;
-			$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 			$empleado = array();
 			$llamadas = array();
 
-			foreach ($response->data as $key => $conexion) {
-				array_push($empleado, (object)['ID' => $conexion->agentConnectionId->agent->uuid, 'NOMBRE' => $conexion->agentConnectionId->agent->fullName]);
+			foreach ($responseAll->data as $key => $conexionAll) {
+				array_push($empleado, (object)['ID' => $conexionAll->agentConnectionId->agent->uuid, 'NOMBRE' => $conexionAll->agentConnectionId->agent->fullName]);
 				// $conexion->Fecha = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($conexion->Fecha)));
 				// $conexion->Inicio = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($conexion->Inicio)));
 				// $conexion->Fin = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($conexion->Fin)));
-				array_push($llamadas, $conexion);
 				// $promedio += strtotime($value->Duración) - strtotime("TODAY");
 
 			}
+			if ($response != null) {
+				foreach ($response->data as $key => $conexion) {
+
+					array_push($llamadas, $conexion);
+				}
+				}
+			
 
 			$dataView->empleados = array_unique($empleado, SORT_REGULAR);
 			$dataView->llamadas = array_unique($llamadas, SORT_REGULAR);
-
+			$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+			$dataView->filterParams = $dataPost;
 
 			$this->_loadView('Reportes llamadas', 'reportes_llamadas', '', $dataView, 'reportes_llamadas');
 		}
@@ -1320,7 +1328,7 @@ class ReportesController extends BaseController
 		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
 		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
 		$tiposOrden = $this->_plantillasModel->get_tipos_orden();
-		
+
 
 		$dataView = (object)array();
 		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
