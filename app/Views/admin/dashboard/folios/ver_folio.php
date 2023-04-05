@@ -120,22 +120,22 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 					console.log(respuesta);
 					if (response.status === 1) {
 						const folio = response.folio;
-						const preguntas = response.preguntas_iniciales;
-						const personas = response.personas;
-						const domicilios = response.domicilios;
-						const vehiculos = response.vehiculos;
-						const relacion_parentesco = response.parentescoRelacion;
-						const parentesco = response.parentesco;
-						const personaiduno = response.personaiduno;
-						const personaidDos = response.personaidDos;
-						const relacionFisFis = response.relacionFisFis;
-						const fisicaImpDelito = response.fisicaImpDelito;
-						const delitosModalidadFiltro = response.delitosModalidadFiltro;
-						const personafisica = response.personafisica;
-						const imputados = response.imputados;
-						const victimas = response.victimas;
-						const objetos = response.objetos;
-						const archivos = response.archivosexternos;
+						const preguntas = response.respuesta.preguntas_iniciales;
+						const personas = response.respuesta.personas;
+						const domicilios = response.respuesta.domicilios;
+						const vehiculos = response.respuesta.vehiculos;
+						const relacion_parentesco = response.respuesta.parentescoRelacion;
+						const parentesco = response.respuesta.parentesco;
+						const personaiduno = response.respuesta.personaiduno;
+						const personaidDos = response.respuesta.personaidDos;
+						const relacionFisFis = response.respuesta.relacionFisFis;
+						const fisicaImpDelito = response.respuesta.fisicaImpDelito;
+						const delitosModalidadFiltro = response.respuesta.delitosModalidadFiltro;
+						const personafisica = response.respuesta.personafisica;
+						const imputados = response.respuesta.imputados;
+						const victimas = response.respuesta.victimas;
+						const objetos = response.respuesta.objetos;
+						const archivos = response.respuesta.archivosexternos;
 						buscar_btn.classList.add('d-none');
 						buscar_nuevo_btn.classList.remove('d-none');
 

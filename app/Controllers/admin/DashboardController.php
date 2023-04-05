@@ -980,36 +980,8 @@ class DashboardController extends BaseController
 			if ($data->folio) {
 				if ($data->folio->STATUS == 'ABIERTO') {
 					$data->status = 1;
-					$data->folioDenunciantes = $this->_folioModel->get_folio_denunciante($data->folio->DENUNCIANTEID);
-					$data->preguntas_iniciales = $this->_folioPreguntasModel->where('FOLIOID', $numfolio)->where('ANO', $year)->first();
-					$data->personas = $this->_folioPersonaFisicaModel->get_by_folio($numfolio, $year);
-					$data->correos = $this->_folioPersonaFisicaModel->get_correos_persona($numfolio, $year);
-					$data->parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $numfolio)->where('ANO', $year)->findAll();
-					$data->personaiduno = $this->_parentescoPersonaFisicaModel->get_personaFisicaUno($numfolio, $year);
-					$data->personaidDos = $this->_parentescoPersonaFisicaModel->get_personaFisicaDos($numfolio, $year);
-					$data->parentesco = $this->_parentescoPersonaFisicaModel->get_Parentesco($numfolio, $year);
-					$data->relacionFisFis = $this->_relacionIDOModel->get_by_folio($numfolio, $year);
-					$data->vehiculos = $this->_folioVehiculoModel->get_by_folio($numfolio, $year);
-					$data->fisicaImpDelito = $this->_imputadoDelitoModel->get_by_folio($numfolio, $year);
-					$data->delitosModalidadFiltro = $this->_delitoModalidadModel->get_delitodescr($numfolio, $year);
-					$data->objetos = $this->_folioObjetoInvolucradoModel->get_descripcion($numfolio, $year);
-					$data->documentos = $this->_folioDocModel->get_by_folio($numfolio, $year);
-					$data->archivosexternos = $this->_archivoExternoModel->asObject()->where('FOLIOID', $numfolio)->where('ANO', $year)->findAll();
-
-
-					if ($data->archivosexternos) {
-						foreach ($data->archivosexternos as $key => $archivos) {
-							$file_info = new \finfo(FILEINFO_MIME_TYPE);
-							$type = $file_info->buffer($archivos->ARCHIVO);
-
-							$archivos->ARCHIVO = 'data:' . $type . ';base64,' . base64_encode($archivos->ARCHIVO);
-						}
-					}
-
-
-					// $data->personafisica = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->findAll();
-					$data->imputados = $this->_folioPersonaFisicaModel->get_imputados($numfolio, $year);
-					$data->victimas = $this->_folioPersonaFisicaModel->get_victimas($numfolio, $year);
+					
+					$data->respuesta =$this->getDataFolio($numfolio,$year);
 					$this->_folioModel->set(['STATUS' => 'EN PROCESO', 'AGENTEATENCIONID' => session('ID')])->where('ANO', $year)->where('FOLIOID', $numfolio)->update();
 					$datosBitacora = [
 						'ACCION' => 'Está atendiendo un folio',
@@ -1021,6 +993,13 @@ class DashboardController extends BaseController
 					return json_encode(['status' => 2, 'motivo' => 'EL FOLIO YA ESTA SIENDO ATENDIDO']);
 				} else if ($data->folio->STATUS == 'EN PROCESO' && $data->folio->TIPODENUNCIA == "DA") {
 					$data->status = 1;
+					$data->respuesta = $this->getDataFolio($numfolio,$year);
+
+					$datosBitacora = [
+						'ACCION' => 'Está atendiendo una denuncia anonima',
+						'NOTAS' => 'FOLIO: ' . $numfolio . ' AÑO: ' . $year,
+					];
+					$this->_bitacoraActividad($datosBitacora);
 					return json_encode($data);
 				} else {
 					$agente = $this->_usuariosModel->asObject()->where('ID', $data->folio->AGENTEATENCIONID)->first();
@@ -1034,39 +1013,14 @@ class DashboardController extends BaseController
 
 			if ($data->folio) {
 				$data->status = 1;
-				$data->preguntas_iniciales = $this->_folioPreguntasModel->where('FOLIOID', $numfolio)->where('ANO', $year)->first();
-				$data->personas = $this->_folioPersonaFisicaModel->get_by_folio($numfolio, $year);
-				$data->vehiculos = $this->_folioVehiculoModel->get_by_folio($numfolio, $year);
-				$data->parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $numfolio)->where('ANO', $year)->findAll();
-				$data->personaiduno = $this->_parentescoPersonaFisicaModel->get_personaFisicaUno($numfolio, $year);
-				$data->personaidDos = $this->_parentescoPersonaFisicaModel->get_personaFisicaDos($numfolio, $year);
-				$data->parentesco = $this->_parentescoPersonaFisicaModel->get_Parentesco($numfolio, $year);
-				$data->relacionFisFis = $this->_relacionIDOModel->get_by_folio($numfolio, $year);
-				$data->vehiculos = $this->_folioVehiculoModel->get_by_folio($numfolio, $year);
-				$data->fisicaImpDelito = $this->_imputadoDelitoModel->get_by_folio($numfolio, $year);
-				$data->delitosModalidadFiltro = $this->_delitoModalidadModel->get_delitodescr($numfolio, $year);
-				$data->objetos = $this->_folioObjetoInvolucradoModel->get_descripcion($numfolio, $year);
-				$data->archivosexternos = $this->_archivoExternoModel->asObject()->where('FOLIOID', $numfolio)->where('ANO', $year)->findAll();
+				$data->respuesta = $this->getDataFolio($numfolio,$year);
 
-
-				if ($data->archivosexternos) {
-					foreach ($data->archivosexternos as $key => $archivos) {
-						$file_info = new \finfo(FILEINFO_MIME_TYPE);
-						$type = $file_info->buffer($archivos->ARCHIVO);
-
-						$archivos->ARCHIVO = 'data:' . $type . ';base64,' . base64_encode($archivos->ARCHIVO);
-					}
-				}
-				$data->folioDenunciantes = $this->_folioModel->get_folio_denunciante($data->folio->DENUNCIANTEID);
-
-				// $data->personafisica = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->findAll();
-				$data->imputados = $this->_folioPersonaFisicaModel->get_imputados($numfolio, $year);
-				$data->victimas = $this->_folioPersonaFisicaModel->get_victimas($numfolio, $year);
 
 				if ($data->folio->STATUS == 'ABIERTO' || $data->folio->STATUS == 'EN PROCESO') {
 					$data->agente = $this->_usuariosModel->asObject()->where('ID', $data->folio->AGENTEATENCIONID)->first();
 				} else if ($data->folio->STATUS == 'EN PROCESO' && $data->folio->TIPODENUNCIA == "DA") {
 					$data->status = 1;
+					$data->respuesta = $this->getDataFolio($numfolio,$year);
 					return json_encode($data);
 				}
 				// var_dump($data->archivosexternos);exit;
@@ -1077,6 +1031,43 @@ class DashboardController extends BaseController
 		}
 	}
 
+	public function getDataFolio($numfolio, $year)
+	{
+
+		$data = (object) array();
+		$data->folio = $this->_folioModel->asObject()->where('ANO', $year)->where('FOLIOID', $numfolio)->first();
+		$data->folioDenunciantes = $this->_folioModel->get_folio_denunciante($data->folio->DENUNCIANTEID);
+		$data->preguntas_iniciales = $this->_folioPreguntasModel->where('FOLIOID', $numfolio)->where('ANO', $year)->first();
+		$data->personas = $this->_folioPersonaFisicaModel->get_by_folio($numfolio, $year);
+		$data->correos = $this->_folioPersonaFisicaModel->get_correos_persona($numfolio, $year);
+		$data->parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $numfolio)->where('ANO', $year)->findAll();
+		$data->personaiduno = $this->_parentescoPersonaFisicaModel->get_personaFisicaUno($numfolio, $year);
+		$data->personaidDos = $this->_parentescoPersonaFisicaModel->get_personaFisicaDos($numfolio, $year);
+		$data->parentesco = $this->_parentescoPersonaFisicaModel->get_Parentesco($numfolio, $year);
+		$data->relacionFisFis = $this->_relacionIDOModel->get_by_folio($numfolio, $year);
+		$data->vehiculos = $this->_folioVehiculoModel->get_by_folio($numfolio, $year);
+		$data->fisicaImpDelito = $this->_imputadoDelitoModel->get_by_folio($numfolio, $year);
+		$data->delitosModalidadFiltro = $this->_delitoModalidadModel->get_delitodescr($numfolio, $year);
+		$data->objetos = $this->_folioObjetoInvolucradoModel->get_descripcion($numfolio, $year);
+		$data->documentos = $this->_folioDocModel->get_by_folio($numfolio, $year);
+		$data->archivosexternos = $this->_archivoExternoModel->asObject()->where('FOLIOID', $numfolio)->where('ANO', $year)->findAll();
+
+
+		if ($data->archivosexternos) {
+			foreach ($data->archivosexternos as $key => $archivos) {
+				$file_info = new \finfo(FILEINFO_MIME_TYPE);
+				$type = $file_info->buffer($archivos->ARCHIVO);
+
+				$archivos->ARCHIVO = 'data:' . $type . ';base64,' . base64_encode($archivos->ARCHIVO);
+			}
+		}
+
+
+		// $data->personafisica = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->findAll();
+		$data->imputados = $this->_folioPersonaFisicaModel->get_imputados($numfolio, $year);
+		$data->victimas = $this->_folioPersonaFisicaModel->get_victimas($numfolio, $year);
+		return ($data);
+	}
 	public function getFolioInformationDenunciaAnonima()
 	{
 		$data = (object) array();

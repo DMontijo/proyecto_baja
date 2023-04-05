@@ -37,12 +37,6 @@
 				<button class="btn btn-success" id="aceptar" name="aceptar"> Aceptar llamada</button>
 				<button class="btn btn-danger" id="rechazar" name="rechazar"> Rechazar</button>
 			</div>
-			<div id="loading_sub_doc" class="modal-body text-center d-none" style="min-height:170px;">
-				<div class="d-flex justify-content-center">
-					<div class="spinner-border text-primary" role="status">
-					</div>
-				</div>
-			</div>
 		</div>
 	</div>
 </div>
