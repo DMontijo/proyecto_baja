@@ -5,7 +5,6 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
-<?php include 'geolocalizacion_modal.php' ?>
 
 <?php $session = session(); ?>
 <style>

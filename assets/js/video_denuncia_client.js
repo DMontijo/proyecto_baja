@@ -102,7 +102,6 @@ guestVideoService.registerVideoRecordingStatus(isRecording => {
 
 guestVideoService.saveGeolocation(() => {
 	texto_inicial.style.display = "block";
-	// $("#geolocalizacion_modal").modal("hide");
 	guestVideoService.connectGuest(
 		{ delito, folio: folio_SY + "/" + year_SF, descripcion },
 		guest => {
@@ -120,7 +119,6 @@ function deleteVideoElement() {
 }
 
 $(function () {
-	// $("#geolocalizacion_modal").modal("show");
 	reloadSetFunction();
 });
 
