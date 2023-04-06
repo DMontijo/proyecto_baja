@@ -32,7 +32,9 @@ const audio_denunciante_off = document.querySelector("#off-audio-denunciante");
 const marksRecording = document.querySelector("#marks-recording-modal");
 const enviar_marca = document.querySelector("#enviar_marca");
 const desconectar_llamada = document.querySelector("#disconnect-call");
-const denunciante_nombre_llamada = document.querySelector("#denunciante_nombre_llamada");
+const denunciante_nombre_llamada = document.querySelector(
+	"#denunciante_nombre_llamada"
+);
 const folio_llamada = document.querySelector("#folio_llamada_v");
 const header_llamda = document.querySelector("#header-llamada");
 
@@ -45,10 +47,10 @@ var myInterval;
 const agentVideoService = new VideoServiceAgent(agentUUID, { apiURI, apiKey });
 
 disponible_connect.addEventListener("click", () => {
-	console.log("disponible_connect");
+	console.log("Conectando agente...");
 	agentVideoService.connetAgent(
 		() => {
-			console.log("Se conecto el agente");
+			console.log("¡Agente conectado con éxito!");
 			clearVideoCall();
 			disponible_connect.hidden = true;
 			no_disponible_connect.hidden = false;
@@ -61,66 +63,133 @@ disponible_connect.addEventListener("click", () => {
 
 				guestUUID = response.guest.uuid;
 				console.log("Respuesta: ", response);
-				document.querySelector("#nombre_denunciante").value = response.guest.name;
-				document.querySelector("#main_video_details_name").value = response.guest.name;
-				document.querySelector("#genero_denunciante").value = response.guest.gender == "FEMALE" ? "FEMENINO" : "MASCULINO";
-				document.querySelector("#correo_deunciante").value = response.guest.details.CORREO;
-				document.querySelector("#delito_denunciante_llamada").value = response.details != null ? response.details.delito : "-";
-				document.querySelector("#descripcion_denunciante_llamada").innerHTML = response.details != null ? response.details.descripcion : "-";
-				document.querySelector("#folio_llamada").value = response.details != null ? response.details.folio : "-";
-				document.querySelector("#idioma_denunciante").value = response.guest.languages ? response.guest.languages[0].title : "-";
+				document.querySelector("#nombre_denunciante").value =
+					response.guest.name;
+				document.querySelector("#main_video_details_name").value =
+					response.guest.name;
+				document.querySelector("#genero_denunciante").value =
+					response.guest.gender == "FEMALE"
+						? "FEMENINO"
+						: "MASCULINO";
+				document.querySelector("#correo_deunciante").value =
+					response.guest.details.CORREO;
+				document.querySelector("#delito_denunciante_llamada").value =
+					response.details != null ? response.details.delito : "-";
+				document.querySelector(
+					"#descripcion_denunciante_llamada"
+				).innerHTML =
+					response.details != null
+						? response.details.descripcion
+						: "-";
+				document.querySelector("#folio_llamada").value =
+					response.details != null ? response.details.folio : "-";
+				document.querySelector("#idioma_denunciante").value = response
+					.guest.languages
+					? response.guest.languages[0].title
+					: "-";
 				$("#llamadaModal").modal("show");
 				disponible_connect.hidden = true;
 				no_disponible_connect.hidden = false;
 			});
 		},
 		response => {
+			try {
+				agentVideoService.endVideoCall(() => {
+					console.log("¡Llamada finalizada con éxito!");
+				});
+			} catch (error) { }
+			try {
+				agentVideoService.disconnectAgent(() => {
+					console.log("¡Agente desconectado con éxito!");
+				});
+			} catch (error) { }
 			disponible_connect.hidden = false;
 			no_disponible_connect.hidden = true;
+			clearVideoCall();
 			Swal.fire({
 				icon: "error",
 				text: response.message,
-				confirmButtonColor: "#bf9b55"
+				showConfirmButton: false,
+				timer: 3000
 			});
 		}
 	);
 });
 
 no_disponible_connect.addEventListener("click", () => {
-	console.log("NO DISPONIBLE");
+	console.log("Desconectando agente...");
 	agentVideoService.disconnectAgent(() => {
+		console.log("¡Agente desconectado con éxito!");
 		clearVideoCall();
 	});
 });
 
 aceptar_llamada.addEventListener("click", () => {
-	console.log("Clic en aceptar llamada");
-
-	agentVideoService.acceptCall("agn_vf", "main_video",
+	console.log("Aceptando llamada...");
+	agentVideoService.acceptCall(
+		"agn_vf",
+		"main_video",
 		(response, agent, { guest, guestConnection }) => {
+			console.log("¡Llamada aceptada con éxito!");
 			clearVideoCall();
 			video_container.style.display = "block";
-			document.querySelector("#secondary_video_details_name").innerHTML = `${agent.names} ${agent.lastnames}`;
-			document.querySelector("#main_video_details_name").innerHTML = guest.name;
-			folio_llamada.innerHTML = guestConnection.folio;
-			if (document.getElementById('input_folio_atencion').value == '') {
-				try {
-					let split = guestConnection.folio.split('/');
-					document.getElementById('input_folio_atencion').value = split[0];
-				} catch (error) { }
-			}
 
+			document.querySelector(
+				"#secondary_video_details_name"
+			).innerHTML = `${agent.names} ${agent.lastnames}`;
+			document.querySelector("#main_video_details_name").innerHTML =
+				guest.name;
+			folio_llamada.innerHTML = guestConnection.folio;
 			denunciante_nombre_llamada.innerHTML = guest.name;
 			disponible_connect.hidden = true;
 			no_disponible_connect.hidden = true;
 			header_llamda.hidden = false;
 			$("#llamadaModal").modal("hide");
+			if (document.getElementById("input_folio_atencion").value == "") {
+				try {
+					let split = guestConnection.folio.split("/");
+					document.getElementById("input_folio_atencion").value =
+						split[0];
+				} catch (error) { }
+			}
 
 			agentVideoService.registerOnGuestDisconnected(() => {
 				console.log("Guest disconnected");
-			})
+				Swal.fire({
+					icon: "error",
+					text: "El usuario se desconecto.",
+					showConfirmButton: false,
+					timer: 1000
+				});
+			});
 		}
 	);
+});
+
+desconectar_llamada.addEventListener("click", () => {
+	console.log("Finalizando llamada...");
+	agentVideoService.endVideoCall(() => {
+		console.log("¡Llamada finalizada con éxito!");
+		clearVideoCall();
+		console.log("Desconectando agente...");
+		agentVideoService.disconnectAgent(() => {
+			console.log("¡Agente desconectado con éxito!");
+			clearVideoCall();
+		});
+	});
+});
+
+rechazar_llamada.addEventListener("click", () => {
+	console.log("Rechazando llamada...");
+	agentVideoService.transferCall(resp => {
+		console.log("¡Llamada rechazada con éxito.!");
+		clearVideoCall();
+		console.log("Desconectando agente...");
+		agentVideoService.disconnectAgent(() => {
+			console.log("¡Agente desconectado con éxito!");
+			clearVideoCall();
+		});
+	});
 });
 
 video_agente_on.addEventListener("click", e => {
@@ -168,28 +237,6 @@ audio_denunciante_on.addEventListener("click", () => {
 audio_denunciante_off.addEventListener("click", () => {
 	agentVideoService.toggleRemoteAudio(isEnable => {
 		toogleAudioDenunciante(isEnable);
-	});
-});
-
-desconectar_llamada.addEventListener("click", () => {
-	console.log("Clic en colgar llamada");
-	agentVideoService.endVideoCall(() => {
-		console.log("Llamada colgada");
-		agentVideoService.disconnectAgent(() => {
-			clearVideoCall();
-		});
-	});
-});
-
-rechazar_llamada.addEventListener("click", () => {
-	console.log("Clic en rechazar llamada");
-
-	agentVideoService.transferCall((resp) => {
-		console.log("Respues de rechazar", resp);
-		$("#llamadaModal").modal("hide");
-		agentVideoService.disconnectAgent(() => {
-			clearVideoCall();
-		});
 	});
 });
 
@@ -270,13 +317,16 @@ function deleteVideoElement() {
 
 function toogleVideoAgent(isEnabled) {
 	if (isEnabled == true) {
-		document.getElementById("camara_agente_prendida").style.display = "block";
+		document.getElementById("camara_agente_prendida").style.display =
+			"block";
 		document.getElementById("camara_agente_apagada").style.display = "none";
 		video_agente_on.style.display = "block";
 		video_agente_off.style.display = "none";
 	} else {
-		document.getElementById("camara_agente_prendida").style.display = "none";
-		document.getElementById("camara_agente_apagada").style.display = "block";
+		document.getElementById("camara_agente_prendida").style.display =
+			"none";
+		document.getElementById("camara_agente_apagada").style.display =
+			"block";
 		video_agente_on.style.display = "none";
 		video_agente_off.style.display = "block";
 	}
@@ -284,7 +334,8 @@ function toogleVideoAgent(isEnabled) {
 
 function toogleAudioAgent(isEnable) {
 	if (isEnable == true) {
-		document.getElementById("audio_agente_prendida").style.display = "block";
+		document.getElementById("audio_agente_prendida").style.display =
+			"block";
 		document.getElementById("audio_agente_apagada").style.display = "none";
 		audio_agente_on.style.display = "block";
 		audio_agente_off.style.display = "none";
@@ -297,30 +348,38 @@ function toogleAudioAgent(isEnable) {
 }
 
 function toogleVideoDenunciante(isEnabled) {
-	console.log('Dentro de toogle video denunciante', isEnable);
+	console.log("Dentro de toogle video denunciante", isEnable);
 	if (isEnabled == true) {
-		document.getElementById("camara_prendida_denunciante").style.display = "block";
-		document.getElementById("camara_apagada_denunciante").style.display = "none";
+		document.getElementById("camara_prendida_denunciante").style.display =
+			"block";
+		document.getElementById("camara_apagada_denunciante").style.display =
+			"none";
 		video_denunciante_on.style.display = "block";
 		video_denunciante_off.style.display = "none";
 	} else {
-		document.getElementById("camara_prendida_denunciante").style.display = "none";
-		document.getElementById("camara_apagada_denunciante").style.display = "block";
+		document.getElementById("camara_prendida_denunciante").style.display =
+			"none";
+		document.getElementById("camara_apagada_denunciante").style.display =
+			"block";
 		video_denunciante_on.style.display = "none";
 		video_denunciante_off.style.display = "block";
 	}
 }
 
 function toogleAudioDenunciante(isEnable) {
-	console.log('Dentro de toogle audio denunciante', isEnable);
+	console.log("Dentro de toogle audio denunciante", isEnable);
 	if (isEnable == true) {
-		document.getElementById("audio_prendido_denunciante").style.display = "block";
-		document.getElementById("audio_apagado_denunciante").style.display = "none";
+		document.getElementById("audio_prendido_denunciante").style.display =
+			"block";
+		document.getElementById("audio_apagado_denunciante").style.display =
+			"none";
 		audio_denunciante_on.style.display = "block";
 		audio_denunciante_off.style.display = "none";
 	} else {
-		document.getElementById("audio_prendido_denunciante").style.display = "none";
-		document.getElementById("audio_apagado_denunciante").style.display = "block";
+		document.getElementById("audio_prendido_denunciante").style.display =
+			"none";
+		document.getElementById("audio_apagado_denunciante").style.display =
+			"block";
 		audio_denunciante_on.style.display = "none";
 		audio_denunciante_off.style.display = "block";
 	}
@@ -329,15 +388,15 @@ function toogleAudioDenunciante(isEnable) {
 function clearVideoCall() {
 	video_container.style.display = "none";
 	clearToolsBar();
-	document.querySelector("#nombre_denunciante").value = '';
-	document.querySelector("#main_video_details_name").innerHTML = '';
+	document.querySelector("#nombre_denunciante").value = "";
+	document.querySelector("#main_video_details_name").innerHTML = "";
 	document.querySelector("#secondary_video_details_name").innerHTML = "";
-	document.querySelector("#genero_denunciante").value = '';
-	document.querySelector("#correo_deunciante").value = '';
-	document.querySelector("#delito_denunciante_llamada").value = '';
-	document.querySelector("#descripcion_denunciante_llamada").innerHTML = '';
-	document.querySelector("#folio_llamada").value = '';
-	document.querySelector("#idioma_denunciante").value = '';
+	document.querySelector("#genero_denunciante").value = "";
+	document.querySelector("#correo_deunciante").value = "";
+	document.querySelector("#delito_denunciante_llamada").value = "";
+	document.querySelector("#descripcion_denunciante_llamada").innerHTML = "";
+	document.querySelector("#folio_llamada").value = "";
+	document.querySelector("#idioma_denunciante").value = "";
 	folio_llamada.innerHTML = "";
 	denunciante_nombre_llamada.innerHTML = "";
 	disponible_connect.hidden = false;
@@ -356,10 +415,13 @@ function clearToolsBar() {
 	audio_agente_on.style.display = "block";
 	audio_agente_off.style.display = "none";
 
-	document.getElementById("audio_prendido_denunciante").style.display = "block";
+	document.getElementById("audio_prendido_denunciante").style.display =
+		"block";
 	document.getElementById("audio_apagado_denunciante").style.display = "none";
-	document.getElementById("camara_prendida_denunciante").style.display = "block";
-	document.getElementById("camara_apagada_denunciante").style.display = "none";
+	document.getElementById("camara_prendida_denunciante").style.display =
+		"block";
+	document.getElementById("camara_apagada_denunciante").style.display =
+		"none";
 	video_denunciante_on.style.display = "block";
 	video_denunciante_off.style.display = "none";
 	audio_denunciante_on.style.display = "block";
