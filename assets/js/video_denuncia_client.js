@@ -125,5 +125,5 @@ $(function () {
 
 
 function reload() {
-	window.reload();
+	location.reload();
 }
