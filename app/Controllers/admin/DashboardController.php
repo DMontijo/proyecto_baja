@@ -6704,7 +6704,7 @@ class DashboardController extends BaseController
 					'AGENTE_REGISTRO' =>  session('ID')
 
 				);
-				if ($this->request->getPost('titulo') == "DENUNCIA ANONIMA" || $this->request->getPost('titulo') == "PERSONA DESAPARECIDA") {
+				if ($this->request->getPost('titulo') == "DENUNCIA ANONIMA" || $this->request->getPost('titulo') == "FICHA PERSONA DESAPARECIDA") {
 					$dataFolioDoc = array(
 						'FOLIOID' => $folio,
 						'NUMEROEXPEDIENTE' => $expediente ? $expediente : null,
@@ -6741,7 +6741,7 @@ class DashboardController extends BaseController
 
 				);
 
-				if ($this->request->getPost('titulo') == "DENUNCIA ANONIMA" || $this->request->getPost('titulo') == "PERSONA DESAPARECIDA") {
+				if ($this->request->getPost('titulo') == "DENUNCIA ANONIMA" || $this->request->getPost('titulo') == "FICHA PERSONA DESAPARECIDA") {
 					$this->request->getPost('titulo') == "DENUNCIA ANONIMA" ? $pdf = $this->_generatePDF($placeholder) : $pdf = $this->_generatePDFPersonaFisica($placeholder);
 					$dataFolioDoc = array(
 						'FOLIOID' => $folio,
