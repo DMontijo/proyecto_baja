@@ -126,6 +126,7 @@ no_disponible_connect.addEventListener("click", () => {
 
 aceptar_llamada.addEventListener("click", () => {
 	console.log("Aceptando llamada...");
+	aceptar_llamada.disabled = true;
 	agentVideoService.acceptCall(
 		"agn_vf",
 		"main_video",
@@ -133,7 +134,6 @@ aceptar_llamada.addEventListener("click", () => {
 			console.log("¡Llamada aceptada con éxito!");
 			clearVideoCall();
 			video_container.style.display = "block";
-			aceptar_llamada.disabled = true;
 			document.querySelector(
 				"#secondary_video_details_name"
 			).innerHTML = `${agent.names} ${agent.lastnames}`;
@@ -145,6 +145,7 @@ aceptar_llamada.addEventListener("click", () => {
 			no_disponible_connect.hidden = true;
 			header_llamda.hidden = false;
 			$("#llamadaModal").modal("hide");
+			aceptar_llamada.disabled = false;
 			if (document.getElementById("input_folio_atencion").value == "") {
 				try {
 					let split = guestConnection.folio.split("/");
@@ -165,8 +166,6 @@ aceptar_llamada.addEventListener("click", () => {
 			});
 		}
 	);
-	aceptar_llamada.disabled = false;
-
 });
 
 desconectar_llamada.addEventListener("click", () => {
