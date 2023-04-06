@@ -2713,7 +2713,7 @@ class DashboardController extends BaseController
 			}
 		}
 
-		if ($data['DESAPARECIDA'] = "N") {
+		if ($data['DESAPARECIDA'] == "N") {
 			$data['FOTO'] = null;
 		}
 

@@ -363,7 +363,6 @@ class DashboardController extends BaseController
 				'HECHOCOORDENADAX' => $this->request->getPost('longitud'),
 				'HECHOCOORDENADAY' => $this->request->getPost('latitud'),
 				'NOTIFICACIONES' => $this->request->getPost('notificaciones_check') == 'on' ? 'S' : 'N',
-
 			];
 		} else {
 			$dataFolio = [
@@ -387,7 +386,6 @@ class DashboardController extends BaseController
 				'HECHODELITO' => $this->request->getPost('delito'),
 				'TIPODENUNCIA' => 'VD',
 				'NOTIFICACIONES' => $this->request->getPost('notificaciones_check') == 'on' ? 'S' : 'N',
-
 			];
 		}
 
@@ -451,6 +449,7 @@ class DashboardController extends BaseController
 				if ($exterior_des == '') {
 					$exterior_des = NULL;
 				}
+
 				$dataDesaparecido = array(
 					'NOMBRE' => $this->request->getPost('nombre_des'),
 					'PRIMERAPELLIDO' => $this->request->getPost('apellido_paterno_des'),
