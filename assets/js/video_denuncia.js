@@ -103,6 +103,13 @@ aceptar_llamada.addEventListener("click", () => {
 			document.querySelector("#secondary_video_details_name").innerHTML = `${agent.names} ${agent.lastnames}`;
 			document.querySelector("#main_video_details_name").innerHTML = guest.name;
 			folio_llamada.innerHTML = guestConnection.folio;
+			if (document.getElementById('input_folio_atencion').value == '') {
+				try {
+					let split = guestConnection.folio.split('/');
+					document.getElementById('input_folio_atencion').value = split[0];
+				} catch (error) { }
+			}
+
 			denunciante_nombre_llamada.innerHTML = guest.name;
 			disponible_connect.hidden = true;
 			no_disponible_connect.hidden = true;
