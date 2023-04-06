@@ -5799,7 +5799,7 @@ class DashboardController extends BaseController
 				$type = $file_info->buffer($data->victima[0]['FOTO']);
 				$data->victima[0]['FOTO'] = 'data:' . $type . ';base64,' . base64_encode($data->victima[0]['FOTO']);
 				if ($type == 'image/png' || $type == 'image/jpg' || $type == 'image/jpeg') {
-					$data->plantilla = str_replace('[IMAGEN_DESAPARECIDO]',  "<img src='" . $data->victima[0]['FOTO'] . "'></img>", $data->plantilla);
+					$data->plantilla = str_replace('[IMAGEN_DESAPARECIDO]',  "<img src='" . $data->victima[0]['FOTO'] . "' style='max-width:200px;'></img>", $data->plantilla);
 				}
 			}
 		}
