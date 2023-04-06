@@ -31,6 +31,7 @@ let year_SF = array[0];
 // const audio_denunciante_apagado_b = document.querySelector('#audio_denunciante_apagado_b');
 // const camara_apagada_denunciante_b = document.querySelector('#camara_apagada_denunciante_b');
 // const camara_prendida_denunciante_b = document.querySelector('#camara_prendida_denunciante_b');
+const reloadSetFunction = setTimeout(reload(), 1000);
 
 const guestVideoService = new VideoServiceGuest(
 	guestUUID,
@@ -122,7 +123,6 @@ $(function () {
 	reloadSetFunction();
 });
 
-const reloadSetFunction = setTimeout(reload(), 1000);
 
 function reload() {
 	window.reload();
