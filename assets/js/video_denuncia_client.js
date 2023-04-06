@@ -31,7 +31,7 @@ let year_SF = array[0];
 // const audio_denunciante_apagado_b = document.querySelector('#audio_denunciante_apagado_b');
 // const camara_apagada_denunciante_b = document.querySelector('#camara_apagada_denunciante_b');
 // const camara_prendida_denunciante_b = document.querySelector('#camara_prendida_denunciante_b');
-const reloadSetFunction = setTimeout(reload(), 1000);
+// const reloadSetFunction = setTimeout(reload(), 1000);
 
 const guestVideoService = new VideoServiceGuest(
 	guestUUID,
@@ -47,7 +47,7 @@ guestVideoService.registerOnVideoReady(
 	"secondary_video",
 	"main_video",
 	(response, guestData) => {
-		clearTimeout(reloadSetFunction);
+		// clearTimeout(reloadSetFunction);
 		texto_inicial.style.display = "none";
 		video_container.style.display = "block";
 		document.querySelector("#documentos_anexar_card").style.display =
@@ -120,10 +120,10 @@ function deleteVideoElement() {
 }
 
 $(function () {
-	reloadSetFunction();
+	// reloadSetFunction();
 });
 
 
-function reload() {
-	location.reload();
-}
+// function reload() {
+// 	location.reload();
+// }
