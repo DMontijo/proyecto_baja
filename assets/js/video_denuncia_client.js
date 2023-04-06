@@ -46,7 +46,7 @@ guestVideoService.registerOnVideoReady(
 	"secondary_video",
 	"main_video",
 	(response, guestData) => {
-		clearTimeout(reloadSetFunction);
+		// clearTimeout(reloadSetFunction);
 		texto_inicial.style.display = "none";
 		video_container.style.display = "block";
 		document.querySelector("#documentos_anexar_card").style.display =
@@ -119,10 +119,10 @@ function deleteVideoElement() {
 }
 
 $(function () {
-	reloadSetFunction();
+	// reloadSetFunction();
 });
 
-const reloadSetFunction = setTimeout(reload(), 1000);
+// const reloadSetFunction = setTimeout(reload(), 1000);
 
 function reload() {
 	window.reload();
