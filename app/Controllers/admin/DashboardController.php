@@ -2712,10 +2712,15 @@ class DashboardController extends BaseController
 				$data['FECHANACIMIENTO'] = null;
 			}
 		}
-		$data['FOTO'] = null;
-		// if ($data['DESAPARECIDA'] == "N") {
-		// 	$data['FOTO'] = null;
-		// }
+
+		if ($data['DESAPARECIDA'] == "N") {
+			$data['FOTO'] = null;
+		} else {
+			try {
+				$data['FOTO'] = $data['FOTO'] ? base64_encode($data['FOTO']) : null;
+			} catch (\Throwable $th) {
+			}
+		}
 
 		foreach ($data as $clave => $valor) {
 			if (empty($valor)) {
