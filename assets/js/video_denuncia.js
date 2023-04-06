@@ -133,7 +133,7 @@ aceptar_llamada.addEventListener("click", () => {
 			console.log("¡Llamada aceptada con éxito!");
 			clearVideoCall();
 			video_container.style.display = "block";
-
+			aceptar_llamada.disabled = true;
 			document.querySelector(
 				"#secondary_video_details_name"
 			).innerHTML = `${agent.names} ${agent.lastnames}`;
@@ -154,6 +154,7 @@ aceptar_llamada.addEventListener("click", () => {
 			}
 
 			agentVideoService.registerOnGuestDisconnected(() => {
+				aceptar_llamada.disabled = false;
 				console.log("Guest disconnected");
 				Swal.fire({
 					icon: "error",
@@ -164,6 +165,8 @@ aceptar_llamada.addEventListener("click", () => {
 			});
 		}
 	);
+	aceptar_llamada.disabled = false;
+
 });
 
 desconectar_llamada.addEventListener("click", () => {
