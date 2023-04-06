@@ -1935,7 +1935,7 @@ class DashboardController extends BaseController
 
 					// $expedienteCreado = (object)array(
 					// 	'status' => 201,
-					// 	'EXPEDIENTEID' => '402002202200323'
+					// 	'EXPEDIENTEID' => '102001202305366'
 					// );
 					// return json_encode(['info' => $expedienteCreado]);
 
@@ -2712,10 +2712,10 @@ class DashboardController extends BaseController
 				$data['FECHANACIMIENTO'] = null;
 			}
 		}
-
-		if ($data['DESAPARECIDA'] == "N") {
-			$data['FOTO'] = null;
-		}
+		$data['FOTO'] = null;
+		// if ($data['DESAPARECIDA'] == "N") {
+		// 	$data['FOTO'] = null;
+		// }
 
 		foreach ($data as $clave => $valor) {
 			if (empty($valor)) {

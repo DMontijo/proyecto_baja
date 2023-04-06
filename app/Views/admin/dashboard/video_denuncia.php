@@ -1197,7 +1197,6 @@
 				respuesta = response;
 				document.getElementById("form_parentesco_insert").reset();
 				if (response.status === 1) {
-
 					const folio = response.folio;
 					const preguntas = response.respuesta.preguntas_iniciales;
 					const personas = response.respuesta.personas;
@@ -1596,8 +1595,6 @@
 					//FOLIO DENUNCIANTES
 					if (folioDenunciantes) llenarTablaFolioDenunciantes(folioDenunciantes);
 
-
-
 				} else if (response.status === 2) {
 					Swal.fire({
 						icon: 'error',
@@ -1611,7 +1608,7 @@
 					card5.classList.add('d-none');
 					card6.classList.add('d-none');
 
-					let texto = 'El folio ya fue atentido por el agente<br><strong>' + response.agente +
+					let texto = 'El folio ya fue atendido por el agente<br><strong>' + response.agente +
 						'</strong><br><br><strong>' + response.motivo + '</strong>';
 					if (response.motivo == 'EXPEDIENTE') {
 						texto = texto + '<br><br><strong>' + expedienteConGuiones(response.expediente) + '</strong>';
