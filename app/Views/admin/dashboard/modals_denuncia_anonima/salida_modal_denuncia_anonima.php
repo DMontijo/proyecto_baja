@@ -270,7 +270,6 @@
 					'status': salida,
 					'motivo': descripcion,
 				}
-
 			}
 			if (descripcion) {
 				$.ajax({

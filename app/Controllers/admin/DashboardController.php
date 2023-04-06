@@ -1888,18 +1888,20 @@ class DashboardController extends BaseController
 					$imputados_con_delito = array();
 					$imputados = $this->_folioPersonaFisicaModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->orderBy('PERSONAFISICAID', 'asc')->where('CALIDADJURIDICAID', 2)->findAll();
 
-					if (($folioRow['HECHOMUNICIPIOID'] == 1 || $folioRow['HECHOMUNICIPIOID'] == 6) &&
-						!($municipio == 1 || $municipio == 6)
-					) {
-						throw new \Exception('Solo puedes dar salida a Ensenada o San Quintín por el municipio del hecho.');
-					} else if (($folioRow['HECHOMUNICIPIOID'] == 2 || $folioRow['HECHOMUNICIPIOID'] == 3 || $folioRow['HECHOMUNICIPIOID'] == 7) &&
-						!($municipio == 2 || $municipio == 3 || $municipio == 7)
-					) {
-						throw new \Exception('Solo puedes dar salida a Tecate, Mexicali y San Felipe por el municipio del hecho.');
-					} else if (($folioRow['HECHOMUNICIPIOID'] == 4 || $folioRow['HECHOMUNICIPIOID'] == 5) &&
-						!($municipio == 4 || $municipio == 5)
-					) {
-						throw new \Exception('Solo puedes dar salida a Tijuana o Playas de Rosarito por el municipio del hecho.');
+					if ($folioRow['HECHOMUNICIPIOID'] == 1 && !$municipio == 1) {
+						throw new \Exception('Solo puedes dar salida a Ensenada.');
+					} else if ($folioRow['HECHOMUNICIPIOID'] == 2 && !$municipio == 2) {
+						throw new \Exception('Solo puedes dar salida a Mexicali.');
+					} else if ($folioRow['HECHOMUNICIPIOID'] == 3 && !$municipio == 3) {
+						throw new \Exception('Solo puedes dar salida a Tecate.');
+					} else if ($folioRow['HECHOMUNICIPIOID'] == 4 && !$municipio == 4) {
+						throw new \Exception('Solo puedes dar salida a Tijuana.');
+					} else if ($folioRow['HECHOMUNICIPIOID'] == 5 && !$municipio == 5) {
+						throw new \Exception('Solo puedes dar salida a Playas de Rosarito.');
+					} else if ($folioRow['HECHOMUNICIPIOID'] == 6 && !$municipio == 6) {
+						throw new \Exception('Solo puedes dar salida a San Quintin.');
+					} else if ($folioRow['HECHOMUNICIPIOID'] == 7 && !$municipio == 7) {
+						throw new \Exception('Solo puedes dar salida a San Felipe.');
 					}
 
 					foreach ($fisImpDelito as $value) {
