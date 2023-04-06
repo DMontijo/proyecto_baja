@@ -131,11 +131,11 @@ export class VideoServiceGuest {
 	connectGuest(details, callback) {
 		this.#guestDetails = details;
 
-		this.#socket.on("exception", function(data) {
+		this.#socket.on("exception", function (data) {
 			console.warn("event", data);
 		});
 
-		this.#socket.on("disconnect", function() {
+		this.#socket.on("disconnect", function () {
 			console.warn("disconnect");
 		});
 
@@ -155,7 +155,7 @@ export class VideoServiceGuest {
 				details: this.#guestDetails,
 				sessionId:
 					previusSession &&
-					this.#diffMinutes(new Date(previusSession.createdAt)) < 180
+						this.#diffMinutes(new Date(previusSession.createdAt)) < 180
 						? previusSession.sessionId
 						: null
 			},
@@ -231,7 +231,7 @@ export class VideoServiceGuest {
 			this.#videoCallService.connectVideoCall(
 				response.token,
 				localVideoSelector,
-				() => {}
+				() => { }
 			);
 		});
 	}
@@ -267,21 +267,21 @@ export class VideoServiceGuest {
 	 * Helper to prevent the Agent to close the tab
 	 */
 	#preventUserCloseWindow() {
-		var preventClose = function(e) {
-			e.preventDefault();
-			e.stopPropagation();
-			e.returnValue = "Se perdera la sesión si cierras la ventana.";
-			return "Se perdera la sesión si cierras la ventana.";
-		};
-		window.removeEventListener("beforeunload", null, false);
-		window.addEventListener("beforeunload", preventClose, true);
+		// var preventClose = function(e) {
+		// 	e.preventDefault();
+		// 	e.stopPropagation();
+		// 	e.returnValue = "Se perdera la sesión si cierras la ventana.";
+		// 	return "Se perdera la sesión si cierras la ventana.";
+		// };
+		// window.removeEventListener("beforeunload", null, false);
+		// window.addEventListener("beforeunload", preventClose, true);
 	}
 
 	/**
 	 * Helper to disable function to avoid the Agent to close the window
 	 */
 	#allowUserToCloseWindow() {
-		window.addEventListener("beforeunload", () => {});
+		// window.addEventListener("beforeunload", () => {});
 	}
 
 	/**
@@ -312,7 +312,7 @@ export class VideoServiceGuest {
 	 */
 	#emit(eventName, data, callback) {
 		const _data = data ?? {};
-		const _callback = callback ?? function() {};
+		const _callback = callback ?? function () { };
 
 		this.#socket.emit(eventName, _data, _callback);
 	}

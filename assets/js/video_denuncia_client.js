@@ -2,8 +2,8 @@ import { VideoServiceGuest } from "../guest/guest.js";
 
 const apiKey = "vspk_6258d819-105e-4487-b7f1-be72e892850e";
 const guestUUID = document.getElementById("input_uuid").value;
-const apiURI = "https://videodenunciabalancer.fgebc.gob.mx";
-// const apiURI = "https://ef88-2806-2f0-51e0-a3f5-d1cf-8a97-8917-a925.ngrok.io";
+// const apiURI = "https://videodenunciabalancer.fgebc.gob.mx";
+const apiURI = "https://e79c-52-0-63-150.ngrok.io";
 
 const delito = document.getElementById("input_delito").value;
 const descripcion = document.getElementById("input_descripcion").value;
@@ -46,16 +46,18 @@ guestVideoService.registerOnVideoReady(
 	"secondary_video",
 	"main_video",
 	(response, guestData) => {
+		clearTimeout(reloadSetFunction);
 		texto_inicial.style.display = "none";
 		video_container.style.display = "block";
-		document.querySelector("#documentos_anexar_card").style.display = "block";
+		document.querySelector("#documentos_anexar_card").style.display =
+			"block";
 		agente_name.innerHTML = "LIC. " + response.agent.name;
 		// denunciante_name.innerHTML = guestData.name;
 	}
 );
 
-guestVideoService.registerOnDisconnect((e) => {
-	console.log('Desconectado', e);
+guestVideoService.registerOnDisconnect(e => {
+	console.log("Desconectado", e);
 	pantalla_final.style.display = "block";
 	video_container.style.display = "none";
 	document.querySelector("#documentos_anexar_card").style.display = "none";
@@ -117,6 +119,13 @@ function deleteVideoElement() {
 	});
 }
 
-// $(function () {
-// 	$("#geolocalizacion_modal").modal("show");
-// });
+$(function () {
+	// $("#geolocalizacion_modal").modal("show");
+	reloadSetFunction();
+});
+
+const reloadSetFunction = setTimeout(reload(), 1000);
+
+function reload() {
+	window.reload();
+}
