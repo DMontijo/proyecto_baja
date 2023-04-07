@@ -24,12 +24,11 @@ priorityLinesSockets.registerToPriorityLineUpdate(priorityLists => {
 		});
 		priorityLists.forEach((cola, i) => {
 			cola.guests.forEach(dataGuest => {
-                console.log(dataGuest.priority);
-				let fila = document.createElement("tr");                
+				console.log(dataGuest.priority);
+				let fila = document.createElement("tr");
 				let td_1 = document.createElement("td");
 				td_1.classList.add("text-center");
 				let text_1 = document.createTextNode(dataGuest.details.folio);
-
 
 				let td_2 = document.createElement("td");
 				td_2.classList.add("text-center");
@@ -43,7 +42,9 @@ priorityLinesSockets.registerToPriorityLineUpdate(priorityLists => {
 
 				let td_4 = document.createElement("td");
 				td_4.classList.add("text-center");
-				let text_4 = document.createTextNode(dataGuest.guest.languages[0].title);
+				let text_4 = document.createTextNode(
+					dataGuest.guest.languages[0].title
+				);
 
 				let td_5 = document.createElement("td");
 				td_5.classList.add("text-center");
@@ -51,7 +52,7 @@ priorityLinesSockets.registerToPriorityLineUpdate(priorityLists => {
 
 				let td_6 = document.createElement("td");
 				td_6.classList.add("text-center");
-                let text_priority = setPriority(dataGuest.priority);
+				let text_priority = setPriority(dataGuest.priority);
 				let text_6 = document.createTextNode(text_priority);
 
 				td_1.appendChild(text_1);
@@ -59,15 +60,14 @@ priorityLinesSockets.registerToPriorityLineUpdate(priorityLists => {
 				td_3.appendChild(text_3);
 				td_4.appendChild(text_4);
 				td_5.appendChild(text_5);
-                td_6.appendChild(text_6);
+				td_6.appendChild(text_6);
 
 				fila.appendChild(td_1);
 				fila.appendChild(td_2);
 				fila.appendChild(td_3);
 				fila.appendChild(td_4);
 				fila.appendChild(td_5);
-                fila.appendChild(td_6);
-
+				fila.appendChild(td_6);
 
 				tbody.appendChild(fila);
 			});
@@ -84,13 +84,13 @@ priorityLinesSockets.registerToPriorityLineUpdate(priorityLists => {
 
 function setPriority(num) {
 	switch (num) {
-		case 1:
+		case "1":
 			return "BAJA - " + num;
-		case 2:
+		case "2":
 			return "MEDIA - " + num;
-		case 3:
+		case "3":
 			return "ALTA - " + num;
-		case num > 3:
+		case num > "3":
 			return "URGENTE - " + num;
 		default:
 			return "DESCONOCIDO - " + num;
