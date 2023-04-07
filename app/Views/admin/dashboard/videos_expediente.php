@@ -124,6 +124,7 @@
 	}
 
 	function llenarTablaVideos(videos, marcas) {
+		console.log(videos.length);
 		for (let i = 0; i < videos.length; i++) {
 			if (videos[i].uri != null) {
 				marcasVideoArray = [];
@@ -137,8 +138,8 @@
 				}
 				var fila =
 					`<tr id="row${i}">` +
-					`<td class="text-center" value="" style="max-width:30vw;"><video src="${videos[i].url}" width="100%" height="100%" controls></video></td>` +
-					`<td class="text-center" value="">${marcasVideoArray}</td>` +
+					`<td class="text-center" value="" style="max-width:30vw;"><video src="${videos[i].url ? videos[i].url : '-'} " width="100%" height="100%" controls></video></td>` +
+					`<td class="text-center" value="">${marcasVideoArra ?marcasVideoArray :'-'}</td>` +
 					`</tr>`;
 
 				$('#table-videos tr:first').after(fila);
