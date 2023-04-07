@@ -3649,6 +3649,7 @@ class DashboardController extends BaseController
 		$data['folio'] = $folio;
 
 		$endpointFolio = $this->urlApi . 'recordings/folio/' . $folio;
+		return $endpointFolio;
 
 		$responseFolio = $this->_curlGetService($endpointFolio);
 		return json_encode($responseFolio);
