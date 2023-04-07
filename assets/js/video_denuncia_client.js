@@ -1,4 +1,3 @@
-// import { set } from "lodash";
 import { VideoServiceGuest } from "../guest/guest.js";
 import { variables } from './variables.js';
 
@@ -100,9 +99,9 @@ guestVideoService.registerVideoRecordingStatus(isRecording => {
 guestVideoService.saveGeolocation(() => {
 	texto_inicial.style.display = "block";
 	guestVideoService.connectGuest({ delito, folio: folio_SY + "/" + year_SF, descripcion }, guest => { console.log(guest); });
-	// setTimeout(() => {
-	// 	guestVideoService.connectGuest({ delito, folio: folio_SY + "/" + year_SF, descripcion }, guest => { console.log(guest); });
-	// }, 2000);
+	setTimeout(() => {
+		guestVideoService.connectGuest({ delito, folio: folio_SY + "/" + year_SF, descripcion }, guest => { console.log(guest); });
+	}, 2000);
 });
 
 function deleteVideoElement() {
