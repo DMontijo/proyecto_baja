@@ -24,6 +24,7 @@ priorityLinesSockets.registerToPriorityLineUpdate(priorityLists => {
 		});
 		priorityLists.forEach((cola, i) => {
 			cola.guests.forEach(dataGuest => {
+                console.log(dataGuest.priority);
 				let fila = document.createElement("tr");                
 				let td_1 = document.createElement("td");
 				td_1.classList.add("text-center");
@@ -58,7 +59,7 @@ priorityLinesSockets.registerToPriorityLineUpdate(priorityLists => {
 				td_3.appendChild(text_3);
 				td_4.appendChild(text_4);
 				td_5.appendChild(text_5);
-                td_5.appendChild(text_6);
+                td_6.appendChild(text_6);
 
 				fila.appendChild(td_1);
 				fila.appendChild(td_2);
