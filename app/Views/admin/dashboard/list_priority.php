@@ -16,7 +16,9 @@
 								<table id="table-cola" class="table table-bordered table-hover table-striped d-none">
 									<thead>
 										<tr>
-											<th class="text-center" id="filtrogenero">Genero</th>
+											<th class="text-center" id="filtrogenero"></th>
+											<th class="text-center" id="filtroidioma"></th>
+
 										</tr>
 										<tr>
 											<th class="text-center">NOMBRE DEL DENUNCIANTE</th>

@@ -23,7 +23,8 @@ priorityLinesSockets.registerToPriorityLineUpdate((priorityLists) => {
 			row.remove();
 		});
 		priorityLists.forEach((cola, i) => {
-            document.querySelector('#filtrogenero').innerHTML = cola.gender +' '+ cola.language;
+            document.querySelector('#filtrogenero').innerHTML = cola.gender =='MALE' ? 'MASCULINO' : 'FEMENINO';
+            document.querySelector('#filtroidioma').innerHTML = cola.language;
             cola.guests.forEach((dataGuest)=>{
                 let fila = document.createElement("tr");
 
