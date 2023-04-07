@@ -101,7 +101,7 @@
 
 	function viewVideo(year, folio) {
 		data = {
-			'folio': folio + '/' +year,
+			'folio': folio + '/' + year,
 
 		};
 		console.log(data);
@@ -126,18 +126,18 @@
 	function llenarTablaVideos(videos, marcas) {
 		for (let i = 0; i < videos.length; i++) {
 			if (videos[i].uri != null) {
-				console.log(videos[i].id);
-				console.log(videos[i]['id']);
-
 				marcasVideoArray = [];
-				if (videos[i].id == marcas.id) {
-					let marcasVideo = marcas.recordingMarks;
-					marcas.recordingMarks.forEach(marcas => {
-						if (marcas.messageText != null) {
-							marcasVideoArray += marcas.markTime + ' ' + marcas.messageText + `<br>`;
-						}
-					});
+				if (marcas) {
+					if (videos[i].id == marcas.id) {
+						let marcasVideo = marcas.recordingMarks;
+						marcas.recordingMarks.forEach(marcas => {
+							if (marcas.messageText != null) {
+								marcasVideoArray += marcas.markTime + ' ' + marcas.messageText + `<br>`;
+							}
+						});
+					}
 				}
+
 				var fila =
 					`<tr id="row${i}">` +
 					`<td class="text-center" value="" style="max-width:30vw;"><video src="${videos[i].url ? videos[i].url : '-'} " width="100%" height="100%" controls></video></td>` +
