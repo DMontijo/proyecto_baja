@@ -1,3 +1,4 @@
+import { set } from "lodash";
 import { VideoServiceGuest } from "../guest/guest.js";
 import { variables } from './variables.js';
 
@@ -46,8 +47,7 @@ guestVideoService.registerOnVideoReady("secondary_video", "main_video", (respons
 	// clearTimeout(reloadSetFunction);
 	texto_inicial.style.display = "none";
 	video_container.style.display = "block";
-	document.querySelector("#documentos_anexar_card").style.display =
-		"block";
+	document.querySelector("#documentos_anexar_card").style.display = "block";
 	agente_name.innerHTML = "LIC. " + response.agent.name;
 	// denunciante_name.innerHTML = guestData.name;
 }
@@ -99,12 +99,10 @@ guestVideoService.registerVideoRecordingStatus(isRecording => {
 
 guestVideoService.saveGeolocation(() => {
 	texto_inicial.style.display = "block";
-	guestVideoService.connectGuest(
-		{ delito, folio: folio_SY + "/" + year_SF, descripcion },
-		guest => {
-			console.log(guest);
-		}
-	);
+	deleteVideoElement();
+	setTimeout(() => {
+		guestVideoService.connectGuest({ delito, folio: folio_SY + "/" + year_SF, descripcion }, guest => { console.log(guest); });
+	}, 2000);
 });
 
 function deleteVideoElement() {
