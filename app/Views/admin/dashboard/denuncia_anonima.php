@@ -37,7 +37,7 @@
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="fecha" class="form-label font-weight-bold">Fecha del delito:</label>
-							<input type="date" class="form-control" id="fecha" name="fecha" max="<?= date("Y-m-d") ?>" required>
+							<input type="date" data-date="" data-date-format="DD MMMM YYYY" class="form-control" id="fecha" name="fecha" max="<?= date("Y-m-d") ?>" required>
 						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="hora" class="form-label font-weight-bold">Hora del delito:</label>
