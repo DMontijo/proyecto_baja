@@ -24,11 +24,7 @@ priorityLinesSockets.registerToPriorityLineUpdate(priorityLists => {
 		});
 		priorityLists.forEach((cola, i) => {
 			cola.guests.forEach(dataGuest => {
-                console.log(dataGuest.languages[0]);
-				let fila = document.createElement("tr");
-
-
-                
+				let fila = document.createElement("tr");                
 				let td_1 = document.createElement("td");
 				td_1.classList.add("text-center");
 				let text_1 = document.createTextNode(dataGuest.details.folio);
