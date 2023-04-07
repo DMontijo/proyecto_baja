@@ -1,9 +1,8 @@
 import { VideoServiceGuest } from "../guest/guest.js";
+import { variables } from './variables.js';
 
-const apiKey = "vspk_6258d819-105e-4487-b7f1-be72e892850e";
+const { apiKey, apiURI } = variables;
 const guestUUID = document.getElementById("input_uuid").value;
-// const apiURI = "https://videodenunciabalancer.fgebc.gob.mx";
-const apiURI = "https://e79c-52-0-63-150.ngrok.io";
 
 const delito = document.getElementById("input_delito").value;
 const descripcion = document.getElementById("input_descripcion").value;

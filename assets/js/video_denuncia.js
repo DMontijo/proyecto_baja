@@ -1,8 +1,9 @@
 import { VideoServiceAgent } from "../agent/agent.js";
-const apiKey = document.getElementById("input_api").value;
+import { variables } from './variables.js';
+
+const { apiKey, apiURI } = variables;
+
 const agentUUID = document.getElementById("input_uuid").value;
-// const apiURI = "https://videodenunciabalancer.fgebc.gob.mx";
-const apiURI = "https://e79c-52-0-63-150.ngrok.io";
 
 const disponible_connect = document.querySelector("#disponible");
 const no_disponible_connect = document.querySelector("#no_disponible");

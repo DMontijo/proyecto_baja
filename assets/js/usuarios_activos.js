@@ -1,9 +1,7 @@
 import { RoomsSockets } from "../agent/extras.js";
+import { variables } from './variables.js';
 
-
-const apiKey = "vspk_6258d819-105e-4487-b7f1-be72e892850e";
-
-const apiURI = "https://e79c-52-0-63-150.ngrok.io";
+const { apiKey, apiURI } = variables;
 
 const roomsSockets = new RoomsSockets( { apiURI, apiKey });
 
@@ -13,7 +11,9 @@ roomsSockets.registerToRoomsUpdate((response)=>{
 	let tbody = document.querySelector("#table-usuarios-activos tbody");
 	let filas = document.querySelectorAll("#table-usuarios-activos tbody tr");
 	const count = response.filter(i => i).length;
-console.log(count);
+
+	console.log(count);
+
 	if (count >= 1) {
 		message.classList.add('d-none');
 		table.classList.remove('d-none');
