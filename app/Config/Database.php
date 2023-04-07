@@ -37,7 +37,7 @@ class Database extends Config
 		// 'hostname' => '172.19.10.36',
 		'username' => 'fgebc_admin',
 		'password' => 'fgebc_dba0wner',
-		'database' => 'CDT_DB',
+		'database' => 'cdtec',
 		'DBDriver' => 'MySQLi',
 		'DBPrefix' => '',
 		'pConnect' => false,
