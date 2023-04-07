@@ -211,13 +211,13 @@ video_agente_off.addEventListener("click", e => {
 
 audio_agente_on.addEventListener("click", () => {
 	agentVideoService.toggleAudio(isEnable => {
-		toogleAudioAgent(isEnable);
+		toogleAudioAgent( isEnabled);
 	});
 });
 
 audio_agente_off.addEventListener("click", () => {
 	agentVideoService.toggleAudio(isEnable => {
-		toogleAudioAgent(isEnable);
+		toogleAudioAgent( isEnabled);
 	});
 });
 
@@ -235,13 +235,13 @@ video_denunciante_off.addEventListener("click", e => {
 
 audio_denunciante_on.addEventListener("click", () => {
 	agentVideoService.toggleRemoteAudio(isEnable => {
-		toogleAudioDenunciante(isEnable);
+		toogleAudioDenunciante( isEnabled);
 	});
 });
 
 audio_denunciante_off.addEventListener("click", () => {
 	agentVideoService.toggleRemoteAudio(isEnable => {
-		toogleAudioDenunciante(isEnable);
+		toogleAudioDenunciante( isEnabled);
 	});
 });
 
@@ -338,7 +338,7 @@ function toogleVideoAgent(isEnabled) {
 	}
 }
 
-function toogleAudioAgent(isEnable) {
+function toogleAudioAgent( isEnabled) {
 	if (isEnable == true) {
 		document.getElementById("audio_agente_prendida").style.display =
 			"block";
@@ -354,7 +354,7 @@ function toogleAudioAgent(isEnable) {
 }
 
 function toogleVideoDenunciante(isEnabled) {
-	console.log("Dentro de toogle video denunciante", isEnable);
+	console.log("Dentro de toogle video denunciante",  isEnabled);
 	if (isEnabled == true) {
 		document.getElementById("camara_prendida_denunciante").style.display =
 			"block";
@@ -372,8 +372,8 @@ function toogleVideoDenunciante(isEnabled) {
 	}
 }
 
-function toogleAudioDenunciante(isEnable) {
-	console.log("Dentro de toogle audio denunciante", isEnable);
+function toogleAudioDenunciante( isEnabled) {
+	console.log("Dentro de toogle audio denunciante",  isEnabled);
 	if (isEnable == true) {
 		document.getElementById("audio_prendido_denunciante").style.display =
 			"block";
