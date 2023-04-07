@@ -98,7 +98,19 @@ guestVideoService.registerVideoRecordingStatus(isRecording => {
 
 guestVideoService.saveGeolocation(() => {
 	texto_inicial.style.display = "block";
-	guestVideoService.connectGuest({ delito, folio: folio_SY + "/" + year_SF, descripcion }, guest => { console.log(guest); });
+	guestVideoService.connectGuest(
+		{ delito, folio: folio_SY + "/" + year_SF, descripcion },
+		guest => { console.log(guest); },
+		error => {
+			Swal.fire({
+				icon: "error",
+				text: 'Hubo un error, se recargará la página',
+				showConfirmButton: false,
+				timer: 1500
+			}).then(() => {
+				location.reload();
+			})
+		});
 });
 
 function deleteVideoElement() {

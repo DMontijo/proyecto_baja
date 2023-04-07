@@ -119,7 +119,7 @@ export class VideoServiceAgent {
 		}
 
 		this.#socket.on("exception", function (response) {
-			console.warn("event", response);
+			console.warn("event", response ? response : 'No event');
 			if (typeof onerror === "function") onerror(response);
 		});
 

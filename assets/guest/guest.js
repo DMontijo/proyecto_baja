@@ -116,7 +116,7 @@ export class VideoServiceGuest {
 		try {
 			this.#socket = io(this.#apiURI, {
 				...this.#socketConfig,
-				extraHeaders: this.#socketHeaders,
+				extraHeaders: this.#socketHeaders
 			});
 		} catch (err) {
 			throw ExceptionSocketIONotImported();
@@ -128,11 +128,12 @@ export class VideoServiceGuest {
 	 * @param {Object} details - Details of the guest
 	 * @param {Function} callback - This method is executed after guest is connected to socket
 	 */
-	connectGuest(details, callback) {
+	connectGuest(details, callback, onerror) {
 		this.#guestDetails = details;
 
 		this.#socket.on("exception", function (data) {
-			console.warn("event", data);
+			console.warn("event", data ? data : "No event");
+			if (typeof onerror === "function") onerror(response);
 		});
 
 		this.#socket.on("disconnect", function () {
