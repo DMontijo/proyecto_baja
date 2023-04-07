@@ -23,24 +23,44 @@ priorityLinesSockets.registerToPriorityLineUpdate((priorityLists) => {
 			row.remove();
 		});
 		priorityLists.forEach((cola, i) => {
-            document.querySelector('#filtrogenero').innerHTML = cola.gender =='MALE' ? 'MASCULINO' : 'FEMENINO';
-            document.querySelector('#filtroidioma').innerHTML = cola.language;
+           
             cola.guests.forEach((dataGuest)=>{
                 let fila = document.createElement("tr");
 
                 let td_1 = document.createElement("td");
                 td_1.classList.add('text-center');
                 let text_1 = document.createTextNode((dataGuest.guest.name).toUpperCase());
+
                 let td_2 = document.createElement("td");
                 td_2.classList.add('text-center');
-                let text_2 = document.createTextNode(dataGuest.priority);
-                td_2.classList.add('font-weight-bold');
-                td_2.classList.add('text-success');
+                let text_2 = document.createTextNode(dataGuest.gender);
     
+                let td_3 = document.createElement("td");
+                td_3.classList.add('text-center');
+                let text_3 = document.createTextNode(dataGuest.language);
+
+                
+                let td_4 = document.createElement("td");
+                td_4.classList.add('text-center');
+                let text_4 = document.createTextNode(dataGuest.details.delito);
+
+                
+                let td_5 = document.createElement("td");
+                td_5.classList.add('text-center');
+                let text_5 = document.createTextNode(dataGuest.priority);
+
                 td_1.appendChild(text_1);
                 td_2.appendChild(text_2);
+                td_3.appendChild(text_3);
+                td_4.appendChild(text_4);
+                td_5.appendChild(text_5);
+
                 fila.appendChild(td_1);
                 fila.appendChild(td_2);
+                fila.appendChild(td_3);
+                fila.appendChild(td_4);
+                fila.appendChild(td_5);
+
                 tbody.appendChild(fila);
             })
 		console.log(cola);

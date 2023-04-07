@@ -17,12 +17,10 @@
 								<table id="table-cola" class="table table-bordered table-hover table-striped d-none">
 									<thead>
 										<tr>
-											<th class="text-center" id="filtrogenero"></th>
-											<th class="text-center" id="filtroidioma"></th>
-
-										</tr>
-										<tr>
 											<th class="text-center">NOMBRE DEL DENUNCIANTE</th>
+											<th class="text-center">GÉNERO</th>
+											<th class="text-center">IDIOMA</th>
+											<th class="text-center">DELITO</th>
 											<th class="text-center">PRIORIDAD</th>
 										</tr>
 									</thead>
