@@ -104,6 +104,7 @@
 			'folio': folio + '/' .year,
 
 		};
+		console.log(data);
 		$.ajax({
 			data: data,
 			url: "<?= base_url('/data/get-video-link') ?>",
