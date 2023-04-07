@@ -177,11 +177,13 @@ desconectar_llamada.addEventListener("click", () => {
 	agentVideoService.endVideoCall(() => {
 		console.log("¡Llamada finalizada con éxito!");
 		clearVideoCall();
-		console.log("Desconectando agente...");
-		agentVideoService.disconnectAgent(() => {
-			console.log("¡Agente desconectado con éxito!");
-			clearVideoCall();
-		});
+		setTimeout(() => {
+			console.log("Desconectando agente...");
+			agentVideoService.disconnectAgent(() => {
+				console.log("¡Agente desconectado con éxito!");
+				clearVideoCall();
+			});
+		}, 2000);
 	});
 });
 
