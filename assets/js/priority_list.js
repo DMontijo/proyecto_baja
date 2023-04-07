@@ -12,7 +12,7 @@ priorityLinesSockets.registerToPriorityLineUpdate((priorityLists) => {
 	let table = document.querySelector("#table-cola");
 	let tbody = document.querySelector("#table-cola tbody");
 	let filas = document.querySelectorAll("#table-cola tbody tr");
-	const count = response.filter(i => i).length;
+	const count = priorityLists.filter(i => i).length;
 
 	console.log(count);
 	
@@ -22,7 +22,7 @@ priorityLinesSockets.registerToPriorityLineUpdate((priorityLists) => {
 		filas.forEach(row => {
 			row.remove();
 		});
-		response.forEach((cola, i) => {
+		priorityLists.forEach((cola, i) => {
 		console.log(cola);
 		});
 	} else {
