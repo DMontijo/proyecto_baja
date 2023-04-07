@@ -190,7 +190,7 @@ desconectar_llamada.addEventListener("click", () => {
 rechazar_llamada.addEventListener("click", () => {
 	console.log("Rechazando llamada...");
 	agentVideoService.transferCall(resp => {
-		console.log("¡Llamada rechazada con éxito.!", resp);
+		console.log("¡Llamada rechazada con éxito.!");
 		clearVideoCall();
 		console.log("Desconectando agente...");
 		agentVideoService.disconnectAgent(() => {
