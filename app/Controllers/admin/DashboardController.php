@@ -5784,7 +5784,7 @@ class DashboardController extends BaseController
 			$data->plantilla = str_replace('[ANO_DESAPARICION]', $data->mediaFiliacionVictima->FECHADESAPARICION ? date('Y', strtotime($data->mediaFiliacionVictima->FECHADESAPARICION)) : '', $data->plantilla);
 			$data->plantilla = str_replace('[LUGAR_DESAPARICION]',  $data->mediaFiliacionVictima->LUGARDESAPARICION ?  $data->mediaFiliacionVictima->LUGARDESAPARICION : '-', $data->plantilla);
 
-			$data->plantilla = str_replace('[ESTATURA_DESAPARECIDO]',  $data->mediaFiliacionVictima->ESTATURA ?  (float)(((float)$data->mediaFiliacionVictima->ESTATURA) / 10) : '-', $data->plantilla);
+			$data->plantilla = str_replace('[ESTATURA_DESAPARECIDO]',  $data->mediaFiliacionVictima->ESTATURA ?  (float)(((float)$data->mediaFiliacionVictima->ESTATURA) / 100) : '-', $data->plantilla);
 			$data->plantilla = str_replace('[COMPLEXION_DESAPARECIDO]',  $complexion ?  $complexion->FIGURADESCR : '-', $data->plantilla);
 			$data->plantilla = str_replace('[PESO_DESAPARECIDO]',  $data->mediaFiliacionVictima->PESO ?  $data->mediaFiliacionVictima->PESO : '-', $data->plantilla);
 			$data->plantilla = str_replace('[TEZ_DESAPARECIDO]',  $colorPiel ?  $colorPiel->PIELCOLORDESCR : '-', $data->plantilla);
