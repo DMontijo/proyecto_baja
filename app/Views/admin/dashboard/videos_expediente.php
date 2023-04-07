@@ -63,7 +63,7 @@
 					<table id="table-videos" class="table table-bordered table-hover table-striped table-light">
 						<tr>
 							<th class="text-center bg-primary text-white">VIDEO</th>
-							<th class="text-center bg-primary text-white">MARCA DE TIEMPO</th>
+							<!-- <th class="text-center bg-primary text-white">MARCA DE TIEMPO</th> -->
 
 						</tr>
 					</table>
@@ -140,8 +140,8 @@
 
 				var fila =
 					`<tr id="row${i}">` +
-					`<td class="text-center" value="" style="max-width:30vw;"><video src="${videos[i].url ? videos[i].url : '-'} " width="100%" height="100%" controls></video></td>` +
-					`<td class="text-center" value="">${marcasVideoArray ?marcasVideoArray :'-'}</td>` +
+					`<td class="text-center" value="" style="max-width:30vw;"><video src="${videos[i].url} " width="100%" height="100%" controls></video></td>` +
+					// `<td class="text-center" value="">${marcasVideoArray ?marcasVideoArray :'-'}</td>` +
 					`</tr>`;
 
 				$('#table-videos tr:first').after(fila);
