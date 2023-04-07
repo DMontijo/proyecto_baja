@@ -13,11 +13,14 @@
 						<div class="row">
 							<div class="col-12 mt-3" style="overflow-x:scroll;">
 								<p id="message" class="mb-3 text-primary font-weight-bold text-center"> No hay ninguna lista</p>
-								<p id="filtrogenero" class="mb-3 text-primary font-weight-bold text-center"></p>
-								<p id="filtroidioma" class="mb-3 text-primary font-weight-bold text-center"></p>
-
+								
 								<table id="table-cola" class="table table-bordered table-hover table-striped d-none">
 									<thead>
+										<tr>
+											<th class="text-center" id="filtrogenero"></th>
+											<th class="text-center" id="filtroidioma"></th>
+
+										</tr>
 										<tr>
 											<th class="text-center">NOMBRE DEL DENUNCIANTE</th>
 											<th class="text-center">PRIORIDAD</th>

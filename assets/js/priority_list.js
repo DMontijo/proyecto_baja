@@ -28,21 +28,20 @@ priorityLinesSockets.registerToPriorityLineUpdate((priorityLists) => {
             cola.guests.forEach((dataGuest)=>{
                 let fila = document.createElement("tr");
 
-                // let td_1 = document.createElement("td");
-                // td_1.classList.add('text-center');
-                // let text_1 = document.createTextNode((user.host.agent.names + ' ' + user.host.agent.lastnames).toUpperCase());
-                // let td_2 = document.createElement("td");
-                // td_2.classList.add('text-center');
-                // let texto_activo = 'ACTIVO  - DISPONIBLE';
-                // let text_2 = document.createTextNode(texto_activo);
-                // td_2.classList.add('font-weight-bold');
-                // td_2.classList.add('text-success');
+                let td_1 = document.createElement("td");
+                td_1.classList.add('text-center');
+                let text_1 = document.createTextNode((dataGuest.guest.name).toUpperCase());
+                let td_2 = document.createElement("td");
+                td_2.classList.add('text-center');
+                let text_2 = document.createTextNode(dataGuest.priority);
+                td_2.classList.add('font-weight-bold');
+                td_2.classList.add('text-success');
     
-                // td_1.appendChild(text_1);
-                // td_2.appendChild(text_2);
-                // fila.appendChild(td_1);
-                // fila.appendChild(td_2);
-                // tbody.appendChild(fila);
+                td_1.appendChild(text_1);
+                td_2.appendChild(text_2);
+                fila.appendChild(td_1);
+                fila.appendChild(td_2);
+                tbody.appendChild(fila);
             })
 		console.log(cola);
 		});
