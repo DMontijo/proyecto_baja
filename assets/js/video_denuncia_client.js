@@ -43,18 +43,15 @@ const guestVideoService = new VideoServiceGuest(
 	}
 );
 
-guestVideoService.registerOnVideoReady(
-	"secondary_video",
-	"main_video",
-	(response, guestData) => {
-		// clearTimeout(reloadSetFunction);
-		texto_inicial.style.display = "none";
-		video_container.style.display = "block";
-		document.querySelector("#documentos_anexar_card").style.display =
-			"block";
-		agente_name.innerHTML = "LIC. " + response.agent.name;
-		// denunciante_name.innerHTML = guestData.name;
-	}
+guestVideoService.registerOnVideoReady("secondary_video", "main_video", (response, guestData) => {
+	// clearTimeout(reloadSetFunction);
+	texto_inicial.style.display = "none";
+	video_container.style.display = "block";
+	document.querySelector("#documentos_anexar_card").style.display =
+		"block";
+	agente_name.innerHTML = "LIC. " + response.agent.name;
+	// denunciante_name.innerHTML = guestData.name;
+}
 );
 
 guestVideoService.registerOnDisconnect(e => {

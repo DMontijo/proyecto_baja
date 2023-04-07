@@ -17,6 +17,7 @@
 		max-width: 200px;
 		min-width: 150px;
 		padding: 10px;
+		padding-top: 30px;
 		/* background-color: white; */
 		height: calc(70vh - 70px);
 		margin-top: -70vh;

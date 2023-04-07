@@ -48,9 +48,11 @@ const agentVideoService = new VideoServiceAgent(agentUUID, { apiURI, apiKey });
 
 disponible_connect.addEventListener("click", () => {
 	console.log("Conectando agente...");
+	disponible_connect.disabled = true;
 	agentVideoService.connetAgent(
 		() => {
 			console.log("¡Agente conectado con éxito!");
+			disponible_connect.disabled = false;
 			clearVideoCall();
 			disponible_connect.hidden = true;
 			no_disponible_connect.hidden = false;
@@ -93,6 +95,7 @@ disponible_connect.addEventListener("click", () => {
 			});
 		},
 		response => {
+			disponible_connect.disabled = false;
 			try {
 				agentVideoService.endVideoCall(() => {
 					console.log("¡Llamada finalizada con éxito!");
