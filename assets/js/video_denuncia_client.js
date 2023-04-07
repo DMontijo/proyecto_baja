@@ -99,7 +99,6 @@ guestVideoService.registerVideoRecordingStatus(isRecording => {
 
 guestVideoService.saveGeolocation(() => {
 	texto_inicial.style.display = "block";
-	deleteVideoElement();
 	setTimeout(() => {
 		guestVideoService.connectGuest({ delito, folio: folio_SY + "/" + year_SF, descripcion }, guest => { console.log(guest); });
 	}, 2000);
