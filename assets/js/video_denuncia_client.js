@@ -1,5 +1,5 @@
 import { VideoServiceGuest } from "../guest/guest.js";
-import { variables } from './variables.js';
+import { variables } from "./variables.js";
 
 const { apiKey, apiURI } = variables;
 const guestUUID = document.getElementById("input_uuid").value;
@@ -30,7 +30,6 @@ let year_SF = array[0];
 // const audio_denunciante_apagado_b = document.querySelector('#audio_denunciante_apagado_b');
 // const camara_apagada_denunciante_b = document.querySelector('#camara_apagada_denunciante_b');
 // const camara_prendida_denunciante_b = document.querySelector('#camara_prendida_denunciante_b');
-// const reloadSetFunction = setTimeout(reload(), 1000);
 
 const guestVideoService = new VideoServiceGuest(
 	guestUUID,
@@ -42,14 +41,17 @@ const guestVideoService = new VideoServiceGuest(
 	}
 );
 
-guestVideoService.registerOnVideoReady("secondary_video", "main_video", (response, guestData) => {
-	// clearTimeout(reloadSetFunction);
-	texto_inicial.style.display = "none";
-	video_container.style.display = "block";
-	document.querySelector("#documentos_anexar_card").style.display = "block";
-	agente_name.innerHTML = "LIC. " + response.agent.name;
-	// denunciante_name.innerHTML = guestData.name;
-}
+guestVideoService.registerOnVideoReady(
+	"secondary_video",
+	"main_video",
+	(response, guestData) => {
+		texto_inicial.style.display = "none";
+		video_container.style.display = "block";
+		document.querySelector("#documentos_anexar_card").style.display =
+			"block";
+		agente_name.innerHTML = "LIC. " + response.agent.name;
+		// denunciante_name.innerHTML = guestData.name;
+	}
 );
 
 guestVideoService.registerOnDisconnect(e => {
@@ -94,23 +96,43 @@ guestVideoService.registerMediaRemoteToggling(response => {
 
 guestVideoService.registerVideoRecordingStatus(isRecording => {
 	console.log("isRecording", isRecording);
+	if (isRecording) {
+		Swal.fire({
+			title: "Se inicio la grabación.",
+			position: 'top-end',
+			showConfirmButton: false,
+			timer: 1500
+		});
+	} else {
+		Swal.fire({
+			position: 'top-end',
+			title: "Se detuvo la grabación.",
+			showConfirmButton: false,
+			timer: 1500
+		});
+	}
 });
 
 guestVideoService.saveGeolocation(() => {
+	console.log("Conectando denunciante...");
 	texto_inicial.style.display = "block";
 	guestVideoService.connectGuest(
 		{ delito, folio: folio_SY + "/" + year_SF, descripcion },
-		guest => { console.log(guest); },
+		guest => {
+			console.log("Denuciante conectado");
+			console.log(guest);
+		},
 		error => {
 			Swal.fire({
 				icon: "error",
-				text: 'Hubo un error, se recargará la página',
+				title: "Hubo un error, se recargará la página",
 				showConfirmButton: false,
-				timer: 1500
-			}).then(() => {
-				location.reload();
-			})
-		});
+				timer: 1000
+			}).then(result => {
+				location.reload;
+			});
+		}
+	);
 });
 
 function deleteVideoElement() {
@@ -120,12 +142,3 @@ function deleteVideoElement() {
 		element.remove();
 	});
 }
-
-$(function () {
-	// reloadSetFunction();
-});
-
-
-// function reload() {
-// 	location.reload();
-// }

@@ -138,6 +138,7 @@ export class VideoServiceGuest {
 
 		this.#socket.on("disconnect", function () {
 			console.warn("disconnect");
+			if (typeof onerror === "function") onerror(response);
 		});
 
 		const previusSession = JSON.parse(
