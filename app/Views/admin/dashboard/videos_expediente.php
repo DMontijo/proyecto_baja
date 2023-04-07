@@ -101,7 +101,7 @@
 
 	function viewVideo(year, folio) {
 		data = {
-			'folio': year + '-' + folio,
+			'folio': folio + '/' .year,
 
 		};
 		$.ajax({
