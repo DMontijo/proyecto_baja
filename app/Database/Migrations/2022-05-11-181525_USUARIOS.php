@@ -55,7 +55,7 @@ class USUARIOS extends Migration
 			'TOKENVIDEO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '255',
-				'default' => 'NONE',
+				'null' => TRUE,
 			],
 		]);
 		$this->forge->addKey('ID', TRUE);
