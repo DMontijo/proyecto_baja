@@ -538,7 +538,7 @@ class DashboardController extends BaseController
 		$data = (object) array();
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
-		$this->_loadView('Usuarios activos', 'list_priority', '', $data, 'list_priority');
+		$this->_loadView('Cola de llamadas', 'list_priority', '', $data, 'list_priority');
 	}
 	public function firmas()
 	{
