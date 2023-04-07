@@ -104,14 +104,12 @@
 			'folio': folio + '/' + year,
 
 		};
-		console.log(data);
 		$.ajax({
 			data: data,
 			url: "<?= base_url('/data/get-video-link') ?>",
 			method: "POST",
 			dataType: "json",
 			success: function(response) {
-				console.log(response);
 				const videos = response.responseVideos;
 				const marcas = response.marcasVideo;
 				// console.log(videos);
