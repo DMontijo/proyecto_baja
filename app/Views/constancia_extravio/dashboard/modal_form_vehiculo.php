@@ -48,7 +48,7 @@
                     </div>
                     <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
                         <label for="fecha" class="form-label fw-bold input-required">Fecha del extravío:</label>
-                        <input type="date" data-date="" data-date-format="DD MMMM YYYY" class="form-control" id="fecha" name="fecha" max="<?= date("Y-m-d") ?>"
+                        <input type="date" class="form-control" id="fecha" name="fecha" max="<?= date("Y-m-d") ?>"
                             required>
                         <div class="invalid-feedback">
                             La fecha del extravío es obligatoria

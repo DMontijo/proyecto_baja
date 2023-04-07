@@ -632,7 +632,7 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="diaDesaparicion1" class="form-label font-weight-bold">Dia de desaparición</label>
-		<input type="date" data-date="" data-date-format="DD MMMM YYYY" class="form-control" id="diaDesaparicion1" name="diaDesaparicion1" max="<?= date("Y-m-d") ?>">
+		<input type="date" class="form-control" id="diaDesaparicion1" name="diaDesaparicion1" max="<?= date("Y-m-d") ?>">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="lugarDesaparicion" class="form-label font-weight-bold">Lugar de desaparición</label>

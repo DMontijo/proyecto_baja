@@ -14,7 +14,7 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="fecha_nacimiento_menor" class="form-label fw-bold">Fecha de nacimiento</label>
-		<input type="date" data-date="" data-date-format="DD MMMM YYYY" class="form-control" id="fecha_nacimiento_menor" name="fecha_nacimiento_menor" min="<?= ((int)date("Y")) - 18 . '-' . date("m") . '-' . date("d") ?>" max="<?= date("Y-m-d") ?>">
+		<input type="date" class="form-control" id="fecha_nacimiento_menor" name="fecha_nacimiento_menor" min="<?= ((int)date("Y")) - 18 . '-' . date("m") . '-' . date("d") ?>" max="<?= date("Y-m-d") ?>">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3" hidden>
 		<label for="edad_menor" class="form-label fw-bold">Edad</label>
