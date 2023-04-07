@@ -36,26 +36,4 @@
 </section>
 <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
 <script src="<?= base_url() ?>/assets/js/priority_list.js" type="module"></script>
-<script>
-		$(function() {
-		$("#table-cola").DataTable({
-			responsive: false,
-			lengthChange: false,
-			autoWidth: true,
-			ordering: true,
-			order: [
-				[0, 'asc'],
-			],
-			searching: true,
-			pageLength: 10,
-			// dom: 'Bfrtip',
-			// buttons: [
-			// 	'copy', 'excel', 'pdf'
-			// ],
-			language: {
-				url: '//cdn.datatables.net/plug-ins/1.12.1/i18n/es-MX.json'
-			}
-		});
-	});
-</script>
 <?= $this->endSection() ?>

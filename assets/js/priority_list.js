@@ -17,6 +17,27 @@ priorityLinesSockets.registerToPriorityLineUpdate((priorityLists) => {
 	console.log(count);
 	
 	if (count >= 1) {
+
+        $("#table-cola").DataTable({
+			responsive: false,
+			lengthChange: false,
+			autoWidth: true,
+			ordering: true,
+			order: [
+				[0, 'asc'],
+			],
+			searching: true,
+			pageLength: 10,
+			// dom: 'Bfrtip',
+			// buttons: [
+			// 	'copy', 'excel', 'pdf'
+			// ],
+			language: {
+				url: '//cdn.datatables.net/plug-ins/1.12.1/i18n/es-MX.json'
+			}
+		});
+
+        
 		message.classList.add('d-none');
 		table.classList.remove('d-none');
 		filas.forEach(row => {
