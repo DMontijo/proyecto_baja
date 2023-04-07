@@ -799,7 +799,7 @@ class ReportesController extends BaseController
 			// 		->get('duration');
 			// }
 
-			$endpointFolio = $this->urlApi . 'recordings/folio/' . $folio->FOLIOID;
+			$endpointFolio = $this->urlApi . 'recordings/folio?folio=' . $folio->FOLIOID .'/'. $folio->ANO;
 
 			$responseFolio = $this->_curlGetService($endpointFolio);
 			// return json_encode($responseFolio);
