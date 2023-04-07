@@ -101,7 +101,7 @@
 
 	function viewVideo(year, folio) {
 		data = {
-			'folio': folio + '/' .year,
+			'folio': folio + '/' +year,
 
 		};
 		console.log(data);
