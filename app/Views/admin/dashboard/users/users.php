@@ -22,7 +22,7 @@
                                     data-page-length='50' style="width:100%">
                                     <thead>
                                         <tr>
-                                            <th class="text-center">ROL</th>
+                                            <th class="text-center">PERFIL</th>
                                             <th class="text-center">NOMBRE</th>
                                             <th class="text-center">SEXO</th>
                                             <th class="text-center">CORREO</th>
