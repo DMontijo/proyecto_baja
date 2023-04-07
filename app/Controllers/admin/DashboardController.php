@@ -800,8 +800,6 @@ class DashboardController extends BaseController
 
 		if ($this->validate(['correo_usuario' => 'required|valid_email|is_unique[USUARIOS.CORREO]'])) {
 			try {
-				$usuario = ($this->_getUnusedUsersVideo())[0];
-				// $videoUser = $this->_updateUserVideo($usuario->ID, 'LIC. ' . $data['NOMBRE'], $data['APELLIDO_PATERNO'] . ' ' . $data['APELLIDO_MATERNO'], $data['CORREO'], $data['SEXO'], 'agente');
 				$dataApi = array();
 				$dataApi['names'] = $this->request->getPost('nombre_usuario');
 				$dataApi['lastnames'] = $this->request->getPost('apellido_paterno_usuario') . ' ' .  $this->request->getPost('apellido_materno_usuario');
@@ -815,10 +813,7 @@ class DashboardController extends BaseController
 			}
 
 			if ($response->uuid) {
-				// $data['USUARIOVIDEO'] = $videoUser->ID;
-				// $data['TOKENVIDEO'] = $videoUser->Token;
 				$data['TOKENVIDEO'] = $response->uuid;
-
 				try {
 					$usuario = $this->_usuariosModel->insert($data);
 				} catch (\Throwable $th) {

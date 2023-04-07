@@ -19,11 +19,6 @@ class UsuariosModel extends Model
 		'SEXO',
 		'CORREO',
 		'PASSWORD',
-		'USUARIOVIDEO',
 		'TOKENVIDEO',
-		'HUELLA_DIGITAL',
-		'CERTIFICADOFIRMA',
-		'KEYFIRMA',
-		'FRASEFIRMA',
 	];
 }

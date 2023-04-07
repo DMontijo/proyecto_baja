@@ -52,20 +52,10 @@ class USUARIOS extends Migration
 			'OFICINAID' => [
 				'type' => 'INT',
 			],
-			'USUARIOVIDEO' => [
-				'type' => 'INT',
-			],
 			'TOKENVIDEO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '255',
-			],
-			'CERTIFICADOFIRMA' => [
-				'type' => 'LONGBLOB',
-				'null' => TRUE,
-			],
-			'KEYFIRMA' => [
-				'type' => 'LONGBLOB',
-				'null' => TRUE,
+				'default' => 'NONE',
 			],
 		]);
 		$this->forge->addKey('ID', TRUE);
