@@ -25,7 +25,7 @@
 											</div>
 										<?php endif; ?>
 
-										<form action="<?= base_url() ?>/admin/login" method="POST" class="row g-3 needs-validation" novalidate>
+										<form id="admin_login_form" action="<?= base_url() ?>/admin/login" method="POST" class="row g-3 needs-validation" novalidate>
 											<div class="col-12">
 												<label for="correo" class="form-label fw-bold">Correo electrónico</label>
 												<input type="email" class="form-control" id="correo" name="correo" required>
@@ -42,7 +42,7 @@
 											</div>
 
 											<div class="col-12 d-flex align-items-center justify-content-center">
-												<button type="submit" class="btn btn-primary btn-block">
+												<button type="submit" id="btn-submit" class="btn btn-primary btn-block">
 													ENTRAR
 												</button>
 											</div>
@@ -59,6 +59,23 @@
 		</div>
 	</div>
 </section>
+<script>
+	(function() {
+		'use strict'
+
+		let form = document.querySelector('#admin_login_form');
+
+		form.addEventListener('submit', function(event) {
+			document.querySelector('#btn-submit').disabled = true;
+			if (!form.checkValidity()) {
+				event.preventDefault();
+				event.stopPropagation();
+				document.querySelector('#btn-submit').disabled = false;
+			}
+			form.classList.add('was-validated')
+		}, false)
+	})();
+</script>
 <?php if (session()->getFlashdata('message_error')) : ?>
 	<script>
 		Swal.fire({
@@ -91,12 +108,12 @@
 					success: function(response) {
 						if (response.status == 1) {
 							Swal.fire({
-							icon: 'success',
-							html: 'Se han cerrado todas las sesiones, por favor inicia sesión de nuevo.',
-							confirmButtonColor: '#bf9b55',
-						})
+								icon: 'success',
+								html: 'Se han cerrado todas las sesiones, por favor inicia sesión de nuevo.',
+								confirmButtonColor: '#bf9b55',
+							})
 						}
-					
+
 					},
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
