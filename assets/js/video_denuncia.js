@@ -271,6 +271,7 @@ stopRecord.addEventListener("click", () => {
 
 marksRecording.addEventListener("click", () => {
 	$("#marksModal").modal("show");
+	clearSelect(selectMarks);
 	agentVideoService.getMarkTypes().then(result => {
 		console.log(result);
 		result.forEach(marcas => {
@@ -431,4 +432,10 @@ function clearToolsBar() {
 	video_denunciante_off.style.display = "none";
 	audio_denunciante_on.style.display = "block";
 	audio_denunciante_off.style.display = "none";
+}
+
+function clearSelect(select_element) {
+	for (let i = select_element.options.length; i >= 1; i--) {
+		select_element.remove(i);
+	}
 }
