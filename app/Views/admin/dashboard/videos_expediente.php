@@ -110,13 +110,13 @@
 			method: "POST",
 			dataType: "json",
 			success: function(response) {
-				const videos = response.responseVideos;
-				const marcas = response.marcasVideo;
+				// const videos = response.responseVideos;
+				// const marcas = response.marcasVideo;
 				console.log(response);
-				console.log(videos);
-				console.log(marcas);
-				llenarTablaVideos(videos, marcas);
-				$('#videos_expediente_modal').modal('show');
+				// console.log(videos);
+				// console.log(marcas);
+				// llenarTablaVideos(videos, marcas);
+				// $('#videos_expediente_modal').modal('show');
 			}
 		});
 
