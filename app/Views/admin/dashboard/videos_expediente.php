@@ -126,7 +126,8 @@
 	function llenarTablaVideos(videos, marcas) {
 		for (let i = 0; i < videos.length; i++) {
 			if (videos[i].uri != null) {
-				console.log(videos[i]);
+				console.log(videos[i].id);
+				console.log(videos[i]['id']);
 
 				marcasVideoArray = [];
 				if (videos[i].id == marcas.id) {
