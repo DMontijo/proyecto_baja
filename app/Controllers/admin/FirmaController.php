@@ -1205,34 +1205,34 @@ class FirmaController extends BaseController
 			}
 		}
 
-		// if (ENVIRONMENT == 'production') {
-		// 	switch ($municipioid) {
-		// 		case 1:
-		// 			$to_orden_proteccion = 'victor.ramirez@ensenada.gob.mx';
-		// 			break;
-		// 		case 2:
-		// 			$to_orden_proteccion = 'udai@mexicali.gob.mx';
-		// 			break;
-		// 		case 3:
-		// 			$to_orden_proteccion = 'seguridad.juridico@tecate.gob.mx';
-		// 			break;
-		// 		case 4:
-		// 			$to_orden_proteccion = 'enlace.secretaria@tijuana.gob.mx';
-		// 			break;
-		// 		case 5:
-		// 			$to_orden_proteccion = 'sub.tecnica.ssc@gmail.com';
-		// 			break;
-		// 		case 6:
-		// 			$to_orden_proteccion = 'dspm-fge@sanquintin.gob.mx';
-		// 			break;
-		// 		case 7:
-		// 			$to_orden_proteccion = 'dspm@sanfelipe.gob.mx';
-		// 			break;
-		// 		default:
-		// 			$to_orden_proteccion = '';
-		// 			break;
-		// 	}
-		// }
+		if (ENVIRONMENT == 'production') {
+			switch ($municipioid) {
+				case 1:
+					$to_orden_proteccion = 'victor.ramirez@ensenada.gob.mx';
+					break;
+				case 2:
+					$to_orden_proteccion = 'udai@mexicali.gob.mx';
+					break;
+				case 3:
+					$to_orden_proteccion = 'seguridad.juridico@tecate.gob.mx';
+					break;
+				case 4:
+					$to_orden_proteccion = 'enlace.secretaria@tijuana.gob.mx';
+					break;
+				case 5:
+					$to_orden_proteccion = 'sub.tecnica.ssc@gmail.com';
+					break;
+				case 6:
+					$to_orden_proteccion = 'dspm-fge@sanquintin.gob.mx';
+					break;
+				case 7:
+					$to_orden_proteccion = 'dspm@sanfelipe.gob.mx';
+					break;
+				default:
+					$to_orden_proteccion = '';
+					break;
+			}
+		}
 		$email = \Config\Services::email();
 		$email->setTo($to_orden_proteccion);
 		$email->setSubject('FGEBC - ORDENES DE PROTECCIÓN');
