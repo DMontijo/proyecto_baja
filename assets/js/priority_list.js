@@ -1,4 +1,4 @@
-import { PriorityLinesSockets } from "../agent/extras.js";
+import { PriorityLinesSockets } from '../agent/extras.js';
 import { variables } from './variables.js';
 
 const { apiKey, apiURI } = variables;
