@@ -41,11 +41,11 @@ priorityLinesSockets.registerToPriorityLineUpdate(priorityLists => {
 
 				let td_3 = document.createElement("td");
 				td_3.classList.add("text-center");
-				let text_3 = document.createTextNode(dataGuest.gender);
+				let text_3 = document.createTextNode(dataGuest.guest.gender);
 
 				let td_4 = document.createElement("td");
 				td_4.classList.add("text-center");
-				let text_4 = document.createTextNode(dataGuest.language);
+				let text_4 = document.createTextNode(dataGuest.languages[0].title);
 
 				let td_5 = document.createElement("td");
 				td_5.classList.add("text-center");
