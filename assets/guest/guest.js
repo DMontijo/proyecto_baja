@@ -161,7 +161,9 @@ export class VideoServiceGuest {
 			},
 			response => {
 				this.#preventUserCloseWindow();
-				this.#loggedInSound.play();
+				try {
+					this.#loggedInSound.play();
+				} catch (error) { }
 				const { guestConnection, guest } = response;
 				this.#guestConnectionId = guestConnection.id;
 				this.guestData = guest;
