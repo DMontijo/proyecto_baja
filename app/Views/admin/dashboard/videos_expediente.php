@@ -124,9 +124,10 @@
 	}
 
 	function llenarTablaVideos(videos, marcas) {
-		console.log(videos.length);
 		for (let i = 0; i < videos.length; i++) {
 			if (videos[i].uri != null) {
+				console.log(videos[i]);
+
 				marcasVideoArray = [];
 				if (videos[i].id == marcas.id) {
 					let marcasVideo = marcas.recordingMarks;
