@@ -63,7 +63,7 @@ class Database extends Config
 		'hostname' => 'database-video-denuncia-baja-california-instance-1.cenwfxggsegs.us-east-1.rds.amazonaws.com',
 		'username' => 'fgebc_admin',
 		'password' => 'fgebc_dba0wner',
-		'database' => 'CDT_DB_TESTING',
+		'database' => 'cdtec_testing',
 		'DBDriver' => 'MySQLi',
 		'DBPrefix' => '',
 		'pConnect' => false,
