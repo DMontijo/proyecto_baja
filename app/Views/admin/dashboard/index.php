@@ -52,7 +52,7 @@ $file_text = $user_id . "_data.txt";
 			<div class="card shadow" style="border-radius:5px; height:100%!important;">
 				<div class="card-body text-center">
 					<h5 class="card-title">USUARIOS ACTIVOS PARA VIDEODENUNCIA</h5>
-					<h4 class="font-weight-bold" id="card_active_users">0</h4>
+					<h4 class="font-weight-bold" id="card_active_users">-</h4>
 					<a type="button" href="<?= base_url('admin/dashboard/usuarios_activos') ?>" class="btn btn-primary font-weight-bold mt-4 text-white">VER MÁS</a>
 				</div>
 			</div>
@@ -61,7 +61,7 @@ $file_text = $user_id . "_data.txt";
 			<div class="card shadow" style="border-radius:5px; height:100%!important;">
 				<div class="card-body text-center">
 					<h5 class="card-title">LISTA DE PRIORIDAD</h5>
-					<h4 class="font-weight-bold" id="lista_prioridad_users">0</h4>
+					<h4 class="font-weight-bold" id="lista_prioridad_users">-</h4>
 					<a type="button" href="<?= base_url('admin/dashboard/lista_prioridad') ?>" class="btn btn-primary font-weight-bold mt-4 text-white">VER MÁS</a>
 				</div>
 			</div>
@@ -134,15 +134,11 @@ $file_text = $user_id . "_data.txt";
 		</div>
 	</div>
 </div>
-<script src="<?= base_url() ?>/assets/js/usuarios_activos.js" type="module"></script>
-<script src="<?= base_url() ?>/assets/js/priority_list.js" type="module"></script>
 
 <?php if (in_array(session('ROLID'), $rolesToMonitor)) { ?>
 	<script>
 		window.onload = function() {
 			getUsuarios();
-			document.getElementById('card_active_users').innerHTML = count;
-
 			setInterval(() => {
 				getUsuarios();
 			}, 50000);
