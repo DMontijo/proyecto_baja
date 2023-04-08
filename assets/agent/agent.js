@@ -28,7 +28,6 @@ export class VideoServiceAgent {
 	#agentUUID;
 	#apiURI;
 	#apiKey;
-	#startVideoCallTime;
 	#socket;
 	#socketHeaders = {
 		"ngrok-skip-browser-warning": "true"
@@ -235,7 +234,6 @@ export class VideoServiceAgent {
 					response.token,
 					localVideoSelector,
 					() => {
-						this.#startVideoCallTime = new Date();
 						this.#phoneRing.pause();
 					}
 				);
@@ -323,7 +321,7 @@ export class VideoServiceAgent {
 	marksRecording() {
 		const now = new Date();
 
-		const videoMS = now.getTime() - this.#startVideoCallTime.getTime();
+		const videoMS = now.getTime() - this.#videoCallService.startVideoCallTime.getTime();
 
 		const d = new Date(Date.UTC(0, 0, 0, 0, 0, 0, videoMS));
 		const parts = [d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds()];

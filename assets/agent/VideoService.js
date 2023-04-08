@@ -24,6 +24,12 @@ export default class VideoCall {
     #publishAudio;
     #publishVideo;
 
+    /**
+     * Recording start time for current call
+     */
+    #startVideoCallTime;
+
+
     #publisher;
 
     /**
@@ -43,6 +49,10 @@ export default class VideoCall {
         try {
             this.#OV = new OpenVidu();
             this.#session = this.#OV.initSession();
+
+            this.#session.on('recordingStarted', () => {
+                this.#startVideoCallTime = new Date();
+            })
         } catch (e) {
             throw new ExceptionOpenViduNotImported();
         };
@@ -64,6 +74,13 @@ export default class VideoCall {
      */
     get session() {
         return this.#session;
+    }
+
+    /**
+     * Recording start time for current call
+     */
+    get startVideoCallTime() {
+        return this.#startVideoCallTime;
     }
 
     /**
