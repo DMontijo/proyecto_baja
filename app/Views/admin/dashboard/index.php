@@ -134,6 +134,8 @@ $file_text = $user_id . "_data.txt";
 		</div>
 	</div>
 </div>
+<script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
+
 <script src="<?= base_url() ?>/assets/js/usuarios_activos.js" type="module"></script>
 <script src="<?= base_url() ?>/assets/js/priority_list.js" type="module"></script>
 
