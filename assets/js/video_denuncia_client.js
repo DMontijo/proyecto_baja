@@ -45,6 +45,7 @@ guestVideoService.registerOnVideoReady(
 	"secondary_video",
 	"main_video",
 	(response, guestData) => {
+		clearTimeout(timeoutID);
 		texto_inicial.style.display = "none";
 		video_container.style.display = "block";
 		document.querySelector("#documentos_anexar_card").style.display =
@@ -132,23 +133,29 @@ guestVideoService.registerOnAgentDisconnected(() => {
 guestVideoService.saveGeolocation(() => {
 	console.log("Conectando denunciante...");
 	texto_inicial.style.display = "block";
-	guestVideoService.connectGuest(
-		{ delito, folio: folio_SY + "/" + year_SF, descripcion },
-		guest => {
-			console.log("Denuciante conectado");
-			console.log(guest);
-		},
-		error => {
-			Swal.fire({
-				icon: "error",
-				title: "Hubo un error, se recargará la página",
-				showConfirmButton: false,
-				timer: 1000
-			}).then(result => {
-				location.reload;
-			});
-		}
-	);
+
+	const timeoutID = setTimeout(() => {
+		guestVideoService.connectGuest(
+			{ delito, folio: folio_SY + "/" + year_SF, descripcion },
+			guest => {
+				console.log("Denuciante conectado");
+				console.log(guest);
+			},
+			error => {
+				Swal.fire({
+					icon: "error",
+					title: "Hubo un error, se recargará la página",
+					showConfirmButton: false,
+					timer: 1000
+				}).then(result => {
+					location.reload;
+				});
+			}
+		);
+	  }, 3000);
+
+
+	
 });
 
 function deleteVideoElement() {
