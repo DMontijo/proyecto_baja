@@ -75,7 +75,7 @@
 								<div class="col-12 text-center">
 									<p class="fw-bold">Haz completado la información</p>
 
-									
+
 									<p class="text-center">
 										<i class="bi bi-exclamation-triangle"> Es muy importante que antes de iniciar tu video denuncia aceptes los derechos de víctima u ofendido.</i>
 										<br>
@@ -581,7 +581,9 @@
 					document.querySelector('input[name="es_vulnerable"]:checked') &&
 					document.querySelector('input[name="fue_con_arma"]:checked') &&
 					document.querySelector('input[name="lesiones"]:checked') &&
-					document.querySelector('input[name="esta_desaparecido"]:checked')
+					document.querySelector('input[name="esta_desaparecido"]:checked') &&
+					document.querySelector('input[name="es_tercera_edad"]:checked') &&
+					document.querySelector('input[name="es_ofendido"]:checked')
 				) {
 					return true;
 				} else {
@@ -629,10 +631,15 @@
 				}
 				break;
 			case 'datos_delito':
+				let date1 = new Date(document.querySelector('#fecha').value);
+				let date2 = new Date("<?= date("Y-m-d") ?>");
+				if (date1 > date2) {
+					document.querySelector('#fecha').value = '';
+				}
 				if (
 					document.querySelector('#delito').value != '' &&
 					document.querySelector('#lugar').value != '' &&
-					document.querySelector('#fecha').value <= "<?= date("Y-m-d") ?>" &&
+					document.querySelector('#fecha').value != '' &&
 					document.querySelector('#hora').value != '' &&
 					document.querySelector('input[name="responsable"]:checked') &&
 					document.querySelector('#descripcion_breve').value != ''

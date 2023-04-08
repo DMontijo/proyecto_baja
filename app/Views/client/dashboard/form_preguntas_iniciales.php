@@ -36,7 +36,7 @@
 			<label class="form-check-label" for="flexRadioDefault1">SI</label>
 		</div>
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="radio" name="es_ofendido" value="NO" selected required>
+			<input class="form-check-input" type="radio" name="es_ofendido" value="NO" required>
 			<label class="form-check-label" for="flexRadioDefault2">NO</label>
 		</div>
 	</div>
@@ -186,7 +186,7 @@
 				document.getElementById('menor_alert').classList.add('d-none');
 
 				document.querySelector('#es_mayor [value="NO"]').checked = false;
-				document.querySelector('#es_ofendido [value="NO"]').checked = false;
+				document.querySelector('#es_ofendido [value="SI"]').checked = true;
 			}
 		})
 	});
