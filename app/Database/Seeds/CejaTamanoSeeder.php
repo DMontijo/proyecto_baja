@@ -13,8 +13,6 @@ class CejaTamanoSeeder extends Seeder
             array('CEJATAMANODESCR' => 'DELGADAS'),
             array('CEJATAMANODESCR' => 'CORTAS'),
             array('CEJATAMANODESCR' => 'LARGAS'),
-
-
         ];
         $this->db->table('CEJATAMANO')->insertBatch($data);
     }
