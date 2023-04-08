@@ -135,7 +135,7 @@ export class VideoServiceAgent {
 				agent: this.#agentUUID
 			},
 			response => {
-				this.#preventUserCloseWindow();
+				// this.#preventUserCloseWindow();
 				this.agentData = response.agent;
 				try {
 					this.#loggedInSound.play();
@@ -178,7 +178,7 @@ export class VideoServiceAgent {
 	 */
 	disconnectAgent(callback) {
 		try {
-			this.#allowUserToCloseWindow();
+			// this.#allowUserToCloseWindow();
 			this.#phoneRing.pause();
 			this.#socket.disconnect();
 			this.#videoCallService?.session.disconnect();
