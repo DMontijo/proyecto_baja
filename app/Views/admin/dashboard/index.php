@@ -61,7 +61,7 @@ $file_text = $user_id . "_data.txt";
 			<div class="card shadow" style="border-radius:5px; height:100%!important;">
 				<div class="card-body text-center">
 					<h5 class="card-title">LISTA DE PRIORIDAD</h5>
-					<h4 class="font-weight-bold" id="card_active_users">0</h4>
+					<h4 class="font-weight-bold" id="lista_prioridad_users">0</h4>
 					<a type="button" href="<?= base_url('admin/dashboard/lista_prioridad') ?>" class="btn btn-primary font-weight-bold mt-4 text-white">VER MÁS</a>
 				</div>
 			</div>
@@ -152,7 +152,7 @@ $file_text = $user_id . "_data.txt";
 			method: "POST",
 			dataType: "json",
 			success: function(response) {
-				document.querySelector('#card_active_users').innerHTML = response.count;
+				document.querySelector('#card_active_users').innerHTML = response.count ? response.count : 0;
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 				console.log('Error');

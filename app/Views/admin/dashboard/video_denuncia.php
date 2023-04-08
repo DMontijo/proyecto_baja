@@ -1650,7 +1650,7 @@
 		buscar_btn.classList.remove('d-none');
 		expediente_modal_correo.value = "";
 		year_modal_correo.value = "";
-		notas_mp.innerHTML = "";
+		notas_mp.value = "";
 		$('#send_mail_select').empty();
 		// quill.root.innerHTML ='';
 		// quill2.root.innerHTML='';
