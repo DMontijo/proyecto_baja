@@ -49,11 +49,6 @@ export default class VideoCall {
         try {
             this.#OV = new OpenVidu();
             this.#session = this.#OV.initSession();
-
-            this.#session.on('recordingStarted', (e) => {
-                console.log('****************************recordingStarted************************************', e)
-                this.#startVideoCallTime = new Date();
-            })
         } catch (e) {
             throw new ExceptionOpenViduNotImported();
         };
@@ -68,6 +63,11 @@ export default class VideoCall {
         this.#session.on('streamCreated', event => {
             this.#session.subscribe(event.stream, this.#remoteVideoSelector);
         });
+
+        this.#session.on('recordingStarted', event => {
+            console.log('****************************recordingStarted************************************', event)
+            this.#startVideoCallTime = new Date();
+        })
     }
 
     /**
@@ -81,6 +81,7 @@ export default class VideoCall {
      * Recording start time for current call
      */
     get startVideoCallTime() {
+        console.log(this.#startVideoCallTime);
         return this.#startVideoCallTime;
     }
 
@@ -94,6 +95,8 @@ export default class VideoCall {
             if (typeof callback === 'function') callback(event);
         });
     }
+
+    
 
     /**
      * Start connection to session
