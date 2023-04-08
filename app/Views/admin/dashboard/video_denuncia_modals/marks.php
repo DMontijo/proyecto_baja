@@ -18,7 +18,7 @@
 				</div>
 				<div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-3">
 					<label for="genero_denunciante" class="form-label font-weight-bold">Comentario:</label>
-					<textarea class="form-control" id="comentario_marca"></textarea>
+					<textarea class="form-control" id="comentario_marca" oninput="mayuscTextarea(this)"></textarea>
 				</div>
 				<button class="btn btn-success" id="enviar_marca"> Enviar</button>
 			</div>
@@ -31,4 +31,9 @@
 		document.getElementById('comentario_marca').value = '';
 
 	});
+
+	function mayuscTextarea(e) {
+		e.value = e.value.toUpperCase();
+	}
+
 </script>
