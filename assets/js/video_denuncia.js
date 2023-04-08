@@ -160,6 +160,7 @@ aceptar_llamada.addEventListener("click", () => {
 
 			agentVideoService.registerOnGuestDisconnected(() => {
 				aceptar_llamada.disabled = false;
+				$("#llamadaModal").modal("hide");
 				console.log("Guest disconnected");
 				Swal.fire({
 					icon: "error",
