@@ -47,18 +47,6 @@ var myInterval;
 
 const agentVideoService = new VideoServiceAgent(agentUUID, { apiURI, apiKey });
 
-agentVideoService.registerOnGuestDisconnected(() => {
-	aceptar_llamada.disabled = false;
-	$("#llamadaModal").modal("hide");
-	console.log("Guest disconnected");
-	Swal.fire({
-		icon: "error",
-		text: "El usuario se desconecto.",
-		showConfirmButton: false,
-		timer: 2000
-	});
-});
-
 disponible_connect.addEventListener("click", () => {
 	console.log("Conectando agente...");
 	disponible_connect.disabled = true;
@@ -137,6 +125,18 @@ no_disponible_connect.addEventListener("click", () => {
 	agentVideoService.disconnectAgent(() => {
 		console.log("¡Agente desconectado con éxito!");
 		clearVideoCall();
+	});
+});
+
+agentVideoService.registerOnGuestDisconnected(() => {
+	aceptar_llamada.disabled = false;
+	$("#llamadaModal").modal("hide");
+	console.log("Guest disconnected");
+	Swal.fire({
+		icon: "error",
+		text: "El usuario se desconecto.",
+		showConfirmButton: false,
+		timer: 2000
 	});
 });
 
