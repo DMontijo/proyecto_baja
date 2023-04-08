@@ -50,50 +50,51 @@ const agentVideoService = new VideoServiceAgent(agentUUID, { apiURI, apiKey });
 disponible_connect.addEventListener("click", () => {
 	console.log("Conectando agente...");
 	disponible_connect.disabled = true;
-	agentVideoService.connetAgent(() => {
-		console.log("¡Agente conectado con éxito!");
-		disponible_connect.disabled = false;
-		clearVideoCall();
-		disponible_connect.hidden = true;
-		no_disponible_connect.hidden = false;
-
-		agentVideoService.registerOnGuestConnected(response => {
-			try {
-				deleteVideoElement();
-			} catch (error) { }
+	agentVideoService.connetAgent(
+		() => {
+			console.log("¡Agente conectado con éxito!");
+			disponible_connect.disabled = false;
 			clearVideoCall();
-
-			guestUUID = response.guest.uuid;
-			console.log("Respuesta: ", response);
-			document.querySelector("#nombre_denunciante").value =
-				response.guest.name;
-			document.querySelector("#main_video_details_name").value =
-				response.guest.name;
-			document.querySelector("#genero_denunciante").value =
-				response.guest.gender == "FEMALE"
-					? "FEMENINO"
-					: "MASCULINO";
-			document.querySelector("#correo_deunciante").value =
-				response.guest.details.CORREO;
-			document.querySelector("#delito_denunciante_llamada").value =
-				response.details != null ? response.details.delito : "-";
-			document.querySelector(
-				"#descripcion_denunciante_llamada"
-			).innerHTML =
-				response.details != null
-					? response.details.descripcion
-					: "-";
-			document.querySelector("#folio_llamada").value =
-				response.details != null ? response.details.folio : "-";
-			document.querySelector("#idioma_denunciante").value = response
-				.guest.languages
-				? response.guest.languages[0].title
-				: "-";
-			$("#llamadaModal").modal("show");
 			disponible_connect.hidden = true;
 			no_disponible_connect.hidden = false;
-		});
 
+			agentVideoService.registerOnGuestConnected(response => {
+				try {
+					deleteVideoElement();
+				} catch (error) { }
+				clearVideoCall();
+
+				guestUUID = response.guest.uuid;
+				console.log("Respuesta: ", response);
+				document.querySelector("#nombre_denunciante").value =
+					response.guest.name;
+				document.querySelector("#main_video_details_name").value =
+					response.guest.name;
+				document.querySelector("#genero_denunciante").value =
+					response.guest.gender == "FEMALE"
+						? "FEMENINO"
+						: "MASCULINO";
+				document.querySelector("#correo_deunciante").value =
+					response.guest.details.CORREO;
+				document.querySelector("#delito_denunciante_llamada").value =
+					response.details != null ? response.details.delito : "-";
+				document.querySelector(
+					"#descripcion_denunciante_llamada"
+				).innerHTML =
+					response.details != null
+						? response.details.descripcion
+						: "-";
+				document.querySelector("#folio_llamada").value =
+					response.details != null ? response.details.folio : "-";
+				document.querySelector("#idioma_denunciante").value = response
+					.guest.languages
+					? response.guest.languages[0].title
+					: "-";
+				$("#llamadaModal").modal("show");
+				disponible_connect.hidden = true;
+				no_disponible_connect.hidden = false;
+			});
+			
 		agentVideoService.registerOnGuestDisconnected(() => {
 			aceptar_llamada.disabled = false;
 			$("#llamadaModal").modal("hide");
@@ -105,7 +106,7 @@ disponible_connect.addEventListener("click", () => {
 				timer: 2000
 			});
 		});
-	},
+		},
 		response => {
 			disponible_connect.disabled = false;
 			try {
@@ -164,9 +165,21 @@ aceptar_llamada.addEventListener("click", () => {
 			if (document.getElementById("input_folio_atencion").value == "") {
 				try {
 					let split = guestConnection.folio.split("/");
-					document.getElementById("input_folio_atencion").value = split[0];
+					document.getElementById("input_folio_atencion").value =
+						split[0];
 				} catch (error) { }
 			}
+
+			agentVideoService.registerOnGuestDisconnected(() => {
+				aceptar_llamada.disabled = false;
+				console.log("Guest disconnected");
+				Swal.fire({
+					icon: "error",
+					text: "El usuario se desconecto.",
+					showConfirmButton: false,
+					timer: 1000
+				});
+			});
 		}
 	);
 });
