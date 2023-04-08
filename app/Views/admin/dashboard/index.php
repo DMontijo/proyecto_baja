@@ -134,6 +134,9 @@ $file_text = $user_id . "_data.txt";
 		</div>
 	</div>
 </div>
+<script src="<?= base_url() ?>/assets/js/usuarios_activos.js" type="module"></script>
+<script src="<?= base_url() ?>/assets/js/priority_list.js" type="module"></script>
+
 <?php if (in_array(session('ROLID'), $rolesToMonitor)) { ?>
 	<script>
 		window.onload = function() {
