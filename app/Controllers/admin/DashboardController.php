@@ -6911,7 +6911,9 @@ class DashboardController extends BaseController
 		$data['ID'] = uniqid();
 		$data['USUARIOID'] = session('ID');
 
-		$this->_bitacoraActividadModel->insert($data);
+		if ($data['USUARIOID']) {
+			$this->_bitacoraActividadModel->insert($data);
+		}
 	}
 
 	private function _encriptar($plaintext, $key128)

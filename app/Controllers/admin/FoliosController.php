@@ -755,7 +755,9 @@ class FoliosController extends BaseController
 		$data['USUARIOID'] = session('ID');
 
 
-		$this->_bitacoraActividadModel->insert($data);
+		if ($data['USUARIOID']) {
+			$this->_bitacoraActividadModel->insert($data);
+		}
 	}
 	private function permisos($permiso)
 	{

@@ -197,7 +197,9 @@ class LoginController extends BaseController
 		$data['USUARIOID'] = session('ID');
 
 
-		$this->_bitacoraActividadModel->insert($data);
+		if ($data['USUARIOID']) {
+			$this->_bitacoraActividadModel->insert($data);
+		}
 	}
 }
 /* End of file LoginController.php */
