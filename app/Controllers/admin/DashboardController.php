@@ -3649,7 +3649,7 @@ class DashboardController extends BaseController
 		$data = array();
 		$folio = $this->request->getPost('folio');
 		$data['folio'] = $folio;
-		$url = "https://e79c-52-0-63-150.ngrok.io/";
+		$url = "https://videodenunciabalancer.fgebc.gob.mx/";
 
 		// $endpointFolio = $this->urlApi . 'recordings/folio?folio=' . $folio;
 		$endpointFolio = $url . 'recordings/folio?folio=' . $folio;

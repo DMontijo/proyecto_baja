@@ -991,8 +991,6 @@ class ReportesController extends BaseController
 		];
 
 		$endpoint = $this->urlApi . "call-records?pageSize=0&agentUuid=" . $dataPost->agentUuid . '&sessionStartedFrom=' . $dataPost->sessionStartedAt . '&sessionStartedTo=' . $dataPost->sessionFinishedAt;
-		// $endpoint = "https://ef88-2806-2f0-51e0-a3f5-d1cf-8a97-8917-a925.ngrok.io/call-records?pageSize=0&agentUuid=" . $dataPost->agentUuid;
-
 		$response = $this->_curlGetService($endpoint);
 		// var_dump($endpoint);
 		// exit;
