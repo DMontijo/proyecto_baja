@@ -50,7 +50,8 @@ export default class VideoCall {
             this.#OV = new OpenVidu();
             this.#session = this.#OV.initSession();
 
-            this.#session.on('recordingStarted', () => {
+            this.#session.on('recordingStarted', (e) => {
+                console.log('****************************recordingStarted************************************', e)
                 this.#startVideoCallTime = new Date();
             })
         } catch (e) {
