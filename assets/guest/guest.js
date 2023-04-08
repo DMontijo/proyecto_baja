@@ -252,6 +252,15 @@ export class VideoServiceGuest {
 	}
 
 	/**
+	 * @param {Function} callback - This method is called after receiving agent-disconnected socket
+	 */
+	registerOnAgentDisconnected(callback) {
+		this.$socket.on('agent-disconnected', (response) => {
+			if (typeof callback === 'function') callback(response);
+		});
+	}
+
+	/**
 	 * Close guest socket connection
 	 *
 	 * @param {Function} [callback] - This method is executed after guest is disconnected

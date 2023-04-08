@@ -113,6 +113,16 @@ guestVideoService.registerVideoRecordingStatus(isRecording => {
 	}
 });
 
+guestVideoService.registerOnAgentDisconnected(() => {
+	console.log("Agent disconnected");
+	pantalla_final.style.display = "block";
+	video_container.style.display = "none";
+	document.querySelector("#documentos_anexar_card").style.display = "none";
+	setTimeout(() => {
+		deleteVideoElement();
+	}, 2000);
+})
+
 guestVideoService.saveGeolocation(() => {
 	console.log("Conectando denunciante...");
 	texto_inicial.style.display = "block";
