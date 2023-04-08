@@ -13,8 +13,6 @@ priorityLinesSockets.registerToPriorityLineUpdate(priorityLists => {
 	let tbody = document.querySelector("#table-cola tbody");
 	let filas = document.querySelectorAll("#table-cola tbody tr");
 	const count = priorityLists.filter(i => i).length;
-	document.getElementById('lista_prioridad_users').innerHTML = count;
-
 	console.log(count);
 
 	if (count >= 1) {
