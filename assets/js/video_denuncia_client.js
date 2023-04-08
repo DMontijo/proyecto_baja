@@ -45,7 +45,7 @@ guestVideoService.registerOnVideoReady(
 	"secondary_video",
 	"main_video",
 	(response, guestData) => {
-		clearTimeout(timeoutID);
+		// clearTimeout(timeoutID);
 		texto_inicial.style.display = "none";
 		video_container.style.display = "block";
 		document.querySelector("#documentos_anexar_card").style.display =
@@ -134,7 +134,7 @@ guestVideoService.saveGeolocation(() => {
 	console.log("Conectando denunciante...");
 	texto_inicial.style.display = "block";
 
-	const timeoutID = setTimeout(() => {
+	// const timeoutID = setTimeout(() => {
 		guestVideoService.connectGuest(
 			{ delito, folio: folio_SY + "/" + year_SF, descripcion },
 			guest => {
@@ -152,7 +152,7 @@ guestVideoService.saveGeolocation(() => {
 				});
 			}
 		);
-	  }, 3000);
+	//   }, 3000);
 
 
 	
