@@ -115,6 +115,12 @@ guestVideoService.registerVideoRecordingStatus(isRecording => {
 
 guestVideoService.registerOnAgentDisconnected(() => {
 	console.log("Agent disconnected");
+	Swal.fire({
+		position: 'top-end',
+		title: "El agente se desconecto.",
+		showConfirmButton: false,
+		timer: 1500
+	});
 	pantalla_final.style.display = "block";
 	video_container.style.display = "none";
 	document.querySelector("#documentos_anexar_card").style.display = "none";
