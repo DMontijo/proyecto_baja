@@ -138,30 +138,10 @@ $file_text = $user_id . "_data.txt";
 <?php if (in_array(session('ROLID'), $rolesToMonitor)) { ?>
 	<script>
 		window.onload = function() {
-			getUsuarios();
 			setInterval(() => {
-				getUsuarios();
 			}, 50000);
 		}
-		const getUsuarios = () => {
-			$.ajax({
-				data: {
-					'u': 24,
-					'token': '198429b7cc8a2a5733d97bc13153227dd5017555',
-					'a': 'status'
-				},
-				url: "<?= base_url('/data/get-active-users') ?>",
-				method: "POST",
-				dataType: "json",
-				success: function(response) {
-					document.querySelector('#card_active_users').innerHTML = response.count ? response.count : 0;
-				},
-				error: function(jqXHR, textStatus, errorThrown) {
-					console.log('Error');
-					document.querySelector('#card_active_users').innerHTML = 0;
-				}
-			});
-		}
+	
 	</script>
 <?php }; ?>
 <?php if (session()->getFlashdata('acceso_denegado')) : ?>
