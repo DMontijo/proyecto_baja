@@ -112,14 +112,14 @@ export class VideoServiceAgent {
 		try {
 			this.#socket = io(this.#apiURI, {
 				...this.#socketConfig,
-				extraHeaders: this.#socketHeaders,
+				extraHeaders: this.#socketHeaders
 			});
 		} catch (err) {
 			throw ExceptionSocketIONotImported();
 		}
 
 		this.#socket.on("exception", function (response) {
-			console.warn("event", response ? response : 'No event');
+			console.warn("event", response ? response : "No event");
 			if (typeof onerror === "function") onerror(response);
 		});
 
@@ -166,6 +166,7 @@ export class VideoServiceAgent {
 	 */
 	registerOnGuestDisconnected(callback) {
 		this.#socket.on("guest-disconnected", () => {
+			this.#phoneRing.pause();
 			if (typeof callback === "function") callback();
 		});
 	}
@@ -178,6 +179,7 @@ export class VideoServiceAgent {
 	disconnectAgent(callback) {
 		try {
 			this.#allowUserToCloseWindow();
+			this.#phoneRing.pause();
 			this.#socket.disconnect();
 			this.#videoCallService?.session.disconnect();
 		} catch (e) {
