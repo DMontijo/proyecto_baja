@@ -1,5 +1,5 @@
 import { VideoServiceAgent } from "../agent/agent.js";
-import { variables } from './variables.js';
+import { variables } from "./variables.js";
 
 const { apiKey, apiURI } = variables;
 
@@ -61,7 +61,7 @@ disponible_connect.addEventListener("click", () => {
 			agentVideoService.registerOnGuestConnected(response => {
 				try {
 					deleteVideoElement();
-				} catch (error) { }
+				} catch (error) {}
 				clearVideoCall();
 
 				guestUUID = response.guest.uuid;
@@ -94,18 +94,18 @@ disponible_connect.addEventListener("click", () => {
 				disponible_connect.hidden = true;
 				no_disponible_connect.hidden = false;
 			});
-			
-		agentVideoService.registerOnGuestDisconnected(() => {
-			aceptar_llamada.disabled = false;
-			$("#llamadaModal").modal("hide");
-			console.log("Guest disconnected");
-			Swal.fire({
-				icon: "error",
-				text: "El usuario se desconecto.",
-				showConfirmButton: false,
-				timer: 2000
+
+			agentVideoService.registerOnGuestDisconnected(() => {
+				aceptar_llamada.disabled = false;
+				$("#llamadaModal").modal("hide");
+				console.log("Guest disconnected");
+				Swal.fire({
+					icon: "error",
+					text: "El usuario se desconecto.",
+					showConfirmButton: false,
+					timer: 2000
+				});
 			});
-		});
 		},
 		response => {
 			disponible_connect.disabled = false;
@@ -113,12 +113,12 @@ disponible_connect.addEventListener("click", () => {
 				agentVideoService.endVideoCall(() => {
 					console.log("¡Llamada finalizada con éxito!");
 				});
-			} catch (error) { }
+			} catch (error) {}
 			try {
 				agentVideoService.disconnectAgent(() => {
 					console.log("¡Agente desconectado con éxito!");
 				});
-			} catch (error) { }
+			} catch (error) {}
 			disponible_connect.hidden = false;
 			no_disponible_connect.hidden = true;
 			clearVideoCall();
@@ -167,7 +167,7 @@ aceptar_llamada.addEventListener("click", () => {
 					let split = guestConnection.folio.split("/");
 					document.getElementById("input_folio_atencion").value =
 						split[0];
-				} catch (error) { }
+				} catch (error) {}
 			}
 
 			agentVideoService.registerOnGuestDisconnected(() => {
@@ -278,7 +278,7 @@ stopRecord.addEventListener("click", () => {
 		startRecord.style.display = "block";
 		stopRecord.style.display = "none";
 
-		setTimeout(function () {
+		setTimeout(function() {
 			document.getElementById("grabacion_stop").style.display = "none";
 		}, 3000);
 	});
@@ -299,17 +299,26 @@ marksRecording.addEventListener("click", () => {
 });
 
 enviar_marca.addEventListener("click", () => {
-	// console.log(agentVideoService.marksRecording());
-	agentVideoService.emitMarkTime(
-		agentVideoService.marksRecording(),
-		coment_marks.value,
-		selectMarks.value,
-		() => {
-			selectMarks.value = "";
-			coment_marks.value = "";
-			$("#marksModal").modal("hide");
-		}
-	);
+	if (selectMarks.value == "" || coment_marks.value == "") {
+		Swal.fire({
+			icon: "error",
+			text: "Por favor, completa todos los campos .",
+			showConfirmButton: true,
+			confirmButtonColor: "#bf9b55"
+		});
+	} else {
+		// console.log(agentVideoService.marksRecording());
+		agentVideoService.emitMarkTime(
+			agentVideoService.marksRecording(),
+			coment_marks.value,
+			selectMarks.value,
+			() => {
+				selectMarks.value = "";
+				coment_marks.value = "";
+				$("#marksModal").modal("hide");
+			}
+		);
+	}
 });
 
 // function pad(val) {
