@@ -806,25 +806,38 @@ class DashboardController extends BaseController
 		];
 
 		if ($this->validate(['correo_usuario' => 'required|valid_email|is_unique[USUARIOS.CORREO]'])) {
-			try {
-				$dataApi = array();
-				$dataApi['names'] = $this->request->getPost('nombre_usuario');
-				$dataApi['lastnames'] = $this->request->getPost('apellido_paterno_usuario') . ' ' .  $this->request->getPost('apellido_materno_usuario');
-				$dataApi['email'] = $this->request->getPost('correo_usuario');
-				$dataApi['role'] = 3;
-				$dataApi['sex'] = $this->request->getPost('sexo_usuario') == 'F' ? "FEMALE" : 'MALE';
-				$dataApi['languages'] = [2];
-				$response = $this->_curlPostService($this->urlApi . 'agent/', $dataApi);
-			} catch (\Throwable $th) {
-				return redirect()->back()->with('message_error', 'Usuario no creado, hubo un error.');
-			}
+			if ($data['ROLID'] != '5') {
+				try {
+					$dataApi = array();
+					$dataApi['names'] = $this->request->getPost('nombre_usuario');
+					$dataApi['lastnames'] = $this->request->getPost('apellido_paterno_usuario') . ' ' .  $this->request->getPost('apellido_materno_usuario');
+					$dataApi['email'] = $this->request->getPost('correo_usuario');
+					$dataApi['role'] = 3;
+					$dataApi['sex'] = $this->request->getPost('sexo_usuario') == 'F' ? "FEMALE" : 'MALE';
+					$dataApi['languages'] = [2];
+					$response = $this->_curlPostService($this->urlApi . 'agent/', $dataApi);
+				} catch (\Throwable $th) {
+					return redirect()->back()->with('message_error', 'Usuario no creado, hubo un error.');
+				}
 
-			if ($response->uuid) {
-				$data['TOKENVIDEO'] = $response->uuid;
+				if ($response->uuid) {
+					$data['TOKENVIDEO'] = $response->uuid;
+					try {
+						$usuario = $this->_usuariosModel->insert($data);
+					} catch (\Throwable $th) {
+						return redirect()->back()->with('message_error', 'Usuario no creado, ya existe el correo ingresado.');
+					}
+
+					$this->_bitacoraActividad($datosBitacora);
+					$this->_sendEmailPassword($data['CORREO'], $this->request->getPost('password'));
+					return redirect()->to(base_url('/admin/dashboard/usuarios'))->with('message_success', 'Usuario registrado correctamente.');
+				}
+			} else {
+				$data['TOKENVIDEO'] = NULL;
 				try {
 					$usuario = $this->_usuariosModel->insert($data);
 				} catch (\Throwable $th) {
-					return redirect()->back()->with('message_error', 'Usuario no creado, ya existe el correo ingresado.');
+					return redirect()->back()->with('message_error', 'Usuario no creado.');
 				}
 
 				$this->_bitacoraActividad($datosBitacora);
@@ -859,23 +872,42 @@ class DashboardController extends BaseController
 		}
 
 		if ($usuario) {
-			try {
-				$videoUser = $this->_updateUserVideo($usuario->TOKENVIDEO, $data['NOMBRE'], $data['APELLIDO_PATERNO'] . ' ' . $data['APELLIDO_MATERNO'], $data['CORREO'], $data['SEXO'], $data['ROLID']);
-				if ($videoUser->status == "sucess") {
+			if ($data['ROLID'] != '5') {
+				try {
 					try {
+						$videoUser = $this->_updateUserVideo($usuario->TOKENVIDEO, $data['NOMBRE'], $data['APELLIDO_PATERNO'] . ' ' . $data['APELLIDO_MATERNO'], $data['CORREO'], $data['SEXO'], $data['ROLID']);
+					} catch (\Throwable $th) {
+						throw new \Exception('No se actualizo o no existe en el servidor de video.');
+					}
+					if ($videoUser->status == "sucess") {
+						try {
+							$this->_usuariosModel->set($data)->where('ID', $id)->update();
+						} catch (\Throwable $th) {
+							$videoUser = $this->_updateUserVideo($usuario->TOKENVIDEO,  $usuario->NOMBRE, $usuario->APELLIDO_PATERNO . ' ' . $usuario->APELLIDO_MATERNO, $usuario->CORREO, $usuario->SEXO, $usuario->ROLID);
+							throw new \Exception('No se actualizo en base de datos.');
+						}
+					} else {
+						throw new \Exception('No se actualizo en servidor de videodenuncia');
+					}
+				} catch (\Throwable $th) {
+					return redirect()->back()->with('message_error', 'Usuario no actualizado en el servidor.');
+				}
+
+				return redirect()->to(base_url('/admin/dashboard/usuarios'))->with('message_success', 'Usuario actualizado correctamente.');
+			} else {
+				try {
+					try {
+						$data['TOKENVIDEO'] = NULL;
 						$this->_usuariosModel->set($data)->where('ID', $id)->update();
 					} catch (\Throwable $th) {
-						$videoUser = $this->_updateUserVideo($usuario->TOKENVIDEO,  $usuario->NOMBRE, $usuario->APELLIDO_PATERNO . ' ' . $usuario->APELLIDO_MATERNO, $usuario->CORREO, $usuario->SEXO, $usuario->ROLID);
 						throw new \Exception('No se actualizo en base de datos.');
 					}
-				} else {
-					throw new \Exception('No se actualizo en servidor de videodenuncia');
+				} catch (\Throwable $th) {
+					return redirect()->back()->with('message_error', 'Usuario no actualizado en el servidor.');
 				}
-			} catch (\Throwable $th) {
-				return redirect()->back()->with('message_error', 'Usuario no actualizado en el servidor.');
-			}
 
-			return redirect()->to(base_url('/admin/dashboard/usuarios'))->with('message_success', 'Usuario actualizado correctamente.');
+				return redirect()->to(base_url('/admin/dashboard/usuarios'))->with('message_success', 'Usuario actualizado correctamente.');
+			}
 		} else {
 			return redirect()->back()->with('message_error', 'Usuario no actualizado.');
 		}
