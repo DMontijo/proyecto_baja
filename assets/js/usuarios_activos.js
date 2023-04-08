@@ -12,7 +12,6 @@ roomsSockets.registerToRoomsUpdate((response)=>{
 	let filas = document.querySelectorAll("#table-usuarios-activos tbody tr");
 	const count = response.filter(i => i).length;
 
-	document.getElementById('card_active_users').innerHTML = count;
 	console.log(count);
 	
 	if (count >= 1) {

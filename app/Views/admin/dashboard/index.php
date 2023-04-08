@@ -141,6 +141,8 @@ $file_text = $user_id . "_data.txt";
 	<script>
 		window.onload = function() {
 			getUsuarios();
+			document.getElementById('card_active_users').innerHTML = count;
+
 			setInterval(() => {
 				getUsuarios();
 			}, 50000);
