@@ -16,6 +16,9 @@ let folio_completo = document.getElementById("input_folio").value;
 let array = folio_completo.split("-");
 let folio_SY = array[1];
 let year_SF = array[0];
+var intervalo = setInterval(function () {
+	location.reload();
+}, 1000 * 60 * 10);
 
 // const recording = document.querySelector('#recording');
 // const recording_stop = document.querySelector('#recording_stop');
@@ -45,7 +48,6 @@ guestVideoService.registerOnVideoReady(
 	"secondary_video",
 	"main_video",
 	(response, guestData) => {
-		// clearTimeout(timeoutID);
 		texto_inicial.style.display = "none";
 		video_container.style.display = "block";
 		document.querySelector("#documentos_anexar_card").style.display =
@@ -57,6 +59,7 @@ guestVideoService.registerOnVideoReady(
 
 guestVideoService.registerOnDisconnect(e => {
 	console.log("Desconectado", e);
+	clearInterval(intervalo);
 	pantalla_final.style.display = "block";
 	video_container.style.display = "none";
 	document.querySelector("#documentos_anexar_card").style.display = "none";
@@ -100,13 +103,13 @@ guestVideoService.registerVideoRecordingStatus(isRecording => {
 	if (isRecording) {
 		Swal.fire({
 			title: "Se inicio la grabación.",
-			position: 'top-end',
+			position: "top-end",
 			showConfirmButton: false,
 			timer: 1500
 		});
 	} else {
 		Swal.fire({
-			position: 'top-end',
+			position: "top-end",
 			title: "Se detuvo la grabación.",
 			showConfirmButton: false,
 			timer: 1500
@@ -117,7 +120,7 @@ guestVideoService.registerVideoRecordingStatus(isRecording => {
 guestVideoService.registerOnAgentDisconnected(() => {
 	console.log("Agent disconnected");
 	Swal.fire({
-		position: 'top-end',
+		position: "top-end",
 		title: "El agente se desconecto.",
 		showConfirmButton: false,
 		timer: 1500
@@ -128,34 +131,30 @@ guestVideoService.registerOnAgentDisconnected(() => {
 	setTimeout(() => {
 		deleteVideoElement();
 	}, 2000);
-})
+});
 
 guestVideoService.saveGeolocation(() => {
 	console.log("Conectando denunciante...");
 	texto_inicial.style.display = "block";
 
-	// const timeoutID = setTimeout(() => {
-		guestVideoService.connectGuest(
-			{ delito, folio: folio_SY + "/" + year_SF, descripcion },
-			guest => {
-				console.log("Denuciante conectado");
-				console.log(guest);
-			},
-			error => {
-				Swal.fire({
-					icon: "error",
-					title: "Hubo un error, se recargará la página",
-					showConfirmButton: false,
-					timer: 1000
-				}).then(result => {
-					location.reload;
-				});
-			}
-		);
-	//   }, 3000);
-
-
-	
+	guestVideoService.connectGuest(
+		{ delito, folio: folio_SY + "/" + year_SF, descripcion },
+		guest => {
+			console.log("Denuciante conectado");
+			console.log(guest);
+			clearInterval(intervalo);
+		},
+		error => {
+			Swal.fire({
+				icon: "error",
+				title: "Hubo un error, se recargará la página",
+				showConfirmButton: false,
+				timer: 1000
+			}).then(result => {
+				location.reload;
+			});
+		}
+	);
 });
 
 function deleteVideoElement() {

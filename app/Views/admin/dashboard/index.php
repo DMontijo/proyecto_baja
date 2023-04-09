@@ -138,13 +138,12 @@ $file_text = $user_id . "_data.txt";
 
 <script src="<?= base_url() ?>/assets/js/index_activos.js" type="module"></script>
 <?php if (in_array(session('ROLID'), $rolesToMonitor)) { ?>
-	<script>
+	<!-- <script>
 		window.onload = function() {
 			setInterval(() => {
 			}, 50000);
 		}
-	
-	</script>
+	</script> -->
 <?php }; ?>
 <?php if (session()->getFlashdata('acceso_denegado')) : ?>
 	<script>

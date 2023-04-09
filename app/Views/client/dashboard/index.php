@@ -145,6 +145,7 @@
 	var checkML_imputado = document.getElementById('checkML_imputado');
 	var checkML_des = document.getElementById('checkML_des');
 	var check_ubi = document.getElementById('check_ubi');
+
 	check_ubi.addEventListener('click', function() {
 		let mapa = document.querySelector('#map');
 
@@ -161,6 +162,7 @@
 
 		}
 	});
+
 	checkML_menor.addEventListener('click', function() {
 		if (checkML_menor.checked) {
 			document.getElementById('lblExterior_menor').innerHTML = "Manzana";
@@ -170,6 +172,7 @@
 			document.getElementById('lblInterior_menor').innerHTML = "Número interior";
 		}
 	});
+
 	checkML_imputado.addEventListener('click', function() {
 		if (checkML_imputado.checked) {
 			document.getElementById('lblExterior_imputado').innerHTML = "Manzana";
@@ -179,6 +182,7 @@
 			document.getElementById('lblInterior_imputado').innerHTML = "Número interior";
 		}
 	});
+
 	checkML_des.addEventListener('click', function() {
 		if (checkML_des.checked) {
 			document.getElementById('lblExterior_des').innerHTML = "Manzana";
