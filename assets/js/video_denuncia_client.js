@@ -18,7 +18,7 @@ let folio_SY = array[1];
 let year_SF = array[0];
 var intervalo = setTimeout(function () {
 	location.reload();
-}, 1000 * 60 * 10);
+}, 1000 * 60 * 5);
 
 // const recording = document.querySelector('#recording');
 // const recording_stop = document.querySelector('#recording_stop');
@@ -59,7 +59,6 @@ guestVideoService.registerOnVideoReady(
 
 guestVideoService.registerOnDisconnect(e => {
 	console.log("Desconectado", e);
-	clearTimeout(intervalo);
 	pantalla_final.style.display = "block";
 	video_container.style.display = "none";
 	document.querySelector("#documentos_anexar_card").style.display = "none";
