@@ -16,7 +16,7 @@ let folio_completo = document.getElementById("input_folio").value;
 let array = folio_completo.split("-");
 let folio_SY = array[1];
 let year_SF = array[0];
-var intervalo = setInterval(function () {
+var intervalo = setTimeout(function () {
 	location.reload();
 }, 1000 * 60 * 10);
 
@@ -59,7 +59,7 @@ guestVideoService.registerOnVideoReady(
 
 guestVideoService.registerOnDisconnect(e => {
 	console.log("Desconectado", e);
-	clearInterval(intervalo);
+	clearTimeout(intervalo);
 	pantalla_final.style.display = "block";
 	video_container.style.display = "none";
 	document.querySelector("#documentos_anexar_card").style.display = "none";
@@ -142,7 +142,7 @@ guestVideoService.saveGeolocation(() => {
 		guest => {
 			console.log("Denuciante conectado");
 			console.log(guest);
-			clearInterval(intervalo);
+			clearTimeout(intervalo);
 		},
 		error => {
 			Swal.fire({
