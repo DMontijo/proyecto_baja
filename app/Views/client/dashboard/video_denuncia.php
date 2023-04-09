@@ -109,7 +109,7 @@
 	<div class="input-group mb-1">
 		<input type="text" class="form-control d-none" id="input_uuid" value="<?= $body_data->UUID ?>">
 		<input type="text" class="form-control d-none" id="input_folio" value="<?php echo $_GET['folio'] ?>">
-		<input type="text" class="form-control d-none" id="input_priority" value="<?php echo $_GET['prioridad'] ?>">
+		<input type="text" class="form-control d-none" id="input_priority" value="<?php echo isset($_GET['prioridad']) ? $_GET['prioridad'] : 1 ?>">
 		<input type="text" class="form-control d-none" id="input_delito" value="<?php echo $_GET['delito'] ?>">
 		<input type="text" class="form-control d-none" id="input_descripcion" value="<?php echo $_GET['descripcion'] ?>">
 		<input type="text" class="form-control d-none" id="input_base_url_endcall" value="<?= base_url('/denuncia/dashboard/end-videocall') ?>">
