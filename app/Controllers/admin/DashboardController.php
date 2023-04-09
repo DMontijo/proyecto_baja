@@ -1938,6 +1938,14 @@ class DashboardController extends BaseController
 						throw new \Exception('Solo puedes dar salida a San Felipe.');
 					}
 
+					if ($municipio == 6) {
+						$municipio = 1;
+					}
+
+					if ($municipio == 7) {
+						$municipio = 2;
+					}
+
 					foreach ($fisImpDelito as $value) {
 						if (!in_array($value['PERSONAFISICAID'], $imputados_con_delito)) {
 							array_push($imputados_con_delito, $value['PERSONAFISICAID']);

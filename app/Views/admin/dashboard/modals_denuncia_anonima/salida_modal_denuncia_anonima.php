@@ -49,6 +49,8 @@
 											<option value="3">TECATE</option>
 											<option value="4">TIJUANA</option>
 											<option value="5">PLAYAS DE ROSARITO</option>
+											<option value="6">SAN QUINTIN</option>
+											<option value="7">SAN FELIPE</option>
 										</select>
 									</div>
 

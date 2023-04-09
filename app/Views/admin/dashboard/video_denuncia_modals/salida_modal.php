@@ -50,6 +50,8 @@
 											<option value="3">TECATE</option>
 											<option value="4">TIJUANA</option>
 											<option value="5">PLAYAS DE ROSARITO</option>
+											<option value="6">SAN QUINTIN</option>
+											<option value="7">SAN FELIPE</option>
 										</select>
 									</div>
 								</div>
@@ -126,7 +128,7 @@
 	const form_delito = document.querySelector('#denuncia_form');
 	const form_vehiculo = document.querySelector('#form_vehiculo');
 	let select_uma = document.querySelector("#uma_select");
-								var options = select_uma.options;
+	var options = select_uma.options;
 	tipoSalida.addEventListener('change', (e) => {
 
 		const notas_caso_salida = document.querySelector('#notas_caso_salida');
@@ -342,26 +344,26 @@
 							year_modal_correo.value = year;
 							input_municipio.value = municipio_empleado.value;
 							if (input_municipio.value == 1) {
-									eliminarUMAByMunicipio("ENSENADA");
-								} else if (input_municipio.value == 6) {
-									eliminarUMAByMunicipio("ENSENADA - SAN QUINTIN");
-								} else if (input_municipio.value == 2) {
-									eliminarUMAByMunicipio("MEXICALI");
-								} else if (input_municipio.value == 7) {
-									eliminarUMAByMunicipio("MEXICALI - SAN FELIPE");
-								} else if (input_municipio.value == 4) {
-									for (var i = options.length - 1; i >= 0; i--) {
-										var option = options[i];
-										var value = option.value;
-										if (!value.includes("ZONA COSTA - LA MESA") && !value.includes("ZONA COSTA - MARIANO MATAMOROS") && !value.includes("ZONA COSTA - ZONA RIO")) {
-											option.parentNode.removeChild(option);
-										}
+								eliminarUMAByMunicipio("ENSENADA");
+							} else if (input_municipio.value == 6) {
+								eliminarUMAByMunicipio("ENSENADA - SAN QUINTIN");
+							} else if (input_municipio.value == 2) {
+								eliminarUMAByMunicipio("MEXICALI");
+							} else if (input_municipio.value == 7) {
+								eliminarUMAByMunicipio("MEXICALI - SAN FELIPE");
+							} else if (input_municipio.value == 4) {
+								for (var i = options.length - 1; i >= 0; i--) {
+									var option = options[i];
+									var value = option.value;
+									if (!value.includes("ZONA COSTA - LA MESA") && !value.includes("ZONA COSTA - MARIANO MATAMOROS") && !value.includes("ZONA COSTA - ZONA RIO")) {
+										option.parentNode.removeChild(option);
 									}
-								} else if (input_municipio.value == 5) {
-									eliminarUMAByMunicipio("ZONA COSTA - PLAYAS ROSARITO");
-								} else if (input_municipio.value == 3) {
-									eliminarUMAByMunicipio("ZONA COSTA - TECATE");
 								}
+							} else if (input_municipio.value == 5) {
+								eliminarUMAByMunicipio("ZONA COSTA - PLAYAS ROSARITO");
+							} else if (input_municipio.value == 3) {
+								eliminarUMAByMunicipio("ZONA COSTA - TECATE");
+							}
 							card6.classList.remove('d-none');
 							<?php if (session('ROLID') != 4 && session('ROLID') != 8 && session('ROLID') != 10) { ?>
 
@@ -497,7 +499,7 @@
 								folio_modal.value = inputFolio.value;
 								inputExpediente.value = data.expediente;
 								input_municipio.value = municipio_empleado.value;
-							
+
 								if (input_municipio.value == 1) {
 									eliminarUMAByMunicipio("ENSENADA");
 								} else if (input_municipio.value == 6) {
@@ -594,15 +596,16 @@
 		}
 
 	});
-	function eliminarUMAByMunicipio(uma){
-				for (var i = options.length - 1; i >= 0; i--) {
-					var option = options[i];
-					var value = option.value;
-					if (!value.includes(uma)) {
-						option.parentNode.removeChild(option);
-					}
-				}
+
+	function eliminarUMAByMunicipio(uma) {
+		for (var i = options.length - 1; i >= 0; i--) {
+			var option = options[i];
+			var value = option.value;
+			if (!value.includes(uma)) {
+				option.parentNode.removeChild(option);
 			}
+		}
+	}
 
 	function clearSelect(select_element) {
 		for (let i = select_element.options.length; i >= 1; i--) {
