@@ -373,10 +373,12 @@ class FirmaController extends BaseController
 					$rfc = $fiel_user['rfc'];
 					$num_certificado = $fiel_user['num_certificado'];
 					for ($i = 0; $i < count($documento); $i++) {
-						if (isset($documento[$i]->AGENTE_ASIGNADO) && $documento[$i]->AGENTE_ASIGNADO != session('ID')) {
+						if (empty($documento[$i]->ENCARGADO_ASIGNADO) && isset($documento[$i]->AGENTE_ASIGNADO) && $documento[$i]->AGENTE_ASIGNADO != session('ID') ) {
 							return json_encode((object)['status' => 0, 'message_error' => "No tienes permiso para firmar en este folio."]);
 						}
-						if (isset($documento[$i]->ENCARGADO_ASIGNADO) && $documento[$i]->ENCARGADO_ASIGNADO != session('ID')) {
+						else if (isset($documento[$i]->ENCARGADO_ASIGNADO) && $documento[$i]->ENCARGADO_ASIGNADO != session('ID')) {
+							return json_encode((object)['status' => 0, 'message_error' => "Solo puede firmar el encargado asignado."]);
+						}else if (isset($documento[$i]->ENCARGADO_ASIGNADO) && $documento[$i]->ENCARGADO_ASIGNADO != session('ID') && isset($documento[$i]->AGENTE_ASIGNADO)) {
 							return json_encode((object)['status' => 0, 'message_error' => "Solo puede firmar el encargado asignado."]);
 						}
 						$municipio = (object)[];
@@ -505,10 +507,18 @@ class FirmaController extends BaseController
 					$rfc = $fiel_user['rfc'];
 					$num_certificado = $fiel_user['num_certificado'];
 					for ($i = 0; $i < count($documento); $i++) {
-						if (isset($documento[$i]->AGENTE_ASIGNADO) && $documento[$i]->AGENTE_ASIGNADO != session('ID')) {
+						// if (isset($documento[$i]->AGENTE_ASIGNADO) && $documento[$i]->AGENTE_ASIGNADO != session('ID')) {
+						// 	return json_encode((object)['status' => 0, 'message_error' => "No tienes permiso para firmar en este folio."]);
+						// }
+						// if (isset($documento[$i]->ENCARGADO_ASIGNADO) && $documento[$i]->ENCARGADO_ASIGNADO != session('ID')) {
+						// 	return json_encode((object)['status' => 0, 'message_error' => "Solo puede firmar el encargado asignado."]);
+						// }
+						if (empty($documento[$i]->ENCARGADO_ASIGNADO) && isset($documento[$i]->AGENTE_ASIGNADO) && $documento[$i]->AGENTE_ASIGNADO != session('ID') ) {
 							return json_encode((object)['status' => 0, 'message_error' => "No tienes permiso para firmar en este folio."]);
 						}
-						if (isset($documento[$i]->ENCARGADO_ASIGNADO) && $documento[$i]->ENCARGADO_ASIGNADO != session('ID')) {
+						else if (isset($documento[$i]->ENCARGADO_ASIGNADO) && $documento[$i]->ENCARGADO_ASIGNADO != session('ID')) {
+							return json_encode((object)['status' => 0, 'message_error' => "Solo puede firmar el encargado asignado."]);
+						}else if (isset($documento[$i]->ENCARGADO_ASIGNADO) && $documento[$i]->ENCARGADO_ASIGNADO != session('ID') && isset($documento[$i]->AGENTE_ASIGNADO)) {
 							return json_encode((object)['status' => 0, 'message_error' => "Solo puede firmar el encargado asignado."]);
 						}
 						$municipio = (object)[];
