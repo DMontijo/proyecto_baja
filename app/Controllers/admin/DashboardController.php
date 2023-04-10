@@ -1944,6 +1944,7 @@ class DashboardController extends BaseController
 
 					if ($municipio == 7) {
 						$municipio = 2;
+						return json_encode(['info' => $municipio]);
 					}
 
 					foreach ($fisImpDelito as $value) {
