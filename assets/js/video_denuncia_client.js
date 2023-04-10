@@ -16,9 +16,9 @@ let folio_completo = document.getElementById("input_folio").value;
 let array = folio_completo.split("-");
 let folio_SY = array[1];
 let year_SF = array[0];
-var intervalo = setTimeout(function () {
+var intervalo = setInterval(function () {
 	location.reload();
-}, 1000 * 60 * 5);
+}, 300000);
 
 // const recording = document.querySelector('#recording');
 // const recording_stop = document.querySelector('#recording_stop');
@@ -141,7 +141,7 @@ guestVideoService.saveGeolocation(() => {
 		guest => {
 			console.log("Denuciante conectado");
 			console.log(guest);
-			clearTimeout(intervalo);
+			clearInterval(intervalo)
 		},
 		error => {
 			Swal.fire({
