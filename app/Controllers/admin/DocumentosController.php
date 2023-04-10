@@ -256,7 +256,6 @@ class DocumentosController extends BaseController
 
 		$filename = $documento->TIPODOC . "_" . $folio . "_" . $year . ".pdf";
 		header("Content-type: application/pdf");
-		// header("Content-Disposition: attachment; filename=" . $documento->TIPODOC . "_" . $folio . "_" . $year . ".pdf");
 		header("Content-Disposition: attachment; filename=\"$filename\"");
 		echo $documento->PDF;
 	}
@@ -268,8 +267,10 @@ class DocumentosController extends BaseController
 		$year = trim($this->request->getPost('year'));
 
 		$documento = $this->_folioDocModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $docid)->first();
+
+		$filename = $documento->TIPODOC . "_" . $folio . "_" . $year . ".xml";
 		header("Content-type: application/xml");
-		header("Content-Disposition: attachment; filename=" . $documento->TIPODOC . $folio . '_' . $year .  '_' . $docid . '.xml');
+		header("Content-Disposition: attachment; filename=\"$filename\"");
 		echo $documento->XML;
 	}
 	public function borrarDocumento()
