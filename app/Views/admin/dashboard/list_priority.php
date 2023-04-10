@@ -7,7 +7,7 @@
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-12">
-				<h3 class="mb-4 font-weight-bold text-center">LISTA DE PRIORIDAD</h3>
+				<h3 class="mb-4 font-weight-bold text-center">LLAMADAS EN COLA</h3>
 				<div class="card shadow border-0 rounded">
 					<div class="card-body">
 						<div class="row">
