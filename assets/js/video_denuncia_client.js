@@ -18,7 +18,7 @@ let folio_SY = array[1];
 let year_SF = array[0];
 var intervalo = setInterval(function () {
 	location.reload();
-}, 300000);
+}, 180000);
 
 // const recording = document.querySelector('#recording');
 // const recording_stop = document.querySelector('#recording_stop');
