@@ -104,16 +104,16 @@ class DashboardController extends BaseController
 			'NBOLETO' => $this->request->getPost('noboletos'),
 			'NTALON' => $this->request->getPost('notalon'),
 			'NOMBRESORTEO' => $this->request->getPost('nombreSorteo'),
-			'SORTEOFECHA' => empty($this->request->getPost('fechaSorteo'))?null:$this->request->getPost('fechaSorteo'),
+			'SORTEOFECHA' => empty($this->request->getPost('fechaSorteo')) ? null : $this->request->getPost('fechaSorteo'),
 			'PERMISOGOBERNACION' => $this->request->getPost('permisoGobernacion'),
 			'PERMISOGOBCOLABORADORES' => $this->request->getPost('permisoGColaboradores'),
 
 			'TIPODOCUMENTO' => $this->request->getPost('tipodoc'),
 			'NDOCUMENTO' => $this->request->getPost('nodocumento'),
-			'DUENONOMBREDOC' => $this->request->getPost('duenonamedoc') ?$this->request->getPost('duenonamedoc'):null ,
-			'DUENOAPELLIDOPDOC' => $this->request->getPost('duenoapdoc') ? $this->request->getPost('duenoapdoc'):null,
-			'DUENOAPELLIDOMDOC' => $this->request->getPost('duenoamdoc')? $this->request->getPost('duenoamdoc'):null,
-			'DUENOFECHANACIMIENTODOC' => empty($this->request->getPost('fecha_duenodoc'))? null:$this->request->getPost('fecha_duenodoc'),
+			'DUENONOMBREDOC' => $this->request->getPost('duenonamedoc') ? $this->request->getPost('duenonamedoc') : null,
+			'DUENOAPELLIDOPDOC' => $this->request->getPost('duenoapdoc') ? $this->request->getPost('duenoapdoc') : null,
+			'DUENOAPELLIDOMDOC' => $this->request->getPost('duenoamdoc') ? $this->request->getPost('duenoamdoc') : null,
+			'DUENOFECHANACIMIENTODOC' => empty($this->request->getPost('fecha_duenodoc')) ? null : $this->request->getPost('fecha_duenodoc'),
 
 			'SERIEVEHICULO' => $this->request->getPost('serieV'),
 			'NPLACA' => $this->request->getPost('noplaca'),
@@ -125,19 +125,19 @@ class DashboardController extends BaseController
 			'STATUS' => 'ABIERTO',
 		];
 
-		if(isset($data['EXTRAVIO']) && $data['EXTRAVIO']=='DOCUMENTOS' || $data['EXTRAVIO']=='BOLETOS DE SORTEO'){
-			$constancias_abiertas = $this->_constanciaExtravioModel->asObject()->where('DENUNCIANTEID',session('DENUNCIANTEID'))->where('TIPODOCUMENTO',$data['TIPODOCUMENTO'])->where('STATUS','ABIERTO')->findAll();
-			$constancias_proceso = $this->_constanciaExtravioModel->asObject()->where('DENUNCIANTEID',session('DENUNCIANTEID'))->where('TIPODOCUMENTO',$data['TIPODOCUMENTO'])->where('STATUS','EN PROCESO')->findAll();
+		if (isset($data['EXTRAVIO']) && $data['EXTRAVIO'] == 'DOCUMENTOS' || $data['EXTRAVIO'] == 'BOLETOS DE SORTEO') {
+			$constancias_abiertas = $this->_constanciaExtravioModel->asObject()->where('DENUNCIANTEID', session('DENUNCIANTEID'))->where('TIPODOCUMENTO', $data['TIPODOCUMENTO'])->where('STATUS', 'ABIERTO')->findAll();
+			$constancias_proceso = $this->_constanciaExtravioModel->asObject()->where('DENUNCIANTEID', session('DENUNCIANTEID'))->where('TIPODOCUMENTO', $data['TIPODOCUMENTO'])->where('STATUS', 'EN PROCESO')->findAll();
 			$constancias = (object) array_merge($constancias_abiertas, $constancias_proceso);
-			if(isset($constancias) && $constancias){
+			if (isset($constancias) && $constancias) {
 				foreach ($constancias as $key => $constancia) {
-					if($constancia->DUENONOMBREDOC == $data['DUENONOMBREDOC'] && $constancia->DUENOAPELLIDOPDOC == $data['DUENOAPELLIDOPDOC'] && $constancia->DUENOAPELLIDOMDOC == $data['DUENOAPELLIDOMDOC'] && $constancia->DUENOFECHANACIMIENTODOC == $data['DUENOFECHANACIMIENTODOC']){
-						return redirect()->to(base_url('/constancia_extravio/dashboard'))->with('message_warning', 'Ya existe una solicitud de "'.$data['TIPODOCUMENTO'].'" con la misma información.');
+					if ($constancia->DUENONOMBREDOC == $data['DUENONOMBREDOC'] && $constancia->DUENOAPELLIDOPDOC == $data['DUENOAPELLIDOPDOC'] && $constancia->DUENOAPELLIDOMDOC == $data['DUENOAPELLIDOMDOC'] && $constancia->DUENOFECHANACIMIENTODOC == $data['DUENOFECHANACIMIENTODOC']) {
+						return redirect()->to(base_url('/constancia_extravio/dashboard'))->with('message_warning', 'Ya existe una solicitud de "' . $data['TIPODOCUMENTO'] . '" con la misma información.');
 					};
 				}
 			}
 		}
-		
+
 		list($CONSECUTIVO, $year) = $this->_constanciaExtravioConsecutivoModel->get_consecutivo();
 		$data['CONSTANCIAEXTRAVIOID'] = $CONSECUTIVO;
 		$data['ANO'] = $year;
@@ -187,8 +187,9 @@ class DashboardController extends BaseController
 		$year = $this->request->getPost('year');
 
 		$constancia = $this->_constanciaExtravioModel->asObject()->where('CONSTANCIAEXTRAVIOID', $folio)->where('ANO', $year)->first();
+		$filename = "Constancia_" . $folio . '_' . $year . '.pdf';
 		header("Content-type: application/pdf");
-		header("Content-Disposition: attachment; filename=Constancia_" . $folio . '_' . $year . '.pdf');
+		header("Content-Disposition: attachment; filename=\"$filename\"");
 		echo $constancia->PDF;
 	}
 
@@ -198,8 +199,9 @@ class DashboardController extends BaseController
 		$year = $this->request->getPost('year');
 
 		$constancia = $this->_constanciaExtravioModel->asObject()->where('CONSTANCIAEXTRAVIOID', $folio)->where('ANO', $year)->first();
+		$filename = "Constancia_" . $folio . '_' . $year . '.xml';
 		header("Content-type: application/xml");
-		header("Content-Disposition: attachment; filename=Constancia_" . $folio . '_' . $year . '.xml');
+		header("Content-Disposition: attachment; filename=\"$filename\"");
 		echo $constancia->XML;
 	}
 }
