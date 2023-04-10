@@ -152,7 +152,11 @@ class FolioDocModel extends Model
 	}
 	public function countFoliosAsignados($agente)
 	{
+		if (session('ROLID')==6) {
+			$strQuery = "SELECT COUNT(DISTINCT FOLIOID) as count_folios FROM FOLIODOC WHERE STATUS = 'ABIERTO' AND ENCARGADO_ASIGNADO =" . $agente		;
+		}else{
 		$strQuery = "SELECT COUNT(DISTINCT FOLIOID) as count_folios FROM FOLIODOC WHERE STATUS = 'ABIERTO' AND AGENTE_ASIGNADO =" . $agente;
+		}
 		$result = $this->db->query($strQuery)->getResult();
 		return $result[0]->count_folios;
 	}

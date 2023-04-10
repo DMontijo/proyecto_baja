@@ -38,12 +38,19 @@ class DocumentosController extends BaseController
 		if (!$this->permisos('DOCUMENTOS')) {
 			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
 		}
-		$data = [
-			'fechaInicio' => date("Y-m-d"),
-			'fechaFin' => date("Y-m-d"),
-			'AGENTE_ASIGNADO' => session('ID')
-		];
-
+		if (session('ROLID') == 6) {
+			$data = [
+				'fechaInicio' => date("Y-m-d"),
+				'fechaFin' => date("Y-m-d"),
+				'ENCARGADO_ASIGNADO' => session('ID')
+			];
+		} else {
+			$data = [
+				'fechaInicio' => date("Y-m-d"),
+				'fechaFin' => date("Y-m-d"),
+				'AGENTE_ASIGNADO' => session('ID')
+			];
+		}
 		foreach ($data as $clave => $valor) {
 			if (empty($valor)) unset($data[$clave]);
 		}
@@ -51,7 +58,6 @@ class DocumentosController extends BaseController
 		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
 		// $resultFilter = $this->_folioModel->filterDatesDocumentos($data);
 		$resultFilter = $this->_folioDocModel->filterDatesDocumentos($data);
-
 		if (session('ROLID') == '2' || session('ROLID') == '3' || session('ROLID') == '6') {
 			$empleado = $this->_usuariosModel->asObject()->where('ID',	session('ID'))->orderBy('NOMBRE', 'ASC')->findAll();
 		} else {
@@ -69,15 +75,28 @@ class DocumentosController extends BaseController
 	public function postDocumentos()
 	{
 
-		$data = [
-			'AGENTE_ASIGNADO' => session('ID'),
-			'STATUS' => $this->request->getPost('status'),
-			'EXPEDIENTEID' => $this->request->getPost('expediente'),
-			'fechaInicio' => $this->request->getPost('fechaInicio'),
-			'fechaFin' => $this->request->getPost('fechaFin'),
-			'horaInicio' => $this->request->getPost('horaInicio'),
-			'horaFin' => $this->request->getPost('horaFin')
-		];
+		if (session('ROLID') == 6) {
+			$data = [
+				'ENCARGADO_ASIGNADO' => session('ID'),
+				'STATUS' => $this->request->getPost('status'),
+				'EXPEDIENTEID' => $this->request->getPost('expediente'),
+				'fechaInicio' => $this->request->getPost('fechaInicio'),
+				'fechaFin' => $this->request->getPost('fechaFin'),
+				'horaInicio' => $this->request->getPost('horaInicio'),
+				'horaFin' => $this->request->getPost('horaFin')
+			];
+		}else{
+			$data = [
+				'AGENTE_ASIGNADO' => session('ID'),
+				'STATUS' => $this->request->getPost('status'),
+				'EXPEDIENTEID' => $this->request->getPost('expediente'),
+				'fechaInicio' => $this->request->getPost('fechaInicio'),
+				'fechaFin' => $this->request->getPost('fechaFin'),
+				'horaInicio' => $this->request->getPost('horaInicio'),
+				'horaFin' => $this->request->getPost('horaFin')
+			];
+		}
+		
 
 		foreach ($data as $clave => $valor) {
 			//Recorre el array y elimina los valores que nulos o vacíos
@@ -153,7 +172,7 @@ class DocumentosController extends BaseController
 		$data->plantillas = $this->_plantillasModel->asObject()->where('TITULO !=', 'CONSTANCIA DE EXTRAVÍO')->orderBy('TITULO', 'ASC')->findAll();
 		$data->institucionremision = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $data->foliorow[0]->INSTITUCIONREMISIONMUNICIPIOID)->where('ESTADOID', 2)->first();
 		$data->municipioasignado = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $data->foliorow[0]->MUNICIPIOASIGNADOID)->where('ESTADOID', 2)->first();
-		$data->encargados =$this->_usuariosModel->asObject()->where('ROLID', 6)->findAll();
+		$data->encargados = $this->_usuariosModel->asObject()->where('ROLID', 6)->findAll();
 
 		$data2 = [
 			'header_data' => (object)['title' => 'DOCUMENTOS'],
