@@ -60,9 +60,10 @@ class Database extends Config
 
 	public $development = [
 		'DSN'      => '',
-		'hostname' => 'localhost',
-		'username' => 'root',
-		'password' => '',
+		'hostname' => 'database-video-denuncia-baja-california-instance-1.cenwfxggsegs.us-east-1.rds.amazonaws.com',
+		'username' => 'fgebc_admin',
+		'password' => 'fgebc_dba0wner',
+		'database' => 'cdtec_testing',
 		'DBDriver' => 'MySQLi',
 		'DBPrefix' => '',
 		'pConnect' => false,
