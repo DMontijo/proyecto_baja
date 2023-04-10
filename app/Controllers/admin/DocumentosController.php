@@ -85,7 +85,7 @@ class DocumentosController extends BaseController
 				'horaInicio' => $this->request->getPost('horaInicio'),
 				'horaFin' => $this->request->getPost('horaFin')
 			];
-		}else{
+		} else {
 			$data = [
 				'AGENTE_ASIGNADO' => session('ID'),
 				'STATUS' => $this->request->getPost('status'),
@@ -96,7 +96,7 @@ class DocumentosController extends BaseController
 				'horaFin' => $this->request->getPost('horaFin')
 			];
 		}
-		
+
 
 		foreach ($data as $clave => $valor) {
 			//Recorre el array y elimina los valores que nulos o vacíos
@@ -254,8 +254,10 @@ class DocumentosController extends BaseController
 
 		$documento = $this->_folioDocModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $docid)->first();
 
+		$filename = $documento->TIPODOC . "_" . $folio . "_" . $year . ".pdf";
 		header("Content-type: application/pdf");
-		header("Content-Disposition: attachment; filename=" . $documento->TIPODOC . '_' . $folio . '_' . $year .  '_' . $docid . '.pdf');
+		// header("Content-Disposition: attachment; filename=" . $documento->TIPODOC . "_" . $folio . "_" . $year . ".pdf");
+		header("Content-Disposition: attachment; filename=\"$filename\"");
 		echo $documento->PDF;
 	}
 
