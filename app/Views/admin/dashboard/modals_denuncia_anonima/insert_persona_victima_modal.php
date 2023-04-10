@@ -47,7 +47,7 @@
 					</div>
 					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 						<label for="fecha_nacimiento_new" class="form-label font-weight-bold">Fecha de nacimiento</label>
-						<input type="date" class="form-control" id="fecha_nacimiento_new" name="fecha_nacimiento_new" max="<?= ((int)date("Y")) - 18 . '-' . date("m") . '-' . date("d") ?>">
+						<input type="date" class="form-control" id="fecha_nacimiento_new" name="fecha_nacimiento_new" max="<?= ((int)date("Y")) . '-' . date("m") . '-' . date("d") ?>">
 
 					</div>
 					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -1215,5 +1215,4 @@
 	// $("#insert_persona_victima_modal_denuncia").one("hidden.bs.modal", function() {
 	// 	document.getElementById("persona_fisica_form_insert_denunciaA").reset();
 	// 		});
-
 </script>
