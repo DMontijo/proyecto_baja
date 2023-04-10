@@ -35,7 +35,7 @@
 					<textarea class="form-control" id="descripcion_denunciante_llamada" name="descripcion_denunciante_llamada" rows="5" disabled></textarea>
 				</div>
 				<button class="btn btn-success" id="aceptar" name="aceptar"> Aceptar llamada</button>
-				<button class="btn btn-danger" id="rechazar" name="rechazar"> Rechazar</button>
+				<button class="btn btn-danger d-none" id="rechazar" name="rechazar"> Rechazar</button>
 			</div>
 		</div>
 	</div>
