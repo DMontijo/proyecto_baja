@@ -164,6 +164,7 @@ guestVideoService.saveGeolocation(() => {
 			})
 			.catch(function(error) {
 				console.log("Acceso a cámara y audio denegado");
+				texto_inicial.style.display = "none";
 				pantalla_error.style.display = "block";
 				video_container.style.display = "none";
 				document.querySelector(
