@@ -44,10 +44,9 @@ class ConstanciasController extends BaseController
 			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
 		}
 		$data = (object)array();
-		$data->abiertas = count($this->_constanciaExtravioModel->asObject()->where('STATUS', 'ABIERTO')->findAll());
-		$data->proceso = count($this->_constanciaExtravioModel->asObject()->where('STATUS', 'EN PROCESO')->findAll());
-		// $data->firmadas = count($this->_constanciaExtravioModel->asObject()->where('STATUS', 'FIRMADO')->findAll());
-		$data->firmadas = 0;
+		$data->abiertas = $this->_constanciaExtravioModel->asObject()->where('STATUS', 'ABIERTO')->countAllResults();
+		$data->proceso = $this->_constanciaExtravioModel->asObject()->where('STATUS', 'EN PROCESO')->countAllResults();
+		$data->firmadas = $this->_constanciaExtravioModel->asObject()->where('STATUS', 'FIRMADO')->countAllResults();
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 		$this->_loadView('Constancias extravío', 'constancias', '', $data, 'index');
