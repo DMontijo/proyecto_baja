@@ -3685,7 +3685,6 @@ class DashboardController extends BaseController
 	}
 	public function getVideoLink()
 	{
-
 		$data = array();
 		$folio = $this->request->getPost('folio');
 		$data['folio'] = $folio;
@@ -3711,21 +3710,6 @@ class DashboardController extends BaseController
 		} else {
 			return json_encode(['status' => 1, 'responseVideos' => $responseFolio]);
 		}
-
-		// return json_encode($endpointId);
-
-		// $endpoint = 'https://videodenunciaserver1.fgebc.gob.mx/api/vc';
-		// $data = array();
-		// $data['u'] = '24';
-		// $data['token'] = '198429b7cc8a2a5733d97bc13153227dd5017555';
-		// $data['a'] = 'getRepo';
-		// $data['folio'] = $folio;
-		// $data['min'] = !empty($this->request->getPost('min')) ? $this->request->getPost('min') : '2000-01-01';
-		// $data['max'] = !empty($this->request->getPost('max')) ? $this->request->getPost('max') : date("Y-m-d");
-
-		// $response = $this->_curlPost($endpoint, $data);
-
-		// return json_encode($response);
 	}
 
 	public function getLinkFromCall()

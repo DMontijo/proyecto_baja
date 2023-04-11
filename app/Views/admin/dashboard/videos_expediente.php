@@ -80,11 +80,9 @@
 					<table id="table-videos" class="table table-bordered table-hover table-striped table-light d-none">
 						<tr>
 							<th class="text-center bg-primary text-white">VIDEO</th>
-							<!-- <th class="text-center bg-primary text-white">MARCA DE TIEMPO</th> -->
 						</tr>
 					</table>
 				</div>
-
 			</div>
 		</div>
 	</div>
