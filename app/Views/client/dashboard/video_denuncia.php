@@ -162,6 +162,9 @@
 							De presentarse fallas de conexión recarga la página web o ingresa nuevamente con tu usuario
 							de lo contrario nos pondremos en contacto contigo.
 						</p>
+						<p>
+							<strong>Para iniciar su videollamada se requiere otorgar permisos de cámara y micrófono.</strong>
+						</p>
 					</div>
 				</div>
 			</div>
