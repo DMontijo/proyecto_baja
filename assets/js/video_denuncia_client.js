@@ -16,7 +16,7 @@ let folio_completo = document.getElementById("input_folio").value;
 let array = folio_completo.split("-");
 let folio_SY = array[1];
 let year_SF = array[0];
-var intervalo = setInterval(function () {
+var intervalo = setInterval(function() {
 	location.reload();
 }, 180000);
 
@@ -50,7 +50,7 @@ guestVideoService.registerOnVideoReady(
 	(response, guestData) => {
 		texto_inicial.style.display = "none";
 		video_container.style.display = "block";
-		clearInterval(intervalo)
+		clearInterval(intervalo);
 		document.querySelector("#documentos_anexar_card").style.display =
 			"block";
 		agente_name.innerHTML = "LIC. " + response.agent.name;
@@ -136,24 +136,49 @@ guestVideoService.registerOnAgentDisconnected(() => {
 guestVideoService.saveGeolocation(() => {
 	console.log("Conectando denunciante...");
 	texto_inicial.style.display = "block";
+	if (navigator.mediaDevices) {
+		navigator.mediaDevices
+			.getUserMedia({ audio: true, video: true })
+			.then(function(stream) {
+				console.log("Acceso a cámara y audio concedido");
 
-	guestVideoService.connectGuest(
-		{ delito, folio: folio_SY + "/" + year_SF, descripcion },
-		guest => {
-			console.log("Denuciante conectado");
-			console.log(guest);
-		},
-		error => {
-			Swal.fire({
-				icon: "error",
-				title: "Hubo un error, se recargará la página",
-				showConfirmButton: false,
-				timer: 1000
-			}).then(result => {
-				location.reload;
+				guestVideoService.connectGuest(
+					{ delito, folio: folio_SY + "/" + year_SF, descripcion },
+					guest => {
+						console.log("Denuciante conectado");
+						console.log(guest);
+					},
+					error => {
+						Swal.fire({
+							icon: "error",
+							title: "Hubo un error, se recargará la página",
+							showConfirmButton: false,
+							timer: 1000
+						}).then(result => {
+							location.reload;
+						});
+					}
+				);
+			})
+			.catch(function(error) {
+				console.log("Acceso a cámara y audio denegado");
+				Swal.fire({
+					position: "top-end",
+					title: "Por favor, acepta los permisos de audio y video.",
+					showConfirmButton: false,
+					timer: 1500
+				});
+			
 			});
-		}
-	);
+	} else {
+		console.log("El navegador no soporta MediaDevices");
+		Swal.fire({
+			position: "top-end",
+			title: "Intenta con otro navgador.",
+			showConfirmButton: false,
+			timer: 1500
+		});
+	}
 });
 
 function deleteVideoElement() {
