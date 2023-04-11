@@ -56,13 +56,13 @@
 
 		// Validamos el primer archivo únicamente
 		const archivo = this.files[0];
-		if (archivo.size > 3000000) {
+		if (archivo.size > 2000000) {
 			// Limpiar
 			document.querySelector('#foto_vehiculo_nc').value = "";
 			Swal.fire({
 				icon: 'error',
 				title: 'Error',
-				text: 'El tamaño máximo de los documentos debe ser de 3MB.',
+				text: 'El tamaño máximo de los documentos debe ser de 2MB.',
 				confirmButtonColor: '#bf9b55',
 			})
 		}
@@ -74,13 +74,13 @@
 
 		// Validamos el primer archivo únicamente
 		const archivo = this.files[0];
-		if (archivo.size > 3000000) {
+		if (archivo.size > 2000000) {
 			// Limpiar
 			document.querySelector('#documento_vehiculo_nc').value = "";
 			Swal.fire({
 				icon: 'error',
 				title: 'Error',
-				text: 'El tamaño máximo de los documentos debe ser de 3MB.',
+				text: 'El tamaño máximo de los documentos debe ser de 2MB.',
 				confirmButtonColor: '#bf9b55',
 			})
 		}
