@@ -10,6 +10,8 @@ const texto_inicial = document.querySelector("#pantalla_inicial");
 const priority = document.querySelector("#input_priority").value;
 const video_container = document.querySelector("#video_container");
 const pantalla_final = document.querySelector("#pantalla_final");
+const pantalla_error = document.querySelector("#pantalla_error");
+
 const agente_name = document.querySelector("#main_video_details_name");
 
 let folio_completo = document.getElementById("input_folio").value;
@@ -162,13 +164,14 @@ guestVideoService.saveGeolocation(() => {
 			})
 			.catch(function(error) {
 				console.log("Acceso a cámara y audio denegado");
-				Swal.fire({
-					position: "top-end",
-					title: "Por favor, acepta los permisos de audio y video.",
-					showConfirmButton: false,
-					timer: 1500
-				});
-			
+				pantalla_error.style.display = "block";
+				video_container.style.display = "none";
+				document.querySelector(
+					"#documentos_anexar_card"
+				).style.display = "none";
+				setTimeout(() => {
+					deleteVideoElement();
+				}, 2000);
 			});
 	} else {
 		console.log("El navegador no soporta MediaDevices");

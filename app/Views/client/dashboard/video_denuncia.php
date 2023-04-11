@@ -188,6 +188,20 @@
 				</div>
 			</div>
 		</div>
+		<div class="col-12 p-0 m-0" id="pantalla_error" style=" display:none;">
+			<div class="card text-center">
+				<div class="card-body p-0 m-0 p-5 d-flex justify-content-center align-items-center">
+					<div class="text-center" style="max-width:500px;">
+						<img src="<?= base_url() ?>/assets/img/FGEBC.png" alt="Loader FGEBC" class="mb-3" style="width:250px;">
+						<p class="fw-bold">NO PUEDES INICIAR TU VIDEODENUNCIA</p>
+						<p>Acepta los permisos de audio y cámara. En caso de que no sean solicitados, limpia los permisos y aceptalos</p>
+						<div class="d-grid gap-2">
+							<a href="<?= base_url('/denuncia/dashboard/denuncias') ?>" type="button" name="" id="" class="btn btn-primary">IR A MIS DENUNCIAS</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 		<div class="col-12 p-0 m-0">
 			<div class="card text-center">
 				<div class="card-body p-0 m-0">
