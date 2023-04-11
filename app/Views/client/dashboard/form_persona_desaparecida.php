@@ -694,4 +694,22 @@
 			input_colonia.value = e.target.value;
 		}
 	});
+
+	document.querySelector('#foto_des').addEventListener("change", function() {
+		// Si no hay archivos, regresamos
+		if (this.files.length <= 0) return;
+
+		// Validamos el primer archivo únicamente
+		const archivo = this.files[0];
+		if (archivo.size > 3000000) {
+			// Limpiar
+			document.querySelector('#foto_des').value = "";
+			Swal.fire({
+				icon: 'error',
+				title: 'Error',
+				text: 'El tamaño máximo de los documentos debe ser de 3MB.',
+				confirmButtonColor: '#bf9b55',
+			})
+		}
+	});
 </script>

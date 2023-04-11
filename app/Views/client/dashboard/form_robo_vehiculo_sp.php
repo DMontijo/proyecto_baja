@@ -33,7 +33,7 @@
 		<label for="placas_vehiculo" class="form-label fw-bold">Placas:</label>
 		<input type="text" class="form-control" id="placas_vehiculo" name="placas_vehiculo">
 	</div>
-	
+
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="serie_vehiculo" class="form-label fw-bold">No. Serie:</label>
 		<input type="text" class="form-control" id="serie_vehiculo" name="serie_vehiculo">
@@ -56,7 +56,6 @@
 	</div>
 </div>
 <script>
-
 	function contarCaracteresVehiculo(obj) {
 		var maxLength = 300;
 		var strLength = obj.value.length;
@@ -68,6 +67,40 @@
 			document.getElementById("numCaracterVehiculoSp").innerHTML = charRemain + ' caracteres restantes';
 		}
 	}
-	
 
+	document.querySelector('#foto_vehiculo_sp').addEventListener("change", function() {
+		// Si no hay archivos, regresamos
+		if (this.files.length <= 0) return;
+
+		// Validamos el primer archivo únicamente
+		const archivo = this.files[0];
+		if (archivo.size > 3000000) {
+			// Limpiar
+			document.querySelector('#foto_vehiculo_sp').value = "";
+			Swal.fire({
+				icon: 'error',
+				title: 'Error',
+				text: 'El tamaño máximo de los documentos debe ser de 3MB.',
+				confirmButtonColor: '#bf9b55',
+			})
+		}
+	});
+
+	document.querySelector('#documento_vehiculo_sp').addEventListener("change", function() {
+		// Si no hay archivos, regresamos
+		if (this.files.length <= 0) return;
+
+		// Validamos el primer archivo únicamente
+		const archivo = this.files[0];
+		if (archivo.size > 3000000) {
+			// Limpiar
+			document.querySelector('#documento_vehiculo_sp').value = "";
+			Swal.fire({
+				icon: 'error',
+				title: 'Error',
+				text: 'El tamaño máximo de los documentos debe ser de 3MB.',
+				confirmButtonColor: '#bf9b55',
+			})
+		}
+	});
 </script>
