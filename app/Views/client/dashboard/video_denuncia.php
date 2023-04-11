@@ -151,6 +151,9 @@
 			<div class="card text-center">
 				<div class="card-body p-0 m-0 p-5 d-flex justify-content-center align-items-center">
 					<div class="text-center" style="max-width:500px;">
+						<p>
+							<strong>Para iniciar su videollamada se requiere otorgar permisos de cámara y micrófono.</strong>
+						</p>
 						<img src="<?= base_url() ?>/assets/img/loader.gif" alt="Loader FGEBC" class="mb-3">
 						<p class="fw-bold">
 							¡Tu solicitud se ha registrado con éxito!
@@ -162,8 +165,10 @@
 							De presentarse fallas de conexión recarga la página web o ingresa nuevamente con tu usuario
 							de lo contrario nos pondremos en contacto contigo.
 						</p>
-						<p>
-							<strong>Para iniciar su videollamada se requiere otorgar permisos de cámara y micrófono.</strong>
+						<p class="text-center">
+							<a href="<?= base_url('/salas_virtuales') ?>" type="button" class="btn btn-secondary mt-4">
+								Directorio Salas Virtuales
+							</a>
 						</p>
 					</div>
 				</div>
