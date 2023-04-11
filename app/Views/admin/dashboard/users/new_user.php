@@ -196,12 +196,10 @@
 				var validation = Array.prototype.filter.call(forms, function(form) {
 					form.addEventListener('submit', function(event) {
 						document.querySelector('#btn-submit').setAttribute('disabled', true);
-						document.querySelector('#spinner').classList.remove('d-none');
 						if (form.checkValidity() === false) {
 							event.preventDefault();
 							event.stopPropagation();
 							document.querySelector('#btn-submit').removeAttribute('disabled');
-							document.querySelector('#spinner').classList.add('d-none');
 						}
 						form.classList.add('was-validated');
 					}, false);
