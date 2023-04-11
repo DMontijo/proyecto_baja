@@ -84,14 +84,14 @@
 									</p>
 
 
-									<div class="row">
+									<!-- <div class="row">
 										<div class="col-12 col-sm-6 offset-sm-3">
 											<p class="p-0 m-0"><strong>Documentos a anexar</strong></p>
 											<small>Si deseas anexar cualquier documento o imagén para la videodenuncia, hazlo aqui.</small>
 											<input type="file" class="form-control" id="documentosArchivo" name="documentosArchivo[]" accept="image/jpeg, image/jpg, image/png, .doc, .pdf" multiple>
 											<img id="viewDocumentoArchivo" class="img-fluid" src="" style="max-width:100px;">
 										</div>
-									</div>
+									</div> -->
 									<br>
 
 
@@ -102,6 +102,7 @@
 											Debes confirmar de leído los derechos de víctima u ofendido para continuar.
 										</div>
 									</div>
+									<br>
 									<div class="form-group">
 										<input class="form-check-input" type="checkbox" id="notificaciones_check" name="notificaciones_check" required>
 										<label class="fw-bold" for="notificaciones_check">

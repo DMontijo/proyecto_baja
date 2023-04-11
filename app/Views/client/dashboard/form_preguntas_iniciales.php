@@ -67,7 +67,7 @@
 		</div>
 	</div>
 	<div id="vulnerable_container" class="col-12 mb-3 d-none">
-		<label for="vulnerable_descripcion" class="form-label fw-bold input-required">Describe cual</label>
+		<label for="vulnerable_descripcion" class="form-label fw-bold">Describe cual</label>
 		<input type="text" class="form-control" id="vulnerable_descripcion" name="vulnerable_descripcion" maxlength="100">
 	</div>
 	<div class="col-12 mb-3">
