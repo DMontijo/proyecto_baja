@@ -183,6 +183,7 @@
 						<p>En la Fiscalía General del Estado de Baja California día a día trabajamos para garantizarte un fácil acceso a la justicia desde cualquier lugar del mundo.</p>
 						<div class="d-grid gap-2">
 							<a href="<?= base_url('/denuncia/dashboard/denuncias') ?>" type="button" name="" id="" class="btn btn-primary">IR A MIS DENUNCIAS</a>
+							<button id="btn-inicia-denuncia" type="button" name="btn-inicia-denuncia" class="btn btn-primary  mb-3" onclick="iniciarDenuncia();"><i class="bi bi-camera-video-fill"></i> Iniciar denuncia</button>
 						</div>
 					</div>
 				</div>
@@ -194,9 +195,11 @@
 					<div class="text-center" style="max-width:500px;">
 						<img src="<?= base_url() ?>/assets/img/FGEBC.png" alt="Loader FGEBC" class="mb-3" style="width:250px;">
 						<p class="fw-bold">NO PUEDES INICIAR TU VIDEODENUNCIA</p>
-						<p>Acepta los permisos de audio y cámara. En caso de que no sean solicitados, limpia los permisos y aceptalos</p>
+						<p>Acepta los permisos de audio y cámara. En caso de que no sean solicitados, limpia los permisos y aceptalos.
+							Una vez aceptados, recarga la página
+						</p>
 						<div class="d-grid gap-2">
-							<a href="<?= base_url('/denuncia/dashboard/denuncias') ?>" type="button" name="" id="" class="btn btn-primary">IR A MIS DENUNCIAS</a>
+							<button type="button" name="iniciar_den" id="iniciar_den" onclick="location.reload()" class="btn btn-primary">INICIAR VIDEODENUNCIA</button>
 						</div>
 					</div>
 				</div>
@@ -235,6 +238,7 @@
 <script type="text/javascript" src="<?= base_url() ?>/assets/agent/assets/openvidu-browser-2.25.0.min.js"></script>
 <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
 <script src="<?= base_url() ?>/assets/js/video_denuncia_client.js" type="module"></script>
+
 <script>
 	const folio_get = `<?php echo $_GET['folio'] ?>`;
 
