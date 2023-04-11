@@ -131,7 +131,15 @@
 <?php include('800_modal.php') ?>
 <?php include('open_folios_modal.php') ?>
 <?php include('derechos_ofendido_modal.php') ?>
-
+<?php if (session()->getFlashdata('message_error')) : ?>
+	<script>
+		Swal.fire({
+			icon: 'error',
+			html: '<strong><?= session()->getFlashdata('message') ?></strong>',
+			confirmButtonColor: '#bf9b55',
+		})
+	</script>
+<?php endif; ?>
 <script>
 	var steps = document.querySelectorAll('.step');
 	const prevBtn = document.querySelector('#prev-btn');

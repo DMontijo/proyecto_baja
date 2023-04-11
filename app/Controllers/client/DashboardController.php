@@ -337,6 +337,27 @@ class DashboardController extends BaseController
 	public function create()
 	{
 		$session = session();
+		$folioDenunciante = $this->_folioModel->asObject()->where('DENUNCIANTEID',$session->get('DENUNCIANTEID'))->where('STATUS', 'ABIERTO')->first();
+		if ($folioDenunciante) {
+			return redirect()->to(base_url('/denuncia/dashboard'))->with('message_error', 'Ya tienes un folio a procesar, por favor espere');
+		}
+
+		if (($this->request->getPost('es_menor') == null || $this->request->getPost('es_menor') == '')
+			&& ($this->request->getPost('es_tercera_edad') == null || $this->request->getPost('es_tercera_edad') == '')
+			&& ($this->request->getPost('es_ofendido') == null || $this->request->getPost('es_ofendido') == '')
+			&& ($this->request->getPost('tiene_discapacidad') == null || $this->request->getPost('tiene_discapacidad') == '')
+			&& ($this->request->getPost('fue_con_arma') == null || $this->request->getPost('fue_con_arma') == '')
+			&& ($this->request->getPost('lesiones') == null || $this->request->getPost('lesiones') == '')
+			&& ($this->request->getPost('esta_desaparecido') == null || $this->request->getPost('esta_desaparecido') == '')
+			&& ($this->request->getPost('HECHODELITO') == null || $this->request->getPost('HECHODELITO') == '')
+			&& ($this->request->getPost('HECHOLUGARID') == null || $this->request->getPost('HECHOLUGARID') == '')
+			&& ($this->request->getPost('HECHOFECHA') == null || $this->request->getPost('HECHOFECHA') == '')
+			&& ($this->request->getPost('HECHOHORA') == null || $this->request->getPost('HECHOHORA') == '')
+			&& ($this->request->getPost('HECHONARRACION') == null || $this->request->getPost('HECHONARRACION') == '')
+		) {
+			return redirect()->to(base_url('/denuncia/dashboard'))->with('message_error', 'Por favor, completa tu denuncia antes de continuar..');
+
+		}else{
 		list($FOLIOID, $year) = $this->_folioConsecutivoModel->get_consecutivo();
 
 		if ($this->request->getPost('check_ubi') == 'on') {
@@ -908,6 +929,7 @@ class DashboardController extends BaseController
 		} else {
 			return redirect()->to(base_url('/denuncia/dashboard'));
 		}
+	}
 	}
 
 	private function _folioUpdate($id, $data, $year)
