@@ -145,7 +145,7 @@ class DashboardController extends BaseController
 		$this->protocol = 'https://';
 		$this->ip = "ws.fgebc.gob.mx";
 		$this->endpoint = $this->protocol . $this->ip . '/webServiceVD';
-		$this->urlApi = "https://videodenunciabalancer.fgebc.gob.mx/guests/";
+		$this->urlApi = "https://0d63-52-0-63-150.ngrok-free.app/guests/";
 	}
 
 	public function index()

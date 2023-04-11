@@ -400,7 +400,7 @@ class DashboardController extends BaseController
 		$this->protocol = 'https://';
 		$this->ip = "ws.fgebc.gob.mx";
 		$this->endpoint = $this->protocol . $this->ip . '/webServiceVD';
-		$this->urlApi = "https://videodenunciabalancer.fgebc.gob.mx/";
+		$this->urlApi = "https://0d63-52-0-63-150.ngrok-free.app/";
 	}
 
 	public function index()
@@ -3689,7 +3689,7 @@ class DashboardController extends BaseController
 		$data = array();
 		$folio = $this->request->getPost('folio');
 		$data['folio'] = $folio;
-		$url = "https://videodenunciabalancer.fgebc.gob.mx/";
+		$url = "https://0d63-52-0-63-150.ngrok-free.app/";
 
 		// $endpointFolio = $this->urlApi . 'recordings/folio?folio=' . $folio;
 		$endpointFolio = $url . 'recordings/folio?folio=' . $folio;

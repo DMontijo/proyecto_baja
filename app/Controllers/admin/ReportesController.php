@@ -35,7 +35,7 @@ class ReportesController extends BaseController
 		$this->_constanciaExtravioModel = new ConstanciaExtravioModel();
 		$this->_rolesPermisosModel = new RolesPermisosModel();
 		$this->_plantillasModel = new PlantillasModel();
-		$this->urlApi = "https://videodenunciabalancer.fgebc.gob.mx/";
+		$this->urlApi = "https://0d63-52-0-63-150.ngrok-free.app/";
 	}
 
 	public function index()
