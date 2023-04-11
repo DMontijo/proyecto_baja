@@ -7040,7 +7040,10 @@ class DashboardController extends BaseController
 			// ->join('TIPOEXPEDIENTE', 'TIPOEXPEDIENTE.TIPOEXPEDIENTEID = FOLIO.TIPOEXPEDIENTEID', 'left')
 			// ->findAll();
 
-		} else {
+		} else if(session('ROLID')== 12){
+			$data->folio = $this->_folioModel->videos_expediente_model(5);
+
+		}else {
 			// $data->folio = $this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)
 			// ->where('FOLIO.TIPOEXPEDIENTEID !=', null)->where('AGENTEFIRMAID !=', null)->where('TIPODENUNCIA', 'VD')
 			// ->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID', 'left')
