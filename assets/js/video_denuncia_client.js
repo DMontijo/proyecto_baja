@@ -50,6 +50,7 @@ guestVideoService.registerOnVideoReady(
 	(response, guestData) => {
 		texto_inicial.style.display = "none";
 		video_container.style.display = "block";
+		clearInterval(intervalo)
 		document.querySelector("#documentos_anexar_card").style.display =
 			"block";
 		agente_name.innerHTML = "LIC. " + response.agent.name;
@@ -141,7 +142,6 @@ guestVideoService.saveGeolocation(() => {
 		guest => {
 			console.log("Denuciante conectado");
 			console.log(guest);
-			clearInterval(intervalo)
 		},
 		error => {
 			Swal.fire({
