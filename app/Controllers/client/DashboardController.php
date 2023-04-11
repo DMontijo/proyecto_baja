@@ -337,9 +337,9 @@ class DashboardController extends BaseController
 	public function create()
 	{
 		$session = session();
-		$folioDenunciante = $this->_folioModel->asObject()->where('DENUNCIANTEID', $session->get('DENUNCIANTEID'))->where('STATUS', 'ABIERTO')->first();
+		$folioDenunciante = $this->_folioModel->asObject()->where('DENUNCIANTEID', $session->get('DENUNCIANTEID'))->where('STATUS', 'ABIERTO')->orWhere('STATUS', 'EN PROCESO')->first();
 		if ($folioDenunciante) {
-			return redirect()->to(base_url('/denuncia/dashboard'))->with('message_error', 'Ya tienes un folio a procesar, por favor espere.');
+			return redirect()->to(base_url('/denuncia/dashboard'))->with('message_error', 'Ya tienes un folio en proceso, no puedes generar una nueva denuncia.');
 		}
 
 		if (($this->request->getPost('es_menor') == null || $this->request->getPost('es_menor') == '')
@@ -349,13 +349,13 @@ class DashboardController extends BaseController
 			|| ($this->request->getPost('fue_con_arma') == null || $this->request->getPost('fue_con_arma') == '')
 			|| ($this->request->getPost('lesiones') == null || $this->request->getPost('lesiones') == '')
 			|| ($this->request->getPost('esta_desaparecido') == null || $this->request->getPost('esta_desaparecido') == '')
-			|| ($this->request->getPost('HECHODELITO') == null || $this->request->getPost('HECHODELITO') == '')
-			|| ($this->request->getPost('HECHOLUGARID') == null || $this->request->getPost('HECHOLUGARID') == '')
-			|| ($this->request->getPost('HECHOFECHA') == null || $this->request->getPost('HECHOFECHA') == '')
-			|| ($this->request->getPost('HECHOHORA') == null || $this->request->getPost('HECHOHORA') == '')
-			|| ($this->request->getPost('HECHONARRACION') == null || $this->request->getPost('HECHONARRACION') == '')
+			|| ($this->request->getPost('delito') == null || $this->request->getPost('delito') == '')
+			|| ($this->request->getPost('lugar') == null || $this->request->getPost('lugar') == '')
+			|| ($this->request->getPost('fecha') == null || $this->request->getPost('fecha') == '')
+			|| ($this->request->getPost('hora') == null || $this->request->getPost('hora') == '')
+			|| ($this->request->getPost('descripcion_breve') == null || $this->request->getPost('descripcion_breve') == '')
 		) {
-			return redirect()->to(base_url('/denuncia/dashboard'))->with('message_error', 'Por favor, completa tu denuncia antes de continuar.');
+			return redirect()->to(base_url('/denuncia/dashboard'))->with('message_error', 'Hubo un error, levanta tu denuncia nuevamente');
 		} else {
 			list($FOLIOID, $year) = $this->_folioConsecutivoModel->get_consecutivo();
 
