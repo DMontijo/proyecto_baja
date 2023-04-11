@@ -45,8 +45,9 @@ class ConstanciasController extends BaseController
 		}
 		$data = (object)array();
 		$data->abiertas = count($this->_constanciaExtravioModel->asObject()->where('STATUS', 'ABIERTO')->findAll());
-		$data->firmadas = count($this->_constanciaExtravioModel->asObject()->where('STATUS', 'FIRMADO')->findAll());
 		$data->proceso = count($this->_constanciaExtravioModel->asObject()->where('STATUS', 'EN PROCESO')->findAll());
+		// $data->firmadas = count($this->_constanciaExtravioModel->asObject()->where('STATUS', 'FIRMADO')->findAll());
+		$data->firmadas = 0;
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 		$this->_loadView('Constancias extravío', 'constancias', '', $data, 'index');
@@ -328,7 +329,7 @@ class ConstanciasController extends BaseController
 
 		echo view("admin/dashboard/constancias/$view", $data2);
 	}
-	
+
 	private function permisos($permiso)
 	{
 		return in_array($permiso, session('permisos'));
