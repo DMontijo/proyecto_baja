@@ -356,7 +356,7 @@ class DashboardController extends BaseController
 			|| ($this->request->getPost('hora') == null || $this->request->getPost('hora') == '')
 			|| ($this->request->getPost('descripcion_breve') == null || $this->request->getPost('descripcion_breve') == '')
 		) {
-			return redirect()->to(base_url('/denuncia/dashboard'))->with('message_error', 'Hubo un error, llena todo correctamente y no subas documentos e imagenes muy grandes.');
+			return redirect()->to(base_url('/denuncia/dashboard'))->with('message_error', 'Hubo un error, no subas documentos e imagenes muy grandes, máximo 3MB por documento.');
 		}
 
 		$dataFolio = [
