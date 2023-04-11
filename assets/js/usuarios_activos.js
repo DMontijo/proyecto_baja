@@ -28,10 +28,15 @@ roomsSockets.registerToRoomsUpdate((response)=>{
 			let text_1 = document.createTextNode((user.host.agent.names + ' ' + user.host.agent.lastnames).toUpperCase());
 			let td_2 = document.createElement("td");
 			td_2.classList.add('text-center');
-			let texto_activo = 'ACTIVO  - DISPONIBLE';
+			if(user.available == false){
+				let texto_activo = 'EN LLAMADA - NO DISPONIBLE';
+				td_2.classList.add('text-danger');
+			}else{
+				let texto_activo = 'ACTIVO  - DISPONIBLE';
+				td_2.classList.add('text-success');
+			}
 			let text_2 = document.createTextNode(texto_activo);
 			td_2.classList.add('font-weight-bold');
-			td_2.classList.add('text-success');
 
 			td_1.appendChild(text_1);
 			td_2.appendChild(text_2);
