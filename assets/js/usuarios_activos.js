@@ -10,6 +10,7 @@ roomsSockets.registerToRoomsUpdate((response)=>{
 	let table = document.querySelector("#table-usuarios-activos");
 	let tbody = document.querySelector("#table-usuarios-activos tbody");
 	let filas = document.querySelectorAll("#table-usuarios-activos tbody tr");
+	let texto_activo='';
 	const count = response.filter(i => i).length;
 
 	console.log(count);
@@ -29,10 +30,10 @@ roomsSockets.registerToRoomsUpdate((response)=>{
 			let td_2 = document.createElement("td");
 			td_2.classList.add('text-center');
 			if(user.available == false){
-				let texto_activo = 'EN LLAMADA - NO DISPONIBLE';
+				texto_activo = 'EN LLAMADA - NO DISPONIBLE';
 				td_2.classList.add('text-danger');
 			}else{
-				let texto_activo = 'ACTIVO  - DISPONIBLE';
+				texto_activo = 'ACTIVO  - DISPONIBLE';
 				td_2.classList.add('text-success');
 			}
 			let text_2 = document.createTextNode(texto_activo);
