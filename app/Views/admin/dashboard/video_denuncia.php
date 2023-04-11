@@ -2690,13 +2690,7 @@
 
 					document.querySelector('#distribuidor_vehiculo_ad').value = vehiculo
 						.VEHICULODISTRIBUIDORID ? vehiculo.VEHICULODISTRIBUIDORID : '';
-					document.querySelector('#marca_ad').value = vehiculo.MARCAID ? vehiculo
-						.VEHICULODISTRIBUIDORID + ' ' + vehiculo.MARCAID : '';
-					document.querySelector('#linea_vehiculo_ad').value = vehiculo.MODELOID ? vehiculo
-						.VEHICULODISTRIBUIDORID + ' ' + vehiculo.MARCAID + ' ' + vehiculo.MODELOID : '';
-					document.querySelector('#version_vehiculo_ad').value = vehiculo.VEHICULOVERSIONID ? vehiculo
-						.VEHICULODISTRIBUIDORID + ' ' + vehiculo.MARCAID + ' ' + vehiculo.MODELOID + ' ' +
-						vehiculo.VEHICULOVERSIONID : '';
+
 					document.querySelector('#transmision_vehiculo').value = vehiculo.TRANSMISION ? vehiculo
 						.TRANSMISION : '';
 					document.querySelector('#traccion_vehiculo').value = vehiculo.TRACCION ? vehiculo.TRACCION :
@@ -2751,6 +2745,7 @@
 
 					if (marcaVehiculo) {
 						let select_marca = document.querySelector('#marca_ad');
+						clearSelect(select_marca);
 						const option_marca = document.createElement('option');
 						option_marca.value = marcaVehiculo.VEHICULOMARCAID;
 						option_marca.text = marcaVehiculo.VEHICULOMARCADESCR;
@@ -2758,6 +2753,8 @@
 					}
 					if (lineaVehiculo) {
 						let select_linea = document.querySelector('#linea_vehiculo_ad');
+						clearSelect(select_linea);
+
 						const option_modelo = document.createElement('option');
 						option_modelo.value = lineaVehiculo.VEHICULOMODELOID;
 						option_modelo.text = lineaVehiculo.VEHICULOMODELODESCR;
@@ -2765,11 +2762,16 @@
 					}
 					if (versionVehiculo) {
 						let select_version = document.querySelector('#version_vehiculo_ad');
+						clearSelect(select_version);
 						const option_version = document.createElement('option');
 						option_version.value = versionVehiculo.VEHICULOVERSIONID;
 						option_version.text = versionVehiculo.VEHICULOVERSIONDESCR;
 						select_version.add(option_version, null);
 					}
+					document.querySelector('#marca_ad').value = vehiculo.MARCAID ? vehiculo.MARCAID : '';
+					document.querySelector('#linea_vehiculo_ad').value = vehiculo.MODELOID ? vehiculo.MODELOID : '';
+					document.querySelector('#version_vehiculo_ad').value = vehiculo.VEHICULOVERSIONID ? 
+						vehiculo.VEHICULOVERSIONID : '';
 					$('#folio_vehiculo_modal').modal('show');
 				} else {
 					Swal.fire({
