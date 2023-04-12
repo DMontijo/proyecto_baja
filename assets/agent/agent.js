@@ -52,6 +52,8 @@ export class VideoServiceAgent {
 	#connectionId;
 	#recordingId;
 
+	#localVideoSelector;
+
 	/**
 	 * @param {string} agentUUID - Preexisting agent uuid
 	 * @param {string} folio - Complaint folio
@@ -210,6 +212,7 @@ export class VideoServiceAgent {
 	 * @param {Function} [callback] - This method is executed after call is connected, this will receive the details of guest connection
 	 */
 	acceptCall(localVideoSelector, remoteVideoSelector, callback) {
+		this.#localVideoSelector = localVideoSelector;
 		this.#emit(
 			"connect-call",
 			{
@@ -474,14 +477,12 @@ export class VideoServiceAgent {
 	 */
 	reloadAgentVideoCall() {
 		this.#emit('reload-agent-video-call', async (response) => {
+			console.log(response);
 			this.#connectionId = response.connectionId;
-
-			
-			
 			await this.#videoCallService.forceDisconnection();
 			this.#videoCallService.connectVideoCall(
 				response.token,
-				localVideoSelector,
+				this.#localVideoSelector,
 				callback(response)
 			);
 		})

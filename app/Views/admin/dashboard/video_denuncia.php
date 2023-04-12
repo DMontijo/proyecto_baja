@@ -377,7 +377,7 @@
 												</button>
 												<!-- RECARGAR AGENTE -->
 												<button class="btn btn-lg btn-light" type="button" id="recargar_agente" name="recargar_agente" title="Recargar conexión del agente">
-													<i class="fas fa-rotate-right"></i>
+												<i class="fa-solid fa-rotate"></i>													
 												</button>
 
 											</div>
