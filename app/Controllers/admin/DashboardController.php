@@ -6446,12 +6446,15 @@ class DashboardController extends BaseController
 
 		$data->plantilla = str_replace('[EXTERIOR]', $data->folio->HECHONUMEROCASA ? $data->folio->HECHONUMEROCASA : 'S/N', $data->plantilla);
 
-		$data->plantilla = str_replace('[DIRECCION]', 
-		($data->folio->HECHOCALLE ? $data->folio->HECHOCALLE : 'SIN CALLE') . ' ' . 
-		($data->folio->HECHONUMEROCASA ? $data->folio->HECHONUMEROCASA : 'S/N')  . ',' . 
-		($data->folio->HECHOCOLONIADESCR ? $data->folio->HECHOCOLONIADESCR : 'SIN COLONIA') . ',' . 
-		(isset($data->localidad) ? $data->localidad->LOCALIDADDESCR : 'SIN LOCALIDAD') . ',' . 
-		(isset($data->municipio_delito) ? $data->municipio_delito->MUNICIPIODESCR : 'SIN MUNICIPIO'), $data->plantilla);
+		$data->plantilla = str_replace(
+			'[DIRECCION]',
+			($data->folio->HECHOCALLE ? $data->folio->HECHOCALLE : 'SIN CALLE') . ' ' .
+				($data->folio->HECHONUMEROCASA ? $data->folio->HECHONUMEROCASA : 'S/N')  . ',' .
+				($data->folio->HECHOCOLONIADESCR ? $data->folio->HECHOCOLONIADESCR : 'SIN COLONIA') . ',' .
+				(isset($data->localidad) ? $data->localidad->LOCALIDADDESCR : 'SIN LOCALIDAD') . ',' .
+				(isset($data->municipio_delito) ? $data->municipio_delito->MUNICIPIODESCR : 'SIN MUNICIPIO'),
+			$data->plantilla
+		);
 
 		$data->plantilla = str_replace('[LUGAR_HECHO]', $data->lugar_delito->HECHODESCR, $data->plantilla);
 
@@ -6567,13 +6570,16 @@ class DashboardController extends BaseController
 			$data->plantilla = str_replace('[MINUTOS]', date('i'), $data->plantilla);
 			$data->plantilla = str_replace('[ESTADO]', $data->municipios->MUNICIPIODESCR, $data->plantilla);
 			$data->plantilla = str_replace('[EXTERIOR]', $data->folio->HECHONUMEROCASA ? $data->folio->HECHONUMEROCASA : 'S/N', $data->plantilla);
-			$data->plantilla = str_replace('[DIRECCION]', 
-			($data->folio->HECHOCALLE ? $data->folio->HECHOCALLE : 'SIN CALLE') . ' ' . 
-			($data->folio->HECHONUMEROCASA ? $data->folio->HECHONUMEROCASA : 'S/N')  . ',' . 
-			($data->folio->HECHOCOLONIADESCR ? $data->folio->HECHOCOLONIADESCR : 'SIN COLONIA') . ',' . 
-			(isset($data->localidad) ? $data->localidad->LOCALIDADDESCR : 'SIN LOCALIDAD') . ',' . 
-			(isset($data->municipio_delito) ? $data->municipio_delito->MUNICIPIODESCR : 'SIN MUNICIPIO'), $data->plantilla);
-			
+			$data->plantilla = str_replace(
+				'[DIRECCION]',
+				($data->folio->HECHOCALLE ? $data->folio->HECHOCALLE : 'SIN CALLE') . ' ' .
+					($data->folio->HECHONUMEROCASA ? $data->folio->HECHONUMEROCASA : 'S/N')  . ',' .
+					($data->folio->HECHOCOLONIADESCR ? $data->folio->HECHOCOLONIADESCR : 'SIN COLONIA') . ',' .
+					(isset($data->localidad) ? $data->localidad->LOCALIDADDESCR : 'SIN LOCALIDAD') . ',' .
+					(isset($data->municipio_delito) ? $data->municipio_delito->MUNICIPIODESCR : 'SIN MUNICIPIO'),
+				$data->plantilla
+			);
+
 			$data->plantilla = str_replace('[LUGAR_HECHO]', $data->lugar_delito->HECHODESCR, $data->plantilla);
 
 			$data->plantilla = str_replace('[MUNICIPIO_DELITO]', $data->municipio_delito ? $data->municipio_delito->MUNICIPIODESCR : '', $data->plantilla);
@@ -7030,26 +7036,9 @@ class DashboardController extends BaseController
 		if (session('ROLID') == 11 || session('ROLID') == 1 || session('ROLID') == 7 || session('ROLID') == 2) {
 			$data->folio = $this->_folioModel->videos_expediente_model(1);
 		} else if (session('ROLID') == 12) {
-			$data->folio = $this->_folioModel->videos_expediente_model(5);
-		} 
-		
-		
-		else {
-			$data->folio = $this->_folioModel->videos_expediente_model(1);
-			foreach ($data->folio as $key => $value) {
-
-				if ($value->INSTITUCIONREMISIONMUNICIPIOID) {
-					$data->folio = $this->_folioModel->videos_expediente_model(2);
-				}
-
-				if ($value->MUNICIPIOASIGNADOID) {
-					$data->folio = $this->_folioModel->videos_expediente_model(3);
-				}
-
-				if ($value->OFICINAASIGNADOID) {
-					$data->folio = $this->_folioModel->videos_expediente_model(4);
-				}
-			}
+			$data->folio = $this->_folioModel->videos_expediente_model(3);
+		} else {
+			$data->folio = $this->_folioModel->videos_expediente_model(2);
 		}
 
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
