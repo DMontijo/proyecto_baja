@@ -7,16 +7,16 @@
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-12">
-				<h3 class="mb-4 font-weight-bold text-center">USUARIOS ACTIVOS PARA VIDEODENUNCIA</h3>
+				<h3 class="mb-4 font-weight-bold text-center">AGENTES ACTIVOS PARA VIDEODENUNCIA</h3>
 				<div class="card shadow border-0 rounded">
 					<div class="card-body">
 						<div class="row">
 							<div class="col-12 mt-3" style="overflow-x:scroll;">
-								<p id="message" class="mb-3 text-primary font-weight-bold text-center"> No hay ningún usuario disponible para videodenuncia</p>
+								<p id="message" class="mb-3 text-primary font-weight-bold text-center"> No hay ningún agente disponible para videodenuncia</p>
 								<table id="table-usuarios-activos" class="table table-bordered table-hover table-striped d-none">
 									<thead>
 										<tr>
-											<th class="text-center">NOMBRE</th>
+											<th class="text-center">AGENTE</th>
 											<th class="text-center">ESTADO</th>
 										</tr>
 									</thead>

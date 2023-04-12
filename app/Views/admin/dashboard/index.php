@@ -51,7 +51,7 @@ $file_text = $user_id . "_data.txt";
 		<div class="col-12 col-md-4 mb-4">
 			<div class="card shadow" style="border-radius:5px; height:100%!important;">
 				<div class="card-body text-center">
-					<h5 class="card-title">USUARIOS ACTIVOS PARA VIDEODENUNCIA</h5>
+					<h5 class="card-title">AGENTES ACTIVOS PARA VIDEODENUNCIA</h5>
 					<h4 class="font-weight-bold" id="card_active_users">-</h4>
 					<a type="button" href="<?= base_url('admin/dashboard/usuarios_activos') ?>" class="btn btn-primary font-weight-bold mt-4 text-white">VER MÁS</a>
 				</div>
@@ -60,7 +60,7 @@ $file_text = $user_id . "_data.txt";
 		<div class="col-12 col-md-4 mb-4">
 			<div class="card shadow" style="border-radius:5px; height:100%!important;">
 				<div class="card-body text-center">
-					<h5 class="card-title">USUARIOS EN LLAMADA</h5>
+					<h5 class="card-title">AGENTES EN LLAMADA</h5>
 					<h4 class="font-weight-bold" id="card_en_llamada">-</h4>
 					<a type="button" href="<?= base_url('admin/dashboard/usuarios_en_llamada') ?>" class="btn btn-primary font-weight-bold mt-4 text-white">VER MÁS</a>
 				</div>
@@ -78,7 +78,7 @@ $file_text = $user_id . "_data.txt";
 		<div class="col-12 col-md-4 mb-4">
 			<div class="card shadow" style="border-radius:5px; height:100%!important;">
 				<div class="card-body text-center">
-					<h5 class="card-title">AGENTES DENTRO DE LA PLATAFORMA</h5>
+					<h5 class="card-title">USUARIOS DENTRO DE LA PLATAFORMA</h5>
 					<h4 class="font-weight-bold"><?= $body_data->sesiones_admin ?></h4>
 					<a type="button" href="<?= base_url('admin/dashboard/sesiones_activas') ?>" class="btn btn-primary font-weight-bold mt-4 text-white">VER MÁS</a>
 				</div>
