@@ -57,7 +57,6 @@
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
-
 			</div>
 
 			<div class="modal-body text-center" id="">
@@ -72,7 +71,7 @@
 				<div class="row d-none" id="videos_expediente_empty">
 					<div class="col-12">
 						<p class="text-primary">
-							No hay videos en este expediente.
+							No hay videos grabados en este expediente.
 						</p>
 					</div>
 				</div>
@@ -128,9 +127,9 @@
 			method: "POST",
 			dataType: "json",
 			success: function(response) {
-				let array = [];
-				if (response.responseVideos.length > 0) {
-					llenarTablaVideos(response.responseVideos);
+				let videos = response.responseVideos.filter(video => video.url);
+				if (videos.length > 0) {
+					llenarTablaVideos(videos);
 					document.getElementById('videos_expediente_spinner').classList.add('d-none');
 					document.getElementById('videos_expediente_empty').classList.add('d-none');
 					document.getElementById('table-videos').classList.remove('d-none');
@@ -146,7 +145,7 @@
 
 	function llenarTablaVideos(videos) {
 		for (let i = 0; i < videos.length; i++) {
-			if (videos[i].uri != null) {
+			if (videos[i].url != null) {
 				var fila =
 					`<tr id="row${i}">` +
 					`<td class="text-center" value="" style="max-width:30vw;"><video src="${videos[i].url} " width="100%" height="100%" controls></video></td>` +
