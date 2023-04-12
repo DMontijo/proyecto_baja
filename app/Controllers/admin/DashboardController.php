@@ -1789,7 +1789,7 @@ class DashboardController extends BaseController
 
 		$data = $this->_folioDocModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('AGENTE_ASIGNADO !=', null)->first();
 		if ($data) {
-			return json_encode(['status' => 1, 'documentos' => $data]);
+			return json_encode(['status' => 1]);
 		} else {
 			return json_encode(['status' => 0]);
 		}
