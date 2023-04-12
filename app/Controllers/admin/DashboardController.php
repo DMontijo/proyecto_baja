@@ -533,6 +533,14 @@ class DashboardController extends BaseController
 		$this->_loadView('Usuarios activos', 'usuarios_activos', '', $data, 'usuarios_activos');
 	}
 
+	public function usuarios_en_llamada()
+	{
+		$data = (object) array();
+		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+
+		$this->_loadView('Usuarios en llamada', 'usuarios_en_llamada', '', $data, 'usuarios_en_llamada');
+	}
+
 	public function lista_prioridad()
 	{
 		$data = (object) array();

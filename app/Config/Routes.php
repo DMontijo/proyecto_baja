@@ -71,6 +71,7 @@ $routes->group('admin', function ($routes) {
 
 		$routes->get('generarqr', 'admin/FirmaController::generarqr');
 		$routes->get('usuarios_activos', 'admin/DashboardController::usuarios_activos');
+		$routes->get('usuarios_en_llamada', 'admin/DashboardController::usuarios_en_llamada');
 		$routes->get('lista_prioridad', 'admin/DashboardController::lista_prioridad');
 
 		$routes->get('firmas', 'admin/DashboardController::firmas');
