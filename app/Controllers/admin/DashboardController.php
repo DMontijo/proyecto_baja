@@ -7031,7 +7031,10 @@ class DashboardController extends BaseController
 			$data->folio = $this->_folioModel->videos_expediente_model(1);
 		} else if (session('ROLID') == 12) {
 			$data->folio = $this->_folioModel->videos_expediente_model(5);
-		} else {
+		} 
+		
+		
+		else {
 			$data->folio = $this->_folioModel->videos_expediente_model(1);
 			foreach ($data->folio as $key => $value) {
 
@@ -7048,6 +7051,7 @@ class DashboardController extends BaseController
 				}
 			}
 		}
+
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 		$this->_loadView('Videos expediente', 'videos', '', $data, 'videos_expediente');
