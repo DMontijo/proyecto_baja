@@ -278,6 +278,7 @@ $routes->group('data', function ($routes) {
 	$routes->post('update-media-filiacion-by-id', 'admin/DashboardController::updateMediaFiliacionById');
 	$routes->post('update-vehiculo-by-id', 'admin/DashboardController::updateVehiculoByFolio');
 	$routes->post('create-vehiculo-by-id', 'admin/DashboardController::createVehiculoByFolio');
+	$routes->post('delete-vehiculo-by-id', 'admin/DashboardController::deleteVehiculoByFolio');
 
 	$routes->post('delete-parentesco-by-id', 'admin/DashboardController::deleteParentescoById');
 	$routes->post('delete-persona-fisica-by-id', 'admin/DashboardController::deletePersonaFisicaById');

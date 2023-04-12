@@ -5517,6 +5517,38 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
+	public function deleteVehiculoByFolio()
+	{
+		try {
+			$folio = trim($this->request->getPost('folio'));
+			$year = trim($this->request->getPost('year'));
+			$vehiculoid = trim($this->request->getPost('vehiculoid'));
+		
+
+			$deleteVehiculo = $this->_folioVehiculoModel->where('FOLIOID', $folio)->where('ANO', $year)->where('VEHICULOID', $vehiculoid)->delete();
+
+			if ($deleteVehiculo) {
+				$vehiculos = $this->_folioVehiculoModel->get_by_folio($folio, $year);
+
+
+				$datosBitacora = [
+					'ACCION' => 'Ha eliminado un vehiculo',
+					'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
+				];
+
+			
+				$this->_bitacoraActividad($datosBitacora);
+
+
+				return json_encode(['status' => 1, 'vehiculos' => $vehiculos]);
+			} else {
+				return json_encode(['status' => 0]);
+			}
+		} catch (\Exception $e) {
+			return json_encode(['status' => 0]);
+		}
+	}
+
 
 	public function createFisImpDelitoByFolio()
 	{
