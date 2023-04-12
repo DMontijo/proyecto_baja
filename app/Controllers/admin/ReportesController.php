@@ -250,11 +250,19 @@ class ReportesController extends BaseController
 		$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
 
 		$row++;
-
+	
 		foreach ($resultFilter->result as $index => $folio) {
+		$tipo ='';		
+		if ($folio->TIPODENUNCIA == 'VD') {
+			$tipo = 'CDTEC';
+		}else if($folio->TIPODENUNCIA == 'DA'){
+			$tipo = 'ANÓNIMA';
+		}else {
+			$tipo = 'TELEFÓNICA';
+		}
 			$sheet->setCellValue('A' . $row, $folio->FOLIOID);
 			$sheet->setCellValue('B' . $row, $folio->ANO);
-			$sheet->setCellValue('C' . $row, $folio->TIPODENUNCIA == 'VD' ? 'CDTEC' : 'ANÓNIMA');
+			$sheet->setCellValue('C' . $row, $tipo);
 			$sheet->setCellValue('D' . $row, $folio->EXPEDIENTEID . '/' . $folio->TIPOEXPEDIENTECLAVE);
 			$sheet->setCellValue('E' . $row, date('d-m-Y'), strtotime($folio->FECHASALIDA));
 			$sheet->setCellValue('F' . $row, $folio->N_DENUNCIANTE . ' ' . $folio->APP_DENUNCIANTE . ' ' . $folio->APM_DENUNCIANTE);
@@ -842,14 +850,21 @@ class ReportesController extends BaseController
 			$horaregistro = date('H:i:s', $fecharegistro);
 			$sheet->setCellValue('A1', "CENTRO TELEFÓNICO Y EN LÍNEA DE ATENCIÓN Y ORIENTACIÓN TEMPRANA");
 			$sheet->setCellValue('A2', "REGISTRO ESTATAL DE PRE DENUNCIA TELEFÓNICA Y EN LÍNEA");
-
+			$tipo ='';		
+			if ($folio->TIPODENUNCIA == 'VD') {
+				$tipo = 'CDTEC';
+			}else if($folio->TIPODENUNCIA == 'DA'){
+				$tipo = 'ANÓNIMA';
+			}else {
+				$tipo = 'TELEFÓNICA';
+			}
 			$sheet->setCellValue('A' . $row, $row - 4);
 			$sheet->setCellValue('B' . $row, $dateregistro);
 			$sheet->setCellValue('C' . $row, $folio->FOLIOID);
 			$sheet->setCellValue('D' . $row, $inicio != '' ? $inicio : '');
 			$sheet->setCellValue('E' . $row, isset($fin) ? $fin : '');
 			$sheet->setCellValue('F' . $row,  $horas != '' ? strval($horas)  . ':' . $minutos . ':' . number_format($segundos, 0) : 'NO HAY VIDEO GRABADO');
-			$sheet->setCellValue('G' . $row, $folio->TIPODENUNCIA == 'DA' ? 'ANÓNIMA' : 'CDTEC');
+			$sheet->setCellValue('G' . $row, $tipo);
 			$sheet->setCellValue('H' . $row, $folio->MUNICIPIODESCR);
 			$sheet->setCellValue('I' . $row, $folio->N_DENUNCIANTE);
 			$sheet->setCellValue('J' . $row, $folio->APP_DENUNCIANTE);

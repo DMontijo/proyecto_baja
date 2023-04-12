@@ -79,9 +79,11 @@
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
 												<label for="status" class="form-label font-weight-bold">Tipo:</label>
 												<select class="form-control" id="tipo" name="tipo" required>
-													<option selected value="">CDTEC Y DENUNCIA ANÓNIMA</option>
+													<option selected value="">Todos los tipos de denuncia</option>
 													<option <?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'VD' ? 'selected' : '') : null ?> value="VD">CDTEC</option>
 													<option <?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'DA' ? 'selected' : '') : null ?> value="DA">DENUNCIA ANÓNIMA</option>
+													<option <?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'TE' ? 'selected' : '') : null ?> value="TE">TELEFÓNICA</option>
+
 												</select>
 											</div>
 											<div class="col-12 text-right">
@@ -134,11 +136,19 @@
 									if (isset($folio->EXPEDIENTEID)) {
 										$arrayExpediente = str_split($folio->EXPEDIENTEID);
 										$expedienteid = $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
+									}
+									$tipo = '';
+									if ($folio->TIPODENUNCIA == 'VD') {
+										$tipo = 'CDTEC';
+									} else if ($folio->TIPODENUNCIA == 'DA') {
+										$tipo = 'ANÓNIMA';
+									} else {
+										$tipo = 'TELEFÓNICA';
 									} ?>
 									<tr>
 										<td class="text-center font-weight-bold"><?= $folio->FOLIOID ?></td>
 										<td class="text-center"><?= $folio->ANO ?></td>
-										<td class="text-center"><?= $folio->TIPODENUNCIA == 'VD' ? 'CDTEC' : 'ANÓNIMA' ?></td>
+										<td class="text-center"><?= $tipo ?></td>
 										<td class="text-center"><?= $expedienteid ? $expedienteid . '/' . $folio->TIPOEXPEDIENTECLAVE  : '' ?></td>
 										<td class="text-center"><?= date('d-m-Y', strtotime($folio->FECHASALIDA)) ?></td>
 										<td class="text-center"><?= $folio->STATUS ?></td>

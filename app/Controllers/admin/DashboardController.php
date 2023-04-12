@@ -1840,9 +1840,10 @@ class DashboardController extends BaseController
 		$year = $this->request->getPost('year');
 		$institutomunicipio = $this->request->getPost('institutomunicipio');
 		$institutoremision = $this->request->getPost('institutoremision');
-
+		$telefonica = $this->request->getPost('denuncia_tel');
 
 		$agenteId = session('ID') ? session('ID') : 1;
+
 
 		if ($status == 'DERIVADO' || $status == 'CANALIZADO') {
 			$data = [
@@ -1861,7 +1862,9 @@ class DashboardController extends BaseController
 				'FECHASALIDA' => date('Y-m-d H:i:s'),
 			];
 		}
-
+		if ($telefonica == 'S') {
+			$data['TIPODENUNCIA'] = 'TE';
+		} 
 		if (!empty($status) && !empty($motivo) && !empty($year) && !empty($folio) && !empty($agenteId)) {
 			$folioRow = $this->_folioModel->where('ANO', $year)->where('FOLIOID', $folio)->where('STATUS', 'EN PROCESO')->first();
 			if ($folioRow) {
@@ -1885,6 +1888,8 @@ class DashboardController extends BaseController
 							return json_encode(['status' => 1]);
 						}
 					} else if ($folio->TIPODENUNCIA == 'DA') {
+						return json_encode(['status' => 1]);
+					}else if ($folio->TIPODENUNCIA == 'TE') {
 						return json_encode(['status' => 1]);
 					}
 				} else {
@@ -6455,6 +6460,15 @@ class DashboardController extends BaseController
 				(isset($data->municipio_delito) ? $data->municipio_delito->MUNICIPIODESCR : 'SIN MUNICIPIO'),
 			$data->plantilla
 		);
+		$data->plantilla = str_replace(
+			'[DIRECCION]',
+			($data->folio->HECHOCALLE ? $data->folio->HECHOCALLE : 'SIN CALLE') . ' ' .
+				($data->folio->HECHONUMEROCASA ? $data->folio->HECHONUMEROCASA : 'S/N')  . ',' .
+				($data->folio->HECHOCOLONIADESCR ? $data->folio->HECHOCOLONIADESCR : 'SIN COLONIA') . ',' .
+				(isset($data->localidad) ? $data->localidad->LOCALIDADDESCR : 'SIN LOCALIDAD') . ',' .
+				(isset($data->municipio_delito) ? $data->municipio_delito->MUNICIPIODESCR : 'SIN MUNICIPIO'),
+			$data->plantilla
+		);
 
 		$data->plantilla = str_replace('[LUGAR_HECHO]', $data->lugar_delito->HECHODESCR, $data->plantilla);
 
@@ -6570,6 +6584,16 @@ class DashboardController extends BaseController
 			$data->plantilla = str_replace('[MINUTOS]', date('i'), $data->plantilla);
 			$data->plantilla = str_replace('[ESTADO]', $data->municipios->MUNICIPIODESCR, $data->plantilla);
 			$data->plantilla = str_replace('[EXTERIOR]', $data->folio->HECHONUMEROCASA ? $data->folio->HECHONUMEROCASA : 'S/N', $data->plantilla);
+			$data->plantilla = str_replace(
+				'[DIRECCION]',
+				($data->folio->HECHOCALLE ? $data->folio->HECHOCALLE : 'SIN CALLE') . ' ' .
+					($data->folio->HECHONUMEROCASA ? $data->folio->HECHONUMEROCASA : 'S/N')  . ',' .
+					($data->folio->HECHOCOLONIADESCR ? $data->folio->HECHOCOLONIADESCR : 'SIN COLONIA') . ',' .
+					(isset($data->localidad) ? $data->localidad->LOCALIDADDESCR : 'SIN LOCALIDAD') . ',' .
+					(isset($data->municipio_delito) ? $data->municipio_delito->MUNICIPIODESCR : 'SIN MUNICIPIO'),
+				$data->plantilla
+			);
+
 			$data->plantilla = str_replace(
 				'[DIRECCION]',
 				($data->folio->HECHOCALLE ? $data->folio->HECHOCALLE : 'SIN CALLE') . ' ' .
