@@ -377,8 +377,7 @@
 												</button>
 												<!-- RECARGAR AGENTE -->
 												<button class="btn btn-lg btn-light" type="button" id="recargar_agente" name="recargar_agente" title="Recargar conexión del agente">
-												<i class="fa-solid fa-rotate"></i>													
-												</button>
+													<i class="fas fa-sync-alt"></i> </button>
 
 											</div>
 
@@ -412,7 +411,7 @@
 
 												<!-- RECARGAR DENUNCIANTE -->
 												<button class="btn btn-lg btn-light" type="button" id="recargar_denunciante_btn" name="recargar_denunciante_btn" title="Recargar conexión del denunciante">
-													<i class="fas fa-arrows-rotate"></i>
+													<i class="fas fa-undo"></i>
 												</button>
 
 
