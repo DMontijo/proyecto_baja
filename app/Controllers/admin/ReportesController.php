@@ -526,8 +526,8 @@ class ReportesController extends BaseController
 
 		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
 		$resultFilter = $this->_folioModel->filterDatesRegistroDiario($data);
-		$empleado = $this->_usuariosModel->asObject()->where('ID',	session('ID'))->orderBy('NOMBRE', 'ASC')->findAll();
-
+		$empleado = $this->_usuariosModel->asObject()->orderBy('NOMBRE', 'ASC')->findAll();
+		
 		$dataView = (object)array();
 		$dataView->result = $resultFilter->result;
 		$dataView->municipios = $municipio;
@@ -541,7 +541,7 @@ class ReportesController extends BaseController
 	public function postRegistroDiario()
 	{
 		$data = [
-			'AGENTEATENCIONID' => session('ID'),
+			'AGENTEATENCIONID' => $this->request->getPost('agente_registro'),
 			'STATUS' => $this->request->getPost('status'),
 			'TIPODENUNCIA' => $this->request->getPost('tipo'),
 			'fechaInicio' => $this->request->getPost('fechaInicio'),
@@ -562,13 +562,14 @@ class ReportesController extends BaseController
 		}
 
 		$resultFilter = $this->_folioModel->filterDatesRegistroDiario($data);
+		///var_dump($data);
+		$empleado = $this->_usuariosModel->asObject()->orderBy('NOMBRE', 'ASC')->findAll();
 
-		$empleado = $this->_usuariosModel->asObject()->where('ID',	session('ID'))->orderBy('NOMBRE', 'ASC')->findAll();
+		if (isset($data['AGENTEATENCIONID'])) {
+			$agente = $this->_usuariosModel->asObject()->where('ID', $data['AGENTEATENCIONID'])->orderBy('NOMBRE', 'ASC')->first();
+			$data['AGENTENOMBRE'] = $agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' . $agente->APELLIDO_MATERNO;
+		}
 
-		// if (isset($data['AGENTEATENCIONID'])) {
-		// 	$agente = $this->_usuariosModel->asObject()->where('ID', $data['AGENTEATENCIONID'])->orderBy('NOMBRE', 'ASC')->first();
-		// 	$data['AGENTENOMBRE'] = $agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' . $agente->APELLIDO_MATERNO;
-		// }
 
 
 		$dataView = (object)array();
@@ -585,7 +586,7 @@ class ReportesController extends BaseController
 	{
 
 		$data = [
-			'AGENTEATENCIONID' => session('ID'),
+			'AGENTEATENCIONID' => $this->request->getPost('agente_registro'),
 			'STATUS' => $this->request->getPost('STATUS'),
 			'TIPODENUNCIA' => $this->request->getPost('TIPODENUNCIA'),
 			'fechaInicio' => $this->request->getPost('fechaInicio'),
@@ -860,7 +861,11 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('O' . $row, isset($folio->DELITOMODALIDADDESCR) ? $folio->DELITOMODALIDADDESCR : 'NO EXISTE');
 			$sheet->setCellValue('P' . $row, $folio->N_AGENT . ' ' . $folio->APP_AGENT . ' ' . $folio->APM_AGENT);
 			$sheet->setCellValue('Q' . $row, isset($folio->TIPOEXPEDIENTEDESCR) ? $folio->TIPOEXPEDIENTEDESCR : $folio->STATUS);
-			$sheet->setCellValue('R' . $row, $folio->EXPEDIENTEID ? $folio->EXPEDIENTEID : "SIN EXPEDIENTE");
+			if (isset($folio->EXPEDIENTEID)) {
+				$arrayExpediente = str_split($folio->EXPEDIENTEID);
+				$expedienteid = $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
+			}
+			$sheet->setCellValue('R' . $row, $folio->EXPEDIENTEID ? $expedienteid.'/'.$folio->TIPOEXPEDIENTECLAVE: "SIN EXPEDIENTE");
 			$sheet->setCellValue('S' . $row, $remision); //remision
 			$sheet->setCellValue('T' . $row, "");
 
