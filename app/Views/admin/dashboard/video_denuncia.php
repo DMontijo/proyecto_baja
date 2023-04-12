@@ -405,6 +405,11 @@
 													</svg>
 												</button>
 
+												<!-- RECARGAR DENUNCIANTE -->
+												<button class="btn btn-lg btn-light" id="recargar_denunciante_btn" name="recargar_denunciante_btn" data-toggle="tooltip" data-placement="top" title="Recargar conexión del denunciante">
+													<i class="fa-regular fa-rotate-right fa-fw"></i>
+												</button>
+
 											</div>
 										</div>
 									</div>

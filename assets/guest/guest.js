@@ -341,4 +341,13 @@ export class VideoServiceGuest {
 		diff /= 60;
 		return Math.round(diff);
 	}
+
+	/**
+	 * @param {Function} callback - This method reload the guest from agent
+	 */
+	registerRefreshGuestConnection(callback) {
+		this.#socket.on('refresh-connection', () => {
+			if (typeof callback === 'function') callback();
+		});
+	}
 }

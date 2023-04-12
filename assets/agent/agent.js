@@ -455,6 +455,22 @@ export class VideoServiceAgent {
 	}
 
 	/**
+	 * This function will emit a signal to the guest to reload its page
+	 *
+	 * @param {string} markTime - MarkTime string
+	 * @param {string} messageTextMark - Message text
+	 * @param {string} selectedMark - Selected Mark id
+	 * @param {function} callback - function to be executed when the MarkTime is sent
+	 */
+	refreshGuestConnection(callback = () => { }) {
+		this.#emit("refresh-guest-connection",
+			response => {
+				if (typeof callback === "function") callback(response);
+			}
+		);
+	}
+
+	/**
 	 * Helper to protect emit events of socket
 	 *
 	 * @param {string} eventName - The new of the event to emit

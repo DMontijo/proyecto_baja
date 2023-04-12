@@ -200,6 +200,8 @@
 						<div class="d-grid gap-2">
 							<button type="button" name="iniciar_d" id="iniciar_d" onclick="location.reload();" class="btn btn-primary">INICIAR VIDEODENUNCIA</button>
 						</div>
+						<img src="<?= base_url() ?>/assets/img/verificar_audio_video.gif" alt="Autorizacion audio y video FGEBC" class="mb-3">
+
 					</div>
 				</div>
 			</div>
