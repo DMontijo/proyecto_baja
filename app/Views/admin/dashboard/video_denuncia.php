@@ -2248,6 +2248,8 @@
 						personaFisica.FECHANACIMIENTO : '';
 					document.querySelector('#edad_pf').value = personaFisica.EDADCANTIDAD ? personaFisica
 						.EDADCANTIDAD : '';
+					document.querySelector('#fotografia_actual_pf').value = personaFisica.FOTOGRAFIA_ACTUAL ? personaFisica
+						.FOTOGRAFIA_ACTUAL : '';
 					document.querySelector('#numero_identidad_pf').value = personaFisica.NUMEROIDENTIFICACION ?
 						personaFisica.NUMEROIDENTIFICACION : '';
 					document.querySelector('#codigo_pais_pf').value = personaFisica.CODIGOPAISTEL ?
