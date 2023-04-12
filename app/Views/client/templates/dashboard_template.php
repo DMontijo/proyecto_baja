@@ -68,7 +68,6 @@
 							<li>
 								<hr class="dropdown-divider">
 							</li>
-							<li><a class="dropdown-item" href="<?= base_url('denuncia/logout') ?>"><i class="bi bi-box-arrow-left"></i> Salir</a></a></li>
 						</ul>
 					</li>
 				</ul>
