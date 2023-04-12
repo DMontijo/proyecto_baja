@@ -12,9 +12,10 @@
 			<div class="col-12">
 				<div class="card shadow border-0" style="overflow-x:auto;">
 					<div class="card-body">
-						<table id="folios_expediente" class="table table-bordered table-striped">
+						<table id="folios_expediente" class="table table-bordered table-striped table-sm">
 							<thead>
 								<tr>
+									<th class="text-center" style="min-width:150px;">FOLIO</th>
 									<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
 									<th class="text-center">OFENDIDO</th>
 									<th class="text-center">IMPUTADO</th>
@@ -30,7 +31,8 @@
 										$expedienteid =  $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
 									} ?>
 									<tr>
-										<td class="text-center"><?= ($expedienteid ? $expedienteid : '') . '/' . $folio->TIPOEXPEDIENTECLAVE ?></td>
+										<td class="text-center font-weight-bold"><?= $folio->FOLIOID . '/' . $folio->ANO ?></td>
+										<td class="text-center font-weight-bold"><?= ($expedienteid ? $expedienteid : '') . '/' . $folio->TIPOEXPEDIENTECLAVE ?></td>
 										<td class="text-center"><?= isset($folio->OFENDIDO) ? $folio->OFENDIDO : '' ?></td>
 										<td class="text-center"><?= isset($folio->IMPUTADO_NOMBRE) ? $folio->IMPUTADO_NOMBRE : '' ?></td>
 										<td class="text-center"><?= $folio->NOMBRE ?> <?= $folio->APELLIDO_PATERNO ?> <?= $folio->APELLIDO_MATERNO ?></td>
@@ -59,16 +61,28 @@
 			</div>
 
 			<div class="modal-body text-center" id="">
+				<div class="row" id="videos_expediente_spinner">
+					<div class="col-12">
+						<div class="spinner-border text-primary" role="status">
+							<span class="sr-only">Cargando...</span>
+						</div>
+						<p>CARGANDO ...</p>
+					</div>
+				</div>
+				<div class="row d-none" id="videos_expediente_empty">
+					<div class="col-12">
+						<p class="text-primary">
+							No hay videos en este expediente.
+						</p>
+					</div>
+				</div>
 				<div class="table-responsive">
-					<table id="table-videos" class="table table-bordered table-hover table-striped table-light">
+					<table id="table-videos" class="table table-bordered table-hover table-striped table-light d-none">
 						<tr>
 							<th class="text-center bg-primary text-white">VIDEO</th>
-							<!-- <th class="text-center bg-primary text-white">MARCA DE TIEMPO</th> -->
-
 						</tr>
 					</table>
 				</div>
-
 			</div>
 		</div>
 	</div>
@@ -80,10 +94,10 @@
 			responsive: false,
 			lengthChange: false,
 			autoWidth: true,
-			ordering: true,
-			order: [
-				[0, 'asc'],
-			],
+			// ordering: true,
+			// order: [
+			// 	[0, 'asc'],
+			// ],
 			searching: true,
 			pageLength: 100,
 			// dom: 'Bfrtip',
@@ -102,54 +116,56 @@
 	function viewVideo(year, folio) {
 		data = {
 			'folio': folio + '/' + year,
-
 		};
+		$('#videos_expediente_modal').modal('show');
+		document.getElementById('videos_expediente_spinner').classList.remove('d-none');
+		document.getElementById('videos_expediente_empty').classList.add('d-none');
+		document.getElementById('table-videos').classList.add('d-none');
+		clearTablaVideos();
 		$.ajax({
 			data: data,
 			url: "<?= base_url('/data/get-video-link') ?>",
 			method: "POST",
 			dataType: "json",
 			success: function(response) {
-				const videos = response.responseVideos;
-				const marcas = response.marcasVideo;
-				// console.log(videos);
-				// console.log(marcas);
-				llenarTablaVideos(videos, marcas);
-				$('#videos_expediente_modal').modal('show');
+				let array = [];
+				if (response.responseVideos.length > 0) {
+					llenarTablaVideos(response.responseVideos);
+					document.getElementById('videos_expediente_spinner').classList.add('d-none');
+					document.getElementById('videos_expediente_empty').classList.add('d-none');
+					document.getElementById('table-videos').classList.remove('d-none');
+				} else {
+					document.getElementById('videos_expediente_spinner').classList.add('d-none');
+					document.getElementById('videos_expediente_empty').classList.remove('d-none');
+					document.getElementById('table-videos').classList.add('d-none');
+				}
 			}
 		});
 
 	}
 
-	function llenarTablaVideos(videos, marcas) {
+	function llenarTablaVideos(videos) {
 		for (let i = 0; i < videos.length; i++) {
 			if (videos[i].uri != null) {
-				marcasVideoArray = [];
-				if (marcas) {
-					if (videos[i].id == marcas.id) {
-						let marcasVideo = marcas.recordingMarks;
-						marcas.recordingMarks.forEach(marcas => {
-							if (marcas.messageText != null) {
-								marcasVideoArray += marcas.markTime + ' ' + marcas.messageText + `<br>`;
-							}
-						});
-					}
-				}
-
 				var fila =
 					`<tr id="row${i}">` +
 					`<td class="text-center" value="" style="max-width:30vw;"><video src="${videos[i].url} " width="100%" height="100%" controls></video></td>` +
-					// `<td class="text-center" value="">${marcasVideoArray ?marcasVideoArray :'-'}</td>` +
 					`</tr>`;
-
 				$('#table-videos tr:first').after(fila);
 				$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
 				var nFilas = $("#archvideosivos tr").length;
 				$("#adicionados").append(nFilas - 1);
 			}
-
-
 		}
+	}
+
+	function clearTablaVideos() {
+		let tabla_videos = document.querySelectorAll('#table-videos tr');
+		tabla_videos.forEach(row => {
+			if (row.id !== '') {
+				row.remove();
+			}
+		});
 	}
 
 	$('#videos_expediente_modal').on('hidden.bs.modal', function() {

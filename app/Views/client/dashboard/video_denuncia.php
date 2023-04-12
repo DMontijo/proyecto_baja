@@ -194,8 +194,8 @@
 					<div class="text-center" style="max-width:500px;">
 						<img src="<?= base_url() ?>/assets/img/FGEBC.png" alt="Loader FGEBC" class="mb-3" style="width:250px;">
 						<p class="fw-bold">NO PUEDES INICIAR TU VIDEODENUNCIA</p>
-						<p>Acepta los permisos de audio y cámara. En caso de que no sean solicitados, limpia los permisos y aceptalos.
-							Una vez aceptados, recarga la página
+						<p>Acepta los permisos de audio y cámara. En caso de que no sean solicitados, limpia los permisos y aceptalos.<br>
+							Una vez aceptados los permisos de la camara y el micrófono, recarga la página.
 						</p>
 						<div class="d-grid gap-2">
 							<button type="button" name="iniciar_d" id="iniciar_d" onclick="location.reload();" class="btn btn-primary">INICIAR VIDEODENUNCIA</button>

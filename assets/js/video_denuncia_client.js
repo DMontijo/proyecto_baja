@@ -18,7 +18,7 @@ let folio_completo = document.getElementById("input_folio").value;
 let array = folio_completo.split("-");
 let folio_SY = array[1];
 let year_SF = array[0];
-var intervalo = setInterval(function() {
+var intervalo = setInterval(function () {
 	location.reload();
 }, 180000);
 
@@ -50,11 +50,10 @@ guestVideoService.registerOnVideoReady(
 	"secondary_video",
 	"main_video",
 	(response, guestData) => {
+		clearInterval(intervalo);
 		texto_inicial.style.display = "none";
 		video_container.style.display = "block";
-		clearInterval(intervalo);
-		document.querySelector("#documentos_anexar_card").style.display =
-			"block";
+		document.querySelector("#documentos_anexar_card").style.display = "block";
 		agente_name.innerHTML = "LIC. " + response.agent.name;
 		// denunciante_name.innerHTML = guestData.name;
 	}
@@ -141,9 +140,8 @@ guestVideoService.saveGeolocation(() => {
 	if (navigator.mediaDevices) {
 		navigator.mediaDevices
 			.getUserMedia({ audio: true, video: true })
-			.then(function(stream) {
+			.then(function (stream) {
 				console.log("Acceso a cámara y audio concedido");
-
 				guestVideoService.connectGuest(
 					{ delito, folio: folio_SY + "/" + year_SF, descripcion },
 					guest => {
@@ -162,20 +160,25 @@ guestVideoService.saveGeolocation(() => {
 					}
 				);
 			})
-			.catch(function(error) {
+			.catch(function (error) {
 				console.log("Acceso a cámara y audio denegado");
 				texto_inicial.style.display = "none";
 				pantalla_error.style.display = "block";
 				video_container.style.display = "none";
-				document.querySelector(
-					"#documentos_anexar_card"
-				).style.display = "none";
+				document.querySelector("#documentos_anexar_card").style.display = "none";
 				setTimeout(() => {
 					deleteVideoElement();
 				}, 2000);
 			});
 	} else {
-		console.log("El navegador no soporta MediaDevices");
+		console.log("El navegador no soporta el uso de la camara o micrófono, intenta desde otro dispositivo.");
+		texto_inicial.style.display = "none";
+		pantalla_error.style.display = "block";
+		video_container.style.display = "none";
+		document.querySelector("#documentos_anexar_card").style.display = "none";
+		setTimeout(() => {
+			deleteVideoElement();
+		}, 2000);
 		Swal.fire({
 			position: "top-end",
 			title: "Intenta con otro navgador.",

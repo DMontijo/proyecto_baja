@@ -18,7 +18,7 @@
                                 </a>
                             </div>
                             <div class="col-12 mt-3" style="overflow-x:scroll;">
-                                <table id="table-usuarios" class="table table-bordered table-striped"
+                                <table id="table-usuarios" class="table table-bordered table-striped table-sm"
                                     data-page-length='50' style="width:100%">
                                     <thead>
                                         <tr>
