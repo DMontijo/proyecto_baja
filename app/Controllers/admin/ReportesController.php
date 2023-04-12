@@ -122,8 +122,6 @@ class ReportesController extends BaseController
 
 	public function createFoliosXlsx()
 	{
-
-
 		$data = [
 			'MUNICIPIOID' => $this->request->getPost('municipio'),
 			'AGENTEATENCIONID' => $this->request->getPost('agente'),
@@ -154,8 +152,8 @@ class ReportesController extends BaseController
 		$spreadSheet->getProperties()
 			->setCreator("Fiscalía General del Estado de Baja California")
 			->setLastModifiedBy("Fiscalía General del Estado de Baja California")
-			->setTitle("Reporte_Folios_' . $date")
-			->setSubject("Reporte_Folios_' . $date")
+			->setTitle("Reporte Folios" . $date)
+			->setSubject("Reporte Folios" . $date)
 			->setDescription(
 				"El presente documento fue generado por el Centro de Denuncia Tecnológica de la Fiscalía General del Estado de Baja California."
 			)
@@ -252,9 +250,17 @@ class ReportesController extends BaseController
 		$row++;
 
 		foreach ($resultFilter->result as $index => $folio) {
+			$tipo = '';
+			if ($folio->TIPODENUNCIA == 'VD') {
+				$tipo = 'CDTEC';
+			} else if ($folio->TIPODENUNCIA == 'DA') {
+				$tipo = 'ANÓNIMA';
+			} else {
+				$tipo = 'TELEFÓNICA';
+			}
 			$sheet->setCellValue('A' . $row, $folio->FOLIOID);
 			$sheet->setCellValue('B' . $row, $folio->ANO);
-			$sheet->setCellValue('C' . $row, $folio->TIPODENUNCIA == 'VD' ? 'CDTEC' : 'ANÓNIMA');
+			$sheet->setCellValue('C' . $row, $tipo);
 			$sheet->setCellValue('D' . $row, $folio->EXPEDIENTEID . '/' . $folio->TIPOEXPEDIENTECLAVE);
 			$sheet->setCellValue('E' . $row, date('d-m-Y'), strtotime($folio->FECHASALIDA));
 			$sheet->setCellValue('F' . $row, $folio->N_DENUNCIANTE . ' ' . $folio->APP_DENUNCIANTE . ' ' . $folio->APM_DENUNCIANTE);
@@ -273,8 +279,10 @@ class ReportesController extends BaseController
 
 		$writer = new Xlsx($spreadSheet);
 
-		header('Content-Type: application/vnd.ms-excel');
-		header('Content-Disposition: attachment; filename="Reporte_Folios_' . $date . '.xlsx"');
+		$filename = "Reporte_Folios_" . $date . ".xlsx";
+		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+		header("Content-Disposition: attachment; filename=\"$filename\"");
+		header('Content-Transfer-Encoding: binary');
 		header('Cache-Control: max-age=0');
 		$writer->save("php://output");
 	}
@@ -388,8 +396,8 @@ class ReportesController extends BaseController
 		$spreadSheet->getProperties()
 			->setCreator("Fiscalía General del Estado de Baja California")
 			->setLastModifiedBy("Fiscalía General del Estado de Baja California")
-			->setTitle("Reporte_Constancias_' . $date")
-			->setSubject("Reporte_Constancias_' . $date")
+			->setTitle("Reporte_Constancias " . $date)
+			->setSubject("Reporte_Constancias " . $date)
 			->setDescription(
 				"El presente documento fue generado por el Centro de Denuncia Tecnológica de la Fiscalía General del Estado de Baja California."
 			)
@@ -508,8 +516,10 @@ class ReportesController extends BaseController
 
 		$writer = new Xlsx($spreadSheet);
 
-		header('Content-Type: application/vnd.ms-excel');
-		header('Content-Disposition: attachment; filename="Reporte_Constancias_' . $date . '.xlsx"');
+		$filename = "Reporte_Constancias_" . $date . ".xlsx";
+		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+		header("Content-Disposition: attachment; filename=\"$filename\"");
+		header('Content-Transfer-Encoding: binary');
 		header('Cache-Control: max-age=0');
 		$writer->save("php://output");
 	}
@@ -527,7 +537,7 @@ class ReportesController extends BaseController
 		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
 		$resultFilter = $this->_folioModel->filterDatesRegistroDiario($data);
 		$empleado = $this->_usuariosModel->asObject()->orderBy('NOMBRE', 'ASC')->findAll();
-		
+
 		$dataView = (object)array();
 		$dataView->result = $resultFilter->result;
 		$dataView->municipios = $municipio;
@@ -614,8 +624,8 @@ class ReportesController extends BaseController
 		$spreadSheet->getProperties()
 			->setCreator("Fiscalía General del Estado de Baja California")
 			->setLastModifiedBy("Fiscalía General del Estado de Baja California")
-			->setTitle("REGISTRO_DIARIO . $date")
-			->setSubject("REGISTRO_DIARIO' . $date")
+			->setTitle("REGISTRO_DIARIO" . $date)
+			->setSubject("REGISTRO_DIARIO" . $date)
 			->setDescription(
 				"El presente documento fue generado por el Centro de Denuncia Tecnológica de la Fiscalía General del Estado de Baja California."
 			)
@@ -800,7 +810,7 @@ class ReportesController extends BaseController
 			// 		->get('duration');
 			// }
 
-			$endpointFolio = $this->urlApi . 'recordings/folio?folio=' . $folio->FOLIOID .'/'. $folio->ANO;
+			$endpointFolio = $this->urlApi . 'recordings/folio?folio=' . $folio->FOLIOID . '/' . $folio->ANO;
 
 			$responseFolio = $this->_curlGetService($endpointFolio);
 			// return json_encode($responseFolio);
@@ -843,14 +853,21 @@ class ReportesController extends BaseController
 			$horaregistro = date('H:i:s', $fecharegistro);
 			$sheet->setCellValue('A1', "CENTRO TELEFÓNICO Y EN LÍNEA DE ATENCIÓN Y ORIENTACIÓN TEMPRANA");
 			$sheet->setCellValue('A2', "REGISTRO ESTATAL DE PRE DENUNCIA TELEFÓNICA Y EN LÍNEA");
-
+			$tipo = '';
+			if ($folio->TIPODENUNCIA == 'VD') {
+				$tipo = 'CDTEC';
+			} else if ($folio->TIPODENUNCIA == 'DA') {
+				$tipo = 'ANÓNIMA';
+			} else {
+				$tipo = 'TELEFÓNICA';
+			}
 			$sheet->setCellValue('A' . $row, $row - 4);
 			$sheet->setCellValue('B' . $row, $dateregistro);
 			$sheet->setCellValue('C' . $row, $folio->FOLIOID);
 			$sheet->setCellValue('D' . $row, $inicio != '' ? $inicio : '');
 			$sheet->setCellValue('E' . $row, isset($fin) ? $fin : '');
 			$sheet->setCellValue('F' . $row,  $horas != '' ? strval($horas)  . ':' . $minutos . ':' . number_format($segundos, 0) : 'NO HAY VIDEO GRABADO');
-			$sheet->setCellValue('G' . $row, $folio->TIPODENUNCIA == 'DA' ? 'ANÓNIMA' : 'CDTEC');
+			$sheet->setCellValue('G' . $row, $tipo);
 			$sheet->setCellValue('H' . $row, $folio->MUNICIPIODESCR);
 			$sheet->setCellValue('I' . $row, $folio->N_DENUNCIANTE);
 			$sheet->setCellValue('J' . $row, $folio->APP_DENUNCIANTE);
@@ -865,7 +882,7 @@ class ReportesController extends BaseController
 				$arrayExpediente = str_split($folio->EXPEDIENTEID);
 				$expedienteid = $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
 			}
-			$sheet->setCellValue('R' . $row, $folio->EXPEDIENTEID ? $expedienteid.'/'.$folio->TIPOEXPEDIENTECLAVE: "SIN EXPEDIENTE");
+			$sheet->setCellValue('R' . $row, $folio->EXPEDIENTEID ? $expedienteid . '/' . $folio->TIPOEXPEDIENTECLAVE : "SIN EXPEDIENTE");
 			$sheet->setCellValue('S' . $row, $remision); //remision
 			$sheet->setCellValue('T' . $row, "");
 
@@ -901,8 +918,10 @@ class ReportesController extends BaseController
 		// $drawing->setRotation(25);
 		$writer = new Xlsx($spreadSheet);
 
-		header('Content-Type: application/vnd.ms-excel');
-		header('Content-Disposition: attachment; filename="REGISTRO_DIARIO_' . session('NOMBRE') . '.xlsx"');
+		$filename = "Registro_Diario_" . session('NOMBRE') . ".xlsx";
+		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+		header("Content-Disposition: attachment; filename=\"$filename\"");
+		header('Content-Transfer-Encoding: binary');
 		header('Cache-Control: max-age=0');
 		$writer->save("php://output");
 	}
@@ -1019,8 +1038,8 @@ class ReportesController extends BaseController
 
 					array_push($llamadas, $conexion);
 				}
-				}
-			
+			}
+
 
 			$dataView->empleados = array_unique($empleado, SORT_REGULAR);
 			$dataView->llamadas = array_unique($llamadas, SORT_REGULAR);
@@ -1152,8 +1171,8 @@ class ReportesController extends BaseController
 		$spreadSheet->getProperties()
 			->setCreator("Fiscalía General del Estado de Baja California")
 			->setLastModifiedBy("Fiscalía General del Estado de Baja California")
-			->setTitle("REGISTRO_LLAMADAS . $date")
-			->setSubject("REGISTRO_LLAMADAS' . $date")
+			->setTitle("REGISTRO_LLAMADAS " . $date)
+			->setSubject("REGISTRO_LLAMADAS " . $date)
 			->setDescription(
 				"El presente documento fue generado por el Centro de Denuncia Tecnológica de la Fiscalía General del Estado de Baja California."
 			)
@@ -1314,8 +1333,10 @@ class ReportesController extends BaseController
 		// $drawing->setRotation(25);
 		$writer = new Xlsx($spreadSheet);
 
-		header('Content-Type: application/vnd.ms-excel');
-		header('Content-Disposition: attachment; filename="REGISTRO_LLAMADAS_' . session('NOMBRE') . '.xlsx"');
+		$filename = "Registro_Llamadas_" . $date . ".xlsx";
+		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+		header("Content-Disposition: attachment; filename=\"$filename\"");
+		header('Content-Transfer-Encoding: binary');
 		header('Cache-Control: max-age=0');
 		$writer->save("php://output");
 	}
@@ -1428,8 +1449,8 @@ class ReportesController extends BaseController
 		$spreadSheet->getProperties()
 			->setCreator("Fiscalía General del Estado de Baja California")
 			->setLastModifiedBy("Fiscalía General del Estado de Baja California")
-			->setTitle("REPORTE_CONAVIM . $date")
-			->setSubject("REPORTE_CONAVIM' . $date")
+			->setTitle("REPORTE_CONAVIM" . $date)
+			->setSubject("REPORTE_CONAVIM" . $date)
 			->setDescription(
 				"El presente documento fue generado por el Centro de Denuncia Tecnológica de la Fiscalía General del Estado de Baja California."
 			)
@@ -1600,8 +1621,10 @@ class ReportesController extends BaseController
 		// $drawing->setRotation(25);
 		$writer = new Xlsx($spreadSheet);
 
-		header('Content-Type: application/vnd.ms-excel');
-		header('Content-Disposition: attachment; filename="reporte_conavim_' . session('NOMBRE') . '.xlsx"');
+		$filename = "Reporte_Conavim_" . $date . ".xlsx";
+		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+		header("Content-Disposition: attachment; filename=\"$filename\"");
+		header('Content-Transfer-Encoding: binary');
 		header('Cache-Control: max-age=0');
 		$writer->save("php://output");
 	}
@@ -1729,8 +1752,8 @@ class ReportesController extends BaseController
 		$spreadSheet->getProperties()
 			->setCreator("Fiscalía General del Estado de Baja California")
 			->setLastModifiedBy("Fiscalía General del Estado de Baja California")
-			->setTitle("REPORTE_CEEAIV . $date")
-			->setSubject("REPORTE_CEEAIV' . $date")
+			->setTitle("REPORTE_CEEAIV" . $date)
+			->setSubject("REPORTE_CEEAIV" . $date)
 			->setDescription(
 				"El presente documento fue generado por el Centro de Denuncia Tecnológica de la Fiscalía General del Estado de Baja California."
 			)
@@ -1895,11 +1918,14 @@ class ReportesController extends BaseController
 		// $drawing->setRotation(25);
 		$writer = new Xlsx($spreadSheet);
 
-		header('Content-Type: application/vnd.ms-excel');
-		header('Content-Disposition: attachment; filename="reporte_conavim_' . session('NOMBRE') . '.xlsx"');
+		$filename = "Registro_Canalizaciones_Derivaciones_" . $date . ".xlsx";
+		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+		header("Content-Disposition: attachment; filename=\"$filename\"");
+		header('Content-Transfer-Encoding: binary');
 		header('Cache-Control: max-age=0');
 		$writer->save("php://output");
 	}
+
 	private function _curlGetService($endpoint)
 	{
 		$ch = curl_init();

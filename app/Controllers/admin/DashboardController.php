@@ -530,7 +530,15 @@ class DashboardController extends BaseController
 		$data = (object) array();
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
-		$this->_loadView('Usuarios activos', 'usuarios_activos', '', $data, 'usuarios_activos');
+		$this->_loadView('Agentes activos', 'usuarios_activos', '', $data, 'usuarios_activos');
+	}
+
+	public function usuarios_en_llamada()
+	{
+		$data = (object) array();
+		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+
+		$this->_loadView('Agente en llamada', 'usuarios_en_llamada', '', $data, 'usuarios_en_llamada');
 	}
 
 	public function lista_prioridad()
@@ -1840,9 +1848,10 @@ class DashboardController extends BaseController
 		$year = $this->request->getPost('year');
 		$institutomunicipio = $this->request->getPost('institutomunicipio');
 		$institutoremision = $this->request->getPost('institutoremision');
-
+		$telefonica = $this->request->getPost('denuncia_tel');
 
 		$agenteId = session('ID') ? session('ID') : 1;
+
 
 		if ($status == 'DERIVADO' || $status == 'CANALIZADO') {
 			$data = [
@@ -1861,7 +1870,9 @@ class DashboardController extends BaseController
 				'FECHASALIDA' => date('Y-m-d H:i:s'),
 			];
 		}
-
+		if ($telefonica == 'S') {
+			$data['TIPODENUNCIA'] = 'TE';
+		} 
 		if (!empty($status) && !empty($motivo) && !empty($year) && !empty($folio) && !empty($agenteId)) {
 			$folioRow = $this->_folioModel->where('ANO', $year)->where('FOLIOID', $folio)->where('STATUS', 'EN PROCESO')->first();
 			if ($folioRow) {
@@ -1885,6 +1896,8 @@ class DashboardController extends BaseController
 							return json_encode(['status' => 1]);
 						}
 					} else if ($folio->TIPODENUNCIA == 'DA') {
+						return json_encode(['status' => 1]);
+					}else if ($folio->TIPODENUNCIA == 'TE') {
 						return json_encode(['status' => 1]);
 					}
 				} else {
@@ -4228,7 +4241,7 @@ class DashboardController extends BaseController
 					'INSTAGRAM' => $this->request->getPost('instagram_pf'),
 					'TWITTER' => $this->request->getPost('twitter_pf'),
 					'FOTO' =>  $fotoP,
-					'FOTOGRAFIA_ACTUAL' => $this->request->getPost('fotografia_actual_pf'),
+					'FOTOGRAFIA_ACTUAL' => $this->request->getPost('fotografia_actual_pf') != '' ? $this->request->getPost('fotografia_actual_pf'): NULL,
 				);
 			} else {
 				$data = array(
@@ -4260,7 +4273,7 @@ class DashboardController extends BaseController
 					'FACEBOOK' => $this->request->getPost('facebook_pf'),
 					'INSTAGRAM' => $this->request->getPost('instagram_pf'),
 					'TWITTER' => $this->request->getPost('twitter_pf'),
-					'FOTOGRAFIA_ACTUAL' => $this->request->getPost('fotografia_actual_pf'),
+					'FOTOGRAFIA_ACTUAL' => $this->request->getPost('fotografia_actual_pf')!= '' ? $this->request->getPost('fotografia_actual_pf'): NULL,
 				);
 			}
 
@@ -5512,6 +5525,38 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
+	public function deleteVehiculoByFolio()
+	{
+		try {
+			$folio = trim($this->request->getPost('folio'));
+			$year = trim($this->request->getPost('year'));
+			$vehiculoid = trim($this->request->getPost('vehiculoid'));
+		
+
+			$deleteVehiculo = $this->_folioVehiculoModel->where('FOLIOID', $folio)->where('ANO', $year)->where('VEHICULOID', $vehiculoid)->delete();
+
+			if ($deleteVehiculo) {
+				$vehiculos = $this->_folioVehiculoModel->get_by_folio($folio, $year);
+
+
+				$datosBitacora = [
+					'ACCION' => 'Ha eliminado un vehiculo',
+					'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
+				];
+
+			
+				$this->_bitacoraActividad($datosBitacora);
+
+
+				return json_encode(['status' => 1, 'vehiculos' => $vehiculos]);
+			} else {
+				return json_encode(['status' => 0]);
+			}
+		} catch (\Exception $e) {
+			return json_encode(['status' => 0]);
+		}
+	}
+
 
 	public function createFisImpDelitoByFolio()
 	{
@@ -6446,12 +6491,24 @@ class DashboardController extends BaseController
 
 		$data->plantilla = str_replace('[EXTERIOR]', $data->folio->HECHONUMEROCASA ? $data->folio->HECHONUMEROCASA : 'S/N', $data->plantilla);
 
-		$data->plantilla = str_replace('[DIRECCION]', 
-		($data->folio->HECHOCALLE ? $data->folio->HECHOCALLE : 'SIN CALLE') . ' ' . 
-		($data->folio->HECHONUMEROCASA ? $data->folio->HECHONUMEROCASA : 'S/N')  . ',' . 
-		($data->folio->HECHOCOLONIADESCR ? $data->folio->HECHOCOLONIADESCR : 'SIN COLONIA') . ',' . 
-		(isset($data->localidad) ? $data->localidad->LOCALIDADDESCR : 'SIN LOCALIDAD') . ',' . 
-		(isset($data->municipio_delito) ? $data->municipio_delito->MUNICIPIODESCR : 'SIN MUNICIPIO'), $data->plantilla);
+		$data->plantilla = str_replace(
+			'[DIRECCION]',
+			($data->folio->HECHOCALLE ? $data->folio->HECHOCALLE : 'SIN CALLE') . ' ' .
+				($data->folio->HECHONUMEROCASA ? $data->folio->HECHONUMEROCASA : 'S/N')  . ',' .
+				($data->folio->HECHOCOLONIADESCR ? $data->folio->HECHOCOLONIADESCR : 'SIN COLONIA') . ',' .
+				(isset($data->localidad) ? $data->localidad->LOCALIDADDESCR : 'SIN LOCALIDAD') . ',' .
+				(isset($data->municipio_delito) ? $data->municipio_delito->MUNICIPIODESCR : 'SIN MUNICIPIO'),
+			$data->plantilla
+		);
+		$data->plantilla = str_replace(
+			'[DIRECCION]',
+			($data->folio->HECHOCALLE ? $data->folio->HECHOCALLE : 'SIN CALLE') . ' ' .
+				($data->folio->HECHONUMEROCASA ? $data->folio->HECHONUMEROCASA : 'S/N')  . ',' .
+				($data->folio->HECHOCOLONIADESCR ? $data->folio->HECHOCOLONIADESCR : 'SIN COLONIA') . ',' .
+				(isset($data->localidad) ? $data->localidad->LOCALIDADDESCR : 'SIN LOCALIDAD') . ',' .
+				(isset($data->municipio_delito) ? $data->municipio_delito->MUNICIPIODESCR : 'SIN MUNICIPIO'),
+			$data->plantilla
+		);
 
 		$data->plantilla = str_replace('[LUGAR_HECHO]', $data->lugar_delito->HECHODESCR, $data->plantilla);
 
@@ -6567,13 +6624,26 @@ class DashboardController extends BaseController
 			$data->plantilla = str_replace('[MINUTOS]', date('i'), $data->plantilla);
 			$data->plantilla = str_replace('[ESTADO]', $data->municipios->MUNICIPIODESCR, $data->plantilla);
 			$data->plantilla = str_replace('[EXTERIOR]', $data->folio->HECHONUMEROCASA ? $data->folio->HECHONUMEROCASA : 'S/N', $data->plantilla);
-			$data->plantilla = str_replace('[DIRECCION]', 
-			($data->folio->HECHOCALLE ? $data->folio->HECHOCALLE : 'SIN CALLE') . ' ' . 
-			($data->folio->HECHONUMEROCASA ? $data->folio->HECHONUMEROCASA : 'S/N')  . ',' . 
-			($data->folio->HECHOCOLONIADESCR ? $data->folio->HECHOCOLONIADESCR : 'SIN COLONIA') . ',' . 
-			(isset($data->localidad) ? $data->localidad->LOCALIDADDESCR : 'SIN LOCALIDAD') . ',' . 
-			(isset($data->municipio_delito) ? $data->municipio_delito->MUNICIPIODESCR : 'SIN MUNICIPIO'), $data->plantilla);
-			
+			$data->plantilla = str_replace(
+				'[DIRECCION]',
+				($data->folio->HECHOCALLE ? $data->folio->HECHOCALLE : 'SIN CALLE') . ' ' .
+					($data->folio->HECHONUMEROCASA ? $data->folio->HECHONUMEROCASA : 'S/N')  . ',' .
+					($data->folio->HECHOCOLONIADESCR ? $data->folio->HECHOCOLONIADESCR : 'SIN COLONIA') . ',' .
+					(isset($data->localidad) ? $data->localidad->LOCALIDADDESCR : 'SIN LOCALIDAD') . ',' .
+					(isset($data->municipio_delito) ? $data->municipio_delito->MUNICIPIODESCR : 'SIN MUNICIPIO'),
+				$data->plantilla
+			);
+
+			$data->plantilla = str_replace(
+				'[DIRECCION]',
+				($data->folio->HECHOCALLE ? $data->folio->HECHOCALLE : 'SIN CALLE') . ' ' .
+					($data->folio->HECHONUMEROCASA ? $data->folio->HECHONUMEROCASA : 'S/N')  . ',' .
+					($data->folio->HECHOCOLONIADESCR ? $data->folio->HECHOCOLONIADESCR : 'SIN COLONIA') . ',' .
+					(isset($data->localidad) ? $data->localidad->LOCALIDADDESCR : 'SIN LOCALIDAD') . ',' .
+					(isset($data->municipio_delito) ? $data->municipio_delito->MUNICIPIODESCR : 'SIN MUNICIPIO'),
+				$data->plantilla
+			);
+
 			$data->plantilla = str_replace('[LUGAR_HECHO]', $data->lugar_delito->HECHODESCR, $data->plantilla);
 
 			$data->plantilla = str_replace('[MUNICIPIO_DELITO]', $data->municipio_delito ? $data->municipio_delito->MUNICIPIODESCR : '', $data->plantilla);
@@ -7030,24 +7100,11 @@ class DashboardController extends BaseController
 		if (session('ROLID') == 11 || session('ROLID') == 1 || session('ROLID') == 7 || session('ROLID') == 2) {
 			$data->folio = $this->_folioModel->videos_expediente_model(1);
 		} else if (session('ROLID') == 12) {
-			$data->folio = $this->_folioModel->videos_expediente_model(5);
+			$data->folio = $this->_folioModel->videos_expediente_model(3);
 		} else {
-			$data->folio = $this->_folioModel->videos_expediente_model(1);
-			foreach ($data->folio as $key => $value) {
-
-				if ($value->INSTITUCIONREMISIONMUNICIPIOID) {
-					$data->folio = $this->_folioModel->videos_expediente_model(2);
-				}
-
-				if ($value->MUNICIPIOASIGNADOID) {
-					$data->folio = $this->_folioModel->videos_expediente_model(3);
-				}
-
-				if ($value->OFICINAASIGNADOID) {
-					$data->folio = $this->_folioModel->videos_expediente_model(4);
-				}
-			}
+			$data->folio = $this->_folioModel->videos_expediente_model(2);
 		}
+
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 		$this->_loadView('Videos expediente', 'videos', '', $data, 'videos_expediente');

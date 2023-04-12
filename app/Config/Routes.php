@@ -71,6 +71,7 @@ $routes->group('admin', function ($routes) {
 
 		$routes->get('generarqr', 'admin/FirmaController::generarqr');
 		$routes->get('usuarios_activos', 'admin/DashboardController::usuarios_activos');
+		$routes->get('usuarios_en_llamada', 'admin/DashboardController::usuarios_en_llamada');
 		$routes->get('lista_prioridad', 'admin/DashboardController::lista_prioridad');
 
 		$routes->get('firmas', 'admin/DashboardController::firmas');
@@ -278,6 +279,7 @@ $routes->group('data', function ($routes) {
 	$routes->post('update-media-filiacion-by-id', 'admin/DashboardController::updateMediaFiliacionById');
 	$routes->post('update-vehiculo-by-id', 'admin/DashboardController::updateVehiculoByFolio');
 	$routes->post('create-vehiculo-by-id', 'admin/DashboardController::createVehiculoByFolio');
+	$routes->post('delete-vehiculo-by-id', 'admin/DashboardController::deleteVehiculoByFolio');
 
 	$routes->post('delete-parentesco-by-id', 'admin/DashboardController::deleteParentescoById');
 	$routes->post('delete-persona-fisica-by-id', 'admin/DashboardController::deletePersonaFisicaById');
