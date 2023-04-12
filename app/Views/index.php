@@ -157,6 +157,4 @@
 		document.querySelector('#tutorial_video').pause();
 	});
 </script>
-
-
 <?= $this->endSection() ?>

@@ -2277,26 +2277,25 @@ class DashboardController extends BaseController
 
 							$sinetiqueta = strip_tags($docP['PLACEHOLDER'], ['strong', 'br']); //placeolder sin etiquetas html
 							//escribe el texto del rtf
-							$sect->writeText($sinetiqueta, new PHPRtfLite_Font(11, 'Arial'), new PHPRtfLite_ParFormat(PHPRtfLite_ParFormat::TEXT_ALIGN_JUSTIFY));
+							$sect->writeText($sinetiqueta, new PHPRtfLite_Font(11, 'Arial'), new PHPRtfLite_ParFormat(PHPRtfLite_ParFormat::TEXT_ALIGN_LEFT));
 							// save rtf document
 							$rtf->save('assets/' . $docP['NUMEROEXPEDIENTE'] . '_' . $docP['FOLIODOCID'] . '.rtf');
 							$tarjet = FCPATH  . 'assets/' . $docP['NUMEROEXPEDIENTE'] . "_" . $docP['FOLIODOCID'] . ".rtf";
-							//contenido del rtf guardado
+							//Blob del rtf guardado
 							$data = file_get_contents($tarjet);
-							//creacion del documento rtf
-							$document = new Document($data);
-							$espacio = implode(chr(0), str_split($data));
-							// fwrite($fh, $espacio) or die("No se pudo escribir en el archivo");
-							// $data2 = file_get_contents($tarjet2);
-							// fwrite($tarjet2, $espacio);
+							//Convierte el blob a UTF-16LE
+							$utf16le = mb_convert_encoding($data, 'UTF-16LE');
+
 							$plantilla = (object) array();
-
 							$plantilla = $this->_plantillasModel->where('TITULO', $docP['TIPODOC'])->first();
-
 							$documentos = array();
-							$documentos['DOCUMENTO'] = base64_encode($espacio);
+
+							//Convierte el blob a base64 para enviarlo al webservice.
+							$documentos['DOCUMENTO'] = base64_encode($utf16le);
 							$documentos['DOCTODESCR'] = $docP['TIPODOC'];
 
+
+							//Se asigna el autor y oficina dependiendo del enviroment
 							if (ENVIRONMENT == 'development') {
 								if ($foliovd['MUNICIPIOASIGNADOID'] == 1) {
 									$documentos['AUTOR'] = 8987;
@@ -2309,6 +2308,7 @@ class DashboardController extends BaseController
 									$documentos['OFICINAIDAUTOR'] = 924;
 								}
 							}
+
 							if (ENVIRONMENT == 'production') {
 								if ($foliovd['MUNICIPIOASIGNADOID'] == 1) {
 									$documentos['AUTOR'] = 8988;
@@ -2321,9 +2321,6 @@ class DashboardController extends BaseController
 									$documentos['OFICINAIDAUTOR'] = 924;
 								}
 							}
-							// $documentos['AUTOR'] = 3947;
-							// $documentos['OFICINAIDAUTOR'] = 394;
-
 
 							$documentos['STATUSDOCUMENTOID'] = 4;
 							if ($foliovd['MUNICIPIOASIGNADOID'] == 1) {
@@ -2528,19 +2525,17 @@ class DashboardController extends BaseController
 								// save rtf document
 								$rtf->save('assets/' . $docP['NUMEROEXPEDIENTE'] . '_' . $docP['FOLIODOCID'] . '.rtf');
 								$tarjet = FCPATH  . 'assets/' . $docP['NUMEROEXPEDIENTE'] . "_" . $docP['FOLIODOCID'] . ".rtf";
-								//contenido del rtf guardado
+								//Blob del rtf guardado
 								$data = file_get_contents($tarjet);
-								//creacion del documento rtf
-								$document = new Document($data);
-								$espacio = implode(chr(0), str_split($data));
-								// fwrite($fh, $espacio) or die("No se pudo escribir en el archivo");
-								// $data2 = file_get_contents($tarjet2);
-								// fwrite($tarjet2, $espacio);
-								$plantilla = (object) array();
+								//Convierte el blob a UTF-16LE
+								$utf16le = mb_convert_encoding($data, 'UTF-16LE');
 
+								$plantilla = (object) array();
 								$plantilla = $this->_plantillasModel->where('TITULO', $docP['TIPODOC'])->first();
 								$documentos = array();
-								$documentos['DOCUMENTO'] = base64_encode($espacio);
+
+								//Convierte el blob a base64 para enviarlo al webservice.
+								$documentos['DOCUMENTO'] = base64_encode($utf16le);
 								$documentos['DOCTODESCR'] = $docP['TIPODOC'];
 								if (ENVIRONMENT == 'development') {
 									if ($foliovd['MUNICIPIOASIGNADOID'] == 1) {
