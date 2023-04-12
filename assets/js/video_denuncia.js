@@ -49,7 +49,19 @@ var totalSeconds = 0;
 var myInterval;
 
 const agentVideoService = new VideoServiceAgent(agentUUID, { apiURI, apiKey });
-
+recargar_denunciante_btn.addEventListener("click", () => {
+	console.log("RECARGANDO DENUNCIANTE")
+	agentVideoService.refreshGuestConnection(() => {
+		Swal.fire({
+			icon: "success",
+			text: "La conexion de denunciante se recargara en 3 segundos",
+			showConfirmButton: true,
+			confirmButtonColor: "#bf9b55",
+			timer: 3000,
+			timerProgressBar: true,
+		});
+	});
+});
 disponible_connect.addEventListener("click", () => {
 	console.log("Conectando agente...");
 	disponible_connect.disabled = true;
@@ -263,18 +275,7 @@ audio_denunciante_off.addEventListener("click", () => {
 	});
 });
 
-recargar_denunciante_btn.addEventListener("click", () => {
-	agentVideoService.refreshGuestConnection(() => {
-		Swal.fire({
-			icon: "success",
-			text: "La conexion de denunciante se recargara en 3 segundos",
-			showConfirmButton: true,
-			confirmButtonColor: "#bf9b55",
-			timer: 3000,
-			timerProgressBar: true,
-		});
-	});
-});
+
 
 startRecord.addEventListener("click", () => {
 	agentVideoService.startRecording(() => {
