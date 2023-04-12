@@ -360,7 +360,7 @@ class ReportesController extends BaseController
 		$data = [
 			'MUNICIPIOID' => $this->request->getPost('municipio'),
 			'AGENTEID' => $this->request->getPost('agente'),
-			'STATUS' => $_POST["STATUS"],
+			'STATUS' => $this->request->getPost('status'),
 			'fechaInicio' => $this->request->getPost('fechaInicio'),
 			'fechaFin' => $this->request->getPost('fechaFin'),
 			'horaInicio' => $this->request->getPost('horaInicio'),
