@@ -33,6 +33,8 @@ const audio_denunciante_off = document.querySelector("#off-audio-denunciante");
 //RECARGAR PAGINA DE DENUNCIANTE
 const recargar_denunciante_btn = document.querySelector("#recargar_denunciante_btn");
 
+const recargar_agente = document.querySelector("#recargar_agente");
+
 const marksRecording = document.querySelector("#marks-recording-modal");
 const enviar_marca = document.querySelector("#enviar_marca");
 const desconectar_llamada = document.querySelector("#disconnect-call");

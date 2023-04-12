@@ -457,10 +457,7 @@ export class VideoServiceAgent {
 	/**
 	 * This function will emit a signal to the guest to reload its page
 	 *
-	 * @param {string} markTime - MarkTime string
-	 * @param {string} messageTextMark - Message text
-	 * @param {string} selectedMark - Selected Mark id
-	 * @param {function} callback - function to be executed when the MarkTime is sent
+	 * @param {function} callback - function to be executed after the guest has reloaded
 	 */
 	refreshGuestConnection(callback = () => { }) {
 		this.#emit("refresh-guest-connection",
@@ -468,6 +465,26 @@ export class VideoServiceAgent {
 				if (typeof callback === "function") callback(response);
 			}
 		);
+	}
+
+	/**
+	 * This function will emit a signal to reload connection to video call
+	 * 
+	 * @param {function} callback - function to be executed after the agent video connection reload
+	 */
+	reloadAgentVideoCall() {
+		this.#emit('reload-agent-video-call', async (response) => {
+			this.#connectionId = response.connectionId;
+
+			
+			
+			await this.#videoCallService.forceDisconnection();
+			this.#videoCallService.connectVideoCall(
+				response.token,
+				localVideoSelector,
+				callback(response)
+			);
+		})
 	}
 
 	/**
