@@ -9,7 +9,7 @@ const roomsSockets = new RoomsSockets({ apiURI, apiKey });
 const priorityLinesSockets = new PriorityLinesSockets({ apiURI, apiKey });
 
 roomsSockets.registerToRoomsUpdate(response => {
-	const countUser = response.filter(i => i).length;
+	const countUser = response.filter(i => i.available).length;
 
 	document.getElementById("card_active_users").innerHTML = countUser;
 });
