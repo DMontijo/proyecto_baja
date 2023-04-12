@@ -5729,6 +5729,7 @@ class DashboardController extends BaseController
 		$data = (object) array();
 		$data->folio = $this->_folioModel->asObject()->where('ANO', $year)->where('FOLIOID', $folio)->first();
 		$data->plantilla = $this->_plantillasModel->where('TITULO', $titulo)->first();
+
 		$data->folioDoc = $this->_folioDocModel->get_by_folio($folio, $data->folio->ANO);
 		$data->lugar_hecho = $data->folio->HECHOLUGARID ? $this->_hechoLugarModel->asObject()->where('HECHOLUGARID', $data->folio->HECHOLUGARID)->first() : (object)['HECHOLUGARDESCR' => 'NO ESPECIFICADO'];
 		$data->derivacion = $this->_derivacionesAtencionesModel->asObject()->where('MUNICIPIOID', $data->folio->INSTITUCIONREMISIONMUNICIPIOID)->where('INSTITUCIONREMISIONID',  $data->folio->INSTITUCIONREMISIONID)->first();
@@ -6435,6 +6436,7 @@ class DashboardController extends BaseController
 		$data->plantilla = str_replace('[ANO]', date('Y'), $data->plantilla);
 		$data->plantilla = str_replace('[HORA]', date('H'), $data->plantilla);
 		$data->plantilla = str_replace('[MINUTOS]', date('i'), $data->plantilla);
+
 		$data->plantilla = str_replace('[ESTADO]', $data->municipios->MUNICIPIODESCR, $data->plantilla);
 		$data->plantilla = str_replace('[MUNICIPIO_DELITO]', $data->municipio_delito ? $data->municipio_delito->MUNICIPIODESCR : '', $data->plantilla);
 		$data->plantilla = str_replace('[LOCALIDAD_DELITO]', $data->localidad ? $data->localidad->LOCALIDADDESCR : '', $data->plantilla);
@@ -6443,16 +6445,25 @@ class DashboardController extends BaseController
 		$data->plantilla = str_replace('[CALLE]', $data->folio->HECHOCALLE ? $data->folio->HECHOCALLE : 'SIN CALLE', $data->plantilla);
 
 		$data->plantilla = str_replace('[EXTERIOR]', $data->folio->HECHONUMEROCASA ? $data->folio->HECHONUMEROCASA : 'S/N', $data->plantilla);
-		$data->plantilla = str_replace('[DIRECCION]', ($data->folio->HECHOCALLE ? $data->folio->HECHOCALLE : 'SIN CALLE') . ' ' . ($data->folio->HECHONUMEROCASA ? $data->folio->HECHONUMEROCASA : 'S/N')  . ',' . ($data->folio->HECHOCOLONIADESCR ? $data->folio->HECHOCOLONIADESCR : 'SIN COLONIA') . ',' . ($data->localidad->LOCALIDADDESCR ? $data->localidad->LOCALIDADDESCR : 'SIN LOCALIDAD') . ',' . ($data->municipio_delito->MUNICIPIODESCR ? $data->municipio_delito->MUNICIPIODESCR : 'SIN MUNICIPIO'), $data->plantilla);
+
+		$data->plantilla = str_replace('[DIRECCION]', 
+		($data->folio->HECHOCALLE ? $data->folio->HECHOCALLE : 'SIN CALLE') . ' ' . 
+		($data->folio->HECHONUMEROCASA ? $data->folio->HECHONUMEROCASA : 'S/N')  . ',' . 
+		($data->folio->HECHOCOLONIADESCR ? $data->folio->HECHOCOLONIADESCR : 'SIN COLONIA') . ',' . 
+		(isset($data->localidad) ? $data->localidad->LOCALIDADDESCR : 'SIN LOCALIDAD') . ',' . 
+		(isset($data->municipio_delito) ? $data->municipio_delito->MUNICIPIODESCR : 'SIN MUNICIPIO'), $data->plantilla);
+
 		$data->plantilla = str_replace('[LUGAR_HECHO]', $data->lugar_delito->HECHODESCR, $data->plantilla);
 
 		$data->plantilla = str_replace('[HECHO]', $data->folio->HECHONARRACION ? $data->folio->HECHONARRACION : 'SIN NARRACIÓN', $data->plantilla);
+
 		$data->plantilla = str_replace('[HECHO_LUGAR]', $data->lugar_hecho->HECHODESCR ? $data->lugar_hecho->HECHODESCR : '-', $data->plantilla);
 		$data->plantilla = str_replace('[HECHO_FECHA]', $data->folio->HECHOFECHA ? $data->folio->HECHOFECHA : '-', $data->plantilla);
 		$data->plantilla = str_replace('[HECHO_HORA]', $data->folio->HECHOHORA ? $data->folio->HECHOHORA : '-', $data->plantilla);
 		$data->plantilla = str_replace('[DETALLE_INTERVENCIONES]', $data->folio->HECHONARRACION ? $data->folio->HECHONARRACION : 'SIN NARRACIÓN', $data->plantilla);
 		$data->plantilla = str_replace('[HECHO_NARRACION]', $data->folio->HECHONARRACION ? $data->folio->HECHONARRACION : 'SIN NARRACIÓN', $data->plantilla);
 		$data->plantilla = str_replace('[ZONA_JAP]',  'CENTRO DE DENUNCIA TECNOLÓGICA', $data->plantilla);
+
 		$data->plantilla = str_replace('[VICTIMA_DOMICILIO]', 'en: ' . ($data->victimaDom->CALLE ? $data->victimaDom->CALLE : 'DESCONOCIDO') . ($data->victimaDom->NUMEROCASA ? ' Ext. ' . $data->victimaDom->NUMEROCASA : '') . ($data->victimaDom->NUMEROINTERIOR ? ' Int. ' . $data->victimaDom->NUMEROINTERIOR : '') . ($data->victimaDom->COLONIADESCR ? ' ' . $data->victimaDom->COLONIADESCR : '') . (isset($data->municipioVictima) == true ? ' ' . $data->municipioVictima->MUNICIPIODESCR : '') . (isset($data->estadoVictima) == true ? ' ' . $data->estadoVictima->ESTADODESCR : ''), $data->plantilla);
 		$data->plantilla = str_replace('[VICTIMA_DOMICILIO_COMPLETO]', ($data->victimaDom->CALLE ? $data->victimaDom->CALLE : 'DESCONOCIDO') . ($data->victimaDom->NUMEROCASA ? ' Ext. ' . $data->victimaDom->NUMEROCASA : '') . ($data->victimaDom->NUMEROINTERIOR ? ' Int. ' . $data->victimaDom->NUMEROINTERIOR : '') . ($data->victimaDom->COLONIADESCR ? ' ' . $data->victimaDom->COLONIADESCR : '') . (isset($data->municipioVictima) == true ? ' ' . $data->municipioVictima->MUNICIPIODESCR : '') . (isset($data->estadoVictima) == true ? ' ' . $data->estadoVictima->ESTADODESCR : ''), $data->plantilla);
 		$data->plantilla = str_replace('[VICTIMA_TIPO_IDENTIFICACION]', isset($data->tipoIdentificacionVictima) == true ? $data->tipoIdentificacionVictima->PERSONATIPOIDENTIFICACIONDESCR : 'DESCONOCIDO', $data->plantilla);
@@ -6482,6 +6493,7 @@ class DashboardController extends BaseController
 			$data->plantilla = str_replace('[TIPO_EXPEDIENTE]',  $data->folio->STATUS == "DERIVADO" ? "DERIVACIÓN" : "CANALIZACIÓN", $data->plantilla);
 			return json_encode(['status' => 1, 'plantilla' => $data->plantilla]);
 		} else {
+
 			$data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->where('TIPOEXPEDIENTEID',  $data->folio->TIPOEXPEDIENTEID)->first();
 			$arrayExpediente = str_split($data->folio->EXPEDIENTEID);
 			$expedienteid =  $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14] . '/' . ($data->tipoExpediente->TIPOEXPEDIENTECLAVE ? $data->tipoExpediente->TIPOEXPEDIENTECLAVE : '-');;
@@ -6555,7 +6567,13 @@ class DashboardController extends BaseController
 			$data->plantilla = str_replace('[MINUTOS]', date('i'), $data->plantilla);
 			$data->plantilla = str_replace('[ESTADO]', $data->municipios->MUNICIPIODESCR, $data->plantilla);
 			$data->plantilla = str_replace('[EXTERIOR]', $data->folio->HECHONUMEROCASA ? $data->folio->HECHONUMEROCASA : 'S/N', $data->plantilla);
-			$data->plantilla = str_replace('[DIRECCION]', ($data->folio->HECHOCALLE ? $data->folio->HECHOCALLE : 'SIN CALLE') . ' ' . ($data->folio->HECHONUMEROCASA ? $data->folio->HECHONUMEROCASA : 'S/N')  . ',' . ($data->folio->HECHOCOLONIADESCR ? $data->folio->HECHOCOLONIADESCR : 'SIN COLONIA') . ',' . ($data->localidad->LOCALIDADDESCR ? $data->localidad->LOCALIDADDESCR : 'SIN LOCALIDAD') . ',' . ($data->municipio_delito->MUNICIPIODESCR ? $data->municipio_delito->MUNICIPIODESCR : 'SIN MUNICIPIO'), $data->plantilla);
+			$data->plantilla = str_replace('[DIRECCION]', 
+			($data->folio->HECHOCALLE ? $data->folio->HECHOCALLE : 'SIN CALLE') . ' ' . 
+			($data->folio->HECHONUMEROCASA ? $data->folio->HECHONUMEROCASA : 'S/N')  . ',' . 
+			($data->folio->HECHOCOLONIADESCR ? $data->folio->HECHOCOLONIADESCR : 'SIN COLONIA') . ',' . 
+			(isset($data->localidad) ? $data->localidad->LOCALIDADDESCR : 'SIN LOCALIDAD') . ',' . 
+			(isset($data->municipio_delito) ? $data->municipio_delito->MUNICIPIODESCR : 'SIN MUNICIPIO'), $data->plantilla);
+			
 			$data->plantilla = str_replace('[LUGAR_HECHO]', $data->lugar_delito->HECHODESCR, $data->plantilla);
 
 			$data->plantilla = str_replace('[MUNICIPIO_DELITO]', $data->municipio_delito ? $data->municipio_delito->MUNICIPIODESCR : '', $data->plantilla);
