@@ -51,6 +51,9 @@
 						<a class="nav-link <?php if ('' === 'denuncias') echo 'active'; ?>" href="<?= base_url() ?>/denuncia/dashboard/denuncias"><i class="bi bi-archive"></i> Mis
 							denuncias</a>
 					</li>
+					<li  class="nav-item">
+						<a class="nav-link" href="<?= base_url('denuncia/logout') ?>"><i class="bi bi-box-arrow-left"></i> Salir</a></a>
+					</li>
 					<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" href="#" id="options" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 							<i class="bi bi-three-dots-vertical"></i>
