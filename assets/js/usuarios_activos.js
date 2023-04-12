@@ -33,7 +33,6 @@ roomsSockets.registerToRoomsUpdate((response) => {
 			td_2.classList.add('font-weight-bold');
 			td_1.appendChild(text_1);
 			td_2.appendChild(text_2);
-			td_3.appendChild(text_3);
 			fila.appendChild(td_1);
 			fila.appendChild(td_2);
 			tbody.appendChild(fila);
