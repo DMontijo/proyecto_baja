@@ -475,7 +475,7 @@ export class VideoServiceAgent {
 	 * 
 	 * @param {function} callback - function to be executed after the agent video connection reload
 	 */
-	reloadAgentVideoCall() {
+	reloadAgentVideoCall(callback) {
 		this.#emit('reload-agent-video-call', {}, (response) => {
 			console.log(response);
 			this.#connectionId = response.connectionId;
@@ -483,7 +483,7 @@ export class VideoServiceAgent {
 			this.#videoCallService.connectVideoCall(
 				response.token,
 				this.#localVideoSelector,
-				callback(response)
+				typeof callback === "function" ?  callback(response): undefined
 			);
 		})
 	}
