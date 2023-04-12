@@ -64,6 +64,12 @@ recargar_denunciante_btn.addEventListener("click", () => {
 		});
 	});
 });
+recargar_agente.addEventListener("click", () => {
+	console.log("ENTRANDO A RECARGAR LLAMADA");
+	agentVideoService.reloadAgentVideoCall((resp) => {
+		console.log(resp);
+	});
+});
 disponible_connect.addEventListener("click", () => {
 	console.log("Conectando agente...");
 	disponible_connect.disabled = true;
