@@ -33,9 +33,10 @@
 
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
 												<label for="agente_registro" class="form-label font-weight-bold">Agente:</label>
-												<select class="form-control" id="agente_registro" name="agente_registro" required disabled>
+												<select class="form-control" id="agente_registro" name="agente_registro">
+														<option selected value="">Todos los agentes</option>
 													<?php foreach ($body_data->empleados as $index => $empleado) { ?>
-														<option <?= isset($body_data->filterParams->AGENTEID) ? ($body_data->filterParams->AGENTEID == $empleado->ID ? 'selected' : '') : null ?> value="<?= $empleado->ID ?>"> <?= $empleado->NOMBRE . ' ' . $empleado->APELLIDO_PATERNO . ' ' . $empleado->APELLIDO_MATERNO ?> </option>
+														<option <?= isset($body_data->filterParams->AGENTEATENCIONID) ? ($body_data->filterParams->AGENTEATENCIONID == $empleado->ID ? 'selected' : '') : null ?> value="<?= $empleado->ID ?>"> <?= $empleado->NOMBRE . ' ' . $empleado->APELLIDO_PATERNO . ' ' . $empleado->APELLIDO_MATERNO ?> </option>
 													<?php } ?>
 												</select>
 											</div>
@@ -72,7 +73,7 @@
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
 												<label for="status" class="form-label font-weight-bold">Tipo:</label>
 												<select class="form-control" id="tipo" name="tipo" required>
-													<option selected value="">CDTEC Y DENUNCIA ANÓNIMA</option>
+													<option selected value="">Todos los tipos...</option>
 													<option <?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'VD' ? 'selected' : '') : null ?> value="VD">CDTEC</option>
 													<option <?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'TE' ? 'selected' : '') : null ?> value="TE">TELEFÓNICA</option>
 													<option <?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'DA' ? 'selected' : '') : null ?> value="DA">DENUNCIA ANÓNIMA</option>
@@ -213,21 +214,20 @@
 	<script>
 		// alert(document.getElementById('agente_registro').innerHTML);
 		let form = document.querySelector('#formExcel');
-		let agente = document.getElementById('agente_registro').innerHTML;
+		
 		form.addEventListener('submit', function(event) {
 			event.preventDefault();
 			text = `
 			<p>
 				El reporte sera generado de acuerdo a la siguiente información<br>
 				<ul style="text-align:left;">
-						<li><span style="font-weight:bold;">Agente:</span> ${agente}</li>
+						<li><span style="font-weight:bold;">Agente:</span> <?=  isset($body_data->filterParams->AGENTENOMBRE) ? $body_data->filterParams->AGENTENOMBRE : ''?></li>
 						<li><span style="font-weight:bold;">Fecha inicio:</span> <?= isset($body_data->filterParams->fechaInicio) ? $body_data->filterParams->fechaInicio : '' ?></li>
 						<li><span style="font-weight:bold;">Fecha cierre:</span> <?= isset($body_data->filterParams->fechaFin) ? $body_data->filterParams->fechaFin : '' ?></li>
 						<li><span style="font-weight:bold;">Hora inicio:</span> <?= isset($body_data->filterParams->horaInicio) ? $body_data->filterParams->horaInicio : '' ?></li>
 						<li><span style="font-weight:bold;">Hora fin:</span> <?= isset($body_data->filterParams->horaFin) ? $body_data->filterParams->horaFin : '' ?></li>
 						<li><span style="font-weight:bold;">Estatus:</span> <?= isset($body_data->filterParams->STATUS) ? ($body_data->filterParams->STATUS == 'CON' ? 'CON EXPEDIENTE' : ($body_data->filterParams->STATUS == 'SIN' ? 'SIN EXPEDIENTE' : 'TODOS LOS FOLIOS/EXPEDIENTES')) : '' ?></li>
-						<li><span style="font-weight:bold;">Tipo:</span> <?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'VD' ? 'CDTEC' : ($body_data->filterParams->TIPODENUNCIA == 'DA' ? 'ANÓNIMA' : 'CDTEC Y DENUNCIA ANÓNIMA')) : 'CDTEC Y DENUNCIA ANÓNIMA' ?></li>
-
+						<li><span style="font-weight:bold;">Tipo:</span> <?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'VD' ? 'CDTEC' : ($body_data->filterParams->TIPODENUNCIA == 'DA' ? 'ANÓNIMA' : 'TODOS')) : 'TODOS' ?></li>
 				</ul>
 			</p>
 			`

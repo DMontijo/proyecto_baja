@@ -237,8 +237,8 @@
 						<li><span style="font-weight:bold;">Hora inicio:</span> <?= isset($body_data->filterParams->horaInicio) ? $body_data->filterParams->horaInicio : '' ?></li>
 						<li><span style="font-weight:bold;">Hora fin:</span> <?= isset($body_data->filterParams->horaFin) ? $body_data->filterParams->horaFin : '' ?></li>
 						<li><span style="font-weight:bold;">Estatus:</span> <?= isset($body_data->filterParams->STATUS) ? $body_data->filterParams->STATUS : '' ?></li>
-						<li><span style="font-weight:bold;">Tipo:</span> <?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'VD' ? 'CDTEC' : ($body_data->filterParams->TIPODENUNCIA == 'DA' ? 'ANÓNIMA' : 'CDTEC Y DENUNCIA ANÓNIMA')) : 'CDTEC Y DENUNCIA ANÓNIMA' ?></li>
-
+						<li><span style="font-weight:bold;">Tipo:</span>
+						<?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'VD' ? 'CDTEC' : ($body_data->filterParams->TIPODENUNCIA == 'DA' ? 'ANÓNIMA' : 'TODOS')) : 'TODOS' ?></li>
 				</ul>
 			</p>
 			`
