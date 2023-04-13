@@ -132,6 +132,7 @@ class ReportesController extends BaseController
 			'horaInicio' => $this->request->getPost('horaInicio'),
 			'horaFin' => $this->request->getPost('horaFin')
 		];
+		ob_start();
 
 		$date = date("Y_m_d_h_i_s");
 
@@ -284,6 +285,7 @@ class ReportesController extends BaseController
 		header("Content-Disposition: attachment; filename=\"$filename\"");
 		header('Content-Transfer-Encoding: binary');
 		header('Cache-Control: max-age=0');
+		ob_end_clean();
 		$writer->save("php://output");
 	}
 
