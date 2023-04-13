@@ -546,9 +546,17 @@ class ReportesController extends BaseController
 		}
 
 		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
-		$resultFilter = $this->_folioModel->filterDatesRegistroDiario($data);
+		
 		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
-		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
+		$rolUser = session()->get('rol')->ID;
+		if ($rolUser == 1 || $rolUser == 2 || $rolUser == 6 || $rolUser == 7 || $rolUser == 11){
+			$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
+			//$data['AGENTEATENCIONID'] = session('ID');
+		}else{
+			$empleado = $this->_usuariosModel->asObject()->where('ID',	session('ID'))->orderBy('NOMBRE', 'ASC')->findAll();
+			$data['AGENTEATENCIONID'] = session('ID');
+		}
+		$resultFilter = $this->_folioModel->filterDatesRegistroDiario($data);
 
 		$dataView = (object)array();
 		$dataView->result = $resultFilter->result;
@@ -609,7 +617,7 @@ class ReportesController extends BaseController
 	{
 
 		$data = [
-			'AGENTEATENCIONID' => $this->request->getPost('agente_registro'),
+			'AGENTEATENCIONID' => $this->request->getPost('AGENTEATENCIONID'),
 			'STATUS' => $this->request->getPost('STATUS'),
 			'TIPODENUNCIA' => $this->request->getPost('TIPODENUNCIA'),
 			'fechaInicio' => $this->request->getPost('fechaInicio'),
@@ -618,7 +626,7 @@ class ReportesController extends BaseController
 			'horaFin' => $this->request->getPost('horaFin')
 		];
 		$date = date("Y_m_d_h_i_s");
-
+		//var_dump($data);
 		foreach ($data as $clave => $valor) {
 			//Recorre el array y elimina los valores que nulos o vacíos
 			if (empty($valor)) unset($data[$clave]);
@@ -631,8 +639,8 @@ class ReportesController extends BaseController
 		}
 
 		$resultFilter = $this->_folioModel->filterDatesRegistroDiario($data);
-		// var_dump($resultFilter);
-		// exit;
+		//var_dump($resultFilter);
+		//exit;
 		$spreadSheet = new Spreadsheet();
 		$spreadSheet->getProperties()
 			->setCreator("Fiscalía General del Estado de Baja California")

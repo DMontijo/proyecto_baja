@@ -404,14 +404,6 @@ class FolioModel extends Model
 				LEFT JOIN CANALIZACIONES ON FOLIO.INSTITUCIONREMISIONID = CANALIZACIONES.INSTITUCIONREMISIONID AND FOLIO.INSTITUCIONREMISIONMUNICIPIOID = CANALIZACIONES.MUNICIPIOID
 				LEFT JOIN EMPLEADOS ON FOLIO.AGENTEASIGNADOID = EMPLEADOS.EMPLEADOID';
 
-
-			foreach ($obj as $clave => $valor) {
-				if ($clave != 'fechaInicio' && $clave != 'fechaFin' && $clave != 'horaInicio' && $clave != 'horaFin') {
-					$strQuery = $strQuery . ' AND ';
-					$strQuery = $strQuery . 'FOLIO.' . $clave . ' = ' . '"' . $valor . '"';
-				}
-			}
-
 			$strQuery =
 				$strQuery . ' WHERE ' .
 				'FOLIO.FECHASALIDA BETWEEN CAST("' .
@@ -419,8 +411,13 @@ class FolioModel extends Model
 				(isset($obj['horaInicio']) ? (date('H:i:s', strtotime($obj['horaInicio']))) : '00:00:00') . '" AS DATETIME)' . ' AND ' . 'CAST("' .
 				(isset($obj['fechaFin']) ? (isset($obj['horaFin']) ? date("Y-m-d", strtotime($obj['fechaFin'])) : date("Y-m-d", strtotime(date("Y-m-d", strtotime($obj['fechaFin']))))) : date("Y-m-d")) . ' ' .
 				(isset($obj['horaFin']) ? (date('H:i:s', strtotime($obj['horaFin']))) : '23:59:59') . '" AS DATETIME)';
-			if (isset($obj['AGENTEATENCIONID'])) $strQuery = $strQuery . '	AND FOLIO.AGENTEATENCIONID = ' . $obj['AGENTEATENCIONID'];
-
+			///if (isset($obj['AGENTEATENCIONID'])) $strQuery = $strQuery . '	AND FOLIO.AGENTEATENCIONID = ' . $obj['AGENTEATENCIONID'];
+			foreach ($obj as $clave => $valor) {
+				if ($clave != 'fechaInicio' && $clave != 'fechaFin' && $clave != 'horaInicio' && $clave != 'horaFin') {
+					$strQuery = $strQuery . ' AND ';
+					$strQuery = $strQuery . 'FOLIO.' . $clave . ' = ' . '"' . $valor . '"';
+				}
+			}
 			$strQuery = $strQuery . ' GROUP BY  FOLIO.FOLIOID';
 		}
 		
