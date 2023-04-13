@@ -52,6 +52,8 @@ export class VideoServiceAgent {
 	#connectionId;
 	#recordingId;
 
+	#localVideoSelector;
+
 	/**
 	 * @param {string} agentUUID - Preexisting agent uuid
 	 * @param {string} folio - Complaint folio
@@ -210,6 +212,7 @@ export class VideoServiceAgent {
 	 * @param {Function} [callback] - This method is executed after call is connected, this will receive the details of guest connection
 	 */
 	acceptCall(localVideoSelector, remoteVideoSelector, callback) {
+		this.#localVideoSelector = localVideoSelector;
 		this.#emit(
 			"connect-call",
 			{
@@ -452,6 +455,37 @@ export class VideoServiceAgent {
 				if (typeof callback === "function") callback(this.guestVideo);
 			}
 		);
+	}
+
+	/**
+	 * This function will emit a signal to the guest to reload its page
+	 *
+	 * @param {function} callback - function to be executed after the guest has reloaded
+	 */
+	refreshGuestConnection(callback = () => { }) {
+		this.#emit("refresh-guest-connection",
+			response => {
+				if (typeof callback === "function") callback(response);
+			}
+		);
+	}
+
+	/**
+	 * This function will emit a signal to reload connection to video call
+	 * 
+	 * @param {function} callback - function to be executed after the agent video connection reload
+	 */
+	reloadAgentVideoCall(callback) {
+		this.#emit('reload-agent-video-call', {}, async (response) => {
+			console.log(response);
+			this.#connectionId = response.connectionId;
+			await this.#videoCallService.forceDisconnection();
+			this.#videoCallService.connectVideoCall(
+				response.token,
+				this.#localVideoSelector,
+				typeof callback === "function" ?  callback(response): undefined
+			);
+		})
 	}
 
 	/**

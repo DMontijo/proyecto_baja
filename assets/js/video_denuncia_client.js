@@ -59,6 +59,19 @@ guestVideoService.registerOnVideoReady(
 	}
 );
 
+guestVideoService.registerRefreshGuestConnection(() => {
+	Swal.fire({
+		position: "top-end",
+		title: "La connexión se recargara dentro de 3 segundos, mantente conectado",
+		showConfirmButton: false,
+		icon: "info",
+		timer: 3000,
+		timerProgressBar: true,
+	}).then(() => {
+		location.reload();
+	})
+})
+
 guestVideoService.registerOnDisconnect(e => {
 	console.log("Desconectado", e);
 	pantalla_final.style.display = "block";

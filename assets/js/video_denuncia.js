@@ -30,6 +30,11 @@ const video_denunciante_off = document.querySelector("#off-video-denunciante");
 const audio_denunciante_on = document.querySelector("#on-audio-denunciante");
 const audio_denunciante_off = document.querySelector("#off-audio-denunciante");
 
+//RECARGAR PAGINA DE DENUNCIANTE
+const recargar_denunciante_btn = document.querySelector("#recargar_denunciante_btn");
+
+// const recargar_agente = document.querySelector("#recargar_agente");
+
 const marksRecording = document.querySelector("#marks-recording-modal");
 const enviar_marca = document.querySelector("#enviar_marca");
 const desconectar_llamada = document.querySelector("#disconnect-call");
@@ -46,7 +51,25 @@ var totalSeconds = 0;
 var myInterval;
 
 const agentVideoService = new VideoServiceAgent(agentUUID, { apiURI, apiKey });
-
+recargar_denunciante_btn.addEventListener("click", () => {
+	console.log("RECARGANDO DENUNCIANTE")
+	agentVideoService.refreshGuestConnection(() => {
+		Swal.fire({
+			icon: "success",
+			text: "La conexion de denunciante se recargara en 3 segundos",
+			showConfirmButton: true,
+			confirmButtonColor: "#bf9b55",
+			timer: 3000,
+			timerProgressBar: true,
+		});
+	});
+});
+// recargar_agente.addEventListener("click", () => {
+// 	console.log("ENTRANDO A RECARGAR LLAMADA");
+// 	agentVideoService.reloadAgentVideoCall((resp) => {
+// 		console.log(resp);
+// 	});
+// });
 disponible_connect.addEventListener("click", () => {
 	console.log("Conectando agente...");
 	disponible_connect.disabled = true;
@@ -259,6 +282,8 @@ audio_denunciante_off.addEventListener("click", () => {
 		toogleAudioDenunciante(isEnabled);
 	});
 });
+
+
 
 startRecord.addEventListener("click", () => {
 	agentVideoService.startRecording(() => {
