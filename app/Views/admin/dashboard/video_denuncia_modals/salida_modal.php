@@ -241,6 +241,8 @@
 
 
 	btnFinalizar.addEventListener('click', () => {
+		console.log(form_vehiculo);
+		return;
 		if (document.querySelector('#vehiculoid').value != '' && !form_vehiculo.checkValidity()) {
 			Swal.fire({
 				icon: 'error',
