@@ -122,6 +122,15 @@ disponible_connect.addEventListener("click", () => {
 				aceptar_llamada.disabled = false;
 				$("#llamadaModal").modal("hide");
 				console.log("Guest disconnected con modal");
+
+				setTimeout(() => {
+					console.log("Desconectando agente...");
+					agentVideoService.disconnectAgent(() => {
+						console.log("¡Agente desconectado con éxito!");
+						clearVideoCall();
+					});
+				}, 2000);
+
 				Swal.fire({
 					icon: "error",
 					text: "El usuario se desconecto.",
