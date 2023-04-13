@@ -74,6 +74,8 @@
 													<option <?= isset($body_data->filterParams->STATUS) ? ($body_data->filterParams->STATUS == 'EXPEDIENTE' ? 'selected' : '') : null ?> value="EXPEDIENTE">EXPEDIENTE</option>
 													<option <?= isset($body_data->filterParams->STATUS) ? ($body_data->filterParams->STATUS == 'CANALIZADO' ? 'selected' : '') : null ?> value="CANALIZADO">CANALIZADO</option>
 													<option <?= isset($body_data->filterParams->STATUS) ? ($body_data->filterParams->STATUS == 'DERIVADO' ? 'selected' : '') : null ?> value="DERIVADO">DERIVADO</option>
+													<option <?= isset($body_data->filterParams->STATUS) ? ($body_data->filterParams->STATUS == 'ABIERTO' ? 'selected' : '') : null ?> value="ABIERTO">ABIERTO</option>
+													<option <?= isset($body_data->filterParams->STATUS) ? ($body_data->filterParams->STATUS == 'EN PROCESO' ? 'selected' : '') : null ?> value="EN PROCESO">EN PROCESO</option>
 												</select>
 											</div>
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
@@ -150,7 +152,7 @@
 										<td class="text-center"><?= $folio->ANO ?></td>
 										<td class="text-center"><?= $tipo ?></td>
 										<td class="text-center"><?= $expedienteid ? $expedienteid . '/' . $folio->TIPOEXPEDIENTECLAVE  : '' ?></td>
-										<td class="text-center"><?= date('d-m-Y', strtotime($folio->FECHASALIDA)) ?></td>
+										<td class="text-center"><?= $folio->FECHASALIDA ? date('d-m-Y H:i:s', strtotime($folio->FECHASALIDA)) : '' ?></td>
 										<td class="text-center"><?= $folio->STATUS ?></td>
 										<td class="text-center"><?= $folio->N_DENUNCIANTE . ' ' . $folio->APP_DENUNCIANTE . ' ' . $folio->APM_DENUNCIANTE ?></td>
 										<td class="text-center"><?= $folio->N_AGENT . ' ' . $folio->APP_AGENT . ' ' . $folio->APM_AGENT ?></td>

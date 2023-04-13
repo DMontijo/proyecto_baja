@@ -67,22 +67,55 @@ class FolioModel extends Model
 		LEFT JOIN TIPOEXPEDIENTE ON TIPOEXPEDIENTE.TIPOEXPEDIENTEID = FOLIO.TIPOEXPEDIENTEID
 		LEFT JOIN EMPLEADOS ON EMPLEADOS.EMPLEADOID = FOLIO.AGENTEASIGNADOID AND EMPLEADOS.MUNICIPIOID = FOLIO.MUNICIPIOASIGNADOID
 		LEFT JOIN ESTADO ON ESTADO.ESTADOID = FOLIO.ESTADOID
-		LEFT JOIN MUNICIPIO ON MUNICIPIO.MUNICIPIOID = FOLIO.MUNICIPIOID AND MUNICIPIO.ESTADOID = FOLIO.ESTADOID WHERE NOT FOLIO.STATUS = "ABIERTO" AND NOT FOLIO.STATUS = "EN PROCESO"';
+		LEFT JOIN MUNICIPIO ON MUNICIPIO.MUNICIPIOID = FOLIO.MUNICIPIOID AND MUNICIPIO.ESTADOID = FOLIO.ESTADOID';
+
+		$fechaInicio = isset($obj['fechaInicio']) ? $obj['fechaInicio'] : '';
+		$fechaFin = isset($obj['fechaFin']) ? $obj['fechaFin'] : '';
+		$horaInicio = isset($obj['horaInicio']) ? $obj['horaInicio'] : null;
+		$horaFin = isset($obj['horaFin']) ? $obj['horaFin'] : null;
+
+		if (isset($obj['fechaInicio'])) {
+			unset($obj['fechaInicio']);
+		}
+		if (isset($obj['fechaFin'])) {
+			unset($obj['fechaFin']);
+		}
+		if (isset($obj['horaInicio'])) {
+			unset($obj['horaInicio']);
+		}
+		if (isset($obj['horaFin'])) {
+			unset($obj['horaFin']);
+		}
+
+		$count = count($obj);
+
+		if ($count > 0) {
+			$strQuery = $strQuery . ' WHERE ';
+		}
 
 		foreach ($obj as $clave => $valor) {
+			$count -= 1;
 			if ($clave != 'fechaInicio' && $clave != 'fechaFin' && $clave != 'horaInicio' && $clave != 'horaFin') {
-				$strQuery = $strQuery . ' AND ';
 				$strQuery = $strQuery . 'FOLIO.' . $clave . ' = ' . '"' . $valor . '"';
+
+				if ($count > 0) {
+					$strQuery = $strQuery . ' AND ';
+				}
 			}
 		}
 
-		$strQuery =
-			$strQuery . ' AND ' .
-			'FOLIO.FECHASALIDA BETWEEN CAST("' .
-			(isset($obj['fechaInicio']) ? date("Y-m-d", strtotime($obj['fechaInicio'])) : date("Y-m-d")) . ' ' .
-			(isset($obj['horaInicio']) ? (date('H:i:s', strtotime($obj['horaInicio']))) : '00:00:00') . '" AS DATETIME)' . ' AND ' . 'CAST("' .
-			(isset($obj['fechaFin']) ? (isset($obj['horaFin']) ? date("Y-m-d", strtotime($obj['fechaFin'])) : date("Y-m-d", strtotime(date("Y-m-d", strtotime($obj['fechaFin']))))) : date("Y-m-d")) . ' ' .
-			(isset($obj['horaFin']) ? (date('H:i:s', strtotime($obj['horaFin']))) : '23:59:59') . '" AS DATETIME)';
+		if (count($obj) > 0) {
+			$strQuery = $strQuery . ' AND ';
+		} else {
+			$strQuery = $strQuery . ' WHERE ';
+		}
+
+		$strQuery = $strQuery . 'FOLIO.FECHAREGISTRO BETWEEN CAST("' .
+			(isset($fechaInicio) ? date("Y-m-d", strtotime($fechaInicio)) : date("Y-m-d")) . ' ' .
+			(isset($horaInicio) ? (date('H:i:s', strtotime($horaInicio))) : '00:00:00') . '" AS DATETIME)' . ' AND ' . 'CAST("' .
+			(isset($fechaFin) ? (isset($obj['horaFin']) ? date("Y-m-d", strtotime($fechaFin)) : date("Y-m-d", strtotime(date("Y-m-d", strtotime($fechaFin))))) : date("Y-m-d")) . ' ' .
+			(isset($horaFin) ? (date('H:i:s', strtotime($horaFin))) : '23:59:59') . '" AS DATETIME)';
+
 		$result = $this->db->query($strQuery)->getResult();
 
 		$dataView = (object)array();
@@ -390,7 +423,7 @@ class FolioModel extends Model
 
 			$strQuery = $strQuery . ' GROUP BY  FOLIO.FOLIOID';
 		}
-		//var_dump($strQuery);
+		
 		$result = $this->db->query($strQuery)->getResult();
 
 		$dataView = (object)array();
