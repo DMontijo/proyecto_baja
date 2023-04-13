@@ -161,15 +161,15 @@ guestVideoService.saveGeolocation(() => {
 						});
 					},
 					ondisconnect => {
-						Swal.fire({
-							icon: "error",
-							title: "Hubo una desconexión, se recargará la página.",
-							showConfirmButton: false,
-							timer: 1000,
-							timerProgressBar: true,
-						}).then(result => {
-							location.reload;
-						});
+						// Swal.fire({
+						// 	icon: "error",
+						// 	title: "Hubo una desconexión, se recargará la página.",
+						// 	showConfirmButton: false,
+						// 	timer: 1000,
+						// 	timerProgressBar: true,
+						// }).then(result => {
+						// 	location.reload;
+						// });
 					},
 				);
 			})
