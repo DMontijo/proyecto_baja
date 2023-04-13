@@ -128,17 +128,17 @@ export class VideoServiceGuest {
 	 * @param {Object} details - Details of the guest
 	 * @param {Function} callback - This method is executed after guest is connected to socket
 	 */
-	connectGuest(details, callback, onerror) {
+	connectGuest(details, callback, onerror, ondisconnect) {
 		this.#guestDetails = details;
 
 		this.#socket.on("exception", function (data) {
 			console.warn("event", data ? data : "No event");
-			if (typeof onerror === "function") onerror(response);
+			if (typeof onerror === "function") onerror(data);
 		});
 
-		this.#socket.on("disconnect", function () {
+		this.#socket.on("disconnect", function (data) {
 			console.warn("disconnect");
-			if (typeof onerror === "function") onerror(response);
+			if (typeof ondisconnect === "function") ondisconnect(data);
 		});
 
 		const previusSession = JSON.parse(
@@ -155,11 +155,7 @@ export class VideoServiceGuest {
 				latitude: this.#position?.coords.latitude,
 				longitude: this.#position?.coords.longitude,
 				details: this.#guestDetails,
-				sessionId:
-					previusSession &&
-						this.#diffMinutes(new Date(previusSession.createdAt)) < 180
-						? previusSession.sessionId
-						: null
+				sessionId: previusSession && this.#diffMinutes(new Date(previusSession.createdAt)) < 180 ? previusSession.sessionId : null
 			},
 			response => {
 				this.#preventUserCloseWindow();

@@ -18,9 +18,7 @@ let folio_completo = document.getElementById("input_folio").value;
 let array = folio_completo.split("-");
 let folio_SY = array[1];
 let year_SF = array[0];
-var intervalo = setInterval(function() {
-	location.reload();
-}, 180000);
+var intervalo = setInterval(function () { location.reload(); }, 90000);
 
 // const recording = document.querySelector('#recording');
 // const recording_stop = document.querySelector('#recording_stop');
@@ -36,15 +34,7 @@ var intervalo = setInterval(function() {
 // const camara_apagada_denunciante_b = document.querySelector('#camara_apagada_denunciante_b');
 // const camara_prendida_denunciante_b = document.querySelector('#camara_prendida_denunciante_b');
 
-const guestVideoService = new VideoServiceGuest(
-	guestUUID,
-	folio_SY + "/" + year_SF,
-	priority,
-	{
-		apiURI,
-		apiKey
-	}
-);
+const guestVideoService = new VideoServiceGuest(guestUUID, folio_SY + "/" + year_SF, priority, { apiURI, apiKey });
 
 guestVideoService.registerOnVideoReady(
 	"secondary_video",
@@ -53,8 +43,7 @@ guestVideoService.registerOnVideoReady(
 		texto_inicial.style.display = "none";
 		video_container.style.display = "block";
 		clearInterval(intervalo);
-		document.querySelector("#documentos_anexar_card").style.display =
-			"block";
+		document.querySelector("#documentos_anexar_card").style.display = "block";
 		agente_name.innerHTML = "LIC. " + response.agent.name;
 		// denunciante_name.innerHTML = guestData.name;
 	}
@@ -63,7 +52,7 @@ guestVideoService.registerOnVideoReady(
 guestVideoService.registerRefreshGuestConnection(() => {
 	Swal.fire({
 		position: "top-end",
-		title: "La connexión se recargara dentro de 3 segundos, mantente conectado",
+		title: "La conexión se recargara dentro de 3 segundos, mantente conectado",
 		showConfirmButton: false,
 		icon: "info",
 		timer: 3000,
@@ -78,9 +67,6 @@ guestVideoService.registerOnDisconnect(e => {
 	pantalla_final.style.display = "block";
 	video_container.style.display = "none";
 	document.querySelector("#documentos_anexar_card").style.display = "none";
-	setTimeout(() => {
-		deleteVideoElement();
-	}, 2000);
 });
 
 guestVideoService.registerMediaRemoteToggling(response => {
@@ -120,14 +106,16 @@ guestVideoService.registerVideoRecordingStatus(isRecording => {
 			title: "Se inicio la grabación.",
 			position: "top-end",
 			showConfirmButton: false,
-			timer: 1500
+			timer: 1500,
+			timerProgressBar: true,
 		});
 	} else {
 		Swal.fire({
 			position: "top-end",
 			title: "Se detuvo la grabación.",
 			showConfirmButton: false,
-			timer: 1500
+			timer: 1500,
+			timerProgressBar: true,
 		});
 	}
 });
@@ -138,14 +126,12 @@ guestVideoService.registerOnAgentDisconnected(() => {
 		position: "top-end",
 		title: "El agente se desconecto.",
 		showConfirmButton: false,
-		timer: 1500
+		timer: 1500,
+		timerProgressBar: true,
 	});
 	pantalla_final.style.display = "block";
 	video_container.style.display = "none";
 	document.querySelector("#documentos_anexar_card").style.display = "none";
-	setTimeout(() => {
-		deleteVideoElement();
-	}, 2000);
 });
 
 guestVideoService.saveGeolocation(() => {
@@ -154,7 +140,7 @@ guestVideoService.saveGeolocation(() => {
 	if (navigator.mediaDevices) {
 		navigator.mediaDevices
 			.getUserMedia({ audio: true, video: true })
-			.then(function(stream) {
+			.then(function (stream) {
 				console.log("Acceso a cámara y audio concedido");
 
 				guestVideoService.connectGuest(
@@ -163,37 +149,49 @@ guestVideoService.saveGeolocation(() => {
 						console.log("Denuciante conectado");
 						console.log(guest);
 					},
-					error => {
+					onerror => {
 						Swal.fire({
 							icon: "error",
-							title: "Hubo un error, se recargará la página",
+							title: "Hubo un error, se recargará la página.",
 							showConfirmButton: false,
-							timer: 1000
+							timer: 1000,
+							timerProgressBar: true,
 						}).then(result => {
 							location.reload;
 						});
-					}
+					},
+					ondisconnect => {
+						Swal.fire({
+							icon: "error",
+							title: "Hubo una desconexión, se recargará la página.",
+							showConfirmButton: false,
+							timer: 1000,
+							timerProgressBar: true,
+						}).then(result => {
+							location.reload;
+						});
+					},
 				);
 			})
-			.catch(function(error) {
+			.catch(function (error) {
 				console.log("Acceso a cámara y audio denegado");
 				texto_inicial.style.display = "none";
 				pantalla_error.style.display = "block";
 				video_container.style.display = "none";
-				document.querySelector(
-					"#documentos_anexar_card"
-				).style.display = "none";
-				setTimeout(() => {
-					deleteVideoElement();
-				}, 2000);
+				document.querySelector("#documentos_anexar_card").style.display = "none";
 			});
 	} else {
 		console.log("El navegador no soporta MediaDevices");
+		texto_inicial.style.display = "none";
+		pantalla_error.style.display = "block";
+		video_container.style.display = "none";
+		document.querySelector("#documentos_anexar_card").style.display = "none";
 		Swal.fire({
 			position: "top-end",
-			title: "Intenta con otro navgador.",
+			title: "Tu navegador no soporte el microfono y la cámara, de favor utiliza otro navegador o dispositivo.",
 			showConfirmButton: false,
-			timer: 1500
+			timer: 5000,
+			timerProgressBar: true,
 		});
 	}
 });
