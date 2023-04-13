@@ -257,7 +257,7 @@
 		if (document.querySelector('#vehiculoid').value != '' && !form_vehiculo.checkValidity()) {
 			Swal.fire({
 				icon: 'error',
-				text: 'Por favor, completa todos los campos de los vehículos.',
+				text: 'Por favor, completa toda la información de los vehículos.',
 				confirmButtonColor: '#bf9b55',
 			});
 			return;
@@ -265,7 +265,7 @@
 		if (!form_delito.checkValidity()) {
 			Swal.fire({
 				icon: 'error',
-				text: 'Por favor, completa todos los campos de denuncia.',
+				text: 'Por favor, completa todos los campos del hecho y da clic en actualizar para poder continuar.',
 				confirmButtonColor: '#bf9b55',
 			});
 			return;

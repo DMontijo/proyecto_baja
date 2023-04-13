@@ -327,7 +327,7 @@ enviar_marca.addEventListener("click", () => {
 	if (selectMarks.value == "" || coment_marks.value == "") {
 		Swal.fire({
 			icon: "error",
-			text: "Por favor, completa todos los campos .",
+			text: "Por favor, completa todos los campos.",
 			showConfirmButton: true,
 			confirmButtonColor: "#bf9b55"
 		});
