@@ -277,8 +277,8 @@ class ReportesController extends BaseController
 			if (!(($row - 1) >= count($resultFilter->result))) $row++;
 		}
 
-		$sheet->getStyle('A1:J1')->applyFromArray($styleHeaders);
-		$sheet->getStyle('A2:J' . $row)->applyFromArray($styleCells);
+		$sheet->getStyle('A1:K1')->applyFromArray($styleHeaders);
+		$sheet->getStyle('A2:K' . $row)->applyFromArray($styleCells);
 
 		$writer = new Xlsx($spreadSheet);
 
