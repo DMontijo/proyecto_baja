@@ -376,8 +376,8 @@
 													</svg>
 												</button>
 												<!-- RECARGAR AGENTE -->
-												<button class="btn btn-lg btn-light" type="button" id="recargar_agente" name="recargar_agente" title="Recargar conexión del agente">
-													<i class="fas fa-sync-alt"></i> </button>
+												<!-- <button class="btn btn-lg btn-light" type="button" id="recargar_agente" name="recargar_agente" title="Recargar conexión del agente">
+													<i class="fas fa-sync-alt"></i> </button> -->
 
 											</div>
 

@@ -33,7 +33,7 @@ const audio_denunciante_off = document.querySelector("#off-audio-denunciante");
 //RECARGAR PAGINA DE DENUNCIANTE
 const recargar_denunciante_btn = document.querySelector("#recargar_denunciante_btn");
 
-const recargar_agente = document.querySelector("#recargar_agente");
+// const recargar_agente = document.querySelector("#recargar_agente");
 
 const marksRecording = document.querySelector("#marks-recording-modal");
 const enviar_marca = document.querySelector("#enviar_marca");
@@ -64,12 +64,12 @@ recargar_denunciante_btn.addEventListener("click", () => {
 		});
 	});
 });
-recargar_agente.addEventListener("click", () => {
-	console.log("ENTRANDO A RECARGAR LLAMADA");
-	agentVideoService.reloadAgentVideoCall((resp) => {
-		console.log(resp);
-	});
-});
+// recargar_agente.addEventListener("click", () => {
+// 	console.log("ENTRANDO A RECARGAR LLAMADA");
+// 	agentVideoService.reloadAgentVideoCall((resp) => {
+// 		console.log(resp);
+// 	});
+// });
 disponible_connect.addEventListener("click", () => {
 	console.log("Conectando agente...");
 	disponible_connect.disabled = true;
