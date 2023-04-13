@@ -1910,6 +1910,34 @@ class DashboardController extends BaseController
 		try {
 			if (!empty($tiposExpedienteId) && !empty($folio) && !empty($municipio) && !empty($estado) && !empty($notas)) {
 				$folioRow = $this->_folioModel->where('ANO', $year)->where('FOLIOID', $folio)->where('STATUS', 'EN PROCESO')->first();
+				$folioVehiculoRow = $this->_folioVehiculoModel->where('ANO', $year)->where('FOLIOID', $folio)->findAll();
+
+				if (($folioRow['MUNICIPIOID'] == '' || $folioRow['MUNICIPIOID'] == NULL)
+					|| ($folioRow['HECHOLOCALIDADID'] == '' || $folioRow['HECHOLOCALIDADID'] == NULL)
+					|| ($folioRow['HECHOCOLONIAID'] == '' || $folioRow['HECHOCOLONIAID'] == NULL)
+					|| ($folioRow['HECHOCALLE'] == '' || $folioRow['HECHOCALLE'] == NULL)
+					|| ($folioRow['HECHONUMEROCASA'] == '' || $folioRow['HECHONUMEROCASA'] == NULL)
+					|| ($folioRow['HECHOLUGARID'] == '' || $folioRow['HECHOLUGARID'] == NULL)
+					|| ($folioRow['HECHOFECHA'] == '' || $folioRow['HECHOFECHA'] == NULL)
+					|| ($folioRow['HECHOHORA'] == '' || $folioRow['HECHOHORA'] == NULL)
+					|| ($folioRow['HECHONARRACION'] == '' || $folioRow['HECHONARRACION'] == NULL)
+				) {
+					throw new \Exception('Actualiza los campos de información del hecho.');
+				}
+
+				foreach ($folioVehiculoRow as $key => $vehiculo) {
+					if (($vehiculo['SITUACION'] == '' || $vehiculo['SITUACION'] == NULL)
+						|| ($vehiculo['ESTADOIDPLACA'] == '' || $vehiculo['ESTADOIDPLACA'] == NULL)
+						|| ($vehiculo['VEHICULODISTRIBUIDORID'] == '' || $vehiculo['VEHICULODISTRIBUIDORID'] == NULL)
+						|| ($vehiculo['MARCAID'] == '' || $vehiculo['MARCAID'] == NULL)
+						|| ($vehiculo['MODELOID'] == '' || $vehiculo['MODELOID'] == NULL)
+						|| ($vehiculo['ANOVEHICULO'] == '' || $vehiculo['ANOVEHICULO'] == NULL)
+						|| ($vehiculo['PERSONAFISICAIDPROPIETARIO'] == '' || $vehiculo['PERSONAFISICAIDPROPIETARIO'] == NULL)
+					) {
+						throw new \Exception('Actualiza los campos de los vehiculos.');
+					}
+				}
+
 
 				if ($folioRow) {
 					$personas = $this->_folioPersonaFisicaModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->orderBy('PERSONAFISICAID', 'asc')->findAll();
@@ -7040,10 +7068,9 @@ class DashboardController extends BaseController
 			// ->join('TIPOEXPEDIENTE', 'TIPOEXPEDIENTE.TIPOEXPEDIENTEID = FOLIO.TIPOEXPEDIENTEID', 'left')
 			// ->findAll();
 
-		} else if(session('ROLID')== 12){
+		} else if (session('ROLID') == 12) {
 			$data->folio = $this->_folioModel->videos_expediente_model(5);
-
-		}else {
+		} else {
 			// $data->folio = $this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)
 			// ->where('FOLIO.TIPOEXPEDIENTEID !=', null)->where('AGENTEFIRMAID !=', null)->where('TIPODENUNCIA', 'VD')
 			// ->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID', 'left')
