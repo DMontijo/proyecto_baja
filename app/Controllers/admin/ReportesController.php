@@ -231,8 +231,9 @@ class ReportesController extends BaseController
 		$headers = [
 			'FOLIO',
 			'AÑO',
-			'TIPO',
+			'MEDIO',
 			'EXPEDIENTE',
+			'TIPO',
 			'FECHA DE SALIDA',
 			'NOMBRE DEL DENUNCIANTE',
 			'NOMBRE DEL AGENTE',
@@ -253,7 +254,7 @@ class ReportesController extends BaseController
 		foreach ($resultFilter->result as $index => $folio) {
 			$tipo = '';
 			if ($folio->TIPODENUNCIA == 'VD') {
-				$tipo = 'CDTEC';
+				$tipo = 'VIDEO';
 			} else if ($folio->TIPODENUNCIA == 'DA') {
 				$tipo = 'ANÓNIMA';
 			} else {
@@ -262,13 +263,14 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('A' . $row, $folio->FOLIOID);
 			$sheet->setCellValue('B' . $row, $folio->ANO);
 			$sheet->setCellValue('C' . $row, $tipo);
-			$sheet->setCellValue('D' . $row, $folio->EXPEDIENTEID . '/' . $folio->TIPOEXPEDIENTECLAVE);
-			$sheet->setCellValue('E' . $row, date('d-m-Y'), strtotime($folio->FECHASALIDA));
-			$sheet->setCellValue('F' . $row, $folio->N_DENUNCIANTE . ' ' . $folio->APP_DENUNCIANTE . ' ' . $folio->APM_DENUNCIANTE);
-			$sheet->setCellValue('G' . $row, $folio->N_AGENT . ' ' . $folio->APP_AGENT . ' ' . $folio->APM_AGENT);
-			$sheet->setCellValue('H' . $row, $folio->ESTADODESCR);
-			$sheet->setCellValue('I' . $row, $folio->MUNICIPIODESCR);
-			$sheet->setCellValue('J' . $row, $folio->STATUS);
+			$sheet->setCellValue('D' . $row, $folio->EXPEDIENTEID ? ($folio->EXPEDIENTEID . '/' . $folio->TIPOEXPEDIENTECLAVE) : '');
+			$sheet->setCellValue('E' . $row, $folio->TIPOEXPEDIENTECLAVE ? $folio->TIPOEXPEDIENTECLAVE : '');
+			$sheet->setCellValue('F' . $row, date('d-m-Y'), strtotime($folio->FECHASALIDA));
+			$sheet->setCellValue('G' . $row, $folio->N_DENUNCIANTE . ' ' . $folio->APP_DENUNCIANTE . ' ' . $folio->APM_DENUNCIANTE);
+			$sheet->setCellValue('H' . $row, $folio->N_AGENT . ' ' . $folio->APP_AGENT . ' ' . $folio->APM_AGENT);
+			$sheet->setCellValue('I' . $row, $folio->ESTADODESCR);
+			$sheet->setCellValue('J' . $row, $folio->MUNICIPIODESCR);
+			$sheet->setCellValue('K' . $row, $folio->STATUS);
 
 			$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
 
@@ -859,7 +861,7 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('A2', "REGISTRO ESTATAL DE PRE DENUNCIA TELEFÓNICA Y EN LÍNEA");
 			$tipo = '';
 			if ($folio->TIPODENUNCIA == 'VD') {
-				$tipo = 'CDTEC';
+				$tipo = 'VIDEO';
 			} else if ($folio->TIPODENUNCIA == 'DA') {
 				$tipo = 'ANÓNIMA';
 			} else {

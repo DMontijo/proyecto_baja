@@ -148,7 +148,7 @@
 										$expedienteid = $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
 									}
 									if ($folio->TIPODENUNCIA == 'VD') {
-										$tipo = 'CDTEC';
+										$tipo = 'VIDEO';
 									} else if ($folio->TIPODENUNCIA == 'DA') {
 										$tipo = 'ANÓNIMA';
 									} else {

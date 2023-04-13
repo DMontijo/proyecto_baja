@@ -139,7 +139,7 @@
 									}
 									$tipo = '';
 									if ($folio->TIPODENUNCIA == 'VD') {
-										$tipo = 'CDTEC';
+										$tipo = 'VIDEO';
 									} else if ($folio->TIPODENUNCIA == 'DA') {
 										$tipo = 'ANÓNIMA';
 									} else {
