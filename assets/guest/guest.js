@@ -137,7 +137,7 @@ export class VideoServiceGuest {
 		});
 
 		this.#socket.on("disconnect", function (data) {
-			console.warn("disconnect");
+			console.warn("ON Disconnect", data);
 			if (typeof ondisconnect === "function") ondisconnect(data);
 		});
 
