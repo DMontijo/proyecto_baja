@@ -203,3 +203,14 @@ function deleteVideoElement() {
 		element.remove();
 	});
 }
+
+window.addEventListener('offline', goOffline());
+window.addEventListener('online', goOnline());
+
+function goOnline() {
+	console.log('Online')
+}
+
+function goOffline() {
+	console.log('Offline')
+}
