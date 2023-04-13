@@ -1872,7 +1872,7 @@ class DashboardController extends BaseController
 		}
 		if ($telefonica == 'S') {
 			$data['TIPODENUNCIA'] = 'TE';
-		} 
+		}
 		if (!empty($status) && !empty($motivo) && !empty($year) && !empty($folio) && !empty($agenteId)) {
 			$folioRow = $this->_folioModel->where('ANO', $year)->where('FOLIOID', $folio)->where('STATUS', 'EN PROCESO')->first();
 			if ($folioRow) {
@@ -1897,7 +1897,7 @@ class DashboardController extends BaseController
 						}
 					} else if ($folio->TIPODENUNCIA == 'DA') {
 						return json_encode(['status' => 1]);
-					}else if ($folio->TIPODENUNCIA == 'TE') {
+					} else if ($folio->TIPODENUNCIA == 'TE') {
 						return json_encode(['status' => 1]);
 					}
 				} else {
@@ -4241,7 +4241,7 @@ class DashboardController extends BaseController
 					'INSTAGRAM' => $this->request->getPost('instagram_pf'),
 					'TWITTER' => $this->request->getPost('twitter_pf'),
 					'FOTO' =>  $fotoP,
-					'FOTOGRAFIA_ACTUAL' => $this->request->getPost('fotografia_actual_pf') != '' ? $this->request->getPost('fotografia_actual_pf'): NULL,
+					'FOTOGRAFIA_ACTUAL' => $this->request->getPost('fotografia_actual_pf') != '' ? $this->request->getPost('fotografia_actual_pf') : NULL,
 				);
 			} else {
 				$data = array(
@@ -4273,7 +4273,7 @@ class DashboardController extends BaseController
 					'FACEBOOK' => $this->request->getPost('facebook_pf'),
 					'INSTAGRAM' => $this->request->getPost('instagram_pf'),
 					'TWITTER' => $this->request->getPost('twitter_pf'),
-					'FOTOGRAFIA_ACTUAL' => $this->request->getPost('fotografia_actual_pf')!= '' ? $this->request->getPost('fotografia_actual_pf'): NULL,
+					'FOTOGRAFIA_ACTUAL' => $this->request->getPost('fotografia_actual_pf') != '' ? $this->request->getPost('fotografia_actual_pf') : NULL,
 				);
 			}
 
@@ -5531,7 +5531,7 @@ class DashboardController extends BaseController
 			$folio = trim($this->request->getPost('folio'));
 			$year = trim($this->request->getPost('year'));
 			$vehiculoid = trim($this->request->getPost('vehiculoid'));
-		
+
 
 			$deleteVehiculo = $this->_folioVehiculoModel->where('FOLIOID', $folio)->where('ANO', $year)->where('VEHICULOID', $vehiculoid)->delete();
 
@@ -5544,7 +5544,7 @@ class DashboardController extends BaseController
 					'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
 				];
 
-			
+
 				$this->_bitacoraActividad($datosBitacora);
 
 
