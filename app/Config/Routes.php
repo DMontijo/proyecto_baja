@@ -280,6 +280,7 @@ $routes->group('data', function ($routes) {
 	$routes->post('update-vehiculo-by-id', 'admin/DashboardController::updateVehiculoByFolio');
 	$routes->post('create-vehiculo-by-id', 'admin/DashboardController::createVehiculoByFolio');
 	$routes->post('delete-vehiculo-by-id', 'admin/DashboardController::deleteVehiculoByFolio');
+	$routes->post('delete-archivo-by-id', 'admin/DashboardController::deleteArchivoById');
 
 	$routes->post('delete-parentesco-by-id', 'admin/DashboardController::deleteParentescoById');
 	$routes->post('delete-persona-fisica-by-id', 'admin/DashboardController::deletePersonaFisicaById');
@@ -315,6 +316,8 @@ $routes->group('data', function ($routes) {
 	//Archivos externos
 
 	$routes->post('create_archivos', 'client/DashboardController::crear_archivos_externos');
+	$routes->post('create_archivos_admin', 'admin/DashboardController::crear_archivos_externos');
+
 	$routes->post('refresh_archivos', 'admin/DashboardController::refreshArchivosExternos');
 
 	//delitos 

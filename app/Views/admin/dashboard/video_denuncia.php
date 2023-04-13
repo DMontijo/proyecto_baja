@@ -1157,10 +1157,13 @@
 				var img = `<a id="downloadArchivo" download=""><img src='${archivos[i].ARCHIVO}');' width="50px" height="50px"></img></a>`;
 
 			}
+			var btnEliminarArchivo =
+				`<button type='button' id="deleteArchivobtn" class='btn btn-primary' onclick='deleteArchivo(${archivos[i].FOLIOARCHIVOID})'><i class='fas fa-trash'></i></button>`;
 			var fila =
 				`<tr id="row${i}">` +
 				`<td class="text-center" value="${archivos[i].FOLIOARCHIVOID}">${archivos[i].ARCHIVODESCR}</td>` +
 				`<td class="text-center" value="${archivos[i].FOLIOARCHIVOID}">${img}</td>` +
+				`<td class="text-center">${btnEliminarArchivo}</td>` +
 
 				`</tr>`;
 
@@ -2798,6 +2801,47 @@
 		});
 	}
 
+	function deleteArchivo(archivoid) {
+		$.ajax({
+			data: {
+				'archivoid': archivoid,
+				'folio': inputFolio.value,
+				'year': year_select.value,
+			},
+			url: "<?= base_url('/data/delete-archivo-by-id') ?>",
+			method: "POST",
+			dataType: "json",
+			beforeSend: function() {
+						document.getElementById('deleteArchivobtn').disabled=true;
+
+					},
+			success: function(response) {
+				if (response.status == 1) {
+					const archivos = response.archivos.archivosexternos;
+					Swal.fire({
+						icon: 'success',
+						text: 'Archivo eliminado correctamente',
+						confirmButtonColor: '#bf9b55',
+					});
+					let tabla_archivos = document.querySelectorAll(
+						'#table-archivos tr');
+					tabla_archivos.forEach(row => {
+						if (row.id !== '') {
+							row.remove();
+						}
+					});
+					llenarTablaArchivosExternos(archivos);
+					document.getElementById('deleteArchivobtn').disabled=false;
+
+				}else{
+					document.getElementById('deleteArchivobtn').disabled=false;
+
+				}
+			}
+		});
+
+	}
+
 	function deleteVehiculo(vehiculoid) {
 		$.ajax({
 			data: {
@@ -2915,6 +2959,9 @@
 
 			var btn_insertar_parentesco = document.querySelector('#insertParentescoModal');
 			var btnRefrescarArchivos = document.querySelector('#refrescarArchivos');
+			var btnAgregarArchivos = document.querySelector('#agregarArchivosAdmin');
+			var btnSubirArchivos = document.querySelector('#btnSubirArchivos');
+
 
 			var btn_insertar_persona_fisica = document.querySelector('#insertPersonaFisicaModal');
 			var btn_asignar_delitos = document.querySelector('#insertArbolDelictual');
@@ -3141,6 +3188,15 @@
 
 				$('#relacion_parentesco_modal_insert').modal('show');
 			}, false);
+			btnAgregarArchivos.addEventListener('click', (e) => {
+				$('#agregar_archivos_modal').modal('show');
+
+			});
+			btnSubirArchivos.addEventListener('click', (e) => {
+				e.preventDefault();
+				crearArchivos();
+
+			});
 			btnRefrescarArchivos.addEventListener('click', (e) => {
 				$.ajax({
 					data: {
@@ -5708,6 +5764,127 @@
 				});
 			}
 
+			async function crearArchivos() {
+				document.getElementById('archivo_content').classList.add('d-none');
+				document.getElementById('documentos_anexar_spinner').classList.remove('d-none');
+				let documento;
+				let nombre_documento;
+				if ($("#documentoArchivo")[0].files && $("#documentoArchivo")[0].files[0]) {
+					if ($("#documentoArchivo")[0].files[0].type == "image/jpeg" || $("#documentoArchivo")[0].files[0].type == "image/png" || $("#documentoArchivo")[0].files[0].type == "image/jpg") {
+						nombre_documento =$("#documentoArchivo")[0].files[0].name;
+						documento = await comprimirImagen($("#documentoArchivo")[0].files[0], 50);
+						console.log(documento);
+					} else {
+						nombre_documento =$("#documentoArchivo")[0].files[0].name;
+						documento = $("#documentoArchivo")[0].files[0];
+					}
+				} else {
+					document.getElementById('archivo_content').classList.remove('d-none');
+					document.getElementById('documentos_anexar_spinner').classList.add('d-none');
+					Swal.fire({
+						icon: 'error',
+						text: 'Debes seleccionar un documento.',
+						showConfirmButton: false,
+						timer: 1000
+					});
+					return
+				}
+				var packetData = new FormData();
+				packetData.append("documentoArchivo", documento);
+				packetData.append("folio", document.querySelector('#input_folio_atencion').value);
+				packetData.append("year", document.querySelector('#year_select').value);
+				packetData.append("nombreDocumento", nombre_documento);
+
+				$.ajax({
+					url: "<?= base_url('/data/create_archivos_admin') ?>",
+					method: "POST",
+					dataType: 'json',
+					contentType: false,
+					data: packetData,
+					processData: false,
+					cache: false,
+					success: function(response) {
+						const archivos = response.archivos.archivosexternos;
+						console.log(response);
+						document.getElementById('archivo_content').classList.remove('d-none');
+						document.getElementById('documentos_anexar_spinner').classList.add('d-none');
+						if (response.status == 1) {
+							$('#agregar_archivos_modal').modal('hide');
+
+							Swal.fire({
+								icon: 'success',
+								text: 'Documento agregado correctamente.',
+								showConfirmButton: false,
+								timer: 1000
+							});
+
+							let preview = document.querySelector('#viewDocumentoArchivo');
+
+							document.getElementById('documentoArchivo').value = '';
+							preview.setAttribute('src', '');
+							let tabla_archivos = document.querySelectorAll(
+								'#table-archivos tr');
+							tabla_archivos.forEach(row => {
+								if (row.id !== '') {
+									row.remove();
+								}
+							});
+							llenarTablaArchivosExternos(archivos);
+
+						} else if (response.status == 0) {
+							Swal.fire({
+								icon: 'error',
+								text: 'No se subio el documento.',
+								showConfirmButton: false,
+								timer: 1000
+							});
+						} else if (response.status == 2) {
+							Swal.fire({
+								icon: 'error',
+								text: 'Debes seleccionar un documento.',
+								showConfirmButton: false,
+								timer: 1000
+							});
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						console.log(textStatus);
+						document.getElementById('archivo_content').classList.remove('d-none');
+						document.getElementById('documentos_anexar_spinner').classList.add('d-none');
+						Swal.fire({
+							icon: 'error',
+							text: 'No se subio el documento.',
+							showConfirmButton: false,
+							timer: 1000
+						});
+					}
+				});
+
+			}
+
+			function comprimirImagen(imagenComoArchivo, porcentajeCalidad) {
+				return new Promise((resolve, reject) => {
+					const $canvas = document.createElement("canvas");
+					const imagen = new Image();
+					imagen.onload = () => {
+						$canvas.width = imagen.width;
+						$canvas.height = imagen.height;
+						$canvas.getContext("2d").drawImage(imagen, 0, 0);
+						$canvas.toBlob(
+							(blob) => {
+								if (blob === null) {
+									return reject(blob);
+								} else {
+									resolve(blob);
+								}
+							},
+							"image/jpeg", porcentajeCalidad / 100
+						);
+					};
+					imagen.src = URL.createObjectURL(imagenComoArchivo);
+				});
+			};
+
 			function agregarVehiculo() {
 				var packetData = new FormData();
 
@@ -6896,6 +7073,7 @@
 <?php include 'video_denuncia_modals/salida_modal.php' ?>
 <?php include 'video_denuncia_modals/marks.php' ?>
 <?php include 'video_denuncia_modals/encargados_modal.php' ?>
+<?php include 'video_denuncia_modals/agregar_archivosExternos_modal.php' ?>
 
 <?php include 'video_denuncia_modals/persona_modal.php' ?>
 <?php include 'video_denuncia_modals/relacion_parentesco_modal.php' ?>

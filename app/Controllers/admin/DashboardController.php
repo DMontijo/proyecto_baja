@@ -506,6 +506,67 @@ class DashboardController extends BaseController
 			}
 		}
 	}
+	public function crear_archivos_externos()
+	{
+		$documento = $this->request->getFile('documentoArchivo');
+		if (empty($documento)) {
+			return json_encode(['status' => 2]);
+		}
+		$doc = file_get_contents($documento);
+		$f = finfo_open();
+		$mime_type = finfo_buffer($f, $doc, FILEINFO_MIME_TYPE);
+		$extension = explode('/', $mime_type)[1];
+
+		$archivo = $_FILES['documentoArchivo']['name'];
+		$nombre = $this->request->getPost('nombreDocumento');
+
+
+		$data = (object) array();
+		$folio = $this->request->getPost('folio');
+		$year = $this->request->getPost('year');
+		$data = [
+			'FOLIOID' => $this->request->getPost('folio'),
+			'ANO' => $this->request->getPost('year'),
+			'ARCHIVODESCR' => strtoupper($nombre),
+			'ARCHIVO' => $doc,
+			'EXTENSION' => $extension,
+		];
+		$archivoExterno = $this->_folioExpArchivo($data, $folio, $year);
+		if ($archivoExterno) {
+			$datados = (object) array();
+
+			$datados->archivosexternos = $this->_archivoExternoModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
+			if ($datados->archivosexternos) {
+				foreach ($datados->archivosexternos as $key => $archivos) {
+					$file_info = new \finfo(FILEINFO_MIME_TYPE);
+					$type = $file_info->buffer($archivos->ARCHIVO);
+					$archivos->ARCHIVO = 'data:' . $type . ';base64,' . base64_encode($archivos->ARCHIVO);
+				}
+			}
+			return json_encode(['status' => 1, 'archivos'=>$datados]);
+		} else {
+			return json_encode(['status' => 0]);
+		}
+	}
+	private function _folioExpArchivo($data, $folio, $year)
+	{
+		$data = $data;
+		$data['FOLIOID'] = $folio;
+		$data['ANO'] = $year;
+
+
+		$archivoExterno = $this->_archivoExternoModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->orderBy('FOLIOARCHIVOID ', 'desc')->first();
+
+		if ($archivoExterno) {
+			$data['FOLIOARCHIVOID'] = ((int) $archivoExterno->FOLIOARCHIVOID) + 1;
+			$archivoExterno = $this->_archivoExternoModel->insert($data);
+			return $data['FOLIOARCHIVOID'];
+		} else {
+			$data['FOLIOARCHIVOID'] = 1;
+			$archivoExterno = $this->_archivoExternoModel->insert($data);
+			return $data['FOLIOARCHIVOID'];
+		}
+	}
 	public function nuevo_asignacion_permiso()
 	{
 		$data = (object) array();
@@ -5518,6 +5579,42 @@ class DashboardController extends BaseController
 
 
 				return json_encode(['status' => 1, 'fisicaImpDelito' => $fisicaImpDelito, 'relacionFisFis' => $relacionFisFis]);
+			} else {
+				return json_encode(['status' => 0]);
+			}
+		} catch (\Exception $e) {
+			return json_encode(['status' => 0]);
+		}
+	}
+	public function deleteArchivoById(){
+		try {
+			$folio = trim($this->request->getPost('folio'));
+			$year = trim($this->request->getPost('year'));
+			$archivoid = trim($this->request->getPost('archivoid'));
+
+			$deletearchivo = $this->_archivoExternoModel->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIOARCHIVOID', $archivoid)->delete();
+
+			if ($deletearchivo) {
+				$datados = (object) array();
+
+				$datados->archivosexternos = $this->_archivoExternoModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
+				if ($datados->archivosexternos) {
+					foreach ($datados->archivosexternos as $key => $archivos) {
+						$file_info = new \finfo(FILEINFO_MIME_TYPE);
+						$type = $file_info->buffer($archivos->ARCHIVO);
+						$archivos->ARCHIVO = 'data:' . $type . ';base64,' . base64_encode($archivos->ARCHIVO);
+					}
+				}
+				$datosBitacora = [
+					'ACCION' => 'Ha eliminado un archivo',
+					'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
+				];
+
+
+				$this->_bitacoraActividad($datosBitacora);
+
+
+				return json_encode(['status' => 1, 'archivos'=>$datados]);
 			} else {
 				return json_encode(['status' => 0]);
 			}

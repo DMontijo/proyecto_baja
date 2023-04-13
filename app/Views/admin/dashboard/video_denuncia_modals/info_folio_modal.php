@@ -135,6 +135,8 @@
 									</div>
 								</div>
 									<button type="button" id="refrescarArchivos" name="refrescarArchivos" class="btn btn-primary font-weight-bold">ACTUALIZAR ARCHIVOS</button>
+									<button type="button" id="agregarArchivosAdmin" name="agregarArchivosAdmin" class="btn btn-primary font-weight-bold"><i class="fas fa-plus mr-3"></i>AGREGAR ARCHIVOS</button>
+
 								</div>
 								<div class="table-responsive">
 									<table id="table-archivos" class="table table-bordered table-hover table-striped table-light">
