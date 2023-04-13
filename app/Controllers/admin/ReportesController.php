@@ -264,7 +264,7 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('B' . $row, $folio->ANO);
 			$sheet->setCellValue('C' . $row, $tipo);
 			$sheet->setCellValue('D' . $row, $folio->EXPEDIENTEID ? ($folio->EXPEDIENTEID . '/' . $folio->TIPOEXPEDIENTECLAVE) : '');
-			$sheet->setCellValue('E' . $row, $folio->TIPOEXPEDIENTECLAVE ? $folio->TIPOEXPEDIENTECLAVE : '');
+			$sheet->setCellValue('E' . $row, $folio->TIPOEXPEDIENTECLAVE ? $folio->TIPOEXPEDIENTECLAVE : $folio->STATUS);
 			$sheet->setCellValue('F' . $row, date('d-m-Y'), strtotime($folio->FECHASALIDA));
 			$sheet->setCellValue('G' . $row, $folio->N_DENUNCIANTE . ' ' . $folio->APP_DENUNCIANTE . ' ' . $folio->APM_DENUNCIANTE);
 			$sheet->setCellValue('H' . $row, $folio->N_AGENT . ' ' . $folio->APP_AGENT . ' ' . $folio->APM_AGENT);
