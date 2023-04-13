@@ -126,7 +126,8 @@ disponible_connect.addEventListener("click", () => {
 					icon: "error",
 					text: "El usuario se desconecto.",
 					showConfirmButton: false,
-					timer: 2000
+					timer: 3000,
+					timerProgressBar: true,
 				});
 			});
 		},
@@ -149,7 +150,8 @@ disponible_connect.addEventListener("click", () => {
 				icon: "error",
 				text: response.message,
 				showConfirmButton: false,
-				timer: 3000
+				timer: 3000,
+				timerProgressBar: true,
 			});
 		}
 	);
@@ -200,7 +202,8 @@ aceptar_llamada.addEventListener("click", () => {
 					icon: "error",
 					text: "El usuario se desconecto.",
 					showConfirmButton: false,
-					timer: 1000
+					timer: 3000,
+					timerProgressBar: true,
 				});
 			});
 		}
