@@ -159,6 +159,7 @@ export default class VideoCall {
      */
     async forceDisconnection() {
         console.log("FORZANDO DESCONEXIÓN");
+        await this.#session.unpublish(this.#publisher);
         await this.#session.disconnect(this.#session.connection);
     }
 
