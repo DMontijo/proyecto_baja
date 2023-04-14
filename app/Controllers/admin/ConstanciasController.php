@@ -339,7 +339,7 @@ class ConstanciasController extends BaseController
 
 		$filename = urlencode("Constancia_" . $folio . '_' . $year . '.pdf');
 		header("Content-type: application/pdf");
-		header("Content-Disposition: inline; filename=\"$filename\"");
+		header("Content-Disposition: attachment; filename=\"$filename\"");
 		echo $constancia->PDF;
 	}
 
