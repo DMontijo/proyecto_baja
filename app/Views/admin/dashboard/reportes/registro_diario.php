@@ -137,7 +137,7 @@
 										<td class="text-center font-weight-bold"><?= $folio->FOLIOID ?></td>
 										<td class="text-center"><?= $folio->ANO ?></td>
 										<td class="text-center"><?= $folio->TIPODENUNCIA == 'VD' ? 'CDTEC' : 'ANÓNIMA' ?></td>
-										<td class="text-center"><?= $expedienteid ? $expedienteid : '' ?></td>
+										<td class="text-center"><?= $expedienteid ? $expedienteid . '/' . $folio->TIPOEXPEDIENTECLAVE :  '' ?></td>
 										<td class="text-center"><?= $folio->FECHASALIDA ?></td>
 										<td class="text-center"><?= $folio->STATUS ?></td>
 										<td class="text-center"><?= $folio->N_DENUNCIANTE . ' ' . $folio->APP_DENUNCIANTE . ' ' . $folio->APM_DENUNCIANTE ?></td>
