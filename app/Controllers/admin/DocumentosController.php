@@ -259,7 +259,7 @@ class DocumentosController extends BaseController
 		header("Content-type: application/octet-stream");
 		header("Content-Transfer-Encoding: Binary");
 		header("Content-Disposition: attachment; filename=\"$filename\"");
-		readfile($documento->PDF);
+		echo $documento->PDF;
 	}
 
 	public function download_documento_xml()
