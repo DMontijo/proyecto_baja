@@ -17,9 +17,9 @@
 								<tr>
 									<th class="text-center" style="min-width:150px;">FOLIO</th>
 									<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
+									<th class="text-center">DELITO</th>
 									<th class="text-center">OFENDIDO</th>
 									<th class="text-center">IMPUTADO</th>
-									<th class="text-center">DELITO</th>
 									<th class="text-center">ATENDIDO POR</th>
 									<th class="text-center">FECHA REGISTRO</th>
 									<th class="text-center">FECHA SALIDA</th>
@@ -36,12 +36,12 @@
 									<tr>
 										<td class="text-center font-weight-bold"><?= $folio->FOLIOID . '/' . $folio->ANO ?></td>
 										<td class="text-center font-weight-bold"><?= ($expedienteid ? $expedienteid : '') . '/' . $folio->TIPOEXPEDIENTECLAVE ?></td>
+										<td class="text-center"><?= $folio->DELITOMODALIDADDESCR ?></td>
 										<td class="text-center"><?= isset($folio->OFENDIDO) ? $folio->OFENDIDO : '' ?></td>
 										<td class="text-center"><?= isset($folio->IMPUTADO_NOMBRE) ? $folio->IMPUTADO_NOMBRE : '' ?></td>
-										<td class="text-center"><?= $folio->DELITOMODALIDADDESCR ?></td>
+										<td class="text-center"><?= $folio->NOMBREAGENTE ?></td>
 										<td class="text-center"><?= date('d-m-Y H:i:s', strtotime($folio->FECHAREGISTRO)) ?></td>
 										<td class="text-center"><?= date('d-m-Y H:i:s', strtotime($folio->FECHASALIDA)) ?></td>
-										<td class="text-center"><?= $folio->NOMBREAGENTE ?></td>
 
 										<td class="text-center"><button type="button" class="btn btn-primary" onclick="viewVideo(<?= $folio->ANO ?>,<?= $folio->FOLIOID ?>)"><i class="fas fa-video"></i></button></td>
 									</tr>
