@@ -148,7 +148,9 @@
 			if (videos[i].url != null) {
 				var fila =
 					`<tr id="row${i}">` +
-					`<td class="text-center" value="" style="max-width:30vw;"><video src="${videos[i].url} " width="100%" height="100%" controls></video></td>` +
+					`<td class="text-center" value="" style="max-width:30vw;">
+						<video src="${videos[i].url}" width="100%" height="100%" controls controlsList="nodownload"></video>
+					</td>` +
 					`</tr>`;
 				$('#table-videos tr:first').after(fila);
 				$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
