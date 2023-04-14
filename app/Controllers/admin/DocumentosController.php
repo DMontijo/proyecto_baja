@@ -272,6 +272,11 @@ class DocumentosController extends BaseController
 		header("Content-type: application/octet-stream");
 		header("Content-Transfer-Encoding: Binary"); 
 		header("Content-Disposition: attachment; filename=\"$filename\"");
+		header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+		header('Pragma: public');
+		header('Expires: 0');
+		ob_clean();
+		flush();
 		readfile($documento->PDF);
 	}
 	public function download_documento_xml()
