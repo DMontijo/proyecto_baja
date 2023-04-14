@@ -261,8 +261,8 @@ class DocumentosController extends BaseController
 		// readfile($documento->PDF);
 		// Descarga del archivo utilizando fpassthru()
 $archivo = fopen($documento->PDF, 'rb');
-fpassthru($documento->PDF);
-fclose($documento->PDF);
+fpassthru($archivo);
+fclose($archivo);
 	}
 	
 	public function download_documento_xml()
