@@ -282,7 +282,18 @@ class DocumentosController extends BaseController
 		$filename = urlencode($documento->TIPODOC . "_" . $folio . "_" . $year . ".xml");
 		header("Content-type: application/xml");
 		header("Content-Disposition: attachment; filename=\"$filename\"");
-		echo $documento->XML;
+		header('Content-Length: ' . strlen($documento->XML));
+		header('Expires: 0');
+		header('Cache-Control: must-revalidate');
+		header('Pragma: public');
+
+		$fp = fopen('php://memory', 'r+');
+		fwrite($fp, $documento->XML);
+		rewind($fp);
+		fpassthru($fp);
+		fclose($fp);
+		exit();
+		// echo $documento->XML;
 	}
 	public function borrarDocumento()
 	{
