@@ -246,22 +246,34 @@ class DocumentosController extends BaseController
 		];
 		echo view("admin/dashboard/wyswyg/validar_documento", $data2);
 	}
+	// public function download_documento_pdf()
+	// {
+	// 	$docid = trim($this->request->getPost('docid'));
+	// 	$folio = trim($this->request->getPost('folio'));
+	// 	$year = trim($this->request->getPost('year'));
+
+	// 	$documento = $this->_folioDocModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $docid)->first();
+
+	// 	$filename = urlencode($documento->TIPODOC . "_" . $folio . "_" . $year. ".pdf") ;
+	// 	header("Content-type: application/pdf");
+	// 	header("Content-Disposition: attachment; filename=\"$filename\"");
+	// 	echo $documento->PDF;
+	// }
 	public function download_documento_pdf()
 	{
 		$docid = trim($this->request->getPost('docid'));
 		$folio = trim($this->request->getPost('folio'));
 		$year = trim($this->request->getPost('year'));
-
+	
 		$documento = $this->_folioDocModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $docid)->first();
-
-		$filename = urlencode($documento->TIPODOC . "_" . $folio . "_" . $year. ".pdf") ;
-		header("Content-type: application/pdf");
-		// header("Content-type: application/octet-stream");
-		// header("Content-Transfer-Encoding: Binary");
+	
+		$filename = urlencode($documento->TIPODOC . "" . $folio . "" . $year) . ".pdf";
+	
+		header("Content-type: application/octet-stream");
+		header("Content-Transfer-Encoding: Binary"); 
 		header("Content-Disposition: attachment; filename=\"$filename\"");
-		echo $documento->PDF;
+		readfile($documento->PDF);
 	}
-
 	public function download_documento_xml()
 	{
 		$docid = trim($this->request->getPost('docid'));
