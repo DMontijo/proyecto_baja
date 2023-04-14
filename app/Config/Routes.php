@@ -82,7 +82,6 @@ $routes->group('admin', function ($routes) {
 		$routes->post('editar_usuario', 'admin/DashboardController::update_usuario');
 		$routes->post('editar_password', 'admin/DashboardController::editar_password');
 
-
 		$routes->get('video-denuncia', 'admin/DashboardController::video_denuncia');
 		$routes->get('denuncia-anonima', 'admin/DashboardController::denuncia_anonima');
 

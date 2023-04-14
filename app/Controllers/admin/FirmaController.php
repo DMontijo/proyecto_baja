@@ -373,12 +373,11 @@ class FirmaController extends BaseController
 					$rfc = $fiel_user['rfc'];
 					$num_certificado = $fiel_user['num_certificado'];
 					for ($i = 0; $i < count($documento); $i++) {
-						if (empty($documento[$i]->ENCARGADO_ASIGNADO) && isset($documento[$i]->AGENTE_ASIGNADO) && $documento[$i]->AGENTE_ASIGNADO != session('ID') ) {
+						if (empty($documento[$i]->ENCARGADO_ASIGNADO) && isset($documento[$i]->AGENTE_ASIGNADO) && $documento[$i]->AGENTE_ASIGNADO != session('ID')) {
 							return json_encode((object)['status' => 0, 'message_error' => "No tienes permiso para firmar en este folio."]);
-						}
-						else if (isset($documento[$i]->ENCARGADO_ASIGNADO) && $documento[$i]->ENCARGADO_ASIGNADO != session('ID')) {
+						} else if (isset($documento[$i]->ENCARGADO_ASIGNADO) && $documento[$i]->ENCARGADO_ASIGNADO != session('ID')) {
 							return json_encode((object)['status' => 0, 'message_error' => "Solo puede firmar el encargado asignado."]);
-						}else if (isset($documento[$i]->ENCARGADO_ASIGNADO) && $documento[$i]->ENCARGADO_ASIGNADO != session('ID') && isset($documento[$i]->AGENTE_ASIGNADO)) {
+						} else if (isset($documento[$i]->ENCARGADO_ASIGNADO) && $documento[$i]->ENCARGADO_ASIGNADO != session('ID') && isset($documento[$i]->AGENTE_ASIGNADO)) {
 							return json_encode((object)['status' => 0, 'message_error' => "Solo puede firmar el encargado asignado."]);
 						}
 						$municipio = (object)[];
@@ -513,12 +512,11 @@ class FirmaController extends BaseController
 						// if (isset($documento[$i]->ENCARGADO_ASIGNADO) && $documento[$i]->ENCARGADO_ASIGNADO != session('ID')) {
 						// 	return json_encode((object)['status' => 0, 'message_error' => "Solo puede firmar el encargado asignado."]);
 						// }
-						if (empty($documento[$i]->ENCARGADO_ASIGNADO) && isset($documento[$i]->AGENTE_ASIGNADO) && $documento[$i]->AGENTE_ASIGNADO != session('ID') ) {
+						if (empty($documento[$i]->ENCARGADO_ASIGNADO) && isset($documento[$i]->AGENTE_ASIGNADO) && $documento[$i]->AGENTE_ASIGNADO != session('ID')) {
 							return json_encode((object)['status' => 0, 'message_error' => "No tienes permiso para firmar en este folio."]);
-						}
-						else if (isset($documento[$i]->ENCARGADO_ASIGNADO) && $documento[$i]->ENCARGADO_ASIGNADO != session('ID')) {
+						} else if (isset($documento[$i]->ENCARGADO_ASIGNADO) && $documento[$i]->ENCARGADO_ASIGNADO != session('ID')) {
 							return json_encode((object)['status' => 0, 'message_error' => "Solo puede firmar el encargado asignado."]);
-						}else if (isset($documento[$i]->ENCARGADO_ASIGNADO) && $documento[$i]->ENCARGADO_ASIGNADO != session('ID') && isset($documento[$i]->AGENTE_ASIGNADO)) {
+						} else if (isset($documento[$i]->ENCARGADO_ASIGNADO) && $documento[$i]->ENCARGADO_ASIGNADO != session('ID') && isset($documento[$i]->AGENTE_ASIGNADO)) {
 							return json_encode((object)['status' => 0, 'message_error' => "Solo puede firmar el encargado asignado."]);
 						}
 						$municipio = (object)[];
@@ -1043,9 +1041,10 @@ class FirmaController extends BaseController
 
 			if ($folioM->MUNICIPIOASIGNADOID != null) {
 				$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $folioM->MUNICIPIOASIGNADOID)->where('ESTADOID', 2)->first();
-			}else{
+			} else {
 				$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $folioM->INSTITUCIONREMISIONMUNICIPIOID)->where('ESTADOID', 2)->first();
-			}			$fecha_actual = date('d') . ' DE ' . $meses[date('n') - 1] . " DEL " . date('Y');
+			}
+			$fecha_actual = date('d') . ' DE ' . $meses[date('n') - 1] . " DEL " . date('Y');
 			$agente = trim($agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' .  $agente->APELLIDO_MATERNO);
 			$imputado = trim($imputado->NOMBRE . ' ' . $imputado->PRIMERAPELLIDO . ' ' .  $imputado->SEGUNDOAPELLIDO);
 
@@ -1124,7 +1123,7 @@ class FirmaController extends BaseController
 
 			if ($folioM->MUNICIPIOASIGNADOID != null) {
 				$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $folioM->MUNICIPIOASIGNADOID)->where('ESTADOID', 2)->first();
-			}else{
+			} else {
 				$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $folioM->INSTITUCIONREMISIONMUNICIPIOID)->where('ESTADOID', 2)->first();
 			}
 			$fecha_actual = date('d') . ' DE ' . $meses[date('n') - 1] . " DEL " . date('Y');
@@ -1138,7 +1137,7 @@ class FirmaController extends BaseController
 			$email = \Config\Services::email();
 			$email->setTo($to);
 			$email->setSubject('FGEBC - Documentos folio: ' . $folio . '/' . $folioM->ANO);
-		
+
 			$body = view('email_template/documentos_firmados_email_template.php', ['municipio' => $municipio, 'fecha' => $fecha_actual, 'agente' => $agente, 'expediente' => $folioM->EXPEDIENTEID ? $expediente : 'SIN EXPEDIENTE', 'folio' => $folio, 'year' => $folioM->ANO, 'tipoexpediente' => $folioM->TIPOEXPEDIENTEID ? ($tipoExpediente  == "" ? $tipoExpediente : $tipoExpediente->TIPOEXPEDIENTEDESCR) : $folioM->STATUS, 'status' => $folioM->STATUS, 'delito' => $delito, 'imputado' => $imputado, 'claveexpediente' => $folioM->TIPOEXPEDIENTEID ? ($tipoExpediente  == "" ? $tipoExpediente : $tipoExpediente->TIPOEXPEDIENTECLAVE) : $folioM->STATUS]);
 
 			$email->setMessage($body);
@@ -1253,6 +1252,7 @@ class FirmaController extends BaseController
 					break;
 			}
 		}
+
 		$email = \Config\Services::email();
 		$email->setTo($to_orden_proteccion);
 		$email->setSubject('FGEBC - ORDENES DE PROTECCIÓN');

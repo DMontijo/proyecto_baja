@@ -56,7 +56,7 @@ class UserController extends BaseController
 		$this->_folioModel = new FolioModel();
 		$this->_escolaridadModel = new EscolaridadModel();
 		$this->_ocupacionModel = new OcupacionModel();
-		$this->urlApi = "https://videodenunciabalancer.fgebc.gob.mx/guests/";
+		$this->urlApi = VIDEOCALL_URL . "guests/";
 	}
 
 	public function index()

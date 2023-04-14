@@ -152,17 +152,17 @@ class ExtravioController extends BaseController
 				'CORREO' => $this->request->getPost('correo'),
 			];
 			$dataApi = array();
-			$dataApi['name']=$this->request->getPost('nombre') .' ' . $this->request->getPost('apellido_paterno');
-			$dataApi['details']= $dataApi2;
-			$dataApi['gender']= $this->request->getPost('sexo') == 'F' ? "FEMALE": 'MALE';
-			$dataApi['languages']= [22];
-			$urlApi = "https://videodenunciabalancer.fgebc.gob.mx/guests";
+			$dataApi['name'] = $this->request->getPost('nombre') . ' ' . $this->request->getPost('apellido_paterno');
+			$dataApi['details'] = $dataApi2;
+			$dataApi['gender'] = $this->request->getPost('sexo') == 'F' ? "FEMALE" : 'MALE';
+			$dataApi['languages'] = [22];
+			$urlApi = VIDEOCALL_URL . "guests/";
 			$response = $this->_curlPost($urlApi, $dataApi);
 			$data['UUID'] = $response->uuid;
 			if ($response->uuid) {
-			$this->_denunciantesModel->insert($data);
-			$this->_sendEmailPassword($data['CORREO'], $password);
-			return redirect()->to(base_url('/constancia_extravio'))->with('message_success', 'Inicia sesión con la contraseña que llegará a tu correo e ingresa.');
+				$this->_denunciantesModel->insert($data);
+				$this->_sendEmailPassword($data['CORREO'], $password);
+				return redirect()->to(base_url('/constancia_extravio'))->with('message_success', 'Inicia sesión con la contraseña que llegará a tu correo e ingresa.');
 			}
 		} else {
 			return redirect()->back()->with('message_error', 'Hubo un error en los datos o puede que ya exista un registro con el mismo correo');
