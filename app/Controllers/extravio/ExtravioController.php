@@ -156,7 +156,7 @@ class ExtravioController extends BaseController
 			$dataApi['details']= $dataApi2;
 			$dataApi['gender']= $this->request->getPost('sexo') == 'F' ? "FEMALE": 'MALE';
 			$dataApi['languages']= [22];
-			$urlApi = "https://73cd-2806-2f0-51e1-bf82-9c59-5b45-24ff-584e.ngrok-free.app/guests";
+			$urlApi = "https://6e79-52-0-63-150.ngrok-free.app/guests";
 			$response = $this->_curlPost($urlApi, $dataApi);
 			$data['UUID'] = $response->uuid;
 			if ($response->uuid) {
