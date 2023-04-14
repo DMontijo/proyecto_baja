@@ -1986,18 +1986,18 @@ class DashboardController extends BaseController
 				$folioRow = $this->_folioModel->where('ANO', $year)->where('FOLIOID', $folio)->where('STATUS', 'EN PROCESO')->first();
 				$folioVehiculoRow = $this->_folioVehiculoModel->where('ANO', $year)->where('FOLIOID', $folio)->findAll();
 
-				if (($folioRow['MUNICIPIOID'] == '' || $folioRow['MUNICIPIOID'] == NULL)
-					|| ($folioRow['HECHOLOCALIDADID'] == '' || $folioRow['HECHOLOCALIDADID'] == NULL)
-					|| ($folioRow['HECHOCOLONIAID'] == '' || $folioRow['HECHOCOLONIAID'] == NULL)
-					|| ($folioRow['HECHOCALLE'] == '' || $folioRow['HECHOCALLE'] == NULL)
-					|| ($folioRow['HECHONUMEROCASA'] == '' || $folioRow['HECHONUMEROCASA'] == NULL)
-					|| ($folioRow['HECHOLUGARID'] == '' || $folioRow['HECHOLUGARID'] == NULL)
-					|| ($folioRow['HECHOFECHA'] == '' || $folioRow['HECHOFECHA'] == NULL)
-					|| ($folioRow['HECHOHORA'] == '' || $folioRow['HECHOHORA'] == NULL)
-					|| ($folioRow['HECHONARRACION'] == '' || $folioRow['HECHONARRACION'] == NULL)
-				) {
-					throw new \Exception('Actualiza los campos de información del hecho.');
-				}
+				// if (($folioRow['MUNICIPIOID'] == '' || $folioRow['MUNICIPIOID'] == NULL)
+				// 	|| ($folioRow['HECHOLOCALIDADID'] == '' || $folioRow['HECHOLOCALIDADID'] == NULL)
+				// 	|| ($folioRow['HECHOCOLONIAID'] == '' || $folioRow['HECHOCOLONIAID'] == NULL)
+				// 	|| ($folioRow['HECHOCALLE'] == '' || $folioRow['HECHOCALLE'] == NULL)
+				// 	|| ($folioRow['HECHONUMEROCASA'] == '' || $folioRow['HECHONUMEROCASA'] == NULL)
+				// 	|| ($folioRow['HECHOLUGARID'] == '' || $folioRow['HECHOLUGARID'] == NULL)
+				// 	|| ($folioRow['HECHOFECHA'] == '' || $folioRow['HECHOFECHA'] == NULL)
+				// 	|| ($folioRow['HECHOHORA'] == '' || $folioRow['HECHOHORA'] == NULL)
+				// 	|| ($folioRow['HECHONARRACION'] == '' || $folioRow['HECHONARRACION'] == NULL)
+				// ) {
+				// 	throw new \Exception('Actualiza los campos de información del hecho.');
+				// }
 
 				foreach ($folioVehiculoRow as $key => $vehiculo) {
 					if (($vehiculo['SITUACION'] == '' || $vehiculo['SITUACION'] == NULL)
