@@ -288,7 +288,7 @@ class ReportesController extends BaseController
 
 		$writer = new Xlsx($spreadSheet);
 
-		$filename = "Reporte_Folios_" . $date . ".xlsx";
+		$filename = urlencode("Reporte_Folios_" . $date . ".xlsx");
 		header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 		header("Content-Disposition: attachment; filename=\"$filename\"");
 		header("Content-Transfer-Encoding: binary");
@@ -525,7 +525,7 @@ class ReportesController extends BaseController
 
 		$writer = new Xlsx($spreadSheet);
 
-		$filename = "Reporte_Constancias_" . $date . ".xlsx";
+		$filename = urlencode("Reporte_Constancias_" . $date . ".xlsx");
 		header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 		header("Content-Disposition: attachment; filename=\"$filename\"");
 		header("Content-Transfer-Encoding: binary");
@@ -937,7 +937,7 @@ class ReportesController extends BaseController
 		// $drawing->setRotation(25);
 		$writer = new Xlsx($spreadSheet);
 
-		$filename = "Registro_Diario_" . session('NOMBRE') . ".xlsx";
+		$filename = urlencode("Registro_Diario_" . session('NOMBRE') . ".xlsx");
 		header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 		header("Content-Disposition: attachment; filename=\"$filename\"");
 		header("Content-Transfer-Encoding: binary");
@@ -1352,7 +1352,7 @@ class ReportesController extends BaseController
 		// $drawing->setRotation(25);
 		$writer = new Xlsx($spreadSheet);
 
-		$filename = "Registro_Llamadas_" . $date . ".xlsx";
+		$filename = urlencode("Registro_Llamadas_" . $date . ".xlsx");
 		header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 		header("Content-Disposition: attachment; filename=\"$filename\"");
 		header("Content-Transfer-Encoding: binary");
@@ -1640,7 +1640,7 @@ class ReportesController extends BaseController
 		// $drawing->setRotation(25);
 		$writer = new Xlsx($spreadSheet);
 
-		$filename = "Reporte_Conavim_" . $date . ".xlsx";
+		$filename = urlencode("Reporte_Conavim_" . $date . ".xlsx");
 		header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 		header("Content-Disposition: attachment; filename=\"$filename\"");
 		header("Content-Transfer-Encoding: binary");
@@ -1937,7 +1937,7 @@ class ReportesController extends BaseController
 		// $drawing->setRotation(25);
 		$writer = new Xlsx($spreadSheet);
 
-		$filename = "Registro_Canalizaciones_Derivaciones_" . $date . ".xlsx";
+		$filename = urlencode("Registro_Canalizaciones_Derivaciones_" . $date . ".xlsx");
 		header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 		header("Content-Disposition: attachment; filename=\"$filename\"");
 		header("Content-Transfer-Encoding: binary");
@@ -2029,7 +2029,7 @@ class ReportesController extends BaseController
 		$array = str_split($expId);
 		return $array[2] . $array[4] . $array[5] . '-' . $array[6] . $array[7] . $array[8] . $array[9] . '-' . $array[10] . $array[11] . $array[12] . $array[13] . $array[14];
 	}
-	
+
 	public function formatFecha($date)
 	{
 		return date("d/m/Y", strtotime($date));

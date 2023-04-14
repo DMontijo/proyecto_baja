@@ -254,7 +254,7 @@ class DocumentosController extends BaseController
 
 		$documento = $this->_folioDocModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $docid)->first();
 
-		$filename = $documento->TIPODOC . "_" . $folio . "_" . $year . ".pdf";
+		$filename = urlencode($documento->TIPODOC . "_" . $folio . "_" . $year . ".pdf");
 		header("Content-type: application/pdf");
 		header("Content-Disposition: attachment; filename=\"$filename\"");
 		echo $documento->PDF;
@@ -268,7 +268,7 @@ class DocumentosController extends BaseController
 
 		$documento = $this->_folioDocModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $docid)->first();
 
-		$filename = $documento->TIPODOC . "_" . $folio . "_" . $year . ".xml";
+		$filename = urlencode($documento->TIPODOC . "_" . $folio . "_" . $year . ".xml");
 		header("Content-type: application/xml");
 		header("Content-Disposition: attachment; filename=\"$filename\"");
 		echo $documento->XML;

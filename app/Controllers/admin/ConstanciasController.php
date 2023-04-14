@@ -350,7 +350,7 @@ class ConstanciasController extends BaseController
 
 		$constancia = $this->_constanciaExtravioModel->asObject()->where('CONSTANCIAEXTRAVIOID', $folio)->where('ANO', $year)->first();
 
-		$filename = "Constancia_" . $folio . '_' . $year . '.xml';
+		$filename = urlencode("Constancia_" . $folio . '_' . $year . '.xml');
 		header("Content-type: application/xml");
 		header("Content-Disposition: attachment; filename=\"$filename\"");
 		echo $constancia->XML;

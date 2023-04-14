@@ -187,7 +187,7 @@ class DashboardController extends BaseController
 		$year = $this->request->getPost('year');
 
 		$constancia = $this->_constanciaExtravioModel->asObject()->where('CONSTANCIAEXTRAVIOID', $folio)->where('ANO', $year)->first();
-		$filename = "Constancia_" . $folio . '_' . $year . '.pdf';
+		$filename = urlencode("Constancia_" . $folio . '_' . $year . '.pdf');
 		header("Content-type: application/pdf");
 		header("Content-Disposition: attachment; filename=\"$filename\"");
 		echo $constancia->PDF;
@@ -199,7 +199,7 @@ class DashboardController extends BaseController
 		$year = $this->request->getPost('year');
 
 		$constancia = $this->_constanciaExtravioModel->asObject()->where('CONSTANCIAEXTRAVIOID', $folio)->where('ANO', $year)->first();
-		$filename = "Constancia_" . $folio . '_' . $year . '.xml';
+		$filename = urlencode("Constancia_" . $folio . '_' . $year . '.xml');
 		header("Content-type: application/xml");
 		header("Content-Disposition: attachment; filename=\"$filename\"");
 		echo $constancia->XML;
