@@ -277,8 +277,8 @@ class DocumentosController extends BaseController
 		header('Expires: 0');
 		ob_clean();
 		flush();
-		readfile($documento->PDF);
-	}
+		echo $documento->PDF;
+}
 	public function download_documento_xml()
 	{
 		$docid = trim($this->request->getPost('docid'));
