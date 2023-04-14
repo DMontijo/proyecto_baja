@@ -264,21 +264,26 @@ class DocumentosController extends BaseController
 		$docid = trim($this->request->getPost('docid'));
 		$folio = trim($this->request->getPost('folio'));
 		$year = trim($this->request->getPost('year'));
-	
+
 		$documento = $this->_folioDocModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $docid)->first();
-	
+
 		$filename = urlencode($documento->TIPODOC . "" . $folio . "" . $year) . ".pdf";
-	
+
 		header("Content-type: application/octet-stream");
-		header("Content-Transfer-Encoding: Binary"); 
+		header("Content-Transfer-Encoding: Binary");
 		header("Content-Disposition: attachment; filename=\"$filename\"");
 		header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 		header('Pragma: public');
 		header('Expires: 0');
 		ob_clean();
 		flush();
-		echo $documento->PDF;
-}
+		$request = \Config\Services::request();
+		$agent = $request->getUserAgent();
+		if ($agent->isMobile()) {
+			readfile($documento->PDF);
+		}else{
+		echo $documento->PDF;}
+	}
 	public function download_documento_xml()
 	{
 		$docid = trim($this->request->getPost('docid'));
