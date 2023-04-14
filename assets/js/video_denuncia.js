@@ -123,13 +123,13 @@ disponible_connect.addEventListener("click", () => {
 				$("#llamadaModal").modal("hide");
 				console.log("Guest disconnected con modal");
 
-				setTimeout(() => {
-					console.log("Desconectando agente...");
-					agentVideoService.disconnectAgent(() => {
-						console.log("¡Agente desconectado con éxito!");
-						clearVideoCall();
-					});
-				}, 2000);
+				// setTimeout(() => {
+				// 	console.log("Desconectando agente...");
+				// 	agentVideoService.disconnectAgent(() => {
+				// 		console.log("¡Agente desconectado con éxito!");
+				// 		clearVideoCall();
+				// 	});
+				// }, 2000);
 
 				Swal.fire({
 					icon: "error",
