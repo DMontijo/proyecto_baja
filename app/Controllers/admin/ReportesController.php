@@ -289,10 +289,10 @@ class ReportesController extends BaseController
 		$writer = new Xlsx($spreadSheet);
 
 		$filename = "Reporte_Folios_" . $date . ".xlsx";
-		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+		header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 		header("Content-Disposition: attachment; filename=\"$filename\"");
-		header('Content-Transfer-Encoding: binary');
-		header('Cache-Control: max-age=0');
+		header("Content-Transfer-Encoding: binary");
+		header("Cache-Control: max-age=0");
 		$writer->save("php://output");
 	}
 
@@ -526,10 +526,10 @@ class ReportesController extends BaseController
 		$writer = new Xlsx($spreadSheet);
 
 		$filename = "Reporte_Constancias_" . $date . ".xlsx";
-		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+		header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 		header("Content-Disposition: attachment; filename=\"$filename\"");
-		header('Content-Transfer-Encoding: binary');
-		header('Cache-Control: max-age=0');
+		header("Content-Transfer-Encoding: binary");
+		header("Cache-Control: max-age=0");
 		$writer->save("php://output");
 	}
 
@@ -544,13 +544,13 @@ class ReportesController extends BaseController
 		}
 
 		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
-		
+
 		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
 		$rolUser = session()->get('rol')->ID;
-		if ($rolUser == 1 || $rolUser == 2 || $rolUser == 6 || $rolUser == 7 || $rolUser == 11){
+		if ($rolUser == 1 || $rolUser == 2 || $rolUser == 6 || $rolUser == 7 || $rolUser == 11) {
 			$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
 			//$data['AGENTEATENCIONID'] = session('ID');
-		}else{
+		} else {
 			$empleado = $this->_usuariosModel->asObject()->where('ID',	session('ID'))->orderBy('NOMBRE', 'ASC')->findAll();
 			$data['AGENTEATENCIONID'] = session('ID');
 		}
@@ -938,10 +938,10 @@ class ReportesController extends BaseController
 		$writer = new Xlsx($spreadSheet);
 
 		$filename = "Registro_Diario_" . session('NOMBRE') . ".xlsx";
-		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+		header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 		header("Content-Disposition: attachment; filename=\"$filename\"");
-		header('Content-Transfer-Encoding: binary');
-		header('Cache-Control: max-age=0');
+		header("Content-Transfer-Encoding: binary");
+		header("Cache-Control: max-age=0");
 		$writer->save("php://output");
 	}
 
@@ -1353,10 +1353,10 @@ class ReportesController extends BaseController
 		$writer = new Xlsx($spreadSheet);
 
 		$filename = "Registro_Llamadas_" . $date . ".xlsx";
-		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+		header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 		header("Content-Disposition: attachment; filename=\"$filename\"");
-		header('Content-Transfer-Encoding: binary');
-		header('Cache-Control: max-age=0');
+		header("Content-Transfer-Encoding: binary");
+		header("Cache-Control: max-age=0");
 		$writer->save("php://output");
 	}
 
@@ -1641,10 +1641,10 @@ class ReportesController extends BaseController
 		$writer = new Xlsx($spreadSheet);
 
 		$filename = "Reporte_Conavim_" . $date . ".xlsx";
-		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+		header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 		header("Content-Disposition: attachment; filename=\"$filename\"");
-		header('Content-Transfer-Encoding: binary');
-		header('Cache-Control: max-age=0');
+		header("Content-Transfer-Encoding: binary");
+		header("Cache-Control: max-age=0");
 		$writer->save("php://output");
 	}
 
@@ -1938,10 +1938,10 @@ class ReportesController extends BaseController
 		$writer = new Xlsx($spreadSheet);
 
 		$filename = "Registro_Canalizaciones_Derivaciones_" . $date . ".xlsx";
-		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+		header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 		header("Content-Disposition: attachment; filename=\"$filename\"");
-		header('Content-Transfer-Encoding: binary');
-		header('Cache-Control: max-age=0');
+		header("Content-Transfer-Encoding: binary");
+		header("Cache-Control: max-age=0");
 		$writer->save("php://output");
 	}
 
@@ -2029,6 +2029,7 @@ class ReportesController extends BaseController
 		$array = str_split($expId);
 		return $array[2] . $array[4] . $array[5] . '-' . $array[6] . $array[7] . $array[8] . $array[9] . '-' . $array[10] . $array[11] . $array[12] . $array[13] . $array[14];
 	}
+	
 	public function formatFecha($date)
 	{
 		return date("d/m/Y", strtotime($date));
