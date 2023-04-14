@@ -3785,9 +3785,8 @@ class DashboardController extends BaseController
 		$data = array();
 		$folio = $this->request->getPost('folio');
 		$data['folio'] = $folio;
-		$url = VIDEOCALL_URL;
+		$url = $this->urlApi;
 
-		// $endpointFolio = $this->urlApi . 'recordings/folio?folio=' . $folio;
 		$endpointFolio = $url . 'recordings/folio?folio=' . $folio;
 		$responseFolio = $this->_curlGetService($endpointFolio);
 		// return json_encode($responseFolio);
