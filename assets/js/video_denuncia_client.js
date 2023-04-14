@@ -36,9 +36,7 @@ var intervalo = setInterval(function () { location.reload(); }, 90000);
 
 const guestVideoService = new VideoServiceGuest(guestUUID, folio_SY + "/" + year_SF, priority, { apiURI, apiKey });
 
-guestVideoService.registerOnVideoReady(
-	"secondary_video",
-	"main_video",
+guestVideoService.registerOnVideoReady("secondary_video","main_video",
 	(response, guestData) => {
 		clearInterval(intervalo);
 		texto_inicial.style.display = "none";

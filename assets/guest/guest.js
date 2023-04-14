@@ -214,8 +214,8 @@ export class VideoServiceGuest {
 			localStorage.setItem(SESSION_RECOVER_KEY, JSON.stringify({ sessionId: response.sessionId, createdAt: new Date() }));
 
 			this.agentData = response.agent;
-			if (typeof callback === "function")
-				callback(response, this.guestData);
+
+			if (typeof callback === "function") callback(response, this.guestData);
 
 			this.#videoCallService = new VideoCall({ remoteVideoSelector });
 			this.#videoCallService.connectVideoCall(response.token, localVideoSelector, () => { });

@@ -115,8 +115,8 @@ export default class VideoCall {
         this.#session.connect(this.#token)
         .then(() => {
             this.#publisher = this.#OV.initPublisher(this.#localVideoSelector, {
-                // audioSource: undefined,     // The source of audio. If undefined default microphone
-                // videoSource: undefined,     // The source of video. If undefined default webcam
+                audioSource: undefined,     // The source of audio. If undefined default microphone
+                videoSource: undefined,     // The source of video. If undefined default webcam
                 publishAudio: this.#publishAudio, // Whether you want to start publishing with your audio unmuted or not
                 publishVideo: this.#publishVideo, // Whether you want to start publishing with your video enabled or not
                 resolution: this.#resolution,      // The resolution of your video
