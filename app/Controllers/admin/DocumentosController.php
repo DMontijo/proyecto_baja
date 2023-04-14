@@ -257,9 +257,12 @@ class DocumentosController extends BaseController
 		$filename = urlencode($documento->TIPODOC . "_" . $folio . "_" . $year. ".pdf") ;
 		header("Content-type: application/pdf");
 		header("Content-Disposition: attachment; filename=\"$filename\"");
-		header('Content-Length: ' . filesize($documento->PDF));
-
-		readfile($documento->PDF);
+		
+		// readfile($documento->PDF);
+		// Descarga del archivo utilizando fpassthru()
+$archivo = fopen($documento->PDF, 'rb');
+fpassthru($documento->PDF);
+fclose($documento->PDF);
 	}
 	
 	public function download_documento_xml()
