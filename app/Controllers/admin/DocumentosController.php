@@ -255,10 +255,8 @@ class DocumentosController extends BaseController
 		$documento = $this->_folioDocModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $docid)->first();
 
 		$filename = urlencode($documento->TIPODOC . "_" . $folio . "_" . $year). ".pdf";
-
-		header("Content-type: application/octet-stream");
-		header("Content-Transfer-Encoding: Binary"); 
-			header("Content-Disposition: attachment; filename=\"$filename\"");
+		header("Content-type: application/pdf");
+		header("Content-Disposition: attachment; filename=\"$filename\"");
 		echo $documento->PDF;
 	}
 
