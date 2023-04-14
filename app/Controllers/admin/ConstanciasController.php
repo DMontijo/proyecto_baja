@@ -340,7 +340,8 @@ class ConstanciasController extends BaseController
 		$filename = "Constancia_" . $folio . '_' . $year . '.pdf';
 		header("Content-type: application/pdf");
 		header("Content-Disposition: attachment; filename=\"$filename\"");
-		echo $constancia->PDF;
+		fpassthru($constancia->PDF);
+		// echo $constancia->PDF;
 	}
 
 	public function download_constancia_xml()
