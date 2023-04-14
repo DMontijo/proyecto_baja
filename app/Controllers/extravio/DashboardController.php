@@ -190,7 +190,18 @@ class DashboardController extends BaseController
 		$filename = "Constancia_" . $folio . '_' . $year . '.pdf';
 		header("Content-type: application/pdf");
 		header("Content-Disposition: attachment; filename=\"$filename\"");
-		echo $constancia->PDF;
+		header('Content-Length: ' . strlen($constancia->PDF));
+		header('Expires: 0');
+		header('Cache-Control: must-revalidate');
+		header('Pragma: public');
+
+		$fp = fopen('php://memory', 'r+');
+		fwrite($fp, $constancia->PDF);
+		rewind($fp);
+		fpassthru($fp);
+		fclose($fp);
+		exit();
+		// echo $constancia->PDF;
 	}
 
 	public function download_constancia_xml()
@@ -202,7 +213,18 @@ class DashboardController extends BaseController
 		$filename = "Constancia_" . $folio . '_' . $year . '.xml';
 		header("Content-type: application/xml");
 		header("Content-Disposition: attachment; filename=\"$filename\"");
-		echo $constancia->XML;
+		header('Content-Length: ' . strlen($constancia->XML));
+		header('Expires: 0');
+		header('Cache-Control: must-revalidate');
+		header('Pragma: public');
+
+		$fp = fopen('php://memory', 'r+');
+		fwrite($fp, $constancia->XML);
+		rewind($fp);
+		fpassthru($fp);
+		fclose($fp);
+		exit();
+		// echo $constancia->XML;
 	}
 }
 
