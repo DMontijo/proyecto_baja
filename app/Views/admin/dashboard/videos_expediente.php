@@ -20,7 +20,7 @@
 									<th class="text-center">DELITO</th>
 									<th class="text-center">OFENDIDO</th>
 									<th class="text-center">IMPUTADO</th>
-									<th class="text-center">ATENDIDO POR</th>
+									<th class="text-center" style="min-width:150px;">ATENDIDO POR</th>
 									<th class="text-center" style="min-width:150px;">FECHA REGISTRO</th>
 									<th class="text-center" style="min-width:150px;">FECHA SALIDA</th>
 									<th class="text-center">VIDEOS</th>
