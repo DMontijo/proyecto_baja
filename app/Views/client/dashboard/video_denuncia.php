@@ -283,7 +283,8 @@
 				icon: 'error',
 				text: 'Debes seleccionar un documento.',
 				showConfirmButton: false,
-				timer: 1000
+				timer: 3000,
+				timerProgressBar: true,
 			});
 			return
 		}
@@ -309,7 +310,8 @@
 						icon: 'success',
 						text: 'Documento agregado correctamente.',
 						showConfirmButton: false,
-						timer: 1000
+						timer: 3000,
+						timerProgressBar: true,
 					});
 					let preview = document.querySelector('#viewDocumentoArchivo');
 
@@ -321,14 +323,16 @@
 						icon: 'error',
 						text: 'No se subio el documento.',
 						showConfirmButton: false,
-						timer: 1000
+						timer: 3000,
+						timerProgressBar: true,
 					});
 				} else if (response.status == 2) {
 					Swal.fire({
 						icon: 'error',
 						text: 'Debes seleccionar un documento.',
 						showConfirmButton: false,
-						timer: 1000
+						timer: 3000,
+						timerProgressBar: true,
 					});
 				}
 			},
@@ -340,7 +344,8 @@
 					icon: 'error',
 					text: 'No se subio el documento.',
 					showConfirmButton: false,
-					timer: 1000
+					timer: 3000,
+					timerProgressBar: true,
 				});
 			}
 		});

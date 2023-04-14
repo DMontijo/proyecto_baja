@@ -128,22 +128,20 @@ export class VideoServiceGuest {
 	 * @param {Object} details - Details of the guest
 	 * @param {Function} callback - This method is executed after guest is connected to socket
 	 */
-	connectGuest(details, callback, onerror) {
+	connectGuest(details, callback, onerror, ondisconnect) {
 		this.#guestDetails = details;
 
 		this.#socket.on("exception", function (data) {
 			console.warn("event", data ? data : "No event");
-			if (typeof onerror === "function") onerror(response);
+			if (typeof onerror === "function") onerror(data);
 		});
 
-		this.#socket.on("disconnect", function () {
-			console.warn("disconnect");
-			if (typeof onerror === "function") onerror(response);
+		this.#socket.on("disconnect", function (data) {
+			console.warn("ON Disconnect", data);
+			if (typeof ondisconnect === "function") ondisconnect(data);
 		});
 
-		const previusSession = JSON.parse(
-			localStorage.getItem(SESSION_RECOVER_KEY)
-		);
+		const previusSession = JSON.parse(localStorage.getItem(SESSION_RECOVER_KEY));
 
 		this.#emit(
 			"connect-guest",
@@ -155,17 +153,11 @@ export class VideoServiceGuest {
 				latitude: this.#position?.coords.latitude,
 				longitude: this.#position?.coords.longitude,
 				details: this.#guestDetails,
-				sessionId:
-					previusSession &&
-						this.#diffMinutes(new Date(previusSession.createdAt)) < 180
-						? previusSession.sessionId
-						: null
+				sessionId: previusSession && this.#diffMinutes(new Date(previusSession.createdAt)) < 180 ? previusSession.sessionId : null
 			},
 			response => {
 				this.#preventUserCloseWindow();
-				try {
-					this.#loggedInSound.play();
-				} catch (error) { }
+				// this.#loggedInSound.play();
 				const { guestConnection, guest } = response;
 				this.#guestConnectionId = guestConnection.id;
 				this.guestData = guest;
@@ -202,7 +194,7 @@ export class VideoServiceGuest {
 				this.#socket.disconnect();
 				this.#loggedOutSound.play();
 			} catch (e) {
-				console.warn(e);
+				console.warn('OnDisconnect => ', e);
 			}
 
 			if (typeof callback === "function") callback(resp);
@@ -219,24 +211,14 @@ export class VideoServiceGuest {
 		this.#socket.on("video-ready", response => {
 			console.log(response);
 
-			localStorage.setItem(
-				SESSION_RECOVER_KEY,
-				JSON.stringify({
-					sessionId: response.sessionId,
-					createdAt: new Date()
-				})
-			);
+			localStorage.setItem(SESSION_RECOVER_KEY, JSON.stringify({ sessionId: response.sessionId, createdAt: new Date() }));
 
 			this.agentData = response.agent;
 			if (typeof callback === "function")
 				callback(response, this.guestData);
 
 			this.#videoCallService = new VideoCall({ remoteVideoSelector });
-			this.#videoCallService.connectVideoCall(
-				response.token,
-				localVideoSelector,
-				() => { }
-			);
+			this.#videoCallService.connectVideoCall(response.token, localVideoSelector, () => { });
 		});
 	}
 
