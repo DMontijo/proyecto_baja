@@ -338,7 +338,8 @@ class ConstanciasController extends BaseController
 		$constancia = $this->_constanciaExtravioModel->asObject()->where('CONSTANCIAEXTRAVIOID', $folio)->where('ANO', $year)->first();
 
 		$filename = "Constancia_" . $folio . '_' . $year . '.pdf';
-		header("Content-type: application/pdf");
+		// header("Content-type: application/pdf");
+		header('Content-Type: application/octet-stream');
 		header("Content-Disposition: attachment; filename=\"$filename\"");
 		echo $constancia->PDF;
 	}
