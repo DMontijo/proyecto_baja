@@ -883,7 +883,7 @@ class DashboardController extends BaseController
 					$dataApi['email'] = $this->request->getPost('correo_usuario');
 					$dataApi['role'] = 3;
 					$dataApi['sex'] = $this->request->getPost('sexo_usuario') == 'F' ? "FEMALE" : 'MALE';
-					$dataApi['languages'] = [2];
+					$dataApi['languages'] = [22];
 					$response = $this->_curlPostService($this->urlApi . 'agent/', $dataApi);
 				} catch (\Throwable $th) {
 					return redirect()->back()->with('message_error', 'Usuario no creado, hubo un error.');
