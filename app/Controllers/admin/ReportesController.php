@@ -67,7 +67,6 @@ class ReportesController extends BaseController
 		$dataView->empleados = $empleado;
 		$dataView->filterParams = (object)$data;
 		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
-
 		$this->_loadView('Folios generados', 'folios', '', $dataView, 'folios');
 	}
 
@@ -116,16 +115,15 @@ class ReportesController extends BaseController
 		$dataView->empleados = $empleado;
 		$dataView->filterParams = (object)$data;
 		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
-
 		$this->_loadView('Folios generados', 'folios', '', $dataView, 'folios');
 	}
 
 	public function createFoliosXlsx()
 	{
 		$data = [
-			'MUNICIPIOID' => $this->request->getPost('municipio'),
-			'AGENTEATENCIONID' => $this->request->getPost('agente'),
-			'STATUS' => $this->request->getPost('status'),
+			'MUNICIPIOID' => $this->request->getPost('MUNICIPIOID'),
+			'AGENTEATENCIONID' => $this->request->getPost('AGENTEATENCIONID'),
+			'STATUS' => $this->request->getPost('STATUS'),
 			'TIPODENUNCIA' => $this->request->getPost('TIPODENUNCIA'),
 			'fechaInicio' => $this->request->getPost('fechaInicio'),
 			'fechaFin' => $this->request->getPost('fechaFin'),
@@ -272,8 +270,8 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('D' . $row, $folio->EXPEDIENTEID ? ($folio->EXPEDIENTEID . '/' . $folio->TIPOEXPEDIENTECLAVE) : '');
 			$sheet->setCellValue('E' . $row, $folio->TIPOEXPEDIENTECLAVE ? $folio->TIPOEXPEDIENTECLAVE : $folio->STATUS);
 			$sheet->setCellValue('F' . $row, $fechaSalida);
-			$sheet->setCellValue('G' . $row, $folio->N_DENUNCIANTE . ' ' . $folio->APP_DENUNCIANTE . ' ' . $folio->APM_DENUNCIANTE);
-			$sheet->setCellValue('H' . $row, $folio->N_AGENT . ' ' . $folio->APP_AGENT . ' ' . $folio->APM_AGENT);
+			$sheet->setCellValue('G' . $row, $folio->NOMBRE_DENUNCIANTE);
+			$sheet->setCellValue('H' . $row, $folio->NOMBRE_AGENTE);
 			$sheet->setCellValue('I' . $row, $folio->ESTADODESCR);
 			$sheet->setCellValue('J' . $row, $folio->MUNICIPIODESCR);
 			$sheet->setCellValue('K' . $row, $folio->STATUS);
@@ -282,6 +280,10 @@ class ReportesController extends BaseController
 
 			if (!(($row - 1) >= count($resultFilter->result))) $row++;
 		}
+		$row++;
+		$row++;
+		$sheet->setCellValue('A' . $row, 'CANTIDAD DE RESULTADOS:');
+		$sheet->setCellValue('B' . $row, count($resultFilter->result));
 
 		$sheet->getStyle('A1:K1')->applyFromArray($styleHeaders);
 		$sheet->getStyle('A2:K' . $row)->applyFromArray($styleCells);

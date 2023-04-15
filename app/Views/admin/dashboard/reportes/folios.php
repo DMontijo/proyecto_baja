@@ -101,66 +101,69 @@
 					</div>
 				</div>
 				<div class="card shadow border-0">
-					<div class="card-body" style="overflow-x:auto;">
+					<div class="card-body">
 						<div class="row mb-3">
 							<div class="col-12 text-right">
+								
 								<?php if (isset($body_data->filterParams)) { ?>
 									<!-- Form para aplicar mismo filtro utilizado para crear el archivo de excel-->
-									<form id="formExcel" action="<?= base_url() ?>/admin/dashboard/generar_excel_folios" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+									<form id="formExcel" action="<?= base_url() ?>/admin/dashboard/generar_excel_folios" method="post" class="needs-validation" novalidate>
 										<?php foreach ($body_data->filterParams as $index => $value) { ?>
 											<input type="hidden" id="<?= $index ?>" name="<?= $index ?>" value="<?= $value ?>">
 										<?php } ?>
-										<div class="col-12 text-right p-0">
-											<button type="submit" class="btn btn-success font-weight-bold" id="btnExcel" name="btnExcel">Exportar reporte a excel</button>
+										<div class="col-12 text-right p-0 pb-2">
+											<button type="submit" class="btn btn-success font-weight-bold" id="btnExcel" name="btnExcel">Exportar a excel</button>
 										</div>
 									</form>
 								<?php } ?>
 							</div>
+							<div class="col-12" style="overflow-x:auto;">
+								<table id="folios_generados" class="table table-bordered table-striped table-sm" style="font-size:12px;">
+									<thead>
+										<tr>
+											<th class="text-center">FOLIO</th>
+											<th class="text-center">AÑO</th>
+											<th class="text-center">TIPO</th>
+											<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
+											<th class="text-center" style="min-width:150px;">FECHA DE SALIDA</th>
+											<th class="text-center" style="min-width:100px;">ESTADO FOLIO</th>
+											<th class="text-center" style="min-width:250px;">NOMBRE DEL DENUNCIANTE</th>
+											<th class="text-center" style="min-width:250px;">NOMBRE DEL AGENTE</th>
+											<th class="text-center">MUNICIPIO</th>
+										</tr>
+									</thead>
+									<tbody>
+										<?php
+										foreach ($body_data->result as $index => $folio) {
+											$expedienteid = '';
+											if (isset($folio->EXPEDIENTEID)) {
+												$arrayExpediente = str_split($folio->EXPEDIENTEID);
+												$expedienteid = $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
+											}
+											$tipo = '';
+											if ($folio->TIPODENUNCIA == 'VD') {
+												$tipo = 'VIDEO';
+											} else if ($folio->TIPODENUNCIA == 'DA') {
+												$tipo = 'ANÓNIMA';
+											} else {
+												$tipo = 'TELEFÓNICA';
+											} ?>
+											<tr>
+												<td class="text-center font-weight-bold"><?= $folio->FOLIOID ?></td>
+												<td class="text-center"><?= $folio->ANO ?></td>
+												<td class="text-center"><?= $tipo ?></td>
+												<td class="text-center font-weight-bold"><?= $expedienteid ? $expedienteid . '/' . $folio->TIPOEXPEDIENTECLAVE  : '' ?></td>
+												<td class="text-center"><?= $folio->FECHASALIDA ? date('d-m-Y H:i:s', strtotime($folio->FECHASALIDA)) : '' ?></td>
+												<td class="text-center"><?= $folio->STATUS ?></td>
+												<td class="text-center"><?= $folio->NOMBRE_DENUNCIANTE ?></td>
+												<td class="text-center"><?= $folio->NOMBRE_AGENTE ?></td>
+												<td class="text-center"><?= $folio->MUNICIPIODESCR ?></td>
+											</tr>
+										<?php } ?>
+									</tbody>
+								</table>
+							</div>
 						</div>
-						<table id="folios_generados" class="table table-bordered table-striped">
-							<thead>
-								<tr>
-									<th class="text-center" style="min-width:150px;">FOLIO</th>
-									<th class="text-center" style="min-width:150px;">AÑO</th>
-									<th class="text-center" style="min-width:150px;">TIPO</th>
-									<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
-									<th class="text-center" style="min-width:150px;">FECHA DE SALIDA</th>
-									<th class="text-center" style="min-width:150px;">ESTADO FOLIO</th>
-									<th class="text-center" style="min-width:200px;">NOMBRE DEL DENUNCIANTE</th>
-									<th class="text-center" style="min-width:200px;">NOMBRE DEL AGENTE</th>
-									<th class="text-center" style="min-width:150px;">MUNICIPIO DE ATENCIÓN</th>
-								</tr>
-							</thead>
-							<tbody>
-								<?php
-								foreach ($body_data->result as $index => $folio) {
-									$expedienteid = '';
-									if (isset($folio->EXPEDIENTEID)) {
-										$arrayExpediente = str_split($folio->EXPEDIENTEID);
-										$expedienteid = $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
-									}
-									$tipo = '';
-									if ($folio->TIPODENUNCIA == 'VD') {
-										$tipo = 'VIDEO';
-									} else if ($folio->TIPODENUNCIA == 'DA') {
-										$tipo = 'ANÓNIMA';
-									} else {
-										$tipo = 'TELEFÓNICA';
-									} ?>
-									<tr>
-										<td class="text-center font-weight-bold"><?= $folio->FOLIOID ?></td>
-										<td class="text-center"><?= $folio->ANO ?></td>
-										<td class="text-center"><?= $tipo ?></td>
-										<td class="text-center"><?= $expedienteid ? $expedienteid . '/' . $folio->TIPOEXPEDIENTECLAVE  : '' ?></td>
-										<td class="text-center"><?= $folio->FECHASALIDA ? date('d-m-Y H:i:s', strtotime($folio->FECHASALIDA)) : '' ?></td>
-										<td class="text-center"><?= $folio->STATUS ?></td>
-										<td class="text-center"><?= $folio->N_DENUNCIANTE . ' ' . $folio->APP_DENUNCIANTE . ' ' . $folio->APM_DENUNCIANTE ?></td>
-										<td class="text-center"><?= $folio->N_AGENT . ' ' . $folio->APP_AGENT . ' ' . $folio->APM_AGENT ?></td>
-										<td class="text-center"><?= $folio->MUNICIPIODESCR ?></td>
-									</tr>
-								<?php } ?>
-							</tbody>
-						</table>
 					</div>
 				</div>
 			</div>
