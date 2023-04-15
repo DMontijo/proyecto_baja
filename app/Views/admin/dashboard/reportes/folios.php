@@ -104,7 +104,7 @@
 					<div class="card-body">
 						<div class="row mb-3">
 							<div class="col-12 text-right">
-								
+
 								<?php if (isset($body_data->filterParams)) { ?>
 									<!-- Form para aplicar mismo filtro utilizado para crear el archivo de excel-->
 									<form id="formExcel" action="<?= base_url() ?>/admin/dashboard/generar_excel_folios" method="post" class="needs-validation" novalidate>
@@ -204,8 +204,11 @@
 			responsive: false,
 			lengthChange: false,
 			autoWidth: true,
-			ordering: false,
-			searching: false,
+			ordering: true,
+			order: [
+				// [0, 'asc'],
+			],
+			searching: true,
 			pageLength: 100,
 			// dom: 'Bfrtip',
 			// buttons: [
@@ -216,7 +219,8 @@
 			}
 		});
 	});
-
+</script>
+<script>
 	function collapse_filter() {
 		if (document.querySelector('#filtros').classList.contains('show')) {
 			document.querySelector('#filtros').classList.remove('show');

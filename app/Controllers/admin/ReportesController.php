@@ -377,9 +377,9 @@ class ReportesController extends BaseController
 	public function createConstanciasXlsx()
 	{
 		$data = [
-			'MUNICIPIOID' => $this->request->getPost('municipio'),
-			'AGENTEID' => $this->request->getPost('agente'),
-			'STATUS' => $this->request->getPost('status'),
+			'MUNICIPIOID' => $this->request->getPost('MUNICIPIOID'),
+			'AGENTEID' => $this->request->getPost('AGENTEID'),
+			'STATUS' => $this->request->getPost('STATUS'),
 			'fechaInicio' => $this->request->getPost('fechaInicio'),
 			'fechaFin' => $this->request->getPost('fechaFin'),
 			'horaInicio' => $this->request->getPost('horaInicio'),
@@ -490,7 +490,6 @@ class ReportesController extends BaseController
 			'NOMBRE DEL AGENTE',
 			'ESTADO DE ATENCIÓN',
 			'MUNICIPIO DE ATENCIÓN',
-			'ESTATUS DE EXPEDIENTE',
 		];
 
 		for ($i = 0; $i < count($headers); $i++) {
@@ -507,8 +506,8 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('A' . $row, $constancia->CONSTANCIAEXTRAVIOID);
 			$sheet->setCellValue('B' . $row, $constancia->ANO);
 			$sheet->setCellValue('C' . $row, isset($constancia->FECHAFIRMA) ? $constancia->FECHAFIRMA : '');
-			$sheet->setCellValue('D' . $row, $constancia->N_SOLICITANTE . ' ' . $constancia->APP_SOLICITANTE . ' ' . $constancia->APM_SOLICITANTE);
-			$sheet->setCellValue('E' . $row, isset($constancia->N_AGENT) ? $constancia->N_AGENT . ' ' . $constancia->APP_AGENT . ' ' . $constancia->APM_AGENT : 'NO SE HA FIRMADO');
+			$sheet->setCellValue('D' . $row, $constancia->NOMBRE_DENUNCIANTE);
+			$sheet->setCellValue('E' . $row, isset($constancia->NOMBRE_AGENTE) ? $constancia->NOMBRE_AGENTE : 'NO SE HA FIRMADO');
 			$sheet->setCellValue('F' . $row, $constancia->ESTADODESCR);
 			if ($constancia->MUNICIPIOIDCITA != null) {
 				$sheet->setCellValue('G' . $row, $constancia->MUNICIPIODESCRCITA);
@@ -521,9 +520,13 @@ class ReportesController extends BaseController
 			if (!(($row - 1) >= count($resultFilter->result))) $row++;
 		}
 
-		$sheet->getStyle('A1:H1')->applyFromArray($styleHeaders);
-		$sheet->getStyle('A2:H' . $row)->applyFromArray($styleCells);
-		$sheet->setCellValue('H' . $row, $constancia->STATUS);
+		$row++;
+		$row++;
+		$sheet->setCellValue('A' . $row, 'CANTIDAD DE RESULTADOS:');
+		$sheet->setCellValue('B' . $row, count($resultFilter->result));
+
+		$sheet->getStyle('A1:G1')->applyFromArray($styleHeaders);
+		$sheet->getStyle('A2:G' . $row)->applyFromArray($styleCells);
 
 		$writer = new Xlsx($spreadSheet);
 
