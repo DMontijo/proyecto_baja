@@ -85,7 +85,7 @@
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
 												<label for="status" class="form-label font-weight-bold">Tipo:</label>
 												<select class="form-control" id="tipo" name="tipo" required>
-												<option selected value="">Todos los tipos de denuncia</option>
+													<option selected value="">Todos los tipos de denuncia</option>
 													<option <?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'VD' ? 'selected' : '') : null ?> value="VD">VIDEO DENUNCIA</option>
 													<option <?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'DA' ? 'selected' : '') : null ?> value="DA">DENUNCIA ANÓNIMA</option>
 													<option <?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'TE' ? 'selected' : '') : null ?> value="TE">TELEFÓNICA</option>
@@ -128,7 +128,6 @@
 									<th class="text-center" style="min-width:150px;">ESTATUS</th>
 									<th class="text-center" style="min-width:150px;">TIPO</th>
 									<th class="text-center" style="min-width:150px;">DELITO</th>
-
 									<th class="text-center" style="min-width:200px;">NOMBRE DEL DENUNCIANTE</th>
 									<th class="text-center" style="min-width:200px;">AGENTE DE ATENCIÓN</th>
 									<th class="text-center" style="min-width:150px;">MUNICIPIO ASIGNADO</th>
@@ -159,7 +158,7 @@
 										<td class="text-center">
 											<a href="<?= base_url('/admin/dashboard/ver_folio?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO ?>" class="btn btn-primary text-white"><i class="fas fa-folder-open"></i> ABRIR</a>
 										</td>
-										<td class="text-center font-weight-bold"><?= $folio->FOLIOID . '/' . $folio->ANO ?></td>
+										<td class="text-center font-weight-bold"><?= $folio->FOLIOID ?></td>
 										<td class="text-center"><?= $folio->ANO ?></td>
 										<td class="text-center font-weight-bold"><?= $expedienteid ?  $expedienteid . '/' . $folio->TIPOEXPEDIENTECLAVE : $folio->FOLIOID . '/' . $folio->ANO ?></td>
 										<td class="text-center"><?= $folio->STATUS ?></td>
@@ -218,11 +217,11 @@
 			autoWidth: true,
 			ordering: true,
 			order: [
-				[0, 'desc'],
-				[1, 'desc']
+				[1, 'desc'],
+				[2, 'desc']
 			],
 			searching: true,
-			pageLength: 20,
+			pageLength: 100,
 			// dom: 'Bfrtip',
 			// buttons: [
 			// 	'copy', 'excel', 'pdf'
