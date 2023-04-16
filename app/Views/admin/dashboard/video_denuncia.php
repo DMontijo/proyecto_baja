@@ -2812,9 +2812,9 @@
 			method: "POST",
 			dataType: "json",
 			beforeSend: function() {
-						document.getElementById('deleteArchivobtn').disabled=true;
+				document.getElementById('deleteArchivobtn').disabled = true;
 
-					},
+			},
 			success: function(response) {
 				if (response.status == 1) {
 					const archivos = response.archivos.archivosexternos;
@@ -2831,10 +2831,10 @@
 						}
 					});
 					llenarTablaArchivosExternos(archivos);
-					document.getElementById('deleteArchivobtn').disabled=false;
+					document.getElementById('deleteArchivobtn').disabled = false;
 
-				}else{
-					document.getElementById('deleteArchivobtn').disabled=false;
+				} else {
+					document.getElementById('deleteArchivobtn').disabled = false;
 
 				}
 			}
@@ -2998,18 +2998,18 @@
 				selector: '#documento',
 				width: 792,
 				height: 800,
-				font_size_formats: '11pt',
-				plugins: 'quickbars table image link lists advlist media autoresize code',
-				toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright alignjustify | indent outdent | bullist numlist | code',
+				// font_size_formats: '11pt',
+				plugins: "advcode advlist advtable anchor autocorrect autolink autosave casechange charmap checklist codesample directionality editimage emoticons export footnotes formatpainter help image insertdatetime link linkchecker lists media mediaembed mergetags nonbreaking pagebreak permanentpen powerpaste searchreplace table tableofcontents tinymcespellchecker visualblocks visualchars wordcount",
+				toolbar: 'undo redo spellcheckdialog  | blocks fontfamily fontsize | bold italic underline forecolor backcolor | link image | align lineheight checklist bullist numlist | indent outdent | removeformat',
 			});
 
 			var tiny2 = tinymce.init({
 				selector: '#documento_editar',
 				width: 792,
 				height: 800,
-				font_size_formats: '11pt',
-				plugins: 'quickbars table image link lists advlist media autoresize code',
-				toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright alignjustify | indent outdent | bullist numlist | code',
+				// font_size_formats: '11pt',
+				plugins: "advcode advlist advtable anchor autocorrect autolink autosave casechange charmap checklist codesample directionality editimage emoticons export footnotes formatpainter help image insertdatetime link linkchecker lists media mediaembed mergetags nonbreaking pagebreak permanentpen powerpaste searchreplace table tableofcontents tinymcespellchecker visualblocks visualchars wordcount",
+				toolbar: 'undo redo spellcheckdialog  | blocks fontfamily fontsize | bold italic underline forecolor backcolor | link image | align lineheight checklist bullist numlist | indent outdent | removeformat',
 			});
 
 			inputsText.forEach((input) => {
@@ -5771,11 +5771,11 @@
 				let nombre_documento;
 				if ($("#documentoArchivo")[0].files && $("#documentoArchivo")[0].files[0]) {
 					if ($("#documentoArchivo")[0].files[0].type == "image/jpeg" || $("#documentoArchivo")[0].files[0].type == "image/png" || $("#documentoArchivo")[0].files[0].type == "image/jpg") {
-						nombre_documento =$("#documentoArchivo")[0].files[0].name;
+						nombre_documento = $("#documentoArchivo")[0].files[0].name;
 						documento = await comprimirImagen($("#documentoArchivo")[0].files[0], 50);
 						console.log(documento);
 					} else {
-						nombre_documento =$("#documentoArchivo")[0].files[0].name;
+						nombre_documento = $("#documentoArchivo")[0].files[0].name;
 						documento = $("#documentoArchivo")[0].files[0];
 					}
 				} else {

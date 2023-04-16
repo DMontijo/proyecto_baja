@@ -543,7 +543,7 @@ class DashboardController extends BaseController
 					$archivos->ARCHIVO = 'data:' . $type . ';base64,' . base64_encode($archivos->ARCHIVO);
 				}
 			}
-			return json_encode(['status' => 1, 'archivos'=>$datados]);
+			return json_encode(['status' => 1, 'archivos' => $datados]);
 		} else {
 			return json_encode(['status' => 0]);
 		}
@@ -5613,7 +5613,8 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
-	public function deleteArchivoById(){
+	public function deleteArchivoById()
+	{
 		try {
 			$folio = trim($this->request->getPost('folio'));
 			$year = trim($this->request->getPost('year'));
@@ -5641,7 +5642,7 @@ class DashboardController extends BaseController
 				$this->_bitacoraActividad($datosBitacora);
 
 
-				return json_encode(['status' => 1, 'archivos'=>$datados]);
+				return json_encode(['status' => 1, 'archivos' => $datados]);
 			} else {
 				return json_encode(['status' => 0]);
 			}
@@ -5991,7 +5992,7 @@ class DashboardController extends BaseController
 				$type = $file_info->buffer($data->victima[0]['FOTO']);
 				$data->victima[0]['FOTO'] = 'data:' . $type . ';base64,' . base64_encode($data->victima[0]['FOTO']);
 				if ($type == 'image/png' || $type == 'image/jpg' || $type == 'image/jpeg') {
-					$data->plantilla = str_replace('[IMAGEN_DESAPARECIDO]',  "<img src='" . $data->victima[0]['FOTO'] . "' style='max-width:200px;'></img>", $data->plantilla);
+					$data->plantilla = str_replace('[IMAGEN_DESAPARECIDO]',  "<img src='" . $data->victima[0]['FOTO'] . "' style='max-width:170px;'></img>", $data->plantilla);
 				}
 			}
 		}
@@ -6711,7 +6712,7 @@ class DashboardController extends BaseController
 					$type = $file_info->buffer($data->victima[0]['FOTO']);
 					$data->victima[0]['FOTO'] = 'data:' . $type . ';base64,' . base64_encode($data->victima[0]['FOTO']);
 					if ($type == 'image/png' || $type == 'image/jpg' || $type == 'image/jpeg') {
-						$data->plantilla = str_replace('[IMAGEN_DESAPARECIDO]',  "<img src='" . $data->victima[0]['FOTO'] . "'></img>", $data->plantilla);
+						$data->plantilla = str_replace('[IMAGEN_DESAPARECIDO]',  "<img src='" . $data->victima[0]['FOTO'] . "' style='max-width:170px;'></img>", $data->plantilla);
 					}
 				}
 			}
