@@ -1962,10 +1962,10 @@ class DashboardController extends BaseController
 						return json_encode(['status' => 1]);
 					}
 				} else {
-					return json_encode(['status' => 0, 'error' => 'No hizo el update']);
+					return json_encode(['status' => 0, 'error' => 'No hizo actualizo el folio.']);
 				}
 			} else {
-				return json_encode(['status' => 0, 'error' => 'Ya fue atendido el folio']);
+				return json_encode(['status' => 0, 'error' => 'Ya fue atendido el folio o alguien lo libero cuando lo estaba trabajando.']);
 			}
 		} else {
 			return json_encode(['status' => 0, 'error' => 'No existe alguna de las variables']);
@@ -1986,34 +1986,34 @@ class DashboardController extends BaseController
 				$folioRow = $this->_folioModel->where('ANO', $year)->where('FOLIOID', $folio)->where('STATUS', 'EN PROCESO')->first();
 				$folioVehiculoRow = $this->_folioVehiculoModel->where('ANO', $year)->where('FOLIOID', $folio)->findAll();
 
-				if (($folioRow['MUNICIPIOID'] == '' || $folioRow['MUNICIPIOID'] == NULL)
-					|| ($folioRow['HECHOLOCALIDADID'] == '' || $folioRow['HECHOLOCALIDADID'] == NULL)
-					|| ($folioRow['HECHOCOLONIADESCR'] == '' || $folioRow['HECHOCOLONIADESCR'] == NULL)
-					|| ($folioRow['HECHOCALLE'] == '' || $folioRow['HECHOCALLE'] == NULL)
-					|| ($folioRow['HECHONUMEROCASA'] == '' || $folioRow['HECHONUMEROCASA'] == NULL)
-					|| ($folioRow['HECHOLUGARID'] == '' || $folioRow['HECHOLUGARID'] == NULL)
-					|| ($folioRow['HECHOFECHA'] == '' || $folioRow['HECHOFECHA'] == NULL)
-					|| ($folioRow['HECHOHORA'] == '' || $folioRow['HECHOHORA'] == NULL)
-					|| ($folioRow['HECHONARRACION'] == '' || $folioRow['HECHONARRACION'] == NULL)
-				) {
-					throw new \Exception('Actualiza los campos de información del hecho.');
-				}
-
-				foreach ($folioVehiculoRow as $key => $vehiculo) {
-					if (($vehiculo['SITUACION'] == '' || $vehiculo['SITUACION'] == NULL)
-						|| ($vehiculo['ESTADOIDPLACA'] == '' || $vehiculo['ESTADOIDPLACA'] == NULL)
-						|| ($vehiculo['VEHICULODISTRIBUIDORID'] == '' || $vehiculo['VEHICULODISTRIBUIDORID'] == NULL)
-						|| ($vehiculo['MARCAID'] == '' || $vehiculo['MARCAID'] == NULL)
-						|| ($vehiculo['MODELOID'] == '' || $vehiculo['MODELOID'] == NULL)
-						|| ($vehiculo['ANOVEHICULO'] == '' || $vehiculo['ANOVEHICULO'] == NULL)
-						|| ($vehiculo['PERSONAFISICAIDPROPIETARIO'] == '' || $vehiculo['PERSONAFISICAIDPROPIETARIO'] == NULL)
-					) {
-						throw new \Exception('Actualiza los campos de los vehiculos.');
-					}
-				}
-
-
 				if ($folioRow) {
+
+					if (($folioRow['MUNICIPIOID'] == '' || $folioRow['MUNICIPIOID'] == NULL)
+						|| ($folioRow['HECHOLOCALIDADID'] == '' || $folioRow['HECHOLOCALIDADID'] == NULL)
+						|| ($folioRow['HECHOCOLONIADESCR'] == '' || $folioRow['HECHOCOLONIADESCR'] == NULL)
+						|| ($folioRow['HECHOCALLE'] == '' || $folioRow['HECHOCALLE'] == NULL)
+						|| ($folioRow['HECHONUMEROCASA'] == '' || $folioRow['HECHONUMEROCASA'] == NULL)
+						|| ($folioRow['HECHOLUGARID'] == '' || $folioRow['HECHOLUGARID'] == NULL)
+						|| ($folioRow['HECHOFECHA'] == '' || $folioRow['HECHOFECHA'] == NULL)
+						|| ($folioRow['HECHOHORA'] == '' || $folioRow['HECHOHORA'] == NULL)
+						|| ($folioRow['HECHONARRACION'] == '' || $folioRow['HECHONARRACION'] == NULL)
+					) {
+						throw new \Exception('Actualiza los campos de información del hecho.');
+					}
+
+					foreach ($folioVehiculoRow as $key => $vehiculo) {
+						if (($vehiculo['SITUACION'] == '' || $vehiculo['SITUACION'] == NULL)
+							|| ($vehiculo['ESTADOIDPLACA'] == '' || $vehiculo['ESTADOIDPLACA'] == NULL)
+							|| ($vehiculo['VEHICULODISTRIBUIDORID'] == '' || $vehiculo['VEHICULODISTRIBUIDORID'] == NULL)
+							|| ($vehiculo['MARCAID'] == '' || $vehiculo['MARCAID'] == NULL)
+							|| ($vehiculo['MODELOID'] == '' || $vehiculo['MODELOID'] == NULL)
+							|| ($vehiculo['ANOVEHICULO'] == '' || $vehiculo['ANOVEHICULO'] == NULL)
+							|| ($vehiculo['PERSONAFISICAIDPROPIETARIO'] == '' || $vehiculo['PERSONAFISICAIDPROPIETARIO'] == NULL)
+						) {
+							throw new \Exception('Actualiza los campos de los vehiculos.');
+						}
+					}
+
 					$personas = $this->_folioPersonaFisicaModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->orderBy('PERSONAFISICAID', 'asc')->findAll();
 					$fisImpDelito = $this->_imputadoDelitoModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
 					$relacionFisFis = $this->_relacionIDOModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
@@ -2203,7 +2203,7 @@ class DashboardController extends BaseController
 						throw new \Exception($expedienteCreado->error);
 					}
 				} else {
-					throw new \Exception('Ya fue atendido el folio');
+					throw new \Exception('Ya fue atendido el folio o alguien lo libero cuando lo estaba trabajando.');
 				}
 			} else {
 				throw new \Exception('No se enviarón todas las variables necesarias.');
