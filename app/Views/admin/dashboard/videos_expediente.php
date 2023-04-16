@@ -10,10 +10,10 @@
 				<h1 class="mb-4 text-center font-weight-bold">VIDEOS DE EXPEDIENTES</h1>
 			</div>
 			<div class="col-12">
-				<div class="card shadow border-0" style="overflow-x:auto;">
+				<div class="card shadow border-0">
 					<div class="card-body">
 						<div class="row">
-							<div class="col-12">
+							<div class="col-12" style="overflow-x:auto;">
 								<table id="folios_expediente" class="table table-bordered table-striped table-sm" style="font-size:12px;">
 									<thead>
 										<tr>
