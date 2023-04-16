@@ -1227,7 +1227,7 @@ class FirmaController extends BaseController
 		if (ENVIRONMENT == 'production') {
 			switch ($municipioid) {
 				case 1:
-					$to_orden_proteccion = 'victor.ramirez@ensenada.gob.mx';
+					$to_orden_proteccion = 'copmproteccion@ensenada.gob.mx';
 					break;
 				case 2:
 					$to_orden_proteccion = 'udai@mexicali.gob.mx';
