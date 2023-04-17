@@ -40,7 +40,7 @@
 		/** Define the footer rules **/
 		footer {
 			position: fixed;
-			bottom: 0;
+			bottom: 0cm;
 		}
 
 		main {

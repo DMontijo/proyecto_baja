@@ -55,7 +55,7 @@
 <?php if ($body_data->foliorow[0]->AGENTEASIGNADOID != NULL) { ?>
 	<script>
 		document.getElementById('subirDocumento').disabled = true;
-		document.getElementById('generarDocumento').disabled = true;
+		// document.getElementById('generarDocumento').disabled = true;
 	</script>
 <?php } ?>
 <?php if ($body_data->foliorow[0]->TIPODENUNCIA == "DA") { ?>
@@ -424,16 +424,16 @@
 			width: 792,
 			height: 800,
 			// font_size_formats: '11pt',
-			plugins: "advcode advlist advtable anchor autocorrect autolink autosave casechange charmap checklist codesample directionality editimage emoticons export footnotes formatpainter help image insertdatetime link linkchecker lists media mediaembed mergetags nonbreaking pagebreak permanentpen powerpaste searchreplace table tableofcontents tinymcespellchecker visualblocks visualchars wordcount",
-			toolbar: 'undo redo spellcheckdialog  | blocks fontfamily fontsize | bold italic underline forecolor backcolor | link image | align lineheight checklist bullist numlist | indent outdent | removeformat',
+			plugins: 'quickbars table image link lists advlist media autoresize code',
+			toolbar: 'undo redo | blocks  fontsize | bold italic | alignleft aligncenter alignright alignjustify | indent outdent | bullist numlist | code',
 		});
 		var tiny2 = tinymce.init({
 			selector: '#documento_editar',
 			width: 792,
 			height: 800,
 			// font_size_formats: '11pt',
-			plugins: "advcode advlist advtable anchor autocorrect autolink autosave casechange charmap checklist codesample directionality editimage emoticons export footnotes formatpainter help image insertdatetime link linkchecker lists media mediaembed mergetags nonbreaking pagebreak permanentpen powerpaste searchreplace table tableofcontents tinymcespellchecker visualblocks visualchars wordcount",
-			toolbar: 'undo redo spellcheckdialog  | blocks fontfamily fontsize | bold italic underline forecolor backcolor | link image | align lineheight checklist bullist numlist | indent outdent | removeformat',
+			plugins: 'quickbars table image link lists advlist media autoresize code',
+			toolbar: 'undo redo | blocks  fontsize | bold italic | alignleft aligncenter alignright alignjustify | indent outdent | bullist numlist | code',
 		});
 		// var quill2 = new Quill('#documento_editar', {
 		// 	modules: {
