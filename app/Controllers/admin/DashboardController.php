@@ -6661,6 +6661,28 @@ class DashboardController extends BaseController
 		$data->plantilla = str_replace('[VICTIMA_ESTADO_CIVIL]', isset($data->edoCivilVictima) == true ? $data->edoCivilVictima->PERSONAESTADOCIVILDESCR : 'DESCONOCIDO', $data->plantilla);
 		$data->plantilla = str_replace('[IMPUTADO_DOMICILIO_COMPLETO]', ($data->imputadoDom->CALLE ? $data->imputadoDom->CALLE : 'DESCONOCIDO') . ' EXT. ' . ($data->imputadoDom->NUMEROCASA ? $data->imputadoDom->NUMEROCASA : '') . ' INT. ' . ($data->imputadoDom->NUMEROINTERIOR ? $data->imputadoDom->NUMEROINTERIOR : '') . ' ' . $data->imputadoDom->COLONIADESCR . ($data->municipio_imp ? $data->municipio_imp->MUNICIPIODESCR : '') . ' ' . ($data->estado_imp ? $data->estado_imp->ESTADODESCR : ''), $data->plantilla);
 		$hecho_info = '<p><b>FOLIO:</b> ' . $data->folio->FOLIOID . '</p><p><b>AÑO:</b> ' . $data->folio->ANO . '</p><p><b>FECHA DEL HECHO:</b> ' . $data->folio->HECHOFECHA . '</p><p><b>HORA DEL HECHO:</b> ' . $data->folio->HECHOHORA . '</p><p><b>CALLE DEL HECHO:</b> ' . $data->folio->HECHOCALLE . ' EXT.' . $data->folio->HECHONUMEROCASA . ' INT.' . $data->folio->HECHONUMEROCASAINT . ' ' . $data->municipios->MUNICIPIODESCR . '</p><p><b>NARRACIÓN DEL HECHO:</b> ' . $data->folio->HECHONARRACION . '</p><p><b>NOTAS DEL AGENTE:</b> ' . $data->folio->NOTASAGENTE . '</p>';
+		if ($data->vehiculos_da) {
+			foreach ($data->vehiculos_da as $key => $vehiculos) {
+				$estadoV = $this->_estadosModel->asObject()->where('ESTADOID',  $vehiculos->ESTADOIDPLACA)->first();
+				$linea = $this->_vehiculoVersionModel->asObject()->where('VEHICULOVERSIONID',  $vehiculos->VEHICULOVERSIONID)->first();
+				$color = $this->_coloresVehiculoModel->asObject()->where('VEHICULOCOLORID',  $vehiculos->PRIMERCOLORID)->first();
+				$tipo = $this->_tipoVehiculoModel->asObject()->where('VEHICULOTIPOID',  $vehiculos->TIPOID)->first();
+				$hecho_info = $hecho_info .
+				'<br><p><b>VEHÍCULO: </b> ' . ($key+1) .
+					'</p><p><b> PLACAS: </b> ' . ($vehiculos->PLACAS ? $vehiculos->PLACAS : '-') .
+					'<b> SERIE: </b> ' . ($vehiculos->NUMEROSERIE ? $vehiculos->NUMEROSERIE : '-') .
+					'<b> MARCA: </b>' . ($vehiculos->MARCADESCR ? $vehiculos->MARCADESCR : '-') .
+					'<b> MODELO: </b> ' . ($vehiculos->MODELODESCR ? $vehiculos->MODELODESCR : '-') .
+					'<b> ESTADO: </b> ' . ($estadoV ? $estadoV->ESTADODESCR : '-') .
+					'<b> LINEA: </b> ' . ($vehiculos->ANOVEHICULO ? $vehiculos->ANOVEHICULO : '-') .
+					'<b> COLOR: </b> ' . ($color ? $color->VEHICULOCOLORDESCR  : '-') .
+					'<br><b> SEÑAS PARTICULARES: </b> ' .  ($vehiculos->SENASPARTICULARES ? $vehiculos->SENASPARTICULARES : '-') .
+					'<br><b> CLASE: </b> ' . ($linea ? $linea->VEHICULOVERSIONDESCR : '-') .
+					'<b> TIPO: </b> ' .  ($tipo ? $tipo->VEHICULOTIPODESCR : '-' .'</p>');
+
+			}
+		}
+
 		$data->plantilla = str_replace('[INFORMACION_DEL_HECHO]', $hecho_info, $data->plantilla);
 
 		$data->plantilla = str_replace('[FOLIO_ATENCION]', $data->folio->FOLIOID . '/' . $data->folio->ANO, $data->plantilla);
@@ -6877,7 +6899,27 @@ class DashboardController extends BaseController
 			$data->plantilla = str_replace('[IMPUTADO_DOMICILIO_COMPLETO]', ($data->imputadoDom->CALLE ? $data->imputadoDom->CALLE : 'DESCONOCIDO') . ' EXT. ' . ($data->imputadoDom->NUMEROCASA ? $data->imputadoDom->NUMEROCASA : '') . ' INT. ' . ($data->imputadoDom->NUMEROINTERIOR ? $data->imputadoDom->NUMEROINTERIOR : '') . ' ' . $data->imputadoDom->COLONIADESCR . ($data->municipio_imp ? $data->municipio_imp->MUNICIPIODESCR : '') . ' ' . ($data->estado_imp ? $data->estado_imp->ESTADODESCR : ''), $data->plantilla);
 
 			$hecho_info = '<p><b>FOLIO:</b> ' . $data->folio->FOLIOID . '</p><p><b>AÑO:</b> ' . $data->folio->ANO . '</p><p><b>FECHA DEL HECHO:</b> ' . $data->folio->HECHOFECHA . '</p><p><b>HORA DEL HECHO:</b> ' . $data->folio->HECHOHORA . '</p><p><b>CALLE DEL HECHO:</b> ' . $data->folio->HECHOCALLE . ' EXT.' . $data->folio->HECHONUMEROCASA . ' INT.' . $data->folio->HECHONUMEROCASAINT . ' ' . $data->municipios->MUNICIPIODESCR . '</p><p><b>NARRACIÓN DEL HECHO:</b> ' . $data->folio->HECHONARRACION . '</p><p><b>NOTAS DEL AGENTE:</b> ' . $data->folio->NOTASAGENTE . '</p>';
-
+			if ($data->vehiculos_da) {
+				foreach ($data->vehiculos_da as $key => $vehiculos) {
+					$estadoV = $this->_estadosModel->asObject()->where('ESTADOID',  $vehiculos->ESTADOIDPLACA)->first();
+					$linea = $this->_vehiculoVersionModel->asObject()->where('VEHICULOVERSIONID',  $vehiculos->VEHICULOVERSIONID)->first();
+					$color = $this->_coloresVehiculoModel->asObject()->where('VEHICULOCOLORID',  $vehiculos->PRIMERCOLORID)->first();
+					$tipo = $this->_tipoVehiculoModel->asObject()->where('VEHICULOTIPOID',  $vehiculos->TIPOID)->first();
+					$hecho_info = $hecho_info .
+					'<br><p><b>VEHÍCULO: </b> ' . ($key+1) .
+					'</p><p><b> PLACAS: </b> ' . ($vehiculos->PLACAS ? $vehiculos->PLACAS : '-') .
+					'<b> SERIE: </b> ' . ($vehiculos->NUMEROSERIE ? $vehiculos->NUMEROSERIE : '-') .
+					'<b> MARCA: </b>' . ($vehiculos->MARCADESCR ? $vehiculos->MARCADESCR : '-') .
+					'<b> MODELO: </b> ' . ($vehiculos->MODELODESCR ? $vehiculos->MODELODESCR : '-') .
+					'<b> ESTADO: </b> ' . ($estadoV ? $estadoV->ESTADODESCR : '-') .
+					'<b> LINEA: </b> ' . ($vehiculos->ANOVEHICULO ? $vehiculos->ANOVEHICULO : '-') .
+					'<b> COLOR: </b> ' . ($color ? $color->VEHICULOCOLORDESCR  : '-') .
+					'<br><b> SEÑAS PARTICULARES: </b> ' .  ($vehiculos->SENASPARTICULARES ? $vehiculos->SENASPARTICULARES : '-') .
+					'<br><b> CLASE: </b> ' . ($linea ? $linea->VEHICULOVERSIONDESCR : '-') .
+					'<b> TIPO: </b> ' .  ($tipo ? $tipo->VEHICULOTIPODESCR : '-' .'</p>');
+	
+				}
+			}
 			$data->plantilla = str_replace('[INFORMACION_DEL_HECHO]', $hecho_info, $data->plantilla);
 			if ($data->plantilla) {
 				return json_encode(['status' => 1, 'plantilla' => $data->plantilla]);
