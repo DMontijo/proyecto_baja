@@ -2059,7 +2059,7 @@ class DashboardController extends BaseController
 						throw new \Exception('Todos los imputados deben tener al menos 1 delito asignado');
 					}
 
-					if (count($relacionFisFis) == 0 || count($relacionFisFis) <= 0) {
+					if (count($relacionFisFis) == 0 || count($relacionFisFis) <=0 ) {
 						throw new \Exception('Todos los imputados deben tener una relación con una persona física');
 					}
 
@@ -6661,24 +6661,6 @@ class DashboardController extends BaseController
 		$data->plantilla = str_replace('[VICTIMA_ESTADO_CIVIL]', isset($data->edoCivilVictima) == true ? $data->edoCivilVictima->PERSONAESTADOCIVILDESCR : 'DESCONOCIDO', $data->plantilla);
 		$data->plantilla = str_replace('[IMPUTADO_DOMICILIO_COMPLETO]', ($data->imputadoDom->CALLE ? $data->imputadoDom->CALLE : 'DESCONOCIDO') . ' EXT. ' . ($data->imputadoDom->NUMEROCASA ? $data->imputadoDom->NUMEROCASA : '') . ' INT. ' . ($data->imputadoDom->NUMEROINTERIOR ? $data->imputadoDom->NUMEROINTERIOR : '') . ' ' . $data->imputadoDom->COLONIADESCR . ($data->municipio_imp ? $data->municipio_imp->MUNICIPIODESCR : '') . ' ' . ($data->estado_imp ? $data->estado_imp->ESTADODESCR : ''), $data->plantilla);
 		$hecho_info = '<p><b>FOLIO:</b> ' . $data->folio->FOLIOID . '</p><p><b>AÑO:</b> ' . $data->folio->ANO . '</p><p><b>FECHA DEL HECHO:</b> ' . $data->folio->HECHOFECHA . '</p><p><b>HORA DEL HECHO:</b> ' . $data->folio->HECHOHORA . '</p><p><b>CALLE DEL HECHO:</b> ' . $data->folio->HECHOCALLE . ' EXT.' . $data->folio->HECHONUMEROCASA . ' INT.' . $data->folio->HECHONUMEROCASAINT . ' ' . $data->municipios->MUNICIPIODESCR . '</p><p><b>NARRACIÓN DEL HECHO:</b> ' . $data->folio->HECHONARRACION . '</p><p><b>NOTAS DEL AGENTE:</b> ' . $data->folio->NOTASAGENTE . '</p>';
-
-		// if ($data->vehiculos_da) {
-		// 	foreach ($data->vehiculos_da as $key => $vehiculos) {
-		// 		$hecho_info = $hecho_info .
-
-		// 			'<br><p><b>VEHÍCULO:</b></p> ' . $key .
-		// 			'<br><p><b>PLACAS:</b></p> ' . ($vehiculos->PLACAS ? $vehiculos->PLACAS : '-') .
-		// 			'<br><p><b>SERIE:</b></p> ' . ($vehiculos->NUMEROSERIE ? $vehiculos->NUMEROSERIE : '-') .
-		// 			'<br><p><b>MARCA:</b></p> ' . ($vehiculos->MARCADESCR ? $vehiculos->MARCADESCR : '-') .
-		// 			'<br><p><b>MODELO:</b></p> ' . ($vehiculos->MODELODESCR ? $vehiculos->MODELODESCR : '-') .
-		// 			'<br><p><b>ESTADO:</b></p> ' . ($estadoV ? $estadoV->ESTADODESCR : '-') .
-		// 			'<br><p><b>LINEA:</b></p> ' . ($vehiculos->ANOVEHICULO ? $vehiculos->ANOVEHICULO : '-') .
-		// 			'<br><p><b>COLOR:</b></p> ' . ($color ? $color->VEHICULOCOLORDESCR  : '-') .
-		// 			'<br><p><b>SEÑAS PARTICULARES:</b></p> ' .  ($vehiculos->SENASPARTICULARES ? $vehiculos->SENASPARTICULARES : '-') .
-		// 			'<br><p><b>CLASE:</b></p> ' . ($linea ? $linea->VEHICULOVERSIONDESCR : '-') .
-		// 			'<br><p><b>TIPO:</b></p> ' .  ($tipo ? $tipo->VEHICULOTIPODESCR : '-');
-		// 	}
-		// }
 		$data->plantilla = str_replace('[INFORMACION_DEL_HECHO]', $hecho_info, $data->plantilla);
 
 		$data->plantilla = str_replace('[FOLIO_ATENCION]', $data->folio->FOLIOID . '/' . $data->folio->ANO, $data->plantilla);
@@ -6895,23 +6877,7 @@ class DashboardController extends BaseController
 			$data->plantilla = str_replace('[IMPUTADO_DOMICILIO_COMPLETO]', ($data->imputadoDom->CALLE ? $data->imputadoDom->CALLE : 'DESCONOCIDO') . ' EXT. ' . ($data->imputadoDom->NUMEROCASA ? $data->imputadoDom->NUMEROCASA : '') . ' INT. ' . ($data->imputadoDom->NUMEROINTERIOR ? $data->imputadoDom->NUMEROINTERIOR : '') . ' ' . $data->imputadoDom->COLONIADESCR . ($data->municipio_imp ? $data->municipio_imp->MUNICIPIODESCR : '') . ' ' . ($data->estado_imp ? $data->estado_imp->ESTADODESCR : ''), $data->plantilla);
 
 			$hecho_info = '<p><b>FOLIO:</b> ' . $data->folio->FOLIOID . '</p><p><b>AÑO:</b> ' . $data->folio->ANO . '</p><p><b>FECHA DEL HECHO:</b> ' . $data->folio->HECHOFECHA . '</p><p><b>HORA DEL HECHO:</b> ' . $data->folio->HECHOHORA . '</p><p><b>CALLE DEL HECHO:</b> ' . $data->folio->HECHOCALLE . ' EXT.' . $data->folio->HECHONUMEROCASA . ' INT.' . $data->folio->HECHONUMEROCASAINT . ' ' . $data->municipios->MUNICIPIODESCR . '</p><p><b>NARRACIÓN DEL HECHO:</b> ' . $data->folio->HECHONARRACION . '</p><p><b>NOTAS DEL AGENTE:</b> ' . $data->folio->NOTASAGENTE . '</p>';
-			// if ($data->vehiculos_da) {
-			// 	foreach ($data->vehiculos_da as $key => $vehiculos) {
-			// 		$hecho_info = $hecho_info .
-	
-			// 			'<br><p><b>VEHÍCULO:</b></p> ' . $key .
-			// 			'<br><p><b>PLACAS:</b></p> ' . ($vehiculos->PLACAS ? $vehiculos->PLACAS : '-') .
-			// 			'<br><p><b>SERIE:</b></p> ' . ($vehiculos->NUMEROSERIE ? $vehiculos->NUMEROSERIE : '-') .
-			// 			'<br><p><b>MARCA:</b></p> ' . ($vehiculos->MARCADESCR ? $vehiculos->MARCADESCR : '-') .
-			// 			'<br><p><b>MODELO:</b></p> ' . ($vehiculos->MODELODESCR ? $vehiculos->MODELODESCR : '-') .
-			// 			'<br><p><b>ESTADO:</b></p> ' . ($estadoV ? $estadoV->ESTADODESCR : '-') .
-			// 			'<br><p><b>LINEA:</b></p> ' . ($vehiculos->ANOVEHICULO ? $vehiculos->ANOVEHICULO : '-') .
-			// 			'<br><p><b>COLOR:</b></p> ' . ($color ? $color->VEHICULOCOLORDESCR  : '-') .
-			// 			'<br><p><b>SEÑAS PARTICULARES:</b></p> ' .  ($vehiculos->SENASPARTICULARES ? $vehiculos->SENASPARTICULARES : '-') .
-			// 			'<br><p><b>CLASE:</b></p> ' . ($linea ? $linea->VEHICULOVERSIONDESCR : '-') .
-			// 			'<br><p><b>TIPO:</b></p> ' .  ($tipo ? $tipo->VEHICULOTIPODESCR : '-');
-			// 	}
-			// }
+
 			$data->plantilla = str_replace('[INFORMACION_DEL_HECHO]', $hecho_info, $data->plantilla);
 			if ($data->plantilla) {
 				return json_encode(['status' => 1, 'plantilla' => $data->plantilla]);
@@ -6979,21 +6945,19 @@ class DashboardController extends BaseController
 
 				);
 				if ($this->request->getPost('titulo') == "DENUNCIA ANONIMA" || $this->request->getPost('titulo') == "FICHA PERSONA DESAPARECIDA") {
-					$this->request->getPost('titulo') == "DENUNCIA ANONIMA" ? $pdf = $this->_generatePDF($placeholder) : $pdf = $this->_generatePDFPersonaFisica($placeholder);
 					$dataFolioDoc = array(
 						'FOLIOID' => $folio,
 						'NUMEROEXPEDIENTE' => $expediente ? $expediente : null,
 						'ANO' => $year,
 						'PLACEHOLDER' => $placeholder,
 						'STATUS' => 'FIRMADO',
-						'PDF' => $pdf,
 						'MUNICIPIOID' => $folioRow['MUNICIPIOASIGNADOID'],
 						'ESTADOID' => 2,
 						'TIPODOC' => $this->request->getPost('titulo'),
 						'STATUSENVIO' => $this->request->getPost('statusenvio'),
 						'ENVIADO' => 'N',
 						'CLASIFICACIONDOCTOID' => $clasificaciondoctoid,
-						'AGENTE_ASIGNADO' =>  $this->request->getPost('agente_asignado') != '' ?  $this->request->getPost('agente_asignado') : null,
+						'AGENTE_ASIGNADO' =>  $documentos_folio->AGENTE_ASIGNADO,
 						'AGENTE_REGISTRO' =>  session('ID')
 
 					);
@@ -7017,27 +6981,27 @@ class DashboardController extends BaseController
 
 				);
 
-				// if ($this->request->getPost('titulo') == "DENUNCIA ANONIMA" || $this->request->getPost('titulo') == "FICHA PERSONA DESAPARECIDA") {
-				// 	$this->request->getPost('titulo') == "DENUNCIA ANONIMA" ? $pdf = $this->_generatePDF($placeholder) : $pdf = $this->_generatePDFPersonaFisica($placeholder);
-				// 	$dataFolioDoc = array(
-				// 		'FOLIOID' => $folio,
-				// 		'NUMEROEXPEDIENTE' => $expediente ? $expediente : null,
-				// 		'ANO' => $year,
-				// 		'PLACEHOLDER' => $placeholder,
-				// 		'STATUS' => 'FIRMADO',
-				// 		'PDF' => $pdf,
-				// 		'MUNICIPIOID' => $folioRow['MUNICIPIOASIGNADOID'],
-				// 		'ESTADOID' => 2,
-				// 		'TIPODOC' => $this->request->getPost('titulo'),
-				// 		'STATUSENVIO' => $this->request->getPost('statusenvio'),
-				// 		'ENVIADO' => 'N',
-				// 		'CLASIFICACIONDOCTOID' => $clasificaciondoctoid,
-				// 		'AGENTE_ASIGNADO' =>  $this->request->getPost('agente_asignado') != '' ?  $this->request->getPost('agente_asignado') : null,
-				// 		'AGENTE_REGISTRO' =>  session('ID')
+				if ($this->request->getPost('titulo') == "DENUNCIA ANONIMA" || $this->request->getPost('titulo') == "FICHA PERSONA DESAPARECIDA") {
+					$this->request->getPost('titulo') == "DENUNCIA ANONIMA" ? $pdf = $this->_generatePDF($placeholder) : $pdf = $this->_generatePDFPersonaFisica($placeholder);
+					$dataFolioDoc = array(
+						'FOLIOID' => $folio,
+						'NUMEROEXPEDIENTE' => $expediente ? $expediente : null,
+						'ANO' => $year,
+						'PLACEHOLDER' => $placeholder,
+						'STATUS' => 'FIRMADO',
+						'PDF' => $pdf,
+						'MUNICIPIOID' => $folioRow['MUNICIPIOASIGNADOID'],
+						'ESTADOID' => 2,
+						'TIPODOC' => $this->request->getPost('titulo'),
+						'STATUSENVIO' => $this->request->getPost('statusenvio'),
+						'ENVIADO' => 'N',
+						'CLASIFICACIONDOCTOID' => $clasificaciondoctoid,
+						'AGENTE_ASIGNADO' =>  $this->request->getPost('agente_asignado') != '' ?  $this->request->getPost('agente_asignado') : null,
+						'AGENTE_REGISTRO' =>  session('ID')
 
-				// 	);
-				// }
-				// $foliodoc = $this->_folioDoc($dataFolioDoc, $expediente ? $expediente : null, $year);
+					);
+				}
+				$foliodoc = $this->_folioDoc($dataFolioDoc, $expediente ? $expediente : null, $year);
 			}
 
 
