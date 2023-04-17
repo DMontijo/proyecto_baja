@@ -254,10 +254,21 @@ class DocumentosController extends BaseController
 
 		$documento = $this->_folioDocModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $docid)->first();
 
-		$filename = urlencode($documento->TIPODOC . "_" . $folio . "_" . $year . ".pdf");
+		$filename = urlencode($documento->TIPODOC . "_" . $folio . "_" . $year . '.pdf');
 		header("Content-type: application/pdf");
-		header("Content-Disposition: attachment; filename=\"$filename\"");
-		echo $documento->PDF;
+		header('Content-Disposition: attachment; filename="' . $filename . '"');
+		header('Content-Length: ' . strlen($documento->PDF));
+		header('Expires: 0');
+		header('Cache-Control: must-revalidate');
+		header('Pragma: public');
+
+		$fp = fopen('php://memory', 'r+');
+		fwrite($fp, $documento->PDF);
+		rewind($fp);
+		fpassthru($fp);
+		fclose($fp);
+		exit();
+		// echo $documento->PDF;
 	}
 
 	public function download_documento_xml()
@@ -271,7 +282,18 @@ class DocumentosController extends BaseController
 		$filename = urlencode($documento->TIPODOC . "_" . $folio . "_" . $year . ".xml");
 		header("Content-type: application/xml");
 		header("Content-Disposition: attachment; filename=\"$filename\"");
-		echo $documento->XML;
+		header('Content-Length: ' . strlen($documento->XML));
+		header('Expires: 0');
+		header('Cache-Control: must-revalidate');
+		header('Pragma: public');
+
+		$fp = fopen('php://memory', 'r+');
+		fwrite($fp, $documento->XML);
+		rewind($fp);
+		fpassthru($fp);
+		fclose($fp);
+		exit();
+		// echo $documento->XML;
 	}
 	public function borrarDocumento()
 	{

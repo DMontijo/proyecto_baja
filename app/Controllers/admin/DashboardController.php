@@ -6945,19 +6945,21 @@ class DashboardController extends BaseController
 
 				);
 				if ($this->request->getPost('titulo') == "DENUNCIA ANONIMA" || $this->request->getPost('titulo') == "FICHA PERSONA DESAPARECIDA") {
+					$this->request->getPost('titulo') == "DENUNCIA ANONIMA" ? $pdf = $this->_generatePDF($placeholder) : $pdf = $this->_generatePDFPersonaFisica($placeholder);
 					$dataFolioDoc = array(
 						'FOLIOID' => $folio,
 						'NUMEROEXPEDIENTE' => $expediente ? $expediente : null,
 						'ANO' => $year,
 						'PLACEHOLDER' => $placeholder,
 						'STATUS' => 'FIRMADO',
+						'PDF' => $pdf,
 						'MUNICIPIOID' => $folioRow['MUNICIPIOASIGNADOID'],
 						'ESTADOID' => 2,
 						'TIPODOC' => $this->request->getPost('titulo'),
 						'STATUSENVIO' => $this->request->getPost('statusenvio'),
 						'ENVIADO' => 'N',
 						'CLASIFICACIONDOCTOID' => $clasificaciondoctoid,
-						'AGENTE_ASIGNADO' =>  $documentos_folio->AGENTE_ASIGNADO,
+						'AGENTE_ASIGNADO' =>  $this->request->getPost('agente_asignado') != '' ?  $this->request->getPost('agente_asignado') : null,
 						'AGENTE_REGISTRO' =>  session('ID')
 
 					);
@@ -6981,27 +6983,27 @@ class DashboardController extends BaseController
 
 				);
 
-				if ($this->request->getPost('titulo') == "DENUNCIA ANONIMA" || $this->request->getPost('titulo') == "FICHA PERSONA DESAPARECIDA") {
-					$this->request->getPost('titulo') == "DENUNCIA ANONIMA" ? $pdf = $this->_generatePDF($placeholder) : $pdf = $this->_generatePDFPersonaFisica($placeholder);
-					$dataFolioDoc = array(
-						'FOLIOID' => $folio,
-						'NUMEROEXPEDIENTE' => $expediente ? $expediente : null,
-						'ANO' => $year,
-						'PLACEHOLDER' => $placeholder,
-						'STATUS' => 'FIRMADO',
-						'PDF' => $pdf,
-						'MUNICIPIOID' => $folioRow['MUNICIPIOASIGNADOID'],
-						'ESTADOID' => 2,
-						'TIPODOC' => $this->request->getPost('titulo'),
-						'STATUSENVIO' => $this->request->getPost('statusenvio'),
-						'ENVIADO' => 'N',
-						'CLASIFICACIONDOCTOID' => $clasificaciondoctoid,
-						'AGENTE_ASIGNADO' =>  $this->request->getPost('agente_asignado') != '' ?  $this->request->getPost('agente_asignado') : null,
-						'AGENTE_REGISTRO' =>  session('ID')
+				// if ($this->request->getPost('titulo') == "DENUNCIA ANONIMA" || $this->request->getPost('titulo') == "FICHA PERSONA DESAPARECIDA") {
+				// 	$this->request->getPost('titulo') == "DENUNCIA ANONIMA" ? $pdf = $this->_generatePDF($placeholder) : $pdf = $this->_generatePDFPersonaFisica($placeholder);
+				// 	$dataFolioDoc = array(
+				// 		'FOLIOID' => $folio,
+				// 		'NUMEROEXPEDIENTE' => $expediente ? $expediente : null,
+				// 		'ANO' => $year,
+				// 		'PLACEHOLDER' => $placeholder,
+				// 		'STATUS' => 'FIRMADO',
+				// 		'PDF' => $pdf,
+				// 		'MUNICIPIOID' => $folioRow['MUNICIPIOASIGNADOID'],
+				// 		'ESTADOID' => 2,
+				// 		'TIPODOC' => $this->request->getPost('titulo'),
+				// 		'STATUSENVIO' => $this->request->getPost('statusenvio'),
+				// 		'ENVIADO' => 'N',
+				// 		'CLASIFICACIONDOCTOID' => $clasificaciondoctoid,
+				// 		'AGENTE_ASIGNADO' =>  $this->request->getPost('agente_asignado') != '' ?  $this->request->getPost('agente_asignado') : null,
+				// 		'AGENTE_REGISTRO' =>  session('ID')
 
-					);
-				}
-				$foliodoc = $this->_folioDoc($dataFolioDoc, $expediente ? $expediente : null, $year);
+				// 	);
+				// }
+				// $foliodoc = $this->_folioDoc($dataFolioDoc, $expediente ? $expediente : null, $year);
 			}
 
 
