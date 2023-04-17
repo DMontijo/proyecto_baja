@@ -1997,6 +1997,7 @@ class DashboardController extends BaseController
 						|| ($folioRow['HECHOFECHA'] == '' || $folioRow['HECHOFECHA'] == NULL)
 						|| ($folioRow['HECHOHORA'] == '' || $folioRow['HECHOHORA'] == NULL)
 						|| ($folioRow['HECHONARRACION'] == '' || $folioRow['HECHONARRACION'] == NULL)
+						|| ($folioRow['HECHODELITO'] == '' || $folioRow['HECHODELITO'] == NULL)
 					) {
 						throw new \Exception('Actualiza los campos de información del hecho.');
 					}
