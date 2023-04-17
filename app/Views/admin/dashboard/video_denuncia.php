@@ -6,6 +6,10 @@
 <?php $session = session(); ?>
 <div class="row" id="videoDen">
 	<style>
+		textarea {
+			text-transform: uppercase !important;
+		}
+
 		#video_container {
 			width: 100%;
 			min-height: 70vh;
@@ -489,7 +493,7 @@
 		<div class="card rounded bg-white shadow">
 			<div class="card-body">
 				<label class="font-weight-bold" for="notas">Breve descripción del caso:</label>
-				<textarea class="form-control" id="notas_mp" placeholder="Descripción del caso..." rows="10" required maxlength="1000" oninput="mayuscTextarea(this)" onkeydown="pulsar(event)" onkeyup="contarCaracteres(this)"></textarea>
+				<textarea class="form-control" id="notas_mp" placeholder="Descripción del caso..." rows="10" required maxlength="1000" onkeydown="pulsar(event)" onkeyup="contarCaracteres(this)"></textarea>
 				<small id="numCaracter">1000 caracteres restantes</small>
 
 			</div>

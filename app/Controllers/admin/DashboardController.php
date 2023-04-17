@@ -2059,7 +2059,7 @@ class DashboardController extends BaseController
 						throw new \Exception('Todos los imputados deben tener al menos 1 delito asignado');
 					}
 
-					if (count($relacionFisFis) == 0 || count($relacionFisFis) <=0 ) {
+					if (count($relacionFisFis) == 0 || count($relacionFisFis) <= 0) {
 						throw new \Exception('Todos los imputados deben tener una relación con una persona física');
 					}
 
@@ -2070,7 +2070,7 @@ class DashboardController extends BaseController
 					$folioRow['MUNICIPIOID'] = $municipio;
 					$folioRow['ESTADOID'] = $estado;
 					$folioRow['HECHOMEDIOCONOCIMIENTOID'] = (string) 6;
-					$folioRow['NOTASAGENTE'] = $notas;
+					$folioRow['NOTASAGENTE'] = strtoupper($notas);
 					$folioRow['STATUS'] = 'EXPEDIENTE';
 					$folioRow['AGENTEATENCIONID'] = session('ID') ? session('ID') : 1;
 					$folioRow['AGENTEFIRMAID'] = session('ID') ? session('ID') : 1;
