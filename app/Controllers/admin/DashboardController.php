@@ -2059,6 +2059,10 @@ class DashboardController extends BaseController
 						throw new \Exception('Todos los imputados deben tener al menos 1 delito asignado');
 					}
 
+					if (count($relacionFisFis) == 0 || count($relacionFisFis) <=0 ) {
+						throw new \Exception('Todos los imputados deben tener una relación con una persona física');
+					}
+
 
 					$narracion = $folioRow['HECHONARRACION'];
 					$fecha = $folioRow['HECHOFECHA'];
