@@ -69,7 +69,7 @@ $file_text = $user_id . "_data.txt";
 		<div class="col-12 col-md-4 mb-4">
 			<div class="card shadow" style="border-radius:5px; height:100%!important;">
 				<div class="card-body text-center">
-					<h5 class="card-title">LLAMADAS EN COLA</h5>
+					<h5 class="card-title">LLAMADAS EN FILA</h5>
 					<h4 class="font-weight-bold" id="lista_prioridad_users">-</h4>
 					<a type="button" href="<?= base_url('admin/dashboard/lista_prioridad') ?>" class="btn btn-primary font-weight-bold mt-4 text-white">VER MÁS</a>
 				</div>

@@ -7,12 +7,12 @@
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-12">
-				<h3 class="mb-4 font-weight-bold text-center">LLAMADAS EN COLA</h3>
+				<h3 class="mb-4 font-weight-bold text-center">LLAMADAS EN FILA</h3>
 				<div class="card shadow border-0 rounded">
 					<div class="card-body">
 						<div class="row">
 							<div class="col-12 mt-3" style="overflow-x:scroll;">
-								<p id="message" class="mb-3 text-primary font-weight-bold text-center"> No hay ninguna lista</p>
+								<p id="message" class="mb-3 text-primary font-weight-bold text-center"> No hay ninguna llamada en fila</p>
 
 								<table id="table-cola" class="table table-bordered table-hover table-striped d-none">
 									<thead>
