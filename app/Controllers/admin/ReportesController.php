@@ -1573,11 +1573,6 @@ class ReportesController extends BaseController
 			"MUNICIPIO QUE ATIENDE",
 			"SERVIDOR PUBLICO SOLICITANTE",
 			"DELITO",
-			"NOMBRE DE LA VICTIMA/OFENDIDO",
-			"APELLIDO PATERNO",
-			"APELLIDO MATERNO",
-			"GENERO",
-			"EDAD",
 			"TIPO DE ORDEN DE PROTECCIÓN",
 			"VÍCTIMA LESIONADA",
 		];
@@ -1604,26 +1599,21 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('C' . $row, $this->separarExpID($orden->EXPEDIENTEID));
 			$sheet->setCellValue('D' . $row, 'CENTRO DE DENUNCIA TECNÓLOGICA');
 			$sheet->setCellValue('E' . $row,  $orden->MUNICIPIODESCR);
-			$sheet->setCellValue('F' . $row,  $orden->NOMBRE_MP . ' ' . $orden->APATERNO_MP . ' ' . $orden->AMATERNO_MP);
+			$sheet->setCellValue('F' . $row,  $orden->NOMBRE_MP);
 			$sheet->setCellValue('G' . $row,  $orden->HECHODELITO);
-			$sheet->setCellValue('H' . $row,  $orden->NOMBRE);
-			$sheet->setCellValue('I' . $row,  $orden->PRIMERAPELLIDO);
-			$sheet->setCellValue('J' . $row,  $orden->SEGUNDOAPELLIDO);
-			$sheet->setCellValue('K' . $row,  $orden->SEXO);
-			$sheet->setCellValue('L' . $row,  $orden->EDADCANTIDAD);
-			$sheet->setCellValue('M' . $row,  $orden->TIPODOC);
-			$sheet->setCellValue('N' . $row,  $orden->LESIONES);
-			$sheet->setCellValue('O' . $row, '');
+			$sheet->setCellValue('H' . $row,  $orden->TIPODOC);
+			$sheet->setCellValue('I' . $row,  $orden->LESIONES);
+			$sheet->setCellValue('J' . $row, '');
 
 			$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
 
 			if (!(($row - 4) >= count($documentos))) $row++;
 		}
-		$sheet->getStyle('A1:R1')->applyFromArray($styleCab);
-		$sheet->getStyle('A2:R2')->applyFromArray($styleCab);
+		$sheet->getStyle('A1:J1')->applyFromArray($styleCab);
+		$sheet->getStyle('A2:J2')->applyFromArray($styleCab);
 
-		$sheet->getStyle('A4:R4')->applyFromArray($styleHeaders);
-		$sheet->getStyle('A5:R' . $row)->applyFromArray($styleCells);
+		$sheet->getStyle('A4:J4')->applyFromArray($styleHeaders);
+		$sheet->getStyle('A5:J' . $row)->applyFromArray($styleCells);
 
 		$sheet->mergeCells('A1:R1');
 		$sheet->mergeCells('A2:R2');
