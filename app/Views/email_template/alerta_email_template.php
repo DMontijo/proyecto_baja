@@ -6,7 +6,9 @@
 	<h3>El folio <strong><?= $folio ?> / <?= $year ?></strong> es un caso de suma importancia. <br> Favor de verificar en el sistema de videodenuncia</h3>
 	<!-- <p>Se ha generado un nuevo expediente</p> -->
 	<br>
-	<h2></h2>
+	<a class="btn" href="<?= base_url('/admin') ?>">
+		IR A PLATAFORMA
+	</a>
 	<br>
 </div>
 
