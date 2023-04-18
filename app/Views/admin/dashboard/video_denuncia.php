@@ -474,7 +474,7 @@
 		<div class="card rounded bg-white shadow" style="min-height: 70px;">
 			<div class="card-body">
 				<button id="folios-atendidos-btn" class="btn btn-primary btn-block h-100" role="button" data-toggle="modal" data-target="#folios_atendidos_modal"><i class="fas fa-file-alt"></i> FOLIOS DEL DENUNCIANTE</button>
-				<button id="enviar_alertas" class="btn btn-primary btn-block h-100"><i class="fas fa-exclamation-triangle"></i> ALERTA</button>
+				<button id="enviar_alertas" title="Pulsa este botón en caso de emergencia o folios de suma importancia." class="btn btn-primary btn-block h-100"><i class="fas fa-exclamation-triangle"></i> ALERTA</button>
 
 			</div>
 		</div>

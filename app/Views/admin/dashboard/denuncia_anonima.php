@@ -124,20 +124,27 @@
 						</div>
 					</form>
 				</div>
+				<div id="optmain" name="optmain" style="display: none;">
+					<div class="row m-2">
+						<div class="col-12 col-sm-6 col-md-6 col-lg-6">
+							<div class="form-group">
+								<button type="button" style="min-height:80px;" class="btn btn-primary font-weight-bold btn-lg  w-100" id="btn_update_folio">
+									Actualizar hecho
+								</button>
 
-
-				<div class="row " id="personasInvolucradas" name="personasInvolucradas" style="display: none;">
-					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-						<div class="form-group">
-							<br>
-							<button type="button" class="btn btn-primary font-weight-bold btn-lg" id="btn_update_folio">
-								Actualizar hecho
-							</button>
-							<button type="button" class="btn btn-primary font-weight-bold btn-lg" id="enviar_alertas_da">
-								<i class="fas fa-exclamation-triangle"></i> ALERTA
-							</button>
+							</div>
+						</div>
+						<div class="col-12 col-sm-6 col-md-6 col-lg-6">
+							<div class="form-group">
+								<button type="button" title="Pulsa este botón en caso de emergencia o folios de suma importancia."style="min-height:80px;" class="btn btn-primary font-weight-bold btn-lg  w-100" id="enviar_alertas_da">
+									<i class="fas fa-exclamation-triangle"></i> ALERTA
+								</button>
+							</div>
 						</div>
 					</div>
+				</div>
+				<div class="row card rounded shadow" id="personasInvolucradas" name="personasInvolucradas" style="display: none;">
+
 					<div class="col-12 pt-5">
 						<h3 class="font-weight-bold text-center text-blue pb-3">PERSONAS INVOLUCRADAS</h3>
 					</div>
@@ -182,7 +189,7 @@
 						</table>
 					</div>
 				</div>
-				<div class="row" id="roboVehiculo" name="roboVehiculo" style="display: none;">
+				<div class="row card rounded shadow" id="roboVehiculo" name="roboVehiculo" style="display: none;">
 					<div class="col-12 pt-5">
 						<h3 class="font-weight-bold text-center text-blue pb-3">VEHÍCULOS INVOLUCRADOS</h3>
 					</div>
@@ -204,7 +211,7 @@
 						</table>
 					</div>
 				</div>
-				<div class="row" id="objetosInvolucrados" name="objetosInvolucrados" style="display: none;">
+				<div class="row card rounded shadow"  id="objetosInvolucrados" name="objetosInvolucrados" style="display: none;">
 					<div class="col-12 pt-5">
 						<h3 class="font-weight-bold text-center text-blue pb-3">OBJETOS INVOLUCRADOS</h3>
 					</div>
@@ -228,7 +235,7 @@
 					</div>
 				</div>
 
-				<div class="row" id="delitosInvolucrados" name="delitosInvolucrados" style="display: none;">
+				<div class="row card rounded shadow" id="delitosInvolucrados" name="delitosInvolucrados" style="display: none;">
 					<div class="col-12 pt-5">
 						<h3 class="font-weight-bold text-center text-blue pb-3">DELITOS COMETIDOS</h3>
 					</div>
@@ -250,7 +257,7 @@
 					</div>
 				</div>
 
-				<div class="row" id="fisfis" name="fisfis" style="display: none;">
+				<div class="row card rounded shadow" id="fisfis" name="fisfis" style="display: none;">
 					<div class="col-12 pt-5">
 						<h3 class="font-weight-bold text-center text-blue pb-3">ÁRBOL DELICTIVO</h3>
 					</div>
@@ -317,6 +324,7 @@
 	var btn_arbol = document.getElementById('habilitar-delito');
 	var form_folio = document.getElementById('form_folio');
 	var div_personasInvolucradas = document.getElementById('personasInvolucradas');
+	var div_optmain = document.getElementById('optmain');
 	var form_persona_fisica = document.getElementById('persona_fisica_form_insert_denunciaA');
 	var form_objetosinvolucrados = document.querySelector('#form_objetos_involucrados');
 	var form_fis_fis = document.querySelector('#form_fisfis_insert');
@@ -1264,6 +1272,9 @@
 					document.getElementById("roboVehiculo").style.display = "block";
 					// }
 					document.getElementById("personasInvolucradas").style.display = "block";
+					document.getElementById("personasInvolucradas").style.backgroundColor="#E7E7E7";
+
+					document.getElementById("optmain").style.display = "block";
 
 					document.getElementById("foliodiv").style.display = "none";
 					document.getElementById('folio').value = response.folio;
@@ -1272,6 +1283,9 @@
 					document.getElementById('year').value = response.year;
 					document.getElementById('year').disabled = true;
 					document.getElementById("objetosInvolucrados").style.display = "block";
+					document.getElementById("objetosInvolucrados").style.backgroundColor="#E7E7E7";
+
+
 					document.getElementById("delitosInvolucrados").style.display = "block";
 					document.getElementById("roboVehiculo").style.display = "block";
 
