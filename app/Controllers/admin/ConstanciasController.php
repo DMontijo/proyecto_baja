@@ -243,7 +243,7 @@ class ConstanciasController extends BaseController
 
 		$timestamp = strtotime($constancia->HECHOFECHA);
 		$dia_extravio = date('d', $timestamp);
-		$mes_extravio = $meses[date('m', $timestamp) - 1];
+		$mes_extravio = $meses[date('n', $timestamp) - 1];
 		$ano_extravio = date('Y', $timestamp);
 
 		$data->constanciaExtravio->PLACEHOLDER = str_replace('[FOLIO_NUMERO]', $constancia->CONSTANCIAEXTRAVIOID, $data->constanciaExtravio->PLACEHOLDER);
@@ -270,7 +270,7 @@ class ConstanciasController extends BaseController
 				$timestamp_sorteo = strtotime($constancia->SORTEOFECHA);
 				$dia_sorteo = date('d', $timestamp_sorteo);
 				$ano_sorteo = date('Y', $timestamp_sorteo);
-				$mes_sorteo = $meses[date('n') - 1];
+				$mes_sorteo = $meses[date('n', $timestamp_sorteo) - 1];
 
 				$descr = 'EXTRAVÍO DE BOLETO CON NÚMERO: [NBOLETO] Y TALÓN CON NÚMERO: [NTALON] DEL SORTEO: [NOMBRESORTEO] A CELEBRARSE EL DÍA: [SORTEOFECHA], CON PERMISO DE GOBERNACIÓN: [PERMISOGOBERNACION], Y PERMISO DE GOBERNACIÓN DE COLABORADORES: [PERMISOGOBCOLABORADORES].';
 				$descr = str_replace('[NBOLETO]', $constancia->NBOLETO, $descr);

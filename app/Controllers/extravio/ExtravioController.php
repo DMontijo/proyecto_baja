@@ -284,6 +284,7 @@ class ExtravioController extends BaseController
 		];
 		echo view("constancia_extravio/register/$view", $data);
 	}
+
 	function descargar_pdf()
 	{
 		$data = (object)array();
@@ -358,6 +359,7 @@ class ExtravioController extends BaseController
 		// Download pdf
 		$dompdf->stream();
 	}
+	
 	private function _get_client_ip()
 	{
 		$ipaddress = '';
