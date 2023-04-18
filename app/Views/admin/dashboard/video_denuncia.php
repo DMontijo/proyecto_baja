@@ -264,6 +264,7 @@
 					<div class="row">
 						<div class="col-12 px-4 py-3">
 							<button class="btn btn-success" id="disponible" name="disponible" data-toggle="tooltip" data-placement="top" title="Conectar para recibir video llamadas"><i class="fas fa-door-open"></i> HACERME DISPONIBLE</button>
+							<button class="btn btn-warning" id="media_configuration" name="configuration" data-toggle="tooltip" data-placement="top" title="Configuración de media"><i class="fas fa-cogs"></i></button>
 							<button class="btn btn-danger" id="no_disponible" name="no_disponible" data-toggle="tooltip" data-placement="top" hidden><i class="fas fa-times-circle"></i> DESCONECTARME</button>
 						</div>
 						<div class="col-12 px-4" id="header-llamada" name="header-llamada" hidden>
@@ -496,7 +497,11 @@
 		</div>
 	</div>
 
+	
 </div>
+
+<?php include("video_denuncia_media_devices_modal.php"); ?>
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.css">
 <script type="text/javascript" src="<?= base_url() ?>/assets/agent/assets/openvidu-browser-2.25.0.min.js"></script>
