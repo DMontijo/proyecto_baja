@@ -1194,6 +1194,30 @@ class FirmaController extends BaseController
 		}
 	}
 
+	public function sendEmailAlertas(){
+		$folio = $this->request->getPost('folio');
+		$year = $this->request->getPost('year');
+
+		if (ENVIRONMENT == 'development') {
+			$to = 'andrea.solorzano@yocontigo-it.com, otoniel.f@yocontigo-it.com';
+		}else{
+			$to = 'isnad.medel@fgebc.gob.mx, direcciongeneralsejap@fgebc.gob.mx';
+		}
+		$email = \Config\Services::email();
+		$email->setTo($to);
+		$email->setSubject('¡EMERGENCIA!');
+		$body = view('email_template/alerta_email_template.php',['folio' => $folio, 'year'=>$year ]);
+		$email->setMessage($body);
+		
+		if ($email->send()) {
+			$email->clear(TRUE);
+			return json_encode((object)['status' => 1]);
+		} else {
+			return json_encode((object)['status' => 0]);
+		}
+
+
+	}
 	public function sendEmailOrdenesProtección($municipioid, $municipiodescr, $fecha, $documentos)
 	{
 		if (ENVIRONMENT == 'development') {
