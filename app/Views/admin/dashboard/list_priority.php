@@ -23,6 +23,7 @@
 											<th class="text-center">IDIOMA</th>
 											<th class="text-center">DELITO</th>
 											<th class="text-center">PRIORIDAD</th>
+											<th class="text-center">UBICACIÓN</th>
 										</tr>
 									</thead>
 									<tbody></tbody>
