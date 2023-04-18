@@ -1113,7 +1113,7 @@ class FirmaController extends BaseController
 			}
 
 			if (empty($documento)) {
-				return json_encode((object)['status' => 2, 'data' => $documento]);
+				return json_encode((object)['status' => 2]);
 			}
 
 			$imputado = $this->_folioPersonaFisicaModel->asObject()->where('ANO', $year)->where('FOLIOID', $folioM->FOLIOID)->where('CALIDADJURIDICAID', 2)->first();
