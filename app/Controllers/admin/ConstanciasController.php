@@ -243,7 +243,7 @@ class ConstanciasController extends BaseController
 
 		$timestamp = strtotime($constancia->HECHOFECHA);
 		$dia_extravio = date('d', $timestamp);
-		$mes_extravio = $meses[date('n') - 1];
+		$mes_extravio = $meses[date('m', $timestamp) - 1];
 		$ano_extravio = date('Y', $timestamp);
 
 		$data->constanciaExtravio->PLACEHOLDER = str_replace('[FOLIO_NUMERO]', $constancia->CONSTANCIAEXTRAVIOID, $data->constanciaExtravio->PLACEHOLDER);
