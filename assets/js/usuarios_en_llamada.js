@@ -32,6 +32,8 @@ roomsSockets.registerToRoomsUpdate((response) => {
 			let text_4 = document.createTextNode(user.users[0].guest.name);
 			let td_5 = document.createElement("td");
 			let text_5 = document.createTextNode(user.users[0].guestConnection.ip);
+			let td_7 = document.createElement("td");
+
 			td_1.classList.add('text-center');
 			td_2.classList.add('text-center');
 			td_2.classList.add('text-danger');
@@ -40,6 +42,23 @@ roomsSockets.registerToRoomsUpdate((response) => {
 			td_3.classList.add('text-center');
 			td_4.classList.add('text-center');
 			td_5.classList.add('text-center');
+			td_5.classList.add('text-center');
+			td_7.classList.add("text-center");
+
+			if (user.users[0].guestConnection.latitude && user.users[0].guestConnection.longitude) {
+				let a = document.createElement("a");
+				a.setAttribute("href", 'https://www.google.com/maps/search/?api=1&query=' + user.users[0].guestConnection.latitude + "," + user.users[0].guestConnection.longitude + '&zoom=20');
+				a.setAttribute("target", '_blank');
+				a.classList.add('btn');
+				a.classList.add('btn-primary');
+				let aTexto = document.createTextNode("UBICACIÓN");
+				a.appendChild(aTexto);
+				td_7.appendChild(a);
+			} else {
+				let aTexto = document.createTextNode("SIN UBICACIÓN");
+				td_7.appendChild(aTexto);
+			}
+
 			td_1.appendChild(text_1);
 			td_2.appendChild(text_2);
 			td_3.appendChild(text_3);
@@ -50,6 +69,7 @@ roomsSockets.registerToRoomsUpdate((response) => {
 			fila.appendChild(td_3);
 			fila.appendChild(td_4);
 			fila.appendChild(td_5);
+			fila.appendChild(td_7);
 			tbody.appendChild(fila);
 		});
 	} else {

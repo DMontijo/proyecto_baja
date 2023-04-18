@@ -21,6 +21,7 @@
 											<th class="text-center">FOLIO</th>
 											<th class="text-center">DENUNCIANTE</th>
 											<th class="text-center">DENUNCIANTE IP</th>
+											<th class="text-center">UBICACIÓN</th>
 										</tr>
 									</thead>
 									<tbody></tbody>
