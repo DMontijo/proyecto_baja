@@ -47,20 +47,6 @@
 												</select>
 											</div>
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
-												<label for="agente" class="form-label font-weight-bold">Género:</label>
-												<select class="form-control" id="GENERO" name="GENERO" required>
-													<?php if (!isset($body_data->filterParams->GENERO)) { ?>
-														<option selected value="">Ambos</option>
-														<option value="F">Femenino</option>
-														<option value="M">Masculino</option>
-													<?php } else { ?>
-														<option <?= ($body_data->filterParams->GENERO == '' ? 'selected' : '') ?> value="">Ambos</option>
-														<option <?= ($body_data->filterParams->GENERO == 'F' ? 'selected' : '') ?> value="F">Femenino</option>
-														<option <?= ($body_data->filterParams->GENERO == 'M' ? 'selected' : '') ?> value="M">Masculino</option>
-													<?php } ?>
-												</select>
-											</div>
-											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
 												<label for="agente" class="form-label font-weight-bold">Tipo orden de protección:</label>
 												<select class="form-control" id="TIPOORDEN" name="TIPOORDEN" required>
 													<option selected value="">Todos los tipos</option>
@@ -127,11 +113,6 @@
 									<th class="text-center" style="min-width:150px;">MUNICIPIO QUE ATIENDE</th>
 									<th class="text-center" style="min-width:150px;">SERVIDOR PUBLICO SOLICITANTE</th>
 									<th class="text-center" style="min-width:150px;">DELITO</th>
-									<th class="text-center" style="min-width:150px;">NOMBRE DE LA VICTIMA/OFENDIDO</th>
-									<th class="text-center" style="min-width:150px;">APELLIDO PATERNO</th>
-									<th class="text-center" style="min-width:150px;">APELLIDO MATERNO</th>
-									<th class="text-center" style="min-width:150px;">GENERO</th>
-									<th class="text-center" style="min-width:150px;">EDAD</th>
 									<th class="text-center" style="min-width:150px;">TIPO DE ORDEN DE PROTECCIÓN</th>
 									<th class="text-center" style="min-width:150px;">VÍCTIMA LESIONADA</th>
 								</tr>
@@ -147,13 +128,9 @@
 										<td class="text-center"><?= $array[1] . $array[2] . $array[4] . $array[5] . '-' . $array[6] . $array[7] . $array[8] . $array[9] . '-' . $array[10] . $array[11] . $array[12] . $array[13] . $array[14] ?></td>
 										<td class="text-center">CENTRO DE DENUNCIA TECNÓLOGICA</td>
 										<td class="text-center"><?= $orden->MUNICIPIODESCR ?></td>
-										<td class="text-center"><?= $orden->NOMBRE_MP . ' ' . $orden->APATERNO_MP . ' ' . $orden->AMATERNO_MP ?></td>
+										<td class="text-center"><?= $orden->NOMBRE_MP ?></td>
 										<td class="text-center"><?= $orden->HECHODELITO ?></td>
-										<td class="text-center"><?= $orden->NOMBRE ?></td>
-										<td class="text-center"><?= $orden->PRIMERAPELLIDO ?></td>
-										<td class="text-center"><?= $orden->SEGUNDOAPELLIDO ?></td>
-										<td class="text-center"><?= $orden->SEXO ?></td>
-										<td class="text-center"><?= $orden->EDADCANTIDAD ?></td>
+										
 										<td class="text-center"><?= $orden->TIPODOC ?></td>
 										<td class="text-center"><?= $orden->LESIONES ?></td>
 									</tr>

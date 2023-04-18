@@ -1372,6 +1372,8 @@ class ReportesController extends BaseController
 			'fechaFin' => date("Y-m-d")
 		];
 		$documentos = $this->_plantillasModel->filtro_ordenes_proteccion($dataPost);
+		// var_dump($documentos);
+		// exit();
 		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
 		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
 		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
