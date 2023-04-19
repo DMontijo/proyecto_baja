@@ -267,7 +267,7 @@
 					btnFinalizar.disabled = false;
 
 				} else {
-					var denuncia_tel = document.querySelector('input[name="denuncia_tel"]:checked');
+					var denuncia_tel = document.querySelector('input[name="denuncia_tel_da"]:checked');
 
 					data = {
 						'folio': inputFolio.value,
@@ -282,7 +282,7 @@
 				}
 
 			} else {
-				var denuncia_tel = document.querySelector('input[name="denuncia_tel"]:checked');
+				var denuncia_tel = document.querySelector('input[name="denuncia_tel_da"]:checked');
 
 				data = {
 					'folio': inputFolio.value,
@@ -349,7 +349,7 @@
 		} else {
 			if (municipio_empleado.value != '') {
 				let descripcion = document.querySelector('#notas_caso_salida').value;
-				var denuncia_tel = document.querySelector('input[name="denuncia_tel"]:checked');
+				var denuncia_tel = document.querySelector('input[name="denuncia_tel_da"]:checked');
 
 				if (
 					descripcion &&
