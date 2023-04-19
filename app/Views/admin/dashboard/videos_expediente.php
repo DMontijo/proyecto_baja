@@ -14,19 +14,21 @@
 					<div class="card-body">
 						<div class="row">
 							<div class="col-12" style="overflow-x:auto;">
-								<table id="folios_expediente" class="table table-bordered table-striped table-sm" style="font-size:12px;">
+								<table id="folios_expediente" class="table table-bordered table-striped table-sm" style="font-size:11px;">
 									<thead>
 										<tr>
+											<th class="text-center"></th>
 											<th class="text-center">FOLIO</th>
 											<th class="text-center">AÑO</th>
 											<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
-											<th class="text-center" style="min-width:150px;">DELITO</th>
+											<th class="text-center" style="min-width:150px;">MUNICIPIO</th>
+											<th class="text-center" style="min-width:300px;">DELITO</th>
 											<th class="text-center" style="min-width:150px;">OFENDIDO</th>
 											<th class="text-center" style="min-width:150px;">IMPUTADO</th>
 											<th class="text-center" style="min-width:150px;">ATENDIDO POR</th>
 											<th class="text-center" style="min-width:150px;">FECHA REGISTRO</th>
 											<th class="text-center" style="min-width:150px;">FECHA SALIDA</th>
-											<th class="text-center">VIDEOS</th>
+											<th class="text-center"></th>
 										</tr>
 									</thead>
 									<tbody>
@@ -37,17 +39,18 @@
 												$expedienteid =  $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
 											} ?>
 											<tr>
+											<td class="text-center"><button type="button" class="btn btn-primary btn-sm" onclick="viewVideo(<?= $folio->ANO ?>,<?= $folio->FOLIOID ?>)"><i class="fas fa-video"></i></button></td>
 												<td class="text-center font-weight-bold"><?= $folio->FOLIOID ?></td>
 												<td class="text-center font-weight-bold"><?= $folio->ANO ?></td>
 												<td class="text-center font-weight-bold"><?= ($expedienteid ? $expedienteid : '') . '/' . $folio->TIPOEXPEDIENTECLAVE ?></td>
+												<td class="text-center"><?= $folio->MUNICIPIO ?></td>
 												<td class="text-center"><?= $folio->DELITOMODALIDADDESCR ?></td>
 												<td class="text-center"><?= isset($folio->OFENDIDOS) ? $folio->OFENDIDOS : '' ?></td>
 												<td class="text-center"><?= isset($folio->IMPUTADOS) ? $folio->IMPUTADOS : '' ?></td>
 												<td class="text-center"><?= $folio->NOMBREAGENTE ?></td>
 												<td class="text-center"><?= date('d-m-Y H:i:s', strtotime($folio->FECHAREGISTRO)) ?></td>
 												<td class="text-center"><?= date('d-m-Y H:i:s', strtotime($folio->FECHASALIDA)) ?></td>
-
-												<td class="text-center"><button type="button" class="btn btn-primary" onclick="viewVideo(<?= $folio->ANO ?>,<?= $folio->FOLIOID ?>)"><i class="fas fa-video"></i></button></td>
+												<td class="text-center"><button type="button" class="btn btn-primary btn-sm" onclick="viewVideo(<?= $folio->ANO ?>,<?= $folio->FOLIOID ?>)"><i class="fas fa-video"></i></button></td>
 											</tr>
 										<?php } ?>
 									</tbody>
@@ -108,8 +111,8 @@
 			autoWidth: true,
 			ordering: true,
 			order: [
-				[0, 'desc'],
 				[1, 'desc'],
+				[2, 'desc'],
 			],
 			searching: true,
 			pageLength: 100,
