@@ -704,6 +704,7 @@ class FoliosController extends BaseController
 		$data->objetoclasificacion = $this->_objetoClasificacionModel->asObject()->findAll();
 		$data->objetosubclasificacion = $this->_objetoSubclasificacionModel->asObject()->findAll();
 		$data->tipomoneda = $this->_tipoMonedaModel->asObject()->findAll();
+
 		$data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->where('TIPOEXPEDIENTEID <= 5')->findAll();
 
 		$data->distribuidorVehiculo = $this->_vehiculoDistribuidorModel->asObject()->findAll();
@@ -729,10 +730,14 @@ class FoliosController extends BaseController
 		}
 
 
-		if ($data->datosFolio->INSTITUCIONREMISIONMUNICIPIOID) {
+		if ($data->datosFolio->INSTITUCIONREMISIONMUNICIPIOID && $data->datosFolio->STATUS == 'DERIVADO') {
 			$data->datosFolio = $this->_folioModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $data->year)->join('MUNICIPIO', 'FOLIO.INSTITUCIONREMISIONMUNICIPIOID = MUNICIPIO.MUNICIPIOID AND MUNICIPIO.ESTADOID =2')->join('DERIVACIONES', 'FOLIO.INSTITUCIONREMISIONID = DERIVACIONES.INSTITUCIONREMISIONID AND FOLIO.INSTITUCIONREMISIONMUNICIPIOID = DERIVACIONES.MUNICIPIOID')->first();
 		}
-
+		
+		if ($data->datosFolio->INSTITUCIONREMISIONMUNICIPIOID && $data->datosFolio->STATUS == 'CANALIZADO') {
+			$data->datosFolio = $this->_folioModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $data->year)->join('MUNICIPIO', 'FOLIO.INSTITUCIONREMISIONMUNICIPIOID = MUNICIPIO.MUNICIPIOID AND MUNICIPIO.ESTADOID =2')->join('CANALIZACIONES', 'FOLIO.INSTITUCIONREMISIONID = CANALIZACIONES.INSTITUCIONREMISIONID AND FOLIO.INSTITUCIONREMISIONMUNICIPIOID = CANALIZACIONES.MUNICIPIOID')->first();
+		}
+		
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 		// var_dump($data);exit;
