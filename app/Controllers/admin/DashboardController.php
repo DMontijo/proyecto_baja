@@ -870,7 +870,7 @@ class DashboardController extends BaseController
 		];
 
 		$datosBitacora = [
-			'ACCION' => 'Ha creado un usuario',
+			'ACCION' => 'Ha creado un nuevo usuario en cdtec.',
 			'NOTAS' => 'NUEVO USUARIO CREADO: ' . $this->request->getPost('correo'),
 		];
 
@@ -1063,7 +1063,6 @@ class DashboardController extends BaseController
 			$cer_fiel->move($directory, $file_cer);
 			$datosBitacora = [
 				'ACCION' => 'Ha cargado la firma FIEL',
-
 			];
 
 			$this->_bitacoraActividad($datosBitacora);
@@ -1091,7 +1090,7 @@ class DashboardController extends BaseController
 					$data->respuesta = $this->getDataFolio($numfolio, $year);
 					$this->_folioModel->set(['STATUS' => 'EN PROCESO', 'AGENTEATENCIONID' => session('ID')])->where('ANO', $year)->where('FOLIOID', $numfolio)->update();
 					$datosBitacora = [
-						'ACCION' => 'Está atendiendo un folio',
+						'ACCION' => 'Solicito la información para atender un folio.',
 						'NOTAS' => 'FOLIO: ' . $numfolio . ' AÑO: ' . $year,
 					];
 					$this->_bitacoraActividad($datosBitacora);
@@ -1103,7 +1102,7 @@ class DashboardController extends BaseController
 					$data->respuesta = $this->getDataFolio($numfolio, $year);
 
 					$datosBitacora = [
-						'ACCION' => 'Está atendiendo una denuncia anonima',
+						'ACCION' => 'Solicito la información para atender un folio anónimo.',
 						'NOTAS' => 'FOLIO: ' . $numfolio . ' AÑO: ' . $year,
 					];
 					$this->_bitacoraActividad($datosBitacora);
@@ -1442,11 +1441,6 @@ class DashboardController extends BaseController
 				$update = $this->_folioModel->set($dataFolio)->where('EXPEDIENTEID', $expediente)->update();
 				$updateDoc = $this->_folioDocModel->set($dataFolioDoc)->where('NUMEROEXPEDIENTE', $expediente)->update();
 				if ($update) {
-					$datosBitacora = [
-						'ACCION' => 'Remitio un expediente.',
-						'NOTAS' => 'Exp: ' . $expediente . ' oficina: ' . $oficina . ' empleado:' . $empleado . ' area:' . $area->AREAID,
-					];
-
 					$bandeja = $this->_folioModel->where('EXPEDIENTEID', $expediente)->first();
 					$folioDocPericiales = $this->_folioDocModel->expedienteDocumentos($expediente);
 					if ($folioDocPericiales) {
@@ -1482,7 +1476,7 @@ class DashboardController extends BaseController
 
 									if ($_intervencionPericial->status == 201) {
 										$datosBitacora = [
-											'ACCION' => 'Se envio una solicitud perital.',
+											'ACCION' => 'Se envio una solicitud pericial.',
 											'NOTAS' => 'Exp: ' . $expediente . ' Solicitud: ' . $_solicitudPericial->SOLICITUDID . 'Intervencion' . $intervencion,
 										];
 										$this->_bitacoraActividad($datosBitacora);
@@ -1496,6 +1490,10 @@ class DashboardController extends BaseController
 					$updateArch = $this->_archivoExternoModel->set($dataFolioArc)->where('FOLIOID', $bandeja['FOLIOID'])->where('ANO', $bandeja['ANO'])->update();
 
 					if ($_bandeja_creada->status == 201) {
+						$datosBitacora = [
+							'ACCION' => 'Remitio un expediente.',
+							'NOTAS' => 'Exp: ' . $expediente . ' oficina: ' . $oficina . ' empleado:' . $empleado . ' area:' . $area->AREAID,
+						];
 						$this->_bitacoraActividad($datosBitacora);
 						// $folioDoc = $this->_folioDocModel->where('NUMEROEXPEDIENTE', $expediente)->where('FOLIODOC.FOLIOID',$bandeja['FOLIOID'])->where('STATUS', 'FIRMADO')->join('RELACIONFOLIODOCEXPDOC', 'FOLIODOC.NUMEROEXPEDIENTE = RELACIONFOLIODOCEXPDOC.EXPEDIENTEID  AND FOLIODOC.FOLIODOCID = RELACIONFOLIODOCEXPDOC.FOLIODOCID')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('TIPODOC', 'SOLICITUD DE PERITAJE')->orLike('TIPODOC', 'OFICIO DE COLABORACION PARA INGRESO A HOSPITAL')->findAll();
 						return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_success', 'Expediente remitido correctamente.');
@@ -1617,7 +1615,7 @@ class DashboardController extends BaseController
 
 								$_intervencionPericial = $this->_createIntervencionPericial($dataInter, $municipio);
 								$datosBitacora = [
-									'ACCION' => 'Se envio una solicitud perital.',
+									'ACCION' => 'Se envio una solicitud pericial.',
 									'NOTAS' => 'Exp: ' . $expediente . ' Solicitud: ' . $_solicitudPericial->SOLICITUDID . 'Intervencion' . $intervencion,
 								];
 								$this->_bitacoraActividad($datosBitacora);
@@ -1628,8 +1626,8 @@ class DashboardController extends BaseController
 
 				if (!$bandejaRac) {
 					$datosBitacora = [
-						'ACCION' => 'Remitio un expediente.',
-						'NOTAS' => 'Exp: ' . $expediente . ' moeulo: ' . $modulo . ' empleado:' . $getMediador->data->EMPLEADOID_MEDIADOR  . ' area:' . $getMediador->data->AREA_MEDIADOR,
+						'ACCION' => 'Remitio un expediente RAC.',
+						'NOTAS' => 'Exp: ' . $expediente . ' modulo: ' . $modulo . ' empleado:' . $getMediador->data->EMPLEADOID_MEDIADOR  . ' area:' . $getMediador->data->AREA_MEDIADOR,
 					];
 					$this->_bitacoraActividad($datosBitacora);
 
@@ -1941,7 +1939,7 @@ class DashboardController extends BaseController
 
 				if ($update) {
 					$datosBitacora = [
-						'ACCION' => 'Ha actualizado el status del folio',
+						'ACCION' => 'Ha actualizado el status del folio a derivado o canalizado.',
 						'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year . ' STATUS: ' . $status == 'ATENDIDA' ? 'CANALIZADO' : $status,
 					];
 
@@ -1983,7 +1981,7 @@ class DashboardController extends BaseController
 
 		try {
 			if (!empty($tiposExpedienteId) && !empty($folio) && !empty($municipio) && !empty($estado) && !empty($notas)) {
-				$folioRow = $this->_folioModel->where('ANO', $year)->where('FOLIOID', $folio)->where('STATUS', 'EN PROCESO')->first();
+				$folioRow = $this->_folioModel->where('ANO', $year)->where('FOLIOID', $folio)->where('STATUS', 'EN PROCESO')->where('EXPEDIENTEID IS NULL')->first();
 				$folioVehiculoRow = $this->_folioVehiculoModel->where('ANO', $year)->where('FOLIOID', $folio)->findAll();
 
 				if ($folioRow) {
@@ -2059,7 +2057,7 @@ class DashboardController extends BaseController
 						throw new \Exception('Todos los imputados deben tener al menos 1 delito asignado');
 					}
 
-					if (count($relacionFisFis) == 0 || count($relacionFisFis) <=0 ) {
+					if (count($relacionFisFis) == 0 || count($relacionFisFis) <= 0) {
 						throw new \Exception('Todos los imputados deben tener una relación con una persona física');
 					}
 
@@ -2104,6 +2102,12 @@ class DashboardController extends BaseController
 					if ($expedienteCreado->status == 201) {
 						$folioRow['EXPEDIENTEID'] = $expedienteCreado->EXPEDIENTEID;
 						$folioRow['FECHASALIDA'] = date('Y-m-d H:i:s');
+
+						$datosBitacora = [
+							'ACCION' => 'Ha creado un expediente.',
+							'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year . ' EXPEDIENTE: ' . $expedienteCreado->EXPEDIENTEID
+						];
+						$this->_bitacoraActividad($datosBitacora);
 
 						$update = $this->_folioModel->set($folioRow)->where('FOLIOID', $folio)->where('ANO', $year)->update();
 						$personasRelacionMysqlOracle = array();
@@ -2191,7 +2195,12 @@ class DashboardController extends BaseController
 						}
 
 						if ($update) {
-							if ($folioRow['TIPODENUNCIA'] == 'VD') {
+							$datosBitacora = [
+								'ACCION' => 'Ha actualizado el folio con expediente.',
+								'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year . ' EXPEDIENTE: ' . $expedienteCreado->EXPEDIENTEID
+							];
+							$this->_bitacoraActividad($datosBitacora);
+							if ($folioRow['TIPODENUNCIA'] == 'VD' || $folioRow['TIPODENUNCIA'] == 'TE') {
 								$denunciante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', $folioRow['DENUNCIANTEID'])->first();
 								if ($this->_sendEmailExpediente($denunciante->CORREO, $folio, $expedienteCreado->EXPEDIENTEID)) {
 									return json_encode(['status' => 1, 'expediente' => $expedienteCreado->EXPEDIENTEID]);
@@ -3937,10 +3946,10 @@ class DashboardController extends BaseController
 			$folioRow['AGENTEATENCIONID'] = null;
 			$folioRow['AGENTEFIRMAID'] = null;
 
-			$update = $this->_folioModel->set($folioRow)->where('ANO', $year)->where('FOLIOID', $folio)->update();
+			$update = $this->_folioModel->set($folioRow)->where('ANO', $year)->where('FOLIOID', $folio)->where('EXPEDIENTEID IS NULL')->update();
 
 			$datosBitacora = [
-				'ACCION' => 'Ha restaurado un folio',
+				'ACCION' => 'Ha restaurado un folio a abierto',
 				'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year . ' STATUS: ABIERTO',
 			];
 
@@ -3965,9 +3974,9 @@ class DashboardController extends BaseController
 			// $folioRow['AGENTEATENCIONID'] = NULL;
 			$folioRow['AGENTEFIRMAID'] = null;
 
-			$update = $this->_folioModel->set($folioRow)->where('ANO', $year)->where('FOLIOID', $folio)->update();
+			$update = $this->_folioModel->set($folioRow)->where('ANO', $year)->where('FOLIOID', $folio)->where('EXPEDEINTEID IS NULL')->update();
 			$datosBitacora = [
-				'ACCION' => 'Está en proceso un folio',
+				'ACCION' => 'Ha restaurado un folio a en proceso.',
 				'NOTAS' => 'FOLIO: ' . $folio . ' AÑO:' . $year . ' STATUS: EN PROCESO',
 			];
 
@@ -4018,8 +4027,9 @@ class DashboardController extends BaseController
 			}
 			$update = $this->_folioModel->set($dataFolio)->where('FOLIOID', $folio)->where('ANO', $year)->update();
 			if ($update) {
+
 				$datosBitacora = [
-					'ACCION' => 'Ha actualizado un folio',
+					'ACCION' => 'Ha actualizado la información del hecho.',
 					'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
 				];
 
@@ -4075,7 +4085,7 @@ class DashboardController extends BaseController
 			$update = $this->_folioModel->set($dataFolio)->where('FOLIOID', $folio)->where('ANO', $year)->update();
 			if ($update) {
 				$datosBitacora = [
-					'ACCION' => 'Ha actualizado un folio',
+					'ACCION' => 'Ha actualizado la información del hecho.',
 					'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
 				];
 
@@ -5512,7 +5522,7 @@ class DashboardController extends BaseController
 			$delitosModalidadFiltro = $this->_delitoModalidadModel->get_delitodescr($folio, $year);
 
 			$datosBitacora = [
-				'ACCION' => 'Ha ingresado una nuevo arbol delictual',
+				'ACCION' => 'Ha ingresado una nueva relación de delito.',
 				'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
 			];
 
@@ -5564,7 +5574,7 @@ class DashboardController extends BaseController
 					$fisicaImpDelito = $this->_imputadoDelitoModel->get_by_folio($folio, $year);
 
 					$datosBitacora = [
-						'ACCION' => 'Ha eliminado un árbol delictivo',
+						'ACCION' => 'Ha eliminado un árbol delictivo.',
 						'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
 					];
 
@@ -5639,7 +5649,7 @@ class DashboardController extends BaseController
 					}
 				}
 				$datosBitacora = [
-					'ACCION' => 'Ha eliminado un archivo',
+					'ACCION' => 'Ha eliminado un archivo externo.',
 					'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
 				];
 
@@ -5847,7 +5857,7 @@ class DashboardController extends BaseController
 
 
 				$datosBitacora = [
-					'ACCION' => 'Ha actualizado el objeto involucrado',
+					'ACCION' => 'Ha actualizado un objeto involucrado.',
 					'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year . 'OBJETOID: ' . $objetoid,
 				];
 
@@ -6668,7 +6678,7 @@ class DashboardController extends BaseController
 				$color = $this->_coloresVehiculoModel->asObject()->where('VEHICULOCOLORID',  $vehiculos->PRIMERCOLORID)->first();
 				$tipo = $this->_tipoVehiculoModel->asObject()->where('VEHICULOTIPOID',  $vehiculos->TIPOID)->first();
 				$hecho_info = $hecho_info .
-				'<br><p><b>VEHÍCULO: </b> ' . ($key+1) .
+					'<br><p><b>VEHÍCULO: </b> ' . ($key + 1) .
 					'</p><p><b> PLACAS: </b> ' . ($vehiculos->PLACAS ? $vehiculos->PLACAS : '-') .
 					'<b> SERIE: </b> ' . ($vehiculos->NUMEROSERIE ? $vehiculos->NUMEROSERIE : '-') .
 					'<b> MARCA: </b>' . ($vehiculos->MARCADESCR ? $vehiculos->MARCADESCR : '-') .
@@ -6678,8 +6688,7 @@ class DashboardController extends BaseController
 					'<b> COLOR: </b> ' . ($color ? $color->VEHICULOCOLORDESCR  : '-') .
 					'<br><b> SEÑAS PARTICULARES: </b> ' .  ($vehiculos->SENASPARTICULARES ? $vehiculos->SENASPARTICULARES : '-') .
 					'<br><b> CLASE: </b> ' . ($linea ? $linea->VEHICULOVERSIONDESCR : '-') .
-					'<b> TIPO: </b> ' .  ($tipo ? $tipo->VEHICULOTIPODESCR : '-' .'</p>');
-
+					'<b> TIPO: </b> ' .  ($tipo ? $tipo->VEHICULOTIPODESCR : '-' . '</p>');
 			}
 		}
 
@@ -6906,18 +6915,17 @@ class DashboardController extends BaseController
 					$color = $this->_coloresVehiculoModel->asObject()->where('VEHICULOCOLORID',  $vehiculos->PRIMERCOLORID)->first();
 					$tipo = $this->_tipoVehiculoModel->asObject()->where('VEHICULOTIPOID',  $vehiculos->TIPOID)->first();
 					$hecho_info = $hecho_info .
-					'<br><p><b>VEHÍCULO: </b> ' . ($key+1) .
-					'</p><p><b> PLACAS: </b> ' . ($vehiculos->PLACAS ? $vehiculos->PLACAS : '-') .
-					'<b> SERIE: </b> ' . ($vehiculos->NUMEROSERIE ? $vehiculos->NUMEROSERIE : '-') .
-					'<b> MARCA: </b>' . ($vehiculos->MARCADESCR ? $vehiculos->MARCADESCR : '-') .
-					'<b> MODELO: </b> ' . ($vehiculos->MODELODESCR ? $vehiculos->MODELODESCR : '-') .
-					'<b> ESTADO: </b> ' . ($estadoV ? $estadoV->ESTADODESCR : '-') .
-					'<b> LINEA: </b> ' . ($vehiculos->ANOVEHICULO ? $vehiculos->ANOVEHICULO : '-') .
-					'<b> COLOR: </b> ' . ($color ? $color->VEHICULOCOLORDESCR  : '-') .
-					'<br><b> SEÑAS PARTICULARES: </b> ' .  ($vehiculos->SENASPARTICULARES ? $vehiculos->SENASPARTICULARES : '-') .
-					'<br><b> CLASE: </b> ' . ($linea ? $linea->VEHICULOVERSIONDESCR : '-') .
-					'<b> TIPO: </b> ' .  ($tipo ? $tipo->VEHICULOTIPODESCR : '-' .'</p>');
-	
+						'<br><p><b>VEHÍCULO: </b> ' . ($key + 1) .
+						'</p><p><b> PLACAS: </b> ' . ($vehiculos->PLACAS ? $vehiculos->PLACAS : '-') .
+						'<b> SERIE: </b> ' . ($vehiculos->NUMEROSERIE ? $vehiculos->NUMEROSERIE : '-') .
+						'<b> MARCA: </b>' . ($vehiculos->MARCADESCR ? $vehiculos->MARCADESCR : '-') .
+						'<b> MODELO: </b> ' . ($vehiculos->MODELODESCR ? $vehiculos->MODELODESCR : '-') .
+						'<b> ESTADO: </b> ' . ($estadoV ? $estadoV->ESTADODESCR : '-') .
+						'<b> LINEA: </b> ' . ($vehiculos->ANOVEHICULO ? $vehiculos->ANOVEHICULO : '-') .
+						'<b> COLOR: </b> ' . ($color ? $color->VEHICULOCOLORDESCR  : '-') .
+						'<br><b> SEÑAS PARTICULARES: </b> ' .  ($vehiculos->SENASPARTICULARES ? $vehiculos->SENASPARTICULARES : '-') .
+						'<br><b> CLASE: </b> ' . ($linea ? $linea->VEHICULOVERSIONDESCR : '-') .
+						'<b> TIPO: </b> ' .  ($tipo ? $tipo->VEHICULOTIPODESCR : '-' . '</p>');
 				}
 			}
 			$data->plantilla = str_replace('[INFORMACION_DEL_HECHO]', $hecho_info, $data->plantilla);
@@ -7138,8 +7146,8 @@ class DashboardController extends BaseController
 				$documentos = $this->_folioDocModel->get_by_folio($folio, $year);
 
 				$datosBitacora = [
-					'ACCION' => 'Ha actualizado el documento',
-					'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
+					'ACCION' => 'Ha actualizado un documento.',
+					'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year . ' DOCUMENTO: ' . $docid,
 				];
 
 				$this->_bitacoraActividad($datosBitacora);

@@ -437,9 +437,9 @@ class FoliosController extends BaseController
 		$year = $this->request->getVar('year');
 
 		$data = ['EXPEDIENTEID' => null, 'AGENTEATENCIONID' => null, 'AGENTEFIRMAID' => null, 'STATUS' => 'ABIERTO'];
-		$this->_folioModel->set($data)->where('FOLIOID', $folio)->where('ANO', $year)->update();
+		$this->_folioModel->set($data)->where('FOLIOID', $folio)->where('ANO', $year)->where('EXPEDIENTEID IS NULL')->update();
 		$datosBitacora = [
-			'ACCION' => 'Ha liberado un folio',
+			'ACCION' => 'Ha liberado un folio desde folios en proceso.',
 			'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year
 		];
 		$this->_bitacoraActividad($datosBitacora);

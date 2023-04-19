@@ -270,6 +270,7 @@
 			});
 			return;
 		}
+
 		btnFinalizar.setAttribute('disabled', true);
 		if (!(tipoSalida.value == '1' || tipoSalida.value == '4' || tipoSalida.value == '5' || tipoSalida.value == '6' || tipoSalida.value == '7' || tipoSalida.value == '8' || tipoSalida.value == '9')) {
 			let salida = tipoSalida.value;
@@ -307,7 +308,6 @@
 					'status': salida,
 					'motivo': descripcion,
 					'denuncia_tel': denuncia_tel.value,
-
 				}
 
 			}
@@ -448,7 +448,6 @@
 						'folio': inputFolio.value,
 						'year': year_select.value,
 						'municipio_empleado': municipio_empleado.value,
-
 					};
 					// $.ajax({
 
