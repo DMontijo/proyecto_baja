@@ -41,8 +41,8 @@
 												<td class="text-center font-weight-bold"><?= $folio->ANO ?></td>
 												<td class="text-center font-weight-bold"><?= ($expedienteid ? $expedienteid : '') . '/' . $folio->TIPOEXPEDIENTECLAVE ?></td>
 												<td class="text-center"><?= $folio->DELITOMODALIDADDESCR ?></td>
-												<td class="text-center"><?= isset($folio->OFENDIDO) ? $folio->OFENDIDO : '' ?></td>
-												<td class="text-center"><?= isset($folio->IMPUTADO_NOMBRE) ? $folio->IMPUTADO_NOMBRE : '' ?></td>
+												<td class="text-center"><?= isset($folio->OFENDIDOS) ? $folio->OFENDIDOS : '' ?></td>
+												<td class="text-center"><?= isset($folio->IMPUTADOS) ? $folio->IMPUTADOS : '' ?></td>
 												<td class="text-center"><?= $folio->NOMBREAGENTE ?></td>
 												<td class="text-center"><?= date('d-m-Y H:i:s', strtotime($folio->FECHAREGISTRO)) ?></td>
 												<td class="text-center"><?= date('d-m-Y H:i:s', strtotime($folio->FECHASALIDA)) ?></td>
