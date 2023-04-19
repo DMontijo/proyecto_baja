@@ -67,7 +67,7 @@
 	<script>
 		document.getElementById('enviarDocumento').disabled = true;
 		document.getElementById('subirDocumento').disabled = true;
-		document.getElementById('btn_remitir').disabled = true;
+		// document.getElementById('btn_remitir').disabled = true;
 	</script>
 <?php } ?>
 <?php if ($body_data->foliorow[0]->STATUS != "EXPEDIENTE" && $body_data->foliorow[0]->TIPODENUNCIA == "VD") { ?>
