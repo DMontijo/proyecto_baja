@@ -1986,8 +1986,8 @@ class DashboardController extends BaseController
 				$folioVehiculoRow = $this->_folioVehiculoModel->where('ANO', $year)->where('FOLIOID', $folio)->findAll();
 
 				if ($folioRow) {
-
-					if (($folioRow['MUNICIPIOID'] == '' || $folioRow['MUNICIPIOID'] == NULL)
+					if ($folioRow['TIPODENUNCIA']=='VD') {
+						if (($folioRow['MUNICIPIOID'] == '' || $folioRow['MUNICIPIOID'] == NULL)
 						|| ($folioRow['HECHOLOCALIDADID'] == '' || $folioRow['HECHOLOCALIDADID'] == NULL)
 						|| ($folioRow['HECHOCOLONIADESCR'] == '' || $folioRow['HECHOCOLONIADESCR'] == NULL)
 						|| ($folioRow['HECHOCALLE'] == '' || $folioRow['HECHOCALLE'] == NULL)
@@ -1996,10 +1996,25 @@ class DashboardController extends BaseController
 						|| ($folioRow['HECHOFECHA'] == '' || $folioRow['HECHOFECHA'] == NULL)
 						|| ($folioRow['HECHOHORA'] == '' || $folioRow['HECHOHORA'] == NULL)
 						|| ($folioRow['HECHONARRACION'] == '' || $folioRow['HECHONARRACION'] == NULL)
-						// || ($folioRow['HECHODELITO'] == '' || $folioRow['HECHODELITO'] == NULL)
+						|| ($folioRow['HECHODELITO'] == '' || $folioRow['HECHODELITO'] == NULL)
 					) {
 						throw new \Exception('Actualiza los campos de información del hecho.');
 					}
+					}else{
+						if (($folioRow['MUNICIPIOID'] == '' || $folioRow['MUNICIPIOID'] == NULL)
+						|| ($folioRow['HECHOLOCALIDADID'] == '' || $folioRow['HECHOLOCALIDADID'] == NULL)
+						|| ($folioRow['HECHOCOLONIADESCR'] == '' || $folioRow['HECHOCOLONIADESCR'] == NULL)
+						|| ($folioRow['HECHOCALLE'] == '' || $folioRow['HECHOCALLE'] == NULL)
+						|| ($folioRow['HECHONUMEROCASA'] == '' || $folioRow['HECHONUMEROCASA'] == NULL)
+						|| ($folioRow['HECHOLUGARID'] == '' || $folioRow['HECHOLUGARID'] == NULL)
+						|| ($folioRow['HECHOFECHA'] == '' || $folioRow['HECHOFECHA'] == NULL)
+						|| ($folioRow['HECHOHORA'] == '' || $folioRow['HECHOHORA'] == NULL)
+						|| ($folioRow['HECHONARRACION'] == '' || $folioRow['HECHONARRACION'] == NULL)
+					) {
+						throw new \Exception('Actualiza los campos de información del hecho.');
+					}
+					}
+					
 
 					foreach ($folioVehiculoRow as $key => $vehiculo) {
 						if (($vehiculo['SITUACION'] == '' || $vehiculo['SITUACION'] == NULL)
