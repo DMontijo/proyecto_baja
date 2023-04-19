@@ -333,6 +333,8 @@ $routes->group('data', function ($routes) {
 
 	//Encargados
 	$routes->post('update-encargado', 'admin/DocumentosController::actualizarDocumentoEncargado');
+	$routes->post('email-alerts', 'admin/FirmaController::sendEmailAlertas');
+
 
 });
 

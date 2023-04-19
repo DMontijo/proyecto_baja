@@ -268,6 +268,7 @@
 					<div class="row">
 						<div class="col-12 px-4 py-3">
 							<button class="btn btn-success" id="disponible" name="disponible" data-toggle="tooltip" data-placement="top" title="Conectar para recibir video llamadas"><i class="fas fa-door-open"></i> HACERME DISPONIBLE</button>
+							<button class="btn btn-warning" id="media_configuration" name="configuration" data-toggle="tooltip" data-placement="top" title="Configuración de media"><i class="fas fa-cogs"></i></button>
 							<button class="btn btn-danger" id="no_disponible" name="no_disponible" data-toggle="tooltip" data-placement="top" hidden><i class="fas fa-times-circle"></i> DESCONECTARME</button>
 						</div>
 						<div class="col-12 px-4" id="header-llamada" name="header-llamada" hidden>
@@ -477,6 +478,8 @@
 		<div class="card rounded bg-white shadow" style="min-height: 70px;">
 			<div class="card-body">
 				<button id="folios-atendidos-btn" class="btn btn-primary btn-block h-100" role="button" data-toggle="modal" data-target="#folios_atendidos_modal"><i class="fas fa-file-alt"></i> FOLIOS DEL DENUNCIANTE</button>
+				<button id="enviar_alertas" title="Pulsa este botón en caso de emergencia o folios de suma importancia." class="btn btn-primary btn-block h-100"><i class="fas fa-exclamation-triangle"></i> ALERTA</button>
+
 			</div>
 		</div>
 		<div class="card rounded bg-white shadow">
@@ -500,7 +503,11 @@
 		</div>
 	</div>
 
+
 </div>
+
+<?php include("video_denuncia_media_devices_modal.php"); ?>
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.css">
 <script type="text/javascript" src="<?= base_url() ?>/assets/agent/assets/openvidu-browser-2.25.0.min.js"></script>
@@ -2979,6 +2986,7 @@
 			var btn_proteccionA = document.querySelector('#proteccionA');
 			var btn_proteccionPer = document.querySelector('#proteccionPer');
 			var btn_proteccionRon = document.querySelector('#proteccionRon');
+			var btn_enviar_alertas = document.querySelector('#enviar_alertas');
 
 			var btn_guardarFolioDoc = document.querySelector('#guardarFolioDoc');
 			var btn_actualizarFolioDoc = document.querySelector('#actualizarFolioDoc');
@@ -4039,7 +4047,43 @@
 				let contenidoModificado = tinymce.get("documento").getContent();
 				insertarDocumento(contenidoModificado, plantilla.value);
 			}, false);
+			btn_enviar_alertas.addEventListener('click', (event) => {
+				const data = {
+					'folio': document.querySelector('#input_folio_atencion').value,
+					'year': document.querySelector('#year_select').value
+				};
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/email-alerts') ?>",
+					method: "POST",
+					dataType: "json",
+					beforeSend: function() {
+						document.querySelector('#enviar_alertas').disabled = true;;
 
+					},
+					success: function(response) {
+						document.querySelector('#enviar_alertas').disabled = false;;
+
+						if (response.status == 1) {
+							Swal.fire({
+								icon: 'success',
+								text: 'Se ha enviado la alerta correctamente',
+								timer: 3000,
+							});
+						} else {
+							Swal.fire({
+								icon: 'error',
+								text: 'No se enviaron las alertas',
+								timer: 3000,
+							});
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						document.querySelector('#enviar_alertas').disabled = false;;
+						console.log(textStatus);
+					}
+				});
+			}, false);
 			btn_actualizarFolioDoc.addEventListener('click', (event) => {
 				let contenidoModificado = tinymce.get("documento_editar").getContent();
 				actualizarDocumento(contenidoModificado);

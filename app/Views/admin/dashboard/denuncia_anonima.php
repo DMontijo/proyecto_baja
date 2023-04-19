@@ -124,17 +124,27 @@
 						</div>
 					</form>
 				</div>
+				<div id="optmain" name="optmain" style="display: none;">
+					<div class="row m-2">
+						<div class="col-12 col-sm-6 col-md-6 col-lg-6">
+							<div class="form-group">
+								<button type="button" style="min-height:80px;" class="btn btn-primary font-weight-bold btn-lg  w-100" id="btn_update_folio">
+									Actualizar hecho
+								</button>
 
-
-				<div class="row " id="personasInvolucradas" name="personasInvolucradas" style="display: none;">
-					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-						<div class="form-group">
-							<br>
-							<button type="button" class="btn btn-primary font-weight-bold btn-lg" id="btn_update_folio">
-								Actualizar hecho
-							</button>
+							</div>
+						</div>
+						<div class="col-12 col-sm-6 col-md-6 col-lg-6">
+							<div class="form-group">
+								<button type="button" title="Pulsa este botón en caso de emergencia o folios de suma importancia."style="min-height:80px;" class="btn btn-primary font-weight-bold btn-lg  w-100" id="enviar_alertas_da">
+									<i class="fas fa-exclamation-triangle"></i> ALERTA
+								</button>
+							</div>
 						</div>
 					</div>
+				</div>
+				<div class="row card rounded shadow" id="personasInvolucradas" name="personasInvolucradas" style="display: none;">
+
 					<div class="col-12 pt-5">
 						<h3 class="font-weight-bold text-center text-blue pb-3">PERSONAS INVOLUCRADAS</h3>
 					</div>
@@ -179,7 +189,7 @@
 						</table>
 					</div>
 				</div>
-				<div class="row" id="roboVehiculo" name="roboVehiculo" style="display: none;">
+				<div class="row card rounded shadow" id="roboVehiculo" name="roboVehiculo" style="display: none;">
 					<div class="col-12 pt-5">
 						<h3 class="font-weight-bold text-center text-blue pb-3">VEHÍCULOS INVOLUCRADOS</h3>
 					</div>
@@ -201,7 +211,7 @@
 						</table>
 					</div>
 				</div>
-				<div class="row" id="objetosInvolucrados" name="objetosInvolucrados" style="display: none;">
+				<div class="row card rounded shadow"  id="objetosInvolucrados" name="objetosInvolucrados" style="display: none;">
 					<div class="col-12 pt-5">
 						<h3 class="font-weight-bold text-center text-blue pb-3">OBJETOS INVOLUCRADOS</h3>
 					</div>
@@ -225,7 +235,7 @@
 					</div>
 				</div>
 
-				<div class="row" id="delitosInvolucrados" name="delitosInvolucrados" style="display: none;">
+				<div class="row card rounded shadow" id="delitosInvolucrados" name="delitosInvolucrados" style="display: none;">
 					<div class="col-12 pt-5">
 						<h3 class="font-weight-bold text-center text-blue pb-3">DELITOS COMETIDOS</h3>
 					</div>
@@ -247,7 +257,7 @@
 					</div>
 				</div>
 
-				<div class="row" id="fisfis" name="fisfis" style="display: none;">
+				<div class="row card rounded shadow" id="fisfis" name="fisfis" style="display: none;">
 					<div class="col-12 pt-5">
 						<h3 class="font-weight-bold text-center text-blue pb-3">ÁRBOL DELICTIVO</h3>
 					</div>
@@ -305,6 +315,8 @@
 	var btn_agregar_objetos = document.getElementById('habilitar-objetos-involucrados');
 	var btn_salida = document.getElementById('habilitar-salida');
 	var btn_update_folio = document.getElementById('btn_update_folio');
+	var btn_enviar_alertas = document.querySelector('#enviar_alertas_da');
+
 
 	var btn_vehiculo = document.getElementById('habilitar-vehiculos');
 	var notas_caso_mp = document.getElementById('notas_denuncia');
@@ -312,6 +324,7 @@
 	var btn_arbol = document.getElementById('habilitar-delito');
 	var form_folio = document.getElementById('form_folio');
 	var div_personasInvolucradas = document.getElementById('personasInvolucradas');
+	var div_optmain = document.getElementById('optmain');
 	var form_persona_fisica = document.getElementById('persona_fisica_form_insert_denunciaA');
 	var form_objetosinvolucrados = document.querySelector('#form_objetos_involucrados');
 	var form_fis_fis = document.querySelector('#form_fisfis_insert');
@@ -676,6 +689,43 @@
 			error: function(jqXHR, textStatus, errorThrown) {}
 		});
 	});
+	btn_enviar_alertas.addEventListener('click', (event) => {
+		const data = {
+			'folio': document.querySelector('#folio').value,
+			'year': document.querySelector('#year').value,
+		};
+		$.ajax({
+			data: data,
+			url: "<?= base_url('/data/email-alerts') ?>",
+			method: "POST",
+			dataType: "json",
+			beforeSend: function() {
+				document.querySelector('#enviar_alertas_da').disabled = true;;
+
+			},
+			success: function(response) {
+				document.querySelector('#enviar_alertas_da').disabled = false;;
+
+				if (response.status == 1) {
+					Swal.fire({
+						icon: 'success',
+						text: 'Se ha enviado la alerta correctamente',
+						timer: 3000,
+					});
+				} else {
+					Swal.fire({
+						icon: 'error',
+						text: 'No se enviaron las alertas',
+						timer: 3000,
+					});
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				document.querySelector('#enviar_alertas_da').disabled = false;;
+				console.log(textStatus);
+			}
+		});
+	}, false);
 	btn_agregar_victima.addEventListener('click', (event) => {
 		$('#insert_persona_victima_modal_denuncia').modal('show');
 	}, false);
@@ -1222,6 +1272,9 @@
 					document.getElementById("roboVehiculo").style.display = "block";
 					// }
 					document.getElementById("personasInvolucradas").style.display = "block";
+					document.getElementById("personasInvolucradas").style.backgroundColor="#E7E7E7";
+
+					document.getElementById("optmain").style.display = "block";
 
 					document.getElementById("foliodiv").style.display = "none";
 					document.getElementById('folio').value = response.folio;
@@ -1230,6 +1283,9 @@
 					document.getElementById('year').value = response.year;
 					document.getElementById('year').disabled = true;
 					document.getElementById("objetosInvolucrados").style.display = "block";
+					document.getElementById("objetosInvolucrados").style.backgroundColor="#E7E7E7";
+
+
 					document.getElementById("delitosInvolucrados").style.display = "block";
 					document.getElementById("roboVehiculo").style.display = "block";
 
@@ -1503,6 +1559,7 @@
 			e.target.value = e.target.value.slice(0, e.target.maxLength);
 		};
 	}
+
 	function agregarObjetosInvolucrados() {
 
 		const data = {
@@ -1739,7 +1796,7 @@
 					});
 					llenarTablaVehiculos(vehiculos);
 					$('#insert_vehiculo_modal_denuncia').modal('hide');
-					document.querySelector('#doc_vehiculo').setAttribute('src','');
+					document.querySelector('#doc_vehiculo').setAttribute('src', '');
 					document.querySelector('#foto_vehiculo').setAttribute('src', '');
 
 					document.getElementById("form_vehiculo_da_da").reset();
@@ -1996,42 +2053,42 @@
 					});
 
 					$('#propietario_vehiculo_da').empty();
-							let select_propietario_da = document.querySelector("#propietario_vehiculo_da");
-							const option_vacio_pro = document.createElement('option');
-							option_vacio_pro.value = '';
-							option_vacio_pro.text = '';
-							option_vacio_pro.disabled = true;
-							option_vacio_pro.selected = true;
-							select_propietario_da.add(option_vacio_pro, null);
+					let select_propietario_da = document.querySelector("#propietario_vehiculo_da");
+					const option_vacio_pro = document.createElement('option');
+					option_vacio_pro.value = '';
+					option_vacio_pro.text = '';
+					option_vacio_pro.disabled = true;
+					option_vacio_pro.selected = true;
+					select_propietario_da.add(option_vacio_pro, null);
 
-							personas.forEach(persona => {
-								let primer_apellido = persona.PRIMERAPELLIDO ? persona
-									.PRIMERAPELLIDO : '';
+					personas.forEach(persona => {
+						let primer_apellido = persona.PRIMERAPELLIDO ? persona
+							.PRIMERAPELLIDO : '';
 
-								const option = document.createElement('option');
-								option.value = persona.PERSONAFISICAID;
-								option.text = persona.NOMBRE + ' '.primer_apellido;
-								select_propietario_da.add(option, null);
-							});
+						const option = document.createElement('option');
+						option.value = persona.PERSONAFISICAID;
+						option.text = persona.NOMBRE + ' '.primer_apellido;
+						select_propietario_da.add(option, null);
+					});
 
-							$('#propietario_vehiculo_den').empty();
-							let select_propietario_den = document.querySelector("#propietario_vehiculo_den");
-							const option_vacio_pro_den = document.createElement('option');
-							option_vacio_pro_den.value = '';
-							option_vacio_pro_den.text = '';
-							option_vacio_pro_den.disabled = true;
-							option_vacio_pro_den.selected = true;
-							select_propietario_den.add(option_vacio_pro_den, null);
+					$('#propietario_vehiculo_den').empty();
+					let select_propietario_den = document.querySelector("#propietario_vehiculo_den");
+					const option_vacio_pro_den = document.createElement('option');
+					option_vacio_pro_den.value = '';
+					option_vacio_pro_den.text = '';
+					option_vacio_pro_den.disabled = true;
+					option_vacio_pro_den.selected = true;
+					select_propietario_den.add(option_vacio_pro_den, null);
 
-							personas.forEach(persona => {
-								let primer_apellido = persona.PRIMERAPELLIDO ? persona
-									.PRIMERAPELLIDO : '';
+					personas.forEach(persona => {
+						let primer_apellido = persona.PRIMERAPELLIDO ? persona
+							.PRIMERAPELLIDO : '';
 
-								const option = document.createElement('option');
-								option.value = persona.PERSONAFISICAID;
-								option.text = persona.NOMBRE + ' '.primer_apellido;
-								select_propietario_den.add(option, null);
-							});
+						const option = document.createElement('option');
+						option.value = persona.PERSONAFISICAID;
+						option.text = persona.NOMBRE + ' '.primer_apellido;
+						select_propietario_den.add(option, null);
+					});
 					Swal.fire({
 						icon: 'success',
 						text: 'Persona física actualizada correctamente',
@@ -2743,7 +2800,7 @@
 
 					document.querySelector('#situacion_vehiculo_den').value = vehiculo.SITUACION ?
 						vehiculo.SITUACION : '';
-						document.querySelector('#propietario_vehiculo_den').value = vehiculo.PERSONAFISICAIDPROPIETARIO ?
+					document.querySelector('#propietario_vehiculo_den').value = vehiculo.PERSONAFISICAIDPROPIETARIO ?
 						vehiculo.PERSONAFISICAIDPROPIETARIO : '';
 					if (vehiculo.ESTADOEXTRANJEROIDPLACA) {
 						document.getElementById("estado_extranjero_vehiculo_da_ad").style.display = "block";
@@ -2755,7 +2812,7 @@
 					document.querySelector('#marca_ad_exacta_da').value = vehiculo.MARCADEXAC ? vehiculo.MARCADEXAC : '';
 
 					document.querySelector('#distribuidor_vehiculo_da_ad').value = vehiculo.VEHICULODISTRIBUIDORID ? vehiculo.VEHICULODISTRIBUIDORID : '';
-					
+
 					document.querySelector('#transmision_vehiculo_da').value = vehiculo.TRANSMISION ? vehiculo.TRANSMISION : '';
 					document.querySelector('#traccion_vehiculo_da').value = vehiculo.TRACCION ? vehiculo.TRACCION : '';
 					document.querySelector('#seguro_vigente_vehiculo_da').value = vehiculo.SEGUROVIGENTE ? vehiculo.SEGUROVIGENTE : '';
