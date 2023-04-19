@@ -1978,6 +1978,7 @@ class DashboardController extends BaseController
 		$estado = empty($this->request->getPost('estado')) ? 2 : $this->request->getPost('estado');
 		$notas = $this->request->getPost('notas');
 		$tiposExpedienteId = $this->request->getPost('tipo_expediente');
+		$telefonica = $this->request->getPost('denuncia_tel');
 
 		try {
 			if (!empty($tiposExpedienteId) && !empty($folio) && !empty($municipio) && !empty($estado) && !empty($notas)) {
@@ -2098,6 +2099,9 @@ class DashboardController extends BaseController
 					$folioRow['HECHONARRACION'] = $narracion;
 					$folioRow['HECHOFECHA'] = $fecha;
 					$folioRow['MUNICIPIOASIGNADOID'] = $municipio;
+					if ($telefonica == 'S') {
+						$folioRow['TIPODENUNCIA'] = 'TE';
+					}
 
 					if ($expedienteCreado->status == 201) {
 						$folioRow['EXPEDIENTEID'] = $expedienteCreado->EXPEDIENTEID;

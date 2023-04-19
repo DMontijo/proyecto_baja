@@ -431,6 +431,7 @@
 		} else {
 			if (municipio_empleado.value != '') {
 				let descripcion = document.querySelector('#notas_caso_salida').value;
+				var denuncia_tel = document.querySelector('input[name="denuncia_tel"]:checked');
 
 				if (
 					descripcion &&
@@ -442,7 +443,9 @@
 						'municipio': municipio_empleado.value,
 						'estado': 2,
 						'notas': descripcion,
-						'tipo_expediente': Number(tipoSalida.value)
+						'tipo_expediente': Number(tipoSalida.value),
+						'denuncia_tel': denuncia_tel.value,
+
 					}
 					const dataFolio = {
 						'folio': inputFolio.value,
