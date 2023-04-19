@@ -23,6 +23,7 @@ const $listaDeDispositivosVideo = document.querySelector("#listaDeDispositivosVi
 const $listaDeDispositivosAudio = document.querySelector("#listaDeDispositivosAudio");
 const $video = document.querySelector("#video");
 const acceptConfiguration = document.querySelector("#acceptConfiguration");
+let stream;
 
 //VIDEO Y AUDIO AGENTE
 const video_agente_on = document.querySelector("#on-video-agent");
@@ -88,6 +89,8 @@ recargar_denunciante_btn.addEventListener("click", () => {
 // });
 disponible_connect.addEventListener("click", () => {
 	console.log("Conectando agente...");
+	console.log(videoSelected, 'video');
+	console.log(audioSelected, 'audio');
 	disponible_connect.disabled = true;
 	agentVideoService.connetAgent(
 		() => {
@@ -377,6 +380,10 @@ enviar_marca.addEventListener("click", () => {
 acceptConfiguration.addEventListener("click", () => {
 	videoSelected = $("#listaDeDispositivosVideo option:selected").text();
 	audioSelected = $("#listaDeDispositivosAudio option:selected").text();
+	stream.getTracks().forEach(function(track) {
+		track.stop();
+	});
+	$(mediaDevicesModal).modal("hide");
 });
 
 // function pad(val) {
@@ -581,7 +588,7 @@ function initMediaDevices() {
 		$estado.innerHTML = "Tu navegador no soporta este funcionamiento. Sube una foto desde tu dispositivo.";
 		return;
 	}
-	let stream;
+	// let stream;
 
 	if (!isSafari) {
 		navigator.mediaDevices.enumerateDevices().then(function(dispositivos) {
