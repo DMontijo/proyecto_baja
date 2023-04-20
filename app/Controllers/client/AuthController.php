@@ -138,7 +138,7 @@ class AuthController extends BaseController
 
 		$email = \Config\Services::email();
 		$email->setTo($to);
-		$email->setSubject('Cambio de contraseña');
+		$email->setSubject('Cambio de contraseña.');
 		$body = view('email_template/reset_password_template.php', ['password' => $password]);
 		$email->setMessage($body);
 

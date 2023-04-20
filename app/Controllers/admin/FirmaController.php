@@ -1204,7 +1204,7 @@ class FirmaController extends BaseController
 		}
 		$email = \Config\Services::email();
 		$email->setTo($to);
-		$email->setSubject('¡EMERGENCIA!');
+		$email->setSubject('Alerta, revisar folio');
 		$body = view('email_template/alerta_email_template.php',['folio' => $folio, 'year'=>$year ]);
 		$email->setMessage($body);
 		
@@ -1279,7 +1279,7 @@ class FirmaController extends BaseController
 
 		$email = \Config\Services::email();
 		$email->setTo($to_orden_proteccion);
-		$email->setSubject('FGEBC - ORDENES DE PROTECCIÓN');
+		$email->setSubject('FGEBC - Ordenes de protección');
 		$body = view('email_template/orden_proteccion_email_template.php', ['municipio' => $municipiodescr, 'fecha' => $fecha]);
 		$email->setMessage($body);
 		foreach ($documentos as $key => $documento) {
