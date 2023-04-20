@@ -23,7 +23,7 @@
 		</p>
 	<?php } else { ?>
 		<p style="text-align:justify;">
-			Estimado usuario, el Centro de Denuncia Tecnológica de la Fiscalía General del Estado de Baja California, tiene por recibido su folio de atención número <strong><?= $folio . '/' . $year ?></strong> respecto del cual se generó carta derivación, misma que se adjunta al presente correo, lo anterior en virtud de que la solicitud planteada corresponde a diversa autoridad.
+			Estimado usuario, el Centro de Denuncia Tecnológica de la Fiscalía General del Estado de Baja California, tiene por recibido su folio de atención número <strong><?= $folio . '/' . $year ?></strong> respecto del cual se generó derivación o canalización, misma que se adjunta al presente correo, lo anterior en virtud de que la solicitud planteada corresponde a diversa autoridad.
 		</p>
 		<br>
 		<p style="text-align:center;">
