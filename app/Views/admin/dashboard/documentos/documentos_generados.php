@@ -833,6 +833,7 @@
 
 
 					if (response.status == 1) {
+						tinymce.get("documento").setContent('');
 						const documentos = response.documentos;
 						Swal.fire({
 							icon: 'success',
