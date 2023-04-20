@@ -7,19 +7,6 @@
 <?= $this->section('content') ?>
 
 <div class="container">
-	<?php
-	// $email = \Config\Services::email();
-
-	// $email->setTo('abdiel_flores@outlook.com');
-	// $email->setSubject('Email Test');
-	// $email->setMessage('Testing the email class.');
-
-	// $sending = $email->send(false);
-
-	// var_dump($sending);
-	// var_dump($email->printDebugger(['headers']));
-	// exit;
-	?>
 	<!--Versión escritorio-->
 	<div class="row mb-5">
 		<div class="col-12">
