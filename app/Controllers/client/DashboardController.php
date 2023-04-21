@@ -339,7 +339,7 @@ class DashboardController extends BaseController
 		$session = session();
 		$folioDenunciante = $this->_folioModel->where('DENUNCIANTEID', session('DENUNCIANTEID'))->where('STATUS', 'ABIERTO')->orWhere('STATUS', 'EN PROCESO')->countAllResults();
 
-		if ($folioDenunciante >= 1) {
+		if ($folioDenunciante == 1) {
 			return redirect()->to(base_url('/denuncia/dashboard'))->with('message_error', 'Ya tienes un folio, no puedes generar una nueva denuncia.');
 		}
 
