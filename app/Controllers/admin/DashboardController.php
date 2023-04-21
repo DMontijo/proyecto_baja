@@ -7300,6 +7300,8 @@ class DashboardController extends BaseController
 		$data = (object) array();
 		if (session('ROLID') == 11 || session('ROLID') == 1 || session('ROLID') == 6 || session('ROLID') == 7 || session('ROLID') == 2) {
 			$data->folio = $this->_folioModel->videos_expediente_model(1);
+		} else if (session('ROLID') == 3 || session('ROLID') == 4 || session('ROLID') == 8 || session('ROLID') == 9 || session('ROLID') == 10) {
+			$data->folio = $this->_folioModel->videos_expediente_model(4);
 		} else if (session('ROLID') == 12) {
 			$data->folio = $this->_folioModel->videos_expediente_model(3);
 		} else {
