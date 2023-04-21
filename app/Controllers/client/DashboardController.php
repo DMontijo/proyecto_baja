@@ -337,11 +337,11 @@ class DashboardController extends BaseController
 	public function create()
 	{
 		$session = session();
-		// $folioDenunciante = $this->_folioModel->where('DENUNCIANTEID', session('DENUNCIANTEID'))->where('STATUS', 'ABIERTO')->orWhere('STATUS', 'EN PROCESO')->countAllResults();
+		$folioDenunciante = $this->_folioModel->where('DENUNCIANTEID', session('DENUNCIANTEID'))->where('STATUS', 'ABIERTO')->orWhere('STATUS', 'EN PROCESO')->countAllResults();
 
-		// if ($folioDenunciante >= 1) {
-		// 	return redirect()->to(base_url('/denuncia/dashboard'))->with('message_error', 'Ya tienes un folio, no puedes generar una nueva denuncia.');
-		// }
+		if ($folioDenunciante >= 1) {
+			return redirect()->to(base_url('/denuncia/dashboard'))->with('message_error', 'Ya tienes un folio, no puedes generar una nueva denuncia.');
+		}
 
 		if (($this->request->getPost('es_menor') == null || $this->request->getPost('es_menor') == '')
 			|| ($this->request->getPost('es_tercera_edad') == null || $this->request->getPost('es_tercera_edad') == '')
