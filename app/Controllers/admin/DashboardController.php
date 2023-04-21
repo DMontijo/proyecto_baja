@@ -1986,35 +1986,35 @@ class DashboardController extends BaseController
 				$folioVehiculoRow = $this->_folioVehiculoModel->where('ANO', $year)->where('FOLIOID', $folio)->findAll();
 
 				if ($folioRow) {
-					if ($folioRow['TIPODENUNCIA']=='VD') {
+					if ($folioRow['TIPODENUNCIA'] == 'VD') {
 						if (($folioRow['MUNICIPIOID'] == '' || $folioRow['MUNICIPIOID'] == NULL)
-						|| ($folioRow['HECHOLOCALIDADID'] == '' || $folioRow['HECHOLOCALIDADID'] == NULL)
-						|| ($folioRow['HECHOCOLONIADESCR'] == '' || $folioRow['HECHOCOLONIADESCR'] == NULL)
-						|| ($folioRow['HECHOCALLE'] == '' || $folioRow['HECHOCALLE'] == NULL)
-						|| ($folioRow['HECHONUMEROCASA'] == '' || $folioRow['HECHONUMEROCASA'] == NULL)
-						|| ($folioRow['HECHOLUGARID'] == '' || $folioRow['HECHOLUGARID'] == NULL)
-						|| ($folioRow['HECHOFECHA'] == '' || $folioRow['HECHOFECHA'] == NULL)
-						|| ($folioRow['HECHOHORA'] == '' || $folioRow['HECHOHORA'] == NULL)
-						|| ($folioRow['HECHONARRACION'] == '' || $folioRow['HECHONARRACION'] == NULL)
-						|| ($folioRow['HECHODELITO'] == '' || $folioRow['HECHODELITO'] == NULL)
-					) {
-						throw new \Exception('Actualiza los campos de información del hecho.');
-					}
-					}else{
+							|| ($folioRow['HECHOLOCALIDADID'] == '' || $folioRow['HECHOLOCALIDADID'] == NULL)
+							|| ($folioRow['HECHOCOLONIADESCR'] == '' || $folioRow['HECHOCOLONIADESCR'] == NULL)
+							|| ($folioRow['HECHOCALLE'] == '' || $folioRow['HECHOCALLE'] == NULL)
+							|| ($folioRow['HECHONUMEROCASA'] == '' || $folioRow['HECHONUMEROCASA'] == NULL)
+							|| ($folioRow['HECHOLUGARID'] == '' || $folioRow['HECHOLUGARID'] == NULL)
+							|| ($folioRow['HECHOFECHA'] == '' || $folioRow['HECHOFECHA'] == NULL)
+							|| ($folioRow['HECHOHORA'] == '' || $folioRow['HECHOHORA'] == NULL)
+							|| ($folioRow['HECHONARRACION'] == '' || $folioRow['HECHONARRACION'] == NULL)
+							|| ($folioRow['HECHODELITO'] == '' || $folioRow['HECHODELITO'] == NULL)
+						) {
+							throw new \Exception('Actualiza los campos de información del hecho.');
+						}
+					} else {
 						if (($folioRow['MUNICIPIOID'] == '' || $folioRow['MUNICIPIOID'] == NULL)
-						|| ($folioRow['HECHOLOCALIDADID'] == '' || $folioRow['HECHOLOCALIDADID'] == NULL)
-						|| ($folioRow['HECHOCOLONIADESCR'] == '' || $folioRow['HECHOCOLONIADESCR'] == NULL)
-						|| ($folioRow['HECHOCALLE'] == '' || $folioRow['HECHOCALLE'] == NULL)
-						|| ($folioRow['HECHONUMEROCASA'] == '' || $folioRow['HECHONUMEROCASA'] == NULL)
-						|| ($folioRow['HECHOLUGARID'] == '' || $folioRow['HECHOLUGARID'] == NULL)
-						|| ($folioRow['HECHOFECHA'] == '' || $folioRow['HECHOFECHA'] == NULL)
-						|| ($folioRow['HECHOHORA'] == '' || $folioRow['HECHOHORA'] == NULL)
-						|| ($folioRow['HECHONARRACION'] == '' || $folioRow['HECHONARRACION'] == NULL)
-					) {
-						throw new \Exception('Actualiza los campos de información del hecho.');
+							|| ($folioRow['HECHOLOCALIDADID'] == '' || $folioRow['HECHOLOCALIDADID'] == NULL)
+							|| ($folioRow['HECHOCOLONIADESCR'] == '' || $folioRow['HECHOCOLONIADESCR'] == NULL)
+							|| ($folioRow['HECHOCALLE'] == '' || $folioRow['HECHOCALLE'] == NULL)
+							|| ($folioRow['HECHONUMEROCASA'] == '' || $folioRow['HECHONUMEROCASA'] == NULL)
+							|| ($folioRow['HECHOLUGARID'] == '' || $folioRow['HECHOLUGARID'] == NULL)
+							|| ($folioRow['HECHOFECHA'] == '' || $folioRow['HECHOFECHA'] == NULL)
+							|| ($folioRow['HECHOHORA'] == '' || $folioRow['HECHOHORA'] == NULL)
+							|| ($folioRow['HECHONARRACION'] == '' || $folioRow['HECHONARRACION'] == NULL)
+						) {
+							throw new \Exception('Actualiza los campos de información del hecho.');
+						}
 					}
-					}
-					
+
 
 					foreach ($folioVehiculoRow as $key => $vehiculo) {
 						if (($vehiculo['SITUACION'] == '' || $vehiculo['SITUACION'] == NULL)
@@ -7298,7 +7298,7 @@ class DashboardController extends BaseController
 	public function videos_expediente()
 	{
 		$data = (object) array();
-		if (session('ROLID') == 11 || session('ROLID') == 1 || session('ROLID') == 7 || session('ROLID') == 2) {
+		if (session('ROLID') == 11 || session('ROLID') == 1 || session('ROLID') == 6 || session('ROLID') == 7 || session('ROLID') == 2) {
 			$data->folio = $this->_folioModel->videos_expediente_model(1);
 		} else if (session('ROLID') == 12) {
 			$data->folio = $this->_folioModel->videos_expediente_model(3);
