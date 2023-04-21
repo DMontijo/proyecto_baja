@@ -226,6 +226,12 @@ class FolioModel extends Model
 	}
 
 
+	public function countFolioDenunciante($denuncianteid){
+		$strQuery = 'SELECT COUNT(*) AS "folios_pendientes" FROM FOLIO WHERE DENUNCIANTEID = '. $denuncianteid .' AND (STATUS = "ABIERTO" OR STATUS = "EN PROCESO")';
+		$result = $this->db->query($strQuery)->getRow();
+
+		return $result;
+	}
 
 	public function videos_expediente_model($tipo)
 	{
