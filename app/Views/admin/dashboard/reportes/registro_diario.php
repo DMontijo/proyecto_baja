@@ -28,13 +28,10 @@
 								<div id="filtros" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
 									<div class="card-body">
 										<form action="<?= base_url() ?>/admin/dashboard/registro_diario" method="post" enctype="multipart/form-data" class="row needs-validation" novalidate>
-
-
-
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
 												<label for="agente_registro" class="form-label font-weight-bold">Agente:</label>
 												<select class="form-control" id="agente_registro" name="agente_registro">
-														<option selected value="">Todos los agentes</option>
+													<option selected value="">Todos los agentes</option>
 													<?php foreach ($body_data->empleados as $index => $empleado) { ?>
 														<option <?= isset($body_data->filterParams->AGENTEATENCIONID) ? ($body_data->filterParams->AGENTEATENCIONID == $empleado->ID ? 'selected' : '') : null ?> value="<?= $empleado->ID ?>"> <?= $empleado->NOMBRE . ' ' . $empleado->APELLIDO_PATERNO . ' ' . $empleado->APELLIDO_MATERNO ?> </option>
 													<?php } ?>
@@ -110,43 +107,57 @@
 								<?php } ?>
 							</div>
 						</div>
-						<table id="registro_diario" class="table table-bordered table-striped">
-							<thead>
-								<tr>
-									<th class="text-center">FOLIO</th>
-									<th class="text-center">AÑO</th>
-									<th class="text-center">TIPO</th>
-									<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
-									<th class="text-center">FECHA DE SALIDA</th>
-									<th class="text-center">ESTADO FOLIO</th>
-									<th class="text-center">NOMBRE DEL DENUNCIANTE</th>
-									<th class="text-center">NOMBRE DEL AGENTE</th>
-									<th class="text-center">MUNICIPIO DE ATENCIÓN</th>
-								</tr>
-							</thead>
-							<tbody>
+						<div class="row" style="font-size:10px;">
+							<div class="col-12" style="overflow:auto;">
+								<table id="registro_diario" class="table table-bordered table-striped table-sm">
+									<thead>
+										<tr>
+											<th class="text-center">FOLIO</th>
+											<th class="text-center">AÑO</th>
+											<th class="text-center">MEDIO</th>
+											<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
+											<th class="text-center">FECHA DE SALIDA</th>
+											<th class="text-center">ESTADO FOLIO</th>
+											<th class="text-center">NOMBRE DEL DENUNCIANTE</th>
+											<th class="text-center">NOMBRE DEL AGENTE</th>
+											<th class="text-center">MUNICIPIO DE ATENCIÓN</th>
+										</tr>
+									</thead>
+									<tbody>
 
-								<?php
-								foreach ($body_data->result as $index => $folio) {
-									$expedienteid = '';
-									if (isset($folio->EXPEDIENTEID)) {
-										$arrayExpediente = str_split($folio->EXPEDIENTEID);
-										$expedienteid = $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
-									} ?>
-									<tr>
-										<td class="text-center font-weight-bold"><?= $folio->FOLIOID ?></td>
-										<td class="text-center"><?= $folio->ANO ?></td>
-										<td class="text-center"><?= $folio->TIPODENUNCIA == 'VD' ? 'CDTEC' : 'ANÓNIMA' ?></td>
-										<td class="text-center"><?= $expedienteid ? $expedienteid . '/' . $folio->TIPOEXPEDIENTECLAVE :  '' ?></td>
-										<td class="text-center"><?= $folio->FECHASALIDA ?></td>
-										<td class="text-center"><?= $folio->STATUS ?></td>
-										<td class="text-center"><?= $folio->N_DENUNCIANTE . ' ' . $folio->APP_DENUNCIANTE . ' ' . $folio->APM_DENUNCIANTE ?></td>
-										<td class="text-center"><?= $folio->N_AGENT . ' ' . $folio->APP_AGENT . ' ' . $folio->APM_AGENT ?></td>
-										<td class="text-center"><?= $folio->MUNICIPIODESCR ?></td>
-									</tr>
-								<?php } ?>
-							</tbody>
-						</table>
+										<?php
+										foreach ($body_data->result as $index => $folio) {
+											$expedienteid = '';
+											if (isset($folio->EXPEDIENTEID)) {
+												$arrayExpediente = str_split($folio->EXPEDIENTEID);
+												$expedienteid = $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
+											}
+
+											$tipo = '';
+											if ($folio->TIPODENUNCIA == 'VD') {
+												$tipo = 'VIDEO';
+											} else if ($folio->TIPODENUNCIA == 'DA') {
+												$tipo = 'ANÓNIMA';
+											} else {
+												$tipo = 'TELEFÓNICA';
+											}
+										?>
+											<tr>
+												<td class="text-center font-weight-bold"><?= $folio->FOLIOID ?></td>
+												<td class="text-center"><?= $folio->ANO ?></td>
+												<td class="text-center"><?= $tipo ?></td>
+												<td class="text-center font-weight-bold"><?= $expedienteid ? $expedienteid . '/' . $folio->TIPOEXPEDIENTECLAVE :  '' ?></td>
+												<td class="text-center"><?= $folio->FECHASALIDA ?></td>
+												<td class="text-center"><?= $folio->STATUS ?></td>
+												<td class="text-center"><?= $folio->N_DENUNCIANTE . ' ' . $folio->APP_DENUNCIANTE . ' ' . $folio->APM_DENUNCIANTE ?></td>
+												<td class="text-center"><?= $folio->N_AGENT . ' ' . $folio->APP_AGENT . ' ' . $folio->APM_AGENT ?></td>
+												<td class="text-center"><?= $folio->MUNICIPIODESCR ?></td>
+											</tr>
+										<?php } ?>
+									</tbody>
+								</table>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -187,8 +198,11 @@
 			responsive: false,
 			lengthChange: false,
 			autoWidth: true,
-			ordering: false,
-			searching: false,
+			ordering: true,
+			order: [
+				[0, 'desc'],
+			],
+			searching: true,
 			pageLength: 100,
 			// dom: 'Bfrtip',
 			// buttons: [
@@ -199,7 +213,8 @@
 			}
 		});
 	});
-
+</script>
+<script>
 	function collapse_filter() {
 		if (document.querySelector('#filtros').classList.contains('show')) {
 			document.querySelector('#filtros').classList.remove('show');
@@ -214,14 +229,14 @@
 	<script>
 		// alert(document.getElementById('agente_registro').innerHTML);
 		let form = document.querySelector('#formExcel');
-		
+
 		form.addEventListener('submit', function(event) {
 			event.preventDefault();
 			text = `
 			<p>
 				El reporte sera generado de acuerdo a la siguiente información<br>
 				<ul style="text-align:left;">
-						<li><span style="font-weight:bold;">Agente:</span> <?=  isset($body_data->filterParams->AGENTENOMBRE) ? $body_data->filterParams->AGENTENOMBRE : ''?></li>
+						<li><span style="font-weight:bold;">Agente:</span> <?= isset($body_data->filterParams->AGENTENOMBRE) ? $body_data->filterParams->AGENTENOMBRE : '' ?></li>
 						<li><span style="font-weight:bold;">Fecha inicio:</span> <?= isset($body_data->filterParams->fechaInicio) ? $body_data->filterParams->fechaInicio : '' ?></li>
 						<li><span style="font-weight:bold;">Fecha cierre:</span> <?= isset($body_data->filterParams->fechaFin) ? $body_data->filterParams->fechaFin : '' ?></li>
 						<li><span style="font-weight:bold;">Hora inicio:</span> <?= isset($body_data->filterParams->horaInicio) ? $body_data->filterParams->horaInicio : '' ?></li>

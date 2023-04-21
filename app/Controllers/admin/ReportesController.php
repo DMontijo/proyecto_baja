@@ -648,8 +648,8 @@ class ReportesController extends BaseController
 		$spreadSheet->getProperties()
 			->setCreator("Fiscalía General del Estado de Baja California")
 			->setLastModifiedBy("Fiscalía General del Estado de Baja California")
-			->setTitle("REGISTRO_DIARIO" . $date)
-			->setSubject("REGISTRO_DIARIO" . $date)
+			->setTitle("REGISTRO_DIARIO_" . $date)
+			->setSubject("REGISTRO_DIARIO_" . $date)
 			->setDescription(
 				"El presente documento fue generado por el Centro de Denuncia Tecnológica de la Fiscalía General del Estado de Baja California."
 			)

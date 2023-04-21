@@ -147,7 +147,8 @@
 												$tipo = 'ANÓNIMA';
 											} else {
 												$tipo = 'TELEFÓNICA';
-											} ?>
+											}
+										?>
 											<tr>
 												<td class="text-center font-weight-bold"><?= $folio->FOLIOID ?></td>
 												<td class="text-center"><?= $folio->ANO ?></td>
