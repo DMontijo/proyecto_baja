@@ -607,6 +607,7 @@ class FoliosController extends BaseController
 		} else {
 			$data->year = $this->request->getGet('year');
 		}
+
 		// Catálogos
 		$data->delitosUsuarios = $this->_delitosUsuariosModel->asObject()->orderBy('DELITO', 'ASC')->findAll();
 		$lugares = $this->_hechoLugarModel->orderBy('HECHODESCR', 'ASC')->findAll();
@@ -715,6 +716,10 @@ class FoliosController extends BaseController
 
 		$data->datosFolio = $this->_folioModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $data->year)->first();
 
+		if ($data->datosFolio->MUNICIPIOASIGNADOID  && $data->datosFolio->TIPOEXPEDIENTEID) {
+			$data->datosFolio = $this->_folioModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $data->year)->join('MUNICIPIO', 'FOLIO.MUNICIPIOASIGNADOID = MUNICIPIO.MUNICIPIOID AND MUNICIPIO.ESTADOID =2')->join('TIPOEXPEDIENTE', 'FOLIO.TIPOEXPEDIENTEID = TIPOEXPEDIENTE.TIPOEXPEDIENTEID')->first();
+		}
+
 		if ($data->datosFolio->AGENTEASIGNADOID) {
 			$data->datosFolio = $this->_folioModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $data->year)->join('MUNICIPIO', 'FOLIO.MUNICIPIOASIGNADOID = MUNICIPIO.MUNICIPIOID AND MUNICIPIO.ESTADOID =2')->join('EMPLEADOS', 'EMPLEADOS.EMPLEADOID = FOLIO.AGENTEASIGNADOID')->join('TIPOEXPEDIENTE', 'FOLIO.TIPOEXPEDIENTEID = TIPOEXPEDIENTE.TIPOEXPEDIENTEID')->first();
 			if ($data->datosFolio) {
@@ -724,14 +729,15 @@ class FoliosController extends BaseController
 			}
 		}
 
+
 		if ($data->datosFolio->INSTITUCIONREMISIONMUNICIPIOID && $data->datosFolio->STATUS == 'DERIVADO') {
 			$data->datosFolio = $this->_folioModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $data->year)->join('MUNICIPIO', 'FOLIO.INSTITUCIONREMISIONMUNICIPIOID = MUNICIPIO.MUNICIPIOID AND MUNICIPIO.ESTADOID =2')->join('DERIVACIONES', 'FOLIO.INSTITUCIONREMISIONID = DERIVACIONES.INSTITUCIONREMISIONID AND FOLIO.INSTITUCIONREMISIONMUNICIPIOID = DERIVACIONES.MUNICIPIOID')->first();
 		}
-
+		
 		if ($data->datosFolio->INSTITUCIONREMISIONMUNICIPIOID && $data->datosFolio->STATUS == 'CANALIZADO') {
 			$data->datosFolio = $this->_folioModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $data->year)->join('MUNICIPIO', 'FOLIO.INSTITUCIONREMISIONMUNICIPIOID = MUNICIPIO.MUNICIPIOID AND MUNICIPIO.ESTADOID =2')->join('CANALIZACIONES', 'FOLIO.INSTITUCIONREMISIONID = CANALIZACIONES.INSTITUCIONREMISIONID AND FOLIO.INSTITUCIONREMISIONMUNICIPIOID = CANALIZACIONES.MUNICIPIOID')->first();
 		}
-
+		
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 		// var_dump($data);exit;
