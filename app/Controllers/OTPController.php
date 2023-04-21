@@ -63,6 +63,7 @@ class OTPController extends BaseController
 			$email->setSubject('Nuevo código');
 			$body = view('email_template/token_email_template', ['otp' => $otp]);
 			$email->setMessage($body);
+			$email->setAltMessage('Se ha generado un nuevo código.SU CÓDIGO ES: ' . $otp);
 
 			$data = [
 				'CODIGO_OTP' => $otp,

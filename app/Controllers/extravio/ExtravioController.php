@@ -244,6 +244,7 @@ class ExtravioController extends BaseController
 		$email->setSubject('Te estamos atendiendo');
 		$body = view('email_template/password_email_constancia.php', ['email' => $to, 'password' => $password]);
 		$email->setMessage($body);
+		$email->setAltMessage('Usted ha generado un nuevo registro en el Centro de Denuncia Tecnológica.ara acceder debes ingresar los siguientes datos. USUARIO: ' . $to . 'CONTRASEÑA:' .$password  );
 
 		if ($email->send()) {
 			return true;
@@ -264,6 +265,7 @@ class ExtravioController extends BaseController
 		$email->setSubject('Cambio de contraseña');
 		$body = view('email_template/reset_password_template.php', ['password' => $password]);
 		$email->setMessage($body);
+		$email->setAltMessage('Usted ha generado un nuevo registro en el Centro de Denuncia Tecnológica.ara acceder debes ingresar los siguientes datos. USUARIO: ' . $to . 'CONTRASEÑA:' .$password  );
 
 		if ($email->send()) {
 			return redirect()->to(base_url('/constancia_extravio'))->with('message_success', 'Verifica tu nueva contraseña en tu correo.');

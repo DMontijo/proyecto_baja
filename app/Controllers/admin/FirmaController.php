@@ -994,7 +994,7 @@ class FirmaController extends BaseController
 		$email->setSubject('Constancia de extravío firmada');
 		$body = view('email_template/constancia_firmada_email_template.php');
 		$email->setMessage($body);
-
+		$email->setAltMessage('SE HA FIRMADO TU CONSTANCIA SOLICITADA:Ingrese a su cuenta en el Centro de Denuncia Tecnológica e inicie sesión para descargarla nuevamente');
 		$email->attach($pdf, 'attachment', 'Constancia_' . $folio . '_' . $year . '.pdf', 'application/pdf');
 		$email->attach($xml, 'attachment', 'Constancia_' . $folio . '_' . $year . '.xml', 'application/xml');
 
@@ -1057,6 +1057,19 @@ class FirmaController extends BaseController
 			$email->setSubject('FGEBC - Documentos folio: ' . $folio . '/' . $folioM->ANO);
 			$body = view('email_template/documentos_firmados_email_template.php', ['municipio' => $municipio, 'fecha' => $fecha_actual, 'agente' => $agente, 'expediente' => $folioM->EXPEDIENTEID ? $expediente : 'SIN EXPEDIENTE', 'folio' => $folio, 'year' => $folioM->ANO, 'tipoexpediente' => $folioM->TIPOEXPEDIENTEID ? ($tipoExpediente  == "" ? $tipoExpediente : $tipoExpediente->TIPOEXPEDIENTEDESCR) : $folioM->STATUS, 'status' => $folioM->STATUS, 'delito' => $delito, 'imputado' => $imputado, 'claveexpediente' => $folioM->TIPOEXPEDIENTEID ? ($tipoExpediente  == "" ? $tipoExpediente : $tipoExpediente->TIPOEXPEDIENTECLAVE) : $folioM->STATUS]);
 			$email->setMessage($body);
+
+			if ($folioM->STATUS == 'EXPEDIENTE') {
+				$expediente_guiones = '';
+				$arrayExpediente = str_split($folioM->EXPEDIENTEID);
+				$expediente_guiones =  $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
+				$claveexpediente =  $folioM->TIPOEXPEDIENTEID ? ($tipoExpediente  == "" ? $tipoExpediente : $tipoExpediente->TIPOEXPEDIENTECLAVE) : $folioM->STATUS;
+				$email->setAltMessage('Estimado usuario, el Centro de Denuncia Tecnológica de la Fiscalía General del Estado de Baja California, tiene por recibido su folio' . $folio . '/' . $year .', mediante el cual expone hechos presumiblemente como delito, por lo que se generó el expediente número'. $expediente_guiones .'/'. $claveexpediente .
+				 ', por la probable comisión del delito ' . $delito .'y/o lo que resulte en contra de' . $imputado . '. Se le informa que en el expediente generado se ordenaron los documentos que se adjuntan al presente correo. Para consultar el estado de su expediente puede ingresar a https://cdtec.fgebc.gob.mx. Lo anterior, con fundamento en lo dispuesto por los artículos 20 inciso C y 21 de la Constitución Política de los Estados Unidos Mexicanos, el numeral 131 fracción II del Código Nacional de Procedimientos Penales, así como el artículo 22 fracción II y demás relativos de la Ley Orgánica de la Fiscalía General del Estado de Baja California.'.
+					isset($municipio) ? $municipio->MUNICIPIODESCR . ', ' : '' . 'BAJA CALIFORNIA' . $fecha_actual .'LIC.' . $agente .'AGENTE DEL MINISTERIO PÚBLICO CON ADSCRIPCIÓN CENTRO DE DENUNCIA TECNOLÓGICA DE LA FISCALÍA GENERAL DEL ESTADO DE BAJA CALIFORNIA');
+			} else {
+				$email->setAltMessage('Estimado usuario, el Centro de Denuncia Tecnológica de la Fiscalía General del Estado de Baja California, tiene por recibido su folio' . $folio . '/' . $year .',respecto del cual se generó derivación o canalización, misma que se adjunta al presente correo, lo anterior en virtud de que la solicitud planteada corresponde a diversa autoridad.'.
+				isset($municipio) ? $municipio->MUNICIPIODESCR . ', ' : '' . 'BAJA CALIFORNIA' . $fecha_actual .'LIC.' . $agente .'AGENTE DEL MINISTERIO PÚBLICO CON ADSCRIPCIÓN CENTRO DE DENUNCIA TECNOLÓGICA DE LA FISCALÍA GENERAL DEL ESTADO DE BAJA CALIFORNIA');
+			}
 
 
 			if ($documento->TIPODOC == 'DENUNCIA ANONIMA') {
@@ -1141,7 +1154,18 @@ class FirmaController extends BaseController
 			$body = view('email_template/documentos_firmados_email_template.php', ['municipio' => $municipio, 'fecha' => $fecha_actual, 'agente' => $agente, 'expediente' => $folioM->EXPEDIENTEID ? $expediente : 'SIN EXPEDIENTE', 'folio' => $folio, 'year' => $folioM->ANO, 'tipoexpediente' => $folioM->TIPOEXPEDIENTEID ? ($tipoExpediente  == "" ? $tipoExpediente : $tipoExpediente->TIPOEXPEDIENTEDESCR) : $folioM->STATUS, 'status' => $folioM->STATUS, 'delito' => $delito, 'imputado' => $imputado, 'claveexpediente' => $folioM->TIPOEXPEDIENTEID ? ($tipoExpediente  == "" ? $tipoExpediente : $tipoExpediente->TIPOEXPEDIENTECLAVE) : $folioM->STATUS]);
 
 			$email->setMessage($body);
-
+			if ($folioM->STATUS == 'EXPEDIENTE') {
+				$expediente_guiones = '';
+				$arrayExpediente = str_split($folioM->EXPEDIENTEID);
+				$expediente_guiones =  $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
+				$claveexpediente =  $folioM->TIPOEXPEDIENTEID ? ($tipoExpediente  == "" ? $tipoExpediente : $tipoExpediente->TIPOEXPEDIENTECLAVE) : $folioM->STATUS;
+				$email->setAltMessage('Estimado usuario, el Centro de Denuncia Tecnológica de la Fiscalía General del Estado de Baja California, tiene por recibido su folio' . $folio . '/' . $year .', mediante el cual expone hechos presumiblemente como delito, por lo que se generó el expediente número'. $expediente_guiones .'/'. $claveexpediente .
+				 ', por la probable comisión del delito ' . $delito .'y/o lo que resulte en contra de' . $imputado . '. Se le informa que en el expediente generado se ordenaron los documentos que se adjuntan al presente correo. Para consultar el estado de su expediente puede ingresar a https://cdtec.fgebc.gob.mx. Lo anterior, con fundamento en lo dispuesto por los artículos 20 inciso C y 21 de la Constitución Política de los Estados Unidos Mexicanos, el numeral 131 fracción II del Código Nacional de Procedimientos Penales, así como el artículo 22 fracción II y demás relativos de la Ley Orgánica de la Fiscalía General del Estado de Baja California.'.
+					isset($municipio) ? $municipio->MUNICIPIODESCR . ', ' : '' . 'BAJA CALIFORNIA' . $fecha_actual .'LIC.' . $agente .'AGENTE DEL MINISTERIO PÚBLICO CON ADSCRIPCIÓN CENTRO DE DENUNCIA TECNOLÓGICA DE LA FISCALÍA GENERAL DEL ESTADO DE BAJA CALIFORNIA');
+			} else {
+				$email->setAltMessage('Estimado usuario, el Centro de Denuncia Tecnológica de la Fiscalía General del Estado de Baja California, tiene por recibido su folio' . $folio . '/' . $year .',respecto del cual se generó derivación o canalización, misma que se adjunta al presente correo, lo anterior en virtud de que la solicitud planteada corresponde a diversa autoridad.'.
+				isset($municipio) ? $municipio->MUNICIPIODESCR . ', ' : '' . 'BAJA CALIFORNIA' . $fecha_actual .'LIC.' . $agente .'AGENTE DEL MINISTERIO PÚBLICO CON ADSCRIPCIÓN CENTRO DE DENUNCIA TECNOLÓGICA DE LA FISCALÍA GENERAL DEL ESTADO DE BAJA CALIFORNIA');
+			}
 			for ($i = 0; $i < count($documento); $i++) {
 				if ($documento[$i]->TIPODOC == 'DENUNCIA ANONIMA') {
 					$pdf = $documento[$i]->PDF;
@@ -1151,7 +1175,7 @@ class FirmaController extends BaseController
 					$xml = $documento[$i]->XML;
 					$email->attach($pdf, 'attachment',  $documento[$i]->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento[$i]->FOLIODOCID . '.pdf', 'application/pdf');
 					$email->attach($xml, 'attachment', $documento[$i]->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento[$i]->FOLIODOCID . '.xml', 'application/xml');
-					if (str_contains($documento[$i]->TIPODOC, "ORDEN DE PROTECCION")) {
+					if (strpos($documento[$i]->TIPODOC, "ORDEN DE PROTECCION")) {
 						array_push($ordenesProteccion, $documento[$i]);
 						$sendPolice = true;
 					}
@@ -1193,29 +1217,29 @@ class FirmaController extends BaseController
 		}
 	}
 
-	public function sendEmailAlertas(){
+	public function sendEmailAlertas()
+	{
 		$folio = $this->request->getPost('folio');
 		$year = $this->request->getPost('year');
 
 		if (ENVIRONMENT == 'development') {
 			$to = 'andrea.solorzano@yocontigo-it.com, otoniel.f@yocontigo-it.com';
-		}else{
+		} else {
 			$to = 'isnad.medel@fgebc.gob.mx, direcciongeneralsejap@fgebc.gob.mx';
 		}
 		$email = \Config\Services::email();
 		$email->setTo($to);
 		$email->setSubject('Alerta, revisar folio');
-		$body = view('email_template/alerta_email_template.php',['folio' => $folio, 'year'=>$year ]);
+		$body = view('email_template/alerta_email_template.php', ['folio' => $folio, 'year' => $year]);
 		$email->setMessage($body);
-		
+		$email->setAltMessage('El folio ' . $folio . '/' . $year .'es un caso de suma importancia. Favor de verificar en el sistema de videodenuncia');
+
 		if ($email->send()) {
 			$email->clear(TRUE);
 			return json_encode((object)['status' => 1]);
 		} else {
 			return json_encode((object)['status' => 0]);
 		}
-
-
 	}
 	public function sendEmailOrdenesProtección($municipioid, $municipiodescr, $fecha, $documentos)
 	{
@@ -1282,6 +1306,9 @@ class FirmaController extends BaseController
 		$email->setSubject('FGEBC - Ordenes de protección');
 		$body = view('email_template/orden_proteccion_email_template.php', ['municipio' => $municipiodescr, 'fecha' => $fecha]);
 		$email->setMessage($body);
+		$email->setAltMessage('Anteponiendo un cordial saludo, a través del presente se adjunta medida de protección emergente generada en el Centro de Denuncia Tecnológica de la Fiscalía General del Estado de Baja California, misma que se remite para su debida atención, agradeciendo de antemano su colaboración.'.
+		isset($municipiodescr) ? $municipiodescr->MUNICIPIODESCR. ', ' : '' . 'BAJA CALIFORNIA,'.$fecha. 'CENTRO DE DENUNCIA TECNOLÓGICA DE LA FISCALÍA GENERAL DEL ESTADO DE BAJA CALIFORNIA');
+
 		foreach ($documentos as $key => $documento) {
 			$pdf = $documento->PDF;
 			$email->attach($pdf, 'attachment',  $documento->TIPODOC . '.pdf', 'application/pdf');

@@ -1784,6 +1784,8 @@ class DashboardController extends BaseController
 		$email->setSubject('Folio atendido');
 		$body = view('email_template/folio_der_can_email_template.php', ['folio' => $folio, 'motivo' => $motivo]);
 		$email->setMessage($body);
+		$email->setAltMessage('EL FOLIO ' . $folio .' FUE ' . $motivo == 'ATENDIDA' ? 'CANALIZADO' : $motivo);
+
 		if ($email->send()) {
 			return true;
 		} else {
@@ -1800,6 +1802,14 @@ class DashboardController extends BaseController
 		$email->setSubject('Nuevo expediente creado');
 		$body = view('email_template/expediente_email_template.php', ['expediente' => $expedienteId, 'tipoexpediente' => $tipoExpediente->TIPOEXPEDIENTECLAVE]);
 		$email->setMessage($body);
+
+		$expediente_guiones = '';
+		$arrayExpediente = str_split($expedienteId);
+		$expediente_guiones =  $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
+
+
+		$email->setAltMessage('Gracias por denunciar, se te ha generado un nuevo expediente' . $expediente_guiones .'/' . $tipoExpediente->TIPOEXPEDIENTECLAVE);
+
 		if ($email->send()) {
 			return true;
 		} else {
@@ -1815,6 +1825,7 @@ class DashboardController extends BaseController
 		$email->setSubject('Nueva cuenta creada');
 		$body = view('email_template/password_email_admin_template.php', ['email' => $to, 'password' => $password]);
 		$email->setMessage($body);
+		$email->setAltMessage('Se ha generado un nuevo registro en el Centro de Denuncia Tecnológica.Para acceder debes ingresar los siguientes datos. USUARIO: ' . $to .'CONTRASEÑA:'. $password);
 
 		if ($email->send()) {
 			return true;

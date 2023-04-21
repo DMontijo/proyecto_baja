@@ -141,6 +141,7 @@ class AuthController extends BaseController
 		$email->setSubject('Cambio de contraseña.');
 		$body = view('email_template/reset_password_template.php', ['password' => $password]);
 		$email->setMessage($body);
+		$email->setAltMessage('Usted ha solicitado un cambio de contraseña. Su nueva contraseña es: ' .$password);
 
 		if ($email->send()) {
 			return redirect()->to(base_url('/denuncia'))->with('message_success', 'Verifica tu nueva contraseña en tu correo.');
