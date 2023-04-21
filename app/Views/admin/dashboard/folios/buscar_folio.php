@@ -169,7 +169,7 @@
 												<td class="text-center"><?= $folio->NOMBRE_DENUNCIANTE ?></td>
 												<td class="text-center"><?= $folio->NOMBRE_AGENTE ?></td>
 												<td class="text-center"><?= $folio->MUNICIPIODESCR ?></td>
-												<td class="text-center"><?= $folio->OFICINADESCR ?></td>
+												<td class="text-center"><?= $folio->OFICINADESCR ? $folio->OFICINADESCR : $folio->MODULODESCR ?></td>
 												<td class="text-center"><?= $folio->FECHAREGISTRO ?></td>
 												<td class="text-center"><?= $folio->FECHASALIDA ?  $folio->FECHASALIDA : '' ?></td>
 											</tr>
