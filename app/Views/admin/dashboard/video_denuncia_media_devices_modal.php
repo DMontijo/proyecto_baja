@@ -32,6 +32,11 @@
 						<div class="col-12">
 							<select style="max-width: 100%;" class="select-audio form-select" name="listaDeDispositivosAudio" id="listaDeDispositivosAudio"></select>
 						</div>
+						<div class="col-12">
+							<div class="ratio ratio-16x9">
+								<audio id="audio"></audio>
+							</div>
+						</div>
 					</div>
 
 					<div class="row">
