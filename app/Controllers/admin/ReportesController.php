@@ -1388,7 +1388,7 @@ class ReportesController extends BaseController
 		$dataView->dataOrdenes = $documentos;
 		$dataView->filterParams = (object)$dataPost;
 
-		$this->_loadView('Registro CONAVIM', 'registro_conavim', '', $dataView, 'registro_conavim');
+		$this->_loadView('Bitácora CONAVIM', 'registro_conavim', '', $dataView, 'registro_conavim');
 	}
 
 	public function postRegistroConavim()
@@ -1475,8 +1475,8 @@ class ReportesController extends BaseController
 		$spreadSheet->getProperties()
 			->setCreator("Fiscalía General del Estado de Baja California")
 			->setLastModifiedBy("Fiscalía General del Estado de Baja California")
-			->setTitle("REPORTE_CONAVIM" . $date)
-			->setSubject("REPORTE_CONAVIM" . $date)
+			->setTitle("REPORTE_CONAVIM_" . $date)
+			->setSubject("REPORTE_CONAVIM_" . $date)
 			->setDescription(
 				"El presente documento fue generado por el Centro de Denuncia Tecnológica de la Fiscalía General del Estado de Baja California."
 			)
@@ -1566,12 +1566,13 @@ class ReportesController extends BaseController
 			'U', 'V', 'W', 'X', 'Y', 'Z'
 		];
 		$headers = [
-			"Folio",
-			"FECHA DE EXPEDICIÓN",
+			"NO.",
+			"FOLIO",
 			"NO. EXPEDIENTE",
-			"MODULO QUE EXPIDE",
-			"MUNICIPIO QUE ATIENDE",
-			"SERVIDOR PUBLICO SOLICITANTE",
+			"FECHA DE ORDEN DE EXPEDICIÓN",
+			"MÓDULO EN QUE SE EXPIDE",
+			"MUNICIPIO QUE ATIENDE LA ORDEN",
+			"SERVIDOR PÚBLICO QUE SOLICITA ORDEN DE PROTECCIÓN ",
 			"DELITO",
 			"TIPO DE ORDEN DE PROTECCIÓN",
 			"VÍCTIMA LESIONADA",
@@ -1585,30 +1586,35 @@ class ReportesController extends BaseController
 		$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
 
 		$row++;
+		$num = 1;
 
 		foreach ($documentos as $index => $orden) {
-			$this->separarExpID($orden->EXPEDIENTEID);
-
-
 			$sheet->setCellValue('A1', "CENTRO TELEFÓNICO Y EN LÍNEA DE ATENCIÓN Y ORIENTACIÓN TEMPRANA");
 			$sheet->setCellValue('A2', "REGISTRO ORDENES DE PROTECCIÓN");
 
 
-			$sheet->setCellValue('A' . $row, $orden->FOLIOID);
-			$sheet->setCellValue('B' . $row, $this->formatFecha($orden->FECHAFIRMA));
+			$sheet->setCellValue('A' . $row, $num);
+			$sheet->setCellValue('B' . $row, $orden->FOLIOID . '/' . $orden->ANO);
 			$sheet->setCellValue('C' . $row, $this->separarExpID($orden->EXPEDIENTEID));
-			$sheet->setCellValue('D' . $row, 'CENTRO DE DENUNCIA TECNÓLOGICA');
-			$sheet->setCellValue('E' . $row,  $orden->MUNICIPIODESCR);
-			$sheet->setCellValue('F' . $row,  $orden->NOMBRE_MP);
-			$sheet->setCellValue('G' . $row,  $orden->HECHODELITO);
-			$sheet->setCellValue('H' . $row,  $orden->TIPODOC);
-			$sheet->setCellValue('I' . $row,  $orden->LESIONES);
-			$sheet->setCellValue('J' . $row, '');
+			$sheet->setCellValue('D' . $row, $this->formatFecha($orden->FECHAFIRMA));
+			$sheet->setCellValue('E' . $row, 'CENTRO DE DENUNCIA TECNÓLOGICA');
+			$sheet->setCellValue('F' . $row,  $orden->MUNICIPIODESCR);
+			$sheet->setCellValue('G' . $row,  $orden->NOMBRE_MP);
+			$sheet->setCellValue('H' . $row,  $orden->HECHODELITO);
+			$sheet->setCellValue('I' . $row,  $orden->TIPODOC);
+			$sheet->setCellValue('J' . $row,  $orden->LESIONES);
 
 			$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
 
 			if (!(($row - 4) >= count($documentos))) $row++;
+			$num++;
 		}
+
+		$row++;
+		$row++;
+		$sheet->setCellValue('A' . $row, 'CANTIDAD DE RESULTADOS:');
+		$sheet->setCellValue('B' . $row, count($documentos));
+
 		$sheet->getStyle('A1:J1')->applyFromArray($styleCab);
 		$sheet->getStyle('A2:J2')->applyFromArray($styleCab);
 

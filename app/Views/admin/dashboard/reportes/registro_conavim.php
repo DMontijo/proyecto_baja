@@ -7,7 +7,7 @@
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-12 text-center mb-4">
-				<h1 class="mb-4 text-center font-weight-bold">REGISTRO CONAVIM</h1>
+				<h1 class="mb-4 text-center font-weight-bold">BITÁCORA CONAVIM</h1>
 				<a class="link link-primary" href="<?= base_url('admin/dashboard/reportes') ?>" role="button"><i class="fas fa-reply"></i> REGRESAR A REPORTES</a>
 			</div>
 			<div class="col-12">
@@ -107,12 +107,13 @@
 								<table id="tabla_conavim" class="table table-bordered table-striped table-sm" style="font-size:12px;">
 									<thead>
 										<tr>
+											<th class="text-center">NO.</th>
 											<th class="text-center">FOLIO</th>
+											<th class="text-center" style="min-width:150px;">NO. EXPEDIENTE</th>
 											<th class="text-center" style="min-width:150px;">FECHA DE EXPEDICIÓN</th>
-											<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
-											<th class="text-center" style="min-width:150px;">MODULO QUE EXPIDE</th>
-											<th class="text-center" style="min-width:150px;">MUNICIPIO QUE ATIENDE</th>
-											<th class="text-center" style="min-width:150px;">SERVIDOR PUBLICO SOLICITANTE</th>
+											<th class="text-center" style="min-width:150px;">MODULO EN QUE SE EXPIDE</th>
+											<th class="text-center" style="min-width:150px;">MUNICIPIO QUE ATIENDE LA ORDEN</th>
+											<th class="text-center" style="min-width:150px;">SERVIDOR PÚBLICO QUE SOLICITA ORDEN DE PROTECCIÓN</th>
 											<th class="text-center" style="min-width:150px;">DELITO</th>
 											<th class="text-center" style="min-width:150px;">TIPO DE ORDEN DE PROTECCIÓN</th>
 											<th class="text-center" style="min-width:150px;">VÍCTIMA LESIONADA</th>
@@ -120,14 +121,20 @@
 									</thead>
 									<tbody>
 										<?php
+										$num = 1;
 										foreach ($body_data->dataOrdenes as $index => $orden) {
-											$array = str_split($orden->EXPEDIENTEID);
+											$expedienteid = '';
+											if (isset($orden->EXPEDIENTEID)) {
+												$arrayExpediente = str_split($orden->EXPEDIENTEID);
+												$expedienteid = $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
+											}
 										?>
 											<tr>
+												<td class="text-center font-weight-bold"><?= $num ?></td>
 												<td class="text-center font-weight-bold"><?= $orden->FOLIOID . '/' . $orden->ANO ?></td>
-												<td class="text-center"><?= $orden->FECHAFIRMA ?  date("d/m/Y", strtotime($orden->FECHAFIRMA)) : '' ?></td>
-												<td class="text-center"><?= $array[1] . $array[2] . $array[4] . $array[5] . '-' . $array[6] . $array[7] . $array[8] . $array[9] . '-' . $array[10] . $array[11] . $array[12] . $array[13] . $array[14] ?></td>
-												<td class="text-center">CENTRO DE DENUNCIA TECNÓLOGICA</td>
+												<td class="text-center"><?= $expedienteid ?></td>
+												<td class="text-center"><?= $orden->FECHAFIRMA ?  date("d-m-Y", strtotime($orden->FECHAFIRMA)) : '' ?></td>
+												<td class="text-center">CENTRO DE DENUNCIA TECNOLÓGICA</td>
 												<td class="text-center"><?= $orden->MUNICIPIODESCR ?></td>
 												<td class="text-center"><?= $orden->NOMBRE_MP ?></td>
 												<td class="text-center"><?= $orden->HECHODELITO ?></td>
@@ -135,7 +142,9 @@
 												<td class="text-center"><?= $orden->TIPODOC ?></td>
 												<td class="text-center"><?= $orden->LESIONES ?></td>
 											</tr>
-										<?php } ?>
+										<?php
+											$num++;
+										} ?>
 									</tbody>
 								</table>
 							</div>
