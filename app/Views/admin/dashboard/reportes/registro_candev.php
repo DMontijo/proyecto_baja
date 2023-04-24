@@ -7,7 +7,7 @@
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-12 text-center mb-4">
-				<h1 class="mb-4 text-center font-weight-bold">REGISTRO DE CANALIZACIONES Y DERIVACIONES</h1>
+				<h1 class="mb-4 text-center font-weight-bold">BITACORA CANDEV</h1>
 				<a class="link link-primary" href="<?= base_url('admin/dashboard/reportes') ?>" role="button"><i class="fas fa-reply"></i> REGRESAR A REPORTES</a>
 			</div>
 			<div class="col-12">
@@ -128,15 +128,19 @@
 									<tbody>
 										<?php
 										foreach ($body_data->dataInfo as $index => $orden) {
-											$array = isset($orden->EXPEDIENTEID) ? str_split($orden->EXPEDIENTEID) : '';
+											$expedienteid = '';
+											if (isset($orden->EXPEDIENTEID)) {
+												$arrayExpediente = str_split($orden->EXPEDIENTEID);
+												$expedienteid = $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
+											}
 										?>
 											<tr>
-												<td class="text-center font-weight-bold"><?= $orden->FOLIOID ?></td>
+												<td class="text-center font-weight-bold"><?= $orden->FOLIOID . '/' . $orden->ANO ?></td>
 												<td class="text-center"><?= date("d/m/Y", strtotime($orden->HECHOFECHA)) ?></td>
-												<td class="text-center"><?= isset($orden->EXPEDIENTEID) ? $array[1] . $array[2] . $array[4] . $array[5] . '-' . $array[6] . $array[7] . $array[8] . $array[9] . '-' . $array[10] . $array[11] . $array[12] . $array[13] . $array[14] : '' ?></td>
+												<td class="text-center"><?= $expedienteid != '' ? $expedienteid : ($orden->FOLIOID . '/' . $orden->ANO) ?></td>
 												<td class="text-center">CENTRO DE DENUNCIA TECNÓLOGICA</td>
 												<td class="text-center"><?= $orden->MUNICIPIODESCR ?></td>
-												<td class="text-center"><?= $orden->NOMBRE_MP . ' ' . $orden->APATERNO_MP . ' ' . $orden->AMATERNO_MP ?></td>
+												<td class="text-center"><?= $orden->AGENTE_NOMBRE ?></td>
 												<td class="text-center"><?= $orden->HECHODELITO ?></td>
 												<td class="text-center"><?= $orden->NOMBRE ?></td>
 												<td class="text-center"><?= $orden->PRIMERAPELLIDO ?></td>

@@ -1690,7 +1690,7 @@ class ReportesController extends BaseController
 		$dataView->dataInfo = $dataInfo;
 		$dataView->filterParams = (object)$dataPost;
 
-		$this->_loadView('Registro Canalizaciones Derivaciones', 'registro_candev', '', $dataView, 'registro_candev');
+		$this->_loadView('Bitacora CANDEV', 'registro_candev', '', $dataView, 'registro_candev');
 	}
 
 	public function postRegistroCanDev()
@@ -1740,7 +1740,7 @@ class ReportesController extends BaseController
 		$dataView->dataInfo = $dataInfo;
 		$dataView->filterParams = (object)$dataPost;
 
-		$this->_loadView('Registro Canalizaciones Derivaciones', 'registro_candev', '', $dataView, 'registro_candev');
+		$this->_loadView('Bitacora CANDEV', 'registro_candev', '', $dataView, 'registro_candev');
 	}
 
 	public function createCanaDevXlsx()
@@ -1865,7 +1865,7 @@ class ReportesController extends BaseController
 			'U', 'V', 'W', 'X', 'Y', 'Z'
 		];
 		$headers = [
-			"Folio",
+			"FOLIO",
 			"FECHA DE ATENCIÓN",
 			"NO. EXPEDIENTE",
 			"MODULO QUE EXPIDE",
@@ -1895,28 +1895,27 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('A2', "REGISTRO DE CANALIZACIONES Y DERIVACIONES");
 
 
-			$sheet->setCellValue('A' . $row, $orden->FOLIOID);
+			$sheet->setCellValue('A' . $row, $orden->FOLIOID . '/' . $orden->ANO);
 			$sheet->setCellValue('B' . $row, $this->formatFecha($orden->HECHOFECHA));
-			$sheet->setCellValue('C' . $row, (isset($orden->EXPEDIENTEID)) ? $this->separarExpID($orden->EXPEDIENTEID) : '');
+			$sheet->setCellValue('C' . $row, (isset($orden->EXPEDIENTEID)) ? $this->separarExpID($orden->EXPEDIENTEID) : ($orden->FOLIOID . '/' . $orden->ANO));
 			$sheet->setCellValue('D' . $row, 'CENTRO DE DENUNCIA TECNÓLOGICA');
 			$sheet->setCellValue('E' . $row,  $orden->MUNICIPIODESCR);
-			$sheet->setCellValue('F' . $row,  $orden->NOMBRE_MP . ' ' . $orden->APATERNO_MP . ' ' . $orden->AMATERNO_MP);
+			$sheet->setCellValue('F' . $row,  $orden->AGENTE_NOMBRE);
 			$sheet->setCellValue('G' . $row,  $orden->HECHODELITO);
 			$sheet->setCellValue('H' . $row,  $orden->NOMBRE);
 			$sheet->setCellValue('I' . $row,  $orden->PRIMERAPELLIDO);
 			$sheet->setCellValue('J' . $row,  $orden->SEGUNDOAPELLIDO);
 			$sheet->setCellValue('K' . $row,  $orden->STATUS);
-			$sheet->setCellValue('L' . $row, '');
 
 			$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
 
 			if (!(($row - 4) >= count($dataInfo))) $row++;
 		}
-		$sheet->getStyle('A1:R1')->applyFromArray($styleCab);
-		$sheet->getStyle('A2:R2')->applyFromArray($styleCab);
+		$sheet->getStyle('A1:K1')->applyFromArray($styleCab);
+		$sheet->getStyle('A2:K2')->applyFromArray($styleCab);
 
-		$sheet->getStyle('A4:R4')->applyFromArray($styleHeaders);
-		$sheet->getStyle('A5:R' . $row)->applyFromArray($styleCells);
+		$sheet->getStyle('A4:K4')->applyFromArray($styleHeaders);
+		$sheet->getStyle('A5:K' . $row)->applyFromArray($styleCells);
 
 		$sheet->mergeCells('A1:R1');
 		$sheet->mergeCells('A2:R2');

@@ -68,7 +68,7 @@
 				<div class="card shadow border-0 text-center">
 					<div class="card-body p-2" style="height:200px;">
 						<a href="<?= base_url('admin/dashboard/registro_candev') ?>" class="btn btn-primary btn-block h-100 d-flex flex-column justify-content-center align-items-center d-flex flex-column justify-content-center align-items-center">
-							<i class="far fa-clipboard" style="font-size: 20px;"></i><br><span class="font-weight-bold">REGISTRO CANALIZACIÓN Y DERIVACIÓN</span>
+							<i class="far fa-clipboard" style="font-size: 20px;"></i><br><span class="font-weight-bold">BITÁCORA CANDEV</span>
 						</a>
 					</div>
 				</div>
