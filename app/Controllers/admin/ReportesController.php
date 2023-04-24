@@ -1865,6 +1865,7 @@ class ReportesController extends BaseController
 			'U', 'V', 'W', 'X', 'Y', 'Z'
 		];
 		$headers = [
+			"NO.",
 			"FOLIO",
 			"FECHA DE ATENCIÓN",
 			"NO. EXPEDIENTE",
@@ -1886,6 +1887,7 @@ class ReportesController extends BaseController
 		$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
 
 		$row++;
+		$num = 1;
 
 		foreach ($dataInfo as $index => $orden) {
 			//$this->separarExpID($orden->EXPEDIENTEID);
@@ -1894,31 +1896,32 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('A1', "CENTRO TELEFÓNICO Y EN LÍNEA DE ATENCIÓN Y ORIENTACIÓN TEMPRANA");
 			$sheet->setCellValue('A2', "REGISTRO DE CANALIZACIONES Y DERIVACIONES");
 
-
-			$sheet->setCellValue('A' . $row, $orden->FOLIOID . '/' . $orden->ANO);
-			$sheet->setCellValue('B' . $row, $this->formatFecha($orden->HECHOFECHA));
-			$sheet->setCellValue('C' . $row, (isset($orden->EXPEDIENTEID)) ? $this->separarExpID($orden->EXPEDIENTEID) : ($orden->FOLIOID . '/' . $orden->ANO));
-			$sheet->setCellValue('D' . $row, 'CENTRO DE DENUNCIA TECNÓLOGICA');
-			$sheet->setCellValue('E' . $row,  $orden->MUNICIPIODESCR);
-			$sheet->setCellValue('F' . $row,  $orden->AGENTE_NOMBRE);
-			$sheet->setCellValue('G' . $row,  $orden->HECHODELITO);
-			$sheet->setCellValue('H' . $row,  $orden->NOMBRE);
-			$sheet->setCellValue('I' . $row,  $orden->PRIMERAPELLIDO);
-			$sheet->setCellValue('J' . $row,  $orden->SEGUNDOAPELLIDO);
-			$sheet->setCellValue('K' . $row,  $orden->STATUS);
+			$sheet->setCellValue('A' . $row, $num);
+			$sheet->setCellValue('B' . $row, $orden->FOLIOID . '/' . $orden->ANO);
+			$sheet->setCellValue('C' . $row, $this->formatFecha($orden->HECHOFECHA));
+			$sheet->setCellValue('D' . $row, (isset($orden->EXPEDIENTEID)) ? $this->separarExpID($orden->EXPEDIENTEID) : ($orden->FOLIOID . '/' . $orden->ANO));
+			$sheet->setCellValue('E' . $row, 'CENTRO DE DENUNCIA TECNÓLOGICA');
+			$sheet->setCellValue('F' . $row,  $orden->MUNICIPIODESCR);
+			$sheet->setCellValue('G' . $row,  $orden->AGENTE_NOMBRE);
+			$sheet->setCellValue('H' . $row,  $orden->HECHODELITO);
+			$sheet->setCellValue('I' . $row,  $orden->NOMBRE);
+			$sheet->setCellValue('J' . $row,  $orden->PRIMERAPELLIDO);
+			$sheet->setCellValue('K' . $row,  $orden->SEGUNDOAPELLIDO);
+			$sheet->setCellValue('L' . $row,  $orden->STATUS);
 
 			$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
 
 			if (!(($row - 4) >= count($dataInfo))) $row++;
+			$num++;
 		}
-		$sheet->getStyle('A1:K1')->applyFromArray($styleCab);
-		$sheet->getStyle('A2:K2')->applyFromArray($styleCab);
+		$sheet->getStyle('A1:L1')->applyFromArray($styleCab);
+		$sheet->getStyle('A2:L2')->applyFromArray($styleCab);
 
-		$sheet->getStyle('A4:K4')->applyFromArray($styleHeaders);
-		$sheet->getStyle('A5:K' . $row)->applyFromArray($styleCells);
+		$sheet->getStyle('A4:L4')->applyFromArray($styleHeaders);
+		$sheet->getStyle('A5:L' . $row)->applyFromArray($styleCells);
 
-		$sheet->mergeCells('A1:R1');
-		$sheet->mergeCells('A2:R2');
+		$sheet->mergeCells('A1:L1');
+		$sheet->mergeCells('A2:L2');
 		$drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
 		$drawing->setName('FGEBC');
 		$drawing->setDescription('LOGO');

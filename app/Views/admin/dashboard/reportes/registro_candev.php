@@ -112,6 +112,7 @@
 								<table id="registro_candev" class="table table-bordered table-striped table-sm" style="font-size:12px;">
 									<thead>
 										<tr>
+											<th class="text-center">NO.</th>
 											<th class="text-center">FOLIO</th>
 											<th class="text-center">FECHA DE ATENCIÓN</th>
 											<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
@@ -127,6 +128,7 @@
 									</thead>
 									<tbody>
 										<?php
+										$num = 1;
 										foreach ($body_data->dataInfo as $index => $orden) {
 											$expedienteid = '';
 											if (isset($orden->EXPEDIENTEID)) {
@@ -135,6 +137,7 @@
 											}
 										?>
 											<tr>
+												<td class="text-center font-weight-bold"><?= $num ?></td>
 												<td class="text-center font-weight-bold"><?= $orden->FOLIOID . '/' . $orden->ANO ?></td>
 												<td class="text-center"><?= date("d/m/Y", strtotime($orden->HECHOFECHA)) ?></td>
 												<td class="text-center"><?= $expedienteid != '' ? $expedienteid : ($orden->FOLIOID . '/' . $orden->ANO) ?></td>
@@ -147,7 +150,9 @@
 												<td class="text-center"><?= $orden->SEGUNDOAPELLIDO ?></td>
 												<td class="text-center"><?= $orden->STATUS ?></td>
 											</tr>
-										<?php } ?>
+										<?php
+											$num++;
+										} ?>
 									</tbody>
 								</table>
 							</div>
