@@ -1407,7 +1407,6 @@ class DashboardController extends BaseController
 			$area = $this->_empleadosModel->asObject()->where('EMPLEADOID', $empleado)->where('MUNICIPIOID', $municipio)->first();
 			$documents = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente)->findAll();
 			$status = 2;
-			$dataInter =  array('SOLICITUDID' => 9000600, 'INTERVENCIONID' => 98);
 
 			foreach ($documents as $key => $document) {
 				if (
@@ -4356,7 +4355,7 @@ class DashboardController extends BaseController
 					'ESTADOORIGENID' => $this->request->getPost('edoorigen_pf'),
 					'MUNICIPIOORIGENID' => $this->request->getPost('munorigen_pf'),
 					'CALIDADJURIDICAID' => $this->request->getPost('calidad_juridica_pf'),
-					'DESCRIPCION_FISICA' => $this->request->getPost('descripcionFisica_pf'),
+					'DESCRIPCION_FISICA' => $this->request->getPost('descripcionFisica_pf')!=''?$this->request->getPost('descripcionFisica_pf'): NULL,
 					'APODO' => $this->request->getPost('apodo_pf'),
 					'DENUNCIANTE' => $this->request->getPost('denunciante_pf'),
 					'FACEBOOK' => $this->request->getPost('facebook_pf'),
@@ -4389,7 +4388,7 @@ class DashboardController extends BaseController
 					'ESTADOORIGENID' => $this->request->getPost('edoorigen_pf'),
 					'MUNICIPIOORIGENID' => $this->request->getPost('munorigen_pf'),
 					'CALIDADJURIDICAID' => $this->request->getPost('calidad_juridica_pf'),
-					'DESCRIPCION_FISICA' => $this->request->getPost('descripcionFisica_pf'),
+					'DESCRIPCION_FISICA' => $this->request->getPost('descripcionFisica_pf')!=''?$this->request->getPost('descripcionFisica_pf'): NULL,
 					'APODO' => $this->request->getPost('apodo_pf'),
 					'DENUNCIANTE' => $this->request->getPost('denunciante_pf'),
 					'FACEBOOK' => $this->request->getPost('facebook_pf'),
@@ -5170,27 +5169,27 @@ class DashboardController extends BaseController
 			'FECHANACIMIENTO' => $this->request->getPost('fecha_nacimiento'),
 			'EDADCANTIDAD' => $this->request->getPost('edad'),
 			'SEXO' => $this->request->getPost('sexo') != null ?  $this->request->getPost('sexo') : NULL,
-			'TELEFONO' => $this->request->getPost('telefono'),
-			'TELEFONO2' => $this->request->getPost('telefono_adicional'),
+			'TELEFONO' => $this->request->getPost('telefono') != '' ? $this->request->getPost('telefono') : NULL,
+			'TELEFONO2' => $this->request->getPost('telefono_adicional') != '' ? $this->request->getPost('telefono_adicional') : NULL,
 			'CALIDADJURIDICAID' => $this->request->getPost('calidad_juridica'),
-			'TIPOIDENTIFICACIONID' => $this->request->getPost('identificacion'),
-			'CODIGOPAISTEL' => $this->request->getPost('codigo_pais_pfc'),
-			'CODIGOPAISTEL2' => $this->request->getPost('codigo_pais_pfc_2'),
+			'TIPOIDENTIFICACIONID' => $this->request->getPost('identificacion') != 0 ? $this->request->getPost('identificacion') : NULL,
+			'CODIGOPAISTEL' => $this->request->getPost('codigo_pais_pfc') != '' ? $this->request->getPost('codigo_pais_pfc') : NULL,
+			'CODIGOPAISTEL2' => $this->request->getPost('codigo_pais_pfc_2') != '' ? $this->request->getPost('codigo_pais_pfc_2') : NULL,
 			'NUMEROIDENTIFICACION' => $this->request->getPost('numero_identificacion'),
 			'NACIONALIDADID' => $this->request->getPost('nacionalidad_origen'),
 			'PERSONAIDIOMAID' => $this->request->getPost('idioma'),
 			'ESCOLARIDADID' => $this->request->getPost('escolaridad'),
 			'OCUPACIONID' => $this->request->getPost('ocupacion'),
-			'ESTADOCIVILID' => $this->request->getPost('estado_civil'),
-			'ESTADOORIGENID' => $this->request->getPost('estado_origen'),
-			'MUNICIPIOORIGENID' => $this->request->getPost('municipio_origen'),
-			'FACEBOOK' => $this->request->getPost('facebook'),
-			'INSTAGRAM' => $this->request->getPost('instagram'),
-			'TWITTER' => $this->request->getPost('twitter'),
+			'ESTADOCIVILID' => $this->request->getPost('estado_civil')!=0 ? $this->request->getPost('estado_civil') : NULL,
+			'ESTADOORIGENID' =>  $this->request->getPost('estado_origen') != 0 ? $this->request->getPost('estado_origen') : NULL,
+			'MUNICIPIOORIGENID' =>  $this->request->getPost('municipio_origen') != 0 ? $this->request->getPost('municipio_origen') : NULL,
+			'FACEBOOK' => $this->request->getPost('facebook')!= '' ? $this->request->getPost('facebook'):NULL,
+			'INSTAGRAM' => $this->request->getPost('instagram')!=''?$this->request->getPost('instagram'):NULL,
+			'TWITTER' => $this->request->getPost('twitter')!=''?$this->request->getPost('twitter'):NULL,
 			'LEER' => $this->request->getPost('leer'),
 			'ESCRIBIR' => $this->request->getPost('escribir'),
 			'PAIS' => $this->request->getPost('pais_actual'),
-			'CORREO' => $this->request->getPost('correo'),
+			'CORREO' => $this->request->getPost('correo')!=''?$this->request->getPost('correo'):NULL,
 			'DESAPARECIDA' => $this->request->getPost('desaparecida'),
 
 		);
