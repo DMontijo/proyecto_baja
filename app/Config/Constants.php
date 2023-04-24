@@ -86,4 +86,4 @@ define('KEY_128', 'A2832DE3C0B2289253D4B383404E8C1C');
 define('X_API_KEY', 'vssk_fd61131c-c0c8-42ff-a381-9b3a87da2b34');
 // define('VIDEOCALL_URL', 'https://videodenunciabalancer.fgebc.gob.mx/');
 
-define('VIDEOCALL_URL', 'https://3782-2806-2f0-5021-4716-a30a-2e44-4dd-66d7.ngrok-free.app');
+define('VIDEOCALL_URL', 'https://21b2-2806-2f0-5021-4716-fcae-1cc4-b0b0-874.ngrok-free.app');
