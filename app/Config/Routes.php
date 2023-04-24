@@ -228,6 +228,7 @@ $routes->group('data', function ($routes) {
 
 	$routes->post('get-oficinas-by-municipio', 'admin/DashboardController::getOficinasByMunicipio');
 	$routes->post('get-empleados-by-municipio-and-oficina', 'admin/DashboardController::getEmpleadosByMunicipioAndOficina');
+	$routes->post('get-unidades-by-municipio-and-coordinacion', 'admin/DashboardController::getUnidades');
 
 	$routes->post('get-derivacion-by-municipio', 'admin/DashboardController::getDerivacionByMunicipio');
 	$routes->post('get-canalizacion-by-municipio', 'admin/DashboardController::getCanalizacionByMunicipio');

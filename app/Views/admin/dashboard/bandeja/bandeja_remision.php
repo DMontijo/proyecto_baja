@@ -28,12 +28,20 @@
 							<input autocomplete="off" type="text" name="expediente" class="form-control" id="expediente" value="<?= $body_data->expedienteid ?>" hidden required>
 							<input autocomplete="off" type="text" name="municipio" class="form-control" id="municipio" value="<?= $body_data->municipio ?>" hidden required>
 							<div class="col-12 col-sm-6 col-md-6 col-lg-6 mb-3">
-								<label for="estado_pfd" class="form-label font-weight-bold">Oficina</label>
-								<select class="form-control" id="oficina" name="oficina" required>
+								<label for="estado_pfd" class="form-label font-weight-bold">Coordinación: </label>
+								<select class="form-control" id="coordinacion" name="coordinacion" required>
 									<option selected value=""></option>
-									<?php foreach ($body_data->oficinas as $index => $oficina) { ?>
-										<option value="<?= $oficina->OFICINAID ?>"> <?= $oficina->OFICINADESCR ?> </option>
+									<?php foreach ($body_data->coordinacion as $index => $coordinacion) { ?>
+										<option value="<?= $coordinacion->OFICINAID ?>"> <?= $coordinacion->OFICINADESCR ?> </option>
 									<?php } ?>
+								</select>
+							</div>
+
+							<div class="col-12 col-sm-6 col-md-6 col-lg-6 mb-3">
+								<label for="estado_pfd" class="form-label font-weight-bold">Unidad: </label>
+								<select class="form-control" id="unidad" name="unidad" required>
+									<option selected value=""></option>
+									
 								</select>
 							</div>
 							<div class="col-12 col-sm-6 col-md-6 col-lg-6 mb-3">
@@ -54,7 +62,9 @@
 </section>
 <script>
 	const form_remision = document.querySelector('#form_remision');
-	const oficina = document.querySelector('#oficina');
+	const coordinacion = document.querySelector('#coordinacion');
+	const unidad = document.querySelector('#unidad');
+
 	const empleados = document.querySelector('#empleado');
 
 
@@ -67,26 +77,27 @@
 		form_remision.classList.add('was-validated')
 	}, false)
 
-	oficina.addEventListener('change', (e) => {
+	coordinacion.addEventListener('change', (e) => {
 		$.ajax({
 			data: {
 				'municipio': '<?= $body_data->municipio ?>',
-				'oficina': e.target.value,
+				'coordinacion': e.target.value,
 			},
-			url: "<?= base_url('/data/get-empleados-by-municipio-and-oficina') ?>",
+			url: "<?= base_url('/data/get-unidades-by-municipio-and-coordinacion') ?>",
 			method: "POST",
 			dataType: "json",
 		}).done(function(data) {
-			clearSelect(empleado);
-			data.forEach(emp => {
+			const unidades = data.data;
+			clearSelect(unidad);
+			unidades.forEach(unidade => {
 				let option = document.createElement("option");
-				option.text = emp.NOMBRE + ' ' + emp.PRIMERAPELLIDO + ' ' + emp.SEGUNDOAPELLIDO;
-				option.value = emp.EMPLEADOID;
-				empleado.add(option);
+				option.text = unidade.OFICINADESCR;
+				option.value = unidade.OFICINAID;
+				unidad.add(option);
 			});
-			empleado.value = '';
+			unidad.value = '';
 		}).fail(function(jqXHR, textStatus) {
-			clearSelect(empleado);
+			clearSelect(unidad);
 		});
 	});
 

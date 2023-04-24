@@ -1374,6 +1374,7 @@ class DashboardController extends BaseController
 		if (!$this->permisos('BANDEJA')) {
 			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
 		}
+		$coordinacion = $this->getCoordinacion();
 		$data = (object) array();
 		$data->municipio = $this->request->getGet('municipioasignado');
 		$data->folio = $this->request->getGet('folio');
@@ -1388,6 +1389,7 @@ class DashboardController extends BaseController
 		}
 
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+		$data->coordinacion = $coordinacion->data;
 
 		if ($data->expediente['TIPOEXPEDIENTEID'] == 5) {
 			$this->_loadView('Bandeja remisión', 'remision', '', $data, 'bandeja/bandeja_rac');
@@ -1400,7 +1402,7 @@ class DashboardController extends BaseController
 	{
 		try {
 			$expediente = trim($this->request->getPost('expediente'));
-			$oficina = trim($this->request->getPost('oficina'));
+			$oficina = trim($this->request->getPost('coordinacion'));
 			$empleado = trim($this->request->getPost('empleado'));
 			$municipio = trim($this->request->getPost('municipio'));
 
@@ -3454,6 +3456,35 @@ class DashboardController extends BaseController
 		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
 		$data['schema'] = $conexion->SCHEMA;
 		return json_encode($this->_curlPostDataEncrypt($endpoint, $data)->data);
+	}
+
+	public function getCoordinacion()
+	{
+
+		$municipio = $this->request->getGet('municipioasignado');
+		$function = '/unidades.php?process=coordinacion';
+		$endpoint = $this->endpoint . $function;
+		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
+		$data['MUNICIPIOID'] = $municipio;
+		$data['userDB'] = $conexion->USER;
+		$data['pwdDB'] = $conexion->PASSWORD;
+		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
+		$data['schema'] = $conexion->SCHEMA;
+		return $this->_curlPostDataEncrypt($endpoint, $data);
+	}
+	public function getUnidades()
+	{
+		$municipio =$this->request->getPost('municipio');
+		$coordinacion =$this->request->getPost('coordinacion');
+		$function = '/unidades.php?process=unidad';
+		$endpoint = $this->endpoint . $function;
+		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
+		$data['COORD_ID'] = $coordinacion;
+		$data['userDB'] = $conexion->USER;
+		$data['pwdDB'] = $conexion->PASSWORD;
+		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
+		$data['schema'] = $conexion->SCHEMA;
+		return json_encode($this->_curlPostDataEncrypt($endpoint, $data));
 	}
 	private function getMediador($municipio, $modulo)
 	{
