@@ -107,70 +107,69 @@
 								<?php } ?>
 							</div>
 						</div>
-
-						<table id="registro_candev" class="table table-bordered table-striped">
-							<thead>
-								<tr>
-									<th class="text-center">FOLIO</th>
-									<th class="text-center">FECHA DE ATENCIÓN</th>
-									<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
-									<th class="text-center" style="min-width:150px;">MODULO QUE EXPIDE</th>
-									<th class="text-center" style="min-width:150px;">MUNICIPIO QUE ATIENDE</th>
-									<th class="text-center" style="min-width:150px;">SERVIDOR PUBLICO SOLICITANTE</th>
-									<th class="text-center" style="min-width:150px;">DELITO</th>
-									<th class="text-center" style="min-width:150px;">NOMBRE DE LA VICTIMA/OFENDIDO</th>
-									<th class="text-center" style="min-width:150px;">APELLIDO PATERNO</th>
-									<th class="text-center" style="min-width:150px;">APELLIDO MATERNO</th>
-									<th class="text-center" style="min-width:150px;">SALIDA</th>
-								</tr>
-							</thead>
-							<tbody>
-								<?php
-								foreach ($body_data->dataInfo as $index => $orden) {
-									$array = isset($orden->EXPEDIENTEID) ? str_split($orden->EXPEDIENTEID) : '';
-								?>
-									<tr>
-										<td class="text-center font-weight-bold"><?= $orden->FOLIOID ?></td>
-										<td class="text-center"><?= date("d/m/Y", strtotime($orden->HECHOFECHA)) ?></td>
-										<td class="text-center"><?= isset($orden->EXPEDIENTEID) ? $array[1] . $array[2] . $array[4] . $array[5] . '-' . $array[6] . $array[7] . $array[8] . $array[9] . '-' . $array[10] . $array[11] . $array[12] . $array[13] . $array[14] : '' ?></td>
-										<td class="text-center">CENTRO DE DENUNCIA TECNÓLOGICA</td>
-										<td class="text-center"><?= $orden->MUNICIPIODESCR ?></td>
-										<td class="text-center"><?= $orden->NOMBRE_MP . ' ' . $orden->APATERNO_MP . ' ' . $orden->AMATERNO_MP ?></td>
-										<td class="text-center"><?= $orden->HECHODELITO ?></td>
-										<td class="text-center"><?= $orden->NOMBRE ?></td>
-										<td class="text-center"><?= $orden->PRIMERAPELLIDO ?></td>
-										<td class="text-center"><?= $orden->SEGUNDOAPELLIDO ?></td>
-										<td class="text-center"><?= $orden->STATUS ?></td>
-									</tr>
-								<?php } ?>
-							</tbody>
-						</table>
+						<div class="row">
+							<div class="col-12" style="overflow-x:auto;">
+								<table id="registro_candev" class="table table-bordered table-striped table-sm" style="font-size:12px;">
+									<thead>
+										<tr>
+											<th class="text-center">FOLIO</th>
+											<th class="text-center">FECHA DE ATENCIÓN</th>
+											<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
+											<th class="text-center" style="min-width:150px;">MODULO QUE EXPIDE</th>
+											<th class="text-center" style="min-width:150px;">MUNICIPIO QUE ATIENDE</th>
+											<th class="text-center" style="min-width:150px;">SERVIDOR PUBLICO SOLICITANTE</th>
+											<th class="text-center" style="min-width:150px;">DELITO</th>
+											<th class="text-center" style="min-width:150px;">NOMBRE DE LA VICTIMA/OFENDIDO</th>
+											<th class="text-center" style="min-width:150px;">APELLIDO PATERNO</th>
+											<th class="text-center" style="min-width:150px;">APELLIDO MATERNO</th>
+											<th class="text-center" style="min-width:150px;">SALIDA</th>
+										</tr>
+									</thead>
+									<tbody>
+										<?php
+										foreach ($body_data->dataInfo as $index => $orden) {
+											$array = isset($orden->EXPEDIENTEID) ? str_split($orden->EXPEDIENTEID) : '';
+										?>
+											<tr>
+												<td class="text-center font-weight-bold"><?= $orden->FOLIOID ?></td>
+												<td class="text-center"><?= date("d/m/Y", strtotime($orden->HECHOFECHA)) ?></td>
+												<td class="text-center"><?= isset($orden->EXPEDIENTEID) ? $array[1] . $array[2] . $array[4] . $array[5] . '-' . $array[6] . $array[7] . $array[8] . $array[9] . '-' . $array[10] . $array[11] . $array[12] . $array[13] . $array[14] : '' ?></td>
+												<td class="text-center">CENTRO DE DENUNCIA TECNÓLOGICA</td>
+												<td class="text-center"><?= $orden->MUNICIPIODESCR ?></td>
+												<td class="text-center"><?= $orden->NOMBRE_MP . ' ' . $orden->APATERNO_MP . ' ' . $orden->AMATERNO_MP ?></td>
+												<td class="text-center"><?= $orden->HECHODELITO ?></td>
+												<td class="text-center"><?= $orden->NOMBRE ?></td>
+												<td class="text-center"><?= $orden->PRIMERAPELLIDO ?></td>
+												<td class="text-center"><?= $orden->SEGUNDOAPELLIDO ?></td>
+												<td class="text-center"><?= $orden->STATUS ?></td>
+											</tr>
+										<?php } ?>
+									</tbody>
+								</table>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </section>
-
 <script>
 	$(function() {
 		$("#registro_candev").DataTable({
 			responsive: false,
 			lengthChange: false,
 			autoWidth: true,
-			ordering: false,
-			searching: false,
-			pageLength: 30,
-			// dom: 'Bfrtip',
-			// buttons: [
-			// 	'copy', 'excel', 'pdf'
-			// ],
+			ordering: true,
+			searching: true,
+			pageLength: 100,
 			language: {
 				url: '//cdn.datatables.net/plug-ins/1.12.1/i18n/es-MX.json'
 			}
 		});
 	});
-
+</script>
+<script>
 	function collapse_filter() {
 		if (document.querySelector('#filtros').classList.contains('show')) {
 			document.querySelector('#filtros').classList.remove('show');
