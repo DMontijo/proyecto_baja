@@ -337,11 +337,10 @@ class DashboardController extends BaseController
 	public function create()
 	{
 		$session = session();
-		// $folioDenunciante = $this->_folioModel->where('DENUNCIANTEID', session('DENUNCIANTEID'))->where('STATUS', 'ABIERTO')->orWhere('STATUS', 'EN PROCESO')->countAllResults();
-
-		// if ($folioDenunciante >= 1) {
-		// 	return redirect()->to(base_url('/denuncia/dashboard'))->with('message_error', 'Ya tienes un folio, no puedes generar una nueva denuncia.');
-		// }
+		$folioDenunciante = $this->_folioModel->countFolioDenunciante(session('DENUNCIANTEID'));
+		if ($folioDenunciante->folios_pendientes == 1) {
+			return redirect()->to(base_url('/denuncia/dashboard'))->with('message_error', 'Ya tienes un folio, no puedes generar una nueva denuncia.');
+		}
 
 		if (($this->request->getPost('es_menor') == null || $this->request->getPost('es_menor') == '')
 			|| ($this->request->getPost('es_tercera_edad') == null || $this->request->getPost('es_tercera_edad') == '')
@@ -1012,6 +1011,8 @@ class DashboardController extends BaseController
 		$email->setTo($to);
 		$email->setSubject('Nuevo folio generado.');
 		$body = view('email_template/folio_email_template.php', ['folio' => $folio . '/' . $year]);
+		$email->setAltMessage('Se ha generado un nuevo folio. SU FOLIO ES: ' . $folio . '/' . $year .'Para darle seguimiento a su caso ingrese a su cuenta en el Centro de Denuncia Tecnológica e inicie su video denuncia con el folio generado.' );
+
 		$email->setMessage($body);
 
 		if ($email->send()) {

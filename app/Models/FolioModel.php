@@ -143,8 +143,9 @@ class FolioModel extends Model
 		LEFT JOIN ESTADO ON ESTADO.ESTADOID = FOLIO.ESTADOID
 		LEFT JOIN FOLIORELACIONFISFIS ON FOLIORELACIONFISFIS.FOLIOID = FOLIO.FOLIOID AND FOLIORELACIONFISFIS.ANO = FOLIO.ANO 
 		LEFT JOIN DELITOMODALIDAD ON DELITOMODALIDAD.DELITOMODALIDADID = FOLIORELACIONFISFIS.DELITOMODALIDADID
+		LEFT JOIN MUNICIPIO ON MUNICIPIO.MUNICIPIOID = FOLIO.MUNICIPIOID AND MUNICIPIO.ESTADOID = FOLIO.ESTADOID
 		LEFT JOIN BANDEJARAC ON BANDEJARAC.FOLIOID = FOLIO.FOLIOID AND BANDEJARAC.ANO = FOLIO.ANO
-		LEFT JOIN MUNICIPIO ON MUNICIPIO.MUNICIPIOID = FOLIO.MUNICIPIOID AND MUNICIPIO.ESTADOID = FOLIO.ESTADOID';
+';
 
 		$fechaInicio = isset($obj['fechaInicio']) ? $obj['fechaInicio'] : '';
 		$fechaFin = isset($obj['fechaFin']) ? $obj['fechaFin'] : '';
@@ -228,6 +229,12 @@ class FolioModel extends Model
 	}
 
 
+	public function countFolioDenunciante($denuncianteid){
+		$strQuery = 'SELECT COUNT(*) AS "folios_pendientes" FROM FOLIO WHERE DENUNCIANTEID = '. $denuncianteid .' AND (STATUS = "ABIERTO" OR STATUS = "EN PROCESO")';
+		$result = $this->db->query($strQuery)->getRow();
+
+		return $result;
+	}
 
 	public function videos_expediente_model($tipo)
 	{

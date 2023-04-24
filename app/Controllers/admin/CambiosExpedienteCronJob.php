@@ -91,6 +91,8 @@ class CambiosExpedienteCronJob extends BaseController
         $email->setSubject('Cambio expediente');
         $body = view('email_template/update_info_email_template.php', ['expediente' => $expedienteId, 'oficina'=> $oficina, 'estadojuridico'=>$estadojuridico]);
         $email->setMessage($body);
+        $email->setAltMessage('El expediente se ha cambio de estado y se encuentra en:' . $estadojuridico .'y se esta atendiendo en la oficina:' . $oficina);
+
         if ($email->send()) {
             return true;
         } else {

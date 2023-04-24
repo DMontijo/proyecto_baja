@@ -371,6 +371,7 @@ class UserController extends BaseController
 		$email->setSubject('Te estamos atendiendo');
 		$body = view('email_template/password_email_template.php', ['email' => $to, 'password' => $password]);
 		$email->setMessage($body);
+		$email->setAltMessage('Usted ha generado un nuevo registro en el Centro de Denuncia Tecnológica. Para acceder debes ingresar los siguientes datos. USUARIO: ' .$to .'CONTRASEÑA' . $password );
 
 		if ($email->send()) {
 			return true;
