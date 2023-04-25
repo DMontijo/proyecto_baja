@@ -6682,8 +6682,8 @@
 							if (response.status == 1) {
 								const plantilla = response.plantilla;
 								tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
-								document.querySelector("#victima_modal_documento").value = '';
-								document.querySelector("#imputado_modal_documento").value = '';
+								// document.querySelector("#victima_modal_documento").value = '';
+								// document.querySelector("#imputado_modal_documento").value = '';
 								plantilla.value = '';
 								select_uma.value = '';
 								select_proceso.value = '';
@@ -6695,8 +6695,8 @@
 
 							} else {
 								tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
-								document.querySelector("#victima_modal_documento").value = '';
-								document.querySelector("#imputado_modal_documento").value = '';
+								// document.querySelector("#victima_modal_documento").value = '';
+								// document.querySelector("#imputado_modal_documento").value = '';
 								plantilla.value = '';
 								select_uma.value = '';
 								select_proceso.value = '';
@@ -6710,8 +6710,8 @@
 						error: function(jqXHR, textStatus, errorThrown) {
 							console.error(textStatus);
 							tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
-							document.querySelector("#victima_modal_documento").value = '';
-							document.querySelector("#imputado_modal_documento").value = '';
+							// document.querySelector("#victima_modal_documento").value = '';
+							// document.querySelector("#imputado_modal_documento").value = '';
 							plantilla.value = '';
 							select_uma.value = '';
 							select_proceso.value = '';
@@ -6741,16 +6741,16 @@
 								const plantilla = response.plantilla;
 								if (select_uma.getAttribute('required') == "true") {
 									tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
-									document.querySelector("#victima_modal_documento").value = '';
-									document.querySelector("#imputado_modal_documento").value = '';
+									// document.querySelector("#victima_modal_documento").value = '';
+									// document.querySelector("#imputado_modal_documento").value = '';
 									plantilla.value = '';
 									select_uma.value = '';
 									select_proceso.value = '';
 									select_notificacion.value = '';
 								} else {
 									tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
-									document.querySelector("#victima_modal_documento").value = '';
-									document.querySelector("#imputado_modal_documento").value = '';
+									// document.querySelector("#victima_modal_documento").value = '';
+									// document.querySelector("#imputado_modal_documento").value = '';
 									plantilla.value = '';
 									select_uma.value = '';
 									select_proceso.value = '';
@@ -6761,16 +6761,16 @@
 							} else {
 								if (select_uma.getAttribute('required') == "true") {
 									tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
-									document.querySelector("#victima_modal_documento").value = '';
-									document.querySelector("#imputado_modal_documento").value = '';
+									// document.querySelector("#victima_modal_documento").value = '';
+									// document.querySelector("#imputado_modal_documento").value = '';
 									plantilla.value = '';
 									select_uma.value = '';
 									select_proceso.value = '';
 									select_notificacion.value = '';
 								} else {
 									tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
-									document.querySelector("#victima_modal_documento").value = '';
-									document.querySelector("#imputado_modal_documento").value = '';
+									// document.querySelector("#victima_modal_documento").value = '';
+									// document.querySelector("#imputado_modal_documento").value = '';
 									plantilla.value = '';
 									select_uma.value = '';
 									select_proceso.value = '';
@@ -6782,8 +6782,8 @@
 						error: function(jqXHR, textStatus, errorThrown) {
 							console.error(textStatus);
 							tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
-							document.querySelector("#victima_modal_documento").value = '';
-							document.querySelector("#imputado_modal_documento").value = '';
+							// document.querySelector("#victima_modal_documento").value = '';
+							// document.querySelector("#imputado_modal_documento").value = '';
 							plantilla.value = '';
 							select_uma.value = '';
 							select_proceso.value = '';
@@ -6821,6 +6821,8 @@
 									'titulo': tipoPlantilla,
 									'statusenvio': 0,
 									'agente_asignado': document.querySelector('#empleado_asignado').value,
+									'victimaid': document.querySelector('#victima_modal_documento').value,
+								'imputado': document.querySelector('#imputado_modal_documento').value,
 								};
 								insertarDoc(data);
 							} else {
@@ -6831,6 +6833,8 @@
 									'titulo': tipoPlantilla,
 									'statusenvio': 0,
 									'agente_asignado': document.querySelector('#empleado_asignado').value,
+									'victimaid': document.querySelector('#victima_modal_documento').value,
+								'imputado': document.querySelector('#imputado_modal_documento').value,
 
 								};
 								insertarDoc(data);
@@ -6864,6 +6868,8 @@
 									'titulo': tipoPlantilla,
 									'statusenvio': 1,
 									'agente_asignado': document.querySelector('#empleado_asignado').value,
+									'victimaid': document.querySelector('#victima_modal_documento').value,
+								'imputado': document.querySelector('#imputado_modal_documento').value,
 
 								};
 								insertarDoc(data);
@@ -6877,6 +6883,8 @@
 									'titulo': tipoPlantilla,
 									'statusenvio': 1,
 									'agente_asignado': document.querySelector('#empleado_asignado').value,
+									'victimaid': document.querySelector('#victima_modal_documento').value,
+								'imputado': document.querySelector('#imputado_modal_documento').value,
 
 								};
 								insertarDoc(data);
@@ -6897,6 +6905,8 @@
 									'titulo': tipoPlantilla,
 									'statusenvio': 0,
 									'agente_asignado': document.querySelector('#empleado_asignado').value,
+									'victimaid': document.querySelector('#victima_modal_documento').value,
+								'imputado': document.querySelector('#imputado_modal_documento').value,
 
 								};
 								insertarDoc(data);
@@ -6909,6 +6919,8 @@
 									'titulo': tipoPlantilla,
 									'statusenvio': 0,
 									'agente_asignado': document.querySelector('#empleado_asignado').value,
+									'victimaid': document.querySelector('#victima_modal_documento').value,
+								'imputado': document.querySelector('#imputado_modal_documento').value,
 
 								};
 								insertarDoc(data);
@@ -6944,7 +6956,8 @@
 
 						if (response.status == 1) {
 							tinymce.get("documento").setContent('');
-
+							document.querySelector("#victima_modal_documento").value = '';
+							document.querySelector("#imputado_modal_documento").value = '';
 							const documentos = response.documentos;
 							Swal.fire({
 								icon: 'success',
