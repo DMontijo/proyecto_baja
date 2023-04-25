@@ -414,7 +414,7 @@ class DashboardController extends BaseController
 			$data->cantidad_abiertos = count($this->_folioModel->asObject()->where('STATUS', 'ABIERTO')->findAll());
 			$data->cantidad_derivados = count($this->_folioModel->asObject()->where('STATUS', 'DERIVADO')->where('FECHASALIDA BETWEEN "' . date('Y-m-d') . ' 00:00:00' . '" and "' . date('Y-m-d', strtotime("+ 1 day")) . ' 00:00:00' . '"')->findAll());
 			$data->cantidad_canalizados = count($this->_folioModel->asObject()->where('STATUS', 'CANALIZADO')->where('FECHASALIDA BETWEEN "' . date('Y-m-d') . ' 00:00:00' . '" and "' . date('Y-m-d', strtotime("+ 1 day")) . ' 00:00:00' . '"')->findAll());
-			$data->cantidad_expedientes = count($this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('AGENTEFIRMAID !=', null)->where('FECHASALIDA BETWEEN "' . date('Y-m-d') . ' 00:00:00' . '" and "' . date('Y-m-d', strtotime("+ 1 day")) . ' 00:00:00' . '"')->findAll());
+			$data->cantidad_expedientes = count($this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('FECHASALIDA BETWEEN "' . date('Y-m-d') . ' 00:00:00' . '" and "' . date('Y-m-d', strtotime("+ 1 day")) . ' 00:00:00' . '"')->findAll());
 			$data->cantidad_documentos = $this->_folioDocModel->countFoliosAsignados(session('ID'));
 			$data->cantidad_expedientes_no_firmados = count($this->_folioModel->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('AGENTEFIRMAID', null)->findAll());
 			$data->sesiones_admin = count($this->_sesionesModel->sesiones_abiertas()->result);
