@@ -32,24 +32,31 @@
 								<select class="form-control" id="coordinacion" name="coordinacion" required>
 									<option selected value=""></option>
 									<?php foreach ($body_data->coordinacion as $index => $coordinacion) { ?>
-										<option value="<?= $coordinacion->OFICINAID ?>"> <?= $coordinacion->OFICINADESCR ?> </option>
+										<option value="<?= $coordinacion->OFICINAID .' '.$coordinacion->AREAID.' '.$coordinacion->EMPLEADOIDRESPONSABLEAREA ?>"> <?= $coordinacion->OFICINADESCR ?> </option>
 									<?php } ?>
 								</select>
 							</div>
 
 							<div class="col-12 col-sm-6 col-md-6 col-lg-6 mb-3">
 								<label for="estado_pfd" class="form-label font-weight-bold">Unidad: </label>
-								<select class="form-control" id="unidad" name="unidad" required>
+								<select class="form-control" id="unidad" name="unidad">
 									<option selected value=""></option>
 									
 								</select>
 							</div>
+							<div class="col-12 col-sm-6 col-md-6 col-lg-6 mb-3 d-none">
+								<input id="oficinaid" name="oficinaid"/>
+								<input id="empleadoid" name="empleadoid"/>
+								<input id="areaid" name="areaid"/>
+
 							<div class="col-12 col-sm-6 col-md-6 col-lg-6 mb-3">
+
+							<!-- <div class="col-12 col-sm-6 col-md-6 col-lg-6 mb-3">
 								<label for="estado_pfd" class="form-label font-weight-bold">Empleado</label>
 								<select class="form-control" id="empleado" name="empleado" required>
 									<option selected value=""></option>
 								</select>
-							</div>
+							</div> -->
 							<div class="col-12 text-center">
 								<button type="submit" class="btn btn-primary" id="btn_remitir"><i class="fas fa-cloud-upload-alt mr-2"></i> REMITIR </button>
 							</div>
@@ -67,7 +74,6 @@
 
 	const empleados = document.querySelector('#empleado');
 
-
 	form_remision.addEventListener('submit', function(event) {
 		if (!form_remision.checkValidity()) {
 			event.preventDefault();
@@ -78,15 +84,20 @@
 	}, false)
 
 	coordinacion.addEventListener('change', (e) => {
+		console.log(e.target.value.split(" ")[0]);
 		$.ajax({
 			data: {
 				'municipio': '<?= $body_data->municipio ?>',
-				'coordinacion': e.target.value,
+				'coordinacion': e.target.value.split(" ")[0],
 			},
 			url: "<?= base_url('/data/get-unidades-by-municipio-and-coordinacion') ?>",
 			method: "POST",
 			dataType: "json",
 		}).done(function(data) {
+			console.log(data.data);
+			document.getElementById('oficinaid').value= e.target.value.split(" ")[0]
+			document.getElementById('empleadoid').value= e.target.value.split(" ")[2];
+			document.getElementById('areaid').value= e.target.value.split(" ")[1];
 			const unidades = data.data;
 			clearSelect(unidad);
 			unidades.forEach(unidade => {
@@ -101,6 +112,26 @@
 		});
 	});
 
+	unidad.addEventListener('change', (e) => {
+		$.ajax({
+			data: {
+				'municipio': '<?= $body_data->municipio ?>',
+				'unidad': e.target.value,
+			},
+			url: "<?= base_url('/data/get-agent-by-municipio-and-unidad') ?>",
+			method: "POST",
+			dataType: "json",
+		}).done(function(data) {
+			console.log(data);
+			document.getElementById('oficinaid').value=data.data[0].OFICINAID_MP;
+			document.getElementById('empleadoid').value=data.data[0].EMPLEADOID_MP;
+			document.getElementById('areaid').value=data.data[0].AREAID_MP;
+
+			console.log(data.data[0].EMPLEADOID_MP);
+		}).fail(function(jqXHR, textStatus) {
+			console.log(textStatus);
+		});
+	});
 	function clearSelect(select_element) {
 		for (let i = select_element.options.length; i >= 1; i--) {
 			select_element.remove(i);

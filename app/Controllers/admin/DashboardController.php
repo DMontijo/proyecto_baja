@@ -1401,15 +1401,17 @@ class DashboardController extends BaseController
 	public function bandeja_remision_post()
 	{
 		try {
-			$expediente = trim($this->request->getPost('expediente'));
-			$oficina = trim($this->request->getPost('coordinacion'));
-			$empleado = trim($this->request->getPost('empleado'));
-			$municipio = trim($this->request->getPost('municipio'));
 
-			$area = $this->_empleadosModel->asObject()->where('EMPLEADOID', $empleado)->where('MUNICIPIOID', $municipio)->first();
+			$expediente = trim($this->request->getPost('expediente'));
+			$oficina = trim($this->request->getPost('oficinaid'));
+			$empleado = trim($this->request->getPost('empleadoid'));
+			$municipio = trim($this->request->getPost('municipio'));
+			$area =  trim($this->request->getPost('areaid'));
+
+			// $area = $this->_empleadosModel->asObject()->where('EMPLEADOID', $empleado)->where('MUNICIPIOID', $municipio)->first();
 			$documents = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente)->findAll();
 			$status = 2;
-			$dataInter =  array('SOLICITUDID' => 9000600, 'INTERVENCIONID' => 98);
+			// $dataInter =  array('SOLICITUDID' => 9000600, 'INTERVENCIONID' => 98);
 
 			foreach ($documents as $key => $document) {
 				if (
@@ -1424,7 +1426,7 @@ class DashboardController extends BaseController
 			$dataFolio = array(
 				'AGENTEASIGNADOID' => $empleado,
 				'OFICINAASIGNADOID' => $oficina,
-				'AREAASIGNADOID' => $area->AREAID
+				'AREAASIGNADOID' => $area
 			);
 			$dataFolioDoc = array(
 				'AGENTEID' => $empleado,
@@ -1436,7 +1438,7 @@ class DashboardController extends BaseController
 			);
 
 
-			$updateExpediente = $this->_updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area->AREAID, 'REMISION', $status);
+			$updateExpediente = $this->_updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area, 'REMISION', $status);
 
 			if ($updateExpediente->status == 201) {
 
@@ -1494,7 +1496,7 @@ class DashboardController extends BaseController
 					if ($_bandeja_creada->status == 201) {
 						$datosBitacora = [
 							'ACCION' => 'Remitio un expediente.',
-							'NOTAS' => 'Exp: ' . $expediente . ' oficina: ' . $oficina . ' empleado:' . $empleado . ' area:' . $area->AREAID,
+							'NOTAS' => 'Exp: ' . $expediente . ' oficina: ' . $oficina . ' empleado:' . $empleado . ' area:' . $area,
 						];
 						$this->_bitacoraActividad($datosBitacora);
 						// $folioDoc = $this->_folioDocModel->where('NUMEROEXPEDIENTE', $expediente)->where('FOLIODOC.FOLIOID',$bandeja['FOLIOID'])->where('STATUS', 'FIRMADO')->join('RELACIONFOLIODOCEXPDOC', 'FOLIODOC.NUMEROEXPEDIENTE = RELACIONFOLIODOCEXPDOC.EXPEDIENTEID  AND FOLIODOC.FOLIODOCID = RELACIONFOLIODOCEXPDOC.FOLIODOCID')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('TIPODOC', 'SOLICITUD DE PERITAJE')->orLike('TIPODOC', 'OFICIO DE COLABORACION PARA INGRESO A HOSPITAL')->findAll();
@@ -3480,6 +3482,20 @@ class DashboardController extends BaseController
 		$endpoint = $this->endpoint . $function;
 		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
 		$data['COORD_ID'] = $coordinacion;
+		$data['userDB'] = $conexion->USER;
+		$data['pwdDB'] = $conexion->PASSWORD;
+		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
+		$data['schema'] = $conexion->SCHEMA;
+		return json_encode($this->_curlPostDataEncrypt($endpoint, $data));
+	}
+	public function getAgentByUnidad()
+	{
+		$municipio =$this->request->getPost('municipio');
+		$unidad =$this->request->getPost('unidad');
+		$function = '/unidades.php?process=nextUnidad';
+		$endpoint = $this->endpoint . $function;
+		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
+		$data['OFICINAID_MP'] = $unidad;
 		$data['userDB'] = $conexion->USER;
 		$data['pwdDB'] = $conexion->PASSWORD;
 		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
