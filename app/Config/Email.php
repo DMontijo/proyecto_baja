@@ -9,7 +9,7 @@ class Email extends BaseConfig
 	/**
 	 * @var string
 	 */
-	public $fromEmail = 'notificacion@fgebc.gob.mx';
+	public $fromEmail = 'notificacionfgebc@fgebc.gob.mx';
 
 	/**
 	 * @var string
@@ -54,14 +54,14 @@ class Email extends BaseConfig
 	 *
 	 * @var string
 	 */
-	public $SMTPUser = 'notificacion@fgebc.gob.mx';
+	public $SMTPUser = 'notificacionfgebc@fgebc.gob.mx';
 
 	/**
 	 * SMTP Password
 	 *
 	 * @var string
 	 */
-	public $SMTPPass = 'Mom86810';
+	public $SMTPPass = 'Wak27081';
 
 	/**
 	 * SMTP Port
