@@ -54,7 +54,7 @@
 </section>
 <?php if ($body_data->foliorow[0]->AGENTEASIGNADOID != NULL) { ?>
 	<script>
-		document.getElementById('subirDocumento').disabled = true;
+		// document.getElementById('subirDocumento').disabled = true;
 		// document.getElementById('generarDocumento').disabled = true;
 	</script>
 <?php } ?>
