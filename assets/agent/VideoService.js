@@ -23,6 +23,8 @@ export default class VideoCall {
     #resolution;
     #publishAudio;
     #publishVideo;
+    #audioSource;
+    #videoSource;
 
     /**
      * Recording start time for current call
@@ -40,6 +42,8 @@ export default class VideoCall {
      * @param {string} [config.resolution] - Resolution for LocalVideo
      * @param {boolean} [config.startWithAudio = true] - Start with audio or muted (dafault: true);
      * @param {boolean} [config.startWithVideo = true] - Start with video or dark (default: true);
+     * @param {string} [config.audioSource = undefined] - Start with audio or undefined (default: undefined);
+     * @param {string} [config.videoSource = undefined] - Start with video or undefined (default: undefined);
      * 
      * @example
      * 
@@ -59,7 +63,9 @@ export default class VideoCall {
         this.#resolution = config.resolution ?? "1280x720";
         this.#publishAudio = typeof config.startWithAudio !== 'undefined' ? config.startWithAudio : true;
         this.#publishVideo = typeof config.startWithVideo !== 'undefined' ? config.startWithVideo : true;
- 
+        this.#audioSource = config.audioSource ?? undefined;
+        this.#videoSource = config.videoSource ?? undefined;
+
         this.#session.on('streamCreated', event => {
             this.#session.subscribe(event.stream, this.#remoteVideoSelector);
         });
@@ -113,18 +119,18 @@ export default class VideoCall {
         this.#localVideoSelector = localVideoSelector;
 
         this.#session.connect(this.#token)
-        .then(() => {
+        .then(async () => {
             this.#publisher = this.#OV.initPublisher(this.#localVideoSelector, {
-                // audioSource: undefined,     // The source of audio. If undefined default microphone
-                // videoSource: undefined,     // The source of video. If undefined default webcam
-                publishAudio: this.#publishAudio, // Whether you want to start publishing with your audio unmuted or not
-                publishVideo: this.#publishVideo, // Whether you want to start publishing with your video enabled or not
-                resolution: this.#resolution,      // The resolution of your video
-                frameRate: 30,			    // The frame rate of your video
-                insertMode: 'APPEND',	    // How the video is inserted in the target element 'video-container'
-                mirror: false       	        // Whether to mirror your local video or not
+                audioSource: this.#audioSource,     // The source of audio. If undefined default microphone
+                videoSource: this.#videoSource,     // The source of video. If undefined default webcam
+                publishAudio: this.#publishAudio,   // Whether you want to start publishing with your audio unmuted or not
+                publishVideo: this.#publishVideo,   // Whether you want to start publishing with your video enabled or not
+                resolution: this.#resolution,       // The resolution of your video
+                frameRate: 30,			            // The frame rate of your video
+                insertMode: 'APPEND',	            // How the video is inserted in the target element 'video-container'
+                mirror: false       	            // Whether to mirror your local video or not
             });
-
+            
             this.#session.publish(this.#publisher);
 
             if (typeof callback === 'function') callback();

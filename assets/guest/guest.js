@@ -55,6 +55,16 @@ export class VideoServiceGuest {
 	isRecording = false;
 
 	/**
+	 * @type {MediaStream} 
+	 */
+	videoStream = undefined;
+
+	/**
+	* @type {MediaStream} 
+	*/
+	audioStream = undefined;
+
+	/**
 	 * @param {string} guestUUID - Preexisting guest uuid
 	 * @param {string} folio - Complaint folio
 	 * @param {string} priority - Complaint priority
@@ -227,7 +237,11 @@ export class VideoServiceGuest {
 			if (typeof callback === "function")
 				callback(response, this.guestData);
 
-			this.#videoCallService = new VideoCall({ remoteVideoSelector });
+			this.#videoCallService = new VideoCall({ remoteVideoSelector,
+				audioSource: this.audioStream,
+				videoSource: this.videoStream,
+			});
+			
 			this.#videoCallService.connectVideoCall(
 				response.token,
 				localVideoSelector,
