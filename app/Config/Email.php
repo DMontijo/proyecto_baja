@@ -61,7 +61,7 @@ class Email extends BaseConfig
 	 *
 	 * @var string
 	 */
-	public $SMTPPass = 'Wasabi64!';
+	public $SMTPPass = 'Cam56934';
 
 	/**
 	 * SMTP Port
