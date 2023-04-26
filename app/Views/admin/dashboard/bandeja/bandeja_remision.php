@@ -48,6 +48,9 @@
 								<input id="oficinaid" name="oficinaid"/>
 								<input id="empleadoid" name="empleadoid"/>
 								<input id="areaid" name="areaid"/>
+								<input id="tipoOficina" name="tipoOficina"/>
+
+							</div>
 
 							<div class="col-12 col-sm-6 col-md-6 col-lg-6 mb-3">
 
@@ -59,6 +62,7 @@
 							</div> -->
 							<div class="col-12 text-center">
 								<button type="submit" class="btn btn-primary" id="btn_remitir"><i class="fas fa-cloud-upload-alt mr-2"></i> REMITIR </button>
+							</div>
 							</div>
 						</form>
 					</div>
@@ -98,6 +102,8 @@
 			document.getElementById('oficinaid').value= e.target.value.split(" ")[0]
 			document.getElementById('empleadoid').value= e.target.value.split(" ")[2];
 			document.getElementById('areaid').value= e.target.value.split(" ")[1];
+			document.getElementById('tipoOficina').value= 'COORDINACION';
+
 			const unidades = data.data;
 			clearSelect(unidad);
 			unidades.forEach(unidade => {
@@ -126,6 +132,7 @@
 			document.getElementById('oficinaid').value=data.data[0].OFICINAID_MP;
 			document.getElementById('empleadoid').value=data.data[0].EMPLEADOID_MP;
 			document.getElementById('areaid').value=data.data[0].AREAID_MP;
+			document.getElementById('tipoOficina').value= 'UNIDAD';
 
 			console.log(data.data[0].EMPLEADOID_MP);
 		}).fail(function(jqXHR, textStatus) {

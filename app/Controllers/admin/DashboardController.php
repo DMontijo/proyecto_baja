@@ -1407,6 +1407,7 @@ class DashboardController extends BaseController
 			$empleado = trim($this->request->getPost('empleadoid'));
 			$municipio = trim($this->request->getPost('municipio'));
 			$area =  trim($this->request->getPost('areaid'));
+			$tipo = $this->request->getPost('tipoOficina');
 
 			// $area = $this->_empleadosModel->asObject()->where('EMPLEADOID', $empleado)->where('MUNICIPIOID', $municipio)->first();
 			$documents = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente)->findAll();
@@ -1438,7 +1439,7 @@ class DashboardController extends BaseController
 			);
 
 
-			$updateExpediente = $this->_updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area, 'REMISION', $status);
+			$updateExpediente = $this->_updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area, 'REMISION', $tipo, $status);
 
 			if ($updateExpediente->status == 201) {
 
@@ -4239,7 +4240,7 @@ class DashboardController extends BaseController
 		}
 	}
 
-	private function _updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area, $tipo, $estadojuridicoid = null)
+	private function _updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area, $tipo,  $tipoEnvio = null , $estadojuridicoid = null)
 	{
 		$function = '/expediente.php?process=updateArea';
 		$endpoint = $this->endpoint . $function;
@@ -4261,19 +4262,24 @@ class DashboardController extends BaseController
 		if ($tipo == 'REMISION') {
 			$data['AREAIDREGISTRO'] = $area;
 
-			if (ENVIRONMENT == 'production') {
-				if ($oficina == 409 || $oficina == 793 || $oficina == 924) {
-					$data['AREAIDRESPONSABLE'] = $area;
-				} else {
-					$data['AREAIDRESPONSABLE'] = null;
-				}
-			} else {
-				if ($oficina == 394 || $oficina == 793 || $oficina == 924) {
-					$data['AREAIDRESPONSABLE'] = $area;
-				} else {
-					$data['AREAIDRESPONSABLE'] = null;
-				}
+			if ($tipoEnvio == 'COORDINACION') {
+				$data['AREAIDRESPONSABLE'] = null;
+			}else if($tipoEnvio =='UNIDAD'){
+				$data['AREAIDRESPONSABLE'] = $area;
 			}
+			// if (ENVIRONMENT == 'production') {
+			// 	if ($oficina == 409 || $oficina == 793 || $oficina == 924) {
+			// 		$data['AREAIDRESPONSABLE'] = $area;
+			// 	} else {
+			// 		$data['AREAIDRESPONSABLE'] = null;
+			// 	}
+			// } else {
+			// 	if ($oficina == 394 || $oficina == 793 || $oficina == 924) {
+			// 		$data['AREAIDRESPONSABLE'] = $area;
+			// 	} else {
+			// 		$data['AREAIDRESPONSABLE'] = null;
+			// 	}
+			// }
 		} else {
 			$data['AREAIDREGISTRO'] = $area;
 			$data['AREAIDRESPONSABLE'] = $area;
