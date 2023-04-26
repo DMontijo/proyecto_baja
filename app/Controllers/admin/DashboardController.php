@@ -3503,6 +3503,20 @@ class DashboardController extends BaseController
 		$data['schema'] = $conexion->SCHEMA;
 		return json_encode($this->_curlPostDataEncrypt($endpoint, $data));
 	}
+	public function getEmpleadosByOficina()
+	{
+		$municipio = $this->request->getPost('municipio');
+		$oficina = $this->request->getPost('oficina');
+		$function = '/unidades.php?process=empleadoCdtec';
+		$endpoint = $this->endpoint . $function;
+		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
+		$data['OFICINAID'] = $oficina;
+		$data['userDB'] = $conexion->USER;
+		$data['pwdDB'] = $conexion->PASSWORD;
+		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
+		$data['schema'] = $conexion->SCHEMA;
+		return json_encode($this->_curlPostDataEncrypt($endpoint, $data));
+	}
 	private function getMediador($municipio, $modulo)
 	{
 		$function = '/consumoVistas.php?process=getMediador';

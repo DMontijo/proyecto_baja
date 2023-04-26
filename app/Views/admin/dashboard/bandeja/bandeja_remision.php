@@ -32,32 +32,32 @@
 								<select class="form-control" id="coordinacion" name="coordinacion" required>
 									<option selected value=""></option>
 									<?php foreach ($body_data->coordinacion as $index => $coordinacion) { ?>
-										<option value="<?= $coordinacion->OFICINAID .' '.$coordinacion->AREAID.' '.$coordinacion->EMPLEADOIDRESPONSABLEAREA ?>"> <?= $coordinacion->OFICINADESCR ?> </option>
+										<option value="<?= $coordinacion->OFICINAID . ' ' . $coordinacion->AREAID . ' ' . $coordinacion->EMPLEADOIDRESPONSABLEAREA ?>"> <?= $coordinacion->OFICINADESCR ?> </option>
 									<?php } ?>
 								</select>
 							</div>
 
-							<div class="col-12 col-sm-6 col-md-6 col-lg-6 mb-3">
+							<div class="col-12 col-sm-6 col-md-6 col-lg-6 mb-3 d-none" id="div_unidad">
 								<label for="estado_pfd" class="form-label font-weight-bold">Unidad: </label>
 								<select class="form-control" id="unidad" name="unidad">
 									<option selected value=""></option>
-									
+
 								</select>
 							</div>
 							<div class="col-12 col-sm-6 col-md-6 col-lg-6 mb-3 d-none">
-								<input id="oficinaid" name="oficinaid"/>
-								<input id="empleadoid" name="empleadoid"/>
-								<input id="areaid" name="areaid"/>
-								<input id="tipoOficina" name="tipoOficina"/>
+								<input id="oficinaid" name="oficinaid" />
+								<input id="empleadoid" name="empleadoid" />
+								<input id="areaid" name="areaid" />
+								<input id="tipoOficina" name="tipoOficina" />
 
 							</div>
 
-							<!-- <div class="col-12 col-sm-6 col-md-6 col-lg-6 mb-3">
+							<div class="col-12 col-sm-6 col-md-6 col-lg-6 mb-3 d-none" id="div_empleado">
 								<label for="estado_pfd" class="form-label font-weight-bold">Empleado</label>
-								<select class="form-control" id="empleado" name="empleado" required>
+								<select class="form-control" id="empleado" name="empleado">
 									<option selected value=""></option>
 								</select>
-							</div> -->
+							</div>
 							<div class="col-12 text-center">
 								<button type="submit" class="btn btn-primary" id="btn_remitir"><i class="fas fa-cloud-upload-alt mr-2"></i> REMITIR </button>
 							</div>
@@ -85,34 +85,80 @@
 	}, false)
 
 	coordinacion.addEventListener('change', (e) => {
-		console.log(e.target.value.split(" ")[0]);
-		$.ajax({
-			data: {
-				'municipio': '<?= $body_data->municipio ?>',
-				'coordinacion': e.target.value.split(" ")[0],
-			},
-			url: "<?= base_url('/data/get-unidades-by-municipio-and-coordinacion') ?>",
-			method: "POST",
-			dataType: "json",
-		}).done(function(data) {
-			console.log(data.data);
-			document.getElementById('oficinaid').value= e.target.value.split(" ")[0]
-			document.getElementById('empleadoid').value= e.target.value.split(" ")[2];
-			document.getElementById('areaid').value= e.target.value.split(" ")[1];
-			document.getElementById('tipoOficina').value= 'COORDINACION';
+		let selectedOption = e.target.options[e.target.selectedIndex];
+		let selectedOptionInnerHTML = selectedOption.innerHTML;
+		if (selectedOptionInnerHTML.includes("VIDEO DENUNCIA")) {
+			document.getElementById('div_empleado').classList.remove('d-none');
+			document.getElementById('div_unidad').classList.add('d-none');
 
-			const unidades = data.data;
-			clearSelect(unidad);
-			unidades.forEach(unidade => {
-				let option = document.createElement("option");
-				option.text = unidade.OFICINADESCR;
-				option.value = unidade.OFICINAID;
-				unidad.add(option);
+			$.ajax({
+				data: {
+					'municipio': '<?= $body_data->municipio ?>',
+					'oficina': e.target.value.split(" ")[0],
+				},
+				url: "<?= base_url('/data/get-empleados-by-oficina') ?>",
+				method: "POST",
+				dataType: "json",
+			}).done(function(response) {
+				console.log(response);
+				const empleado = response.data;
+				clearSelect(unidad);
+				empleado.forEach(emplead => {
+					let option = document.createElement("option");
+					option.value = emplead.EMPLEADOID +' '+ emplead.OFICINAID +' '+emplead.AREAID;
+					option.text = emplead.NOMBRE + ' '+ emplead.PRIMERAPELLIDO +' '+emplead.SEGUNDOAPELLIDO;
+					empleados.add(option);
+				});
+				empleados.value = '';
+			}).fail(function(jqXHR, textStatus) {
+				clearSelect(empleados);
+				document.getElementById('div_empleado').classList.add('d-none');
+
 			});
-			unidad.value = '';
-		}).fail(function(jqXHR, textStatus) {
-			clearSelect(unidad);
-		});
+		
+		} else {
+			document.getElementById('div_unidad').classList.remove('d-none');
+			document.getElementById('div_empleado').classList.add('d-none');
+
+			$.ajax({
+				data: {
+					'municipio': '<?= $body_data->municipio ?>',
+					'coordinacion': e.target.value.split(" ")[0],
+				},
+				url: "<?= base_url('/data/get-unidades-by-municipio-and-coordinacion') ?>",
+				method: "POST",
+				dataType: "json",
+			}).done(function(data) {
+				console.log(data.data);
+				document.getElementById('oficinaid').value = e.target.value.split(" ")[0]
+				document.getElementById('empleadoid').value = e.target.value.split(" ")[2];
+				document.getElementById('areaid').value = e.target.value.split(" ")[1];
+				document.getElementById('tipoOficina').value = 'COORDINACION';
+				console.log("coord");
+
+
+
+				const unidades = data.data;
+				clearSelect(unidad);
+				unidades.forEach(unidade => {
+					let option = document.createElement("option");
+					option.text = unidade.OFICINADESCR;
+					option.value = unidade.OFICINAID;
+					unidad.add(option);
+				});
+				unidad.value = '';
+			}).fail(function(jqXHR, textStatus) {
+				clearSelect(unidad);
+				document.getElementById('div_unidad').classList.add('d-none');
+
+			});
+		}
+	});
+	empleados.addEventListener('change', (e) => {
+			document.getElementById('oficinaid').value = e.target.value.split(" ")[1]
+			document.getElementById('empleadoid').value =e.target.value.split(" ")[0]
+			document.getElementById('areaid').value =e.target.value.split(" ")[2]
+			document.getElementById('tipoOficina').value = 'CDTEC';
 	});
 
 	unidad.addEventListener('change', (e) => {
@@ -126,16 +172,17 @@
 			dataType: "json",
 		}).done(function(data) {
 			console.log(data);
-			document.getElementById('oficinaid').value=data.data[0].OFICINAID_MP;
-			document.getElementById('empleadoid').value=data.data[0].EMPLEADOID_MP;
-			document.getElementById('areaid').value=data.data[0].AREAID_MP;
-			document.getElementById('tipoOficina').value= 'UNIDAD';
+			document.getElementById('oficinaid').value = data.data[0].OFICINAID_MP;
+			document.getElementById('empleadoid').value = data.data[0].EMPLEADOID_MP;
+			document.getElementById('areaid').value = data.data[0].AREAID_MP;
+			document.getElementById('tipoOficina').value = 'UNIDAD';
 
 			console.log(data.data[0].EMPLEADOID_MP);
 		}).fail(function(jqXHR, textStatus) {
 			console.log(textStatus);
 		});
 	});
+
 	function clearSelect(select_element) {
 		for (let i = select_element.options.length; i >= 1; i--) {
 			select_element.remove(i);
