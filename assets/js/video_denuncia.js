@@ -109,7 +109,7 @@ disponible_connect.addEventListener("click", () => {
 					deleteVideoElement();
 				} catch (error) {}
 				clearVideoCall();
-
+console.log(response.guest.uuid, 'response');
 				guestUUID = response.guest.uuid;
 				console.log("Respuesta: ", response);
 				document.querySelector("#nombre_denunciante").value =
