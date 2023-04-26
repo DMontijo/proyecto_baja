@@ -3477,8 +3477,8 @@ class DashboardController extends BaseController
 	}
 	public function getUnidades()
 	{
-		$municipio =$this->request->getPost('municipio');
-		$coordinacion =$this->request->getPost('coordinacion');
+		$municipio = $this->request->getPost('municipio');
+		$coordinacion = $this->request->getPost('coordinacion');
 		$function = '/unidades.php?process=unidad';
 		$endpoint = $this->endpoint . $function;
 		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
@@ -3491,8 +3491,8 @@ class DashboardController extends BaseController
 	}
 	public function getAgentByUnidad()
 	{
-		$municipio =$this->request->getPost('municipio');
-		$unidad =$this->request->getPost('unidad');
+		$municipio = $this->request->getPost('municipio');
+		$unidad = $this->request->getPost('unidad');
 		$function = '/unidades.php?process=nextUnidad';
 		$endpoint = $this->endpoint . $function;
 		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
@@ -4240,7 +4240,7 @@ class DashboardController extends BaseController
 		}
 	}
 
-	private function _updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area, $tipo,  $tipoEnvio = null , $estadojuridicoid = null)
+	private function _updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area, $tipo,  $tipoEnvio = null, $estadojuridicoid = null)
 	{
 		$function = '/expediente.php?process=updateArea';
 		$endpoint = $this->endpoint . $function;
@@ -4264,22 +4264,19 @@ class DashboardController extends BaseController
 
 			if ($tipoEnvio == 'COORDINACION') {
 				$data['AREAIDRESPONSABLE'] = null;
-			}else if($tipoEnvio =='UNIDAD'){
+			} else if ($tipoEnvio == 'UNIDAD') {
 				$data['AREAIDRESPONSABLE'] = $area;
+			} else {
+				if (ENVIRONMENT == 'production') {
+					if ($oficina == 409 || $oficina == 793 || $oficina == 924) {
+						$data['AREAIDRESPONSABLE'] = $area;
+					} 
+				} else {
+					if ($oficina == 394 || $oficina == 793 || $oficina == 924) {
+						$data['AREAIDRESPONSABLE'] = $area;
+					} 
+				}
 			}
-			// if (ENVIRONMENT == 'production') {
-			// 	if ($oficina == 409 || $oficina == 793 || $oficina == 924) {
-			// 		$data['AREAIDRESPONSABLE'] = $area;
-			// 	} else {
-			// 		$data['AREAIDRESPONSABLE'] = null;
-			// 	}
-			// } else {
-			// 	if ($oficina == 394 || $oficina == 793 || $oficina == 924) {
-			// 		$data['AREAIDRESPONSABLE'] = $area;
-			// 	} else {
-			// 		$data['AREAIDRESPONSABLE'] = null;
-			// 	}
-			// }
 		} else {
 			$data['AREAIDREGISTRO'] = $area;
 			$data['AREAIDRESPONSABLE'] = $area;

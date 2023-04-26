@@ -52,8 +52,6 @@
 
 							</div>
 
-							<div class="col-12 col-sm-6 col-md-6 col-lg-6 mb-3">
-
 							<!-- <div class="col-12 col-sm-6 col-md-6 col-lg-6 mb-3">
 								<label for="estado_pfd" class="form-label font-weight-bold">Empleado</label>
 								<select class="form-control" id="empleado" name="empleado" required>
@@ -62,7 +60,6 @@
 							</div> -->
 							<div class="col-12 text-center">
 								<button type="submit" class="btn btn-primary" id="btn_remitir"><i class="fas fa-cloud-upload-alt mr-2"></i> REMITIR </button>
-							</div>
 							</div>
 						</form>
 					</div>
