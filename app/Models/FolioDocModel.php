@@ -15,6 +15,7 @@ class FolioDocModel extends Model
 		'ANO',
 		'VICTIMAID',
 		'IMPUTADOID',
+		'PLANTILLAID',
 		'ESTADOID',
 		'MUNICIPIOID',
 		'NUMEROEXPEDIENTE',

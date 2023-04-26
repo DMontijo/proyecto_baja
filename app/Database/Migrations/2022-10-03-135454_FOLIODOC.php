@@ -33,6 +33,12 @@ class FOLIODOC extends Migration
 				'null' => TRUE,
 
 			],
+			'PLANTILLAID' => [
+				'type' => 'INT',
+				'unsigned' => TRUE,
+				'null' => TRUE,
+
+			],
             'ESTADOID' => [ //DONDE SE FIRMA
 				'type' => 'INT',
 				'unsigned' => TRUE,
