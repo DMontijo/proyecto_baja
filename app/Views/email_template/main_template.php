@@ -127,14 +127,16 @@
 		<tr>
 			<td align="center" style="background-color: #7D7D7D!important;padding-top: 50px;padding-bottom: 50px" bgcolor="#7D7D7D">
 				<table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:600px;">
-					<tr>
-						<td border="0" valign="top" style="<?= "font-size: 0; background-color: #511229!important;height: 294px;background-image: url('" . base_url('assets/img/email/HEADER_CORREO.jpg') . "');background-repeat: no-repeat; background-size: 600px 294px;" ?>" bgcolor="#511229"></td>
+					<tr border="0" valign="top" style="text-align: center;font-size: 0; background-color: #511229!important; background-repeat: no-repeat;" bgcolor="#511229">
+						<td style="height: 90px;">
+							<img src="<?= base_url('assets/img/FGEBC.png') ?>" width="150px" alt="FGEBC Logo" style="margin-bottom: -70px;margin-top: 10px;">
+						</td>
 					</tr>
 					<tr>
 						<td style="padding: 0px 50px 50px 50px; background-color: #ffffff!important;" bgcolor="#ffffff">
 							<table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:500px;">
 								<tr>
-									<td class="body" bgcolor="#E5E4E3" style="padding: 10px;">
+									<td class="body" bgcolor="#E5E4E3" style="padding: 80px 10px 20px 10px;">
 										<?= $this->renderSection('body') ?>
 									</td>
 								</tr>
