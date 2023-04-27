@@ -1401,7 +1401,6 @@ class DashboardController extends BaseController
 	public function bandeja_remision_post()
 	{
 		try {
-
 			$expediente = trim($this->request->getPost('expediente'));
 			$oficina = trim($this->request->getPost('oficinaid'));
 			$empleado = trim($this->request->getPost('empleadoid'));
@@ -4279,6 +4278,7 @@ class DashboardController extends BaseController
 			if ($tipoEnvio == 'COORDINACION') {
 				$data['AREAIDRESPONSABLE'] = null;
 			} else if ($tipoEnvio == 'UNIDAD') {
+				$data['OFICINAIDRESPONSABLE'] = null;
 				$data['AREAIDRESPONSABLE'] = $area;
 			} else {
 				if (ENVIRONMENT == 'production') {
