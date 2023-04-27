@@ -1372,8 +1372,8 @@ class ReportesController extends BaseController
 			'fechaFin' => date("Y-m-d")
 		];
 		$documentos = $this->_plantillasModel->filtro_ordenes_proteccion($dataPost);
-		// var_dump($documentos);
-		// exit();
+		//  var_dump($documentos);
+		//  exit();
 		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
 		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
 		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
@@ -1574,6 +1574,8 @@ class ReportesController extends BaseController
 			"SERVIDOR PUBLICO SOLICITANTE",
 			"DELITO",
 			"TIPO DE ORDEN DE PROTECCIÓN",
+			"VICTIMA/OFENDIDO",
+			"GÉNERO",
 			"VÍCTIMA LESIONADA",
 		];
 
@@ -1602,18 +1604,20 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('F' . $row,  $orden->NOMBRE_MP);
 			$sheet->setCellValue('G' . $row,  $orden->HECHODELITO);
 			$sheet->setCellValue('H' . $row,  $orden->TIPODOC);
-			$sheet->setCellValue('I' . $row,  $orden->LESIONES);
-			$sheet->setCellValue('J' . $row, '');
+			$sheet->setCellValue('I' . $row,  $orden->NOMBRE_VTM);
+			$sheet->setCellValue('J' . $row,  ($orden->SEXO == 'M' ? 'MASCULINO' : ($orden->SEXO == 'F' ? 'FEMENINO' : '')));
+			$sheet->setCellValue('K' . $row,  $orden->LESIONES);
+			$sheet->setCellValue('L' . $row, '');
 
 			$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
 
 			if (!(($row - 4) >= count($documentos))) $row++;
 		}
-		$sheet->getStyle('A1:J1')->applyFromArray($styleCab);
-		$sheet->getStyle('A2:J2')->applyFromArray($styleCab);
+		$sheet->getStyle('A1:K1')->applyFromArray($styleCab);
+		$sheet->getStyle('A2:K2')->applyFromArray($styleCab);
 
-		$sheet->getStyle('A4:J4')->applyFromArray($styleHeaders);
-		$sheet->getStyle('A5:J' . $row)->applyFromArray($styleCells);
+		$sheet->getStyle('A4:K4')->applyFromArray($styleHeaders);
+		$sheet->getStyle('A5:K' . $row)->applyFromArray($styleCells);
 
 		$sheet->mergeCells('A1:R1');
 		$sheet->mergeCells('A2:R2');
