@@ -59,7 +59,7 @@
 								</select>
 							</div>
 							<div class="col-12 text-center">
-								<button type="submit" class="btn btn-primary" id="btn_remitir"><i class="fas fa-cloud-upload-alt mr-2"></i> REMITIR </button>
+								<button type="submit" class="btn btn-primary" id="btn_remitir" disabled><i class="fas fa-cloud-upload-alt mr-2"></i> REMITIR </button>
 							</div>
 						</form>
 					</div>
@@ -74,6 +74,7 @@
 	const unidad = document.querySelector('#unidad');
 
 	const empleados = document.querySelector('#empleado');
+	const btn_remitir = document.getElementById('btn_remitir');
 
 	form_remision.addEventListener('submit', function(event) {
 		if (!form_remision.checkValidity()) {
@@ -90,6 +91,7 @@
 		if (selectedOptionInnerHTML.includes("VIDEO DENUNCIA")) {
 			document.getElementById('div_empleado').classList.remove('d-none');
 			document.getElementById('div_unidad').classList.add('d-none');
+			document.querySelector('#empleado').setAttribute('required', true);
 
 			$.ajax({
 				data: {
@@ -101,21 +103,23 @@
 				dataType: "json",
 			}).done(function(response) {
 				console.log(response);
+
 				const empleado = response.data;
 				clearSelect(unidad);
 				empleado.forEach(emplead => {
 					let option = document.createElement("option");
-					option.value = emplead.EMPLEADOID +' '+ emplead.OFICINAID +' '+emplead.AREAID;
-					option.text = emplead.NOMBRE + ' '+ emplead.PRIMERAPELLIDO +' '+emplead.SEGUNDOAPELLIDO;
+					option.value = emplead.EMPLEADOID + ' ' + emplead.OFICINAID + ' ' + emplead.AREAID;
+					option.text = emplead.NOMBRE + ' ' + emplead.PRIMERAPELLIDO + ' ' + emplead.SEGUNDOAPELLIDO;
 					empleados.add(option);
 				});
 				empleados.value = '';
+
 			}).fail(function(jqXHR, textStatus) {
 				clearSelect(empleados);
 				document.getElementById('div_empleado').classList.add('d-none');
 
 			});
-		
+
 		} else {
 			document.getElementById('div_unidad').classList.remove('d-none');
 			document.getElementById('div_empleado').classList.add('d-none');
@@ -147,18 +151,24 @@
 					unidad.add(option);
 				});
 				unidad.value = '';
+				btn_remitir.disabled = false;
+
 			}).fail(function(jqXHR, textStatus) {
 				clearSelect(unidad);
 				document.getElementById('div_unidad').classList.add('d-none');
+				btn_remitir.disabled = true;
+
 
 			});
 		}
 	});
 	empleados.addEventListener('change', (e) => {
-			document.getElementById('oficinaid').value = e.target.value.split(" ")[1]
-			document.getElementById('empleadoid').value =e.target.value.split(" ")[0]
-			document.getElementById('areaid').value =e.target.value.split(" ")[2]
-			document.getElementById('tipoOficina').value = 'CDTEC';
+		document.getElementById('oficinaid').value = e.target.value.split(" ")[1]
+		document.getElementById('empleadoid').value = e.target.value.split(" ")[0]
+		document.getElementById('areaid').value = e.target.value.split(" ")[2]
+		document.getElementById('tipoOficina').value = 'CDTEC';
+		btn_remitir.disabled = false;
+
 	});
 
 	unidad.addEventListener('change', (e) => {
@@ -177,6 +187,13 @@
 			document.getElementById('areaid').value = data.data[0].AREAID_MP;
 			document.getElementById('tipoOficina').value = 'UNIDAD';
 
+			if (data.status == 401) {
+				Swal.fire({
+					icon: 'error',
+					html: 'No hay MP en esta unidad, selecciona otra',
+					confirmButtonColor: '#bf9b55',
+				})
+			}
 			console.log(data.data[0].EMPLEADOID_MP);
 		}).fail(function(jqXHR, textStatus) {
 			console.log(textStatus);

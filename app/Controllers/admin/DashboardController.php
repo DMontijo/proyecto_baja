@@ -1407,6 +1407,11 @@ class DashboardController extends BaseController
 			$municipio = trim($this->request->getPost('municipio'));
 			$area =  trim($this->request->getPost('areaid'));
 			$tipo = $this->request->getPost('tipoOficina');
+			
+			if (($oficina == 0 || $oficina == '')||($area == 0 || $area == '')||($empleado == 0 || $empleado == '')) {
+				return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_error', 'Por favor, completa los campos');
+
+			}
 
 			// $area = $this->_empleadosModel->asObject()->where('EMPLEADOID', $empleado)->where('MUNICIPIOID', $municipio)->first();
 			$documents = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente)->findAll();
@@ -1428,6 +1433,7 @@ class DashboardController extends BaseController
 				'OFICINAASIGNADOID' => $oficina,
 				'AREAASIGNADOID' => $area
 			);
+
 			$dataFolioDoc = array(
 				'AGENTEID' => $empleado,
 				'OFICINAID' => $oficina,
@@ -4278,7 +4284,6 @@ class DashboardController extends BaseController
 			if ($tipoEnvio == 'COORDINACION') {
 				$data['AREAIDRESPONSABLE'] = null;
 			} else if ($tipoEnvio == 'UNIDAD') {
-				$data['OFICINAIDRESPONSABLE'] = null;
 				$data['AREAIDRESPONSABLE'] = $area;
 			} else {
 				if (ENVIRONMENT == 'production') {
