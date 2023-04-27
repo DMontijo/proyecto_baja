@@ -1919,6 +1919,7 @@ class DashboardController extends BaseController
 		$institutomunicipio = $this->request->getPost('institutomunicipio');
 		$institutoremision = $this->request->getPost('institutoremision');
 		$telefonica = $this->request->getPost('denuncia_tel');
+		$electronica = $this->request->getPost('denuncia_electronica');
 
 		$agenteId = session('ID') ? session('ID') : 1;
 
@@ -1942,6 +1943,9 @@ class DashboardController extends BaseController
 		}
 		if ($telefonica == 'S') {
 			$data['TIPODENUNCIA'] = 'TE';
+		}
+		if ($electronica == 'S') {
+			$data['TIPODENUNCIA'] = 'EL';
 		}
 		if (!empty($status) && !empty($motivo) && !empty($year) && !empty($folio) && !empty($agenteId)) {
 			$folioRow = $this->_folioModel->where('ANO', $year)->where('FOLIOID', $folio)->where('STATUS', 'EN PROCESO')->first();
@@ -1990,6 +1994,7 @@ class DashboardController extends BaseController
 		$notas = $this->request->getPost('notas');
 		$tiposExpedienteId = $this->request->getPost('tipo_expediente');
 		$telefonica = $this->request->getPost('denuncia_tel');
+		$electronica = $this->request->getPost('denuncia_electronica');
 
 		try {
 			if (!empty($tiposExpedienteId) && !empty($folio) && !empty($municipio) && !empty($estado) && !empty($notas)) {
@@ -2128,7 +2133,11 @@ class DashboardController extends BaseController
 					if ($telefonica == 'S') {
 						$folioRow['TIPODENUNCIA'] = 'TE';
 					}
+					if ($electronica == 'S') {
+						$folioRow['TIPODENUNCIA'] = 'EL';
+					}
 
+					
 					if ($expedienteCreado->status == 201) {
 						$folioRow['EXPEDIENTEID'] = $expedienteCreado->EXPEDIENTEID;
 						$folioRow['FECHASALIDA'] = date('Y-m-d H:i:s');
@@ -2230,7 +2239,7 @@ class DashboardController extends BaseController
 								'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year . ' EXPEDIENTE: ' . $expedienteCreado->EXPEDIENTEID
 							];
 							$this->_bitacoraActividad($datosBitacora);
-							if ($folioRow['TIPODENUNCIA'] == 'VD' || $folioRow['TIPODENUNCIA'] == 'TE') {
+							if ($folioRow['TIPODENUNCIA'] == 'VD' || $folioRow['TIPODENUNCIA'] == 'TE' || $folioRow['TIPODENUNCIA'] == 'EL') {
 								$denunciante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', $folioRow['DENUNCIANTEID'])->first();
 								if ($this->_sendEmailExpediente($denunciante->CORREO, $folio, $expedienteCreado->EXPEDIENTEID)) {
 									return json_encode(['status' => 1, 'expediente' => $expedienteCreado->EXPEDIENTEID]);

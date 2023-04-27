@@ -254,8 +254,10 @@ class ReportesController extends BaseController
 				$tipo = 'VIDEO';
 			} else if ($folio->TIPODENUNCIA == 'DA') {
 				$tipo = 'ANÓNIMA';
-			} else {
+			} else if($folio->TIPODENUNCIA =='TE') {
 				$tipo = 'TELEFÓNICA';
+			}else{
+				$tipo = 'ELECTRONICA';
 			}
 
 			$fechaSalida = '';
@@ -882,9 +884,12 @@ class ReportesController extends BaseController
 				$tipo = 'VIDEO';
 			} else if ($folio->TIPODENUNCIA == 'DA') {
 				$tipo = 'ANÓNIMA';
-			} else {
+			} else if($folio->TIPODENUNCIA =='TE') {
 				$tipo = 'TELEFÓNICA';
+			}else{
+				$tipo = 'ELECTRONICA';
 			}
+
 			$sheet->setCellValue('A' . $row, $row - 4);
 			$sheet->setCellValue('B' . $row, $dateregistro);
 			$sheet->setCellValue('C' . $row, $folio->FOLIOID);
@@ -2216,9 +2221,12 @@ class ReportesController extends BaseController
 				$tipo = 'VIDEO DENUNCIA';
 			} else if ($folio->TIPODENUNCIA == 'DA') {
 				$tipo = 'ANÓNIMA';
-			} else {
+			}else if($folio->TIPODENUNCIA =='TE') {
 				$tipo = 'TELEFÓNICA';
+			}else{
+				$tipo = 'ELECTRONICA';
 			}
+
 			$sheet->setCellValue('A' . $row, $row - 4);
 			$sheet->setCellValue('B' . $row, $dateregistro);
 			$sheet->setCellValue('C' . $row, $folio->FOLIOID);
