@@ -165,7 +165,7 @@
 						victimas.forEach(victima => {
 							const option = document.createElement('option');
 							option.value = victima.PERSONAFISICAID;
-							option.text = victima.NOMBRE + ' ' + victima.PRIMERAPELLIDO;
+							option.text = victima.NOMBRE + ' ' + victima.PRIMERAPELLIDO+' | ' + victima.PERSONACALIDADJURIDICADESCR;
 							select_victima_documento.add(option, null);
 						});
 						$('#imputado_modal_documento').empty();
@@ -252,7 +252,7 @@
 						victimas.forEach(victima => {
 							const option = document.createElement('option');
 							option.value = victima.PERSONAFISICAID;
-							option.text = victima.NOMBRE + ' ' + victima.PRIMERAPELLIDO;
+							option.text = victima.NOMBRE + ' ' + victima.PRIMERAPELLIDO+' | ' + victima.PERSONACALIDADJURIDICADESCR;
 							select_victima_documento.add(option, null);
 						});
 						$('#imputado_modal_documento').empty();
@@ -837,7 +837,6 @@
 		}
 
 		function insertarDoc(data) {
-			console.log(data);
 			$.ajax({
 				data: data,
 				url: "<?= base_url('/admin/dashboard/insert-documentosWSYWSG') ?>",
