@@ -3975,7 +3975,7 @@ class DashboardController extends BaseController
 			$folioRow['AGENTEATENCIONID'] = null;
 			$folioRow['AGENTEFIRMAID'] = null;
 
-			$update = $this->_folioModel->set($folioRow)->where('ANO', $year)->where('FOLIOID', $folio)->where('EXPEDIENTEID IS NULL')->update();
+			$update = $this->_folioModel->set($folioRow)->where('ANO', $year)->where('FOLIOID', $folio)->where('AGENTEATENCIONID', session('ID'))->where('EXPEDIENTEID IS NULL')->update();
 
 			$datosBitacora = [
 				'ACCION' => 'Ha restaurado un folio a abierto',
