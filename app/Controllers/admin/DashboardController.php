@@ -2137,7 +2137,7 @@ class DashboardController extends BaseController
 						$folioRow['TIPODENUNCIA'] = 'EL';
 					}
 
-					
+
 					if ($expedienteCreado->status == 201) {
 						$folioRow['EXPEDIENTEID'] = $expedienteCreado->EXPEDIENTEID;
 						$folioRow['FECHASALIDA'] = date('Y-m-d H:i:s');
@@ -6990,7 +6990,7 @@ class DashboardController extends BaseController
 		$plantilla = $this->_plantillasModel->where('TITULO', $this->request->getPost('titulo'))->first();
 		$folioRow = $this->_folioModel->where('ANO', $year)->where('FOLIOID', $folio)->first();
 
-		if (($this->request->getPost('victimaid') == '' || $this->request->getPost('victimaid') == null || $this->request->getPost('victimaid')==0)|| $this->request->getPost('imputado') == '' || $this->request->getPost('imputado') == null || $this->request->getPost('imputado')==0) {
+		if (($this->request->getPost('victimaid') == '' || $this->request->getPost('victimaid') == null || $this->request->getPost('victimaid') == 0) || $this->request->getPost('imputado') == '' || $this->request->getPost('imputado') == null || $this->request->getPost('imputado') == 0) {
 			return json_encode(['status' => 0]);
 		}
 		if ($folioRow) {
@@ -7121,6 +7121,11 @@ class DashboardController extends BaseController
 					$update = $this->_folioModel->set($dataFolio)->where('FOLIOID', $folio)->where('ANO', $year)->update();
 				}
 				$documentos = $this->_folioDocModel->get_by_folio($folio, $year);
+				$datosBitacora = [
+					'ACCION' => 'Ha agregado un nuevo documento',
+					'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year . ' PLANTILLAID: ' .  $plantilla['ID'],
+				];
+				$this->_bitacoraActividad($datosBitacora);
 
 				return json_encode(['status' => 1, 'documentos' => $documentos]);
 			} else {
