@@ -29,9 +29,10 @@
 										<td class="text-center"><?= $folio->HECHODELITO ?></td>
 										<td class="text-center"><?= $folio->NOMBRE ?> <?= $folio->APELLIDO_PATERNO ?> <?= $folio->APELLIDO_MATERNO ?></td>
 										<td class="text-center">
-											<form id="<?= 'form_' . $folio->FOLIOID ?>" action="<?= base_url('admin/dashboard/liberar_folio') ?>" method="POST">
+											<form id="formulario_liberacion" action="<?= base_url('admin/dashboard/liberar_folio') ?>" name="formulario_liberacion" method="POST"onsubmit="return confirmarLiberacion()">
 												<input type="text" name="folio" value="<?= $folio->FOLIOID ?>" hidden>
 												<input type="text" name="year" value="<?= $folio->ANO ?>" hidden>
+												<input type="text" id="agenteatencion" value="<?= $folio->NOMBRE . ' ' . $folio->APELLIDO_PATERNO?>" hidden>
 												<button type="submit" class="btn btn-primary">LIBERAR</button>
 											</form>
 										</td>
@@ -46,6 +47,22 @@
 	</div>
 </section>
 <script>
+	function confirmarLiberacion() {
+		event.preventDefault();
+
+		Swal.fire({
+			icon: 'warning',
+			title: "El folio esta siendo atendido por "+document.getElementById('agenteatencion').value ,
+			showCancelButton: true,
+			confirmButtonColor: "#bf9b55",
+			confirmButtonText: "Aceptar",
+			cancelButtonText: "Cancelar",
+		}).then(result => {
+			if (result.dismiss === Swal.DismissReason.cancel) {}else{
+				document.getElementById('formulario_liberacion').submit();
+			}
+		})
+	}
 	$(function() {
 		$("#folios_sin_firma").DataTable({
 			responsive: false,
