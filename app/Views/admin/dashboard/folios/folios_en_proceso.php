@@ -52,7 +52,7 @@
 
 		Swal.fire({
 			icon: 'warning',
-			title: "El folio esta siendo atendido por "+document.getElementById('agenteatencion').value ,
+			title: "¿Estás seguro de liberar este folio? El folio esta siendo atendido por "+document.getElementById('agenteatencion').value ,
 			showCancelButton: true,
 			confirmButtonColor: "#bf9b55",
 			confirmButtonText: "Aceptar",
