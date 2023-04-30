@@ -54,7 +54,7 @@ class Email extends BaseConfig
 	 *
 	 * @var string
 	 */
-	public $SMTPUser = 'notificacionfgebc@fgebc.gob.mx';
+	public $SMTPUser = 'notificacionesfgebc@fgebc.gob.mx';
 
 	/**
 	 * SMTP Password
