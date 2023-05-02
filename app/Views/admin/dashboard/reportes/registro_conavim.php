@@ -103,7 +103,7 @@
 							</div>
 						</div>
 
-						<table id="registro_llamadas" class="table table-bordered table-striped">
+						<table id="registro_conavim" class="table table-bordered table-striped ">
 							<thead>
 								<tr>
 									<th class="text-center">FOLIO</th>
@@ -153,9 +153,12 @@
 			responsive: false,
 			lengthChange: false,
 			autoWidth: true,
-			ordering: false,
-			searching: false,
-			pageLength: 30,
+			ordering: true,
+			order: [
+				// [0, 'asc'],
+			],
+			searching: true,
+			pageLength: 100,
 			// dom: 'Bfrtip',
 			// buttons: [
 			// 	'copy', 'excel', 'pdf'

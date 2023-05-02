@@ -2281,6 +2281,277 @@ class ReportesController extends BaseController
 		header("Cache-Control: max-age=0");
 		$writer->save("php://output");
 	}
+
+	public function getComisionEstatal()
+	{
+		$dataPost = [
+			'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
+			'fechaFin' => date("Y-m-d")
+		];
+		$documentos = $this->_plantillasModel->filtro_comision_estatal($dataPost);
+		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
+		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
+		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
+
+
+		$dataView = (object)array();
+		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+		$dataView->municipios = $municipio;
+		$dataView->empleados = $empleado;
+		$dataView->dataDocumentos = $documentos;
+		$dataView->filterParams = (object)$dataPost;
+
+		$this->_loadView('Registro CEEIAV', 'registro_ceeiav', '', $dataView, 'registro_ceeiav');
+	}
+
+	public function postComisionEstatal()
+	{
+
+		$dataPost = [
+			'MUNICIPIOID' => $this->request->getPost('MUNICIPIOID'),
+			'AGENTEATENCIONID' => $this->request->getPost('AGENTEATENCIONID'),
+
+			'fechaInicio' => $this->request->getPost('fechaInicio'),
+			'fechaFin' => $this->request->getPost('fechaFin'),
+			'horaInicio' => $this->request->getPost('horaInicio'),
+			'horaFin' => $this->request->getPost('horaFin'),
+
+			'nombreAgente' => '',
+			'municipioDescr' => ''
+		];
+
+		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
+		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
+		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
+		$documentos = $this->_plantillasModel->filtro_comision_estatal($dataPost);
+
+		if (!empty($dataPost['AGENTEATENCIONID'])) {
+			foreach ($empleado as $index => $dato) {
+				//var_dump('info empleado', $dato);
+				if ($dato->ID == $dataPost['AGENTEATENCIONID']) {
+					//var_dump('info empleado', $dato);
+					$dataPost['nombreAgente'] = $dato->NOMBRE . ' ' . $dato->APELLIDO_PATERNO . ' ' . $dato->APELLIDO_MATERNO;
+				}
+			}
+		}
+		if (!empty($dataPost['MUNICIPIOID'])) {
+			foreach ($municipio as $index => $dato) {
+				///var_dump('info municipio', $dato);
+				if ($dato->MUNICIPIOID == $dataPost['MUNICIPIOID']) {
+					$dataPost['municipioDescr'] = $dato->MUNICIPIODESCR;
+				}
+			}
+		}
+
+
+		$dataView = (object)array();
+		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+		$dataView->municipios = $municipio;
+		$dataView->empleados = $empleado;
+		$dataView->dataDocumentos = $documentos;
+		$dataView->filterParams = (object)$dataPost;
+
+		$this->_loadView('Registro CEEIAV', 'registro_ceeiav', '', $dataView, 'registro_ceeiav');
+	}
+
+	public function createComisionEstatalXlsx()
+	{
+		$dataPost = [
+			'MUNICIPIOID' => $this->request->getPost('MUNICIPIOID'),
+			'AGENTEATENCIONID' => $this->request->getPost('AGENTEATENCIONID'),
+
+			'fechaInicio' => $this->request->getPost('fechaInicio'),
+			'fechaFin' => $this->request->getPost('fechaFin'),
+			'horaInicio' => $this->request->getPost('horaInicio'),
+			'horaFin' => $this->request->getPost('horaFin'),
+		];
+
+		foreach ($dataPost as $clave => $valor) {
+			//Recorre el array y elimina los valores que nulos o vacíos
+			if (empty($valor)) unset($dataPost[$clave]);
+		}
+		if (count($dataPost) <= 0) {
+			$dataPost = [
+				'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
+				'fechaFin' => date("Y-m-d"),
+			];
+		}
+		$documentos = $this->_plantillasModel->filtro_comision_estatal($dataPost);	
+		
+		$date = date("Y_m_d_h_i_s");
+
+		$spreadSheet = new Spreadsheet();
+		$spreadSheet->getProperties()
+			->setCreator("Fiscalía General del Estado de Baja California")
+			->setLastModifiedBy("Fiscalía General del Estado de Baja California")
+			->setTitle("REPORTE_CEEAIV" . $date)
+			->setSubject("REPORTE_CEEAIV" . $date)
+			->setDescription(
+				"El presente documento fue generado por el Centro de Denuncia Tecnológica de la Fiscalía General del Estado de Baja California."
+			)
+			->setKeywords("reporte ceeiav cdtec fgebc")
+			->setCategory("Reportes");
+		$sheet = $spreadSheet->getActiveSheet();
+
+
+		$styleHeaders = [
+			'font' => [
+				'bold' => true,
+				'color' => ['argb' => 'FFFFFF'],
+				'name' => 'Arial',
+				'size' => '10'
+			],
+			'alignment' => [
+				'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+				'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+			],
+			'borders' => [
+				'allBorders' => [
+					'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+					'color' => ['argb' => '000000'],
+				],
+			],
+			'fill' => [
+				'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_GRADIENT_LINEAR,
+				'rotation' => 90,
+				'startColor' => [
+					'argb' => '511229',
+				],
+				'endColor' => [
+					'argb' => '511229',
+				],
+			],
+		];
+
+		$styleCab = [
+			'font' => [
+				'bold' => true,
+				'color' => ['argb' => '000000'],
+				'name' => 'Arial',
+				'size' => '12'
+			],
+			'alignment' => [
+				'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+
+			],
+
+		];
+
+		$styleCells = [
+			'font' => [
+				'bold' => false,
+				'color' => ['argb' => '000000'],
+				'name' => 'Arial',
+				'size' => '10'
+			],
+			'alignment' => [
+				'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+				'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+			],
+			'borders' => [
+				'allBorders' => [
+					'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+					'color' => ['argb' => '000000'],
+				],
+			],
+			'fill' => [
+				'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_GRADIENT_LINEAR,
+				'rotation' => 90,
+				'startColor' => [
+					'argb' => 'FFFFFF',
+				],
+				'endColor' => [
+					'argb' => 'FFFFFF',
+				],
+			],
+		];
+		$row = 4;
+
+		$columns = [
+			'A', 'B', 'C', 'D', 'E',
+			'F', 'G', 'H', 'I', 'J',
+			'K', 'L', 'M', 'N', 'O',
+			'P', 'Q', 'R', 'S', 'T',
+			'U', 'V', 'W', 'X', 'Y', 'Z'
+		];
+		$headers = [
+			"Folio",
+			"FECHA DE EXPEDICIÓN",
+			"NO. EXPEDIENTE",
+			"MODULO QUE EXPIDE",
+			"MUNICIPIO DE CANALIZACION",
+			"SERVIDOR PUBLICO SOLICITANTE",
+			"DELITO",
+			"VICTIMA/OFENDIDO",
+		];
+
+		for ($i = 0; $i < count($headers); $i++) {
+			$sheet->setCellValue($columns[$i] . 4, $headers[$i]);
+			$sheet->getColumnDimension($columns[$i])->setAutoSize(true);
+		}
+
+		$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
+
+		$row++;
+
+		foreach ($documentos as $index => $orden) {
+			$this->separarExpID($orden->EXPEDIENTEID);
+
+
+			$sheet->setCellValue('A1', "CENTRO TELEFÓNICO Y EN LÍNEA DE ATENCIÓN Y ORIENTACIÓN TEMPRANA");
+			$sheet->setCellValue('A2', "REGISTRO DE CALIZACIONES A LA COMISIÓN EJECUTIVA ESTATAL DE ATENCIÓN INTEGRAL A VÍCTIMAS");
+
+
+			$sheet->setCellValue('A' . $row, $orden->FOLIOID);
+			$sheet->setCellValue('B' . $row, $this->formatFecha($orden->FECHAFIRMA));
+			$sheet->setCellValue('C' . $row, $this->separarExpID($orden->EXPEDIENTEID));
+			$sheet->setCellValue('D' . $row, 'CENTRO DE DENUNCIA TECNÓLOGICA');
+			$sheet->setCellValue('E' . $row,  $orden->MUNICIPIODESCR);
+			$sheet->setCellValue('F' . $row,  $orden->NOMBRE_MP);
+			$sheet->setCellValue('G' . $row,  $orden->DELITOMODALIDADDESCR);
+			$sheet->setCellValue('H' . $row,  $orden->NOMBRE_VTM);
+			$sheet->setCellValue('I' . $row, '');
+
+			$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
+
+			if (!(($row - 4) >= count($documentos))) $row++;
+		}
+		$sheet->getStyle('A1:I1')->applyFromArray($styleCab);
+		$sheet->getStyle('A2:I2')->applyFromArray($styleCab);
+
+		$sheet->getStyle('A4:I4')->applyFromArray($styleHeaders);
+		$sheet->getStyle('A5:I' . $row)->applyFromArray($styleCells);
+
+		$sheet->mergeCells('A1:I1');
+		$sheet->mergeCells('A2:I2');
+		$drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+		$drawing->setName('FGEBC');
+		$drawing->setDescription('LOGO');
+		$drawing->setPath(FCPATH . 'assets/img/FGEBC_recortada.png'); // put your path and image here
+		$drawing->setHeight(60);
+		$drawing->setCoordinates('A1');
+		$drawing->setOffsetX(10);
+		$drawing->setWorksheet($spreadSheet->getActiveSheet());
+		// $drawing2 = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+		// $drawing2->setName('FGEBC');
+		// $drawing2->setDescription('LOGO');
+		// $drawing2->setPath(FCPATH . 'assets/img/logo_sejap.jpg'); // put your path and image here
+		// $drawing2->setHeight(45);
+		// $drawing2->setCoordinates('O1');
+		// $drawing2->setOffsetX(-30);
+		// $drawing2->setWorksheet($spreadSheet->getActiveSheet());
+		// $drawing->setOffsetX(110);
+		// $drawing->setRotation(25);
+		$writer = new Xlsx($spreadSheet);
+
+		$filename = urlencode("Reporte_Ceeaiv_" . $date . ".xlsx");
+		header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+		header("Content-Disposition: attachment; filename=\"$filename\"");
+		header("Content-Transfer-Encoding: binary");
+		header("Cache-Control: max-age=0");
+		$writer->save("php://output");
+	}
+
 	private function _curlGetService($endpoint)
 	{
 		$ch = curl_init();
