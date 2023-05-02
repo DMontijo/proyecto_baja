@@ -165,7 +165,7 @@
 						victimas.forEach(victima => {
 							const option = document.createElement('option');
 							option.value = victima.PERSONAFISICAID;
-							option.text = victima.NOMBRE + ' ' + victima.PRIMERAPELLIDO;
+							option.text = victima.NOMBRE + ' ' + victima.PRIMERAPELLIDO+' | ' + victima.PERSONACALIDADJURIDICADESCR;
 							select_victima_documento.add(option, null);
 						});
 						$('#imputado_modal_documento').empty();
@@ -252,7 +252,7 @@
 						victimas.forEach(victima => {
 							const option = document.createElement('option');
 							option.value = victima.PERSONAFISICAID;
-							option.text = victima.NOMBRE + ' ' + victima.PRIMERAPELLIDO;
+							option.text = victima.NOMBRE + ' ' + victima.PRIMERAPELLIDO+' | ' + victima.PERSONACALIDADJURIDICADESCR;
 							select_victima_documento.add(option, null);
 						});
 						$('#imputado_modal_documento').empty();
@@ -580,8 +580,8 @@
 						if (response.status == 1) {
 							const plantilla = response.plantilla;
 							tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
-							document.querySelector("#victima_modal_documento").value = '';
-							document.querySelector("#imputado_modal_documento").value = '';
+							// document.querySelector("#victima_modal_documento").value = '';
+							// document.querySelector("#imputado_modal_documento").value = '';
 							document.getElementById('uma_select').value = ''
 							document.getElementById('tiponotificacion_select').value = ''
 							document.getElementById('tipoproceso_select').value = ''
@@ -592,8 +592,8 @@
 							document.getElementById("div_noti").style.display = "none";
 						} else {
 							tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
-							document.querySelector("#victima_modal_documento").value = '';
-							document.querySelector("#imputado_modal_documento").value = '';
+							// document.querySelector("#victima_modal_documento").value = '';
+							// document.querySelector("#imputado_modal_documento").value = '';
 							document.getElementById('uma_select').value = ''
 							document.getElementById('tiponotificacion_select').value = ''
 							document.getElementById('tipoproceso_select').value = ''
@@ -606,8 +606,8 @@
 					error: function(jqXHR, textStatus, errorThrown) {
 						// console.error(textStatus);
 						tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
-						document.querySelector("#victima_modal_documento").value = '';
-						document.querySelector("#imputado_modal_documento").value = '';
+						// document.querySelector("#victima_modal_documento").value = '';
+						// document.querySelector("#imputado_modal_documento").value = '';
 						document.querySelector("#plantilla").value = '';
 						document.getElementById('uma_select').value = ''
 						document.getElementById('tiponotificacion_select').value = ''
@@ -640,8 +640,8 @@
 							const plantilla = response.plantilla;
 							if (select_uma.getAttribute('required') == "true") {
 								tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
-								document.querySelector("#victima_modal_documento").value = '';
-								document.querySelector("#imputado_modal_documento").value = '';
+								// document.querySelector("#victima_modal_documento").value = '';
+								// document.querySelector("#imputado_modal_documento").value = '';
 								document.getElementById('uma_select').value = '';
 								document.getElementById('tiponotificacion_select').value = ''
 								document.getElementById('tipoproceso_select').value = ''
@@ -649,8 +649,8 @@
 								document.getElementById("div_noti").style.display = "none";
 							} else {
 								tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
-								document.querySelector("#victima_modal_documento").value = '';
-								document.querySelector("#imputado_modal_documento").value = '';
+								// document.querySelector("#victima_modal_documento").value = '';
+								// document.querySelector("#imputado_modal_documento").value = '';
 								document.getElementById('uma_select').value = ''
 								document.getElementById("involucrados").style.display = "none";
 								document.getElementById("div_uma").style.display = "none";
@@ -662,8 +662,8 @@
 						} else {
 							if (select_uma.getAttribute('required') == "true") {
 								tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
-								document.querySelector("#victima_modal_documento").value = '';
-								document.querySelector("#imputado_modal_documento").value = '';
+								// document.querySelector("#victima_modal_documento").value = '';
+								// document.querySelector("#imputado_modal_documento").value = '';
 								document.getElementById('uma_select').value = ''
 								document.querySelector("#plantilla").value = '';
 								document.getElementById('tiponotificacion_select').value = ''
@@ -672,8 +672,8 @@
 								document.getElementById("div_noti").style.display = "none";
 							} else {
 								tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
-								document.querySelector("#victima_modal_documento").value = '';
-								document.querySelector("#imputado_modal_documento").value = '';
+								// document.querySelector("#victima_modal_documento").value = '';
+								// document.querySelector("#imputado_modal_documento").value = '';
 								document.getElementById('uma_select').value = ''
 								document.querySelector("#plantilla").value = '';
 								document.getElementById("involucrados").style.display = "none";
@@ -734,6 +734,9 @@
 								'titulo': tipoPlantilla,
 								'statusenvio': 0,
 								'agente_asignado': document.querySelector('#empleado_asignado').value,
+								'victimaid': document.querySelector('#victima_modal_documento').value,
+								'imputado': document.querySelector('#imputado_modal_documento').value,
+
 
 							};
 							insertarDoc(data);
@@ -745,6 +748,8 @@
 								'titulo': tipoPlantilla,
 								'statusenvio': 0,
 								'agente_asignado': document.querySelector('#empleado_asignado').value,
+								'victimaid': document.querySelector('#victima_modal_documento').value,
+								'imputado': document.querySelector('#imputado_modal_documento').value,
 
 							};
 							insertarDoc(data);
@@ -774,6 +779,8 @@
 								'titulo': tipoPlantilla,
 								'statusenvio': 1,
 								'agente_asignado': document.querySelector('#empleado_asignado').value,
+								'victimaid': document.querySelector('#victima_modal_documento').value,
+								'imputado': document.querySelector('#imputado_modal_documento').value,
 
 							};
 							insertarDoc(data);
@@ -785,6 +792,8 @@
 								'titulo': tipoPlantilla,
 								'statusenvio': 1,
 								'agente_asignado': document.querySelector('#empleado_asignado').value,
+								'victimaid': document.querySelector('#victima_modal_documento').value,
+								'imputado': document.querySelector('#imputado_modal_documento').value,
 
 							};
 							insertarDoc(data);
@@ -800,6 +809,8 @@
 								'titulo': tipoPlantilla,
 								'statusenvio': 0,
 								'agente_asignado': document.querySelector('#empleado_asignado').value,
+								'victimaid': document.querySelector('#victima_modal_documento').value,
+								'imputado': document.querySelector('#imputado_modal_documento').value,
 
 							};
 							insertarDoc(data);
@@ -811,6 +822,8 @@
 								'titulo': tipoPlantilla,
 								'statusenvio': 0,
 								'agente_asignado': document.querySelector('#empleado_asignado').value,
+								'victimaid': document.querySelector('#victima_modal_documento').value,
+								'imputado': document.querySelector('#imputado_modal_documento').value,
 
 							};
 							insertarDoc(data);
@@ -834,6 +847,8 @@
 
 					if (response.status == 1) {
 						tinymce.get("documento").setContent('');
+						document.querySelector("#victima_modal_documento").value = '';
+						document.querySelector("#imputado_modal_documento").value = '';
 						const documentos = response.documentos;
 						Swal.fire({
 							icon: 'success',

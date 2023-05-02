@@ -7,7 +7,7 @@
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-12 text-center mb-4">
-				<h1 class="mb-4 text-center font-weight-bold">REPORTE DE FOLIOS</h1>
+				<h1 class="mb-4 text-center font-weight-bold">REGISTRO DE ATENCIONES</h1>
 				<a class="link link-primary" href="<?= base_url('admin/dashboard/reportes') ?>" role="button"><i class="fas fa-reply"></i> REGRESAR A REPORTES</a>
 			</div>
 			<div class="col-12">
@@ -26,7 +26,7 @@
 
 								<div id="filtros" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
 									<div class="card-body">
-										<form action="<?= base_url() ?>/admin/dashboard/reportes_folios" method="post" enctype="multipart/form-data" class="row needs-validation" novalidate>
+										<form action="<?= base_url() ?>/admin/dashboard/registro_atenciones" method="post" enctype="multipart/form-data" class="row needs-validation" novalidate>
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
 												<label for="municipio" class="form-label font-weight-bold">Municipio:</label>
 												<select class="form-control" id="municipio" name="municipio" required>
@@ -40,7 +40,14 @@
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
 												<label for="agente" class="form-label font-weight-bold">Agente:</label>
 												<select class="form-control" id="agente" name="agente" required>
+													<?php 
+													$rolUser = session()->get('rol')->ID;
+													if ($rolUser == 1 || $rolUser == 2 || $rolUser == 6 || $rolUser == 7 || $rolUser == 11) {?>
 													<option selected value="">Todos los agentes</option>
+													<?php }else{?>
+														<option  value="" disabled>Todos los agentes</option>
+
+													<?php }?>
 													<?php foreach ($body_data->empleados as $index => $empleado) { ?>
 														<option <?= isset($body_data->filterParams->AGENTEATENCIONID) ? ($body_data->filterParams->AGENTEATENCIONID == $empleado->ID ? 'selected' : '') : null ?> value="<?= $empleado->ID ?>"> <?= $empleado->NOMBRE . ' ' . $empleado->APELLIDO_PATERNO . ' ' . $empleado->APELLIDO_MATERNO ?> </option>
 													<?php } ?>
@@ -108,7 +115,7 @@
 
 								<?php if (isset($body_data->filterParams)) { ?>
 									<!-- Form para aplicar mismo filtro utilizado para crear el archivo de excel-->
-									<form id="formExcel" action="<?= base_url() ?>/admin/dashboard/generar_excel_folios" method="post" class="needs-validation" novalidate>
+									<form id="formExcel" action="<?= base_url() ?>/admin/dashboard/generar_excel_registro_atenciones" method="post" class="needs-validation" novalidate>
 										<?php foreach ($body_data->filterParams as $index => $value) { ?>
 											<input type="hidden" id="<?= $index ?>" name="<?= $index ?>" value="<?= $value ?>">
 										<?php } ?>
@@ -159,8 +166,8 @@
 												<td class="text-center font-weight-bold"><?= $expedienteid ? $expedienteid . '/' . $folio->TIPOEXPEDIENTECLAVE  : '' ?></td>
 												<td class="text-center"><?= $folio->FECHASALIDA ? date('d-m-Y H:i:s', strtotime($folio->FECHASALIDA)) : '' ?></td>
 												<td class="text-center"><?= $folio->STATUS ?></td>
-												<td class="text-center"><?= $folio->NOMBRE_DENUNCIANTE ?></td>
-												<td class="text-center"><?= $folio->NOMBRE_AGENTE ?></td>
+												<td class="text-center"><?= $folio->N_DENUNCIANTE . ' ' . $folio->APP_DENUNCIANTE . ' ' . $folio->APM_DENUNCIANTE ?></td>
+												<td class="text-center"><?= $folio->N_AGENT . ' ' . $folio->APP_AGENT . ' ' . $folio->APM_AGENT ?></td>
 												<td class="text-center"><?= $folio->MUNICIPIODESCR ?></td>
 											</tr>
 										<?php } ?>

@@ -1783,7 +1783,7 @@ class DashboardController extends BaseController
 		$email->setSubject('Folio atendido');
 		$body = view('email_template/folio_der_can_email_template.php', ['folio' => $folio, 'motivo' => $motivo]);
 		$email->setMessage($body);
-		$email->setAltMessage('EL FOLIO ' . $folio .' FUE ' . $motivo == 'ATENDIDA' ? 'CANALIZADO' : $motivo);
+		$email->setAltMessage('EL FOLIO ' . $folio . ' FUE ' . $motivo == 'ATENDIDA' ? 'CANALIZADO' : $motivo);
 
 		if ($email->send()) {
 			return true;
@@ -1807,7 +1807,7 @@ class DashboardController extends BaseController
 		$expediente_guiones =  $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
 
 
-		$email->setAltMessage('Gracias por denunciar, se te ha generado un nuevo expediente' . $expediente_guiones .'/' . $tipoExpediente->TIPOEXPEDIENTECLAVE);
+		$email->setAltMessage('Gracias por denunciar, se te ha generado un nuevo expediente' . $expediente_guiones . '/' . $tipoExpediente->TIPOEXPEDIENTECLAVE);
 
 		if ($email->send()) {
 			return true;
@@ -1824,7 +1824,7 @@ class DashboardController extends BaseController
 		$email->setSubject('Nueva cuenta creada');
 		$body = view('email_template/password_email_admin_template.php', ['email' => $to, 'password' => $password]);
 		$email->setMessage($body);
-		$email->setAltMessage('Se ha generado un nuevo registro en el Centro de Denuncia Tecnológica.Para acceder debes ingresar los siguientes datos. USUARIO: ' . $to .'CONTRASEÑA:'. $password);
+		$email->setAltMessage('Se ha generado un nuevo registro en el Centro de Denuncia Tecnológica.Para acceder debes ingresar los siguientes datos. USUARIO: ' . $to . 'CONTRASEÑA:' . $password);
 
 		if ($email->send()) {
 			return true;
@@ -1918,6 +1918,7 @@ class DashboardController extends BaseController
 		$institutomunicipio = $this->request->getPost('institutomunicipio');
 		$institutoremision = $this->request->getPost('institutoremision');
 		$telefonica = $this->request->getPost('denuncia_tel');
+		$electronica = $this->request->getPost('denuncia_electronica');
 
 		$agenteId = session('ID') ? session('ID') : 1;
 
@@ -1941,6 +1942,9 @@ class DashboardController extends BaseController
 		}
 		if ($telefonica == 'S') {
 			$data['TIPODENUNCIA'] = 'TE';
+		}
+		if ($electronica == 'S') {
+			$data['TIPODENUNCIA'] = 'EL';
 		}
 		if (!empty($status) && !empty($motivo) && !empty($year) && !empty($folio) && !empty($agenteId)) {
 			$folioRow = $this->_folioModel->where('ANO', $year)->where('FOLIOID', $folio)->where('STATUS', 'EN PROCESO')->first();
@@ -1989,6 +1993,7 @@ class DashboardController extends BaseController
 		$notas = $this->request->getPost('notas');
 		$tiposExpedienteId = $this->request->getPost('tipo_expediente');
 		$telefonica = $this->request->getPost('denuncia_tel');
+		$electronica = $this->request->getPost('denuncia_electronica');
 
 		try {
 			if (!empty($tiposExpedienteId) && !empty($folio) && !empty($municipio) && !empty($estado) && !empty($notas)) {
@@ -2127,6 +2132,10 @@ class DashboardController extends BaseController
 					if ($telefonica == 'S') {
 						$folioRow['TIPODENUNCIA'] = 'TE';
 					}
+					if ($electronica == 'S') {
+						$folioRow['TIPODENUNCIA'] = 'EL';
+					}
+
 
 					if ($expedienteCreado->status == 201) {
 						$folioRow['EXPEDIENTEID'] = $expedienteCreado->EXPEDIENTEID;
@@ -2229,7 +2238,7 @@ class DashboardController extends BaseController
 								'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year . ' EXPEDIENTE: ' . $expedienteCreado->EXPEDIENTEID
 							];
 							$this->_bitacoraActividad($datosBitacora);
-							if ($folioRow['TIPODENUNCIA'] == 'VD' || $folioRow['TIPODENUNCIA'] == 'TE') {
+							if ($folioRow['TIPODENUNCIA'] == 'VD' || $folioRow['TIPODENUNCIA'] == 'TE' || $folioRow['TIPODENUNCIA'] == 'EL') {
 								$denunciante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', $folioRow['DENUNCIANTEID'])->first();
 								if ($this->_sendEmailExpediente($denunciante->CORREO, $folio, $expedienteCreado->EXPEDIENTEID)) {
 									return json_encode(['status' => 1, 'expediente' => $expedienteCreado->EXPEDIENTEID]);
@@ -4366,7 +4375,7 @@ class DashboardController extends BaseController
 					'ESTADOORIGENID' => $this->request->getPost('edoorigen_pf'),
 					'MUNICIPIOORIGENID' => $this->request->getPost('munorigen_pf'),
 					'CALIDADJURIDICAID' => $this->request->getPost('calidad_juridica_pf'),
-					'DESCRIPCION_FISICA' => $this->request->getPost('descripcionFisica_pf')!=''?$this->request->getPost('descripcionFisica_pf'): NULL,
+					'DESCRIPCION_FISICA' => $this->request->getPost('descripcionFisica_pf') != '' ? $this->request->getPost('descripcionFisica_pf') : NULL,
 					'APODO' => $this->request->getPost('apodo_pf'),
 					'DENUNCIANTE' => $this->request->getPost('denunciante_pf'),
 					'FACEBOOK' => $this->request->getPost('facebook_pf'),
@@ -4399,7 +4408,7 @@ class DashboardController extends BaseController
 					'ESTADOORIGENID' => $this->request->getPost('edoorigen_pf'),
 					'MUNICIPIOORIGENID' => $this->request->getPost('munorigen_pf'),
 					'CALIDADJURIDICAID' => $this->request->getPost('calidad_juridica_pf'),
-					'DESCRIPCION_FISICA' => $this->request->getPost('descripcionFisica_pf')!=''?$this->request->getPost('descripcionFisica_pf'): NULL,
+					'DESCRIPCION_FISICA' => $this->request->getPost('descripcionFisica_pf') != '' ? $this->request->getPost('descripcionFisica_pf') : NULL,
 					'APODO' => $this->request->getPost('apodo_pf'),
 					'DENUNCIANTE' => $this->request->getPost('denunciante_pf'),
 					'FACEBOOK' => $this->request->getPost('facebook_pf'),
@@ -5191,16 +5200,16 @@ class DashboardController extends BaseController
 			'PERSONAIDIOMAID' => $this->request->getPost('idioma'),
 			'ESCOLARIDADID' => $this->request->getPost('escolaridad'),
 			'OCUPACIONID' => $this->request->getPost('ocupacion'),
-			'ESTADOCIVILID' => $this->request->getPost('estado_civil')!=0 ? $this->request->getPost('estado_civil') : NULL,
+			'ESTADOCIVILID' => $this->request->getPost('estado_civil') != 0 ? $this->request->getPost('estado_civil') : NULL,
 			'ESTADOORIGENID' =>  $this->request->getPost('estado_origen') != 0 ? $this->request->getPost('estado_origen') : NULL,
 			'MUNICIPIOORIGENID' =>  $this->request->getPost('municipio_origen') != 0 ? $this->request->getPost('municipio_origen') : NULL,
-			'FACEBOOK' => $this->request->getPost('facebook')!= '' ? $this->request->getPost('facebook'):NULL,
-			'INSTAGRAM' => $this->request->getPost('instagram')!=''?$this->request->getPost('instagram'):NULL,
-			'TWITTER' => $this->request->getPost('twitter')!=''?$this->request->getPost('twitter'):NULL,
+			'FACEBOOK' => $this->request->getPost('facebook') != '' ? $this->request->getPost('facebook') : NULL,
+			'INSTAGRAM' => $this->request->getPost('instagram') != '' ? $this->request->getPost('instagram') : NULL,
+			'TWITTER' => $this->request->getPost('twitter') != '' ? $this->request->getPost('twitter') : NULL,
 			'LEER' => $this->request->getPost('leer'),
 			'ESCRIBIR' => $this->request->getPost('escribir'),
 			'PAIS' => $this->request->getPost('pais_actual'),
-			'CORREO' => $this->request->getPost('correo')!=''?$this->request->getPost('correo'):NULL,
+			'CORREO' => $this->request->getPost('correo') != '' ? $this->request->getPost('correo') : NULL,
 			'DESAPARECIDA' => $this->request->getPost('desaparecida'),
 
 		);
@@ -6848,7 +6857,7 @@ class DashboardController extends BaseController
 			$data->plantilla = str_replace('[DETALLE_INTERVENCIONES]', $data->folio->HECHONARRACION ? $data->folio->HECHONARRACION : 'SIN NARRACIÓN', $data->plantilla);
 			$data->plantilla = str_replace('[HECHO_NARRACION]', $data->folio->HECHONARRACION ? $data->folio->HECHONARRACION : 'SIN NARRACIÓN', $data->plantilla);
 			$data->plantilla = str_replace('[TIPO_EXPEDIENTE]',  $data->tipoExpediente->TIPOEXPEDIENTECLAVE, $data->plantilla);
-			$data->plantilla = str_replace('[nomenclatura, año, consecutivo, tipo de expediente]', $expedienteid .'/'. $data->tipoExpediente->TIPOEXPEDIENTECLAVE, $data->plantilla);
+			$data->plantilla = str_replace('[nomenclatura, año, consecutivo, tipo de expediente]', $expedienteid . '/' . $data->tipoExpediente->TIPOEXPEDIENTECLAVE, $data->plantilla);
 
 			$data->plantilla = str_replace('[ZONA_JAP]',  'CENTRO DE DENUNCIA TECNOLÓGICA', $data->plantilla);
 			$data->plantilla = str_replace('[VICTIMA_DOMICILIO]', 'en: ' . ($data->victimaDom->CALLE ? $data->victimaDom->CALLE : 'DESCONOCIDO') . ($data->victimaDom->NUMEROCASA ? ' Ext. ' . $data->victimaDom->NUMEROCASA : '') . ($data->victimaDom->NUMEROINTERIOR ? ' Int. ' . $data->victimaDom->NUMEROINTERIOR : '') . ($data->victimaDom->COLONIADESCR ? ' ' . $data->victimaDom->COLONIADESCR : '') . (isset($data->municipioVictima) == true ? ' ' . $data->municipioVictima->MUNICIPIODESCR : '') . (isset($data->estadoVictima) == true ? ' ' . $data->estadoVictima->ESTADODESCR : ''), $data->plantilla);
@@ -6980,6 +6989,9 @@ class DashboardController extends BaseController
 		$plantilla = $this->_plantillasModel->where('TITULO', $this->request->getPost('titulo'))->first();
 		$folioRow = $this->_folioModel->where('ANO', $year)->where('FOLIOID', $folio)->first();
 
+		if (($this->request->getPost('victimaid') == '' || $this->request->getPost('victimaid') == null || $this->request->getPost('victimaid') == 0) || $this->request->getPost('imputado') == '' || $this->request->getPost('imputado') == null || $this->request->getPost('imputado') == 0) {
+			return json_encode(['status' => 0]);
+		}
 		if ($folioRow) {
 
 			$clasificaciondoctoid = '';
@@ -7018,7 +7030,10 @@ class DashboardController extends BaseController
 					'MUNICIPIOID' => $folioRow['MUNICIPIOASIGNADOID'],
 					'ESTADOID' => 2,
 					'TIPODOC' => $this->request->getPost('titulo'),
+					'PLANTILLAID' => $plantilla['ID'],
 					'STATUSENVIO' => $this->request->getPost('statusenvio'),
+					'VICTIMAID' => $this->request->getPost('victimaid'),
+					'IMPUTADOID' => $this->request->getPost('imputado'),
 					'ENVIADO' => 'N',
 					'CLASIFICACIONDOCTOID' => $clasificaciondoctoid,
 					'AGENTE_ASIGNADO' =>  $documentos_folio->AGENTE_ASIGNADO,
@@ -7036,7 +7051,10 @@ class DashboardController extends BaseController
 						'MUNICIPIOID' => $folioRow['MUNICIPIOASIGNADOID'],
 						'ESTADOID' => 2,
 						'TIPODOC' => $this->request->getPost('titulo'),
+						'PLANTILLAID' => $plantilla['ID'],
 						'STATUSENVIO' => $this->request->getPost('statusenvio'),
+						'VICTIMAID' => $this->request->getPost('victimaid'),
+						'IMPUTADOID' => $this->request->getPost('imputado'),
 						'ENVIADO' => 'N',
 						'CLASIFICACIONDOCTOID' => $clasificaciondoctoid,
 						'AGENTE_ASIGNADO' =>  $documentos_folio->AGENTE_ASIGNADO,
@@ -7056,7 +7074,10 @@ class DashboardController extends BaseController
 					'MUNICIPIOID' => $folioRow['MUNICIPIOASIGNADOID'],
 					'ESTADOID' => 2,
 					'TIPODOC' => $this->request->getPost('titulo'),
+					'PLANTILLAID' => $plantilla['ID'],
 					'STATUSENVIO' => $this->request->getPost('statusenvio'),
+					'VICTIMAID' => $this->request->getPost('victimaid'),
+					'IMPUTADOID' => $this->request->getPost('imputado'),
 					'ENVIADO' => 'N',
 					'CLASIFICACIONDOCTOID' => $clasificaciondoctoid,
 					'AGENTE_ASIGNADO' =>  $this->request->getPost('agente_asignado') != '' ?  $this->request->getPost('agente_asignado') : null,
@@ -7076,7 +7097,10 @@ class DashboardController extends BaseController
 						'MUNICIPIOID' => $folioRow['MUNICIPIOASIGNADOID'],
 						'ESTADOID' => 2,
 						'TIPODOC' => $this->request->getPost('titulo'),
+						'PLANTILLAID' => $plantilla['ID'],
 						'STATUSENVIO' => $this->request->getPost('statusenvio'),
+						'VICTIMAID' => $this->request->getPost('victimaid'),
+						'IMPUTADOID' => $this->request->getPost('imputado'),
 						'ENVIADO' => 'N',
 						'CLASIFICACIONDOCTOID' => $clasificaciondoctoid,
 						'AGENTE_ASIGNADO' =>  $this->request->getPost('agente_asignado') != '' ?  $this->request->getPost('agente_asignado') : null,
@@ -7096,6 +7120,11 @@ class DashboardController extends BaseController
 					$update = $this->_folioModel->set($dataFolio)->where('FOLIOID', $folio)->where('ANO', $year)->update();
 				}
 				$documentos = $this->_folioDocModel->get_by_folio($folio, $year);
+				$datosBitacora = [
+					'ACCION' => 'Ha agregado un nuevo documento',
+					'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year . ' PLANTILLAID: ' .  $plantilla['ID'],
+				];
+				$this->_bitacoraActividad($datosBitacora);
 
 				return json_encode(['status' => 1, 'documentos' => $documentos]);
 			} else {

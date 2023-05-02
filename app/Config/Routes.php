@@ -136,6 +136,10 @@ $routes->group('admin', function ($routes) {
 		$routes->post('registro_conavim', 'admin/ReportesController::postRegistroConavim');
 		$routes->get('registro_candev', 'admin/ReportesController::getRegistroCanDev');
 		$routes->post('registro_candev', 'admin/ReportesController::postRegistroCanDev');
+		$routes->get('registro_atenciones', 'admin/ReportesController::getRegistroAtenciones');
+		$routes->post('registro_atenciones', 'admin/ReportesController::postRegistroAtenciones');
+		$routes->get('registro_ceeiav', 'admin/ReportesController::getComisionEstatal');
+		$routes->post('registro_ceeiav', 'admin/ReportesController::postComisionEstatal');
 
 		$routes->post('generar_excel_folios', 'admin/ReportesController::createFoliosXlsx');
 		$routes->post('generar_excel_constancias', 'admin/ReportesController::createConstanciasXlsx');
@@ -143,6 +147,8 @@ $routes->group('admin', function ($routes) {
 		$routes->post('generar_excel_llamadas', 'admin/ReportesController::createLlamadasXlsx');
 		$routes->post('generar_excel_conavim', 'admin/ReportesController::createOrdenXlsx');
 		$routes->post('generar_excel_canadev', 'admin/ReportesController::createCanaDevXlsx');
+		$routes->post('generar_excel_registro_atenciones', 'admin/ReportesController::createRegistroAtencionesXlsx');
+		$routes->post('generar_excel_ceeaiv', 'admin/ReportesController::createComisionEstatalXlsx');
 
 		$routes->get('documentos', 'admin/DocumentosController::index');
 		$routes->post('documentos', 'admin/DocumentosController::postDocumentos');

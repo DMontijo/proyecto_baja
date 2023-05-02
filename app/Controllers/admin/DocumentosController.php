@@ -3,6 +3,7 @@
 namespace App\Controllers\admin;
 
 use App\Controllers\BaseController;
+use App\Models\BitacoraActividadModel;
 use App\Models\FolioDocModel;
 use App\Models\FolioModel;
 use App\Models\FolioPersonaFisicaModel;
@@ -21,6 +22,7 @@ class DocumentosController extends BaseController
 	private $_folioModel;
 	private $_usuariosModel;
 	private $_municipiosModel;
+	private $_bitacoraActividadModel;
 
 	function __construct()
 	{
@@ -31,6 +33,7 @@ class DocumentosController extends BaseController
 		$this->_folioModel = new FolioModel();
 		$this->_usuariosModel = new UsuariosModel();
 		$this->_municipiosModel = new MunicipiosModel();
+		$this->_bitacoraActividadModel = new BitacoraActividadModel();
 	}
 	public function index()
 	{
@@ -306,8 +309,13 @@ class DocumentosController extends BaseController
 		$deleteDoc = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $docid)->delete();
 
 		$documentos = $this->_folioDocModel->get_by_folio($folio, $year);
-
+	
 		if ($deleteDoc) {
+			$datosBitacora = [
+				'ACCION' => 'Ha borrado un documento',
+				'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year . ' PLANTILLAID: ' .  $docid,
+			];
+			$this->_bitacoraActividad($datosBitacora);
 			return json_encode((object)['status' => 1, 'documentos' => $documentos]);;
 		} else {
 			return json_encode(['status' => 0]);
@@ -347,5 +355,15 @@ class DocumentosController extends BaseController
 	private function permisos($permiso)
 	{
 		return in_array($permiso, session('permisos'));
+	}
+	private function _bitacoraActividad($data)
+	{
+		$data = $data;
+		$data['ID'] = uniqid();
+		$data['USUARIOID'] = session('ID');
+
+		if ($data['USUARIOID']) {
+			$this->_bitacoraActividadModel->insert($data);
+		}
 	}
 }
