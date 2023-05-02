@@ -19,6 +19,7 @@ use App\Models\FolioModel;
 
 use App\Models\EscolaridadModel;
 use App\Models\OcupacionModel;
+use GuzzleHttp\Client;
 
 class UserController extends BaseController
 {
@@ -185,7 +186,7 @@ class UserController extends BaseController
 					$this->_denunciantesModel->insert($data);
 					$this->_sendEmailPassword($data['CORREO'], $password);
 					session()->setFlashdata('message', 'Inicia sesión con la contraseña que llegará a tu correo electrónico');
-					return redirect()->to(base_url('/denuncia'))->with('message_success', 'Inicia sesión con la contraseña que llegará a tu correo electrónico y comienza tu denuncia');
+					return redirect()->to(base_url('/denuncia'))->with('message_success', 'Inicia sesión con la contraseña que llegará a tu correo electrónico o a tus mensajes SMS y comienza tu denuncia');
 				}
 			} else {
 				return redirect()->back()->with('message', 'Hubo un error en los datos o puede que ya exista un registro con el mismo correo');
@@ -367,16 +368,24 @@ class UserController extends BaseController
 	private function _sendEmailPassword($to, $password)
 	{
 		$email = \Config\Services::email();
+		$user = $this->_denunciantesModel->asObject()->where('CORREO', $to)->first();
 		$email->setTo($to);
 		$email->setSubject('Te estamos atendiendo');
 		$body = view('email_template/password_email_template.php', ['email' => $to, 'password' => $password]);
 		$email->setMessage($body);
 		$email->setAltMessage('Usted ha generado un nuevo registro en el Centro de Denuncia Tecnológica. Para acceder debes ingresar los siguientes datos. USUARIO: ' .$to .'CONTRASEÑA' . $password );
+		$sendSMS = $this->sendSMS("Te estamos atendiendo", $user->TELEFONO, 'USUARIO: ' .$to .' CONTRASEÑA' . $password );
 
 		if ($email->send()) {
-			return true;
+			if ($sendSMS == "") {
+				return true;
+			}
 		} else {
-			return false;
+			if ($sendSMS == "") {
+				return true;
+			} else {
+				return false;
+			}
 		}
 	}
 
@@ -460,6 +469,30 @@ class UserController extends BaseController
 		curl_close($ch);
 
 		return json_decode($result);
+	}
+	public function sendSMS($tipo, $celular, $mensaje)
+	{
+
+		$endpoint = "http://enviosms.ddns.net/API/";
+		$data = array();
+		$data['UsuarioID'] = 1;
+		$data['Nombre'] = $tipo;
+		$lstMensajes = array();
+		$obj = array("Celular" =>  $celular, "Mensaje" => $mensaje);
+		$lstMensajes[] = $obj;
+		$data['lstMensajes'] = $lstMensajes;
+
+		$httpClient = new Client([
+			'base_uri' => $endpoint
+		]);
+
+		$response = $httpClient->post('campañas/enviarSMS', [
+			'json' => $data
+		]);
+
+		$respuestaServ = $response->getBody()->getContents();
+
+		return json_decode($respuestaServ);
 	}
 }
 
