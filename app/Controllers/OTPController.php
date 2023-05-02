@@ -53,6 +53,8 @@ class OTPController extends BaseController
 	public function sendEmailOTP()
 	{
 		$to = trim($this->request->getPost('email'));
+		$tel = trim($this->request->getPost('telefono'));
+
 		$otp = $this->_generarOTP();
 
 		date_default_timezone_set('America/Tijuana');
@@ -69,7 +71,8 @@ class OTPController extends BaseController
 			$body = view('email_template/token_email_template', ['otp' => $otp]);
 			$email->setMessage($body);
 			$email->setAltMessage('Se ha generado un nuevo código.SU CÓDIGO ES: ' . $otp);
-			$sendSMS = $this->sendSMS("Nuevo codigo", $user->TELEFONO, 'Se ha generado un nuevo código.SU CÓDIGO ES: ' . $otp);
+			$telefono = $user != null ? $user->TELEFONO : $tel;
+			$sendSMS = $this->sendSMS("Nuevo codigo", $tel, 'Notificaciones FGE/Estimado usuario, tu codigo es: ' . $otp);
 
 			$data = [
 				'CODIGO_OTP' => $otp,

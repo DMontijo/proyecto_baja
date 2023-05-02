@@ -236,7 +236,9 @@
 
 		e.target.setAttribute('disabled', true);
 		var data = {
-			'email': document.querySelector('#correo').value
+			'email': document.querySelector('#correo').value,
+			'telefono': document.querySelector('#telefono').value
+
 		}
 
 		$.ajax({

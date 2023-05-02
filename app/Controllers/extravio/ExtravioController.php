@@ -247,7 +247,7 @@ class ExtravioController extends BaseController
 		$body = view('email_template/password_email_constancia.php', ['email' => $to, 'password' => $password]);
 		$email->setMessage($body);
 		$email->setAltMessage('Usted ha generado un nuevo registro en el Centro de Denuncia Tecnológica.ara acceder debes ingresar los siguientes datos. USUARIO: ' . $to . 'CONTRASEÑA:' .$password  );
-		$sendSMS = $this->sendSMS("Te estamos atendiendo", $user->TELEFONO, 'USUARIO: ' .$to .' CONTRASEÑA' . $password );
+		$sendSMS = $this->sendSMS("Te estamos atendiendo", $user->TELEFONO, 'Notificaciones FGE/Estimado usuario, tu contraseña es: ' . $password );
 		// var_dump($sendSMS);exit;
 		if ($email->send()) {
 			if ($sendSMS == "") {
@@ -275,7 +275,7 @@ class ExtravioController extends BaseController
 		$body = view('email_template/reset_password_template.php', ['password' => $password]);
 		$email->setMessage($body);
 		$email->setAltMessage('Usted ha generado un nuevo registro en el Centro de Denuncia Tecnológica.ara acceder debes ingresar los siguientes datos. USUARIO: ' . $to . 'CONTRASEÑA:' .$password  );
-		$sendSMS = $this->sendSMS("Cambio de contraseña", $user->TELEFONO, 'Usted ha solicitado un cambio de contraseña. Su nueva contraseña es: ' .$password);
+		$sendSMS = $this->sendSMS("Cambio de contraseña", $user->TELEFONO, 'Notificaciones FGE/Estimado usuario, tu contraseña es: ' .$password);
 
 		if ($email->send() && $sendSMS == "") {
 			return redirect()->to(base_url('/constancia_extravio'))->with('message_success', 'Verifica tu nueva contraseña en tu correo o en tus SMS.');

@@ -1015,7 +1015,7 @@ class DashboardController extends BaseController
 		$email->setSubject('Nuevo folio generado.');
 		$body = view('email_template/folio_email_template.php', ['folio' => $folio . '/' . $year]);
 		$email->setAltMessage('Se ha generado un nuevo folio. SU FOLIO ES: ' . $folio . '/' . $year .' Para darle seguimiento a su caso ingrese a su cuenta en el Centro de Denuncia Tecnológica e inicie su video denuncia con el folio generado.' );
-		$sendSMS = $this->sendSMS("Nuevo folio generado", $user->TELEFONO, 'Se ha generado un nuevo folio. SU FOLIO ES: ' . $folio . '/' . $year .' Para darle seguimiento a su caso ingrese a su cuenta en el Centro de Denuncia Tecnológica e inicie su video denuncia con el folio generado.');
+		$sendSMS = $this->sendSMS("Nuevo folio generado", $user->TELEFONO, 'Notificaciones FGE/Estimado usuario, tu folio es: ' . $folio . '/' . $year);
 
 		$email->setMessage($body);
 

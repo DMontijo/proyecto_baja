@@ -149,7 +149,9 @@ document.querySelector('#resend_btn').addEventListener('click', (e) => {
     e.target.setAttribute('disabled', true);
     document.querySelector('#validate_btn').setAttribute('disabled', true);
     var data = {
-        'email': document.querySelector('#correo').value
+        'email': document.querySelector('#correo').value,
+        'telefono': document.querySelector('#telefono').value
+
     }
 
     $.ajax({

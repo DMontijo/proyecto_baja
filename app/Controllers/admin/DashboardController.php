@@ -1846,7 +1846,7 @@ class DashboardController extends BaseController
 
 
 		$email->setAltMessage('Gracias por denunciar, se te ha generado un nuevo expediente ' . $expediente_guiones . '/' . $tipoExpediente->TIPOEXPEDIENTECLAVE);
-		$sendSMS = $this->sendSMS("Nuevo expediente", $denunciante->TELEFONO, 'Gracias por denunciar, se te ha generado un nuevo expediente ' . $expediente_guiones . '/' . $tipoExpediente->TIPOEXPEDIENTECLAVE);
+		$sendSMS = $this->sendSMS("Nuevo expediente", $denunciante->TELEFONO, 'Notificaciones FGE/Estimado usuario, tu numero de expediente es:' . $expediente_guiones . '/' . $tipoExpediente->TIPOEXPEDIENTECLAVE);
 
 		if ($email->send()) {
 			if ($sendSMS == "") {
