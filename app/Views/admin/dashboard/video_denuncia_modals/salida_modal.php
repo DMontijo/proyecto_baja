@@ -68,7 +68,7 @@
 									</div>
 								</div>
 								<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-									<label for="denuncia_con_datos_origen" class="form-label font-weight-bold">¿¿La denuncia fue con datos de origen?</label>
+									<label for="denuncia_con_datos_origen" class="form-label font-weight-bold">¿La denuncia fue con datos de origen?</label>
 									<br>
 									<div class="form-check form-check-inline">
 										<input class="form-check-input" type="radio" name="denuncia_con_datos_origen" value="S" required>

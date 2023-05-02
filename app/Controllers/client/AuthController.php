@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 
 use App\Models\DenunciantesModel;
 use App\Models\SesionesDenunciantesModel;
+use GuzzleHttp\Client;
 
 class AuthController extends BaseController
 {
@@ -142,9 +143,10 @@ class AuthController extends BaseController
 		$body = view('email_template/reset_password_template.php', ['password' => $password]);
 		$email->setMessage($body);
 		$email->setAltMessage('Usted ha solicitado un cambio de contraseña. Su nueva contraseña es: ' .$password);
+		$sendSMS = $this->sendSMS("Cambio de contraseña", $user->TELEFONO, 'Usted ha solicitado un cambio de contraseña. Su nueva contraseña es: ' .$password);
 
-		if ($email->send()) {
-			return redirect()->to(base_url('/denuncia'))->with('message_success', 'Verifica tu nueva contraseña en tu correo.');
+		if ($email->send() && $sendSMS == "") {
+			return redirect()->to(base_url('/denuncia'))->with('message_success', 'Verifica tu nueva contraseña en tu correo o en tus SMS.');
 		}
 	}
 
@@ -211,6 +213,30 @@ class AuthController extends BaseController
 			'body_data' => $data
 		];
 		echo view("client/auth/$view", $data);
+	}
+	public function sendSMS($tipo, $celular, $mensaje)
+	{
+
+		$endpoint = "http://enviosms.ddns.net/API/";
+		$data = array();
+		$data['UsuarioID'] = 1;
+		$data['Nombre'] = $tipo;
+		$lstMensajes = array();
+		$obj = array("Celular" => $celular , "Mensaje" => $mensaje);
+		$lstMensajes[] = $obj;
+		$data['lstMensajes'] = $lstMensajes;
+
+		$httpClient = new Client([
+			'base_uri' => $endpoint
+		]);
+
+		$response = $httpClient->post('campañas/enviarSMS', [
+			'json' => $data
+		]);
+
+		$respuestaServ = $response->getBody()->getContents();
+
+		return json_decode($respuestaServ);
 	}
 }
 

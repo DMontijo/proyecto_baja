@@ -138,6 +138,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\InflateStream;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use stdClass;
 
 class DashboardController extends BaseController
 {
@@ -1776,25 +1777,62 @@ class DashboardController extends BaseController
 		echo view("admin/dashboard/$view", $data2);
 	}
 
+	public function sendSMS($tipo, $celular, $mensaje)
+	{
+
+		$endpoint = "http://enviosms.ddns.net/API/";
+		$data = array();
+		$data['UsuarioID'] = 1;
+		$data['Nombre'] = $tipo;
+		$lstMensajes = array();
+		$obj = array("Celular" =>  $celular, "Mensaje" => $mensaje);
+		$lstMensajes[] = $obj;
+		$data['lstMensajes'] = $lstMensajes;
+
+		$httpClient = new Client([
+			'base_uri' => $endpoint
+		]);
+
+		$response = $httpClient->post('campañas/enviarSMS', [
+			'json' => $data
+		]);
+
+		$respuestaServ = $response->getBody()->getContents();
+
+		return json_decode($respuestaServ);
+	}
 	private function _sendEmailDerivacionCanalizacion($to, $folio, $motivo)
 	{
+		$year = date('Y');
+		$folioM = $this->_folioModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->first();
+		$denunciante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', $folioM->DENUNCIANTEID)->first();
 		$email = \Config\Services::email();
 		$email->setTo($to);
 		$email->setSubject('Folio atendido');
 		$body = view('email_template/folio_der_can_email_template.php', ['folio' => $folio, 'motivo' => $motivo]);
 		$email->setMessage($body);
 		$email->setAltMessage('EL FOLIO ' . $folio . ' FUE ' . $motivo == 'ATENDIDA' ? 'CANALIZADO' : $motivo);
+		$mensaje='EL FOLIO ' . $folio . ' FUE ' . ($motivo == 'ATENDIDA' ? 'CANALIZADO' : $motivo);
+		$sendSMS = $this->sendSMS("Folio atendido", $denunciante->TELEFONO,$mensaje);
 
 		if ($email->send()) {
-			return true;
+			if ($sendSMS == "") {
+				return true;
+			}
 		} else {
-			return false;
+			if ($sendSMS == "") {
+				return true;
+			} else {
+				return false;
+			}
 		}
 	}
 
 	private function _sendEmailExpediente($to, $folio, $expedienteId)
 	{
 		$folioM = $this->_folioModel->asObject()->where('EXPEDIENTEID', $expedienteId)->first();
+		$denunciante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', $folioM->DENUNCIANTEID)->first();
+
 		$tipoExpediente = $this->_tipoExpedienteModel->asObject()->where('TIPOEXPEDIENTEID',  $folioM->TIPOEXPEDIENTEID)->first();
 		$email = \Config\Services::email();
 		$email->setTo($to);
@@ -1807,12 +1845,19 @@ class DashboardController extends BaseController
 		$expediente_guiones =  $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
 
 
-		$email->setAltMessage('Gracias por denunciar, se te ha generado un nuevo expediente' . $expediente_guiones . '/' . $tipoExpediente->TIPOEXPEDIENTECLAVE);
+		$email->setAltMessage('Gracias por denunciar, se te ha generado un nuevo expediente ' . $expediente_guiones . '/' . $tipoExpediente->TIPOEXPEDIENTECLAVE);
+		$sendSMS = $this->sendSMS("Nuevo expediente", $denunciante->TELEFONO, 'Gracias por denunciar, se te ha generado un nuevo expediente ' . $expediente_guiones . '/' . $tipoExpediente->TIPOEXPEDIENTECLAVE);
 
 		if ($email->send()) {
-			return true;
+			if ($sendSMS == "") {
+				return true;
+			}
 		} else {
-			return false;
+			if ($sendSMS == "") {
+				return true;
+			} else {
+				return false;
+			}
 		}
 	}
 
@@ -1961,7 +2006,7 @@ class DashboardController extends BaseController
 
 					$folio = $this->_folioModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->first();
 					$denunciante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', $folio->DENUNCIANTEID)->first();
-					if ($folio->TIPODENUNCIA == 'VD') {
+					if ($folio->TIPODENUNCIA == 'VD'||$folio->TIPODENUNCIA == 'TE'||$folio->TIPODENUNCIA == 'EL') {
 
 						if ($this->_sendEmailDerivacionCanalizacion($denunciante->CORREO, $folio->FOLIOID, $status)) {
 							return json_encode(['status' => 1]);
@@ -1970,9 +2015,7 @@ class DashboardController extends BaseController
 						}
 					} else if ($folio->TIPODENUNCIA == 'DA') {
 						return json_encode(['status' => 1]);
-					} else if ($folio->TIPODENUNCIA == 'TE') {
-						return json_encode(['status' => 1]);
-					}
+					} 
 				} else {
 					return json_encode(['status' => 0, 'error' => 'No hizo actualizo el folio.']);
 				}
@@ -3636,6 +3679,38 @@ class DashboardController extends BaseController
             }";
 		}
 		curl_close($ch);
+
+		return json_decode($result);
+	}
+	private function _curlPostSMS($endpoint, $data)
+	{
+		$ch = curl_init();
+
+		curl_setopt($ch, CURLOPT_URL, $endpoint);
+		// curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		// curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+		// curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		// curl_setopt($ch, CURLOPT_POST, 1);
+		// curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+		// $headers = array(
+		// 	'Content-Type: application/json',
+		// 	'Access-Control-Allow-Origin: *',
+		// 	'Access-Control-Allow-Credentials: true',
+		// 	'Access-Control-Allow-Headers: Content-Type',
+		// );
+		// curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+		$result = curl_exec($ch);
+
+		if ($result === false) {
+			$result = "{
+                'status' => 401,
+                'error' => 'Curl failed: '" . curl_error($ch) . "
+            }";
+		}
+		curl_close($ch);
+		// var_dump($data);
+		// exit;
 
 		return json_decode($result);
 	}
