@@ -29,9 +29,9 @@
 										<td class="text-center"><?= $folio->HECHODELITO ?></td>
 										<td class="text-center"><?= $folio->NOMBRE ?> <?= $folio->APELLIDO_PATERNO ?> <?= $folio->APELLIDO_MATERNO ?></td>
 										<td class="text-center">
-											<form id="formulario_liberacion" action="<?= base_url('admin/dashboard/liberar_folio') ?>" name="formulario_liberacion" method="POST"onsubmit="return confirmarLiberacion()">
-												<input type="text" name="folio" value="<?= $folio->FOLIOID ?>" hidden>
-												<input type="text" name="year" value="<?= $folio->ANO ?>" hidden>
+											<form id="<?= 'form_' . $folio->FOLIOID ?>"action="<?= base_url('admin/dashboard/liberar_folio') ?>" name="formulario_liberacion" method="POST"onsubmit="return confirmarLiberacion(this)">
+												<input type="text" name="folio" value="<?= $folio->FOLIOID ?>" hidden >
+												<input type="text" name="year" value="<?= $folio->ANO ?>" hidden >
 												<input type="text" id="agenteatencion" value="<?= $folio->NOMBRE . ' ' . $folio->APELLIDO_PATERNO?>" hidden>
 												<button type="submit" class="btn btn-primary">LIBERAR</button>
 											</form>
@@ -47,7 +47,7 @@
 	</div>
 </section>
 <script>
-	function confirmarLiberacion() {
+	function confirmarLiberacion(element) {
 		event.preventDefault();
 
 		Swal.fire({
@@ -59,7 +59,9 @@
 			cancelButtonText: "Cancelar",
 		}).then(result => {
 			if (result.dismiss === Swal.DismissReason.cancel) {}else{
-				document.getElementById('formulario_liberacion').submit();
+				element.submit();
+				// console.log(document.getElementById('folio').value);	
+				// document.getElementsByName('formulario_liberacion').submit();
 			}
 		})
 	}
