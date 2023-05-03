@@ -171,12 +171,23 @@ class DocumentosController extends BaseController
 		$data->documentos = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $data->expediente)->where('ANO', $data->year)->findAll();
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 		$data->foliorow = $this->_folioModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $data->year)->findAll();
-		$data->empleados = $this->_usuariosModel->asObject()->orderBy('NOMBRE', 'ASC')->where('ROLID', 3)->findAll();
+		$data->empleados = $this->_usuariosModel->asObject()
+		->select('USUARIOS.*, SESIONES.ACTIVO')
+		->join('SESIONES','USUARIOS.ID= SESIONES.ID_USUARIO')
+		->where('ROLID', 3)
+		->where('ACTIVO', 1)
+		->findAll();		
 		$data->plantillas = $this->_plantillasModel->asObject()->where('TITULO !=', 'CONSTANCIA DE EXTRAVÍO')->orderBy('TITULO', 'ASC')->findAll();
 		$data->institucionremision = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $data->foliorow[0]->INSTITUCIONREMISIONMUNICIPIOID)->where('ESTADOID', 2)->first();
 		$data->municipioasignado = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $data->foliorow[0]->MUNICIPIOASIGNADOID)->where('ESTADOID', 2)->first();
-		$data->encargados = $this->_usuariosModel->asObject()->where('ROLID', 6)->findAll();
-
+		$data->encargados =
+		$this->_usuariosModel->asObject()
+		->select('USUARIOS.*, SESIONES.ACTIVO')
+		->join('SESIONES','USUARIOS.ID= SESIONES.ID_USUARIO')
+		->where('ROLID', 6)
+		->where('ACTIVO', 1)
+		->findAll();		
+		
 		$data2 = [
 			'header_data' => (object)['title' => 'DOCUMENTOS'],
 			'body_data' => $data
@@ -322,6 +333,26 @@ class DocumentosController extends BaseController
 		}
 	}
 
+	public function actualizarDocumentoAgenteAsignado()
+	{
+		$docid = trim($this->request->getPost('foliodocid'));
+		$folio = trim($this->request->getPost('folio'));
+		$year = trim($this->request->getPost('year'));
+		$agenteid = trim($this->request->getPost('agenteid'));
+		$dataAgente = array(
+			'AGENTE_ASIGNADO' => $agenteid,
+		);
+
+		$updateObjetoInvolucrado = $this->_folioDocModel->set($dataAgente)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $docid)->update();
+
+		$documentos = $this->_folioDocModel->get_by_folio($folio, $year);
+
+		if ($updateObjetoInvolucrado) {
+			return json_encode((object)['status' => 1, 'documentos' => $documentos]);;
+		} else {
+			return json_encode(['status' => 0]);
+		}
+	}
 	public function actualizarDocumentoEncargado()
 	{
 		$docid = trim($this->request->getPost('foliodocid'));

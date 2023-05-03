@@ -154,19 +154,18 @@
 	const form_vehiculo = document.querySelector('#form_vehiculo');
 	let select_uma = document.querySelector("#uma_select");
 	var options = select_uma.options;
-	tipoSalida.addEventListener('change', (e) => {
-
+	$(document).on('show.bs.modal', '#salida_modal', function() {
 		const notas_caso_salida = document.querySelector('#notas_caso_salida');
 		const notas_caso_mp = document.querySelector('#notas_mp');
 		notas_caso_salida.value = notas_caso_mp.value;
-		if (charRemain < 300) {
+		if (charRemain < 1000) {
 			document.getElementById("numCaracterSalida").innerHTML = charRemain + ' caracteres restantes';
 		} else {
 			document.getElementById("numCaracterSalida").innerHTML = '1000 caracteres restantes';
 
 		}
-
-
+	});
+	tipoSalida.addEventListener('change', (e) => {
 		if (!(e.target.value == 'DERIVADO' || e.target.value == 'CANALIZADO' || e.target.value == '1' || e.target.value == '4' || e.target.value == '5' || e.target.value == '6' || e.target.value == '7' || e.target.value == '8' || e.target.value == '9')) {
 			document.querySelector('#v-pills-delitos-tab').classList.add('d-none');
 			document.querySelector('#v-pills-documentos-tab').classList.add('d-none');
@@ -275,11 +274,21 @@
 			return;
 		}
 		if (!form_delito.checkValidity()) {
+			let message = "Por favor completa los siguientes campos:\n";
+			let inputs = form_delito.querySelectorAll("input, select");
+
+			inputs.forEach(input => {
+				if (!input.validity.valid && input.labels.length > 0) {
+					message += "- " + input.labels[0].textContent + "\n";
+				}
+			});
+
 			Swal.fire({
 				icon: 'error',
-				text: 'Por favor, completa todos los campos del hecho y da clic en actualizar para poder continuar.',
+				text: message,
 				confirmButtonColor: '#bf9b55',
 			});
+
 			return;
 		}
 

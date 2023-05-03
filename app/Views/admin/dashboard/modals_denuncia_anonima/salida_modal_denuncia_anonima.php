@@ -162,7 +162,7 @@
 		const notas_caso_salida = document.querySelector('#notas_caso_salida');
 		notas_caso_salida.value = notas_caso_mp.value;
 
-		if (charRemain < 300) {
+		if (charRemain < 1000) {
 			document.getElementById("numCaracterSalidaDa").innerHTML = charRemain + ' caracteres restantes';
 		} else {
 			document.getElementById("numCaracterSalidaDa").innerHTML = '1000 caracteres restantes';

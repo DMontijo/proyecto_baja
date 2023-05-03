@@ -1752,7 +1752,12 @@ class DashboardController extends BaseController
 		$data->plantillas = $this->_plantillasModel->asObject()->where('TITULO !=', 'CONSTANCIA DE EXTRAVIO')->where('ACTIVO', 1)->orderBy('TITULO', 'ASC')->findAll();
 		$data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->like('TIPOEXPEDIENTECLAVE', 'NUC')->orLike('TIPOEXPEDIENTECLAVE', 'NAC')->orLike('TIPOEXPEDIENTECLAVE', 'RAC')->findAll();
 		$data->situacionVehiculo = $this->_situacionVehiculoModel->asObject()->findAll();
-		$data->empleados = $this->_usuariosModel->asObject()->orderBy('NOMBRE', 'ASC')->where('ROLID', 3)->findAll();
+		$data->empleados =  $this->_usuariosModel->asObject()
+		->select('USUARIOS.*, SESIONES.ACTIVO')
+		->join('SESIONES','USUARIOS.ID= SESIONES.ID_USUARIO')
+		->where('ROLID', 3)
+		->where('ACTIVO', 1)
+		->findAll();		
 		$data->folioDoc = $this->_folioDocModel->asObject()->where('FOLIOID', $data->folio)->first();
 		$data->distribuidorVehiculo = $this->_vehiculoDistribuidorModel->asObject()->findAll();
 		$data->marcaVehiculo = $this->_vehiculoMarcaModel->asObject()->findAll();
@@ -1762,7 +1767,13 @@ class DashboardController extends BaseController
 		$data->servicioVehiculo = $this->_vehiculoServicioModel->asObject()->findAll();
 		$data->colorVehiculo = $this->_coloresVehiculoModel->asObject()->findAll();
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
-		$data->encargados = $this->_usuariosModel->asObject()->where('ROLID', 6)->findAll();
+		$data->encargados =
+			$this->_usuariosModel->asObject()
+			->select('USUARIOS.*, SESIONES.ACTIVO')
+			->join('SESIONES', 'USUARIOS.ID= SESIONES.ID_USUARIO')
+			->where('ROLID', 6)
+			->where('ACTIVO', 1)
+			->findAll();
 		$data->delitosModalidad = $this->_delitoModalidadModel->asObject()->orderBy('DELITOMODALIDADDESCR', 'ASC')->where('DELITOMODALIDADDESCR IS NOT NULL')->where('DELITOMODALIDADDESCR !=', '')->findAll();
 		$this->_loadView('Video denuncia', 'videodenuncia', '', $data, 'video_denuncia');
 	}
@@ -1812,8 +1823,8 @@ class DashboardController extends BaseController
 		$body = view('email_template/folio_der_can_email_template.php', ['folio' => $folio, 'motivo' => $motivo]);
 		$email->setMessage($body);
 		$email->setAltMessage('EL FOLIO ' . $folio . ' FUE ' . $motivo == 'ATENDIDA' ? 'CANALIZADO' : $motivo);
-		$mensaje='EL FOLIO ' . $folio . ' FUE ' . ($motivo == 'ATENDIDA' ? 'CANALIZADO' : $motivo);
-		$sendSMS = $this->sendSMS("Folio atendido", $denunciante->TELEFONO,$mensaje);
+		$mensaje = 'EL FOLIO ' . $folio . ' FUE ' . ($motivo == 'ATENDIDA' ? 'CANALIZADO' : $motivo);
+		$sendSMS = $this->sendSMS("Folio atendido", $denunciante->TELEFONO, $mensaje);
 
 		if ($email->send()) {
 			if ($sendSMS == "") {
@@ -1967,66 +1978,194 @@ class DashboardController extends BaseController
 
 		$agenteId = session('ID') ? session('ID') : 1;
 
+		try {
 
-		if ($status == 'DERIVADO' || $status == 'CANALIZADO') {
-			$data = [
-				'STATUS' => $status,
-				'NOTASAGENTE' => $motivo,
-				'AGENTEATENCIONID' => $agenteId,
-				'FECHASALIDA' => date('Y-m-d H:i:s'),
-				'INSTITUCIONREMISIONMUNICIPIOID' => $institutomunicipio,
-				'INSTITUCIONREMISIONID' => $institutoremision
-			];
-		} else {
-			$data = [
-				'STATUS' => $status == 'ATENDIDA' ? 'CANALIZADO' : $status,
-				'NOTASAGENTE' => $motivo,
-				'AGENTEATENCIONID' => $agenteId,
-				'FECHASALIDA' => date('Y-m-d H:i:s'),
-			];
-		}
-		if ($telefonica == 'S') {
-			$data['TIPODENUNCIA'] = 'TE';
-		}
-		if ($electronica == 'S') {
-			$data['TIPODENUNCIA'] = 'EL';
-		}
-		if (!empty($status) && !empty($motivo) && !empty($year) && !empty($folio) && !empty($agenteId)) {
-			$folioRow = $this->_folioModel->where('ANO', $year)->where('FOLIOID', $folio)->where('STATUS', 'EN PROCESO')->first();
-			if ($folioRow) {
-				$update = $this->_folioModel->set($data)->where('ANO', $year)->where('FOLIOID', $folio)->update();
+			if ($status == 'DERIVADO' || $status == 'CANALIZADO') {
+				$data = [
+					'STATUS' => $status,
+					'NOTASAGENTE' => $motivo,
+					'AGENTEATENCIONID' => $agenteId,
+					'FECHASALIDA' => date('Y-m-d H:i:s'),
+					'INSTITUCIONREMISIONMUNICIPIOID' => $institutomunicipio,
+					'INSTITUCIONREMISIONID' => $institutoremision
+				];
+			} else {
+				$data = [
+					'STATUS' => $status == 'ATENDIDA' ? 'CANALIZADO' : $status,
+					'NOTASAGENTE' => $motivo,
+					'AGENTEATENCIONID' => $agenteId,
+					'FECHASALIDA' => date('Y-m-d H:i:s'),
+				];
+			}
+			if ($telefonica == 'S') {
+				$data['TIPODENUNCIA'] = 'TE';
+			}
+			if ($electronica == 'S') {
+				$data['TIPODENUNCIA'] = 'EL';
+			}
+			if (!empty($status) && !empty($motivo) && !empty($year) && !empty($folio) && !empty($agenteId)) {
+				$folioRow = $this->_folioModel->where('ANO', $year)->where('FOLIOID', $folio)->where('STATUS', 'EN PROCESO')->first();
+				$folioVehiculoRow = $this->_folioVehiculoModel->where('ANO', $year)->where('FOLIOID', $folio)->findAll();
 
-				if ($update) {
-					$datosBitacora = [
-						'ACCION' => 'Ha actualizado el status del folio a derivado o canalizado.',
-						'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year . ' STATUS: ' . $status == 'ATENDIDA' ? 'CANALIZADO' : $status,
-					];
+				if ($folioRow) {
+					$this->deteccionErrores($folioRow, $folioVehiculoRow);
+					$update = $this->_folioModel->set($data)->where('ANO', $year)->where('FOLIOID', $folio)->update();
 
-					$this->_bitacoraActividad($datosBitacora);
 
-					$folio = $this->_folioModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->first();
-					$denunciante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', $folio->DENUNCIANTEID)->first();
-					if ($folio->TIPODENUNCIA == 'VD'||$folio->TIPODENUNCIA == 'TE'||$folio->TIPODENUNCIA == 'EL') {
+					if ($update) {
+						$datosBitacora = [
+							'ACCION' => 'Ha actualizado el status del folio a derivado o canalizado.',
+							'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year . ' STATUS: ' . $status == 'ATENDIDA' ? 'CANALIZADO' : $status,
+						];
 
-						if ($this->_sendEmailDerivacionCanalizacion($denunciante->CORREO, $folio->FOLIOID, $status)) {
-							return json_encode(['status' => 1]);
-						} else {
+						$this->_bitacoraActividad($datosBitacora);
+
+						$folio = $this->_folioModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->first();
+						$denunciante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', $folio->DENUNCIANTEID)->first();
+						if ($folio->TIPODENUNCIA == 'VD' || $folio->TIPODENUNCIA == 'TE' || $folio->TIPODENUNCIA == 'EL') {
+
+							if ($this->_sendEmailDerivacionCanalizacion($denunciante->CORREO, $folio->FOLIOID, $status)) {
+								return json_encode(['status' => 1]);
+							} else {
+								return json_encode(['status' => 1]);
+							}
+						} else if ($folio->TIPODENUNCIA == 'DA') {
 							return json_encode(['status' => 1]);
 						}
-					} else if ($folio->TIPODENUNCIA == 'DA') {
-						return json_encode(['status' => 1]);
-					} 
+					} else {
+						return json_encode(['status' => 0, 'error' => 'No hizo actualizo el folio.']);
+					}
 				} else {
-					return json_encode(['status' => 0, 'error' => 'No hizo actualizo el folio.']);
+					return json_encode(['status' => 0, 'error' => 'Ya fue atendido el folio o alguien lo libero cuando lo estaba trabajando.']);
 				}
 			} else {
-				return json_encode(['status' => 0, 'error' => 'Ya fue atendido el folio o alguien lo libero cuando lo estaba trabajando.']);
+				return json_encode(['status' => 0, 'error' => 'No existe alguna de las variables']);
 			}
-		} else {
-			return json_encode(['status' => 0, 'error' => 'No existe alguna de las variables']);
+		} catch (\Exception $e) {
+			return json_encode(['status' => 0, 'error' => $e->getMessage()]);
 		}
 	}
 
+	public function deteccionErrores($folioRow, $folioVehiculoRow)
+	{
+
+		if ($folioRow['TIPODENUNCIA'] == 'VD' || $folioRow['TIPODENUNCIA'] == 'TE' || $folioRow['TIPODENUNCIA'] == 'EL') {
+			$error_messages = array();
+
+			if (($folioRow['MUNICIPIOID'] == '' || $folioRow['MUNICIPIOID'] == NULL)) {
+				$error_messages[] = 'Municipio no especificado';
+			}
+			if (($folioRow['HECHOMUNICIPIOID'] == '' || $folioRow['HECHOMUNICIPIOID'] == NULL)) {
+				$error_messages[] = 'Municipio del hecho no especificado';
+			}
+			if (($folioRow['HECHOLOCALIDADID'] == '' || $folioRow['HECHOLOCALIDADID'] == NULL)) {
+				$error_messages[] = 'Localidad del hecho no especificada';
+			}
+			if (($folioRow['HECHOCOLONIADESCR'] == '' || $folioRow['HECHOCOLONIADESCR'] == NULL)) {
+				$error_messages[] = 'Colonia del hecho no especificada';
+			}
+			if (($folioRow['HECHOCALLE'] == '' || $folioRow['HECHOCALLE'] == NULL)) {
+				$error_messages[] = 'Calle del hecho no especificada';
+			}
+			if (($folioRow['HECHONUMEROCASA'] == '' || $folioRow['HECHONUMEROCASA'] == NULL)) {
+				$error_messages[] = 'Número de casa del hecho no especificado';
+			}
+			if (($folioRow['HECHOLUGARID'] == '' || $folioRow['HECHOLUGARID'] == NULL)) {
+				$error_messages[] = 'Lugar del hecho no especificado';
+			}
+			if (($folioRow['HECHOFECHA'] == '' || $folioRow['HECHOFECHA'] == NULL)) {
+				$error_messages[] = 'Fecha del hecho no especificada';
+			}
+			if (($folioRow['HECHOHORA'] == '' || $folioRow['HECHOHORA'] == NULL)) {
+				$error_messages[] = 'Hora del hecho no especificada';
+			}
+			if (($folioRow['HECHONARRACION'] == '' || $folioRow['HECHONARRACION'] == NULL)) {
+				$error_messages[] = 'Narración del hecho no especificada';
+			}
+			if (($folioRow['HECHODELITO'] == '' || $folioRow['HECHODELITO'] == NULL)) {
+				$error_messages[] = 'Tipo de delito del hecho no especificado';
+			}
+
+			if (!empty($error_messages)) {
+				$error_message = 'Actualiza los campos de información del hecho: ';
+				$error_message .= implode(PHP_EOL, $error_messages);
+				throw new \Exception($error_message);
+			}
+		} else {
+			$error_messages = array();
+
+			if (($folioRow['MUNICIPIOID'] == '' || $folioRow['MUNICIPIOID'] == NULL)) {
+				$error_messages[] = 'Municipio no especificado';
+			}
+			if (($folioRow['HECHOMUNICIPIOID'] == '' || $folioRow['HECHOMUNICIPIOID'] == NULL)) {
+				$error_messages[] = 'Municipio del hecho no especificado';
+			}
+			if (($folioRow['HECHOLOCALIDADID'] == '' || $folioRow['HECHOLOCALIDADID'] == NULL)) {
+				$error_messages[] = 'Localidad del hecho no especificada';
+			}
+			if (($folioRow['HECHOCOLONIADESCR'] == '' || $folioRow['HECHOCOLONIADESCR'] == NULL)) {
+				$error_messages[] = 'Colonia del hecho no especificada';
+			}
+			if (($folioRow['HECHOCALLE'] == '' || $folioRow['HECHOCALLE'] == NULL)) {
+				$error_messages[] = 'Calle del hecho no especificada';
+			}
+			if (($folioRow['HECHONUMEROCASA'] == '' || $folioRow['HECHONUMEROCASA'] == NULL)) {
+				$error_messages[] = 'Número de casa del hecho no especificado';
+			}
+			if (($folioRow['HECHOLUGARID'] == '' || $folioRow['HECHOLUGARID'] == NULL)) {
+				$error_messages[] = 'Lugar del hecho no especificado';
+			}
+			if (($folioRow['HECHOFECHA'] == '' || $folioRow['HECHOFECHA'] == NULL)) {
+				$error_messages[] = 'Fecha del hecho no especificada';
+			}
+			if (($folioRow['HECHOHORA'] == '' || $folioRow['HECHOHORA'] == NULL)) {
+				$error_messages[] = 'Hora del hecho no especificada';
+			}
+			if (($folioRow['HECHONARRACION'] == '' || $folioRow['HECHONARRACION'] == NULL)) {
+				$error_messages[] = 'Narración del hecho no especificada';
+			}
+			if (!empty($error_messages)) {
+				$error_message = 'Actualiza los campos de información del hecho: ';
+				$error_message .= implode(PHP_EOL, $error_messages);
+				throw new \Exception($error_message);
+			}
+		}
+		foreach ($folioVehiculoRow as $key => $vehiculo) {
+			if (($vehiculo['SITUACION'] == '' || $vehiculo['SITUACION'] == NULL)
+				|| ($vehiculo['ESTADOIDPLACA'] == '' || $vehiculo['ESTADOIDPLACA'] == NULL)
+				|| ($vehiculo['VEHICULODISTRIBUIDORID'] == '' || $vehiculo['VEHICULODISTRIBUIDORID'] == NULL)
+				|| ($vehiculo['MARCAID'] == '' || $vehiculo['MARCAID'] == NULL)
+				|| ($vehiculo['MODELOID'] == '' || $vehiculo['MODELOID'] == NULL)
+				|| ($vehiculo['ANOVEHICULO'] == '' || $vehiculo['ANOVEHICULO'] == NULL)
+				|| ($vehiculo['PERSONAFISICAIDPROPIETARIO'] == '' || $vehiculo['PERSONAFISICAIDPROPIETARIO'] == NULL)
+			) {
+				$mensajeError = 'Faltan los siguientes campos en el vehículo: ';
+				if ($vehiculo['SITUACION'] == '' || $vehiculo['SITUACION'] == NULL) {
+					$error_messages[] = 'Situación, ';
+				}
+				if ($vehiculo['ESTADOIDPLACA'] == '' || $vehiculo['ESTADOIDPLACA'] == NULL) {
+					$mensajeError .= 'Estado de la placa, ';
+				}
+				if ($vehiculo['VEHICULODISTRIBUIDORID'] == '' || $vehiculo['VEHICULODISTRIBUIDORID'] == NULL) {
+					$mensajeError .= 'Distribuidor, ';
+				}
+				if ($vehiculo['MARCAID'] == '' || $vehiculo['MARCAID'] == NULL) {
+					$mensajeError .= 'Marca, ';
+				}
+				if ($vehiculo['MODELOID'] == '' || $vehiculo['MODELOID'] == NULL) {
+					$mensajeError .= 'Modelo, ';
+				}
+				if ($vehiculo['ANOVEHICULO'] == '' || $vehiculo['ANOVEHICULO'] == NULL) {
+					$mensajeError .= 'Año del vehículo, ';
+				}
+				if ($vehiculo['PERSONAFISICAIDPROPIETARIO'] == '' || $vehiculo['PERSONAFISICAIDPROPIETARIO'] == NULL) {
+					$mensajeError .= 'Propietario, ';
+				}
+				$mensajeError = rtrim($mensajeError, ', ');
+				throw new \Exception($mensajeError);
+			}
+		}
+	}
 	public function saveInJusticia()
 	{
 		$folio = $this->request->getPost('folio');
@@ -2044,48 +2183,7 @@ class DashboardController extends BaseController
 				$folioVehiculoRow = $this->_folioVehiculoModel->where('ANO', $year)->where('FOLIOID', $folio)->findAll();
 
 				if ($folioRow) {
-					if ($folioRow['TIPODENUNCIA'] == 'VD') {
-						if (($folioRow['MUNICIPIOID'] == '' || $folioRow['MUNICIPIOID'] == NULL)
-							|| ($folioRow['HECHOLOCALIDADID'] == '' || $folioRow['HECHOLOCALIDADID'] == NULL)
-							|| ($folioRow['HECHOCOLONIADESCR'] == '' || $folioRow['HECHOCOLONIADESCR'] == NULL)
-							|| ($folioRow['HECHOCALLE'] == '' || $folioRow['HECHOCALLE'] == NULL)
-							|| ($folioRow['HECHONUMEROCASA'] == '' || $folioRow['HECHONUMEROCASA'] == NULL)
-							|| ($folioRow['HECHOLUGARID'] == '' || $folioRow['HECHOLUGARID'] == NULL)
-							|| ($folioRow['HECHOFECHA'] == '' || $folioRow['HECHOFECHA'] == NULL)
-							|| ($folioRow['HECHOHORA'] == '' || $folioRow['HECHOHORA'] == NULL)
-							|| ($folioRow['HECHONARRACION'] == '' || $folioRow['HECHONARRACION'] == NULL)
-							|| ($folioRow['HECHODELITO'] == '' || $folioRow['HECHODELITO'] == NULL)
-						) {
-							throw new \Exception('Actualiza los campos de información del hecho.');
-						}
-					} else {
-						if (($folioRow['MUNICIPIOID'] == '' || $folioRow['MUNICIPIOID'] == NULL)
-							|| ($folioRow['HECHOLOCALIDADID'] == '' || $folioRow['HECHOLOCALIDADID'] == NULL)
-							|| ($folioRow['HECHOCOLONIADESCR'] == '' || $folioRow['HECHOCOLONIADESCR'] == NULL)
-							|| ($folioRow['HECHOCALLE'] == '' || $folioRow['HECHOCALLE'] == NULL)
-							|| ($folioRow['HECHONUMEROCASA'] == '' || $folioRow['HECHONUMEROCASA'] == NULL)
-							|| ($folioRow['HECHOLUGARID'] == '' || $folioRow['HECHOLUGARID'] == NULL)
-							|| ($folioRow['HECHOFECHA'] == '' || $folioRow['HECHOFECHA'] == NULL)
-							|| ($folioRow['HECHOHORA'] == '' || $folioRow['HECHOHORA'] == NULL)
-							|| ($folioRow['HECHONARRACION'] == '' || $folioRow['HECHONARRACION'] == NULL)
-						) {
-							throw new \Exception('Actualiza los campos de información del hecho.');
-						}
-					}
-
-
-					foreach ($folioVehiculoRow as $key => $vehiculo) {
-						if (($vehiculo['SITUACION'] == '' || $vehiculo['SITUACION'] == NULL)
-							|| ($vehiculo['ESTADOIDPLACA'] == '' || $vehiculo['ESTADOIDPLACA'] == NULL)
-							|| ($vehiculo['VEHICULODISTRIBUIDORID'] == '' || $vehiculo['VEHICULODISTRIBUIDORID'] == NULL)
-							|| ($vehiculo['MARCAID'] == '' || $vehiculo['MARCAID'] == NULL)
-							|| ($vehiculo['MODELOID'] == '' || $vehiculo['MODELOID'] == NULL)
-							|| ($vehiculo['ANOVEHICULO'] == '' || $vehiculo['ANOVEHICULO'] == NULL)
-							|| ($vehiculo['PERSONAFISICAIDPROPIETARIO'] == '' || $vehiculo['PERSONAFISICAIDPROPIETARIO'] == NULL)
-						) {
-							throw new \Exception('Actualiza los campos de los vehiculos.');
-						}
-					}
+					$this->deteccionErrores($folioRow, $folioVehiculoRow);
 
 					$personas = $this->_folioPersonaFisicaModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->orderBy('PERSONAFISICAID', 'asc')->findAll();
 					$fisImpDelito = $this->_imputadoDelitoModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
@@ -7067,7 +7165,9 @@ class DashboardController extends BaseController
 		if (($this->request->getPost('victimaid') == '' || $this->request->getPost('victimaid') == null || $this->request->getPost('victimaid') == 0) || $this->request->getPost('imputado') == '' || $this->request->getPost('imputado') == null || $this->request->getPost('imputado') == 0) {
 			return json_encode(['status' => 0]);
 		}
+
 		if ($folioRow) {
+
 
 			$clasificaciondoctoid = '';
 

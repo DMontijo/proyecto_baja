@@ -699,6 +699,7 @@
 				var btnFirmar =
 					`<button type='button'  class='btn btn-primary my-2' onclick='firmarDocumento(${documentos[i].FOLIOID}, ${documentos[i].ANO}, ${documentos[i].FOLIODOCID})' disabled><i class="fas fa-signature"></i></button>`
 				var btnAsignarEncargado = `<button type='button'  class='btn btn-primary my-2' onclick='asignarEncargado(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})' disabled><i class="fas fa-user-tag"></i></button>`
+				var btnAsignarAgente = `<button type='button'  class='btn btn-primary my-2' onclick='asignarAgente(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})' disabled><i class="fas fa-user-tag"></i></button>`
 
 			} else {
 				var btn =
@@ -707,6 +708,7 @@
 					`<button type='button'  class='btn btn-primary my-2' onclick='firmarDocumento(${documentos[i].FOLIOID}, ${documentos[i].ANO}, ${documentos[i].FOLIODOCID})'><i class="fas fa-signature"></i></button>`
 
 				var btnAsignarEncargado = `<button type='button'  class='btn btn-primary my-2' onclick='asignarEncargado(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})'><i class="fas fa-user-tag"></i></button>`
+				var btnAsignarAgente = `<button type='button'  class='btn btn-primary my-2' onclick='asignarAgente(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})'><i class="fas fa-user-tag"></i></button>`
 
 			}
 			var btnBorrar = '';
@@ -717,9 +719,11 @@
 			var fila =
 				`<tr id="row${i}">` +
 				`<td class="text-center">${documentos[i].TIPODOC}</td>` +
-				`<td class="text-center">${documentos[i].NOMBRE} ${documentos[i].APELLIDO_PATERNO} ${documentos[i].APELLIDO_MATERNO}</td>` +
+				`<td class="text-center">${documentos[i].AGENTER_NOMBRE} ${documentos[i].AGENTER_AP} ${documentos[i].AGENTER_AM}</td>` +
 				`<td class="text-center">${documentos[i].STATUS}</td>` +
-				`<td class="text-center">${btn} ${btnFirmar} ${btnBorrar} ${btnAsignarEncargado}</td>` +
+				`<td class="text-center">${btn} ${btnFirmar} ${btnBorrar}</td>` +
+				`<td class="text-center">${btnAsignarAgente}</td>` +
+				`<td class="text-center">${btnAsignarEncargado}</td>` +
 				`</tr>`;
 
 			$('#table-documentos tr:first').after(fila);
@@ -1932,7 +1936,53 @@
 		});
 
 	}
+	function asignarAgente(documento, folio, ano) {
+		$('#documentos_generados_modal').modal('hide');
 
+		$('#asignarAgenteModal').modal('show');
+		const btn_asignar_agente = document.querySelector('#enviarAgente');
+
+		btn_asignar_agente.addEventListener('click', (e) => {
+			btn_asignar_agente.disabled = true;
+			$.ajax({
+				data: {
+					'foliodocid': documento,
+					'folio': folio,
+					'year': ano,
+					'agenteid': document.querySelector('#selectAgente').value
+				},
+				url: "<?= base_url('/data/update-agente-asignado') ?>",
+				method: "POST",
+				dataType: "json",
+				success: function(response) {
+					const documentos = response.documentos;
+					if (response.status == 1) {
+						btn_asignar_agente.disabled = false;
+						let tabla_documentos = document.querySelectorAll('#table-documentos tr');
+						tabla_documentos.forEach(row => {
+							if (row.id !== '') {
+								row.remove();
+							}
+						});
+						llenarTablaDocumentos(documentos);
+
+						Swal.fire({
+							icon: 'success',
+							text: 'Agente asignado correctamente',
+							confirmButtonColor: '#bf9b55',
+						});
+						$('#asignarAgenteModal').modal('hide');
+					}
+
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					btn_asignar_agente.disabled = false;
+
+				}
+			});
+		});
+
+	}
 	function borrarDocumento(folio, ano, foliodocid) {
 		Swal.fire({
 			title: '¿Estas seguro?',
@@ -7136,6 +7186,8 @@
 <?php include 'video_denuncia_modals/salida_modal.php' ?>
 <?php include 'video_denuncia_modals/marks.php' ?>
 <?php include 'video_denuncia_modals/encargados_modal.php' ?>
+<?php include 'video_denuncia_modals/asignar_agente_modal.php' ?>
+
 <?php include 'video_denuncia_modals/agregar_archivosExternos_modal.php' ?>
 
 <?php include 'video_denuncia_modals/persona_modal.php' ?>
