@@ -65,12 +65,12 @@ class OTPController extends BaseController
 		if ($to) {
 			$user = $this->_denunciantesModel->asObject()->where('CORREO', $to)->first();
 
-			$email = \Config\Services::email();
-			$email->setTo($to);
-			$email->setSubject('Nuevo código');
-			$body = view('email_template/token_email_template', ['otp' => $otp]);
-			$email->setMessage($body);
-			$email->setAltMessage('Se ha generado un nuevo código.SU CÓDIGO ES: ' . $otp);
+			// $email = \Config\Services::email();
+			// $email->setTo($to);
+			// $email->setSubject('Nuevo código');
+			// $body = view('email_template/token_email_template', ['otp' => $otp]);
+			// $email->setMessage($body);
+			// $email->setAltMessage('Se ha generado un nuevo código.SU CÓDIGO ES: ' . $otp);
 			$telefono = $user != null ? $user->TELEFONO : $tel;
 			$sendSMS = $this->sendSMS("Nuevo codigo", $tel, 'Notificaciones FGE/Estimado usuario, tu codigo es: ' . $otp);
 
@@ -87,13 +87,19 @@ class OTPController extends BaseController
 			}else{
 				$newOTP = $this->_OTPModel->insert($data);
 			}
-
-			if ($email->send()) {
+			if ($sendSMS =="") {
 				return json_encode((object)['status' => 200]);
-			} else {
-				$data = $email->printDebugger(['headers']);
+			}else{
+				$data = $sendSMS;
 				return json_encode((object)['status' => 500, 'data' => $data]);
 			}
+
+			// if ($email->send()) {
+			// 	return json_encode((object)['status' => 200]);
+			// } else {
+			// 	$data = $email->printDebugger(['headers']);
+			// 	return json_encode((object)['status' => 500, 'data' => $data]);
+			// }
 		} else {
 			$data = ['message' => 'Error en envío de mensaje'];
 			return json_encode((object)['status' => 500, 'data' => $data]);

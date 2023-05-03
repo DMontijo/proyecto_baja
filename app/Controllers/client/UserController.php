@@ -186,7 +186,7 @@ class UserController extends BaseController
 					$this->_denunciantesModel->insert($data);
 					$this->_sendEmailPassword($data['CORREO'], $password);
 					session()->setFlashdata('message', 'Inicia sesión con la contraseña que llegará a tu correo electrónico');
-					return redirect()->to(base_url('/denuncia'))->with('message_success', 'Inicia sesión con la contraseña que llegará a tu correo electrónico o a tus mensajes SMS y comienza tu denuncia');
+					return redirect()->to(base_url('/denuncia'))->with('message_success', 'Inicia sesión con la contraseña que llegará tus mensajes SMS y comienza tu denuncia');
 				}
 			} else {
 				return redirect()->back()->with('message', 'Hubo un error en los datos o puede que ya exista un registro con el mismo correo');
@@ -367,26 +367,28 @@ class UserController extends BaseController
 
 	private function _sendEmailPassword($to, $password)
 	{
-		$email = \Config\Services::email();
+		// $email = \Config\Services::email();
 		$user = $this->_denunciantesModel->asObject()->where('CORREO', $to)->first();
-		$email->setTo($to);
-		$email->setSubject('Te estamos atendiendo');
-		$body = view('email_template/password_email_template.php', ['email' => $to, 'password' => $password]);
-		$email->setMessage($body);
-		$email->setAltMessage('Usted ha generado un nuevo registro en el Centro de Denuncia Tecnológica. Para acceder debes ingresar los siguientes datos. USUARIO: ' .$to .'CONTRASEÑA' . $password );
+		// $email->setTo($to);
+		// $email->setSubject('Te estamos atendiendo');
+		// $body = view('email_template/password_email_template.php', ['email' => $to, 'password' => $password]);
+		// $email->setMessage($body);
+		// $email->setAltMessage('Usted ha generado un nuevo registro en el Centro de Denuncia Tecnológica. Para acceder debes ingresar los siguientes datos. USUARIO: ' .$to .'CONTRASEÑA' . $password );
 		$sendSMS = $this->sendSMS("Te estamos atendiendo", $user->TELEFONO, 'Notificaciones FGE/Estimado usuario, tu contraseña es: ' . $password );
 
-		if ($email->send()) {
+		// if ($email->send()) {
 			if ($sendSMS == "") {
 				return true;
-			}
-		} else {
-			if ($sendSMS == "") {
-				return true;
-			} else {
+			}else {
 				return false;
 			}
-		}
+		// } else {
+		// 	if ($sendSMS == "") {
+		// 		return true;
+		// 	} else {
+		// 		return false;
+		// 	}
+		// }
 	}
 
 	private function _loadView($title, $data, $view)

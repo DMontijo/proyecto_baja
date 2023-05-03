@@ -26,6 +26,15 @@
 		</div>
 	</div>
 </div>
+<?php if (session()->getFlashdata('message_error')) : ?>
+	<script>
+		Swal.fire({
+			icon: 'error',
+			html: '<strong><?= session()->getFlashdata('message_error') ?></strong>',
+			confirmButtonColor: '#bf9b55',
+		})
+	</script>
+<?php endif; ?>
 <script>
 	(function() {
 		'use strict'
