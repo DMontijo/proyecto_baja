@@ -339,8 +339,9 @@ $routes->group('data', function ($routes) {
 
 	//Encargados
 	$routes->post('update-encargado', 'admin/DocumentosController::actualizarDocumentoEncargado');
-	$routes->post('email-alerts', 'admin/FirmaController::sendEmailAlertas');
+	$routes->post('update-agente-asignado', 'admin/DocumentosController::actualizarDocumentoAgenteAsignado');
 
+	$routes->post('email-alerts', 'admin/FirmaController::sendEmailAlertas');
 
 });
 
