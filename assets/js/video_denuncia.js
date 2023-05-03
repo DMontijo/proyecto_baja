@@ -18,7 +18,7 @@ const stopRecord = document.querySelector("#stop-recording");
 
 // VIDEO Y AUDIO DE AGENTE SELECTER
 const mediaDevicesModal = document.getElementById("media_devices_modal");
-const mediaConfiguration = document.getElementById("media_configuration");
+const $mediaConfiguration = document.getElementById("media_configuration");
 const $listaDeDispositivosVideo = document.querySelector("#listaDeDispositivosVideo");
 const $listaDeDispositivosAudio = document.querySelector("#listaDeDispositivosAudio");
 const $video = document.querySelector("#video");
@@ -62,7 +62,7 @@ var totalSeconds = 0;
 var myInterval;
 
 
-mediaConfiguration.addEventListener("click", async () => {
+$mediaConfiguration.addEventListener("click", async () => {
 	$(mediaDevicesModal).modal("show");
 	initMediaDevices();
 });
@@ -109,7 +109,7 @@ disponible_connect.addEventListener("click", () => {
 					deleteVideoElement();
 				} catch (error) {}
 				clearVideoCall();
-console.log(response.guest.uuid, 'response');
+				console.log(response.guest.uuid, 'response');
 				guestUUID = response.guest.uuid;
 				console.log("Respuesta: ", response);
 				document.querySelector("#nombre_denunciante").value =
@@ -216,6 +216,7 @@ aceptar_llamada.addEventListener("click", () => {
 			denunciante_nombre_llamada.innerHTML = guest.name;
 			disponible_connect.hidden = true;
 			no_disponible_connect.hidden = true;
+			$mediaConfiguration.hidden = true;
 			header_llamda.hidden = false;
 			$("#llamadaModal").modal("hide");
 			aceptar_llamada.disabled = false;
@@ -507,6 +508,7 @@ function clearVideoCall() {
 	disponible_connect.hidden = false;
 	no_disponible_connect.hidden = true;
 	header_llamda.hidden = true;
+	$mediaConfiguration.hidden = false;
 	$("#llamadaModal").modal("hide");
 }
 

@@ -227,14 +227,12 @@
 						</div>
 					</div>
 				</div>
-
 			</div>
 		</div>
 
 		<br>
 
 	</div>
-<!-- </div> -->
 </div>
 
 <?php include("video_denuncia_media_devices_modal.php"); ?>
