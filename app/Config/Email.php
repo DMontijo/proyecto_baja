@@ -54,14 +54,14 @@ class Email extends BaseConfig
 	 *
 	 * @var string
 	 */
-	public $SMTPUser = 'notificacionesfgebc@fgebc.gob.mx';
+	public $SMTPUser = 'notificacionfgebc@fgebc.gob.mx';
 
 	/**
 	 * SMTP Password
 	 *
 	 * @var string
 	 */
-	public $SMTPPass = 'Crh7#MZ8p0q!0&4$';
+	public $SMTPPass = 'dymzjzpmqmgflgvw';
 
 	/**
 	 * SMTP Port
