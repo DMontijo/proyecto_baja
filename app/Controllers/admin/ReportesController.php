@@ -1571,6 +1571,7 @@ class ReportesController extends BaseController
 			'U', 'V', 'W', 'X', 'Y', 'Z'
 		];
 		$headers = [
+			"No.",
 			"Folio",
 			"FECHA DE EXPEDICIÓN",
 			"NO. EXPEDIENTE",
@@ -1592,6 +1593,7 @@ class ReportesController extends BaseController
 		$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
 
 		$row++;
+		$num = 1;
 
 		foreach ($documentos as $index => $orden) {
 			$this->separarExpID($orden->EXPEDIENTEID);
@@ -1601,28 +1603,30 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('A2', "REGISTRO ORDENES DE PROTECCIÓN");
 
 
-			$sheet->setCellValue('A' . $row, $orden->FOLIOID);
-			$sheet->setCellValue('B' . $row, $this->formatFecha($orden->FECHAFIRMA));
-			$sheet->setCellValue('C' . $row, $this->separarExpID($orden->EXPEDIENTEID));
-			$sheet->setCellValue('D' . $row, 'CENTRO DE DENUNCIA TECNÓLOGICA');
-			$sheet->setCellValue('E' . $row,  $orden->MUNICIPIODESCR);
-			$sheet->setCellValue('F' . $row,  $orden->NOMBRE_MP);
-			$sheet->setCellValue('G' . $row,  $orden->HECHODELITO);
-			$sheet->setCellValue('H' . $row,  $orden->TIPODOC);
-			$sheet->setCellValue('I' . $row,  $orden->NOMBRE_VTM);
-			$sheet->setCellValue('J' . $row, ($orden->SEXO == 'M' ? 'MASCULINO' : ($orden->SEXO == 'F' ? 'FEMENINO' : '')));
-			$sheet->setCellValue('K' . $row,  $orden->LESIONES);
-			$sheet->setCellValue('L' . $row, '');
+			$sheet->setCellValue('A' . $row, $num);
+			$sheet->setCellValue('B' . $row, $orden->FOLIOID);
+			$sheet->setCellValue('C' . $row, $this->formatFecha($orden->FECHAFIRMA));
+			$sheet->setCellValue('D' . $row, $this->separarExpID($orden->EXPEDIENTEID));
+			$sheet->setCellValue('E' . $row, 'CENTRO DE DENUNCIA TECNÓLOGICA');
+			$sheet->setCellValue('F' . $row,  $orden->MUNICIPIODESCR);
+			$sheet->setCellValue('G' . $row,  $orden->NOMBRE_MP);
+			$sheet->setCellValue('H' . $row,  $orden->DELITOMODALIDADDESCR);
+			$sheet->setCellValue('I' . $row,  $orden->TIPODOC);
+			$sheet->setCellValue('J' . $row,  $orden->NOMBRE_VTM);
+			$sheet->setCellValue('K' . $row, ($orden->SEXO == 'M' ? 'MASCULINO' : ($orden->SEXO == 'F' ? 'FEMENINO' : '')));
+			$sheet->setCellValue('L' . $row,  $orden->LESIONES);
+			$sheet->setCellValue('M' . $row, '');
 
 			$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
 
 			if (!(($row - 4) >= count($documentos))) $row++;
+			$num++;
 		}
-		$sheet->getStyle('A1:K1')->applyFromArray($styleCab);
-		$sheet->getStyle('A2:K2')->applyFromArray($styleCab);
+		$sheet->getStyle('A1:L1')->applyFromArray($styleCab);
+		$sheet->getStyle('A2:L2')->applyFromArray($styleCab);
 
-		$sheet->getStyle('A4:K4')->applyFromArray($styleHeaders);
-		$sheet->getStyle('A5:K' . $row)->applyFromArray($styleCells);
+		$sheet->getStyle('A4:L4')->applyFromArray($styleHeaders);
+		$sheet->getStyle('A5:L' . $row)->applyFromArray($styleCells);
 
 		$sheet->mergeCells('A1:R1');
 		$sheet->mergeCells('A2:R2');
@@ -1693,7 +1697,7 @@ class ReportesController extends BaseController
 		$dataView->dataInfo = $dataInfo;
 		$dataView->filterParams = (object)$dataPost;
 
-		$this->_loadView('Bitacora CANDEV', 'registro_candev', '', $dataView, 'registro_candev');
+		$this->_loadView('Registro Canalización y Derivación', 'registro_candev', '', $dataView, 'registro_candev');
 	}
 
 	public function postRegistroCanDev()
@@ -1743,7 +1747,7 @@ class ReportesController extends BaseController
 		$dataView->dataInfo = $dataInfo;
 		$dataView->filterParams = (object)$dataPost;
 
-		$this->_loadView('Bitacora CANDEV', 'registro_candev', '', $dataView, 'registro_candev');
+		$this->_loadView('Registro Canalización y Derivación', 'registro_candev', '', $dataView, 'registro_candev');
 	}
 
 	public function createCanaDevXlsx()
@@ -1876,9 +1880,7 @@ class ReportesController extends BaseController
 			"MUNICIPIO QUE ATIENDE",
 			"SERVIDOR PUBLICO SOLICITANTE",
 			"DELITO",
-			"NOMBRE DE LA VICTIMA/OFENDIDO",
-			"APELLIDO PATERNO",
-			"APELLIDO MATERNO",
+			"VICTIMA/OFENDIDO",
 			"SALIDA",
 		];
 
@@ -1906,11 +1908,9 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('E' . $row, 'CENTRO DE DENUNCIA TECNÓLOGICA');
 			$sheet->setCellValue('F' . $row,  $orden->MUNICIPIODESCR);
 			$sheet->setCellValue('G' . $row,  $orden->AGENTE_NOMBRE);
-			$sheet->setCellValue('H' . $row,  $orden->HECHODELITO);
-			$sheet->setCellValue('I' . $row,  $orden->NOMBRE);
-			$sheet->setCellValue('J' . $row,  $orden->PRIMERAPELLIDO);
-			$sheet->setCellValue('K' . $row,  $orden->SEGUNDOAPELLIDO);
-			$sheet->setCellValue('L' . $row,  $orden->STATUS);
+			$sheet->setCellValue('H' . $row,  $orden->DELITOMODALIDADDESCR);
+			$sheet->setCellValue('I' . $row,  $orden->NOMBRE_VTM);		
+			$sheet->setCellValue('J' . $row,  $orden->STATUS);
 
 			$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
 
@@ -2479,6 +2479,7 @@ class ReportesController extends BaseController
 			'U', 'V', 'W', 'X', 'Y', 'Z'
 		];
 		$headers = [
+			"No.",
 			"Folio",
 			"FECHA DE EXPEDICIÓN",
 			"NO. EXPEDIENTE",
@@ -2497,37 +2498,38 @@ class ReportesController extends BaseController
 		$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
 
 		$row++;
-
+		$num = 1;
 		foreach ($documentos as $index => $orden) {
 			$this->separarExpID($orden->EXPEDIENTEID);
 
 
 			$sheet->setCellValue('A1', "CENTRO TELEFÓNICO Y EN LÍNEA DE ATENCIÓN Y ORIENTACIÓN TEMPRANA");
-			$sheet->setCellValue('A2', "REGISTRO DE CALIZACIONES A LA COMISIÓN EJECUTIVA ESTATAL DE ATENCIÓN INTEGRAL A VÍCTIMAS");
+			$sheet->setCellValue('A2', "REGISTRO DE CANALIZACIONES A LA COMISIÓN EJECUTIVA ESTATAL DE ATENCIÓN INTEGRAL A VÍCTIMAS");
 
-
-			$sheet->setCellValue('A' . $row, $orden->FOLIOID);
-			$sheet->setCellValue('B' . $row, $this->formatFecha($orden->FECHAFIRMA));
-			$sheet->setCellValue('C' . $row, $this->separarExpID($orden->EXPEDIENTEID));
-			$sheet->setCellValue('D' . $row, 'CENTRO DE DENUNCIA TECNÓLOGICA');
-			$sheet->setCellValue('E' . $row,  $orden->MUNICIPIODESCR);
-			$sheet->setCellValue('F' . $row,  $orden->NOMBRE_MP);
-			$sheet->setCellValue('G' . $row,  $orden->DELITOMODALIDADDESCR);
-			$sheet->setCellValue('H' . $row,  $orden->NOMBRE_VTM);
-			$sheet->setCellValue('I' . $row, '');
+			$sheet->setCellValue('A' . $row, $num);
+			$sheet->setCellValue('B' . $row, $orden->FOLIOID."/".$orden->ANO);
+			$sheet->setCellValue('C' . $row, $this->formatFecha($orden->FECHAFIRMA));
+			$sheet->setCellValue('D' . $row, $this->separarExpID($orden->EXPEDIENTEID));
+			$sheet->setCellValue('E' . $row, 'CENTRO DE DENUNCIA TECNÓLOGICA');
+			$sheet->setCellValue('F' . $row,  $orden->MUNICIPIODESCR);
+			$sheet->setCellValue('G' . $row,  $orden->NOMBRE_MP);
+			$sheet->setCellValue('H' . $row,  $orden->DELITOMODALIDADDESCR);
+			$sheet->setCellValue('I' . $row,  $orden->NOMBRE_VTM);
+			$sheet->setCellValue('J' . $row, '');
 
 			$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
 
 			if (!(($row - 4) >= count($documentos))) $row++;
+			$num++;
 		}
-		$sheet->getStyle('A1:I1')->applyFromArray($styleCab);
+		$sheet->getStyle('A1:J1')->applyFromArray($styleCab);
 		$sheet->getStyle('A2:I2')->applyFromArray($styleCab);
 
-		$sheet->getStyle('A4:I4')->applyFromArray($styleHeaders);
-		$sheet->getStyle('A5:I' . $row)->applyFromArray($styleCells);
+		$sheet->getStyle('A4:J4')->applyFromArray($styleHeaders);
+		$sheet->getStyle('A5:J' . $row)->applyFromArray($styleCells);
 
-		$sheet->mergeCells('A1:I1');
-		$sheet->mergeCells('A2:I2');
+		$sheet->mergeCells('A1:J1');
+		$sheet->mergeCells('A2:J2');
 		$drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
 		$drawing->setName('FGEBC');
 		$drawing->setDescription('LOGO');

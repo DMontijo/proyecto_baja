@@ -7,7 +7,7 @@
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-12 text-center mb-4">
-				<h1 class="mb-4 text-center font-weight-bold">BITÁCORA CONAVIM</h1>
+				<h1 class="mb-4 text-center font-weight-bold">REGISTRO CONAVIM</h1>
 				<a class="link link-primary" href="<?= base_url('admin/dashboard/reportes') ?>" role="button"><i class="fas fa-reply"></i> REGRESAR A REPORTES</a>
 			</div>
 			<div class="col-12">
@@ -107,6 +107,7 @@
 								<table id="registro_conavim" class="table table-bordered table-striped ">
 									<thead>
 										<tr>
+											<th class="text-center">No.</th>
 											<th class="text-center">FOLIO</th>
 											<th class="text-center" style="min-width:150px;">FECHA DE EXPEDICIÓN</th>
 											<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
@@ -122,23 +123,25 @@
 									</thead>
 									<tbody>
 										<?php
+										$num = 1;
 										foreach ($body_data->dataOrdenes as $index => $orden) {
 											$array = str_split($orden->EXPEDIENTEID);
 										?>
 											<tr>
+												<td class="text-center"><?= $num ?></td>
 												<td class="text-center font-weight-bold"><?= $orden->FOLIOID . '/' . $orden->ANO ?></td>
 												<td class="text-center"><?= $orden->FECHAFIRMA ?  date("d/m/Y", strtotime($orden->FECHAFIRMA)) : '' ?></td>
 												<td class="text-center"><?= $array[1] . $array[2] . $array[4] . $array[5] . '-' . $array[6] . $array[7] . $array[8] . $array[9] . '-' . $array[10] . $array[11] . $array[12] . $array[13] . $array[14] ?></td>
 												<td class="text-center">CENTRO DE DENUNCIA TECNÓLOGICA</td>
 												<td class="text-center"><?= $orden->MUNICIPIODESCR ?></td>
 												<td class="text-center"><?= $orden->NOMBRE_MP ?></td>
-												<td class="text-center"><?= $orden->HECHODELITO ?></td>
+												<td class="text-center"><?= $orden->DELITOMODALIDADDESCR ?></td>
 												<td class="text-center"><?= $orden->TIPODOC ?></td>
 												<td class="text-center"><?= $orden->NOMBRE_VTM ?></td>
 												<td class="text-center"><?= ($orden->SEXO == 'M' ? 'MASCULINO' : ($orden->SEXO == 'F' ? 'FEMENINO' : '')) ?></td>
 												<td class="text-center"><?= $orden->LESIONES ?></td>
 											</tr>
-										<?php } ?>
+										<?php $num++; } ?>
 									</tbody>
 								</table>
 							</div>
