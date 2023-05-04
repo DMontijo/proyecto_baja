@@ -96,9 +96,9 @@ if ($agent->isMobile()) {
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="telefono" class="form-label fw-bold input-required">Número de teléfono</label>
 							<input type="number" class="form-control" id="telefono" name="telefono" required minlenght="10" maxlength="10" oninput="clearInputPhone(event);" pattern="[0-9]+">
-							<!-- <small>Mínimo 6 digitos</small> -->
+							<small>El campo de teléfono debe tener 10 dígitos</small>
 							<div class="invalid-feedback">
-								El campo de teléfono debe tener al menos 10 dígitos
+								El campo de teléfono debe tener 10 dígitos
 							</div>
 							<input type="number" id="codigo_pais" name="codigo_pais" maxlength="3" hidden>
 						</div>
@@ -522,7 +522,7 @@ if ($agent->isMobile()) {
 			document.querySelector('#titulo').scrollIntoView();
 		} else {
 			submitBtn.click();
-				Swal.fire({
+			Swal.fire({
 				icon: 'error',
 				title: 'Error',
 				text: 'Debes llenar todos los campos requeridos para avanzar',
@@ -531,13 +531,13 @@ if ($agent->isMobile()) {
 			if (document.getElementById('telefono').value.length < 10) {
 				document.getElementById('telefono').classList.add('is-invalid')
 				Swal.fire({
-				icon: 'error',
-				title: 'Error',
-				text: 'El numero de teléfono debe tener 10 dígitos',
-				confirmButtonColor: '#bf9b55',
-			});
+					icon: 'error',
+					title: 'Error',
+					text: 'El numero de teléfono debe tener 10 dígitos',
+					confirmButtonColor: '#bf9b55',
+				});
 			}
-			
+
 		}
 	});
 
