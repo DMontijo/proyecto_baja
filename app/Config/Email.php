@@ -9,7 +9,7 @@ class Email extends BaseConfig
 	/**
 	 * @var string
 	 */
-	public $fromEmail = 'notificacionfgebc@fgebc.gob.mx';
+	public $fromEmail = 'andrea.solorzano@yocontigo-it.com';
 
 	/**
 	 * @var string
@@ -47,21 +47,21 @@ class Email extends BaseConfig
 	 *
 	 * @var string
 	 */
-	public $SMTPHost = 'smtp.office365.com';
+	public $SMTPHost = 'smtp.gmail.com';
 
 	/**
 	 * SMTP Username
 	 *
 	 * @var string
 	 */
-	public $SMTPUser = 'notificacionfgebc@fgebc.gob.mx';
+	public $SMTPUser = 'andrea.solorzano@yocontigo-it.com';
 
 	/**
 	 * SMTP Password
 	 *
 	 * @var string
 	 */
-	public $SMTPPass = 'dymzjzpmqmgflgvw';
+	public $SMTPPass = 'andrea.yocontigo';
 
 	/**
 	 * SMTP Port

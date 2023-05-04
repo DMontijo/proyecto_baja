@@ -84,4 +84,4 @@ defined('EXIT__AUTO_MAX')      || define('EXIT__AUTO_MAX', 125); // highest auto
 define('TOKEN_API', 'FGEBC_5F^5uJsT16M%jZL');
 define('KEY_128', 'A2832DE3C0B2289253D4B383404E8C1C');
 define('X_API_KEY', 'vssk_fd61131c-c0c8-42ff-a381-9b3a87da2b34');
-define('VIDEOCALL_URL', 'https://videodenunciabalancer.fgebc.gob.mx/');
+define('VIDEOCALL_URL', 'https://0394-52-0-63-150.ngrok-free.app/');
