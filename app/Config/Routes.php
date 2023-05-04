@@ -169,6 +169,7 @@ $routes->group('admin', function ($routes) {
  * */
 
 $routes->group('denuncia', function ($routes) {
+	$routes->get('/', 'HomeController::maintenance');
 	// $routes->get('/', 'client/AuthController::index');
 	// $routes->post('login_auth', 'client/AuthController::login_auth');
 	// $routes->get('logout', 'client/AuthController::logout');
@@ -346,6 +347,7 @@ $routes->group('data', function ($routes) {
  * Extravio Routes
  */
 $routes->group('constancia_extravio', function ($routes) {
+	$routes->get('/', 'HomeController::maintenance');
 	// $routes->get('/', 'extravio/ExtravioController::index');
 	// $routes->get('login', 'extravio/ExtravioController::login');
 	// $routes->post('login_auth', 'extravio/ExtravioController::login_auth');
