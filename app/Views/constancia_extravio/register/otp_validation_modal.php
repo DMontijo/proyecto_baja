@@ -3,19 +3,18 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-primary text-white justify-content-center">
-                <h5 class="modal-title" id="bs">Validación de correo</h5>
+                <h5 class="modal-title" id="bs">Validación de teléfono</h5>
             </div>
             <div id="load" class="modal-body text-center">
                 <div class="mb-3" id="divCorreo">
-                    <label for="correo_otp" class="col-form-label">Ingresa el código de 6 dígitos que llegó a tu correo
-                        electrónico.</label>
+                    <label for="correo_otp" class="col-form-label">Ingresa el código de 6 dígitos que llegó a tus mensajes SMS.</label>
                     <input type="text" class="form-control text-center" id="correo_otp" name="correo_otp" required
                         pattern="\d{6}" maxlength="6" placeholder="Código de 6 dígitos númericos.">
                 </div>
                 <button id="resend_btn" class="btn btn-secondary" role="button" type="submit"><i
                         class="bi bi-arrow-clockwise"></i> Solicitar de nuevo</button>
                 <button id="validate_btn" class="btn btn-primary" role="button" type="submit"><i
-                        class="bi bi-check-circle-fill"></i> Validar correo</button>
+                        class="bi bi-check-circle-fill"></i> Validar teléfono</button>
             </div>
             <div id="loading" class="modal-body text-center d-none" style="min-height:170px;">
                 <div class="d-flex justify-content-center">
