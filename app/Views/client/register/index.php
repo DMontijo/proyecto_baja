@@ -94,11 +94,11 @@ if ($agent->isMobile()) {
 							</div>
 						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="telefono" class="form-label fw-bold input-required">Número de teléfono</label>
+							<label for="telefono" class="form-label fw-bold input-required">Número de celular</label>
 							<input type="number" class="form-control" id="telefono" name="telefono" required minlenght="10" maxlength="10" oninput="clearInputPhone(event);" pattern="[0-9]+">
-							<small>El campo de teléfono debe tener 10 dígitos</small>
+							<small>El campo número debe tener 10 dígitos</small>
 							<div class="invalid-feedback">
-								El campo de teléfono debe tener 10 dígitos
+								El campo número debe tener 10 dígitos
 							</div>
 							<input type="number" id="codigo_pais" name="codigo_pais" maxlength="3" hidden>
 						</div>
