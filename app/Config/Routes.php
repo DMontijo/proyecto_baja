@@ -32,9 +32,14 @@ $routes->setAutoRoute(true);
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 
-//En caso de requerir pasar el sitio a mantenimiento comentar la linea 36 y descomentar la 37 y comentar todas las rutas del client.
-// $routes->get('/', 'HomeController::index');
-$routes->get('/', 'HomeController::maintenance');
+/**
+ * En caso de requerir pasar el sitio a mantenimiento comentar la linea 36 y descomentar la 37 y
+ * comentar todas las rutas del client tanto del constancia de extravío y solo descomentar la que redirije a
+ * HomeController::maintenance
+ */
+
+$routes->get('/', 'HomeController::index');
+// $routes->get('/', 'HomeController::maintenance');
 $routes->get('derivaciones', 'DerivacionesController::index');
 $routes->get('canalizaciones', 'DerivacionesController::canalizaciones');
 $routes->get('salas_virtuales', 'DerivacionesController::salas_virtuales');
@@ -175,37 +180,37 @@ $routes->group('admin', function ($routes) {
  * */
 
 $routes->group('denuncia', function ($routes) {
-	$routes->get('/', 'HomeController::maintenance');
-	// $routes->get('/', 'client/AuthController::index');
-	// $routes->post('login_auth', 'client/AuthController::login_auth');
-	// $routes->get('logout', 'client/AuthController::logout');
-	// $routes->post('cerrar-sesion', 'client/AuthController::cerrar_sesiones');
+	// $routes->get('/', 'HomeController::maintenance');
+	$routes->get('/', 'client/AuthController::index');
+	$routes->post('login_auth', 'client/AuthController::login_auth');
+	$routes->get('logout', 'client/AuthController::logout');
+	$routes->post('cerrar-sesion', 'client/AuthController::cerrar_sesiones');
 
-	// // $routes->resource('denunciante', ['controller' => 'client/UserController']);
-	// $routes->get('denunciante/new', 'client/UserController::new');
-	// $routes->post('denunciante', 'client/UserController::create');
+	// $routes->resource('denunciante', ['controller' => 'client/UserController']);
+	$routes->get('denunciante/new', 'client/UserController::new');
+	$routes->post('denunciante', 'client/UserController::create');
 
-	// $routes->get('change_password', 'client/AuthController::change_password');
-	// $routes->post('change_password', 'client/AuthController::change_password_post');
-	// $routes->post('send_email_change_password', 'client/AuthController::sendEmailChangePassword');
+	$routes->get('change_password', 'client/AuthController::change_password');
+	$routes->post('change_password', 'client/AuthController::change_password_post');
+	$routes->post('send_email_change_password', 'client/AuthController::sendEmailChangePassword');
 
-	// $routes->get('actualizar_info', 'client/UserController::updateDenuncianteInfo');
-	// $routes->post('actualizar_info', 'client/UserController::updateDenuncianteInfoPost');
+	$routes->get('actualizar_info', 'client/UserController::updateDenuncianteInfo');
+	$routes->post('actualizar_info', 'client/UserController::updateDenuncianteInfoPost');
 
-	// $routes->group('dashboard', ['filter' => 'denuciantesAuth'], function ($routes) {
-	// 	$routes->get('/', 'client/DashboardController::index');
-	// 	$routes->get('video-denuncia', 'client/DashboardController::video_denuncia');
-	// 	$routes->post('video-llamada', 'client/DashboardController::video_llamada');
-	// 	$routes->get('end-videocall', 'client/DashboardController::endVideoCall');
+	$routes->group('dashboard', ['filter' => 'denuciantesAuth'], function ($routes) {
+		$routes->get('/', 'client/DashboardController::index');
+		$routes->get('video-denuncia', 'client/DashboardController::video_denuncia');
+		$routes->post('video-llamada', 'client/DashboardController::video_llamada');
+		$routes->get('end-videocall', 'client/DashboardController::endVideoCall');
 
-	// 	$routes->get('perfil', 'client/DashboardController::profile');
-	// 	$routes->post('actualizar-perfil', 'client/DashboardController::update_profile');
-	// 	$routes->post('actualizar-password', 'client/DashboardController::update_password');
+		$routes->get('perfil', 'client/DashboardController::profile');
+		$routes->post('actualizar-perfil', 'client/DashboardController::update_profile');
+		$routes->post('actualizar-password', 'client/DashboardController::update_password');
 
-	// 	$routes->get('denuncias', 'client/DashboardController::denuncias');
-	// 	$routes->post('create', 'client/DashboardController::create');
-	// 	$routes->post('descargarPDF', 'client/DashboardController::descargar_pdf');
-	// });
+		$routes->get('denuncias', 'client/DashboardController::denuncias');
+		$routes->post('create', 'client/DashboardController::create');
+		$routes->post('descargarPDF', 'client/DashboardController::descargar_pdf');
+	});
 });
 
 /**
@@ -356,29 +361,29 @@ $routes->group('data', function ($routes) {
  * Extravio Routes
  */
 $routes->group('constancia_extravio', function ($routes) {
-	$routes->get('/', 'HomeController::maintenance');
-	// $routes->get('/', 'extravio/ExtravioController::index');
-	// $routes->get('login', 'extravio/ExtravioController::login');
-	// $routes->post('login_auth', 'extravio/ExtravioController::login_auth');
+	// $routes->get('/', 'HomeController::maintenance');
+	$routes->get('/', 'extravio/ExtravioController::index');
+	$routes->get('login', 'extravio/ExtravioController::login');
+	$routes->post('login_auth', 'extravio/ExtravioController::login_auth');
 
-	// $routes->post('send_email_change_password', 'extravio/ExtravioController::sendEmailChangePassword');
-	// $routes->post('descargarConstanciaRealizada', 'extravio/ExtravioController::descargar_pdf');
+	$routes->post('send_email_change_password', 'extravio/ExtravioController::sendEmailChangePassword');
+	$routes->post('descargarConstanciaRealizada', 'extravio/ExtravioController::descargar_pdf');
 
-	// $routes->get('register', 'extravio/ExtravioController::register');
-	// $routes->post('create', 'extravio/ExtravioController::create');
+	$routes->get('register', 'extravio/ExtravioController::register');
+	$routes->post('create', 'extravio/ExtravioController::create');
 
-	// $routes->group('dashboard', ['filter' => 'constanciasExtravioAuth'], function ($routes) {
-	// 	$routes->get('/', 'extravio/DashboardController::index');
-	// 	$routes->post('solicitar_constancia', 'extravio/DashboardController::solicitar_constancia');
+	$routes->group('dashboard', ['filter' => 'constanciasExtravioAuth'], function ($routes) {
+		$routes->get('/', 'extravio/DashboardController::index');
+		$routes->post('solicitar_constancia', 'extravio/DashboardController::solicitar_constancia');
 
-	// 	$routes->get('constancias', 'extravio/DashboardController::constancias');
-	// 	$routes->post('download_constancia_pdf', 'extravio/DashboardController::download_constancia_pdf');
-	// 	$routes->post('download_constancia_xml', 'extravio/DashboardController::download_constancia_xml');
+		$routes->get('constancias', 'extravio/DashboardController::constancias');
+		$routes->post('download_constancia_pdf', 'extravio/DashboardController::download_constancia_pdf');
+		$routes->post('download_constancia_xml', 'extravio/DashboardController::download_constancia_xml');
 
-	// 	$routes->get('perfil', 'extravio/ExtravioController::profile');
-	// 	$routes->post('actualizar-perfil', 'extravio/ExtravioController::update_profile');
-	// 	$routes->post('actualizar-password', 'extravio/ExtravioController::update_password');
-	// });
+		$routes->get('perfil', 'extravio/ExtravioController::profile');
+		$routes->post('actualizar-perfil', 'extravio/ExtravioController::update_profile');
+		$routes->post('actualizar-password', 'extravio/ExtravioController::update_password');
+	});
 });
 /**
  * --------------------------------------------------------------------
