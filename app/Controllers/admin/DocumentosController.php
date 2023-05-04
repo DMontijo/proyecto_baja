@@ -3,6 +3,7 @@
 namespace App\Controllers\admin;
 
 use App\Controllers\BaseController;
+use App\Models\BitacoraActividadModel;
 use App\Models\FolioDocModel;
 use App\Models\FolioModel;
 use App\Models\FolioPersonaFisicaModel;
@@ -21,6 +22,7 @@ class DocumentosController extends BaseController
 	private $_folioModel;
 	private $_usuariosModel;
 	private $_municipiosModel;
+	private $_bitacoraActividadModel;
 
 	function __construct()
 	{
@@ -31,6 +33,7 @@ class DocumentosController extends BaseController
 		$this->_folioModel = new FolioModel();
 		$this->_usuariosModel = new UsuariosModel();
 		$this->_municipiosModel = new MunicipiosModel();
+		$this->_bitacoraActividadModel = new BitacoraActividadModel();
 	}
 	public function index()
 	{
@@ -168,12 +171,23 @@ class DocumentosController extends BaseController
 		$data->documentos = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $data->expediente)->where('ANO', $data->year)->findAll();
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 		$data->foliorow = $this->_folioModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $data->year)->findAll();
-		$data->empleados = $this->_usuariosModel->asObject()->orderBy('NOMBRE', 'ASC')->where('ROLID', 3)->findAll();
+		$data->empleados = $this->_usuariosModel->asObject()
+		->select('USUARIOS.*, SESIONES.ACTIVO')
+		->join('SESIONES','USUARIOS.ID= SESIONES.ID_USUARIO')
+		->where('ROLID', 3)
+		->where('ACTIVO', 1)
+		->findAll();		
 		$data->plantillas = $this->_plantillasModel->asObject()->where('TITULO !=', 'CONSTANCIA DE EXTRAVÍO')->orderBy('TITULO', 'ASC')->findAll();
 		$data->institucionremision = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $data->foliorow[0]->INSTITUCIONREMISIONMUNICIPIOID)->where('ESTADOID', 2)->first();
 		$data->municipioasignado = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $data->foliorow[0]->MUNICIPIOASIGNADOID)->where('ESTADOID', 2)->first();
-		$data->encargados = $this->_usuariosModel->asObject()->where('ROLID', 6)->findAll();
-
+		$data->encargados =
+		$this->_usuariosModel->asObject()
+		->select('USUARIOS.*, SESIONES.ACTIVO')
+		->join('SESIONES','USUARIOS.ID= SESIONES.ID_USUARIO')
+		->where('ROLID', 6)
+		->where('ACTIVO', 1)
+		->findAll();		
+		
 		$data2 = [
 			'header_data' => (object)['title' => 'DOCUMENTOS'],
 			'body_data' => $data
@@ -306,14 +320,39 @@ class DocumentosController extends BaseController
 		$deleteDoc = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $docid)->delete();
 
 		$documentos = $this->_folioDocModel->get_by_folio($folio, $year);
-
+	
 		if ($deleteDoc) {
+			$datosBitacora = [
+				'ACCION' => 'Ha borrado un documento',
+				'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year . ' PLANTILLAID: ' .  $docid,
+			];
+			$this->_bitacoraActividad($datosBitacora);
 			return json_encode((object)['status' => 1, 'documentos' => $documentos]);;
 		} else {
 			return json_encode(['status' => 0]);
 		}
 	}
 
+	public function actualizarDocumentoAgenteAsignado()
+	{
+		$docid = trim($this->request->getPost('foliodocid'));
+		$folio = trim($this->request->getPost('folio'));
+		$year = trim($this->request->getPost('year'));
+		$agenteid = trim($this->request->getPost('agenteid'));
+		$dataAgente = array(
+			'AGENTE_ASIGNADO' => $agenteid,
+		);
+
+		$updateObjetoInvolucrado = $this->_folioDocModel->set($dataAgente)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $docid)->update();
+
+		$documentos = $this->_folioDocModel->get_by_folio($folio, $year);
+
+		if ($updateObjetoInvolucrado) {
+			return json_encode((object)['status' => 1, 'documentos' => $documentos]);;
+		} else {
+			return json_encode(['status' => 0]);
+		}
+	}
 	public function actualizarDocumentoEncargado()
 	{
 		$docid = trim($this->request->getPost('foliodocid'));
@@ -347,5 +386,15 @@ class DocumentosController extends BaseController
 	private function permisos($permiso)
 	{
 		return in_array($permiso, session('permisos'));
+	}
+	private function _bitacoraActividad($data)
+	{
+		$data = $data;
+		$data['ID'] = uniqid();
+		$data['USUARIOID'] = session('ID');
+
+		if ($data['USUARIOID']) {
+			$this->_bitacoraActividadModel->insert($data);
+		}
 	}
 }

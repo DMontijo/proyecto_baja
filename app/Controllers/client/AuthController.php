@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 
 use App\Models\DenunciantesModel;
 use App\Models\SesionesDenunciantesModel;
+use GuzzleHttp\Client;
 
 class AuthController extends BaseController
 {
@@ -136,15 +137,19 @@ class AuthController extends BaseController
 		$user = $this->_denunciantesModel->asObject()->where('CORREO', $to)->first();
 		$this->_denunciantesModel->set('PASSWORD', hashPassword($password))->where('DENUNCIANTEID', $user->DENUNCIANTEID)->update();
 
-		$email = \Config\Services::email();
-		$email->setTo($to);
-		$email->setSubject('Cambio de contraseña.');
-		$body = view('email_template/reset_password_template.php', ['password' => $password]);
-		$email->setMessage($body);
-		$email->setAltMessage('Usted ha solicitado un cambio de contraseña. Su nueva contraseña es: ' .$password);
+		// $email = \Config\Services::email();
+		// $email->setTo($to);
+		// $email->setSubject('Cambio de contraseña.');
+		// $body = view('email_template/reset_password_template.php', ['password' => $password]);
+		// $email->setMessage($body);
+		// $email->setAltMessage('Usted ha solicitado un cambio de contraseña. Su nueva contraseña es: ' .$password);
+		$sendSMS = $this->sendSMS("Cambio de contraseña", $user->TELEFONO, 'Notificaciones FGE/Estimado usuario, tu contraseña es: ' . $password);
+		// if ($email->send() && $sendSMS == "") {
+		if ($sendSMS == "") {
+			return redirect()->to(base_url('/denuncia'))->with('message_success', 'Verifica tu nueva contraseña en tus SMS.');
+		}else{
+			return redirect()->to(base_url('/denuncia'))->with('message_error', $sendSMS);
 
-		if ($email->send()) {
-			return redirect()->to(base_url('/denuncia'))->with('message_success', 'Verifica tu nueva contraseña en tu correo.');
 		}
 	}
 
@@ -211,6 +216,30 @@ class AuthController extends BaseController
 			'body_data' => $data
 		];
 		echo view("client/auth/$view", $data);
+	}
+	public function sendSMS($tipo, $celular, $mensaje)
+	{
+
+		$endpoint = "http://enviosms.ddns.net/API/";
+		$data = array();
+		$data['UsuarioID'] = 1;
+		$data['Nombre'] = $tipo;
+		$lstMensajes = array();
+		$obj = array("Celular" => $celular, "Mensaje" => $mensaje);
+		$lstMensajes[] = $obj;
+		$data['lstMensajes'] = $lstMensajes;
+
+		$httpClient = new Client([
+			'base_uri' => $endpoint
+		]);
+
+		$response = $httpClient->post('campañas/enviarSMS', [
+			'json' => $data
+		]);
+
+		$respuestaServ = $response->getBody()->getContents();
+
+		return json_decode($respuestaServ);
 	}
 }
 

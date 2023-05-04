@@ -254,8 +254,10 @@ class ReportesController extends BaseController
 				$tipo = 'VIDEO';
 			} else if ($folio->TIPODENUNCIA == 'DA') {
 				$tipo = 'ANÓNIMA';
-			} else {
+			} else if ($folio->TIPODENUNCIA == 'TE') {
 				$tipo = 'TELEFÓNICA';
+			} else {
+				$tipo = 'ELECTRONICA';
 			}
 
 			$fechaSalida = '';
@@ -882,9 +884,12 @@ class ReportesController extends BaseController
 				$tipo = 'VIDEO';
 			} else if ($folio->TIPODENUNCIA == 'DA') {
 				$tipo = 'ANÓNIMA';
-			} else {
+			} else if ($folio->TIPODENUNCIA == 'TE') {
 				$tipo = 'TELEFÓNICA';
+			} else {
+				$tipo = 'ELECTRONICA';
 			}
+
 			$sheet->setCellValue('A' . $row, $row - 4);
 			$sheet->setCellValue('B' . $row, $dateregistro);
 			$sheet->setCellValue('C' . $row, $folio->FOLIOID);
@@ -1372,8 +1377,8 @@ class ReportesController extends BaseController
 			'fechaFin' => date("Y-m-d")
 		];
 		$documentos = $this->_plantillasModel->filtro_ordenes_proteccion($dataPost);
-		// var_dump($documentos);
-		// exit();
+		//  var_dump($documentos);
+		//  exit();
 		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
 		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
 		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
@@ -1475,8 +1480,8 @@ class ReportesController extends BaseController
 		$spreadSheet->getProperties()
 			->setCreator("Fiscalía General del Estado de Baja California")
 			->setLastModifiedBy("Fiscalía General del Estado de Baja California")
-			->setTitle("REPORTE_CONAVIM_" . $date)
-			->setSubject("REPORTE_CONAVIM_" . $date)
+			->setTitle("REPORTE_CONAVIM" . $date)
+			->setSubject("REPORTE_CONAVIM" . $date)
 			->setDescription(
 				"El presente documento fue generado por el Centro de Denuncia Tecnológica de la Fiscalía General del Estado de Baja California."
 			)
@@ -1566,15 +1571,17 @@ class ReportesController extends BaseController
 			'U', 'V', 'W', 'X', 'Y', 'Z'
 		];
 		$headers = [
-			"NO.",
-			"FOLIO",
+			"No.",
+			"Folio",
+			"FECHA DE EXPEDICIÓN",
 			"NO. EXPEDIENTE",
-			"FECHA DE ORDEN DE EXPEDICIÓN",
-			"MÓDULO EN QUE SE EXPIDE",
-			"MUNICIPIO QUE ATIENDE LA ORDEN",
-			"SERVIDOR PÚBLICO QUE SOLICITA ORDEN DE PROTECCIÓN ",
+			"MODULO QUE EXPIDE",
+			"MUNICIPIO QUE ATIENDE",
+			"SERVIDOR PUBLICO SOLICITANTE",
 			"DELITO",
 			"TIPO DE ORDEN DE PROTECCIÓN",
+			"VICTIMA/OFENDIDO",
+			"GÉNERO",
 			"VÍCTIMA LESIONADA",
 		];
 
@@ -1589,37 +1596,37 @@ class ReportesController extends BaseController
 		$num = 1;
 
 		foreach ($documentos as $index => $orden) {
+			$this->separarExpID($orden->EXPEDIENTEID);
+
+
 			$sheet->setCellValue('A1', "CENTRO TELEFÓNICO Y EN LÍNEA DE ATENCIÓN Y ORIENTACIÓN TEMPRANA");
 			$sheet->setCellValue('A2', "REGISTRO ORDENES DE PROTECCIÓN");
 
 
 			$sheet->setCellValue('A' . $row, $num);
-			$sheet->setCellValue('B' . $row, $orden->FOLIOID . '/' . $orden->ANO);
-			$sheet->setCellValue('C' . $row, $this->separarExpID($orden->EXPEDIENTEID));
-			$sheet->setCellValue('D' . $row, $this->formatFecha($orden->FECHAFIRMA));
+			$sheet->setCellValue('B' . $row, $orden->FOLIOID);
+			$sheet->setCellValue('C' . $row, $this->formatFecha($orden->FECHAFIRMA));
+			$sheet->setCellValue('D' . $row, $this->separarExpID($orden->EXPEDIENTEID));
 			$sheet->setCellValue('E' . $row, 'CENTRO DE DENUNCIA TECNÓLOGICA');
 			$sheet->setCellValue('F' . $row,  $orden->MUNICIPIODESCR);
 			$sheet->setCellValue('G' . $row,  $orden->NOMBRE_MP);
-			$sheet->setCellValue('H' . $row,  $orden->HECHODELITO);
+			$sheet->setCellValue('H' . $row,  $orden->DELITOMODALIDADDESCR);
 			$sheet->setCellValue('I' . $row,  $orden->TIPODOC);
-			$sheet->setCellValue('J' . $row,  $orden->LESIONES);
+			$sheet->setCellValue('J' . $row,  $orden->NOMBRE_VTM);
+			$sheet->setCellValue('K' . $row, ($orden->SEXO == 'M' ? 'MASCULINO' : ($orden->SEXO == 'F' ? 'FEMENINO' : '')));
+			$sheet->setCellValue('L' . $row,  $orden->LESIONES);
+			$sheet->setCellValue('M' . $row, '');
 
 			$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
 
 			if (!(($row - 4) >= count($documentos))) $row++;
 			$num++;
 		}
+		$sheet->getStyle('A1:L1')->applyFromArray($styleCab);
+		$sheet->getStyle('A2:L2')->applyFromArray($styleCab);
 
-		$row++;
-		$row++;
-		$sheet->setCellValue('A' . $row, 'CANTIDAD DE RESULTADOS:');
-		$sheet->setCellValue('B' . $row, count($documentos));
-
-		$sheet->getStyle('A1:J1')->applyFromArray($styleCab);
-		$sheet->getStyle('A2:J2')->applyFromArray($styleCab);
-
-		$sheet->getStyle('A4:J4')->applyFromArray($styleHeaders);
-		$sheet->getStyle('A5:J' . $row)->applyFromArray($styleCells);
+		$sheet->getStyle('A4:L4')->applyFromArray($styleHeaders);
+		$sheet->getStyle('A5:L' . $row)->applyFromArray($styleCells);
 
 		$sheet->mergeCells('A1:R1');
 		$sheet->mergeCells('A2:R2');
@@ -1690,7 +1697,7 @@ class ReportesController extends BaseController
 		$dataView->dataInfo = $dataInfo;
 		$dataView->filterParams = (object)$dataPost;
 
-		$this->_loadView('Bitacora CANDEV', 'registro_candev', '', $dataView, 'registro_candev');
+		$this->_loadView('Registro Canalización y Derivación', 'registro_candev', '', $dataView, 'registro_candev');
 	}
 
 	public function postRegistroCanDev()
@@ -1740,7 +1747,7 @@ class ReportesController extends BaseController
 		$dataView->dataInfo = $dataInfo;
 		$dataView->filterParams = (object)$dataPost;
 
-		$this->_loadView('Bitacora CANDEV', 'registro_candev', '', $dataView, 'registro_candev');
+		$this->_loadView('Registro Canalización y Derivación', 'registro_candev', '', $dataView, 'registro_candev');
 	}
 
 	public function createCanaDevXlsx()
@@ -1873,9 +1880,7 @@ class ReportesController extends BaseController
 			"MUNICIPIO QUE ATIENDE",
 			"SERVIDOR PUBLICO SOLICITANTE",
 			"DELITO",
-			"NOMBRE DE LA VICTIMA/OFENDIDO",
-			"APELLIDO PATERNO",
-			"APELLIDO MATERNO",
+			"VICTIMA/OFENDIDO",
 			"SALIDA",
 		];
 
@@ -1903,11 +1908,9 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('E' . $row, 'CENTRO DE DENUNCIA TECNÓLOGICA');
 			$sheet->setCellValue('F' . $row,  $orden->MUNICIPIODESCR);
 			$sheet->setCellValue('G' . $row,  $orden->AGENTE_NOMBRE);
-			$sheet->setCellValue('H' . $row,  $orden->HECHODELITO);
-			$sheet->setCellValue('I' . $row,  $orden->NOMBRE);
-			$sheet->setCellValue('J' . $row,  $orden->PRIMERAPELLIDO);
-			$sheet->setCellValue('K' . $row,  $orden->SEGUNDOAPELLIDO);
-			$sheet->setCellValue('L' . $row,  $orden->STATUS);
+			$sheet->setCellValue('H' . $row,  $orden->DELITOMODALIDADDESCR);
+			$sheet->setCellValue('I' . $row,  $orden->NOMBRE_VTM);		
+			$sheet->setCellValue('J' . $row,  $orden->STATUS);
 
 			$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
 
@@ -1943,6 +1946,611 @@ class ReportesController extends BaseController
 		$writer = new Xlsx($spreadSheet);
 
 		$filename = urlencode("Registro_Canalizaciones_Derivaciones_" . $date . ".xlsx");
+		header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+		header("Content-Disposition: attachment; filename=\"$filename\"");
+		header("Content-Transfer-Encoding: binary");
+		header("Cache-Control: max-age=0");
+		$writer->save("php://output");
+	}
+	public function getRegistroAtenciones()
+	{
+
+		$data = [
+			'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
+			'fechaFin' => date("Y-m-d")
+		];
+		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
+
+		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
+		$rolUser = session()->get('rol')->ID;
+		if ($rolUser == 1 || $rolUser == 2 || $rolUser == 6 || $rolUser == 7 || $rolUser == 11) {
+			$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
+			//$data['AGENTEATENCIONID'] = session('ID');
+		} else {
+			$empleado = $this->_usuariosModel->asObject()->where('ID',	session('ID'))->orderBy('NOMBRE', 'ASC')->findAll();
+			$data['AGENTEATENCIONID'] = session('ID');
+		}
+		$resultFilter = $this->_folioModel->filterRegistroAtenciones($data);
+		$dataView = (object)array();
+		$dataView->result = $resultFilter->result;
+		$dataView->municipios = $municipio;
+		$dataView->empleados = $empleado;
+		$dataView->filterParams = (object)$data;
+		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+		$this->_loadView('Registro de atenciones', 'Registro de atenciones', '', $dataView, 'registro_atenciones');
+	}
+	public function postRegistroAtenciones()
+	{
+		$data = [
+			'MUNICIPIOID' => $this->request->getPost('municipio'),
+			'AGENTEATENCIONID' => $this->request->getPost('agente'),
+			'STATUS' => $this->request->getPost('status'),
+			'TIPODENUNCIA' => $this->request->getPost('tipo'),
+			'fechaInicio' => $this->request->getPost('fechaInicio'),
+			'fechaFin' => $this->request->getPost('fechaFin'),
+			'horaInicio' => $this->request->getPost('horaInicio'),
+			'horaFin' => $this->request->getPost('horaFin')
+		];
+		foreach ($data as $clave => $valor) {
+			//Recorre el array y elimina los valores que nulos o vacíos
+			if (empty($valor)) unset($data[$clave]);
+		}
+		if (count($data) <= 0) {
+			$data = [
+				'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
+				'fechaFin' => date("Y-m-d"),
+			];
+		}
+		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
+		$resultFilter = $this->_folioModel->filterRegistroAtenciones($data);
+		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
+		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
+
+		if (isset($data['AGENTEID'])) {
+			$agente = $this->_usuariosModel->asObject()->where('ID', $data['AGENTEID'])->orderBy('NOMBRE', 'ASC')->first();
+			$data['AGENTENOMBRE'] = $agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' . $agente->APELLIDO_MATERNO;
+		}
+
+		if (isset($data['MUNICIPIOID'])) {
+			$mun = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data['MUNICIPIOID'])->first();
+			$data['MUNICIPIONOMBRE'] = $mun->MUNICIPIODESCR;
+		}
+		$dataView = (object)array();
+		$dataView->result = $resultFilter->result;
+		$dataView->municipios = $municipio;
+		$dataView->empleados = $empleado;
+		$dataView->filterParams = (object)$data;
+		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+		$this->_loadView('Registro de atenciones', 'Registro de atenciones', '', $dataView, 'registro_atenciones');
+	}
+	public function createRegistroAtencionesXlsx()
+	{
+		$data = [
+			'MUNICIPIOID' => $this->request->getPost('MUNICIPIOID'),
+			'AGENTEATENCIONID' => $this->request->getPost('AGENTEATENCIONID'),
+			'STATUS' => $this->request->getPost('STATUS'),
+			'TIPODENUNCIA' => $this->request->getPost('TIPODENUNCIA'),
+			'fechaInicio' => $this->request->getPost('fechaInicio'),
+			'fechaFin' => $this->request->getPost('fechaFin'),
+			'horaInicio' => $this->request->getPost('horaInicio'),
+			'horaFin' => $this->request->getPost('horaFin')
+		];
+		$date = date("Y_m_d_h_i_s");
+		foreach ($data as $clave => $valor) {
+			if (empty($valor)) unset($data[$clave]);
+		}
+		if (count($data) <= 0) {
+			$data = [
+				'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
+				'fechaFin' => date("Y-m-d"),
+			];
+		}
+
+		$resultFilter = $this->_folioModel->filterRegistroAtenciones($data);
+
+		$spreadSheet = new Spreadsheet();
+		$spreadSheet->getProperties()
+			->setCreator("Fiscalía General del Estado de Baja California")
+			->setLastModifiedBy("Fiscalía General del Estado de Baja California")
+			->setTitle("BITACORA_REGISTRO_DE_ATENCIONES" . $date)
+			->setSubject("BITACORA_REGISTRO_DE_ATENCIONES" . $date)
+			->setDescription(
+				"El presente documento fue generado por el Centro de Denuncia Tecnológica de la Fiscalía General del Estado de Baja California."
+			)
+			->setKeywords("registro atenciones cdtec fgebc")
+			->setCategory("Reportes");
+		$sheet = $spreadSheet->getActiveSheet();
+
+
+		$styleHeaders = [
+			'font' => [
+				'bold' => true,
+				'color' => ['argb' => 'FFFFFF'],
+				'name' => 'Arial',
+				'size' => '10'
+			],
+			'alignment' => [
+				'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+				'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+			],
+			'borders' => [
+				'allBorders' => [
+					'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+					'color' => ['argb' => '000000'],
+				],
+			],
+			'fill' => [
+				'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_GRADIENT_LINEAR,
+				'rotation' => 90,
+				'startColor' => [
+					'argb' => '511229',
+				],
+				'endColor' => [
+					'argb' => '511229',
+				],
+			],
+		];
+
+		$styleCab = [
+			'font' => [
+				'bold' => true,
+				'color' => ['argb' => '000000'],
+				'name' => 'Arial',
+				'size' => '12'
+			],
+			'alignment' => [
+				'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+
+			],
+
+		];
+
+		$styleCells = [
+			'font' => [
+				'bold' => false,
+				'color' => ['argb' => '000000'],
+				'name' => 'Arial',
+				'size' => '10'
+			],
+			'alignment' => [
+				'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+				'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+			],
+			'borders' => [
+				'allBorders' => [
+					'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+					'color' => ['argb' => '000000'],
+				],
+			],
+			'fill' => [
+				'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_GRADIENT_LINEAR,
+				'rotation' => 90,
+				'startColor' => [
+					'argb' => 'FFFFFF',
+				],
+				'endColor' => [
+					'argb' => 'FFFFFF',
+				],
+			],
+		];
+		$row = 4;
+
+		$columns = [
+			'A', 'B', 'C', 'D', 'E',
+			'F', 'G', 'H', 'I', 'J',
+			'K', 'L', 'M', 'N', 'O',
+			'P', 'Q', 'R', 'S', 'T',
+			'U', 'V', 'W', 'X', 'Y', 'Z'
+		];
+		$headers = [
+			'NO.',
+			'FECHA RECEPCIÓN',
+			'FOLIO',
+			'HORA',
+			'CONCLUSIÓN',
+			'DURACIÓN DE ATENCION',
+			'TIPO DE ATENCIÓN',
+			'MUNICIPIO',
+			'NOMBRE (S)',
+			'APELLIDO PATERNO',
+			'APELLIDO MATERNO',
+			'GENÉRO',
+			'TELEFONO',
+			'CORREO ELECTRÓNICO',
+			'DELITO',
+			'SERVIDOR PÚBLICO QUE ATIENDE',
+			'TIPO DE EXPEDIENTE GENERADO',
+			'NO. EXPEDIENTE GENERADO',
+			'REMISIÓN',
+			'PRIORIDAD DE ATENCIÓN',
+		];
+
+		for ($i = 0; $i < count($headers); $i++) {
+			$sheet->setCellValue($columns[$i] . 4, $headers[$i]);
+			$sheet->getColumnDimension($columns[$i])->setAutoSize(true);
+		}
+
+		$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
+
+		$row++;
+
+
+		foreach ($resultFilter->result as $index => $folio) {
+
+			$inicio = '';
+			$fin = '';
+			$duracion = '';
+			$horas = '';
+			$segundos = '';
+			$minutos = '';
+			$remision = '';
+
+			if ($folio->TIPOEXPEDIENTEID == 1 || $folio->TIPOEXPEDIENTEID == 4) {
+				$remision = $folio->OFICINA_EMP;
+			} else if ($folio->TIPOEXPEDIENTEID == 5) {
+				$remision = $folio->REMISION_RAC;
+			} else if ($folio->STATUS == "DERIVADO") {
+				$remision = $folio->REMISION_DERIVACION;
+			} else if ($folio->STATUS == "CANALIZADO") {
+				$remision = $folio->REMISION_CANALIZACION;
+			}
+
+			$endpointFolio = $this->urlApi . 'recordings/folio?folio=' . $folio->FOLIOID . '/' . $folio->ANO;
+
+			$responseFolio = $this->_curlGetService($endpointFolio);
+			if ($responseFolio != null) {
+				foreach ($responseFolio as $key => $videoDuration) {
+					if ($videoDuration != '') {
+
+						$timestampInicio = strtotime($videoDuration->callRecordId->sessionStartedAt);
+						$inicio = date('H:i:s', $timestampInicio);
+
+						if ($videoDuration->callRecordId->sessionFinishedAt) {
+							$timestampFin = strtotime($videoDuration->callRecordId->sessionFinishedAt);
+							$fin = date('H:i:s', $timestampFin);
+						}
+					}
+					$duracion = $videoDuration->duration;
+					$horas = floor($duracion / 3600);
+					$minutos = floor(($duracion - ($horas * 3600)) / 60);
+					$segundos = $duracion - ($horas * 3600) - ($minutos * 60);
+				}
+			}
+			$fecharegistro = strtotime($folio->FECHAREGISTRO);
+			$dateregistro = date('d-m-Y', $fecharegistro);
+			$sheet->setCellValue('A1', "CENTRO DE DENUNCIA TECNOLÓGICA");
+			$sheet->setCellValue('A2', "REGISTRO DE ATENCIONES");
+			$tipo = '';
+			if ($folio->TIPODENUNCIA == 'VD') {
+				$tipo = 'VIDEO DENUNCIA';
+			} else if ($folio->TIPODENUNCIA == 'DA') {
+				$tipo = 'ANÓNIMA';
+			} else if ($folio->TIPODENUNCIA == 'TE') {
+				$tipo = 'TELEFÓNICA';
+			} else {
+				$tipo = 'ELECTRONICA';
+			}
+
+			$sheet->setCellValue('A' . $row, $row - 4);
+			$sheet->setCellValue('B' . $row, $dateregistro);
+			$sheet->setCellValue('C' . $row, $folio->FOLIOID);
+			$sheet->setCellValue('D' . $row, $inicio != '' ? $inicio : '');
+			$sheet->setCellValue('E' . $row, isset($fin) ? $fin : '');
+			$sheet->setCellValue('F' . $row,  $horas != '' ? strval($horas)  . ':' . $minutos . ':' . number_format($segundos, 0) : 'NO HAY VIDEO GRABADO');
+			$sheet->setCellValue('G' . $row, $tipo);
+			$sheet->setCellValue('H' . $row, $folio->MUNICIPIODESCR);
+			$sheet->setCellValue('I' . $row, $folio->N_DENUNCIANTE);
+			$sheet->setCellValue('J' . $row, $folio->APP_DENUNCIANTE);
+			$sheet->setCellValue('K' . $row, $folio->APM_DENUNCIANTE);
+			$sheet->setCellValue('L' . $row, $folio->GENERO == "F" ? "FEMENINO" : "MASCULINO");
+			$sheet->setCellValue('M' . $row, $folio->TELEFONODENUNCIANTE);
+			$sheet->setCellValue('N' . $row, $folio->CORREODENUNCIANTE);
+			$sheet->setCellValue('O' . $row, isset($folio->DELITOMODALIDADDESCR) ? $folio->DELITOMODALIDADDESCR : 'NO EXISTE');
+			$sheet->setCellValue('P' . $row, $folio->N_AGENT . ' ' . $folio->APP_AGENT . ' ' . $folio->APM_AGENT);
+			$sheet->setCellValue('Q' . $row, isset($folio->TIPOEXPEDIENTEDESCR) ? $folio->TIPOEXPEDIENTEDESCR : $folio->STATUS);
+			if (isset($folio->EXPEDIENTEID)) {
+				$arrayExpediente = str_split($folio->EXPEDIENTEID);
+				$expedienteid = $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
+			}
+			$sheet->setCellValue('R' . $row, $folio->EXPEDIENTEID ? $expedienteid . '/' . $folio->TIPOEXPEDIENTECLAVE : "SIN EXPEDIENTE");
+			$sheet->setCellValue('S' . $row, $remision); //remision
+			$sheet->setCellValue('T' . $row, "");
+
+			$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
+
+			if (!(($row - 4) >= count($resultFilter->result))) $row++;
+		}
+		$sheet->getStyle('A1:T1')->applyFromArray($styleCab);
+		$sheet->getStyle('A2:T2')->applyFromArray($styleCab);
+
+		$sheet->getStyle('A4:T4')->applyFromArray($styleHeaders);
+		$sheet->getStyle('A5:T' . $row)->applyFromArray($styleCells);
+
+		$sheet->mergeCells('A1:T1');
+		$sheet->mergeCells('A2:T2');
+		$drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+		$drawing->setName('FGEBC');
+		$drawing->setDescription('LOGO');
+		$drawing->setPath(FCPATH . 'assets/img/FGEBC_recortada.png'); // put your path and image here
+		$drawing->setHeight(60);
+		$drawing->setCoordinates('A1');
+		$drawing->setOffsetX(10);
+		$drawing->setWorksheet($spreadSheet->getActiveSheet());
+		$writer = new Xlsx($spreadSheet);
+
+		$filename = urlencode("BITACORA_REGISTROS_DE_ATENCIONES.xlsx");
+		header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+		header("Content-Disposition: attachment; filename=\"$filename\"");
+		header("Content-Transfer-Encoding: binary");
+		header("Cache-Control: max-age=0");
+		$writer->save("php://output");
+	}
+
+	public function getComisionEstatal()
+	{
+		$dataPost = [
+			'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
+			'fechaFin' => date("Y-m-d")
+		];
+		$documentos = $this->_plantillasModel->filtro_comision_estatal($dataPost);
+		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
+		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
+		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
+
+
+		$dataView = (object)array();
+		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+		$dataView->municipios = $municipio;
+		$dataView->empleados = $empleado;
+		$dataView->dataDocumentos = $documentos;
+		$dataView->filterParams = (object)$dataPost;
+
+		$this->_loadView('Registro CEEIAV', 'registro_ceeiav', '', $dataView, 'registro_ceeiav');
+	}
+
+	public function postComisionEstatal()
+	{
+
+		$dataPost = [
+			'MUNICIPIOID' => $this->request->getPost('MUNICIPIOID'),
+			'AGENTEATENCIONID' => $this->request->getPost('AGENTEATENCIONID'),
+
+			'fechaInicio' => $this->request->getPost('fechaInicio'),
+			'fechaFin' => $this->request->getPost('fechaFin'),
+			'horaInicio' => $this->request->getPost('horaInicio'),
+			'horaFin' => $this->request->getPost('horaFin'),
+
+			'nombreAgente' => '',
+			'municipioDescr' => ''
+		];
+
+		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
+		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
+		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
+		$documentos = $this->_plantillasModel->filtro_comision_estatal($dataPost);
+
+		if (!empty($dataPost['AGENTEATENCIONID'])) {
+			foreach ($empleado as $index => $dato) {
+				//var_dump('info empleado', $dato);
+				if ($dato->ID == $dataPost['AGENTEATENCIONID']) {
+					//var_dump('info empleado', $dato);
+					$dataPost['nombreAgente'] = $dato->NOMBRE . ' ' . $dato->APELLIDO_PATERNO . ' ' . $dato->APELLIDO_MATERNO;
+				}
+			}
+		}
+		if (!empty($dataPost['MUNICIPIOID'])) {
+			foreach ($municipio as $index => $dato) {
+				///var_dump('info municipio', $dato);
+				if ($dato->MUNICIPIOID == $dataPost['MUNICIPIOID']) {
+					$dataPost['municipioDescr'] = $dato->MUNICIPIODESCR;
+				}
+			}
+		}
+
+
+		$dataView = (object)array();
+		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+		$dataView->municipios = $municipio;
+		$dataView->empleados = $empleado;
+		$dataView->dataDocumentos = $documentos;
+		$dataView->filterParams = (object)$dataPost;
+
+		$this->_loadView('Registro CEEIAV', 'registro_ceeiav', '', $dataView, 'registro_ceeiav');
+	}
+
+	public function createComisionEstatalXlsx()
+	{
+		$dataPost = [
+			'MUNICIPIOID' => $this->request->getPost('MUNICIPIOID'),
+			'AGENTEATENCIONID' => $this->request->getPost('AGENTEATENCIONID'),
+
+			'fechaInicio' => $this->request->getPost('fechaInicio'),
+			'fechaFin' => $this->request->getPost('fechaFin'),
+			'horaInicio' => $this->request->getPost('horaInicio'),
+			'horaFin' => $this->request->getPost('horaFin'),
+		];
+
+		foreach ($dataPost as $clave => $valor) {
+			//Recorre el array y elimina los valores que nulos o vacíos
+			if (empty($valor)) unset($dataPost[$clave]);
+		}
+		if (count($dataPost) <= 0) {
+			$dataPost = [
+				'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
+				'fechaFin' => date("Y-m-d"),
+			];
+		}
+		$documentos = $this->_plantillasModel->filtro_comision_estatal($dataPost);
+
+		$date = date("Y_m_d_h_i_s");
+
+		$spreadSheet = new Spreadsheet();
+		$spreadSheet->getProperties()
+			->setCreator("Fiscalía General del Estado de Baja California")
+			->setLastModifiedBy("Fiscalía General del Estado de Baja California")
+			->setTitle("REPORTE_CEEAIV" . $date)
+			->setSubject("REPORTE_CEEAIV" . $date)
+			->setDescription(
+				"El presente documento fue generado por el Centro de Denuncia Tecnológica de la Fiscalía General del Estado de Baja California."
+			)
+			->setKeywords("reporte ceeiav cdtec fgebc")
+			->setCategory("Reportes");
+		$sheet = $spreadSheet->getActiveSheet();
+
+
+		$styleHeaders = [
+			'font' => [
+				'bold' => true,
+				'color' => ['argb' => 'FFFFFF'],
+				'name' => 'Arial',
+				'size' => '10'
+			],
+			'alignment' => [
+				'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+				'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+			],
+			'borders' => [
+				'allBorders' => [
+					'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+					'color' => ['argb' => '000000'],
+				],
+			],
+			'fill' => [
+				'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_GRADIENT_LINEAR,
+				'rotation' => 90,
+				'startColor' => [
+					'argb' => '511229',
+				],
+				'endColor' => [
+					'argb' => '511229',
+				],
+			],
+		];
+
+		$styleCab = [
+			'font' => [
+				'bold' => true,
+				'color' => ['argb' => '000000'],
+				'name' => 'Arial',
+				'size' => '12'
+			],
+			'alignment' => [
+				'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+
+			],
+
+		];
+
+		$styleCells = [
+			'font' => [
+				'bold' => false,
+				'color' => ['argb' => '000000'],
+				'name' => 'Arial',
+				'size' => '10'
+			],
+			'alignment' => [
+				'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+				'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+			],
+			'borders' => [
+				'allBorders' => [
+					'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+					'color' => ['argb' => '000000'],
+				],
+			],
+			'fill' => [
+				'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_GRADIENT_LINEAR,
+				'rotation' => 90,
+				'startColor' => [
+					'argb' => 'FFFFFF',
+				],
+				'endColor' => [
+					'argb' => 'FFFFFF',
+				],
+			],
+		];
+		$row = 4;
+
+		$columns = [
+			'A', 'B', 'C', 'D', 'E',
+			'F', 'G', 'H', 'I', 'J',
+			'K', 'L', 'M', 'N', 'O',
+			'P', 'Q', 'R', 'S', 'T',
+			'U', 'V', 'W', 'X', 'Y', 'Z'
+		];
+		$headers = [
+			"No.",
+			"Folio",
+			"FECHA DE EXPEDICIÓN",
+			"NO. EXPEDIENTE",
+			"MODULO QUE EXPIDE",
+			"MUNICIPIO DE CANALIZACION",
+			"SERVIDOR PUBLICO SOLICITANTE",
+			"DELITO",
+			"VICTIMA/OFENDIDO",
+		];
+
+		for ($i = 0; $i < count($headers); $i++) {
+			$sheet->setCellValue($columns[$i] . 4, $headers[$i]);
+			$sheet->getColumnDimension($columns[$i])->setAutoSize(true);
+		}
+
+		$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
+
+		$row++;
+		$num = 1;
+		foreach ($documentos as $index => $orden) {
+			$this->separarExpID($orden->EXPEDIENTEID);
+
+
+			$sheet->setCellValue('A1', "CENTRO TELEFÓNICO Y EN LÍNEA DE ATENCIÓN Y ORIENTACIÓN TEMPRANA");
+			$sheet->setCellValue('A2', "REGISTRO DE CANALIZACIONES A LA COMISIÓN EJECUTIVA ESTATAL DE ATENCIÓN INTEGRAL A VÍCTIMAS");
+
+			$sheet->setCellValue('A' . $row, $num);
+			$sheet->setCellValue('B' . $row, $orden->FOLIOID."/".$orden->ANO);
+			$sheet->setCellValue('C' . $row, $this->formatFecha($orden->FECHAFIRMA));
+			$sheet->setCellValue('D' . $row, $this->separarExpID($orden->EXPEDIENTEID));
+			$sheet->setCellValue('E' . $row, 'CENTRO DE DENUNCIA TECNÓLOGICA');
+			$sheet->setCellValue('F' . $row,  $orden->MUNICIPIODESCR);
+			$sheet->setCellValue('G' . $row,  $orden->NOMBRE_MP);
+			$sheet->setCellValue('H' . $row,  $orden->DELITOMODALIDADDESCR);
+			$sheet->setCellValue('I' . $row,  $orden->NOMBRE_VTM);
+			$sheet->setCellValue('J' . $row, '');
+
+			$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
+
+			if (!(($row - 4) >= count($documentos))) $row++;
+			$num++;
+		}
+		$sheet->getStyle('A1:J1')->applyFromArray($styleCab);
+		$sheet->getStyle('A2:I2')->applyFromArray($styleCab);
+
+		$sheet->getStyle('A4:J4')->applyFromArray($styleHeaders);
+		$sheet->getStyle('A5:J' . $row)->applyFromArray($styleCells);
+
+		$sheet->mergeCells('A1:J1');
+		$sheet->mergeCells('A2:J2');
+		$drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+		$drawing->setName('FGEBC');
+		$drawing->setDescription('LOGO');
+		$drawing->setPath(FCPATH . 'assets/img/FGEBC_recortada.png'); // put your path and image here
+		$drawing->setHeight(60);
+		$drawing->setCoordinates('A1');
+		$drawing->setOffsetX(10);
+		$drawing->setWorksheet($spreadSheet->getActiveSheet());
+		// $drawing2 = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+		// $drawing2->setName('FGEBC');
+		// $drawing2->setDescription('LOGO');
+		// $drawing2->setPath(FCPATH . 'assets/img/logo_sejap.jpg'); // put your path and image here
+		// $drawing2->setHeight(45);
+		// $drawing2->setCoordinates('O1');
+		// $drawing2->setOffsetX(-30);
+		// $drawing2->setWorksheet($spreadSheet->getActiveSheet());
+		// $drawing->setOffsetX(110);
+		// $drawing->setRotation(25);
+		$writer = new Xlsx($spreadSheet);
+
+		$filename = urlencode("Reporte_Ceeaiv_" . $date . ".xlsx");
 		header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 		header("Content-Disposition: attachment; filename=\"$filename\"");
 		header("Content-Transfer-Encoding: binary");

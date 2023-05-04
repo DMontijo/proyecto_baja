@@ -43,6 +43,7 @@ use App\Models\VehiculoTipoModel;
 use App\Models\VehiculoVersionModel;
 use App\Models\FolioArchivoExternoModel;
 use App\Models\TipoExpedienteModel;
+use GuzzleHttp\Client;
 
 class DashboardController extends BaseController
 {
@@ -1007,21 +1008,48 @@ class DashboardController extends BaseController
 
 	private function _sendEmailFolio($to, $folio, $year)
 	{
-		$email = \Config\Services::email();
-		$email->setTo($to);
-		$email->setSubject('Nuevo folio generado.');
-		$body = view('email_template/folio_email_template.php', ['folio' => $folio . '/' . $year]);
-		$email->setAltMessage('Se ha generado un nuevo folio. SU FOLIO ES: ' . $folio . '/' . $year .'Para darle seguimiento a su caso ingrese a su cuenta en el Centro de Denuncia Tecnológica e inicie su video denuncia con el folio generado.' );
+		$user = $this->_denunciantesModel->asObject()->where('CORREO', $to)->first();
 
-		$email->setMessage($body);
+		// $email = \Config\Services::email();
+		// $email->setTo($to);
+		// $email->setSubject('Nuevo folio generado.');
+		// $body = view('email_template/folio_email_template.php', ['folio' => $folio . '/' . $year]);
+		// $email->setAltMessage('Se ha generado un nuevo folio. SU FOLIO ES: ' . $folio . '/' . $year .' Para darle seguimiento a su caso ingrese a su cuenta en el Centro de Denuncia Tecnológica e inicie su video denuncia con el folio generado.' );
+		$sendSMS = $this->sendSMS("Nuevo folio generado", $user->TELEFONO, 'Notificaciones FGE/Estimado usuario, tu folio es: ' . $folio . '/' . $year);
 
-		if ($email->send()) {
+		// $email->setMessage($body);
+
+		// if ($email->send()) {
+		if ($sendSMS == "") {
 			return true;
 		} else {
 			return false;
 		}
 	}
+	public function sendSMS($tipo, $celular, $mensaje)
+	{
 
+		$endpoint = "http://enviosms.ddns.net/API/";
+		$data = array();
+		$data['UsuarioID'] = 1;
+		$data['Nombre'] = $tipo;
+		$lstMensajes = array();
+		$obj = array("Celular" => $celular, "Mensaje" => $mensaje);
+		$lstMensajes[] = $obj;
+		$data['lstMensajes'] = $lstMensajes;
+
+		$httpClient = new Client([
+			'base_uri' => $endpoint
+		]);
+
+		$response = $httpClient->post('campañas/enviarSMS', [
+			'json' => $data
+		]);
+
+		$respuestaServ = $response->getBody()->getContents();
+
+		return json_decode($respuestaServ);
+	}
 	private function _loadView($title, $menu, $submenu, $data, $view)
 	{
 		$data2 = [

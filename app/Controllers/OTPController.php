@@ -3,15 +3,19 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Models\DenunciantesModel;
 use App\Models\OTPModel;
+use GuzzleHttp\Client;
 
 class OTPController extends BaseController
 {
 	private $_OTPModel;
+	private $_denunciantesModel;
 	
 	public function __construct()
 	{
 		$this->_OTPModel = new OTPModel();
+		$this->_denunciantesModel = new DenunciantesModel();
 	}
 
 	private function _generarOTP()
@@ -49,6 +53,8 @@ class OTPController extends BaseController
 	public function sendEmailOTP()
 	{
 		$to = trim($this->request->getPost('email'));
+		$tel = trim($this->request->getPost('telefono'));
+
 		$otp = $this->_generarOTP();
 
 		date_default_timezone_set('America/Tijuana');
@@ -57,13 +63,16 @@ class OTPController extends BaseController
 		$convert = date("Y-m-d H:i:s", $nuevafecha);
 
 		if ($to) {
+			$user = $this->_denunciantesModel->asObject()->where('CORREO', $to)->first();
 
-			$email = \Config\Services::email();
-			$email->setTo($to);
-			$email->setSubject('Nuevo código');
-			$body = view('email_template/token_email_template', ['otp' => $otp]);
-			$email->setMessage($body);
-			$email->setAltMessage('Se ha generado un nuevo código.SU CÓDIGO ES: ' . $otp);
+			// $email = \Config\Services::email();
+			// $email->setTo($to);
+			// $email->setSubject('Nuevo código');
+			// $body = view('email_template/token_email_template', ['otp' => $otp]);
+			// $email->setMessage($body);
+			// $email->setAltMessage('Se ha generado un nuevo código.SU CÓDIGO ES: ' . $otp);
+			$telefono = $user != null ? $user->TELEFONO : $tel;
+			$sendSMS = $this->sendSMS("Nuevo codigo", $tel, 'Notificaciones FGE/Estimado usuario, tu codigo es: ' . $otp);
 
 			$data = [
 				'CODIGO_OTP' => $otp,
@@ -78,13 +87,19 @@ class OTPController extends BaseController
 			}else{
 				$newOTP = $this->_OTPModel->insert($data);
 			}
-
-			if ($email->send()) {
+			if ($sendSMS =="") {
 				return json_encode((object)['status' => 200]);
-			} else {
-				$data = $email->printDebugger(['headers']);
+			}else{
+				$data = $sendSMS;
 				return json_encode((object)['status' => 500, 'data' => $data]);
 			}
+
+			// if ($email->send()) {
+			// 	return json_encode((object)['status' => 200]);
+			// } else {
+			// 	$data = $email->printDebugger(['headers']);
+			// 	return json_encode((object)['status' => 500, 'data' => $data]);
+			// }
 		} else {
 			$data = ['message' => 'Error en envío de mensaje'];
 			return json_encode((object)['status' => 500, 'data' => $data]);
@@ -129,5 +144,29 @@ class OTPController extends BaseController
 		}else{
 			return json_encode((object)['status' => 500, 'data' => ['message' => 'No existe el email.']]);
 		}
+	}
+	public function sendSMS($tipo, $celular, $mensaje)
+	{
+
+		$endpoint = "http://enviosms.ddns.net/API/";
+		$data = array();
+		$data['UsuarioID'] = 1;
+		$data['Nombre'] = $tipo;
+		$lstMensajes = array();
+		$obj = array("Celular" =>  $celular, "Mensaje" => $mensaje);
+		$lstMensajes[] = $obj;
+		$data['lstMensajes'] = $lstMensajes;
+
+		$httpClient = new Client([
+			'base_uri' => $endpoint
+		]);
+
+		$response = $httpClient->post('campañas/enviarSMS', [
+			'json' => $data
+		]);
+
+		$respuestaServ = $response->getBody()->getContents();
+
+		return json_decode($respuestaServ);
 	}
 }

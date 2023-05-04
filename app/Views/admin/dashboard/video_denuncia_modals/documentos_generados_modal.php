@@ -17,7 +17,9 @@
 										<th class="text-center bg-primary text-white" id="tipodoc" name="tipodoc">TIPO DE DOCUMENTO</th>
 										<th class="text-center bg-primary text-white">GENERADO POR</th>
 										<th class="text-center bg-primary text-white">STATUS</th>
-										<th class="text-center bg-primary text-white"></th>
+										<th class="text-center bg-primary text-white">ACCIONES</th>
+										<th class="text-center bg-primary text-white">ASIGNAR AGENTE</th>
+										<th class="text-center bg-primary text-white">ASIGNAR ENCARGADO</th>
 									</tr>
 								</table>
 							</div>

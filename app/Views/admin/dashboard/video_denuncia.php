@@ -699,6 +699,7 @@
 				var btnFirmar =
 					`<button type='button'  class='btn btn-primary my-2' onclick='firmarDocumento(${documentos[i].FOLIOID}, ${documentos[i].ANO}, ${documentos[i].FOLIODOCID})' disabled><i class="fas fa-signature"></i></button>`
 				var btnAsignarEncargado = `<button type='button'  class='btn btn-primary my-2' onclick='asignarEncargado(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})' disabled><i class="fas fa-user-tag"></i></button>`
+				var btnAsignarAgente = `<button type='button'  class='btn btn-primary my-2' onclick='asignarAgente(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})' disabled><i class="fas fa-user-tag"></i></button>`
 
 			} else {
 				var btn =
@@ -707,6 +708,7 @@
 					`<button type='button'  class='btn btn-primary my-2' onclick='firmarDocumento(${documentos[i].FOLIOID}, ${documentos[i].ANO}, ${documentos[i].FOLIODOCID})'><i class="fas fa-signature"></i></button>`
 
 				var btnAsignarEncargado = `<button type='button'  class='btn btn-primary my-2' onclick='asignarEncargado(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})'><i class="fas fa-user-tag"></i></button>`
+				var btnAsignarAgente = `<button type='button'  class='btn btn-primary my-2' onclick='asignarAgente(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})'><i class="fas fa-user-tag"></i></button>`
 
 			}
 			var btnBorrar = '';
@@ -717,9 +719,11 @@
 			var fila =
 				`<tr id="row${i}">` +
 				`<td class="text-center">${documentos[i].TIPODOC}</td>` +
-				`<td class="text-center">${documentos[i].NOMBRE} ${documentos[i].APELLIDO_PATERNO} ${documentos[i].APELLIDO_MATERNO}</td>` +
+				`<td class="text-center">${documentos[i].AGENTER_NOMBRE} ${documentos[i].AGENTER_AP} ${documentos[i].AGENTER_AM}</td>` +
 				`<td class="text-center">${documentos[i].STATUS}</td>` +
-				`<td class="text-center">${btn} ${btnFirmar} ${btnBorrar} ${btnAsignarEncargado}</td>` +
+				`<td class="text-center">${btn} ${btnFirmar} ${btnBorrar}</td>` +
+				`<td class="text-center">${btnAsignarAgente}</td>` +
+				`<td class="text-center">${btnAsignarEncargado}</td>` +
 				`</tr>`;
 
 			$('#table-documentos tr:first').after(fila);
@@ -1294,7 +1298,7 @@
 
 							const option = document.createElement('option');
 							option.value = victima.PERSONAFISICAID;
-							option.text = victima.NOMBRE + ' ' + primer_apellido;
+							option.text = victima.NOMBRE + ' ' + primer_apellido +' | ' + victima.PERSONACALIDADJURIDICADESCR;
 							select_victima_documento.add(option, null);
 						});
 
@@ -1341,7 +1345,7 @@
 
 							const option = document.createElement('option');
 							option.value = victima.PERSONAFISICAID;
-							option.text = victima.NOMBRE + ' ' + primer_apellido;
+							option.text = victima.NOMBRE + ' ' + primer_apellido +' | ' + victima.PERSONACALIDADJURIDICADESCR;
 							select_victima_ofendido.add(option, null);
 						});
 						$('#imputado_delito_cometido').empty();
@@ -1932,7 +1936,53 @@
 		});
 
 	}
+	function asignarAgente(documento, folio, ano) {
+		$('#documentos_generados_modal').modal('hide');
 
+		$('#asignarAgenteModal').modal('show');
+		const btn_asignar_agente = document.querySelector('#enviarAgente');
+
+		btn_asignar_agente.addEventListener('click', (e) => {
+			btn_asignar_agente.disabled = true;
+			$.ajax({
+				data: {
+					'foliodocid': documento,
+					'folio': folio,
+					'year': ano,
+					'agenteid': document.querySelector('#selectAgente').value
+				},
+				url: "<?= base_url('/data/update-agente-asignado') ?>",
+				method: "POST",
+				dataType: "json",
+				success: function(response) {
+					const documentos = response.documentos;
+					if (response.status == 1) {
+						btn_asignar_agente.disabled = false;
+						let tabla_documentos = document.querySelectorAll('#table-documentos tr');
+						tabla_documentos.forEach(row => {
+							if (row.id !== '') {
+								row.remove();
+							}
+						});
+						llenarTablaDocumentos(documentos);
+
+						Swal.fire({
+							icon: 'success',
+							text: 'Agente asignado correctamente',
+							confirmButtonColor: '#bf9b55',
+						});
+						$('#asignarAgenteModal').modal('hide');
+					}
+
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					btn_asignar_agente.disabled = false;
+
+				}
+			});
+		});
+
+	}
 	function borrarDocumento(folio, ano, foliodocid) {
 		Swal.fire({
 			title: '¿Estas seguro?',
@@ -2055,7 +2105,7 @@
 
 						const option = document.createElement('option');
 						option.value = victima.PERSONAFISICAID;
-						option.text = victima.NOMBRE + ' ' + primer_apellido;
+						option.text = victima.NOMBRE + ' ' + primer_apellido +' | ' + victima.PERSONACALIDADJURIDICADESCR;
 						select_victima_ofendido.add(option, null);
 					});
 					const option_vacio_vd = document.createElement('option');
@@ -2074,7 +2124,7 @@
 
 						const option = document.createElement('option');
 						option.value = victima.PERSONAFISICAID;
-						option.text = victima.NOMBRE + ' ' + primer_apellido;
+						option.text = victima.NOMBRE + ' ' + primer_apellido +' | ' + victima.PERSONACALIDADJURIDICADESCR;
 						select_victima_documento.add(option, null);
 					});
 					const option_vacio_id = document.createElement('option');
@@ -5014,7 +5064,7 @@
 
 								const option = document.createElement('option');
 								option.value = victima.PERSONAFISICAID;
-								option.text = victima.NOMBRE + ' ' + primer_apellido;
+								option.text = victima.NOMBRE + ' ' + primer_apellido +' | ' + victima.PERSONACALIDADJURIDICADESCR;
 								select_victima_ofendido.add(option, null);
 							});
 							$('#victima_modal_documento').empty();
@@ -5026,7 +5076,7 @@
 
 								const option = document.createElement('option');
 								option.value = victima.PERSONAFISICAID;
-								option.text = victima.NOMBRE + ' ' + primer_apellido;
+								option.text = victima.NOMBRE + ' ' + primer_apellido +' | ' + victima.PERSONACALIDADJURIDICADESCR;
 								select_victima_modal.add(option, null);
 							});
 							document.getElementById('subirFotoPersona').value = '';
@@ -6110,7 +6160,7 @@
 
 								const option = document.createElement('option');
 								option.value = victima.PERSONAFISICAID;
-								option.text = victima.NOMBRE + ' ' + primer_apellido;
+								option.text = victima.NOMBRE + ' ' + primer_apellido +' | ' + victima.PERSONACALIDADJURIDICADESCR;
 								select_victima_ofendido.add(option, null);
 							});
 							const option_vacio_vd = document.createElement('option');
@@ -6129,7 +6179,7 @@
 
 								const option = document.createElement('option');
 								option.value = victima.PERSONAFISICAID;
-								option.text = victima.NOMBRE + ' ' + primer_apellido;
+								option.text = victima.NOMBRE + ' ' + primer_apellido +' | ' + victima.PERSONACALIDADJURIDICADESCR;
 								select_victima_documento.add(option, null);
 							});
 							const option_vacio_id = document.createElement('option');
@@ -6682,8 +6732,8 @@
 							if (response.status == 1) {
 								const plantilla = response.plantilla;
 								tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
-								document.querySelector("#victima_modal_documento").value = '';
-								document.querySelector("#imputado_modal_documento").value = '';
+								// document.querySelector("#victima_modal_documento").value = '';
+								// document.querySelector("#imputado_modal_documento").value = '';
 								plantilla.value = '';
 								select_uma.value = '';
 								select_proceso.value = '';
@@ -6695,8 +6745,8 @@
 
 							} else {
 								tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
-								document.querySelector("#victima_modal_documento").value = '';
-								document.querySelector("#imputado_modal_documento").value = '';
+								// document.querySelector("#victima_modal_documento").value = '';
+								// document.querySelector("#imputado_modal_documento").value = '';
 								plantilla.value = '';
 								select_uma.value = '';
 								select_proceso.value = '';
@@ -6710,8 +6760,8 @@
 						error: function(jqXHR, textStatus, errorThrown) {
 							console.error(textStatus);
 							tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
-							document.querySelector("#victima_modal_documento").value = '';
-							document.querySelector("#imputado_modal_documento").value = '';
+							// document.querySelector("#victima_modal_documento").value = '';
+							// document.querySelector("#imputado_modal_documento").value = '';
 							plantilla.value = '';
 							select_uma.value = '';
 							select_proceso.value = '';
@@ -6741,16 +6791,16 @@
 								const plantilla = response.plantilla;
 								if (select_uma.getAttribute('required') == "true") {
 									tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
-									document.querySelector("#victima_modal_documento").value = '';
-									document.querySelector("#imputado_modal_documento").value = '';
+									// document.querySelector("#victima_modal_documento").value = '';
+									// document.querySelector("#imputado_modal_documento").value = '';
 									plantilla.value = '';
 									select_uma.value = '';
 									select_proceso.value = '';
 									select_notificacion.value = '';
 								} else {
 									tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
-									document.querySelector("#victima_modal_documento").value = '';
-									document.querySelector("#imputado_modal_documento").value = '';
+									// document.querySelector("#victima_modal_documento").value = '';
+									// document.querySelector("#imputado_modal_documento").value = '';
 									plantilla.value = '';
 									select_uma.value = '';
 									select_proceso.value = '';
@@ -6761,16 +6811,16 @@
 							} else {
 								if (select_uma.getAttribute('required') == "true") {
 									tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
-									document.querySelector("#victima_modal_documento").value = '';
-									document.querySelector("#imputado_modal_documento").value = '';
+									// document.querySelector("#victima_modal_documento").value = '';
+									// document.querySelector("#imputado_modal_documento").value = '';
 									plantilla.value = '';
 									select_uma.value = '';
 									select_proceso.value = '';
 									select_notificacion.value = '';
 								} else {
 									tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
-									document.querySelector("#victima_modal_documento").value = '';
-									document.querySelector("#imputado_modal_documento").value = '';
+									// document.querySelector("#victima_modal_documento").value = '';
+									// document.querySelector("#imputado_modal_documento").value = '';
 									plantilla.value = '';
 									select_uma.value = '';
 									select_proceso.value = '';
@@ -6782,8 +6832,8 @@
 						error: function(jqXHR, textStatus, errorThrown) {
 							console.error(textStatus);
 							tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
-							document.querySelector("#victima_modal_documento").value = '';
-							document.querySelector("#imputado_modal_documento").value = '';
+							// document.querySelector("#victima_modal_documento").value = '';
+							// document.querySelector("#imputado_modal_documento").value = '';
 							plantilla.value = '';
 							select_uma.value = '';
 							select_proceso.value = '';
@@ -6821,6 +6871,8 @@
 									'titulo': tipoPlantilla,
 									'statusenvio': 0,
 									'agente_asignado': document.querySelector('#empleado_asignado').value,
+									'victimaid': document.querySelector('#victima_modal_documento').value,
+								'imputado': document.querySelector('#imputado_modal_documento').value,
 								};
 								insertarDoc(data);
 							} else {
@@ -6831,6 +6883,8 @@
 									'titulo': tipoPlantilla,
 									'statusenvio': 0,
 									'agente_asignado': document.querySelector('#empleado_asignado').value,
+									'victimaid': document.querySelector('#victima_modal_documento').value,
+								'imputado': document.querySelector('#imputado_modal_documento').value,
 
 								};
 								insertarDoc(data);
@@ -6864,6 +6918,8 @@
 									'titulo': tipoPlantilla,
 									'statusenvio': 1,
 									'agente_asignado': document.querySelector('#empleado_asignado').value,
+									'victimaid': document.querySelector('#victima_modal_documento').value,
+								'imputado': document.querySelector('#imputado_modal_documento').value,
 
 								};
 								insertarDoc(data);
@@ -6877,6 +6933,8 @@
 									'titulo': tipoPlantilla,
 									'statusenvio': 1,
 									'agente_asignado': document.querySelector('#empleado_asignado').value,
+									'victimaid': document.querySelector('#victima_modal_documento').value,
+								'imputado': document.querySelector('#imputado_modal_documento').value,
 
 								};
 								insertarDoc(data);
@@ -6897,6 +6955,8 @@
 									'titulo': tipoPlantilla,
 									'statusenvio': 0,
 									'agente_asignado': document.querySelector('#empleado_asignado').value,
+									'victimaid': document.querySelector('#victima_modal_documento').value,
+								'imputado': document.querySelector('#imputado_modal_documento').value,
 
 								};
 								insertarDoc(data);
@@ -6909,6 +6969,8 @@
 									'titulo': tipoPlantilla,
 									'statusenvio': 0,
 									'agente_asignado': document.querySelector('#empleado_asignado').value,
+									'victimaid': document.querySelector('#victima_modal_documento').value,
+								'imputado': document.querySelector('#imputado_modal_documento').value,
 
 								};
 								insertarDoc(data);
@@ -6944,7 +7006,8 @@
 
 						if (response.status == 1) {
 							tinymce.get("documento").setContent('');
-
+							document.querySelector("#victima_modal_documento").value = '';
+							document.querySelector("#imputado_modal_documento").value = '';
 							const documentos = response.documentos;
 							Swal.fire({
 								icon: 'success',
@@ -7123,6 +7186,8 @@
 <?php include 'video_denuncia_modals/salida_modal.php' ?>
 <?php include 'video_denuncia_modals/marks.php' ?>
 <?php include 'video_denuncia_modals/encargados_modal.php' ?>
+<?php include 'video_denuncia_modals/asignar_agente_modal.php' ?>
+
 <?php include 'video_denuncia_modals/agregar_archivosExternos_modal.php' ?>
 
 <?php include 'video_denuncia_modals/persona_modal.php' ?>

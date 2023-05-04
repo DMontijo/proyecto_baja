@@ -229,8 +229,9 @@ class FolioModel extends Model
 	}
 
 
-	public function countFolioDenunciante($denuncianteid){
-		$strQuery = 'SELECT COUNT(*) AS "folios_pendientes" FROM FOLIO WHERE DENUNCIANTEID = '. $denuncianteid .' AND (STATUS = "ABIERTO" OR STATUS = "EN PROCESO")';
+	public function countFolioDenunciante($denuncianteid)
+	{
+		$strQuery = 'SELECT COUNT(*) AS "folios_pendientes" FROM FOLIO WHERE DENUNCIANTEID = ' . $denuncianteid . ' AND (STATUS = "ABIERTO" OR STATUS = "EN PROCESO")';
 		$result = $this->db->query($strQuery)->getRow();
 
 		return $result;
@@ -573,12 +574,14 @@ class FolioModel extends Model
 	{
 
 		$sql = 'SELECT FO.FOLIOID,FO.ANO, FO.STATUS, FO.HECHOFECHA, MU.MUNICIPIODESCR,
-		CONCAT(US.NOMBRE," ",US.APELLIDO_PATERNO," ",US.APELLIDO_MATERNO) AS AGENTE_NOMBRE,
-		FO.HECHODELITO, FO.EXPEDIENTEID, FPS.NOMBRE, FPS.PRIMERAPELLIDO, FPS.SEGUNDOAPELLIDO
+		CONCAT(US.NOMBRE," ",US.APELLIDO_PATERNO," ",US.APELLIDO_MATERNO) AS AGENTE_NOMBRE,FO.EXPEDIENTEID, 
+		CONCAT(FPS.NOMBRE," ", FPS.PRIMERAPELLIDO," ", FPS.SEGUNDOAPELLIDO) AS NOMBRE_VTM, DELMOD.DELITOMODALIDADDESCR
 		FROM FOLIO AS FO 
 		LEFT JOIN MUNICIPIO AS MU ON MU.MUNICIPIOID = FO.MUNICIPIOID
 		LEFT JOIN USUARIOS AS US ON US.ID = FO.AGENTEATENCIONID
 		LEFT JOIN FOLIOPERSONAFISICA AS FPS ON FPS.FOLIOID = FO.FOLIOID
+		LEFT JOIN FOLIOPERSONAFISIMPDELITO AS FDEL ON FDEL.FOLIOID = FO.FOLIOID
+		LEFT JOIN DELITOMODALIDAD AS DELMOD ON DELMOD.DELITOMODALIDADID = FDEL.DELITOMODALIDADID
 		WHERE MU.ESTADOID = 2 AND FPS.CALIDADJURIDICAID = 1';
 
 		if (!empty($bindParams['MUNICIPIOID'])) $sql = $sql . ' AND MU.MUNICIPIOID = ' . $bindParams['MUNICIPIOID'];
@@ -597,5 +600,84 @@ class FolioModel extends Model
 		$query = $this->db->query($sql);
 
 		return $query->getResult('object');
+	}
+
+	public function filterRegistroAtenciones($obj)
+	{
+		$strQuery = 'SELECT
+		FOLIO.FOLIOID, FOLIO.ANO, FOLIO.EXPEDIENTEID, FOLIO.STATUS, FOLIO.TIPODENUNCIA, FOLIO.FECHAREGISTRO,FOLIO.FECHASALIDA,FOLIO.TIPOEXPEDIENTEID,FOLIO.FECHASALIDA,FOLIO.FECHAREGISTRO, 
+		DENUNCIANTES.NOMBRE AS "N_DENUNCIANTE", DENUNCIANTES.APELLIDO_PATERNO AS "APP_DENUNCIANTE", DENUNCIANTES.APELLIDO_MATERNO AS "APM_DENUNCIANTE",DENUNCIANTES.TELEFONO AS "TELEFONODENUNCIANTE",DENUNCIANTES.CORREO AS "CORREODENUNCIANTE",  DENUNCIANTES.SEXO AS "GENERO",		CONCAT(USUARIOS.NOMBRE," ",USUARIOS.APELLIDO_PATERNO," ",USUARIOS.APELLIDO_MATERNO) AS "NOMBRE_AGENTE", 
+		USUARIOS.NOMBRE AS "N_AGENT", USUARIOS.APELLIDO_PATERNO AS "APP_AGENT", USUARIOS.APELLIDO_MATERNO AS "APM_AGENT",
+		BANDEJARAC.MODULODESCR AS "REMISION_RAC",
+		DERIVACIONES.INSTITUCIONREMISIONDESCR AS "REMISION_DERIVACION",
+		CANALIZACIONES.INSTITUCIONREMISIONDESCR AS "REMISION_CANALIZACION",
+		ESTADO.ESTADODESCR,MUNICIPIO.MUNICIPIODESCR,MUNICIPIOASIGNADO.MUNICIPIODESCR AS MUNICIPIOASIGNADO, TIPOEXPEDIENTE.TIPOEXPEDIENTEDESCR, EMPLEADOS.AREADESCR, TIPOEXPEDIENTE.TIPOEXPEDIENTECLAVE,
+		EMPLEADOS.OFICINADESCR AS "OFICINA_EMP" 
+		
+		FROM FOLIO 
+		LEFT JOIN USUARIOS ON USUARIOS.ID = FOLIO.AGENTEATENCIONID
+		LEFT JOIN MUNICIPIO AS MUNICIPIOASIGNADO ON MUNICIPIOASIGNADO.MUNICIPIOID = FOLIO.MUNICIPIOASIGNADOID AND MUNICIPIOASIGNADO.ESTADOID = 2
+		LEFT JOIN DENUNCIANTES ON DENUNCIANTES.DENUNCIANTEID = FOLIO.DENUNCIANTEID
+		LEFT JOIN TIPOEXPEDIENTE ON TIPOEXPEDIENTE.TIPOEXPEDIENTEID = FOLIO.TIPOEXPEDIENTEID
+		LEFT JOIN EMPLEADOS ON EMPLEADOS.EMPLEADOID = FOLIO.AGENTEASIGNADOID AND EMPLEADOS.MUNICIPIOID = FOLIO.MUNICIPIOID
+		LEFT JOIN ESTADO ON ESTADO.ESTADOID = FOLIO.ESTADOID
+		LEFT JOIN MUNICIPIO ON MUNICIPIO.MUNICIPIOID = FOLIO.MUNICIPIOID AND MUNICIPIO.ESTADOID = FOLIO.ESTADOID
+		LEFT JOIN BANDEJARAC ON FOLIO.FOLIOID = BANDEJARAC.FOLIOID
+				LEFT JOIN DERIVACIONES ON FOLIO.INSTITUCIONREMISIONID = DERIVACIONES.INSTITUCIONREMISIONID AND FOLIO.INSTITUCIONREMISIONMUNICIPIOID = DERIVACIONES.MUNICIPIOID
+				LEFT JOIN CANALIZACIONES ON FOLIO.INSTITUCIONREMISIONID = CANALIZACIONES.INSTITUCIONREMISIONID AND FOLIO.INSTITUCIONREMISIONMUNICIPIOID = CANALIZACIONES.MUNICIPIOID';
+
+		$fechaInicio = isset($obj['fechaInicio']) ? $obj['fechaInicio'] : '';
+		$fechaFin = isset($obj['fechaFin']) ? $obj['fechaFin'] : '';
+		$horaInicio = isset($obj['horaInicio']) ? $obj['horaInicio'] : null;
+		$horaFin = isset($obj['horaFin']) ? $obj['horaFin'] : null;
+
+		if (isset($obj['fechaInicio'])) {
+			unset($obj['fechaInicio']);
+		}
+		if (isset($obj['fechaFin'])) {
+			unset($obj['fechaFin']);
+		}
+		if (isset($obj['horaInicio'])) {
+			unset($obj['horaInicio']);
+		}
+		if (isset($obj['horaFin'])) {
+			unset($obj['horaFin']);
+		}
+
+		$count = count($obj);
+
+		if ($count > 0) {
+			$strQuery = $strQuery . ' WHERE ';
+		}
+
+		foreach ($obj as $clave => $valor) {
+			$count -= 1;
+			if ($clave != 'fechaInicio' && $clave != 'fechaFin' && $clave != 'horaInicio' && $clave != 'horaFin') {
+				$strQuery = $strQuery . 'FOLIO.' . $clave . ' = ' . '"' . $valor . '"';
+
+				if ($count > 0) {
+					$strQuery = $strQuery . ' AND ';
+				}
+			}
+		}
+
+		if (count($obj) > 0) {
+			$strQuery = $strQuery . ' AND ';
+		} else {
+			$strQuery = $strQuery . ' WHERE ';
+		}
+
+		$strQuery = $strQuery . 'FOLIO.FECHAREGISTRO BETWEEN CAST("' .
+			(isset($fechaInicio) ? date("Y-m-d", strtotime($fechaInicio)) : date("Y-m-d")) . ' ' .
+			(isset($horaInicio) ? (date('H:i:s', strtotime($horaInicio))) : '00:00:00') . '" AS DATETIME)' . ' AND ' . 'CAST("' .
+			(isset($fechaFin) ? (isset($obj['horaFin']) ? date("Y-m-d", strtotime($fechaFin)) : date("Y-m-d", strtotime(date("Y-m-d", strtotime($fechaFin))))) : date("Y-m-d")) . ' ' .
+			(isset($horaFin) ? (date('H:i:s', strtotime($horaFin))) : '23:59:59') . '" AS DATETIME)';
+
+		$result = $this->db->query($strQuery)->getResult();
+
+		$dataView = (object)array();
+		$dataView->result = $result;
+		// $dataView->strQuery = $strQuery;
+		return $dataView;
 	}
 }

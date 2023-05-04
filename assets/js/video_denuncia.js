@@ -174,6 +174,7 @@ disponible_connect.addEventListener("click", () => {
 			disponible_connect.hidden = false;
 			no_disponible_connect.hidden = true;
 			clearVideoCall();
+			aceptar_llamada.disabled = false;
 			Swal.fire({
 				icon: "error",
 				text: response.message,

@@ -7,7 +7,7 @@
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-12 text-center mb-4">
-				<h1 class="mb-4 text-center font-weight-bold">REGISTRO CONAVIM</h1>
+				<h1 class="mb-4 text-center font-weight-bold">REGISTRO CEEIAV</h1>
 				<a class="link link-primary" href="<?= base_url('admin/dashboard/reportes') ?>" role="button"><i class="fas fa-reply"></i> REGRESAR A REPORTES</a>
 			</div>
 			<div class="col-12">
@@ -26,7 +26,7 @@
 
 								<div id="filtros" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
 									<div class="card-body">
-										<form action="<?= base_url() ?>/admin/dashboard/registro_conavim" method="post" enctype="multipart/form-data" class="row needs-validation" novalidate>
+										<form action="<?= base_url() ?>/admin/dashboard/registro_ceeiav" method="post" enctype="multipart/form-data" class="row needs-validation" novalidate>
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
 												<label for="municipio" class="form-label font-weight-bold">Municipio:</label>
 												<select class="form-control" id="MUNICIPIOID" name="MUNICIPIOID" required>
@@ -43,15 +43,6 @@
 													<option selected value="">Todos los agentes</option>
 													<?php foreach ($body_data->empleados as $index => $empleado) { ?>
 														<option <?= isset($body_data->filterParams->AGENTEATENCIONID) ? ($body_data->filterParams->AGENTEATENCIONID == $empleado->ID ? 'selected' : '') : null ?> value="<?= $empleado->ID ?>"> <?= $empleado->NOMBRE . ' ' . $empleado->APELLIDO_PATERNO . ' ' . $empleado->APELLIDO_MATERNO ?> </option>
-													<?php } ?>
-												</select>
-											</div>
-											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
-												<label for="agente" class="form-label font-weight-bold">Tipo orden de protección:</label>
-												<select class="form-control" id="TIPOORDEN" name="TIPOORDEN" required>
-													<option selected value="">Todos los tipos</option>
-													<?php foreach ($body_data->tiposOrden as $index => $tipoOrden) { ?>
-														<option <?= isset($body_data->filterParams->TIPOORDEN) ? ($body_data->filterParams->TIPOORDEN == $tipoOrden->TITULO ? 'selected' : '') : null ?> value="<?= $tipoOrden->TITULO ?>"><?= $tipoOrden->TITULO ?></option>
 													<?php } ?>
 												</select>
 											</div>
@@ -76,7 +67,7 @@
 												<input type="time" class="form-control" id="horaFin" name="horaFin" value="<?= isset($body_data->filterParams->horaFin) ? $body_data->filterParams->horaFin : '' ?>">
 											</div>
 											<div class="col-12 text-right">
-												<a href="<?= base_url('admin/dashboard/registro_conavim') ?>" class="btn btn-secondary font-weight-bold" id="btnFiltroFolio" name="btnFiltroFolio">Borrar filtro</a>
+												<a href="<?= base_url('admin/dashboard/registro_ceeiav') ?>" class="btn btn-secondary font-weight-bold" id="btnFiltroFolio" name="btnFiltroFolio">Borrar filtro</a>
 												<button type="submit" class="btn btn-primary font-weight-bold" id="btnFiltroFolio" name="btnFiltroFolio">Filtrar</button>
 											</div>
 										</form>
@@ -93,7 +84,7 @@
 							<div class="col-12 d-flex justify-content-center align-items-center">
 								<?php if (isset($body_data->filterParams)) { ?>
 									<!-- Form para aplicar mismo filtro utilizado para crear el archivo de excel-->
-									<form id="formExcel" action="<?= base_url() ?>/admin/dashboard/generar_excel_conavim" method="post" enctype="multipart/form-data" class="needs-validation d-inline-block ml-auto" novalidate>
+									<form id="formExcel" action="<?= base_url() ?>/admin/dashboard/generar_excel_ceeaiv" method="post" enctype="multipart/form-data" class="needs-validation d-inline-block ml-auto" novalidate>
 										<?php foreach ($body_data->filterParams as $index => $value) { ?>
 											<input type="hidden" id="<?= $index ?>" name="<?= $index ?>" value="<?= $value ?>">
 										<?php } ?>
@@ -102,59 +93,61 @@
 								<?php } ?>
 							</div>
 						</div>
-						<div class="row">
-							<div class="col-12" style="overflow-x:auto;">
-								<table id="registro_conavim" class="table table-bordered table-striped ">
-									<thead>
-										<tr>
-											<th class="text-center">No.</th>
-											<th class="text-center">FOLIO</th>
-											<th class="text-center" style="min-width:150px;">FECHA DE EXPEDICIÓN</th>
-											<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
-											<th class="text-center" style="min-width:150px;">MODULO QUE EXPIDE</th>
-											<th class="text-center" style="min-width:150px;">MUNICIPIO QUE ATIENDE</th>
-											<th class="text-center" style="min-width:150px;">SERVIDOR PUBLICO SOLICITANTE</th>
-											<th class="text-center" style="min-width:150px;">DELITO</th>
-											<th class="text-center" style="min-width:150px;">TIPO DE ORDEN DE PROTECCIÓN</th>
-											<th class="text-center" style="min-width:150px;">NOMBRE DE LA VICTIMA/OFENDIDO</th>
-											<th class="text-center" style="min-width:150px;">GÉNERO</th>
-											<th class="text-center" style="min-width:150px;">VÍCTIMA LESIONADA</th>
-										</tr>
-									</thead>
-									<tbody>
-										<?php
-										$num = 1;
-										foreach ($body_data->dataOrdenes as $index => $orden) {
-											$array = str_split($orden->EXPEDIENTEID);
-										?>
-											<tr>
-												<td class="text-center"><?= $num ?></td>
-												<td class="text-center font-weight-bold"><?= $orden->FOLIOID . '/' . $orden->ANO ?></td>
-												<td class="text-center"><?= $orden->FECHAFIRMA ?  date("d/m/Y", strtotime($orden->FECHAFIRMA)) : '' ?></td>
-												<td class="text-center"><?= $array[1] . $array[2] . $array[4] . $array[5] . '-' . $array[6] . $array[7] . $array[8] . $array[9] . '-' . $array[10] . $array[11] . $array[12] . $array[13] . $array[14] ?></td>
-												<td class="text-center">CENTRO DE DENUNCIA TECNÓLOGICA</td>
-												<td class="text-center"><?= $orden->MUNICIPIODESCR ?></td>
-												<td class="text-center"><?= $orden->NOMBRE_MP ?></td>
-												<td class="text-center"><?= $orden->DELITOMODALIDADDESCR ?></td>
-												<td class="text-center"><?= $orden->TIPODOC ?></td>
-												<td class="text-center"><?= $orden->NOMBRE_VTM ?></td>
-												<td class="text-center"><?= ($orden->SEXO == 'M' ? 'MASCULINO' : ($orden->SEXO == 'F' ? 'FEMENINO' : '')) ?></td>
-												<td class="text-center"><?= $orden->LESIONES ?></td>
-											</tr>
-										<?php $num++; } ?>
-									</tbody>
-								</table>
-							</div>
-						</div>
+
+						<table id="registro_ceeaiv" class="table table-bordered table-striped">
+							<thead>
+								<tr>
+									<th class="text-center">No.</th>
+									<th class="text-center">FOLIO</th>
+									<th class="text-center" style="min-width:150px;">FECHA DE EXPEDICIÓN</th>
+									<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
+									<th class="text-center" style="min-width:150px;">MODULO QUE EXPIDE</th>
+									<th class="text-center" style="min-width:150px;">MUNICIPIO CANALIZACION</th>
+									<th class="text-center" style="min-width:150px;">SERVIDOR PUBLICO SOLICITANTE</th>
+									<th class="text-center" style="min-width:150px;">DELITO</th>
+									<th class="text-center" style="min-width:150px;">NOMBRE DE LA VICTIMA/OFENDIDO</th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php
+								$num = 1;
+								foreach ($body_data->dataDocumentos as $index => $doc) {
+									$array = str_split($doc->EXPEDIENTEID);
+								?>
+									<tr>
+										<td class="text-center"><?= $num ?></td>
+										<td class="text-center font-weight-bold"><?= $doc->FOLIOID . '/' . $doc->ANO ?></td>
+										<td class="text-center"><?= $doc->FECHAFIRMA ?  date("d/m/Y", strtotime($doc->FECHAFIRMA)) : '' ?></td>
+										<td class="text-center"><?= $array[1] . $array[2] . $array[4] . $array[5] . '-' . $array[6] . $array[7] . $array[8] . $array[9] . '-' . $array[10] . $array[11] . $array[12] . $array[13] . $array[14] ?></td>
+										<td class="text-center">CENTRO DE DENUNCIA TECNÓLOGICA</td>
+										<td class="text-center"><?= $doc->MUNICIPIODESCR ?></td>
+										<td class="text-center"><?= $doc->NOMBRE_MP ?></td>
+										<td class="text-center"><?= $doc->DELITOMODALIDADDESCR ?></td>
+										<td class="text-center"><?= $doc->NOMBRE_VTM ?></td>									
+									</tr>
+								<?php $num++ ;} ?>
+							</tbody>
+						</table>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </section>
+
+<script>
+	function collapse_filter() {
+		if (document.querySelector('#filtros').classList.contains('show')) {
+			document.querySelector('#filtros').classList.remove('show');
+		} else {
+			document.querySelector('#filtros').classList.add('show');
+		}
+	}
+</script>
+
 <script>
 	$(function() {
-		$("#registro_conavim").DataTable({
+		$("#registro_ceeaiv").DataTable({
 			responsive: false,
 			lengthChange: false,
 			autoWidth: true,
@@ -174,15 +167,7 @@
 		});
 	});
 </script>
-<script>
-	function collapse_filter() {
-		if (document.querySelector('#filtros').classList.contains('show')) {
-			document.querySelector('#filtros').classList.remove('show');
-		} else {
-			document.querySelector('#filtros').classList.add('show');
-		}
-	}
-</script>
+
 <?php if (isset($body_data->filterParams)) { ?>
 	<script>
 		let form = document.querySelector('#formExcel');
@@ -199,7 +184,6 @@
 						<li><span style="font-weight:bold;">Hora cierre:</span> <?= isset($body_data->filterParams->horaFin) ? $body_data->filterParams->horaFin : '' ?></li>
 						<li><span style="font-weight:bold;">Agente:</span> <?= isset($body_data->filterParams->AGENTEATENCIONID) ? $body_data->filterParams->nombreAgente : '' ?></li>
 						<li><span style="font-weight:bold;">Municipio:</span> <?= isset($body_data->filterParams->MUNICIPIOID) ? $body_data->filterParams->municipioDescr : '' ?></li>
-						<li><span style="font-weight:bold;">Genero:</span> <?= isset($body_data->filterParams->GENERO) ? ($body_data->filterParams->GENERO == 'M' ? 'Masculino' : ($body_data->filterParams->GENERO == 'F' ? 'Femenino' : '')) : '' ?></li>
 				</ul>
 			</p>
 			`

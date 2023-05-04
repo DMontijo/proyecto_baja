@@ -13,6 +13,7 @@
 <?php include 'app/Views/admin/dashboard/video_denuncia_modals/documentos_modal_editar.php' ?>
 <?php include 'app/Views/admin/dashboard/video_denuncia_modals/change_status_doc.php' ?>
 <?php include('app/Views/admin/dashboard/video_denuncia_modals/encargados_modal.php') ?>
+<?php include('app/Views/admin/dashboard/video_denuncia_modals/asignar_agente_modal.php') ?>
 
 <?php include 'app/Views/admin/dashboard/video_denuncia_modals/documentos_modal_wyswyg.php' ?>
 <?php include 'app/Views/admin/dashboard/video_denuncia_modals/send_email_modal.php' ?>
@@ -44,7 +45,13 @@
 							<th class="text-center bg-primary text-white" id="tipodoc" name="tipodoc">DOCUMENTO</th>
 							<th class="text-center bg-primary text-white">ESTADO</th>
 							<th class="text-center bg-primary text-white">GENERADO POR</th>
+							<th class="text-center bg-primary text-white">ASIGNADO A</th>
+
 							<th class="text-center bg-primary text-white">ACCIONES</th>
+							<th class="text-center bg-primary text-white">ASIGNAR AGENTE</th>
+							<th class="text-center bg-primary text-white">ASIGNAR ENCARGADO</th>
+
+
 						</tr>
 					</table>
 				</div>
@@ -165,7 +172,7 @@
 						victimas.forEach(victima => {
 							const option = document.createElement('option');
 							option.value = victima.PERSONAFISICAID;
-							option.text = victima.NOMBRE + ' ' + victima.PRIMERAPELLIDO;
+							option.text = victima.NOMBRE + ' ' + victima.PRIMERAPELLIDO+' | ' + victima.PERSONACALIDADJURIDICADESCR;
 							select_victima_documento.add(option, null);
 						});
 						$('#imputado_modal_documento').empty();
@@ -252,7 +259,7 @@
 						victimas.forEach(victima => {
 							const option = document.createElement('option');
 							option.value = victima.PERSONAFISICAID;
-							option.text = victima.NOMBRE + ' ' + victima.PRIMERAPELLIDO;
+							option.text = victima.NOMBRE + ' ' + victima.PRIMERAPELLIDO+' | ' + victima.PERSONACALIDADJURIDICADESCR;
 							select_victima_documento.add(option, null);
 						});
 						$('#imputado_modal_documento').empty();
@@ -580,8 +587,8 @@
 						if (response.status == 1) {
 							const plantilla = response.plantilla;
 							tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
-							document.querySelector("#victima_modal_documento").value = '';
-							document.querySelector("#imputado_modal_documento").value = '';
+							// document.querySelector("#victima_modal_documento").value = '';
+							// document.querySelector("#imputado_modal_documento").value = '';
 							document.getElementById('uma_select').value = ''
 							document.getElementById('tiponotificacion_select').value = ''
 							document.getElementById('tipoproceso_select').value = ''
@@ -592,8 +599,8 @@
 							document.getElementById("div_noti").style.display = "none";
 						} else {
 							tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
-							document.querySelector("#victima_modal_documento").value = '';
-							document.querySelector("#imputado_modal_documento").value = '';
+							// document.querySelector("#victima_modal_documento").value = '';
+							// document.querySelector("#imputado_modal_documento").value = '';
 							document.getElementById('uma_select').value = ''
 							document.getElementById('tiponotificacion_select').value = ''
 							document.getElementById('tipoproceso_select').value = ''
@@ -606,8 +613,8 @@
 					error: function(jqXHR, textStatus, errorThrown) {
 						// console.error(textStatus);
 						tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
-						document.querySelector("#victima_modal_documento").value = '';
-						document.querySelector("#imputado_modal_documento").value = '';
+						// document.querySelector("#victima_modal_documento").value = '';
+						// document.querySelector("#imputado_modal_documento").value = '';
 						document.querySelector("#plantilla").value = '';
 						document.getElementById('uma_select').value = ''
 						document.getElementById('tiponotificacion_select').value = ''
@@ -640,8 +647,8 @@
 							const plantilla = response.plantilla;
 							if (select_uma.getAttribute('required') == "true") {
 								tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
-								document.querySelector("#victima_modal_documento").value = '';
-								document.querySelector("#imputado_modal_documento").value = '';
+								// document.querySelector("#victima_modal_documento").value = '';
+								// document.querySelector("#imputado_modal_documento").value = '';
 								document.getElementById('uma_select').value = '';
 								document.getElementById('tiponotificacion_select').value = ''
 								document.getElementById('tipoproceso_select').value = ''
@@ -649,8 +656,8 @@
 								document.getElementById("div_noti").style.display = "none";
 							} else {
 								tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
-								document.querySelector("#victima_modal_documento").value = '';
-								document.querySelector("#imputado_modal_documento").value = '';
+								// document.querySelector("#victima_modal_documento").value = '';
+								// document.querySelector("#imputado_modal_documento").value = '';
 								document.getElementById('uma_select').value = ''
 								document.getElementById("involucrados").style.display = "none";
 								document.getElementById("div_uma").style.display = "none";
@@ -662,8 +669,8 @@
 						} else {
 							if (select_uma.getAttribute('required') == "true") {
 								tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
-								document.querySelector("#victima_modal_documento").value = '';
-								document.querySelector("#imputado_modal_documento").value = '';
+								// document.querySelector("#victima_modal_documento").value = '';
+								// document.querySelector("#imputado_modal_documento").value = '';
 								document.getElementById('uma_select').value = ''
 								document.querySelector("#plantilla").value = '';
 								document.getElementById('tiponotificacion_select').value = ''
@@ -672,8 +679,8 @@
 								document.getElementById("div_noti").style.display = "none";
 							} else {
 								tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
-								document.querySelector("#victima_modal_documento").value = '';
-								document.querySelector("#imputado_modal_documento").value = '';
+								// document.querySelector("#victima_modal_documento").value = '';
+								// document.querySelector("#imputado_modal_documento").value = '';
 								document.getElementById('uma_select').value = ''
 								document.querySelector("#plantilla").value = '';
 								document.getElementById("involucrados").style.display = "none";
@@ -734,6 +741,9 @@
 								'titulo': tipoPlantilla,
 								'statusenvio': 0,
 								'agente_asignado': document.querySelector('#empleado_asignado').value,
+								'victimaid': document.querySelector('#victima_modal_documento').value,
+								'imputado': document.querySelector('#imputado_modal_documento').value,
+
 
 							};
 							insertarDoc(data);
@@ -745,6 +755,8 @@
 								'titulo': tipoPlantilla,
 								'statusenvio': 0,
 								'agente_asignado': document.querySelector('#empleado_asignado').value,
+								'victimaid': document.querySelector('#victima_modal_documento').value,
+								'imputado': document.querySelector('#imputado_modal_documento').value,
 
 							};
 							insertarDoc(data);
@@ -774,6 +786,8 @@
 								'titulo': tipoPlantilla,
 								'statusenvio': 1,
 								'agente_asignado': document.querySelector('#empleado_asignado').value,
+								'victimaid': document.querySelector('#victima_modal_documento').value,
+								'imputado': document.querySelector('#imputado_modal_documento').value,
 
 							};
 							insertarDoc(data);
@@ -785,6 +799,8 @@
 								'titulo': tipoPlantilla,
 								'statusenvio': 1,
 								'agente_asignado': document.querySelector('#empleado_asignado').value,
+								'victimaid': document.querySelector('#victima_modal_documento').value,
+								'imputado': document.querySelector('#imputado_modal_documento').value,
 
 							};
 							insertarDoc(data);
@@ -800,6 +816,8 @@
 								'titulo': tipoPlantilla,
 								'statusenvio': 0,
 								'agente_asignado': document.querySelector('#empleado_asignado').value,
+								'victimaid': document.querySelector('#victima_modal_documento').value,
+								'imputado': document.querySelector('#imputado_modal_documento').value,
 
 							};
 							insertarDoc(data);
@@ -811,6 +829,8 @@
 								'titulo': tipoPlantilla,
 								'statusenvio': 0,
 								'agente_asignado': document.querySelector('#empleado_asignado').value,
+								'victimaid': document.querySelector('#victima_modal_documento').value,
+								'imputado': document.querySelector('#imputado_modal_documento').value,
 
 							};
 							insertarDoc(data);
@@ -834,6 +854,8 @@
 
 					if (response.status == 1) {
 						tinymce.get("documento").setContent('');
+						document.querySelector("#victima_modal_documento").value = '';
+						document.querySelector("#imputado_modal_documento").value = '';
 						const documentos = response.documentos;
 						Swal.fire({
 							icon: 'success',
@@ -1313,6 +1335,7 @@
 				var btnCambiarStatus = `<button type='button'  class='btn btn-primary my-2' onclick='cambiarStatusDoc(${documentos[i].FOLIODOCID}, ${documentos[i].STATUSENVIO}, "${documentos[i].ENVIADO}", ${documentos[i].FOLIOID}, ${documentos[i].ANO})'><i class="fas fa-dice"></i></button>`
 				var btnEnviar = `<button type='button'  class='btn btn-primary my-2' onclick='firmarUnitarioModal(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})'><i class="fas fa-paper-plane"></i></button>`
 				var btnAsignarEncargado = `<button type='button'  class='btn btn-primary my-2' onclick='asignarEncargado(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})' disabled><i class="fas fa-user-tag"></i></button>`
+				var btnAsignarAgente = `<button type='button'  class='btn btn-primary my-2' onclick='asignarAgente(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})' disabled><i class="fas fa-user-tag"></i></button>`
 
 			} else {
 				var btn =
@@ -1340,20 +1363,32 @@
 				var btnCambiarStatus = `<button type='button'  class='btn btn-primary my-2' onclick='cambiarStatusDoc(${documentos[i].FOLIODOCID}, ${documentos[i].STATUSENVIO}, "${documentos[i].ENVIADO}", ${documentos[i].FOLIOID}, ${documentos[i].ANO})'><i class="fas fa-dice"></i></button>`
 				var btnEnviar = `<button type='button'  class='btn btn-primary my-2' onclick='firmarUnitarioModal(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})' disabled><i class="fas fa-paper-plane"></i></button>`
 				var btnAsignarEncargado = `<button type='button'  class='btn btn-primary my-2' onclick='asignarEncargado(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})'><i class="fas fa-user-tag"></i></button>`
+				var btnAsignarAgente = `<button type='button'  class='btn btn-primary my-2' onclick='asignarAgente(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})'><i class="fas fa-user-tag"></i></button>`
 
 			}
 			var btnBorrar = '';
+			var asignados ='SIN AGENTE O ENCARGADO ASIGNADO';
 			if (documentos[i].ENVIADO == 'N') {
 				btnBorrar =
 					`<button type='button'  class='btn btn-primary my-2' onclick='borrarDocumento(${documentos[i].FOLIOID}, ${documentos[i].ANO}, ${documentos[i].FOLIODOCID})'><i class="fas fa-trash"></i></button>`
+			}
+			if (documentos[i].ENCARGADO_NOMBRE) {
+				asignados=
+				documentos[i].ENCARGADO_NOMBRE+ ' '+
+				documentos[i].AP_ENCARGADO + ' '+
+				documentos[i].AM_ENCARGADO;
+			}else if(documentos[i].AGENTE_NOMBRE){
+				asignados =documentos[i].AGENTE_NOMBRE + ' '+documentos[i].AP_AGENTE +' '+documentos[i].AM_AGENTE;
 			}
 			var fila =
 				`<tr id="row${i}">` +
 				`<td class="text-center">${documentos[i].TIPODOC}</td>` +
 				`<td class="text-center">${documentos[i].STATUS}</td>` +
-				`<td class="text-center">${documentos[i].NOMBRE} ${documentos[i].APELLIDO_PATERNO} ${documentos[i].APELLIDO_MATERNO}</td>` +
-
-				`<td class="text-center">${btn} ${btnpdf} ${btnxml} ${btnFirmar} ${btnCambiarStatus} ${btnEnviar} ${btnBorrar} ${btnAsignarEncargado}</td>` +
+				`<td class="text-center">${documentos[i].AGENTER_NOMBRE} ${documentos[i].AGENTER_AP} ${documentos[i].AGENTER_AM}</td>` +
+				`<td class="text-center">${asignados} </td>` +
+				`<td class="text-center">${btn} ${btnpdf} ${btnxml} ${btnFirmar} ${btnCambiarStatus} ${btnEnviar} ${btnBorrar}</td>` +
+				`<td class="text-center">${btnAsignarAgente}</td>` +
+				`<td class="text-center">${btnAsignarEncargado}</td>` +
 				`</tr>`;
 
 			$('#table-documentos tr:first').after(fila);
@@ -1362,7 +1397,51 @@
 			$("#adicionados").append(nFilas - 1);
 		}
 	}
+	function asignarAgente(documento, folio, ano) {
+		$('#asignarAgenteModal').modal('show');
+		const btn_asignar_agente = document.querySelector('#enviarAgente');
 
+		btn_asignar_agente.addEventListener('click', (e) => {
+			btn_asignar_agente.disabled = true;
+			$.ajax({
+				data: {
+					'foliodocid': documento,
+					'folio': folio,
+					'year': ano,
+					'agenteid': document.querySelector('#selectAgente').value
+				},
+				url: "<?= base_url('/data/update-agente-asignado') ?>",
+				method: "POST",
+				dataType: "json",
+				success: function(response) {
+					const documentos = response.documentos;
+					if (response.status == 1) {
+						btn_asignar_agente.disabled = false;
+						let tabla_documentos = document.querySelectorAll('#table-documentos tr');
+						tabla_documentos.forEach(row => {
+							if (row.id !== '') {
+								row.remove();
+							}
+						});
+						llenarTablaDocumentos(documentos);
+
+						Swal.fire({
+							icon: 'success',
+							text: 'Agente asignado correctamente',
+							confirmButtonColor: '#bf9b55',
+						});
+						$('#asignarAgenteModal').modal('hide');
+					}
+
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					btn_asignar_agente.disabled = false;
+
+				}
+			});
+		});
+
+	}
 	function asignarEncargado(documento, folio, ano) {
 		$('#encargadosModal').modal('show');
 		const btn_asignar_encargado = document.querySelector('#enviarEncargado');
