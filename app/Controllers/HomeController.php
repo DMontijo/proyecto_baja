@@ -10,6 +10,13 @@ class HomeController extends BaseController
 		$this->_loadView('Inicio', $data, 'index');
 	}
 
+	//Función que muestra la vista de mantenimiento
+	public function maintenance()
+	{
+		$data = array();
+		$this->_loadView('Sitio en mantenimiento', $data, 'mantenimiento');
+	}
+
 	private function _loadView($title, $data, $view)
 	{
 		$data = [
