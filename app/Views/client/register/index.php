@@ -259,7 +259,7 @@ if ($agent->isMobile()) {
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="cp" class="form-label fw-bold">Código postal</label>
-							<input type="number" class="form-control" id="cp" maxlength="10" oninput="clearInputPhone(event);" name="cp">
+							<input type="number" class="form-control" id="cp" maxlength="10" name="cp">
 						</div>
 
 						<div class="col-12 mt-4 mb-4">
