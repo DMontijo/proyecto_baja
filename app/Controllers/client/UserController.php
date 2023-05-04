@@ -185,7 +185,7 @@ class UserController extends BaseController
 				if ($response->uuid) {
 					$this->_denunciantesModel->insert($data);
 					$this->_sendEmailPassword($data['CORREO'], $password);
-					session()->setFlashdata('message', 'Inicia sesión con la contraseña que llegará a tu correo electrónico');
+					session()->setFlashdata('message', 'Inicia sesión con tu correo y la contraseña que llegará a tus mensajes SMS.');
 					return redirect()->to(base_url('/denuncia'))->with('message_success', 'Inicia sesión con la contraseña que llegará tus mensajes SMS y comienza tu denuncia');
 				}
 			} else {
