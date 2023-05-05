@@ -36,8 +36,6 @@ class CambiosExpedienteCronJob extends BaseController
             $municipio = $folio->MUNICIPIOASIGNADOID != NULL ? $folio->MUNICIPIOASIGNADOID : $folio->INSTITUCIONREMISIONMUNICIPIOID;
 
             $info = $this->_getInfo($folio->EXPEDIENTEID, $municipio);
-            var_dump($info);exit;
-
             if ($info != null) {
                 $correo = $this->_sendEmailCambioExpediente($folio->CORREO, $folio->EXPEDIENTEID, $info->OFICINADESCR, $info->ESTADOJURIDICODESCR);
                 if ($correo) {

@@ -38,6 +38,10 @@ class ReportesController extends BaseController
 		$this->urlApi = VIDEOCALL_URL;
 	}
 
+	/**
+	 * Vista de reportes
+	 *
+	 */
 	public function index()
 	{
 		if (!$this->permisos('REPORTES')) {
@@ -49,14 +53,21 @@ class ReportesController extends BaseController
 		$this->_loadView('Reportes', 'Reportes', '', $dataView, 'index');
 	}
 
+	/**
+	 * Vista para ingresar a los reportes de folios 
+	 * Se carga con un filtro default
+	 *
+	 */
 	public function getFolios()
 	{
+		// Datos del filtro
 		$data = [
 			'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
 			'fechaFin' => date("Y-m-d"),
 		];
 
 		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
+		//Filtro
 		$resultFilter = $this->_folioModel->filterDates($data);
 		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
 		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
@@ -70,8 +81,14 @@ class ReportesController extends BaseController
 		$this->_loadView('Folios generados', 'folios', '', $dataView, 'folios');
 	}
 
+	/**
+	 * Función para realizar un filtro en reporte de folios.
+	 * Recibe por metodo POST los datos del formulario del filtro
+	 *
+	 */
 	public function postFolios()
 	{
+		//Datos del filtro
 		$data = [
 			'MUNICIPIOID' => $this->request->getPost('municipio'),
 			'AGENTEATENCIONID' => $this->request->getPost('agente'),
@@ -87,6 +104,7 @@ class ReportesController extends BaseController
 			//Recorre el array y elimina los valores que nulos o vacíos
 			if (empty($valor)) unset($data[$clave]);
 		}
+		//Para cuando se borra el filtro
 		if (count($data) <= 0) {
 			$data = [
 				'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
@@ -95,6 +113,7 @@ class ReportesController extends BaseController
 		}
 
 		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
+		//Generacion del filtro
 		$resultFilter = $this->_folioModel->filterDates($data);
 		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
 		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
@@ -118,8 +137,15 @@ class ReportesController extends BaseController
 		$this->_loadView('Folios generados', 'folios', '', $dataView, 'folios');
 	}
 
+	/**
+	 * Función para generar el reporte XLSX de folios
+	 * Recibe por metodo POST los datos del filtro
+	 *
+	 */
 	public function createFoliosXlsx()
 	{
+		//Datos del filtro
+
 		$data = [
 			'MUNICIPIOID' => $this->request->getPost('MUNICIPIOID'),
 			'AGENTEATENCIONID' => $this->request->getPost('AGENTEATENCIONID'),
@@ -137,6 +163,7 @@ class ReportesController extends BaseController
 			//Recorre el array y elimina los valores que nulos o vacíos
 			if (empty($valor)) unset($data[$clave]);
 		}
+		//Cuando no hay filtro
 		if (count($data) <= 0) {
 			$data = [
 				'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
@@ -144,8 +171,10 @@ class ReportesController extends BaseController
 			];
 		}
 
+		//Generacion del filtro
 		$resultFilter = $this->_folioModel->filterDates($data);
 
+		//Inicio del XLSX
 		$spreadSheet = new Spreadsheet();
 		$spreadSheet->getProperties()
 			->setCreator("Fiscalía General del Estado de Baja California")
@@ -159,6 +188,7 @@ class ReportesController extends BaseController
 			->setCategory("Reportes");
 		$sheet = $spreadSheet->getActiveSheet();
 
+		//Estilo del header
 		$styleHeaders = [
 			'font' => [
 				'bold' => true,
@@ -188,6 +218,7 @@ class ReportesController extends BaseController
 			],
 		];
 
+		//Estilo de las celdas
 		$styleCells = [
 			'font' => [
 				'bold' => false,
@@ -225,6 +256,7 @@ class ReportesController extends BaseController
 			'P', 'Q', 'R', 'S', 'T',
 			'U', 'V', 'W', 'X', 'Y', 'Z'
 		];
+		//Cabeceras
 		$headers = [
 			'FOLIO',
 			'AÑO',
@@ -248,6 +280,7 @@ class ReportesController extends BaseController
 
 		$row++;
 
+		//Rellenado del XLSX
 		foreach ($resultFilter->result as $index => $folio) {
 			$tipo = '';
 			if ($folio->TIPODENUNCIA == 'VD') {
@@ -299,15 +332,22 @@ class ReportesController extends BaseController
 		header("Cache-Control: max-age=0");
 		$writer->save("php://output");
 	}
-
+	/**
+	 * Vista para ingresar a los reportes de constancia 
+	 * Se carga con un filtro default
+	 *
+	 */
 	public function getConstancias()
 	{
+		// Datos del filtro
+
 		$data = [
 			'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
 			'fechaFin' => date("Y-m-d"),
 		];
 
 		foreach ($data as $clave => $valor) {
+			//Recorre el array y elimina los valores que nulos o vacíos
 			if (empty($valor)) unset($data[$clave]);
 		}
 
@@ -327,8 +367,15 @@ class ReportesController extends BaseController
 	}
 
 
+	/**
+	 * Función para realizar un filtro en reporte de constancias.
+	 * Recibe por metodo POST los datos del formulario del filtro
+	 *
+	 */
 	public function postConstancias()
 	{
+		//Datos del filtro
+
 		$data = [
 			'MUNICIPIOID' => $this->request->getPost('municipio'),
 			'AGENTEID' => $this->request->getPost('agente'),
@@ -343,6 +390,8 @@ class ReportesController extends BaseController
 			//Recorre el array y elimina los valores que nulos o vacíos
 			if (empty($valor)) unset($data[$clave]);
 		}
+		//Para cuando se borra el filtro
+
 		if (count($data) <= 0) {
 			$data = [
 				'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
@@ -351,6 +400,8 @@ class ReportesController extends BaseController
 		}
 
 		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
+		//Generacion del filtro
+
 		$resultFilter = $this->_constanciaExtravioModel->filterDates($data);
 		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
 		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
@@ -375,9 +426,14 @@ class ReportesController extends BaseController
 		$this->_loadView('Constancias generadas', 'constancias', '', $dataView, 'constancias');
 	}
 
-
+	/**
+	 * Función para generar el reporte XLSX de constancias
+	 * Recibe por metodo POST los datos del filtro
+	 *
+	 */
 	public function createConstanciasXlsx()
 	{
+		//Datos del filtro
 		$data = [
 			'MUNICIPIOID' => $this->request->getPost('MUNICIPIOID'),
 			'AGENTEID' => $this->request->getPost('AGENTEID'),
@@ -394,6 +450,8 @@ class ReportesController extends BaseController
 			//Recorre el array y elimina los valores que nulos o vacíos
 			if (empty($valor)) unset($data[$clave]);
 		}
+		//Cuando no hay filtro
+
 		if (count($data) <= 0) {
 			$data = [
 				'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
@@ -402,8 +460,10 @@ class ReportesController extends BaseController
 			];
 		}
 
+		//Generacion del filtro
 
 		$resultFilter = $this->_constanciaExtravioModel->filterDates($data);
+		//Inicio del XLSX
 
 		$spreadSheet = new Spreadsheet();
 		$spreadSheet->getProperties()
@@ -417,6 +477,7 @@ class ReportesController extends BaseController
 			->setKeywords("reporte constancias extravío cdtec fgebc")
 			->setCategory("Reportes");
 		$sheet = $spreadSheet->getActiveSheet();
+		//Estilo del header
 
 		$styleHeaders = [
 			'font' => [
@@ -446,6 +507,7 @@ class ReportesController extends BaseController
 				],
 			],
 		];
+		//Estilo de las celdas
 
 		$styleCells = [
 			'font' => [
@@ -484,6 +546,8 @@ class ReportesController extends BaseController
 			'P', 'Q', 'R', 'S', 'T',
 			'U', 'V', 'W', 'X', 'Y', 'Z'
 		];
+		//Cabeceras
+
 		$headers = [
 			'CONSTANCIA',
 			'AÑO',
@@ -502,6 +566,7 @@ class ReportesController extends BaseController
 		$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
 
 		$row++;
+		//Rellenado del XLSX
 
 		foreach ($resultFilter->result as $index => $constancia) {
 
@@ -540,13 +605,22 @@ class ReportesController extends BaseController
 		$writer->save("php://output");
 	}
 
+	/**
+	 * Vista para ingresar a los reportes de registro diario
+	 * Se carga con un filtro default
+	 *
+	 */
 	public function getRegistroDiario()
 	{
+		// Datos del filtro
+
 		$data = [
 			'fechaInicio' => date("Y-m-d"),
 			'fechaFin' => date("Y-m-d"),
 		];
 		foreach ($data as $clave => $valor) {
+			//Recorre el array y elimina los valores que nulos o vacíos
+
 			if (empty($valor)) unset($data[$clave]);
 		}
 
@@ -573,8 +647,15 @@ class ReportesController extends BaseController
 		$this->_loadView('Registro diario', 'registro diario', '', $dataView, 'registro_diario');
 	}
 
+	/**
+	 * Función para realizar un filtro en reporte de registro diario.
+	 * Recibe por metodo POST los datos del formulario del filtro
+	 *
+	 */
 	public function postRegistroDiario()
 	{
+		//Datos del filtro
+
 		$data = [
 			'AGENTEATENCIONID' => $this->request->getPost('agente_registro'),
 			'STATUS' => $this->request->getPost('status'),
@@ -589,12 +670,15 @@ class ReportesController extends BaseController
 			//Recorre el array y elimina los valores que nulos o vacíos
 			if (empty($valor)) unset($data[$clave]);
 		}
+		//Para cuando se borra el filtro
+
 		if (count($data) <= 0) {
 			$data = [
 				'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
 				'fechaFin' => date("Y-m-d"),
 			];
 		}
+		//Generacion del filtro
 
 		$resultFilter = $this->_folioModel->filterDatesRegistroDiario($data);
 		///var_dump($data);
@@ -617,9 +701,14 @@ class ReportesController extends BaseController
 
 		$this->_loadView('Registro diario', 'registro diario', '', $dataView, 'registro_diario');
 	}
-
+	/**
+	 * Función para generar el reporte XLSX de registro diario
+	 * Recibe por metodo POST los datos del filtro
+	 *
+	 */
 	public function createRegistroDiarioXlsx()
 	{
+		//Datos del filtro
 
 		$data = [
 			'AGENTEATENCIONID' => $this->request->getPost('AGENTEATENCIONID'),
@@ -636,12 +725,15 @@ class ReportesController extends BaseController
 			//Recorre el array y elimina los valores que nulos o vacíos
 			if (empty($valor)) unset($data[$clave]);
 		}
+		//Cuando no hay filtro
+
 		if (count($data) <= 0) {
 			$data = [
 				'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
 				'fechaFin' => date("Y-m-d"),
 			];
 		}
+		//Generacion del filtro
 
 		$resultFilter = $this->_folioModel->filterDatesRegistroDiario($data);
 		//var_dump($resultFilter);
@@ -659,6 +751,7 @@ class ReportesController extends BaseController
 			->setCategory("Reportes");
 		$sheet = $spreadSheet->getActiveSheet();
 
+		//Estilo del header
 
 		$styleHeaders = [
 			'font' => [
@@ -688,6 +781,7 @@ class ReportesController extends BaseController
 				],
 			],
 		];
+		//Estilo de las celdas
 
 		$styleCab = [
 			'font' => [
@@ -740,6 +834,8 @@ class ReportesController extends BaseController
 			'P', 'Q', 'R', 'S', 'T',
 			'U', 'V', 'W', 'X', 'Y', 'Z'
 		];
+		//Cabeceras
+
 		$headers = [
 			'NO.',
 			'FECHA RECEPCIÓN',
@@ -771,40 +867,20 @@ class ReportesController extends BaseController
 		$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
 
 		$row++;
+		//Rellenado del XLSX
 
 
 		foreach ($resultFilter->result as $index => $folio) {
-			// $endpoint = 'https://videodenunciaserver1.fgebc.gob.mx/api/vc';
-			// $data = array();
-			// $data['u'] = '24';
-			// $data['token'] = '198429b7cc8a2a5733d97bc13153227dd5017555';
-			// $data['a'] = 'getRepo';
-			// $data['folio'] = $folio->ANO . '-' . $folio->FOLIOID;
-			// $data['min'] = '2022-01-01';
-			// $data['max'] = date('Y-m-d');
-			// $duracion = '';
+
 			$inicio = '';
 			$fin = '';
-			// $remision = '';
-			// $grabacion = '';
+
 			$duracion = '';
 			$horas = '';
 			$segundos = '';
 			$minutos = '';
 			$timestamp = '';
 
-			// $response = $this->_curlPost($endpoint, $data);
-			// if ($response->data > 0) {
-			// 	$array = array_reverse($response->data);
-			// 	foreach ($array as $key => $api) {
-			// 		$duracion = $api->Duración;
-			// 		$inicio = $api->Inicio;
-			// 		$fin = $api->Fin;
-			// 		if ($api->Grabación != '') {
-			// 			$grabacion = $api->Grabación;
-			// 		}
-			// 	}
-			// }
 			if ($folio->TIPOEXPEDIENTEID == 1 || $folio->TIPOEXPEDIENTEID == 4) {
 				$remision = $folio->OFICINA_EMP;
 			} else if ($folio->TIPOEXPEDIENTEID == 5) {
@@ -815,31 +891,10 @@ class ReportesController extends BaseController
 				$remision = $folio->REMISION_CANALIZACION;
 			}
 
-
-			// $ffprobe = FFProbe::create([
-			// 	'ffmpeg.binaries'  => 'C:/ffmpeg/bin/ffmpeg.exe', // the path to the FFMpeg binary
-			// 	'ffprobe.binaries' => 'C:/ffmpeg/bin/ffprobe.exe', // the path to the FFProbe binary
-			// 	'timeout'          => 3600, // the timeout for the underlying process
-			// 	'ffmpeg.threads'   => 12,   // the number of threads that FFMpeg should use
-			// ]);
-			// if ($response->data > 0 && $grabacion != '') {
-			// 	$duration = $ffprobe
-			// 		->streams('https://fgebc-records.s3.amazonaws.com/' . $grabacion)
-			// 		->videos()
-			// 		->first()
-			// 		->get('duration');
-			// } else if ($response->data[0]->Grabación) {
-			// 	$duration = $ffprobe
-			// 		->streams('https://fgebc-records.s3.amazonaws.com/' . $response->data[0]->Grabación)
-			// 		->videos()
-			// 		->first()
-			// 		->get('duration');
-			// }
-
+			// Duración de los videos
 			$endpointFolio = $this->urlApi . 'recordings/folio?folio=' . $folio->FOLIOID . '/' . $folio->ANO;
 
 			$responseFolio = $this->_curlGetService($endpointFolio);
-			// return json_encode($responseFolio);
 
 			if ($responseFolio != null) {
 				foreach ($responseFolio as $key => $videoDuration) {
@@ -858,20 +913,8 @@ class ReportesController extends BaseController
 					$minutos = floor(($duracion - ($horas * 3600)) / 60);
 					$segundos = $duracion - ($horas * 3600) - ($minutos * 60);
 				}
-				// return json_encode($responseFolio);
-				// if ($duration != '') {
-				// 	$horas = floor($duration / 3600);
-				// 	$minutos = floor(($duration - ($horas * 3600)) / 60);
-				// 	$segundos = $duration - ($horas * 3600) - ($minutos * 60);
-				// }
 			}
-			// $row++;
-			// if(isset($folio->DELITOMODALIDADDESCR)){
-			// 	foreach ($folio->DELITOMODALIDADDESCR as $key => $delito){
-			// 		var_dump($delito);
-			// 		exit;
-			// 	}
-			// }
+
 			$fecharegistro = strtotime($folio->FECHAREGISTRO);
 			$fechasalida = strtotime($folio->FECHASALIDA);
 			$dateregistro = date('d-m-Y', $fecharegistro);
@@ -954,13 +997,17 @@ class ReportesController extends BaseController
 		header("Cache-Control: max-age=0");
 		$writer->save("php://output");
 	}
-
+	/**
+	 * Vista para ingresar a los reportes de firmas FIEL
+	 *
+	 */
 	public function getFielReport()
 	{
 		$data = (object) array();
 		if (!$this->permisos('USUARIOS')) {
 			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
 		}
+		//Query ROL-USUARIO
 		$data->usuario = $this->_usuariosModel->asObject()
 			->select('USUARIOS.*, ROLES.NOMBRE_ROL, ZONAS_USUARIOS.NOMBRE_ZONA, MUNICIPIO.MUNICIPIODESCR,OFICINA.OFICINADESCR')
 			->join('ROLES', 'ROLES.ID = USUARIOS.ROLID', 'LEFT')
@@ -975,13 +1022,17 @@ class ReportesController extends BaseController
 
 		$this->_loadView('FIEL', 'fiel', '', $data, 'fiel');
 	}
-
+	/**
+	 * Vista para ingresar a los reportes de llamadas
+	 * Se carga con un filtro default
+	 *
+	 */
 	public function getReporteLlamadas()
 	{
 
+		//Conexion al servicio de videollamda
 		$endpoint = $this->urlApi . "call-records?pageSize=0";
 		$response = $this->_curlGetService($endpoint);
-		// var_dump($response->data);exit;
 		if ($response->statusCode == "success") {
 			$dataView = (object)array();
 			$dataView->llamadas = $response->data;
@@ -989,6 +1040,7 @@ class ReportesController extends BaseController
 			$empleado = array();
 			$llamadas = array();
 
+			//Filtro
 			foreach ($response->data as $key => $conexion) {
 				array_push($empleado, (object)['ID' => $conexion->agentConnectionId->agent->uuid, 'NOMBRE' => $conexion->agentConnectionId->agent->fullName]);
 				// $conexion->Fecha = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($conexion->Fecha)));
@@ -1006,35 +1058,12 @@ class ReportesController extends BaseController
 			$this->_loadView('Reportes llamadas', 'reportes_llamadas', '', $dataView, 'reportes_llamadas');
 		}
 	}
-	// $endpoint = 'https://videodenunciaserver1.fgebc.gob.mx/api/vc';
-	// $data = array();
-	// $data['u'] = '24';
-	// $data['token'] = '198429b7cc8a2a5733d97bc13153227dd5017555';
-	// $data['a'] = 'getRepo';
-	// $data['min'] = '2022-01-01';
-	// $data['max'] = date('Y-m-d');
 
-	// $response = $this->_curlPost($endpoint, $data);
-	// $llamadas = array();
-	// $empleado = array();
-	// $promedio = 0;
-	// foreach ($response->data as $key => $value) {
-	// 	// foreach ($value as $array => $data) {
-	// 	//iterar datos de cada una de las llamadas
-	// 	// }
-	// 	if ($value->Estatus == 'Terminada' && $value->Grabación) {
-	// 		$idAgente = 'id Agente';
-	// 		array_push($empleado, (object)['ID' => $value->$idAgente, 'NOMBRE' => $value->Agente]);
-	// 		$value->Fecha = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($value->Fecha)));
-	// 		$value->Inicio = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($value->Inicio)));
-	// 		$value->Fin = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($value->Fin)));
-	// 		array_push($llamadas, $value);
-	// 		$promedio += strtotime($value->Duración) - strtotime("TODAY");
-	// 	}
-	// }
-
-
-
+	/**
+	 * Función para realizar un filtro en reporte de llamadas.
+	 * Recibe por metodo POST los datos del formulario del filtro
+	 *
+	 */
 	public function postReporteLlamadas()
 	{
 		$dataPost = (object) [
@@ -1043,6 +1072,7 @@ class ReportesController extends BaseController
 			'agentUuid' => $this->request->getPost('agenteId'),
 		];
 
+		//Conexion al servicio de videollamada
 		$endpoint = $this->urlApi . "call-records?pageSize=0&agentUuid=" . $dataPost->agentUuid . '&sessionStartedFrom=' . $dataPost->sessionStartedAt . '&sessionStartedTo=' . $dataPost->sessionFinishedAt;
 		$response = $this->_curlGetService($endpoint);
 		// var_dump($endpoint);
@@ -1054,13 +1084,9 @@ class ReportesController extends BaseController
 			$empleado = array();
 			$llamadas = array();
 
+			// Filtro
 			foreach ($responseAll->data as $key => $conexionAll) {
 				array_push($empleado, (object)['ID' => $conexionAll->agentConnectionId->agent->uuid, 'NOMBRE' => $conexionAll->agentConnectionId->agent->fullName]);
-				// $conexion->Fecha = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($conexion->Fecha)));
-				// $conexion->Inicio = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($conexion->Inicio)));
-				// $conexion->Fin = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($conexion->Fin)));
-				// $promedio += strtotime($value->Duración) - strtotime("TODAY");
-
 			}
 			if ($response != null) {
 				foreach ($response->data as $key => $conexion) {
@@ -1077,60 +1103,13 @@ class ReportesController extends BaseController
 
 			$this->_loadView('Reportes llamadas', 'reportes_llamadas', '', $dataView, 'reportes_llamadas');
 		}
-		// $endpoint = 'https://videodenunciaserver1.fgebc.gob.mx/api/vc';
-		// $data = array();
-		// $data['u'] = '24';
-		// $data['token'] = '198429b7cc8a2a5733d97bc13153227dd5017555';
-		// $data['a'] = 'getRepo';
-		// $data['min'] = $dataPost->fechaInicio ? $dataPost->fechaInicio : '2000-01-01';
-		// $data['max'] = $dataPost->fechaFin ? $dataPost->fechaFin : date("Y-m-d");
-
-		// $response = $this->_curlPost($endpoint, $data);
-		// $llamadas = array();
-		// $empleado = array();
-		// $promedio = 0;
-		// if (!isset($dataPost->agenteId)) {
-		// 	foreach ($response->data as $key => $value) {
-		// 		// foreach ($value as $array => $data) {
-		// 		//iterar datos de cada una de las llamadas
-		// 		// }
-		// 		if ($value->Estatus == 'Terminada' && $value->Grabación) {
-		// 			$idAgente = 'id Agente';
-		// 			array_push($empleado, (object)['ID' => $value->$idAgente, 'NOMBRE' => $value->Agente]);
-		// 			$value->Fecha = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($value->Fecha)));
-		// 			$value->Inicio = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($value->Inicio)));
-		// 			$value->Fin = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($value->Fin)));
-		// 			array_push($llamadas, $value);
-		// 			$promedio = date('H:i:s', strtotime($value->Duración));
-		// 		}
-		// 	}
-		// 	//var_dump('promedio de tiempo en llamada', ($promedio));
-		// }
-		// if (isset($dataPost->agenteId)) {
-		// 	$idAgente = 'id Agente';
-		// 	foreach ($response->data as $key => $value) {
-		// 		// foreach ($value as $array => $data) {
-		// 		//iterar datos de cada una de las llamadas
-		// 		// }
-		// 		array_push($empleado, (object)['ID' => $value->$idAgente, 'NOMBRE' => $value->Agente]);
-		// 		if ($value->Estatus == 'Terminada' && $value->Grabación && $value->$idAgente == $dataPost->agenteId) {
-		// 			$dataPost->nombreAgente = $value->Agente;
-		// 			array_push($llamadas, $value);
-		// 			$promedio += strtotime($value->Duración) - strtotime("TODAY");
-		// 		}
-		// 	}
-		// }
-
-		// $dataView = (object)array();
-		// $dataView->llamadas = $llamadas;
-		// $dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
-		// $dataView->empleados = array_unique($empleado, SORT_REGULAR);
-		// $dataView->filterParams = $dataPost;
-		// $dataView->promedio = (count($llamadas) > 0) ? gmdate('H:i:s', ($promedio / count($llamadas))) : '00:00:00';
-
-		// $this->_loadView('Reportes llamadas', 'reportes_llamadas', '', $dataView, 'reportes_llamadas');
 	}
+	/**
+	 * Función para generar el reporte XLSX de reporte de llamadas
+	 * Recibe por metodo POST los datos del filtro
+	 * ! Deprecated method, do not use.
 
+	 */
 	public function createLlamadasXlsx()
 	{
 		$dataPost = [
@@ -1369,13 +1348,21 @@ class ReportesController extends BaseController
 		header("Cache-Control: max-age=0");
 		$writer->save("php://output");
 	}
-
+	/**
+	 * Vista para ingresar a los reportes de conavim 
+	 * Se carga con un filtro default
+	 *
+	 */
 	public function getRegistroConavim()
 	{
+		// Datos del filtro
+
 		$dataPost = [
 			'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
 			'fechaFin' => date("Y-m-d")
 		];
+		//Filtro
+
 		$documentos = $this->_plantillasModel->filtro_ordenes_proteccion($dataPost);
 		//  var_dump($documentos);
 		//  exit();
@@ -1395,9 +1382,14 @@ class ReportesController extends BaseController
 
 		$this->_loadView('Bitácora CONAVIM', 'registro_conavim', '', $dataView, 'registro_conavim');
 	}
-
+	/**
+	 * Función para realizar un filtro en reporte de registro conavim.
+	 * Recibe por metodo POST los datos del formulario del filtro
+	 *
+	 */
 	public function postRegistroConavim()
 	{
+		//Datos del filtro
 
 		$dataPost = [
 			'MUNICIPIOID' => $this->request->getPost('MUNICIPIOID'),
@@ -1419,7 +1411,6 @@ class ReportesController extends BaseController
 		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
 		$tiposOrden = $this->_plantillasModel->get_tipos_orden();
 		$documentos = $this->_plantillasModel->filtro_ordenes_proteccion($dataPost);
-
 		if (!empty($dataPost['AGENTEATENCIONID'])) {
 			foreach ($empleado as $index => $dato) {
 				//var_dump('info empleado', $dato);
@@ -1449,9 +1440,15 @@ class ReportesController extends BaseController
 
 		$this->_loadView('Registro CONAVIM', 'registro_conavim', '', $dataView, 'registro_conavim');
 	}
-
+	/**
+	 * Función para generar el reporte XLSX de conavim
+	 * Recibe por metodo POST los datos del filtro
+	 *
+	 */
 	public function createOrdenXlsx()
 	{
+		//Datos del filtro
+
 		$dataPost = [
 			'MUNICIPIOID' => $this->request->getPost('MUNICIPIOID'),
 			'AGENTEATENCIONID' => $this->request->getPost('AGENTEATENCIONID'),
@@ -1467,14 +1464,19 @@ class ReportesController extends BaseController
 			//Recorre el array y elimina los valores que nulos o vacíos
 			if (empty($valor)) unset($dataPost[$clave]);
 		}
+		//Cuando no hay filtro
+
 		if (count($dataPost) <= 0) {
 			$dataPost = [
 				'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
 				'fechaFin' => date("Y-m-d"),
 			];
 		}
+		//Generacion del filtro
+
 		$documentos = $this->_plantillasModel->filtro_ordenes_proteccion($dataPost);
 		$date = date("Y_m_d_h_i_s");
+		//Inicio del XLSX
 
 		$spreadSheet = new Spreadsheet();
 		$spreadSheet->getProperties()
@@ -1489,6 +1491,7 @@ class ReportesController extends BaseController
 			->setCategory("Reportes");
 		$sheet = $spreadSheet->getActiveSheet();
 
+		//Estilo del header
 
 		$styleHeaders = [
 			'font' => [
@@ -1532,6 +1535,7 @@ class ReportesController extends BaseController
 			],
 
 		];
+		//Estilo de las celdas
 
 		$styleCells = [
 			'font' => [
@@ -1570,6 +1574,8 @@ class ReportesController extends BaseController
 			'P', 'Q', 'R', 'S', 'T',
 			'U', 'V', 'W', 'X', 'Y', 'Z'
 		];
+		//Cabeceras
+
 		$headers = [
 			"No.",
 			"Folio",
@@ -1594,6 +1600,7 @@ class ReportesController extends BaseController
 
 		$row++;
 		$num = 1;
+		//Rellenado del XLSX
 
 		foreach ($documentos as $index => $orden) {
 			$this->separarExpID($orden->EXPEDIENTEID);
@@ -1657,9 +1664,14 @@ class ReportesController extends BaseController
 		header("Cache-Control: max-age=0");
 		$writer->save("php://output");
 	}
-
+	/**
+	 * Vista para ingresar a los reportes de candev 
+	 * Se carga con un filtro default
+	 *
+	 */
 	public function getRegistroCanDev()
 	{
+		// Datos del filtro
 
 		$dataPost = [
 			'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
@@ -1700,8 +1712,15 @@ class ReportesController extends BaseController
 		$this->_loadView('Registro Canalización y Derivación', 'registro_candev', '', $dataView, 'registro_candev');
 	}
 
+	/**
+	 * Función para realizar un filtro en reporte de candev.
+	 * Recibe por metodo POST los datos del formulario del filtro
+	 *
+	 */
 	public function postRegistroCanDev()
 	{
+		//Datos del filtro
+
 		$dataPost = [
 			'MUNICIPIOID' => $this->request->getPost('MUNICIPIOID'),
 			'AGENTEATENCIONID' => $this->request->getPost('AGENTEATENCIONID'),
@@ -1719,6 +1738,8 @@ class ReportesController extends BaseController
 		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
 		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
 		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
+		//Generacion del filtro
+
 		$dataInfo = $this->_folioModel->filtro_canalizaciones_derivaciones($dataPost);
 
 		if (!empty($dataPost['AGENTEATENCIONID'])) {
@@ -1749,9 +1770,15 @@ class ReportesController extends BaseController
 
 		$this->_loadView('Registro Canalización y Derivación', 'registro_candev', '', $dataView, 'registro_candev');
 	}
-
+	/**
+	 * Función para generar el reporte XLSX de candev
+	 * Recibe por metodo POST los datos del filtro
+	 *
+	 */
 	public function createCanaDevXlsx()
 	{
+		//Datos del filtro
+
 		$dataPost = [
 			'MUNICIPIOID' => $this->request->getPost('MUNICIPIOID'),
 			'AGENTEATENCIONID' => $this->request->getPost('AGENTEATENCIONID'),
@@ -1767,15 +1794,20 @@ class ReportesController extends BaseController
 			//Recorre el array y elimina los valores que nulos o vacíos
 			if (empty($valor)) unset($dataPost[$clave]);
 		}
+		//Cuando no hay filtro
+
 		if (count($dataPost) <= 0) {
 			$dataPost = [
 				'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
 				'fechaFin' => date("Y-m-d"),
 			];
 		}
+		//Generacion del filtro
+
 		$dataInfo = $this->_folioModel->filtro_canalizaciones_derivaciones($dataPost);
 
 		$date = date("Y_m_d_h_i_s");
+		//Inicio del XLSX
 
 		$spreadSheet = new Spreadsheet();
 		$spreadSheet->getProperties()
@@ -1789,6 +1821,7 @@ class ReportesController extends BaseController
 			->setKeywords("reporte ceeaiv cdtec fgebc")
 			->setCategory("Reportes");
 		$sheet = $spreadSheet->getActiveSheet();
+		//Estilo del header
 
 
 		$styleHeaders = [
@@ -1833,6 +1866,7 @@ class ReportesController extends BaseController
 			],
 
 		];
+		//Estilo de las celdas
 
 		$styleCells = [
 			'font' => [
@@ -1871,6 +1905,8 @@ class ReportesController extends BaseController
 			'P', 'Q', 'R', 'S', 'T',
 			'U', 'V', 'W', 'X', 'Y', 'Z'
 		];
+		//Cabeceras
+
 		$headers = [
 			"NO.",
 			"FOLIO",
@@ -1893,6 +1929,7 @@ class ReportesController extends BaseController
 
 		$row++;
 		$num = 1;
+		//Rellenado del XLSX
 
 		foreach ($dataInfo as $index => $orden) {
 			//$this->separarExpID($orden->EXPEDIENTEID);
@@ -1909,7 +1946,7 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('F' . $row,  $orden->MUNICIPIODESCR);
 			$sheet->setCellValue('G' . $row,  $orden->AGENTE_NOMBRE);
 			$sheet->setCellValue('H' . $row,  $orden->DELITOMODALIDADDESCR);
-			$sheet->setCellValue('I' . $row,  $orden->NOMBRE_VTM);		
+			$sheet->setCellValue('I' . $row,  $orden->NOMBRE_VTM);
 			$sheet->setCellValue('J' . $row,  $orden->STATUS);
 
 			$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
@@ -1952,8 +1989,15 @@ class ReportesController extends BaseController
 		header("Cache-Control: max-age=0");
 		$writer->save("php://output");
 	}
+
+	/**
+	 * Vista para ingresar a los reportes de registro de atenciones
+	 * Se carga con un filtro default
+	 *
+	 */
 	public function getRegistroAtenciones()
 	{
+		// Datos del filtro
 
 		$data = [
 			'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
@@ -1963,6 +2007,7 @@ class ReportesController extends BaseController
 
 		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
 		$rolUser = session()->get('rol')->ID;
+		//Filtro de agentes dependiendo del rol
 		if ($rolUser == 1 || $rolUser == 2 || $rolUser == 6 || $rolUser == 7 || $rolUser == 11) {
 			$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
 			//$data['AGENTEATENCIONID'] = session('ID');
@@ -1970,6 +2015,8 @@ class ReportesController extends BaseController
 			$empleado = $this->_usuariosModel->asObject()->where('ID',	session('ID'))->orderBy('NOMBRE', 'ASC')->findAll();
 			$data['AGENTEATENCIONID'] = session('ID');
 		}
+		//Filtro
+
 		$resultFilter = $this->_folioModel->filterRegistroAtenciones($data);
 		$dataView = (object)array();
 		$dataView->result = $resultFilter->result;
@@ -1979,8 +2026,15 @@ class ReportesController extends BaseController
 		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 		$this->_loadView('Registro de atenciones', 'Registro de atenciones', '', $dataView, 'registro_atenciones');
 	}
+	/**
+	 * Función para realizar un filtro en reporte de registro de atenciones.
+	 * Recibe por metodo POST los datos del formulario del filtro
+	 *
+	 */
 	public function postRegistroAtenciones()
 	{
+		//Datos del filtro
+
 		$data = [
 			'MUNICIPIOID' => $this->request->getPost('municipio'),
 			'AGENTEATENCIONID' => $this->request->getPost('agente'),
@@ -1995,6 +2049,8 @@ class ReportesController extends BaseController
 			//Recorre el array y elimina los valores que nulos o vacíos
 			if (empty($valor)) unset($data[$clave]);
 		}
+		//Para cuando se borra el filtro
+
 		if (count($data) <= 0) {
 			$data = [
 				'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
@@ -2002,6 +2058,8 @@ class ReportesController extends BaseController
 			];
 		}
 		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
+		//Generacion del filtro
+
 		$resultFilter = $this->_folioModel->filterRegistroAtenciones($data);
 		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
 		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
@@ -2023,8 +2081,15 @@ class ReportesController extends BaseController
 		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 		$this->_loadView('Registro de atenciones', 'Registro de atenciones', '', $dataView, 'registro_atenciones');
 	}
+	/**
+	 * Función para generar el reporte XLSX de registro de atenciones
+	 * Recibe por metodo POST los datos del filtro
+	 *
+	 */
 	public function createRegistroAtencionesXlsx()
 	{
+		//Datos del filtro
+
 		$data = [
 			'MUNICIPIOID' => $this->request->getPost('MUNICIPIOID'),
 			'AGENTEATENCIONID' => $this->request->getPost('AGENTEATENCIONID'),
@@ -2037,16 +2102,22 @@ class ReportesController extends BaseController
 		];
 		$date = date("Y_m_d_h_i_s");
 		foreach ($data as $clave => $valor) {
+			//Recorre el array y elimina los valores que nulos o vacíos
+
 			if (empty($valor)) unset($data[$clave]);
 		}
+		//Cuando no hay filtro
+
 		if (count($data) <= 0) {
 			$data = [
 				'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
 				'fechaFin' => date("Y-m-d"),
 			];
 		}
+		//Generacion del filtro
 
 		$resultFilter = $this->_folioModel->filterRegistroAtenciones($data);
+		//Inicio del XLSX
 
 		$spreadSheet = new Spreadsheet();
 		$spreadSheet->getProperties()
@@ -2174,6 +2245,7 @@ class ReportesController extends BaseController
 
 		$row++;
 
+		//Rellenado del XLSX
 
 		foreach ($resultFilter->result as $index => $folio) {
 
@@ -2286,12 +2358,21 @@ class ReportesController extends BaseController
 		$writer->save("php://output");
 	}
 
+	/**
+	 * Vista para ingresar a los reportes de ceeiav 
+	 * Se carga con un filtro default
+	 *
+	 */
 	public function getComisionEstatal()
 	{
+		// Datos del filtro
+
 		$dataPost = [
 			'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
 			'fechaFin' => date("Y-m-d")
 		];
+		//Filtro
+
 		$documentos = $this->_plantillasModel->filtro_comision_estatal($dataPost);
 		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
 		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
@@ -2307,9 +2388,14 @@ class ReportesController extends BaseController
 
 		$this->_loadView('Registro CEEIAV', 'registro_ceeiav', '', $dataView, 'registro_ceeiav');
 	}
-
+	/**
+	 * Función para realizar un filtro en reporte de ceeiav.
+	 * Recibe por metodo POST los datos del formulario del filtro
+	 *
+	 */
 	public function postComisionEstatal()
 	{
+		//Datos del filtro
 
 		$dataPost = [
 			'MUNICIPIOID' => $this->request->getPost('MUNICIPIOID'),
@@ -2327,6 +2413,8 @@ class ReportesController extends BaseController
 		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
 		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
 		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
+		//Generacion del filtro
+
 		$documentos = $this->_plantillasModel->filtro_comision_estatal($dataPost);
 
 		if (!empty($dataPost['AGENTEATENCIONID'])) {
@@ -2357,9 +2445,15 @@ class ReportesController extends BaseController
 
 		$this->_loadView('Registro CEEIAV', 'registro_ceeiav', '', $dataView, 'registro_ceeiav');
 	}
-
+	/**
+	 * Función para generar el reporte XLSX de ceeiav
+	 * Recibe por metodo POST los datos del filtro
+	 *
+	 */
 	public function createComisionEstatalXlsx()
 	{
+		//Datos del filtro
+
 		$dataPost = [
 			'MUNICIPIOID' => $this->request->getPost('MUNICIPIOID'),
 			'AGENTEATENCIONID' => $this->request->getPost('AGENTEATENCIONID'),
@@ -2374,12 +2468,16 @@ class ReportesController extends BaseController
 			//Recorre el array y elimina los valores que nulos o vacíos
 			if (empty($valor)) unset($dataPost[$clave]);
 		}
+		//Cuando no hay filtro
+
 		if (count($dataPost) <= 0) {
 			$dataPost = [
 				'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
 				'fechaFin' => date("Y-m-d"),
 			];
 		}
+		//Generacion del filtro
+
 		$documentos = $this->_plantillasModel->filtro_comision_estatal($dataPost);
 
 		$date = date("Y_m_d_h_i_s");
@@ -2397,7 +2495,7 @@ class ReportesController extends BaseController
 			->setCategory("Reportes");
 		$sheet = $spreadSheet->getActiveSheet();
 
-
+		//Estilos y caracteristicas
 		$styleHeaders = [
 			'font' => [
 				'bold' => true,
@@ -2499,6 +2597,8 @@ class ReportesController extends BaseController
 
 		$row++;
 		$num = 1;
+		//Rellenado del XLSX
+
 		foreach ($documentos as $index => $orden) {
 			$this->separarExpID($orden->EXPEDIENTEID);
 
@@ -2507,7 +2607,7 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('A2', "REGISTRO DE CANALIZACIONES A LA COMISIÓN EJECUTIVA ESTATAL DE ATENCIÓN INTEGRAL A VÍCTIMAS");
 
 			$sheet->setCellValue('A' . $row, $num);
-			$sheet->setCellValue('B' . $row, $orden->FOLIOID."/".$orden->ANO);
+			$sheet->setCellValue('B' . $row, $orden->FOLIOID . "/" . $orden->ANO);
 			$sheet->setCellValue('C' . $row, $this->formatFecha($orden->FECHAFIRMA));
 			$sheet->setCellValue('D' . $row, $this->separarExpID($orden->EXPEDIENTEID));
 			$sheet->setCellValue('E' . $row, 'CENTRO DE DENUNCIA TECNÓLOGICA');
@@ -2557,7 +2657,11 @@ class ReportesController extends BaseController
 		header("Cache-Control: max-age=0");
 		$writer->save("php://output");
 	}
-
+	/**
+	 * Función CURL GET para el serivicio de videollamada 
+	 *
+	 * @param  mixed $endpoint
+	 */
 	private function _curlGetService($endpoint)
 	{
 		$ch = curl_init();
@@ -2589,7 +2693,12 @@ class ReportesController extends BaseController
 
 		return json_decode($result);
 	}
-
+	/**
+	 * Función CURL POST a Justicia sin encriptacion
+	 *
+	 * @param  mixed $endpoint
+	 * @param  mixed $data
+	 */
 	private function _curlPost($endpoint, $data)
 	{
 		$ch = curl_init();
@@ -2621,7 +2730,16 @@ class ReportesController extends BaseController
 
 		return json_decode($result);
 	}
-
+	
+	/**
+	 * Función para cargar cualquier vista en cualquier función.
+	 *
+	 * @param  mixed $title
+	 * @param  mixed $menu
+	 * @param  mixed $submenu
+	 * @param  mixed $data
+	 * @param  mixed $view
+	 */
 	private function _loadView($title, $menu, $submenu, $data, $view)
 	{
 		$data2 = [
@@ -2631,18 +2749,32 @@ class ReportesController extends BaseController
 
 		echo view("admin/dashboard/reportes/$view", $data2);
 	}
-
+	/**
+	 * Función para revisar los permisos que tienen los usuarios y poder restringir el acceso
+	 *
+	 * @param  mixed $permiso
+	 */
 	private function permisos($permiso)
 	{
 		return in_array($permiso, session('permisos'));
 	}
-
+	
+	/**
+	 * Funcion para separar el expediente en formato SEJAp
+	 *
+	 * @param  mixed $expId
+	 */
 	public function separarExpID($expId)
 	{
 		$array = str_split($expId);
 		return $array[2] . $array[4] . $array[5] . '-' . $array[6] . $array[7] . $array[8] . $array[9] . '-' . $array[10] . $array[11] . $array[12] . $array[13] . $array[14];
 	}
-
+	
+	/**
+	 * Funcion para formatear fecha en d/m/y
+	 *
+	 * @param  mixed $date
+	 */
 	public function formatFecha($date)
 	{
 		return date("d/m/Y", strtotime($date));

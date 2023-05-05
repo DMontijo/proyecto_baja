@@ -2021,7 +2021,6 @@ class DashboardController extends BaseController
 	 * @param  mixed $data
 	 * @param  mixed $view
 	 */
-	// Load a dashboard view.
 	private function _loadView($title, $menu, $submenu, $data, $view)
 	{
 		$data2 = [
