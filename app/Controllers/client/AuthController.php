@@ -19,7 +19,10 @@ class AuthController extends BaseController
 		$this->_denunciantesModel = new DenunciantesModel();
 		$this->_sesionesDenunciantesModel = new SesionesDenunciantesModel();
 	}
-
+	/**
+	 * Vista de Login-Denuncia
+	 * Autentica que no tenga sesion iniciada, y si tiene sesion lo redirige al dashboard
+	 */
 	public function index()
 	{
 		if ($this->_isAuth()) {
@@ -29,7 +32,11 @@ class AuthController extends BaseController
 			$this->_loadView('Login', [], 'index');
 		}
 	}
-
+	/**
+	 * Función para autenticar el ingreso a la plataforma desde el denunciante
+	 * Recibe por metodo POST el correo y contraseña
+	 *
+	 */
 	public function login_auth()
 	{
 		$session = session();
@@ -37,18 +44,28 @@ class AuthController extends BaseController
 		$password = $this->request->getPost('password');
 		$email = trim($email);
 		$password = trim($password);
+		// Encuentra un usuario con ese correo
+
 		$data = $this->_denunciantesModel->where('CORREO', $email)->first();
 		if ($data) {
+			// Verifica que no tenga sesiones activas
+
 			$control_session = $this->_sesionesDenunciantesModel->asObject()->where('ID_DENUNCIANTE', $data['DENUNCIANTEID'])->where('ACTIVO', 1)->first();
 			if ($control_session) {
 				return redirect()->to(base_url('/denuncia'))->with('message_session', 'Ya tienes sesiones activas, cierralas para continuar.')->with('id',  $data['DENUNCIANTEID']);
 			}
+			// Valida la contraseña ingresada con la de su usuario
+
 			if (validatePassword($password, $data['PASSWORD'])) {
 				$data['logged_in'] = TRUE;
 				$data['type'] = 'user';
 				$data['uuid'] = uniqid();
+				//Ingresa en variable session los datos del usuario
+
 				$session->set($data);
 				$agent = $this->request->getUserAgent();
+				//Datos para guardar en la tabla de sesiones
+
 				$sesion_data = [
 					'ID' => $data['uuid'],
 					'ID_DENUNCIANTE' => $data['DENUNCIANTEID'],
@@ -71,7 +88,10 @@ class AuthController extends BaseController
 			return redirect()->back();
 		}
 	}
-
+	/**
+	 * Función para cerrar sesión desde el dashboard de denuncia
+	 *
+	 */
 	public function logout()
 	{
 		$session = session();
@@ -93,6 +113,11 @@ class AuthController extends BaseController
 		$session->destroy();
 		return redirect()->to(base_url());
 	}
+	/**
+	 * Función para cerrar todas las sesiones activas del denunciante al momento de querer ingresar a la plataforma
+	 * Recibe por metodo POST el id del denunciante
+	 *
+	 */
 	public function cerrar_sesiones()
 	{
 		$session = session();
@@ -108,6 +133,11 @@ class AuthController extends BaseController
 		}
 	}
 
+	/**
+	 * Vista para cambiar la contraseña dentro de la plataforma
+	 * Manda por metodo GET los datos del denunciante
+	 *
+	 */
 	public function change_password()
 	{
 		$id = $this->request->getGet('id');
@@ -121,7 +151,11 @@ class AuthController extends BaseController
 			$this->_loadView('Cambiar contraseña', $data, 'change_password');
 		}
 	}
-
+	/**
+	 * Función para cambiar la contraseña dentro de la plataforma
+	 * Manda por metodo POST el id del denunciante y la nueva contraseña
+	 *
+	 */
 	public function change_password_post()
 	{
 		$id = $this->request->getPost('id');
@@ -130,6 +164,10 @@ class AuthController extends BaseController
 		return redirect()->to(base_url('/denuncia'))->with('message_success', 'Contraseña modificada con éxito.');
 	}
 
+	/**
+	 * Función para mandar por email o sms la nueva contraseña
+	 *
+	 */
 	public function sendEmailChangePassword()
 	{
 		$password = $this->_generatePassword(6);
@@ -147,12 +185,14 @@ class AuthController extends BaseController
 		// if ($email->send() && $sendSMS == "") {
 		if ($sendSMS == "") {
 			return redirect()->to(base_url('/denuncia'))->with('message_success', 'Verifica tu nueva contraseña en tus SMS.');
-		}else{
+		} else {
 			return redirect()->to(base_url('/denuncia'))->with('message_error', $sendSMS);
-
 		}
 	}
-
+	/**
+	 * Función para verifica si el usuario ha iniciado sesión y es un usuario. 
+	 *
+	 */
 	private function _isAuth()
 	{
 		if (session('logged_in') && session('type') == 'user') {
@@ -160,16 +200,27 @@ class AuthController extends BaseController
 		};
 	}
 
+	/**
+	 * Funcíon para generar una contraseña aleatoria.
+	 * Como parametro se recibe el tamaño de la contraseña
+	 *
+	 * @param  mixed $length
+	 */
 	private function _generatePassword($length)
 	{
 		$password = "";
 		$pattern = "1234567890abcdefghijklmnopqrstuvwxyz";
 		$max = strlen($pattern) - 1;
 		for ($i = 0; $i < $length; $i++) {
+			//Concatena los pattern de modo aleatorio
 			$password .= substr($pattern, mt_rand(0, $max), 1);
 		}
 		return $password;
 	}
+	/**
+	 * Función para devolver la dirección IP del cliente que está haciendo la petición HTTP
+	 *
+	 */
 	private function _get_client_ip()
 	{
 		$ipaddress = '';
@@ -197,7 +248,10 @@ class AuthController extends BaseController
 		endif;
 		return $ipaddress;
 	}
-
+	/**
+	 * Función para devolver la ip publica del cliente que está haciendo la petición HTTP
+	 *
+	 */
 	private function _get_public_ip()
 	{
 		try {
@@ -208,7 +262,14 @@ class AuthController extends BaseController
 			$externalIp = '127.0.0.1';
 		}
 		return $externalIp;
-	}
+	}	
+	/**
+	 * Función para cargar cualquier vista en cualquier función.
+	 *
+	 * @param  mixed $title
+	 * @param  mixed $data
+	 * @param  mixed $view
+	 */
 	private function _loadView($title, $data, $view)
 	{
 		$data = [
@@ -216,7 +277,14 @@ class AuthController extends BaseController
 			'body_data' => $data
 		];
 		echo view("client/auth/$view", $data);
-	}
+	}	
+	/**
+	 * Función para enviar mensajes SMS
+	 *
+	 * @param  mixed $tipo
+	 * @param  mixed $celular
+	 * @param  mixed $mensaje
+	 */
 	public function sendSMS($tipo, $celular, $mensaje)
 	{
 
