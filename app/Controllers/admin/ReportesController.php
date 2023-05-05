@@ -1107,246 +1107,212 @@ class ReportesController extends BaseController
 	/**
 	 * Función para generar el reporte XLSX de reporte de llamadas
 	 * Recibe por metodo POST los datos del filtro
-	 * ! Deprecated method, do not use.
 
 	 */
 	public function createLlamadasXlsx()
 	{
-		$dataPost = [
-			'fechaInicio' => $this->request->getPost('fechaInicio'),
-			'fechaFin' => $this->request->getPost('fechaFin'),
-			'horaInicio' => $this->request->getPost('horaInicio'),
-			'horaFin' => $this->request->getPost('horaFin'),
-			'agenteId' => $this->request->getPost('agenteId'),
+		//Datos del formulario
+		$dataPost = (object) [
+			'sessionStartedAt' => $this->request->getPost('fechaInicio')  != '' ? date('Y-m-d\TH:i:s\Z', strtotime($this->request->getPost('fechaInicio') . '+7 hours')) : date('Y-m-d\TH:i:s\Z', strtotime('2000-01-01' . '+7 hours')),
+			'sessionFinishedAt' => $this->request->getPost('fechaFin') != '' ? date('Y-m-d\TH:i:s\Z', strtotime($this->request->getPost('fechaFin') . '+7 hours')) : date('Y-m-d\TH:i:s\Z'),
+			'agentUuid' => $this->request->getPost('agentUuid'),
 		];
+
+		//Conexion al servicio de videollamada
+		$endpoint = $this->urlApi . "call-records?pageSize=0&agentUuid=" . $dataPost->agentUuid . '&sessionStartedFrom=' . $dataPost->sessionStartedAt . '&sessionStartedTo=' . $dataPost->sessionFinishedAt;
+		$response = $this->_curlGetService($endpoint);
+		$endpointAll = $this->urlApi . "call-records?pageSize=0";
+		$responseAll = $this->_curlGetService($endpointAll);
 		$date = date("Y_m_d_h_i_s");
 
-		foreach ($dataPost as $clave => $valor) {
-			//Recorre el array y elimina los valores que nulos o vacíos
-			if (empty($valor)) unset($dataPost[$clave]);
-		}
-		if (count($dataPost) <= 0) {
-			$dataPost = [
-				'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
-				'fechaFin' => date("Y-m-d"),
+		if ($responseAll->statusCode == "success") {
+			$dataView = (object)array();
+			$empleado = array();
+			$llamadas = array();
+
+			// Filtro
+			foreach ($responseAll->data as $key => $conexionAll) {
+				array_push($empleado, (object)['ID' => $conexionAll->agentConnectionId->agent->uuid, 'NOMBRE' => $conexionAll->agentConnectionId->agent->fullName]);
+			}
+			if ($response != null) {
+				foreach ($response->data as $key => $conexion) {
+
+					array_push($llamadas, $conexion);
+				}
+			}
+			//Inicio de XLSX
+			$spreadSheet = new Spreadsheet();
+			$spreadSheet->getProperties()
+				->setCreator("Fiscalía General del Estado de Baja California")
+				->setLastModifiedBy("Fiscalía General del Estado de Baja California")
+				->setTitle("REGISTRO_LLAMADAS " . $date)
+				->setSubject("REGISTRO_LLAMADAS " . $date)
+				->setDescription(
+					"El presente documento fue generado por el Centro de Denuncia Tecnológica de la Fiscalía General del Estado de Baja California."
+				)
+				->setKeywords("registro llamadas cdtec fgebc")
+				->setCategory("Reportes");
+			$sheet = $spreadSheet->getActiveSheet();
+			//Estilos y caracteristicas
+			$styleHeaders = [
+				'font' => [
+					'bold' => true,
+					'color' => ['argb' => 'FFFFFF'],
+					'name' => 'Arial',
+					'size' => '10'
+				],
+				'alignment' => [
+					'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+					'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+				],
+				'borders' => [
+					'allBorders' => [
+						'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+						'color' => ['argb' => '000000'],
+					],
+				],
+				'fill' => [
+					'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_GRADIENT_LINEAR,
+					'rotation' => 90,
+					'startColor' => [
+						'argb' => '511229',
+					],
+					'endColor' => [
+						'argb' => '511229',
+					],
+				],
 			];
-		}
 
-		$endpoint = 'https://videodenunciaserver1.fgebc.gob.mx/api/vc';
-		$data = array();
-		$data['u'] = '24';
-		$data['token'] = '198429b7cc8a2a5733d97bc13153227dd5017555';
-		$data['a'] = 'getRepo';
-		$data['min'] = isset($dataPost['fechaInicio']) ? $dataPost['fechaInicio'] : '2000-01-01';
-		$data['max'] = isset($dataPost['fechaFin']) ? $dataPost['fechaFin'] : date("Y-m-d");
-
-		$response = $this->_curlPost($endpoint, $data);
-		$llamadas = array();
-		$promedio = 0;
-		if (!isset($dataPost['agenteId'])) {
-			foreach ($response->data as $key => $value) {
-				// foreach ($value as $array => $data) {
-				//iterar datos de cada una de las llamadas
-				// }
-				if ($value->Estatus == 'Terminada' && $value->Grabación) {
-					$idAgente = 'id Agente';
-					$value->Fecha = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($value->Fecha)));
-					$value->Inicio = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($value->Inicio)));
-					$value->Fin = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($value->Fin)));
-					array_push($llamadas, $value);
-					$promedio = date('H:i:s', strtotime($value->Duración));
-				}
-			}
-			//var_dump('promedio de tiempo en llamada', ($promedio));
-		}
-		if (isset($dataPost['agenteId'])) {
-			$idAgente = 'id Agente';
-			foreach ($response->data as $key => $value) {
-				// foreach ($value as $array => $data) {
-				//iterar datos de cada una de las llamadas
-				// }
-				if ($value->Estatus == 'Terminada' && $value->Grabación && $value->$idAgente == $dataPost['agenteId']) {
-					//array_push($empleado, (object)['ID'=>$value->$idAgente, 'NOMBRE' => $value->Agente]);
-					$value->Fecha = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($value->Fecha)));
-					$value->Inicio = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($value->Inicio)));
-					$value->Fin = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($value->Fin)));
-					array_push($llamadas, $value);
-					$promedio += strtotime($value->Duración) - strtotime("TODAY");
-				}
-			}
-		}
-		$spreadSheet = new Spreadsheet();
-		$spreadSheet->getProperties()
-			->setCreator("Fiscalía General del Estado de Baja California")
-			->setLastModifiedBy("Fiscalía General del Estado de Baja California")
-			->setTitle("REGISTRO_LLAMADAS " . $date)
-			->setSubject("REGISTRO_LLAMADAS " . $date)
-			->setDescription(
-				"El presente documento fue generado por el Centro de Denuncia Tecnológica de la Fiscalía General del Estado de Baja California."
-			)
-			->setKeywords("registro llamadas cdtec fgebc")
-			->setCategory("Reportes");
-		$sheet = $spreadSheet->getActiveSheet();
-
-
-		$styleHeaders = [
-			'font' => [
-				'bold' => true,
-				'color' => ['argb' => 'FFFFFF'],
-				'name' => 'Arial',
-				'size' => '10'
-			],
-			'alignment' => [
-				'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
-				'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
-			],
-			'borders' => [
-				'allBorders' => [
-					'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+			$styleCab = [
+				'font' => [
+					'bold' => true,
 					'color' => ['argb' => '000000'],
+					'name' => 'Arial',
+					'size' => '12'
 				],
-			],
-			'fill' => [
-				'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_GRADIENT_LINEAR,
-				'rotation' => 90,
-				'startColor' => [
-					'argb' => '511229',
+				'alignment' => [
+					'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+
 				],
-				'endColor' => [
-					'argb' => '511229',
-				],
-			],
-		];
 
-		$styleCab = [
-			'font' => [
-				'bold' => true,
-				'color' => ['argb' => '000000'],
-				'name' => 'Arial',
-				'size' => '12'
-			],
-			'alignment' => [
-				'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+			];
 
-			],
-
-		];
-
-		$styleCells = [
-			'font' => [
-				'bold' => false,
-				'color' => ['argb' => '000000'],
-				'name' => 'Arial',
-				'size' => '10'
-			],
-			'alignment' => [
-				'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
-				'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
-			],
-			'borders' => [
-				'allBorders' => [
-					'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+			$styleCells = [
+				'font' => [
+					'bold' => false,
 					'color' => ['argb' => '000000'],
+					'name' => 'Arial',
+					'size' => '10'
 				],
-			],
-			'fill' => [
-				'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_GRADIENT_LINEAR,
-				'rotation' => 90,
-				'startColor' => [
-					'argb' => 'FFFFFF',
+				'alignment' => [
+					'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+					'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
 				],
-				'endColor' => [
-					'argb' => 'FFFFFF',
+				'borders' => [
+					'allBorders' => [
+						'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+						'color' => ['argb' => '000000'],
+					],
 				],
-			],
-		];
-		$row = 4;
+				'fill' => [
+					'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_GRADIENT_LINEAR,
+					'rotation' => 90,
+					'startColor' => [
+						'argb' => 'FFFFFF',
+					],
+					'endColor' => [
+						'argb' => 'FFFFFF',
+					],
+				],
+			];
+			$row = 4;
 
-		$columns = [
-			'A', 'B', 'C', 'D', 'E',
-			'F', 'G', 'H', 'I', 'J',
-			'K', 'L', 'M', 'N', 'O',
-			'P', 'Q', 'R', 'S', 'T',
-			'U', 'V', 'W', 'X', 'Y', 'Z'
-		];
-		$headers = [
-			"Fecha",
-			"Folio",
-			"Inicio",
-			"Fin",
-			"Agente",
-			"Cliente",
-			"Espera",
-			"Duración",
-			"Estatus"
-		];
+			$columns = [
+				'A', 'B', 'C', 'D', 'E',
+				'F', 'G', 'H', 'I', 'J',
+				'K', 'L', 'M', 'N', 'O',
+				'P', 'Q', 'R', 'S', 'T',
+				'U', 'V', 'W', 'X', 'Y', 'Z'
+			];
+			$headers = [
+				"Fecha",
+				"Folio",
+				"Inicio",
+				"Fin",
+				"Agente",
+				"Cliente",
+				// "Espera",
+				// "Duración",
+				// "Estatus"
+			];
 
-		for ($i = 0; $i < count($headers); $i++) {
-			$sheet->setCellValue($columns[$i] . 4, $headers[$i]);
-			$sheet->getColumnDimension($columns[$i])->setAutoSize(true);
-		}
-
-		$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
-
-		$row++;
-		$idAgente = 'id Agente';
-
-		foreach ($llamadas as $index => $llamada) {
-
-			$sheet->setCellValue('A1', "CENTRO TELEFÓNICO Y EN LÍNEA DE ATENCIÓN Y ORIENTACIÓN TEMPRANA");
-			$sheet->setCellValue('A2', "REGISTRO ESTATAL DE PRE DENUNCIA TELEFÓNICA Y EN LÍNEA");
-
-
-			$sheet->setCellValue('A' . $row, $llamada->Fecha);
-			$sheet->setCellValue('B' . $row, $llamada->Folio);
-			$sheet->setCellValue('C' . $row, $llamada->Inicio);
-			$sheet->setCellValue('D' . $row, $llamada->Fin);
-			$sheet->setCellValue('E' . $row, $llamada->Agente);
-			$sheet->setCellValue('F' . $row, $llamada->Cliente);
-			$sheet->setCellValue('G' . $row, $llamada->Espera);
-			$sheet->setCellValue('H' . $row, $llamada->Duración);
-			$sheet->setCellValue('I' . $row, $llamada->Estatus);
-
-			$sheet->setCellValue('J' . $row, '');
+			for ($i = 0; $i < count($headers); $i++) {
+				$sheet->setCellValue($columns[$i] . 4, $headers[$i]);
+				$sheet->getColumnDimension($columns[$i])->setAutoSize(true);
+			}
 
 			$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
 
-			if (!(($row - 4) >= count($llamadas))) $row++;
+			$row++;
+			$idAgente = 'id Agente';
+			//Llenado
+			foreach ($llamadas as $index => $llamada) {
+
+				$sheet->setCellValue('A1', "CENTRO TELEFÓNICO Y EN LÍNEA DE ATENCIÓN Y ORIENTACIÓN TEMPRANA");
+				$sheet->setCellValue('A2', "REGISTRO ESTATAL DE PRE DENUNCIA TELEFÓNICA Y EN LÍNEA");
+
+
+				$sheet->setCellValue('A' . $row, date('d-m-Y', strtotime($llamada->sessionStartedAt)));
+				$sheet->setCellValue('B' . $row, $llamada->guestConnectionId->folio);
+				$sheet->setCellValue('C' . $row, date('d-m-Y H:i:s', strtotime($llamada->sessionStartedAt)));
+				$sheet->setCellValue('D' . $row, $llamada->sessionFinishedAt != null ? date('d-m-Y H:i:s', strtotime($llamada->sessionFinishedAt)) : '-');
+				$sheet->setCellValue('E' . $row, $llamada->agentConnectionId->agent->fullName);
+				$sheet->setCellValue('F' . $row, $llamada->guestConnectionId->uuid->details->NOMBRE . ' ' . $llamada->guestConnectionId->uuid->details->APELLIDO_PATERNO);
+				// $sheet->setCellValue('G' . $row, $llamada->Espera);
+				// $sheet->setCellValue('H' . $row, $llamada->Duración);
+				// $sheet->setCellValue('I' . $row, $llamada->Estatus);
+
+				$sheet->setCellValue('G' . $row, '');
+
+				$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
+
+				if (!(($row - 4) >= count($llamadas))) $row++;
+			}
+			$sheet->getStyle('A1:F1')->applyFromArray($styleCab);
+			$sheet->getStyle('A2:F2')->applyFromArray($styleCab);
+
+			$sheet->getStyle('A4:F4')->applyFromArray($styleHeaders);
+			$sheet->getStyle('A5:F' . $row)->applyFromArray($styleCells);
+
+			$sheet->mergeCells('A1:F1');
+			$sheet->mergeCells('A2:F2');
+			$drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+			$drawing->setName('FGEBC');
+			$drawing->setDescription('LOGO');
+			$drawing->setPath(FCPATH . 'assets/img/FGEBC_recortada.png'); // put your path and image here
+			$drawing->setHeight(60);
+			$drawing->setCoordinates('A1');
+			$drawing->setOffsetX(10);
+			$drawing->setWorksheet($spreadSheet->getActiveSheet());
+			// $drawing2 = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+			// $drawing2->setName('FGEBC');
+			// $drawing2->setDescription('LOGO');
+			// $drawing2->setPath(FCPATH . 'assets/img/logo_sejap.jpg'); // put your path and image here
+			// $drawing2->setHeight(45);
+			// $drawing2->setCoordinates('O1');
+			// $drawing2->setOffsetX(-30);
+			// $drawing2->setWorksheet($spreadSheet->getActiveSheet());
+			// $drawing->setOffsetX(110);
+			// $drawing->setRotation(25);
+			$writer = new Xlsx($spreadSheet);
+
+			$filename = urlencode("Registro_Llamadas_" . $date . ".xlsx");
+			header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+			header("Content-Disposition: attachment; filename=\"$filename\"");
+			header("Content-Transfer-Encoding: binary");
+			header("Cache-Control: max-age=0");
+			$writer->save("php://output");
 		}
-		$sheet->getStyle('A1:R1')->applyFromArray($styleCab);
-		$sheet->getStyle('A2:R2')->applyFromArray($styleCab);
-
-		$sheet->getStyle('A4:R4')->applyFromArray($styleHeaders);
-		$sheet->getStyle('A5:R' . $row)->applyFromArray($styleCells);
-
-		$sheet->mergeCells('A1:R1');
-		$sheet->mergeCells('A2:R2');
-		$drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
-		$drawing->setName('FGEBC');
-		$drawing->setDescription('LOGO');
-		$drawing->setPath(FCPATH . 'assets/img/FGEBC_recortada.png'); // put your path and image here
-		$drawing->setHeight(60);
-		$drawing->setCoordinates('A1');
-		$drawing->setOffsetX(10);
-		$drawing->setWorksheet($spreadSheet->getActiveSheet());
-		// $drawing2 = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
-		// $drawing2->setName('FGEBC');
-		// $drawing2->setDescription('LOGO');
-		// $drawing2->setPath(FCPATH . 'assets/img/logo_sejap.jpg'); // put your path and image here
-		// $drawing2->setHeight(45);
-		// $drawing2->setCoordinates('O1');
-		// $drawing2->setOffsetX(-30);
-		// $drawing2->setWorksheet($spreadSheet->getActiveSheet());
-		// $drawing->setOffsetX(110);
-		// $drawing->setRotation(25);
-		$writer = new Xlsx($spreadSheet);
-
-		$filename = urlencode("Registro_Llamadas_" . $date . ".xlsx");
-		header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-		header("Content-Disposition: attachment; filename=\"$filename\"");
-		header("Content-Transfer-Encoding: binary");
-		header("Cache-Control: max-age=0");
-		$writer->save("php://output");
 	}
 	/**
 	 * Vista para ingresar a los reportes de conavim 
@@ -2730,7 +2696,7 @@ class ReportesController extends BaseController
 
 		return json_decode($result);
 	}
-	
+
 	/**
 	 * Función para cargar cualquier vista en cualquier función.
 	 *
@@ -2758,7 +2724,7 @@ class ReportesController extends BaseController
 	{
 		return in_array($permiso, session('permisos'));
 	}
-	
+
 	/**
 	 * Funcion para separar el expediente en formato SEJAp
 	 *
@@ -2769,7 +2735,7 @@ class ReportesController extends BaseController
 		$array = str_split($expId);
 		return $array[2] . $array[4] . $array[5] . '-' . $array[6] . $array[7] . $array[8] . $array[9] . '-' . $array[10] . $array[11] . $array[12] . $array[13] . $array[14];
 	}
-	
+
 	/**
 	 * Funcion para formatear fecha en d/m/y
 	 *
