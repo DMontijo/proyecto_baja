@@ -1753,11 +1753,11 @@ class DashboardController extends BaseController
 		$data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->like('TIPOEXPEDIENTECLAVE', 'NUC')->orLike('TIPOEXPEDIENTECLAVE', 'NAC')->orLike('TIPOEXPEDIENTECLAVE', 'RAC')->findAll();
 		$data->situacionVehiculo = $this->_situacionVehiculoModel->asObject()->findAll();
 		$data->empleados =  $this->_usuariosModel->asObject()
-		->select('USUARIOS.*, SESIONES.ACTIVO')
-		->join('SESIONES','USUARIOS.ID= SESIONES.ID_USUARIO')
-		->where('ROLID', 3)
-		->where('ACTIVO', 1)
-		->findAll();		
+			->select('USUARIOS.*, SESIONES.ACTIVO')
+			->join('SESIONES', 'USUARIOS.ID= SESIONES.ID_USUARIO')
+			->where('ROLID', 3)
+			->where('ACTIVO', 1)
+			->findAll();
 		$data->folioDoc = $this->_folioDocModel->asObject()->where('FOLIOID', $data->folio)->first();
 		$data->distribuidorVehiculo = $this->_vehiculoDistribuidorModel->asObject()->findAll();
 		$data->marcaVehiculo = $this->_vehiculoMarcaModel->asObject()->findAll();
@@ -1817,28 +1817,18 @@ class DashboardController extends BaseController
 		$year = date('Y');
 		$folioM = $this->_folioModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->first();
 		$denunciante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', $folioM->DENUNCIANTEID)->first();
-		// $email = \Config\Services::email();
-		// $email->setTo($to);
-		// $email->setSubject('Folio atendido');
-		// $body = view('email_template/folio_der_can_email_template.php', ['folio' => $folio, 'motivo' => $motivo]);
-		// $email->setMessage($body);
-		// $email->setAltMessage('EL FOLIO ' . $folio . ' FUE ' . $motivo == 'ATENDIDA' ? 'CANALIZADO' : $motivo);
-		$mensaje = 'EL FOLIO ' . $folio . ' FUE ' . ($motivo == 'ATENDIDA' ? 'CANALIZADO' : $motivo);
-		$sendSMS = $this->sendSMS("Folio atendido", $denunciante->TELEFONO, $mensaje);
+		$email = \Config\Services::email();
+		$email->setTo($to);
+		$email->setSubject('Folio atendido');
+		$body = view('email_template/folio_der_can_email_template.php', ['folio' => $folio, 'motivo' => $motivo]);
+		$email->setMessage($body);
+		$email->setAltMessage('EL FOLIO ' . $folio . ' FUE ' . $motivo == 'ATENDIDA' ? 'CANALIZADO' : $motivo);
 
-		// if ($email->send()) {
-			if ($sendSMS == "") {
-				return true;
-			}else{
-				return false;
-			}
-		// } else {
-			// if ($sendSMS == "") {
-			// 	return true;
-			// } else {
-			// 	return false;
-			// }
-		// }
+		if ($email->send()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	private function _sendEmailExpediente($to, $folio, $expedienteId)
@@ -1862,17 +1852,17 @@ class DashboardController extends BaseController
 		$sendSMS = $this->sendSMS("Nuevo expediente", $denunciante->TELEFONO, 'Notificaciones FGE/Estimado usuario, tu numero de expediente es:' . $expediente_guiones . '/' . $tipoExpediente->TIPOEXPEDIENTECLAVE);
 
 		// if ($email->send()) {
-			if ($sendSMS == "") {
-				return true;
-			}else{
-				return false;
-			}
+		if ($sendSMS == "") {
+			return true;
+		} else {
+			return false;
+		}
 		// } else {
-			// if ($sendSMS == "") {
-			// 	return true;
-			// } else {
-			// 	return false;
-			// }
+		// if ($sendSMS == "") {
+		// 	return true;
+		// } else {
+		// 	return false;
+		// }
 		// }
 	}
 
