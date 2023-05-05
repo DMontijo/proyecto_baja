@@ -68,30 +68,6 @@
 										</select>
 									</div> -->
 								</div>
-								<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-									<label for="denuncia_tel_da" class="form-label font-weight-bold">¿La denuncia fue télefonica?</label>
-									<br>
-									<div class="form-check form-check-inline">
-										<input class="form-check-input" type="radio" name="denuncia_tel_da" value="S" required>
-										<label class="form-check-label" for="flexRadioDefault1">SI</label>
-									</div>
-									<div class="form-check form-check-inline">
-										<input class="form-check-input" type="radio" name="denuncia_tel_da" value="N" required>
-										<label class="form-check-label" for="flexRadioDefault2">NO</label>
-									</div>
-								</div>
-								<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-									<label for="denuncia_con_datos_origen_da" class="form-label font-weight-bold">¿La denuncia fue con datos de origen?</label>
-									<br>
-									<div class="form-check form-check-inline">
-										<input class="form-check-input" type="radio" name="denuncia_con_datos_origen_da" value="S" required>
-										<label class="form-check-label" for="flexRadioDefault1">SI</label>
-									</div>
-									<div class="form-check form-check-inline">
-										<input class="form-check-input" type="radio" name="denuncia_con_datos_origen_da" value="N" required>
-										<label class="form-check-label" for="flexRadioDefault2">NO</label>
-									</div>
-								</div>
 								<div class="row mb-2">
 									<div id="derivaciones_container" class="col-12 d-none">
 										<label for="derivaciones" class="form-label font-weight-bold">Derivaciones</label>
@@ -279,9 +255,6 @@
 					btnFinalizar.disabled = false;
 
 				} else {
-					var denuncia_tel = document.querySelector('input[name="denuncia_tel_da"]:checked');
-					var denuncia_con_datos_origen = document.querySelector('input[name="denuncia_con_datos_origen_da"]:checked');
-
 					data = {
 						'folio': inputFolio.value,
 						'year': year_select.value,
@@ -289,23 +262,20 @@
 						'motivo': descripcion,
 						'institutomunicipio': municipio_empleado.value,
 						'institutoremision': derivaciones.value != '' && tipoSalida.value == 'DERIVADO' ? derivaciones.value : canalizaciones.value,
-						'denuncia_tel': denuncia_tel.value,
-						'denuncia_electronica': denuncia_con_datos_origen.value,
+						'denuncia_tel': 'N',
+						'denuncia_electronica': 'N',
 
 					}
 				}
 
 			} else {
-				var denuncia_tel = document.querySelector('input[name="denuncia_tel_da"]:checked');
-				var denuncia_con_datos_origen = document.querySelector('input[name="denuncia_con_datos_origen_da"]:checked');
-
 				data = {
 					'folio': inputFolio.value,
 					'year': year_select.value,
 					'status': salida,
 					'motivo': descripcion,
-					'denuncia_tel': denuncia_tel.value,
-					'denuncia_electronica': denuncia_con_datos_origen.value,
+					'denuncia_tel': 'N',
+					'denuncia_electronica': 'N',
 
 
 				}
@@ -366,9 +336,6 @@
 		} else {
 			if (municipio_empleado.value != '') {
 				let descripcion = document.querySelector('#notas_caso_salida').value;
-				var denuncia_tel = document.querySelector('input[name="denuncia_tel_da"]:checked');
-				var denuncia_con_datos_origen = document.querySelector('input[name="denuncia_con_datos_origen_da"]:checked');
-
 				if (
 					descripcion &&
 					inputFolio.value != '' &&
@@ -380,8 +347,8 @@
 						'estado': 2,
 						'notas': descripcion,
 						'tipo_expediente': Number(tipoSalida.value),
-						'denuncia_tel': denuncia_tel.value,
-						'denuncia_electronica': denuncia_con_datos_origen.value,
+						'denuncia_tel': 'N',
+						'denuncia_electronica': 'N',
 
 					}
 					const dataFolio = {
