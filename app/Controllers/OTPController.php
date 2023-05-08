@@ -6,6 +6,10 @@ use App\Controllers\BaseController;
 use App\Models\DenunciantesModel;
 use App\Models\OTPModel;
 use GuzzleHttp\Client;
+use MailerSend\MailerSend;
+use MailerSend\Helpers\Builder\Recipient;
+use MailerSend\Helpers\Builder\EmailParams;
+
 
 class OTPController extends BaseController
 {
@@ -71,6 +75,24 @@ class OTPController extends BaseController
 			// $body = view('email_template/token_email_template', ['otp' => $otp]);
 			// $email->setMessage($body);
 			// $email->setAltMessage('Se ha generado un nuevo código.SU CÓDIGO ES: ' . $otp);
+
+			// // $mailersend = new MailerSend(['api_key' => 'key']);
+
+			// // $recipients = [
+			// // 	new Recipient('your@client.com', 'Your Client'),
+			// // ];
+
+			// // $emailParams = (new EmailParams())
+			// // 	->setFrom('your@domain.com')
+			// // 	->setFromName('Your Name')
+			// // 	->setRecipients($recipients)
+			// // 	->setSubject('Subject')
+			// // 	->setHtml('This is the HTML content')
+			// // 	->setText('This is the text content')
+			// // 	->setReplyTo('reply to')
+			// // 	->setReplyToName('reply to name');
+
+			// // $mailersend->email->send($emailParams);
 			$telefono = $user != null ? $user->TELEFONO : $tel;
 			$sendSMS = $this->sendSMS("Nuevo codigo", $tel, 'Notificaciones FGE/Estimado usuario, tu codigo es: ' . $otp);
 
