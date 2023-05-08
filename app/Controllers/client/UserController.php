@@ -367,28 +367,28 @@ class UserController extends BaseController
 
 	private function _sendEmailPassword($to, $password)
 	{
-		// $email = \Config\Services::email();
+		$email = \Config\Services::email();
 		$user = $this->_denunciantesModel->asObject()->where('CORREO', $to)->first();
-		// $email->setTo($to);
-		// $email->setSubject('Te estamos atendiendo');
-		// $body = view('email_template/password_email_template.php', ['email' => $to, 'password' => $password]);
-		// $email->setMessage($body);
-		// $email->setAltMessage('Usted ha generado un nuevo registro en el Centro de Denuncia Tecnológica. Para acceder debes ingresar los siguientes datos. USUARIO: ' .$to .'CONTRASEÑA' . $password );
-		$sendSMS = $this->sendSMS("Te estamos atendiendo", $user->TELEFONO, 'Notificaciones FGE/Estimado usuario, tu contraseña es: ' . $password );
+		$email->setTo($to);
+		$email->setSubject('Te estamos atendiendo');
+		$body = view('email_template/password_email_template.php', ['email' => $to, 'password' => $password]);
+		$email->setMessage($body);
+		$email->setAltMessage('Usted ha generado un nuevo registro en el Centro de Denuncia Tecnológica. Para acceder debes ingresar los siguientes datos. USUARIO: ' .$to .'CONTRASEÑA' . $password );
+		//$sendSMS = $this->sendSMS("Te estamos atendiendo", $user->TELEFONO, 'Notificaciones FGE/Estimado usuario, tu contraseña es: ' . $password );
 
-		// if ($email->send()) {
-			if ($sendSMS == "") {
-				return true;
-			}else {
-				return false;
-			}
-		// } else {
+		 if ($email->send()) {
+			// if ($sendSMS == "") {
+			 	return true;
+			// }else {
+			// 	return false;
+		 // }
+		 } else {
 		// 	if ($sendSMS == "") {
 		// 		return true;
 		// 	} else {
-		// 		return false;
+		 		return false;
 		// 	}
-		// }
+		}
 	}
 
 	private function _loadView($title, $data, $view)

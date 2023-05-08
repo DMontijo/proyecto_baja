@@ -9,12 +9,12 @@ class Email extends BaseConfig
 	/**
 	 * @var string
 	 */
-	public $fromEmail = 'andrea.solorzano@yocontigo-it.com';
+	public $fromEmail = 'pruebastibe@gmail.com';
 
 	/**
 	 * @var string
 	 */
-	public $fromName = 'FGEBC';
+	public $fromName = 'FGEBC Testing';
 
 	/**
 	 * @var string
@@ -54,14 +54,14 @@ class Email extends BaseConfig
 	 *
 	 * @var string
 	 */
-	public $SMTPUser = 'andrea.solorzano@yocontigo-it.com';
+	public $SMTPUser = 'pruebastibe@gmail.com';
 
 	/**
 	 * SMTP Password
 	 *
 	 * @var string
 	 */
-	public $SMTPPass = 'andrea.yocontigo';
+	public $SMTPPass = 'hyzszjmzmndwlvdl';
 
 	/**
 	 * SMTP Port

@@ -137,18 +137,18 @@ class AuthController extends BaseController
 		$user = $this->_denunciantesModel->asObject()->where('CORREO', $to)->first();
 		$this->_denunciantesModel->set('PASSWORD', hashPassword($password))->where('DENUNCIANTEID', $user->DENUNCIANTEID)->update();
 
-		// $email = \Config\Services::email();
-		// $email->setTo($to);
-		// $email->setSubject('Cambio de contraseña.');
-		// $body = view('email_template/reset_password_template.php', ['password' => $password]);
-		// $email->setMessage($body);
-		// $email->setAltMessage('Usted ha solicitado un cambio de contraseña. Su nueva contraseña es: ' .$password);
-		$sendSMS = $this->sendSMS("Cambio de contraseña", $user->TELEFONO, 'Notificaciones FGE/Estimado usuario, tu contraseña es: ' . $password);
-		// if ($email->send() && $sendSMS == "") {
-		if ($sendSMS == "") {
+		$email = \Config\Services::email();
+		$email->setTo($to);
+		$email->setSubject('Cambio de contraseña.');
+		$body = view('email_template/reset_password_template.php', ['password' => $password]);
+		$email->setMessage($body);
+		$email->setAltMessage('Usted ha solicitado un cambio de contraseña. Su nueva contraseña es: ' .$password);
+		//$sendSMS = $this->sendSMS("Cambio de contraseña", $user->TELEFONO, 'Notificaciones FGE/Estimado usuario, tu contraseña es: ' . $password);
+		if ($email->send()) {
+		//if ($sendSMS == "") {
 			return redirect()->to(base_url('/denuncia'))->with('message_success', 'Verifica tu nueva contraseña en tus SMS.');
 		}else{
-			return redirect()->to(base_url('/denuncia'))->with('message_error', $sendSMS);
+			return redirect()->to(base_url('/denuncia'))->with('message_error', 'No se pudo enviar');
 
 		}
 	}

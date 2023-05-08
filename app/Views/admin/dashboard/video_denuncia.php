@@ -3794,6 +3794,10 @@
 				clearSelect(select_linea);
 				clearSelect(select_version);
 
+				select_marca.disabled = true;
+				select_linea.disabled = true;
+				select_version.disabled = true;
+
 
 				let data = {
 					'distribuidor_vehiculo': e.target.value,
@@ -3813,12 +3817,17 @@
 							select_marca.add(option);
 						});
 						select_marca.value = '1';
-
+						select_marca.disabled = false;
 					},
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
 
 			});
+
+			document.querySelector('#marca_add_ad').disabled = true;
+			document.querySelector('#linea_vehiculo_add_ad').disabled = true;
+			document.querySelector('#version_vehiculo_add_ad').disabled = true;
+
 			document.querySelector('#distribuidor_vehiculo_add_ad').addEventListener('change', (e) => {
 
 				let select_marca_add = document.querySelector('#marca_add_ad');
@@ -3828,6 +3837,10 @@
 				clearSelect(select_marca_add);
 				clearSelect(select_linea_add);
 				clearSelect(select_version_add);
+
+				select_marca_add.disabled = true;
+				select_linea_add.disabled = true;
+				select_version_add.disabled = true;
 
 
 				let data = {
@@ -3848,7 +3861,7 @@
 							select_marca_add.add(option);
 						});
 						select_marca_add.value = '1';
-
+						select_marca_add.disabled = false;
 					},
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
@@ -3861,6 +3874,9 @@
 
 				clearSelect(select_linea);
 				clearSelect(select_version);
+
+				select_linea.disabled = true;
+				select_version.disabled = true;
 
 				// select_linea.value = '';
 				// select_version.value = '';
@@ -3886,7 +3902,7 @@
 							option.value = linea_vehiculo.VEHICULOMODELOID;
 							select_linea.add(option);
 						});
-
+						select_linea.disabled = false;
 					},
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
@@ -3898,6 +3914,9 @@
 
 				clearSelect(select_linea_add);
 				clearSelect(select_version_add);
+
+				select_linea_add.disabled = true;
+				select_version_add.disabled = true;
 
 				// select_linea.value = '';
 				// select_version.value = '';
@@ -3923,6 +3942,7 @@
 							option.value = linea_vehiculo.VEHICULOMODELOID;
 							select_linea_add.add(option);
 						});
+						select_linea_add.disabled = false;
 
 					},
 					error: function(jqXHR, textStatus, errorThrown) {}
@@ -3935,6 +3955,8 @@
 				let select_marca = document.querySelector('#marca_ad');
 
 				clearSelect(select_version);
+
+				select_version.disabled = true;
 
 				let data = {
 					'linea_vehiculo': e.target.value,
@@ -3956,6 +3978,8 @@
 							option.value = version_vehiculo.VEHICULOVERSIONID;
 							select_version.add(option);
 						});
+						select_version.disabled = false;
+
 
 					},
 					error: function(jqXHR, textStatus, errorThrown) {}
@@ -3968,6 +3992,8 @@
 				let select_marca_add = document.querySelector('#marca_add_ad');
 
 				clearSelect(select_version_add);
+				
+				select_version_add.disabled = true;
 
 				let data = {
 					'linea_vehiculo': e.target.value,
@@ -3989,6 +4015,8 @@
 							option.value = version_vehiculo.VEHICULOVERSIONID;
 							select_version_add.add(option);
 						});
+						
+						select_version_add.disabled = false;
 
 					},
 					error: function(jqXHR, textStatus, errorThrown) {}
@@ -4231,9 +4259,15 @@
 			}, false)
 
 			document.querySelector('#municipio_delito').addEventListener('change', (e) => {
+				//municipio del hecho mp
 				let select_localidad = document.querySelector('#localidad_delito');
 				let select_colonia = document.querySelector('#colonia_delito_select');
-				let input_colonia = document.querySelector('#colonia_delito');
+				let input_colonia = document.querySelector('#colonia_delito')
+				
+				//deshabilita los select de localidad y colonia en caso de que cambien de municipio
+
+				select_localidad.disabled = true;
+				select_colonia.disabled = true;
 
 				let estado = 2;
 				let municipio = e.target.value;
@@ -4268,6 +4302,7 @@
 							option.value = localidad.LOCALIDADID;
 							select_localidad.add(option);
 						});
+						select_localidad.disabled = false;
 					},
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
@@ -4276,6 +4311,8 @@
 			document.querySelector('#localidad_delito').addEventListener('change', (e) => {
 				let select_colonia = document.querySelector('#colonia_delito_select');
 				let input_colonia = document.querySelector('#colonia_delito');
+
+				select_colonia.disabled = true;
 
 				let estado = 2;
 				let municipio = document.querySelector('#municipio_delito').value;
@@ -4314,6 +4351,7 @@
 						option.text = 'OTRO';
 						option.value = '0';
 						select_colonia.add(option);
+						select_colonia.disabled = false;
 					},
 					error: function(jqXHR, textStatus, errorThrown) {
 
@@ -4435,6 +4473,7 @@
 
 			document.querySelector('#edoorigen_pf').addEventListener('change', (e) => {
 				let select_municipio = document.querySelector('#munorigen_pf');
+				select_municipio.disabled = true;
 				clearSelect(select_municipio);
 				select_municipio.value = '';
 				let data = {
@@ -4455,6 +4494,7 @@
 							option.value = municipio.MUNICIPIOID;
 							select_municipio.add(option);
 						});
+						select_municipio.disabled = false;
 					},
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
@@ -4530,10 +4570,15 @@
 				}
 				document.querySelector('#edad_new').value = edad;
 			})
+			document.querySelector('#municipio_select_origen_new').disabled = true;
+			
+			
 
 			document.querySelector('#nacionalidad_new').addEventListener('change', (e) => {
 				let select_estado = document.querySelector('#estado_select_origen_new');
 				let select_municipio = document.querySelector('#municipio_select_origen_new');
+
+				//select_municipio.disabled = true;
 
 				clearSelect(select_municipio);
 
@@ -4557,6 +4602,7 @@
 								select_municipio.add(option);
 							});
 							select_municipio.value = '1';
+							//select_municipio.disabled = false;
 						},
 						error: function(jqXHR, textStatus, errorThrown) {}
 					});
@@ -4570,6 +4616,7 @@
 
 			document.querySelector('#estado_select_origen_new').addEventListener('change', (e) => {
 				let select_municipio = document.querySelector('#municipio_select_origen_new');
+				select_municipio.disabled = true;
 
 				clearSelect(select_municipio);
 
@@ -4593,10 +4640,16 @@
 							option.value = municipio.MUNICIPIOID;
 							select_municipio.add(option);
 						});
+						select_municipio.disabled = false;
 					},
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
 			});
+
+			document.querySelector('#municipio_select_new').disabled = true;
+			document.querySelector('#localidad_select_new').disabled = true;
+			document.querySelector('#colonia_select_new').disabled = true;
+			
 
 			document.querySelector('#pais_select_new').addEventListener('change', (e) => {
 
@@ -4700,6 +4753,10 @@
 				let select_colonia = document.querySelector('#colonia_select_new');
 				let input_colonia = document.querySelector('#colonia_new');
 
+				select_municipio.disabled = true;
+				select_localidad.disabled = true;
+				select_colonia.disabled = true;
+			
 				clearSelect(select_municipio);
 				clearSelect(select_localidad);
 				clearSelect(select_colonia);
@@ -4730,6 +4787,7 @@
 							option.value = municipio.MUNICIPIOID;
 							select_municipio.add(option);
 						});
+						select_municipio.disabled = false;
 					},
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
@@ -4779,6 +4837,7 @@
 							option.value = localidad.LOCALIDADID;
 							select_localidad.add(option);
 						});
+						select_localidad.disabled = false;
 					},
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
@@ -4821,6 +4880,7 @@
 								option.value = colonia.COLONIAID;
 								select_colonia.add(option);
 							});
+							select_colonia.disabled = false;
 
 							var option = document.createElement("option");
 							option.text = 'OTRO';
