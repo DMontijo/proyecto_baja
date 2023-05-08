@@ -406,6 +406,9 @@ class UserController extends BaseController
 		return $password;
 	}
 
+	/**
+	 * Función para verificar si este el email para evitar duplicidad en registro
+	 */
 	public function existEmail()
 	{
 		$email = $this->request->getPost('email');
@@ -418,7 +421,12 @@ class UserController extends BaseController
 			return json_encode((object)['exist' => 0]);
 		}
 	}
-
+	
+	/**
+	 * Función para obtner los folios abiertos o cerrados del denunciante.
+	 * Permite abrir el modal y no generar otro registro
+	 *
+	 */
 	public function getFoliosAbiertosById()
 	{
 		$id = $this->request->getPost('id');
@@ -427,7 +435,13 @@ class UserController extends BaseController
 		$data->proceso = $this->_folioModel->asObject()->where('STATUS', 'EN PROCESO')->where('DENUNCIANTEID', $id)->findAll();
 		return json_encode($data);
 	}
-
+	
+	/**
+	 * Función para enviar un correo con la contraseña generada al denunciante
+	 *
+	 * @param  mixed $to
+	 * @param  mixed $password
+	 */
 	private function _sendEmailPassword($to, $password)
 	{
 		// $email = \Config\Services::email();
@@ -453,7 +467,14 @@ class UserController extends BaseController
 		// 	}
 		// }
 	}
-
+	
+	/**
+	 * Función para cargar cualquier vista en cualquier función de la carpeta register.
+	 *
+	 * @param  mixed $title
+	 * @param  mixed $data
+	 * @param  mixed $view
+	 */
 	private function _loadView($title, $data, $view)
 	{
 		$data = [
@@ -463,7 +484,13 @@ class UserController extends BaseController
 
 		echo view("client/register/$view", $data);
 	}
-
+	/**
+	 * Función para cargar cualquier vista en cualquier función de la carpeta dashboard.
+	 *
+	 * @param  mixed $title
+	 * @param  mixed $data
+	 * @param  mixed $view
+	 */
 	private function _loadViewDashboard($title, $data, $view)
 	{
 		$data = [
@@ -472,6 +499,12 @@ class UserController extends BaseController
 		];
 		echo view("client/dashboard/$view", $data);
 	}
+	/**
+	 * Función CURL POST a Justicia encriptados
+	 *
+	 * @param  mixed $endpoint
+	 * @param  mixed $data
+	 */
 	private function _curlPost($endpoint, $data)
 	{
 		$ch = curl_init();
@@ -503,7 +536,12 @@ class UserController extends BaseController
 
 		return json_decode($result);
 	}
-
+/**
+	 * Función CURL PATCH al servicio de videollamada
+	 *
+	 * @param  mixed $endpoint
+	 * @param  mixed $data
+	 */
 	private function _curlPatch($endpoint, $data)
 	{
 		$ch = curl_init();
@@ -535,6 +573,13 @@ class UserController extends BaseController
 
 		return json_decode($result);
 	}
+	/**
+	 * Función para enviar mensajes SMS
+	 *
+	 * @param  mixed $tipo
+	 * @param  mixed $celular
+	 * @param  mixed $mensaje
+	 */
 	public function sendSMS($tipo, $celular, $mensaje)
 	{
 
