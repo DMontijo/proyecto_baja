@@ -18,6 +18,11 @@ class DerivacionesController extends Controller
 		$this->_canalizacionesModel = new CanalizacionesModel();
 	}
 
+	/**
+	 * Vista para ver el directorio de derivaciones
+	 *  Obtiene todas las oficinas de las derivaciones
+	 *
+	 */
 	public function index()
 	{
 		$data = (object) array();
@@ -29,6 +34,11 @@ class DerivacionesController extends Controller
 		$this->_loadView('Directorio de derivaciones', $data, 'derivaciones');
 	}
 
+	/**
+	 * Vista para ver el directorio de canalizaciones
+	 *  Obtiene todas las oficinas de las canalizaciones
+	 *
+	 */
 	public function canalizaciones()
 	{
 		$data = (object) array();
@@ -39,13 +49,24 @@ class DerivacionesController extends Controller
 		$data->canalizacionesRosarito = $this->_canalizacionesModel->asObject()->getByMunicipioId(5);
 		$this->_loadView('Directorio de canalizaciones', $data, 'canalizaciones');
 	}
-
+	/**
+	 * Vista para ver el directorio de salas virtuales
+	 *  Obtiene todas las oficinas de las salas virtuales
+	 *
+	 */
 	public function salas_virtuales()
 	{
 		$data = (object) array();
 		$this->_loadView('Directorio de salas virtuales', $data, 'salas_virtuales');
 	}
 
+	/**
+	 * Función para cargar cualquier vista en cualquier función.
+	 *
+	 * @param  mixed $title
+	 * @param  mixed $data
+	 * @param  mixed $view
+	 */
 	private function _loadView($title, $data, $view)
 	{
 		$data = [

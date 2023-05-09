@@ -7,11 +7,19 @@ use App\Controllers\BaseController;
 
 class CorreoController extends BaseController
 {
+	/**
+	 * ! Deprecated method, do not use.
+	 *
+	 */
 	public function index()
 	{
 		return view('email_view');
 	}
-
+	/**
+	 * Plantilla de una función para enviar correos
+	 * ! Deprecated method, do not use.
+	 *
+	 */
 	public function sendEmail()
 	{
 		$to = $this->request->getVar('email');
@@ -30,7 +38,11 @@ class CorreoController extends BaseController
 			var_dump(json_encode($data));
 		}
 	}
-
+	/**
+	 * Plantilla de una función para reenviar correos
+	 * ! Deprecated method, do not use.
+	 *
+	 */
 	public function resend()
 	{
 		$to = $this->request->getPost('to');
@@ -74,7 +86,10 @@ class CorreoController extends BaseController
 			return json_encode((object)['data' => $data]);
 		}
 	}
-
+	/**
+	 * ! Deprecated method, do not use.
+	 *
+	 */
 	public function getLastOTP()
 	{
 		$email = $this->request->getPost('email');
@@ -83,7 +98,10 @@ class CorreoController extends BaseController
 		return json_encode((object)['data' => $data]);
 	}
 
-
+	/**
+	 * ! Deprecated method, do not use.
+	 *
+	 */
 	public function modal_view()
 	{
 		return view('client/registro/otp_validation_modal');

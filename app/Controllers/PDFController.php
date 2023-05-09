@@ -24,7 +24,7 @@ class PDFController extends BaseController
 	private $_constanciaExtravioModel;
 	private $_tipoIdentificacionModel;
 	private $db;
-	
+
 	function __construct()
 	{
 		$this->_plantillasModel = new PlantillasModel();
@@ -37,30 +37,55 @@ class PDFController extends BaseController
 		$this->_tipoIdentificacionModel = new PersonaTipoIdentificacionModel();
 		$this->db = \Config\Database::connect();
 	}
+	/**
+	 * Plantilla de una vista de certificado medico
+	 * ! Deprecated method, do not use.
+	 *
+	 */
 	public function certificadoMedico()
 	{
 		$data = (object) array();
 		$data->certificadoMedico = $this->_plantillasModel->asObject()->findAll();
 		$this->_loadView('Documentos', $data, 'certificadoMedico');
 	}
+	/**
+	 * Plantilla de una vista de constancia videodenuncia
+	 * ! Deprecated method, do not use.
+	 *
+	 */
 	public function constanciaVideoDenuncia()
 	{
 		$data = (object) array();
 		$data->constanciaVideoD = $this->_plantillasModel->asObject()->findAll();
 		$this->_loadView('Documentos', $data, 'constanciaVideoDenuncia');
 	}
+	/**
+	 * Plantilla de una vista de proteccion de albergue
+	 * ! Deprecated method, do not use.
+	 *
+	 */
 	public function proteccionAlbergue()
 	{
 		$data = (object) array();
 		$data->constanciaAlbergue = $this->_plantillasModel->asObject()->findAll();
 		$this->_loadView('Documentos', $data, 'proteccionAlbergue');
 	}
+	/**
+	 * Plantilla de una vista de proteccion de pertenencias
+	 * ! Deprecated method, do not use.
+	 *
+	 */
 	public function proteccionPertenencia()
 	{
 		$data = (object) array();
 		$data->constanciaPertenencia = $this->_plantillasModel->asObject()->findAll();
 		$this->_loadView('Documentos', $data, 'proteccionPertenencia');
 	}
+	/**
+	 * Plantilla de una vista de proteccion de rondines
+	 * ! Deprecated method, do not use.
+	 *
+	 */
 	public function proteccionRondines()
 	{
 		$data = (object) array();
@@ -68,6 +93,13 @@ class PDFController extends BaseController
 		$this->_loadView('Documentos', $data, 'proteccionRondines');
 	}
 
+	/**
+	 * Función para cargar cualquier vista en cualquier función.
+	 *
+	 * @param  mixed $title
+	 * @param  mixed $data
+	 * @param  mixed $view
+	 */
 	private function _loadView($title, $data, $view)
 	{
 		$data = [

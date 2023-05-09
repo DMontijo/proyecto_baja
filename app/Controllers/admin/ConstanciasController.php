@@ -37,7 +37,11 @@ class ConstanciasController extends BaseController
 		$this->_estadosModel = new EstadosModel();
 		$this->_rolesPermisosModel = new RolesPermisosModel();
 	}
-
+	/**
+	 * Vista de Constancias Admin
+	 * Retorna las cantidades de constancias
+	 *
+	 */
 	public function index()
 	{
 		if (!$this->permisos('CONSTANCIAS DE EXTRAVIOS')) {
@@ -52,6 +56,11 @@ class ConstanciasController extends BaseController
 		$this->_loadView('Constancias extravío', 'constancias', '', $data, 'index');
 	}
 
+	/**
+	 * Vista de constancias abiertos.
+	 * Retorna toda la información de constancias abiertas
+	 *
+	 */
 	public function constancias_abiertas()
 	{
 		if (!$this->permisos('CONSTANCIAS DE EXTRAVIOS')) {
@@ -86,6 +95,11 @@ class ConstanciasController extends BaseController
 		$this->_loadView('Constancias extravío abiertas', 'constancias', '', $data, 'constancias_abiertas');
 	}
 
+	/**
+	 * Función para actualizar en tiempo real las constancias abiertas
+	 * Retorna toda la información de constancias abiertas
+	 *
+	 */
 	public function getAllConstanciasAbiertas()
 	{
 		$data = $this->_constanciaExtravioModel
@@ -113,7 +127,11 @@ class ConstanciasController extends BaseController
 			->findAll();
 		return json_encode($data);
 	}
-
+	/**
+	 * Vista de constancias en proceso.
+	 * Retorna toda la información de constancias en proceso
+	 *
+	 */
 	public function constancias_proceso()
 	{
 		if (!$this->permisos('CONSTANCIAS DE EXTRAVIOS')) {
@@ -147,7 +165,11 @@ class ConstanciasController extends BaseController
 
 		$this->_loadView('Constancias extravío en proceso', 'constancias', '', $data, 'constancias_proceso');
 	}
-
+	/**
+	 * Vista de constancias firmadas.
+	 * Retorna toda la información de constancias firmadas
+	 *
+	 */
 	public function constancias_firmadas()
 	{
 		if (!$this->permisos('CONSTANCIAS DE EXTRAVIOS')) {
@@ -182,7 +204,11 @@ class ConstanciasController extends BaseController
 
 		$this->_loadView('Constancias extravío firmadas', 'constancias', '', $data, 'constancias_firmadas');
 	}
-
+	/**
+	 * Función para liberar las constancias en proceso.
+	 * Recibe por metodo POST el folio y año.
+	 *
+	 */
 	public function constancia_extravio_liberar()
 	{
 		if (!$this->permisos('CONSTANCIAS DE EXTRAVIOS')) {
@@ -205,7 +231,11 @@ class ConstanciasController extends BaseController
 		}
 		return redirect()->back()->with('message_error', 'Constancia no liberada.');
 	}
-
+	/**
+	 * Función para previsualizar la constancia generada y revisar que si esté correcto para su firma
+	 * Recibe por metodo GET el folio y año.
+	 *
+	 */
 	public function constancia_extravio_show()
 	{
 		if (!$this->permisos('CONSTANCIAS DE EXTRAVIOS')) {
@@ -227,7 +257,9 @@ class ConstanciasController extends BaseController
 			return redirect()->back()->with('message_error', 'La constancia no existe.');
 		}
 
+		// Info para el placeholder de la constancia
 		$data->constanciaExtravio = $this->_plantillasModel->asObject()->where('TITULO', 'CONSTANCIA DE EXTRAVIO')->first();
+		/**Información para rellenar la constancia de acuerdo a su folio */
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 		$solicitante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID ', $constancia->DENUNCIANTEID)->first();
@@ -246,6 +278,7 @@ class ConstanciasController extends BaseController
 		$mes_extravio = $meses[date('n', $timestamp) - 1];
 		$ano_extravio = date('Y', $timestamp);
 
+		// Replace de la constancia
 		$data->constanciaExtravio->PLACEHOLDER = str_replace('[FOLIO_NUMERO]', $constancia->CONSTANCIAEXTRAVIOID, $data->constanciaExtravio->PLACEHOLDER);
 		$data->constanciaExtravio->PLACEHOLDER = str_replace('[DOMICILIO_COMPARECIENTE]', $constancia->DOMICILIO, $data->constanciaExtravio->PLACEHOLDER);
 		$data->constanciaExtravio->PLACEHOLDER = str_replace('[NOMBRE_COMPARECIENTE]', $solicitante->NOMBRE . " " . $solicitante->APELLIDO_PATERNO . " " . $solicitante->APELLIDO_MATERNO, $data->constanciaExtravio->PLACEHOLDER);
@@ -263,6 +296,7 @@ class ConstanciasController extends BaseController
 		$data->constanciaExtravio->PLACEHOLDER = str_replace('[ANIO]', $year, $data->constanciaExtravio->PLACEHOLDER);
 		$data->constanciaExtravio->PLACEHOLDER = str_replace('[HORA]', date('H:i'), $data->constanciaExtravio->PLACEHOLDER);
 
+		//Replace especifico del tipo de extravío
 		switch ($constancia->EXTRAVIO) {
 			case 'BOLETOS DE SORTEO':
 				$data->constanciaExtravio->PLACEHOLDER = str_replace('[NOMBRE_CERTIFICADO]', 'BOLETOS', $data->constanciaExtravio->PLACEHOLDER);
@@ -330,6 +364,11 @@ class ConstanciasController extends BaseController
 		echo view("admin/dashboard/documentos/constancia_extravio", $data2);
 	}
 
+	/**
+	 * Función para descargar la constancia en formato PDF
+	 * Recibe por metodo POST el folio y año.
+	 *
+	 */
 	public function download_constancia_pdf()
 	{
 		$folio = $this->request->getPost('folio');
@@ -353,7 +392,11 @@ class ConstanciasController extends BaseController
 		exit();
 		// echo $constancia->PDF;
 	}
-
+	/**
+	 * Función para descargar la constancia en formato XML
+	 * Recibe por metodo POST el folio y año.
+	 *
+	 */
 	public function download_constancia_xml()
 	{
 		$folio = $this->request->getPost('folio');
@@ -377,7 +420,15 @@ class ConstanciasController extends BaseController
 		exit();
 		// echo $constancia->XML;
 	}
-
+	/**
+	 * Función para cargar cualquier vista en cualquier función.
+	 *
+	 * @param  mixed $title
+	 * @param  mixed $menu
+	 * @param  mixed $submenu
+	 * @param  mixed $data
+	 * @param  mixed $view
+	 */
 	private function _loadView($title, $menu, $submenu, $data, $view)
 	{
 		$data2 = [
@@ -387,7 +438,11 @@ class ConstanciasController extends BaseController
 
 		echo view("admin/dashboard/constancias/$view", $data2);
 	}
-
+	/**
+	 * Función para revisar los permisos que tienen los usuarios y poder restringir el acceso
+	 *
+	 * @param  mixed $permiso
+	 */
 	private function permisos($permiso)
 	{
 		return in_array($permiso, session('permisos'));

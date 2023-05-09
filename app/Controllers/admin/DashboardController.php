@@ -404,6 +404,11 @@ class DashboardController extends BaseController
 		$this->urlApi = VIDEOCALL_URL;
 	}
 
+	/**
+	 * Vista de Dashboard Admin
+	 * Retorna las cantidades visualizadas al inicio de la plataforma.
+	 *
+	 */
 	public function index()
 	{
 		$data = (object) array();
@@ -436,6 +441,11 @@ class DashboardController extends BaseController
 		$this->_loadView('Principal', 'dashboard', '', $data, 'index');
 	}
 
+	/**
+	 * Vista de Usuarios Registrados
+	 * Retorna los usuarios registrados en CDTEC detallando su perfil.
+	 *
+	 */
 	public function usuarios()
 	{
 		$data = (object) array();
@@ -455,6 +465,12 @@ class DashboardController extends BaseController
 		$this->_loadView('Usuarios', 'usuarios', '', $data, 'users/users');
 	}
 
+	/**
+	 * Vista de Roles
+	 * Genera los permisos que tienen los diferentes roles en CDTEC.
+	 * 
+	 */
+
 	public function asignacion_permisos()
 	{
 		$data = (object) array();
@@ -471,6 +487,11 @@ class DashboardController extends BaseController
 
 		$this->_loadView('Asignación de permisos', 'asignacion de permisos', '', $data, 'roles/asignacion_permisos');
 	}
+	/**
+	 * Vista de Sesiones Activas.
+	 * Carga todas las sesiones actividas de los usuarios de CDTEC y los denunciantes dentro de ella.
+	 *
+	 */
 	public function sesiones_activas()
 	{
 		if (!$this->permisos('SESIONES')) {
@@ -484,6 +505,11 @@ class DashboardController extends BaseController
 		$this->_loadView('Sesiones activas', 'sesiones', '', $data, 'sesiones_activas');
 	}
 
+	/**
+	 * Funcion para cerrar sesiones (Denunciantes y Usuarios de CDTEC)
+	 * Recibe por metodo GET el id del denunciante o del usuario y actualiza su tabla respectiva de sesiones para que esta sesión sea cerrada.
+	 *
+	 */
 	public function cerrar_sesiones_general()
 	{
 		if (isset($_GET['id_denunciante'])) {
@@ -507,6 +533,13 @@ class DashboardController extends BaseController
 			}
 		}
 	}
+	/**
+	 * Funcion para insertar archivos externos al folio desde el administrador
+	 *
+	 * Recibe el archivo y valida que no venga vacio, se obtiene las características de este archivo y los manda en un array para poder insertarlos a 
+	 * la tabla correspondiente.
+	 * Una vez insertados, regresa a la vista la actualizacion de archivos.
+	 */
 	public function crear_archivos_externos()
 	{
 		$documento = $this->request->getFile('documentoArchivo');
@@ -549,6 +582,16 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
+
+	/**
+	 * Funcion Archivos Externos.
+	 * Verifica que exista algun archivo dentro de ese folio, si existe incrementa el FOLIOARCHIVOID y si no empieza desde el 1.
+	 * * Se utiliza en la funcion crear_archivos_externos
+	 *
+	 * @param  mixed $data
+	 * @param  mixed $folio
+	 * @param  mixed $year
+	 */
 	private function _folioExpArchivo($data, $folio, $year)
 	{
 		$data = $data;
@@ -568,6 +611,11 @@ class DashboardController extends BaseController
 			return $data['FOLIOARCHIVOID'];
 		}
 	}
+	/**
+	 * Vista de para la nueva asignacion de permisos
+	 * Carga los roles y los permisos existentes.
+	 *
+	 */
 	public function nuevo_asignacion_permiso()
 	{
 		$data = (object) array();
@@ -577,6 +625,11 @@ class DashboardController extends BaseController
 		$this->_loadView('Nuevo asignacion de permisos', '', '', $data, 'roles/nueva_asignacion_rol');
 	}
 
+	/**
+	 * Vista para agregar nuevos roles.
+	 * Carga los roles ya existentes para que el usuario vea cuales ya estan y no se repitan.
+	 *
+	 */
 	public function nuevo_rol()
 	{
 		$data = (object) array();
@@ -587,6 +640,11 @@ class DashboardController extends BaseController
 		$this->_loadView('Nuevo rol', '', '', $data, 'roles/nuevo_rol');
 	}
 
+	/**
+	 * Vista de usuarios activos para videodenuncia.
+	 * Se accede a través del card en la página principal del administrador. (AGENTES ACTIVOS PARA VIDEODENUNCIA)
+	 *
+	 */
 	public function usuarios_activos()
 	{
 		$data = (object) array();
@@ -595,6 +653,11 @@ class DashboardController extends BaseController
 		$this->_loadView('Agentes activos', 'usuarios_activos', '', $data, 'usuarios_activos');
 	}
 
+	/**
+	 * Vista de usuarios en llamada de videodenuncia.
+	 * Se accede a través del card en la página principal del administrador.(AGENTES EN LLAMADA)
+	 *	 
+	 */
 	public function usuarios_en_llamada()
 	{
 		$data = (object) array();
@@ -603,6 +666,10 @@ class DashboardController extends BaseController
 		$this->_loadView('Agente en llamada', 'usuarios_en_llamada', '', $data, 'usuarios_en_llamada');
 	}
 
+	/**
+	 * Vista de cola de llamadas.
+	 * Se accede a través del card en la página principal del administrador.(LLAMADAS EN FILA)
+	 */
 	public function lista_prioridad()
 	{
 		$data = (object) array();
@@ -610,15 +677,25 @@ class DashboardController extends BaseController
 
 		$this->_loadView('Llamadas en fila', 'list_priority', '', $data, 'list_priority');
 	}
+	/**
+	 * Vista de firmas
+	 * ! Deprecated method, do not use.
+	 *
+	 */
 	public function firmas()
 	{
 		$data = (object) array();
-		$data = $this->_usuariosModel->asObject()->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->join('ZONAS_USUARIOS', 'ZONAS_USUARIOS.ID_ZONA = USUARIOS.ZONAID')->findAll();
+		$data->usuarios = $this->_usuariosModel->asObject()->join('ROLES', 'ROLES.ID = USUARIOS.ROLID')->join('ZONAS_USUARIOS', 'ZONAS_USUARIOS.ID_ZONA = USUARIOS.ZONAID')->findAll();
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 		$this->_loadView('Firmar documentos', 'firmar', '', $data, 'signs');
 	}
 
+	/**
+	 * Vista para agregar un nuevo usuario.
+	 * Carga las zonas, municipios y roles.
+	 *
+	 */
 	public function nuevo_usuario()
 	{
 		$data = (object) array();
@@ -630,6 +707,12 @@ class DashboardController extends BaseController
 		$this->_loadView('Nuevo usuario', '', '', $data, 'users/new_user');
 	}
 
+	/**
+	 * Funcion para asignar permisos a un rol.
+	 * Recibe por metodo POST el rol y el permiso que se ligaran. Valida que no exista esa relación (para evitar repetir) y si no existe se insertan.
+	 * Regresa los roles y los permisos para retornar a la vista de Permisos Registrados.
+	 *
+	 */
 	public function create_asignacion_permiso()
 	{
 		$data = (object) array();
@@ -659,6 +742,11 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**
+	 * Función para crear roles.
+	 * Recibe po metodo POST el nombre del rol, valida que no existe, y si no existe lo agrega.
+	 * Regresa los roles y los permisos para retornar a la vista de Permisos Registrados.
+	 */
 	public function create_rol()
 	{
 		$data = (object) array();
@@ -689,6 +777,11 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**
+	 * Función para eliminar permisos de un rol.
+	 * Recibe por metodo GET el ROLID y el PERMISOID para su posterior eliminación
+	 * Regresa los roles y los permisos para retornar a la vista de Permisos Registrados.
+	 */
 	public function eliminar_asignacion_permiso()
 	{
 		$rolid = $this->request->getGet('rol');
@@ -712,6 +805,11 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**
+	 * Vista para editar un usuario.
+	 * Recibe por metodo GET el ID del usuario a editar para cargar el formulario.
+	 *
+	 */
 	public function editar_usuario()
 	{
 		$id = $this->request->getGet('id');
@@ -732,6 +830,11 @@ class DashboardController extends BaseController
 		$this->_loadView('Editar usuario', '', '', $data, 'users/edit_user');
 	}
 
+	/**
+	 * Vista para denuncia anonima.
+	 * Regresa todo los catálogos necesarios para el consumo de esta vista.
+	 *
+	 */
 	public function denuncia_anonima()
 	{
 		if (!$this->permisos('DENUNCIA ANONIMA')) {
@@ -855,6 +958,12 @@ class DashboardController extends BaseController
 		$this->_loadView('Denuncia anónima', 'denuncia_anonima', '', $data, 'denuncia_anonima');
 	}
 
+	/**
+	 * Función para crear usuarios.
+	 * Recibe por metodo POST todos los campos del formulario para la creación de un usuario.
+	 * * Si el usuario es diferente de AGENTE DEL MINISTERIO PÚBLICO VISUALIZADOR, este usuario se agregará al servicio de videollamada
+	 *
+	 */
 	public function crear_usuario()
 	{
 		$data = [
@@ -919,6 +1028,11 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**
+	 * Función para actualizar a un usuario de CDTEC.
+	 * Recibe por metodo POST todos los campos del formulario para la actualización de un usuario.
+	 * * Si el usuario es diferente de AGENTE DEL MINISTERIO PÚBLICO VISUALIZADOR, este usuario se actualizará en el servicio de videollamada. Si se actualiza en este servicio, se actualizará en VIDEODENUNCIA.
+	 */
 	public function update_usuario()
 	{
 		$id = $this->request->getPost('id');
@@ -983,6 +1097,12 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**
+	 * Función para modificar la contraseña de un usuario CDTEC.
+	 * Recibe por metodo POST el id del usuario y la nueva contraseña. Esta se hashea para su posterior actualización en la tabla.
+	 * * Está función permite que un usuario autorizado modifique la de otro usuario.
+	 *
+	 */
 	public function editar_password()
 	{
 		$id = $this->request->getPost('id');
@@ -998,7 +1118,11 @@ class DashboardController extends BaseController
 
 		return redirect()->back()->with('message_success', 'Contraseña actualizada correctamente');
 	}
-
+	/**
+	 * Vista de folios no atendidos
+	 * ! Deprecated method, do not use.
+	 *
+	 */
 	public function folios()
 	{
 		$data = (object) array();
@@ -1009,6 +1133,11 @@ class DashboardController extends BaseController
 		$this->_loadView('Folios no atendidos', 'folios', '', $data, 'folios');
 	}
 
+	/**
+	 * Vista de perfil.
+	 * Carga las zones, roles y permisos del usuario en sesión.
+	 *
+	 */
 	public function perfil()
 	{
 		$data = (object) array();
@@ -1018,7 +1147,12 @@ class DashboardController extends BaseController
 
 		$this->_loadView('Perfil', 'perfil', '', $data, 'perfil');
 	}
-
+	/**
+	 * Función para modificar la contraseña de un usuario CDTEC.
+	 * Recibe por metodo POST la nueva contraseña. Esta se hashea para su posterior actualización en la tabla.
+	 * * Está función permite que el usuario modifique su propia contraseña a través de su id
+	 *
+	 */
 	public function update_password()
 	{
 		$password = $this->request->getPost('password');
@@ -1037,6 +1171,10 @@ class DashboardController extends BaseController
 		return redirect()->to(base_url('admin'));
 	}
 
+	/**
+	 * Función para carga la firma FIEL.
+	 * Recibe los archivos .key y .cer y los sube al sevidor en la carpeta de uploads. Si no existe, se crea el directorio. Y se le asigna el nombre a cada archivo para identificarlo por ID.
+	 */
 	public function charge_fiel()
 	{
 		$key_fiel = $this->request->getFile('key');
@@ -1074,6 +1212,14 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**
+	 * Función para obtener la información del folio.
+	 * * Importante para VIDEODENUNCIA Y VER FOLIO. (NO BORRAR)
+	 * Recibe por metodo POST el folio, el año y si esta "buscado", cuando $search es diferente de true es para traer los datos del folio en la sección de VIDEODENUNCIA
+	 * cuando es true entra en la sección de CONSULTA DE FOLIOS.
+	 * Regresa todos los datos del folio a la vista correspondiente.
+	 *
+	 */
 	public function getFolioInformation()
 	{
 		$data = (object) array();
@@ -1138,6 +1284,15 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**
+	 * Función para obtener los datos de todas las tablas del folio
+	 * * Se utiliza en la función de getFolioInformation (NO BORRAR).
+	 * 
+	 * Recibe por parametros el numero del folio y el año para utilizarlo en todas las consultas de todas las tablas
+	 *
+	 * @param  mixed $numfolio
+	 * @param  mixed $year
+	 */
 	public function getDataFolio($numfolio, $year)
 	{
 
@@ -1175,6 +1330,11 @@ class DashboardController extends BaseController
 		$data->victimas = $this->_folioPersonaFisicaModel->get_victimas($numfolio, $year);
 		return ($data);
 	}
+	/**
+	 * Función para obtener la información del folio en denuncia anonima para posterior agregar personas.
+	 * Se recibe por metodo POST el folio y el año para su consulta.
+	 *
+	 */
 	public function getFolioInformationDenunciaAnonima()
 	{
 		$data = (object) array();
@@ -1190,6 +1350,12 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**
+	 * Función para obtener todas los datos de la persona fisica.
+	 * Se recibe por metodo post el ID de la persona, el folio y el año. (Se obtiene MEDIAFILIACION, DOMICILIO y PERSONA FISICA)
+	 * *Todos los datos se regresan a la vista correspondiente.
+	 *
+	 */
 	public function getPersonaFisicaById()
 	{
 		$id = trim($this->request->getPost('id'));
@@ -1231,7 +1397,12 @@ class DashboardController extends BaseController
 			return json_encode($data);
 		}
 	}
-
+	/**
+	 * Función para obtener la relacion de parentesco de una persona y otra.
+	 * Se recibe por metodo post el ID de la persona, el folio y el año.
+	 * *Todos los datos se regresan a la vista correspondiente.
+	 *
+	 */
 	public function getRelacionParentesco()
 	{
 		$id = trim($this->request->getPost('personafisica1'));
@@ -1260,7 +1431,12 @@ class DashboardController extends BaseController
 			return json_encode($data);
 		}
 	}
-
+	/**
+	 * Función para obtener la relacion de imputado y delitos.
+	 * Se recibe por metodo post el ID de la persona, el folio, el año y el delito correspondiente.
+	 * *Todos los datos se regresan a la vista correspondiente.
+	 * ! Deprecated method, do not use.
+	 */
 	public function getImputadoDelito()
 	{
 		$id = trim($this->request->getPost('personafisica'));
@@ -1279,7 +1455,11 @@ class DashboardController extends BaseController
 			return json_encode($data);
 		}
 	}
-
+	/**
+	 * Función para obtener el domicilio de la persona fisica
+	 * Se recibe por metodo post el ID de la persona, el folio y el año.
+	 * *Todos los datos se regresan a la vista correspondiente.
+	 */
 	public function findPersonadDomicilioById()
 	{
 		$id = $this->request->getPost('id');
@@ -1297,7 +1477,13 @@ class DashboardController extends BaseController
 		return json_encode($data);
 	}
 
-
+	/**
+	 * Función para refrescar los archivos externos
+	 * Se recibe por metodo post el folio y el año.
+	 * Sirve cuando el denunciante sube archivos durante de la llamada y el MP refresca para actualizar en tiempo real.
+	 * *Todos los archivos se codifican para la visualizacion en la vista.
+	 * *Todos los datos se regresan a la vista correspondiente.
+	 */
 	public function refreshArchivosExternos()
 	{
 		$folio = $this->request->getPost('folio');
@@ -1316,7 +1502,12 @@ class DashboardController extends BaseController
 		}
 		return json_encode($data);
 	}
-
+	/**
+	 * Función para obtener los datos del vehiculo.
+	 * Se recibe por metodo post el ID del vehículo, el folio y el año para todas las consultas relacionadas.
+	 * *Todos los archivos se codifican para la visualizacion en la vista.
+	 * *Todos los datos se regresan a la vista correspondiente.
+	 */
 	public function findPersonadVehiculoById()
 	{
 		$data = (object) array();
@@ -1354,7 +1545,10 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
-
+	/**
+	 * Vista para la bandeja de salida
+	 * Se realiza un conteo de expedientes para cada municipio.
+	 */
 	public function bandeja_salida()
 	{
 		if (!$this->permisos('BANDEJA')) {
@@ -1369,7 +1563,11 @@ class DashboardController extends BaseController
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 		$this->_loadView('Bandeja de remisión', 'bandeja de remision', '', $data, 'bandeja/bandeja_salida');
 	}
-
+	/**
+	 * Vista para la bandeja de remision
+	 * Se recibe por metodo GET el municipio asignado, folio, año y expediente.
+	 * Se cargan diferentes vista de acuerdo al tipo de expediente.
+	 */
 	public function bandeja_remision()
 	{
 		if (!$this->permisos('BANDEJA')) {
@@ -1397,6 +1595,10 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**
+	 * Función para asignar bandeja de remisión.
+	 * Se obtiene por metodo POST el expediente, la oficina, el empleado asignado y el municipio.
+	 */
 	public function bandeja_remision_post()
 	{
 		try {
@@ -1406,6 +1608,7 @@ class DashboardController extends BaseController
 			$municipio = trim($this->request->getPost('municipio'));
 
 			$area = $this->_empleadosModel->asObject()->where('EMPLEADOID', $empleado)->where('MUNICIPIOID', $municipio)->first();
+			// Obtiene los documentos del folio para asignar un estado juridico.
 			$documents = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente)->findAll();
 			$status = 2;
 
@@ -1419,6 +1622,7 @@ class DashboardController extends BaseController
 				}
 			}
 
+			// Datos para actualizar las tablas.
 			$dataFolio = array(
 				'AGENTEASIGNADOID' => $empleado,
 				'OFICINAASIGNADOID' => $oficina,
@@ -1434,14 +1638,17 @@ class DashboardController extends BaseController
 			);
 
 
+			// Crea conexion al servicio de justicia para actualizar el area asignada
 			$updateExpediente = $this->_updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area->AREAID, 'REMISION', $status);
 
 			if ($updateExpediente->status == 201) {
 
+				//Actualizacion de tablas de VIDEODENUNCIA
 				$update = $this->_folioModel->set($dataFolio)->where('EXPEDIENTEID', $expediente)->update();
 				$updateDoc = $this->_folioDocModel->set($dataFolioDoc)->where('NUMEROEXPEDIENTE', $expediente)->update();
 				if ($update) {
 					$bandeja = $this->_folioModel->where('EXPEDIENTEID', $expediente)->first();
+					//Se revisa que haya documentos subidos a Justicia de tipo periciales
 					$folioDocPericiales = $this->_folioDocModel->expedienteDocumentos($expediente);
 					if ($folioDocPericiales) {
 						foreach ($folioDocPericiales as $key => $doc) {
@@ -1454,15 +1661,19 @@ class DashboardController extends BaseController
 							$solicitudp['ANO'] = $doc->ANO;
 							$solicitudp['TITULO'] = $doc->TIPODOC;
 
+							// Se suben los documentos periciales a Justicia.
 							$_solicitudPericial = $this->_createSolicitudesPericiales($solicitudp);
 							if ($_solicitudPericial->status == 201) {
+								//Crea la solicitud pericial a Justicia.
 								$_solicitudDocto = $this->_createSolicitudDocto($expediente, $_solicitudPericial->SOLICITUDID, $doc->EXPEDIENTEDOCID, $bandeja['MUNICIPIOASIGNADOID']);
 
 								if ($_solicitudDocto->status == 201) {
+									//Crea la solicityd en el expediente a Justicia.
 									$_solicitudExpediente = $this->_createSolicitudExpediente($expediente, $_solicitudPericial->SOLICITUDID, $municipio);
 									$plantilla = (object) array();
 
 									$plantilla = $this->_plantillasModel->where('TITULO',  $doc->TIPODOC)->first();
+									//Se obtiene el id de intervencion de acuerdo al municipio
 									if ($municipio == 1 ||  $municipio == 6) {
 										$intervencion = $plantilla['INTERVENCIONENSENADAID'];
 									} else if ($municipio == 2 || $municipio == 3 || $municipio == 7) {
@@ -1472,6 +1683,7 @@ class DashboardController extends BaseController
 									}
 									$dataInter =  array('SOLICITUDID' => $_solicitudPericial->SOLICITUDID, 'INTERVENCIONID' => $intervencion);
 
+									//Se crea la intervención pericial a Justicia.
 									$_intervencionPericial = $this->_createIntervencionPericial($dataInter, $municipio);
 
 									if ($_intervencionPericial->status == 201) {
@@ -1485,7 +1697,9 @@ class DashboardController extends BaseController
 							}
 						}
 					}
+					//Se suben los documentos y archivos externos a Justicia
 					$subirArchivos = $this->subirArchivosRemision($bandeja['FOLIOID'], $bandeja['ANO'], $expediente);
+					//Se crea la bandeja en Justicia.
 					$_bandeja_creada = $this->_createBandeja($bandeja);
 					$updateArch = $this->_archivoExternoModel->set($dataFolioArc)->where('FOLIOID', $bandeja['FOLIOID'])->where('ANO', $bandeja['ANO'])->update();
 
@@ -1511,6 +1725,10 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**
+	 * Función para asignar bandeja de remisión de tipo RAC.
+	 * Se obtiene por metodo POST el expediente, el modulo, el procedimiento y el municipio.
+	 */
 	public function bandeja_rac()
 	{
 		try {
@@ -1519,6 +1737,7 @@ class DashboardController extends BaseController
 			$procedimiento = trim($this->request->getPost('procedimiento'));
 			$municipio = trim($this->request->getPost('municipio'));
 
+			//Se verifica que no exista el RAC en Justicia.
 			$existRac = $this->_bandejaRacModel->asObject()->where('EXPEDIENTEID', $expediente)->findAll();
 			if ($existRac) {
 				return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_error', 'Ya fue remitido este expediente.');
@@ -1526,6 +1745,7 @@ class DashboardController extends BaseController
 
 			$status = 2;
 			$bandeja = $this->_folioModel->where('EXPEDIENTEID', $expediente)->first();
+			// Obtiene los documentos del folio para asignar un estado juridico.
 
 			$documents = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente)->findAll();
 			foreach ($documents as $key => $document) {
@@ -1538,8 +1758,9 @@ class DashboardController extends BaseController
 				}
 			}
 
+			//Se obtiene el Mediador desde el WebServicice, se le manda el municipio y el modulo
 			$getMediador = $this->getMediador($municipio, $modulo);
-
+			// Datos para actualizar las tablas.
 			$dataFolio = array(
 				'AGENTEASIGNADOID' =>  $getMediador->data->EMPLEADOID_MEDIADOR,
 				'OFICINAASIGNADOID' => $getMediador->data->OFICINA_MP_MEDIADOR,
@@ -1547,6 +1768,7 @@ class DashboardController extends BaseController
 			);
 
 			try {
+				//Se crea la bandeja RAC en Justicia.
 				$_bandeja_rac = $this->_createJusticiaAlterna($expediente, $procedimiento, $municipio);
 
 				if ($_bandeja_rac->status == 401) {
@@ -1556,6 +1778,7 @@ class DashboardController extends BaseController
 				return redirect()->back()->with('message_error', 'No se esta guardando en tabla expedientejusticiaalterna por lo tanto no se puede remitir.');
 			}
 			try {
+				// Crea conexion al servicio de justicia para actualizar el area asignada
 				$updateExpediente = $this->_updateExpedienteByBandeja($expediente, $municipio, $getMediador->data->OFICINA_MP_MEDIADOR, $getMediador->data->EMPLEADOID_MEDIADOR, $getMediador->data->AREA_MEDIADOR, 'RAC', $status);
 				if ($updateExpediente->status == 401) {
 					return redirect()->back()->with('message_error', 'No se actualizo el expediente en justicia por lo tanto no se puede remitir.');
@@ -1565,6 +1788,7 @@ class DashboardController extends BaseController
 			}
 
 			if ($updateExpediente->status == 201 && $_bandeja_rac->status == 201) {
+				//Se actualizan las tablas cuando el area y la bandeja hayan sido creadas.
 
 				$this->_folioModel->set($dataFolio)->where('EXPEDIENTEID', $expediente)->update();
 
@@ -1578,10 +1802,13 @@ class DashboardController extends BaseController
 					'MEDIADORID' => $getMediador->data->EMPLEADOID_MEDIADOR
 				);
 
+				//Se mandan los datos finales del RAC a una tabla de VIDEODENUNCIA para un control.
 				$bandejaRac = $this->_bandejaRacModel->insert($dataBandeja);
+				//Se suben los archivos y documentos a Justicia.
 				$this->subirArchivosRemision($bandeja['FOLIOID'], $bandeja['ANO'], $expediente);
 
 				// $folioDoc = $this->_folioDocModel->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->join('RELACIONFOLIODOCEXPDOC', 'FOLIODOC.NUMEROEXPEDIENTE = RELACIONFOLIODOCEXPDOC.EXPEDIENTEID  AND FOLIODOC.FOLIODOCID = RELACIONFOLIODOCEXPDOC.FOLIODOCID')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('TIPODOC', 'SOLICITUD DE PERITAJE')->orLike('TIPODOC', 'OFICIO DE COLABORACION PARA INGRESO A HOSPITAL')->findAll();
+				//Se revisa que haya documentos subidos a Justicia de tipo periciales
 				$folioDoc = $this->_folioDocModel->expedienteDocumentos($expediente);
 
 				if ($folioDoc) {
@@ -1595,15 +1822,18 @@ class DashboardController extends BaseController
 						$solicitudp['AREAIDREGISTRO'] =  $getMediador->data->AREA_MEDIADOR;
 						$solicitudp['ANO'] = $doc->ANO;
 						$solicitudp['TITULO'] = $doc->TIPODOC;
-
+						// Se suben los documentos periciales a Justicia.
 						$_solicitudPericial = $this->_createSolicitudesPericiales($solicitudp);
 						if ($_solicitudPericial->status == 201) {
+							//Crea la solicitud pericial a Justicia.
 							$_solicitudDocto = $this->_createSolicitudDocto($expediente, $_solicitudPericial->SOLICITUDID, $doc->EXPEDIENTEDOCID, $bandeja['MUNICIPIOASIGNADOID']);
 							if ($_solicitudDocto->status == 201) {
+								//Crea la solicityd en el expediente a Justicia.
 								$_solicitudExpediente = $this->_createSolicitudExpediente($expediente, $_solicitudPericial->SOLICITUDID, $municipio);
 								$plantilla = (object) array();
 
 								$plantilla = $this->_plantillasModel->where('TITULO',  $doc->TIPODOC)->first();
+								//Se obtiene el id de intervencion de acuerdo al municipio
 								if ($municipio == 1 ||  $municipio == 6) {
 									$intervencion = $plantilla['INTERVENCIONENSENADAID'];
 								} else if ($municipio == 2 || $municipio == 3 || $municipio == 7) {
@@ -1612,7 +1842,7 @@ class DashboardController extends BaseController
 									$intervencion = $plantilla['INTERVENCIONTIJUANAID'];
 								}
 								$dataInter =  array('SOLICITUDID' => $_solicitudPericial->SOLICITUDID, 'INTERVENCIONID' => $intervencion);
-
+								//Se crea la intervención pericial a Justicia.
 								$_intervencionPericial = $this->_createIntervencionPericial($dataInter, $municipio);
 								$datosBitacora = [
 									'ACCION' => 'Se envio una solicitud pericial.',
@@ -1641,7 +1871,11 @@ class DashboardController extends BaseController
 		}
 	}
 
-
+	/**
+	 * Vista para videodenuncia.
+	 * Regresa todo los catálogos necesarios para el consumo de esta vista.
+	 *
+	 */
 	public function video_denuncia()
 	{
 		$data = (object) array();
@@ -1778,6 +2012,15 @@ class DashboardController extends BaseController
 		$this->_loadView('Video denuncia', 'videodenuncia', '', $data, 'video_denuncia');
 	}
 
+	/**
+	 * Función para cargar cualquier vista en cualquier función.
+	 *
+	 * @param  mixed $title
+	 * @param  mixed $menu
+	 * @param  mixed $submenu
+	 * @param  mixed $data
+	 * @param  mixed $view
+	 */
 	private function _loadView($title, $menu, $submenu, $data, $view)
 	{
 		$data2 = [
@@ -1788,6 +2031,13 @@ class DashboardController extends BaseController
 		echo view("admin/dashboard/$view", $data2);
 	}
 
+	/**
+	 * Función para enviar mensajes SMS
+	 *
+	 * @param  mixed $tipo
+	 * @param  mixed $celular
+	 * @param  mixed $mensaje
+	 */
 	public function sendSMS($tipo, $celular, $mensaje)
 	{
 
@@ -1812,6 +2062,13 @@ class DashboardController extends BaseController
 
 		return json_decode($respuestaServ);
 	}
+	/**
+	 * Función para enviar email cuando el folio es derivado o canalizado. También se envía SMS.
+	 *
+	 * @param  mixed $to
+	 * @param  mixed $folio
+	 * @param  mixed $motivo
+	 */
 	private function _sendEmailDerivacionCanalizacion($to, $folio, $motivo)
 	{
 		$year = date('Y');
@@ -1831,6 +2088,13 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**
+	 * Función para enviar email cuando el folio es de tipo expediente. También se envía SMS.
+	 *
+	 * @param  mixed $to
+	 * @param  mixed $folio
+	 * @param  mixed $expedienteId
+	 */
 	private function _sendEmailExpediente($to, $folio, $expedienteId)
 	{
 		$folioM = $this->_folioModel->asObject()->where('EXPEDIENTEID', $expedienteId)->first();
@@ -1866,6 +2130,12 @@ class DashboardController extends BaseController
 		// }
 	}
 
+	/**
+	 * Función para enviar email con la contraseña del usuario
+	 *
+	 * @param  mixed $to
+	 * @param  mixed $password
+	 */
 	private function _sendEmailPassword($to, $password)
 	{
 
@@ -1883,6 +2153,11 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**
+	 * Función para verificar que el correo no exista
+	 * Recibe por metodo POST el email
+	 *
+	 */
 	public function existEmailAdmin()
 	{
 		$email = $this->request->getPost('email');
@@ -1896,6 +2171,11 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**
+	 * Función para obtener las oficinas de acuerdo al municipio.
+	 * Recibe por metodo POST el municipio
+	 *
+	 */
 	public function getOficinasByMunicipio()
 	{
 		$municipio = $this->request->getPost('municipio');
@@ -1909,6 +2189,10 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**
+	 * Función para obtener todos los documentos
+	 * Recibe por metodo POST el folio y el año.
+	 */
 	public function getDocumentosByFolio()
 	{
 		$folio = $this->request->getPost('folio');
@@ -1922,6 +2206,11 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**
+	 * Función para obtener todas las instituciones de derivaciones de acuerdo al municipio.
+	 * Se recibe por metodo POST el municipio
+	 *
+	 */
 	public function getDerivacionByMunicipio()
 	{
 		$municipio = $this->request->getPost('municipio');
@@ -1929,6 +2218,11 @@ class DashboardController extends BaseController
 		return json_encode($data);
 	}
 
+	/**
+	 * Función para obtener la relación de personas fisicas y delitos.
+	 * Recibe por metodo POST el folio y año.
+	 *
+	 */
 	public function getDelitosModalidad()
 	{
 		$folio = $this->request->getPost('folio');
@@ -1939,12 +2233,22 @@ class DashboardController extends BaseController
 	}
 
 
+	/**
+	 * Función para obtener todas las instituciones de canalizaciones de acuerdo al municipio.
+	 * Se recibe por metodo POST el municipio
+	 *
+	 */
 	public function getCanalizacionByMunicipio()
 	{
 		$municipio = $this->request->getPost('municipio');
 		$data = $this->_canalizacionesAtencionesModel->asObject()->where('MUNICIPIOID', $municipio)->orderBy('INSTITUCIONREMISIONDESCR', 'asc')->findAll();
 		return json_encode($data);
 	}
+	/**
+	 * Función para obtener los empleados de acuerdo al municipio y oficina.
+	 * Se recibe por metodo POST el municipio y oficina.
+	 *
+	 */
 	public function getEmpleadosByMunicipioAndOficina()
 	{
 		$municipio = $this->request->getPost('municipio');
@@ -1959,6 +2263,11 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**
+	 * Función para actualizar el status del folio cuando se le da salida de tipo DERIVADO O CANALIZADO.
+	 * Recibe por metodo POST el status, notas del agente, folio, año, municipio de institucion, institucion id y el tipo de denuncia (en caso de ser modificado)
+	 *
+	 */
 	public function updateStatusFolio()
 	{
 		$status = $this->request->getPost('status');
@@ -2002,6 +2311,7 @@ class DashboardController extends BaseController
 				$folioVehiculoRow = $this->_folioVehiculoModel->where('ANO', $year)->where('FOLIOID', $folio)->findAll();
 
 				if ($folioRow) {
+					//Se detecta que en la DB existan todos los campos necesarios para Justicia
 					$this->deteccionErrores($folioRow, $folioVehiculoRow);
 					$update = $this->_folioModel->set($data)->where('ANO', $year)->where('FOLIOID', $folio)->update();
 
@@ -2040,6 +2350,12 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**
+	 * Función para detectar que todos los campos requeridos en Justicia esten completos.
+	 *
+	 * @param  mixed $folioRow
+	 * @param  mixed $folioVehiculoRow
+	 */
 	public function deteccionErrores($folioRow, $folioVehiculoRow)
 	{
 
@@ -2160,6 +2476,11 @@ class DashboardController extends BaseController
 			}
 		}
 	}
+	/**
+	 * Función para dar salida y crear expediente en Justicia.
+	 * Se recibe por metodo POST el folio, año, municipio, estado, notas del agente, tipo de expediente, y tipo de denuncia.
+	 *
+	 */
 	public function saveInJusticia()
 	{
 		$folio = $this->request->getPost('folio');
@@ -2177,7 +2498,11 @@ class DashboardController extends BaseController
 				$folioVehiculoRow = $this->_folioVehiculoModel->where('ANO', $year)->where('FOLIOID', $folio)->findAll();
 
 				if ($folioRow) {
+					//Se detecta que en la DB existan todos los campos necesarios para Justicia
+
 					$this->deteccionErrores($folioRow, $folioVehiculoRow);
+
+					//Se consultan los datos a enviar a Justicia.
 
 					$personas = $this->_folioPersonaFisicaModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->orderBy('PERSONAFISICAID', 'asc')->findAll();
 					$fisImpDelito = $this->_imputadoDelitoModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
@@ -2189,6 +2514,7 @@ class DashboardController extends BaseController
 					$imputados_con_delito = array();
 					$imputados = $this->_folioPersonaFisicaModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->orderBy('PERSONAFISICAID', 'asc')->where('CALIDADJURIDICAID', 2)->findAll();
 
+					//Validación para dar salida al municipio correcto
 					if (($folioRow['HECHOMUNICIPIOID'] == 1) && !($municipio == 1)) {
 						throw new \Exception('Solo puedes dar salida a Ensenada.');
 					} else if (($folioRow['HECHOMUNICIPIOID'] == 2) && !($municipio == 2)) {
@@ -2213,6 +2539,7 @@ class DashboardController extends BaseController
 						$municipio = 2;
 					}
 
+					// Verificación para que todos los imputados tengan un delito y una relación con el ofendido
 					foreach ($fisImpDelito as $value) {
 						if (!in_array($value['PERSONAFISICAID'], $imputados_con_delito)) {
 							array_push($imputados_con_delito, $value['PERSONAFISICAID']);
@@ -2231,6 +2558,7 @@ class DashboardController extends BaseController
 					$narracion = $folioRow['HECHONARRACION'];
 					$fecha = $folioRow['HECHOFECHA'];
 
+					//Asignación de variables para creaar el expediente
 					$folioRow['MUNICIPIOID'] = $municipio;
 					$folioRow['ESTADOID'] = $estado;
 					$folioRow['HECHOMEDIOCONOCIMIENTOID'] = (string) 6;
@@ -2254,6 +2582,7 @@ class DashboardController extends BaseController
 					// );
 					// return json_encode(['info' => $expedienteCreado]);
 
+					// Destruye variables 
 					unset($folioRow['OFICINAIDRESPONSABLE']);
 					unset($folioRow['EMPLEADOIDREGISTRO']);
 					unset($folioRow['AREAIDREGISTRO']);
@@ -2282,6 +2611,8 @@ class DashboardController extends BaseController
 						];
 						$this->_bitacoraActividad($datosBitacora);
 
+
+						//Se actualiza la DB en VIDEODENUNCIA
 						$update = $this->_folioModel->set($folioRow)->where('FOLIOID', $folio)->where('ANO', $year)->update();
 						$personasRelacionMysqlOracle = array();
 						try {
@@ -2292,9 +2623,11 @@ class DashboardController extends BaseController
 									$persona['NOMBRE'] = 'QUIEN RESULTE OFENDIDO';
 								}
 
+								//Se crean todas las personas fisicas
 								$_persona = $this->_createPersonaFisica($expedienteCreado->EXPEDIENTEID, $persona, $municipio);
 								if ($_persona->status == 201) {
 
+									//Si es correcto se crea el imputado, domicilios y media filiacion de cada persona.
 									$domicilios = $this->_folioPersonaFisicaDomicilioModel->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->where('PERSONAFISICAID', $persona['PERSONAFISICAID'])->findAll();
 									$mediaFiliacion = $this->_folioMediaFiliacion->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->where('PERSONAFISICAID', $persona['PERSONAFISICAID'])->first();
 
@@ -2312,7 +2645,7 @@ class DashboardController extends BaseController
 								}
 							}
 
-							//Relacion Persona Física Imputado delito
+							//Se crea la relacion Persona Física Imputado delito
 							if (count($fisImpDelito) > 0) {
 								foreach ($fisImpDelito as $imputadodelito) {
 									try {
@@ -2323,7 +2656,7 @@ class DashboardController extends BaseController
 								}
 							}
 
-							//Relacion Victima Imputado
+							//Se crea la relacion Victima Imputado
 							if (count($relacionFisFis) > 0) {
 								foreach ($relacionFisFis as $fisFis) {
 									try {
@@ -2332,6 +2665,7 @@ class DashboardController extends BaseController
 										$_relacionFisFis = $this->_createRelacionFisFis($expedienteCreado->EXPEDIENTEID, $fisFis, $victima['id_oracle'], $imputado['id_oracle'], $municipio);
 										// Expediente vehiculo
 										if ($fisFis['DELITOMODALIDADID'] == 178 || $fisFis['DELITOMODALIDADID'] == 179) {
+											//Si el delito asignado es robo de vehiculo se crea el expediente del vehiculo.
 											if (count($vehiculos) > 0) {
 												foreach ($vehiculos as $vehiculo) {
 													if ($vehiculo['PLACAS'] == '') {
@@ -2352,7 +2686,7 @@ class DashboardController extends BaseController
 								}
 							}
 
-							// Relacion Persona Física Imputado delito
+							// Se crea la relacion Persona Física Imputado delito
 							if (count($parentescos) > 0) {
 								foreach ($parentescos as $parentesco) {
 									try {
@@ -2401,6 +2735,11 @@ class DashboardController extends BaseController
 	}
 
 
+	/**
+	 * Función para subir los archivos y documentos a Justicia antes de remisión
+	 * Se recibe por metodo POST el folio, año y expediente
+	 *
+	 */
 	public function crearArchivo()
 	{
 		$folio = $this->request->getPost('folio');
@@ -2410,6 +2749,7 @@ class DashboardController extends BaseController
 		$folioDocSinFirmar = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'ABIERTO')->orderBy('FOLIODOCID', 'asc')->findAll();
 		$foliovd = $this->_folioModel->where('FOLIOID', $folio)->where('ANO', $year)->where('EXPEDIENTEID', $expediente)->where('STATUS', 'EXPEDIENTE')->first();
 
+		// Se revisa que no hayan documentos sin firmar
 		if ($folioDocSinFirmar) {
 			return json_encode((object)['status' => 4]);
 		}
@@ -2422,10 +2762,12 @@ class DashboardController extends BaseController
 			try {
 
 				foreach ($archivosExternosVD as $key => $arch) {
+					//Se verifica que los archivos externos no esten subidos en Justicia para no repetirlos
 					$relacionDocArc = $this->_relacionFolioDocModel->where('FOLIOID', $arch['FOLIOID'])->where('ANO', $arch['ANO'])->where('FOLIODOCID', $arch['FOLIOARCHIVOID'])->where('TIPO', 'ARCHIVO')->orderBy('FOLIODOCID', 'asc')->first();
 					if ($relacionDocArc == NULL) {
 						$municipioid = $foliovd['MUNICIPIOID'] ? $foliovd['MUNICIPIOID'] : NULL;
 
+						//Se asigna el autor y oficina de acuerdo al .ENV
 						try {
 							if (ENVIRONMENT == 'development') {
 								if ($foliovd['MUNICIPIOASIGNADOID'] == 1) {
@@ -2452,6 +2794,7 @@ class DashboardController extends BaseController
 									$oficina = 924;
 								}
 							}
+							// Se suben los archivos externos a Justicia.
 							$_archivo = $this->_createArchivosExternos($expediente, $folio, $year,  $municipioid, 53, $arch['ARCHIVODESCR'], $arch['ARCHIVO'], $arch['EXTENSION'], $autor, $oficina);
 							if ($_archivo->status == 201) {
 								$datosRelacionFolio = [
@@ -2475,9 +2818,12 @@ class DashboardController extends BaseController
 		if ($folioDoc) {
 			try {
 				foreach ($folioDoc as $key => $doc) {
+					//Se verifica que los documentos no esten subidos en Justicia para no repetirlos
+
 					$relacionDocArc = $this->_relacionFolioDocModel->where('FOLIOID', $doc['FOLIOID'])->where('ANO', $doc['ANO'])->where('FOLIODOCID', $doc['FOLIODOCID'])->where('TIPO', 'ARCHIVO DOC')->orderBy('FOLIODOCID', 'asc')->first();
 					if ($relacionDocArc == NULL) {
 						$municipioid = $foliovd['MUNICIPIOID'] ? $foliovd['MUNICIPIOID'] : NULL;
+						//Se asigna el autor y oficina de acuerdo al .ENV
 
 						try {
 							if (ENVIRONMENT == 'development') {
@@ -2505,6 +2851,7 @@ class DashboardController extends BaseController
 									$oficina = 924;
 								}
 							}
+							// Se suben los documentos a Justicia.
 							$_archivo = $this->_createArchivosExternos($expediente, $folio, $year,  $municipioid, 53,  $doc['TIPODOC'], $doc['PDF'], 'pdf', $autor, $oficina);
 							// $_archivo = $this->_createArchivosExternos($expediente, $folio, $year,  $municipioid, 53, $doc['TIPODOC'], $doc['PDF'], 'pdf', 3947,  394);
 							if ($_archivo->status == 201) {
@@ -2556,6 +2903,7 @@ class DashboardController extends BaseController
 					$relacionDocExpDoc = $this->_relacionFolioDocExpDoc->where('FOLIOID', $docP['FOLIOID'])->where('ANO', $docP['ANO'])->where('EXPEDIENTEID', $docP['NUMEROEXPEDIENTE'])->where('FOLIODOCID', $docP['FOLIODOCID'])->orderBy('FOLIODOCID', 'asc')->first();
 
 					if ($relacionDocExpDoc == null) {
+						// Se crean los RTF´s de las solicitudes periciales
 
 						try {
 							PHPRtfLite::registerAutoloader();
@@ -2611,6 +2959,7 @@ class DashboardController extends BaseController
 								}
 							}
 
+							// Se asigna la clasificacion y plantilla de acuerdo al municipio
 							$documentos['STATUSDOCUMENTOID'] = 4;
 							if ($foliovd['MUNICIPIOASIGNADOID'] == 1) {
 								$documentos['CLASIFICACIONDOCTOID'] = $plantilla['CLASIFICACIONDOCTOENSENADAID'];
@@ -2635,6 +2984,8 @@ class DashboardController extends BaseController
 								$documentos['PLANTILLAID'] = $plantilla['pLANTILLAJUSTICIAMEXICALIID'];
 							}
 
+
+							// Se crean los documentos periciales
 							$expedienteDocumento = $this->_createFolioDocumentos($expediente, $documentos, $docP['MUNICIPIOID']);
 
 							if ($expedienteDocumento->status == 201) {
@@ -2665,10 +3016,18 @@ class DashboardController extends BaseController
 	}
 
 
+	/**
+	 * Función para subir los archivos y documentos a Justicia desde la remisión
+	 *
+	 * @param  mixed $folio
+	 * @param  mixed $year
+	 * @param  mixed $expediente
+	 */
 	public function subirArchivosRemision($folio, $year, $expediente)
 	{
 		$folioDocSinFirmar = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'ABIERTO')->orderBy('FOLIODOCID', 'asc')->findAll();
 		$foliovd = $this->_folioModel->where('FOLIOID', $folio)->where('ANO', $year)->where('EXPEDIENTEID', $expediente)->where('STATUS', 'EXPEDIENTE')->first();
+		// Se revisa que no hayan documentos sin firmar
 
 		if ($folioDocSinFirmar) {
 			return json_encode((object)['status' => 4]);
@@ -2683,9 +3042,12 @@ class DashboardController extends BaseController
 				try {
 
 					foreach ($archivosExternosVD as $key => $arch) {
+						//Se verifica que los archivos externos no esten subidos en Justicia para no repetirlos
+
 						$relacionDocArc = $this->_relacionFolioDocModel->where('FOLIOID', $arch['FOLIOID'])->where('ANO', $arch['ANO'])->where('FOLIODOCID', $arch['FOLIOARCHIVOID'])->where('TIPO', 'ARCHIVO')->orderBy('FOLIODOCID', 'asc')->first();
 						if ($relacionDocArc == NULL) {
 							$municipioid = $foliovd['MUNICIPIOID'] ? $foliovd['MUNICIPIOID'] : NULL;
+							//Se asigna el autor y oficina de acuerdo al .ENV
 
 							try {
 								if (ENVIRONMENT == 'development') {
@@ -2713,6 +3075,8 @@ class DashboardController extends BaseController
 										$oficina = 924;
 									}
 								}
+								// Se suben los archivos externos a Justicia.
+
 
 								$_archivo = $this->_createArchivosExternos($expediente, $folio, $year,  $municipioid, 53, $arch['ARCHIVODESCR'], $arch['ARCHIVO'], $arch['EXTENSION'], $autor, $oficina);
 								if ($_archivo->status == 201) {
@@ -2738,9 +3102,12 @@ class DashboardController extends BaseController
 
 				try {
 					foreach ($folioDoc as $key => $doc) {
+						//Se verifica que los documentos no esten subidos en Justicia para no repetirlos
+
 						$relacionDocArc = $this->_relacionFolioDocModel->where('FOLIOID', $doc['FOLIOID'])->where('ANO', $doc['ANO'])->where('FOLIODOCID', $doc['FOLIODOCID'])->where('TIPO', 'ARCHIVO DOC')->orderBy('FOLIODOCID', 'asc')->first();
 						if ($relacionDocArc == NULL) {
 							$municipioid = $foliovd['MUNICIPIOID'] ? $foliovd['MUNICIPIOID'] : NULL;
+							//Se asigna el autor y oficina de acuerdo al .ENV
 
 							try {
 								if (ENVIRONMENT == 'development') {
@@ -2768,6 +3135,7 @@ class DashboardController extends BaseController
 										$oficina = 924;
 									}
 								}
+								// Se suben los documentos a Justicia.
 
 								$_archivo = $this->_createArchivosExternos($expediente, $folio, $year,  $municipioid, 53,  $doc['TIPODOC'], $doc['PDF'], 'pdf', $autor, $oficina);
 
@@ -2800,6 +3168,7 @@ class DashboardController extends BaseController
 						$relacionDocExpDoc = $this->_relacionFolioDocExpDoc->where('FOLIOID', $docP['FOLIOID'])->where('ANO', $docP['ANO'])->where('EXPEDIENTEID', $docP['NUMEROEXPEDIENTE'])->where('FOLIODOCID', $docP['FOLIODOCID'])->orderBy('FOLIODOCID', 'asc')->first();
 
 						if ($relacionDocExpDoc == null) {
+							// Se crean los RTF´s de las solicitudes periciales
 
 							try {
 								// PHPRtfLite::registerAutoloader();
@@ -2826,6 +3195,8 @@ class DashboardController extends BaseController
 								//Convierte el blob a base64 para enviarlo al webservice.
 								$documentos['DOCUMENTO'] = base64_encode($utf16le);
 								$documentos['DOCTODESCR'] = $docP['TIPODOC'];
+								//Se asigna el autor y oficina dependiendo del enviroment
+
 								if (ENVIRONMENT == 'development') {
 									if ($foliovd['MUNICIPIOASIGNADOID'] == 1) {
 										$documentos['AUTOR'] = 8987;
@@ -2850,6 +3221,7 @@ class DashboardController extends BaseController
 										$documentos['OFICINAIDAUTOR'] = 924;
 									}
 								}
+								// Se asigna la clasificacion y plantilla de acuerdo al municipio
 
 								$documentos['STATUSDOCUMENTOID'] = 4;
 								if ($foliovd['MUNICIPIOASIGNADOID'] == 1) {
@@ -2877,6 +3249,7 @@ class DashboardController extends BaseController
 
 
 
+								// Se crean los documentos periciales
 
 
 								$expedienteDocumento = $this->_createFolioDocumentos($expediente, $documentos, $docP['MUNICIPIOID']);
@@ -2911,10 +3284,16 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**
+	 * Función para crear el expediente en Justicia.
+	 *
+	 * @param  mixed $folioRow
+	 */
 	private function _createExpediente($folioRow)
 	{
 		$function = '/expediente.php?process=crear';
 		$endpoint = $this->endpoint . $function;
+		//Se crea la conexion de acrdo al municipio y enviroment.
 		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $folioRow['MUNICIPIOID'])->where('TYPE', ENVIRONMENT)->first();
 		// $conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int)$folioRow['MUNICIPIOID'])->where('TYPE', 'production')->first();
 		$array = [
@@ -2965,6 +3344,7 @@ class DashboardController extends BaseController
 
 		$data = $folioRow;
 
+		// Se limpian varibles nulas o que no esten en el array definido
 		foreach ($data as $clave => $valor) {
 			if (empty($valor)) {
 				unset($data[$clave]);
@@ -2984,6 +3364,13 @@ class DashboardController extends BaseController
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
 
+	/**
+	 * Función para crear personas fisicas en Justicia
+	 *
+	 * @param  mixed $expedienteId
+	 * @param  mixed $personaFisica
+	 * @param  mixed $municipio
+	 */
 	private function _createPersonaFisica($expedienteId, $personaFisica, $municipio)
 	{
 		$function = '/personaFisica.php?process=crear';
@@ -3030,6 +3417,8 @@ class DashboardController extends BaseController
 			"FOTO",
 		];
 		$endpoint = $this->endpoint . $function;
+		//Se crea la conexion de acuerdo al municipio y enviroment.
+
 		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
 		$data = $personaFisica;
 
@@ -3041,6 +3430,7 @@ class DashboardController extends BaseController
 			}
 		}
 
+		//Se sube la foto cuando la persona es desaparecida
 		if ($data['DESAPARECIDA'] == "N") {
 			$data['FOTO'] = null;
 		} else {
@@ -3050,6 +3440,7 @@ class DashboardController extends BaseController
 			}
 		}
 
+		// Se limpian varibles nulas o que no esten en el array definido
 		foreach ($data as $clave => $valor) {
 			if (empty($valor)) {
 				unset($data[$clave]);
@@ -3072,6 +3463,14 @@ class DashboardController extends BaseController
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
 
+	/**
+	 * Función para crear domicilios de las personas fisicas en Justicia
+	 *
+	 * @param  mixed $expedienteId
+	 * @param  mixed $personaFisicaId
+	 * @param  mixed $domicilioPersonaFisica
+	 * @param  mixed $municipio
+	 */
 	private function _createDomicilioPersonaFisica($expedienteId, $personaFisicaId, $domicilioPersonaFisica, $municipio)
 	{
 		if ($domicilioPersonaFisica['ESTADOID'] && $domicilioPersonaFisica['MUNICIPIOID'] && $domicilioPersonaFisica['LOCALIDADID']) {
@@ -3094,6 +3493,8 @@ class DashboardController extends BaseController
 				"NUMEROINTERIOR",
 			];
 			$endpoint = $this->endpoint . $function;
+			//Se crea la conexion de acuerdo al municipio y enviroment.
+
 			$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
 			$data = $domicilioPersonaFisica;
 
@@ -3102,6 +3503,8 @@ class DashboardController extends BaseController
 			// if ($data['COLONIAID'] != 0) {
 			// 	unset($data['COLONIADESCR']);
 			// }
+
+			// Se limpian varibles nulas o que no esten en el array definido
 			unset($data['DOMICILIOID']);
 
 			foreach ($data as $clave => $valor) {
@@ -3126,6 +3529,14 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**
+	 * Función para crear la media filiacion de las personas fisicas en Justicia.
+	 *
+	 * @param  mixed $expedienteId
+	 * @param  mixed $personaFisicaId
+	 * @param  mixed $personaFisicaMediaFiliacion
+	 * @param  mixed $municipio
+	 */
 	private function _createPersonaFisicaMediaFilicacion($expedienteId, $personaFisicaId, $personaFisicaMediaFiliacion, $municipio)
 	{
 		$function = '/mediaFiliacion.php?process=crear';
@@ -3207,9 +3618,12 @@ class DashboardController extends BaseController
 			'ESTOMAGODESCR',
 		];
 		$endpoint = $this->endpoint . $function;
+		//Se crea la conexion de acuerdo al municipio y enviroment.
+
 		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
 		$data = $personaFisicaMediaFiliacion;
 
+		// Se limpian varibles nulas o que no esten en el array definido
 		foreach ($data as $clave => $valor) {
 			if (empty($valor)) {
 				unset($data[$clave]);
@@ -3232,10 +3646,19 @@ class DashboardController extends BaseController
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
 
+	/**
+	 * Se crea el expediente del imputado en Justicia
+	 *
+	 * @param  mixed $expedienteId
+	 * @param  mixed $personaFisicaId
+	 * @param  mixed $municipio
+	 */
 	private function _createExpImputado($expedienteId, $personaFisicaId, $municipio)
 	{
 		$function = '/imputado.php?process=crear';
 		$endpoint = $this->endpoint . $function;
+		//Se crea la conexion de acuerdo al municipio y enviroment.
+
 		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
 		$data = array();
 
@@ -3250,6 +3673,7 @@ class DashboardController extends BaseController
 		$data['pwdDB'] = $conexion->PASSWORD;
 		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
 		$data['schema'] = $conexion->SCHEMA;
+		// Se limpian varibles nulas o que no esten en el array definido
 
 		foreach ($data as $clave => $valor) {
 			if (empty($valor)) {
@@ -3260,6 +3684,15 @@ class DashboardController extends BaseController
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
 
+	/**
+	 * Se crea la relacion parentesco en Justicia
+	 *
+	 * @param  mixed $expedienteId
+	 * @param  mixed $relacionparentesco
+	 * @param  mixed $personafisica1
+	 * @param  mixed $personafisica2
+	 * @param  mixed $municipio
+	 */
 	private function _createRelacionParentesco($expedienteId, $relacionparentesco, $personafisica1, $personafisica2, $municipio)
 	{
 		$function = '/relacionParentesco.php?process=crear';
@@ -3270,8 +3703,12 @@ class DashboardController extends BaseController
 			'PERSONAFISICAID2'
 		];
 		$endpoint = $this->endpoint . $function;
+		//Se crea la conexion de acuerdo al municipio y enviroment.
+
 		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
 		$data = $relacionparentesco;
+		// Se limpian varibles nulas o que no esten en el array definido
+
 		foreach ($data as $clave => $valor) {
 			if (empty($valor)) {
 				unset($data[$clave]);
@@ -3295,6 +3732,15 @@ class DashboardController extends BaseController
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
 
+	/**
+	 * Se crea la relacion persona fisica a persona fisica en Justicia.
+	 *
+	 * @param  mixed $expedienteId
+	 * @param  mixed $relacionff
+	 * @param  mixed $victima
+	 * @param  mixed $imputado
+	 * @param  mixed $municipio
+	 */
 	private function _createRelacionFisFis($expedienteId, $relacionff, $victima, $imputado, $municipio)
 	{
 		$function = '/relacionfisfis.php?process=crear';
@@ -3308,8 +3754,12 @@ class DashboardController extends BaseController
 			'CONVIOLENCIA',
 		];
 		$endpoint = $this->endpoint . $function;
+		//Se crea la conexion de acuerdo al municipio y enviroment.
+
 		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
 		$data = $relacionff;
+		// Se limpian varibles nulas o que no esten en el array definido
+
 		foreach ($data as $clave => $valor) {
 			if (empty($valor)) {
 				unset($data[$clave]);
@@ -3332,6 +3782,20 @@ class DashboardController extends BaseController
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
 
+	/**
+	 * Se crean los archivos externos y documentos en Justicia
+	 *
+	 * @param  mixed $expedienteId
+	 * @param  mixed $folioid
+	 * @param  mixed $ano
+	 * @param  mixed $municipioid
+	 * @param  mixed $clasificaciondoctoid
+	 * @param  mixed $tipodoc
+	 * @param  mixed $archivo
+	 * @param  mixed $extension
+	 * @param  mixed $autor
+	 * @param  mixed $oficina
+	 */
 	private function _createArchivosExternos($expedienteId, $folioid, $ano, $municipioid, $clasificaciondoctoid, $tipodoc, $archivo, $extension, $autor, $oficina)
 	{
 		if ($archivo != '' && $archivo) {
@@ -3354,8 +3818,11 @@ class DashboardController extends BaseController
 			];
 			$endpoint = $this->endpoint . $function;
 			$folioRow = $this->_folioModel->where('ANO', $ano)->where('FOLIOID', $folioid)->first();
+			//Se crea la conexion de acuerdo al municipio y enviroment.
+
 			$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipioid != '' ? $municipioid : $folioRow['MUNICIPIOID'])->where('TYPE', ENVIRONMENT)->first();
 
+			// Se asignan las variables
 			$data = array();
 			$data['EXPEDIENTEID'] = $expedienteId;
 			$data['EXTENSION'] = '.' . $extension;
@@ -3378,6 +3845,13 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**
+	 * Función para crear los documentos periciales en Justicia.
+	 *
+	 * @param  mixed $expedienteId
+	 * @param  mixed $documentos
+	 * @param  mixed $municipio
+	 */
 	private function _createFolioDocumentos($expedienteId, $documentos, $municipio)
 	{
 		$function = '/documento.php?process=crear';
@@ -3406,8 +3880,12 @@ class DashboardController extends BaseController
 
 		];
 		$endpoint = $this->endpoint . $function;
+		//Se crea la conexion de acuerdo al municipio y enviroment.
+
 		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
 		$data = $documentos;
+		// Se limpian varibles nulas o que no esten en el array definido
+
 		foreach ($data as $clave => $valor) {
 			if (empty($valor)) {
 				unset($data[$clave]);
@@ -3428,6 +3906,12 @@ class DashboardController extends BaseController
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
 
+	/**
+	 * Función para crear las intervenciones periciales en Justicia.
+	 *
+	 * @param  mixed $solicitud
+	 * @param  mixed $municipio
+	 */
 	private function _createIntervencionPericial($solicitud, $municipio)
 	{
 
@@ -3446,8 +3930,11 @@ class DashboardController extends BaseController
 
 		];
 		$endpoint = $this->endpoint . $function;
+		//Se crea la conexion de acuerdo al municipio y enviroment.
+
 		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
 		$data = $solicitud;
+		// Se limpian varibles nulas o que no esten en el array definido
 
 		foreach ($data as $clave => $valor) {
 			if (empty($valor)) {
@@ -3466,6 +3953,11 @@ class DashboardController extends BaseController
 		$data['schema'] = $conexion->SCHEMA;
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
+	/**
+	 * Función para crear solicitudes periciales en Justicia.
+	 *
+	 * @param  mixed $solicitud
+	 */
 	private function _createSolicitudesPericiales($solicitud)
 	{
 		$function = '/solicitudPericial.php?process=crear';
@@ -3490,8 +3982,12 @@ class DashboardController extends BaseController
 			'OBSERVACIONESENTREGA'
 		];
 		$endpoint = $this->endpoint . $function;
+		//Se crea la conexion de acuerdo al municipio y enviroment.
+
 		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $solicitud['MUNICIPIOID'])->where('TYPE', ENVIRONMENT)->first();
 		$data = $solicitud;
+		// Se limpian varibles nulas o que no esten en el array definido
+
 		foreach ($data as $clave => $valor) {
 			if (empty($valor)) {
 				unset($data[$clave]);
@@ -3510,6 +4006,13 @@ class DashboardController extends BaseController
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
 
+	/**
+	 * Función para crear las solicitudes periciales en el expediente en Justicia
+	 *
+	 * @param  mixed $expedienteId
+	 * @param  mixed $solicitudExp
+	 * @param  mixed $municipio
+	 */
 	private function _createSolicitudExpediente($expedienteId, $solicitudExp, $municipio)
 	{
 		$function = '/solicitudPericial.php?process=solicitudExpediente';
@@ -3519,6 +4022,8 @@ class DashboardController extends BaseController
 
 		];
 		$endpoint = $this->endpoint . $function;
+		//Se crea la conexion de acuerdo al municipio y enviroment.
+
 		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
 		$data = array();
 
@@ -3532,6 +4037,14 @@ class DashboardController extends BaseController
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
 
+	/**
+	 * Funcion para crear la relacion de la solicitud, expediente y documento en Justicia
+	 *
+	 * @param  mixed $expedienteId
+	 * @param  mixed $solicitudid
+	 * @param  mixed $solicitudDocto
+	 * @param  mixed $municipio
+	 */
 	private function _createSolicitudDocto($expedienteId, $solicitudid, $solicitudDocto, $municipio)
 	{
 
@@ -3545,20 +4058,10 @@ class DashboardController extends BaseController
 		];
 
 		$endpoint = $this->endpoint . $function;
+		//Se crea la conexion de acuerdo al municipio y enviroment.
+
 		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
 		$data = array();
-
-		// foreach ($data as $clave => $valor) {
-		// 	if (empty($valor)) {
-		// 		unset($data[$clave]);
-		// 	}
-		// }
-
-		// foreach ($data as $clave => $valor) {
-		// 	if (!in_array($clave, $array)) {
-		// 		unset($data[$clave]);
-		// 	}
-		// }
 
 		$data['EXPEDIENTEID'] = $expedienteId;
 		$data['SOLICITUDID'] = $solicitudid;
@@ -3571,6 +4074,13 @@ class DashboardController extends BaseController
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
 
+	/**
+	 * Función para crear la bandeja RAC en Justicia
+	 *
+	 * @param  mixed $expedienteId
+	 * @param  mixed $procedimientoid
+	 * @param  mixed $municipio
+	 */
 	private function _createJusticiaAlterna($expedienteId, $procedimientoid, $municipio)
 	{
 		$function = '/justiciaAlterna.php?process=crear';
@@ -3585,6 +4095,8 @@ class DashboardController extends BaseController
 		];
 
 		$endpoint = $this->endpoint . $function;
+		//Se crea la conexion de acuerdo al municipio y enviroment.
+
 		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
 
 		$data['EXPEDIENTEID'] = $expedienteId;
@@ -3596,11 +4108,17 @@ class DashboardController extends BaseController
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
 
+	/**
+	 * Función para obtener los modulos desde el WebServices
+	 *
+	 */
 	public function getModulos()
 	{
 		$municipio = $this->request->getPost('municipio');
 		$function = '/consumoVistas.php?process=mediacion';
 		$endpoint = $this->endpoint . $function;
+		//Se crea la conexion de acuerdo al municipio y enviroment.
+
 		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
 		$data['MUNICIPIOID'] = $municipio;
 		$data['userDB'] = $conexion->USER;
@@ -3609,10 +4127,18 @@ class DashboardController extends BaseController
 		$data['schema'] = $conexion->SCHEMA;
 		return json_encode($this->_curlPostDataEncrypt($endpoint, $data)->data);
 	}
+	/**
+	 * Función para obtener los mediadores desde el WebServices
+	 *
+	 * @param  mixed $municipio
+	 * @param  mixed $modulo
+	 */
 	private function getMediador($municipio, $modulo)
 	{
 		$function = '/consumoVistas.php?process=getMediador';
 		$endpoint = $this->endpoint . $function;
+		//Se crea la conexion de acuerdo al municipio y enviroment.
+
 		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
 		$data['MUNICIPIOID'] = $municipio;
 		$data['AREA_MP_MEDIADOR'] = $modulo;
@@ -3622,6 +4148,14 @@ class DashboardController extends BaseController
 		$data['schema'] = $conexion->SCHEMA;
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
+	/**
+	 * Función para crear la relación del imputado y del delito en Justicia
+	 *
+	 * @param  mixed $expedienteId
+	 * @param  mixed $fisimpdelito
+	 * @param  mixed $imputado
+	 * @param  mixed $municipio
+	 */
 	private function _createFisImpDelito($expedienteId, $fisimpdelito, $imputado, $municipio)
 	{
 		$function = '/imputadoDelito.php?process=crear';
@@ -3633,8 +4167,12 @@ class DashboardController extends BaseController
 			'TENTATIVA',
 		];
 		$endpoint = $this->endpoint . $function;
+		//Se crea la conexion de acuerdo al municipio y enviroment.
+
 		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
 		$data = $fisimpdelito;
+		// Se limpian varibles nulas o que no esten en el array definido
+
 		foreach ($data as $clave => $valor) {
 			if (empty($valor)) {
 				unset($data[$clave]);
@@ -3657,6 +4195,13 @@ class DashboardController extends BaseController
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
 
+	/**
+	 * Función para crear los vehiculos en Justicia
+	 *
+	 * @param  mixed $expedienteId
+	 * @param  mixed $vehiculos
+	 * @param  mixed $municipio
+	 */
 	private function _createExpVehiculo($expedienteId, $vehiculos, $municipio)
 	{
 
@@ -3697,8 +4242,11 @@ class DashboardController extends BaseController
 		];
 
 		$endpoint = $this->endpoint . $function;
+		//Se crea la conexion de acuerdo al municipio y enviroment.
+
 		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
 		$data = $vehiculos;
+		// Se limpian varibles nulas o que no esten en el array definido
 
 		foreach ($data as $clave => $valor) {
 			if (empty($valor)) {
@@ -3713,6 +4261,8 @@ class DashboardController extends BaseController
 
 		$data['EXPEDIENTEID'] = $expedienteId;
 		$data['ANO'] = $vehiculos['ANOVEHICULO'];
+
+		//Se suben las fotos y doucmentos de los vehiculos a archivos externos en Justicia
 
 		isset($vehiculos['FOTO'])
 			? $data['FOTO'] = base64_encode($vehiculos['FOTO'])
@@ -3743,6 +4293,12 @@ class DashboardController extends BaseController
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
 
+	/**
+	 * Función CURL POST a Justicia sin encriptacion
+	 *
+	 * @param  mixed $endpoint
+	 * @param  mixed $data
+	 */
 	private function _curlPost($endpoint, $data)
 	{
 		$ch = curl_init();
@@ -3774,40 +4330,13 @@ class DashboardController extends BaseController
 
 		return json_decode($result);
 	}
-	private function _curlPostSMS($endpoint, $data)
-	{
-		$ch = curl_init();
 
-		curl_setopt($ch, CURLOPT_URL, $endpoint);
-		// curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		// curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-		// curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-		// curl_setopt($ch, CURLOPT_POST, 1);
-		// curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-		// $headers = array(
-		// 	'Content-Type: application/json',
-		// 	'Access-Control-Allow-Origin: *',
-		// 	'Access-Control-Allow-Credentials: true',
-		// 	'Access-Control-Allow-Headers: Content-Type',
-		// );
-		// curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-		$result = curl_exec($ch);
-
-		if ($result === false) {
-			$result = "{
-                'status' => 401,
-                'error' => 'Curl failed: '" . curl_error($ch) . "
-            }";
-		}
-		curl_close($ch);
-		// var_dump($data);
-		// exit;
-
-		return json_decode($result);
-	}
-
-
+	/**
+	 * Función CURL PATCH para actualizar usuarios en el serivicio de videollamada 
+	 *
+	 * @param  mixed $endpoint
+	 * @param  mixed $data
+	 */
 	private function _curlPatch($endpoint, $data)
 	{
 		$ch = curl_init();
@@ -3839,6 +4368,12 @@ class DashboardController extends BaseController
 		return json_decode($result);
 	}
 
+	/**
+	 * Función CURL POST para agregar usuarios en el serivicio de videollamada 
+	 *
+	 * @param  mixed $endpoint
+	 * @param  mixed $data
+	 */
 	private function _curlPostService($endpoint, $data)
 	{
 		$ch = curl_init();
@@ -3871,6 +4406,11 @@ class DashboardController extends BaseController
 		return json_decode($result);
 	}
 
+	/**
+	 * Función CURL GET para el serivicio de videollamada 
+	 *
+	 * @param  mixed $endpoint
+	 */
 	private function _curlGetService($endpoint)
 	{
 		$ch = curl_init();
@@ -3904,6 +4444,12 @@ class DashboardController extends BaseController
 	}
 
 
+	/**
+	 * Función CURL POST a Justicia encriptados
+	 *
+	 * @param  mixed $endpoint
+	 * @param  mixed $data
+	 */
 	private function _curlPostDataEncrypt($endpoint, $data)
 	{
 		// var_dump($data);exit;
@@ -3999,6 +4545,10 @@ class DashboardController extends BaseController
 		// return json_encode(['tiempo' => $duration]);
 
 	}
+	/**
+	 * Función para obtener los videos del servicio de videollamada
+	 *
+	 */
 	public function getVideoLink()
 	{
 		$data = array();
@@ -4027,6 +4577,10 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**
+	 * Función para obtener el link de la llamada
+	 * ! Deprecated method, do not use.
+	 */
 	public function getLinkFromCall()
 	{
 		$folio = $this->request->getPost('folio');
@@ -4059,7 +4613,10 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
-
+	/**
+	 * Función para los usuarios activos de Jitsi
+	 * ! Deprecated method, do not use.
+	 */
 	public function getActiveUsers()
 	{
 		$endpoint = 'https://videodenunciaserver1.fgebc.gob.mx/api/user';
@@ -4078,7 +4635,10 @@ class DashboardController extends BaseController
 		}
 		return json_encode(['users' => $active_users, 'count' => count($active_users)]);
 	}
-
+	/**
+	 * Función para obtener los usuarios no activos en Jitsi
+	 * ! Deprecated method, do not use.
+	 */
 	private function _getUnusedUsersVideo()
 	{
 		$endpoint = 'https://videodenunciaserver1.fgebc.gob.mx/api/user';
@@ -4099,7 +4659,10 @@ class DashboardController extends BaseController
 		sort($unused_users);
 		return $unused_users;
 	}
-
+	/**
+	 * Función para limpiar los videos en Jitsi
+	 * ! Deprecated method, do not use.
+	 */
 	function clearUsersVideo()
 	{
 		// $endpoint = 'https://videodenunciaserver1.fgebc.gob.mx/api/user';
@@ -4123,6 +4686,16 @@ class DashboardController extends BaseController
 		// }
 	}
 
+	/**
+	 * Función para actualizar los usuarios en el servicio de videollamada
+	 *
+	 * @param  mixed $uuid
+	 * @param  mixed $names
+	 * @param  mixed $lastnames
+	 * @param  mixed $email
+	 * @param  mixed $sex
+	 * @param  mixed $rolId
+	 */
 	private function _updateUserVideo($uuid, $names, $lastnames, $email, $sex, $rolId)
 	{
 		if ($uuid && $names && $lastnames && $email && $sex && $rolId) {
@@ -4137,6 +4710,10 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**
+	 * Función para restaurar folios a abiertos cuando buscan uno nuevo
+	 *
+	 */
 	public function restoreFolio()
 	{
 		$folio = $this->request->getPost('folio');
@@ -4164,7 +4741,10 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 1, 'message' => $update]);
 		}
 	}
-
+	/**
+	 * Función para cambiar el status del folio a en proceso cuando lo buscan
+	 *
+	 */
 	public function restoreFolioProcess()
 	{
 		$folio = $this->request->getPost('folio');
@@ -4192,6 +4772,10 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**
+	 * Función para actualizar la tabla de folio en VIDEODENUNCIA a través del metodo POST
+	 *
+	 */
 	public function updateFolio()
 	{
 		$colonia = $this->_coloniasModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $this->request->getPost('municipio_delito'))->where('LOCALIDADID', $this->request->getPost('localidad_delito'))->where('COLONIAID', $this->request->getPost('colonia_delito_select'))->first();
@@ -4248,7 +4832,10 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
-
+	/**
+	 * Función para actualizar la tabla de folio en DENUNCIA ANONIMA a través del metodo POST
+	 *
+	 */
 	public function updateFolioDenuncia()
 	{
 
@@ -4340,6 +4927,10 @@ class DashboardController extends BaseController
 	// 	}
 	// }
 
+	/**
+	 * Función para actualizar la tabla de folio al asignar una oficina y un empleado por metodo POST
+	 *
+	 */
 	public function updateFolioAsignacion()
 	{
 		try {
@@ -4378,10 +4969,23 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**
+	 * Función para actualizar el area de registro y responsable en Justicia
+	 *
+	 * @param  mixed $expediente
+	 * @param  mixed $municipio
+	 * @param  mixed $oficina
+	 * @param  mixed $empleado
+	 * @param  mixed $area
+	 * @param  mixed $tipo
+	 * @param  mixed $estadojuridicoid
+	 */
 	private function _updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area, $tipo, $estadojuridicoid = null)
 	{
 		$function = '/expediente.php?process=updateArea';
 		$endpoint = $this->endpoint . $function;
+		//Se crea la conexion de acrdo al municipio y enviroment.
+
 		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
 		$empleado_select = $this->_empleadosModel->asObject()->where('EMPLEADOID', (int) $empleado)->first();
 
@@ -4420,6 +5024,7 @@ class DashboardController extends BaseController
 
 		$data['EXPEDIENTEID'] = $expediente;
 		$data['ESTADOJURIDICOEXPEDIENTEID'] = (string) $estadojuridicoid;
+		// Se limpian varibles nulas o que no esten en el array definido
 
 		foreach ($data as $clave => $valor) {
 			if (empty($valor)) {
@@ -4440,10 +5045,17 @@ class DashboardController extends BaseController
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
 
+	/**
+	 * Se crea la bandeja en Justicia
+	 *
+	 * @param  mixed $bandeja
+	 */
 	private function _createBandeja($bandeja)
 	{
 		$function = '/expediente.php?process=bandeja';
 		$endpoint = $this->endpoint . $function;
+		//Se crea la conexion de acrdo al municipio y enviroment.
+
 		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $bandeja['MUNICIPIOASIGNADOID'])->where('TYPE', ENVIRONMENT)->first();
 		$array = [
 			"AREAIDREGISTRO",
@@ -4451,6 +5063,7 @@ class DashboardController extends BaseController
 		];
 
 		$data = $bandeja;
+		// Se limpian varibles nulas o que no esten en el array definido
 
 		foreach ($data as $clave => $valor) {
 			if (empty($valor)) {
@@ -4473,6 +5086,10 @@ class DashboardController extends BaseController
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
 
+	/**
+	 * Función para actualizar las preguntas iniciales en VIDEODENUNCIA a través del metodo PSOT.
+	 *
+	 */
 	public function updatePreguntasIniciales()
 	{
 		try {
@@ -4509,6 +5126,11 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**
+	 * Función para actualizar las personas fisicas de acuerdo a su ID a través del metodo POST.
+	 * Devuelve todos los datos necesarios para la actualizacion de las tablas visuales.
+	 *
+	 */
 	public function updatePersonaFisicaById()
 	{
 		try {
@@ -4616,7 +5238,11 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
-
+	/**
+	 * Función para actualizar el domicilio de las personas fisicas de acuerdo a su ID a través del metodo POST.
+	 * Devuelve todos los datos necesarios para la actualizacion de las tablas visuales.
+	 *
+	 */
 	public function updatePersonaFisicaDomicilioById()
 	{
 		try {
@@ -4683,7 +5309,11 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
-
+	/**
+	 * Función para actualizar la media filiacion de las personas fisicas de acuerdo a su ID a través del metodo POST.
+	 * Devuelve todos los datos necesarios para la actualizacion de las tablas visuales.
+	 *
+	 */
 	public function updateMediaFiliacionById()
 	{
 		try {
@@ -4805,7 +5435,11 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
-
+	/**
+	 * Función para actualizar los vehículos de acuerdo a su ID a través del metodo POST.
+	 * Devuelve todos los datos necesarios para la actualizacion de las tablas visuales.
+	 *
+	 */
 	public function updateVehiculoByFolio()
 	{
 
@@ -4993,7 +5627,11 @@ class DashboardController extends BaseController
 		// 	return json_encode(['status' => 0]);
 		// }
 	}
-
+	/**
+	 * Función para agregar vehículos de acuerdo a su folio y año a través del metodo POST.
+	 * Devuelve todos los datos necesarios para la actualizacion de las tablas visuales.
+	 *
+	 */
 	public function createVehiculoByFolio()
 	{
 
@@ -5175,7 +5813,11 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0, 'message' => $insert]);
 		}
 	}
-
+	/**
+	 * Función para actualizar el parentesco de acuerdo al id de las personas involucradas a través del metodo POST.
+	 * Devuelve todos los datos necesarios para la actualizacion de las tablas visuales.
+	 *
+	 */
 	public function updateParentescoByFolio()
 	{
 		try {
@@ -5214,7 +5856,11 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
-
+	/**
+	 * Función para eliminar los parentesco de acuerdo los ID's de las personas involucradas a través del metodo POST.
+	 * Devuelve todos los datos necesarios para la actualizacion de las tablas visuales.
+	 *
+	 */
 	public function deleteParentescoById()
 	{
 
@@ -5249,7 +5895,11 @@ class DashboardController extends BaseController
 		}
 	}
 
-
+	/**
+	 * Función para eliminar a las personas fisicas de acuerdo a su ID a través del metodo POST.
+	 * Devuelve todos los datos necesarios para la actualizacion de las tablas visuales.
+	 *
+	 */
 
 	public function deletePersonaFisicaById()
 	{
@@ -5285,6 +5935,11 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
+	/**
+	 * Función para actualizar los vehículos de acuerdo a su ID a través del metodo POST.
+	 * Devuelve todos los datos necesarios para la actualizacion de las tablas visuales.
+	 *
+	 */
 	public function createParentescoByFolio()
 	{
 		$folio = trim($this->request->getPost('folio'));
@@ -5325,6 +5980,10 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**
+	 * Función para obtener un filtro de personas fisicas para la selección de relacion fis-fis
+	 *
+	 */
 	public function getPersonaFisicaFiltro()
 	{
 
@@ -5343,6 +6002,12 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**
+	 * Función para crear personas fisicas.
+	 * Recibe por metodo POST todos los campos necesarios.
+	 * Devuelve todos los datos necesarios para la actualizacion de las tablas visuales.
+
+	 */
 	public function createPersonaFisicaByFolio()
 	{
 		$folio = trim($this->request->getPost('folio'));
@@ -5409,6 +6074,7 @@ class DashboardController extends BaseController
 			$dataNewPersonaFisica['OCUPACIONDESCR'] = NULL;
 		}
 		// var_dump($dataNewPersonaFisicaDomicilio);exit;
+		//Crea la persona fisica, domicilio y filiación conforme al id consecutivo
 		$personaFisica = $this->_folioPersonaFisica($dataNewPersonaFisica, $folio, $year);
 		$mediaFiliacion = $this->_folioPersonaFisicaMediaFiliacion($dataNewPersonaFisica, $folio, $personaFisica, $year);
 		$domicilio = $this->_folioPersonaFisicaDomicilio($dataNewPersonaFisicaDomicilio, $folio, $personaFisica, $year);
@@ -5434,6 +6100,12 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**
+	 * Función para crear personas fisícas en denuncia anonima
+	 *  Devuelve todos los datos necesarios para la actualizacion de las tablas visuales.
+	 * Recibe por metodo POST todos los campos necesarios.
+
+	 */
 	public function createPersonaFisicaByDenunciaAnonima()
 	{
 		$nombre = $this->request->getPost('nombre');
@@ -5580,7 +6252,7 @@ class DashboardController extends BaseController
 			'LUGARDESAPARICION' => $this->request->getPost('lugarDesaparicion') == '0' || empty($this->request->getPost('lugarDesaparicion')) ? null : $this->request->getPost('lugarDesaparicion'),
 			'VESTIMENTADESCR' => $this->request->getPost('vestimenta_mf') == '0' || empty($this->request->getPost('vestimenta_mf')) ? null : $this->request->getPost('vestimenta_mf'),
 		];
-
+		//Crea la persona fisica, domicilio y filiación conforme al id consecutivo
 		$personaFisica = $this->_folioPersonaFisica($dataNewPersonaFisica, $folio, $year);
 		$mediaFiliacion = $this->_folioPersonaFisicaMediaFiliacion($dataNewPersonaFisicaMediaFiliacion, $folio, $personaFisica, $year);
 		$domicilio = $this->_folioPersonaFisicaDomicilio($dataNewPersonaFisicaDomicilio, $folio, $personaFisica, $year);
@@ -5606,6 +6278,13 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**
+	 * Funcíon para sacar si hay registro de personas fisicas e incrementar 1, o si no hay asignar el valor inicial
+	 *
+	 * @param  mixed $data
+	 * @param  mixed $folio
+	 * @param  mixed $year
+	 */
 	private function _folioPersonaFisica($data, $folio, $year)
 	{
 		$data = $data;
@@ -5628,6 +6307,14 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**
+	 * Funcíon para sacar si hay registro de domicilios e incrementar 1, o si no hay asignar el valor inicial
+	 *
+	 * @param  mixed $data
+	 * @param  mixed $folio
+	 * @param  mixed $personaFisicaID
+	 * @param  mixed $year
+	 */
 	private function _folioPersonaFisicaDomicilio($data, $folio, $personaFisicaID, $year)
 	{
 		$data = $data;
@@ -5687,6 +6374,13 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**
+	 * Funcíon para agregar media filiacion a las personas fisícas
+	 * @param  mixed $data
+	 * @param  mixed $folio
+	 * @param  mixed $personaFisicaID
+	 * @param  mixed $year
+	 */
 	private function _folioPersonaFisicaMediaFiliacion($data, $folio, $personaFisicaID, $year)
 	{
 		$data = $data;
@@ -5702,6 +6396,10 @@ class DashboardController extends BaseController
 		$this->_folioMediaFiliacion->insert($data);
 	}
 
+	/**
+	 * Función para agregar la relación de delitos, imputado y victima.
+	 * Devuelve todos los datos necesarios para la actualizacion de las tablas visuales
+	 */
 	public function createRelacionIDOByFolio()
 	{
 		$folio = trim($this->request->getPost('folio'));
@@ -5716,6 +6414,7 @@ class DashboardController extends BaseController
 			'CONVIOLENCIA' => $this->request->getPost('conviolencia') != null ? $this->request->getPost('conviolencia') : NULL,
 
 		);
+		// Se revisa que no exista esa relación
 		$checarDelito = $this->_relacionIDOModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAIDVICTIMA', $this->request->getPost('victima'))->where('PERSONAFISICAIDIMPUTADO', $this->request->getPost('imputado'))->where('DELITOMODALIDADID', $this->request->getPost('delito'))->first();
 		if (isset($checarDelito)) {
 			return json_encode(['status' => 3]);
@@ -5738,7 +6437,10 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0, 'message' => $_POST]);
 		}
 	}
-
+	/**
+	 * Función para eliminar el árbol delictual.
+	 * Devuelve todos los datos necesarios para la actualizacion de las tablas visuales
+	 */
 	public function deleteArbolByFolio()
 	{
 		try {
@@ -5752,6 +6454,7 @@ class DashboardController extends BaseController
 			$countdelitoFisFis = $this->_relacionIDOModel->count_delitosFisFis($folio, $year, $delitomodalidad, $personafisicaimputado);
 			$deleteArbol = $this->_relacionIDOModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAIDVICTIMA', $personafisicavictima)->where('DELITOMODALIDADID', $delitomodalidad)->where('PERSONAFISICAIDIMPUTADO', $personafisicaimputado)->delete();
 
+			// Si solo hay un delito se retorna para que el usuario confirme que va a eliminar
 			if ($countdelitoFisFis[0]->DELITOMODALIDADID == 1) {
 				return json_encode(['status' => 3, 'count' => $countImpDelito[0]->DELITOMODALIDADID]);
 			}
@@ -5794,7 +6497,10 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
-
+	/**
+	 * Función para eliminar la relación del delito e imputado
+	 * Devuelve todos los datos necesarios para la actualizacion de las tablas visuales
+	 */
 	public function deleteImpDelitoByFolio()
 	{
 		try {
@@ -5833,6 +6539,11 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
+	/**
+	 * Función para eliminar archivos externos conforme a su id
+	 * Recibe por metodo POST el folio, año y archivo id para su eliminación
+	 * Devuelve todos los datos necesarios para la actualizacion de las tablas visuales
+	 */
 	public function deleteArchivoById()
 	{
 		try {
@@ -5848,6 +6559,7 @@ class DashboardController extends BaseController
 				$datados->archivosexternos = $this->_archivoExternoModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
 				if ($datados->archivosexternos) {
 					foreach ($datados->archivosexternos as $key => $archivos) {
+						//Se codifica para que la imagén pueda ser visual
 						$file_info = new \finfo(FILEINFO_MIME_TYPE);
 						$type = $file_info->buffer($archivos->ARCHIVO);
 						$archivos->ARCHIVO = 'data:' . $type . ';base64,' . base64_encode($archivos->ARCHIVO);
@@ -5870,6 +6582,11 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
+	/**
+	 * Función para eliminar vehiculos conforme a su id
+	 * Recibe por metodo POST el folio, año y vehiculo id para su eliminación
+	 * Devuelve todos los datos necesarios para la actualizacion de las tablas visuales
+	 */
 	public function deleteVehiculoByFolio()
 	{
 		try {
@@ -5902,7 +6619,11 @@ class DashboardController extends BaseController
 		}
 	}
 
-
+	/**
+	 * Función para crear la relación imputado-delito
+	 * Recibe por metodo POST los datos del formulario
+	 * Devuelve todos los datos necesarios para la actualizacion de las tablas visuales
+	 */
 	public function createFisImpDelitoByFolio()
 	{
 		$folio = trim($this->request->getPost('folio'));
@@ -5913,6 +6634,7 @@ class DashboardController extends BaseController
 			'PERSONAFISICAID' => $this->request->getPost('imputado'),
 			'DELITOMODALIDADID' => $this->request->getPost('delito'),
 		);
+		// Se revisa que no exista esa relación
 		$checarDelito = $this->_imputadoDelitoModel->where('FOLIOID', $folio)->where('ANO', $year)->where('DELITOMODALIDADID', $this->request->getPost('delito'))->where('PERSONAFISICAID', $this->request->getPost('imputado'))->first();
 		if (isset($checarDelito)) {
 			return json_encode(['status' => 3]);
@@ -5934,7 +6656,11 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
-
+	/**
+	 * Función para obtener la subclasificación de los objetos involucrados
+	 * Recibe por metodo POST el id de la clasificacion del objeto
+	 * Devuelve todos los datos necesarios para la actualizacion de las tablas visuales
+	 */
 	public function getObjetoSubclasificacion()
 	{
 		$data = (object) array();
@@ -5948,7 +6674,11 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
-
+	/**
+	 * Función para crear objetos involucrados
+	 * Recibe por metodo POST los datos del formulario
+	 * Devuelve todos los datos necesarios para la actualizacion de las tablas visuales
+	 */
 	public function createObjetoInvolucradoByFolio()
 	{
 
@@ -5984,7 +6714,11 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 1, 'objetos' => $objetos, 'personas' => $personas]);
 		}
 	}
-
+	/**
+	 * Función para eliminar objetos involucrados
+	 * Recibe por metodo POST los datos del formulario
+	 * Devuelve todos los datos necesarios para la actualizacion de las tablas visuales
+	 */
 	public function deleteObjetoInvolucrado()
 	{
 
@@ -6013,7 +6747,11 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
-
+	/**
+	 * Función para obtener todos los datos del objetos involucrado conforme a su id
+	 * Recibe por metodo POST el folio, año y objeto id.
+	 * Devuelve todos los datos necesarios para la actualizacion de las tablas visuales
+	 */
 	public function getObjetoInvolucrado()
 	{
 		$objetoid = trim($this->request->getPost('objetoid'));
@@ -6031,7 +6769,11 @@ class DashboardController extends BaseController
 			return json_encode($data);
 		}
 	}
-
+	/**
+	 * Función para actualizar objetos involucrados conforme a su id
+	 * Recibe por metodo POST los datos del formulario
+	 * Devuelve todos los datos necesarios para la actualizacion de las tablas visuales
+	 */
 	public function updateObjetosInvolucradosById()
 	{
 		try {
@@ -6077,6 +6819,12 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**
+	 * Funcíon para sacar si hay registro de objetos involucrados e incrementar 1, o si no hay asignar el valor inicial	 *
+	 * @param  mixed $data
+	 * @param  mixed $folio
+	 * @param  mixed $year
+	 */
 	private function _folioObjetoInvolucrado($data, $folio, $year)
 	{
 		$data = $data;
@@ -6096,6 +6844,11 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**
+	 * Función para rellenar la plantilla solicitada
+	 * Recibe por metodo POST el folio, año, titulo de la plantilla, victima, imputado. En dado caso; umas, notificacion, procesos.
+	 *
+	 */
 	public function get_Plantillas()
 	{
 		$meses = array("ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE");
@@ -6117,6 +6870,11 @@ class DashboardController extends BaseController
 		}
 
 		$data = (object) array();
+
+
+		/*
+		**Se obtiene todos los datos de las diferentes tablas para completar el rellenado
+		**/
 		$data->folio = $this->_folioModel->asObject()->where('ANO', $year)->where('FOLIOID', $folio)->first();
 		$data->plantilla = $this->_plantillasModel->where('TITULO', $titulo)->first();
 
@@ -6242,6 +7000,7 @@ class DashboardController extends BaseController
 			$data->plantilla = str_replace('[HORA_NOTAS]',  date('H:i:s', strtotime($data->folio->FECHASALIDA)), $data->plantilla);
 			$data->plantilla = str_replace('[ARMAS]', '', $data->plantilla);
 
+			// Se crean tablas iterativas de los vehiculos existentes
 			if ($data->vehiculos_da) {
 				foreach ($data->vehiculos_da as $key => $vehiculos) {
 					$estadoV = $this->_estadosModel->asObject()->where('ESTADOID',  $vehiculos->ESTADOIDPLACA)->first();
@@ -6437,6 +7196,7 @@ class DashboardController extends BaseController
 					$data->plantilla
 				);
 			}
+			// Se crean tablas iterativas de los delitos involucrados
 			if ($data->delitosModalidadFiltro) {
 				foreach ($data->delitosModalidadFiltro as $key => $delitos) {
 					$data->plantilla = str_replace(
@@ -6486,6 +7246,8 @@ class DashboardController extends BaseController
 					$data->plantilla = str_replace('[ESTATUS_DELITO]',  '-', $data->plantilla);
 				}
 			}
+			// Se crean tablas iterativas de los imputados registrados
+
 			if ($data->imputados_da) {
 				foreach ($data->imputados_da as $key => $imputados) {
 					$data->mediaFiiacionImp = $this->_folioMediaFiliacion->asObject()->where('FOLIOID', $folio)->where('PERSONAFISICAID', $imputados->PERSONAFISICAID)->first();
@@ -6720,6 +7482,7 @@ class DashboardController extends BaseController
 			}
 		}
 
+		// Info de los delitos registrados
 		if ($relacionfisfis != null) {
 			$data->relacion_delitodescr = $this->_delitoModalidadModel->asObject()->where('DELITOMODALIDADID', $relacionfisfis->DELITOMODALIDADID)->first();
 			$data->plantilla = str_replace('[DELITO_NOMBRE]',  $data->relacion_delitodescr->DELITOMODALIDADDESCR ?  $data->relacion_delitodescr->DELITOMODALIDADDESCR : '-', $data->plantilla);
@@ -6767,6 +7530,8 @@ class DashboardController extends BaseController
 			$data->plantilla = str_replace('[DOMICILIO_INSTALACION]', 'BLVD. GRAL. RODOLFO SÁNCHEZ TABOADA NO. 10127, ESQUINA CON AV. RÍO TIJUANA. ZONA URBANA RÍO TIJUANA. (EDIFICIO DE CRISTALES NEGROS, PRIMER PISO).', $data->plantilla);
 			$data->plantilla = str_replace('[TELEFONO_UJAP]', '664-736-52-96, correo electrónico: umacosta@fgebc.gob.mx', $data->plantilla);
 		}
+
+		//Info de la notificacion y proceso
 		if ($notificacion || $proceso) {
 			$data->plantilla = str_replace('[TIPO_PROCESO]',  $proceso ?  $proceso : '-', $data->plantilla);
 			$data->plantilla = str_replace('[TIPO_NOTIFICACION]',  $notificacion ?  $notificacion : '-', $data->plantilla);
@@ -6782,6 +7547,9 @@ class DashboardController extends BaseController
 			$data->plantilla = str_replace('[NUMERO_CODIGO_PENAL]', ($data->relacion_delitodescr->DELITOMODALIDADARTICULO ?  $data->relacion_delitodescr->DELITOMODALIDADARTICULO : '[NUMERO_CODIGO_PENAL]'), $data->plantilla);
 		}
 
+		/**
+		 * Informacion del folio y personas fisicas
+		 */
 		$data->estado = $this->_estadosModel->asObject()->where('ESTADOID', $data->folio->ESTADOID)->first();
 		$data->lugar_hecho = $data->folio->HECHOLUGARID ? $this->_hechoLugarModel->asObject()->where('HECHOLUGARID', $data->folio->HECHOLUGARID)->first() : (object)['HECHOLUGARDESCR' => 'NO ESPECIFICADO'];
 		$data->derivacion = $this->_derivacionesAtencionesModel->asObject()->where('MUNICIPIOID', $data->folio->INSTITUCIONREMISIONMUNICIPIOID)->where('INSTITUCIONREMISIONID',  $data->folio->INSTITUCIONREMISIONID)->first();
@@ -6811,6 +7579,7 @@ class DashboardController extends BaseController
 			}
 		}
 
+		//Replace consumiendo los datos anteriores
 		$data->plantilla = str_replace('[DOCUMENTO_FECHA]', date('d') . ' DE ' . $meses[date('n') - 1] . " DEL " . date('Y'), $data->plantilla);
 		$data->plantilla = str_replace('[DOCUMENTO_CIUDAD]', $data->municipios->MUNICIPIODESCR, $data->plantilla);
 		$data->plantilla = str_replace('[VICTIMA_NOMBRE]', $data->victima[0]['NOMBRE'] . ' ' . ($data->victima[0]['PRIMERAPELLIDO'] ? $data->victima[0]['PRIMERAPELLIDO'] : '') . ' ' . ($data->victima[0]['SEGUNDOAPELLIDO'] ? $data->victima[0]['SEGUNDOAPELLIDO'] : ''), $data->plantilla);
@@ -6916,12 +7685,13 @@ class DashboardController extends BaseController
 			$data->plantilla = str_replace('[TIPO_EXPEDIENTE]',  $data->folio->STATUS == "DERIVADO" ? "DERIVACIÓN" : "CANALIZACIÓN", $data->plantilla);
 			return json_encode(['status' => 1, 'plantilla' => $data->plantilla]);
 		} else {
+			//Replaces cuando hay expedientes
 
 			$data->tipoExpediente = $this->_tipoExpedienteModel->asObject()->where('TIPOEXPEDIENTEID',  $data->folio->TIPOEXPEDIENTEID)->first();
 			$arrayExpediente = str_split($data->folio->EXPEDIENTEID);
 			$expedienteid =  $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14] . '/' . ($data->tipoExpediente->TIPOEXPEDIENTECLAVE ? $data->tipoExpediente->TIPOEXPEDIENTECLAVE : '-');;
 
-			//VICTIMA RASGOS
+			//VICTIMA RASGOS PERSONA DESAPARECIDA
 			$data->mediaFiliacionVictima = $this->_folioMediaFiliacion->asObject()->where('FOLIOID', $folio)->where('PERSONAFISICAID', $victima)->first();
 			if ($data->victima[0]['DESAPARECIDA'] == 'S' && $data->mediaFiliacionVictima) {
 				$colorOjos = $this->_ojoColorModel->asObject()->where('OJOCOLORID', $data->mediaFiliacionVictima->OJOCOLORID)->first();
@@ -6958,6 +7728,7 @@ class DashboardController extends BaseController
 				}
 			}
 
+			// Victima rasgos
 			if ($data->mediaFiliacionVictima) {
 				$colorOjos = $this->_ojoColorModel->asObject()->where('OJOCOLORID', $data->mediaFiliacionVictima->OJOCOLORID)->first();
 				$colorCabello = $this->_cabelloColorModel->asObject()->where('CABELLOCOLORID', $data->mediaFiliacionVictima->CABELLOCOLORID)->first();
@@ -7036,6 +7807,7 @@ class DashboardController extends BaseController
 			$data->plantilla = str_replace('[VICTIMA_NACIONALIDAD]', isset($data->nacionalidadVictima) == true ? $data->nacionalidadVictima->PERSONANACIONALIDADDESCR : 'DESCONOCIDO', $data->plantilla);
 			$data->plantilla = str_replace('[VICTIMA_ESTADO_CIVIL]', isset($data->edoCivilVictima) == true ? $data->edoCivilVictima->PERSONAESTADOCIVILDESCR : 'DESCONOCIDO', $data->plantilla);
 
+			// Replaces del municipio asignado
 			switch ($data->folio->MUNICIPIOASIGNADOID) {
 				case '1':
 					$data->plantilla = str_replace('[DIRECCION_NOMBRE]', 'C. DAVID ARMANDO SÁNCHEZ GONZÁLEZ,<br>MAYOR DE INFANTERÍA DIRECTOR DE SEGURIDAD PÚBLICO MUNICIPAL', $data->plantilla);
@@ -7070,6 +7842,7 @@ class DashboardController extends BaseController
 					break;
 			}
 
+			//Info de las umas registradas
 
 			if ($uma == 'MEXICALI - CD MORELOS') {
 				$data->plantilla = str_replace('[DOMICILIO_INSTALACION]', 'CALZADA LÁZARO CÁRDENAS S/N. A UN COSTADO DE WELTON, EN CIUDAD MORELOS.', $data->plantilla);
@@ -7145,6 +7918,12 @@ class DashboardController extends BaseController
 		// }
 	}
 
+	/**
+	 * Función para agregar documentos en VIDEODENUNCIA
+	 * Recibe por metodo POST el expediente, folio, año, placeholder y municipio
+	 * Devuelve todos los datos necesarios para la actualizacion de las tablas visuales.
+	 *
+	 */
 	public function insertFolioDoc()
 	{
 		$expediente = $this->request->getPost('expediente');
@@ -7156,6 +7935,7 @@ class DashboardController extends BaseController
 		$plantilla = $this->_plantillasModel->where('TITULO', $this->request->getPost('titulo'))->first();
 		$folioRow = $this->_folioModel->where('ANO', $year)->where('FOLIOID', $folio)->first();
 
+		//Se verifica que las victimas e imputados no vengan vacios
 		if (($this->request->getPost('victimaid') == '' || $this->request->getPost('victimaid') == null || $this->request->getPost('victimaid') == 0) || $this->request->getPost('imputado') == '' || $this->request->getPost('imputado') == null || $this->request->getPost('imputado') == 0) {
 			return json_encode(['status' => 0]);
 		}
@@ -7165,6 +7945,7 @@ class DashboardController extends BaseController
 
 			$clasificaciondoctoid = '';
 
+			// Se obtiene la clasificación del documento conforme a su municipio
 			switch ($municipio) {
 
 				case '1':
@@ -7304,6 +8085,11 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**
+	 * Función para cambiar el estado de envio del documento conforme a su id. 
+	 * Se reciben los datos por metodo POST
+	 * Devuelve todos los datos necesarios para la actualizacion de las tablas visuales.
+	 */
 	public function changeStatusDoc()
 	{
 		try {
@@ -7338,6 +8124,14 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
+	/**
+	 *  Funcíon para sacar si hay registro de documentos e incrementar 1, o si no hay asignar el valor inicial
+
+	 *
+	 * @param  mixed $data
+	 * @param  mixed $expediente
+	 * @param  mixed $year
+	 */
 	private function _folioDoc($data, $expediente, $year)
 	{
 		$data = $data;
@@ -7357,6 +8151,11 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**
+	 * Función para actualizar el placeholder del documento a partir de su id
+	 * Devuelve todos los datos necesarios para la actualizacion de las tablas visuales.
+	 *
+	 */
 	public function updateDocumentoByFolio()
 	{
 		try {
@@ -7390,6 +8189,10 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**
+	 * Función para visualizar el documento conforme a su id
+	 *
+	 */
 	public function getDocumentoById()
 	{
 		$docid = trim($this->request->getPost('docid'));
@@ -7409,6 +8212,10 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**
+	 * ! Deprecated method, do not use.
+	 *
+	 */
 	public function getFolioDenunciante()
 	{
 		$folio = trim($this->request->getPost('folio'));
@@ -7423,6 +8230,11 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**
+	 * Función para agregar información a la bitacora diaria.
+	 *
+	 * @param  mixed $data
+	 */
 	private function _bitacoraActividad($data)
 	{
 		$data = $data;
@@ -7434,6 +8246,11 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**
+	 * Función para encriptar los datos del metodo POST enviados al WebService de Justicia
+	 * @param  mixed $plaintext
+	 * @param  mixed $key128
+	 */
 	private function _encriptar($plaintext, $key128)
 	{
 		$iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-128-cbc'));
@@ -7441,6 +8258,12 @@ class DashboardController extends BaseController
 		return base64_encode($iv . $cipherText);
 	}
 
+	/**
+	 * Función para desencriptar los datos del metodo POST enviados al WebService de Justicia
+	 * ! Deprecated method, do not use.
+	 * @param  mixed $encodedInitialData
+	 * @param  mixed $key128
+	 */
 	private function _desencriptar($encodedInitialData, $key128)
 	{
 		$encodedInitialData = base64_decode($encodedInitialData);
@@ -7450,11 +8273,20 @@ class DashboardController extends BaseController
 		return $decrypted;
 	}
 
+	/**
+	 * Función para revisar los permisos que tienen los usuarios y poder restringir el acceso
+	 *
+	 * @param  mixed $permiso
+	 */
 	private function permisos($permiso)
 	{
 		return in_array($permiso, session('permisos'));
 	}
 
+	/**
+	 * Función para crear el folio desde denuncia anonima
+	 *
+	 */
 	public function crearFolioDenunciaAnonima()
 	{
 
@@ -7505,6 +8337,10 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**
+	 * Vista de videos expedientes. Restringidos al ROL del usuario
+	 *
+	 */
 	public function videos_expediente()
 	{
 		$data = (object) array();
@@ -7522,7 +8358,13 @@ class DashboardController extends BaseController
 
 		$this->_loadView('Videos expediente', 'videos', '', $data, 'videos_expediente');
 	}
-
+	/**
+	 * Funcíon para sacar si hay registro de vehículos e incrementar 1, o si no hay asignar el valor inicial
+	 *
+	 * @param  mixed $data
+	 * @param  mixed $folio
+	 * @param  mixed $year
+	 */
 	private function _folioVehiculo($data, $folio, $year)
 	{
 		$data = $data;
@@ -7540,6 +8382,11 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**
+	 * Genera el PDF cuando la plantilla es Denuncia Anonima
+	 *
+	 * @param  mixed $placeholder
+	 */
 	private function _generatePDF($placeholder)
 	{
 		$arrContextOptions = array(
@@ -7575,7 +8422,11 @@ class DashboardController extends BaseController
 		});
 		return $dompdf->output();
 	}
-
+	/**
+	 * Genera el PDF cuando la plantilla es persona desaparecida (Cambia el template)
+	 *
+	 * @param  mixed $placeholder
+	 */
 	private function _generatePDFPersonaFisica($placeholder)
 	{
 		$arrContextOptions = array(
