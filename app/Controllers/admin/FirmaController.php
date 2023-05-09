@@ -27,6 +27,7 @@ use Endroid\QrCode\Writer\PngWriter;
 
 class FirmaController extends BaseController
 {
+	private $db_read;
 
 	private $_plantillasModel;
 	private $_usuariosModel;
@@ -42,8 +43,24 @@ class FirmaController extends BaseController
 	private $_tipoExpedienteModel;
 	private $_folioRelacionFisFisModel;
 
+
+	private $_plantillasModelRead;
+	private $_usuariosModelRead;
+	private $_denunciantesModelRead;
+	private $_hechoLugarModelRead;
+	private $_municipiosModelRead;
+	private $_estadosModelRead;
+	private $_constanciaExtravioModelRead;
+	private $_folioDocModelRead;
+	private $_folioModelRead;
+	private $_folioPersonaFisicaModelRead;
+	private $_tipoExpedienteModelRead;
+	private $_folioRelacionFisFisModelRead;
+
 	function __construct()
 	{
+		$this->db_read = ENVIRONMENT == 'production' ? db_connect('default_read') : db_connect('development_read');
+
 		$this->_plantillasModel = new PlantillasModel();
 		$this->_usuariosModel = new UsuariosModel();
 		$this->_denunciantesModel = new DenunciantesModel();
@@ -57,6 +74,19 @@ class FirmaController extends BaseController
 		$this->_folioPersonaFisicaModel = new FolioPersonaFisicaModel();
 		$this->_tipoExpedienteModel = new TipoExpedienteModel();
 		$this->_folioRelacionFisFisModel = new FolioRelacionFisFisModel();
+
+		$this->_plantillasModelRead = model('PlantillasModel', true, $this->db_read);
+		$this->_usuariosModelRead = model('UsuariosModel', true, $this->db_read);
+		$this->_denunciantesModelRead = model('DenunciantesModel', true, $this->db_read);
+		$this->_hechoLugarModelRead = model('HechoLugarModel', true, $this->db_read);
+		$this->_municipiosModelRead = model('MunicipiosModel', true, $this->db_read);
+		$this->_estadosModelRead = model('EstadosModel', true, $this->db_read);
+		$this->_constanciaExtravioModelRead = model('ConstanciaExtravioModel', true, $this->db_read);
+		$this->_folioDocModelRead = model('FolioDocModel', true, $this->db_read);
+		$this->_folioModelRead = model('FolioModel', true, $this->db_read);
+		$this->_folioPersonaFisicaModelRead = model('FolioPersonaFisicaModel', true, $this->db_read);
+		$this->_tipoExpedienteModelRead = model('TipoExpedienteModel', true, $this->db_read);
+		$this->_folioRelacionFisFisModelRead = model('FolioRelacionFisFisModel', true, $this->db_read);
 	}
 
 	/**
@@ -73,25 +103,25 @@ class FirmaController extends BaseController
 			$user_id = session('ID');
 
 			// Se busca las constancias que no esten firmadas
-			$constancia = $this->_constanciaExtravioModel->asObject()->where('CONSTANCIAEXTRAVIOID', $numfolio)->where('ANO', $year)->where('STATUS !=', 'FIRMADO')->first();
+			$constancia = $this->_constanciaExtravioModelRead->asObject()->where('CONSTANCIAEXTRAVIOID', $numfolio)->where('ANO', $year)->where('STATUS !=', 'FIRMADO')->first();
 			if (!$constancia) {
 				return redirect()->to(base_url('/admin/dashboard/constancias_extravio_abiertas'))->with('message_error', 'No existe la constancia o ya fue firmada.');
 			}
 
 			//Info de la plantilla de cosntancias de extravio
-			$plantilla = $this->_plantillasModel->asObject()->where('TITULO', 'CONSTANCIA DE EXTRAVIO')->first();
+			$plantilla = $this->_plantillasModelRead->asObject()->where('TITULO', 'CONSTANCIA DE EXTRAVIO')->first();
 
 			// Info para la plantilla
-			$solicitante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', $constancia->DENUNCIANTEID)->first();
+			$solicitante = $this->_denunciantesModelRead->asObject()->where('DENUNCIANTEID', $constancia->DENUNCIANTEID)->first();
 
-			$lugar = $this->_hechoLugarModel->asObject()->where('HECHOLUGARID', $constancia->HECHOLUGARID)->first();
+			$lugar = $this->_hechoLugarModelRead->asObject()->where('HECHOLUGARID', $constancia->HECHOLUGARID)->first();
 			$municipio = (object)[];
 			if ($constancia->MUNICIPIOIDCITA) {
-				$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $constancia->MUNICIPIOIDCITA)->where('ESTADOID', $constancia->ESTADOID)->first();
+				$municipio = $this->_municipiosModelRead->asObject()->where('MUNICIPIOID', $constancia->MUNICIPIOIDCITA)->where('ESTADOID', $constancia->ESTADOID)->first();
 			} else {
-				$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $constancia->MUNICIPIOID)->where('ESTADOID', $constancia->ESTADOID)->first();
+				$municipio = $this->_municipiosModelRead->asObject()->where('MUNICIPIOID', $constancia->MUNICIPIOID)->where('ESTADOID', $constancia->ESTADOID)->first();
 			}
-			$estado = $this->_estadosModel->asObject()->where('ESTADOID', $constancia->ESTADOID)->first();
+			$estado = $this->_estadosModelRead->asObject()->where('ESTADOID', $constancia->ESTADOID)->first();
 			$meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
 
 			$timestamp = strtotime($constancia->HECHOFECHA);
@@ -321,7 +351,7 @@ class FirmaController extends BaseController
 						];
 
 						//Verifica que si este abierta esa constancia
-						$constancia = $this->_constanciaExtravioModel->asObject()->where('CONSTANCIAEXTRAVIOID', $numfolio)->where('ANO', $year)->where('STATUS !=', 'FIRMADO')->first();
+						$constancia = $this->_constanciaExtravioModelRead->asObject()->where('CONSTANCIAEXTRAVIOID', $numfolio)->where('ANO', $year)->where('STATUS !=', 'FIRMADO')->first();
 						if (!$constancia) {
 							return redirect()->to(base_url('/admin/dashboard/constancias_extravio_abiertas'))->with('message_error', 'No existe la constancia o ya fue firmada.');
 						}
@@ -375,13 +405,13 @@ class FirmaController extends BaseController
 
 		// Busca cuando no tienen expediente
 		if ($numexpediente != null && $numexpediente != "undefined") {
-			$documento = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $numexpediente)->where('ANO', $year)->where('STATUS', 'ABIERTO')->findAll();
+			$documento = $this->_folioDocModelRead->asObject()->where('NUMEROEXPEDIENTE', $numexpediente)->where('ANO', $year)->where('STATUS', 'ABIERTO')->findAll();
 		} else {
-			$documento = $this->_folioDocModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'ABIERTO')->findAll();
+			$documento = $this->_folioDocModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'ABIERTO')->findAll();
 		}
 
 		// Info folio
-		$folioRow = $this->_folioModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->first();
+		$folioRow = $this->_folioModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->first();
 		if ($documento == null || count($documento) <= 0) {
 			return json_encode((object)['status' => 0, 'message_error' => "No hay documentos por firmar"]);
 		}
@@ -427,9 +457,9 @@ class FirmaController extends BaseController
 						$text = str_replace(chr(10), ' ', $text);
 						$text = str_replace('  ', ' ', trim($text));
 						//Municipio de acuerdo al documento o al folio
-						$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $documento[$i]->MUNICIPIOID)->where('ESTADOID', $documento[$i]->ESTADOID)->first();
+						$municipio = $this->_municipiosModelRead->asObject()->where('MUNICIPIOID', $documento[$i]->MUNICIPIOID)->where('ESTADOID', $documento[$i]->ESTADOID)->first();
 						if (isset($municipio) == false) {
-							$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $folioRow->MUNICIPIOID)->where('ESTADOID', $folioRow->ESTADOID)->first();
+							$municipio = $this->_municipiosModelRead->asObject()->where('MUNICIPIOID', $folioRow->MUNICIPIOID)->where('ESTADOID', $folioRow->ESTADOID)->first();
 						}
 						$estado = $this->_estadosModel->asObject()->where('ESTADOID', $documento[$i]->ESTADOID)->first();
 						// Generacion de la firma
@@ -503,9 +533,9 @@ class FirmaController extends BaseController
 						}
 					}
 					if ($numexpediente != null && $numexpediente != "undefined") {
-						$documentosExp = $this->_folioDocModel->get_by_expediente($numexpediente, $year);
+						$documentosExp = $this->_folioDocModelRead->get_by_expediente($numexpediente, $year);
 					} else {
-						$documentosExp = $this->_folioDocModel->get_by_folio($folio, $year);
+						$documentosExp = $this->_folioDocModelRead->get_by_folio($folio, $year);
 					}
 					return json_encode((object)['status' => 1, 'documentos' => $documentosExp]);
 				} else {
@@ -532,10 +562,10 @@ class FirmaController extends BaseController
 		$user_id = session('ID');
 
 		// Info del documento y folio
-		$documento = $this->_folioDocModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento_id)->where('STATUS', 'ABIERTO')->findAll();
+		$documento = $this->_folioDocModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento_id)->where('STATUS', 'ABIERTO')->findAll();
 
 
-		$folioRow = $this->_folioModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->first();
+		$folioRow = $this->_folioModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->first();
 		if ($documento == null || count($documento) <= 0) {
 			return json_encode((object)['status' => 0, 'message_error' => "No hay documentos por firmar"]);
 		}
@@ -583,11 +613,11 @@ class FirmaController extends BaseController
 						$text = str_replace('  ', ' ', trim($text));
 						//Municipio de acuerdo al documento o al folio
 
-						$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $documento[$i]->MUNICIPIOID)->where('ESTADOID', $documento[$i]->ESTADOID)->first();
+						$municipio = $this->_municipiosModelRead->asObject()->where('MUNICIPIOID', $documento[$i]->MUNICIPIOID)->where('ESTADOID', $documento[$i]->ESTADOID)->first();
 						if (isset($municipio) == false) {
-							$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $folioRow->MUNICIPIOID)->where('ESTADOID', $folioRow->ESTADOID)->first();
+							$municipio = $this->_municipiosModelRead->asObject()->where('MUNICIPIOID', $folioRow->MUNICIPIOID)->where('ESTADOID', $folioRow->ESTADOID)->first();
 						}
-						$estado = $this->_estadosModel->asObject()->where('ESTADOID', $documento[$i]->ESTADOID)->first();
+						$estado = $this->_estadosModelRead->asObject()->where('ESTADOID', $documento[$i]->ESTADOID)->first();
 						// Generacion de la firma
 
 						$signature = $this->_generateSignature($user_id, "FIRMA DE DOCUMENTOS", $text, $folio, $FECHAFIRMA, $HORAFIRMA);
@@ -655,7 +685,7 @@ class FirmaController extends BaseController
 						}
 					}
 					if ($folio != null && $folio != "undefined") {
-						$documentosExp = $this->_folioDocModel->get_by_folio($folio, $year);
+						$documentosExp = $this->_folioDocModelRead->get_by_folio($folio, $year);
 					}
 					return json_encode((object)['status' => 1, 'documentos' => $documentosExp]);
 				} else {
@@ -1164,16 +1194,16 @@ class FirmaController extends BaseController
 
 		if ($to && $year && $folio) {
 			if ($expediente != "undefined" && $expediente != '') {
-				$documento = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente)->where('ANO', $year)->where('STATUS', 'FIRMADO')->where('STATUSENVIO', 1)->where('ENVIADO', 'N')->where('FOLIODOCID', $folio_doc)->first();
-				$folioM = $this->_folioModel->asObject()->where('ANO', $year)->where('EXPEDIENTEID', $expediente)->first();
-				$tipoExpediente = $this->_tipoExpedienteModel->asObject()->where('TIPOEXPEDIENTEID',  $folioM->TIPOEXPEDIENTEID)->first();
-				$delito = $this->_folioRelacionFisFisModel->get_by_folio($folio, $year);
+				$documento = $this->_folioDocModelRead->asObject()->where('NUMEROEXPEDIENTE', $expediente)->where('ANO', $year)->where('STATUS', 'FIRMADO')->where('STATUSENVIO', 1)->where('ENVIADO', 'N')->where('FOLIODOCID', $folio_doc)->first();
+				$folioM = $this->_folioModelRead->asObject()->where('ANO', $year)->where('EXPEDIENTEID', $expediente)->first();
+				$tipoExpediente = $this->_tipoExpedienteModelRead->asObject()->where('TIPOEXPEDIENTEID',  $folioM->TIPOEXPEDIENTEID)->first();
+				$delito = $this->_folioRelacionFisFisModelRead->get_by_folio($folio, $year);
 				$delito =  $delito[0]['DELITOMODALIDADDESCR'];
 			} else {
 
-				$documento = $this->_folioDocModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'FIRMADO')->where('STATUSENVIO', 1)->where('ENVIADO', 'N')->where('FOLIODOCID', $folio_doc)->first();
+				$documento = $this->_folioDocModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'FIRMADO')->where('STATUSENVIO', 1)->where('ENVIADO', 'N')->where('FOLIODOCID', $folio_doc)->first();
 
-				$folioM = $this->_folioModel->asObject()->where('ANO', $year)->where('FOLIOID', $folio)->first();
+				$folioM = $this->_folioModelRead->asObject()->where('ANO', $year)->where('FOLIOID', $folio)->first();
 				$tipoExpediente = '';
 				$delito = '';
 			}
@@ -1181,15 +1211,15 @@ class FirmaController extends BaseController
 				return json_encode((object)['status' => 2]);
 			}
 
-			$imputado = $this->_folioPersonaFisicaModel->asObject()->where('ANO', $year)->where('FOLIOID', $folioM->FOLIOID)->where('CALIDADJURIDICAID', 2)->first();
-			$agente = $this->_usuariosModel->asObject()->where('ID', session('ID'))->first();
+			$imputado = $this->_folioPersonaFisicaModelRead->asObject()->where('ANO', $year)->where('FOLIOID', $folioM->FOLIOID)->where('CALIDADJURIDICAID', 2)->first();
+			$agente = $this->_usuariosModelRead->asObject()->where('ID', session('ID'))->first();
 
 			$folio = $folioM->FOLIOID;
 
 			if ($folioM->MUNICIPIOASIGNADOID != null) {
-				$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $folioM->MUNICIPIOASIGNADOID)->where('ESTADOID', 2)->first();
+				$municipio = $this->_municipiosModelRead->asObject()->where('MUNICIPIOID', $folioM->MUNICIPIOASIGNADOID)->where('ESTADOID', 2)->first();
 			} else {
-				$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $folioM->INSTITUCIONREMISIONMUNICIPIOID)->where('ESTADOID', 2)->first();
+				$municipio = $this->_municipiosModelRead->asObject()->where('MUNICIPIOID', $folioM->INSTITUCIONREMISIONMUNICIPIOID)->where('ESTADOID', 2)->first();
 			}
 			$fecha_actual = date('d') . ' DE ' . $meses[date('n') - 1] . " DEL " . date('Y');
 			$agente = trim($agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' .  $agente->APELLIDO_MATERNO);
@@ -1264,14 +1294,14 @@ class FirmaController extends BaseController
 		if ($to && $year && $folio) {
 
 			if ($expediente != "undefined" && $expediente != '') {
-				$documento = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente)->where('ANO', $year)->where('STATUS', 'FIRMADO')->where('STATUSENVIO', 1)->where('ENVIADO', 'N')->findAll();
-				$folioM = $this->_folioModel->asObject()->where('ANO', $year)->where('EXPEDIENTEID', $expediente)->first();
-				$tipoExpediente = $this->_tipoExpedienteModel->asObject()->where('TIPOEXPEDIENTEID',  $folioM->TIPOEXPEDIENTEID)->first();
-				$delito = $this->_folioRelacionFisFisModel->get_by_folio($folio, $year);
+				$documento = $this->_folioDocModelRead->asObject()->where('NUMEROEXPEDIENTE', $expediente)->where('ANO', $year)->where('STATUS', 'FIRMADO')->where('STATUSENVIO', 1)->where('ENVIADO', 'N')->findAll();
+				$folioM = $this->_folioModelRead->asObject()->where('ANO', $year)->where('EXPEDIENTEID', $expediente)->first();
+				$tipoExpediente = $this->_tipoExpedienteModelRead->asObject()->where('TIPOEXPEDIENTEID',  $folioM->TIPOEXPEDIENTEID)->first();
+				$delito = $this->_folioRelacionFisFisModelRead->get_by_folio($folio, $year);
 				$delito =  $delito[0]['DELITOMODALIDADDESCR'];
 			} else {
-				$documento = $this->_folioDocModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'FIRMADO')->where('STATUSENVIO', 1)->where('ENVIADO', 'N')->findAll();
-				$folioM = $this->_folioModel->asObject()->where('ANO', $year)->where('FOLIOID', $folio)->first();
+				$documento = $this->_folioDocModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'FIRMADO')->where('STATUSENVIO', 1)->where('ENVIADO', 'N')->findAll();
+				$folioM = $this->_folioModelRead->asObject()->where('ANO', $year)->where('FOLIOID', $folio)->first();
 				$tipoExpediente = '';
 				$delito = '';
 			}
@@ -1280,15 +1310,15 @@ class FirmaController extends BaseController
 				return json_encode((object)['status' => 2]);
 			}
 
-			$imputado = $this->_folioPersonaFisicaModel->asObject()->where('ANO', $year)->where('FOLIOID', $folioM->FOLIOID)->where('CALIDADJURIDICAID', 2)->first();
-			$agente = $this->_usuariosModel->asObject()->where('ID', session('ID'))->first();
+			$imputado = $this->_folioPersonaFisicaModelRead->asObject()->where('ANO', $year)->where('FOLIOID', $folioM->FOLIOID)->where('CALIDADJURIDICAID', 2)->first();
+			$agente = $this->_usuariosModelRead->asObject()->where('ID', session('ID'))->first();
 
 			$folio = $folioM->FOLIOID;
 
 			if ($folioM->MUNICIPIOASIGNADOID != null) {
-				$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $folioM->MUNICIPIOASIGNADOID)->where('ESTADOID', 2)->first();
+				$municipio = $this->_municipiosModelRead->asObject()->where('MUNICIPIOID', $folioM->MUNICIPIOASIGNADOID)->where('ESTADOID', 2)->first();
 			} else {
-				$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $folioM->INSTITUCIONREMISIONMUNICIPIOID)->where('ESTADOID', 2)->first();
+				$municipio = $this->_municipiosModelRead->asObject()->where('MUNICIPIOID', $folioM->INSTITUCIONREMISIONMUNICIPIOID)->where('ESTADOID', 2)->first();
 			}
 			$fecha_actual = date('d') . ' DE ' . $meses[date('n') - 1] . " DEL " . date('Y');
 			$agente = trim($agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' .  $agente->APELLIDO_MATERNO);

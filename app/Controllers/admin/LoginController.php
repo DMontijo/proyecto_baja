@@ -13,12 +13,19 @@ use App\Models\RolesUsuariosModel;
 class LoginController extends BaseController
 {
 
+	//Modelos de escritura
 	private $_usuariosModel;
 	private $_sesionesModel;
 	private $_bitacoraActividadModel;
 	private $_rolesPermisosModel;
 	private $_rolesUsuariosModel;
+	//Modelos de lectura
 	private $_sesionesModelRead;
+	private $_rolesPermisosModelReader;
+	private $_rolesUsuariosModelRead;
+	private $_usuariosModelRead;
+
+
 	private $db_read;
 
 	function __construct()
@@ -29,10 +36,14 @@ class LoginController extends BaseController
 		$this->_usuariosModel = new UsuariosModel();
 		$this->_sesionesModel = new SesionesModel();
 		$this->_bitacoraActividadModel = new BitacoraActividadModel();
-		$this->_rolesPermisosModel = new rolesPermisosModel();
+		$this->_rolesPermisosModel = new RolesPermisosModel();
 		$this->_rolesUsuariosModel = new RolesUsuariosModel();
 
 		$this->_sesionesModelRead = model('SesionesModel', true, $this->db_read);
+		$this->_rolesPermisosModelReader = model('RolesPermisosModel', true, $this->db_read);
+		$this->_rolesUsuariosModelRead = model('RolesUsuariosModel', true, $this->db_read);
+		$this->_usuariosModelRead = model('UsuariosModel', true, $this->db_read);
+
 	}
 
 	/**
@@ -62,7 +73,7 @@ class LoginController extends BaseController
 		$email = trim($email);
 		$password = trim($password);
 		// Encuentra un usuario con ese correo
-		$data = $this->_usuariosModel->where('CORREO', $email)->first();
+		$data = $this->_usuariosModelRead->where('CORREO', $email)->first();
 
 		if ($data) {
 			// Verifica que no tenga sesiones activas
@@ -72,9 +83,9 @@ class LoginController extends BaseController
 			}
 			// Valida la contraseña ingresada con la de su usuario
 			if (validatePassword($password, $data['PASSWORD'])) {
-				$data['permisos'] = $this->_rolesPermisosModel->select('PERMISOS.PERMISODESCR AS NOMBRE')->where('ROLID', $data['ROLID'])->join('PERMISOS', 'PERMISOS.PERMISOID = ROLESPERMISOS.PERMISOID', 'left')->findAll();
+				$data['permisos'] = $this->_rolesPermisosModelReader->select('PERMISOS.PERMISODESCR AS NOMBRE')->where('ROLID', $data['ROLID'])->join('PERMISOS', 'PERMISOS.PERMISOID = ROLESPERMISOS.PERMISOID', 'left')->findAll();
 				$data['permisos'] = array_column($data['permisos'], ('NOMBRE'));
-				$data['rol'] = $this->_rolesUsuariosModel->asObject()->where('ID', $data['ROLID'])->first();
+				$data['rol'] = $this->_rolesUsuariosModelRead->asObject()->where('ID', $data['ROLID'])->first();
 				$data['logged_in'] = TRUE;
 				$data['type'] = 'admin';
 				$data['uuid'] = uniqid();

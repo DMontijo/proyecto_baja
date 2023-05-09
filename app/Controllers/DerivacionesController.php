@@ -4,18 +4,19 @@ namespace App\Controllers;
 
 use CodeIgniter\Controller;
 
-use App\Models\DerivacionesModel;
-use App\Models\CanalizacionesModel;
-
 class DerivacionesController extends Controller
 {
-	private $_derivacionesModel;
-	private $_canalizacionesModel;
+
+	private $_derivacionesModelRead;
+	private $_canalizacionesModelRead;
+	private $db_read;
 
 	function __construct()
 	{
-		$this->_derivacionesModel = new DerivacionesModel();
-		$this->_canalizacionesModel = new CanalizacionesModel();
+		$this->db_read = ENVIRONMENT == 'production' ? db_connect('default_read') : db_connect('development_read');
+
+		$this->_derivacionesModelRead = model('DerivacionesModel', true, $this->db_read);
+		$this->_canalizacionesModelRead = model('CanalizacionesModel', true, $this->db_read);
 	}
 
 	/**
@@ -26,11 +27,11 @@ class DerivacionesController extends Controller
 	public function index()
 	{
 		$data = (object) array();
-		$data->derivacionesEnsenada = $this->_derivacionesModel->asObject()->getByMunicipioId(1);
-		$data->derivacionesMexicali = $this->_derivacionesModel->asObject()->getByMunicipioId(2);
-		$data->derivacionesTecate = $this->_derivacionesModel->asObject()->getByMunicipioId(3);
-		$data->derivacionesTijuana = $this->_derivacionesModel->asObject()->getByMunicipioId(4);
-		$data->derivacionesRosarito = $this->_derivacionesModel->asObject()->getByMunicipioId(5);
+		$data->derivacionesEnsenada = $this->_derivacionesModelRead->asObject()->getByMunicipioId(1);
+		$data->derivacionesMexicali = $this->_derivacionesModelRead->asObject()->getByMunicipioId(2);
+		$data->derivacionesTecate = $this->_derivacionesModelRead->asObject()->getByMunicipioId(3);
+		$data->derivacionesTijuana = $this->_derivacionesModelRead->asObject()->getByMunicipioId(4);
+		$data->derivacionesRosarito = $this->_derivacionesModelRead->asObject()->getByMunicipioId(5);
 		$this->_loadView('Directorio de derivaciones', $data, 'derivaciones');
 	}
 
@@ -42,11 +43,11 @@ class DerivacionesController extends Controller
 	public function canalizaciones()
 	{
 		$data = (object) array();
-		$data->canalizacionesEnsenada = $this->_canalizacionesModel->asObject()->getByMunicipioId(1);
-		$data->canalizacionesMexicali = $this->_canalizacionesModel->asObject()->getByMunicipioId(2);
-		$data->canalizacionesTecate = $this->_canalizacionesModel->asObject()->getByMunicipioId(3);
-		$data->canalizacionesTijuana = $this->_canalizacionesModel->asObject()->getByMunicipioId(4);
-		$data->canalizacionesRosarito = $this->_canalizacionesModel->asObject()->getByMunicipioId(5);
+		$data->canalizacionesEnsenada = $this->_canalizacionesModelRead->asObject()->getByMunicipioId(1);
+		$data->canalizacionesMexicali = $this->_canalizacionesModelRead->asObject()->getByMunicipioId(2);
+		$data->canalizacionesTecate = $this->_canalizacionesModelRead->asObject()->getByMunicipioId(3);
+		$data->canalizacionesTijuana = $this->_canalizacionesModelRead->asObject()->getByMunicipioId(4);
+		$data->canalizacionesRosarito = $this->_canalizacionesModelRead->asObject()->getByMunicipioId(5);
 		$this->_loadView('Directorio de canalizaciones', $data, 'canalizaciones');
 	}
 	/**

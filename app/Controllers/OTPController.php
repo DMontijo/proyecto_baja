@@ -3,19 +3,23 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use App\Models\DenunciantesModel;
 use App\Models\OTPModel;
 use GuzzleHttp\Client;
 
 class OTPController extends BaseController
 {
 	private $_OTPModel;
-	private $_denunciantesModel;
+	private $_OTPModelRead;
+	private $_denunciantesModelRead;
+	private $db_read;
 
 	public function __construct()
 	{
+		$this->db_read = ENVIRONMENT == 'production' ? db_connect('default_read') : db_connect('development_read');
+
 		$this->_OTPModel = new OTPModel();
-		$this->_denunciantesModel = new DenunciantesModel();
+		$this->_OTPModelRead = model('OTPModel', true, $this->db_read);
+		$this->_denunciantesModelRead = model('DenunciantesModel', true, $this->db_read);
 	}
 
 	/**
@@ -82,7 +86,7 @@ class OTPController extends BaseController
 		$convert = date("Y-m-d H:i:s", $nuevafecha);
 
 		if ($to) {
-			$user = $this->_denunciantesModel->asObject()->where('CORREO', $to)->first();
+			$user = $this->_denunciantesModelRead->asObject()->where('CORREO', $to)->first();
 
 			// $email = \Config\Services::email();
 			// $email->setTo($to);
@@ -99,7 +103,7 @@ class OTPController extends BaseController
 				'VENCIMIENTO' => $convert,
 			];
 
-			$otpRegister = $this->_OTPModel->asObject()->where('CORREO', $to)->first();
+			$otpRegister = $this->_OTPModelRead->asObject()->where('CORREO', $to)->first();
 
 			if ($otpRegister) {
 				$newOTP = $this->_OTPModel->set($data)->where('CORREO', $to)->update();
@@ -138,7 +142,7 @@ class OTPController extends BaseController
 		$now = date("Y-m-d H:i:s");
 
 		if ($email && $otp) {
-			$data = $this->_OTPModel->asObject()->where('CORREO', $email)->where('CODIGO_OTP', $otp)->orderBy('IDOTP', 'desc')->first();
+			$data = $this->_OTPModelRead->asObject()->where('CORREO', $email)->where('CODIGO_OTP', $otp)->orderBy('IDOTP', 'desc')->first();
 
 			if (!$data) {
 				return json_encode((object)['status' => 500, 'message' => 'El código ingresado es incorrecto.']);
@@ -167,7 +171,7 @@ class OTPController extends BaseController
 	{
 		$email = trim($this->request->getPost('email'));
 		if ($email) {
-			$data = $this->_OTPModel->asObject()->where('CORREO', $email)->orderBy('IDOTP', 'desc')->first();
+			$data = $this->_OTPModelRead->asObject()->where('CORREO', $email)->orderBy('IDOTP', 'desc')->first();
 			return json_encode((object)['data' => $data]);
 		} else {
 			return json_encode((object)['status' => 500, 'data' => ['message' => 'No existe el email.']]);

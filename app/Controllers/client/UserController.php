@@ -23,40 +23,48 @@ use GuzzleHttp\Client;
 
 class UserController extends BaseController
 {
+	private $db_read;
 
-	private $_nacionalidadModel;
-	private $_estadosCivilesModel;
-	private $_personaIdiomaModel;
-	private $_estadosModel;
-	private $_municipiosModel;
-	private $_localidadesModel;
-	private $_coloniasModel;
+	private $_nacionalidadModelRead;
+	private $_estadosCivilesModelRead;
+	private $_personaIdiomaModelRead;
+	private $_estadosModelRead;
+	private $_municipiosModelRead;
+	private $_localidadesModelRead;
+	private $_coloniasModelRead;
 	private $_denunciantesModel;
-	private $_tipoIdentificacionModel;
-	private $_paisesModel;
-	private $_clasificacionLugarModel;
+	private $_tipoIdentificacionModelRead;
+	private $_paisesModelRead;
+	private $_clasificacionLugarModelRead;
 	private $_folioModel;
-	private $_escolaridadModel;
-	private $_ocupacionModel;
+	private $_folioModelRead;
+
+	private $_escolaridadModelRead;
+	private $_denunciantesModelRead;
+
+	private $_ocupacionModelRead;
 	private $urlApi;
 
 	function __construct()
 	{
+		$this->db_read = ENVIRONMENT == 'production' ? db_connect('default_read') : db_connect('development_read');
+
 		//Models
-		$this->_nacionalidadModel = new PersonaNacionalidadModel();
-		$this->_estadosCivilesModel = new PersonaEstadoCivilModel();
-		$this->_personaIdiomaModel = new PersonaIdiomaModel();
-		$this->_estadosModel = new EstadosModel();
-		$this->_municipiosModel = new MunicipiosModel();
-		$this->_localidadesModel = new LocalidadesModel();
-		$this->_coloniasModel = new ColoniasModel();
+		$this->_nacionalidadModelRead = model('PersonaNacionalidadModel', true, $this->db_read);
+		$this->_estadosCivilesModelRead = model('PersonaEstadoCivilModel', true, $this->db_read);
+		$this->_personaIdiomaModelRead = model('PersonaIdiomaModel', true, $this->db_read);
+		$this->_estadosModelRead = model('EstadosModel', true, $this->db_read);
+		$this->_municipiosModelRead = model('MunicipiosModel', true, $this->db_read);
+		$this->_localidadesModelRead = model('LocalidadesModel', true, $this->db_read);
+		$this->_coloniasModelRead = model('ColoniasModel', true, $this->db_read);
 		$this->_denunciantesModel = new DenunciantesModel();
-		$this->_tipoIdentificacionModel = new PersonaTipoIdentificacionModel();
-		$this->_paisesModel = new PaisesModel();
-		$this->_clasificacionLugarModel = new HechoClasificacionLugarModel();
+		$this->_tipoIdentificacionModelRead = model('PersonaTipoIdentificacionModel', true, $this->db_read);
+		$this->_paisesModelRead = model('PaisesModel', true, $this->db_read);
+		$this->_clasificacionLugarModelRead = model('HechoClasificacionLugarModel', true, $this->db_read);
+		$this->_denunciantesModelRead = model('DenunciantesModel', true, $this->db_read);
 		$this->_folioModel = new FolioModel();
-		$this->_escolaridadModel = new EscolaridadModel();
-		$this->_ocupacionModel = new OcupacionModel();
+		$this->_escolaridadModelRead = model('EscolaridadModel', true, $this->db_read);
+		$this->_ocupacionModelRead = model('OcupacionModel', true, $this->db_read);
 		$this->urlApi = VIDEOCALL_URL . "guests/";
 	}
 
@@ -77,14 +85,14 @@ class UserController extends BaseController
 	public function new()
 	{
 		$data = (object) array();
-		$data->nacionalidades = $this->_nacionalidadModel->asObject()->findAll();
-		$data->edoCiviles = $this->_estadosCivilesModel->asObject()->findAll();
-		$data->idiomas = $this->_personaIdiomaModel->asObject()->findAll();
-		$data->paises = $this->_paisesModel->asObject()->findAll();
-		$data->estados = $this->_estadosModel->asObject()->findAll();
-		$data->tiposIdentificaciones = $this->_tipoIdentificacionModel->asObject()->findAll();
-		$data->escolaridades = $this->_escolaridadModel->asObject()->findAll();
-		$data->ocupaciones = $this->_ocupacionModel->asObject()->findAll();
+		$data->nacionalidades = $this->_nacionalidadModelRead->asObject()->findAll();
+		$data->edoCiviles = $this->_estadosCivilesModelRead->asObject()->findAll();
+		$data->idiomas = $this->_personaIdiomaModelRead->asObject()->findAll();
+		$data->paises = $this->_paisesModelRead->asObject()->findAll();
+		$data->estados = $this->_estadosModelRead->asObject()->findAll();
+		$data->tiposIdentificaciones = $this->_tipoIdentificacionModelRead->asObject()->findAll();
+		$data->escolaridades = $this->_escolaridadModelRead->asObject()->findAll();
+		$data->ocupaciones = $this->_ocupacionModelRead->asObject()->findAll();
 		$this->_loadView('Denuncia', $data, 'index');
 	}
 
@@ -226,14 +234,14 @@ class UserController extends BaseController
 	public function updateDenuncianteInfo()
 	{
 		$data = (object) array();
-		$data->nacionalidades = $this->_nacionalidadModel->asObject()->findAll();
-		$data->edoCiviles = $this->_estadosCivilesModel->asObject()->findAll();
-		$data->idiomas = $this->_personaIdiomaModel->asObject()->findAll();
-		$data->paises = $this->_paisesModel->asObject()->findAll();
-		$data->estados = $this->_estadosModel->asObject()->findAll();
-		$data->tiposIdentificaciones = $this->_tipoIdentificacionModel->asObject()->findAll();
-		$data->escolaridades = $this->_escolaridadModel->asObject()->findAll();
-		$data->ocupaciones = $this->_ocupacionModel->asObject()->findAll();
+		$data->nacionalidades = $this->_nacionalidadModelRead->asObject()->findAll();
+		$data->edoCiviles = $this->_estadosCivilesModelRead->asObject()->findAll();
+		$data->idiomas = $this->_personaIdiomaModelRead->asObject()->findAll();
+		$data->paises = $this->_paisesModelRead->asObject()->findAll();
+		$data->estados = $this->_estadosModelRead->asObject()->findAll();
+		$data->tiposIdentificaciones = $this->_tipoIdentificacionModelRead->asObject()->findAll();
+		$data->escolaridades = $this->_escolaridadModelRead->asObject()->findAll();
+		$data->ocupaciones = $this->_ocupacionModelRead->asObject()->findAll();
 		$this->_loadViewDashboard('Denuncia', $data, 'dash_register_update/index');
 	}
 
@@ -310,7 +318,7 @@ class UserController extends BaseController
 		}
 		try {
 			if (!session()->has('DENUNCIANTEID')) throw new \Exception();
-			$denunciante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', session('DENUNCIANTEID'))->first();
+			$denunciante = $this->_denunciantesModelRead->asObject()->where('DENUNCIANTEID', session('DENUNCIANTEID'))->first();
 			// Actualiazacion del usuario en el servicio de videollamada
 			$endpoint = $this->urlApi . $denunciante->UUID;
 			$dataApi = array('languages' => [(int)$this->request->getPost('idioma')]);
@@ -338,7 +346,7 @@ class UserController extends BaseController
 	public function getMunicipiosByEstado()
 	{
 		$estadoID = $this->request->getPost('estado_id');
-		$data = $this->_municipiosModel->asObject()->where('ESTADOID', $estadoID)->orderBy('MUNICIPIODESCR', 'asc')->findAll();
+		$data = $this->_municipiosModelRead->asObject()->where('ESTADOID', $estadoID)->orderBy('MUNICIPIODESCR', 'asc')->findAll();
 		return json_encode((object)['data' => $data]);
 	}
 	/**
@@ -350,7 +358,7 @@ class UserController extends BaseController
 	{
 		$estadoID = $this->request->getPost('estado_id');
 		$municipioID = $this->request->getPost('municipio_id');
-		$data = $this->_localidadesModel->asObject()->where('ESTADOID', $estadoID)->where('MUNICIPIOID', $municipioID)->orderBy('LOCALIDADDESCR', 'asc')->findAll();
+		$data = $this->_localidadesModelRead->asObject()->where('ESTADOID', $estadoID)->where('MUNICIPIOID', $municipioID)->orderBy('LOCALIDADDESCR', 'asc')->findAll();
 		return json_encode((object)['data' => $data]);
 	}
 	/**
@@ -362,7 +370,7 @@ class UserController extends BaseController
 	{
 		$estadoID = $this->request->getPost('estado_id');
 		$municipioID = $this->request->getPost('municipio_id');
-		$data = $this->_coloniasModel->asObject()->where('ESTADOID', $estadoID)->where('MUNICIPIOID', $municipioID)->orderBy('COLONIADESCR', 'asc')->findAll();
+		$data = $this->_coloniasModelRead->asObject()->where('ESTADOID', $estadoID)->where('MUNICIPIOID', $municipioID)->orderBy('COLONIADESCR', 'asc')->findAll();
 		return json_encode((object)['data' => $data]);
 	}
 	/**
@@ -375,7 +383,7 @@ class UserController extends BaseController
 		$estadoID = $this->request->getPost('estado_id');
 		$municipioID = $this->request->getPost('municipio_id');
 		$localidadID = $this->request->getPost('localidad_id');
-		$data = $this->_coloniasModel->asObject()->where('ESTADOID', $estadoID)->where('MUNICIPIOID', $municipioID)->where('LOCALIDADID', $localidadID)->orderBy('COLONIADESCR', 'asc')->findAll();
+		$data = $this->_coloniasModelRead->asObject()->where('ESTADOID', $estadoID)->where('MUNICIPIOID', $municipioID)->where('LOCALIDADID', $localidadID)->orderBy('COLONIADESCR', 'asc')->findAll();
 		return json_encode((object)['data' => $data]);
 	}
 	/**
@@ -386,7 +394,7 @@ class UserController extends BaseController
 	public function getClasificacionByLugar()
 	{
 		$lugar_id = $this->request->getPost('lugar_id');
-		$data = $this->_clasificacionLugarModel->asObject()->where('HECHOLUGARID', $lugar_id)->findAll();
+		$data = $this->_clasificacionLugarModelRead->asObject()->where('HECHOLUGARID', $lugar_id)->findAll();
 		return json_encode((object)['data' => $data]);
 	}
 
@@ -412,7 +420,7 @@ class UserController extends BaseController
 	public function existEmail()
 	{
 		$email = $this->request->getPost('email');
-		$data = $this->_denunciantesModel->where('CORREO', $email)->first();
+		$data = $this->_denunciantesModelRead->where('CORREO', $email)->first();
 		if ($data == NULL) {
 			return json_encode((object)['exist' => 0]);
 		} else if (count($data) > 0) {
@@ -431,8 +439,8 @@ class UserController extends BaseController
 	{
 		$id = $this->request->getPost('id');
 		$data = (object)array();
-		$data->abiertos = $this->_folioModel->asObject()->where('STATUS', 'ABIERTO')->where('DENUNCIANTEID', $id)->findAll();
-		$data->proceso = $this->_folioModel->asObject()->where('STATUS', 'EN PROCESO')->where('DENUNCIANTEID', $id)->findAll();
+		$data->abiertos = $this->_folioModelRead->asObject()->where('STATUS', 'ABIERTO')->where('DENUNCIANTEID', $id)->findAll();
+		$data->proceso = $this->_folioModelRead->asObject()->where('STATUS', 'EN PROCESO')->where('DENUNCIANTEID', $id)->findAll();
 		return json_encode($data);
 	}
 	
@@ -445,7 +453,7 @@ class UserController extends BaseController
 	private function _sendEmailPassword($to, $password)
 	{
 		// $email = \Config\Services::email();
-		$user = $this->_denunciantesModel->asObject()->where('CORREO', $to)->first();
+		$user = $this->_denunciantesModelRead->asObject()->where('CORREO', $to)->first();
 		// $email->setTo($to);
 		// $email->setSubject('Te estamos atendiendo');
 		// $body = view('email_template/password_email_template.php', ['email' => $to, 'password' => $password]);
