@@ -327,7 +327,9 @@ class FoliosController extends BaseController
 		$this->_tipoExpedienteModel = new TipoExpedienteModel();
 		$this->_rolesPermisosModel = new RolesPermisosModel();
 	}
-
+	/* Vista de Bandeja de Folios
+	* Retorna las cantidades visualizadas al ingresar a bandeja de folios de acuerdo al ROL
+	*/
 	public function index()
 	{
 		$data = (object) array();
@@ -355,6 +357,10 @@ class FoliosController extends BaseController
 		$this->_loadView('Folios', 'folios', '', $data, 'index');
 	}
 
+	/**
+	 * Vista para visualizar los folios abiertos
+	 *
+	 */
 	public function folios_abiertos()
 	{
 		if (!$this->permisos('FOLIOS')) {
@@ -362,12 +368,16 @@ class FoliosController extends BaseController
 		}
 		$data = (object) array();
 		// $data->folio = $this->_folioModel->asObject()->where('STATUS', 'ABIERTO')->join('DENUNCIANTES', 'DENUNCIANTES.DENUNCIANTEID = FOLIO.DENUNCIANTEID')->findAll();
+		//Query folios abiertos
 		$data->folio = $this->_folioModel->get_folios_abiertos();
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 		$this->_loadView('Folios abiertos', 'folios', '', $data, 'folios_abiertos');
 	}
-
+	/**
+	 * Vista para visualizar los folios derivados
+	 * Se visualizan diferentes folios de acuerdo al rol del usuario
+	 */
 	public function folios_derivados()
 	{
 		if (!$this->permisos('FOLIOS')) {
@@ -389,7 +399,10 @@ class FoliosController extends BaseController
 
 		$this->_loadView('Folios derivados', 'folios', '', $data, 'folios_derivados');
 	}
-
+	/**
+	 * Vista para visualizar los folios canalizados
+	 * Se visualizan diferentes folios de acuerdo al rol del usuario
+	 */
 	public function folios_canalizados()
 	{
 		if (!$this->permisos('FOLIOS')) {
@@ -418,7 +431,10 @@ class FoliosController extends BaseController
 
 		$this->_loadView('Folios canalizados', 'folios', '', $data, 'folios_canalizados');
 	}
-
+	/**
+	 * Vista para visualizar los folios en proceso
+	 *
+	 */
 	public function folios_en_proceso()
 	{
 		if (!$this->permisos('FOLIOS')) {
@@ -431,6 +447,10 @@ class FoliosController extends BaseController
 		$this->_loadView('Folios en proceso', 'folios', '', $data, 'folios_en_proceso');
 	}
 
+	/**
+	 * Función para liberar los folios en proceso
+	 *
+	 */
 	public function liberar_folio()
 	{
 		$folio = $this->request->getVar('folio');
@@ -445,7 +465,10 @@ class FoliosController extends BaseController
 		$this->_bitacoraActividad($datosBitacora);
 		return redirect()->to(base_url('/admin/dashboard/folios_en_proceso'));
 	}
-
+	/**
+	 * Vista para visualizar los folios con expediente
+	 * Se visualizan diferentes folios de acuerdo al rol del usuario
+	 */
 	public function folios_expediente()
 	{
 		if (!$this->permisos('FOLIOS')) {
@@ -482,7 +505,10 @@ class FoliosController extends BaseController
 		$this->_loadView('Folios expediente', 'folios', '', $data, 'folios_expediente');
 	}
 
-
+	/**
+	 * Vista para visualizar los folios sin firmar
+	 *  ! Deprecated method, do not use.
+	 */
 	public function folios_sin_firma()
 	{
 		if (!$this->permisos('FOLIOS')) {
@@ -495,6 +521,10 @@ class FoliosController extends BaseController
 		$this->_loadView('Expedientes sin firmar', 'folios', '', $data, 'folios_sin_firma');
 	}
 
+	/**
+	 * Funcion para firmar folios  en folios sin firma
+	 *  ! Deprecated method, do not use.
+	 */
 	public function firmar_folio()
 	{
 		$folio = $this->request->getVar('folio');
@@ -508,29 +538,37 @@ class FoliosController extends BaseController
 		return redirect()->to(base_url('/admin/dashboard/folios_sin_firma'));
 	}
 
+	/**
+	 * Vista de consulta de folios.
+	 * Su filtro es el default para traer todos los folios de un mes atras en adelante
+	 *
+	 */
 	public function getAllFolios()
 	{
 		if (!$this->permisos('BUSQUEDA DE FOLIO')) {
 			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
 		}
 
+		//Datos del filtro por default
 		$data = (object) array();
 		$data = [
 			'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
 			'fechaFin' => date("Y-m-d"),
 		];
-
+		// Se limpian varibles nulas o que no esten en el array definido
 		foreach ($data as $clave => $valor) {
 			if (empty($valor)) {
 				unset($data[$clave]);
 			}
 		}
 
+		// Info para la tabla visual
 		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
 		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
 		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
 		$tipoExpediente = $this->_tipoExpedienteModel->asObject()->like('TIPOEXPEDIENTECLAVE', 'NUC')->orLike('TIPOEXPEDIENTECLAVE', 'NAC')->orLike('TIPOEXPEDIENTECLAVE', 'RAC')->findAll();
 
+		// Filtro
 		$resultFilter = $this->_folioModel->filterAllDates($data);
 
 		$dataView = (object) array();
@@ -544,8 +582,15 @@ class FoliosController extends BaseController
 		$this->_loadView('Buscar folio', 'folios', '', $dataView, 'buscar_folio');
 	}
 
+	/**
+	 * Función para filtrar los folios en consulta de folios
+	 * Se recibe por metodo POST el formulario de filtros
+	 *
+	 */
 	public function getFilterFolios()
 	{
+		//Datos del filtro que requiren buscar
+
 		$data = (object) array();
 		$data = [
 			'FOLIOID' => $this->request->getPost('folio'),
@@ -560,6 +605,7 @@ class FoliosController extends BaseController
 			'horaFin' => $this->request->getPost('horaFin'),
 			'TIPOEXPEDIENTEID' => $this->request->getPost('tipo_salida'),
 		];
+		// Se limpian varibles nulas o que no esten en el array definido
 
 		foreach ($data as $clave => $valor) {
 			if (empty($valor)) {
@@ -567,6 +613,7 @@ class FoliosController extends BaseController
 			}
 		}
 
+		//Cuando se borra el filtro
 		if (count($data) <= 0) {
 			$data = [
 				'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
@@ -590,6 +637,11 @@ class FoliosController extends BaseController
 		$this->_loadView('Buscar folio', 'folios', '', $dataView, 'buscar_folio');
 	}
 
+	/**
+	 * Función cuando abren un expediente desde consulta de folios o para abrir los folios atendidos de ese denuniante desde VIDEODENUNCIA
+	 * Recibe por metodo POST el folio y año, o GET en casod e ser desde VIDEODENUNCIA.
+	 *
+	 */
 	public function viewFolio()
 	{
 		if (!$this->permisos('BUSQUEDA DE FOLIO')) {
@@ -714,12 +766,14 @@ class FoliosController extends BaseController
 		$data->servicioVehiculo = $this->_vehiculoServicioModel->asObject()->findAll();
 		$data->estadosExtranjeros = $this->_estadosExtranjeros->asObject()->findAll();
 
+		//Datos del folio
 		$data->datosFolio = $this->_folioModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $data->year)->first();
 
+		// Cuando se le abrio expediente
 		if ($data->datosFolio->MUNICIPIOASIGNADOID  && $data->datosFolio->TIPOEXPEDIENTEID) {
 			$data->datosFolio = $this->_folioModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $data->year)->join('MUNICIPIO', 'FOLIO.MUNICIPIOASIGNADOID = MUNICIPIO.MUNICIPIOID AND MUNICIPIO.ESTADOID =2')->join('TIPOEXPEDIENTE', 'FOLIO.TIPOEXPEDIENTEID = TIPOEXPEDIENTE.TIPOEXPEDIENTEID')->first();
 		}
-
+		//Cuando estan remitidos
 		if ($data->datosFolio->AGENTEASIGNADOID) {
 			$data->datosFolio = $this->_folioModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $data->year)->join('MUNICIPIO', 'FOLIO.MUNICIPIOASIGNADOID = MUNICIPIO.MUNICIPIOID AND MUNICIPIO.ESTADOID =2')->join('EMPLEADOS', 'EMPLEADOS.EMPLEADOID = FOLIO.AGENTEASIGNADOID')->join('TIPOEXPEDIENTE', 'FOLIO.TIPOEXPEDIENTEID = TIPOEXPEDIENTE.TIPOEXPEDIENTEID')->first();
 			if ($data->datosFolio) {
@@ -729,20 +783,31 @@ class FoliosController extends BaseController
 			}
 		}
 
+		//Cuando es derivado
 		if ($data->datosFolio->INSTITUCIONREMISIONMUNICIPIOID && $data->datosFolio->STATUS == 'DERIVADO') {
 			$data->datosFolio = $this->_folioModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $data->year)->join('MUNICIPIO', 'FOLIO.INSTITUCIONREMISIONMUNICIPIOID = MUNICIPIO.MUNICIPIOID AND MUNICIPIO.ESTADOID =2')->join('DERIVACIONES', 'FOLIO.INSTITUCIONREMISIONID = DERIVACIONES.INSTITUCIONREMISIONID AND FOLIO.INSTITUCIONREMISIONMUNICIPIOID = DERIVACIONES.MUNICIPIOID')->first();
 		}
-		
+		//Cuando es canalizado
 		if ($data->datosFolio->INSTITUCIONREMISIONMUNICIPIOID && $data->datosFolio->STATUS == 'CANALIZADO') {
 			$data->datosFolio = $this->_folioModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $data->year)->join('MUNICIPIO', 'FOLIO.INSTITUCIONREMISIONMUNICIPIOID = MUNICIPIO.MUNICIPIOID AND MUNICIPIO.ESTADOID =2')->join('CANALIZACIONES', 'FOLIO.INSTITUCIONREMISIONID = CANALIZACIONES.INSTITUCIONREMISIONID AND FOLIO.INSTITUCIONREMISIONMUNICIPIOID = CANALIZACIONES.MUNICIPIOID')->first();
 		}
-		
+
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 		// var_dump($data);exit;
 		$this->_loadView('Video denuncia', 'videodenuncia', '', $data, 'ver_folio');
 	}
 
+	/**
+	 * Función para cargar cualquier vista en cualquier función.
+	 *
+	 * @param  mixed $title
+	 * @param  mixed $menu
+	 * @param  mixed $submenu
+	 * @param  mixed $data
+	 * @param  mixed $view
+	 * @return void
+	 */
 	private function _loadView($title, $menu, $submenu, $data, $view)
 	{
 		$data2 = [
@@ -752,6 +817,11 @@ class FoliosController extends BaseController
 
 		echo view("admin/dashboard/folios/$view", $data2);
 	}
+	/**
+	 * Función para agregar información a la bitacora diaria.
+	 *
+	 * @param  mixed $data
+	 */
 	private function _bitacoraActividad($data)
 	{
 		$data = $data;
@@ -763,6 +833,11 @@ class FoliosController extends BaseController
 			$this->_bitacoraActividadModel->insert($data);
 		}
 	}
+	/**
+	 * Función para revisar los permisos que tienen los usuarios y poder restringir el acceso
+	 *
+	 * @param  mixed $permiso
+	 */
 	private function permisos($permiso)
 	{
 		return in_array($permiso, session('permisos'));

@@ -71,6 +71,11 @@ class ExtravioController extends BaseController
 		$this->db = \Config\Database::connect();
 	}
 
+	/**
+	 * Vista de Login-Constancia de extravio
+	 * Autentica que no tenga sesion iniciada, y si tiene sesion lo redirige al dashboard de constancia de extravio
+	 *
+	 */
 	public function index()
 	{
 		if ($this->_isAuth()) {
@@ -80,11 +85,19 @@ class ExtravioController extends BaseController
 			$this->_loadView('Login', [], 'index');
 		}
 	}
+	/**
+	 * Vista para generar un nuevo solicitante de constancia
+	 *
+	 */
 	public function register()
 	{
 		$this->_loadView('Nuevo solicitante', [], 'register');
 	}
-
+	/**
+	 * Función para autenticar el ingreso a la plataforma desde las constancias de extravio
+	 * Recibe por metodo POST el correo y contraseña
+	 *
+	 */
 	public function login_auth()
 	{
 		$session = session();
@@ -94,15 +107,20 @@ class ExtravioController extends BaseController
 		$password = trim($password);
 		$data = $this->_denunciantesModel->where('CORREO', $email)->first();
 		if ($data) {
+			// Verifica que no tenga sesiones activas
+
 			$control_session = $this->_sesionesDenunciantesModel->asObject()->where('ID_DENUNCIANTE', $data['DENUNCIANTEID'])->where('ACTIVO', 1)->first();
 			if ($control_session) {
 				return redirect()->to(base_url('/denuncia'))->with('message_session', 'Ya tienes sesiones activas, cierralas para continuar.')->with('id',  $data['DENUNCIANTEID']);
 			}
+			// Valida la contraseña ingresada con la de su usuario
+
 			if (validatePassword($password, $data['PASSWORD'])) {
 				$data['logged_in'] = TRUE;
 				$data['type'] = 'user_constancias';
 				$data['uuid'] = uniqid();
 
+				//Datos de la sesion
 				$session->set($data);
 				$agent = $this->request->getUserAgent();
 
@@ -128,11 +146,17 @@ class ExtravioController extends BaseController
 			return redirect()->back();
 		}
 	}
-
+	/**
+	 * Función para crear un nuevo solicitante
+	 * Recibe con metodo POST los datos del formulario
+	 *
+	 */
 	public function create()
 	{
+		//Genera contraseña para el usuario
 
 		$password = $this->_generatePassword(6);
+		//Datos del denunciante
 
 		$data = [
 			'NOMBRE' => $this->request->getPost('nombre'),
@@ -148,6 +172,7 @@ class ExtravioController extends BaseController
 			'SEXO' => $this->request->getPost('sexo'),
 			'TIPO' => 2,
 		];
+		//Verifica que el correo sea unico
 
 		if ($this->validate(['correo' => 'required|is_unique[DENUNCIANTES.CORREO]'])) {
 			$dataApi2 = [
@@ -156,6 +181,7 @@ class ExtravioController extends BaseController
 				'APELLIDO_MATERNO' => $this->request->getPost('apellido_materno'),
 				'CORREO' => $this->request->getPost('correo'),
 			];
+			//Datos a enviar al servicio de videollamada
 			$dataApi = array();
 			$dataApi['name'] = $this->request->getPost('nombre') . ' ' . $this->request->getPost('apellido_paterno');
 			$dataApi['details'] = $dataApi2;
@@ -164,6 +190,8 @@ class ExtravioController extends BaseController
 			$urlApi = VIDEOCALL_URL . "guests/";
 			$response = $this->_curlPost($urlApi, $dataApi);
 			$data['UUID'] = $response->uuid;
+			//Respuesta del servicio de videollamada
+
 			if ($response->uuid) {
 				$this->_denunciantesModel->insert($data);
 				$this->_sendEmailPassword($data['CORREO'], $password);
@@ -173,14 +201,21 @@ class ExtravioController extends BaseController
 			return redirect()->back()->with('message_error', 'Hubo un error en los datos o puede que ya exista un registro con el mismo correo');
 		}
 	}
-
+	/**
+	 * Vista de perfil, carga los datos del solicitante en la vista
+	 *
+	 */
 	public function profile()
 	{
 		$data = (object) array();
 		$data->user = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', session('DENUNCIANTEID'))->first();
 		$this->_loadView('Perfil', $data, 'perfil');
 	}
-
+	/**
+	 * Funcion para actualizar el perfil del solicitante.
+	 * El formulario es recibido por metodo POST
+	 *
+	 */
 	public function update_profile()
 	{
 		$session = session();
@@ -206,7 +241,11 @@ class ExtravioController extends BaseController
 		}
 		return redirect()->back()->with('message_error', 'No se pudo actualizar el registro.');
 	}
-
+	/**
+	 * Función para actualizar la contraseña del solicitante
+	 * Se recibe la contraseña por metodo POST
+	 *
+	 */
 	public function update_password()
 	{
 		$password = trim($this->request->getPost('password'));
@@ -217,7 +256,12 @@ class ExtravioController extends BaseController
 
 		return redirect()->back()->with('message_success', 'Contraseña actualizada correctamente');
 	}
-
+	/**
+	 * Funcíon para generar una contraseña aleatoria.
+	 * Como parametro se recibe el tamaño de la contraseña
+	 *
+	 * @param  mixed $length
+	 */
 	private function _generatePassword($length)
 	{
 		$password = "";
@@ -228,7 +272,10 @@ class ExtravioController extends BaseController
 		}
 		return $password;
 	}
-
+	/**
+	 * Función para verificar si este el email para evitar duplicidad en registro
+	 * ! Deprecated method, do not use
+	 */
 	public function existEmail()
 	{
 		$email = $this->request->getPost('email');
@@ -241,7 +288,12 @@ class ExtravioController extends BaseController
 			return json_encode((object)['exist' => 0]);
 		}
 	}
-
+	/**
+	 * Función para enviar un correo con la contraseña generada al solicitante
+	 *
+	 * @param  mixed $to
+	 * @param  mixed $password
+	 */
 	private function _sendEmailPassword($to, $password)
 	{
 		// $email = \Config\Services::email();
@@ -288,7 +340,10 @@ class ExtravioController extends BaseController
 		// 	}
 		// }
 	}
-
+	/**
+	 * Función para mandar por email o sms la nueva contraseña
+	 *
+	 */
 	public function sendEmailChangePassword()
 	{
 		$password = $this->_generatePassword(6);
@@ -311,13 +366,23 @@ class ExtravioController extends BaseController
 
 		// }
 	}
-
+	/**
+	 * Función para verifica si el usuario ha iniciado sesión y es un usuario. 
+	 *
+	 */
 	private function _isAuth()
 	{
 		if (session('logged_in') && session('type') == 'user') {
 			return true;
 		};
 	}
+	/**
+	 * Función para cargar cualquier vista en cualquier función.
+	 *
+	 * @param  mixed $title
+	 * @param  mixed $data
+	 * @param  mixed $view
+	 */
 	private function _loadView($title, $data, $view)
 	{
 		$data = [
@@ -327,6 +392,11 @@ class ExtravioController extends BaseController
 		echo view("constancia_extravio/register/$view", $data);
 	}
 
+	/**
+	 * Función para descargar el PDF de la constancia de extravio
+	 * ! Deprecated method, do not use
+	 *
+	 */
 	function descargar_pdf()
 	{
 		$data = (object)array();
@@ -401,7 +471,10 @@ class ExtravioController extends BaseController
 		// Download pdf
 		$dompdf->stream();
 	}
-	
+	/**
+	 * Función para devolver la dirección IP del cliente que está haciendo la petición HTTP
+	 *
+	 */
 	private function _get_client_ip()
 	{
 		$ipaddress = '';
@@ -429,7 +502,10 @@ class ExtravioController extends BaseController
 		endif;
 		return $ipaddress;
 	}
-
+	/**
+	 * Función para devolver la ip publica del cliente que está haciendo la petición HTTP
+	 *
+	 */
 	private function _get_public_ip()
 	{
 		try {
@@ -441,6 +517,9 @@ class ExtravioController extends BaseController
 		}
 		return $externalIp;
 	}
+	/**
+	 * Función para verificar si este el email para evitar duplicidad en registro
+	 */
 	public function existEmailSolicitantes()
 	{
 		$email = $this->request->getPost('email');
@@ -454,6 +533,12 @@ class ExtravioController extends BaseController
 			return json_encode((object)['exist' => 0]);
 		}
 	}
+	/**
+	 * Función CURL POST al servicio de videollamada
+	 *
+	 * @param  mixed $endpoint
+	 * @param  mixed $data
+	 */
 	private function _curlPost($endpoint, $data)
 	{
 		$ch = curl_init();
@@ -484,6 +569,13 @@ class ExtravioController extends BaseController
 		curl_close($ch);
 		return json_decode($result);
 	}
+	/**
+	 * Función para enviar mensajes SMS
+	 *
+	 * @param  mixed $tipo
+	 * @param  mixed $celular
+	 * @param  mixed $mensaje
+	 */
 	public function sendSMS($tipo, $celular, $mensaje)
 	{
 

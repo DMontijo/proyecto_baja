@@ -35,6 +35,12 @@ class DocumentosController extends BaseController
 		$this->_municipiosModel = new MunicipiosModel();
 		$this->_bitacoraActividadModel = new BitacoraActividadModel();
 	}
+	/**
+	 * Vista de Folios Asignados para Firmar
+	 * Se mandan datas diferentes de acuerdo al ROL
+	 * Retorna toda la información de los documentos a firmar
+
+	 */
 	public function index()
 	{
 		$data = (object)array();
@@ -54,16 +60,20 @@ class DocumentosController extends BaseController
 				'AGENTE_ASIGNADO' => session('ID')
 			];
 		}
+		// Destruye los valores limpios
 		foreach ($data as $clave => $valor) {
 			if (empty($valor)) unset($data[$clave]);
 		}
 
 		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
 		// $resultFilter = $this->_folioModel->filterDatesDocumentos($data);
+		// Función para mostrar un filtro establecido
 		$resultFilter = $this->_folioDocModel->filterDatesDocumentos($data);
 		if (session('ROLID') == '2' || session('ROLID') == '3' || session('ROLID') == '6') {
+			//Obtiene solo el empleado de la sesión
 			$empleado = $this->_usuariosModel->asObject()->where('ID',	session('ID'))->orderBy('NOMBRE', 'ASC')->findAll();
 		} else {
+			// Obtiene todos los empleados
 			$empleado = $this->_usuariosModel->asObject()->orderBy('NOMBRE', 'ASC')->findAll();
 		}
 		$dataView = (object)array();
@@ -75,6 +85,13 @@ class DocumentosController extends BaseController
 
 		$this->_loadView('Documentos', $dataView, 'index');
 	}
+	/**
+	 * Función para cambiar el filtro por otro que el usuario haya establecido
+	 * Recibe los datos del formulario a través del metodo POST
+	 * Se mandan datas diferentes de acuerdo al ROL
+	 * Retorna toda la información de los documentos a firmar
+
+	 */
 	public function postDocumentos()
 	{
 
@@ -113,6 +130,8 @@ class DocumentosController extends BaseController
 		}
 
 		// $resultFilter = $this->_folioModel->filterDatesDocumentos($data);
+		// Función para mostrar el filtro mandado
+
 		$resultFilter = $this->_folioDocModel->filterDatesDocumentos($data);
 
 		$empleado = $this->_usuariosModel->asObject()->where('ID',	session('ID'))->orderBy('NOMBRE', 'ASC')->findAll();
@@ -133,6 +152,11 @@ class DocumentosController extends BaseController
 
 		$this->_loadView('Documentos', $dataView, 'index');
 	}
+	/**
+	 * Vista de documetnos abiertos para firmar
+	 * Retorna toda la información de los documentos abiertos a firmar
+	 * ! Deprecated method, do not use.
+	 */
 	public function documentos_abiertas()
 	{
 		$data = (object)array();
@@ -142,6 +166,11 @@ class DocumentosController extends BaseController
 
 		$this->_loadView('Documentos abiertos', $data, 'documentos_abiertas');
 	}
+	/**
+	 * Vista de documetnos firmados
+	 * Retorna toda la información de los documentos firmados
+	 * ! Deprecated method, do not use.
+	 */
 	public function documentos_firmados()
 	{
 		$data = (object)array();
@@ -152,7 +181,12 @@ class DocumentosController extends BaseController
 
 		$this->_loadView('Documentos abiertos', $data, 'documentos_firmados');
 	}
-
+	/**
+	 * Vista para visisualizar todos los documentos del folio.
+	 * Recibe por metodo GET el folio, expediente y el año
+	 * * Carga toda la informacion para dar seguimiento a los documentos
+	 *
+	 */
 	public function documentos_show()
 	{
 		if (!$this->permisos('DOCUMENTOS')) {
@@ -168,32 +202,41 @@ class DocumentosController extends BaseController
 		$data->year = $this->request->getGet('year');
 
 		// $data->documento = $this->_plantillasModel->asObject()->where('TITULO', $data->tipodoc)->first();
+		//Info de los documentos
 		$data->documentos = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $data->expediente)->where('ANO', $data->year)->findAll();
 		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
 		$data->foliorow = $this->_folioModel->asObject()->where('FOLIOID', $data->folio)->where('ANO', $data->year)->findAll();
+		//Agentes activos
 		$data->empleados = $this->_usuariosModel->asObject()
-		->select('USUARIOS.*, SESIONES.ACTIVO')
-		->join('SESIONES','USUARIOS.ID= SESIONES.ID_USUARIO')
-		->where('ROLID', 3)
-		->where('ACTIVO', 1)
-		->findAll();		
+			->select('USUARIOS.*, SESIONES.ACTIVO')
+			->join('SESIONES', 'USUARIOS.ID= SESIONES.ID_USUARIO')
+			->where('ROLID', 3)
+			->where('ACTIVO', 1)
+			->findAll();
 		$data->plantillas = $this->_plantillasModel->asObject()->where('TITULO !=', 'CONSTANCIA DE EXTRAVÍO')->orderBy('TITULO', 'ASC')->findAll();
 		$data->institucionremision = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $data->foliorow[0]->INSTITUCIONREMISIONMUNICIPIOID)->where('ESTADOID', 2)->first();
 		$data->municipioasignado = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $data->foliorow[0]->MUNICIPIOASIGNADOID)->where('ESTADOID', 2)->first();
+		//Encargados activos
+
 		$data->encargados =
-		$this->_usuariosModel->asObject()
-		->select('USUARIOS.*, SESIONES.ACTIVO')
-		->join('SESIONES','USUARIOS.ID= SESIONES.ID_USUARIO')
-		->where('ROLID', 6)
-		->where('ACTIVO', 1)
-		->findAll();		
-		
+			$this->_usuariosModel->asObject()
+			->select('USUARIOS.*, SESIONES.ACTIVO')
+			->join('SESIONES', 'USUARIOS.ID= SESIONES.ID_USUARIO')
+			->where('ROLID', 6)
+			->where('ACTIVO', 1)
+			->findAll();
+
 		$data2 = [
 			'header_data' => (object)['title' => 'DOCUMENTOS'],
 			'body_data' => $data
 		];
 		echo view("admin/dashboard/documentos/documentos_generados", $data2);
 	}
+
+	/**
+	 * Función para cargar todos los select y rellenar las tablas visuales.
+	 * Recibe por metodo POST el expediente, folio y año.
+	 */
 	public function obtenDocumentos()
 	{
 		$expediente = $this->request->getPost('expediente');
@@ -218,6 +261,12 @@ class DocumentosController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
+	/**
+	 * Función para obtener el placeholder de un documento en especifico y poder editarlo antes de firmar
+	 * Recibe por metodo POST el folio, año y id del documento
+	 * Devuelve todos los datos necesarios para la actualizacion de las tablas visuales.
+	 *
+	 */
 	public function getDocumento()
 	{
 		$docid = trim($this->request->getPost('docid'));
@@ -237,6 +286,11 @@ class DocumentosController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
+
+	/**
+	 * Vista para que los denunciantes visualicen la validación de su documento.
+	 *
+	 */
 	public function validar_documento()
 	{
 		$year = date('Y');
@@ -260,12 +314,17 @@ class DocumentosController extends BaseController
 		];
 		echo view("admin/dashboard/wyswyg/validar_documento", $data2);
 	}
+	/**
+	 * Function para descargar el documento en formato PDF
+	 * Recibe por metodo POST el folio, año y id del documento.
+	 */
 	public function download_documento_pdf()
 	{
 		$docid = trim($this->request->getPost('docid'));
 		$folio = trim($this->request->getPost('folio'));
 		$year = trim($this->request->getPost('year'));
 
+		// Info del documento
 		$documento = $this->_folioDocModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $docid)->first();
 
 		$filename = urlencode($documento->TIPODOC . "_" . $folio . "_" . $year . '.pdf');
@@ -284,13 +343,16 @@ class DocumentosController extends BaseController
 		exit();
 		// echo $documento->PDF;
 	}
-
+	/**
+	 * Function para descargar el documento en formato XML
+	 * Recibe por metodo POST el folio, año y id del documento.
+	 */
 	public function download_documento_xml()
 	{
 		$docid = trim($this->request->getPost('docid'));
 		$folio = trim($this->request->getPost('folio'));
 		$year = trim($this->request->getPost('year'));
-
+		// Info del documento
 		$documento = $this->_folioDocModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $docid)->first();
 
 		$filename = urlencode($documento->TIPODOC . "_" . $folio . "_" . $year . ".xml");
@@ -309,6 +371,12 @@ class DocumentosController extends BaseController
 		exit();
 		// echo $documento->XML;
 	}
+	/**
+	 * Function para borrar el documento del folio a traves de su id
+	 * Recibe por metodo POST el folio, año y id del documento.
+	 * Devuelve todos los datos necesarios para la actualizacion de las tablas visuales.
+
+	 */
 	public function borrarDocumento()
 	{
 		$docid = trim($this->request->getPost('docid'));
@@ -320,7 +388,7 @@ class DocumentosController extends BaseController
 		$deleteDoc = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $docid)->delete();
 
 		$documentos = $this->_folioDocModel->get_by_folio($folio, $year);
-	
+
 		if ($deleteDoc) {
 			$datosBitacora = [
 				'ACCION' => 'Ha borrado un documento',
@@ -332,27 +400,37 @@ class DocumentosController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
-
+	/**
+	 * Function para asignar un documento a un agente en especifico para su firma
+	 * Recibe por metodo POST el folio, año , id del documento y agente asignado.
+	 * Devuelve todos los datos necesarios para la actualizacion de las tablas visuales.
+	 */
 	public function actualizarDocumentoAgenteAsignado()
 	{
 		$docid = trim($this->request->getPost('foliodocid'));
 		$folio = trim($this->request->getPost('folio'));
 		$year = trim($this->request->getPost('year'));
 		$agenteid = trim($this->request->getPost('agenteid'));
+		// Info a actualizar
 		$dataAgente = array(
 			'AGENTE_ASIGNADO' => $agenteid,
 		);
 
-		$updateObjetoInvolucrado = $this->_folioDocModel->set($dataAgente)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $docid)->update();
+		$updateDoc = $this->_folioDocModel->set($dataAgente)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $docid)->update();
 
 		$documentos = $this->_folioDocModel->get_by_folio($folio, $year);
 
-		if ($updateObjetoInvolucrado) {
+		if ($updateDoc) {
 			return json_encode((object)['status' => 1, 'documentos' => $documentos]);;
 		} else {
 			return json_encode(['status' => 0]);
 		}
 	}
+	/**
+	 * Function para asignar un documento a un encargado en especifico para su firma
+	 * Recibe por metodo POST el folio, año , id del documento y agente asignado.
+	 * Devuelve todos los datos necesarios para la actualizacion de las tablas visuales.
+	 */
 	public function actualizarDocumentoEncargado()
 	{
 		$docid = trim($this->request->getPost('foliodocid'));
@@ -363,17 +441,23 @@ class DocumentosController extends BaseController
 			'ENCARGADO_ASIGNADO' => $encargadoid,
 		);
 
-		$updateObjetoInvolucrado = $this->_folioDocModel->set($dataEncargado)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $docid)->update();
+		$updateDoc = $this->_folioDocModel->set($dataEncargado)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $docid)->update();
 
 		$documentos = $this->_folioDocModel->get_by_folio($folio, $year);
 
-		if ($updateObjetoInvolucrado) {
+		if ($updateDoc) {
 			return json_encode((object)['status' => 1, 'documentos' => $documentos]);;
 		} else {
 			return json_encode(['status' => 0]);
 		}
 	}
-
+	/**
+	 * Función para cargar cualquier vista en cualquier función.
+	 *
+	 * @param  mixed $title
+	 * @param  mixed $data
+	 * @param  mixed $view
+	 */
 	private function _loadView($title, $data, $view)
 	{
 		$data = [
@@ -383,10 +467,21 @@ class DocumentosController extends BaseController
 
 		echo view("admin/dashboard/wyswyg/$view", $data);
 	}
+
+	/**
+	 * Función para revisar los permisos que tienen los usuarios y poder restringir el acceso
+	 *
+	 * @param  mixed $permiso
+	 */
 	private function permisos($permiso)
 	{
 		return in_array($permiso, session('permisos'));
 	}
+	/**
+	 * Función para agregar información a la bitacora diaria.
+	 *
+	 * @param  mixed $data
+	 */
 	private function _bitacoraActividad($data)
 	{
 		$data = $data;

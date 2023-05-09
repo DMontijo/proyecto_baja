@@ -76,6 +76,11 @@ class DashboardController extends BaseController
 		$this->_constanciaExtravioConsecutivoModel = new ConstanciaExtravioConsecutivoModel();
 	}
 
+	/**
+	 * Vista para generar constancias de extravio.
+	 * Carga todos los catalogos para su funcionamiento
+	 *
+	 */
 	public function index()
 	{
 		$data = (object) array();
@@ -87,8 +92,14 @@ class DashboardController extends BaseController
 		$this->_loadView('Generar constancias', $data, 'index');
 	}
 
+	/**
+	 * Funcion para crear una constancia de extravio
+	 * Recibe por metodo POST los datos del formulario
+	 *
+	 */
 	public function solicitar_constancia()
 	{
+		//Datos del formulario
 		$data = [
 			'DENUNCIANTEID' => session('DENUNCIANTEID'),
 
@@ -125,6 +136,7 @@ class DashboardController extends BaseController
 			'STATUS' => 'ABIERTO',
 		];
 
+		//Validacion cuando existen constancias del mismo tipo
 		if (isset($data['EXTRAVIO']) && $data['EXTRAVIO'] == 'DOCUMENTOS' || $data['EXTRAVIO'] == 'BOLETOS DE SORTEO') {
 			$constancias_abiertas = $this->_constanciaExtravioModel->asObject()->where('DENUNCIANTEID', session('DENUNCIANTEID'))->where('TIPODOCUMENTO', $data['TIPODOCUMENTO'])->where('STATUS', 'ABIERTO')->findAll();
 			$constancias_proceso = $this->_constanciaExtravioModel->asObject()->where('DENUNCIANTEID', session('DENUNCIANTEID'))->where('TIPODOCUMENTO', $data['TIPODOCUMENTO'])->where('STATUS', 'EN PROCESO')->findAll();
@@ -138,6 +150,7 @@ class DashboardController extends BaseController
 			}
 		}
 
+		//Inserción de la constancia de extravio
 		list($CONSECUTIVO, $year) = $this->_constanciaExtravioConsecutivoModel->get_consecutivo();
 		$data['CONSTANCIAEXTRAVIOID'] = $CONSECUTIVO;
 		$data['ANO'] = $year;
@@ -148,6 +161,10 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**
+	 * Vista para el listado de Mis constancias de acuerdo al denunciante en la sesion
+	 *
+	 */
 	public function constancias()
 	{
 		$data = (object) array();
@@ -155,6 +172,10 @@ class DashboardController extends BaseController
 		$this->_loadView('Mis constancias de extravío', $data, 'lista_constancias');
 	}
 
+	/**
+	 * Vista para cargar cuando la constancia sea firmada y el denunciante se asegure que es valido
+	 *
+	 */
 	public function validar_constancia()
 	{
 		$year = date('Y');
@@ -172,6 +193,13 @@ class DashboardController extends BaseController
 		echo view("constancia_extravio/dashboard/validar_constancia", $data2);
 	}
 
+	/**
+	 * Función para cargar cualquier vista en cualquier función.
+	 *
+	 * @param  mixed $title
+	 * @param  mixed $data
+	 * @param  mixed $view
+	 */
 	private function _loadView($title, $data, $view)
 	{
 		$data = [
@@ -181,6 +209,11 @@ class DashboardController extends BaseController
 		echo view("constancia_extravio/dashboard/$view", $data);
 	}
 
+	/**
+	 * Función para que el denunciante descargue en formato PDF su constancia
+	 * Recibe por metodo POST el folio y año de la constancia
+	 *
+	 */
 	public function download_constancia_pdf()
 	{
 		$folio = $this->request->getPost('folio');
@@ -203,7 +236,11 @@ class DashboardController extends BaseController
 		exit();
 		// echo $constancia->PDF;
 	}
-
+	/**
+	 * Función para que el denunciante descargue en formato XML su constancia
+	 * Recibe por metodo POST el folio y año de la constancia
+	 *
+	 */
 	public function download_constancia_xml()
 	{
 		$folio = $this->request->getPost('folio');

@@ -15,13 +15,17 @@ class OTPController extends BaseController
 {
 	private $_OTPModel;
 	private $_denunciantesModel;
-	
+
 	public function __construct()
 	{
 		$this->_OTPModel = new OTPModel();
 		$this->_denunciantesModel = new DenunciantesModel();
 	}
 
+	/**
+	 * Función para generar el OTP
+	 * ! Deprecated method, do not use.
+	 */
 	private function _generarOTP()
 	{
 		/**6 digitos */
@@ -29,6 +33,10 @@ class OTPController extends BaseController
 		$otp = urlencode($rndno);
 		return $otp;
 	}
+	/**
+	 * Función para generar el OTP alfanumerico
+	 * ! Deprecated method, do not use.
+	 */
 	private function _alfanumericMinOTP()
 	{
 		/**Alfanumerico de 10 digitos , modificar el 10 por la cantidad deseada*/
@@ -37,6 +45,10 @@ class OTPController extends BaseController
 		$aleatorio = substr(str_shuffle($caracteres), 0, 10);
 		return $aleatorio;
 	}
+	/**
+	 * Función para generar el OTP alfanumerico mayusculas
+	 * ! Deprecated method, do not use.
+	 */
 	private function _alfanumericMayOTP()
 	{
 		/**Alfanumerico de 10 digitos , modificar el 10 por la cantidad deseada*/
@@ -45,6 +57,10 @@ class OTPController extends BaseController
 		$aleatorio = substr(str_shuffle($caracteres), 0, 10);
 		return $aleatorio;
 	}
+	/**
+	 * Función para generar el OTP alfanumerico (mayusculas y minusculas)
+	 * ! Deprecated method, do not use.
+	 */
 	private function _alfanumericMinMayOTP()
 	{
 		/**Alfanumerico de 10 digitos , modificar el 10 por la cantidad deseada*/
@@ -53,12 +69,15 @@ class OTPController extends BaseController
 		$aleatorio = substr(str_shuffle($caracteres), 0, 10);
 		return $aleatorio;
 	}
-
+	/**
+	 * Función para enviar por correo el codigo OTP generadp
+	 */
 	public function sendEmailOTP()
 	{
 		$to = trim($this->request->getPost('email'));
 		$tel = trim($this->request->getPost('telefono'));
 
+		//Generacion de OTP
 		$otp = $this->_generarOTP();
 
 		date_default_timezone_set('America/Tijuana');
@@ -94,8 +113,8 @@ class OTPController extends BaseController
 				->setReplyToName('FGEBC');
 
 			
-			//$telefono = $user != null ? $user->TELEFONO : $tel;
-			//$sendSMS = $this->sendSMS("Nuevo codigo", $tel, 'Notificaciones FGE/Estimado usuario, tu codigo es: ' . $otp);
+			$telefono = $user != null ? $user->TELEFONO : $tel;
+			$sendSMS = $this->sendSMS("Nuevo codigo", $tel, 'Notificaciones FGE/Estimado usuario, tu codigo es: ' . $otp);
 
 			$data = [
 				'CODIGO_OTP' => $otp,
@@ -103,26 +122,21 @@ class OTPController extends BaseController
 				'VENCIMIENTO' => $convert,
 			];
 
-			$otpRegister = $this->_OTPModel->asObject()->where('CORREO',$to)->first();
-			
-			if($otpRegister){
-				$newOTP = $this->_OTPModel->set($data)->where('CORREO',$to)->update();
-			}else{
+			$otpRegister = $this->_OTPModel->asObject()->where('CORREO', $to)->first();
+
+			if ($otpRegister) {
+				$newOTP = $this->_OTPModel->set($data)->where('CORREO', $to)->update();
+			} else {
 				$newOTP = $this->_OTPModel->insert($data);
 			}
-			// if ($sendSMS =="") {
-			// 	return json_encode((object)['status' => 200]);
-			// }else{
-			// 	$data = $sendSMS;
-			// 	return json_encode((object)['status' => 500, 'data' => $data]);
-			// }
+
 			$result = $mailersend->email->send($emailParams);
-			
-			if ($result) {
+
+			if ($sendSMS == "" && $result) {
 				return json_encode((object)['status' => 200]);
 			} else {
-				//$data = $email->printDebugger(['headers']);
-				return json_encode((object)['status' => 500, 'data' => 'error']);
+				$data = $sendSMS;
+				return json_encode((object)['status' => 500, 'data' => $data]);
 			}
 
 			// if ($email->send()) {
@@ -137,45 +151,61 @@ class OTPController extends BaseController
 		}
 	}
 
+	/**
+	 * Función para validar el OTP enviado y el ingresado
+	 * Recibe por metodo POST el email y el codigo
+	 *
+	 */
 	public function validateOTP()
 	{
 		date_default_timezone_set('America/Tijuana');
 		$email = trim($this->request->getPost('email'));
 		$otp = trim($this->request->getPost('codigo'));
 		$now = date("Y-m-d H:i:s");
-		
+
 		if ($email && $otp) {
-			$data = $this->_OTPModel->asObject()->where('CORREO', $email)->where('CODIGO_OTP',$otp)->orderBy('IDOTP', 'desc')->first();
-			
-			if(!$data){
-				return json_encode((object)['status' => 500,'message' => 'El código ingresado es incorrecto.']);
+			$data = $this->_OTPModel->asObject()->where('CORREO', $email)->where('CODIGO_OTP', $otp)->orderBy('IDOTP', 'desc')->first();
+
+			if (!$data) {
+				return json_encode((object)['status' => 500, 'message' => 'El código ingresado es incorrecto.']);
 			}
-			
+
 			$expire = $data->VENCIMIENTO;
 			$today_t = strtotime($now);
 			$expire_t = strtotime($expire);
 
 			if ($expire_t < $today_t) {
-				return json_encode((object)['status' => 200,'valid' => false]);
-			}else{
-				return json_encode((object)['status' => 200,'valid' => true]);
+				return json_encode((object)['status' => 200, 'valid' => false]);
+			} else {
+				return json_encode((object)['status' => 200, 'valid' => true]);
 			}
-			
 		} else {
 			return json_encode((object)['status' => 500, 'message' => 'Verifica que estás enviando todos los campos.']);
 		}
 	}
 
+	/**
+	 * Función para verificar que existe el OTP
+	 * ! Deperecated method, do not use
+	 *
+	 */
 	public function getLastOTP()
 	{
 		$email = trim($this->request->getPost('email'));
 		if ($email) {
 			$data = $this->_OTPModel->asObject()->where('CORREO', $email)->orderBy('IDOTP', 'desc')->first();
 			return json_encode((object)['data' => $data]);
-		}else{
+		} else {
 			return json_encode((object)['status' => 500, 'data' => ['message' => 'No existe el email.']]);
 		}
 	}
+	/**
+	 * Función para enviar mensajes SMS
+	 *
+	 * @param  mixed $tipo
+	 * @param  mixed $celular
+	 * @param  mixed $mensaje
+	 */
 	public function sendSMS($tipo, $celular, $mensaje)
 	{
 

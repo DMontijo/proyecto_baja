@@ -29,10 +29,10 @@
 										<td class="text-center"><?= $folio->HECHODELITO ?></td>
 										<td class="text-center"><?= $folio->NOMBRE ?> <?= $folio->APELLIDO_PATERNO ?> <?= $folio->APELLIDO_MATERNO ?></td>
 										<td class="text-center">
-											<form id="<?= 'form_' . $folio->FOLIOID ?>"action="<?= base_url('admin/dashboard/liberar_folio') ?>" name="formulario_liberacion" method="POST"onsubmit="return confirmarLiberacion(this)">
-												<input type="text" name="folio" value="<?= $folio->FOLIOID ?>" hidden >
+											<form id="<?= 'form_' . $folio->FOLIOID ?>"action="<?= base_url('admin/dashboard/liberar_folio') ?>" name="formulario_liberacion" method="POST"onsubmit="return confirmarLiberacion(event,this)">
+												<input type="text" name="folio" id="folio" value="<?= $folio->FOLIOID ?>" hidden >
 												<input type="text" name="year" value="<?= $folio->ANO ?>" hidden >
-												<input type="text" id="agenteatencion" value="<?= $folio->NOMBRE . ' ' . $folio->APELLIDO_PATERNO?>" hidden>
+												<input type="text" id="agenteatencion" name="agenteatencion" value="<?= $folio->NOMBRE . ' ' . $folio->APELLIDO_PATERNO?>" hidden>
 												<button type="submit" class="btn btn-primary">LIBERAR</button>
 											</form>
 										</td>
@@ -47,24 +47,29 @@
 	</div>
 </section>
 <script>
-	function confirmarLiberacion(element) {
-		event.preventDefault();
+function confirmarLiberacion(event, element) {
+  event.preventDefault();
 
-		Swal.fire({
-			icon: 'warning',
-			title: "¿Estás seguro de liberar este folio? El folio esta siendo atendido por "+document.getElementById('agenteatencion').value ,
-			showCancelButton: true,
-			confirmButtonColor: "#bf9b55",
-			confirmButtonText: "Aceptar",
-			cancelButtonText: "Cancelar",
-		}).then(result => {
-			if (result.dismiss === Swal.DismissReason.cancel) {}else{
-				element.submit();
-				// console.log(document.getElementById('folio').value);	
-				// document.getElementsByName('formulario_liberacion').submit();
-			}
-		})
-	}
+  // Obtenemos la fila actual del botón que se ha presionado
+  var row = element.closest('tr');
+
+  // Obtenemos el valor del agente de atención de la fila actual
+  var agenteAtencion = row.querySelector('#agenteatencion').value;
+
+  Swal.fire({
+    icon: 'warning',
+    title: "¿Estás seguro de liberar este folio? El folio está siendo atendido por " + agenteAtencion,
+    showCancelButton: true,
+    confirmButtonColor: "#bf9b55",
+    confirmButtonText: "Aceptar",
+    cancelButtonText: "Cancelar",
+  }).then(result => {
+    if (result.dismiss === Swal.DismissReason.cancel) {}else{
+      element.submit();
+    }
+  });
+}
+
 	$(function() {
 		$("#folios_sin_firma").DataTable({
 			responsive: false,

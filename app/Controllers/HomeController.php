@@ -4,6 +4,10 @@ namespace App\Controllers;
 
 class HomeController extends BaseController
 {
+	/**
+	 * Vista principal de CDTEC
+	 *
+	 */
 	public function index()
 	{
 		$data = array();
@@ -17,6 +21,14 @@ class HomeController extends BaseController
 		$this->_loadView('Sitio en mantenimiento', $data, 'mantenimiento');
 	}
 
+	/**
+	 * Función para cargar cualquier vista en cualquier función.
+
+	 *
+	 * @param  mixed $title
+	 * @param  mixed $data
+	 * @param  mixed $view
+	 */
 	private function _loadView($title, $data, $view)
 	{
 		$data = [
