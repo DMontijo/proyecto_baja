@@ -136,6 +136,8 @@ class DashboardController extends BaseController
 		$this->_denunciantesModelRead = model('DenunciantesModel', true, $this->db_read);
 
 		$this->_conexionesDBModelRead = model('ConexionesDBModel', true, $this->db_read);
+		$this->_frenteFormaModelRead = model('FrenteFormaModel', true, $this->db_read);
+
 		$this->_folioConsecutivoModelRead = model('FolioConsecutivoModel', true, $this->db_read);
 		// $this->protocol = 'http://';
 		// $this->ip = "10.144.244.223";
