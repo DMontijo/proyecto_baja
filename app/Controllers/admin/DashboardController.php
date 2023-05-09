@@ -2222,7 +2222,6 @@ class DashboardController extends BaseController
 		$data->objetoclasificacion = $this->_objetoClasificacionModelRead->asObject()->findAll();
 		$data->objetosubclasificacion = $this->_objetoSubclasificacionModelRead->asObject()->findAll();
 		$data->tipomoneda = $this->_tipoMonedaModelRead->asObject()->findAll();
-		$data->personafisica = $this->_folioPersonaFisicaModelRead->asObject()->where('FOLIOID', $data->folio)->where('ANO', $year)->findAll();
 		$data->plantillas = $this->_plantillasModelRead->asObject()->where('TITULO !=', 'CONSTANCIA DE EXTRAVIO')->where('ACTIVO', 1)->orderBy('TITULO', 'ASC')->findAll();
 		$data->tipoExpediente = $this->_tipoExpedienteModelRead->asObject()->like('TIPOEXPEDIENTECLAVE', 'NUC')->orLike('TIPOEXPEDIENTECLAVE', 'NAC')->orLike('TIPOEXPEDIENTECLAVE', 'RAC')->findAll();
 		$data->situacionVehiculo = $this->_situacionVehiculoModelRead->asObject()->findAll();
