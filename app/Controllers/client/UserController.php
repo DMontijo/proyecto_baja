@@ -21,6 +21,10 @@ use App\Models\EscolaridadModel;
 use App\Models\OcupacionModel;
 use GuzzleHttp\Client;
 
+use MailerSend\MailerSend;
+use MailerSend\Helpers\Builder\Recipient;
+use MailerSend\Helpers\Builder\EmailParams;
+
 class UserController extends BaseController
 {
 
@@ -371,17 +375,38 @@ class UserController extends BaseController
 		$user = $this->_denunciantesModel->asObject()->where('CORREO', $to)->first();
 		// $email->setTo($to);
 		// $email->setSubject('Te estamos atendiendo');
-		// $body = view('email_template/password_email_template.php', ['email' => $to, 'password' => $password]);
+		$body = view('email_template/password_email_template.php', ['email' => $to, 'password' => $password]);
 		// $email->setMessage($body);
 		// $email->setAltMessage('Usted ha generado un nuevo registro en el Centro de Denuncia Tecnológica. Para acceder debes ingresar los siguientes datos. USUARIO: ' .$to .'CONTRASEÑA' . $password );
-		$sendSMS = $this->sendSMS("Te estamos atendiendo", $user->TELEFONO, 'Notificaciones FGE/Estimado usuario, tu contraseña es: ' . $password );
+		// $sendSMS = $this->sendSMS("Te estamos atendiendo", $user->TELEFONO, 'Notificaciones FGE/Estimado usuario, tu contraseña es: ' . $password );
 
-		// if ($email->send()) {
-			if ($sendSMS == "") {
-				return true;
-			}else {
-				return false;
-			}
+		$mailersend = new MailerSend(['api_key' => EMAIL_TOKEN]);
+
+		$recipients = [
+			new Recipient($to, 'Your Client'),
+		];
+		$emailParams = (new EmailParams()) //check envio
+			->setFrom('notificacionfgebc@fgebc.gob.mx')
+			->setFromName('FGEBC')
+			->setRecipients($recipients)
+			->setSubject('Te estamos atendiendo')
+			->setHtml($body)
+			->setText('Usted ha generado un nuevo registro en el Centro de Denuncia Tecnológica. Para acceder debes ingresar los siguientes datos. USUARIO: ' .$to .'CONTRASEÑA' . $password)
+			->setReplyTo('notificacionfgebc@fgebc.gob.mx')
+			->setReplyToName('FGEBC');
+		$result = $mailersend->email->send($emailParams);
+
+		if ($result){
+			return true;
+		} else {
+			return false;
+		}
+		// // if ($email->send()) {
+		// 	if ($sendSMS == "") {
+		// 		return true;
+		// 	}else {
+		// 		return false;
+		// 	}
 		// } else {
 		// 	if ($sendSMS == "") {
 		// 		return true;

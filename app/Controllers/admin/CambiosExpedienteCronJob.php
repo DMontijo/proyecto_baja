@@ -6,6 +6,9 @@ use App\Controllers\BaseController;
 use App\Models\ConexionesDBModel;
 use App\Models\DenunciantesModel;
 use App\Models\FolioModel;
+use MailerSend\MailerSend;
+use MailerSend\Helpers\Builder\Recipient;
+use MailerSend\Helpers\Builder\EmailParams;
 
 class CambiosExpedienteCronJob extends BaseController
 {
@@ -36,7 +39,8 @@ class CambiosExpedienteCronJob extends BaseController
             $municipio = $folio->MUNICIPIOASIGNADOID != NULL ? $folio->MUNICIPIOASIGNADOID : $folio->INSTITUCIONREMISIONMUNICIPIOID;
 
             $info = $this->_getInfo($folio->EXPEDIENTEID, $municipio);
-            var_dump($info);exit;
+            var_dump($info);
+            exit;
 
             if ($info != null) {
                 $correo = $this->_sendEmailCambioExpediente($folio->CORREO, $folio->EXPEDIENTEID, $info->OFICINADESCR, $info->ESTADOJURIDICODESCR);
@@ -58,7 +62,7 @@ class CambiosExpedienteCronJob extends BaseController
         $data['instance'] = "172.16.105.56/PGJETIJ";
         $data['schema'] = "DBO";
 
-        
+
         // $data['userDB'] = $conexion->USER;
         // $data['pwdDB'] = $conexion->PASSWORD;
         // $data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
@@ -86,14 +90,35 @@ class CambiosExpedienteCronJob extends BaseController
     private function _sendEmailCambioExpediente($to, $expedienteId, $oficina, $estadojuridico)
     {
         $folioM = $this->_folioModel->asObject()->where('EXPEDIENTEID', $expedienteId)->first();
-        $email = \Config\Services::email();
-        $email->setTo($to);
-        $email->setSubject('Cambio expediente');
-        $body = view('email_template/update_info_email_template.php', ['expediente' => $expedienteId, 'oficina'=> $oficina, 'estadojuridico'=>$estadojuridico]);
-        $email->setMessage($body);
-        $email->setAltMessage('El expediente se ha cambio de estado y se encuentra en:' . $estadojuridico .'y se esta atendiendo en la oficina:' . $oficina);
+        // $email = \Config\Services::email();
+        // $email->setTo($to);
+        // $email->setSubject('Cambio expediente');
+        $body = view('email_template/update_info_email_template.php', ['expediente' => $expedienteId, 'oficina' => $oficina, 'estadojuridico' => $estadojuridico]);
+        // $email->setMessage($body);
+        // $email->setAltMessage('El expediente se ha cambio de estado y se encuentra en:' . $estadojuridico .'y se esta atendiendo en la oficina:' . $oficina);
 
-        if ($email->send()) {
+        // if ($email->send()) {
+        //     return true;
+        // } else {
+        //     return false;
+        // }
+
+        $mailersend = new MailerSend(['api_key' => EMAIL_TOKEN]);
+
+        $recipients = [
+            new Recipient($to, 'Your Client'),
+        ];
+        $emailParams = (new EmailParams())
+            ->setFrom('notificacionfgebc@fgebc.gob.mx')
+            ->setFromName('FGEBC')
+            ->setRecipients($recipients)
+            ->setSubject('Cambio expediente')
+            ->setHtml($body)
+            ->setText('El expediente se ha cambio de estado y se encuentra en:' . $estadojuridico .'y se esta atendiendo en la oficina:' . $oficina)
+            ->setReplyTo('notificacionfgebc@fgebc.gob.mx')
+            ->setReplyToName('FGEBC');
+        $result = $mailersend->email->send($emailParams);
+        if ($result) {
             return true;
         } else {
             return false;

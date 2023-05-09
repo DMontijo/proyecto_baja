@@ -7,6 +7,9 @@ use App\Controllers\BaseController;
 use App\Models\DenunciantesModel;
 use App\Models\SesionesDenunciantesModel;
 use GuzzleHttp\Client;
+use MailerSend\MailerSend;
+use MailerSend\Helpers\Builder\Recipient;
+use MailerSend\Helpers\Builder\EmailParams;
 
 class AuthController extends BaseController
 {
@@ -140,16 +143,32 @@ class AuthController extends BaseController
 		// $email = \Config\Services::email();
 		// $email->setTo($to);
 		// $email->setSubject('Cambio de contraseña.');
-		// $body = view('email_template/reset_password_template.php', ['password' => $password]);
+		$body = view('email_template/reset_password_template.php', ['password' => $password]);
 		// $email->setMessage($body);
 		// $email->setAltMessage('Usted ha solicitado un cambio de contraseña. Su nueva contraseña es: ' .$password);
-		$sendSMS = $this->sendSMS("Cambio de contraseña", $user->TELEFONO, 'Notificaciones FGE/Estimado usuario, tu contraseña es: ' . $password);
-		// if ($email->send() && $sendSMS == "") {
-		if ($sendSMS == "") {
-			return redirect()->to(base_url('/denuncia'))->with('message_success', 'Verifica tu nueva contraseña en tus SMS.');
-		}else{
-			return redirect()->to(base_url('/denuncia'))->with('message_error', $sendSMS);
 
+		$mailersend = new MailerSend(['api_key' => EMAIL_TOKEN]);
+
+		$recipients = [
+			new Recipient($to, 'Your Client'),
+		];
+		$emailParams = (new EmailParams())
+			->setFrom('notificacionfgebc@fgebc.gob.mx')
+			->setFromName('FGEBC')
+			->setRecipients($recipients)
+			->setSubject('Cambio de contraseña.')
+			->setHtml($body)
+			->setText('Usted ha solicitado un cambio de contraseña. Su nueva contraseña es: ' . $password)
+			->setReplyTo('notificacionfgebc@fgebc.gob.mx')
+			->setReplyToName('FGEBC');
+		$result = $mailersend->email->send($emailParams);
+		// $sendSMS = $this->sendSMS("Cambio de contraseña", $user->TELEFONO, 'Notificaciones FGE/Estimado usuario, tu contraseña es: ' . $password);
+		// if ($email->send() && $sendSMS == "") {
+		if ($result) {
+			// if ($sendSMS == "") {
+			return redirect()->to(base_url('/denuncia'))->with('message_success', 'Verifica tu nueva contraseña en tus SMS.');
+		} else {
+			return redirect()->to(base_url('/denuncia'))->with('message_error', 'Error');
 		}
 	}
 

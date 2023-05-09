@@ -24,6 +24,10 @@ use Dompdf\Options;
 use App\Models\SesionesDenunciantesModel;
 use GuzzleHttp\Client;
 
+use MailerSend\MailerSend;
+use MailerSend\Helpers\Builder\Recipient;
+use MailerSend\Helpers\Builder\EmailParams;
+
 class ExtravioController extends BaseController
 {
 
@@ -244,17 +248,38 @@ class ExtravioController extends BaseController
 		$user = $this->_denunciantesModel->asObject()->where('CORREO', $to)->first();
 		// $email->setTo($to);
 		// $email->setSubject('Te estamos atendiendo');
-		// $body = view('email_template/password_email_constancia.php', ['email' => $to, 'password' => $password]);
+		$body = view('email_template/password_email_constancia.php', ['email' => $to, 'password' => $password]);
 		// $email->setMessage($body);
 		// $email->setAltMessage('Usted ha generado un nuevo registro en el Centro de Denuncia Tecnológica.ara acceder debes ingresar los siguientes datos. USUARIO: ' . $to . 'CONTRASEÑA:' .$password  );
-		$sendSMS = $this->sendSMS("Te estamos atendiendo", $user->TELEFONO, 'Notificaciones FGE/Estimado usuario, tu contraseña es: ' . $password );
-		// var_dump($sendSMS);exit;
-		// if ($email->send()) {
-			if ($sendSMS == "") {
-				return true;
-			}else{
-				return false;
-			}
+		// $sendSMS = $this->sendSMS("Te estamos atendiendo", $user->TELEFONO, 'Notificaciones FGE/Estimado usuario, tu contraseña es: ' . $password );
+		// // var_dump($sendSMS);exit;
+
+		$mailersend = new MailerSend(['api_key' => EMAIL_TOKEN]);
+
+		$recipients = [
+			new Recipient($to, 'Your Client'),
+		];
+		$emailParams = (new EmailParams())
+			->setFrom('notificacionfgebc@fgebc.gob.mx')
+			->setFromName('FGEBC')
+			->setRecipients($recipients)
+			->setSubject('Te estamos atendiendo')
+			->setHtml($body)
+			->setText('Usted ha generado un nuevo registro en el Centro de Denuncia Tecnológica. Para acceder debes ingresar los siguientes datos. USUARIO: ' .$to .'CONTRASEÑA' . $password)
+			->setReplyTo('notificacionfgebc@fgebc.gob.mx')
+			->setReplyToName('FGEBC');
+		$result = $mailersend->email->send($emailParams);
+		if ($result){
+			return true;
+		} else {
+			return false;
+		}
+		// // if ($email->send()) {
+		// 	if ($sendSMS == "") {
+		// 		return true;
+		// 	}else{
+		// 		return false;
+		// 	}
 		// } else {
 		// 	if ($sendSMS == "") {
 		// 		return true;
@@ -277,14 +302,14 @@ class ExtravioController extends BaseController
 		// $body = view('email_template/reset_password_template.php', ['password' => $password]);
 		// $email->setMessage($body);
 		// $email->setAltMessage('Usted ha generado un nuevo registro en el Centro de Denuncia Tecnológica.ara acceder debes ingresar los siguientes datos. USUARIO: ' . $to . 'CONTRASEÑA:' .$password  );
-		$sendSMS = $this->sendSMS("Cambio de contraseña", $user->TELEFONO, 'Notificaciones FGE/Estimado usuario, tu contraseña es: ' .$password);
+		// $sendSMS = $this->sendSMS("Cambio de contraseña", $user->TELEFONO, 'Notificaciones FGE/Estimado usuario, tu contraseña es: ' .$password);
 
-		if ($sendSMS == "") {
-			return redirect()->to(base_url('/constancia_extravio'))->with('message_success', 'Verifica tu nueva contraseña en tus SMS.');
-		}else{
-			return redirect()->to(base_url('/constancia_extravio'))->with('message_error', $sendSMS);
+		// if ($sendSMS == "") {
+		// 	return redirect()->to(base_url('/constancia_extravio'))->with('message_success', 'Verifica tu nueva contraseña en tus SMS.');
+		// }else{
+		// 	return redirect()->to(base_url('/constancia_extravio'))->with('message_error', $sendSMS);
 
-		}
+		// }
 	}
 
 	private function _isAuth()

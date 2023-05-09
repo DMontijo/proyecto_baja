@@ -76,25 +76,26 @@ class OTPController extends BaseController
 			// $email->setMessage($body);
 			// $email->setAltMessage('Se ha generado un nuevo código.SU CÓDIGO ES: ' . $otp);
 
-			// // $mailersend = new MailerSend(['api_key' => 'key']);
+			$mailersend = new MailerSend(['api_key' => EMAIL_TOKEN]);
 
-			// // $recipients = [
-			// // 	new Recipient('your@client.com', 'Your Client'),
-			// // ];
+			$recipients = [
+				new Recipient($to, 'Your Client'),
+			];
+			$body = view('email_template/token_email_template', ['otp' => $otp]);
 
-			// // $emailParams = (new EmailParams())
-			// // 	->setFrom('your@domain.com')
-			// // 	->setFromName('Your Name')
-			// // 	->setRecipients($recipients)
-			// // 	->setSubject('Subject')
-			// // 	->setHtml('This is the HTML content')
-			// // 	->setText('This is the text content')
-			// // 	->setReplyTo('reply to')
-			// // 	->setReplyToName('reply to name');
+			$emailParams = (new EmailParams()) //Check envio
+				->setFrom('notificacionfgebc@fgebc.gob.mx')
+				->setFromName('FGEBC')
+				->setRecipients($recipients)
+				->setSubject('Nuevo código')
+				->setHtml($body)
+				->setText('Se ha generado un nuevo código.SU CÓDIGO ES: ' . $otp)
+				->setReplyTo('notificacionfgebc@fgebc.gob.mx')
+				->setReplyToName('FGEBC');
 
-			// // $mailersend->email->send($emailParams);
-			$telefono = $user != null ? $user->TELEFONO : $tel;
-			$sendSMS = $this->sendSMS("Nuevo codigo", $tel, 'Notificaciones FGE/Estimado usuario, tu codigo es: ' . $otp);
+			
+			//$telefono = $user != null ? $user->TELEFONO : $tel;
+			//$sendSMS = $this->sendSMS("Nuevo codigo", $tel, 'Notificaciones FGE/Estimado usuario, tu codigo es: ' . $otp);
 
 			$data = [
 				'CODIGO_OTP' => $otp,
@@ -109,11 +110,19 @@ class OTPController extends BaseController
 			}else{
 				$newOTP = $this->_OTPModel->insert($data);
 			}
-			if ($sendSMS =="") {
+			// if ($sendSMS =="") {
+			// 	return json_encode((object)['status' => 200]);
+			// }else{
+			// 	$data = $sendSMS;
+			// 	return json_encode((object)['status' => 500, 'data' => $data]);
+			// }
+			$result = $mailersend->email->send($emailParams);
+			
+			if ($result) {
 				return json_encode((object)['status' => 200]);
-			}else{
-				$data = $sendSMS;
-				return json_encode((object)['status' => 500, 'data' => $data]);
+			} else {
+				//$data = $email->printDebugger(['headers']);
+				return json_encode((object)['status' => 500, 'data' => 'error']);
 			}
 
 			// if ($email->send()) {
