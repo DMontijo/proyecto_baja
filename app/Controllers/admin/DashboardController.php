@@ -8528,7 +8528,7 @@ class DashboardController extends BaseController
 	public function crearFolioDenunciaAnonima()
 	{
 
-		list($FOLIOID, $year) = $this->_folioConsecutivoModelRead->get_consecutivo();
+		list($FOLIOID, $year) = $this->_folioConsecutivoModel->get_consecutivo();
 		$dataFolio = [
 			'FOLIOID' => $FOLIOID,
 			'DENUNCIANTEID' => 1,

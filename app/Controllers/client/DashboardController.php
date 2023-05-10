@@ -4,6 +4,7 @@ namespace App\Controllers\client;
 
 use App\Controllers\BaseController;
 use App\Models\DenunciantesModel;
+use App\Models\FolioConsecutivoModel;
 use App\Models\FolioModel;
 use App\Models\FolioPersonaFisicaDomicilioModel;
 use App\Models\FolioPersonaFisicaMediaFiliacionModel;
@@ -74,6 +75,7 @@ class DashboardController extends BaseController
 	private $_denunciantesModelRead;
 	private $_conexionesDBModelRead;
 	private $_folioConsecutivoModelRead;
+	private $_folioConsecutivoModel;
 
 	public function __construct()
 	{
@@ -89,6 +91,8 @@ class DashboardController extends BaseController
 		$this->_folioPersonaFisicaDomicilioModel = new FolioPersonaFisicaDomicilioModel();
 		$this->_folioVehiculoModel = new FolioVehiculoModel();
 		$this->_folioMediaFiliacion = new FolioPersonaFisicaMediaFiliacionModel();
+		$this->_folioConsecutivoModel = new FolioConsecutivoModel();
+
 		//Models reader
 		$this->_folioModelRead = model('FolioModel', true, $this->db_read);
 
@@ -441,7 +445,7 @@ class DashboardController extends BaseController
 		}
 
 		// Se obtiene el consecutivo del folio
-		list($FOLIOID, $year) = $this->_folioConsecutivoModelRead->get_consecutivo();
+		list($FOLIOID, $year) = $this->_folioConsecutivoModel->get_consecutivo();
 		$dataFolio['FOLIOID'] = $FOLIOID;
 		$dataFolio['ANO'] = $year;
 
