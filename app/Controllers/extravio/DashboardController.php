@@ -3,6 +3,7 @@
 namespace App\Controllers\extravio;
 
 use App\Controllers\BaseController;
+use App\Models\ConstanciaExtravioConsecutivoModel;
 use App\Models\ConstanciaExtravioModel;
 
 class DashboardController extends BaseController
@@ -18,6 +19,8 @@ class DashboardController extends BaseController
 	private $_documentosExtravioTipoModelRead;
 	private $_constanciaExtravioModelRead;
 	private $_constanciaExtravioConsecutivoModelRead;
+	private $_constanciaExtravioConsecutivoModel;
+
 
 
 	public function __construct()
@@ -27,6 +30,7 @@ class DashboardController extends BaseController
 		//Models
 
 		$this->_constanciaExtravioModel = new ConstanciaExtravioModel();
+		$this->_constanciaExtravioConsecutivoModel = new ConstanciaExtravioConsecutivoModel();
 
 
 		$this->_hechoLugarModelRead = model('HechoLugarModel', true, $this->db_read);
@@ -113,7 +117,7 @@ class DashboardController extends BaseController
 		}
 
 		//Inserción de la constancia de extravio
-		list($CONSECUTIVO, $year) = $this->_constanciaExtravioConsecutivoModelRead->get_consecutivo();
+		list($CONSECUTIVO, $year) = $this->_constanciaExtravioConsecutivoModel->get_consecutivo();
 		$data['CONSTANCIAEXTRAVIOID'] = $CONSECUTIVO;
 		$data['ANO'] = $year;
 		if ($this->_constanciaExtravioModel->save($data)) {

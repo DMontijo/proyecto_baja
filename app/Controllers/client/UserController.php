@@ -65,6 +65,8 @@ class UserController extends BaseController
 		$this->_folioModel = new FolioModel();
 		$this->_escolaridadModelRead = model('EscolaridadModel', true, $this->db_read);
 		$this->_ocupacionModelRead = model('OcupacionModel', true, $this->db_read);
+		$this->_folioModelRead = model('FolioModel', true, $this->db_read);
+
 		$this->urlApi = VIDEOCALL_URL . "guests/";
 	}
 
