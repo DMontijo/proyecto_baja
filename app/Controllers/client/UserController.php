@@ -24,6 +24,8 @@ use GuzzleHttp\Client;
 use MailerSend\MailerSend;
 use MailerSend\Helpers\Builder\Recipient;
 use MailerSend\Helpers\Builder\EmailParams;
+use MailerSend\Exceptions\MailerSendValidationException;
+use MailerSend\Exceptions\MailerSendRateLimitException;
 
 class UserController extends BaseController
 {
@@ -435,7 +437,7 @@ class UserController extends BaseController
 			return json_encode((object)['exist' => 0]);
 		}
 	}
-	
+
 	/**
 	 * Función para obtner los folios abiertos o cerrados del denunciante.
 	 * Permite abrir el modal y no generar otro registro
@@ -449,7 +451,7 @@ class UserController extends BaseController
 		$data->proceso = $this->_folioModelRead->asObject()->where('STATUS', 'EN PROCESO')->where('DENUNCIANTEID', $id)->findAll();
 		return json_encode($data);
 	}
-	
+
 	/**
 	 * Función para enviar un correo con la contraseña generada al denunciante
 	 *
@@ -458,51 +460,44 @@ class UserController extends BaseController
 	 */
 	private function _sendEmailPassword($to, $password)
 	{
-		// $email = \Config\Services::email();
 		$user = $this->_denunciantesModelRead->asObject()->where('CORREO', $to)->first();
-		// $email->setTo($to);
-		// $email->setSubject('Te estamos atendiendo');
+
+
 		$body = view('email_template/password_email_template.php', ['email' => $to, 'password' => $password]);
-		// $email->setMessage($body);
-		// $email->setAltMessage('Usted ha generado un nuevo registro en el Centro de Denuncia Tecnológica. Para acceder debes ingresar los siguientes datos. USUARIO: ' .$to .'CONTRASEÑA' . $password );
-		// $sendSMS = $this->sendSMS("Te estamos atendiendo", $user->TELEFONO, 'Notificaciones FGE/Estimado usuario, tu contraseña es: ' . $password );
-
 		$mailersend = new MailerSend(['api_key' => EMAIL_TOKEN]);
-
 		$recipients = [
 			new Recipient($to, 'Your Client'),
 		];
+
 		$emailParams = (new EmailParams()) //check envio
 			->setFrom('notificacionfgebc@fgebc.gob.mx')
 			->setFromName('FGEBC')
 			->setRecipients($recipients)
 			->setSubject('Te estamos atendiendo')
 			->setHtml($body)
-			->setText('Usted ha generado un nuevo registro en el Centro de Denuncia Tecnológica. Para acceder debes ingresar los siguientes datos. USUARIO: ' .$to .'CONTRASEÑA' . $password)
+			->setText('Usted ha generado un nuevo registro en el Centro de Denuncia Tecnológica. Para acceder debes ingresar los siguientes datos. USUARIO: ' . $to . 'CONTRASEÑA' . $password)
 			->setReplyTo('notificacionfgebc@fgebc.gob.mx')
 			->setReplyToName('FGEBC');
-		$result = $mailersend->email->send($emailParams);
+		$sendSMS = $this->sendSMS("Te estamos atendiendo", $user->TELEFONO, 'Notificaciones FGE/Estimado usuario, tu contraseña es: ' . $password);
 
-		if ($result){
+		try {
+			$result = $mailersend->email->send($emailParams);
+		} catch (MailerSendValidationException $e) {
+			$result = false;
+		} catch (MailerSendRateLimitException $e) {
+			$result = false;
+		}
+		if ($result) {
 			return true;
 		} else {
-			return false;
+			if ($sendSMS == "") {
+				return true;
+			} else {
+				return false;
+			}
 		}
-		// // if ($email->send()) {
-		// 	if ($sendSMS == "") {
-		// 		return true;
-		// 	}else {
-		// 		return false;
-		// 	}
-		// } else {
-		// 	if ($sendSMS == "") {
-		// 		return true;
-		// 	} else {
-		// 		return false;
-		// 	}
-		// }
 	}
-	
+
 	/**
 	 * Función para cargar cualquier vista en cualquier función de la carpeta register.
 	 *
@@ -571,7 +566,7 @@ class UserController extends BaseController
 
 		return json_decode($result);
 	}
-/**
+	/**
 	 * Función CURL PATCH al servicio de videollamada
 	 *
 	 * @param  mixed $endpoint

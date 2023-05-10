@@ -9,6 +9,8 @@ use App\Models\FolioModel;
 use MailerSend\MailerSend;
 use MailerSend\Helpers\Builder\Recipient;
 use MailerSend\Helpers\Builder\EmailParams;
+use MailerSend\Exceptions\MailerSendValidationException;
+use MailerSend\Exceptions\MailerSendRateLimitException;
 
 class CambiosExpedienteCronJob extends BaseController
 {
@@ -87,34 +89,30 @@ class CambiosExpedienteCronJob extends BaseController
     private function _sendEmailCambioExpediente($to, $expedienteId, $oficina, $estadojuridico)
     {
         $folioM = $this->_folioModel->asObject()->where('EXPEDIENTEID', $expedienteId)->first();
-        // $email = \Config\Services::email();
-        // $email->setTo($to);
-        // $email->setSubject('Cambio expediente');
+
         $body = view('email_template/update_info_email_template.php', ['expediente' => $expedienteId, 'oficina' => $oficina, 'estadojuridico' => $estadojuridico]);
-        // $email->setMessage($body);
-        // $email->setAltMessage('El expediente se ha cambio de estado y se encuentra en:' . $estadojuridico .'y se esta atendiendo en la oficina:' . $oficina);
-
-        // if ($email->send()) {
-        //     return true;
-        // } else {
-        //     return false;
-        // }
-
         $mailersend = new MailerSend(['api_key' => EMAIL_TOKEN]);
-
         $recipients = [
             new Recipient($to, 'Your Client'),
         ];
+
         $emailParams = (new EmailParams())
             ->setFrom('notificacionfgebc@fgebc.gob.mx')
             ->setFromName('FGEBC')
             ->setRecipients($recipients)
             ->setSubject('Cambio expediente')
             ->setHtml($body)
-            ->setText('El expediente se ha cambio de estado y se encuentra en:' . $estadojuridico .'y se esta atendiendo en la oficina:' . $oficina)
+            ->setText('El expediente se ha cambio de estado y se encuentra en:' . $estadojuridico . 'y se esta atendiendo en la oficina:' . $oficina)
             ->setReplyTo('notificacionfgebc@fgebc.gob.mx')
             ->setReplyToName('FGEBC');
-        $result = $mailersend->email->send($emailParams);
+
+        try {
+            $result = $mailersend->email->send($emailParams);
+        } catch (MailerSendValidationException $e) {
+            $result = false;
+        } catch (MailerSendRateLimitException $e) {
+            $result = false;
+        }
         if ($result) {
             return true;
         } else {

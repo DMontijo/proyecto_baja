@@ -8,6 +8,8 @@ use GuzzleHttp\Client;
 use MailerSend\MailerSend;
 use MailerSend\Helpers\Builder\Recipient;
 use MailerSend\Helpers\Builder\EmailParams;
+use MailerSend\Exceptions\MailerSendValidationException;
+use MailerSend\Exceptions\MailerSendRateLimitException;
 
 
 class OTPController extends BaseController
@@ -104,6 +106,7 @@ class OTPController extends BaseController
 			$recipients = [
 				new Recipient($to, 'Your Client'),
 			];
+
 			$body = view('email_template/token_email_template', ['otp' => $otp]);
 
 			$emailParams = (new EmailParams()) //Check envio
@@ -117,8 +120,7 @@ class OTPController extends BaseController
 				->setReplyToName('FGEBC');
 
 			
-			$telefono = $user != null ? $user->TELEFONO : $tel;
-			$sendSMS = $this->sendSMS("Nuevo codigo", $tel, 'Notificaciones FGE/Estimado usuario, tu codigo es: ' . $otp);
+			$telefono = $user != null ? $user->TELEFONO : $tel; 
 
 			$data = [
 				'CODIGO_OTP' => $otp,
@@ -134,21 +136,26 @@ class OTPController extends BaseController
 				$newOTP = $this->_OTPModel->insert($data);
 			}
 
-			$result = $mailersend->email->send($emailParams);
-
-			if ($sendSMS == "" && $result) {
+			$sendSMS = $this->sendSMS("Nuevo codigo", $tel, 'Notificaciones FGE/Estimado usuario, tu codigo es: ' . $otp);
+			try{
+				$result = $mailersend->email->send($emailParams);
+			} catch(MailerSendValidationException $e){
+				$result = false;
+			} catch (MailerSendRateLimitException $e) {
+				$result = false;
+			}	
+			
+			if ($result) {
 				return json_encode((object)['status' => 200]);
 			} else {
-				$data = $sendSMS;
-				return json_encode((object)['status' => 500, 'data' => $data]);
+				// $data = $sendSMS;
+				if($sendSMS == ""){
+					return json_encode((object)['status' => 200]);
+				}else {
+					return json_encode((object)['status' => 500, 'data' => $sendSMS]);
+				}
 			}
 
-			// if ($email->send()) {
-			// 	return json_encode((object)['status' => 200]);
-			// } else {
-			// 	$data = $email->printDebugger(['headers']);
-			// 	return json_encode((object)['status' => 500, 'data' => $data]);
-			// }
 		} else {
 			$data = ['message' => 'Error en envío de mensaje'];
 			return json_encode((object)['status' => 500, 'data' => $data]);

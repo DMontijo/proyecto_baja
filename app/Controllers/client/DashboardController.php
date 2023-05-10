@@ -15,6 +15,8 @@ use GuzzleHttp\Client;
 use MailerSend\MailerSend;
 use MailerSend\Helpers\Builder\Recipient;
 use MailerSend\Helpers\Builder\EmailParams;
+use MailerSend\Exceptions\MailerSendValidationException;
+use MailerSend\Exceptions\MailerSendRateLimitException;
 
 class DashboardController extends BaseController
 {
@@ -1126,42 +1128,39 @@ class DashboardController extends BaseController
 	{
 		$user = $this->_denunciantesModelRead->asObject()->where('CORREO', $to)->first();
 
-		// $email = \Config\Services::email();
-		// $email->setTo($to);
-		// $email->setSubject('Nuevo folio generado.');
 		$body = view('email_template/folio_email_template.php', ['folio' => $folio . '/' . $year]);
-		// $email->setAltMessage('Se ha generado un nuevo folio. SU FOLIO ES: ' . $folio . '/' . $year .' Para darle seguimiento a su caso ingrese a su cuenta en el Centro de Denuncia Tecnológica e inicie su video denuncia con el folio generado.' );
-		// $sendSMS = $this->sendSMS("Nuevo folio generado", $user->TELEFONO, 'Notificaciones FGE/Estimado usuario, tu folio es: ' . $folio . '/' . $year);
-
 		$mailersend = new MailerSend(['api_key' => EMAIL_TOKEN]);
-
 		$recipients = [
 			new Recipient($to, 'Your Client'),
 		];
+
 		$emailParams = (new EmailParams())
 			->setFrom('notificacionfgebc@fgebc.gob.mx')
 			->setFromName('FGEBC')
 			->setRecipients($recipients)
 			->setSubject('Nuevo folio generado.')
 			->setHtml($body)
-			->setText('Se ha generado un nuevo folio. SU FOLIO ES: ' . $folio . '/' . $year .' Para darle seguimiento a su caso ingrese a su cuenta en el Centro de Denuncia Tecnológica e inicie su video denuncia con el folio generado.')
+			->setText('Se ha generado un nuevo folio. SU FOLIO ES: ' . $folio . '/' . $year . ' Para darle seguimiento a su caso ingrese a su cuenta en el Centro de Denuncia Tecnológica e inicie su video denuncia con el folio generado.')
 			->setReplyTo('notificacionfgebc@fgebc.gob.mx')
 			->setReplyToName('FGEBC');
-		$result = $mailersend->email->send($emailParams);
+		$sendSMS = $this->sendSMS("Nuevo folio generado", $user->TELEFONO, 'Notificaciones FGE/Estimado usuario, tu folio es: ' . $folio . '/' . $year);
 
+		try {
+			$result = $mailersend->email->send($emailParams);
+		} catch (MailerSendValidationException $e) {
+			$result = false;
+		} catch (MailerSendRateLimitException $e) {
+			$result = false;
+		}
 		if ($result) {
 			return true;
 		} else {
-			return false;
+			if ($sendSMS == "") {
+				return true;
+			} else {
+				return false;
+			}
 		}
-		// // $email->setMessage($body);
-
-		// // if ($email->send()) {
-		// if ($sendSMS == "") {
-		// 	return true;
-		// } else {
-		// 	return false;
-		// }
 	}
 	/**
 	 * Función para enviar mensajes SMS

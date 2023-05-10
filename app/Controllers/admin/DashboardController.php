@@ -143,6 +143,8 @@ use stdClass;
 use MailerSend\MailerSend;
 use MailerSend\Helpers\Builder\Recipient;
 use MailerSend\Helpers\Builder\EmailParams;
+use MailerSend\Exceptions\MailerSendValidationException;
+use MailerSend\Exceptions\MailerSendRateLimitException;
 
 class DashboardController extends BaseController
 {
@@ -270,7 +272,7 @@ class DashboardController extends BaseController
 	//Reader
 	private $_folioModelRead;
 	private $_folioDocModelRead;
-	private $_sesionesModelRead;	
+	private $_sesionesModelRead;
 	private $_sesionesDenunciantesModelRead;
 	private $_rolesPermisosModelRead;
 	private $_usuariosModelRead;
@@ -868,7 +870,7 @@ class DashboardController extends BaseController
 		$data->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 		$data->roles = $this->_rolesUsuariosModelRead->asObject()->findAll();
 		$data->permisos = $this->_permisosModelRead->asObject()->findAll();
-	
+
 		$this->_loadView('Nuevo asignacion de permisos', '', '', $data, 'roles/nueva_asignacion_rol');
 	}
 
@@ -2162,7 +2164,7 @@ class DashboardController extends BaseController
 		$data->ocupaciones = $this->_ocupacionModelRead->asObject()->findAll();
 		$data->colorVehiculo = $this->_coloresVehiculoModelRead->asObject()->findAll();
 		$data->tipoVehiculo = $this->_tipoVehiculoModelRead->asObject()->orderBy('VEHICULOTIPODESCR', 'ASC')->findAll();
-		
+
 		$data->parentesco = $this->_parentescoModelRead->asObject()->findAll();
 		$data->figura = $this->_figuraModelRead->asObject()->findAll();
 
@@ -2316,40 +2318,35 @@ class DashboardController extends BaseController
 		$year = date('Y');
 		$folioM = $this->_folioModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->first();
 		$denunciante = $this->_denunciantesModelRead->asObject()->where('DENUNCIANTEID', $folioM->DENUNCIANTEID)->first();
-		// $email = \Config\Services::email();
-		// $email->setTo($to);
-		// $email->setSubject('Folio atendido');
+
 		$body = view('email_template/folio_der_can_email_template.php', ['folio' => $folio, 'motivo' => $motivo]);
-		// $email->setMessage($body);
-		// $email->setAltMessage('EL FOLIO ' . $folio . ' FUE ' . $motivo == 'ATENDIDA' ? 'CANALIZADO' : $motivo);
-
-		// if ($email->send()) {
-		// 	return true;
-		// } else {
-		// 	return false;
-		// }
-
-
 		$mailersend = new MailerSend(['api_key' => EMAIL_TOKEN]);
+		$recipients = [
+			new Recipient($to, 'Your Client'),
+		];
 
-        $recipients = [
-            new Recipient($to, 'Your Client'),
-        ];
-        $emailParams = (new EmailParams())
-            ->setFrom('notificacionfgebc@fgebc.gob.mx')
-            ->setFromName('FGEBC')
-            ->setRecipients($recipients)
-            ->setSubject('Folio atendido')
-            ->setHtml($body)
-            ->setText('EL FOLIO ' . $folio . ' FUE ' . $motivo == 'ATENDIDA' ? 'CANALIZADO' : $motivo)
-            ->setReplyTo('notificacionfgebc@fgebc.gob.mx')
-            ->setReplyToName('FGEBC');
-        $result = $mailersend->email->send($emailParams);
-        if ($result) {
-            return true;
-        } else {
-            return false;
-        }
+		$emailParams = (new EmailParams())
+			->setFrom('notificacionfgebc@fgebc.gob.mx')
+			->setFromName('FGEBC')
+			->setRecipients($recipients)
+			->setSubject('Folio atendido')
+			->setHtml($body)
+			->setText('EL FOLIO ' . $folio . ' FUE ' . $motivo == 'ATENDIDA' ? 'CANALIZADO' : $motivo)
+			->setReplyTo('notificacionfgebc@fgebc.gob.mx')
+			->setReplyToName('FGEBC');
+		try {
+			$result = $mailersend->email->send($emailParams);
+		} catch (MailerSendValidationException $e) {
+			$result = false;
+		} catch (MailerSendRateLimitException $e) {
+			$result = false;
+		}
+
+		if ($result) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -2363,56 +2360,46 @@ class DashboardController extends BaseController
 	{
 		$folioM = $this->_folioModelRead->asObject()->where('EXPEDIENTEID', $expedienteId)->first();
 		$denunciante = $this->_denunciantesModelRead->asObject()->where('DENUNCIANTEID', $folioM->DENUNCIANTEID)->first();
-
 		$tipoExpediente = $this->_tipoExpedienteModelRead->asObject()->where('TIPOEXPEDIENTEID',  $folioM->TIPOEXPEDIENTEID)->first();
-		// $email = \Config\Services::email();
-		// $email->setTo($to);
-		// $email->setSubject('Nuevo expediente creado');
-		 $body = view('email_template/expediente_email_template.php', ['expediente' => $expedienteId, 'tipoexpediente' => $tipoExpediente->TIPOEXPEDIENTECLAVE]);
-		// $email->setMessage($body);
 
 		$expediente_guiones = '';
 		$arrayExpediente = str_split($expedienteId);
 		$expediente_guiones =  $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
 
-
-		// $email->setAltMessage('Gracias por denunciar, se te ha generado un nuevo expediente ' . $expediente_guiones . '/' . $tipoExpediente->TIPOEXPEDIENTECLAVE);
-		// $sendSMS = $this->sendSMS("Nuevo expediente", $denunciante->TELEFONO, 'Notificaciones FGE/Estimado usuario, tu numero de expediente es:' . $expediente_guiones . '/' . $tipoExpediente->TIPOEXPEDIENTECLAVE);
-
-		// // if ($email->send()) {
-		// if ($sendSMS == "") {
-		// 	return true;
-		// } else {
-		// 	return false;
-		// }
-		// } else {
-		// if ($sendSMS == "") {
-		// 	return true;
-		// } else {
-		// 	return false;
-		// }
-		// }
-
 		$mailersend = new MailerSend(['api_key' => EMAIL_TOKEN]);
+		$recipients = [
+			new Recipient($to, 'Your Client'),
+		];
 
-        $recipients = [
-            new Recipient($to, 'Your Client'),
-        ];
-        $emailParams = (new EmailParams())
-            ->setFrom('notificacionfgebc@fgebc.gob.mx')
-            ->setFromName('FGEBC')
-            ->setRecipients($recipients)
-            ->setSubject('Nuevo expediente creado')
-            ->setHtml($body)
-            ->setText('Gracias por denunciar, se te ha generado un nuevo expediente ' . $expediente_guiones . '/' . $tipoExpediente->TIPOEXPEDIENTECLAVE)
-            ->setReplyTo('notificacionfgebc@fgebc.gob.mx')
-            ->setReplyToName('FGEBC');
-        $result = $mailersend->email->send($emailParams);
-        if ($result) {
-            return true;
-        } else {
-            return false;
-        }
+		$body = view('email_template/expediente_email_template.php', ['expediente' => $expedienteId, 'tipoexpediente' => $tipoExpediente->TIPOEXPEDIENTECLAVE]);
+		$emailParams = (new EmailParams())
+			->setFrom('notificacionfgebc@fgebc.gob.mx')
+			->setFromName('FGEBC')
+			->setRecipients($recipients)
+			->setSubject('Nuevo expediente creado')
+			->setHtml($body)
+			->setText('Gracias por denunciar, se te ha generado un nuevo expediente ' . $expediente_guiones . '/' . $tipoExpediente->TIPOEXPEDIENTECLAVE)
+			->setReplyTo('notificacionfgebc@fgebc.gob.mx')
+			->setReplyToName('FGEBC');
+
+		$sendSMS = $this->sendSMS("Nuevo expediente", $denunciante->TELEFONO, 'Notificaciones FGE/Estimado usuario, tu numero de expediente es:' . $expediente_guiones . '/' . $tipoExpediente->TIPOEXPEDIENTECLAVE);
+		try {
+			$result = $mailersend->email->send($emailParams);
+		} catch (MailerSendValidationException $e) {
+			$result = false;
+		} catch (MailerSendRateLimitException $e) {
+			$result = false;
+		}
+
+		if ($result) {
+			return true;
+		} else {
+			if ($sendSMS == "") {
+				return true;
+			} else {
+				return false;
+			}
+		}
 	}
 
 	/**
@@ -2423,40 +2410,34 @@ class DashboardController extends BaseController
 	 */
 	private function _sendEmailPassword($to, $password)
 	{
-
-		// $email = \Config\Services::email();
-		// $email->setTo($to);
-		// $email->setSubject('Nueva cuenta creada');
 		$body = view('email_template/password_email_admin_template.php', ['email' => $to, 'password' => $password]);
-		// $email->setMessage($body);
-		// $email->setAltMessage('Se ha generado un nuevo registro en el Centro de Denuncia Tecnológica.Para acceder debes ingresar los siguientes datos. USUARIO: ' . $to . 'CONTRASEÑA:' . $password);
-
-		// if ($email->send()) {
-		// 	return true;
-		// } else {
-		// 	return false;
-		// }
 
 		$mailersend = new MailerSend(['api_key' => EMAIL_TOKEN]);
 
-        $recipients = [
-            new Recipient($to, 'Your Client'),
-        ];
-        $emailParams = (new EmailParams())
-            ->setFrom('notificacionfgebc@fgebc.gob.mx')
-            ->setFromName('FGEBC')
-            ->setRecipients($recipients)
-            ->setSubject('Nueva cuenta creada')
-            ->setHtml($body)
-            ->setText('Se ha generado un nuevo registro en el Centro de Denuncia Tecnológica.Para acceder debes ingresar los siguientes datos. USUARIO: ' . $to . 'CONTRASEÑA:' . $password)
-            ->setReplyTo('notificacionfgebc@fgebc.gob.mx')
-            ->setReplyToName('FGEBC');
-        $result = $mailersend->email->send($emailParams);
-        if ($result) {
-            return true;
-        } else {
-            return false;
-        }
+		$recipients = [
+			new Recipient($to, 'Your Client'),
+		];
+		$emailParams = (new EmailParams())
+			->setFrom('notificacionfgebc@fgebc.gob.mx')
+			->setFromName('FGEBC')
+			->setRecipients($recipients)
+			->setSubject('Nueva cuenta creada')
+			->setHtml($body)
+			->setText('Se ha generado un nuevo registro en el Centro de Denuncia Tecnológica.Para acceder debes ingresar los siguientes datos. USUARIO: ' . $to . 'CONTRASEÑA:' . $password)
+			->setReplyTo('notificacionfgebc@fgebc.gob.mx')
+			->setReplyToName('FGEBC');
+		try {
+			$result = $mailersend->email->send($emailParams);
+		} catch (MailerSendValidationException $e) {
+			$result = false;
+		} catch (MailerSendRateLimitException $e) {
+			$result = false;
+		}
+		if ($result) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**

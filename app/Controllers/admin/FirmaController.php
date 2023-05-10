@@ -28,6 +28,8 @@ use MailerSend\MailerSend;
 use MailerSend\Helpers\Builder\Recipient;
 use MailerSend\Helpers\Builder\EmailParams;
 use MailerSend\Helpers\Builder\Attachment;
+use MailerSend\Exceptions\MailerSendValidationException;
+use MailerSend\Exceptions\MailerSendRateLimitException;
 
 class FirmaController extends BaseController
 {
@@ -1166,31 +1168,17 @@ class FirmaController extends BaseController
 	 */
 	private function _sendEmailConstanciaFirmada($to, $folio, $year, $xml, $pdf)
 	{
-		// $email = \Config\Services::email();
-		// $email->setTo($to);
-		// $email->setSubject('Constancia de extravío firmada');
+
 		$body = view('email_template/constancia_firmada_email_template.php');
-		// $email->setMessage($body);
-		// $email->setAltMessage('SE HA FIRMADO TU CONSTANCIA SOLICITADA:Ingrese a su cuenta en el Centro de Denuncia Tecnológica e inicie sesión para descargarla nuevamente');
-		// $email->attach($pdf, 'attachment', 'Constancia_' . $folio . '_' . $year . '.pdf', 'application/pdf');
-		// $email->attach($xml, 'attachment', 'Constancia_' . $folio . '_' . $year . '.xml', 'application/xml');
-
-		// if ($email->send()) {
-		// 	$email->clear(TRUE);
-		// 	return true;
-		// } else {
-		// 	return false;
-		// }
 		$mailersend = new MailerSend(['api_key' => EMAIL_TOKEN]);
-
 		$recipients = [
 			new Recipient($to, 'Your Client'),
 		];
-
 		$attachments = [
 			new Attachment($pdf, 'Constancia_' . $folio . '_' . $year . '.pdf', 'attachment'),
 			new Attachment($xml, 'Constancia_' . $folio . '_' . $year . '.xml', 'attachment')
 		];
+
 		$emailParams = (new EmailParams()) //check envio 
 			->setFrom('notificacionfgebc@fgebc.gob.mx')
 			->setFromName('FGEBC')
@@ -1201,7 +1189,14 @@ class FirmaController extends BaseController
 			->setAttachments($attachments)
 			->setReplyTo('notificacionfgebc@fgebc.gob.mx')
 			->setReplyToName('FGEBC');
-		$result = $mailersend->email->send($emailParams);
+
+		try {
+			$result = $mailersend->email->send($emailParams);
+		} catch (MailerSendValidationException $e) {
+			$result = false;
+		} catch (MailerSendRateLimitException $e) {
+			$result = false;
+		}
 		if ($result) {
 			return true;
 		} else {
@@ -1259,11 +1254,7 @@ class FirmaController extends BaseController
 			$derecho_ofendido = file_get_contents(FCPATH . 'assets/documentos/DerechosDeVictimaOfendido.pdf');
 			$termino_condiciones = file_get_contents(FCPATH . 'assets/documentos/TerminosCondiciones.pdf');
 
-			// $email = \Config\Services::email();
-			// $email->setTo($to);
-			// $email->setSubject('FGEBC - Documentos folio: ' . $folio . '/' . $folioM->ANO);
 			$body = view('email_template/documentos_firmados_email_template.php', ['municipio' => $municipio, 'fecha' => $fecha_actual, 'agente' => $agente, 'expediente' => $folioM->EXPEDIENTEID ? $expediente : 'SIN EXPEDIENTE', 'folio' => $folio, 'year' => $folioM->ANO, 'tipoexpediente' => $folioM->TIPOEXPEDIENTEID ? ($tipoExpediente  == "" ? $tipoExpediente : $tipoExpediente->TIPOEXPEDIENTEDESCR) : $folioM->STATUS, 'status' => $folioM->STATUS, 'delito' => $delito, 'imputado' => $imputado, 'claveexpediente' => $folioM->TIPOEXPEDIENTEID ? ($tipoExpediente  == "" ? $tipoExpediente : $tipoExpediente->TIPOEXPEDIENTECLAVE) : $folioM->STATUS]);
-			// $email->setMessage($body);
 
 			$mailersend = new MailerSend(['api_key' => EMAIL_TOKEN]);
 			$recipients = [
@@ -1294,28 +1285,26 @@ class FirmaController extends BaseController
 
 			if ($documento->TIPODOC == 'DENUNCIA ANONIMA') {
 				$pdf = $documento->PDF;
-				// $email->attach($pdf, 'attachment',  $documento->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento->FOLIODOCID . '.pdf', 'application/pdf');
 				array_push($attachments, new Attachment($pdf, $documento->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento->FOLIODOCID . '.pdf', 'attachment'));
 			} else {
 				$pdf = $documento->PDF;
 				$xml = $documento->XML;
-				// $email->attach($pdf, 'attachment',  $documento->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento->FOLIODOCID . '.pdf', 'application/pdf');
 				array_push($attachments, new Attachment($pdf, $documento->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento->FOLIODOCID . '.pdf', 'attachment'));
-				// $email->attach($xml, 'attachment', $documento->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento->FOLIODOCID . '.xml', 'application/xml');
 				array_push($attachments, new Attachment($xml, $documento->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento->FOLIODOCID . '.xml', 'attachment'));
 			}
-			// $email->attach($termino_condiciones, 'attachment', 'Terminos y Condiciones.pdf', 'application/pdf');
-			// $email->attach($aviso_privacidad, 'attachment', 'Aviso de Privacidad.pdf', 'application/pdf');
-			// $email->attach($derecho_ofendido, 'attachment', 'Derechos de Víctima u Ofendido.pdf', 'application/pdf');
 			array_push($attachments, new Attachment($termino_condiciones, 'Terminos y Condiciones.pdf', 'attachment'));
 			array_push($attachments, new Attachment($aviso_privacidad, 'Aviso de Privacidad.pdf', 'attachment'));
 			array_push($attachments, new Attachment($derecho_ofendido, 'Derechos de Víctima u Ofendido.pdf', 'attachment'));
 			$emailParams->setAttachments($attachments);
 			$emailParams->setReplyTo('notificacionfgebc@fgebc.gob.mx');
 			$emailParams->setReplyToName('FGEBC');
-			$result = $mailersend->email->send($emailParams);
-
-			//if ($email->send()) {
+			try {
+				$result = $mailersend->email->send($emailParams);
+			} catch (MailerSendValidationException $e) {
+				$result = false;
+			} catch (MailerSendRateLimitException $e) {
+				$result = false;
+			}
 			if ($result) {
 				$datosUpdate = [
 					'ENVIADO' => 'S',
@@ -1382,13 +1371,8 @@ class FirmaController extends BaseController
 			$derecho_ofendido = file_get_contents(FCPATH . 'assets/documentos/DerechosDeVictimaOfendido.pdf');
 			$termino_condiciones = file_get_contents(FCPATH . 'assets/documentos/TerminosCondiciones.pdf');
 
-			// $email = \Config\Services::email();
-			// $email->setTo($to);
-			// $email->setSubject('FGEBC - Documentos folio: ' . $folio . '/' . $folioM->ANO);
 
 			$body = view('email_template/documentos_firmados_email_template.php', ['municipio' => $municipio, 'fecha' => $fecha_actual, 'agente' => $agente, 'expediente' => $folioM->EXPEDIENTEID ? $expediente : 'SIN EXPEDIENTE', 'folio' => $folio, 'year' => $folioM->ANO, 'tipoexpediente' => $folioM->TIPOEXPEDIENTEID ? ($tipoExpediente  == "" ? $tipoExpediente : $tipoExpediente->TIPOEXPEDIENTEDESCR) : $folioM->STATUS, 'status' => $folioM->STATUS, 'delito' => $delito, 'imputado' => $imputado, 'claveexpediente' => $folioM->TIPOEXPEDIENTEID ? ($tipoExpediente  == "" ? $tipoExpediente : $tipoExpediente->TIPOEXPEDIENTECLAVE) : $folioM->STATUS]);
-
-			// $email->setMessage($body);
 
 			$mailersend = new MailerSend(['api_key' => EMAIL_TOKEN]);
 			$recipients = [
@@ -1419,14 +1403,11 @@ class FirmaController extends BaseController
 			for ($i = 0; $i < count($documento); $i++) {
 				if ($documento[$i]->TIPODOC == 'DENUNCIA ANONIMA') {
 					$pdf = $documento[$i]->PDF;
-					// $email->attach($pdf, 'attachment',  $documento[$i]->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento[$i]->FOLIODOCID . '.pdf', 'application/pdf');
 					array_push($attachments, new Attachment($pdf,  $documento[$i]->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento[$i]->FOLIODOCID . '.pdf', 'attachment'));
 				} else {
 					$pdf = $documento[$i]->PDF;
 					$xml = $documento[$i]->XML;
-					// $email->attach($pdf, 'attachment',  $documento[$i]->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento[$i]->FOLIODOCID . '.pdf', 'application/pdf');
 					array_push($attachments, new Attachment($pdf, $documento[$i]->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento[$i]->FOLIODOCID . '.pdf', 'attachment'));
-					// $email->attach($xml, 'attachment', $documento[$i]->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento[$i]->FOLIODOCID . '.xml', 'application/xml');
 					array_push($attachments, new Attachment($xml, $documento[$i]->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento[$i]->FOLIODOCID . '.xml', 'attachment'));
 					if (strpos($documento[$i]->TIPODOC, "ORDEN DE PROTECCION")) {
 						array_push($ordenesProteccion, $documento[$i]);
@@ -1435,19 +1416,20 @@ class FirmaController extends BaseController
 				}
 			}
 
-			// $email->attach($termino_condiciones, 'attachment', 'Terminos y Condiciones.pdf', 'application/pdf');
-			// $email->attach($aviso_privacidad, 'attachment', 'Aviso de Privacidad.pdf', 'application/pdf');
-			// $email->attach($derecho_ofendido, 'attachment', 'Derechos de Victima u Ofendido.pdf', 'application/pdf');
-
 			array_push($attachments, new Attachment($termino_condiciones, 'Terminos y Condiciones.pdf', 'attachment'));
 			array_push($attachments, new Attachment($aviso_privacidad, 'Aviso de Privacidad.pdf', 'attachment'));
 			array_push($attachments, new Attachment($derecho_ofendido, 'Derechos de Victima u Ofendido.pdf', 'attachment'));
 			$emailParams->setAttachments($attachments);
 			$emailParams->setReplyTo('notificacionfgebc@fgebc.gob.mx');
 			$emailParams->setReplyToName('FGEBC');
-			$result = $mailersend->email->send($emailParams);
+			try {
+				$result = $mailersend->email->send($emailParams);
+			} catch (MailerSendValidationException $e) {
+				$result = false;
+			} catch (MailerSendRateLimitException $e) {
+				$result = false;
+			}
 
-			//if ($email->send()) {
 			if ($result) {
 				// $email->clear(TRUE);
 				$datosUpdate = [
@@ -1468,10 +1450,10 @@ class FirmaController extends BaseController
 				}
 				return json_encode((object)['status' => 1]);
 			} else {
-				try {
-					//$email->clear(TRUE);
-				} catch (\Throwable $th) {
-				}
+				// try {
+				// 	//$email->clear(TRUE);
+				// } catch (\Throwable $th) {
+				// }
 				return json_encode((object)['status' => 0]);
 			}
 		} else {
@@ -1493,19 +1475,14 @@ class FirmaController extends BaseController
 		} else {
 			$to = ['isnad.medel@fgebc.gob.mx', 'direcciongeneralsejap@fgebc.gob.mx'];
 		}
-		// $email = \Config\Services::email();
-		// $email->setTo($to);
-		// $email->setSubject('Alerta, revisar folio');
+
 		$body = view('email_template/alerta_email_template.php', ['folio' => $folio, 'year' => $year]);
-		// $email->setMessage($body);
-		// $email->setAltMessage('El folio ' . $folio . '/' . $year .'es un caso de suma importancia. Favor de verificar en el sistema de videodenuncia');
-
 		$mailersend = new MailerSend(['api_key' => EMAIL_TOKEN]);
-
 		$recipients = [
 			new Recipient($to[0], 'Your Client'),
 			new Recipient($to[1], 'Your Client'),
 		];
+
 		$emailParams = (new EmailParams()) //check envio
 			->setFrom('notificacionfgebc@fgebc.gob.mx')
 			->setFromName('FGEBC')
@@ -1515,7 +1492,14 @@ class FirmaController extends BaseController
 			->setText('El folio ' . $folio . '/' . $year . 'es un caso de suma importancia. Favor de verificar en el sistema de videodenuncia')
 			->setReplyTo('notificacionfgebc@fgebc.gob.mx')
 			->setReplyToName('FGEBC');
-		$result = $mailersend->email->send($emailParams);
+		
+		try {
+			$result = $mailersend->email->send($emailParams);
+		} catch (MailerSendValidationException $e) {
+			$result = false;
+		} catch (MailerSendRateLimitException $e) {
+			$result = false;
+		}
 
 		// if ($email->send()) {
 		if ($result) {
@@ -1593,12 +1577,7 @@ class FirmaController extends BaseController
 			}
 		}
 
-		// $email = \Config\Services::email();
-		// $email->setTo($to_orden_proteccion);
-		// $email->setSubject('FGEBC - Ordenes de protección');
 		$body = view('email_template/orden_proteccion_email_template.php', ['municipio' => $municipiodescr, 'fecha' => $fecha]);
-		// $email->setMessage($body);
-
 		$mailersend = new MailerSend(['api_key' => EMAIL_TOKEN]);
 		$recipients = [
 			new Recipient($to_orden_proteccion, 'Your Client'),
@@ -1617,24 +1596,25 @@ class FirmaController extends BaseController
 
 		foreach ($documentos as $key => $documento) {
 			$pdf = $documento->PDF;
-			//$email->attach($pdf, 'attachment',  $documento->TIPODOC . '.pdf', 'application/pdf');
 			array_push($attachments, new Attachment($pdf, $documento->TIPODOC . '.pdf', 'application/pdf', 'attachment'));
 		}
 
 		$emailParams->setAttachments($attachments);
 		$emailParams->setReplyTo('notificacionfgebc@fgebc.gob.mx');
 		$emailParams->setReplyToName('FGEBC');
-	
-		try {
-			// $email->send();
-			$result = $mailersend->email->send($emailParams);
-		} catch (\Throwable $th) {
-		}
 
 		try {
-			// $email->clear(TRUE);
-		} catch (\Throwable $th) {
+			$result = $mailersend->email->send($emailParams);
+		} catch (MailerSendValidationException $e) {
+			$result = false;
+		} catch (MailerSendRateLimitException $e) {
+			$result = false;
 		}
+
+		// try {
+		// 	// $email->clear(TRUE);
+		// } catch (\Throwable $th) {
+		// }
 	}
 
 	/**
