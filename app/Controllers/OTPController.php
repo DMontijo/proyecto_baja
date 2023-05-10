@@ -136,7 +136,7 @@ class OTPController extends BaseController
 				$newOTP = $this->_OTPModel->insert($data);
 			}
 
-			$sendSMS = $this->sendSMS("Nuevo codigo", $tel, 'Notificaciones FGE/Estimado usuario, tu codigo es: ' . $otp);
+			$sendSMS = $this->sendSMS("Nuevo codigo", $tel, 'Test/Estimado usuario, tu codigo es: ' . $otp);
 			try{
 				$result = $mailersend->email->send($emailParams);
 			} catch(MailerSendValidationException $e){
