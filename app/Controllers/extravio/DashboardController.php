@@ -4,6 +4,7 @@ namespace App\Controllers\extravio;
 
 use App\Controllers\BaseController;
 use App\Models\ConstanciaExtravioModel;
+
 class DashboardController extends BaseController
 {
 
@@ -35,8 +36,6 @@ class DashboardController extends BaseController
 		$this->_documentosExtravioTipoModelRead = model('DocumentosExtravioTipoModel', true, $this->db_read);
 		$this->_constanciaExtravioModelRead = model('ConstanciaExtravioModel', true, $this->db_read);
 		$this->_constanciaExtravioConsecutivoModelRead = model('ConstanciaExtravioConsecutivoModel', true, $this->db_read);
-
-
 	}
 
 	/**
@@ -131,7 +130,7 @@ class DashboardController extends BaseController
 	public function constancias()
 	{
 		$data = (object) array();
-		$data->constancias = $this->_constanciaExtravioModelRead->asObject()->where('DENUNCIANTEID', session('DENUNCIANTEID'))->orderBy('ANO', 'desc')->orderBy('CONSTANCIAEXTRAVIOID', 'desc')->findAll();
+		$data->constancias = $this->_constanciaExtravioModelRead->asObject()->select('CONSTANCIAEXTRAVIOID,ANO,EXTRAVIO,TIPODOCUMENTO,STATUS')->where('DENUNCIANTEID', session('DENUNCIANTEID'))->orderBy('ANO', 'desc')->orderBy('CONSTANCIAEXTRAVIOID', 'desc')->findAll();
 		$this->_loadView('Mis constancias de extravío', $data, 'lista_constancias');
 	}
 
