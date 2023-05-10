@@ -100,8 +100,8 @@ class DashboardController extends BaseController
 
 		//Validacion cuando existen constancias del mismo tipo
 		if (isset($data['EXTRAVIO']) && $data['EXTRAVIO'] == 'DOCUMENTOS' || $data['EXTRAVIO'] == 'BOLETOS DE SORTEO') {
-			$constancias_abiertas = $this->_constanciaExtravioModelRead->asObject()->where('DENUNCIANTEID', session('DENUNCIANTEID'))->where('TIPODOCUMENTO', $data['TIPODOCUMENTO'])->where('STATUS', 'ABIERTO')->findAll();
-			$constancias_proceso = $this->_constanciaExtravioModelRead->asObject()->where('DENUNCIANTEID', session('DENUNCIANTEID'))->where('TIPODOCUMENTO', $data['TIPODOCUMENTO'])->where('STATUS', 'EN PROCESO')->findAll();
+			$constancias_abiertas = $this->_constanciaExtravioModelRead->asObject()->select('CONSTANCIAEXTRAVIOID,ANO,EXTRAVIO,TIPODOCUMENTO,STATUS,DUENONOMBREDOC,DUENOAPELLIDOPDOC,DUENOAPELLIDOMDOC,DUENOFECHANACIMIENTODOC')->where('DENUNCIANTEID', session('DENUNCIANTEID'))->where('TIPODOCUMENTO', $data['TIPODOCUMENTO'])->where('STATUS', 'ABIERTO')->findAll();
+			$constancias_proceso = $this->_constanciaExtravioModelRead->asObject()->select('CONSTANCIAEXTRAVIOID,ANO,EXTRAVIO,TIPODOCUMENTO,STATUS,DUENONOMBREDOC,DUENOAPELLIDOPDOC,DUENOAPELLIDOMDOC,DUENOFECHANACIMIENTODOC')->where('DENUNCIANTEID', session('DENUNCIANTEID'))->where('TIPODOCUMENTO', $data['TIPODOCUMENTO'])->where('STATUS', 'EN PROCESO')->findAll();
 			$constancias = (object) array_merge($constancias_abiertas, $constancias_proceso);
 			if (isset($constancias) && $constancias) {
 				foreach ($constancias as $key => $constancia) {
