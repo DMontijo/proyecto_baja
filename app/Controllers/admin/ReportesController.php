@@ -19,23 +19,30 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class ReportesController extends BaseController
 {
-	private $_folioModel;
-	private $_municipiosModel;
-	private $_usuariosModel;
-	private $_constanciaExtravioModel;
-	private $_rolesPermisosModel;
-	private $_plantillasModel;
+
 	private $urlApi;
+	private $db_read;
+	private $_folioModelRead;
+	private $_municipiosModelRead;
+	private $_usuariosModelRead;
+	private $_constanciaExtravioModelRead;
+	private $_rolesPermisosModelRead;
+	private $_plantillasModelRead;
 
 	function __construct()
-	{
-		$this->_folioModel = new FolioModel();
-		$this->_municipiosModel = new MunicipiosModel();
-		$this->_usuariosModel = new UsuariosModel();
-		$this->_constanciaExtravioModel = new ConstanciaExtravioModel();
-		$this->_rolesPermisosModel = new RolesPermisosModel();
-		$this->_plantillasModel = new PlantillasModel();
+	{ 
+		//Conexion de lectura
+		$this->db_read = ENVIRONMENT == 'production' ? db_connect('default_read') : db_connect('development_read');
+
 		$this->urlApi = VIDEOCALL_URL;
+		//Models reader
+		$this->_folioModelRead = model('FolioModel', true, $this->db_read);
+		$this->_municipiosModelRead = model('MunicipiosModel', true, $this->db_read);
+		$this->_usuariosModelRead = model('UsuariosModel', true, $this->db_read);
+		$this->_constanciaExtravioModelRead = model('ConstanciaExtravioModel', true, $this->db_read);
+		$this->_rolesPermisosModelRead = model('RolesPermisosModel', true, $this->db_read);
+		$this->_plantillasModelRead = model('PlantillasModel', true, $this->db_read);
+
 	}
 
 	/**
@@ -48,7 +55,7 @@ class ReportesController extends BaseController
 			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
 		}
 		$dataView = (object)array();
-		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+		$dataView->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 		$this->_loadView('Reportes', 'Reportes', '', $dataView, 'index');
 	}
@@ -66,18 +73,18 @@ class ReportesController extends BaseController
 			'fechaFin' => date("Y-m-d"),
 		];
 
-		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
+		$municipio = $this->_municipiosModelRead->asObject()->where('ESTADOID', 2)->findAll();
 		//Filtro
-		$resultFilter = $this->_folioModel->filterDates($data);
+		$resultFilter = $this->_folioModelRead->filterDates($data);
 		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
-		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
+		$empleado = $this->_usuariosModelRead->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
 
 		$dataView = (object)array();
 		$dataView->result = $resultFilter->result;
 		$dataView->municipios = $municipio;
 		$dataView->empleados = $empleado;
 		$dataView->filterParams = (object)$data;
-		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+		$dataView->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 		$this->_loadView('Folios generados', 'folios', '', $dataView, 'folios');
 	}
 
@@ -112,19 +119,19 @@ class ReportesController extends BaseController
 			];
 		}
 
-		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
+		$municipio = $this->_municipiosModelRead->asObject()->where('ESTADOID', 2)->findAll();
 		//Generacion del filtro
-		$resultFilter = $this->_folioModel->filterDates($data);
+		$resultFilter = $this->_folioModelRead->filterDates($data);
 		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
-		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
+		$empleado = $this->_usuariosModelRead->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
 
 		if (isset($data['AGENTEATENCIONID'])) {
-			$agente = $this->_usuariosModel->asObject()->where('ID', $data['AGENTEATENCIONID'])->orderBy('NOMBRE', 'ASC')->first();
+			$agente = $this->_usuariosModelRead->asObject()->where('ID', $data['AGENTEATENCIONID'])->orderBy('NOMBRE', 'ASC')->first();
 			$data['AGENTENOMBRE'] = $agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' . $agente->APELLIDO_MATERNO;
 		}
 
 		if (isset($data['MUNICIPIOID'])) {
-			$mun = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data['MUNICIPIOID'])->first();
+			$mun = $this->_municipiosModelRead->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data['MUNICIPIOID'])->first();
 			$data['MUNICIPIONOMBRE'] = $mun->MUNICIPIODESCR;
 		}
 
@@ -133,7 +140,7 @@ class ReportesController extends BaseController
 		$dataView->municipios = $municipio;
 		$dataView->empleados = $empleado;
 		$dataView->filterParams = (object)$data;
-		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+		$dataView->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 		$this->_loadView('Folios generados', 'folios', '', $dataView, 'folios');
 	}
 
@@ -172,7 +179,7 @@ class ReportesController extends BaseController
 		}
 
 		//Generacion del filtro
-		$resultFilter = $this->_folioModel->filterDates($data);
+		$resultFilter = $this->_folioModelRead->filterDates($data);
 
 		//Inicio del XLSX
 		$spreadSheet = new Spreadsheet();
@@ -351,17 +358,17 @@ class ReportesController extends BaseController
 			if (empty($valor)) unset($data[$clave]);
 		}
 
-		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
-		$resultFilter = $this->_constanciaExtravioModel->filterDates($data);
+		$municipio = $this->_municipiosModelRead->asObject()->where('ESTADOID', 2)->findAll();
+		$resultFilter = $this->_constanciaExtravioModelRead->filterDates($data);
 		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
-		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
+		$empleado = $this->_usuariosModelRead->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
 
 		$dataView = (object)array();
 		$dataView->result = $resultFilter->result;
 		$dataView->municipios = $municipio;
 		$dataView->empleados = $empleado;
 		$dataView->filterParams = (object)$data;
-		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+		$dataView->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 		$this->_loadView('Constancias generadas', 'constancias', '', $dataView, 'constancias');
 	}
@@ -399,20 +406,20 @@ class ReportesController extends BaseController
 			];
 		}
 
-		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
+		$municipio = $this->_municipiosModelRead->asObject()->where('ESTADOID', 2)->findAll();
 		//Generacion del filtro
 
-		$resultFilter = $this->_constanciaExtravioModel->filterDates($data);
+		$resultFilter = $this->_constanciaExtravioModelRead->filterDates($data);
 		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
-		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
+		$empleado = $this->_usuariosModelRead->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
 
 		if (isset($data['AGENTEID'])) {
-			$agente = $this->_usuariosModel->asObject()->where('ID', $data['AGENTEID'])->orderBy('NOMBRE', 'ASC')->first();
+			$agente = $this->_usuariosModelRead->asObject()->where('ID', $data['AGENTEID'])->orderBy('NOMBRE', 'ASC')->first();
 			$data['AGENTENOMBRE'] = $agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' . $agente->APELLIDO_MATERNO;
 		}
 
 		if (isset($data['MUNICIPIOID'])) {
-			$mun = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data['MUNICIPIOID'])->first();
+			$mun = $this->_municipiosModelRead->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data['MUNICIPIOID'])->first();
 			$data['MUNICIPIONOMBRE'] = $mun->MUNICIPIODESCR;
 		}
 
@@ -421,7 +428,7 @@ class ReportesController extends BaseController
 		$dataView->municipios = $municipio;
 		$dataView->empleados = $empleado;
 		$dataView->filterParams = (object)$data;
-		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+		$dataView->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 		$this->_loadView('Constancias generadas', 'constancias', '', $dataView, 'constancias');
 	}
@@ -462,7 +469,7 @@ class ReportesController extends BaseController
 
 		//Generacion del filtro
 
-		$resultFilter = $this->_constanciaExtravioModel->filterDates($data);
+		$resultFilter = $this->_constanciaExtravioModelRead->filterDates($data);
 		//Inicio del XLSX
 
 		$spreadSheet = new Spreadsheet();
@@ -624,25 +631,25 @@ class ReportesController extends BaseController
 			if (empty($valor)) unset($data[$clave]);
 		}
 
-		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
+		$municipio = $this->_municipiosModelRead->asObject()->where('ESTADOID', 2)->findAll();
 
 		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
 		$rolUser = session()->get('rol')->ID;
 		if ($rolUser == 1 || $rolUser == 2 || $rolUser == 6 || $rolUser == 7 || $rolUser == 11) {
-			$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
+			$empleado = $this->_usuariosModelRead->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
 			//$data['AGENTEATENCIONID'] = session('ID');
 		} else {
-			$empleado = $this->_usuariosModel->asObject()->where('ID',	session('ID'))->orderBy('NOMBRE', 'ASC')->findAll();
+			$empleado = $this->_usuariosModelRead->asObject()->where('ID',	session('ID'))->orderBy('NOMBRE', 'ASC')->findAll();
 			$data['AGENTEATENCIONID'] = session('ID');
 		}
-		$resultFilter = $this->_folioModel->filterDatesRegistroDiario($data);
+		$resultFilter = $this->_folioModelRead->filterDatesRegistroDiario($data);
 
 		$dataView = (object)array();
 		$dataView->result = $resultFilter->result;
 		$dataView->municipios = $municipio;
 		$dataView->empleados = $empleado;
 		$dataView->filterParams = (object)$data;
-		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+		$dataView->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 		$this->_loadView('Registro diario', 'registro diario', '', $dataView, 'registro_diario');
 	}
@@ -680,13 +687,13 @@ class ReportesController extends BaseController
 		}
 		//Generacion del filtro
 
-		$resultFilter = $this->_folioModel->filterDatesRegistroDiario($data);
+		$resultFilter = $this->_folioModelRead->filterDatesRegistroDiario($data);
 		///var_dump($data);
 		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
-		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
+		$empleado = $this->_usuariosModelRead->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
 
 		if (isset($data['AGENTEATENCIONID'])) {
-			$agente = $this->_usuariosModel->asObject()->where('ID', $data['AGENTEATENCIONID'])->orderBy('NOMBRE', 'ASC')->first();
+			$agente = $this->_usuariosModelRead->asObject()->where('ID', $data['AGENTEATENCIONID'])->orderBy('NOMBRE', 'ASC')->first();
 			$data['AGENTENOMBRE'] = $agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' . $agente->APELLIDO_MATERNO;
 		}
 
@@ -697,7 +704,7 @@ class ReportesController extends BaseController
 		$dataView->empleados = $empleado;
 		$dataView->filterParams = (object)$data;
 
-		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+		$dataView->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 		$this->_loadView('Registro diario', 'registro diario', '', $dataView, 'registro_diario');
 	}
@@ -735,7 +742,7 @@ class ReportesController extends BaseController
 		}
 		//Generacion del filtro
 
-		$resultFilter = $this->_folioModel->filterDatesRegistroDiario($data);
+		$resultFilter = $this->_folioModelRead->filterDatesRegistroDiario($data);
 		//var_dump($resultFilter);
 		//exit;
 		$spreadSheet = new Spreadsheet();
@@ -1008,7 +1015,7 @@ class ReportesController extends BaseController
 			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
 		}
 		//Query ROL-USUARIO
-		$data->usuario = $this->_usuariosModel->asObject()
+		$data->usuario = $this->_usuariosModelRead->asObject()
 			->select('USUARIOS.*, ROLES.NOMBRE_ROL, ZONAS_USUARIOS.NOMBRE_ZONA, MUNICIPIO.MUNICIPIODESCR,OFICINA.OFICINADESCR')
 			->join('ROLES', 'ROLES.ID = USUARIOS.ROLID', 'LEFT')
 			->join('ZONAS_USUARIOS', 'ZONAS_USUARIOS.ID_ZONA = USUARIOS.ZONAID', 'LEFT')
@@ -1018,7 +1025,7 @@ class ReportesController extends BaseController
 			->orderBy('ROLES.NOMBRE_ROL', 'ASC')
 			->orderBy('USUARIOS.NOMBRE', 'ASC')
 			->findAll();
-		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+		$data->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 		$this->_loadView('FIEL', 'fiel', '', $data, 'fiel');
 	}
@@ -1036,7 +1043,7 @@ class ReportesController extends BaseController
 		if ($response->statusCode == "success") {
 			$dataView = (object)array();
 			$dataView->llamadas = $response->data;
-			$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+			$dataView->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 			$empleado = array();
 			$llamadas = array();
 
@@ -1098,7 +1105,7 @@ class ReportesController extends BaseController
 
 			$dataView->empleados = array_unique($empleado, SORT_REGULAR);
 			$dataView->llamadas = array_unique($llamadas, SORT_REGULAR);
-			$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+			$dataView->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 			$dataView->filterParams = $dataPost;
 
 			$this->_loadView('Reportes llamadas', 'reportes_llamadas', '', $dataView, 'reportes_llamadas');
@@ -1329,17 +1336,17 @@ class ReportesController extends BaseController
 		];
 		//Filtro
 
-		$documentos = $this->_plantillasModel->filtro_ordenes_proteccion($dataPost);
+		$documentos = $this->_plantillasModelRead->filtro_ordenes_proteccion($dataPost);
 		//  var_dump($documentos);
 		//  exit();
-		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
+		$municipio = $this->_municipiosModelRead->asObject()->where('ESTADOID', 2)->findAll();
 		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
-		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
-		$tiposOrden = $this->_plantillasModel->get_tipos_orden();
+		$empleado = $this->_usuariosModelRead->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
+		$tiposOrden = $this->_plantillasModelRead->get_tipos_orden();
 
 
 		$dataView = (object)array();
-		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+		$dataView->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 		$dataView->municipios = $municipio;
 		$dataView->empleados = $empleado;
 		$dataView->tiposOrden = (object)$tiposOrden;
@@ -1372,11 +1379,11 @@ class ReportesController extends BaseController
 			'municipioDescr' => ''
 		];
 
-		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
+		$municipio = $this->_municipiosModelRead->asObject()->where('ESTADOID', 2)->findAll();
 		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
-		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
-		$tiposOrden = $this->_plantillasModel->get_tipos_orden();
-		$documentos = $this->_plantillasModel->filtro_ordenes_proteccion($dataPost);
+		$empleado = $this->_usuariosModelRead->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
+		$tiposOrden = $this->_plantillasModelRead->get_tipos_orden();
+		$documentos = $this->_plantillasModelRead->filtro_ordenes_proteccion($dataPost);
 		if (!empty($dataPost['AGENTEATENCIONID'])) {
 			foreach ($empleado as $index => $dato) {
 				//var_dump('info empleado', $dato);
@@ -1397,7 +1404,7 @@ class ReportesController extends BaseController
 
 
 		$dataView = (object)array();
-		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+		$dataView->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 		$dataView->municipios = $municipio;
 		$dataView->empleados = $empleado;
 		$dataView->tiposOrden = (object)$tiposOrden;
@@ -1440,7 +1447,7 @@ class ReportesController extends BaseController
 		}
 		//Generacion del filtro
 
-		$documentos = $this->_plantillasModel->filtro_ordenes_proteccion($dataPost);
+		$documentos = $this->_plantillasModelRead->filtro_ordenes_proteccion($dataPost);
 		$date = date("Y_m_d_h_i_s");
 		//Inicio del XLSX
 
@@ -1644,10 +1651,10 @@ class ReportesController extends BaseController
 			'fechaFin' => date("Y-m-d")
 		];
 
-		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
+		$municipio = $this->_municipiosModelRead->asObject()->where('ESTADOID', 2)->findAll();
 		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
-		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
-		$dataInfo = $this->_folioModel->filtro_canalizaciones_derivaciones($dataPost);
+		$empleado = $this->_usuariosModelRead->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
+		$dataInfo = $this->_folioModelRead->filtro_canalizaciones_derivaciones($dataPost);
 
 		if (!empty($dataPost['AGENTEATENCIONID'])) {
 			foreach ($empleado as $index => $dato) {
@@ -1669,7 +1676,7 @@ class ReportesController extends BaseController
 
 
 		$dataView = (object)array();
-		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+		$dataView->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 		$dataView->municipios = $municipio;
 		$dataView->empleados = $empleado;
 		$dataView->dataInfo = $dataInfo;
@@ -1701,12 +1708,12 @@ class ReportesController extends BaseController
 			'municipioDescr' => ''
 		];
 
-		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
+		$municipio = $this->_municipiosModelRead->asObject()->where('ESTADOID', 2)->findAll();
 		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
-		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
+		$empleado = $this->_usuariosModelRead->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
 		//Generacion del filtro
 
-		$dataInfo = $this->_folioModel->filtro_canalizaciones_derivaciones($dataPost);
+		$dataInfo = $this->_folioModelRead->filtro_canalizaciones_derivaciones($dataPost);
 
 		if (!empty($dataPost['AGENTEATENCIONID'])) {
 			foreach ($empleado as $index => $dato) {
@@ -1728,7 +1735,7 @@ class ReportesController extends BaseController
 
 
 		$dataView = (object)array();
-		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+		$dataView->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 		$dataView->municipios = $municipio;
 		$dataView->empleados = $empleado;
 		$dataView->dataInfo = $dataInfo;
@@ -1770,7 +1777,7 @@ class ReportesController extends BaseController
 		}
 		//Generacion del filtro
 
-		$dataInfo = $this->_folioModel->filtro_canalizaciones_derivaciones($dataPost);
+		$dataInfo = $this->_folioModelRead->filtro_canalizaciones_derivaciones($dataPost);
 
 		$date = date("Y_m_d_h_i_s");
 		//Inicio del XLSX
@@ -1969,27 +1976,27 @@ class ReportesController extends BaseController
 			'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
 			'fechaFin' => date("Y-m-d")
 		];
-		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
+		$municipio = $this->_municipiosModelRead->asObject()->where('ESTADOID', 2)->findAll();
 
 		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
 		$rolUser = session()->get('rol')->ID;
 		//Filtro de agentes dependiendo del rol
 		if ($rolUser == 1 || $rolUser == 2 || $rolUser == 6 || $rolUser == 7 || $rolUser == 11) {
-			$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
+			$empleado = $this->_usuariosModelRead->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
 			//$data['AGENTEATENCIONID'] = session('ID');
 		} else {
-			$empleado = $this->_usuariosModel->asObject()->where('ID',	session('ID'))->orderBy('NOMBRE', 'ASC')->findAll();
+			$empleado = $this->_usuariosModelRead->asObject()->where('ID',	session('ID'))->orderBy('NOMBRE', 'ASC')->findAll();
 			$data['AGENTEATENCIONID'] = session('ID');
 		}
 		//Filtro
 
-		$resultFilter = $this->_folioModel->filterRegistroAtenciones($data);
+		$resultFilter = $this->_folioModelRead->filterRegistroAtenciones($data);
 		$dataView = (object)array();
 		$dataView->result = $resultFilter->result;
 		$dataView->municipios = $municipio;
 		$dataView->empleados = $empleado;
 		$dataView->filterParams = (object)$data;
-		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+		$dataView->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 		$this->_loadView('Registro de atenciones', 'Registro de atenciones', '', $dataView, 'registro_atenciones');
 	}
 	/**
@@ -2023,20 +2030,20 @@ class ReportesController extends BaseController
 				'fechaFin' => date("Y-m-d"),
 			];
 		}
-		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
+		$municipio = $this->_municipiosModelRead->asObject()->where('ESTADOID', 2)->findAll();
 		//Generacion del filtro
 
-		$resultFilter = $this->_folioModel->filterRegistroAtenciones($data);
+		$resultFilter = $this->_folioModelRead->filterRegistroAtenciones($data);
 		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
-		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
+		$empleado = $this->_usuariosModelRead->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
 
 		if (isset($data['AGENTEID'])) {
-			$agente = $this->_usuariosModel->asObject()->where('ID', $data['AGENTEID'])->orderBy('NOMBRE', 'ASC')->first();
+			$agente = $this->_usuariosModelRead->asObject()->where('ID', $data['AGENTEID'])->orderBy('NOMBRE', 'ASC')->first();
 			$data['AGENTENOMBRE'] = $agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' . $agente->APELLIDO_MATERNO;
 		}
 
 		if (isset($data['MUNICIPIOID'])) {
-			$mun = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data['MUNICIPIOID'])->first();
+			$mun = $this->_municipiosModelRead->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data['MUNICIPIOID'])->first();
 			$data['MUNICIPIONOMBRE'] = $mun->MUNICIPIODESCR;
 		}
 		$dataView = (object)array();
@@ -2044,7 +2051,7 @@ class ReportesController extends BaseController
 		$dataView->municipios = $municipio;
 		$dataView->empleados = $empleado;
 		$dataView->filterParams = (object)$data;
-		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+		$dataView->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 		$this->_loadView('Registro de atenciones', 'Registro de atenciones', '', $dataView, 'registro_atenciones');
 	}
 	/**
@@ -2082,7 +2089,7 @@ class ReportesController extends BaseController
 		}
 		//Generacion del filtro
 
-		$resultFilter = $this->_folioModel->filterRegistroAtenciones($data);
+		$resultFilter = $this->_folioModelRead->filterRegistroAtenciones($data);
 		//Inicio del XLSX
 
 		$spreadSheet = new Spreadsheet();
@@ -2339,14 +2346,14 @@ class ReportesController extends BaseController
 		];
 		//Filtro
 
-		$documentos = $this->_plantillasModel->filtro_comision_estatal($dataPost);
-		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
+		$documentos = $this->_plantillasModelRead->filtro_comision_estatal($dataPost);
+		$municipio = $this->_municipiosModelRead->asObject()->where('ESTADOID', 2)->findAll();
 		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
-		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
+		$empleado = $this->_usuariosModelRead->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
 
 
 		$dataView = (object)array();
-		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+		$dataView->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 		$dataView->municipios = $municipio;
 		$dataView->empleados = $empleado;
 		$dataView->dataDocumentos = $documentos;
@@ -2376,12 +2383,12 @@ class ReportesController extends BaseController
 			'municipioDescr' => ''
 		];
 
-		$municipio = $this->_municipiosModel->asObject()->where('ESTADOID', 2)->findAll();
+		$municipio = $this->_municipiosModelRead->asObject()->where('ESTADOID', 2)->findAll();
 		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
-		$empleado = $this->_usuariosModel->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
+		$empleado = $this->_usuariosModelRead->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
 		//Generacion del filtro
 
-		$documentos = $this->_plantillasModel->filtro_comision_estatal($dataPost);
+		$documentos = $this->_plantillasModelRead->filtro_comision_estatal($dataPost);
 
 		if (!empty($dataPost['AGENTEATENCIONID'])) {
 			foreach ($empleado as $index => $dato) {
@@ -2403,7 +2410,7 @@ class ReportesController extends BaseController
 
 
 		$dataView = (object)array();
-		$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+		$dataView->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 		$dataView->municipios = $municipio;
 		$dataView->empleados = $empleado;
 		$dataView->dataDocumentos = $documentos;
@@ -2444,7 +2451,7 @@ class ReportesController extends BaseController
 		}
 		//Generacion del filtro
 
-		$documentos = $this->_plantillasModel->filtro_comision_estatal($dataPost);
+		$documentos = $this->_plantillasModelRead->filtro_comision_estatal($dataPost);
 
 		$date = date("Y_m_d_h_i_s");
 

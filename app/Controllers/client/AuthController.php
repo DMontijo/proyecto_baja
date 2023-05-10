@@ -13,14 +13,23 @@ use MailerSend\Helpers\Builder\EmailParams;
 
 class AuthController extends BaseController
 {
+	private $db_read;
 
 	private $_denunciantesModel;
 	private $_sesionesDenunciantesModel;
+	private $_denunciantesModelRead;
+	private $_sesionesDenunciantesModelRead;
 
 	function __construct()
 	{
+		$this->db_read = ENVIRONMENT == 'production' ? db_connect('default_read') : db_connect('development_read');
+
 		$this->_denunciantesModel = new DenunciantesModel();
 		$this->_sesionesDenunciantesModel = new SesionesDenunciantesModel();
+
+		$this->_denunciantesModelRead = model('DenunciantesModel', true, $this->db_read);
+		$this->_sesionesDenunciantesModelRead = model('SesionesDenunciantesModel', true, $this->db_read);
+
 	}
 	/**
 	 * Vista de Login-Denuncia
@@ -49,11 +58,11 @@ class AuthController extends BaseController
 		$password = trim($password);
 		// Encuentra un usuario con ese correo
 
-		$data = $this->_denunciantesModel->where('CORREO', $email)->first();
+		$data = $this->_denunciantesModelRead->where('CORREO', $email)->first();
 		if ($data) {
 			// Verifica que no tenga sesiones activas
 
-			$control_session = $this->_sesionesDenunciantesModel->asObject()->where('ID_DENUNCIANTE', $data['DENUNCIANTEID'])->where('ACTIVO', 1)->first();
+			$control_session = $this->_sesionesDenunciantesModelRead->asObject()->where('ID_DENUNCIANTE', $data['DENUNCIANTEID'])->where('ACTIVO', 1)->first();
 			if ($control_session) {
 				return redirect()->to(base_url('/denuncia'))->with('message_session', 'Ya tienes sesiones activas, cierralas para continuar.')->with('id',  $data['DENUNCIANTEID']);
 			}
@@ -102,7 +111,7 @@ class AuthController extends BaseController
 			'ACTIVO' => 0,
 			'ID_DENUNCIANTE' => $session->get('ID'),
 		];
-		$session_denunciante =  $this->_sesionesDenunciantesModel->where('ID_DENUNCIANTE', $session->get('DENUNCIANTEID'))->where('ID', session('uuid'))->where('ACTIVO', 1)->orderBy('FECHAINICIO', 'DESC')->first();
+		$session_denunciante =  $this->_sesionesDenunciantesModelRead->where('ID_DENUNCIANTE', $session->get('DENUNCIANTEID'))->where('ID', session('uuid'))->where('ACTIVO', 1)->orderBy('FECHAINICIO', 'DESC')->first();
 		if ($session_denunciante) {
 			$update = $this->_sesionesDenunciantesModel->set($sesion_data)->where('ID', $session_denunciante['ID'])->update();
 			if ($update) {
@@ -150,7 +159,7 @@ class AuthController extends BaseController
 		$data = (object)array();
 
 		if ($id || $token || $email) {
-			$data = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', $id)->orWhere('CORREO', $email)->first();
+			$data = $this->_denunciantesModelRead->asObject()->where('DENUNCIANTEID', $id)->orWhere('CORREO', $email)->first();
 			$this->_loadView('Cambiar contraseña', $data, 'change_password');
 		}
 	}
@@ -175,7 +184,7 @@ class AuthController extends BaseController
 	{
 		$password = $this->_generatePassword(6);
 		$to = $this->request->getPost('correo_reset_password');
-		$user = $this->_denunciantesModel->asObject()->where('CORREO', $to)->first();
+		$user = $this->_denunciantesModelRead->asObject()->where('CORREO', $to)->first();
 		$this->_denunciantesModel->set('PASSWORD', hashPassword($password))->where('DENUNCIANTEID', $user->DENUNCIANTEID)->update();
 
 		// $email = \Config\Services::email();

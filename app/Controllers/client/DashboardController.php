@@ -3,18 +3,7 @@
 namespace App\Controllers\client;
 
 use App\Controllers\BaseController;
-use App\Models\CabelloColorModel;
-use App\Models\CabelloEstiloModel;
-use App\Models\CabelloTamanoModel;
-use App\Models\CejaFormaModel;
-use App\Models\ColoniasModel;
-use App\Models\ConexionesDBModel;
-use App\Models\DelitosUsuariosModel;
 use App\Models\DenunciantesModel;
-use App\Models\EscolaridadModel;
-use App\Models\EstadoExtranjeroModel;
-use App\Models\EstadosModel;
-use App\Models\FiguraModel;
 use App\Models\FolioConsecutivoModel;
 use App\Models\FolioModel;
 use App\Models\FolioPersonaFisicaDomicilioModel;
@@ -22,27 +11,6 @@ use App\Models\FolioPersonaFisicaMediaFiliacionModel;
 use App\Models\FolioPersonaFisicaModel;
 use App\Models\FolioPreguntasModel;
 use App\Models\FolioVehiculoModel;
-use App\Models\FrenteFormaModel;
-use App\Models\HechoLugarModel;
-use App\Models\LocalidadesModel;
-use App\Models\MunicipiosModel;
-use App\Models\OcupacionModel;
-use App\Models\OjoColorModel;
-use App\Models\PaisesModel;
-use App\Models\ParentescoModel;
-use App\Models\PersonaFisicaParentescoModel;
-use App\Models\PersonaIdiomaModel;
-use App\Models\PersonaNacionalidadModel;
-use App\Models\PielColorModel;
-use App\Models\VehiculoColorModel;
-use App\Models\VehiculoDistribuidorModel;
-use App\Models\VehiculoMarcaModel;
-use App\Models\VehiculoModeloModel;
-use App\Models\VehiculoServicioModel;
-use App\Models\VehiculoTipoModel;
-use App\Models\VehiculoVersionModel;
-use App\Models\FolioArchivoExternoModel;
-use App\Models\TipoExpedienteModel;
 use GuzzleHttp\Client;
 use MailerSend\MailerSend;
 use MailerSend\Helpers\Builder\Recipient;
@@ -50,99 +18,134 @@ use MailerSend\Helpers\Builder\EmailParams;
 
 class DashboardController extends BaseController
 {
-	private $_paisesModel;
-	private $_estadosModel;
-	private $_municipiosModel;
-	private $_localidadesModel;
-	private $_coloniasModel;
-	private $_hechoLugarModel;
-	private $_coloresVehiculoModel;
-	private $_tipoVehiculoModel;
-	private $_delitosUsuariosModel;
+
 	private $_denunciantesModel;
-	private $_personaIdiomaModel;
-	private $_nacionalidadModel;
+
 	private $_folioModel;
-	private $_folioConsecutivoModel;
 	private $_folioPreguntasModel;
 	private $_folioPersonaFisicaModel;
 	private $_folioPersonaFisicaDomicilioModel;
 	private $_folioVehiculoModel;
 	private $_folioMediaFiliacion;
-	private $_escolaridadModel;
-	private $_ocupacionModel;
-	private $_cabelloColorModel;
-	private $_cabelloTamanoModel;
-	private $_cabelloEstiloModel;
-	private $_frenteFormaModel;
-	private $_ojoColorModel;
-	private $_cejaFormaModel;
-	private $_figuraModel;
-	private $_pielColorModel;
-	private $_parentescoModel;
+
 	private $_parentescoPersonaFisicaModel;
-	private $_vehiculoDistribuidorModel;
-	private $_vehiculoMarcaModel;
-	private $_vehiculoModeloModel;
-	private $_vehiculoVersionModel;
-	private $_vehiculoServicioModel;
-	private $_estadosExtranjeros;
+
 	private $_archivoExternoModel;
-	private $_tipoExpedienteModel;
-	private $urlApi;
-	private $_conexionesDBModel;
+
 
 	private $protocol;
 	private $ip;
 	private $endpoint;
+	private $db_read;
+	private $urlApi;
+
+	private $_folioModelRead;
+
+	private $_archivoExternoModelRead;
+	private $_municipiosModelRead;
+
+	private $_delitosUsuariosModelRead;
+	private $_hechoLugarModelRead;
+	private $_nacionalidadModelRead;
+	private $_personaIdiomaModelRead;
+	private $_paisesModelRead;
+	private $_estadosModelRead;
+	private $_escolaridadModelRead;
+	private $_ocupacionModelRead;
+	private $_coloresVehiculoModelRead;
+	private $_tipoVehiculoModelRead;
+	private $_figuraModelRead;
+	private $_cabelloColorModelRead;
+	private $_cabelloEstiloModelRead;
+	private $_cabelloTamanoModelRead;
+	private $_frenteFormaModelRead;
+	private $_cejaFormaModelRead;
+	private $_ojoColorModelRead;
+	private $_parentescoModelRead;
+	private $_pielColorModelRead;
+	private $_vehiculoDistribuidorModelRead;
+	private $_vehiculoMarcaModelRead;
+	private $_vehiculoModeloModelRead;
+	private $_vehiculoVersionModelRead;
+	private $_vehiculoServicioModelRead;
+	private $_estadosExtranjerosRead;
+	private $_folioPreguntasModelRead;
+	private $_folioPersonaFisicaModelRead;
+	private $_folioVehiculoModelRead;
+	private $_folioPersonaFisicaDomicilioModelRead;
+	private $_localidadesModelRead;
+	private $_coloniasModelRead;
+	private $_denunciantesModelRead;
+	private $_conexionesDBModelRead;
+	private $_folioConsecutivoModelRead;
+	private $_folioConsecutivoModel;
 
 	public function __construct()
 	{
+		$this->db_read = ENVIRONMENT == 'production' ? db_connect('default_read') : db_connect('development_read');
+
 		//Models
-		$this->_paisesModel = new PaisesModel();
-		$this->_estadosModel = new EstadosModel();
-		$this->_municipiosModel = new MunicipiosModel();
-		$this->_localidadesModel = new LocalidadesModel();
-		$this->_coloniasModel = new ColoniasModel();
-		$this->_hechoLugarModel = new HechoLugarModel();
-		$this->_coloresVehiculoModel = new VehiculoColorModel();
-		$this->_tipoVehiculoModel = new VehiculoTipoModel();
-		$this->_delitosUsuariosModel = new DelitosUsuariosModel();
+
 		$this->_denunciantesModel = new DenunciantesModel();
-		$this->_personaIdiomaModel = new PersonaIdiomaModel();
-		$this->_nacionalidadModel = new PersonaNacionalidadModel();
 
 		$this->_folioModel = new FolioModel();
-		$this->_folioConsecutivoModel = new FolioConsecutivoModel();
 		$this->_folioPreguntasModel = new FolioPreguntasModel();
 		$this->_folioPersonaFisicaModel = new FolioPersonaFisicaModel();
 		$this->_folioPersonaFisicaDomicilioModel = new FolioPersonaFisicaDomicilioModel();
 		$this->_folioVehiculoModel = new FolioVehiculoModel();
 		$this->_folioMediaFiliacion = new FolioPersonaFisicaMediaFiliacionModel();
+		$this->_folioConsecutivoModel = new FolioConsecutivoModel();
 
-		$this->_escolaridadModel = new EscolaridadModel();
-		$this->_ocupacionModel = new OcupacionModel();
+		//Models reader
+		$this->_folioModelRead = model('FolioModel', true, $this->db_read);
 
-		$this->_cabelloColorModel = new CabelloColorModel();
-		$this->_cabelloTamanoModel = new CabelloTamanoModel();
-		$this->_cabelloEstiloModel = new CabelloEstiloModel();
-		$this->_frenteFormaModel = new FrenteFormaModel();
-		$this->_ojoColorModel = new OjoColorModel();
-		$this->_cejaFormaModel = new CejaFormaModel();
-		$this->_figuraModel = new FiguraModel();
-		$this->_pielColorModel = new PielColorModel();
-		$this->_parentescoModel = new ParentescoModel();
-		$this->_parentescoPersonaFisicaModel = new PersonaFisicaParentescoModel();
-		$this->_vehiculoDistribuidorModel = new VehiculoDistribuidorModel();
-		$this->_vehiculoMarcaModel = new VehiculoMarcaModel();
-		$this->_vehiculoModeloModel = new VehiculoModeloModel();
-		$this->_vehiculoVersionModel = new VehiculoVersionModel();
-		$this->_vehiculoServicioModel = new VehiculoServicioModel();
-		$this->_estadosExtranjeros = new EstadoExtranjeroModel();
-		$this->_archivoExternoModel = new FolioArchivoExternoModel();
-		$this->_tipoExpedienteModel = new TipoExpedienteModel();
-		$this->_conexionesDBModel = new ConexionesDBModel();
+		$this->_archivoExternoModelRead = model('FolioArchivoExternoModel', true, $this->db_read);
+		$this->_municipiosModelRead = model('MunicipiosModel', true, $this->db_read);
 
+		$this->_delitosUsuariosModelRead = model('DelitosUsuariosModel', true, $this->db_read);
+		$this->_hechoLugarModelRead = model('HechoLugarModel', true, $this->db_read);
+		$this->_nacionalidadModelRead = model('PersonaNacionalidadModel', true, $this->db_read);
+		$this->_personaIdiomaModelRead = model('PersonaIdiomaModel', true, $this->db_read);
+		$this->_paisesModelRead = model('PaisesModel', true, $this->db_read);
+		$this->_estadosModelRead = model('EstadosModel', true, $this->db_read);
+		$this->_escolaridadModelRead = model('EscolaridadModel', true, $this->db_read);
+		$this->_ocupacionModelRead = model('OcupacionModel', true, $this->db_read);
+		$this->_coloresVehiculoModelRead = model('VehiculoColorModel', true, $this->db_read);
+		$this->_tipoVehiculoModelRead = model('VehiculoTipoModel', true, $this->db_read);
+		$this->_figuraModelRead = model('FiguraModel', true, $this->db_read);
+
+		$this->_cabelloColorModelRead = model('CabelloColorModel', true, $this->db_read);
+		$this->_cabelloEstiloModelRead = model('CabelloEstiloModel', true, $this->db_read);
+		$this->_cabelloTamanoModelRead = model('CabelloTamanoModel', true, $this->db_read);
+
+		$this->_cejaFormaModelRead = model('CejaFormaModel', true, $this->db_read);
+
+		$this->_ojoColorModelRead = model('OjoColorModel', true, $this->db_read);
+		$this->_parentescoModelRead = model('ParentescoModel', true, $this->db_read);
+		$this->_pielColorModelRead = model('PielColorModel', true, $this->db_read);
+
+		$this->_vehiculoDistribuidorModelRead = model('VehiculoDistribuidorModel', true, $this->db_read);
+		$this->_vehiculoMarcaModelRead = model('VehiculoMarcaModel', true, $this->db_read);
+		$this->_vehiculoModeloModelRead = model('VehiculoModeloModel', true, $this->db_read);
+		$this->_vehiculoVersionModelRead = model('VehiculoVersionModel', true, $this->db_read);
+		$this->_vehiculoServicioModelRead = model('VehiculoServicioModel', true, $this->db_read);
+		$this->_estadosExtranjerosRead = model('EstadoExtranjeroModel', true, $this->db_read);
+
+		$this->_folioPreguntasModelRead = model('FolioPreguntasModel', true, $this->db_read);
+		$this->_folioPersonaFisicaModelRead = model('FolioPersonaFisicaModel', true, $this->db_read);
+
+		$this->_folioVehiculoModelRead = model('FolioVehiculoModel', true, $this->db_read);
+
+		$this->_folioPersonaFisicaDomicilioModelRead = model('FolioPersonaFisicaDomicilioModel', true, $this->db_read);
+		$this->_localidadesModelRead = model('LocalidadesModel', true, $this->db_read);
+		$this->_coloniasModelRead = model('ColoniasModel', true, $this->db_read);
+
+		$this->_denunciantesModelRead = model('DenunciantesModel', true, $this->db_read);
+
+		$this->_conexionesDBModelRead = model('ConexionesDBModel', true, $this->db_read);
+		$this->_frenteFormaModelRead = model('FrenteFormaModel', true, $this->db_read);
+
+		$this->_folioConsecutivoModelRead = model('FolioConsecutivoModel', true, $this->db_read);
 		// $this->protocol = 'http://';
 		// $this->ip = "10.144.244.223";
 		// $this->endpoint = $this->protocol . $this->ip . '/webServiceVD';
@@ -158,13 +161,13 @@ class DashboardController extends BaseController
 	public function index()
 	{
 		$data = (object) array();
-		$data->paises = $this->_paisesModel->asObject()->findAll();
-		$data->estados = $this->_estadosModel->asObject()->findAll();
-		$data->estadosExtranjeros = $this->_estadosExtranjeros->asObject()->findAll();
+		$data->paises = $this->_paisesModelRead->asObject()->findAll();
+		$data->estados = $this->_estadosModelRead->asObject()->findAll();
+		$data->estadosExtranjeros = $this->_estadosExtranjerosRead->asObject()->findAll();
 
-		$data->municipios = $this->_municipiosModel->asObject()->where('ESTADOID', '2')->findAll();
-		$data->nacionalidades = $this->_nacionalidadModel->asObject()->findAll();
-		$lugares = $this->_hechoLugarModel->orderBy('HECHODESCR', 'ASC')->findAll();
+		$data->municipios = $this->_municipiosModelRead->asObject()->where('ESTADOID', '2')->findAll();
+		$data->nacionalidades = $this->_nacionalidadModelRead->asObject()->findAll();
+		$lugares = $this->_hechoLugarModelRead->orderBy('HECHODESCR', 'ASC')->findAll();
 
 		$lugares_sin = [];
 		$lugares_fuego = [];
@@ -191,25 +194,25 @@ class DashboardController extends BaseController
 		$lugares_merge = [];
 		$lugares_merge =  array_merge($lugares_peticion, $lugares_sin);
 		$data->lugares = (object)array_unique($lugares_merge, SORT_REGULAR);
-		$data->colorVehiculo = $this->_coloresVehiculoModel->asObject()->findAll();
-		$data->tipoVehiculo = $this->_tipoVehiculoModel->asObject()->orderBy('VEHICULOTIPODESCR', 'ASC')->findAll();
-		$data->delitosUsuarios = $this->_delitosUsuariosModel->asObject()->orderBy('DELITO', 'ASC')->findAll();
-		$data->escolaridades = $this->_escolaridadModel->asObject()->findAll();
-		$data->ocupaciones = $this->_ocupacionModel->asObject()->findAll();
-		$data->figura = $this->_figuraModel->asObject()->findAll();
-		$data->cabelloColor = $this->_cabelloColorModel->asObject()->findAll();
-		$data->cabelloTamano = $this->_cabelloTamanoModel->asObject()->findAll();
-		$data->frenteForma = $this->_frenteFormaModel->asObject()->findAll();
-		$data->ojoColor = $this->_ojoColorModel->asObject()->findAll();
-		$data->cabelloEstilo = $this->_cabelloEstiloModel->asObject()->findAll();
-		$data->cejaForma = $this->_cejaFormaModel->asObject()->findAll();
-		$data->pielColor = $this->_pielColorModel->asObject()->findAll();
-		$data->parentesco = $this->_parentescoModel->asObject()->findAll();
-		$data->distribuidorVehiculo = $this->_vehiculoDistribuidorModel->asObject()->findAll();
-		$data->marcaVehiculo = $this->_vehiculoMarcaModel->asObject()->findAll();
-		$data->lineaVehiculo = $this->_vehiculoModeloModel->asObject()->findAll();
-		$data->versionVehiculo = $this->_vehiculoVersionModel->asObject()->findAll();
-		$data->servicioVehiculo = $this->_vehiculoServicioModel->asObject()->findAll();
+		$data->colorVehiculo = $this->_coloresVehiculoModelRead->asObject()->findAll();
+		$data->tipoVehiculo = $this->_tipoVehiculoModelRead->asObject()->orderBy('VEHICULOTIPODESCR', 'ASC')->findAll();
+		$data->delitosUsuarios = $this->_delitosUsuariosModelRead->asObject()->orderBy('DELITO', 'ASC')->findAll();
+		$data->escolaridades = $this->_escolaridadModelRead->asObject()->findAll();
+		$data->ocupaciones = $this->_ocupacionModelRead->asObject()->findAll();
+		$data->figura = $this->_figuraModelRead->asObject()->findAll();
+		$data->cabelloColor = $this->_cabelloColorModelRead->asObject()->findAll();
+		$data->cabelloTamano = $this->_cabelloTamanoModelRead->asObject()->findAll();
+		$data->frenteForma = $this->_frenteFormaModelRead->asObject()->findAll();
+		$data->ojoColor = $this->_ojoColorModelRead->asObject()->findAll();
+		$data->cabelloEstilo = $this->_cabelloEstiloModelRead->asObject()->findAll();
+		$data->cejaForma = $this->_cejaFormaModelRead->asObject()->findAll();
+		$data->pielColor = $this->_pielColorModelRead->asObject()->findAll();
+		$data->parentesco = $this->_parentescoModelRead->asObject()->findAll();
+		$data->distribuidorVehiculo = $this->_vehiculoDistribuidorModelRead->asObject()->findAll();
+		$data->marcaVehiculo = $this->_vehiculoMarcaModelRead->asObject()->findAll();
+		$data->lineaVehiculo = $this->_vehiculoModeloModelRead->asObject()->findAll();
+		$data->versionVehiculo = $this->_vehiculoVersionModelRead->asObject()->findAll();
+		$data->servicioVehiculo = $this->_vehiculoServicioModelRead->asObject()->findAll();
 		$this->_loadView('Dashboard', 'dashboard', '', $data, 'index');
 	}
 
@@ -219,7 +222,7 @@ class DashboardController extends BaseController
 	 */
 	public function video_denuncia()
 	{
-		$denunciante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', session('DENUNCIANTEID'))->first();
+		$denunciante = $this->_denunciantesModelRead->asObject()->where('DENUNCIANTEID', session('DENUNCIANTEID'))->first();
 		//Datos que recibe de la url generada
 		$data = (object) [
 			'folio' => $this->request->getGet('folio'),
@@ -236,7 +239,7 @@ class DashboardController extends BaseController
 		];
 		$array = explode("-", $data->folio);
 
-		$folio = $this->_folioModel->where('ANO', $data->year)->where('FOLIOID', $array[1])->where('STATUS', 'ABIERTO')->first();
+		$folio = $this->_folioModelRead->where('ANO', $data->year)->where('FOLIOID', $array[1])->where('STATUS', 'ABIERTO')->first();
 
 		if ($folio) {
 			$this->_loadView('Video denuncia', 'video-denuncia', '', $data, 'video_denuncia');
@@ -285,7 +288,7 @@ class DashboardController extends BaseController
 		if ($archivoExterno) {
 			$datados = (object) array();
 
-			$datados->archivosexternos = $this->_archivoExternoModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
+			$datados->archivosexternos = $this->_archivoExternoModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
 			if ($datados->archivosexternos) {
 				foreach ($datados->archivosexternos as $key => $archivos) {
 					//Codificacion del archivo para visualizarse
@@ -314,7 +317,7 @@ class DashboardController extends BaseController
 		$data['ANO'] = $year;
 
 
-		$archivoExterno = $this->_archivoExternoModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->orderBy('FOLIOARCHIVOID ', 'desc')->first();
+		$archivoExterno = $this->_archivoExternoModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->orderBy('FOLIOARCHIVOID ', 'desc')->first();
 
 		if ($archivoExterno) {
 			$data['FOLIOARCHIVOID'] = ((int) $archivoExterno->FOLIOARCHIVOID) + 1;
@@ -336,7 +339,7 @@ class DashboardController extends BaseController
 		$session = session();
 		$data = (object) array();
 		//Busqueda de folios de ese denunciante
-		$data->folios = $this->_folioModel->asObject()->join('TIPOEXPEDIENTE', 'FOLIO.TIPOEXPEDIENTEID = TIPOEXPEDIENTE.TIPOEXPEDIENTEID', 'LEFT')->join('MUNICIPIO', 'FOLIO.MUNICIPIOASIGNADOID = MUNICIPIO.MUNICIPIOID AND MUNICIPIO.ESTADOID = 2', 'LEFT')->join('EMPLEADOS', 'FOLIO.OFICINAASIGNADOID = EMPLEADOS.OFICINAID AND FOLIO.AGENTEASIGNADOID = EMPLEADOS.EMPLEADOID AND FOLIO.MUNICIPIOASIGNADOID = EMPLEADOS.MUNICIPIOID', 'LEFT')->where('DENUNCIANTEID', $session->get('DENUNCIANTEID'))->findAll();
+		$data->folios = $this->_folioModelRead->asObject()->join('TIPOEXPEDIENTE', 'FOLIO.TIPOEXPEDIENTEID = TIPOEXPEDIENTE.TIPOEXPEDIENTEID', 'LEFT')->join('MUNICIPIO', 'FOLIO.MUNICIPIOASIGNADOID = MUNICIPIO.MUNICIPIOID AND MUNICIPIO.ESTADOID = 2', 'LEFT')->join('EMPLEADOS', 'FOLIO.OFICINAASIGNADOID = EMPLEADOS.OFICINAID AND FOLIO.AGENTEASIGNADOID = EMPLEADOS.EMPLEADOID AND FOLIO.MUNICIPIOASIGNADOID = EMPLEADOS.MUNICIPIOID', 'LEFT')->where('DENUNCIANTEID', $session->get('DENUNCIANTEID'))->findAll();
 		foreach ($data->folios as $key => $folio) {
 			$folio->ESTADOENJUSTICIA = '';
 			$folio->OFICINAENJUSTICIA = '';
@@ -374,7 +377,7 @@ class DashboardController extends BaseController
 	public function create()
 	{
 		$session = session();
-		$folioDenunciante = $this->_folioModel->countFolioDenunciante(session('DENUNCIANTEID'));
+		$folioDenunciante = $this->_folioModelRead->countFolioDenunciante(session('DENUNCIANTEID'));
 		//Verifica que no tenga folios el denunciante
 		if ($folioDenunciante->folios_pendientes == 1) {
 			return redirect()->to(base_url('/denuncia/dashboard'))->with('message_error', 'Ya tienes un folio, no puedes generar una nueva denuncia.');
@@ -424,14 +427,14 @@ class DashboardController extends BaseController
 			$dataFolio['HECHOCOORDENADAY'] = $this->request->getPost('latitud');
 		}
 
-		$colonia = $this->_coloniasModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $this->request->getPost('municipio'))->where('LOCALIDADID', $this->request->getPost('localidad'))->where('COLONIAID', $this->request->getPost('colonia_select'))->first();
+		$colonia = $this->_coloniasModelRead->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $this->request->getPost('municipio'))->where('LOCALIDADID', $this->request->getPost('localidad'))->where('COLONIAID', $this->request->getPost('colonia_select'))->first();
 
 		if ($this->request->getPost('colonia_select')) {
 
 			if ((int) $this->request->getPost('colonia_select') == 0) {
 				$dataFolio['HECHOCOLONIAID'] = null;
 				$dataFolio['HECHOCOLONIADESCR'] = $this->request->getPost('colonia');
-				$localidad = $this->_localidadesModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $dataFolio['HECHOMUNICIPIOID'])->where('LOCALIDADID', $dataFolio['HECHOLOCALIDADID'])->first();
+				$localidad = $this->_localidadesModelRead->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $dataFolio['HECHOMUNICIPIOID'])->where('LOCALIDADID', $dataFolio['HECHOLOCALIDADID'])->first();
 				$dataFolio['HECHOZONA'] = $localidad->ZONA;
 			} else {
 				$dataFolio['HECHOCOLONIAID'] = (int) $this->request->getPost('colonia_select');
@@ -637,7 +640,7 @@ class DashboardController extends BaseController
 			}
 
 			//DATOS DEL DENUNCIANTE
-			$denunciante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', $session->get('DENUNCIANTEID'))->first();
+			$denunciante = $this->_denunciantesModelRead->asObject()->where('DENUNCIANTEID', $session->get('DENUNCIANTEID'))->first();
 
 			$fecha = (object) [
 				'day' => date('d', strtotime($denunciante->FECHANACIMIENTO)),
@@ -886,9 +889,9 @@ class DashboardController extends BaseController
 			// 	}
 			// }
 
-			$denunciante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', session('DENUNCIANTEID'))->first();
-			$idioma = $this->_personaIdiomaModel->asObject()->where('PERSONAIDIOMAID', $denunciante->IDIOMAID)->first();
-			$delito = $this->_delitosUsuariosModel->asObject()->where('DELITO', $this->request->getPost('delito'))->first();
+			$denunciante = $this->_denunciantesModelRead->asObject()->where('DENUNCIANTEID', session('DENUNCIANTEID'))->first();
+			$idioma = $this->_personaIdiomaModelRead->asObject()->where('PERSONAIDIOMAID', $denunciante->IDIOMAID)->first();
+			$delito = $this->_delitosUsuariosModelRead->asObject()->where('DELITO', $this->request->getPost('delito'))->first();
 			$prioridad = 1;
 
 			//Prioridad conforme al delito
@@ -970,7 +973,7 @@ class DashboardController extends BaseController
 			$data['FECHANACIMIENTO'] = null;
 		}
 
-		$personaFisica = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->orderBy('PERSONAFISICAID', 'desc')->first();
+		$personaFisica = $this->_folioPersonaFisicaModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->orderBy('PERSONAFISICAID', 'desc')->first();
 
 		if ($personaFisica) {
 			$data['PERSONAFISICAID'] = ((int) $personaFisica->PERSONAFISICAID) + 1;
@@ -1001,7 +1004,7 @@ class DashboardController extends BaseController
 		$data['FOLIOID'] = $folio;
 		$data['ANO'] = $year;
 		$data['PERSONAFISICAID'] = $personaFisicaID;
-		$colonia = $this->_coloniasModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data['MUNICIPIOID'])->where('LOCALIDADID',  $data['LOCALIDADID'])->where('COLONIAID', $data['COLONIAID'])->first();
+		$colonia = $this->_coloniasModelRead->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data['MUNICIPIOID'])->where('LOCALIDADID',  $data['LOCALIDADID'])->where('COLONIAID', $data['COLONIAID'])->first();
 
 		if ((int) $data['COLONIAID'] == 0 || $data['COLONIAID'] == null) {
 			$data['COLONIAID'] = null;
@@ -1014,7 +1017,7 @@ class DashboardController extends BaseController
 
 			if ($data['MUNICIPIOID']) {
 				try {
-					$colonia = $this->_coloniasModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data['MUNICIPIOID'])->where('LOCALIDADID',  $data['LOCALIDADID'])->where('COLONIAID', $data['COLONIAID'])->first();
+					$colonia = $this->_coloniasModelRead->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data['MUNICIPIOID'])->where('LOCALIDADID',  $data['LOCALIDADID'])->where('COLONIAID', $data['COLONIAID'])->first();
 					$colonia ? $data['LOCALIDADID'] = $colonia->LOCALIDADID : $data['LOCALIDADID'] = null;
 				} catch (\Exception $e) {
 					$data['LOCALIDADID'] = null;
@@ -1027,14 +1030,14 @@ class DashboardController extends BaseController
 		if ($data['LOCALIDADID'] != null) {
 			if ($data['MUNICIPIOID']) {
 				try {
-					$localidad = $this->_localidadesModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data['MUNICIPIOID'])->where('LOCALIDADID', $data['LOCALIDADID'])->first();
+					$localidad = $this->_localidadesModelRead->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data['MUNICIPIOID'])->where('LOCALIDADID', $data['LOCALIDADID'])->first();
 					$localidad ? $data['ZONA'] = $localidad->ZONA : null;
 				} catch (\Exception $e) {
 				}
 			}
 		}
 
-		$personaDomicilio = $this->_folioPersonaFisicaDomicilioModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $personaFisicaID)->orderBy('DOMICILIOID', 'desc')->first();
+		$personaDomicilio = $this->_folioPersonaFisicaDomicilioModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $personaFisicaID)->orderBy('DOMICILIOID', 'desc')->first();
 
 		if ($personaDomicilio) {
 			$data['DOMICILIOID'] = ((int) $personaDomicilio->DOMICILIOID) + 1;
@@ -1101,7 +1104,7 @@ class DashboardController extends BaseController
 		$data['FOLIOID'] = $folio;
 		$data['ANO'] = $year;
 
-		$vehiculo = $this->_folioVehiculoModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->orderBy('VEHICULOID', 'desc')->first();
+		$vehiculo = $this->_folioVehiculoModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->orderBy('VEHICULOID', 'desc')->first();
 
 		if ($vehiculo) {
 			$data['VEHICULOID'] = ((int) $vehiculo->VEHICULOID) + 1;
@@ -1121,7 +1124,7 @@ class DashboardController extends BaseController
 	 */
 	private function _sendEmailFolio($to, $folio, $year)
 	{
-		$user = $this->_denunciantesModel->asObject()->where('CORREO', $to)->first();
+		$user = $this->_denunciantesModelRead->asObject()->where('CORREO', $to)->first();
 
 		// $email = \Config\Services::email();
 		// $email->setTo($to);
@@ -1221,15 +1224,15 @@ class DashboardController extends BaseController
 		$denuncianteId = $this->request->getPost('id');
 		$year = $this->request->getPost('year');
 		//Info del folio
-		$folio = $this->_folioModel->asObject()->where('FOLIOID', $folioId,)->where('ANO', $year)->where('STATUS', 'ABIERTO')->where('DENUNCIANTEID', $denuncianteId)->first();
+		$folio = $this->_folioModelRead->asObject()->where('FOLIOID', $folioId,)->where('ANO', $year)->where('STATUS', 'ABIERTO')->where('DENUNCIANTEID', $denuncianteId)->first();
 
 		if ($folioId && $folio && $denuncianteId && $year) {
 
 			//Info de la denuncia
-			$preguntas = $this->_folioPreguntasModel->asObject()->where('FOLIOID', $folioId)->where('ANO', $year)->first();
-			$denunciante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', $denuncianteId)->first();
-			$idioma = $this->_personaIdiomaModel->asObject()->where('PERSONAIDIOMAID', $denunciante->IDIOMAID)->first();
-			$delito = $this->_delitosUsuariosModel->asObject()->where('DELITO', $folio->HECHODELITO)->first();
+			$preguntas = $this->_folioPreguntasModelRead->asObject()->where('FOLIOID', $folioId)->where('ANO', $year)->first();
+			$denunciante = $this->_denunciantesModelRead->asObject()->where('DENUNCIANTEID', $denuncianteId)->first();
+			$idioma = $this->_personaIdiomaModelRead->asObject()->where('PERSONAIDIOMAID', $denunciante->IDIOMAID)->first();
+			$delito = $this->_delitosUsuariosModelRead->asObject()->where('DELITO', $folio->HECHODELITO)->first();
 			$fecha = (object) [
 				'day' => date('d', strtotime($denunciante->FECHANACIMIENTO)),
 				'month' => date('m', strtotime($denunciante->FECHANACIMIENTO)),
@@ -1288,7 +1291,7 @@ class DashboardController extends BaseController
 	public function getMarcaByDist()
 	{
 		$distribuidor = trim($this->request->getPost('distribuidor_vehiculo'));
-		$marca = $this->_vehiculoMarcaModel->asObject()->where('VEHICULODISTRIBUIDORID', $distribuidor)->findAll();
+		$marca = $this->_vehiculoMarcaModelRead->asObject()->where('VEHICULODISTRIBUIDORID', $distribuidor)->findAll();
 		return json_encode((object) ['data' => $marca]);
 	}
 	/**
@@ -1300,7 +1303,7 @@ class DashboardController extends BaseController
 	{
 		$distribuidor = trim($this->request->getPost('dist'));
 		$marca = trim($this->request->getPost('marca'));
-		$modelo = $this->_vehiculoModeloModel->asObject()->where('VEHICULODISTRIBUIDORID', $distribuidor)->where('VEHICULOMARCAID', $marca)->findAll();
+		$modelo = $this->_vehiculoModeloModelRead->asObject()->where('VEHICULODISTRIBUIDORID', $distribuidor)->where('VEHICULOMARCAID', $marca)->findAll();
 		return json_encode((object) ['data' => $modelo]);
 	}
 	/**
@@ -1313,7 +1316,7 @@ class DashboardController extends BaseController
 		$distribuidor = trim($this->request->getPost('dist'));
 		$marca = trim($this->request->getPost('marca'));
 		$modelo = trim($this->request->getPost('linea_vehiculo'));
-		$version = $this->_vehiculoVersionModel->asObject()->where('VEHICULODISTRIBUIDORID', $distribuidor)->where('VEHICULOMARCAID', $marca)->where('VEHICULOMODELOID', $modelo)->findAll();
+		$version = $this->_vehiculoVersionModelRead->asObject()->where('VEHICULODISTRIBUIDORID', $distribuidor)->where('VEHICULOMARCAID', $marca)->where('VEHICULOMODELOID', $modelo)->findAll();
 		return json_encode((object) ['data' => $version]);
 	}
 
@@ -1340,7 +1343,7 @@ class DashboardController extends BaseController
 	public function profile()
 	{
 		$data = (object) array();
-		$data->user = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', session('DENUNCIANTEID'))->first();
+		$data->user = $this->_denunciantesModelRead->asObject()->where('DENUNCIANTEID', session('DENUNCIANTEID'))->first();
 		$this->_loadView('Perfil', '', '', $data, 'perfil/perfil');
 	}
 
@@ -1401,7 +1404,7 @@ class DashboardController extends BaseController
 	{
 		$function = '/expediente.php?process=getStatus';
 		$endpoint = $this->endpoint . $function;
-		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
+		$conexion = $this->_conexionesDBModelRead->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
 		$data = array();
 
 		$data['EXPEDIENTEID'] = $expedienteId;

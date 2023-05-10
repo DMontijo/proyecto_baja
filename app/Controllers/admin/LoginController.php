@@ -13,21 +13,39 @@ use App\Models\RolesUsuariosModel;
 class LoginController extends BaseController
 {
 
+	//Modelos de escritura
 	private $_usuariosModel;
 	private $_sesionesModel;
 	private $_bitacoraActividadModel;
 	private $_rolesPermisosModel;
 	private $_rolesUsuariosModel;
+	//Modelos de lectura
+	private $_sesionesModelRead;
+	private $_rolesPermisosModelReader;
+	private $_rolesUsuariosModelRead;
+	private $_usuariosModelRead;
+
+
+	private $db_read;
 
 	function __construct()
 	{
+
+		$this->db_read = ENVIRONMENT == 'production' ? db_connect('default_read') : db_connect('development_read');
+
 		$this->_usuariosModel = new UsuariosModel();
 		$this->_sesionesModel = new SesionesModel();
 		$this->_bitacoraActividadModel = new BitacoraActividadModel();
-		$this->_rolesPermisosModel = new rolesPermisosModel();
+		$this->_rolesPermisosModel = new RolesPermisosModel();
 		$this->_rolesUsuariosModel = new RolesUsuariosModel();
+
+		$this->_sesionesModelRead = model('SesionesModel', true, $this->db_read);
+		$this->_rolesPermisosModelReader = model('RolesPermisosModel', true, $this->db_read);
+		$this->_rolesUsuariosModelRead = model('RolesUsuariosModel', true, $this->db_read);
+		$this->_usuariosModelRead = model('UsuariosModel', true, $this->db_read);
+
 	}
-	
+
 	/**
 	 * Vista de Login-Admin
 	 * Autentica que no tenga sesion iniciada, y si tiene sesion lo redirige al dashboard
@@ -41,7 +59,7 @@ class LoginController extends BaseController
 			$this->_loadView('Login', [], 'index');
 		}
 	}
-	
+
 	/**
 	 * Función para autenticar el ingreso a la plataforma desde el admin
 	 * Recibe por metodo POST el correo y contraseña
@@ -55,19 +73,19 @@ class LoginController extends BaseController
 		$email = trim($email);
 		$password = trim($password);
 		// Encuentra un usuario con ese correo
-		$data = $this->_usuariosModel->where('CORREO', $email)->first();
+		$data = $this->_usuariosModelRead->where('CORREO', $email)->first();
 
 		if ($data) {
 			// Verifica que no tenga sesiones activas
-			$control_session = $this->_sesionesModel->asObject()->where('ID_USUARIO', $data['ID'])->where('ACTIVO', 1)->first();
+			$control_session = $this->_sesionesModelRead->asObject()->where('ID_USUARIO', $data['ID'])->where('ACTIVO', 1)->first();
 			if ($control_session) {
 				return redirect()->to(base_url('/admin'))->with('message_session', 'Ya tienes sesiones activas, cierralas para continuar.')->with('id',  $data['ID']);
 			}
 			// Valida la contraseña ingresada con la de su usuario
 			if (validatePassword($password, $data['PASSWORD'])) {
-				$data['permisos'] = $this->_rolesPermisosModel->select('PERMISOS.PERMISODESCR AS NOMBRE')->where('ROLID', $data['ROLID'])->join('PERMISOS', 'PERMISOS.PERMISOID = ROLESPERMISOS.PERMISOID', 'left')->findAll();
+				$data['permisos'] = $this->_rolesPermisosModelReader->select('PERMISOS.PERMISODESCR AS NOMBRE')->where('ROLID', $data['ROLID'])->join('PERMISOS', 'PERMISOS.PERMISOID = ROLESPERMISOS.PERMISOID', 'left')->findAll();
 				$data['permisos'] = array_column($data['permisos'], ('NOMBRE'));
-				$data['rol'] = $this->_rolesUsuariosModel->asObject()->where('ID', $data['ROLID'])->first();
+				$data['rol'] = $this->_rolesUsuariosModelRead->asObject()->where('ID', $data['ROLID'])->first();
 				$data['logged_in'] = TRUE;
 				$data['type'] = 'admin';
 				$data['uuid'] = uniqid();
@@ -101,7 +119,7 @@ class LoginController extends BaseController
 			return redirect()->back();
 		}
 	}
-	
+
 	/**
 	 * Función para cerrar sesión desde el admin
 	 *
@@ -115,7 +133,7 @@ class LoginController extends BaseController
 		];
 
 		// Verifica que tenga sesiones activas
-		$session_user =  $this->_sesionesModel->where('ID_USUARIO', $session->get('ID'))->where('ID', session('uuid'))->where('ACTIVO', 1)->orderBy('FECHAINICIO', 'DESC')->first();
+		$session_user =  $this->_sesionesModelRead->where('ID_USUARIO', $session->get('ID'))->where('ID', session('uuid'))->where('ACTIVO', 1)->orderBy('FECHAINICIO', 'DESC')->first();
 
 		if ($session_user) {
 			// Las cierra
@@ -139,7 +157,7 @@ class LoginController extends BaseController
 		}
 	}
 
-	
+
 	/**
 	 * Función para cerrar todas las sesiones activas del usuario al momento de querer ingresar a la plataforma
 	 * Recibe por metodo POST el id del usuario
@@ -159,7 +177,7 @@ class LoginController extends BaseController
 			return json_encode(['status' => 1]);
 		}
 	}
-	
+
 	/**
 	 * Función para verifica si el usuario ha iniciado sesión y es un administrador. 
 	 *
@@ -170,7 +188,7 @@ class LoginController extends BaseController
 			return true;
 		};
 	}
-	
+
 	/**
 	 * Función para cargar cualquier vista en cualquier función.
 	 *
@@ -188,7 +206,7 @@ class LoginController extends BaseController
 
 		echo view("admin/login/$view", $data);
 	}
-	
+
 	/**
 	 * Función para devolver la dirección IP del cliente que está haciendo la petición HTTP
 	 *
@@ -220,7 +238,7 @@ class LoginController extends BaseController
 		endif;
 		return $ipaddress;
 	}
-	
+
 	/**
 	 * Función para devolver la ip publica del cliente que está haciendo la petición HTTP
 	 *
@@ -235,7 +253,7 @@ class LoginController extends BaseController
 			$externalIp = '127.0.0.1';
 		}
 		return $externalIp;
-	}	
+	}
 	/**
 	 * Función para agregar información a la bitacora diaria.
 	 *

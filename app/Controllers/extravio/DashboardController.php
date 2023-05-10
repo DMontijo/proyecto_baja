@@ -3,77 +3,43 @@
 namespace App\Controllers\extravio;
 
 use App\Controllers\BaseController;
-use App\Models\ColoniasModel;
 use App\Models\ConstanciaExtravioConsecutivoModel;
 use App\Models\ConstanciaExtravioModel;
-use App\Models\DelitosUsuariosModel;
-use App\Models\DenunciantesModel;
-use App\Models\DocumentosExtravioTipoModel;
-use App\Models\EstadosModel;
-use App\Models\FolioModel;
-use App\Models\FolioPersonaFisicaDomicilioModel;
-use App\Models\FolioPersonaFisicaModel;
-use App\Models\FolioPreguntasModel;
-use App\Models\FolioVehiculoModel;
-use App\Models\HechoLugarModel;
-use App\Models\LocalidadesModel;
-use App\Models\MunicipiosModel;
-use App\Models\PaisesModel;
-use App\Models\PersonaIdiomaModel;
-use App\Models\PlantillasModel;
-use App\Models\UsuariosModel;
-use App\Models\VehiculoColorModel;
-use App\Models\VehiculoTipoModel;
 
 class DashboardController extends BaseController
 {
 
-	private $_paisesModel;
-	private $_estadosModel;
-	private $_municipiosModel;
-	private $_localidadesModel;
-	private $_coloniasModel;
-	private $_hechoLugarModel;
-	private $_coloresVehiculoModel;
-	private $_tipoVehiculoModel;
-	private $_delitosUsuariosModel;
-	private $_denunciantesModel;
-	private $_personaIdiomaModel;
-	private $_documentosExtravioTipoModel;
-	private $_folioModel;
-	private $_folioPreguntasModel;
-	private $_folioPersonaFisicaModel;
-	private $_folioPersonaFisicaDomicilioModel;
-	private $_folioVehiculoModel;
+	private $db_read;
+
 	private $_constanciaExtravioModel;
-	private $_plantillasModel;
-	private $_usuariosModel;
+	private $_estadosModelRead;
+	private $_municipiosModelRead;
+	private $_hechoLugarModelRead;
+	private $_denunciantesModelRead;
+	private $_documentosExtravioTipoModelRead;
+	private $_constanciaExtravioModelRead;
+	private $_constanciaExtravioConsecutivoModelRead;
 	private $_constanciaExtravioConsecutivoModel;
+
+
 
 	public function __construct()
 	{
+		$this->db_read = ENVIRONMENT == 'production' ? db_connect('default_read') : db_connect('development_read');
+
 		//Models
-		$this->_paisesModel = new PaisesModel();
-		$this->_estadosModel = new EstadosModel();
-		$this->_municipiosModel = new MunicipiosModel();
-		$this->_localidadesModel = new LocalidadesModel();
-		$this->_coloniasModel = new ColoniasModel();
-		$this->_hechoLugarModel = new HechoLugarModel();
-		$this->_coloresVehiculoModel = new VehiculoColorModel();
-		$this->_tipoVehiculoModel = new VehiculoTipoModel();
-		$this->_delitosUsuariosModel = new DelitosUsuariosModel();
-		$this->_denunciantesModel = new DenunciantesModel();
-		$this->_personaIdiomaModel = new PersonaIdiomaModel();
-		$this->_documentosExtravioTipoModel = new DocumentosExtravioTipoModel();
-		$this->_folioModel = new FolioModel();
-		$this->_folioPreguntasModel = new FolioPreguntasModel();
-		$this->_folioPersonaFisicaModel = new FolioPersonaFisicaModel();
-		$this->_folioPersonaFisicaDomicilioModel = new FolioPersonaFisicaDomicilioModel();
-		$this->_folioVehiculoModel = new FolioVehiculoModel();
+
 		$this->_constanciaExtravioModel = new ConstanciaExtravioModel();
-		$this->_plantillasModel = new PlantillasModel();
-		$this->_usuariosModel = new UsuariosModel();
 		$this->_constanciaExtravioConsecutivoModel = new ConstanciaExtravioConsecutivoModel();
+
+
+		$this->_hechoLugarModelRead = model('HechoLugarModel', true, $this->db_read);
+		$this->_estadosModelRead = model('EstadosModel', true, $this->db_read);
+		$this->_municipiosModelRead = model('MunicipiosModel', true, $this->db_read);
+		$this->_denunciantesModelRead = model('DenunciantesModel', true, $this->db_read);
+		$this->_documentosExtravioTipoModelRead = model('DocumentosExtravioTipoModel', true, $this->db_read);
+		$this->_constanciaExtravioModelRead = model('ConstanciaExtravioModel', true, $this->db_read);
+		$this->_constanciaExtravioConsecutivoModelRead = model('ConstanciaExtravioConsecutivoModel', true, $this->db_read);
 	}
 
 	/**
@@ -84,11 +50,11 @@ class DashboardController extends BaseController
 	public function index()
 	{
 		$data = (object) array();
-		$data->estados = $this->_estadosModel->asObject()->findAll();
-		$data->municipios = $this->_municipiosModel->asObject()->where('ESTADOID', '2')->findAll();
-		$data->lugares = $this->_hechoLugarModel->asObject()->orderBy('HECHODESCR', 'asc')->findAll();
-		$data->identificacion = $this->_documentosExtravioTipoModel->asObject()->orderBy('DOCUMENTOEXTRAVIOTIPODESCR', 'asc')->where('VISIBLE', '1')->findAll();
-		$data->denunciante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', session('DENUNCIANTEID'))->first();
+		$data->estados = $this->_estadosModelRead->asObject()->findAll();
+		$data->municipios = $this->_municipiosModelRead->asObject()->where('ESTADOID', '2')->findAll();
+		$data->lugares = $this->_hechoLugarModelRead->asObject()->orderBy('HECHODESCR', 'asc')->findAll();
+		$data->identificacion = $this->_documentosExtravioTipoModelRead->asObject()->orderBy('DOCUMENTOEXTRAVIOTIPODESCR', 'asc')->where('VISIBLE', '1')->findAll();
+		$data->denunciante = $this->_denunciantesModelRead->asObject()->where('DENUNCIANTEID', session('DENUNCIANTEID'))->first();
 		$this->_loadView('Generar constancias', $data, 'index');
 	}
 
@@ -138,8 +104,8 @@ class DashboardController extends BaseController
 
 		//Validacion cuando existen constancias del mismo tipo
 		if (isset($data['EXTRAVIO']) && $data['EXTRAVIO'] == 'DOCUMENTOS' || $data['EXTRAVIO'] == 'BOLETOS DE SORTEO') {
-			$constancias_abiertas = $this->_constanciaExtravioModel->asObject()->where('DENUNCIANTEID', session('DENUNCIANTEID'))->where('TIPODOCUMENTO', $data['TIPODOCUMENTO'])->where('STATUS', 'ABIERTO')->findAll();
-			$constancias_proceso = $this->_constanciaExtravioModel->asObject()->where('DENUNCIANTEID', session('DENUNCIANTEID'))->where('TIPODOCUMENTO', $data['TIPODOCUMENTO'])->where('STATUS', 'EN PROCESO')->findAll();
+			$constancias_abiertas = $this->_constanciaExtravioModelRead->asObject()->select('CONSTANCIAEXTRAVIOID,ANO,EXTRAVIO,TIPODOCUMENTO,STATUS,DUENONOMBREDOC,DUENOAPELLIDOPDOC,DUENOAPELLIDOMDOC,DUENOFECHANACIMIENTODOC')->where('DENUNCIANTEID', session('DENUNCIANTEID'))->where('TIPODOCUMENTO', $data['TIPODOCUMENTO'])->where('STATUS', 'ABIERTO')->findAll();
+			$constancias_proceso = $this->_constanciaExtravioModelRead->asObject()->select('CONSTANCIAEXTRAVIOID,ANO,EXTRAVIO,TIPODOCUMENTO,STATUS,DUENONOMBREDOC,DUENOAPELLIDOPDOC,DUENOAPELLIDOMDOC,DUENOFECHANACIMIENTODOC')->where('DENUNCIANTEID', session('DENUNCIANTEID'))->where('TIPODOCUMENTO', $data['TIPODOCUMENTO'])->where('STATUS', 'EN PROCESO')->findAll();
 			$constancias = (object) array_merge($constancias_abiertas, $constancias_proceso);
 			if (isset($constancias) && $constancias) {
 				foreach ($constancias as $key => $constancia) {
@@ -168,7 +134,7 @@ class DashboardController extends BaseController
 	public function constancias()
 	{
 		$data = (object) array();
-		$data->constancias = $this->_constanciaExtravioModel->asObject()->where('DENUNCIANTEID', session('DENUNCIANTEID'))->orderBy('ANO', 'desc')->orderBy('CONSTANCIAEXTRAVIOID', 'desc')->findAll();
+		$data->constancias = $this->_constanciaExtravioModelRead->asObject()->select('CONSTANCIAEXTRAVIOID,ANO,EXTRAVIO,TIPODOCUMENTO,STATUS')->where('DENUNCIANTEID', session('DENUNCIANTEID'))->orderBy('ANO', 'desc')->orderBy('CONSTANCIAEXTRAVIOID', 'desc')->findAll();
 		$this->_loadView('Mis constancias de extravío', $data, 'lista_constancias');
 	}
 
@@ -181,9 +147,9 @@ class DashboardController extends BaseController
 		$year = date('Y');
 		$folio = $this->request->getGet('folio');
 		$year = $this->request->getGet('year');
-		$constancia = $this->_constanciaExtravioModel->asObject()->where('CONSTANCIAEXTRAVIOID', base64_decode($folio))->where('ANO', $year)->first();
+		$constancia = $this->_constanciaExtravioModelRead->asObject()->where('CONSTANCIAEXTRAVIOID', base64_decode($folio))->where('ANO', $year)->first();
 		if ($constancia) {
-			$solicitante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', $constancia->DENUNCIANTEID)->first();
+			$solicitante = $this->_denunciantesModelRead->asObject()->where('DENUNCIANTEID', $constancia->DENUNCIANTEID)->first();
 			$constancia->NOMBRESOLICITANTE = $solicitante->NOMBRE . ' ' . $solicitante->APELLIDO_PATERNO . ' ' . $solicitante->APELLIDO_MATERNO;
 		}
 		$data2 = [
@@ -219,7 +185,7 @@ class DashboardController extends BaseController
 		$folio = $this->request->getPost('folio');
 		$year = $this->request->getPost('year');
 
-		$constancia = $this->_constanciaExtravioModel->asObject()->where('CONSTANCIAEXTRAVIOID', $folio)->where('ANO', $year)->first();
+		$constancia = $this->_constanciaExtravioModelRead->asObject()->where('CONSTANCIAEXTRAVIOID', $folio)->where('ANO', $year)->first();
 		$filename = urlencode("Constancia_" . $folio . '_' . $year . '.pdf');
 		header("Content-type: application/pdf");
 		header("Content-Disposition: attachment; filename=\"$filename\"");
@@ -246,7 +212,7 @@ class DashboardController extends BaseController
 		$folio = $this->request->getPost('folio');
 		$year = $this->request->getPost('year');
 
-		$constancia = $this->_constanciaExtravioModel->asObject()->where('CONSTANCIAEXTRAVIOID', $folio)->where('ANO', $year)->first();
+		$constancia = $this->_constanciaExtravioModelRead->asObject()->where('CONSTANCIAEXTRAVIOID', $folio)->where('ANO', $year)->first();
 		$filename = urlencode("Constancia_" . $folio . '_' . $year . '.xml');
 		header("Content-type: application/xml");
 		header("Content-Disposition: attachment; filename=\"$filename\"");

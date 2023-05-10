@@ -4,17 +4,8 @@ namespace App\Controllers\extravio;
 
 use App\Controllers\BaseController;
 
-use App\Models\PersonaNacionalidadModel;
-use App\Models\PersonaEstadoCivilModel;
-use App\Models\PersonaIdiomaModel;
 use App\Models\EstadosModel;
 use App\Models\MunicipiosModel;
-use App\Models\LocalidadesModel;
-use App\Models\ColoniasModel;
-use App\Models\PersonaTipoIdentificacionModel;
-use App\Models\PaisesModel;
-use App\Models\HechoClasificacionLugarModel;
-use App\Models\FolioModel;
 use App\Models\DenunciantesModel;
 use App\Models\ConstanciaExtravioModel;
 use App\Models\UsuariosModel;
@@ -30,43 +21,37 @@ use MailerSend\Helpers\Builder\EmailParams;
 
 class ExtravioController extends BaseController
 {
+	private $db_read;
 
 	private $_denunciantesModel;
-	private $_nacionalidadModel;
-	private $_estadosCivilesModel;
-	private $_personaIdiomaModel;
-	private $_estadosModel;
-	private $_municipiosModel;
-	private $_localidadesModel;
-	private $_coloniasModel;
-	private $_tipoIdentificacionModel;
-	private $_paisesModel;
-	private $_clasificacionLugarModel;
-	private $_folioModel;
-	private $_constanciaExtravioModel;
-	private $_usuariosModel;
-	private $_hechoLugarModel;
 	private $db;
 	private $_sesionesDenunciantesModel;
+	private $_sesionesDenunciantesModelRead;
+	private $_denunciantesModelRead;
+	private $_constanciaExtravioModelRead;
+	private $_estadosModelRead;
+	private $_municipiosModelRead;
+	private $_hechoLugarModelRead;
+	private $_usuariosModelRead;
+
+
+
+
 
 	function __construct()
 	{
+		$this->db_read = ENVIRONMENT == 'production' ? db_connect('default_read') : db_connect('development_read');
+
 		$this->_denunciantesModel = new DenunciantesModel();
-		$this->_nacionalidadModel = new PersonaNacionalidadModel();
-		$this->_estadosCivilesModel = new PersonaEstadoCivilModel();
-		$this->_personaIdiomaModel = new PersonaIdiomaModel();
-		$this->_estadosModel = new EstadosModel();
-		$this->_municipiosModel = new MunicipiosModel();
-		$this->_localidadesModel = new LocalidadesModel();
-		$this->_coloniasModel = new ColoniasModel();
-		$this->_tipoIdentificacionModel = new PersonaTipoIdentificacionModel();
-		$this->_paisesModel = new PaisesModel();
-		$this->_clasificacionLugarModel = new HechoClasificacionLugarModel();
-		$this->_folioModel = new FolioModel();
-		$this->_constanciaExtravioModel = new ConstanciaExtravioModel();
-		$this->_usuariosModel = new UsuariosModel();
-		$this->_hechoLugarModel = new HechoLugarModel();
+
 		$this->_sesionesDenunciantesModel = new SesionesDenunciantesModel();
+		$this->_sesionesDenunciantesModelRead = model('SesionesDenunciantesModel', true, $this->db_read);
+		$this->_denunciantesModelRead = model('DenunciantesModel', true, $this->db_read);
+		$this->_constanciaExtravioModelRead = model('ConstanciaExtravioModel', true, $this->db_read);
+		$this->_usuariosModelRead = model('UsuariosModel', true, $this->db_read);
+		$this->_hechoLugarModelRead = model('HechoLugarModel', true, $this->db_read);
+		$this->_estadosModelRead = model('EstadosModel', true, $this->db_read);
+		$this->_municipiosModelRead = model('MunicipiosModel', true, $this->db_read);
 
 		$this->db = \Config\Database::connect();
 	}
@@ -105,11 +90,11 @@ class ExtravioController extends BaseController
 		$password = $this->request->getPost('password');
 		$email = trim($email);
 		$password = trim($password);
-		$data = $this->_denunciantesModel->where('CORREO', $email)->first();
+		$data = $this->_denunciantesModelRead->where('CORREO', $email)->first();
 		if ($data) {
 			// Verifica que no tenga sesiones activas
 
-			$control_session = $this->_sesionesDenunciantesModel->asObject()->where('ID_DENUNCIANTE', $data['DENUNCIANTEID'])->where('ACTIVO', 1)->first();
+			$control_session = $this->_sesionesDenunciantesModelRead->asObject()->where('ID_DENUNCIANTE', $data['DENUNCIANTEID'])->where('ACTIVO', 1)->first();
 			if ($control_session) {
 				return redirect()->to(base_url('/denuncia'))->with('message_session', 'Ya tienes sesiones activas, cierralas para continuar.')->with('id',  $data['DENUNCIANTEID']);
 			}
@@ -208,7 +193,7 @@ class ExtravioController extends BaseController
 	public function profile()
 	{
 		$data = (object) array();
-		$data->user = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', session('DENUNCIANTEID'))->first();
+		$data->user = $this->_denunciantesModelRead->asObject()->where('DENUNCIANTEID', session('DENUNCIANTEID'))->first();
 		$this->_loadView('Perfil', $data, 'perfil');
 	}
 	/**
@@ -279,7 +264,7 @@ class ExtravioController extends BaseController
 	public function existEmail()
 	{
 		$email = $this->request->getPost('email');
-		$data = $this->_denunciantesModel->where('CORREO', $email)->first();
+		$data = $this->_denunciantesModelRead->where('CORREO', $email)->first();
 		if ($data == NULL) {
 			return json_encode((object)['exist' => 0]);
 		} else if (count($data) > 0) {
@@ -297,7 +282,7 @@ class ExtravioController extends BaseController
 	private function _sendEmailPassword($to, $password)
 	{
 		// $email = \Config\Services::email();
-		$user = $this->_denunciantesModel->asObject()->where('CORREO', $to)->first();
+		$user = $this->_denunciantesModelRead->asObject()->where('CORREO', $to)->first();
 		// $email->setTo($to);
 		// $email->setSubject('Te estamos atendiendo');
 		$body = view('email_template/password_email_constancia.php', ['email' => $to, 'password' => $password]);
@@ -348,7 +333,7 @@ class ExtravioController extends BaseController
 	{
 		$password = $this->_generatePassword(6);
 		$to = $this->request->getPost('correo_reset_password');
-		$user = $this->_denunciantesModel->asObject()->where('CORREO', $to)->first();
+		$user = $this->_denunciantesModelRead->asObject()->where('CORREO', $to)->first();
 		$this->_denunciantesModel->set('PASSWORD', hashPassword($password))->where('DENUNCIANTEID', $user->DENUNCIANTEID)->update();
 
 		// $email = \Config\Services::email();
@@ -420,13 +405,13 @@ class ExtravioController extends BaseController
 		$dompdf = new Dompdf($options);
 		$data = $this->db->table("PLANTILLAS")->get()->getResult();
 		$numfolio = $_POST['input_folio_atencion_pdf'];
-		$constancias = $this->_constanciaExtravioModel->asObject()->where('CONSTANCIAEXTRAVIOID', base64_decode($numfolio))->first();
+		$constancias = $this->_constanciaExtravioModelRead->asObject()->where('CONSTANCIAEXTRAVIOID', base64_decode($numfolio))->first();
 
-		$agente = $this->_usuariosModel->asObject()->where('ID', $constancias->AGENTEID)->first();
-		$denunciante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', $constancias->DENUNCIANTEID)->first();
-		$lugar = $this->_hechoLugarModel->asObject()->where('HECHOLUGARID', $constancias->HECHOLUGARID)->first();
-		$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $constancias->MUNICIPIOID)->where('ESTADOID', $constancias->ESTADOID)->first();
-		$estado = $this->_estadosModel->asObject()->where('ESTADOID', $constancias->ESTADOID)->first();
+		$agente = $this->_usuariosModelRead->asObject()->where('ID', $constancias->AGENTEID)->first();
+		$denunciante = $this->_denunciantesModelRead->asObject()->where('DENUNCIANTEID', $constancias->DENUNCIANTEID)->first();
+		$lugar = $this->_hechoLugarModelRead->asObject()->where('HECHOLUGARID', $constancias->HECHOLUGARID)->first();
+		$municipio = $this->_municipiosModelRead->asObject()->where('MUNICIPIOID', $constancias->MUNICIPIOID)->where('ESTADOID', $constancias->ESTADOID)->first();
+		$estado = $this->_estadosModelRead->asObject()->where('ESTADOID', $constancias->ESTADOID)->first();
 		$timestamp = strtotime($constancias->HECHOFECHA);
 		$dia = date('d', $timestamp);
 		$meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
@@ -539,7 +524,7 @@ class ExtravioController extends BaseController
 	{
 		$email = $this->request->getPost('email');
 
-		$data = $this->_denunciantesModel->where('CORREO', $email)->first();
+		$data = $this->_denunciantesModelRead->where('CORREO', $email)->first();
 		if ($data == NULL) {
 			return json_encode((object)['exist' => 0]);
 		} else if (count($data) > 0) {
