@@ -178,6 +178,7 @@ disponible_connect.addEventListener("click", () => {
 			disponible_connect.hidden = false;
 			no_disponible_connect.hidden = true;
 			clearVideoCall();
+			aceptar_llamada.disabled = false;
 			Swal.fire({
 				icon: "error",
 				text: response.message,
@@ -363,7 +364,7 @@ enviar_marca.addEventListener("click", () => {
 	if (selectMarks.value == "" || coment_marks.value == "") {
 		Swal.fire({
 			icon: "error",
-			text: "Por favor, completa todos los campos .",
+			text: "Por favor, completa todos los campos.",
 			showConfirmButton: true,
 			confirmButtonColor: "#bf9b55"
 		});

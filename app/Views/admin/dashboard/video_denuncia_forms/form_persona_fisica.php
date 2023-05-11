@@ -2,7 +2,7 @@
     class="row p-0 m-0 needs-validation" novalidate>
     <input type="hidden" class="form-control" id="pf_id" name="pf_id">
     <div id="contenedor_fisica_foto" class="col-12 mb-5 d-none">
-        <a id="fisica_foto_download" dowload="" href="">
+        <a id="fisica_foto_download" download="" href="">
             <img id="fisica_foto" class="img-fluid" src="" style="max-width:300px;">
             <br>
             <input class="form-control" type="file" id="subirFotoPersona" name="subirFotoPersona"

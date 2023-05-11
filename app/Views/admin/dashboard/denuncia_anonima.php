@@ -2754,12 +2754,13 @@
 	function llenarTablaVehiculos(vehiculos) {
 		for (let i = 0; i < vehiculos.length; i++) {
 			var btnVehiculo = `<button type='button' class='btn btn-primary' onclick='viewVehiculo(${vehiculos[i].VEHICULOID})'><i class='fas fa-eye'></i></button>`;
-
+			var btnEliminarVehiculo =
+				`<button type='button' class='btn btn-primary' onclick='deleteVehiculo(${vehiculos[i].VEHICULOID})'><i class='fas fa-trash'></i></button>`;
 			var fila3 =
 				`<tr id="row${i}">` +
 				`<td class="text-center">${vehiculos[i].PLACAS?vehiculos[i].PLACAS:'DESCONOCIDO'}</td>` +
 				`<td class="text-center">${vehiculos[i].NUMEROSERIE?vehiculos[i].NUMEROSERIE:'DESCONOCIDO'}</td>` +
-				`<td class="text-center">${btnVehiculo}</td>` +
+				`<td class="text-center">${btnVehiculo} ${btnEliminarVehiculo}</td>` +
 				`</tr>`;
 
 			$('#table-vehiculos tr:first').after(fila3);
@@ -2894,7 +2895,35 @@
 			}
 		});
 	}
-
+	function deleteVehiculo(vehiculoid) {
+		$.ajax({
+			data: {
+				'vehiculoid': vehiculoid,
+				'folio': inputFolio.value,
+				'year': year_select.value,
+			},
+			url: "<?= base_url('/data/delete-vehiculo-by-id') ?>",
+			method: "POST",
+			dataType: "json",
+			success: function(response) {
+				if (response.status == 1) {
+					const vehiculos = response.vehiculos;
+					Swal.fire({
+						icon: 'success',
+						text: 'Vehículo eliminado correctamente',
+						confirmButtonColor: '#bf9b55',
+					});
+					let tabla_vehiculo = document.querySelectorAll('#table-vehiculos tr');
+					tabla_vehiculo.forEach(row => {
+						if (row.id !== '') {
+							row.remove();
+						}
+					});
+					llenarTablaVehiculos(vehiculos);
+				}
+			}
+		});
+	}
 	function actualizarVehiculo() {
 		var packetData = new FormData();
 

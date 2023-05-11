@@ -151,9 +151,7 @@ export class VideoServiceGuest {
 			if (typeof ondisconnect === "function") ondisconnect(data);
 		});
 
-		const previusSession = JSON.parse(
-			localStorage.getItem(SESSION_RECOVER_KEY)
-		);
+		const previusSession = JSON.parse(localStorage.getItem(SESSION_RECOVER_KEY));
 
 		this.#emit(
 			"connect-guest",
@@ -169,9 +167,7 @@ export class VideoServiceGuest {
 			},
 			response => {
 				this.#preventUserCloseWindow();
-				try {
-					this.#loggedInSound.play();
-				} catch (error) { }
+				// this.#loggedInSound.play();
 				const { guestConnection, guest } = response;
 				this.#guestConnectionId = guestConnection.id;
 				this.guestData = guest;
@@ -208,7 +204,7 @@ export class VideoServiceGuest {
 				this.#socket.disconnect();
 				this.#loggedOutSound.play();
 			} catch (e) {
-				console.warn(e);
+				console.warn('OnDisconnect => ', e);
 			}
 
 			if (typeof callback === "function") callback(resp);
@@ -225,17 +221,11 @@ export class VideoServiceGuest {
 		this.#socket.on("video-ready", response => {
 			console.log(response);
 
-			localStorage.setItem(
-				SESSION_RECOVER_KEY,
-				JSON.stringify({
-					sessionId: response.sessionId,
-					createdAt: new Date()
-				})
-			);
+			localStorage.setItem(SESSION_RECOVER_KEY, JSON.stringify({ sessionId: response.sessionId, createdAt: new Date() }));
 
 			this.agentData = response.agent;
-			if (typeof callback === "function")
-				callback(response, this.guestData);
+
+			if (typeof callback === "function") callback(response, this.guestData);
 
 			this.#videoCallService = new VideoCall({ remoteVideoSelector,
 				audioSource: this.audioStream,

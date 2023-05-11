@@ -31,7 +31,15 @@ $routes->setAutoRoute(true);
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
+
+/**
+ * En caso de requerir pasar el sitio a mantenimiento comentar la linea 36 y descomentar la 37 y
+ * comentar todas las rutas del client tanto del constancia de extravío y solo descomentar la que redirije a
+ * HomeController::maintenance
+ */
+
 $routes->get('/', 'HomeController::index');
+// $routes->get('/', 'HomeController::maintenance');
 $routes->get('derivaciones', 'DerivacionesController::index');
 $routes->get('canalizaciones', 'DerivacionesController::canalizaciones');
 $routes->get('salas_virtuales', 'DerivacionesController::salas_virtuales');
@@ -71,6 +79,7 @@ $routes->group('admin', function ($routes) {
 
 		$routes->get('generarqr', 'admin/FirmaController::generarqr');
 		$routes->get('usuarios_activos', 'admin/DashboardController::usuarios_activos');
+		$routes->get('usuarios_en_llamada', 'admin/DashboardController::usuarios_en_llamada');
 		$routes->get('lista_prioridad', 'admin/DashboardController::lista_prioridad');
 
 		$routes->get('firmas', 'admin/DashboardController::firmas');
@@ -80,7 +89,6 @@ $routes->group('admin', function ($routes) {
 		$routes->get('editar_usuario', 'admin/DashboardController::editar_usuario');
 		$routes->post('editar_usuario', 'admin/DashboardController::update_usuario');
 		$routes->post('editar_password', 'admin/DashboardController::editar_password');
-
 
 		$routes->get('video-denuncia', 'admin/DashboardController::video_denuncia');
 		$routes->get('denuncia-anonima', 'admin/DashboardController::denuncia_anonima');
@@ -136,6 +144,10 @@ $routes->group('admin', function ($routes) {
 		$routes->post('registro_conavim', 'admin/ReportesController::postRegistroConavim');
 		$routes->get('registro_candev', 'admin/ReportesController::getRegistroCanDev');
 		$routes->post('registro_candev', 'admin/ReportesController::postRegistroCanDev');
+		$routes->get('registro_atenciones', 'admin/ReportesController::getRegistroAtenciones');
+		$routes->post('registro_atenciones', 'admin/ReportesController::postRegistroAtenciones');
+		$routes->get('registro_ceeiav', 'admin/ReportesController::getComisionEstatal');
+		$routes->post('registro_ceeiav', 'admin/ReportesController::postComisionEstatal');
 
 		$routes->post('generar_excel_folios', 'admin/ReportesController::createFoliosXlsx');
 		$routes->post('generar_excel_constancias', 'admin/ReportesController::createConstanciasXlsx');
@@ -143,6 +155,8 @@ $routes->group('admin', function ($routes) {
 		$routes->post('generar_excel_llamadas', 'admin/ReportesController::createLlamadasXlsx');
 		$routes->post('generar_excel_conavim', 'admin/ReportesController::createOrdenXlsx');
 		$routes->post('generar_excel_canadev', 'admin/ReportesController::createCanaDevXlsx');
+		$routes->post('generar_excel_registro_atenciones', 'admin/ReportesController::createRegistroAtencionesXlsx');
+		$routes->post('generar_excel_ceeaiv', 'admin/ReportesController::createComisionEstatalXlsx');
 
 		$routes->get('documentos', 'admin/DocumentosController::index');
 		$routes->post('documentos', 'admin/DocumentosController::postDocumentos');
@@ -166,6 +180,7 @@ $routes->group('admin', function ($routes) {
  * */
 
 $routes->group('denuncia', function ($routes) {
+	// $routes->get('/', 'HomeController::maintenance');
 	$routes->get('/', 'client/AuthController::index');
 	$routes->post('login_auth', 'client/AuthController::login_auth');
 	$routes->get('logout', 'client/AuthController::logout');
@@ -278,6 +293,8 @@ $routes->group('data', function ($routes) {
 	$routes->post('update-media-filiacion-by-id', 'admin/DashboardController::updateMediaFiliacionById');
 	$routes->post('update-vehiculo-by-id', 'admin/DashboardController::updateVehiculoByFolio');
 	$routes->post('create-vehiculo-by-id', 'admin/DashboardController::createVehiculoByFolio');
+	$routes->post('delete-vehiculo-by-id', 'admin/DashboardController::deleteVehiculoByFolio');
+	$routes->post('delete-archivo-by-id', 'admin/DashboardController::deleteArchivoById');
 
 	$routes->post('delete-parentesco-by-id', 'admin/DashboardController::deleteParentescoById');
 	$routes->post('delete-persona-fisica-by-id', 'admin/DashboardController::deletePersonaFisicaById');
@@ -313,6 +330,8 @@ $routes->group('data', function ($routes) {
 	//Archivos externos
 
 	$routes->post('create_archivos', 'client/DashboardController::crear_archivos_externos');
+	$routes->post('create_archivos_admin', 'admin/DashboardController::crear_archivos_externos');
+
 	$routes->post('refresh_archivos', 'admin/DashboardController::refreshArchivosExternos');
 
 	//delitos 
@@ -329,8 +348,9 @@ $routes->group('data', function ($routes) {
 
 	//Encargados
 	$routes->post('update-encargado', 'admin/DocumentosController::actualizarDocumentoEncargado');
-	$routes->post('email-alerts', 'admin/FirmaController::sendEmailAlertas');
+	$routes->post('update-agente-asignado', 'admin/DocumentosController::actualizarDocumentoAgenteAsignado');
 
+	$routes->post('email-alerts', 'admin/FirmaController::sendEmailAlertas');
 
 });
 
@@ -341,6 +361,7 @@ $routes->group('data', function ($routes) {
  * Extravio Routes
  */
 $routes->group('constancia_extravio', function ($routes) {
+	// $routes->get('/', 'HomeController::maintenance');
 	$routes->get('/', 'extravio/ExtravioController::index');
 	$routes->get('login', 'extravio/ExtravioController::login');
 	$routes->post('login_auth', 'extravio/ExtravioController::login_auth');

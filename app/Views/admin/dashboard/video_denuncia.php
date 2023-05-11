@@ -6,6 +6,10 @@
 <?php $session = session(); ?>
 <div class="row" id="videoDen">
 	<style>
+		textarea {
+			text-transform: uppercase !important;
+		}
+
 		#video_container {
 			width: 100%;
 			min-height: 70vh;
@@ -492,7 +496,7 @@
 		<div class="card rounded bg-white shadow">
 			<div class="card-body">
 				<label class="font-weight-bold" for="notas">Breve descripción del caso:</label>
-				<textarea class="form-control" id="notas_mp" placeholder="Descripción del caso..." rows="10" required maxlength="1000" oninput="mayuscTextarea(this)" onkeydown="pulsar(event)" onkeyup="contarCaracteres(this)"></textarea>
+				<textarea class="form-control" id="notas_mp" placeholder="Descripción del caso..." rows="10" required maxlength="1000" onkeydown="pulsar(event)" onkeyup="contarCaracteres(this)"></textarea>
 				<small id="numCaracter">1000 caracteres restantes</small>
 
 			</div>
@@ -695,6 +699,7 @@
 				var btnFirmar =
 					`<button type='button'  class='btn btn-primary my-2' onclick='firmarDocumento(${documentos[i].FOLIOID}, ${documentos[i].ANO}, ${documentos[i].FOLIODOCID})' disabled><i class="fas fa-signature"></i></button>`
 				var btnAsignarEncargado = `<button type='button'  class='btn btn-primary my-2' onclick='asignarEncargado(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})' disabled><i class="fas fa-user-tag"></i></button>`
+				var btnAsignarAgente = `<button type='button'  class='btn btn-primary my-2' onclick='asignarAgente(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})' disabled><i class="fas fa-user-tag"></i></button>`
 
 			} else {
 				var btn =
@@ -703,6 +708,7 @@
 					`<button type='button'  class='btn btn-primary my-2' onclick='firmarDocumento(${documentos[i].FOLIOID}, ${documentos[i].ANO}, ${documentos[i].FOLIODOCID})'><i class="fas fa-signature"></i></button>`
 
 				var btnAsignarEncargado = `<button type='button'  class='btn btn-primary my-2' onclick='asignarEncargado(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})'><i class="fas fa-user-tag"></i></button>`
+				var btnAsignarAgente = `<button type='button'  class='btn btn-primary my-2' onclick='asignarAgente(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})'><i class="fas fa-user-tag"></i></button>`
 
 			}
 			var btnBorrar = '';
@@ -713,9 +719,11 @@
 			var fila =
 				`<tr id="row${i}">` +
 				`<td class="text-center">${documentos[i].TIPODOC}</td>` +
-				`<td class="text-center">${documentos[i].NOMBRE} ${documentos[i].APELLIDO_PATERNO} ${documentos[i].APELLIDO_MATERNO}</td>` +
+				`<td class="text-center">${documentos[i].AGENTER_NOMBRE} ${documentos[i].AGENTER_AP} ${documentos[i].AGENTER_AM}</td>` +
 				`<td class="text-center">${documentos[i].STATUS}</td>` +
-				`<td class="text-center">${btn} ${btnFirmar} ${btnBorrar} ${btnAsignarEncargado}</td>` +
+				`<td class="text-center">${btn} ${btnFirmar} ${btnBorrar}</td>` +
+				`<td class="text-center">${btnAsignarAgente}</td>` +
+				`<td class="text-center">${btnAsignarEncargado}</td>` +
 				`</tr>`;
 
 			$('#table-documentos tr:first').after(fila);
@@ -1164,10 +1172,13 @@
 				var img = `<a id="downloadArchivo" download=""><img src='${archivos[i].ARCHIVO}');' width="50px" height="50px"></img></a>`;
 
 			}
+			var btnEliminarArchivo =
+				`<button type='button' id="deleteArchivobtn" class='btn btn-primary' onclick='deleteArchivo(${archivos[i].FOLIOARCHIVOID})'><i class='fas fa-trash'></i></button>`;
 			var fila =
 				`<tr id="row${i}">` +
 				`<td class="text-center" value="${archivos[i].FOLIOARCHIVOID}">${archivos[i].ARCHIVODESCR}</td>` +
 				`<td class="text-center" value="${archivos[i].FOLIOARCHIVOID}">${img}</td>` +
+				`<td class="text-center">${btnEliminarArchivo}</td>` +
 
 				`</tr>`;
 
@@ -1186,11 +1197,13 @@
 		for (let i = 0; i < vehiculos.length; i++) {
 			var btnVehiculo =
 				`<button type='button' class='btn btn-primary' onclick='viewVehiculo(${vehiculos[i].VEHICULOID})'><i class='fas fa-eye'></i></button>`;
+			var btnEliminarVehiculo =
+				`<button type='button' class='btn btn-primary' onclick='deleteVehiculo(${vehiculos[i].VEHICULOID})'><i class='fas fa-trash'></i></button>`;
 			var fila3 =
 				`<tr id="row${i}">` +
 				`<td class="text-center">${vehiculos[i].PLACAS?vehiculos[i].PLACAS:'DESCONOCIDO'}</td>` +
 				`<td class="text-center">${vehiculos[i].NUMEROSERIE?vehiculos[i].NUMEROSERIE:'DESCONOCIDO'}</td>` +
-				`<td class="text-center">${btnVehiculo}</td>` +
+				`<td class="text-center">${btnVehiculo} ${btnEliminarVehiculo}</td>` +
 				`</tr>`;
 
 			$('#table-vehiculos tr:first').after(fila3);
@@ -1285,7 +1298,7 @@
 
 							const option = document.createElement('option');
 							option.value = victima.PERSONAFISICAID;
-							option.text = victima.NOMBRE + ' ' + primer_apellido;
+							option.text = victima.NOMBRE + ' ' + primer_apellido +' | ' + victima.PERSONACALIDADJURIDICADESCR;
 							select_victima_documento.add(option, null);
 						});
 
@@ -1332,7 +1345,7 @@
 
 							const option = document.createElement('option');
 							option.value = victima.PERSONAFISICAID;
-							option.text = victima.NOMBRE + ' ' + primer_apellido;
+							option.text = victima.NOMBRE + ' ' + primer_apellido +' | ' + victima.PERSONACALIDADJURIDICADESCR;
 							select_victima_ofendido.add(option, null);
 						});
 						$('#imputado_delito_cometido').empty();
@@ -1923,7 +1936,53 @@
 		});
 
 	}
+	function asignarAgente(documento, folio, ano) {
+		$('#documentos_generados_modal').modal('hide');
 
+		$('#asignarAgenteModal').modal('show');
+		const btn_asignar_agente = document.querySelector('#enviarAgente');
+
+		btn_asignar_agente.addEventListener('click', (e) => {
+			btn_asignar_agente.disabled = true;
+			$.ajax({
+				data: {
+					'foliodocid': documento,
+					'folio': folio,
+					'year': ano,
+					'agenteid': document.querySelector('#selectAgente').value
+				},
+				url: "<?= base_url('/data/update-agente-asignado') ?>",
+				method: "POST",
+				dataType: "json",
+				success: function(response) {
+					const documentos = response.documentos;
+					if (response.status == 1) {
+						btn_asignar_agente.disabled = false;
+						let tabla_documentos = document.querySelectorAll('#table-documentos tr');
+						tabla_documentos.forEach(row => {
+							if (row.id !== '') {
+								row.remove();
+							}
+						});
+						llenarTablaDocumentos(documentos);
+
+						Swal.fire({
+							icon: 'success',
+							text: 'Agente asignado correctamente',
+							confirmButtonColor: '#bf9b55',
+						});
+						$('#asignarAgenteModal').modal('hide');
+					}
+
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					btn_asignar_agente.disabled = false;
+
+				}
+			});
+		});
+
+	}
 	function borrarDocumento(folio, ano, foliodocid) {
 		Swal.fire({
 			title: '¿Estas seguro?',
@@ -2046,7 +2105,7 @@
 
 						const option = document.createElement('option');
 						option.value = victima.PERSONAFISICAID;
-						option.text = victima.NOMBRE + ' ' + primer_apellido;
+						option.text = victima.NOMBRE + ' ' + primer_apellido +' | ' + victima.PERSONACALIDADJURIDICADESCR;
 						select_victima_ofendido.add(option, null);
 					});
 					const option_vacio_vd = document.createElement('option');
@@ -2065,7 +2124,7 @@
 
 						const option = document.createElement('option');
 						option.value = victima.PERSONAFISICAID;
-						option.text = victima.NOMBRE + ' ' + primer_apellido;
+						option.text = victima.NOMBRE + ' ' + primer_apellido +' | ' + victima.PERSONACALIDADJURIDICADESCR;
 						select_victima_documento.add(option, null);
 					});
 					const option_vacio_id = document.createElement('option');
@@ -2263,6 +2322,8 @@
 						personaFisica.FECHANACIMIENTO : '';
 					document.querySelector('#edad_pf').value = personaFisica.EDADCANTIDAD ? personaFisica
 						.EDADCANTIDAD : '';
+					document.querySelector('#fotografia_actual_pf').value = personaFisica.FOTOGRAFIA_ACTUAL ? personaFisica
+						.FOTOGRAFIA_ACTUAL : '';
 					document.querySelector('#numero_identidad_pf').value = personaFisica.NUMEROIDENTIFICACION ?
 						personaFisica.NUMEROIDENTIFICACION : '';
 					document.querySelector('#codigo_pais_pf').value = personaFisica.CODIGOPAISTEL ?
@@ -2801,6 +2862,76 @@
 		});
 	}
 
+	function deleteArchivo(archivoid) {
+		$.ajax({
+			data: {
+				'archivoid': archivoid,
+				'folio': inputFolio.value,
+				'year': year_select.value,
+			},
+			url: "<?= base_url('/data/delete-archivo-by-id') ?>",
+			method: "POST",
+			dataType: "json",
+			beforeSend: function() {
+				document.getElementById('deleteArchivobtn').disabled = true;
+
+			},
+			success: function(response) {
+				if (response.status == 1) {
+					const archivos = response.archivos.archivosexternos;
+					Swal.fire({
+						icon: 'success',
+						text: 'Archivo eliminado correctamente',
+						confirmButtonColor: '#bf9b55',
+					});
+					let tabla_archivos = document.querySelectorAll(
+						'#table-archivos tr');
+					tabla_archivos.forEach(row => {
+						if (row.id !== '') {
+							row.remove();
+						}
+					});
+					llenarTablaArchivosExternos(archivos);
+					document.getElementById('deleteArchivobtn').disabled = false;
+
+				} else {
+					document.getElementById('deleteArchivobtn').disabled = false;
+
+				}
+			}
+		});
+
+	}
+
+	function deleteVehiculo(vehiculoid) {
+		$.ajax({
+			data: {
+				'vehiculoid': vehiculoid,
+				'folio': inputFolio.value,
+				'year': year_select.value,
+			},
+			url: "<?= base_url('/data/delete-vehiculo-by-id') ?>",
+			method: "POST",
+			dataType: "json",
+			success: function(response) {
+				if (response.status == 1) {
+					const vehiculos = response.vehiculos;
+					Swal.fire({
+						icon: 'success',
+						text: 'Vehículo eliminado correctamente',
+						confirmButtonColor: '#bf9b55',
+					});
+					let tabla_vehiculo = document.querySelectorAll('#table-vehiculos tr');
+					tabla_vehiculo.forEach(row => {
+						if (row.id !== '') {
+							row.remove();
+						}
+					});
+					llenarTablaVehiculos(vehiculos);
+				}
+			}
+		});
+	}
 	$(document).on('hidden.bs.modal', '#info_folio_modal', function() {
 		let tabs = document.querySelectorAll('#info_tabs .nav-link');
 		let contents = document.querySelectorAll('#info_content .tab-pane');
@@ -2889,6 +3020,9 @@
 
 			var btn_insertar_parentesco = document.querySelector('#insertParentescoModal');
 			var btnRefrescarArchivos = document.querySelector('#refrescarArchivos');
+			var btnAgregarArchivos = document.querySelector('#agregarArchivosAdmin');
+			var btnSubirArchivos = document.querySelector('#btnSubirArchivos');
+
 
 			var btn_insertar_persona_fisica = document.querySelector('#insertPersonaFisicaModal');
 			var btn_asignar_delitos = document.querySelector('#insertArbolDelictual');
@@ -2926,18 +3060,18 @@
 				selector: '#documento',
 				width: 792,
 				height: 800,
-				font_size_formats: '11pt',
+				// font_size_formats: '11pt',
 				plugins: 'quickbars table image link lists advlist media autoresize code',
-				toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright alignjustify | indent outdent | bullist numlist | code',
+				toolbar: 'undo redo | blocks  fontsize | bold italic | alignleft aligncenter alignright alignjustify | indent outdent | bullist numlist | code',
 			});
 
 			var tiny2 = tinymce.init({
 				selector: '#documento_editar',
 				width: 792,
 				height: 800,
-				font_size_formats: '11pt',
+				// font_size_formats: '11pt',
 				plugins: 'quickbars table image link lists advlist media autoresize code',
-				toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright alignjustify | indent outdent | bullist numlist | code',
+				toolbar: 'undo redo | blocks  fontsize | bold italic | alignleft aligncenter alignright alignjustify | indent outdent | bullist numlist | code',
 			});
 
 			inputsText.forEach((input) => {
@@ -3116,6 +3250,15 @@
 
 				$('#relacion_parentesco_modal_insert').modal('show');
 			}, false);
+			btnAgregarArchivos.addEventListener('click', (e) => {
+				$('#agregar_archivos_modal').modal('show');
+
+			});
+			btnSubirArchivos.addEventListener('click', (e) => {
+				e.preventDefault();
+				crearArchivos();
+
+			});
 			btnRefrescarArchivos.addEventListener('click', (e) => {
 				$.ajax({
 					data: {
@@ -4921,7 +5064,7 @@
 
 								const option = document.createElement('option');
 								option.value = victima.PERSONAFISICAID;
-								option.text = victima.NOMBRE + ' ' + primer_apellido;
+								option.text = victima.NOMBRE + ' ' + primer_apellido +' | ' + victima.PERSONACALIDADJURIDICADESCR;
 								select_victima_ofendido.add(option, null);
 							});
 							$('#victima_modal_documento').empty();
@@ -4933,7 +5076,7 @@
 
 								const option = document.createElement('option');
 								option.value = victima.PERSONAFISICAID;
-								option.text = victima.NOMBRE + ' ' + primer_apellido;
+								option.text = victima.NOMBRE + ' ' + primer_apellido +' | ' + victima.PERSONACALIDADJURIDICADESCR;
 								select_victima_modal.add(option, null);
 							});
 							document.getElementById('subirFotoPersona').value = '';
@@ -5719,6 +5862,127 @@
 				});
 			}
 
+			async function crearArchivos() {
+				document.getElementById('archivo_content').classList.add('d-none');
+				document.getElementById('documentos_anexar_spinner').classList.remove('d-none');
+				let documento;
+				let nombre_documento;
+				if ($("#documentoArchivo")[0].files && $("#documentoArchivo")[0].files[0]) {
+					if ($("#documentoArchivo")[0].files[0].type == "image/jpeg" || $("#documentoArchivo")[0].files[0].type == "image/png" || $("#documentoArchivo")[0].files[0].type == "image/jpg") {
+						nombre_documento = $("#documentoArchivo")[0].files[0].name;
+						documento = await comprimirImagen($("#documentoArchivo")[0].files[0], 50);
+						console.log(documento);
+					} else {
+						nombre_documento = $("#documentoArchivo")[0].files[0].name;
+						documento = $("#documentoArchivo")[0].files[0];
+					}
+				} else {
+					document.getElementById('archivo_content').classList.remove('d-none');
+					document.getElementById('documentos_anexar_spinner').classList.add('d-none');
+					Swal.fire({
+						icon: 'error',
+						text: 'Debes seleccionar un documento.',
+						showConfirmButton: false,
+						timer: 1000
+					});
+					return
+				}
+				var packetData = new FormData();
+				packetData.append("documentoArchivo", documento);
+				packetData.append("folio", document.querySelector('#input_folio_atencion').value);
+				packetData.append("year", document.querySelector('#year_select').value);
+				packetData.append("nombreDocumento", nombre_documento);
+
+				$.ajax({
+					url: "<?= base_url('/data/create_archivos_admin') ?>",
+					method: "POST",
+					dataType: 'json',
+					contentType: false,
+					data: packetData,
+					processData: false,
+					cache: false,
+					success: function(response) {
+						const archivos = response.archivos.archivosexternos;
+						console.log(response);
+						document.getElementById('archivo_content').classList.remove('d-none');
+						document.getElementById('documentos_anexar_spinner').classList.add('d-none');
+						if (response.status == 1) {
+							$('#agregar_archivos_modal').modal('hide');
+
+							Swal.fire({
+								icon: 'success',
+								text: 'Documento agregado correctamente.',
+								showConfirmButton: false,
+								timer: 1000
+							});
+
+							let preview = document.querySelector('#viewDocumentoArchivo');
+
+							document.getElementById('documentoArchivo').value = '';
+							preview.setAttribute('src', '');
+							let tabla_archivos = document.querySelectorAll(
+								'#table-archivos tr');
+							tabla_archivos.forEach(row => {
+								if (row.id !== '') {
+									row.remove();
+								}
+							});
+							llenarTablaArchivosExternos(archivos);
+
+						} else if (response.status == 0) {
+							Swal.fire({
+								icon: 'error',
+								text: 'No se subio el documento.',
+								showConfirmButton: false,
+								timer: 1000
+							});
+						} else if (response.status == 2) {
+							Swal.fire({
+								icon: 'error',
+								text: 'Debes seleccionar un documento.',
+								showConfirmButton: false,
+								timer: 1000
+							});
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						console.log(textStatus);
+						document.getElementById('archivo_content').classList.remove('d-none');
+						document.getElementById('documentos_anexar_spinner').classList.add('d-none');
+						Swal.fire({
+							icon: 'error',
+							text: 'No se subio el documento.',
+							showConfirmButton: false,
+							timer: 1000
+						});
+					}
+				});
+
+			}
+
+			function comprimirImagen(imagenComoArchivo, porcentajeCalidad) {
+				return new Promise((resolve, reject) => {
+					const $canvas = document.createElement("canvas");
+					const imagen = new Image();
+					imagen.onload = () => {
+						$canvas.width = imagen.width;
+						$canvas.height = imagen.height;
+						$canvas.getContext("2d").drawImage(imagen, 0, 0);
+						$canvas.toBlob(
+							(blob) => {
+								if (blob === null) {
+									return reject(blob);
+								} else {
+									resolve(blob);
+								}
+							},
+							"image/jpeg", porcentajeCalidad / 100
+						);
+					};
+					imagen.src = URL.createObjectURL(imagenComoArchivo);
+				});
+			};
+
 			function agregarVehiculo() {
 				var packetData = new FormData();
 
@@ -5896,7 +6160,7 @@
 
 								const option = document.createElement('option');
 								option.value = victima.PERSONAFISICAID;
-								option.text = victima.NOMBRE + ' ' + primer_apellido;
+								option.text = victima.NOMBRE + ' ' + primer_apellido +' | ' + victima.PERSONACALIDADJURIDICADESCR;
 								select_victima_ofendido.add(option, null);
 							});
 							const option_vacio_vd = document.createElement('option');
@@ -5915,7 +6179,7 @@
 
 								const option = document.createElement('option');
 								option.value = victima.PERSONAFISICAID;
-								option.text = victima.NOMBRE + ' ' + primer_apellido;
+								option.text = victima.NOMBRE + ' ' + primer_apellido +' | ' + victima.PERSONACALIDADJURIDICADESCR;
 								select_victima_documento.add(option, null);
 							});
 							const option_vacio_id = document.createElement('option');
@@ -6468,8 +6732,8 @@
 							if (response.status == 1) {
 								const plantilla = response.plantilla;
 								tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
-								document.querySelector("#victima_modal_documento").value = '';
-								document.querySelector("#imputado_modal_documento").value = '';
+								// document.querySelector("#victima_modal_documento").value = '';
+								// document.querySelector("#imputado_modal_documento").value = '';
 								plantilla.value = '';
 								select_uma.value = '';
 								select_proceso.value = '';
@@ -6481,8 +6745,8 @@
 
 							} else {
 								tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
-								document.querySelector("#victima_modal_documento").value = '';
-								document.querySelector("#imputado_modal_documento").value = '';
+								// document.querySelector("#victima_modal_documento").value = '';
+								// document.querySelector("#imputado_modal_documento").value = '';
 								plantilla.value = '';
 								select_uma.value = '';
 								select_proceso.value = '';
@@ -6496,8 +6760,8 @@
 						error: function(jqXHR, textStatus, errorThrown) {
 							console.error(textStatus);
 							tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
-							document.querySelector("#victima_modal_documento").value = '';
-							document.querySelector("#imputado_modal_documento").value = '';
+							// document.querySelector("#victima_modal_documento").value = '';
+							// document.querySelector("#imputado_modal_documento").value = '';
 							plantilla.value = '';
 							select_uma.value = '';
 							select_proceso.value = '';
@@ -6527,16 +6791,16 @@
 								const plantilla = response.plantilla;
 								if (select_uma.getAttribute('required') == "true") {
 									tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
-									document.querySelector("#victima_modal_documento").value = '';
-									document.querySelector("#imputado_modal_documento").value = '';
+									// document.querySelector("#victima_modal_documento").value = '';
+									// document.querySelector("#imputado_modal_documento").value = '';
 									plantilla.value = '';
 									select_uma.value = '';
 									select_proceso.value = '';
 									select_notificacion.value = '';
 								} else {
 									tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
-									document.querySelector("#victima_modal_documento").value = '';
-									document.querySelector("#imputado_modal_documento").value = '';
+									// document.querySelector("#victima_modal_documento").value = '';
+									// document.querySelector("#imputado_modal_documento").value = '';
 									plantilla.value = '';
 									select_uma.value = '';
 									select_proceso.value = '';
@@ -6547,16 +6811,16 @@
 							} else {
 								if (select_uma.getAttribute('required') == "true") {
 									tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
-									document.querySelector("#victima_modal_documento").value = '';
-									document.querySelector("#imputado_modal_documento").value = '';
+									// document.querySelector("#victima_modal_documento").value = '';
+									// document.querySelector("#imputado_modal_documento").value = '';
 									plantilla.value = '';
 									select_uma.value = '';
 									select_proceso.value = '';
 									select_notificacion.value = '';
 								} else {
 									tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
-									document.querySelector("#victima_modal_documento").value = '';
-									document.querySelector("#imputado_modal_documento").value = '';
+									// document.querySelector("#victima_modal_documento").value = '';
+									// document.querySelector("#imputado_modal_documento").value = '';
 									plantilla.value = '';
 									select_uma.value = '';
 									select_proceso.value = '';
@@ -6568,8 +6832,8 @@
 						error: function(jqXHR, textStatus, errorThrown) {
 							console.error(textStatus);
 							tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
-							document.querySelector("#victima_modal_documento").value = '';
-							document.querySelector("#imputado_modal_documento").value = '';
+							// document.querySelector("#victima_modal_documento").value = '';
+							// document.querySelector("#imputado_modal_documento").value = '';
 							plantilla.value = '';
 							select_uma.value = '';
 							select_proceso.value = '';
@@ -6607,6 +6871,8 @@
 									'titulo': tipoPlantilla,
 									'statusenvio': 0,
 									'agente_asignado': document.querySelector('#empleado_asignado').value,
+									'victimaid': document.querySelector('#victima_modal_documento').value,
+								'imputado': document.querySelector('#imputado_modal_documento').value,
 								};
 								insertarDoc(data);
 							} else {
@@ -6617,6 +6883,8 @@
 									'titulo': tipoPlantilla,
 									'statusenvio': 0,
 									'agente_asignado': document.querySelector('#empleado_asignado').value,
+									'victimaid': document.querySelector('#victima_modal_documento').value,
+								'imputado': document.querySelector('#imputado_modal_documento').value,
 
 								};
 								insertarDoc(data);
@@ -6650,6 +6918,8 @@
 									'titulo': tipoPlantilla,
 									'statusenvio': 1,
 									'agente_asignado': document.querySelector('#empleado_asignado').value,
+									'victimaid': document.querySelector('#victima_modal_documento').value,
+								'imputado': document.querySelector('#imputado_modal_documento').value,
 
 								};
 								insertarDoc(data);
@@ -6663,6 +6933,8 @@
 									'titulo': tipoPlantilla,
 									'statusenvio': 1,
 									'agente_asignado': document.querySelector('#empleado_asignado').value,
+									'victimaid': document.querySelector('#victima_modal_documento').value,
+								'imputado': document.querySelector('#imputado_modal_documento').value,
 
 								};
 								insertarDoc(data);
@@ -6683,6 +6955,8 @@
 									'titulo': tipoPlantilla,
 									'statusenvio': 0,
 									'agente_asignado': document.querySelector('#empleado_asignado').value,
+									'victimaid': document.querySelector('#victima_modal_documento').value,
+								'imputado': document.querySelector('#imputado_modal_documento').value,
 
 								};
 								insertarDoc(data);
@@ -6695,6 +6969,8 @@
 									'titulo': tipoPlantilla,
 									'statusenvio': 0,
 									'agente_asignado': document.querySelector('#empleado_asignado').value,
+									'victimaid': document.querySelector('#victima_modal_documento').value,
+								'imputado': document.querySelector('#imputado_modal_documento').value,
 
 								};
 								insertarDoc(data);
@@ -6729,6 +7005,9 @@
 						const documentos = response.documentos;
 
 						if (response.status == 1) {
+							tinymce.get("documento").setContent('');
+							document.querySelector("#victima_modal_documento").value = '';
+							document.querySelector("#imputado_modal_documento").value = '';
 							const documentos = response.documentos;
 							Swal.fire({
 								icon: 'success',
@@ -6907,6 +7186,9 @@
 <?php include 'video_denuncia_modals/salida_modal.php' ?>
 <?php include 'video_denuncia_modals/marks.php' ?>
 <?php include 'video_denuncia_modals/encargados_modal.php' ?>
+<?php include 'video_denuncia_modals/asignar_agente_modal.php' ?>
+
+<?php include 'video_denuncia_modals/agregar_archivosExternos_modal.php' ?>
 
 <?php include 'video_denuncia_modals/persona_modal.php' ?>
 <?php include 'video_denuncia_modals/relacion_parentesco_modal.php' ?>

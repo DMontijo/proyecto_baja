@@ -18,7 +18,9 @@ let folio_completo = document.getElementById("input_folio").value;
 let array = folio_completo.split("-");
 let folio_SY = array[1];
 let year_SF = array[0];
-var intervalo = setInterval(function () { location.reload(); }, 90000);
+var intervalo = setInterval(function() {
+	location.reload();
+}, 90000);
 
 // VIDEO Y AUDIO DE AGENTE SELECTER
 const mediaDevicesModal = document.getElementById("media_devices_modal");
@@ -45,16 +47,23 @@ let audioStream;
 // const camara_apagada_denunciante_b = document.querySelector('#camara_apagada_denunciante_b');
 // const camara_prendida_denunciante_b = document.querySelector('#camara_prendida_denunciante_b');
 
-const guestVideoService = new VideoServiceGuest(guestUUID, folio_SY + "/" + year_SF, priority, { apiURI, apiKey });
+const guestVideoService = new VideoServiceGuest(
+	guestUUID,
+	folio_SY + "/" + year_SF,
+	priority,
+	{ apiURI, apiKey }
+);
 
 guestVideoService.registerOnVideoReady(
 	"secondary_video",
 	"main_video",
 	(response, guestData) => {
+		clearInterval(intervalo);
 		texto_inicial.style.display = "none";
 		video_container.style.display = "block";
 		clearInterval(intervalo);
-		document.querySelector("#documentos_anexar_card").style.display = "block";
+		document.querySelector("#documentos_anexar_card").style.display =
+			"block";
 		agente_name.innerHTML = "LIC. " + response.agent.name;
 		// denunciante_name.innerHTML = guestData.name;
 	}
@@ -63,21 +72,55 @@ guestVideoService.registerOnVideoReady(
 guestVideoService.registerRefreshGuestConnection(() => {
 	Swal.fire({
 		position: "top-end",
-		title: "La conexión se recargara dentro de 3 segundos, mantente conectado",
+		title:
+			"La conexión se recargara dentro de 3 segundos, mantente conectado",
 		showConfirmButton: false,
 		icon: "info",
 		timer: 3000,
-		timerProgressBar: true,
+		timerProgressBar: true
 	}).then(() => {
 		location.reload();
-	})
-})
+	});
+});
 
 guestVideoService.registerOnDisconnect(e => {
 	console.log("Desconectado", e);
 	pantalla_final.style.display = "block";
 	video_container.style.display = "none";
 	document.querySelector("#documentos_anexar_card").style.display = "none";
+	Swal.fire({
+		title: "Llamada finalizada, ¿Deseas cerrar tu sesión?",
+		showCancelButton: true,
+		confirmButtonColor: "#bf9b55",
+		confirmButtonText: "Aceptar",
+		cancelButtonText: "Cancelar",
+		timer: 10000,
+		timerProgressBar: true
+	}).then(result => {
+		if (result.dismiss === Swal.DismissReason.cancel) {
+			console.log("Has hecho click en el botón cancelar");
+		} else if (result.dismiss === Swal.DismissReason.backdrop) {
+			console.log("Has hecho click fuera del modal");
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					// Maneja la respuesta del servidor aquí
+				}
+			};
+			xhttp.open("GET", "../logout", true);
+			xhttp.send();
+		} else {
+			console.log("Has hecho click en el botón aceptar");
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					// Maneja la respuesta del servidor aquí
+				}
+			};
+			xhttp.open("GET", "../logout", true);
+			xhttp.send();
+		}
+	});
 });
 
 guestVideoService.registerMediaRemoteToggling(response => {
@@ -118,7 +161,7 @@ guestVideoService.registerVideoRecordingStatus(isRecording => {
 			position: "top-end",
 			showConfirmButton: false,
 			timer: 1500,
-			timerProgressBar: true,
+			timerProgressBar: true
 		});
 	} else {
 		Swal.fire({
@@ -126,20 +169,20 @@ guestVideoService.registerVideoRecordingStatus(isRecording => {
 			title: "Se detuvo la grabación.",
 			showConfirmButton: false,
 			timer: 1500,
-			timerProgressBar: true,
+			timerProgressBar: true
 		});
 	}
 });
 
 guestVideoService.registerOnAgentDisconnected(() => {
 	console.log("Agent disconnected");
-	Swal.fire({
-		position: "top-end",
-		title: "El agente se desconecto.",
-		showConfirmButton: false,
-		timer: 1500,
-		timerProgressBar: true,
-	});
+	// Swal.fire({
+	// 	position: "top-end",
+	// 	title: "El agente se desconecto.",
+	// 	showConfirmButton: false,
+	// 	timer: 1500,
+	// 	timerProgressBar: true,
+	// });
 	pantalla_final.style.display = "block";
 	video_container.style.display = "none";
 	document.querySelector("#documentos_anexar_card").style.display = "none";
@@ -469,15 +512,4 @@ function deleteVideoElement() {
 	videos_array.forEach(element => {
 		element.remove();
 	});
-}
-
-window.addEventListener('offline', goOffline());
-window.addEventListener('online', goOnline());
-
-function goOnline() {
-	console.log('Online')
-}
-
-function goOffline() {
-	console.log('Offline')
 }

@@ -138,7 +138,7 @@
 		const notas_caso_salida = document.querySelector('#notas_caso_salida');
 		notas_caso_salida.value = notas_caso_mp.value;
 
-		if (charRemain < 300) {
+		if (charRemain < 1000) {
 			document.getElementById("numCaracterSalidaDa").innerHTML = charRemain + ' caracteres restantes';
 		} else {
 			document.getElementById("numCaracterSalidaDa").innerHTML = '1000 caracteres restantes';
@@ -262,6 +262,9 @@
 						'motivo': descripcion,
 						'institutomunicipio': municipio_empleado.value,
 						'institutoremision': derivaciones.value != '' && tipoSalida.value == 'DERIVADO' ? derivaciones.value : canalizaciones.value,
+						'denuncia_tel': 'N',
+						'denuncia_electronica': 'N',
+
 					}
 				}
 
@@ -271,6 +274,10 @@
 					'year': year_select.value,
 					'status': salida,
 					'motivo': descripcion,
+					'denuncia_tel': 'N',
+					'denuncia_electronica': 'N',
+
+
 				}
 			}
 			if (descripcion) {
@@ -329,7 +336,6 @@
 		} else {
 			if (municipio_empleado.value != '') {
 				let descripcion = document.querySelector('#notas_caso_salida').value;
-
 				if (
 					descripcion &&
 					inputFolio.value != '' &&
@@ -340,7 +346,10 @@
 						'municipio': municipio_empleado.value,
 						'estado': 2,
 						'notas': descripcion,
-						'tipo_expediente': Number(tipoSalida.value)
+						'tipo_expediente': Number(tipoSalida.value),
+						'denuncia_tel': 'N',
+						'denuncia_electronica': 'N',
+
 					}
 					const dataFolio = {
 						'folio': inputFolio.value,

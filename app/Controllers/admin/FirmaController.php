@@ -24,9 +24,16 @@ use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelLow;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
 use Endroid\QrCode\Writer\PngWriter;
+use MailerSend\MailerSend;
+use MailerSend\Helpers\Builder\Recipient;
+use MailerSend\Helpers\Builder\EmailParams;
+use MailerSend\Helpers\Builder\Attachment;
+use MailerSend\Exceptions\MailerSendValidationException;
+use MailerSend\Exceptions\MailerSendRateLimitException;
 
 class FirmaController extends BaseController
 {
+	private $db_read;
 
 	private $_plantillasModel;
 	private $_usuariosModel;
@@ -42,8 +49,24 @@ class FirmaController extends BaseController
 	private $_tipoExpedienteModel;
 	private $_folioRelacionFisFisModel;
 
+
+	private $_plantillasModelRead;
+	private $_usuariosModelRead;
+	private $_denunciantesModelRead;
+	private $_hechoLugarModelRead;
+	private $_municipiosModelRead;
+	private $_estadosModelRead;
+	private $_constanciaExtravioModelRead;
+	private $_folioDocModelRead;
+	private $_folioModelRead;
+	private $_folioPersonaFisicaModelRead;
+	private $_tipoExpedienteModelRead;
+	private $_folioRelacionFisFisModelRead;
+
 	function __construct()
 	{
+		$this->db_read = ENVIRONMENT == 'production' ? db_connect('default_read') : db_connect('development_read');
+
 		$this->_plantillasModel = new PlantillasModel();
 		$this->_usuariosModel = new UsuariosModel();
 		$this->_denunciantesModel = new DenunciantesModel();
@@ -57,8 +80,25 @@ class FirmaController extends BaseController
 		$this->_folioPersonaFisicaModel = new FolioPersonaFisicaModel();
 		$this->_tipoExpedienteModel = new TipoExpedienteModel();
 		$this->_folioRelacionFisFisModel = new FolioRelacionFisFisModel();
+
+		$this->_plantillasModelRead = model('PlantillasModel', true, $this->db_read);
+		$this->_usuariosModelRead = model('UsuariosModel', true, $this->db_read);
+		$this->_denunciantesModelRead = model('DenunciantesModel', true, $this->db_read);
+		$this->_hechoLugarModelRead = model('HechoLugarModel', true, $this->db_read);
+		$this->_municipiosModelRead = model('MunicipiosModel', true, $this->db_read);
+		$this->_estadosModelRead = model('EstadosModel', true, $this->db_read);
+		$this->_constanciaExtravioModelRead = model('ConstanciaExtravioModel', true, $this->db_read);
+		$this->_folioDocModelRead = model('FolioDocModel', true, $this->db_read);
+		$this->_folioModelRead = model('FolioModel', true, $this->db_read);
+		$this->_folioPersonaFisicaModelRead = model('FolioPersonaFisicaModel', true, $this->db_read);
+		$this->_tipoExpedienteModelRead = model('TipoExpedienteModel', true, $this->db_read);
+		$this->_folioRelacionFisFisModelRead = model('FolioRelacionFisFisModel', true, $this->db_read);
 	}
 
+	/**
+	 * Función para firmar las constancias de extravio
+	 * Recibe por metodo port el folio, año y contraseña de la FIEL
+	 */
 	public function firmar_constancia_extravio()
 	{
 		try {
@@ -68,41 +108,50 @@ class FirmaController extends BaseController
 			$password = str_replace(' ', '', trim($this->request->getPost('contrasena')));
 			$user_id = session('ID');
 
-			$constancia = $this->_constanciaExtravioModel->asObject()->where('CONSTANCIAEXTRAVIOID', $numfolio)->where('ANO', $year)->where('STATUS !=', 'FIRMADO')->first();
+			// Se busca las constancias que no esten firmadas
+			$constancia = $this->_constanciaExtravioModelRead->asObject()->where('CONSTANCIAEXTRAVIOID', $numfolio)->where('ANO', $year)->where('STATUS !=', 'FIRMADO')->first();
 			if (!$constancia) {
 				return redirect()->to(base_url('/admin/dashboard/constancias_extravio_abiertas'))->with('message_error', 'No existe la constancia o ya fue firmada.');
 			}
 
-			$plantilla = $this->_plantillasModel->asObject()->where('TITULO', 'CONSTANCIA DE EXTRAVIO')->first();
+			//Info de la plantilla de cosntancias de extravio
+			$plantilla = $this->_plantillasModelRead->asObject()->where('TITULO', 'CONSTANCIA DE EXTRAVIO')->first();
 
-			$solicitante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', $constancia->DENUNCIANTEID)->first();
+			// Info para la plantilla
+			$solicitante = $this->_denunciantesModelRead->asObject()->where('DENUNCIANTEID', $constancia->DENUNCIANTEID)->first();
 
-			$lugar = $this->_hechoLugarModel->asObject()->where('HECHOLUGARID', $constancia->HECHOLUGARID)->first();
+			$lugar = $this->_hechoLugarModelRead->asObject()->where('HECHOLUGARID', $constancia->HECHOLUGARID)->first();
 			$municipio = (object)[];
 			if ($constancia->MUNICIPIOIDCITA) {
-				$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $constancia->MUNICIPIOIDCITA)->where('ESTADOID', $constancia->ESTADOID)->first();
+				$municipio = $this->_municipiosModelRead->asObject()->where('MUNICIPIOID', $constancia->MUNICIPIOIDCITA)->where('ESTADOID', $constancia->ESTADOID)->first();
 			} else {
-				$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $constancia->MUNICIPIOID)->where('ESTADOID', $constancia->ESTADOID)->first();
+				$municipio = $this->_municipiosModelRead->asObject()->where('MUNICIPIOID', $constancia->MUNICIPIOID)->where('ESTADOID', $constancia->ESTADOID)->first();
 			}
-			$estado = $this->_estadosModel->asObject()->where('ESTADOID', $constancia->ESTADOID)->first();
+			$estado = $this->_estadosModelRead->asObject()->where('ESTADOID', $constancia->ESTADOID)->first();
 			$meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
 
 			$timestamp = strtotime($constancia->HECHOFECHA);
 			$dia_extravio = date('d', $timestamp);
-			$mes_extravio = $meses[date('n') - 1];
+			$mes_extravio = $meses[date('n', $timestamp) - 1];
 			$ano_extravio = date('Y', $timestamp);
 
 			$document_name = $plantilla->TITULO;
+
+			// Asignacion de fecha actual
 			$FECHAFIRMA = date("Y-m-d");
 			$HORAFIRMA = date("H:i");
 
 
+			// Creacion de archivos PEM y autenticacion de contraseña
 			if ($this->_crearArchivosPEMText($user_id, $password)) {
+				// Validacion de que exista esa firma FIEL
 				if ($this->_validarFiel($user_id)) {
+					// Info de la firma
 					$fiel_user = $this->_extractData($user_id);
 					$razon_social = $fiel_user['razon_social'];
 					$rfc = $fiel_user['rfc'];
 					$num_certificado = $fiel_user['num_certificado'];
+					// URL para los QR
 					$url = base_url('/validar_constancia?folio=' . base64_encode($folio) . '&year=' . $year);
 
 					//TEXTO *************************************************************************************************************************************************************************
@@ -184,6 +233,7 @@ class FirmaController extends BaseController
 							break;
 					}
 
+					// Generacion de la firma
 					$signature = $this->_generateSignature($user_id, $document_name, $plantilla->TEXTO, $folio, $FECHAFIRMA, $HORAFIRMA);
 
 					//PLACEHOLDER *************************************************************************************************************************************************************************
@@ -213,7 +263,7 @@ class FirmaController extends BaseController
 							$timestamp_sorteo = strtotime($constancia->SORTEOFECHA);
 							$dia_sorteo = date('d', $timestamp_sorteo);
 							$ano_sorteo = date('Y', $timestamp_sorteo);
-							$mes_sorteo = $meses[date('n') - 1];
+							$mes_sorteo = $meses[date('n', $timestamp_sorteo) - 1];
 
 							$descr = 'EXTRAVÍO DE BOLETO CON NÚMERO: [NBOLETO] Y TALÓN CON NÚMERO: [NTALON] DEL SORTEO: [NOMBRESORTEO] A CELEBRARSE EL DÍA: [SORTEOFECHA], CON PERMISO DE GOBERNACIÓN: [PERMISOGOBERNACION], Y PERMISO DE GOBERNACIÓN DE COLABORADORES: [PERMISOGOBCOLABORADORES].';
 							$descr = str_replace('[NBOLETO]', $constancia->NBOLETO, $descr);
@@ -274,14 +324,19 @@ class FirmaController extends BaseController
 					$plantilla->PLACEHOLDER = str_replace('[LUGARFIRMA]', $municipio->MUNICIPIODESCR . ", " . $estado->ESTADODESCR, $plantilla->PLACEHOLDER);
 					$plantilla->PLACEHOLDER = str_replace('[URL]', $url, $plantilla->PLACEHOLDER);
 
+					// Si se creó bien la firma
 					if ($signature->status == 1) {
+						//Crea el XML
 						$xml = $this->_createXMLSignature($signature->signed_chain, $signature->signature, $numfolio, $year);
 
+						//QR de la URL de validacion
 						$qr1 = $this->_generateQR($url);
+						//QR del contenido de la FIRMA
 						$qr2 = $this->_generateQR($signature->signed_chain);
 
 						$plantilla->PLACEHOLDER = str_replace('[CODIGO_QR_1]', '<img src="' . $qr1 . '" width="50px" height="50px">', $plantilla->PLACEHOLDER);
 						$plantilla->PLACEHOLDER = str_replace('[CODIGO_QR_2]', '<img src="' . $qr2 . '" width="120px" height="120px">', $plantilla->PLACEHOLDER);
+						//Generacion del PDF de la constancia
 						$pdf = $this->_generatePDF($plantilla->PLACEHOLDER);
 
 						$datosInsert = [
@@ -301,10 +356,12 @@ class FirmaController extends BaseController
 							'STATUS' => 'FIRMADO'
 						];
 
-						$constancia = $this->_constanciaExtravioModel->asObject()->where('CONSTANCIAEXTRAVIOID', $numfolio)->where('ANO', $year)->where('STATUS !=', 'FIRMADO')->first();
+						//Verifica que si este abierta esa constancia
+						$constancia = $this->_constanciaExtravioModelRead->asObject()->where('CONSTANCIAEXTRAVIOID', $numfolio)->where('ANO', $year)->where('STATUS !=', 'FIRMADO')->first();
 						if (!$constancia) {
 							return redirect()->to(base_url('/admin/dashboard/constancias_extravio_abiertas'))->with('message_error', 'No existe la constancia o ya fue firmada.');
 						}
+						// Actualiza con los nuevos campos
 						$update = $this->_constanciaExtravioModel->set($datosInsert)->where('CONSTANCIAEXTRAVIOID ', $numfolio)->where('ANO', $year)->update();
 
 						if ($update) {
@@ -332,7 +389,10 @@ class FirmaController extends BaseController
 			return redirect()->to(base_url('/admin/dashboard/constancia_extravio_show?folio=' . $numfolio . '&year=' . $year))->with('message_error', $e->getMessage());
 		}
 	}
-
+	/**
+	 * Función para firmar los documentos de manera general
+	 * Recibe por metodo POST el expediente, folio y año
+	 */
 	public function firmar_documentos()
 	{
 		$numexpediente = $this->request->getPost('expediente_modal');
@@ -349,13 +409,15 @@ class FirmaController extends BaseController
 		$password = str_replace(' ', '', trim($this->request->getPost('contrasena')));
 		$user_id = session('ID');
 
+		// Busca cuando no tienen expediente
 		if ($numexpediente != null && $numexpediente != "undefined") {
-			$documento = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $numexpediente)->where('ANO', $year)->where('STATUS', 'ABIERTO')->findAll();
+			$documento = $this->_folioDocModelRead->asObject()->where('NUMEROEXPEDIENTE', $numexpediente)->where('ANO', $year)->where('STATUS', 'ABIERTO')->findAll();
 		} else {
-			$documento = $this->_folioDocModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'ABIERTO')->findAll();
+			$documento = $this->_folioDocModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'ABIERTO')->findAll();
 		}
 
-		$folioRow = $this->_folioModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->first();
+		// Info folio
+		$folioRow = $this->_folioModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->first();
 		if ($documento == null || count($documento) <= 0) {
 			return json_encode((object)['status' => 0, 'message_error' => "No hay documentos por firmar"]);
 		}
@@ -366,22 +428,30 @@ class FirmaController extends BaseController
 		$HORAFIRMA = date("H:i");
 
 		try {
+			// Creacion de archivos PEM y autenticacion de contraseña
+
 			if ($this->_crearArchivosPEMText($user_id, $password)) {
+				// Validacion de que exista esa firma FIEL
+
 				if ($this->_validarFiel($user_id)) {
+					// Info de la firma
+
 					$fiel_user = $this->_extractData($user_id);
 					$razon_social = $fiel_user['razon_social'];
 					$rfc = $fiel_user['rfc'];
 					$num_certificado = $fiel_user['num_certificado'];
 					for ($i = 0; $i < count($documento); $i++) {
-						if (empty($documento[$i]->ENCARGADO_ASIGNADO) && isset($documento[$i]->AGENTE_ASIGNADO) && $documento[$i]->AGENTE_ASIGNADO != session('ID') ) {
+						// Validacion de que usuario puede firmar
+						if (empty($documento[$i]->ENCARGADO_ASIGNADO) && isset($documento[$i]->AGENTE_ASIGNADO) && $documento[$i]->AGENTE_ASIGNADO != session('ID')) {
 							return json_encode((object)['status' => 0, 'message_error' => "No tienes permiso para firmar en este folio."]);
-						}
-						else if (isset($documento[$i]->ENCARGADO_ASIGNADO) && $documento[$i]->ENCARGADO_ASIGNADO != session('ID')) {
+						} else if (isset($documento[$i]->ENCARGADO_ASIGNADO) && $documento[$i]->ENCARGADO_ASIGNADO != session('ID')) {
 							return json_encode((object)['status' => 0, 'message_error' => "Solo puede firmar el encargado asignado."]);
-						}else if (isset($documento[$i]->ENCARGADO_ASIGNADO) && $documento[$i]->ENCARGADO_ASIGNADO != session('ID') && isset($documento[$i]->AGENTE_ASIGNADO)) {
+						} else if (isset($documento[$i]->ENCARGADO_ASIGNADO) && $documento[$i]->ENCARGADO_ASIGNADO != session('ID') && isset($documento[$i]->AGENTE_ASIGNADO)) {
 							return json_encode((object)['status' => 0, 'message_error' => "Solo puede firmar el encargado asignado."]);
 						}
 						$municipio = (object)[];
+
+						// Replaces del documento a firmar
 						$documento[$i]->PLACEHOLDER = str_replace('[EXPEDIENTE_NOMBRE_DEL_RESPONSABLE]', $razon_social, $documento[$i]->PLACEHOLDER);
 						$documento[$i]->PLACEHOLDER = str_replace('EXPEDIENTE_NOMBRE_DEL_RESPONSABLE', $razon_social, $documento[$i]->PLACEHOLDER);
 						$documento[$i]->PLACEHOLDER = str_replace('[NOMBRE_LICENCIADO]', $razon_social, $documento[$i]->PLACEHOLDER);
@@ -392,13 +462,16 @@ class FirmaController extends BaseController
 						$text = str_replace(chr(13), ' ', $text);
 						$text = str_replace(chr(10), ' ', $text);
 						$text = str_replace('  ', ' ', trim($text));
-						$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $documento[$i]->MUNICIPIOID)->where('ESTADOID', $documento[$i]->ESTADOID)->first();
+						//Municipio de acuerdo al documento o al folio
+						$municipio = $this->_municipiosModelRead->asObject()->where('MUNICIPIOID', $documento[$i]->MUNICIPIOID)->where('ESTADOID', $documento[$i]->ESTADOID)->first();
 						if (isset($municipio) == false) {
-							$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $folioRow->MUNICIPIOID)->where('ESTADOID', $folioRow->ESTADOID)->first();
+							$municipio = $this->_municipiosModelRead->asObject()->where('MUNICIPIOID', $folioRow->MUNICIPIOID)->where('ESTADOID', $folioRow->ESTADOID)->first();
 						}
 						$estado = $this->_estadosModel->asObject()->where('ESTADOID', $documento[$i]->ESTADOID)->first();
+						// Generacion de la firma
 
 						$signature = $this->_generateSignature($user_id, "FIRMA DE DOCUMENTOS", $text, $expediente, $FECHAFIRMA, $HORAFIRMA);
+						// URL para los QR
 
 						if ($numexpediente != null && $numexpediente != "undefined") {
 
@@ -406,6 +479,7 @@ class FirmaController extends BaseController
 						} else {
 							$urldoc = base_url('/validar_documento?folio=' . base64_encode($folio) . '&year=' . $year . '&foliodoc=' . base64_encode($documento[$i]->FOLIODOCID));
 						}
+						//Comprimir firma
 						if (strlen($signature->signed_chain) > 2930) {
 							$signature->signed_chain = substr($signature->signed_chain, 0, 2930) . '...';
 						}
@@ -423,10 +497,12 @@ class FirmaController extends BaseController
 							'url' => $urldoc,
 							'qrurl' => $this->_generateQR($urldoc)
 						);
+						//Generacion del PDF del documento
 
 						$pdf = $this->_generatePDFDocumentos($datapdf);
 
 						if ($signature->status == 1) {
+							//Crea el XML de la firma
 							$xmldocumentos = $this->_createXMLSignature($signature->signed_chain, $signature->signature, $expediente, $year);
 							$datosInsert = [
 								'NUMEROIDENTIFICADOR' => $documento[$i]->FOLIODOCID . '/' . $documento[$i]->ANO,
@@ -443,6 +519,8 @@ class FirmaController extends BaseController
 								'STATUS' => 'FIRMADO',
 								'PLACEHOLDER' => $documento[$i]->PLACEHOLDER,
 							];
+							// Actualiza con los nuevos campos
+
 							if ($numexpediente != null && $numexpediente != "undefined") {
 
 								$update = $this->_folioDocModel->set($datosInsert)->where('NUMEROEXPEDIENTE', $numexpediente)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
@@ -461,9 +539,9 @@ class FirmaController extends BaseController
 						}
 					}
 					if ($numexpediente != null && $numexpediente != "undefined") {
-						$documentosExp = $this->_folioDocModel->get_by_expediente($numexpediente, $year);
+						$documentosExp = $this->_folioDocModelRead->get_by_expediente($numexpediente, $year);
 					} else {
-						$documentosExp = $this->_folioDocModel->get_by_folio($folio, $year);
+						$documentosExp = $this->_folioDocModelRead->get_by_folio($folio, $year);
 					}
 					return json_encode((object)['status' => 1, 'documentos' => $documentosExp]);
 				} else {
@@ -475,7 +553,10 @@ class FirmaController extends BaseController
 		}
 	}
 
-
+	/**
+	 * Función para firmar un documento de acuerdo a su id
+	 * Recibe por metodo POST el folio,año y id del documento
+	 */
 	public function firmar_documentos_by_id()
 	{
 		$folio = $this->request->getPost('folio_id');
@@ -486,10 +567,11 @@ class FirmaController extends BaseController
 		$password = str_replace(' ', '', trim($this->request->getPost('contrasena_doc')));
 		$user_id = session('ID');
 
-		$documento = $this->_folioDocModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento_id)->where('STATUS', 'ABIERTO')->findAll();
+		// Info del documento y folio
+		$documento = $this->_folioDocModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento_id)->where('STATUS', 'ABIERTO')->findAll();
 
 
-		$folioRow = $this->_folioModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->first();
+		$folioRow = $this->_folioModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->first();
 		if ($documento == null || count($documento) <= 0) {
 			return json_encode((object)['status' => 0, 'message_error' => "No hay documentos por firmar"]);
 		}
@@ -500,28 +582,31 @@ class FirmaController extends BaseController
 		$HORAFIRMA = date("H:i");
 
 		try {
+			// Creacion de archivos PEM y autenticacion de contraseña
+
 			if ($this->_crearArchivosPEMText($user_id, $password)) {
+				// Validacion de que exista esa firma FIEL
+
 				if ($this->_validarFiel($user_id)) {
+					// Info de la firma
+
 					$fiel_user = $this->_extractData($user_id);
 					$razon_social = $fiel_user['razon_social'];
 					$rfc = $fiel_user['rfc'];
 					$num_certificado = $fiel_user['num_certificado'];
 					for ($i = 0; $i < count($documento); $i++) {
-						// if (isset($documento[$i]->AGENTE_ASIGNADO) && $documento[$i]->AGENTE_ASIGNADO != session('ID')) {
-						// 	return json_encode((object)['status' => 0, 'message_error' => "No tienes permiso para firmar en este folio."]);
-						// }
-						// if (isset($documento[$i]->ENCARGADO_ASIGNADO) && $documento[$i]->ENCARGADO_ASIGNADO != session('ID')) {
-						// 	return json_encode((object)['status' => 0, 'message_error' => "Solo puede firmar el encargado asignado."]);
-						// }
-						if (empty($documento[$i]->ENCARGADO_ASIGNADO) && isset($documento[$i]->AGENTE_ASIGNADO) && $documento[$i]->AGENTE_ASIGNADO != session('ID') ) {
+						// Validacion de que usuario puede firmar
+
+						if (empty($documento[$i]->ENCARGADO_ASIGNADO) && isset($documento[$i]->AGENTE_ASIGNADO) && $documento[$i]->AGENTE_ASIGNADO != session('ID')) {
 							return json_encode((object)['status' => 0, 'message_error' => "No tienes permiso para firmar en este folio."]);
-						}
-						else if (isset($documento[$i]->ENCARGADO_ASIGNADO) && $documento[$i]->ENCARGADO_ASIGNADO != session('ID')) {
+						} else if (isset($documento[$i]->ENCARGADO_ASIGNADO) && $documento[$i]->ENCARGADO_ASIGNADO != session('ID')) {
 							return json_encode((object)['status' => 0, 'message_error' => "Solo puede firmar el encargado asignado."]);
-						}else if (isset($documento[$i]->ENCARGADO_ASIGNADO) && $documento[$i]->ENCARGADO_ASIGNADO != session('ID') && isset($documento[$i]->AGENTE_ASIGNADO)) {
+						} else if (isset($documento[$i]->ENCARGADO_ASIGNADO) && $documento[$i]->ENCARGADO_ASIGNADO != session('ID') && isset($documento[$i]->AGENTE_ASIGNADO)) {
 							return json_encode((object)['status' => 0, 'message_error' => "Solo puede firmar el encargado asignado."]);
 						}
 						$municipio = (object)[];
+						// Replaces del documento a firmar
+
 						$documento[$i]->PLACEHOLDER = str_replace('[EXPEDIENTE_NOMBRE_DEL_RESPONSABLE]', $razon_social, $documento[$i]->PLACEHOLDER);
 						$documento[$i]->PLACEHOLDER = str_replace('EXPEDIENTE_NOMBRE_DEL_RESPONSABLE', $razon_social, $documento[$i]->PLACEHOLDER);
 						$documento[$i]->PLACEHOLDER = str_replace('[NOMBRE_LICENCIADO]', $razon_social, $documento[$i]->PLACEHOLDER);
@@ -532,17 +617,23 @@ class FirmaController extends BaseController
 						$text = str_replace(chr(13), ' ', $text);
 						$text = str_replace(chr(10), ' ', $text);
 						$text = str_replace('  ', ' ', trim($text));
-						$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $documento[$i]->MUNICIPIOID)->where('ESTADOID', $documento[$i]->ESTADOID)->first();
+						//Municipio de acuerdo al documento o al folio
+
+						$municipio = $this->_municipiosModelRead->asObject()->where('MUNICIPIOID', $documento[$i]->MUNICIPIOID)->where('ESTADOID', $documento[$i]->ESTADOID)->first();
 						if (isset($municipio) == false) {
-							$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $folioRow->MUNICIPIOID)->where('ESTADOID', $folioRow->ESTADOID)->first();
+							$municipio = $this->_municipiosModelRead->asObject()->where('MUNICIPIOID', $folioRow->MUNICIPIOID)->where('ESTADOID', $folioRow->ESTADOID)->first();
 						}
-						$estado = $this->_estadosModel->asObject()->where('ESTADOID', $documento[$i]->ESTADOID)->first();
+						$estado = $this->_estadosModelRead->asObject()->where('ESTADOID', $documento[$i]->ESTADOID)->first();
+						// Generacion de la firma
 
 						$signature = $this->_generateSignature($user_id, "FIRMA DE DOCUMENTOS", $text, $folio, $FECHAFIRMA, $HORAFIRMA);
+						// URL para los QR
 
 						if ($folio != null && $folio != "undefined") {
 							$urldoc = base_url('/validar_documento?folio=' . base64_encode($folio) . '&year=' . $year . '&foliodoc=' . base64_encode($documento_id));
 						}
+						//Comprimir firma
+
 						if (strlen($signature->signed_chain) > 2930) {
 							$signature->signed_chain = substr($signature->signed_chain, 0, 2930) . '...';
 						}
@@ -560,10 +651,13 @@ class FirmaController extends BaseController
 							'url' => $urldoc,
 							'qrurl' => $this->_generateQR($urldoc)
 						);
+						//Generacion del PDF del documento
 
 						$pdf = $this->_generatePDFDocumentos($datapdf);
 
 						if ($signature->status == 1) {
+							//Crea el XML de la firma
+
 							$xmldocumentos = $this->_createXMLSignature($signature->signed_chain, $signature->signature, $folio, $year);
 							$datosInsert = [
 								'NUMEROIDENTIFICADOR' => $documento[$i]->FOLIODOCID . '/' . $documento[$i]->ANO,
@@ -580,6 +674,8 @@ class FirmaController extends BaseController
 								'STATUS' => 'FIRMADO',
 								'PLACEHOLDER' => $documento[$i]->PLACEHOLDER,
 							];
+							// Actualiza con los nuevos campos
+
 							if ($folio != null && $folio != "undefined") {
 								$update = $this->_folioDocModel->set($datosInsert)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
 							}
@@ -595,7 +691,7 @@ class FirmaController extends BaseController
 						}
 					}
 					if ($folio != null && $folio != "undefined") {
-						$documentosExp = $this->_folioDocModel->get_by_folio($folio, $year);
+						$documentosExp = $this->_folioDocModelRead->get_by_folio($folio, $year);
 					}
 					return json_encode((object)['status' => 1, 'documentos' => $documentosExp]);
 				} else {
@@ -606,6 +702,14 @@ class FirmaController extends BaseController
 			return json_encode((object)['status' => 0, 'message_error' => $e->getMessage()]);
 		}
 	}
+
+	/**
+	 * Funcion para crear los archivos PEM y validar de acuerdo a la contraseña ingresada y poder firmar documentos
+	 * Crear archivos .key.pem, .cer.pem y .txt a partir de archivos .key y .cer 
+	 * * Autenticación del usuario mediante la FIEL 
+	 * @param  mixed $agenteId
+	 * @param  mixed $pass
+	 */
 	private function _crearArchivosPEMText($agenteId, $pass)
 	{
 		$user_id = $agenteId;
@@ -681,6 +785,11 @@ class FirmaController extends BaseController
 		}
 	}
 
+	/**
+	 * Funcion para validar la firma FIEL
+	 *
+	 * @param  mixed $agentId
+	 */
 	private function _validarFiel($agentId)
 	{
 		$user_id = $agentId;
@@ -743,6 +852,11 @@ class FirmaController extends BaseController
 		}
 	}
 
+	/**
+	 * Función para extraer la información de la firma FIEL del usaurio
+	 *
+	 * @param  mixed $agentId
+	 */
 	private function _extractData($agentId)
 	{
 		$user_id = $agentId;
@@ -751,7 +865,9 @@ class FirmaController extends BaseController
 
 		$Comando_NoCert = "x509 -in " . $directory . '/' . $file_cer_pem . " -noout -serial";
 		$NoCert = exec('openssl ' . $Comando_NoCert, $arr, $status);
+		//Convertir a numeros el certificado
 		$NoCert = $this->_ConvANum($NoCert);
+		//Extraer el numero de certificado
 		$NoCert = trim($this->_ExtraeNoCer($NoCert));
 
 		// Obtener la Razon social y RFC.
@@ -771,6 +887,16 @@ class FirmaController extends BaseController
 		}
 	}
 
+	/**
+	 * Función para generar una firma electronica
+	 *
+	 * @param  mixed $agentId
+	 * @param  mixed $documentName
+	 * @param  mixed $text
+	 * @param  mixed $folio
+	 * @param  mixed $fecha
+	 * @param  mixed $hora
+	 */
 	private function _generateSignature($agentId, $documentName, $text, $folio, $fecha, $hora)
 	{
 		$fecha = $fecha;
@@ -786,6 +912,7 @@ class FirmaController extends BaseController
 		$fp = fopen($directory . '/' . $file_key_pem, "r");
 		$priv_key = fread($fp, 8192);
 		fclose($fp);
+		//Se obtiene un identificador de clave privada a partir de la clave privada del agente 
 		$pkeyid = openssl_get_privatekey($priv_key);
 
 		// Generar la firma ============================================================
@@ -803,8 +930,10 @@ class FirmaController extends BaseController
 		$fp = fopen($directory . '/' . $file_cer_pem, "r");
 		$cert = fread($fp, 8192);
 		fclose($fp);
+		//Se obtiene un identificador de clave pública a partir del certificado del agente
 		$pubkeyid = openssl_get_publickey($cert);
 
+		// Verifica que la firma electrónica sea válida utilizando la cadena original, la firma y la clave pública del agente.
 		$ok = openssl_verify($cadena_a_firmar, $signature, $pubkeyid, OPENSSL_ALGO_SHA512);
 
 		// Liberar la clave de la memoria ==============================================
@@ -817,6 +946,14 @@ class FirmaController extends BaseController
 		}
 	}
 
+	/**
+	 * Función para crear el archivo XML de la firma
+	 *
+	 * @param  mixed $signed_chain
+	 * @param  mixed $e_signature
+	 * @param  mixed $folio
+	 * @param  mixed $year
+	 */
 	private function _createXMLSignature($signed_chain, $e_signature, $folio, $year)
 	{
 		$xml  = new \DOMdocument('1.0', 'UTF-8');
@@ -849,6 +986,11 @@ class FirmaController extends BaseController
 		return $ArchXML;
 	}
 
+	/**
+	 * Función para convertir una cadena a numeros
+	 *
+	 * @param  mixed $str
+	 */
 	private function _ConvANum($str)
 	{
 		$legalChars = "%[^0-9\-\. ]%";
@@ -856,6 +998,11 @@ class FirmaController extends BaseController
 		return $str;
 	}
 
+	/**
+	 * Funcion para extrar la caducidad
+	 * Devuelve una nueva cadena de texto que contiene solo los caracteres que aparecen en las posiciones impares de la cadena original.
+	 * @param  mixed $Cad
+	 */
 	private function _ExtraeNoCer($Cad)
 	{
 		$Cad1 = $Cad;
@@ -867,6 +1014,12 @@ class FirmaController extends BaseController
 		return $Cad2;
 	}
 
+	/**
+	 * Función para cargar los atributos de un nodo XML
+	 * $nodo es el objeto  $attr atributos asociativos
+	 * @param  mixed $nodo
+	 * @param  mixed $attr
+	 */
 	private function _loadAtt(&$nodo, $attr)
 	{
 		global $xml;
@@ -878,6 +1031,11 @@ class FirmaController extends BaseController
 		}
 	}
 
+	/**
+	 * Genera el PDF de la constancia de extravio
+	 *
+	 * @param  mixed $placeholder
+	 */
 	private function _generatePDF($placeholder)
 	{
 		$arrContextOptions = array(
@@ -914,6 +1072,11 @@ class FirmaController extends BaseController
 		return $dompdf->output();
 	}
 
+	/**
+	 * Genera el PDF de los documentos
+	 *
+	 * @param  mixed $datapdf
+	 */
 	private function _generatePDFDocumentos($datapdf)
 	{
 
@@ -970,6 +1133,11 @@ class FirmaController extends BaseController
 		return $dompdf->output();
 	}
 
+	/**
+	 * Función para generar codigos qr
+	 *
+	 * @param  mixed $info
+	 */
 	private function _generateQR($info)
 	{
 		$writer = new PngWriter();
@@ -989,25 +1157,57 @@ class FirmaController extends BaseController
 		return $result->getDataUri();
 	}
 
+	/**
+	 * Función para enviar por correo al denunciante la constancia firmada
+	 *
+	 * @param  mixed $to
+	 * @param  mixed $folio
+	 * @param  mixed $year
+	 * @param  mixed $xml
+	 * @param  mixed $pdf
+	 */
 	private function _sendEmailConstanciaFirmada($to, $folio, $year, $xml, $pdf)
 	{
-		$email = \Config\Services::email();
-		$email->setTo($to);
-		$email->setSubject('Constancia de extravío firmada');
+
 		$body = view('email_template/constancia_firmada_email_template.php');
-		$email->setMessage($body);
+		$mailersend = new MailerSend(['api_key' => EMAIL_TOKEN]);
+		$recipients = [
+			new Recipient($to, 'Your Client'),
+		];
+		$attachments = [
+			new Attachment($pdf, 'Constancia_' . $folio . '_' . $year . '.pdf', 'attachment'),
+			new Attachment($xml, 'Constancia_' . $folio . '_' . $year . '.xml', 'attachment')
+		];
 
-		$email->attach($pdf, 'attachment', 'Constancia_' . $folio . '_' . $year . '.pdf', 'application/pdf');
-		$email->attach($xml, 'attachment', 'Constancia_' . $folio . '_' . $year . '.xml', 'application/xml');
+		$emailParams = (new EmailParams()) //check envio 
+			->setFrom('notificacionfgebc@fgebc.gob.mx')
+			->setFromName('FGEBC')
+			->setRecipients($recipients)
+			->setSubject('Constancia de extravío firmada')
+			->setHtml($body)
+			->setText('SE HA FIRMADO TU CONSTANCIA SOLICITADA:Ingrese a su cuenta en el Centro de Denuncia Tecnológica e inicie sesión para descargarla nuevamente')
+			->setAttachments($attachments)
+			->setReplyTo('notificacionfgebc@fgebc.gob.mx')
+			->setReplyToName('FGEBC');
 
-		if ($email->send()) {
-			$email->clear(TRUE);
+		try {
+			$result = $mailersend->email->send($emailParams);
+		} catch (MailerSendValidationException $e) {
+			$result = false;
+		} catch (MailerSendRateLimitException $e) {
+			$result = false;
+		}
+		if ($result) {
 			return true;
 		} else {
 			return false;
 		}
 	}
 
+	/**
+	 * Función para enviar por correo al denunciante un documento en especifico
+	 *
+	 */
 	public function sendEmailDocumentoByID()
 	{
 		$to = trim($this->request->getPost('send_mail_select'));
@@ -1019,16 +1219,16 @@ class FirmaController extends BaseController
 
 		if ($to && $year && $folio) {
 			if ($expediente != "undefined" && $expediente != '') {
-				$documento = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente)->where('ANO', $year)->where('STATUS', 'FIRMADO')->where('STATUSENVIO', 1)->where('ENVIADO', 'N')->where('FOLIODOCID', $folio_doc)->first();
-				$folioM = $this->_folioModel->asObject()->where('ANO', $year)->where('EXPEDIENTEID', $expediente)->first();
-				$tipoExpediente = $this->_tipoExpedienteModel->asObject()->where('TIPOEXPEDIENTEID',  $folioM->TIPOEXPEDIENTEID)->first();
-				$delito = $this->_folioRelacionFisFisModel->get_by_folio($folio, $year);
+				$documento = $this->_folioDocModelRead->asObject()->where('NUMEROEXPEDIENTE', $expediente)->where('ANO', $year)->where('STATUS', 'FIRMADO')->where('STATUSENVIO', 1)->where('ENVIADO', 'N')->where('FOLIODOCID', $folio_doc)->first();
+				$folioM = $this->_folioModelRead->asObject()->where('ANO', $year)->where('EXPEDIENTEID', $expediente)->first();
+				$tipoExpediente = $this->_tipoExpedienteModelRead->asObject()->where('TIPOEXPEDIENTEID',  $folioM->TIPOEXPEDIENTEID)->first();
+				$delito = $this->_folioRelacionFisFisModelRead->get_by_folio($folio, $year);
 				$delito =  $delito[0]['DELITOMODALIDADDESCR'];
 			} else {
 
-				$documento = $this->_folioDocModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'FIRMADO')->where('STATUSENVIO', 1)->where('ENVIADO', 'N')->where('FOLIODOCID', $folio_doc)->first();
+				$documento = $this->_folioDocModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'FIRMADO')->where('STATUSENVIO', 1)->where('ENVIADO', 'N')->where('FOLIODOCID', $folio_doc)->first();
 
-				$folioM = $this->_folioModel->asObject()->where('ANO', $year)->where('FOLIOID', $folio)->first();
+				$folioM = $this->_folioModelRead->asObject()->where('ANO', $year)->where('FOLIOID', $folio)->first();
 				$tipoExpediente = '';
 				$delito = '';
 			}
@@ -1036,16 +1236,17 @@ class FirmaController extends BaseController
 				return json_encode((object)['status' => 2]);
 			}
 
-			$imputado = $this->_folioPersonaFisicaModel->asObject()->where('ANO', $year)->where('FOLIOID', $folioM->FOLIOID)->where('CALIDADJURIDICAID', 2)->first();
-			$agente = $this->_usuariosModel->asObject()->where('ID', session('ID'))->first();
+			$imputado = $this->_folioPersonaFisicaModelRead->asObject()->where('ANO', $year)->where('FOLIOID', $folioM->FOLIOID)->where('CALIDADJURIDICAID', 2)->first();
+			$agente = $this->_usuariosModelRead->asObject()->where('ID', session('ID'))->first();
 
 			$folio = $folioM->FOLIOID;
 
 			if ($folioM->MUNICIPIOASIGNADOID != null) {
-				$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $folioM->MUNICIPIOASIGNADOID)->where('ESTADOID', 2)->first();
-			}else{
-				$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $folioM->INSTITUCIONREMISIONMUNICIPIOID)->where('ESTADOID', 2)->first();
-			}			$fecha_actual = date('d') . ' DE ' . $meses[date('n') - 1] . " DEL " . date('Y');
+				$municipio = $this->_municipiosModelRead->asObject()->where('MUNICIPIOID', $folioM->MUNICIPIOASIGNADOID)->where('ESTADOID', 2)->first();
+			} else {
+				$municipio = $this->_municipiosModelRead->asObject()->where('MUNICIPIOID', $folioM->INSTITUCIONREMISIONMUNICIPIOID)->where('ESTADOID', 2)->first();
+			}
+			$fecha_actual = date('d') . ' DE ' . $meses[date('n') - 1] . " DEL " . date('Y');
 			$agente = trim($agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' .  $agente->APELLIDO_MATERNO);
 			$imputado = trim($imputado->NOMBRE . ' ' . $imputado->PRIMERAPELLIDO . ' ' .  $imputado->SEGUNDOAPELLIDO);
 
@@ -1053,27 +1254,58 @@ class FirmaController extends BaseController
 			$derecho_ofendido = file_get_contents(FCPATH . 'assets/documentos/DerechosDeVictimaOfendido.pdf');
 			$termino_condiciones = file_get_contents(FCPATH . 'assets/documentos/TerminosCondiciones.pdf');
 
-			$email = \Config\Services::email();
-			$email->setTo($to);
-			$email->setSubject('FGEBC - Documentos folio: ' . $folio . '/' . $folioM->ANO);
 			$body = view('email_template/documentos_firmados_email_template.php', ['municipio' => $municipio, 'fecha' => $fecha_actual, 'agente' => $agente, 'expediente' => $folioM->EXPEDIENTEID ? $expediente : 'SIN EXPEDIENTE', 'folio' => $folio, 'year' => $folioM->ANO, 'tipoexpediente' => $folioM->TIPOEXPEDIENTEID ? ($tipoExpediente  == "" ? $tipoExpediente : $tipoExpediente->TIPOEXPEDIENTEDESCR) : $folioM->STATUS, 'status' => $folioM->STATUS, 'delito' => $delito, 'imputado' => $imputado, 'claveexpediente' => $folioM->TIPOEXPEDIENTEID ? ($tipoExpediente  == "" ? $tipoExpediente : $tipoExpediente->TIPOEXPEDIENTECLAVE) : $folioM->STATUS]);
-			$email->setMessage($body);
 
+			$mailersend = new MailerSend(['api_key' => EMAIL_TOKEN]);
+			$recipients = [
+				new Recipient($to, 'Your Client'),
+			];
+
+			$emailParams = (new EmailParams())
+				->setFrom('notificacionfgebc@fgebc.gob.mx')
+				->setFromName('FGEBC')
+				->setRecipients($recipients)
+				->setSubject('FGEBC - Documentos folio: ' . $folio . '/' . $folioM->ANO)
+				->setHtml($body);
+
+			if ($folioM->STATUS == 'EXPEDIENTE') {
+				$expediente_guiones = '';
+				$arrayExpediente = str_split($folioM->EXPEDIENTEID);
+				$expediente_guiones =  $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
+				$claveexpediente =  $folioM->TIPOEXPEDIENTEID ? ($tipoExpediente  == "" ? $tipoExpediente : $tipoExpediente->TIPOEXPEDIENTECLAVE) : $folioM->STATUS;
+
+				$emailParams->setText('Estimado usuario, el Centro de Denuncia Tecnológica de la Fiscalía General del Estado de Baja California, tiene por recibido su folio' . $folio . '/' . $folioM->ANO . ', mediante el cual expone hechos presumiblemente como delito, por lo que se generó el expediente número' . $expediente_guiones . '/' . $claveexpediente .
+					', por la probable comisión del delito ' . $delito . 'y/o lo que resulte en contra de' . $imputado . '. Se le informa que en el expediente generado se ordenaron los documentos que se adjuntan al presente correo. Para consultar el estado de su expediente puede ingresar a https://cdtec.fgebc.gob.mx. Lo anterior, con fundamento en lo dispuesto por los artículos 20 inciso C y 21 de la Constitución Política de los Estados Unidos Mexicanos, el numeral 131 fracción II del Código Nacional de Procedimientos Penales, así como el artículo 22 fracción II y demás relativos de la Ley Orgánica de la Fiscalía General del Estado de Baja California.' .
+					isset($municipio) ? $municipio->MUNICIPIODESCR . ', ' : '' . 'BAJA CALIFORNIA' . $fecha_actual . 'LIC.' . $agente . 'AGENTE DEL MINISTERIO PÚBLICO CON ADSCRIPCIÓN CENTRO DE DENUNCIA TECNOLÓGICA DE LA FISCALÍA GENERAL DEL ESTADO DE BAJA CALIFORNIA');
+			} else {
+				$emailParams->setText('Estimado usuario, el Centro de Denuncia Tecnológica de la Fiscalía General del Estado de Baja California, tiene por recibido su folio' . $folio . '/' . $folioM->ANO . ',respecto del cual se generó derivación o canalización, misma que se adjunta al presente correo, lo anterior en virtud de que la solicitud planteada corresponde a diversa autoridad.' .
+					isset($municipio) ? $municipio->MUNICIPIODESCR . ', ' : '' . 'BAJA CALIFORNIA' . $fecha_actual . 'LIC.' . $agente . 'AGENTE DEL MINISTERIO PÚBLICO CON ADSCRIPCIÓN CENTRO DE DENUNCIA TECNOLÓGICA DE LA FISCALÍA GENERAL DEL ESTADO DE BAJA CALIFORNIA');
+			}
+			$attachments = [];
 
 			if ($documento->TIPODOC == 'DENUNCIA ANONIMA') {
 				$pdf = $documento->PDF;
-				$email->attach($pdf, 'attachment',  $documento->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento->FOLIODOCID . '.pdf', 'application/pdf');
+				array_push($attachments, new Attachment($pdf, $documento->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento->FOLIODOCID . '.pdf', 'attachment'));
 			} else {
 				$pdf = $documento->PDF;
 				$xml = $documento->XML;
-				$email->attach($pdf, 'attachment',  $documento->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento->FOLIODOCID . '.pdf', 'application/pdf');
-				$email->attach($xml, 'attachment', $documento->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento->FOLIODOCID . '.xml', 'application/xml');
+				array_push($attachments, new Attachment($pdf, $documento->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento->FOLIODOCID . '.pdf', 'attachment'));
+				array_push($attachments, new Attachment($xml, $documento->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento->FOLIODOCID . '.xml', 'attachment'));
 			}
-			$email->attach($termino_condiciones, 'attachment', 'Terminos y Condiciones.pdf', 'application/pdf');
-			$email->attach($aviso_privacidad, 'attachment', 'Aviso de Privacidad.pdf', 'application/pdf');
-			$email->attach($derecho_ofendido, 'attachment', 'Derechos de Víctima u Ofendido.pdf', 'application/pdf');
-
-			if ($email->send()) {
+			array_push($attachments, new Attachment($termino_condiciones, 'Terminos y Condiciones.pdf', 'attachment'));
+			array_push($attachments, new Attachment($aviso_privacidad, 'Aviso de Privacidad.pdf', 'attachment'));
+			array_push($attachments, new Attachment($derecho_ofendido, 'Derechos de Víctima u Ofendido.pdf', 'attachment'));
+			$emailParams->setAttachments($attachments);
+			$emailParams->setReplyTo('notificacionfgebc@fgebc.gob.mx');
+			$emailParams->setReplyToName('FGEBC');
+			try {
+				$result = $mailersend->email->send($emailParams);
+			} catch (MailerSendValidationException $e) {
+				$result = false;
+			} catch (MailerSendRateLimitException $e) {
+				$result = false;
+			}
+			if ($result) {
 				$datosUpdate = [
 					'ENVIADO' => 'S',
 				];
@@ -1088,6 +1320,10 @@ class FirmaController extends BaseController
 		}
 	}
 
+	/**
+	 * Función para enviar por correo al denunciante todos los documentos de su folio
+	 *
+	 */
 	public function sendEmailDocumentos()
 	{
 		$to = trim($this->request->getPost('send_mail_select'));
@@ -1101,14 +1337,14 @@ class FirmaController extends BaseController
 		if ($to && $year && $folio) {
 
 			if ($expediente != "undefined" && $expediente != '') {
-				$documento = $this->_folioDocModel->asObject()->where('NUMEROEXPEDIENTE', $expediente)->where('ANO', $year)->where('STATUS', 'FIRMADO')->where('STATUSENVIO', 1)->where('ENVIADO', 'N')->findAll();
-				$folioM = $this->_folioModel->asObject()->where('ANO', $year)->where('EXPEDIENTEID', $expediente)->first();
-				$tipoExpediente = $this->_tipoExpedienteModel->asObject()->where('TIPOEXPEDIENTEID',  $folioM->TIPOEXPEDIENTEID)->first();
-				$delito = $this->_folioRelacionFisFisModel->get_by_folio($folio, $year);
+				$documento = $this->_folioDocModelRead->asObject()->where('NUMEROEXPEDIENTE', $expediente)->where('ANO', $year)->where('STATUS', 'FIRMADO')->where('STATUSENVIO', 1)->where('ENVIADO', 'N')->findAll();
+				$folioM = $this->_folioModelRead->asObject()->where('ANO', $year)->where('EXPEDIENTEID', $expediente)->first();
+				$tipoExpediente = $this->_tipoExpedienteModelRead->asObject()->where('TIPOEXPEDIENTEID',  $folioM->TIPOEXPEDIENTEID)->first();
+				$delito = $this->_folioRelacionFisFisModelRead->get_by_folio($folio, $year);
 				$delito =  $delito[0]['DELITOMODALIDADDESCR'];
 			} else {
-				$documento = $this->_folioDocModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'FIRMADO')->where('STATUSENVIO', 1)->where('ENVIADO', 'N')->findAll();
-				$folioM = $this->_folioModel->asObject()->where('ANO', $year)->where('FOLIOID', $folio)->first();
+				$documento = $this->_folioDocModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'FIRMADO')->where('STATUSENVIO', 1)->where('ENVIADO', 'N')->findAll();
+				$folioM = $this->_folioModelRead->asObject()->where('ANO', $year)->where('FOLIOID', $folio)->first();
 				$tipoExpediente = '';
 				$delito = '';
 			}
@@ -1117,15 +1353,15 @@ class FirmaController extends BaseController
 				return json_encode((object)['status' => 2]);
 			}
 
-			$imputado = $this->_folioPersonaFisicaModel->asObject()->where('ANO', $year)->where('FOLIOID', $folioM->FOLIOID)->where('CALIDADJURIDICAID', 2)->first();
-			$agente = $this->_usuariosModel->asObject()->where('ID', session('ID'))->first();
+			$imputado = $this->_folioPersonaFisicaModelRead->asObject()->where('ANO', $year)->where('FOLIOID', $folioM->FOLIOID)->where('CALIDADJURIDICAID', 2)->first();
+			$agente = $this->_usuariosModelRead->asObject()->where('ID', session('ID'))->first();
 
 			$folio = $folioM->FOLIOID;
 
 			if ($folioM->MUNICIPIOASIGNADOID != null) {
-				$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $folioM->MUNICIPIOASIGNADOID)->where('ESTADOID', 2)->first();
-			}else{
-				$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $folioM->INSTITUCIONREMISIONMUNICIPIOID)->where('ESTADOID', 2)->first();
+				$municipio = $this->_municipiosModelRead->asObject()->where('MUNICIPIOID', $folioM->MUNICIPIOASIGNADOID)->where('ESTADOID', 2)->first();
+			} else {
+				$municipio = $this->_municipiosModelRead->asObject()->where('MUNICIPIOID', $folioM->INSTITUCIONREMISIONMUNICIPIOID)->where('ESTADOID', 2)->first();
 			}
 			$fecha_actual = date('d') . ' DE ' . $meses[date('n') - 1] . " DEL " . date('Y');
 			$agente = trim($agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' .  $agente->APELLIDO_MATERNO);
@@ -1135,36 +1371,67 @@ class FirmaController extends BaseController
 			$derecho_ofendido = file_get_contents(FCPATH . 'assets/documentos/DerechosDeVictimaOfendido.pdf');
 			$termino_condiciones = file_get_contents(FCPATH . 'assets/documentos/TerminosCondiciones.pdf');
 
-			$email = \Config\Services::email();
-			$email->setTo($to);
-			$email->setSubject('FGEBC - Documentos folio: ' . $folio . '/' . $folioM->ANO);
-		
+
 			$body = view('email_template/documentos_firmados_email_template.php', ['municipio' => $municipio, 'fecha' => $fecha_actual, 'agente' => $agente, 'expediente' => $folioM->EXPEDIENTEID ? $expediente : 'SIN EXPEDIENTE', 'folio' => $folio, 'year' => $folioM->ANO, 'tipoexpediente' => $folioM->TIPOEXPEDIENTEID ? ($tipoExpediente  == "" ? $tipoExpediente : $tipoExpediente->TIPOEXPEDIENTEDESCR) : $folioM->STATUS, 'status' => $folioM->STATUS, 'delito' => $delito, 'imputado' => $imputado, 'claveexpediente' => $folioM->TIPOEXPEDIENTEID ? ($tipoExpediente  == "" ? $tipoExpediente : $tipoExpediente->TIPOEXPEDIENTECLAVE) : $folioM->STATUS]);
 
-			$email->setMessage($body);
+			$mailersend = new MailerSend(['api_key' => EMAIL_TOKEN]);
+			$recipients = [
+				new Recipient($to, 'Your Client'),
+			];
 
+			$emailParams = (new EmailParams())
+				->setFrom('notificacionfgebc@fgebc.gob.mx')
+				->setFromName('FGEBC')
+				->setRecipients($recipients)
+				->setSubject('FGEBC - Documentos folio: ' . $folio . '/' . $folioM->ANO)
+				->setHtml($body);
+			$attachments = [];
+
+
+			if ($folioM->STATUS == 'EXPEDIENTE') {
+				$expediente_guiones = '';
+				$arrayExpediente = str_split($folioM->EXPEDIENTEID);
+				$expediente_guiones =  $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
+				$claveexpediente =  $folioM->TIPOEXPEDIENTEID ? ($tipoExpediente  == "" ? $tipoExpediente : $tipoExpediente->TIPOEXPEDIENTECLAVE) : $folioM->STATUS;
+				$emailParams->setText('Estimado usuario, el Centro de Denuncia Tecnológica de la Fiscalía General del Estado de Baja California, tiene por recibido su folio' . $folio . '/' . $year . ', mediante el cual expone hechos presumiblemente como delito, por lo que se generó el expediente número' . $expediente_guiones . '/' . $claveexpediente .
+					', por la probable comisión del delito ' . $delito . 'y/o lo que resulte en contra de' . $imputado . '. Se le informa que en el expediente generado se ordenaron los documentos que se adjuntan al presente correo. Para consultar el estado de su expediente puede ingresar a https://cdtec.fgebc.gob.mx. Lo anterior, con fundamento en lo dispuesto por los artículos 20 inciso C y 21 de la Constitución Política de los Estados Unidos Mexicanos, el numeral 131 fracción II del Código Nacional de Procedimientos Penales, así como el artículo 22 fracción II y demás relativos de la Ley Orgánica de la Fiscalía General del Estado de Baja California.' .
+					isset($municipio) ? $municipio->MUNICIPIODESCR . ', ' : '' . 'BAJA CALIFORNIA' . $fecha_actual . 'LIC.' . $agente . 'AGENTE DEL MINISTERIO PÚBLICO CON ADSCRIPCIÓN CENTRO DE DENUNCIA TECNOLÓGICA DE LA FISCALÍA GENERAL DEL ESTADO DE BAJA CALIFORNIA');
+			} else {
+				$emailParams->setText('Estimado usuario, el Centro de Denuncia Tecnológica de la Fiscalía General del Estado de Baja California, tiene por recibido su folio' . $folio . '/' . $year . ',respecto del cual se generó derivación o canalización, misma que se adjunta al presente correo, lo anterior en virtud de que la solicitud planteada corresponde a diversa autoridad.' .
+					isset($municipio) ? $municipio->MUNICIPIODESCR . ', ' : '' . 'BAJA CALIFORNIA' . $fecha_actual . 'LIC.' . $agente . 'AGENTE DEL MINISTERIO PÚBLICO CON ADSCRIPCIÓN CENTRO DE DENUNCIA TECNOLÓGICA DE LA FISCALÍA GENERAL DEL ESTADO DE BAJA CALIFORNIA');
+			}
 			for ($i = 0; $i < count($documento); $i++) {
 				if ($documento[$i]->TIPODOC == 'DENUNCIA ANONIMA') {
 					$pdf = $documento[$i]->PDF;
-					$email->attach($pdf, 'attachment',  $documento[$i]->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento[$i]->FOLIODOCID . '.pdf', 'application/pdf');
+					array_push($attachments, new Attachment($pdf,  $documento[$i]->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento[$i]->FOLIODOCID . '.pdf', 'attachment'));
 				} else {
 					$pdf = $documento[$i]->PDF;
 					$xml = $documento[$i]->XML;
-					$email->attach($pdf, 'attachment',  $documento[$i]->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento[$i]->FOLIODOCID . '.pdf', 'application/pdf');
-					$email->attach($xml, 'attachment', $documento[$i]->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento[$i]->FOLIODOCID . '.xml', 'application/xml');
-					if (str_contains($documento[$i]->TIPODOC, "ORDEN DE PROTECCION")) {
+					array_push($attachments, new Attachment($pdf, $documento[$i]->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento[$i]->FOLIODOCID . '.pdf', 'attachment'));
+					array_push($attachments, new Attachment($xml, $documento[$i]->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento[$i]->FOLIODOCID . '.xml', 'attachment'));
+					if (strpos($documento[$i]->TIPODOC, "ORDEN DE PROTECCION")) {
 						array_push($ordenesProteccion, $documento[$i]);
 						$sendPolice = true;
 					}
 				}
 			}
 
-			$email->attach($termino_condiciones, 'attachment', 'Terminos y Condiciones.pdf', 'application/pdf');
-			$email->attach($aviso_privacidad, 'attachment', 'Aviso de Privacidad.pdf', 'application/pdf');
-			$email->attach($derecho_ofendido, 'attachment', 'Derechos de Victima u Ofendido.pdf', 'application/pdf');
+			array_push($attachments, new Attachment($termino_condiciones, 'Terminos y Condiciones.pdf', 'attachment'));
+			array_push($attachments, new Attachment($aviso_privacidad, 'Aviso de Privacidad.pdf', 'attachment'));
+			array_push($attachments, new Attachment($derecho_ofendido, 'Derechos de Victima u Ofendido.pdf', 'attachment'));
+			$emailParams->setAttachments($attachments);
+			$emailParams->setReplyTo('notificacionfgebc@fgebc.gob.mx');
+			$emailParams->setReplyToName('FGEBC');
+			try {
+				$result = $mailersend->email->send($emailParams);
+			} catch (MailerSendValidationException $e) {
+				$result = false;
+			} catch (MailerSendRateLimitException $e) {
+				$result = false;
+			}
 
-			if ($email->send()) {
-				$email->clear(TRUE);
+			if ($result) {
+				// $email->clear(TRUE);
 				$datosUpdate = [
 					'ENVIADO' => 'S',
 				];
@@ -1183,10 +1450,10 @@ class FirmaController extends BaseController
 				}
 				return json_encode((object)['status' => 1]);
 			} else {
-				try {
-					$email->clear(TRUE);
-				} catch (\Throwable $th) {
-				}
+				// try {
+				// 	//$email->clear(TRUE);
+				// } catch (\Throwable $th) {
+				// }
 				return json_encode((object)['status' => 0]);
 			}
 		} else {
@@ -1194,30 +1461,62 @@ class FirmaController extends BaseController
 		}
 	}
 
-	public function sendEmailAlertas(){
+	/**
+	 * Función para enviar por correo a Isna y Sonia las alertas de un folio importante
+	 *
+	 */
+	public function sendEmailAlertas()
+	{
 		$folio = $this->request->getPost('folio');
 		$year = $this->request->getPost('year');
 
 		if (ENVIRONMENT == 'development') {
-			$to = 'andrea.solorzano@yocontigo-it.com, otoniel.f@yocontigo-it.com';
-		}else{
-			$to = 'isnad.medel@fgebc.gob.mx, direcciongeneralsejap@fgebc.gob.mx';
+			$to = ['andrea.solorzano@yocontigo-it.com', 'otoniel.f@yocontigo-it.com'];
+		} else {
+			$to = ['isnad.medel@fgebc.gob.mx', 'direcciongeneralsejap@fgebc.gob.mx'];
 		}
-		$email = \Config\Services::email();
-		$email->setTo($to);
-		$email->setSubject('¡EMERGENCIA!');
-		$body = view('email_template/alerta_email_template.php',['folio' => $folio, 'year'=>$year ]);
-		$email->setMessage($body);
+
+		$body = view('email_template/alerta_email_template.php', ['folio' => $folio, 'year' => $year]);
+		$mailersend = new MailerSend(['api_key' => EMAIL_TOKEN]);
+		$recipients = [
+			new Recipient($to[0], 'Your Client'),
+			new Recipient($to[1], 'Your Client'),
+		];
+
+		$emailParams = (new EmailParams()) //check envio
+			->setFrom('notificacionfgebc@fgebc.gob.mx')
+			->setFromName('FGEBC')
+			->setRecipients($recipients)
+			->setSubject('Alerta, revisar folio')
+			->setHtml($body)
+			->setText('El folio ' . $folio . '/' . $year . 'es un caso de suma importancia. Favor de verificar en el sistema de videodenuncia')
+			->setReplyTo('notificacionfgebc@fgebc.gob.mx')
+			->setReplyToName('FGEBC');
 		
-		if ($email->send()) {
-			$email->clear(TRUE);
+		try {
+			$result = $mailersend->email->send($emailParams);
+		} catch (MailerSendValidationException $e) {
+			$result = false;
+		} catch (MailerSendRateLimitException $e) {
+			$result = false;
+		}
+
+		// if ($email->send()) {
+		if ($result) {
+			// $email->clear(TRUE);
 			return json_encode((object)['status' => 1]);
 		} else {
 			return json_encode((object)['status' => 0]);
 		}
-
-
 	}
+	/**
+	 * Función para enviar por correo a los policias cuando existen ordenes de proteccion en el folio
+	 *
+	 * @param  mixed $municipioid
+	 * @param  mixed $municipiodescr
+	 * @param  mixed $fecha
+	 * @param  mixed $documentos
+	 */
 	public function sendEmailOrdenesProtección($municipioid, $municipiodescr, $fecha, $documentos)
 	{
 		if (ENVIRONMENT == 'development') {
@@ -1252,7 +1551,7 @@ class FirmaController extends BaseController
 		if (ENVIRONMENT == 'production') {
 			switch ($municipioid) {
 				case 1:
-					$to_orden_proteccion = 'victor.ramirez@ensenada.gob.mx';
+					$to_orden_proteccion = 'copmproteccion@ensenada.gob.mx';
 					break;
 				case 2:
 					$to_orden_proteccion = 'udai@mexicali.gob.mx';
@@ -1277,27 +1576,52 @@ class FirmaController extends BaseController
 					break;
 			}
 		}
-		$email = \Config\Services::email();
-		$email->setTo($to_orden_proteccion);
-		$email->setSubject('FGEBC - ORDENES DE PROTECCIÓN');
+
 		$body = view('email_template/orden_proteccion_email_template.php', ['municipio' => $municipiodescr, 'fecha' => $fecha]);
-		$email->setMessage($body);
+		$mailersend = new MailerSend(['api_key' => EMAIL_TOKEN]);
+		$recipients = [
+			new Recipient($to_orden_proteccion, 'Your Client'),
+		];
+
+		$emailParams = (new EmailParams())
+			->setFrom('notificacionfgebc@fgebc.gob.mx')
+			->setFromName('FGEBC')
+			->setRecipients($recipients)
+			->setSubject('FGEBC - Ordenes de protección')
+			->setHtml($body);
+		$attachments = [];
+
+		$emailParams->setText('Anteponiendo un cordial saludo, a través del presente se adjunta medida de protección emergente generada en el Centro de Denuncia Tecnológica de la Fiscalía General del Estado de Baja California, misma que se remite para su debida atención, agradeciendo de antemano su colaboración.' .
+			isset($municipiodescr) ? $municipiodescr->MUNICIPIODESCR . ', ' : '' . 'BAJA CALIFORNIA,' . $fecha . 'CENTRO DE DENUNCIA TECNOLÓGICA DE LA FISCALÍA GENERAL DEL ESTADO DE BAJA CALIFORNIA');
+
 		foreach ($documentos as $key => $documento) {
 			$pdf = $documento->PDF;
-			$email->attach($pdf, 'attachment',  $documento->TIPODOC . '.pdf', 'application/pdf');
+			array_push($attachments, new Attachment($pdf, $documento->TIPODOC . '.pdf', 'application/pdf', 'attachment'));
 		}
 
-		try {
-			$email->send();
-		} catch (\Throwable $th) {
-		}
+		$emailParams->setAttachments($attachments);
+		$emailParams->setReplyTo('notificacionfgebc@fgebc.gob.mx');
+		$emailParams->setReplyToName('FGEBC');
 
 		try {
-			$email->clear(TRUE);
-		} catch (\Throwable $th) {
+			$result = $mailersend->email->send($emailParams);
+		} catch (MailerSendValidationException $e) {
+			$result = false;
+		} catch (MailerSendRateLimitException $e) {
+			$result = false;
 		}
+
+		// try {
+		// 	// $email->clear(TRUE);
+		// } catch (\Throwable $th) {
+		// }
 	}
 
+	/**
+	 * Función para agregar información a la bitacora diaria.
+	 *
+	 * @param  mixed $data
+	 */
 	private function _bitacoraActividad($data)
 	{
 		$data = $data;

@@ -54,6 +54,9 @@ priorityLinesSockets.registerToPriorityLineUpdate(priorityLists => {
 				let text_priority = setPriority(dataGuest.priority);
 				let text_6 = document.createTextNode(text_priority);
 
+				let td_7 = document.createElement("td");
+				td_7.classList.add("text-center");
+
 				td_1.appendChild(text_1);
 				td_2.appendChild(text_2);
 				td_3.appendChild(text_3);
@@ -61,12 +64,27 @@ priorityLinesSockets.registerToPriorityLineUpdate(priorityLists => {
 				td_5.appendChild(text_5);
 				td_6.appendChild(text_6);
 
+				if (dataGuest.guestConnection.latitude && dataGuest.guestConnection.longitude) {
+					let a = document.createElement("a");
+					a.setAttribute("href", 'https://www.google.com/maps/search/?api=1&query=' + dataGuest.guestConnection.latitude + "," + dataGuest.guestConnection.longitude + '&zoom=20');
+					a.setAttribute("target", '_blank');
+					a.classList.add('btn');
+					a.classList.add('btn-primary');
+					let aTexto = document.createTextNode("UBICACIÓN");
+					a.appendChild(aTexto);
+					td_7.appendChild(a);
+				} else {
+					let aTexto = document.createTextNode("SIN UBICACIÓN");
+					td_7.appendChild(aTexto);
+				}
+
 				fila.appendChild(td_1);
 				fila.appendChild(td_2);
 				fila.appendChild(td_3);
 				fila.appendChild(td_4);
 				fila.appendChild(td_5);
 				fila.appendChild(td_6);
+				fila.appendChild(td_7);
 
 				tbody.appendChild(fila);
 			});

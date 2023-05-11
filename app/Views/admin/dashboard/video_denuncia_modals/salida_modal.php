@@ -55,6 +55,30 @@
 										</select>
 									</div>
 								</div>
+								<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+									<label for="denuncia_tel" class="form-label font-weight-bold">¿La denuncia fue télefonica?</label>
+									<br>
+									<div class="form-check form-check-inline">
+										<input class="form-check-input" type="radio" name="denuncia_tel" value="S" required>
+										<label class="form-check-label" for="flexRadioDefault1">SI</label>
+									</div>
+									<div class="form-check form-check-inline">
+										<input class="form-check-input" type="radio" name="denuncia_tel" value="N" required>
+										<label class="form-check-label" for="flexRadioDefault2">NO</label>
+									</div>
+								</div>
+								<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+									<label for="denuncia_con_datos_origen" class="form-label font-weight-bold">¿La denuncia fue con datos de origen?</label>
+									<br>
+									<div class="form-check form-check-inline">
+										<input class="form-check-input" type="radio" name="denuncia_con_datos_origen" value="S" required>
+										<label class="form-check-label" for="flexRadioDefault1">SI</label>
+									</div>
+									<div class="form-check form-check-inline">
+										<input class="form-check-input" type="radio" name="denuncia_con_datos_origen" value="N" required>
+										<label class="form-check-label" for="flexRadioDefault2">NO</label>
+									</div>
+								</div>
 								<div class="row mb-2">
 									<div id="derivaciones_container" class="col-12 d-none">
 										<label for="derivaciones" class="form-label font-weight-bold">Derivaciones</label>
@@ -73,7 +97,7 @@
 								</div>
 								<div id="notas" class="form-group">
 									<label for="notas_caso_salida">Notas</label>
-									<textarea id="notas_caso_salida" class="form-control" placeholder="Notas..." rows="10" maxlength="1000" oninput="mayuscTextarea(this)" onkeydown="pulsar(event)" onkeyup="contarCaracteresSalida(this)"></textarea>
+									<textarea id="notas_caso_salida" class="form-control" placeholder="Notas..." rows="10" maxlength="1000" onkeydown="pulsar(event)" onkeyup="contarCaracteresSalida(this)"></textarea>
 									<small id="numCaracterSalida"> </small>
 
 								</div>
@@ -121,6 +145,7 @@
 
 	const municipio_empleado_container = document.querySelector('#municipio_empleado_container');
 	const municipio_empleado = document.querySelector('#municipio_empleado');
+
 	const derivaciones_container = document.querySelector('#derivaciones_container');
 	const derivaciones = document.querySelector('#derivaciones');
 	const canalizaciones_container = document.querySelector('#canalizaciones_container');
@@ -129,19 +154,18 @@
 	const form_vehiculo = document.querySelector('#form_vehiculo');
 	let select_uma = document.querySelector("#uma_select");
 	var options = select_uma.options;
-	tipoSalida.addEventListener('change', (e) => {
-
+	$(document).on('show.bs.modal', '#salida_modal', function() {
 		const notas_caso_salida = document.querySelector('#notas_caso_salida');
 		const notas_caso_mp = document.querySelector('#notas_mp');
 		notas_caso_salida.value = notas_caso_mp.value;
-		if (charRemain < 300) {
+		if (charRemain < 1000) {
 			document.getElementById("numCaracterSalida").innerHTML = charRemain + ' caracteres restantes';
 		} else {
 			document.getElementById("numCaracterSalida").innerHTML = '1000 caracteres restantes';
 
 		}
-
-
+	});
+	tipoSalida.addEventListener('change', (e) => {
 		if (!(e.target.value == 'DERIVADO' || e.target.value == 'CANALIZADO' || e.target.value == '1' || e.target.value == '4' || e.target.value == '5' || e.target.value == '6' || e.target.value == '7' || e.target.value == '8' || e.target.value == '9')) {
 			document.querySelector('#v-pills-delitos-tab').classList.add('d-none');
 			document.querySelector('#v-pills-documentos-tab').classList.add('d-none');
@@ -241,22 +265,26 @@
 
 
 	btnFinalizar.addEventListener('click', () => {
-		if (document.querySelector('#vehiculoid').value != '' && !form_vehiculo.checkValidity()) {
-			Swal.fire({
-				icon: 'error',
-				text: 'Por favor, completa todos los campos de los vehículos.',
-				confirmButtonColor: '#bf9b55',
-			});
-			return;
-		}
+	
 		if (!form_delito.checkValidity()) {
+			let message = "Por favor completa los siguientes campos:\n";
+			let inputs = form_delito.querySelectorAll("input, select");
+
+			inputs.forEach(input => {
+				if (!input.validity.valid && input.labels.length > 0) {
+					message += "- " + input.labels[0].textContent + "\n";
+				}
+			});
+
 			Swal.fire({
 				icon: 'error',
-				text: 'Por favor, completa todos los campos de denuncia.',
+				text: message,
 				confirmButtonColor: '#bf9b55',
 			});
+
 			return;
 		}
+
 		btnFinalizar.setAttribute('disabled', true);
 		if (!(tipoSalida.value == '1' || tipoSalida.value == '4' || tipoSalida.value == '5' || tipoSalida.value == '6' || tipoSalida.value == '7' || tipoSalida.value == '8' || tipoSalida.value == '9')) {
 			let salida = tipoSalida.value;
@@ -272,6 +300,9 @@
 					btnFinalizar.disabled = false;
 
 				} else {
+					var denuncia_tel = document.querySelector('input[name="denuncia_tel"]:checked');
+					var denuncia_con_datos_origen = document.querySelector('input[name="denuncia_con_datos_origen"]:checked');
+
 					data = {
 						'folio': inputFolio.value,
 						'year': year_select.value,
@@ -279,15 +310,25 @@
 						'motivo': descripcion,
 						'institutomunicipio': municipio_empleado.value,
 						'institutoremision': derivaciones.value != '' && tipoSalida.value == 'DERIVADO' ? derivaciones.value : canalizaciones.value,
+						'denuncia_tel': denuncia_tel.value,
+						'denuncia_electronica': denuncia_con_datos_origen.value,
+
 					}
 				}
 
 			} else {
+				var denuncia_tel = document.querySelector('input[name="denuncia_tel"]:checked');
+				var denuncia_con_datos_origen = document.querySelector('input[name="denuncia_con_datos_origen"]:checked');
+
+
 				data = {
 					'folio': inputFolio.value,
 					'year': year_select.value,
 					'status': salida,
 					'motivo': descripcion,
+					'denuncia_tel': denuncia_tel.value,
+					'denuncia_electronica': denuncia_con_datos_origen.value,
+
 				}
 
 			}
@@ -411,6 +452,9 @@
 		} else {
 			if (municipio_empleado.value != '') {
 				let descripcion = document.querySelector('#notas_caso_salida').value;
+				var denuncia_tel = document.querySelector('input[name="denuncia_tel"]:checked');
+				var denuncia_con_datos_origen = document.querySelector('input[name="denuncia_con_datos_origen"]:checked');
+
 
 				if (
 					descripcion &&
@@ -422,13 +466,16 @@
 						'municipio': municipio_empleado.value,
 						'estado': 2,
 						'notas': descripcion,
-						'tipo_expediente': Number(tipoSalida.value)
+						'tipo_expediente': Number(tipoSalida.value),
+						'denuncia_tel': denuncia_tel.value,
+						'denuncia_electronica': denuncia_con_datos_origen.value,
+
+
 					}
 					const dataFolio = {
 						'folio': inputFolio.value,
 						'year': year_select.value,
 						'municipio_empleado': municipio_empleado.value,
-
 					};
 					// $.ajax({
 

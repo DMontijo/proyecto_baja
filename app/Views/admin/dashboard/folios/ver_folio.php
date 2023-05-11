@@ -5,28 +5,46 @@
 <?= $this->section('content') ?>
 <?php $session = session(); ?>
 <?php if ($body_data->datosFolio->STATUS == 'EN PROCESO' || $body_data->datosFolio->STATUS == 'ABIERTO') { ?>
-	<div class="alert alert-warning text-right font-weight-bold" role="alert">
-		ESTATUS: <?= $body_data->datosFolio->STATUS ?>
+	<div class="alert alert-warning" role="alert">
+		<h3 class="font-weigth-bold text-center">
+			<strong>FOLIO: </strong><?= $body_data->datosFolio->FOLIOID . '/' . $body_data->datosFolio->ANO ?>
+		</h3>
+		<strong>ESTATUS:</strong> <?= $body_data->datosFolio->STATUS ?>
 	</div>
 <?php } ?>
 <?php if ($body_data->datosFolio->STATUS != 'EN PROCESO' && $body_data->datosFolio->STATUS != 'ABIERTO') { ?>
-	<div class="alert alert-warning text-right font-weight-bold" role="alert">
-		ESTATUS: <?= $body_data->datosFolio->TIPOEXPEDIENTEID ?  $body_data->datosFolio->STATUS  . ' ' . $body_data->datosFolio->TIPOEXPEDIENTEDESCR : $body_data->datosFolio->STATUS ?> <br>
-
-		MUNICIPIO ASIGNADO O REMITIDO: <?= $body_data->datosFolio->MUNICIPIODESCR ?> <br>
+	<div class="alert alert-success" role="alert">
+		<h3 class="font-weigth-bold text-center">
+			<?php
+			$expedienteid = '';
+			if ($body_data->datosFolio->EXPEDIENTEID && $body_data->datosFolio->EXPEDIENTEID != '') {
+				$arrayExpediente = str_split($body_data->datosFolio->EXPEDIENTEID);
+				$expedienteid =  $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
+			}
+			$tipoexpediente = '';
+			if (isset($body_data->datosFolio->TIPOEXPEDIENTECLAVE)) {
+				$expedienteid = $expedienteid . '/' . $body_data->datosFolio->TIPOEXPEDIENTECLAVE;
+			}
+			?>
+			<strong>FOLIO: </strong><?= $body_data->datosFolio->FOLIOID . '/' . $body_data->datosFolio->ANO ?><br>
+			<strong>EXPEDIENTE: </strong><?= $expedienteid ?>
+		</h3>
+		<strong>ESTATUS: </strong><?= $body_data->datosFolio->STATUS ?><br>
+		<strong>MUNICIPIO ASIGNADO: </strong><?= $body_data->datosFolio->MUNICIPIODESCR ?> <br>
 	<?php }
 if ($body_data->datosFolio->INSTITUCIONREMISIONID) { ?>
-		INSTITUTO REMITIDO: <?= $body_data->datosFolio->INSTITUCIONREMISIONDESCR ?> <br>
+		<strong>INSTITUTO REMITIDO: </strong><?= $body_data->datosFolio->INSTITUCIONREMISIONDESCR ?> <br>
 	<?php }
 if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->MEDIADORID)) { ?>
-		AGENTE ASIGNADO: <?= $body_data->datosFolio->NOMBRE . ' ' . $body_data->datosFolio->PRIMERAPELLIDO . ' ' . $body_data->datosFolio->SEGUNDOAPELLIDO  ?><br>
-		OFICINA ASIGNADA: <?= $body_data->datosFolio->OFICINADESCR ?><br>
-		AREA ASIGNADA: <?= $body_data->datosFolio->AREADESCR ?><br>
+		<strong>AGENTE ASIGNADO: </strong><?= $body_data->datosFolio->NOMBRE . ' ' . $body_data->datosFolio->PRIMERAPELLIDO . ' ' . $body_data->datosFolio->SEGUNDOAPELLIDO  ?><br>
+		<strong>OFICINA ASIGNADA: </strong><?= $body_data->datosFolio->OFICINADESCR ?><br>
 	<?php } ?>
 	</div>
 	<?php if (!$body_data->datosFolio->AGENTEASIGNADOID && $body_data->datosFolio->MUNICIPIOASIGNADOID) { ?>
-		<div class="alert alert-danger text-right font-weight-bold" role="alert">
-			NO SE HA REMITIDO
+		<div class="alert alert-danger font-weight-bold" role="alert">
+			<h3 class="font-weigth-bold text-center">
+				<strong>NO SE HA REMITIDO</strong>
+			</h3>
 		</div>
 	<?php } ?>
 
@@ -62,16 +80,16 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 		</div>
 		<?php if ($body_data->datosFolio->STATUS != 'EN PROCESO' && $body_data->datosFolio->STATUS != 'ABIERTO') { ?>
 
-		<div class="col-12 col-sm-6 col-md-4">
-			<div class="card rounded bg-white shadow" style="height: 240px;">
-				<div class="card-body">
-					<button id="documentos-folio-btn" class="btn btn-primary btn-block h-100" role="button" <?php if ($body_data->datosFolio->STATUS == 'ABIERTO' || $body_data->datosFolio->STATUS == 'EN PROCESO') {
-																												echo 'disabled';
-																											} ?>><i class="fas fa-file-alt fa-3x"></i><br><br> DOCUMENTOS</button>
+			<div class="col-12 col-sm-6 col-md-4">
+				<div class="card rounded bg-white shadow" style="height: 240px;">
+					<div class="card-body">
+						<button id="documentos-folio-btn" class="btn btn-primary btn-block h-100" role="button" <?php if ($body_data->datosFolio->STATUS == 'ABIERTO' || $body_data->datosFolio->STATUS == 'EN PROCESO') {
+																													echo 'disabled';
+																												} ?>><i class="fas fa-file-alt fa-3x"></i><br><br> DOCUMENTOS</button>
+					</div>
 				</div>
 			</div>
-		</div>
-		<?php }?>
+		<?php } ?>
 		<!-- <div class="col-12 col-sm-6 col-md-4 d-none">
 			<div class="card rounded bg-white shadow" style="height: 240px;">
 				<div class="card-body">
@@ -422,14 +440,14 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 		});
 		<?php if ($body_data->datosFolio->STATUS != 'EN PROCESO' && $body_data->datosFolio->STATUS != 'ABIERTO') { ?>
 
-		documentos_folio_btn.addEventListener('click', () => {
-			<?php if ($body_data->datosFolio->EXPEDIENTEID != NULL) { ?>
-				window.location.href = `<?= base_url('/admin/dashboard/documentos_show?folio=') ?>${inputFolio.value}&year=${year_select.value}&expediente=` + `<?= $body_data->datosFolio->EXPEDIENTEID ?>`;
-			<?php } else { ?>
+			documentos_folio_btn.addEventListener('click', () => {
+				<?php if ($body_data->datosFolio->EXPEDIENTEID != NULL) { ?>
+					window.location.href = `<?= base_url('/admin/dashboard/documentos_show?folio=') ?>${inputFolio.value}&year=${year_select.value}&expediente=` + `<?= $body_data->datosFolio->EXPEDIENTEID ?>`;
+				<?php } else { ?>
 
-				window.location.href = `<?= base_url('/admin/dashboard/documentos_show?folio=') ?>${inputFolio.value}&year=${year_select.value}`;
-			<?php } ?>
-		});
+					window.location.href = `<?= base_url('/admin/dashboard/documentos_show?folio=') ?>${inputFolio.value}&year=${year_select.value}`;
+				<?php } ?>
+			});
 		<?php } ?>
 		// videos_folio_btn.addEventListener('click', () => {
 		// 	data = {

@@ -222,6 +222,7 @@ export class VideoServiceAgent {
 	 * @param {Function} [callback] - This method is executed after call is connected, this will receive the details of guest connection
 	 */
 	acceptCall(localVideoSelector, remoteVideoSelector, callback) {
+		this.#phoneRing.pause();
 		this.#localVideoSelector = localVideoSelector;
 		this.#emit(
 			"connect-call",

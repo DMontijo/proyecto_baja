@@ -23,7 +23,7 @@ class App extends BaseConfig
 	 *
 	 * @var string
 	 */
-	public $baseURL = 'https://cdtec.fgebc.gob.mx/';
+	public $baseURL = 'https://cdtec.fgebc.gob.mx/cdtec';
 
 	/**
 	 * --------------------------------------------------------------------------
@@ -136,7 +136,7 @@ class App extends BaseConfig
 	 *
 	 * @var boolean
 	 */
-	public $forceGlobalSecureRequests = false;
+	public $forceGlobalSecureRequests = true;
 
 	/**
 	 * --------------------------------------------------------------------------

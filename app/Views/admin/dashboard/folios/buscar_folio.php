@@ -85,9 +85,12 @@
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
 												<label for="status" class="form-label font-weight-bold">Tipo:</label>
 												<select class="form-control" id="tipo" name="tipo" required>
-													<option selected value="">Todos los tipos</option>
+													<option selected value="">Todos los tipos de denuncia</option>
 													<option <?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'VD' ? 'selected' : '') : null ?> value="VD">VIDEO DENUNCIA</option>
 													<option <?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'DA' ? 'selected' : '') : null ?> value="DA">DENUNCIA ANÓNIMA</option>
+													<option <?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'TE' ? 'selected' : '') : null ?> value="TE">TELEFÓNICA</option>
+													<option <?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'EL' ? 'selected' : '') : null ?> value="EL">ELECTRÓNICA</option>
+
 												</select>
 											</div>
 
@@ -116,55 +119,69 @@
 				</div>
 				<div class="card shadow border-0" style="overflow-x:auto;">
 					<div class="card-body">
-						<table id="expedientes_generados" class="table table-bordered table-striped">
-							<thead>
-								<tr>
-									<th class="text-center"></th>
-									<th class="text-center" style="min-width:150px;">FOLIO</th>
-									<th class="text-center">AÑO</th>
-									<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
-									<th class="text-center" style="min-width:150px;">ESTATUS</th>
-									<th class="text-center" style="min-width:150px;">TIPO</th>
-									<th class="text-center" style="min-width:150px;">DELITO</th>
+						<div class="row">
+							<div class="col-12" style="overflow-x: auto;">
+								<table id="expedientes_generados" class="table table-bordered table-striped table-sm" style="font-size:12px;">
+									<thead>
+										<tr>
+											<th class="text-center"></th>
+											<th class="text-center">FOLIO</th>
+											<th class="text-center">AÑO</th>
+											<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
+											<th class="text-center">ESTATUS</th>
+											<th class="text-center">MEDIO</th>
+											<th class="text-center" style="min-width:300px;">DELITO</th>
+											<th class="text-center" style="min-width:200px;">NOMBRE DEL DENUNCIANTE</th>
+											<th class="text-center" style="min-width:200px;">AGENTE DE ATENCIÓN</th>
+											<th class="text-center">MUNICIPIO ASIGNADO</th>
+											<th class="text-center" style="min-width:250px;">DEPARTAMENTO ASIGNADO</th>
+											<th class="text-center" style="min-width:150px;">FECHA REGISTRO</th>
+											<th class="text-center" style="min-width:150px;">FECHA SALIDA</th>
+										</tr>
+									</thead>
+									<tbody>
+										<?php
+										foreach ($body_data->result as $index => $folio) {
+											$expedienteid = '';
+											$tipo = '';
 
-									<th class="text-center" style="min-width:200px;">NOMBRE DEL DENUNCIANTE</th>
-									<th class="text-center" style="min-width:200px;">AGENTE DE ATENCIÓN</th>
-									<th class="text-center" style="min-width:150px;">MUNICIPIO ASIGNADO</th>
-									<th class="text-center" style="min-width:250px;">DEPARTAMENTO ASIGNADO</th>
-									<th class="text-center" style="min-width:150px;">FECHA REGISTRO</th>
-									<th class="text-center" style="min-width:150px;">FECHA SALIDA</th>
-								</tr>
-							</thead>
-							<tbody>
-								<?php
-								foreach ($body_data->result as $index => $folio) {
-									$expedienteid = '';
-									if (isset($folio->EXPEDIENTEID)) {
-										$arrayExpediente = str_split($folio->EXPEDIENTEID);
-										$expedienteid = $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
-									} ?>
+											if (isset($folio->EXPEDIENTEID)) {
+												$arrayExpediente = str_split($folio->EXPEDIENTEID);
+												$expedienteid = $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
+											}
+											if ($folio->TIPODENUNCIA == 'VD') {
+												$tipo = 'VIDEO';
+											} else if ($folio->TIPODENUNCIA == 'DA') {
+												$tipo = 'ANÓNIMA';
+											} else if ($folio->TIPODENUNCIA == 'TE')  {
+												$tipo = 'TELEFÓNICA';
+											}else{
+												$tipo = 'ELECTRÓNICA';
 
-									<tr>
-										<td class="text-center">
-											<a href="<?= base_url('/admin/dashboard/ver_folio?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO ?>" class="btn btn-primary text-white"><i class="fas fa-folder-open"></i> ABRIR</a>
-										</td>
-										<td class="text-center font-weight-bold"><?= $folio->FOLIOID . '/' . $folio->ANO ?></td>
-										<td class="text-center"><?= $folio->ANO ?></td>
-										<td class="text-center font-weight-bold"><?= $expedienteid ?  $expedienteid . '/' . $folio->TIPOEXPEDIENTECLAVE : $folio->FOLIOID . '/' . $folio->ANO ?></td>
-										<td class="text-center"><?= $folio->STATUS ?></td>
-										<td class="text-center"><?= $folio->TIPODENUNCIA == 'VD' ? 'VIDEODENUNCIA' : 'ANÓNIMA' ?></td>
-										<td class="text-center"><?= $folio->DELITOMODALIDADDESCR ? $folio->DELITOMODALIDADDESCR : $folio->HECHODELITO ?></td>
+											} ?>
 
-										<td class="text-center"><?= $folio->N_DENUNCIANTE . ' ' . $folio->APP_DENUNCIANTE . ' ' . $folio->APM_DENUNCIANTE ?></td>
-										<td class="text-center"><?= $folio->N_AGENT . ' ' . $folio->APP_AGENT . ' ' . $folio->APM_AGENT ?></td>
-										<td class="text-center"><?= $folio->MUNICIPIOASIGNADO ?></td>
-										<td class="text-center"><?= $folio->OFICINADESCR ?></td>
-										<td class="text-center"><?= $folio->FECHAREGISTRO ?></td>
-										<td class="text-center"><?= $folio->FECHASALIDA ?  $folio->FECHASALIDA : '' ?></td>
-									</tr>
-								<?php } ?>
-							</tbody>
-						</table>
+											<tr>
+												<td class="text-center">
+													<a href="<?= base_url('/admin/dashboard/ver_folio?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO ?>" class="btn btn-primary text-white btn-sm"><i class="fas fa-folder-open"></i> ABRIR</a>
+												</td>
+												<td class="text-center font-weight-bold"><?= $folio->FOLIOID ?></td>
+												<td class="text-center"><?= $folio->ANO ?></td>
+												<td class="text-center font-weight-bold"><?= $expedienteid ?  $expedienteid . '/' . $folio->TIPOEXPEDIENTECLAVE : $folio->FOLIOID . '/' . $folio->ANO ?></td>
+												<td class="text-center"><?= $folio->STATUS ?></td>
+												<td class="text-center"><?= $tipo ?></td>
+												<td class="text-center"><?= $folio->DELITOMODALIDADDESCR ? $folio->DELITOMODALIDADDESCR : $folio->HECHODELITO ?></td>
+												<td class="text-center"><?= $folio->NOMBRE_DENUNCIANTE ?></td>
+												<td class="text-center"><?= $folio->NOMBRE_AGENTE ?></td>
+												<td class="text-center"><?= $folio->MUNICIPIODESCR ?></td>
+												<td class="text-center"><?= $folio->OFICINADESCR ? $folio->OFICINADESCR : $folio->MODULODESCR ?></td>
+												<td class="text-center"><?= $folio->FECHAREGISTRO ?></td>
+												<td class="text-center"><?= $folio->FECHASALIDA ?  $folio->FECHASALIDA : '' ?></td>
+											</tr>
+										<?php } ?>
+									</tbody>
+								</table>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -207,11 +224,11 @@
 			autoWidth: true,
 			ordering: true,
 			order: [
-				[0, 'desc'],
-				[1, 'desc']
+				[1, 'desc'],
+				[2, 'desc']
 			],
 			searching: true,
-			pageLength: 20,
+			pageLength: 100,
 			// dom: 'Bfrtip',
 			// buttons: [
 			// 	'copy', 'excel', 'pdf'

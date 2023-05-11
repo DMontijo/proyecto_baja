@@ -107,7 +107,7 @@
 			autoWidth: true,
 			ordering: true,
 			order: [
-				[0, 'asc'],
+				[3, 'desc'],
 			],
 			searching: true,
 			pageLength: 100,
@@ -127,7 +127,7 @@
 			autoWidth: true,
 			ordering: true,
 			order: [
-				[0, 'asc'],
+				[3, 'desc'],
 			],
 			searching: true,
 			pageLength: 100,

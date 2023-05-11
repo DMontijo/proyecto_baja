@@ -94,9 +94,12 @@ if ($agent->isMobile()) {
 							</div>
 						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="telefono" class="form-label fw-bold input-required">Número de teléfono</label>
-							<input type="number" class="form-control" id="telefono" name="telefono" required max="99999999999999999999" minlenght="6" maxlength="20" oninput="clearInputPhone(event);">
-							<!-- <small>Mínimo 6 digitos</small> -->
+							<label for="telefono" class="form-label fw-bold input-required">Número de celular</label>
+							<input type="number" class="form-control" id="telefono" name="telefono" required minlenght="10" maxlength="10" oninput="clearInputPhone(event);" pattern="[0-9]+">
+							<small>El campo número debe tener 10 dígitos</small>
+							<div class="invalid-feedback">
+								El campo número debe tener 10 dígitos
+							</div>
 							<input type="number" id="codigo_pais" name="codigo_pais" maxlength="3" hidden>
 						</div>
 
@@ -256,7 +259,7 @@ if ($agent->isMobile()) {
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="cp" class="form-label fw-bold">Código postal</label>
-							<input type="number" class="form-control" id="cp" maxlength="10" oninput="clearInputPhone(event);" name="cp">
+							<input type="number" class="form-control" id="cp" maxlength="10" name="cp">
 						</div>
 
 						<div class="col-12 mt-4 mb-4">
@@ -483,6 +486,11 @@ if ($agent->isMobile()) {
 		if (e.target.value.length > e.target.maxLength) {
 			e.target.value = e.target.value.slice(0, e.target.maxLength);
 		};
+		if (e.target.value.length < 10) {
+			e.target.classList.add('is-invalid');
+		} else {
+			e.target.classList.remove('is-invalid');
+		}
 	}
 
 	chargeCurrentStep(currentStep);
@@ -520,6 +528,16 @@ if ($agent->isMobile()) {
 				text: 'Debes llenar todos los campos requeridos para avanzar',
 				confirmButtonColor: '#bf9b55',
 			});
+			if (document.getElementById('telefono').value.length < 10) {
+				document.getElementById('telefono').classList.add('is-invalid')
+				Swal.fire({
+					icon: 'error',
+					title: 'Error',
+					text: 'El numero de teléfono debe tener 10 dígitos',
+					confirmButtonColor: '#bf9b55',
+				});
+			}
+
 		}
 	});
 
@@ -575,7 +593,8 @@ if ($agent->isMobile()) {
 					regex.test(document.querySelector('#correo').value) &&
 					document.querySelector('#fecha_nacimiento').value != '' &&
 					document.querySelector('input[name="sexo"]:checked') &&
-					document.querySelector('#telefono').value != ''
+					document.querySelector('#telefono').value != '' &&
+					document.querySelector('#telefono').value.length == 10
 				) {
 					return true;
 				} else {
@@ -1445,7 +1464,7 @@ if ($agent->isMobile()) {
 							let documento_identidad = document.querySelector('#documento_text');
 							let documento_identidad_modal = document.querySelector('#img_identificacion_modal');
 							let preview = document.querySelector('#img_preview');
-							
+
 							clearSelect($listaDeDispositivos);
 
 							documento.removeAttribute('required');

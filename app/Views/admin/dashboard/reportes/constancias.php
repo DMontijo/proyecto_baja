@@ -100,7 +100,7 @@
 				</div>
 
 				<div class="card shadow border-0">
-					<div class="card-body" style="overflow-x:auto;">
+					<div class="card-body">
 						<div class="row mb-3">
 							<div class="col-12 text-right">
 								<?php if (isset($body_data->filterParams)) { ?>
@@ -109,61 +109,68 @@
 										<?php foreach ($body_data->filterParams as $index => $value) { ?>
 											<input type="hidden" id="<?= $index ?>" name="<?= $index ?>" value="<?= $value ?>">
 										<?php } ?>
-										<div class="col-12 text-right p-0">
+										<div class="col-12 text-right p-0 pb-2">
 											<button type="submit" class="btn btn-success font-weight-bold" id="btnExcel" name="btnExcel">Exportar reporte a excel</button>
 										</div>
 									</form>
 								<?php } ?>
 							</div>
+							<div class="col-12" style="overflow-x:auto;">
+								<table id="constancias_generadas" class="table table-bordered table-striped table-sm" style="font-size:12px;">
+									<thead>
+										<tr>
+											<th class="text-center">CONSTANCIA</th>
+											<th class="text-center">AÑO</th>
+											<th class="text-center" style="min-width:150px;">FECHA DE FIRMA</th>
+											<th class="text-center" style="min-width:150px;">ESTADO CONSTANCIA</th>
+											<th class="text-center" style="min-width:250px;">DENUNCIANTE</th>
+											<th class="text-center" style="min-width:250px;">AGENTE</th>
+											<th class="text-center" style="min-width:150px;">MUNICIPIO</th>
+											<th class="text-center" style="min-width:150px;"></th>
+										</tr>
+									</thead>
+									<tbody>
+
+										<?php foreach ($body_data->result as $index => $constancia) { ?>
+											<tr>
+												<td class="text-center font-weight-bold"><?= $constancia->CONSTANCIAEXTRAVIOID ?></td>
+												<td class="text-center"><?= $constancia->ANO ?></td>
+												<td class="text-center"><?= isset($constancia->FECHAFIRMA) ? $constancia->FECHAFIRMA : '' ?></td>
+												<td class="text-center"><?= $constancia->STATUS ?></td>
+												<td class="text-center"><?= $constancia->NOMBRE_DENUNCIANTE ?></td>
+												<td class="text-center"><?= isset($constancia->NOMBRE_AGENTE) ? $constancia->NOMBRE_AGENTE : 'NO SE HA FIRMADO' ?></td>
+												<?php if ($constancia->MUNICIPIOIDCITA == null) { ?>
+													<td class="text-center"><?= $constancia->MUNICIPIODESCR ?></td>
+												<?php } ?>
+												<?php if ($constancia->MUNICIPIOIDCITA != null) { ?>
+													<td class="text-center"><?= $constancia->MUNICIPIODESCRCITA ?></td>
+												<?php } ?>
+												<?php if ($constancia->STATUS == 'FIRMADO') { ?>
+													<td class="text-center">
+														<form class="d-inline-block" method="POST" action="<?php echo base_url('admin/dashboard/download_constancia_pdf') ?>">
+															<input type="text" class="form-control" id="folio" name="folio" value="<?= $constancia->CONSTANCIAEXTRAVIOID ?>" hidden>
+															<input type="text" class="form-control" id="year" name="year" value="<?= $constancia->ANO ?>" hidden>
+															<button type="submit" class="btn btn-primary btn-sm">
+																PDF
+															</button>
+														</form>
+														<form class="d-inline-block" method="POST" action="<?php echo base_url('admin/dashboard/download_constancia_xml') ?>">
+															<input type="text" class="form-control" id="folio" name="folio" value="<?= $constancia->CONSTANCIAEXTRAVIOID ?>" hidden>
+															<input type="text" class="form-control" id="year" name="year" value="<?= $constancia->ANO ?>" hidden>
+															<button type="submit" class="btn btn-primary mb-0 btn-sm">
+																XML
+															</button>
+														</form>
+													</td>
+												<?php } else { ?>
+													<td class="text-center"></td>
+												<?php } ?>
+											</tr>
+										<?php } ?>
+									</tbody>
+								</table>
+							</div>
 						</div>
-						<table id="constancias_generadas" class="table table-bordered table-striped">
-							<thead>
-								<tr>
-									<th class="text-center" style="min-width:150px;">CONSTANCIA</th>
-									<th class="text-center">AÑO</th>
-									<th class="text-center" style="min-width:150px;">FECHA DE FIRMA</th>
-									<th class="text-center" style="min-width:150px;">ESTADO CONSTANCIA</th>
-									<th class="text-center" style="min-width:150px;">NOMBRE DEL DENUNCIANTE</th>
-									<th class="text-center" style="min-width:150px;">NOMBRE DEL AGENTE</th>
-
-									<th class="text-center">MUNICIPIO DE ATENCIÓN</th>
-								</tr>
-							</thead>
-							<tbody>
-
-								<?php
-								//    var_dump( $body_data->result);
-								//   exit;
-								foreach ($body_data->result as $index => $constancia) {
-									// $body_data->resultMCita = $constancia;
-									//     var_dump($body_data->resultMCita );
-									//   exit;
-
-								?>
-									<tr>
-
-										<td class="text-center font-weight-bold"><?= $constancia->CONSTANCIAEXTRAVIOID ?>
-										</td>
-										<td class="text-center"><?= $constancia->ANO ?></td>
-										<td class="text-center">
-											<?= isset($constancia->FECHAFIRMA) ? $constancia->FECHAFIRMA : '' ?></td>
-										<td class="text-center"><?= $constancia->STATUS ?></td>
-										<td class="text-center">
-											<?= $constancia->N_SOLICITANTE . ' ' . $constancia->APP_SOLICITANTE . ' ' . $constancia->APM_SOLICITANTE ?>
-										</td>
-										<td class="text-center">
-											<?= isset($constancia->N_AGENT) ? $constancia->N_AGENT . ' ' . $constancia->APP_AGENT . ' ' . $constancia->APM_AGENT : 'NO SE HA FIRMADO' ?>
-										</td>
-										<?php if ($constancia->MUNICIPIOIDCITA == null) { ?>
-											<td class="text-center"><?= $constancia->MUNICIPIODESCR ?></td>
-										<?php } ?>
-										<?php if ($constancia->MUNICIPIOIDCITA != null) { ?>
-											<td class="text-center"><?= $constancia->MUNICIPIODESCRCITA ?></td>
-										<?php } ?>
-									</tr>
-								<?php } ?>
-							</tbody>
-						</table>
 					</div>
 				</div>
 			</div>
@@ -204,8 +211,11 @@
 			responsive: false,
 			lengthChange: false,
 			autoWidth: true,
-			ordering: false,
-			searching: false,
+			ordering: true,
+			order: [
+				// [0, 'asc'],
+			],
+			searching: true,
 			pageLength: 100,
 			// dom: 'Bfrtip',
 			// buttons: [
@@ -216,7 +226,8 @@
 			}
 		});
 	});
-
+</script>
+<script>
 	function collapse_filter() {
 		if (document.querySelector('#filtros').classList.contains('show')) {
 			document.querySelector('#filtros').classList.remove('show');
