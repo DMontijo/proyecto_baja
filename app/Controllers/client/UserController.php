@@ -56,7 +56,7 @@ class UserController extends BaseController
 		$this->_folioModel = new FolioModel();
 		$this->_escolaridadModel = new EscolaridadModel();
 		$this->_ocupacionModel = new OcupacionModel();
-		$this->urlApi = "https://95c3-2806-103e-19-a714-c299-9f1b-6065-4e2b.ngrok-free.app/guests/";
+		$this->urlApi = "https://a44a-52-0-63-150.ngrok-free.app/guests/";
 	}
 
 	public function index()
