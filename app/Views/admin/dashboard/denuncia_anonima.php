@@ -954,6 +954,9 @@
 			return false;
 		}
 	}
+	function clearGuion(e) {
+		e.target.value = e.target.value.replace(/-/g, "");
+	}
 
 	function clearText(text) {
 		return text

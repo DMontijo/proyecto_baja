@@ -1298,7 +1298,7 @@
 
 							const option = document.createElement('option');
 							option.value = victima.PERSONAFISICAID;
-							option.text = victima.NOMBRE + ' ' + primer_apellido +' | ' + victima.PERSONACALIDADJURIDICADESCR;
+							option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
 							select_victima_documento.add(option, null);
 						});
 
@@ -1345,7 +1345,7 @@
 
 							const option = document.createElement('option');
 							option.value = victima.PERSONAFISICAID;
-							option.text = victima.NOMBRE + ' ' + primer_apellido +' | ' + victima.PERSONACALIDADJURIDICADESCR;
+							option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
 							select_victima_ofendido.add(option, null);
 						});
 						$('#imputado_delito_cometido').empty();
@@ -1936,6 +1936,7 @@
 		});
 
 	}
+
 	function asignarAgente(documento, folio, ano) {
 		$('#documentos_generados_modal').modal('hide');
 
@@ -1983,6 +1984,7 @@
 		});
 
 	}
+
 	function borrarDocumento(folio, ano, foliodocid) {
 		Swal.fire({
 			title: '¿Estas seguro?',
@@ -2105,7 +2107,7 @@
 
 						const option = document.createElement('option');
 						option.value = victima.PERSONAFISICAID;
-						option.text = victima.NOMBRE + ' ' + primer_apellido +' | ' + victima.PERSONACALIDADJURIDICADESCR;
+						option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
 						select_victima_ofendido.add(option, null);
 					});
 					const option_vacio_vd = document.createElement('option');
@@ -2124,7 +2126,7 @@
 
 						const option = document.createElement('option');
 						option.value = victima.PERSONAFISICAID;
-						option.text = victima.NOMBRE + ' ' + primer_apellido +' | ' + victima.PERSONACALIDADJURIDICADESCR;
+						option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
 						select_victima_documento.add(option, null);
 					});
 					const option_vacio_id = document.createElement('option');
@@ -2966,6 +2968,10 @@
 		for (let i = select_element.options.length; i >= 1; i--) {
 			select_element.remove(i);
 		}
+	}
+
+	function clearGuion(e) {
+		e.target.value = e.target.value.replace(/-/g, "");
 	}
 
 	function clearText(text) {
@@ -5064,7 +5070,7 @@
 
 								const option = document.createElement('option');
 								option.value = victima.PERSONAFISICAID;
-								option.text = victima.NOMBRE + ' ' + primer_apellido +' | ' + victima.PERSONACALIDADJURIDICADESCR;
+								option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
 								select_victima_ofendido.add(option, null);
 							});
 							$('#victima_modal_documento').empty();
@@ -5076,7 +5082,7 @@
 
 								const option = document.createElement('option');
 								option.value = victima.PERSONAFISICAID;
-								option.text = victima.NOMBRE + ' ' + primer_apellido +' | ' + victima.PERSONACALIDADJURIDICADESCR;
+								option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
 								select_victima_modal.add(option, null);
 							});
 							document.getElementById('subirFotoPersona').value = '';
@@ -6160,7 +6166,7 @@
 
 								const option = document.createElement('option');
 								option.value = victima.PERSONAFISICAID;
-								option.text = victima.NOMBRE + ' ' + primer_apellido +' | ' + victima.PERSONACALIDADJURIDICADESCR;
+								option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
 								select_victima_ofendido.add(option, null);
 							});
 							const option_vacio_vd = document.createElement('option');
@@ -6179,7 +6185,7 @@
 
 								const option = document.createElement('option');
 								option.value = victima.PERSONAFISICAID;
-								option.text = victima.NOMBRE + ' ' + primer_apellido +' | ' + victima.PERSONACALIDADJURIDICADESCR;
+								option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
 								select_victima_documento.add(option, null);
 							});
 							const option_vacio_id = document.createElement('option');
@@ -6872,7 +6878,7 @@
 									'statusenvio': 0,
 									'agente_asignado': document.querySelector('#empleado_asignado').value,
 									'victimaid': document.querySelector('#victima_modal_documento').value,
-								'imputado': document.querySelector('#imputado_modal_documento').value,
+									'imputado': document.querySelector('#imputado_modal_documento').value,
 								};
 								insertarDoc(data);
 							} else {
@@ -6884,7 +6890,7 @@
 									'statusenvio': 0,
 									'agente_asignado': document.querySelector('#empleado_asignado').value,
 									'victimaid': document.querySelector('#victima_modal_documento').value,
-								'imputado': document.querySelector('#imputado_modal_documento').value,
+									'imputado': document.querySelector('#imputado_modal_documento').value,
 
 								};
 								insertarDoc(data);
@@ -6919,7 +6925,7 @@
 									'statusenvio': 1,
 									'agente_asignado': document.querySelector('#empleado_asignado').value,
 									'victimaid': document.querySelector('#victima_modal_documento').value,
-								'imputado': document.querySelector('#imputado_modal_documento').value,
+									'imputado': document.querySelector('#imputado_modal_documento').value,
 
 								};
 								insertarDoc(data);
@@ -6934,7 +6940,7 @@
 									'statusenvio': 1,
 									'agente_asignado': document.querySelector('#empleado_asignado').value,
 									'victimaid': document.querySelector('#victima_modal_documento').value,
-								'imputado': document.querySelector('#imputado_modal_documento').value,
+									'imputado': document.querySelector('#imputado_modal_documento').value,
 
 								};
 								insertarDoc(data);
@@ -6956,7 +6962,7 @@
 									'statusenvio': 0,
 									'agente_asignado': document.querySelector('#empleado_asignado').value,
 									'victimaid': document.querySelector('#victima_modal_documento').value,
-								'imputado': document.querySelector('#imputado_modal_documento').value,
+									'imputado': document.querySelector('#imputado_modal_documento').value,
 
 								};
 								insertarDoc(data);
@@ -6970,7 +6976,7 @@
 									'statusenvio': 0,
 									'agente_asignado': document.querySelector('#empleado_asignado').value,
 									'victimaid': document.querySelector('#victima_modal_documento').value,
-								'imputado': document.querySelector('#imputado_modal_documento').value,
+									'imputado': document.querySelector('#imputado_modal_documento').value,
 
 								};
 								insertarDoc(data);

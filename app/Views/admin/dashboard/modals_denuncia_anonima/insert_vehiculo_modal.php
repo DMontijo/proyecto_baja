@@ -34,7 +34,7 @@
 					</div>
 					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 						<label for="placas_vehiculo" class="form-label font-weight-bold">Placas:</label>
-						<input type="text" class="form-control" id="placas_vehiculo" name="placas_vehiculo">
+						<input type="text" class="form-control" id="placas_vehiculo" name="placas_vehiculo" oninput="clearGuion(event);">
 					</div>
 					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 						<label for="estado_vehiculo" class="form-label font-weight-bold">Estado de origen:</label>
@@ -54,7 +54,7 @@
 					</div>
 					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 						<label for="serie_vehiculo" class="form-label font-weight-bold">No. Serie:</label>
-						<input type="text" class="form-control" id="serie_vehiculo" name="serie_vehiculo">
+						<input type="text" class="form-control" id="serie_vehiculo" name="serie_vehiculo" oninput="clearGuion(event);">
 					</div>
 					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 						<label for="tipo_vehiculo" class="form-label font-weight-bold">Tipo de vehículo:</label>
