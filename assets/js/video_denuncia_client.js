@@ -22,6 +22,17 @@ var intervalo = setInterval(function() {
 	location.reload();
 }, 90000);
 
+// VIDEO Y AUDIO DE AGENTE SELECTER
+const mediaDevicesModal = document.getElementById("media_devices_modal");
+const mediaConfiguration = document.getElementById("media_configuration");
+const $listaDeDispositivosVideo = document.querySelector("#listaDeDispositivosVideo");
+const $listaDeDispositivosAudio = document.querySelector("#listaDeDispositivosAudio");
+const $video = document.querySelector("#video");
+const $audio = document.querySelector("#audio")
+const $acceptConfiguration = document.querySelector("#acceptConfiguration");
+let videoStream;
+let audioStream;
+
 // const recording = document.querySelector('#recording');
 // const recording_stop = document.querySelector('#recording_stop');
 // const video = document.querySelector('#togogle-video');
@@ -177,69 +188,322 @@ guestVideoService.registerOnAgentDisconnected(() => {
 	document.querySelector("#documentos_anexar_card").style.display = "none";
 });
 
-guestVideoService.saveGeolocation(() => {
-	console.log("Conectando denunciante...");
-	texto_inicial.style.display = "block";
-	if (navigator.mediaDevices) {
-		navigator.mediaDevices
-			.getUserMedia({ audio: true, video: true })
-			.then(function(stream) {
-				console.log("Acceso a cámara y audio concedido");
-				guestVideoService.connectGuest(
-					{ delito, folio: folio_SY + "/" + year_SF, descripcion },
-					guest => {
-						console.log("Denuciante conectado");
-						console.log(guest);
-					},
-					onerror => {
-						Swal.fire({
-							icon: "error",
-							title: "Hubo un error, se recargará la página.",
-							showConfirmButton: false,
-							timer: 1000,
-							timerProgressBar: true
-						}).then(result => {
-							location.reload;
-						});
-					},
-					ondisconnect => {
-						// Swal.fire({
-						// 	icon: "error",
-						// 	title: "Hubo una desconexión, se recargará la página.",
-						// 	showConfirmButton: false,
-						// 	timer: 1000,
-						// 	timerProgressBar: true,
-						// }).then(result => {
-						// 	location.reload;
-						// });
-					}
-				);
-			})
-			.catch(function(error) {
-				console.log("Acceso a cámara y audio denegado");
-				texto_inicial.style.display = "none";
-				pantalla_error.style.display = "block";
-				video_container.style.display = "none";
-				document.querySelector(
-					"#documentos_anexar_card"
-				).style.display = "none";
+$acceptConfiguration.addEventListener("click", () => {
+	if(!audioStream) return;
+	if(!videoStream) return;
+
+	audioStream.getTracks().forEach(function(track) {
+		track.stop();
+	});
+	
+	videoStream.getTracks().forEach(function(track) {
+		track.stop();
+	});
+	
+	$(mediaDevicesModal).modal("hide");
+
+	try {
+		guestVideoService.connectGuest(
+		{ delito, folio: folio_SY + "/" + year_SF, descripcion },
+		guest => {
+			console.log("Denuciante conectado");
+			console.log(guest);
+		},
+		onerror => {
+			Swal.fire({
+				icon: "error",
+				title: "Hubo un error, se recargará la página.",
+				showConfirmButton: false,
+				timer: 1000,
+				timerProgressBar: true,
+			}).then(result => {
+				location.reload;
 			});
-	} else {
-		console.log("El navegador no soporta MediaDevices");
+		},
+		ondisconnect => {
+			// Swal.fire({
+			// 	icon: "error",
+			// 	title: "Hubo una desconexión, se recargará la página.",
+			// 	showConfirmButton: false,
+			// 	timer: 1000,
+			// 	timerProgressBar: true,
+			// }).then(result => {
+			// 	location.reload;
+			// });
+		});
+	} catch (error) {
+		console.log("Acceso a cámara y audio denegado");
 		texto_inicial.style.display = "none";
 		pantalla_error.style.display = "block";
 		video_container.style.display = "none";
-		document.querySelector("#documentos_anexar_card").style.display =
-			"none";
-		Swal.fire({
-			position: "top-end",
-			title:
-				"Tu navegador no soporte el microfono y la cámara, de favor utiliza otro navegador o dispositivo.",
-			showConfirmButton: false,
-			timer: 5000,
-			timerProgressBar: true
-		});
+		document.querySelector("#documentos_anexar_card").style.display = "none";
 	}
+});
+
+const llenarSelectConDispositivosDisponiblesVideo = (idDeDispositivo) => {
+	if($listaDeDispositivosVideo.length) $($listaDeDispositivosVideo).empty();
+
+	navigator.mediaDevices.enumerateDevices().then(function(dispositivos) {
+		const dispositivosDeVideo = [];
+		dispositivos.forEach(function(dispositivo) {
+			const tipo = dispositivo.kind;
+
+			if (tipo === "videoinput") {
+				dispositivosDeVideo.push(dispositivo);
+			}
+		});
+
+		if (dispositivosDeVideo.length > 0) {
+			dispositivosDeVideo.forEach(dispositivo => {
+				const option = document.createElement('option');
+				option.value = dispositivo.deviceId;
+				option.text = dispositivo.label;
+				if(dispositivo.deviceId === idDeDispositivo) {
+					option.selected = true;
+				}
+				$listaDeDispositivosVideo.appendChild(option);
+			});
+		}
+	});
+}
+
+const llenarSelectConDispositivosDisponiblesAudio = (idDeDispositivo) => {
+	$($listaDeDispositivosAudio).empty();
+
+	navigator.mediaDevices.enumerateDevices().then(function(dispositivos) {
+		const dispositivosDeAudio = [];
+		dispositivos.forEach(function(dispositivo) {
+			const tipo = dispositivo.kind;
+
+			if (tipo === "audioinput") {
+				dispositivosDeAudio.push(dispositivo)
+			}
+		});
+
+		if (dispositivosDeAudio.length > 0) {
+			dispositivosDeAudio.forEach(dispositivo => {
+				const option = document.createElement('option');
+				option.value = dispositivo.deviceId;
+				option.text = dispositivo.label;
+				if(dispositivo.deviceId === idDeDispositivo) {
+					option.selected = true;
+				}
+				$listaDeDispositivosAudio.appendChild(option);
+			});
+		}
+	});
+}
+
+function tieneSoporteUserMedia() {
+	return !!(navigator.getUserMedia || (navigator.mozGetUserMedia || navigator.mediaDevices.getUserMedia) || navigator.webkitGetUserMedia || navigator.msGetUserMedia)
+}
+
+function _getUserMediaAudio() {
+	return (navigator.getUserMedia || (navigator.mozGetUserMedia || navigator.mediaDevices.getUserMedia) || navigator.webkitGetUserMedia || navigator.msGetUserMedia).apply(navigator, arguments);
+}
+
+function _getUserMediaVideo() {
+	return (navigator.getUserMedia || (navigator.mozGetUserMedia || navigator.mediaDevices.getUserMedia) || navigator.webkitGetUserMedia || navigator.msGetUserMedia).apply(navigator, arguments);
+}
+
+guestVideoService.saveGeolocation(() => {
+	console.log("Conectando denunciante...");
+	var isSafari = navigator.vendor && navigator.vendor.indexOf('Apple') > -1 &&
+		navigator.userAgent &&
+		navigator.userAgent.indexOf('CriOS') == -1 &&
+		navigator.userAgent.indexOf('FxiOS') == -1;
+
+
+	if (!tieneSoporteUserMedia()) {
+		alert("Tu navegador no soporta esta característica");
+		$estado.innerHTML = "Tu navegador no soporta este funcionamiento. Sube una foto desde tu dispositivo.";
+		return;
+	}
+
+	$(mediaDevicesModal).modal("show");
+
+	let dispositivosDeVideo;
+	let dispositivosDeAudio;
+
+	if (!isSafari) {
+		navigator.mediaDevices.enumerateDevices().then(function(dispositivos) {
+			dispositivosDeVideo = [];
+			dispositivosDeAudio = [];
+
+			dispositivos.forEach(function(dispositivo) {
+				const tipo = dispositivo.kind;
+
+				if (tipo === "videoinput") {
+					dispositivosDeVideo.push(dispositivo);
+				}
+
+				if (tipo === "audioinput") {
+					dispositivosDeAudio.push(dispositivo);
+				}
+			});
+
+			if (dispositivosDeVideo.length > 0) {
+				mostrarStreamVideo(dispositivosDeVideo.deviceId);
+			}
+
+			if (dispositivosDeAudio.length > 0) {
+				mostrarStreamAudio(dispositivosDeAudio.deviceId);
+			}
+		});
+
+		const mostrarStreamVideo = idDeDispositivo => {
+			_getUserMediaVideo({
+					video: {
+						deviceId: idDeDispositivo,
+					}
+				},
+				function(streamObtenidoVideo) {
+					llenarSelectConDispositivosDisponiblesVideo(idDeDispositivo);
+
+					$listaDeDispositivosVideo.onchange = () => {
+						if (videoStream) {
+							videoStream.getTracks().forEach(function(track) {
+								track.stop();
+							});
+						}
+						mostrarStreamVideo($listaDeDispositivosVideo.value);
+					}
+
+					videoStream = streamObtenidoVideo;
+					guestVideoService.videoStream = idDeDispositivo;
+
+					$video.srcObject = streamObtenidoVideo;
+					$video.play();
+
+					$('#media-devices-alert').attr('hidden', true);
+					$('#media-devices-selectors').removeAttr('hidden');
+					checkButtonAccept();
+				},
+				function(error) {
+					let listDevices = document.getElementById('listDevicesVideo');
+					$video.remove();
+					$('#listDevicesVideo').empty();
+					$('#videoDiv').remove();
+
+					let spanElement = document.createElement('span');
+					spanElement.textContent = 'Permiso denegado, vuelve a recargar';
+					spanElement.setAttribute('id', 'listaDeDispositivosVideo')
+					listDevices.appendChild(spanElement);
+					console.log("Permiso denegado o error: ", error);
+
+					$acceptConfiguration.setAttribute('disabled', true);
+				});
+		}
+
+		const mostrarStreamAudio = idDeDispositivo => {
+			_getUserMediaAudio({
+					audio: {
+						deviceId: idDeDispositivo,
+					}
+				},
+				function(streamObtenidoAudio) {
+					llenarSelectConDispositivosDisponiblesAudio(idDeDispositivo);
+
+					$listaDeDispositivosAudio.onchange = () => {
+						if (audioStream) {
+							audioStream.getTracks().forEach(function(track) {
+								track.stop();
+							});
+						}
+						mostrarStreamAudio($listaDeDispositivosAudio.value);
+					}
+
+					audioStream = streamObtenidoAudio;
+					guestVideoService.audioStream = idDeDispositivo;
+
+					$audio.srcObject = streamObtenidoAudio;
+					$audio.play();
+
+					$('#media-devices-alert').attr('hidden', true);
+					$('#media-devices-selectors').removeAttr('hidden');
+					checkButtonAccept();
+				},
+				function(error) {
+					let listDevices = document.getElementById('listDevicesAudio');
+					$audio.remove();
+					$('#listDevicesAudio').empty();
+
+					let spanElement = document.createElement('span');
+					spanElement.textContent = 'Permiso denegado, vuelve a recargar';
+					spanElement.setAttribute('id', 'listaDeDispositivosAudio')
+					listDevices.appendChild(spanElement);
+
+					console.log("Permiso denegado o error: ", error);
+					$acceptConfiguration.setAttribute('disabled', true);
+				});
+		}
+
+	}
+	
+	function checkButtonAccept(){
+		if(audioStream && videoStream){
+			$($acceptConfiguration).removeAttr('disabled');
+		} 
+	}
+
+	// texto_inicial.style.display = "block";
+	// if (navigator.mediaDevices) {
+	// 	navigator.mediaDevices
+	// 		.getUserMedia({ audio: true, video: true })
+	// 		.then(function (stream) {
+	// 			console.log("Acceso a cámara y audio concedido");
+
+	// 			guestVideoService.connectGuest(
+	// 				{ delito, folio: folio_SY + "/" + year_SF, descripcion },
+	// 				guest => {
+	// 					console.log("Denuciante conectado");
+	// 					console.log(guest);
+	// 				},
+	// 				onerror => {
+	// 					Swal.fire({
+	// 						icon: "error",
+	// 						title: "Hubo un error, se recargará la página.",
+	// 						showConfirmButton: false,
+	// 						timer: 1000,
+	// 						timerProgressBar: true,
+	// 					}).then(result => {
+	// 						location.reload;
+	// 					});
+	// 				},
+	// 				ondisconnect => {
+	// 					// Swal.fire({
+	// 					// 	icon: "error",
+	// 					// 	title: "Hubo una desconexión, se recargará la página.",
+	// 					// 	showConfirmButton: false,
+	// 					// 	timer: 1000,
+	// 					// 	timerProgressBar: true,
+	// 					// }).then(result => {
+	// 					// 	location.reload;
+	// 					// });
+	// 				},
+	// 			);
+	// 		})
+	// 		.catch(function (error) {
+	// 			console.log("Acceso a cámara y audio denegado");
+	// 			texto_inicial.style.display = "none";
+	// 			pantalla_error.style.display = "block";
+	// 			video_container.style.display = "none";
+	// 			document.querySelector("#documentos_anexar_card").style.display = "none";
+	// 		});
+	// } else {
+	// 	console.log("El navegador no soporta MediaDevices");
+	// 	texto_inicial.style.display = "none";
+	// 	pantalla_error.style.display = "block";
+	// 	video_container.style.display = "none";
+	// 	document.querySelector("#documentos_anexar_card").style.display = "none";
+	// 	Swal.fire({
+	// 		position: "top-end",
+	// 		title: "Tu navegador no soporte el microfono y la cámara, de favor utiliza otro navegador o dispositivo.",
+	// 		showConfirmButton: false,
+	// 		timer: 5000,
+	// 		timerProgressBar: true,
+	// 	});
+	// }
 });
 
 function deleteVideoElement() {

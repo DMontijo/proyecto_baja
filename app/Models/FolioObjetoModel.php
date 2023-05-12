@@ -6,7 +6,6 @@ use CodeIgniter\Model;
 
 class FolioObjetoModel extends Model
 {
-
     protected $table            = 'FOLIOOBJETO';
     protected $allowedFields    = [
         'FOLIOID',

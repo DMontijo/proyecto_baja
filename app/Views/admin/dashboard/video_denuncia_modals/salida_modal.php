@@ -265,14 +265,7 @@
 
 
 	btnFinalizar.addEventListener('click', () => {
-		if (document.querySelector('#vehiculoid').value != '' && !form_vehiculo.checkValidity()) {
-			Swal.fire({
-				icon: 'error',
-				text: 'Por favor, completa toda la información de los vehículos.',
-				confirmButtonColor: '#bf9b55',
-			});
-			return;
-		}
+	
 		if (!form_delito.checkValidity()) {
 			let message = "Por favor completa los siguientes campos:\n";
 			let inputs = form_delito.querySelectorAll("input, select");
