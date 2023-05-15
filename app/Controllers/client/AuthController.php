@@ -202,7 +202,7 @@ class AuthController extends BaseController
 			->setText('Usted ha solicitado un cambio de contraseña. Su nueva contraseña es: ' . $password)
 			->setReplyTo('notificacionfgebc@fgebc.gob.mx')
 			->setReplyToName('FGEBC');
-		$sendSMS = $this->sendSMS("Cambio de contraseña", $user->TELEFONO, 'Test/Estimado usuario, tu contraseña es: ' . $password);
+		$sendSMS = $this->sendSMS("Cambio de contraseña", $user->TELEFONO, 'Notificaciones FGEBC/Estimado usuario, tu contraseña es: ' . $password);
 
 		try {
 			$result = $mailersend->email->send($emailParams);

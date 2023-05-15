@@ -2382,7 +2382,7 @@ class DashboardController extends BaseController
 			->setReplyTo('notificacionfgebc@fgebc.gob.mx')
 			->setReplyToName('FGEBC');
 
-		$sendSMS = $this->sendSMS("Nuevo expediente", $denunciante->TELEFONO, 'Test/Estimado usuario, tu numero de expediente es:' . $expediente_guiones . '/' . $tipoExpediente->TIPOEXPEDIENTECLAVE);
+		$sendSMS = $this->sendSMS("Nuevo expediente", $denunciante->TELEFONO, 'Notificaciones FGEBC/Estimado usuario, tu numero de expediente es:' . $expediente_guiones . '/' . $tipoExpediente->TIPOEXPEDIENTECLAVE);
 		try {
 			$result = $mailersend->email->send($emailParams);
 		} catch (MailerSendValidationException $e) {
