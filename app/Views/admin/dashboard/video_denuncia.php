@@ -1595,7 +1595,8 @@
 					document.querySelector('#hora_delito').value = folio.HECHOHORA ? folio.HECHOHORA : '';
 					document.querySelector('#fecha_delito').value = folio.HECHOFECHA ? folio.HECHOFECHA : '';
 					document.querySelector('#narracion_delito').value = folio.HECHONARRACION ? folio.HECHONARRACION : '';
-
+					document.querySelector('#autorizaFoto').value = folio.LOCALIZACIONPERSONAMEDIOS == 'S' ?
+							'S' : 'N';
 					// if (folio.HECHODELITO == "ROBO DE VEHÍCULO") {
 					// 	$('#v-pills-vehiculos-tab').css('display', 'block');
 					// } else {
@@ -2529,9 +2530,6 @@
 
 						document.querySelector('#lugarDesaparicion').value = mediaFiliacion.LUGARDESAPARICION;
 						document.querySelector('#vestimenta_mf').value = mediaFiliacion.VESTIMENTADESCR;
-
-						document.querySelector('#autorizaFoto').value = folio.LOCALIZACIONPERSONAMEDIOS == 'S' ?
-							'S' : 'N';
 						document.querySelector('#escolaridad_mf').value = mediaFiliacion.ESCOLARIDADID ?
 							mediaFiliacion.ESCOLARIDADID : '';
 						document.querySelector('#ocupacion_mf').value = mediaFiliacion.OCUPACIONID ?
@@ -4357,7 +4355,9 @@
 					'hora_delito': document.querySelector('#hora_delito').value,
 					'narracion_delito': document.querySelector('#narracion_delito').value,
 					'latitud': document.querySelector('#latitud_denuncia').value,
-					'longitud': document.querySelector('#longitud_denuncia').value
+					'longitud': document.querySelector('#longitud_denuncia').value,
+					'autoriza_foto': document.querySelector('#autorizaFoto').value
+
 
 				};
 				$.ajax({

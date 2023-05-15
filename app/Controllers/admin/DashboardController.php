@@ -5087,6 +5087,7 @@ class DashboardController extends BaseController
 				'HECHONUMEROCASAINT' => $this->request->getPost('interior_delito'),
 				'HECHONARRACION' => $this->request->getPost('narracion_delito'),
 				'HECHODELITO' => $this->request->getPost('delito_delito'),
+				'LOCALIZACIONPERSONAMEDIOS' => $this->request->getPost('autoriza_foto'),
 				'HECHOCOORDENADAX' => $this->request->getPost('longitud') != '-117.015543' ? $this->request->getPost('longitud') : NULL,
 				'HECHOCOORDENADAY' => $this->request->getPost('latitud') != '32.521036' ? $this->request->getPost('latitud') : NULL,
 			);
@@ -5125,7 +5126,6 @@ class DashboardController extends BaseController
 	 */
 	public function updateFolioDenuncia()
 	{
-
 		$colonia = $this->_coloniasModelRead->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $this->request->getPost('municipio_delito'))->where('LOCALIDADID', $this->request->getPost('localidad_delito'))->where('COLONIAID', $this->request->getPost('colonia_delito_select'))->first();
 		try {
 
@@ -5148,6 +5148,7 @@ class DashboardController extends BaseController
 				'HECHONUMEROCASAINT' => $this->request->getPost('interior_delito'),
 				'HECHONARRACION' => $this->request->getPost('notas'),
 				'NOTASAGENTE' => $this->request->getPost('notas'),
+				'LOCALIZACIONPERSONAMEDIOS' => $this->request->getPost('autoriza_foto'),
 
 			);
 

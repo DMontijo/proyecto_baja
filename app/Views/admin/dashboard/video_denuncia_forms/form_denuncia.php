@@ -65,10 +65,19 @@
 		<label for="hora_delito" class="form-label font-weight-bold">Hora:</label>
 		<input type="time" class="form-control" id="hora_delito" name="hora_delito" required>
 	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="autorizaFoto" class="form-label font-weight-bold">Autoriza foto en medios</label>
+		<select class="form-control" id="autorizaFoto" name="autorizaFoto">
+			<option disabled selected value=""></option>
+			<option value="S">SI</option>
+			<option value="N">NO</option>
+		</select>
+	</div>
 	<div class="col-12 mb-3">
 		<label for="narracion_delito" class="form-label font-weight-bold">Narración:</label>
 		<textarea type="text" class="form-control" id="narracion_delito" name="narracion_delito" rows="5" maxlength="1000" required></textarea>
 	</div>
+
 	<div class="col-12 mb-3" id="map_denuncia" name="map_denuncia">
 	</div>
 	<input type="text" class="form-control d-none" id="latitud_denuncia" name="latitud_denuncia">
