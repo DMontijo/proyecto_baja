@@ -123,6 +123,7 @@
 		} else {
 			document.getElementById('div_unidad').classList.remove('d-none');
 			document.getElementById('div_empleado').classList.add('d-none');
+			btn_remitir.disabled = true;
 
 			$.ajax({
 				data: {
@@ -172,6 +173,8 @@
 	});
 
 	unidad.addEventListener('change', (e) => {
+		btn_remitir.disabled = true;
+
 		$.ajax({
 			data: {
 				'municipio': '<?= $body_data->municipio ?>',
@@ -186,6 +189,7 @@
 			document.getElementById('empleadoid').value = data.data[0].EMPLEADOID_MP;
 			document.getElementById('areaid').value = data.data[0].AREAID_MP;
 			document.getElementById('tipoOficina').value = 'UNIDAD';
+			btn_remitir.disabled = false;
 
 			if (data.status == 401) {
 				Swal.fire({
