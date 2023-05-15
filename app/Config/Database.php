@@ -34,7 +34,6 @@ class Database extends Config
 	public $default = [
 		'DSN'      => '',
 		'hostname' => 'database-video-denuncia-baja-california-instance-1.cenwfxggsegs.us-east-1.rds.amazonaws.com',
-		// 'hostname' => '172.19.10.36',
 		'username' => 'fgebc_admin',
 		'password' => 'fgebc_dba0wner',
 		'database' => 'cdtec',
