@@ -1661,6 +1661,7 @@ class DashboardController extends BaseController
 		$data = (object) array();
 		$data->parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID1', $id)->first();
 
+		var_dump($data->parentescoRelacion);exit;
 		if ($data->parentescoRelacion) {
 			$data->parentesco = $this->_parentescoModel->where('PERSONAPARENTESCOID', $data->parentescoRelacion['PARENTESCOID'])->first();
 			// $data->parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID2', $id)->first();
