@@ -6160,6 +6160,7 @@ class DashboardController extends BaseController
 			$year = $this->request->getPost('year');
 			$parentescoid = $this->request->getPost('parentesco_mf');
 
+			var_dump($parentescoid);exit;
 			$deleteRelacionParentesco = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID1', $idp1)->where('PERSONAFISICAID2', $idp2)->where('PARENTESCOID', $parentescoid)->delete();
 			if ($deleteRelacionParentesco) {
 				$parentescoRelacion = $this->_parentescoPersonaFisicaModel->getRelacion($folio, $year);
