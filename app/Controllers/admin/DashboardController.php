@@ -6709,8 +6709,9 @@ class DashboardController extends BaseController
 		}
 		$insertRelacionIDO = $this->_relacionIDOModel->insert($datoRelacionFisfis);
 
-		if (isset($insertRelacionIDO)) {
+		if (!$insertRelacionIDO) {
 			$relacionFisFis = $this->_relacionIDOModelRead->get_by_folio($folio, $year);
+
 			$delitosModalidadFiltro = $this->_delitoModalidadModelRead->get_delitodescr($folio, $year);
 
 			$datosBitacora = [
