@@ -222,7 +222,7 @@ class UserController extends BaseController
 					//Insercion de datos
 					$this->_denunciantesModel->insert($data);
 					//Envio de contraseña
-					$this->_sendEmailPassword($data['CORREO'], $password);
+					$this->_sendEmailPassword($data['CORREO'], $data['TELEFONO'],$password);
 					session()->setFlashdata('message', 'Inicia sesión con tu correo y la contraseña que llegará a tus mensajes SMS.');
 					return redirect()->to(base_url('/denuncia'))->with('message_success', 'Inicia sesión con la contraseña que llegará tus mensajes SMS y comienza tu denuncia');
 				}
@@ -458,11 +458,8 @@ class UserController extends BaseController
 	 * @param  mixed $to
 	 * @param  mixed $password
 	 */
-	private function _sendEmailPassword($to, $password)
+	private function _sendEmailPassword($to, $telefono, $password)
 	{
-		$user = $this->_denunciantesModelRead->asObject()->where('CORREO', $to)->first();
-
-
 		$body = view('email_template/password_email_template.php', ['email' => $to, 'password' => $password]);
 		$mailersend = new MailerSend(['api_key' => EMAIL_TOKEN]);
 		$recipients = [
@@ -478,7 +475,7 @@ class UserController extends BaseController
 			->setText('Usted ha generado un nuevo registro en el Centro de Denuncia Tecnológica. Para acceder debes ingresar los siguientes datos. USUARIO: ' . $to . 'CONTRASEÑA' . $password)
 			->setReplyTo('notificacionfgebc@fgebc.gob.mx')
 			->setReplyToName('FGEBC');
-		$sendSMS = $this->sendSMS("Te estamos atendiendo", $user->TELEFONO, 'Notificaciones FGEBC/Estimado usuario, tu contraseña es: ' . $password);
+		$sendSMS = $this->sendSMS("Te estamos atendiendo", $telefono, 'Notificaciones FGEBC/Estimado usuario, tu contraseña es: ' . $password);
 
 		try {
 			$result = $mailersend->email->send($emailParams);
