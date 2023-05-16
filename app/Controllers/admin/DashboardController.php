@@ -6710,7 +6710,7 @@ class DashboardController extends BaseController
 		$insertRelacionIDO = $this->_relacionIDOModel->insert($datoRelacionFisfis);
 
 		if (!$insertRelacionIDO) {
-			set_time_limit(10000);
+			set_time_limit(20000);
 			$relacionFisFis = $this->_relacionIDOModelRead->get_by_folio($folio, $year);
 			$relacionFisFisSin = $this->_relacionIDOModel->get_by_folio($folio, $year);
 
