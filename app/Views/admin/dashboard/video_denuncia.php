@@ -777,7 +777,7 @@
 	}
 
 	function eliminarparentesco(personofisica1, personafisica2, parentesco) {
-		console.log("eliminar 2",personafisica2);
+		console.log("eliminar 2",parentesco);
 		$.ajax({
 			data: {
 				'personafisica1': personofisica1,
