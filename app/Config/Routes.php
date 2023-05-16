@@ -305,6 +305,8 @@ $routes->group('data', function ($routes) {
 	$routes->post('get-personafisicofiltro', 'admin/DashboardController::getPersonaFisicaFiltro');
 	$routes->post('create-persona_fisica-by-folio', 'admin/DashboardController::createPersonaFisicaByFolio');
 	$routes->post('create-relacion_ido-by-folio', 'admin/DashboardController::createRelacionIDOByFolio');
+	$routes->post('get-relacion_ido-by-folio', 'admin/DashboardController::getRelacionIDO');
+
 	$routes->post('create-fisimpdelito-by-folio', 'admin/DashboardController::createFisImpDelitoByFolio');
 	$routes->post('get-fisimpdelito-by-folio', 'admin/DashboardController::getImputadoDelito');
 	$routes->post('delete-fisimpdelito-by-folio', 'admin/DashboardController::deleteImpDelitoByFolio');
