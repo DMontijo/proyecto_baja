@@ -1407,6 +1407,23 @@
 								option.text = persona.NOMBRE + ' ' + primer_apellido;
 								select_personaFisica1.add(option, null);
 							});
+							$('#personaFisica2').empty();
+							let select_personaFisica2= document.querySelector("#personaFisica2")
+							const option_vacio_pe2 = document.createElement('option');
+							option_vacio_pe2.value = '';
+							option_vacio_pe2.text = 'Selecciona ...';
+							option_vacio_pe2.disabled = true;
+							option_vacio_pe2.selected = true;
+							select_personaFisica2.add(option_vacio_pe2, null);
+							personas.forEach(persona => {
+								let primer_apellido = persona.PRIMERAPELLIDO ? persona
+									.PRIMERAPELLIDO : '';
+
+								const option = document.createElement('option');
+								option.value = persona.PERSONAFISICAID;
+								option.text = persona.NOMBRE + ' ' + primer_apellido;
+								select_personaFisica2.add(option, null);
+							});
 						$('#propietario').empty();
 						let select_propietario = document.querySelector("#propietario");
 						const option_vacio_prop = document.createElement('option');
@@ -2210,6 +2227,23 @@
 								option.value = persona.PERSONAFISICAID;
 								option.text = persona.NOMBRE + ' ' + primer_apellido;
 								select_personaFisica1.add(option, null);
+							});
+							$('#personaFisica2').empty();
+							let select_personaFisica2= document.querySelector("#personaFisica2")
+							const option_vacio_pe2 = document.createElement('option');
+							option_vacio_pe2.value = '';
+							option_vacio_pe2.text = 'Selecciona ...';
+							option_vacio_pe2.disabled = true;
+							option_vacio_pe2.selected = true;
+							select_personaFisica2.add(option_vacio_pe2, null);
+							personas.forEach(persona => {
+								let primer_apellido = persona.PRIMERAPELLIDO ? persona
+									.PRIMERAPELLIDO : '';
+
+								const option = document.createElement('option');
+								option.value = persona.PERSONAFISICAID;
+								option.text = persona.NOMBRE + ' ' + primer_apellido;
+								select_personaFisica2.add(option, null);
 							});
 					$('#propietario').empty();
 					let select_propietario = document.querySelector("#propietario");
@@ -5109,6 +5143,23 @@
 								option.text = persona.NOMBRE + ' ' + primer_apellido;
 								select_personaFisica1.add(option, null);
 							});
+							$('#personaFisica2').empty();
+							let select_personaFisica2= document.querySelector("#personaFisica2")
+							const option_vacio_pe2 = document.createElement('option');
+							option_vacio_pe2.value = '';
+							option_vacio_pe2.text = 'Selecciona ...';
+							option_vacio_pe2.disabled = true;
+							option_vacio_pe2.selected = true;
+							select_personaFisica2.add(option_vacio_pe2, null);
+							personas.forEach(persona => {
+								let primer_apellido = persona.PRIMERAPELLIDO ? persona
+									.PRIMERAPELLIDO : '';
+
+								const option = document.createElement('option');
+								option.value = persona.PERSONAFISICAID;
+								option.text = persona.NOMBRE + ' ' + primer_apellido;
+								select_personaFisica2.add(option, null);
+							});
 							$('#propietario').empty();
 							let select_propietario = document.querySelector("#propietario");
 							select_propietario.add(option_vacio, null);
@@ -6377,6 +6428,23 @@
 								option.value = persona.PERSONAFISICAID;
 								option.text = persona.NOMBRE + ' ' + primer_apellido;
 								select_personaFisica1.add(option, null);
+							});
+							$('#personaFisica2').empty();
+							let select_personaFisica2= document.querySelector("#personaFisica2")
+							const option_vacio_pe2 = document.createElement('option');
+							option_vacio_pe2.value = '';
+							option_vacio_pe2.text = 'Selecciona ...';
+							option_vacio_pe2.disabled = true;
+							option_vacio_pe2.selected = true;
+							select_personaFisica2.add(option_vacio_pe2, null);
+							personas.forEach(persona => {
+								let primer_apellido = persona.PRIMERAPELLIDO ? persona
+									.PRIMERAPELLIDO : '';
+
+								const option = document.createElement('option');
+								option.value = persona.PERSONAFISICAID;
+								option.text = persona.NOMBRE + ' ' + primer_apellido;
+								select_personaFisica2.add(option, null);
 							});
 							$('#propietario').empty();
 							let select_propietario = document.querySelector("#propietario");
