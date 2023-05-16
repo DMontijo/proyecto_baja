@@ -6708,37 +6708,23 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 3]);
 		}
 		$insertRelacionIDO = $this->_relacionIDOModel->insert($datoRelacionFisfis);
-		$this->_relacionIDOModel->transComplete();
-		if ($this->_relacionIDOModel->transStatus() === false) {
-			return json_encode(['status' => 0, 'message' => $_POST]);
 
-		}else {
+		if (!$insertRelacionIDO) {
 			$relacionFisFis = $this->_relacionIDOModelRead->get_by_folio($folio, $year);
-			var_dump($relacionFisFis);exit;
-		return json_encode(['status' => 1, 'relacionFisFis' => $relacionFisFis]);
+
+			$datosBitacora = [
+				'ACCION' => 'Ha ingresado una nueva relación de delito.',
+				'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
+			];
+
+			$this->_bitacoraActividad($datosBitacora);
+
+			return json_encode(['status' => 1, 'relacionFisFis' => $relacionFisFis]);
+		} else {
+			return json_encode(['status' => 0, 'message' => $_POST]);
 		}
-		// if (!$insertRelacionIDO) {
-		// 	$relacionFisFis = $this->_relacionIDOModelRead->get_by_folio($folio, $year);
-		// 	$relacionFisFisSin = $this->_relacionIDOModel->get_by_folio($folio, $year);
-
-		// 	var_dump($relacionFisFis);
-		// 	var_dump("sin");
-		// 	var_dump($relacionFisFisSin);
-		// 	exit;
-		// 	$delitosModalidadFiltro = $this->_delitoModalidadModelRead->get_delitodescr($folio, $year);
-
-		// 	$datosBitacora = [
-		// 		'ACCION' => 'Ha ingresado una nueva relación de delito.',
-		// 		'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
-		// 	];
-
-		// 	$this->_bitacoraActividad($datosBitacora);
-
-		// 	return json_encode(['status' => 1, 'relacionFisFis' => $relacionFisFis]);
-		// } else {
-		// 	return json_encode(['status' => 0, 'message' => $_POST]);
-		// }
 	}
+
 	/**
 	 * Función para eliminar el árbol delictual.
 	 * Devuelve todos los datos necesarios para la actualizacion de las tablas visuales
