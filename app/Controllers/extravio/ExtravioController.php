@@ -175,7 +175,7 @@ class ExtravioController extends BaseController
 
 			if ($response->uuid) {
 				$this->_denunciantesModel->insert($data);
-				$this->_sendEmailPassword($data['CORREO'], $password);
+				$this->_sendEmailPassword($data['CORREO'], $data['TELEFONO'],$password);
 				return redirect()->to(base_url('/constancia_extravio'))->with('message_success', 'Inicia sesión con la contraseña que llegará a tus mensajes SMS e ingresa.');
 			}
 		} else {
@@ -275,16 +275,15 @@ class ExtravioController extends BaseController
 	 * @param  mixed $to
 	 * @param  mixed $password
 	 */
-	private function _sendEmailPassword($to, $password)
+	private function _sendEmailPassword($to,$telefono, $password)
 	{
 		// $email = \Config\Services::email();
-		$user = $this->_denunciantesModelRead->asObject()->where('CORREO', $to)->first();
 		// $email->setTo($to);
 		// $email->setSubject('Te estamos atendiendo');
 		// $body = view('email_template/password_email_constancia.php', ['email' => $to, 'password' => $password]);
 		// $email->setMessage($body);
 		// $email->setAltMessage('Usted ha generado un nuevo registro en el Centro de Denuncia Tecnológica.ara acceder debes ingresar los siguientes datos. USUARIO: ' . $to . 'CONTRASEÑA:' .$password  );
-		$sendSMS = $this->sendSMS("Te estamos atendiendo", $user->TELEFONO, 'Notificaciones FGE/Estimado usuario, tu contraseña es: ' . $password);
+		$sendSMS = $this->sendSMS("Te estamos atendiendo", $telefono, 'Notificaciones FGE/Estimado usuario, tu contraseña es: ' . $password);
 		// var_dump($sendSMS);exit;
 		// if ($email->send()) {
 		if ($sendSMS == "") {
