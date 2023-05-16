@@ -5201,6 +5201,7 @@
 			}
 			//DOMICILIO PERSONA FÍSICA
 
+
 			document.querySelector('#pais_pfd').addEventListener('change', (e) => {
 
 				let select_estado = document.querySelector('#estado_pfd');
@@ -5310,6 +5311,10 @@
 				select_localidad.value = '';
 				select_colonia.value = '';
 				input_colonia.value = '';
+				
+				select_municipio.disabled = true;
+				select_localidad.disabled = true;
+				select_colonia.disabled = true;
 
 				select_colonia.classList.remove('d-none');
 				input_colonia.classList.add('d-none');
@@ -5332,6 +5337,7 @@
 							option.value = municipio.MUNICIPIOID;
 							select_municipio.add(option);
 						});
+						select_municipio.disabled = false;
 					},
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
@@ -5359,6 +5365,9 @@
 				clearSelect(select_colonia);
 
 				select_localidad.value = '';
+				select_localidad.disabled = true;
+				select_colonia.disabled = true;
+				
 
 				let data = {
 					'estado_id': estado,
@@ -5379,6 +5388,7 @@
 							option.value = localidad.LOCALIDADID;
 							select_localidad.add(option);
 						});
+						select_localidad.disabled = false;
 					},
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
@@ -5394,6 +5404,8 @@
 
 				clearSelect(select_colonia);
 				select_colonia.value = '';
+
+				select_colonia.disabled = true;
 
 				let data = {
 					'estado_id': estado,
@@ -5426,6 +5438,8 @@
 							option.text = 'OTRO';
 							option.value = '0';
 							select_colonia.add(option);
+
+							select_colonia.disabled = false;
 						},
 						error: function(jqXHR, textStatus, errorThrown) {}
 					});

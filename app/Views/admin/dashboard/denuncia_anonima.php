@@ -343,6 +343,8 @@
 	var select_victima = document.getElementById('victima_conocido');
 	var select_imputado = document.getElementById('imputado_conocido');
 	var charRemain;
+
+
 	$('#delito_cometido').select2({
 		theme: "bootstrap"
 	});
@@ -468,6 +470,11 @@
 			agregarPersonaFisica();
 		}
 	});
+	//desactivar selectores que estan vacios hasta el momento
+	document.querySelector('#marca_ad').disabled = true;
+	document.querySelector('#linea_vehiculo_ad').disabled = true;
+	document.querySelector('#version_vehiculo_ad').disabled = true;
+
 	document.querySelector('#distribuidor_vehiculo_ad').addEventListener('change', (e) => {
 
 		let select_marca = document.querySelector('#marca_ad');
@@ -477,7 +484,10 @@
 		clearSelect(select_marca);
 		clearSelect(select_linea);
 		clearSelect(select_version);
-
+		
+		select_marca.disabled = true;
+		select_linea.disabled = true;
+		select_version.disabled = true;
 
 		let data = {
 			'distribuidor_vehiculo': e.target.value,
@@ -501,6 +511,7 @@
 				option_otro.text = 'OTRO';
 				option_otro.value = '00';
 				select_marca.add(option_otro);
+				select_marca.disabled = false;
 
 			},
 			error: function(jqXHR, textStatus, errorThrown) {}
@@ -520,6 +531,9 @@
 		// select_version.value = '';
 
 		// select_version.classList.remove('d-none');
+		
+		select_linea.disabled = true;
+		select_version.disabled = true;
 
 		let data = {
 			'marca': e.target.value,
@@ -540,6 +554,7 @@
 					option.value = linea_vehiculo.VEHICULOMODELOID;
 					select_linea.add(option);
 				});
+				select_linea.disabled = false;
 
 			},
 			error: function(jqXHR, textStatus, errorThrown) {}
@@ -552,6 +567,8 @@
 		let select_marca = document.querySelector('#marca_ad');
 
 		clearSelect(select_version);
+
+		select_version.disabled = true;
 
 		let data = {
 			'linea_vehiculo': e.target.value,
@@ -573,6 +590,7 @@
 					option.value = version_vehiculo.VEHICULOVERSIONID;
 					select_version.add(option);
 				});
+				select_version.disabled = false;
 
 			},
 			error: function(jqXHR, textStatus, errorThrown) {}
@@ -590,6 +608,9 @@
 		clearSelect(select_linea);
 		clearSelect(select_version);
 
+		select_marca.disabled = false;
+		select_linea.disabled = false;
+		select_version.disabled = false;
 
 		let data = {
 			'distribuidor_vehiculo': e.target.value,
@@ -613,6 +634,7 @@
 				option_otro.text = 'OTRO';
 				option_otro.value = '00';
 				select_marca.add(option_otro);
+				select_marca.disabled = false;
 
 			},
 			error: function(jqXHR, textStatus, errorThrown) {}
@@ -651,7 +673,7 @@
 					option.value = linea_vehiculo.VEHICULOMODELOID;
 					select_linea.add(option);
 				});
-
+				select_linea.disabled = false;
 			},
 			error: function(jqXHR, textStatus, errorThrown) {}
 		});
@@ -684,7 +706,7 @@
 					option.value = version_vehiculo.VEHICULOVERSIONID;
 					select_version.add(option);
 				});
-
+				select_version.disabled = false;
 			},
 			error: function(jqXHR, textStatus, errorThrown) {}
 		});
@@ -963,14 +985,24 @@
 			.replaceAll('´', '');
 	}
 
+	document.querySelector('#localidad').disabled = true;
+	document.querySelector('#colonia_select').disabled = true;
 
 	document.querySelector('#municipio').addEventListener('change', (e) => {
 		let select_localidad = document.querySelector('#localidad');
+		let select_colonia = document.querySelector('#colonia_select');
 
 		let estado = 2;
 		let municipio = e.target.value;
 
 		clearSelect(select_localidad);
+		clearSelect(select_colonia);
+
+		select_colonia.value = '';
+		select_localidad.value = '';
+
+		select_localidad.disabled = true;
+		select_colonia.disabled = true;
 
 		let data = {
 			'estado_id': estado,
@@ -990,6 +1022,7 @@
 					option.value = localidad.LOCALIDADID;
 					select_localidad.add(option);
 				});
+				select_localidad.disabled = false;
 			},
 			error: function(jqXHR, textStatus, errorThrown) {}
 		});
@@ -1005,6 +1038,8 @@
 		clearSelect(select_colonia);
 		select_colonia.value = '';
 		input_colonia.value = '';
+		select_colonia.disabled = true;
+		input_colonia.disabled = true;
 		let data = {
 			'estado_id': estado,
 			'municipio_id': municipio,
@@ -1029,6 +1064,11 @@
 				option.text = 'OTRO';
 				option.value = '0';
 				select_colonia.add(option);
+				select_colonia.disabled = false;
+				input_colonia.disabled = false;
+				input_colonia.classList.add('d-none');
+				select_colonia.classList.remove('d-none');
+
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 
@@ -1045,6 +1085,8 @@
 			input_colonia.classList.remove('d-none');
 			input_colonia.focus();
 		} else {
+			input_colonia.classList.add('d-none');
+			select_colonia.classList.remove('d-none');
 			input_colonia.value = e.target.value;
 		}
 	});
