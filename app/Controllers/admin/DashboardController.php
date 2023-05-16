@@ -6713,8 +6713,8 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0, 'message' => $_POST]);
 
 		}else {
-			$this->_relacionIDOModelRead->get_by_folio($folio, $year);
-					return json_encode(['status' => 1, 'relacionFisFis' => $relacionFisFis]);
+			$relacionFisFis = $this->_relacionIDOModelRead->get_by_folio($folio, $year);
+		return json_encode(['status' => 1, 'relacionFisFis' => $relacionFisFis]);
 		}
 		// if (!$insertRelacionIDO) {
 		// 	$relacionFisFis = $this->_relacionIDOModelRead->get_by_folio($folio, $year);
