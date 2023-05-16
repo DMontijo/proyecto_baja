@@ -1643,7 +1643,7 @@
 					if (vehiculos) llenarTablaVehiculos(vehiculos);
 					//PARENTESCO
 					console.log(relacion_parentesco);
-					if (relacion_parentesco) llenarTablaParentesco(response.parentescoRelacion,response.parentesco);
+					if (relacion_parentesco) llenarTablaParentesco(relacion_parentesco, parentesco);
 
 					//ARBOL DELICTUAL
 					if (relacionFisFis) llenarTablaFisFis(relacionFisFis);
