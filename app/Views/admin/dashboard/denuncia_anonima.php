@@ -976,6 +976,9 @@
 			return false;
 		}
 	}
+	function clearGuion(e) {
+		e.target.value = e.target.value.replace(/-/g, "");
+	}
 
 	function clearText(text) {
 		return text
@@ -2375,7 +2378,7 @@
 						document.querySelector('#lugarDesaparicion').value = mediaFiliacion.LUGARDESAPARICION;
 						document.querySelector('#vestimenta_mf').value = mediaFiliacion.VESTIMENTADESCR;
 
-						document.querySelector('#autorizaFoto').value = folio.LOCALIZACIONPERSONAMEDIOS == 'S' ? 'S' : 'N';
+						document.querySelector('#autorizaFoto_da').value = folio.LOCALIZACIONPERSONAMEDIOS == 'S' ? 'S' : 'N';
 						document.querySelector('#escolaridad_mf').value = mediaFiliacion.ESCOLARIDADID ? mediaFiliacion.ESCOLARIDADID : '';
 						document.querySelector('#ocupacion_mf').value = mediaFiliacion.OCUPACIONID ? mediaFiliacion.OCUPACIONID : '';
 
@@ -3059,6 +3062,8 @@
 			'fecha_delito': document.querySelector('#fecha_delito_da').value,
 			'hora_delito': document.querySelector('#hora_delito_da').value,
 			'notas': document.querySelector('#notas_da').value,
+			'autoriza_foto': document.querySelector('#autorizaFoto_da').value
+
 		};
 		$.ajax({
 			data: data,

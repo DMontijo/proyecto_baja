@@ -34,7 +34,6 @@ class Database extends Config
 	public $default = [
 		'DSN'      => '',
 		'hostname' => 'database-video-denuncia-baja-california-instance-1.cenwfxggsegs.us-east-1.rds.amazonaws.com',
-		// 'hostname' => '172.19.10.36',
 		'username' => 'fgebc_admin',
 		'password' => 'fgebc_dba0wner',
 		'database' => 'cdtec',
@@ -87,10 +86,10 @@ class Database extends Config
 
 	public $development = [
 		'DSN'      => '',
-		'hostname' => 'localhost',
-		'username' => 'root',
-		'password' => 'root',
-		'database' => 'proyecto_baja',
+		'hostname' => 'database-video-denuncia-baja-california-instance-1.cenwfxggsegs.us-east-1.rds.amazonaws.com',
+		'username' => 'fgebc_admin',
+		'password' => 'fgebc_dba0wner',
+		'database' => 'cdtec_testing',
 		'DBDriver' => 'MySQLi',
 		'DBPrefix' => '',
 		'pConnect' => false,

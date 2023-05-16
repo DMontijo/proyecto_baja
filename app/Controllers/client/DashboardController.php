@@ -1143,7 +1143,7 @@ class DashboardController extends BaseController
 			->setText('Se ha generado un nuevo folio. SU FOLIO ES: ' . $folio . '/' . $year . ' Para darle seguimiento a su caso ingrese a su cuenta en el Centro de Denuncia Tecnológica e inicie su video denuncia con el folio generado.')
 			->setReplyTo('notificacionfgebc@fgebc.gob.mx')
 			->setReplyToName('FGEBC');
-		$sendSMS = $this->sendSMS("Nuevo folio generado", $user->TELEFONO, 'Test/Estimado usuario, tu folio es: ' . $folio . '/' . $year);
+		$sendSMS = $this->sendSMS("Nuevo folio generado", $user->TELEFONO, 'Notificaciones FGEBC/Estimado usuario, tu folio es: ' . $folio . '/' . $year);
 
 		try {
 			$result = $mailersend->email->send($emailParams);

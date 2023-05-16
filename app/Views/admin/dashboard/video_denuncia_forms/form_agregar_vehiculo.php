@@ -1,4 +1,4 @@
-<form id="form_vehiculo_agregar" action="" method="post"  enctype="multipart/form-data" class="row p-0 m-0 needs-validation" novalidate>
+<form id="form_vehiculo_agregar" action="" method="post" enctype="multipart/form-data" class="row p-0 m-0 needs-validation" novalidate>
 
 	<div class="col-12">
 		<p class="font-weight-bold text-center mt-3">GENERALES</p>
@@ -24,7 +24,7 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="placas_vehiculo_add" class="form-label font-weight-bold">Placas:</label>
-		<input type="text" class="form-control" id="placas_vehiculo_add" name="placas_vehiculo_add">
+		<input type="text" class="form-control" id="placas_vehiculo_add" name="placas_vehiculo_add" oninput="clearGuion(event);">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="estado_vehiculo_add" class="form-label font-weight-bold">Estado:</label>
@@ -46,7 +46,7 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="serie_vehiculo_add" class="form-label font-weight-bold">No. Serie:</label>
-		<input type="text" class="form-control" id="serie_vehiculo_add" name="serie_vehiculo_add">
+		<input type="text" class="form-control" id="serie_vehiculo_add" name="serie_vehiculo_add" oninput="clearGuion(event);">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="tipo_vehiculo_add" class="form-label font-weight-bold">Tipo de vehículo:</label>
@@ -83,17 +83,17 @@
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="transmision_vehiculo_add" class="form-label font-weight-bold ">Caja / Transmisión:</label>
 		<select class="form-control" id="transmision_vehiculo_add" name="transmision_vehiculo_add">
-		<option selected  value="A">Automática</option>
-		<option selected  value="M">Manual</option>
-		<option selected  value="D">Dual</option>
+			<option selected value="A">Automática</option>
+			<option selected value="M">Manual</option>
+			<option selected value="D">Dual</option>
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="traccion_vehiculo_add" class="form-label font-weight-bold ">Tracción:</label>
 		<select class="form-control" id="traccion_vehiculo_add" name="traccion_vehiculo_add">
-		<option selected  value="D">Doble</option>
-		<option selected  value="S">Sencilla</option>
-		<option selected  value="O">Dual</option>
+			<option selected value="D">Doble</option>
+			<option selected value="S">Sencilla</option>
+			<option selected value="O">Dual</option>
 		</select>
 	</div>
 	<div class="col-12 mb-3">
@@ -110,7 +110,7 @@
 		<input class="form-control" type="file" id="subirDocAdd" name="subirDocAdd" accept="image/jpeg, image/jpg, image/png, .doc, .pdf"></input>
 		<img class="img-fluid mb-3" id="doc_vehiculo_add" name="doc_vehiculo_add" src="" alt="">
 	</div>
-	
+
 	<div class="col-12">
 		<p class="font-weight-bold text-center mt-3">FABRICANTE</p>
 	</div>
@@ -119,7 +119,7 @@
 		<select class="form-control" id="distribuidor_vehiculo_add_ad" name="distribuidor_vehiculo_add_ad" required>
 			<option selected disabled value="">Selecciona el distribuidor</option>
 			<?php foreach ($body_data->distribuidorVehiculo as $index => $distribuidor_vehiculo) { ?>
-				<option value="<?= $distribuidor_vehiculo->VEHICULODISTRIBUIDORID?>"> <?= $distribuidor_vehiculo->VEHICULODISTRIBUIDORDESCR ?></option>
+				<option value="<?= $distribuidor_vehiculo->VEHICULODISTRIBUIDORID ?>"> <?= $distribuidor_vehiculo->VEHICULODISTRIBUIDORDESCR ?></option>
 			<?php } ?>
 		</select>
 	</div>
@@ -127,7 +127,7 @@
 		<label for="marca_ad" class="form-label font-weight-bold">Marca:</label>
 		<select class="form-control" id="marca_add_ad" name="marca_add_ad" required>
 			<option selected disabled value="">Selecciona la marca</option>
-	
+
 		</select>
 
 	</div>
@@ -141,7 +141,7 @@
 		<select class="form-control" id="linea_vehiculo_add_ad" name="linea_vehiculo_add_ad" required>
 			<option selected disabled value="">Selecciona el modelo</option>
 
-			
+
 		</select>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -168,17 +168,17 @@
 	<div class="col-12 col-sm-12 col-md-12 col-lg-8 mb-3">
 		<label for="seguro_vigente_vehiculo_add" class="form-label font-weight-bold ">¿Cuenta con seguro vigente?</label>
 		<select class="form-control" id="seguro_vigente_vehiculo_add" name="seguro_vigente_vehiculo_add">
-		<option selected  value="S">Si</option>
-		<option selected  value="N">No</option>
-		<option selected  value="D">Se desconoce</option>
+			<option selected value="S">Si</option>
+			<option selected value="N">No</option>
+			<option selected value="D">Se desconoce</option>
 		</select>
-		
+
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="propietario_vehiculo_add" class="form-label font-weight-bold">Propietario:</label>
 		<select class="form-control" id="propietario_vehiculo_add" name="propietario_vehiculo_add" required>
 			<option selected disabled value="">Selecciona el propietario</option>
-	
+
 		</select>
 
 	</div>
@@ -188,7 +188,7 @@
 </form>
 
 <script>
-		document.querySelector('#subirFotoVAdd').addEventListener('change', (e) => {
+	document.querySelector('#subirFotoVAdd').addEventListener('change', (e) => {
 		let preview = document.querySelector('#foto_vehiculo_add');
 		if (e.target.files && e.target.files[0]) {
 			let reader = new FileReader();
@@ -198,7 +198,7 @@
 			reader.readAsDataURL(e.target.files[0]);
 		}
 	});
-	
+
 	document.querySelector('#subirDocAdd').addEventListener('change', (e) => {
 		let preview = document.querySelector('#doc_vehiculo_add');
 		if (e.target.files && e.target.files[0]) {

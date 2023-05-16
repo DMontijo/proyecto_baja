@@ -556,6 +556,9 @@
 			select_element.remove(i);
 		}
 	}
+	function clearGuion(e) {
+		e.target.value = e.target.value.replace(/-/g, "");
+	}
 
 
 	function refreshSteps() {

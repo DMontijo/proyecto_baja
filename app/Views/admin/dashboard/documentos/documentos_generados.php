@@ -38,6 +38,9 @@
 			<div class="col-12 col-sm-6 col-md-4 col-lg-3">
 				<button type="button" style="min-height:120px;" class="btn btn-primary mb-3 w-100" id="subirDocumento" name="subirDocumento" data-toggle="modal" data-target="#subirDocumentosModal"><i class="fas fa-upload"></i> Subir a Justicia Net</button>
 			</div>
+			<div class="col-12 col-sm-6 col-md-4 col-lg-3">
+				<button type="button" style="min-height:120px;" class="btn btn-primary mb-3 w-100" id="refrescarPagina" name="refrescarPagina" onclick="location.reload()"><i class="fas fa-undo-alt"></i> Refrescar</button>
+			</div>
 			<div class="col-12">
 				<div class="table-responsive table-bordered">
 					<table id="table-documentos" class="table table-bordered table-hover table-striped table-light">
