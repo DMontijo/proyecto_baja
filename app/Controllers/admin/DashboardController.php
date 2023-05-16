@@ -6713,10 +6713,10 @@ class DashboardController extends BaseController
 			$relacionFisFis = $this->_relacionIDOModelRead->get_by_folio($folio, $year);
 			$relacionFisFisSin = $this->_relacionIDOModel->get_by_folio($folio, $year);
 
-			// var_dump($relacionFisFis);
-			// var_dump("sin");
-			// var_dump($relacionFisFisSin);
-			// exit;
+			var_dump($relacionFisFis);
+			var_dump("sin");
+			var_dump($relacionFisFisSin);
+			exit;
 			$delitosModalidadFiltro = $this->_delitoModalidadModelRead->get_delitodescr($folio, $year);
 
 			$datosBitacora = [
@@ -6726,7 +6726,7 @@ class DashboardController extends BaseController
 
 			$this->_bitacoraActividad($datosBitacora);
 
-			return json_encode(['status' => 1, 'relacionFisFis' => 1]);
+			return json_encode(['status' => 1, 'relacionFisFis' => $relacionFisFis]);
 		} else {
 			return json_encode(['status' => 0, 'message' => $_POST]);
 		}
@@ -6735,7 +6735,6 @@ class DashboardController extends BaseController
 		$folio = trim($this->request->getPost('folio'));
 		$year = trim($this->request->getPost('year'));
 		$relacionFisFis = $this->_relacionIDOModelRead->get_by_folio($folio, $year);
-		return json_encode(['status' => 1, 'relacionFisFis' => $relacionFisFis]);
 
 	}
 

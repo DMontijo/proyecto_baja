@@ -1596,7 +1596,7 @@
 					document.querySelector('#fecha_delito').value = folio.HECHOFECHA ? folio.HECHOFECHA : '';
 					document.querySelector('#narracion_delito').value = folio.HECHONARRACION ? folio.HECHONARRACION : '';
 					document.querySelector('#autorizaFoto').value = folio.LOCALIZACIONPERSONAMEDIOS == 'S' ?
-						'S' : 'N';
+							'S' : 'N';
 					// if (folio.HECHODELITO == "ROBO DE VEHÍCULO") {
 					// 	$('#v-pills-vehiculos-tab').css('display', 'block');
 					// } else {
@@ -3996,7 +3996,7 @@
 				let select_marca_add = document.querySelector('#marca_add_ad');
 
 				clearSelect(select_version_add);
-
+				
 				select_version_add.disabled = true;
 
 				let data = {
@@ -4019,7 +4019,7 @@
 							option.value = version_vehiculo.VEHICULOVERSIONID;
 							select_version_add.add(option);
 						});
-
+						
 						select_version_add.disabled = false;
 
 					},
@@ -4267,7 +4267,7 @@
 				let select_localidad = document.querySelector('#localidad_delito');
 				let select_colonia = document.querySelector('#colonia_delito_select');
 				let input_colonia = document.querySelector('#colonia_delito')
-
+				
 				//deshabilita los select de localidad y colonia en caso de que cambien de municipio
 
 				select_localidad.disabled = true;
@@ -4577,8 +4577,8 @@
 				document.querySelector('#edad_new').value = edad;
 			})
 			document.querySelector('#municipio_select_origen_new').disabled = true;
-
-
+			
+			
 
 			document.querySelector('#nacionalidad_new').addEventListener('change', (e) => {
 				let select_estado = document.querySelector('#estado_select_origen_new');
@@ -4655,7 +4655,7 @@
 			document.querySelector('#municipio_select_new').disabled = true;
 			document.querySelector('#localidad_select_new').disabled = true;
 			document.querySelector('#colonia_select_new').disabled = true;
-
+			
 
 			document.querySelector('#pais_select_new').addEventListener('change', (e) => {
 
@@ -4762,7 +4762,7 @@
 				select_municipio.disabled = true;
 				select_localidad.disabled = true;
 				select_colonia.disabled = true;
-
+			
 				clearSelect(select_municipio);
 				clearSelect(select_localidad);
 				clearSelect(select_colonia);
@@ -5317,7 +5317,7 @@
 				select_localidad.value = '';
 				select_colonia.value = '';
 				input_colonia.value = '';
-
+				
 				select_municipio.disabled = true;
 				select_localidad.disabled = true;
 				select_colonia.disabled = true;
@@ -5373,7 +5373,7 @@
 				select_localidad.value = '';
 				select_localidad.disabled = true;
 				select_colonia.disabled = true;
-
+				
 
 				let data = {
 					'estado_id': estado,
@@ -6438,24 +6438,16 @@
 								confirmButtonColor: '#bf9b55',
 							});
 						} else if (response.status == 1) {
-							$.ajax({
-								data: data,
-								url: "<?= base_url('/data/get-relacion_ido-by-folio') ?>",
-								method: "POST",
-								dataType: "json",
-								success: function(response) {
-									let tabla_relacion_fis_fis = document.querySelectorAll(
-										'#table-delitos-videodenuncia tr');
-									tabla_relacion_fis_fis.forEach(row => {
-										if (row.id !== '') {
-											row.remove();
-										}
-									});
-
-									llenarTablaFisFis(response.relacionFisFis);
+							
+							let tabla_relacion_fis_fis = document.querySelectorAll(
+								'#table-delitos-videodenuncia tr');
+							tabla_relacion_fis_fis.forEach(row => {
+								if (row.id !== '') {
+									row.remove();
 								}
 							});
 
+							llenarTablaFisFis(response.relacionFisFis);
 							$('#insert_asignar_arbol_delictual_modal').modal('hide');
 							document.getElementById("form_asignar_arbol_delictual_insert").reset();
 							Swal.fire({
