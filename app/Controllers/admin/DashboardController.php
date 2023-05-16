@@ -6713,7 +6713,7 @@ class DashboardController extends BaseController
 		if ($this->_relacionIDOModel->transStatus() === false) {
 			return json_encode(['status' => 0, 'message' => $_POST]);
 		} else {
-			$relacionFisFis = $this->_relacionIDOModel->get_by_folio($folio, $year);
+			$relacionFisFis = $this->_relacionIDOModelRead->get_by_folio($folio, $year);
 
 			$datosBitacora = [
 				'ACCION' => 'Ha ingresado una nueva relación de delito.',
