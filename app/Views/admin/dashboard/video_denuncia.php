@@ -803,7 +803,7 @@
 							row.remove();
 						}
 					});
-					llenarTablaParentesco(response.parentescoRelacion,response.parentesco);
+					llenarTablaParentesco(response.parentescoRelacion);
 
 				} else {
 					Swal.fire({
@@ -864,7 +864,7 @@
 
 	}
 
-	function llenarTablaParentesco(relacion_parentesco, parentesco) {
+	function llenarTablaParentesco(relacion_parentesco) {
 
 		for (let i = 0; i < relacion_parentesco.length; i++) {
 			var btn =
@@ -876,7 +876,7 @@
 			var fila2 =
 				`<tr id="row${i}">` +
 				`<td class="text-center">${relacion_parentesco[i].NOMBREP1}</td>` +
-				`<td class="text-center">${parentesco[i].PERSONAPARENTESCODESCR}</td>` +
+				`<td class="text-center">${relacion_parentesco[i].PERSONAPARENTESCODESCR}</td>` +
 				`<td class="text-center">${relacion_parentesco[i].NOMBREP2}</td>` +
 				`<td class="text-center">${btn}</td>` +
 				`<td class="text-center">${btnEliminar}</td>` +
@@ -1233,7 +1233,7 @@
 					const domicilios = response.respuesta.domicilios;
 					const vehiculos = response.respuesta.vehiculos;
 					const relacion_parentesco = response.respuesta.parentescoRelacion;
-					const parentesco = response.respuesta.parentesco;
+					// const parentesco = response.respuesta.parentesco;
 					// const personaiduno = response.respuesta.personaiduno;
 					// const personaidDos = response.respuesta.personaidDos;
 					const relacionFisFis = response.respuesta.relacionFisFis;
@@ -1643,7 +1643,7 @@
 					if (vehiculos) llenarTablaVehiculos(vehiculos);
 					//PARENTESCO
 					console.log(relacion_parentesco);
-					if (relacion_parentesco) llenarTablaParentesco(relacion_parentesco, parentesco);
+					if (relacion_parentesco) llenarTablaParentesco(relacion_parentesco);
 
 					//ARBOL DELICTUAL
 					if (relacionFisFis) llenarTablaFisFis(relacionFisFis);
@@ -5278,7 +5278,7 @@
 									row.remove();
 								}
 							});
-							llenarTablaParentesco(response.parentescoRelacion,response.parentesco);
+							llenarTablaParentesco(response.parentescoRelacion);
 
 
 							// $('#propietario_update').empty();
@@ -5888,7 +5888,7 @@
 									row.remove();
 								}
 							});
-							llenarTablaParentesco(response.parentescoRelacion,response.parentesco);
+							llenarTablaParentesco(response.parentescoRelacion);
 
 
 							Swal.fire({
@@ -5938,7 +5938,7 @@
 									row.remove();
 								}
 							});
-							llenarTablaParentesco(response.parentescoRelacion,response.parentesco);
+							llenarTablaParentesco(response.parentescoRelacion);
 
 
 							Swal.fire({
@@ -6827,7 +6827,7 @@
 									row.remove();
 								}
 							});
-							llenarTablaParentesco(response.parentescoRelacion,response.parentesco);
+							llenarTablaParentesco(response.parentescoRelacion);
 
 
 							Swal.fire({

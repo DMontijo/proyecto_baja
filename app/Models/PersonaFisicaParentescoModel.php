@@ -13,7 +13,7 @@ class PersonaFisicaParentescoModel extends Model
 	public function getRelacion($folio, $year)
 	{
 		$builder = $this->db->table($this->table);
-		$builder->select(['P1.NOMBRE AS NOMBREP1', 'FOLIORELACIONPARENTESCO.PERSONAFISICAID1 AS IDP1', 'P2.NOMBRE AS NOMBREP2', 'FOLIORELACIONPARENTESCO.PERSONAFISICAID2 AS IDP2']);
+		$builder->select(['P1.NOMBRE AS NOMBREP1', 'FOLIORELACIONPARENTESCO.PERSONAFISICAID1 AS IDP1', 'PERSONAPARENTESCODESCR','P2.NOMBRE AS NOMBREP2', 'FOLIORELACIONPARENTESCO.PERSONAFISICAID2 AS IDP2']);
 		$builder->where('FOLIORELACIONPARENTESCO.FOLIOID', $folio);
 		$builder->where('FOLIORELACIONPARENTESCO.ANO', $year);
 		$builder->where('P1.FOLIOID', $folio);
@@ -23,6 +23,7 @@ class PersonaFisicaParentescoModel extends Model
 		$builder->where('P2.ANO', $year);
 		$builder->join('FOLIOPERSONAFISICA AS P1', 'P1.PERSONAFISICAID =' . $this->table . '.PERSONAFISICAID1');
 		$builder->join('FOLIOPERSONAFISICA AS P2', 'P2.PERSONAFISICAID =' . $this->table . '.PERSONAFISICAID2');
+		$builder->join('PERSONAPARENTESCO', 'PERSONAPARENTESCO.PARENTESCOID =' . $this->table . '.PARENTESCOID');
 
 
 
