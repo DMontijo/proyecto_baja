@@ -6363,12 +6363,12 @@
 							});
 							$('#personaFisica1').empty();
 							let select_personaFisica1= document.querySelector("#personaFisica1")
-							const option_vacio_p = document.createElement('option');
-							option_vacio_p.value = '';
-							option_vacio_p.text = 'Selecciona ...';
-							option_vacio_p.disabled = true;
-							option_vacio_p.selected = true;
-							select_personaFisica1.add(option_vacio_p, null);
+							const option_vacio_pe = document.createElement('option');
+							option_vacio_pe.value = '';
+							option_vacio_pe.text = 'Selecciona ...';
+							option_vacio_pe.disabled = true;
+							option_vacio_pe.selected = true;
+							select_personaFisica1.add(option_vacio_pe, null);
 							personas.forEach(persona => {
 								let primer_apellido = persona.PRIMERAPELLIDO ? persona
 									.PRIMERAPELLIDO : '';
