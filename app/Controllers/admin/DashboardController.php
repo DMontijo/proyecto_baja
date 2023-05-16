@@ -5503,12 +5503,12 @@ class DashboardController extends BaseController
 				$imputados = $this->_folioPersonaFisicaModelRead->get_imputados($folio, $year);
 				$victimas = $this->_folioPersonaFisicaModelRead->get_victimas($folio, $year);
 
-				$parentescoRelacion = $this->_parentescoPersonaFisicaModelRead->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
-				$personaiduno = $this->_parentescoPersonaFisicaModelRead->get_personaFisicaUno($folio, $year);
-				$personaidDos = $this->_parentescoPersonaFisicaModelRead->get_personaFisicaDos($folio, $year);
-				$parentesco = $this->_parentescoPersonaFisicaModelRead->get_Parentesco($folio, $year);
-				$fisicaImpDelito = $this->_imputadoDelitoModelRead->get_by_folio($folio, $year);
-				$relacionFisFis = $this->_relacionIDOModelRead->get_by_folio($folio, $year);
+				$parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
+				$personaiduno = $this->_parentescoPersonaFisicaModel->get_personaFisicaUno($folio, $year);
+				$personaidDos = $this->_parentescoPersonaFisicaModel->get_personaFisicaDos($folio, $year);
+				$parentesco = $this->_parentescoPersonaFisicaModel->get_Parentesco($folio, $year);
+				$fisicaImpDelito = $this->_imputadoDelitoModel->get_by_folio($folio, $year);
+				$relacionFisFis = $this->_relacionIDOModel->get_by_folio($folio, $year);
 
 
 				$datosBitacora = [
@@ -6087,7 +6087,7 @@ class DashboardController extends BaseController
 		$insert = $this->_folioVehiculo($data, $folio, $year);
 
 		if (!$insert) {
-			$vehiculos = $this->_folioVehiculoModelRead->get_by_folio($folio, $year);
+			$vehiculos = $this->_folioVehiculoModel->get_by_folio($folio, $year);
 
 			$datosBitacora = [
 				'ACCION' => 'Ha agregado el vehículo de una persona fisica',
