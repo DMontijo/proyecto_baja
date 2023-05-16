@@ -5499,9 +5499,9 @@ class DashboardController extends BaseController
 
 			if ($update) {
 
-				$personas = $this->_folioPersonaFisicaModelRead->get_by_folio($folio, $year);
-				$imputados = $this->_folioPersonaFisicaModelRead->get_imputados($folio, $year);
-				$victimas = $this->_folioPersonaFisicaModelRead->get_victimas($folio, $year);
+				$personas = $this->_folioPersonaFisicaModel->get_by_folio($folio, $year);
+				$imputados = $this->_folioPersonaFisicaModel->get_imputados($folio, $year);
+				$victimas = $this->_folioPersonaFisicaModel->get_victimas($folio, $year);
 
 				$parentescoRelacion = $this->_parentescoPersonaFisicaModel->getRelacion($folio, $year);
 				// $personaiduno = $this->_parentescoPersonaFisicaModel->get_personaFisicaUno($folio, $year);
