@@ -181,7 +181,7 @@ class ExtravioController extends BaseController
 
 			if ($response->uuid) {
 				$this->_denunciantesModel->insert($data);
-				$this->_sendEmailPassword($data['CORREO'], $password);
+				$this->_sendEmailPassword($data['CORREO'], $data['TELEFONO'],$password);
 				return redirect()->to(base_url('/constancia_extravio'))->with('message_success', 'Inicia sesión con la contraseña que llegará a tus mensajes SMS e ingresa.');
 			}
 		} else {
@@ -281,10 +281,8 @@ class ExtravioController extends BaseController
 	 * @param  mixed $to
 	 * @param  mixed $password
 	 */
-	private function _sendEmailPassword($to, $password)
+	private function _sendEmailPassword($to, $telefono,$password)
 	{
-		$user = $this->_denunciantesModelRead->asObject()->select('TELEFONO')->where('CORREO', $to)->first();
-		var_dump($user);exit;
 
 		$body = view('email_template/password_email_constancia.php', ['email' => $to, 'password' => $password]);
 		$mailersend = new MailerSend(['api_key' => EMAIL_TOKEN]);
@@ -301,7 +299,7 @@ class ExtravioController extends BaseController
 			->setReplyTo('notificacionfgebc@fgebc.gob.mx')
 			->setReplyToName('FGEBC');
 
-		$sendSMS = $this->sendSMS("Te estamos atendiendo", $user->TELEFONO, 'Notificaciones FGEBC/Estimado usuario, tu contraseña es: ' . $password);
+		$sendSMS = $this->sendSMS("Te estamos atendiendo", $telefono, 'Notificaciones FGEBC/Estimado usuario, tu contraseña es: ' . $password);
 
 		try {
 			$result = $mailersend->email->send($emailParams);
