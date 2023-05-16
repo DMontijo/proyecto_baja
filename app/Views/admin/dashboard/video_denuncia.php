@@ -777,6 +777,7 @@
 	}
 
 	function eliminarparentesco(personofisica1, personafisica2, parentesco) {
+		console.log("eliminar 2",personafisica2);
 		$.ajax({
 			data: {
 				'personafisica1': personofisica1,
@@ -864,9 +865,10 @@
 	}
 
 	function llenarTablaParentesco(relacion_parentesco, personaiduno, personaidDos, parentesco) {
-		console.log(personaidDos);
 
 		for (let i = 0; i < relacion_parentesco.length; i++) {
+			console.log(personaidDos);
+
 			var btn =
 				`<button type='button'  class='btn btn-primary' onclick='view_form_parentesco(${relacion_parentesco[i].PERSONAFISICAID1})'><i class="fas fa-eye"></i></button>`
 			var btnEliminar =
