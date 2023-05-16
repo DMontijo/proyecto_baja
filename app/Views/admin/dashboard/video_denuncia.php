@@ -803,8 +803,8 @@
 							row.remove();
 						}
 					});
-					llenarTablaParentesco(response.parentescoRelacion, response.personaiduno, response
-						.personaidDos, response.parentesco);
+					llenarTablaParentesco(response.parentescoRelacion,response.parentesco);
+
 				} else {
 					Swal.fire({
 						icon: 'error',
@@ -864,7 +864,7 @@
 
 	}
 
-	function llenarTablaParentesco(relacion_parentesco, personaiduno, personaidDos, parentesco) {
+	function llenarTablaParentesco(relacion_parentesco, parentesco) {
 
 		for (let i = 0; i < relacion_parentesco.length; i++) {
 			console.log(personaidDos[i]);
@@ -872,14 +872,14 @@
 			var btn =
 				`<button type='button'  class='btn btn-primary' onclick='view_form_parentesco(${relacion_parentesco[i].PERSONAFISICAID1})'><i class="fas fa-eye"></i></button>`
 			var btnEliminar =
-				`<button type='button'  class='btn btn-primary' onclick='eliminarparentesco(${personaiduno[i].PERSONAFISICAID1},${personaidDos[i].PERSONAFISICAID2},${relacion_parentesco[i].PARENTESCOID})'><i class="fas fa-trash"></i></button>`
+				`<button type='button'  class='btn btn-primary' onclick='eliminarparentesco(${relacion_parentesco[i].IDP1},${relacion_parentesco[i].IDP1},${relacion_parentesco[i].PARENTESCOID})'><i class="fas fa-trash"></i></button>`
 
 
 			var fila2 =
 				`<tr id="row${i}">` +
-				`<td class="text-center">${personaiduno[i].NOMBRE}</td>` +
+				`<td class="text-center">${relacion_parentesco[i].NOMBREP1}</td>` +
 				`<td class="text-center">${parentesco[i].PERSONAPARENTESCODESCR}</td>` +
-				`<td class="text-center">${personaidDos[i].NOMBRE}</td>` +
+				`<td class="text-center">${relacion_parentesco[i].NOMBREP2}</td>` +
 				`<td class="text-center">${btn}</td>` +
 				`<td class="text-center">${btnEliminar}</td>` +
 
@@ -5280,8 +5280,7 @@
 									row.remove();
 								}
 							});
-							llenarTablaParentesco(response.parentescoRelacion, response.personaiduno,
-								response.personaidDos, response.parentesco);
+							llenarTablaParentesco(response.parentescoRelacion,response.parentesco);
 
 
 							// $('#propietario_update').empty();
@@ -5891,8 +5890,8 @@
 									row.remove();
 								}
 							});
-							llenarTablaParentesco(response.parentescoRelacion, response.personaiduno,
-								response.personaidDos, response.parentesco);
+							llenarTablaParentesco(response.parentescoRelacion,response.parentesco);
+
 
 							Swal.fire({
 								icon: 'success',
@@ -5941,8 +5940,8 @@
 									row.remove();
 								}
 							});
-							llenarTablaParentesco(response.parentescoRelacion, response.personaiduno,
-								response.personaidDos, response.parentesco);
+							llenarTablaParentesco(response.parentescoRelacion,response.parentesco);
+
 
 							Swal.fire({
 								icon: 'success',
@@ -6830,8 +6829,8 @@
 									row.remove();
 								}
 							});
-							llenarTablaParentesco(response.parentescoRelacion, response.personaiduno,
-								response.personaidDos, response.parentesco);
+							llenarTablaParentesco(response.parentescoRelacion,response.parentesco);
+
 
 							Swal.fire({
 								icon: 'success',

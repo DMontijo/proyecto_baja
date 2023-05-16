@@ -10,16 +10,20 @@ class PersonaFisicaParentescoModel extends Model
 	protected $table            = 'FOLIORELACIONPARENTESCO';
 	protected $allowedFields    = ['FOLIOID', 'ANO', 'PARENTESCOID', 'PERSONAFISICAID1', 'PERSONAFISICAID2'];
 
-	public function get_personaFisicaUno($folio, $year)
+	public function getRelacion($folio, $year)
 	{
 		$builder = $this->db->table($this->table);
-		$builder->select(['FOLIOPERSONAFISICA.PRIMERAPELLIDO', 'FOLIOPERSONAFISICA.SEGUNDOAPELLIDO', 'FOLIOPERSONAFISICA.NOMBRE', 'FOLIORELACIONPARENTESCO.PERSONAFISICAID1']);
+		$builder->select(['FOLIOPERSONAFISICA.PRIMERAPELLIDO', 'FOLIOPERSONAFISICA.SEGUNDOAPELLIDO', 'P1.NOMBRE AS NOMBREP1', 'P1.PERSONAFISICAID1 AS IDP1', 'P2.NOMBRE AS NOMBREP2', 'P2.PERSONAFISICAID2 AS NOMBREP2']);
 		$builder->where('FOLIORELACIONPARENTESCO.FOLIOID', $folio);
 		$builder->where('FOLIORELACIONPARENTESCO.ANO', $year);
-		$builder->where('FOLIOPERSONAFISICA.FOLIOID', $folio);
-		$builder->where('FOLIOPERSONAFISICA.ANO', $year);
+		$builder->where('P1.FOLIOID', $folio);
+		$builder->where('P1.ANO', $year);
 
-		$builder->join('FOLIOPERSONAFISICA', 'FOLIOPERSONAFISICA.PERSONAFISICAID =' . $this->table . '.PERSONAFISICAID1');
+		$builder->where('P2.FOLIOID', $folio);
+		$builder->where('P2.ANO', $year);
+		$builder->join('FOLIOPERSONAFISICA AS P1', 'FOLIOPERSONAFISICA.PERSONAFISICAID =' . $this->table . '.PERSONAFISICAID1');
+		$builder->join('FOLIOPERSONAFISICA AS P2', 'FOLIOPERSONAFISICA.PERSONAFISICAID =' . $this->table . '.PERSONAFISICAID2');
+
 
 
 		$query = $builder->get();
