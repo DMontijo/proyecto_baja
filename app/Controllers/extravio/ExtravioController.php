@@ -284,7 +284,7 @@ class ExtravioController extends BaseController
 	private function _sendEmailPassword($to, $password)
 	{
 		$user = $this->_denunciantesModelRead->asObject()->where('CORREO', $to)->first();
-		var_dump($this->_denunciantesModelRead->asObject()->where('CORREO', $to));
+		var_dump($this->_denunciantesModelRead->asObject()->where('CORREO', $to)->findAll());
 		var_dump($to);exit;
 
 		$body = view('email_template/password_email_constancia.php', ['email' => $to, 'password' => $password]);
