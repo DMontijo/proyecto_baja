@@ -868,9 +868,9 @@
 
 		for (let i = 0; i < relacion_parentesco.length; i++) {
 			var btn =
-				`<button type='button'  class='btn btn-primary' onclick='view_form_parentesco(${relacion_parentesco[i].PERSONAFISICAID1})'><i class="fas fa-eye"></i></button>`
+				`<button type='button'  class='btn btn-primary' onclick='view_form_parentesco(${relacion_parentesco[i].IDP1})'><i class="fas fa-eye"></i></button>`
 			var btnEliminar =
-				`<button type='button'  class='btn btn-primary' onclick='eliminarparentesco(${relacion_parentesco[i].IDP1},${relacion_parentesco[i].IDP1},${relacion_parentesco[i].PARENTESCOID})'><i class="fas fa-trash"></i></button>`
+				`<button type='button'  class='btn btn-primary' onclick='eliminarparentesco(${relacion_parentesco[i].IDP1},${relacion_parentesco[i].IDP2},${relacion_parentesco[i].PARENTESCOID})'><i class="fas fa-trash"></i></button>`
 
 
 			var fila2 =
