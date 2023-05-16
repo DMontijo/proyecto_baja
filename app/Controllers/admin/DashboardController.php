@@ -6711,8 +6711,12 @@ class DashboardController extends BaseController
 
 		if (!$insertRelacionIDO) {
 			$relacionFisFis = $this->_relacionIDOModelRead->get_by_folio($folio, $year);
+			$relacionFisFisSin = $this->_relacionIDOModel->get_by_folio($folio, $year);
 
-			var_dump($relacionFisFis);exit;
+			var_dump($relacionFisFis);
+			var_dump("sin");
+			var_dump($relacionFisFisSin);
+			exit;
 			$delitosModalidadFiltro = $this->_delitoModalidadModelRead->get_delitodescr($folio, $year);
 
 			$datosBitacora = [
