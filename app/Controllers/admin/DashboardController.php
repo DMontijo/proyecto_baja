@@ -6714,6 +6714,7 @@ class DashboardController extends BaseController
 
 		}else {
 			$relacionFisFis = $this->_relacionIDOModelRead->get_by_folio($folio, $year);
+			var_dump($relacionFisFis);exit;
 		return json_encode(['status' => 1, 'relacionFisFis' => $relacionFisFis]);
 		}
 		// if (!$insertRelacionIDO) {
