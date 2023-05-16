@@ -6707,9 +6707,12 @@ class DashboardController extends BaseController
 		if (isset($checarDelito)) {
 			return json_encode(['status' => 3]);
 		}
-		$insertRelacionIDO = $this->_relacionIDOModel->insert($datoRelacionFisfis);
-
-		if (isset($insertRelacionIDO)) {
+		$this->_relacionIDOModel->transStart();
+		$this->_relacionIDOModel->insert($datoRelacionFisfis);
+		$this->_relacionIDOModel->transComplete();
+		if ($this->_relacionIDOModel->transStatus() === false) {
+			return json_encode(['status' => 0, 'message' => $_POST]);
+		} else {
 			$relacionFisFis = $this->_relacionIDOModel->get_by_folio($folio, $year);
 
 			$datosBitacora = [
@@ -6720,9 +6723,24 @@ class DashboardController extends BaseController
 			$this->_bitacoraActividad($datosBitacora);
 
 			return json_encode(['status' => 1, 'relacionFisFis' => $relacionFisFis]);
-		} else {
-			return json_encode(['status' => 0, 'message' => $_POST]);
 		}
+
+		// $insertRelacionIDO = $this->_relacionIDOModel->insert($datoRelacionFisfis);
+
+		// if (isset($insertRelacionIDO)) {
+		// 	$relacionFisFis = $this->_relacionIDOModel->get_by_folio($folio, $year);
+
+		// 	$datosBitacora = [
+		// 		'ACCION' => 'Ha ingresado una nueva relación de delito.',
+		// 		'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
+		// 	];
+
+		// 	$this->_bitacoraActividad($datosBitacora);
+
+		// 	return json_encode(['status' => 1, 'relacionFisFis' => $relacionFisFis]);
+		// } else {
+		// 	return json_encode(['status' => 0, 'message' => $_POST]);
+		// }
 	}
 
 	/**
