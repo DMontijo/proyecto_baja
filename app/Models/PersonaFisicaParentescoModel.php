@@ -23,7 +23,7 @@ class PersonaFisicaParentescoModel extends Model
 		$builder->where('P2.ANO', $year);
 		$builder->join('FOLIOPERSONAFISICA AS P1', 'P1.PERSONAFISICAID =' . $this->table . '.PERSONAFISICAID1');
 		$builder->join('FOLIOPERSONAFISICA AS P2', 'P2.PERSONAFISICAID =' . $this->table . '.PERSONAFISICAID2');
-		$builder->join('PERSONAPARENTESCO', 'PERSONAPARENTESCO.PARENTESCOID =' . $this->table . '.PARENTESCOID');
+		$builder->join('PERSONAPARENTESCO', 'PERSONAPARENTESCO.PERSONAPARENTESCOID =' . $this->table . '.PARENTESCOID');
 
 
 
