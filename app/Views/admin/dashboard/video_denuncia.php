@@ -867,8 +867,6 @@
 	function llenarTablaParentesco(relacion_parentesco, parentesco) {
 
 		for (let i = 0; i < relacion_parentesco.length; i++) {
-			console.log(personaidDos[i]);
-
 			var btn =
 				`<button type='button'  class='btn btn-primary' onclick='view_form_parentesco(${relacion_parentesco[i].PERSONAFISICAID1})'><i class="fas fa-eye"></i></button>`
 			var btnEliminar =
@@ -1236,8 +1234,8 @@
 					const vehiculos = response.respuesta.vehiculos;
 					const relacion_parentesco = response.respuesta.parentescoRelacion;
 					const parentesco = response.respuesta.parentesco;
-					const personaiduno = response.respuesta.personaiduno;
-					const personaidDos = response.respuesta.personaidDos;
+					// const personaiduno = response.respuesta.personaiduno;
+					// const personaidDos = response.respuesta.personaidDos;
 					const relacionFisFis = response.respuesta.relacionFisFis;
 					const fisicaImpDelito = response.respuesta.fisicaImpDelito;
 					const delitosModalidadFiltro = response.respuesta.delitosModalidadFiltro;
@@ -1645,8 +1643,8 @@
 					if (vehiculos) llenarTablaVehiculos(vehiculos);
 					//PARENTESCO
 					console.log(relacion_parentesco);
-					if (relacion_parentesco) llenarTablaParentesco(relacion_parentesco, personaiduno,
-						personaidDos, parentesco);
+					if (relacion_parentesco) llenarTablaParentesco(response.parentescoRelacion,response.parentesco);
+
 					//ARBOL DELICTUAL
 					if (relacionFisFis) llenarTablaFisFis(relacionFisFis);
 
