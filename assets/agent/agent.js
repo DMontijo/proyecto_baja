@@ -16,7 +16,7 @@ import {
  * @example
  * const videoServiceAgent = new VideoServiceAgent('AGENT_UUID', { apiURL : 'localhost', apiKey : 'API_KEY'});
  *
- * agentVideoService.connetAgent();
+ * agentVideoService.connectAgent();
  * agentVideoService.registerOnGuestConnected((response) => alert(response));
  * agentVideoService.disconnectAgent();
  */
@@ -44,6 +44,16 @@ export class VideoServiceAgent {
 	guestAudio = true;
 	guestVideo = true;
 
+	/**
+	 * @type {MediaStream} 
+	 */
+	videoStream = undefined;
+
+	/**
+	* @type {MediaStream} 
+	*/
+	audioStream = undefined;
+
 	guestData = {};
 	agentData = {};
 
@@ -65,7 +75,7 @@ export class VideoServiceAgent {
 	 * @example
 	 * const videoServiceAgent = new VideoServiceAgent('AGENT_UUID', { apiURL : 'localhost', apiKey : 'API_KEY'});
 	 *
-	 * agentVideoService.connetAgent();
+	 * agentVideoService.connectAgent();
 	 * agentVideoService.registerOnGuestConnected((response) => alert(response));
 	 * agentVideoService.disconnectAgent();
 	 *
@@ -105,7 +115,7 @@ export class VideoServiceAgent {
 	 * @param {Function} callback - This method is executed after agent is connected to socket
 	 * @param {Function} onerrror - This method is executed if an exception occours
 	 */
-	connetAgent(callback, onerror) {
+	connectAgent(callback, onerror) {
 		if (this.#socket) {
 			this.#socket.disconnect();
 		}
@@ -230,7 +240,10 @@ export class VideoServiceAgent {
 				if (typeof callback === "function")
 					callback(response, this.agentData, this.guestData);
 
-				this.#videoCallService = new VideoCall({ remoteVideoSelector });
+				this.#videoCallService = new VideoCall({ remoteVideoSelector,
+					audioSource: this.audioStream,
+					videoSource: this.videoStream,
+				});
 
 				this.#videoCallService.registerOnSessionDisconnected();
 
@@ -487,6 +500,24 @@ export class VideoServiceAgent {
 				typeof callback === "function" ?  callback(response): undefined
 			);
 		})
+	}
+
+	/**
+	 * This method set the videoStream for agent
+	 * 
+	 * @param {MediaStream} videoStream - videoStream
+	 */
+	set videoStream(videoStream) {
+		this.videoStream = videoStream;
+	}
+
+	/**
+	 * This method set the audioStream for agent
+	 * 
+	 * @param {MediaStream} audioStream - audioStream
+	 */
+	set audioStream(audioStream) {
+		this.audioStream = audioStream;
 	}
 
 	/**

@@ -157,6 +157,9 @@
 			select_element.remove(i);
 		}
 	}
+	///deshabilita los select hasta que dependen de otros
+	document.querySelector('#localidad').disabled = true;
+	document.querySelector('#colonia_select').disabled = true;
 
 
 	document.querySelector('#municipio').addEventListener('change', (e) => {
@@ -166,6 +169,9 @@
 
 		let estado = 2;
 		let municipio = e.target.value;
+
+		select_localidad.disabled = true;
+		select_colonia.disabled = true;
 
 		clearSelect(select_localidad);
 		clearSelect(select_colonia);
@@ -196,6 +202,7 @@
 					option.value = localidad.LOCALIDADID;
 					select_localidad.add(option);
 				});
+				select_localidad.disabled = false;
 			},
 			error: function(jqXHR, textStatus, errorThrown) {}
 		});
@@ -204,6 +211,8 @@
 	document.querySelector('#localidad').addEventListener('change', (e) => {
 		let select_colonia = document.querySelector('#colonia_select');
 		let input_colonia = document.querySelector('#colonia');
+
+		select_colonia.disabled = true;
 
 		let estado = 2;
 		let municipio = document.querySelector('#municipio').value;
@@ -241,6 +250,7 @@
 				option.value = '0';
 				option.style = 'font-weight: bold;';
 				select_colonia.add(option);
+				select_colonia.disabled = false;
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 

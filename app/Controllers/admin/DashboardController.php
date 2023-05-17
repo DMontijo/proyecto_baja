@@ -140,6 +140,12 @@ use Dompdf\Dompdf;
 use Dompdf\Options;
 use stdClass;
 
+use MailerSend\MailerSend;
+use MailerSend\Helpers\Builder\Recipient;
+use MailerSend\Helpers\Builder\EmailParams;
+use MailerSend\Exceptions\MailerSendValidationException;
+use MailerSend\Exceptions\MailerSendRateLimitException;
+
 class DashboardController extends BaseController
 {
 	private $db_read;
@@ -266,7 +272,7 @@ class DashboardController extends BaseController
 	//Reader
 	private $_folioModelRead;
 	private $_folioDocModelRead;
-	private $_sesionesModelRead;	
+	private $_sesionesModelRead;
 	private $_sesionesDenunciantesModelRead;
 	private $_rolesPermisosModelRead;
 	private $_usuariosModelRead;
@@ -864,7 +870,7 @@ class DashboardController extends BaseController
 		$data->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 		$data->roles = $this->_rolesUsuariosModelRead->asObject()->findAll();
 		$data->permisos = $this->_permisosModelRead->asObject()->findAll();
-	
+
 		$this->_loadView('Nuevo asignacion de permisos', '', '', $data, 'roles/nueva_asignacion_rol');
 	}
 
@@ -975,10 +981,10 @@ class DashboardController extends BaseController
 		if (!$insert) {
 			$this->_bitacoraActividad($datosBitacora);
 			$dataView = (object) array();
-			$dataView->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
-			$dataView->rolPermisoDescr = $this->_rolesPermisosModelRead->get_rol_permiso();
-			$dataView->roles = $this->_rolesUsuariosModelRead->asObject()->findAll();
-			$dataView->permisos = $this->_permisosModelRead->asObject()->findAll();
+			$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+			$dataView->rolPermisoDescr = $this->_rolesPermisosModel->get_rol_permiso();
+			$dataView->roles = $this->_rolesUsuariosModel->asObject()->findAll();
+			$dataView->permisos = $this->_permisosModel->asObject()->findAll();
 			return redirect()->to(base_url('/admin/dashboard/asignacion_permisos'))->with('message_success', 'Asignación de permisos creado correctamente.');
 		} else {
 			return redirect()->to(base_url('/admin/dashboard/asignacion_permisos'))->with('message_error', 'Asignación de permisos no creado.');
@@ -1010,10 +1016,10 @@ class DashboardController extends BaseController
 		if ($insert) {
 			$this->_bitacoraActividad($datosBitacora);
 			$dataView = (object) array();
-			$dataView->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
-			$dataView->rolPermisoDescr = $this->_rolesPermisosModelRead->get_rol_permiso();
-			$dataView->roles = $this->_rolesUsuariosModelRead->asObject()->findAll();
-			$dataView->permisos = $this->_permisosModelRead->asObject()->findAll();
+			$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+			$dataView->rolPermisoDescr = $this->_rolesPermisosModel->get_rol_permiso();
+			$dataView->roles = $this->_rolesUsuariosModel->asObject()->findAll();
+			$dataView->permisos = $this->_permisosModel->asObject()->findAll();
 			return redirect()->to(base_url('/admin/dashboard/asignacion_permisos'))->with('message_success', 'Rol creado correctamente.');
 		} else {
 			return redirect()->to(base_url('/admin/dashboard/asignacion_permisos'))->with('message_error', 'Rol no creado.');
@@ -1037,10 +1043,10 @@ class DashboardController extends BaseController
 			];
 			$this->_bitacoraActividad($datosBitacora);
 			$dataView = (object) array();
-			$dataView->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
-			$dataView->roles = $this->_rolesUsuariosModelRead->asObject()->findAll();
-			$dataView->permisos = $this->_permisosModelRead->asObject()->findAll();
-			$dataView->rolPermisoDescr = $this->_rolesPermisosModelRead->get_rol_permiso();
+			$dataView->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+			$dataView->roles = $this->_rolesUsuariosModel->asObject()->findAll();
+			$dataView->permisos = $this->_permisosModel->asObject()->findAll();
+			$dataView->rolPermisoDescr = $this->_rolesPermisosModel->get_rol_permiso();
 
 			return redirect()->to(base_url('/admin/dashboard/asignacion_permisos'))->with('message_success', 'Rol eliminado correctamente.');
 		} else {
@@ -1545,10 +1551,10 @@ class DashboardController extends BaseController
 		$data->preguntas_iniciales = $this->_folioPreguntasModelRead->where('FOLIOID', $numfolio)->where('ANO', $year)->first();
 		$data->personas = $this->_folioPersonaFisicaModelRead->get_by_folio($numfolio, $year);
 		$data->correos = $this->_folioPersonaFisicaModelRead->get_correos_persona($numfolio, $year);
-		$data->parentescoRelacion = $this->_parentescoPersonaFisicaModelRead->where('FOLIOID', $numfolio)->where('ANO', $year)->findAll();
-		$data->personaiduno = $this->_parentescoPersonaFisicaModelRead->get_personaFisicaUno($numfolio, $year);
-		$data->personaidDos = $this->_parentescoPersonaFisicaModelRead->get_personaFisicaDos($numfolio, $year);
-		$data->parentesco = $this->_parentescoPersonaFisicaModelRead->get_Parentesco($numfolio, $year);
+		$data->parentescoRelacion = $this->_parentescoPersonaFisicaModel->getRelacion($numfolio, $year);
+		// $data->personaiduno = $this->_parentescoPersonaFisicaModelRead->get_personaFisicaUno($numfolio, $year);
+		// $data->personaidDos = $this->_parentescoPersonaFisicaModelRead->get_personaFisicaDos($numfolio, $year);
+		// $data->parentesco = $this->_parentescoPersonaFisicaModelRead->get_Parentesco($numfolio, $year);
 		$data->relacionFisFis = $this->_relacionIDOModelRead->get_by_folio($numfolio, $year);
 		$data->vehiculos = $this->_folioVehiculoModelRead->get_by_folio($numfolio, $year);
 		$data->fisicaImpDelito = $this->_imputadoDelitoModelRead->get_by_folio($numfolio, $year);
@@ -2158,7 +2164,7 @@ class DashboardController extends BaseController
 		$data->ocupaciones = $this->_ocupacionModelRead->asObject()->findAll();
 		$data->colorVehiculo = $this->_coloresVehiculoModelRead->asObject()->findAll();
 		$data->tipoVehiculo = $this->_tipoVehiculoModelRead->asObject()->orderBy('VEHICULOTIPODESCR', 'ASC')->findAll();
-		
+
 		$data->parentesco = $this->_parentescoModelRead->asObject()->findAll();
 		$data->figura = $this->_figuraModelRead->asObject()->findAll();
 
@@ -2312,14 +2318,31 @@ class DashboardController extends BaseController
 		$year = date('Y');
 		$folioM = $this->_folioModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->first();
 		$denunciante = $this->_denunciantesModelRead->asObject()->where('DENUNCIANTEID', $folioM->DENUNCIANTEID)->first();
-		$email = \Config\Services::email();
-		$email->setTo($to);
-		$email->setSubject('Folio atendido');
-		$body = view('email_template/folio_der_can_email_template.php', ['folio' => $folio, 'motivo' => $motivo]);
-		$email->setMessage($body);
-		$email->setAltMessage('EL FOLIO ' . $folio . ' FUE ' . $motivo == 'ATENDIDA' ? 'CANALIZADO' : $motivo);
 
-		if ($email->send()) {
+		$body = view('email_template/folio_der_can_email_template.php', ['folio' => $folio, 'motivo' => $motivo]);
+		$mailersend = new MailerSend(['api_key' => EMAIL_TOKEN]);
+		$recipients = [
+			new Recipient($to, 'Your Client'),
+		];
+
+		$emailParams = (new EmailParams())
+			->setFrom('notificacionfgebc@fgebc.gob.mx')
+			->setFromName('FGEBC')
+			->setRecipients($recipients)
+			->setSubject('Folio atendido')
+			->setHtml($body)
+			->setText('EL FOLIO ' . $folio . ' FUE ' . $motivo == 'ATENDIDA' ? 'CANALIZADO' : $motivo)
+			->setReplyTo('notificacionfgebc@fgebc.gob.mx')
+			->setReplyToName('FGEBC');
+		try {
+			$result = $mailersend->email->send($emailParams);
+		} catch (MailerSendValidationException $e) {
+			$result = false;
+		} catch (MailerSendRateLimitException $e) {
+			$result = false;
+		}
+
+		if ($result) {
 			return true;
 		} else {
 			return false;
@@ -2337,35 +2360,46 @@ class DashboardController extends BaseController
 	{
 		$folioM = $this->_folioModelRead->asObject()->where('EXPEDIENTEID', $expedienteId)->first();
 		$denunciante = $this->_denunciantesModelRead->asObject()->where('DENUNCIANTEID', $folioM->DENUNCIANTEID)->first();
-
 		$tipoExpediente = $this->_tipoExpedienteModelRead->asObject()->where('TIPOEXPEDIENTEID',  $folioM->TIPOEXPEDIENTEID)->first();
-		// $email = \Config\Services::email();
-		// $email->setTo($to);
-		// $email->setSubject('Nuevo expediente creado');
-		// $body = view('email_template/expediente_email_template.php', ['expediente' => $expedienteId, 'tipoexpediente' => $tipoExpediente->TIPOEXPEDIENTECLAVE]);
-		// $email->setMessage($body);
 
 		$expediente_guiones = '';
 		$arrayExpediente = str_split($expedienteId);
 		$expediente_guiones =  $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
 
+		$mailersend = new MailerSend(['api_key' => EMAIL_TOKEN]);
+		$recipients = [
+			new Recipient($to, 'Your Client'),
+		];
 
-		// $email->setAltMessage('Gracias por denunciar, se te ha generado un nuevo expediente ' . $expediente_guiones . '/' . $tipoExpediente->TIPOEXPEDIENTECLAVE);
-		$sendSMS = $this->sendSMS("Nuevo expediente", $denunciante->TELEFONO, 'Notificaciones FGE/Estimado usuario, tu numero de expediente es:' . $expediente_guiones . '/' . $tipoExpediente->TIPOEXPEDIENTECLAVE);
+		$body = view('email_template/expediente_email_template.php', ['expediente' => $expedienteId, 'tipoexpediente' => $tipoExpediente->TIPOEXPEDIENTECLAVE]);
+		$emailParams = (new EmailParams())
+			->setFrom('notificacionfgebc@fgebc.gob.mx')
+			->setFromName('FGEBC')
+			->setRecipients($recipients)
+			->setSubject('Nuevo expediente creado')
+			->setHtml($body)
+			->setText('Gracias por denunciar, se te ha generado un nuevo expediente ' . $expediente_guiones . '/' . $tipoExpediente->TIPOEXPEDIENTECLAVE)
+			->setReplyTo('notificacionfgebc@fgebc.gob.mx')
+			->setReplyToName('FGEBC');
 
-		// if ($email->send()) {
-		if ($sendSMS == "") {
+		$sendSMS = $this->sendSMS("Nuevo expediente", $denunciante->TELEFONO, 'Notificaciones FGEBC/Estimado usuario, tu numero de expediente es:' . $expediente_guiones . '/' . $tipoExpediente->TIPOEXPEDIENTECLAVE);
+		try {
+			$result = $mailersend->email->send($emailParams);
+		} catch (MailerSendValidationException $e) {
+			$result = false;
+		} catch (MailerSendRateLimitException $e) {
+			$result = false;
+		}
+
+		if ($result) {
 			return true;
 		} else {
-			return false;
+			if ($sendSMS == "") {
+				return true;
+			} else {
+				return false;
+			}
 		}
-		// } else {
-		// if ($sendSMS == "") {
-		// 	return true;
-		// } else {
-		// 	return false;
-		// }
-		// }
 	}
 
 	/**
@@ -2376,15 +2410,30 @@ class DashboardController extends BaseController
 	 */
 	private function _sendEmailPassword($to, $password)
 	{
-
-		$email = \Config\Services::email();
-		$email->setTo($to);
-		$email->setSubject('Nueva cuenta creada');
 		$body = view('email_template/password_email_admin_template.php', ['email' => $to, 'password' => $password]);
-		$email->setMessage($body);
-		$email->setAltMessage('Se ha generado un nuevo registro en el Centro de Denuncia Tecnológica.Para acceder debes ingresar los siguientes datos. USUARIO: ' . $to . 'CONTRASEÑA:' . $password);
 
-		if ($email->send()) {
+		$mailersend = new MailerSend(['api_key' => EMAIL_TOKEN]);
+
+		$recipients = [
+			new Recipient($to, 'Your Client'),
+		];
+		$emailParams = (new EmailParams())
+			->setFrom('notificacionfgebc@fgebc.gob.mx')
+			->setFromName('FGEBC')
+			->setRecipients($recipients)
+			->setSubject('Nueva cuenta creada')
+			->setHtml($body)
+			->setText('Se ha generado un nuevo registro en el Centro de Denuncia Tecnológica.Para acceder debes ingresar los siguientes datos. USUARIO: ' . $to . 'CONTRASEÑA:' . $password)
+			->setReplyTo('notificacionfgebc@fgebc.gob.mx')
+			->setReplyToName('FGEBC');
+		try {
+			$result = $mailersend->email->send($emailParams);
+		} catch (MailerSendValidationException $e) {
+			$result = false;
+		} catch (MailerSendRateLimitException $e) {
+			$result = false;
+		}
+		if ($result) {
 			return true;
 		} else {
 			return false;
@@ -5038,6 +5087,7 @@ class DashboardController extends BaseController
 				'HECHONUMEROCASAINT' => $this->request->getPost('interior_delito'),
 				'HECHONARRACION' => $this->request->getPost('narracion_delito'),
 				'HECHODELITO' => $this->request->getPost('delito_delito'),
+				'LOCALIZACIONPERSONAMEDIOS' => $this->request->getPost('autoriza_foto'),
 				'HECHOCOORDENADAX' => $this->request->getPost('longitud') != '-117.015543' ? $this->request->getPost('longitud') : NULL,
 				'HECHOCOORDENADAY' => $this->request->getPost('latitud') != '32.521036' ? $this->request->getPost('latitud') : NULL,
 			);
@@ -5076,7 +5126,6 @@ class DashboardController extends BaseController
 	 */
 	public function updateFolioDenuncia()
 	{
-
 		$colonia = $this->_coloniasModelRead->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $this->request->getPost('municipio_delito'))->where('LOCALIDADID', $this->request->getPost('localidad_delito'))->where('COLONIAID', $this->request->getPost('colonia_delito_select'))->first();
 		try {
 
@@ -5099,6 +5148,7 @@ class DashboardController extends BaseController
 				'HECHONUMEROCASAINT' => $this->request->getPost('interior_delito'),
 				'HECHONARRACION' => $this->request->getPost('notas'),
 				'NOTASAGENTE' => $this->request->getPost('notas'),
+				'LOCALIZACIONPERSONAMEDIOS' => $this->request->getPost('autoriza_foto'),
 
 			);
 
@@ -5449,16 +5499,16 @@ class DashboardController extends BaseController
 
 			if ($update) {
 
-				$personas = $this->_folioPersonaFisicaModelRead->get_by_folio($folio, $year);
-				$imputados = $this->_folioPersonaFisicaModelRead->get_imputados($folio, $year);
-				$victimas = $this->_folioPersonaFisicaModelRead->get_victimas($folio, $year);
+				$personas = $this->_folioPersonaFisicaModel->get_by_folio($folio, $year);
+				$imputados = $this->_folioPersonaFisicaModel->get_imputados($folio, $year);
+				$victimas = $this->_folioPersonaFisicaModel->get_victimas($folio, $year);
 
-				$parentescoRelacion = $this->_parentescoPersonaFisicaModelRead->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
-				$personaiduno = $this->_parentescoPersonaFisicaModelRead->get_personaFisicaUno($folio, $year);
-				$personaidDos = $this->_parentescoPersonaFisicaModelRead->get_personaFisicaDos($folio, $year);
-				$parentesco = $this->_parentescoPersonaFisicaModelRead->get_Parentesco($folio, $year);
-				$fisicaImpDelito = $this->_imputadoDelitoModelRead->get_by_folio($folio, $year);
-				$relacionFisFis = $this->_relacionIDOModelRead->get_by_folio($folio, $year);
+				$parentescoRelacion = $this->_parentescoPersonaFisicaModel->getRelacion($folio, $year);
+				// $personaiduno = $this->_parentescoPersonaFisicaModel->get_personaFisicaUno($folio, $year);
+				// $personaidDos = $this->_parentescoPersonaFisicaModel->get_personaFisicaDos($folio, $year);
+				// $parentesco = $this->_parentescoPersonaFisicaModel->get_Parentesco($folio, $year);
+				$fisicaImpDelito = $this->_imputadoDelitoModel->get_by_folio($folio, $year);
+				$relacionFisFis = $this->_relacionIDOModel->get_by_folio($folio, $year);
 
 
 				$datosBitacora = [
@@ -5468,7 +5518,7 @@ class DashboardController extends BaseController
 
 				$this->_bitacoraActividad($datosBitacora);
 
-				return json_encode(['status' => 1, 'personas' => $personas, 'imputados' => $imputados, 'victimas' => $victimas, 'parentescoRelacion' => $parentescoRelacion, 'personaiduno' => $personaiduno, 'personaidDos' => $personaidDos, 'parentesco' => $parentesco, 'fisicaImpDelito' => $fisicaImpDelito, 'relacionFisFis' => $relacionFisFis]);
+				return json_encode(['status' => 1, 'personas' => $personas, 'imputados' => $imputados, 'victimas' => $victimas, 'parentescoRelacion' => $parentescoRelacion,  'fisicaImpDelito' => $fisicaImpDelito, 'relacionFisFis' => $relacionFisFis]);
 			} else {
 				return json_encode(['status' => 0]);
 			}
@@ -5848,7 +5898,7 @@ class DashboardController extends BaseController
 		$update = $this->_folioVehiculoModel->set($data)->where('FOLIOID', $folio)->where('ANO', $year)->where('VEHICULOID', $vehiculoid)->update();
 
 		if ($update) {
-			$vehiculos = $this->_folioVehiculoModelRead->get_by_folio($folio, $year);
+			$vehiculos = $this->_folioVehiculoModel->get_by_folio($folio, $year);
 
 			$datosBitacora = [
 				'ACCION' => 'Ha actualizado el vehículo de una persona fisica',
@@ -6037,7 +6087,7 @@ class DashboardController extends BaseController
 		$insert = $this->_folioVehiculo($data, $folio, $year);
 
 		if (!$insert) {
-			$vehiculos = $this->_folioVehiculoModelRead->get_by_folio($folio, $year);
+			$vehiculos = $this->_folioVehiculoModel->get_by_folio($folio, $year);
 
 			$datosBitacora = [
 				'ACCION' => 'Ha agregado el vehículo de una persona fisica',
@@ -6075,10 +6125,10 @@ class DashboardController extends BaseController
 			$updateRelacionParentesco = $this->_parentescoPersonaFisicaModel->set($dataRelacionParentesco)->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID1', $idp1)->where('PERSONAFISICAID2', $idp2)->update();
 
 			if ($updateRelacionParentesco) {
-				$parentescoRelacion = $this->_parentescoPersonaFisicaModelRead->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
-				$personaiduno = $this->_parentescoPersonaFisicaModelRead->get_personaFisicaUno($folio, $year);
-				$personaidDos = $this->_parentescoPersonaFisicaModelRead->get_personaFisicaDos($folio, $year);
-				$parentesco = $this->_parentescoPersonaFisicaModelRead->get_Parentesco($folio, $year);
+				$parentescoRelacion = $this->_parentescoPersonaFisicaModel->getRelacion($folio, $year);
+				// $personaiduno = $this->_parentescoPersonaFisicaModel->get_personaFisicaUno($folio, $year);
+				// $personaidDos = $this->_parentescoPersonaFisicaModel->get_personaFisicaDos($folio, $year);
+				// $parentesco = $this->_parentescoPersonaFisicaModel->get_Parentesco($folio, $year);
 				$datosBitacora = [
 					'ACCION' => 'Ha actualizado el parentesco de una persona fisica',
 					'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
@@ -6086,7 +6136,7 @@ class DashboardController extends BaseController
 
 				$this->_bitacoraActividad($datosBitacora);
 
-				return json_encode(['status' => 1, 'parentescoRelacion' => $parentescoRelacion, 'personaiduno' => $personaiduno, 'personaidDos' => $personaidDos, 'parentesco' => $parentesco]);
+				return json_encode(['status' => 1, 'parentescoRelacion' => $parentescoRelacion]);
 			} else {
 				return json_encode(['status' => 0, 'message' => $updateRelacionParentesco]);
 			}
@@ -6112,10 +6162,10 @@ class DashboardController extends BaseController
 
 			$deleteRelacionParentesco = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID1', $idp1)->where('PERSONAFISICAID2', $idp2)->where('PARENTESCOID', $parentescoid)->delete();
 			if ($deleteRelacionParentesco) {
-				$parentescoRelacion = $this->_parentescoPersonaFisicaModelRead->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
-				$personaiduno = $this->_parentescoPersonaFisicaModelRead->get_personaFisicaUno($folio, $year);
-				$personaidDos = $this->_parentescoPersonaFisicaModelRead->get_personaFisicaDos($folio, $year);
-				$parentesco = $this->_parentescoPersonaFisicaModelRead->get_Parentesco($folio, $year);
+				$parentescoRelacion = $this->_parentescoPersonaFisicaModel->getRelacion($folio, $year);
+				// $personaiduno = $this->_parentescoPersonaFisicaModel->get_personaFisicaUno($folio, $year);
+				// $personaidDos = $this->_parentescoPersonaFisicaModel->get_personaFisicaDos($folio, $year);
+				// $parentesco = $this->_parentescoPersonaFisicaModel->get_Parentesco($folio, $year);
 
 				$datosBitacora = [
 					'ACCION' => 'Ha eliminado una relación de parenteso',
@@ -6124,7 +6174,7 @@ class DashboardController extends BaseController
 
 				$this->_bitacoraActividad($datosBitacora);
 
-				return json_encode(['status' => 1, 'parentescoRelacion' => $parentescoRelacion, 'personaiduno' => $personaiduno, 'personaidDos' => $personaidDos, 'parentesco' => $parentesco, 'post' => $_POST]);
+				return json_encode(['status' => 1, 'parentescoRelacion' => $parentescoRelacion, 'post' => $_POST]);
 			} else {
 				return json_encode(['status' => 0]);
 			}
@@ -6153,9 +6203,9 @@ class DashboardController extends BaseController
 			$deletePersonaFisicaMediaF = $this->_folioMediaFiliacion->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $personaf_id)->delete();
 
 			if ($deletePersonaFisica && $deletePersonaFisicaDom && $deletePersonaFisicaMediaF) {
-				$personas = $this->_folioPersonaFisicaModelRead->get_by_folio($folio, $year);
-				$imputados = $this->_folioPersonaFisicaModelRead->get_imputados($folio, $year);
-				$victimas = $this->_folioPersonaFisicaModelRead->get_victimas($folio, $year);
+				$personas = $this->_folioPersonaFisicaModel->get_by_folio($folio, $year);
+				$imputados = $this->_folioPersonaFisicaModel->get_imputados($folio, $year);
+				$victimas = $this->_folioPersonaFisicaModel->get_victimas($folio, $year);
 				$delitosModalidadFiltro = $this->_delitoModalidadModelRead->get_delitodescr($folio, $year);
 
 				$datosBitacora = [
@@ -6199,12 +6249,12 @@ class DashboardController extends BaseController
 		$insertRelacionParentesco = $this->_parentescoPersonaFisicaModel->insert($dataRelacionParentesco);
 
 		if (!$insertRelacionParentesco) {
-			$personas = $this->_folioPersonaFisicaModelRead->get_by_folio($folio, $year);
+			$personas = $this->_folioPersonaFisicaModel->get_by_folio($folio, $year);
 
-			$parentescoRelacion = $this->_parentescoPersonaFisicaModelRead->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
-			$personaiduno = $this->_parentescoPersonaFisicaModelRead->get_personaFisicaUno($folio, $year);
-			$personaidDos = $this->_parentescoPersonaFisicaModelRead->get_personaFisicaDos($folio, $year);
-			$parentesco = $this->_parentescoPersonaFisicaModelRead->get_Parentesco($folio, $year);
+			$parentescoRelacion = $this->_parentescoPersonaFisicaModel->getRelacion($folio, $year);
+			// $personaiduno = $this->_parentescoPersonaFisicaModel->get_personaFisicaUno($folio, $year);
+			// $personaidDos = $this->_parentescoPersonaFisicaModel->get_personaFisicaDos($folio, $year);
+			// $parentesco = $this->_parentescoPersonaFisicaModel->get_Parentesco($folio, $year);
 			$datosBitacora = [
 				'ACCION' => 'Ha ingresado un nuevo parentesco a una persona fisica',
 				'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
@@ -6212,7 +6262,7 @@ class DashboardController extends BaseController
 
 			$this->_bitacoraActividad($datosBitacora);
 
-			return json_encode(['status' => 1, 'personas' => $personas, 'parentescoRelacion' => $parentescoRelacion, 'personaiduno' => $personaiduno, 'personaidDos' => $personaidDos, 'parentesco' => $parentesco]);
+			return json_encode(['status' => 1, 'personas' => $personas, 'parentescoRelacion' => $parentescoRelacion]);
 		} else {
 			return json_encode(['status' => 0]);
 		}
@@ -6497,11 +6547,11 @@ class DashboardController extends BaseController
 
 
 		if ($personaFisica) {
-			$personas = $this->_folioPersonaFisicaModelRead->get_by_folio($folio, $year);
-			$personaFisicaID = $this->_folioPersonaFisicaModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->orderBy('PERSONAFISICAID', 'desc')->first();
-			$imputados = $this->_folioPersonaFisicaModelRead->get_imputados($folio, $year);
-			$victimas = $this->_folioPersonaFisicaModelRead->get_victimas($folio, $year);
-			$delitosModalidadFiltro = $this->_delitoModalidadModelRead->get_delitodescr($folio, $year);
+			$personas = $this->_folioPersonaFisicaModel->get_by_folio($folio, $year);
+			$personaFisicaID = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->orderBy('PERSONAFISICAID', 'desc')->first();
+			$imputados = $this->_folioPersonaFisicaModel->get_imputados($folio, $year);
+			$victimas = $this->_folioPersonaFisicaModel->get_victimas($folio, $year);
+			$delitosModalidadFiltro = $this->_delitoModalidadModel->get_delitodescr($folio, $year);
 
 			$datosBitacora = [
 				'ACCION' => 'Ha ingresado una nueva persona fisica',
@@ -6657,11 +6707,28 @@ class DashboardController extends BaseController
 		if (isset($checarDelito)) {
 			return json_encode(['status' => 3]);
 		}
+		// $this->_relacionIDOModel->transStart();
+		// $this->_relacionIDOModel->insert($datoRelacionFisfis);
+		// $this->_relacionIDOModel->transComplete();
+		// if ($this->_relacionIDOModel->transStatus() === false) {
+		// 	return json_encode(['status' => 0, 'message' => $_POST]);
+		// } else {
+		// 	$relacionFisFis = $this->_relacionIDOModelRead->get_by_folio($folio, $year);
+
+		// 	$datosBitacora = [
+		// 		'ACCION' => 'Ha ingresado una nueva relación de delito.',
+		// 		'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
+		// 	];
+
+		// 	$this->_bitacoraActividad($datosBitacora);
+
+		// 	return json_encode(['status' => 1, 'relacionFisFis' => $relacionFisFis]);
+		// }
+
 		$insertRelacionIDO = $this->_relacionIDOModel->insert($datoRelacionFisfis);
 
 		if (isset($insertRelacionIDO)) {
-			$relacionFisFis = $this->_relacionIDOModelRead->get_by_folio($folio, $year);
-			$delitosModalidadFiltro = $this->_delitoModalidadModelRead->get_delitodescr($folio, $year);
+			$relacionFisFis = $this->_relacionIDOModel->get_by_folio($folio, $year);
 
 			$datosBitacora = [
 				'ACCION' => 'Ha ingresado una nueva relación de delito.',
@@ -6675,6 +6742,7 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0, 'message' => $_POST]);
 		}
 	}
+
 	/**
 	 * Función para eliminar el árbol delictual.
 	 * Devuelve todos los datos necesarios para la actualizacion de las tablas visuales
@@ -6716,8 +6784,8 @@ class DashboardController extends BaseController
 			// } else 
 			if ($countdelitoFisFis[0]->DELITOMODALIDADID > 1) {
 				if ($deleteArbol) {
-					$relacionFisFis = $this->_relacionIDOModelRead->get_by_folio($folio, $year);
-					$fisicaImpDelito = $this->_imputadoDelitoModelRead->get_by_folio($folio, $year);
+					$relacionFisFis = $this->_relacionIDOModel->get_by_folio($folio, $year);
+					$fisicaImpDelito = $this->_imputadoDelitoModel->get_by_folio($folio, $year);
 
 					$datosBitacora = [
 						'ACCION' => 'Ha eliminado un árbol delictivo.',
@@ -6752,8 +6820,8 @@ class DashboardController extends BaseController
 			$deleteArbol = $this->_relacionIDOModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAIDVICTIMA', $personafisicavictima)->where('DELITOMODALIDADID', $delitomodalidad)->where('PERSONAFISICAIDIMPUTADO', $personafisicaimputado)->delete();
 
 			if ($deleteImpDelito && $deleteArbol) {
-				$fisicaImpDelito = $this->_imputadoDelitoModelRead->get_by_folio($folio, $year);
-				$relacionFisFis = $this->_relacionIDOModelRead->get_by_folio($folio, $year);
+				$fisicaImpDelito = $this->_imputadoDelitoModel->get_by_folio($folio, $year);
+				$relacionFisFis = $this->_relacionIDOModel->get_by_folio($folio, $year);
 
 				$datosBitacora1 = [
 					'ACCION' => 'Ha eliminado el delito de un imputado',
@@ -6836,7 +6904,7 @@ class DashboardController extends BaseController
 			$deleteVehiculo = $this->_folioVehiculoModel->where('FOLIOID', $folio)->where('ANO', $year)->where('VEHICULOID', $vehiculoid)->delete();
 
 			if ($deleteVehiculo) {
-				$vehiculos = $this->_folioVehiculoModelRead->get_by_folio($folio, $year);
+				$vehiculos = $this->_folioVehiculoModel->get_by_folio($folio, $year);
 
 
 				$datosBitacora = [
@@ -6880,7 +6948,7 @@ class DashboardController extends BaseController
 		$insertFisImpDelito = $this->_imputadoDelitoModel->insert($datoFisImpDelito);
 
 		if (isset($insertFisImpDelito)) {
-			$fisicaImpDelito = $this->_imputadoDelitoModelRead->get_by_folio($folio, $year);
+			$fisicaImpDelito = $this->_imputadoDelitoModel->get_by_folio($folio, $year);
 			// $delitosModalidadFiltro = $this->_delitoModalidadModel->get_delitodescr($folio, $year);
 			$datosBitacora = [
 				'ACCION' => 'Ha ingresado una nuevo delito en un imputado',
@@ -6940,8 +7008,8 @@ class DashboardController extends BaseController
 		);
 		$objetoInvolucrado = $this->_folioObjetoInvolucrado($dataObjetoInvolucrado, $folio, $year);
 		if ($objetoInvolucrado) {
-			$objetos = $this->_folioObjetoInvolucradoModelRead->get_descripcion($folio, $year);
-			$personas = $this->_folioPersonaFisicaModelRead->get_by_folio($folio, $year);
+			$objetos = $this->_folioObjetoInvolucradoModel->get_descripcion($folio, $year);
+			$personas = $this->_folioPersonaFisicaModel->get_by_folio($folio, $year);
 
 			$datosBitacora = [
 				'ACCION' => 'Ha ingresado un nuevo objeto involucrado',
@@ -6968,7 +7036,7 @@ class DashboardController extends BaseController
 			$deleteObjetoInvolucrado = $this->_folioObjetoInvolucradoModel->where('FOLIOID', $folio)->where('ANO', $year)->where('OBJETOID', $objetoid)->delete();
 
 			if ($deleteObjetoInvolucrado) {
-				$objetos = $this->_folioObjetoInvolucradoModelRead->get_descripcion($folio, $year);
+				$objetos = $this->_folioObjetoInvolucradoModel->get_descripcion($folio, $year);
 
 				$datosBitacora1 = [
 					'ACCION' => 'Ha eliminado un objeto involucrado',
@@ -7038,7 +7106,7 @@ class DashboardController extends BaseController
 			$updateObjetoInvolucrado = $this->_folioObjetoInvolucradoModel->set($dataObjetoInvolucrado)->where('FOLIOID', $folio)->where('ANO', $year)->where('OBJETOID', $objetoid)->update();
 
 			if ($updateObjetoInvolucrado) {
-				$objetos = $this->_folioObjetoInvolucradoModelRead->get_descripcion($folio, $year);
+				$objetos = $this->_folioObjetoInvolucradoModel->get_descripcion($folio, $year);
 
 
 				$datosBitacora = [
@@ -8307,7 +8375,7 @@ class DashboardController extends BaseController
 					);
 					$update = $this->_folioModel->set($dataFolio)->where('FOLIOID', $folio)->where('ANO', $year)->update();
 				}
-				$documentos = $this->_folioDocModelRead->get_by_folio($folio, $year);
+				$documentos = $this->_folioDocModel->get_by_folio($folio, $year);
 				$datosBitacora = [
 					'ACCION' => 'Ha agregado un nuevo documento',
 					'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year . ' PLANTILLAID: ' .  $plantilla['ID'],
@@ -8345,7 +8413,7 @@ class DashboardController extends BaseController
 
 			$updateDocumento = $this->_folioDocModel->set($dataDocumento)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $docid)->update();
 			if ($updateDocumento) {
-				$documentos = $this->_folioDocModelRead->get_by_folio($folio, $year);
+				$documentos = $this->_folioDocModel->get_by_folio($folio, $year);
 
 				$datosBitacora = [
 					'ACCION' => 'Ha actualizado el estatus de un documento',
@@ -8409,7 +8477,7 @@ class DashboardController extends BaseController
 			$updateDocumento = $this->_folioDocModel->set($dataDocumento)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $docid)->update();
 
 			if ($updateDocumento) {
-				$documentos = $this->_folioDocModelRead->get_by_folio($folio, $year);
+				$documentos = $this->_folioDocModel->get_by_folio($folio, $year);
 
 				$datosBitacora = [
 					'ACCION' => 'Ha actualizado un documento.',

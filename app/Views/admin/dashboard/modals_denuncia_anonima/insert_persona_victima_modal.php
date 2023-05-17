@@ -1013,6 +1013,13 @@
 	</div>
 </div>
 <script>
+
+	document.querySelector('#municipio_select_new').disabled = true;
+	document.querySelector('#localidad_select_new').disabled = true;
+	document.querySelector('#colonia_select_new').disabled = true;
+	document.querySelector('#municipio_select_origen_new').disabled = true;
+	
+
 	document.querySelector('#ocupacion_new').addEventListener('change', (e) => {
 		let select_ocupacion = document.querySelector('#ocupacion_new');
 		let input_ocupacion = document.querySelector('#ocupacion_descr_new');
@@ -1035,6 +1042,7 @@
 
 		select_municipio.value = '';
 
+		select_municipio.disabled = true;
 
 		let data = {
 			'estado_id': e.target.value,
@@ -1054,6 +1062,7 @@
 					option.value = municipio.MUNICIPIOID;
 					select_municipio.add(option);
 				});
+				select_municipio.disabled = false;
 			},
 			error: function(jqXHR, textStatus, errorThrown) {}
 		});
@@ -1064,12 +1073,16 @@
 		let select_municipio = document.querySelector('#municipio_select_new');
 		let select_colonia = document.querySelector('#colonia_select_new');
 		let input_colonia = document.querySelector('#colonia_new');
+		let select_localidad = document.querySelector('#localidad_select_new');
 
 		clearSelect(select_municipio);
 
 
 		select_municipio.value = '';
 
+		select_municipio.disabled = true;
+		select_colonia.disabled = true;
+		select_localidad.disabled = true;
 
 		let data = {
 			'estado_id': e.target.value,
@@ -1089,6 +1102,7 @@
 					option.value = municipio.MUNICIPIOID;
 					select_municipio.add(option);
 				});
+				select_municipio.disabled = false;
 			},
 			error: function(jqXHR, textStatus, errorThrown) {}
 		});
@@ -1115,6 +1129,10 @@
 		clearSelect(select_colonia);
 
 		select_localidad.value = '';
+		
+		select_localidad.disabled = true;
+		select_colonia.disabled = true;
+		
 
 		let data = {
 			'estado_id': estado,
@@ -1135,6 +1153,7 @@
 					option.value = localidad.LOCALIDADID;
 					select_localidad.add(option);
 				});
+				select_localidad.disabled = false;
 			},
 			error: function(jqXHR, textStatus, errorThrown) {}
 		});
@@ -1177,6 +1196,7 @@
 						option.value = colonia.COLONIAID;
 						select_colonia.add(option);
 					});
+					select_colonia.disabled = false;
 
 					var option = document.createElement("option");
 					option.text = 'OTRO';

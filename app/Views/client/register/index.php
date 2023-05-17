@@ -781,11 +781,15 @@ if ($agent->isMobile()) {
 			}
 		})
 
+		document.querySelector('#municipio_select_origen').disabled = true;
+
 		document.querySelector('#nacionalidad').addEventListener('change', (e) => {
 			let select_estado = document.querySelector('#estado_select_origen');
 			let select_municipio = document.querySelector('#municipio_select_origen');
 
 			clearSelect(select_municipio);
+
+			select_municipio.disabled = true;
 
 			if (e.target.value !== '82') {
 				select_estado.value = '33';
@@ -807,6 +811,7 @@ if ($agent->isMobile()) {
 							select_municipio.add(option);
 						});
 						select_municipio.value = '1';
+						select_municipio.disabled = false;
 					},
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
@@ -824,6 +829,8 @@ if ($agent->isMobile()) {
 			clearSelect(select_municipio);
 
 			select_municipio.value = '';
+
+			select_municipio.disabled = true;
 
 			let data = {
 				'estado_id': e.target.value,
@@ -843,6 +850,7 @@ if ($agent->isMobile()) {
 						option.value = municipio.MUNICIPIOID;
 						select_municipio.add(option);
 					});
+					select_municipio.disabled = false;
 				},
 				error: function(jqXHR, textStatus, errorThrown) {}
 			});
@@ -859,6 +867,10 @@ if ($agent->isMobile()) {
 			clearSelect(select_municipio);
 			clearSelect(select_localidad);
 			clearSelect(select_colonia);
+
+			select_municipio.disabled = true;
+			select_localidad.disabled = true;
+			select_colonia.disabled = true;
 
 			if (e.target.value !== 'MX') {
 
@@ -943,7 +955,9 @@ if ($agent->isMobile()) {
 				input_colonia.classList.add('d-none');
 			}
 		});
-
+		document.querySelector('#municipio_select').disabled = true;
+		document.querySelector('#localidad_select').disabled = true;
+		document.querySelector('#colonia_select').disabled = true;
 		document.querySelector('#estado_select').addEventListener('change', (e) => {
 			let select_municipio = document.querySelector('#municipio_select');
 			let select_localidad = document.querySelector('#localidad_select');
@@ -958,6 +972,10 @@ if ($agent->isMobile()) {
 			select_localidad.value = '';
 			select_colonia.value = '';
 			input_colonia.value = '';
+
+			select_municipio.disabled = true;
+			select_colonia.disabled = true;
+			select_localidad.disabled = true;
 
 			select_colonia.classList.remove('d-none');
 			input_colonia.classList.add('d-none');
@@ -980,6 +998,7 @@ if ($agent->isMobile()) {
 						option.value = municipio.MUNICIPIOID;
 						select_municipio.add(option);
 					});
+					select_municipio.disabled = false;
 				},
 				error: function(jqXHR, textStatus, errorThrown) {}
 			});
@@ -1009,6 +1028,9 @@ if ($agent->isMobile()) {
 			clearSelect(select_localidad);
 			clearSelect(select_colonia);
 
+			select_colonia.disabled = true;
+			select_localidad.disabled = true;
+
 			select_localidad.value = '';
 
 			let data = {
@@ -1030,6 +1052,7 @@ if ($agent->isMobile()) {
 						option.value = localidad.LOCALIDADID;
 						select_localidad.add(option);
 					});
+					select_localidad.disabled = false;
 				},
 				error: function(jqXHR, textStatus, errorThrown) {}
 			});
@@ -1045,6 +1068,8 @@ if ($agent->isMobile()) {
 
 			clearSelect(select_colonia);
 			select_colonia.value = '';
+
+			select_colonia.disabled = true;
 
 			let data = {
 				'estado_id': estado,
@@ -1072,6 +1097,7 @@ if ($agent->isMobile()) {
 							option.value = colonia.COLONIAID;
 							select_colonia.add(option);
 						});
+						select_colonia.disabled = false;
 
 						var option = document.createElement("option");
 						option.text = 'OTRO';

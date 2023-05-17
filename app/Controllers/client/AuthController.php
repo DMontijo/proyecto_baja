@@ -7,6 +7,11 @@ use App\Controllers\BaseController;
 use App\Models\DenunciantesModel;
 use App\Models\SesionesDenunciantesModel;
 use GuzzleHttp\Client;
+use MailerSend\MailerSend;
+use MailerSend\Helpers\Builder\Recipient;
+use MailerSend\Helpers\Builder\EmailParams;
+use MailerSend\Exceptions\MailerSendValidationException;
+use MailerSend\Exceptions\MailerSendRateLimitException;
 
 class AuthController extends BaseController
 {
@@ -26,7 +31,6 @@ class AuthController extends BaseController
 
 		$this->_denunciantesModelRead = model('DenunciantesModel', true, $this->db_read);
 		$this->_sesionesDenunciantesModelRead = model('SesionesDenunciantesModel', true, $this->db_read);
-
 	}
 	/**
 	 * Vista de Login-Denuncia
@@ -184,18 +188,38 @@ class AuthController extends BaseController
 		$user = $this->_denunciantesModelRead->asObject()->where('CORREO', $to)->first();
 		$this->_denunciantesModel->set('PASSWORD', hashPassword($password))->where('DENUNCIANTEID', $user->DENUNCIANTEID)->update();
 
-		// $email = \Config\Services::email();
-		// $email->setTo($to);
-		// $email->setSubject('Cambio de contraseña.');
-		// $body = view('email_template/reset_password_template.php', ['password' => $password]);
-		// $email->setMessage($body);
-		// $email->setAltMessage('Usted ha solicitado un cambio de contraseña. Su nueva contraseña es: ' .$password);
-		$sendSMS = $this->sendSMS("Cambio de contraseña", $user->TELEFONO, 'Notificaciones FGE/Estimado usuario, tu contraseña es: ' . $password);
-		// if ($email->send() && $sendSMS == "") {
-		if ($sendSMS == "") {
+		$body = view('email_template/reset_password_template.php', ['password' => $password]);
+		$mailersend = new MailerSend(['api_key' => EMAIL_TOKEN]);
+		$recipients = [
+			new Recipient($to, 'Your Client'),
+		];
+		$emailParams = (new EmailParams())
+			->setFrom('notificacionfgebc@fgebc.gob.mx')
+			->setFromName('FGEBC')
+			->setRecipients($recipients)
+			->setSubject('Cambio de contraseña.')
+			->setHtml($body)
+			->setText('Usted ha solicitado un cambio de contraseña. Su nueva contraseña es: ' . $password)
+			->setReplyTo('notificacionfgebc@fgebc.gob.mx')
+			->setReplyToName('FGEBC');
+		$sendSMS = $this->sendSMS("Cambio de contraseña", $user->TELEFONO, 'Notificaciones FGEBC/Estimado usuario, tu contraseña es: ' . $password);
+
+		try {
+			$result = $mailersend->email->send($emailParams);
+		} catch (MailerSendValidationException $e) {
+			$result = false;
+		} catch (MailerSendRateLimitException $e) {
+			$result = false;
+		}
+
+		if ($result) {
 			return redirect()->to(base_url('/denuncia'))->with('message_success', 'Verifica tu nueva contraseña en tus SMS.');
 		} else {
-			return redirect()->to(base_url('/denuncia'))->with('message_error', $sendSMS);
+			if ($sendSMS == "") {
+				return redirect()->to(base_url('/denuncia'))->with('message_success', 'Verifica tu nueva contraseña en tus SMS.');
+			} else {
+				return redirect()->to(base_url('/denuncia'))->with('message_error', $sendSMS);
+			}
 		}
 	}
 	/**
@@ -271,7 +295,7 @@ class AuthController extends BaseController
 			$externalIp = '127.0.0.1';
 		}
 		return $externalIp;
-	}	
+	}
 	/**
 	 * Función para cargar cualquier vista en cualquier función.
 	 *
@@ -286,7 +310,7 @@ class AuthController extends BaseController
 			'body_data' => $data
 		];
 		echo view("client/auth/$view", $data);
-	}	
+	}
 	/**
 	 * Función para enviar mensajes SMS
 	 *
