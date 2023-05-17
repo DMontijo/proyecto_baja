@@ -4,8 +4,10 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
-	<meta HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
+	<meta http-equiv="Expires" content="0">
+	<meta http-equiv="Last-Modified" content="0">
+	<meta http-equiv="Cache-Control" content="no-cache, mustrevalidate">
+	<meta http-equiv="Pragma" content="no-cache">
 	<meta name="robots" content="noindex">
 	<link rel="icon" href="<?= base_url() ?>/assets/img/FGEBC.png" type="image/x-icon">
 	<link rel="shortcut icon" href="<?= base_url() ?>/assets/img/FGEBC.png" type="image/x-icon">
@@ -47,7 +49,7 @@
 					<li class="nav-item">
 						<a class="nav-link <?php if ('' === 'constancias') echo 'active'; ?>" href="<?= base_url() ?>/constancia_extravio/dashboard/constancias"><i class="bi bi-archive"></i> Mis constancias</a>
 					</li>
-					<li  class="nav-item">
+					<li class="nav-item">
 						<a class="nav-link" href="<?= base_url('denuncia/logout') ?>"><i class="bi bi-box-arrow-left"></i> Salir</a></a>
 					</li>
 					<li class="nav-item dropdown">
