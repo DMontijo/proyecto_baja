@@ -3642,7 +3642,12 @@
 								}
 							});
 							llenarTablaDocumentos(documentos);
-
+							document.querySelector('#load_doc').classList.remove('d-none');
+							document.querySelector('#password_modalLabel_doc_id').classList.remove(
+								'd-none');
+							document.querySelector('#loading_doc_id').classList.add('d-none');
+							document.querySelector('#password_verifying_doc_id').classList.add('d-none');
+							btn_firmar_doc_id.disabled = false;
 						} else if (response.status == 0) {
 
 							Swal.fire({
