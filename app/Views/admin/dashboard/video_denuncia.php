@@ -509,10 +509,10 @@
 <?php include("video_denuncia_media_devices_modal.php"); ?>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.js"></script>
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.css">
-<script type="text/javascript" src="<?= base_url() ?>/assets/agent/assets/openvidu-browser-2.25.0.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.css?v=<?= rand() ?>">
+<script type="text/javascript" src="<?= base_url() ?>/assets/agent/assets/openvidu-browser-2.25.0.min.js?v=<?= rand() ?>"></script>
 <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
-<script src="<?= base_url() ?>/assets/js/video_denuncia.js" type="module"></script>
+<script src="<?= base_url() ?>/assets/js/video_denuncia.js?v=<?= rand() ?>" type="module"></script>
 <script>
 	$(function() {
 		$('[data-toggle="tooltip"]').tooltip()
@@ -777,7 +777,7 @@
 	}
 
 	function eliminarparentesco(personofisica1, personafisica2, parentesco) {
-		console.log("eliminar 2",parentesco);
+		console.log("eliminar 2", parentesco);
 		$.ajax({
 			data: {
 				'personafisica1': personofisica1,
@@ -1391,39 +1391,39 @@
 							select_personaFisica1_I.add(option, null);
 						});
 						$('#personaFisica1').empty();
-							let select_personaFisica1= document.querySelector("#personaFisica1")
-							const option_vacio_p = document.createElement('option');
-							option_vacio_p.value = '';
-							option_vacio_p.text = 'Selecciona ...';
-							option_vacio_p.disabled = true;
-							option_vacio_p.selected = true;
-							select_personaFisica1.add(option_vacio_p, null);
-							personas.forEach(persona => {
-								let primer_apellido = persona.PRIMERAPELLIDO ? persona
-									.PRIMERAPELLIDO : '';
+						let select_personaFisica1 = document.querySelector("#personaFisica1")
+						const option_vacio_p = document.createElement('option');
+						option_vacio_p.value = '';
+						option_vacio_p.text = 'Selecciona ...';
+						option_vacio_p.disabled = true;
+						option_vacio_p.selected = true;
+						select_personaFisica1.add(option_vacio_p, null);
+						personas.forEach(persona => {
+							let primer_apellido = persona.PRIMERAPELLIDO ? persona
+								.PRIMERAPELLIDO : '';
 
-								const option = document.createElement('option');
-								option.value = persona.PERSONAFISICAID;
-								option.text = persona.NOMBRE + ' ' + primer_apellido;
-								select_personaFisica1.add(option, null);
-							});
-							$('#personaFisica2').empty();
-							let select_personaFisica2= document.querySelector("#personaFisica2")
-							const option_vacio_pe2 = document.createElement('option');
-							option_vacio_pe2.value = '';
-							option_vacio_pe2.text = 'Selecciona ...';
-							option_vacio_pe2.disabled = true;
-							option_vacio_pe2.selected = true;
-							select_personaFisica2.add(option_vacio_pe2, null);
-							personas.forEach(persona => {
-								let primer_apellido = persona.PRIMERAPELLIDO ? persona
-									.PRIMERAPELLIDO : '';
+							const option = document.createElement('option');
+							option.value = persona.PERSONAFISICAID;
+							option.text = persona.NOMBRE + ' ' + primer_apellido;
+							select_personaFisica1.add(option, null);
+						});
+						$('#personaFisica2').empty();
+						let select_personaFisica2 = document.querySelector("#personaFisica2")
+						const option_vacio_pe2 = document.createElement('option');
+						option_vacio_pe2.value = '';
+						option_vacio_pe2.text = 'Selecciona ...';
+						option_vacio_pe2.disabled = true;
+						option_vacio_pe2.selected = true;
+						select_personaFisica2.add(option_vacio_pe2, null);
+						personas.forEach(persona => {
+							let primer_apellido = persona.PRIMERAPELLIDO ? persona
+								.PRIMERAPELLIDO : '';
 
-								const option = document.createElement('option');
-								option.value = persona.PERSONAFISICAID;
-								option.text = persona.NOMBRE + ' ' + primer_apellido;
-								select_personaFisica2.add(option, null);
-							});
+							const option = document.createElement('option');
+							option.value = persona.PERSONAFISICAID;
+							option.text = persona.NOMBRE + ' ' + primer_apellido;
+							select_personaFisica2.add(option, null);
+						});
 						$('#propietario').empty();
 						let select_propietario = document.querySelector("#propietario");
 						const option_vacio_prop = document.createElement('option');
@@ -1630,7 +1630,7 @@
 					document.querySelector('#fecha_delito').value = folio.HECHOFECHA ? folio.HECHOFECHA : '';
 					document.querySelector('#narracion_delito').value = folio.HECHONARRACION ? folio.HECHONARRACION : '';
 					document.querySelector('#autorizaFoto').value = folio.LOCALIZACIONPERSONAMEDIOS == 'S' ?
-							'S' : 'N';
+						'S' : 'N';
 					// if (folio.HECHODELITO == "ROBO DE VEHÍCULO") {
 					// 	$('#v-pills-vehiculos-tab').css('display', 'block');
 					// } else {
@@ -2212,39 +2212,39 @@
 						select_personaFisica1_I.add(option, null);
 					});
 					$('#personaFisica1').empty();
-							let select_personaFisica1= document.querySelector("#personaFisica1")
-							const option_vacio_pe = document.createElement('option');
-							option_vacio_pe.value = '';
-							option_vacio_pe.text = 'Selecciona ...';
-							option_vacio_pe.disabled = true;
-							option_vacio_pe.selected = true;
-							select_personaFisica1.add(option_vacio_pe, null);
-							personas.forEach(persona => {
-								let primer_apellido = persona.PRIMERAPELLIDO ? persona
-									.PRIMERAPELLIDO : '';
+					let select_personaFisica1 = document.querySelector("#personaFisica1")
+					const option_vacio_pe = document.createElement('option');
+					option_vacio_pe.value = '';
+					option_vacio_pe.text = 'Selecciona ...';
+					option_vacio_pe.disabled = true;
+					option_vacio_pe.selected = true;
+					select_personaFisica1.add(option_vacio_pe, null);
+					personas.forEach(persona => {
+						let primer_apellido = persona.PRIMERAPELLIDO ? persona
+							.PRIMERAPELLIDO : '';
 
-								const option = document.createElement('option');
-								option.value = persona.PERSONAFISICAID;
-								option.text = persona.NOMBRE + ' ' + primer_apellido;
-								select_personaFisica1.add(option, null);
-							});
-							$('#personaFisica2').empty();
-							let select_personaFisica2= document.querySelector("#personaFisica2")
-							const option_vacio_pe2 = document.createElement('option');
-							option_vacio_pe2.value = '';
-							option_vacio_pe2.text = 'Selecciona ...';
-							option_vacio_pe2.disabled = true;
-							option_vacio_pe2.selected = true;
-							select_personaFisica2.add(option_vacio_pe2, null);
-							personas.forEach(persona => {
-								let primer_apellido = persona.PRIMERAPELLIDO ? persona
-									.PRIMERAPELLIDO : '';
+						const option = document.createElement('option');
+						option.value = persona.PERSONAFISICAID;
+						option.text = persona.NOMBRE + ' ' + primer_apellido;
+						select_personaFisica1.add(option, null);
+					});
+					$('#personaFisica2').empty();
+					let select_personaFisica2 = document.querySelector("#personaFisica2")
+					const option_vacio_pe2 = document.createElement('option');
+					option_vacio_pe2.value = '';
+					option_vacio_pe2.text = 'Selecciona ...';
+					option_vacio_pe2.disabled = true;
+					option_vacio_pe2.selected = true;
+					select_personaFisica2.add(option_vacio_pe2, null);
+					personas.forEach(persona => {
+						let primer_apellido = persona.PRIMERAPELLIDO ? persona
+							.PRIMERAPELLIDO : '';
 
-								const option = document.createElement('option');
-								option.value = persona.PERSONAFISICAID;
-								option.text = persona.NOMBRE + ' ' + primer_apellido;
-								select_personaFisica2.add(option, null);
-							});
+						const option = document.createElement('option');
+						option.value = persona.PERSONAFISICAID;
+						option.text = persona.NOMBRE + ' ' + primer_apellido;
+						select_personaFisica2.add(option, null);
+					});
 					$('#propietario').empty();
 					let select_propietario = document.querySelector("#propietario");
 					const option_vacio_pro = document.createElement('option');
@@ -4069,7 +4069,7 @@
 				let select_marca_add = document.querySelector('#marca_add_ad');
 
 				clearSelect(select_version_add);
-				
+
 				select_version_add.disabled = true;
 
 				let data = {
@@ -4092,7 +4092,7 @@
 							option.value = version_vehiculo.VEHICULOVERSIONID;
 							select_version_add.add(option);
 						});
-						
+
 						select_version_add.disabled = false;
 
 					},
@@ -4340,7 +4340,7 @@
 				let select_localidad = document.querySelector('#localidad_delito');
 				let select_colonia = document.querySelector('#colonia_delito_select');
 				let input_colonia = document.querySelector('#colonia_delito')
-				
+
 				//deshabilita los select de localidad y colonia en caso de que cambien de municipio
 
 				select_localidad.disabled = true;
@@ -4650,8 +4650,8 @@
 				document.querySelector('#edad_new').value = edad;
 			})
 			document.querySelector('#municipio_select_origen_new').disabled = true;
-			
-			
+
+
 
 			document.querySelector('#nacionalidad_new').addEventListener('change', (e) => {
 				let select_estado = document.querySelector('#estado_select_origen_new');
@@ -4728,7 +4728,7 @@
 			document.querySelector('#municipio_select_new').disabled = true;
 			document.querySelector('#localidad_select_new').disabled = true;
 			document.querySelector('#colonia_select_new').disabled = true;
-			
+
 
 			document.querySelector('#pais_select_new').addEventListener('change', (e) => {
 
@@ -4835,7 +4835,7 @@
 				select_municipio.disabled = true;
 				select_localidad.disabled = true;
 				select_colonia.disabled = true;
-			
+
 				clearSelect(select_municipio);
 				clearSelect(select_localidad);
 				clearSelect(select_colonia);
@@ -5132,7 +5132,7 @@
 							});
 
 							$('#personaFisica1').empty();
-							let select_personaFisica1= document.querySelector("#personaFisica1")
+							let select_personaFisica1 = document.querySelector("#personaFisica1")
 							const option_vacio_p = document.createElement('option');
 							option_vacio_p.value = '';
 							option_vacio_p.text = 'Selecciona ...';
@@ -5149,7 +5149,7 @@
 								select_personaFisica1.add(option, null);
 							});
 							$('#personaFisica2').empty();
-							let select_personaFisica2= document.querySelector("#personaFisica2")
+							let select_personaFisica2 = document.querySelector("#personaFisica2")
 							const option_vacio_pe2 = document.createElement('option');
 							option_vacio_pe2.value = '';
 							option_vacio_pe2.text = 'Selecciona ...';
@@ -5424,7 +5424,7 @@
 				select_localidad.value = '';
 				select_colonia.value = '';
 				input_colonia.value = '';
-				
+
 				select_municipio.disabled = true;
 				select_localidad.disabled = true;
 				select_colonia.disabled = true;
@@ -5480,7 +5480,7 @@
 				select_localidad.value = '';
 				select_localidad.disabled = true;
 				select_colonia.disabled = true;
-				
+
 
 				let data = {
 					'estado_id': estado,
@@ -6417,7 +6417,7 @@
 								select_personaFisica1_I.add(option, null);
 							});
 							$('#personaFisica1').empty();
-							let select_personaFisica1= document.querySelector("#personaFisica1")
+							let select_personaFisica1 = document.querySelector("#personaFisica1")
 							const option_vacio_pe = document.createElement('option');
 							option_vacio_pe.value = '';
 							option_vacio_pe.text = 'Selecciona ...';
@@ -6434,7 +6434,7 @@
 								select_personaFisica1.add(option, null);
 							});
 							$('#personaFisica2').empty();
-							let select_personaFisica2= document.querySelector("#personaFisica2")
+							let select_personaFisica2 = document.querySelector("#personaFisica2")
 							const option_vacio_pe2 = document.createElement('option');
 							option_vacio_pe2.value = '';
 							option_vacio_pe2.text = 'Selecciona ...';
@@ -6579,7 +6579,7 @@
 								confirmButtonColor: '#bf9b55',
 							});
 						} else if (response.status == 1) {
-							
+
 							let tabla_relacion_fis_fis = document.querySelectorAll(
 								'#table-delitos-videodenuncia tr');
 							tabla_relacion_fis_fis.forEach(row => {

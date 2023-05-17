@@ -82,8 +82,8 @@
 	<footer class="container-fluid text-center text-white bg-primary d-flex align-items-center justify-content-center footer py-3">
 		<span>© <?= date("Y") ?> Fiscalía General del Estado de Baja California</span>
 	</footer>
-	<script src="<?= base_url() ?>/assets/bootstrap/js/bootstrap.bundle.min.js"></script>
-	<script src="<?= base_url() ?>/assets/js/full_screen.js"></script>
+	<script src="<?= base_url() ?>/assets/bootstrap/js/bootstrap.bundle.min.js?v=<?= rand() ?>"></script>
+	<script src="<?= base_url() ?>/assets/js/full_screen.js?v=<?= rand() ?>"></script>
 	<?php if (session()->getFlashdata('message_error')) : ?>
 		<script>
 			Swal.fire({

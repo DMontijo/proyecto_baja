@@ -145,7 +145,7 @@ $file_text = $user_id . "_data.txt";
 </div>
 <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
 
-<script src="<?= base_url() ?>/assets/js/index_activos.js" type="module"></script>
+<script src="<?= base_url() ?>/assets/js/index_activos.js?v=<?= rand() ?>" type="module"></script>
 <?php if (in_array(session('ROLID'), $rolesToMonitor)) { ?>
 	<!-- <script>
 		window.onload = function() {
