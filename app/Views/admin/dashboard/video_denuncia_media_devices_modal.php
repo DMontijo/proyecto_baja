@@ -1,4 +1,4 @@
-<div class="modal fade" id="media_devices_modal" tabindex="-1" aria-labelledby="media_devices_modal" aria-hidden="true">
+<div class="modal fade" id="media_devices_modal" tabindex="-1" aria-labelledby="media_devices_modal" aria-hidden="true"  data-backdrop="false">
 	<div class="modal-dialog modal-lg modal-dialog-centered">
 		<div class="modal-content">
 
@@ -30,7 +30,7 @@
 							<p class="fw-bolder">Seleccione entrada de audio</p>
 						</div>
 						<div class="col-12" id="listDevicesAudio">
-							<select style="max-width: 100%;" class="select-audio form-select" name="listaDeDispositivosAudio" id="listaDeDispositivosAudio"></select>
+							<select style="max-width: 100%;" class="select-audio form-control" name="listaDeDispositivosAudio" id="listaDeDispositivosAudio"></select>
 						</div>
 						<div class="col-12">
 							<div class="ratio ratio-16x9">
@@ -44,7 +44,7 @@
 							<p class="fw-bolder">Seleccione entrada de video</p>
 						</div>
 						<div class="col-12" id="listDevicesVideo">
-							<select class="form-select" name="listaDeDispositivosVideo" id="listaDeDispositivosVideo"></select>
+							<select class="form-control" name="listaDeDispositivosVideo" id="listaDeDispositivosVideo"></select>
 						</div>
 						<div class="col-12">
 							<div class="ratio ratio-16x9">

@@ -410,11 +410,13 @@ class FirmaController extends BaseController
 		$user_id = session('ID');
 
 		// Busca cuando no tienen expediente
-		if ($numexpediente != null && $numexpediente != "undefined") {
-			$documento = $this->_folioDocModelRead->asObject()->where('NUMEROEXPEDIENTE', $numexpediente)->where('ANO', $year)->where('STATUS', 'ABIERTO')->findAll();
-		} else {
-			$documento = $this->_folioDocModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'ABIERTO')->findAll();
-		}
+		$documento = $this->_folioDocModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'ABIERTO')->findAll();
+
+		// if ($numexpediente != null && $numexpediente != "undefined") {
+		// 	$documento = $this->_folioDocModelRead->asObject()->where('NUMEROEXPEDIENTE', $numexpediente)->where('ANO', $year)->where('STATUS', 'ABIERTO')->findAll();
+		// } else {
+		// 	$documento = $this->_folioDocModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'ABIERTO')->findAll();
+		// }
 
 		// Info folio
 		$folioRow = $this->_folioModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->first();
@@ -520,13 +522,13 @@ class FirmaController extends BaseController
 								'PLACEHOLDER' => $documento[$i]->PLACEHOLDER,
 							];
 							// Actualiza con los nuevos campos
+							$update = $this->_folioDocModel->set($datosInsert)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
 
-							if ($numexpediente != null && $numexpediente != "undefined") {
-
-								$update = $this->_folioDocModel->set($datosInsert)->where('NUMEROEXPEDIENTE', $numexpediente)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
-							} else {
-								$update = $this->_folioDocModel->set($datosInsert)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
-							}
+							// if ($numexpediente != null && $numexpediente != "undefined") {
+							// 	$update = $this->_folioDocModel->set($datosInsert)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
+							// } else {
+							// 	$update = $this->_folioDocModel->set($datosInsert)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
+							// }
 							if ($update) {
 								$datosBitacora = [
 									'ACCION' => 'Ha firmado un documento',
@@ -560,20 +562,20 @@ class FirmaController extends BaseController
 	public function firmar_documentos_by_id()
 	{
 		$folio = $this->request->getPost('folio_id');
-
 		$year = $this->request->getPost('year_doc');
 		$documento_id = $this->request->getPost('documento_id');
-
 		$password = str_replace(' ', '', trim($this->request->getPost('contrasena_doc')));
 		$user_id = session('ID');
 
+		if ($folio == null || $folio == "undefined") {
+			return json_encode((object)['status' => 0, 'message_error' => "El folio esta vacío y no se puede firmar el documento."]);
+		}
+
 		// Info del documento y folio
 		$documento = $this->_folioDocModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento_id)->where('STATUS', 'ABIERTO')->findAll();
-
-
 		$folioRow = $this->_folioModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->first();
 		if ($documento == null || count($documento) <= 0) {
-			return json_encode((object)['status' => 0, 'message_error' => "No hay documentos por firmar"]);
+			return json_encode((object)['status' => 0, 'message_error' => "No esta el documento a firmar."]);
 		}
 
 		$meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
@@ -583,20 +585,17 @@ class FirmaController extends BaseController
 
 		try {
 			// Creacion de archivos PEM y autenticacion de contraseña
-
 			if ($this->_crearArchivosPEMText($user_id, $password)) {
-				// Validacion de que exista esa firma FIEL
 
+				// Validacion de que exista esa firma FIEL
 				if ($this->_validarFiel($user_id)) {
 					// Info de la firma
-
 					$fiel_user = $this->_extractData($user_id);
 					$razon_social = $fiel_user['razon_social'];
 					$rfc = $fiel_user['rfc'];
 					$num_certificado = $fiel_user['num_certificado'];
 					for ($i = 0; $i < count($documento); $i++) {
 						// Validacion de que usuario puede firmar
-
 						if (empty($documento[$i]->ENCARGADO_ASIGNADO) && isset($documento[$i]->AGENTE_ASIGNADO) && $documento[$i]->AGENTE_ASIGNADO != session('ID')) {
 							return json_encode((object)['status' => 0, 'message_error' => "No tienes permiso para firmar en este folio."]);
 						} else if (isset($documento[$i]->ENCARGADO_ASIGNADO) && $documento[$i]->ENCARGADO_ASIGNADO != session('ID')) {
@@ -676,23 +675,22 @@ class FirmaController extends BaseController
 							];
 							// Actualiza con los nuevos campos
 
-							if ($folio != null && $folio != "undefined") {
-								$update = $this->_folioDocModel->set($datosInsert)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
-							}
+
+							$update = $this->_folioDocModel->set($datosInsert)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
 							if ($update) {
 								$datosBitacora = [
 									'ACCION' => 'Ha firmado un documento',
 									'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year . 'DOCUMENTO ID' . $documento_id,
 								];
 								$this->_bitacoraActividad($datosBitacora);
+							} else {
+								return json_encode((object)['status' => 0, 'message_error' => "No se actualizo el archivo, por lo tanto no fue posible generar el pdf."]);
 							}
 						} else {
 							return json_encode((object)['status' => 0, 'message_error' => "Fallo al firmar el documento. Intentelo de nuevo."]);
 						}
 					}
-					if ($folio != null && $folio != "undefined") {
-						$documentosExp = $this->_folioDocModelRead->get_by_folio($folio, $year);
-					}
+					$documentosExp = $this->_folioDocModelRead->get_by_folio($folio, $year);
 					return json_encode((object)['status' => 1, 'documentos' => $documentosExp]);
 				} else {
 					return json_encode((object)['status' => 0, 'message_error' => "La FIEL no es válida o está vencida"]);
@@ -1219,7 +1217,7 @@ class FirmaController extends BaseController
 
 		if ($to && $year && $folio) {
 			if ($expediente != "undefined" && $expediente != '') {
-				$documento = $this->_folioDocModelRead->asObject()->where('NUMEROEXPEDIENTE', $expediente)->where('ANO', $year)->where('STATUS', 'FIRMADO')->where('STATUSENVIO', 1)->where('ENVIADO', 'N')->where('FOLIODOCID', $folio_doc)->first();
+				$documento = $this->_folioDocModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'FIRMADO')->where('STATUSENVIO', 1)->where('ENVIADO', 'N')->where('FOLIODOCID', $folio_doc)->first();
 				$folioM = $this->_folioModelRead->asObject()->where('ANO', $year)->where('EXPEDIENTEID', $expediente)->first();
 				$tipoExpediente = $this->_tipoExpedienteModelRead->asObject()->where('TIPOEXPEDIENTEID',  $folioM->TIPOEXPEDIENTEID)->first();
 				$delito = $this->_folioRelacionFisFisModelRead->get_by_folio($folio, $year);
@@ -1337,7 +1335,7 @@ class FirmaController extends BaseController
 		if ($to && $year && $folio) {
 
 			if ($expediente != "undefined" && $expediente != '') {
-				$documento = $this->_folioDocModelRead->asObject()->where('NUMEROEXPEDIENTE', $expediente)->where('ANO', $year)->where('STATUS', 'FIRMADO')->where('STATUSENVIO', 1)->where('ENVIADO', 'N')->findAll();
+				$documento = $this->_folioDocModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'FIRMADO')->where('STATUSENVIO', 1)->where('ENVIADO', 'N')->findAll();
 				$folioM = $this->_folioModelRead->asObject()->where('ANO', $year)->where('EXPEDIENTEID', $expediente)->first();
 				$tipoExpediente = $this->_tipoExpedienteModelRead->asObject()->where('TIPOEXPEDIENTEID',  $folioM->TIPOEXPEDIENTEID)->first();
 				$delito = $this->_folioRelacionFisFisModelRead->get_by_folio($folio, $year);
@@ -1436,11 +1434,12 @@ class FirmaController extends BaseController
 					'ENVIADO' => 'S',
 				];
 				for ($i = 0; $i < count($documento); $i++) {
-					if ($expediente != "undefined" && $expediente != '') {
-						$update = $this->_folioDocModel->set($datosUpdate)->where('NUMEROEXPEDIENTE', $expediente)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
-					} else {
-						$update = $this->_folioDocModel->set($datosUpdate)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
-					}
+					$update = $this->_folioDocModel->set($datosUpdate)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
+					// if ($expediente != "undefined" && $expediente != '') {
+					// 	$update = $this->_folioDocModel->set($datosUpdate)->where('NUMEROEXPEDIENTE', $expediente)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
+					// } else {
+					// 	$update = $this->_folioDocModel->set($datosUpdate)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
+					// }
 				}
 				if ($sendPolice && count($ordenesProteccion) > 0) {
 					try {
@@ -1492,7 +1491,7 @@ class FirmaController extends BaseController
 			->setText('El folio ' . $folio . '/' . $year . 'es un caso de suma importancia. Favor de verificar en el sistema de videodenuncia')
 			->setReplyTo('notificacionfgebc@fgebc.gob.mx')
 			->setReplyToName('FGEBC');
-		
+
 		try {
 			$result = $mailersend->email->send($emailParams);
 		} catch (MailerSendValidationException $e) {
