@@ -212,7 +212,7 @@ class DocumentosController extends BaseController
 
 		// $data->documento = $this->_plantillasModel->asObject()->where('TITULO', $data->tipodoc)->first();
 		//Info de los documentos
-		$data->documentos = $this->_folioDocModelRead->asObject()->where('NUMEROEXPEDIENTE', $data->expediente)->where('ANO', $data->year)->findAll();
+		$data->documentos = $this->_folioDocModelRead->asObject()->where('FOLIOID', $data->folio)->where('ANO', $data->year)->findAll();
 		$data->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 		$data->foliorow = $this->_folioModelRead->asObject()->where('FOLIOID', $data->folio)->where('ANO', $data->year)->findAll();
 		//Agentes activos

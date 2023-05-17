@@ -1855,10 +1855,12 @@ class DashboardController extends BaseController
 			$oficina = trim($this->request->getPost('oficina'));
 			$empleado = trim($this->request->getPost('empleado'));
 			$municipio = trim($this->request->getPost('municipio'));
+			$folio = trim($this->request->getPost('folio'));
+			$year = trim($this->request->getPost('year'));
 
 			$area = $this->_empleadosModelRead->asObject()->where('EMPLEADOID', $empleado)->where('MUNICIPIOID', $municipio)->first();
 			// Obtiene los documentos del folio para asignar un estado juridico.
-			$documents = $this->_folioDocModelRead->asObject()->where('NUMEROEXPEDIENTE', $expediente)->findAll();
+			$documents = $this->_folioDocModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
 			$status = 2;
 
 			foreach ($documents as $key => $document) {
@@ -1894,7 +1896,7 @@ class DashboardController extends BaseController
 
 				//Actualizacion de tablas de VIDEODENUNCIA
 				$update = $this->_folioModel->set($dataFolio)->where('EXPEDIENTEID', $expediente)->update();
-				$updateDoc = $this->_folioDocModel->set($dataFolioDoc)->where('NUMEROEXPEDIENTE', $expediente)->update();
+				$updateDoc = $this->_folioDocModel->set($dataFolioDoc)->where('FOLIOID', $folio)->where('ANO', $year)->update();
 				if ($update) {
 					$bandeja = $this->_folioModelRead->where('EXPEDIENTEID', $expediente)->first();
 					//Se revisa que haya documentos subidos a Justicia de tipo periciales
@@ -1985,7 +1987,8 @@ class DashboardController extends BaseController
 			$modulo = trim($this->request->getPost('modulo'));
 			$procedimiento = trim($this->request->getPost('procedimiento'));
 			$municipio = trim($this->request->getPost('municipio'));
-
+			$folio = trim($this->request->getPost('folio'));
+			$year = trim($this->request->getPost('year'));
 			//Se verifica que no exista el RAC en Justicia.
 			$existRac = $this->_bandejaRacModelRead->asObject()->where('EXPEDIENTEID', $expediente)->findAll();
 			if ($existRac) {
@@ -1996,7 +1999,7 @@ class DashboardController extends BaseController
 			$bandeja = $this->_folioModelRead->where('EXPEDIENTEID', $expediente)->first();
 			// Obtiene los documentos del folio para asignar un estado juridico.
 
-			$documents = $this->_folioDocModelRead->asObject()->where('NUMEROEXPEDIENTE', $expediente)->findAll();
+			$documents = $this->_folioDocModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
 			foreach ($documents as $key => $document) {
 				if (
 					$document->TIPODOC == 'CRITERIO DE OPORTUNIDAD' ||
@@ -3033,7 +3036,7 @@ class DashboardController extends BaseController
 		$year = $this->request->getPost('year');
 		$expediente = $this->request->getPost('expediente');
 
-		$folioDocSinFirmar = $this->_folioDocModelRead->where('FOLIOID', $folio)->where('ANO', $year)->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'ABIERTO')->orderBy('FOLIODOCID', 'asc')->findAll();
+		$folioDocSinFirmar = $this->_folioDocModelRead->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'ABIERTO')->orderBy('FOLIODOCID', 'asc')->findAll();
 		$foliovd = $this->_folioModelRead->where('FOLIOID', $folio)->where('ANO', $year)->where('EXPEDIENTEID', $expediente)->where('STATUS', 'EXPEDIENTE')->first();
 
 		// Se revisa que no hayan documentos sin firmar
@@ -3041,9 +3044,9 @@ class DashboardController extends BaseController
 			return json_encode((object)['status' => 4]);
 		}
 
-		$folioDoc = $this->_folioDocModelRead->where('FOLIOID', $folio)->where('ANO', $year)->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOCID', 'asc')->findAll();
+		$folioDoc = $this->_folioDocModelRead->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOCID', 'asc')->findAll();
 		$archivosExternosVD = $this->_archivoExternoModelRead->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
-		$folioDocPeritaje = $this->_folioDocModelRead->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('TIPODOC', 'SOLICITUD DE PERITAJE')->orLike('TIPODOC', 'OFICIO DE COLABORACION PARA INGRESO A HOSPITAL')->findAll();
+		$folioDocPeritaje = $this->_folioDocModelRead->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('TIPODOC', 'SOLICITUD DE PERITAJE')->orLike('TIPODOC', 'OFICIO DE COLABORACION PARA INGRESO A HOSPITAL')->findAll();
 
 		if ($archivosExternosVD) {
 			try {
@@ -3312,7 +3315,7 @@ class DashboardController extends BaseController
 	 */
 	public function subirArchivosRemision($folio, $year, $expediente)
 	{
-		$folioDocSinFirmar = $this->_folioDocModelRead->where('FOLIOID', $folio)->where('ANO', $year)->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'ABIERTO')->orderBy('FOLIODOCID', 'asc')->findAll();
+		$folioDocSinFirmar = $this->_folioDocModelRead->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'ABIERTO')->orderBy('FOLIODOCID', 'asc')->findAll();
 		$foliovd = $this->_folioModelRead->where('FOLIOID', $folio)->where('ANO', $year)->where('EXPEDIENTEID', $expediente)->where('STATUS', 'EXPEDIENTE')->first();
 		// Se revisa que no hayan documentos sin firmar
 
@@ -3320,9 +3323,9 @@ class DashboardController extends BaseController
 			return json_encode((object)['status' => 4]);
 		}
 
-		$folioDoc = $this->_folioDocModelRead->where('FOLIOID', $folio)->where('ANO', $year)->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOCID', 'asc')->findAll();
+		$folioDoc = $this->_folioDocModelRead->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOCID', 'asc')->findAll();
 		$archivosExternosVD = $this->_archivoExternoModelRead->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
-		$folioDocPeritaje = $this->_folioDocModelRead->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('TIPODOC', 'SOLICITUD DE PERITAJE')->orLike('TIPODOC', 'OFICIO DE COLABORACION PARA INGRESO A HOSPITAL')->findAll();
+		$folioDocPeritaje = $this->_folioDocModelRead->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('TIPODOC', 'SOLICITUD DE PERITAJE')->orLike('TIPODOC', 'OFICIO DE COLABORACION PARA INGRESO A HOSPITAL')->findAll();
 		try {
 
 			if ($archivosExternosVD) {
@@ -8479,10 +8482,13 @@ class DashboardController extends BaseController
 	private function _folioDoc($data, $expediente, $year)
 	{
 		$data = $data;
+		$folio = $data['FOLIOID'];
+		$year = $data['ANO'];
+
 		$data['NUMEROEXPEDIENTE'] = $expediente;
 		$data['ANO'] = $year;
 
-		$foliodoc = $this->_folioDocModelRead->asObject()->where('NUMEROEXPEDIENTE', $expediente)->where('ANO', $year)->orderBy('FOLIODOCID', 'desc')->first();
+		$foliodoc = $this->_folioDocModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->orderBy('FOLIODOCID', 'desc')->first();
 
 		if ($foliodoc) {
 			$data['FOLIODOCID'] = ((int) $foliodoc->FOLIODOCID) + 1;

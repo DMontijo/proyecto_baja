@@ -410,11 +410,13 @@ class FirmaController extends BaseController
 		$user_id = session('ID');
 
 		// Busca cuando no tienen expediente
-		if ($numexpediente != null && $numexpediente != "undefined") {
-			$documento = $this->_folioDocModelRead->asObject()->where('NUMEROEXPEDIENTE', $numexpediente)->where('ANO', $year)->where('STATUS', 'ABIERTO')->findAll();
-		} else {
-			$documento = $this->_folioDocModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'ABIERTO')->findAll();
-		}
+		$documento = $this->_folioDocModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'ABIERTO')->findAll();
+
+		// if ($numexpediente != null && $numexpediente != "undefined") {
+		// 	$documento = $this->_folioDocModelRead->asObject()->where('NUMEROEXPEDIENTE', $numexpediente)->where('ANO', $year)->where('STATUS', 'ABIERTO')->findAll();
+		// } else {
+		// 	$documento = $this->_folioDocModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'ABIERTO')->findAll();
+		// }
 
 		// Info folio
 		$folioRow = $this->_folioModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->first();
@@ -1215,7 +1217,7 @@ class FirmaController extends BaseController
 
 		if ($to && $year && $folio) {
 			if ($expediente != "undefined" && $expediente != '') {
-				$documento = $this->_folioDocModelRead->asObject()->where('NUMEROEXPEDIENTE', $expediente)->where('ANO', $year)->where('STATUS', 'FIRMADO')->where('STATUSENVIO', 1)->where('ENVIADO', 'N')->where('FOLIODOCID', $folio_doc)->first();
+				$documento = $this->_folioDocModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'FIRMADO')->where('STATUSENVIO', 1)->where('ENVIADO', 'N')->where('FOLIODOCID', $folio_doc)->first();
 				$folioM = $this->_folioModelRead->asObject()->where('ANO', $year)->where('EXPEDIENTEID', $expediente)->first();
 				$tipoExpediente = $this->_tipoExpedienteModelRead->asObject()->where('TIPOEXPEDIENTEID',  $folioM->TIPOEXPEDIENTEID)->first();
 				$delito = $this->_folioRelacionFisFisModelRead->get_by_folio($folio, $year);
@@ -1333,7 +1335,7 @@ class FirmaController extends BaseController
 		if ($to && $year && $folio) {
 
 			if ($expediente != "undefined" && $expediente != '') {
-				$documento = $this->_folioDocModelRead->asObject()->where('NUMEROEXPEDIENTE', $expediente)->where('ANO', $year)->where('STATUS', 'FIRMADO')->where('STATUSENVIO', 1)->where('ENVIADO', 'N')->findAll();
+				$documento = $this->_folioDocModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'FIRMADO')->where('STATUSENVIO', 1)->where('ENVIADO', 'N')->findAll();
 				$folioM = $this->_folioModelRead->asObject()->where('ANO', $year)->where('EXPEDIENTEID', $expediente)->first();
 				$tipoExpediente = $this->_tipoExpedienteModelRead->asObject()->where('TIPOEXPEDIENTEID',  $folioM->TIPOEXPEDIENTEID)->first();
 				$delito = $this->_folioRelacionFisFisModelRead->get_by_folio($folio, $year);
