@@ -93,7 +93,7 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 				</div>
 			</div>
 		<?php } ?>
-		<?php if (session('ROLID')==1 || session('ROLID')==11) {?>
+		<?php if ((session('ROLID')==1 || session('ROLID')==11) && $body_data->datosFolio->OFICINAASIGNADOID != NULL ) {?>
 			<div class="col-12 col-sm-6 col-md-4">
 			<div class="card rounded bg-white shadow" style="height: 240px;">
 				<div class="card-body">
