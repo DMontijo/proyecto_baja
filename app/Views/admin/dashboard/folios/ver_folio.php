@@ -73,7 +73,7 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 				</div>
 			</div>
 		</div>
-		
+
 		<div id="card3" class="col-12 col-sm-6 col-md-4 d-none">
 			<div class="card rounded bg-white shadow" style="height: 240px;">
 				<div class="card-body">
@@ -93,16 +93,16 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 				</div>
 			</div>
 		<?php } ?>
-		<?php if ((session('ROLID')==1 || session('ROLID')==11) && $body_data->datosFolio->OFICINAASIGNADOID != NULL ) {?>
+		<?php if ((session('ROLID') == 1 || session('ROLID') == 11) && $body_data->datosFolio->OFICINAASIGNADOID != NULL) { ?>
 			<div class="col-12 col-sm-6 col-md-4">
-			<div class="card rounded bg-white shadow" style="height: 240px;">
-				<div class="card-body">
-					<button id="btn_actualizar_oficina" name="btn_actualizar_oficina"class="btn btn-primary btn-block h-100" role="button"><i class="fas fa-pen-alt fa-3x"></i><br><br> ACTUALIZAR OFICINA</button>
+				<div class="card rounded bg-white shadow" style="height: 240px;">
+					<div class="card-body">
+						<button id="btn_actualizar_oficina" name="btn_actualizar_oficina" class="btn btn-primary btn-block h-100" role="button"><i class="fas fa-pen-alt fa-3x"></i><br><br> ACTUALIZAR OFICINA</button>
+					</div>
 				</div>
 			</div>
-		</div>
 		<?php } ?>
-		
+
 		<!-- <div class="col-12 col-sm-6 col-md-4 d-none">
 			<div class="card rounded bg-white shadow" style="height: 240px;">
 				<div class="card-body">
@@ -139,47 +139,50 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 		const mayuscTextarea = (e) => {
 			e.value = e.value.toUpperCase();
 		}
-		btn_actualizar_oficina.addEventListener('click', (e) => {
-			$.ajax({
-				data: {
-					'expedienteid': input_expediente.value,
-					'folio': inputFolio.value,
-					'year': year_select.value,
-					'municipio': <?= $body_data->datosFolio->MUNICIPIOASIGNADOID?>
-				},
-				url: "<?= base_url('/data/get-update-oficinas') ?>",
-				method: "POST",
-				dataType: "json",
-				beforeSend: function() {
-					btn_actualizar_oficina.disabled = true;
+		if (btn_actualizar_oficina != null) {
+			btn_actualizar_oficina.addEventListener('click', (e) => {
+				$.ajax({
+					data: {
+						'expedienteid': input_expediente.value,
+						'folio': inputFolio.value,
+						'year': year_select.value,
+						'municipio': <?= $body_data->datosFolio->MUNICIPIOASIGNADOID ?>
+					},
+					url: "<?= base_url('/data/get-update-oficinas') ?>",
+					method: "POST",
+					dataType: "json",
+					beforeSend: function() {
+						btn_actualizar_oficina.disabled = true;
 
-				},
-				success: function(response) {
-					if(response.status ===1){
-						Swal.fire({
-						icon: 'success',
-						text: 'Oficina actualizada correctamente',
-						confirmButtonColor: '#bf9b55',
-					});
-					btn_actualizar_oficina.disabled = false;
-					location.reload();
+					},
+					success: function(response) {
+						if (response.status === 1) {
+							Swal.fire({
+								icon: 'success',
+								text: 'Oficina actualizada correctamente',
+								confirmButtonColor: '#bf9b55',
+							});
+							btn_actualizar_oficina.disabled = false;
+							location.reload();
 
-					}else{
-						Swal.fire({
-						icon: 'error',
-						text: "La oficina no se actualizó",
-						confirmButtonColor: '#bf9b55',
-					});
-					btn_actualizar_oficina.disabled = false;
+						} else {
+							Swal.fire({
+								icon: 'error',
+								text: "La oficina no se actualizó",
+								confirmButtonColor: '#bf9b55',
+							});
+							btn_actualizar_oficina.disabled = false;
 
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						btn_actualizar_oficina.disabled = false;
+						console.log(jqXHR, textStatus, errorThrown);
 					}
-				},
-				error: function(jqXHR, textStatus, errorThrown) {
-					btn_actualizar_oficina.disabled = false;
-					console.log(jqXHR, textStatus, errorThrown);
-				}
+				});
 			});
-		});
+		}
+
 		buscar_btn.addEventListener('click', (e) => {
 			console.log("en el boton");
 			$.ajax({
