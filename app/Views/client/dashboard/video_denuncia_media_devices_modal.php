@@ -28,7 +28,7 @@
 							<p class="fw-bolder">Seleccione entrada de audio</p>
 						</div>
 						<div class="col-12" id="listDevicesAudio">
-							<select style="max-width: 100%;" class="select-audio form-select" name="listaDeDispositivosAudio" id="listaDeDispositivosAudio"></select>
+							<select style="max-width: 100%;" class="select-audio form-control" name="listaDeDispositivosAudio" id="listaDeDispositivosAudio"></select>
 						</div>
 						<div class="col-12">
                             <audio id="audio"></audio>
@@ -40,7 +40,7 @@
 							<p class="fw-bolder">Seleccione entrada de video</p>
 						</div>
 						<div class="col-12" id="listDevicesVideo">
-							<select class="form-select" name="listaDeDispositivosVideo" id="listaDeDispositivosVideo"></select>
+							<select class="form-control" name="listaDeDispositivosVideo" id="listaDeDispositivosVideo"></select>
 						</div>
 						<div class="col-12">
 							<div class="ratio ratio-16x9" id="videoDiv">
