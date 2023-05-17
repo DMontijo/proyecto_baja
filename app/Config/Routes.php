@@ -246,6 +246,7 @@ $routes->group('data', function ($routes) {
 
 	$routes->post('get-derivacion-by-municipio', 'admin/DashboardController::getDerivacionByMunicipio');
 	$routes->post('get-canalizacion-by-municipio', 'admin/DashboardController::getCanalizacionByMunicipio');
+	$routes->post('get-update-oficinas', 'admin/DashboardController::getOficinas');
 
 	//OTP
 	$routes->post('sendOTP', 'OTPController::sendEmailOTP');
