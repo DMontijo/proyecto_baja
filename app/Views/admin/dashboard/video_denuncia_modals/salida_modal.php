@@ -265,7 +265,19 @@
 
 
 	btnFinalizar.addEventListener('click', () => {
-	
+		var denuncia_tel = document.querySelector('input[name="denuncia_tel"]:checked');
+		var denuncia_con_datos_origen = document.querySelector('input[name="denuncia_con_datos_origen"]:checked');
+
+		if (tipoSalida.value == "" || municipio_empleado.value == "" || !denuncia_tel || !denuncia_con_datos_origen) {
+			Swal.fire({
+				icon: 'error',
+				text: "Por favor, completa los datos del formulario",
+				confirmButtonColor: '#bf9b55',
+			});
+			btnFinalizar.disabled = false;
+			return;
+		}
+
 		if (!form_delito.checkValidity()) {
 			let message = "Por favor completa los siguientes campos:\n";
 			let inputs = form_delito.querySelectorAll("input, select");
@@ -275,6 +287,7 @@
 					message += "- " + input.labels[0].textContent + "\n";
 				}
 			});
+			btnFinalizar.disabled = false;
 
 			Swal.fire({
 				icon: 'error',
@@ -426,6 +439,8 @@
 							text: data.error,
 							confirmButtonColor: '#bf9b55',
 						});
+						btnFinalizar.disabled = false;
+
 					}
 				}).fail(function(jqXHR, textStatus) {
 					btnFinalizar.removeAttribute('disabled');
