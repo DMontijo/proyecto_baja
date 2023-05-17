@@ -8447,7 +8447,6 @@ class DashboardController extends BaseController
 			$dataDocumento = array(
 				'STATUSENVIO' => $status_doc_envio,
 				'ENVIADO' => $status_req_envio,
-
 			);
 
 			$updateDocumento = $this->_folioDocModel->set($dataDocumento)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $docid)->update();
