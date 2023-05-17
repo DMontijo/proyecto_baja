@@ -4427,7 +4427,7 @@ class DashboardController extends BaseController
 		$year = $this->request->getPost('year');
 		$folio = $this->request->getPost('folio');
 
-		$function = '/testing/expediente.php?process=actualizarVD';
+		$function = '/expediente.php?process=actualizarVD';
 		$endpoint = $this->endpoint . $function;
 		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
 		$data['EXPEDIENTEID'] = $expediente;
