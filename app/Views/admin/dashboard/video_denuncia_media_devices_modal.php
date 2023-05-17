@@ -1,4 +1,4 @@
-<div class="modal fade" id="media_devices_modal" tabindex="-1" aria-labelledby="media_devices_modal" aria-hidden="true">
+<div class="modal fade" id="media_devices_modal" tabindex="-1" aria-labelledby="media_devices_modal" aria-hidden="true"  data-backdrop="false">
 	<div class="modal-dialog modal-lg modal-dialog-centered">
 		<div class="modal-content">
 
