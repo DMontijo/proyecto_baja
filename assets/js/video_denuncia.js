@@ -68,19 +68,19 @@ $mediaConfiguration.addEventListener("click", async () => {
 });
 
 const agentVideoService = new VideoServiceAgent(agentUUID, { apiURI, apiKey });
-recargar_denunciante_btn.addEventListener("click", () => {
-	console.log("RECARGANDO DENUNCIANTE")
-	agentVideoService.refreshGuestConnection(() => {
-		Swal.fire({
-			icon: "success",
-			text: "La conexion de denunciante se recargara en 3 segundos",
-			showConfirmButton: true,
-			confirmButtonColor: "#bf9b55",
-			timer: 3000,
-			timerProgressBar: true,
-		});
-	});
-});
+// recargar_denunciante_btn.addEventListener("click", () => {
+// 	console.log("RECARGANDO DENUNCIANTE")
+// 	agentVideoService.refreshGuestConnection(() => {
+// 		Swal.fire({
+// 			icon: "success",
+// 			text: "La conexion de denunciante se recargara en 3 segundos",
+// 			showConfirmButton: true,
+// 			confirmButtonColor: "#bf9b55",
+// 			timer: 3000,
+// 			timerProgressBar: true,
+// 		});
+// 	});
+// });
 // recargar_agente.addEventListener("click", () => {
 // 	console.log("ENTRANDO A RECARGAR LLAMADA");
 // 	agentVideoService.reloadAgentVideoCall((resp) => {
