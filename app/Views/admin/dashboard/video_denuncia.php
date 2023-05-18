@@ -1214,6 +1214,7 @@
 	}
 
 	buscar_btn.addEventListener('click', (e) => {
+		borrarTodoConFolio();
 		preventCloseWindow();
 		$.ajax({
 			data: {
@@ -1702,7 +1703,184 @@
 			}
 		});
 	});
+	function borrarTodoConFolio() {
+		let currentTime = new Date();
+		let year = currentTime.getFullYear()
 
+		expediente_modal_correo.value = "";
+		year_modal_correo.value = "";
+		notas_mp.value = "";
+		$('#send_mail_select').empty();
+		// quill.root.innerHTML ='';
+		// quill2.root.innerHTML='';
+
+		tabla_personas = document.querySelectorAll('#table-personas tr');
+		tabla_vehiculos = document.querySelectorAll('#table-vehiculos tr');
+		tabla_parentesco = document.querySelectorAll('#table-parentesco tr');
+		tabla_relacion_fis_fis = document.querySelectorAll('#table-delitos-videodenuncia tr');
+		tabla_delito_cometido = document.querySelectorAll('#table-delito-cometidos tr');
+		tabla_objetos_involucrados = document.querySelectorAll('#table-objetos-involucradoss tr');
+		let tabla_documentos = document.querySelectorAll('#table-documentos tr');
+
+
+		tabla_personas.forEach(row => {
+			if (row.id !== '') {
+				row.remove();
+			}
+		});
+
+		tabla_vehiculos.forEach(row => {
+			if (row.id !== '') {
+				row.remove();
+			}
+		});
+		tabla_parentesco.forEach(row => {
+			if (row.id !== '') {
+				row.remove();
+			}
+		});
+		tabla_relacion_fis_fis.forEach(row => {
+			if (row.id !== '') {
+				row.remove();
+			}
+		});
+		tabla_delito_cometido.forEach(row => {
+			if (row.id !== '') {
+				row.remove();
+			}
+		});
+		tabla_objetos_involucrados.forEach(row => {
+			if (row.id !== '') {
+				row.remove();
+			}
+		});
+		tabla_documentos.forEach(row => {
+			if (row.id !== '') {
+				row.remove();
+			}
+		});
+		card2.classList.add('d-none');
+		card3.classList.add('d-none');
+		card4.classList.add('d-none');
+		card5.classList.add('d-none');
+		card6.classList.add('d-none');
+		card7.classList.add('d-none');
+		card8.classList.add('d-none');
+		card9.classList.add('d-none');
+
+		// card6.classList.remove('d-none');
+
+		document.querySelector('#delito_dash').value = '';
+		document.querySelector('#delito_descr_dash').value = '';
+
+		//PREGUNTAS INICIALES
+		document.querySelector('#es_menor').value = '';
+		document.querySelector('#es_tercera_edad').value = '';
+		document.querySelector('#tiene_discapacidad').value = '';
+		document.querySelector('#es_vulnerable').value = '';
+		document.querySelector('#vulnerable_descripcion').value = '';
+		document.querySelector('#fue_con_arma').value = '';
+		document.querySelector('#esta_desaparecido').value = '';
+		document.querySelector('#lesiones').value = '';
+		document.querySelector('#lesiones_visibles').value = '';
+
+		//DENUNCIA
+		document.querySelector('#delito_delito').value = '';
+		document.querySelector('#municipio_delito').value = '';
+		document.querySelector('#localidad_delito').value = '';
+		document.querySelector('#colonia_delito').value = '';
+		document.querySelector('#colonia_delito_select').value = '';
+		document.querySelector('#calle_delito').value = '';
+		document.querySelector('#exterior_delito').value = '';
+		document.querySelector('#interior_delito').value = '';
+		document.querySelector('#lugar_delito').value = '';
+		document.querySelector('#hora_delito').value = '';
+		document.querySelector('#fecha_delito').value = '';
+		document.querySelector('#narracion_delito').value = '';
+		clearSelect(document.querySelector('#colonia_delito_select'));
+		clearSelect(document.querySelector('#localidad_delito'));
+
+		//PERSONA FISICA
+		document.querySelectorAll('#pf_id').forEach(element => {
+			element.value = '';
+		});
+		document.querySelector('#tipo_identificacion_pf').value = '';
+		document.querySelector('#numero_identidad_pf').value = '';
+		document.querySelector('#nombre_pf').value = '';
+		document.querySelector('#apellido_paterno_pf').value = '';
+		document.querySelector('#apellido_materno_pf').value = '';
+		document.querySelector('#nacionalidad_pf').value = '';
+		document.querySelector('#idioma_pf').value = '';
+		document.querySelector('#edoorigen_pf').value = '';
+		document.querySelector('#munorigen_pf').value = '';
+		document.querySelector('#telefono_pf').value = '';
+		document.querySelector('#codigo_pais_pf').value = '';
+		document.querySelector('#telefono_pf_2').value = '';
+		document.querySelector('#codigo_pais_pf_2').value = '';
+		document.querySelector('#correo_pf').value = '';
+		document.querySelector('#fecha_nacimiento_pf').value = '';
+		document.querySelector('#edad_pf').value = '';
+		document.querySelector('#edoc_pf').value = '';
+		document.querySelector('#sexo_pf').value = '';
+		document.querySelector('#ocupacion_pf').value = '';
+		document.querySelector('#escolaridad_pf').value = '';
+		document.querySelector('#descripcionFisica_pf').value = '';
+		document.querySelector('#calidad_juridica_pf').value = '';
+		document.querySelector('#apodo_pf').value = '';
+		document.querySelector('#denunciante_pf').value = '';
+		document.querySelector('#facebook_pf').value = '';
+		document.querySelector('#instagram_pf').value = '';
+		document.querySelector('#twitter_pf').value = '';
+		clearSelect(document.querySelector('#munorigen_pf'));
+
+		//DOMICILIO PERSONA FISICA
+		document.querySelector('#pfd_id').value = '';
+		document.querySelector('#pais_pfd').value = '';
+		document.querySelector('#estado_pfd').value = '';
+		document.querySelector('#municipio_pfd').value = '';
+		document.querySelector('#localidad_pfd').value = '';
+		document.querySelector('#colonia_pfd_select').value = '';
+		document.querySelector('#colonia_pfd').value = '';
+		document.querySelector('#cp_pfd').value = '';
+		document.querySelector('#calle_pfd').value = '';
+		document.querySelector('#exterior_pfd').value = '';
+		document.querySelector('#interior_pfd').value = '';
+		document.querySelector('#referencia_pfd').value = '';
+		// document.querySelector('#zona_pfd').value = '';
+		clearSelect(document.querySelector('#municipio_pfd'));
+		clearSelect(document.querySelector('#localidad_pfd'));
+		clearSelect(document.querySelector('#colonia_pfd_select'));
+
+		//PARENTESCO
+		document.querySelector('#parentesco_mf_I').value = '';
+		document.querySelector('#personaFisica1_I').value = '';
+		document.querySelector('#personaFisica2_I').value = '';
+		document.querySelector('#parentesco_mf').value = '';
+		document.querySelector('#personaFisica1').value = '';
+		document.querySelector('#personaFisica2').value = '';
+
+		//ARBOL DELICTUAL
+		document.querySelector('#imputado_arbol').value = '';
+		document.querySelector('#delito_cometido').value = '';
+		document.querySelector('#victima_ofendido').value = '';
+
+		//DELITOS COMETIDOS
+
+		document.querySelector('#imputado_delito_cometido').value = '';
+		document.querySelector('#delito_cometido_fisimpdelito').value = '';
+
+
+
+		//RESET FORM
+		document.getElementById("form_asignar_arbol_delictual_insert").reset();
+		document.getElementById("form_parentesco_insert").reset();
+		document.getElementById("form_delitos_cometidos_insert").reset();
+		document.getElementById("form_objetos_involucrados").reset();
+		document.getElementById("form_vehiculo").reset();
+		divFolioAtendido.classList.add('d-none');
+
+		// $('#v-pills-vehiculos-tab').css('display', 'NONE');
+	}
 	function borrarTodo() {
 		let currentTime = new Date();
 		let year = currentTime.getFullYear()
