@@ -119,6 +119,7 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 	<script>
 		const inputFolio = document.querySelector('#input_folio_atencion');
 		const input_expediente = document.querySelector('#input_expediente');
+		cons municipio_asignado = <?= $body_data->datosFolio->MUNICIPIOASIGNADOID?>
 
 		const buscar_btn = document.querySelector('#buscar-btn');
 		const buscar_nuevo_btn = document.querySelector('#buscar-nuevo-btn');
@@ -139,7 +140,7 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 		const mayuscTextarea = (e) => {
 			e.value = e.value.toUpperCase();
 		}
-		if (btn_actualizar_oficina != null  && <?php $body_data->datosFolio->MUNICIPIOASIGNADOID != NULL?>) {
+		if (btn_actualizar_oficina != null  && municipio_asignado != null) {
 			btn_actualizar_oficina.addEventListener('click', (e) => {
 				$.ajax({
 					data: {
