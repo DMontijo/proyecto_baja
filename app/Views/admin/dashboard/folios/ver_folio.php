@@ -145,7 +145,7 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 						'expedienteid': input_expediente.value,
 						'folio': inputFolio.value,
 						'year': year_select.value,
-						'municipio': <?= $body_data->datosFolio->MUNICIPIOASIGNADOID?$body_data->datosFolio->MUNICIPIOASIGNADOID:$body_data->datosFolio->INSTITUCIONREMISIONMUNICIPIOID ?>
+						'municipio': <?= ($body_data->datosFolio->MUNICIPIOASIGNADOID?$body_data->datosFolio->MUNICIPIOASIGNADOID:($body_data->datosFolio->INSTITUCIONREMISIONMUNICIPIOID?$body_data->datosFolio->INSTITUCIONREMISIONMUNICIPIOID:0)) ?>
 					},
 					url: "<?= base_url('/data/get-update-oficinas') ?>",
 					method: "POST",
