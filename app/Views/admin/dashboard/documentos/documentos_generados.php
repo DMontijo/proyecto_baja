@@ -41,20 +41,17 @@
 			<div class="col-12 col-sm-6 col-md-4 col-lg-3">
 				<button type="button" style="min-height:120px;" class="btn btn-primary mb-3 w-100" id="refrescarPagina" name="refrescarPagina" onclick="location.reload()"><i class="fas fa-undo-alt"></i> Refrescar</button>
 			</div>
-			<div class="col-12">
+			<div class="col-12" style="font-size:11px;overflow:auto;">
 				<div class="table-responsive table-bordered">
-					<table id="table-documentos" class="table table-bordered table-hover table-striped table-light">
+					<table id="table-documentos" class="table table-bordered table-hover table-striped table-light table-sm">
 						<tr>
-							<th class="text-center bg-primary text-white" id="tipodoc" name="tipodoc">DOCUMENTO</th>
+							<th class="text-center bg-primary text-white" id="tipodoc" name="tipodoc">NOMBRE</th>
 							<th class="text-center bg-primary text-white">ESTADO</th>
 							<th class="text-center bg-primary text-white">GENERADO POR</th>
 							<th class="text-center bg-primary text-white">ASIGNADO A</th>
-
-							<th class="text-center bg-primary text-white">ACCIONES</th>
 							<th class="text-center bg-primary text-white">ASIGNAR AGENTE</th>
 							<th class="text-center bg-primary text-white">ASIGNAR ENCARGADO</th>
-
-
+							<th class="text-center bg-primary text-white" style="min-width:300px;">ACCIONES</th>
 						</tr>
 					</table>
 				</div>
@@ -1313,16 +1310,16 @@
 		for (let i = 0; i < documentos.length; i++) {
 			if (documentos[i].STATUS == 'FIRMADO') {
 				var btn =
-					`<button type='button'  class='btn btn-primary my-2' onclick='viewDocumento(${documentos[i].FOLIODOCID})' disabled><i class="fas fa-edit"></i></button>`
+					`<button type='button'  class='btn btn-primary my-2 btn-sm' onclick='viewDocumento(${documentos[i].FOLIODOCID})' disabled><i class="fas fa-edit"></i></button>`
 
 				var btnFirmar =
-					`<button type='button'  class='btn btn-primary my-2' onclick='firmarDocumento(${documentos[i].FOLIODOCID})' disabled><i class="fas fa-signature"></i></button>`
+					`<button type='button'  class='btn btn-primary my-2 btn-sm' onclick='firmarDocumento(${documentos[i].FOLIODOCID})' disabled><i class="fas fa-signature"></i></button>`
 				var btnpdf = `<form class="d-inline-block" method="POST" action="<?php echo base_url('/data/download-pdf-documento') ?>">
 													<input type="text" class="form-control" name="folio" value="<?= $_GET['folio'] ?>" hidden>
 													<input type="text" class="form-control" name="year" value="<?= $_GET['year'] ?>" hidden>
 													<input type="text" class="form-control" name="docid" value="${documentos[i].FOLIODOCID}" hidden>
 
-													<button type="submit" class="btn btn-primary my-2">
+													<button type="submit" class="btn btn-primary my-2 btn-sm">
 														PDF
 													</button>
 												</form>`
@@ -1331,24 +1328,24 @@
 													<input type="text" class="form-control" name="year" value="<?= $_GET['year'] ?>" hidden>
 													<input type="text" class="form-control" name="docid" value="${documentos[i].FOLIODOCID}" hidden>
 
-													<button type="submit" class="btn btn-primary my-2">
+													<button type="submit" class="btn btn-primary my-2 btn-sm">
 														XML
 													</button>
 												</form>`
-				var btnCambiarStatus = `<button type='button'  class='btn btn-primary my-2' onclick='cambiarStatusDoc(${documentos[i].FOLIODOCID}, ${documentos[i].STATUSENVIO}, "${documentos[i].ENVIADO}", ${documentos[i].FOLIOID}, ${documentos[i].ANO})'><i class="fas fa-dice"></i></button>`
-				var btnEnviar = `<button type='button'  class='btn btn-primary my-2' onclick='firmarUnitarioModal(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})'><i class="fas fa-paper-plane"></i></button>`
-				var btnAsignarEncargado = `<button type='button'  class='btn btn-primary my-2' onclick='asignarEncargado(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})' disabled><i class="fas fa-user-tag"></i></button>`
-				var btnAsignarAgente = `<button type='button'  class='btn btn-primary my-2' onclick='asignarAgente(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})' disabled><i class="fas fa-user-tag"></i></button>`
+				var btnCambiarStatus = `<button type='button'  class='btn btn-primary my-2 btn-sm' onclick='cambiarStatusDoc(${documentos[i].FOLIODOCID}, ${documentos[i].STATUSENVIO}, "${documentos[i].ENVIADO}", ${documentos[i].FOLIOID}, ${documentos[i].ANO})'><i class="fas fa-dice"></i></button>`
+				var btnEnviar = `<button type='button'  class='btn btn-primary my-2 btn-sm' onclick='firmarUnitarioModal(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})'><i class="fas fa-paper-plane"></i></button>`
+				var btnAsignarEncargado = `<button type='button'  class='btn btn-primary my-2 btn-sm' onclick='asignarEncargado(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})' disabled><i class="fas fa-user-tag"></i></button>`
+				var btnAsignarAgente = `<button type='button'  class='btn btn-primary my-2 btn-sm' onclick='asignarAgente(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})' disabled><i class="fas fa-user-tag"></i></button>`
 
 			} else {
 				var btn =
-					`<button type='button'  class='btn btn-primary my-2' onclick='viewDocumento(${documentos[i].FOLIODOCID})'><i class="fas fa-edit"></i></button>`
+					`<button type='button'  class='btn btn-primary my-2 btn-sm' onclick='viewDocumento(${documentos[i].FOLIODOCID})'><i class="fas fa-edit"></i></button>`
 				var btnpdf = `<form class="d-inline-block" method="POST" action="<?php echo base_url('/data/download-pdf-documento') ?>">
 													<input type="text" class="form-control" name="folio" value="<?= $_GET['folio'] ?>" hidden>
 													<input type="text" class="form-control" name="year" value="<?= $_GET['year'] ?>" hidden>
 													<input type="text" class="form-control" name="docid" value="${documentos[i].FOLIODOCID}" hidden>
 
-													<button type="submit" class="btn btn-primary my-2" disabled>
+													<button type="submit" class="btn btn-primary my-2 btn-sm" disabled>
 														PDF
 													</button>
 												</form>`
@@ -1357,23 +1354,23 @@
 													<input type="text" class="form-control" name="year" value="<?= $_GET['year'] ?>" hidden>
 													<input type="text" class="form-control" name="docid" value="${documentos[i].FOLIODOCID}" hidden>
 
-													<button type="submit" class="btn btn-primary my-2" disabled>
+													<button type="submit" class="btn btn-primary my-2 btn-sm" disabled>
 														XML
 													</button>
 												</form>`
 				var btnFirmar =
-					`<button type='button'  class='btn btn-primary my-2' onclick='firmarDocumento(${documentos[i].FOLIOID}, ${documentos[i].ANO}, ${documentos[i].FOLIODOCID})'><i class="fas fa-signature"></i></button>`
-				var btnCambiarStatus = `<button type='button'  class='btn btn-primary my-2' onclick='cambiarStatusDoc(${documentos[i].FOLIODOCID}, ${documentos[i].STATUSENVIO}, "${documentos[i].ENVIADO}", ${documentos[i].FOLIOID}, ${documentos[i].ANO})'><i class="fas fa-dice"></i></button>`
-				var btnEnviar = `<button type='button'  class='btn btn-primary my-2' onclick='firmarUnitarioModal(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})' disabled><i class="fas fa-paper-plane"></i></button>`
-				var btnAsignarEncargado = `<button type='button'  class='btn btn-primary my-2' onclick='asignarEncargado(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})'><i class="fas fa-user-tag"></i></button>`
-				var btnAsignarAgente = `<button type='button'  class='btn btn-primary my-2' onclick='asignarAgente(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})'><i class="fas fa-user-tag"></i></button>`
+					`<button type='button'  class='btn btn-primary my-2 btn-sm' onclick='firmarDocumento(${documentos[i].FOLIOID}, ${documentos[i].ANO}, ${documentos[i].FOLIODOCID})'><i class="fas fa-signature"></i></button>`
+				var btnCambiarStatus = `<button type='button'  class='btn btn-primary my-2 btn-sm' onclick='cambiarStatusDoc(${documentos[i].FOLIODOCID}, ${documentos[i].STATUSENVIO}, "${documentos[i].ENVIADO}", ${documentos[i].FOLIOID}, ${documentos[i].ANO})'><i class="fas fa-dice"></i></button>`
+				var btnEnviar = `<button type='button'  class='btn btn-primary my-2 btn-sm' onclick='firmarUnitarioModal(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})' disabled><i class="fas fa-paper-plane"></i></button>`
+				var btnAsignarEncargado = `<button type='button'  class='btn btn-primary my-2 btn-sm' onclick='asignarEncargado(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})'><i class="fas fa-user-tag"></i></button>`
+				var btnAsignarAgente = `<button type='button'  class='btn btn-primary my-2 btn-sm' onclick='asignarAgente(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})'><i class="fas fa-user-tag"></i></button>`
 
 			}
 			var btnBorrar = '';
 			var asignados ='SIN AGENTE O ENCARGADO ASIGNADO';
 			if (documentos[i].ENVIADO == 'N') {
 				btnBorrar =
-					`<button type='button'  class='btn btn-primary my-2' onclick='borrarDocumento(${documentos[i].FOLIOID}, ${documentos[i].ANO}, ${documentos[i].FOLIODOCID})'><i class="fas fa-trash"></i></button>`
+					`<button type='button'  class='btn btn-primary my-2 btn-sm' onclick='borrarDocumento(${documentos[i].FOLIOID}, ${documentos[i].ANO}, ${documentos[i].FOLIODOCID})'><i class="fas fa-trash"></i></button>`
 			}
 			if (documentos[i].ENCARGADO_NOMBRE) {
 				asignados=
@@ -1389,9 +1386,9 @@
 				`<td class="text-center">${documentos[i].STATUS}</td>` +
 				`<td class="text-center">${documentos[i].AGENTER_NOMBRE} ${documentos[i].AGENTER_AP} ${documentos[i].AGENTER_AM}</td>` +
 				`<td class="text-center">${asignados} </td>` +
-				`<td class="text-center">${btn} ${btnpdf} ${btnxml} ${btnFirmar} ${btnCambiarStatus} ${btnEnviar} ${btnBorrar}</td>` +
 				`<td class="text-center">${btnAsignarAgente}</td>` +
 				`<td class="text-center">${btnAsignarEncargado}</td>` +
+				`<td class="text-center">${btn} ${btnpdf} ${btnxml} ${btnFirmar} ${btnCambiarStatus} ${btnEnviar} ${btnBorrar}</td>` +
 				`</tr>`;
 
 			$('#table-documentos tr:first').after(fila);
