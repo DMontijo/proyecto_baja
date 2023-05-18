@@ -1214,6 +1214,7 @@
 	}
 
 	buscar_btn.addEventListener('click', (e) => {
+		borrarTodo();
 		preventCloseWindow();
 		$.ajax({
 			data: {
