@@ -170,13 +170,14 @@ class FolioDocModel extends Model
 		return $result[0]->count_folios;
 	}
 
-	public function expedienteDocumentos($expediente)
+	public function expedienteDocumentos($folio, $year)
 	{
 		$strQuery = "SELECT * FROM FOLIODOC  
 		JOIN RELACIONFOLIODOCEXPDOC ON FOLIODOC.NUMEROEXPEDIENTE = RELACIONFOLIODOCEXPDOC.EXPEDIENTEID  AND FOLIODOC.FOLIODOCID = RELACIONFOLIODOCEXPDOC.FOLIODOCID
 		 WHERE (FOLIODOC.TIPODOC LIKE '%SOLICITUD DE PERITAJE%' OR FOLIODOC.TIPODOC LIKE '%OFICIO DE COLABORACION PARA INGRESO A HOSPITAL%')
 		  AND STATUS = 'FIRMADO'
-		   AND FOLIODOC.NUMEROEXPEDIENTE=" . $expediente;
+		   AND FOLIODOC.FOLIOID=" . $folio 
+		   . "AND FOLIODOC.ANO=" . $year;
 		$result = $this->db->query($strQuery)->getResult();
 		return $result;
 	}
