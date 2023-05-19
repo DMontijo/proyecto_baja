@@ -1420,32 +1420,62 @@ class FirmaController extends BaseController
 			$emailParams->setAttachments($attachments);
 			$emailParams->setReplyTo('notificacionfgebc@fgebc.gob.mx');
 			$emailParams->setReplyToName('FGEBC');
-			try {
-				$result = $mailersend->email->send($emailParams);
-			} catch (MailerSendValidationException $e) {
-				$result = false;
-			} catch (MailerSendRateLimitException $e) {
-				$result = false;
-			}
 
-			if ($result) {
-				if ($sendPolice && count($ordenesProteccion) > 0) {
-					try {
-						$this->sendEmailOrdenesProteccion($folioM->MUNICIPIOASIGNADOID, $municipio, $fecha_actual, $ordenesProteccion);
-					} catch (\Throwable $th) {
-					}
+			if ($sendPolice && count($ordenesProteccion) > 0) {
+				try {
+					$ordenes = $this->sendEmailOrdenesProteccion($folioM->MUNICIPIOASIGNADOID, $municipio, $fecha_actual, $ordenesProteccion);
+					var_dump($ordenes);
+					exit;
+				} catch (\Throwable $th) {
 				}
-
-				$datosUpdate = [
-					'ENVIADO' => 'S',
-				];
-				for ($i = 0; $i < count($documento); $i++) {
-					$update = $this->_folioDocModel->set($datosUpdate)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
-				}
-				return json_encode((object)['status' => 1]);
-			} else {
-				return json_encode((object)['status' => 0]);
 			}
+			
+			// try {
+			// 	$result = $mailersend->email->send($emailParams);
+			// } catch (MailerSendValidationException $e) {
+			// 	$result = false;
+			// } catch (MailerSendRateLimitException $e) {
+			// 	$result = false;
+			// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			// if ($result) {
+			// 	$ordenes = '';
+			// 	if ($sendPolice && count($ordenesProteccion) > 0) {
+			// 		try {
+			// 			$ordenes = $this->sendEmailOrdenesProteccion($folioM->MUNICIPIOASIGNADOID, $municipio, $fecha_actual, $ordenesProteccion);
+			// 		} catch (\Throwable $th) {
+			// 		}
+			// 	}
+
+			// 	$datosUpdate = [
+			// 		'ENVIADO' => 'S',
+			// 	];
+			// 	for ($i = 0; $i < count($documento); $i++) {
+			// 		$update = $this->_folioDocModel->set($datosUpdate)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
+			// 	}
+			// 	if($ordenes)
+			// 	{
+			// 		return json_encode((object)['status' => 1]);
+			// 	}else{
+			// 		return json_encode((object)['status' => 0, 'result' => $ordenes]);
+			// 	}
+			// } else {
+			// 	return json_encode((object)['status' => 0]);
+			// }
 		} else {
 			return json_encode((object)['status' => 3]);
 		}
@@ -1508,28 +1538,29 @@ class FirmaController extends BaseController
 	 */
 	public function sendEmailOrdenesProteccion($municipioid, $municipiodescr, $fecha, $documentos)
 	{
+		//var_dump('enviando ordenes de proteccion');
 		if (ENVIRONMENT == 'development') {
 			switch ($municipioid) {
 				case 1:
-					$to_orden_proteccion = 'otoniel.f@yocontigo-it.com';
+					$to_orden_proteccion = ['sergio.v@yocontigo-it.com', 'otoniel.f@yocontigo-it.com'];
 					break;
 				case 2:
-					$to_orden_proteccion = 'otoniel.f@yocontigo-it.com';
+					$to_orden_proteccion = ['sergio.v@yocontigo-it.com', 'otoniel.f@yocontigo-it.com'];
 					break;
 				case 3:
-					$to_orden_proteccion = 'otoniel.f@yocontigo-it.com';
+					$to_orden_proteccion = ['sergio.v@yocontigo-it.com', 'otoniel.f@yocontigo-it.com'];
 					break;
 				case 4:
-					$to_orden_proteccion = 'otoniel.f@yocontigo-it.com';
+					$to_orden_proteccion = ['sergio.v@yocontigo-it.com', 'otoniel.f@yocontigo-it.com'];
 					break;
 				case 5:
-					$to_orden_proteccion = 'otoniel.f@yocontigo-it.com';
+					$to_orden_proteccion = ['sergio.v@yocontigo-it.com', 'otoniel.f@yocontigo-it.com'];
 					break;
 				case 6:
-					$to_orden_proteccion = 'otoniel.f@yocontigo-it.com';
+					$to_orden_proteccion = ['sergio.v@yocontigo-it.com', 'otoniel.f@yocontigo-it.com'];
 					break;
 				case 7:
-					$to_orden_proteccion = 'otoniel.f@yocontigo-it.com';
+					$to_orden_proteccion = ['sergio.v@yocontigo-it.com', 'otoniel.f@yocontigo-it.com'];
 					break;
 				default:
 					$to_orden_proteccion = '';
@@ -1585,7 +1616,7 @@ class FirmaController extends BaseController
 
 		foreach ($documentos as $key => $documento) {
 			$pdf = $documento->PDF;
-			array_push($attachments, new Attachment($pdf, $documento->TIPODOC . '.pdf', 'application/pdf', 'attachment'));
+			array_push($attachments, new Attachment($pdf, $documento->TIPODOC . '.pdf', 'attachment'));
 		}
 
 		$emailParams->setAttachments($attachments);
@@ -1596,9 +1627,13 @@ class FirmaController extends BaseController
 			$result = $mailersend->email->send($emailParams);
 		} catch (MailerSendValidationException $e) {
 			$result = false;
+			$info = $e->getMessage();
 		} catch (MailerSendRateLimitException $e) {
 			$result = false;
+			$info = $e->getMessage();
 		}
+		//var_dump($info);
+		return $result;
 	}
 
 	/**

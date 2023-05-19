@@ -124,6 +124,7 @@
 											<th class="text-center" style="min-width:150px;">FECHA DE FIRMA</th>
 											<th class="text-center" style="min-width:150px;">ESTADO CONSTANCIA</th>
 											<th class="text-center" style="min-width:250px;">DENUNCIANTE</th>
+											<th class="text-center" style="min-width:250px;">GÉNERO</th>
 											<th class="text-center" style="min-width:250px;">AGENTE</th>
 											<th class="text-center" style="min-width:150px;">MUNICIPIO</th>
 											<th class="text-center" style="min-width:150px;"></th>
@@ -138,6 +139,7 @@
 												<td class="text-center"><?= isset($constancia->FECHAFIRMA) ? $constancia->FECHAFIRMA : '' ?></td>
 												<td class="text-center"><?= $constancia->STATUS ?></td>
 												<td class="text-center"><?= $constancia->NOMBRE_DENUNCIANTE ?></td>
+												<td class="text-center"><?= ($constancia->GENERO == 'M' ? 'MASCULINO' : ($constancia->GENERO == 'F' ? 'FEMENINO' : ''))?></td>
 												<td class="text-center"><?= isset($constancia->NOMBRE_AGENTE) ? $constancia->NOMBRE_AGENTE : 'NO SE HA FIRMADO' ?></td>
 												<?php if ($constancia->MUNICIPIOIDCITA == null) { ?>
 													<td class="text-center"><?= $constancia->MUNICIPIODESCR ?></td>
