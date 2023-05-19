@@ -4464,6 +4464,43 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
+	public function getOficinasByExpediente()
+	{
+
+		// $expedientesRow = $this->_folioModelRead->asObject()->where('EXPEDIENTEID IS NOT NULL')->findAll();
+		// foreach ($expedientesRow as $key => $expediente) {
+		// 	# code...
+		// }
+		// $function = '/expediente.php?process=actualizarVD';
+		// $endpoint = $this->endpoint . $function;
+		// $conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
+		// $data['EXPEDIENTEID'] = $expediente;
+		// $data['userDB'] = $conexion->USER;
+		// $data['pwdDB'] = $conexion->PASSWORD;
+		// $data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
+		// $data['schema'] = $conexion->SCHEMA;
+
+		// $response = $this->_curlPostDataEncrypt($endpoint, $data);
+		// if ($response->status == 201) {
+		// 	$datosUpdate = array(
+		// 		'OFICINAASIGNADOID' => $response->data[0]->OFICINAIDRESPONSABLE,
+		// 		'AREAASIGNADOID' => $response->data[0]->AREAIDRESPONSABLE,
+		// 		'AGENTEASIGNADOID' => $response->data[0]->EMPLEADOIDREGISTRO
+
+		// 	);
+		// 	$update = $this->_folioModel->set($datosUpdate)->where('ANO', $year)->where('FOLIOID', $folio)->where('EXPEDIENTEID', $expediente)->update();
+
+		// 	if ($update) {
+		// 		return json_encode(['status' => 1]);
+		// 	}
+		// } else {
+		// 	return json_encode(['status' => 0]);
+		// }
+	}
+	/**
+	 * Funcion para actualizar las oficinas de todos los expedientes
+	 */
+	
 	/**
 	 * Función para obtener los mediadores desde el WebServices
 	 *

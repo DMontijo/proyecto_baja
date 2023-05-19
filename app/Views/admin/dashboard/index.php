@@ -142,6 +142,17 @@ $file_text = $user_id . "_data.txt";
 			</div>
 		</div>
 	</div>
+	<div class="col-12 mb-3">
+		<hr>
+	</div>
+	<div class="col-12 col-md-4 mb-4">
+		<div class="card shadow" style="border-radius:5px; height:100%!important;">
+			<div class="card-body text-center">
+				<h5 class="card-title">OFICINAS DE EXPEDIENTES</h5>
+				<a type="button" href="<?= base_url('admin/dashboard/folios_abiertos') ?>" class="btn btn-primary font-weight-bold mt-4 text-white">ACTUALIZAR</a>
+			</div>
+		</div>
+	</div>
 </div>
 <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
 
