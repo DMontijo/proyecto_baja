@@ -1491,7 +1491,18 @@ class DashboardController extends BaseController
 					];
 					$this->_bitacoraActividad($datosBitacora);
 					return json_encode($data);
-				} else if ($data->folio->STATUS == 'EN PROCESO' && $data->folio->TIPODENUNCIA == "VD") {
+				} else if ($data->folio->STATUS == 'EN PROCESO' && $data->folio->AGENTEATENCIONID == session('ID')) {
+					$data->status = 1;
+
+					$data->respuesta = $this->getDataFolio($numfolio, $year);
+					$this->_folioModel->set(['STATUS' => 'EN PROCESO', 'AGENTEATENCIONID' => session('ID')])->where('ANO', $year)->where('FOLIOID', $numfolio)->update();
+					$datosBitacora = [
+						'ACCION' => 'Solicito la información para atender un folio.',
+						'NOTAS' => 'FOLIO: ' . $numfolio . ' AÑO: ' . $year,
+					];
+					$this->_bitacoraActividad($datosBitacora);
+					return json_encode($data);
+				} else if ($data->folio->STATUS == 'EN PROCESO' && $data->folio->TIPODENUNCIA == "VD"  && $data->folio->AGENTEATENCIONID != session('ID')) {
 					return json_encode(['status' => 2, 'motivo' => 'EL FOLIO YA ESTA SIENDO ATENDIDO']);
 				} else if ($data->folio->STATUS == 'EN PROCESO' && $data->folio->TIPODENUNCIA == "DA") {
 					$data->status = 1;
@@ -4436,25 +4447,22 @@ class DashboardController extends BaseController
 		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
 		$data['schema'] = $conexion->SCHEMA;
 
-		$response =$this->_curlPostDataEncrypt($endpoint, $data);
-		if($response->status == 201){
+		$response = $this->_curlPostDataEncrypt($endpoint, $data);
+		if ($response->status == 201) {
 			$datosUpdate = array(
-				'OFICINAASIGNADOID'=> $response->data[0]->OFICINAIDRESPONSABLE,
-				'AREAASIGNADOID'=>$response->data[0]->AREAIDRESPONSABLE,
-				'AGENTEASIGNADOID'=>$response->data[0]->EMPLEADOIDREGISTRO
+				'OFICINAASIGNADOID' => $response->data[0]->OFICINAIDRESPONSABLE,
+				'AREAASIGNADOID' => $response->data[0]->AREAIDRESPONSABLE,
+				'AGENTEASIGNADOID' => $response->data[0]->EMPLEADOIDREGISTRO
 
 			);
-			$update = $this->_folioModel->set($datosUpdate)->where('ANO', $year)->where('FOLIOID', $folio)->where('EXPEDIENTEID',$expediente)->update();
+			$update = $this->_folioModel->set($datosUpdate)->where('ANO', $year)->where('FOLIOID', $folio)->where('EXPEDIENTEID', $expediente)->update();
 
 			if ($update) {
 				return json_encode(['status' => 1]);
 			}
-
-		}else{
+		} else {
 			return json_encode(['status' => 0]);
-
 		}
-
 	}
 	/**
 	 * Función para obtener los mediadores desde el WebServices
