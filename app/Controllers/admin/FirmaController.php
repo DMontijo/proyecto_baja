@@ -1420,62 +1420,48 @@ class FirmaController extends BaseController
 			$emailParams->setAttachments($attachments);
 			$emailParams->setReplyTo('notificacionfgebc@fgebc.gob.mx');
 			$emailParams->setReplyToName('FGEBC');
-
 			if ($sendPolice && count($ordenesProteccion) > 0) {
+				$ordenes = $this->sendEmailOrdenesProteccion($folioM->MUNICIPIOASIGNADOID, $municipio, $fecha_actual, $ordenesProteccion);
+				if($ordenes){
+					try {
+						$result = $mailersend->email->send($emailParams);
+					} catch (MailerSendValidationException $e) {
+						$result = false;
+					} catch (MailerSendRateLimitException $e) {
+						$result = false;
+					}
+					if($result){
+						$datosUpdate = [
+							'ENVIADO' => 'S',
+						];
+						for ($i = 0; $i < count($documento); $i++) {
+							$update = $this->_folioDocModel->set($datosUpdate)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
+						}
+						return json_encode((object)['status' => 1]);
+					} else {
+						return json_encode((object)['status' => 0]);
+					}
+				}
+			} else {
 				try {
-					$ordenes = $this->sendEmailOrdenesProteccion($folioM->MUNICIPIOASIGNADOID, $municipio, $fecha_actual, $ordenesProteccion);
-					var_dump($ordenes);
-					exit;
-				} catch (\Throwable $th) {
+					$result = $mailersend->email->send($emailParams);
+				} catch (MailerSendValidationException $e) {
+					$result = false;
+				} catch (MailerSendRateLimitException $e) {
+					$result = false;
+				}
+				if($result){
+					$datosUpdate = [
+						'ENVIADO' => 'S',
+					];
+					for ($i = 0; $i < count($documento); $i++) {
+						$update = $this->_folioDocModel->set($datosUpdate)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
+					}
+					return json_encode((object)['status' => 1]);
+				} else {
+					return json_encode((object)['status' => 0]);
 				}
 			}
-			
-			// try {
-			// 	$result = $mailersend->email->send($emailParams);
-			// } catch (MailerSendValidationException $e) {
-			// 	$result = false;
-			// } catch (MailerSendRateLimitException $e) {
-			// 	$result = false;
-			// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-			// if ($result) {
-			// 	$ordenes = '';
-			// 	if ($sendPolice && count($ordenesProteccion) > 0) {
-			// 		try {
-			// 			$ordenes = $this->sendEmailOrdenesProteccion($folioM->MUNICIPIOASIGNADOID, $municipio, $fecha_actual, $ordenesProteccion);
-			// 		} catch (\Throwable $th) {
-			// 		}
-			// 	}
-
-			// 	$datosUpdate = [
-			// 		'ENVIADO' => 'S',
-			// 	];
-			// 	for ($i = 0; $i < count($documento); $i++) {
-			// 		$update = $this->_folioDocModel->set($datosUpdate)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
-			// 	}
-			// 	if($ordenes)
-			// 	{
-			// 		return json_encode((object)['status' => 1]);
-			// 	}else{
-			// 		return json_encode((object)['status' => 0, 'result' => $ordenes]);
-			// 	}
-			// } else {
-			// 	return json_encode((object)['status' => 0]);
-			// }
 		} else {
 			return json_encode((object)['status' => 3]);
 		}
@@ -1571,25 +1557,25 @@ class FirmaController extends BaseController
 		if (ENVIRONMENT == 'production') {
 			switch ($municipioid) {
 				case 1:
-					$to_orden_proteccion = 'copmproteccion@ensenada.gob.mx';
+					$to_orden_proteccion = ['copmproteccion@ensenada.gob.mx', 'cdtec@fgebc.gob.mx'];
 					break;
 				case 2:
-					$to_orden_proteccion = 'udai@mexicali.gob.mx';
+					$to_orden_proteccion = ['udai@mexicali.gob.mx', 'cdtec@fgebc.gob.mx'];
 					break;
 				case 3:
-					$to_orden_proteccion = 'seguridad.juridico@tecate.gob.mx';
+					$to_orden_proteccion = ['seguridad.juridico@tecate.gob.mx', 'cdtec@fgebc.gob.mx'];
 					break;
 				case 4:
-					$to_orden_proteccion = 'enlace.secretaria@tijuana.gob.mx';
+					$to_orden_proteccion = ['enlace.secretaria@tijuana.gob.mx', 'cdtec@fgebc.gob.mx'];
 					break;
 				case 5:
-					$to_orden_proteccion = 'sub.tecnica.ssc@gmail.com';
+					$to_orden_proteccion = ['sub.tecnica.ssc@gmail.com', 'cdtec@fgebc.gob.mx'];
 					break;
 				case 6:
-					$to_orden_proteccion = 'dspm-fge@sanquintin.gob.mx';
+					$to_orden_proteccion = ['dspm-fge@sanquintin.gob.mx', 'cdtec@fgebc.gob.mx'];
 					break;
 				case 7:
-					$to_orden_proteccion = 'dspm@sanfelipe.gob.mx';
+					$to_orden_proteccion = ['dspm@sanfelipe.gob.mx', 'cdtec@fgebc.gob.mx'];
 					break;
 				default:
 					$to_orden_proteccion = '';
@@ -1600,7 +1586,8 @@ class FirmaController extends BaseController
 		$body = view('email_template/orden_proteccion_email_template.php', ['municipio' => $municipiodescr, 'fecha' => $fecha]);
 		$mailersend = new MailerSend(['api_key' => EMAIL_TOKEN]);
 		$recipients = [
-			new Recipient($to_orden_proteccion, 'Your Client'),
+			new Recipient($to_orden_proteccion[0], 'Your Client'),
+			new Recipient($to_orden_proteccion[1], 'Your Client'),
 		];
 
 		$emailParams = (new EmailParams())
