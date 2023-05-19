@@ -5121,6 +5121,9 @@ class DashboardController extends BaseController
 
 			$folio = trim($this->request->getPost('folio'));
 			$year = trim($this->request->getPost('year'));
+			if ($this->permisosAgenteAtencion($folio, $year) == null) {
+				return json_encode(['status' => 0, 'message' => "El agente no coincide con el agente de atención"]);
+			}
 			$dataFolio = array(
 				'HECHOFECHA' => $this->request->getPost('fecha_delito'),
 				'HECHOHORA' => $this->request->getPost('hora_delito'),
@@ -5182,6 +5185,9 @@ class DashboardController extends BaseController
 
 			$folio = trim($this->request->getPost('folio'));
 			$year = trim($this->request->getPost('year'));
+			if ($this->permisosAgenteAtencion($folio, $year) == null) {
+				return json_encode(['status' => 0, 'message' => "El agente no coincide con el agente de atención"]);
+			}
 			$dataFolio = array(
 				'HECHOFECHA' => $this->request->getPost('fecha_delito'),
 				'HECHOHORA' => $this->request->getPost('hora_delito'),
@@ -5433,6 +5439,9 @@ class DashboardController extends BaseController
 		try {
 			$folio = trim($this->request->getPost('folio'));
 			$year = trim($this->request->getPost('year'));
+			if ($this->permisosAgenteAtencion($folio, $year) == null) {
+				return json_encode(['status' => 0, 'message' => "El agente no coincide con el agente de atención"]);
+			}
 			$dataPreguntas = array(
 				'ES_MENOR' => $this->request->getPost('es_menor'),
 				'ES_TERCERA_EDAD' => $this->request->getPost('es_tercera_edad'),
@@ -5477,6 +5486,9 @@ class DashboardController extends BaseController
 			$year = $this->request->getPost('year');
 			$fotoPersona = $this->request->getFile('subirFotoPersona');
 			$fotoP = null;
+			if ($this->permisosAgenteAtencion($folio, $year) == null) {
+				return json_encode(['status' => 0, 'message' => "El agente no coincide con el agente de atención"]);
+			}
 			if ($_FILES) {
 				$fotoP = file_get_contents($fotoPersona);
 				$data = array(
@@ -5596,6 +5608,9 @@ class DashboardController extends BaseController
 			if ($exterior_pfd == '') {
 				$exterior_pfd = NULL;
 			}
+			if ($this->permisosAgenteAtencion($folio, $year) == null) {
+				return json_encode(['status' => 0, 'message' => "El agente no coincide con el agente de atención"]);
+			}
 			$data = array(
 				'id' => trim($this->request->getPost('pf_id')),
 				'folio' => trim($this->request->getPost('folio')),
@@ -5659,7 +5674,9 @@ class DashboardController extends BaseController
 
 			$folio = trim($this->request->getPost('folio'));
 			$year = trim($this->request->getPost('year'));
-
+			if ($this->permisosAgenteAtencion($folio, $year) == null) {
+				return json_encode(['status' => 0, 'message' => "El agente no coincide con el agente de atención"]);
+			}
 			$data = array(
 				'OCUPACIONID' => $this->request->getPost('ocupacion_mf') == '0' || empty($this->request->getPost('ocupacion_mf')) ? null : $this->request->getPost('ocupacion_mf'),
 				'ESTATURA' => $this->request->getPost('estatura_mf') == '0' || empty($this->request->getPost('estatura_mf')) ? null : $this->request->getPost('estatura_mf'),
@@ -5799,7 +5816,9 @@ class DashboardController extends BaseController
 
 		$modelodescr = $this->_vehiculoModeloModelRead->asObject()->where('VEHICULODISTRIBUIDORID', $distribuidorpost)->where('VEHICULOMARCAID', $marcapost)->where('VEHICULOMODELOID', $modelopost)->first();
 		$marcadescr = $this->_vehiculoMarcaModelRead->asObject()->where('VEHICULODISTRIBUIDORID', $distribuidorpost)->where('VEHICULOMARCAID', $marcapost)->first();
-
+		if ($this->permisosAgenteAtencion($folio, $year) == null) {
+			return json_encode(['status' => 0, 'message' => "El agente no coincide con el agente de atención"]);
+		}
 		if (isset($document_file) && isset($foto_file)) {
 
 			try {
@@ -5976,6 +5995,9 @@ class DashboardController extends BaseController
 		// var_dump($_POST);exit;
 		$folio = trim($this->request->getPost('folio'));
 		$year = trim($this->request->getPost('year'));
+		if ($this->permisosAgenteAtencion($folio, $year) == null) {
+			return json_encode(['status' => 0, 'message' => "El agente no coincide con el agente de atención"]);
+		}
 		$distribuidorpost = trim($this->request->getPost('distribuidor_vehiculo_ad'));
 		$marcapost = trim($this->request->getPost('marca_ad'));
 		$modelopost = trim($this->request->getPost('linea_vehiculo_ad'));
@@ -6164,6 +6186,9 @@ class DashboardController extends BaseController
 
 			$folio = trim($this->request->getPost('folio'));
 			$year = trim($this->request->getPost('year'));
+			if ($this->permisosAgenteAtencion($folio, $year) == null) {
+				return json_encode(['status' => 0, 'message' => "El agente no coincide con el agente de atención"]);
+			}
 			$dataRelacionParentesco = array(
 				'FOLIO' => trim($this->request->getPost('folio')),
 				'ANO' => trim($this->request->getPost('year')),
@@ -6209,7 +6234,9 @@ class DashboardController extends BaseController
 			$folio = $this->request->getPost('folio');
 			$year = $this->request->getPost('year');
 			$parentescoid = $this->request->getPost('parentesco_mf');
-
+			if ($this->permisosAgenteAtencion($folio, $year) == null) {
+				return json_encode(['status' => 0, 'message' => "El agente no coincide con el agente de atención"]);
+			}
 			$deleteRelacionParentesco = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID1', $idp1)->where('PERSONAFISICAID2', $idp2)->where('PARENTESCOID', $parentescoid)->delete();
 			if ($deleteRelacionParentesco) {
 				$parentescoRelacion = $this->_parentescoPersonaFisicaModel->getRelacion($folio, $year);
@@ -6247,7 +6274,9 @@ class DashboardController extends BaseController
 
 			$folio = $this->request->getPost('folio');
 			$year = $this->request->getPost('year');
-
+			if ($this->permisosAgenteAtencion($folio, $year) == null) {
+				return json_encode(['status' => 0, 'message' => "El agente no coincide con el agente de atención"]);
+			}
 			$deletePersonaFisica = $this->_folioPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $personaf_id)->delete();
 			$deletePersonaFisicaDom = $this->_folioPersonaFisicaDomicilioModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $personaf_id)->delete();
 			$deletePersonaFisicaMediaF = $this->_folioMediaFiliacion->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $personaf_id)->delete();
@@ -6282,6 +6311,9 @@ class DashboardController extends BaseController
 	{
 		$folio = trim($this->request->getPost('folio'));
 		$year = trim($this->request->getPost('year'));
+		if ($this->permisosAgenteAtencion($folio, $year) == null) {
+			return json_encode(['status' => 0, 'message' => "El agente no coincide con el agente de atención"]);
+		}
 		$persona1 = $this->request->getPost('personaFisica1');
 		$persona2 = $this->request->getPost('personaFisica2');
 		$parentescoid = $this->request->getPost('parentesco_mf');
@@ -6350,6 +6382,9 @@ class DashboardController extends BaseController
 	{
 		$folio = trim($this->request->getPost('folio'));
 		$year = trim($this->request->getPost('year'));
+		if ($this->permisosAgenteAtencion($folio, $year) == null) {
+			return json_encode(['status' => 0, 'message' => "El agente no coincide con el agente de atención"]);
+		}
 		$dataNewPersonaFisica = array(
 			'FOLIOID' => $this->request->getPost('folio'),
 			'ANO' => $this->request->getPost('year'),
@@ -6742,6 +6777,9 @@ class DashboardController extends BaseController
 	{
 		$folio = trim($this->request->getPost('folio'));
 		$year = trim($this->request->getPost('year'));
+		if ($this->permisosAgenteAtencion($folio, $year) == null) {
+			return json_encode(['status' => 0, 'message' => "El agente no coincide con el agente de atención"]);
+		}
 		$datoRelacionFisfis = array(
 			'FOLIOID' => $this->request->getPost('folio'),
 			'ANO' => $this->request->getPost('year'),
@@ -6802,6 +6840,9 @@ class DashboardController extends BaseController
 		try {
 			$folio = trim($this->request->getPost('folio'));
 			$year = trim($this->request->getPost('year'));
+			if ($this->permisosAgenteAtencion($folio, $year) == null) {
+				return json_encode(['status' => 0, 'message' => "El agente no coincide con el agente de atención"]);
+			}
 			$personafisicavictima = trim($this->request->getPost('personafisicavictima'));
 			$delitomodalidad = trim($this->request->getPost('delito'));
 			$personafisicaimputado = trim($this->request->getPost('personafisicaimputado'));
@@ -6862,6 +6903,9 @@ class DashboardController extends BaseController
 		try {
 			$folio = trim($this->request->getPost('folio'));
 			$year = trim($this->request->getPost('year'));
+			if ($this->permisosAgenteAtencion($folio, $year) == null) {
+				return json_encode(['status' => 0, 'message' => "El agente no coincide con el agente de atención"]);
+			}
 			$personafisicavictima = trim($this->request->getPost('personafisicavictima'));
 			$delitomodalidad = trim($this->request->getPost('delito'));
 			$personafisicaimputado = trim($this->request->getPost('personafisicaimputado'));
@@ -6906,7 +6950,9 @@ class DashboardController extends BaseController
 			$folio = trim($this->request->getPost('folio'));
 			$year = trim($this->request->getPost('year'));
 			$archivoid = trim($this->request->getPost('archivoid'));
-
+			if ($this->permisosAgenteAtencion($folio, $year) == null) {
+				return json_encode(['status' => 0, 'message' => "El agente no coincide con el agente de atención"]);
+			}
 			$deletearchivo = $this->_archivoExternoModel->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIOARCHIVOID', $archivoid)->delete();
 
 			if ($deletearchivo) {
@@ -6950,7 +6996,9 @@ class DashboardController extends BaseController
 			$year = trim($this->request->getPost('year'));
 			$vehiculoid = trim($this->request->getPost('vehiculoid'));
 
-
+			if ($this->permisosAgenteAtencion($folio, $year) == null) {
+				return json_encode(['status' => 0, 'message' => "El agente no coincide con el agente de atención"]);
+			}
 			$deleteVehiculo = $this->_folioVehiculoModel->where('FOLIOID', $folio)->where('ANO', $year)->where('VEHICULOID', $vehiculoid)->delete();
 
 			if ($deleteVehiculo) {
@@ -6984,6 +7032,9 @@ class DashboardController extends BaseController
 	{
 		$folio = trim($this->request->getPost('folio'));
 		$year = trim($this->request->getPost('year'));
+		if ($this->permisosAgenteAtencion($folio, $year) == null) {
+			return json_encode(['status' => 0, 'message' => "El agente no coincide con el agente de atención"]);
+		}
 		$datoFisImpDelito = array(
 			'FOLIOID' => $this->request->getPost('folio'),
 			'ANO' => $this->request->getPost('year'),
@@ -7040,7 +7091,9 @@ class DashboardController extends BaseController
 
 		$folio = trim($this->request->getPost('folio'));
 		$year = trim($this->request->getPost('year'));
-
+		if ($this->permisosAgenteAtencion($folio, $year) == null) {
+			return json_encode(['status' => 0, 'message' => "El agente no coincide con el agente de atención"]);
+		}
 		$dataObjetoInvolucrado = array(
 			'FOLIOID' => $this->request->getPost('folio'),
 			'ANO' => $this->request->getPost('year'),
@@ -7082,7 +7135,9 @@ class DashboardController extends BaseController
 			$folio = trim($this->request->getPost('folio'));
 			$year = trim($this->request->getPost('year'));
 			$objetoid = trim($this->request->getPost('objetoid'));
-
+			if ($this->permisosAgenteAtencion($folio, $year) == null) {
+				return json_encode(['status' => 0, 'message' => "El agente no coincide con el agente de atención"]);
+			}
 			$deleteObjetoInvolucrado = $this->_folioObjetoInvolucradoModel->where('FOLIOID', $folio)->where('ANO', $year)->where('OBJETOID', $objetoid)->delete();
 
 			if ($deleteObjetoInvolucrado) {
@@ -7136,6 +7191,9 @@ class DashboardController extends BaseController
 			$objetoid = trim($this->request->getPost('objetoid'));
 			$folio = trim($this->request->getPost('folio'));
 			$year = trim($this->request->getPost('year'));
+			if ($this->permisosAgenteAtencion($folio, $year) == null) {
+				return json_encode(['status' => 0, 'message' => "El agente no coincide con el agente de atención"]);
+			}
 			$dataObjetoInvolucrado = array(
 				'FOLIO' => trim($this->request->getPost('folio')),
 				'ANO' => trim($this->request->getPost('year')),
@@ -8287,7 +8345,9 @@ class DashboardController extends BaseController
 		$year = $this->request->getPost('year');
 		$placeholder = $this->request->getPost('placeholder');
 		$municipio = $this->request->getPost('municipio');
-
+		if ($this->permisosAgenteAtencion($folio, $year) == null) {
+			return json_encode(['status' => 0, 'message' => "El agente no coincide con el agente de atención"]);
+		}
 		$plantilla = $this->_plantillasModelRead->where('TITULO', $this->request->getPost('titulo'))->first();
 		$folioRow = $this->_folioModelRead->where('ANO', $year)->where('FOLIOID', $folio)->first();
 
@@ -8640,6 +8700,17 @@ class DashboardController extends BaseController
 	{
 		return in_array($permiso, session('permisos'));
 	}
+
+	/**
+	 * Función para validar que solo el agente de atención sea el eque agregue, elimine o actualice informacion del folio
+	 */
+	private function permisosAgenteAtencion($folio, $year)
+	{
+		$validacionAgenteAtencion = $this->_folioModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('AGENTEATENCIONID', session('ID'))->first();
+
+		return $validacionAgenteAtencion;
+	}
+
 
 	/**
 	 * Función para crear el folio desde denuncia anonima
