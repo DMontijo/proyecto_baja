@@ -1103,7 +1103,7 @@
 				});
 
 				document.querySelector('#marca_objeto_update').value = objeto.MARCA ? objeto.MARCA : '';
-				document.querySelector('#serie_objeto_update').value = objeto.NUMEROSERIE ? objeto.CANTIDAD :
+				document.querySelector('#serie_objeto_update').value = objeto.NUMEROSERIE ? objeto.NUMEROSERIE :
 					'';
 				document.querySelector('#cantidad_objeto_update').value = objeto.CANTIDAD ? objeto.CANTIDAD :
 					'';
