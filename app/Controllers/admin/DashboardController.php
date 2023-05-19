@@ -8706,7 +8706,7 @@ class DashboardController extends BaseController
 
 		$data->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 
-		$this->_loadView('Videos expediente', 'videos', '', $data, 'videos_expediente');
+		$this->_loadView('Videos de expedientes', 'videos', '', $data, 'videos_expediente');
 	}
 	/**
 	 * Funcíon para sacar si hay registro de vehículos e incrementar 1, o si no hay asignar el valor inicial

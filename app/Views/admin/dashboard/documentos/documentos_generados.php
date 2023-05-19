@@ -172,7 +172,7 @@
 						victimas.forEach(victima => {
 							const option = document.createElement('option');
 							option.value = victima.PERSONAFISICAID;
-							option.text = victima.NOMBRE + ' ' + victima.PRIMERAPELLIDO+' | ' + victima.PERSONACALIDADJURIDICADESCR;
+							option.text = victima.NOMBRE + ' ' + victima.PRIMERAPELLIDO + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
 							select_victima_documento.add(option, null);
 						});
 						$('#imputado_modal_documento').empty();
@@ -259,7 +259,7 @@
 						victimas.forEach(victima => {
 							const option = document.createElement('option');
 							option.value = victima.PERSONAFISICAID;
-							option.text = victima.NOMBRE + ' ' + victima.PRIMERAPELLIDO+' | ' + victima.PERSONACALIDADJURIDICADESCR;
+							option.text = victima.NOMBRE + ' ' + victima.PRIMERAPELLIDO + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
 							select_victima_documento.add(option, null);
 						});
 						$('#imputado_modal_documento').empty();
@@ -1028,6 +1028,7 @@
 						document.querySelector('#password_verifying_mail').classList.add(
 							'd-none');
 						btn_enviarcorreoDoc.disabled = false;
+						location.reload();
 
 					} else if (response.status == 2) {
 						Swal.fire({
@@ -1071,6 +1072,7 @@
 					}
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
+					console.error(jqXHR, textStatus, errorThrown);
 					Swal.fire({
 						icon: 'error',
 						text: 'No fue posible enviar los documentos',
@@ -1095,8 +1097,8 @@
 				'year_modal_correo': document.querySelector("#year_modal_correo_uni").value,
 				'folio': document.querySelector("#folio_modal_correo_uni").value,
 				'folio_doc': document.querySelector("#foliodoc_modal_correo_uni").value
-
 			};
+
 			$.ajax({
 				data: data,
 				url: "<?= base_url('/admin/dashboard/send-documentos-correo-by-id') ?>",
@@ -1115,7 +1117,7 @@
 					if (response.status == 1) {
 						Swal.fire({
 							icon: 'success',
-							text: 'Correo enviado correctamente',
+							text: 'Documento enviado correctamente.',
 							confirmButtonColor: '#bf9b55',
 						});
 						$('#sendEmailDocModalUni').modal('hide');
@@ -1125,6 +1127,7 @@
 						document.querySelector('#password_verifying_mail_uni').classList.add(
 							'd-none');
 						btn_enviarcorreoDocUni.disabled = false;
+						location.reload();
 
 					} else if (response.status == 2) {
 						Swal.fire({
@@ -1367,18 +1370,18 @@
 
 			}
 			var btnBorrar = '';
-			var asignados ='SIN AGENTE O ENCARGADO ASIGNADO';
+			var asignados = 'SIN AGENTE O ENCARGADO ASIGNADO';
 			if (documentos[i].ENVIADO == 'N') {
 				btnBorrar =
 					`<button type='button'  class='btn btn-primary my-2 btn-sm' onclick='borrarDocumento(${documentos[i].FOLIOID}, ${documentos[i].ANO}, ${documentos[i].FOLIODOCID})'><i class="fas fa-trash"></i></button>`
 			}
 			if (documentos[i].ENCARGADO_NOMBRE) {
-				asignados=
-				documentos[i].ENCARGADO_NOMBRE+ ' '+
-				documentos[i].AP_ENCARGADO + ' '+
-				documentos[i].AM_ENCARGADO;
-			}else if(documentos[i].AGENTE_NOMBRE){
-				asignados =documentos[i].AGENTE_NOMBRE + ' '+documentos[i].AP_AGENTE +' '+documentos[i].AM_AGENTE;
+				asignados =
+					documentos[i].ENCARGADO_NOMBRE + ' ' +
+					documentos[i].AP_ENCARGADO + ' ' +
+					documentos[i].AM_ENCARGADO;
+			} else if (documentos[i].AGENTE_NOMBRE) {
+				asignados = documentos[i].AGENTE_NOMBRE + ' ' + documentos[i].AP_AGENTE + ' ' + documentos[i].AM_AGENTE;
 			}
 			var fila =
 				`<tr id="row${i}">` +
@@ -1397,6 +1400,7 @@
 			$("#adicionados").append(nFilas - 1);
 		}
 	}
+
 	function asignarAgente(documento, folio, ano) {
 		$('#asignarAgenteModal').modal('show');
 		const btn_asignar_agente = document.querySelector('#enviarAgente');
@@ -1442,6 +1446,7 @@
 		});
 
 	}
+
 	function asignarEncargado(documento, folio, ano) {
 		$('#encargadosModal').modal('show');
 		const btn_asignar_encargado = document.querySelector('#enviarEncargado');

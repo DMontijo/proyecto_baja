@@ -28,8 +28,8 @@ class DocumentosController extends BaseController
 	private $_municipiosModelRead;
 
 	function __construct()
-	{		
-		
+	{
+
 		$this->db_read = ENVIRONMENT == 'production' ? db_connect('default_read') : db_connect('development_read');
 
 		$this->_folioDocModel = new FolioDocModel();
@@ -41,7 +41,6 @@ class DocumentosController extends BaseController
 		$this->_folioModelRead = model('FolioModel', true, $this->db_read);
 		$this->_usuariosModelRead = model('UsuariosModel', true, $this->db_read);
 		$this->_municipiosModelRead = model('MunicipiosModel', true, $this->db_read);
-
 	}
 	/**
 	 * Vista de Folios Asignados para Firmar
@@ -68,22 +67,19 @@ class DocumentosController extends BaseController
 				'AGENTE_ASIGNADO' => session('ID')
 			];
 		}
-		// Destruye los valores limpios
+
+		// Destruye los valores limpios o vacíos.
 		foreach ($data as $clave => $valor) {
 			if (empty($valor)) unset($data[$clave]);
 		}
 
 		$municipio = $this->_municipiosModelRead->asObject()->where('ESTADOID', 2)->findAll();
-		// $resultFilter = $this->_folioModel->filterDatesDocumentos($data);
+
 		// Función para mostrar un filtro establecido
 		$resultFilter = $this->_folioDocModelRead->filterDatesDocumentos($data);
-		// if (session('ROLID') == '2' || session('ROLID') == '3' || session('ROLID') == '6') {
-			//Obtiene solo el empleado de la sesión
-			$empleado = $this->_usuariosModelRead->asObject()->where('ID',	session('ID'))->orderBy('NOMBRE', 'ASC')->findAll();
-		// } else {
-			// Obtiene todos los empleados
-			// $empleado = $this->_usuariosModelRead->asObject()->orderBy('NOMBRE', 'ASC')->findAll();
-		// }
+
+		//Obtiene solo el empleado de la sesión
+		$empleado = $this->_usuariosModelRead->asObject()->where('ID',	session('ID'))->orderBy('NOMBRE', 'ASC')->findAll();
 
 		$dataView = (object)array();
 		$dataView->result = $resultFilter->result;
@@ -138,18 +134,10 @@ class DocumentosController extends BaseController
 			];
 		}
 
-		// $resultFilter = $this->_folioModel->filterDatesDocumentos($data);
 		// Función para mostrar el filtro mandado
-
 		$resultFilter = $this->_folioDocModelRead->filterDatesDocumentos($data);
 
 		$empleado = $this->_usuariosModelRead->asObject()->where('ID',	session('ID'))->orderBy('NOMBRE', 'ASC')->findAll();
-
-		// if (isset($data['AGENTEATENCIONID'])) {
-		// 	$agente = $this->_usuariosModel->asObject()->where('ID', $data['AGENTEATENCIONID'])->orderBy('NOMBRE', 'ASC')->first();
-		// 	$data['AGENTENOMBRE'] = $agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' . $agente->APELLIDO_MATERNO;
-		// }
-
 
 		$dataView = (object)array();
 		$dataView->result = $resultFilter->result;
@@ -215,6 +203,7 @@ class DocumentosController extends BaseController
 		$data->documentos = $this->_folioDocModelRead->asObject()->where('FOLIOID', $data->folio)->where('ANO', $data->year)->findAll();
 		$data->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 		$data->foliorow = $this->_folioModelRead->asObject()->where('FOLIOID', $data->folio)->where('ANO', $data->year)->findAll();
+
 		//Agentes activos
 		$data->empleados = $this->_usuariosModelRead->asObject()
 			->select('USUARIOS.*, SESIONES.ACTIVO')
@@ -225,8 +214,8 @@ class DocumentosController extends BaseController
 		$data->plantillas = $this->_plantillasModelRead->asObject()->where('TITULO !=', 'CONSTANCIA DE EXTRAVÍO')->orderBy('TITULO', 'ASC')->findAll();
 		$data->institucionremision = $this->_municipiosModelRead->asObject()->where('MUNICIPIOID', $data->foliorow[0]->INSTITUCIONREMISIONMUNICIPIOID)->where('ESTADOID', 2)->first();
 		$data->municipioasignado = $this->_municipiosModelRead->asObject()->where('MUNICIPIOID', $data->foliorow[0]->MUNICIPIOASIGNADOID)->where('ESTADOID', 2)->first();
-		//Encargados activos
 
+		//Encargados activos
 		$data->encargados =
 			$this->_usuariosModelRead->asObject()
 			->select('USUARIOS.*, SESIONES.ACTIVO')
@@ -285,7 +274,6 @@ class DocumentosController extends BaseController
 
 		$data = (object) array();
 
-		// $data->documento = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $docid)->first();
 		$data->documento = $this->_folioDocModelRead->get_folio_by_first($folio, $year, $docid);
 
 		if ($data->documento) {
@@ -313,10 +301,7 @@ class DocumentosController extends BaseController
 		} else {
 			$documento = $this->_folioDocModelRead->asObject()->where('FOLIOID', base64_decode($folio))->where('ANO', $year)->where('FOLIODOCID', base64_decode($foliodocid))->first();
 		}
-		if ($documento) {
-			// $solicitante = $this->_folioPersonaFisicaModel->asObject()->where('PERSONAFISICAID', $documento->PERSONAFISICAID)->where('NUMEROEXPEDIENTE',$expediente)->where('ANO', $year)->first();
-			// $documento->NOMBRESOLICITANTE = $solicitante->NOMBRE . ' ' . $solicitante->PRIMERAPELLIDO . ' ' . $solicitante->SEGUNDOAPELLIDO;
-		}
+
 		$data2 = [
 			'header_data' => (object) ['title' => 'Validar documento', 'menu' => 'documento', 'submenu' => ''],
 			'body_data' => (object) ['documento' => $documento],
@@ -336,7 +321,9 @@ class DocumentosController extends BaseController
 		// Info del documento
 		$documento = $this->_folioDocModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $docid)->first();
 
-		$filename = urlencode($documento->TIPODOC . "_" . $folio . "_" . $year . '.pdf');
+		$doc_name = $documento->TIPODOC ? str_replace(" ", "_", $documento->TIPODOC) : '';
+		$filename = urlencode($doc_name . "_" . $folio . "_" . $year . '.pdf');
+
 		header("Content-type: application/pdf");
 		header('Content-Disposition: attachment; filename="' . $filename . '"');
 		header('Content-Length: ' . strlen($documento->PDF));
@@ -350,7 +337,6 @@ class DocumentosController extends BaseController
 		fpassthru($fp);
 		fclose($fp);
 		exit();
-		// echo $documento->PDF;
 	}
 	/**
 	 * Function para descargar el documento en formato XML
@@ -361,10 +347,13 @@ class DocumentosController extends BaseController
 		$docid = trim($this->request->getPost('docid'));
 		$folio = trim($this->request->getPost('folio'));
 		$year = trim($this->request->getPost('year'));
+
 		// Info del documento
 		$documento = $this->_folioDocModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $docid)->first();
 
-		$filename = urlencode($documento->TIPODOC . "_" . $folio . "_" . $year . ".xml");
+		$doc_name = $documento->TIPODOC ? str_replace(" ", "_", $documento->TIPODOC) : '';
+		$filename = urlencode($doc_name . "_" . $folio . "_" . $year . ".xml");
+
 		header("Content-type: application/xml");
 		header("Content-Disposition: attachment; filename=\"$filename\"");
 		header('Content-Length: ' . strlen($documento->XML));
@@ -378,7 +367,6 @@ class DocumentosController extends BaseController
 		fpassthru($fp);
 		fclose($fp);
 		exit();
-		// echo $documento->XML;
 	}
 	/**
 	 * Function para borrar el documento del folio a traves de su id
@@ -392,8 +380,6 @@ class DocumentosController extends BaseController
 		$folio = trim($this->request->getPost('folio'));
 		$year = trim($this->request->getPost('year'));
 
-		// $data->documento = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $docid)->first();
-		// $data->documento = $this->_folioDocModel->delete_doc_by_folio($folio, $year, $docid);
 		$deleteDoc = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $docid)->delete();
 
 		$documentos = $this->_folioDocModelRead->get_by_folio($folio, $year);

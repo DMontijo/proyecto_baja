@@ -397,7 +397,6 @@ class FirmaController extends BaseController
 	{
 		$numexpediente = $this->request->getPost('expediente_modal');
 		$folio = $this->request->getPost('folio');
-
 		if ($numexpediente == null) {
 			$numexpediente = $this->request->getPost('expediente');
 		}
@@ -408,41 +407,41 @@ class FirmaController extends BaseController
 		}
 		$password = str_replace(' ', '', trim($this->request->getPost('contrasena')));
 		$user_id = session('ID');
-
-		// Busca cuando no tienen expediente
-		$documento = $this->_folioDocModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'ABIERTO')->findAll();
-
-		// if ($numexpediente != null && $numexpediente != "undefined") {
-		// 	$documento = $this->_folioDocModelRead->asObject()->where('NUMEROEXPEDIENTE', $numexpediente)->where('ANO', $year)->where('STATUS', 'ABIERTO')->findAll();
-		// } else {
-		// 	$documento = $this->_folioDocModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'ABIERTO')->findAll();
-		// }
-
-		// Info folio
-		$folioRow = $this->_folioModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->first();
-		if ($documento == null || count($documento) <= 0) {
-			return json_encode((object)['status' => 0, 'message_error' => "No hay documentos por firmar"]);
-		}
-
 		$meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
-
 		$FECHAFIRMA = date("Y-m-d");
 		$HORAFIRMA = date("H:i");
 
+		if ($folio == null || $folio == "undefined") {
+			return json_encode((object)['status' => 0, 'message_error' => "El folio esta vacío y no se puede firmar el documento."]);
+		}
+
+		// Buscar documentos que no estan firmados.
+		$documento = $this->_folioDocModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'ABIERTO')->findAll();
+		if ($documento == null || count($documento) <= 0) {
+			return json_encode((object)['status' => 0, 'message_error' => "No hay documentos por firmar, asegurate de haber agregado y firmado los documentos."]);
+		}
+
+		// Info folio
+		$folioRow = $this->_folioModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->first();
+		if (!$folioRow) {
+			return json_encode((object)['status' => 0, 'message_error' => "El folio no se encontro y no se pueden firmar los documentos."]);
+		}
+
 		try {
 			// Creacion de archivos PEM y autenticacion de contraseña
-
 			if ($this->_crearArchivosPEMText($user_id, $password)) {
+
 				// Validacion de que exista esa firma FIEL
-
 				if ($this->_validarFiel($user_id)) {
-					// Info de la firma
 
+					// Info de la firma
 					$fiel_user = $this->_extractData($user_id);
 					$razon_social = $fiel_user['razon_social'];
 					$rfc = $fiel_user['rfc'];
 					$num_certificado = $fiel_user['num_certificado'];
 					for ($i = 0; $i < count($documento); $i++) {
+						$municipio = (object)[];
+
 						// Validacion de que usuario puede firmar
 						if (empty($documento[$i]->ENCARGADO_ASIGNADO) && isset($documento[$i]->AGENTE_ASIGNADO) && $documento[$i]->AGENTE_ASIGNADO != session('ID')) {
 							return json_encode((object)['status' => 0, 'message_error' => "No tienes permiso para firmar en este folio."]);
@@ -451,9 +450,8 @@ class FirmaController extends BaseController
 						} else if (isset($documento[$i]->ENCARGADO_ASIGNADO) && $documento[$i]->ENCARGADO_ASIGNADO != session('ID') && isset($documento[$i]->AGENTE_ASIGNADO)) {
 							return json_encode((object)['status' => 0, 'message_error' => "Solo puede firmar el encargado asignado."]);
 						}
-						$municipio = (object)[];
 
-						// Replaces del documento a firmar
+						// Reemplazar variables de los documentos
 						$documento[$i]->PLACEHOLDER = str_replace('[EXPEDIENTE_NOMBRE_DEL_RESPONSABLE]', $razon_social, $documento[$i]->PLACEHOLDER);
 						$documento[$i]->PLACEHOLDER = str_replace('EXPEDIENTE_NOMBRE_DEL_RESPONSABLE', $razon_social, $documento[$i]->PLACEHOLDER);
 						$documento[$i]->PLACEHOLDER = str_replace('[NOMBRE_LICENCIADO]', $razon_social, $documento[$i]->PLACEHOLDER);
@@ -464,31 +462,29 @@ class FirmaController extends BaseController
 						$text = str_replace(chr(13), ' ', $text);
 						$text = str_replace(chr(10), ' ', $text);
 						$text = str_replace('  ', ' ', trim($text));
+
 						//Municipio de acuerdo al documento o al folio
 						$municipio = $this->_municipiosModelRead->asObject()->where('MUNICIPIOID', $documento[$i]->MUNICIPIOID)->where('ESTADOID', $documento[$i]->ESTADOID)->first();
 						if (isset($municipio) == false) {
 							$municipio = $this->_municipiosModelRead->asObject()->where('MUNICIPIOID', $folioRow->MUNICIPIOID)->where('ESTADOID', $folioRow->ESTADOID)->first();
 						}
 						$estado = $this->_estadosModel->asObject()->where('ESTADOID', $documento[$i]->ESTADOID)->first();
-						// Generacion de la firma
 
-						$signature = $this->_generateSignature($user_id, "FIRMA DE DOCUMENTOS", $text, $expediente, $FECHAFIRMA, $HORAFIRMA);
+						// Generacion de la firma electrónica
+						$signature = $this->_generateSignature($user_id, ($documento[$i]->TIPODOC ? $documento[$i]->PLACEHOLDER : " "), $text, $folio . '/' . $year, $FECHAFIRMA, $HORAFIRMA);
+
 						// URL para los QR
+						$urldoc = base_url('/validar_documento?folio=' . base64_encode($folio) . '&year=' . $year . '&foliodoc=' . base64_encode($documento[$i]->FOLIODOCID));
 
-						if ($numexpediente != null && $numexpediente != "undefined") {
-
-							$urldoc = base_url('/validar_documento?expediente=' . base64_encode($numexpediente) . '&year=' . $year . '&foliodoc=' . base64_encode($documento[$i]->FOLIODOCID));
-						} else {
-							$urldoc = base_url('/validar_documento?folio=' . base64_encode($folio) . '&year=' . $year . '&foliodoc=' . base64_encode($documento[$i]->FOLIODOCID));
-						}
 						//Comprimir firma
 						if (strlen($signature->signed_chain) > 2930) {
 							$signature->signed_chain = substr($signature->signed_chain, 0, 2930) . '...';
 						}
+
 						$datapdf = array(
 							'placeholder' => $documento[$i]->PLACEHOLDER,
 							'firma' => $signature->signature,
-							'numeroident' => $documento[$i]->FOLIODOCID . '/' . $documento[$i]->ANO,
+							'numeroident' => $documento[$i]->FOLIOID . '/' . $documento[$i]->ANO . '/' . $documento[$i]->FOLIODOCID,
 							'agente' => $razon_social,
 							'rfc' => $rfc,
 							'certificado' => $num_certificado,
@@ -499,15 +495,15 @@ class FirmaController extends BaseController
 							'url' => $urldoc,
 							'qrurl' => $this->_generateQR($urldoc)
 						);
-						//Generacion del PDF del documento
 
+						//Generacion del PDF del documento
 						$pdf = $this->_generatePDFDocumentos($datapdf);
 
 						if ($signature->status == 1) {
 							//Crea el XML de la firma
 							$xmldocumentos = $this->_createXMLSignature($signature->signed_chain, $signature->signature, $expediente, $year);
 							$datosInsert = [
-								'NUMEROIDENTIFICADOR' => $documento[$i]->FOLIODOCID . '/' . $documento[$i]->ANO,
+								'NUMEROIDENTIFICADOR' => $documento[$i]->FOLIOID . '/' . $documento[$i]->ANO . '/' . $documento[$i]->FOLIODOCID,
 								'RAZONSOCIALFIRMA' => $razon_social,
 								'RFCFIRMA' => $rfc,
 								'NCERTIFICADOFIRMA' => $num_certificado,
@@ -521,18 +517,14 @@ class FirmaController extends BaseController
 								'STATUS' => 'FIRMADO',
 								'PLACEHOLDER' => $documento[$i]->PLACEHOLDER,
 							];
+
 							// Actualiza con los nuevos campos
 							$update = $this->_folioDocModel->set($datosInsert)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
 
-							// if ($numexpediente != null && $numexpediente != "undefined") {
-							// 	$update = $this->_folioDocModel->set($datosInsert)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
-							// } else {
-							// 	$update = $this->_folioDocModel->set($datosInsert)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
-							// }
 							if ($update) {
 								$datosBitacora = [
 									'ACCION' => 'Ha firmado un documento',
-									'NOTAS' => 'DOCUMENTO: ' . $numexpediente . ' AÑO: ' . $year,
+									'NOTAS' => 'Identificador: ' . $documento[$i]->FOLIOID . '/' . $documento[$i]->ANO . '/' . $documento[$i]->FOLIODOCID,
 								];
 								$this->_bitacoraActividad($datosBitacora);
 							}
@@ -540,11 +532,10 @@ class FirmaController extends BaseController
 							return json_encode((object)['status' => 0, 'message_error' => "Fallo al firmar el documento. Intentelo de nuevo."]);
 						}
 					}
-					if ($numexpediente != null && $numexpediente != "undefined") {
-						$documentosExp = $this->_folioDocModelRead->get_by_expediente($numexpediente, $year);
-					} else {
-						$documentosExp = $this->_folioDocModelRead->get_by_folio($folio, $year);
-					}
+
+					//Cargar documentos actualizados para imprimir en vista.
+					$documentosExp = $this->_folioDocModelRead->get_by_folio($folio, $year);
+
 					return json_encode((object)['status' => 1, 'documentos' => $documentosExp]);
 				} else {
 					return json_encode((object)['status' => 0, 'message_error' => "La FIEL no es válida o está vencida"]);
@@ -566,6 +557,9 @@ class FirmaController extends BaseController
 		$documento_id = $this->request->getPost('documento_id');
 		$password = str_replace(' ', '', trim($this->request->getPost('contrasena_doc')));
 		$user_id = session('ID');
+		$meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
+		$FECHAFIRMA = date("Y-m-d");
+		$HORAFIRMA = date("H:i");
 
 		if ($folio == null || $folio == "undefined") {
 			return json_encode((object)['status' => 0, 'message_error' => "El folio esta vacío y no se puede firmar el documento."]);
@@ -573,15 +567,15 @@ class FirmaController extends BaseController
 
 		// Info del documento y folio
 		$documento = $this->_folioDocModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento_id)->where('STATUS', 'ABIERTO')->findAll();
-		$folioRow = $this->_folioModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->first();
 		if ($documento == null || count($documento) <= 0) {
 			return json_encode((object)['status' => 0, 'message_error' => "No esta el documento a firmar."]);
 		}
 
-		$meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
-
-		$FECHAFIRMA = date("Y-m-d");
-		$HORAFIRMA = date("H:i");
+		// Info folio
+		$folioRow = $this->_folioModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->first();
+		if (!$folioRow) {
+			return json_encode((object)['status' => 0, 'message_error' => "El folio no se encontro y no se pueden firmar los documentos."]);
+		}
 
 		try {
 			// Creacion de archivos PEM y autenticacion de contraseña
@@ -589,12 +583,16 @@ class FirmaController extends BaseController
 
 				// Validacion de que exista esa firma FIEL
 				if ($this->_validarFiel($user_id)) {
+
 					// Info de la firma
 					$fiel_user = $this->_extractData($user_id);
 					$razon_social = $fiel_user['razon_social'];
 					$rfc = $fiel_user['rfc'];
 					$num_certificado = $fiel_user['num_certificado'];
+
 					for ($i = 0; $i < count($documento); $i++) {
+						$municipio = (object)[];
+
 						// Validacion de que usuario puede firmar
 						if (empty($documento[$i]->ENCARGADO_ASIGNADO) && isset($documento[$i]->AGENTE_ASIGNADO) && $documento[$i]->AGENTE_ASIGNADO != session('ID')) {
 							return json_encode((object)['status' => 0, 'message_error' => "No tienes permiso para firmar en este folio."]);
@@ -603,9 +601,8 @@ class FirmaController extends BaseController
 						} else if (isset($documento[$i]->ENCARGADO_ASIGNADO) && $documento[$i]->ENCARGADO_ASIGNADO != session('ID') && isset($documento[$i]->AGENTE_ASIGNADO)) {
 							return json_encode((object)['status' => 0, 'message_error' => "Solo puede firmar el encargado asignado."]);
 						}
-						$municipio = (object)[];
-						// Replaces del documento a firmar
 
+						// Reemplazar variables de los documentos
 						$documento[$i]->PLACEHOLDER = str_replace('[EXPEDIENTE_NOMBRE_DEL_RESPONSABLE]', $razon_social, $documento[$i]->PLACEHOLDER);
 						$documento[$i]->PLACEHOLDER = str_replace('EXPEDIENTE_NOMBRE_DEL_RESPONSABLE', $razon_social, $documento[$i]->PLACEHOLDER);
 						$documento[$i]->PLACEHOLDER = str_replace('[NOMBRE_LICENCIADO]', $razon_social, $documento[$i]->PLACEHOLDER);
@@ -616,30 +613,29 @@ class FirmaController extends BaseController
 						$text = str_replace(chr(13), ' ', $text);
 						$text = str_replace(chr(10), ' ', $text);
 						$text = str_replace('  ', ' ', trim($text));
-						//Municipio de acuerdo al documento o al folio
 
+						//Municipio de acuerdo al documento o al folio
 						$municipio = $this->_municipiosModelRead->asObject()->where('MUNICIPIOID', $documento[$i]->MUNICIPIOID)->where('ESTADOID', $documento[$i]->ESTADOID)->first();
 						if (isset($municipio) == false) {
 							$municipio = $this->_municipiosModelRead->asObject()->where('MUNICIPIOID', $folioRow->MUNICIPIOID)->where('ESTADOID', $folioRow->ESTADOID)->first();
 						}
 						$estado = $this->_estadosModelRead->asObject()->where('ESTADOID', $documento[$i]->ESTADOID)->first();
+
 						// Generacion de la firma
-
 						$signature = $this->_generateSignature($user_id, "FIRMA DE DOCUMENTOS", $text, $folio, $FECHAFIRMA, $HORAFIRMA);
+
 						// URL para los QR
+						$urldoc = base_url('/validar_documento?folio=' . base64_encode($folio) . '&year=' . $year . '&foliodoc=' . base64_encode($documento_id));
 
-						if ($folio != null && $folio != "undefined") {
-							$urldoc = base_url('/validar_documento?folio=' . base64_encode($folio) . '&year=' . $year . '&foliodoc=' . base64_encode($documento_id));
-						}
 						//Comprimir firma
-
 						if (strlen($signature->signed_chain) > 2930) {
 							$signature->signed_chain = substr($signature->signed_chain, 0, 2930) . '...';
 						}
+
 						$datapdf = array(
 							'placeholder' => $documento[$i]->PLACEHOLDER,
 							'firma' => $signature->signature,
-							'numeroident' => $documento[$i]->FOLIODOCID . '/' . $documento[$i]->ANO,
+							'numeroident' => $documento[$i]->FOLIOID . '/' . $documento[$i]->ANO . '/' . $documento[$i]->FOLIODOCID,
 							'agente' => $razon_social,
 							'rfc' => $rfc,
 							'certificado' => $num_certificado,
@@ -650,16 +646,17 @@ class FirmaController extends BaseController
 							'url' => $urldoc,
 							'qrurl' => $this->_generateQR($urldoc)
 						);
-						//Generacion del PDF del documento
 
+						//Generacion del PDF del documento
 						$pdf = $this->_generatePDFDocumentos($datapdf);
 
 						if ($signature->status == 1) {
-							//Crea el XML de la firma
 
+							//Crea el XML de la firma
 							$xmldocumentos = $this->_createXMLSignature($signature->signed_chain, $signature->signature, $folio, $year);
+
 							$datosInsert = [
-								'NUMEROIDENTIFICADOR' => $documento[$i]->FOLIODOCID . '/' . $documento[$i]->ANO,
+								'NUMEROIDENTIFICADOR' => $documento[$i]->FOLIOID . '/' . $documento[$i]->ANO . '/' . $documento[$i]->FOLIODOCID,
 								'RAZONSOCIALFIRMA' => $razon_social,
 								'RFCFIRMA' => $rfc,
 								'NCERTIFICADOFIRMA' => $num_certificado,
@@ -673,14 +670,14 @@ class FirmaController extends BaseController
 								'STATUS' => 'FIRMADO',
 								'PLACEHOLDER' => $documento[$i]->PLACEHOLDER,
 							];
+
 							// Actualiza con los nuevos campos
-
-
 							$update = $this->_folioDocModel->set($datosInsert)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
+
 							if ($update) {
 								$datosBitacora = [
 									'ACCION' => 'Ha firmado un documento',
-									'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year . 'DOCUMENTO ID' . $documento_id,
+									'NOTAS' => 'Identificador: ' . $documento[$i]->FOLIOID . '/' . $documento[$i]->ANO . '/' . $documento[$i]->FOLIODOCID,
 								];
 								$this->_bitacoraActividad($datosBitacora);
 							} else {
@@ -690,7 +687,10 @@ class FirmaController extends BaseController
 							return json_encode((object)['status' => 0, 'message_error' => "Fallo al firmar el documento. Intentelo de nuevo."]);
 						}
 					}
+
+					//Cargar documentos actualizados para imprimir en vista.
 					$documentosExp = $this->_folioDocModelRead->get_by_folio($folio, $year);
+
 					return json_encode((object)['status' => 1, 'documentos' => $documentosExp]);
 				} else {
 					return json_encode((object)['status' => 0, 'message_error' => "La FIEL no es válida o está vencida"]);
@@ -1283,13 +1283,14 @@ class FirmaController extends BaseController
 
 			if ($documento->TIPODOC == 'DENUNCIA ANONIMA') {
 				$pdf = $documento->PDF;
-				array_push($attachments, new Attachment($pdf, $documento->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento->FOLIODOCID . '.pdf', 'attachment'));
+				array_push($attachments, new Attachment($pdf, $documento->TIPODOC ? str_replace(" ", "_", $documento->TIPODOC) : '' . '_' . $expediente . '_' . $year . '_' . $documento->FOLIODOCID . '.pdf', 'attachment'));
 			} else {
 				$pdf = $documento->PDF;
 				$xml = $documento->XML;
-				array_push($attachments, new Attachment($pdf, $documento->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento->FOLIODOCID . '.pdf', 'attachment'));
-				array_push($attachments, new Attachment($xml, $documento->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento->FOLIODOCID . '.xml', 'attachment'));
+				array_push($attachments, new Attachment($pdf, $documento->TIPODOC ? str_replace(" ", "_", $documento->TIPODOC) : '' . '_' . $expediente . '_' . $year . '_' . $documento->FOLIODOCID . '.pdf', 'attachment'));
+				array_push($attachments, new Attachment($xml, $documento->TIPODOC ? str_replace(" ", "_", $documento->TIPODOC) : '' . '_' . $expediente . '_' . $year . '_' . $documento->FOLIODOCID . '.xml', 'attachment'));
 			}
+
 			array_push($attachments, new Attachment($termino_condiciones, 'Terminos y Condiciones.pdf', 'attachment'));
 			array_push($attachments, new Attachment($aviso_privacidad, 'Aviso de Privacidad.pdf', 'attachment'));
 			array_push($attachments, new Attachment($derecho_ofendido, 'Derechos de Víctima u Ofendido.pdf', 'attachment'));
@@ -1385,7 +1386,6 @@ class FirmaController extends BaseController
 				->setHtml($body);
 			$attachments = [];
 
-
 			if ($folioM->STATUS == 'EXPEDIENTE') {
 				$expediente_guiones = '';
 				$arrayExpediente = str_split($folioM->EXPEDIENTEID);
@@ -1401,13 +1401,13 @@ class FirmaController extends BaseController
 			for ($i = 0; $i < count($documento); $i++) {
 				if ($documento[$i]->TIPODOC == 'DENUNCIA ANONIMA') {
 					$pdf = $documento[$i]->PDF;
-					array_push($attachments, new Attachment($pdf,  $documento[$i]->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento[$i]->FOLIODOCID . '.pdf', 'attachment'));
+					array_push($attachments, new Attachment($pdf,  $documento[$i]->TIPODOC ? str_replace("", "_", $documento[$i]->TIPODOC) : '' . '_' . $expediente . '_' . $year . '_' . $documento[$i]->FOLIODOCID . '.pdf', 'attachment'));
 				} else {
 					$pdf = $documento[$i]->PDF;
 					$xml = $documento[$i]->XML;
-					array_push($attachments, new Attachment($pdf, $documento[$i]->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento[$i]->FOLIODOCID . '.pdf', 'attachment'));
-					array_push($attachments, new Attachment($xml, $documento[$i]->TIPODOC . '_' . $expediente . '_' . $year . '_' . $documento[$i]->FOLIODOCID . '.xml', 'attachment'));
-					if (strpos($documento[$i]->TIPODOC, "ORDEN DE PROTECCION")) {
+					array_push($attachments, new Attachment($pdf, $documento[$i]->TIPODOC ? str_replace("", "_", $documento[$i]->TIPODOC) : '' . '_' . $expediente . '_' . $year . '_' . $documento[$i]->FOLIODOCID . '.pdf', 'attachment'));
+					array_push($attachments, new Attachment($xml, $documento[$i]->TIPODOC ? str_replace("", "_", $documento[$i]->TIPODOC) : '' . '_' . $expediente . '_' . $year . '_' . $documento[$i]->FOLIODOCID . '.xml', 'attachment'));
+					if (strpos($documento[$i]->TIPODOC, "ORDEN DE PROTECCION") !== false) {
 						array_push($ordenesProteccion, $documento[$i]);
 						$sendPolice = true;
 					}
@@ -1429,30 +1429,21 @@ class FirmaController extends BaseController
 			}
 
 			if ($result) {
-				// $email->clear(TRUE);
+				if ($sendPolice && count($ordenesProteccion) > 0) {
+					try {
+						$this->sendEmailOrdenesProteccion($folioM->MUNICIPIOASIGNADOID, $municipio, $fecha_actual, $ordenesProteccion);
+					} catch (\Throwable $th) {
+					}
+				}
+
 				$datosUpdate = [
 					'ENVIADO' => 'S',
 				];
 				for ($i = 0; $i < count($documento); $i++) {
 					$update = $this->_folioDocModel->set($datosUpdate)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
-					// if ($expediente != "undefined" && $expediente != '') {
-					// 	$update = $this->_folioDocModel->set($datosUpdate)->where('NUMEROEXPEDIENTE', $expediente)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
-					// } else {
-					// 	$update = $this->_folioDocModel->set($datosUpdate)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
-					// }
-				}
-				if ($sendPolice && count($ordenesProteccion) > 0) {
-					try {
-						$this->sendEmailOrdenesProtección($folioM->MUNICIPIOASIGNADOID, $municipio, $fecha_actual, $ordenesProteccion);
-					} catch (\Throwable $th) {
-					}
 				}
 				return json_encode((object)['status' => 1]);
 			} else {
-				// try {
-				// 	//$email->clear(TRUE);
-				// } catch (\Throwable $th) {
-				// }
 				return json_encode((object)['status' => 0]);
 			}
 		} else {
@@ -1500,14 +1491,13 @@ class FirmaController extends BaseController
 			$result = false;
 		}
 
-		// if ($email->send()) {
 		if ($result) {
-			// $email->clear(TRUE);
 			return json_encode((object)['status' => 1]);
 		} else {
 			return json_encode((object)['status' => 0]);
 		}
 	}
+
 	/**
 	 * Función para enviar por correo a los policias cuando existen ordenes de proteccion en el folio
 	 *
@@ -1516,7 +1506,7 @@ class FirmaController extends BaseController
 	 * @param  mixed $fecha
 	 * @param  mixed $documentos
 	 */
-	public function sendEmailOrdenesProtección($municipioid, $municipiodescr, $fecha, $documentos)
+	public function sendEmailOrdenesProteccion($municipioid, $municipiodescr, $fecha, $documentos)
 	{
 		if (ENVIRONMENT == 'development') {
 			switch ($municipioid) {
@@ -1609,11 +1599,6 @@ class FirmaController extends BaseController
 		} catch (MailerSendRateLimitException $e) {
 			$result = false;
 		}
-
-		// try {
-		// 	// $email->clear(TRUE);
-		// } catch (\Throwable $th) {
-		// }
 	}
 
 	/**
@@ -1626,7 +1611,6 @@ class FirmaController extends BaseController
 		$data = $data;
 		$data['ID'] = uniqid();
 		$data['USUARIOID'] = session('ID');
-
 
 		if ($data['USUARIOID']) {
 			$this->_bitacoraActividadModel->insert($data);

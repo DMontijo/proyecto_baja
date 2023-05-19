@@ -651,7 +651,7 @@ class ReportesController extends BaseController
 		$dataView->filterParams = (object)$data;
 		$dataView->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 
-		$this->_loadView('Registro diario', 'registro diario', '', $dataView, 'registro_diario');
+		$this->_loadView('Reporte diario', 'registro diario', '', $dataView, 'registro_diario');
 	}
 
 	/**
@@ -706,7 +706,7 @@ class ReportesController extends BaseController
 
 		$dataView->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 
-		$this->_loadView('Registro diario', 'registro diario', '', $dataView, 'registro_diario');
+		$this->_loadView('Reporte diario', 'registro diario', '', $dataView, 'registro_diario');
 	}
 	/**
 	 * Función para generar el reporte XLSX de registro diario
@@ -1027,7 +1027,7 @@ class ReportesController extends BaseController
 			->findAll();
 		$data->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 
-		$this->_loadView('FIEL', 'fiel', '', $data, 'fiel');
+		$this->_loadView('Reporte FIEL', 'fiel', '', $data, 'fiel');
 	}
 	/**
 	 * Vista para ingresar a los reportes de llamadas
@@ -1062,7 +1062,7 @@ class ReportesController extends BaseController
 			$dataView->llamadas = array_unique($llamadas, SORT_REGULAR);
 
 
-			$this->_loadView('Reportes llamadas', 'reportes_llamadas', '', $dataView, 'reportes_llamadas');
+			$this->_loadView('Reporte llamadas', 'reportes_llamadas', '', $dataView, 'reportes_llamadas');
 		}
 	}
 
@@ -1108,7 +1108,7 @@ class ReportesController extends BaseController
 			$dataView->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 			$dataView->filterParams = $dataPost;
 
-			$this->_loadView('Reportes llamadas', 'reportes_llamadas', '', $dataView, 'reportes_llamadas');
+			$this->_loadView('Reporte llamadas', 'reportes_llamadas', '', $dataView, 'reportes_llamadas');
 		}
 	}
 	/**
@@ -1353,7 +1353,7 @@ class ReportesController extends BaseController
 		$dataView->dataOrdenes = $documentos;
 		$dataView->filterParams = (object)$dataPost;
 
-		$this->_loadView('Bitácora CONAVIM', 'registro_conavim', '', $dataView, 'registro_conavim');
+		$this->_loadView('Reporte CONAVIM', 'registro_conavim', '', $dataView, 'registro_conavim');
 	}
 	/**
 	 * Función para realizar un filtro en reporte de registro conavim.
@@ -1411,7 +1411,7 @@ class ReportesController extends BaseController
 		$dataView->dataOrdenes = $documentos;
 		$dataView->filterParams = (object)$dataPost;
 
-		$this->_loadView('Registro CONAVIM', 'registro_conavim', '', $dataView, 'registro_conavim');
+		$this->_loadView('Reporte CONAVIM', 'registro_conavim', '', $dataView, 'registro_conavim');
 	}
 	/**
 	 * Función para generar el reporte XLSX de conavim
@@ -1682,7 +1682,7 @@ class ReportesController extends BaseController
 		$dataView->dataInfo = $dataInfo;
 		$dataView->filterParams = (object)$dataPost;
 
-		$this->_loadView('Registro Canalización y Derivación', 'registro_candev', '', $dataView, 'registro_candev');
+		$this->_loadView('Reporte Canalización y Derivación', 'registro_candev', '', $dataView, 'registro_candev');
 	}
 
 	/**
@@ -1741,7 +1741,7 @@ class ReportesController extends BaseController
 		$dataView->dataInfo = $dataInfo;
 		$dataView->filterParams = (object)$dataPost;
 
-		$this->_loadView('Registro Canalización y Derivación', 'registro_candev', '', $dataView, 'registro_candev');
+		$this->_loadView('Reporte Canalización y Derivación', 'registro_candev', '', $dataView, 'registro_candev');
 	}
 	/**
 	 * Función para generar el reporte XLSX de candev
@@ -1997,7 +1997,7 @@ class ReportesController extends BaseController
 		$dataView->empleados = $empleado;
 		$dataView->filterParams = (object)$data;
 		$dataView->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
-		$this->_loadView('Registro de atenciones', 'Registro de atenciones', '', $dataView, 'registro_atenciones');
+		$this->_loadView('Reporte de atenciones', 'Registro de atenciones', '', $dataView, 'registro_atenciones');
 	}
 	/**
 	 * Función para realizar un filtro en reporte de registro de atenciones.
@@ -2052,7 +2052,7 @@ class ReportesController extends BaseController
 		$dataView->empleados = $empleado;
 		$dataView->filterParams = (object)$data;
 		$dataView->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
-		$this->_loadView('Registro de atenciones', 'Registro de atenciones', '', $dataView, 'registro_atenciones');
+		$this->_loadView('Reporte de atenciones', 'Registro de atenciones', '', $dataView, 'registro_atenciones');
 	}
 	/**
 	 * Función para generar el reporte XLSX de registro de atenciones
@@ -2359,7 +2359,7 @@ class ReportesController extends BaseController
 		$dataView->dataDocumentos = $documentos;
 		$dataView->filterParams = (object)$dataPost;
 
-		$this->_loadView('Registro CEEIAV', 'registro_ceeiav', '', $dataView, 'registro_ceeiav');
+		$this->_loadView('Reporte CEEIAV', 'registro_ceeiav', '', $dataView, 'registro_ceeiav');
 	}
 	/**
 	 * Función para realizar un filtro en reporte de ceeiav.
@@ -2416,7 +2416,7 @@ class ReportesController extends BaseController
 		$dataView->dataDocumentos = $documentos;
 		$dataView->filterParams = (object)$dataPost;
 
-		$this->_loadView('Registro CEEIAV', 'registro_ceeiav', '', $dataView, 'registro_ceeiav');
+		$this->_loadView('Reporte CEEIAV', 'registro_ceeiav', '', $dataView, 'registro_ceeiav');
 	}
 	/**
 	 * Función para generar el reporte XLSX de ceeiav
