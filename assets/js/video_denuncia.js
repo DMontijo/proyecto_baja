@@ -227,6 +227,7 @@ aceptar_llamada.addEventListener("click", () => {
 					document.getElementById("input_folio_atencion").value =
 						split[0];
 						document.getElementById("buscar-btn").click();
+						document.querySelector('#folio_atendido').innerHTML = 'FOLIO ATENDIDO: ' + guestConnection.folio;
 
 				} catch (error) {}
 			}
