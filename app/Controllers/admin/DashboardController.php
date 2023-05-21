@@ -4464,49 +4464,65 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
+
+	/**Funcion para actualizar las oficinas asignadas de justicia en videodenuncia */
 	public function getOficinasByExpediente()
 	{
+		$municipios = [1, 2, 3, 4, 5, 6, 7];
+		$function = '/testing/expediente.php?process=getChangesVD';
+		$endpoint = $this->endpoint . $function;
+		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->whereIn('MUNICIPIOID', $municipios)->where('TYPE', ENVIRONMENT)->findAll();
+		foreach ($conexion as $key => $cxn) {
+			$data['userDB'] = $cxn->USER;
+			$data['pwdDB'] = $cxn->PASSWORD;
+			$data['instance'] = $cxn->IP . '/' . $cxn->INSTANCE;
+			$data['schema'] = $cxn->SCHEMA;
+			$response = $this->_curlPostDataEncrypt($endpoint, $data);
+			//Respuesta de todos los expedientes cambiados desde justicia
+			if ($response->status == 201) {
+				$expedentesEnJusticia = [];
+				$oficinaAsignado = [];
+				foreach ($response->data as $key => $expedientes) {
+					//Se compara con los folios de Videodenuncia
+					$foliosVD = $this->_folioModelRead->asObject()->select('EXPEDIENTEID')->where('EXPEDIENTEID', $expedientes->EXPEDIENTEID)->first();
+					if (isset($foliosVD)) {
+						array_push($expedentesEnJusticia, $expedientes->EXPEDIENTEID);
+						array_push($oficinaAsignado, $expedientes->OFICINAIDCOORD);
+					}
+				}
+				$datosUpdate = array(
+					'OFICINAASIGNADOID' => $oficinaAsignado,
+				);
+				foreach ($datosUpdate['OFICINAASIGNADOID'] as $index => $valor) {
 
-		// $expedientesRow = $this->_folioModelRead->asObject()->where('EXPEDIENTEID IS NOT NULL')->findAll();
-		// foreach ($expedientesRow as $key => $expediente) {
-		// 	# code...
-		// }
-		// $function = '/expediente.php?process=actualizarVD';
-		// $endpoint = $this->endpoint . $function;
-		// $conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
-		// $data['EXPEDIENTEID'] = $expediente;
-		// $data['userDB'] = $conexion->USER;
-		// $data['pwdDB'] = $conexion->PASSWORD;
-		// $data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
-		// $data['schema'] = $conexion->SCHEMA;
-
-		// $response = $this->_curlPostDataEncrypt($endpoint, $data);
-		// if ($response->status == 201) {
-		// 	$datosUpdate = array(
-		// 		'OFICINAASIGNADOID' => $response->data[0]->OFICINAIDRESPONSABLE,
-		// 		'AREAASIGNADOID' => $response->data[0]->AREAIDRESPONSABLE,
-		// 		'AGENTEASIGNADOID' => $response->data[0]->EMPLEADOIDREGISTRO
-
-		// 	);
-		// 	$update = $this->_folioModel->set($datosUpdate)->where('ANO', $year)->where('FOLIOID', $folio)->where('EXPEDIENTEID', $expediente)->update();
-
-		// 	if ($update) {
-		// 		return json_encode(['status' => 1]);
-		// 	}
-		// } else {
-		// 	return json_encode(['status' => 0]);
-		// }
+					$updateFoliosVD = $this->_folioModel->set('OFICINAASIGNADOID', $valor)
+						->asObject()
+						->where('EXPEDIENTEID', $expedentesEnJusticia[$index])
+						->update();
+				}
+				if ($updateFoliosVD) {
+					$functionUpdate =  '/testing/expediente.php?process=actualizarVD';
+					$endpointUpdate = $this->endpoint . $functionUpdate;
+					$data['EXPEDIENTEID']= $expedentesEnJusticia;
+					$responseUpdate = $this->_curlPostDataEncrypt($endpointUpdate, $data);
+					if ($responseUpdate->status == 201) {
+						return json_encode(['status' => 1]);
+					}
+				}
+			}
+		}
 	}
 	/**
 	 * Funcion para actualizar las oficinas de todos los expedientes
 	 */
-	
+
 	/**
 	 * Función para obtener los mediadores desde el WebServices
 	 *
 	 * @param  mixed $municipio
 	 * @param  mixed $modulo
 	 */
+
 	private function getMediador($municipio, $modulo)
 	{
 		$function = '/consumoVistas.php?process=getMediador';
@@ -4858,7 +4874,6 @@ class DashboardController extends BaseController
 		// return $result;
 		return json_decode($result);
 	}
-
 	public function getTimeVideo()
 	{
 		// $video = $this->request->getPost('name_video');
