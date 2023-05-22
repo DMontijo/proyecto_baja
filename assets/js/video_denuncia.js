@@ -42,7 +42,7 @@ const audio_denunciante_on = document.querySelector("#on-audio-denunciante");
 const audio_denunciante_off = document.querySelector("#off-audio-denunciante");
 
 //RECARGAR PAGINA DE DENUNCIANTE
-const recargar_denunciante_btn = document.querySelector("#recargar_denunciante_btn");
+// const recargar_denunciante_btn = document.querySelector("#recargar_denunciante_btn");
 
 // const recargar_agente = document.querySelector("#recargar_agente");
 
@@ -68,29 +68,32 @@ $mediaConfiguration.addEventListener("click", async () => {
 });
 
 const agentVideoService = new VideoServiceAgent(agentUUID, { apiURI, apiKey });
-recargar_denunciante_btn.addEventListener("click", () => {
-	console.log("RECARGANDO DENUNCIANTE")
-	agentVideoService.refreshGuestConnection(() => {
-		Swal.fire({
-			icon: "success",
-			text: "La conexion de denunciante se recargara en 3 segundos",
-			showConfirmButton: true,
-			confirmButtonColor: "#bf9b55",
-			timer: 3000,
-			timerProgressBar: true,
-		});
-	});
-});
+
+// recargar_denunciante_btn.addEventListener("click", () => {
+// 	console.log("RECARGANDO DENUNCIANTE")
+// 	agentVideoService.refreshGuestConnection(() => {
+// 		Swal.fire({
+// 			icon: "success",
+// 			text: "La conexion de denunciante se recargara en 3 segundos",
+// 			showConfirmButton: true,
+// 			confirmButtonColor: "#bf9b55",
+// 			timer: 3000,
+// 			timerProgressBar: true,
+// 		});
+// 	});
+// });
+
 // recargar_agente.addEventListener("click", () => {
 // 	console.log("ENTRANDO A RECARGAR LLAMADA");
 // 	agentVideoService.reloadAgentVideoCall((resp) => {
 // 		console.log(resp);
 // 	});
 // });
+
 disponible_connect.addEventListener("click", () => {
 	console.log("Conectando agente...");
-	if(!agentVideoService.videoStream && !agentVideoService.audioStream){
-		
+	if (!agentVideoService.videoStream && !agentVideoService.audioStream) {
+
 		console.log(agentVideoService.videoStream, 'video');
 		console.log(agentVideoService.audioStream, 'audio');
 	}
@@ -107,7 +110,7 @@ disponible_connect.addEventListener("click", () => {
 			agentVideoService.registerOnGuestConnected(response => {
 				try {
 					deleteVideoElement();
-				} catch (error) {}
+				} catch (error) { }
 				clearVideoCall();
 				console.log(response.guest.uuid, 'response');
 				guestUUID = response.guest.uuid;
@@ -169,12 +172,12 @@ disponible_connect.addEventListener("click", () => {
 				agentVideoService.endVideoCall(() => {
 					console.log("¡Llamada finalizada con éxito!");
 				});
-			} catch (error) {}
+			} catch (error) { }
 			try {
 				agentVideoService.disconnectAgent(() => {
 					console.log("¡Agente desconectado con éxito!");
 				});
-			} catch (error) {}
+			} catch (error) { }
 			disponible_connect.hidden = false;
 			no_disponible_connect.hidden = true;
 			clearVideoCall();
@@ -226,7 +229,7 @@ aceptar_llamada.addEventListener("click", () => {
 					let split = guestConnection.folio.split("/");
 					document.getElementById("input_folio_atencion").value =
 						split[0];
-				} catch (error) {}
+				} catch (error) { }
 			}
 
 			agentVideoService.registerOnGuestDisconnected(() => {
@@ -340,7 +343,7 @@ stopRecord.addEventListener("click", () => {
 		startRecord.style.display = "block";
 		stopRecord.style.display = "none";
 
-		setTimeout(function() {
+		setTimeout(function () {
 			document.getElementById("grabacion_stop").style.display = "none";
 		}, 3000);
 	});
@@ -384,17 +387,17 @@ enviar_marca.addEventListener("click", () => {
 });
 
 $acceptConfiguration.addEventListener("click", () => {
-	if(!audioStream) return;
-	if(!videoStream) return;
+	if (!audioStream) return;
+	if (!videoStream) return;
 
-	audioStream.getTracks().forEach(function(track) {
+	audioStream.getTracks().forEach(function (track) {
 		track.stop();
 	});
-	
-	videoStream.getTracks().forEach(function(track) {
+
+	videoStream.getTracks().forEach(function (track) {
 		track.stop();
 	});
-	
+
 	$(mediaDevicesModal).modal("hide");
 });
 
@@ -565,11 +568,11 @@ const llenarSelectConDispositivosDisponiblesVideo = (idDeDispositivo) => {
 	// 	$('#listDevicesVideo').appendChild(selectElement);
 	// } 
 
-	if($listaDeDispositivosVideo.length) $($listaDeDispositivosVideo).empty();
+	if ($listaDeDispositivosVideo.length) $($listaDeDispositivosVideo).empty();
 
-	navigator.mediaDevices.enumerateDevices().then(function(dispositivos) {
+	navigator.mediaDevices.enumerateDevices().then(function (dispositivos) {
 		const dispositivosDeVideo = [];
-		dispositivos.forEach(function(dispositivo) {
+		dispositivos.forEach(function (dispositivo) {
 			const tipo = dispositivo.kind;
 
 			if (tipo === "videoinput") {
@@ -582,7 +585,7 @@ const llenarSelectConDispositivosDisponiblesVideo = (idDeDispositivo) => {
 				const option = document.createElement('option');
 				option.value = dispositivo.deviceId;
 				option.text = dispositivo.label;
-				if(dispositivo.deviceId === idDeDispositivo) {
+				if (dispositivo.deviceId === idDeDispositivo) {
 					option.selected = true;
 				}
 				$listaDeDispositivosVideo.appendChild(option);
@@ -594,9 +597,9 @@ const llenarSelectConDispositivosDisponiblesVideo = (idDeDispositivo) => {
 const llenarSelectConDispositivosDisponiblesAudio = (idDeDispositivo) => {
 	$($listaDeDispositivosAudio).empty();
 
-	navigator.mediaDevices.enumerateDevices().then(function(dispositivos) {
+	navigator.mediaDevices.enumerateDevices().then(function (dispositivos) {
 		const dispositivosDeAudio = [];
-		dispositivos.forEach(function(dispositivo) {
+		dispositivos.forEach(function (dispositivo) {
 			const tipo = dispositivo.kind;
 
 			if (tipo === "audioinput") {
@@ -609,7 +612,7 @@ const llenarSelectConDispositivosDisponiblesAudio = (idDeDispositivo) => {
 				const option = document.createElement('option');
 				option.value = dispositivo.deviceId;
 				option.text = dispositivo.label;
-				if(dispositivo.deviceId === idDeDispositivo) {
+				if (dispositivo.deviceId === idDeDispositivo) {
 					option.selected = true;
 				}
 				$listaDeDispositivosAudio.appendChild(option);
@@ -635,11 +638,11 @@ function initMediaDevices() {
 	let dispositivosDeAudio;
 
 	if (!isSafari) {
-		navigator.mediaDevices.enumerateDevices().then(function(dispositivos) {
+		navigator.mediaDevices.enumerateDevices().then(function (dispositivos) {
 			dispositivosDeVideo = [];
 			dispositivosDeAudio = [];
 
-			dispositivos.forEach(function(dispositivo) {
+			dispositivos.forEach(function (dispositivo) {
 				const tipo = dispositivo.kind;
 
 				if (tipo === "videoinput") {
@@ -662,16 +665,16 @@ function initMediaDevices() {
 
 		const mostrarStreamVideo = idDeDispositivo => {
 			_getUserMediaVideo({
-					video: {
-						deviceId: idDeDispositivo,
-					}
-				},
-				function(streamObtenidoVideo) {
+				video: {
+					deviceId: idDeDispositivo,
+				}
+			},
+				function (streamObtenidoVideo) {
 					llenarSelectConDispositivosDisponiblesVideo(idDeDispositivo);
 
 					$listaDeDispositivosVideo.onchange = () => {
 						if (videoStream) {
-							videoStream.getTracks().forEach(function(track) {
+							videoStream.getTracks().forEach(function (track) {
 								track.stop();
 							});
 						}
@@ -687,9 +690,9 @@ function initMediaDevices() {
 					$('#media-devices-alert').attr('hidden', true);
 					$('#media-devices-selectors').removeAttr('hidden');
 				},
-				function(error) {
+				function (error) {
 					let listDevices = document.getElementById('listDevicesVideo');
-					if($video) $video.remove();
+					if ($video) $video.remove();
 					$('#listDevicesVideo').empty();
 
 					let spanElement = document.createElement('span');
@@ -703,16 +706,16 @@ function initMediaDevices() {
 
 		const mostrarStreamAudio = idDeDispositivo => {
 			_getUserMediaAudio({
-					audio: {
-						deviceId: idDeDispositivo,
-					}
-				},
-				function(streamObtenidoAudio) {
+				audio: {
+					deviceId: idDeDispositivo,
+				}
+			},
+				function (streamObtenidoAudio) {
 					llenarSelectConDispositivosDisponiblesAudio(idDeDispositivo);
 
 					$listaDeDispositivosAudio.onchange = () => {
 						if (audioStream) {
-							audioStream.getTracks().forEach(function(track) {
+							audioStream.getTracks().forEach(function (track) {
 								track.stop();
 							});
 						}
@@ -728,7 +731,7 @@ function initMediaDevices() {
 					$('#media-devices-alert').attr('hidden', true);
 					$('#media-devices-selectors').removeAttr('hidden');
 				},
-				function(error) {
+				function (error) {
 					let listDevices = document.getElementById('listDevicesAudio');
 					$audio.remove();
 					$('#listDevicesAudio').empty();
@@ -742,21 +745,21 @@ function initMediaDevices() {
 					$acceptConfiguration.setAttribute('disabled', true);
 				});
 
-			if(streamObtenidoAudio && streamObtenidoAudio) $($acceptConfiguration).removeAttr('disabled');
+			if (streamObtenidoAudio && streamObtenidoAudio) $($acceptConfiguration).removeAttr('disabled');
 		}
 	} else {
 		const mostrarStream = (idDeDispositivo = null) => {
 			let options = {
-				audio: true, 
+				audio: true,
 				video: true,
 				deviceId: idDeDispositivo
 			}
 			idDeDispositivo = null ? delete options.deviceId : idDeDispositivo;
-			navigator.mediaDevices.getUserMedia(options).then(function(streamObtenido) {
+			navigator.mediaDevices.getUserMedia(options).then(function (streamObtenido) {
 
-				navigator.mediaDevices.enumerateDevices().then(function(dispositivos) {
+				navigator.mediaDevices.enumerateDevices().then(function (dispositivos) {
 					const dispositivosDeVideo = [];
-					dispositivos.forEach(function(dispositivo) {
+					dispositivos.forEach(function (dispositivo) {
 						const tipo = dispositivo.kind;
 						if (tipo === "videoinput") {
 							dispositivosDeVideo.push(dispositivo);
@@ -767,7 +770,7 @@ function initMediaDevices() {
 					$listaDeDispositivosVideo.onchange = () => {
 						console.log('Cambiando dispositivo');
 						if (stream) {
-							stream.getTracks().forEach(function(track) {
+							stream.getTracks().forEach(function (track) {
 								track.stop();
 							});
 						}
@@ -783,7 +786,7 @@ function initMediaDevices() {
 						$video.play();
 					}
 				});
-			}).catch(function(err) {
+			}).catch(function (err) {
 				console.log("Permiso denegado o error: ", error);
 				$estado.classList.remove('d-none');
 			});
