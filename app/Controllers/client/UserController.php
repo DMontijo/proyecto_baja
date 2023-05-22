@@ -223,8 +223,8 @@ class UserController extends BaseController
 					$this->_denunciantesModel->insert($data);
 					//Envio de contraseña
 					$this->_sendEmailPassword($data['CORREO'], $data['TELEFONO'],$password);
-					session()->setFlashdata('message', 'Inicia sesión con tu correo y la contraseña que llegará a tus mensajes SMS.');
-					return redirect()->to(base_url('/denuncia'))->with('message_success', 'Inicia sesión con la contraseña que llegará tus mensajes SMS y comienza tu denuncia');
+					session()->setFlashdata('message', 'Inicia sesión con tu correo y la contraseña que llegará a tu correo electrónico y/o mensajes SMS.');
+					return redirect()->to(base_url('/denuncia'))->with('message_success', 'Inicia sesión con la contraseña que llegará a tu correo electrónico y/o mensajes SMS y comienza tu denuncia.');
 				}
 			} else {
 				return redirect()->back()->with('message', 'Hubo un error en los datos o puede que ya exista un registro con el mismo correo');

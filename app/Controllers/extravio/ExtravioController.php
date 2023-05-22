@@ -182,7 +182,7 @@ class ExtravioController extends BaseController
 			if ($response->uuid) {
 				$this->_denunciantesModel->insert($data);
 				$this->_sendEmailPassword($data['CORREO'], $data['TELEFONO'],$password);
-				return redirect()->to(base_url('/constancia_extravio'))->with('message_success', 'Inicia sesión con la contraseña que llegará a tus mensajes SMS e ingresa.');
+				return redirect()->to(base_url('/constancia_extravio'))->with('message_success', 'Inicia sesión con la contraseña que llegará a tu correo electrónico y/o mensajes SMS e ingresa.');
 			}
 		} else {
 			return redirect()->back()->with('message_error', 'Hubo un error en los datos o puede que ya exista un registro con el mismo correo');
@@ -355,10 +355,10 @@ class ExtravioController extends BaseController
 		}
 
 		if ($result) {
-			return redirect()->to(base_url('/constancia_extravio'))->with('message_success', 'Verifica tu nueva contraseña en tus SMS.');
+			return redirect()->to(base_url('/constancia_extravio'))->with('message_success', 'Verifica tu nueva contraseña en tu correo electrónico y/o mensajes SMS.');
 		} else {
 			if ($sendSMS == "") {
-				return redirect()->to(base_url('/constancia_extravio'))->with('message_success', 'Verifica tu nueva contraseña en tus SMS.');
+				return redirect()->to(base_url('/constancia_extravio'))->with('message_success', 'Verifica tu nueva contraseña en tu correo electrónico y/o mensajes SMS.');
 			} else {
 				return redirect()->to(base_url('/constancia_extravio'))->with('message_error', 'Error');
 			}

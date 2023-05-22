@@ -415,9 +415,9 @@
 												</button>
 
 												<!-- RECARGAR DENUNCIANTE -->
-												<button class="btn btn-lg btn-light" type="button" id="recargar_denunciante_btn" name="recargar_denunciante_btn" title="Recargar conexión del denunciante">
+												<!-- <button class="btn btn-lg btn-light" type="button" id="recargar_denunciante_btn" name="recargar_denunciante_btn" title="Recargar conexión del denunciante">
 													<i class="fas fa-undo"></i>
-												</button>
+												</button> -->
 
 
 											</div>
