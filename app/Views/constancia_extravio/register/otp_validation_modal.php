@@ -7,7 +7,7 @@
             </div>
             <div id="load" class="modal-body text-center">
                 <div class="mb-3" id="divCorreo">
-                    <label for="correo_otp" class="col-form-label">Ingresa el código de 6 dígitos que llegó a tus mensajes SMS.</label>
+                    <label for="correo_otp" class="col-form-label">Ingresa el código de 6 dígitos que llegó a tu correo electrónico y/o mensajes SMS.</label>
                     <input type="text" class="form-control text-center" id="correo_otp" name="correo_otp" required
                         pattern="\d{6}" maxlength="6" placeholder="Código de 6 dígitos númericos.">
                 </div>
