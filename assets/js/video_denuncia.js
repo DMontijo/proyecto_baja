@@ -46,7 +46,7 @@ const recargar_denunciante_btn = document.querySelector("#recargar_denunciante_b
 
 // const recargar_agente = document.querySelector("#recargar_agente");
 
-const marksRecording = document.querySelector("#marks-recording-modal");
+// const marksRecording = document.querySelector("#marks-recording-modal");
 const enviar_marca = document.querySelector("#enviar_marca");
 const desconectar_llamada = document.querySelector("#disconnect-call");
 const denunciante_nombre_llamada = document.querySelector(
@@ -324,7 +324,7 @@ audio_denunciante_off.addEventListener("click", () => {
 
 startRecord.addEventListener("click", () => {
 	agentVideoService.startRecording(() => {
-		marksRecording.disabled = false;
+		// marksRecording.disabled = false;
 		document.getElementById("grabacion").style.display = "block";
 		document.getElementById("grabacion_stop").style.display = "none";
 		startRecord.style.display = "none";
@@ -334,7 +334,7 @@ startRecord.addEventListener("click", () => {
 
 stopRecord.addEventListener("click", () => {
 	agentVideoService.stopRecording(() => {
-		marksRecording.disabled = true;
+		// marksRecording.disabled = true;
 		document.getElementById("grabacion").style.display = "none";
 		document.getElementById("grabacion_stop").style.display = "block";
 		startRecord.style.display = "block";
@@ -346,19 +346,19 @@ stopRecord.addEventListener("click", () => {
 	});
 });
 
-marksRecording.addEventListener("click", () => {
-	$("#marksModal").modal("show");
-	clearSelect(selectMarks);
-	agentVideoService.getMarkTypes().then(result => {
-		console.log(result);
-		result.forEach(marcas => {
-			const option = document.createElement("option");
-			option.value = marcas.id;
-			option.text = marcas.typeTitle;
-			selectMarks.add(option, null);
-		});
-	});
-});
+// marksRecording.addEventListener("click", () => {
+// 	$("#marksModal").modal("show");
+// 	clearSelect(selectMarks);
+// 	agentVideoService.getMarkTypes().then(result => {
+// 		console.log(result);
+// 		result.forEach(marcas => {
+// 			const option = document.createElement("option");
+// 			option.value = marcas.id;
+// 			option.text = marcas.typeTitle;
+// 			selectMarks.add(option, null);
+// 		});
+// 	});
+// });
 
 enviar_marca.addEventListener("click", () => {
 	if (selectMarks.value == "" || coment_marks.value == "") {
