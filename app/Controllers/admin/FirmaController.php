@@ -1280,6 +1280,8 @@ class FirmaController extends BaseController
 					isset($municipio) ? $municipio->MUNICIPIODESCR . ', ' : '' . 'BAJA CALIFORNIA' . $fecha_actual . 'LIC.' . $agente . 'AGENTE DEL MINISTERIO PÚBLICO CON ADSCRIPCIÓN CENTRO DE DENUNCIA TECNOLÓGICA DE LA FISCALÍA GENERAL DEL ESTADO DE BAJA CALIFORNIA');
 			}
 			$attachments = [];
+			$sendPolice = false;
+			$ordenesProteccion = [];
 
 			if ($documento->TIPODOC == 'DENUNCIA ANONIMA') {
 				$pdf = $documento->PDF;
@@ -1289,6 +1291,11 @@ class FirmaController extends BaseController
 				$xml = $documento->XML;
 				array_push($attachments, new Attachment($pdf, $documento->TIPODOC ? str_replace(" ", "_", $documento->TIPODOC) : '' . '_' . $expediente . '_' . $year . '_' . $documento->FOLIODOCID . '.pdf', 'attachment'));
 				array_push($attachments, new Attachment($xml, $documento->TIPODOC ? str_replace(" ", "_", $documento->TIPODOC) : '' . '_' . $expediente . '_' . $year . '_' . $documento->FOLIODOCID . '.xml', 'attachment'));
+				
+				if (strpos($documento->TIPODOC, "ORDEN DE PROTECCION") !== false) {
+					array_push($ordenesProteccion, $documento);
+					$sendPolice = true;
+				}
 			}
 
 			array_push($attachments, new Attachment($termino_condiciones, 'Terminos y Condiciones.pdf', 'attachment'));
@@ -1297,22 +1304,46 @@ class FirmaController extends BaseController
 			$emailParams->setAttachments($attachments);
 			$emailParams->setReplyTo('notificacionfgebc@fgebc.gob.mx');
 			$emailParams->setReplyToName('FGEBC');
-			try {
-				$result = $mailersend->email->send($emailParams);
-			} catch (MailerSendValidationException $e) {
-				$result = false;
-			} catch (MailerSendRateLimitException $e) {
-				$result = false;
-			}
-			if ($result) {
-				$datosUpdate = [
-					'ENVIADO' => 'S',
-				];
-				$update = $this->_folioDocModel->set($datosUpdate)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento->FOLIODOCID)->update();
 
-				return json_encode((object)['status' => 1]);
+			if ($sendPolice && count($ordenesProteccion) > 0) {
+				$ordenes = $this->sendEmailOrdenesProteccion($folioM->MUNICIPIOASIGNADOID, $municipio, $fecha_actual, $ordenesProteccion);
+				if($ordenes){
+					try {
+						$result = $mailersend->email->send($emailParams);
+					} catch (MailerSendValidationException $e) {
+						$result = false;
+					} catch (MailerSendRateLimitException $e) {
+						$result = false;
+					}
+					if ($result) {
+						$datosUpdate = [
+							'ENVIADO' => 'S',
+						];
+						$update = $this->_folioDocModel->set($datosUpdate)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento->FOLIODOCID)->update();
+		
+						return json_encode((object)['status' => 1, 'sendpolice' => $sendPolice]);
+					} else {
+						return json_encode((object)['status' => 0]);
+					}
+				}
 			} else {
-				return json_encode((object)['status' => 0]);
+				try {
+					$result = $mailersend->email->send($emailParams);
+				} catch (MailerSendValidationException $e) {
+					$result = false;
+				} catch (MailerSendRateLimitException $e) {
+					$result = false;
+				}
+				if ($result) {
+					$datosUpdate = [
+						'ENVIADO' => 'S',
+					];
+					$update = $this->_folioDocModel->set($datosUpdate)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento->FOLIODOCID)->update();
+	
+					return json_encode((object)['status' => 1, 'sendpolice' => $sendPolice]);
+				} else {
+					return json_encode((object)['status' => 0]);
+				}
 			}
 		} else {
 			return json_encode((object)['status' => 3]);
