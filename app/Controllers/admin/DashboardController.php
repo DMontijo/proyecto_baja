@@ -4505,11 +4505,12 @@ class DashboardController extends BaseController
 					$endpointUpdate = $this->endpoint . $functionUpdate;
 					$data['EXPEDIENTEID']= $expedentesEnJusticia;
 					$responseUpdate = $this->_curlPostDataEncrypt($endpointUpdate, $data);
-					if ($responseUpdate->status == 201) {
-						return json_encode(['status' => 1]);
-					}
+					
 				}
 			}
+		}
+		if ($responseUpdate->status == 201) {
+			return json_encode(['status' => 1]);
 		}
 	}
 	/**
