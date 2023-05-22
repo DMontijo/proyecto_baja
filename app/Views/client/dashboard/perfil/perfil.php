@@ -5,7 +5,6 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
-<!-- <?= var_dump($body_data->user) ?> -->
 <div class="row">
 	<div class="col-12">
 		<h1 class="text-center fw-bold py-5">MI PERFIL</h1>

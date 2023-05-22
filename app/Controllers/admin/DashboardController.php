@@ -4436,25 +4436,22 @@ class DashboardController extends BaseController
 		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
 		$data['schema'] = $conexion->SCHEMA;
 
-		$response =$this->_curlPostDataEncrypt($endpoint, $data);
-		if($response->status == 201){
+		$response = $this->_curlPostDataEncrypt($endpoint, $data);
+		if ($response->status == 201) {
 			$datosUpdate = array(
-				'OFICINAASIGNADOID'=> $response->data[0]->OFICINAIDRESPONSABLE,
-				'AREAASIGNADOID'=>$response->data[0]->AREAIDRESPONSABLE,
-				'AGENTEASIGNADOID'=>$response->data[0]->EMPLEADOIDREGISTRO
+				'OFICINAASIGNADOID' => $response->data[0]->OFICINAIDRESPONSABLE,
+				'AREAASIGNADOID' => $response->data[0]->AREAIDRESPONSABLE,
+				'AGENTEASIGNADOID' => $response->data[0]->EMPLEADOIDREGISTRO
 
 			);
-			$update = $this->_folioModel->set($datosUpdate)->where('ANO', $year)->where('FOLIOID', $folio)->where('EXPEDIENTEID',$expediente)->update();
+			$update = $this->_folioModel->set($datosUpdate)->where('ANO', $year)->where('FOLIOID', $folio)->where('EXPEDIENTEID', $expediente)->update();
 
 			if ($update) {
 				return json_encode(['status' => 1]);
 			}
-
-		}else{
+		} else {
 			return json_encode(['status' => 0]);
-
 		}
-
 	}
 	/**
 	 * Función para obtener los mediadores desde el WebServices

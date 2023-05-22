@@ -1894,26 +1894,32 @@
 		return array[1] + array[2] + array[4] + array[5] + '-' + array[6] + array[7] + array[8] + array[9] + '-' + array[10] + array[11] + array[12] + array[13] + array[14];
 	}
 
-	// buscar_nuevo_btn.addEventListener('click', () => {
-	// 	data = {
-	// 		'folio': inputFolio.value,
-	// 		'year': year_select.value,
-	// 	}
-	// 	$.ajax({
-	// 		data: data,
-	// 		url: "<?= base_url('/data/restore-folio') ?>",
-	// 		method: "POST",
-	// 		dataType: "json",
+	buscar_nuevo_btn.addEventListener('click', () => {
+		// data = {
+		// 	'folio': inputFolio.value,
+		// 	'year': year_select.value,
+		// }
+		// $.ajax({
+		// 	data: data,
+		// 	url: "<?= base_url('/data/restore-folio') ?>",
+		// 	method: "POST",
+		// 	dataType: "json",
 
-	// 	}).done(function(data) {}).fail(function(jqXHR, textStatus) {
-	// 		Swal.fire({
-	// 			icon: 'error',
-	// 			text: 'El folio quedó en proceso, comunicate con soporte técnico para devolver el estado a abierto.',
-	// 			confirmButtonColor: '#bf9b55',
-	// 		});
-	// 	});
-	// 	borrarTodo();
-	// });
+		// }).done(function(data) {}).fail(function(jqXHR, textStatus) {
+		// 	Swal.fire({
+		// 		icon: 'error',
+		// 		text: 'El folio quedó en proceso, comunicate con soporte técnico para devolver el estado a abierto.',
+		// 		confirmButtonColor: '#bf9b55',
+		// 	});
+		// });
+		Swal.fire({
+			icon: 'warning',
+			text: 'El folio quedó en proceso.',
+			showConfirmButton: false,
+			timer: 1500
+		});
+		borrarTodo();
+	});
 
 
 	function firmarDocumento(folio, ano, foliodocid) {
@@ -1921,7 +1927,6 @@
 		document.querySelector('#documento_id').value = foliodocid;
 		document.querySelector('#year_doc').value = ano;
 		$('#contrasena_modal_doc_id').modal('show');
-
 	}
 
 	function asignarEncargado(documento, folio, ano) {
