@@ -18,7 +18,7 @@ let folio_completo = document.getElementById("input_folio").value;
 let array = folio_completo.split("-");
 let folio_SY = array[1];
 let year_SF = array[0];
-var intervalo = setInterval(function() {
+var intervalo = setInterval(function () {
 	location.reload();
 }, 90000);
 
@@ -102,23 +102,25 @@ guestVideoService.registerOnDisconnect(e => {
 		} else if (result.dismiss === Swal.DismissReason.backdrop) {
 			console.log("Has hecho click fuera del modal");
 			var xhttp = new XMLHttpRequest();
-			xhttp.onreadystatechange = function() {
+			xhttp.onreadystatechange = function () {
 				if (this.readyState == 4 && this.status == 200) {
 					// Maneja la respuesta del servidor aquí
 				}
 			};
 			xhttp.open("GET", "../logout", true);
 			xhttp.send();
+			window.location.href = "cdtec.fgebc.gob.mx";
 		} else {
 			console.log("Has hecho click en el botón aceptar");
 			var xhttp = new XMLHttpRequest();
-			xhttp.onreadystatechange = function() {
+			xhttp.onreadystatechange = function () {
 				if (this.readyState == 4 && this.status == 200) {
 					// Maneja la respuesta del servidor aquí
 				}
 			};
 			xhttp.open("GET", "../logout", true);
 			xhttp.send();
+			window.location.href = "cdtec.fgebc.gob.mx";
 		}
 	});
 });
@@ -189,48 +191,48 @@ guestVideoService.registerOnAgentDisconnected(() => {
 });
 
 $acceptConfiguration.addEventListener("click", () => {
-	if(!audioStream) return;
-	if(!videoStream) return;
+	if (!audioStream) return;
+	if (!videoStream) return;
 
-	audioStream.getTracks().forEach(function(track) {
+	audioStream.getTracks().forEach(function (track) {
 		track.stop();
 	});
-	
-	videoStream.getTracks().forEach(function(track) {
+
+	videoStream.getTracks().forEach(function (track) {
 		track.stop();
 	});
-	
+
 	$(mediaDevicesModal).modal("hide");
 
 	try {
 		guestVideoService.connectGuest(
-		{ delito, folio: folio_SY + "/" + year_SF, descripcion },
-		guest => {
-			console.log("Denuciante conectado");
-			console.log(guest);
-		},
-		onerror => {
-			Swal.fire({
-				icon: "error",
-				title: "Hubo un error, se recargará la página.",
-				showConfirmButton: false,
-				timer: 1000,
-				timerProgressBar: true,
-			}).then(result => {
-				location.reload;
+			{ delito, folio: folio_SY + "/" + year_SF, descripcion },
+			guest => {
+				console.log("Denuciante conectado");
+				console.log(guest);
+			},
+			onerror => {
+				Swal.fire({
+					icon: "error",
+					title: "Hubo un error, se recargará la página.",
+					showConfirmButton: false,
+					timer: 1000,
+					timerProgressBar: true,
+				}).then(result => {
+					location.reload;
+				});
+			},
+			ondisconnect => {
+				// Swal.fire({
+				// 	icon: "error",
+				// 	title: "Hubo una desconexión, se recargará la página.",
+				// 	showConfirmButton: false,
+				// 	timer: 1000,
+				// 	timerProgressBar: true,
+				// }).then(result => {
+				// 	location.reload;
+				// });
 			});
-		},
-		ondisconnect => {
-			// Swal.fire({
-			// 	icon: "error",
-			// 	title: "Hubo una desconexión, se recargará la página.",
-			// 	showConfirmButton: false,
-			// 	timer: 1000,
-			// 	timerProgressBar: true,
-			// }).then(result => {
-			// 	location.reload;
-			// });
-		});
 	} catch (error) {
 		console.log("Acceso a cámara y audio denegado");
 		texto_inicial.style.display = "none";
@@ -241,11 +243,11 @@ $acceptConfiguration.addEventListener("click", () => {
 });
 
 const llenarSelectConDispositivosDisponiblesVideo = (idDeDispositivo) => {
-	if($listaDeDispositivosVideo.length) $($listaDeDispositivosVideo).empty();
+	if ($listaDeDispositivosVideo.length) $($listaDeDispositivosVideo).empty();
 
-	navigator.mediaDevices.enumerateDevices().then(function(dispositivos) {
+	navigator.mediaDevices.enumerateDevices().then(function (dispositivos) {
 		const dispositivosDeVideo = [];
-		dispositivos.forEach(function(dispositivo) {
+		dispositivos.forEach(function (dispositivo) {
 			const tipo = dispositivo.kind;
 
 			if (tipo === "videoinput") {
@@ -258,7 +260,7 @@ const llenarSelectConDispositivosDisponiblesVideo = (idDeDispositivo) => {
 				const option = document.createElement('option');
 				option.value = dispositivo.deviceId;
 				option.text = dispositivo.label;
-				if(dispositivo.deviceId === idDeDispositivo) {
+				if (dispositivo.deviceId === idDeDispositivo) {
 					option.selected = true;
 				}
 				$listaDeDispositivosVideo.appendChild(option);
@@ -270,9 +272,9 @@ const llenarSelectConDispositivosDisponiblesVideo = (idDeDispositivo) => {
 const llenarSelectConDispositivosDisponiblesAudio = (idDeDispositivo) => {
 	$($listaDeDispositivosAudio).empty();
 
-	navigator.mediaDevices.enumerateDevices().then(function(dispositivos) {
+	navigator.mediaDevices.enumerateDevices().then(function (dispositivos) {
 		const dispositivosDeAudio = [];
-		dispositivos.forEach(function(dispositivo) {
+		dispositivos.forEach(function (dispositivo) {
 			const tipo = dispositivo.kind;
 
 			if (tipo === "audioinput") {
@@ -285,7 +287,7 @@ const llenarSelectConDispositivosDisponiblesAudio = (idDeDispositivo) => {
 				const option = document.createElement('option');
 				option.value = dispositivo.deviceId;
 				option.text = dispositivo.label;
-				if(dispositivo.deviceId === idDeDispositivo) {
+				if (dispositivo.deviceId === idDeDispositivo) {
 					option.selected = true;
 				}
 				$listaDeDispositivosAudio.appendChild(option);
@@ -326,11 +328,11 @@ guestVideoService.saveGeolocation(() => {
 	let dispositivosDeAudio;
 
 	if (!isSafari) {
-		navigator.mediaDevices.enumerateDevices().then(function(dispositivos) {
+		navigator.mediaDevices.enumerateDevices().then(function (dispositivos) {
 			dispositivosDeVideo = [];
 			dispositivosDeAudio = [];
 
-			dispositivos.forEach(function(dispositivo) {
+			dispositivos.forEach(function (dispositivo) {
 				const tipo = dispositivo.kind;
 
 				if (tipo === "videoinput") {
@@ -353,16 +355,16 @@ guestVideoService.saveGeolocation(() => {
 
 		const mostrarStreamVideo = idDeDispositivo => {
 			_getUserMediaVideo({
-					video: {
-						deviceId: idDeDispositivo,
-					}
-				},
-				function(streamObtenidoVideo) {
+				video: {
+					deviceId: idDeDispositivo,
+				}
+			},
+				function (streamObtenidoVideo) {
 					llenarSelectConDispositivosDisponiblesVideo(idDeDispositivo);
 
 					$listaDeDispositivosVideo.onchange = () => {
 						if (videoStream) {
-							videoStream.getTracks().forEach(function(track) {
+							videoStream.getTracks().forEach(function (track) {
 								track.stop();
 							});
 						}
@@ -379,7 +381,7 @@ guestVideoService.saveGeolocation(() => {
 					$('#media-devices-selectors').removeAttr('hidden');
 					checkButtonAccept();
 				},
-				function(error) {
+				function (error) {
 					let listDevices = document.getElementById('listDevicesVideo');
 					$video.remove();
 					$('#listDevicesVideo').empty();
@@ -397,16 +399,16 @@ guestVideoService.saveGeolocation(() => {
 
 		const mostrarStreamAudio = idDeDispositivo => {
 			_getUserMediaAudio({
-					audio: {
-						deviceId: idDeDispositivo,
-					}
-				},
-				function(streamObtenidoAudio) {
+				audio: {
+					deviceId: idDeDispositivo,
+				}
+			},
+				function (streamObtenidoAudio) {
 					llenarSelectConDispositivosDisponiblesAudio(idDeDispositivo);
 
 					$listaDeDispositivosAudio.onchange = () => {
 						if (audioStream) {
-							audioStream.getTracks().forEach(function(track) {
+							audioStream.getTracks().forEach(function (track) {
 								track.stop();
 							});
 						}
@@ -423,7 +425,7 @@ guestVideoService.saveGeolocation(() => {
 					$('#media-devices-selectors').removeAttr('hidden');
 					checkButtonAccept();
 				},
-				function(error) {
+				function (error) {
 					let listDevices = document.getElementById('listDevicesAudio');
 					$audio.remove();
 					$('#listDevicesAudio').empty();
@@ -439,11 +441,11 @@ guestVideoService.saveGeolocation(() => {
 		}
 
 	}
-	
-	function checkButtonAccept(){
-		if(audioStream && videoStream){
+
+	function checkButtonAccept() {
+		if (audioStream && videoStream) {
 			$($acceptConfiguration).removeAttr('disabled');
-		} 
+		}
 	}
 
 	// texto_inicial.style.display = "block";
