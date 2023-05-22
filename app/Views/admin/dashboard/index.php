@@ -145,6 +145,7 @@ $file_text = $user_id . "_data.txt";
 	<div class="col-12 mb-3">
 		<hr>
 	</div>
+	<?php if (session('ROLID')==1 ||session('ROLID')==2 ||session('ROLID')==6 ||session('ROLID')==7 ||session('ROLID')==11) {?>
 	<div class="col-12 col-md-4 mb-4">
 		<div class="card shadow" style="border-radius:5px; height:100%!important;">
 			<div class="card-body text-center">
@@ -153,6 +154,8 @@ $file_text = $user_id . "_data.txt";
 			</div>
 		</div>
 	</div>
+	<?php } ?>
+
 </div>
 <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
 
