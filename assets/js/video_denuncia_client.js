@@ -1,7 +1,7 @@
 import { VideoServiceGuest } from "../guest/guest.js";
 import { variables } from "./variables.js";
 
-const { apiKey, apiURI } = variables;
+const { apiKey, apiURI, urlApp } = variables;
 const guestUUID = document.getElementById("input_uuid").value;
 
 const delito = document.getElementById("input_delito").value;
@@ -109,7 +109,7 @@ guestVideoService.registerOnDisconnect(e => {
 			};
 			xhttp.open("GET", "../logout", true);
 			xhttp.send();
-			window.location.href = "cdtec.fgebc.gob.mx";
+			window.location.href = urlApp;
 		} else {
 			console.log("Has hecho click en el botón aceptar");
 			var xhttp = new XMLHttpRequest();
@@ -120,7 +120,7 @@ guestVideoService.registerOnDisconnect(e => {
 			};
 			xhttp.open("GET", "../logout", true);
 			xhttp.send();
-			window.location.href = "cdtec.fgebc.gob.mx";
+			window.location.href = urlApp;
 		}
 	});
 });
