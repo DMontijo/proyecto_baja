@@ -388,6 +388,8 @@ guestVideoService.saveGeolocation(() => {
 
 	$(mediaDevicesModal).modal("show");
 
+	console.log('safari check',isSafari);
+
 	let dispositivosDeVideo;
 	let dispositivosDeAudio;
 
@@ -536,7 +538,7 @@ guestVideoService.saveGeolocation(() => {
 						dispositivosDeVideo.push(dispositivo);
 					}
 				});
-
+				console.log(dispositivosDeVideo);
 				
 				llenarSelectConDispositivosDisponiblesVideoIOS();
 
