@@ -1869,9 +1869,9 @@ class DashboardController extends BaseController
 			$folio = trim($this->request->getPost('folio'));
 			$year = trim($this->request->getPost('year'));
 
-			$area = $this->_empleadosModelRead->asObject()->where('EMPLEADOID', $empleado)->where('MUNICIPIOID', $municipio)->first();
+			$area = $this->_empleadosModel->asObject()->where('EMPLEADOID', $empleado)->where('MUNICIPIOID', $municipio)->first();
 			// Obtiene los documentos del folio para asignar un estado juridico.
-			$documents = $this->_folioDocModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
+			$documents = $this->_folioDocModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
 			$status = 2;
 
 			foreach ($documents as $key => $document) {
@@ -1910,7 +1910,7 @@ class DashboardController extends BaseController
 				$updateDoc = $this->_folioDocModel->set($dataFolioDoc)->where('FOLIOID', $folio)->where('ANO', $year)->update();
 
 				if ($update) {
-					$bandeja = $this->_folioModelRead->where('EXPEDIENTEID', $expediente)->first();
+					$bandeja = $this->_folioModel->where('EXPEDIENTEID', $expediente)->first();
 
 					//Se revisa que haya documentos subidos a Justicia de tipo periciales
 					$folioDocPericiales = $this->_folioDocModel->expedienteDocumentos($folio, $year);
@@ -2004,16 +2004,16 @@ class DashboardController extends BaseController
 			$folio = trim($this->request->getPost('folio'));
 			$year = trim($this->request->getPost('year'));
 			//Se verifica que no exista el RAC en Justicia.
-			$existRac = $this->_bandejaRacModelRead->asObject()->where('EXPEDIENTEID', $expediente)->findAll();
+			$existRac = $this->_bandejaRacModel->asObject()->where('EXPEDIENTEID', $expediente)->findAll();
 			if ($existRac) {
 				return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_error', 'Ya fue remitido este expediente.');
 			}
 
 			$status = 2;
-			$bandeja = $this->_folioModelRead->where('EXPEDIENTEID', $expediente)->first();
+			$bandeja = $this->_folioModel->where('EXPEDIENTEID', $expediente)->first();
 			// Obtiene los documentos del folio para asignar un estado juridico.
 
-			$documents = $this->_folioDocModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
+			$documents = $this->_folioDocModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
 			foreach ($documents as $key => $document) {
 				if (
 					$document->TIPODOC == 'CRITERIO DE OPORTUNIDAD' ||
@@ -2075,7 +2075,7 @@ class DashboardController extends BaseController
 
 				// $folioDoc = $this->_folioDocModel->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->join('RELACIONFOLIODOCEXPDOC', 'FOLIODOC.NUMEROEXPEDIENTE = RELACIONFOLIODOCEXPDOC.EXPEDIENTEID  AND FOLIODOC.FOLIODOCID = RELACIONFOLIODOCEXPDOC.FOLIODOCID')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('TIPODOC', 'SOLICITUD DE PERITAJE')->orLike('TIPODOC', 'OFICIO DE COLABORACION PARA INGRESO A HOSPITAL')->findAll();
 				//Se revisa que haya documentos subidos a Justicia de tipo periciales
-				$folioDoc = $this->_folioDocModelRead->expedienteDocumentos($folio, $year);
+				$folioDoc = $this->_folioDocModel->expedienteDocumentos($folio, $year);
 
 				if ($folioDoc) {
 					foreach ($folioDoc as $key => $doc) {
@@ -3329,17 +3329,17 @@ class DashboardController extends BaseController
 	 */
 	public function subirArchivosRemision($folio, $year, $expediente)
 	{
-		$folioDocSinFirmar = $this->_folioDocModelRead->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'ABIERTO')->orderBy('FOLIODOCID', 'asc')->findAll();
-		$foliovd = $this->_folioModelRead->where('FOLIOID', $folio)->where('ANO', $year)->where('EXPEDIENTEID', $expediente)->where('STATUS', 'EXPEDIENTE')->first();
+		$folioDocSinFirmar = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'ABIERTO')->orderBy('FOLIODOCID', 'asc')->findAll();
+		$foliovd = $this->_folioModel->where('FOLIOID', $folio)->where('ANO', $year)->where('EXPEDIENTEID', $expediente)->where('STATUS', 'EXPEDIENTE')->first();
 		// Se revisa que no hayan documentos sin firmar
 
 		if ($folioDocSinFirmar) {
 			return json_encode((object)['status' => 4]);
 		}
 
-		$folioDoc = $this->_folioDocModelRead->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOCID', 'asc')->findAll();
-		$archivosExternosVD = $this->_archivoExternoModelRead->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
-		$folioDocPeritaje = $this->_folioDocModelRead->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('TIPODOC', 'SOLICITUD DE PERITAJE')->orLike('TIPODOC', 'OFICIO DE COLABORACION PARA INGRESO A HOSPITAL')->findAll();
+		$folioDoc = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOCID', 'asc')->findAll();
+		$archivosExternosVD = $this->_archivoExternoModel->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
+		$folioDocPeritaje = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('TIPODOC', 'SOLICITUD DE PERITAJE')->orLike('TIPODOC', 'OFICIO DE COLABORACION PARA INGRESO A HOSPITAL')->findAll();
 		try {
 
 			if ($archivosExternosVD) {
@@ -3348,7 +3348,7 @@ class DashboardController extends BaseController
 					foreach ($archivosExternosVD as $key => $arch) {
 						//Se verifica que los archivos externos no esten subidos en Justicia para no repetirlos
 
-						$relacionDocArc = $this->_relacionFolioDocModelRead->where('FOLIOID', $arch['FOLIOID'])->where('ANO', $arch['ANO'])->where('FOLIODOCID', $arch['FOLIOARCHIVOID'])->where('TIPO', 'ARCHIVO')->orderBy('FOLIODOCID', 'asc')->first();
+						$relacionDocArc = $this->_relacionFolioDocModel->where('FOLIOID', $arch['FOLIOID'])->where('ANO', $arch['ANO'])->where('FOLIODOCID', $arch['FOLIOARCHIVOID'])->where('TIPO', 'ARCHIVO')->orderBy('FOLIODOCID', 'asc')->first();
 						if ($relacionDocArc == NULL) {
 							$municipioid = $foliovd['MUNICIPIOID'] ? $foliovd['MUNICIPIOID'] : NULL;
 							//Se asigna el autor y oficina de acuerdo al .ENV
@@ -3408,7 +3408,7 @@ class DashboardController extends BaseController
 					foreach ($folioDoc as $key => $doc) {
 						//Se verifica que los documentos no esten subidos en Justicia para no repetirlos
 
-						$relacionDocArc = $this->_relacionFolioDocModelRead->where('FOLIOID', $doc['FOLIOID'])->where('ANO', $doc['ANO'])->where('FOLIODOCID', $doc['FOLIODOCID'])->where('TIPO', 'ARCHIVO DOC')->orderBy('FOLIODOCID', 'asc')->first();
+						$relacionDocArc = $this->_relacionFolioDocModel->where('FOLIOID', $doc['FOLIOID'])->where('ANO', $doc['ANO'])->where('FOLIODOCID', $doc['FOLIODOCID'])->where('TIPO', 'ARCHIVO DOC')->orderBy('FOLIODOCID', 'asc')->first();
 						if ($relacionDocArc == NULL) {
 							$municipioid = $foliovd['MUNICIPIOID'] ? $foliovd['MUNICIPIOID'] : NULL;
 							//Se asigna el autor y oficina de acuerdo al .ENV
@@ -3469,7 +3469,7 @@ class DashboardController extends BaseController
 
 					foreach ($folioDocPeritaje as $key => $docP) {
 
-						$relacionDocExpDoc = $this->_relacionFolioDocExpDocRead->where('FOLIOID', $docP['FOLIOID'])->where('ANO', $docP['ANO'])->where('EXPEDIENTEID', $docP['NUMEROEXPEDIENTE'])->where('FOLIODOCID', $docP['FOLIODOCID'])->orderBy('FOLIODOCID', 'asc')->first();
+						$relacionDocExpDoc = $this->_relacionFolioDocExpDoc->where('FOLIOID', $docP['FOLIOID'])->where('ANO', $docP['ANO'])->where('EXPEDIENTEID', $docP['NUMEROEXPEDIENTE'])->where('FOLIODOCID', $docP['FOLIODOCID'])->orderBy('FOLIODOCID', 'asc')->first();
 
 						if ($relacionDocExpDoc == null) {
 							// Se crean los RTF´s de las solicitudes periciales
@@ -3493,7 +3493,7 @@ class DashboardController extends BaseController
 								$utf16le = mb_convert_encoding($data, 'UTF-16LE');
 
 								$plantilla = (object) array();
-								$plantilla = $this->_plantillasModelRead->where('TITULO', $docP['TIPODOC'])->first();
+								$plantilla = $this->_plantillasModel->where('TITULO', $docP['TIPODOC'])->first();
 								$documentos = array();
 
 								//Convierte el blob a base64 para enviarlo al webservice.
