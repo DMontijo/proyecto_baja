@@ -202,7 +202,7 @@
 						}
 					},
 					error: function(jqXHR, textStatus, errorThrown) {
-						document.querySelector('#submit-btn').removeAttribute('disabled');
+						document.querySelector('#submit-btn-perfil').removeAttribute('disabled');
 						console.log(jqXHR);
 					}
 				});

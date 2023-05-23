@@ -102,7 +102,6 @@ document.querySelector('#resend_btn').addEventListener('click', (e) => {
     var data = {
         'email': document.querySelector('#correo').value,
         'telefono': document.querySelector('#telefono').value
-
     }
 
     $.ajax({

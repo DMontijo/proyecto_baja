@@ -82,6 +82,15 @@
 	</footer>
 	<script src="<?= base_url() ?>/assets/bootstrap/js/bootstrap.bundle.min.js"></script>
 	<script src="<?= base_url() ?>/assets/js/full_screen.js"></script>
+	<script>
+		//Bloquear tecla esc
+		window.addEventListener("keydown", function(e) {
+			if (e.keyCode == 27 || e.key == 'Escape' || e.code == 'Escape') {
+				e.preventDefault();
+				return false;
+			}
+		}, false);
+	</script>
 	<?php if (session()->getFlashdata('message_error')) : ?>
 		<script>
 			Swal.fire({

@@ -1,4 +1,4 @@
-<div class="modal fade" id="anonima_modal" tabindex="-1" aria-labelledby="anonima_modalLabel" aria-hidden="true">
+<div class="modal fade" id="anonima_modal" tabindex="-1" aria-labelledby="anonima_modalLabel" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content shadow-lg border-0" style="border-radius: 1.5em;">
 			<div class="modal-header bg-primary justify-content-center" style="border-radius: 1.5em 1.5em 0 0;">

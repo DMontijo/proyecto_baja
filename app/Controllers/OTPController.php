@@ -81,7 +81,7 @@ class OTPController extends BaseController
 	public function sendEmailOTP()
 	{
 		$to = trim($this->request->getPost('email'));
-		$tel = trim($this->request->getPost('telefono'));
+		$tel = $this->request->getPost('telefono') ? trim($this->request->getPost('telefono')) : null;
 
 		//Generacion de OTP
 		$otp = $this->_generarOTP();
@@ -119,8 +119,8 @@ class OTPController extends BaseController
 				->setReplyTo('notificacionfgebc@fgebc.gob.mx')
 				->setReplyToName('FGEBC');
 
-			
-			$telefono = $user != null ? $user->TELEFONO : $tel; 
+
+			$telefono = $user != null ? $user->TELEFONO : $tel;
 
 			$data = [
 				'CODIGO_OTP' => $otp,
@@ -136,26 +136,27 @@ class OTPController extends BaseController
 				$newOTP = $this->_OTPModel->insert($data);
 			}
 
-			$sendSMS = $this->sendSMS("Nuevo codigo", $tel, 'Notificaciones FGEBC/Estimado usuario, tu codigo es: ' . $otp);
-			try{
+			if ($tel) {
+				$sendSMS = $this->sendSMS("Nuevo codigo", $tel, 'Notificaciones FGEBC/Estimado usuario, tu codigo es: ' . $otp);
+			}
+			try {
 				$result = $mailersend->email->send($emailParams);
-			} catch(MailerSendValidationException $e){
+			} catch (MailerSendValidationException $e) {
 				$result = false;
 			} catch (MailerSendRateLimitException $e) {
 				$result = false;
-			}	
-			
+			}
+
 			if ($result) {
 				return json_encode((object)['status' => 200]);
 			} else {
 				// $data = $sendSMS;
-				if($sendSMS == ""){
+				if ($sendSMS == "") {
 					return json_encode((object)['status' => 200]);
-				}else {
+				} else {
 					return json_encode((object)['status' => 500, 'data' => $sendSMS]);
 				}
 			}
-
 		} else {
 			$data = ['message' => 'Error en envío de mensaje'];
 			return json_encode((object)['status' => 500, 'data' => $data]);

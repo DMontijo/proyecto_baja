@@ -1,4 +1,4 @@
-<div class="modal fade" id="take_photo_modal" tabindex="-1" aria-labelledby="take_photo_modal" aria-hidden="true">
+<div class="modal fade" id="take_photo_modal" tabindex="-1" aria-labelledby="take_photo_modal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
 	<div class="modal-dialog modal-lg modal-dialog-centered">
 		<div class="modal-content">
 			<div class="modal-header bg-primary text-white">
@@ -22,7 +22,7 @@
 					<div class="col-12">
 						<div class="ratio ratio-16x9">
 							<video class="rounded" muted="muted" id="video"></video>
-							<canvas id="canvas" name="canvas"class="d-none"></canvas>
+							<canvas id="canvas" name="canvas" class="d-none"></canvas>
 						</div>
 					</div>
 				</div>
