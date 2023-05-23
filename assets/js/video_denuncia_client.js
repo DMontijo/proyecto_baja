@@ -389,8 +389,8 @@ guestVideoService.saveGeolocation(() => {
 
 	$(mediaDevicesModal).modal("show");
 
-	console.log('safari check',isSafari);
-	console.log('platform check', platform);
+	// console.log('safari check',isSafari);
+	// console.log('platform check', platform);
 	let dispositivosDeVideo;
 	let dispositivosDeAudio;
 

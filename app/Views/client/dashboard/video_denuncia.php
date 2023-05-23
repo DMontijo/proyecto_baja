@@ -9,7 +9,7 @@
 <?php $session = session(); ?>
 <style>
 	#video_container {
-		width: 50%;
+		width: 100%;
 		min-height: 70vh;
 	}
 
