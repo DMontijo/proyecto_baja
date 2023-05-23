@@ -51,7 +51,7 @@
 						<a class="nav-link <?php if ('' === 'denuncias') echo 'active'; ?>" href="<?= base_url() ?>/denuncia/dashboard/denuncias"><i class="bi bi-archive"></i> Mis
 							denuncias</a>
 					</li>
-					<li  class="nav-item">
+					<li class="nav-item">
 						<a class="nav-link" href="<?= base_url('denuncia/logout') ?>"><i class="bi bi-box-arrow-left"></i> Salir</a></a>
 					</li>
 					<li class="nav-item dropdown">
@@ -84,6 +84,14 @@
 	</footer>
 	<script src="<?= base_url() ?>/assets/bootstrap/js/bootstrap.bundle.min.js?v=<?= rand() ?>"></script>
 	<script src="<?= base_url() ?>/assets/js/full_screen.js?v=<?= rand() ?>"></script>
+	<script>
+		$(document).keyup(function(e) {
+			if (e.which === 27) {
+				e.preventDefault();
+				return false;
+			}
+		});
+	</script>
 	<?php if (session()->getFlashdata('message_error')) : ?>
 		<script>
 			Swal.fire({
