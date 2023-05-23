@@ -1913,7 +1913,7 @@ class DashboardController extends BaseController
 					$bandeja = $this->_folioModel->where('EXPEDIENTEID', $expediente)->first();
 
 					//Se revisa que haya documentos subidos a Justicia de tipo periciales
-					$folioDocPericiales = $this->_folioDocModel->expedienteDocumentos($folio, $year);
+					$folioDocPericiales = $this->_folioDocModelRead->expedienteDocumentos($folio, $year);
 
 					if ($folioDocPericiales) {
 						foreach ($folioDocPericiales as $key => $doc) {
@@ -2075,7 +2075,7 @@ class DashboardController extends BaseController
 
 				// $folioDoc = $this->_folioDocModel->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->join('RELACIONFOLIODOCEXPDOC', 'FOLIODOC.NUMEROEXPEDIENTE = RELACIONFOLIODOCEXPDOC.EXPEDIENTEID  AND FOLIODOC.FOLIODOCID = RELACIONFOLIODOCEXPDOC.FOLIODOCID')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('TIPODOC', 'SOLICITUD DE PERITAJE')->orLike('TIPODOC', 'OFICIO DE COLABORACION PARA INGRESO A HOSPITAL')->findAll();
 				//Se revisa que haya documentos subidos a Justicia de tipo periciales
-				$folioDoc = $this->_folioDocModel->expedienteDocumentos($folio, $year);
+				$folioDoc = $this->_folioDocModelRead->expedienteDocumentos($folio, $year);
 
 				if ($folioDoc) {
 					foreach ($folioDoc as $key => $doc) {
