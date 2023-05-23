@@ -48,7 +48,7 @@
 						</div>
 						<div class="col-12">
 							<div class="ratio ratio-16x9">
-								<video class="rounded" id="video"></video>
+								<video class="rounded" id="video" muted autoplay playsinline></video>
 								<canvas id="canvas" name="canvas"class="d-none"></canvas>
 							</div>
 						</div>
