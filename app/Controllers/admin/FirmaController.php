@@ -195,12 +195,21 @@ class FirmaController extends BaseController
 							break;
 						case 'PLACAS':
 							$perdido = '';
-							if ($constancia->POSICIONPLACA == 'PLACA DELANTERA' || $constancia->POSICIONPLACA == 'PLACA TRASERA') {
+							if (str_contains($constancia->POSICIONPLACA, 'PLACA DELANTERA') || str_contains($constancia->POSICIONPLACA, 'PLACA TRASERA')) {
 								$perdido = $constancia->POSICIONPLACA;
-								$ext = $constancia->POSICIONPLACA . '  FEDERAL';
+								if (str_contains($constancia->POSICIONPLACA, 'ESTATALES')) {
+									$constancia->POSICIONPLACA = str_replace('ESTATALES', '', $constancia->POSICIONPLACA);
+									$ext = $constancia->POSICIONPLACA . ' ESTATAL';
+								} else if (str_contains($constancia->POSICIONPLACA, 'NACIONALES')) {
+									$constancia->POSICIONPLACA = str_replace('NACIONALES', '', $constancia->POSICIONPLACA);
+									$ext = $constancia->POSICIONPLACA . ' FEDERAL';
+								} else {
+									$constancia->POSICIONPLACA = str_replace('EXTRANJERAS', '', $constancia->POSICIONPLACA);
+									$ext = $constancia->POSICIONPLACA . ' EXTRANJERA';
+								}
 							} else {
 								$perdido = 'PLACAS';
-								$ext = $constancia->POSICIONPLACA . '  FEDERALES';
+								$ext = $constancia->POSICIONPLACA;
 							}
 							$descr = 'EXTRAVÍO DE: [POSICIONPLACA]<br>NÚMERO: [NPLACA]<br><br>RESPECTO DE UN VEHÍCULO:<br>MARCA:[MARCA]<br>LINEA: [MODELO]<br>MODELO: [ANIOVEHICULO]<br>NÚMERO DE SERIE: [SERIEVEHICULO]';
 							$descr = str_replace('[POSICIONPLACA]', $ext, $descr);
@@ -277,12 +286,21 @@ class FirmaController extends BaseController
 							break;
 						case 'PLACAS':
 							$perdido = '';
-							if ($constancia->POSICIONPLACA == 'PLACA DELANTERA' || $constancia->POSICIONPLACA == 'PLACA TRASERA') {
+							if (str_contains($constancia->POSICIONPLACA, 'PLACA DELANTERA') || str_contains($constancia->POSICIONPLACA, 'PLACA TRASERA')) {
 								$perdido = $constancia->POSICIONPLACA;
-								$ext = $constancia->POSICIONPLACA . '  FEDERAL';
+								if (str_contains($constancia->POSICIONPLACA, 'ESTATALES')) {
+									$constancia->POSICIONPLACA = str_replace('ESTATALES', '', $constancia->POSICIONPLACA);
+									$ext = $constancia->POSICIONPLACA . ' ESTATAL';
+								} else if (str_contains($constancia->POSICIONPLACA, 'NACIONALES')) {
+									$constancia->POSICIONPLACA = str_replace('NACIONALES', '', $constancia->POSICIONPLACA);
+									$ext = $constancia->POSICIONPLACA . ' FEDERAL';
+								} else {
+									$constancia->POSICIONPLACA = str_replace('EXTRANJERAS', '', $constancia->POSICIONPLACA);
+									$ext = $constancia->POSICIONPLACA . ' EXTRANJERA';
+								}
 							} else {
 								$perdido = 'PLACAS';
-								$ext = $constancia->POSICIONPLACA . '  FEDERALES';
+								$ext = $constancia->POSICIONPLACA;
 							}
 							$descr = 'EXTRAVÍO DE: [POSICIONPLACA]<br>NÚMERO: [NPLACA]<br><br>RESPECTO DE UN VEHÍCULO:<br>MARCA:[MARCA]<br>LINEA: [MODELO]<br>MODELO: [ANIOVEHICULO]<br>NÚMERO DE SERIE: [SERIEVEHICULO]';
 							$descr = str_replace('[POSICIONPLACA]', $ext, $descr);

@@ -94,7 +94,7 @@ class DashboardController extends BaseController
 
 			'SERIEVEHICULO' => $this->request->getPost('serieV'),
 			'NPLACA' => $this->request->getPost('noplaca'),
-			'POSICIONPLACA' => $this->request->getPost('posicionPlaca'),
+			'POSICIONPLACA' => $this->request->getPost('posicionPlaca') . ' ' .$this->request->getPost('tipo_placa'),
 			'DISTRIBUIDORVEHICULO' => $this->request->getPost('distribuidor'),
 			'MARCA' => $this->request->getPost('marca'),
 			'MODELO' => $this->request->getPost('modelo'),
