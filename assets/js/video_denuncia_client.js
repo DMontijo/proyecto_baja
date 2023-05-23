@@ -394,7 +394,7 @@ guestVideoService.saveGeolocation(() => {
 	let dispositivosDeVideo;
 	let dispositivosDeAudio;
 
-	if (!isSafari) {
+	if (!isSafari && platform != 'iPhone') {
 		navigator.mediaDevices.enumerateDevices().then(function(dispositivos) {
 			dispositivosDeVideo = [];
 			dispositivosDeAudio = [];
