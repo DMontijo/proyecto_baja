@@ -4471,7 +4471,6 @@ class DashboardController extends BaseController
 		try {
 			$municipios = [1, 2, 3, 4, 5, 6, 7];
 			$conexiones = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->whereIn('MUNICIPIOID', $municipios)->where('TYPE', ENVIRONMENT)->findAll();
-			$municipio = '';
 			$function = '/expediente.php?process=getChangesVD';
 			$endpoint = $this->endpoint . $function;
 			$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', 2)->where('TYPE', ENVIRONMENT)->first();
@@ -4480,19 +4479,25 @@ class DashboardController extends BaseController
 			$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
 			$data['schema'] = $conexion->SCHEMA;
 			$response = $this->_curlPostDataEncrypt($endpoint, $data);
+			var_dump($response);exit;
 			//Respuesta de todos los expedientes cambiados desde justicia
 			if ($response->status == 201) {
 				$expedentesEnJusticia = [];
 				$oficinaAsignado = [];
+				$municipioAsignado = [];
+
 				foreach ($response->data as $key => $expedientes) {
 					//Se compara con los folios de Videodenuncia
-					$foliosVD = $this->_folioModelRead->asObject()->select('EXPEDIENTEID,MUNICIPIOASIGNADOID')->where('EXPEDIENTEID', $expedientes->EXPEDIENTEID)->first();
+					$foliosVD = $this->_folioModelRead->asObject()->select('EXPEDIENTEID,MUNICIPIOASIGNADOID')->where('EXPEDIENTEID', $expedientes->EXPEDIENTEID)->where('MUNICIPIOASIGNADOID', $expedientes->MUNICIPIOID)->first();
 					if (isset($foliosVD)) {
-						array_push($expedentesEnJusticia, $expedientes->EXPEDIENTEID);
+						array_push($expedentesEnJusticia, $foliosVD->EXPEDIENTEID);
 						array_push($oficinaAsignado, $expedientes->OFICINAIDCOORD);
-						$municipio = $foliosVD->MUNICIPIOASIGNADOID;
+						array_push($municipioAsignado,  $foliosVD->MUNICIPIOASIGNADOID);
 					}
 				}
+				$municipio = array(
+					'MUNICIPIOASIGNADOID' => $municipioAsignado,
+				);
 				$datosUpdate = array(
 					'OFICINAASIGNADOID' => $oficinaAsignado,
 				);
@@ -4503,38 +4508,45 @@ class DashboardController extends BaseController
 						->update();
 				}
 				if ($updateFoliosVD) {
-					$functionUpdate =  '/expediente.php?process=actualizarVD';
-					$endpointUpdate = $this->endpoint . $functionUpdate;
-					$data['EXPEDIENTEID'] = $expedentesEnJusticia;
+					try {
+						$functionUpdate =  '/expediente.php?process=actualizarVD';
+						$endpointUpdate = $this->endpoint . $functionUpdate;
+						$data['EXPEDIENTEID'] = $expedentesEnJusticia;
+						foreach ($municipio['MUNICIPIOASIGNADOID'] as $index => $mun) {
+							if ($mun == 1 || $mun == 6) {
+								$data['userDB'] = $conexiones[0]->USER;
+								$data['pwdDB'] = $conexiones[0]->PASSWORD;
+								$data['instance'] = $conexiones[0]->IP . '/' . $conexiones[0]->INSTANCE;
+								$data['schema'] = $conexiones[0]->SCHEMA;
+							} else if ($mun == 2 || $mun == 3 || $mun == 7) {
+								$data['userDB'] = $conexiones[1]->USER;
+								$data['pwdDB'] = $conexiones[1]->PASSWORD;
+								$data['instance'] = $conexiones[1]->IP . '/' . $conexiones[1]->INSTANCE;
+								$data['schema'] = $conexiones[1]->SCHEMA;
+							} else if ($mun == 4 || $mun == 5) {
+								$data['userDB'] = $conexiones[3]->USER;
+								$data['pwdDB'] = $conexiones[3]->PASSWORD;
+								$data['instance'] = $conexiones[3]->IP . '/' . $conexiones[3]->INSTANCE;
+								$data['schema'] = $conexiones[3]->SCHEMA;
+							}
+							$responseUpdate = $this->_curlPostDataEncrypt($endpointUpdate, $data);
+						}
+						if ($responseUpdate->status == 201) {
+							return json_encode(['status' => 1]);
+						}else{
+							return json_encode(['status' => 0]);
 
-					if ($municipio == 1 || $municipio == 6) {
-						$data['userDB'] = $conexiones[0]->USER;
-						$data['pwdDB'] = $conexiones[0]->PASSWORD;
-						$data['instance'] = $conexiones[0]->IP . '/' . $conexiones[0]->INSTANCE;
-						$data['schema'] = $conexiones[0]->SCHEMA;
-					} else if ($municipio == 2 ||$municipio == 3 || $municipio == 7) {
-						$data['userDB'] = $conexiones[1]->USER;
-						$data['pwdDB'] = $conexiones[1]->PASSWORD;
-						$data['instance'] = $conexiones[1]->IP . '/' . $conexiones[1]->INSTANCE;
-						$data['schema'] = $conexiones[1]->SCHEMA;
-					} else if ($municipio == 4 ||$municipio == 5) {
-						$data['userDB'] = $conexiones[3]->USER;
-						$data['pwdDB'] = $conexiones[3]->PASSWORD;
-						$data['instance'] = $conexiones[3]->IP . '/' . $conexiones[3]->INSTANCE;
-						$data['schema'] = $conexiones[3]->SCHEMA;
+						}
+					} catch (\Error $e) {
+						throw new \Exception('Error en actualizacion en Justicia: ' . $e->getMessage());
 					}
-
-					$responseUpdate = $this->_curlPostDataEncrypt($endpointUpdate, $data);
 				}
-			}
-
-			if ($responseUpdate->status == 201) {
-				return json_encode(['status' => 1]);
 			}
 		} catch (\Exception $e) {
 			return json_encode(['status' => 0, 'error' => $e->getMessage()]);
 		}
 	}
+
 	/**
 	 * Función para obtener los mediadores desde el WebServices
 	 *
