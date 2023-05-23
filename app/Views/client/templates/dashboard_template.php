@@ -85,13 +85,16 @@
 	<script src="<?= base_url() ?>/assets/bootstrap/js/bootstrap.bundle.min.js?v=<?= rand() ?>"></script>
 	<script src="<?= base_url() ?>/assets/js/full_screen.js?v=<?= rand() ?>"></script>
 	<script>
-		$(document).keyup(function(e) {
-			console.log('Tecla presionada:', e);
-			if (e.which === 27) {
-				e.preventDefault();
+		//Código para bloquear tecla esc
+		document.onkeydown = function() {
+			console.log('Tecla presionada:', window.event.keyCode);
+			if (window.event && window.event.keyCode === 27) {
+				window.event.keyCode = 505;
+			}
+			if (window.event && window.event.keyCode === 505) {
 				return false;
 			}
-		});
+		}
 	</script>
 	<?php if (session()->getFlashdata('message_error')) : ?>
 		<script>
