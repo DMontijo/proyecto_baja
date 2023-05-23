@@ -87,9 +87,10 @@
 	<script>
 		//Código para bloquear tecla esc
 		document.onkeydown = function() {
-			console.log('Tecla presionada:', window.event.keyCode);
-			if (window.event && window.event.keyCode === 27) {
+			if (window.event && window.event.keyCode == 27) {
+				console.log('Tecla presionada:', window.event.keyCode);
 				window.event.preventDefault();
+				window.event.stopPropagation();
 				return false;
 			}
 			// if (window.event && window.event.keyCode === 505) {
