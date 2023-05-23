@@ -19,7 +19,7 @@ class ConstanciasController extends BaseController
 {
 	private $db_read;
 	private $_constanciaExtravioModel;
-	
+
 	private $_constanciaExtravioModelRead;
 	private $_plantillasModelRead;
 	private $_denunciantesModelRead;
@@ -36,12 +36,11 @@ class ConstanciasController extends BaseController
 		$this->_constanciaExtravioModel = new ConstanciaExtravioModel();
 		$this->_plantillasModelRead = model('PlantillasModel', true, $this->db_read);
 		$this->_denunciantesModelRead = model('DenunciantesModel', true, $this->db_read);
-		$this->_hechoLugarModelRead= model('HechoLugarModel', true, $this->db_read);
+		$this->_hechoLugarModelRead = model('HechoLugarModel', true, $this->db_read);
 		$this->_municipiosModelRead = model('MunicipiosModel', true, $this->db_read);
 		$this->_estadosModelRead = model('EstadosModel', true, $this->db_read);
 		$this->_rolesPermisosModelRead = model('RolesPermisosModel', true, $this->db_read);
 		$this->_constanciaExtravioModelRead = model('ConstanciaExtravioModel', true, $this->db_read);
-
 	}
 	/**
 	 * Vista de Constancias Admin
@@ -324,12 +323,21 @@ class ConstanciasController extends BaseController
 				break;
 			case 'PLACAS':
 				$perdido = '';
-				if ($constancia->POSICIONPLACA == 'PLACA DELANTERA' || $constancia->POSICIONPLACA == 'PLACA TRASERA') {
+				if (str_contains($constancia->POSICIONPLACA, 'PLACA DELANTERA') || str_contains($constancia->POSICIONPLACA, 'PLACA TRASERA')) {
 					$perdido = $constancia->POSICIONPLACA;
-					$ext = $constancia->POSICIONPLACA . '  FEDERAL';
+					if (str_contains($constancia->POSICIONPLACA, 'ESTATALES')) {
+						$constancia->POSICIONPLACA = str_replace('ESTATALES', '', $constancia->POSICIONPLACA);
+						$ext = $constancia->POSICIONPLACA . ' ESTATAL';
+					} else if (str_contains($constancia->POSICIONPLACA, 'NACIONALES')) {
+						$constancia->POSICIONPLACA = str_replace('NACIONALES', '', $constancia->POSICIONPLACA);
+						$ext = $constancia->POSICIONPLACA . ' FEDERAL';
+					} else {
+						$constancia->POSICIONPLACA = str_replace('EXTRANJERAS', '', $constancia->POSICIONPLACA);
+						$ext = $constancia->POSICIONPLACA . ' EXTRANJERA';
+					}
 				} else {
 					$perdido = 'PLACAS';
-					$ext = $constancia->POSICIONPLACA . '  FEDERALES';
+					$ext = $constancia->POSICIONPLACA;
 				}
 				$descr = 'EXTRAVÍO DE: [POSICIONPLACA]<br>NÚMERO: [NPLACA]<br><br>RESPECTO DE UN VEHÍCULO:<br>MARCA:[MARCA]<br>LINEA: [MODELO]<br>MODELO: [ANIOVEHICULO]<br>NÚMERO DE SERIE: [SERIEVEHICULO]';
 				$descr = str_replace('[POSICIONPLACA]', $ext, $descr);
