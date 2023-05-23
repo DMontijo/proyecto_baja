@@ -378,6 +378,7 @@ guestVideoService.saveGeolocation(() => {
 		navigator.userAgent &&
 		navigator.userAgent.indexOf("CriOS") == -1 &&
 		navigator.userAgent.indexOf("FxiOS") == -1;
+	let platform = navigator.platform;
 
 	if (!tieneSoporteUserMedia()) {
 		alert("Tu navegador no soporta esta característica");
@@ -389,7 +390,7 @@ guestVideoService.saveGeolocation(() => {
 	$(mediaDevicesModal).modal("show");
 
 	console.log('safari check',isSafari);
-
+	console.log('platform check', platform);
 	let dispositivosDeVideo;
 	let dispositivosDeAudio;
 
