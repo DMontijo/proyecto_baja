@@ -89,11 +89,12 @@
 		document.onkeydown = function() {
 			console.log('Tecla presionada:', window.event.keyCode);
 			if (window.event && window.event.keyCode === 27) {
-				window.event.keyCode = 505;
-			}
-			if (window.event && window.event.keyCode === 505) {
+				window.event.preventDefault();
 				return false;
 			}
+			// if (window.event && window.event.keyCode === 505) {
+			// 	return false;
+			// }
 		}
 	</script>
 	<?php if (session()->getFlashdata('message_error')) : ?>
