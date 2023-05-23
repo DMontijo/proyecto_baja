@@ -1,4 +1,4 @@
-<div class="modal fade" id="media_devices_modal" tabindex="-1" aria-labelledby="media_devices_modal" aria-hidden="true"  data-backdrop="false">
+<div class="modal fade" id="media_devices_modal" tabindex="-1" aria-labelledby="media_devices_modal" aria-hidden="true"  data-bs-backdrop="static">
 	<div class="modal-dialog modal-lg modal-dialog-centered">
 		<div class="modal-content">
 
@@ -44,7 +44,7 @@
 						</div>
 						<div class="col-12">
 							<div class="ratio ratio-16x9" id="videoDiv">
-								<video class="rounded" id="video"></video>
+								<video class="rounded" id="video" muted autoplay playsinline></video>
 								<canvas id="canvas" name="canvas"class="d-none"></canvas>
 							</div>
 						</div>
