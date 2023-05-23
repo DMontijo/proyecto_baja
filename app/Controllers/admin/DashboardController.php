@@ -4479,7 +4479,6 @@ class DashboardController extends BaseController
 			$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
 			$data['schema'] = $conexion->SCHEMA;
 			$response = $this->_curlPostDataEncrypt($endpoint, $data);
-			var_dump($response);exit;
 			//Respuesta de todos los expedientes cambiados desde justicia
 			if ($response->status == 201) {
 				$expedentesEnJusticia = [];
