@@ -517,13 +517,6 @@
 	$(function() {
 		$('[data-toggle="tooltip"]').tooltip()
 	})
-	// Service 
-	// const apiKey = 'vspk_988a387a-001c-4d80-a456-6debd55dba61';
-	// const agentUUID = '<?= session('TOKENVIDEO') ?>';
-	// const agentVideoService = new VideoServiceAgent(agentUUID, {
-	// 	apiURI,
-	// 	apiKey
-	// });
 
 	const inputFolio = document.querySelector('#input_folio_atencion');
 	const inputExpediente = document.querySelector('#input_expediente');
