@@ -347,6 +347,7 @@ $routes->group('data', function ($routes) {
 	$routes->post('change-status-doc', 'admin/DashboardController::changeStatusDoc');
 
 	$routes->post('get-documentos-by-folio', 'admin/DashboardController::getDocumentosByFolio');
+	$routes->get('update-oficinas-by-justicia', 'admin/DashboardController::getOficinasByExpediente');
 
 	//Encargados
 	$routes->post('update-encargado', 'admin/DocumentosController::actualizarDocumentoEncargado');
