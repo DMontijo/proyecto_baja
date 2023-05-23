@@ -555,6 +555,7 @@ guestVideoService.saveGeolocation(() => {
 					
 					videoStream = streamObtenidoVideo;
 					guestVideoService.videoStream = idDeDispositivo;
+					console.log($video);
 					$video.srcObject = videoStream;
 					$video.play();
 
@@ -569,8 +570,8 @@ guestVideoService.saveGeolocation(() => {
 		const mostrarStreamAudio = (streamObtenidoAudio = null) => {	
 			
 			let options = {
-				video: true,
-				deviceId: streamObtenidoAudio.id
+				deviceId: streamObtenidoAudio.id,
+				audio: true
 			}
 
 			let idDeDispositivo = null ? delete options.deviceId : streamObtenidoAudio.id;
