@@ -1964,6 +1964,7 @@ class DashboardController extends BaseController
 					}
 					//Se suben los documentos y archivos externos a Justicia
 					$subirArchivos = $this->subirArchivosRemision($bandeja['FOLIOID'], $bandeja['ANO'], $expediente);
+
 					//Se crea la bandeja en Justicia.
 					$_bandeja_creada = $this->_createBandeja($bandeja);
 					$updateArch = $this->_archivoExternoModel->set($dataFolioArc)->where('FOLIOID', $bandeja['FOLIOID'])->where('ANO', $bandeja['ANO'])->update();
@@ -1974,7 +1975,6 @@ class DashboardController extends BaseController
 							'NOTAS' => 'Exp: ' . $expediente . ' oficina: ' . $oficina . ' empleado:' . $empleado . ' area:' . $area->AREAID,
 						];
 						$this->_bitacoraActividad($datosBitacora);
-						// $folioDoc = $this->_folioDocModel->where('NUMEROEXPEDIENTE', $expediente)->where('FOLIODOC.FOLIOID',$bandeja['FOLIOID'])->where('STATUS', 'FIRMADO')->join('RELACIONFOLIODOCEXPDOC', 'FOLIODOC.NUMEROEXPEDIENTE = RELACIONFOLIODOCEXPDOC.EXPEDIENTEID  AND FOLIODOC.FOLIODOCID = RELACIONFOLIODOCEXPDOC.FOLIODOCID')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('TIPODOC', 'SOLICITUD DE PERITAJE')->orLike('TIPODOC', 'OFICIO DE COLABORACION PARA INGRESO A HOSPITAL')->findAll();
 						return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_success', 'Expediente remitido correctamente.');
 					} else {
 						return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_error', 'Se remitio el expediente pero no se creo la bandeja entrada en justicia, de favor comentalo con el área de informática.');
@@ -2073,7 +2073,6 @@ class DashboardController extends BaseController
 				//Se suben los archivos y documentos a Justicia.
 				$this->subirArchivosRemision($bandeja['FOLIOID'], $bandeja['ANO'], $expediente);
 
-				// $folioDoc = $this->_folioDocModel->where('NUMEROEXPEDIENTE', $expediente)->where('STATUS', 'FIRMADO')->join('RELACIONFOLIODOCEXPDOC', 'FOLIODOC.NUMEROEXPEDIENTE = RELACIONFOLIODOCEXPDOC.EXPEDIENTEID  AND FOLIODOC.FOLIODOCID = RELACIONFOLIODOCEXPDOC.FOLIODOCID')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('TIPODOC', 'SOLICITUD DE PERITAJE')->orLike('TIPODOC', 'OFICIO DE COLABORACION PARA INGRESO A HOSPITAL')->findAll();
 				//Se revisa que haya documentos subidos a Justicia de tipo periciales
 				$folioDoc = $this->_folioDocModelRead->expedienteDocumentos($folio, $year);
 
@@ -3042,7 +3041,6 @@ class DashboardController extends BaseController
 	/**
 	 * Función para subir los archivos y documentos a Justicia antes de remisión
 	 * Se recibe por metodo POST el folio, año y expediente
-	 *
 	 */
 	public function crearArchivo()
 	{
@@ -3339,7 +3337,7 @@ class DashboardController extends BaseController
 
 		$folioDoc = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOCID', 'asc')->findAll();
 		$archivosExternosVD = $this->_archivoExternoModel->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
-		$folioDocPeritaje = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('TIPODOC', 'SOLICITUD DE PERITAJE')->orLike('TIPODOC', 'OFICIO DE COLABORACION PARA INGRESO A HOSPITAL')->findAll();
+		$folioDocPeritaje = $this->_folioDocModelRead->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOC.FOLIODOCID', 'asc')->like('TIPODOC', 'SOLICITUD DE PERITAJE')->orLike('TIPODOC', 'OFICIO DE COLABORACION PARA INGRESO A HOSPITAL')->findAll();
 		try {
 
 			if ($archivosExternosVD) {
