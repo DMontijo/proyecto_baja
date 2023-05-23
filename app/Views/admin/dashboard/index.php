@@ -142,10 +142,60 @@ $file_text = $user_id . "_data.txt";
 			</div>
 		</div>
 	</div>
+	<div class="col-12 mb-3">
+		<hr>
+	</div>
+	<?php if (session('ROLID')==1 ||session('ROLID')==2 ||session('ROLID')==6 ||session('ROLID')==7 ||session('ROLID')==11) {?>
+	<div class="col-12 col-md-4 mb-4">
+		<div class="card shadow" style="border-radius:5px; height:100%!important;">
+			<div class="card-body text-center">
+				<h5 class="card-title">OFICINAS DE EXPEDIENTES</h5>
+				<button type="button" id="btnActualizarExpedientes" name="btnActualizarExpedientes" class="btn btn-primary font-weight-bold mt-4 text-white">ACTUALIZAR</a>
+			</div>
+		</div>
+	</div>
+	<?php } ?>
+
 </div>
-<script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
+<script src="https://cdn.socket.io/4.6.0/socket.io.min.js?v=<?= rand() ?>" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
 
 <script src="<?= base_url() ?>/assets/js/index_activos.js?v=<?= rand() ?>" type="module"></script>
+<script>
+	var btnActualizarExpedientes = document.querySelector('#btnActualizarExpedientes');
+	btnActualizarExpedientes.addEventListener('click', (e) => {
+
+		$.ajax({
+			url: "<?= base_url('/data/update-oficinas-by-justicia') ?>",
+			method: "GET",
+			dataType: "json",
+			beforeSend: function() {
+				btnActualizarExpedientes.disabled = true;;
+
+			},
+			success: function(response) {
+				btnActualizarExpedientes.disabled = false;;
+
+				if (response.status == 1) {
+					Swal.fire({
+						icon: 'success',
+						text: 'Se han actualizado las oficinas asignadas correctamente',
+						timer: 3000,
+					});
+				} else {
+					Swal.fire({
+						icon: 'error',
+						text: 'No se pudo actualizar las oficinas',
+						timer: 3000,
+					});
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				btnActualizarExpedientes.disabled = false;;
+				console.log(textStatus);
+			}
+		});
+	}, false);
+</script>
 <?php if (in_array(session('ROLID'), $rolesToMonitor)) { ?>
 	<!-- <script>
 		window.onload = function() {
