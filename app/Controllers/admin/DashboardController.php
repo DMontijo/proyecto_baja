@@ -1908,10 +1908,13 @@ class DashboardController extends BaseController
 				//Actualizacion de tablas de VIDEODENUNCIA
 				$update = $this->_folioModel->set($dataFolio)->where('EXPEDIENTEID', $expediente)->update();
 				$updateDoc = $this->_folioDocModel->set($dataFolioDoc)->where('FOLIOID', $folio)->where('ANO', $year)->update();
+
 				if ($update) {
 					$bandeja = $this->_folioModelRead->where('EXPEDIENTEID', $expediente)->first();
+
 					//Se revisa que haya documentos subidos a Justicia de tipo periciales
-					$folioDocPericiales = $this->_folioDocModelRead->expedienteDocumentos($folio, $year);
+					$folioDocPericiales = $this->_folioDocModel->expedienteDocumentos($folio, $year);
+
 					if ($folioDocPericiales) {
 						foreach ($folioDocPericiales as $key => $doc) {
 							$solicitudp = array();
@@ -4532,9 +4535,8 @@ class DashboardController extends BaseController
 						}
 						if ($responseUpdate->status == 201) {
 							return json_encode(['status' => 1]);
-						}else{
+						} else {
 							return json_encode(['status' => 0]);
-
 						}
 					} catch (\Error $e) {
 						throw new \Exception('Error en actualizacion en Justicia: ' . $e->getMessage());
