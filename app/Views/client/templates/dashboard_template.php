@@ -86,6 +86,7 @@
 	<script src="<?= base_url() ?>/assets/js/full_screen.js?v=<?= rand() ?>"></script>
 	<script>
 		$(document).keyup(function(e) {
+			console.log('Tecla presionada:', e);
 			if (e.which === 27) {
 				e.preventDefault();
 				return false;
