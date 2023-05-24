@@ -202,7 +202,7 @@ class FirmaController extends BaseController
 									$ext = $constancia->POSICIONPLACA . ' ESTATAL';
 								} else if (str_contains($constancia->POSICIONPLACA, 'NACIONALES')) {
 									$constancia->POSICIONPLACA = str_replace('NACIONALES', '', $constancia->POSICIONPLACA);
-									$ext = $constancia->POSICIONPLACA . ' FEDERAL';
+									$ext = $constancia->POSICIONPLACA . ' NACIONAL';
 								} else {
 									$constancia->POSICIONPLACA = str_replace('EXTRANJERAS', '', $constancia->POSICIONPLACA);
 									$ext = $constancia->POSICIONPLACA . ' EXTRANJERA';
@@ -293,7 +293,7 @@ class FirmaController extends BaseController
 									$ext = $constancia->POSICIONPLACA . ' ESTATAL';
 								} else if (str_contains($constancia->POSICIONPLACA, 'NACIONALES')) {
 									$constancia->POSICIONPLACA = str_replace('NACIONALES', '', $constancia->POSICIONPLACA);
-									$ext = $constancia->POSICIONPLACA . ' FEDERAL';
+									$ext = $constancia->POSICIONPLACA . ' NACIONAL';
 								} else {
 									$constancia->POSICIONPLACA = str_replace('EXTRANJERAS', '', $constancia->POSICIONPLACA);
 									$ext = $constancia->POSICIONPLACA . ' EXTRANJERA';
