@@ -100,101 +100,113 @@ disponible_connect.addEventListener("click", () => {
 		console.log(agentVideoService.audioStream, "audio");
 	}
 
-	disponible_connect.disabled = true;
-	agentVideoService.connectAgent(
-		() => {
-			console.log("¡Agente conectado con éxito!");
-			disponible_connect.disabled = false;
-			clearVideoCall();
-			disponible_connect.hidden = true;
-			no_disponible_connect.hidden = false;
-
-			agentVideoService.registerOnGuestConnected(response => {
-				try {
-					deleteVideoElement();
-				} catch (error) {}
+	navigator.mediaDevices.getUserMedia({
+		audio:true,
+		video:true,
+	}).then(function(){
+		disponible_connect.disabled = true;
+		agentVideoService.connectAgent(
+			() => {
+				console.log("¡Agente conectado con éxito!");
+				disponible_connect.disabled = false;
 				clearVideoCall();
-				console.log(response.guest.uuid, "response");
-				guestUUID = response.guest.uuid;
-				console.log("Respuesta: ", response);
-				document.querySelector("#nombre_denunciante").value =
-					response.guest.name;
-				document.querySelector("#main_video_details_name").value =
-					response.guest.name;
-				document.querySelector("#genero_denunciante").value =
-					response.guest.gender == "FEMALE"
-						? "FEMENINO"
-						: "MASCULINO";
-				document.querySelector("#correo_deunciante").value =
-					response.guest.details.CORREO;
-				document.querySelector("#delito_denunciante_llamada").value =
-					response.details != null ? response.details.delito : "-";
-				document.querySelector(
-					"#descripcion_denunciante_llamada"
-				).innerHTML =
-					response.details != null
-						? response.details.descripcion
-						: "-";
-				document.querySelector("#folio_llamada").value =
-					response.details != null ? response.details.folio : "-";
-				document.querySelector("#idioma_denunciante").value = response
-					.guest.languages
-					? response.guest.languages[0].title
-					: "-";
-				$("#llamadaModal").modal("show");
 				disponible_connect.hidden = true;
 				no_disponible_connect.hidden = false;
-			});
-
-			agentVideoService.registerOnGuestDisconnected(() => {
+	
+				agentVideoService.registerOnGuestConnected(response => {
+					try {
+						deleteVideoElement();
+					} catch (error) {}
+					clearVideoCall();
+					console.log(response.guest.uuid, "response");
+					guestUUID = response.guest.uuid;
+					console.log("Respuesta: ", response);
+					document.querySelector("#nombre_denunciante").value =
+						response.guest.name;
+					document.querySelector("#main_video_details_name").value =
+						response.guest.name;
+					document.querySelector("#genero_denunciante").value =
+						response.guest.gender == "FEMALE"
+							? "FEMENINO"
+							: "MASCULINO";
+					document.querySelector("#correo_deunciante").value =
+						response.guest.details.CORREO;
+					document.querySelector("#delito_denunciante_llamada").value =
+						response.details != null ? response.details.delito : "-";
+					document.querySelector(
+						"#descripcion_denunciante_llamada"
+					).innerHTML =
+						response.details != null
+							? response.details.descripcion
+							: "-";
+					document.querySelector("#folio_llamada").value =
+						response.details != null ? response.details.folio : "-";
+					document.querySelector("#idioma_denunciante").value = response
+						.guest.languages
+						? response.guest.languages[0].title
+						: "-";
+					$("#llamadaModal").modal("show");
+					disponible_connect.hidden = true;
+					no_disponible_connect.hidden = false;
+				});
+	
+				agentVideoService.registerOnGuestDisconnected(() => {
+					aceptar_llamada.disabled = false;
+					$("#llamadaModal").modal("hide");
+					console.log("Guest disconnected con modal");
+	
+					// setTimeout(() => {
+					// 	console.log("Desconectando agente...");
+					// 	agentVideoService.disconnectAgent(() => {
+					// 		console.log("¡Agente desconectado con éxito!");
+					// 		clearVideoCall();
+					// 	});
+					// }, 2000);
+	
+					Swal.fire({
+						icon: "error",
+						text: "El usuario se desconecto.",
+						showConfirmButton: false,
+						timer: 3000,
+						timerProgressBar: true
+					});
+				});
+			},
+			response => {
+				disponible_connect.disabled = false;
+				try {
+					agentVideoService.endVideoCall(() => {
+						console.log("¡Llamada finalizada con éxito!");
+					});
+				} catch (error) {}
+				try {
+					agentVideoService.disconnectAgent(() => {
+						console.log("¡Agente desconectado con éxito!");
+					});
+				} catch (error) {}
+				disponible_connect.hidden = false;
+				no_disponible_connect.hidden = true;
+				clearVideoCall();
 				aceptar_llamada.disabled = false;
-				$("#llamadaModal").modal("hide");
-				console.log("Guest disconnected con modal");
-
-				// setTimeout(() => {
-				// 	console.log("Desconectando agente...");
-				// 	agentVideoService.disconnectAgent(() => {
-				// 		console.log("¡Agente desconectado con éxito!");
-				// 		clearVideoCall();
-				// 	});
-				// }, 2000);
-
 				Swal.fire({
 					icon: "error",
-					text: "El usuario se desconecto.",
+					text: response.message,
 					showConfirmButton: false,
 					timer: 3000,
 					timerProgressBar: true
 				});
-			});
-		},
-		response => {
-			disponible_connect.disabled = false;
-			try {
-				agentVideoService.endVideoCall(() => {
-					console.log("¡Llamada finalizada con éxito!");
-				});
-			} catch (error) {}
-			try {
-				agentVideoService.disconnectAgent(() => {
-					console.log("¡Agente desconectado con éxito!");
-				});
-			} catch (error) {}
-			disponible_connect.hidden = false;
-			no_disponible_connect.hidden = true;
-			clearVideoCall();
-			aceptar_llamada.disabled = false;
-			Swal.fire({
-				icon: "error",
-				text: response.message,
-				showConfirmButton: false,
-				timer: 3000,
-				timerProgressBar: true
-			});
-		}
-	);
-});
+			}
+		);
+	})
+	.catch(function(){
+		Swal.fire({
+			icon: "error",
+			text: "Acepta los permisos de audio y video para comenzar.",
+			showConfirmButton: true,
+		});
+	})
 
+});
 no_disponible_connect.addEventListener("click", () => {
 	console.log("Desconectando agente...");
 	agentVideoService.disconnectAgent(() => {
