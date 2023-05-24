@@ -94,15 +94,15 @@ class ExtravioController extends BaseController
 		$password = trim($password);
 		$data = $this->_denunciantesModelRead->where('CORREO', $email)->first();
 		if ($data) {
-			// Verifica que no tenga sesiones activas
-
-			$control_session = $this->_sesionesDenunciantesModelRead->asObject()->where('ID_DENUNCIANTE', $data['DENUNCIANTEID'])->where('ACTIVO', 1)->first();
-			if ($control_session) {
-				return redirect()->to(base_url('/denuncia'))->with('message_session', 'Ya tienes sesiones activas, cierralas para continuar.')->with('id',  $data['DENUNCIANTEID']);
-			}
 			// Valida la contraseña ingresada con la de su usuario
 
 			if (validatePassword($password, $data['PASSWORD'])) {
+				// Verifica que no tenga sesiones activas
+
+				$control_session = $this->_sesionesDenunciantesModelRead->asObject()->where('ID_DENUNCIANTE', $data['DENUNCIANTEID'])->where('ACTIVO', 1)->first();
+				if ($control_session) {
+					return redirect()->to(base_url('/denuncia'))->with('message_session', 'Ya tienes sesiones activas, cierralas para continuar.')->with('id',  $data['DENUNCIANTEID']);
+				}
 				$data['logged_in'] = TRUE;
 				$data['type'] = 'user_constancias';
 				$data['uuid'] = uniqid();
@@ -181,7 +181,7 @@ class ExtravioController extends BaseController
 
 			if ($response->uuid) {
 				$this->_denunciantesModel->insert($data);
-				$this->_sendEmailPassword($data['CORREO'], $data['TELEFONO'],$password);
+				$this->_sendEmailPassword($data['CORREO'], $data['TELEFONO'], $password);
 				return redirect()->to(base_url('/constancia_extravio'))->with('message_success', 'Inicia sesión con la contraseña que llegará a tu correo electrónico y/o mensajes SMS e ingresa.');
 			}
 		} else {
@@ -281,7 +281,7 @@ class ExtravioController extends BaseController
 	 * @param  mixed $to
 	 * @param  mixed $password
 	 */
-	private function _sendEmailPassword($to, $telefono,$password)
+	private function _sendEmailPassword($to, $telefono, $password)
 	{
 
 		$body = view('email_template/password_email_constancia.php', ['email' => $to, 'password' => $password]);

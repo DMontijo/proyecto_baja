@@ -61,15 +61,13 @@ class AuthController extends BaseController
 
 		$data = $this->_denunciantesModelRead->where('CORREO', $email)->first();
 		if ($data) {
-			// Verifica que no tenga sesiones activas
-
-			$control_session = $this->_sesionesDenunciantesModelRead->asObject()->where('ID_DENUNCIANTE', $data['DENUNCIANTEID'])->where('ACTIVO', 1)->first();
-			if ($control_session) {
-				return redirect()->to(base_url('/denuncia'))->with('message_session', 'Ya tienes sesiones activas, cierralas para continuar.')->with('id',  $data['DENUNCIANTEID']);
-			}
 			// Valida la contraseña ingresada con la de su usuario
-
 			if (validatePassword($password, $data['PASSWORD'])) {
+				// Verifica que no tenga sesiones activas
+				$control_session = $this->_sesionesDenunciantesModelRead->asObject()->where('ID_DENUNCIANTE', $data['DENUNCIANTEID'])->where('ACTIVO', 1)->first();
+				if ($control_session) {
+					return redirect()->to(base_url('/denuncia'))->with('message_session', 'Ya tienes sesiones activas, cierralas para continuar.')->with('id',  $data['DENUNCIANTEID']);
+				}
 				$data['logged_in'] = TRUE;
 				$data['type'] = 'user';
 				$data['uuid'] = uniqid();
@@ -109,8 +107,7 @@ class AuthController extends BaseController
 	{
 		$session = session();
 		$sesion_data = [
-			'ACTIVO' => 0,
-			'ID_DENUNCIANTE' => $session->get('ID'),
+			'ACTIVO' => 0
 		];
 		$session_denunciante =  $this->_sesionesDenunciantesModelRead->where('ID_DENUNCIANTE', $session->get('DENUNCIANTEID'))->where('ID', session('uuid'))->where('ACTIVO', 1)->orderBy('FECHAINICIO', 'DESC')->first();
 		if ($session_denunciante) {
