@@ -65,9 +65,15 @@
 												<td class="text-center"><?= $folio->MUNICIPIODESCR ?></td>
 												<td class="text-center"><?= ($folio->HECHOCALLE ? $folio->HECHOCALLE : 'SIN CALLE') . ' ' . ($folio->HECHONUMEROCASA ? $folio->HECHONUMEROCASA : 'S/N') . ($folio->HECHONUMEROCASAINT ? ' INT. ' . $folio->HECHONUMEROCASAINT : '')  . ', ' . ($folio->HECHOCOLONIADESCR ? $folio->HECHOCOLONIADESCR : 'SIN COLONIA'); ?></td>
 												<td class="text-center"><?= $folio->DELITOMODALIDADDESCR ?></td>
-												<td class="text-center">
-													<a type="button" href="<?= base_url('/admin/dashboard/bandeja_remision?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO . '&municipioasignado=' . $folio->MUNICIPIOASIGNADOID . '&expediente=' . $folio->EXPEDIENTEID ?>" class="btn btn-primary text-white btn-sm">REMITIR</a>
-												</td>
+												<?php if ($folio->STATUSDOCUMENTO != null  && str_contains($folio->STATUSDOCUMENTO, "ABIERTO")) { ?>
+													<td class="text-center">
+														<button type="button" href="<?= base_url('/admin/dashboard/bandeja_remision?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO . '&municipioasignado=' . $folio->MUNICIPIOASIGNADOID . '&expediente=' . $folio->EXPEDIENTEID ?>" class="btn btn-primary text-white btn-sm" disabled>REMITIR</button>
+													</td>
+												<?php } else { ?>
+													<td class="text-center">
+														<a type="button" href="<?= base_url('/admin/dashboard/bandeja_remision?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO . '&municipioasignado=' . $folio->MUNICIPIOASIGNADOID . '&expediente=' . $folio->EXPEDIENTEID ?>" class="btn btn-primary text-white btn-sm">REMITIR</a>
+													</td>
+												<?php } ?>
 											</tr>
 										<?php } ?>
 									</tbody>
@@ -106,9 +112,15 @@
 												<td class="text-center"><?= $folio->MUNICIPIODESCR ?></td>
 												<td class="text-center"><?= ($folio->HECHOCALLE ? $folio->HECHOCALLE : 'SIN CALLE') . ' ' . ($folio->HECHONUMEROCASA ? $folio->HECHONUMEROCASA : 'S/N') . ($folio->HECHONUMEROCASAINT ? ' INT. ' . $folio->HECHONUMEROCASAINT : '')  . ', ' . ($folio->HECHOCOLONIADESCR ? $folio->HECHOCOLONIADESCR : 'SIN COLONIA'); ?></td>
 												<td class="text-center"><?= $folio->DELITOMODALIDADDESCR ?></td>
-												<td class="text-center">
-													<a type="button" href="<?= base_url('/admin/dashboard/bandeja_remision?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO . '&municipioasignado=' . $folio->MUNICIPIOASIGNADOID . '&expediente=' . $folio->EXPEDIENTEID ?>" class="btn btn-primary text-white btn-sm">REMITIR</a>
-												</td>
+												<?php if ($folio->STATUSDOCUMENTO != null  && str_contains($folio->STATUSDOCUMENTO, "ABIERTO")) { ?>
+													<td class="text-center">
+														<button type="button" href="<?= base_url('/admin/dashboard/bandeja_remision?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO . '&municipioasignado=' . $folio->MUNICIPIOASIGNADOID . '&expediente=' . $folio->EXPEDIENTEID ?>" class="btn btn-primary text-white btn-sm" disabled>REMITIR</button>
+													</td>
+												<?php } else { ?>
+													<td class="text-center">
+														<a type="button" href="<?= base_url('/admin/dashboard/bandeja_remision?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO . '&municipioasignado=' . $folio->MUNICIPIOASIGNADOID . '&expediente=' . $folio->EXPEDIENTEID ?>" class="btn btn-primary text-white btn-sm">REMITIR</a>
+													</td>
+												<?php } ?>
 											</tr>
 										<?php } ?>
 									</tbody>
@@ -147,9 +159,15 @@
 												<td class="text-center"><?= $folio->MUNICIPIODESCR ?></td>
 												<td class="text-center"><?= ($folio->HECHOCALLE ? $folio->HECHOCALLE : 'SIN CALLE') . ' ' . ($folio->HECHONUMEROCASA ? $folio->HECHONUMEROCASA : 'S/N') . ($folio->HECHONUMEROCASAINT ? ' INT. ' . $folio->HECHONUMEROCASAINT : '')  . ', ' . ($folio->HECHOCOLONIADESCR ? $folio->HECHOCOLONIADESCR : 'SIN COLONIA'); ?></td>
 												<td class="text-center"><?= $folio->DELITOMODALIDADDESCR ?></td>
-												<td class="text-center">
-													<a type="button" href="<?= base_url('/admin/dashboard/bandeja_remision?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO . '&municipioasignado=' . $folio->MUNICIPIOASIGNADOID . '&expediente=' . $folio->EXPEDIENTEID ?>" class="btn btn-primary text-white btn-sm">REMITIR</a>
-												</td>
+												<?php if ($folio->STATUSDOCUMENTO != null  && str_contains($folio->STATUSDOCUMENTO, "ABIERTO")) { ?>
+													<td class="text-center">
+														<button type="button" href="<?= base_url('/admin/dashboard/bandeja_remision?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO . '&municipioasignado=' . $folio->MUNICIPIOASIGNADOID . '&expediente=' . $folio->EXPEDIENTEID ?>" class="btn btn-primary text-white btn-sm" disabled>REMITIR</button>
+													</td>
+												<?php } else { ?>
+													<td class="text-center">
+														<a type="button" href="<?= base_url('/admin/dashboard/bandeja_remision?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO . '&municipioasignado=' . $folio->MUNICIPIOASIGNADOID . '&expediente=' . $folio->EXPEDIENTEID ?>" class="btn btn-primary text-white btn-sm">REMITIR</a>
+													</td>
+												<?php } ?>
 											</tr>
 										<?php } ?>
 									</tbody>
@@ -188,9 +206,15 @@
 												<td class="text-center"><?= $folio->MUNICIPIODESCR ?></td>
 												<td class="text-center"><?= ($folio->HECHOCALLE ? $folio->HECHOCALLE : 'SIN CALLE') . ' ' . ($folio->HECHONUMEROCASA ? $folio->HECHONUMEROCASA : 'S/N') . ($folio->HECHONUMEROCASAINT ? ' INT. ' . $folio->HECHONUMEROCASAINT : '')  . ', ' . ($folio->HECHOCOLONIADESCR ? $folio->HECHOCOLONIADESCR : 'SIN COLONIA'); ?></td>
 												<td class="text-center"><?= $folio->DELITOMODALIDADDESCR ?></td>
-												<td class="text-center">
-													<a type="button" href="<?= base_url('/admin/dashboard/bandeja_remision?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO . '&municipioasignado=' . $folio->MUNICIPIOASIGNADOID . '&expediente=' . $folio->EXPEDIENTEID ?>" class="btn btn-primary text-white btn-sm">REMITIR</a>
-												</td>
+												<?php if ($folio->STATUSDOCUMENTO != null  && str_contains($folio->STATUSDOCUMENTO, "ABIERTO")) { ?>
+													<td class="text-center">
+														<button type="button" href="<?= base_url('/admin/dashboard/bandeja_remision?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO . '&municipioasignado=' . $folio->MUNICIPIOASIGNADOID . '&expediente=' . $folio->EXPEDIENTEID ?>" class="btn btn-primary text-white btn-sm" disabled>REMITIR</button>
+													</td>
+												<?php } else { ?>
+													<td class="text-center">
+														<a type="button" href="<?= base_url('/admin/dashboard/bandeja_remision?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO . '&municipioasignado=' . $folio->MUNICIPIOASIGNADOID . '&expediente=' . $folio->EXPEDIENTEID ?>" class="btn btn-primary text-white btn-sm">REMITIR</a>
+													</td>
+												<?php } ?>
 											</tr>
 										<?php } ?>
 									</tbody>
@@ -229,9 +253,15 @@
 												<td class="text-center"><?= $folio->MUNICIPIODESCR ?></td>
 												<td class="text-center"><?= ($folio->HECHOCALLE ? $folio->HECHOCALLE : 'SIN CALLE') . ' ' . ($folio->HECHONUMEROCASA ? $folio->HECHONUMEROCASA : 'S/N') . ($folio->HECHONUMEROCASAINT ? ' INT. ' . $folio->HECHONUMEROCASAINT : '')  . ', ' . ($folio->HECHOCOLONIADESCR ? $folio->HECHOCOLONIADESCR : 'SIN COLONIA'); ?></td>
 												<td class="text-center"><?= $folio->DELITOMODALIDADDESCR ?></td>
-												<td class="text-center">
-													<a type="button" href="<?= base_url('/admin/dashboard/bandeja_remision?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO . '&municipioasignado=' . $folio->MUNICIPIOASIGNADOID . '&expediente=' . $folio->EXPEDIENTEID ?>" class="btn btn-primary text-white btn-sm">REMITIR</a>
-												</td>
+												<?php if ($folio->STATUSDOCUMENTO != null  && str_contains($folio->STATUSDOCUMENTO, "ABIERTO")) { ?>
+													<td class="text-center">
+														<button type="button" href="<?= base_url('/admin/dashboard/bandeja_remision?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO . '&municipioasignado=' . $folio->MUNICIPIOASIGNADOID . '&expediente=' . $folio->EXPEDIENTEID ?>" class="btn btn-primary text-white btn-sm" disabled>REMITIR</button>
+													</td>
+												<?php } else { ?>
+													<td class="text-center">
+														<a type="button" href="<?= base_url('/admin/dashboard/bandeja_remision?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO . '&municipioasignado=' . $folio->MUNICIPIOASIGNADOID . '&expediente=' . $folio->EXPEDIENTEID ?>" class="btn btn-primary text-white btn-sm">REMITIR</a>
+													</td>
+												<?php } ?>
 											</tr>
 										<?php } ?>
 									</tbody>
