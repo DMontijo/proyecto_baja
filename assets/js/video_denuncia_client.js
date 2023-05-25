@@ -558,10 +558,8 @@ guestVideoService.saveGeolocation(() => {
 
 					if (dispositivosDeVideo.length > 0) {
 						// $estado.classList.add('d-none');
-
 						videoStream = streamObtenidoVideo;
-						guestVideoService.videoStream = idDeDispositivo;
-						console.log('video ',$video);
+						guestVideoService.videoStream = streamObtenidoVideo.deviceId;
 						$video.srcObject = videoStream;
 						$video.play();
 
@@ -607,7 +605,7 @@ guestVideoService.saveGeolocation(() => {
 						// $estado.classList.add('d-none');
 
 						audioStream = streamObtenidoAudio;
-						guestVideoService.audioStream = idDeDispositivo;
+						guestVideoService.audioStream = streamObtenidoAudio.deviceId;
 
 						$audio.srcObject = audioStream;
 						$audio.play();
