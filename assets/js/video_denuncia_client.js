@@ -380,6 +380,7 @@ guestVideoService.saveGeolocation(() => {
 		navigator.userAgent.indexOf("FxiOS") == -1;
 
 	let platform = navigator.platform;
+	//console.log('platoform', platform)
 
 	if (!tieneSoporteUserMedia()) {
 		alert("Tu navegador no soporta esta característica");
@@ -540,12 +541,13 @@ guestVideoService.saveGeolocation(() => {
 							dispositivosDeVideo.push(dispositivo);
 						}
 					});
-					console.log(dispositivosDeVideo);
+					//console.log('camara seleccionada ',dispositivosDeVideo);
 
 					llenarSelectConDispositivosDisponiblesVideoIOS();
 
 					$listaDeDispositivosVideo.onchange = () => {
-						console.log("Cambiando dispositivo video");
+						$listaDeDispositivosVideo.empty();
+						console.log("Cambiando dispositivo video", $listaDeDispositivosVideo);
 						if (videoStream) {
 							videoStream.getTracks().forEach(function(track) {
 								track.stop();
@@ -559,7 +561,7 @@ guestVideoService.saveGeolocation(() => {
 
 						videoStream = streamObtenidoVideo;
 						guestVideoService.videoStream = idDeDispositivo;
-						console.log($video);
+						console.log('video ',$video);
 						$video.srcObject = videoStream;
 						$video.play();
 
