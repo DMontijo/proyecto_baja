@@ -18,6 +18,7 @@
 								<tr>
 									<th class="text-center">FOLIO</th>
 									<th class="text-center">DELITO COMENTADO</th>
+									<th class="text-center">DENUNCIANTE</th>
 									<th class="text-center">EN ATENCIÓN POR</th>
 									<th class="text-center"></th>
 								</tr>
@@ -27,6 +28,7 @@
 									<tr>
 										<td class="text-center font-weight-bold"><?= $folio->FOLIOID . '/' . $folio->ANO ?></td>
 										<td class="text-center"><?= $folio->HECHODELITO ?></td>
+										<td class="text-center"><?= $folio->NOMBREDENUNCIANTE ?> <?= $folio->APPDENUNCIANTE ?> <?= $folio->APMDENUNCIANTE ? $folio->APMDENUNCIANTE :'' ?></td>
 										<td class="text-center"><?= $folio->NOMBRE ?> <?= $folio->APELLIDO_PATERNO ?> <?= $folio->APELLIDO_MATERNO ?></td>
 										<td class="text-center">
 											<form id="<?= 'form_' . $folio->FOLIOID ?>"action="<?= base_url('admin/dashboard/liberar_folio') ?>" name="formulario_liberacion" method="POST"onsubmit="return confirmarLiberacion(event,this)">

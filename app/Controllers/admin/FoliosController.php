@@ -309,7 +309,13 @@ class FoliosController extends BaseController
 			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
 		}
 		$data = (object) array();
-		$data->folio = $this->_folioModelRead->asObject()->where('STATUS', 'EN PROCESO')->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')->findAll();
+		$data->folio = $this->_folioModelRead->asObject()
+		->select('FOLIO.*, USUARIOS.*, DENUNCIANTES.NOMBRE AS NOMBREDENUNCIANTE,DENUNCIANTES.APELLIDO_PATERNO AS APPDENUNCIANTE, DENUNCIANTES.APELLIDO_MATERNO AS APMDENUNCIANTE')
+		->where('STATUS', 'EN PROCESO')
+		->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')
+		->join('DENUNCIANTES', 'DENUNCIANTES.DENUNCIANTEID = FOLIO.DENUNCIANTEID')
+
+		->findAll();
 		$data->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 		$this->_loadView('Folios en proceso', 'folios', '', $data, 'folios_en_proceso');
