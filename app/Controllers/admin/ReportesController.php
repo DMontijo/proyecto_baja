@@ -9,6 +9,7 @@ use App\Models\MunicipiosModel;
 use App\Models\RolesPermisosModel;
 use App\Models\UsuariosModel;
 use App\Models\PlantillasModel;
+use App\Models\VideoCallReadModel;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 // use Aws\S3\S3Client;
@@ -28,9 +29,10 @@ class ReportesController extends BaseController
 	private $_constanciaExtravioModelRead;
 	private $_rolesPermisosModelRead;
 	private $_plantillasModelRead;
+	private $_videoCallModelRead;
 
 	function __construct()
-	{ 
+	{
 		//Conexion de lectura
 		$this->db_read = ENVIRONMENT == 'production' ? db_connect('default_read') : db_connect('development_read');
 
@@ -42,7 +44,7 @@ class ReportesController extends BaseController
 		$this->_constanciaExtravioModelRead = model('ConstanciaExtravioModel', true, $this->db_read);
 		$this->_rolesPermisosModelRead = model('RolesPermisosModel', true, $this->db_read);
 		$this->_plantillasModelRead = model('PlantillasModel', true, $this->db_read);
-
+		$this->_videoCallModelRead = new VideoCallReadModel();
 	}
 
 	/**
@@ -613,7 +615,7 @@ class ReportesController extends BaseController
 	}
 
 	/**
-	 * Vista para ingresar a los reportes de registro diario
+	 * Vista para ingresar a los reportes de reporte diario
 	 * Se carga con un filtro default
 	 *
 	 */
@@ -651,11 +653,11 @@ class ReportesController extends BaseController
 		$dataView->filterParams = (object)$data;
 		$dataView->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 
-		$this->_loadView('Reporte diario', 'registro diario', '', $dataView, 'registro_diario');
+		$this->_loadView('Reporte diario', 'reporte diario', '', $dataView, 'registro_diario');
 	}
 
 	/**
-	 * Función para realizar un filtro en reporte de registro diario.
+	 * Función para realizar un filtro en reporte de reporte diario.
 	 * Recibe por metodo POST los datos del formulario del filtro
 	 *
 	 */
@@ -685,10 +687,10 @@ class ReportesController extends BaseController
 				'fechaFin' => date("Y-m-d"),
 			];
 		}
-		//Generacion del filtro
 
+		//Generacion del filtro
 		$resultFilter = $this->_folioModelRead->filterDatesRegistroDiario($data);
-		///var_dump($data);
+
 		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
 		$empleado = $this->_usuariosModelRead->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
 
@@ -697,8 +699,6 @@ class ReportesController extends BaseController
 			$data['AGENTENOMBRE'] = $agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' . $agente->APELLIDO_MATERNO;
 		}
 
-
-
 		$dataView = (object)array();
 		$dataView->result = $resultFilter->result;
 		$dataView->empleados = $empleado;
@@ -706,10 +706,10 @@ class ReportesController extends BaseController
 
 		$dataView->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 
-		$this->_loadView('Reporte diario', 'registro diario', '', $dataView, 'registro_diario');
+		$this->_loadView('Reporte diario', 'reporte diario', '', $dataView, 'registro_diario');
 	}
 	/**
-	 * Función para generar el reporte XLSX de registro diario
+	 * Función para generar el reporte XLSX de reporte diario
 	 * Recibe por metodo POST los datos del filtro
 	 *
 	 */
@@ -727,24 +727,23 @@ class ReportesController extends BaseController
 			'horaFin' => $this->request->getPost('horaFin')
 		];
 		$date = date("Y_m_d_h_i_s");
-		//var_dump($data);
+
 		foreach ($data as $clave => $valor) {
 			//Recorre el array y elimina los valores que nulos o vacíos
 			if (empty($valor)) unset($data[$clave]);
 		}
-		//Cuando no hay filtro
 
+		//Cuando no hay filtro
 		if (count($data) <= 0) {
 			$data = [
 				'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
 				'fechaFin' => date("Y-m-d"),
 			];
 		}
-		//Generacion del filtro
 
+		//Generacion del filtro
 		$resultFilter = $this->_folioModelRead->filterDatesRegistroDiario($data);
-		//var_dump($resultFilter);
-		//exit;
+
 		$spreadSheet = new Spreadsheet();
 		$spreadSheet->getProperties()
 			->setCreator("Fiscalía General del Estado de Baja California")
@@ -754,12 +753,11 @@ class ReportesController extends BaseController
 			->setDescription(
 				"El presente documento fue generado por el Centro de Denuncia Tecnológica de la Fiscalía General del Estado de Baja California."
 			)
-			->setKeywords("registro diario cdtec fgebc")
+			->setKeywords("reporte diario cdtec fgebc")
 			->setCategory("Reportes");
 		$sheet = $spreadSheet->getActiveSheet();
 
 		//Estilo del header
-
 		$styleHeaders = [
 			'font' => [
 				'bold' => true,
@@ -788,8 +786,8 @@ class ReportesController extends BaseController
 				],
 			],
 		];
-		//Estilo de las celdas
 
+		//Estilo de las celdas
 		$styleCab = [
 			'font' => [
 				'bold' => true,
@@ -841,13 +839,16 @@ class ReportesController extends BaseController
 			'P', 'Q', 'R', 'S', 'T',
 			'U', 'V', 'W', 'X', 'Y', 'Z'
 		];
-		//Cabeceras
 
+		//Cabeceras
 		$headers = [
 			'NO.',
-			'FECHA RECEPCIÓN',
 			'FOLIO',
-			'HORA',
+			'AÑO',
+			'FECHA RECEPCIÓN',
+			'FECHA ATENCIÓN',
+			'HORA ATENCIÓN',
+			'INICIO',
 			'CONCLUSIÓN',
 			'DURACIÓN DE ATENCION',
 			'TIPO DE ATENCIÓN',
@@ -858,7 +859,7 @@ class ReportesController extends BaseController
 			'GENÉRO',
 			'TELEFONO',
 			'CORREO ELECTRÓNICO',
-			'DELITO',
+			'DELITOS',
 			'SERVIDOR PÚBLICO QUE ATIENDE',
 			'TIPO DE EXPEDIENTE GENERADO',
 			'NO. EXPEDIENTE GENERADO',
@@ -874,19 +875,17 @@ class ReportesController extends BaseController
 		$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
 
 		$row++;
+
 		//Rellenado del XLSX
-
-
 		foreach ($resultFilter->result as $index => $folio) {
-
 			$inicio = '';
 			$fin = '';
-
 			$duracion = '';
+			$duracion_total = '';
 			$horas = '';
 			$segundos = '';
 			$minutos = '';
-			$timestamp = '';
+			$prioridad = '';
 
 			if ($folio->TIPOEXPEDIENTEID == 1 || $folio->TIPOEXPEDIENTEID == 4) {
 				$remision = $folio->OFICINA_EMP;
@@ -898,28 +897,23 @@ class ReportesController extends BaseController
 				$remision = $folio->REMISION_CANALIZACION;
 			}
 
-			// Duración de los videos
-			$endpointFolio = $this->urlApi . 'recordings/folio?folio=' . $folio->FOLIOID . '/' . $folio->ANO;
+			// Información del las llamadas por folio
+			$infoCall = $this->_videoCallModelRead->getReporteDiarioInfoByFolio($folio->FOLIOID, $folio->ANO);
 
-			$responseFolio = $this->_curlGetService($endpointFolio);
+			if (count($infoCall) > 0) {
+				$infoCall = (object)$infoCall[0];
+				$inicio = $this->stringToTime($infoCall->sessionStartedAt);
 
-			if ($responseFolio != null) {
-				foreach ($responseFolio as $key => $videoDuration) {
-					if ($videoDuration != '') {
-
-						$timestampInicio = strtotime($videoDuration->callRecordId->sessionStartedAt);
-						$inicio = date('H:i:s', $timestampInicio);
-
-						if ($videoDuration->callRecordId->sessionFinishedAt) {
-							$timestampFin = strtotime($videoDuration->callRecordId->sessionFinishedAt);
-							$fin = date('H:i:s', $timestampFin);
-						}
-					}
-					$duracion = $videoDuration->duration;
-					$horas = floor($duracion / 3600);
-					$minutos = floor(($duracion - ($horas * 3600)) / 60);
-					$segundos = $duracion - ($horas * 3600) - ($minutos * 60);
+				if ($infoCall->sessionFinishedAt) {
+					$fin = $this->stringToTime($infoCall->sessionFinishedAt);
 				}
+
+				$duracion = $infoCall->duration;
+				$horas = floor($duracion / 3600);
+				$minutos = floor(($duracion - ($horas * 3600)) / 60);
+				$segundos = $duracion - ($horas * 3600) - ($minutos * 60);
+				$duracion_total = $this->stringToTime(strval($horas)  . ':' . $minutos . ':' . number_format($segundos, 0));
+				$prioridad = $infoCall->priority;
 			}
 
 			$fecharegistro = strtotime($folio->FECHAREGISTRO);
@@ -941,42 +935,48 @@ class ReportesController extends BaseController
 			}
 
 			$sheet->setCellValue('A' . $row, $row - 4);
-			$sheet->setCellValue('B' . $row, $dateregistro);
-			$sheet->setCellValue('C' . $row, $folio->FOLIOID);
-			$sheet->setCellValue('D' . $row, $inicio != '' ? $inicio : '');
-			$sheet->setCellValue('E' . $row, isset($fin) ? $fin : '');
-			$sheet->setCellValue('F' . $row,  $horas != '' ? strval($horas)  . ':' . $minutos . ':' . number_format($segundos, 0) : 'NO HAY VIDEO GRABADO');
-			$sheet->setCellValue('G' . $row, $tipo);
-			$sheet->setCellValue('H' . $row, $folio->MUNICIPIODESCR);
-			$sheet->setCellValue('I' . $row, $folio->N_DENUNCIANTE);
-			$sheet->setCellValue('J' . $row, $folio->APP_DENUNCIANTE);
-			$sheet->setCellValue('K' . $row, $folio->APM_DENUNCIANTE);
-			$sheet->setCellValue('L' . $row, $folio->GENERO == "F" ? "FEMENINO" : "MASCULINO");
-			$sheet->setCellValue('M' . $row, $folio->TELEFONODENUNCIANTE);
-			$sheet->setCellValue('N' . $row, $folio->CORREODENUNCIANTE);
-			$sheet->setCellValue('O' . $row, isset($folio->DELITOMODALIDADDESCR) ? $folio->DELITOMODALIDADDESCR : 'NO EXISTE');
-			$sheet->setCellValue('P' . $row, $folio->N_AGENT . ' ' . $folio->APP_AGENT . ' ' . $folio->APM_AGENT);
-			$sheet->setCellValue('Q' . $row, isset($folio->TIPOEXPEDIENTEDESCR) ? $folio->TIPOEXPEDIENTEDESCR : $folio->STATUS);
+			$sheet->setCellValue('B' . $row, $folio->FOLIOID);
+			$sheet->setCellValue('C' . $row, $folio->ANO);
+			$sheet->setCellValue('D' . $row, $dateregistro);
+			$sheet->setCellValue('E' . $row, $datesalida);
+			$sheet->setCellValue('F' . $row, $horaregistro);
+			$sheet->setCellValue('G' . $row, $inicio != '' ? $inicio : '');
+			$sheet->setCellValue('H' . $row, isset($fin) ? $fin : '');
+			$sheet->setCellValue('I' . $row, $duracion_total != '' ? $duracion_total : 'NO HAY VIDEO');
+			$sheet->setCellValue('J' . $row, $tipo);
+			$sheet->setCellValue('K' . $row, $folio->MUNICIPIODESCR);
+			$sheet->setCellValue('L' . $row, $folio->N_DENUNCIANTE);
+			$sheet->setCellValue('M' . $row, $folio->APP_DENUNCIANTE);
+			$sheet->setCellValue('N' . $row, $folio->APM_DENUNCIANTE);
+			$sheet->setCellValue('O' . $row, $folio->GENERO == "F" ? "FEMENINO" : "MASCULINO");
+			$sheet->setCellValue('P' . $row, $folio->TELEFONODENUNCIANTE);
+			$sheet->setCellValue('Q' . $row, $folio->CORREODENUNCIANTE);
+			$sheet->setCellValue('R' . $row, isset($folio->DELITOMODALIDADDESCR) ? $folio->DELITOMODALIDADDESCR : 'NO EXISTE');
+			$sheet->setCellValue('S' . $row, $folio->N_AGENT . ' ' . $folio->APP_AGENT . ' ' . $folio->APM_AGENT);
+			$sheet->setCellValue('T' . $row, isset($folio->TIPOEXPEDIENTECLAVE) ? $folio->TIPOEXPEDIENTECLAVE : $folio->STATUS);
 			if (isset($folio->EXPEDIENTEID)) {
 				$arrayExpediente = str_split($folio->EXPEDIENTEID);
 				$expedienteid = $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
 			}
-			$sheet->setCellValue('R' . $row, $folio->EXPEDIENTEID ? $expedienteid . '/' . $folio->TIPOEXPEDIENTECLAVE : "SIN EXPEDIENTE");
-			$sheet->setCellValue('S' . $row, $remision); //remision
-			$sheet->setCellValue('T' . $row, "");
-
+			$sheet->setCellValue('U' . $row, $folio->EXPEDIENTEID ? $expedienteid . '/' . $folio->TIPOEXPEDIENTECLAVE : ($folio->FOLIOID . '/' . $folio->ANO));
+			$sheet->setCellValue('V' . $row, $remision); //remision
+			$sheet->setCellValue('W' . $row, $prioridad == '' ? 1 : $prioridad);
 			$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
-
 			if (!(($row - 4) >= count($resultFilter->result))) $row++;
 		}
-		$sheet->getStyle('A1:T1')->applyFromArray($styleCab);
-		$sheet->getStyle('A2:T2')->applyFromArray($styleCab);
+		$row++;
+		$row++;
+		$sheet->setCellValue('A' . $row, 'CANTIDAD DE RESULTADOS: ');
+		$sheet->setCellValue('B' . $row, count($resultFilter->result));
 
-		$sheet->getStyle('A4:T4')->applyFromArray($styleHeaders);
-		$sheet->getStyle('A5:T' . $row)->applyFromArray($styleCells);
+		$sheet->getStyle('A1:W1')->applyFromArray($styleCab);
+		$sheet->getStyle('A2:W2')->applyFromArray($styleCab);
 
-		$sheet->mergeCells('A1:T1');
-		$sheet->mergeCells('A2:T2');
+		$sheet->getStyle('A4:W4')->applyFromArray($styleHeaders);
+		$sheet->getStyle('A5:W' . $row)->applyFromArray($styleCells);
+
+		$sheet->mergeCells('A1:W1');
+		$sheet->mergeCells('A2:W2');
 		$drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
 		$drawing->setName('FGEBC');
 		$drawing->setDescription('LOGO');
@@ -998,6 +998,7 @@ class ReportesController extends BaseController
 		$writer = new Xlsx($spreadSheet);
 
 		$filename = urlencode("Registro_Diario_" . session('NOMBRE') . ".xlsx");
+		$filename = str_replace(array(" ", "+"), '_', $filename);
 		header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 		header("Content-Disposition: attachment; filename=\"$filename\"");
 		header("Content-Transfer-Encoding: binary");
@@ -2751,5 +2752,20 @@ class ReportesController extends BaseController
 	public function formatFecha($date)
 	{
 		return date("d/m/Y", strtotime($date));
+	}
+
+	/**
+	 * Funcion para formatear string a hora en formato hora:minutos:segundos
+	 *
+	 * @param  mixed $string
+	 */
+	function stringToTime($string)
+	{
+		$tiempo = strtotime($string);
+		if ($tiempo === false) {
+			return '';
+		}
+
+		return date('H:i:s', $tiempo);
 	}
 }
