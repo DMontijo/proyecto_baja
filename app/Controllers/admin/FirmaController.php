@@ -1069,7 +1069,6 @@ class FirmaController extends BaseController
 		$options = new Options();
 		$options->set('isRemoteEnabled', true);
 		$options->set('isPhpEnabled', true);
-		// $options->set('defaultFont', 'Arial');
 		$dompdf = new Dompdf($options);
 		$dompdf->loadHtml(view('doc_template/document', ['data' => $data]));
 		$dompdf->setPaper('A4', 'portrait');

@@ -7490,7 +7490,7 @@ class DashboardController extends BaseController
 
 		$relacionfisfis = $this->_relacionIDOModelRead->asObject()->where('FOLIOID', $data->folio->FOLIOID)->where('ANO', $data->folio->ANO)->where('PERSONAFISICAIDVICTIMA', $victima)->where('PERSONAFISICAIDIMPUTADO', $imputado)->first();
 		if ($data->plantilla['TITULO'] == 'DENUNCIA ANONIMA') {
-			$data->plantilla = str_replace('[FOLIO]',  $data->folio->FOLIOID, $data->plantilla);
+			$data->plantilla = str_replace('[FOLIO]',  $data->folio->FOLIOID . '/' . $data->folio->ANO, $data->plantilla);
 			$data->plantilla = str_replace('[USUARIO_ID]',  $data->folio->AGENTEATENCIONID, $data->plantilla);
 			$data->plantilla = str_replace('[NOTAS]',  $data->folio->NOTASAGENTE, $data->plantilla);
 			$data->plantilla = str_replace('[HORA_NOTAS]',  date('H:i:s', strtotime($data->folio->FECHASALIDA)), $data->plantilla);
@@ -8917,7 +8917,7 @@ class DashboardController extends BaseController
 		$options->set('isPhpEnabled', true);
 		// $options->set('defaultFont', 'Arial');
 		$dompdf = new Dompdf($options);
-		$dompdf->loadHtml(view('doc_template/document', ['data' => $data]));
+		$dompdf->loadHtml(view('doc_template/template_documents_only_placeholder', ['data' => $data]));
 		$dompdf->setPaper('A4', 'portrait');
 		$dompdf->render();
 		$canvas = $dompdf->getCanvas();
