@@ -138,7 +138,7 @@ class FirmaController extends BaseController
 			$document_name = $plantilla->TITULO;
 
 			// Asignacion de fecha actual
-			$FECHAFIRMA = date("Y-m-d");
+			$FECHAFIRMA = date("d-m-Y");
 			$HORAFIRMA = date("H:i");
 
 
@@ -426,7 +426,7 @@ class FirmaController extends BaseController
 		$password = str_replace(' ', '', trim($this->request->getPost('contrasena')));
 		$user_id = session('ID');
 		$meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
-		$FECHAFIRMA = date("Y-m-d");
+		$FECHAFIRMA = date("d-m-Y");
 		$HORAFIRMA = date("H:i");
 
 		if ($folio == null || $folio == "undefined") {
@@ -576,7 +576,7 @@ class FirmaController extends BaseController
 		$password = str_replace(' ', '', trim($this->request->getPost('contrasena_doc')));
 		$user_id = session('ID');
 		$meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
-		$FECHAFIRMA = date("Y-m-d");
+		$FECHAFIRMA = date("d-m-Y");
 		$HORAFIRMA = date("H:i");
 
 		if ($folio == null || $folio == "undefined") {
