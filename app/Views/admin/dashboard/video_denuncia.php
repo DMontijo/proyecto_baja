@@ -4510,7 +4510,7 @@
 			document.querySelector('#narracion_delito').addEventListener('input', (event) => {
 				event.target.value = clearText(event.target.value).toUpperCase();
 			}, false)
-
+			$('#lugar_delito').select2({ theme: "bootstrap"});
 			document.querySelector('#municipio_delito').addEventListener('change', (e) => {
 				//municipio del hecho mp
 				let select_localidad = document.querySelector('#localidad_delito');
@@ -4813,6 +4813,8 @@
 			//INTL TEL INPUT END
 
 			//CREAR PERSONA FISICA
+			$('#ocupacion_new').select2({ theme: "bootstrap"});
+			$('#ocupacion_pf').select2({ theme: "bootstrap"});
 			document.querySelector('#fecha_nacimiento_new').addEventListener('change', (e) => {
 				let fecha = e.target.value;
 				let hoy = new Date();

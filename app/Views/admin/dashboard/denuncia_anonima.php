@@ -348,6 +348,20 @@
 	$('#delito_cometido').select2({
 		theme: "bootstrap"
 	});
+
+	$('#lugar').select2({
+		theme: "bootstrap"
+	});
+	$('#ocupacion_pf').select2({
+		theme: "bootstrap"
+	});
+	$('#ocupacion_new').select2({
+		theme: "bootstrap"
+	});
+
+
+
+
 	document.querySelector('#ocupacion_pf').addEventListener('change', (e) => {
 		let select_ocupacion = document.querySelector('#ocupacion_pf');
 		let input_ocupacion = document.querySelector('#ocupacion_pf_m');
