@@ -43,7 +43,6 @@ class LoginController extends BaseController
 		$this->_rolesPermisosModelReader = model('RolesPermisosModel', true, $this->db_read);
 		$this->_rolesUsuariosModelRead = model('RolesUsuariosModel', true, $this->db_read);
 		$this->_usuariosModelRead = model('UsuariosModel', true, $this->db_read);
-
 	}
 
 	/**
@@ -76,13 +75,14 @@ class LoginController extends BaseController
 		$data = $this->_usuariosModelRead->where('CORREO', $email)->first();
 
 		if ($data) {
-			// Verifica que no tenga sesiones activas
-			$control_session = $this->_sesionesModelRead->asObject()->where('ID_USUARIO', $data['ID'])->where('ACTIVO', 1)->first();
-			if ($control_session) {
-				return redirect()->to(base_url('/admin'))->with('message_session', 'Ya tienes sesiones activas, cierralas para continuar.')->with('id',  $data['ID']);
-			}
 			// Valida la contraseña ingresada con la de su usuario
 			if (validatePassword($password, $data['PASSWORD'])) {
+				// Verifica que no tenga sesiones activas
+				$control_session = $this->_sesionesModelRead->asObject()->where('ID_USUARIO', $data['ID'])->where('ACTIVO', 1)->first();
+				if ($control_session) {
+					return redirect()->to(base_url('/admin'))->with('message_session', 'Ya tienes sesiones activas, cierralas para continuar.')->with('id',  $data['ID']);
+				}
+
 				$data['permisos'] = $this->_rolesPermisosModelReader->select('PERMISOS.PERMISODESCR AS NOMBRE')->where('ROLID', $data['ROLID'])->join('PERMISOS', 'PERMISOS.PERMISOID = ROLESPERMISOS.PERMISOID', 'left')->findAll();
 				$data['permisos'] = array_column($data['permisos'], ('NOMBRE'));
 				$data['rol'] = $this->_rolesUsuariosModelRead->asObject()->where('ID', $data['ROLID'])->first();
