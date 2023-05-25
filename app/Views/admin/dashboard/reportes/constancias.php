@@ -136,7 +136,7 @@
 											<tr>
 												<td class="text-center font-weight-bold"><?= $constancia->CONSTANCIAEXTRAVIOID ?></td>
 												<td class="text-center"><?= $constancia->ANO ?></td>
-												<td class="text-center"><?= isset($constancia->FECHAFIRMA) ? $constancia->FECHAFIRMA : '' ?></td>
+												<td class="text-center"><?= isset($constancia->FECHAFIRMA) ? date('d-m-Y', strtotime($constancia->FECHAFIRMA)) : '' ?></td>
 												<td class="text-center"><?= $constancia->STATUS ?></td>
 												<td class="text-center"><?= $constancia->NOMBRE_DENUNCIANTE ?></td>
 												<td class="text-center"><?= ($constancia->GENERO == 'M' ? 'MASCULINO' : ($constancia->GENERO == 'F' ? 'FEMENINO' : ''))?></td>

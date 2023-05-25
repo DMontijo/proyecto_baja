@@ -440,7 +440,7 @@ class ExtravioController extends BaseController
 		$data[5]->PLACEHOLDER = str_replace('[NUMEROIDENTIFICADOR]', $constancias->NUMEROIDENTIFICADOR, $data[5]->PLACEHOLDER);
 		$data[5]->PLACEHOLDER = str_replace('[RFCFIRMA]', $constancias->RFCFIRMA, $data[5]->PLACEHOLDER);
 		$data[5]->PLACEHOLDER = str_replace('[NCERTIFICADOFIRMA]', $constancias->NCERTIFICADOFIRMA, $data[5]->PLACEHOLDER);
-		$data[5]->PLACEHOLDER = str_replace('[FECHAFIRMA]', $constancias->FECHAFIRMA, $data[5]->PLACEHOLDER);
+		$data[5]->PLACEHOLDER = str_replace('[FECHAFIRMA]', date('d-m-Y', strtotime($constancias->FECHAFIRMA)), $data[5]->PLACEHOLDER);
 		$data[5]->PLACEHOLDER = str_replace('[HORAFIRMA]', $constancias->HORAFIRMA, $data[5]->PLACEHOLDER);
 		$data[5]->PLACEHOLDER = str_replace('[LUGARFIRMA]', $constancias->LUGARFIRMA, $data[5]->PLACEHOLDER);
 		$data[5]->PLACEHOLDER = str_replace('[FIRMAELECTRONICA]', $constancias->FIRMAELECTRONICA, $data[5]->PLACEHOLDER);
