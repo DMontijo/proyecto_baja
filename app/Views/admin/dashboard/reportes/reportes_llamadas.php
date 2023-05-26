@@ -41,12 +41,12 @@
 
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
 												<label for="fecha" class="form-label font-weight-bold">Fecha de inicio:</label>
-												<input type="datetime-local" class="form-control" id="fechaInicio" name="fechaInicio" max="<?= date("Y-m-d") ?>" value="<?= isset($body_data->filterParams->sessionStartedAt) ? date('d-m-Y H:i:s',strtotime($body_data->filterParams->sessionStartedAt)) : '' ?>">
+												<input type="datetime-local" class="form-control" id="fechaInicio" name="fechaInicio" max="<?= date("Y-m-d") ?>" value="<?= isset($body_data->filterParams->sessionStartedAt) ? date('d-m-Y H:i:s', strtotime($body_data->filterParams->sessionStartedAt)) : '' ?>">
 											</div>
 
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
 												<label for="fecha" class="form-label font-weight-bold">Fecha de cierre:</label>
-												<input type="datetime-local" class="form-control" id="fechaFin" name="fechaFin" max="<?= date("Y-m-d") ?>" value="<?= isset($body_data->filterParams->sessionFinishedAt) ?date('d-m-Y H:i:s',strtotime( $body_data->filterParams->sessionFinishedAt)) : '' ?>">
+												<input type="datetime-local" class="form-control" id="fechaFin" name="fechaFin" max="<?= date("Y-m-d") ?>" value="<?= isset($body_data->filterParams->sessionFinishedAt) ? date('d-m-Y H:i:s', strtotime($body_data->filterParams->sessionFinishedAt)) : '' ?>">
 											</div>
 
 											<div class="col-12 text-right">
@@ -80,11 +80,11 @@
 						<table id="registro_llamadas" class="table table-bordered table-striped">
 							<thead>
 								<tr>
-									<th class="text-center">Folio</th>
-									<th class="text-center">Inicio</th>
-									<th class="text-center">Fin</th>
-									<th class="text-center">Agente</th>
-									<th class="text-center">Denunciante</th>
+									<th class="text-center">FOLIO</th>
+									<th class="text-center">INICIO</th>
+									<th class="text-center">FIN</th>
+									<th class="text-center">AGENTE</th>
+									<th class="text-center">DENUNCIANTE</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -93,9 +93,9 @@
 									<tr>
 										<td class="text-center font-weight-bold"><?= $llamada->guestConnectionId->folio ?></td>
 										<td class="text-center"><?= date('d-m-Y H:i:s', strtotime($llamada->sessionStartedAt)) ?></td>
-										<td class="text-center"><?= $llamada->sessionFinishedAt!= null ? date('d-m-Y H:i:s',strtotime($llamada->sessionFinishedAt)) :'-' ?></td>
+										<td class="text-center"><?= $llamada->sessionFinishedAt != null ? date('d-m-Y H:i:s', strtotime($llamada->sessionFinishedAt)) : '-' ?></td>
 										<td class="text-center"><?= $llamada->agentConnectionId->agent->fullName ?></td>
-										<td class="text-center"><?= $llamada->guestConnectionId->uuid->details->NOMBRE .' ' . $llamada->guestConnectionId->uuid->details->APELLIDO_PATERNO?></td>
+										<td class="text-center"><?= $llamada->guestConnectionId->uuid->details->NOMBRE . ' ' . $llamada->guestConnectionId->uuid->details->APELLIDO_PATERNO ?></td>
 									</tr>
 								<?php } ?>
 							</tbody>
@@ -113,9 +113,12 @@
 			responsive: false,
 			lengthChange: false,
 			autoWidth: true,
-			ordering: false,
-			searching: false,
-			pageLength: 30,
+			ordering: true,
+			order: [
+				[1, 'desc'],
+			],
+			searching: true,
+			pageLength: 10,
 			// dom: 'Bfrtip',
 			// buttons: [
 			// 	'copy', 'excel', 'pdf'
@@ -125,7 +128,8 @@
 			}
 		});
 	});
-
+</script>
+<script>
 	function collapse_filter() {
 		if (document.querySelector('#filtros').classList.contains('show')) {
 			document.querySelector('#filtros').classList.remove('show');

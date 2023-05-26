@@ -1030,6 +1030,7 @@ class ReportesController extends BaseController
 
 		$this->_loadView('Reporte FIEL', 'fiel', '', $data, 'fiel');
 	}
+
 	/**
 	 * Vista para ingresar a los reportes de llamadas
 	 * Se carga con un filtro default
@@ -1038,30 +1039,28 @@ class ReportesController extends BaseController
 	public function getReporteLlamadas()
 	{
 
+		$dataPost = (object) [
+			'sessionStartedAt' => date('Y-m-d\TH:i:s\Z', strtotime('-48 hours')),
+			'sessionFinishedAt' => date('Y-m-d\TH:i:s\Z', strtotime('+7 hours')),
+		];
+
 		//Conexion al servicio de videollamda
-		$endpoint = $this->urlApi . "call-records?pageSize=0";
+		$endpoint = $this->urlApi . "call-records?pageSize=0&sessionStartedFrom=" . $dataPost->sessionStartedAt . '&sessionStartedTo=' . $dataPost->sessionFinishedAt;
 		$response = $this->_curlGetService($endpoint);
 		if ($response->statusCode == "success") {
 			$dataView = (object)array();
-			$dataView->llamadas = $response->data;
-			$dataView->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
-			$empleado = array();
 			$llamadas = array();
 
 			//Filtro
 			foreach ($response->data as $key => $conexion) {
-				array_push($empleado, (object)['ID' => $conexion->agentConnectionId->agent->uuid, 'NOMBRE' => $conexion->agentConnectionId->agent->fullName]);
-				// $conexion->Fecha = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($conexion->Fecha)));
-				// $conexion->Inicio = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($conexion->Inicio)));
-				// $conexion->Fin = date("Y-m-d H:i:s", strtotime('-2 hour', strtotime($conexion->Fin)));
 				array_push($llamadas, $conexion);
-				// $promedio += strtotime($value->Duración) - strtotime("TODAY");
-
 			}
 
-			$dataView->empleados = array_unique($empleado, SORT_REGULAR);
+			$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
+			$dataView->empleados = $this->_usuariosModelRead->asObject()->select("CONCAT(NOMBRE,' ',APELLIDO_PATERNO,' ',APELLIDO_MATERNO) AS NOMBRE, TOKENVIDEO AS ID")->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
 			$dataView->llamadas = array_unique($llamadas, SORT_REGULAR);
-
+			$dataView->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
+			$dataView->filterParams = $dataPost;
 
 			$this->_loadView('Reporte llamadas', 'reportes_llamadas', '', $dataView, 'reportes_llamadas');
 		}
@@ -1083,28 +1082,17 @@ class ReportesController extends BaseController
 		//Conexion al servicio de videollamada
 		$endpoint = $this->urlApi . "call-records?pageSize=0&agentUuid=" . $dataPost->agentUuid . '&sessionStartedFrom=' . $dataPost->sessionStartedAt . '&sessionStartedTo=' . $dataPost->sessionFinishedAt;
 		$response = $this->_curlGetService($endpoint);
-		// var_dump($endpoint);
-		// exit;
-		$endpointAll = $this->urlApi . "call-records?pageSize=0";
-		$responseAll = $this->_curlGetService($endpointAll);
-		if ($responseAll->statusCode == "success") {
+		if ($response->statusCode == "success") {
 			$dataView = (object)array();
-			$empleado = array();
 			$llamadas = array();
 
-			// Filtro
-			foreach ($responseAll->data as $key => $conexionAll) {
-				array_push($empleado, (object)['ID' => $conexionAll->agentConnectionId->agent->uuid, 'NOMBRE' => $conexionAll->agentConnectionId->agent->fullName]);
-			}
-			if ($response != null) {
-				foreach ($response->data as $key => $conexion) {
-
-					array_push($llamadas, $conexion);
-				}
+			//Filtro
+			foreach ($response->data as $key => $conexion) {
+				array_push($llamadas, $conexion);
 			}
 
-
-			$dataView->empleados = array_unique($empleado, SORT_REGULAR);
+			$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
+			$dataView->empleados = $this->_usuariosModelRead->asObject()->select("CONCAT(NOMBRE,' ',APELLIDO_PATERNO,' ',APELLIDO_MATERNO) AS NOMBRE, TOKENVIDEO AS ID")->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
 			$dataView->llamadas = array_unique($llamadas, SORT_REGULAR);
 			$dataView->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 			$dataView->filterParams = $dataPost;
@@ -1112,6 +1100,7 @@ class ReportesController extends BaseController
 			$this->_loadView('Reporte llamadas', 'reportes_llamadas', '', $dataView, 'reportes_llamadas');
 		}
 	}
+
 	/**
 	 * Función para generar el reporte XLSX de reporte de llamadas
 	 * Recibe por metodo POST los datos del filtro
@@ -1129,25 +1118,19 @@ class ReportesController extends BaseController
 		//Conexion al servicio de videollamada
 		$endpoint = $this->urlApi . "call-records?pageSize=0&agentUuid=" . $dataPost->agentUuid . '&sessionStartedFrom=' . $dataPost->sessionStartedAt . '&sessionStartedTo=' . $dataPost->sessionFinishedAt;
 		$response = $this->_curlGetService($endpoint);
-		$endpointAll = $this->urlApi . "call-records?pageSize=0";
-		$responseAll = $this->_curlGetService($endpointAll);
 		$date = date("Y_m_d_h_i_s");
 
-		if ($responseAll->statusCode == "success") {
-			$dataView = (object)array();
-			$empleado = array();
+		if ($response->statusCode == "success") {
 			$llamadas = array();
 
 			// Filtro
-			foreach ($responseAll->data as $key => $conexionAll) {
-				array_push($empleado, (object)['ID' => $conexionAll->agentConnectionId->agent->uuid, 'NOMBRE' => $conexionAll->agentConnectionId->agent->fullName]);
-			}
 			if ($response != null) {
 				foreach ($response->data as $key => $conexion) {
-
 					array_push($llamadas, $conexion);
 				}
+				$llamadas = array_unique($llamadas, SORT_REGULAR);
 			}
+
 			//Inicio de XLSX
 			$spreadSheet = new Spreadsheet();
 			$spreadSheet->getProperties()
@@ -1243,15 +1226,12 @@ class ReportesController extends BaseController
 				'U', 'V', 'W', 'X', 'Y', 'Z'
 			];
 			$headers = [
-				"Fecha",
-				"Folio",
-				"Inicio",
-				"Fin",
-				"Agente",
-				"Cliente",
-				// "Espera",
-				// "Duración",
-				// "Estatus"
+				"FECHA",
+				"FOLIO",
+				"INICIO",
+				"FIN",
+				"AGENTE",
+				"DENUNCIANTE",
 			];
 
 			for ($i = 0; $i < count($headers); $i++) {
@@ -1262,7 +1242,6 @@ class ReportesController extends BaseController
 			$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
 
 			$row++;
-			$idAgente = 'id Agente';
 			//Llenado
 			foreach ($llamadas as $index => $llamada) {
 
@@ -1276,9 +1255,6 @@ class ReportesController extends BaseController
 				$sheet->setCellValue('D' . $row, $llamada->sessionFinishedAt != null ? date('d-m-Y H:i:s', strtotime($llamada->sessionFinishedAt)) : '-');
 				$sheet->setCellValue('E' . $row, $llamada->agentConnectionId->agent->fullName);
 				$sheet->setCellValue('F' . $row, $llamada->guestConnectionId->uuid->details->NOMBRE . ' ' . $llamada->guestConnectionId->uuid->details->APELLIDO_PATERNO);
-				// $sheet->setCellValue('G' . $row, $llamada->Espera);
-				// $sheet->setCellValue('H' . $row, $llamada->Duración);
-				// $sheet->setCellValue('I' . $row, $llamada->Estatus);
 
 				$sheet->setCellValue('G' . $row, '');
 
