@@ -110,7 +110,7 @@
 				[3, 'desc'],
 			],
 			searching: true,
-			pageLength: 100,
+			pageLength: 25,
 			// dom: 'Bfrtip',
 			// buttons: [
 			// 	'copy', 'excel', 'pdf'
@@ -130,7 +130,7 @@
 				[3, 'desc'],
 			],
 			searching: true,
-			pageLength: 100,
+			pageLength: 25,
 			// dom: 'Bfrtip',
 			// buttons: [
 			// 	'copy', 'excel', 'pdf'

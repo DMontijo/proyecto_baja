@@ -285,7 +285,7 @@
 				[0, 'asc'],
 			],
 			searching: true,
-			pageLength: 100,
+			pageLength: 25,
 			// dom: 'Bfrtip',
 			// buttons: [
 			// 	'copy', 'excel', 'pdf'
@@ -305,7 +305,7 @@
 				[0, 'asc'],
 			],
 			searching: true,
-			pageLength: 100,
+			pageLength: 25,
 			// dom: 'Bfrtip',
 			// buttons: [
 			// 	'copy', 'excel', 'pdf'
@@ -325,7 +325,7 @@
 				[0, 'asc'],
 			],
 			searching: true,
-			pageLength: 100,
+			pageLength: 25,
 			// dom: 'Bfrtip',
 			// buttons: [
 			// 	'copy', 'excel', 'pdf'
@@ -345,7 +345,7 @@
 				[0, 'asc'],
 			],
 			searching: true,
-			pageLength: 100,
+			pageLength: 25,
 			// dom: 'Bfrtip',
 			// buttons: [
 			// 	'copy', 'excel', 'pdf'
@@ -365,7 +365,7 @@
 				[0, 'asc'],
 			],
 			searching: true,
-			pageLength: 100,
+			pageLength: 25,
 			// dom: 'Bfrtip',
 			// buttons: [
 			// 	'copy', 'excel', 'pdf'
