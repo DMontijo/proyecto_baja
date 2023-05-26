@@ -3049,13 +3049,12 @@ class DashboardController extends BaseController
 		$expediente = $this->request->getPost('expediente');
 
 		$folioDocSinFirmar = $this->_folioDocModelRead->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'ABIERTO')->orderBy('FOLIODOCID', 'asc')->findAll();
-		$foliovd = $this->_folioModelRead->where('FOLIOID', $folio)->where('ANO', $year)->where('EXPEDIENTEID', $expediente)->where('STATUS', 'EXPEDIENTE')->first();
-
 		// Se revisa que no hayan documentos sin firmar
 		if ($folioDocSinFirmar) {
 			return json_encode((object)['status' => 4]);
 		}
 
+		$foliovd = $this->_folioModelRead->where('FOLIOID', $folio)->where('ANO', $year)->where('EXPEDIENTEID', $expediente)->where('STATUS', 'EXPEDIENTE')->first();
 		$folioDoc = $this->_folioDocModelRead->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOCID', 'asc')->findAll();
 		$archivosExternosVD = $this->_archivoExternoModelRead->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
 		$folioDocPeritaje = $this->_folioDocModelRead->expedienteDocumentos($folio, $year);
@@ -3327,15 +3326,13 @@ class DashboardController extends BaseController
 	 */
 	public function subirArchivosRemision($folio, $year, $expediente)
 	{
-		$folioDocSinFirmar = $this->_folioDocModelRead->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'ABIERTO')->orderBy('FOLIODOCID', 'asc')->findAll();
-		$foliovd = $this->_folioModelRead->where('FOLIOID', $folio)->where('ANO', $year)->where('EXPEDIENTEID', $expediente)->where('STATUS', 'EXPEDIENTE')->first();
+		$folioDocSinFirmar = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'ABIERTO')->orderBy('FOLIODOCID', 'asc')->findAll();
 		// Se revisa que no hayan documentos sin firmar
-
 		if ($folioDocSinFirmar) {
 			return json_encode((object)['status' => 4]);
 		}
-
-		$folioDoc = $this->_folioDocModel->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOCID', 'asc')->findAll();
+		$foliovd = $this->_folioModelRead->where('FOLIOID', $folio)->where('ANO', $year)->where('EXPEDIENTEID', $expediente)->where('STATUS', 'EXPEDIENTE')->first();
+		$folioDoc = $this->_folioDocModelRead->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOCID', 'asc')->findAll();
 		$archivosExternosVD = $this->_archivoExternoModelRead->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
 		$folioDocPeritaje = $this->_folioDocModelRead->expedienteDocumentos($folio, $year);
 		try {
