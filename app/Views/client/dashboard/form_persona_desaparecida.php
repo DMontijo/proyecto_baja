@@ -356,7 +356,7 @@
 
 <script>
 	$(function() {
-		$('[data-to	ggle="tooltip"]').tooltip()
+		$('[data-toggle="tooltip"]').tooltip()
 	});
 	document.querySelector('#ocupacion_des').addEventListener('change', (e) => {
 		let select_ocupacion = document.querySelector('#ocupacion_des');
