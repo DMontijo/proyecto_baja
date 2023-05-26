@@ -73,7 +73,11 @@
 			option.value = response.AREAID;
 			modulo.add(option);
 		});
+		modulo.disabled = false;
 		modulo.value = '';
+		$('#modulo').select2({
+			theme: "bootstrap"
+		});
 	}).fail(function(jqXHR, textStatus) {
 		clearSelect(modulo);
 	});

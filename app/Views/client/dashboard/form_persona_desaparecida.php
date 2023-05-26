@@ -345,15 +345,19 @@
 
 	<div class="col-12 text-center my-5">
 		<div class="form-check d-inline-block">
-			<input id="autorization_photo_des" name="autorization_photo_des" class="form-check-input" type="checkbox">
-			<label class="form-check-label" for="autorization_photo_des">
+			<input id="autorization_photo_des" name="autorization_photo_des" class="form-check-input" type="checkbox" data-toggle="tooltip" data-placement="left" title="Al autorizar la publicación en medios está autorizando que se pueda publicar tanto en medios electrónicos como redes sociales, así como televisión, radio, entre otros.">
+			<label class="form-check-label" for="autorization_photo_des" data-toggle="tooltip" data-placement="right" title="Al autorizar la publicación en medios está autorizando que se pueda publicar tanto en medios electrónicos como redes sociales, así como televisión, radio, entre otros.">
 				Doy autorización de publicar la fotografía e información en medios de comunicación.
 			</label>
+
 		</div>
 	</div>
 </div>
 
 <script>
+	$(function() {
+		$('[data-to	ggle="tooltip"]').tooltip()
+	});
 	document.querySelector('#ocupacion_des').addEventListener('change', (e) => {
 		let select_ocupacion = document.querySelector('#ocupacion_des');
 		let input_ocupacion = document.querySelector('#ocupacion_descr_des');

@@ -18,7 +18,7 @@ let folio_completo = document.getElementById("input_folio").value;
 let array = folio_completo.split("-");
 let folio_SY = array[1];
 let year_SF = array[0];
-var intervalo = setInterval(function() {
+var intervalo = setInterval(function () {
 	location.reload();
 }, 90000);
 
@@ -106,7 +106,7 @@ guestVideoService.registerOnDisconnect(e => {
 		} else if (result.dismiss === Swal.DismissReason.backdrop) {
 			console.log("Has hecho click fuera del modal");
 			var xhttp = new XMLHttpRequest();
-			xhttp.onreadystatechange = function() {
+			xhttp.onreadystatechange = function () {
 				if (this.readyState == 4 && this.status == 200) {
 					// Maneja la respuesta del servidor aquí
 				}
@@ -117,7 +117,7 @@ guestVideoService.registerOnDisconnect(e => {
 		} else {
 			console.log("Has hecho click en el botón aceptar");
 			var xhttp = new XMLHttpRequest();
-			xhttp.onreadystatechange = function() {
+			xhttp.onreadystatechange = function () {
 				if (this.readyState == 4 && this.status == 200) {
 					// Maneja la respuesta del servidor aquí
 				}
@@ -198,11 +198,11 @@ $acceptConfiguration.addEventListener("click", () => {
 	if (!audioStream) return;
 	if (!videoStream) return;
 
-	audioStream.getTracks().forEach(function(track) {
+	audioStream.getTracks().forEach(function (track) {
 		track.stop();
 	});
 
-	videoStream.getTracks().forEach(function(track) {
+	videoStream.getTracks().forEach(function (track) {
 		track.stop();
 	});
 
@@ -251,9 +251,9 @@ $acceptConfiguration.addEventListener("click", () => {
 const llenarSelectConDispositivosDisponiblesVideo = idDeDispositivo => {
 	if ($listaDeDispositivosVideo.length) $($listaDeDispositivosVideo).empty();
 
-	navigator.mediaDevices.enumerateDevices().then(function(dispositivos) {
+	navigator.mediaDevices.enumerateDevices().then(function (dispositivos) {
 		const dispositivosDeVideo = [];
-		dispositivos.forEach(function(dispositivo) {
+		dispositivos.forEach(function (dispositivo) {
 			const tipo = dispositivo.kind;
 
 			if (tipo === "videoinput") {
@@ -278,9 +278,9 @@ const llenarSelectConDispositivosDisponiblesVideo = idDeDispositivo => {
 const llenarSelectConDispositivosDisponiblesAudio = idDeDispositivo => {
 	$($listaDeDispositivosAudio).empty();
 
-	navigator.mediaDevices.enumerateDevices().then(function(dispositivos) {
+	navigator.mediaDevices.enumerateDevices().then(function (dispositivos) {
 		const dispositivosDeAudio = [];
-		dispositivos.forEach(function(dispositivo) {
+		dispositivos.forEach(function (dispositivo) {
 			const tipo = dispositivo.kind;
 
 			if (tipo === "audioinput") {
@@ -303,9 +303,9 @@ const llenarSelectConDispositivosDisponiblesAudio = idDeDispositivo => {
 };
 
 const llenarSelectConDispositivosDisponiblesVideoIOS = () => {
-	navigator.mediaDevices.enumerateDevices().then(function(dispositivos) {
+	navigator.mediaDevices.enumerateDevices().then(function (dispositivos) {
 		const dispositivosDeVideo = [];
-		dispositivos.forEach(function(dispositivo) {
+		dispositivos.forEach(function (dispositivo) {
 			const tipo = dispositivo.kind;
 			if (tipo === "videoinput") {
 				dispositivosDeVideo.push(dispositivo);
@@ -323,9 +323,9 @@ const llenarSelectConDispositivosDisponiblesVideoIOS = () => {
 	});
 };
 const llenarSelectConDispositivosDisponiblesAudioIOS = () => {
-	navigator.mediaDevices.enumerateDevices().then(function(dispositivos) {
+	navigator.mediaDevices.enumerateDevices().then(function (dispositivos) {
 		const dispositivosDeAudio = [];
-		dispositivos.forEach(function(dispositivo) {
+		dispositivos.forEach(function (dispositivo) {
 			const tipo = dispositivo.kind;
 			if (tipo === "audioinput") {
 				dispositivosDeAudio.push(dispositivo);
@@ -394,11 +394,11 @@ guestVideoService.saveGeolocation(() => {
 	let dispositivosDeAudio;
 
 	if (!isSafari && platform != "iPhone") {
-		navigator.mediaDevices.enumerateDevices().then(function(dispositivos) {
+		navigator.mediaDevices.enumerateDevices().then(function (dispositivos) {
 			dispositivosDeVideo = [];
 			dispositivosDeAudio = [];
 
-			dispositivos.forEach(function(dispositivo) {
+			dispositivos.forEach(function (dispositivo) {
 				const tipo = dispositivo.kind;
 
 				if (tipo === "videoinput") {
@@ -426,14 +426,14 @@ guestVideoService.saveGeolocation(() => {
 						deviceId: idDeDispositivo
 					}
 				},
-				function(streamObtenidoVideo) {
+				function (streamObtenidoVideo) {
 					llenarSelectConDispositivosDisponiblesVideo(
 						idDeDispositivo
 					);
 
 					$listaDeDispositivosVideo.onchange = () => {
 						if (videoStream) {
-							videoStream.getTracks().forEach(function(track) {
+							videoStream.getTracks().forEach(function (track) {
 								track.stop();
 							});
 						}
@@ -450,7 +450,7 @@ guestVideoService.saveGeolocation(() => {
 					$("#media-devices-selectors").removeAttr("hidden");
 					checkButtonAccept();
 				},
-				function(error) {
+				function (error) {
 					let listDevices = document.getElementById(
 						"listDevicesVideo"
 					);
@@ -477,14 +477,14 @@ guestVideoService.saveGeolocation(() => {
 						deviceId: idDeDispositivo
 					}
 				},
-				function(streamObtenidoAudio) {
+				function (streamObtenidoAudio) {
 					llenarSelectConDispositivosDisponiblesAudio(
 						idDeDispositivo
 					);
 
 					$listaDeDispositivosAudio.onchange = () => {
 						if (audioStream) {
-							audioStream.getTracks().forEach(function(track) {
+							audioStream.getTracks().forEach(function (track) {
 								track.stop();
 							});
 						}
@@ -501,7 +501,7 @@ guestVideoService.saveGeolocation(() => {
 					$("#media-devices-selectors").removeAttr("hidden");
 					checkButtonAccept();
 				},
-				function(error) {
+				function (error) {
 					let listDevices = document.getElementById(
 						"listDevicesAudio"
 					);
@@ -531,23 +531,24 @@ guestVideoService.saveGeolocation(() => {
 				: streamObtenidoVideo.id;
 			navigator.mediaDevices
 				.enumerateDevices()
-				.then(function(dispositivos) {
+				.then(function (dispositivos) {
 					dispositivosDeVideo = [];
 
-					dispositivos.forEach(function(dispositivo) {
+					dispositivos.forEach(function (dispositivo) {
 						const tipo = dispositivo.kind;
 						if (tipo === "videoinput") {
 							dispositivosDeVideo.push(dispositivo);
 						}
 					});
-					console.log(dispositivosDeVideo);
+					//console.log('camara seleccionada ',dispositivosDeVideo);
 
 					llenarSelectConDispositivosDisponiblesVideoIOS();
 
 					$listaDeDispositivosVideo.onchange = () => {
-						console.log("Cambiando dispositivo video");
+						$listaDeDispositivosVideo.empty();
+						console.log("Cambiando dispositivo video", $listaDeDispositivosVideo);
 						if (videoStream) {
-							videoStream.getTracks().forEach(function(track) {
+							videoStream.getTracks().forEach(function (track) {
 								track.stop();
 							});
 						}
@@ -556,10 +557,8 @@ guestVideoService.saveGeolocation(() => {
 
 					if (dispositivosDeVideo.length > 0) {
 						// $estado.classList.add('d-none');
-
 						videoStream = streamObtenidoVideo;
-						guestVideoService.videoStream = idDeDispositivo;
-						console.log($video);
+						guestVideoService.videoStream = streamObtenidoVideo.deviceId;
 						$video.srcObject = videoStream;
 						$video.play();
 
@@ -580,9 +579,9 @@ guestVideoService.saveGeolocation(() => {
 				: streamObtenidoAudio.id;
 			navigator.mediaDevices
 				.enumerateDevices()
-				.then(function(dispositivos) {
+				.then(function (dispositivos) {
 					dispositivosDeAudio = [];
-					dispositivos.forEach(function(dispositivo) {
+					dispositivos.forEach(function (dispositivo) {
 						const tipo = dispositivo.kind;
 						if (tipo === "audioinput") {
 							dispositivosDeAudio.push(dispositivo);
@@ -594,7 +593,7 @@ guestVideoService.saveGeolocation(() => {
 					$listaDeDispositivosAudio.onchange = () => {
 						console.log("Cambiando dispositivo audio");
 						if (audioStream) {
-							audioStream.getTracks().forEach(function(track) {
+							audioStream.getTracks().forEach(function (track) {
 								track.stop();
 							});
 						}
@@ -605,7 +604,7 @@ guestVideoService.saveGeolocation(() => {
 						// $estado.classList.add('d-none');
 
 						audioStream = streamObtenidoAudio;
-						guestVideoService.audioStream = idDeDispositivo;
+						guestVideoService.audioStream = streamObtenidoAudio.deviceId;
 
 						$audio.srcObject = audioStream;
 						$audio.play();
@@ -626,13 +625,13 @@ guestVideoService.saveGeolocation(() => {
 			idDeDispositivo = null ? delete options.deviceId : idDeDispositivo;
 			navigator.mediaDevices
 				.getUserMedia(options)
-				.then(function(streamObtenido) {
+				.then(function (streamObtenido) {
 					navigator.mediaDevices
 						.enumerateDevices()
-						.then(function(dispositivos) {
+						.then(function (dispositivos) {
 							dispositivosDeVideo = [];
 							dispositivosDeAudio = [];
-							dispositivos.forEach(function(dispositivo) {
+							dispositivos.forEach(function (dispositivo) {
 								const tipo = dispositivo.kind;
 								if (tipo === "videoinput") {
 									dispositivosDeVideo.push(dispositivo);
@@ -650,7 +649,7 @@ guestVideoService.saveGeolocation(() => {
 							}
 						});
 				})
-				.catch(function(err) {
+				.catch(function (err) {
 					console.log("Permiso denegado o error: ", err);
 					$estado.classList.remove("d-none");
 				});
