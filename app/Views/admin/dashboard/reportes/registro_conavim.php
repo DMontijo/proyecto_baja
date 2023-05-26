@@ -102,9 +102,9 @@
 								<?php } ?>
 							</div>
 						</div>
-						<div class="row">
+						<div class="row" style="font-size:10px;">
 							<div class="col-12" style="overflow-x:auto;">
-								<table id="registro_conavim" class="table table-bordered table-striped ">
+								<table id="registro_conavim" class="table table-bordered table-striped table-sm">
 									<thead>
 										<tr>
 											<th class="text-center">No.</th>
@@ -141,7 +141,8 @@
 												<td class="text-center"><?= ($orden->SEXO == 'M' ? 'MASCULINO' : ($orden->SEXO == 'F' ? 'FEMENINO' : '')) ?></td>
 												<td class="text-center"><?= $orden->LESIONES ?></td>
 											</tr>
-										<?php $num++; } ?>
+										<?php $num++;
+										} ?>
 									</tbody>
 								</table>
 							</div>

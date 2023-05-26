@@ -121,7 +121,7 @@
 				[1, 'desc'],
 			],
 			searching: true,
-			pageLength: 30,
+			pageLength: 25,
 			// dom: 'Bfrtip',
 			// buttons: [
 			// 	'copy', 'excel', 'pdf'

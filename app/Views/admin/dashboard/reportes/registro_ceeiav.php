@@ -93,41 +93,45 @@
 								<?php } ?>
 							</div>
 						</div>
-
-						<table id="registro_ceeaiv" class="table table-bordered table-striped">
-							<thead>
-								<tr>
-									<th class="text-center">No.</th>
-									<th class="text-center">FOLIO</th>
-									<th class="text-center" style="min-width:150px;">FECHA DE EXPEDICIÓN</th>
-									<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
-									<th class="text-center" style="min-width:150px;">MODULO QUE EXPIDE</th>
-									<th class="text-center" style="min-width:150px;">MUNICIPIO CANALIZACION</th>
-									<th class="text-center" style="min-width:150px;">SERVIDOR PUBLICO SOLICITANTE</th>
-									<th class="text-center" style="min-width:150px;">DELITO</th>
-									<th class="text-center" style="min-width:150px;">NOMBRE DE LA VICTIMA/OFENDIDO</th>
-								</tr>
-							</thead>
-							<tbody>
-								<?php
-								$num = 1;
-								foreach ($body_data->dataDocumentos as $index => $doc) {
-									$array = str_split($doc->EXPEDIENTEID);
-								?>
-									<tr>
-										<td class="text-center"><?= $num ?></td>
-										<td class="text-center font-weight-bold"><?= $doc->FOLIOID . '/' . $doc->ANO ?></td>
-										<td class="text-center"><?= $doc->FECHAFIRMA ?  date("d/m/Y", strtotime($doc->FECHAFIRMA)) : '' ?></td>
-										<td class="text-center"><?= $array[1] . $array[2] . $array[4] . $array[5] . '-' . $array[6] . $array[7] . $array[8] . $array[9] . '-' . $array[10] . $array[11] . $array[12] . $array[13] . $array[14] ?></td>
-										<td class="text-center">CENTRO DE DENUNCIA TECNÓLOGICA</td>
-										<td class="text-center"><?= $doc->MUNICIPIODESCR ?></td>
-										<td class="text-center"><?= $doc->NOMBRE_MP ?></td>
-										<td class="text-center"><?= $doc->DELITOMODALIDADDESCR ?></td>
-										<td class="text-center"><?= $doc->NOMBRE_VTM ?></td>									
-									</tr>
-								<?php $num++ ;} ?>
-							</tbody>
-						</table>
+						<div class="row" style="font-size:10px;">
+							<div class="col-12" style="overflow-x:auto;">
+								<table id="registro_ceeaiv" class="table table-bordered table-striped table-sm">
+									<thead>
+										<tr>
+											<th class="text-center">No.</th>
+											<th class="text-center">FOLIO</th>
+											<th class="text-center" style="min-width:150px;">FECHA DE EXPEDICIÓN</th>
+											<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
+											<th class="text-center" style="min-width:150px;">MODULO QUE EXPIDE</th>
+											<th class="text-center" style="min-width:150px;">MUNICIPIO CANALIZACION</th>
+											<th class="text-center" style="min-width:150px;">SERVIDOR PUBLICO SOLICITANTE</th>
+											<th class="text-center" style="min-width:150px;">DELITO</th>
+											<th class="text-center" style="min-width:150px;">NOMBRE DE LA VICTIMA/OFENDIDO</th>
+										</tr>
+									</thead>
+									<tbody>
+										<?php
+										$num = 1;
+										foreach ($body_data->dataDocumentos as $index => $doc) {
+											$array = str_split($doc->EXPEDIENTEID);
+										?>
+											<tr>
+												<td class="text-center"><?= $num ?></td>
+												<td class="text-center font-weight-bold"><?= $doc->FOLIOID . '/' . $doc->ANO ?></td>
+												<td class="text-center"><?= $doc->FECHAFIRMA ?  date("d/m/Y", strtotime($doc->FECHAFIRMA)) : '' ?></td>
+												<td class="text-center"><?= $array[1] . $array[2] . $array[4] . $array[5] . '-' . $array[6] . $array[7] . $array[8] . $array[9] . '-' . $array[10] . $array[11] . $array[12] . $array[13] . $array[14] ?></td>
+												<td class="text-center">CENTRO DE DENUNCIA TECNÓLOGICA</td>
+												<td class="text-center"><?= $doc->MUNICIPIODESCR ?></td>
+												<td class="text-center"><?= $doc->NOMBRE_MP ?></td>
+												<td class="text-center"><?= $doc->DELITOMODALIDADDESCR ?></td>
+												<td class="text-center"><?= $doc->NOMBRE_VTM ?></td>
+											</tr>
+										<?php $num++;
+										} ?>
+									</tbody>
+								</table>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>

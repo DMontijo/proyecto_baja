@@ -116,7 +116,7 @@
 								<?php } ?>
 							</div>
 							<div class="col-12" style="overflow-x:auto;">
-								<table id="constancias_generadas" class="table table-bordered table-striped table-sm" style="font-size:12px;">
+								<table id="constancias_generadas" class="table table-bordered table-striped table-sm" style="font-size:10px;">
 									<thead>
 										<tr>
 											<th class="text-center">CONSTANCIA</th>

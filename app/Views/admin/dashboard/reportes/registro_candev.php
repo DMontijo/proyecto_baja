@@ -107,43 +107,47 @@
 								<?php } ?>
 							</div>
 						</div>
-
-						<table id="registro_candev" class="table table-bordered table-striped table-sm">
-							<thead>
-								<tr>
-									<th class="text-center">No.</th>
-									<th class="text-center">FOLIO</th>
-									<th class="text-center">FECHA DE ATENCIÓN</th>
-									<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
-									<th class="text-center" style="min-width:150px;">MODULO QUE EXPIDE</th>
-									<th class="text-center" style="min-width:150px;">MUNICIPIO QUE ATIENDE</th>
-									<th class="text-center" style="min-width:150px;">SERVIDOR PUBLICO SOLICITANTE</th>
-									<th class="text-center" style="min-width:150px;">DELITO</th>
-									<th class="text-center" style="min-width:150px;">VICTIMA/OFENDIDO</th>
-									<th class="text-center" style="min-width:150px;">SALIDA</th>
-								</tr>
-							</thead>
-							<tbody>
-								<?php
-								$num = 1;
-								foreach ($body_data->dataInfo as $index => $orden) {
-									$array = isset($orden->EXPEDIENTEID) ? str_split($orden->EXPEDIENTEID) : '';
-								?>
-									<tr>
-										<td class="text-center"><?= $num ?></td>
-										<td class="text-center font-weight-bold"><?= $orden->FOLIOID ?></td>
-										<td class="text-center"><?= date("d/m/Y", strtotime($orden->HECHOFECHA)) ?></td>
-										<td class="text-center"><?= isset($orden->EXPEDIENTEID) ? $array[1] . $array[2] . $array[4] . $array[5] . '-' . $array[6] . $array[7] . $array[8] . $array[9] . '-' . $array[10] . $array[11] . $array[12] . $array[13] . $array[14] : '' ?></td>
-										<td class="text-center">CENTRO DE DENUNCIA TECNÓLOGICA</td>
-										<td class="text-center"><?= $orden->MUNICIPIODESCR ?></td>
-										<td class="text-center"><?= $orden->AGENTE_NOMBRE ?></td>
-										<td class="text-center"><?= $orden->DELITOMODALIDADDESCR ?></td>
-										<td class="text-center"><?= $orden->NOMBRE_VTM ?></td>
-										<td class="text-center"><?= $orden->STATUS ?></td>
-									</tr>
-								<?php $num++; } ?>
-							</tbody>
-						</table>
+						<div class="row" style="font-size:10px;">
+							<div class="col-12" style="overflow-x:auto;">
+								<table id="registro_candev" class="table table-bordered table-striped table-sm">
+									<thead>
+										<tr>
+											<th class="text-center">No.</th>
+											<th class="text-center">FOLIO</th>
+											<th class="text-center">FECHA DE ATENCIÓN</th>
+											<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
+											<th class="text-center" style="min-width:150px;">MODULO QUE EXPIDE</th>
+											<th class="text-center" style="min-width:150px;">MUNICIPIO QUE ATIENDE</th>
+											<th class="text-center" style="min-width:150px;">SERVIDOR PUBLICO SOLICITANTE</th>
+											<th class="text-center" style="min-width:150px;">DELITO</th>
+											<th class="text-center" style="min-width:150px;">VICTIMA/OFENDIDO</th>
+											<th class="text-center" style="min-width:150px;">SALIDA</th>
+										</tr>
+									</thead>
+									<tbody>
+										<?php
+										$num = 1;
+										foreach ($body_data->dataInfo as $index => $orden) {
+											$array = isset($orden->EXPEDIENTEID) ? str_split($orden->EXPEDIENTEID) : '';
+										?>
+											<tr>
+												<td class="text-center"><?= $num ?></td>
+												<td class="text-center font-weight-bold"><?= $orden->FOLIOID ?></td>
+												<td class="text-center"><?= date("d/m/Y", strtotime($orden->HECHOFECHA)) ?></td>
+												<td class="text-center"><?= isset($orden->EXPEDIENTEID) ? $array[1] . $array[2] . $array[4] . $array[5] . '-' . $array[6] . $array[7] . $array[8] . $array[9] . '-' . $array[10] . $array[11] . $array[12] . $array[13] . $array[14] : '' ?></td>
+												<td class="text-center">CENTRO DE DENUNCIA TECNÓLOGICA</td>
+												<td class="text-center"><?= $orden->MUNICIPIODESCR ?></td>
+												<td class="text-center"><?= $orden->AGENTE_NOMBRE ?></td>
+												<td class="text-center"><?= $orden->DELITOMODALIDADDESCR ?></td>
+												<td class="text-center"><?= $orden->NOMBRE_VTM ?></td>
+												<td class="text-center"><?= $orden->STATUS ?></td>
+											</tr>
+										<?php $num++;
+										} ?>
+									</tbody>
+								</table>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
