@@ -74,8 +74,7 @@
 				</div>
 			</div>
 			<?php if (session('ROLID') == 1 || session('ROLID') == 2 || session('ROLID') == 6 || session('ROLID') == 7 || session('ROLID') == 11) { ?>
-
-				<!-- <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+				<div class="col-12 col-sm-6 col-md-4 col-lg-3">
 					<div class="card shadow border-0 text-center">
 						<div class="card-body p-2" style="height:200px;">
 							<a href="<?= base_url('admin/dashboard/registro_atenciones') ?>" class="btn btn-primary btn-block h-100 d-flex flex-column justify-content-center align-items-center d-flex flex-column justify-content-center align-items-center">
@@ -83,7 +82,7 @@
 							</a>
 						</div>
 					</div>
-				</div> -->
+				</div>
 			<?php } ?>
 			<div class="col-12 col-sm-6 col-md-4 col-lg-3">
 				<div class="card shadow border-0 text-center">

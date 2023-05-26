@@ -40,14 +40,14 @@
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
 												<label for="agente" class="form-label font-weight-bold">Agente:</label>
 												<select class="form-control" id="agente" name="agente" required>
-													<?php 
+													<?php
 													$rolUser = session()->get('rol')->ID;
-													if ($rolUser == 1 || $rolUser == 2 || $rolUser == 6 || $rolUser == 7 || $rolUser == 11) {?>
-													<option selected value="">Todos los agentes</option>
-													<?php }else{?>
-														<option  value="" disabled>Todos los agentes</option>
+													if ($rolUser == 1 || $rolUser == 2 || $rolUser == 6 || $rolUser == 7 || $rolUser == 11) { ?>
+														<option selected value="">Todos los agentes</option>
+													<?php } else { ?>
+														<option value="" disabled>Todos los agentes</option>
 
-													<?php }?>
+													<?php } ?>
 													<?php foreach ($body_data->empleados as $index => $empleado) { ?>
 														<option <?= isset($body_data->filterParams->AGENTEATENCIONID) ? ($body_data->filterParams->AGENTEATENCIONID == $empleado->ID ? 'selected' : '') : null ?> value="<?= $empleado->ID ?>"> <?= $empleado->NOMBRE . ' ' . $empleado->APELLIDO_PATERNO . ' ' . $empleado->APELLIDO_MATERNO ?> </option>
 													<?php } ?>
@@ -155,7 +155,7 @@
 												$tipo = 'ANÓNIMA';
 											} else if ($folio->TIPODENUNCIA == 'TE') {
 												$tipo = 'TELEFÓNICA';
-											}else{
+											} else {
 												$tipo = 'ELECTRÓNICA';
 											}
 										?>

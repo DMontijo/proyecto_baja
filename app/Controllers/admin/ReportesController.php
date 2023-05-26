@@ -335,6 +335,7 @@ class ReportesController extends BaseController
 		$writer = new Xlsx($spreadSheet);
 
 		$filename = urlencode("Reporte_Folios_" . $date . ".xlsx");
+		$filename = str_replace(array(" ", "+"), '_', $filename);
 		header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 		header("Content-Disposition: attachment; filename=\"$filename\"");
 		header("Content-Transfer-Encoding: binary");
@@ -607,6 +608,7 @@ class ReportesController extends BaseController
 		$writer = new Xlsx($spreadSheet);
 
 		$filename = urlencode("Reporte_Constancias_" . $date . ".xlsx");
+		$filename = str_replace(array(" ", "+"), '_', $filename);
 		header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 		header("Content-Disposition: attachment; filename=\"$filename\"");
 		header("Content-Transfer-Encoding: binary");
@@ -886,6 +888,7 @@ class ReportesController extends BaseController
 			$segundos = '';
 			$minutos = '';
 			$prioridad = '';
+			$remision = '';
 
 			if ($folio->TIPOEXPEDIENTEID == 1 || $folio->TIPOEXPEDIENTEID == 4) {
 				$remision = $folio->OFICINA_EMP;
@@ -1291,6 +1294,7 @@ class ReportesController extends BaseController
 			$writer = new Xlsx($spreadSheet);
 
 			$filename = urlencode("Registro_Llamadas_" . $date . ".xlsx");
+			$filename = str_replace(array(" ", "+"), '_', $filename);
 			header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 			header("Content-Disposition: attachment; filename=\"$filename\"");
 			header("Content-Transfer-Encoding: binary");
@@ -1608,6 +1612,7 @@ class ReportesController extends BaseController
 		$writer = new Xlsx($spreadSheet);
 
 		$filename = urlencode("Reporte_Conavim_" . $date . ".xlsx");
+		$filename = str_replace(array(" ", "+"), '_', $filename);
 		header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 		header("Content-Disposition: attachment; filename=\"$filename\"");
 		header("Content-Transfer-Encoding: binary");
@@ -1932,7 +1937,8 @@ class ReportesController extends BaseController
 		// $drawing->setRotation(25);
 		$writer = new Xlsx($spreadSheet);
 
-		$filename = urlencode("Registro_Canalizaciones_Derivaciones_" . $date . ".xlsx");
+		$filename = urlencode("Reporte_Canalizaciones_Derivaciones_" . $date . ".xlsx");
+		$filename = str_replace(array(" ", "+"), '_', $filename);
 		header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 		header("Content-Disposition: attachment; filename=\"$filename\"");
 		header("Content-Transfer-Encoding: binary");
@@ -1966,7 +1972,6 @@ class ReportesController extends BaseController
 			$data['AGENTEATENCIONID'] = session('ID');
 		}
 		//Filtro
-
 		$resultFilter = $this->_folioModelRead->filterRegistroAtenciones($data);
 		$dataView = (object)array();
 		$dataView->result = $resultFilter->result;
@@ -2009,7 +2014,6 @@ class ReportesController extends BaseController
 		}
 		$municipio = $this->_municipiosModelRead->asObject()->where('ESTADOID', 2)->findAll();
 		//Generacion del filtro
-
 		$resultFilter = $this->_folioModelRead->filterRegistroAtenciones($data);
 		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
 		$empleado = $this->_usuariosModelRead->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
@@ -2196,15 +2200,15 @@ class ReportesController extends BaseController
 		$row++;
 
 		//Rellenado del XLSX
-
 		foreach ($resultFilter->result as $index => $folio) {
-
 			$inicio = '';
 			$fin = '';
 			$duracion = '';
+			$duracion_total = '';
 			$horas = '';
 			$segundos = '';
 			$minutos = '';
+			$prioridad = '';
 			$remision = '';
 
 			if ($folio->TIPOEXPEDIENTEID == 1 || $folio->TIPOEXPEDIENTEID == 4) {
@@ -2217,31 +2221,29 @@ class ReportesController extends BaseController
 				$remision = $folio->REMISION_CANALIZACION;
 			}
 
-			$endpointFolio = $this->urlApi . 'recordings/folio?folio=' . $folio->FOLIOID . '/' . $folio->ANO;
+			// Información del las llamadas por folio
+			$infoCall = $this->_videoCallModelRead->getReporteDiarioInfoByFolio($folio->FOLIOID, $folio->ANO);
 
-			$responseFolio = $this->_curlGetService($endpointFolio);
-			if ($responseFolio != null) {
-				foreach ($responseFolio as $key => $videoDuration) {
-					if ($videoDuration != '') {
+			if (count($infoCall) > 0) {
+				$infoCall = (object)$infoCall[0];
+				$inicio = $this->stringToTime($infoCall->sessionStartedAt);
 
-						$timestampInicio = strtotime($videoDuration->callRecordId->sessionStartedAt);
-						$inicio = date('H:i:s', $timestampInicio);
-
-						if ($videoDuration->callRecordId->sessionFinishedAt) {
-							$timestampFin = strtotime($videoDuration->callRecordId->sessionFinishedAt);
-							$fin = date('H:i:s', $timestampFin);
-						}
-					}
-					$duracion = $videoDuration->duration;
-					$horas = floor($duracion / 3600);
-					$minutos = floor(($duracion - ($horas * 3600)) / 60);
-					$segundos = $duracion - ($horas * 3600) - ($minutos * 60);
+				if ($infoCall->sessionFinishedAt) {
+					$fin = $this->stringToTime($infoCall->sessionFinishedAt);
 				}
+
+				$duracion = $infoCall->duration;
+				$horas = floor($duracion / 3600);
+				$minutos = floor(($duracion - ($horas * 3600)) / 60);
+				$segundos = $duracion - ($horas * 3600) - ($minutos * 60);
+				$duracion_total = $this->stringToTime(strval($horas)  . ':' . $minutos . ':' . number_format($segundos, 0));
+				$prioridad = $infoCall->priority;
 			}
+
 			$fecharegistro = strtotime($folio->FECHAREGISTRO);
 			$dateregistro = date('d-m-Y', $fecharegistro);
 			$sheet->setCellValue('A1', "CENTRO DE DENUNCIA TECNOLÓGICA");
-			$sheet->setCellValue('A2', "REGISTRO DE ATENCIONES");
+			$sheet->setCellValue('A2', "REPORTE DE ATENCIONES");
 			$tipo = '';
 			if ($folio->TIPODENUNCIA == 'VD') {
 				$tipo = 'VIDEO DENUNCIA';
@@ -2258,7 +2260,7 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('C' . $row, $folio->FOLIOID);
 			$sheet->setCellValue('D' . $row, $inicio != '' ? $inicio : '');
 			$sheet->setCellValue('E' . $row, isset($fin) ? $fin : '');
-			$sheet->setCellValue('F' . $row,  $horas != '' ? strval($horas)  . ':' . $minutos . ':' . number_format($segundos, 0) : 'NO HAY VIDEO GRABADO');
+			$sheet->setCellValue('F' . $row, $duracion_total != '' ? $duracion_total : 'NO HAY VIDEO');
 			$sheet->setCellValue('G' . $row, $tipo);
 			$sheet->setCellValue('H' . $row, $folio->MUNICIPIODESCR);
 			$sheet->setCellValue('I' . $row, $folio->N_DENUNCIANTE);
@@ -2269,14 +2271,14 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('N' . $row, $folio->CORREODENUNCIANTE);
 			$sheet->setCellValue('O' . $row, isset($folio->DELITOMODALIDADDESCR) ? $folio->DELITOMODALIDADDESCR : 'NO EXISTE');
 			$sheet->setCellValue('P' . $row, $folio->N_AGENT . ' ' . $folio->APP_AGENT . ' ' . $folio->APM_AGENT);
-			$sheet->setCellValue('Q' . $row, isset($folio->TIPOEXPEDIENTEDESCR) ? $folio->TIPOEXPEDIENTEDESCR : $folio->STATUS);
+			$sheet->setCellValue('Q' . $row, isset($folio->TIPOEXPEDIENTECLAVE) ? $folio->TIPOEXPEDIENTECLAVE : $folio->STATUS);
 			if (isset($folio->EXPEDIENTEID)) {
 				$arrayExpediente = str_split($folio->EXPEDIENTEID);
 				$expedienteid = $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
 			}
 			$sheet->setCellValue('R' . $row, $folio->EXPEDIENTEID ? $expedienteid . '/' . $folio->TIPOEXPEDIENTECLAVE : "SIN EXPEDIENTE");
 			$sheet->setCellValue('S' . $row, $remision); //remision
-			$sheet->setCellValue('T' . $row, "");
+			$sheet->setCellValue('T' . $row, $prioridad == '' ? 1 : $prioridad);
 
 			$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
 
@@ -2300,7 +2302,8 @@ class ReportesController extends BaseController
 		$drawing->setWorksheet($spreadSheet->getActiveSheet());
 		$writer = new Xlsx($spreadSheet);
 
-		$filename = urlencode("BITACORA_REGISTROS_DE_ATENCIONES.xlsx");
+		$filename = urlencode("Bitacora_Reporte_Atenciones.xlsx");
+		$filename = str_replace(array(" ", "+"), '_', $filename);
 		header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 		header("Content-Disposition: attachment; filename=\"$filename\"");
 		header("Content-Transfer-Encoding: binary");
@@ -2601,6 +2604,7 @@ class ReportesController extends BaseController
 		$writer = new Xlsx($spreadSheet);
 
 		$filename = urlencode("Reporte_Ceeaiv_" . $date . ".xlsx");
+		$filename = str_replace(array(" ", "+"), '_', $filename);
 		header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 		header("Content-Disposition: attachment; filename=\"$filename\"");
 		header("Content-Transfer-Encoding: binary");

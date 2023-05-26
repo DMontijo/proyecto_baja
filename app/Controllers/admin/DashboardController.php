@@ -912,7 +912,7 @@ class DashboardController extends BaseController
 		$data = (object) array();
 		$data->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 
-		$this->_loadView('Agente en llamada', 'usuarios_en_llamada', '', $data, 'usuarios_en_llamada');
+		$this->_loadView('Agentes en llamada', 'usuarios_en_llamada', '', $data, 'usuarios_en_llamada');
 	}
 
 	/**
