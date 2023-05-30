@@ -352,7 +352,7 @@ class FirmaController extends BaseController
 						//QR del contenido de la FIRMA
 						$qr2 = $this->_generateQR($signature->signed_chain);
 
-						$plantilla->PLACEHOLDER = str_replace('[CODIGO_QR_1]', '<img src="' . $qr1 . '" width="50px" height="50px">', $plantilla->PLACEHOLDER);
+						$plantilla->PLACEHOLDER = str_replace('[CODIGO_QR_1]', '<img src="' . $qr1 . '" width="100px" height="100px">', $plantilla->PLACEHOLDER);
 						$plantilla->PLACEHOLDER = str_replace('[CODIGO_QR_2]', '<img src="' . $qr2 . '" width="120px" height="120px">', $plantilla->PLACEHOLDER);
 						//Generacion del PDF de la constancia
 						$pdf = $this->_generatePDF($plantilla->PLACEHOLDER);
