@@ -27,6 +27,7 @@ export class VideoServiceAgent {
 	 */
 	#agentUUID;
 	#apiURI;
+	#apiURIAgentSuffix = "/agent";
 	#apiKey;
 	#socket;
 	#socketHeaders = {
@@ -67,6 +68,7 @@ export class VideoServiceAgent {
 	/**
 	 * @param {string} agentUUID - Preexisting agent uuid
 	 * @param {string} folio - Complaint folio
+	 * @param {string} apiURISuffix - Suffix of URL where video service API is
 	 * @param {Object} config - Basic configuration to use access API
 	 * @param {string} config.apiURI - URL where video service API is
 	 * @param {string} config.apiKey - API key to authorize connections
@@ -93,7 +95,7 @@ export class VideoServiceAgent {
 				"config.apiURI",
 				"VideoServiceAgent"
 			);
-		this.#apiURI = config.apiURI;
+		this.#apiURI = config.apiURI + this.#apiURIAgentSuffix;
 
 		if (!config?.apiKey)
 			throw ExceptionConstructorMissingParameter(
@@ -115,7 +117,7 @@ export class VideoServiceAgent {
 	 * @param {Function} callback - This method is executed after agent is connected to socket
 	 * @param {Function} onerrror - This method is executed if an exception occours
 	 */
-	connectAgent(callback, onerror) {
+	connectAgent(callback, onerror, ondisconnect) {
 		if (this.#socket) {
 			this.#socket.disconnect();
 		}
@@ -134,10 +136,11 @@ export class VideoServiceAgent {
 			if (typeof onerror === "function") onerror(response);
 		});
 
-		this.#socket.on("disconnect", () => {
+		this.#socket.on("disconnect", (response) => {
 			try {
 				this.#loggedOutSound.play();
 			} catch (error) { }
+			if (typeof ondisconnect === "function") ondisconnect(response)
 		});
 
 		this.#emit(

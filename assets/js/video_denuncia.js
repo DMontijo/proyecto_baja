@@ -99,7 +99,7 @@ disponible_connect.addEventListener("click", () => {
 	}
 
 	disponible_connect.disabled = true;
-	agentVideoService.connectAgent(
+	agentVideoService.connectAgent( 
 		() => {
 			console.log("¡Agente conectado con éxito!");
 			disponible_connect.disabled = false;
@@ -164,6 +164,11 @@ disponible_connect.addEventListener("click", () => {
 					timer: 3000,
 					timerProgressBar: true
 				});
+
+				agentVideoService.disconnectAgent(() => {
+					console.log("¡Agente desconectado con éxito!");
+					clearVideoCall();
+				});
 			});
 		},
 		response => {
@@ -188,6 +193,11 @@ disponible_connect.addEventListener("click", () => {
 				showConfirmButton: false,
 				timer: 3000,
 				timerProgressBar: true
+			});
+		},
+		ondisconnect => {
+			agentVideoService.disconnectAgent(() => {
+				console.log("SERVER ERROR - ¡Agente desconectado con éxito!");
 			});
 		}
 	);

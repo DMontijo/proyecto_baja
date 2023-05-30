@@ -21,6 +21,7 @@ let year_SF = array[0];
 var intervalo = setInterval(function () {
 	location.reload();
 }, 90000);
+var checkPriorityLine;
 
 // VIDEO Y AUDIO DE AGENTE SELECTER
 const mediaDevicesModal = document.getElementById("media_devices_modal");
@@ -190,6 +191,10 @@ guestVideoService.registerOnAgentDisconnected(() => {
 	document.querySelector("#documentos_anexar_card").style.display = "none";
 });
 
+guestVideoService.registerOnGuestConnected(() => {
+	clearInterval(checkPriorityLine);
+});
+
 $acceptConfiguration.addEventListener("click", () => {
 	if (!audioStream) return;
 	if (!videoStream) return;
@@ -209,6 +214,19 @@ $acceptConfiguration.addEventListener("click", () => {
 			{ delito, folio: folio_SY + "/" + year_SF, descripcion },
 			guest => {
 				console.log("Denuciante conectado");
+				clearInterval(intervalo);
+				checkPriorityLine = setInterval(() => {
+					guestVideoService.checkPriorityLine(guest.uuid, response => {
+						if (response !== true) {
+							console.log('not-queue');
+							checkPriorityLine = setInterval(() => {
+								location.reload();
+							}, 90000);
+						} else {
+							console.log('guest-in-queue');
+						}
+					});
+				}, 9000);
 				console.log(guest);
 			},
 			onerror => {
