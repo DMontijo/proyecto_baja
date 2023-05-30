@@ -520,100 +520,66 @@ guestVideoService.saveGeolocation(() => {
 			);
 		};
 	} else {
-		const mostrarStreamVideo = (streamObtenidoVideo = null) => {
+		const mostrarStreamVideo = (camera_selected = null) => {
+			
 			let options = {
-				video: true,
-				deviceId: streamObtenidoVideo.id
-			};
-
-			let idDeDispositivo = null
-				? delete options.deviceId
-				: streamObtenidoVideo.id;
-			navigator.mediaDevices
-				.enumerateDevices()
-				.then(function (dispositivos) {
-					dispositivosDeVideo = [];
-
-					dispositivos.forEach(function (dispositivo) {
-						const tipo = dispositivo.kind;
-						if (tipo === "videoinput") {
-							dispositivosDeVideo.push(dispositivo);
-						}
-					});
-					//console.log('camara seleccionada ',dispositivosDeVideo);
-
-					llenarSelectConDispositivosDisponiblesVideoIOS();
-
-					$listaDeDispositivosVideo.onchange = () => {
-						$listaDeDispositivosVideo.empty();
-						console.log("Cambiando dispositivo video", $listaDeDispositivosVideo);
-						if (videoStream) {
-							videoStream.getTracks().forEach(function (track) {
-								track.stop();
-							});
-						}
-						mostrarStreamVideo($listaDeDispositivosVideo.value);
-					};
-
-					if (dispositivosDeVideo.length > 0) {
-						// $estado.classList.add('d-none');
-						videoStream = streamObtenidoVideo;
-						guestVideoService.videoStream = streamObtenidoVideo.deviceId;
-						$video.srcObject = videoStream;
-						$video.play();
-
-						$("#media-devices-alert").attr("hidden", true);
-						$("#media-devices-selectors").removeAttr("hidden");
-						checkButtonAccept();
+				video: {
+					deviceId: {
+					  exact: camera_selected.deviceId ? camera_selected.deviceId : camera_selected,
 					}
-				});
-		};
-		const mostrarStreamAudio = (streamObtenidoAudio = null) => {
-			let options = {
-				deviceId: streamObtenidoAudio.id,
+				},
 				audio: true
 			};
 
-			let idDeDispositivo = null
-				? delete options.deviceId
-				: streamObtenidoAudio.id;
-			navigator.mediaDevices
-				.enumerateDevices()
-				.then(function (dispositivos) {
-					dispositivosDeAudio = [];
-					dispositivos.forEach(function (dispositivo) {
-						const tipo = dispositivo.kind;
-						if (tipo === "audioinput") {
-							dispositivosDeAudio.push(dispositivo);
-						}
+			navigator.mediaDevices.getUserMedia(options).then(function(streamObtenido) {
+				// console.log('camara selected', streamObtenido);
+				$listaDeDispositivosVideo.onchange = () => {
+					// console.log('anterior',videoStream);
+					videoStream.getTracks().forEach(function(track) {
+						track.stop();
 					});
+					mostrarStreamVideo($listaDeDispositivosVideo.value);
+				};
 
-					llenarSelectConDispositivosDisponiblesAudioIOS();
+				videoStream = streamObtenido;
+				guestVideoService.videoStream = camera_selected.deviceId ? camera_selected.deviceId : camera_selected;
+				console.log('service',guestVideoService.videoStream);
 
-					$listaDeDispositivosAudio.onchange = () => {
-						console.log("Cambiando dispositivo audio");
-						if (audioStream) {
-							audioStream.getTracks().forEach(function (track) {
-								track.stop();
-							});
-						}
-						mostrarStreamAudio($listaDeDispositivosAudio.value);
-					};
+				$video.srcObject = videoStream;
+				$video.play();
+			});
+		}; 
 
-					if (dispositivosDeAudio.length > 0) {
-						// $estado.classList.add('d-none');
+		const mostrarStreamAudio = (audio_selected = null) => {
 
-						audioStream = streamObtenidoAudio;
-						guestVideoService.audioStream = streamObtenidoAudio.deviceId;
-
-						$audio.srcObject = audioStream;
-						$audio.play();
-
-						$("#media-devices-alert").attr("hidden", true);
-						$("#media-devices-selectors").removeAttr("hidden");
-						checkButtonAccept();
+			let options = {
+				audio: {
+					deviceId: {
+					  exact: audio_selected.deviceId ? audio_selected.deviceId : audio_selected,
 					}
-				});
+				},
+			};
+
+			navigator.mediaDevices.getUserMedia(options).then(function(streamObtenido) {
+				// console.log('camara selected', streamObtenido);
+				$listaDeDispositivosAudio.onchange = () => {
+					// console.log('anterior',audioStream);
+					audioStream.getTracks().forEach(function(track) {
+						track.stop();
+					});
+					mostrarStreamAudio($listaDeDispositivosAudio.value);
+				};
+
+				audioStream = streamObtenido;
+				guestVideoService.audioStream = audio_selected.deviceId ? audio_selected.deviceId : audio_selected;
+
+				$audio.srcObject = audioStream;
+				$audio.play();
+			});
+
+			$("#media-devices-alert").attr("hidden", true);
+			$("#media-devices-selectors").removeAttr("hidden");
+			checkButtonAccept();
 		};
 
 		const mostrarStream = (idDeDispositivo = null) => {
@@ -623,33 +589,33 @@ guestVideoService.saveGeolocation(() => {
 				audio: true
 			};
 			idDeDispositivo = null ? delete options.deviceId : idDeDispositivo;
-			navigator.mediaDevices
-				.getUserMedia(options)
-				.then(function (streamObtenido) {
-					navigator.mediaDevices
-						.enumerateDevices()
-						.then(function (dispositivos) {
-							dispositivosDeVideo = [];
-							dispositivosDeAudio = [];
-							dispositivos.forEach(function (dispositivo) {
-								const tipo = dispositivo.kind;
-								if (tipo === "videoinput") {
-									dispositivosDeVideo.push(dispositivo);
-								}
-								if (tipo === "audioinput") {
-									dispositivosDeAudio.push(dispositivo);
-								}
-							});
-							if (dispositivosDeVideo.length > 0) {
-								mostrarStreamVideo(streamObtenido);
+			
+			navigator.mediaDevices.getUserMedia(options).then(function(streamObtenido) {
+					navigator.mediaDevices.enumerateDevices().then(function(dispositivos) {
+						dispositivosDeVideo = [];
+						dispositivosDeAudio = [];
+						dispositivos.forEach(function(dispositivo) {
+							const tipo = dispositivo.kind;
+							if (tipo === "videoinput") {
+								dispositivosDeVideo.push(dispositivo);
 							}
-
-							if (dispositivosDeAudio.length > 0) {
-								mostrarStreamAudio(streamObtenido);
+							if (tipo === "audioinput") {
+								dispositivosDeAudio.push(dispositivo);
 							}
 						});
+						
+						if (dispositivosDeVideo.length > 0) {
+							llenarSelectConDispositivosDisponiblesVideoIOS();
+							mostrarStreamVideo(dispositivosDeVideo[0]);
+						}
+
+						if (dispositivosDeAudio.length > 0) {
+							llenarSelectConDispositivosDisponiblesAudioIOS();
+							mostrarStreamAudio(dispositivosDeAudio[0]);
+						}
+					});
 				})
-				.catch(function (err) {
+				.catch(function(err) {
 					console.log("Permiso denegado o error: ", err);
 					$estado.classList.remove("d-none");
 				});
