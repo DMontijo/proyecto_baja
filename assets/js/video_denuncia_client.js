@@ -543,10 +543,11 @@ guestVideoService.saveGeolocation(() => {
 
 				videoStream = streamObtenido;
 				guestVideoService.videoStream = camera_selected.deviceId ? camera_selected.deviceId : camera_selected;
-				console.log('service',guestVideoService.videoStream);
+				console.log('video w', videoStream);
 
 				$video.srcObject = videoStream;
 				$video.play();
+				checkButtonAccept();
 			});
 		}; 
 
@@ -561,7 +562,7 @@ guestVideoService.saveGeolocation(() => {
 			};
 
 			navigator.mediaDevices.getUserMedia(options).then(function(streamObtenido) {
-				// console.log('camara selected', streamObtenido);
+				console.log('camara selected', streamObtenido);
 				$listaDeDispositivosAudio.onchange = () => {
 					// console.log('anterior',audioStream);
 					audioStream.getTracks().forEach(function(track) {
@@ -572,14 +573,16 @@ guestVideoService.saveGeolocation(() => {
 
 				audioStream = streamObtenido;
 				guestVideoService.audioStream = audio_selected.deviceId ? audio_selected.deviceId : audio_selected;
-
+				console.log('audio w', audioStream);
 				$audio.srcObject = audioStream;
 				$audio.play();
+				checkButtonAccept();
 			});
 
 			$("#media-devices-alert").attr("hidden", true);
 			$("#media-devices-selectors").removeAttr("hidden");
-			checkButtonAccept();
+			//console.log('remove attee')
+			//if (audioStream && videoStream) $($acceptConfiguration).removeAttr("disabled");
 		};
 
 		const mostrarStream = (idDeDispositivo = null) => {

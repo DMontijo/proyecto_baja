@@ -902,10 +902,12 @@ function initMediaDevices() {
 
 				videoStream = streamObtenido;
 				agentVideoService.videoStream = camera_selected.deviceId ? camera_selected.deviceId : camera_selected;
-				console.log('service',agentVideoService.videoStream);
+				// console.log('service',agentVideoService.videoStream);
 
 				$video.srcObject = videoStream;
 				$video.play();
+				if (audioStream && videoStream) $($acceptConfiguration).removeAttr("disabled");
+
 			});
 		}; 
 
@@ -934,11 +936,15 @@ function initMediaDevices() {
 
 				$audio.srcObject = audioStream;
 				$audio.play();
+				if (audioStream && videoStream) $($acceptConfiguration).removeAttr("disabled");
+
 			});
 
 			$("#media-devices-alert").attr("hidden", true);
 			$("#media-devices-selectors").removeAttr("hidden");
-			if (audioStream && videoStream) $($acceptConfiguration).removeAttr("disabled");
+			// console.log('audio w', audioStream);
+			// console.log('video w', videoStream);
+			// if (audioStream && videoStream) $($acceptConfiguration).removeAttr("disabled");
 		};
 
 		const mostrarStream = (idDeDispositivo = null) => {
