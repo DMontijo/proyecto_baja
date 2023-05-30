@@ -692,6 +692,7 @@ const llenarSelectConDispositivosDisponiblesAudio = idDeDispositivo => {
 };
 
 const llenarSelectConDispositivosDisponiblesVideoIOS = () => {
+	if ($listaDeDispositivosVideo.length) $($listaDeDispositivosVideo).empty();
 	//console.log('llenando video');
 	navigator.mediaDevices.enumerateDevices().then(function(dispositivos) {
 		const dispositivosDeVideo = [];
@@ -713,6 +714,7 @@ const llenarSelectConDispositivosDisponiblesVideoIOS = () => {
 	});
 };
 const llenarSelectConDispositivosDisponiblesAudioIOS = () => {
+	if ($listaDeDispositivosAudio.length) $($listaDeDispositivosAudio).empty();
 	//console.log('llenando audio');
 	navigator.mediaDevices.enumerateDevices().then(function(dispositivos) {
 		const dispositivosDeAudio = [];
