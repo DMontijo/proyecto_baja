@@ -582,7 +582,7 @@ class ReportesController extends BaseController
 
 			$sheet->setCellValue('A' . $row, $constancia->CONSTANCIAEXTRAVIOID);
 			$sheet->setCellValue('B' . $row, $constancia->ANO);
-			$sheet->setCellValue('C' . $row, isset($constancia->FECHAFIRMA) ? $constancia->FECHAFIRMA : '');
+			$sheet->setCellValue('C' . $row, isset($constancia->FECHAFIRMA) ? date('d-m-Y', strtotime($constancia->FECHAFIRMA)) : '');
 			$sheet->setCellValue('D' . $row, $constancia->NOMBRE_DENUNCIANTE);
 			$sheet->setCellValue('E' . $row, isset($constancia->NOMBRE_AGENTE) ? $constancia->NOMBRE_AGENTE : 'NO SE HA FIRMADO');
 			$sheet->setCellValue('F' . $row, $constancia->ESTADODESCR);

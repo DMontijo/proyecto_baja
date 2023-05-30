@@ -34,7 +34,7 @@
                                     <td class="text-center font-weight-bold"><?= $constancia->CONSTANCIAEXTRAVIOID ?>
                                     </td>
                                     <td class="text-center"><?= $constancia->ANO ?></td>
-                                    <td class="text-center"><?= $constancia->FECHA ?></td>
+                                    <td class="text-center"><?= date('d-m-Y', strtotime($constancia->FECHA)) ?></td>
                                     <td class="text-center"><?= $constancia->HORA ?></td>
                                     <td class="text-center"><?= $constancia->NOMBRE ?></td>
                                     <td class="text-center"><?= $constancia->CORREO?></td>

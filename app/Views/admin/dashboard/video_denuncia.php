@@ -1657,7 +1657,7 @@
 				} else if (response.status === 2) {
 					Swal.fire({
 						icon: 'error',
-						html: 'El folio se encuentra en atención.',
+						html: 'El folio se encuentra en atención por el agente: <strong>' + response.agente + '</strong>',
 						confirmButtonColor: '#bf9b55',
 					});
 				} else if (response.status === 3) {

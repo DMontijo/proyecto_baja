@@ -174,8 +174,8 @@
 												<td class="text-center"><?= $folio->NOMBRE_AGENTE ?></td>
 												<td class="text-center"><?= $folio->MUNICIPIODESCR ?></td>
 												<td class="text-center"><?= $folio->OFICINADESCR ? $folio->OFICINADESCR : $folio->MODULODESCR ?></td>
-												<td class="text-center"><?= $folio->FECHAREGISTRO ?></td>
-												<td class="text-center"><?= $folio->FECHASALIDA ?  $folio->FECHASALIDA : '' ?></td>
+												<td class="text-center"><?= date('d-m-Y H:i:s', strtotime($folio->FECHAREGISTRO)) ?></td>
+												<td class="text-center"><?= $folio->FECHASALIDA ?  date('d-m-Y H:i:s', strtotime($folio->FECHASALIDA)) : '' ?></td>
 											</tr>
 										<?php } ?>
 									</tbody>
