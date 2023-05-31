@@ -96,7 +96,7 @@
 							El rol es obligatorio
 						</div>
 					</div>
-					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3" id="municipio_div">
 						<label for="municipio" class="form-label font-weight-bold">Municipio</label>
 						<select class="form-control" name="municipio" id="municipio" required>
 							<option value="" selected disabled>Selecciona el municipio</option>
@@ -110,10 +110,34 @@
 							El municipio es obligatorio
 						</div>
 					</div>
-					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3" id="municipios_multiple">
+						<label for="mun" class="form-label font-weight-bold">Municipio</label>
+						<select class="js-example-basic-multiple form-control" name="mun[]" id="mun" multiple="multiple">
+							<option value="" disabled>Selecciona el municipio</option>
+							<option value="1">ENSENADA</option>
+							<option value="2">MEXICALI</option>
+							<option value="3">TECATE</option>
+							<option value="4">TIJUANA</option>
+							<option value="5">PLAYAS DE ROSARITO</option>
+						</select>
+						<div class="invalid-feedback">
+							El municipio es obligatorio
+						</div>
+					</div>
+					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3" id="oficina_div">
 						<label for="oficina" class="font-weight-bold">Oficina</label>
 						<select class="form-control" name="oficina" id="oficina" required>
 							<option value="" selected disabled>Selecciona la oficina</option>
+						</select>
+						<div class="invalid-feedback">
+							La oficina es obligatoria
+						</div>
+					</div>
+
+					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3" id="oficina_multiple">
+						<label for="ofi" class="form-label font-weight-bold">Oficina</label>
+						<select class="js-example-basic-multiple form-control" name="ofi[]" id="ofi" multiple="multiple">
+							<option value="" disabled>Selecciona la oficina</option>
 						</select>
 						<div class="invalid-feedback">
 							La oficina es obligatoria
@@ -137,9 +161,20 @@
 			const inputsText = document.querySelectorAll('input[type="text"]');
 			const inputsEmail = document.querySelectorAll('input[type="email"]');
 			const municipio = document.querySelector('#municipio');
+			const mun = document.querySelector('#mun');
+			const ofi = document.querySelector('#ofi');
+
+			const rol = document.querySelector('#rol_usuario');
+
 			const oficina_select = document.querySelector('#oficina');
 			const password = document.querySelector('#password_usuario');
 			const toggle_password = document.querySelector('#toggle-password');
+			// $('.js-example-basic-multiple').select2();
+			$('#mun').select2();
+			$('#ofi').select2();
+
+			document.getElementById('municipios_multiple').classList.add('d-none');
+			document.getElementById('oficina_multiple').classList.add('d-none');
 
 			inputsText.forEach((input) => {
 				input.addEventListener('input', function(event) {
@@ -166,6 +201,44 @@
 				}
 
 			}, false);
+			rol.addEventListener('change', function(event) {
+				if (event.target.value == 12) {
+					municipio.required = false;
+					mun.required = true;
+					document.getElementById('municipio_div').classList.add('d-none');
+					document.getElementById('municipios_multiple').classList.remove('d-none');
+
+					oficina.required = false;
+					ofi.required = true;
+					document.getElementById('oficina_div').classList.add('d-none');
+					document.getElementById('oficina_multiple').classList.remove('d-none');
+				}
+			});
+
+			$('#mun').on('change', function() {
+				var selectedValues = $(this).val();
+				console.log(selectedValues); // Hacer algo con los valores seleccionados
+
+				$.ajax({
+					data: {
+						'municipio': selectedValues,
+					},
+					url: "<?= base_url('/data/get-oficinas-by-municipio') ?>",
+					method: "POST",
+					dataType: "json",
+				}).done(function(data) {
+					clearSelect(ofi);
+					data.forEach(oficina => {
+						let option = document.createElement("option");
+						option.text = oficina.OFICINADESCR;
+						option.value = oficina.MUNICIPIOID+ ',' +oficina.OFICINAID;
+						ofi.add(option);
+					});
+					ofi.value = '';
+				}).fail(function(jqXHR, textStatus) {
+					clearSelect(ofi);
+				});
+			});
 
 			municipio.addEventListener('change', function(event) {
 				$.ajax({

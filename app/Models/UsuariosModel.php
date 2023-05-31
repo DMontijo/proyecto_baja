@@ -13,6 +13,7 @@ class UsuariosModel extends Model
 		'ZONAID',
 		'MUNICIPIOID',
 		'OFICINAID',
+		'MUNICIPIOSOFICINASID',
 		'NOMBRE',
 		'APELLIDO_PATERNO',
 		'APELLIDO_MATERNO',
