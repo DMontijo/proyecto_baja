@@ -375,6 +375,19 @@
 			input_ocupacion.value = '';
 		}
 	});
+	document.querySelector('#fecha_nacimiento_pf').addEventListener('blur', (e) => {
+			let fecha = e.target.value;
+			let hoy = new Date();
+			let cumpleanos = new Date(fecha);
+			let edad = hoy.getFullYear() - cumpleanos.getFullYear();
+			let m = hoy.getMonth() - cumpleanos.getMonth();
+
+			if (m < 0 || (m === 0 && hoy.getDate() <= cumpleanos.getDate())) {
+				edad--;
+			}
+			document.querySelector('#edad_pf').value = edad;
+
+		});
 	document.querySelector('#victima_conocido').addEventListener('change', (e) => {
 		if (e.target.value == 1) {
 			$('#insert_persona_victima_modal_denuncia').modal('show');
