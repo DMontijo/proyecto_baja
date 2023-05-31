@@ -73,6 +73,9 @@
 			¿La dirección contiene manzana y lote?
 		</label>
 	</div>
+	<div class="col-12 my-4 text-center">
+		<button type="submit" class="btn btn-primary font-weight-bold">ACTUALIZAR DOMICILIO</button>
+	</div>
 </form>
 <script>
 	(function() {
