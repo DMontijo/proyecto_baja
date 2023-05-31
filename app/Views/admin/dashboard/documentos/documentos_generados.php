@@ -67,7 +67,7 @@
 <?php } ?>
 <?php if ($body_data->foliorow[0]->TIPODENUNCIA == "DA") { ?>
 	<script>
-		document.getElementById('enviarDocumento').disabled = true;
+		// document.getElementById('enviarDocumento').disabled = true;
 	</script>
 <?php } ?>
 <?php if ($body_data->foliorow[0]->STATUS == "CANALIZADO" || $body_data->foliorow[0]->STATUS == "DERIVADO") { ?>
