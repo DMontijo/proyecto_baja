@@ -202,7 +202,7 @@
 
 			}, false);
 			rol.addEventListener('change', function(event) {
-				if (event.target.value == 12) {
+				if (event.target.value == 13) {
 					municipio.required = false;
 					mun.required = true;
 					document.getElementById('municipio_div').classList.add('d-none');
