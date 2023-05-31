@@ -31,6 +31,7 @@ export class VideoServiceGuest {
 	#guestUUID;
 	#folio;
 	#apiURI;
+	#apiURIGuestSuffix = "/guest";
 	#apiKey;
 	#socket;
 	#socketHeaders = {
@@ -108,7 +109,7 @@ export class VideoServiceGuest {
 				"config.apiURI",
 				"VideoServiceGuest"
 			);
-		this.#apiURI = config.apiURI;
+		this.#apiURI = config.apiURI + this.#apiURIGuestSuffix;
 
 		if (!config?.apiKey)
 			throw ExceptionConstructorMissingParameter(
@@ -147,7 +148,10 @@ export class VideoServiceGuest {
 		});
 
 		this.#socket.on("disconnect", function (data) {
-			console.warn("ON Disconnect", data);
+			console.warn("ON Disconnect SERVER reloading", data);
+			setInterval(function () {
+				location.reload();
+			}, 9000);
 			if (typeof ondisconnect === "function") ondisconnect(data);
 		});
 
@@ -174,6 +178,21 @@ export class VideoServiceGuest {
 				if (typeof callback === "function") callback(guest);
 			}
 		);
+	}
+
+	checkPriorityLine(guest, callback) {
+		this.#emit('check-proprity-line', guest, callback);
+	}
+
+	/**
+	 * Register the listener for guest connections
+	 *
+	 * @param {Function} [callback] - This method is executed after guest is assigned to agent
+	 */
+	registerOnGuestConnected(callback) {
+		this.#socket.on("guest-connected", (response) => {
+			if (typeof callback === "function") callback(response);
+		});
 	}
 
 	/**

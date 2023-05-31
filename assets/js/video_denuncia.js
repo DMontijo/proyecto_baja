@@ -205,6 +205,13 @@ disponible_connect.addEventListener("click", () => {
 						timer: 3000,
 						timerProgressBar: true
 					});
+				},
+				ondisconnect => {
+					agentVideoService.disconnectAgent(() => {
+						console.log(
+							"SERVER ERROR - ¡Agente desconectado con éxito!"
+						);
+					});
 				}
 			);
 		})
@@ -882,65 +889,75 @@ function initMediaDevices() {
 		};
 	} else {
 		const mostrarStreamVideo = (camera_selected = null) => {
-			
 			let options = {
 				video: {
 					deviceId: {
-					  exact: camera_selected.deviceId ? camera_selected.deviceId : camera_selected,
+						exact: camera_selected.deviceId
+							? camera_selected.deviceId
+							: camera_selected
 					}
 				},
 				audio: true
 			};
 
-			navigator.mediaDevices.getUserMedia(options).then(function(streamObtenido) {
-				// console.log('camara selected', streamObtenido);
-				$listaDeDispositivosVideo.onchange = () => {
-					// console.log('anterior',videoStream);
-					videoStream.getTracks().forEach(function(track) {
-						track.stop();
-					});
-					mostrarStreamVideo($listaDeDispositivosVideo.value);
-				};
+			navigator.mediaDevices
+				.getUserMedia(options)
+				.then(function(streamObtenido) {
+					// console.log('camara selected', streamObtenido);
+					$listaDeDispositivosVideo.onchange = () => {
+						// console.log('anterior',videoStream);
+						videoStream.getTracks().forEach(function(track) {
+							track.stop();
+						});
+						mostrarStreamVideo($listaDeDispositivosVideo.value);
+					};
 
-				videoStream = streamObtenido;
-				agentVideoService.videoStream = camera_selected.deviceId ? camera_selected.deviceId : camera_selected;
-				// console.log('service',agentVideoService.videoStream);
+					videoStream = streamObtenido;
+					agentVideoService.videoStream = camera_selected.deviceId
+						? camera_selected.deviceId
+						: camera_selected;
+					// console.log('service',agentVideoService.videoStream);
 
-				$video.srcObject = videoStream;
-				$video.play();
-				if (audioStream && videoStream) $($acceptConfiguration).removeAttr("disabled");
-
-			});
-		}; 
+					$video.srcObject = videoStream;
+					$video.play();
+					if (audioStream && videoStream)
+						$($acceptConfiguration).removeAttr("disabled");
+				});
+		};
 
 		const mostrarStreamAudio = (audio_selected = null) => {
-
 			let options = {
 				audio: {
 					deviceId: {
-					  exact: audio_selected.deviceId ? audio_selected.deviceId : audio_selected,
+						exact: audio_selected.deviceId
+							? audio_selected.deviceId
+							: audio_selected
 					}
-				},
+				}
 			};
 
-			navigator.mediaDevices.getUserMedia(options).then(function(streamObtenido) {
-				// console.log('camara selected', streamObtenido);
-				$listaDeDispositivosAudio.onchange = () => {
-					// console.log('anterior',audioStream);
-					audioStream.getTracks().forEach(function(track) {
-						track.stop();
-					});
-					mostrarStreamAudio($listaDeDispositivosAudio.value);
-				};
+			navigator.mediaDevices
+				.getUserMedia(options)
+				.then(function(streamObtenido) {
+					// console.log('camara selected', streamObtenido);
+					$listaDeDispositivosAudio.onchange = () => {
+						// console.log('anterior',audioStream);
+						audioStream.getTracks().forEach(function(track) {
+							track.stop();
+						});
+						mostrarStreamAudio($listaDeDispositivosAudio.value);
+					};
 
-				audioStream = streamObtenido;
-				agentVideoService.audioStream = audio_selected.deviceId ? audio_selected.deviceId : audio_selected;
+					audioStream = streamObtenido;
+					agentVideoService.audioStream = audio_selected.deviceId
+						? audio_selected.deviceId
+						: audio_selected;
 
-				$audio.srcObject = audioStream;
-				$audio.play();
-				if (audioStream && videoStream) $($acceptConfiguration).removeAttr("disabled");
-
-			});
+					$audio.srcObject = audioStream;
+					$audio.play();
+					if (audioStream && videoStream)
+						$($acceptConfiguration).removeAttr("disabled");
+				});
 
 			$("#media-devices-alert").attr("hidden", true);
 			$("#media-devices-selectors").removeAttr("hidden");
@@ -956,31 +973,35 @@ function initMediaDevices() {
 				audio: true
 			};
 			idDeDispositivo = null ? delete options.deviceId : idDeDispositivo;
-			
-			navigator.mediaDevices.getUserMedia(options).then(function(streamObtenido) {
-					navigator.mediaDevices.enumerateDevices().then(function(dispositivos) {
-						dispositivosDeVideo = [];
-						dispositivosDeAudio = [];
-						dispositivos.forEach(function(dispositivo) {
-							const tipo = dispositivo.kind;
-							if (tipo === "videoinput") {
-								dispositivosDeVideo.push(dispositivo);
+
+			navigator.mediaDevices
+				.getUserMedia(options)
+				.then(function(streamObtenido) {
+					navigator.mediaDevices
+						.enumerateDevices()
+						.then(function(dispositivos) {
+							dispositivosDeVideo = [];
+							dispositivosDeAudio = [];
+							dispositivos.forEach(function(dispositivo) {
+								const tipo = dispositivo.kind;
+								if (tipo === "videoinput") {
+									dispositivosDeVideo.push(dispositivo);
+								}
+								if (tipo === "audioinput") {
+									dispositivosDeAudio.push(dispositivo);
+								}
+							});
+
+							if (dispositivosDeVideo.length > 0) {
+								llenarSelectConDispositivosDisponiblesVideoIOS();
+								mostrarStreamVideo(dispositivosDeVideo[0]);
 							}
-							if (tipo === "audioinput") {
-								dispositivosDeAudio.push(dispositivo);
+
+							if (dispositivosDeAudio.length > 0) {
+								llenarSelectConDispositivosDisponiblesAudioIOS();
+								mostrarStreamAudio(dispositivosDeAudio[0]);
 							}
 						});
-						
-						if (dispositivosDeVideo.length > 0) {
-							llenarSelectConDispositivosDisponiblesVideoIOS();
-							mostrarStreamVideo(dispositivosDeVideo[0]);
-						}
-
-						if (dispositivosDeAudio.length > 0) {
-							llenarSelectConDispositivosDisponiblesAudioIOS();
-							mostrarStreamAudio(dispositivosDeAudio[0]);
-						}
-					});
 				})
 				.catch(function(err) {
 					console.log("Permiso denegado o error: ", err);
