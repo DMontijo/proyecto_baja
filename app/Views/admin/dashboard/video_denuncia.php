@@ -1654,6 +1654,8 @@
 					//FOLIO DENUNCIANTES
 					if (folioDenunciantes) llenarTablaFolioDenunciantes(folioDenunciantes);
 
+					$('#lugar_delito').trigger('change');
+
 				} else if (response.status === 2) {
 					Swal.fire({
 						icon: 'error',
@@ -2949,6 +2951,7 @@
 						.REFERENCIA : '';
 
 					// document.querySelector('#zona_pfd').value = domicilio.ZONA ? domicilio.ZONA : '';
+					$('#ocupacion_pf').trigger('change');
 
 					$('#folio_persona_fisica_modal').modal('show');
 
