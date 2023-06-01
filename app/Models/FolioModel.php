@@ -129,13 +129,13 @@ class FolioModel extends Model
 			$strQuery = $strQuery . ' WHERE ';
 		}
 
-		$strQuery = $strQuery . 'FOLIO.FECHAREGISTRO BETWEEN CAST("' .
+		$strQuery = $strQuery . 'FOLIO.FECHASALIDA BETWEEN CAST("' .
 			(isset($fechaInicio) ? date("Y-m-d", strtotime($fechaInicio)) : date("Y-m-d")) . ' ' .
 			(isset($horaInicio) ? (date('H:i:s', strtotime($horaInicio))) : '00:00:00') . '" AS DATETIME)' . ' AND ' . 'CAST("' .
 			(isset($fechaFin) ? (isset($obj['horaFin']) ? date("Y-m-d", strtotime($fechaFin)) : date("Y-m-d", strtotime(date("Y-m-d", strtotime($fechaFin))))) : date("Y-m-d")) . ' ' .
 			(isset($horaFin) ? (date('H:i:s', strtotime($horaFin))) : '23:59:59') . '" AS DATETIME)';
 		$strQuery = $strQuery . ' GROUP BY FOLIO.FOLIOID';
-		$strQuery = $strQuery . ' ORDER BY FOLIO.FECHASALIDA DESC';
+		$strQuery = $strQuery . ' ORDER BY FOLIO.FECHASALIDA ASC';
 		$resultAll = $this->db->query($strQuery)->getResult();
 
 		$strQueryCriterio = 'SELECT FOLIOID, ANO, NUMEROEXPEDIENTE, FOLIODOCID, TIPODOC FROM FOLIODOC WHERE TIPODOC = "CRITERIO DE OPORTUNIDAD"';

@@ -581,6 +581,7 @@ class ReportesController extends BaseController
 			'AÑO',
 			'FECHA DE FIRMA',
 			'NOMBRE DEL SOLICITANTE',
+			'GENERO',
 			'NOMBRE DEL AGENTE',
 			'ESTADO DE ATENCIÓN',
 			'MUNICIPIO DE ATENCIÓN',
@@ -602,8 +603,9 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('B' . $row, $constancia->ANO);
 			$sheet->setCellValue('C' . $row, isset($constancia->FECHAFIRMA) ? date('d-m-Y', strtotime($constancia->FECHAFIRMA)) : '');
 			$sheet->setCellValue('D' . $row, $constancia->NOMBRE_DENUNCIANTE);
-			$sheet->setCellValue('E' . $row, isset($constancia->NOMBRE_AGENTE) ? $constancia->NOMBRE_AGENTE : 'NO SE HA FIRMADO');
-			$sheet->setCellValue('F' . $row, $constancia->ESTADODESCR);
+			$sheet->setCellValue('E' . $row, ($constancia->GENERO == 'M' ? 'MASCULINO' : ($constancia->GENERO == 'F' ? 'FEMENINO' : '')));
+			$sheet->setCellValue('F' . $row, isset($constancia->NOMBRE_AGENTE) ? $constancia->NOMBRE_AGENTE : 'NO SE HA FIRMADO');
+			$sheet->setCellValue('G' . $row, $constancia->ESTADODESCR);
 			if ($constancia->MUNICIPIOIDCITA != null) {
 				$sheet->setCellValue('G' . $row, $constancia->MUNICIPIODESCRCITA);
 			}
