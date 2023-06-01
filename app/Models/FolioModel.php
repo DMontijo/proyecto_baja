@@ -59,9 +59,9 @@ class FolioModel extends Model
 	{
 		$strQuery = 'SELECT
 		FOLIO.FOLIOID, FOLIO.ANO, FOLIO.EXPEDIENTEID, FOLIO.STATUS, FOLIO.TIPODENUNCIA, FOLIO.FECHAREGISTRO,FOLIO.FECHASALIDA,
-		CONCAT(DENUNCIANTES.NOMBRE," ",DENUNCIANTES.APELLIDO_PATERNO," ",DENUNCIANTES.APELLIDO_MATERNO) AS "NOMBRE_DENUNCIANTE",
+		CONCAT(DENUNCIANTES.NOMBRE," ",DENUNCIANTES.APELLIDO_PATERNO," ",DENUNCIANTES.APELLIDO_MATERNO) AS "NOMBRE_DENUNCIANTE", DENUNCIANTES.SEXO AS GENERO,
 		CONCAT(USUARIOS.NOMBRE," ",USUARIOS.APELLIDO_PATERNO," ",USUARIOS.APELLIDO_MATERNO) AS "NOMBRE_AGENTE", 
-		ESTADO.ESTADODESCR,MUNICIPIO.MUNICIPIODESCR,MUNICIPIOASIGNADO.MUNICIPIODESCR AS MUNICIPIOASIGNADO, TIPOEXPEDIENTE.TIPOEXPEDIENTEDESCR, EMPLEADOS.AREADESCR, TIPOEXPEDIENTE.TIPOEXPEDIENTECLAVE 
+		ESTADO.ESTADODESCR,MUNICIPIO.MUNICIPIODESCR,MUNICIPIOASIGNADO.MUNICIPIODESCR AS MUNICIPIOASIGNADO, TIPOEXPEDIENTE.TIPOEXPEDIENTEDESCR, EMPLEADOS.AREADESCR, TIPOEXPEDIENTE.TIPOEXPEDIENTECLAVE, DELMOD.DELITOMODALIDADDESCR AS DELITO
 		FROM FOLIO 
 		LEFT JOIN USUARIOS ON USUARIOS.ID = FOLIO.AGENTEATENCIONID
 		LEFT JOIN MUNICIPIO AS MUNICIPIOASIGNADO ON MUNICIPIOASIGNADO.MUNICIPIOID = FOLIO.MUNICIPIOASIGNADOID AND MUNICIPIOASIGNADO.ESTADOID = 2
@@ -69,7 +69,9 @@ class FolioModel extends Model
 		LEFT JOIN TIPOEXPEDIENTE ON TIPOEXPEDIENTE.TIPOEXPEDIENTEID = FOLIO.TIPOEXPEDIENTEID
 		LEFT JOIN EMPLEADOS ON EMPLEADOS.EMPLEADOID = FOLIO.AGENTEASIGNADOID AND EMPLEADOS.MUNICIPIOID = FOLIO.MUNICIPIOASIGNADOID
 		LEFT JOIN ESTADO ON ESTADO.ESTADOID = FOLIO.ESTADOID
-		LEFT JOIN MUNICIPIO ON MUNICIPIO.MUNICIPIOID = FOLIO.MUNICIPIOID AND MUNICIPIO.ESTADOID = FOLIO.ESTADOID';
+		LEFT JOIN MUNICIPIO ON MUNICIPIO.MUNICIPIOID = FOLIO.MUNICIPIOID AND MUNICIPIO.ESTADOID = FOLIO.ESTADOID
+		LEFT JOIN FOLIOPERSONAFISIMPDELITO ON FOLIO.FOLIOID = FOLIOPERSONAFISIMPDELITO.FOLIOID
+		LEFT JOIN DELITOMODALIDAD AS DELMOD ON DELMOD.DELITOMODALIDADID = FOLIOPERSONAFISIMPDELITO.DELITOMODALIDADID';
 
 		$fechaInicio = isset($obj['fechaInicio']) ? $obj['fechaInicio'] : '';
 		$fechaFin = isset($obj['fechaFin']) ? $obj['fechaFin'] : '';
@@ -97,13 +99,28 @@ class FolioModel extends Model
 
 		foreach ($obj as $clave => $valor) {
 			$count -= 1;
-			if ($clave != 'fechaInicio' && $clave != 'fechaFin' && $clave != 'horaInicio' && $clave != 'horaFin') {
+			if ($clave != 'fechaInicio' && $clave != 'fechaFin' && $clave != 'horaInicio' && $clave != 'horaFin' && $clave != 'GENERO' && $clave != 'TIPOEXP') {
 				$strQuery = $strQuery . 'FOLIO.' . $clave . ' = ' . '"' . $valor . '"';
 
 				if ($count > 0) {
 					$strQuery = $strQuery . ' AND ';
 				}
 			}
+			if($clave == 'GENERO'){
+				$strQuery = $strQuery . 'DENUNCIANTES.SEXO'. ' = ' . '"' . $valor . '"';
+
+				if ($count > 0) {
+					$strQuery = $strQuery . ' AND ';
+				}
+			}
+			if($clave == 'TIPOEXP'){
+				$strQuery = $strQuery . 'TIPOEXPEDIENTE.TIPOEXPEDIENTEID'. ' = ' . '"' . $valor . '"';
+
+				if ($count > 0) {
+					$strQuery = $strQuery . ' AND ';
+				}
+			}
+
 		}
 
 		if (count($obj) > 0) {
@@ -117,11 +134,47 @@ class FolioModel extends Model
 			(isset($horaInicio) ? (date('H:i:s', strtotime($horaInicio))) : '00:00:00') . '" AS DATETIME)' . ' AND ' . 'CAST("' .
 			(isset($fechaFin) ? (isset($obj['horaFin']) ? date("Y-m-d", strtotime($fechaFin)) : date("Y-m-d", strtotime(date("Y-m-d", strtotime($fechaFin))))) : date("Y-m-d")) . ' ' .
 			(isset($horaFin) ? (date('H:i:s', strtotime($horaFin))) : '23:59:59') . '" AS DATETIME)';
+		$strQuery = $strQuery . ' GROUP BY FOLIO.FOLIOID';
+		$strQuery = $strQuery . ' ORDER BY FOLIO.FECHASALIDA DESC';
+		$resultAll = $this->db->query($strQuery)->getResult();
 
-		$result = $this->db->query($strQuery)->getResult();
+		$strQueryCriterio = 'SELECT FOLIOID, ANO, NUMEROEXPEDIENTE, FOLIODOCID, TIPODOC FROM FOLIODOC WHERE TIPODOC = "CRITERIO DE OPORTUNIDAD"';
+		$resultCriterio = $this->db->query($strQueryCriterio)->getResult();
+
+		$strQueryFacultad = 'SELECT FOLIOID, ANO, NUMEROEXPEDIENTE, FOLIODOCID, TIPODOC FROM FOLIODOC WHERE TIPODOC = "FACULTAD DE ABSTENERSE DE INVESTIGAR (NO DELITO)"';
+		$resultFalcultad = $this->db->query($strQueryFacultad)->getResult();
+		
+		$strQueryPericiales = 'SELECT FOLIOID, ANO, NUMEROEXPEDIENTE, FOLIODOCID, TIPODOC FROM FOLIODOC WHERE TIPODOC LIKE "%SOLICITUD DE PERITAJE%"';
+		$resultPericiales = $this->db->query($strQueryPericiales)->getResult();
+
+		$arrayCriterio = [];
+		foreach ($resultCriterio as $docto) {
+			if($docto->NUMEROEXPEDIENTE) array_push($arrayCriterio, $docto->FOLIOID);
+		}
+		$arrayFacultad = [];
+		foreach ($resultFalcultad as $docto) {
+			if($docto->NUMEROEXPEDIENTE) array_push($arrayFacultad, $docto->FOLIOID);
+		}
+		$arrayPerciales = [];
+		foreach ($resultPericiales as $docto) {
+			if($docto->NUMEROEXPEDIENTE) array_push($arrayPerciales, $docto->FOLIOID);
+		}
+		foreach ($resultAll as $folio) {
+			
+			if(in_array($folio->FOLIOID, $arrayCriterio)) {
+				$folio->TIPOEXPEDIENTECLAVE = $folio->TIPOEXPEDIENTECLAVE . ' - CRITERIO';	
+			}; 
+			if(in_array($folio->FOLIOID, $arrayFacultad)) {
+				$folio->TIPOEXPEDIENTECLAVE = $folio->TIPOEXPEDIENTECLAVE . ' - FACULTAD';
+			} 
+			if(in_array($folio->FOLIOID, $arrayPerciales)) {
+				$folio->PERCICIALES = 'SI';
+			} 
+
+		}
 
 		$dataView = (object)array();
-		$dataView->result = $result;
+		$dataView->result = $resultAll;
 		// $dataView->strQuery = $strQuery;
 		return $dataView;
 	}
@@ -371,6 +424,12 @@ class FolioModel extends Model
 					(isset($obj['horaInicio']) ? (date('H:i:s', strtotime($obj['horaInicio']))) : '00:00:00') . '" AS DATETIME)' . ' AND ' . 'CAST("' .
 					(isset($obj['fechaFin']) ? (isset($obj['horaFin']) ? date("Y-m-d", strtotime($obj['fechaFin'])) : date("Y-m-d", strtotime(date("Y-m-d", strtotime($obj['fechaFin']))))) : date("Y-m-d")) . ' ' .
 					(isset($obj['horaFin']) ? (date('H:i:s', strtotime($obj['horaFin']))) : '23:59:59') . '" AS DATETIME)';
+					if(isset($obj['GENERO'])){
+						$strQuery = $strQuery . 'AND DENUNCIANTES.SEXO'. ' = ' . '"' . $obj['GENERO'] . '"';
+					}
+					if(isset($obj['TIPOEXP'])){
+						$strQuery = $strQuery . 'AND TIPOEXPEDIENTE.TIPOEXPEDIENTEID'. ' = ' . '"' . $obj['TIPOEXP'] . '"';
+					}
 				$strQuery = $strQuery . ' GROUP BY  FOLIO.FOLIOID';
 			}
 			if ($obj['STATUS'] == "SIN") {
@@ -403,6 +462,12 @@ class FolioModel extends Model
 					(isset($obj['horaInicio']) ? (date('H:i:s', strtotime($obj['horaInicio']))) : '00:00:00') . '" AS DATETIME)' . ' AND ' . 'CAST("' .
 					(isset($obj['fechaFin']) ? (isset($obj['horaFin']) ? date("Y-m-d", strtotime($obj['fechaFin'])) : date("Y-m-d", strtotime(date("Y-m-d", strtotime($obj['fechaFin']))))) : date("Y-m-d")) . ' ' .
 					(isset($obj['horaFin']) ? (date('H:i:s', strtotime($obj['horaFin']))) : '23:59:59') . '" AS DATETIME)';
+					if(isset($obj['GENERO'])){
+						$strQuery = $strQuery . 'AND DENUNCIANTES.SEXO'. ' = ' . '"' . $obj['GENERO'] . '"';
+					}
+					if(isset($obj['TIPOEXP'])){
+						$strQuery = $strQuery . 'AND TIPOEXPEDIENTE.TIPOEXPEDIENTEID'. ' = ' . '"' . $obj['TIPOEXP'] . '"';
+					}
 				$strQuery = $strQuery . ' GROUP BY  FOLIO.FOLIOID';
 			}
 			if ($obj['STATUS'] == "TODOS") {
@@ -437,6 +502,12 @@ class FolioModel extends Model
 					(isset($obj['horaInicio']) ? (date('H:i:s', strtotime($obj['horaInicio']))) : '00:00:00') . '" AS DATETIME)' . ' AND ' . 'CAST("' .
 					(isset($obj['fechaFin']) ? (isset($obj['horaFin']) ? date("Y-m-d", strtotime($obj['fechaFin'])) : date("Y-m-d", strtotime(date("Y-m-d", strtotime($obj['fechaFin']))))) : date("Y-m-d")) . ' ' .
 					(isset($obj['horaFin']) ? (date('H:i:s', strtotime($obj['horaFin']))) : '23:59:59') . '" AS DATETIME)';
+					if(isset($obj['GENERO'])){
+						$strQuery = $strQuery . 'AND DENUNCIANTES.SEXO'. ' = ' . '"' . $obj['GENERO'] . '"';
+					}
+					if(isset($obj['TIPOEXP'])){
+						$strQuery = $strQuery . 'AND TIPOEXPEDIENTE.TIPOEXPEDIENTEID'. ' = ' . '"' . $obj['TIPOEXP'] . '"';
+					}
 				$strQuery = $strQuery . ' GROUP BY  FOLIO.FOLIOID';
 			}
 		} else {
@@ -470,13 +541,20 @@ class FolioModel extends Model
 				(isset($obj['horaFin']) ? (date('H:i:s', strtotime($obj['horaFin']))) : '23:59:59') . '" AS DATETIME)';
 			///if (isset($obj['AGENTEATENCIONID'])) $strQuery = $strQuery . '	AND FOLIO.AGENTEATENCIONID = ' . $obj['AGENTEATENCIONID'];
 			foreach ($obj as $clave => $valor) {
-				if ($clave != 'fechaInicio' && $clave != 'fechaFin' && $clave != 'horaInicio' && $clave != 'horaFin') {
+				if ($clave != 'fechaInicio' && $clave != 'fechaFin' && $clave != 'horaInicio' && $clave != 'horaFin' && $clave != 'GENERO' && $clave != 'TIPOEXP') {
 					$strQuery = $strQuery . ' AND ';
 					$strQuery = $strQuery . 'FOLIO.' . $clave . ' = ' . '"' . $valor . '"';
 				}
 			}
+			if(isset($obj['GENERO'])){
+				$strQuery = $strQuery . 'AND DENUNCIANTES.SEXO'. ' = ' . '"' . $obj['GENERO'] . '"';
+			}
+			if(isset($obj['TIPOEXP'])){
+				$strQuery = $strQuery . 'AND TIPOEXPEDIENTE.TIPOEXPEDIENTEID'. ' = ' . '"' . $obj['TIPOEXP'] . '"';
+			}
 			$strQuery = $strQuery . ' GROUP BY  FOLIO.FOLIOID';
 		}
+		$strQuery = $strQuery . ' ORDER BY FOLIO.FECHASALIDA DESC';
 
 		$result = $this->db->query($strQuery)->getResult();
 

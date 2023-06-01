@@ -98,9 +98,14 @@ class ConstanciaExtravioModel extends Model
 
 
 				foreach ($obj as $clave => $valor) {
-					if ($clave != 'fechaInicio'  && $clave != 'horaInicio') {
+					if ($clave != 'fechaInicio'  && $clave != 'horaInicio' && $clave != 'GENERO') {
 						$strQuery = $strQuery . ' AND ';
 						$strQuery = $strQuery . 'CONSTANCIAEXTRAVIO.' . $clave . ' = ' . '"' . $valor . '"';
+					}
+					if($clave == 'GENERO'){
+						$strQuery = $strQuery . ' AND ';
+						$strQuery = $strQuery . 'DENUNCIANTES.SEXO'. ' = ' . '"' . $valor . '"';
+						
 					}
 				}
 
@@ -128,9 +133,14 @@ class ConstanciaExtravioModel extends Model
 				WHERE CONSTANCIAEXTRAVIO.STATUS = "FIRMADO"';
 
 				foreach ($obj as $clave => $valor) {
-					if ($clave != 'fechaInicio' && $clave != 'fechaFin' && $clave != 'horaInicio' && $clave != 'horaFin') {
+					if ($clave != 'fechaInicio' && $clave != 'fechaFin' && $clave != 'horaInicio' && $clave != 'horaFin' && $clave != 'GENERO') {
 						$strQuery = $strQuery . ' AND ';
 						$strQuery = $strQuery . 'CONSTANCIAEXTRAVIO.' . $clave . ' = ' . '"' . $valor . '"';
+					}
+					if($clave == 'GENERO'){
+						$strQuery = $strQuery . ' AND ';
+						$strQuery = $strQuery . 'DENUNCIANTES.SEXO'. ' = ' . '"' . $valor . '"';
+						
 					}
 				}
 
@@ -157,9 +167,14 @@ class ConstanciaExtravioModel extends Model
 				WHERE CONSTANCIAEXTRAVIO.STATUS = "FIRMADO"';
 
 				foreach ($obj as $clave => $valor) {
-					if ($clave != 'fechaInicio' && $clave != 'fechaFin' && $clave != 'horaInicio' && $clave != 'horaFin') {
+					if ($clave != 'fechaInicio' && $clave != 'fechaFin' && $clave != 'horaInicio' && $clave != 'horaFin' && $clave != 'GENERO') {
 						$strQuery = $strQuery . ' AND ';
 						$strQuery = $strQuery . 'CONSTANCIAEXTRAVIO.' . $clave . ' = ' . '"' . $valor . '"';
+					}
+					if($clave == 'GENERO'){
+						$strQuery = $strQuery . ' AND ';
+						$strQuery = $strQuery . 'DENUNCIANTES.SEXO'. ' = ' . '"' . $valor . '"';
+						
 					}
 				}
 
@@ -185,21 +200,44 @@ class ConstanciaExtravioModel extends Model
 			INNER JOIN MUNICIPIO ON MUNICIPIO.MUNICIPIOID = CONSTANCIAEXTRAVIO.MUNICIPIOID AND MUNICIPIO.ESTADOID = CONSTANCIAEXTRAVIO.ESTADOID
 			LEFT JOIN MUNICIPIO  AS MUNICIPIOCITA ON MUNICIPIOCITA.MUNICIPIOID = CONSTANCIAEXTRAVIO.MUNICIPIOIDCITA  AND MUNICIPIOCITA.ESTADOID = CONSTANCIAEXTRAVIO.ESTADOID';
 
+			$count = count($obj);
+
+			if ($count > 0) {
+				$strQuery = $strQuery . ' WHERE ';
+			}
+
 			foreach ($obj as $clave => $valor) {
-				if ($clave != 'fechaInicio' && $clave != 'fechaFin' && $clave != 'horaInicio' && $clave != 'horaFin') {
-					$strQuery = $strQuery . ' AND ';
-					$strQuery = $strQuery . 'CONSTANCIAEXTRAVIO.' . $clave . ' = ' . '"' . $valor . '"';
+				$count -= 1;
+				if ($clave != 'fechaInicio' && $clave != 'fechaFin' && $clave != 'horaInicio' && $clave != 'horaFin' && $clave != 'GENERO') {
+					$strQuery = $strQuery . 'FOLIO.' . $clave . ' = ' . '"' . $valor . '"';
+	
+					if ($count > 0) {
+						$strQuery = $strQuery . ' AND ';
+					}
 				}
+				if($clave == 'GENERO'){
+					$strQuery = $strQuery . 'DENUNCIANTES.SEXO'. ' = ' . '"' . $valor . '"';
+	
+					if ($count > 0) {
+						$strQuery = $strQuery . ' AND ';
+					}
+				}
+			}
+			
+			if ($count > 0) {
+				$strQuery = $strQuery . ' AND ';
 			}
 
 			$strQuery =
-				$strQuery . ' AND ' .
-				'CONSTANCIAEXTRAVIO.FECHAFIRMA BETWEEN CAST("' .
+				$strQuery .'CONSTANCIAEXTRAVIO.FECHAFIRMA BETWEEN CAST("' .
 				(isset($obj['fechaInicio']) ? date("Y-m-d", strtotime($obj['fechaInicio'])) : date("Y-m-d")) . ' ' .
 				(isset($obj['horaInicio']) ? (date('H:i:s', strtotime($obj['horaInicio']))) : '00:00:00') . '" AS DATETIME)' . ' AND ' . 'CAST("' .
 				(isset($obj['fechaFin']) ? (isset($obj['horaFin']) ? date("Y-m-d", strtotime($obj['fechaFin'])) : date("Y-m-d", strtotime(date("Y-m-d", strtotime($obj['fechaFin']))))) : date("Y-m-d")) . ' ' .
 				(isset($obj['horaFin']) ? (date('H:i:s', strtotime($obj['horaFin']))) : '23:59:59') . '" AS DATETIME)';
 		}
+
+		// var_dump($strQuery);
+		// exit;
 		$result = $this->db->query($strQuery)->getResult();
 		$dataView = (object)array();
 		$dataView->result = $result;

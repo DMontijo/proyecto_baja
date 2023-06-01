@@ -103,6 +103,8 @@ class ReportesController extends BaseController
 			'AGENTEATENCIONID' => $this->request->getPost('agente'),
 			'STATUS' => $this->request->getPost('status'),
 			'TIPODENUNCIA' => $this->request->getPost('tipo'),
+			'TIPOEXP' => $this->request->getPost('tipoExp'),
+			'GENERO' => $this->request->getPost('genero'),
 			'fechaInicio' => $this->request->getPost('fechaInicio'),
 			'fechaFin' => $this->request->getPost('fechaFin'),
 			'horaInicio' => $this->request->getPost('horaInicio'),
@@ -160,6 +162,8 @@ class ReportesController extends BaseController
 			'AGENTEATENCIONID' => $this->request->getPost('AGENTEATENCIONID'),
 			'STATUS' => $this->request->getPost('STATUS'),
 			'TIPODENUNCIA' => $this->request->getPost('TIPODENUNCIA'),
+			'TIPOEXP' => $this->request->getPost('TIPOEXP'),
+			'GENERO' => $this->request->getPost('GENERO'),
 			'fechaInicio' => $this->request->getPost('fechaInicio'),
 			'fechaFin' => $this->request->getPost('fechaFin'),
 			'horaInicio' => $this->request->getPost('horaInicio'),
@@ -271,10 +275,14 @@ class ReportesController extends BaseController
 			'AÑO',
 			'MEDIO',
 			'EXPEDIENTE',
+			'CONTIENE PERICIALES',
+			'FECHA DE SALIDA',
 			'TIPO',
 			'FECHA DE SALIDA',
 			'NOMBRE DEL DENUNCIANTE',
+			'GENERO',
 			'NOMBRE DEL AGENTE',
+			'DELITO',
 			'ESTADO DE ATENCIÓN',
 			'MUNICIPIO DE ATENCIÓN',
 			'ESTATUS DE EXPEDIENTE',
@@ -307,18 +315,27 @@ class ReportesController extends BaseController
 			if ($folio->FECHASALIDA) {
 				$fechaSalida = date('d-m-Y H:i:s', strtotime($folio->FECHASALIDA));
 			}
+			$expedienteid = '';
+			if (isset($folio->EXPEDIENTEID)) {
+				$arrayExpediente = str_split($folio->EXPEDIENTEID);
+				$expedienteid = $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
+			}
 
 			$sheet->setCellValue('A' . $row, $folio->FOLIOID);
 			$sheet->setCellValue('B' . $row, $folio->ANO);
 			$sheet->setCellValue('C' . $row, $tipo);
-			$sheet->setCellValue('D' . $row, $folio->EXPEDIENTEID ? ($folio->EXPEDIENTEID . '/' . $folio->TIPOEXPEDIENTECLAVE) : '');
-			$sheet->setCellValue('E' . $row, $folio->TIPOEXPEDIENTECLAVE ? $folio->TIPOEXPEDIENTECLAVE : $folio->STATUS);
-			$sheet->setCellValue('F' . $row, $fechaSalida);
-			$sheet->setCellValue('G' . $row, $folio->NOMBRE_DENUNCIANTE);
-			$sheet->setCellValue('H' . $row, $folio->NOMBRE_AGENTE);
-			$sheet->setCellValue('I' . $row, $folio->ESTADODESCR);
-			$sheet->setCellValue('J' . $row, $folio->MUNICIPIODESCR);
-			$sheet->setCellValue('K' . $row, $folio->STATUS);
+			$sheet->setCellValue('D' . $row, $folio->EXPEDIENTEID ? ($expedienteid . '/' . $folio->TIPOEXPEDIENTECLAVE) : '');
+			$sheet->setCellValue('E' . $row, isset($folio->PERCIALES) ? $folio->PERCIALES : 'NO');
+			$sheet->setCellValue('F' . $row, $folio->FECHASALIDA ? date('d-m-Y H:i:s', strtotime($folio->FECHASALIDA)) : '');
+			$sheet->setCellValue('G' . $row, $folio->TIPOEXPEDIENTECLAVE ? $folio->TIPOEXPEDIENTECLAVE : $folio->STATUS);
+			$sheet->setCellValue('H' . $row, $fechaSalida);
+			$sheet->setCellValue('I' . $row, $folio->NOMBRE_DENUNCIANTE);
+			$sheet->setCellValue('J' . $row, isset($folio->GENERO) ? ($folio->GENERO == 'M' ? 'MASCULINO' : ($folio->GENERO == 'F' ? 'FEMENINO' : '')) : '');
+			$sheet->setCellValue('K' . $row, $folio->NOMBRE_AGENTE);
+			$sheet->setCellValue('L' . $row, $folio->DELITO);
+			$sheet->setCellValue('M' . $row, $folio->ESTADODESCR);
+			$sheet->setCellValue('N' . $row, $folio->MUNICIPIODESCR);
+			$sheet->setCellValue('O' . $row, $folio->STATUS);
 
 			$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
 
@@ -329,8 +346,8 @@ class ReportesController extends BaseController
 		$sheet->setCellValue('A' . $row, 'CANTIDAD DE RESULTADOS:');
 		$sheet->setCellValue('B' . $row, count($resultFilter->result));
 
-		$sheet->getStyle('A1:K1')->applyFromArray($styleHeaders);
-		$sheet->getStyle('A2:K' . $row)->applyFromArray($styleCells);
+		$sheet->getStyle('A1:O1')->applyFromArray($styleHeaders);
+		$sheet->getStyle('A2:O' . $row)->applyFromArray($styleCells);
 
 		$writer = new Xlsx($spreadSheet);
 
@@ -390,6 +407,7 @@ class ReportesController extends BaseController
 			'MUNICIPIOID' => $this->request->getPost('municipio'),
 			'AGENTEID' => $this->request->getPost('agente'),
 			'STATUS' => $this->request->getPost('status'),
+			'GENERO' => $this->request->getPost('genero'),
 			'fechaInicio' => $this->request->getPost('fechaInicio'),
 			'fechaFin' => $this->request->getPost('fechaFin'),
 			'horaInicio' => $this->request->getPost('horaInicio'),
@@ -671,6 +689,8 @@ class ReportesController extends BaseController
 			'AGENTEATENCIONID' => $this->request->getPost('agente_registro'),
 			'STATUS' => $this->request->getPost('status'),
 			'TIPODENUNCIA' => $this->request->getPost('tipo'),
+			'GENERO' => $this->request->getPost('genero'),
+			'TIPOEXP' => $this->request->getPost('tipoExp'),
 			'fechaInicio' => $this->request->getPost('fechaInicio'),
 			'fechaFin' => $this->request->getPost('fechaFin'),
 			'horaInicio' => $this->request->getPost('horaInicio'),
@@ -723,6 +743,8 @@ class ReportesController extends BaseController
 			'AGENTEATENCIONID' => $this->request->getPost('AGENTEATENCIONID'),
 			'STATUS' => $this->request->getPost('STATUS'),
 			'TIPODENUNCIA' => $this->request->getPost('TIPODENUNCIA'),
+			'GENERO' => $this->request->getPost('GENERO'),
+			'TIPOEXP' => $this->request->getPost('TIPOEXP'),
 			'fechaInicio' => $this->request->getPost('fechaInicio'),
 			'fechaFin' => $this->request->getPost('fechaFin'),
 			'horaInicio' => $this->request->getPost('horaInicio'),
