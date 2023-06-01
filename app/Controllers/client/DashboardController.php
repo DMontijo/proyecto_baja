@@ -4,6 +4,7 @@ namespace App\Controllers\client;
 
 use App\Controllers\BaseController;
 use App\Models\DenunciantesModel;
+use App\Models\FolioArchivoExternoModel;
 use App\Models\FolioConsecutivoModel;
 use App\Models\FolioModel;
 use App\Models\FolioPersonaFisicaDomicilioModel;
@@ -97,6 +98,7 @@ class DashboardController extends BaseController
 		$this->_folioVehiculoModel = new FolioVehiculoModel();
 		$this->_folioMediaFiliacion = new FolioPersonaFisicaMediaFiliacionModel();
 		$this->_folioConsecutivoModel = new FolioConsecutivoModel();
+		$this->_archivoExternoModel = new FolioArchivoExternoModel();
 
 		//Models reader
 		$this->_folioModelRead = model('FolioModel', true, $this->db_read);
@@ -290,7 +292,7 @@ class DashboardController extends BaseController
 		if ($archivoExterno) {
 			$datados = (object) array();
 
-			$datados->archivosexternos = $this->_archivoExternoModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
+			$datados->archivosexternos = $this->_archivoExternoModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
 			if ($datados->archivosexternos) {
 				foreach ($datados->archivosexternos as $key => $archivos) {
 					//Codificacion del archivo para visualizarse
@@ -319,7 +321,7 @@ class DashboardController extends BaseController
 		$data['ANO'] = $year;
 
 
-		$archivoExterno = $this->_archivoExternoModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->orderBy('FOLIOARCHIVOID ', 'desc')->first();
+		$archivoExterno = $this->_archivoExternoModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->orderBy('FOLIOARCHIVOID ', 'desc')->first();
 
 		if ($archivoExterno) {
 			$data['FOLIOARCHIVOID'] = ((int) $archivoExterno->FOLIOARCHIVOID) + 1;
