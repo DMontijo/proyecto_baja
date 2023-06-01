@@ -4,6 +4,7 @@ namespace App\Controllers\client;
 
 use App\Controllers\BaseController;
 use App\Models\DenunciantesModel;
+use App\Models\FolioArchivoExternoModel;
 use App\Models\FolioConsecutivoModel;
 use App\Models\FolioModel;
 use App\Models\FolioPersonaFisicaDomicilioModel;
@@ -97,6 +98,7 @@ class DashboardController extends BaseController
 		$this->_folioVehiculoModel = new FolioVehiculoModel();
 		$this->_folioMediaFiliacion = new FolioPersonaFisicaMediaFiliacionModel();
 		$this->_folioConsecutivoModel = new FolioConsecutivoModel();
+		$this->_archivoExternoModel = new FolioArchivoExternoModel();
 
 		//Models reader
 		$this->_folioModelRead = model('FolioModel', true, $this->db_read);
