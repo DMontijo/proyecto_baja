@@ -4117,10 +4117,9 @@ class DashboardController extends BaseController
 				'EXPORTAR',
 			];
 			$endpoint = $this->endpoint . $function;
-			$folioRow = $this->_folioModelRead->where('ANO', $ano)->where('FOLIOID', $folioid)->first();
+			$folioRow = $this->_folioModel->where('ANO', $ano)->where('FOLIOID', $folioid)->first();
 			//Se crea la conexion de acuerdo al municipio y enviroment.
-
-			$conexion = $this->_conexionesDBModelRead->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipioid != '' ? $municipioid : $folioRow['MUNICIPIOID'])->where('TYPE', ENVIRONMENT)->first();
+			$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $municipioid != '' ? intval($municipioid) : intval($folioRow['MUNICIPIOID']))->where('TYPE', ENVIRONMENT)->first();
 
 			// Se asignan las variables
 			$data = array();
@@ -4141,6 +4140,8 @@ class DashboardController extends BaseController
 			$data['pwdDB'] = $conexion->PASSWORD;
 			$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
 			$data['schema'] = $conexion->SCHEMA;
+			// var_dump($data);exit;
+
 			return $this->_curlPostDataEncrypt($endpoint, $data);
 		}
 	}
@@ -4691,6 +4692,7 @@ class DashboardController extends BaseController
 			$extension = explode('/', $mime_type)[1];
 			try {
 				$_archivosExternos = $this->_createArchivosExternos($expedienteId, $vehiculos['FOLIOID'], $vehiculos['ANO'], '', 53, 'ROBO DE VEHÍCULO',  $vehiculos['FOTO'], $extension, 3947,  394);
+				// var_dump($_archivosExternos);exit;
 			} catch (\Throwable $th) {
 			}
 		}
@@ -5176,7 +5178,7 @@ class DashboardController extends BaseController
 			// $folioRow['AGENTEATENCIONID'] = NULL;
 			$folioRow['AGENTEFIRMAID'] = null;
 
-			$update = $this->_folioModel->set($folioRow)->where('ANO', $year)->where('FOLIOID', $folio)->where('EXPEDEINTEID IS NULL')->update();
+			$update = $this->_folioModel->set($folioRow)->where('ANO', $year)->where('FOLIOID', $folio)->where('EXPEDIENTEID IS NULL')->update();
 			$datosBitacora = [
 				'ACCION' => 'Ha restaurado un folio a en proceso.',
 				'NOTAS' => 'FOLIO: ' . $folio . ' AÑO:' . $year . ' STATUS: EN PROCESO',
