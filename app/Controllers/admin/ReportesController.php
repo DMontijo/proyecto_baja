@@ -2375,6 +2375,7 @@ class ReportesController extends BaseController
 		$dataPost = [
 			'MUNICIPIOID' => $this->request->getPost('MUNICIPIOID'),
 			'AGENTEATENCIONID' => $this->request->getPost('AGENTEATENCIONID'),
+			'GENERO' => $this->request->getPost('genero'),
 
 			'fechaInicio' => $this->request->getPost('fechaInicio'),
 			'fechaFin' => $this->request->getPost('fechaFin'),
@@ -2384,7 +2385,11 @@ class ReportesController extends BaseController
 			'nombreAgente' => '',
 			'municipioDescr' => ''
 		];
-
+		
+		foreach ($dataPost as $clave => $valor) {
+			//Recorre el array y elimina los valores que nulos o vacíos
+			if (empty($valor)) unset($dataPost[$clave]);
+		}
 		$municipio = $this->_municipiosModelRead->asObject()->where('ESTADOID', 2)->findAll();
 		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
 		$empleado = $this->_usuariosModelRead->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
@@ -2578,7 +2583,7 @@ class ReportesController extends BaseController
 			$this->separarExpID($orden->EXPEDIENTEID);
 
 
-			$sheet->setCellValue('A1', "CENTRO TELEFÓNICO Y EN LÍNEA DE ATENCIÓN Y ORIENTACIÓN TEMPRANA");
+			$sheet->setCellValue('A1', "CENTRO DE DENUNCIA TECNOLÓGICA");
 			$sheet->setCellValue('A2', "REGISTRO DE CANALIZACIONES A LA COMISIÓN EJECUTIVA ESTATAL DE ATENCIÓN INTEGRAL A VÍCTIMAS");
 
 			$sheet->setCellValue('A' . $row, $num);
