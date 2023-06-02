@@ -137,7 +137,8 @@
 					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3" id="oficina_multiple">
 						<label for="ofi" class="form-label font-weight-bold">Oficina</label>
 						<select class="js-example-basic-multiple form-control" name="ofi[]" id="ofi" multiple="multiple">
-							<option value="" disabled>Selecciona la oficina</option>
+						<option value="" disabled>Selecciona la oficina</option>
+
 						</select>
 						<div class="invalid-feedback">
 							La oficina es obligatoria
@@ -234,7 +235,7 @@
 						option.value = oficina.MUNICIPIOID + ',' + oficina.OFICINAID;
 						ofi.add(option);
 					});
-					ofi.value = '';
+					// ofi.value = '';
 				}).fail(function(jqXHR, textStatus) {
 					clearSelect(ofi);
 				});
