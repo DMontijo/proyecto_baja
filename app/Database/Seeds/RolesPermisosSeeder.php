@@ -119,6 +119,12 @@ class RolesPermisosSeeder extends Seeder
 			array('ROLID' => '11', 'PERMISOID' => '10'),
 			array('ROLID' => '11', 'PERMISOID' => '12'),
 
+			//VISUALIZADOR RAC
+			array('ROLID' => '12', 'PERMISOID' => '9'),
+
+			//VISUALIZADOR ESTATAL
+			array('ROLID' => '13', 'PERMISOID' => '9'),
+
 		];
 		$this->db->table('ROLESPERMISOS')->insertBatch($data);
 	}

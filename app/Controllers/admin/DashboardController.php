@@ -1215,18 +1215,48 @@ class DashboardController extends BaseController
 	 */
 	public function crear_usuario()
 	{
-		$data = [
-			'NOMBRE' => $this->request->getPost('nombre_usuario'),
-			'APELLIDO_PATERNO' => $this->request->getPost('apellido_paterno_usuario'),
-			'APELLIDO_MATERNO' => $this->request->getPost('apellido_materno_usuario'),
-			'CORREO' => $this->request->getPost('correo_usuario'),
-			'PASSWORD' => hashPassword($this->request->getPost('password_usuario')),
-			'SEXO' => $this->request->getPost('sexo_usuario'),
-			'ROLID' => $this->request->getPost('rol_usuario'),
-			'ZONAID' => $this->request->getPost('zona_usuario'),
-			'MUNICIPIOID' => $this->request->getPost('municipio'),
-			'OFICINAID' => $this->request->getPost('oficina'),
-		];
+
+		if ($this->request->getPost('mun') != null) {
+			$result = [];
+
+			foreach ($this->request->getPost('ofi') as $datos) {
+				// Separar el municipio y la oficina
+				$parts = explode(',', $datos);
+				$municipio = $parts[0];
+				$oficina = $parts[1];
+
+				// Crear un nuevo elemento en el resultado
+				$result[] = [
+					'MUNICIPIOID' => $municipio,
+					'OFICINAID' => $oficina
+				];
+			}
+
+			$data = [
+				'NOMBRE' => $this->request->getPost('nombre_usuario'),
+				'APELLIDO_PATERNO' => $this->request->getPost('apellido_paterno_usuario'),
+				'APELLIDO_MATERNO' => $this->request->getPost('apellido_materno_usuario'),
+				'CORREO' => $this->request->getPost('correo_usuario'),
+				'PASSWORD' => hashPassword($this->request->getPost('password_usuario')),
+				'SEXO' => $this->request->getPost('sexo_usuario'),
+				'ROLID' => $this->request->getPost('rol_usuario'),
+				'ZONAID' => $this->request->getPost('zona_usuario'),
+				'MUNICIPIOSOFICINASID' => json_encode($result),
+			];
+		} else {
+			$data = [
+				'NOMBRE' => $this->request->getPost('nombre_usuario'),
+				'APELLIDO_PATERNO' => $this->request->getPost('apellido_paterno_usuario'),
+				'APELLIDO_MATERNO' => $this->request->getPost('apellido_materno_usuario'),
+				'CORREO' => $this->request->getPost('correo_usuario'),
+				'PASSWORD' => hashPassword($this->request->getPost('password_usuario')),
+				'SEXO' => $this->request->getPost('sexo_usuario'),
+				'ROLID' => $this->request->getPost('rol_usuario'),
+				'ZONAID' => $this->request->getPost('zona_usuario'),
+				'MUNICIPIOID' => $this->request->getPost('municipio'),
+				'OFICINAID' => $this->request->getPost('oficina'),
+			];
+		}
 
 		$datosBitacora = [
 			'ACCION' => 'Ha creado un nuevo usuario en cdtec.',
@@ -1504,8 +1534,8 @@ class DashboardController extends BaseController
 					return json_encode($data);
 				} else if ($data->folio->STATUS == 'EN PROCESO' && $data->folio->TIPODENUNCIA == "VD"  && $data->folio->AGENTEATENCIONID != session('ID')) {
 					$agente = $this->_usuariosModelRead->asObject()->where('ID', $data->folio->AGENTEATENCIONID)->first();
-					return json_encode(['status' => 2, 'motivo' => 'EL FOLIO YA ESTA SIENDO ATENDIDO','agente' => $agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' . $agente->APELLIDO_MATERNO]);
-				} else if ($data->folio->STATUS == 'EN PROCESO' && $data->folio->TIPODENUNCIA == "DA") {
+					return json_encode(['status' => 2, 'motivo' => 'EL FOLIO YA ESTA SIENDO ATENDIDO', 'agente' => $agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' . $agente->APELLIDO_MATERNO]);
+				} else if ($data->folio->STATUS == 'EN PROCESO' && $data->folio->TIPODENUNCIA == "DA" && $data->folio->AGENTEATENCIONID == session('ID')) {
 					$data->status = 1;
 					$data->respuesta = $this->getDataFolio($numfolio, $year);
 
@@ -2485,8 +2515,13 @@ class DashboardController extends BaseController
 		$municipio = $this->request->getPost('municipio');
 
 		if (!empty($municipio)) {
-			$data = $this->_oficinasModelRead->asObject()->where('MUNICIPIOID', $municipio)->orderBy('OFICINADESCR', 'asc')->findAll();
-			return json_encode($data);
+			if (gettype($municipio) == "array") {
+				$data = $this->_oficinasModelRead->asObject()->whereIn('MUNICIPIOID', $municipio)->orderBy('OFICINADESCR', 'asc')->findAll();
+				return json_encode($data);
+			} else {
+				$data = $this->_oficinasModelRead->asObject()->where('MUNICIPIOID', $municipio)->orderBy('OFICINADESCR', 'asc')->findAll();
+				return json_encode($data);
+			}
 		} else {
 			$data = $this->_oficinasModelRead->asObject()->orderBy('OFICINADESCR', 'asc')->findAll();
 			return json_encode($data);
@@ -4117,9 +4152,10 @@ class DashboardController extends BaseController
 				'EXPORTAR',
 			];
 			$endpoint = $this->endpoint . $function;
-			$folioRow = $this->_folioModel->where('ANO', $ano)->where('FOLIOID', $folioid)->first();
+			$folioRow = $this->_folioModelRead->where('ANO', $ano)->where('FOLIOID', $folioid)->first();
 			//Se crea la conexion de acuerdo al municipio y enviroment.
-			$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $municipioid != '' ? intval($municipioid) : intval($folioRow['MUNICIPIOID']))->where('TYPE', ENVIRONMENT)->first();
+
+			$conexion = $this->_conexionesDBModelRead->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipioid != '' ? $municipioid : $folioRow['MUNICIPIOID'])->where('TYPE', ENVIRONMENT)->first();
 
 			// Se asignan las variables
 			$data = array();
@@ -4140,8 +4176,6 @@ class DashboardController extends BaseController
 			$data['pwdDB'] = $conexion->PASSWORD;
 			$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
 			$data['schema'] = $conexion->SCHEMA;
-			// var_dump($data);exit;
-
 			return $this->_curlPostDataEncrypt($endpoint, $data);
 		}
 	}
@@ -4692,7 +4726,6 @@ class DashboardController extends BaseController
 			$extension = explode('/', $mime_type)[1];
 			try {
 				$_archivosExternos = $this->_createArchivosExternos($expedienteId, $vehiculos['FOLIOID'], $vehiculos['ANO'], '', 53, 'ROBO DE VEHÍCULO',  $vehiculos['FOTO'], $extension, 3947,  394);
-				// var_dump($_archivosExternos);exit;
 			} catch (\Throwable $th) {
 			}
 		}
@@ -5178,7 +5211,7 @@ class DashboardController extends BaseController
 			// $folioRow['AGENTEATENCIONID'] = NULL;
 			$folioRow['AGENTEFIRMAID'] = null;
 
-			$update = $this->_folioModel->set($folioRow)->where('ANO', $year)->where('FOLIOID', $folio)->where('EXPEDIENTEID IS NULL')->update();
+			$update = $this->_folioModel->set($folioRow)->where('ANO', $year)->where('FOLIOID', $folio)->where('EXPEDEINTEID IS NULL')->update();
 			$datosBitacora = [
 				'ACCION' => 'Ha restaurado un folio a en proceso.',
 				'NOTAS' => 'FOLIO: ' . $folio . ' AÑO:' . $year . ' STATUS: EN PROCESO',
@@ -7406,7 +7439,7 @@ class DashboardController extends BaseController
 		$data->vehiculos_da = $this->_folioVehiculoModelRead->asObject()->where('FOLIOID', $data->folio->FOLIOID)->where('ANO', $data->folio->ANO)->findAll();
 		$data->municipio_imp = $this->_municipiosModelRead->asObject()->where('ESTADOID',  $data->imputadoDom->ESTADOID)->where('MUNICIPIOID',  $data->imputadoDom->MUNICIPIOID)->first();
 		$data->estado_imp = $this->_estadosModelRead->asObject()->where('ESTADOID',  $data->imputadoDom->ESTADOID)->first();
-		$data->desaparecidos_da = $this->_folioPersonaFisicaModelRead->asObject()->where('FOLIOID', $data->folio->FOLIOID)->where('ANO', $data->folio->ANO)->where('DESAPARECIDA','S')->findAll();
+		$data->desaparecidos_da = $this->_folioPersonaFisicaModelRead->asObject()->where('FOLIOID', $data->folio->FOLIOID)->where('ANO', $data->folio->ANO)->where('DESAPARECIDA', 'S')->findAll();
 
 		//Info denunciante
 		$data->denunciante = $this->_folioPersonaFisicaModelRead->asObject()->where('FOLIOID', $data->folio->FOLIOID)->where('ANO', $data->folio->ANO)->where('DENUNCIANTE', 'S')->first();
@@ -8082,7 +8115,7 @@ class DashboardController extends BaseController
 		$data->plantilla = str_replace('[DOCUMENTO_CIUDAD]', $data->municipios->MUNICIPIODESCR, $data->plantilla);
 		$data->plantilla = str_replace('[VICTIMA_NOMBRE]', $data->victima[0]['NOMBRE'] . ' ' . ($data->victima[0]['PRIMERAPELLIDO'] ? $data->victima[0]['PRIMERAPELLIDO'] : '') . ' ' . ($data->victima[0]['SEGUNDOAPELLIDO'] ? $data->victima[0]['SEGUNDOAPELLIDO'] : ''), $data->plantilla);
 		$data->plantilla = str_replace('[VICTIMA_EDAD]', $data->victima[0]['EDADCANTIDAD'] ? $data->victima[0]['EDADCANTIDAD'] : '-', $data->plantilla);
-		$data->plantilla = str_replace('[VICTIMA_TELEFONO]', ($data->victima[0]['TELEFONO'] ? $data->victima[0]['TELEFONO'] : '-') . ($data->victima[0]['TELEFONO2'] ? ' y con teléfono secundario ' . $data->victima[0]['TELEFONO2'] : '' ), $data->plantilla);
+		$data->plantilla = str_replace('[VICTIMA_TELEFONO]', ($data->victima[0]['TELEFONO'] ? $data->victima[0]['TELEFONO'] : '-') . ($data->victima[0]['TELEFONO2'] ? ' y con teléfono secundario ' . $data->victima[0]['TELEFONO2'] : ''), $data->plantilla);
 		$data->plantilla = str_replace('[VICTIMA_CORREO]', $data->victima[0]['CORREO'] ? $data->victima[0]['CORREO'] : '-', $data->plantilla);
 		$data->plantilla = str_replace('[VICTIMA_SEXO]', $data->victima[0]['SEXO'] ? ($data->victima[0]['SEXO'] == 'F' ? 'FEMENINO' : 'MASCULINO') : '-', $data->plantilla);
 
@@ -8153,33 +8186,33 @@ class DashboardController extends BaseController
 			'<b> TIPO DE IDENTIFICACIÓN: </b> ' . ($data->denuncianteTipoIdentificacion ? $data->denuncianteTipoIdentificacion->PERSONATIPOIDENTIFICACIONDESCR  : '-') .
 			'<b> NÚMERO DE IDENTIFICACIÓN: </b> ' . ($data->denunciante->NUMEROIDENTIFICACION ? $data->denunciante->NUMEROIDENTIFICACION  : '-') . '</p>';
 
-			if ($data->desaparecidos_da) {
+		if ($data->desaparecidos_da) {
 			foreach ($data->desaparecidos_da as $key => $desaparecidos) {
-			$data->mediaFiliacionDesaparecidos = $this->_folioMediaFiliacionRead->asObject()->where('FOLIOID', $folio)->where('PERSONAFISICAID', $desaparecidos->PERSONAFISICAID)->first();
+				$data->mediaFiliacionDesaparecidos = $this->_folioMediaFiliacionRead->asObject()->where('FOLIOID', $folio)->where('PERSONAFISICAID', $desaparecidos->PERSONAFISICAID)->first();
 
-			//Victima media filiación
-			$colorOjos = $this->_ojoColorModelRead->asObject()->where('OJOCOLORID', $data->mediaFiliacionDesaparecidos->OJOCOLORID)->first();
-			$colorCabello = $this->_cabelloColorModelRead->asObject()->where('CABELLOCOLORID', $data->mediaFiliacionDesaparecidos->CABELLOCOLORID)->first();
-			$complexion = $this->_figuraModelRead->asObject()->where('FIGURAID', $data->mediaFiliacionDesaparecidos->FIGURAID)->first();
-			$colorPiel = $this->_pielColorModelRead->asObject()->where('PIELCOLORID', $data->mediaFiliacionDesaparecidos->PIELCOLORID)->first();
-			$cejasForma = $this->_cejaFormaModelRead->asObject()->where('CEJAFORMAID', $data->mediaFiliacionDesaparecidos->CEJAFORMAID)->first();
-			$cabelloTamano = $this->_cabelloTamanoModelRead->asObject()->where('CABELLOTAMANOID', $data->mediaFiliacionDesaparecidos->CABELLOTAMANOID)->first();
+				//Victima media filiación
+				$colorOjos = $this->_ojoColorModelRead->asObject()->where('OJOCOLORID', $data->mediaFiliacionDesaparecidos->OJOCOLORID)->first();
+				$colorCabello = $this->_cabelloColorModelRead->asObject()->where('CABELLOCOLORID', $data->mediaFiliacionDesaparecidos->CABELLOCOLORID)->first();
+				$complexion = $this->_figuraModelRead->asObject()->where('FIGURAID', $data->mediaFiliacionDesaparecidos->FIGURAID)->first();
+				$colorPiel = $this->_pielColorModelRead->asObject()->where('PIELCOLORID', $data->mediaFiliacionDesaparecidos->PIELCOLORID)->first();
+				$cejasForma = $this->_cejaFormaModelRead->asObject()->where('CEJAFORMAID', $data->mediaFiliacionDesaparecidos->CEJAFORMAID)->first();
+				$cabelloTamano = $this->_cabelloTamanoModelRead->asObject()->where('CABELLOTAMANOID', $data->mediaFiliacionDesaparecidos->CABELLOTAMANOID)->first();
 
-			$hecho_info = $hecho_info .
-				'<br><p><b>MEDIA FILIACIÓN DE PERSONA DESAPARECIDA: </b> ' . ($key + 1) .
-				'</p><p><b> NOMBRE: </b> ' . $desaparecidos->NOMBRE . ' ' . ($desaparecidos->PRIMERAPELLIDO ? $desaparecidos->PRIMERAPELLIDO : '') . ' ' . ($desaparecidos->SEGUNDOAPELLIDO? $desaparecidos->SEGUNDOAPELLIDO : '') .
-				'<b> EDAD: </b> ' . ($desaparecidos->EDADCANTIDAD ? $desaparecidos->EDADCANTIDAD : '-') .
-				'<b> FECHA DE DESAPARICIÓN: </b>' .  ($data->mediaFiliacionDesaparecidos->FECHADESAPARICION ?$data->mediaFiliacionDesaparecidos->FECHADESAPARICION :'-') .
-				'<b> LUGAR DE DESAPARICIÓN: </b> ' . ($data->mediaFiliacionDesaparecidos->LUGARDESAPARICION ?$data->mediaFiliacionDesaparecidos->LUGARDESAPARICION:'' ).
-				'<b> ESTATURA: </b> ' . ( $data->mediaFiliacionDesaparecidos->ESTATURA ?  (float)(((float)$data->mediaFiliacionDesaparecidos->ESTATURA) / 100) : '-') .
-				'<b> COMPLEXIÓN: </b> ' . ($complexion ?  $complexion->FIGURADESCR : '-') .
-				'<b> PESO: </b> ' . ( $data->mediaFiliacionDesaparecidos->PESO ?  $data->mediaFiliacionDesaparecidos->PESO : '-') .
-				'<b> TEZ: </b> ' . ($colorPiel ?  $colorPiel->PIELCOLORDESCR : '-') .
-				'<b> COLOR DE OJOS: </b> ' . ($colorOjos ?  $colorOjos->OJOCOLORDESCR : '-') .
-				'<b> TIPO CEJA: </b> ' . ( $cejasForma ?  $cejasForma->CEJAFORMADESCR : '-') .
-				'<b> SEÑAS PARTICULARES: </b> ' . ($data->mediaFiliacionDesaparecidos->SENASPARTICULARES ?  $data->mediaFiliacionDesaparecidos->SENASPARTICULARES : '-') .
-				'<b> TAMAÑO DEL CABELLO: </b> ' . ($cabelloTamano ?  $cabelloTamano->CABELLOTAMANODESCR : '-') 
-				. '</p>';
+				$hecho_info = $hecho_info .
+					'<br><p><b>MEDIA FILIACIÓN DE PERSONA DESAPARECIDA: </b> ' . ($key + 1) .
+					'</p><p><b> NOMBRE: </b> ' . $desaparecidos->NOMBRE . ' ' . ($desaparecidos->PRIMERAPELLIDO ? $desaparecidos->PRIMERAPELLIDO : '') . ' ' . ($desaparecidos->SEGUNDOAPELLIDO ? $desaparecidos->SEGUNDOAPELLIDO : '') .
+					'<b> EDAD: </b> ' . ($desaparecidos->EDADCANTIDAD ? $desaparecidos->EDADCANTIDAD : '-') .
+					'<b> FECHA DE DESAPARICIÓN: </b>' .  ($data->mediaFiliacionDesaparecidos->FECHADESAPARICION ? $data->mediaFiliacionDesaparecidos->FECHADESAPARICION : '-') .
+					'<b> LUGAR DE DESAPARICIÓN: </b> ' . ($data->mediaFiliacionDesaparecidos->LUGARDESAPARICION ? $data->mediaFiliacionDesaparecidos->LUGARDESAPARICION : '') .
+					'<b> ESTATURA: </b> ' . ($data->mediaFiliacionDesaparecidos->ESTATURA ?  (float)(((float)$data->mediaFiliacionDesaparecidos->ESTATURA) / 100) : '-') .
+					'<b> COMPLEXIÓN: </b> ' . ($complexion ?  $complexion->FIGURADESCR : '-') .
+					'<b> PESO: </b> ' . ($data->mediaFiliacionDesaparecidos->PESO ?  $data->mediaFiliacionDesaparecidos->PESO : '-') .
+					'<b> TEZ: </b> ' . ($colorPiel ?  $colorPiel->PIELCOLORDESCR : '-') .
+					'<b> COLOR DE OJOS: </b> ' . ($colorOjos ?  $colorOjos->OJOCOLORDESCR : '-') .
+					'<b> TIPO CEJA: </b> ' . ($cejasForma ?  $cejasForma->CEJAFORMADESCR : '-') .
+					'<b> SEÑAS PARTICULARES: </b> ' . ($data->mediaFiliacionDesaparecidos->SENASPARTICULARES ?  $data->mediaFiliacionDesaparecidos->SENASPARTICULARES : '-') .
+					'<b> TAMAÑO DEL CABELLO: </b> ' . ($cabelloTamano ?  $cabelloTamano->CABELLOTAMANODESCR : '-')
+					. '</p>';
 			}
 		}
 		if ($data->vehiculos_da) {
@@ -8434,11 +8467,11 @@ class DashboardController extends BaseController
 				'<b> CORREO: </b> ' . ($data->denunciante->CORREO ? $data->denunciante->CORREO  : '-') .
 				'<b> TIPO DE IDENTIFICACIÓN: </b> ' . ($data->denuncianteTipoIdentificacion ? $data->denuncianteTipoIdentificacion->PERSONATIPOIDENTIFICACIONDESCR  : '-') .
 				'<b> NÚMERO DE IDENTIFICACIÓN: </b> ' . ($data->denunciante->NUMEROIDENTIFICACION ? $data->denunciante->NUMEROIDENTIFICACION  : '-') . '</p>';
-		
-				if ($data->desaparecidos_da) {
-					foreach ($data->desaparecidos_da as $key => $desaparecidos) {
+
+			if ($data->desaparecidos_da) {
+				foreach ($data->desaparecidos_da as $key => $desaparecidos) {
 					$data->mediaFiliacionDesaparecidos = $this->_folioMediaFiliacionRead->asObject()->where('FOLIOID', $folio)->where('PERSONAFISICAID', $desaparecidos->PERSONAFISICAID)->first();
-		
+
 					//Victima media filiación
 					$colorOjos = $this->_ojoColorModelRead->asObject()->where('OJOCOLORID', $data->mediaFiliacionDesaparecidos->OJOCOLORID)->first();
 					$colorCabello = $this->_cabelloColorModelRead->asObject()->where('CABELLOCOLORID', $data->mediaFiliacionDesaparecidos->CABELLOCOLORID)->first();
@@ -8446,24 +8479,24 @@ class DashboardController extends BaseController
 					$colorPiel = $this->_pielColorModelRead->asObject()->where('PIELCOLORID', $data->mediaFiliacionDesaparecidos->PIELCOLORID)->first();
 					$cejasForma = $this->_cejaFormaModelRead->asObject()->where('CEJAFORMAID', $data->mediaFiliacionDesaparecidos->CEJAFORMAID)->first();
 					$cabelloTamano = $this->_cabelloTamanoModelRead->asObject()->where('CABELLOTAMANOID', $data->mediaFiliacionDesaparecidos->CABELLOTAMANOID)->first();
-		
+
 					$hecho_info = $hecho_info .
 						'<br><p><b>MEDIA FILIACIÓN DE PERSONA DESAPARECIDA: </b> ' . ($key + 1) .
-						'</p><p><b> NOMBRE: </b> ' . $desaparecidos->NOMBRE . ' ' . ($desaparecidos->PRIMERAPELLIDO ? $desaparecidos->PRIMERAPELLIDO : '') . ' ' . ($desaparecidos->SEGUNDOAPELLIDO? $desaparecidos->SEGUNDOAPELLIDO : '') .
+						'</p><p><b> NOMBRE: </b> ' . $desaparecidos->NOMBRE . ' ' . ($desaparecidos->PRIMERAPELLIDO ? $desaparecidos->PRIMERAPELLIDO : '') . ' ' . ($desaparecidos->SEGUNDOAPELLIDO ? $desaparecidos->SEGUNDOAPELLIDO : '') .
 						'<b> EDAD: </b> ' . ($desaparecidos->EDADCANTIDAD ? $desaparecidos->EDADCANTIDAD : '-') .
-						'<b> FECHA DE DESAPARICIÓN: </b>' .  ($data->mediaFiliacionDesaparecidos->FECHADESAPARICION ?$data->mediaFiliacionDesaparecidos->FECHADESAPARICION :'-') .
-						'<b> LUGAR DE DESAPARICIÓN: </b> ' . ($data->mediaFiliacionDesaparecidos->LUGARDESAPARICION ?$data->mediaFiliacionDesaparecidos->LUGARDESAPARICION:'' ).
-						'<b> ESTATURA: </b> ' . ( $data->mediaFiliacionDesaparecidos->ESTATURA ?  (float)(((float)$data->mediaFiliacionDesaparecidos->ESTATURA) / 100) : '-') .
+						'<b> FECHA DE DESAPARICIÓN: </b>' .  ($data->mediaFiliacionDesaparecidos->FECHADESAPARICION ? $data->mediaFiliacionDesaparecidos->FECHADESAPARICION : '-') .
+						'<b> LUGAR DE DESAPARICIÓN: </b> ' . ($data->mediaFiliacionDesaparecidos->LUGARDESAPARICION ? $data->mediaFiliacionDesaparecidos->LUGARDESAPARICION : '') .
+						'<b> ESTATURA: </b> ' . ($data->mediaFiliacionDesaparecidos->ESTATURA ?  (float)(((float)$data->mediaFiliacionDesaparecidos->ESTATURA) / 100) : '-') .
 						'<b> COMPLEXIÓN: </b> ' . ($complexion ?  $complexion->FIGURADESCR : '-') .
-						'<b> PESO: </b> ' . ( $data->mediaFiliacionDesaparecidos->PESO ?  $data->mediaFiliacionDesaparecidos->PESO : '-') .
+						'<b> PESO: </b> ' . ($data->mediaFiliacionDesaparecidos->PESO ?  $data->mediaFiliacionDesaparecidos->PESO : '-') .
 						'<b> TEZ: </b> ' . ($colorPiel ?  $colorPiel->PIELCOLORDESCR : '-') .
 						'<b> COLOR DE OJOS: </b> ' . ($colorOjos ?  $colorOjos->OJOCOLORDESCR : '-') .
-						'<b> TIPO CEJA: </b> ' . ( $cejasForma ?  $cejasForma->CEJAFORMADESCR : '-') .
+						'<b> TIPO CEJA: </b> ' . ($cejasForma ?  $cejasForma->CEJAFORMADESCR : '-') .
 						'<b> SEÑAS PARTICULARES: </b> ' . ($data->mediaFiliacionDesaparecidos->SENASPARTICULARES ?  $data->mediaFiliacionDesaparecidos->SENASPARTICULARES : '-') .
-						'<b> TAMAÑO DEL CABELLO: </b> ' . ($cabelloTamano ?  $cabelloTamano->CABELLOTAMANODESCR : '-') 
+						'<b> TAMAÑO DEL CABELLO: </b> ' . ($cabelloTamano ?  $cabelloTamano->CABELLOTAMANODESCR : '-')
 						. '</p>';
-					}
 				}
+			}
 			if ($data->vehiculos_da) {
 				foreach ($data->vehiculos_da as $key => $vehiculos) {
 					$estadoV = $this->_estadosModelRead->asObject()->where('ESTADOID',  $vehiculos->ESTADOIDPLACA)->first();
@@ -8941,11 +8974,14 @@ class DashboardController extends BaseController
 		} else if (session('ROLID') == 3 || session('ROLID') == 4 || session('ROLID') == 8 || session('ROLID') == 9 || session('ROLID') == 10) {
 			$data->folio = $this->_folioModelRead->videos_expediente_model(4);
 		} else if (session('ROLID') == 12) {
+			// VISUALIZADOR RAC
 			$data->folio = $this->_folioModelRead->videos_expediente_model(3);
+		} else if (session('ROLID') == 13) {
+			//VISUALIZADOR ESTATAL
+			$data->folio = $this->_folioModelRead->videos_expediente_model(5);
 		} else {
 			$data->folio = $this->_folioModelRead->videos_expediente_model(2);
 		}
-
 		$data->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 		$this->_loadView('Videos de expedientes', 'videos', '', $data, 'videos_expediente');

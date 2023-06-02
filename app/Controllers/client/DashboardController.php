@@ -99,7 +99,6 @@ class DashboardController extends BaseController
 		$this->_folioMediaFiliacion = new FolioPersonaFisicaMediaFiliacionModel();
 		$this->_folioConsecutivoModel = new FolioConsecutivoModel();
 		$this->_archivoExternoModel = new FolioArchivoExternoModel();
-
 		//Models reader
 		$this->_folioModelRead = model('FolioModel', true, $this->db_read);
 
