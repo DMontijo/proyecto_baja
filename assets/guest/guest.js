@@ -1,3 +1,4 @@
+
 /*****************************************
  *
  *  AGENT CONNECTIONS TO VIDEO SERVICE SDK
@@ -244,8 +245,6 @@ export class VideoServiceGuest {
 
 			this.agentData = response.agent;
 
-			if (typeof callback === "function") callback(response, this.guestData);
-
 			this.#videoCallService = new VideoCall({ remoteVideoSelector,
 				audioSource: this.audioStream,
 				videoSource: this.videoStream,
@@ -256,8 +255,23 @@ export class VideoServiceGuest {
 				localVideoSelector,
 				() => { }
 			);
+
+			if (typeof callback === "function") callback(response, this.guestData);
 		});
 	}
+
+	/**
+     * Register the network quality
+     * 
+     * @param {Function} callback - This method is executed after session is connected
+     */
+	registerOnNewtworkQualityChanged(callback){
+		if (!this.#videoCallService) return;
+
+		this.#videoCallService.registerOnNewtworkQualityChanged((event) => {
+			if (typeof callback === "function") callback(event);
+		});
+	} 
 
 	/**
 	 * Register recording status changes

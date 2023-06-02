@@ -16,6 +16,10 @@ const video_container = document.getElementById("video_container");
 const startRecord = document.querySelector("#start-recording");
 const stopRecord = document.querySelector("#stop-recording");
 
+// NETWORK QUALITY SIGNAL
+const networkQualitySignalGuestButton = document.getElementById("network_quality_signal_guest");
+const networkQualitySignalAgentButton = document.getElementById("network_quality_signal_agent");
+
 // VIDEO Y AUDIO DE AGENTE SELECTER
 const mediaDevicesModal = document.getElementById("media_devices_modal");
 const $mediaConfiguration = document.getElementById("media_configuration");
@@ -296,6 +300,10 @@ aceptar_llamada.addEventListener("click", () => {
 			agentVideoService.registerOnGuestDisconnected(() => {
 				aceptar_llamada.disabled = false;
 				console.log("Guest disconnected");
+				agentVideoService.disconnectAgent(() => {
+					console.log("¡Agente desconectado con éxito!");
+					clearVideoCall();
+				});
 				Swal.fire({
 					icon: "error",
 					text: "El usuario se desconecto.",
@@ -304,9 +312,71 @@ aceptar_llamada.addEventListener("click", () => {
 					timerProgressBar: true
 				});
 			});
+
+			agentVideoService.registerOnNewtworkQualityChanged((event, host) => {
+				
+				const signal = createSignalLevel(event.newValue);
+				networkQualitySignalAgentButton.classList.remove("d-none");
+				networkQualitySignalGuestButton.classList.remove("d-none");
+				if(host.host) {
+					networkQualitySignalAgentButton.innerHTML = signal;
+				} else {
+					networkQualitySignalGuestButton.innerHTML = signal;
+				}
+			});
 		}
 	);
 });
+
+function createSignalLevel(levelSignal) {
+	const signalDetails = getColorSignal(levelSignal);
+	
+	return `
+	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-reception-${signalDetails.levelSignal}" style="color: ${signalDetails.colorSignal}" viewBox="0 0 16 16">
+		${signalDetails.svgPath}
+	</svg>
+	`;
+}
+
+function getColorSignal(levelSignal){
+	let colorSignal;
+	let svgPath;
+
+	switch(levelSignal) {
+		case 5:
+			levelSignal = 4;
+			colorSignal = 'green';
+			svgPath = `<path d="M0 11.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-5zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-8zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v11a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-11z"/>`;
+			break;
+		case 4:
+			levelSignal = 3;
+			colorSignal = 'green';
+			svgPath = `<path d="M0 11.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-5zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-8zm4 8a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z"/>`;
+			break;
+		case 3: case 2:
+			levelSignal = 2;
+			colorSignal = 'yellow';
+			svgPath = `<path d="M0 11.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-5zm4 5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm4 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z"/>`;
+			break;
+		case 1:
+			colorSignal = 'red';
+			svgPath = `<path d="M0 11.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2zm4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm4 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm4 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z"/>`;
+			break;
+		case 0:
+			colorSignal = 'red';
+			svgPath = `<path d="M0 13.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm4 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm4 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm4 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z"/>`;
+			break;
+		default:
+			levelSignal = 0;
+			svgPath = `<path d="M0 13.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm4 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm4 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm4 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z"/>`;
+	}
+
+	return {
+		levelSignal,
+		colorSignal,
+		svgPath,
+	}
+}
 
 desconectar_llamada.addEventListener("click", () => {
 	console.log("Finalizando llamada...");

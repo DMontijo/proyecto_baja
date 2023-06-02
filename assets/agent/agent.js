@@ -161,6 +161,19 @@ export class VideoServiceAgent {
 	}
 
 	/**
+     * Register the network quality
+     * 
+     * @param {Function} callback - This method is executed after session is connected
+     */
+	registerOnNewtworkQualityChanged(callback){
+		if (!this.#videoCallService) return;
+
+		this.#videoCallService.registerOnNewtworkQualityChanged((event, host) => {
+			if (typeof callback === "function") callback(event, host);
+		});
+	} 
+
+	/**
 	 * Register the listener for guest connections
 	 *
 	 * @param {Function} [callback] - This method is executed after gest is assigned to agent
@@ -240,16 +253,14 @@ export class VideoServiceAgent {
 				this.#phoneRing.pause();
 				console.log(this.agentData);
 
-				if (typeof callback === "function")
-					callback(response, this.agentData, this.guestData);
-
+				
 				this.#videoCallService = new VideoCall({ remoteVideoSelector,
 					audioSource: this.audioStream,
 					videoSource: this.videoStream,
 				});
-
+				
 				this.#videoCallService.registerOnSessionDisconnected();
-
+				
 				this.#videoCallService.connectVideoCall(
 					response.token,
 					localVideoSelector,
@@ -257,6 +268,8 @@ export class VideoServiceAgent {
 						this.#phoneRing.pause();
 					}
 				);
+
+				if (typeof callback === "function") callback(response, this.agentData, this.guestData);
 			}
 		);
 	}
