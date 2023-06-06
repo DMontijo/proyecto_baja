@@ -19,6 +19,7 @@ const stopRecord = document.querySelector("#stop-recording");
 // NETWORK QUALITY SIGNAL
 const networkQualitySignalGuestButton = document.getElementById("network_quality_signal_guest");
 const networkQualitySignalAgentButton = document.getElementById("network_quality_signal_agent");
+const toastAgent = document.getElementById("toast_agent");
 
 // VIDEO Y AUDIO DE AGENTE SELECTER
 const mediaDevicesModal = document.getElementById("media_devices_modal");
@@ -316,13 +317,24 @@ aceptar_llamada.addEventListener("click", () => {
 			agentVideoService.registerOnNewtworkQualityChanged((event, host) => {
 				
 				const signal = createSignalLevel(event.newValue);
-				networkQualitySignalAgentButton.classList.remove("d-none");
-				networkQualitySignalGuestButton.classList.remove("d-none");
 				if(host.host) {
+					networkQualitySignalAgentButton.classList.remove("d-none");
 					networkQualitySignalAgentButton.innerHTML = signal;
 				} else {
+					networkQualitySignalGuestButton.classList.remove("d-none");
 					networkQualitySignalGuestButton.innerHTML = signal;
 				}
+			});
+
+			agentVideoService.toggleVideoFailConection((toggle) => {
+				toogleVideoDenunciante(toggle);
+				console.log(toastAgent, 'toastAgent');
+				$(toastAgent).removeClass('hide');
+				$(toastAgent).addClass('fade show');
+				setTimeout(() => {
+					$(toastAgent).removeClass('show');
+					$(toastAgent).addClass('fade hide');
+				}, 9000);
 			});
 		}
 	);

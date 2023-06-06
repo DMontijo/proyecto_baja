@@ -106,14 +106,17 @@ function getColorSignal(levelSignal){
 			levelSignal = 2;
 			colorSignal = 'yellow';
 			$(toastGuest).toast('show');
+			turnOffCamera();
 			break;
 		case 1:
 			colorSignal = 'red';
 			$(toastGuest).toast('show');
+			turnOffCamera();
 			break;
 		case 0:
 			colorSignal = 'red';
 			$(toastGuest).toast('show');
+			turnOffCamera();
 			break;
 		default:
 			levelSignal = 0;
@@ -125,6 +128,11 @@ function getColorSignal(levelSignal){
 	}
 }
 
+function turnOffCamera() {
+	setTimeout(() => {
+		guestVideoService.toggleRemoteVideoFailConection(IsEnabled => {});
+	}, 3000);
+}
 
 guestVideoService.registerRefreshGuestConnection(() => {
 	Swal.fire({

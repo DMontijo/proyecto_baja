@@ -134,6 +134,30 @@
 		video {
 			width: 100%;
 		}
+		
+		.toast {
+			width: 350px;
+			max-width: 100%;
+			font-size: 0.875rem;
+			pointer-events: auto;
+			background-color: rgba(255, 255, 255, 0.85);
+			background-clip: padding-box;
+			border: 1px solid rgba(0, 0, 0, 0.1);
+			box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+			border-radius: 0.25rem;
+		}
+
+		.show {
+			display: block;
+		}
+
+		.fade {
+			transition: opacity 0.15s linear;
+		}
+
+		.toast:not(.showing):not(.show) {
+			opacity: 0;
+		}
 	</style>
 	<div class="col-12 text-center mb-4 d-none" id="divFolioAtendido" name="divFolioAtendido">
 		<h3 class="mb-4 text-center font-weight-bold" id="folio_atendido" name="folio_atendido"></h3>
@@ -512,6 +536,7 @@
 </div>
 
 <?php include("video_denuncia_media_devices_modal.php"); ?>
+<?php include("video_denuncia_toast.php"); ?>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.css?v=<?= rand() ?>">

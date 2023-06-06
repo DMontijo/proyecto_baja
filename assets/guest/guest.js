@@ -294,6 +294,22 @@ export class VideoServiceGuest {
 	}
 
 	/**
+	 * Toggle guest video
+	 *
+	 * @param {Function} callback - This function will be called when the video has been toggled
+	 */
+	toggleRemoteVideoFailConection(callback) {
+		this.guestVideo = false;
+		this.#emit(
+			"toggle-video-guest",
+			{ toogleVideoGuest: this.guestVideo },
+			() => {
+				if (typeof callback === "function") callback(this.guestVideo);
+			}
+		);
+	}
+
+	/**
 	 * Close guest socket connection
 	 *
 	 * @param {Function} [callback] - This method is executed after guest is disconnected

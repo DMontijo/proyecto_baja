@@ -160,6 +160,14 @@ export class VideoServiceAgent {
 		);
 	}
 
+	toggleVideoFailConection(callback) {
+		this.#socket.on("mute-video", ({ toggleVideo }) => {
+			this.guestVideo = toggleVideo.toogleVideoGuest;
+			console.log(toggleVideo, 'guestviceo');
+			if (typeof callback === "function") callback(toggleVideo);
+		});
+	}
+
 	/**
      * Register the network quality
      * 
