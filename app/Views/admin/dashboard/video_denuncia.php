@@ -518,6 +518,7 @@
 		$('[data-toggle="tooltip"]').tooltip()
 	})
 
+	//Declaracion de variables globales, se utilizan en diferentes funciones.
 	const inputFolio = document.querySelector('#input_folio_atencion');
 	const inputExpediente = document.querySelector('#input_expediente');
 	const inputDenuncia = document.querySelector('#input_denuncia');
@@ -549,6 +550,7 @@
 	let marker = null;
 	let current = null;
 
+	//Funcion para obtener la fecha actual, se muestra al momento de asignarse una denuncia
 	function startTime() {
 		var today = new Date();
 		var hr = today.getHours();
@@ -579,6 +581,7 @@
 		}, 500);
 	}
 
+	//Funcion pra formatear la hora, asegurando que siempre tenga los dos digitos
 	function checkTime(i) {
 		if (i < 10) {
 			i = "0" + i;
@@ -586,6 +589,7 @@
 		return i;
 	}
 
+	//Funion para prevenir cerrar la ventana durante la asignacion de una denuncia.
 	function preventCloseWindow() {
 		window.removeEventListener("beforeunload", null, false);
 		window.addEventListener("beforeunload", (evento) => {
@@ -595,6 +599,7 @@
 		});
 	}
 
+	//Funcion para retornar cuando se presione la tecla ENTER al mismo tiempo que SHIFT, evitando su comportamiento normal
 	function pulsar(e) {
 		if (e.which === 13 && !e.shiftKey) {
 			e.preventDefault();
@@ -602,6 +607,7 @@
 		}
 	}
 
+	//Funcion para contar caracteres restantes de los textarea
 	function contarCaracteres(obj) {
 		var maxLength = 1000;
 		var strLength = obj.value.length;
@@ -615,6 +621,7 @@
 		}
 	}
 
+	//Funcion para iterar el llenado de tabla de personas fisicas, recibe como parametro todas las personas fisicas
 	function llenarTablaPersonas(personas) {
 		for (let i = 0; i < personas.length; i++) {
 			var btn =
@@ -635,6 +642,7 @@
 			$("#adicionados").append(nFilas - 1);
 		}
 	}
+	//Funcion para iterar el llenado de tabla de los folios del mismo denunciante, recibe como parametros todos los folios		
 
 	function llenarTablaFolioDenunciantes(folioDenunciantes) {
 
@@ -682,6 +690,7 @@
 
 		}
 	}
+	//Funcion para iterar el llenado de tabla de documentos, recibe como parametro todos los documentos
 
 	function llenarTablaDocumentos(documentos) {
 		for (let i = 0; i < documentos.length; i++) {
@@ -725,11 +734,11 @@
 			$("#adicionados").append(nFilas - 1);
 		}
 	}
-
+	//Funcion para redirigir a remitir el folio
 	function remitir() {
 		window.location.href = `<?= base_url('/admin/dashboard/bandeja_remision?folio=') ?>${inputFolio.value}&year=${year_select.value}&municipioasignado=${input_municipio.value}&expediente=${inputExpediente.value}`;
 	}
-
+	//Funcion para visualizar la relacion de parentesco, recibe como parametro la persona fisica 1
 	function view_form_parentesco($personafisica) {
 		$.ajax({
 			data: {
@@ -745,6 +754,7 @@
 				let relacion_parentesco = response.parentescoRelacion;
 				let idPersonaFisica = response.idPersonaFisica;
 				// 	if (relacion_parentesco) {
+				//Se asignan los valores del parentesco
 				document.querySelector('#parentesco_mf').value = parentesco.PERSONAPARENTESCOID ? parentesco
 					.PERSONAPARENTESCOID : '';
 				document.querySelector('#personaFisica1').value = relacion_parentesco.PERSONAFISICAID1 ?
@@ -768,6 +778,7 @@
 			error: function(jqXHR, textStatus, errorThrown) {}
 		});
 	}
+	//Funcion para eliminar el parentesco, se tiene que recibir por parametro la persona fisica1, personafisica2 y el parentesco a eliminar
 
 	function eliminarparentesco(personofisica1, personafisica2, parentesco) {
 		console.log("eliminar 2", parentesco);
@@ -811,6 +822,7 @@
 
 	}
 
+	//Funcion para actualizar el documento, recibe el placeholder actualizado
 	function actualizarDocumento(placeholder) {
 
 		const data = {
@@ -827,6 +839,7 @@
 			success: function(response) {
 				if (response.status == 1) {
 					const documentos = response.documentos;
+					//llena la tabla de documentos
 					let tabla_documentos = document.querySelectorAll('#table-documentos tr');
 					tabla_documentos.forEach(row => {
 						if (row.id !== '') {
@@ -856,7 +869,7 @@
 		});
 
 	}
-
+	//Funcion para iterar el llenado de tabla de la relacion de parentescos, recibe como parametro toda la informacion de la relacion de parentescos
 	function llenarTablaParentesco(relacion_parentesco) {
 
 		for (let i = 0; i < relacion_parentesco.length; i++) {
@@ -883,6 +896,7 @@
 
 		}
 	}
+	//Funcion para iterar el llenado de tabla de arbol delitivo, recibe como parametro toda la informacion del arbol delictivo
 
 	function llenarTablaFisFis(relacionFisFis) {
 		for (let i = 0; i < relacionFisFis.length; i++) {
@@ -904,7 +918,7 @@
 		}
 	}
 
-
+	//Funcion para eliminar el delito del imputado, recibe como parametro la victima, imputado y el id del delito
 	function eliminarImputadoDelito(personafisicavictima, personafisicaimputado, delitoModalidadId) {
 		$.ajax({
 			data: {
@@ -921,6 +935,7 @@
 			success: function(response) {
 
 				if (response.status == 1) {
+					//Se llenan las tablas
 					Swal.fire({
 						icon: 'success',
 						text: 'Delito del imputado y árbol delicitivo eliminado correctamente',
@@ -955,6 +970,7 @@
 
 	}
 
+	//Funcion para eliminar la relacion del arbol delictivo, recibe como parametro el imputado, victima y el id del delito
 	function eliminarArbolDelictivo(personafisicavictima, personafisicaimputado, delitoModalidadId) {
 		$.ajax({
 			data: {
@@ -970,6 +986,7 @@
 			dataType: "json",
 			success: function(response) {
 				if (response.status == 3) {
+					//Validaccion de ultimo registro
 					Swal.fire({
 						title: 'Este es el ultimo registro, se eliminará el delito cometido de la denuncia',
 						showDenyButton: true,
@@ -987,6 +1004,7 @@
 				}
 
 				if (response.status == 1) {
+					//Cuando el imputado tiene mas de 1 delito
 					Swal.fire({
 						icon: 'success',
 						text: 'Árbol delictivo eliminado correctamente',
@@ -1023,6 +1041,7 @@
 
 	}
 
+	//Funcion para eliminar los objetos involucrados, recibe por parametro el id del objeto
 	function eliminarObjetosInvolucrados(objetoid) {
 		$.ajax({
 			data: {
@@ -1037,6 +1056,7 @@
 			success: function(response) {
 
 				if (response.status == 1) {
+					//Se llena la tabla de objetos
 					Swal.fire({
 						icon: 'success',
 						text: 'Objeto involucrado eliminado correctamente',
@@ -1064,6 +1084,7 @@
 
 	}
 
+	// Funcion para visualizar la informacion del objeto involucrado, recibe por parametro el id del objeto
 	function viewObjetoInvolucrado(objetoid) {
 		$('#folio_objetos_update').modal('show');
 		$.ajax({
@@ -1078,6 +1099,7 @@
 			success: function(response) {
 				let objeto = response.objetoInvolucrado;
 				let objeto_sub = response.objetosub;
+				// Se llenan los valores
 				document.querySelector('#objeto_id').value = objeto.OBJETOID ? objeto.OBJETOID : '';
 				document.querySelector('#situacion_objeto_update').value = objeto.SITUACION ? objeto.SITUACION :
 					'';
@@ -1114,6 +1136,7 @@
 		});
 	}
 
+	//Funcion para iterar la tabla de relacion de imputado-delito, recibe la informacion de esta relacion
 	function llenarTablaImpDel(impDelito) {
 		for (let i = 0; i < impDelito.length; i++) {
 			// var btn = `<button type='button'  class='btn btn-primary' onclick='eliminarImputadoDelito(${impDelito[i].PERSONAFISICAID},${impDelito[i].DELITOMODALIDADID})'><i class='fa fa-trash'></i></button>`
@@ -1132,6 +1155,7 @@
 		}
 	}
 
+	//Funcion para iterar la tabla de objetos involucrados, recibe por parametro la informacion de los objetos
 	function llenarTablaObjetosInvolucrados(objetos) {
 		for (let i = 0; i < objetos.length; i++) {
 			var btnEliminar =
@@ -1153,6 +1177,7 @@
 			$("#adicionados").append(nFilas - 1);
 		}
 	}
+	//Funcion para iterar la tabla de archivos externos, recibe por parametro la informacion de los archivos
 
 	function llenarTablaArchivosExternos(archivos) {
 		for (let i = 0; i < archivos.length; i++) {
@@ -1180,11 +1205,13 @@
 			var nFilas = $("#archivos tr").length;
 			$("#adicionados").append(nFilas - 1);
 
+			///Funcion de descarga de archivos
 			document.querySelector('#downloadArchivo').setAttribute('href', archivos[i].ARCHIVO);
 			document.querySelector('#downloadArchivo').setAttribute('download', archivos[i].FOLIOID + '_' +
 				archivos[i].ANO + '_' + archivos[i].FOLIOARCHIVOID + '.' + archivos[i].EXTENSION);
 		}
 	}
+	//Funcion para iterar la tabla de vehiculos, recibe por parametro la informacion de los vehiculos
 
 	function llenarTablaVehiculos(vehiculos) {
 		for (let i = 0; i < vehiculos.length; i++) {
@@ -1206,7 +1233,9 @@
 		}
 	}
 
+	//Evento al buscar un folio
 	buscar_btn.addEventListener('click', (e) => {
+		//Limpia todos los valores en caso de que hayan quedado
 		borrarTodoConFolio();
 		preventCloseWindow();
 		$.ajax({
@@ -1221,6 +1250,7 @@
 				respuesta = response;
 				document.getElementById("form_parentesco_insert").reset();
 				if (response.status === 1) {
+					//respuestas de la funcion
 					const folio = response.folio;
 					const preguntas = response.respuesta.preguntas_iniciales;
 					const personas = response.respuesta.personas;
@@ -1242,6 +1272,7 @@
 					const archivos = response.respuesta.archivosexternos;
 					const folioDenunciantes = response.respuesta.folioDenunciantes;
 
+					//Cambios de estilos
 					inputFolio.classList.add('d-none');
 					buscar_btn.classList.add('d-none');
 					year_select.classList.add('d-none');
@@ -1254,6 +1285,8 @@
 
 					divFolioAtendido.classList.remove('d-none');
 					// card6.classList.remove('d-none');
+
+					//LLenado de valores de la denuncia
 					document.querySelector('#folio_atendido').innerHTML = 'FOLIO ATENDIDO: ' + folio.FOLIOID + '/' + folio.ANO;
 
 					document.querySelector('#delito_dash').value = folio.HECHODELITO;
@@ -1280,6 +1313,7 @@
 					option_vacio_im.disabled = true;
 					option_vacio_im.selected = true;
 					if (victimas || imputados || correos || personas) {
+						//Siempre se limpian los selects, se declaran, y se llenan con la respuesta correspondiente
 						$('#victima_modal_documento').empty();
 						let select_victima_documento = document.querySelector(
 							"#victima_modal_documento");
@@ -1519,6 +1553,8 @@
 					//DENUNCIA
 					document.querySelector('#delito_delito').value = folio.HECHODELITO;
 					document.querySelector('#municipio_delito').value = folio.HECHOMUNICIPIOID ? folio.HECHOMUNICIPIOID : '';
+
+					//Coordenadas del mapa
 					let mapa_denuncia = document.querySelector('#map_denuncia');
 					mapa_denuncia.style.width = '100%';
 					mapa_denuncia.style.height = '400px';
@@ -1698,6 +1734,8 @@
 			}
 		});
 	});
+
+	//Funcion para borrar todos los valores
 	function borrarTodoConFolio() {
 		let currentTime = new Date();
 		let year = currentTime.getFullYear()
@@ -1876,6 +1914,7 @@
 
 		// $('#v-pills-vehiculos-tab').css('display', 'NONE');
 	}
+
 	function borrarTodo() {
 		let currentTime = new Date();
 		let year = currentTime.getFullYear()
@@ -2061,12 +2100,14 @@
 		// $('#v-pills-vehiculos-tab').css('display', 'NONE');
 	}
 
+	//Funcion para darle formato al expediente, recibe por parametro el expediente sin formato
 	function expedienteConGuiones(expediente) {
 		const array = expediente.trim().split('');
 		// return array[0] + '-' + array[1] + array[2] + '-' + array[3] + array[4] + array[5] + '-' + array[6] + array[7] + array[8] + array[9] + '-' + array[10] + array[11] + array[12] + array[13] + array[14];
 		return array[1] + array[2] + array[4] + array[5] + '-' + array[6] + array[7] + array[8] + array[9] + '-' + array[10] + array[11] + array[12] + array[13] + array[14];
 	}
 
+	//Evento al buscar nuevo folio
 	buscar_nuevo_btn.addEventListener('click', () => {
 		// data = {
 		// 	'folio': inputFolio.value,
@@ -2095,6 +2136,7 @@
 	});
 
 
+	//Funcion para llenar valores y abrir modal para firmar documentos por id, recibe por parametro el folio, año y id del documento
 	function firmarDocumento(folio, ano, foliodocid) {
 		document.querySelector('#folio_id').value = folio;
 		document.querySelector('#documento_id').value = foliodocid;
@@ -2102,6 +2144,7 @@
 		$('#contrasena_modal_doc_id').modal('show');
 	}
 
+	//Funcion para asignar un encargado al documento y que este lo firme, recibe por parametro el id del documento, folio y año
 	function asignarEncargado(documento, folio, ano) {
 		$('#documentos_generados_modal').modal('hide');
 		$('#encargadosModal').modal('show');
@@ -2124,6 +2167,7 @@
 					const documentos = response.documentos;
 					if (response.status == 1) {
 						btn_asignar_encargado.disabled = false;
+						//LLena la tabla de documentos
 						let tabla_documentos = document.querySelectorAll('#table-documentos tr');
 						tabla_documentos.forEach(row => {
 							if (row.id !== '') {
@@ -2150,6 +2194,7 @@
 
 	}
 
+	//Funcion para asignar un agente al documento y que este lo firme, recibe por parametro el id del documento, folio y año
 	function asignarAgente(documento, folio, ano) {
 		$('#documentos_generados_modal').modal('hide');
 
@@ -2171,6 +2216,7 @@
 				success: function(response) {
 					const documentos = response.documentos;
 					if (response.status == 1) {
+						//Llena la tabla de documentos
 						btn_asignar_agente.disabled = false;
 						let tabla_documentos = document.querySelectorAll('#table-documentos tr');
 						tabla_documentos.forEach(row => {
@@ -2198,6 +2244,7 @@
 
 	}
 
+	//Funcion para borrar un documento, se manda por parametro el folio, año y id del documento
 	function borrarDocumento(folio, ano, foliodocid) {
 		Swal.fire({
 			title: '¿Estas seguro?',
@@ -2219,6 +2266,7 @@
 					dataType: "json",
 					success: function(response) {
 						if (response.status == 1) {
+							//Se llena la tabla de documentos
 							const documentos = response.documentos;
 							let tabla_documentos = document.querySelectorAll(
 								'#table-documentos tr');
@@ -2255,6 +2303,7 @@
 	}
 
 
+	//Funcion para visualizar el documento para una posible edicion, recibe por parametro el id del documento
 	function viewDocumento(foliodocid) {
 		jQuery('.ql-toolbar').remove();
 		$('#documentos_generados_modal').modal('hide');
@@ -2278,10 +2327,12 @@
 		});
 	}
 
+	//Funcion para abrir una ventana para visualizar un folio del mismo denunciante
 	function viewFoliosDenunciantes(folio, year) {
 		window.open(`<?= base_url('/admin/dashboard/ver_folio?folio=') ?>` + folio + '&year=' + year, '_blank');
 	}
 
+	//Funcion para eliminar una persona fisica del folio, recibe por parametro el id de la persona fisica
 	function deletePersonaFisicaById(personafisicaid) {
 		const data = {
 			'folio': document.querySelector('#input_folio_atencion').value,
@@ -2295,6 +2346,7 @@
 			dataType: "json",
 			success: function(response) {
 				if (response.status == 1) {
+					//Llenado de la tabla de personas
 					let tabla_personas = document.querySelectorAll('#table-personas tr');
 					tabla_personas.forEach(row => {
 						if (row.id !== '') {
@@ -2312,6 +2364,7 @@
 					const victimas = response.victimas;
 					const personas = response.personas;
 
+					//Nuevo llenado de selects donde haya personas fisicas
 					$('#victima_ofendido').empty();
 					let select_victima_ofendido = document.querySelector("#victima_ofendido")
 					victimas.forEach(victima => {
@@ -2503,6 +2556,7 @@
 		});
 	}
 
+	//Funcion para viualizar la informacion de la persona fisica seleccionada, recibe por parametro el id de la persona fisica
 	function viewPersonaFisica(id) {
 		$.ajax({
 			data: {
@@ -2526,6 +2580,7 @@
 					document.querySelectorAll('#pf_id').forEach(element => {
 						element.value = id;
 					});
+					//LLenado de informacion en los valores
 					if (personaFisica.FOTO) {
 						extension = (((personaFisica.FOTO.split(';'))[0]).split('/'))[1];
 						if (extension == 'pdf' || extension == 'doc') {
@@ -2965,6 +3020,7 @@
 			}
 		});
 	}
+	//Funcion para viualizar la informacion del vehiculo  seleccionada, recibe por parametro el id del vehiculo
 
 	function viewVehiculo(id) {
 		$.ajax({
@@ -2978,6 +3034,7 @@
 			dataType: "json",
 			success: function(response) {
 				if (response.status == 1) {
+					//Respuestas
 					const vehiculo = response.vehiculo;
 					const distribuidorVehiculo = response.distribuidorVehiculo;
 					const marcaVehiculo = response.marcaVehiculo;
@@ -2985,6 +3042,8 @@
 					const versionVehiculo = response.versionVehiculo;
 					const color = response.color;
 					const tipov = response.tipov;
+
+					//Llenado de informacion en los valores
 					document.querySelector('#vehiculoid').value = id;
 					document.querySelector('#situacion_vehiculo').value = vehiculo.SITUACION ?
 						vehiculo.SITUACION : '';
@@ -3109,6 +3168,7 @@
 		});
 	}
 
+	//Funcion para eliminar un archivo externo, recibe por parametro el id del archivo
 	function deleteArchivo(archivoid) {
 		$.ajax({
 			data: {
@@ -3126,6 +3186,7 @@
 			success: function(response) {
 				if (response.status == 1) {
 					const archivos = response.archivos.archivosexternos;
+					//llena la tabla de archivos externos
 					Swal.fire({
 						icon: 'success',
 						text: 'Archivo eliminado correctamente',
@@ -3150,6 +3211,7 @@
 
 	}
 
+	//Funcion para eliminar un vehiculo, recibe por parametro el id del vehiculo
 	function deleteVehiculo(vehiculoid) {
 		$.ajax({
 			data: {
@@ -3163,6 +3225,8 @@
 			success: function(response) {
 				if (response.status == 1) {
 					const vehiculos = response.vehiculos;
+
+					//Llenado de la tabla de vehiculos
 					Swal.fire({
 						icon: 'success',
 						text: 'Vehículo eliminado correctamente',
@@ -3179,46 +3243,60 @@
 			}
 		});
 	}
+	// Cuando se oculta el modal con el ID 'info_folio_modal'
 	$(document).on('hidden.bs.modal', '#info_folio_modal', function() {
 		let tabs = document.querySelectorAll('#info_tabs .nav-link');
 		let contents = document.querySelectorAll('#info_content .tab-pane');
+		// Remueve la clase 'active' de todas las pestañas
 		tabs.forEach(element => {
 			element.classList.remove('active');
 		});
+		// Remueve las clases 'show' y 'active' de todos los contenidos
 		contents.forEach(element => {
 			element.classList.remove('show');
 			element.classList.remove('active');
 		});
+		// Agrega la clase 'active' a la primera pestaña y agrega las clases 'show' y 'active' al primer contenido
+
 		tabs[0].classList.add('active');
 		contents[0].classList.add('show');
 		contents[0].classList.add('active');
 	})
+	// Cuando se oculta el modal con el ID 'persona fisica'
 
 	$(document).on('hidden.bs.modal', '#folio_persona_fisica_modal', function() {
 		let tabs = document.querySelectorAll('#persona_tabs .nav-item');
 		let contents = document.querySelectorAll('#persona_content .tab-pane');
+		// Remueve la clase 'active' de todas las pestañas
+
 		tabs.forEach(element => {
 			element.classList.remove('active');
 		});
+		// Remueve las clases 'show' y 'active' de todos los contenidos
+
 		contents.forEach(element => {
 			element.classList.remove('show');
 			element.classList.remove('active');
 		});
+		// Agrega la clase 'active' a la primera pestaña y agrega las clases 'show' y 'active' al primer contenido
+
 		tabs[0].classList.add('active');
 		contents[0].classList.add('show');
 		contents[0].classList.add('active');
 	})
 
+	//Limpia las opciones del select para que quede vacio
 	function clearSelect(select_element) {
 		for (let i = select_element.options.length; i >= 1; i--) {
 			select_element.remove(i);
 		}
 	}
 
+	//Elimina todos los guiones del elemento
 	function clearGuion(e) {
 		e.target.value = e.target.value.replace(/-/g, "");
 	}
-
+	//Elimina todos los caracteres especiales del texto
 	function clearText(text) {
 		return text
 			.normalize('NFD')
@@ -3227,7 +3305,7 @@
 			.replaceAll('´', '');
 	}
 
-
+	// Funcion para eliminar los guiones del valor del campo y limita la longitud del valor al maxLength especificado.
 	function clearInputPhone(e) {
 		e.target.value = e.target.value.replace(/-/g, "");
 		if (e.target.value.length > e.target.maxLength) {
@@ -3235,6 +3313,7 @@
 		};
 	}
 
+	//Convierte todo el elemento a mayusculas
 	function mayuscTextarea(e) {
 		e.value = e.value.toUpperCase();
 	}
@@ -3244,6 +3323,7 @@
 	var iti
 	var iti2
 
+	//Carga todos los formularios y elementos para llenar la denuncia, asi como las acciones submit de los formularios
 	window.onload = function() {
 		startTime();
 		(function() {
@@ -3510,6 +3590,8 @@
 				crearArchivos();
 
 			});
+
+			//Evento para refrescar la tabla de archivos y visualizar si el denunciante subio archivos
 			btnRefrescarArchivos.addEventListener('click', (e) => {
 				$.ajax({
 					data: {
@@ -3623,6 +3705,8 @@
 
 				}
 			});
+
+			//Evento para enviar por correo los documentos de forma general
 			btn_enviarcorreoDoc.addEventListener('click', (event) => {
 				$.ajax({
 					data: {
@@ -3722,6 +3806,7 @@
 				});
 			}, false);
 
+			//Evento para firmar los documentos de manera general
 			btn_firmar_doc.addEventListener('click', (event) => {
 				$.ajax({
 					data: {
@@ -3785,6 +3870,7 @@
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
 			}, false);
+			//Evento para firmar un documento por id
 			btn_firmar_doc_id.addEventListener('click', (event) => {
 				$.ajax({
 					data: {
@@ -4513,7 +4599,9 @@
 			document.querySelector('#narracion_delito').addEventListener('input', (event) => {
 				event.target.value = clearText(event.target.value).toUpperCase();
 			}, false)
-			$('#lugar_delito').select2({ theme: "bootstrap"});
+			$('#lugar_delito').select2({
+				theme: "bootstrap"
+			});
 			document.querySelector('#municipio_delito').addEventListener('change', (e) => {
 				//municipio del hecho mp
 				let select_localidad = document.querySelector('#localidad_delito');
@@ -4816,8 +4904,12 @@
 			//INTL TEL INPUT END
 
 			//CREAR PERSONA FISICA
-			$('#ocupacion_new').select2({ theme: "bootstrap"});
-			$('#ocupacion_pf').select2({ theme: "bootstrap"});
+			$('#ocupacion_new').select2({
+				theme: "bootstrap"
+			});
+			$('#ocupacion_pf').select2({
+				theme: "bootstrap"
+			});
 			document.querySelector('#fecha_nacimiento_new').addEventListener('change', (e) => {
 				let fecha = e.target.value;
 				let hoy = new Date();
