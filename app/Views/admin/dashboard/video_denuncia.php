@@ -3933,6 +3933,8 @@
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
 			}, false);
+
+			//Evento para subir los archivos externos a Justicia
 			btn_archivos_externos.addEventListener('click', (event) => {
 				$('#subirDocumentosModal').modal('show');
 				$('#subirDocumentosModal').show();
@@ -4045,6 +4047,7 @@
 			// 	obtenerPlantillas(tipoPlantilla);
 			// }, false);
 
+			//Rellena los select del modelo del vehiculo desde el año 1800 hasta el actual
 			let startYear = 1800;
 			let endYear = new Date().getFullYear();
 			for (let i = endYear; i > startYear; i--) {
@@ -4054,6 +4057,7 @@
 			}
 
 
+			//Evento change para filtrar las personas que no se hayan seleccionado
 			selectPersonaFisica1.addEventListener("change", function() {
 				let personaFisica2_I = document.querySelector("#personaFisica2_I")
 
@@ -4087,6 +4091,8 @@
 					},
 				});
 			});
+
+			//Evento change de estados para mostrar estado extranjero
 			document.querySelector('#estado_vehiculo_ad').addEventListener('change', (e) => {
 				let select_estado = document.querySelector('#estado_vehiculo_ad');
 				let select_estado_extr = document.querySelector('#estado_extranjero_vehiculo_ad');
@@ -4108,6 +4114,7 @@
 			let select_estado_extr = document.querySelector('#estado_extranjero_vehiculo_ad');
 			let select_estado_extr_add = document.querySelector('#estado_extranjero_vehiculo_add_ad');
 
+			//Evento change para devolver a estado normal en vehiculos
 			document.querySelector('#estado_extranjero_vehiculo_ad').addEventListener('change', (e) => {
 				if (select_estado_extr.value == 0) {
 					let select_estado = document.querySelector('#estado_vehiculo_ad');
@@ -4126,6 +4133,7 @@
 			});
 
 
+			//Evento change para obtener las marcas de acuerdo al distribuidor. Limpia los select para que no se acumulen
 			document.querySelector('#distribuidor_vehiculo_ad').addEventListener('change', (e) => {
 
 				let select_marca = document.querySelector('#marca_ad');
@@ -4152,6 +4160,7 @@
 					dataType: "json",
 					success: function(response) {
 						let marcaVehiculo = response.data;
+						//Itera el select de marcas
 						marcaVehiculo.forEach(marca_vehiculo => {
 							let option = document.createElement("option");
 							option.text = marca_vehiculo.VEHICULOMARCADESCR;
@@ -4196,6 +4205,8 @@
 					dataType: "json",
 					success: function(response) {
 						let marcaVehiculo = response.data;
+						//Itera el select de marcas
+
 						marcaVehiculo.forEach(marca_vehiculo => {
 							let option = document.createElement("option");
 							option.text = marca_vehiculo.VEHICULOMARCADESCR;
@@ -4209,6 +4220,8 @@
 				});
 
 			});
+			//Evento change para obtener el modelo de acuerdo a la marca. Limpia los select para que no se acumulen
+
 			document.querySelector('#marca_ad').addEventListener('change', (e) => {
 				let select_linea = document.querySelector('#linea_vehiculo_ad');
 				let select_version = document.querySelector('#version_vehiculo_ad');
@@ -4237,6 +4250,7 @@
 					dataType: "json",
 					success: function(response) {
 						let lineaVehiculo = response.data;
+						//Itera el select de lineas
 
 						lineaVehiculo.forEach(linea_vehiculo => {
 							var option = document.createElement("option");
@@ -4277,6 +4291,7 @@
 					dataType: "json",
 					success: function(response) {
 						let lineaVehiculo = response.data;
+						//Itera el select de mdoelo
 
 						lineaVehiculo.forEach(linea_vehiculo => {
 							var option = document.createElement("option");
@@ -4290,6 +4305,8 @@
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
 			});
+
+			//Evento change para obtener la version de acuerdo al modelo. Limpia los select para que no se acumulen
 
 			document.querySelector('#linea_vehiculo_ad').addEventListener('change', (e) => {
 				let select_version = document.querySelector('#version_vehiculo_ad');
@@ -4313,6 +4330,7 @@
 					dataType: "json",
 					success: function(response) {
 						let versionVehiculo = response.data;
+						//Itera el select de modelo
 
 						versionVehiculo.forEach(version_vehiculo => {
 							var option = document.createElement("option");
@@ -4350,6 +4368,7 @@
 					dataType: "json",
 					success: function(response) {
 						let versionVehiculo = response.data;
+						//Itera el select de version
 
 						versionVehiculo.forEach(version_vehiculo => {
 							var option = document.createElement("option");
@@ -4374,10 +4393,8 @@
 
 
 
-
-
-
 			$('#documentos_modal_wyswyg').on('show.bs.modal', function(event) {
+				//Control para asignar documentos a un mp
 				<?php if (session('ROLID') == 4 || session('ROLID') == 8 || session('ROLID') == 10) { ?>
 					const data = {
 						'folio': document.querySelector('#input_folio_atencion').value,
@@ -4416,6 +4433,8 @@
 				document.getElementById("involucrados").style.display = "none";
 				// quill.root.innerHTML = '';
 			});
+
+			//Evento change de tipo de plantilla, modifica los estilos de acuerdo al tipo
 			selectPlantilla.addEventListener("change", function() {
 				if (plantilla.value == "CITATORIO") {
 					document.getElementById("div_uma").style.display = "block";
@@ -4467,6 +4486,8 @@
 				let contenidoModificado = tinymce.get("documento").getContent();
 				insertarDocumento(contenidoModificado, plantilla.value);
 			}, false);
+
+			//Evento para enviar alertas cuando el folio es un caso especial
 			btn_enviar_alertas.addEventListener('click', (event) => {
 				const data = {
 					'folio': document.querySelector('#input_folio_atencion').value,
@@ -4509,6 +4530,7 @@
 				actualizarDocumento(contenidoModificado);
 			}, false);
 
+			//Evento change de clasificacion de objetos para obtener la subclasificacion, se limpia el select de subclasificacion para no acumular
 			selectObjetoClasificacion.addEventListener("change", function() {
 				let objetoSubclasificacion = document.querySelector("#objeto_subclasificacion")
 
@@ -4597,11 +4619,16 @@
 			//DENUNCIA
 
 			document.querySelector('#narracion_delito').addEventListener('input', (event) => {
-				event.target.value = clearText(event.target.value).toUpperCase();
+				event.target.value = clearText(event.target.value).toUpperCase(); //Convierte a mayusculas
 			}, false)
+
+			//Se modifica el select para tener un filtro de busqueda
 			$('#lugar_delito').select2({
 				theme: "bootstrap"
 			});
+
+			//Evento change para obtener la localidad de acuerdo al municipio. Limpia los select para que no se acumulen
+
 			document.querySelector('#municipio_delito').addEventListener('change', (e) => {
 				//municipio del hecho mp
 				let select_localidad = document.querySelector('#localidad_delito');
@@ -4651,6 +4678,7 @@
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
 			});
+			//Evento change para obtener la colonia de acuerdo al municipio, localidad y estado. Limpia los select para que no se acumulen
 
 			document.querySelector('#localidad_delito').addEventListener('change', (e) => {
 				let select_colonia = document.querySelector('#colonia_delito_select');
@@ -4703,6 +4731,7 @@
 				});
 			});
 
+			//Evento change de colonias para modifica estilos 
 			document.querySelector('#colonia_delito_select').addEventListener('change', (e) => {
 				let select_colonia = document.querySelector('#colonia_delito_select');
 				let input_colonia = document.querySelector('#colonia_delito');
@@ -4716,6 +4745,7 @@
 				}
 			});
 
+			//Funcion  para actualizar los hechos de la denuncia
 			function actualizarDenuncia() {
 				const data = {
 					'folio': document.querySelector('#input_folio_atencion').value,
@@ -4768,6 +4798,7 @@
 				});
 			}
 			//DENUNCIA END
+			//Funcion  para actualizar las preguntas de la denuncia
 
 			//PREGUNTAS
 			function actualizarPreguntas() {
@@ -4816,6 +4847,7 @@
 			}
 
 			//PERSONA FISICA
+			//Evento change para obtener los municipios de acuerdo al estado. Limpia los select para que no se acumulen
 
 			document.querySelector('#edoorigen_pf').addEventListener('change', (e) => {
 				let select_municipio = document.querySelector('#munorigen_pf');
@@ -4910,6 +4942,8 @@
 			$('#ocupacion_pf').select2({
 				theme: "bootstrap"
 			});
+
+			//Obtiene la edad de acuerdo a la fecha de nacimiento
 			document.querySelector('#fecha_nacimiento_new').addEventListener('change', (e) => {
 				let fecha = e.target.value;
 				let hoy = new Date();
@@ -4925,6 +4959,7 @@
 			document.querySelector('#municipio_select_origen_new').disabled = true;
 
 
+			//Evento change para obtener los municipios de acuerdo al estado. Limpia los select para que no se acumulen
 
 			document.querySelector('#nacionalidad_new').addEventListener('change', (e) => {
 				let select_estado = document.querySelector('#estado_select_origen_new');
@@ -4965,6 +5000,7 @@
 					select_municipio.value = '';
 				}
 			});
+			//Evento change para obtener los municipios de acuerdo al estado. Limpia los select para que no se acumulen
 
 			document.querySelector('#estado_select_origen_new').addEventListener('change', (e) => {
 				let select_municipio = document.querySelector('#municipio_select_origen_new');
@@ -5002,7 +5038,7 @@
 			document.querySelector('#localidad_select_new').disabled = true;
 			document.querySelector('#colonia_select_new').disabled = true;
 
-
+			//Evento change para obtener los municipios de acuerdo al estado. Limpia los select para que no se acumulen
 			document.querySelector('#pais_select_new').addEventListener('change', (e) => {
 
 				let select_estado = document.querySelector('#estado_select_new');
@@ -5041,6 +5077,7 @@
 						},
 						error: function(jqXHR, textStatus, errorThrown) {}
 					});
+		//Evento change para obtener las localidades de acuerdo al municipio. Limpia los select para que no se acumulen
 
 					$.ajax({
 						data: data,
@@ -5098,6 +5135,7 @@
 					input_colonia.classList.add('d-none');
 				}
 			});
+		//Evento change para obtener los municipios de acuerdo al estado. Limpia los select para que no se acumulen
 
 			document.querySelector('#estado_select_new').addEventListener('change', (e) => {
 				let select_municipio = document.querySelector('#municipio_select_new');
@@ -5156,6 +5194,7 @@
 					document.querySelector('#colonia-message').classList.remove('d-none');
 				}
 			});
+		//Evento change para obtener las localidades de acuerdo al municipio. Limpia los select para que no se acumulen
 
 			document.querySelector('#municipio_select_new').addEventListener('change', (e) => {
 				let select_localidad = document.querySelector('#localidad_select_new');
@@ -5194,6 +5233,7 @@
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
 			});
+		//Evento change para obtener los colonias de acuerdo al estado, municipio y localidad. Limpia los select para que no se acumulen
 
 			document.querySelector('#localidad_select_new').addEventListener('change', (e) => {
 				let select_colonia = document.querySelector('#colonia_select_new');
@@ -5256,6 +5296,7 @@
 				}
 			});
 
+			//Evento change de colonias para modficar estilos
 			document.querySelector('#colonia_select_new').addEventListener('change', (e) => {
 				let select_colonia = document.querySelector('#colonia_select_new');
 				let input_colonia = document.querySelector('#colonia_new');
@@ -5273,6 +5314,7 @@
 
 			//END CREAR PERSONA FISICA
 
+			//Obtiene la edad aroximada de acuerdo a la fecha de nacimiento
 			document.querySelector('#fecha_nacimiento_pf').addEventListener('change', (e) => {
 				let fecha = e.target.value;
 				let hoy = new Date();
@@ -5286,6 +5328,7 @@
 				document.querySelector('#edad_pf').value = edad;
 			})
 
+			//Funcion para eliminar los guiones y limita la longitud
 			function clearInputPhone(e) {
 				e.target.value = e.target.value.replace(/-/g, "");
 				if (e.target.value.length > e.target.maxLength) {
@@ -5293,7 +5336,7 @@
 				};
 			}
 
-
+			//Funcion para actualizar la informacion de la persona fisica
 			function actualizarPersona() {
 				var packetData = new FormData();
 				packetData.append("subirFotoPersona", $("#subirFotoPersona")[0].files[0]);
@@ -5377,7 +5420,9 @@
 						let relacionFisFis = response.relacionFisFis;
 						let fisicaImpDelito = response.fisicaImpDelito;
 
+
 						if (response.status == 1) {
+							//Llena tabla de personas e itera los selects donde se usen la informacion de las personas fisicas
 							let tabla_personas = document.querySelectorAll('#table-personas tr');
 							tabla_personas.forEach(row => {
 								if (row.id !== '') {
@@ -5587,6 +5632,7 @@
 			}
 			//DOMICILIO PERSONA FÍSICA
 
+		//Eventochange de pais para obtener los municipios y localidades  cuando es diferente a MX
 
 			document.querySelector('#pais_pfd').addEventListener('change', (e) => {
 
@@ -5682,6 +5728,7 @@
 					input_colonia.classList.add('d-none');
 				}
 			});
+		//Evento change para obtener los municipios de acuerdo al estado. Limpia los select para que no se acumulen
 
 			document.querySelector('#estado_pfd').addEventListener('change', (e) => {
 				let select_municipio = document.querySelector('#municipio_pfd');
@@ -5738,6 +5785,7 @@
 					input_colonia.classList.remove('d-none');
 				}
 			});
+		//Evento change para obtener las localidades de acuerdo al municipio. Limpia los select para que no se acumulen
 
 			document.querySelector('#municipio_pfd').addEventListener('change', (e) => {
 				let select_localidad = document.querySelector('#localidad_pfd');
@@ -5779,6 +5827,7 @@
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
 			});
+		//Evento change para obtener las colonias de acuerdo a la localidad. Limpia los select para que no se acumulen
 
 			document.querySelector('#localidad_pfd').addEventListener('change', (e) => {
 				let select_colonia = document.querySelector('#colonia_pfd_select');
@@ -5842,6 +5891,7 @@
 				}
 			});
 
+			//Evento change de colonias para modificar estilos
 			document.querySelector('#colonia_pfd_select').addEventListener('change', (e) => {
 				let select_colonia = document.querySelector('#colonia_pfd_select');
 				let input_colonia = document.querySelector('#colonia_pfd');
@@ -5857,6 +5907,7 @@
 				}
 			});
 
+			//Fujcion para actualziar el domicilio de la persona fisica
 			function actualizarDomicilio() {
 				const data = {
 					'folio': document.querySelector('#input_folio_atencion').value,
@@ -5913,6 +5964,7 @@
 				});
 			}
 
+			//Funcion para actualizar la media filiacio de la persona fisica
 			function actualizarPersonaMediaAfiliacion(id) {
 				const data = {
 					'folio': document.querySelector('#input_folio_atencion').value,
@@ -6145,6 +6197,7 @@
 			}
 
 
+			//Funcion para actualizar el parentesco entre dos personas fisicas
 			function actualizarParentesco() {
 				const data = {
 					'folio': document.querySelector('#input_folio_atencion').value,
@@ -6190,6 +6243,7 @@
 				});
 			}
 
+			//Funcion para agregar parentescos
 			function insertarParentesco() {
 				const data = {
 					'folio': document.querySelector('#input_folio_atencion').value,
@@ -6206,6 +6260,7 @@
 					dataType: "json",
 					success: function(response) {
 						if (response.status == 1) {
+							//Llena la tabla de parentescos
 							$('#personaFisica2_I').empty();
 							document.querySelector('#parentesco_mf_I').value = '';
 							document.querySelector('#personaFisica1_I').value = '';
@@ -6240,6 +6295,7 @@
 				});
 			}
 
+			//Funcion para actualizar la informacion de un vehiculo
 			function actualizarVehiculo() {
 				var packetData = new FormData();
 
@@ -6296,6 +6352,7 @@
 								text: 'Vehículo actualizado correctamente',
 								confirmButtonColor: '#bf9b55',
 							});
+							//actualiza la tabla del vehiculo
 							let tabla_vehiculo = document.querySelectorAll('#table-vehiculos tr');
 							tabla_vehiculo.forEach(row => {
 								if (row.id !== '') {
@@ -6322,11 +6379,13 @@
 				});
 			}
 
+			//funcion para subir archivos externos
 			async function crearArchivos() {
 				document.getElementById('archivo_content').classList.add('d-none');
 				document.getElementById('documentos_anexar_spinner').classList.remove('d-none');
 				let documento;
 				let nombre_documento;
+				//se comprime el archivo
 				if ($("#documentoArchivo")[0].files && $("#documentoArchivo")[0].files[0]) {
 					if ($("#documentoArchivo")[0].files[0].type == "image/jpeg" || $("#documentoArchivo")[0].files[0].type == "image/png" || $("#documentoArchivo")[0].files[0].type == "image/jpg") {
 						nombre_documento = $("#documentoArchivo")[0].files[0].name;
@@ -6380,6 +6439,7 @@
 
 							document.getElementById('documentoArchivo').value = '';
 							preview.setAttribute('src', '');
+							//actualiza la tabla de archivos externos
 							let tabla_archivos = document.querySelectorAll(
 								'#table-archivos tr');
 							tabla_archivos.forEach(row => {
@@ -6420,6 +6480,7 @@
 
 			}
 
+			//Funcion para comprimir las imagenes dado a un porcentaje
 			function comprimirImagen(imagenComoArchivo, porcentajeCalidad) {
 				return new Promise((resolve, reject) => {
 					const $canvas = document.createElement("canvas");
@@ -6443,6 +6504,7 @@
 				});
 			};
 
+			//Funcion para agregar vehiculos al folio
 			function agregarVehiculo() {
 				var packetData = new FormData();
 
@@ -6495,6 +6557,7 @@
 								text: 'Vehículo agregado correctamente',
 								confirmButtonColor: '#bf9b55',
 							});
+							//actualiza la tabla de vehiculos
 							let tabla_vehiculo = document.querySelectorAll('#table-vehiculos tr');
 							tabla_vehiculo.forEach(row => {
 								if (row.id !== '') {
@@ -6525,6 +6588,7 @@
 				});
 			}
 
+			//Funcion para agregar una persona fisica con los datos del formulario
 			function insertarPersonaFisica() {
 				const data = {
 					'folio': document.querySelector('#input_folio_atencion').value,
@@ -6573,7 +6637,6 @@
 
 
 				};
-				console.log(data);
 				$.ajax({
 					data: data,
 					url: "<?= base_url('/data/create-persona_fisica-by-folio') ?>",
@@ -6583,6 +6646,7 @@
 						if (response.status == 1) {
 							document.getElementById("persona_fisica_form_insert").reset();
 
+							//se actualiza la tabla de personas fisicas y se vuelve a rellenar los selects y tablas donde se utilicen la informacion de personas fisicas
 							let tabla_personas = document.querySelectorAll('#table-personas tr');
 							tabla_personas.forEach(row => {
 								if (row.id !== '') {
@@ -6827,6 +6891,8 @@
 				});
 			}
 
+
+			//funcion para agregar un arbol delictual
 			function insertarRelacionIDO() {
 				const data = {
 					'folio': document.querySelector('#input_folio_atencion').value,
@@ -6853,6 +6919,8 @@
 							});
 						} else if (response.status == 1) {
 
+
+							//llena la tabla de arbol delictivo
 							let tabla_relacion_fis_fis = document.querySelectorAll(
 								'#table-delitos-videodenuncia tr');
 							tabla_relacion_fis_fis.forEach(row => {
@@ -6884,6 +6952,7 @@
 				});
 			}
 
+			//funcion para asignar un delito a un imputado
 			function insertar_impdelito() {
 				const data = {
 					'folio': document.querySelector('#input_folio_atencion').value,
@@ -6947,6 +7016,7 @@
 				});
 			}
 
+			//funcion para agregar objetos involucrados al folio
 			function agregarObjetosInvolucrados() {
 
 				const data = {
@@ -7024,6 +7094,7 @@
 				});
 			}
 
+			//funcion para actualizar la informacion del objeto involucrado de acuerdo a su id
 			function actualizarObjetosInvolucrados(objetoid) {
 
 				const data = {
@@ -7084,6 +7155,7 @@
 				});
 			}
 
+			//funcion para actualiar el pantesco entre 2 personas
 			function actualizarParentesco() {
 				const data = {
 					'folio': document.querySelector('#input_folio_atencion').value,
@@ -7129,8 +7201,7 @@
 				});
 			}
 
-
-
+			//funcion para obtener la informacion de la plantilla al completar todos los campos requeridos
 			function obtenerPlantillas(tipoPlantilla, victima, imputado) {
 
 				<?php if (session('ROLID') == 4 || session('ROLID') == 8 || session('ROLID') == 10) { ?>
@@ -7342,8 +7413,11 @@
 				}
 			}
 
+
+			//funcion para asignar valores a los documentos a un folio
 			function insertarDocumento(contenido, tipoPlantilla) {
 
+				//se valida que no sea enviado cuando es denuncia anonima
 				if (document.getElementById('input_denuncia').value == "DA") {
 					Swal.fire({
 						title: 'Este documento no será enviado',
@@ -7387,9 +7461,7 @@
 						}
 					})
 				} else {
-
-
-
+					//se pregunta si el documento debe de ser enviado
 					Swal.fire({
 						title: '¿Este documento tiene que ser enviado?',
 						showDenyButton: true,
@@ -7476,6 +7548,7 @@
 
 			}
 
+			//se obtiene el nombre de los parametros de la url
 			function getParameterByName(name, url = window.location.href) {
 				name = name.replace(/[\[\]]/g, "\\$&");
 				var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
@@ -7485,11 +7558,13 @@
 				return decodeURIComponent(results[2].replace(/\+/g, " "));
 			}
 
+			//Funcion para validar que el nombre de un parametro exista en la url
 			function isParameterByName(name) {
 				let regex = new RegExp('[?&]' + name + '=');
 				return regex.test(window.location.href);
 			}
 
+			//funcion para agregar documentos al folio con la informacion ya establecida
 			function insertarDoc(data) {
 				$.ajax({
 					data: data,
@@ -7534,6 +7609,7 @@
 				});
 			}
 
+			//Se convierte las fechas en horario de Tijuana
 			function dateToString(_date) {
 				let date = new Date(_date);
 				let dateToTijuanaString = date.toLocaleString('en-US', {
@@ -7550,6 +7626,8 @@
 			}
 		})();
 	};
+
+	//Se inicializa el mapa del delito
 	const initMap = (coordenaday, coordenadax) => {
 		const position = {
 			lat: parseFloat(coordenaday),
@@ -7605,6 +7683,8 @@
 			currentPosition();
 		});
 	};
+
+	//funcion para obtener la posicion actual
 	const currentPosition = () => {
 		if (navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(
@@ -7626,6 +7706,7 @@
 		}
 	};
 
+	//Funcion para manejar los errores de localizacion
 	const handleLocationError = (browserHasGeolocation, infoWindow, pos) => {
 		infoWindow.setPosition(pos);
 		infoWindow.setContent(
@@ -7636,6 +7717,7 @@
 		infoWindow.open(map);
 	};
 
+	//Funcion para añadir la longitud y posicion al mapa
 	const addMarker = (position, map, prov) => {
 
 		marker ? (marker.setMap(null), (marker = null)) : null;
