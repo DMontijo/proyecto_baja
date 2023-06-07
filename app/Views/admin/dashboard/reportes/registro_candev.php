@@ -189,6 +189,7 @@
 	<script>
 		let form = document.querySelector('#formExcel');
 
+		//Datos de confirmacion del filtro
 		form.addEventListener('submit', function(event) {
 			event.preventDefault();
 			text = `

@@ -171,6 +171,7 @@
 	$(function() {
 		$('[data-toggle="tooltip"]').tooltip()
 	})
+	//Modificar estilos de acuerdo a los de radios de persona menor
 	radiosMenor.forEach((radio) => {
 		radio.addEventListener('click', (e) => {
 			if (e.target.value === 'SI') {
@@ -190,7 +191,7 @@
 			}
 		})
 	});
-
+	//Modificar estilos de acuerdo a los de radios de persona desaparecida
 	radiosDesaparecido.forEach((radio) => {
 		radio.addEventListener('click', (e) => {
 			if (e.target.value === 'SI') {
@@ -212,7 +213,7 @@
 	// 		}
 	// 	})
 	// });
-
+	//Modificar estilos de acuerdo a los de radios de grupo vulnerable
 	radiosVulnerable.forEach((radio) => {
 		radio.addEventListener('click', (e) => {
 			if (e.target.value === 'SI') {

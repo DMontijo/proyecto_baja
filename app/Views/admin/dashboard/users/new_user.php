@@ -137,7 +137,7 @@
 					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3" id="oficina_multiple">
 						<label for="ofi" class="form-label font-weight-bold">Oficina</label>
 						<select class="js-example-basic-multiple form-control" name="ofi[]" id="ofi" multiple="multiple">
-						<option value="" disabled>Selecciona la oficina</option>
+							<option value="" disabled>Selecciona la oficina</option>
 
 						</select>
 						<div class="invalid-feedback">
@@ -159,6 +159,7 @@
 	<script>
 		(function() {
 			'use strict';
+			//Declaracion de lementos
 			const inputsText = document.querySelectorAll('input[type="text"]');
 			const inputsEmail = document.querySelectorAll('input[type="email"]');
 			const municipio = document.querySelector('#municipio');
@@ -170,25 +171,28 @@
 			const oficina_select = document.querySelector('#oficina');
 			const password = document.querySelector('#password_usuario');
 			const toggle_password = document.querySelector('#toggle-password');
-			// $('.js-example-basic-multiple').select2();
+			//Select de tipo multiple
 			$('#mun').select2();
 			$('#ofi').select2();
 
+			//Se ocultan los municipios y oficinas con opcion multiple
 			document.getElementById('municipios_multiple').classList.add('d-none');
 			document.getElementById('oficina_multiple').classList.add('d-none');
 
+			//Convierte todos los input text a mayusculas
 			inputsText.forEach((input) => {
 				input.addEventListener('input', function(event) {
 					event.target.value = clearText(event.target.value).toUpperCase();
 				}, false)
 			});
+			//Convierte todos los input email a minusculas
 
 			inputsEmail.forEach((input) => {
 				input.addEventListener('input', function(event) {
 					event.target.value = clearText(event.target.value).toLowerCase();
 				}, false)
 			});
-
+			//Evento para mostrar contraseña
 			toggle_password.addEventListener('click', (event) => {
 				const type = password.getAttribute("type") === "password" ? "text" : "password";
 				password.setAttribute("type", type);
@@ -202,6 +206,8 @@
 				}
 
 			}, false);
+
+			//Valida cuando el rol sea visualizador para mostrar municipios y oficinas multiplez
 			rol.addEventListener('change', function(event) {
 				if (event.target.value == 13) {
 					municipio.required = false;
@@ -216,6 +222,7 @@
 				}
 			});
 
+			//Obtiene todas las oficinas de los municipios seleccionados
 			$('#mun').on('change', function() {
 				var selectedValues = $(this).val();
 				console.log(selectedValues); // Hacer algo con los valores seleccionados
@@ -241,6 +248,7 @@
 				});
 			});
 
+			//Obtiene las oficinas del municipio seleccionado
 			municipio.addEventListener('change', function(event) {
 				$.ajax({
 					data: {
@@ -280,7 +288,7 @@
 				});
 			}, false);
 		})();
-
+		//Elimina todos los caracteres especiales del texto
 		function clearText(text) {
 			return text
 				.normalize('NFD')
@@ -288,7 +296,7 @@
 				.normalize()
 				.replaceAll('´', '');
 		}
-
+		//Elimina todos los options del select
 		function clearSelect(select_element) {
 			for (let i = select_element.options.length; i >= 1; i--) {
 				select_element.remove(i);
@@ -296,6 +304,7 @@
 		}
 
 
+		//Verifica que el correo no este registrado
 		document.querySelector('#correo_usuario').addEventListener('blur', (e) => {
 			let regex = /\S+@\S+\.\S+/
 			if (regex.test(e.target.value)) {

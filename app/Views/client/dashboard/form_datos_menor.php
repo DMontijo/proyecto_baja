@@ -191,6 +191,7 @@
 </div>
 
 <script>
+	//Evento para modificar estilos de la ocupacion
 	document.querySelector('#ocupacion_menor').addEventListener('change', (e) => {
 		let select_ocupacion = document.querySelector('#ocupacion_menor');
 		let input_ocupacion = document.querySelector('#ocupacion_descr_menor');
@@ -204,6 +205,7 @@
 			input_ocupacion.value = "";
 		}
 	});
+	//Evento para calcular la edad aproximada
 	document.querySelector('#fecha_nacimiento_menor').addEventListener('change', (e) => {
 		let fecha = e.target.value;
 		let hoy = new Date();
@@ -217,12 +219,14 @@
 		document.querySelector('#edad_menor').value = edad;
 	})
 
+	//Funcion para eliminar todas las opciones del select
 	function clearSelect(select_element) {
 		for (let i = select_element.options.length; i >= 1; i--) {
 			select_element.remove(i);
 		}
 	}
 
+	//Evento para traer los municipios de acuerdo a un estado
 	document.querySelector('#nacionalidad_menor').addEventListener('change', (e) => {
 		let select_estado = document.querySelector('#estado_origen_menor');
 		let select_municipio = document.querySelector('#municipio_origen_menor');
@@ -258,7 +262,7 @@
 			select_municipio.value = '';
 		}
 	});
-
+	//Evento para traer los municipios de acuerdo a un estado
 	document.querySelector('#estado_origen_menor').addEventListener('change', (e) => {
 		let select_municipio = document.querySelector('#municipio_origen_menor');
 
@@ -288,7 +292,7 @@
 			error: function(jqXHR, textStatus, errorThrown) {}
 		});
 	});
-
+	//Evento para traer los municipios de un estado
 	document.querySelector('#pais_menor').addEventListener('change', (e) => {
 
 		let select_estado = document.querySelector('#estado_menor');
@@ -388,7 +392,7 @@
 			input_colonia.classList.add('d-none');
 		}
 	});
-
+	//Evento para traer los municipios de acuerdo a un estado
 	document.querySelector('#estado_menor').addEventListener('change', (e) => {
 		let select_municipio = document.querySelector('#municipio_menor');
 		let select_localidad = document.querySelector('#localidad_menor');
@@ -429,6 +433,7 @@
 			error: function(jqXHR, textStatus, errorThrown) {}
 		});
 	});
+	//Evento para traer las localidad de acuerdo a un municipio
 
 	document.querySelector('#municipio_menor').addEventListener('change', (e) => {
 		let select_localidad = document.querySelector('#localidad_menor');
@@ -472,6 +477,7 @@
 		});
 	});
 
+	//Evento para traer las colonias de acuerdo a un municipio, estado y localidad. Se limpian select para evitar acumulacion
 	document.querySelector('#localidad_menor').addEventListener('change', (e) => {
 		let select_colonia = document.querySelector('#colonia_menor');
 		let input_colonia = document.querySelector('#colonia_menor_input');
@@ -519,6 +525,7 @@
 		});
 	});
 
+	//Evento change para cambiar los estilos de la colonia
 	document.querySelector('#colonia_menor').addEventListener('change', (e) => {
 		let select_colonia = document.querySelector('#colonia_menor');
 		let input_colonia = document.querySelector('#colonia_menor_input');

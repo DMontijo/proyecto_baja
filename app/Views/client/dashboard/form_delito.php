@@ -152,6 +152,7 @@
 	</div>
 </div>
 <script>
+	//Funcion para eliminar los optiones de un select
 	function clearSelect(select_element) {
 		for (let i = select_element.options.length; i >= 1; i--) {
 			select_element.remove(i);
@@ -162,6 +163,7 @@
 	document.querySelector('#colonia_select').disabled = true;
 
 
+	//Evento para traer las localidades de acuerdo a un municipio. Se limpian los select para que no acumulen
 	document.querySelector('#municipio').addEventListener('change', (e) => {
 		let select_localidad = document.querySelector('#localidad');
 		let select_colonia = document.querySelector('#colonia_select');
@@ -207,6 +209,7 @@
 			error: function(jqXHR, textStatus, errorThrown) {}
 		});
 	});
+	//Evento para traer las colonias de acuerdo a un municipio, estado y localidad. Se limpian los select para que no acumulen
 
 	document.querySelector('#localidad').addEventListener('change', (e) => {
 		let select_colonia = document.querySelector('#colonia_select');
@@ -258,6 +261,7 @@
 		});
 	});
 
+	//Evento change para modificar estilos de una colonia
 	document.querySelector('#colonia_select').addEventListener('change', (e) => {
 		let select_colonia = document.querySelector('#colonia_select');
 		let input_colonia = document.querySelector('#colonia');
@@ -303,6 +307,7 @@
 	let map, infoWindow;
 	let marker = null;
 	let current = null;
+	//inicializa el mapa del hecho
 	const initMap = () => {
 		const position = {
 			lat: 32.521036,
@@ -360,6 +365,7 @@
 			currentPosition();
 		});
 	};
+	//obtiene la posicion actual
 	const currentPosition = () => {
 		if (navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(
@@ -382,6 +388,7 @@
 		}
 	};
 
+	//obtiene los errores de la localizacion
 	const handleLocationError = (browserHasGeolocation, infoWindow, pos) => {
 		infoWindow.setPosition(pos);
 		infoWindow.setContent(
@@ -392,6 +399,7 @@
 		infoWindow.open(map);
 	};
 
+	//marca en el mapa la posicion del hecho
 	const addMarker = (position, map, prov) => {
 
 		marker ? (marker.setMap(null), (marker = null)) : null;
@@ -428,6 +436,7 @@
 
 	window.initMap = initMap;
 
+	//Funcion para contar carcateres de un elemento
 	function contarCaracteres(obj) {
 		var maxLength = 1000;
 		var strLength = obj.value.length;

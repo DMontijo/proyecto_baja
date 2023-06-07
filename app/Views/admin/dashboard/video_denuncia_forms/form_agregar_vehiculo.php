@@ -188,6 +188,7 @@
 </form>
 
 <script>
+	//Previsualizacion al subir foto
 	document.querySelector('#subirFotoVAdd').addEventListener('change', (e) => {
 		let preview = document.querySelector('#foto_vehiculo_add');
 		if (e.target.files && e.target.files[0]) {
@@ -198,6 +199,7 @@
 			reader.readAsDataURL(e.target.files[0]);
 		}
 	});
+	//Previsualizacion al subir documento
 
 	document.querySelector('#subirDocAdd').addEventListener('change', (e) => {
 		let preview = document.querySelector('#doc_vehiculo_add');

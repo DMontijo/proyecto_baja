@@ -108,6 +108,7 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 		$("textarea").prop('disabled', true);
 	</script>
 	<script>
+		//Declaracion de variables
 		const inputFolio = document.querySelector('#input_folio_atencion');
 		const input_expediente = document.querySelector('#input_expediente');
 		const buscar_btn = document.querySelector('#buscar-btn');
@@ -125,12 +126,13 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 
 		var respuesta;
 
+		//Funcion para convertir el elemento a mayusculoas
 		const mayuscTextarea = (e) => {
 			e.value = e.value.toUpperCase();
 		}
 
+		//Evento para obtener la informacion del folio.
 		buscar_btn.addEventListener('click', (e) => {
-			console.log("en el boton");
 			$.ajax({
 				data: {
 					'folio': inputFolio.value,
@@ -167,6 +169,7 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 						// card2.classList.remove('d-none');
 						card3.classList.remove('d-none');
 
+						//Se llenan todos los elementos con los valores del folio
 						if (personas) {
 							$('#propietario_update').empty();
 							let select_propietario_update = document.querySelector("#propietario_update")
@@ -299,6 +302,7 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 						document.querySelector('#narracion_delito').value = folio.HECHONARRACION ? folio.HECHONARRACION : '';
 
 
+						//Llenado de las tablas con la informacion del folio
 						if (vehiculos) {
 							//VEHICULOS
 							for (let i = 0; i < vehiculos.length; i++) {
@@ -442,9 +446,12 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 			});
 		});
 
+		//Funcion para redirigir a la busqueda de folio
 		buscar_nuevo_btn.addEventListener('click', () => {
 			window.location.href = `<?= base_url('/admin/dashboard/buscar_folio') ?>`;
 		});
+
+		//Validacion para habilitar el boton de documentos
 		<?php if ($body_data->datosFolio->STATUS != 'EN PROCESO' && $body_data->datosFolio->STATUS != 'ABIERTO') { ?>
 
 			documentos_folio_btn.addEventListener('click', () => {
@@ -477,6 +484,7 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 		// 		})
 		// 	});
 		// });
+		// Funcion para visualizar la informacion del objeto involucrado, recibe por parametro el id del objeto
 
 		function viewObjetoInvolucrado(objetoid) {
 			$('#folio_objetos_ver').modal('show');
@@ -518,6 +526,7 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 				}
 			});
 		}
+		//Funcion para viualizar la informacion de la persona fisica seleccionada, recibe por parametro el id de la persona fisica
 
 		function viewPersonaFisica(id) {
 			$.ajax({
@@ -852,6 +861,7 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 				}
 			});
 		}
+		// Funcion para visualizar la informacion del domicilio de la persona fisica, recibe por parametro el id de la persona fisica
 
 		function viewDomicilio(id) {
 			$.ajax({
@@ -901,6 +911,7 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 				}
 			});
 		}
+		//Funcion para viualizar la informacion del vehiculo  seleccionada, recibe por parametro el id del vehiculo
 
 		function viewVehiculo(id) {
 			$.ajax({
@@ -985,17 +996,24 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 				}
 			});
 		}
+		// Cuando se oculta el modal con el ID 'info_folio_modal'
 
 		$(document).on('hidden.bs.modal', '#info_folio_modal', function() {
 			let tabs = document.querySelectorAll('#info_tabs .nav-link');
 			let contents = document.querySelectorAll('#info_content .tab-pane');
+			// Remueve la clase 'active' de todas las pestañas
+
 			tabs.forEach(element => {
 				element.classList.remove('active');
 			});
+			// Remueve las clases 'show' y 'active' de todos los contenidos
+
 			contents.forEach(element => {
 				element.classList.remove('show');
 				element.classList.remove('active');
 			});
+			// Agrega la clase 'active' a la primera pestaña y agrega las clases 'show' y 'active' al primer contenido
+
 			tabs[0].classList.add('active');
 			contents[0].classList.add('show');
 			contents[0].classList.add('active');
@@ -1004,23 +1022,31 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 		$(document).on('hidden.bs.modal', '#folio_persona_fisica_modal', function() {
 			let tabs = document.querySelectorAll('#persona_tabs .nav-item');
 			let contents = document.querySelectorAll('#persona_content .tab-pane');
+			// Remueve la clase 'active' de todas las pestañas
+
 			tabs.forEach(element => {
 				element.classList.remove('active');
 			});
+			// Remueve las clases 'show' y 'active' de todos los contenidos
+
 			contents.forEach(element => {
 				element.classList.remove('show');
 				element.classList.remove('active');
 			});
+			// Agrega la clase 'active' a la primera pestaña y agrega las clases 'show' y 'active' al primer contenido
+
 			tabs[0].classList.add('active');
 			contents[0].classList.add('show');
 			contents[0].classList.add('active');
 		})
+		//Limpia las opciones del select para que quede vacio
 
 		function clearSelect(select_element) {
 			for (let i = select_element.options.length; i >= 1; i--) {
 				select_element.remove(i);
 			}
 		}
+		//Elimina todos los caracteres especiales del texto
 
 		function clearText(text) {
 			return text
@@ -1032,6 +1058,8 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 
 
 		//DELITO FORM ******************************************************************
+		//Carga todos los formularios y elementos para llenar la denuncia, asi como las acciones submit de los formularios
+
 		window.onload = function() {
 			(function() {
 				'use strict'
@@ -1068,15 +1096,18 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 				// 	}
 				// }, false);
 
+				//Convierte todos los input text en mayusculas
 				inputsText.forEach((input) => {
 					input.addEventListener('input', (event) => {
 						event.target.value = clearText(event.target.value).toUpperCase();
 					}, false)
 				});
 
+				//Convierte todo el valor a mayusculas
 				document.querySelector('#narracion_delito').addEventListener('input', (event) => {
 					event.target.value = clearText(event.target.value).toUpperCase();
 				}, false)
+				//Evento change para obtener la localidad de acuerdo al municipio. Limpia los select para que no se acumulen
 
 				document.querySelector('#municipio_delito').addEventListener('change', (e) => {
 					let select_localidad = document.querySelector('#localidad_delito');
@@ -1119,6 +1150,7 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 						error: function(jqXHR, textStatus, errorThrown) {}
 					});
 				});
+				//Evento change para obtener la colonia de acuerdo al municipio, estado y localidad. Limpia los select para que no se acumulen
 
 				document.querySelector('#localidad_delito').addEventListener('change', (e) => {
 					let select_colonia = document.querySelector('#colonia_delito_select');
@@ -1167,6 +1199,7 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 					});
 				});
 
+				//Evento change de colonia para modificar estilos
 				document.querySelector('#colonia_delito_select').addEventListener('change', (e) => {
 					let select_colonia = document.querySelector('#colonia_delito_select');
 					let input_colonia = document.querySelector('#colonia_delito');
@@ -1180,6 +1213,7 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 						input_colonia.value = '-';
 					}
 				});
+				//Funcion  para actualizar los hechos de la denuncia
 
 				function actualizarDenuncia() {
 					const data = {
@@ -1229,7 +1263,7 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 				}
 
 
-
+				//Funcion  para actualizar las preguntas de la denuncia
 				function actualizarPreguntas() {
 					const data = {
 						'folio': document.querySelector('#input_folio_atencion').value,

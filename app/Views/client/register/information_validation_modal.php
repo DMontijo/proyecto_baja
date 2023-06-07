@@ -232,6 +232,7 @@
 </div>
 <?php include('otp_validation_modal.php') ?>
 <script>
+	//Evento para validar la informacion, posterior se envia el codigo OTP
 	document.querySelector('#valid_information_btn').addEventListener('click', (e) => {
 
 		e.target.setAttribute('disabled', true);

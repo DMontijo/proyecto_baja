@@ -158,9 +158,8 @@
 												$tipo = 'ANÓNIMA';
 											} else if ($folio->TIPODENUNCIA == 'TE') {
 												$tipo = 'TELEFÓNICA';
-											}else{
+											} else {
 												$tipo = 'ELECTRÓNICA';
-
 											}
 										?>
 											<tr>
@@ -250,6 +249,7 @@
 	<script>
 		// alert(document.getElementById('agente_registro').innerHTML);
 		let form = document.querySelector('#formExcel');
+		//Datos de confirmacion del filtro
 
 		form.addEventListener('submit', function(event) {
 			event.preventDefault();

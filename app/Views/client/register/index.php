@@ -465,6 +465,7 @@ if ($agent->isMobile()) {
 	let width = 100 / stepCount;
 	let currentStep = 0;
 
+	//Al hacer checked en manzana y lote cambia los textos del label
 	checkML.addEventListener('click', function() {
 		if (checkML.checked) {
 			document.getElementById('lblExterior').innerHTML = "Manzana";
@@ -481,6 +482,7 @@ if ($agent->isMobile()) {
 
 
 
+	//Funcion para eliminar los guiones y verifica que el telefono sea de longitud 10
 	function clearInputPhone(e) {
 		e.target.value = e.target.value.replace(/-/g, "");
 		if (e.target.value.length > e.target.maxLength) {
@@ -495,15 +497,18 @@ if ($agent->isMobile()) {
 
 	chargeCurrentStep(currentStep);
 
+	//Abre modal para tomar foto
 	document.querySelector('#photo-btn').addEventListener('click', () => {
 		initPhoto();
 		$('#take_photo_modal').modal('show');
 	});
-
+	//Evento para avanzar en el formulario
 	nextBtn.addEventListener('click', () => {
 		if (validarStep(currentStep)) {
 			currentStep++;
 			let previousStep = currentStep - 1;
+			// Se realiza una serie de comprobaciones utilizando if para verificar las condiciones de visibilidad de los elementos de paso (steps) y los botones (prevBtn, nextBtn, submitBtn).
+
 			if ((currentStep > 0) && (currentStep <= stepCount)) {
 				prevBtn.classList.remove('d-none');
 				prevBtn.classList.add('d-inline-block');
@@ -518,7 +523,9 @@ if ($agent->isMobile()) {
 					nextBtn.classList.add('d-none');
 				}
 			}
+			// Se actualiza el ancho de la barra de progreso (progress) según el valor actual de currentStep.
 			progress.style.width = `${currentStep*width}%`
+			// Se realiza un desplazamiento suave (scrollIntoView()) hacia el elemento con el ID 'titulo'.
 			document.querySelector('#titulo').scrollIntoView();
 		} else {
 			submitBtn.click();
@@ -541,10 +548,13 @@ if ($agent->isMobile()) {
 		}
 	});
 
+	//Evento para retroceder el formulario
 	prevBtn.addEventListener('click', () => {
 		if (currentStep > 0) {
 			currentStep--;
 			let previousStep = currentStep + 1;
+			// Se realizan modificaciones en las clases CSS de los elementos (prevBtn, steps, submitBtn, nextBtn) para mostrar u ocultar los elementos correspondientes según el paso actual.
+
 			prevBtn.classList.add('d-none');
 			prevBtn.classList.add('d-inline-block');
 			steps[currentStep].classList.remove('d-none');
@@ -568,6 +578,7 @@ if ($agent->isMobile()) {
 		progress.style.width = `${currentStep*width}%`
 	});
 
+	//Funcion para mostrar el paso actual en función del número proporcionado como argumento.
 	function chargeCurrentStep(num) {
 		steps.forEach((step, index) => {
 			if (num === index) {
@@ -580,6 +591,7 @@ if ($agent->isMobile()) {
 		progress.style.width = `${currentStep*width}%`
 	}
 
+	//funcion para validar los campos requeridos que no esten vacios y cumplan una condicion
 	function validarStep(step) {
 		let regex = /\S+@\S+\.\S+/
 

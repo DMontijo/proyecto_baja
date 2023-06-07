@@ -103,6 +103,7 @@
 <?php endif; ?>
 <?php if (session()->getFlashdata('message_session')) : ?>
 	<script>
+		//Funcionpara cerrar todas las sesiones activas
 		Swal.fire({
 			icon: 'error',
 			title: '<?= session()->getFlashdata('message_session') ?>',

@@ -134,10 +134,12 @@
 	const canalizaciones = document.querySelector('#canalizaciones');
 
 
+	//Evento change para seleccionar el tipo de salida
 	tipoSalida.addEventListener('change', (e) => {
 		const notas_caso_salida = document.querySelector('#notas_caso_salida');
 		notas_caso_salida.value = notas_caso_mp.value;
 
+		//Se sacan los caracteres restantes
 		if (charRemain < 1000) {
 			document.getElementById("numCaracterSalidaDa").innerHTML = charRemain + ' caracteres restantes';
 		} else {
@@ -151,6 +153,8 @@
 		} else {
 			municipio_empleado_container.classList.remove('d-none');
 		}
+
+		//Validacion para cuando es Canalizado
 		if (e.target.value == 'CANALIZADO') {
 			canalizaciones_container.classList.remove('d-none');
 			document.querySelector('#municipio_empleado').addEventListener('change', (e) => {
@@ -158,6 +162,7 @@
 
 				if (tipoSalida.value == "CANALIZADO") {
 
+					//Obtiene las oficinas de canalizaciones de acuerdo al municipio
 					let select_canalizacion = document.querySelector('#canalizaciones');
 					clearSelect(select_canalizacion);
 					select_canalizacion.value = '';
@@ -196,10 +201,12 @@
 			canalizaciones.value = '';
 		}
 
+		//validacion cuando es derivado
 		if (e.target.value == 'DERIVADO') {
 			derivaciones_container.classList.remove('d-none');
 			document.querySelector('#municipio_empleado').addEventListener('change', (e) => {
 				if (tipoSalida.value == "DERIVADO") {
+					//Obtiene las oficinas de derivaciones de acuerdo al municipio
 
 					let select_derivacion = document.querySelector('#derivaciones');
 					clearSelect(select_derivacion);
@@ -238,15 +245,18 @@
 		}
 	});
 
+	//Evento para finalizar la salida
 	btnFinalizar.addEventListener('click', () => {
 		btnFinalizar.setAttribute('disabled', true);
 
+		//Cuando es derivado o canalizado
 		if (!(tipoSalida.value == '1' || tipoSalida.value == '4' || tipoSalida.value == '5' || tipoSalida.value == '6' || tipoSalida.value == '7' || tipoSalida.value == '8' || tipoSalida.value == '9')) {
 			let salida = tipoSalida.value;
 			let descripcion = document.querySelector('#notas_caso_salida').value;
 
 			if (tipoSalida.value == 'DERIVADO' || tipoSalida.value == 'CANALIZADO') {
 				if (derivaciones.value == '' && tipoSalida.value == 'DERIVADO' || canalizaciones.value == '' && tipoSalida.value == 'CANALIZADO') {
+					//Valida que se seleccione oficina
 					Swal.fire({
 						icon: 'error',
 						text: 'No se puede derivar ó canalizar sin una oficina.',
@@ -280,6 +290,7 @@
 
 				}
 			}
+			//Valida que haya notas
 			if (descripcion) {
 				$.ajax({
 					data: data,
@@ -334,6 +345,8 @@
 				});
 			}
 		} else {
+
+			//Cuando es de tipo expediente
 			if (municipio_empleado.value != '') {
 				let descripcion = document.querySelector('#notas_caso_salida').value;
 				if (
@@ -370,6 +383,7 @@
 					// 	error: function(jqXHR, textStatus, errorThrown) {}
 					// });
 
+					//Se sube a Justicia 
 					$.ajax({
 						data: data,
 						url: "<?= base_url('/data/save-in-justicia') ?>",
@@ -459,18 +473,21 @@
 	});
 
 
+	//Funcion para eliminar todos los options del select
 	function clearSelect(select_element) {
 		for (let i = select_element.options.length; i >= 1; i--) {
 			select_element.remove(i);
 		}
 	}
 
+	//Funcion para formatear el numero de expediente
 	function expedienteConGuiones(expediente) {
 		const array = expediente.trim().split('');
 		// return array[0] + '-' + array[1] + array[2] + '-' + array[3] + array[4] + array[5] + '-' + array[6] + array[7] + array[8] + array[9] + '-' + array[10] + array[11] + array[12] + array[13] + array[14];
 		return array[1] + array[2] + array[4] + array[5] + '-' + array[6] + array[7] + array[8] + array[9] + '-' + array[10] + array[11] + array[12] + array[13] + array[14] + '/' + tipoExpedienteClave(array[0]);
 	}
 
+	//Funcion para obtener el tipo de expediente de acuerdo a la opcion seleccionada en  tipo salida
 	function tipoExpedienteClave(num) {
 		num = typeof(num) == 'string' ? num : (new String(num)).toString();
 
@@ -502,10 +519,12 @@
 		}
 	}
 
+	//Funcion para mostrar un loading
 	function showLoading() {
 		document.querySelector('#loading_general').classList.remove('d-none');
 	}
 
+	//Funcion para contar los caractere en el modal.
 	function contarCaracteresSalidaDa(obj) {
 		if (charRemain < 1000) {
 			var maxLength = charRemain;

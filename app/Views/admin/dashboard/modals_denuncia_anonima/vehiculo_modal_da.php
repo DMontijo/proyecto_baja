@@ -208,11 +208,13 @@
 </div>
 <script>
 	
+	//Iteracion del modelo de vehiculo hasta el año actual
 	let startYearU = 1800;
 	let endYearU = new Date().getFullYear();
 	for (let i = endYearU; i > startYearU; i--) {
 		$('#modelo_vehiculo_da').append($('<option />').val(i).html(i));
 	}
+	//Previsualiacion de imagen al subir foto
 	document.querySelector('#subirFotoVDa').addEventListener('change', (e) => {
 		let preview = document.querySelector('#foto_vehiculo_da');
 		if (e.target.files && e.target.files[0]) {
@@ -223,6 +225,7 @@
 			reader.readAsDataURL(e.target.files[0]);
 		}
 	});
+	//Previsualiacion de imagen al subir documento
 
 	document.querySelector('#subirDocDa').addEventListener('change', (e) => {
 		let preview = document.querySelector('#doc_vehiculo_da');

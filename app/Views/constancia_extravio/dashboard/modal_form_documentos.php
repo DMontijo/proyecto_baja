@@ -1,32 +1,26 @@
-<div class="modal fade" id="documentos_modal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
-    aria-labelledby="documentos_modalLabel" aria-hidden="true">
+<div class="modal fade" id="documentos_modal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="documentos_modalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-xl">
         <div class="modal-content border-0">
             <div class="modal-header bg-primary">
                 <h5 class="modal-title text-white fw-bold" id="boletos_modalLabel">Constancia de extravío de documentos
                 </h5>
-                <button id="documentos_close_btn" type="button" class="btn-close btn-close-white"
-                    data-bs-dismiss="modal" aria-label="Close"></button>
+                <button id="documentos_close_btn" type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body bg-light">
 
-                <form id="form_documentos" action="<?= base_url() ?>/constancia_extravio/dashboard/solicitar_constancia"
-                    method="post" class="row needs-validation" novalidate>
+                <form id="form_documentos" action="<?= base_url() ?>/constancia_extravio/dashboard/solicitar_constancia" method="post" class="row needs-validation" novalidate>
 
                     <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3 d-none">
                         <label for="nombre" class="form-label fw-bold input-required">Nombre:</label>
-                        <input class="form-control" id="nombre" name="nombre"
-                            value="<?= $body_data->denunciante->NOMBRE ?>" disabled>
+                        <input class="form-control" id="nombre" name="nombre" value="<?= $body_data->denunciante->NOMBRE ?>" disabled>
                     </div>
                     <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3 d-none">
                         <label for="apellido_p" class="form-label fw-bold input-required">Apellido paterno:</label>
-                        <input class="form-control" id="apellido_p" name="apellido_p"
-                            value="<?= $body_data->denunciante->APELLIDO_PATERNO ?>" disabled>
+                        <input class="form-control" id="apellido_p" name="apellido_p" value="<?= $body_data->denunciante->APELLIDO_PATERNO ?>" disabled>
                     </div>
                     <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3 d-none">
                         <label for="apellido_m" class="form-label fw-bold input-required">Apellido materno:</label>
-                        <input class="form-control" id="apellido_m" name="apellido_m"
-                            value="<?= $body_data->denunciante->APELLIDO_MATERNO ?>" disabled>
+                        <input class="form-control" id="apellido_m" name="apellido_m" value="<?= $body_data->denunciante->APELLIDO_MATERNO ?>" disabled>
                     </div>
 
                     <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -34,7 +28,7 @@
                         <select class="form-select" id="municipio" name="municipio" required>
                             <option selected disabled value="">Elige el municipio del extravío</option>
                             <?php foreach ($body_data->municipios as $index => $municipio) { ?>
-                            <option value="<?= $municipio->MUNICIPIOID ?>"> <?= $municipio->MUNICIPIODESCR ?> </option>
+                                <option value="<?= $municipio->MUNICIPIOID ?>"> <?= $municipio->MUNICIPIODESCR ?> </option>
                             <?php } ?>
                         </select>
                         <div class="invalid-feedback">
@@ -53,11 +47,11 @@
                         <select class="form-select" id="lugar" name="lugar" required>
                             <option selected disabled value="">Elige el lugar del extravío</option>
                             <?php foreach ($body_data->lugares as $index => $lugar) {
-								if (!strpos($lugar->HECHODESCR, '(CON ARMA BLANCA)') && !strpos($lugar->HECHODESCR, '(CON ARMA DE FUEGO)')) { ?>
-                            <option value="<?= $lugar->HECHOLUGARID ?>"> <?= $lugar->HECHODESCR ?> </option>
+                                if (!strpos($lugar->HECHODESCR, '(CON ARMA BLANCA)') && !strpos($lugar->HECHODESCR, '(CON ARMA DE FUEGO)')) { ?>
+                                    <option value="<?= $lugar->HECHOLUGARID ?>"> <?= $lugar->HECHODESCR ?> </option>
                             <?php
-								}
-							} ?>
+                                }
+                            } ?>
                         </select>
                         <div class="invalid-feedback">
                             Por favor, selecciona un lugar.
@@ -65,8 +59,7 @@
                     </div>
                     <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
                         <label for="fecha" class="form-label fw-bold input-required">Fecha del extravío:</label>
-                        <input type="date" class="form-control" id="fecha" name="fecha" max="<?= date("Y-m-d") ?>"
-                            required>
+                        <input type="date" class="form-control" id="fecha" name="fecha" max="<?= date("Y-m-d") ?>" required>
                         <div class="invalid-feedback">
                             La fecha del extravío es obligatoria
                         </div>
@@ -76,8 +69,8 @@
                         <select class="form-select" id="tipodoc" name="tipodoc" required>
                             <option selected disabled value="">Elige el tipo de documento</option>
                             <?php foreach ($body_data->identificacion as $index => $identificacion) { ?>
-                            <option value="<?= $identificacion->DOCUMENTOEXTRAVIOTIPODESCR  ?>">
-                                <?= $identificacion->DOCUMENTOEXTRAVIOTIPODESCR ?></option>
+                                <option value="<?= $identificacion->DOCUMENTOEXTRAVIOTIPODESCR  ?>">
+                                    <?= $identificacion->DOCUMENTOEXTRAVIOTIPODESCR ?></option>
                             <?php } ?>
                         </select>
                         <div class="invalid-feedback">
@@ -120,8 +113,7 @@
                             <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
                                 <label for="apellido_m" class="form-label fw-bold input-required">Permiso de
                                     gobernación:</label>
-                                <input class="form-control" type="text" id="permisoGobernacion"
-                                    name="permisoGobernacion">
+                                <input class="form-control" type="text" id="permisoGobernacion" name="permisoGobernacion">
                                 <div class="invalid-feedback">
                                     El permiso de gobernación es obligatorio
                                 </div>
@@ -129,8 +121,7 @@
                             <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
                                 <label for="apellido_m" class="form-label fw-bold ">Permiso gobernación de
                                     colaboradores:</label>
-                                <input class="form-control" type="text" id="permisoGColaboradores"
-                                    name="permisoGColaboradores">
+                                <input class="form-control" type="text" id="permisoGColaboradores" name="permisoGColaboradores">
                             </div>
                         </div>
                     </div>
@@ -162,8 +153,8 @@
                                 <select class="form-select" id="municipio_cita" name="municipio_cita">
                                     <option selected disabled value="">Elige el municipio de la cita...</option>
                                     <?php foreach ($body_data->municipios as $index => $municipio) { ?>
-                                    <option value="<?= $municipio->MUNICIPIOID ?>"> <?= $municipio->MUNICIPIODESCR ?>
-                                    </option>
+                                        <option value="<?= $municipio->MUNICIPIOID ?>"> <?= $municipio->MUNICIPIODESCR ?>
+                                        </option>
                                     <?php } ?>
                                 </select>
                                 <div class="invalid-feedback">
@@ -206,8 +197,7 @@
                             <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
                                 <label for="fecha_duenodoc" class="form-label fw-bold input-required">Fecha
                                     nacimiento</label>
-                                <input type="date" class="form-control" id="fecha_duenodoc" name="fecha_duenodoc"
-                                    max="<?= date("Y-m-d") ?>" required>
+                                <input type="date" class="form-control" id="fecha_duenodoc" name="fecha_duenodoc" max="<?= date("Y-m-d") ?>" required>
                                 <div class="invalid-feedback">
                                     La fecha de nacimiento es obligatoria
                                 </div>
@@ -229,152 +219,156 @@
     </div>
 </div>
 <script>
-const select_tipo_doc = document.querySelector("#tipodoc")
-const solicitante = document.querySelector("input[name=solicitante]");
-const form_documentos = document.querySelector('#form_documentos');
-const form_documentos_btn = document.querySelector('#form_documentos_btn');
-const documentos_close_btn = document.querySelector('#documentos_close_btn');
-const spinner_documentos = document.querySelector('#form_documentos_btn #spinner');
-const btn_text_documentos = document.querySelector('#form_documentos_btn #text');
+    //Declaracion de elementos
+    const select_tipo_doc = document.querySelector("#tipodoc")
+    const solicitante = document.querySelector("input[name=solicitante]");
+    const form_documentos = document.querySelector('#form_documentos');
+    const form_documentos_btn = document.querySelector('#form_documentos_btn');
+    const documentos_close_btn = document.querySelector('#documentos_close_btn');
+    const spinner_documentos = document.querySelector('#form_documentos_btn #spinner');
+    const btn_text_documentos = document.querySelector('#form_documentos_btn #text');
 
-form_documentos.addEventListener('submit', function(event) {
-    if (!form_documentos.checkValidity()) {
-        event.preventDefault();
-        event.stopPropagation();
-        form_documentos_btn.disabled = false;
-        documentos_close_btn.classList.remove('d-none')
-        spinner_documentos.classList.add('d-none');
-        btn_text_documentos.classList.remove('d-none');
-    } else {
-        documentos_close_btn.classList.add('d-none')
-        form_documentos_btn.disabled = true;
-        spinner_documentos.classList.remove('d-none');
-        btn_text_documentos.classList.add('d-none');
-    }
-    form_documentos.classList.add('was-validated')
-}, false);
-
-solicitante.addEventListener('change', function(e) {
-    if (e.target.checked) {
-        document.getElementById("duenonamedoc").value = document.getElementById("nombre").value
-        document.getElementById("duenoapdoc").value = document.getElementById("apellido_p").value
-        document.getElementById("duenoamdoc").value = document.getElementById("apellido_m").value
-    } else {
-        document.getElementById("duenonamedoc").value = '';
-        document.getElementById("duenoapdoc").value = '';
-        document.getElementById("duenoamdoc").value = '';
-    }
-});
-
-document.querySelector('#tipodoc').addEventListener('change', (e) => {
-
-    if (e.target.value == 'BOLETOS DE SORTEOS') {
-
-        document.getElementById('extravio').value = 'BOLETOS DE SORTEO';
-        document.querySelector('#boletos_container').classList.remove('d-none');
-        document.querySelector('#numerodocumento_container').classList.add('d-none');
-        document.querySelector('#documentos_container').classList.add('d-none');
-        document.querySelector('#pasaporte_container').classList.add('d-none');
-
-        document.querySelector('#permisoGobernacion').setAttribute('required', true)
-        document.querySelector('#fechaSorteo').setAttribute('required', true)
-        document.querySelector('#nombreSorteo').setAttribute('required', true)
-        document.querySelector('#notalon').setAttribute('required', true)
-        document.querySelector('#noboletos').setAttribute('required', true)
-
-        document.querySelector('#duenonamedoc').required = false;
-        document.querySelector('#duenoapdoc').required = false;
-        document.querySelector('#fecha_duenodoc').required = false;
-
-
-        solicitante.checked = false;
-        document.getElementById('duenonamedoc').value = '';
-        document.getElementById('duenoapdoc').value = '';
-        document.getElementById('duenoamdoc').value = '';
-        document.getElementById('fecha_duenodoc').value = '';
-        document.getElementById('nodocumento').value = '';
-
-        document.querySelectorAll('input[name="cita"]').forEach((cita) => {
-            cita.removeAttribute('required');
-        });
-        document.querySelector('#municipio_cita-container').classList.add('d-none');
-        document.querySelector('#municipio_cita').removeAttribute('required');
-        document.querySelector('#municipio_cita').value = '';
-
-    } else if (e.target.value == 'PASAPORTE MEXICANO') {
-
-        document.getElementById('extravio').value = 'DOCUMENTOS';
-        document.querySelector('#pasaporte_container').classList.remove('d-none');
-        document.querySelector('#boletos_container').classList.add('d-none');
-
-        document.querySelectorAll('input[name="cita"]').forEach((cita) => {
-            cita.setAttribute('required', true);
-        });
-        document.querySelector('input[name="cita"]:checked') ? document.querySelector(
-            'input[name="cita"]:checked').checked = false : null;
-        document.querySelector('#documentos_container').classList.remove('d-none');
-
-        document.querySelector('#permisoGobernacion').required = false;
-        document.querySelector('#fechaSorteo').required = false;
-        document.querySelector('#nombreSorteo').required = false;
-        document.querySelector('#notalon').required = false;
-        document.querySelector('#noboletos').required = false;
-
-        document.querySelector('#duenonamedoc').setAttribute('required', true);
-        document.querySelector('#duenoapdoc').setAttribute('required', true);
-        document.querySelector('#fecha_duenodoc').setAttribute('required', true);
-
-        solicitante.checked = false;
-        document.getElementById('duenonamedoc').value = '';
-        document.getElementById('duenoapdoc').value = '';
-        document.getElementById('duenoamdoc').value = '';
-        document.getElementById('fecha_duenodoc').value = '';
-        document.getElementById('nodocumento').value = '';
-    } else {
-
-        document.getElementById('extravio').value = 'DOCUMENTOS';
-
-        document.querySelector('#boletos_container').classList.add('d-none');
-        document.querySelector('#documentos_container').classList.remove('d-none');
-
-        document.querySelector('#pasaporte_container').classList.add('d-none');
-        document.querySelectorAll('input[name="cita"]').forEach((cita) => {
-            cita.removeAttribute('required');
-        });
-        document.querySelector('#municipio_cita-container').classList.add('d-none');
-        document.querySelector('#municipio_cita').removeAttribute('required');
-        document.querySelector('#municipio_cita').value = '';
-        document.querySelector('input[name="cita"]:checked') ? document.querySelector(
-            'input[name="cita"]:checked').checked = false : null;
-
-        document.querySelector('#permisoGobernacion').required = false;
-        document.querySelector('#fechaSorteo').required = false;
-        document.querySelector('#nombreSorteo').required = false;
-        document.querySelector('#notalon').required = false;
-        document.querySelector('#noboletos').required = false;
-
-        document.querySelector('#duenonamedoc').setAttribute('required', true);
-        document.querySelector('#duenoapdoc').setAttribute('required', true);
-        document.querySelector('#fecha_duenodoc').setAttribute('required', true);
-
-        solicitante.checked = false;
-        document.getElementById('duenonamedoc').value = '';
-        document.getElementById('duenoapdoc').value = '';
-        document.getElementById('duenoamdoc').value = '';
-        document.getElementById('fecha_duenodoc').value = '';
-        document.getElementById('nodocumento').value = '';
-    }
-});
-
-document.querySelectorAll('input[name="cita"]').forEach(input => {
-    input.addEventListener('change', (e) => {
-        if (document.querySelector('input[name="cita"]:checked').value == "SI") {
-            document.querySelector('#municipio_cita-container').classList.remove('d-none');
-            document.querySelector('#municipio_cita').setAttribute('required', true)
+    form_documentos.addEventListener('submit', function(event) {
+        if (!form_documentos.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+            form_documentos_btn.disabled = false;
+            documentos_close_btn.classList.remove('d-none')
+            spinner_documentos.classList.add('d-none');
+            btn_text_documentos.classList.remove('d-none');
         } else {
+            documentos_close_btn.classList.add('d-none')
+            form_documentos_btn.disabled = true;
+            spinner_documentos.classList.remove('d-none');
+            btn_text_documentos.classList.add('d-none');
+        }
+        form_documentos.classList.add('was-validated')
+    }, false);
+
+    //Rellena los campos del dueño
+    solicitante.addEventListener('change', function(e) {
+        if (e.target.checked) {
+            document.getElementById("duenonamedoc").value = document.getElementById("nombre").value
+            document.getElementById("duenoapdoc").value = document.getElementById("apellido_p").value
+            document.getElementById("duenoamdoc").value = document.getElementById("apellido_m").value
+        } else {
+            document.getElementById("duenonamedoc").value = '';
+            document.getElementById("duenoapdoc").value = '';
+            document.getElementById("duenoamdoc").value = '';
+        }
+    });
+
+    //Aplica estilos de acuerdo al tipo de documento
+    document.querySelector('#tipodoc').addEventListener('change', (e) => {
+
+        if (e.target.value == 'BOLETOS DE SORTEOS') {
+
+            document.getElementById('extravio').value = 'BOLETOS DE SORTEO';
+            document.querySelector('#boletos_container').classList.remove('d-none');
+            document.querySelector('#numerodocumento_container').classList.add('d-none');
+            document.querySelector('#documentos_container').classList.add('d-none');
+            document.querySelector('#pasaporte_container').classList.add('d-none');
+
+            document.querySelector('#permisoGobernacion').setAttribute('required', true)
+            document.querySelector('#fechaSorteo').setAttribute('required', true)
+            document.querySelector('#nombreSorteo').setAttribute('required', true)
+            document.querySelector('#notalon').setAttribute('required', true)
+            document.querySelector('#noboletos').setAttribute('required', true)
+
+            document.querySelector('#duenonamedoc').required = false;
+            document.querySelector('#duenoapdoc').required = false;
+            document.querySelector('#fecha_duenodoc').required = false;
+
+
+            solicitante.checked = false;
+            document.getElementById('duenonamedoc').value = '';
+            document.getElementById('duenoapdoc').value = '';
+            document.getElementById('duenoamdoc').value = '';
+            document.getElementById('fecha_duenodoc').value = '';
+            document.getElementById('nodocumento').value = '';
+
+            document.querySelectorAll('input[name="cita"]').forEach((cita) => {
+                cita.removeAttribute('required');
+            });
             document.querySelector('#municipio_cita-container').classList.add('d-none');
             document.querySelector('#municipio_cita').removeAttribute('required');
+            document.querySelector('#municipio_cita').value = '';
+
+        } else if (e.target.value == 'PASAPORTE MEXICANO') {
+
+            document.getElementById('extravio').value = 'DOCUMENTOS';
+            document.querySelector('#pasaporte_container').classList.remove('d-none');
+            document.querySelector('#boletos_container').classList.add('d-none');
+
+            document.querySelectorAll('input[name="cita"]').forEach((cita) => {
+                cita.setAttribute('required', true);
+            });
+            document.querySelector('input[name="cita"]:checked') ? document.querySelector(
+                'input[name="cita"]:checked').checked = false : null;
+            document.querySelector('#documentos_container').classList.remove('d-none');
+
+            document.querySelector('#permisoGobernacion').required = false;
+            document.querySelector('#fechaSorteo').required = false;
+            document.querySelector('#nombreSorteo').required = false;
+            document.querySelector('#notalon').required = false;
+            document.querySelector('#noboletos').required = false;
+
+            document.querySelector('#duenonamedoc').setAttribute('required', true);
+            document.querySelector('#duenoapdoc').setAttribute('required', true);
+            document.querySelector('#fecha_duenodoc').setAttribute('required', true);
+
+            solicitante.checked = false;
+            document.getElementById('duenonamedoc').value = '';
+            document.getElementById('duenoapdoc').value = '';
+            document.getElementById('duenoamdoc').value = '';
+            document.getElementById('fecha_duenodoc').value = '';
+            document.getElementById('nodocumento').value = '';
+        } else {
+
+            document.getElementById('extravio').value = 'DOCUMENTOS';
+
+            document.querySelector('#boletos_container').classList.add('d-none');
+            document.querySelector('#documentos_container').classList.remove('d-none');
+
+            document.querySelector('#pasaporte_container').classList.add('d-none');
+            document.querySelectorAll('input[name="cita"]').forEach((cita) => {
+                cita.removeAttribute('required');
+            });
+            document.querySelector('#municipio_cita-container').classList.add('d-none');
+            document.querySelector('#municipio_cita').removeAttribute('required');
+            document.querySelector('#municipio_cita').value = '';
+            document.querySelector('input[name="cita"]:checked') ? document.querySelector(
+                'input[name="cita"]:checked').checked = false : null;
+
+            document.querySelector('#permisoGobernacion').required = false;
+            document.querySelector('#fechaSorteo').required = false;
+            document.querySelector('#nombreSorteo').required = false;
+            document.querySelector('#notalon').required = false;
+            document.querySelector('#noboletos').required = false;
+
+            document.querySelector('#duenonamedoc').setAttribute('required', true);
+            document.querySelector('#duenoapdoc').setAttribute('required', true);
+            document.querySelector('#fecha_duenodoc').setAttribute('required', true);
+
+            solicitante.checked = false;
+            document.getElementById('duenonamedoc').value = '';
+            document.getElementById('duenoapdoc').value = '';
+            document.getElementById('duenoamdoc').value = '';
+            document.getElementById('fecha_duenodoc').value = '';
+            document.getElementById('nodocumento').value = '';
         }
-    })
-});
+    });
+
+    //Evento para modificar campos requeridos al confirmar una cita
+    document.querySelectorAll('input[name="cita"]').forEach(input => {
+        input.addEventListener('change', (e) => {
+            if (document.querySelector('input[name="cita"]:checked').value == "SI") {
+                document.querySelector('#municipio_cita-container').classList.remove('d-none');
+                document.querySelector('#municipio_cita').setAttribute('required', true)
+            } else {
+                document.querySelector('#municipio_cita-container').classList.add('d-none');
+                document.querySelector('#municipio_cita').removeAttribute('required');
+            }
+        })
+    });
 </script>

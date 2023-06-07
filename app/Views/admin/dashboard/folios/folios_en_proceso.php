@@ -28,13 +28,13 @@
 									<tr>
 										<td class="text-center font-weight-bold"><?= $folio->FOLIOID . '/' . $folio->ANO ?></td>
 										<td class="text-center"><?= $folio->HECHODELITO ?></td>
-										<td class="text-center"><?= $folio->NOMBREDENUNCIANTE ?> <?= $folio->APPDENUNCIANTE ?> <?= $folio->APMDENUNCIANTE ? $folio->APMDENUNCIANTE :'' ?></td>
+										<td class="text-center"><?= $folio->NOMBREDENUNCIANTE ?> <?= $folio->APPDENUNCIANTE ?> <?= $folio->APMDENUNCIANTE ? $folio->APMDENUNCIANTE : '' ?></td>
 										<td class="text-center"><?= $folio->NOMBRE ?> <?= $folio->APELLIDO_PATERNO ?> <?= $folio->APELLIDO_MATERNO ?></td>
 										<td class="text-center">
-											<form id="<?= 'form_' . $folio->FOLIOID ?>"action="<?= base_url('admin/dashboard/liberar_folio') ?>" name="formulario_liberacion" method="POST"onsubmit="return confirmarLiberacion(event,this)">
-												<input type="text" name="folio" id="folio" value="<?= $folio->FOLIOID ?>" hidden >
-												<input type="text" name="year" value="<?= $folio->ANO ?>" hidden >
-												<input type="text" id="agenteatencion" name="agenteatencion" value="<?= $folio->NOMBRE . ' ' . $folio->APELLIDO_PATERNO?>" hidden>
+											<form id="<?= 'form_' . $folio->FOLIOID ?>" action="<?= base_url('admin/dashboard/liberar_folio') ?>" name="formulario_liberacion" method="POST" onsubmit="return confirmarLiberacion(event,this)">
+												<input type="text" name="folio" id="folio" value="<?= $folio->FOLIOID ?>" hidden>
+												<input type="text" name="year" value="<?= $folio->ANO ?>" hidden>
+												<input type="text" id="agenteatencion" name="agenteatencion" value="<?= $folio->NOMBRE . ' ' . $folio->APELLIDO_PATERNO ?>" hidden>
 												<button type="submit" class="btn btn-primary">LIBERAR</button>
 											</form>
 										</td>
@@ -49,28 +49,29 @@
 	</div>
 </section>
 <script>
-function confirmarLiberacion(event, element) {
-  event.preventDefault();
+	//Funcion para aventar una alerta con el nombre y confirmacion de liberacion
+	function confirmarLiberacion(event, element) {
+		event.preventDefault();
 
-  // Obtenemos la fila actual del botón que se ha presionado
-  var row = element.closest('tr');
+		// Obtenemos la fila actual del botón que se ha presionado
+		var row = element.closest('tr');
 
-  // Obtenemos el valor del agente de atención de la fila actual
-  var agenteAtencion = row.querySelector('#agenteatencion').value;
+		// Obtenemos el valor del agente de atención de la fila actual
+		var agenteAtencion = row.querySelector('#agenteatencion').value;
 
-  Swal.fire({
-    icon: 'warning',
-    title: "¿Estás seguro de liberar este folio? El folio está siendo atendido por " + agenteAtencion,
-    showCancelButton: true,
-    confirmButtonColor: "#bf9b55",
-    confirmButtonText: "Aceptar",
-    cancelButtonText: "Cancelar",
-  }).then(result => {
-    if (result.dismiss === Swal.DismissReason.cancel) {}else{
-      element.submit();
-    }
-  });
-}
+		Swal.fire({
+			icon: 'warning',
+			title: "¿Estás seguro de liberar este folio? El folio está siendo atendido por " + agenteAtencion,
+			showCancelButton: true,
+			confirmButtonColor: "#bf9b55",
+			confirmButtonText: "Aceptar",
+			cancelButtonText: "Cancelar",
+		}).then(result => {
+			if (result.dismiss === Swal.DismissReason.cancel) {} else {
+				element.submit();
+			}
+		});
+	}
 
 	$(function() {
 		$("#folios_sin_firma").DataTable({

@@ -38,6 +38,8 @@
 	</div>
 </div>
 <script>
+	//Funcion para contar los caracteres restantes de la descripcion del vehiculo
+
 	function contarCaracteresVehiculo(obj) {
 		var maxLength = 300;
 		var strLength = obj.value.length;
@@ -49,6 +51,7 @@
 			document.getElementById("numCaracterVehiculo").innerHTML = charRemain + ' caracteres restantes';
 		}
 	}
+	//Evento para validar el tamaño de la foto
 
 	document.querySelector('#foto_vehiculo_nc').addEventListener("change", function() {
 		// Si no hay archivos, regresamos
@@ -67,6 +70,7 @@
 			})
 		}
 	});
+	//Evento para validar el tamaño del documento
 
 	document.querySelector('#documento_vehiculo_nc').addEventListener("change", function() {
 		// Si no hay archivos, regresamos

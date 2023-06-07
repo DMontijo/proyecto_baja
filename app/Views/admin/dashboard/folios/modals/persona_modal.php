@@ -43,7 +43,9 @@
 	</div>
 </div>
 <script>
+	//Se deshabilitan todos los elementos input, select y textarea
+
 	$("input").prop('disabled', true);
 	$("select").prop('disabled', true);
 	$("textarea").prop('disabled', true);
-</script>	
+</script>

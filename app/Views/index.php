@@ -124,6 +124,8 @@
 <?php include('client/dashboard/800_modal.php') ?>
 
 <script>
+	// Funcion que verifica si la casilla de verificación está marcada. Si no esta checkeado manda un popover
+
 	function handleClickBTN(e) {
 		var chk = document.getElementById("aceptar_todos").checked;
 		if (!chk) {
@@ -136,9 +138,12 @@
 		}
 	}
 
+
+	//evento para reproducir video del tutoral cuando abren modal
 	document.querySelector('#tutorial_modal').addEventListener('shown.bs.modal', () => {
 		document.querySelector('#tutorial_video').play();
 	});
+	//evento para pausar video del tutoral cuando cierran	 modal
 
 	document.querySelector('#tutorial_modal').addEventListener('hidden.bs.modal', () => {
 		document.querySelector('#tutorial_video').pause();

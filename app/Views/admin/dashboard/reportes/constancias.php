@@ -250,6 +250,7 @@
 	<script>
 		let form = document.querySelector('#formExcel');
 
+		//Datos de confirmacion del filtro
 		form.addEventListener('submit', function(event) {
 			event.preventDefault();
 			text = `
@@ -283,6 +284,7 @@
 		});
 	</script>
 	<script>
+		//Evento change al cambira el status, deshabilita la fecha y hora fin
 		$(document).on('change', '#status', function() {
 			var fechaFin = document.getElementById('fechaFin');
 			var horaFin = document.getElementById('horaFin');

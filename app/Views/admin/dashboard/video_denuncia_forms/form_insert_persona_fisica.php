@@ -359,6 +359,7 @@
 			})
 	})()
 	
+	//Evento para mostrar el input de ocupacion(si es necesario)
 	document.querySelector('#ocupacion_new').addEventListener('change', (e) => {
 		let select_ocupacion = document.querySelector('#ocupacion_new');
 		let input_ocupacion = document.querySelector('#ocupacion_descr_new');

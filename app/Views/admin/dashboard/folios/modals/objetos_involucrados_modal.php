@@ -8,10 +8,10 @@
 				</button>
 			</div>
 			<div class="modal-body bg-light" style="height:70vh;overflow-y:auto;">
-			
+
 				<div class="tab-content pt-3" id="persona_content">
 					<div class="tab-pane fade show active" id="nav-form_objetos_involucrados" role="tabpanel" aria-labelledby="nav-form_objetos_involucrados-tab">
-					<?= view('admin/dashboard/folios/forms/form_objetos_involucrados') ?>
+						<?= view('admin/dashboard/folios/forms/form_objetos_involucrados') ?>
 					</div>
 				</div>
 			</div>
@@ -19,7 +19,9 @@
 	</div>
 </div>
 <script>
+	//Se deshabilitan todos los elementos input, select y textarea
+
 	$("input").prop('disabled', true);
 	$("select").prop('disabled', true);
 	$("textarea").prop('disabled', true);
-</script>	
+</script>

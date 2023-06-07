@@ -52,6 +52,7 @@
 				let regex = /\S+@\S+\.\S+/
 				let email = document.querySelector('#correo_reset_password');
 
+				//Verifica que exista el correo
 				if (regex.test(email.value)) {
 					$.ajax({
 						data: {

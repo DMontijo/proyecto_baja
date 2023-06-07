@@ -77,32 +77,32 @@
 							</div>
 						</div>
 						<div class="row" style="font-size:10px;">
-								<div class="col-12" style="overflow:auto;">
-									<table id="registro_llamadas" class="table table-bordered table-striped table-sm">
-										<thead>
+							<div class="col-12" style="overflow:auto;">
+								<table id="registro_llamadas" class="table table-bordered table-striped table-sm">
+									<thead>
+										<tr>
+											<th class="text-center">FOLIO</th>
+											<th class="text-center">INICIO</th>
+											<th class="text-center">FIN</th>
+											<th class="text-center">AGENTE</th>
+											<th class="text-center">DENUNCIANTE</th>
+										</tr>
+									</thead>
+									<tbody>
+										<?php
+										foreach ($body_data->llamadas as $index => $llamada) { ?>
 											<tr>
-												<th class="text-center">FOLIO</th>
-												<th class="text-center">INICIO</th>
-												<th class="text-center">FIN</th>
-												<th class="text-center">AGENTE</th>
-												<th class="text-center">DENUNCIANTE</th>
+												<td class="text-center font-weight-bold"><?= $llamada->guestConnectionId->folio ?></td>
+												<td class="text-center"><?= date('d-m-Y H:i:s', strtotime($llamada->sessionStartedAt)) ?></td>
+												<td class="text-center"><?= $llamada->sessionFinishedAt != null ? date('d-m-Y H:i:s', strtotime($llamada->sessionFinishedAt)) : '-' ?></td>
+												<td class="text-center"><?= $llamada->agentConnectionId->agent->fullName ?></td>
+												<td class="text-center"><?= $llamada->guestConnectionId->uuid->details->NOMBRE . ' ' . $llamada->guestConnectionId->uuid->details->APELLIDO_PATERNO ?></td>
 											</tr>
-										</thead>
-										<tbody>
-											<?php
-											foreach ($body_data->llamadas as $index => $llamada) { ?>
-												<tr>
-													<td class="text-center font-weight-bold"><?= $llamada->guestConnectionId->folio ?></td>
-													<td class="text-center"><?= date('d-m-Y H:i:s', strtotime($llamada->sessionStartedAt)) ?></td>
-													<td class="text-center"><?= $llamada->sessionFinishedAt != null ? date('d-m-Y H:i:s', strtotime($llamada->sessionFinishedAt)) : '-' ?></td>
-													<td class="text-center"><?= $llamada->agentConnectionId->agent->fullName ?></td>
-													<td class="text-center"><?= $llamada->guestConnectionId->uuid->details->NOMBRE . ' ' . $llamada->guestConnectionId->uuid->details->APELLIDO_PATERNO ?></td>
-												</tr>
-											<?php } ?>
-										</tbody>
-									</table>
-								</div>
+										<?php } ?>
+									</tbody>
+								</table>
 							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -144,6 +144,7 @@
 <?php if (isset($body_data->filterParams)) { ?>
 	<script>
 		let form = document.querySelector('#formExcel');
+		//Datos de confirmacion del filtro
 
 		form.addEventListener('submit', function(event) {
 			event.preventDefault();

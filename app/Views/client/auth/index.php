@@ -94,6 +94,7 @@
 <?php endif; ?>
 <?php if (session()->getFlashdata('message_session')) : ?>
 	<script>
+		//Funcion para cerrar todas las sesiones abiertas al querer ingresar
 		Swal.fire({
 			icon: 'error',
 			title: '<?= session()->getFlashdata('message_session') ?>',
