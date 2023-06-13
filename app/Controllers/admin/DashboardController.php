@@ -8393,7 +8393,7 @@ class DashboardController extends BaseController
 					break;
 				case '4':
 					$data->plantilla = str_replace('[DIRECCION_NOMBRE]', 'SECRETARIO DE SEGURIDAD Y PROTECCIÓN CIUDADANA MUNICIPAL', $data->plantilla);
-					$data->plantilla = str_replace('[REMISION_DOMICILIO]', 'Avenida Mutua Martínez s/n Campestre Murua, Tijuana, B. C.', $data->plantilla);
+					$data->plantilla = str_replace('[REMISION_DOMICILIO]', 'Av. Instituto Politécnico Nacional No. 1351 Col. Garita de Otay, Delegación Centenario C.P. 22430 Tijuana Baja California (segundo piso de oficinas de INDIVI)', $data->plantilla);
 					break;
 				case '5':
 					$data->plantilla = str_replace('[DIRECCION_NOMBRE]', 'SECRETARÍA DE SEGURIDAD Y PROTECCIÓN CIUDADANA', $data->plantilla);
