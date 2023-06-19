@@ -27,14 +27,39 @@ class Database extends Config
 
 	/**
 	 * The default database connection.
-	 *
+	 * Read and write
 	 * @var array
 	 */
 
 	public $default = [
 		'DSN'      => '',
 		'hostname' => 'database-video-denuncia-baja-california-instance-1.cenwfxggsegs.us-east-1.rds.amazonaws.com',
-		// 'hostname' => '172.19.10.36',
+		'username' => 'fgebc_admin',
+		'password' => 'fgebc_dba0wner',
+		'database' => 'cdtec',
+		'DBDriver' => 'MySQLi',
+		'DBPrefix' => '',
+		'pConnect' => false,
+		'DBDebug'  => (ENVIRONMENT !== 'production'),
+		'charset'  => 'utf8',
+		'DBCollat' => 'utf8_general_ci',
+		'swapPre'  => '',
+		'encrypt'  => false,
+		'compress' => false,
+		'strictOn' => false,
+		'failover' => [],
+		'port'     => 3306,
+	];
+
+	/**
+	 * The default database connection.
+	 * Only read
+	 * @var array
+	 */
+
+	public $default_read = [
+		'DSN'      => '',
+		'hostname' => 'database-video-denuncia-baja-california-instance-1-us-east-1b.cenwfxggsegs.us-east-1.rds.amazonaws.com',
 		'username' => 'fgebc_admin',
 		'password' => 'fgebc_dba0wner',
 		'database' => 'cdtec',
@@ -55,6 +80,7 @@ class Database extends Config
 	/**
 	 * This database connection is used when
 	 * enviroment is development
+	 * Read and write
 	 * @var array
 	 */
 
@@ -64,6 +90,59 @@ class Database extends Config
 		'username' => 'fgebc_admin',
 		'password' => 'fgebc_dba0wner',
 		'database' => 'cdtec_testing',
+		'DBDriver' => 'MySQLi',
+		'DBPrefix' => '',
+		'pConnect' => false,
+		'DBDebug'  => (ENVIRONMENT !== 'production'),
+		'charset'  => 'utf8',
+		'DBCollat' => 'utf8_general_ci',
+		'swapPre'  => '',
+		'encrypt'  => false,
+		'compress' => false,
+		'strictOn' => false,
+		'failover' => [],
+		'port'     => 3306,
+	];
+
+	/**
+	 * This database connection is used when
+	 * enviroment is development
+	 * Only read
+	 * @var array
+	 */
+
+	public $development_read = [
+		'DSN'      => '',
+		'hostname' => 'database-video-denuncia-baja-california-instance-1-us-east-1b.cenwfxggsegs.us-east-1.rds.amazonaws.com',
+		'username' => 'fgebc_admin',
+		'password' => 'fgebc_dba0wner',
+		'database' => 'cdtec_testing',
+		'DBDriver' => 'MySQLi',
+		'DBPrefix' => '',
+		'pConnect' => false,
+		'DBDebug'  => (ENVIRONMENT !== 'production'),
+		'charset'  => 'utf8',
+		'DBCollat' => 'utf8_general_ci',
+		'swapPre'  => '',
+		'encrypt'  => false,
+		'compress' => false,
+		'strictOn' => false,
+		'failover' => [],
+		'port'     => 3306,
+	];
+
+	/**
+	 * This database connection is used for videocall registers
+	 * Only read
+	 * @var array
+	 */
+
+	public $videocall_read = [
+		'DSN'      => '',
+		'hostname' => 'database-video-denuncia-baja-california-instance-1-us-east-1b.cenwfxggsegs.us-east-1.rds.amazonaws.com',
+		'username' => 'fgebc_admin',
+		'password' => 'fgebc_dba0wner',
+		'database' => 'video_service',
 		'DBDriver' => 'MySQLi',
 		'DBPrefix' => '',
 		'pConnect' => false,

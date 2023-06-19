@@ -85,7 +85,25 @@
 													<option <?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'VD' ? 'selected' : '') : null ?> value="VD">CDTEC</option>
 													<option <?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'DA' ? 'selected' : '') : null ?> value="DA">DENUNCIA ANÓNIMA</option>
 													<option <?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'TE' ? 'selected' : '') : null ?> value="TE">TELEFÓNICA</option>
+													<option <?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'EL' ? 'selected' : '') : null ?> value="EL">ELECTRÓNICA</option>
 
+												</select>
+											</div>
+											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
+												<label for="status" class="form-label font-weight-bold">Tipo de expediente:</label>
+												<select class="form-control" id="tipoExp" name="tipoExp" required>
+													<option selected value="">Todos los tipos</option>
+													<option <?= isset($body_data->filterParams->TIPOEXP) ? ($body_data->filterParams->TIPOEXP == '1' ? 'selected' : '') : null ?> value="1">(NUC) CASO DE INVESTIGACION </option>
+													<option <?= isset($body_data->filterParams->TIPOEXP) ? ($body_data->filterParams->TIPOEXP == '4' ? 'selected' : '') : null ?> value="4">(NAC) ACTA CIRCUNSTANCIADA</option>
+													<option <?= isset($body_data->filterParams->TIPOEXP) ? ($body_data->filterParams->TIPOEXP == '5' ? 'selected' : '') : null ?> value="5">(RAC) REGISTRO DE ATENCION CIUDADANA</option>
+												</select>
+											</div>
+											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
+												<label for="status" class="form-label font-weight-bold">Genero:</label>
+												<select class="form-control" id="genero" name="genero" required>
+													<option selected value="">Ambos</option>
+													<option <?= isset($body_data->filterParams->GENERO) ? ($body_data->filterParams->GENERO == 'M' ? 'selected' : '') : null ?> value="M">MASCULINO</option>
+													<option <?= isset($body_data->filterParams->GENERO) ? ($body_data->filterParams->GENERO == 'F' ? 'selected' : '') : null ?> value="F">FEMENINO</option>
 												</select>
 											</div>
 											<div class="col-12 text-right">
@@ -118,17 +136,19 @@
 								<?php } ?>
 							</div>
 							<div class="col-12" style="overflow-x:auto;">
-								<table id="folios_generados" class="table table-bordered table-striped table-sm" style="font-size:12px;">
+								<table id="folios_generados" class="table table-bordered table-striped table-sm" style="font-size:10px;">
 									<thead>
 										<tr>
 											<th class="text-center">FOLIO</th>
 											<th class="text-center">AÑO</th>
 											<th class="text-center">TIPO</th>
 											<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
+											<th class="text-center" style="min-width:150px;">CONTIENE PERCICIALES</th>
 											<th class="text-center" style="min-width:150px;">FECHA DE SALIDA</th>
 											<th class="text-center" style="min-width:100px;">ESTADO FOLIO</th>
 											<th class="text-center" style="min-width:250px;">NOMBRE DEL DENUNCIANTE</th>
 											<th class="text-center" style="min-width:250px;">NOMBRE DEL AGENTE</th>
+											<th class="text-center" style="min-width:250px;">DELITO</th>
 											<th class="text-center">MUNICIPIO</th>
 										</tr>
 									</thead>
@@ -145,18 +165,23 @@
 												$tipo = 'VIDEO';
 											} else if ($folio->TIPODENUNCIA == 'DA') {
 												$tipo = 'ANÓNIMA';
-											} else {
+											} else if ($folio->TIPODENUNCIA == 'TE') {
 												$tipo = 'TELEFÓNICA';
-											} ?>
+											}else{
+												$tipo = 'ELECTRÓNICA';
+											}
+										?>
 											<tr>
 												<td class="text-center font-weight-bold"><?= $folio->FOLIOID ?></td>
 												<td class="text-center"><?= $folio->ANO ?></td>
 												<td class="text-center"><?= $tipo ?></td>
 												<td class="text-center font-weight-bold"><?= $expedienteid ? $expedienteid . '/' . $folio->TIPOEXPEDIENTECLAVE  : '' ?></td>
+												<td class="text-center"><?= isset($folio->PERCIALES) ? $folio->PERCIALES : 'NO' ?></td>
 												<td class="text-center"><?= $folio->FECHASALIDA ? date('d-m-Y H:i:s', strtotime($folio->FECHASALIDA)) : '' ?></td>
 												<td class="text-center"><?= $folio->STATUS ?></td>
 												<td class="text-center"><?= $folio->NOMBRE_DENUNCIANTE ?></td>
 												<td class="text-center"><?= $folio->NOMBRE_AGENTE ?></td>
+												<td class="text-center"><?= isset($folio->DELITO) ? $folio->DELITO : ''  ?></td>
 												<td class="text-center"><?= $folio->MUNICIPIODESCR ?></td>
 											</tr>
 										<?php } ?>
@@ -209,7 +234,7 @@
 				// [0, 'asc'],
 			],
 			searching: true,
-			pageLength: 100,
+			pageLength: 25,
 			// dom: 'Bfrtip',
 			// buttons: [
 			// 	'copy', 'excel', 'pdf'
@@ -233,6 +258,7 @@
 	<script>
 		let form = document.querySelector('#formExcel');
 
+		//Datos de confirmacion del filtro
 		form.addEventListener('submit', function(event) {
 			event.preventDefault();
 			text = `
@@ -246,8 +272,11 @@
 						<li><span style="font-weight:bold;">Hora inicio:</span> <?= isset($body_data->filterParams->horaInicio) ? $body_data->filterParams->horaInicio : '' ?></li>
 						<li><span style="font-weight:bold;">Hora fin:</span> <?= isset($body_data->filterParams->horaFin) ? $body_data->filterParams->horaFin : '' ?></li>
 						<li><span style="font-weight:bold;">Estatus:</span> <?= isset($body_data->filterParams->STATUS) ? $body_data->filterParams->STATUS : '' ?></li>
+						<li><span style="font-weight:bold;">Genero:</span> <?= isset($body_data->filterParams->GENERO) ? ($body_data->filterParams->GENERO == 'M' ? 'MASCULINO' : ($body_data->filterParams->GENERO == 'F' ? 'FEMENINO' : '')) : '' ?></li>
 						<li><span style="font-weight:bold;">Tipo:</span>
 						<?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'VD' ? 'CDTEC' : ($body_data->filterParams->TIPODENUNCIA == 'DA' ? 'ANÓNIMA' : 'TODOS')) : 'TODOS' ?></li>
+						<li><span style="font-weight:bold;">Tipo de expediente:</span>
+						<?= isset($body_data->filterParams->TIPOEXP) ? ($body_data->filterParams->TIPOEXP == '1' ? '(NUC) CASO DE INVESTIGACION' : ($body_data->filterParams->TIPOEXP == '4' ? '(NAC) ACTA CIRCUNSTANCIADA' : ($body_data->filterParams->TIPOEXP == '5' ? '(RAC) REGISTRO DE ATENCION CIUDADANA' : 'TODOS'))) : 'TODOS' ?></li>
 				</ul>
 			</p>
 			`

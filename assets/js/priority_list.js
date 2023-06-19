@@ -37,7 +37,9 @@ priorityLinesSockets.registerToPriorityLineUpdate(priorityLists => {
 
 				let td_3 = document.createElement("td");
 				td_3.classList.add("text-center");
-				let text_3 = document.createTextNode(dataGuest.guest.gender == 'MALE' ? 'MASCULINO' : 'FEMENINO');
+				let text_3 = document.createTextNode(
+					dataGuest.guest.gender == "MALE" ? "MASCULINO" : "FEMENINO"
+				);
 
 				let td_4 = document.createElement("td");
 				td_4.classList.add("text-center");
@@ -64,12 +66,22 @@ priorityLinesSockets.registerToPriorityLineUpdate(priorityLists => {
 				td_5.appendChild(text_5);
 				td_6.appendChild(text_6);
 
-				if (dataGuest.guestConnection.latitude && dataGuest.guestConnection.longitude) {
+				if (
+					dataGuest.guestConnection.latitude &&
+					dataGuest.guestConnection.longitude
+				) {
 					let a = document.createElement("a");
-					a.setAttribute("href", 'https://www.google.com/maps/search/?api=1&query=' + dataGuest.guestConnection.latitude + "," + dataGuest.guestConnection.longitude + '&zoom=20');
-					a.setAttribute("target", '_blank');
-					a.classList.add('btn');
-					a.classList.add('btn-primary');
+					a.setAttribute(
+						"href",
+						"https://www.google.com/maps/search/?api=1&query=" +
+							dataGuest.guestConnection.latitude +
+							"," +
+							dataGuest.guestConnection.longitude +
+							"&zoom=20"
+					);
+					a.setAttribute("target", "_blank");
+					a.classList.add("btn");
+					a.classList.add("btn-primary");
 					let aTexto = document.createTextNode("UBICACIÓN");
 					a.appendChild(aTexto);
 					td_7.appendChild(a);
@@ -99,17 +111,20 @@ priorityLinesSockets.registerToPriorityLineUpdate(priorityLists => {
 	}
 });
 
+/**
+ * Función que regresa el texto de prioridad
+ */
 function setPriority(num) {
 	switch (num) {
 		case "1":
-			return "BAJA - " + num;
+			return "BAJA";
 		case "2":
-			return "MEDIA - " + num;
+			return "MEDIA";
 		case "3":
-			return "ALTA - " + num;
+			return "ALTA";
 		case num > "3":
-			return "URGENTE - " + num;
+			return "ALTA";
 		default:
-			return "DESCONOCIDO - " + num;
+			return "DESCONOCIDO";
 	}
 }

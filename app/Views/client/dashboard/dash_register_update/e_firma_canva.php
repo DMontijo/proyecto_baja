@@ -20,6 +20,12 @@
 </div>
 <script>
 	(function() {
+		/**
+		 *  Se define la función requestAnimFrame como una función que utiliza diferentes implementaciones de requestAnimationFrame según la disponibilidad del navegador.
+		 * 	Si el navegador no admite requestAnimationFrame, se verifica si existen otras implementaciones compatibles como webkitRequestAnimationFrame, mozRequestAnimationFrame, oRequestAnimationFrame, msRequestAnimationFrame.
+		 * Si ninguna de estas implementaciones está disponible, se utiliza setTimeout con una duración de tiempo aproximada de 1 segundo dividida por 60 (aproximadamente 60 cuadros por segundo).
+		 */
+
 		window.requestAnimFrame = (function(callback) {
 			return window.requestAnimationFrame ||
 				window.webkitRequestAnimationFrame ||
@@ -38,11 +44,13 @@
 		let drawImage = document.getElementById("firma_imagen");
 		let clearBtn = document.getElementById("limpiar_firma");
 		let submitBtn = document.getElementById("crear_firma");
+		//Brrar el lienzo.
 
 		clearBtn.addEventListener("click", function(e) {
 			clearCanvas();
 			drawText.innerHTML = '';
 		}, false);
+		//Obtiene la representación en formato de URL de los datos del lienzo.
 
 		submitBtn.addEventListener("click", function(e) {
 			canvas.fillStyle = "rgba(0,0,0,.4)";
@@ -56,6 +64,7 @@
 			y: 0
 		};
 		let lastPos = mousePos;
+		// Obtiene la posición del ratón en relación al lienzo
 
 		canvas.addEventListener("mousedown", function(e) {
 			let tint = '#000000';
@@ -63,6 +72,7 @@
 			drawing = true;
 			lastPos = getMousePos(canvas, e);
 		}, false);
+		//Obtiene la representación en formato de URL de los datos del lienzo
 
 		canvas.addEventListener("mouseup", function(e) {
 			drawing = false;
@@ -70,10 +80,12 @@
 			let dataUrl = canvas.toDataURL();
 			drawText.innerHTML = dataUrl;
 		}, false);
+		// Cuando el puntero del ratón sale del área del lienzo
 
 		canvas.addEventListener("mousemove", function(e) {
 			mousePos = getMousePos(canvas, e);
 		}, false);
+		// Cuando el puntero del ratón se mueve dentro del área del lienzo, se ejecuta una función que actualiza la variable mousePos con la posición actual d
 
 		canvas.addEventListener("mouseout", function(e) {
 			drawing = false;
@@ -81,6 +93,7 @@
 			let dataUrl = canvas.toDataURL();
 			drawText.innerHTML = dataUrl;
 		}, false);
+		//Cuando se detecta un toque en el lienzo
 
 		canvas.addEventListener("touchstart", function(e) {
 			mousePos = getTouchPos(canvas, e);
@@ -92,18 +105,21 @@
 			});
 			canvas.dispatchEvent(mouseEvent);
 		}, false);
+		//Cuando se detecta el final de un toque en el lienzo
 
 		canvas.addEventListener("touchend", function(e) {
 			e.preventDefault();
 			let mouseEvent = new MouseEvent("mouseup", {});
 			canvas.dispatchEvent(mouseEvent);
 		}, false);
+		//Cuando el puntero táctil se mueve fuera del área del lienzo
 
 		canvas.addEventListener("touchleave", function(e) {
 			e.preventDefault();
 			let mouseEvent = new MouseEvent("mouseup", {});
 			canvas.dispatchEvent(mouseEvent);
 		}, false);
+		//Cuando el puntero táctil se mueve dentro del área del lienzo
 
 		canvas.addEventListener("touchmove", function(e) {
 			e.preventDefault();
@@ -114,6 +130,7 @@
 			});
 			canvas.dispatchEvent(mouseEvent);
 		}, false);
+		//Funcion para obtener la posición del ratón en relación con el lienzo.
 
 		function getMousePos(canvasDom, mouseEvent) {
 			let rect = canvasDom.getBoundingClientRect();
@@ -122,6 +139,7 @@
 				y: mouseEvent.clientY - rect.top
 			};
 		}
+		//Funcion para obtener la posición del toque en relación con el lienzo.
 
 		function getTouchPos(canvasDom, touchEvent) {
 			let rect = canvasDom.getBoundingClientRect();
@@ -130,6 +148,7 @@
 				y: touchEvent.touches[0].clientY - rect.top
 			};
 		}
+		//Funcion que se encarga de dibujar en el lienzo
 
 		function renderCanvas() {
 			if (drawing) {
@@ -145,10 +164,12 @@
 				lastPos = mousePos;
 			}
 		}
+		//Funcion que borra todo el contenido del lienzo
 
 		function clearCanvas() {
 			canvas.width = canvas.width;
 		}
+		//Funcion para actualizar el lienzo en cada cuadro de animación.
 
 		(function drawLoop() {
 			requestAnimFrame(drawLoop);

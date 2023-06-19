@@ -4,8 +4,10 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
-	<meta HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
+	<meta http-equiv="Expires" content="0">
+	<meta http-equiv="Last-Modified" content="0">
+	<meta http-equiv="Cache-Control" content="no-cache, mustrevalidate">
+	<meta http-equiv="Pragma" content="no-cache">
 	<meta name="robots" content="noindex">
 	<link rel="icon" href="<?= base_url() ?>/assets/img/FGEBC.png" type="image/x-icon">
 	<link rel="shortcut icon" href="<?= base_url() ?>/assets/img/FGEBC.png" type="image/x-icon">
@@ -43,7 +45,7 @@
 		<span>© <?= date("Y") ?> Fiscalía General del Estado de Baja California</span>
 	</footer>
 	<script src="<?= base_url() ?>/assets/bootstrap/js/bootstrap.bundle.min.js"></script>
-	<script src="<?= base_url() ?>/assets/js/full_screen.js"></script>
+	<script src="<?= base_url() ?>/assets/js/full_screen.js?v=<?= rand() ?>"></script>
 </body>
 
 </html>

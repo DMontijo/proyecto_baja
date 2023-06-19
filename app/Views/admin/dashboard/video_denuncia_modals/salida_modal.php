@@ -63,7 +63,19 @@
 										<label class="form-check-label" for="flexRadioDefault1">SI</label>
 									</div>
 									<div class="form-check form-check-inline">
-										<input class="form-check-input" type="radio" name="denuncia_tel" value="N" required>
+										<input class="form-check-input" type="radio" name="denuncia_tel" value="N" checked required>
+										<label class="form-check-label" for="flexRadioDefault2">NO</label>
+									</div>
+								</div>
+								<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+									<label for="denuncia_con_datos_origen" class="form-label font-weight-bold">¿La denuncia fue con datos de origen?</label>
+									<br>
+									<div class="form-check form-check-inline">
+										<input class="form-check-input" type="radio" name="denuncia_con_datos_origen" value="S" required>
+										<label class="form-check-label" for="flexRadioDefault1">SI</label>
+									</div>
+									<div class="form-check form-check-inline">
+										<input class="form-check-input" type="radio" name="denuncia_con_datos_origen" value="N" checked required>
 										<label class="form-check-label" for="flexRadioDefault2">NO</label>
 									</div>
 								</div>
@@ -126,6 +138,7 @@
 
 
 <script>
+	//Declaracion de elementos
 	const tipoSalida = document.querySelector('#tipo_salida');
 	const btnFinalizar = document.querySelector('#btn-finalizar-derivacion');
 	const notas_caso_salida = document.querySelector('#notas_caso_salida');
@@ -142,19 +155,20 @@
 	const form_vehiculo = document.querySelector('#form_vehiculo');
 	let select_uma = document.querySelector("#uma_select");
 	var options = select_uma.options;
-	tipoSalida.addEventListener('change', (e) => {
-
+	//Al mostrar modal, mostrar caracteres restantes e informacion escrita
+	$(document).on('show.bs.modal', '#salida_modal', function() {
 		const notas_caso_salida = document.querySelector('#notas_caso_salida');
 		const notas_caso_mp = document.querySelector('#notas_mp');
 		notas_caso_salida.value = notas_caso_mp.value;
-		if (charRemain < 300) {
+		if (charRemain < 1000) {
 			document.getElementById("numCaracterSalida").innerHTML = charRemain + ' caracteres restantes';
 		} else {
 			document.getElementById("numCaracterSalida").innerHTML = '1000 caracteres restantes';
 
 		}
-
-
+	});
+	//Evento para cambiar el tipo de salida
+	tipoSalida.addEventListener('change', (e) => {
 		if (!(e.target.value == 'DERIVADO' || e.target.value == 'CANALIZADO' || e.target.value == '1' || e.target.value == '4' || e.target.value == '5' || e.target.value == '6' || e.target.value == '7' || e.target.value == '8' || e.target.value == '9')) {
 			document.querySelector('#v-pills-delitos-tab').classList.add('d-none');
 			document.querySelector('#v-pills-documentos-tab').classList.add('d-none');
@@ -164,6 +178,7 @@
 		} else {
 			municipio_empleado_container.classList.remove('d-none');
 		}
+		//Cuando es canalizado
 		if (e.target.value == 'CANALIZADO') {
 			canalizaciones_container.classList.remove('d-none');
 
@@ -177,6 +192,7 @@
 				let data = {
 					'municipio': e.target.value,
 				}
+				//Obtiene las oficinas de canalizacion de acuerdo al municipio
 				$.ajax({
 					data: data,
 					url: "<?= base_url('/data/get-canalizacion-by-municipio') ?>",
@@ -205,6 +221,7 @@
 
 		}
 
+		//Cuando es derivado
 		if (e.target.value == 'DERIVADO') {
 			derivaciones_container.classList.remove('d-none');
 
@@ -218,7 +235,7 @@
 				let data = {
 					'municipio': e.target.value,
 				}
-				console.log(e);
+				//Obtiene las oficinas de las derivaciones de acuerdo al municipio
 				$.ajax({
 					data: data,
 					url: "<?= base_url('/data/get-derivacion-by-municipio') ?>",
@@ -248,35 +265,57 @@
 		}
 	});
 
+	//Mostrar modal
 	btnAgregarDelito.addEventListener('click', (e) => {
 		$('#delito_modal').modal('show');
 	});
 
 
+	//Evento para finalizar la salida
 	btnFinalizar.addEventListener('click', () => {
-		if (document.querySelector('#vehiculoid').value != '' && !form_vehiculo.checkValidity()) {
+		var denuncia_tel = document.querySelector('input[name="denuncia_tel"]:checked');
+		var denuncia_con_datos_origen = document.querySelector('input[name="denuncia_con_datos_origen"]:checked');
+
+		//Valida que todos los campos esten completos
+		if (tipoSalida.value == "" || municipio_empleado.value == "" || !denuncia_tel || !denuncia_con_datos_origen) {
 			Swal.fire({
 				icon: 'error',
-				text: 'Por favor, completa toda la información de los vehículos.',
+				text: "Por favor, completa los datos del formulario",
 				confirmButtonColor: '#bf9b55',
 			});
+			btnFinalizar.disabled = false;
 			return;
 		}
+
+		//Valida que el formulario de hechos este completo
 		if (!form_delito.checkValidity()) {
+			let message = "Por favor completa los siguientes campos:\n";
+			let inputs = form_delito.querySelectorAll("input, select");
+
+			inputs.forEach(input => {
+				if (!input.validity.valid && input.labels.length > 0) {
+					message += "- " + input.labels[0].textContent + "\n";
+				}
+			});
+			btnFinalizar.disabled = false;
+
 			Swal.fire({
 				icon: 'error',
-				text: 'Por favor, completa todos los campos del hecho y da clic en actualizar para poder continuar.',
+				text: message,
 				confirmButtonColor: '#bf9b55',
 			});
+
 			return;
 		}
 
 		btnFinalizar.setAttribute('disabled', true);
+		//Cuando es derivado o canalizado
 		if (!(tipoSalida.value == '1' || tipoSalida.value == '4' || tipoSalida.value == '5' || tipoSalida.value == '6' || tipoSalida.value == '7' || tipoSalida.value == '8' || tipoSalida.value == '9')) {
 			let salida = tipoSalida.value;
 			let descripcion = document.querySelector('#notas_caso_salida').value;
 
 			if (tipoSalida.value == 'DERIVADO' || tipoSalida.value == 'CANALIZADO') {
+				//Valida que no esten vacios
 				if (derivaciones.value == '' && tipoSalida.value == 'DERIVADO' || canalizaciones.value == '' && tipoSalida.value == 'CANALIZADO') {
 					Swal.fire({
 						icon: 'error',
@@ -287,6 +326,7 @@
 
 				} else {
 					var denuncia_tel = document.querySelector('input[name="denuncia_tel"]:checked');
+					var denuncia_con_datos_origen = document.querySelector('input[name="denuncia_con_datos_origen"]:checked');
 
 					data = {
 						'folio': inputFolio.value,
@@ -296,11 +336,15 @@
 						'institutomunicipio': municipio_empleado.value,
 						'institutoremision': derivaciones.value != '' && tipoSalida.value == 'DERIVADO' ? derivaciones.value : canalizaciones.value,
 						'denuncia_tel': denuncia_tel.value,
+						'denuncia_electronica': denuncia_con_datos_origen.value,
+
 					}
 				}
 
 			} else {
 				var denuncia_tel = document.querySelector('input[name="denuncia_tel"]:checked');
+				var denuncia_con_datos_origen = document.querySelector('input[name="denuncia_con_datos_origen"]:checked');
+
 
 				data = {
 					'folio': inputFolio.value,
@@ -308,6 +352,8 @@
 					'status': salida,
 					'motivo': descripcion,
 					'denuncia_tel': denuncia_tel.value,
+					'denuncia_electronica': denuncia_con_datos_origen.value,
+
 				}
 
 			}
@@ -363,6 +409,7 @@
 							expediente_modal_correo.value = data.expediente;
 							year_modal_correo.value = year;
 							input_municipio.value = municipio_empleado.value;
+							//Elimina las umas de acuerdo al municipio
 							if (input_municipio.value == 1) {
 								eliminarUMAByMunicipio("ENSENADA");
 							} else if (input_municipio.value == 6) {
@@ -405,6 +452,8 @@
 							text: data.error,
 							confirmButtonColor: '#bf9b55',
 						});
+						btnFinalizar.disabled = false;
+
 					}
 				}).fail(function(jqXHR, textStatus) {
 					btnFinalizar.removeAttribute('disabled');
@@ -429,9 +478,12 @@
 				});
 			}
 		} else {
+			//Cuando es de tipo expediente
 			if (municipio_empleado.value != '') {
 				let descripcion = document.querySelector('#notas_caso_salida').value;
 				var denuncia_tel = document.querySelector('input[name="denuncia_tel"]:checked');
+				var denuncia_con_datos_origen = document.querySelector('input[name="denuncia_con_datos_origen"]:checked');
+
 
 				if (
 					descripcion &&
@@ -445,6 +497,8 @@
 						'notas': descripcion,
 						'tipo_expediente': Number(tipoSalida.value),
 						'denuncia_tel': denuncia_tel.value,
+						'denuncia_electronica': denuncia_con_datos_origen.value,
+
 
 					}
 					const dataFolio = {
@@ -463,6 +517,7 @@
 					// 	},
 					// 	error: function(jqXHR, textStatus, errorThrown) {}
 					// });
+					//Se suben toda la informacion a Justicia
 					$.ajax({
 						data: data,
 						url: "<?= base_url('/data/save-in-justicia') ?>",
@@ -522,6 +577,7 @@
 								inputExpediente.value = data.expediente;
 								input_municipio.value = municipio_empleado.value;
 
+								//Elimina las umas de acuerdo al municipio seleccionado
 								if (input_municipio.value == 1) {
 									eliminarUMAByMunicipio("ENSENADA");
 								} else if (input_municipio.value == 6) {
@@ -568,6 +624,7 @@
 						}
 
 					}).fail(function(jqXHR, textStatus) {
+						//Si sale mal restaura el folio
 						console.log(jqXHR, textStatus);
 						data = {
 							'folio': inputFolio.value,
@@ -619,6 +676,7 @@
 
 	});
 
+	//Funcion para eliminar las opciones del select que incluyan una uma diferente
 	function eliminarUMAByMunicipio(uma) {
 		for (var i = options.length - 1; i >= 0; i--) {
 			var option = options[i];
@@ -629,18 +687,21 @@
 		}
 	}
 
+	//Funcion para eliminar las opciones de un select
 	function clearSelect(select_element) {
 		for (let i = select_element.options.length; i >= 1; i--) {
 			select_element.remove(i);
 		}
 	}
 
+	//Funcion para dar formato de expediente
 	function expedienteConGuiones(expediente) {
 		const array = expediente.trim().split('');
 		// return array[0] + '-' + array[1] + array[2] + '-' + array[3] + array[4] + array[5] + '-' + array[6] + array[7] + array[8] + array[9] + '-' + array[10] + array[11] + array[12] + array[13] + array[14];
 		return array[1] + array[2] + array[4] + array[5] + '-' + array[6] + array[7] + array[8] + array[9] + '-' + array[10] + array[11] + array[12] + array[13] + array[14] + '/' + tipoExpedienteClave(array[0]);
 	}
 
+	//Funcion para mostrar el tipo de expediente de acuerdo a la salida seleccionada
 	function tipoExpedienteClave(num) {
 		num = typeof(num) == 'string' ? num : (new String(num)).toString();
 
@@ -672,10 +733,12 @@
 		}
 	}
 
+	//Funcion para mostrar un loading
 	function showLoading() {
 		document.querySelector('#loading_general').classList.remove('d-none');
 	}
 
+	//Funcion para contar los caracteres restantes
 	function contarCaracteresSalida(obj) {
 		if (charRemain < 1000) {
 			var maxLength = charRemain;

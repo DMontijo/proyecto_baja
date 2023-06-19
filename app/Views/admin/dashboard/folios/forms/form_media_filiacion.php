@@ -663,12 +663,5 @@
 			<?php } ?>
 		</select>
 	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="autorizaFoto" class="form-label font-weight-bold">Autoriza foto en medios</label>
-		<select class="form-control" id="autorizaFoto" name="autorizaFoto">
-			<option disabled selected value=""></option>
-			<option value="S">SI</option>
-			<option value="N">NO</option>
-		</select>
-	</div>
+	
 </div>

@@ -89,6 +89,7 @@
 													<option <?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'VD' ? 'selected' : '') : null ?> value="VD">VIDEO DENUNCIA</option>
 													<option <?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'DA' ? 'selected' : '') : null ?> value="DA">DENUNCIA ANÓNIMA</option>
 													<option <?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'TE' ? 'selected' : '') : null ?> value="TE">TELEFÓNICA</option>
+													<option <?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'EL' ? 'selected' : '') : null ?> value="EL">ELECTRÓNICA</option>
 
 												</select>
 											</div>
@@ -152,8 +153,11 @@
 												$tipo = 'VIDEO';
 											} else if ($folio->TIPODENUNCIA == 'DA') {
 												$tipo = 'ANÓNIMA';
-											} else {
+											} else if ($folio->TIPODENUNCIA == 'TE')  {
 												$tipo = 'TELEFÓNICA';
+											}else{
+												$tipo = 'ELECTRÓNICA';
+
 											} ?>
 
 											<tr>
@@ -169,9 +173,9 @@
 												<td class="text-center"><?= $folio->NOMBRE_DENUNCIANTE ?></td>
 												<td class="text-center"><?= $folio->NOMBRE_AGENTE ?></td>
 												<td class="text-center"><?= $folio->MUNICIPIODESCR ?></td>
-												<td class="text-center"><?= $folio->OFICINADESCR ?></td>
-												<td class="text-center"><?= $folio->FECHAREGISTRO ?></td>
-												<td class="text-center"><?= $folio->FECHASALIDA ?  $folio->FECHASALIDA : '' ?></td>
+												<td class="text-center"><?= $folio->OFICINADESCR ? $folio->OFICINADESCR : $folio->MODULODESCR ?></td>
+												<td class="text-center"><?= date('d-m-Y H:i:s', strtotime($folio->FECHAREGISTRO)) ?></td>
+												<td class="text-center"><?= $folio->FECHASALIDA ?  date('d-m-Y H:i:s', strtotime($folio->FECHASALIDA)) : '' ?></td>
 											</tr>
 										<?php } ?>
 									</tbody>
@@ -224,7 +228,7 @@
 				[2, 'desc']
 			],
 			searching: true,
-			pageLength: 100,
+			pageLength: 25,
 			// dom: 'Bfrtip',
 			// buttons: [
 			// 	'copy', 'excel', 'pdf'

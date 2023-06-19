@@ -66,18 +66,21 @@
     var inputsText = document.querySelectorAll('input[type="text"]');
     var inputsEmail = document.querySelectorAll('input[type="email"]');
 
+    //Convierte todos los input text a mayusculas
     inputsText.forEach((input) => {
         input.addEventListener('input', function(event) {
             event.target.value = clearText(event.target.value).toUpperCase();
         }, false)
     })
 
+    //Convierte todos los inout email a minusculas
     inputsEmail.forEach((input) => {
         input.addEventListener('input', function(event) {
             event.target.value = clearText(event.target.value).toLowerCase();
         }, false)
     })
 
+    //Elimina los caracteres especiales del texto
     function clearText(text) {
         return text
             .normalize('NFD')

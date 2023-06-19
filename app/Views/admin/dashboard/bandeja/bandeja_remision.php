@@ -27,6 +27,9 @@
 						<form id="form_remision" class="row needs-validation" action="<?= base_url() ?>/admin/dashboard/bandeja_remision" method="POST" novalidate>
 							<input autocomplete="off" type="text" name="expediente" class="form-control" id="expediente" value="<?= $body_data->expedienteid ?>" hidden required>
 							<input autocomplete="off" type="text" name="municipio" class="form-control" id="municipio" value="<?= $body_data->municipio ?>" hidden required>
+							<input autocomplete="off" type="text" name="folio" class="form-control" id="folio" value="<?= $body_data->folio ?>" hidden required>
+							<input autocomplete="off" type="text" name="year" class="form-control" id="year" value="<?= $body_data->year ?>" hidden required>
+
 							<div class="col-12 col-sm-6 col-md-6 col-lg-6 mb-3">
 								<label for="estado_pfd" class="form-label font-weight-bold">Coordinación: </label>
 								<select class="form-control" id="coordinacion" name="coordinacion" required>

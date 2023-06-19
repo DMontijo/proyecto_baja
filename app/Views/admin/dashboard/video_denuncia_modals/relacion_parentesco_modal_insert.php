@@ -21,6 +21,8 @@
 	</div>
 </div>
 <script>
+	//Limpieza de elementos al cerrar modal
+
 	$('#relacion_parentesco_modal_insert').on('hidden.bs.modal', function() {
 		$(this).find('form').trigger('reset');
 	});

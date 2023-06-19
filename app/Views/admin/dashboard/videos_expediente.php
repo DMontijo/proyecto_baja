@@ -115,7 +115,7 @@
 				[2, 'desc'],
 			],
 			searching: true,
-			pageLength: 100,
+			pageLength: 25,
 			// dom: 'Bfrtip',
 			// buttons: [
 			// 	'copy', 'excel', 'pdf'
@@ -129,6 +129,7 @@
 <script>
 	var tabla_videos = document.getElementById('table-videos').innerHTML;
 
+	//funcion para ver el video, se manda el año y el folio
 	function viewVideo(year, folio) {
 		data = {
 			'folio': folio + '/' + year,
@@ -144,6 +145,8 @@
 			method: "POST",
 			dataType: "json",
 			success: function(response) {
+
+				//se obtiene el ultimo video disponible
 				let videos = response.responseVideos.filter(video => video.url);
 				if (videos.length > 0) {
 					llenarTablaVideos(videos);
@@ -160,6 +163,7 @@
 
 	}
 
+	//funcion para llenar la tabla de videos
 	function llenarTablaVideos(videos) {
 		for (let i = 0; i < videos.length; i++) {
 			if (videos[i].url != null) {
@@ -177,6 +181,7 @@
 		}
 	}
 
+	//Funcion para limpiar la tabla de videos y que no se acumule
 	function clearTablaVideos() {
 		let tabla_videos = document.querySelectorAll('#table-videos tr');
 		tabla_videos.forEach(row => {

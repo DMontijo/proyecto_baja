@@ -16,14 +16,25 @@ const video_container = document.getElementById("video_container");
 const startRecord = document.querySelector("#start-recording");
 const stopRecord = document.querySelector("#stop-recording");
 
+// NETWORK QUALITY SIGNAL
+const networkQualitySignalGuestButton = document.getElementById("network_quality_signal_guest");
+const networkQualitySignalAgentButton = document.getElementById("network_quality_signal_agent");
+const toastAgent = document.getElementById("toast_agent");
+
 // VIDEO Y AUDIO DE AGENTE SELECTER
 const mediaDevicesModal = document.getElementById("media_devices_modal");
-const mediaConfiguration = document.getElementById("media_configuration");
-const $listaDeDispositivosVideo = document.querySelector("#listaDeDispositivosVideo");
-const $listaDeDispositivosAudio = document.querySelector("#listaDeDispositivosAudio");
+const $mediaConfiguration = document.getElementById("media_configuration");
+const $listaDeDispositivosVideo = document.querySelector(
+	"#listaDeDispositivosVideo"
+);
+const $listaDeDispositivosAudio = document.querySelector(
+	"#listaDeDispositivosAudio"
+);
 const $video = document.querySelector("#video");
-const acceptConfiguration = document.querySelector("#acceptConfiguration");
-let stream;
+const $audio = document.querySelector("#audio");
+const $acceptConfiguration = document.querySelector("#acceptConfiguration");
+let videoStream;
+let audioStream;
 
 //VIDEO Y AUDIO AGENTE
 const video_agente_on = document.querySelector("#on-video-agent");
@@ -40,11 +51,11 @@ const audio_denunciante_on = document.querySelector("#on-audio-denunciante");
 const audio_denunciante_off = document.querySelector("#off-audio-denunciante");
 
 //RECARGAR PAGINA DE DENUNCIANTE
-const recargar_denunciante_btn = document.querySelector("#recargar_denunciante_btn");
+// const recargar_denunciante_btn = document.querySelector("#recargar_denunciante_btn");
 
 // const recargar_agente = document.querySelector("#recargar_agente");
 
-const marksRecording = document.querySelector("#marks-recording-modal");
+// const marksRecording = document.querySelector("#marks-recording-modal");
 const enviar_marca = document.querySelector("#enviar_marca");
 const desconectar_llamada = document.querySelector("#disconnect-call");
 const denunciante_nombre_llamada = document.querySelector(
@@ -59,132 +70,164 @@ let guestUUID = "";
 var totalSeconds = 0;
 var myInterval;
 
-var audioSelected;
-var videoSelected;
-
-mediaConfiguration.addEventListener("click", async () => {
+$mediaConfiguration.addEventListener("click", async () => {
 	$(mediaDevicesModal).modal("show");
 	initMediaDevices();
 });
 
 const agentVideoService = new VideoServiceAgent(agentUUID, { apiURI, apiKey });
-recargar_denunciante_btn.addEventListener("click", () => {
-	console.log("RECARGANDO DENUNCIANTE")
-	agentVideoService.refreshGuestConnection(() => {
-		Swal.fire({
-			icon: "success",
-			text: "La conexion de denunciante se recargara en 3 segundos",
-			showConfirmButton: true,
-			confirmButtonColor: "#bf9b55",
-			timer: 3000,
-			timerProgressBar: true,
-		});
-	});
-});
+
+// recargar_denunciante_btn.addEventListener("click", () => {
+// 	console.log("RECARGANDO DENUNCIANTE")
+// 	agentVideoService.refreshGuestConnection(() => {
+// 		Swal.fire({
+// 			icon: "success",
+// 			text: "La conexion de denunciante se recargara en 3 segundos",
+// 			showConfirmButton: true,
+// 			confirmButtonColor: "#bf9b55",
+// 			timer: 3000,
+// 			timerProgressBar: true,
+// 		});
+// 	});
+// });
+
 // recargar_agente.addEventListener("click", () => {
 // 	console.log("ENTRANDO A RECARGAR LLAMADA");
 // 	agentVideoService.reloadAgentVideoCall((resp) => {
 // 		console.log(resp);
 // 	});
 // });
+
 disponible_connect.addEventListener("click", () => {
 	console.log("Conectando agente...");
-	console.log(videoSelected, 'video');
-	console.log(audioSelected, 'audio');
-	disponible_connect.disabled = true;
-	agentVideoService.connetAgent(
-		() => {
-			console.log("¡Agente conectado con éxito!");
-			disponible_connect.disabled = false;
-			clearVideoCall();
-			disponible_connect.hidden = true;
-			no_disponible_connect.hidden = false;
+	if (!agentVideoService.videoStream && !agentVideoService.audioStream) {
+		console.log(agentVideoService.videoStream, "video");
+		console.log(agentVideoService.audioStream, "audio");
+	}
 
-			agentVideoService.registerOnGuestConnected(response => {
-				try {
-					deleteVideoElement();
-				} catch (error) {}
-				clearVideoCall();
+	navigator.mediaDevices
+		.getUserMedia({
+			audio: true,
+			video: true
+		})
+		.then(function() {
+			disponible_connect.disabled = true;
+			agentVideoService.connectAgent(
+				() => {
+					console.log("¡Agente conectado con éxito!");
+					disponible_connect.disabled = false;
+					clearVideoCall();
+					disponible_connect.hidden = true;
+					no_disponible_connect.hidden = false;
 
-				guestUUID = response.guest.uuid;
-				console.log("Respuesta: ", response);
-				document.querySelector("#nombre_denunciante").value =
-					response.guest.name;
-				document.querySelector("#main_video_details_name").value =
-					response.guest.name;
-				document.querySelector("#genero_denunciante").value =
-					response.guest.gender == "FEMALE"
-						? "FEMENINO"
-						: "MASCULINO";
-				document.querySelector("#correo_deunciante").value =
-					response.guest.details.CORREO;
-				document.querySelector("#delito_denunciante_llamada").value =
-					response.details != null ? response.details.delito : "-";
-				document.querySelector(
-					"#descripcion_denunciante_llamada"
-				).innerHTML =
-					response.details != null
-						? response.details.descripcion
-						: "-";
-				document.querySelector("#folio_llamada").value =
-					response.details != null ? response.details.folio : "-";
-				document.querySelector("#idioma_denunciante").value = response
-					.guest.languages
-					? response.guest.languages[0].title
-					: "-";
-				$("#llamadaModal").modal("show");
-				disponible_connect.hidden = true;
-				no_disponible_connect.hidden = false;
-			});
+					agentVideoService.registerOnGuestConnected(response => {
+						try {
+							deleteVideoElement();
+						} catch (error) {}
+						clearVideoCall();
+						console.log(response.guest.uuid, "response");
+						guestUUID = response.guest.uuid;
+						console.log("Respuesta: ", response);
+						document.querySelector("#nombre_denunciante").value =
+							response.guest.name;
+						document.querySelector(
+							"#main_video_details_name"
+						).value = response.guest.name;
+						document.querySelector("#genero_denunciante").value =
+							response.guest.gender == "FEMALE"
+								? "FEMENINO"
+								: "MASCULINO";
+						document.querySelector("#correo_deunciante").value =
+							response.guest.details.CORREO;
+						document.querySelector(
+							"#delito_denunciante_llamada"
+						).value =
+							response.details != null
+								? response.details.delito
+								: "-";
+						document.querySelector(
+							"#descripcion_denunciante_llamada"
+						).innerHTML =
+							response.details != null
+								? response.details.descripcion
+								: "-";
+						document.querySelector("#folio_llamada").value =
+							response.details != null
+								? response.details.folio
+								: "-";
+						document.querySelector(
+							"#idioma_denunciante"
+						).value = response.guest.languages
+							? response.guest.languages[0].title
+							: "-";
+						$("#llamadaModal").modal("show");
+						disponible_connect.hidden = true;
+						no_disponible_connect.hidden = false;
+					});
 
-			agentVideoService.registerOnGuestDisconnected(() => {
-				aceptar_llamada.disabled = false;
-				$("#llamadaModal").modal("hide");
-				console.log("Guest disconnected con modal");
+					agentVideoService.registerOnGuestDisconnected(() => {
+						aceptar_llamada.disabled = false;
+						$("#llamadaModal").modal("hide");
+						console.log("Guest disconnected con modal");
 
-				// setTimeout(() => {
-				// 	console.log("Desconectando agente...");
-				// 	agentVideoService.disconnectAgent(() => {
-				// 		console.log("¡Agente desconectado con éxito!");
-				// 		clearVideoCall();
-				// 	});
-				// }, 2000);
+						// setTimeout(() => {
+						// 	console.log("Desconectando agente...");
+						// 	agentVideoService.disconnectAgent(() => {
+						// 		console.log("¡Agente desconectado con éxito!");
+						// 		clearVideoCall();
+						// 	});
+						// }, 2000);
 
-				Swal.fire({
-					icon: "error",
-					text: "El usuario se desconecto.",
-					showConfirmButton: false,
-					timer: 3000,
-					timerProgressBar: true,
-				});
-			});
-		},
-		response => {
-			disponible_connect.disabled = false;
-			try {
-				agentVideoService.endVideoCall(() => {
-					console.log("¡Llamada finalizada con éxito!");
-				});
-			} catch (error) {}
-			try {
-				agentVideoService.disconnectAgent(() => {
-					console.log("¡Agente desconectado con éxito!");
-				});
-			} catch (error) {}
-			disponible_connect.hidden = false;
-			no_disponible_connect.hidden = true;
-			clearVideoCall();
+						Swal.fire({
+							icon: "error",
+							text: "El usuario se desconecto.",
+							showConfirmButton: false,
+							timer: 3000,
+							timerProgressBar: true
+						});
+					});
+				},
+				response => {
+					disponible_connect.disabled = false;
+					try {
+						agentVideoService.endVideoCall(() => {
+							console.log("¡Llamada finalizada con éxito!");
+						});
+					} catch (error) {}
+					try {
+						agentVideoService.disconnectAgent(() => {
+							console.log("¡Agente desconectado con éxito!");
+						});
+					} catch (error) {}
+					disponible_connect.hidden = false;
+					no_disponible_connect.hidden = true;
+					clearVideoCall();
+					aceptar_llamada.disabled = false;
+					Swal.fire({
+						icon: "error",
+						text: response.message,
+						showConfirmButton: false,
+						timer: 3000,
+						timerProgressBar: true
+					});
+				},
+				ondisconnect => {
+					agentVideoService.disconnectAgent(() => {
+						console.log(
+							"SERVER ERROR - ¡Agente desconectado con éxito!"
+						);
+					});
+				}
+			);
+		})
+		.catch(function() {
 			Swal.fire({
 				icon: "error",
-				text: response.message,
-				showConfirmButton: false,
-				timer: 3000,
-				timerProgressBar: true,
+				text: "Acepta los permisos de audio y video para comenzar.",
+				showConfirmButton: true
 			});
-		}
-	);
+		});
 });
-
 no_disponible_connect.addEventListener("click", () => {
 	console.log("Desconectando agente...");
 	agentVideoService.disconnectAgent(() => {
@@ -212,6 +255,7 @@ aceptar_llamada.addEventListener("click", () => {
 			denunciante_nombre_llamada.innerHTML = guest.name;
 			disponible_connect.hidden = true;
 			no_disponible_connect.hidden = true;
+			$mediaConfiguration.hidden = true;
 			header_llamda.hidden = false;
 			$("#llamadaModal").modal("hide");
 			aceptar_llamada.disabled = false;
@@ -220,23 +264,131 @@ aceptar_llamada.addEventListener("click", () => {
 					let split = guestConnection.folio.split("/");
 					document.getElementById("input_folio_atencion").value =
 						split[0];
+					document.getElementById("buscar-btn").click();
+				} catch (error) {}
+			} else {
+				try {
+					// ../../data/restore-folio
+					var xhttp = new XMLHttpRequest();
+
+					var data = new FormData();
+					data.append(
+						"folio",
+						document.getElementById("input_folio_atencion").value
+					);
+					data.append(
+						"year",
+						document.getElementById("year_select").value
+					);
+
+					xhttp.onreadystatechange = function() {
+						if (this.readyState == 4 && this.status == 200) {
+							// Maneja la respuesta del servidor aquí
+						}
+					};
+					xhttp.open("POST", "../../data/restore-folio", true);
+					xhttp.send(data);
+					borrarTodo();
+
+					let split = guestConnection.folio.split("/");
+					document.getElementById("input_folio_atencion").value =
+						split[0];
+					document.getElementById("buscar-btn").click();
+					// buscar_btn.classList.add("d-none");
 				} catch (error) {}
 			}
 
 			agentVideoService.registerOnGuestDisconnected(() => {
 				aceptar_llamada.disabled = false;
 				console.log("Guest disconnected");
+				agentVideoService.disconnectAgent(() => {
+					console.log("¡Agente desconectado con éxito!");
+					clearVideoCall();
+				});
 				Swal.fire({
 					icon: "error",
 					text: "El usuario se desconecto.",
 					showConfirmButton: false,
 					timer: 3000,
-					timerProgressBar: true,
+					timerProgressBar: true
 				});
+			});
+
+			agentVideoService.registerOnNewtworkQualityChanged((event, host) => {
+				
+				const signal = createSignalLevel(event.newValue);
+				if(host.host) {
+					networkQualitySignalAgentButton.classList.remove("d-none");
+					networkQualitySignalAgentButton.innerHTML = signal;
+				} else {
+					networkQualitySignalGuestButton.classList.remove("d-none");
+					networkQualitySignalGuestButton.innerHTML = signal;
+				}
+			});
+
+			agentVideoService.toggleVideoFailConection((toggle) => {
+				toogleVideoDenunciante(toggle);
+				console.log(toastAgent, 'toastAgent');
+				$(toastAgent).removeClass('hide');
+				$(toastAgent).addClass('fade show');
+				setTimeout(() => {
+					$(toastAgent).removeClass('show');
+					$(toastAgent).addClass('fade hide');
+				}, 9000);
 			});
 		}
 	);
 });
+
+function createSignalLevel(levelSignal) {
+	const signalDetails = getColorSignal(levelSignal);
+	
+	return `
+	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-reception-${signalDetails.levelSignal}" style="color: ${signalDetails.colorSignal}" viewBox="0 0 16 16">
+		${signalDetails.svgPath}
+	</svg>
+	`;
+}
+
+function getColorSignal(levelSignal){
+	let colorSignal;
+	let svgPath;
+
+	switch(levelSignal) {
+		case 5:
+			levelSignal = 4;
+			colorSignal = 'green';
+			svgPath = `<path d="M0 11.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-5zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-8zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v11a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-11z"/>`;
+			break;
+		case 4:
+			levelSignal = 3;
+			colorSignal = 'green';
+			svgPath = `<path d="M0 11.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-5zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-8zm4 8a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z"/>`;
+			break;
+		case 3: case 2:
+			levelSignal = 2;
+			colorSignal = 'yellow';
+			svgPath = `<path d="M0 11.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-5zm4 5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm4 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z"/>`;
+			break;
+		case 1:
+			colorSignal = 'red';
+			svgPath = `<path d="M0 11.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2zm4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm4 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm4 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z"/>`;
+			break;
+		case 0:
+			colorSignal = 'red';
+			svgPath = `<path d="M0 13.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm4 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm4 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm4 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z"/>`;
+			break;
+		default:
+			levelSignal = 0;
+			svgPath = `<path d="M0 13.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm4 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm4 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm4 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z"/>`;
+	}
+
+	return {
+		levelSignal,
+		colorSignal,
+		svgPath,
+	}
+}
 
 desconectar_llamada.addEventListener("click", () => {
 	console.log("Finalizando llamada...");
@@ -314,11 +466,9 @@ audio_denunciante_off.addEventListener("click", () => {
 	});
 });
 
-
-
 startRecord.addEventListener("click", () => {
 	agentVideoService.startRecording(() => {
-		marksRecording.disabled = false;
+		// marksRecording.disabled = false;
 		document.getElementById("grabacion").style.display = "block";
 		document.getElementById("grabacion_stop").style.display = "none";
 		startRecord.style.display = "none";
@@ -328,7 +478,7 @@ startRecord.addEventListener("click", () => {
 
 stopRecord.addEventListener("click", () => {
 	agentVideoService.stopRecording(() => {
-		marksRecording.disabled = true;
+		// marksRecording.disabled = true;
 		document.getElementById("grabacion").style.display = "none";
 		document.getElementById("grabacion_stop").style.display = "block";
 		startRecord.style.display = "block";
@@ -340,19 +490,19 @@ stopRecord.addEventListener("click", () => {
 	});
 });
 
-marksRecording.addEventListener("click", () => {
-	$("#marksModal").modal("show");
-	clearSelect(selectMarks);
-	agentVideoService.getMarkTypes().then(result => {
-		console.log(result);
-		result.forEach(marcas => {
-			const option = document.createElement("option");
-			option.value = marcas.id;
-			option.text = marcas.typeTitle;
-			selectMarks.add(option, null);
-		});
-	});
-});
+// marksRecording.addEventListener("click", () => {
+// 	$("#marksModal").modal("show");
+// 	clearSelect(selectMarks);
+// 	agentVideoService.getMarkTypes().then(result => {
+// 		console.log(result);
+// 		result.forEach(marcas => {
+// 			const option = document.createElement("option");
+// 			option.value = marcas.id;
+// 			option.text = marcas.typeTitle;
+// 			selectMarks.add(option, null);
+// 		});
+// 	});
+// });
 
 enviar_marca.addEventListener("click", () => {
 	if (selectMarks.value == "" || coment_marks.value == "") {
@@ -377,12 +527,18 @@ enviar_marca.addEventListener("click", () => {
 	}
 });
 
-acceptConfiguration.addEventListener("click", () => {
-	videoSelected = $("#listaDeDispositivosVideo option:selected").text();
-	audioSelected = $("#listaDeDispositivosAudio option:selected").text();
-	stream.getTracks().forEach(function(track) {
+$acceptConfiguration.addEventListener("click", () => {
+	if (!audioStream) return;
+	if (!videoStream) return;
+
+	audioStream.getTracks().forEach(function(track) {
 		track.stop();
 	});
+
+	videoStream.getTracks().forEach(function(track) {
+		track.stop();
+	});
+
 	$(mediaDevicesModal).modal("hide");
 });
 
@@ -497,6 +653,7 @@ function clearVideoCall() {
 	disponible_connect.hidden = false;
 	no_disponible_connect.hidden = true;
 	header_llamda.hidden = true;
+	$mediaConfiguration.hidden = false;
 	$("#llamadaModal").modal("hide");
 }
 
@@ -530,164 +687,409 @@ function clearSelect(select_element) {
 }
 
 function tieneSoporteUserMedia() {
-	return !!(navigator.getUserMedia || (navigator.mozGetUserMedia || navigator.mediaDevices.getUserMedia) || navigator.webkitGetUserMedia || navigator.msGetUserMedia)
+	return !!(
+		navigator.getUserMedia ||
+		navigator.mozGetUserMedia ||
+		navigator.mediaDevices.getUserMedia ||
+		navigator.webkitGetUserMedia ||
+		navigator.msGetUserMedia
+	);
 }
 
-function _getUserMedia() {
-	return (navigator.getUserMedia || (navigator.mozGetUserMedia || navigator.mediaDevices.getUserMedia) || navigator.webkitGetUserMedia || navigator.msGetUserMedia).apply(navigator, arguments);
+function _getUserMediaAudio() {
+	return (
+		navigator.getUserMedia ||
+		navigator.mozGetUserMedia ||
+		navigator.mediaDevices.getUserMedia ||
+		navigator.webkitGetUserMedia ||
+		navigator.msGetUserMedia
+	).apply(navigator, arguments);
 }
 
-const llenarSelectConDispositivosDisponibles = () => {
-	$($listaDeDispositivosAudio).empty();
-	$($listaDeDispositivosVideo).empty();
+function _getUserMediaVideo() {
+	return (
+		navigator.getUserMedia ||
+		navigator.mozGetUserMedia ||
+		navigator.mediaDevices.getUserMedia ||
+		navigator.webkitGetUserMedia ||
+		navigator.msGetUserMedia
+	).apply(navigator, arguments);
+}
+
+const llenarSelectConDispositivosDisponiblesVideo = idDeDispositivo => {
+	// console.log($listaDeDispositivosVideo);
+	// if(!$listaDeDispositivosVideo){
+	// 	$('#listDevicesVideo').empty(listDevicesVideo);
+	// 	const selectElement = document.createElement('select');
+	// 	selectElement.setAttribute('name', 'listaDeDispositivosVideo');
+	// 	selectElement.setAttribute('id', 'listaDeDispositivosVideo');
+	// 	selectElement.setAttribute('class', 'form-control');
+	// 	$('#listDevicesVideo').appendChild(selectElement);
+	// }
+
+	if ($listaDeDispositivosVideo.length) $($listaDeDispositivosVideo).empty();
 
 	navigator.mediaDevices.enumerateDevices().then(function(dispositivos) {
 		const dispositivosDeVideo = [];
-		const dispositivosDeAudio = [];
 		dispositivos.forEach(function(dispositivo) {
 			const tipo = dispositivo.kind;
 
 			if (tipo === "videoinput") {
 				dispositivosDeVideo.push(dispositivo);
 			}
+		});
+
+		if (dispositivosDeVideo.length > 0) {
+			dispositivosDeVideo.forEach(dispositivo => {
+				const option = document.createElement("option");
+				option.value = dispositivo.deviceId;
+				option.text = dispositivo.label;
+				if (dispositivo.deviceId === idDeDispositivo) {
+					option.selected = true;
+				}
+				$listaDeDispositivosVideo.appendChild(option);
+			});
+		}
+	});
+};
+
+const llenarSelectConDispositivosDisponiblesAudio = idDeDispositivo => {
+	$($listaDeDispositivosAudio).empty();
+
+	navigator.mediaDevices.enumerateDevices().then(function(dispositivos) {
+		const dispositivosDeAudio = [];
+		dispositivos.forEach(function(dispositivo) {
+			const tipo = dispositivo.kind;
 
 			if (tipo === "audioinput") {
-				dispositivosDeAudio.push(dispositivo)
+				dispositivosDeAudio.push(dispositivo);
+			}
+		});
+
+		if (dispositivosDeAudio.length > 0) {
+			dispositivosDeAudio.forEach(dispositivo => {
+				const option = document.createElement("option");
+				option.value = dispositivo.deviceId;
+				option.text = dispositivo.label;
+				if (dispositivo.deviceId === idDeDispositivo) {
+					option.selected = true;
+				}
+				$listaDeDispositivosAudio.appendChild(option);
+			});
+		}
+	});
+};
+
+const llenarSelectConDispositivosDisponiblesVideoIOS = () => {
+	if ($listaDeDispositivosVideo.length) $($listaDeDispositivosVideo).empty();
+	//console.log('llenando video');
+	navigator.mediaDevices.enumerateDevices().then(function(dispositivos) {
+		const dispositivosDeVideo = [];
+		dispositivos.forEach(function(dispositivo) {
+			const tipo = dispositivo.kind;
+			if (tipo === "videoinput") {
+				dispositivosDeVideo.push(dispositivo);
 			}
 		});
 
 		if (dispositivosDeVideo.length > 0) {
 			dispositivosDeVideo.forEach(dispositivo => {
-				const option = document.createElement('option');
+				const option = document.createElement("option");
 				option.value = dispositivo.deviceId;
 				option.text = dispositivo.label;
 				$listaDeDispositivosVideo.appendChild(option);
 			});
 		}
+	});
+};
+const llenarSelectConDispositivosDisponiblesAudioIOS = () => {
+	if ($listaDeDispositivosAudio.length) $($listaDeDispositivosAudio).empty();
+	//console.log('llenando audio');
+	navigator.mediaDevices.enumerateDevices().then(function(dispositivos) {
+		const dispositivosDeAudio = [];
+		dispositivos.forEach(function(dispositivo) {
+			const tipo = dispositivo.kind;
+			if (tipo === "audioinput") {
+				dispositivosDeAudio.push(dispositivo);
+			}
+		});
 
 		if (dispositivosDeAudio.length > 0) {
 			dispositivosDeAudio.forEach(dispositivo => {
-				const option = document.createElement('option');
+				const option = document.createElement("option");
 				option.value = dispositivo.deviceId;
 				option.text = dispositivo.label;
 				$listaDeDispositivosAudio.appendChild(option);
 			});
 		}
 	});
-}
+};
 
 function initMediaDevices() {
-	var isSafari = navigator.vendor && navigator.vendor.indexOf('Apple') > -1 &&
+	var isSafari =
+		navigator.vendor &&
+		navigator.vendor.indexOf("Apple") > -1 &&
 		navigator.userAgent &&
-		navigator.userAgent.indexOf('CriOS') == -1 &&
-		navigator.userAgent.indexOf('FxiOS') == -1;
-
+		navigator.userAgent.indexOf("CriOS") == -1 &&
+		navigator.userAgent.indexOf("FxiOS") == -1;
+	let platform = navigator.platform;
 
 	if (!tieneSoporteUserMedia()) {
 		alert("Tu navegador no soporta esta característica");
-		$estado.innerHTML = "Tu navegador no soporta este funcionamiento. Sube una foto desde tu dispositivo.";
+		$estado.innerHTML =
+			"Tu navegador no soporta este funcionamiento. Sube una foto desde tu dispositivo.";
 		return;
 	}
-	// let stream;
 
-	if (!isSafari) {
+	let dispositivosDeVideo;
+	let dispositivosDeAudio;
+
+	if (!isSafari && platform != "iPhone") {
 		navigator.mediaDevices.enumerateDevices().then(function(dispositivos) {
-
-			console.log('dispositivos', dispositivos);
-			const dispositivosDeVideo = [];
+			dispositivosDeVideo = [];
+			dispositivosDeAudio = [];
 
 			dispositivos.forEach(function(dispositivo) {
 				const tipo = dispositivo.kind;
+
 				if (tipo === "videoinput") {
 					dispositivosDeVideo.push(dispositivo);
+				}
+
+				if (tipo === "audioinput") {
+					dispositivosDeAudio.push(dispositivo);
 				}
 			});
 
 			if (dispositivosDeVideo.length > 0) {
-				mostrarStream(dispositivosDeVideo[0].deviceId);
+				mostrarStreamVideo(dispositivosDeVideo.deviceId);
+			}
+
+			if (dispositivosDeAudio.length > 0) {
+				mostrarStreamAudio(dispositivosDeAudio.deviceId);
 			}
 		});
 
-		const mostrarStream = idDeDispositivo => {
-			console.log(idDeDispositivo, 'idDispositivo');
-			_getUserMedia({
-					audio: true,
+		const mostrarStreamVideo = idDeDispositivo => {
+			_getUserMediaVideo(
+				{
 					video: {
-						deviceId: idDeDispositivo,
+						deviceId: idDeDispositivo
 					}
 				},
-				function(streamObtenido) {
-					// $estado.classList.add('d-none');
-					llenarSelectConDispositivosDisponibles();
+				function(streamObtenidoVideo) {
+					llenarSelectConDispositivosDisponiblesVideo(
+						idDeDispositivo
+					);
 
 					$listaDeDispositivosVideo.onchange = () => {
-						if (stream) {
-							stream.getTracks().forEach(function(track) {
+						if (videoStream) {
+							videoStream.getTracks().forEach(function(track) {
 								track.stop();
 							});
 						}
-						mostrarStream($listaDeDispositivosVideo.value);
-					}
+						mostrarStreamVideo($listaDeDispositivosVideo.value);
+					};
 
-					stream = streamObtenido;
-
-					$video.srcObject = stream;
+					videoStream = streamObtenidoVideo;
+					agentVideoService.videoStream = idDeDispositivo;
+					console.log(agentVideoService.videoStream);
+					$video.srcObject = streamObtenidoVideo;
 					$video.play();
 
-					$('#media-devices-alert').attr('hidden', true);
-					$('#media-devices-selectors').removeAttr('hidden');
+					$("#media-devices-alert").attr("hidden", true);
+					$("#media-devices-selectors").removeAttr("hidden");
 				},
 				function(error) {
+					let listDevices = document.getElementById(
+						"listDevicesVideo"
+					);
+					if ($video) $video.remove();
+					$("#listDevicesVideo").empty();
+
+					let spanElement = document.createElement("span");
+					spanElement.textContent =
+						"Permiso denegado, vuelve a recargar";
+					spanElement.setAttribute("id", "listaDeDispositivosVideo");
+					listDevices.appendChild(spanElement);
 					console.log("Permiso denegado o error: ", error);
-					// $estado.classList.remove('d-none');
-				});
-		}
-	} else {
-		const mostrarStream = (idDeDispositivo = null) => {
-			console.log(idDeDispositivo, 'idDispositivo');
-			let options = {
-				audio: true, 
-				video: true,
-				deviceId: idDeDispositivo
-			}
-			idDeDispositivo = null ? delete options.deviceId : idDeDispositivo;
-			navigator.mediaDevices.getUserMedia(options).then(function(streamObtenido) {
+					$acceptConfiguration.setAttribute("disabled", true);
+				}
+			);
+		};
 
-				navigator.mediaDevices.enumerateDevices().then(function(dispositivos) {
-					const dispositivosDeVideo = [];
-					dispositivos.forEach(function(dispositivo) {
-						const tipo = dispositivo.kind;
-						if (tipo === "videoinput") {
-							dispositivosDeVideo.push(dispositivo);
-						}
-					});
-					llenarSelectConDispositivosDisponibles();
+		const mostrarStreamAudio = idDeDispositivo => {
+			_getUserMediaAudio(
+				{
+					audio: {
+						deviceId: idDeDispositivo
+					}
+				},
+				function(streamObtenidoAudio) {
+					llenarSelectConDispositivosDisponiblesAudio(
+						idDeDispositivo
+					);
 
-					$listaDeDispositivosVideo.onchange = () => {
-						console.log('Cambiando dispositivo');
-						if (stream) {
-							stream.getTracks().forEach(function(track) {
+					$listaDeDispositivosAudio.onchange = () => {
+						if (audioStream) {
+							audioStream.getTracks().forEach(function(track) {
 								track.stop();
 							});
 						}
-						mostrarStream($listaDeDispositivosVideo.value);
+						mostrarStreamAudio($listaDeDispositivosAudio.value);
+					};
+
+					audioStream = streamObtenidoAudio;
+					agentVideoService.audioStream = idDeDispositivo;
+					console.log(agentVideoService.audioStream);
+					$audio.srcObject = streamObtenidoAudio;
+					$audio.play();
+
+					$("#media-devices-alert").attr("hidden", true);
+					$("#media-devices-selectors").removeAttr("hidden");
+				},
+				function(error) {
+					let listDevices = document.getElementById(
+						"listDevicesAudio"
+					);
+					$audio.remove();
+					$("#listDevicesAudio").empty();
+
+					let spanElement = document.createElement("span");
+					spanElement.textContent =
+						"Permiso denegado, vuelve a recargar";
+					spanElement.setAttribute("id", "listaDeDispositivosAudio");
+					listDevices.appendChild(spanElement);
+
+					console.log("Permiso denegado o error: ", error);
+					$acceptConfiguration.setAttribute("disabled", true);
+				}
+			);
+
+			if (streamObtenidoAudio && streamObtenidoAudio)
+				$($acceptConfiguration).removeAttr("disabled");
+		};
+	} else {
+		const mostrarStreamVideo = (camera_selected = null) => {
+			let options = {
+				video: {
+					deviceId: {
+						exact: camera_selected.deviceId
+							? camera_selected.deviceId
+							: camera_selected
 					}
+				},
+				audio: true
+			};
 
-					if (dispositivosDeVideo.length > 0) {
-						$estado.classList.add('d-none');
+			navigator.mediaDevices
+				.getUserMedia(options)
+				.then(function(streamObtenido) {
+					// console.log('camara selected', streamObtenido);
+					$listaDeDispositivosVideo.onchange = () => {
+						// console.log('anterior',videoStream);
+						videoStream.getTracks().forEach(function(track) {
+							track.stop();
+						});
+						mostrarStreamVideo($listaDeDispositivosVideo.value);
+					};
 
-						stream = streamObtenido;
+					videoStream = streamObtenido;
+					agentVideoService.videoStream = camera_selected.deviceId
+						? camera_selected.deviceId
+						: camera_selected;
+					// console.log('service',agentVideoService.videoStream);
 
-						$video.srcObject = stream;
-						$video.play();
-					}
+					$video.srcObject = videoStream;
+					$video.play();
+					if (audioStream && videoStream)
+						$($acceptConfiguration).removeAttr("disabled");
 				});
-			}).catch(function(err) {
-				console.log("Permiso denegado o error: ", error);
-				$estado.classList.remove('d-none');
-			});
-		}
+		};
 
+		const mostrarStreamAudio = (audio_selected = null) => {
+			let options = {
+				audio: {
+					deviceId: {
+						exact: audio_selected.deviceId
+							? audio_selected.deviceId
+							: audio_selected
+					}
+				}
+			};
+
+			navigator.mediaDevices
+				.getUserMedia(options)
+				.then(function(streamObtenido) {
+					// console.log('camara selected', streamObtenido);
+					$listaDeDispositivosAudio.onchange = () => {
+						// console.log('anterior',audioStream);
+						audioStream.getTracks().forEach(function(track) {
+							track.stop();
+						});
+						mostrarStreamAudio($listaDeDispositivosAudio.value);
+					};
+
+					audioStream = streamObtenido;
+					agentVideoService.audioStream = audio_selected.deviceId
+						? audio_selected.deviceId
+						: audio_selected;
+
+					$audio.srcObject = audioStream;
+					$audio.play();
+					if (audioStream && videoStream)
+						$($acceptConfiguration).removeAttr("disabled");
+				});
+
+			$("#media-devices-alert").attr("hidden", true);
+			$("#media-devices-selectors").removeAttr("hidden");
+			// console.log('audio w', audioStream);
+			// console.log('video w', videoStream);
+			// if (audioStream && videoStream) $($acceptConfiguration).removeAttr("disabled");
+		};
+
+		const mostrarStream = (idDeDispositivo = null) => {
+			let options = {
+				video: true,
+				deviceId: idDeDispositivo,
+				audio: true
+			};
+			idDeDispositivo = null ? delete options.deviceId : idDeDispositivo;
+
+			navigator.mediaDevices
+				.getUserMedia(options)
+				.then(function(streamObtenido) {
+					navigator.mediaDevices
+						.enumerateDevices()
+						.then(function(dispositivos) {
+							dispositivosDeVideo = [];
+							dispositivosDeAudio = [];
+							dispositivos.forEach(function(dispositivo) {
+								const tipo = dispositivo.kind;
+								if (tipo === "videoinput") {
+									dispositivosDeVideo.push(dispositivo);
+								}
+								if (tipo === "audioinput") {
+									dispositivosDeAudio.push(dispositivo);
+								}
+							});
+
+							if (dispositivosDeVideo.length > 0) {
+								llenarSelectConDispositivosDisponiblesVideoIOS();
+								mostrarStreamVideo(dispositivosDeVideo[0]);
+							}
+
+							if (dispositivosDeAudio.length > 0) {
+								llenarSelectConDispositivosDisponiblesAudioIOS();
+								mostrarStreamAudio(dispositivosDeAudio[0]);
+							}
+						});
+				})
+				.catch(function(err) {
+					console.log("Permiso denegado o error: ", err);
+					$estado.classList.remove("d-none");
+				});
+		};
 		mostrarStream();
 	}
-};
+}

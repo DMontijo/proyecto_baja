@@ -181,7 +181,7 @@ if ($agent->isMobile()) {
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="cp" class="form-label fw-bold">Código postal</label>
-							<input type="number" class="form-control" id="cp" maxlength="10" oninput="clearInputPhone(event);" name="cp">
+							<input type="number" class="form-control" id="cp" maxlength="10" name="cp">
 						</div>
 
 						<div class="col-12 mt-4 mb-4">
@@ -383,7 +383,7 @@ if ($agent->isMobile()) {
 	let width = 100 / stepCount;
 	let currentStep = 0;
 	var checkML = document.getElementById('checkML');
-
+	//Evento para cambiar el texto del label cuando seleccionan Manzana y Lote
 	checkML.addEventListener('click', function() {
 		if (checkML.checked) {
 			document.getElementById('lblExterior').innerHTML = "Manzana";
@@ -394,6 +394,7 @@ if ($agent->isMobile()) {
 		}
 	});
 
+	//Funcion para limpiar los guiones y validar el largo
 	function clearInputPhone(e) {
 		e.target.value = e.target.value.replace(/-/g, "");
 		if (e.target.value.length > e.target.maxLength) {
@@ -403,12 +404,14 @@ if ($agent->isMobile()) {
 
 	chargeCurrentStep(currentStep);
 
+	//Evento para abrir modal para tomar foto
 	document.querySelector('#photo-btn').addEventListener('click', () => {
 		initPhoto();
 		$('#take_photo_modal').modal('show');
 	});
 
 	nextBtn.addEventListener('click', () => {
+		//Modifica estilos de acuerdo a los steps
 		if (validarStep(currentStep)) {
 			currentStep++;
 			let previousStep = currentStep - 1;
@@ -440,6 +443,8 @@ if ($agent->isMobile()) {
 	});
 
 	prevBtn.addEventListener('click', () => {
+		//Modifica estilos de acuerdo a los steps
+
 		if (currentStep > 0) {
 			currentStep--;
 			let previousStep = currentStep + 1;
@@ -465,7 +470,7 @@ if ($agent->isMobile()) {
 		}
 		progress.style.width = `${currentStep*width}%`
 	});
-
+	//Funcion mostrar o ocultar los elementos de paso según el número especificado, y también actualiza el ancho del progreso.
 	function chargeCurrentStep(num) {
 		steps.forEach((step, index) => {
 			if (num === index) {
@@ -477,6 +482,7 @@ if ($agent->isMobile()) {
 		})
 		progress.style.width = `${currentStep*width}%`
 	}
+	//Funcion para validar los elementos requeridos de cada step
 
 	function validarStep(step) {
 		switch (step) {
@@ -542,6 +548,7 @@ if ($agent->isMobile()) {
 	}
 </script>
 <script>
+	//Funcion para eliminar los caracteres especiales del texto
 	function clearText(text) {
 		return text
 			.normalize('NFD')
@@ -568,11 +575,13 @@ if ($agent->isMobile()) {
 			form.classList.add('was-validated')
 		}, false)
 
+		//Convierte los input text a mayusculas y limpia caracteres especiales
 		inputsText.forEach((input) => {
 			input.addEventListener('input', function(event) {
 				event.target.value = clearText(event.target.value).toUpperCase();
 			}, false)
 		})
+		//Convierte los input email a minusculas y limpia caracteres especiales
 
 		inputsEmail.forEach((input) => {
 			input.addEventListener('input', function(event) {
@@ -580,6 +589,7 @@ if ($agent->isMobile()) {
 			}, false)
 		})
 
+		//Envia alerta cuando el idioma no es español
 		document.querySelector('#idioma').addEventListener('change', (e) => {
 			let alert = document.querySelector('#idioma_alert');
 			if (e.target.value !== '22') {
@@ -589,6 +599,7 @@ if ($agent->isMobile()) {
 			}
 		})
 
+		//Modifica estilos de acuerdo a la opcion selecciona de la ocupacion
 		document.querySelector('#ocupacion').addEventListener('change', (e) => {
 			let select_ocupacion = document.querySelector('#ocupacion');
 			let input_ocupacion = document.querySelector('#ocupacion_descr');
@@ -602,6 +613,7 @@ if ($agent->isMobile()) {
 				input_ocupacion.value = "";
 			}
 		});
+		//Obtiene los municipios cuando la nacionalidad sea diferente a mx
 		document.querySelector('#nacionalidad').addEventListener('change', (e) => {
 			let select_estado = document.querySelector('#estado_select_origen');
 			let select_municipio = document.querySelector('#municipio_select_origen');
@@ -638,7 +650,7 @@ if ($agent->isMobile()) {
 				select_municipio.value = '';
 			}
 		});
-
+		//Obtiene los municipios de acuerdo al estado
 		document.querySelector('#estado_select_origen').addEventListener('change', (e) => {
 			let select_municipio = document.querySelector('#municipio_select_origen');
 
@@ -669,6 +681,7 @@ if ($agent->isMobile()) {
 			});
 		});
 
+		//Obtiene los municipios y localidades cuando el pais sea diferente a mx
 		document.querySelector('#pais_select').addEventListener('change', (e) => {
 
 			let select_estado = document.querySelector('#estado_select');
@@ -764,7 +777,7 @@ if ($agent->isMobile()) {
 				input_colonia.classList.add('d-none');
 			}
 		});
-
+		//Obtiene los municipios de acuerdo al estado seleccionado
 		document.querySelector('#estado_select').addEventListener('change', (e) => {
 			let select_municipio = document.querySelector('#municipio_select');
 			let select_localidad = document.querySelector('#localidad_select');
@@ -819,6 +832,7 @@ if ($agent->isMobile()) {
 			}
 		});
 
+		//Obtiene las localidades de acuerdo al municipio
 		document.querySelector('#municipio_select').addEventListener('change', (e) => {
 			let select_localidad = document.querySelector('#localidad_select');
 			let select_colonia = document.querySelector('#colonia_select');
@@ -856,6 +870,7 @@ if ($agent->isMobile()) {
 			});
 		});
 
+		//Obtiene las colonias de acuerdo a la localidad, estado y municipio
 		document.querySelector('#localidad_select').addEventListener('change', (e) => {
 			let select_colonia = document.querySelector('#colonia_select');
 			let input_colonia = document.querySelector('#colonia');
@@ -918,6 +933,7 @@ if ($agent->isMobile()) {
 
 
 
+		//Modifica los estilos de acuerdo a la colonia seleccionada
 		document.querySelector('#colonia_select').addEventListener('change', (e) => {
 			let select_colonia = document.querySelector('#colonia_select');
 			let input_colonia = document.querySelector('#colonia');
@@ -932,6 +948,7 @@ if ($agent->isMobile()) {
 			}
 		});
 
+		//Valida el tamaño del documento y lo previsualiza
 		document.querySelector('#documento').addEventListener('change', async (e) => {
 			let documento_identidad = document.querySelector('#documento_text');
 
@@ -1000,6 +1017,7 @@ if ($agent->isMobile()) {
 			}
 		});
 
+		//Funcion que convierte un Blob en base64
 		function blobToBase64(blob) {
 			return new Promise((resolve, _) => {
 				const reader = new FileReader();
@@ -1008,6 +1026,7 @@ if ($agent->isMobile()) {
 			});
 		}
 
+		//Funcion para comprimir la imagen a un porcentaje
 		function comprimirImagen(imagenComoArchivo, porcentajeCalidad) {
 			return new Promise((resolve, reject) => {
 				const $canvas = document.createElement("canvas");
@@ -1033,6 +1052,7 @@ if ($agent->isMobile()) {
 
 	})()
 
+	//Funcion para eliminar los options de un select
 	function clearSelect(select_element) {
 		for (let i = select_element.options.length; i >= 1; i--) {
 			select_element.remove(i);
@@ -1044,6 +1064,7 @@ if ($agent->isMobile()) {
 		return new bootstrap.Tooltip(tooltipTriggerEl)
 	});
 
+	//Funcion para enviar la informacion al modal de validacion de datos
 	function enviar_datos() {
 		let nacionalidad = document.querySelector("#nacionalidad").value ? document.querySelector("#nacionalidad").options[document.querySelector("#nacionalidad").selectedIndex].text : '';
 		let idioma = document.querySelector("#idioma").value ? document.querySelector("#idioma").options[document.querySelector("#idioma").selectedIndex].text : '';
@@ -1109,6 +1130,7 @@ if ($agent->isMobile()) {
 		document.querySelector('#img_firma_modal').setAttribute("src", firma_url);
 	}
 
+	//Funcion para convertir la fecha a la zona horaria de tijuana
 	function dateToString(fecha) {
 		let date = new Date(fecha);
 		let dateToTijuanaString = date.toLocaleString('en-US', {
@@ -1125,6 +1147,7 @@ if ($agent->isMobile()) {
 		return (dateTijuana.toLocaleDateString("es-ES", options)).toUpperCase();
 	}
 
+	//Cuando se valida l a informacion realiza un submit y envia la informacion a la db
 	document.querySelector('#valid_information_btn').addEventListener('click', (e) => {
 		document.querySelector('#form_register').submit();
 	});

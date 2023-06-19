@@ -16,7 +16,7 @@ import {
  * @example
  * const videoServiceAgent = new VideoServiceAgent('AGENT_UUID', { apiURL : 'localhost', apiKey : 'API_KEY'});
  *
- * agentVideoService.connetAgent();
+ * agentVideoService.connectAgent();
  * agentVideoService.registerOnGuestConnected((response) => alert(response));
  * agentVideoService.disconnectAgent();
  */
@@ -27,6 +27,7 @@ export class VideoServiceAgent {
 	 */
 	#agentUUID;
 	#apiURI;
+	#apiURIAgentSuffix = "/agent";
 	#apiKey;
 	#socket;
 	#socketHeaders = {
@@ -44,6 +45,16 @@ export class VideoServiceAgent {
 	guestAudio = true;
 	guestVideo = true;
 
+	/**
+	 * @type {MediaStream} 
+	 */
+	videoStream = undefined;
+
+	/**
+	* @type {MediaStream} 
+	*/
+	audioStream = undefined;
+
 	guestData = {};
 	agentData = {};
 
@@ -57,6 +68,7 @@ export class VideoServiceAgent {
 	/**
 	 * @param {string} agentUUID - Preexisting agent uuid
 	 * @param {string} folio - Complaint folio
+	 * @param {string} apiURISuffix - Suffix of URL where video service API is
 	 * @param {Object} config - Basic configuration to use access API
 	 * @param {string} config.apiURI - URL where video service API is
 	 * @param {string} config.apiKey - API key to authorize connections
@@ -65,7 +77,7 @@ export class VideoServiceAgent {
 	 * @example
 	 * const videoServiceAgent = new VideoServiceAgent('AGENT_UUID', { apiURL : 'localhost', apiKey : 'API_KEY'});
 	 *
-	 * agentVideoService.connetAgent();
+	 * agentVideoService.connectAgent();
 	 * agentVideoService.registerOnGuestConnected((response) => alert(response));
 	 * agentVideoService.disconnectAgent();
 	 *
@@ -83,7 +95,7 @@ export class VideoServiceAgent {
 				"config.apiURI",
 				"VideoServiceAgent"
 			);
-		this.#apiURI = config.apiURI;
+		this.#apiURI = config.apiURI + this.#apiURIAgentSuffix;
 
 		if (!config?.apiKey)
 			throw ExceptionConstructorMissingParameter(
@@ -105,7 +117,7 @@ export class VideoServiceAgent {
 	 * @param {Function} callback - This method is executed after agent is connected to socket
 	 * @param {Function} onerrror - This method is executed if an exception occours
 	 */
-	connetAgent(callback, onerror) {
+	connectAgent(callback, onerror, ondisconnect) {
 		if (this.#socket) {
 			this.#socket.disconnect();
 		}
@@ -124,10 +136,11 @@ export class VideoServiceAgent {
 			if (typeof onerror === "function") onerror(response);
 		});
 
-		this.#socket.on("disconnect", () => {
+		this.#socket.on("disconnect", (response) => {
 			try {
 				this.#loggedOutSound.play();
 			} catch (error) { }
+			if (typeof ondisconnect === "function") ondisconnect(response)
 		});
 
 		this.#emit(
@@ -146,6 +159,27 @@ export class VideoServiceAgent {
 			}
 		);
 	}
+
+	toggleVideoFailConection(callback) {
+		this.#socket.on("mute-video", ({ toggleVideo }) => {
+			this.guestVideo = toggleVideo.toogleVideoGuest;
+			console.log(toggleVideo, 'guestviceo');
+			if (typeof callback === "function") callback(toggleVideo);
+		});
+	}
+
+	/**
+     * Register the network quality
+     * 
+     * @param {Function} callback - This method is executed after session is connected
+     */
+	registerOnNewtworkQualityChanged(callback){
+		if (!this.#videoCallService) return;
+
+		this.#videoCallService.registerOnNewtworkQualityChanged((event, host) => {
+			if (typeof callback === "function") callback(event, host);
+		});
+	} 
 
 	/**
 	 * Register the listener for guest connections
@@ -212,6 +246,7 @@ export class VideoServiceAgent {
 	 * @param {Function} [callback] - This method is executed after call is connected, this will receive the details of guest connection
 	 */
 	acceptCall(localVideoSelector, remoteVideoSelector, callback) {
+		this.#phoneRing.pause();
 		this.#localVideoSelector = localVideoSelector;
 		this.#emit(
 			"connect-call",
@@ -226,13 +261,14 @@ export class VideoServiceAgent {
 				this.#phoneRing.pause();
 				console.log(this.agentData);
 
-				if (typeof callback === "function")
-					callback(response, this.agentData, this.guestData);
-
-				this.#videoCallService = new VideoCall({ remoteVideoSelector });
-
+				
+				this.#videoCallService = new VideoCall({ remoteVideoSelector,
+					audioSource: this.audioStream,
+					videoSource: this.videoStream,
+				});
+				
 				this.#videoCallService.registerOnSessionDisconnected();
-
+				
 				this.#videoCallService.connectVideoCall(
 					response.token,
 					localVideoSelector,
@@ -240,6 +276,8 @@ export class VideoServiceAgent {
 						this.#phoneRing.pause();
 					}
 				);
+
+				if (typeof callback === "function") callback(response, this.agentData, this.guestData);
 			}
 		);
 	}
@@ -486,6 +524,24 @@ export class VideoServiceAgent {
 				typeof callback === "function" ?  callback(response): undefined
 			);
 		})
+	}
+
+	/**
+	 * This method set the videoStream for agent
+	 * 
+	 * @param {MediaStream} videoStream - videoStream
+	 */
+	set videoStream(videoStream) {
+		this.videoStream = videoStream;
+	}
+
+	/**
+	 * This method set the audioStream for agent
+	 * 
+	 * @param {MediaStream} audioStream - audioStream
+	 */
+	set audioStream(audioStream) {
+		this.audioStream = audioStream;
 	}
 
 	/**

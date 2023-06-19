@@ -36,7 +36,7 @@
 					</div>
 					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 						<label for="placas_vehiculo_da" class="form-label font-weight-bold">Placas:</label>
-						<input type="text" class="form-control" id="placas_vehiculo_da" name="placas_vehiculo_da">
+						<input type="text" class="form-control" id="placas_vehiculo_da" name="placas_vehiculo_da" oninput="clearGuion(event);">
 					</div>
 					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 						<label for="estado_vehiculo_da" class="form-label font-weight-bold">Estado:</label>
@@ -58,7 +58,7 @@
 					</div>
 					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 						<label for="serie_vehiculo_da" class="form-label font-weight-bold">No. Serie:</label>
-						<input type="text" class="form-control" id="serie_vehiculo_da" name="serie_vehiculo_da">
+						<input type="text" class="form-control" id="serie_vehiculo_da" name="serie_vehiculo_da"oninput="clearGuion(event);" >
 					</div>
 					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 						<label for="tipo_vehiculo_da" class="form-label font-weight-bold">Tipo de vehículo:</label>
@@ -208,11 +208,13 @@
 </div>
 <script>
 	
+	//Iteracion del modelo de vehiculo hasta el año actual
 	let startYearU = 1800;
 	let endYearU = new Date().getFullYear();
 	for (let i = endYearU; i > startYearU; i--) {
 		$('#modelo_vehiculo_da').append($('<option />').val(i).html(i));
 	}
+	//Previsualiacion de imagen al subir foto
 	document.querySelector('#subirFotoVDa').addEventListener('change', (e) => {
 		let preview = document.querySelector('#foto_vehiculo_da');
 		if (e.target.files && e.target.files[0]) {
@@ -223,6 +225,7 @@
 			reader.readAsDataURL(e.target.files[0]);
 		}
 	});
+	//Previsualiacion de imagen al subir documento
 
 	document.querySelector('#subirDocDa').addEventListener('change', (e) => {
 		let preview = document.querySelector('#doc_vehiculo_da');

@@ -178,6 +178,7 @@
 	<script>
 		(function() {
 			'use strict';
+			//Declaracion de elementos
 			const inputsText = document.querySelectorAll('input[type="text"]');
 			const inputsEmail = document.querySelectorAll('input[type="email"]');
 			const municipio = document.querySelector('#municipio');
@@ -189,11 +190,13 @@
 			const toggle_password = document.querySelector('#toggle-password');
 			const toggle_password_confirm = document.querySelector('#toggle-password-confirm');
 
+			//Convierte todos los input text a mayusculas
 			inputsText.forEach((input) => {
 				input.addEventListener('input', function(event) {
 					event.target.value = clearText(event.target.value).toUpperCase();
 				}, false)
 			});
+			//Convierte todos los input email a minusculas
 
 			inputsEmail.forEach((input) => {
 				input.addEventListener('input', function(event) {
@@ -201,6 +204,7 @@
 				}, false)
 			});
 
+			//Evento para mostrar contraseña
 			toggle_password.addEventListener('click', (event) => {
 				const type = password.getAttribute("type") === "password" ? "text" : "password";
 				password.setAttribute("type", type);
@@ -214,7 +218,7 @@
 				}
 
 			}, false);
-
+			//Evento para mostrar contraseña de confirmacion
 			toggle_password_confirm.addEventListener('click', (event) => {
 				const type = password_confirm.getAttribute("type") === "password" ? "text" : "password";
 				password_confirm.setAttribute("type", type);
@@ -228,6 +232,7 @@
 				}
 			}, false);
 
+			//Evento para obtener las oficinas de acuerdo al municipio, se limpia el select para que no se acumule
 			municipio.addEventListener('change', function(event) {
 				$.ajax({
 					data: {
@@ -250,6 +255,7 @@
 				});
 			}, false);
 
+			//VAlidacion de formularios submit
 			form_datos.addEventListener('submit', function(event) {
 				document.querySelector('#btn-submit-datos').setAttribute('disabled', true);
 				if (!form_datos.checkValidity()) {
@@ -283,6 +289,7 @@
 				form_password.classList.add('was-validated');
 			}, false);
 		})();
+		//Elimina todos los caracteres especiales del texto
 
 		function clearText(text) {
 			return text
@@ -291,6 +298,7 @@
 				.normalize()
 				.replaceAll('´', '');
 		}
+		//Elimina todos los options de un select
 
 		function clearSelect(select_element) {
 			for (let i = select_element.options.length; i >= 1; i--) {

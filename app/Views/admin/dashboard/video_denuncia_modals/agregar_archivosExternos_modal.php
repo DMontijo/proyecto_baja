@@ -36,6 +36,7 @@
 	</div>
 </div>
 <script>
+	//Previsualizacion del documento a subir
 	document.querySelector('#documentoArchivo').addEventListener('change', (e) => {
 		let preview = document.querySelector('#viewDocumentoArchivo');
 		if (e.target.files && e.target.files[0]) {
@@ -46,6 +47,7 @@
 			reader.readAsDataURL(e.target.files[0]);
 		}
 	});
+	//Limpieza de elementos al cerrar modal
 	$('#agregar_archivos_modal').on('hidden.bs.modal', function() {
 		let preview = document.querySelector('#viewDocumentoArchivo');
 

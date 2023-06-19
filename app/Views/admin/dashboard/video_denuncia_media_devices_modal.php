@@ -1,4 +1,4 @@
-<div class="modal fade" id="media_devices_modal" tabindex="-1" aria-labelledby="media_devices_modal" aria-hidden="true">
+<div class="modal fade" id="media_devices_modal" tabindex="-1" aria-labelledby="media_devices_modal" aria-hidden="true"  data-backdrop="false">
 	<div class="modal-dialog modal-lg modal-dialog-centered">
 		<div class="modal-content">
 
@@ -29,8 +29,13 @@
 						<div class="col-12">
 							<p class="fw-bolder">Seleccione entrada de audio</p>
 						</div>
+						<div class="col-12" id="listDevicesAudio">
+							<select style="max-width: 100%;" class="select-audio form-control" name="listaDeDispositivosAudio" id="listaDeDispositivosAudio"></select>
+						</div>
 						<div class="col-12">
-							<select style="max-width: 100%;" class="select-audio form-select" name="listaDeDispositivosAudio" id="listaDeDispositivosAudio"></select>
+							<div class="ratio ratio-16x9">
+								<audio id="audio"></audio>
+							</div>
 						</div>
 					</div>
 
@@ -38,12 +43,12 @@
 						<div class="col-12">
 							<p class="fw-bolder">Seleccione entrada de video</p>
 						</div>
-						<div class="col-12">
-							<select class="form-select" name="listaDeDispositivosVideo" id="listaDeDispositivosVideo"></select>
+						<div class="col-12" id="listDevicesVideo">
+							<select class="form-control" name="listaDeDispositivosVideo" id="listaDeDispositivosVideo"></select>
 						</div>
 						<div class="col-12">
 							<div class="ratio ratio-16x9">
-								<video class="rounded" id="video"></video>
+								<video class="rounded" id="video" muted autoplay playsinline></video>
 								<canvas id="canvas" name="canvas"class="d-none"></canvas>
 							</div>
 						</div>

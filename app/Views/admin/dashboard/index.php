@@ -15,6 +15,13 @@ $file_text = $user_id . "_data.txt";
 ?>
 <?= $this->section('content') ?>
 <div class="row">
+	<?php if (in_array(session('ROLID'), $rolesToMonitor)) { ?>
+		<div class="col-12 text-right pb-3">
+			<button type="button" id="btnActualizarExpedientes" name="btnActualizarExpedientes" class="btn btn-primary font-weight-bold text-white" data-toggle="tooltip" data-placement="top" title="Botón para sincronizar las coordinaciones de los expedientes con Justicia Net.">
+				<i class="fas fa-sync-alt"></i> SINCRONIZAR EXPEDIENTES
+			</button>
+		</div>
+	<?php } ?>
 	<div class="col-12">
 		<?php if (file_exists($directory . '/' . $file_key) && file_exists($directory . '/' . $file_cer)) { ?>
 			<?php if (file_exists($directory . '/' . $file_text)) { ?>
@@ -143,9 +150,71 @@ $file_text = $user_id . "_data.txt";
 		</div>
 	</div>
 </div>
-<script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
+<script src="https://cdn.socket.io/4.6.0/socket.io.min.js?v=<?= rand() ?>" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
 
-<script src="<?= base_url() ?>/assets/js/index_activos.js" type="module"></script>
+<script src="<?= base_url() ?>/assets/js/index_activos.js?v=<?= rand() ?>" type="module"></script>
+
+<script>
+	$(function() {
+		$('[data-toggle="tooltip"]').tooltip()
+	});
+	var btnActualizarExpedientes = document.querySelector('#btnActualizarExpedientes');
+
+	//Evento para actualizar las oficinas de los expedientes cuando se actualizan en Justicia. Sirve para sincronizarlo con VIdeodenuncia
+	btnActualizarExpedientes.addEventListener('click', (e) => {
+
+		$.ajax({
+			url: "<?= base_url('/data/update-oficinas-by-justicia') ?>",
+			method: "GET",
+			dataType: "json",
+			beforeSend: function() {
+				btnActualizarExpedientes.disabled = true;;
+				Swal.fire({
+					icon: 'info',
+					title: 'Sincronizando expedientes con Justicia Net.',
+					showConfirmButton: false,
+					timer: 2000,
+					timerProgressBar: true,
+				});
+			},
+			success: function(response) {
+				btnActualizarExpedientes.disabled = false;;
+
+				if (response.status == 1) {
+					Swal.fire({
+						icon: 'success',
+						title: 'Sincronizado exitosamente.',
+						text: 'Se han sincronizado las coordinaciones de los expedientes de CDTEC con Justicia Net correctamente.',
+						showConfirmButton: false,
+						timer: 5000,
+						timerProgressBar: true,
+					});
+				} else {
+					Swal.fire({
+						icon: 'error',
+						title: 'Error en sincronización',
+						text: 'No fue posible sincronizar los expedientes con Justicia Net.',
+						showConfirmButton: false,
+						timer: 2000,
+						timerProgressBar: true,
+					});
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				btnActualizarExpedientes.disabled = false;
+				Swal.fire({
+					icon: 'error',
+					title: 'Error en sincronización',
+					text: 'No fue posible sincronizar los expedientes con Justicia Net.',
+					showConfirmButton: false,
+					timer: 2000,
+					timerProgressBar: true,
+				});
+				console.error('Error de boton de sincronización:', textStatus);
+			}
+		});
+	}, false);
+</script>
 <?php if (in_array(session('ROLID'), $rolesToMonitor)) { ?>
 	<!-- <script>
 		window.onload = function() {

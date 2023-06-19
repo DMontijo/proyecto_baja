@@ -26,6 +26,7 @@
 	</div>
 </div>
 <script>
+	//Limpieza de elementos al cerrar modal
 	$("#encargadosModal").on('hidden.bs.modal', function() {
 		document.getElementById('selectEncargado').value = '';
 	});

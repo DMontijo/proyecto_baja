@@ -89,6 +89,16 @@
 		font-weight: bold;
 	}
 
+	#network_quality_group {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: 0.5s;
+		position: absolute;
+		width: 100%;
+		top: 90%;
+	}
+
 	#tools-group {
 		padding: 10px;
 		background-color: rgba(0, 0, 0, 0);
@@ -219,6 +229,9 @@
 											<button class="btn btn-sm btn-light" id="main_video_details_name" name="main_video_details_name"></button>
 										</div>
 									</div>
+									<div id="network_quality_group">
+										<button class="btn btn-sm btn-light d-none" id="network_quality_signal" name="network_quality_signal"></button>
+									</div>
 								</div>
 								<div id="secondary_videos_container">
 									<div class="secondary_video" id="secondary_video">
@@ -228,7 +241,6 @@
 						</div>
 					</div>
 				</div>
-
 			</div>
 		</div>
 
@@ -236,10 +248,13 @@
 
 	</div>
 </div>
-</div>
-<script type="text/javascript" src="<?= base_url() ?>/assets/agent/assets/openvidu-browser-2.25.0.min.js"></script>
+
+<?php include("video_denuncia_media_devices_modal.php"); ?>
+<?php include("video_denuncia_toast.php"); ?>
+
+<script type="text/javascript" src="<?= base_url() ?>/assets/agent/assets/openvidu-browser-2.27.0.min.js?v=<?= rand() ?>"></script>
 <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
-<script src="<?= base_url() ?>/assets/js/video_denuncia_client.js" type="module"></script>
+<script src="<?= base_url() ?>/assets/js/video_denuncia_client.js?v=<?= rand() ?>" type="module"></script>
 <script>
 	const folio_get = `<?php echo $_GET['folio'] ?>`;
 
@@ -250,6 +265,7 @@
 	document.getElementById('folio').value = folio;
 	document.getElementById('year').value = year;
 
+	//Evento para previsualizar el documento
 	document.querySelector('#documentoArchivo').addEventListener('change', (e) => {
 		let preview = document.querySelector('#viewDocumentoArchivo');
 		if (e.target.files && e.target.files[0]) {
@@ -261,15 +277,18 @@
 		}
 	});
 
+	//Evento para enviar archivos externos a VD
 	document.getElementById('form_archivos_externos').addEventListener('submit', function(evt) {
 		evt.preventDefault();
 		crearArchivos();
 	})
 
+	//Funcion asincrona para crear los archivos externos en VD y comprimirlos
 	async function crearArchivos() {
 		document.getElementById('form_archivos_externos').classList.add('d-none');
 		document.getElementById('documentos_anexar_spinner').classList.remove('d-none');
 		let documento;
+		//Comprime
 		if ($("#documentoArchivo")[0].files && $("#documentoArchivo")[0].files[0]) {
 			if ($("#documentoArchivo")[0].files[0].type == "image/jpeg" || $("#documentoArchivo")[0].files[0].type == "image/png" || $("#documentoArchivo")[0].files[0].type == "image/jpg") {
 				documento = await comprimirImagen($("#documentoArchivo")[0].files[0], 50);
@@ -288,6 +307,8 @@
 			});
 			return
 		}
+
+		//Envio de datos
 		var packetData = new FormData();
 		packetData.append("documentoArchivo", documento);
 		packetData.append("folio", document.getElementById('folio').value);
@@ -352,6 +373,7 @@
 
 	}
 
+	//Funcion para comprimir el documento a un porcentaje
 	function comprimirImagen(imagenComoArchivo, porcentajeCalidad) {
 		return new Promise((resolve, reject) => {
 			const $canvas = document.createElement("canvas");

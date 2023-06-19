@@ -102,57 +102,69 @@
 								<?php } ?>
 							</div>
 						</div>
-
-						<table id="registro_llamadas" class="table table-bordered table-striped">
-							<thead>
-								<tr>
-									<th class="text-center">FOLIO</th>
-									<th class="text-center" style="min-width:150px;">FECHA DE EXPEDICIÓN</th>
-									<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
-									<th class="text-center" style="min-width:150px;">MODULO QUE EXPIDE</th>
-									<th class="text-center" style="min-width:150px;">MUNICIPIO QUE ATIENDE</th>
-									<th class="text-center" style="min-width:150px;">SERVIDOR PUBLICO SOLICITANTE</th>
-									<th class="text-center" style="min-width:150px;">DELITO</th>
-									<th class="text-center" style="min-width:150px;">TIPO DE ORDEN DE PROTECCIÓN</th>
-									<th class="text-center" style="min-width:150px;">VÍCTIMA LESIONADA</th>
-								</tr>
-							</thead>
-							<tbody>
-								<?php
-								foreach ($body_data->dataOrdenes as $index => $orden) {
-									$array = str_split($orden->EXPEDIENTEID);
-								?>
-									<tr>
-										<td class="text-center font-weight-bold"><?= $orden->FOLIOID . '/' . $orden->ANO ?></td>
-										<td class="text-center"><?= $orden->FECHAFIRMA ?  date("d/m/Y", strtotime($orden->FECHAFIRMA)) : '' ?></td>
-										<td class="text-center"><?= $array[1] . $array[2] . $array[4] . $array[5] . '-' . $array[6] . $array[7] . $array[8] . $array[9] . '-' . $array[10] . $array[11] . $array[12] . $array[13] . $array[14] ?></td>
-										<td class="text-center">CENTRO DE DENUNCIA TECNÓLOGICA</td>
-										<td class="text-center"><?= $orden->MUNICIPIODESCR ?></td>
-										<td class="text-center"><?= $orden->NOMBRE_MP ?></td>
-										<td class="text-center"><?= $orden->HECHODELITO ?></td>
-										
-										<td class="text-center"><?= $orden->TIPODOC ?></td>
-										<td class="text-center"><?= $orden->LESIONES ?></td>
-									</tr>
-								<?php } ?>
-							</tbody>
-						</table>
+						<div class="row" style="font-size:10px;">
+							<div class="col-12" style="overflow-x:auto;">
+								<table id="registro_conavim" class="table table-bordered table-striped table-sm">
+									<thead>
+										<tr>
+											<th class="text-center">No.</th>
+											<th class="text-center">FOLIO</th>
+											<th class="text-center" style="min-width:150px;">FECHA DE EXPEDICIÓN</th>
+											<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
+											<th class="text-center" style="min-width:150px;">MODULO QUE EXPIDE</th>
+											<th class="text-center" style="min-width:150px;">MUNICIPIO QUE ATIENDE</th>
+											<th class="text-center" style="min-width:150px;">SERVIDOR PUBLICO SOLICITANTE</th>
+											<th class="text-center" style="min-width:150px;">DELITO</th>
+											<th class="text-center" style="min-width:150px;">TIPO DE ORDEN DE PROTECCIÓN</th>
+											<th class="text-center" style="min-width:150px;">NOMBRE DE LA VICTIMA/OFENDIDO</th>
+											<th class="text-center" style="min-width:150px;">GÉNERO</th>
+											<th class="text-center" style="min-width:150px;">VÍCTIMA LESIONADA</th>
+										</tr>
+									</thead>
+									<tbody>
+										<?php
+										$num = 1;
+										foreach ($body_data->dataOrdenes as $index => $orden) {
+											$array = str_split($orden->EXPEDIENTEID);
+										?>
+											<tr>
+												<td class="text-center"><?= $num ?></td>
+												<td class="text-center font-weight-bold"><?= $orden->FOLIOID . '/' . $orden->ANO ?></td>
+												<td class="text-center"><?= $orden->FECHAFIRMA ?  date("d/m/Y", strtotime($orden->FECHAFIRMA)) : '' ?></td>
+												<td class="text-center"><?= $array[1] . $array[2] . $array[4] . $array[5] . '-' . $array[6] . $array[7] . $array[8] . $array[9] . '-' . $array[10] . $array[11] . $array[12] . $array[13] . $array[14] ?></td>
+												<td class="text-center">CENTRO DE DENUNCIA TECNÓLOGICA</td>
+												<td class="text-center"><?= $orden->MUNICIPIODESCR ?></td>
+												<td class="text-center"><?= $orden->NOMBRE_MP ?></td>
+												<td class="text-center"><?= $orden->DELITOMODALIDADDESCR ?></td>
+												<td class="text-center"><?= $orden->TIPODOC ?></td>
+												<td class="text-center"><?= $orden->NOMBRE_VTM ?></td>
+												<td class="text-center"><?= ($orden->SEXO == 'M' ? 'MASCULINO' : ($orden->SEXO == 'F' ? 'FEMENINO' : '')) ?></td>
+												<td class="text-center"><?= $orden->LESIONES ?></td>
+											</tr>
+										<?php $num++;
+										} ?>
+									</tbody>
+								</table>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </section>
-
 <script>
 	$(function() {
 		$("#registro_conavim").DataTable({
 			responsive: false,
 			lengthChange: false,
 			autoWidth: true,
-			ordering: false,
-			searching: false,
-			pageLength: 30,
+			ordering: true,
+			order: [
+				// [0, 'asc'],
+			],
+			searching: true,
+			pageLength: 25,
 			// dom: 'Bfrtip',
 			// buttons: [
 			// 	'copy', 'excel', 'pdf'
@@ -162,7 +174,8 @@
 			}
 		});
 	});
-
+</script>
+<script>
 	function collapse_filter() {
 		if (document.querySelector('#filtros').classList.contains('show')) {
 			document.querySelector('#filtros').classList.remove('show');
@@ -174,6 +187,7 @@
 <?php if (isset($body_data->filterParams)) { ?>
 	<script>
 		let form = document.querySelector('#formExcel');
+		//Datos de confirmacion del filtro
 
 		form.addEventListener('submit', function(event) {
 			event.preventDefault();

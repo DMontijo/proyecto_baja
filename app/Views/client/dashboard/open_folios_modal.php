@@ -1,4 +1,4 @@
-<div class="modal fade" id="open_folios_modal" tabindex="-1" data-bs-backdrop="static" aria-labelledby="open_folios_modal" aria-hidden="true">
+<div class="modal fade" id="open_folios_modal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="open_folios_modal" aria-hidden="true">
 	<div class="modal-dialog modal-lg modal-dialog-centered  modal-dialog-scrollable">
 		<div class="modal-content border-0" style="border-radius: 1.5em;">
 			<div class="modal-header bg-primary text-white justify-content-center">
@@ -16,6 +16,7 @@
 </div>
 
 <script>
+	//Funcion para abrir el link para iniciar la videodenuncia cuando la tiene abierta
 	function iniciarDenuncia() {
 		$.ajax({
 			data: {

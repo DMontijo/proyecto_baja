@@ -47,6 +47,8 @@
     evt.preventDefault();
    cambiarStatusDocumentoForm();
 });
+
+//funcion pata cambiar el status de envio de los documentos, con la finalidad de que puedan volver a enviar
 		function cambiarStatusDocumentoForm(){
 			$.ajax({
 			data: {

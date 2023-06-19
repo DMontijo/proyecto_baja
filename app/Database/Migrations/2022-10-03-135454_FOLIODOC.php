@@ -21,7 +21,24 @@ class FOLIODOC extends Migration
 				'type' => 'INT',
 				'constraint' => '4',
 			],
-           
+			'VICTIMAID' => [
+				'type' => 'INT',
+				'unsigned' => TRUE,
+				'null' => TRUE,
+
+			],
+			'IMPUTADOID' => [
+				'type' => 'INT',
+				'unsigned' => TRUE,
+				'null' => TRUE,
+
+			],
+			'PLANTILLAID' => [
+				'type' => 'INT',
+				'unsigned' => TRUE,
+				'null' => TRUE,
+
+			],
             'ESTADOID' => [ //DONDE SE FIRMA
 				'type' => 'INT',
 				'unsigned' => TRUE,

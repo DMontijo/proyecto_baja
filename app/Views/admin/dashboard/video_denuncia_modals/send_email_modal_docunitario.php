@@ -11,7 +11,6 @@
 			</div>
 
 			<div class="modal-body text-center" id="load_mail_uni">
-
 				<input type="text" class="form-control d-none" id="foliodoc_modal_correo_uni" name="foliodoc_modal_correo_uni" required>
 				<input type="text" class="form-control d-none" id="year_modal_correo_uni" name="year_modal_correo_uni" required>
 				<input type="text" class="form-control d-none" id="folio_modal_correo_uni" name="folio_modal_correo_uni" required>

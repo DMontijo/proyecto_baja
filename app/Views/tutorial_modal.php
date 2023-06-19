@@ -1,4 +1,4 @@
-<div class="modal fade" id="tutorial_modal" tabindex="-1" aria-labelledby="tutorial_modalLabel" aria-hidden="true">
+<div class="modal fade" id="tutorial_modal" tabindex="-1" aria-labelledby="tutorial_modalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
 	<div class="modal-dialog modal-lg modal-dialog-centered">
 		<div class="modal-content border-0">
 			<div class="modal-header bg-blue text-white justify-content-center">

@@ -1,3 +1,4 @@
+
 /*****************************************
  *
  *  AGENT CONNECTIONS TO VIDEO SERVICE SDK
@@ -31,6 +32,7 @@ export class VideoServiceGuest {
 	#guestUUID;
 	#folio;
 	#apiURI;
+	#apiURIGuestSuffix = "/guest";
 	#apiKey;
 	#socket;
 	#socketHeaders = {
@@ -53,6 +55,16 @@ export class VideoServiceGuest {
 	#guestConnectionId;
 
 	isRecording = false;
+
+	/**
+	 * @type {MediaStream} 
+	 */
+	videoStream = undefined;
+
+	/**
+	* @type {MediaStream} 
+	*/
+	audioStream = undefined;
 
 	/**
 	 * @param {string} guestUUID - Preexisting guest uuid
@@ -98,7 +110,7 @@ export class VideoServiceGuest {
 				"config.apiURI",
 				"VideoServiceGuest"
 			);
-		this.#apiURI = config.apiURI;
+		this.#apiURI = config.apiURI + this.#apiURIGuestSuffix;
 
 		if (!config?.apiKey)
 			throw ExceptionConstructorMissingParameter(
@@ -137,7 +149,10 @@ export class VideoServiceGuest {
 		});
 
 		this.#socket.on("disconnect", function (data) {
-			console.warn("ON Disconnect", data);
+			console.warn("ON Disconnect SERVER reloading", data);
+			setInterval(function () {
+				location.reload();
+			}, 9000);
 			if (typeof ondisconnect === "function") ondisconnect(data);
 		});
 
@@ -164,6 +179,21 @@ export class VideoServiceGuest {
 				if (typeof callback === "function") callback(guest);
 			}
 		);
+	}
+
+	checkPriorityLine(guest, callback) {
+		this.#emit('check-proprity-line', guest, callback);
+	}
+
+	/**
+	 * Register the listener for guest connections
+	 *
+	 * @param {Function} [callback] - This method is executed after guest is assigned to agent
+	 */
+	registerOnGuestConnected(callback) {
+		this.#socket.on("guest-connected", (response) => {
+			if (typeof callback === "function") callback(response);
+		});
 	}
 
 	/**
@@ -215,12 +245,33 @@ export class VideoServiceGuest {
 
 			this.agentData = response.agent;
 
-			if (typeof callback === "function") callback(response, this.guestData);
+			this.#videoCallService = new VideoCall({ remoteVideoSelector,
+				audioSource: this.audioStream,
+				videoSource: this.videoStream,
+			});
+			
+			this.#videoCallService.connectVideoCall(
+				response.token,
+				localVideoSelector,
+				() => { }
+			);
 
-			this.#videoCallService = new VideoCall({ remoteVideoSelector });
-			this.#videoCallService.connectVideoCall(response.token, localVideoSelector, () => { });
+			if (typeof callback === "function") callback(response, this.guestData);
 		});
 	}
+
+	/**
+     * Register the network quality
+     * 
+     * @param {Function} callback - This method is executed after session is connected
+     */
+	registerOnNewtworkQualityChanged(callback){
+		if (!this.#videoCallService) return;
+
+		this.#videoCallService.registerOnNewtworkQualityChanged((event) => {
+			if (typeof callback === "function") callback(event);
+		});
+	} 
 
 	/**
 	 * Register recording status changes
@@ -240,6 +291,22 @@ export class VideoServiceGuest {
 		this.#socket.on('agent-disconnected', (response) => {
 			if (typeof callback === 'function') callback(response);
 		});
+	}
+
+	/**
+	 * Toggle guest video
+	 *
+	 * @param {Function} callback - This function will be called when the video has been toggled
+	 */
+	toggleRemoteVideoFailConection(callback) {
+		this.guestVideo = false;
+		this.#emit(
+			"toggle-video-guest",
+			{ toogleVideoGuest: this.guestVideo },
+			() => {
+				if (typeof callback === "function") callback(this.guestVideo);
+			}
+		);
 	}
 
 	/**

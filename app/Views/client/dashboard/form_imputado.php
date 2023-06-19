@@ -204,6 +204,7 @@
 	</div>
 </div>
 <script>
+	//Funcion para contar caracteres de la descripcion
 	function contarCaracteresImp(obj) {
 		var maxLength = 300;
 		var strLength = obj.value.length;
@@ -215,6 +216,7 @@
 			document.getElementById("numCaracterImp").innerHTML = charRemain + ' caracteres restantes';
 		}
 	}
+	//Evento change para modificar estilos de la ocupacion
 	document.querySelector('#ocupacion_imputado').addEventListener('change', (e) => {
 		let select_ocupacion = document.querySelector('#ocupacion_imputado');
 		let input_ocupacion = document.querySelector('#ocupacion_descr_imputado');
@@ -228,6 +230,7 @@
 			input_ocupacion.value = "";
 		}
 	});
+	//Evento para calcular la edad de acuerdo a la fecha de nacimiento
 	document.querySelector('#fecha_nacimiento_imputado').addEventListener('change', (e) => {
 		let fecha = e.target.value;
 		let hoy = new Date();
@@ -241,12 +244,13 @@
 		document.querySelector('#edad_imputado').value = edad;
 	})
 
+	//Funcion para eliminar los options de un select
 	function clearSelect(select_element) {
 		for (let i = select_element.options.length; i >= 1; i--) {
 			select_element.remove(i);
 		}
 	}
-
+	//Evento para traer los municipios de acuerdo a un estado. Se limpian los select para que no acumulen
 	document.querySelector('#nacionalidad_imputado').addEventListener('change', (e) => {
 		let select_estado = document.querySelector('#estado_origen_imputado');
 		let select_municipio = document.querySelector('#municipio_origen_imputado');
@@ -283,6 +287,7 @@
 			select_municipio.value = '';
 		}
 	});
+	//Evento para traer los municipios de acuerdo a un estado. Se limpian los select para que no acumulen
 
 	document.querySelector('#estado_origen_imputado').addEventListener('change', (e) => {
 		let select_municipio = document.querySelector('#municipio_origen_imputado');
@@ -313,6 +318,7 @@
 			error: function(jqXHR, textStatus, errorThrown) {}
 		});
 	});
+	//Evento para traer los municipios de acuerdo a un estado. Se limpian los select para que no acumulen
 
 	document.querySelector('#pais_imputado').addEventListener('change', (e) => {
 
@@ -333,6 +339,7 @@
 
 		if (e.target.value !== 'MX') {
 
+			//Se llena todo automaticamente
 			select_estado.value = '33';
 
 			let data = {
@@ -412,6 +419,7 @@
 			input_colonia.classList.add('d-none');
 		}
 	});
+	//Evento para traer los municipios de acuerdo a un estado. Se limpian los select para que no acumulen
 
 	document.querySelector('#estado_imputado').addEventListener('change', (e) => {
 		let select_municipio = document.querySelector('#municipio_imputado');
@@ -453,6 +461,7 @@
 			error: function(jqXHR, textStatus, errorThrown) {}
 		});
 	});
+	//Evento para traer las localidades de acuerdo a un municipio. Se limpian los select para que no acumulen
 
 	document.querySelector('#municipio_imputado').addEventListener('change', (e) => {
 		let select_localidad = document.querySelector('#localidad_imputado');
@@ -495,6 +504,7 @@
 			error: function(jqXHR, textStatus, errorThrown) {}
 		});
 	});
+	//Evento para traer las colonias de acuerdo a un municipio,estado y localidad. Se limpian los select para que no acumulen
 
 	document.querySelector('#localidad_imputado').addEventListener('change', (e) => {
 		let select_colonia = document.querySelector('#colonia_imputado');
@@ -543,6 +553,7 @@
 		});
 	});
 
+	//Evento para modificar los estilos en colonia
 	document.querySelector('#colonia_imputado').addEventListener('change', (e) => {
 		let select_colonia = document.querySelector('#colonia_imputado');
 		let input_colonia = document.querySelector('#colonia_imputado_input');

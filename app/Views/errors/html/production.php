@@ -1,25 +1,35 @@
 <!doctype html>
-<html>
+<html lang="es">
+
 <head>
-	<meta charset="UTF-8">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="robots" content="noindex">
-
-	<title>Whoops!</title>
-
-	<style type="text/css">
-		<?= preg_replace('#[\r\n\t ]+#', ' ', file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'debug.css')) ?>
-	</style>
+	<!--Bootstrap 5-->
+	<link rel="stylesheet" href="<?= base_url() ?>/assets/bootstrap/css/bootstrap.css">
+	<!--Font-->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap">
+	<title>Centro de Denuncia Tecnológica</title>
 </head>
+
 <body>
-
-	<div class="container text-center">
-
-		<h1 class="headline">Whoops!</h1>
-
-		<p class="lead">We seem to have hit a snag. Please try again later...</p>
-
-	</div>
-
+	<section class="container-fluid bg-primary">
+		<div class="container">
+			<div class="row vh-100 text-white align-items-center justify-content-center text-center">
+				<div class="col-12">
+					<a href="<?= base_url() ?>">
+						<img src="<?= base_url() ?>/assets/img/FGEBC.png" alt="FGEBC Logo" style="width:200px;">
+					</a>
+					<h1 class="">ERROR INESPERADO</h1>
+					<p class="p-2">
+						Parece que hubo un error. Por favor, inténtelo nuevamente...
+					</p>
+				</div>
+			</div>
+		</div>
+	</section>
 </body>
 
 </html>

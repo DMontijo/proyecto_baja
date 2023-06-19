@@ -42,7 +42,7 @@
 												<td class="text-center"><?= $sesionesAdmin->NOMBRE . ' ' . $sesionesAdmin->APELLIDO_PATERNO ?></td>
 												<td class="text-center"><?= $sesionesAdmin->AGENTE_HTTP ?></td>
 												<td class="text-center"><?= $sesionesAdmin->AGENTE_SO ?></td>
-												<td class="text-center"><?= $sesionesAdmin->FECHAINICIO ?></td>
+												<td class="text-center"><?= date('d-m-Y H:i:s',strtotime($sesionesAdmin->FECHAINICIO)) ?></td>
 												<?php if (in_array(session('ROLID'), $rolesToMonitor)) { ?>
 													<td class="text-center">
 														<a href="<?= base_url('/admin/dashboard/cerrar_sesiones_general?id_usuario=') . $sesionesAdmin->ID_USUARIO ?>" class="btn btn-primary text-white"> CERRAR SESIÓN</a>
@@ -107,10 +107,10 @@
 			autoWidth: true,
 			ordering: true,
 			order: [
-				[0, 'asc'],
+				[3, 'desc'],
 			],
 			searching: true,
-			pageLength: 100,
+			pageLength: 25,
 			// dom: 'Bfrtip',
 			// buttons: [
 			// 	'copy', 'excel', 'pdf'
@@ -127,10 +127,10 @@
 			autoWidth: true,
 			ordering: true,
 			order: [
-				[0, 'asc'],
+				[3, 'desc'],
 			],
 			searching: true,
-			pageLength: 100,
+			pageLength: 25,
 			// dom: 'Bfrtip',
 			// buttons: [
 			// 	'copy', 'excel', 'pdf'

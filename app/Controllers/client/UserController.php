@@ -19,71 +19,103 @@ use App\Models\FolioModel;
 
 use App\Models\EscolaridadModel;
 use App\Models\OcupacionModel;
+use GuzzleHttp\Client;
+
+use MailerSend\MailerSend;
+use MailerSend\Helpers\Builder\Recipient;
+use MailerSend\Helpers\Builder\EmailParams;
+use MailerSend\Exceptions\MailerSendValidationException;
+use MailerSend\Exceptions\MailerSendRateLimitException;
 
 class UserController extends BaseController
 {
+	private $db_read;
 
-	private $_nacionalidadModel;
-	private $_estadosCivilesModel;
-	private $_personaIdiomaModel;
-	private $_estadosModel;
-	private $_municipiosModel;
-	private $_localidadesModel;
-	private $_coloniasModel;
+	private $_nacionalidadModelRead;
+	private $_estadosCivilesModelRead;
+	private $_personaIdiomaModelRead;
+	private $_estadosModelRead;
+	private $_municipiosModelRead;
+	private $_localidadesModelRead;
+	private $_coloniasModelRead;
 	private $_denunciantesModel;
-	private $_tipoIdentificacionModel;
-	private $_paisesModel;
-	private $_clasificacionLugarModel;
+	private $_tipoIdentificacionModelRead;
+	private $_paisesModelRead;
+	private $_clasificacionLugarModelRead;
 	private $_folioModel;
-	private $_escolaridadModel;
-	private $_ocupacionModel;
+	private $_folioModelRead;
+
+	private $_escolaridadModelRead;
+	private $_denunciantesModelRead;
+
+	private $_ocupacionModelRead;
 	private $urlApi;
 
 	function __construct()
 	{
+		$this->db_read = ENVIRONMENT == 'production' ? db_connect('default_read') : db_connect('development_read');
+
 		//Models
-		$this->_nacionalidadModel = new PersonaNacionalidadModel();
-		$this->_estadosCivilesModel = new PersonaEstadoCivilModel();
-		$this->_personaIdiomaModel = new PersonaIdiomaModel();
-		$this->_estadosModel = new EstadosModel();
-		$this->_municipiosModel = new MunicipiosModel();
-		$this->_localidadesModel = new LocalidadesModel();
-		$this->_coloniasModel = new ColoniasModel();
+		$this->_nacionalidadModelRead = model('PersonaNacionalidadModel', true, $this->db_read);
+		$this->_estadosCivilesModelRead = model('PersonaEstadoCivilModel', true, $this->db_read);
+		$this->_personaIdiomaModelRead = model('PersonaIdiomaModel', true, $this->db_read);
+		$this->_estadosModelRead = model('EstadosModel', true, $this->db_read);
+		$this->_municipiosModelRead = model('MunicipiosModel', true, $this->db_read);
+		$this->_localidadesModelRead = model('LocalidadesModel', true, $this->db_read);
+		$this->_coloniasModelRead = model('ColoniasModel', true, $this->db_read);
 		$this->_denunciantesModel = new DenunciantesModel();
-		$this->_tipoIdentificacionModel = new PersonaTipoIdentificacionModel();
-		$this->_paisesModel = new PaisesModel();
-		$this->_clasificacionLugarModel = new HechoClasificacionLugarModel();
+		$this->_tipoIdentificacionModelRead = model('PersonaTipoIdentificacionModel', true, $this->db_read);
+		$this->_paisesModelRead = model('PaisesModel', true, $this->db_read);
+		$this->_clasificacionLugarModelRead = model('HechoClasificacionLugarModel', true, $this->db_read);
+		$this->_denunciantesModelRead = model('DenunciantesModel', true, $this->db_read);
 		$this->_folioModel = new FolioModel();
-		$this->_escolaridadModel = new EscolaridadModel();
-		$this->_ocupacionModel = new OcupacionModel();
+		$this->_escolaridadModelRead = model('EscolaridadModel', true, $this->db_read);
+		$this->_ocupacionModelRead = model('OcupacionModel', true, $this->db_read);
+		$this->_folioModelRead = model('FolioModel', true, $this->db_read);
+
 		$this->urlApi = VIDEOCALL_URL . "guests/";
 	}
 
+	/**
+	 * ! Deprecated method, do not use.
+	 *
+	 */
 	public function index()
 	{
 		$data = (object) array();
 		$this->_loadView('Denuncia', $data, 'index');
 	}
 
+	/**
+	 * Vista para crear un nuevo denunciante. Se cargan todos los catalogos necesarios para el registro.
+	 *
+	 */
 	public function new()
 	{
 		$data = (object) array();
-		$data->nacionalidades = $this->_nacionalidadModel->asObject()->findAll();
-		$data->edoCiviles = $this->_estadosCivilesModel->asObject()->findAll();
-		$data->idiomas = $this->_personaIdiomaModel->asObject()->findAll();
-		$data->paises = $this->_paisesModel->asObject()->findAll();
-		$data->estados = $this->_estadosModel->asObject()->findAll();
-		$data->tiposIdentificaciones = $this->_tipoIdentificacionModel->asObject()->findAll();
-		$data->escolaridades = $this->_escolaridadModel->asObject()->findAll();
-		$data->ocupaciones = $this->_ocupacionModel->asObject()->findAll();
+		$data->nacionalidades = $this->_nacionalidadModelRead->asObject()->findAll();
+		$data->edoCiviles = $this->_estadosCivilesModelRead->asObject()->findAll();
+		$data->idiomas = $this->_personaIdiomaModelRead->asObject()->findAll();
+		$data->paises = $this->_paisesModelRead->asObject()->findAll();
+		$data->estados = $this->_estadosModelRead->asObject()->findAll();
+		$data->tiposIdentificaciones = $this->_tipoIdentificacionModelRead->asObject()->findAll();
+		$data->escolaridades = $this->_escolaridadModelRead->asObject()->findAll();
+		$data->ocupaciones = $this->_ocupacionModelRead->asObject()->findAll();
 		$this->_loadView('Denuncia', $data, 'index');
 	}
 
+	/**
+	 * Función para crear un nuevo denunciante
+	 * Recibe con metodo POST los datos del formulario
+	 *
+	 */
 	public function create()
 	{
 		try {
+			//Genera contraseña para el usuario
 			$password = $this->_generatePassword(6);
 
+			//Lista la foto de identificacion
 			$documento = $this->request->getPost('documento_text');
 			if ($documento) {
 				list($type, $documento) = explode(';', $documento);
@@ -93,6 +125,7 @@ class UserController extends BaseController
 			} else {
 				$documento = NULL;
 			}
+			//Lista la firma que ingresó
 
 			$firma = $this->request->getPost('firma_url');
 			if ($firma) {
@@ -110,6 +143,7 @@ class UserController extends BaseController
 				$interior = NULL;
 			}
 
+			//Datos del denunciante
 			$data = [
 				'NOMBRE' => $this->request->getPost('nombre'),
 				'APELLIDO_PATERNO' => $this->request->getPost('apellido_paterno'),
@@ -166,8 +200,10 @@ class UserController extends BaseController
 				$data['OCUPACIONDESCR'] = NULL;
 			}
 
+			//Verifica que el correo sea unico
 			if ($this->validate(['correo' => 'required|is_unique[DENUNCIANTES.CORREO]'])) {
 
+				//Datos para el servicio de videollamada
 				$dataApi2 = [
 					'NOMBRE' => $this->request->getPost('nombre'),
 					'APELLIDO_PATERNO' => $this->request->getPost('apellido_paterno'),
@@ -181,11 +217,14 @@ class UserController extends BaseController
 				$dataApi['languages'] = [(int)$this->request->getPost('idioma')];
 				$response = $this->_curlPost($this->urlApi, $dataApi);
 				$data['UUID'] = $response->uuid;
+				//Respuesta del servicio de videollamada
 				if ($response->uuid) {
+					//Insercion de datos
 					$this->_denunciantesModel->insert($data);
-					$this->_sendEmailPassword($data['CORREO'], $password);
-					session()->setFlashdata('message', 'Inicia sesión con la contraseña que llegará a tu correo electrónico');
-					return redirect()->to(base_url('/denuncia'))->with('message_success', 'Inicia sesión con la contraseña que llegará a tu correo electrónico y comienza tu denuncia');
+					//Envio de contraseña
+					$this->_sendEmailPassword($data['CORREO'], $data['TELEFONO'],$password);
+					session()->setFlashdata('message', 'Inicia sesión con tu correo y la contraseña que llegará a tu correo electrónico y/o mensajes SMS.');
+					return redirect()->to(base_url('/denuncia'))->with('message_success', 'Inicia sesión con la contraseña que llegará a tu correo electrónico y/o mensajes SMS y comienza tu denuncia.');
 				}
 			} else {
 				return redirect()->back()->with('message', 'Hubo un error en los datos o puede que ya exista un registro con el mismo correo');
@@ -195,27 +234,39 @@ class UserController extends BaseController
 		}
 	}
 
+	/**
+	 * Vista para actualizar los datos del denunciante.Se cargan todos los catalogos necesarios para la actualizacion.
+	 * *Usado cuando pasan de constancia de extravio a videodenuncia
+	 *
+	 */
 	public function updateDenuncianteInfo()
 	{
 		$data = (object) array();
-		$data->nacionalidades = $this->_nacionalidadModel->asObject()->findAll();
-		$data->edoCiviles = $this->_estadosCivilesModel->asObject()->findAll();
-		$data->idiomas = $this->_personaIdiomaModel->asObject()->findAll();
-		$data->paises = $this->_paisesModel->asObject()->findAll();
-		$data->estados = $this->_estadosModel->asObject()->findAll();
-		$data->tiposIdentificaciones = $this->_tipoIdentificacionModel->asObject()->findAll();
-		$data->escolaridades = $this->_escolaridadModel->asObject()->findAll();
-		$data->ocupaciones = $this->_ocupacionModel->asObject()->findAll();
+		$data->nacionalidades = $this->_nacionalidadModelRead->asObject()->findAll();
+		$data->edoCiviles = $this->_estadosCivilesModelRead->asObject()->findAll();
+		$data->idiomas = $this->_personaIdiomaModelRead->asObject()->findAll();
+		$data->paises = $this->_paisesModelRead->asObject()->findAll();
+		$data->estados = $this->_estadosModelRead->asObject()->findAll();
+		$data->tiposIdentificaciones = $this->_tipoIdentificacionModelRead->asObject()->findAll();
+		$data->escolaridades = $this->_escolaridadModelRead->asObject()->findAll();
+		$data->ocupaciones = $this->_ocupacionModelRead->asObject()->findAll();
 		$this->_loadViewDashboard('Denuncia', $data, 'dash_register_update/index');
 	}
 
+	/**
+	 * Función para actualizar los datos del denunciante faltante
+	 *
+	 * @return void
+	 */
 	public function updateDenuncianteInfoPost()
-	{
+	{			//Lista la foto de identificacion
+
 		$documento = $this->request->getPost('documento_text');
 		list($type, $documento) = explode(';', $documento);
 		list(, $extension) = explode('/', $type);
 		list(, $documento) = explode(',', $documento);
 		$documento = base64_decode($documento);
+		//Lista la firma que ingresó
 
 		$firma = $this->request->getPost('firma_url');
 		list($type, $firma) = explode(';', $firma);
@@ -227,6 +278,7 @@ class UserController extends BaseController
 		if ($interior == '') {
 			$interior = NULL;
 		}
+		//Datos del denunciante
 
 		$data = [
 			'CODIGOPOSTAL' => $this->request->getPost('cp'),
@@ -274,11 +326,13 @@ class UserController extends BaseController
 		}
 		try {
 			if (!session()->has('DENUNCIANTEID')) throw new \Exception();
-			$denunciante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', session('DENUNCIANTEID'))->first();
+			$denunciante = $this->_denunciantesModelRead->asObject()->where('DENUNCIANTEID', session('DENUNCIANTEID'))->first();
+			// Actualiazacion del usuario en el servicio de videollamada
 			$endpoint = $this->urlApi . $denunciante->UUID;
 			$dataApi = array('languages' => [(int)$this->request->getPost('idioma')]);
 			$response = $this->_curlPatch($endpoint, $dataApi);
 			if ($response->status == "sucess") {
+				//Actualizacion de los datos
 				$update = $this->_denunciantesModel->set($data)->where('DENUNCIANTEID', session('DENUNCIANTEID'))->update();
 				if (!$update) throw new \Exception();
 				session()->set('TIPO', '1');
@@ -292,45 +346,71 @@ class UserController extends BaseController
 		}
 	}
 
+	/**
+	 * Función para obtener los municipios de un estado
+	 * Se recibe por metodo POST el estado
+	 *
+	 */
 	public function getMunicipiosByEstado()
 	{
 		$estadoID = $this->request->getPost('estado_id');
-		$data = $this->_municipiosModel->asObject()->where('ESTADOID', $estadoID)->orderBy('MUNICIPIODESCR', 'asc')->findAll();
+		$data = $this->_municipiosModelRead->asObject()->where('ESTADOID', $estadoID)->orderBy('MUNICIPIODESCR', 'asc')->findAll();
 		return json_encode((object)['data' => $data]);
 	}
-
+	/**
+	 * Función para obtener las localidades de un municipio
+	 * Se recibe por metodo POST el estado y municipio
+	 *
+	 */
 	public function getLocalidadesByMunicipio()
 	{
 		$estadoID = $this->request->getPost('estado_id');
 		$municipioID = $this->request->getPost('municipio_id');
-		$data = $this->_localidadesModel->asObject()->where('ESTADOID', $estadoID)->where('MUNICIPIOID', $municipioID)->orderBy('LOCALIDADDESCR', 'asc')->findAll();
+		$data = $this->_localidadesModelRead->asObject()->where('ESTADOID', $estadoID)->where('MUNICIPIOID', $municipioID)->orderBy('LOCALIDADDESCR', 'asc')->findAll();
 		return json_encode((object)['data' => $data]);
 	}
-
+	/**
+	 * Función para obtener los colonias de un municipio
+	 * Se recibe por metodo POST el estado y municipio
+	 *
+	 */
 	public function getColoniasByEstadoAndMunicipio()
 	{
 		$estadoID = $this->request->getPost('estado_id');
 		$municipioID = $this->request->getPost('municipio_id');
-		$data = $this->_coloniasModel->asObject()->where('ESTADOID', $estadoID)->where('MUNICIPIOID', $municipioID)->orderBy('COLONIADESCR', 'asc')->findAll();
+		$data = $this->_coloniasModelRead->asObject()->where('ESTADOID', $estadoID)->where('MUNICIPIOID', $municipioID)->orderBy('COLONIADESCR', 'asc')->findAll();
 		return json_encode((object)['data' => $data]);
 	}
-
+	/**
+	 * Función para obtener los colonias de una localidad
+	 * Se recibe por metodo POST el estado, municipio y localidad
+	 *
+	 */
 	public function getColoniasByEstadoMunicipioLocalidad()
 	{
 		$estadoID = $this->request->getPost('estado_id');
 		$municipioID = $this->request->getPost('municipio_id');
 		$localidadID = $this->request->getPost('localidad_id');
-		$data = $this->_coloniasModel->asObject()->where('ESTADOID', $estadoID)->where('MUNICIPIOID', $municipioID)->where('LOCALIDADID', $localidadID)->orderBy('COLONIADESCR', 'asc')->findAll();
+		$data = $this->_coloniasModelRead->asObject()->where('ESTADOID', $estadoID)->where('MUNICIPIOID', $municipioID)->where('LOCALIDADID', $localidadID)->orderBy('COLONIADESCR', 'asc')->findAll();
 		return json_encode((object)['data' => $data]);
 	}
-
+	/**
+	 * Función para obtener la clasificacion del lugar
+	 * Se recibe por metodo POST el id del lugar
+	 *
+	 */
 	public function getClasificacionByLugar()
 	{
 		$lugar_id = $this->request->getPost('lugar_id');
-		$data = $this->_clasificacionLugarModel->asObject()->where('HECHOLUGARID', $lugar_id)->findAll();
+		$data = $this->_clasificacionLugarModelRead->asObject()->where('HECHOLUGARID', $lugar_id)->findAll();
 		return json_encode((object)['data' => $data]);
 	}
 
+	/**
+	 * Funcion para generar contraseña, de acuerdo al tamaño indicado
+	 *
+	 * @param  mixed $length
+	 */
 	private function _generatePassword($length)
 	{
 		$password = "";
@@ -342,10 +422,13 @@ class UserController extends BaseController
 		return $password;
 	}
 
+	/**
+	 * Función para verificar si este el email para evitar duplicidad en registro
+	 */
 	public function existEmail()
 	{
 		$email = $this->request->getPost('email');
-		$data = $this->_denunciantesModel->where('CORREO', $email)->first();
+		$data = $this->_denunciantesModelRead->where('CORREO', $email)->first();
 		if ($data == NULL) {
 			return json_encode((object)['exist' => 0]);
 		} else if (count($data) > 0) {
@@ -355,30 +438,70 @@ class UserController extends BaseController
 		}
 	}
 
+	/**
+	 * Función para obtner los folios abiertos o cerrados del denunciante.
+	 * Permite abrir el modal y no generar otro registro
+	 *
+	 */
 	public function getFoliosAbiertosById()
 	{
 		$id = $this->request->getPost('id');
 		$data = (object)array();
-		$data->abiertos = $this->_folioModel->asObject()->where('STATUS', 'ABIERTO')->where('DENUNCIANTEID', $id)->findAll();
-		$data->proceso = $this->_folioModel->asObject()->where('STATUS', 'EN PROCESO')->where('DENUNCIANTEID', $id)->findAll();
+		$data->abiertos = $this->_folioModelRead->asObject()->where('STATUS', 'ABIERTO')->where('DENUNCIANTEID', $id)->findAll();
+		$data->proceso = $this->_folioModelRead->asObject()->where('STATUS', 'EN PROCESO')->where('DENUNCIANTEID', $id)->findAll();
 		return json_encode($data);
 	}
 
-	private function _sendEmailPassword($to, $password)
+	/**
+	 * Función para enviar un correo con la contraseña generada al denunciante
+	 *
+	 * @param  mixed $to
+	 * @param  mixed $password
+	 */
+	private function _sendEmailPassword($to, $telefono, $password)
 	{
-		$email = \Config\Services::email();
-		$email->setTo($to);
-		$email->setSubject('Te estamos atendiendo');
 		$body = view('email_template/password_email_template.php', ['email' => $to, 'password' => $password]);
-		$email->setMessage($body);
+		$mailersend = new MailerSend(['api_key' => EMAIL_TOKEN]);
+		$recipients = [
+			new Recipient($to, 'Your Client'),
+		];
 
-		if ($email->send()) {
+		$emailParams = (new EmailParams()) //check envio
+			->setFrom('notificacionfgebc@fgebc.gob.mx')
+			->setFromName('FGEBC')
+			->setRecipients($recipients)
+			->setSubject('Te estamos atendiendo')
+			->setHtml($body)
+			->setText('Usted ha generado un nuevo registro en el Centro de Denuncia Tecnológica. Para acceder debes ingresar los siguientes datos. USUARIO: ' . $to . 'CONTRASEÑA' . $password)
+			->setReplyTo('notificacionfgebc@fgebc.gob.mx')
+			->setReplyToName('FGEBC');
+		$sendSMS = $this->sendSMS("Te estamos atendiendo", $telefono, 'Notificaciones FGEBC/Estimado usuario, tu contraseña es: ' . $password);
+
+		try {
+			$result = $mailersend->email->send($emailParams);
+		} catch (MailerSendValidationException $e) {
+			$result = false;
+		} catch (MailerSendRateLimitException $e) {
+			$result = false;
+		}
+		if ($result) {
 			return true;
 		} else {
-			return false;
+			if ($sendSMS == "") {
+				return true;
+			} else {
+				return false;
+			}
 		}
 	}
 
+	/**
+	 * Función para cargar cualquier vista en cualquier función de la carpeta register.
+	 *
+	 * @param  mixed $title
+	 * @param  mixed $data
+	 * @param  mixed $view
+	 */
 	private function _loadView($title, $data, $view)
 	{
 		$data = [
@@ -388,7 +511,13 @@ class UserController extends BaseController
 
 		echo view("client/register/$view", $data);
 	}
-
+	/**
+	 * Función para cargar cualquier vista en cualquier función de la carpeta dashboard.
+	 *
+	 * @param  mixed $title
+	 * @param  mixed $data
+	 * @param  mixed $view
+	 */
 	private function _loadViewDashboard($title, $data, $view)
 	{
 		$data = [
@@ -397,6 +526,12 @@ class UserController extends BaseController
 		];
 		echo view("client/dashboard/$view", $data);
 	}
+	/**
+	 * Función CURL POST a Justicia encriptados
+	 *
+	 * @param  mixed $endpoint
+	 * @param  mixed $data
+	 */
 	private function _curlPost($endpoint, $data)
 	{
 		$ch = curl_init();
@@ -428,7 +563,12 @@ class UserController extends BaseController
 
 		return json_decode($result);
 	}
-
+	/**
+	 * Función CURL PATCH al servicio de videollamada
+	 *
+	 * @param  mixed $endpoint
+	 * @param  mixed $data
+	 */
 	private function _curlPatch($endpoint, $data)
 	{
 		$ch = curl_init();
@@ -459,6 +599,37 @@ class UserController extends BaseController
 		curl_close($ch);
 
 		return json_decode($result);
+	}
+	/**
+	 * Función para enviar mensajes SMS
+	 *
+	 * @param  mixed $tipo
+	 * @param  mixed $celular
+	 * @param  mixed $mensaje
+	 */
+	public function sendSMS($tipo, $celular, $mensaje)
+	{
+
+		$endpoint = "http://enviosms.ddns.net/API/";
+		$data = array();
+		$data['UsuarioID'] = 1;
+		$data['Nombre'] = $tipo;
+		$lstMensajes = array();
+		$obj = array("Celular" =>  $celular, "Mensaje" => $mensaje);
+		$lstMensajes[] = $obj;
+		$data['lstMensajes'] = $lstMensajes;
+
+		$httpClient = new Client([
+			'base_uri' => $endpoint
+		]);
+
+		$response = $httpClient->post('campañas/enviarSMS', [
+			'json' => $data
+		]);
+
+		$respuestaServ = $response->getBody()->getContents();
+
+		return json_decode($respuestaServ);
 	}
 }
 

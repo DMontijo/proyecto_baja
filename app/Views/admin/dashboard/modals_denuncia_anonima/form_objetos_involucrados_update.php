@@ -75,6 +75,8 @@
 	</div>
 </form>
 <script>
+
+	//Evento pata obtener la subclasificacion de los objetos, de acuerdo a su clasificacion
 	let selectObjetoClasificacionDa = document.querySelector('#objeto_update_clasificacion');
 	selectObjetoClasificacionDa.addEventListener("change", function() {
 				let objetoSubclasificacion = document.querySelector("#objeto_update_subclasificacion")

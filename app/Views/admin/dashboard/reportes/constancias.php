@@ -85,6 +85,14 @@
 													<option <?= isset($body_data->filterParams->STATUS) ? ($body_data->filterParams->STATUS == 'EN PROCESO' ? 'selected' : '') : null ?> value="EN PROCESO">EN PROCESO</option>
 												</select>
 											</div>
+											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
+												<label for="status" class="form-label font-weight-bold">Genero:</label>
+												<select class="form-control" id="genero" name="genero" required>
+													<option selected value="">Ambos</option>
+													<option <?= isset($body_data->filterParams->GENERO) ? ($body_data->filterParams->GENERO == 'M' ? 'selected' : '') : null ?> value="M">MASCULINO</option>
+													<option <?= isset($body_data->filterParams->GENERO) ? ($body_data->filterParams->GENERO == 'F' ? 'selected' : '') : null ?> value="F">FEMENINO</option>
+												</select>
+											</div>
 
 											<div class="col-12 text-right">
 												<a href="<?= base_url('admin/dashboard/reportes_constancias') ?>" class="btn btn-secondary font-weight-bold" id="btnFiltroFolio" name="btnFiltroFolio">Borrar filtro</a>
@@ -116,7 +124,7 @@
 								<?php } ?>
 							</div>
 							<div class="col-12" style="overflow-x:auto;">
-								<table id="constancias_generadas" class="table table-bordered table-striped table-sm" style="font-size:12px;">
+								<table id="constancias_generadas" class="table table-bordered table-striped table-sm" style="font-size:10px;">
 									<thead>
 										<tr>
 											<th class="text-center">CONSTANCIA</th>
@@ -124,6 +132,7 @@
 											<th class="text-center" style="min-width:150px;">FECHA DE FIRMA</th>
 											<th class="text-center" style="min-width:150px;">ESTADO CONSTANCIA</th>
 											<th class="text-center" style="min-width:250px;">DENUNCIANTE</th>
+											<th class="text-center" style="min-width:250px;">GÉNERO</th>
 											<th class="text-center" style="min-width:250px;">AGENTE</th>
 											<th class="text-center" style="min-width:150px;">MUNICIPIO</th>
 											<th class="text-center" style="min-width:150px;"></th>
@@ -135,9 +144,10 @@
 											<tr>
 												<td class="text-center font-weight-bold"><?= $constancia->CONSTANCIAEXTRAVIOID ?></td>
 												<td class="text-center"><?= $constancia->ANO ?></td>
-												<td class="text-center"><?= isset($constancia->FECHAFIRMA) ? $constancia->FECHAFIRMA : '' ?></td>
+												<td class="text-center"><?= isset($constancia->FECHAFIRMA) ? date('d-m-Y', strtotime($constancia->FECHAFIRMA)) : '' ?></td>
 												<td class="text-center"><?= $constancia->STATUS ?></td>
 												<td class="text-center"><?= $constancia->NOMBRE_DENUNCIANTE ?></td>
+												<td class="text-center"><?= ($constancia->GENERO == 'M' ? 'MASCULINO' : ($constancia->GENERO == 'F' ? 'FEMENINO' : ''))?></td>
 												<td class="text-center"><?= isset($constancia->NOMBRE_AGENTE) ? $constancia->NOMBRE_AGENTE : 'NO SE HA FIRMADO' ?></td>
 												<?php if ($constancia->MUNICIPIOIDCITA == null) { ?>
 													<td class="text-center"><?= $constancia->MUNICIPIODESCR ?></td>
@@ -216,7 +226,7 @@
 				// [0, 'asc'],
 			],
 			searching: true,
-			pageLength: 100,
+			pageLength: 25,
 			// dom: 'Bfrtip',
 			// buttons: [
 			// 	'copy', 'excel', 'pdf'
@@ -240,6 +250,7 @@
 	<script>
 		let form = document.querySelector('#formExcel');
 
+		//Datos de confirmacion del filtro
 		form.addEventListener('submit', function(event) {
 			event.preventDefault();
 			text = `
@@ -273,6 +284,7 @@
 		});
 	</script>
 	<script>
+		//Evento change al cambira el status, deshabilita la fecha y hora fin
 		$(document).on('change', '#status', function() {
 			var fechaFin = document.getElementById('fechaFin');
 			var horaFin = document.getElementById('horaFin');

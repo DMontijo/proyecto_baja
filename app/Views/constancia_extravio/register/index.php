@@ -66,6 +66,15 @@
 	</div>
 </section>
 <?php include('reset_password_modal.php') ?>
+<?php if (session()->getFlashdata('message_error')) : ?>
+	<script>
+		Swal.fire({
+			icon: 'error',
+			html: '<strong><?= session()->getFlashdata('message_error') ?></strong>',
+			confirmButtonColor: '#bf9b55',
+		})
+	</script>
+<?php endif; ?>
 <script>
 	(function() {
 		'use strict'
@@ -94,6 +103,7 @@
 <?php endif; ?>
 <?php if (session()->getFlashdata('message_session')) : ?>
 	<script>
+		//Funcionpara cerrar todas las sesiones activas
 		Swal.fire({
 			icon: 'error',
 			title: '<?= session()->getFlashdata('message_session') ?>',
