@@ -115,6 +115,7 @@ window.onload = function() {
     }, 300000);
 }
 
+// funcion para obtener todas las constancias abiertas
 const getConstanciasAbiertas = () => {
     $.ajax({
         url: "<?= base_url('/data/get-all-constancias-abiertas') ?>",
@@ -127,6 +128,7 @@ const getConstanciasAbiertas = () => {
     });
 }
 
+//se llena la tabla para visualizar las constancias abiertas
 const llenarTabla = (constancias) => {
     const tbody = document.querySelector('#constancias_abiertas tbody');
     const filas = document.querySelectorAll('#constancias_abiertas tbody > tr');

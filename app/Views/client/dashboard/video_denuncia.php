@@ -265,6 +265,7 @@
 	document.getElementById('folio').value = folio;
 	document.getElementById('year').value = year;
 
+	//Evento para previsualizar el documento
 	document.querySelector('#documentoArchivo').addEventListener('change', (e) => {
 		let preview = document.querySelector('#viewDocumentoArchivo');
 		if (e.target.files && e.target.files[0]) {
@@ -276,15 +277,18 @@
 		}
 	});
 
+	//Evento para enviar archivos externos a VD
 	document.getElementById('form_archivos_externos').addEventListener('submit', function(evt) {
 		evt.preventDefault();
 		crearArchivos();
 	})
 
+	//Funcion asincrona para crear los archivos externos en VD y comprimirlos
 	async function crearArchivos() {
 		document.getElementById('form_archivos_externos').classList.add('d-none');
 		document.getElementById('documentos_anexar_spinner').classList.remove('d-none');
 		let documento;
+		//Comprime
 		if ($("#documentoArchivo")[0].files && $("#documentoArchivo")[0].files[0]) {
 			if ($("#documentoArchivo")[0].files[0].type == "image/jpeg" || $("#documentoArchivo")[0].files[0].type == "image/png" || $("#documentoArchivo")[0].files[0].type == "image/jpg") {
 				documento = await comprimirImagen($("#documentoArchivo")[0].files[0], 50);
@@ -303,6 +307,8 @@
 			});
 			return
 		}
+
+		//Envio de datos
 		var packetData = new FormData();
 		packetData.append("documentoArchivo", documento);
 		packetData.append("folio", document.getElementById('folio').value);
@@ -367,6 +373,7 @@
 
 	}
 
+	//Funcion para comprimir el documento a un porcentaje
 	function comprimirImagen(imagenComoArchivo, porcentajeCalidad) {
 		return new Promise((resolve, reject) => {
 			const $canvas = document.createElement("canvas");

@@ -121,6 +121,7 @@
 	const input = document.querySelector("#telefono");
 	const input2 = document.querySelector("#telefono2");
 
+	//Funcion para eliminar guiones y validar el tamaño del elemento
 	function clearInputPhone(e) {
 		e.target.value = e.target.value.replace(/-/g, "");
 		if (e.target.value.length > e.target.maxLength) {
@@ -139,11 +140,13 @@
 		const toggle_password = document.querySelector('#toggle-password');
 		const toggle_password_confirm = document.querySelector('#toggle-password-confirm');
 
+		//Convierte los input text a mayusculas y limpia caracteres especiales
 		inputsText.forEach((input) => {
 			input.addEventListener('input', function(event) {
 				event.target.value = clearText(event.target.value).toUpperCase();
 			}, false)
 		})
+		//Convierte los input email a minusculas y limpia caracteres especiales
 
 		inputsEmail.forEach((input) => {
 			input.addEventListener('input', function(event) {
@@ -151,6 +154,7 @@
 			}, false)
 		})
 
+		//Evento para mostrar la contraseña
 		toggle_password.addEventListener('click', (event) => {
 			const type = password.getAttribute("type") === "password" ? "text" : "password";
 			password.setAttribute("type", type);
@@ -164,7 +168,7 @@
 			}
 
 		}, false);
-
+		//Evento para mostrar la confirmacion de contraseña
 		toggle_password_confirm.addEventListener('click', (event) => {
 			const type = password_confirm.getAttribute("type") === "password" ? "text" : "password";
 			password_confirm.setAttribute("type", type);
@@ -178,6 +182,7 @@
 			}
 		}, false);
 
+		//Envia el codigo OTP
 		form_datos.addEventListener('submit', function(event) {
 			if (!form_datos.checkValidity()) {
 				event.preventDefault();
@@ -210,6 +215,7 @@
 			form_datos.classList.add('was-validated')
 		}, false);
 
+		//Valida que las contraseñas coincidan para su modificacion
 		form_password.addEventListener('submit', function(event) {
 			if (!form_password.checkValidity()) {
 				event.preventDefault();
@@ -231,6 +237,7 @@
 			form_password.classList.add('was-validated')
 		}, false)
 
+		//Calcula la edad de acuerdo a la fecha de nacimiento
 		document.querySelector('#fecha_nacimiento').addEventListener('blur', (e) => {
 			let fecha = e.target.value;
 			let hoy = new Date();
@@ -253,6 +260,7 @@
 			}
 		});
 
+		//Funcion para eliminar los caracteres especiales del texto
 		function clearText(text) {
 			return text
 				.normalize('NFD')

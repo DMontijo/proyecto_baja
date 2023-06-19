@@ -1013,13 +1013,14 @@
 	</div>
 </div>
 <script>
-
+	//Elementos deshbailitados
 	document.querySelector('#municipio_select_new_da').disabled = true;
 	document.querySelector('#localidad_select_new_da').disabled = true;
 	document.querySelector('#colonia_select_new_da').disabled = true;
 	document.querySelector('#municipio_select_origen_new_da').disabled = true;
-	
 
+
+	//Evento change de ocupacion para habilitar un input
 	document.querySelector('#ocupacion_new_da').addEventListener('change', (e) => {
 		let select_ocupacion = document.querySelector('#ocupacion_new_da');
 		let input_ocupacion = document.querySelector('#ocupacion_descr_new_da');
@@ -1033,6 +1034,7 @@
 			input_ocupacion.value = "";
 		}
 	});
+	//Evento change para obtener los municipios del estado seleccionado. Se limpia todo para evitar acumulacion
 	document.querySelector('#estado_select_origen_new_da').addEventListener('change', (e) => {
 		let select_municipio = document.querySelector('#municipio_select_origen_new_da');
 
@@ -1068,6 +1070,7 @@
 		});
 
 	});
+	//Evento change para obtener los municipios del estado seleccionado. Se limpia todo para evitar acumulacion
 
 	document.querySelector('#estado_select_new_da').addEventListener('change', (e) => {
 		let select_municipio = document.querySelector('#municipio_select_new_da');
@@ -1117,6 +1120,8 @@
 			input_colonia.classList.remove('d-none');
 		}
 	});
+		//Evento change para obtener las localidades del municipio seleccionado. Se limpia todo para evitar acumulacion
+
 	document.querySelector('#municipio_select_new_da').addEventListener('change', (e) => {
 		let select_localidad = document.querySelector('#localidad_select_new_da');
 		let select_colonia = document.querySelector('#colonia_select_new_da');
@@ -1129,10 +1134,10 @@
 		clearSelect(select_colonia);
 
 		select_localidad.value = '';
-		
+
 		select_localidad.disabled = true;
 		select_colonia.disabled = true;
-		
+
 
 		let data = {
 			'estado_id': estado,
@@ -1158,6 +1163,7 @@
 			error: function(jqXHR, textStatus, errorThrown) {}
 		});
 	});
+		//Evento change para obtener las colonias de la localidad, municipio y estado seleccionado. Se limpia todo para evitar acumulacion
 
 	document.querySelector('#localidad_select_new_da').addEventListener('change', (e) => {
 		let select_colonia = document.querySelector('#colonia_select_new_da');
@@ -1218,6 +1224,7 @@
 		}
 	});
 
+	//Evento change de colonia para habilitar un input
 	document.querySelector('#colonia_select_new_da').addEventListener('change', (e) => {
 		let select_colonia = document.querySelector('#colonia_select_new_da');
 		let input_colonia = document.querySelector('#colonia_new_da');

@@ -205,11 +205,13 @@
 	</div>
 </div>
 <script>
+	//Iteracion para agregar el modelo del vehiculo hasta la fecha
 	let startYear = 1800;
 	let endYear = new Date().getFullYear();
 	for (let i = endYear; i > startYear; i--) {
 		$('#modelo_vehiculo').append($('<option />').val(i).html(i));
 	}
+	//Previsualizacion al subir fotos
 	document.querySelector('#subirFotoV').addEventListener('change', (e) => {
 		let preview = document.querySelector('#foto_vehiculo');
 		if (e.target.files && e.target.files[0]) {
@@ -220,6 +222,7 @@
 			reader.readAsDataURL(e.target.files[0]);
 		}
 	});
+	//Previsualizacion al subir documentos
 
 	document.querySelector('#subirDoc').addEventListener('change', (e) => {
 		let preview = document.querySelector('#doc_vehiculo');

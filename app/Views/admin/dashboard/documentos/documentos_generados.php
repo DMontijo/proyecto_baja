@@ -118,6 +118,8 @@
 
 <script>
 	$(document).ready(function() {
+
+		//Declaracion de elementos que se usan en diferentes funciones
 		let select_victima_documento = document.querySelector("#victima_modal_documento");
 		let select_imputado_documento = document.querySelector("#imputado_modal_documento");
 		let btn_enviarcorreoDoc = document.querySelector('#enviarcorreoDoc');
@@ -126,6 +128,7 @@
 		let btn_archivos_externos = document.querySelector('#subirDocumento');
 		let resultado = getParameterByName('q');
 
+		//Funcion que verifica si existe ese nombre como parametro en la URL
 		function isParameterByName(name) {
 			let regex = new RegExp('[?&]' + name + '=');
 			return regex.test(window.location.href);
@@ -148,6 +151,7 @@
 						const imputados = response.imputados;
 						const victimas = response.victimas;
 						const correos = response.correos;
+						//llena las tablas y selects necesarios para su implementacion
 						let tabla_documentos = document.querySelectorAll('#table-documentos tr');
 						tabla_documentos.forEach(row => {
 							if (row.id !== '') {
@@ -235,6 +239,7 @@
 						const imputados = response.imputados;
 						const victimas = response.victimas;
 						const correos = response.correos;
+						//llena las tablas y selects necesarios para su implementacion
 						let tabla_documentos = document.querySelectorAll('#table-documentos tr');
 						tabla_documentos.forEach(row => {
 							if (row.id !== '') {
@@ -293,6 +298,7 @@
 			});
 
 		}
+		//Declaracion de variables utilizado para obtencion de la plantilla
 		var selectPlantilla = document.querySelector('#plantilla');
 		let plantilla = document.querySelector("#plantilla");
 		var btn_guardarFolioDoc = document.querySelector('#guardarFolioDoc');
@@ -303,6 +309,7 @@
 		var options = select_uma.options;
 		$('#documentos_modal_wyswyg').on('show.bs.modal', function(event) {
 			<?php if (session('ROLID') == 4 || session('ROLID') == 8 || session('ROLID') == 10) { ?>
+				//Se asigna de manera automatica cuando ya tienen agentes asignados en los documentos
 				const data = {
 					'folio': <?php echo $_GET['folio'] ?>,
 					'year': <?php echo $_GET['year'] ?>,
@@ -337,6 +344,7 @@
 
 			<?php } ?>
 		});
+		//Elimina las UMAS que no correspondan al municipio
 		<?php if ($body_data->foliorow[0]->MUNICIPIOASIGNADOID == 1 || $body_data->foliorow[0]->INSTITUCIONREMISIONMUNICIPIOID	== 1) { ?>
 			eliminarUMAByMunicipio("ENSENADA");
 		<?php } else if ($body_data->foliorow[0]->MUNICIPIOASIGNADOID == 6 || $body_data->foliorow[0]->INSTITUCIONREMISIONMUNICIPIOID	== 6) { ?>
@@ -359,6 +367,7 @@
 			eliminarUMAByMunicipio("ZONA COSTA - TECATE");
 		<?php } ?>
 
+		//Funcion para eliminar las opcion es del select
 		function eliminarUMAByMunicipio(uma) {
 			for (var i = options.length - 1; i >= 0; i--) {
 				var option = options[i];
@@ -448,11 +457,12 @@
 		// 	},
 		// 	theme: 'snow' // or 'bubble'
 		// });
+		//Boton para obtener el contenido del documento
 		btn_actualizarFolioDoc.addEventListener('click', (event) => {
 			let contenidoModificado = tinymce.get("documento_editar").getContent();
 			actualizarDocumento(contenidoModificado);
 		}, false);
-
+		//Evento change de tipo de plantilla, modifica los estilos de acuerdo al tipo
 		selectPlantilla.addEventListener("change", function() {
 			if (plantilla.value == "CITATORIO") {
 				document.getElementById("div_uma").style.display = "block";
@@ -491,7 +501,7 @@
 
 		});
 
-
+		//funcion para obtener la informacion de la plantilla al completar todos los campos requeridos
 		function obtenerPlantillas(tipoPlantilla, victima, imputado) {
 
 
@@ -717,8 +727,10 @@
 			// console.log(plantilla.value);
 			insertarDocumento(contenidoModificado, plantilla.value);
 		}, false);
+		//funcion para asignar valores a los documentos a un folio
 
 		function insertarDocumento(contenido, tipoPlantilla) {
+			//se valida que wsea denuncia anonima
 			<?php if ($body_data->foliorow[0]->TIPODENUNCIA == "DA") { ?>
 				Swal.fire({
 					title: 'Este documento no será enviado',
@@ -842,6 +854,7 @@
 			<?php } ?>
 
 		}
+		//funcion para agregar documentos al folio con la informacion ya establecida
 
 		function insertarDoc(data) {
 			$.ajax({
@@ -888,6 +901,8 @@
 			});
 		}
 		var btn_firmar_doc = document.querySelector('#firmar_documento_modal');
+		//Evento para firmar los documentos de manera general
+
 		btn_firmar_doc.addEventListener('click', (event) => {
 			$.ajax({
 				data: {
@@ -941,6 +956,8 @@
 		}, false);
 
 		var btn_firmar_doc_id = document.querySelector('#firmar_documento_modal_id');
+		//Evento para firmar un documento por id
+
 		btn_firmar_doc_id.addEventListener('click', (event) => {
 			$.ajax({
 				data: {
@@ -992,6 +1009,8 @@
 				error: function(jqXHR, textStatus, errorThrown) {}
 			});
 		}, false);
+		//Evento para enviar por correo los documentos de forma general
+
 		btn_enviarcorreoDoc.addEventListener('click', (event) => {
 			const data = {
 				'send_mail_select': document.querySelector('#send_mail_select').value,
@@ -1090,6 +1109,7 @@
 
 
 		}, false);
+		//Evento para enviar documentos de manera unitaria
 		btn_enviarcorreoDocUni.addEventListener('click', (event) => {
 			const data = {
 				'send_mail_select': document.querySelector('#send_mail_select_uni').value,
@@ -1189,6 +1209,7 @@
 
 		}, false);
 
+		//Evento para subir los archivos externos a Justicia
 		btn_archivos_externos.addEventListener('click', (event) => {
 			$('#subirDocumentosModal').modal('show');
 			$('#subirDocumentosModal').show();
@@ -1263,6 +1284,7 @@
 				});
 			}
 		}, false);
+		//Funcion para actualizar el documento, recibe el placeholder actualizado
 
 		function actualizarDocumento(placeholder) {
 			const data = {
@@ -1308,6 +1330,7 @@
 
 		}
 	});
+	//Funcion para iterar el llenado de tabla de documentos, recibe como parametro todos los documentos
 
 	function llenarTablaDocumentos(documentos) {
 		for (let i = 0; i < documentos.length; i++) {
@@ -1400,6 +1423,7 @@
 			$("#adicionados").append(nFilas - 1);
 		}
 	}
+	//Funcion para asignar un agente al documento y que este lo firme, recibe por parametro el id del documento, folio y año
 
 	function asignarAgente(documento, folio, ano) {
 		$('#asignarAgenteModal').modal('show');
@@ -1446,6 +1470,7 @@
 		});
 
 	}
+	//Funcion para asignar un encargado al documento y que este lo firme, recibe por parametro el id del documento, folio y año
 
 	function asignarEncargado(documento, folio, ano) {
 		$('#encargadosModal').modal('show');
@@ -1492,6 +1517,7 @@
 		});
 
 	}
+	//Funcion para llenar valores y abrir modal para firmar documentos por id, recibe por parametro el folio, año y id del documento
 
 	function firmarDocumento(folio, ano, foliodocid) {
 		document.querySelector('#folio_id').value = folio;
@@ -1510,6 +1536,7 @@
 
 	}
 
+	//Funcion para cambiar el estado de envio del documento
 	function cambiarStatusDoc(foliodocid, status_envio, enviado, folio, ano) {
 
 		$('#change_status_modal').modal('show');
@@ -1521,6 +1548,7 @@
 		document.querySelector("#ano_doc").value = ano;
 
 	}
+	//Funcion para visualizar el documento para una posible edicion, recibe por parametro el id del documento
 
 	function viewDocumento(foliodocid) {
 		jQuery('.ql-toolbar').remove();
@@ -1597,6 +1625,7 @@
 			}
 		});
 	}
+	//se obtiene el nombre de los parametros de la url
 
 	function getParameterByName(name, url = window.location.href) {
 		name = name.replace(/[\[\]]/g, "\\$&");
@@ -1606,11 +1635,11 @@
 		if (!results[2]) return '';
 		return decodeURIComponent(results[2].replace(/\+/g, " "));
 	}
-
+	//Funcion para redirigir a remitir el folio
 	function remitir() {
 		window.location.href = `<?= base_url('/admin/dashboard/bandeja_remision?folio=') ?>${getParameterByName('folio')}&year=${getParameterByName('year')}&municipioasignado=${getParameterByName('municipioasignado')}&expediente=${getParameterByName('expediente')}`;
 	}
-
+	//Funcion para borrar un documento, se manda por parametro el folio, año y id del documento
 	function borrarDocumento(folio, ano, foliodocid) {
 		Swal.fire({
 			title: '¿Estas seguro de eliminar el documento?',

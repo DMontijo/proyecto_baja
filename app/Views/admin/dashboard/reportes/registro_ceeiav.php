@@ -46,6 +46,14 @@
 													<?php } ?>
 												</select>
 											</div>
+											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
+												<label for="status" class="form-label font-weight-bold">Genero:</label>
+												<select class="form-control" id="genero" name="genero" required>
+													<option selected value="">Ambos</option>
+													<option <?= isset($body_data->filterParams->GENERO) ? ($body_data->filterParams->GENERO == 'M' ? 'selected' : '') : null ?> value="M">MASCULINO</option>
+													<option <?= isset($body_data->filterParams->GENERO) ? ($body_data->filterParams->GENERO == 'F' ? 'selected' : '') : null ?> value="F">FEMENINO</option>
+												</select>
+											</div>
 
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
 												<label for="fecha" class="form-label font-weight-bold">Fecha de inicio:</label>
@@ -175,6 +183,7 @@
 <?php if (isset($body_data->filterParams)) { ?>
 	<script>
 		let form = document.querySelector('#formExcel');
+		//Datos de confirmacion del filtro
 
 		form.addEventListener('submit', function(event) {
 			event.preventDefault();

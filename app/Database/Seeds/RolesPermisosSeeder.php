@@ -125,7 +125,6 @@ class RolesPermisosSeeder extends Seeder
 			//VISUALIZADOR ESTATAL
 			array('ROLID' => '13', 'PERMISOID' => '9'),
 
-
 		];
 		$this->db->table('ROLESPERMISOS')->insertBatch($data);
 	}

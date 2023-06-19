@@ -16,6 +16,7 @@
 </div>
 
 <script>
+	//Funcion para abrir el link para iniciar la videodenuncia cuando la tiene abierta
 	function iniciarDenuncia() {
 		$.ajax({
 			data: {

@@ -159,6 +159,8 @@ $file_text = $user_id . "_data.txt";
 		$('[data-toggle="tooltip"]').tooltip()
 	});
 	var btnActualizarExpedientes = document.querySelector('#btnActualizarExpedientes');
+
+	//Evento para actualizar las oficinas de los expedientes cuando se actualizan en Justicia. Sirve para sincronizarlo con VIdeodenuncia
 	btnActualizarExpedientes.addEventListener('click', (e) => {
 
 		$.ajax({

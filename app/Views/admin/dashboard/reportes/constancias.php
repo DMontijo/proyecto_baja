@@ -85,6 +85,14 @@
 													<option <?= isset($body_data->filterParams->STATUS) ? ($body_data->filterParams->STATUS == 'EN PROCESO' ? 'selected' : '') : null ?> value="EN PROCESO">EN PROCESO</option>
 												</select>
 											</div>
+											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
+												<label for="status" class="form-label font-weight-bold">Genero:</label>
+												<select class="form-control" id="genero" name="genero" required>
+													<option selected value="">Ambos</option>
+													<option <?= isset($body_data->filterParams->GENERO) ? ($body_data->filterParams->GENERO == 'M' ? 'selected' : '') : null ?> value="M">MASCULINO</option>
+													<option <?= isset($body_data->filterParams->GENERO) ? ($body_data->filterParams->GENERO == 'F' ? 'selected' : '') : null ?> value="F">FEMENINO</option>
+												</select>
+											</div>
 
 											<div class="col-12 text-right">
 												<a href="<?= base_url('admin/dashboard/reportes_constancias') ?>" class="btn btn-secondary font-weight-bold" id="btnFiltroFolio" name="btnFiltroFolio">Borrar filtro</a>
@@ -242,6 +250,7 @@
 	<script>
 		let form = document.querySelector('#formExcel');
 
+		//Datos de confirmacion del filtro
 		form.addEventListener('submit', function(event) {
 			event.preventDefault();
 			text = `
@@ -275,6 +284,7 @@
 		});
 	</script>
 	<script>
+		//Evento change al cambira el status, deshabilita la fecha y hora fin
 		$(document).on('change', '#status', function() {
 			var fechaFin = document.getElementById('fechaFin');
 			var horaFin = document.getElementById('horaFin');

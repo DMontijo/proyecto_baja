@@ -85,6 +85,7 @@
 	</div>
 </div>
 <script>
+	//Funcion pata convertir todo el elemento en mayuscula
 	function mayuscTextarea(e) {
 		e.value = e.value.toUpperCase();
 	}

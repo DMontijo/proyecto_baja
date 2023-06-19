@@ -243,7 +243,7 @@
 <?php if (isset($body_data->filterParams)) { ?>
 	<script>
 		let form = document.querySelector('#formExcel');
-
+		//Datos de confirmaicon del filtro
 		form.addEventListener('submit', function(event) {
 			event.preventDefault();
 			text = `

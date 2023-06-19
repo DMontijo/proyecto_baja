@@ -78,6 +78,23 @@
 
 												</select>
 											</div>
+											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
+												<label for="status" class="form-label font-weight-bold">Tipo de expediente:</label>
+												<select class="form-control" id="tipoExp" name="tipoExp" required>
+													<option selected value="">Todos los tipos</option>
+													<option <?= isset($body_data->filterParams->TIPOEXP) ? ($body_data->filterParams->TIPOEXP == '1' ? 'selected' : '') : null ?> value="1">(NUC) CASO DE INVESTIGACION </option>
+													<option <?= isset($body_data->filterParams->TIPOEXP) ? ($body_data->filterParams->TIPOEXP == '4' ? 'selected' : '') : null ?> value="4">(NAC) ACTA CIRCUNSTANCIADA</option>
+													<option <?= isset($body_data->filterParams->TIPOEXP) ? ($body_data->filterParams->TIPOEXP == '5' ? 'selected' : '') : null ?> value="5">(RAC) REGISTRO DE ATENCION CIUDADANA</option>
+												</select>
+											</div>
+											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
+												<label for="status" class="form-label font-weight-bold">Genero:</label>
+												<select class="form-control" id="genero" name="genero" required>
+													<option selected value="">Ambos</option>
+													<option <?= isset($body_data->filterParams->GENERO) ? ($body_data->filterParams->GENERO == 'M' ? 'selected' : '') : null ?> value="M">MASCULINO</option>
+													<option <?= isset($body_data->filterParams->GENERO) ? ($body_data->filterParams->GENERO == 'F' ? 'selected' : '') : null ?> value="F">FEMENINO</option>
+												</select>
+											</div>
 											<div class="col-12 text-right">
 												<a href="<?= base_url('admin/dashboard/registro_diario') ?>" class="btn btn-secondary font-weight-bold" id="btnFiltroFolio" name="btnFiltroFolio">Borrar filtro</a>
 												<button type="submit" class="btn btn-primary font-weight-bold" id="btnFiltroFolio" name="btnFiltroFolio">Filtrar</button>
@@ -141,9 +158,8 @@
 												$tipo = 'ANÓNIMA';
 											} else if ($folio->TIPODENUNCIA == 'TE') {
 												$tipo = 'TELEFÓNICA';
-											}else{
+											} else {
 												$tipo = 'ELECTRÓNICA';
-
 											}
 										?>
 											<tr>
@@ -233,6 +249,7 @@
 	<script>
 		// alert(document.getElementById('agente_registro').innerHTML);
 		let form = document.querySelector('#formExcel');
+		//Datos de confirmacion del filtro
 
 		form.addEventListener('submit', function(event) {
 			event.preventDefault();
@@ -246,7 +263,10 @@
 						<li><span style="font-weight:bold;">Hora inicio:</span> <?= isset($body_data->filterParams->horaInicio) ? $body_data->filterParams->horaInicio : '' ?></li>
 						<li><span style="font-weight:bold;">Hora fin:</span> <?= isset($body_data->filterParams->horaFin) ? $body_data->filterParams->horaFin : '' ?></li>
 						<li><span style="font-weight:bold;">Estatus:</span> <?= isset($body_data->filterParams->STATUS) ? ($body_data->filterParams->STATUS == 'CON' ? 'CON EXPEDIENTE' : ($body_data->filterParams->STATUS == 'SIN' ? 'SIN EXPEDIENTE' : 'TODOS LOS FOLIOS/EXPEDIENTES')) : '' ?></li>
+						<li><span style="font-weight:bold;">Genero:</span> <?= isset($body_data->filterParams->GENERO) ? ($body_data->filterParams->GENERO == 'M' ? 'MASCULINO' : ($body_data->filterParams->GENERO == 'F' ? 'FEMENINO' : '')) : '' ?></li>
 						<li><span style="font-weight:bold;">Tipo:</span> <?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'VD' ? 'CDTEC' : ($body_data->filterParams->TIPODENUNCIA == 'DA' ? 'ANÓNIMA' : 'TODOS')) : 'TODOS' ?></li>
+						<li><span style="font-weight:bold;">Tipo de expediente:</span>
+						<?= isset($body_data->filterParams->TIPOEXP) ? ($body_data->filterParams->TIPOEXP == '1' ? '(NUC) CASO DE INVESTIGACION' : ($body_data->filterParams->TIPOEXP == '4' ? '(NAC) ACTA CIRCUNSTANCIADA' : ($body_data->filterParams->TIPOEXP == '5' ? '(RAC) REGISTRO DE ATENCION CIUDADANA' : 'TODOS'))) : 'TODOS' ?></li>
 				</ul>
 			</p>
 			`

@@ -103,6 +103,8 @@ class ReportesController extends BaseController
 			'AGENTEATENCIONID' => $this->request->getPost('agente'),
 			'STATUS' => $this->request->getPost('status'),
 			'TIPODENUNCIA' => $this->request->getPost('tipo'),
+			'TIPOEXP' => $this->request->getPost('tipoExp'),
+			'GENERO' => $this->request->getPost('genero'),
 			'fechaInicio' => $this->request->getPost('fechaInicio'),
 			'fechaFin' => $this->request->getPost('fechaFin'),
 			'horaInicio' => $this->request->getPost('horaInicio'),
@@ -160,6 +162,8 @@ class ReportesController extends BaseController
 			'AGENTEATENCIONID' => $this->request->getPost('AGENTEATENCIONID'),
 			'STATUS' => $this->request->getPost('STATUS'),
 			'TIPODENUNCIA' => $this->request->getPost('TIPODENUNCIA'),
+			'TIPOEXP' => $this->request->getPost('TIPOEXP'),
+			'GENERO' => $this->request->getPost('GENERO'),
 			'fechaInicio' => $this->request->getPost('fechaInicio'),
 			'fechaFin' => $this->request->getPost('fechaFin'),
 			'horaInicio' => $this->request->getPost('horaInicio'),
@@ -271,10 +275,14 @@ class ReportesController extends BaseController
 			'AÑO',
 			'MEDIO',
 			'EXPEDIENTE',
+			'CONTIENE PERICIALES',
+			'FECHA DE SALIDA',
 			'TIPO',
 			'FECHA DE SALIDA',
 			'NOMBRE DEL DENUNCIANTE',
+			'GENERO',
 			'NOMBRE DEL AGENTE',
+			'DELITO',
 			'ESTADO DE ATENCIÓN',
 			'MUNICIPIO DE ATENCIÓN',
 			'ESTATUS DE EXPEDIENTE',
@@ -307,18 +315,27 @@ class ReportesController extends BaseController
 			if ($folio->FECHASALIDA) {
 				$fechaSalida = date('d-m-Y H:i:s', strtotime($folio->FECHASALIDA));
 			}
+			$expedienteid = '';
+			if (isset($folio->EXPEDIENTEID)) {
+				$arrayExpediente = str_split($folio->EXPEDIENTEID);
+				$expedienteid = $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
+			}
 
 			$sheet->setCellValue('A' . $row, $folio->FOLIOID);
 			$sheet->setCellValue('B' . $row, $folio->ANO);
 			$sheet->setCellValue('C' . $row, $tipo);
-			$sheet->setCellValue('D' . $row, $folio->EXPEDIENTEID ? ($folio->EXPEDIENTEID . '/' . $folio->TIPOEXPEDIENTECLAVE) : '');
-			$sheet->setCellValue('E' . $row, $folio->TIPOEXPEDIENTECLAVE ? $folio->TIPOEXPEDIENTECLAVE : $folio->STATUS);
-			$sheet->setCellValue('F' . $row, $fechaSalida);
-			$sheet->setCellValue('G' . $row, $folio->NOMBRE_DENUNCIANTE);
-			$sheet->setCellValue('H' . $row, $folio->NOMBRE_AGENTE);
-			$sheet->setCellValue('I' . $row, $folio->ESTADODESCR);
-			$sheet->setCellValue('J' . $row, $folio->MUNICIPIODESCR);
-			$sheet->setCellValue('K' . $row, $folio->STATUS);
+			$sheet->setCellValue('D' . $row, $folio->EXPEDIENTEID ? ($expedienteid . '/' . $folio->TIPOEXPEDIENTECLAVE) : '');
+			$sheet->setCellValue('E' . $row, isset($folio->PERCIALES) ? $folio->PERCIALES : 'NO');
+			$sheet->setCellValue('F' . $row, $folio->FECHASALIDA ? date('d-m-Y H:i:s', strtotime($folio->FECHASALIDA)) : '');
+			$sheet->setCellValue('G' . $row, $folio->TIPOEXPEDIENTECLAVE ? $folio->TIPOEXPEDIENTECLAVE : $folio->STATUS);
+			$sheet->setCellValue('H' . $row, $fechaSalida);
+			$sheet->setCellValue('I' . $row, $folio->NOMBRE_DENUNCIANTE);
+			$sheet->setCellValue('J' . $row, isset($folio->GENERO) ? ($folio->GENERO == 'M' ? 'MASCULINO' : ($folio->GENERO == 'F' ? 'FEMENINO' : '')) : '');
+			$sheet->setCellValue('K' . $row, $folio->NOMBRE_AGENTE);
+			$sheet->setCellValue('L' . $row, $folio->DELITO);
+			$sheet->setCellValue('M' . $row, $folio->ESTADODESCR);
+			$sheet->setCellValue('N' . $row, $folio->MUNICIPIODESCR);
+			$sheet->setCellValue('O' . $row, $folio->STATUS);
 
 			$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
 
@@ -329,8 +346,8 @@ class ReportesController extends BaseController
 		$sheet->setCellValue('A' . $row, 'CANTIDAD DE RESULTADOS:');
 		$sheet->setCellValue('B' . $row, count($resultFilter->result));
 
-		$sheet->getStyle('A1:K1')->applyFromArray($styleHeaders);
-		$sheet->getStyle('A2:K' . $row)->applyFromArray($styleCells);
+		$sheet->getStyle('A1:O1')->applyFromArray($styleHeaders);
+		$sheet->getStyle('A2:O' . $row)->applyFromArray($styleCells);
 
 		$writer = new Xlsx($spreadSheet);
 
@@ -390,6 +407,7 @@ class ReportesController extends BaseController
 			'MUNICIPIOID' => $this->request->getPost('municipio'),
 			'AGENTEID' => $this->request->getPost('agente'),
 			'STATUS' => $this->request->getPost('status'),
+			'GENERO' => $this->request->getPost('genero'),
 			'fechaInicio' => $this->request->getPost('fechaInicio'),
 			'fechaFin' => $this->request->getPost('fechaFin'),
 			'horaInicio' => $this->request->getPost('horaInicio'),
@@ -563,6 +581,7 @@ class ReportesController extends BaseController
 			'AÑO',
 			'FECHA DE FIRMA',
 			'NOMBRE DEL SOLICITANTE',
+			'GENERO',
 			'NOMBRE DEL AGENTE',
 			'ESTADO DE ATENCIÓN',
 			'MUNICIPIO DE ATENCIÓN',
@@ -584,8 +603,9 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('B' . $row, $constancia->ANO);
 			$sheet->setCellValue('C' . $row, isset($constancia->FECHAFIRMA) ? date('d-m-Y', strtotime($constancia->FECHAFIRMA)) : '');
 			$sheet->setCellValue('D' . $row, $constancia->NOMBRE_DENUNCIANTE);
-			$sheet->setCellValue('E' . $row, isset($constancia->NOMBRE_AGENTE) ? $constancia->NOMBRE_AGENTE : 'NO SE HA FIRMADO');
-			$sheet->setCellValue('F' . $row, $constancia->ESTADODESCR);
+			$sheet->setCellValue('E' . $row, ($constancia->GENERO == 'M' ? 'MASCULINO' : ($constancia->GENERO == 'F' ? 'FEMENINO' : '')));
+			$sheet->setCellValue('F' . $row, isset($constancia->NOMBRE_AGENTE) ? $constancia->NOMBRE_AGENTE : 'NO SE HA FIRMADO');
+			$sheet->setCellValue('G' . $row, $constancia->ESTADODESCR);
 			if ($constancia->MUNICIPIOIDCITA != null) {
 				$sheet->setCellValue('G' . $row, $constancia->MUNICIPIODESCRCITA);
 			}
@@ -671,6 +691,8 @@ class ReportesController extends BaseController
 			'AGENTEATENCIONID' => $this->request->getPost('agente_registro'),
 			'STATUS' => $this->request->getPost('status'),
 			'TIPODENUNCIA' => $this->request->getPost('tipo'),
+			'GENERO' => $this->request->getPost('genero'),
+			'TIPOEXP' => $this->request->getPost('tipoExp'),
 			'fechaInicio' => $this->request->getPost('fechaInicio'),
 			'fechaFin' => $this->request->getPost('fechaFin'),
 			'horaInicio' => $this->request->getPost('horaInicio'),
@@ -723,6 +745,8 @@ class ReportesController extends BaseController
 			'AGENTEATENCIONID' => $this->request->getPost('AGENTEATENCIONID'),
 			'STATUS' => $this->request->getPost('STATUS'),
 			'TIPODENUNCIA' => $this->request->getPost('TIPODENUNCIA'),
+			'GENERO' => $this->request->getPost('GENERO'),
+			'TIPOEXP' => $this->request->getPost('TIPOEXP'),
 			'fechaInicio' => $this->request->getPost('fechaInicio'),
 			'fechaFin' => $this->request->getPost('fechaFin'),
 			'horaInicio' => $this->request->getPost('horaInicio'),
@@ -2353,6 +2377,7 @@ class ReportesController extends BaseController
 		$dataPost = [
 			'MUNICIPIOID' => $this->request->getPost('MUNICIPIOID'),
 			'AGENTEATENCIONID' => $this->request->getPost('AGENTEATENCIONID'),
+			'GENERO' => $this->request->getPost('genero'),
 
 			'fechaInicio' => $this->request->getPost('fechaInicio'),
 			'fechaFin' => $this->request->getPost('fechaFin'),
@@ -2362,7 +2387,11 @@ class ReportesController extends BaseController
 			'nombreAgente' => '',
 			'municipioDescr' => ''
 		];
-
+		
+		foreach ($dataPost as $clave => $valor) {
+			//Recorre el array y elimina los valores que nulos o vacíos
+			if (empty($valor)) unset($dataPost[$clave]);
+		}
 		$municipio = $this->_municipiosModelRead->asObject()->where('ESTADOID', 2)->findAll();
 		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
 		$empleado = $this->_usuariosModelRead->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
@@ -2556,7 +2585,7 @@ class ReportesController extends BaseController
 			$this->separarExpID($orden->EXPEDIENTEID);
 
 
-			$sheet->setCellValue('A1', "CENTRO TELEFÓNICO Y EN LÍNEA DE ATENCIÓN Y ORIENTACIÓN TEMPRANA");
+			$sheet->setCellValue('A1', "CENTRO DE DENUNCIA TECNOLÓGICA");
 			$sheet->setCellValue('A2', "REGISTRO DE CANALIZACIONES A LA COMISIÓN EJECUTIVA ESTATAL DE ATENCIÓN INTEGRAL A VÍCTIMAS");
 
 			$sheet->setCellValue('A' . $row, $num);

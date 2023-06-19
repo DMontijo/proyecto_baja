@@ -8393,7 +8393,7 @@ class DashboardController extends BaseController
 					break;
 				case '4':
 					$data->plantilla = str_replace('[DIRECCION_NOMBRE]', 'SECRETARIO DE SEGURIDAD Y PROTECCIÓN CIUDADANA MUNICIPAL', $data->plantilla);
-					$data->plantilla = str_replace('[REMISION_DOMICILIO]', 'Avenida Mutua Martínez s/n Campestre Murua, Tijuana, B. C.', $data->plantilla);
+					$data->plantilla = str_replace('[REMISION_DOMICILIO]', 'Av. Instituto Politécnico Nacional No. 1351 Col. Garita de Otay, Delegación Centenario C.P. 22430 Tijuana Baja California (segundo piso de oficinas de INDIVI)', $data->plantilla);
 					break;
 				case '5':
 					$data->plantilla = str_replace('[DIRECCION_NOMBRE]', 'SECRETARÍA DE SEGURIDAD Y PROTECCIÓN CIUDADANA', $data->plantilla);
@@ -8973,13 +8973,13 @@ class DashboardController extends BaseController
 			$data->folio = $this->_folioModelRead->videos_expediente_model(1);
 		} else if (session('ROLID') == 3 || session('ROLID') == 4 || session('ROLID') == 8 || session('ROLID') == 9 || session('ROLID') == 10) {
 			$data->folio = $this->_folioModelRead->videos_expediente_model(4);
-		}  else if (session('ROLID') == 12) {
+		} else if (session('ROLID') == 12) {
 			// VISUALIZADOR RAC
 			$data->folio = $this->_folioModelRead->videos_expediente_model(3);
 		} else if (session('ROLID') == 13) {
 			//VISUALIZADOR ESTATAL
 			$data->folio = $this->_folioModelRead->videos_expediente_model(5);
-		}else {
+		} else {
 			$data->folio = $this->_folioModelRead->videos_expediente_model(2);
 		}
 		$data->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();

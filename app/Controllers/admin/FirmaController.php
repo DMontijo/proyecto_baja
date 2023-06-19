@@ -138,7 +138,7 @@ class FirmaController extends BaseController
 			$document_name = $plantilla->TITULO;
 
 			// Asignacion de fecha actual
-			$FECHAFIRMA = date("d-m-Y");
+			$FECHAFIRMA = date("Y-m-d");
 			$HORAFIRMA = date("H:i");
 
 
@@ -203,7 +203,7 @@ class FirmaController extends BaseController
 								} else if (str_contains($constancia->POSICIONPLACA, 'NACIONALES')) {
 									$constancia->POSICIONPLACA = str_replace('NACIONALES', '', $constancia->POSICIONPLACA);
 									$ext = $constancia->POSICIONPLACA . ' NACIONAL';
-								} else {
+								} else if(str_contains($constancia->POSICIONPLACA, 'EXTRANJERAS')){
 									$constancia->POSICIONPLACA = str_replace('EXTRANJERAS', '', $constancia->POSICIONPLACA);
 									$ext = $constancia->POSICIONPLACA . ' EXTRANJERA';
 								}
@@ -294,7 +294,7 @@ class FirmaController extends BaseController
 								} else if (str_contains($constancia->POSICIONPLACA, 'NACIONALES')) {
 									$constancia->POSICIONPLACA = str_replace('NACIONALES', '', $constancia->POSICIONPLACA);
 									$ext = $constancia->POSICIONPLACA . ' NACIONAL';
-								} else {
+								} else if(str_contains($constancia->POSICIONPLACA, 'EXTRANJERAS')){
 									$constancia->POSICIONPLACA = str_replace('EXTRANJERAS', '', $constancia->POSICIONPLACA);
 									$ext = $constancia->POSICIONPLACA . ' EXTRANJERA';
 								}
@@ -426,7 +426,7 @@ class FirmaController extends BaseController
 		$password = str_replace(' ', '', trim($this->request->getPost('contrasena')));
 		$user_id = session('ID');
 		$meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
-		$FECHAFIRMA = date("d-m-Y");
+		$FECHAFIRMA = date("Y-m-d");
 		$HORAFIRMA = date("H:i");
 
 		if ($folio == null || $folio == "undefined") {
@@ -576,7 +576,7 @@ class FirmaController extends BaseController
 		$password = str_replace(' ', '', trim($this->request->getPost('contrasena_doc')));
 		$user_id = session('ID');
 		$meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
-		$FECHAFIRMA = date("d-m-Y");
+		$FECHAFIRMA = date("Y-m-d");
 		$HORAFIRMA = date("H:i");
 
 		if ($folio == null || $folio == "undefined") {

@@ -158,10 +158,12 @@
 	$(function() {
 
 		$('#expediente').keypress(function(e) {
+			// Si el carácter ingresado no es un número, se devuelve false para evitar que se agregue al campo de entrada.
 			if (isNaN(this.value + String.fromCharCode(e.charCode)))
 				return false;
 		})
 		.bind('paste', function(e){
+			// Cuando ocurre un evento de pegado, se obtienen los datos pegados del portapapeles
 			var pastedData = e.originalEvent.clipboardData.getData('text');
 			document.getElementById('expediente').value = pastedData.replaceAll('-','').trim();
 			e.preventDefault();

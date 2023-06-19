@@ -148,12 +148,14 @@
 		var inputsEmail = document.querySelectorAll('input[type="email"]');
 		let form = document.querySelector('#form_register');
 
+		//Convierte todos los input text a mayusculas
 		inputsText.forEach((input) => {
 			input.addEventListener('input', function(event) {
 				event.target.value = clearText(event.target.value).toUpperCase();
 			}, false)
 		})
 
+		//Convierte en minusculas los input email
 		inputsEmail.forEach((input) => {
 			input.addEventListener('input', function(event) {
 				event.target.value = clearText(event.target.value).toLowerCase();
@@ -168,6 +170,7 @@
 			form.classList.add('was-validated')
 		}, false)
 
+		//Calcula la edad de acuerdo a fecha de nacimiento
 		document.querySelector('#fecha_nacimiento').addEventListener('blur', (e) => {
 			let fecha = e.target.value;
 			let hoy = new Date();
@@ -190,6 +193,7 @@
 			}
 		});
 
+		//Valida que  exista el correo
 		document.querySelector('#correo').addEventListener('blur', (e) => {
 			let regex = /\S+@\S+\.\S+/
 			if (regex.test(e.target.value)) {
@@ -216,6 +220,7 @@
 			}
 		});
 
+		//Funcion para eliminar los caracteres especiales del texto
 		function clearText(text) {
 			return text
 				.normalize('NFD')
