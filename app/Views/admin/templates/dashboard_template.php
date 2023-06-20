@@ -306,6 +306,41 @@
 			})
 		</script>
 	<?php endif; ?>
+	<script>
+		closeSessionTimeout();
+		function closeSessionTimeout(){
+			var timeout; 
+		clearTimeout(timeout); 
+		timeout = setTimeout(function(){
+			console.log('timeout funcionando');
+			Swal.fire({
+				icon: 'error',
+				title: 'Tiempo de sesión agotado',
+				text: 'Si quieres seguir trabajando hay que renovar la sesion dando click en Ok, sino Cancelar',
+				confirmButtonColor: '#bf9b55',
+				showCancelButton: true,
+			}).then((result) => {
+				if (result.isConfirmed) {
+					$.ajax({
+						url: "<?= base_url('admin/actualizar-sesion') ?>",
+						method: "get",
+						dataType: "json",
+						success: function(response) {
+							Swal.fire({
+								icon: 'success',
+								title: 'Sesión actualizada',
+							}).then((result) => {
+								closeSessionTimeout();
+							});
+						},
+						error: function(jqXHR, textStatus, errorThrown) {}
+					});
+				}
+			})
+		}, 7080000); ///7080000 for 1:58 hours
+		}
+		 	
+	</script>
 </body>
 
 </html>

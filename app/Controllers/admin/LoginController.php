@@ -9,6 +9,7 @@ use App\Models\SesionesModel;
 use App\Models\BitacoraActividadModel;
 use App\Models\RolesPermisosModel;
 use App\Models\RolesUsuariosModel;
+use DateTime;
 
 class LoginController extends BaseController
 {
@@ -89,6 +90,7 @@ class LoginController extends BaseController
 				$data['logged_in'] = TRUE;
 				$data['type'] = 'admin';
 				$data['uuid'] = uniqid();
+				$data['last_activity'] = date("Y-m-d H:i:s");
 				//Ingresa en variable session los datos del usuario
 				$session->set($data);
 				$agent = $this->request->getUserAgent();
@@ -178,6 +180,27 @@ class LoginController extends BaseController
 		}
 	}
 
+	/**
+	 * Revisa la variable de session 'last_activity'
+	 *
+	 * @param  mixed $placeholder
+	 */
+	public function checkLastActivity(){
+		$session = session();
+		if(session("last_activity")){
+			$date1 = new DateTime(session("last_activity"));
+			$date2 = new DateTime(date("Y-m-d H:i:s"));	
+			$diff = $date1->diff($date2);
+			
+			if(intval($diff->format('%i')) < 118){
+				$session->set('last_activity', date("Y-m-d H:i:s"));
+			}
+
+			return json_encode(['result' => $diff->format('%H %i'), 'last_activity' => $date1, 'actual' => $date2, 'new' => session("last_activity") ]);
+		}else{
+			$session->set('last_activity', date("Y-m-d H:i:s"));
+		}
+	}
 	/**
 	 * Función para verifica si el usuario ha iniciado sesión y es un administrador. 
 	 *
