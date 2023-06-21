@@ -257,25 +257,25 @@ aceptar_llamada.addEventListener("click", () => {
 			} else {
 				try {
 					// ../../data/restore-folio
-					var xhttp = new XMLHttpRequest();
+					// var xhttp = new XMLHttpRequest();
 
-					var data = new FormData();
-					data.append(
-						"folio",
-						document.getElementById("input_folio_atencion").value
-					);
-					data.append(
-						"year",
-						document.getElementById("year_select").value
-					);
+					// var data = new FormData();
+					// data.append(
+					// 	"folio",
+					// 	document.getElementById("input_folio_atencion").value
+					// );
+					// data.append(
+					// 	"year",
+					// 	document.getElementById("year_select").value
+					// );
 
-					xhttp.onreadystatechange = function() {
-						if (this.readyState == 4 && this.status == 200) {
-							// Maneja la respuesta del servidor aquí
-						}
-					};
-					xhttp.open("POST", "../../data/restore-folio", true);
-					xhttp.send(data);
+					// xhttp.onreadystatechange = function() {
+					// 	if (this.readyState == 4 && this.status == 200) {
+					// 		// Maneja la respuesta del servidor aquí
+					// 	}
+					// };
+					// xhttp.open("POST", "../../data/restore-folio", true);
+					// xhttp.send(data);
 					borrarTodo();
 
 					let split = guestConnection.folio.split("/");
