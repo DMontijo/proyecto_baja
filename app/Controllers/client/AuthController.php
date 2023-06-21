@@ -156,7 +156,7 @@ class AuthController extends BaseController
 			$date2 = new DateTime(date("Y-m-d H:i:s"));	
 			$diff = $date1->diff($date2);
 			
-			if(intval($diff->format('%i')) < 118){
+			if(intval($diff->format('%i')) < 120){
 				$session->set('last_activity', date("Y-m-d H:i:s"));
 				return json_encode(['result' => $diff->format('%H %i'), 'last_activity' => $date1, 'actual' => $date2, 'new' => session("last_activity") ]);
 
