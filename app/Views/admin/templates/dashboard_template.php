@@ -326,12 +326,23 @@
 						method: "get",
 						dataType: "json",
 						success: function(response) {
-							Swal.fire({
-								icon: 'success',
-								title: 'Sesión actualizada',
-							}).then((result) => {
-								closeSessionTimeout();
-							});
+							if(response.result){
+									Swal.fire({
+									icon: 'success',
+									title: 'Sesión actualizada',
+									confirmButtonColor: '#bf9b55',
+									}).then((result) => {
+										if (result.isConfirmed) {
+											console.log(response);
+											closeSessionTimeout();
+										}
+									});
+								}else{
+									Swal.fire({
+									icon: 'error',
+									title: 'Tiempo agotado',
+									confirmButtonColor: '#bf9b55',});	
+								}
 						},
 						error: function(jqXHR, textStatus, errorThrown) {}
 					});

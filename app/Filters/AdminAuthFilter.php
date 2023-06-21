@@ -46,6 +46,8 @@ class AdminAuthFilter implements FilterInterface
 			$diff = $date1->diff($date2);
 			if(intval($diff->format('%i')) >= 120){
 				$this->logout();
+			}else{
+				$session->set('last_activity', date("Y-m-d H:i:s"));
 			}
 		}else{
 			$session->set('last_activity', date("Y-m-d H:i:s"));

@@ -186,6 +186,7 @@ $routes->group('denuncia', function ($routes) {
 	$routes->post('login_auth', 'client/AuthController::login_auth');
 	$routes->get('logout', 'client/AuthController::logout');
 	$routes->post('cerrar-sesion', 'client/AuthController::cerrar_sesiones');
+	$routes->get('actualizar-sesion','client/AuthController::checkLastActivity');
 
 	// $routes->resource('denunciante', ['controller' => 'client/UserController']);
 	$routes->get('denunciante/new', 'client/UserController::new');
