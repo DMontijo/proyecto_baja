@@ -27,7 +27,11 @@
 										<th scope="row"><?= $ligar->RAZONSOCIAL  ?></th>
 										<td><?= $ligar->MARCACOMERCIAL ?></td>
 										<td><?= $ligar->RFC ?></td>
-										<td><?= $ligar->RELACIONAR == 'N' ? "AUN NO HA SIDO ACEPTADO" : "ACEPTADO" ?></td>
+										<?php if ($ligar->RELACIONAR == 'N') { ?>
+											<td class="text-danger fw-bold">AUN NO HA SIDO ACEPTADO</td>
+										<?php } else { ?>
+											<td class="text-success fw-bold">ACEPTADO</td>
+										<?php } ?>
 
 										</td>
 									<?php } ?>
