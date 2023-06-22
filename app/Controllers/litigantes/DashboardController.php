@@ -467,41 +467,41 @@ class DashboardController extends BaseController
 		//Datos a insertar en folio
 		$dataFolio = [
 			'DENUNCIANTEID' => $session->get('DENUNCIANTEID'),
-			'HECHOFECHA' => $this->request->getPost('fecha_moral') != '' ? $this->request->getPost('fecha_moral') : NULL,
-			'HECHOHORA' => $this->request->getPost('hora_moral') != '' ? $this->request->getPost('hora_moral') : NULL,
-			'HECHOLUGARID' => $this->request->getPost('lugar_moral'),
+			'HECHOFECHA' => $this->request->getPost('fecha') != '' ? $this->request->getPost('fecha') : NULL,
+			'HECHOHORA' => $this->request->getPost('hora') != '' ? $this->request->getPost('hora') : NULL,
+			'HECHOLUGARID' => $this->request->getPost('lugar'),
 			'ESTADOID' => 2,
-			'MUNICIPIOID' => $this->request->getPost('municipio_moral'),
+			'MUNICIPIOID' => $this->request->getPost('municipio'),
 			'HECHOESTADOID' => 2,
-			'HECHOMUNICIPIOID' => $this->request->getPost('municipio_moral'),
-			'HECHOLOCALIDADID' => $this->request->getPost('localidad_moral'),
-			'HECHOCOLONIAID' => $this->request->getPost('colonia_select_moral'),
-			'HECHOCOLONIADESCR' => $this->request->getPost('colonia_moral') != '' ? $this->request->getPost('colonia_moral') : NULL,
-			'HECHOCALLE' => $this->request->getPost('calle_moral') != '' ? $this->request->getPost('calle_moral') : NULL,
-			'HECHONUMEROCASA' => $this->request->getPost('exterior_moral') != '' ? $this->request->getPost('exterior_moral') : NULL,
-			'HECHONUMEROCASAINT' => $this->request->getPost('interior_moral') != '' ? $this->request->getPost('interior_moral') : NULL,
-			'HECHONARRACION' => $this->request->getPost('descripcion_breve_moral') != '' ? strtoupper($this->request->getPost('descripcion_breve_moral')) : NULL,
-			'HECHODELITO' => $this->request->getPost('delito_moral'),
+			'HECHOMUNICIPIOID' => $this->request->getPost('municipio'),
+			'HECHOLOCALIDADID' => $this->request->getPost('localidad'),
+			'HECHOCOLONIAID' => $this->request->getPost('colonia_select'),
+			'HECHOCOLONIADESCR' => $this->request->getPost('colonia') != '' ? $this->request->getPost('colonia') : NULL,
+			'HECHOCALLE' => $this->request->getPost('calle') != '' ? $this->request->getPost('calle_moral') : NULL,
+			'HECHONUMEROCASA' => $this->request->getPost('exterior') != '' ? $this->request->getPost('exterior') : NULL,
+			'HECHONUMEROCASAINT' => $this->request->getPost('interior') != '' ? $this->request->getPost('interior') : NULL,
+			'HECHONARRACION' => $this->request->getPost('descripcion_breve') != '' ? strtoupper($this->request->getPost('descripcion_breve')) : NULL,
+			'HECHODELITO' => $this->request->getPost('delito'),
 			'TIPODENUNCIA' => 'ES',
 			'NOTIFICACIONES' => 'S'
 		];
 
 		if ($this->request->getPost('check_ubi') == 'on') {
-			$dataFolio['HECHOCOORDENADAX'] = $this->request->getPost('longitud_moral');
-			$dataFolio['HECHOCOORDENADAY'] = $this->request->getPost('latitud_moral');
+			$dataFolio['HECHOCOORDENADAX'] = $this->request->getPost('longitud');
+			$dataFolio['HECHOCOORDENADAY'] = $this->request->getPost('latitud');
 		}
 
 		$colonia = $this->_coloniasModelRead->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $this->request->getPost('municipio'))->where('LOCALIDADID', $this->request->getPost('localidad'))->where('COLONIAID', $this->request->getPost('colonia_select'))->first();
 
-		if ($this->request->getPost('colonia_select_moral')) {
+		if ($this->request->getPost('colonia_select')) {
 
-			if ((int) $this->request->getPost('colonia_select_moral') == 0) {
+			if ((int) $this->request->getPost('colonia_select') == 0) {
 				$dataFolio['HECHOCOLONIAID'] = null;
-				$dataFolio['HECHOCOLONIADESCR'] = $this->request->getPost('colonia_moral');
+				$dataFolio['HECHOCOLONIADESCR'] = $this->request->getPost('colonia');
 				$localidad = $this->_localidadesModelRead->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $dataFolio['HECHOMUNICIPIOID'])->where('LOCALIDADID', $dataFolio['HECHOLOCALIDADID'])->first();
 				$dataFolio['HECHOZONA'] = $localidad->ZONA;
 			} else {
-				$dataFolio['HECHOCOLONIAID'] = (int) $this->request->getPost('colonia_select_moral');
+				$dataFolio['HECHOCOLONIAID'] = (int) $this->request->getPost('colonia_select');
 				$dataFolio['HECHOCOLONIADESCR'] = $colonia->COLONIADESCR;
 				$dataFolio['HECHOZONA'] = $colonia->ZONA;
 			}
@@ -838,41 +838,41 @@ class DashboardController extends BaseController
 		//Datos a insertar en folio
 		$dataFolio = [
 			'DENUNCIANTEID' => $session->get('DENUNCIANTEID'),
-			'HECHOFECHA' => $this->request->getPost('fecha') != '' ? $this->request->getPost('fecha') : NULL,
-			'HECHOHORA' => $this->request->getPost('hora') != '' ? $this->request->getPost('hora') : NULL,
-			'HECHOLUGARID' => $this->request->getPost('lugar'),
+			'HECHOFECHA' => $this->request->getPost('fecha_moral') != '' ? $this->request->getPost('fecha_moral') : NULL,
+			'HECHOHORA' => $this->request->getPost('hora_moral') != '' ? $this->request->getPost('hora_moral') : NULL,
+			'HECHOLUGARID' => $this->request->getPost('lugar_moral'),
 			'ESTADOID' => 2,
-			'MUNICIPIOID' => $this->request->getPost('municipio'),
+			'MUNICIPIOID' => $this->request->getPost('municipio_moral'),
 			'HECHOESTADOID' => 2,
-			'HECHOMUNICIPIOID' => $this->request->getPost('municipio'),
-			'HECHOLOCALIDADID' => $this->request->getPost('localidad'),
-			'HECHOCOLONIAID' => $this->request->getPost('colonia_select'),
-			'HECHOCOLONIADESCR' => $this->request->getPost('colonia') != '' ? $this->request->getPost('colonia') : NULL,
-			'HECHOCALLE' => $this->request->getPost('calle') != '' ? $this->request->getPost('calle') : NULL,
-			'HECHONUMEROCASA' => $this->request->getPost('exterior') != '' ? $this->request->getPost('exterior') : NULL,
-			'HECHONUMEROCASAINT' => $this->request->getPost('interior') != '' ? $this->request->getPost('interior') : NULL,
-			'HECHONARRACION' => $this->request->getPost('descripcion_breve') != '' ? strtoupper($this->request->getPost('descripcion_breve')) : NULL,
-			'HECHODELITO' => $this->request->getPost('delito'),
+			'HECHOMUNICIPIOID' => $this->request->getPost('municipio_moral'),
+			'HECHOLOCALIDADID' => $this->request->getPost('localidad_moral'),
+			'HECHOCOLONIAID' => $this->request->getPost('colonia_select_moral'),
+			'HECHOCOLONIADESCR' => $this->request->getPost('colonia_moral') != '' ? $this->request->getPost('colonia_moral') : NULL,
+			'HECHOCALLE' => $this->request->getPost('calle_moral') != '' ? $this->request->getPost('calle_moral') : NULL,
+			'HECHONUMEROCASA' => $this->request->getPost('exterior_moral') != '' ? $this->request->getPost('exterior_moral') : NULL,
+			'HECHONUMEROCASAINT' => $this->request->getPost('interior_moral') != '' ? $this->request->getPost('interior_moral') : NULL,
+			'HECHONARRACION' => $this->request->getPost('descripcion_breve_moral') != '' ? strtoupper($this->request->getPost('descripcion_breve_moral')) : NULL,
+			'HECHODELITO' => $this->request->getPost('delito_moral'),
 			'TIPODENUNCIA' => 'ES',
 			'NOTIFICACIONES' => 'S'
 		];
 
 		if ($this->request->getPost('check_ubi') == 'on') {
-			$dataFolio['HECHOCOORDENADAX'] = $this->request->getPost('longitud');
-			$dataFolio['HECHOCOORDENADAY'] = $this->request->getPost('latitud');
+			$dataFolio['HECHOCOORDENADAX'] = $this->request->getPost('longitud_moral');
+			$dataFolio['HECHOCOORDENADAY'] = $this->request->getPost('latitud_moral');
 		}
 
-		$colonia = $this->_coloniasModelRead->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $this->request->getPost('municipio'))->where('LOCALIDADID', $this->request->getPost('localidad'))->where('COLONIAID', $this->request->getPost('colonia_select'))->first();
+		$colonia = $this->_coloniasModelRead->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $this->request->getPost('municipio_moral'))->where('LOCALIDADID', $this->request->getPost('localidad_moral'))->where('COLONIAID', $this->request->getPost('colonia_select_moral'))->first();
 
-		if ($this->request->getPost('colonia_select')) {
+		if ($this->request->getPost('colonia_select_moral')) {
 
-			if ((int) $this->request->getPost('colonia_select') == 0) {
+			if ((int) $this->request->getPost('colonia_select_moral') == 0) {
 				$dataFolio['HECHOCOLONIAID'] = null;
-				$dataFolio['HECHOCOLONIADESCR'] = $this->request->getPost('colonia');
+				$dataFolio['HECHOCOLONIADESCR'] = $this->request->getPost('colonia_moral');
 				$localidad = $this->_localidadesModelRead->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $dataFolio['HECHOMUNICIPIOID'])->where('LOCALIDADID', $dataFolio['HECHOLOCALIDADID'])->first();
 				$dataFolio['HECHOZONA'] = $localidad->ZONA;
 			} else {
-				$dataFolio['HECHOCOLONIAID'] = (int) $this->request->getPost('colonia_select');
+				$dataFolio['HECHOCOLONIAID'] = (int) $this->request->getPost('colonia_select_moral');
 				$dataFolio['HECHOCOLONIADESCR'] = $colonia->COLONIADESCR;
 				$dataFolio['HECHOZONA'] = $colonia->ZONA;
 			}
