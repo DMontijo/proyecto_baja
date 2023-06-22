@@ -109,7 +109,9 @@ use App\Models\FolioRelacionFisFisModel;
 use App\Models\ObjetoClasificacionModel;
 use App\Models\ObjetoSubclasificacionModel;
 use App\Models\PermisosModel;
+use App\Models\PersonasMoralesModel;
 use App\Models\PlantillasModel;
+use App\Models\RelacionFisicaMoralModel;
 use App\Models\RelacionFolioDocExpDocModel;
 use App\Models\RelacionFolioDocModel;
 use App\Models\RolesPermisosModel;
@@ -267,7 +269,7 @@ class DashboardController extends BaseController
 	private $_situacionVehiculoModel;
 	private $_sesionesModel;
 	private $_sesionesDenunciantesModel;
-
+	private $_relacionFisicaMoralModel;
 
 	//Reader
 	private $_folioModelRead;
@@ -387,8 +389,10 @@ class DashboardController extends BaseController
 	private $_relacionFolioDocExpDocRead;
 	private $_conexionesDBModelRead;
 	private $_folioConsecutivoModelRead;
-	private $_personasMoralesRead;
 	private $_personasMoralesNotificacionesRead;
+	private $_relacionFisicaMoralModelRead;
+	private $_personasMoralesModel;
+	private $_personasMoralesRead;
 
 	private $protocol;
 	private $ip;
@@ -412,6 +416,7 @@ class DashboardController extends BaseController
 		$this->_delitosUsuariosModel = new DelitosUsuariosModel();
 		$this->_denunciantesModel = new DenunciantesModel();
 		$this->_idiomaModel = new PersonaIdiomaModel();
+		$this->_relacionFisicaMoralModel = new RelacionFisicaMoralModel();
 
 		$this->_folioModel = new FolioModel();
 		$this->_folioPreguntasModel = new FolioPreguntasModel();
@@ -526,6 +531,7 @@ class DashboardController extends BaseController
 		$this->_bandejaRacModel = new BandejaRacModel();
 		$this->_sesionesModel = new SesionesModel();
 		$this->_sesionesDenunciantesModel = new SesionesDenunciantesModel();
+		$this->_personasMoralesModel = new PersonasMoralesModel();
 
 		//Models reader
 		$this->_personasMoralesRead = model('PersonasMoralesModel', true, $this->db_read);
@@ -647,6 +653,8 @@ class DashboardController extends BaseController
 		$this->_folioConsecutivoModelRead = model('FolioConsecutivoModel', true, $this->db_read);
 		$this->_situacionVehiculoModelRead = model('VehiculoSituacionModel', true, $this->db_read);
 		$this->_personasMoralesNotificacionesRead = model('PersonaMoralNotificacionesModel', true, $this->db_read);
+		$this->_relacionFisicaMoralModelRead = model('RelacionFisicaMoralModel', true, $this->db_read);
+		$this->_personasMoralesRead = model('PersonasMoralesModel', true, $this->db_read);
 
 		// $this->protocol = 'http://';
 		// $this->ip = "10.144.244.223";
@@ -716,6 +724,26 @@ class DashboardController extends BaseController
 		$data->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 		$this->_loadView('Usuarios', 'usuarios', '', $data, 'users/users');
+	}
+	/**
+	 * Vista de lista de ligaciones
+	 * Retorna los usuarios registrados en CDTEC detallando su perfil.
+	 *
+	 */
+	public function ligaciones()
+	{
+		$data = (object) array();
+		if (!$this->permisos('LIGACIONES')) {
+			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
+		}
+		$data->litigacion = $this->_relacionFisicaMoralModelRead->asObject()
+			->select('RELACIONFISICAMORAL.*, DENUNCIANTES.NOMBRE,DENUNCIANTES.APELLIDO_PATERNO, DENUNCIANTES.APELLIDO_MATERNO,PERSONASMORALES.RAZONSOCIAL, PERSONASMORALES.MARCACOMERCIAL,PERSONASMORALES.RFC')
+			->join('DENUNCIANTES', 'DENUNCIANTES.DENUNCIANTEID = RELACIONFISICAMORAL.DENUNCIANTEID', 'LEFT')
+			->join('PERSONASMORALES', 'PERSONASMORALES.PERSONAMORALID = RELACIONFISICAMORAL.PERSONAMORALID', 'LEFT')
+			->findAll();
+		$data->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
+
+		$this->_loadView('Ligaciones', 'ligaciones', '', $data, 'ligaciones/ligaciones');
 	}
 
 	/**
@@ -1082,6 +1110,74 @@ class DashboardController extends BaseController
 		$data->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 		$this->_loadView('Editar usuario', '', '', $data, 'users/edit_user');
+	}
+	/**
+	 * Vista para editar una ligacion.
+	 * Recibe por metodo GET el ID de la ligacion a editar para cargar el formulario.
+	 *
+	 */
+	public function editar_ligacion()
+	{
+		$id = $this->request->getGet('id');
+		if (!$id) {
+			return redirect()->back()->with('message_error', 'No se envío el parámeto id.');
+		}
+		$data = (object) array();
+		$data->ligacion = $this->_relacionFisicaMoralModelRead->asObject()->where('ID', $id)->first();
+		$data->litigante = $this->_denunciantesModelRead->asObject()->where('DENUNCIANTEID', $data->ligacion->DENUNCIANTEID)->first();
+		$data->personasmorales = $this->_personasMoralesRead->asObject()
+			->join('ESTADO', 'ESTADO.ESTADOID = PERSONASMORALES.ESTADOID')
+			->join('MUNICIPIO', 'MUNICIPIO.ESTADOID = PERSONASMORALES.ESTADOID AND MUNICIPIO.MUNICIPIOID = PERSONASMORALES.MUNICIPIOID')
+			->join('LOCALIDAD', 'LOCALIDAD.ESTADOID = PERSONASMORALES.ESTADOID AND LOCALIDAD.MUNICIPIOID = PERSONASMORALES.MUNICIPIOID AND LOCALIDAD.LOCALIDADID = PERSONASMORALES.LOCALIDADID')
+			->join('COLONIA', 'COLONIA.ESTADOID = PERSONASMORALES.ESTADOID AND COLONIA.MUNICIPIOID = PERSONASMORALES.MUNICIPIOID AND COLONIA.LOCALIDADID = PERSONASMORALES.LOCALIDADID AND COLONIA.COLONIAID = PERSONASMORALES.COLONIAID')
+			->where('PERSONAMORALID', $data->ligacion->PERSONAMORALID)->first();
+
+		if ($data->ligacion) {
+			$file_info = new \finfo(FILEINFO_MIME_TYPE);
+			$type = $file_info->buffer($data->ligacion->PODERARCHIVO);
+			$data->tipoarchivo = $type;
+			$data->ligacion->PODERARCHIVO = 'data:' . $type . ';base64,' . base64_encode($data->ligacion->PODERARCHIVO);
+		}
+		$data->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
+
+		$this->_loadView('Editar ligacion', '', '', $data, 'ligaciones/edit_ligacion');
+	}
+	/**
+	 * Función para actualizar a una ligacion.
+	 * Recibe por metodo POST todos los campos del formulario para la actualización de una solicitud de ligacion.
+	 */
+	public function update_ligacion()
+	{
+		$id = $this->request->getPost('id');
+		$ligadura = $this->_relacionFisicaMoralModelRead->asObject()->where('ID', $id)->first();
+		if ($this->request->getPost('relacionar') == "N") {
+			$data = [
+				'RELACIONAR' => $this->request->getPost('relacionar'),
+				'RECHAZAR' => 'S',
+				'USUARIOIDRECHAZO' => session('ID'),
+				'FECHAINICIOPODER' => NULL,
+				'FECHAFINPODER' => NULL
+			];
+		} else {
+			$data = [
+				'RELACIONAR' => trim($this->request->getPost('relacionar')),
+				'RECHAZAR' => NULL,
+				'USUARIOIDRELACION' => session('ID'),
+				'FECHAINICIOPODER' => $this->request->getPost('fecha_inicio_poder'),
+				'FECHAFINPODER' => $this->request->getPost('fecha_fin_poder')
+			];
+		}
+
+
+		if ($ligadura) {
+			$update = $this->_relacionFisicaMoralModel->set($data)->where('ID', $id)->update();
+
+			if ($update) {
+				return redirect()->to(base_url('/admin/dashboard/lista_ligaciones'))->with('message_success', 'Ligadura actualizada correctamente.');
+			} else {
+				return redirect()->back()->with('message_error', 'No se pudo actualizar');
+			}
+		}
 	}
 
 	/**

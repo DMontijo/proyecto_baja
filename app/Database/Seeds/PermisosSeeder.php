@@ -22,6 +22,8 @@ class PermisosSeeder extends Seeder
 			array('PERMISOID' => '10', 'PERMISODESCR'=>'DENUNCIA ANONIMA'),
 			array('PERMISOID' => '11', 'PERMISODESCR'=>'BANDEJA'),
 			array('PERMISOID' => '12', 'PERMISODESCR'=>'SESIONES'),
+			array('PERMISOID' => '13', 'PERMISODESCR'=>'LIGACIONES'),
+
 
 
 		];

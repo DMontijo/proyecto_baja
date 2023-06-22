@@ -65,9 +65,11 @@ class RELACIONFISICAMORAL extends Migration
             ],
             'FECHAINICIOPODER' => [
                 'type' => 'DATE',
+                'null' => true,
             ],
             'FECHAFINPODER' => [
                 'type' => 'DATE',
+                'null' => true,
             ],
 
             'FECHAACTUALIZACION DATETIME ON UPDATE CURRENT_TIMESTAMP',

@@ -292,6 +292,9 @@ class DashboardController extends BaseController
 				'PODERNONOTARIO' => $this->request->getPost('poder_notario'),
 				'PODERNOPODER' => $this->request->getPost('poder_no_poder'),
 				'PODERARCHIVO' => $poder_data,
+				'FECHAINICIOPODER' =>NULL,
+				'FECHAFINPODER' =>NULL,
+
 			];
 			if ($this->_relacionFisicaMoralModel->save($data)) {
 				return redirect()->to(base_url('/denuncia_litigantes/dashboard'))->with('message_success', 'Se ha enviado la solicitud de ligación.');

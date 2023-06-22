@@ -56,7 +56,7 @@ $routes->group('admin', function ($routes) {
 	$routes->post('login', 'admin/LoginController::login_auth');
 	$routes->get('logout', 'admin/LoginController::logout');
 	$routes->post('cerrar-sesion', 'admin/LoginController::cerrar_sesiones');
-	$routes->get('actualizar-sesion','admin/LoginController::checkLastActivity');
+	$routes->get('actualizar-sesion', 'admin/LoginController::checkLastActivity');
 
 	$routes->group('dashboard', ['filter' => 'adminAuth'], function ($routes) {
 		$routes->get('/', 'admin/DashboardController::index');
@@ -74,6 +74,7 @@ $routes->group('admin', function ($routes) {
 		$routes->post('create_asignacion_permiso', 'admin/DashboardController::create_asignacion_permiso');
 		$routes->post('create_rol', 'admin/DashboardController::create_rol');
 
+
 		$routes->get('eliminar_asignacion_permiso', 'admin/DashboardController::eliminar_asignacion_permiso');
 		$routes->get('nuevo_rol', 'admin/DashboardController::nuevo_rol');
 
@@ -90,6 +91,7 @@ $routes->group('admin', function ($routes) {
 		$routes->get('editar_usuario', 'admin/DashboardController::editar_usuario');
 		$routes->post('editar_usuario', 'admin/DashboardController::update_usuario');
 		$routes->post('editar_password', 'admin/DashboardController::editar_password');
+
 
 		$routes->get('video-denuncia', 'admin/DashboardController::video_denuncia');
 		$routes->get('denuncia-anonima', 'admin/DashboardController::denuncia_anonima');
@@ -173,6 +175,10 @@ $routes->group('admin', function ($routes) {
 		$routes->post('send-documentos-correo', 'admin/FirmaController::sendEmailDocumentos');
 
 		$routes->post('send-documentos-correo-by-id', 'admin/FirmaController::sendEmailDocumentoByID');
+
+		$routes->get('lista_ligaciones', 'admin/DashboardController::ligaciones');
+		$routes->get('editar_ligacion', 'admin/DashboardController::editar_ligacion');
+		$routes->post('editar_ligacion', 'admin/DashboardController::update_ligacion');
 	});
 });
 
@@ -366,8 +372,6 @@ $routes->group('data', function ($routes) {
 	$routes->post('get-marcacomercial-by-empresa', 'litigantes/DashboardController::getMarcaComercialByEmpresa');
 	$routes->post('get-notificacion-by-empresa', 'litigantes/DashboardController::getNotificacionDireccion');
 	$routes->post('create-direccion-notificacion', 'litigantes/DashboardController::crear_direccion_notificacion');
-
-	
 });
 
 
