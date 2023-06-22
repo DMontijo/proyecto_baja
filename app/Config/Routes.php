@@ -225,6 +225,9 @@ $routes->group('data', function ($routes) {
 	$routes->post('exist-email', 'client/UserController::existEmail');
 	$routes->post('exist-email-admin', 'admin/DashboardController::existEmailAdmin');
 	$routes->post('exist-email-solicitantes', 'extravio/ExtravioController::existEmailSolicitantes');
+	$routes->post('exist-rfc', 'admin/DashboardController::existRFC');
+	$routes->post('exist-email-empresarial', 'admin/DashboardController::existEmailEmpresarial');
+	$routes->post('exist-email-notificacion', 'admin/DashboardController::existEmailEmpresarialNotificacion');
 
 	$routes->post('get-municipios-by-estado', 'client/UserController::getMunicipiosByEstado');
 	$routes->post('get-localidades-by-municipio', 'client/UserController::getLocalidadesByMunicipio');
@@ -359,6 +362,12 @@ $routes->group('data', function ($routes) {
 
 	$routes->post('email-alerts', 'admin/FirmaController::sendEmailAlertas');
 
+	//Persona moral
+	$routes->post('get-marcacomercial-by-empresa', 'litigantes/DashboardController::getMarcaComercialByEmpresa');
+	$routes->post('get-notificacion-by-empresa', 'litigantes/DashboardController::getNotificacionDireccion');
+	$routes->post('create-direccion-notificacion', 'litigantes/DashboardController::crear_direccion_notificacion');
+
+	
 });
 
 
@@ -390,6 +399,26 @@ $routes->group('constancia_extravio', function ($routes) {
 		$routes->get('perfil', 'extravio/ExtravioController::profile');
 		$routes->post('actualizar-perfil', 'extravio/ExtravioController::update_profile');
 		$routes->post('actualizar-password', 'extravio/ExtravioController::update_password');
+	});
+});
+$routes->group('denuncia_litigantes', function ($routes) {
+	$routes->get('/', 'litigantes/DenunciaLitigantesController::index');
+	$routes->get('register', 'litigantes/DenunciaLitigantesController::register');
+	$routes->post('create', 'litigantes/DenunciaLitigantesController::create');
+	$routes->post('login_auth', 'litigantes/DenunciaLitigantesController::login_auth');
+
+	$routes->group('dashboard', ['filter' => 'denunciaLitigantesAuth'], function ($routes) {
+		$routes->get('/', 'litigantes/DashboardController::index');
+		$routes->post('crear_empresa', 'litigantes/DashboardController::crear_empresa');
+		$routes->post('ligar_empresa', 'litigantes/DashboardController::ligar_empresa');
+		$routes->get('ligaciones', 'litigantes/DashboardController::ligaciones');
+		$routes->get('denuncia_persona_fisica', 'litigantes/DashboardController::denuncia_persona_fisica');
+		$routes->post('create_denuncia_persona_fisica', 'litigantes/DashboardController::create_denuncia_persona_fisica');
+		$routes->get('subir_documentos_folio', 'litigantes/DashboardController::subir_documentos_view');
+		$routes->post('subir_documentos', 'litigantes/DashboardController::subir_documentos');
+
+		$routes->get('denuncia_persona_moral', 'litigantes/DashboardController::denuncia_persona_moral');
+		$routes->post('create_denuncia_persona_moral', 'litigantes/DashboardController::create_denuncia_persona_moral');
 	});
 });
 /**

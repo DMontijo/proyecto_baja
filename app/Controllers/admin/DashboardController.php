@@ -387,6 +387,8 @@ class DashboardController extends BaseController
 	private $_relacionFolioDocExpDocRead;
 	private $_conexionesDBModelRead;
 	private $_folioConsecutivoModelRead;
+	private $_personasMoralesRead;
+	private $_personasMoralesNotificacionesRead;
 
 	private $protocol;
 	private $ip;
@@ -526,6 +528,8 @@ class DashboardController extends BaseController
 		$this->_sesionesDenunciantesModel = new SesionesDenunciantesModel();
 
 		//Models reader
+		$this->_personasMoralesRead = model('PersonasMoralesModel', true, $this->db_read);
+
 		$this->_folioModelRead = model('FolioModel', true, $this->db_read);
 		$this->_folioDocModelRead = model('FolioDocModel', true, $this->db_read);
 		$this->_sesionesModelRead = model('SesionesModel', true, $this->db_read);
@@ -642,6 +646,7 @@ class DashboardController extends BaseController
 		$this->_conexionesDBModelRead = model('ConexionesDBModel', true, $this->db_read);
 		$this->_folioConsecutivoModelRead = model('FolioConsecutivoModel', true, $this->db_read);
 		$this->_situacionVehiculoModelRead = model('VehiculoSituacionModel', true, $this->db_read);
+		$this->_personasMoralesNotificacionesRead = model('PersonaMoralNotificacionesModel', true, $this->db_read);
 
 		// $this->protocol = 'http://';
 		// $this->ip = "10.144.244.223";
@@ -2504,6 +2509,58 @@ class DashboardController extends BaseController
 	{
 		$email = $this->request->getPost('email');
 		$data = $this->_usuariosModelRead->where('CORREO', $email)->first();
+		if ($data == null) {
+			return json_encode((object) ['exist' => 0]);
+		} else if (count($data) > 0) {
+			return json_encode((object) ['exist' => 1]);
+		} else {
+			return json_encode((object) ['exist' => 0]);
+		}
+	}
+	/**
+	 * Función para verificar que el rfc no exista
+	 * Recibe por metodo POST el email
+	 *
+	 */
+	public function existRFC()
+	{
+		$rfc = $this->request->getPost('rfc');
+		$data = $this->_personasMoralesRead->where('RFC', $rfc)->first();
+		if ($data == null) {
+			return json_encode((object) ['exist' => 0]);
+		} else if (count($data) > 0) {
+			return json_encode((object) ['exist' => 1]);
+		} else {
+			return json_encode((object) ['exist' => 0]);
+		}
+	}
+
+	/**
+	 * Función para verificar que el correo empresarial no exista
+	 * Recibe por metodo POST el email
+	 *
+	 */
+	public function existEmailEmpresarial()
+	{
+		$email = $this->request->getPost('email');
+		$data = $this->_personasMoralesRead->where('CORREO', $email)->first();
+		if ($data == null) {
+			return json_encode((object) ['exist' => 0]);
+		} else if (count($data) > 0) {
+			return json_encode((object) ['exist' => 1]);
+		} else {
+			return json_encode((object) ['exist' => 0]);
+		}
+	}
+	/**
+	 * Función para verificar que el correo empresarial no exista
+	 * Recibe por metodo POST el email
+	 *
+	 */
+	public function existEmailEmpresarialNotificacion()
+	{
+		$email = $this->request->getPost('email');
+		$data = $this->_personasMoralesNotificacionesRead->where('CORREO', $email)->first();
 		if ($data == null) {
 			return json_encode((object) ['exist' => 0]);
 		} else if (count($data) > 0) {
