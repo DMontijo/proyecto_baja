@@ -12,6 +12,7 @@ use App\Models\FolioPersonaFisicaMediaFiliacionModel;
 use App\Models\FolioPersonaFisicaModel;
 use App\Models\FolioPreguntasModel;
 use App\Models\FolioVehiculoModel;
+use App\Models\PersonaFisicaParentescoModel;
 use GuzzleHttp\Client;
 use MailerSend\MailerSend;
 use MailerSend\Helpers\Builder\Recipient;
@@ -99,6 +100,7 @@ class DashboardController extends BaseController
 		$this->_folioMediaFiliacion = new FolioPersonaFisicaMediaFiliacionModel();
 		$this->_folioConsecutivoModel = new FolioConsecutivoModel();
 		$this->_archivoExternoModel = new FolioArchivoExternoModel();
+		$this->_parentescoPersonaFisicaModel = new PersonaFisicaParentescoModel();
 		//Models reader
 		$this->_folioModelRead = model('FolioModel', true, $this->db_read);
 
