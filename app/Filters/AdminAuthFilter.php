@@ -44,7 +44,7 @@ class AdminAuthFilter implements FilterInterface
 			$date1 = new DateTime(session("last_activity"));
 			$date2 = new DateTime(date("Y-m-d H:i:s"));	
 			$diff = $date1->diff($date2);
-			if(intval($diff->format('%i')) >= 3){
+			if(intval($diff->format('%i')) >= 120){
 				session()->destroy;
 				session_unset();
 				return redirect()->to(base_url('/admin'));

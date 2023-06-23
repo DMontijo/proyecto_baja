@@ -1004,7 +1004,7 @@ class DashboardController extends BaseController
 			//DATOS DEL OFENDIDO- EMPRESA
 
 			$dataOfendido = array(
-				'PERSONAMORALID' => $this->request->getPost('empresa'),
+				'PERSONAMORALID' => trim($this->request->getPost('empresa')),
 				'NOTIFICACIONID' => $this->request->getPost('direccion'),
 				'DENOMINACION' => $this->request->getPost('razon_social'),
 				'MARCACOMERCIAL' => $this->request->getPost('marca_comercial_d'),
@@ -1287,16 +1287,16 @@ class DashboardController extends BaseController
 		$data['CALIDADJURIDICAID'] = $calidadJuridica;
 
 		$personaMoral = $this->_folioPersonaMoralModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->orderBy('PERSONAMORALID', 'desc')->first();
+		$insertPersonaMoral = $this->_folioPersonaMoralModel->insert($data);
+		return $data['PERSONAMORALID'];
 
-		if ($personaMoral) {
-			$data['PERSONAMORALID'] = ((int) $personaMoral->PERSONAMORALID) + 1;
-			$personaMoral = $this->_folioPersonaMoralModel->insert($data);
-			return $data['PERSONAMORALID'];
-		} else {
-			$data['PERSONAMORALID'] = 1;
-			$personaMoral = $this->_folioPersonaMoralModel->insert($data);
-			return $data['PERSONAMORALID'];
-		}
+		// if ($personaMoral) {
+		// 	$data['PERSONAMORALID'] = ((int) $personaMoral->PERSONAMORALID) + 1;
+		// } else {
+		// 	$data['PERSONAMORALID'] = 1;
+		// 	$personaMoral = $this->_folioPersonaMoralModel->insert($data);
+		// 	return $data['PERSONAMORALID'];
+		// }
 	}
 
 

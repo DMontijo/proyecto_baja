@@ -13,7 +13,7 @@ class PERSONAMORALNOTIFICACIONES extends Migration
             'NOTIFICACIONID' => [
 				'type' => 'INT',
 				'unsigned' => TRUE,
-
+                'auto_increment'=> TRUE
 			],
             'PERSONAMORALID' => [
 				'type' => 'INT',

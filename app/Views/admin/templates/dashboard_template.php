@@ -75,6 +75,17 @@
 			<?php } ?>
 			<?php foreach ($body_data->rolPermiso as $permiso) { ?>
 
+				<?php if ($permiso->PERMISOID == 1) { ?>
+
+					<li class="c-sidebar-nav-item" id="nav-modulo-litigantes" name="nav-modulo-litigantes">
+						<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/modulo-litigantes">
+							<i class="fas fa-building c-sidebar-nav-icon"></i> Modulo litigantes
+						</a>
+					</li>
+				<?php } ?>
+			<?php } ?>
+			<?php foreach ($body_data->rolPermiso as $permiso) { ?>
+
 				<?php if ($permiso->PERMISOID == 10) { ?>
 
 					<li class="c-sidebar-nav-item" id="nav-denuncia-anonima" name="nav-denuncia-anonima">
@@ -197,7 +208,7 @@
 				<?php } ?>
 			<?php } ?>
 			<li class="c-sideba
-			<li class="c-sidebar-nav-item" id="nav-salir" name="nav-salir">
+			<li class=" c-sidebar-nav-item" id="nav-salir" name="nav-salir">
 				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url('admin/logout') ?>">
 					<i class="fas fa-sign-out-alt c-sidebar-nav-icon"></i> Salir
 				</a>
@@ -319,38 +330,38 @@
 	<?php endif; ?>
 	<script>
 		closeSessionTimeout();
-		function closeSessionTimeout(){
-			var timeout; 
-		clearTimeout(timeout); 
-		timeout = setTimeout(function(){
-			console.log('timeout funcionando');
-			Swal.fire({
-				icon: 'error',
-				title: 'Tiempo de sesión agotado',
-				text: 'Si quieres seguir trabajando hay que renovar la sesion dando click en Ok, sino Cancelar',
-				confirmButtonColor: '#bf9b55',
-				showCancelButton: true,
-			}).then((result) => {
-				if (result.isConfirmed) {
-					$.ajax({
-						url: "<?= base_url('admin/actualizar-sesion') ?>",
-						method: "get",
-						dataType: "json",
-						success: function(response) {
-							Swal.fire({
-								icon: 'success',
-								title: 'Sesión actualizada',
-							}).then((result) => {
-								closeSessionTimeout();
-							});
-						},
-						error: function(jqXHR, textStatus, errorThrown) {}
-					});
-				}
-			})
-		}, 7080000); ///7080000 for 1:58 hours
+
+		function closeSessionTimeout() {
+			var timeout;
+			clearTimeout(timeout);
+			timeout = setTimeout(function() {
+				console.log('timeout funcionando');
+				Swal.fire({
+					icon: 'error',
+					title: 'Tiempo de sesión agotado',
+					text: 'Si quieres seguir trabajando hay que renovar la sesion dando click en Ok, sino Cancelar',
+					confirmButtonColor: '#bf9b55',
+					showCancelButton: true,
+				}).then((result) => {
+					if (result.isConfirmed) {
+						$.ajax({
+							url: "<?= base_url('admin/actualizar-sesion') ?>",
+							method: "get",
+							dataType: "json",
+							success: function(response) {
+								Swal.fire({
+									icon: 'success',
+									title: 'Sesión actualizada',
+								}).then((result) => {
+									closeSessionTimeout();
+								});
+							},
+							error: function(jqXHR, textStatus, errorThrown) {}
+						});
+					}
+				})
+			}, 7080000); ///7080000 for 1:58 hours
 		}
-		 	
 	</script>
 </body>
 
