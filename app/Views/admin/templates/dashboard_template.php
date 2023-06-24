@@ -4,7 +4,13 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="Expires" content="0">
+	<meta http-equiv="Last-Modified" content="0">
+	<meta http-equiv="Cache-Control" content="no-cache, mustrevalidate">
+	<meta http-equiv="Pragma" content="no-cache">
 	<meta name="robots" content="noindex">
+	<link rel="icon" href="<?= base_url() ?>/assets/img/FGEBC.png" type="image/x-icon">
+	<link rel="shortcut icon" href="<?= base_url() ?>/assets/img/FGEBC.png" type="image/x-icon">
 	<title><?= $this->renderSection('title') ?> - Centro de Denuncia Tecnológica.</title>
 	<!--Montserrat Font-->
 	<link rel="preconnect" href="https://fonts.googleapis.com">
@@ -34,7 +40,10 @@
 	<!-- Mapas -->
 
 	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
-	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBZnoURjO4MKsTx6_iRb1stAdXiGHLKSrQ&callback=initMap&v=weekly" defer></script>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC8Y8sKd0VSyZcl9kPdCewI2mpXh95AJ-8&callback=initMap&v=weekly" defer></script>
+	<!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBZnoURjO4MKsTx6_iRb1stAdXiGHLKSrQ&callback=initMap&v=weekly" defer></script> -->
+	<script src="<?= base_url() ?>/assets/agent/agent.js" type="module"></script>
+
 </head>
 
 <body class="c-app c-legacy-theme">
@@ -297,6 +306,52 @@
 			})
 		</script>
 	<?php endif; ?>
+	<script>
+		closeSessionTimeout();
+		function closeSessionTimeout(){
+			var timeout; 
+		clearTimeout(timeout); 
+		timeout = setTimeout(function(){
+			console.log('timeout funcionando');
+			Swal.fire({
+				icon: 'error',
+				title: 'Tiempo de sesión agotado',
+				text: 'Si quieres seguir trabajando hay que renovar la sesion dando click en Ok, sino Cancelar',
+				confirmButtonColor: '#bf9b55',
+				showCancelButton: true,
+			}).then((result) => {
+				if (result.isConfirmed) {
+					$.ajax({
+						url: "<?= base_url('admin/actualizar-sesion') ?>",
+						method: "get",
+						dataType: "json",
+						success: function(response) {
+							if(response.result){
+									Swal.fire({
+									icon: 'success',
+									title: 'Sesión actualizada',
+									confirmButtonColor: '#bf9b55',
+									}).then((result) => {
+										if (result.isConfirmed) {
+											console.log(response);
+											closeSessionTimeout();
+										}
+									});
+								}else{
+									Swal.fire({
+									icon: 'error',
+									title: 'Tiempo agotado',
+									confirmButtonColor: '#bf9b55',});	
+								}
+						},
+						error: function(jqXHR, textStatus, errorThrown) {}
+					});
+				}
+			})
+		}, 7080000); ///7080000 for 1:58 hours
+		}
+		 	
+	</script>
 </body>
 
 </html>

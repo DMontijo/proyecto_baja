@@ -5,28 +5,46 @@
 <?= $this->section('content') ?>
 <?php $session = session(); ?>
 <?php if ($body_data->datosFolio->STATUS == 'EN PROCESO' || $body_data->datosFolio->STATUS == 'ABIERTO') { ?>
-	<div class="alert alert-warning text-right font-weight-bold" role="alert">
-		ESTATUS: <?= $body_data->datosFolio->STATUS ?>
+	<div class="alert alert-warning" role="alert">
+		<h3 class="font-weigth-bold text-center">
+			<strong>FOLIO: </strong><?= $body_data->datosFolio->FOLIOID . '/' . $body_data->datosFolio->ANO ?>
+		</h3>
+		<strong>ESTATUS:</strong> <?= $body_data->datosFolio->STATUS ?>
 	</div>
 <?php } ?>
 <?php if ($body_data->datosFolio->STATUS != 'EN PROCESO' && $body_data->datosFolio->STATUS != 'ABIERTO') { ?>
-	<div class="alert alert-warning text-right font-weight-bold" role="alert">
-		ESTATUS: <?= $body_data->datosFolio->TIPOEXPEDIENTEID ?  $body_data->datosFolio->STATUS  . ' ' . $body_data->datosFolio->TIPOEXPEDIENTEDESCR : $body_data->datosFolio->STATUS ?> <br>
-
-		MUNICIPIO ASIGNADO O REMITIDO: <?= $body_data->datosFolio->MUNICIPIODESCR ?> <br>
+	<div class="alert alert-success" role="alert">
+		<h3 class="font-weigth-bold text-center">
+			<?php
+			$expedienteid = '';
+			if ($body_data->datosFolio->EXPEDIENTEID && $body_data->datosFolio->EXPEDIENTEID != '') {
+				$arrayExpediente = str_split($body_data->datosFolio->EXPEDIENTEID);
+				$expedienteid =  $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
+			}
+			$tipoexpediente = '';
+			if (isset($body_data->datosFolio->TIPOEXPEDIENTECLAVE)) {
+				$expedienteid = $expedienteid . '/' . $body_data->datosFolio->TIPOEXPEDIENTECLAVE;
+			}
+			?>
+			<strong>FOLIO: </strong><?= $body_data->datosFolio->FOLIOID . '/' . $body_data->datosFolio->ANO ?><br>
+			<strong>EXPEDIENTE: </strong><?= $expedienteid ?>
+		</h3>
+		<strong>ESTATUS: </strong><?= $body_data->datosFolio->STATUS ?><br>
+		<strong>MUNICIPIO ASIGNADO: </strong><?= $body_data->datosFolio->MUNICIPIODESCR ?> <br>
 	<?php }
 if ($body_data->datosFolio->INSTITUCIONREMISIONID) { ?>
-		INSTITUTO REMITIDO: <?= $body_data->datosFolio->INSTITUCIONREMISIONDESCR ?> <br>
+		<strong>INSTITUTO REMITIDO: </strong><?= $body_data->datosFolio->INSTITUCIONREMISIONDESCR ?> <br>
 	<?php }
 if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->MEDIADORID)) { ?>
-		AGENTE ASIGNADO: <?= $body_data->datosFolio->NOMBRE . ' ' . $body_data->datosFolio->PRIMERAPELLIDO . ' ' . $body_data->datosFolio->SEGUNDOAPELLIDO  ?><br>
-		OFICINA ASIGNADA: <?= $body_data->datosFolio->OFICINADESCR ?><br>
-		AREA ASIGNADA: <?= $body_data->datosFolio->AREADESCR ?><br>
+		<strong>AGENTE ASIGNADO: </strong><?= $body_data->datosFolio->NOMBRE . ' ' . $body_data->datosFolio->PRIMERAPELLIDO . ' ' . $body_data->datosFolio->SEGUNDOAPELLIDO  ?><br>
+		<strong>OFICINA ASIGNADA: </strong><?= $body_data->datosFolio->OFICINADESCR ?><br>
 	<?php } ?>
 	</div>
 	<?php if (!$body_data->datosFolio->AGENTEASIGNADOID && $body_data->datosFolio->MUNICIPIOASIGNADOID) { ?>
-		<div class="alert alert-danger text-right font-weight-bold" role="alert">
-			NO SE HA REMITIDO
+		<div class="alert alert-danger font-weight-bold" role="alert">
+			<h3 class="font-weigth-bold text-center">
+				<strong>NO SE HA REMITIDO</strong>
+			</h3>
 		</div>
 	<?php } ?>
 
@@ -42,6 +60,8 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 		<div class="col-12 d-none">
 			<input type="text" class="form-control" id="year_select" placeholder="Folio" value="<?= isset($body_data->year) ? $body_data->year : '' ?>">
 			<input type="text" class="form-control" id="input_folio_atencion" placeholder="Folio" value="<?= isset($body_data->folio) ? $body_data->folio : '' ?>">
+			<input type="text" class="form-control" id="input_expediente" placeholder="Expediente" value="<?= isset($body_data->datosFolio->EXPEDIENTEID) ? $body_data->datosFolio->EXPEDIENTEID : '' ?>">
+
 		</div>
 		<div id="card2" class="col-12 col-sm-6 col-md-4 d-none">
 			<div class="card rounded bg-white shadow" style="min-height: 240px;">
@@ -53,6 +73,7 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 				</div>
 			</div>
 		</div>
+
 		<div id="card3" class="col-12 col-sm-6 col-md-4 d-none">
 			<div class="card rounded bg-white shadow" style="height: 240px;">
 				<div class="card-body">
@@ -60,13 +81,19 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 				</div>
 			</div>
 		</div>
-		<div class="col-12 col-sm-6 col-md-4">
-			<div class="card rounded bg-white shadow" style="height: 240px;">
-				<div class="card-body">
-					<button id="documentos-folio-btn" class="btn btn-primary btn-block h-100" role="button"><i class="fas fa-file-alt fa-3x"></i><br><br> DOCUMENTOS</button>
+		<?php if ($body_data->datosFolio->STATUS != 'EN PROCESO' && $body_data->datosFolio->STATUS != 'ABIERTO') { ?>
+
+			<div class="col-12 col-sm-6 col-md-4">
+				<div class="card rounded bg-white shadow" style="height: 240px;">
+					<div class="card-body">
+						<button id="documentos-folio-btn" class="btn btn-primary btn-block h-100" role="button" <?php if ($body_data->datosFolio->STATUS == 'ABIERTO' || $body_data->datosFolio->STATUS == 'EN PROCESO') {
+																													echo 'disabled';
+																												} ?>><i class="fas fa-file-alt fa-3x"></i><br><br> DOCUMENTOS</button>
+					</div>
 				</div>
 			</div>
-		</div>
+		<?php } ?>
+
 		<!-- <div class="col-12 col-sm-6 col-md-4 d-none">
 			<div class="card rounded bg-white shadow" style="height: 240px;">
 				<div class="card-body">
@@ -81,10 +108,14 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 		$("textarea").prop('disabled', true);
 	</script>
 	<script>
+		//Declaracion de variables
 		const inputFolio = document.querySelector('#input_folio_atencion');
+		const input_expediente = document.querySelector('#input_expediente');
 		const buscar_btn = document.querySelector('#buscar-btn');
 		const buscar_nuevo_btn = document.querySelector('#buscar-nuevo-btn');
+
 		const info_folio_btn = document.querySelector('#info-folio-btn');
+
 		const documentos_folio_btn = document.querySelector('#documentos-folio-btn');
 		// const videos_folio_btn = document.querySelector('#videos-folio-btn');
 		const year_select = document.querySelector('#year_select');
@@ -95,12 +126,13 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 
 		var respuesta;
 
+		//Funcion para convertir el elemento a mayusculoas
 		const mayuscTextarea = (e) => {
 			e.value = e.value.toUpperCase();
 		}
 
+		//Evento para obtener la informacion del folio.
 		buscar_btn.addEventListener('click', (e) => {
-			console.log("en el boton");
 			$.ajax({
 				data: {
 					'folio': inputFolio.value,
@@ -115,28 +147,29 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 					console.log(respuesta);
 					if (response.status === 1) {
 						const folio = response.folio;
-						const preguntas = response.preguntas_iniciales;
-						const personas = response.personas;
-						const domicilios = response.domicilios;
-						const vehiculos = response.vehiculos;
-						const relacion_parentesco = response.parentescoRelacion;
-						const parentesco = response.parentesco;
-						const personaiduno = response.personaiduno;
-						const personaidDos = response.personaidDos;
-						const relacionFisFis = response.relacionFisFis;
-						const fisicaImpDelito = response.fisicaImpDelito;
-						const delitosModalidadFiltro = response.delitosModalidadFiltro;
-						const personafisica = response.personafisica;
-						const imputados = response.imputados;
-						const victimas = response.victimas;
-						const objetos = response.objetos;
-						const archivos = response.archivosexternos;
+						const preguntas = response.respuesta.preguntas_iniciales;
+						const personas = response.respuesta.personas;
+						const domicilios = response.respuesta.domicilios;
+						const vehiculos = response.respuesta.vehiculos;
+						const relacion_parentesco = response.respuesta.parentescoRelacion;
+						const parentesco = response.respuesta.parentesco;
+						const personaiduno = response.respuesta.personaiduno;
+						const personaidDos = response.respuesta.personaidDos;
+						const relacionFisFis = response.respuesta.relacionFisFis;
+						const fisicaImpDelito = response.respuesta.fisicaImpDelito;
+						const delitosModalidadFiltro = response.respuesta.delitosModalidadFiltro;
+						const personafisica = response.respuesta.personafisica;
+						const imputados = response.respuesta.imputados;
+						const victimas = response.respuesta.victimas;
+						const objetos = response.respuesta.objetos;
+						const archivos = response.respuesta.archivosexternos;
 						buscar_btn.classList.add('d-none');
 						buscar_nuevo_btn.classList.remove('d-none');
 
 						// card2.classList.remove('d-none');
 						card3.classList.remove('d-none');
 
+						//Se llenan todos los elementos con los valores del folio
 						if (personas) {
 							$('#propietario_update').empty();
 							let select_propietario_update = document.querySelector("#propietario_update")
@@ -269,6 +302,7 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 						document.querySelector('#narracion_delito').value = folio.HECHONARRACION ? folio.HECHONARRACION : '';
 
 
+						//Llenado de las tablas con la informacion del folio
 						if (vehiculos) {
 							//VEHICULOS
 							for (let i = 0; i < vehiculos.length; i++) {
@@ -412,19 +446,23 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 			});
 		});
 
+		//Funcion para redirigir a la busqueda de folio
 		buscar_nuevo_btn.addEventListener('click', () => {
 			window.location.href = `<?= base_url('/admin/dashboard/buscar_folio') ?>`;
 		});
 
-		documentos_folio_btn.addEventListener('click', () => {
-			<?php if ($body_data->datosFolio->EXPEDIENTEID != NULL) { ?>
-				window.location.href = `<?= base_url('/admin/dashboard/documentos_show?folio=') ?>${inputFolio.value}&year=${year_select.value}&expediente=` + `<?= $body_data->datosFolio->EXPEDIENTEID ?>`;
-			<?php } else { ?>
+		//Validacion para habilitar el boton de documentos
+		<?php if ($body_data->datosFolio->STATUS != 'EN PROCESO' && $body_data->datosFolio->STATUS != 'ABIERTO') { ?>
 
-				window.location.href = `<?= base_url('/admin/dashboard/documentos_show?folio=') ?>${inputFolio.value}&year=${year_select.value}`;
-			<?php } ?>
-		});
+			documentos_folio_btn.addEventListener('click', () => {
+				<?php if ($body_data->datosFolio->EXPEDIENTEID != NULL) { ?>
+					window.location.href = `<?= base_url('/admin/dashboard/documentos_show?folio=') ?>${inputFolio.value}&year=${year_select.value}&expediente=` + `<?= $body_data->datosFolio->EXPEDIENTEID ?>`;
+				<?php } else { ?>
 
+					window.location.href = `<?= base_url('/admin/dashboard/documentos_show?folio=') ?>${inputFolio.value}&year=${year_select.value}`;
+				<?php } ?>
+			});
+		<?php } ?>
 		// videos_folio_btn.addEventListener('click', () => {
 		// 	data = {
 		// 		'folio': inputFolio.value,
@@ -446,6 +484,7 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 		// 		})
 		// 	});
 		// });
+		// Funcion para visualizar la informacion del objeto involucrado, recibe por parametro el id del objeto
 
 		function viewObjetoInvolucrado(objetoid) {
 			$('#folio_objetos_ver').modal('show');
@@ -487,6 +526,7 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 				}
 			});
 		}
+		//Funcion para viualizar la informacion de la persona fisica seleccionada, recibe por parametro el id de la persona fisica
 
 		function viewPersonaFisica(id) {
 			$.ajax({
@@ -821,6 +861,7 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 				}
 			});
 		}
+		// Funcion para visualizar la informacion del domicilio de la persona fisica, recibe por parametro el id de la persona fisica
 
 		function viewDomicilio(id) {
 			$.ajax({
@@ -870,6 +911,7 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 				}
 			});
 		}
+		//Funcion para viualizar la informacion del vehiculo  seleccionada, recibe por parametro el id del vehiculo
 
 		function viewVehiculo(id) {
 			$.ajax({
@@ -954,17 +996,24 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 				}
 			});
 		}
+		// Cuando se oculta el modal con el ID 'info_folio_modal'
 
 		$(document).on('hidden.bs.modal', '#info_folio_modal', function() {
 			let tabs = document.querySelectorAll('#info_tabs .nav-link');
 			let contents = document.querySelectorAll('#info_content .tab-pane');
+			// Remueve la clase 'active' de todas las pestañas
+
 			tabs.forEach(element => {
 				element.classList.remove('active');
 			});
+			// Remueve las clases 'show' y 'active' de todos los contenidos
+
 			contents.forEach(element => {
 				element.classList.remove('show');
 				element.classList.remove('active');
 			});
+			// Agrega la clase 'active' a la primera pestaña y agrega las clases 'show' y 'active' al primer contenido
+
 			tabs[0].classList.add('active');
 			contents[0].classList.add('show');
 			contents[0].classList.add('active');
@@ -973,23 +1022,31 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 		$(document).on('hidden.bs.modal', '#folio_persona_fisica_modal', function() {
 			let tabs = document.querySelectorAll('#persona_tabs .nav-item');
 			let contents = document.querySelectorAll('#persona_content .tab-pane');
+			// Remueve la clase 'active' de todas las pestañas
+
 			tabs.forEach(element => {
 				element.classList.remove('active');
 			});
+			// Remueve las clases 'show' y 'active' de todos los contenidos
+
 			contents.forEach(element => {
 				element.classList.remove('show');
 				element.classList.remove('active');
 			});
+			// Agrega la clase 'active' a la primera pestaña y agrega las clases 'show' y 'active' al primer contenido
+
 			tabs[0].classList.add('active');
 			contents[0].classList.add('show');
 			contents[0].classList.add('active');
 		})
+		//Limpia las opciones del select para que quede vacio
 
 		function clearSelect(select_element) {
 			for (let i = select_element.options.length; i >= 1; i--) {
 				select_element.remove(i);
 			}
 		}
+		//Elimina todos los caracteres especiales del texto
 
 		function clearText(text) {
 			return text
@@ -1001,6 +1058,8 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 
 
 		//DELITO FORM ******************************************************************
+		//Carga todos los formularios y elementos para llenar la denuncia, asi como las acciones submit de los formularios
+
 		window.onload = function() {
 			(function() {
 				'use strict'
@@ -1037,15 +1096,18 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 				// 	}
 				// }, false);
 
+				//Convierte todos los input text en mayusculas
 				inputsText.forEach((input) => {
 					input.addEventListener('input', (event) => {
 						event.target.value = clearText(event.target.value).toUpperCase();
 					}, false)
 				});
 
+				//Convierte todo el valor a mayusculas
 				document.querySelector('#narracion_delito').addEventListener('input', (event) => {
 					event.target.value = clearText(event.target.value).toUpperCase();
 				}, false)
+				//Evento change para obtener la localidad de acuerdo al municipio. Limpia los select para que no se acumulen
 
 				document.querySelector('#municipio_delito').addEventListener('change', (e) => {
 					let select_localidad = document.querySelector('#localidad_delito');
@@ -1088,6 +1150,7 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 						error: function(jqXHR, textStatus, errorThrown) {}
 					});
 				});
+				//Evento change para obtener la colonia de acuerdo al municipio, estado y localidad. Limpia los select para que no se acumulen
 
 				document.querySelector('#localidad_delito').addEventListener('change', (e) => {
 					let select_colonia = document.querySelector('#colonia_delito_select');
@@ -1136,6 +1199,7 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 					});
 				});
 
+				//Evento change de colonia para modificar estilos
 				document.querySelector('#colonia_delito_select').addEventListener('change', (e) => {
 					let select_colonia = document.querySelector('#colonia_delito_select');
 					let input_colonia = document.querySelector('#colonia_delito');
@@ -1149,6 +1213,7 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 						input_colonia.value = '-';
 					}
 				});
+				//Funcion  para actualizar los hechos de la denuncia
 
 				function actualizarDenuncia() {
 					const data = {
@@ -1198,7 +1263,7 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 				}
 
 
-
+				//Funcion  para actualizar las preguntas de la denuncia
 				function actualizarPreguntas() {
 					const data = {
 						'folio': document.querySelector('#input_folio_atencion').value,

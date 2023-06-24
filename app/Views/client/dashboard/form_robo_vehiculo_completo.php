@@ -152,7 +152,7 @@
 		<label for="transmision_vehiculo" class="form-label fw-bold ">Caja / Transmisión:</label>
 		<br>
 		<div class="form-check">
-			<input class="form-check-input" type="radio" name="transmision_vehiculo" id="A" value="A"> 
+			<input class="form-check-input" type="radio" name="transmision_vehiculo" id="A" value="A">
 			<label class="form-check-label" for="flexRadioDefault1">Automática</label>
 		</div>
 		<div class="form-check">
@@ -191,12 +191,14 @@
 </div>
 
 <script>
+	//Iteracion de modelos hasta el año actual
 	let startYear = 1800;
 	let endYear = new Date().getFullYear();
 	for (i = endYear; i > startYear; i--) {
 		$('#modelo_vehiculo').append($('<option />').val(i).html(i));
 	}
 
+	//Funcion para verificar que las placas coincidan
 	function verificarPlacas() {
 
 		placas = document.getElementById('placas_vehiculo');
@@ -214,7 +216,7 @@
 		}
 
 	}
-
+	//Funcion para verificar que el numero de serie coincidan
 	function verificarSerie() {
 
 		serie = document.getElementById('serie_vehiculo');
@@ -233,7 +235,7 @@
 
 	}
 
-
+	//Evento para obtener la marca de acuerdo l distribuidor seleccionado
 	document.querySelector('#distribuidor_vehiculo').addEventListener('change', (e) => {
 
 		let select_marca = document.querySelector('#marca');
@@ -268,6 +270,7 @@
 		});
 
 	});
+	//Evento para obtener el modalo de acuerdo a la marca seleccionada
 
 	document.querySelector('#marca').addEventListener('change', (e) => {
 		let select_linea = document.querySelector('#linea_vehiculo');
@@ -306,6 +309,7 @@
 			error: function(jqXHR, textStatus, errorThrown) {}
 		});
 	});
+	//Evento para obtener la version de acuerdo al modeo seleccionado
 
 	document.querySelector('#linea_vehiculo').addEventListener('change', (e) => {
 		let select_version = document.querySelector('#version_vehiculo');

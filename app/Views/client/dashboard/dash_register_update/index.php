@@ -5,6 +5,15 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
+<?php
+$request = \Config\Services::request();
+$agent = $request->getUserAgent();
+$currentAgent = '';
+
+if ($agent->isMobile()) {
+	$currentAgent = strtolower($agent->getMobile());
+}
+?>
 <div class="container m-auto">
 	<div class="card shadow py-4 px-3 border-0">
 		<div class="card-body">
@@ -135,15 +144,15 @@
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-						<label for="exterior" class="form-label fw-bold input-required" id="lblExterior">Número exterior</label>
+							<label for="exterior" class="form-label fw-bold input-required" id="lblExterior">Número exterior</label>
 							<input type="text" class="form-control" id="exterior" name="exterior" maxlength="10" required>
 							<div class="invalid-feedback">
 								El número exterior es obligatorio
 							</div>
 						</div>
-						
+
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-						<label for="interior" class="form-label fw-bold" id="lblInterior">Número interior</label>
+							<label for="interior" class="form-label fw-bold" id="lblInterior">Número interior</label>
 							<input type="text" class="form-control" id="interior" name="interior" maxlength="10">
 						</div>
 
@@ -152,6 +161,9 @@
 							<select class="form-select" id="localidad_select" name="localidad_select" required>
 								<option selected disabled value="">Selecciona la localidad</option>
 							</select>
+							<div class="invalid-feedback">
+								La localidad es obligatoria
+							</div>
 						</div>
 
 
@@ -169,17 +181,17 @@
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="cp" class="form-label fw-bold">Código postal</label>
-							<input type="number" class="form-control" id="cp" maxlength="10" oninput="clearInputPhone(event);" name="cp">
+							<input type="number" class="form-control" id="cp" maxlength="10" name="cp">
 						</div>
 
 						<div class="col-12 mt-4 mb-4">
-							<input class="form-check-input" type="checkbox" id="checkML" name="checkML" >
+							<input class="form-check-input" type="checkbox" id="checkML" name="checkML">
 							<label class="form-check-label fw-bold" for="checkML">
 								¿Tu dirección contiene manzana y lote?
 							</label>
 						</div>
-					
-						
+
+
 					</div>
 				</div>
 
@@ -259,7 +271,11 @@
 							<textarea id="documento_text" name="documento_text" hidden></textarea>
 							<textarea id="img_text" name="img_text" hidden></textarea>
 
-							<div class="form-text"><button id="photo-btn" class="btn btn-link p-0 m-0" style="font-size:14px;" type="button">Para tomar foto clic aquí <i class="bi bi-camera-fill"></i></button></div>
+							<?php if (strpos($currentAgent, 'iphone') || strpos($currentAgent, 'apple') || strpos($currentAgent, 'ipad')) { ?>
+								<div class="form-text d-none"><button id="photo-btn" class="btn btn-link p-0 m-0" style="font-size:14px;" type="button">Para tomar foto clic aquí <i class="bi bi-camera-fill"></i></button></div>
+							<?php } else { ?>
+								<div class="form-text"><button id="photo-btn" class="btn btn-link p-0 m-0" style="font-size:14px;" type="button">Para tomar foto clic aquí <i class="bi bi-camera-fill"></i></button></div>
+							<?php } ?>
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -367,7 +383,7 @@
 	let width = 100 / stepCount;
 	let currentStep = 0;
 	var checkML = document.getElementById('checkML');
-
+	//Evento para cambiar el texto del label cuando seleccionan Manzana y Lote
 	checkML.addEventListener('click', function() {
 		if (checkML.checked) {
 			document.getElementById('lblExterior').innerHTML = "Manzana";
@@ -378,6 +394,7 @@
 		}
 	});
 
+	//Funcion para limpiar los guiones y validar el largo
 	function clearInputPhone(e) {
 		e.target.value = e.target.value.replace(/-/g, "");
 		if (e.target.value.length > e.target.maxLength) {
@@ -387,12 +404,14 @@
 
 	chargeCurrentStep(currentStep);
 
+	//Evento para abrir modal para tomar foto
 	document.querySelector('#photo-btn').addEventListener('click', () => {
 		initPhoto();
 		$('#take_photo_modal').modal('show');
 	});
 
 	nextBtn.addEventListener('click', () => {
+		//Modifica estilos de acuerdo a los steps
 		if (validarStep(currentStep)) {
 			currentStep++;
 			let previousStep = currentStep - 1;
@@ -424,6 +443,8 @@
 	});
 
 	prevBtn.addEventListener('click', () => {
+		//Modifica estilos de acuerdo a los steps
+
 		if (currentStep > 0) {
 			currentStep--;
 			let previousStep = currentStep + 1;
@@ -449,7 +470,7 @@
 		}
 		progress.style.width = `${currentStep*width}%`
 	});
-
+	//Funcion mostrar o ocultar los elementos de paso según el número especificado, y también actualiza el ancho del progreso.
 	function chargeCurrentStep(num) {
 		steps.forEach((step, index) => {
 			if (num === index) {
@@ -461,6 +482,7 @@
 		})
 		progress.style.width = `${currentStep*width}%`
 	}
+	//Funcion para validar los elementos requeridos de cada step
 
 	function validarStep(step) {
 		switch (step) {
@@ -526,6 +548,7 @@
 	}
 </script>
 <script>
+	//Funcion para eliminar los caracteres especiales del texto
 	function clearText(text) {
 		return text
 			.normalize('NFD')
@@ -552,11 +575,13 @@
 			form.classList.add('was-validated')
 		}, false)
 
+		//Convierte los input text a mayusculas y limpia caracteres especiales
 		inputsText.forEach((input) => {
 			input.addEventListener('input', function(event) {
 				event.target.value = clearText(event.target.value).toUpperCase();
 			}, false)
 		})
+		//Convierte los input email a minusculas y limpia caracteres especiales
 
 		inputsEmail.forEach((input) => {
 			input.addEventListener('input', function(event) {
@@ -564,6 +589,7 @@
 			}, false)
 		})
 
+		//Envia alerta cuando el idioma no es español
 		document.querySelector('#idioma').addEventListener('change', (e) => {
 			let alert = document.querySelector('#idioma_alert');
 			if (e.target.value !== '22') {
@@ -573,19 +599,21 @@
 			}
 		})
 
+		//Modifica estilos de acuerdo a la opcion selecciona de la ocupacion
 		document.querySelector('#ocupacion').addEventListener('change', (e) => {
-		let select_ocupacion = document.querySelector('#ocupacion');
-		let input_ocupacion = document.querySelector('#ocupacion_descr');
+			let select_ocupacion = document.querySelector('#ocupacion');
+			let input_ocupacion = document.querySelector('#ocupacion_descr');
 
-		if (e.target.value === '999') {
-			select_ocupacion.classList.add('d-none');
-			input_ocupacion.classList.remove('d-none');
-			input_ocupacion.value = "";
-			input_ocupacion.focus();
-		} else {
-			input_ocupacion.value = "";
-		}
-	});
+			if (e.target.value === '999') {
+				select_ocupacion.classList.add('d-none');
+				input_ocupacion.classList.remove('d-none');
+				input_ocupacion.value = "";
+				input_ocupacion.focus();
+			} else {
+				input_ocupacion.value = "";
+			}
+		});
+		//Obtiene los municipios cuando la nacionalidad sea diferente a mx
 		document.querySelector('#nacionalidad').addEventListener('change', (e) => {
 			let select_estado = document.querySelector('#estado_select_origen');
 			let select_municipio = document.querySelector('#municipio_select_origen');
@@ -622,7 +650,7 @@
 				select_municipio.value = '';
 			}
 		});
-
+		//Obtiene los municipios de acuerdo al estado
 		document.querySelector('#estado_select_origen').addEventListener('change', (e) => {
 			let select_municipio = document.querySelector('#municipio_select_origen');
 
@@ -653,6 +681,7 @@
 			});
 		});
 
+		//Obtiene los municipios y localidades cuando el pais sea diferente a mx
 		document.querySelector('#pais_select').addEventListener('change', (e) => {
 
 			let select_estado = document.querySelector('#estado_select');
@@ -748,7 +777,7 @@
 				input_colonia.classList.add('d-none');
 			}
 		});
-
+		//Obtiene los municipios de acuerdo al estado seleccionado
 		document.querySelector('#estado_select').addEventListener('change', (e) => {
 			let select_municipio = document.querySelector('#municipio_select');
 			let select_localidad = document.querySelector('#localidad_select');
@@ -803,6 +832,7 @@
 			}
 		});
 
+		//Obtiene las localidades de acuerdo al municipio
 		document.querySelector('#municipio_select').addEventListener('change', (e) => {
 			let select_localidad = document.querySelector('#localidad_select');
 			let select_colonia = document.querySelector('#colonia_select');
@@ -840,6 +870,7 @@
 			});
 		});
 
+		//Obtiene las colonias de acuerdo a la localidad, estado y municipio
 		document.querySelector('#localidad_select').addEventListener('change', (e) => {
 			let select_colonia = document.querySelector('#colonia_select');
 			let input_colonia = document.querySelector('#colonia');
@@ -902,6 +933,7 @@
 
 
 
+		//Modifica los estilos de acuerdo a la colonia seleccionada
 		document.querySelector('#colonia_select').addEventListener('change', (e) => {
 			let select_colonia = document.querySelector('#colonia_select');
 			let input_colonia = document.querySelector('#colonia');
@@ -916,26 +948,111 @@
 			}
 		});
 
-		document.querySelector('#documento').addEventListener('change', (e) => {
+		//Valida el tamaño del documento y lo previsualiza
+		document.querySelector('#documento').addEventListener('change', async (e) => {
 			let documento_identidad = document.querySelector('#documento_text');
 
 			let documento_identidad_modal = document.querySelector('#img_identificacion_modal');
 			let preview = document.querySelector('#img_preview');
 
 			if (e.target.files && e.target.files[0]) {
-				let reader = new FileReader();
-				reader.onload = function(e) {
-					documento_identidad.value = e.target.result;
-					documento_identidad_modal.setAttribute('src', e.target.result);
-					preview.classList.remove('d-none');
-					preview.setAttribute('src', e.target.result);
+				if (e.target.files[0].type == "image/jpeg" || e.target.files[0].type == "image/png" || e.target.files[0].type == "image/jpg") {
+					if (e.target.files[0].size > 2000000) {
+						const blob = await comprimirImagen(e.target.files[0], 50);
+						if (blob.size > 2000000) {
+							e.target.value = '';
+							documento_identidad.value = '';
+							documento_identidad_modal.setAttribute('src', '');
+							preview.classList.add('d-none');
+							preview.setAttribute('src', '');
+							Swal.fire({
+								icon: 'error',
+								text: 'No puedes subir un archivo mayor a 2 mb.',
+								confirmButtonColor: '#bf9b55',
+							});
+							return;
+						} else {
+							const image = await blobToBase64(blob);
+							console.log(image);
+							documento_identidad.value = image;
+							documento_identidad_modal.setAttribute('src', image);
+							preview.classList.remove('d-none');
+							preview.setAttribute('src', image);
+						}
+					} else {
+						let reader = new FileReader();
+						reader.onload = function(e) {
+							documento_identidad.value = e.target.result;
+							documento_identidad_modal.setAttribute('src', e.target.result);
+							preview.classList.remove('d-none');
+							preview.setAttribute('src', e.target.result);
+						}
+						reader.readAsDataURL(e.target.files[0]);
+					}
+
+				} else {
+					if (e.target.files[0].size > 2000000) {
+						e.target.value = '';
+						documento_identidad.value = '';
+						documento_identidad_modal.setAttribute('src', '');
+						preview.classList.add('d-none');
+						preview.setAttribute('src', '');
+						Swal.fire({
+							icon: 'error',
+							text: 'No puedes subir un archivo mayor a 2 MB.',
+							confirmButtonColor: '#bf9b55',
+						});
+						return;
+					} else {
+						let reader = new FileReader();
+						reader.onload = function(e) {
+							documento_identidad.value = e.target.result;
+							documento_identidad_modal.setAttribute('src', e.target.result);
+							preview.classList.remove('d-none');
+							preview.setAttribute('src', e.target.result);
+						}
+						reader.readAsDataURL(e.target.files[0]);
+					}
 				}
-				reader.readAsDataURL(e.target.files[0]);
 			}
 		});
 
+		//Funcion que convierte un Blob en base64
+		function blobToBase64(blob) {
+			return new Promise((resolve, _) => {
+				const reader = new FileReader();
+				reader.onloadend = () => resolve(reader.result);
+				reader.readAsDataURL(blob);
+			});
+		}
+
+		//Funcion para comprimir la imagen a un porcentaje
+		function comprimirImagen(imagenComoArchivo, porcentajeCalidad) {
+			return new Promise((resolve, reject) => {
+				const $canvas = document.createElement("canvas");
+				const imagen = new Image();
+				imagen.onload = () => {
+					$canvas.width = imagen.width;
+					$canvas.height = imagen.height;
+					$canvas.getContext("2d").drawImage(imagen, 0, 0);
+					$canvas.toBlob(
+						(blob) => {
+							if (blob === null) {
+								return reject(blob);
+							} else {
+								resolve(blob);
+							}
+						},
+						"image/jpeg", porcentajeCalidad / 100
+					);
+				};
+				imagen.src = URL.createObjectURL(imagenComoArchivo);
+			});
+		};
+
 	})()
 
+	//Funcion para eliminar los options de un select
 	function clearSelect(select_element) {
 		for (let i = select_element.options.length; i >= 1; i--) {
 			select_element.remove(i);
@@ -947,6 +1064,7 @@
 		return new bootstrap.Tooltip(tooltipTriggerEl)
 	});
 
+	//Funcion para enviar la informacion al modal de validacion de datos
 	function enviar_datos() {
 		let nacionalidad = document.querySelector("#nacionalidad").value ? document.querySelector("#nacionalidad").options[document.querySelector("#nacionalidad").selectedIndex].text : '';
 		let idioma = document.querySelector("#idioma").value ? document.querySelector("#idioma").options[document.querySelector("#idioma").selectedIndex].text : '';
@@ -962,12 +1080,12 @@
 		let calle = document.querySelector("#calle").value ? document.querySelector("#calle").value : '';
 		let nexterior = document.querySelector("#exterior").value ? document.querySelector("#exterior").value : '';
 		let ninterior = document.querySelector("#interior").value ? document.querySelector("#interior").value : '';
-		
+
 		let tipo = document.querySelector("#identificacion").value ? document.querySelector("#identificacion").value : '';
 		let numeroid = document.querySelector("#numero_ide").value ? document.querySelector("#numero_ide").value : '';
 		let edoc = document.querySelector("#e_civil").value ? document.querySelector("#e_civil").value : '';
 		let ocupacion = document.querySelector("#ocupacion").value ? document.querySelector("#ocupacion").options[document.querySelector("#ocupacion").selectedIndex].text : '';
-		let ocupacion_descr = document.querySelector("#ocupacion_descr").value ? document.querySelector("#ocupacion_descr").value :'' ;
+		let ocupacion_descr = document.querySelector("#ocupacion_descr").value ? document.querySelector("#ocupacion_descr").value : '';
 
 		let escolaridad = document.querySelector("#escolaridad").value ? document.querySelector("#escolaridad").options[document.querySelector("#escolaridad").selectedIndex].text : '';
 		let discapacidad = document.querySelector("#discapacidad").value ? document.querySelector("#discapacidad").value : '';
@@ -1006,12 +1124,13 @@
 		document.querySelector('#identificacion_modal').value = tipo;
 		document.querySelector('#numero_ide_modal').value = numeroid;
 		document.querySelector('#e_civil_modal').value = edoc;
-		document.querySelector('#ocupacion_modal').value = ocupacion == 'OTRA' ? ocupacion_descr: ocupacion;
+		document.querySelector('#ocupacion_modal').value = ocupacion == 'OTRA' ? ocupacion_descr : ocupacion;
 		document.querySelector('#discapacidad_modal').value = discapacidad;
 		document.querySelector('#idioma_modal').value = idioma;
 		document.querySelector('#img_firma_modal').setAttribute("src", firma_url);
 	}
 
+	//Funcion para convertir la fecha a la zona horaria de tijuana
 	function dateToString(fecha) {
 		let date = new Date(fecha);
 		let dateToTijuanaString = date.toLocaleString('en-US', {
@@ -1028,6 +1147,7 @@
 		return (dateTijuana.toLocaleDateString("es-ES", options)).toUpperCase();
 	}
 
+	//Cuando se valida l a informacion realiza un submit y envia la informacion a la db
 	document.querySelector('#valid_information_btn').addEventListener('click', (e) => {
 		document.querySelector('#form_register').submit();
 	});

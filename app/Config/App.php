@@ -23,7 +23,7 @@ class App extends BaseConfig
 	 *
 	 * @var string
 	 */
-	public $baseURL = 'https://cdtec.fgebc.gob.mx/';
+	public $baseURL = 'https://cdtec.fgebc.gob.mx/cdtec';
 
 	/**
 	 * --------------------------------------------------------------------------
@@ -136,7 +136,7 @@ class App extends BaseConfig
 	 *
 	 * @var boolean
 	 */
-	public $forceGlobalSecureRequests = false;
+	public $forceGlobalSecureRequests = true;
 
 	/**
 	 * --------------------------------------------------------------------------
@@ -175,7 +175,7 @@ class App extends BaseConfig
 	 * @var integer
 	 */
 	// public $sessionExpiration = 7200;
-	public $sessionExpiration = 0;
+	public $sessionExpiration = 0;//12 hrs
 
 	/**
 	 * --------------------------------------------------------------------------

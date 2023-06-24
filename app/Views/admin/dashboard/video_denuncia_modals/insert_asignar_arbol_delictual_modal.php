@@ -21,6 +21,7 @@
 	</div>
 </div>
 <script>
+		//Limpieza de elementos al cerrar modal
 	$('#form_asignar_arbol_delictual_insert').on('hidden.bs.modal', function() {
 		$(this).find('form').trigger('reset');
 	});

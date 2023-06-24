@@ -49,6 +49,8 @@
 											<option value="3">TECATE</option>
 											<option value="4">TIJUANA</option>
 											<option value="5">PLAYAS DE ROSARITO</option>
+											<option value="6">SAN QUINTIN</option>
+											<option value="7">SAN FELIPE</option>
 										</select>
 									</div>
 
@@ -84,7 +86,7 @@
 								</div>
 								<div id="notas" class="form-group">
 									<label for="notas_caso_salida">Notas</label>
-									<textarea id="notas_caso_salida" class="form-control" placeholder="Notas..." rows="10" maxlength="300" oninput="mayuscTextarea(this)" onkeydown="pulsar(event)" onkeyup="contarCaracteresSalidaDa(this)"></textarea>
+									<textarea id="notas_caso_salida" class="form-control" placeholder="Notas..." rows="10" maxlength="1000" oninput="mayuscTextarea(this)" onkeydown="pulsar(event)" onkeyup="contarCaracteresSalidaDa(this)"></textarea>
 									<small id="numCaracterSalidaDa"> </small>
 
 								</div>
@@ -132,14 +134,16 @@
 	const canalizaciones = document.querySelector('#canalizaciones');
 
 
+	//Evento change para seleccionar el tipo de salida
 	tipoSalida.addEventListener('change', (e) => {
 		const notas_caso_salida = document.querySelector('#notas_caso_salida');
 		notas_caso_salida.value = notas_caso_mp.value;
 
-		if (charRemain < 300) {
+		//Se sacan los caracteres restantes
+		if (charRemain < 1000) {
 			document.getElementById("numCaracterSalidaDa").innerHTML = charRemain + ' caracteres restantes';
 		} else {
-			document.getElementById("numCaracterSalidaDa").innerHTML = '300 caracteres restantes';
+			document.getElementById("numCaracterSalidaDa").innerHTML = '1000 caracteres restantes';
 
 		}
 		if (!(e.target.value == 'DERIVADO' || e.target.value == 'CANALIZADO' || e.target.value == '1' || e.target.value == '4' || e.target.value == '5' || e.target.value == '6' || e.target.value == '7' || e.target.value == '8' || e.target.value == '9')) {
@@ -149,6 +153,8 @@
 		} else {
 			municipio_empleado_container.classList.remove('d-none');
 		}
+
+		//Validacion para cuando es Canalizado
 		if (e.target.value == 'CANALIZADO') {
 			canalizaciones_container.classList.remove('d-none');
 			document.querySelector('#municipio_empleado').addEventListener('change', (e) => {
@@ -156,6 +162,7 @@
 
 				if (tipoSalida.value == "CANALIZADO") {
 
+					//Obtiene las oficinas de canalizaciones de acuerdo al municipio
 					let select_canalizacion = document.querySelector('#canalizaciones');
 					clearSelect(select_canalizacion);
 					select_canalizacion.value = '';
@@ -194,10 +201,12 @@
 			canalizaciones.value = '';
 		}
 
+		//validacion cuando es derivado
 		if (e.target.value == 'DERIVADO') {
 			derivaciones_container.classList.remove('d-none');
 			document.querySelector('#municipio_empleado').addEventListener('change', (e) => {
 				if (tipoSalida.value == "DERIVADO") {
+					//Obtiene las oficinas de derivaciones de acuerdo al municipio
 
 					let select_derivacion = document.querySelector('#derivaciones');
 					clearSelect(select_derivacion);
@@ -236,15 +245,18 @@
 		}
 	});
 
+	//Evento para finalizar la salida
 	btnFinalizar.addEventListener('click', () => {
 		btnFinalizar.setAttribute('disabled', true);
 
+		//Cuando es derivado o canalizado
 		if (!(tipoSalida.value == '1' || tipoSalida.value == '4' || tipoSalida.value == '5' || tipoSalida.value == '6' || tipoSalida.value == '7' || tipoSalida.value == '8' || tipoSalida.value == '9')) {
 			let salida = tipoSalida.value;
 			let descripcion = document.querySelector('#notas_caso_salida').value;
 
 			if (tipoSalida.value == 'DERIVADO' || tipoSalida.value == 'CANALIZADO') {
 				if (derivaciones.value == '' && tipoSalida.value == 'DERIVADO' || canalizaciones.value == '' && tipoSalida.value == 'CANALIZADO') {
+					//Valida que se seleccione oficina
 					Swal.fire({
 						icon: 'error',
 						text: 'No se puede derivar ó canalizar sin una oficina.',
@@ -260,6 +272,9 @@
 						'motivo': descripcion,
 						'institutomunicipio': municipio_empleado.value,
 						'institutoremision': derivaciones.value != '' && tipoSalida.value == 'DERIVADO' ? derivaciones.value : canalizaciones.value,
+						'denuncia_tel': 'N',
+						'denuncia_electronica': 'N',
+
 					}
 				}
 
@@ -269,9 +284,13 @@
 					'year': year_select.value,
 					'status': salida,
 					'motivo': descripcion,
-				}
+					'denuncia_tel': 'N',
+					'denuncia_electronica': 'N',
 
+
+				}
 			}
+			//Valida que haya notas
 			if (descripcion) {
 				$.ajax({
 					data: data,
@@ -326,9 +345,10 @@
 				});
 			}
 		} else {
+
+			//Cuando es de tipo expediente
 			if (municipio_empleado.value != '') {
 				let descripcion = document.querySelector('#notas_caso_salida').value;
-
 				if (
 					descripcion &&
 					inputFolio.value != '' &&
@@ -339,7 +359,10 @@
 						'municipio': municipio_empleado.value,
 						'estado': 2,
 						'notas': descripcion,
-						'tipo_expediente': Number(tipoSalida.value)
+						'tipo_expediente': Number(tipoSalida.value),
+						'denuncia_tel': 'N',
+						'denuncia_electronica': 'N',
+
 					}
 					const dataFolio = {
 						'folio': inputFolio.value,
@@ -360,6 +383,7 @@
 					// 	error: function(jqXHR, textStatus, errorThrown) {}
 					// });
 
+					//Se sube a Justicia 
 					$.ajax({
 						data: data,
 						url: "<?= base_url('/data/save-in-justicia') ?>",
@@ -449,18 +473,21 @@
 	});
 
 
+	//Funcion para eliminar todos los options del select
 	function clearSelect(select_element) {
 		for (let i = select_element.options.length; i >= 1; i--) {
 			select_element.remove(i);
 		}
 	}
 
+	//Funcion para formatear el numero de expediente
 	function expedienteConGuiones(expediente) {
 		const array = expediente.trim().split('');
 		// return array[0] + '-' + array[1] + array[2] + '-' + array[3] + array[4] + array[5] + '-' + array[6] + array[7] + array[8] + array[9] + '-' + array[10] + array[11] + array[12] + array[13] + array[14];
 		return array[1] + array[2] + array[4] + array[5] + '-' + array[6] + array[7] + array[8] + array[9] + '-' + array[10] + array[11] + array[12] + array[13] + array[14] + '/' + tipoExpedienteClave(array[0]);
 	}
 
+	//Funcion para obtener el tipo de expediente de acuerdo a la opcion seleccionada en  tipo salida
 	function tipoExpedienteClave(num) {
 		num = typeof(num) == 'string' ? num : (new String(num)).toString();
 
@@ -492,15 +519,17 @@
 		}
 	}
 
+	//Funcion para mostrar un loading
 	function showLoading() {
 		document.querySelector('#loading_general').classList.remove('d-none');
 	}
 
+	//Funcion para contar los caractere en el modal.
 	function contarCaracteresSalidaDa(obj) {
-		if (charRemain < 300) {
+		if (charRemain < 1000) {
 			var maxLength = charRemain;
 		} else {
-			var maxLength = 300;
+			var maxLength = 1000;
 		}
 		var strLength = obj.value.length;
 		var charRemainSalidaDa = (maxLength - strLength);

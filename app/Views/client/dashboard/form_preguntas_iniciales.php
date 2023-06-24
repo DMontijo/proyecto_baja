@@ -36,7 +36,7 @@
 			<label class="form-check-label" for="flexRadioDefault1">SI</label>
 		</div>
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="radio" name="es_ofendido" value="NO" selected required>
+			<input class="form-check-input" type="radio" name="es_ofendido" value="NO" required>
 			<label class="form-check-label" for="flexRadioDefault2">NO</label>
 		</div>
 	</div>
@@ -67,7 +67,7 @@
 		</div>
 	</div>
 	<div id="vulnerable_container" class="col-12 mb-3 d-none">
-		<label for="vulnerable_descripcion" class="form-label fw-bold input-required">Describe cual</label>
+		<label for="vulnerable_descripcion" class="form-label fw-bold">Describe cual</label>
 		<input type="text" class="form-control" id="vulnerable_descripcion" name="vulnerable_descripcion" maxlength="100">
 	</div>
 	<div class="col-12 mb-3">
@@ -171,6 +171,7 @@
 	$(function() {
 		$('[data-toggle="tooltip"]').tooltip()
 	})
+	//Modificar estilos de acuerdo a los de radios de persona menor
 	radiosMenor.forEach((radio) => {
 		radio.addEventListener('click', (e) => {
 			if (e.target.value === 'SI') {
@@ -186,11 +187,11 @@
 				document.getElementById('menor_alert').classList.add('d-none');
 
 				document.querySelector('#es_mayor [value="NO"]').checked = false;
-				document.querySelector('#es_ofendido [value="NO"]').checked = false;
+				document.querySelector('#es_ofendido [value="SI"]').checked = true;
 			}
 		})
 	});
-
+	//Modificar estilos de acuerdo a los de radios de persona desaparecida
 	radiosDesaparecido.forEach((radio) => {
 		radio.addEventListener('click', (e) => {
 			if (e.target.value === 'SI') {
@@ -212,7 +213,7 @@
 	// 		}
 	// 	})
 	// });
-
+	//Modificar estilos de acuerdo a los de radios de grupo vulnerable
 	radiosVulnerable.forEach((radio) => {
 		radio.addEventListener('click', (e) => {
 			if (e.target.value === 'SI') {

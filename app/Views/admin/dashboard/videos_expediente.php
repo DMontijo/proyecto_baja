@@ -10,48 +10,99 @@
 				<h1 class="mb-4 text-center font-weight-bold">VIDEOS DE EXPEDIENTES</h1>
 			</div>
 			<div class="col-12">
-				<div class="card shadow border-0" style="overflow-x:auto;">
+				<div class="card shadow border-0">
 					<div class="card-body">
-						<table id="folios_expediente" class="table table-bordered table-striped">
-							<thead>
-								<tr>
-									<th class="text-center">TIPO</th>
-									<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
-									<th class="text-center">OFENDIDO</th>
-									<th class="text-center">IMPUTADO</th>
-									<th class="text-center">ATENDIDO POR</th>
-									<th class="text-center">VIDEO</th>
-								
-								</tr>
-							</thead>
-							<tbody>
-								<?php foreach ($body_data->folio as $index => $folio) 
-								{
-									$expedienteid = '';
-									if (isset($folio->EXPEDIENTEID)) {
-										$arrayExpediente = str_split($folio->EXPEDIENTEID);
-										$expedienteid =  $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
-									} ?>
-									<tr>
-										<td class="text-center"><?= $folio->TIPOEXPEDIENTECLAVE ?></td>
-
-										<td class="text-center"><?= $expedienteid ? $expedienteid : '' ?></td>
-										<td class="text-center"><?= isset($folio->OFENDIDO)?$folio->OFENDIDO:'' ?></td>
-
-										<td class="text-center"><?= isset($folio->IMPUTADO_NOMBRE)?$folio->IMPUTADO_NOMBRE:'' ?></td>
-
-										<td class="text-center"><?= $folio->NOMBRE ?> <?= $folio->APELLIDO_PATERNO ?> <?= $folio->APELLIDO_MATERNO ?></td>
-										<td class="text-center"><button type="button" class="btn btn-primary" onclick="viewVideo(<?= $folio->ANO ?>,<?= $folio->FOLIOID ?>)"><i class="fas fa-video"></i></button></td>
-									</tr>
-								<?php }?>
-							</tbody>
-						</table>
+						<div class="row">
+							<div class="col-12" style="overflow-x:auto;">
+								<table id="folios_expediente" class="table table-bordered table-striped table-sm" style="font-size:11px;">
+									<thead>
+										<tr>
+											<th class="text-center"></th>
+											<th class="text-center">FOLIO</th>
+											<th class="text-center">AÑO</th>
+											<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
+											<th class="text-center" style="min-width:150px;">MUNICIPIO</th>
+											<th class="text-center" style="min-width:300px;">DELITO</th>
+											<th class="text-center" style="min-width:150px;">OFENDIDO</th>
+											<th class="text-center" style="min-width:150px;">IMPUTADO</th>
+											<th class="text-center" style="min-width:150px;">ATENDIDO POR</th>
+											<th class="text-center" style="min-width:150px;">FECHA REGISTRO</th>
+											<th class="text-center" style="min-width:150px;">FECHA SALIDA</th>
+											<th class="text-center"></th>
+										</tr>
+									</thead>
+									<tbody>
+										<?php foreach ($body_data->folio as $index => $folio) {
+											$expedienteid = '';
+											if (isset($folio->EXPEDIENTEID)) {
+												$arrayExpediente = str_split($folio->EXPEDIENTEID);
+												$expedienteid =  $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
+											} ?>
+											<tr>
+											<td class="text-center"><button type="button" class="btn btn-primary btn-sm" onclick="viewVideo(<?= $folio->ANO ?>,<?= $folio->FOLIOID ?>)"><i class="fas fa-video"></i></button></td>
+												<td class="text-center font-weight-bold"><?= $folio->FOLIOID ?></td>
+												<td class="text-center font-weight-bold"><?= $folio->ANO ?></td>
+												<td class="text-center font-weight-bold"><?= ($expedienteid ? $expedienteid : '') . '/' . $folio->TIPOEXPEDIENTECLAVE ?></td>
+												<td class="text-center"><?= $folio->MUNICIPIO ?></td>
+												<td class="text-center"><?= $folio->DELITOMODALIDADDESCR ?></td>
+												<td class="text-center"><?= isset($folio->OFENDIDOS) ? $folio->OFENDIDOS : '' ?></td>
+												<td class="text-center"><?= isset($folio->IMPUTADOS) ? $folio->IMPUTADOS : '' ?></td>
+												<td class="text-center"><?= $folio->NOMBREAGENTE ?></td>
+												<td class="text-center"><?= date('d-m-Y H:i:s', strtotime($folio->FECHAREGISTRO)) ?></td>
+												<td class="text-center"><?= date('d-m-Y H:i:s', strtotime($folio->FECHASALIDA)) ?></td>
+												<td class="text-center"><button type="button" class="btn btn-primary btn-sm" onclick="viewVideo(<?= $folio->ANO ?>,<?= $folio->FOLIOID ?>)"><i class="fas fa-video"></i></button></td>
+											</tr>
+										<?php } ?>
+									</tbody>
+								</table>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </section>
+
+
+<div class="modal fade shadow" id="videos_expediente_modal" tabindex="-1" role="dialog" aria-labelledby="videosModalLabel" aria-hidden="true" data-backdrop="true">
+	<div class="modal-dialog modal-dialog-centered mw-100 w-50">
+		<div class="modal-content" style="box-shadow: 0px 0px 55px 9px rgba(0,0,0,0.66)!important;">
+			<div class="modal-header bg-primary justify-content-center">
+				<h5 class="modal-title font-weight-bold text-white">VIDEOS DEL EXPEDIENTE REGISTRADOS</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+
+			<div class="modal-body text-center" id="">
+				<div class="row" id="videos_expediente_spinner">
+					<div class="col-12">
+						<div class="spinner-border text-primary" role="status">
+							<span class="sr-only">Cargando...</span>
+						</div>
+						<p>CARGANDO ...</p>
+					</div>
+				</div>
+				<div class="row d-none" id="videos_expediente_empty">
+					<div class="col-12">
+						<p class="text-primary">
+							No hay videos grabados en este expediente.
+						</p>
+					</div>
+				</div>
+				<div class="table-responsive">
+					<table id="table-videos" class="table table-bordered table-hover table-striped table-light d-none">
+						<tr>
+							<th class="text-center bg-primary text-white">VIDEO</th>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 <script>
 	$(function() {
 		$("#folios_expediente").DataTable({
@@ -60,10 +111,11 @@
 			autoWidth: true,
 			ordering: true,
 			order: [
-				[0, 'asc'],
+				[1, 'desc'],
+				[2, 'desc'],
 			],
 			searching: true,
-			pageLength: 100,
+			pageLength: 25,
 			// dom: 'Bfrtip',
 			// buttons: [
 			// 	'copy', 'excel', 'pdf'
@@ -75,53 +127,73 @@
 	});
 </script>
 <script>
+	var tabla_videos = document.getElementById('table-videos').innerHTML;
+
+	//funcion para ver el video, se manda el año y el folio
 	function viewVideo(year, folio) {
 		data = {
-			'folio': year + '-' + folio,
-			'min': '2000-01-01',
-			'max': '<?= date("Y-m-d") ?>'
+			'folio': folio + '/' + year,
 		};
-		console.log(data);
+		$('#videos_expediente_modal').modal('show');
+		document.getElementById('videos_expediente_spinner').classList.remove('d-none');
+		document.getElementById('videos_expediente_empty').classList.add('d-none');
+		document.getElementById('table-videos').classList.add('d-none');
+		clearTablaVideos();
 		$.ajax({
 			data: data,
 			url: "<?= base_url('/data/get-video-link') ?>",
 			method: "POST",
 			dataType: "json",
-		}).done(function(data) {
-			let grabacion = "";
-			let enlace = 'https://fgebc-records.s3.amazonaws.com/'
-			if (data.data.length > 0) {
-				array = data.data.reverse();
-				array.forEach(element => {
-					if (element.Grabación != '') {
-						grabacion = element.Grabación
-					}
-				});
-				if (grabacion == '') {
-					Swal.fire({
-						icon: 'error',
-						title: 'No hay video grabado',
-						confirmButtonColor: '#bf9b55',
-					})
+			success: function(response) {
+
+				//se obtiene el ultimo video disponible
+				let videos = response.responseVideos.filter(video => video.url);
+				if (videos.length > 0) {
+					llenarTablaVideos(videos);
+					document.getElementById('videos_expediente_spinner').classList.add('d-none');
+					document.getElementById('videos_expediente_empty').classList.add('d-none');
+					document.getElementById('table-videos').classList.remove('d-none');
 				} else {
-					window.open(enlace + grabacion, "_blank");
+					document.getElementById('videos_expediente_spinner').classList.add('d-none');
+					document.getElementById('videos_expediente_empty').classList.remove('d-none');
+					document.getElementById('table-videos').classList.add('d-none');
 				}
-			} else {
-				Swal.fire({
-					icon: 'error',
-					title: 'No hay video grabado',
-					confirmButtonColor: '#bf9b55',
-				})
 			}
-		}).fail(function(jqXHR, textStatus) {
-			Swal.fire({
-				icon: 'error',
-				title: 'Hubo un error',
-				text: 'Contácte con soporte técnico',
-				confirmButtonColor: '#bf9b55',
-			})
+		});
+
+	}
+
+	//funcion para llenar la tabla de videos
+	function llenarTablaVideos(videos) {
+		for (let i = 0; i < videos.length; i++) {
+			if (videos[i].url != null) {
+				var fila =
+					`<tr id="row${i}">` +
+					`<td class="text-center" value="" style="max-width:30vw;">
+						<video src="${videos[i].url}" width="100%" height="100%" controls controlsList="nodownload"></video>
+					</td>` +
+					`</tr>`;
+				$('#table-videos tr:first').after(fila);
+				$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
+				var nFilas = $("#archvideosivos tr").length;
+				$("#adicionados").append(nFilas - 1);
+			}
+		}
+	}
+
+	//Funcion para limpiar la tabla de videos y que no se acumule
+	function clearTablaVideos() {
+		let tabla_videos = document.querySelectorAll('#table-videos tr');
+		tabla_videos.forEach(row => {
+			if (row.id !== '') {
+				row.remove();
+			}
 		});
 	}
+
+	$('#videos_expediente_modal').on('hidden.bs.modal', function() {
+		document.getElementById('table-videos').innerHTML = tabla_videos
+	});
 </script>
 
 <?= $this->endSection() ?>

@@ -5,6 +5,15 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
+<?php
+$request = \Config\Services::request();
+$agent = $request->getUserAgent();
+$currentAgent = '';
+
+if ($agent->isMobile()) {
+	$currentAgent = strtolower($agent->getMobile());
+}
+?>
 <div class="container m-auto">
 	<div class="col-12">
 		<div class="card bg-primary shadow mb-4" style="font-size:14px;background:url(<?= base_url('/assets/img/banner/LINEAS_BANNER.png') ?>);background-repeat: no-repeat;background-size: cover !important;background-position-y: top;border-radius:10px;">
@@ -85,9 +94,12 @@
 							</div>
 						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="telefono" class="form-label fw-bold input-required">Número de teléfono</label>
-							<input type="number" class="form-control" id="telefono" name="telefono" required max="99999999999999999999" minlenght="6" maxlength="20" oninput="clearInputPhone(event);">
-							<!-- <small>Mínimo 6 digitos</small> -->
+							<label for="telefono" class="form-label fw-bold input-required">Número de celular</label>
+							<input type="number" class="form-control" id="telefono" name="telefono" required minlenght="10" maxlength="10" oninput="clearInputPhone(event);" pattern="[0-9]+">
+							<small>El campo número debe tener 10 dígitos</small>
+							<div class="invalid-feedback">
+								El campo número debe tener 10 dígitos
+							</div>
 							<input type="number" id="codigo_pais" name="codigo_pais" maxlength="3" hidden>
 						</div>
 
@@ -228,6 +240,9 @@
 							<select class="form-select" id="localidad_select" name="localidad_select" required>
 								<option selected disabled value="">Selecciona la localidad</option>
 							</select>
+							<div class="invalid-feedback">
+								La localidad es obligatoria
+							</div>
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -244,7 +259,7 @@
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="cp" class="form-label fw-bold">Código postal</label>
-							<input type="number" class="form-control" id="cp" maxlength="10" oninput="clearInputPhone(event);" name="cp">
+							<input type="number" class="form-control" id="cp" maxlength="10" name="cp">
 						</div>
 
 						<div class="col-12 mt-4 mb-4">
@@ -332,8 +347,11 @@
 							<input class="form-control" type="file" id="documento" name="documento" accept="image/jpeg, image/jpg, image/png, application/pdf" required>
 							<textarea id="documento_text" name="documento_text" hidden></textarea>
 							<textarea id="img_text" name="img_text" hidden></textarea>
-
-							<div class="form-text"><button id="photo-btn" class="btn btn-link p-0 m-0" style="font-size:14px;" type="button">Para tomar foto clic aquí <i class="bi bi-camera-fill"></i></button></div>
+							<?php if (strpos($currentAgent, 'iphone') || strpos($currentAgent, 'apple') || strpos($currentAgent, 'ipad')) { ?>
+								<div class="form-text d-none"><button id="photo-btn" class="btn btn-link p-0 m-0" style="font-size:14px;" type="button">Para tomar foto clic aquí <i class="bi bi-camera-fill"></i></button></div>
+							<?php } else { ?>
+								<div class="form-text"><button id="photo-btn" class="btn btn-link p-0 m-0" style="font-size:14px;" type="button">Para tomar foto clic aquí <i class="bi bi-camera-fill"></i></button></div>
+							<?php } ?>
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -447,6 +465,7 @@
 	let width = 100 / stepCount;
 	let currentStep = 0;
 
+	//Al hacer checked en manzana y lote cambia los textos del label
 	checkML.addEventListener('click', function() {
 		if (checkML.checked) {
 			document.getElementById('lblExterior').innerHTML = "Manzana";
@@ -463,24 +482,33 @@
 
 
 
+	//Funcion para eliminar los guiones y verifica que el telefono sea de longitud 10
 	function clearInputPhone(e) {
 		e.target.value = e.target.value.replace(/-/g, "");
 		if (e.target.value.length > e.target.maxLength) {
 			e.target.value = e.target.value.slice(0, e.target.maxLength);
 		};
+		if (e.target.value.length < 10) {
+			e.target.classList.add('is-invalid');
+		} else {
+			e.target.classList.remove('is-invalid');
+		}
 	}
 
 	chargeCurrentStep(currentStep);
 
+	//Abre modal para tomar foto
 	document.querySelector('#photo-btn').addEventListener('click', () => {
 		initPhoto();
 		$('#take_photo_modal').modal('show');
 	});
-
+	//Evento para avanzar en el formulario
 	nextBtn.addEventListener('click', () => {
 		if (validarStep(currentStep)) {
 			currentStep++;
 			let previousStep = currentStep - 1;
+			// Se realiza una serie de comprobaciones utilizando if para verificar las condiciones de visibilidad de los elementos de paso (steps) y los botones (prevBtn, nextBtn, submitBtn).
+
 			if ((currentStep > 0) && (currentStep <= stepCount)) {
 				prevBtn.classList.remove('d-none');
 				prevBtn.classList.add('d-inline-block');
@@ -495,7 +523,9 @@
 					nextBtn.classList.add('d-none');
 				}
 			}
+			// Se actualiza el ancho de la barra de progreso (progress) según el valor actual de currentStep.
 			progress.style.width = `${currentStep*width}%`
+			// Se realiza un desplazamiento suave (scrollIntoView()) hacia el elemento con el ID 'titulo'.
 			document.querySelector('#titulo').scrollIntoView();
 		} else {
 			submitBtn.click();
@@ -505,13 +535,26 @@
 				text: 'Debes llenar todos los campos requeridos para avanzar',
 				confirmButtonColor: '#bf9b55',
 			});
+			if (document.getElementById('telefono').value.length < 10) {
+				document.getElementById('telefono').classList.add('is-invalid')
+				Swal.fire({
+					icon: 'error',
+					title: 'Error',
+					text: 'El numero de teléfono debe tener 10 dígitos',
+					confirmButtonColor: '#bf9b55',
+				});
+			}
+
 		}
 	});
 
+	//Evento para retroceder el formulario
 	prevBtn.addEventListener('click', () => {
 		if (currentStep > 0) {
 			currentStep--;
 			let previousStep = currentStep + 1;
+			// Se realizan modificaciones en las clases CSS de los elementos (prevBtn, steps, submitBtn, nextBtn) para mostrar u ocultar los elementos correspondientes según el paso actual.
+
 			prevBtn.classList.add('d-none');
 			prevBtn.classList.add('d-inline-block');
 			steps[currentStep].classList.remove('d-none');
@@ -535,6 +578,7 @@
 		progress.style.width = `${currentStep*width}%`
 	});
 
+	//Funcion para mostrar el paso actual en función del número proporcionado como argumento.
 	function chargeCurrentStep(num) {
 		steps.forEach((step, index) => {
 			if (num === index) {
@@ -547,7 +591,10 @@
 		progress.style.width = `${currentStep*width}%`
 	}
 
+	//funcion para validar los campos requeridos que no esten vacios y cumplan una condicion
 	function validarStep(step) {
+		let regex = /\S+@\S+\.\S+/
+
 		switch (step) {
 			case 0:
 				document.querySelector('#correo').blur();
@@ -555,9 +602,11 @@
 					document.querySelector('#nombre').value != '' &&
 					document.querySelector('#apellido_paterno').value != '' &&
 					document.querySelector('#correo').value != '' &&
+					regex.test(document.querySelector('#correo').value) &&
 					document.querySelector('#fecha_nacimiento').value != '' &&
 					document.querySelector('input[name="sexo"]:checked') &&
-					document.querySelector('#telefono').value != ''
+					document.querySelector('#telefono').value != '' &&
+					document.querySelector('#telefono').value.length == 10
 				) {
 					return true;
 				} else {
@@ -744,11 +793,15 @@
 			}
 		})
 
+		document.querySelector('#municipio_select_origen').disabled = true;
+
 		document.querySelector('#nacionalidad').addEventListener('change', (e) => {
 			let select_estado = document.querySelector('#estado_select_origen');
 			let select_municipio = document.querySelector('#municipio_select_origen');
 
 			clearSelect(select_municipio);
+
+			select_municipio.disabled = true;
 
 			if (e.target.value !== '82') {
 				select_estado.value = '33';
@@ -770,6 +823,7 @@
 							select_municipio.add(option);
 						});
 						select_municipio.value = '1';
+						select_municipio.disabled = false;
 					},
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
@@ -787,6 +841,8 @@
 			clearSelect(select_municipio);
 
 			select_municipio.value = '';
+
+			select_municipio.disabled = true;
 
 			let data = {
 				'estado_id': e.target.value,
@@ -806,6 +862,7 @@
 						option.value = municipio.MUNICIPIOID;
 						select_municipio.add(option);
 					});
+					select_municipio.disabled = false;
 				},
 				error: function(jqXHR, textStatus, errorThrown) {}
 			});
@@ -822,6 +879,10 @@
 			clearSelect(select_municipio);
 			clearSelect(select_localidad);
 			clearSelect(select_colonia);
+
+			select_municipio.disabled = true;
+			select_localidad.disabled = true;
+			select_colonia.disabled = true;
 
 			if (e.target.value !== 'MX') {
 
@@ -906,7 +967,9 @@
 				input_colonia.classList.add('d-none');
 			}
 		});
-
+		document.querySelector('#municipio_select').disabled = true;
+		document.querySelector('#localidad_select').disabled = true;
+		document.querySelector('#colonia_select').disabled = true;
 		document.querySelector('#estado_select').addEventListener('change', (e) => {
 			let select_municipio = document.querySelector('#municipio_select');
 			let select_localidad = document.querySelector('#localidad_select');
@@ -921,6 +984,10 @@
 			select_localidad.value = '';
 			select_colonia.value = '';
 			input_colonia.value = '';
+
+			select_municipio.disabled = true;
+			select_colonia.disabled = true;
+			select_localidad.disabled = true;
 
 			select_colonia.classList.remove('d-none');
 			input_colonia.classList.add('d-none');
@@ -943,6 +1010,7 @@
 						option.value = municipio.MUNICIPIOID;
 						select_municipio.add(option);
 					});
+					select_municipio.disabled = false;
 				},
 				error: function(jqXHR, textStatus, errorThrown) {}
 			});
@@ -972,6 +1040,9 @@
 			clearSelect(select_localidad);
 			clearSelect(select_colonia);
 
+			select_colonia.disabled = true;
+			select_localidad.disabled = true;
+
 			select_localidad.value = '';
 
 			let data = {
@@ -993,6 +1064,7 @@
 						option.value = localidad.LOCALIDADID;
 						select_localidad.add(option);
 					});
+					select_localidad.disabled = false;
 				},
 				error: function(jqXHR, textStatus, errorThrown) {}
 			});
@@ -1008,6 +1080,8 @@
 
 			clearSelect(select_colonia);
 			select_colonia.value = '';
+
+			select_colonia.disabled = true;
 
 			let data = {
 				'estado_id': estado,
@@ -1035,6 +1109,7 @@
 							option.value = colonia.COLONIAID;
 							select_colonia.add(option);
 						});
+						select_colonia.disabled = false;
 
 						var option = document.createElement("option");
 						option.text = 'OTRO';
@@ -1072,23 +1147,104 @@
 			}
 		});
 
-		document.querySelector('#documento').addEventListener('change', (e) => {
+		document.querySelector('#documento').addEventListener('change', async (e) => {
 			let documento_identidad = document.querySelector('#documento_text');
 
 			let documento_identidad_modal = document.querySelector('#img_identificacion_modal');
 			let preview = document.querySelector('#img_preview');
 
 			if (e.target.files && e.target.files[0]) {
-				let reader = new FileReader();
-				reader.onload = function(e) {
-					documento_identidad.value = e.target.result;
-					documento_identidad_modal.setAttribute('src', e.target.result);
-					preview.classList.remove('d-none');
-					preview.setAttribute('src', e.target.result);
+				if (e.target.files[0].type == "image/jpeg" || e.target.files[0].type == "image/png" || e.target.files[0].type == "image/jpg") {
+					if (e.target.files[0].size > 2000000) {
+						const blob = await comprimirImagen(e.target.files[0], 50);
+						if (blob.size > 2000000) {
+							e.target.value = '';
+							documento_identidad.value = '';
+							documento_identidad_modal.setAttribute('src', '');
+							preview.classList.add('d-none');
+							preview.setAttribute('src', '');
+							Swal.fire({
+								icon: 'error',
+								text: 'No puedes subir un archivo mayor a 2 mb.',
+								confirmButtonColor: '#bf9b55',
+							});
+							return;
+						} else {
+							const image = await blobToBase64(blob);
+							console.log(image);
+							documento_identidad.value = image;
+							documento_identidad_modal.setAttribute('src', image);
+							preview.classList.remove('d-none');
+							preview.setAttribute('src', image);
+						}
+					} else {
+						let reader = new FileReader();
+						reader.onload = function(e) {
+							documento_identidad.value = e.target.result;
+							documento_identidad_modal.setAttribute('src', e.target.result);
+							preview.classList.remove('d-none');
+							preview.setAttribute('src', e.target.result);
+						}
+						reader.readAsDataURL(e.target.files[0]);
+					}
+
+				} else {
+					if (e.target.files[0].size > 2000000) {
+						e.target.value = '';
+						documento_identidad.value = '';
+						documento_identidad_modal.setAttribute('src', '');
+						preview.classList.add('d-none');
+						preview.setAttribute('src', '');
+						Swal.fire({
+							icon: 'error',
+							text: 'No puedes subir un archivo mayor a 2 MB.',
+							confirmButtonColor: '#bf9b55',
+						});
+						return;
+					} else {
+						let reader = new FileReader();
+						reader.onload = function(e) {
+							documento_identidad.value = e.target.result;
+							documento_identidad_modal.setAttribute('src', e.target.result);
+							preview.classList.remove('d-none');
+							preview.setAttribute('src', e.target.result);
+						}
+						reader.readAsDataURL(e.target.files[0]);
+					}
 				}
-				reader.readAsDataURL(e.target.files[0]);
 			}
 		});
+
+		function blobToBase64(blob) {
+			return new Promise((resolve, _) => {
+				const reader = new FileReader();
+				reader.onloadend = () => resolve(reader.result);
+				reader.readAsDataURL(blob);
+			});
+		}
+
+		function comprimirImagen(imagenComoArchivo, porcentajeCalidad) {
+			return new Promise((resolve, reject) => {
+				const $canvas = document.createElement("canvas");
+				const imagen = new Image();
+				imagen.onload = () => {
+					$canvas.width = imagen.width;
+					$canvas.height = imagen.height;
+					$canvas.getContext("2d").drawImage(imagen, 0, 0);
+					$canvas.toBlob(
+						(blob) => {
+							if (blob === null) {
+								return reject(blob);
+							} else {
+								resolve(blob);
+							}
+						},
+						"image/jpeg", porcentajeCalidad / 100
+					);
+				};
+				imagen.src = URL.createObjectURL(imagenComoArchivo);
+			});
+		};
 
 		document.querySelector('#correo').addEventListener('blur', (e) => {
 			let regex = /\S+@\S+\.\S+/
@@ -1346,6 +1502,8 @@
 							let documento_identidad = document.querySelector('#documento_text');
 							let documento_identidad_modal = document.querySelector('#img_identificacion_modal');
 							let preview = document.querySelector('#img_preview');
+
+							clearSelect($listaDeDispositivos);
 
 							documento.removeAttribute('required');
 							documento.value = '';

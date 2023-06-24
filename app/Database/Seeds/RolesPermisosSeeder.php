@@ -24,7 +24,7 @@ class RolesPermisosSeeder extends Seeder
 			array('ROLID' => '1', 'PERMISOID' => '11'),
 			array('ROLID' => '1', 'PERMISOID' => '12'),
 
-			//DIRECTOR SEJAP
+			//DIRECTOR JAP
 			array('ROLID' => '2', 'PERMISOID' => '1'),
 			array('ROLID' => '2', 'PERMISOID' => '2'),
 			array('ROLID' => '2', 'PERMISOID' => '3'),
@@ -34,6 +34,7 @@ class RolesPermisosSeeder extends Seeder
 			array('ROLID' => '2', 'PERMISOID' => '9'),
 			array('ROLID' => '2', 'PERMISOID' => '10'),
 			array('ROLID' => '2', 'PERMISOID' => '11'),
+			array('ROLID' => '2', 'PERMISOID' => '12'),
 
 			//AGENTE DE MINISTERIO PÚBLICO
 			array('ROLID' => '3', 'PERMISOID' => '1'),
@@ -50,6 +51,7 @@ class RolesPermisosSeeder extends Seeder
 			array('ROLID' => '4', 'PERMISOID' => '2'),
 			array('ROLID' => '4', 'PERMISOID' => '3'),
 			array('ROLID' => '4', 'PERMISOID' => '4'),
+			array('ROLID' => '4', 'PERMISOID' => '5'),
 			array('ROLID' => '4', 'PERMISOID' => '7'),
 			array('ROLID' => '4', 'PERMISOID' => '10'),
 			array('ROLID' => '4', 'PERMISOID' => '11'),
@@ -66,6 +68,7 @@ class RolesPermisosSeeder extends Seeder
 			array('ROLID' => '6', 'PERMISOID' => '7'),
 			array('ROLID' => '6', 'PERMISOID' => '10'),
 			array('ROLID' => '6', 'PERMISOID' => '11'),
+			array('ROLID' => '6', 'PERMISOID' => '12'),
 
 			//COORDINADOR
 			array('ROLID' => '7', 'PERMISOID' => '1'),
@@ -77,10 +80,14 @@ class RolesPermisosSeeder extends Seeder
 			array('ROLID' => '7', 'PERMISOID' => '9'),
 			array('ROLID' => '7', 'PERMISOID' => '10'),
 			array('ROLID' => '7', 'PERMISOID' => '11'),
+			array('ROLID' => '7', 'PERMISOID' => '12'),
 
 			//FACILITADOR
+			array('ROLID' => '8', 'PERMISOID' => '1'),
 			array('ROLID' => '8', 'PERMISOID' => '2'),
 			array('ROLID' => '8', 'PERMISOID' => '3'),
+			array('ROLID' => '8', 'PERMISOID' => '4'),
+			array('ROLID' => '8', 'PERMISOID' => '5'),
 			array('ROLID' => '8', 'PERMISOID' => '7'),
 			array('ROLID' => '8', 'PERMISOID' => '9'),
 			array('ROLID' => '8', 'PERMISOID' => '10'),
@@ -93,8 +100,11 @@ class RolesPermisosSeeder extends Seeder
 			array('ROLID' => '9', 'PERMISOID' => '10'),
 
 			//SECREATARIO DE ACUERDOS
+			array('ROLID' => '10', 'PERMISOID' => '1'),
 			array('ROLID' => '10', 'PERMISOID' => '2'),
 			array('ROLID' => '10', 'PERMISOID' => '3'),
+			array('ROLID' => '10', 'PERMISOID' => '4'),
+			array('ROLID' => '10', 'PERMISOID' => '5'),
 			array('ROLID' => '10', 'PERMISOID' => '7'),
 			array('ROLID' => '10', 'PERMISOID' => '9'),
 			array('ROLID' => '10', 'PERMISOID' => '10'),
@@ -108,6 +118,12 @@ class RolesPermisosSeeder extends Seeder
 			array('ROLID' => '11', 'PERMISOID' => '9'),
 			array('ROLID' => '11', 'PERMISOID' => '10'),
 			array('ROLID' => '11', 'PERMISOID' => '12'),
+
+			//VISUALIZADOR RAC
+			array('ROLID' => '12', 'PERMISOID' => '9'),
+
+			//VISUALIZADOR ESTATAL
+			array('ROLID' => '13', 'PERMISOID' => '9'),
 
 		];
 		$this->db->table('ROLESPERMISOS')->insertBatch($data);

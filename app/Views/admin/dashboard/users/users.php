@@ -18,11 +18,11 @@
                                 </a>
                             </div>
                             <div class="col-12 mt-3" style="overflow-x:scroll;">
-                                <table id="table-usuarios" class="table table-bordered table-striped"
+                                <table id="table-usuarios" class="table table-bordered table-striped table-sm"
                                     data-page-length='50' style="width:100%">
                                     <thead>
                                         <tr>
-                                            <th class="text-center">ROL</th>
+                                            <th class="text-center">PERFIL</th>
                                             <th class="text-center">NOMBRE</th>
                                             <th class="text-center">SEXO</th>
                                             <th class="text-center">CORREO</th>
@@ -92,7 +92,7 @@ $(function() {
             [1, 'asc'],
         ],
         searching: true,
-        pageLength: 100,
+        pageLength: 25,
         // dom: 'Bfrtip',
         // buttons: [
         // 	'copy', 'excel', 'pdf'

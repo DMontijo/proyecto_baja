@@ -1,4 +1,4 @@
-<div class="modal fade" id="open_folios_modal" tabindex="-1" data-bs-backdrop="static" aria-labelledby="open_folios_modal" aria-hidden="true">
+<div class="modal fade" id="open_folios_modal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="open_folios_modal" aria-hidden="true">
 	<div class="modal-dialog modal-lg modal-dialog-centered  modal-dialog-scrollable">
 		<div class="modal-content border-0" style="border-radius: 1.5em;">
 			<div class="modal-header bg-primary text-white justify-content-center">
@@ -8,6 +8,7 @@
 				<p>El folio <span class="fw-bold" id="folio_num_span"></span> por el delito de <span class="fw-bold" id="folio_delito_span"></span> <span id="folio_estatus"></span></p>
 				<input type="text" id="open_input_year" hidden>
 				<a id="btn-cerrar-sesion" class="btn btn-secondary mb-3" href="<?= base_url('denuncia/logout') ?>"><i class="bi bi-box-arrow-left"></i> Cerrar sesión</a>
+				<a id="btn-mis_denuncias" class="btn btn-primary mb-3" href="<?= base_url('denuncia/dashboard/denuncias') ?>"><i class="bi bi-box-arrow-left"></i> Ir a mis denuncias</a>
 				<button id="btn-inicia-denuncia" type="button" name="btn-inicia-denuncia" class="btn btn-primary  mb-3" onclick="iniciarDenuncia();"><i class="bi bi-camera-video-fill"></i> Iniciar denuncia</button>
 			</div>
 		</div>
@@ -15,6 +16,7 @@
 </div>
 
 <script>
+	//Funcion para abrir el link para iniciar la videodenuncia cuando la tiene abierta
 	function iniciarDenuncia() {
 		$.ajax({
 			data: {

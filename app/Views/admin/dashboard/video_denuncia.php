@@ -5,6 +5,160 @@
 <?= $this->section('content') ?>
 <?php $session = session(); ?>
 <div class="row" id="videoDen">
+	<style>
+		textarea {
+			text-transform: uppercase !important;
+		}
+
+		#video_container {
+			width: 100%;
+			min-height: 70vh;
+		}
+
+		#secondary_videos_container {
+			max-width: 20vh;
+			min-width: 200px;
+			padding: 20px;
+			background-color: transparent;
+			height: calc(70vh - 70px);
+			margin-top: -70vh;
+			margin-left: auto;
+			overflow-y: auto;
+			transition: 0.5s;
+		}
+
+		#secondary_videos_container:hover {
+			background-color: rgba(0, 0, 0, .3);
+		}
+
+		.secondary_video {
+			width: 100%;
+			height: 100px;
+			z-index: 2 !important;
+			margin-bottom: 10px;
+			background-color: black;
+			box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 0.3);
+			-webkit-box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 0.3);
+			-moz-box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 0.3);
+		}
+
+		.secondary_video video {
+			box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 1);
+			-webkit-box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 1);
+			-moz-box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 1);
+			width: 100% !important;
+			height: 100% !important;
+			border: white 2px solid;
+		}
+
+		#secondary_video_details {
+			background-color: transparent;
+			width: 100%;
+			/* height: 100px; */
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+		}
+
+		#secondary_video_details_name {
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			overflow: hidden;
+			/* max-width: 300px; */
+			font-weight: bold;
+			font-size: 8px;
+			padding: 3px;
+			text-align: center;
+			background-color: rgba(255, 255, 255, 1);
+		}
+
+		#secondary_video_details_devices {
+			display: inline-block;
+			background-color: rgba(255, 255, 255, 1);
+			padding: 3px;
+			margin-left: auto;
+		}
+
+		#main_video {
+			/* width: 100% !important;
+			min-height: 70vh;
+			background-color: black; */
+			width: 100% !important;
+			min-height: 70vh;
+			max-height: 70vh;
+			background-color: black;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		#main_video video {
+			max-width: 100%;
+			max-height: 70vh;
+		}
+
+		#main_video_details {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			transition: 0.5s;
+			position: absolute;
+			width: 100%;
+			top: 0;
+		}
+
+		#main_video_details:hover {
+			opacity: 1;
+		}
+
+		#main_video_details_name {
+			display: inline-block;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			overflow: hidden;
+			max-width: 300px;
+			font-weight: bold;
+		}
+
+		#tools-group {
+			padding: 10px;
+			background-color: rgba(0, 0, 0, .3);
+			height: 70px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			margin-top: -70px;
+			z-index: 1;
+		}
+
+		video {
+			width: 100%;
+		}
+		
+		.toast {
+			width: 350px;
+			max-width: 100%;
+			font-size: 0.875rem;
+			pointer-events: auto;
+			background-color: rgba(255, 255, 255, 0.85);
+			background-clip: padding-box;
+			border: 1px solid rgba(0, 0, 0, 0.1);
+			box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+			border-radius: 0.25rem;
+		}
+
+		.show {
+			display: block;
+		}
+
+		.fade {
+			transition: opacity 0.15s linear;
+		}
+
+		.toast:not(.showing):not(.show) {
+			opacity: 0;
+		}
+	</style>
 	<div class="col-12 text-center mb-4 d-none" id="divFolioAtendido" name="divFolioAtendido">
 		<h3 class="mb-4 text-center font-weight-bold" id="folio_atendido" name="folio_atendido"></h3>
 	</div>
@@ -25,12 +179,21 @@
 						<div class="input-group mb-1">
 							<input type="text" class="form-control" id="input_folio_atencion" placeholder="No. de folio" value="<?= isset($body_data->folio) ? $body_data->folio : '' ?>">
 						</div>
+
+						<div class="input-group mb-1">
+							<input type="text" class="form-control d-none" id="input_api" value="vspk_6258d819-105e-4487-b7f1-be72e892850e">
+						</div>
+
+						<div class="input-group mb-1">
+							<input type="text" class="form-control d-none" id="input_uuid" value="<?= session('TOKENVIDEO') ?>">
+						</div>
 					</div>
 					<div class="col-12 p-0 m-0">
 						<div class="input-group mb-1">
 							<input type="text" class="form-control d-none" id="input_denuncia">
 						</div>
 					</div>
+
 					<div class="col-12 p-0 m-0">
 						<div class="input-group mb-1">
 							<input type="text" class="form-control d-none" id="input_expediente">
@@ -123,10 +286,199 @@
 
 <div class="row">
 	<div class="col">
-		<?php if (session('USUARIOVIDEO') && session('TOKENVIDEO')) { ?>
+		<?php if (session('TOKENVIDEO')) { ?>
 			<div class="card rounded bg-white shadow">
-				<div class="card-body embed-responsive embed-responsive-1by1 shadow rounded">
-					<iframe src="<?= "https://videodenunciaserver1.fgebc.gob.mx/pde?u=" . session('USUARIOVIDEO') . "&token=" . session('TOKENVIDEO') ?>" frameborder="0" allow="camera *;microphone *"></iframe>
+				<div class="card-body shadow rounded m-0 p-0">
+					<div class="row">
+						<div class="col-12 px-4 py-3" id="buttons_tools">
+							<button class="btn btn-success" id="disponible" name="disponible" data-toggle="tooltip" data-placement="top" title="Conectar para recibir video llamadas"><i class="fas fa-door-open"></i> HACERME DISPONIBLE</button>
+							<button class="btn btn-danger" id="no_disponible" name="no_disponible" data-toggle="tooltip" data-placement="top" hidden><i class="fas fa-times-circle"></i> DESCONECTARME</button>
+							<button class="btn btn-warning" id="media_configuration" name="configuration" data-toggle="tooltip" data-placement="top" title="Configuración de media"><i class="fas fa-cogs"></i></button>
+						</div>
+						<div class="col-12 px-4" id="header-llamada" name="header-llamada" hidden>
+							<p>
+								FOLIO: <span class="font-weight-bold" id="folio_llamada_v"></span> - NOMBRE: <span class="font-weight-bold" id="denunciante_nombre_llamada"></span>
+							</p>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-12">
+							<div id="video_container" style="display: none;">
+								<div id="main_video">
+									<div id="main_video_details">
+										<div class="btn-group btn-group-toggle mt-3">
+											<button class="btn btn-sm btn-light" id="main_video_details_name">
+												<!-- ABDIEL OTONIEL FLORES GONZÁLEZ -->
+											</button>
+
+											<button class="btn btn-sm btn-light d-none" id="network_quality_signal_guest" name="network_quality_signal_guest">
+											</button>
+
+											<button class="btn btn-sm btn-danger" id="grabacion" name="grabacion" style="display: none;">
+												<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-circle-fill" viewBox="0 0 16 16">
+													<circle cx="8" cy="8" r="8" />
+												</svg>
+												REC
+											</button>
+											<button class="btn btn-sm btn-success" id="grabacion_stop" style="display: none;">
+												GRABACIÓN FINALIZADA
+											</button>
+											<button class="btn btn-sm btn-secondary" id="camara_prendida_denunciante">
+												<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-camera-video-fill" viewBox="0 0 16 16">
+													<path fill-rule="evenodd" d="M0 5a2 2 0 0 1 2-2h7.5a2 2 0 0 1 1.983 1.738l3.11-1.382A1 1 0 0 1 16 4.269v7.462a1 1 0 0 1-1.406.913l-3.111-1.382A2 2 0 0 1 9.5 13H2a2 2 0 0 1-2-2V5z" />
+												</svg>
+											</button>
+											<button class="btn btn-sm btn-danger" id="camara_apagada_denunciante" style="display:none;">
+												<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-camera-video-off-fill" viewBox="0 0 16 16">
+													<path fill-rule="evenodd" d="M10.961 12.365a1.99 1.99 0 0 0 .522-1.103l3.11 1.382A1 1 0 0 0 16 11.731V4.269a1 1 0 0 0-1.406-.913l-3.111 1.382A2 2 0 0 0 9.5 3H4.272l6.69 9.365zm-10.114-9A2.001 2.001 0 0 0 0 5v6a2 2 0 0 0 2 2h5.728L.847 3.366zm9.746 11.925-10-14 .814-.58 10 14-.814.58z" />
+												</svg>
+											</button>
+											<button class="btn btn-sm btn-secondary" id="audio_prendido_denunciante">
+												<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-mic-fill" viewBox="0 0 16 16">
+													<path d="M5 3a3 3 0 0 1 6 0v5a3 3 0 0 1-6 0V3z" />
+													<path d="M3.5 6.5A.5.5 0 0 1 4 7v1a4 4 0 0 0 8 0V7a.5.5 0 0 1 1 0v1a5 5 0 0 1-4.5 4.975V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 .5-.5z" />
+												</svg>
+											</button>
+											<button class="btn btn-sm btn-danger" id="audio_apagado_denunciante" style="display:none;">
+												<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-mic-mute-fill" viewBox="0 0 16 16">
+													<path d="M13 8c0 .564-.094 1.107-.266 1.613l-.814-.814A4.02 4.02 0 0 0 12 8V7a.5.5 0 0 1 1 0v1zm-5 4c.818 0 1.578-.245 2.212-.667l.718.719a4.973 4.973 0 0 1-2.43.923V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 1 0v1a4 4 0 0 0 4 4zm3-9v4.879L5.158 2.037A3.001 3.001 0 0 1 11 3z" />
+													<path d="M9.486 10.607 5 6.12V8a3 3 0 0 0 4.486 2.607zm-7.84-9.253 12 12 .708-.708-12-12-.708.708z" />
+												</svg>
+											</button>
+										</div>
+									</div>
+								</div>
+								<div id="tools" class="row">
+									<div class="col-12">
+										<div id="tools-group">
+											<div class="btn-group btn-group-toggle mr-2" data-toggle="buttons">
+
+												<!--VIDEO AGENTE-->
+												<button class="btn btn-lg btn-danger" id="off-video-agent" name="off-video-agent" data-toggle="tooltip" data-placement="top" title="Encender cámara del agente" style="display:none;">
+													<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-camera-video-off" viewBox="0 0 16 16">
+														<path fill-rule="evenodd" d="M10.961 12.365a1.99 1.99 0 0 0 .522-1.103l3.11 1.382A1 1 0 0 0 16 11.731V4.269a1 1 0 0 0-1.406-.913l-3.111 1.382A2 2 0 0 0 9.5 3H4.272l.714 1H9.5a1 1 0 0 1 1 1v6a1 1 0 0 1-.144.518l.605.847zM1.428 4.18A.999.999 0 0 0 1 5v6a1 1 0 0 0 1 1h5.014l.714 1H2a2 2 0 0 1-2-2V5c0-.675.334-1.272.847-1.634l.58.814zM15 11.73l-3.5-1.555v-4.35L15 4.269v7.462zm-4.407 3.56-10-14 .814-.58 10 14-.814.58z" />
+													</svg>
+												</button>
+												<button class="btn btn-lg btn-light" id="on-video-agent" name="on-video-agent" data-toggle="tooltip" data-placement="top" title="Apagar cámara del agente">
+													<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-camera-video" viewBox="0 0 16 16">
+														<path fill-rule="evenodd" d="M0 5a2 2 0 0 1 2-2h7.5a2 2 0 0 1 1.983 1.738l3.11-1.382A1 1 0 0 1 16 4.269v7.462a1 1 0 0 1-1.406.913l-3.111-1.382A2 2 0 0 1 9.5 13H2a2 2 0 0 1-2-2V5zm11.5 5.175 3.5 1.556V4.269l-3.5 1.556v4.35zM2 4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h7.5a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1H2z" />
+													</svg>
+												</button>
+
+												<!--AUDIO AGENTE-->
+												<button class="btn btn-lg btn-danger" id="off-audio-agent" name="off-audio-agent" data-toggle="tooltip" data-placement="top" title="Activar audio del agente" style="display:none;">
+													<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-mic-mute" viewBox="0 0 16 16">
+														<path d="M13 8c0 .564-.094 1.107-.266 1.613l-.814-.814A4.02 4.02 0 0 0 12 8V7a.5.5 0 0 1 1 0v1zm-5 4c.818 0 1.578-.245 2.212-.667l.718.719a4.973 4.973 0 0 1-2.43.923V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 1 0v1a4 4 0 0 0 4 4zm3-9v4.879l-1-1V3a2 2 0 0 0-3.997-.118l-.845-.845A3.001 3.001 0 0 1 11 3z" />
+														<path d="m9.486 10.607-.748-.748A2 2 0 0 1 6 8v-.878l-1-1V8a3 3 0 0 0 4.486 2.607zm-7.84-9.253 12 12 .708-.708-12-12-.708.708z" />
+													</svg>
+												</button>
+												<button class="btn btn-lg btn-light" id="on-audio-agent" name="on-audio-agent" data-toggle="tooltip" data-placement="top" title="Activar audio del agente">
+													<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-mic" viewBox="0 0 16 16">
+														<path d="M3.5 6.5A.5.5 0 0 1 4 7v1a4 4 0 0 0 8 0V7a.5.5 0 0 1 1 0v1a5 5 0 0 1-4.5 4.975V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 .5-.5z" />
+														<path d="M10 8a2 2 0 1 1-4 0V3a2 2 0 1 1 4 0v5zM8 0a3 3 0 0 0-3 3v5a3 3 0 0 0 6 0V3a3 3 0 0 0-3-3z" />
+													</svg>
+												</button>
+
+												<!--RECORD-->
+												<button class="btn btn-lg btn-light" id="start-recording" name="start-recording" data-toggle="tooltip" data-placement="top" title="Iniciar grabación">
+													<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
+														<path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z" />
+													</svg>
+												</button>
+												<button class="btn btn-lg btn-danger" id="stop-recording" name="stop-recording" data-toggle="tooltip" data-placement="top" title="Detener grabación" style="display:none;">
+													<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-stop-circle" viewBox="0 0 16 16">
+														<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+														<path d="M5 6.5A1.5 1.5 0 0 1 6.5 5h3A1.5 1.5 0 0 1 11 6.5v3A1.5 1.5 0 0 1 9.5 11h-3A1.5 1.5 0 0 1 5 9.5v-3z" />
+													</svg>
+												</button>
+
+												<!--TIME MARK-->
+												<!-- <button class="btn btn-lg btn-light d-none" id="marks-recording-modal" data-toggle="tooltip" data-placement="top" title="Añadir marca de tiempo" disabled>
+													<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmarks" viewBox="0 0 16 16">
+														<path d="M2 4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L7 13.101l-4.223 2.815A.5.5 0 0 1 2 15.5V4zm2-1a1 1 0 0 0-1 1v10.566l3.723-2.482a.5.5 0 0 1 .554 0L11 14.566V4a1 1 0 0 0-1-1H4z" />
+														<path d="M4.268 1H12a1 1 0 0 1 1 1v11.768l.223.148A.5.5 0 0 0 14 13.5V2a2 2 0 0 0-2-2H6a2 2 0 0 0-1.732 1z" />
+													</svg>
+												</button> -->
+
+												<!--END CALL-->
+												<button class="btn btn-lg btn-danger" id="disconnect-call" name="disconnect-call" data-toggle="tooltip" data-placement="top" title="Colgar llamada">
+													<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-telephone-minus" viewBox="0 0 16 16">
+														<path fill-rule="evenodd" d="M10 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5z" />
+														<path d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 0 0 4.168 6.608 17.569 17.569 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
+													</svg>
+												</button>
+
+												<button class="btn btn-sm btn-light d-none" id="network_quality_signal_agent" name="network_quality_signal_agent"></button>
+												<!-- RECARGAR AGENTE -->
+												<!-- <button class="btn btn-lg btn-light" type="button" id="recargar_agente" name="recargar_agente" title="Recargar conexión del agente">
+													<i class="fas fa-sync-alt"></i> </button> -->
+
+											</div>
+
+											<div class="btn-group btn-group-toggle" data-toggle="buttons">
+
+												<!--VIDEO DENUNCIANTE-->
+												<button class="btn btn-lg btn-danger" id="off-video-denunciante" name="off-video-denunciante" data-toggle="tooltip" data-placement="top" title="Encender cámara del denunciante" style="display:none;">
+													<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-camera-video-off" viewBox="0 0 16 16">
+														<path fill-rule="evenodd" d="M10.961 12.365a1.99 1.99 0 0 0 .522-1.103l3.11 1.382A1 1 0 0 0 16 11.731V4.269a1 1 0 0 0-1.406-.913l-3.111 1.382A2 2 0 0 0 9.5 3H4.272l.714 1H9.5a1 1 0 0 1 1 1v6a1 1 0 0 1-.144.518l.605.847zM1.428 4.18A.999.999 0 0 0 1 5v6a1 1 0 0 0 1 1h5.014l.714 1H2a2 2 0 0 1-2-2V5c0-.675.334-1.272.847-1.634l.58.814zM15 11.73l-3.5-1.555v-4.35L15 4.269v7.462zm-4.407 3.56-10-14 .814-.58 10 14-.814.58z" />
+													</svg>
+												</button>
+												<button class="btn btn-lg btn-light" id="on-video-denunciante" name="on-video-denunciante" data-toggle="tooltip" data-placement="top" title="Apagar cámara del denunciante">
+													<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-camera-video" viewBox="0 0 16 16">
+														<path fill-rule="evenodd" d="M0 5a2 2 0 0 1 2-2h7.5a2 2 0 0 1 1.983 1.738l3.11-1.382A1 1 0 0 1 16 4.269v7.462a1 1 0 0 1-1.406.913l-3.111-1.382A2 2 0 0 1 9.5 13H2a2 2 0 0 1-2-2V5zm11.5 5.175 3.5 1.556V4.269l-3.5 1.556v4.35zM2 4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h7.5a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1H2z" />
+													</svg>
+												</button>
+
+												<!--AUDIO DENUNCIANTE-->
+												<button class="btn btn-lg btn-danger" id="off-audio-denunciante" name="off-audio-denunciante" data-toggle="tooltip" data-placement="top" title="Activar audio del denunciante" style="display:none;">
+													<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-mic-mute" viewBox="0 0 16 16">
+														<path d="M13 8c0 .564-.094 1.107-.266 1.613l-.814-.814A4.02 4.02 0 0 0 12 8V7a.5.5 0 0 1 1 0v1zm-5 4c.818 0 1.578-.245 2.212-.667l.718.719a4.973 4.973 0 0 1-2.43.923V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 1 0v1a4 4 0 0 0 4 4zm3-9v4.879l-1-1V3a2 2 0 0 0-3.997-.118l-.845-.845A3.001 3.001 0 0 1 11 3z" />
+														<path d="m9.486 10.607-.748-.748A2 2 0 0 1 6 8v-.878l-1-1V8a3 3 0 0 0 4.486 2.607zm-7.84-9.253 12 12 .708-.708-12-12-.708.708z" />
+													</svg>
+												</button>
+												<button class="btn btn-lg btn-light" id="on-audio-denunciante" name="on-audio-denunciante" data-toggle="tooltip" data-placement="top" title="Activar audio del denunciante">
+													<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-mic" viewBox="0 0 16 16">
+														<path d="M3.5 6.5A.5.5 0 0 1 4 7v1a4 4 0 0 0 8 0V7a.5.5 0 0 1 1 0v1a5 5 0 0 1-4.5 4.975V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 .5-.5z" />
+														<path d="M10 8a2 2 0 1 1-4 0V3a2 2 0 1 1 4 0v5zM8 0a3 3 0 0 0-3 3v5a3 3 0 0 0 6 0V3a3 3 0 0 0-3-3z" />
+													</svg>
+												</button>
+
+												<!-- RECARGAR DENUNCIANTE -->
+												<!-- <button class="btn btn-lg btn-light" type="button" id="recargar_denunciante_btn" name="recargar_denunciante_btn" title="Recargar conexión del denunciante">
+													<i class="fas fa-undo"></i>
+												</button> -->
+
+
+											</div>
+										</div>
+									</div>
+								</div>
+								<div id="secondary_videos_container">
+									<div class="secondary_video" id="agn_vf">
+										<div id="secondary_video_details">
+											<div class="font-weight-bold d-none" id="secondary_video_details_name"></div>
+											<div class="font-weight-bold" id="secondary_video_details_devices">
+												<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-camera-video-fill" id="camara_agente_prendida" viewBox="0 0 16 16">
+													<path fill-rule="evenodd" d="M0 5a2 2 0 0 1 2-2h7.5a2 2 0 0 1 1.983 1.738l3.11-1.382A1 1 0 0 1 16 4.269v7.462a1 1 0 0 1-1.406.913l-3.111-1.382A2 2 0 0 1 9.5 13H2a2 2 0 0 1-2-2V5z" />
+												</svg>
+												<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-camera-video-off-fill" id="camara_agente_apagada" viewBox="0 0 16 16" style="display: none;">
+													<path fill-rule="evenodd" d="M10.961 12.365a1.99 1.99 0 0 0 .522-1.103l3.11 1.382A1 1 0 0 0 16 11.731V4.269a1 1 0 0 0-1.406-.913l-3.111 1.382A2 2 0 0 0 9.5 3H4.272l6.69 9.365zm-10.114-9A2.001 2.001 0 0 0 0 5v6a2 2 0 0 0 2 2h5.728L.847 3.366zm9.746 11.925-10-14 .814-.58 10 14-.814.58z" />
+												</svg>
+												<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-mic-fill" id="audio_agente_prendida" viewBox="0 0 16 16">
+													<path d="M5 3a3 3 0 0 1 6 0v5a3 3 0 0 1-6 0V3z" />
+													<path d="M3.5 6.5A.5.5 0 0 1 4 7v1a4 4 0 0 0 8 0V7a.5.5 0 0 1 1 0v1a5 5 0 0 1-4.5 4.975V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 .5-.5z" />
+												</svg>
+												<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-mic-mute-fill" id="audio_agente_apagada" viewBox="0 0 16 16" style="display: none;">
+													<path d="M13 8c0 .564-.094 1.107-.266 1.613l-.814-.814A4.02 4.02 0 0 0 12 8V7a.5.5 0 0 1 1 0v1zm-5 4c.818 0 1.578-.245 2.212-.667l.718.719a4.973 4.973 0 0 1-2.43.923V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 1 0v1a4 4 0 0 0 4 4zm3-9v4.879L5.158 2.037A3.001 3.001 0 0 1 11 3z" />
+													<path d="M9.486 10.607 5 6.12V8a3 3 0 0 0 4.486 2.607zm-7.84-9.253 12 12 .708-.708-12-12-.708.708z" />
+												</svg>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		<?php } else { ?>
@@ -155,6 +507,8 @@
 		<div class="card rounded bg-white shadow" style="min-height: 70px;">
 			<div class="card-body">
 				<button id="folios-atendidos-btn" class="btn btn-primary btn-block h-100" role="button" data-toggle="modal" data-target="#folios_atendidos_modal"><i class="fas fa-file-alt"></i> FOLIOS DEL DENUNCIANTE</button>
+				<button id="enviar_alertas" title="Pulsa este botón en caso de emergencia o folios de suma importancia." class="btn btn-primary btn-block h-100"><i class="fas fa-exclamation-triangle"></i> ALERTA</button>
+
 			</div>
 		</div>
 		<div class="card rounded bg-white shadow">
@@ -171,16 +525,30 @@
 		<div class="card rounded bg-white shadow">
 			<div class="card-body">
 				<label class="font-weight-bold" for="notas">Breve descripción del caso:</label>
-				<textarea class="form-control" id="notas_mp" placeholder="Descripción del caso..." rows="10" required maxlength="300" oninput="mayuscTextarea(this)" onkeydown="pulsar(event)" onkeyup="contarCaracteres(this)"></textarea>
-				<small id="numCaracter">300 caracteres restantes</small>
+				<textarea class="form-control" id="notas_mp" placeholder="Descripción del caso..." rows="10" required maxlength="1000" onkeydown="pulsar(event)" onkeyup="contarCaracteres(this)"></textarea>
+				<small id="numCaracter">1000 caracteres restantes</small>
 
 			</div>
 		</div>
 	</div>
 
+
 </div>
 
+<?php include("video_denuncia_media_devices_modal.php"); ?>
+<?php include("video_denuncia_toast.php"); ?>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.css?v=<?= rand() ?>">
+<script type="text/javascript" src="<?= base_url() ?>/assets/agent/assets/openvidu-browser-2.27.0.min.js?v=<?= rand() ?>"></script>
+<script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
+<script src="<?= base_url() ?>/assets/js/video_denuncia.js?v=<?= rand() ?>" type="module"></script>
 <script>
+	$(function() {
+		$('[data-toggle="tooltip"]').tooltip()
+	})
+
+	//Declaracion de variables globales, se utilizan en diferentes funciones.
 	const inputFolio = document.querySelector('#input_folio_atencion');
 	const inputExpediente = document.querySelector('#input_expediente');
 	const inputDenuncia = document.querySelector('#input_denuncia');
@@ -212,6 +580,7 @@
 	let marker = null;
 	let current = null;
 
+	//Funcion para obtener la fecha actual, se muestra al momento de asignarse una denuncia
 	function startTime() {
 		var today = new Date();
 		var hr = today.getHours();
@@ -242,6 +611,7 @@
 		}, 500);
 	}
 
+	//Funcion pra formatear la hora, asegurando que siempre tenga los dos digitos
 	function checkTime(i) {
 		if (i < 10) {
 			i = "0" + i;
@@ -249,6 +619,17 @@
 		return i;
 	}
 
+	//Funion para prevenir cerrar la ventana durante la asignacion de una denuncia.
+	function preventCloseWindow() {
+		window.removeEventListener("beforeunload", null, false);
+		window.addEventListener("beforeunload", (evento) => {
+			evento.preventDefault();
+			evento.returnValue = "Si cierras se perdera todo lo que no hayas guardado o se desconectará la llamada.";
+			return "Si cierras se perdera todo lo que no hayas guardado o se desconectará la llamada.";
+		});
+	}
+
+	//Funcion para retornar cuando se presione la tecla ENTER al mismo tiempo que SHIFT, evitando su comportamiento normal
 	function pulsar(e) {
 		if (e.which === 13 && !e.shiftKey) {
 			e.preventDefault();
@@ -256,8 +637,9 @@
 		}
 	}
 
+	//Funcion para contar caracteres restantes de los textarea
 	function contarCaracteres(obj) {
-		var maxLength = 300;
+		var maxLength = 1000;
 		var strLength = obj.value.length;
 		charRemain = (maxLength - strLength);
 
@@ -269,11 +651,12 @@
 		}
 	}
 
+	//Funcion para iterar el llenado de tabla de personas fisicas, recibe como parametro todas las personas fisicas
 	function llenarTablaPersonas(personas) {
 		for (let i = 0; i < personas.length; i++) {
 			var btn =
 				`<button type='button'  class='btn btn-primary' onclick='viewPersonaFisica(${personas[i].PERSONAFISICAID})'><i class='fas fa-eye'></i></button>`
-				var btnDelete =
+			var btnDelete =
 				`<button type='button'  class='btn btn-primary' onclick='deletePersonaFisicaById(${personas[i].PERSONAFISICAID})'><i class='fas fa-trash'></i></button>`
 			var fila =
 				`<tr id="row${i}">` +
@@ -289,6 +672,7 @@
 			$("#adicionados").append(nFilas - 1);
 		}
 	}
+	//Funcion para iterar el llenado de tabla de los folios del mismo denunciante, recibe como parametros todos los folios		
 
 	function llenarTablaFolioDenunciantes(folioDenunciantes) {
 
@@ -336,32 +720,42 @@
 
 		}
 	}
+	//Funcion para iterar el llenado de tabla de documentos, recibe como parametro todos los documentos
 
 	function llenarTablaDocumentos(documentos) {
 		for (let i = 0; i < documentos.length; i++) {
-			console.log(documentos[i]	 );
-			if (documentos[i].STATUS == 'FIRMADO' ) {
+			console.log(documentos[i]);
+			if (documentos[i].STATUS == 'FIRMADO') {
 				var btn =
 					`<button type='button'  class='btn btn-primary' onclick='viewDocumento(${documentos[i].FOLIODOCID})' disabled><i class="fas fa-eye"></i></button>`
 				var btnFirmar =
 					`<button type='button'  class='btn btn-primary my-2' onclick='firmarDocumento(${documentos[i].FOLIOID}, ${documentos[i].ANO}, ${documentos[i].FOLIODOCID})' disabled><i class="fas fa-signature"></i></button>`
+				var btnAsignarEncargado = `<button type='button'  class='btn btn-primary my-2' onclick='asignarEncargado(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})' disabled><i class="fas fa-user-tag"></i></button>`
+				var btnAsignarAgente = `<button type='button'  class='btn btn-primary my-2' onclick='asignarAgente(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})' disabled><i class="fas fa-user-tag"></i></button>`
+
 			} else {
 				var btn =
 					`<button type='button'  class='btn btn-primary' onclick='viewDocumento(${documentos[i].FOLIODOCID})'><i class="fas fa-eye"></i></button>`
 				var btnFirmar =
 					`<button type='button'  class='btn btn-primary my-2' onclick='firmarDocumento(${documentos[i].FOLIOID}, ${documentos[i].ANO}, ${documentos[i].FOLIODOCID})'><i class="fas fa-signature"></i></button>`
-			}
 
-			if (documentos[i].ENVIADO == 'N'){
-				var btnBorrar = 
-				`<button type='button'  class='btn btn-primary my-2' onclick='borrarDocumento(${documentos[i].FOLIOID}, ${documentos[i].ANO}, ${documentos[i].FOLIODOCID})'><i class="fas fa-trash"></i></button>`
+				var btnAsignarEncargado = `<button type='button'  class='btn btn-primary my-2' onclick='asignarEncargado(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})'><i class="fas fa-user-tag"></i></button>`
+				var btnAsignarAgente = `<button type='button'  class='btn btn-primary my-2' onclick='asignarAgente(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})'><i class="fas fa-user-tag"></i></button>`
+
+			}
+			var btnBorrar = '';
+			if (documentos[i].ENVIADO == 'N') {
+				var btnBorrar =
+					`<button type='button'  class='btn btn-primary my-2' onclick='borrarDocumento(${documentos[i].FOLIOID}, ${documentos[i].ANO}, ${documentos[i].FOLIODOCID})'><i class="fas fa-trash"></i></button>`
 			}
 			var fila =
 				`<tr id="row${i}">` +
 				`<td class="text-center">${documentos[i].TIPODOC}</td>` +
-				`<td class="text-center">${documentos[i].NOMBRE} ${documentos[i].APELLIDO_PATERNO} ${documentos[i].APELLIDO_MATERNO}</td>` +
+				`<td class="text-center">${documentos[i].AGENTER_NOMBRE} ${documentos[i].AGENTER_AP} ${documentos[i].AGENTER_AM}</td>` +
 				`<td class="text-center">${documentos[i].STATUS}</td>` +
 				`<td class="text-center">${btn} ${btnFirmar} ${btnBorrar}</td>` +
+				`<td class="text-center">${btnAsignarAgente}</td>` +
+				`<td class="text-center">${btnAsignarEncargado}</td>` +
 				`</tr>`;
 
 			$('#table-documentos tr:first').after(fila);
@@ -370,11 +764,11 @@
 			$("#adicionados").append(nFilas - 1);
 		}
 	}
-
+	//Funcion para redirigir a remitir el folio
 	function remitir() {
 		window.location.href = `<?= base_url('/admin/dashboard/bandeja_remision?folio=') ?>${inputFolio.value}&year=${year_select.value}&municipioasignado=${input_municipio.value}&expediente=${inputExpediente.value}`;
 	}
-
+	//Funcion para visualizar la relacion de parentesco, recibe como parametro la persona fisica 1
 	function view_form_parentesco($personafisica) {
 		$.ajax({
 			data: {
@@ -390,6 +784,7 @@
 				let relacion_parentesco = response.parentescoRelacion;
 				let idPersonaFisica = response.idPersonaFisica;
 				// 	if (relacion_parentesco) {
+				//Se asignan los valores del parentesco
 				document.querySelector('#parentesco_mf').value = parentesco.PERSONAPARENTESCOID ? parentesco
 					.PERSONAPARENTESCOID : '';
 				document.querySelector('#personaFisica1').value = relacion_parentesco.PERSONAFISICAID1 ?
@@ -413,8 +808,10 @@
 			error: function(jqXHR, textStatus, errorThrown) {}
 		});
 	}
+	//Funcion para eliminar el parentesco, se tiene que recibir por parametro la persona fisica1, personafisica2 y el parentesco a eliminar
 
 	function eliminarparentesco(personofisica1, personafisica2, parentesco) {
+		console.log("eliminar 2", parentesco);
 		$.ajax({
 			data: {
 				'personafisica1': personofisica1,
@@ -440,8 +837,8 @@
 							row.remove();
 						}
 					});
-					llenarTablaParentesco(response.parentescoRelacion, response.personaiduno, response
-						.personaidDos, response.parentesco);
+					llenarTablaParentesco(response.parentescoRelacion);
+
 				} else {
 					Swal.fire({
 						icon: 'error',
@@ -455,6 +852,7 @@
 
 	}
 
+	//Funcion para actualizar el documento, recibe el placeholder actualizado
 	function actualizarDocumento(placeholder) {
 
 		const data = {
@@ -471,6 +869,7 @@
 			success: function(response) {
 				if (response.status == 1) {
 					const documentos = response.documentos;
+					//llena la tabla de documentos
 					let tabla_documentos = document.querySelectorAll('#table-documentos tr');
 					tabla_documentos.forEach(row => {
 						if (row.id !== '') {
@@ -500,22 +899,21 @@
 		});
 
 	}
-
-	function llenarTablaParentesco(relacion_parentesco, personaiduno, personaidDos, parentesco) {
-
+	//Funcion para iterar el llenado de tabla de la relacion de parentescos, recibe como parametro toda la informacion de la relacion de parentescos
+	function llenarTablaParentesco(relacion_parentesco) {
 
 		for (let i = 0; i < relacion_parentesco.length; i++) {
 			var btn =
-				`<button type='button'  class='btn btn-primary' onclick='view_form_parentesco(${relacion_parentesco[i].PERSONAFISICAID1})'><i class="fas fa-eye"></i></button>`
+				`<button type='button'  class='btn btn-primary' onclick='view_form_parentesco(${relacion_parentesco[i].IDP1})'><i class="fas fa-eye"></i></button>`
 			var btnEliminar =
-				`<button type='button'  class='btn btn-primary' onclick='eliminarparentesco(${personaiduno[i].PERSONAFISICAID1},${personaidDos[i].PERSONAFISICAID2},${relacion_parentesco[i].PARENTESCOID})'><i class="fas fa-trash"></i></button>`
+				`<button type='button'  class='btn btn-primary' onclick='eliminarparentesco(${relacion_parentesco[i].IDP1},${relacion_parentesco[i].IDP2},${relacion_parentesco[i].PARENTESCOID})'><i class="fas fa-trash"></i></button>`
 
 
 			var fila2 =
 				`<tr id="row${i}">` +
-				`<td class="text-center">${personaiduno[i].NOMBRE}</td>` +
-				`<td class="text-center">${parentesco[i].PERSONAPARENTESCODESCR}</td>` +
-				`<td class="text-center">${personaidDos[i].NOMBRE}</td>` +
+				`<td class="text-center">${relacion_parentesco[i].NOMBREP1}</td>` +
+				`<td class="text-center">${relacion_parentesco[i].PERSONAPARENTESCODESCR}</td>` +
+				`<td class="text-center">${relacion_parentesco[i].NOMBREP2}</td>` +
 				`<td class="text-center">${btn}</td>` +
 				`<td class="text-center">${btnEliminar}</td>` +
 
@@ -528,6 +926,7 @@
 
 		}
 	}
+	//Funcion para iterar el llenado de tabla de arbol delitivo, recibe como parametro toda la informacion del arbol delictivo
 
 	function llenarTablaFisFis(relacionFisFis) {
 		for (let i = 0; i < relacionFisFis.length; i++) {
@@ -549,7 +948,7 @@
 		}
 	}
 
-
+	//Funcion para eliminar el delito del imputado, recibe como parametro la victima, imputado y el id del delito
 	function eliminarImputadoDelito(personafisicavictima, personafisicaimputado, delitoModalidadId) {
 		$.ajax({
 			data: {
@@ -566,6 +965,7 @@
 			success: function(response) {
 
 				if (response.status == 1) {
+					//Se llenan las tablas
 					Swal.fire({
 						icon: 'success',
 						text: 'Delito del imputado y árbol delicitivo eliminado correctamente',
@@ -600,6 +1000,7 @@
 
 	}
 
+	//Funcion para eliminar la relacion del arbol delictivo, recibe como parametro el imputado, victima y el id del delito
 	function eliminarArbolDelictivo(personafisicavictima, personafisicaimputado, delitoModalidadId) {
 		$.ajax({
 			data: {
@@ -615,6 +1016,7 @@
 			dataType: "json",
 			success: function(response) {
 				if (response.status == 3) {
+					//Validaccion de ultimo registro
 					Swal.fire({
 						title: 'Este es el ultimo registro, se eliminará el delito cometido de la denuncia',
 						showDenyButton: true,
@@ -632,6 +1034,7 @@
 				}
 
 				if (response.status == 1) {
+					//Cuando el imputado tiene mas de 1 delito
 					Swal.fire({
 						icon: 'success',
 						text: 'Árbol delictivo eliminado correctamente',
@@ -668,6 +1071,7 @@
 
 	}
 
+	//Funcion para eliminar los objetos involucrados, recibe por parametro el id del objeto
 	function eliminarObjetosInvolucrados(objetoid) {
 		$.ajax({
 			data: {
@@ -682,6 +1086,7 @@
 			success: function(response) {
 
 				if (response.status == 1) {
+					//Se llena la tabla de objetos
 					Swal.fire({
 						icon: 'success',
 						text: 'Objeto involucrado eliminado correctamente',
@@ -709,6 +1114,7 @@
 
 	}
 
+	// Funcion para visualizar la informacion del objeto involucrado, recibe por parametro el id del objeto
 	function viewObjetoInvolucrado(objetoid) {
 		$('#folio_objetos_update').modal('show');
 		$.ajax({
@@ -723,6 +1129,7 @@
 			success: function(response) {
 				let objeto = response.objetoInvolucrado;
 				let objeto_sub = response.objetosub;
+				// Se llenan los valores
 				document.querySelector('#objeto_id').value = objeto.OBJETOID ? objeto.OBJETOID : '';
 				document.querySelector('#situacion_objeto_update').value = objeto.SITUACION ? objeto.SITUACION :
 					'';
@@ -741,7 +1148,7 @@
 				});
 
 				document.querySelector('#marca_objeto_update').value = objeto.MARCA ? objeto.MARCA : '';
-				document.querySelector('#serie_objeto_update').value = objeto.NUMEROSERIE ? objeto.CANTIDAD :
+				document.querySelector('#serie_objeto_update').value = objeto.NUMEROSERIE ? objeto.NUMEROSERIE :
 					'';
 				document.querySelector('#cantidad_objeto_update').value = objeto.CANTIDAD ? objeto.CANTIDAD :
 					'';
@@ -759,45 +1166,7 @@
 		});
 	}
 
-	function borrarDocumento(folio, ano, foliodocid) {
-		Swal.fire({
-			title: '¡Estas seguro?',
-			text: "¡Esta operacion es irevertible!",
-			icon: 'warning',
-			showCancelButton: true,
-			confirmButtonColor: '#bf9b55',
-			confirmButtonText: '¡Si, borrar!'
-			}).then((result) => {
-			if (result.isConfirmed) {
-				$.ajax({
-					data: {
-						'docid': foliodocid,
-						'folio': <?php echo $_GET['folio'] ?>,
-						'year': <?php echo $_GET['year'] ?>,
-					},
-					url: "<?= base_url('/data/delete-documento') ?>",
-					method: "POST",
-					dataType: "json",
-					success: function(response) {
-						if (response.status == 1) {
-							Swal.fire(
-								'¡Borrar!',
-								'El documento se ha borrado.',
-								'success'
-								).then(
-									location.reload()
-								)
-
-						}
-					},
-					error: function(jqXHR, textStatus, errorThrown) {
-						console.log(textStatus);
-					}
-				});
-			}
-		})
-	}
-
+	//Funcion para iterar la tabla de relacion de imputado-delito, recibe la informacion de esta relacion
 	function llenarTablaImpDel(impDelito) {
 		for (let i = 0; i < impDelito.length; i++) {
 			// var btn = `<button type='button'  class='btn btn-primary' onclick='eliminarImputadoDelito(${impDelito[i].PERSONAFISICAID},${impDelito[i].DELITOMODALIDADID})'><i class='fa fa-trash'></i></button>`
@@ -816,6 +1185,7 @@
 		}
 	}
 
+	//Funcion para iterar la tabla de objetos involucrados, recibe por parametro la informacion de los objetos
 	function llenarTablaObjetosInvolucrados(objetos) {
 		for (let i = 0; i < objetos.length; i++) {
 			var btnEliminar =
@@ -837,6 +1207,7 @@
 			$("#adicionados").append(nFilas - 1);
 		}
 	}
+	//Funcion para iterar la tabla de archivos externos, recibe por parametro la informacion de los archivos
 
 	function llenarTablaArchivosExternos(archivos) {
 		for (let i = 0; i < archivos.length; i++) {
@@ -849,10 +1220,13 @@
 				var img = `<a id="downloadArchivo" download=""><img src='${archivos[i].ARCHIVO}');' width="50px" height="50px"></img></a>`;
 
 			}
+			var btnEliminarArchivo =
+				`<button type='button' id="deleteArchivobtn" class='btn btn-primary' onclick='deleteArchivo(${archivos[i].FOLIOARCHIVOID})'><i class='fas fa-trash'></i></button>`;
 			var fila =
 				`<tr id="row${i}">` +
 				`<td class="text-center" value="${archivos[i].FOLIOARCHIVOID}">${archivos[i].ARCHIVODESCR}</td>` +
 				`<td class="text-center" value="${archivos[i].FOLIOARCHIVOID}">${img}</td>` +
+				`<td class="text-center">${btnEliminarArchivo}</td>` +
 
 				`</tr>`;
 
@@ -861,21 +1235,25 @@
 			var nFilas = $("#archivos tr").length;
 			$("#adicionados").append(nFilas - 1);
 
+			///Funcion de descarga de archivos
 			document.querySelector('#downloadArchivo').setAttribute('href', archivos[i].ARCHIVO);
 			document.querySelector('#downloadArchivo').setAttribute('download', archivos[i].FOLIOID + '_' +
 				archivos[i].ANO + '_' + archivos[i].FOLIOARCHIVOID + '.' + archivos[i].EXTENSION);
 		}
 	}
+	//Funcion para iterar la tabla de vehiculos, recibe por parametro la informacion de los vehiculos
 
 	function llenarTablaVehiculos(vehiculos) {
 		for (let i = 0; i < vehiculos.length; i++) {
 			var btnVehiculo =
 				`<button type='button' class='btn btn-primary' onclick='viewVehiculo(${vehiculos[i].VEHICULOID})'><i class='fas fa-eye'></i></button>`;
+			var btnEliminarVehiculo =
+				`<button type='button' class='btn btn-primary' onclick='deleteVehiculo(${vehiculos[i].VEHICULOID})'><i class='fas fa-trash'></i></button>`;
 			var fila3 =
 				`<tr id="row${i}">` +
 				`<td class="text-center">${vehiculos[i].PLACAS?vehiculos[i].PLACAS:'DESCONOCIDO'}</td>` +
 				`<td class="text-center">${vehiculos[i].NUMEROSERIE?vehiculos[i].NUMEROSERIE:'DESCONOCIDO'}</td>` +
-				`<td class="text-center">${btnVehiculo}</td>` +
+				`<td class="text-center">${btnVehiculo} ${btnEliminarVehiculo}</td>` +
 				`</tr>`;
 
 			$('#table-vehiculos tr:first').after(fila3);
@@ -885,7 +1263,11 @@
 		}
 	}
 
+	//Evento al buscar un folio
 	buscar_btn.addEventListener('click', (e) => {
+		//Limpia todos los valores en caso de que hayan quedado
+		borrarTodoConFolio();
+		preventCloseWindow();
 		$.ajax({
 			data: {
 				'folio': inputFolio.value,
@@ -897,30 +1279,30 @@
 			success: function(response) {
 				respuesta = response;
 				document.getElementById("form_parentesco_insert").reset();
-
 				if (response.status === 1) {
-
+					//respuestas de la funcion
 					const folio = response.folio;
-					const preguntas = response.preguntas_iniciales;
-					const personas = response.personas;
-					const domicilios = response.domicilios;
-					const vehiculos = response.vehiculos;
-					const relacion_parentesco = response.parentescoRelacion;
-					const parentesco = response.parentesco;
-					const personaiduno = response.personaiduno;
-					const personaidDos = response.personaidDos;
-					const relacionFisFis = response.relacionFisFis;
-					const fisicaImpDelito = response.fisicaImpDelito;
-					const delitosModalidadFiltro = response.delitosModalidadFiltro;
-					const personafisica = response.personafisica;
-					const imputados = response.imputados;
-					const victimas = response.victimas;
-					const objetos = response.objetos;
-					const documentos = response.documentos;
-					const correos = response.correos;
-					const archivos = response.archivosexternos;
-					const folioDenunciantes = response.folioDenunciantes;
+					const preguntas = response.respuesta.preguntas_iniciales;
+					const personas = response.respuesta.personas;
+					const domicilios = response.respuesta.domicilios;
+					const vehiculos = response.respuesta.vehiculos;
+					const relacion_parentesco = response.respuesta.parentescoRelacion;
+					// const parentesco = response.respuesta.parentesco;
+					// const personaiduno = response.respuesta.personaiduno;
+					// const personaidDos = response.respuesta.personaidDos;
+					const relacionFisFis = response.respuesta.relacionFisFis;
+					const fisicaImpDelito = response.respuesta.fisicaImpDelito;
+					const delitosModalidadFiltro = response.respuesta.delitosModalidadFiltro;
+					const personafisica = response.respuesta.personafisica;
+					const imputados = response.respuesta.imputados;
+					const victimas = response.respuesta.victimas;
+					const objetos = response.respuesta.objetos;
+					const documentos = response.respuesta.documentos;
+					const correos = response.respuesta.correos;
+					const archivos = response.respuesta.archivosexternos;
+					const folioDenunciantes = response.respuesta.folioDenunciantes;
 
+					//Cambios de estilos
 					inputFolio.classList.add('d-none');
 					buscar_btn.classList.add('d-none');
 					year_select.classList.add('d-none');
@@ -933,6 +1315,8 @@
 
 					divFolioAtendido.classList.remove('d-none');
 					// card6.classList.remove('d-none');
+
+					//LLenado de valores de la denuncia
 					document.querySelector('#folio_atendido').innerHTML = 'FOLIO ATENDIDO: ' + folio.FOLIOID + '/' + folio.ANO;
 
 					document.querySelector('#delito_dash').value = folio.HECHODELITO;
@@ -959,6 +1343,7 @@
 					option_vacio_im.disabled = true;
 					option_vacio_im.selected = true;
 					if (victimas || imputados || correos || personas) {
+						//Siempre se limpian los selects, se declaran, y se llenan con la respuesta correspondiente
 						$('#victima_modal_documento').empty();
 						let select_victima_documento = document.querySelector(
 							"#victima_modal_documento");
@@ -971,7 +1356,7 @@
 
 							const option = document.createElement('option');
 							option.value = victima.PERSONAFISICAID;
-							option.text = victima.NOMBRE + ' ' + primer_apellido;
+							option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
 							select_victima_documento.add(option, null);
 						});
 
@@ -1018,7 +1403,7 @@
 
 							const option = document.createElement('option');
 							option.value = victima.PERSONAFISICAID;
-							option.text = victima.NOMBRE + ' ' + primer_apellido;
+							option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
 							select_victima_ofendido.add(option, null);
 						});
 						$('#imputado_delito_cometido').empty();
@@ -1062,6 +1447,40 @@
 							option.value = persona.PERSONAFISICAID;
 							option.text = persona.NOMBRE + ' ' + primer_apellido;
 							select_personaFisica1_I.add(option, null);
+						});
+						$('#personaFisica1').empty();
+						let select_personaFisica1 = document.querySelector("#personaFisica1")
+						const option_vacio_p = document.createElement('option');
+						option_vacio_p.value = '';
+						option_vacio_p.text = 'Selecciona ...';
+						option_vacio_p.disabled = true;
+						option_vacio_p.selected = true;
+						select_personaFisica1.add(option_vacio_p, null);
+						personas.forEach(persona => {
+							let primer_apellido = persona.PRIMERAPELLIDO ? persona
+								.PRIMERAPELLIDO : '';
+
+							const option = document.createElement('option');
+							option.value = persona.PERSONAFISICAID;
+							option.text = persona.NOMBRE + ' ' + primer_apellido;
+							select_personaFisica1.add(option, null);
+						});
+						$('#personaFisica2').empty();
+						let select_personaFisica2 = document.querySelector("#personaFisica2")
+						const option_vacio_pe2 = document.createElement('option');
+						option_vacio_pe2.value = '';
+						option_vacio_pe2.text = 'Selecciona ...';
+						option_vacio_pe2.disabled = true;
+						option_vacio_pe2.selected = true;
+						select_personaFisica2.add(option_vacio_pe2, null);
+						personas.forEach(persona => {
+							let primer_apellido = persona.PRIMERAPELLIDO ? persona
+								.PRIMERAPELLIDO : '';
+
+							const option = document.createElement('option');
+							option.value = persona.PERSONAFISICAID;
+							option.text = persona.NOMBRE + ' ' + primer_apellido;
+							select_personaFisica2.add(option, null);
 						});
 						$('#propietario').empty();
 						let select_propietario = document.querySelector("#propietario");
@@ -1164,6 +1583,8 @@
 					//DENUNCIA
 					document.querySelector('#delito_delito').value = folio.HECHODELITO;
 					document.querySelector('#municipio_delito').value = folio.HECHOMUNICIPIOID ? folio.HECHOMUNICIPIOID : '';
+
+					//Coordenadas del mapa
 					let mapa_denuncia = document.querySelector('#map_denuncia');
 					mapa_denuncia.style.width = '100%';
 					mapa_denuncia.style.height = '400px';
@@ -1268,7 +1689,8 @@
 					document.querySelector('#hora_delito').value = folio.HECHOHORA ? folio.HECHOHORA : '';
 					document.querySelector('#fecha_delito').value = folio.HECHOFECHA ? folio.HECHOFECHA : '';
 					document.querySelector('#narracion_delito').value = folio.HECHONARRACION ? folio.HECHONARRACION : '';
-
+					document.querySelector('#autorizaFoto').value = folio.LOCALIZACIONPERSONAMEDIOS == 'S' ?
+						'S' : 'N';
 					// if (folio.HECHODELITO == "ROBO DE VEHÍCULO") {
 					// 	$('#v-pills-vehiculos-tab').css('display', 'block');
 					// } else {
@@ -1280,8 +1702,9 @@
 					//VEHICULOS
 					if (vehiculos) llenarTablaVehiculos(vehiculos);
 					//PARENTESCO
-					if (relacion_parentesco) llenarTablaParentesco(relacion_parentesco, personaiduno,
-						personaidDos, parentesco);
+					console.log(relacion_parentesco);
+					if (relacion_parentesco) llenarTablaParentesco(relacion_parentesco);
+
 					//ARBOL DELICTUAL
 					if (relacionFisFis) llenarTablaFisFis(relacionFisFis);
 
@@ -1295,14 +1718,14 @@
 					if (archivos) llenarTablaArchivosExternos(archivos);
 
 					//FOLIO DENUNCIANTES
-					if(folioDenunciantes)llenarTablaFolioDenunciantes(folioDenunciantes);
+					if (folioDenunciantes) llenarTablaFolioDenunciantes(folioDenunciantes);
 
-
+					$('#lugar_delito').trigger('change');
 
 				} else if (response.status === 2) {
 					Swal.fire({
 						icon: 'error',
-						html: 'El folio se encuentra en atención.',
+						html: 'El folio se encuentra en atención por el agente: <strong>' + response.agente + '</strong>',
 						confirmButtonColor: '#bf9b55',
 					});
 				} else if (response.status === 3) {
@@ -1312,7 +1735,7 @@
 					card5.classList.add('d-none');
 					card6.classList.add('d-none');
 
-					let texto = 'El folio ya fue atentido por el agente<br><strong>' + response.agente +
+					let texto = 'El folio ya fue atendido por el agente<br><strong>' + response.agente +
 						'</strong><br><br><strong>' + response.motivo + '</strong>';
 					if (response.motivo == 'EXPEDIENTE') {
 						texto = texto + '<br><br><strong>' + expedienteConGuiones(response.expediente) + '</strong>';
@@ -1342,18 +1765,14 @@
 		});
 	});
 
-	function borrarTodo() {
+	//Funcion para borrar todos los valores
+	function borrarTodoConFolio() {
 		let currentTime = new Date();
 		let year = currentTime.getFullYear()
-		buscar_nuevo_btn.classList.add('d-none');
-		inputFolio.classList.remove('d-none');
-		inputFolio.value = "";
-		inputExpediente.value = "";
-		year_select.classList.remove('d-none');
-		year_select.value = year;
-		buscar_btn.classList.remove('d-none');
+
 		expediente_modal_correo.value = "";
 		year_modal_correo.value = "";
+		notas_mp.value = "";
 		$('#send_mail_select').empty();
 		// quill.root.innerHTML ='';
 		// quill2.root.innerHTML='';
@@ -1526,41 +1945,395 @@
 		// $('#v-pills-vehiculos-tab').css('display', 'NONE');
 	}
 
+	function borrarTodo() {
+		let currentTime = new Date();
+		let year = currentTime.getFullYear()
+		buscar_nuevo_btn.classList.add('d-none');
+		inputFolio.classList.remove('d-none');
+		inputFolio.value = "";
+		inputExpediente.value = "";
+		year_select.classList.remove('d-none');
+		year_select.value = year;
+		buscar_btn.classList.remove('d-none');
+		expediente_modal_correo.value = "";
+		year_modal_correo.value = "";
+		notas_mp.value = "";
+		$('#send_mail_select').empty();
+		// quill.root.innerHTML ='';
+		// quill2.root.innerHTML='';
+
+		tabla_personas = document.querySelectorAll('#table-personas tr');
+		tabla_vehiculos = document.querySelectorAll('#table-vehiculos tr');
+		tabla_parentesco = document.querySelectorAll('#table-parentesco tr');
+		tabla_relacion_fis_fis = document.querySelectorAll('#table-delitos-videodenuncia tr');
+		tabla_delito_cometido = document.querySelectorAll('#table-delito-cometidos tr');
+		tabla_objetos_involucrados = document.querySelectorAll('#table-objetos-involucradoss tr');
+		let tabla_documentos = document.querySelectorAll('#table-documentos tr');
+
+
+		tabla_personas.forEach(row => {
+			if (row.id !== '') {
+				row.remove();
+			}
+		});
+
+		tabla_vehiculos.forEach(row => {
+			if (row.id !== '') {
+				row.remove();
+			}
+		});
+		tabla_parentesco.forEach(row => {
+			if (row.id !== '') {
+				row.remove();
+			}
+		});
+		tabla_relacion_fis_fis.forEach(row => {
+			if (row.id !== '') {
+				row.remove();
+			}
+		});
+		tabla_delito_cometido.forEach(row => {
+			if (row.id !== '') {
+				row.remove();
+			}
+		});
+		tabla_objetos_involucrados.forEach(row => {
+			if (row.id !== '') {
+				row.remove();
+			}
+		});
+		tabla_documentos.forEach(row => {
+			if (row.id !== '') {
+				row.remove();
+			}
+		});
+		card2.classList.add('d-none');
+		card3.classList.add('d-none');
+		card4.classList.add('d-none');
+		card5.classList.add('d-none');
+		card6.classList.add('d-none');
+		card7.classList.add('d-none');
+		card8.classList.add('d-none');
+		card9.classList.add('d-none');
+
+		// card6.classList.remove('d-none');
+
+		document.querySelector('#delito_dash').value = '';
+		document.querySelector('#delito_descr_dash').value = '';
+
+		//PREGUNTAS INICIALES
+		document.querySelector('#es_menor').value = '';
+		document.querySelector('#es_tercera_edad').value = '';
+		document.querySelector('#tiene_discapacidad').value = '';
+		document.querySelector('#es_vulnerable').value = '';
+		document.querySelector('#vulnerable_descripcion').value = '';
+		document.querySelector('#fue_con_arma').value = '';
+		document.querySelector('#esta_desaparecido').value = '';
+		document.querySelector('#lesiones').value = '';
+		document.querySelector('#lesiones_visibles').value = '';
+
+		//DENUNCIA
+		document.querySelector('#delito_delito').value = '';
+		document.querySelector('#municipio_delito').value = '';
+		document.querySelector('#localidad_delito').value = '';
+		document.querySelector('#colonia_delito').value = '';
+		document.querySelector('#colonia_delito_select').value = '';
+		document.querySelector('#calle_delito').value = '';
+		document.querySelector('#exterior_delito').value = '';
+		document.querySelector('#interior_delito').value = '';
+		document.querySelector('#lugar_delito').value = '';
+		document.querySelector('#hora_delito').value = '';
+		document.querySelector('#fecha_delito').value = '';
+		document.querySelector('#narracion_delito').value = '';
+		clearSelect(document.querySelector('#colonia_delito_select'));
+		clearSelect(document.querySelector('#localidad_delito'));
+
+		//PERSONA FISICA
+		document.querySelectorAll('#pf_id').forEach(element => {
+			element.value = '';
+		});
+		document.querySelector('#tipo_identificacion_pf').value = '';
+		document.querySelector('#numero_identidad_pf').value = '';
+		document.querySelector('#nombre_pf').value = '';
+		document.querySelector('#apellido_paterno_pf').value = '';
+		document.querySelector('#apellido_materno_pf').value = '';
+		document.querySelector('#nacionalidad_pf').value = '';
+		document.querySelector('#idioma_pf').value = '';
+		document.querySelector('#edoorigen_pf').value = '';
+		document.querySelector('#munorigen_pf').value = '';
+		document.querySelector('#telefono_pf').value = '';
+		document.querySelector('#codigo_pais_pf').value = '';
+		document.querySelector('#telefono_pf_2').value = '';
+		document.querySelector('#codigo_pais_pf_2').value = '';
+		document.querySelector('#correo_pf').value = '';
+		document.querySelector('#fecha_nacimiento_pf').value = '';
+		document.querySelector('#edad_pf').value = '';
+		document.querySelector('#edoc_pf').value = '';
+		document.querySelector('#sexo_pf').value = '';
+		document.querySelector('#ocupacion_pf').value = '';
+		document.querySelector('#escolaridad_pf').value = '';
+		document.querySelector('#descripcionFisica_pf').value = '';
+		document.querySelector('#calidad_juridica_pf').value = '';
+		document.querySelector('#apodo_pf').value = '';
+		document.querySelector('#denunciante_pf').value = '';
+		document.querySelector('#facebook_pf').value = '';
+		document.querySelector('#instagram_pf').value = '';
+		document.querySelector('#twitter_pf').value = '';
+		clearSelect(document.querySelector('#munorigen_pf'));
+
+		//DOMICILIO PERSONA FISICA
+		document.querySelector('#pfd_id').value = '';
+		document.querySelector('#pais_pfd').value = '';
+		document.querySelector('#estado_pfd').value = '';
+		document.querySelector('#municipio_pfd').value = '';
+		document.querySelector('#localidad_pfd').value = '';
+		document.querySelector('#colonia_pfd_select').value = '';
+		document.querySelector('#colonia_pfd').value = '';
+		document.querySelector('#cp_pfd').value = '';
+		document.querySelector('#calle_pfd').value = '';
+		document.querySelector('#exterior_pfd').value = '';
+		document.querySelector('#interior_pfd').value = '';
+		document.querySelector('#referencia_pfd').value = '';
+		// document.querySelector('#zona_pfd').value = '';
+		clearSelect(document.querySelector('#municipio_pfd'));
+		clearSelect(document.querySelector('#localidad_pfd'));
+		clearSelect(document.querySelector('#colonia_pfd_select'));
+
+		//PARENTESCO
+		document.querySelector('#parentesco_mf_I').value = '';
+		document.querySelector('#personaFisica1_I').value = '';
+		document.querySelector('#personaFisica2_I').value = '';
+		document.querySelector('#parentesco_mf').value = '';
+		document.querySelector('#personaFisica1').value = '';
+		document.querySelector('#personaFisica2').value = '';
+
+		//ARBOL DELICTUAL
+		document.querySelector('#imputado_arbol').value = '';
+		document.querySelector('#delito_cometido').value = '';
+		document.querySelector('#victima_ofendido').value = '';
+
+		//DELITOS COMETIDOS
+
+		document.querySelector('#imputado_delito_cometido').value = '';
+		document.querySelector('#delito_cometido_fisimpdelito').value = '';
+
+
+
+		//RESET FORM
+		document.getElementById("form_asignar_arbol_delictual_insert").reset();
+		document.getElementById("form_parentesco_insert").reset();
+		document.getElementById("form_delitos_cometidos_insert").reset();
+		document.getElementById("form_objetos_involucrados").reset();
+		document.getElementById("form_vehiculo").reset();
+		divFolioAtendido.classList.add('d-none');
+
+		// $('#v-pills-vehiculos-tab').css('display', 'NONE');
+	}
+
+	//Funcion para darle formato al expediente, recibe por parametro el expediente sin formato
 	function expedienteConGuiones(expediente) {
 		const array = expediente.trim().split('');
 		// return array[0] + '-' + array[1] + array[2] + '-' + array[3] + array[4] + array[5] + '-' + array[6] + array[7] + array[8] + array[9] + '-' + array[10] + array[11] + array[12] + array[13] + array[14];
 		return array[1] + array[2] + array[4] + array[5] + '-' + array[6] + array[7] + array[8] + array[9] + '-' + array[10] + array[11] + array[12] + array[13] + array[14];
 	}
 
+	//Evento al buscar nuevo folio
 	buscar_nuevo_btn.addEventListener('click', () => {
-		data = {
-			'folio': inputFolio.value,
-			'year': year_select.value,
-		}
-		$.ajax({
-			data: data,
-			url: "<?= base_url('/data/restore-folio') ?>",
-			method: "POST",
-			dataType: "json",
+		// data = {
+		// 	'folio': inputFolio.value,
+		// 	'year': year_select.value,
+		// }
+		// $.ajax({
+		// 	data: data,
+		// 	url: "<?= base_url('/data/restore-folio') ?>",
+		// 	method: "POST",
+		// 	dataType: "json",
 
-		}).done(function(data) {}).fail(function(jqXHR, textStatus) {
-			Swal.fire({
-				icon: 'error',
-				text: 'El folio quedó en proceso, comunicate con soporte técnico para devolver el estado a abierto.',
-				confirmButtonColor: '#bf9b55',
-			});
+		// }).done(function(data) {}).fail(function(jqXHR, textStatus) {
+		// 	Swal.fire({
+		// 		icon: 'error',
+		// 		text: 'El folio quedó en proceso, comunicate con soporte técnico para devolver el estado a abierto.',
+		// 		confirmButtonColor: '#bf9b55',
+		// 	});
+		// });
+		Swal.fire({
+			icon: 'warning',
+			text: 'El folio quedó en proceso.',
+			showConfirmButton: false,
+			timer: 1500
 		});
 		borrarTodo();
 	});
 
+
+	//Funcion para llenar valores y abrir modal para firmar documentos por id, recibe por parametro el folio, año y id del documento
 	function firmarDocumento(folio, ano, foliodocid) {
 		document.querySelector('#folio_id').value = folio;
 		document.querySelector('#documento_id').value = foliodocid;
 		document.querySelector('#year_doc').value = ano;
 		$('#contrasena_modal_doc_id').modal('show');
+	}
+
+	//Funcion para asignar un encargado al documento y que este lo firme, recibe por parametro el id del documento, folio y año
+	function asignarEncargado(documento, folio, ano) {
+		$('#documentos_generados_modal').modal('hide');
+		$('#encargadosModal').modal('show');
+		const btn_asignar_encargado = document.querySelector('#enviarEncargado');
+
+		btn_asignar_encargado.addEventListener('click', (e) => {
+			btn_asignar_encargado.disabled = true;
+
+			$.ajax({
+				data: {
+					'foliodocid': documento,
+					'folio': folio,
+					'year': ano,
+					'encargadoid': document.querySelector('#selectEncargado').value
+				},
+				url: "<?= base_url('/data/update-encargado') ?>",
+				method: "POST",
+				dataType: "json",
+				success: function(response) {
+					const documentos = response.documentos;
+					if (response.status == 1) {
+						btn_asignar_encargado.disabled = false;
+						//LLena la tabla de documentos
+						let tabla_documentos = document.querySelectorAll('#table-documentos tr');
+						tabla_documentos.forEach(row => {
+							if (row.id !== '') {
+								row.remove();
+							}
+						});
+						llenarTablaDocumentos(documentos);
+
+						// Swal.fire({
+						// 	icon: 'success',
+						// 	text: 'Encargado asignado correctamente',
+						// 	confirmButtonColor: '#bf9b55',
+						// });
+						$('#encargadosModal').modal('hide');
+					}
+
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					btn_asignar_encargado.disabled = false;
+
+				}
+			});
+		});
 
 	}
 
+	//Funcion para asignar un agente al documento y que este lo firme, recibe por parametro el id del documento, folio y año
+	function asignarAgente(documento, folio, ano) {
+		$('#documentos_generados_modal').modal('hide');
+
+		$('#asignarAgenteModal').modal('show');
+		const btn_asignar_agente = document.querySelector('#enviarAgente');
+
+		btn_asignar_agente.addEventListener('click', (e) => {
+			btn_asignar_agente.disabled = true;
+			$.ajax({
+				data: {
+					'foliodocid': documento,
+					'folio': folio,
+					'year': ano,
+					'agenteid': document.querySelector('#selectAgente').value
+				},
+				url: "<?= base_url('/data/update-agente-asignado') ?>",
+				method: "POST",
+				dataType: "json",
+				success: function(response) {
+					const documentos = response.documentos;
+					if (response.status == 1) {
+						//Llena la tabla de documentos
+						btn_asignar_agente.disabled = false;
+						let tabla_documentos = document.querySelectorAll('#table-documentos tr');
+						tabla_documentos.forEach(row => {
+							if (row.id !== '') {
+								row.remove();
+							}
+						});
+						llenarTablaDocumentos(documentos);
+
+						Swal.fire({
+							icon: 'success',
+							text: 'Agente asignado correctamente',
+							confirmButtonColor: '#bf9b55',
+						});
+						$('#asignarAgenteModal').modal('hide');
+					}
+
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					btn_asignar_agente.disabled = false;
+
+				}
+			});
+		});
+
+	}
+
+	//Funcion para borrar un documento, se manda por parametro el folio, año y id del documento
+	function borrarDocumento(folio, ano, foliodocid) {
+		Swal.fire({
+			title: '¿Estas seguro?',
+			text: "¡Esta operacion es irevertible!",
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#bf9b55',
+			confirmButtonText: '¡Si, eliminar!'
+		}).then((result) => {
+			if (result.isConfirmed) {
+				$.ajax({
+					data: {
+						'docid': foliodocid,
+						'folio': folio,
+						'year': ano,
+					},
+					url: "<?= base_url('/data/delete-documento') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						if (response.status == 1) {
+							//Se llena la tabla de documentos
+							const documentos = response.documentos;
+							let tabla_documentos = document.querySelectorAll(
+								'#table-documentos tr');
+							tabla_documentos.forEach(row => {
+								if (row.id !== '') {
+									row.remove();
+								}
+							});
+							llenarTablaDocumentos(documentos);
+							Swal.fire(
+								'Documento eliminado',
+								'El documento se ha eliminado correctamente.',
+								'success'
+							);
+						} else {
+							Swal.fire(
+								'¡Borrar!',
+								'El documento no se elimino.',
+								'error'
+							)
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						console.log(textStatus);
+						Swal.fire(
+							'¡Borrar!',
+							'El documento no se elimino.',
+							'error'
+						)
+					}
+				});
+			}
+		});
+	}
+
+
+	//Funcion para visualizar el documento para una posible edicion, recibe por parametro el id del documento
 	function viewDocumento(foliodocid) {
 		jQuery('.ql-toolbar').remove();
 		$('#documentos_generados_modal').modal('hide');
@@ -1584,196 +2357,236 @@
 		});
 	}
 
+	//Funcion para abrir una ventana para visualizar un folio del mismo denunciante
 	function viewFoliosDenunciantes(folio, year) {
 		window.open(`<?= base_url('/admin/dashboard/ver_folio?folio=') ?>` + folio + '&year=' + year, '_blank');
 	}
 
-	function deletePersonaFisicaById(personafisicaid){
-				const data = {
-					'folio': document.querySelector('#input_folio_atencion').value,
-					'year': document.querySelector('#year_select').value,
-					'personafisica': personafisicaid
-				}
-				$.ajax({
-					data: data,
-					url: "<?= base_url('/data/delete-persona-fisica-by-id') ?>",
-					method: "POST",
-					dataType: "json",
-					success: function(response) {
-						if (response.status == 1) {
-							let tabla_personas = document.querySelectorAll('#table-personas tr');
-							tabla_personas.forEach(row => {
-								if (row.id !== '') {
-									row.remove();
-								}
-							});
-
-							llenarTablaPersonas(response.personas);
-							Swal.fire({
-								icon: 'success',
-								text: 'Persona fisica eliminada correctamente',
-								confirmButtonColor: '#bf9b55',
-							});
-							const imputados = response.imputados;
-							const victimas = response.victimas;
-							const personas = response.personas;
-
-							$('#victima_ofendido').empty();
-							let select_victima_ofendido = document.querySelector("#victima_ofendido")
-							victimas.forEach(victima => {
-								let primer_apellido = victima.PRIMERAPELLIDO ? victima
-									.PRIMERAPELLIDO : '';
-
-								const option = document.createElement('option');
-								option.value = victima.PERSONAFISICAID;
-								option.text = victima.NOMBRE + ' ' + primer_apellido;
-								select_victima_ofendido.add(option, null);
-							});
-							const option_vacio_vd = document.createElement('option');
-							option_vacio_vd.value = '';
-							option_vacio_vd.text = '';
-							option_vacio_vd.disabled = true;
-							option_vacio_vd.selected = true;
-							$('#victima_modal_documento').empty();
-							let select_victima_documento = document.querySelector(
-								"#victima_modal_documento");
-							select_victima_documento.add(option_vacio_vd);
-
-							victimas.forEach(victima => {
-								let primer_apellido = victima.PRIMERAPELLIDO ? victima
-									.PRIMERAPELLIDO : '';
-
-								const option = document.createElement('option');
-								option.value = victima.PERSONAFISICAID;
-								option.text = victima.NOMBRE + ' ' + primer_apellido;
-								select_victima_documento.add(option, null);
-							});
-							const option_vacio_id = document.createElement('option');
-							option_vacio_id.value = '';
-							option_vacio_id.text = '';
-							option_vacio_id.disabled = true;
-							option_vacio_id.selected = true;
-							$('#imputado_modal_documento').empty();
-							let select_imputado_documento = document.querySelector(
-								"#imputado_modal_documento");
-							select_imputado_documento.add(option_vacio_id);
-							imputados.forEach(imputado => {
-								let primer_apellido = imputado.PRIMERAPELLIDO ? imputado
-									.PRIMERAPELLIDO : '';
-
-								const option = document.createElement('option');
-								option.value = imputado.PERSONAFISICAID;
-								option.text = imputado.NOMBRE + ' ' + primer_apellido;
-								select_imputado_documento.add(option, null);
-							});
-							$('#imputado_arbol').empty();
-							let select_imputado_mputado = document.querySelector("#imputado_arbol")
-							imputados.forEach(imputado => {
-								let primer_apellido = imputado.PRIMERAPELLIDO ? imputado
-									.PRIMERAPELLIDO : '';
-
-								const option = document.createElement('option');
-								option.value = imputado.PERSONAFISICAID;
-								option.text = imputado.NOMBRE + ' ' + primer_apellido;
-								select_imputado_mputado.add(option, null);
-
-							});
-							$('#personaFisica1_I').empty();
-							let select_personaFisica1_I = document.querySelector("#personaFisica1_I")
-							const option_vacio = document.createElement('option');
-							option_vacio.value = '';
-							option_vacio.text = '';
-							option_vacio.disabled = true;
-							option_vacio.selected = true;
-							select_personaFisica1_I.add(option_vacio, null);
-							personas.forEach(persona => {
-								let primer_apellido = persona.PRIMERAPELLIDO ? persona
-									.PRIMERAPELLIDO : '';
-
-								const option = document.createElement('option');
-								option.value = persona.PERSONAFISICAID;
-								option.text = persona.NOMBRE + ' ' + primer_apellido;
-								select_personaFisica1_I.add(option, null);
-							});
-							$('#propietario').empty();
-							let select_propietario = document.querySelector("#propietario");
-							const option_vacio_pro = document.createElement('option');
-							option_vacio_pro.value = '';
-							option_vacio_pro.text = '';
-							option_vacio_pro.disabled = true;
-							option_vacio_pro.selected = true;
-							select_propietario.add(option_vacio_pro, null);
-
-							personas.forEach(persona => {
-								let primer_apellido = persona.PRIMERAPELLIDO ? persona
-									.PRIMERAPELLIDO : '';
-
-								const option = document.createElement('option');
-								option.value = persona.PERSONAFISICAID;
-								option.text = persona.NOMBRE + ' '.primer_apellido;
-								select_propietario.add(option, null);
-							});
-
-							$('#propietario_vehiculo').empty();
-							let select_propietario_v = document.querySelector("#propietario_vehiculo");
-							const option_vacio_p = document.createElement('option');
-							option_vacio_p.value = '';
-							option_vacio_p.text = '';
-							option_vacio_p.disabled = true;
-							option_vacio_p.selected = true;
-							select_propietario_v.add(option_vacio_p, null);
-							personas.forEach(persona => {
-								let primer_apellido = persona.PRIMERAPELLIDO ? persona
-									.PRIMERAPELLIDO : '';
-
-								const option = document.createElement('option');
-								option.value = persona.PERSONAFISICAID;
-								option.text = persona.NOMBRE + ' ' + primer_apellido;
-								select_propietario_v.add(option, null);
-							});
-
-							$('#propietario_vehiculo_add').empty();
-							let select_propietario_v_add = document.querySelector("#propietario_vehiculo_add");
-							const option_vacio_p_add = document.createElement('option');
-							option_vacio_p_add.value = '';
-							option_vacio_p_add.text = '';
-							option_vacio_p_add.disabled = true;
-							option_vacio_p_add.selected = true;
-							select_propietario_v_add.add(option_vacio_p_add, null);
-							personas.forEach(persona => {
-								let primer_apellido = persona.PRIMERAPELLIDO ? persona
-									.PRIMERAPELLIDO : '';
-
-								const option = document.createElement('option');
-								option.value = persona.PERSONAFISICAID;
-								option.text = persona.NOMBRE + ' ' + primer_apellido;
-								select_propietario_v_add.add(option, null);
-							});
-							$('#propietario_update').empty();
-							let select_propietario_update = document.querySelector(
-								"#propietario_update");
-							personas.forEach(persona => {
-								let primer_apellido = persona.PRIMERAPELLIDO ? persona
-									.PRIMERAPELLIDO : '';
-
-								const option = document.createElement('option');
-								option.value = persona.PERSONAFISICAID;
-								option.text = persona.NOMBRE + ' ' + primer_apellido;
-								select_propietario_update.add(option, null);
-							});
-						} else {
-							Swal.fire({
-								icon: 'error',
-								text: 'No se eliminó la información de la persona fisica',
-								confirmButtonColor: '#bf9b55',
-							});
+	//Funcion para eliminar una persona fisica del folio, recibe por parametro el id de la persona fisica
+	function deletePersonaFisicaById(personafisicaid) {
+		const data = {
+			'folio': document.querySelector('#input_folio_atencion').value,
+			'year': document.querySelector('#year_select').value,
+			'personafisica': personafisicaid
+		}
+		$.ajax({
+			data: data,
+			url: "<?= base_url('/data/delete-persona-fisica-by-id') ?>",
+			method: "POST",
+			dataType: "json",
+			success: function(response) {
+				if (response.status == 1) {
+					//Llenado de la tabla de personas
+					let tabla_personas = document.querySelectorAll('#table-personas tr');
+					tabla_personas.forEach(row => {
+						if (row.id !== '') {
+							row.remove();
 						}
-					},
-					error: function(jqXHR, textStatus, errorThrown) {
-						console.log(textStatus);
-					}
-				});
+					});
+
+					llenarTablaPersonas(response.personas);
+					Swal.fire({
+						icon: 'success',
+						text: 'Persona fisica eliminada correctamente',
+						confirmButtonColor: '#bf9b55',
+					});
+					const imputados = response.imputados;
+					const victimas = response.victimas;
+					const personas = response.personas;
+
+					//Nuevo llenado de selects donde haya personas fisicas
+					$('#victima_ofendido').empty();
+					let select_victima_ofendido = document.querySelector("#victima_ofendido")
+					victimas.forEach(victima => {
+						let primer_apellido = victima.PRIMERAPELLIDO ? victima
+							.PRIMERAPELLIDO : '';
+
+						const option = document.createElement('option');
+						option.value = victima.PERSONAFISICAID;
+						option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
+						select_victima_ofendido.add(option, null);
+					});
+					const option_vacio_vd = document.createElement('option');
+					option_vacio_vd.value = '';
+					option_vacio_vd.text = '';
+					option_vacio_vd.disabled = true;
+					option_vacio_vd.selected = true;
+					$('#victima_modal_documento').empty();
+					let select_victima_documento = document.querySelector(
+						"#victima_modal_documento");
+					select_victima_documento.add(option_vacio_vd);
+
+					victimas.forEach(victima => {
+						let primer_apellido = victima.PRIMERAPELLIDO ? victima
+							.PRIMERAPELLIDO : '';
+
+						const option = document.createElement('option');
+						option.value = victima.PERSONAFISICAID;
+						option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
+						select_victima_documento.add(option, null);
+					});
+					const option_vacio_id = document.createElement('option');
+					option_vacio_id.value = '';
+					option_vacio_id.text = '';
+					option_vacio_id.disabled = true;
+					option_vacio_id.selected = true;
+					$('#imputado_modal_documento').empty();
+					let select_imputado_documento = document.querySelector(
+						"#imputado_modal_documento");
+					select_imputado_documento.add(option_vacio_id);
+					imputados.forEach(imputado => {
+						let primer_apellido = imputado.PRIMERAPELLIDO ? imputado
+							.PRIMERAPELLIDO : '';
+
+						const option = document.createElement('option');
+						option.value = imputado.PERSONAFISICAID;
+						option.text = imputado.NOMBRE + ' ' + primer_apellido;
+						select_imputado_documento.add(option, null);
+					});
+					$('#imputado_arbol').empty();
+					let select_imputado_mputado = document.querySelector("#imputado_arbol")
+					imputados.forEach(imputado => {
+						let primer_apellido = imputado.PRIMERAPELLIDO ? imputado
+							.PRIMERAPELLIDO : '';
+
+						const option = document.createElement('option');
+						option.value = imputado.PERSONAFISICAID;
+						option.text = imputado.NOMBRE + ' ' + primer_apellido;
+						select_imputado_mputado.add(option, null);
+
+					});
+					$('#personaFisica1_I').empty();
+					let select_personaFisica1_I = document.querySelector("#personaFisica1_I")
+					const option_vacio = document.createElement('option');
+					option_vacio.value = '';
+					option_vacio.text = '';
+					option_vacio.disabled = true;
+					option_vacio.selected = true;
+					select_personaFisica1_I.add(option_vacio, null);
+					personas.forEach(persona => {
+						let primer_apellido = persona.PRIMERAPELLIDO ? persona
+							.PRIMERAPELLIDO : '';
+
+						const option = document.createElement('option');
+						option.value = persona.PERSONAFISICAID;
+						option.text = persona.NOMBRE + ' ' + primer_apellido;
+						select_personaFisica1_I.add(option, null);
+					});
+					$('#personaFisica1').empty();
+					let select_personaFisica1 = document.querySelector("#personaFisica1")
+					const option_vacio_pe = document.createElement('option');
+					option_vacio_pe.value = '';
+					option_vacio_pe.text = 'Selecciona ...';
+					option_vacio_pe.disabled = true;
+					option_vacio_pe.selected = true;
+					select_personaFisica1.add(option_vacio_pe, null);
+					personas.forEach(persona => {
+						let primer_apellido = persona.PRIMERAPELLIDO ? persona
+							.PRIMERAPELLIDO : '';
+
+						const option = document.createElement('option');
+						option.value = persona.PERSONAFISICAID;
+						option.text = persona.NOMBRE + ' ' + primer_apellido;
+						select_personaFisica1.add(option, null);
+					});
+					$('#personaFisica2').empty();
+					let select_personaFisica2 = document.querySelector("#personaFisica2")
+					const option_vacio_pe2 = document.createElement('option');
+					option_vacio_pe2.value = '';
+					option_vacio_pe2.text = 'Selecciona ...';
+					option_vacio_pe2.disabled = true;
+					option_vacio_pe2.selected = true;
+					select_personaFisica2.add(option_vacio_pe2, null);
+					personas.forEach(persona => {
+						let primer_apellido = persona.PRIMERAPELLIDO ? persona
+							.PRIMERAPELLIDO : '';
+
+						const option = document.createElement('option');
+						option.value = persona.PERSONAFISICAID;
+						option.text = persona.NOMBRE + ' ' + primer_apellido;
+						select_personaFisica2.add(option, null);
+					});
+					$('#propietario').empty();
+					let select_propietario = document.querySelector("#propietario");
+					const option_vacio_pro = document.createElement('option');
+					option_vacio_pro.value = '';
+					option_vacio_pro.text = '';
+					option_vacio_pro.disabled = true;
+					option_vacio_pro.selected = true;
+					select_propietario.add(option_vacio_pro, null);
+
+					personas.forEach(persona => {
+						let primer_apellido = persona.PRIMERAPELLIDO ? persona
+							.PRIMERAPELLIDO : '';
+
+						const option = document.createElement('option');
+						option.value = persona.PERSONAFISICAID;
+						option.text = persona.NOMBRE + ' '.primer_apellido;
+						select_propietario.add(option, null);
+					});
+
+					$('#propietario_vehiculo').empty();
+					let select_propietario_v = document.querySelector("#propietario_vehiculo");
+					const option_vacio_p = document.createElement('option');
+					option_vacio_p.value = '';
+					option_vacio_p.text = '';
+					option_vacio_p.disabled = true;
+					option_vacio_p.selected = true;
+					select_propietario_v.add(option_vacio_p, null);
+					personas.forEach(persona => {
+						let primer_apellido = persona.PRIMERAPELLIDO ? persona
+							.PRIMERAPELLIDO : '';
+
+						const option = document.createElement('option');
+						option.value = persona.PERSONAFISICAID;
+						option.text = persona.NOMBRE + ' ' + primer_apellido;
+						select_propietario_v.add(option, null);
+					});
+
+					$('#propietario_vehiculo_add').empty();
+					let select_propietario_v_add = document.querySelector("#propietario_vehiculo_add");
+					const option_vacio_p_add = document.createElement('option');
+					option_vacio_p_add.value = '';
+					option_vacio_p_add.text = '';
+					option_vacio_p_add.disabled = true;
+					option_vacio_p_add.selected = true;
+					select_propietario_v_add.add(option_vacio_p_add, null);
+					personas.forEach(persona => {
+						let primer_apellido = persona.PRIMERAPELLIDO ? persona
+							.PRIMERAPELLIDO : '';
+
+						const option = document.createElement('option');
+						option.value = persona.PERSONAFISICAID;
+						option.text = persona.NOMBRE + ' ' + primer_apellido;
+						select_propietario_v_add.add(option, null);
+					});
+					$('#propietario_update').empty();
+					let select_propietario_update = document.querySelector(
+						"#propietario_update");
+					personas.forEach(persona => {
+						let primer_apellido = persona.PRIMERAPELLIDO ? persona
+							.PRIMERAPELLIDO : '';
+
+						const option = document.createElement('option');
+						option.value = persona.PERSONAFISICAID;
+						option.text = persona.NOMBRE + ' ' + primer_apellido;
+						select_propietario_update.add(option, null);
+					});
+				} else {
+					Swal.fire({
+						icon: 'error',
+						text: 'No se eliminó la información de la persona fisica',
+						confirmButtonColor: '#bf9b55',
+					});
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				console.log(textStatus);
 			}
+		});
+	}
+
+	//Funcion para viualizar la informacion de la persona fisica seleccionada, recibe por parametro el id de la persona fisica
 	function viewPersonaFisica(id) {
 		$.ajax({
 			data: {
@@ -1797,6 +2610,7 @@
 					document.querySelectorAll('#pf_id').forEach(element => {
 						element.value = id;
 					});
+					//LLenado de informacion en los valores
 					if (personaFisica.FOTO) {
 						extension = (((personaFisica.FOTO.split(';'))[0]).split('/'))[1];
 						if (extension == 'pdf' || extension == 'doc') {
@@ -1842,6 +2656,8 @@
 						personaFisica.FECHANACIMIENTO : '';
 					document.querySelector('#edad_pf').value = personaFisica.EDADCANTIDAD ? personaFisica
 						.EDADCANTIDAD : '';
+					document.querySelector('#fotografia_actual_pf').value = personaFisica.FOTOGRAFIA_ACTUAL ? personaFisica
+						.FOTOGRAFIA_ACTUAL : '';
 					document.querySelector('#numero_identidad_pf').value = personaFisica.NUMEROIDENTIFICACION ?
 						personaFisica.NUMEROIDENTIFICACION : '';
 					document.querySelector('#codigo_pais_pf').value = personaFisica.CODIGOPAISTEL ?
@@ -2045,9 +2861,6 @@
 
 						document.querySelector('#lugarDesaparicion').value = mediaFiliacion.LUGARDESAPARICION;
 						document.querySelector('#vestimenta_mf').value = mediaFiliacion.VESTIMENTADESCR;
-
-						document.querySelector('#autorizaFoto').value = folio.LOCALIZACIONPERSONAMEDIOS == 'S' ?
-							'S' : 'N';
 						document.querySelector('#escolaridad_mf').value = mediaFiliacion.ESCOLARIDADID ?
 							mediaFiliacion.ESCOLARIDADID : '';
 						document.querySelector('#ocupacion_mf').value = mediaFiliacion.OCUPACIONID ?
@@ -2223,6 +3036,7 @@
 						.REFERENCIA : '';
 
 					// document.querySelector('#zona_pfd').value = domicilio.ZONA ? domicilio.ZONA : '';
+					$('#ocupacion_pf').trigger('change');
 
 					$('#folio_persona_fisica_modal').modal('show');
 
@@ -2236,6 +3050,7 @@
 			}
 		});
 	}
+	//Funcion para viualizar la informacion del vehiculo  seleccionada, recibe por parametro el id del vehiculo
 
 	function viewVehiculo(id) {
 		$.ajax({
@@ -2249,6 +3064,7 @@
 			dataType: "json",
 			success: function(response) {
 				if (response.status == 1) {
+					//Respuestas
 					const vehiculo = response.vehiculo;
 					const distribuidorVehiculo = response.distribuidorVehiculo;
 					const marcaVehiculo = response.marcaVehiculo;
@@ -2256,6 +3072,8 @@
 					const versionVehiculo = response.versionVehiculo;
 					const color = response.color;
 					const tipov = response.tipov;
+
+					//Llenado de informacion en los valores
 					document.querySelector('#vehiculoid').value = id;
 					document.querySelector('#situacion_vehiculo').value = vehiculo.SITUACION ?
 						vehiculo.SITUACION : '';
@@ -2286,13 +3104,7 @@
 
 					document.querySelector('#distribuidor_vehiculo_ad').value = vehiculo
 						.VEHICULODISTRIBUIDORID ? vehiculo.VEHICULODISTRIBUIDORID : '';
-					document.querySelector('#marca_ad').value = vehiculo.MARCAID ? vehiculo
-						.VEHICULODISTRIBUIDORID + ' ' + vehiculo.MARCAID : '';
-					document.querySelector('#linea_vehiculo_ad').value = vehiculo.MODELOID ? vehiculo
-						.VEHICULODISTRIBUIDORID + ' ' + vehiculo.MARCAID + ' ' + vehiculo.MODELOID : '';
-					document.querySelector('#version_vehiculo_ad').value = vehiculo.VEHICULOVERSIONID ? vehiculo
-						.VEHICULODISTRIBUIDORID + ' ' + vehiculo.MARCAID + ' ' + vehiculo.MODELOID + ' ' +
-						vehiculo.VEHICULOVERSIONID : '';
+
 					document.querySelector('#transmision_vehiculo').value = vehiculo.TRANSMISION ? vehiculo
 						.TRANSMISION : '';
 					document.querySelector('#traccion_vehiculo').value = vehiculo.TRACCION ? vehiculo.TRACCION :
@@ -2347,6 +3159,7 @@
 
 					if (marcaVehiculo) {
 						let select_marca = document.querySelector('#marca_ad');
+						clearSelect(select_marca);
 						const option_marca = document.createElement('option');
 						option_marca.value = marcaVehiculo.VEHICULOMARCAID;
 						option_marca.text = marcaVehiculo.VEHICULOMARCADESCR;
@@ -2354,6 +3167,8 @@
 					}
 					if (lineaVehiculo) {
 						let select_linea = document.querySelector('#linea_vehiculo_ad');
+						clearSelect(select_linea);
+
 						const option_modelo = document.createElement('option');
 						option_modelo.value = lineaVehiculo.VEHICULOMODELOID;
 						option_modelo.text = lineaVehiculo.VEHICULOMODELODESCR;
@@ -2361,11 +3176,16 @@
 					}
 					if (versionVehiculo) {
 						let select_version = document.querySelector('#version_vehiculo_ad');
+						clearSelect(select_version);
 						const option_version = document.createElement('option');
 						option_version.value = versionVehiculo.VEHICULOVERSIONID;
 						option_version.text = versionVehiculo.VEHICULOVERSIONDESCR;
 						select_version.add(option_version, null);
 					}
+					document.querySelector('#marca_ad').value = vehiculo.MARCAID ? vehiculo.MARCAID : '';
+					document.querySelector('#linea_vehiculo_ad').value = vehiculo.MODELOID ? vehiculo.MODELOID : '';
+					document.querySelector('#version_vehiculo_ad').value = vehiculo.VEHICULOVERSIONID ?
+						vehiculo.VEHICULOVERSIONID : '';
 					$('#folio_vehiculo_modal').modal('show');
 				} else {
 					Swal.fire({
@@ -2378,42 +3198,135 @@
 		});
 	}
 
+	//Funcion para eliminar un archivo externo, recibe por parametro el id del archivo
+	function deleteArchivo(archivoid) {
+		$.ajax({
+			data: {
+				'archivoid': archivoid,
+				'folio': inputFolio.value,
+				'year': year_select.value,
+			},
+			url: "<?= base_url('/data/delete-archivo-by-id') ?>",
+			method: "POST",
+			dataType: "json",
+			beforeSend: function() {
+				document.getElementById('deleteArchivobtn').disabled = true;
+
+			},
+			success: function(response) {
+				if (response.status == 1) {
+					const archivos = response.archivos.archivosexternos;
+					//llena la tabla de archivos externos
+					Swal.fire({
+						icon: 'success',
+						text: 'Archivo eliminado correctamente',
+						confirmButtonColor: '#bf9b55',
+					});
+					let tabla_archivos = document.querySelectorAll(
+						'#table-archivos tr');
+					tabla_archivos.forEach(row => {
+						if (row.id !== '') {
+							row.remove();
+						}
+					});
+					llenarTablaArchivosExternos(archivos);
+					document.getElementById('deleteArchivobtn').disabled = false;
+
+				} else {
+					document.getElementById('deleteArchivobtn').disabled = false;
+
+				}
+			}
+		});
+
+	}
+
+	//Funcion para eliminar un vehiculo, recibe por parametro el id del vehiculo
+	function deleteVehiculo(vehiculoid) {
+		$.ajax({
+			data: {
+				'vehiculoid': vehiculoid,
+				'folio': inputFolio.value,
+				'year': year_select.value,
+			},
+			url: "<?= base_url('/data/delete-vehiculo-by-id') ?>",
+			method: "POST",
+			dataType: "json",
+			success: function(response) {
+				if (response.status == 1) {
+					const vehiculos = response.vehiculos;
+
+					//Llenado de la tabla de vehiculos
+					Swal.fire({
+						icon: 'success',
+						text: 'Vehículo eliminado correctamente',
+						confirmButtonColor: '#bf9b55',
+					});
+					let tabla_vehiculo = document.querySelectorAll('#table-vehiculos tr');
+					tabla_vehiculo.forEach(row => {
+						if (row.id !== '') {
+							row.remove();
+						}
+					});
+					llenarTablaVehiculos(vehiculos);
+				}
+			}
+		});
+	}
+	// Cuando se oculta el modal con el ID 'info_folio_modal'
 	$(document).on('hidden.bs.modal', '#info_folio_modal', function() {
 		let tabs = document.querySelectorAll('#info_tabs .nav-link');
 		let contents = document.querySelectorAll('#info_content .tab-pane');
+		// Remueve la clase 'active' de todas las pestañas
 		tabs.forEach(element => {
 			element.classList.remove('active');
 		});
+		// Remueve las clases 'show' y 'active' de todos los contenidos
 		contents.forEach(element => {
 			element.classList.remove('show');
 			element.classList.remove('active');
 		});
+		// Agrega la clase 'active' a la primera pestaña y agrega las clases 'show' y 'active' al primer contenido
+
 		tabs[0].classList.add('active');
 		contents[0].classList.add('show');
 		contents[0].classList.add('active');
 	})
+	// Cuando se oculta el modal con el ID 'persona fisica'
 
 	$(document).on('hidden.bs.modal', '#folio_persona_fisica_modal', function() {
 		let tabs = document.querySelectorAll('#persona_tabs .nav-item');
 		let contents = document.querySelectorAll('#persona_content .tab-pane');
+		// Remueve la clase 'active' de todas las pestañas
+
 		tabs.forEach(element => {
 			element.classList.remove('active');
 		});
+		// Remueve las clases 'show' y 'active' de todos los contenidos
+
 		contents.forEach(element => {
 			element.classList.remove('show');
 			element.classList.remove('active');
 		});
+		// Agrega la clase 'active' a la primera pestaña y agrega las clases 'show' y 'active' al primer contenido
+
 		tabs[0].classList.add('active');
 		contents[0].classList.add('show');
 		contents[0].classList.add('active');
 	})
 
+	//Limpia las opciones del select para que quede vacio
 	function clearSelect(select_element) {
 		for (let i = select_element.options.length; i >= 1; i--) {
 			select_element.remove(i);
 		}
 	}
 
+	//Elimina todos los guiones del elemento
+	function clearGuion(e) {
+		e.target.value = e.target.value.replace(/-/g, "");
+	}
+	//Elimina todos los caracteres especiales del texto
 	function clearText(text) {
 		return text
 			.normalize('NFD')
@@ -2422,7 +3335,7 @@
 			.replaceAll('´', '');
 	}
 
-
+	// Funcion para eliminar los guiones del valor del campo y limita la longitud del valor al maxLength especificado.
 	function clearInputPhone(e) {
 		e.target.value = e.target.value.replace(/-/g, "");
 		if (e.target.value.length > e.target.maxLength) {
@@ -2430,6 +3343,7 @@
 		};
 	}
 
+	//Convierte todo el elemento a mayusculas
 	function mayuscTextarea(e) {
 		e.value = e.value.toUpperCase();
 	}
@@ -2439,9 +3353,9 @@
 	var iti
 	var iti2
 
+	//Carga todos los formularios y elementos para llenar la denuncia, asi como las acciones submit de los formularios
 	window.onload = function() {
 		startTime();
-
 		(function() {
 			'use strict'
 			var form_delito = document.querySelector('#denuncia_form');
@@ -2467,6 +3381,9 @@
 
 			var btn_insertar_parentesco = document.querySelector('#insertParentescoModal');
 			var btnRefrescarArchivos = document.querySelector('#refrescarArchivos');
+			var btnAgregarArchivos = document.querySelector('#agregarArchivosAdmin');
+			var btnSubirArchivos = document.querySelector('#btnSubirArchivos');
+
 
 			var btn_insertar_persona_fisica = document.querySelector('#insertPersonaFisicaModal');
 			var btn_asignar_delitos = document.querySelector('#insertArbolDelictual');
@@ -2480,6 +3397,7 @@
 			var btn_proteccionA = document.querySelector('#proteccionA');
 			var btn_proteccionPer = document.querySelector('#proteccionPer');
 			var btn_proteccionRon = document.querySelector('#proteccionRon');
+			var btn_enviar_alertas = document.querySelector('#enviar_alertas');
 
 			var btn_guardarFolioDoc = document.querySelector('#guardarFolioDoc');
 			var btn_actualizarFolioDoc = document.querySelector('#actualizarFolioDoc');
@@ -2499,23 +3417,22 @@
 
 			var expediente_modal_correo = document.querySelector('#expediente_modal_correo');
 			var year_modal_correo = document.querySelector('#year_modal_correo');
-
 			var tiny = tinymce.init({
 				selector: '#documento',
 				width: 792,
 				height: 800,
-				font_size_formats: '11pt',
+				// font_size_formats: '11pt',
 				plugins: 'quickbars table image link lists advlist media autoresize code',
-				toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright alignjustify | indent outdent | bullist numlist | code',
+				toolbar: 'undo redo | blocks  fontsize | bold italic | alignleft aligncenter alignright alignjustify | indent outdent | bullist numlist | code',
 			});
 
 			var tiny2 = tinymce.init({
 				selector: '#documento_editar',
 				width: 792,
 				height: 800,
-				font_size_formats: '11pt',
+				// font_size_formats: '11pt',
 				plugins: 'quickbars table image link lists advlist media autoresize code',
-				toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright alignjustify | indent outdent | bullist numlist | code',
+				toolbar: 'undo redo | blocks  fontsize | bold italic | alignleft aligncenter alignright alignjustify | indent outdent | bullist numlist | code',
 			});
 
 			inputsText.forEach((input) => {
@@ -2694,6 +3611,17 @@
 
 				$('#relacion_parentesco_modal_insert').modal('show');
 			}, false);
+			btnAgregarArchivos.addEventListener('click', (e) => {
+				$('#agregar_archivos_modal').modal('show');
+
+			});
+			btnSubirArchivos.addEventListener('click', (e) => {
+				e.preventDefault();
+				crearArchivos();
+
+			});
+
+			//Evento para refrescar la tabla de archivos y visualizar si el denunciante subio archivos
 			btnRefrescarArchivos.addEventListener('click', (e) => {
 				$.ajax({
 					data: {
@@ -2807,6 +3735,8 @@
 
 				}
 			});
+
+			//Evento para enviar por correo los documentos de forma general
 			btn_enviarcorreoDoc.addEventListener('click', (event) => {
 				$.ajax({
 					data: {
@@ -2843,8 +3773,7 @@
 								'd-none');
 							btn_enviarcorreoDoc.disabled = false;
 
-						}
-						if (response.status == 3) {
+						} else if (response.status == 2) {
 							Swal.fire({
 								icon: 'error',
 								text: 'No hay documentos a enviar',
@@ -2858,12 +3787,56 @@
 							document.querySelector('#password_verifying_mail').classList.add(
 								'd-none');
 							btn_enviarcorreoDoc.disabled = false;
+						} else if (response.status == 3) {
+							Swal.fire({
+								icon: 'error',
+								text: 'Debes seleccionar un correo para enviar.',
+								confirmButtonColor: '#bf9b55',
+							});
+							$('#sendEmailDocModal').modal('hide');
+							document.querySelector('#load_mail').classList.remove('d-none');
+							document.querySelector('#enviar_modalLabel').classList.remove(
+								'd-none');
+							document.querySelector('#loading_mail').classList.add('d-none');
+							document.querySelector('#password_verifying_mail').classList.add(
+								'd-none');
+							btn_enviarcorreoDoc.disabled = false;
 
+						} else {
+							Swal.fire({
+								icon: 'error',
+								text: 'No fue posible enviar el documento',
+								confirmButtonColor: '#bf9b55',
+							});
+							$('#sendEmailDocModal').modal('hide');
+							document.querySelector('#load_mail').classList.remove('d-none');
+							document.querySelector('#enviar_modalLabel').classList.remove(
+								'd-none');
+							document.querySelector('#loading_mail').classList.add('d-none');
+							document.querySelector('#password_verifying_mail').classList.add(
+								'd-none');
+							btn_enviarcorreoDoc.disabled = false;
 						}
 					},
-					error: function(jqXHR, textStatus, errorThrown) {}
+					error: function(jqXHR, textStatus, errorThrown) {
+						Swal.fire({
+							icon: 'error',
+							text: 'No fue posible enviar el documento',
+							confirmButtonColor: '#bf9b55',
+						});
+						$('#sendEmailDocModal').modal('hide');
+						document.querySelector('#load_mail').classList.remove('d-none');
+						document.querySelector('#enviar_modalLabel').classList.remove(
+							'd-none');
+						document.querySelector('#loading_mail').classList.add('d-none');
+						document.querySelector('#password_verifying_mail').classList.add(
+							'd-none');
+						btn_enviarcorreoDoc.disabled = false;
+					}
 				});
 			}, false);
+
+			//Evento para firmar los documentos de manera general
 			btn_firmar_doc.addEventListener('click', (event) => {
 				$.ajax({
 					data: {
@@ -2927,6 +3900,7 @@
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
 			}, false);
+			//Evento para firmar un documento por id
 			btn_firmar_doc_id.addEventListener('click', (event) => {
 				$.ajax({
 					data: {
@@ -2963,7 +3937,12 @@
 								}
 							});
 							llenarTablaDocumentos(documentos);
-
+							document.querySelector('#load_doc').classList.remove('d-none');
+							document.querySelector('#password_modalLabel_doc_id').classList.remove(
+								'd-none');
+							document.querySelector('#loading_doc_id').classList.add('d-none');
+							document.querySelector('#password_verifying_doc_id').classList.add('d-none');
+							btn_firmar_doc_id.disabled = false;
 						} else if (response.status == 0) {
 
 							Swal.fire({
@@ -2984,6 +3963,8 @@
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
 			}, false);
+
+			//Evento para subir los archivos externos a Justicia
 			btn_archivos_externos.addEventListener('click', (event) => {
 				$('#subirDocumentosModal').modal('show');
 				$('#subirDocumentosModal').show();
@@ -3096,6 +4077,7 @@
 			// 	obtenerPlantillas(tipoPlantilla);
 			// }, false);
 
+			//Rellena los select del modelo del vehiculo desde el año 1800 hasta el actual
 			let startYear = 1800;
 			let endYear = new Date().getFullYear();
 			for (let i = endYear; i > startYear; i--) {
@@ -3105,6 +4087,7 @@
 			}
 
 
+			//Evento change para filtrar las personas que no se hayan seleccionado
 			selectPersonaFisica1.addEventListener("change", function() {
 				let personaFisica2_I = document.querySelector("#personaFisica2_I")
 
@@ -3138,6 +4121,8 @@
 					},
 				});
 			});
+
+			//Evento change de estados para mostrar estado extranjero
 			document.querySelector('#estado_vehiculo_ad').addEventListener('change', (e) => {
 				let select_estado = document.querySelector('#estado_vehiculo_ad');
 				let select_estado_extr = document.querySelector('#estado_extranjero_vehiculo_ad');
@@ -3159,6 +4144,7 @@
 			let select_estado_extr = document.querySelector('#estado_extranjero_vehiculo_ad');
 			let select_estado_extr_add = document.querySelector('#estado_extranjero_vehiculo_add_ad');
 
+			//Evento change para devolver a estado normal en vehiculos
 			document.querySelector('#estado_extranjero_vehiculo_ad').addEventListener('change', (e) => {
 				if (select_estado_extr.value == 0) {
 					let select_estado = document.querySelector('#estado_vehiculo_ad');
@@ -3177,6 +4163,7 @@
 			});
 
 
+			//Evento change para obtener las marcas de acuerdo al distribuidor. Limpia los select para que no se acumulen
 			document.querySelector('#distribuidor_vehiculo_ad').addEventListener('change', (e) => {
 
 				let select_marca = document.querySelector('#marca_ad');
@@ -3187,6 +4174,10 @@
 				clearSelect(select_linea);
 				clearSelect(select_version);
 
+				select_marca.disabled = true;
+				select_linea.disabled = true;
+				select_version.disabled = true;
+
 
 				let data = {
 					'distribuidor_vehiculo': e.target.value,
@@ -3199,6 +4190,7 @@
 					dataType: "json",
 					success: function(response) {
 						let marcaVehiculo = response.data;
+						//Itera el select de marcas
 						marcaVehiculo.forEach(marca_vehiculo => {
 							let option = document.createElement("option");
 							option.text = marca_vehiculo.VEHICULOMARCADESCR;
@@ -3206,12 +4198,17 @@
 							select_marca.add(option);
 						});
 						select_marca.value = '1';
-
+						select_marca.disabled = false;
 					},
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
 
 			});
+
+			document.querySelector('#marca_add_ad').disabled = true;
+			document.querySelector('#linea_vehiculo_add_ad').disabled = true;
+			document.querySelector('#version_vehiculo_add_ad').disabled = true;
+
 			document.querySelector('#distribuidor_vehiculo_add_ad').addEventListener('change', (e) => {
 
 				let select_marca_add = document.querySelector('#marca_add_ad');
@@ -3222,6 +4219,10 @@
 				clearSelect(select_linea_add);
 				clearSelect(select_version_add);
 
+				select_marca_add.disabled = true;
+				select_linea_add.disabled = true;
+				select_version_add.disabled = true;
+
 
 				let data = {
 					'distribuidor_vehiculo': e.target.value,
@@ -3234,6 +4235,8 @@
 					dataType: "json",
 					success: function(response) {
 						let marcaVehiculo = response.data;
+						//Itera el select de marcas
+
 						marcaVehiculo.forEach(marca_vehiculo => {
 							let option = document.createElement("option");
 							option.text = marca_vehiculo.VEHICULOMARCADESCR;
@@ -3241,12 +4244,14 @@
 							select_marca_add.add(option);
 						});
 						select_marca_add.value = '1';
-
+						select_marca_add.disabled = false;
 					},
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
 
 			});
+			//Evento change para obtener el modelo de acuerdo a la marca. Limpia los select para que no se acumulen
+
 			document.querySelector('#marca_ad').addEventListener('change', (e) => {
 				let select_linea = document.querySelector('#linea_vehiculo_ad');
 				let select_version = document.querySelector('#version_vehiculo_ad');
@@ -3254,6 +4259,9 @@
 
 				clearSelect(select_linea);
 				clearSelect(select_version);
+
+				select_linea.disabled = true;
+				select_version.disabled = true;
 
 				// select_linea.value = '';
 				// select_version.value = '';
@@ -3272,6 +4280,7 @@
 					dataType: "json",
 					success: function(response) {
 						let lineaVehiculo = response.data;
+						//Itera el select de lineas
 
 						lineaVehiculo.forEach(linea_vehiculo => {
 							var option = document.createElement("option");
@@ -3279,7 +4288,7 @@
 							option.value = linea_vehiculo.VEHICULOMODELOID;
 							select_linea.add(option);
 						});
-
+						select_linea.disabled = false;
 					},
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
@@ -3291,6 +4300,9 @@
 
 				clearSelect(select_linea_add);
 				clearSelect(select_version_add);
+
+				select_linea_add.disabled = true;
+				select_version_add.disabled = true;
 
 				// select_linea.value = '';
 				// select_version.value = '';
@@ -3309,6 +4321,7 @@
 					dataType: "json",
 					success: function(response) {
 						let lineaVehiculo = response.data;
+						//Itera el select de mdoelo
 
 						lineaVehiculo.forEach(linea_vehiculo => {
 							var option = document.createElement("option");
@@ -3316,11 +4329,14 @@
 							option.value = linea_vehiculo.VEHICULOMODELOID;
 							select_linea_add.add(option);
 						});
+						select_linea_add.disabled = false;
 
 					},
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
 			});
+
+			//Evento change para obtener la version de acuerdo al modelo. Limpia los select para que no se acumulen
 
 			document.querySelector('#linea_vehiculo_ad').addEventListener('change', (e) => {
 				let select_version = document.querySelector('#version_vehiculo_ad');
@@ -3328,6 +4344,8 @@
 				let select_marca = document.querySelector('#marca_ad');
 
 				clearSelect(select_version);
+
+				select_version.disabled = true;
 
 				let data = {
 					'linea_vehiculo': e.target.value,
@@ -3342,6 +4360,7 @@
 					dataType: "json",
 					success: function(response) {
 						let versionVehiculo = response.data;
+						//Itera el select de modelo
 
 						versionVehiculo.forEach(version_vehiculo => {
 							var option = document.createElement("option");
@@ -3349,6 +4368,8 @@
 							option.value = version_vehiculo.VEHICULOVERSIONID;
 							select_version.add(option);
 						});
+						select_version.disabled = false;
+
 
 					},
 					error: function(jqXHR, textStatus, errorThrown) {}
@@ -3361,6 +4382,8 @@
 				let select_marca_add = document.querySelector('#marca_add_ad');
 
 				clearSelect(select_version_add);
+
+				select_version_add.disabled = true;
 
 				let data = {
 					'linea_vehiculo': e.target.value,
@@ -3375,6 +4398,7 @@
 					dataType: "json",
 					success: function(response) {
 						let versionVehiculo = response.data;
+						//Itera el select de version
 
 						versionVehiculo.forEach(version_vehiculo => {
 							var option = document.createElement("option");
@@ -3382,6 +4406,8 @@
 							option.value = version_vehiculo.VEHICULOVERSIONID;
 							select_version_add.add(option);
 						});
+
+						select_version_add.disabled = false;
 
 					},
 					error: function(jqXHR, textStatus, errorThrown) {}
@@ -3391,10 +4417,15 @@
 			let select_victima_documento = document.querySelector("#victima_modal_documento");
 			let select_imputado_documento = document.querySelector("#imputado_modal_documento");
 			let select_uma = document.querySelector("#uma_select");
+			let select_proceso = document.querySelector("#tipoproceso_select");
+			let select_notificacion = document.querySelector("#tiponotificacion_select");
+			var options = select_uma.options;
+
 
 
 			$('#documentos_modal_wyswyg').on('show.bs.modal', function(event) {
-				<?php if (session('ROLID') == 4) { ?>
+				//Control para asignar documentos a un mp
+				<?php if (session('ROLID') == 4 || session('ROLID') == 8 || session('ROLID') == 10) { ?>
 					const data = {
 						'folio': document.querySelector('#input_folio_atencion').value,
 						'year': document.querySelector('#year_select').value,
@@ -3414,27 +4445,45 @@
 									text: 'Este folio, ya tiene agente asignado para firmar. Se autoasignará al mismo agente.',
 									confirmButtonColor: '#bf9b55',
 								});
+								document.querySelector('#empleado_asignado').setAttribute('required', false);
 
 							} else {
 								const div_usuarios = document.querySelector('#usuarios');
 								div_usuarios.classList.remove('d-none');
+								document.querySelector('#empleado_asignado').setAttribute('required', true);
+
 							}
 
 						}
 					});
+				<?php } else { ?>
+					document.querySelector('#empleado_asignado').setAttribute('required', false);
 				<?php } ?>
 				$("#documentos_modal_wyswyg select").val("");
 				document.getElementById("involucrados").style.display = "none";
 				// quill.root.innerHTML = '';
 			});
+
+			//Evento change de tipo de plantilla, modifica los estilos de acuerdo al tipo
 			selectPlantilla.addEventListener("change", function() {
 				if (plantilla.value == "CITATORIO") {
 					document.getElementById("div_uma").style.display = "block";
+					document.getElementById("div_noti").style.display = "block";
+					document.getElementById("div_proceso").style.display = "block";
+
 					document.querySelector('#uma_select').setAttribute('required', true);
+					document.querySelector('#tiponotificacion_select').setAttribute('required', true);
+					document.querySelector('#tipoproceso_select').setAttribute('required', true);
+
 
 				} else {
 					document.getElementById("div_uma").style.display = "none";
+					document.getElementById("div_noti").style.display = "none";
+					document.getElementById("div_proceso").style.display = "none";
+
 					document.querySelector('#uma_select').setAttribute('required', false);
+					document.querySelector('#tiponotificacion_select').setAttribute('required', false);
+					document.querySelector('#tipoproceso_select').setAttribute('required', false);
 
 				}
 
@@ -3455,6 +4504,9 @@
 				} else {
 					document.getElementById("involucrados").style.display = "none";
 					document.getElementById("div_uma").style.display = "none";
+					document.getElementById("div_noti").style.display = "none";
+					document.getElementById("div_proceso").style.display = "none";
+
 
 				}
 
@@ -3465,11 +4517,50 @@
 				insertarDocumento(contenidoModificado, plantilla.value);
 			}, false);
 
+			//Evento para enviar alertas cuando el folio es un caso especial
+			btn_enviar_alertas.addEventListener('click', (event) => {
+				const data = {
+					'folio': document.querySelector('#input_folio_atencion').value,
+					'year': document.querySelector('#year_select').value
+				};
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/email-alerts') ?>",
+					method: "POST",
+					dataType: "json",
+					beforeSend: function() {
+						document.querySelector('#enviar_alertas').disabled = true;;
+
+					},
+					success: function(response) {
+						document.querySelector('#enviar_alertas').disabled = false;;
+
+						if (response.status == 1) {
+							Swal.fire({
+								icon: 'success',
+								text: 'Se ha enviado la alerta correctamente',
+								timer: 3000,
+							});
+						} else {
+							Swal.fire({
+								icon: 'error',
+								text: 'No se enviaron las alertas',
+								timer: 3000,
+							});
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						document.querySelector('#enviar_alertas').disabled = false;;
+						console.log(textStatus);
+					}
+				});
+			}, false);
 			btn_actualizarFolioDoc.addEventListener('click', (event) => {
 				let contenidoModificado = tinymce.get("documento_editar").getContent();
 				actualizarDocumento(contenidoModificado);
 			}, false);
 
+			//Evento change de clasificacion de objetos para obtener la subclasificacion, se limpia el select de subclasificacion para no acumular
 			selectObjetoClasificacion.addEventListener("change", function() {
 				let objetoSubclasificacion = document.querySelector("#objeto_subclasificacion")
 
@@ -3558,13 +4649,26 @@
 			//DENUNCIA
 
 			document.querySelector('#narracion_delito').addEventListener('input', (event) => {
-				event.target.value = clearText(event.target.value).toUpperCase();
+				event.target.value = clearText(event.target.value).toUpperCase(); //Convierte a mayusculas
 			}, false)
 
+			//Se modifica el select para tener un filtro de busqueda
+			$('#lugar_delito').select2({
+				theme: "bootstrap"
+			});
+
+			//Evento change para obtener la localidad de acuerdo al municipio. Limpia los select para que no se acumulen
+
 			document.querySelector('#municipio_delito').addEventListener('change', (e) => {
+				//municipio del hecho mp
 				let select_localidad = document.querySelector('#localidad_delito');
 				let select_colonia = document.querySelector('#colonia_delito_select');
-				let input_colonia = document.querySelector('#colonia_delito');
+				let input_colonia = document.querySelector('#colonia_delito')
+
+				//deshabilita los select de localidad y colonia en caso de que cambien de municipio
+
+				select_localidad.disabled = true;
+				select_colonia.disabled = true;
 
 				let estado = 2;
 				let municipio = e.target.value;
@@ -3599,14 +4703,18 @@
 							option.value = localidad.LOCALIDADID;
 							select_localidad.add(option);
 						});
+						select_localidad.disabled = false;
 					},
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
 			});
+			//Evento change para obtener la colonia de acuerdo al municipio, localidad y estado. Limpia los select para que no se acumulen
 
 			document.querySelector('#localidad_delito').addEventListener('change', (e) => {
 				let select_colonia = document.querySelector('#colonia_delito_select');
 				let input_colonia = document.querySelector('#colonia_delito');
+
+				select_colonia.disabled = true;
 
 				let estado = 2;
 				let municipio = document.querySelector('#municipio_delito').value;
@@ -3645,6 +4753,7 @@
 						option.text = 'OTRO';
 						option.value = '0';
 						select_colonia.add(option);
+						select_colonia.disabled = false;
 					},
 					error: function(jqXHR, textStatus, errorThrown) {
 
@@ -3652,6 +4761,7 @@
 				});
 			});
 
+			//Evento change de colonias para modifica estilos 
 			document.querySelector('#colonia_delito_select').addEventListener('change', (e) => {
 				let select_colonia = document.querySelector('#colonia_delito_select');
 				let input_colonia = document.querySelector('#colonia_delito');
@@ -3665,6 +4775,7 @@
 				}
 			});
 
+			//Funcion  para actualizar los hechos de la denuncia
 			function actualizarDenuncia() {
 				const data = {
 					'folio': document.querySelector('#input_folio_atencion').value,
@@ -3682,7 +4793,9 @@
 					'hora_delito': document.querySelector('#hora_delito').value,
 					'narracion_delito': document.querySelector('#narracion_delito').value,
 					'latitud': document.querySelector('#latitud_denuncia').value,
-					'longitud': document.querySelector('#longitud_denuncia').value
+					'longitud': document.querySelector('#longitud_denuncia').value,
+					'autoriza_foto': document.querySelector('#autorizaFoto').value
+
 
 				};
 				$.ajax({
@@ -3715,6 +4828,7 @@
 				});
 			}
 			//DENUNCIA END
+			//Funcion  para actualizar las preguntas de la denuncia
 
 			//PREGUNTAS
 			function actualizarPreguntas() {
@@ -3763,9 +4877,11 @@
 			}
 
 			//PERSONA FISICA
+			//Evento change para obtener los municipios de acuerdo al estado. Limpia los select para que no se acumulen
 
 			document.querySelector('#edoorigen_pf').addEventListener('change', (e) => {
 				let select_municipio = document.querySelector('#munorigen_pf');
+				select_municipio.disabled = true;
 				clearSelect(select_municipio);
 				select_municipio.value = '';
 				let data = {
@@ -3786,6 +4902,7 @@
 							option.value = municipio.MUNICIPIOID;
 							select_municipio.add(option);
 						});
+						select_municipio.disabled = false;
 					},
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
@@ -3849,6 +4966,14 @@
 			//INTL TEL INPUT END
 
 			//CREAR PERSONA FISICA
+			$('#ocupacion_new').select2({
+				theme: "bootstrap"
+			});
+			$('#ocupacion_pf').select2({
+				theme: "bootstrap"
+			});
+
+			//Obtiene la edad de acuerdo a la fecha de nacimiento
 			document.querySelector('#fecha_nacimiento_new').addEventListener('change', (e) => {
 				let fecha = e.target.value;
 				let hoy = new Date();
@@ -3861,10 +4986,16 @@
 				}
 				document.querySelector('#edad_new').value = edad;
 			})
+			document.querySelector('#municipio_select_origen_new').disabled = true;
+
+
+			//Evento change para obtener los municipios de acuerdo al estado. Limpia los select para que no se acumulen
 
 			document.querySelector('#nacionalidad_new').addEventListener('change', (e) => {
 				let select_estado = document.querySelector('#estado_select_origen_new');
 				let select_municipio = document.querySelector('#municipio_select_origen_new');
+
+				//select_municipio.disabled = true;
 
 				clearSelect(select_municipio);
 
@@ -3888,6 +5019,7 @@
 								select_municipio.add(option);
 							});
 							select_municipio.value = '1';
+							//select_municipio.disabled = false;
 						},
 						error: function(jqXHR, textStatus, errorThrown) {}
 					});
@@ -3898,9 +5030,11 @@
 					select_municipio.value = '';
 				}
 			});
+			//Evento change para obtener los municipios de acuerdo al estado. Limpia los select para que no se acumulen
 
 			document.querySelector('#estado_select_origen_new').addEventListener('change', (e) => {
 				let select_municipio = document.querySelector('#municipio_select_origen_new');
+				select_municipio.disabled = true;
 
 				clearSelect(select_municipio);
 
@@ -3924,11 +5058,17 @@
 							option.value = municipio.MUNICIPIOID;
 							select_municipio.add(option);
 						});
+						select_municipio.disabled = false;
 					},
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
 			});
 
+			document.querySelector('#municipio_select_new').disabled = true;
+			document.querySelector('#localidad_select_new').disabled = true;
+			document.querySelector('#colonia_select_new').disabled = true;
+
+			//Evento change para obtener los municipios de acuerdo al estado. Limpia los select para que no se acumulen
 			document.querySelector('#pais_select_new').addEventListener('change', (e) => {
 
 				let select_estado = document.querySelector('#estado_select_new');
@@ -3967,6 +5107,7 @@
 						},
 						error: function(jqXHR, textStatus, errorThrown) {}
 					});
+		//Evento change para obtener las localidades de acuerdo al municipio. Limpia los select para que no se acumulen
 
 					$.ajax({
 						data: data,
@@ -4024,12 +5165,17 @@
 					input_colonia.classList.add('d-none');
 				}
 			});
+		//Evento change para obtener los municipios de acuerdo al estado. Limpia los select para que no se acumulen
 
 			document.querySelector('#estado_select_new').addEventListener('change', (e) => {
 				let select_municipio = document.querySelector('#municipio_select_new');
 				let select_localidad = document.querySelector('#localidad_select_new');
 				let select_colonia = document.querySelector('#colonia_select_new');
 				let input_colonia = document.querySelector('#colonia_new');
+
+				select_municipio.disabled = true;
+				select_localidad.disabled = true;
+				select_colonia.disabled = true;
 
 				clearSelect(select_municipio);
 				clearSelect(select_localidad);
@@ -4061,6 +5207,7 @@
 							option.value = municipio.MUNICIPIOID;
 							select_municipio.add(option);
 						});
+						select_municipio.disabled = false;
 					},
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
@@ -4077,6 +5224,7 @@
 					document.querySelector('#colonia-message').classList.remove('d-none');
 				}
 			});
+		//Evento change para obtener las localidades de acuerdo al municipio. Limpia los select para que no se acumulen
 
 			document.querySelector('#municipio_select_new').addEventListener('change', (e) => {
 				let select_localidad = document.querySelector('#localidad_select_new');
@@ -4110,10 +5258,12 @@
 							option.value = localidad.LOCALIDADID;
 							select_localidad.add(option);
 						});
+						select_localidad.disabled = false;
 					},
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
 			});
+		//Evento change para obtener los colonias de acuerdo al estado, municipio y localidad. Limpia los select para que no se acumulen
 
 			document.querySelector('#localidad_select_new').addEventListener('change', (e) => {
 				let select_colonia = document.querySelector('#colonia_select_new');
@@ -4152,6 +5302,7 @@
 								option.value = colonia.COLONIAID;
 								select_colonia.add(option);
 							});
+							select_colonia.disabled = false;
 
 							var option = document.createElement("option");
 							option.text = 'OTRO';
@@ -4175,6 +5326,7 @@
 				}
 			});
 
+			//Evento change de colonias para modficar estilos
 			document.querySelector('#colonia_select_new').addEventListener('change', (e) => {
 				let select_colonia = document.querySelector('#colonia_select_new');
 				let input_colonia = document.querySelector('#colonia_new');
@@ -4192,6 +5344,7 @@
 
 			//END CREAR PERSONA FISICA
 
+			//Obtiene la edad aroximada de acuerdo a la fecha de nacimiento
 			document.querySelector('#fecha_nacimiento_pf').addEventListener('change', (e) => {
 				let fecha = e.target.value;
 				let hoy = new Date();
@@ -4205,6 +5358,7 @@
 				document.querySelector('#edad_pf').value = edad;
 			})
 
+			//Funcion para eliminar los guiones y limita la longitud
 			function clearInputPhone(e) {
 				e.target.value = e.target.value.replace(/-/g, "");
 				if (e.target.value.length > e.target.maxLength) {
@@ -4212,7 +5366,7 @@
 				};
 			}
 
-
+			//Funcion para actualizar la informacion de la persona fisica
 			function actualizarPersona() {
 				var packetData = new FormData();
 				packetData.append("subirFotoPersona", $("#subirFotoPersona")[0].files[0]);
@@ -4247,6 +5401,7 @@
 				packetData.append("twitter_pf", document.querySelector('#twitter_pf').value);
 				packetData.append("pf_id", document.querySelector('#pf_id').value);
 				packetData.append("ocupacion_descr", document.querySelector('#ocupacion_pf_m').value);
+				packetData.append("fotografia_actual_pf", document.querySelector('#fotografia_actual_pf').value);
 				// const data = {
 				// 	'folio': document.querySelector('#input_folio_atencion').value,
 				// 	'year': document.querySelector('#year_select').value,
@@ -4295,7 +5450,9 @@
 						let relacionFisFis = response.relacionFisFis;
 						let fisicaImpDelito = response.fisicaImpDelito;
 
+
 						if (response.status == 1) {
+							//Llena tabla de personas e itera los selects donde se usen la informacion de las personas fisicas
 							let tabla_personas = document.querySelectorAll('#table-personas tr');
 							tabla_personas.forEach(row => {
 								if (row.id !== '') {
@@ -4320,6 +5477,41 @@
 								option.value = persona.PERSONAFISICAID;
 								option.text = persona.NOMBRE + ' ' + primer_apellido;
 								select_personaFisica1_I.add(option, null);
+							});
+
+							$('#personaFisica1').empty();
+							let select_personaFisica1 = document.querySelector("#personaFisica1")
+							const option_vacio_p = document.createElement('option');
+							option_vacio_p.value = '';
+							option_vacio_p.text = 'Selecciona ...';
+							option_vacio_p.disabled = true;
+							option_vacio_p.selected = true;
+							select_personaFisica1.add(option_vacio_p, null);
+							personas.forEach(persona => {
+								let primer_apellido = persona.PRIMERAPELLIDO ? persona
+									.PRIMERAPELLIDO : '';
+
+								const option = document.createElement('option');
+								option.value = persona.PERSONAFISICAID;
+								option.text = persona.NOMBRE + ' ' + primer_apellido;
+								select_personaFisica1.add(option, null);
+							});
+							$('#personaFisica2').empty();
+							let select_personaFisica2 = document.querySelector("#personaFisica2")
+							const option_vacio_pe2 = document.createElement('option');
+							option_vacio_pe2.value = '';
+							option_vacio_pe2.text = 'Selecciona ...';
+							option_vacio_pe2.disabled = true;
+							option_vacio_pe2.selected = true;
+							select_personaFisica2.add(option_vacio_pe2, null);
+							personas.forEach(persona => {
+								let primer_apellido = persona.PRIMERAPELLIDO ? persona
+									.PRIMERAPELLIDO : '';
+
+								const option = document.createElement('option');
+								option.value = persona.PERSONAFISICAID;
+								option.text = persona.NOMBRE + ' ' + primer_apellido;
+								select_personaFisica2.add(option, null);
 							});
 							$('#propietario').empty();
 							let select_propietario = document.querySelector("#propietario");
@@ -4394,7 +5586,7 @@
 
 								const option = document.createElement('option');
 								option.value = victima.PERSONAFISICAID;
-								option.text = victima.NOMBRE + ' ' + primer_apellido;
+								option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
 								select_victima_ofendido.add(option, null);
 							});
 							$('#victima_modal_documento').empty();
@@ -4406,7 +5598,7 @@
 
 								const option = document.createElement('option');
 								option.value = victima.PERSONAFISICAID;
-								option.text = victima.NOMBRE + ' ' + primer_apellido;
+								option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
 								select_victima_modal.add(option, null);
 							});
 							document.getElementById('subirFotoPersona').value = '';
@@ -4439,8 +5631,7 @@
 									row.remove();
 								}
 							});
-							llenarTablaParentesco(response.parentescoRelacion, response.personaiduno,
-								response.personaidDos, response.parentesco);
+							llenarTablaParentesco(response.parentescoRelacion);
 
 
 							// $('#propietario_update').empty();
@@ -4470,6 +5661,8 @@
 				});
 			}
 			//DOMICILIO PERSONA FÍSICA
+
+		//Eventochange de pais para obtener los municipios y localidades  cuando es diferente a MX
 
 			document.querySelector('#pais_pfd').addEventListener('change', (e) => {
 
@@ -4565,6 +5758,7 @@
 					input_colonia.classList.add('d-none');
 				}
 			});
+		//Evento change para obtener los municipios de acuerdo al estado. Limpia los select para que no se acumulen
 
 			document.querySelector('#estado_pfd').addEventListener('change', (e) => {
 				let select_municipio = document.querySelector('#municipio_pfd');
@@ -4580,6 +5774,10 @@
 				select_localidad.value = '';
 				select_colonia.value = '';
 				input_colonia.value = '';
+
+				select_municipio.disabled = true;
+				select_localidad.disabled = true;
+				select_colonia.disabled = true;
 
 				select_colonia.classList.remove('d-none');
 				input_colonia.classList.add('d-none');
@@ -4602,6 +5800,7 @@
 							option.value = municipio.MUNICIPIOID;
 							select_municipio.add(option);
 						});
+						select_municipio.disabled = false;
 					},
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
@@ -4616,6 +5815,7 @@
 					input_colonia.classList.remove('d-none');
 				}
 			});
+		//Evento change para obtener las localidades de acuerdo al municipio. Limpia los select para que no se acumulen
 
 			document.querySelector('#municipio_pfd').addEventListener('change', (e) => {
 				let select_localidad = document.querySelector('#localidad_pfd');
@@ -4629,6 +5829,9 @@
 				clearSelect(select_colonia);
 
 				select_localidad.value = '';
+				select_localidad.disabled = true;
+				select_colonia.disabled = true;
+
 
 				let data = {
 					'estado_id': estado,
@@ -4649,10 +5852,12 @@
 							option.value = localidad.LOCALIDADID;
 							select_localidad.add(option);
 						});
+						select_localidad.disabled = false;
 					},
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
 			});
+		//Evento change para obtener las colonias de acuerdo a la localidad. Limpia los select para que no se acumulen
 
 			document.querySelector('#localidad_pfd').addEventListener('change', (e) => {
 				let select_colonia = document.querySelector('#colonia_pfd_select');
@@ -4664,6 +5869,8 @@
 
 				clearSelect(select_colonia);
 				select_colonia.value = '';
+
+				select_colonia.disabled = true;
 
 				let data = {
 					'estado_id': estado,
@@ -4696,6 +5903,8 @@
 							option.text = 'OTRO';
 							option.value = '0';
 							select_colonia.add(option);
+
+							select_colonia.disabled = false;
 						},
 						error: function(jqXHR, textStatus, errorThrown) {}
 					});
@@ -4712,6 +5921,7 @@
 				}
 			});
 
+			//Evento change de colonias para modificar estilos
 			document.querySelector('#colonia_pfd_select').addEventListener('change', (e) => {
 				let select_colonia = document.querySelector('#colonia_pfd_select');
 				let input_colonia = document.querySelector('#colonia_pfd');
@@ -4727,6 +5937,7 @@
 				}
 			});
 
+			//Fujcion para actualziar el domicilio de la persona fisica
 			function actualizarDomicilio() {
 				const data = {
 					'folio': document.querySelector('#input_folio_atencion').value,
@@ -4783,6 +5994,7 @@
 				});
 			}
 
+			//Funcion para actualizar la media filiacio de la persona fisica
 			function actualizarPersonaMediaAfiliacion(id) {
 				const data = {
 					'folio': document.querySelector('#input_folio_atencion').value,
@@ -5015,6 +6227,7 @@
 			}
 
 
+			//Funcion para actualizar el parentesco entre dos personas fisicas
 			function actualizarParentesco() {
 				const data = {
 					'folio': document.querySelector('#input_folio_atencion').value,
@@ -5036,8 +6249,8 @@
 									row.remove();
 								}
 							});
-							llenarTablaParentesco(response.parentescoRelacion, response.personaiduno,
-								response.personaidDos, response.parentesco);
+							llenarTablaParentesco(response.parentescoRelacion);
+
 
 							Swal.fire({
 								icon: 'success',
@@ -5060,6 +6273,7 @@
 				});
 			}
 
+			//Funcion para agregar parentescos
 			function insertarParentesco() {
 				const data = {
 					'folio': document.querySelector('#input_folio_atencion').value,
@@ -5076,6 +6290,7 @@
 					dataType: "json",
 					success: function(response) {
 						if (response.status == 1) {
+							//Llena la tabla de parentescos
 							$('#personaFisica2_I').empty();
 							document.querySelector('#parentesco_mf_I').value = '';
 							document.querySelector('#personaFisica1_I').value = '';
@@ -5086,8 +6301,8 @@
 									row.remove();
 								}
 							});
-							llenarTablaParentesco(response.parentescoRelacion, response.personaiduno,
-								response.personaidDos, response.parentesco);
+							llenarTablaParentesco(response.parentescoRelacion);
+
 
 							Swal.fire({
 								icon: 'success',
@@ -5110,6 +6325,7 @@
 				});
 			}
 
+			//Funcion para actualizar la informacion de un vehiculo
 			function actualizarVehiculo() {
 				var packetData = new FormData();
 
@@ -5166,6 +6382,7 @@
 								text: 'Vehículo actualizado correctamente',
 								confirmButtonColor: '#bf9b55',
 							});
+							//actualiza la tabla del vehiculo
 							let tabla_vehiculo = document.querySelectorAll('#table-vehiculos tr');
 							tabla_vehiculo.forEach(row => {
 								if (row.id !== '') {
@@ -5192,6 +6409,132 @@
 				});
 			}
 
+			//funcion para subir archivos externos
+			async function crearArchivos() {
+				document.getElementById('archivo_content').classList.add('d-none');
+				document.getElementById('documentos_anexar_spinner').classList.remove('d-none');
+				let documento;
+				let nombre_documento;
+				//se comprime el archivo
+				if ($("#documentoArchivo")[0].files && $("#documentoArchivo")[0].files[0]) {
+					if ($("#documentoArchivo")[0].files[0].type == "image/jpeg" || $("#documentoArchivo")[0].files[0].type == "image/png" || $("#documentoArchivo")[0].files[0].type == "image/jpg") {
+						nombre_documento = $("#documentoArchivo")[0].files[0].name;
+						documento = await comprimirImagen($("#documentoArchivo")[0].files[0], 50);
+						console.log(documento);
+					} else {
+						nombre_documento = $("#documentoArchivo")[0].files[0].name;
+						documento = $("#documentoArchivo")[0].files[0];
+					}
+				} else {
+					document.getElementById('archivo_content').classList.remove('d-none');
+					document.getElementById('documentos_anexar_spinner').classList.add('d-none');
+					Swal.fire({
+						icon: 'error',
+						text: 'Debes seleccionar un documento.',
+						showConfirmButton: false,
+						timer: 1000
+					});
+					return
+				}
+				var packetData = new FormData();
+				packetData.append("documentoArchivo", documento);
+				packetData.append("folio", document.querySelector('#input_folio_atencion').value);
+				packetData.append("year", document.querySelector('#year_select').value);
+				packetData.append("nombreDocumento", nombre_documento);
+
+				$.ajax({
+					url: "<?= base_url('/data/create_archivos_admin') ?>",
+					method: "POST",
+					dataType: 'json',
+					contentType: false,
+					data: packetData,
+					processData: false,
+					cache: false,
+					success: function(response) {
+						const archivos = response.archivos.archivosexternos;
+						console.log(response);
+						document.getElementById('archivo_content').classList.remove('d-none');
+						document.getElementById('documentos_anexar_spinner').classList.add('d-none');
+						if (response.status == 1) {
+							$('#agregar_archivos_modal').modal('hide');
+
+							Swal.fire({
+								icon: 'success',
+								text: 'Documento agregado correctamente.',
+								showConfirmButton: false,
+								timer: 1000
+							});
+
+							let preview = document.querySelector('#viewDocumentoArchivo');
+
+							document.getElementById('documentoArchivo').value = '';
+							preview.setAttribute('src', '');
+							//actualiza la tabla de archivos externos
+							let tabla_archivos = document.querySelectorAll(
+								'#table-archivos tr');
+							tabla_archivos.forEach(row => {
+								if (row.id !== '') {
+									row.remove();
+								}
+							});
+							llenarTablaArchivosExternos(archivos);
+
+						} else if (response.status == 0) {
+							Swal.fire({
+								icon: 'error',
+								text: 'No se subio el documento.',
+								showConfirmButton: false,
+								timer: 1000
+							});
+						} else if (response.status == 2) {
+							Swal.fire({
+								icon: 'error',
+								text: 'Debes seleccionar un documento.',
+								showConfirmButton: false,
+								timer: 1000
+							});
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						console.log(textStatus);
+						document.getElementById('archivo_content').classList.remove('d-none');
+						document.getElementById('documentos_anexar_spinner').classList.add('d-none');
+						Swal.fire({
+							icon: 'error',
+							text: 'No se subio el documento.',
+							showConfirmButton: false,
+							timer: 1000
+						});
+					}
+				});
+
+			}
+
+			//Funcion para comprimir las imagenes dado a un porcentaje
+			function comprimirImagen(imagenComoArchivo, porcentajeCalidad) {
+				return new Promise((resolve, reject) => {
+					const $canvas = document.createElement("canvas");
+					const imagen = new Image();
+					imagen.onload = () => {
+						$canvas.width = imagen.width;
+						$canvas.height = imagen.height;
+						$canvas.getContext("2d").drawImage(imagen, 0, 0);
+						$canvas.toBlob(
+							(blob) => {
+								if (blob === null) {
+									return reject(blob);
+								} else {
+									resolve(blob);
+								}
+							},
+							"image/jpeg", porcentajeCalidad / 100
+						);
+					};
+					imagen.src = URL.createObjectURL(imagenComoArchivo);
+				});
+			};
+
+			//Funcion para agregar vehiculos al folio
 			function agregarVehiculo() {
 				var packetData = new FormData();
 
@@ -5244,6 +6587,7 @@
 								text: 'Vehículo agregado correctamente',
 								confirmButtonColor: '#bf9b55',
 							});
+							//actualiza la tabla de vehiculos
 							let tabla_vehiculo = document.querySelectorAll('#table-vehiculos tr');
 							tabla_vehiculo.forEach(row => {
 								if (row.id !== '') {
@@ -5274,6 +6618,7 @@
 				});
 			}
 
+			//Funcion para agregar una persona fisica con los datos del formulario
 			function insertarPersonaFisica() {
 				const data = {
 					'folio': document.querySelector('#input_folio_atencion').value,
@@ -5322,7 +6667,6 @@
 
 
 				};
-				console.log(data);
 				$.ajax({
 					data: data,
 					url: "<?= base_url('/data/create-persona_fisica-by-folio') ?>",
@@ -5332,6 +6676,7 @@
 						if (response.status == 1) {
 							document.getElementById("persona_fisica_form_insert").reset();
 
+							//se actualiza la tabla de personas fisicas y se vuelve a rellenar los selects y tablas donde se utilicen la informacion de personas fisicas
 							let tabla_personas = document.querySelectorAll('#table-personas tr');
 							tabla_personas.forEach(row => {
 								if (row.id !== '') {
@@ -5369,7 +6714,7 @@
 
 								const option = document.createElement('option');
 								option.value = victima.PERSONAFISICAID;
-								option.text = victima.NOMBRE + ' ' + primer_apellido;
+								option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
 								select_victima_ofendido.add(option, null);
 							});
 							const option_vacio_vd = document.createElement('option');
@@ -5388,7 +6733,7 @@
 
 								const option = document.createElement('option');
 								option.value = victima.PERSONAFISICAID;
-								option.text = victima.NOMBRE + ' ' + primer_apellido;
+								option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
 								select_victima_documento.add(option, null);
 							});
 							const option_vacio_id = document.createElement('option');
@@ -5437,6 +6782,40 @@
 								option.value = persona.PERSONAFISICAID;
 								option.text = persona.NOMBRE + ' ' + primer_apellido;
 								select_personaFisica1_I.add(option, null);
+							});
+							$('#personaFisica1').empty();
+							let select_personaFisica1 = document.querySelector("#personaFisica1")
+							const option_vacio_pe = document.createElement('option');
+							option_vacio_pe.value = '';
+							option_vacio_pe.text = 'Selecciona ...';
+							option_vacio_pe.disabled = true;
+							option_vacio_pe.selected = true;
+							select_personaFisica1.add(option_vacio_pe, null);
+							personas.forEach(persona => {
+								let primer_apellido = persona.PRIMERAPELLIDO ? persona
+									.PRIMERAPELLIDO : '';
+
+								const option = document.createElement('option');
+								option.value = persona.PERSONAFISICAID;
+								option.text = persona.NOMBRE + ' ' + primer_apellido;
+								select_personaFisica1.add(option, null);
+							});
+							$('#personaFisica2').empty();
+							let select_personaFisica2 = document.querySelector("#personaFisica2")
+							const option_vacio_pe2 = document.createElement('option');
+							option_vacio_pe2.value = '';
+							option_vacio_pe2.text = 'Selecciona ...';
+							option_vacio_pe2.disabled = true;
+							option_vacio_pe2.selected = true;
+							select_personaFisica2.add(option_vacio_pe2, null);
+							personas.forEach(persona => {
+								let primer_apellido = persona.PRIMERAPELLIDO ? persona
+									.PRIMERAPELLIDO : '';
+
+								const option = document.createElement('option');
+								option.value = persona.PERSONAFISICAID;
+								option.text = persona.NOMBRE + ' ' + primer_apellido;
+								select_personaFisica2.add(option, null);
 							});
 							$('#propietario').empty();
 							let select_propietario = document.querySelector("#propietario");
@@ -5542,6 +6921,8 @@
 				});
 			}
 
+
+			//funcion para agregar un arbol delictual
 			function insertarRelacionIDO() {
 				const data = {
 					'folio': document.querySelector('#input_folio_atencion').value,
@@ -5567,6 +6948,9 @@
 								confirmButtonColor: '#bf9b55',
 							});
 						} else if (response.status == 1) {
+
+
+							//llena la tabla de arbol delictivo
 							let tabla_relacion_fis_fis = document.querySelectorAll(
 								'#table-delitos-videodenuncia tr');
 							tabla_relacion_fis_fis.forEach(row => {
@@ -5598,6 +6982,7 @@
 				});
 			}
 
+			//funcion para asignar un delito a un imputado
 			function insertar_impdelito() {
 				const data = {
 					'folio': document.querySelector('#input_folio_atencion').value,
@@ -5661,6 +7046,7 @@
 				});
 			}
 
+			//funcion para agregar objetos involucrados al folio
 			function agregarObjetosInvolucrados() {
 
 				const data = {
@@ -5738,6 +7124,7 @@
 				});
 			}
 
+			//funcion para actualizar la informacion del objeto involucrado de acuerdo a su id
 			function actualizarObjetosInvolucrados(objetoid) {
 
 				const data = {
@@ -5798,6 +7185,7 @@
 				});
 			}
 
+			//funcion para actualiar el pantesco entre 2 personas
 			function actualizarParentesco() {
 				const data = {
 					'folio': document.querySelector('#input_folio_atencion').value,
@@ -5819,8 +7207,8 @@
 									row.remove();
 								}
 							});
-							llenarTablaParentesco(response.parentescoRelacion, response.personaiduno,
-								response.personaidDos, response.parentesco);
+							llenarTablaParentesco(response.parentescoRelacion);
+
 
 							Swal.fire({
 								icon: 'success',
@@ -5843,25 +7231,79 @@
 				});
 			}
 
-
-
+			//funcion para obtener la informacion de la plantilla al completar todos los campos requeridos
 			function obtenerPlantillas(tipoPlantilla, victima, imputado) {
 
-				if (select_uma.getAttribute('required') == "true" && select_uma.value != '' && tipoPlantilla == 'CITATORIO') {
-					$('#documentos_modal_wyswyg').modal('hide');
-					$('#documentos_modal').modal('show');
-				} else if (select_uma.getAttribute('required') == "true" && select_uma.value == '' && tipoPlantilla == 'CITATORIO') {
+				<?php if (session('ROLID') == 4 || session('ROLID') == 8 || session('ROLID') == 10) { ?>
+					console.log("victima");
+					console.log(document.querySelector('#victima_modal_documento').value == '');
 
-					Swal.fire({
-						icon: 'error',
-						text: 'UMA obligatorio',
-						confirmButtonColor: '#bf9b55',
-					});
-				}
-				if (select_uma.getAttribute('required') == "false" && tipoPlantilla != 'CITATORIO') {
-					$('#documentos_modal_wyswyg').modal('hide');
-					$('#documentos_modal').modal('show');
-				}
+					if (tipoPlantilla == "CITATORIO") {
+						if ((document.querySelector('#victima_modal_documento').value != '') && document.querySelector('#empleado_asignado').getAttribute('required') == "true" && document.querySelector('#empleado_asignado').value != '' && select_uma.getAttribute('required') == "true" && select_uma.value != '' && select_notificacion.getAttribute('required') == "true" && select_notificacion.value != '' && select_proceso.getAttribute('required') == "true" && select_proceso.value != '' && tipoPlantilla == 'CITATORIO') {
+							$('#documentos_modal_wyswyg').modal('hide');
+							$('#documentos_modal').modal('show');
+
+						} else if ((document.querySelector('#victima_modal_documento').value == '') || (document.querySelector('#empleado_asignado').getAttribute('required') == "true" && document.querySelector('#empleado_asignado').value == '') || (select_uma.getAttribute('required') == "true" && select_uma.value == '') || (select_notificacion.getAttribute('required') == "true" && select_notificacion.value == '') || (select_proceso.getAttribute('required') == "true" && select_proceso.value == '') && tipoPlantilla == 'CITATORIO') {
+
+							Swal.fire({
+								icon: 'error',
+								text: 'Favor de llenar los campos mostrados en la pantalla',
+								confirmButtonColor: '#bf9b55',
+							});
+						} else if ((document.querySelector('#victima_modal_documento').value != '') && document.querySelector('#empleado_asignado').getAttribute('required') == "false" && document.querySelector('#empleado_asignado').value == '' && select_uma.getAttribute('required') == "true" && select_uma.value != '' && select_notificacion.getAttribute('required') == "true" && select_notificacion.value != '' && select_proceso.getAttribute('required') == "true" && select_proceso.value != '' && tipoPlantilla == 'CITATORIO') {
+							$('#documentos_modal_wyswyg').modal('hide');
+							$('#documentos_modal').modal('show');
+
+						}
+
+					} else {
+						if (document.querySelector('#empleado_asignado').getAttribute('required') == "true" && document.querySelector('#empleado_asignado').value == '') {
+							Swal.fire({
+								icon: 'error',
+								text: 'Favor de asignar a un Agente de Ministerio Público',
+								confirmButtonColor: '#bf9b55',
+							});
+						} else if (document.querySelector('#empleado_asignado').getAttribute('required') == "true" && document.querySelector('#empleado_asignado').value != '') {
+							$('#documentos_modal_wyswyg').modal('hide');
+							$('#documentos_modal').modal('show');
+						} else if (document.querySelector('#empleado_asignado').getAttribute('required') == "false" && document.querySelector('#empleado_asignado').value == '') {
+							$('#documentos_modal_wyswyg').modal('hide');
+							$('#documentos_modal').modal('show');
+						}
+
+
+					}
+
+
+
+
+				<?php } else { ?>
+
+					console.log("victima");
+					console.log(document.querySelector('#victima_modal_documento').value == '');
+
+					if (select_uma.getAttribute('required') == "true" && select_uma.value != '' && select_notificacion.getAttribute('required') == "true" && select_notificacion.value != '' && select_proceso.getAttribute('required') == "true" && select_proceso.value != '' && document.querySelector('#victima_modal_documento').value != '' && tipoPlantilla == 'CITATORIO') {
+						$('#documentos_modal_wyswyg').modal('hide');
+						$('#documentos_modal').modal('show');
+
+					} else if ((document.querySelector('#victima_modal_documento').value == '') || (select_uma.getAttribute('required') == "true" && select_uma.value == '') || (document.querySelector('#victima_modal_documento').value == '') || (select_notificacion.getAttribute('required') == "true" && select_notificacion.value == '') || (select_proceso.getAttribute('required') == "true" && select_proceso.value == '') && tipoPlantilla == 'CITATORIO') {
+
+						Swal.fire({
+							icon: 'error',
+							text: 'Favor de llenar los campos mostrados en la pantalla',
+							confirmButtonColor: '#bf9b55',
+						});
+					}
+
+
+
+					if (select_uma.getAttribute('required') == "false" && tipoPlantilla != 'CITATORIO') {
+						$('#documentos_modal_wyswyg').modal('hide');
+						$('#documentos_modal').modal('show');
+					}
+				<?php } ?>
+
+
 				if (select_uma.value) {
 					const data = {
 
@@ -5871,7 +7313,10 @@
 						'titulo': tipoPlantilla,
 						'victima': victima,
 						'imputado': imputado,
-						'uma': select_uma.value
+						'uma': select_uma.value,
+						'notificacion': select_notificacion.value,
+						'proceso': select_proceso.value
+
 
 					};
 					$.ajax({
@@ -5883,31 +7328,44 @@
 							if (response.status == 1) {
 								const plantilla = response.plantilla;
 								tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
-								document.querySelector("#victima_modal_documento").value = '';
-								document.querySelector("#imputado_modal_documento").value = '';
+								// document.querySelector("#victima_modal_documento").value = '';
+								// document.querySelector("#imputado_modal_documento").value = '';
 								plantilla.value = '';
 								select_uma.value = '';
+								select_proceso.value = '';
+								select_notificacion.value = '';
 								document.getElementById("involucrados").style.display = "none";
 								document.getElementById("div_uma").style.display = "none";
+								document.getElementById("div_proceso").style.display = "none";
+								document.getElementById("div_noti").style.display = "none";
+
 							} else {
 								tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
-								document.querySelector("#victima_modal_documento").value = '';
-								document.querySelector("#imputado_modal_documento").value = '';
+								// document.querySelector("#victima_modal_documento").value = '';
+								// document.querySelector("#imputado_modal_documento").value = '';
 								plantilla.value = '';
 								select_uma.value = '';
+								select_proceso.value = '';
+								select_notificacion.value = '';
 								document.getElementById("involucrados").style.display = "none";
 								document.getElementById("div_uma").style.display = "none";
+								document.getElementById("div_proceso").style.display = "none";
+								document.getElementById("div_noti").style.display = "none";
 							}
 						},
 						error: function(jqXHR, textStatus, errorThrown) {
 							console.error(textStatus);
 							tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
-							document.querySelector("#victima_modal_documento").value = '';
-							document.querySelector("#imputado_modal_documento").value = '';
+							// document.querySelector("#victima_modal_documento").value = '';
+							// document.querySelector("#imputado_modal_documento").value = '';
 							plantilla.value = '';
 							select_uma.value = '';
+							select_proceso.value = '';
+							select_notificacion.value = '';
 							document.getElementById("involucrados").style.display = "none";
 							document.getElementById("div_uma").style.display = "none";
+							document.getElementById("div_proceso").style.display = "none";
+							document.getElementById("div_noti").style.display = "none";
 						}
 					});
 				} else {
@@ -5929,32 +7387,40 @@
 								const plantilla = response.plantilla;
 								if (select_uma.getAttribute('required') == "true") {
 									tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
-									document.querySelector("#victima_modal_documento").value = '';
-									document.querySelector("#imputado_modal_documento").value = '';
+									// document.querySelector("#victima_modal_documento").value = '';
+									// document.querySelector("#imputado_modal_documento").value = '';
 									plantilla.value = '';
 									select_uma.value = '';
+									select_proceso.value = '';
+									select_notificacion.value = '';
 								} else {
 									tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
-									document.querySelector("#victima_modal_documento").value = '';
-									document.querySelector("#imputado_modal_documento").value = '';
+									// document.querySelector("#victima_modal_documento").value = '';
+									// document.querySelector("#imputado_modal_documento").value = '';
 									plantilla.value = '';
 									select_uma.value = '';
+									select_proceso.value = '';
+									select_notificacion.value = '';
 									document.getElementById("involucrados").style.display = "none";
 								}
 
 							} else {
 								if (select_uma.getAttribute('required') == "true") {
 									tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
-									document.querySelector("#victima_modal_documento").value = '';
-									document.querySelector("#imputado_modal_documento").value = '';
+									// document.querySelector("#victima_modal_documento").value = '';
+									// document.querySelector("#imputado_modal_documento").value = '';
 									plantilla.value = '';
 									select_uma.value = '';
+									select_proceso.value = '';
+									select_notificacion.value = '';
 								} else {
 									tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
-									document.querySelector("#victima_modal_documento").value = '';
-									document.querySelector("#imputado_modal_documento").value = '';
+									// document.querySelector("#victima_modal_documento").value = '';
+									// document.querySelector("#imputado_modal_documento").value = '';
 									plantilla.value = '';
 									select_uma.value = '';
+									select_proceso.value = '';
+									select_notificacion.value = '';
 									document.getElementById("involucrados").style.display = "none";
 								}
 							}
@@ -5962,24 +7428,26 @@
 						error: function(jqXHR, textStatus, errorThrown) {
 							console.error(textStatus);
 							tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
-							document.querySelector("#victima_modal_documento").value = '';
-							document.querySelector("#imputado_modal_documento").value = '';
+							// document.querySelector("#victima_modal_documento").value = '';
+							// document.querySelector("#imputado_modal_documento").value = '';
 							plantilla.value = '';
 							select_uma.value = '';
+							select_proceso.value = '';
+							select_notificacion.value = '';
 							document.getElementById("involucrados").style.display = "none";
 							document.getElementById("div_uma").style.display = "none";
+							document.getElementById("div_proceso").style.display = "none";
+							document.getElementById("div_noti").style.display = "none";
 						}
 					});
 				}
 			}
 
 
-
-
-
-
+			//funcion para asignar valores a los documentos a un folio
 			function insertarDocumento(contenido, tipoPlantilla) {
 
+				//se valida que no sea enviado cuando es denuncia anonima
 				if (document.getElementById('input_denuncia').value == "DA") {
 					Swal.fire({
 						title: 'Este documento no será enviado',
@@ -6002,6 +7470,8 @@
 									'titulo': tipoPlantilla,
 									'statusenvio': 0,
 									'agente_asignado': document.querySelector('#empleado_asignado').value,
+									'victimaid': document.querySelector('#victima_modal_documento').value,
+									'imputado': document.querySelector('#imputado_modal_documento').value,
 								};
 								insertarDoc(data);
 							} else {
@@ -6012,6 +7482,8 @@
 									'titulo': tipoPlantilla,
 									'statusenvio': 0,
 									'agente_asignado': document.querySelector('#empleado_asignado').value,
+									'victimaid': document.querySelector('#victima_modal_documento').value,
+									'imputado': document.querySelector('#imputado_modal_documento').value,
 
 								};
 								insertarDoc(data);
@@ -6019,9 +7491,7 @@
 						}
 					})
 				} else {
-
-
-
+					//se pregunta si el documento debe de ser enviado
 					Swal.fire({
 						title: '¿Este documento tiene que ser enviado?',
 						showDenyButton: true,
@@ -6045,6 +7515,8 @@
 									'titulo': tipoPlantilla,
 									'statusenvio': 1,
 									'agente_asignado': document.querySelector('#empleado_asignado').value,
+									'victimaid': document.querySelector('#victima_modal_documento').value,
+									'imputado': document.querySelector('#imputado_modal_documento').value,
 
 								};
 								insertarDoc(data);
@@ -6058,6 +7530,8 @@
 									'titulo': tipoPlantilla,
 									'statusenvio': 1,
 									'agente_asignado': document.querySelector('#empleado_asignado').value,
+									'victimaid': document.querySelector('#victima_modal_documento').value,
+									'imputado': document.querySelector('#imputado_modal_documento').value,
 
 								};
 								insertarDoc(data);
@@ -6078,6 +7552,8 @@
 									'titulo': tipoPlantilla,
 									'statusenvio': 0,
 									'agente_asignado': document.querySelector('#empleado_asignado').value,
+									'victimaid': document.querySelector('#victima_modal_documento').value,
+									'imputado': document.querySelector('#imputado_modal_documento').value,
 
 								};
 								insertarDoc(data);
@@ -6090,6 +7566,8 @@
 									'titulo': tipoPlantilla,
 									'statusenvio': 0,
 									'agente_asignado': document.querySelector('#empleado_asignado').value,
+									'victimaid': document.querySelector('#victima_modal_documento').value,
+									'imputado': document.querySelector('#imputado_modal_documento').value,
 
 								};
 								insertarDoc(data);
@@ -6100,6 +7578,7 @@
 
 			}
 
+			//se obtiene el nombre de los parametros de la url
 			function getParameterByName(name, url = window.location.href) {
 				name = name.replace(/[\[\]]/g, "\\$&");
 				var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
@@ -6109,11 +7588,13 @@
 				return decodeURIComponent(results[2].replace(/\+/g, " "));
 			}
 
+			//Funcion para validar que el nombre de un parametro exista en la url
 			function isParameterByName(name) {
 				let regex = new RegExp('[?&]' + name + '=');
 				return regex.test(window.location.href);
 			}
 
+			//funcion para agregar documentos al folio con la informacion ya establecida
 			function insertarDoc(data) {
 				$.ajax({
 					data: data,
@@ -6124,6 +7605,9 @@
 						const documentos = response.documentos;
 
 						if (response.status == 1) {
+							tinymce.get("documento").setContent('');
+							document.querySelector("#victima_modal_documento").value = '';
+							document.querySelector("#imputado_modal_documento").value = '';
 							const documentos = response.documentos;
 							Swal.fire({
 								icon: 'success',
@@ -6155,6 +7639,7 @@
 				});
 			}
 
+			//Se convierte las fechas en horario de Tijuana
 			function dateToString(_date) {
 				let date = new Date(_date);
 				let dateToTijuanaString = date.toLocaleString('en-US', {
@@ -6171,6 +7656,8 @@
 			}
 		})();
 	};
+
+	//Se inicializa el mapa del delito
 	const initMap = (coordenaday, coordenadax) => {
 		const position = {
 			lat: parseFloat(coordenaday),
@@ -6226,6 +7713,8 @@
 			currentPosition();
 		});
 	};
+
+	//funcion para obtener la posicion actual
 	const currentPosition = () => {
 		if (navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(
@@ -6234,7 +7723,6 @@
 						lat: position.coords.latitude,
 						lng: position.coords.longitude,
 					};
-
 					map.setCenter(pos);
 					addMarker(pos, map, 'current');
 					map.setZoom(15);
@@ -6248,6 +7736,7 @@
 		}
 	};
 
+	//Funcion para manejar los errores de localizacion
 	const handleLocationError = (browserHasGeolocation, infoWindow, pos) => {
 		infoWindow.setPosition(pos);
 		infoWindow.setContent(
@@ -6258,6 +7747,7 @@
 		infoWindow.open(map);
 	};
 
+	//Funcion para añadir la longitud y posicion al mapa
 	const addMarker = (position, map, prov) => {
 
 		marker ? (marker.setMap(null), (marker = null)) : null;
@@ -6297,8 +7787,16 @@
 <?php include 'video_denuncia_modals/folios_atendidos_modal.php' ?>
 <?php include 'video_denuncia_modals/send_email_modal.php' ?>
 <?php include 'video_denuncia_modals/prueba.php' ?>
+<?php include 'video_denuncia_modals/load_save_archivos_modal.php' ?>
+
 <?php include 'video_denuncia_modals/info_folio_modal.php' ?>
 <?php include 'video_denuncia_modals/salida_modal.php' ?>
+<?php include 'video_denuncia_modals/marks.php' ?>
+<?php include 'video_denuncia_modals/encargados_modal.php' ?>
+<?php include 'video_denuncia_modals/asignar_agente_modal.php' ?>
+
+<?php include 'video_denuncia_modals/agregar_archivosExternos_modal.php' ?>
+
 <?php include 'video_denuncia_modals/persona_modal.php' ?>
 <?php include 'video_denuncia_modals/relacion_parentesco_modal.php' ?>
 <?php include 'video_denuncia_modals/relacion_parentesco_modal_insert.php' ?>
@@ -6318,5 +7816,6 @@
 <?php include 'video_denuncia_modals/documentos_generados_modal.php' ?>
 
 <?php include 'documentos/modal_validation_password_doc_id.php' ?>
+
 
 <?php $this->endSection() ?>

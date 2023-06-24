@@ -11,19 +11,17 @@
 			</div>
 
 			<div class="modal-body text-center" id="load_mail_uni">
-
 				<input type="text" class="form-control d-none" id="foliodoc_modal_correo_uni" name="foliodoc_modal_correo_uni" required>
 				<input type="text" class="form-control d-none" id="year_modal_correo_uni" name="year_modal_correo_uni" required>
 				<input type="text" class="form-control d-none" id="folio_modal_correo_uni" name="folio_modal_correo_uni" required>
 
 				<select class="form-control" id="send_mail_select_uni" name="send_mail_select_uni" required>
-					<option selected disabled value=""></option>
-
+					<option selected disabled value="">Seleccionar correo</option>
 				</select>
 				<br>
 				<br>
 				<div class="col-12">
-					<button type="button"id="enviarcorreoDocUnitario" name="enviarcorreoDocUnitario"class="btn btn-secondary font-weight-bold">ENVIAR CORREO</button>
+					<button type="button" id="enviarcorreoDocUnitario" name="enviarcorreoDocUnitario" class="btn btn-secondary font-weight-bold">ENVIAR CORREO</button>
 				</div>
 			</div>
 			<div id="loading_mail_uni" class="modal-body text-center d-none" style="min-height:170px;">

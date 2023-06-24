@@ -21,6 +21,8 @@
 	</div>
 </div>
 <script>
+		//Limpieza de elementos al cerrar modal
+
 	$('#form_delitos_cometidos_insert').on('hidden.bs.modal', function() {
 		$(this).find('form').trigger('reset');
 	});

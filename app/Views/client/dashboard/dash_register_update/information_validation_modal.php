@@ -1,4 +1,4 @@
-<div class="modal fade" id="information_validation" tabindex="-1" aria-labelledby="information_validation" aria-hidden="true">
+<div class="modal fade" id="information_validation" tabindex="-1" aria-labelledby="information_validation" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
 	<div class="modal-dialog modal-lg modal-dialog-centered  modal-dialog-scrollable">
 		<div class="modal-content">
 			<div class="modal-header bg-primary text-white">
@@ -84,10 +84,10 @@
 						<input type="text" class="form-control" id="exterior_modal" name="exterior_modal" disabled>
 					</div>
 					<div class="col-12 col-sm-6 mb-3">
-						<label for="interior_modal" class="form-label fw-bold" >Número interior: </label>
+						<label for="interior_modal" class="form-label fw-bold">Número interior: </label>
 						<input type="text" class="form-control" id="interior_modal" name="interior_modal" disabled>
 					</div>
-				
+
 					<div class="col-12">
 						<hr>
 					</div>

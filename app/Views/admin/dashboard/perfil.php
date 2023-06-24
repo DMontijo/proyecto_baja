@@ -182,6 +182,7 @@ $file_cer = $user_id . '_cer.cer';
 	let password = document.querySelector('#password');
 	let password_confirm = document.querySelector('#password_confirm');
 
+	//Funcion para actualizar la contraseña
 	form_password.addEventListener('submit', function(event) {
 		if (!form_password.checkValidity()) {
 			event.preventDefault();
@@ -199,7 +200,7 @@ $file_cer = $user_id . '_cer.cer';
 		}
 		form_password.classList.add('was-validated')
 	}, false)
-
+	//Funcion para subir los archivos FIEL
 	form_fiel.addEventListener('submit', function(event) {
 		if (!form_fiel.checkValidity()) {
 			event.preventDefault();

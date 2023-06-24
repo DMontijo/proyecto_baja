@@ -4,17 +4,8 @@ namespace App\Controllers\extravio;
 
 use App\Controllers\BaseController;
 
-use App\Models\PersonaNacionalidadModel;
-use App\Models\PersonaEstadoCivilModel;
-use App\Models\PersonaIdiomaModel;
 use App\Models\EstadosModel;
 use App\Models\MunicipiosModel;
-use App\Models\LocalidadesModel;
-use App\Models\ColoniasModel;
-use App\Models\PersonaTipoIdentificacionModel;
-use App\Models\PaisesModel;
-use App\Models\HechoClasificacionLugarModel;
-use App\Models\FolioModel;
 use App\Models\DenunciantesModel;
 use App\Models\ConstanciaExtravioModel;
 use App\Models\UsuariosModel;
@@ -22,50 +13,56 @@ use App\Models\HechoLugarModel;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use App\Models\SesionesDenunciantesModel;
+use GuzzleHttp\Client;
+
+use MailerSend\MailerSend;
+use MailerSend\Helpers\Builder\Recipient;
+use MailerSend\Helpers\Builder\EmailParams;
+use MailerSend\Exceptions\MailerSendValidationException;
+use MailerSend\Exceptions\MailerSendRateLimitException;
 
 class ExtravioController extends BaseController
 {
+	private $db_read;
 
 	private $_denunciantesModel;
-	private $_nacionalidadModel;
-	private $_estadosCivilesModel;
-	private $_personaIdiomaModel;
-	private $_estadosModel;
-	private $_municipiosModel;
-	private $_localidadesModel;
-	private $_coloniasModel;
-	private $_tipoIdentificacionModel;
-	private $_paisesModel;
-	private $_clasificacionLugarModel;
-	private $_folioModel;
-	private $_constanciaExtravioModel;
-	private $_usuariosModel;
-	private $_hechoLugarModel;
 	private $db;
 	private $_sesionesDenunciantesModel;
+	private $_sesionesDenunciantesModelRead;
+	private $_denunciantesModelRead;
+	private $_constanciaExtravioModelRead;
+	private $_estadosModelRead;
+	private $_municipiosModelRead;
+	private $_hechoLugarModelRead;
+	private $_usuariosModelRead;
+
+
+
+
 
 	function __construct()
 	{
+		$this->db_read = ENVIRONMENT == 'production' ? db_connect('default_read') : db_connect('development_read');
+
 		$this->_denunciantesModel = new DenunciantesModel();
-		$this->_nacionalidadModel = new PersonaNacionalidadModel();
-		$this->_estadosCivilesModel = new PersonaEstadoCivilModel();
-		$this->_personaIdiomaModel = new PersonaIdiomaModel();
-		$this->_estadosModel = new EstadosModel();
-		$this->_municipiosModel = new MunicipiosModel();
-		$this->_localidadesModel = new LocalidadesModel();
-		$this->_coloniasModel = new ColoniasModel();
-		$this->_tipoIdentificacionModel = new PersonaTipoIdentificacionModel();
-		$this->_paisesModel = new PaisesModel();
-		$this->_clasificacionLugarModel = new HechoClasificacionLugarModel();
-		$this->_folioModel = new FolioModel();
-		$this->_constanciaExtravioModel = new ConstanciaExtravioModel();
-		$this->_usuariosModel = new UsuariosModel();
-		$this->_hechoLugarModel = new HechoLugarModel();
+
 		$this->_sesionesDenunciantesModel = new SesionesDenunciantesModel();
+		$this->_sesionesDenunciantesModelRead = model('SesionesDenunciantesModel', true, $this->db_read);
+		$this->_denunciantesModelRead = model('DenunciantesModel', true, $this->db_read);
+		$this->_constanciaExtravioModelRead = model('ConstanciaExtravioModel', true, $this->db_read);
+		$this->_usuariosModelRead = model('UsuariosModel', true, $this->db_read);
+		$this->_hechoLugarModelRead = model('HechoLugarModel', true, $this->db_read);
+		$this->_estadosModelRead = model('EstadosModel', true, $this->db_read);
+		$this->_municipiosModelRead = model('MunicipiosModel', true, $this->db_read);
 
 		$this->db = \Config\Database::connect();
 	}
 
+	/**
+	 * Vista de Login-Constancia de extravio
+	 * Autentica que no tenga sesion iniciada, y si tiene sesion lo redirige al dashboard de constancia de extravio
+	 *
+	 */
 	public function index()
 	{
 		if ($this->_isAuth()) {
@@ -75,11 +72,19 @@ class ExtravioController extends BaseController
 			$this->_loadView('Login', [], 'index');
 		}
 	}
+	/**
+	 * Vista para generar un nuevo solicitante de constancia
+	 *
+	 */
 	public function register()
 	{
 		$this->_loadView('Nuevo solicitante', [], 'register');
 	}
-
+	/**
+	 * Función para autenticar el ingreso a la plataforma desde las constancias de extravio
+	 * Recibe por metodo POST el correo y contraseña
+	 *
+	 */
 	public function login_auth()
 	{
 		$session = session();
@@ -87,17 +92,22 @@ class ExtravioController extends BaseController
 		$password = $this->request->getPost('password');
 		$email = trim($email);
 		$password = trim($password);
-		$data = $this->_denunciantesModel->where('CORREO', $email)->first();
+		$data = $this->_denunciantesModelRead->where('CORREO', $email)->first();
 		if ($data) {
-			$control_session = $this->_sesionesDenunciantesModel->asObject()->where('ID_DENUNCIANTE', $data['DENUNCIANTEID'])->where('ACTIVO', 1)->first();
-			if ($control_session) {
-				return redirect()->to(base_url('/denuncia'))->with('message_session', 'Ya tienes sesiones activas, cierralas para continuar.')->with('id',  $data['DENUNCIANTEID']);
-			}
+			// Valida la contraseña ingresada con la de su usuario
+
 			if (validatePassword($password, $data['PASSWORD'])) {
+				// Verifica que no tenga sesiones activas
+
+				$control_session = $this->_sesionesDenunciantesModelRead->asObject()->where('ID_DENUNCIANTE', $data['DENUNCIANTEID'])->where('ACTIVO', 1)->first();
+				if ($control_session) {
+					return redirect()->to(base_url('/denuncia'))->with('message_session', 'Ya tienes sesiones activas, cierralas para continuar.')->with('id',  $data['DENUNCIANTEID']);
+				}
 				$data['logged_in'] = TRUE;
 				$data['type'] = 'user_constancias';
 				$data['uuid'] = uniqid();
 
+				//Datos de la sesion
 				$session->set($data);
 				$agent = $this->request->getUserAgent();
 
@@ -123,11 +133,17 @@ class ExtravioController extends BaseController
 			return redirect()->back();
 		}
 	}
-
+	/**
+	 * Función para crear un nuevo solicitante
+	 * Recibe con metodo POST los datos del formulario
+	 *
+	 */
 	public function create()
 	{
+		//Genera contraseña para el usuario
 
 		$password = $this->_generatePassword(6);
+		//Datos del denunciante
 
 		$data = [
 			'NOMBRE' => $this->request->getPost('nombre'),
@@ -143,23 +159,50 @@ class ExtravioController extends BaseController
 			'SEXO' => $this->request->getPost('sexo'),
 			'TIPO' => 2,
 		];
+		//Verifica que el correo sea unico
 
 		if ($this->validate(['correo' => 'required|is_unique[DENUNCIANTES.CORREO]'])) {
-			$this->_denunciantesModel->insert($data);
-			$this->_sendEmailPassword($data['CORREO'], $password);
-			return redirect()->to(base_url('/constancia_extravio'))->with('message_success', 'Inicia sesión con la contraseña que llegará a tu correo e ingresa.');
+			$dataApi2 = [
+				'NOMBRE' => $this->request->getPost('nombre'),
+				'APELLIDO_PATERNO' => $this->request->getPost('apellido_paterno'),
+				'APELLIDO_MATERNO' => $this->request->getPost('apellido_materno'),
+				'CORREO' => $this->request->getPost('correo'),
+			];
+			//Datos a enviar al servicio de videollamada
+			$dataApi = array();
+			$dataApi['name'] = $this->request->getPost('nombre') . ' ' . $this->request->getPost('apellido_paterno');
+			$dataApi['details'] = $dataApi2;
+			$dataApi['gender'] = $this->request->getPost('sexo') == 'F' ? "FEMALE" : 'MALE';
+			$dataApi['languages'] = [22];
+			$urlApi = VIDEOCALL_URL . "guests/";
+			$response = $this->_curlPost($urlApi, $dataApi);
+			$data['UUID'] = $response->uuid;
+			//Respuesta del servicio de videollamada
+
+			if ($response->uuid) {
+				$this->_denunciantesModel->insert($data);
+				$this->_sendEmailPassword($data['CORREO'], $data['TELEFONO'], $password);
+				return redirect()->to(base_url('/constancia_extravio'))->with('message_success', 'Inicia sesión con la contraseña que llegará a tu correo electrónico y/o mensajes SMS e ingresa.');
+			}
 		} else {
 			return redirect()->back()->with('message_error', 'Hubo un error en los datos o puede que ya exista un registro con el mismo correo');
 		}
 	}
-
+	/**
+	 * Vista de perfil, carga los datos del solicitante en la vista
+	 *
+	 */
 	public function profile()
 	{
 		$data = (object) array();
-		$data->user = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', session('DENUNCIANTEID'))->first();
+		$data->user = $this->_denunciantesModelRead->asObject()->where('DENUNCIANTEID', session('DENUNCIANTEID'))->first();
 		$this->_loadView('Perfil', $data, 'perfil');
 	}
-
+	/**
+	 * Funcion para actualizar el perfil del solicitante.
+	 * El formulario es recibido por metodo POST
+	 *
+	 */
 	public function update_profile()
 	{
 		$session = session();
@@ -185,7 +228,11 @@ class ExtravioController extends BaseController
 		}
 		return redirect()->back()->with('message_error', 'No se pudo actualizar el registro.');
 	}
-
+	/**
+	 * Función para actualizar la contraseña del solicitante
+	 * Se recibe la contraseña por metodo POST
+	 *
+	 */
 	public function update_password()
 	{
 		$password = trim($this->request->getPost('password'));
@@ -196,7 +243,12 @@ class ExtravioController extends BaseController
 
 		return redirect()->back()->with('message_success', 'Contraseña actualizada correctamente');
 	}
-
+	/**
+	 * Funcíon para generar una contraseña aleatoria.
+	 * Como parametro se recibe el tamaño de la contraseña
+	 *
+	 * @param  mixed $length
+	 */
 	private function _generatePassword($length)
 	{
 		$password = "";
@@ -207,11 +259,14 @@ class ExtravioController extends BaseController
 		}
 		return $password;
 	}
-
+	/**
+	 * Función para verificar si este el email para evitar duplicidad en registro
+	 * ! Deprecated method, do not use
+	 */
 	public function existEmail()
 	{
 		$email = $this->request->getPost('email');
-		$data = $this->_denunciantesModel->where('CORREO', $email)->first();
+		$data = $this->_denunciantesModelRead->where('CORREO', $email)->first();
 		if ($data == NULL) {
 			return json_encode((object)['exist' => 0]);
 		} else if (count($data) > 0) {
@@ -220,46 +275,112 @@ class ExtravioController extends BaseController
 			return json_encode((object)['exist' => 0]);
 		}
 	}
-
-	private function _sendEmailPassword($to, $password)
+	/**
+	 * Función para enviar un correo con la contraseña generada al solicitante
+	 *
+	 * @param  mixed $to
+	 * @param  mixed $password
+	 */
+	private function _sendEmailPassword($to, $telefono, $password)
 	{
-		$email = \Config\Services::email();
-		$email->setTo($to);
-		$email->setSubject('Te estamos atendiendo');
-		$body = view('email_template/password_email_constancia.php', ['email' => $to, 'password' => $password]);
-		$email->setMessage($body);
 
-		if ($email->send()) {
+		$body = view('email_template/password_email_constancia.php', ['email' => $to, 'password' => $password]);
+		$mailersend = new MailerSend(['api_key' => EMAIL_TOKEN]);
+		$recipients = [
+			new Recipient($to, 'Your Client'),
+		];
+		$emailParams = (new EmailParams())
+			->setFrom('notificacionfgebc@fgebc.gob.mx')
+			->setFromName('FGEBC')
+			->setRecipients($recipients)
+			->setSubject('Te estamos atendiendo')
+			->setHtml($body)
+			->setText('Usted ha generado un nuevo registro en el Centro de Denuncia Tecnológica. Para acceder debes ingresar los siguientes datos. USUARIO: ' . $to . 'CONTRASEÑA' . $password)
+			->setReplyTo('notificacionfgebc@fgebc.gob.mx')
+			->setReplyToName('FGEBC');
+
+		$sendSMS = $this->sendSMS("Te estamos atendiendo", $telefono, 'Notificaciones FGEBC/Estimado usuario, tu contraseña es: ' . $password);
+
+		try {
+			$result = $mailersend->email->send($emailParams);
+		} catch (MailerSendValidationException $e) {
+			$result = false;
+		} catch (MailerSendRateLimitException $e) {
+			$result = false;
+		}
+		if ($result) {
 			return true;
 		} else {
-			return false;
+			if ($sendSMS == "") {
+				return true;
+			} else {
+				return false;
+			}
 		}
 	}
-
+	/**
+	 * Función para mandar por email o sms la nueva contraseña
+	 *
+	 */
 	public function sendEmailChangePassword()
 	{
 		$password = $this->_generatePassword(6);
 		$to = $this->request->getPost('correo_reset_password');
-		$user = $this->_denunciantesModel->asObject()->where('CORREO', $to)->first();
+		$user = $this->_denunciantesModelRead->asObject()->where('CORREO', $to)->first();
 		$this->_denunciantesModel->set('PASSWORD', hashPassword($password))->where('DENUNCIANTEID', $user->DENUNCIANTEID)->update();
 
-		$email = \Config\Services::email();
-		$email->setTo($to);
-		$email->setSubject('Cambio de contraseña');
-		$body = view('email_template/reset_password_template.php', ['password' => $password]);
-		$email->setMessage($body);
 
-		if ($email->send()) {
-			return redirect()->to(base_url('/constancia_extravio'))->with('message_success', 'Verifica tu nueva contraseña en tu correo.');
+		$body = view('email_template/reset_password_template.php', ['password' => $password]);
+		$mailersend = new MailerSend(['api_key' => EMAIL_TOKEN]);
+		$recipients = [
+			new Recipient($to, 'Your Client'),
+		];
+
+		$emailParams = (new EmailParams()) //check envio
+			->setFrom('notificacionfgebc@fgebc.gob.mx')
+			->setFromName('FGEBC')
+			->setRecipients($recipients)
+			->setSubject('Cambio de contraseña')
+			->setHtml($body)
+			->setText('Usted ha generado un nuevo registro en el Centro de Denuncia Tecnológica. Para acceder debes ingresar los siguientes datos. USUARIO: ' . $to . 'CONTRASEÑA' . $password)
+			->setReplyTo('notificacionfgebc@fgebc.gob.mx')
+			->setReplyToName('FGEBC');
+		$sendSMS = $this->sendSMS("Cambio de contraseña", $user->TELEFONO, 'Notificaciones FGEBC/Estimado usuario, tu contraseña es: ' . $password);
+		try {
+			$result = $mailersend->email->send($emailParams);
+		} catch (MailerSendValidationException $e) {
+			$result = false;
+		} catch (MailerSendRateLimitException $e) {
+			$result = false;
+		}
+
+		if ($result) {
+			return redirect()->to(base_url('/constancia_extravio'))->with('message_success', 'Verifica tu nueva contraseña en tu correo electrónico y/o mensajes SMS.');
+		} else {
+			if ($sendSMS == "") {
+				return redirect()->to(base_url('/constancia_extravio'))->with('message_success', 'Verifica tu nueva contraseña en tu correo electrónico y/o mensajes SMS.');
+			} else {
+				return redirect()->to(base_url('/constancia_extravio'))->with('message_error', 'Error');
+			}
 		}
 	}
-
+	/**
+	 * Función para verifica si el usuario ha iniciado sesión y es un usuario. 
+	 *
+	 */
 	private function _isAuth()
 	{
 		if (session('logged_in') && session('type') == 'user') {
 			return true;
 		};
 	}
+	/**
+	 * Función para cargar cualquier vista en cualquier función.
+	 *
+	 * @param  mixed $title
+	 * @param  mixed $data
+	 * @param  mixed $view
+	 */
 	private function _loadView($title, $data, $view)
 	{
 		$data = [
@@ -268,6 +389,12 @@ class ExtravioController extends BaseController
 		];
 		echo view("constancia_extravio/register/$view", $data);
 	}
+
+	/**
+	 * Función para descargar el PDF de la constancia de extravio
+	 * ! Deprecated method, do not use
+	 *
+	 */
 	function descargar_pdf()
 	{
 		$data = (object)array();
@@ -276,13 +403,13 @@ class ExtravioController extends BaseController
 		$dompdf = new Dompdf($options);
 		$data = $this->db->table("PLANTILLAS")->get()->getResult();
 		$numfolio = $_POST['input_folio_atencion_pdf'];
-		$constancias = $this->_constanciaExtravioModel->asObject()->where('CONSTANCIAEXTRAVIOID', base64_decode($numfolio))->first();
+		$constancias = $this->_constanciaExtravioModelRead->asObject()->where('CONSTANCIAEXTRAVIOID', base64_decode($numfolio))->first();
 
-		$agente = $this->_usuariosModel->asObject()->where('ID', $constancias->AGENTEID)->first();
-		$denunciante = $this->_denunciantesModel->asObject()->where('DENUNCIANTEID', $constancias->DENUNCIANTEID)->first();
-		$lugar = $this->_hechoLugarModel->asObject()->where('HECHOLUGARID', $constancias->HECHOLUGARID)->first();
-		$municipio = $this->_municipiosModel->asObject()->where('MUNICIPIOID', $constancias->MUNICIPIOID)->where('ESTADOID', $constancias->ESTADOID)->first();
-		$estado = $this->_estadosModel->asObject()->where('ESTADOID', $constancias->ESTADOID)->first();
+		$agente = $this->_usuariosModelRead->asObject()->where('ID', $constancias->AGENTEID)->first();
+		$denunciante = $this->_denunciantesModelRead->asObject()->where('DENUNCIANTEID', $constancias->DENUNCIANTEID)->first();
+		$lugar = $this->_hechoLugarModelRead->asObject()->where('HECHOLUGARID', $constancias->HECHOLUGARID)->first();
+		$municipio = $this->_municipiosModelRead->asObject()->where('MUNICIPIOID', $constancias->MUNICIPIOID)->where('ESTADOID', $constancias->ESTADOID)->first();
+		$estado = $this->_estadosModelRead->asObject()->where('ESTADOID', $constancias->ESTADOID)->first();
 		$timestamp = strtotime($constancias->HECHOFECHA);
 		$dia = date('d', $timestamp);
 		$meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
@@ -313,7 +440,7 @@ class ExtravioController extends BaseController
 		$data[5]->PLACEHOLDER = str_replace('[NUMEROIDENTIFICADOR]', $constancias->NUMEROIDENTIFICADOR, $data[5]->PLACEHOLDER);
 		$data[5]->PLACEHOLDER = str_replace('[RFCFIRMA]', $constancias->RFCFIRMA, $data[5]->PLACEHOLDER);
 		$data[5]->PLACEHOLDER = str_replace('[NCERTIFICADOFIRMA]', $constancias->NCERTIFICADOFIRMA, $data[5]->PLACEHOLDER);
-		$data[5]->PLACEHOLDER = str_replace('[FECHAFIRMA]', $constancias->FECHAFIRMA, $data[5]->PLACEHOLDER);
+		$data[5]->PLACEHOLDER = str_replace('[FECHAFIRMA]', date('d-m-Y', strtotime($constancias->FECHAFIRMA)), $data[5]->PLACEHOLDER);
 		$data[5]->PLACEHOLDER = str_replace('[HORAFIRMA]', $constancias->HORAFIRMA, $data[5]->PLACEHOLDER);
 		$data[5]->PLACEHOLDER = str_replace('[LUGARFIRMA]', $constancias->LUGARFIRMA, $data[5]->PLACEHOLDER);
 		$data[5]->PLACEHOLDER = str_replace('[FIRMAELECTRONICA]', $constancias->FIRMAELECTRONICA, $data[5]->PLACEHOLDER);
@@ -342,6 +469,10 @@ class ExtravioController extends BaseController
 		// Download pdf
 		$dompdf->stream();
 	}
+	/**
+	 * Función para devolver la dirección IP del cliente que está haciendo la petición HTTP
+	 *
+	 */
 	private function _get_client_ip()
 	{
 		$ipaddress = '';
@@ -369,7 +500,10 @@ class ExtravioController extends BaseController
 		endif;
 		return $ipaddress;
 	}
-
+	/**
+	 * Función para devolver la ip publica del cliente que está haciendo la petición HTTP
+	 *
+	 */
 	private function _get_public_ip()
 	{
 		try {
@@ -381,11 +515,14 @@ class ExtravioController extends BaseController
 		}
 		return $externalIp;
 	}
+	/**
+	 * Función para verificar si este el email para evitar duplicidad en registro
+	 */
 	public function existEmailSolicitantes()
 	{
 		$email = $this->request->getPost('email');
 
-		$data = $this->_denunciantesModel->where('CORREO', $email)->first();
+		$data = $this->_denunciantesModelRead->where('CORREO', $email)->first();
 		if ($data == NULL) {
 			return json_encode((object)['exist' => 0]);
 		} else if (count($data) > 0) {
@@ -393,5 +530,72 @@ class ExtravioController extends BaseController
 		} else {
 			return json_encode((object)['exist' => 0]);
 		}
+	}
+	/**
+	 * Función CURL POST al servicio de videollamada
+	 *
+	 * @param  mixed $endpoint
+	 * @param  mixed $data
+	 */
+	private function _curlPost($endpoint, $data)
+	{
+		$ch = curl_init();
+
+		curl_setopt($ch, CURLOPT_URL, $endpoint);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+		$headers = array(
+			'Content-Type: application/json',
+			'Access-Control-Allow-Origin: *',
+			'Access-Control-Allow-Credentials: true',
+			'Access-Control-Allow-Headers: Content-Type',
+			'X-API-KEY: ' . X_API_KEY
+		);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+		$result = curl_exec($ch);
+
+		if ($result === false) {
+			$result = "{
+                'status' => 401,
+                'error' => 'Curl failed: '" . curl_error($ch) . "
+            }";
+		}
+		curl_close($ch);
+		return json_decode($result);
+	}
+	/**
+	 * Función para enviar mensajes SMS
+	 *
+	 * @param  mixed $tipo
+	 * @param  mixed $celular
+	 * @param  mixed $mensaje
+	 */
+	public function sendSMS($tipo, $celular, $mensaje)
+	{
+
+		$endpoint = "http://enviosms.ddns.net/API/";
+		$data = array();
+		$data['UsuarioID'] = 1;
+		$data['Nombre'] = $tipo;
+		$lstMensajes = array();
+		$obj = array("Celular" =>  $celular, "Mensaje" => $mensaje);
+		$lstMensajes[] = $obj;
+		$data['lstMensajes'] = $lstMensajes;
+
+		$httpClient = new Client([
+			'base_uri' => $endpoint
+		]);
+
+		$response = $httpClient->post('campañas/enviarSMS', [
+			'json' => $data
+		]);
+
+		$respuestaServ = $response->getBody()->getContents();
+
+		return json_decode($respuestaServ);
 	}
 }

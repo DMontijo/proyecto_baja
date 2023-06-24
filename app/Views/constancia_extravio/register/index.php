@@ -30,7 +30,7 @@
 						<div class="row align-items-center justify-content-center">
 							<div class="col-12 col-lg-10 offset-lg-1">
 								<div class="card shadow-lg py-3 px-3" style="background: rgba(255,255,255,0.8);">
-									<h2 class="fw-bolder text-white text-center text-blue mb-2">Si ya tienes una cuenta para constancias ingresa</h2>
+									<h2 class="fw-bolder text-white text-center text-blue mb-2">Si ya tienes una cuenta para generar constancias ingresa.</h2>
 									<div class="card-body">
 										<?php if (session()->getFlashdata('message')) : ?>
 											<div class="alert alert-warning">
@@ -50,7 +50,7 @@
 											<p class="text-center"><a class="link-primary" type="button" data-bs-toggle="modal" data-bs-target="#reset_pass">Olvidé mi contraseña</a></p>
 
 											<div class="col-12 d-flex align-items-center justify-content-center">
-												<button type="submit" class="btn btn-primary btn-block">
+												<button type="submit" id="btn-submit" class="btn btn-primary btn-block">
 													ENTRAR
 												</button>
 											</div>
@@ -66,6 +66,15 @@
 	</div>
 </section>
 <?php include('reset_password_modal.php') ?>
+<?php if (session()->getFlashdata('message_error')) : ?>
+	<script>
+		Swal.fire({
+			icon: 'error',
+			html: '<strong><?= session()->getFlashdata('message_error') ?></strong>',
+			confirmButtonColor: '#bf9b55',
+		})
+	</script>
+<?php endif; ?>
 <script>
 	(function() {
 		'use strict'
@@ -73,12 +82,59 @@
 		let form = document.querySelector('#client_login_form');
 
 		form.addEventListener('submit', function(event) {
+			document.querySelector('#btn-submit').disabled = true;
 			if (!form.checkValidity()) {
 				event.preventDefault();
 				event.stopPropagation();
+				document.querySelector('#btn-submit').disabled = false;
 			}
 			form.classList.add('was-validated')
 		}, false)
 	})();
 </script>
+<?php if (session()->getFlashdata('message_error')) : ?>
+	<script>
+		Swal.fire({
+			icon: 'error',
+			html: '<strong><?= session()->getFlashdata('message_error') ?></strong>',
+			confirmButtonColor: '#bf9b55',
+		})
+	</script>
+<?php endif; ?>
+<?php if (session()->getFlashdata('message_session')) : ?>
+	<script>
+		//Funcionpara cerrar todas las sesiones activas
+		Swal.fire({
+			icon: 'error',
+			title: '<?= session()->getFlashdata('message_session') ?>',
+			showDenyButton: true,
+			showCancelButton: true,
+			confirmButtonText: 'Aceptar',
+			confirmButtonColor: '#bf9b55',
+			denyButtonText: 'Cancelar',
+		}).then((result) => {
+			if (result.isConfirmed) {
+				let data = {
+					'id': <?= session()->getFlashdata('id') ?>
+				};
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/denuncia/cerrar-sesion') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						if (response.status == 1) {
+							Swal.fire({
+								icon: 'success',
+								html: 'Se han cerrado todas las sesiones, por favor inicia sesión de nuevo.',
+								confirmButtonColor: '#bf9b55',
+							})
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {}
+				});
+			}
+		})
+	</script>
+<?php endif; ?>
 <?= $this->endSection() ?>

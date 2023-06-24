@@ -96,7 +96,7 @@
 							El rol es obligatorio
 						</div>
 					</div>
-					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3" id="municipio_div">
 						<label for="municipio" class="form-label font-weight-bold">Municipio</label>
 						<select class="form-control" name="municipio" id="municipio" required>
 							<option value="" selected disabled>Selecciona el municipio</option>
@@ -110,10 +110,34 @@
 							El municipio es obligatorio
 						</div>
 					</div>
-					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3" id="municipios_multiple">
+						<label for="mun" class="form-label font-weight-bold">Municipio</label>
+						<select class="js-example-basic-multiple form-control" name="mun[]" id="mun" multiple="multiple">
+							<option value="" disabled>Selecciona el municipio</option>
+							<option value="1">ENSENADA</option>
+							<option value="2">MEXICALI</option>
+							<option value="3">TECATE</option>
+							<option value="4">TIJUANA</option>
+							<option value="5">PLAYAS DE ROSARITO</option>
+						</select>
+						<div class="invalid-feedback">
+							El municipio es obligatorio
+						</div>
+					</div>
+					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3" id="oficina_div">
 						<label for="oficina" class="font-weight-bold">Oficina</label>
 						<select class="form-control" name="oficina" id="oficina" required>
 							<option value="" selected disabled>Selecciona la oficina</option>
+						</select>
+						<div class="invalid-feedback">
+							La oficina es obligatoria
+						</div>
+					</div>
+
+					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3" id="oficina_multiple">
+						<label for="ofi" class="form-label font-weight-bold">Oficina</label>
+						<select class="js-example-basic-multiple form-control" name="ofi[]" id="ofi" multiple="multiple">
+							<option value="" disabled>Selecciona la oficina</option>
 						</select>
 						<div class="invalid-feedback">
 							La oficina es obligatoria
@@ -134,25 +158,40 @@
 	<script>
 		(function() {
 			'use strict';
+			//Declaracion de lementos
 			const inputsText = document.querySelectorAll('input[type="text"]');
 			const inputsEmail = document.querySelectorAll('input[type="email"]');
 			const municipio = document.querySelector('#municipio');
+			const mun = document.querySelector('#mun');
+			const ofi = document.querySelector('#ofi');
+
+			const rol = document.querySelector('#rol_usuario');
+
 			const oficina_select = document.querySelector('#oficina');
 			const password = document.querySelector('#password_usuario');
 			const toggle_password = document.querySelector('#toggle-password');
+			//Select de tipo multiple
+			$('#mun').select2();
+			$('#ofi').select2();
 
+			//Se ocultan los municipios y oficinas con opcion multiple
+			document.getElementById('municipios_multiple').classList.add('d-none');
+			document.getElementById('oficina_multiple').classList.add('d-none');
+
+			//Convierte todos los input text a mayusculas
 			inputsText.forEach((input) => {
 				input.addEventListener('input', function(event) {
 					event.target.value = clearText(event.target.value).toUpperCase();
 				}, false)
 			});
+			//Convierte todos los input email a minusculas
 
 			inputsEmail.forEach((input) => {
 				input.addEventListener('input', function(event) {
 					event.target.value = clearText(event.target.value).toLowerCase();
 				}, false)
 			});
-
+			//Evento para mostrar contraseña
 			toggle_password.addEventListener('click', (event) => {
 				const type = password.getAttribute("type") === "password" ? "text" : "password";
 				password.setAttribute("type", type);
@@ -166,7 +205,87 @@
 				}
 
 			}, false);
+			rol.addEventListener('change', function(event) {
+				if (event.target.value == 13) {
+					municipio.required = false;
+					mun.required = true;
+					document.getElementById('municipio_div').classList.add('d-none');
+					document.getElementById('municipios_multiple').classList.remove('d-none');
 
+					oficina.required = false;
+					ofi.required = true;
+					document.getElementById('oficina_div').classList.add('d-none');
+					document.getElementById('oficina_multiple').classList.remove('d-none');
+				}
+			});
+
+			$('#mun').on('change', function() {
+				var selectedValues = $(this).val();
+				console.log(selectedValues); // Hacer algo con los valores seleccionados
+
+				$.ajax({
+					data: {
+						'municipio': selectedValues,
+					},
+					url: "<?= base_url('/data/get-oficinas-by-municipio') ?>",
+					method: "POST",
+					dataType: "json",
+				}).done(function(data) {
+					clearSelect(ofi);
+					data.forEach(oficina => {
+						let option = document.createElement("option");
+						option.text = oficina.OFICINADESCR;
+						option.value = oficina.MUNICIPIOID+ ',' +oficina.OFICINAID;
+						ofi.add(option);
+					});
+					ofi.value = '';
+				}).fail(function(jqXHR, textStatus) {
+					clearSelect(ofi);
+				});
+			});
+
+			//Valida cuando el rol sea visualizador para mostrar municipios y oficinas multiplez
+			rol.addEventListener('change', function(event) {
+				if (event.target.value == 13) {
+					municipio.required = false;
+					mun.required = true;
+					document.getElementById('municipio_div').classList.add('d-none');
+					document.getElementById('municipios_multiple').classList.remove('d-none');
+
+					oficina.required = false;
+					ofi.required = true;
+					document.getElementById('oficina_div').classList.add('d-none');
+					document.getElementById('oficina_multiple').classList.remove('d-none');
+				}
+			});
+
+			//Obtiene todas las oficinas de los municipios seleccionados
+			$('#mun').on('change', function() {
+				var selectedValues = $(this).val();
+				console.log(selectedValues); // Hacer algo con los valores seleccionados
+
+				$.ajax({
+					data: {
+						'municipio': selectedValues,
+					},
+					url: "<?= base_url('/data/get-oficinas-by-municipio') ?>",
+					method: "POST",
+					dataType: "json",
+				}).done(function(data) {
+					clearSelect(ofi);
+					data.forEach(oficina => {
+						let option = document.createElement("option");
+						option.text = oficina.OFICINADESCR;
+						option.value = oficina.MUNICIPIOID + ',' + oficina.OFICINAID;
+						ofi.add(option);
+					});
+					// ofi.value = '';
+				}).fail(function(jqXHR, textStatus) {
+					clearSelect(ofi);
+				});
+			});
+
+			//Obtiene las oficinas del municipio seleccionado
 			municipio.addEventListener('change', function(event) {
 				$.ajax({
 					data: {
@@ -196,19 +315,17 @@
 				var validation = Array.prototype.filter.call(forms, function(form) {
 					form.addEventListener('submit', function(event) {
 						document.querySelector('#btn-submit').setAttribute('disabled', true);
-						document.querySelector('#spinner').classList.remove('d-none');
 						if (form.checkValidity() === false) {
 							event.preventDefault();
 							event.stopPropagation();
 							document.querySelector('#btn-submit').removeAttribute('disabled');
-							document.querySelector('#spinner').classList.add('d-none');
 						}
 						form.classList.add('was-validated');
 					}, false);
 				});
 			}, false);
 		})();
-
+		//Elimina todos los caracteres especiales del texto
 		function clearText(text) {
 			return text
 				.normalize('NFD')
@@ -216,7 +333,7 @@
 				.normalize()
 				.replaceAll('´', '');
 		}
-
+		//Elimina todos los options del select
 		function clearSelect(select_element) {
 			for (let i = select_element.options.length; i >= 1; i--) {
 				select_element.remove(i);
@@ -224,6 +341,7 @@
 		}
 
 
+		//Verifica que el correo no este registrado
 		document.querySelector('#correo_usuario').addEventListener('blur', (e) => {
 			let regex = /\S+@\S+\.\S+/
 			if (regex.test(e.target.value)) {

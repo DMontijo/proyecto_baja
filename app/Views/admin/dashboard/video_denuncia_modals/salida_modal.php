@@ -50,7 +50,33 @@
 											<option value="3">TECATE</option>
 											<option value="4">TIJUANA</option>
 											<option value="5">PLAYAS DE ROSARITO</option>
+											<option value="6">SAN QUINTIN</option>
+											<option value="7">SAN FELIPE</option>
 										</select>
+									</div>
+								</div>
+								<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+									<label for="denuncia_tel" class="form-label font-weight-bold">¿La denuncia fue télefonica?</label>
+									<br>
+									<div class="form-check form-check-inline">
+										<input class="form-check-input" type="radio" name="denuncia_tel" value="S" required>
+										<label class="form-check-label" for="flexRadioDefault1">SI</label>
+									</div>
+									<div class="form-check form-check-inline">
+										<input class="form-check-input" type="radio" name="denuncia_tel" value="N" checked required>
+										<label class="form-check-label" for="flexRadioDefault2">NO</label>
+									</div>
+								</div>
+								<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+									<label for="denuncia_con_datos_origen" class="form-label font-weight-bold">¿La denuncia fue con datos de origen?</label>
+									<br>
+									<div class="form-check form-check-inline">
+										<input class="form-check-input" type="radio" name="denuncia_con_datos_origen" value="S" required>
+										<label class="form-check-label" for="flexRadioDefault1">SI</label>
+									</div>
+									<div class="form-check form-check-inline">
+										<input class="form-check-input" type="radio" name="denuncia_con_datos_origen" value="N" checked required>
+										<label class="form-check-label" for="flexRadioDefault2">NO</label>
 									</div>
 								</div>
 								<div class="row mb-2">
@@ -71,7 +97,7 @@
 								</div>
 								<div id="notas" class="form-group">
 									<label for="notas_caso_salida">Notas</label>
-									<textarea id="notas_caso_salida" class="form-control" placeholder="Notas..." rows="10" maxlength="300" oninput="mayuscTextarea(this)" onkeydown="pulsar(event)" onkeyup="contarCaracteresSalida(this)"></textarea>
+									<textarea id="notas_caso_salida" class="form-control" placeholder="Notas..." rows="10" maxlength="1000" onkeydown="pulsar(event)" onkeyup="contarCaracteresSalida(this)"></textarea>
 									<small id="numCaracterSalida"> </small>
 
 								</div>
@@ -107,9 +133,12 @@
 <?php include('agregar_delito_modal.php') ?>
 <?php include 'info_folio_modal.php' ?>
 <?php include 'vehiculo_modal.php' ?>
+<?php include 'documentos_modal_wyswyg.php' ?>
+
 
 
 <script>
+	//Declaracion de elementos
 	const tipoSalida = document.querySelector('#tipo_salida');
 	const btnFinalizar = document.querySelector('#btn-finalizar-derivacion');
 	const notas_caso_salida = document.querySelector('#notas_caso_salida');
@@ -117,26 +146,29 @@
 
 	const municipio_empleado_container = document.querySelector('#municipio_empleado_container');
 	const municipio_empleado = document.querySelector('#municipio_empleado');
+
 	const derivaciones_container = document.querySelector('#derivaciones_container');
 	const derivaciones = document.querySelector('#derivaciones');
 	const canalizaciones_container = document.querySelector('#canalizaciones_container');
 	const canalizaciones = document.querySelector('#canalizaciones');
 	const form_delito = document.querySelector('#denuncia_form');
 	const form_vehiculo = document.querySelector('#form_vehiculo');
-
-	tipoSalida.addEventListener('change', (e) => {
-
+	let select_uma = document.querySelector("#uma_select");
+	var options = select_uma.options;
+	//Al mostrar modal, mostrar caracteres restantes e informacion escrita
+	$(document).on('show.bs.modal', '#salida_modal', function() {
 		const notas_caso_salida = document.querySelector('#notas_caso_salida');
 		const notas_caso_mp = document.querySelector('#notas_mp');
 		notas_caso_salida.value = notas_caso_mp.value;
-		if (charRemain < 300) {
+		if (charRemain < 1000) {
 			document.getElementById("numCaracterSalida").innerHTML = charRemain + ' caracteres restantes';
 		} else {
-			document.getElementById("numCaracterSalida").innerHTML = '300 caracteres restantes';
+			document.getElementById("numCaracterSalida").innerHTML = '1000 caracteres restantes';
 
 		}
-
-
+	});
+	//Evento para cambiar el tipo de salida
+	tipoSalida.addEventListener('change', (e) => {
 		if (!(e.target.value == 'DERIVADO' || e.target.value == 'CANALIZADO' || e.target.value == '1' || e.target.value == '4' || e.target.value == '5' || e.target.value == '6' || e.target.value == '7' || e.target.value == '8' || e.target.value == '9')) {
 			document.querySelector('#v-pills-delitos-tab').classList.add('d-none');
 			document.querySelector('#v-pills-documentos-tab').classList.add('d-none');
@@ -146,6 +178,7 @@
 		} else {
 			municipio_empleado_container.classList.remove('d-none');
 		}
+		//Cuando es canalizado
 		if (e.target.value == 'CANALIZADO') {
 			canalizaciones_container.classList.remove('d-none');
 
@@ -159,6 +192,7 @@
 				let data = {
 					'municipio': e.target.value,
 				}
+				//Obtiene las oficinas de canalizacion de acuerdo al municipio
 				$.ajax({
 					data: data,
 					url: "<?= base_url('/data/get-canalizacion-by-municipio') ?>",
@@ -187,6 +221,7 @@
 
 		}
 
+		//Cuando es derivado
 		if (e.target.value == 'DERIVADO') {
 			derivaciones_container.classList.remove('d-none');
 
@@ -200,7 +235,7 @@
 				let data = {
 					'municipio': e.target.value,
 				}
-				console.log(e);
+				//Obtiene las oficinas de las derivaciones de acuerdo al municipio
 				$.ajax({
 					data: data,
 					url: "<?= base_url('/data/get-derivacion-by-municipio') ?>",
@@ -230,34 +265,57 @@
 		}
 	});
 
+	//Mostrar modal
 	btnAgregarDelito.addEventListener('click', (e) => {
 		$('#delito_modal').modal('show');
 	});
 
 
+	//Evento para finalizar la salida
 	btnFinalizar.addEventListener('click', () => {
-		if (document.querySelector('#vehiculoid').value != '' && !form_vehiculo.checkValidity()) {
+		var denuncia_tel = document.querySelector('input[name="denuncia_tel"]:checked');
+		var denuncia_con_datos_origen = document.querySelector('input[name="denuncia_con_datos_origen"]:checked');
+
+		//Valida que todos los campos esten completos
+		if (tipoSalida.value == "" || municipio_empleado.value == "" || !denuncia_tel || !denuncia_con_datos_origen) {
 			Swal.fire({
-						icon: 'error',
-						text: 'Por favor, completa todos los campos de los vehículos.',
-						confirmButtonColor: '#bf9b55',
-					});
-					return;
+				icon: 'error',
+				text: "Por favor, completa los datos del formulario",
+				confirmButtonColor: '#bf9b55',
+			});
+			btnFinalizar.disabled = false;
+			return;
 		}
+
+		//Valida que el formulario de hechos este completo
 		if (!form_delito.checkValidity()) {
+			let message = "Por favor completa los siguientes campos:\n";
+			let inputs = form_delito.querySelectorAll("input, select");
+
+			inputs.forEach(input => {
+				if (!input.validity.valid && input.labels.length > 0) {
+					message += "- " + input.labels[0].textContent + "\n";
+				}
+			});
+			btnFinalizar.disabled = false;
+
 			Swal.fire({
-						icon: 'error',
-						text: 'Por favor, completa todos los campos de denuncia.',
-						confirmButtonColor: '#bf9b55',
-					});
-					return;
+				icon: 'error',
+				text: message,
+				confirmButtonColor: '#bf9b55',
+			});
+
+			return;
 		}
+
 		btnFinalizar.setAttribute('disabled', true);
+		//Cuando es derivado o canalizado
 		if (!(tipoSalida.value == '1' || tipoSalida.value == '4' || tipoSalida.value == '5' || tipoSalida.value == '6' || tipoSalida.value == '7' || tipoSalida.value == '8' || tipoSalida.value == '9')) {
 			let salida = tipoSalida.value;
 			let descripcion = document.querySelector('#notas_caso_salida').value;
 
 			if (tipoSalida.value == 'DERIVADO' || tipoSalida.value == 'CANALIZADO') {
+				//Valida que no esten vacios
 				if (derivaciones.value == '' && tipoSalida.value == 'DERIVADO' || canalizaciones.value == '' && tipoSalida.value == 'CANALIZADO') {
 					Swal.fire({
 						icon: 'error',
@@ -267,6 +325,9 @@
 					btnFinalizar.disabled = false;
 
 				} else {
+					var denuncia_tel = document.querySelector('input[name="denuncia_tel"]:checked');
+					var denuncia_con_datos_origen = document.querySelector('input[name="denuncia_con_datos_origen"]:checked');
+
 					data = {
 						'folio': inputFolio.value,
 						'year': year_select.value,
@@ -274,15 +335,25 @@
 						'motivo': descripcion,
 						'institutomunicipio': municipio_empleado.value,
 						'institutoremision': derivaciones.value != '' && tipoSalida.value == 'DERIVADO' ? derivaciones.value : canalizaciones.value,
+						'denuncia_tel': denuncia_tel.value,
+						'denuncia_electronica': denuncia_con_datos_origen.value,
+
 					}
 				}
 
 			} else {
+				var denuncia_tel = document.querySelector('input[name="denuncia_tel"]:checked');
+				var denuncia_con_datos_origen = document.querySelector('input[name="denuncia_con_datos_origen"]:checked');
+
+
 				data = {
 					'folio': inputFolio.value,
 					'year': year_select.value,
 					'status': salida,
 					'motivo': descripcion,
+					'denuncia_tel': denuncia_tel.value,
+					'denuncia_electronica': denuncia_con_datos_origen.value,
+
 				}
 
 			}
@@ -315,6 +386,8 @@
 							$('.modal-backdrop').remove();
 							buscar_nuevo_btn.classList.add('d-none');
 							inputFolio.classList.remove('d-none');
+							input_municipio.classList.remove('d-none');
+
 							// buscar_btn.classList.remove('d-none');
 							let currentTime = new Date();
 							let year = currentTime.getFullYear()
@@ -323,6 +396,7 @@
 							year_select.value = year;
 							year_select.disabled = true;
 							inputFolio.disabled = true;
+							input_municipio.disabled = true;
 
 							card2.classList.add('d-none');
 							card3.classList.add('d-none');
@@ -334,8 +408,31 @@
 							year_modal.value = year;
 							expediente_modal_correo.value = data.expediente;
 							year_modal_correo.value = year;
+							input_municipio.value = municipio_empleado.value;
+							//Elimina las umas de acuerdo al municipio
+							if (input_municipio.value == 1) {
+								eliminarUMAByMunicipio("ENSENADA");
+							} else if (input_municipio.value == 6) {
+								eliminarUMAByMunicipio("ENSENADA - SAN QUINTIN");
+							} else if (input_municipio.value == 2) {
+								eliminarUMAByMunicipio("MEXICALI");
+							} else if (input_municipio.value == 7) {
+								eliminarUMAByMunicipio("MEXICALI - SAN FELIPE");
+							} else if (input_municipio.value == 4) {
+								for (var i = options.length - 1; i >= 0; i--) {
+									var option = options[i];
+									var value = option.value;
+									if (!value.includes("ZONA COSTA - LA MESA") && !value.includes("ZONA COSTA - MARIANO MATAMOROS") && !value.includes("ZONA COSTA - ZONA RIO")) {
+										option.parentNode.removeChild(option);
+									}
+								}
+							} else if (input_municipio.value == 5) {
+								eliminarUMAByMunicipio("ZONA COSTA - PLAYAS ROSARITO");
+							} else if (input_municipio.value == 3) {
+								eliminarUMAByMunicipio("ZONA COSTA - TECATE");
+							}
 							card6.classList.remove('d-none');
-							<?php if (session('ROLID') != 4) { ?>
+							<?php if (session('ROLID') != 4 && session('ROLID') != 8 && session('ROLID') != 10) { ?>
 
 								card7.classList.remove('d-none');
 							<?php } ?>
@@ -355,6 +452,8 @@
 							text: data.error,
 							confirmButtonColor: '#bf9b55',
 						});
+						btnFinalizar.disabled = false;
+
 					}
 				}).fail(function(jqXHR, textStatus) {
 					btnFinalizar.removeAttribute('disabled');
@@ -379,8 +478,12 @@
 				});
 			}
 		} else {
+			//Cuando es de tipo expediente
 			if (municipio_empleado.value != '') {
 				let descripcion = document.querySelector('#notas_caso_salida').value;
+				var denuncia_tel = document.querySelector('input[name="denuncia_tel"]:checked');
+				var denuncia_con_datos_origen = document.querySelector('input[name="denuncia_con_datos_origen"]:checked');
+
 
 				if (
 					descripcion &&
@@ -392,13 +495,16 @@
 						'municipio': municipio_empleado.value,
 						'estado': 2,
 						'notas': descripcion,
-						'tipo_expediente': Number(tipoSalida.value)
+						'tipo_expediente': Number(tipoSalida.value),
+						'denuncia_tel': denuncia_tel.value,
+						'denuncia_electronica': denuncia_con_datos_origen.value,
+
+
 					}
 					const dataFolio = {
 						'folio': inputFolio.value,
 						'year': year_select.value,
 						'municipio_empleado': municipio_empleado.value,
-
 					};
 					// $.ajax({
 
@@ -411,6 +517,7 @@
 					// 	},
 					// 	error: function(jqXHR, textStatus, errorThrown) {}
 					// });
+					//Se suben toda la informacion a Justicia
 					$.ajax({
 						data: data,
 						url: "<?= base_url('/data/save-in-justicia') ?>",
@@ -469,12 +576,35 @@
 								folio_modal.value = inputFolio.value;
 								inputExpediente.value = data.expediente;
 								input_municipio.value = municipio_empleado.value;
+
+								//Elimina las umas de acuerdo al municipio seleccionado
+								if (input_municipio.value == 1) {
+									eliminarUMAByMunicipio("ENSENADA");
+								} else if (input_municipio.value == 6) {
+									eliminarUMAByMunicipio("ENSENADA - SAN QUINTIN");
+								} else if (input_municipio.value == 2) {
+									eliminarUMAByMunicipio("MEXICALI");
+								} else if (input_municipio.value == 7) {
+									eliminarUMAByMunicipio("MEXICALI - SAN FELIPE");
+								} else if (input_municipio.value == 4) {
+									for (var i = options.length - 1; i >= 0; i--) {
+										var option = options[i];
+										var value = option.value;
+										if (!value.includes("ZONA COSTA - LA MESA") && !value.includes("ZONA COSTA - MARIANO MATAMOROS") && !value.includes("ZONA COSTA - ZONA RIO")) {
+											option.parentNode.removeChild(option);
+										}
+									}
+								} else if (input_municipio.value == 5) {
+									eliminarUMAByMunicipio("ZONA COSTA - PLAYAS ROSARITO");
+								} else if (input_municipio.value == 3) {
+									eliminarUMAByMunicipio("ZONA COSTA - TECATE");
+								}
 								expediente_modal.value = data.expediente;
 								year_modal.value = year;
 								expediente_modal_correo.value = data.expediente;
 								year_modal_correo.value = year;
 								card6.classList.remove('d-none');
-								<?php if (session('ROLID') != 4) { ?>
+								<?php if (session('ROLID') != 4 && session('ROLID') != 8 && session('ROLID') != 10) { ?>
 
 									card7.classList.remove('d-none');
 								<?php } ?>
@@ -494,6 +624,7 @@
 						}
 
 					}).fail(function(jqXHR, textStatus) {
+						//Si sale mal restaura el folio
 						console.log(jqXHR, textStatus);
 						data = {
 							'folio': inputFolio.value,
@@ -545,18 +676,32 @@
 
 	});
 
+	//Funcion para eliminar las opciones del select que incluyan una uma diferente
+	function eliminarUMAByMunicipio(uma) {
+		for (var i = options.length - 1; i >= 0; i--) {
+			var option = options[i];
+			var value = option.value;
+			if (!value.includes(uma)) {
+				option.parentNode.removeChild(option);
+			}
+		}
+	}
+
+	//Funcion para eliminar las opciones de un select
 	function clearSelect(select_element) {
 		for (let i = select_element.options.length; i >= 1; i--) {
 			select_element.remove(i);
 		}
 	}
 
+	//Funcion para dar formato de expediente
 	function expedienteConGuiones(expediente) {
 		const array = expediente.trim().split('');
 		// return array[0] + '-' + array[1] + array[2] + '-' + array[3] + array[4] + array[5] + '-' + array[6] + array[7] + array[8] + array[9] + '-' + array[10] + array[11] + array[12] + array[13] + array[14];
 		return array[1] + array[2] + array[4] + array[5] + '-' + array[6] + array[7] + array[8] + array[9] + '-' + array[10] + array[11] + array[12] + array[13] + array[14] + '/' + tipoExpedienteClave(array[0]);
 	}
 
+	//Funcion para mostrar el tipo de expediente de acuerdo a la salida seleccionada
 	function tipoExpedienteClave(num) {
 		num = typeof(num) == 'string' ? num : (new String(num)).toString();
 
@@ -588,15 +733,17 @@
 		}
 	}
 
+	//Funcion para mostrar un loading
 	function showLoading() {
 		document.querySelector('#loading_general').classList.remove('d-none');
 	}
 
+	//Funcion para contar los caracteres restantes
 	function contarCaracteresSalida(obj) {
-		if (charRemain < 300) {
+		if (charRemain < 1000) {
 			var maxLength = charRemain;
 		} else {
-			var maxLength = 300;
+			var maxLength = 1000;
 		}
 		var strLength = obj.value.length;
 		var charRemainSalida = (maxLength - strLength);

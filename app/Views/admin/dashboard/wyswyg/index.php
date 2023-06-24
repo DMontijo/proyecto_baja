@@ -93,7 +93,7 @@
 									<tr>
 										<td class="text-center"><?= $documentos->NUMEROEXPEDIENTE ? $expedienteid : ''   ?></td>
 										<td class="text-center"><?= $documentos->FOLIOID ?></td>
-										<td class="text-center"><?= $documentos->FECHAREGISTRO ?></td>
+										<td class="text-center"><?= date('d-m-Y', strtotime($documentos->FECHAREGISTRO)) ?></td>
 										<td class="text-center"><a type="button" href="<?= $documentos->NUMEROEXPEDIENTE ? base_url('/admin/dashboard/documentos_show?expediente=' . $documentos->NUMEROEXPEDIENTE . '&year=' . $documentos->ANO . '&folio=' . $documentos->FOLIOID) : base_url('/admin/dashboard/documentos_show?folio=' . $documentos->FOLIOID . '&year=' . $documentos->ANO) ?>" class="btn btn-primary text-white"><i class="fas fa-folder-open"></i> DOCUMENTOS</a></td>
 									</tr>
 								<?php } ?>
@@ -143,7 +143,7 @@
 				[0, 'asc'],
 			],
 			searching: true,
-			pageLength: 100,
+			pageLength: 25,
 			// dom: 'Bfrtip',
 			// buttons: [
 			// 	'copy', 'excel', 'pdf'
@@ -158,10 +158,12 @@
 	$(function() {
 
 		$('#expediente').keypress(function(e) {
+			// Si el carácter ingresado no es un número, se devuelve false para evitar que se agregue al campo de entrada.
 			if (isNaN(this.value + String.fromCharCode(e.charCode)))
 				return false;
 		})
 		.bind('paste', function(e){
+			// Cuando ocurre un evento de pegado, se obtienen los datos pegados del portapapeles
 			var pastedData = e.originalEvent.clipboardData.getData('text');
 			document.getElementById('expediente').value = pastedData.replaceAll('-','').trim();
 			e.preventDefault();

@@ -11,17 +11,17 @@
 				<a class="link link-primary" href="<?= base_url('admin/dashboard/folios') ?>" role="button"><i class="fas fa-reply"></i> REGRESAR A FOLIOS</a>
 			</div>
 			<div class="col-12">
-				<div class="card shadow border-0">
+				<div class="card shadow border-0" style="overflow-x:auto;">
 					<div class="card-body table-responsive">
 						<table id="folios_canalizados" class="table table-bordered table-striped">
 							<thead>
 								<tr>
 									<th class="text-center">FOLIO</th>
-									<th class="text-center">DELITO</th>
-									<th class="text-center">ESTADO</th>
+									<!-- <th class="text-center">DELITO</th> -->
+									<!-- <th class="text-center">ESTADO</th> -->
 									<th class="text-center">COMENTARIOS</th>
 									<th class="text-center">ATENDIDO POR</th>
-									<th class="text-center">ROL</th>
+									<!-- <th class="text-center">ROL</th> -->
 									<th class="text-center" style="min-width:150px;">FECHA REGISTRO</th>
 									<th class="text-center" style="min-width:150px;">FECHA SALIDA</th>
 									<!-- <th class="text-center"></th> -->
@@ -30,12 +30,12 @@
 							<tbody>
 								<?php foreach ($body_data->folio as $index => $folio) { ?>
 									<tr>
-										<td class="text-center"><?= $folio->FOLIOID ?></th>
-										<td class="text-center"><?= $folio->HECHODELITO ?></td>
-										<td class="text-center"><?= $folio->STATUS ?></td>
+										<td class="text-center font-weight-bold"><?= $folio->FOLIOID . '/' . $folio->ANO ?></td>
+										<!-- <td class="text-center"><?= $folio->HECHODELITO ?></td> -->
+										<!-- <td class="text-center"><?= $folio->STATUS ?></td> -->
 										<td class="text-center"><?= $folio->NOTASAGENTE ?></td>
 										<td class="text-center"><?= $folio->NOMBRE ?> <?= $folio->APELLIDO_PATERNO ?> <?= $folio->APELLIDO_MATERNO ?></td>
-										<td class="text-center"><?= $folio->NOMBRE_ROL ?></td>
+										<!-- <td class="text-center"><?= $folio->NOMBRE_ROL ?></td> -->
 										<td class="text-center"><?= date('d-m-Y H:i:s', strtotime($folio->FECHAREGISTRO)) ?></td>
 										<td class="text-center"><?= date('d-m-Y H:i:s', strtotime($folio->FECHASALIDA)) ?></td>
 										<!-- <td class="text-center"><button type="button" class="btn btn-primary"><i class="fas fa-eye"></i></button></td> -->
@@ -60,7 +60,7 @@
 				[0, 'asc'],
 			],
 			searching: true,
-			pageLength: 100,
+			pageLength: 25,
 			// dom: 'Bfrtip',
 			// buttons: [
 			// 	'copy', 'excel', 'pdf'

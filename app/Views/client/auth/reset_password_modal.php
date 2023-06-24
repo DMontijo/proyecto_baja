@@ -26,6 +26,15 @@
 		</div>
 	</div>
 </div>
+<?php if (session()->getFlashdata('message_error')) : ?>
+	<script>
+		Swal.fire({
+			icon: 'error',
+			html: '<strong><?= session()->getFlashdata('message_error') ?></strong>',
+			confirmButtonColor: '#bf9b55',
+		})
+	</script>
+<?php endif; ?>
 <script>
 	(function() {
 		'use strict'
@@ -43,6 +52,7 @@
 				let regex = /\S+@\S+\.\S+/
 				let email = document.querySelector('#correo_reset_password');
 
+				//Verifica que exista el correo
 				if (regex.test(email.value)) {
 					$.ajax({
 						data: {

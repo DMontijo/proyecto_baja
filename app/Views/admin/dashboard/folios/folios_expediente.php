@@ -7,7 +7,8 @@
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-12 text-center mb-4">
-				<h1 class="mb-4 text-center font-weight-bold">FOLIOS CON EXPEDIENTE</h1>
+				<h1 class="mb-4 text-center font-weight-bold">FOLIOS CON EXPEDIENTE Y REMITIDOS</h1>
+				<P class="mb-4 text-center"></P>
 				<a class="link link-primary" href="<?= base_url('admin/dashboard/folios') ?>" role="button"><i class="fas fa-reply"></i> REGRESAR A FOLIOS</a>
 			</div>
 			<div class="col-12">
@@ -17,12 +18,12 @@
 							<thead>
 								<tr>
 									<th class="text-center" style="min-width:150px;">FOLIO</th>
+									<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
 									<th class="text-center" style="min-width:150px;">FECHA REGISTRO</th>
 									<th class="text-center" style="min-width:150px;">FECHA SALIDA</th>
-									<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
-									<th class="text-center">DELITO</th>
+									<!-- <th class="text-center">DELITO</th> -->
 									<th class="text-center">ESTADO</th>
-									<th class="text-center">ÁREA ASIGNADA</th>
+									<th class="text-center">OFICINA ASIGNADA</th>
 									<th class="text-center">ATENDIDO POR</th>
 									<!-- <th class="text-center">VIDEO</th> -->
 								</tr>
@@ -32,17 +33,17 @@
 									$expedienteid = '';
 									if (isset($folio->EXPEDIENTEID)) {
 										$arrayExpediente = str_split($folio->EXPEDIENTEID);
-										$expedienteid = $arrayExpediente[0] . '-' . $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
+										$expedienteid =  $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
 									} ?>
 
 									<tr>
-										<td class="text-center"><?= $folio->FOLIOID ?></td>
+										<td class="text-center"><?= $folio->FOLIOID . '/' . $folio->ANO ?></td>
+										<td class="text-center font-weight-bold"><?= $expedienteid ? $expedienteid . '/' . $folio->TIPOEXPEDIENTECLAVE : '' ?></td>
 										<td class="text-center"><?= date('d-m-Y H:i:s', strtotime($folio->FECHAREGISTRO)) ?></td>
 										<td class="text-center"><?= date('d-m-Y H:i:s', strtotime($folio->FECHASALIDA)) ?></td>
-										<td class="text-center"><?= $expedienteid ? $expedienteid : '' ?></td>
-										<td class="text-center"><?= $folio->HECHODELITO ?></td>
-										<td class="text-center"><?= $folio->STATUS . ' ' . $folio->TIPOEXPEDIENTEDESCR ?></td>
-										<td class="text-center"><?= $folio->AREADESCR ?></td>
+										<!-- <td class="text-center"><?= $folio->HECHODELITO ?></td> -->
+										<td class="text-center"><?= $folio->STATUS ?></td>
+										<td class="text-center"><?= $folio->OFICINADESCR ?></td>
 										<td class="text-center"><?= $folio->USUARIONOMBRE ?> <?= $folio->APELLIDO_PATERNO ?> <?= $folio->APELLIDO_MATERNO ?></td>
 										<!-- <td class="text-center"><button type="button" class="btn btn-primary" onclick="viewVideo(<?= $folio->ANO ?>,<?= $folio->FOLIOID ?>)"><i class="fas fa-video"></i></button></td> -->
 									</tr>
@@ -66,7 +67,7 @@
 				[0, 'asc'],
 			],
 			searching: true,
-			pageLength: 100,
+			pageLength: 25,
 			// dom: 'Bfrtip',
 			// buttons: [
 			// 	'copy', 'excel', 'pdf'

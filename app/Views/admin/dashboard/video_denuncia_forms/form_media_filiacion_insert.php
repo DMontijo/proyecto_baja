@@ -662,14 +662,6 @@
 			<?php } ?>
 		</select>
 	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="autorizaFoto1" class="form-label font-weight-bold">Autoriza foto en medios</label>
-		<select class="form-control" id="autorizaFoto1" name="autorizaFoto1">
-			<option disabled disabled selected value=""></option>
-			<option value="S">SI</option>
-			<option value="N">NO</option>
-		</select>
-	</div>
 	<div class="col-12 mb-3 text-center">
 		<button type="submit" class="btn btn-primary font-weight-bold">ACTUALIZAR MEDIA FILIACIÓN</button>
 	</div>

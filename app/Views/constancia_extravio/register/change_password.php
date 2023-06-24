@@ -51,6 +51,7 @@
 			var forms = document.getElementsByClassName('needs-validation');
 			var validation = Array.prototype.filter.call(forms, function(form) {
 				form.addEventListener('submit', function(event) {
+					//verifica que las contraseñas sean iguales
 					if (password.value === password_confirm.value) {
 						console.log('Es igual');
 						if (!form.checkValidity()) {

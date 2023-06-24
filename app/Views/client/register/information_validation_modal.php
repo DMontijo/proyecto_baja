@@ -1,4 +1,4 @@
-<div class="modal fade" id="information_validation" tabindex="-1" aria-labelledby="information_validation" aria-hidden="true">
+<div class="modal fade" id="information_validation" tabindex="-1" aria-labelledby="information_validation" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
 	<div class="modal-dialog modal-lg modal-dialog-centered  modal-dialog-scrollable">
 		<div class="modal-content">
 			<div class="modal-header bg-primary text-white">
@@ -232,11 +232,13 @@
 </div>
 <?php include('otp_validation_modal.php') ?>
 <script>
+	//Evento para validar la informacion, posterior se envia el codigo OTP
 	document.querySelector('#valid_information_btn').addEventListener('click', (e) => {
 
 		e.target.setAttribute('disabled', true);
 		var data = {
-			'email': document.querySelector('#correo').value
+			'email': document.querySelector('#correo').value,
+			'telefono': document.querySelector('#telefono').value
 		}
 
 		$.ajax({

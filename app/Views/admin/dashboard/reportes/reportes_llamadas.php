@@ -32,7 +32,7 @@
 												<select class="form-control" id="agenteId" name="agenteId" required>
 													<option selected value="">Todos los agentes</option>
 													<?php foreach ($body_data->empleados as $index => $empleado) { ?>
-														<option <?= isset($body_data->filterParams->agenteId) ? ($body_data->filterParams->agenteId == $empleado->ID ? 'selected' : '') : null ?> value="<?= $empleado->ID ?>">
+														<option <?= isset($body_data->filterParams->agentUuid) ? ($body_data->filterParams->agentUuid == $empleado->ID ? 'selected' : '') : null ?> value="<?= $empleado->ID ?>">
 															<?= $empleado->NOMBRE ?>
 														</option>
 													<?php } ?>
@@ -41,12 +41,12 @@
 
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
 												<label for="fecha" class="form-label font-weight-bold">Fecha de inicio:</label>
-												<input type="date" class="form-control" id="fechaInicio" name="fechaInicio" max="<?= date("Y-m-d") ?>" value="<?= isset($body_data->filterParams->fechaInicio) ? $body_data->filterParams->fechaInicio : '' ?>">
+												<input type="datetime-local" class="form-control" id="fechaInicio" name="fechaInicio" max="<?= date("Y-m-d") ?>" value="<?= isset($body_data->filterParams->sessionStartedAt) ? date('d-m-Y H:i:s', strtotime($body_data->filterParams->sessionStartedAt)) : '' ?>">
 											</div>
 
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
 												<label for="fecha" class="form-label font-weight-bold">Fecha de cierre:</label>
-												<input type="date" class="form-control" id="fechaFin" name="fechaFin" max="<?= date("Y-m-d") ?>" value="<?= isset($body_data->filterParams->fechaFin) ? $body_data->filterParams->fechaFin : '' ?>">
+												<input type="datetime-local" class="form-control" id="fechaFin" name="fechaFin" max="<?= date("Y-m-d") ?>" value="<?= isset($body_data->filterParams->sessionFinishedAt) ? date('d-m-Y H:i:s', strtotime($body_data->filterParams->sessionFinishedAt)) : '' ?>">
 											</div>
 
 											<div class="col-12 text-right">
@@ -65,7 +65,6 @@
 					<div class="card-body" style="overflow-x:auto;">
 						<div class="row mb-3">
 							<div class="col-12 d-flex justify-content-center align-items-center">
-								<span class='d-inline-block'>PROMEDIO DE TIEMPO EN LLAMADA: <?= $body_data->promedio ?></span>
 								<?php if (isset($body_data->filterParams)) { ?>
 									<!-- Form para aplicar mismo filtro utilizado para crear el archivo de excel-->
 									<form id="formExcel" action="<?= base_url() ?>/admin/dashboard/generar_excel_llamadas" method="post" enctype="multipart/form-data" class="needs-validation d-inline-block ml-auto" novalidate>
@@ -77,38 +76,33 @@
 								<?php } ?>
 							</div>
 						</div>
-
-						<table id="registro_llamadas" class="table table-bordered table-striped">
-							<thead>
-								<tr>
-									<th class="text-center">Folio</th>
-									<th class="text-center">Fecha</th>
-									<th class="text-center">Inicio</th>
-									<th class="text-center">Fin</th>
-									<th class="text-center">Agente</th>
-									<th class="text-center">Espera</th>
-									<th class="text-center">Duración</th>
-									<th class="text-center">Denunciante</th>
-									<th class="text-center">Estatus</th>
-								</tr>
-							</thead>
-							<tbody>
-								<?php
-								foreach ($body_data->llamadas as $index => $llamada) { ?>
-									<tr>
-										<td class="text-center font-weight-bold"><?= $llamada->Folio ?></td>
-										<td class="text-center"><?= $llamada->Fecha ?></td>
-										<td class="text-center"><?= $llamada->Inicio ?></td>
-										<td class="text-center"><?= $llamada->Fin ?></td>
-										<td class="text-center"><?= $llamada->Agente ?></td>
-										<td class="text-center"><?= $llamada->Espera ?></td>
-										<td class="text-center"><?= $llamada->Duración ?></td>
-										<td class="text-center"><?= $llamada->Cliente ?></td>
-										<td class="text-center"><?= $llamada->Estatus ?></td>
-									</tr>
-								<?php } ?>
-							</tbody>
-						</table>
+						<div class="row" style="font-size:10px;">
+							<div class="col-12" style="overflow:auto;">
+								<table id="registro_llamadas" class="table table-bordered table-striped table-sm">
+									<thead>
+										<tr>
+											<th class="text-center">FOLIO</th>
+											<th class="text-center">INICIO</th>
+											<th class="text-center">FIN</th>
+											<th class="text-center">AGENTE</th>
+											<th class="text-center">DENUNCIANTE</th>
+										</tr>
+									</thead>
+									<tbody>
+										<?php
+										foreach ($body_data->llamadas as $index => $llamada) { ?>
+											<tr>
+												<td class="text-center font-weight-bold"><?= $llamada->guestConnectionId->folio ?></td>
+												<td class="text-center"><?= date('d-m-Y H:i:s', strtotime($llamada->sessionStartedAt)) ?></td>
+												<td class="text-center"><?= $llamada->sessionFinishedAt != null ? date('d-m-Y H:i:s', strtotime($llamada->sessionFinishedAt)) : '-' ?></td>
+												<td class="text-center"><?= $llamada->agentConnectionId->agent->fullName ?></td>
+												<td class="text-center"><?= $llamada->guestConnectionId->uuid->details->NOMBRE . ' ' . $llamada->guestConnectionId->uuid->details->APELLIDO_PATERNO ?></td>
+											</tr>
+										<?php } ?>
+									</tbody>
+								</table>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -122,9 +116,12 @@
 			responsive: false,
 			lengthChange: false,
 			autoWidth: true,
-			ordering: false,
-			searching: false,
-			pageLength: 30,
+			ordering: true,
+			order: [
+				[1, 'desc'],
+			],
+			searching: true,
+			pageLength: 25,
 			// dom: 'Bfrtip',
 			// buttons: [
 			// 	'copy', 'excel', 'pdf'
@@ -134,7 +131,8 @@
 			}
 		});
 	});
-
+</script>
+<script>
 	function collapse_filter() {
 		if (document.querySelector('#filtros').classList.contains('show')) {
 			document.querySelector('#filtros').classList.remove('show');
@@ -146,6 +144,7 @@
 <?php if (isset($body_data->filterParams)) { ?>
 	<script>
 		let form = document.querySelector('#formExcel');
+		//Datos de confirmacion del filtro
 
 		form.addEventListener('submit', function(event) {
 			event.preventDefault();
@@ -153,11 +152,8 @@
 			<p>
 				El reporte sera generado de acuerdo a la siguiente información<br>
 				<ul style="text-align:left;">
-						<li><span style="font-weight:bold;">Fecha inicio:</span> <?= isset($body_data->filterParams->fechaInicio) ? $body_data->filterParams->fechaInicio : '' ?></li>
-						<li><span style="font-weight:bold;">Fecha cierra:</span> <?= isset($body_data->filterParams->fechaFin) ? $body_data->filterParams->fechaFin : '' ?></li>
-						<li><span style="font-weight:bold;">Hora inicio:</span> <?= isset($body_data->filterParams->horaInicio) ? $body_data->filterParams->horaInicio : '' ?></li>
-						<li><span style="font-weight:bold;">Hora cierre:</span> <?= isset($body_data->filterParams->horaFin) ? $body_data->filterParams->horaFin : '' ?></li>
-						<li><span style="font-weight:bold;">Agente:</span> <?= isset($body_data->filterParams->nombreAgente) ? $body_data->filterParams->nombreAgente : '' ?></li>
+						<li><span style="font-weight:bold;">Fecha inicio:</span> <?= isset($body_data->filterParams->sessionStartedAt) ? $body_data->filterParams->sessionStartedAt : '' ?></li>
+						<li><span style="font-weight:bold;">Fecha cierra:</span> <?= isset($body_data->filterParams->sessionFinishedAt) ? $body_data->filterParams->sessionFinishedAt : '' ?></li>
 				</ul>
 			</p>
 			`

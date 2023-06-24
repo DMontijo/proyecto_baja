@@ -31,12 +31,12 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="placas_vehiculo" class="form-label fw-bold">Placas:</label>
-		<input type="text" class="form-control" id="placas_vehiculo" name="placas_vehiculo">
+		<input type="text" class="form-control" id="placas_vehiculo" name="placas_vehiculo" oninput="clearGuion(event);">
 	</div>
-	
+
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="serie_vehiculo" class="form-label fw-bold">No. Serie:</label>
-		<input type="text" class="form-control" id="serie_vehiculo" name="serie_vehiculo">
+		<input type="text" class="form-control" id="serie_vehiculo" name="serie_vehiculo" oninput="clearGuion(event);">
 	</div>
 
 	<div class="col-12 mb-3">
@@ -57,6 +57,7 @@
 </div>
 <script>
 
+	//Funcion para contar los caracteres restantes de la descripcion del vehiculo
 	function contarCaracteresVehiculo(obj) {
 		var maxLength = 300;
 		var strLength = obj.value.length;
@@ -68,6 +69,41 @@
 			document.getElementById("numCaracterVehiculoSp").innerHTML = charRemain + ' caracteres restantes';
 		}
 	}
-	
 
+	//Evento para validar el tamaño de la foto
+	document.querySelector('#foto_vehiculo_sp').addEventListener("change", function() {
+		// Si no hay archivos, regresamos
+		if (this.files.length <= 0) return;
+
+		// Validamos el primer archivo únicamente
+		const archivo = this.files[0];
+		if (archivo.size > 2000000) {
+			// Limpiar
+			document.querySelector('#foto_vehiculo_sp').value = "";
+			Swal.fire({
+				icon: 'error',
+				title: 'Error',
+				text: 'El tamaño máximo de los documentos debe ser de 2MB.',
+				confirmButtonColor: '#bf9b55',
+			})
+		}
+	});
+	//Evento para validar el tamaño del documento
+	document.querySelector('#documento_vehiculo_sp').addEventListener("change", function() {
+		// Si no hay archivos, regresamos
+		if (this.files.length <= 0) return;
+
+		// Validamos el primer archivo únicamente
+		const archivo = this.files[0];
+		if (archivo.size > 2000000) {
+			// Limpiar
+			document.querySelector('#documento_vehiculo_sp').value = "";
+			Swal.fire({
+				icon: 'error',
+				title: 'Error',
+				text: 'El tamaño máximo de los documentos debe ser de 2MB.',
+				confirmButtonColor: '#bf9b55',
+			})
+		}
+	});
 </script>

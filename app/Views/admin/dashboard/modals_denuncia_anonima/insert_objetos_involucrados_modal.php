@@ -87,33 +87,35 @@
 	</div>
 </div>
 <script>
+	//Evento pata obtener la subclasificacion de los objetos, de acuerdo a su clasificacion
+
 	let selectObjetoClasificacion = document.querySelector('#objeto_clasificacion');
 	selectObjetoClasificacion.addEventListener("change", function() {
-				let objetoSubclasificacion = document.querySelector("#objeto_subclasificacion")
+		let objetoSubclasificacion = document.querySelector("#objeto_subclasificacion")
 
-				var datos = {
-					"objeto_clasificacion_id": selectObjetoClasificacion.value,
+		var datos = {
+			"objeto_clasificacion_id": selectObjetoClasificacion.value,
+		}
+
+		$.ajax({
+			method: 'POST',
+			url: "<?= base_url('/data/get-objeto-sub-by-cat') ?>",
+			data: datos,
+			dataType: 'JSON',
+			//data: {nombre:n},
+			success: function(response) {
+				const objetoSub = response.objetoSub;
+				if (response.status == 1) {
+					$('#objeto_subclasificacion').empty();
+
+					objetoSub.forEach(element => {
+						const option = document.createElement('option');
+						option.value = element.OBJETOSUBCLASIFICACIONID;
+						option.text = element.OBJETOSUBCLASIFICACIONDESCR;
+						objetoSubclasificacion.add(option, null);
+					});
 				}
-
-				$.ajax({
-					method: 'POST',
-					url: "<?= base_url('/data/get-objeto-sub-by-cat') ?>",
-					data: datos,
-					dataType: 'JSON',
-					//data: {nombre:n},
-					success: function(response) {
-						const objetoSub = response.objetoSub;
-						if (response.status == 1) {
-							$('#objeto_subclasificacion').empty();
-
-							objetoSub.forEach(element => {
-								const option = document.createElement('option');
-								option.value = element.OBJETOSUBCLASIFICACIONID;
-								option.text = element.OBJETOSUBCLASIFICACIONDESCR;
-								objetoSubclasificacion.add(option, null);
-							});
-						}
-					},
-				});
-			});
+			},
+		});
+	});
 </script>

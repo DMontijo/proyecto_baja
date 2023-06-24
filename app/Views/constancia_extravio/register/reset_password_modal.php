@@ -1,4 +1,4 @@
-<div class="modal fade" id="reset_pass" tabindex="-1" aria-labelledby="resetLabel" aria-hidden="true">
+<div class="modal fade" id="reset_pass" tabindex="-1" aria-labelledby="resetLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
 	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content">
 			<div class="modal-header bg-primary text-white">
@@ -43,6 +43,7 @@
 				let regex = /\S+@\S+\.\S+/
 				let email = document.querySelector('#correo_reset_password');
 
+				//Validacion de que exista el correo
 				if (regex.test(email.value)) {
 					$.ajax({
 						data: {

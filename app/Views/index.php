@@ -7,19 +7,6 @@
 <?= $this->section('content') ?>
 
 <div class="container">
-	<?php
-	// $email = \Config\Services::email();
-
-	// $email->setTo('abdiel_flores@outlook.com');
-	// $email->setSubject('Email Test');
-	// $email->setMessage('Testing the email class.');
-
-	// $sending = $email->send(false);
-
-	// var_dump($sending);
-	// var_dump($email->printDebugger(['headers']));
-	// exit;
-	?>
 	<!--Versión escritorio-->
 	<div class="row mb-5">
 		<div class="col-12">
@@ -137,6 +124,8 @@
 <?php include('client/dashboard/800_modal.php') ?>
 
 <script>
+	// Funcion que verifica si la casilla de verificación está marcada. Si no esta checkeado manda un popover
+
 	function handleClickBTN(e) {
 		var chk = document.getElementById("aceptar_todos").checked;
 		if (!chk) {
@@ -149,14 +138,15 @@
 		}
 	}
 
+
+	//evento para reproducir video del tutoral cuando abren modal
 	document.querySelector('#tutorial_modal').addEventListener('shown.bs.modal', () => {
 		document.querySelector('#tutorial_video').play();
 	});
+	//evento para pausar video del tutoral cuando cierran	 modal
 
 	document.querySelector('#tutorial_modal').addEventListener('hidden.bs.modal', () => {
 		document.querySelector('#tutorial_video').pause();
 	});
 </script>
-
-
 <?= $this->endSection() ?>

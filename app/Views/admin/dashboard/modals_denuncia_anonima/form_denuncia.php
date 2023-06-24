@@ -64,9 +64,17 @@
 						<label for="hora_delito_da" class="form-label font-weight-bold">Hora:</label>
 						<input type="time" class="form-control" id="hora_delito_da" name="hora_delito_da">
 					</div>
+					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+						<label for="autorizaFoto_da" class="form-label font-weight-bold">Autoriza foto en medios</label>
+						<select class="form-control" id="autorizaFoto_da" name="autorizaFoto_da">
+							<option disabled selected value=""></option>
+							<option value="S">SI</option>
+							<option value="N">NO</option>
+						</select>
+					</div>
 					<div class="col-12 mb-3">
 						<label for="notas_da" class="form-label font-weight-bold">Notas:</label>
-						<textarea class="form-control" id="notas_da" name="notas_da" row="10" oninput="mayuscTextarea(this)"  maxlength="300"></textarea>
+						<textarea class="form-control" id="notas_da" name="notas_da" row="10" oninput="mayuscTextarea(this)" maxlength="1000"></textarea>
 					</div>
 					<div class="col-12 mb-3 text-center">
 						<button type="submit" class="btn btn-primary font-weight-bold">ACTUALIZAR HECHO</button>
@@ -77,8 +85,8 @@
 	</div>
 </div>
 <script>
+	//Funcion pata convertir todo el elemento en mayuscula
 	function mayuscTextarea(e) {
 		e.value = e.value.toUpperCase();
 	}
-
 </script>

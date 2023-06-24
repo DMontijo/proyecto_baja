@@ -14,6 +14,8 @@
 	<a class="btn" href="<?= base_url('/admin') ?>">
 		INGRESAR
 	</a>
+	<br>
+	<br>
 </div>
 
 <?= $this->endSection() ?>

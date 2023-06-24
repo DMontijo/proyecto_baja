@@ -7,11 +7,128 @@
 <?= $this->section('content') ?>
 
 <?php $session = session(); ?>
-<div class="container-fluid" style="overflow:auto;min-height:100vh;">
-	<div class="row d-block" >
-		<div class="col-12 p-0 m-0">
+<style>
+	#video_container {
+		width: 100%;
+		min-height: 70vh;
+	}
+
+	#secondary_videos_container {
+		max-width: 200px;
+		min-width: 150px;
+		padding: 10px;
+		padding-top: 30px;
+		/* background-color: white; */
+		height: calc(70vh - 70px);
+		margin-top: -70vh;
+		margin-left: auto;
+		overflow-y: auto;
+		transition: 0.5s;
+	}
+
+	@media only screen and (max-width: 600px) {
+		#secondary_videos_container {
+			max-width: 150px;
+			min-width: 150px;
+		}
+	}
+
+	.secondary_video {
+		width: 100%;
+		height: 100px;
+		z-index: 1 !important;
+		margin-bottom: 10px;
+		background-color: black;
+	}
+
+	#secondary_video_details {
+		/* background-color: transparent; */
+		width: 100%;
+	}
+
+	#secondary_video video {
+		box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 1);
+		-webkit-box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 1);
+		-moz-box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 1);
+		width: 100% !important;
+		height: 100% !important;
+		border: white 2px solid;
+	}
+
+	#main_video {
+		width: 100% !important;
+		min-height: 70vh;
+		max-height: 70vh;
+		background-color: black;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	#main_video video {
+		max-width: 100%;
+		max-height: 70vh;
+	}
+
+	#main_video_details {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: 0.5s;
+		position: absolute;
+		width: 100%;
+		top: 0;
+	}
+
+	#main_video_details_name {
+		display: inline-block;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		max-width: 300px;
+		font-weight: bold;
+	}
+
+	#network_quality_group {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: 0.5s;
+		position: absolute;
+		width: 100%;
+		top: 90%;
+	}
+
+	#tools-group {
+		padding: 10px;
+		background-color: rgba(0, 0, 0, 0);
+		height: 70px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		margin-top: -70px;
+		z-index: 1;
+		transition: 0.5s;
+	}
+
+	#tools-group:hover {
+		background-color: rgba(0, 0, 0, .3);
+	}
+</style>
+<div class="container-fluid mb-5">
+	<div class="input-group mb-1">
+		<input type="text" class="form-control d-none" id="input_uuid" value="<?= $body_data->UUID ?>">
+		<input type="text" class="form-control d-none" id="input_folio" value="<?php echo $_GET['folio'] ?>">
+		<input type="text" class="form-control d-none" id="input_priority" value="<?php echo isset($_GET['prioridad']) ? $_GET['prioridad'] : 1 ?>">
+		<input type="text" class="form-control d-none" id="input_delito" value="<?php echo $_GET['delito'] ?>">
+		<input type="text" class="form-control d-none" id="input_descripcion" value="<?php echo $_GET['descripcion'] ?>">
+		<input type="text" class="form-control d-none" id="input_base_url_endcall" value="<?= base_url('/denuncia/dashboard/end-videocall') ?>">
+	</div>
+	<div class="row d-block">
+		<div class="col-12 p-0 m-0 mb-3" id="documentos_anexar_card" style="display:none;">
 			<div class="card">
 				<div class="card-body">
+
 					<form id="form_archivos_externos" method="post" enctype="multipart/form-data">
 						<input type="text" class="form-control" id="folio" name="folio" hidden>
 						<input type="text" class="form-control" id="year" name="year" hidden>
@@ -20,33 +137,124 @@
 						<div class="row" style="font-size:10px;">
 							<div class="col-12 col-sm-6 offset-sm-3">
 								<p class="p-0 m-0"><strong>Documentos a anexar</strong></p>
-								<small>En caso de requerir subir un documento durante la entrevista favor de subirlo en esta sección</small>
+								<small>En caso de requerir subir un documento durante la entrevista favor de subirlo en esta sección.</small>
 								<input type="file" class="form-control" id="documentoArchivo" name="documentoArchivo" accept="image/jpeg, image/jpg, image/png, .doc, .pdf">
 								<img id="viewDocumentoArchivo" class="img-fluid" src="" style="max-width:100px;">
-								<button type="submit" class="btn-sm btn-primary" style="width: 100%;">Subir documentos</button>
+								<button type="submit" class="btn-sm btn-primary" style="width: 100%;">Subir documento</button>
 							</div>
 						</div>
 					</form>
+
+					<div id="documentos_anexar_spinner" class="row text-center d-none" style="font-size:10px;">
+						<div class="col-12 col-sm-6 offset-sm-3">
+							<div class="spinner-border text-primary" role="status">
+								<span class="visually-hidden">Subiendo...</span>
+							</div>
+							<h5 class="text-center">Subiendo</h5>
+						</div>
+					</div>
+
 				</div>
 			</div>
 		</div>
-		<div class="col-12 text-center" style="font-size:10px;">
-			Para un correcto funcionamiento utilice <a href="https://www.google.com/chrome/" target="_blank">google chrome</a>.<br>
-			Si esta utilizando un dispositivo móvil de clic en <b>iniciar en el navegador</b>.
-		</div>
-		<div class="col-12 p-0 m-0">
+		<div class="col-12 p-0 m-0" id="pantalla_inicial">
 			<div class="card text-center">
-				<div class="card-body p-0 m-0">
-					<div class="ratio ratio-16x9">
-						<iframe style="min-height:600px;" src="<?= 'https://videodenunciaserver1.fgebc.gob.mx/videollamada?folio=' . $body_data->folio . '&nombre=' . $session->NOMBRE . ' ' . $session->APELLIDO_PATERNO . ' ' . $session->APELLIDO_MATERNO . '&delito=' . $body_data->delito . '&descripcion=' . $body_data->descripcion . '&idioma=' . $body_data->idioma . '&edad=' . $body_data->edad . '&perfil=' . $body_data->perfil . '&sexo=' . $body_data->sexo . '&prioridad=' . $body_data->prioridad . '&sexo_denunciante=' . $body_data->sexo_denunciante ?>" frameborder="0" allowfullscreen allow="camera *;microphone *"></iframe>
+				<div class="card-body p-0 m-0 p-5 d-flex justify-content-center align-items-center">
+					<div class="text-center" style="max-width:500px;">
+						<p>
+							<strong>Para iniciar su videollamada se requiere otorgar permisos de cámara y micrófono.</strong>
+						</p>
+						<img src="<?= base_url() ?>/assets/img/loader.gif" alt="Loader FGEBC" class="mb-3">
+						<p class="fw-bold">
+							¡Tu solicitud se ha registrado con éxito!
+						</p>
+						<p>En unos minutos serás atendido por personal del Centro de Denuncia Tecnológica,
+							<strong>permanece en línea.</strong>
+						</p>
+						<p>
+							De presentarse fallas de conexión recarga la página web o ingresa nuevamente con tu usuario
+							de lo contrario nos pondremos en contacto contigo.
+						</p>
+						<p class="text-center">
+							<a href="<?= base_url('/salas_virtuales') ?>" type="button" class="btn btn-secondary mt-4">
+								Directorio Salas Virtuales
+							</a>
+						</p>
 					</div>
 				</div>
 			</div>
 		</div>
+		<div class="col-12 p-0 m-0" id="pantalla_final" style=" display:none;">
+			<div class="card text-center">
+				<div class="card-body p-0 m-0 p-5 d-flex justify-content-center align-items-center">
+					<div class="text-center" style="max-width:500px;">
+						<img src="<?= base_url() ?>/assets/img/FGEBC.png" alt="Loader FGEBC" class="mb-3" style="width:250px;">
+						<p class="fw-bold">ESTIMADO (A) USUARIO (A),<br>¡GRACIAS POR SELECCIONAR EL SERVICIO DE VIDEO DENUNCIA!</p>
+						<p>En la Fiscalía General del Estado de Baja California día a día trabajamos para garantizarte un fácil acceso a la justicia desde cualquier lugar del mundo.</p>
+						<div class="d-grid gap-2">
+							<a href="<?= base_url('/denuncia/dashboard/denuncias') ?>" type="button" name="" id="" class="btn btn-primary">IR A MIS DENUNCIAS</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-12 p-0 m-0" id="pantalla_error" style=" display:none;">
+			<div class="card text-center">
+				<div class="card-body p-0 m-0 p-5 d-flex justify-content-center align-items-center">
+					<div class="text-center" style="max-width:500px;">
+						<img src="<?= base_url() ?>/assets/img/FGEBC.png" alt="Loader FGEBC" class="mb-3" style="width:250px;">
+						<p class="fw-bold">NO PUEDES INICIAR TU VIDEODENUNCIA</p>
+						<p><strong>Acepta los permisos de audio y cámara.</strong><br><br>
+							En caso de que no sean solicitados, limpia los permisos y aceptalos.
+							Una vez aceptados los permisos de la camara y el micrófono, recarga la página.
+						</p>
+						<div class="d-grid gap-2">
+							<button type="button" name="iniciar_d" id="iniciar_d" onclick="location.reload();" class="btn btn-primary">INICIAR VIDEODENUNCIA</button>
+						</div>
+						<!-- <br>
+						<img src="<?= base_url() ?>/assets/img/verificar_audio_video.gif" alt="Autorizacion audio y video FGEBC" class="mb-3"> -->
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-12 p-0 m-0">
+			<div class="card text-center">
+				<div class="card-body p-0 m-0">
+					<div class="row">
+						<div class="col-12">
+							<div id="video_container" style=" display:none;">
+								<div id="main_video">
+									<div id="main_video_details">
+										<div class="btn-group btn-group-toggle mt-3 shadow">
+											<button class="btn btn-sm btn-light" id="main_video_details_name" name="main_video_details_name"></button>
+										</div>
+									</div>
+									<div id="network_quality_group">
+										<button class="btn btn-sm btn-light d-none" id="network_quality_signal" name="network_quality_signal"></button>
+									</div>
+								</div>
+								<div id="secondary_videos_container">
+									<div class="secondary_video" id="secondary_video">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<br>
+
 	</div>
 </div>
-</div>
+
+<?php include("video_denuncia_media_devices_modal.php"); ?>
+<?php include("video_denuncia_toast.php"); ?>
+
+<script type="text/javascript" src="<?= base_url() ?>/assets/agent/assets/openvidu-browser-2.27.0.min.js?v=<?= rand() ?>"></script>
+<script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
+<script src="<?= base_url() ?>/assets/js/video_denuncia_client.js?v=<?= rand() ?>" type="module"></script>
 <script>
 	const folio_get = `<?php echo $_GET['folio'] ?>`;
 
@@ -57,6 +265,7 @@
 	document.getElementById('folio').value = folio;
 	document.getElementById('year').value = year;
 
+	//Evento para previsualizar el documento
 	document.querySelector('#documentoArchivo').addEventListener('change', (e) => {
 		let preview = document.querySelector('#viewDocumentoArchivo');
 		if (e.target.files && e.target.files[0]) {
@@ -68,14 +277,40 @@
 		}
 	});
 
+	//Evento para enviar archivos externos a VD
 	document.getElementById('form_archivos_externos').addEventListener('submit', function(evt) {
 		evt.preventDefault();
 		crearArchivos();
 	})
 
-	function crearArchivos() {
+	//Funcion asincrona para crear los archivos externos en VD y comprimirlos
+	async function crearArchivos() {
+		document.getElementById('form_archivos_externos').classList.add('d-none');
+		document.getElementById('documentos_anexar_spinner').classList.remove('d-none');
+		let documento;
+		//Comprime
+		if ($("#documentoArchivo")[0].files && $("#documentoArchivo")[0].files[0]) {
+			if ($("#documentoArchivo")[0].files[0].type == "image/jpeg" || $("#documentoArchivo")[0].files[0].type == "image/png" || $("#documentoArchivo")[0].files[0].type == "image/jpg") {
+				documento = await comprimirImagen($("#documentoArchivo")[0].files[0], 50);
+			} else {
+				documento = $("#documentoArchivo")[0].files[0];
+			}
+		} else {
+			document.getElementById('form_archivos_externos').classList.remove('d-none');
+			document.getElementById('documentos_anexar_spinner').classList.add('d-none');
+			Swal.fire({
+				icon: 'error',
+				text: 'Debes seleccionar un documento.',
+				showConfirmButton: false,
+				timer: 3000,
+				timerProgressBar: true,
+			});
+			return
+		}
+
+		//Envio de datos
 		var packetData = new FormData();
-		packetData.append("documentoArchivo", $("#documentoArchivo")[0].files[0]);
+		packetData.append("documentoArchivo", documento);
 		packetData.append("folio", document.getElementById('folio').value);
 		packetData.append("year", document.getElementById('year').value);
 		$.ajax({
@@ -88,12 +323,16 @@
 			cache: false,
 			success: function(response) {
 				const archivos = response.archivos;
+				document.getElementById('form_archivos_externos').classList.remove('d-none');
+				document.getElementById('documentos_anexar_spinner').classList.add('d-none');
 				if (response.status == 1) {
 					console.log(document.querySelectorAll('#table-archivos'));
 					Swal.fire({
 						icon: 'success',
-						text: 'Archivo agregado correctamente',
-						confirmButtonColor: '#bf9b55',
+						text: 'Documento agregado correctamente.',
+						showConfirmButton: false,
+						timer: 3000,
+						timerProgressBar: true,
 					});
 					let preview = document.querySelector('#viewDocumentoArchivo');
 
@@ -103,23 +342,60 @@
 				} else if (response.status == 0) {
 					Swal.fire({
 						icon: 'error',
-						text: 'Los archivos no se pudieron subir',
-						confirmButtonColor: '#bf9b55',
+						text: 'No se subio el documento.',
+						showConfirmButton: false,
+						timer: 3000,
+						timerProgressBar: true,
 					});
 				} else if (response.status == 2) {
 					Swal.fire({
 						icon: 'error',
-						text: 'Debes subir un documento',
-						confirmButtonColor: '#bf9b55',
+						text: 'Debes seleccionar un documento.',
+						showConfirmButton: false,
+						timer: 3000,
+						timerProgressBar: true,
 					});
 				}
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 				console.log(textStatus);
+				document.getElementById('form_archivos_externos').classList.remove('d-none');
+				document.getElementById('documentos_anexar_spinner').classList.add('d-none');
+				Swal.fire({
+					icon: 'error',
+					text: 'No se subio el documento.',
+					showConfirmButton: false,
+					timer: 3000,
+					timerProgressBar: true,
+				});
 			}
 		});
 
 	}
+
+	//Funcion para comprimir el documento a un porcentaje
+	function comprimirImagen(imagenComoArchivo, porcentajeCalidad) {
+		return new Promise((resolve, reject) => {
+			const $canvas = document.createElement("canvas");
+			const imagen = new Image();
+			imagen.onload = () => {
+				$canvas.width = imagen.width;
+				$canvas.height = imagen.height;
+				$canvas.getContext("2d").drawImage(imagen, 0, 0);
+				$canvas.toBlob(
+					(blob) => {
+						if (blob === null) {
+							return reject(blob);
+						} else {
+							resolve(blob);
+						}
+					},
+					"image/jpeg", porcentajeCalidad / 100
+				);
+			};
+			imagen.src = URL.createObjectURL(imagenComoArchivo);
+		});
+	};
 </script>
 
 <?= $this->endSection() ?>

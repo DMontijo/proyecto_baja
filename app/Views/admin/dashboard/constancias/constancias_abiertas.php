@@ -34,7 +34,7 @@
                                     <td class="text-center font-weight-bold"><?= $constancia->CONSTANCIAEXTRAVIOID ?>
                                     </td>
                                     <td class="text-center"><?= $constancia->ANO ?></td>
-                                    <td class="text-center"><?= $constancia->FECHA ?></td>
+                                    <td class="text-center"><?= date('d-m-Y',strtotime($constancia->FECHA)) ?></td>
                                     <td class="text-center"><?= $constancia->HORA ?></td>
                                     <td class="text-center"><?= $constancia->NOMBRE ?></td>
                                     <td class="text-center"><?= $constancia->CORREO?></td>
@@ -95,7 +95,7 @@ $(function() {
             // [0, 'asc'],
         ],
         searching: true,
-        pageLength: 100,
+        pageLength: 25,
         // dom: 'Bfrtip',
         // buttons: [
         // 	'copy', 'excel', 'pdf'
@@ -115,6 +115,7 @@ window.onload = function() {
     }, 300000);
 }
 
+// funcion para obtener todas las constancias abiertas
 const getConstanciasAbiertas = () => {
     $.ajax({
         url: "<?= base_url('/data/get-all-constancias-abiertas') ?>",
@@ -127,6 +128,7 @@ const getConstanciasAbiertas = () => {
     });
 }
 
+//se llena la tabla para visualizar las constancias abiertas
 const llenarTabla = (constancias) => {
     const tbody = document.querySelector('#constancias_abiertas tbody');
     const filas = document.querySelectorAll('#constancias_abiertas tbody > tr');

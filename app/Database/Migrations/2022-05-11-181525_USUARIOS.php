@@ -48,23 +48,19 @@ class USUARIOS extends Migration
 			],
 			'MUNICIPIOID' => [
 				'type' => 'INT',
+				'null' => TRUE,
 			],
 			'OFICINAID' => [
 				'type' => 'INT',
+				'null' => TRUE,
 			],
-			'USUARIOVIDEO' => [
-				'type' => 'INT',
+			'MUNICIPIOSOFICINASID' => [
+				'type' => 'LONGTEXT',
+				'null' => TRUE,
 			],
 			'TOKENVIDEO' => [
 				'type' => 'VARCHAR',
 				'constraint' => '255',
-			],
-			'CERTIFICADOFIRMA' => [
-				'type' => 'LONGBLOB',
-				'null' => TRUE,
-			],
-			'KEYFIRMA' => [
-				'type' => 'LONGBLOB',
 				'null' => TRUE,
 			],
 		]);

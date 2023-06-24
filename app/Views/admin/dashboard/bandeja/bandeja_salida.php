@@ -32,11 +32,12 @@
 						</ul>
 						<div class="tab-content" id="myTabContent">
 							<div class="tab-pane fade show active" id="ensenada" role="tabpanel" aria-labelledby="ensenada-tab">
-								<table id="table-ensenada" class="table table-bordered table-striped">
+								<table id="table-ensenada" class="table table-bordered table-striped table-sm" style="font-size:12px;">
 									<thead>
 										<tr>
 											<th class="text-center">FOLIO</th>
 											<th class="text-center">EXPEDIENTE</th>
+											<th class="text-center">AGENTE</th>
 											<th class="text-center">MUNICIPIO ASIGNADO</th>
 											<th class="text-center">DOMICILIO DEL HECHO</th>
 											<th class="text-center">DELITOS INVOLUCRADOS</th>
@@ -46,30 +47,45 @@
 									<tbody>
 										<?php foreach ($body_data->ensenada->result as $index => $folio) {
 											$expedienteid = '';
+											$domicilio = '';
 											if (isset($folio->EXPEDIENTEID)) {
 												$arrayExpediente = str_split($folio->EXPEDIENTEID);
 												$expedienteid = $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
-											} ?>
+											}
+
+											if (isset($folio->TIPOEXPEDIENTECLAVE)) {
+												$expedienteid = $expedienteid . '/' . $folio->TIPOEXPEDIENTECLAVE;
+											}
+
+										?>
 											<tr>
-												<td class="text-center"><?= $folio->FOLIOID . '/' . $folio->ANO ?></td>
-												<td class="text-center"><?= $expedienteid ? $expedienteid : '' ?></td>
+												<td class="text-center font-weight-bold"><?= $folio->FOLIOID . '/' . $folio->ANO ?></td>
+												<td class="text-center font-weight-bold"><?= $expedienteid ? $expedienteid : '' ?></td>
+												<td class="text-center"><?= $folio->NOMBRE_AGENTE ?></td>
 												<td class="text-center"><?= $folio->MUNICIPIODESCR ?></td>
-												<td class="text-center"><?= $folio->HECHOCALLE ?></td>
+												<td class="text-center"><?= ($folio->HECHOCALLE ? $folio->HECHOCALLE : 'SIN CALLE') . ' ' . ($folio->HECHONUMEROCASA ? $folio->HECHONUMEROCASA : 'S/N') . ($folio->HECHONUMEROCASAINT ? ' INT. ' . $folio->HECHONUMEROCASAINT : '')  . ', ' . ($folio->HECHOCOLONIADESCR ? $folio->HECHOCOLONIADESCR : 'SIN COLONIA'); ?></td>
 												<td class="text-center"><?= $folio->DELITOMODALIDADDESCR ?></td>
-												<td class="text-center">
-													<a type="button" href="<?= base_url('/admin/dashboard/bandeja_remision?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO . '&municipioasignado=' . $folio->MUNICIPIOASIGNADOID . '&expediente=' . $folio->EXPEDIENTEID ?>" class="btn btn-primary text-white">REMITIR</a>
-												</td>
+												<?php if ($folio->STATUSDOCUMENTO != null  && str_contains($folio->STATUSDOCUMENTO, "ABIERTO")) { ?>
+													<td class="text-center">
+														<button type="button" href="<?= base_url('/admin/dashboard/bandeja_remision?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO . '&municipioasignado=' . $folio->MUNICIPIOASIGNADOID . '&expediente=' . $folio->EXPEDIENTEID ?>" class="btn btn-primary text-white btn-sm" disabled>REMITIR</button>
+													</td>
+												<?php } else { ?>
+													<td class="text-center">
+														<a type="button" href="<?= base_url('/admin/dashboard/bandeja_remision?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO . '&municipioasignado=' . $folio->MUNICIPIOASIGNADOID . '&expediente=' . $folio->EXPEDIENTEID ?>" class="btn btn-primary text-white btn-sm">REMITIR</a>
+													</td>
+												<?php } ?>
 											</tr>
 										<?php } ?>
 									</tbody>
 								</table>
 							</div>
 							<div class="tab-pane fade" id="mexicali" role="tabpanel" aria-labelledby="mexicali-tab">
-								<table id="table-mexicali" class="table table-bordered table-striped">
+								<table id="table-mexicali" class="table table-bordered table-striped table-sm" style="font-size:12px;">
 									<thead>
 										<tr>
 											<th class="text-center">FOLIO</th>
 											<th class="text-center">EXPEDIENTE</th>
+											<th class="text-center">AGENTE</th>
 											<th class="text-center">MUNICIPIO ASIGNADO</th>
 											<th class="text-center">DOMICILIO DEL HECHO</th>
 											<th class="text-center">DELITOS INVOLUCRADOS</th>
@@ -82,27 +98,41 @@
 											if (isset($folio->EXPEDIENTEID)) {
 												$arrayExpediente = str_split($folio->EXPEDIENTEID);
 												$expedienteid = $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
-											} ?>
+											}
+
+											if (isset($folio->TIPOEXPEDIENTECLAVE)) {
+												$expedienteid = $expedienteid . '/' . $folio->TIPOEXPEDIENTECLAVE;
+											}
+
+										?>
 											<tr>
-												<td class="text-center"><?= $folio->FOLIOID . '/' . $folio->ANO ?></td>
-												<td class="text-center"><?= $expedienteid ? $expedienteid : '' ?></td>
+												<td class="text-center font-weight-bold"><?= $folio->FOLIOID . '/' . $folio->ANO ?></td>
+												<td class="text-center font-weight-bold"><?= $expedienteid ? $expedienteid : '' ?></td>
+												<td class="text-center"><?= $folio->NOMBRE_AGENTE ?></td>
 												<td class="text-center"><?= $folio->MUNICIPIODESCR ?></td>
-												<td class="text-center"><?= $folio->HECHOCALLE ?></td>
+												<td class="text-center"><?= ($folio->HECHOCALLE ? $folio->HECHOCALLE : 'SIN CALLE') . ' ' . ($folio->HECHONUMEROCASA ? $folio->HECHONUMEROCASA : 'S/N') . ($folio->HECHONUMEROCASAINT ? ' INT. ' . $folio->HECHONUMEROCASAINT : '')  . ', ' . ($folio->HECHOCOLONIADESCR ? $folio->HECHOCOLONIADESCR : 'SIN COLONIA'); ?></td>
 												<td class="text-center"><?= $folio->DELITOMODALIDADDESCR ?></td>
-												<td class="text-center">
-													<a type="button" href="<?= base_url('/admin/dashboard/bandeja_remision?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO . '&municipioasignado=' . $folio->MUNICIPIOASIGNADOID . '&expediente=' . $folio->EXPEDIENTEID ?>" class="btn btn-primary text-white">REMITIR</a>
-												</td>
+												<?php if ($folio->STATUSDOCUMENTO != null  && str_contains($folio->STATUSDOCUMENTO, "ABIERTO")) { ?>
+													<td class="text-center">
+														<button type="button" href="<?= base_url('/admin/dashboard/bandeja_remision?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO . '&municipioasignado=' . $folio->MUNICIPIOASIGNADOID . '&expediente=' . $folio->EXPEDIENTEID ?>" class="btn btn-primary text-white btn-sm" disabled>REMITIR</button>
+													</td>
+												<?php } else { ?>
+													<td class="text-center">
+														<a type="button" href="<?= base_url('/admin/dashboard/bandeja_remision?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO . '&municipioasignado=' . $folio->MUNICIPIOASIGNADOID . '&expediente=' . $folio->EXPEDIENTEID ?>" class="btn btn-primary text-white btn-sm">REMITIR</a>
+													</td>
+												<?php } ?>
 											</tr>
 										<?php } ?>
 									</tbody>
 								</table>
 							</div>
 							<div class="tab-pane fade" id="tecate" role="tabpanel" aria-labelledby="tecate-tab">
-								<table id="table-tecate" class="table table-bordered table-striped">
+								<table id="table-tecate" class="table table-bordered table-striped table-sm" style="font-size:12px;">
 									<thead>
 										<tr>
 											<th class="text-center">FOLIO</th>
 											<th class="text-center">EXPEDIENTE</th>
+											<th class="text-center">AGENTE</th>
 											<th class="text-center">MUNICIPIO ASIGNADO</th>
 											<th class="text-center">DOMICILIO DEL HECHO</th>
 											<th class="text-center">DELITOS INVOLUCRADOS</th>
@@ -115,27 +145,41 @@
 											if (isset($folio->EXPEDIENTEID)) {
 												$arrayExpediente = str_split($folio->EXPEDIENTEID);
 												$expedienteid = $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
-											} ?>
+											}
+
+											if (isset($folio->TIPOEXPEDIENTECLAVE)) {
+												$expedienteid = $expedienteid . '/' . $folio->TIPOEXPEDIENTECLAVE;
+											}
+
+										?>
 											<tr>
-												<td class="text-center"><?= $folio->FOLIOID . '/' . $folio->ANO ?></td>
-												<td class="text-center"><?= $expedienteid ? $expedienteid : '' ?></td>
+												<td class="text-center font-weight-bold"><?= $folio->FOLIOID . '/' . $folio->ANO ?></td>
+												<td class="text-center font-weight-bold"><?= $expedienteid ? $expedienteid : '' ?></td>
+												<td class="text-center"><?= $folio->NOMBRE_AGENTE ?></td>
 												<td class="text-center"><?= $folio->MUNICIPIODESCR ?></td>
-												<td class="text-center"><?= $folio->HECHOCALLE ?></td>
+												<td class="text-center"><?= ($folio->HECHOCALLE ? $folio->HECHOCALLE : 'SIN CALLE') . ' ' . ($folio->HECHONUMEROCASA ? $folio->HECHONUMEROCASA : 'S/N') . ($folio->HECHONUMEROCASAINT ? ' INT. ' . $folio->HECHONUMEROCASAINT : '')  . ', ' . ($folio->HECHOCOLONIADESCR ? $folio->HECHOCOLONIADESCR : 'SIN COLONIA'); ?></td>
 												<td class="text-center"><?= $folio->DELITOMODALIDADDESCR ?></td>
-												<td class="text-center">
-													<a type="button" href="<?= base_url('/admin/dashboard/bandeja_remision?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO . '&municipioasignado=' . $folio->MUNICIPIOASIGNADOID . '&expediente=' . $folio->EXPEDIENTEID ?>" class="btn btn-primary text-white">REMITIR</a>
-												</td>
+												<?php if ($folio->STATUSDOCUMENTO != null  && str_contains($folio->STATUSDOCUMENTO, "ABIERTO")) { ?>
+													<td class="text-center">
+														<button type="button" href="<?= base_url('/admin/dashboard/bandeja_remision?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO . '&municipioasignado=' . $folio->MUNICIPIOASIGNADOID . '&expediente=' . $folio->EXPEDIENTEID ?>" class="btn btn-primary text-white btn-sm" disabled>REMITIR</button>
+													</td>
+												<?php } else { ?>
+													<td class="text-center">
+														<a type="button" href="<?= base_url('/admin/dashboard/bandeja_remision?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO . '&municipioasignado=' . $folio->MUNICIPIOASIGNADOID . '&expediente=' . $folio->EXPEDIENTEID ?>" class="btn btn-primary text-white btn-sm">REMITIR</a>
+													</td>
+												<?php } ?>
 											</tr>
 										<?php } ?>
 									</tbody>
 								</table>
 							</div>
 							<div class="tab-pane fade" id="tijuana" role="tabpanel" aria-labelledby="tijuana-tab">
-								<table id="table-tijuana" class="table table-bordered table-striped">
+								<table id="table-tijuana" class="table table-bordered table-striped table-sm" style="font-size:12px;">
 									<thead>
 										<tr>
 											<th class="text-center">FOLIO</th>
 											<th class="text-center">EXPEDIENTE</th>
+											<th class="text-center">AGENTE</th>
 											<th class="text-center">MUNICIPIO ASIGNADO</th>
 											<th class="text-center">DOMICILIO DEL HECHO</th>
 											<th class="text-center">DELITOS INVOLUCRADOS</th>
@@ -148,27 +192,41 @@
 											if (isset($folio->EXPEDIENTEID)) {
 												$arrayExpediente = str_split($folio->EXPEDIENTEID);
 												$expedienteid = $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
-											} ?>
+											}
+
+											if (isset($folio->TIPOEXPEDIENTECLAVE)) {
+												$expedienteid = $expedienteid . '/' . $folio->TIPOEXPEDIENTECLAVE;
+											}
+
+										?>
 											<tr>
-												<td class="text-center"><?= $folio->FOLIOID . '/' . $folio->ANO ?></td>
-												<td class="text-center"><?= $expedienteid ? $expedienteid : '' ?></td>
+												<td class="text-center font-weight-bold"><?= $folio->FOLIOID . '/' . $folio->ANO ?></td>
+												<td class="text-center font-weight-bold"><?= $expedienteid ? $expedienteid : '' ?></td>
+												<td class="text-center"><?= $folio->NOMBRE_AGENTE ?></td>
 												<td class="text-center"><?= $folio->MUNICIPIODESCR ?></td>
-												<td class="text-center"><?= $folio->HECHOCALLE ?></td>
+												<td class="text-center"><?= ($folio->HECHOCALLE ? $folio->HECHOCALLE : 'SIN CALLE') . ' ' . ($folio->HECHONUMEROCASA ? $folio->HECHONUMEROCASA : 'S/N') . ($folio->HECHONUMEROCASAINT ? ' INT. ' . $folio->HECHONUMEROCASAINT : '')  . ', ' . ($folio->HECHOCOLONIADESCR ? $folio->HECHOCOLONIADESCR : 'SIN COLONIA'); ?></td>
 												<td class="text-center"><?= $folio->DELITOMODALIDADDESCR ?></td>
-												<td class="text-center">
-													<a type="button" href="<?= base_url('/admin/dashboard/bandeja_remision?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO . '&municipioasignado=' . $folio->MUNICIPIOASIGNADOID . '&expediente=' . $folio->EXPEDIENTEID ?>" class="btn btn-primary text-white">REMITIR</a>
-												</td>
+												<?php if ($folio->STATUSDOCUMENTO != null  && str_contains($folio->STATUSDOCUMENTO, "ABIERTO")) { ?>
+													<td class="text-center">
+														<button type="button" href="<?= base_url('/admin/dashboard/bandeja_remision?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO . '&municipioasignado=' . $folio->MUNICIPIOASIGNADOID . '&expediente=' . $folio->EXPEDIENTEID ?>" class="btn btn-primary text-white btn-sm" disabled>REMITIR</button>
+													</td>
+												<?php } else { ?>
+													<td class="text-center">
+														<a type="button" href="<?= base_url('/admin/dashboard/bandeja_remision?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO . '&municipioasignado=' . $folio->MUNICIPIOASIGNADOID . '&expediente=' . $folio->EXPEDIENTEID ?>" class="btn btn-primary text-white btn-sm">REMITIR</a>
+													</td>
+												<?php } ?>
 											</tr>
 										<?php } ?>
 									</tbody>
 								</table>
 							</div>
 							<div class="tab-pane fade" id="rosarito" role="tabpanel" aria-labelledby="rosarito-tab">
-								<table id="table-rosarito" class="table table-bordered table-striped">
+								<table id="table-rosarito" class="table table-bordered table-striped table-sm" style="font-size:12px;">
 									<thead>
 										<tr>
 											<th class="text-center">FOLIO</th>
 											<th class="text-center">EXPEDIENTE</th>
+											<th class="text-center">AGENTE</th>
 											<th class="text-center">MUNICIPIO ASIGNADO</th>
 											<th class="text-center">DOMICILIO DEL HECHO</th>
 											<th class="text-center">DELITOS INVOLUCRADOS</th>
@@ -181,16 +239,29 @@
 											if (isset($folio->EXPEDIENTEID)) {
 												$arrayExpediente = str_split($folio->EXPEDIENTEID);
 												$expedienteid = $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
-											} ?>
+											}
+
+											if (isset($folio->TIPOEXPEDIENTECLAVE)) {
+												$expedienteid = $expedienteid . '/' . $folio->TIPOEXPEDIENTECLAVE;
+											}
+
+										?>
 											<tr>
-												<td class="text-center"><?= $folio->FOLIOID . '/' . $folio->ANO ?></td>
-												<td class="text-center"><?= $expedienteid ? $expedienteid : '' ?></td>
+												<td class="text-center font-weight-bold"><?= $folio->FOLIOID . '/' . $folio->ANO ?></td>
+												<td class="text-center font-weight-bold"><?= $expedienteid ? $expedienteid : '' ?></td>
+												<td class="text-center"><?= $folio->NOMBRE_AGENTE ?></td>
 												<td class="text-center"><?= $folio->MUNICIPIODESCR ?></td>
-												<td class="text-center"><?= $folio->HECHOCALLE ?></td>
+												<td class="text-center"><?= ($folio->HECHOCALLE ? $folio->HECHOCALLE : 'SIN CALLE') . ' ' . ($folio->HECHONUMEROCASA ? $folio->HECHONUMEROCASA : 'S/N') . ($folio->HECHONUMEROCASAINT ? ' INT. ' . $folio->HECHONUMEROCASAINT : '')  . ', ' . ($folio->HECHOCOLONIADESCR ? $folio->HECHOCOLONIADESCR : 'SIN COLONIA'); ?></td>
 												<td class="text-center"><?= $folio->DELITOMODALIDADDESCR ?></td>
-												<td class="text-center">
-													<a type="button" href="<?= base_url('/admin/dashboard/bandeja_remision?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO . '&municipioasignado=' . $folio->MUNICIPIOASIGNADOID . '&expediente=' . $folio->EXPEDIENTEID ?>" class="btn btn-primary text-white">REMITIR</a>
-												</td>
+												<?php if ($folio->STATUSDOCUMENTO != null  && str_contains($folio->STATUSDOCUMENTO, "ABIERTO")) { ?>
+													<td class="text-center">
+														<button type="button" href="<?= base_url('/admin/dashboard/bandeja_remision?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO . '&municipioasignado=' . $folio->MUNICIPIOASIGNADOID . '&expediente=' . $folio->EXPEDIENTEID ?>" class="btn btn-primary text-white btn-sm" disabled>REMITIR</button>
+													</td>
+												<?php } else { ?>
+													<td class="text-center">
+														<a type="button" href="<?= base_url('/admin/dashboard/bandeja_remision?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO . '&municipioasignado=' . $folio->MUNICIPIOASIGNADOID . '&expediente=' . $folio->EXPEDIENTEID ?>" class="btn btn-primary text-white btn-sm">REMITIR</a>
+													</td>
+												<?php } ?>
 											</tr>
 										<?php } ?>
 									</tbody>
@@ -214,7 +285,7 @@
 				[0, 'asc'],
 			],
 			searching: true,
-			pageLength: 100,
+			pageLength: 25,
 			// dom: 'Bfrtip',
 			// buttons: [
 			// 	'copy', 'excel', 'pdf'
@@ -234,7 +305,7 @@
 				[0, 'asc'],
 			],
 			searching: true,
-			pageLength: 100,
+			pageLength: 25,
 			// dom: 'Bfrtip',
 			// buttons: [
 			// 	'copy', 'excel', 'pdf'
@@ -254,7 +325,7 @@
 				[0, 'asc'],
 			],
 			searching: true,
-			pageLength: 100,
+			pageLength: 25,
 			// dom: 'Bfrtip',
 			// buttons: [
 			// 	'copy', 'excel', 'pdf'
@@ -274,7 +345,7 @@
 				[0, 'asc'],
 			],
 			searching: true,
-			pageLength: 100,
+			pageLength: 25,
 			// dom: 'Bfrtip',
 			// buttons: [
 			// 	'copy', 'excel', 'pdf'
@@ -294,7 +365,7 @@
 				[0, 'asc'],
 			],
 			searching: true,
-			pageLength: 100,
+			pageLength: 25,
 			// dom: 'Bfrtip',
 			// buttons: [
 			// 	'copy', 'excel', 'pdf'

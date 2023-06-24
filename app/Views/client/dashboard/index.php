@@ -75,7 +75,7 @@
 								<div class="col-12 text-center">
 									<p class="fw-bold">Haz completado la información</p>
 
-									
+
 									<p class="text-center">
 										<i class="bi bi-exclamation-triangle"> Es muy importante que antes de iniciar tu video denuncia aceptes los derechos de víctima u ofendido.</i>
 										<br>
@@ -84,14 +84,14 @@
 									</p>
 
 
-									<div class="row">
+									<!-- <div class="row">
 										<div class="col-12 col-sm-6 offset-sm-3">
 											<p class="p-0 m-0"><strong>Documentos a anexar</strong></p>
 											<small>Si deseas anexar cualquier documento o imagén para la videodenuncia, hazlo aqui.</small>
 											<input type="file" class="form-control" id="documentosArchivo" name="documentosArchivo[]" accept="image/jpeg, image/jpg, image/png, .doc, .pdf" multiple>
 											<img id="viewDocumentoArchivo" class="img-fluid" src="" style="max-width:100px;">
 										</div>
-									</div>
+									</div> -->
 									<br>
 
 
@@ -102,6 +102,7 @@
 											Debes confirmar de leído los derechos de víctima u ofendido para continuar.
 										</div>
 									</div>
+									<br>
 									<div class="form-group">
 										<input class="form-check-input" type="checkbox" id="notificaciones_check" name="notificaciones_check" required>
 										<label class="fw-bold" for="notificaciones_check">
@@ -131,7 +132,15 @@
 <?php include('800_modal.php') ?>
 <?php include('open_folios_modal.php') ?>
 <?php include('derechos_ofendido_modal.php') ?>
-
+<?php if (session()->getFlashdata('message_error')) : ?>
+	<script>
+		Swal.fire({
+			icon: 'error',
+			html: '<strong><?= session()->getFlashdata('message') ?></strong>',
+			confirmButtonColor: '#bf9b55',
+		})
+	</script>
+<?php endif; ?>
 <script>
 	var steps = document.querySelectorAll('.step');
 	const prevBtn = document.querySelector('#prev-btn');
@@ -145,6 +154,8 @@
 	var checkML_imputado = document.getElementById('checkML_imputado');
 	var checkML_des = document.getElementById('checkML_des');
 	var check_ubi = document.getElementById('check_ubi');
+
+	//Evento para abrir la ubicacion exacta (mapa)
 	check_ubi.addEventListener('click', function() {
 		let mapa = document.querySelector('#map');
 
@@ -161,6 +172,8 @@
 
 		}
 	});
+
+	//Evento para cambiar el texto del label cuando seleccionan Manzana y Lote del menor
 	checkML_menor.addEventListener('click', function() {
 		if (checkML_menor.checked) {
 			document.getElementById('lblExterior_menor').innerHTML = "Manzana";
@@ -170,6 +183,8 @@
 			document.getElementById('lblInterior_menor').innerHTML = "Número interior";
 		}
 	});
+	//Evento para cambiar el texto del label cuando seleccionan Manzana y Lote del imputado
+
 	checkML_imputado.addEventListener('click', function() {
 		if (checkML_imputado.checked) {
 			document.getElementById('lblExterior_imputado').innerHTML = "Manzana";
@@ -179,6 +194,8 @@
 			document.getElementById('lblInterior_imputado').innerHTML = "Número interior";
 		}
 	});
+	//Evento para cambiar el texto del label cuando seleccionan Manzana y Lote del desaparecido
+
 	checkML_des.addEventListener('click', function() {
 		if (checkML_des.checked) {
 			document.getElementById('lblExterior_des').innerHTML = "Manzana";
@@ -188,6 +205,8 @@
 			document.getElementById('lblInterior_des').innerHTML = "Número interior";
 		}
 	});
+
+	//Abrir modal de aviso al cargar la pagina
 	$(document).ready(() => {
 		$('#aviso_modal').modal('show');
 	});
@@ -215,18 +234,21 @@
 				}, false)
 			})
 
+		//Convierte todos los input text en mayusculas y eliminar caracteres especiales
 		inputsText.forEach((input) => {
 			input.addEventListener('input', (event) => {
 				event.target.value = clearText(event.target.value).toUpperCase();
 			}, false)
 		});
 
+		//Convierte todos los input email a minusculas y eliminar caracteres especiales
 		inputsEmail.forEach((input) => {
 			input.addEventListener('input', (event) => {
 				event.target.value = clearText(event.target.value).toLowerCase();
 			}, false)
 		});
 
+		//Eventos para convertir a mayusculas y eliminar caracteres especiales
 		document.querySelector('#description_fisica_imputado').addEventListener('input', (event) => {
 			event.target.value = clearText(event.target.value).toUpperCase();
 		}, false)
@@ -247,6 +269,7 @@
 			event.target.value = clearText(event.target.value).toUpperCase();
 		}, false)
 
+		//Evento para abrir modal cuando el denunciante tiene folios abiertos
 		document.querySelector('#aviso_modal').addEventListener('hidden.bs.modal', (event) => {
 			$.ajax({
 				data: {
@@ -278,6 +301,7 @@
 
 	})();
 
+	//Evento para calcular los caracteres restantes
 	$('#description').keyup(() => {
 		let ch = 150 - $(this).val().length;
 		$('#mensaje_ayuda').text(ch + ' carácteres restantes');
@@ -289,6 +313,7 @@
 
 	nextBtn.addEventListener('click', () => {
 
+		//Agrega steps de acuerdo a las preguntas iniciales
 		var vista = document.querySelectorAll('.step');
 
 		if (validarStep(vista[currentStep].id)) {
@@ -511,6 +536,7 @@
 	});
 
 	prevBtn.addEventListener('click', () => {
+		//Modifica estilos cuando se regresa un step
 		if (currentStep > 0) {
 			currentStep--;
 			let previousStep = currentStep + 1;
@@ -538,19 +564,26 @@
 		progress.style.width = `${currentStep*width}%`
 	});
 
+	//Funcion para eliminar los options de un select
 	function clearSelect(select_element) {
 		for (let i = select_element.options.length; i >= 1; i--) {
 			select_element.remove(i);
 		}
 	}
+	//Funcion para limpiar los guiones
+	function clearGuion(e) {
+		e.target.value = e.target.value.replace(/-/g, "");
+	}
 
 
+	//Funcion para actualizar las variables con el numero restantes de steps
 	function refreshSteps() {
 		steps = document.querySelectorAll('.step');
 		stepCount = steps.length - 1;
 		width = 100 / stepCount;
 	}
 
+	//Funcion para eliminar caracteres especiales del texto
 	function clearText(text) {
 		return text
 			.normalize('NFD')
@@ -559,6 +592,7 @@
 			.replaceAll('´', '');
 	}
 
+	//Funcion mostrar o ocultar los elementos de paso según el número especificado, y también actualiza el ancho del progreso.
 	function chargeCurrentStep(num) {
 		steps.forEach((step, index) => {
 			if (num === index) {
@@ -572,6 +606,7 @@
 	}
 
 
+	//Funcion para validar los elementos requeridos de cada step
 	function validarStep(step) {
 		switch (step) {
 			case 'datos_iniciales':
@@ -581,7 +616,9 @@
 					document.querySelector('input[name="es_vulnerable"]:checked') &&
 					document.querySelector('input[name="fue_con_arma"]:checked') &&
 					document.querySelector('input[name="lesiones"]:checked') &&
-					document.querySelector('input[name="esta_desaparecido"]:checked')
+					document.querySelector('input[name="esta_desaparecido"]:checked') &&
+					document.querySelector('input[name="es_tercera_edad"]:checked') &&
+					document.querySelector('input[name="es_ofendido"]:checked')
 				) {
 					return true;
 				} else {
@@ -629,10 +666,15 @@
 				}
 				break;
 			case 'datos_delito':
+				let date1 = new Date(document.querySelector('#fecha').value);
+				let date2 = new Date("<?= date("Y-m-d") ?>");
+				if (date1 > date2) {
+					document.querySelector('#fecha').value = '';
+				}
 				if (
 					document.querySelector('#delito').value != '' &&
 					document.querySelector('#lugar').value != '' &&
-					document.querySelector('#fecha').value <= "<?= date("Y-m-d") ?>" &&
+					document.querySelector('#fecha').value != '' &&
 					document.querySelector('#hora').value != '' &&
 					document.querySelector('input[name="responsable"]:checked') &&
 					document.querySelector('#descripcion_breve').value != ''

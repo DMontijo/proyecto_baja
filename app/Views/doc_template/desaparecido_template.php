@@ -21,35 +21,33 @@
 		/** Define now the real margins of every page in the PDF **/
 		body {
 			margin-top: 4cm;
-			margin-left: 2cm;
-			margin-right: 2cm;
-			margin-bottom: 2cm;
+			margin-left: 1cm;
+			margin-right: 1cm;
+			margin-bottom: 2.5cm;
 			font-family: 'Montserrat', Arial, Helvetica, sans-serif;
-			font-size: 11pt;
+			font-size: 9pt;
 			color: #000000;
 		}
 
 		/** Define the header rules **/
 		header {
 			position: fixed;
-			top: -190px;
+			top: -200px;
 			left: 0cm;
 			right: 0cm;
-			height: 16cm;
 		}
 
 		/** Define the footer rules **/
 		footer {
 			position: fixed;
 			bottom: 0cm;
-			left: 2cm;
-			right: 2cm;
-			height: 5cm;
 		}
 
-		/* footer .pagenum:before {
-			content: counter(page);
-		} */
+		main {
+			/* border: 1px solid red; */
+			max-height: 14cm;
+			overflow: hidden !important;
+		}
 	</style>
 </head>
 
@@ -57,25 +55,22 @@
 	<!-- Define header and footer blocks before your content -->
 	<header>
 		<center>
-			<img src="<?= 'data:image/png;base64,' . $data->image1 ?>" height="100%" />
+			<img src="<?= 'data:image/png;base64,' . $data->image1 ?>" width="50%;" />
 		</center>
-
 	</header>
-
-	<footer>
-		<div style="border-style: solid; border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; width: 70%; margin: 0 auto; font-size: 11pt;border-start-end-radius: 10%; border-start-start-radius: 10%; background-color: #511229; color: white;">
-			<p style="text-align:center;">
-				Si tienes información comunicate a la Unidad Especializada para la Investigación y <br> Persecución de Delitos de Desaparición Forzada de Personas y Desaparición Cometida por <br> Particulares al (686) 9046600, extensiones 4029, 2064, 2488 y 4394. También a los números <br>089 y 911.
-			</p>
-		</div>
-
-	</footer>
 
 	<!-- Wrap the content of your PDF inside a main tag -->
 	<main>
-		<br><br>
 		<?= $data->placeholder ?>
 	</main>
+
+	<footer>
+		<div style="width: 70%; margin: 0 auto; font-size: 9pt; background-color: #511229; color: white; border-top-left-radius: 30px; border-top-right-radius: 30px;">
+			<p style="text-align:center; padding:20px 50px 20px 50px;">
+				Si tienes información comunicate a la Unidad Especializada para la Investigación y Persecución de Delitos de Desaparición Forzada de Personas y Desaparición Cometida por <br> Particulares al 686-904-6600, extensiones 4029, 2064, 2488 y 4394. También a los números 089 y 911.
+			</p>
+		</div>
+	</footer>
 </body>
 
 </html>

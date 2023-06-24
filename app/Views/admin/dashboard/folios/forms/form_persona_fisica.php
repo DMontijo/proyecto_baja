@@ -1,6 +1,6 @@
 <div class="row p-0 m-0">
 	<div id="contenedor_fisica_foto" class="col-12 mb-5 d-none">
-		<a id="fisica_foto_download" dowload="" href="">
+		<a id="fisica_foto_download" download="" href="">
 			<img id="fisica_foto" class="img-fluid" src="" style="max-width:300px;">
 		</a>
 	</div>
