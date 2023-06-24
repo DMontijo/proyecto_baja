@@ -120,6 +120,53 @@
 			})
 		</script>
 	<?php endif; ?>
+	<script>
+		
+		closeSessionTimeout();
+		function closeSessionTimeout(){
+			var timeout; 
+			clearTimeout(timeout); 
+			console.log('timeout funcionando');
+			timeout = setTimeout(function(){
+				Swal.fire({
+					icon: 'error',
+					title: 'Tiempo de sesión agotado',
+					text: 'Si quieres seguir utilizando la plataforma hay que renovar la sesion dando click en Ok, sino Cancelar',
+					confirmButtonColor: '#bf9b55',
+					showCancelButton: true,
+				}).then((result) => {
+					if (result.isConfirmed) {
+						$.ajax({
+							url: "<?= base_url('denuncia/actualizar-sesion') ?>",
+							method: "get",
+							dataType: "json",
+							success: function(response) {
+								//console.log(response);
+								if(response.result){
+									Swal.fire({
+									icon: 'success',
+									title: 'Sesión actualizada',
+									confirmButtonColor: '#bf9b55',
+									}).then((result) => {
+										if (result.isConfirmed) {
+											console.log(response);
+											closeSessionTimeout();
+										}
+									});
+								}else{
+									Swal.fire({
+									icon: 'error',
+									title: 'Tiempo agotado',
+									confirmButtonColor: '#bf9b55',});	
+								}
+							},
+							error: function(jqXHR, textStatus, errorThrown) {}
+						});
+					}
+				})
+			}, 7080000); ///7080000 for 1:58 hours
+		}
+	</script>
 </body>
 
 </html>

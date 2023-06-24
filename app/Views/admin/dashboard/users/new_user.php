@@ -138,7 +138,6 @@
 						<label for="ofi" class="form-label font-weight-bold">Oficina</label>
 						<select class="js-example-basic-multiple form-control" name="ofi[]" id="ofi" multiple="multiple">
 							<option value="" disabled>Selecciona la oficina</option>
-
 						</select>
 						<div class="invalid-feedback">
 							La oficina es obligatoria
@@ -206,6 +205,44 @@
 				}
 
 			}, false);
+			rol.addEventListener('change', function(event) {
+				if (event.target.value == 13) {
+					municipio.required = false;
+					mun.required = true;
+					document.getElementById('municipio_div').classList.add('d-none');
+					document.getElementById('municipios_multiple').classList.remove('d-none');
+
+					oficina.required = false;
+					ofi.required = true;
+					document.getElementById('oficina_div').classList.add('d-none');
+					document.getElementById('oficina_multiple').classList.remove('d-none');
+				}
+			});
+
+			$('#mun').on('change', function() {
+				var selectedValues = $(this).val();
+				console.log(selectedValues); // Hacer algo con los valores seleccionados
+
+				$.ajax({
+					data: {
+						'municipio': selectedValues,
+					},
+					url: "<?= base_url('/data/get-oficinas-by-municipio') ?>",
+					method: "POST",
+					dataType: "json",
+				}).done(function(data) {
+					clearSelect(ofi);
+					data.forEach(oficina => {
+						let option = document.createElement("option");
+						option.text = oficina.OFICINADESCR;
+						option.value = oficina.MUNICIPIOID+ ',' +oficina.OFICINAID;
+						ofi.add(option);
+					});
+					ofi.value = '';
+				}).fail(function(jqXHR, textStatus) {
+					clearSelect(ofi);
+				});
+			});
 
 			//Valida cuando el rol sea visualizador para mostrar municipios y oficinas multiplez
 			rol.addEventListener('change', function(event) {

@@ -1864,6 +1864,7 @@ class DashboardController extends BaseController
 		if (!$this->permisos('BANDEJA')) {
 			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
 		}
+		$coordinacion = $this->getCoordinacion();
 		$data = (object) array();
 		$data->municipio = $this->request->getGet('municipioasignado');
 		$data->folio = $this->request->getGet('folio');
@@ -1877,7 +1878,8 @@ class DashboardController extends BaseController
 			return redirect()->back()->with('message_error', 'No se encontro el folio a remitir.');
 		}
 
-		$data->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
+		$data->rolPermiso = $this->_rolesPermisosModel->asObject()->where('ROLID', session('ROLID'))->findAll();
+		$data->coordinacion = $coordinacion->data;
 
 		if ($data->expediente['TIPOEXPEDIENTEID'] == 5) {
 			$this->_loadView('Bandeja remisión', 'remision', '', $data, 'bandeja/bandeja_rac');
@@ -1894,16 +1896,22 @@ class DashboardController extends BaseController
 	{
 		try {
 			$expediente = trim($this->request->getPost('expediente'));
-			$oficina = trim($this->request->getPost('oficina'));
-			$empleado = trim($this->request->getPost('empleado'));
+			$oficina = trim($this->request->getPost('oficinaid'));
+			$empleado = trim($this->request->getPost('empleadoid'));
 			$municipio = trim($this->request->getPost('municipio'));
 			$folio = trim($this->request->getPost('folio'));
 			$year = trim($this->request->getPost('year'));
+			$area =  trim($this->request->getPost('areaid'));
+			$tipo = $this->request->getPost('tipoOficina');
 
-			$area = $this->_empleadosModel->asObject()->where('EMPLEADOID', $empleado)->where('MUNICIPIOID', $municipio)->first();
-			// Obtiene los documentos del folio para asignar un estado juridico.
+			if (($oficina == 0 || $oficina == '') || ($area == 0 || $area == '') || ($empleado == 0 || $empleado == '')) {
+				return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_error', 'Por favor, completa los campos');
+			}
+
 			$documents = $this->_folioDocModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
 			$status = 2;
+			// $dataInter =  array('SOLICITUDID' => 9000600, 'INTERVENCIONID' => 98);
+
 
 			foreach ($documents as $key => $document) {
 				if (
@@ -1919,8 +1927,9 @@ class DashboardController extends BaseController
 			$dataFolio = array(
 				'AGENTEASIGNADOID' => $empleado,
 				'OFICINAASIGNADOID' => $oficina,
-				'AREAASIGNADOID' => $area->AREAID
+				'AREAASIGNADOID' => $area
 			);
+
 			$dataFolioDoc = array(
 				'AGENTEID' => $empleado,
 				'OFICINAID' => $oficina,
@@ -1930,9 +1939,8 @@ class DashboardController extends BaseController
 				'OFICINAID' => $oficina,
 			);
 
-
 			// Crea conexion al servicio de justicia para actualizar el area asignada
-			$updateExpediente = $this->_updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area->AREAID, 'REMISION', $status);
+			$updateExpediente = $this->_updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area, 'REMISION', $tipo, $status);
 
 			if ($updateExpediente->status == 201) {
 
@@ -2003,7 +2011,7 @@ class DashboardController extends BaseController
 					if ($_bandeja_creada->status == 201) {
 						$datosBitacora = [
 							'ACCION' => 'Remitio un expediente.',
-							'NOTAS' => 'Exp: ' . $expediente . ' oficina: ' . $oficina . ' empleado:' . $empleado . ' area:' . $area->AREAID,
+							'NOTAS' => 'Exp: ' . $expediente . ' oficina: ' . $oficina . ' empleado:' . $empleado . ' area:' . $area,
 						];
 						$this->_bitacoraActividad($datosBitacora);
 						return redirect()->to(base_url('/admin/dashboard/bandeja'))->with('message_success', 'Expediente remitido correctamente.');
@@ -4462,6 +4470,67 @@ class DashboardController extends BaseController
 		$data['schema'] = $conexion->SCHEMA;
 		return json_encode($this->_curlPostDataEncrypt($endpoint, $data)->data);
 	}
+
+	public function getCoordinacion()
+	{
+
+		$municipio = $this->request->getGet('municipioasignado');
+		$function = '/unidades.php?process=coordinacion';
+		$endpoint = $this->endpoint . $function;
+		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
+		$data['MUNICIPIOID'] = $municipio;
+		$data['userDB'] = $conexion->USER;
+		$data['pwdDB'] = $conexion->PASSWORD;
+		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
+		$data['schema'] = $conexion->SCHEMA;
+		return $this->_curlPostDataEncrypt($endpoint, $data);
+	}
+
+	public function getUnidades()
+	{
+		$municipio = $this->request->getPost('municipio');
+		$coordinacion = $this->request->getPost('coordinacion');
+		$function = '/unidades.php?process=unidad';
+		$endpoint = $this->endpoint . $function;
+		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
+		$data['COORD_ID'] = $coordinacion;
+		$data['userDB'] = $conexion->USER;
+		$data['pwdDB'] = $conexion->PASSWORD;
+		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
+		$data['schema'] = $conexion->SCHEMA;
+		return json_encode($this->_curlPostDataEncrypt($endpoint, $data));
+	}
+
+	public function getAgentByUnidad()
+	{
+		$municipio = $this->request->getPost('municipio');
+		$unidad = $this->request->getPost('unidad');
+		$function = '/unidades.php?process=nextUnidad';
+		$endpoint = $this->endpoint . $function;
+		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
+		$data['OFICINAID_MP'] = $unidad;
+		$data['userDB'] = $conexion->USER;
+		$data['pwdDB'] = $conexion->PASSWORD;
+		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
+		$data['schema'] = $conexion->SCHEMA;
+		return json_encode($this->_curlPostDataEncrypt($endpoint, $data));
+	}
+
+	public function getEmpleadosByOficina()
+	{
+		$municipio = $this->request->getPost('municipio');
+		$oficina = $this->request->getPost('oficina');
+		$function = '/unidades.php?process=empleadoCdtec';
+		$endpoint = $this->endpoint . $function;
+		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
+		$data['OFICINAID'] = $oficina;
+		$data['userDB'] = $conexion->USER;
+		$data['pwdDB'] = $conexion->PASSWORD;
+		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
+		$data['schema'] = $conexion->SCHEMA;
+		return json_encode($this->_curlPostDataEncrypt($endpoint, $data));
+	}
+
 	/**
 	 * Funcion para actualizar cuando modifican remision en Justicia Net
 	 */
@@ -4585,7 +4654,6 @@ class DashboardController extends BaseController
 	 * @param  mixed $municipio
 	 * @param  mixed $modulo
 	 */
-
 	private function getMediador($municipio, $modulo)
 	{
 		$function = '/consumoVistas.php?process=getMediador';
@@ -5427,7 +5495,6 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
-
 	/**
 	 * Función para actualizar el area de registro y responsable en Justicia
 	 *
@@ -5439,14 +5506,15 @@ class DashboardController extends BaseController
 	 * @param  mixed $tipo
 	 * @param  mixed $estadojuridicoid
 	 */
-	private function _updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area, $tipo, $estadojuridicoid = null)
+
+	private function _updateExpedienteByBandeja($expediente, $municipio, $oficina, $empleado, $area, $tipo,  $tipoEnvio = null, $estadojuridicoid = null)
 	{
 		$function = '/expediente.php?process=updateArea';
 		$endpoint = $this->endpoint . $function;
-		//Se crea la conexion de acrdo al municipio y enviroment.
 
+		//Se crea la conexion de acrdo al municipio y enviroment.
 		$conexion = $this->_conexionesDBModelRead->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
-		$empleado_select = $this->_empleadosModelRead->asObject()->where('EMPLEADOID', (int) $empleado)->first();
+		// $empleado_select = $this->_empleadosModelRead->asObject()->where('EMPLEADOID', (int) $empleado)->first();
 
 		$array = [
 			'EMPLEADOIDREGISTRO',
@@ -5463,17 +5531,19 @@ class DashboardController extends BaseController
 		if ($tipo == 'REMISION') {
 			$data['AREAIDREGISTRO'] = $area;
 
-			if (ENVIRONMENT == 'production') {
-				if ($oficina == 409 || $oficina == 793 || $oficina == 924) {
-					$data['AREAIDRESPONSABLE'] = $area;
-				} else {
-					$data['AREAIDRESPONSABLE'] = null;
-				}
+			if ($tipoEnvio == 'COORDINACION') {
+				$data['AREAIDRESPONSABLE'] = null;
+			} else if ($tipoEnvio == 'UNIDAD') {
+				$data['AREAIDRESPONSABLE'] = $area;
 			} else {
-				if ($oficina == 394 || $oficina == 793 || $oficina == 924) {
-					$data['AREAIDRESPONSABLE'] = $area;
+				if (ENVIRONMENT == 'production') {
+					if ($oficina == 409 || $oficina == 793 || $oficina == 924) {
+						$data['AREAIDRESPONSABLE'] = $area;
+					}
 				} else {
-					$data['AREAIDRESPONSABLE'] = null;
+					if ($oficina == 394 || $oficina == 793 || $oficina == 924) {
+						$data['AREAIDRESPONSABLE'] = $area;
+					}
 				}
 			}
 		} else {

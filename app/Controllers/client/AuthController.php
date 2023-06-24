@@ -12,6 +12,7 @@ use MailerSend\Helpers\Builder\Recipient;
 use MailerSend\Helpers\Builder\EmailParams;
 use MailerSend\Exceptions\MailerSendValidationException;
 use MailerSend\Exceptions\MailerSendRateLimitException;
+use DateTime;
 
 class AuthController extends BaseController
 {
@@ -140,6 +141,30 @@ class AuthController extends BaseController
 
 			$session->destroy();
 			return json_encode(['status' => 1]);
+		}
+	}
+
+	/**
+	 * Revisa la variable de session 'last_activity'
+	 * y si se supera un tiempo mayor a dos horas no renueva la sesion
+	 * @param  mixed $placeholder
+	 */
+	public function checkLastActivity(){
+		$session = session();
+		if(session("last_activity")){
+			$date1 = new DateTime(session("last_activity"));
+			$date2 = new DateTime(date("Y-m-d H:i:s"));	
+			$diff = $date1->diff($date2);
+			if(intval($diff->format('%H')) >= 2 || intval($diff->format('%d')) >= 1){
+				$session->set('last_activity', date("Y-m-d H:i:s"));
+				return json_encode(['result' => $diff->format('%H %i'), 'last_activity' => $date1, 'actual' => $date2, 'new' => session("last_activity") ]);
+
+			}else{
+				return json_encode(['result' => false]);
+			}
+
+		}else{
+			$session->set('last_activity', date("Y-m-d H:i:s"));
 		}
 	}
 

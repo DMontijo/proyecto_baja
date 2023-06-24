@@ -56,6 +56,7 @@ $routes->group('admin', function ($routes) {
 	$routes->post('login', 'admin/LoginController::login_auth');
 	$routes->get('logout', 'admin/LoginController::logout');
 	$routes->post('cerrar-sesion', 'admin/LoginController::cerrar_sesiones');
+	$routes->get('actualizar-sesion','admin/LoginController::checkLastActivity');
 
 	$routes->group('dashboard', ['filter' => 'adminAuth'], function ($routes) {
 		$routes->get('/', 'admin/DashboardController::index');
@@ -185,6 +186,7 @@ $routes->group('denuncia', function ($routes) {
 	$routes->post('login_auth', 'client/AuthController::login_auth');
 	$routes->get('logout', 'client/AuthController::logout');
 	$routes->post('cerrar-sesion', 'client/AuthController::cerrar_sesiones');
+	$routes->get('actualizar-sesion','client/AuthController::checkLastActivity');
 
 	// $routes->resource('denunciante', ['controller' => 'client/UserController']);
 	$routes->get('denunciante/new', 'client/UserController::new');
@@ -243,6 +245,9 @@ $routes->group('data', function ($routes) {
 
 	$routes->post('get-oficinas-by-municipio', 'admin/DashboardController::getOficinasByMunicipio');
 	$routes->post('get-empleados-by-municipio-and-oficina', 'admin/DashboardController::getEmpleadosByMunicipioAndOficina');
+	$routes->post('get-unidades-by-municipio-and-coordinacion', 'admin/DashboardController::getUnidades');
+	$routes->post('get-agent-by-municipio-and-unidad', 'admin/DashboardController::getAgentByUnidad');
+	$routes->post('get-empleados-by-oficina', 'admin/DashboardController::getEmpleadosByOficina');
 
 	$routes->post('get-derivacion-by-municipio', 'admin/DashboardController::getDerivacionByMunicipio');
 	$routes->post('get-canalizacion-by-municipio', 'admin/DashboardController::getCanalizacionByMunicipio');

@@ -84,6 +84,19 @@ export default class VideoCall {
     }
 
     /**
+     * Register the network quality
+     * 
+     * @param {Function} callback - This method is executed after session is connected
+     */
+    registerOnNewtworkQualityChanged(callback) {
+        this.#session.on('networkQualityLevelChanged', event => {
+            if (event.connection.connectionId === this.#session.connection.connectionId) {
+                if (typeof callback === 'function') callback(event);
+            }
+        });
+    }
+
+    /**
      * Start connection to session
      *
      * @param {string} token - Token to connect OpenVidu

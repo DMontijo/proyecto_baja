@@ -12,6 +12,10 @@ const video_container = document.querySelector("#video_container");
 const pantalla_final = document.querySelector("#pantalla_final");
 const pantalla_error = document.querySelector("#pantalla_error");
 
+// NETWORK QUALITY SIGNAL
+const networkQualitySignalButton = document.getElementById("network_quality_signal");
+const toastGuest = document.getElementById("toast_guest");
+
 const agente_name = document.querySelector("#main_video_details_name");
 
 let folio_completo = document.getElementById("input_folio").value;
@@ -21,6 +25,7 @@ let year_SF = array[0];
 var intervalo = setInterval(function () {
 	location.reload();
 }, 90000);
+var checkPriorityLine;
 
 // VIDEO Y AUDIO DE AGENTE SELECTER
 const mediaDevicesModal = document.getElementById("media_devices_modal");
@@ -70,8 +75,64 @@ guestVideoService.registerOnVideoReady(
 			"block";
 		agente_name.innerHTML = "LIC. " + response.agent.name;
 		// denunciante_name.innerHTML = guestData.name;
+
+		guestVideoService.registerOnNewtworkQualityChanged((event) => {
+			const signal = createSignalLevel(event.newValue);
+			networkQualitySignalButton.classList.remove("d-none");
+			networkQualitySignalButton.innerHTML = signal;
+		});
 	}
 );
+
+function createSignalLevel(levelSignal) {
+	const signalDetails = getColorSignal(levelSignal);
+	
+	return `<i class="bi bi-reception-${signalDetails.levelSignal}" style="color: ${signalDetails.colorSignal}"></i>`;
+}
+
+function getColorSignal(levelSignal){
+	let colorSignal;
+
+	switch(levelSignal) {
+		case 5:
+			levelSignal = 4;
+			colorSignal = 'green';
+			break;
+		case 4:
+			levelSignal = 3;
+			colorSignal = 'green';
+			break;
+		case 3: case 2:
+			levelSignal = 2;
+			colorSignal = 'yellow';
+			$(toastGuest).toast('show');
+			turnOffCamera();
+			break;
+		case 1:
+			colorSignal = 'red';
+			$(toastGuest).toast('show');
+			turnOffCamera();
+			break;
+		case 0:
+			colorSignal = 'red';
+			$(toastGuest).toast('show');
+			turnOffCamera();
+			break;
+		default:
+			levelSignal = 0;
+	}
+
+	return {
+		levelSignal: levelSignal,
+		colorSignal: colorSignal,
+	}
+}
+
+function turnOffCamera() {
+	setTimeout(() => {
+		guestVideoService.toggleRemoteVideoFailConection(IsEnabled => {});
+	}, 3000);
+}
 
 guestVideoService.registerRefreshGuestConnection(() => {
 	Swal.fire({
@@ -194,6 +255,10 @@ guestVideoService.registerOnAgentDisconnected(() => {
 	document.querySelector("#documentos_anexar_card").style.display = "none";
 });
 
+guestVideoService.registerOnGuestConnected(() => {
+	clearInterval(checkPriorityLine);
+});
+
 $acceptConfiguration.addEventListener("click", () => {
 	if (!audioStream) return;
 	if (!videoStream) return;
@@ -213,6 +278,19 @@ $acceptConfiguration.addEventListener("click", () => {
 			{ delito, folio: folio_SY + "/" + year_SF, descripcion },
 			guest => {
 				console.log("Denuciante conectado");
+				clearInterval(intervalo);
+				checkPriorityLine = setInterval(() => {
+					guestVideoService.checkPriorityLine(guest.uuid, response => {
+						if (response !== true) {
+							console.log('not-queue');
+							checkPriorityLine = setInterval(() => {
+								location.reload();
+							}, 90000);
+						} else {
+							console.log('guest-in-queue');
+						}
+					});
+				}, 9000);
 				console.log(guest);
 			},
 			onerror => {
@@ -227,6 +305,9 @@ $acceptConfiguration.addEventListener("click", () => {
 				});
 			},
 			ondisconnect => {
+				guestVideoService.disconnectGuest(() => {
+					"SERVER ERROR - ¡Denunciante desconectado con éxito!"
+				});
 				// Swal.fire({
 				// 	icon: "error",
 				// 	title: "Hubo una desconexión, se recargará la página.",

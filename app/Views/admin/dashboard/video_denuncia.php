@@ -134,6 +134,30 @@
 		video {
 			width: 100%;
 		}
+		
+		.toast {
+			width: 350px;
+			max-width: 100%;
+			font-size: 0.875rem;
+			pointer-events: auto;
+			background-color: rgba(255, 255, 255, 0.85);
+			background-clip: padding-box;
+			border: 1px solid rgba(0, 0, 0, 0.1);
+			box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+			border-radius: 0.25rem;
+		}
+
+		.show {
+			display: block;
+		}
+
+		.fade {
+			transition: opacity 0.15s linear;
+		}
+
+		.toast:not(.showing):not(.show) {
+			opacity: 0;
+		}
 	</style>
 	<div class="col-12 text-center mb-4 d-none" id="divFolioAtendido" name="divFolioAtendido">
 		<h3 class="mb-4 text-center font-weight-bold" id="folio_atendido" name="folio_atendido"></h3>
@@ -287,6 +311,9 @@
 												<!-- ABDIEL OTONIEL FLORES GONZÁLEZ -->
 											</button>
 
+											<button class="btn btn-sm btn-light d-none" id="network_quality_signal_guest" name="network_quality_signal_guest">
+											</button>
+
 											<button class="btn btn-sm btn-danger" id="grabacion" name="grabacion" style="display: none;">
 												<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-circle-fill" viewBox="0 0 16 16">
 													<circle cx="8" cy="8" r="8" />
@@ -380,6 +407,8 @@
 														<path d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 0 0 4.168 6.608 17.569 17.569 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
 													</svg>
 												</button>
+
+												<button class="btn btn-sm btn-light d-none" id="network_quality_signal_agent" name="network_quality_signal_agent"></button>
 												<!-- RECARGAR AGENTE -->
 												<!-- <button class="btn btn-lg btn-light" type="button" id="recargar_agente" name="recargar_agente" title="Recargar conexión del agente">
 													<i class="fas fa-sync-alt"></i> </button> -->
@@ -507,10 +536,11 @@
 </div>
 
 <?php include("video_denuncia_media_devices_modal.php"); ?>
+<?php include("video_denuncia_toast.php"); ?>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.css?v=<?= rand() ?>">
-<script type="text/javascript" src="<?= base_url() ?>/assets/agent/assets/openvidu-browser-2.25.0.min.js?v=<?= rand() ?>"></script>
+<script type="text/javascript" src="<?= base_url() ?>/assets/agent/assets/openvidu-browser-2.27.0.min.js?v=<?= rand() ?>"></script>
 <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
 <script src="<?= base_url() ?>/assets/js/video_denuncia.js?v=<?= rand() ?>" type="module"></script>
 <script>
