@@ -255,7 +255,7 @@ aceptar_llamada.addEventListener("click", () => {
 			denunciante_nombre_llamada.innerHTML = guest.name;
 			disponible_connect.hidden = true;
 			no_disponible_connect.hidden = true;
-			$mediaConfiguration.hidden = true;
+			$mediaConfiguration.hidden = false;
 			header_llamda.hidden = false;
 			$("#llamadaModal").modal("hide");
 			aceptar_llamada.disabled = false;
