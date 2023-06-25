@@ -181,8 +181,8 @@ $routes->group('admin', function ($routes) {
  * */
 
 $routes->group('denuncia', function ($routes) {
-	$routes->get('/', 'HomeController::maintenance');
-	// $routes->get('/', 'client/AuthController::index');
+	// $routes->get('/', 'HomeController::maintenance');
+	$routes->get('/', 'client/AuthController::index');
 	$routes->post('login_auth', 'client/AuthController::login_auth');
 	$routes->get('logout', 'client/AuthController::logout');
 	$routes->post('cerrar-sesion', 'client/AuthController::cerrar_sesiones');
