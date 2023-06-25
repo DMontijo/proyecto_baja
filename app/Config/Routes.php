@@ -181,8 +181,8 @@ $routes->group('admin', function ($routes) {
  * */
 
 $routes->group('denuncia', function ($routes) {
-	$routes->get('/', 'HomeController::maintenance');
-	// $routes->get('/', 'client/AuthController::index');
+	// $routes->get('/', 'HomeController::maintenance');
+	$routes->get('/', 'client/AuthController::index');
 	$routes->post('login_auth', 'client/AuthController::login_auth');
 	$routes->get('logout', 'client/AuthController::logout');
 	$routes->post('cerrar-sesion', 'client/AuthController::cerrar_sesiones');
@@ -222,145 +222,145 @@ $routes->group('denuncia', function ($routes) {
 // $routes->get('email', 'CorreoController::index');
 // $routes->post('email', 'CorreoController::sendEmail');
 
-// $routes->group('data', function ($routes) {
-// 	$routes->post('exist-email', 'client/UserController::existEmail');
-// 	$routes->post('exist-email-admin', 'admin/DashboardController::existEmailAdmin');
-// 	$routes->post('exist-email-solicitantes', 'extravio/ExtravioController::existEmailSolicitantes');
+$routes->group('data', function ($routes) {
+	$routes->post('exist-email', 'client/UserController::existEmail');
+	$routes->post('exist-email-admin', 'admin/DashboardController::existEmailAdmin');
+	$routes->post('exist-email-solicitantes', 'extravio/ExtravioController::existEmailSolicitantes');
 
-// 	$routes->post('get-municipios-by-estado', 'client/UserController::getMunicipiosByEstado');
-// 	$routes->post('get-localidades-by-municipio', 'client/UserController::getLocalidadesByMunicipio');
-// 	$routes->post('get-colonias-by-estado-and-municipio', 'client/UserController::getColoniasByEstadoAndMunicipio');
-// 	$routes->post('get-colonias-by-estado-municipio-localidad', 'client/UserController::getColoniasByEstadoMunicipioLocalidad');
-// 	$routes->post('get-folios-user-unattended', 'client/UserController::getFoliosAbiertosById');
-// 	$routes->post('get-clasificacion-by-lugar', 'client/UserController::getClasificacionByLugar');
-// 	$routes->post('get-link-videodenuncia', 'client/DashboardController::getLinkVideodenuncia');
+	$routes->post('get-municipios-by-estado', 'client/UserController::getMunicipiosByEstado');
+	$routes->post('get-localidades-by-municipio', 'client/UserController::getLocalidadesByMunicipio');
+	$routes->post('get-colonias-by-estado-and-municipio', 'client/UserController::getColoniasByEstadoAndMunicipio');
+	$routes->post('get-colonias-by-estado-municipio-localidad', 'client/UserController::getColoniasByEstadoMunicipioLocalidad');
+	$routes->post('get-folios-user-unattended', 'client/UserController::getFoliosAbiertosById');
+	$routes->post('get-clasificacion-by-lugar', 'client/UserController::getClasificacionByLugar');
+	$routes->post('get-link-videodenuncia', 'client/DashboardController::getLinkVideodenuncia');
 
-// 	$routes->post('get-folio-information', 'admin/DashboardController::getFolioInformation');
-// 	$routes->post('get-folio-information-denuncia', 'admin/DashboardController::getFolioInformationDenunciaAnonima');
+	$routes->post('get-folio-information', 'admin/DashboardController::getFolioInformation');
+	$routes->post('get-folio-information-denuncia', 'admin/DashboardController::getFolioInformationDenunciaAnonima');
 
-// 	$routes->post('update-status-folio', 'admin/DashboardController::updateStatusFolio');
-// 	$routes->post('update-salida-folio', 'admin/DashboardController::updateFolioSalida');
-// 	$routes->post('update-folio-asignacion', 'admin/DashboardController::updateFolioAsignacion');
-
-
-// 	$routes->post('get-oficinas-by-municipio', 'admin/DashboardController::getOficinasByMunicipio');
-// 	$routes->post('get-empleados-by-municipio-and-oficina', 'admin/DashboardController::getEmpleadosByMunicipioAndOficina');
-// 	$routes->post('get-unidades-by-municipio-and-coordinacion', 'admin/DashboardController::getUnidades');
-// 	$routes->post('get-agent-by-municipio-and-unidad', 'admin/DashboardController::getAgentByUnidad');
-// 	$routes->post('get-empleados-by-oficina', 'admin/DashboardController::getEmpleadosByOficina');
-
-// 	$routes->post('get-derivacion-by-municipio', 'admin/DashboardController::getDerivacionByMunicipio');
-// 	$routes->post('get-canalizacion-by-municipio', 'admin/DashboardController::getCanalizacionByMunicipio');
-// 	$routes->post('get-update-oficinas', 'admin/DashboardController::getOficinas');
-
-// 	//OTP
-// 	$routes->post('sendOTP', 'OTPController::sendEmailOTP');
-// 	$routes->post('validateOTP', 'OTPController::validateOTP');
-// 	$routes->post('getLastOTP', 'OTPController::getLastOTP');
-
-// 	//Constancias extravío
-// 	$routes->post('get-all-constancias-abiertas', 'admin/ConstanciasController::getAllConstanciasAbiertas');
-
-// 	//Link
-// 	$routes->post('get-video-link', 'admin/DashboardController::getVideoLink');
-// 	$routes->post('get-link-from-call', 'admin/DashboardController::getLinkFromCall');
-// 	$routes->post('get-active-users', 'admin/DashboardController::getActiveUsers');
-// 	$routes->get('get-duration-video', 'admin/DashboardController::getTimeVideo');
-
-// 	//VEHÍCULOS
-// 	$routes->post('get-marca-by-dist', 'client/DashboardController::getMarcaByDist');
-// 	$routes->post('get-modelo-by-marca', 'client/DashboardController::getModeloByMarca');
-// 	$routes->post('get-version-by-modelo', 'client/DashboardController::getVersionByModelo');
-
-// 	//OBJETOS
-// 	$routes->post('get-objeto-sub-by-cat', 'admin/DashboardController::getObjetoSubclasificacion');
-// 	$routes->post('create-objeto-involucrado-by-folio', 'admin/DashboardController::createObjetoInvolucradoByFolio');
-// 	$routes->post('delete-objeto-involucrado-by-folio', 'admin/DashboardController::deleteObjetoInvolucrado');
-// 	$routes->post('get-objeto-involucrado-by-id', 'admin/DashboardController::getObjetoInvolucrado');
-// 	$routes->post('update-objeto-involucrado-by-id', 'admin/DashboardController::updateObjetosInvolucradosById');
-
-// 	//SAVE IN JUSTICIA DATABASE
-// 	$routes->post('save-in-justicia', 'admin/DashboardController::saveInJusticia');
-// 	$routes->post('restore-folio', 'admin/DashboardController::restoreFolio');
-// 	$routes->post('restore-folio-to-process', 'admin/DashboardController::restoreFolioProcess');
-// 	$routes->post('save-archivos-externos', 'admin/DashboardController::crearArchivo');
-
-// 	//GET, UPDATE, INSERT WITH AJAX
-// 	$routes->post('get-persona-fisica-by-id', 'admin/DashboardController::getPersonaFisicaById');
-// 	$routes->post('get-persona-domicilio-by-id', 'admin/DashboardController::findPersonadDomicilioById');
-// 	$routes->post('get-persona-vehiculo-by-id', 'admin/DashboardController::findPersonadVehiculoById');
-
-// 	$routes->post('update-denuncia-by-id', 'admin/DashboardController::updateFolio');
-// 	$routes->post('update-denuncia-by-id-anonima', 'admin/DashboardController::updateFolioDenuncia');
-
-// 	$routes->post('update-preguntas-by-id', 'admin/DashboardController::updatePreguntasIniciales');
-// 	$routes->post('update-persona-fisica-by-id', 'admin/DashboardController::updatePersonaFisicaById');
-// 	$routes->post('update-persona-fisica-domicilio-by-id', 'admin/DashboardController::updatePersonaFisicaDomicilioById');
-// 	$routes->post('update-media-filiacion-by-id', 'admin/DashboardController::updateMediaFiliacionById');
-// 	$routes->post('update-vehiculo-by-id', 'admin/DashboardController::updateVehiculoByFolio');
-// 	$routes->post('create-vehiculo-by-id', 'admin/DashboardController::createVehiculoByFolio');
-// 	$routes->post('delete-vehiculo-by-id', 'admin/DashboardController::deleteVehiculoByFolio');
-// 	$routes->post('delete-archivo-by-id', 'admin/DashboardController::deleteArchivoById');
-
-// 	$routes->post('delete-parentesco-by-id', 'admin/DashboardController::deleteParentescoById');
-// 	$routes->post('delete-persona-fisica-by-id', 'admin/DashboardController::deletePersonaFisicaById');
-
-// 	$routes->post('create-parentesco-by-id', 'admin/DashboardController::createParentescoByFolio');
-// 	$routes->post('update-parentesco-by-id', 'admin/DashboardController::updateParentescoByFolio');
-// 	$routes->post('get-parentesco-by-id', 'admin/DashboardController::getRelacionParentesco');
-// 	$routes->post('get-personafisicofiltro', 'admin/DashboardController::getPersonaFisicaFiltro');
-// 	$routes->post('create-persona_fisica-by-folio', 'admin/DashboardController::createPersonaFisicaByFolio');
-// 	$routes->post('create-relacion_ido-by-folio', 'admin/DashboardController::createRelacionIDOByFolio');
-
-// 	$routes->post('create-fisimpdelito-by-folio', 'admin/DashboardController::createFisImpDelitoByFolio');
-// 	$routes->post('get-fisimpdelito-by-folio', 'admin/DashboardController::getImputadoDelito');
-// 	$routes->post('delete-fisimpdelito-by-folio', 'admin/DashboardController::deleteImpDelitoByFolio');
-// 	$routes->post('delete-arbol_delictivo-by-folio', 'admin/DashboardController::deleteArbolByFolio');
-// 	$routes->post('get-plantilla', 'admin/DashboardController::get_Plantillas');
-
-// 	$routes->post('get-documento-by-id', 'admin/DashboardController::getDocumentoById');
-// 	$routes->post('update-documento-by-id', 'admin/DashboardController::updateDocumentoByFolio');
-// 	$routes->post('get-documentos', 'admin/DocumentosController::obtenDocumentos');
-// 	$routes->post('get-documento-tabla', 'admin/DocumentosController::getDocumento');
+	$routes->post('update-status-folio', 'admin/DashboardController::updateStatusFolio');
+	$routes->post('update-salida-folio', 'admin/DashboardController::updateFolioSalida');
+	$routes->post('update-folio-asignacion', 'admin/DashboardController::updateFolioAsignacion');
 
 
-// 	$routes->post('delete-documento', 'admin/DocumentosController::borrarDocumento');
+	$routes->post('get-oficinas-by-municipio', 'admin/DashboardController::getOficinasByMunicipio');
+	$routes->post('get-empleados-by-municipio-and-oficina', 'admin/DashboardController::getEmpleadosByMunicipioAndOficina');
+	$routes->post('get-unidades-by-municipio-and-coordinacion', 'admin/DashboardController::getUnidades');
+	$routes->post('get-agent-by-municipio-and-unidad', 'admin/DashboardController::getAgentByUnidad');
+	$routes->post('get-empleados-by-oficina', 'admin/DashboardController::getEmpleadosByOficina');
+
+	$routes->post('get-derivacion-by-municipio', 'admin/DashboardController::getDerivacionByMunicipio');
+	$routes->post('get-canalizacion-by-municipio', 'admin/DashboardController::getCanalizacionByMunicipio');
+	$routes->post('get-update-oficinas', 'admin/DashboardController::getOficinas');
+
+	//OTP
+	$routes->post('sendOTP', 'OTPController::sendEmailOTP');
+	$routes->post('validateOTP', 'OTPController::validateOTP');
+	$routes->post('getLastOTP', 'OTPController::getLastOTP');
+
+	//Constancias extravío
+	$routes->post('get-all-constancias-abiertas', 'admin/ConstanciasController::getAllConstanciasAbiertas');
+
+	//Link
+	$routes->post('get-video-link', 'admin/DashboardController::getVideoLink');
+	$routes->post('get-link-from-call', 'admin/DashboardController::getLinkFromCall');
+	$routes->post('get-active-users', 'admin/DashboardController::getActiveUsers');
+	$routes->get('get-duration-video', 'admin/DashboardController::getTimeVideo');
+
+	//VEHÍCULOS
+	$routes->post('get-marca-by-dist', 'client/DashboardController::getMarcaByDist');
+	$routes->post('get-modelo-by-marca', 'client/DashboardController::getModeloByMarca');
+	$routes->post('get-version-by-modelo', 'client/DashboardController::getVersionByModelo');
+
+	//OBJETOS
+	$routes->post('get-objeto-sub-by-cat', 'admin/DashboardController::getObjetoSubclasificacion');
+	$routes->post('create-objeto-involucrado-by-folio', 'admin/DashboardController::createObjetoInvolucradoByFolio');
+	$routes->post('delete-objeto-involucrado-by-folio', 'admin/DashboardController::deleteObjetoInvolucrado');
+	$routes->post('get-objeto-involucrado-by-id', 'admin/DashboardController::getObjetoInvolucrado');
+	$routes->post('update-objeto-involucrado-by-id', 'admin/DashboardController::updateObjetosInvolucradosById');
+
+	//SAVE IN JUSTICIA DATABASE
+	$routes->post('save-in-justicia', 'admin/DashboardController::saveInJusticia');
+	$routes->post('restore-folio', 'admin/DashboardController::restoreFolio');
+	$routes->post('restore-folio-to-process', 'admin/DashboardController::restoreFolioProcess');
+	$routes->post('save-archivos-externos', 'admin/DashboardController::crearArchivo');
+
+	//GET, UPDATE, INSERT WITH AJAX
+	$routes->post('get-persona-fisica-by-id', 'admin/DashboardController::getPersonaFisicaById');
+	$routes->post('get-persona-domicilio-by-id', 'admin/DashboardController::findPersonadDomicilioById');
+	$routes->post('get-persona-vehiculo-by-id', 'admin/DashboardController::findPersonadVehiculoById');
+
+	$routes->post('update-denuncia-by-id', 'admin/DashboardController::updateFolio');
+	$routes->post('update-denuncia-by-id-anonima', 'admin/DashboardController::updateFolioDenuncia');
+
+	$routes->post('update-preguntas-by-id', 'admin/DashboardController::updatePreguntasIniciales');
+	$routes->post('update-persona-fisica-by-id', 'admin/DashboardController::updatePersonaFisicaById');
+	$routes->post('update-persona-fisica-domicilio-by-id', 'admin/DashboardController::updatePersonaFisicaDomicilioById');
+	$routes->post('update-media-filiacion-by-id', 'admin/DashboardController::updateMediaFiliacionById');
+	$routes->post('update-vehiculo-by-id', 'admin/DashboardController::updateVehiculoByFolio');
+	$routes->post('create-vehiculo-by-id', 'admin/DashboardController::createVehiculoByFolio');
+	$routes->post('delete-vehiculo-by-id', 'admin/DashboardController::deleteVehiculoByFolio');
+	$routes->post('delete-archivo-by-id', 'admin/DashboardController::deleteArchivoById');
+
+	$routes->post('delete-parentesco-by-id', 'admin/DashboardController::deleteParentescoById');
+	$routes->post('delete-persona-fisica-by-id', 'admin/DashboardController::deletePersonaFisicaById');
+
+	$routes->post('create-parentesco-by-id', 'admin/DashboardController::createParentescoByFolio');
+	$routes->post('update-parentesco-by-id', 'admin/DashboardController::updateParentescoByFolio');
+	$routes->post('get-parentesco-by-id', 'admin/DashboardController::getRelacionParentesco');
+	$routes->post('get-personafisicofiltro', 'admin/DashboardController::getPersonaFisicaFiltro');
+	$routes->post('create-persona_fisica-by-folio', 'admin/DashboardController::createPersonaFisicaByFolio');
+	$routes->post('create-relacion_ido-by-folio', 'admin/DashboardController::createRelacionIDOByFolio');
+
+	$routes->post('create-fisimpdelito-by-folio', 'admin/DashboardController::createFisImpDelitoByFolio');
+	$routes->post('get-fisimpdelito-by-folio', 'admin/DashboardController::getImputadoDelito');
+	$routes->post('delete-fisimpdelito-by-folio', 'admin/DashboardController::deleteImpDelitoByFolio');
+	$routes->post('delete-arbol_delictivo-by-folio', 'admin/DashboardController::deleteArbolByFolio');
+	$routes->post('get-plantilla', 'admin/DashboardController::get_Plantillas');
+
+	$routes->post('get-documento-by-id', 'admin/DashboardController::getDocumentoById');
+	$routes->post('update-documento-by-id', 'admin/DashboardController::updateDocumentoByFolio');
+	$routes->post('get-documentos', 'admin/DocumentosController::obtenDocumentos');
+	$routes->post('get-documento-tabla', 'admin/DocumentosController::getDocumento');
 
 
-// 	$routes->post('get-denunciante-folio-by-id', 'admin/DashboardController::getFolioDenunciante');
+	$routes->post('delete-documento', 'admin/DocumentosController::borrarDocumento');
 
-// 	$routes->post('download-pdf-documento', 'admin/DocumentosController::download_documento_pdf');
-// 	$routes->post('download-xml-documento', 'admin/DocumentosController::download_documento_xml');
-// 	$routes->post('create-folio-denuncia-anonima', 'admin/DashboardController::crearFolioDenunciaAnonima');
-// 	$routes->post('create-persona_fisica-by-denuncia-anonima', 'admin/DashboardController::createPersonaFisicaByDenunciaAnonima');
 
-// 	//Archivos externos
+	$routes->post('get-denunciante-folio-by-id', 'admin/DashboardController::getFolioDenunciante');
 
-// 	$routes->post('create_archivos', 'client/DashboardController::crear_archivos_externos');
-// 	$routes->post('create_archivos_admin', 'admin/DashboardController::crear_archivos_externos');
+	$routes->post('download-pdf-documento', 'admin/DocumentosController::download_documento_pdf');
+	$routes->post('download-xml-documento', 'admin/DocumentosController::download_documento_xml');
+	$routes->post('create-folio-denuncia-anonima', 'admin/DashboardController::crearFolioDenunciaAnonima');
+	$routes->post('create-persona_fisica-by-denuncia-anonima', 'admin/DashboardController::createPersonaFisicaByDenunciaAnonima');
 
-// 	$routes->post('refresh_archivos', 'admin/DashboardController::refreshArchivosExternos');
+	//Archivos externos
 
-// 	//delitos 
-// 	$routes->post('delitos-iterado', 'admin/DashboardController::getDelitosModalidad');
+	$routes->post('create_archivos', 'client/DashboardController::crear_archivos_externos');
+	$routes->post('create_archivos_admin', 'admin/DashboardController::crear_archivos_externos');
 
-// 	//Clear videodenuncia users Jitsi
-// 	$routes->post('clear-users-video', 'admin/DashboardController::clearUsersVideo');
+	$routes->post('refresh_archivos', 'admin/DashboardController::refreshArchivosExternos');
 
-// 	//RAC
-// 	$routes->post('get-modulos', 'admin/DashboardController::getModulos');
-// 	$routes->post('change-status-doc', 'admin/DashboardController::changeStatusDoc');
+	//delitos 
+	$routes->post('delitos-iterado', 'admin/DashboardController::getDelitosModalidad');
 
-// 	$routes->post('get-documentos-by-folio', 'admin/DashboardController::getDocumentosByFolio');
-// 	$routes->get('update-oficinas-by-justicia', 'admin/DashboardController::getOficinasByExpediente');
+	//Clear videodenuncia users Jitsi
+	$routes->post('clear-users-video', 'admin/DashboardController::clearUsersVideo');
 
-// 	//Encargados
-// 	$routes->post('update-encargado', 'admin/DocumentosController::actualizarDocumentoEncargado');
-// 	$routes->post('update-agente-asignado', 'admin/DocumentosController::actualizarDocumentoAgenteAsignado');
+	//RAC
+	$routes->post('get-modulos', 'admin/DashboardController::getModulos');
+	$routes->post('change-status-doc', 'admin/DashboardController::changeStatusDoc');
 
-// 	$routes->post('email-alerts', 'admin/FirmaController::sendEmailAlertas');
+	$routes->post('get-documentos-by-folio', 'admin/DashboardController::getDocumentosByFolio');
+	$routes->get('update-oficinas-by-justicia', 'admin/DashboardController::getOficinasByExpediente');
 
-// });
+	//Encargados
+	$routes->post('update-encargado', 'admin/DocumentosController::actualizarDocumentoEncargado');
+	$routes->post('update-agente-asignado', 'admin/DocumentosController::actualizarDocumentoAgenteAsignado');
+
+	$routes->post('email-alerts', 'admin/FirmaController::sendEmailAlertas');
+
+});
 
 
 
