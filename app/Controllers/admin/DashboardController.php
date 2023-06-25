@@ -4477,7 +4477,7 @@ class DashboardController extends BaseController
 		$municipio = $this->request->getGet('municipioasignado');
 		$function = '/unidades.php?process=coordinacion';
 		$endpoint = $this->endpoint . $function;
-		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
+		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', 2)->where('TYPE', ENVIRONMENT)->first();
 		$data['MUNICIPIOID'] = $municipio;
 		$data['userDB'] = $conexion->USER;
 		$data['pwdDB'] = $conexion->PASSWORD;
