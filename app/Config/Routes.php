@@ -38,8 +38,8 @@ $routes->setAutoRoute(true);
  * HomeController::maintenance
  */
 
-// $routes->get('/', 'HomeController::index');
-$routes->get('/', 'HomeController::maintenance');
+$routes->get('/', 'HomeController::index');
+// $routes->get('/', 'HomeController::maintenance');
 $routes->get('derivaciones', 'DerivacionesController::index');
 $routes->get('canalizaciones', 'DerivacionesController::canalizaciones');
 $routes->get('salas_virtuales', 'DerivacionesController::salas_virtuales');
@@ -369,8 +369,8 @@ $routes->group('data', function ($routes) {
  * Extravio Routes
  */
 $routes->group('constancia_extravio', function ($routes) {
-	$routes->get('/', 'HomeController::maintenance');
-	// $routes->get('/', 'extravio/ExtravioController::index');
+	// $routes->get('/', 'HomeController::maintenance');
+	$routes->get('/', 'extravio/ExtravioController::index');
 	$routes->get('login', 'extravio/ExtravioController::login');
 	$routes->post('login_auth', 'extravio/ExtravioController::login_auth');
 
