@@ -95,6 +95,7 @@ $routes->group('admin', function ($routes) {
 
 		$routes->get('video-denuncia', 'admin/DashboardController::video_denuncia');
 		$routes->get('denuncia-anonima', 'admin/DashboardController::denuncia_anonima');
+		$routes->get('modulo-litigantes', 'admin/DashboardController::modulo_litigantes');
 
 		$routes->get('folios', 'admin/FoliosController::index');
 		$routes->get('folios_abiertos', 'admin/FoliosController::folios_abiertos');
@@ -245,6 +246,7 @@ $routes->group('data', function ($routes) {
 
 	$routes->post('get-folio-information', 'admin/DashboardController::getFolioInformation');
 	$routes->post('get-folio-information-denuncia', 'admin/DashboardController::getFolioInformationDenunciaAnonima');
+	$routes->post('get-folio-information-litigantes', 'admin/DashboardController::getFolioInformationLitigantes');
 
 	$routes->post('update-status-folio', 'admin/DashboardController::updateStatusFolio');
 	$routes->post('update-salida-folio', 'admin/DashboardController::updateFolioSalida');
@@ -295,6 +297,8 @@ $routes->group('data', function ($routes) {
 
 	//GET, UPDATE, INSERT WITH AJAX
 	$routes->post('get-persona-fisica-by-id', 'admin/DashboardController::getPersonaFisicaById');
+	$routes->post('get-persona-moral-by-id', 'admin/DashboardController::getPersonaMoralById');
+
 	$routes->post('get-persona-domicilio-by-id', 'admin/DashboardController::findPersonadDomicilioById');
 	$routes->post('get-persona-vehiculo-by-id', 'admin/DashboardController::findPersonadVehiculoById');
 
