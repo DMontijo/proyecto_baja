@@ -58,7 +58,7 @@
 	<div id="card4" class="col-12 col-sm-6 col-md-4 col-lg-4 d-none">
 		<div class="card rounded bg-white shadow" style="height: 215px;">
 			<div class="card-body">
-				<button id="salida-folio-btn" class="btn btn-primary btn-block h-100" role="button" data-toggle="modal" data-target="#salida_modal"><i class="fas fa-sign-out-alt"></i> DAR SALIDA</button>
+				<button id="salida-folio-btn" class="btn btn-primary btn-block h-100" role="button" data-toggle="modal" data-target="#salida_modal_litigantes"><i class="fas fa-sign-out-alt"></i> DAR SALIDA</button>
 			</div>
 		</div>
 	</div>
@@ -922,10 +922,11 @@
 								.PRIMERAPELLIDO : '';
 
 							const option = document.createElement('option');
-							option.value = victima.PERSONAFISICAID;
-							option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
+							option.value = victima.PERSONAFISICAID ? victima.PERSONAFISICAID : victima.PERSONAMORALID;
+							option.text = victima.NOMBRE ? victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PFCJDESCR : victima.DENOMINACION  + ' | ' + victima.PMCJDESCR;
 							select_victima_ofendido.add(option, null);
 						});
+
 						$('#imputado_delito_cometido').empty();
 						let select_imputado_delito_cometido = document.querySelector(
 							"#imputado_delito_cometido");
@@ -1079,27 +1080,6 @@
 							select_objeto_update_subclasificacion.add(option, null);
 						});
 					}
-
-					//PREGUNTAS INICIALES
-					if (preguntas) {
-						document.querySelector('#es_menor').value = preguntas.ES_MENOR;
-						document.querySelector('#es_tercera_edad').value = preguntas.ES_TERCERA_EDAD;
-						document.querySelector('#tiene_discapacidad').value = preguntas
-							.TIENE_DISCAPACIDAD;
-						document.querySelector('#es_vulnerable').value = preguntas.ES_GRUPO_VULNERABLE;
-						document.querySelector('#vulnerable_descripcion').value = preguntas
-							.ES_GRUPO_VULNERABLE_DESCR;
-						document.querySelector('#tiene_discapacidad').value = preguntas
-							.TIENE_DISCAPACIDAD;
-						document.querySelector('#fue_con_arma').value = preguntas.FUE_CON_ARMA;
-						document.querySelector('#esta_desaparecido').value = preguntas
-							.ESTA_DESAPARECIDO;
-						document.querySelector('#lesiones').value = preguntas.LESIONES;
-						document.querySelector('#lesiones_visibles').value = preguntas
-							.LESIONES_VISIBLES;
-
-					}
-
 					//DENUNCIA
 					document.querySelector('#delito_delito').value = folio.HECHODELITO;
 					document.querySelector('#municipio_delito').value = folio.HECHOMUNICIPIOID ? folio.HECHOMUNICIPIOID : '';
@@ -1247,26 +1227,10 @@
 				} else if (response.status === 2) {
 					Swal.fire({
 						icon: 'error',
-						html: 'El folio se encuentra en atención por el agente: <strong>' + response.agente + '</strong>',
+						html: 'El folio ya se encuentra atendido.',
 						confirmButtonColor: '#bf9b55',
 					});
-				} else if (response.status === 3) {
-					card2.classList.add('d-none');
-					card3.classList.add('d-none');
-					card4.classList.add('d-none');
-					card5.classList.add('d-none');
-					card6.classList.add('d-none');
-
-					let texto = 'El folio ya fue atendido por el agente<br><strong>' + response.agente +
-						'</strong><br><br><strong>' + response.motivo + '</strong>';
-					if (response.motivo == 'EXPEDIENTE') {
-						texto = texto + '<br><br><strong>' + expedienteConGuiones(response.expediente) + '</strong>';
-					}
-					Swal.fire({
-						icon: 'error',
-						html: texto,
-						confirmButtonColor: '#bf9b55',
-					})
+				
 				} else {
 					card2.classList.add('d-none');
 					card3.classList.add('d-none');
@@ -1276,13 +1240,13 @@
 
 					Swal.fire({
 						icon: 'error',
-						text: 'El folio no existe, verificalo de nuevo.',
+						text: 'El folio no existe o no pertenece a este modulo, verificalo de nuevo.',
 						confirmButtonColor: '#bf9b55',
 					})
 				}
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
-				console.log('Error');
+				console.log('Error', textStatus, jqXHR,errorThrown);
 			}
 		});
 	});
@@ -1356,17 +1320,6 @@
 
 		document.querySelector('#delito_dash_lit').value = '';
 		document.querySelector('#delito_descr_dash_lit').value = '';
-
-		//PREGUNTAS INICIALES
-		document.querySelector('#es_menor').value = '';
-		document.querySelector('#es_tercera_edad').value = '';
-		document.querySelector('#tiene_discapacidad').value = '';
-		document.querySelector('#es_vulnerable').value = '';
-		document.querySelector('#vulnerable_descripcion').value = '';
-		document.querySelector('#fue_con_arma').value = '';
-		document.querySelector('#esta_desaparecido').value = '';
-		document.querySelector('#lesiones').value = '';
-		document.querySelector('#lesiones_visibles').value = '';
 
 		//DENUNCIA
 		document.querySelector('#delito_delito').value = '';
@@ -2849,8 +2802,8 @@
 
 						document.querySelector('#moral_poder_download').setAttribute('href', poder
 							.PODERARCHIVO);
-						document.querySelector('#moral_poder_download').setAttribute('download', 
-						personaMoral.RAZONSOCIAL + '_' + personaMoral.RFC +'.' + extension);
+						document.querySelector('#moral_poder_download').setAttribute('download',
+							personaMoral.RAZONSOCIAL + '_' + personaMoral.RFC + '.' + extension);
 						document.querySelector('#contenedor_moral_poder').classList.remove('d-none');
 					} else {
 						document.querySelector('#moral_poder').setAttribute('src', '');
@@ -2860,11 +2813,11 @@
 					}
 					document.querySelector('#relacion_pm').value = poder.RELACIONAR ? poder
 						.RELACIONAR : '';
-						document.querySelector('#volumen_pm').value = poder.PODERVOLUMEN ? poder
+					document.querySelector('#volumen_pm').value = poder.PODERVOLUMEN ? poder
 						.PODERVOLUMEN : '';
-						document.querySelector('#notario_pm').value = poder.PODERNONOTARIO ? poder
+					document.querySelector('#notario_pm').value = poder.PODERNONOTARIO ? poder
 						.PODERNONOTARIO : '';
-						document.querySelector('#poder_pm').value = poder.PODERNOPODER ? poder
+					document.querySelector('#poder_pm').value = poder.PODERNOPODER ? poder
 						.PODERNOPODER : '';
 					$('#folio_persona_moral_modal').modal('show');
 
@@ -3209,7 +3162,6 @@
 		(function() {
 			'use strict'
 			var form_delito = document.querySelector('#denuncia_form');
-			var form_preguntas = document.querySelector('#preguntas_form');
 			var form_persona_fisica = document.querySelector('#persona_fisica_form');
 			var form_persona_moral = document.querySelector('#persona_moral_form');
 
@@ -3328,7 +3280,7 @@
 				if (!form_delito.checkValidity()) {
 					event.preventDefault();
 					event.stopPropagation();
-					form_preguntas.classList.add('was-validated')
+					form_delito.classList.add('was-validated')
 				} else {
 					event.preventDefault();
 					event.stopPropagation();
@@ -3337,18 +3289,6 @@
 				}
 			}, false);
 
-			form_preguntas.addEventListener('submit', (event) => {
-				if (!form_preguntas.checkValidity()) {
-					event.preventDefault();
-					event.stopPropagation();
-					form_preguntas.classList.add('was-validated')
-				} else {
-					event.preventDefault();
-					event.stopPropagation();
-					form_preguntas.classList.remove('was-validated')
-					actualizarPreguntas();
-				}
-			}, false);
 
 			form_persona_fisica.addEventListener('submit', (event) => {
 				if (!form_persona_fisica.checkValidity()) {
@@ -4582,52 +4522,6 @@
 			}
 			//DENUNCIA END
 			//Funcion  para actualizar las preguntas de la denuncia
-
-			//PREGUNTAS
-			function actualizarPreguntas() {
-				const data = {
-					'folio': document.querySelector('#input_folio_atencion_lit').value,
-					'year': document.querySelector('#year_select_lit').value,
-					'es_menor': document.querySelector('#es_menor').value,
-					'es_tercera_edad': document.querySelector('#es_tercera_edad').value,
-					'tiene_discapacidad': document.querySelector('#tiene_discapacidad').value,
-					'es_vulnerable': document.querySelector('#es_vulnerable').value,
-					'vulnerable_descripcion': document.querySelector('#vulnerable_descripcion').value,
-					'fue_con_arma': document.querySelector('#fue_con_arma').value,
-					'lesiones': document.querySelector('#lesiones').value,
-					'lesiones_visibles': document.querySelector('#lesiones_visibles').value,
-					'esta_desaparecido': document.querySelector('#esta_desaparecido').value,
-				};
-				$.ajax({
-					data: data,
-					url: "<?= base_url('/data/update-preguntas-by-id') ?>",
-					method: "POST",
-					dataType: "json",
-					success: function(response) {
-						console.log(response);
-						if (response.status == 1) {
-							Swal.fire({
-								icon: 'success',
-								text: 'Preguntas actualizadas correctamente',
-								confirmButtonColor: '#bf9b55',
-							});
-						} else {
-							Swal.fire({
-								icon: 'error',
-								text: 'No se actualizaron las preguntas',
-								confirmButtonColor: '#bf9b55',
-							});
-						}
-					},
-					error: function(jqXHR, textStatus, errorThrown) {
-						Swal.fire({
-							icon: 'error',
-							text: 'No se actualizaron las preguntas',
-							confirmButtonColor: '#bf9b55',
-						});
-					}
-				});
-			}
 
 			//PERSONA FISICA
 			//Evento change para obtener los municipios de acuerdo al estado. Limpia los select para que no se acumulen
@@ -7543,7 +7437,7 @@
 <?php include 'video_denuncia_modals/load_save_archivos_modal.php' ?>
 
 <?php include 'litigantes_modals/info_folio_modal.php' ?>
-<?php include 'video_denuncia_modals/salida_modal.php' ?>
+<?php include 'litigantes_modals/salida_modal_litigantes.php' ?>
 <?php include 'video_denuncia_modals/marks.php' ?>
 <?php include 'video_denuncia_modals/encargados_modal.php' ?>
 <?php include 'video_denuncia_modals/asignar_agente_modal.php' ?>
