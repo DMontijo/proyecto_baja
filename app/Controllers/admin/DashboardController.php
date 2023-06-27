@@ -1783,6 +1783,7 @@ class DashboardController extends BaseController
 
 			->where('FOLIOPERSONAMORAL.FOLIOID', $numfolio)->where('FOLIOPERSONAMORAL.ANO', $year)->first();
 
+		$data->personasPropietarios = $this->_folioPersonaFisicaModelRead->get_by_personas_propietarios($numfolio, $year);
 
 		if ($data->archivosexternos) {
 			foreach ($data->archivosexternos as $key => $archivos) {
@@ -1833,7 +1834,6 @@ class DashboardController extends BaseController
 
 		$data = (object) array();
 		$data->foliopersonaMoral = $this->_folioPersonaMoralModelRead->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAMORALID', $id)->first();
-
 		if ($data->foliopersonaMoral) {
 			$data->personaMoralNotificacion = $this->_personasMoralesNotificacionesRead->where('PERSONAMORALID', $id)->where('NOTIFICACIONID', $data->foliopersonaMoral['NOTIFICACIONID'])->first();
 			$data->folio = $this->_folioModelRead->where('FOLIOID', $folio)->where('ANO', $year)->first();
@@ -3056,7 +3056,7 @@ class DashboardController extends BaseController
 			if (!empty($status) && !empty($motivo) && !empty($year) && !empty($folio) && !empty($agenteId)) {
 				$folioRow = $this->_folioModelRead->where('ANO', $year)->where('FOLIOID', $folio)->where('STATUS', 'EN PROCESO')->first();
 				$folioVehiculoRow = $this->_folioVehiculoModelRead->where('ANO', $year)->where('FOLIOID', $folio)->findAll();
-				
+
 				if ($folioRow) {
 					//Se detecta que en la DB existan todos los campos necesarios para Justicia
 					$this->deteccionErrores($folioRow, $folioVehiculoRow);
@@ -3085,7 +3085,7 @@ class DashboardController extends BaseController
 						} else if ($folio->TIPODENUNCIA == 'ES') {
 							$folioPersonaMoral = $this->_folioPersonaMoralModelRead->asObject()->where('ANO', $year)->where('FOLIOID', $folio->FOLIOID)->first();
 							$notificacion = $this->_personasMoralesNotificacionesRead->asObject()->where('PERSONAMORALID', $folioPersonaMoral->PERSONAMORALID)->where('NOTIFICACIONID', $folioPersonaMoral->NOTIFICACIONID)->first();
-							
+
 							if ($this->_sendEmailDerivacionCanalizacion($notificacion->CORREO, $folio->FOLIOID, $status)) {
 								return json_encode(['status' => 1]);
 							} else {
@@ -3203,7 +3203,7 @@ class DashboardController extends BaseController
 				|| ($vehiculo['MARCAID'] == '' || $vehiculo['MARCAID'] == NULL)
 				|| ($vehiculo['MODELOID'] == '' || $vehiculo['MODELOID'] == NULL)
 				|| ($vehiculo['ANOVEHICULO'] == '' || $vehiculo['ANOVEHICULO'] == NULL)
-				|| ($vehiculo['PERSONAFISICAIDPROPIETARIO'] == '' || $vehiculo['PERSONAFISICAIDPROPIETARIO'] == NULL)
+				// || ($vehiculo['PERSONAFISICAIDPROPIETARIO'] == '' || $vehiculo['PERSONAFISICAIDPROPIETARIO'] == NULL)
 			) {
 				$mensajeError = 'Faltan los siguientes campos en el vehículo: ';
 				if ($vehiculo['SITUACION'] == '' || $vehiculo['SITUACION'] == NULL) {
@@ -3224,9 +3224,9 @@ class DashboardController extends BaseController
 				if ($vehiculo['ANOVEHICULO'] == '' || $vehiculo['ANOVEHICULO'] == NULL) {
 					$mensajeError .= 'Año del vehículo, ';
 				}
-				if ($vehiculo['PERSONAFISICAIDPROPIETARIO'] == '' || $vehiculo['PERSONAFISICAIDPROPIETARIO'] == NULL) {
-					$mensajeError .= 'Propietario, ';
-				}
+				// if ($vehiculo['PERSONAFISICAIDPROPIETARIO'] == '' || $vehiculo['PERSONAFISICAIDPROPIETARIO'] == NULL) {
+				// 	$mensajeError .= 'Propietario, ';
+				// }
 				$mensajeError = rtrim($mensajeError, ', ');
 				throw new \Exception($mensajeError);
 			}
@@ -3265,6 +3265,8 @@ class DashboardController extends BaseController
 					$relacionFisFis = $this->_relacionIDOModelRead->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
 					$parentescos = $this->_parentescoPersonaFisicaModelRead->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
 					$vehiculos = $this->_folioVehiculoModelRead->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
+					$personasMorales = $this->_folioPersonaMoralModelRead->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->orderBy('PERSONAMORALID', 'asc')->findAll();
+					$relacionMoralFis = $this->_folioRelacionMoralFisModelRead->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
 
 
 					$imputados_con_delito = array();
@@ -3306,9 +3308,16 @@ class DashboardController extends BaseController
 						throw new \Exception('Todos los imputados deben tener al menos 1 delito asignado');
 					}
 
-					if (count($relacionFisFis) == 0 || count($relacionFisFis) <= 0) {
-						throw new \Exception('Todos los imputados deben tener una relación con una persona física');
+					if ($folioRow['TIPODENUNCIA'] != 'ES') {
+						if (count($relacionFisFis) == 0 || count($relacionFisFis) <= 0) {
+							throw new \Exception('Todos los imputados deben tener una relación con una persona física');
+						}
+					} else {
+						if (count($relacionMoralFis) == 0 || count($relacionMoralFis) <= 0) {
+							throw new \Exception('Todos los imputados deben tener una relación con una persona moral');
+						}
 					}
+
 
 
 					$narracion = $folioRow['HECHONARRACION'];
@@ -3371,6 +3380,8 @@ class DashboardController extends BaseController
 						//Se actualiza la DB en VIDEODENUNCIA
 						$update = $this->_folioModel->set($folioRow)->where('FOLIOID', $folio)->where('ANO', $year)->update();
 						$personasRelacionMysqlOracle = array();
+						$personasMoralesRelacionMysqlOracle = array();
+
 						try {
 							foreach ($personas as $key => $persona) {
 								if ($persona['NOMBRE'] == 'QRR') {
@@ -3400,7 +3411,16 @@ class DashboardController extends BaseController
 									$_mediaFiliacion = $this->_createPersonaFisicaMediaFilicacion($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $mediaFiliacion, $municipio);
 								}
 							}
-
+							if (count($personasMorales) > 0) {
+								foreach ($personasMorales as $key => $personaMoral) {
+									try {
+										//Se crean todas las personas morales
+										$_personaMoral = $this->_createPersonaMoral($expedienteCreado->EXPEDIENTEID, $personaMoral, $municipio);
+										$personasMoralesRelacionMysqlOracle[$personaMoral['PERSONAMORALID']] = ['calidad' => $personaMoral['CALIDADJURIDICAID'], 'id_mysql' => $personaMoral['PERSONAMORALID'], 'id_oracle' => $_personaMoral->PERSONAMORALID];
+									} catch (\Error $e) {
+									}
+								}
+							}
 							//Se crea la relacion Persona Física Imputado delito
 							if (count($fisImpDelito) > 0) {
 								foreach ($fisImpDelito as $imputadodelito) {
@@ -3431,7 +3451,37 @@ class DashboardController extends BaseController
 														$vehiculo['NUMEROSERIE'] = 'VACIO';
 													}
 													try {
-														$_expedienteVehiculo = $this->_createExpVehiculo($expedienteCreado->EXPEDIENTEID, $vehiculo, $municipio);
+														$propietario = $personasRelacionMysqlOracle[$vehiculo['PERSONAFISICAIDPROPIETARIO'] ? $vehiculo['PERSONAFISICAIDPROPIETARIO'] : $vehiculo['PERSONAMORALIDPROPIETARIO']];
+														$_expedienteVehiculo = $this->_createExpVehiculo($expedienteCreado->EXPEDIENTEID, $vehiculo, $municipio, $propietario['id_oracle'], 'FISFIS');
+													} catch (\Error $e) {
+													}
+												}
+											}
+										}
+									} catch (\Error $e) {
+									}
+								}
+							}
+							//Se crea la relacion VictimaMoral Imputado
+							if (count($relacionMoralFis) > 0) {
+								foreach ($relacionMoralFis as $morFis) {
+									try {
+										$victimaMoral = $personasMoralesRelacionMysqlOracle[$morFis['PERSONAMORALIDVICTIMA']];
+										$imputado = $personasMoralesRelacionMysqlOracle[$morFis['PERSONAFISICAIDIMPUTADO']];
+										$_relacionMorFis = $this->_createRelacionMorFis($expedienteCreado->EXPEDIENTEID, $morFis, $victimaMoral['id_oracle'], $imputado['id_oracle'], $municipio);
+										if ($morFis['DELITOMODALIDADID'] == 178 || $morFis['DELITOMODALIDADID'] == 179) {
+											//Si el delito asignado es robo de vehiculo se crea el expediente del vehiculo.
+											if (count($vehiculos) > 0) {
+												foreach ($vehiculos as $vehiculo) {
+													if ($vehiculo['PLACAS'] == '') {
+														$vehiculo['PLACAS'] = 'VACIO';
+													}
+													if ($vehiculo['NUMEROSERIE'] == '') {
+														$vehiculo['NUMEROSERIE'] = 'VACIO';
+													}
+													try {
+														$propietario = $personasMoralesRelacionMysqlOracle[$vehiculo['PERSONAFISICAIDPROPIETARIO'] ? $vehiculo['PERSONAFISICAIDPROPIETARIO'] : $vehiculo['PERSONAMORALIDPROPIETARIO']];
+														$_expedienteVehiculo = $this->_createExpVehiculo($expedienteCreado->EXPEDIENTEID, $vehiculo, $municipio, $propietario['id_oracle'], 'MORALFIS');
 													} catch (\Error $e) {
 													}
 												}
@@ -3472,6 +3522,14 @@ class DashboardController extends BaseController
 								}
 							} else if ($folioRow['TIPODENUNCIA'] == 'DA') {
 								return json_encode(['status' => 1, 'expediente' => $expedienteCreado->EXPEDIENTEID]);
+							} else if ($folioRow['TIPODENUNCIA'] == 'ES') {
+								$folioPersonaMoral = $this->_folioPersonaMoralModelRead->asObject()->where('ANO', $year)->where('FOLIOID', $folio)->first();
+								$notificacion = $this->_personasMoralesNotificacionesRead->asObject()->where('PERSONAMORALID', $folioPersonaMoral->PERSONAMORALID)->where('NOTIFICACIONID', $folioPersonaMoral->NOTIFICACIONID)->first();
+								if ($this->_sendEmailExpediente($notificacion->CORREO, $folio, $expedienteCreado->EXPEDIENTEID)) {
+									return json_encode(['status' => 1, 'expediente' => $expedienteCreado->EXPEDIENTEID]);
+								} else {
+									return json_encode(['status' => 1, 'expediente' => $expedienteCreado->EXPEDIENTEID, 'message' => 'Correo no enviado']);
+								}
 							}
 						} else {
 							throw new \Exception('No hizo el update.');
@@ -4216,6 +4274,66 @@ class DashboardController extends BaseController
 	}
 
 	/**
+	 * Función para crear personas morales en Justicia
+	 *
+	 * @param  mixed $expedienteId
+	 * @param  mixed $personaMoral
+	 * @param  mixed $municipio
+	 */
+	private function _createPersonaMoral($expedienteId, $personaMoral, $municipio)
+	{
+		$function = '/testing/personaMoral.php?process=crear';
+		$array = [
+			"EXPEDIENTEID",
+			"CALIDADJURIDICAID",
+			"DENOMINACION",
+			"ESTADOID",
+			"MUNICIPIOID",
+			"LOCALIDADID",
+			"DELEGACIONID",
+			"ZONA",
+			"COLONIAID",
+			"COLONIADESCR",
+			"CALLE",
+			"NUMERO",
+			"NUMEROINTERIOR",
+			"REFERENCIA",
+			"TELEFONO",
+			"CORREO",
+			"PERSONAMORALGIROID",
+			"PODERVOLUMEN",
+			"PODERNONOTARIO",
+			"PODERNOPODER"
+		];
+		$endpoint = $this->endpoint . $function;
+		//Se crea la conexion de acuerdo al municipio y enviroment.
+
+		$conexion = $this->_conexionesDBModelRead->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
+		$data = $personaMoral;
+		// Se limpian varibles nulas o que no esten en el array definido
+		foreach ($data as $clave => $valor) {
+			if (empty($valor)) {
+				unset($data[$clave]);
+			}
+		}
+
+		foreach ($data as $clave => $valor) {
+			if (!in_array($clave, $array)) {
+				unset($data[$clave]);
+			}
+		}
+
+
+		$data['EXPEDIENTEID'] = $expedienteId;
+		$data['userDB'] = $conexion->USER;
+		$data['pwdDB'] = $conexion->PASSWORD;
+		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
+		$data['schema'] = $conexion->SCHEMA;
+
+		return $this->_curlPostDataEncrypt($endpoint, $data);
+	}
+
+	/**
 	 * Función para crear domicilios de las personas fisicas en Justicia
 	 *
 	 * @param  mixed $expedienteId
@@ -4525,6 +4643,56 @@ class DashboardController extends BaseController
 		}
 		$data['EXPEDIENTEID'] = $expedienteId;
 		$data['PERSONAFISICAIDVICTIMA'] = $victima;
+		$data['PERSONAFISICAIDIMPUTADO'] = $imputado;
+		$data['userDB'] = $conexion->USER;
+		$data['pwdDB'] = $conexion->PASSWORD;
+		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
+		$data['schema'] = $conexion->SCHEMA;
+
+		return $this->_curlPostDataEncrypt($endpoint, $data);
+	}
+
+	/**
+	 * Se crea la relacion persona moral a persona fisica en Justicia.
+	 *
+	 * @param  mixed $expedienteId
+	 * @param  mixed $relacionff
+	 * @param  mixed $victima
+	 * @param  mixed $imputado
+	 * @param  mixed $municipio
+	 */
+	private function _createRelacionMorFis($expedienteId, $relacionmf, $victima, $imputado, $municipio)
+	{
+		$function = '/testing/relacionMoralFis.php?process=crear';
+		$array = [
+			'EXPEDIENTEID',
+			'PERSONAMORALIDVICTIMA',
+			'DELITOMODALIDADID',
+			'PERSONAFISICAIDIMPUTADO',
+			'GRADOPARTICIPACIONID',
+			'TENTATIVA',
+			'CONVIOLENCIA',
+		];
+		$endpoint = $this->endpoint . $function;
+		//Se crea la conexion de acuerdo al municipio y enviroment.
+
+		$conexion = $this->_conexionesDBModelRead->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
+		$data = $relacionmf;
+		// Se limpian varibles nulas o que no esten en el array definido
+
+		foreach ($data as $clave => $valor) {
+			if (empty($valor)) {
+				unset($data[$clave]);
+			}
+		}
+
+		foreach ($data as $clave => $valor) {
+			if (!in_array($clave, $array)) {
+				unset($data[$clave]);
+			}
+		}
+		$data['EXPEDIENTEID'] = $expedienteId;
+		$data['PERSONAMORALIDVICTIMA'] = $victima;
 		$data['PERSONAFISICAIDIMPUTADO'] = $imputado;
 		$data['userDB'] = $conexion->USER;
 		$data['pwdDB'] = $conexion->PASSWORD;
@@ -5132,7 +5300,7 @@ class DashboardController extends BaseController
 	 * @param  mixed $vehiculos
 	 * @param  mixed $municipio
 	 */
-	private function _createExpVehiculo($expedienteId, $vehiculos, $municipio)
+	private function _createExpVehiculo($expedienteId, $vehiculos, $municipio, $propietario, $tipo)
 	{
 
 		$function = '/expVehiculo.php?process=crear';
@@ -5215,6 +5383,8 @@ class DashboardController extends BaseController
 			} catch (\Throwable $th) {
 			}
 		}
+		$data['PERSONAFISICAIDPROPIETARIO'] = $tipo == 'FISFIS' ? $propietario :null ;
+		$data['PERSONAMORALIDPROPIETARIO'] = $tipo == 'MORALFIS' ? $propietario: null;
 		$data['userDB'] = $conexion->USER;
 		$data['pwdDB'] = $conexion->PASSWORD;
 		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
@@ -5414,6 +5584,42 @@ class DashboardController extends BaseController
 		// return $result;
 		return json_decode($result);
 	}
+	private function _curlPostDataEncryptPruebas($endpoint, $data)
+	{
+		// var_dump($data);exit;
+		$ch = curl_init();
+
+		curl_setopt($ch, CURLOPT_URL, $endpoint);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $this->_encriptar(json_encode($data), KEY_128));
+		$headers = array(
+			'Content-Type: application/json',
+			'Access-Control-Allow-Origin: *',
+			'Access-Control-Allow-Credentials: true',
+			'Access-Control-Allow-Headers: Content-Type',
+			'Hash-API: ' . password_hash(TOKEN_API, PASSWORD_BCRYPT),
+			'Key: ' . KEY_128
+		);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		$result = curl_exec($ch);
+
+		if ($result === false) {
+			$result = "{
+                'status' => 401,
+                'error' => 'Curl failed: '" . curl_error($ch) . "
+            }";
+		}
+		curl_close($ch);
+		var_dump($data);
+		var_dump($result);
+		exit;
+		// return $result;
+		// return json_decode($result);
+	}
+
 	public function getTimeVideo()
 	{
 		// $video = $this->request->getPost('name_video');
@@ -5688,7 +5894,7 @@ class DashboardController extends BaseController
 			// $folioRow['AGENTEATENCIONID'] = NULL;
 			$folioRow['AGENTEFIRMAID'] = null;
 
-			$update = $this->_folioModel->set($folioRow)->where('ANO', $year)->where('FOLIOID', $folio)->where('EXPEDEINTEID IS NULL')->update();
+			$update = $this->_folioModel->set($folioRow)->where('ANO', $year)->where('FOLIOID', $folio)->where('EXPEDIENTEID IS NULL')->update();
 			$datosBitacora = [
 				'ACCION' => 'Ha restaurado un folio a en proceso.',
 				'NOTAS' => 'FOLIO: ' . $folio . ' AÑO:' . $year . ' STATUS: EN PROCESO',
@@ -6157,7 +6363,7 @@ class DashboardController extends BaseController
 
 				$personas = $this->_folioPersonaFisicaModel->get_by_folio($folio, $year);
 				$imputados = $this->_folioPersonaFisicaModel->get_imputados($folio, $year);
-				$victimas = $this->_folioPersonaFisicaModel->get_victimas($folio, $year);
+				$victimas = $this->_folioModelRead->get_victimas($folio, $year);
 
 				$parentescoRelacion = $this->_parentescoPersonaFisicaModel->getRelacion($folio, $year);
 				// $personaiduno = $this->_parentescoPersonaFisicaModel->get_personaFisicaUno($folio, $year);
@@ -6165,6 +6371,7 @@ class DashboardController extends BaseController
 				// $parentesco = $this->_parentescoPersonaFisicaModel->get_Parentesco($folio, $year);
 				$fisicaImpDelito = $this->_imputadoDelitoModel->get_by_folio($folio, $year);
 				$relacionFisFis = $this->_relacionIDOModel->get_by_folio($folio, $year);
+				$personasPropietarios = $this->_folioPersonaFisicaModelRead->get_by_personas_propietarios($folio, $year);
 
 
 				$datosBitacora = [
@@ -6174,7 +6381,7 @@ class DashboardController extends BaseController
 
 				$this->_bitacoraActividad($datosBitacora);
 
-				return json_encode(['status' => 1, 'personas' => $personas, 'imputados' => $imputados, 'victimas' => $victimas, 'parentescoRelacion' => $parentescoRelacion,  'fisicaImpDelito' => $fisicaImpDelito, 'relacionFisFis' => $relacionFisFis]);
+				return json_encode(['status' => 1, 'personas' => $personas, 'personasPropietarios' => $personasPropietarios, 'imputados' => $imputados, 'victimas' => $victimas, 'parentescoRelacion' => $parentescoRelacion,  'fisicaImpDelito' => $fisicaImpDelito, 'relacionFisFis' => $relacionFisFis]);
 			} else {
 				return json_encode(['status' => 0]);
 			}
@@ -6557,7 +6764,12 @@ class DashboardController extends BaseController
 			);
 		}
 
-
+		$propietario_vehiculo = $this->request->getPost('propietario_vehiculo');
+		if (str_contains($propietario_vehiculo, " MORAL")) {
+			$propietario_vehiculo = str_replace(" MORAL", "", $this->request->getPost('propietario_vehiculo'));
+			$data['PERSONAFISICAIDPROPIETARIO'] = null;
+			$data['PERSONAMORALIDPROPIETARIO'] = $propietario_vehiculo;
+		}
 		$update = $this->_folioVehiculoModel->set($data)->where('FOLIOID', $folio)->where('ANO', $year)->where('VEHICULOID', $vehiculoid)->update();
 
 		if ($update) {
@@ -6748,6 +6960,13 @@ class DashboardController extends BaseController
 
 			);
 		}
+		$propietario_vehiculo = $this->request->getPost('propietario_vehiculo');
+		if (str_contains($propietario_vehiculo, " MORAL")) {
+			$propietario_vehiculo = str_replace(" MORAL", "", $this->request->getPost('propietario_vehiculo'));
+			$data['PERSONAFISICAIDPROPIETARIO'] = null;
+			$data['PERSONAMORALIDPROPIETARIO'] = $propietario_vehiculo;
+		}
+
 		// $insert = $this->_folioVehiculoModel->insert($data);
 		// $update = $this->_folioVehiculoModel->set($data)->where('FOLIOID', $folio)->where('ANO', $year)->update();
 		$insert = $this->_folioVehiculo($data, $folio, $year);
@@ -6878,8 +7097,9 @@ class DashboardController extends BaseController
 			if ($deletePersonaFisica && $deletePersonaFisicaDom && $deletePersonaFisicaMediaF) {
 				$personas = $this->_folioPersonaFisicaModel->get_by_folio($folio, $year);
 				$imputados = $this->_folioPersonaFisicaModel->get_imputados($folio, $year);
-				$victimas = $this->_folioPersonaFisicaModel->get_victimas($folio, $year);
+				$victimas = $this->_folioModelRead->get_victimas($folio, $year);
 				$delitosModalidadFiltro = $this->_delitoModalidadModelRead->get_delitodescr($folio, $year);
+				$personasPropietarios = $this->_folioPersonaFisicaModelRead->get_by_personas_propietarios($folio, $year);
 
 				$datosBitacora = [
 					'ACCION' => 'Ha eliminado una persona fisica',
@@ -6888,7 +7108,7 @@ class DashboardController extends BaseController
 
 				$this->_bitacoraActividad($datosBitacora);
 
-				return json_encode(['status' => 1, 'personas' => $personas, 'imputados' => $imputados, 'victimas' => $victimas]);
+				return json_encode(['status' => 1, 'personas' => $personas, 'personasPropietarios' => $personasPropietarios, 'imputados' => $imputados, 'victimas' => $victimas]);
 			} else {
 				return json_encode(['status' => 0]);
 			}
@@ -6926,6 +7146,7 @@ class DashboardController extends BaseController
 
 		if (!$insertRelacionParentesco) {
 			$personas = $this->_folioPersonaFisicaModel->get_by_folio($folio, $year);
+			$personasPropietarios = $this->_folioPersonaFisicaModelRead->get_by_personas_propietarios($folio, $year);
 
 			$parentescoRelacion = $this->_parentescoPersonaFisicaModel->getRelacion($folio, $year);
 			// $personaiduno = $this->_parentescoPersonaFisicaModel->get_personaFisicaUno($folio, $year);
@@ -6938,7 +7159,7 @@ class DashboardController extends BaseController
 
 			$this->_bitacoraActividad($datosBitacora);
 
-			return json_encode(['status' => 1, 'personas' => $personas, 'parentescoRelacion' => $parentescoRelacion]);
+			return json_encode(['status' => 1, 'personas' => $personas, 'personasPropietarios' => $personasPropietarios, 'parentescoRelacion' => $parentescoRelacion]);
 		} else {
 			return json_encode(['status' => 0]);
 		}
@@ -7053,6 +7274,7 @@ class DashboardController extends BaseController
 			$imputados = $this->_folioPersonaFisicaModelRead->get_imputados($folio, $year);
 			$victimas = $this->_folioPersonaFisicaModelRead->get_victimas($folio, $year);
 			$delitosModalidadFiltro = $this->_delitoModalidadModelRead->get_delitodescr($folio, $year);
+			$personasPropietarios = $this->_folioPersonaFisicaModelRead->get_by_personas_propietarios($folio, $year);
 
 			$datosBitacora = [
 				'ACCION' => 'Ha ingresado una nueva persona fisica',
@@ -7061,7 +7283,7 @@ class DashboardController extends BaseController
 
 			$this->_bitacoraActividad($datosBitacora);
 
-			return json_encode(['status' => 1, 'personas' => $personas, 'ultimoRegistro' => $personaFisicaID, 'imputados' => $imputados, 'victimas' => $victimas, 'delitosModalidadFiltro' => $delitosModalidadFiltro]);
+			return json_encode(['status' => 1, 'personas' => $personas, 'personasPropietarios' => $personasPropietarios, 'ultimoRegistro' => $personaFisicaID, 'imputados' => $imputados, 'victimas' => $victimas, 'delitosModalidadFiltro' => $delitosModalidadFiltro]);
 		} else {
 			return json_encode(['status' => 0, 'message' => $_POST]);
 		}
@@ -7229,8 +7451,9 @@ class DashboardController extends BaseController
 			$personas = $this->_folioPersonaFisicaModel->get_by_folio($folio, $year);
 			$personaFisicaID = $this->_folioPersonaFisicaModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->orderBy('PERSONAFISICAID', 'desc')->first();
 			$imputados = $this->_folioPersonaFisicaModel->get_imputados($folio, $year);
-			$victimas = $this->_folioPersonaFisicaModel->get_victimas($folio, $year);
+			$victimas = $this->_folioModelRead->get_victimas($folio, $year);
 			$delitosModalidadFiltro = $this->_delitoModalidadModel->get_delitodescr($folio, $year);
+			$personasPropietarios = $this->_folioPersonaFisicaModelRead->get_by_personas_propietarios($folio, $year);
 
 			$datosBitacora = [
 				'ACCION' => 'Ha ingresado una nueva persona fisica',
@@ -7239,7 +7462,7 @@ class DashboardController extends BaseController
 
 			$this->_bitacoraActividad($datosBitacora);
 
-			return json_encode(['status' => 1, 'personas' => $personas, 'ultimoRegistro' => $personaFisicaID, 'imputados' => $imputados, 'victimas' => $victimas, 'delitosModalidadFiltro' => $delitosModalidadFiltro]);
+			return json_encode(['status' => 1, 'personas' => $personas, 'personasPropietarios' => $personasPropietarios, 'ultimoRegistro' => $personaFisicaID, 'imputados' => $imputados, 'victimas' => $victimas, 'delitosModalidadFiltro' => $delitosModalidadFiltro]);
 		} else {
 			return json_encode(['status' => 0, 'message' => $_POST]);
 		}
@@ -7758,10 +7981,17 @@ class DashboardController extends BaseController
 			'PERSONAFISICAIDPROPIETARIO' => $this->request->getPost('propietario'),
 			'PARTICIPAESTADO' => $this->request->getPost('participaestado'),
 		);
+		$propietario_objeto = $this->request->getPost('propietario');
+		if (str_contains($propietario_objeto, " MORAL")) {
+			$propietario_objeto = str_replace(" MORAL", "", $this->request->getPost('propietario'));
+			$dataObjetoInvolucrado['PERSONAFISICAIDPROPIETARIO'] = null;
+			$dataObjetoInvolucrado['PERSONAMORALIDPROPIETARIO'] = $propietario_objeto;
+		}
 		$objetoInvolucrado = $this->_folioObjetoInvolucrado($dataObjetoInvolucrado, $folio, $year);
 		if ($objetoInvolucrado) {
 			$objetos = $this->_folioObjetoInvolucradoModel->get_descripcion($folio, $year);
 			$personas = $this->_folioPersonaFisicaModel->get_by_folio($folio, $year);
+			$personasPropietarios = $this->_folioPersonaFisicaModelRead->get_by_personas_propietarios($folio, $year);
 
 			$datosBitacora = [
 				'ACCION' => 'Ha ingresado un nuevo objeto involucrado',
@@ -7769,7 +7999,7 @@ class DashboardController extends BaseController
 			];
 
 			$this->_bitacoraActividad($datosBitacora);
-			return json_encode(['status' => 1, 'objetos' => $objetos, 'personas' => $personas]);
+			return json_encode(['status' => 1, 'objetos' => $objetos, 'personas' => $personas, 'personasPropietarios' => $personasPropietarios]);
 		}
 	}
 	/**
@@ -7859,7 +8089,12 @@ class DashboardController extends BaseController
 				'PERSONAFISICAIDPROPIETARIO' => $this->request->getPost('propietario'),
 				'PARTICIPAESTADO' => $this->request->getPost('participaestado'),
 			);
-
+			$propietario_objeto = $this->request->getPost('propietario');
+			if (str_contains($propietario_objeto, " MORAL")) {
+				$propietario_objeto = str_replace(" MORAL", "", $this->request->getPost('propietario'));
+				$dataObjetoInvolucrado['PERSONAFISICAIDPROPIETARIO'] = null;
+				$dataObjetoInvolucrado['PERSONAMORALIDPROPIETARIO'] = $propietario_objeto;
+			}
 			$updateObjetoInvolucrado = $this->_folioObjetoInvolucradoModel->set($dataObjetoInvolucrado)->where('FOLIOID', $folio)->where('ANO', $year)->where('OBJETOID', $objetoid)->update();
 
 			if ($updateObjetoInvolucrado) {

@@ -67,7 +67,7 @@ class FolioModel extends Model
 		LEFT JOIN FOLIOPERSONAFISICA t2 ON t1.FOLIOID = t2.FOLIOID AND t1.ANO = t2.ANO AND (t2.CALIDADJURIDICAID = 1 OR t2.CALIDADJURIDICAID = 6 OR t2.CALIDADJURIDICAID = 3) 
 		LEFT JOIN PERSONACALIDADJURIDICA AS PFCJ ON PFCJ.PERSONACALIDADJURIDICAID = t2.CALIDADJURIDICAID
 	  WHERE
-		t1.FOLIOID = ' . $folio . ' AND t1.ANO = ' . $year . ' 
+		t1.FOLIOID = ' . $folio . ' AND t1.ANO = ' . $year . ' AND t2.PERSONAFISICAID IS NOT NULL 
 	UNION 
 	SELECT 
 		t1.FOLIOID, t1.ANO, 
@@ -79,9 +79,7 @@ class FolioModel extends Model
 		LEFT JOIN FOLIOPERSONAMORAL t3 ON t1.FOLIOID = t3.FOLIOID AND t1.ANO = t3.ANO AND t3.CALIDADJURIDICAID = 1
 		LEFT JOIN PERSONACALIDADJURIDICA AS PMCJ ON PMCJ.PERSONACALIDADJURIDICAID = t3.CALIDADJURIDICAID
 	  WHERE 		
-		t1.FOLIOID = ' . $folio . ' AND t1.ANO = ' . $year;
-
-
+		t1.FOLIOID = ' . $folio . ' AND t1.ANO = ' . $year. ' AND t3.PERSONAMORALID IS NOT NULL ';
 		return $this->db->query($strQuery)->getResult('array');
 		// $query = $builder->get();
 		// return $query->getResult('array');

@@ -201,7 +201,7 @@
 			`<td class="text-center">${btn}</td>` +
 			`</tr>`;
 
-		$('#table-personas-morales tr:first').after(fila);
+		$('#table-morales tr:first').after(fila);
 		$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
 		var nFilas = $("#personas-morales tr").length;
 		$("#adicionados").append(nFilas - 1);
@@ -255,50 +255,7 @@
 
 		}
 	}
-	//Funcion para iterar el llenado de tabla de documentos, recibe como parametro todos los documentos
 
-	function llenarTablaDocumentos(documentos) {
-		for (let i = 0; i < documentos.length; i++) {
-			console.log(documentos[i]);
-			if (documentos[i].STATUS == 'FIRMADO') {
-				var btn =
-					`<button type='button'  class='btn btn-primary' onclick='viewDocumento(${documentos[i].FOLIODOCID})' disabled><i class="fas fa-eye"></i></button>`
-				var btnFirmar =
-					`<button type='button'  class='btn btn-primary my-2' onclick='firmarDocumento(${documentos[i].FOLIOID}, ${documentos[i].ANO}, ${documentos[i].FOLIODOCID})' disabled><i class="fas fa-signature"></i></button>`
-				var btnAsignarEncargado = `<button type='button'  class='btn btn-primary my-2' onclick='asignarEncargado(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})' disabled><i class="fas fa-user-tag"></i></button>`
-				var btnAsignarAgente = `<button type='button'  class='btn btn-primary my-2' onclick='asignarAgente(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})' disabled><i class="fas fa-user-tag"></i></button>`
-
-			} else {
-				var btn =
-					`<button type='button'  class='btn btn-primary' onclick='viewDocumento(${documentos[i].FOLIODOCID})'><i class="fas fa-eye"></i></button>`
-				var btnFirmar =
-					`<button type='button'  class='btn btn-primary my-2' onclick='firmarDocumento(${documentos[i].FOLIOID}, ${documentos[i].ANO}, ${documentos[i].FOLIODOCID})'><i class="fas fa-signature"></i></button>`
-
-				var btnAsignarEncargado = `<button type='button'  class='btn btn-primary my-2' onclick='asignarEncargado(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})'><i class="fas fa-user-tag"></i></button>`
-				var btnAsignarAgente = `<button type='button'  class='btn btn-primary my-2' onclick='asignarAgente(${documentos[i].FOLIODOCID},${documentos[i].FOLIOID}, ${documentos[i].ANO})'><i class="fas fa-user-tag"></i></button>`
-
-			}
-			var btnBorrar = '';
-			if (documentos[i].ENVIADO == 'N') {
-				var btnBorrar =
-					`<button type='button'  class='btn btn-primary my-2' onclick='borrarDocumento(${documentos[i].FOLIOID}, ${documentos[i].ANO}, ${documentos[i].FOLIODOCID})'><i class="fas fa-trash"></i></button>`
-			}
-			var fila =
-				`<tr id="row${i}">` +
-				`<td class="text-center">${documentos[i].TIPODOC}</td>` +
-				`<td class="text-center">${documentos[i].AGENTER_NOMBRE} ${documentos[i].AGENTER_AP} ${documentos[i].AGENTER_AM}</td>` +
-				`<td class="text-center">${documentos[i].STATUS}</td>` +
-				`<td class="text-center">${btn} ${btnFirmar} ${btnBorrar}</td>` +
-				`<td class="text-center">${btnAsignarAgente}</td>` +
-				`<td class="text-center">${btnAsignarEncargado}</td>` +
-				`</tr>`;
-
-			$('#table-documentos tr:first').after(fila);
-			$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
-			var nFilas = $("#documentos tr").length;
-			$("#adicionados").append(nFilas - 1);
-		}
-	}
 	//Funcion para redirigir a remitir el folio
 	function remitir() {
 		window.location.href = `<?= base_url('/admin/dashboard/bandeja_remision?folio=') ?>${inputFolio.value}&year=${year_select.value}&municipioasignado=${input_municipio.value}&expediente=${inputExpediente.value}`;
@@ -465,9 +422,9 @@
 
 	function llenarTablaFisFis(relacionFisFis) {
 		for (let i = 0; i < relacionFisFis.length; i++) {
-			let tipo = relacionFisFis[i].PERSONAFISICAIDVICTIMA ? 0: 1;
+			let tipo = relacionFisFis[i].PERSONAFISICAIDVICTIMA ? 0 : 1;
 			var btn =
-			`<button type='button' class='btn btn-primary' onclick='eliminarArbolDelictivo(${relacionFisFis[i].PERSONAFISICAIDVICTIMA ? relacionFisFis[i].PERSONAFISICAIDVICTIMA : relacionFisFis[i].PERSONAMORALIDVICTIMA}, ${relacionFisFis[i].PERSONAFISICAIDIMPUTADO}, ${relacionFisFis[i].DELITOMODALIDADID},${tipo})'><i class='fa fa-trash'></i></button>`
+				`<button type='button' class='btn btn-primary' onclick='eliminarArbolDelictivo(${relacionFisFis[i].PERSONAFISICAIDVICTIMA ? relacionFisFis[i].PERSONAFISICAIDVICTIMA : relacionFisFis[i].PERSONAMORALIDVICTIMA}, ${relacionFisFis[i].PERSONAFISICAIDIMPUTADO}, ${relacionFisFis[i].DELITOMODALIDADID},${tipo})'><i class='fa fa-trash'></i></button>`
 			var fila =
 				`<tr id="row${i}">` +
 				`<td class="text-center">${relacionFisFis[i].NOMBREI}</td>` +
@@ -694,7 +651,7 @@
 				document.querySelector('#descripcion_detallada_update').value = objeto.DESCRIPCIONDETALLADA ?
 					objeto.DESCRIPCIONDETALLADA : '';
 				document.querySelector('#propietario_update').value = objeto.PERSONAFISICAIDPROPIETARIO ? objeto
-					.PERSONAFISICAIDPROPIETARIO : '';
+					.PERSONAFISICAIDPROPIETARIO : objeto.PERSONAMORALIDPROPIETARIO + " MORAL";
 				document.querySelector('#participa_estado_objeto_update').value = objeto.PARTICIPAESTADO ?
 					objeto.PARTICIPAESTADO : '';
 
@@ -835,6 +792,8 @@
 					const correos = response.respuesta.correos;
 					const archivos = response.respuesta.archivosexternos;
 					const folioDenunciantes = response.respuesta.folioDenunciantes;
+					const personasPropietarios = response.respuesta.personasPropietarios;
+
 					//Cambios de estilos
 					inputFolio.classList.add('d-none');
 					buscar_btn.classList.add('d-none');
@@ -975,13 +934,13 @@
 						option_vacio_prop.selected = true;
 
 						select_propietario.add(option_vacio_prop, null);
-						personas.forEach(persona => {
+						personasPropietarios.forEach(persona => {
 							let primer_apellido = persona.PRIMERAPELLIDO ? persona
 								.PRIMERAPELLIDO : '';
 
 							const option = document.createElement('option');
-							option.value = persona.PERSONAFISICAID;
-							option.text = persona.NOMBRE + ' ' + primer_apellido;
+							option.value = persona.PERSONAFISICAID ? persona.PERSONAFISICAID : persona.PERSONAMORALID + ' MORAL';
+							option.text = persona.NOMBRE ? persona.NOMBRE + ' ' + primer_apellido : persona.DENOMINACION;
 							select_propietario.add(option, null);
 						});
 						$('#propietario_vehiculo').empty();
@@ -993,13 +952,13 @@
 						option_vacio_prop_v.selected = true;
 
 						select_propietario_prop_v.add(option_vacio_prop_v, null);
-						personas.forEach(persona => {
+						personasPropietarios.forEach(persona => {
 							let primer_apellido = persona.PRIMERAPELLIDO ? persona
 								.PRIMERAPELLIDO : '';
 
 							const option = document.createElement('option');
-							option.value = persona.PERSONAFISICAID;
-							option.text = persona.NOMBRE + ' ' + primer_apellido;
+							option.value = persona.PERSONAFISICAID ? persona.PERSONAFISICAID : persona.PERSONAMORALID + ' MORAL';
+							option.text = persona.NOMBRE ? persona.NOMBRE + ' ' + primer_apellido : persona.DENOMINACION;
 							select_propietario_prop_v.add(option, null);
 						});
 						$('#propietario_vehiculo_add').empty();
@@ -1011,25 +970,25 @@
 						option_vacio_prop_v_add.selected = true;
 
 						select_propietario_prop_v_add.add(option_vacio_prop_v_add, null);
-						personas.forEach(persona => {
+						personasPropietarios.forEach(persona => {
 							let primer_apellido = persona.PRIMERAPELLIDO ? persona
 								.PRIMERAPELLIDO : '';
 
 							const option = document.createElement('option');
-							option.value = persona.PERSONAFISICAID;
-							option.text = persona.NOMBRE + ' ' + primer_apellido;
+							option.value = persona.PERSONAFISICAID ? persona.PERSONAFISICAID : persona.PERSONAMORALID + ' MORAL';
+							option.text = persona.NOMBRE ? persona.NOMBRE + ' ' + primer_apellido : persona.DENOMINACION;
 							select_propietario_prop_v_add.add(option, null);
 						});
 						$('#propietario_update').empty();
 						let select_propietario_update = document.querySelector("#propietario_update");
 						select_propietario_update.add(option_vacio, null);
-						personas.forEach(persona => {
+						personasPropietarios.forEach(persona => {
 							let primer_apellido = persona.PRIMERAPELLIDO ? persona
 								.PRIMERAPELLIDO : '';
 
 							const option = document.createElement('option');
-							option.value = persona.PERSONAFISICAID;
-							option.text = persona.NOMBRE + ' ' + primer_apellido;
+							option.value = persona.PERSONAFISICAID ? persona.PERSONAFISICAID : persona.PERSONAMORALID + ' MORAL';
+							option.text = persona.NOMBRE ? persona.NOMBRE + ' ' + primer_apellido : persona.DENOMINACION;
 							select_propietario_update.add(option, null);
 						});
 						$('#objeto_update_subclasificacion').empty();
@@ -1219,8 +1178,6 @@
 		let currentTime = new Date();
 		let year = currentTime.getFullYear()
 
-		expediente_modal_correo.value = "";
-		year_modal_correo.value = "";
 		notas_mp.value = "";
 		$('#send_mail_select').empty();
 		// quill.root.innerHTML ='';
@@ -1232,7 +1189,6 @@
 		tabla_relacion_fis_fis = document.querySelectorAll('#table-delitos-videodenuncia tr');
 		tabla_delito_cometido = document.querySelectorAll('#table-delito-cometidos tr');
 		tabla_objetos_involucrados = document.querySelectorAll('#table-objetos-involucradoss tr');
-		let tabla_documentos = document.querySelectorAll('#table-documentos tr');
 
 
 		tabla_personas.forEach(row => {
@@ -1266,11 +1222,7 @@
 				row.remove();
 			}
 		});
-		tabla_documentos.forEach(row => {
-			if (row.id !== '') {
-				row.remove();
-			}
-		});
+	
 		card2.classList.add('d-none');
 		card3.classList.add('d-none');
 		card4.classList.add('d-none');
@@ -1383,29 +1335,24 @@
 	}
 
 	function borrarTodo() {
-		let currentTime = new Date();
-		let year = currentTime.getFullYear()
 		buscar_nuevo_btn.classList.add('d-none');
 		inputFolio.classList.remove('d-none');
 		inputFolio.value = "";
-		inputExpediente.value = "";
 		year_select.classList.remove('d-none');
 		year_select.value = year;
 		buscar_btn.classList.remove('d-none');
-		expediente_modal_correo.value = "";
-		year_modal_correo.value = "";
 		notas_mp.value = "";
-		$('#send_mail_select').empty();
 		// quill.root.innerHTML ='';
 		// quill2.root.innerHTML='';
-
+		tabla_personas_morales = document.querySelectorAll('#table-morales tr');
 		tabla_personas = document.querySelectorAll('#table-personas tr');
 		tabla_vehiculos = document.querySelectorAll('#table-vehiculos tr');
 		tabla_parentesco = document.querySelectorAll('#table-parentesco tr');
+		tabla_archivos = document.querySelectorAll('#table-archivos tr');
+
 		tabla_relacion_fis_fis = document.querySelectorAll('#table-delitos-videodenuncia tr');
 		tabla_delito_cometido = document.querySelectorAll('#table-delito-cometidos tr');
 		tabla_objetos_involucrados = document.querySelectorAll('#table-objetos-involucradoss tr');
-		let tabla_documentos = document.querySelectorAll('#table-documentos tr');
 
 
 		tabla_personas.forEach(row => {
@@ -1413,6 +1360,7 @@
 				row.remove();
 			}
 		});
+
 
 		tabla_vehiculos.forEach(row => {
 			if (row.id !== '') {
@@ -1439,7 +1387,12 @@
 				row.remove();
 			}
 		});
-		tabla_documentos.forEach(row => {
+		tabla_archivos.forEach(row => {
+			if (row.id !== '') {
+				row.remove();
+			}
+		});
+		tabla_personas_morales.forEach(row => {
 			if (row.id !== '') {
 				row.remove();
 			}
@@ -1451,23 +1404,11 @@
 		card6.classList.add('d-none');
 		card7.classList.add('d-none');
 		card8.classList.add('d-none');
-		card9.classList.add('d-none');
 
 		// card6.classList.remove('d-none');
 
 		document.querySelector('#delito_dash_lit').value = '';
 		document.querySelector('#delito_descr_dash_lit').value = '';
-
-		//PREGUNTAS INICIALES
-		document.querySelector('#es_menor').value = '';
-		document.querySelector('#es_tercera_edad').value = '';
-		document.querySelector('#tiene_discapacidad').value = '';
-		document.querySelector('#es_vulnerable').value = '';
-		document.querySelector('#vulnerable_descripcion').value = '';
-		document.querySelector('#fue_con_arma').value = '';
-		document.querySelector('#esta_desaparecido').value = '';
-		document.querySelector('#lesiones').value = '';
-		document.querySelector('#lesiones_visibles').value = '';
 
 		//DENUNCIA
 		document.querySelector('#delito_delito').value = '';
@@ -1553,6 +1494,11 @@
 
 		document.querySelector('#imputado_delito_cometido').value = '';
 		document.querySelector('#delito_cometido_fisimpdelito').value = '';
+
+		//PERSONAS MORALES
+		document.getElementById("persona_moral_form").reset();
+		document.getElementById("persona_moral_poder_form").reset();
+		document.getElementById("persona_moral_notificaciones_form").reset();
 
 
 
@@ -1916,13 +1862,13 @@
 					option_vacio_pro.selected = true;
 					select_propietario.add(option_vacio_pro, null);
 
-					personas.forEach(persona => {
+					personasPropietarios.forEach(persona => {
 						let primer_apellido = persona.PRIMERAPELLIDO ? persona
 							.PRIMERAPELLIDO : '';
 
 						const option = document.createElement('option');
-						option.value = persona.PERSONAFISICAID;
-						option.text = persona.NOMBRE + ' '.primer_apellido;
+						option.value = persona.PERSONAFISICAID ? persona.PERSONAFISICAID : persona.PERSONAMORALID + ' MORAL';
+						option.text = persona.NOMBRE ? persona.NOMBRE + ' ' + primer_apellido : persona.DENOMINACION;
 						select_propietario.add(option, null);
 					});
 
@@ -1934,13 +1880,13 @@
 					option_vacio_p.disabled = true;
 					option_vacio_p.selected = true;
 					select_propietario_v.add(option_vacio_p, null);
-					personas.forEach(persona => {
+					personasPropietarios.forEach(persona => {
 						let primer_apellido = persona.PRIMERAPELLIDO ? persona
 							.PRIMERAPELLIDO : '';
 
 						const option = document.createElement('option');
-						option.value = persona.PERSONAFISICAID;
-						option.text = persona.NOMBRE + ' ' + primer_apellido;
+						option.value = persona.PERSONAFISICAID ? persona.PERSONAFISICAID : persona.PERSONAMORALID + ' MORAL';
+						option.text = persona.NOMBRE ? persona.NOMBRE + ' ' + primer_apellido : persona.DENOMINACION;
 						select_propietario_v.add(option, null);
 					});
 
@@ -1952,25 +1898,25 @@
 					option_vacio_p_add.disabled = true;
 					option_vacio_p_add.selected = true;
 					select_propietario_v_add.add(option_vacio_p_add, null);
-					personas.forEach(persona => {
+					personasPropietarios.forEach(persona => {
 						let primer_apellido = persona.PRIMERAPELLIDO ? persona
 							.PRIMERAPELLIDO : '';
 
 						const option = document.createElement('option');
-						option.value = persona.PERSONAFISICAID;
-						option.text = persona.NOMBRE + ' ' + primer_apellido;
+						option.value = persona.PERSONAFISICAID ? persona.PERSONAFISICAID : persona.PERSONAMORALID + ' MORAL';
+						option.text = persona.NOMBRE ? persona.NOMBRE + ' ' + primer_apellido : persona.DENOMINACION;
 						select_propietario_v_add.add(option, null);
 					});
 					$('#propietario_update').empty();
 					let select_propietario_update = document.querySelector(
 						"#propietario_update");
-					personas.forEach(persona => {
+					personasPropietarios.forEach(persona => {
 						let primer_apellido = persona.PRIMERAPELLIDO ? persona
 							.PRIMERAPELLIDO : '';
 
 						const option = document.createElement('option');
-						option.value = persona.PERSONAFISICAID;
-						option.text = persona.NOMBRE + ' ' + primer_apellido;
+						option.value = persona.PERSONAFISICAID ? persona.PERSONAFISICAID : persona.PERSONAMORALID + ' MORAL';
+						option.text = persona.NOMBRE ? persona.NOMBRE + ' ' + primer_apellido : persona.DENOMINACION;
 						select_propietario_update.add(option, null);
 					});
 				} else {
@@ -2751,7 +2697,7 @@
 				} else {
 					Swal.fire({
 						icon: 'error',
-						html: 'No se encontro a la persona física',
+						html: 'No se encontro a la persona moral',
 						confirmButtonColor: '#bf9b55',
 					})
 				}
@@ -2786,7 +2732,7 @@
 					document.querySelector('#situacion_vehiculo').value = vehiculo.SITUACION ?
 						vehiculo.SITUACION : '';
 					document.querySelector('#propietario_vehiculo').value = vehiculo.PERSONAFISICAIDPROPIETARIO ?
-						vehiculo.PERSONAFISICAIDPROPIETARIO : '';
+						vehiculo.PERSONAFISICAIDPROPIETARIO : vehiculo.PERSONAMORALIDPROPIETARIO+ " MORAL";
 					document.querySelector('#tipo_placas_vehiculo').value = vehiculo.TIPOPLACA ? vehiculo
 						.TIPOPLACA : '';
 					document.querySelector('#placas_vehiculo').value = vehiculo.PLACAS ? vehiculo.PLACAS : '';
@@ -3133,10 +3079,6 @@
 			var btn_guardarFolioDoc = document.querySelector('#guardarFolioDoc');
 			var btn_actualizarFolioDoc = document.querySelector('#actualizarFolioDoc');
 
-			var btn_enviarcorreoDoc = document.querySelector('#enviarcorreoDoc');
-			var btn_firmar_doc = document.querySelector('#btn-firmar-doc');
-			var btn_firmar_doc_id = document.querySelector('#firmar_documento_modal_id');
-
 			var refresh_btn = document.querySelector('#refresh-btn');
 
 			var inputsText = document.querySelectorAll('input[type="text"]');
@@ -3145,26 +3087,7 @@
 			var year_modal = document.querySelector('#year_modal');
 			var folio_modal = document.querySelector('#folio_modal');
 
-			var expediente_modal_correo = document.querySelector('#expediente_modal_correo');
-			var year_modal_correo = document.querySelector('#year_modal_correo');
-			var tiny = tinymce.init({
-				selector: '#documento',
-				width: 792,
-				height: 800,
-				// font_size_formats: '11pt',
-				plugins: 'quickbars table image link lists advlist media autoresize code',
-				toolbar: 'undo redo | blocks  fontsize | bold italic | alignleft aligncenter alignright alignjustify | indent outdent | bullist numlist | code',
-			});
-
-			var tiny2 = tinymce.init({
-				selector: '#documento_editar',
-				width: 792,
-				height: 800,
-				// font_size_formats: '11pt',
-				plugins: 'quickbars table image link lists advlist media autoresize code',
-				toolbar: 'undo redo | blocks  fontsize | bold italic | alignleft aligncenter alignright alignjustify | indent outdent | bullist numlist | code',
-			});
-
+		
 			inputsText.forEach((input) => {
 				input.addEventListener('input', (event) => {
 					event.target.value = clearText(event.target.value).toUpperCase();
@@ -3467,235 +3390,6 @@
 
 				}
 			});
-
-			//Evento para enviar por correo los documentos de forma general
-			btn_enviarcorreoDoc.addEventListener('click', (event) => {
-				$.ajax({
-					data: {
-						'expediente_modal_correo': document.querySelector('#expediente_modal_correo').value,
-						'send_mail_select': document.querySelector('#send_mail_select').value,
-						'year_modal_correo': document.querySelector('#year_modal_correo').value,
-						'folio': inputFolio.value,
-
-					},
-					url: "<?= base_url('/admin/dashboard/send-documentos-correo') ?>",
-					method: "POST",
-					dataType: "json",
-					beforeSend: function() {
-						document.querySelector('#load_mail').classList.add('d-none');
-						document.querySelector('#enviar_modalLabel').classList.add('d-none');
-						document.querySelector('#loading_mail').classList.remove('d-none');
-						document.querySelector('#password_verifying_mail').classList.remove(
-							'd-none');
-						btn_enviarcorreoDoc.disabled = true;
-					},
-					success: function(response) {
-						if (response.status == 1) {
-							Swal.fire({
-								icon: 'success',
-								text: 'Correo enviado correctamente',
-								confirmButtonColor: '#bf9b55',
-							});
-							$('#sendEmailDocModal').modal('hide');
-							document.querySelector('#load_mail').classList.remove('d-none');
-							document.querySelector('#enviar_modalLabel').classList.remove(
-								'd-none');
-							document.querySelector('#loading_mail').classList.add('d-none');
-							document.querySelector('#password_verifying_mail').classList.add(
-								'd-none');
-							btn_enviarcorreoDoc.disabled = false;
-
-						} else if (response.status == 2) {
-							Swal.fire({
-								icon: 'error',
-								text: 'No hay documentos a enviar',
-								confirmButtonColor: '#bf9b55',
-							});
-							$('#sendEmailDocModal').modal('hide');
-							document.querySelector('#load_mail').classList.remove('d-none');
-							document.querySelector('#enviar_modalLabel').classList.remove(
-								'd-none');
-							document.querySelector('#loading_mail').classList.add('d-none');
-							document.querySelector('#password_verifying_mail').classList.add(
-								'd-none');
-							btn_enviarcorreoDoc.disabled = false;
-						} else if (response.status == 3) {
-							Swal.fire({
-								icon: 'error',
-								text: 'Debes seleccionar un correo para enviar.',
-								confirmButtonColor: '#bf9b55',
-							});
-							$('#sendEmailDocModal').modal('hide');
-							document.querySelector('#load_mail').classList.remove('d-none');
-							document.querySelector('#enviar_modalLabel').classList.remove(
-								'd-none');
-							document.querySelector('#loading_mail').classList.add('d-none');
-							document.querySelector('#password_verifying_mail').classList.add(
-								'd-none');
-							btn_enviarcorreoDoc.disabled = false;
-
-						} else {
-							Swal.fire({
-								icon: 'error',
-								text: 'No fue posible enviar el documento',
-								confirmButtonColor: '#bf9b55',
-							});
-							$('#sendEmailDocModal').modal('hide');
-							document.querySelector('#load_mail').classList.remove('d-none');
-							document.querySelector('#enviar_modalLabel').classList.remove(
-								'd-none');
-							document.querySelector('#loading_mail').classList.add('d-none');
-							document.querySelector('#password_verifying_mail').classList.add(
-								'd-none');
-							btn_enviarcorreoDoc.disabled = false;
-						}
-					},
-					error: function(jqXHR, textStatus, errorThrown) {
-						Swal.fire({
-							icon: 'error',
-							text: 'No fue posible enviar el documento',
-							confirmButtonColor: '#bf9b55',
-						});
-						$('#sendEmailDocModal').modal('hide');
-						document.querySelector('#load_mail').classList.remove('d-none');
-						document.querySelector('#enviar_modalLabel').classList.remove(
-							'd-none');
-						document.querySelector('#loading_mail').classList.add('d-none');
-						document.querySelector('#password_verifying_mail').classList.add(
-							'd-none');
-						btn_enviarcorreoDoc.disabled = false;
-					}
-				});
-			}, false);
-
-			//Evento para firmar los documentos de manera general
-			btn_firmar_doc.addEventListener('click', (event) => {
-				$.ajax({
-					data: {
-						'folio': document.querySelector('#folio_modal').value,
-						'expediente_modal': document.querySelector('#expediente_modal').value,
-						'contrasena': document.querySelector('#contrasena').value,
-						'year_modal': document.querySelector('#year_modal').value,
-					},
-					url: "<?= base_url('/admin/dashboard/firmar_documentos') ?>",
-					method: "POST",
-					dataType: "json",
-					beforeSend: function() {
-						document.querySelector('#load').classList.add('d-none');
-						document.querySelector('#password_modalLabel').classList.add('d-none');
-						document.querySelector('#loading').classList.remove('d-none');
-						document.querySelector('#password_verifying').classList.remove(
-							'd-none');
-						btn_firmar_doc.disabled = true;
-					},
-					success: function(response) {
-						if (response.status == 1) {
-							const documentos = response.documentos;
-							let tabla_documentos = document.querySelectorAll(
-								'#table-documentos tr');
-							tabla_documentos.forEach(row => {
-								if (row.id !== '') {
-									row.remove();
-								}
-							});
-							llenarTablaDocumentos(documentos);
-							Swal.fire({
-								icon: 'success',
-								text: 'Documento firmado correctamente',
-								confirmButtonColor: '#bf9b55',
-							});
-							document.querySelector('#contrasena').value = '';
-							$('#contrasena_modal_firma_doc').modal('hide');
-							document.querySelector('#load').classList.remove('d-none');
-							document.querySelector('#password_modalLabel').classList.remove(
-								'd-none');
-							document.querySelector('#loading').classList.add('d-none');
-							document.querySelector('#password_verifying').classList.add(
-								'd-none');
-							btn_firmar_doc.disabled = false;
-						} else if (response.status == 0) {
-							Swal.fire({
-								icon: 'error',
-								text: response.message_error,
-								confirmButtonColor: '#bf9b55',
-							});
-							document.querySelector('#load').classList.remove('d-none');
-							document.querySelector('#password_modalLabel').classList.remove(
-								'd-none');
-							document.querySelector('#loading').classList.add('d-none');
-							document.querySelector('#password_verifying').classList.add(
-								'd-none');
-							btn_firmar_doc.disabled = false;
-
-						}
-					},
-					error: function(jqXHR, textStatus, errorThrown) {}
-				});
-			}, false);
-			//Evento para firmar un documento por id
-			btn_firmar_doc_id.addEventListener('click', (event) => {
-				$.ajax({
-					data: {
-						'folio_id': document.querySelector('#folio_id').value,
-						'documento_id': document.querySelector('#documento_id').value,
-						'contrasena_doc': document.querySelector('#contrasena_doc').value,
-						'year_doc': document.querySelector('#year_doc').value,
-					},
-					url: "<?= base_url('/admin/dashboard/firmar_documentos_id') ?>",
-					method: "POST",
-					dataType: "json",
-					beforeSend: function() {
-						document.querySelector('#load_doc').classList.add('d-none');
-						document.querySelector('#password_modalLabel_doc_id').classList.add('d-none');
-						document.querySelector('#loading_doc_id').classList.remove('d-none');
-						document.querySelector('#password_verifying_doc_id').classList.remove('d-none');
-						btn_firmar_doc_id.disabled = true;
-					},
-					success: function(response) {
-						const documentos = response.documentos;
-						if (response.status == 1) {
-
-							Swal.fire({
-								icon: 'success',
-								text: 'Documento firmado correctamente',
-								confirmButtonColor: '#bf9b55',
-							});
-							document.querySelector('#contrasena_doc').value = '';
-							$('#contrasena_modal_doc_id').modal('hide');
-							let tabla_documentos = document.querySelectorAll('#table-documentos tr');
-							tabla_documentos.forEach(row => {
-								if (row.id !== '') {
-									row.remove();
-								}
-							});
-							llenarTablaDocumentos(documentos);
-							document.querySelector('#load_doc').classList.remove('d-none');
-							document.querySelector('#password_modalLabel_doc_id').classList.remove(
-								'd-none');
-							document.querySelector('#loading_doc_id').classList.add('d-none');
-							document.querySelector('#password_verifying_doc_id').classList.add('d-none');
-							btn_firmar_doc_id.disabled = false;
-						} else if (response.status == 0) {
-
-							Swal.fire({
-								icon: 'error',
-								text: response.message_error,
-								confirmButtonColor: '#bf9b55',
-							});
-							document.querySelector('#load_doc').classList.remove('d-none');
-							document.querySelector('#password_modalLabel_doc_id').classList.remove(
-								'd-none');
-							document.querySelector('#loading_doc_id').classList.add('d-none');
-							document.querySelector('#password_verifying_doc_id').classList.add('d-none');
-							btn_firmar_doc_id.disabled = false;
-
-						}
-					},
-
-					error: function(jqXHR, textStatus, errorThrown) {}
-				});
-			}, false);
-
 
 			//Rellena los select del modelo del vehiculo desde el año 1800 hasta el actual
 			let startYear = 1800;
@@ -4033,109 +3727,6 @@
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
 			});
-			let plantilla = document.querySelector("#plantilla");
-			let select_victima_documento = document.querySelector("#victima_modal_documento");
-			let select_imputado_documento = document.querySelector("#imputado_modal_documento");
-			let select_uma = document.querySelector("#uma_select");
-			let select_proceso = document.querySelector("#tipoproceso_select");
-			let select_notificacion = document.querySelector("#tiponotificacion_select");
-			var options = select_uma.options;
-
-
-
-			$('#documentos_modal_wyswyg').on('show.bs.modal', function(event) {
-				//Control para asignar documentos a un mp
-				<?php if (session('ROLID') == 4 || session('ROLID') == 8 || session('ROLID') == 10) { ?>
-					const data = {
-						'folio': document.querySelector('#input_folio_atencion_lit').value,
-						'year': document.querySelector('#year_select_lit').value,
-					};
-					$.ajax({
-						data: data,
-						url: "<?= base_url('/data/get-documentos-by-folio') ?>",
-						method: "POST",
-						dataType: "json",
-						success: function(response) {
-							console.log(response);
-							if (response.status == 1) {
-								const div_usuarios = document.querySelector('#usuarios');
-								div_usuarios.classList.add('d-none');
-								Swal.fire({
-									icon: 'warning',
-									text: 'Este folio, ya tiene agente asignado para firmar. Se autoasignará al mismo agente.',
-									confirmButtonColor: '#bf9b55',
-								});
-								document.querySelector('#empleado_asignado').setAttribute('required', false);
-
-							} else {
-								const div_usuarios = document.querySelector('#usuarios');
-								div_usuarios.classList.remove('d-none');
-								document.querySelector('#empleado_asignado').setAttribute('required', true);
-
-							}
-
-						}
-					});
-				<?php } else { ?>
-					document.querySelector('#empleado_asignado').setAttribute('required', false);
-				<?php } ?>
-				$("#documentos_modal_wyswyg select").val("");
-				document.getElementById("involucrados").style.display = "none";
-				// quill.root.innerHTML = '';
-			});
-
-			//Evento change de tipo de plantilla, modifica los estilos de acuerdo al tipo
-			selectPlantilla.addEventListener("change", function() {
-				if (plantilla.value == "CITATORIO") {
-					document.getElementById("div_uma").style.display = "block";
-					document.getElementById("div_noti").style.display = "block";
-					document.getElementById("div_proceso").style.display = "block";
-
-					document.querySelector('#uma_select').setAttribute('required', true);
-					document.querySelector('#tiponotificacion_select').setAttribute('required', true);
-					document.querySelector('#tipoproceso_select').setAttribute('required', true);
-
-
-				} else {
-					document.getElementById("div_uma").style.display = "none";
-					document.getElementById("div_noti").style.display = "none";
-					document.getElementById("div_proceso").style.display = "none";
-
-					document.querySelector('#uma_select').setAttribute('required', false);
-					document.querySelector('#tiponotificacion_select').setAttribute('required', false);
-					document.querySelector('#tipoproceso_select').setAttribute('required', false);
-
-				}
-
-				if (plantilla.value != "CONSTANCIA DE EXTRAVÍO") {
-					document.getElementById("involucrados").style.display = "block";
-
-					select_imputado_documento.addEventListener("change", function() {
-
-						// $('#documentos_modal_wyswyg').modal('hide');
-						// $('#documentos_modal').modal('show');
-						obtenerPlantillas(plantilla.value, select_victima_documento.value,
-							select_imputado_documento.value);
-
-
-					})
-
-
-				} else {
-					document.getElementById("involucrados").style.display = "none";
-					document.getElementById("div_uma").style.display = "none";
-					document.getElementById("div_noti").style.display = "none";
-					document.getElementById("div_proceso").style.display = "none";
-
-
-				}
-
-			});
-
-			btn_guardarFolioDoc.addEventListener('click', (event) => {
-				let contenidoModificado = tinymce.get("documento").getContent();
-				insertarDocumento(contenidoModificado, plantilla.value);
-			}, false);
 
 			//Evento para enviar alertas cuando el folio es un caso especial
 			btn_enviar_alertas.addEventListener('click', (event) => {
@@ -4175,10 +3766,7 @@
 					}
 				});
 			}, false);
-			btn_actualizarFolioDoc.addEventListener('click', (event) => {
-				let contenidoModificado = tinymce.get("documento_editar").getContent();
-				actualizarDocumento(contenidoModificado);
-			}, false);
+		
 
 			//Evento change de clasificacion de objetos para obtener la subclasificacion, se limpia el select de subclasificacion para no acumular
 			selectObjetoClasificacion.addEventListener("change", function() {
@@ -5090,39 +4678,39 @@
 							$('#propietario').empty();
 							let select_propietario = document.querySelector("#propietario");
 							select_propietario.add(option_vacio, null);
-							personas.forEach(persona => {
+							personasPropietarios.forEach(persona => {
 								let primer_apellido = persona.PRIMERAPELLIDO ? persona
 									.PRIMERAPELLIDO : '';
 
 								const option = document.createElement('option');
-								option.value = persona.PERSONAFISICAID;
-								option.text = persona.NOMBRE + ' ' + primer_apellido;
+								option.value = persona.PERSONAFISICAID ? persona.PERSONAFISICAID : persona.PERSONAMORALID + ' MORAL';
+								option.text = persona.NOMBRE ? persona.NOMBRE + ' ' + primer_apellido : persona.DENOMINACION;
 								select_propietario.add(option, null);
 							});
 
 							$('#propietario_vehiculo').empty();
 							let select_propietario_v = document.querySelector("#propietario_vehiculo");
 							select_propietario_v.add(option_vacio, null);
-							personas.forEach(persona => {
+							personasPropietarios.forEach(persona => {
 								let primer_apellido = persona.PRIMERAPELLIDO ? persona
 									.PRIMERAPELLIDO : '';
 
 								const option = document.createElement('option');
-								option.value = persona.PERSONAFISICAID;
-								option.text = persona.NOMBRE + ' ' + primer_apellido;
+								option.value = persona.PERSONAFISICAID ? persona.PERSONAFISICAID : persona.PERSONAMORALID + ' MORAL';
+								option.text = persona.NOMBRE ? persona.NOMBRE + ' ' + primer_apellido : persona.DENOMINACION;
 								select_propietario_v.add(option, null);
 							});
 
 							$('#propietario_vehiculo_add').empty();
 							let select_propietario_v_add = document.querySelector("#propietario_vehiculo_add");
 							select_propietario_v_add.add(option_vacio, null);
-							personas.forEach(persona => {
+							personasPropietarios.forEach(persona => {
 								let primer_apellido = persona.PRIMERAPELLIDO ? persona
 									.PRIMERAPELLIDO : '';
 
 								const option = document.createElement('option');
-								option.value = persona.PERSONAFISICAID;
-								option.text = persona.NOMBRE + ' ' + primer_apellido;
+								option.value = persona.PERSONAFISICAID ? persona.PERSONAFISICAID : persona.PERSONAMORALID + ' MORAL';
+								option.text = persona.NOMBRE ? persona.NOMBRE + ' ' + primer_apellido : persona.DENOMINACION;
 								select_propietario_v_add.add(option, null);
 							});
 							$('#imputado_arbol').empty();
@@ -6587,6 +6175,8 @@
 					success: function(response) {
 						const objetos = response.objetos;
 						const personas = response.personas;
+						const personasPropietarios = response.personasPropietarios;
+
 						if (response.status == 1) {
 							document.getElementById("form_objetos_involucrados").reset();
 							$('#objeto_subclasificacion').empty();
@@ -6599,13 +6189,13 @@
 							option_vacio.disabled = true;
 							option_vacio.selected = true;
 							select_propietario.add(option_vacio, null);
-							personas.forEach(persona => {
+							personasPropietarios.forEach(persona => {
 								let primer_apellido = persona.PRIMERAPELLIDO ? persona
 									.PRIMERAPELLIDO : '';
 
 								const option = document.createElement('option');
-								option.value = persona.PERSONAFISICAID;
-								option.text = persona.NOMBRE + ' ' + primer_apellido;
+								option.value = persona.PERSONAFISICAID ? persona.PERSONAFISICAID : persona.PERSONAMORALID + ' MORAL';
+								option.text = persona.NOMBRE ? persona.NOMBRE + ' ' + primer_apellido : persona.DENOMINACION;
 								select_propietario.add(option, null);
 							});
 							let tabla_objetos_involucrados = document.querySelectorAll(
@@ -6746,414 +6336,7 @@
 				});
 			}
 
-			//funcion para obtener la informacion de la plantilla al completar todos los campos requeridos
-			function obtenerPlantillas(tipoPlantilla, victima, imputado) {
-
-				<?php if (session('ROLID') == 4 || session('ROLID') == 8 || session('ROLID') == 10) { ?>
-					console.log("victima");
-					console.log(document.querySelector('#victima_modal_documento').value == '');
-
-					if (tipoPlantilla == "CITATORIO") {
-						if ((document.querySelector('#victima_modal_documento').value != '') && document.querySelector('#empleado_asignado').getAttribute('required') == "true" && document.querySelector('#empleado_asignado').value != '' && select_uma.getAttribute('required') == "true" && select_uma.value != '' && select_notificacion.getAttribute('required') == "true" && select_notificacion.value != '' && select_proceso.getAttribute('required') == "true" && select_proceso.value != '' && tipoPlantilla == 'CITATORIO') {
-							$('#documentos_modal_wyswyg').modal('hide');
-							$('#documentos_modal').modal('show');
-
-						} else if ((document.querySelector('#victima_modal_documento').value == '') || (document.querySelector('#empleado_asignado').getAttribute('required') == "true" && document.querySelector('#empleado_asignado').value == '') || (select_uma.getAttribute('required') == "true" && select_uma.value == '') || (select_notificacion.getAttribute('required') == "true" && select_notificacion.value == '') || (select_proceso.getAttribute('required') == "true" && select_proceso.value == '') && tipoPlantilla == 'CITATORIO') {
-
-							Swal.fire({
-								icon: 'error',
-								text: 'Favor de llenar los campos mostrados en la pantalla',
-								confirmButtonColor: '#bf9b55',
-							});
-						} else if ((document.querySelector('#victima_modal_documento').value != '') && document.querySelector('#empleado_asignado').getAttribute('required') == "false" && document.querySelector('#empleado_asignado').value == '' && select_uma.getAttribute('required') == "true" && select_uma.value != '' && select_notificacion.getAttribute('required') == "true" && select_notificacion.value != '' && select_proceso.getAttribute('required') == "true" && select_proceso.value != '' && tipoPlantilla == 'CITATORIO') {
-							$('#documentos_modal_wyswyg').modal('hide');
-							$('#documentos_modal').modal('show');
-
-						}
-
-					} else {
-						if (document.querySelector('#empleado_asignado').getAttribute('required') == "true" && document.querySelector('#empleado_asignado').value == '') {
-							Swal.fire({
-								icon: 'error',
-								text: 'Favor de asignar a un Agente de Ministerio Público',
-								confirmButtonColor: '#bf9b55',
-							});
-						} else if (document.querySelector('#empleado_asignado').getAttribute('required') == "true" && document.querySelector('#empleado_asignado').value != '') {
-							$('#documentos_modal_wyswyg').modal('hide');
-							$('#documentos_modal').modal('show');
-						} else if (document.querySelector('#empleado_asignado').getAttribute('required') == "false" && document.querySelector('#empleado_asignado').value == '') {
-							$('#documentos_modal_wyswyg').modal('hide');
-							$('#documentos_modal').modal('show');
-						}
-
-
-					}
-
-
-
-
-				<?php } else { ?>
-
-					console.log("victima");
-					console.log(document.querySelector('#victima_modal_documento').value == '');
-
-					if (select_uma.getAttribute('required') == "true" && select_uma.value != '' && select_notificacion.getAttribute('required') == "true" && select_notificacion.value != '' && select_proceso.getAttribute('required') == "true" && select_proceso.value != '' && document.querySelector('#victima_modal_documento').value != '' && tipoPlantilla == 'CITATORIO') {
-						$('#documentos_modal_wyswyg').modal('hide');
-						$('#documentos_modal').modal('show');
-
-					} else if ((document.querySelector('#victima_modal_documento').value == '') || (select_uma.getAttribute('required') == "true" && select_uma.value == '') || (document.querySelector('#victima_modal_documento').value == '') || (select_notificacion.getAttribute('required') == "true" && select_notificacion.value == '') || (select_proceso.getAttribute('required') == "true" && select_proceso.value == '') && tipoPlantilla == 'CITATORIO') {
-
-						Swal.fire({
-							icon: 'error',
-							text: 'Favor de llenar los campos mostrados en la pantalla',
-							confirmButtonColor: '#bf9b55',
-						});
-					}
-
-
-
-					if (select_uma.getAttribute('required') == "false" && tipoPlantilla != 'CITATORIO') {
-						$('#documentos_modal_wyswyg').modal('hide');
-						$('#documentos_modal').modal('show');
-					}
-				<?php } ?>
-
-
-				if (select_uma.value) {
-					const data = {
-
-						'folio': document.querySelector('#input_folio_atencion_lit').value,
-						'expediente': document.querySelector('#input_expediente').value,
-						'year': document.querySelector('#year_select_lit').value,
-						'titulo': tipoPlantilla,
-						'victima': victima,
-						'imputado': imputado,
-						'uma': select_uma.value,
-						'notificacion': select_notificacion.value,
-						'proceso': select_proceso.value
-
-
-					};
-					$.ajax({
-						method: 'POST',
-						url: "<?= base_url('/data/get-plantilla') ?>",
-						data: data,
-						dataType: 'JSON',
-						success: function(response) {
-							if (response.status == 1) {
-								const plantilla = response.plantilla;
-								tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
-								// document.querySelector("#victima_modal_documento").value = '';
-								// document.querySelector("#imputado_modal_documento").value = '';
-								plantilla.value = '';
-								select_uma.value = '';
-								select_proceso.value = '';
-								select_notificacion.value = '';
-								document.getElementById("involucrados").style.display = "none";
-								document.getElementById("div_uma").style.display = "none";
-								document.getElementById("div_proceso").style.display = "none";
-								document.getElementById("div_noti").style.display = "none";
-
-							} else {
-								tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
-								// document.querySelector("#victima_modal_documento").value = '';
-								// document.querySelector("#imputado_modal_documento").value = '';
-								plantilla.value = '';
-								select_uma.value = '';
-								select_proceso.value = '';
-								select_notificacion.value = '';
-								document.getElementById("involucrados").style.display = "none";
-								document.getElementById("div_uma").style.display = "none";
-								document.getElementById("div_proceso").style.display = "none";
-								document.getElementById("div_noti").style.display = "none";
-							}
-						},
-						error: function(jqXHR, textStatus, errorThrown) {
-							console.error(textStatus);
-							tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
-							// document.querySelector("#victima_modal_documento").value = '';
-							// document.querySelector("#imputado_modal_documento").value = '';
-							plantilla.value = '';
-							select_uma.value = '';
-							select_proceso.value = '';
-							select_notificacion.value = '';
-							document.getElementById("involucrados").style.display = "none";
-							document.getElementById("div_uma").style.display = "none";
-							document.getElementById("div_proceso").style.display = "none";
-							document.getElementById("div_noti").style.display = "none";
-						}
-					});
-				} else {
-					const data = {
-						'folio': document.querySelector('#input_folio_atencion_lit').value,
-						'expediente': document.querySelector('#input_expediente').value,
-						'year': document.querySelector('#year_select_lit').value,
-						'titulo': tipoPlantilla,
-						'victima': victima,
-						'imputado': imputado,
-					};
-					$.ajax({
-						method: 'POST',
-						url: "<?= base_url('/data/get-plantilla') ?>",
-						data: data,
-						dataType: 'JSON',
-						success: function(response) {
-							if (response.status == 1) {
-								const plantilla = response.plantilla;
-								if (select_uma.getAttribute('required') == "true") {
-									tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
-									// document.querySelector("#victima_modal_documento").value = '';
-									// document.querySelector("#imputado_modal_documento").value = '';
-									plantilla.value = '';
-									select_uma.value = '';
-									select_proceso.value = '';
-									select_notificacion.value = '';
-								} else {
-									tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
-									// document.querySelector("#victima_modal_documento").value = '';
-									// document.querySelector("#imputado_modal_documento").value = '';
-									plantilla.value = '';
-									select_uma.value = '';
-									select_proceso.value = '';
-									select_notificacion.value = '';
-									document.getElementById("involucrados").style.display = "none";
-								}
-
-							} else {
-								if (select_uma.getAttribute('required') == "true") {
-									tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
-									// document.querySelector("#victima_modal_documento").value = '';
-									// document.querySelector("#imputado_modal_documento").value = '';
-									plantilla.value = '';
-									select_uma.value = '';
-									select_proceso.value = '';
-									select_notificacion.value = '';
-								} else {
-									tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
-									// document.querySelector("#victima_modal_documento").value = '';
-									// document.querySelector("#imputado_modal_documento").value = '';
-									plantilla.value = '';
-									select_uma.value = '';
-									select_proceso.value = '';
-									select_notificacion.value = '';
-									document.getElementById("involucrados").style.display = "none";
-								}
-							}
-						},
-						error: function(jqXHR, textStatus, errorThrown) {
-							console.error(textStatus);
-							tinymce.get("documento").setContent('PLANTILLA VACÍA O CON ERROR');
-							// document.querySelector("#victima_modal_documento").value = '';
-							// document.querySelector("#imputado_modal_documento").value = '';
-							plantilla.value = '';
-							select_uma.value = '';
-							select_proceso.value = '';
-							select_notificacion.value = '';
-							document.getElementById("involucrados").style.display = "none";
-							document.getElementById("div_uma").style.display = "none";
-							document.getElementById("div_proceso").style.display = "none";
-							document.getElementById("div_noti").style.display = "none";
-						}
-					});
-				}
-			}
-
-
-			//funcion para asignar valores a los documentos a un folio
-			function insertarDocumento(contenido, tipoPlantilla) {
-
-				//se valida que no sea enviado cuando es denuncia anonima
-				if (document.getElementById('input_denuncia').value == "DA") {
-					Swal.fire({
-						title: 'Este documento no será enviado',
-						showDenyButton: true,
-						showCancelButton: false,
-						confirmButtonText: 'Confirmar',
-						confirmButtonColor: '#bf9b55',
-					}).then((result) => {
-						/* Read more about isConfirmed, isDenied below */
-
-
-						if (result.isConfirmed) {
-							if (document.querySelector('#input_expediente').value != '') {
-
-								const data = {
-									'folio': document.querySelector('#input_folio_atencion_lit').value,
-									'expediente': document.querySelector('#input_expediente').value,
-									'year': document.querySelector('#year_select_lit').value,
-									'placeholder': contenido,
-									'titulo': tipoPlantilla,
-									'statusenvio': 0,
-									'agente_asignado': document.querySelector('#empleado_asignado').value,
-									'victimaid': document.querySelector('#victima_modal_documento').value,
-									'imputado': document.querySelector('#imputado_modal_documento').value,
-								};
-								insertarDoc(data);
-							} else {
-								const data = {
-									'folio': document.querySelector('#input_folio_atencion_lit').value,
-									'year': document.querySelector('#year_select_lit').value,
-									'placeholder': contenido,
-									'titulo': tipoPlantilla,
-									'statusenvio': 0,
-									'agente_asignado': document.querySelector('#empleado_asignado').value,
-									'victimaid': document.querySelector('#victima_modal_documento').value,
-									'imputado': document.querySelector('#imputado_modal_documento').value,
-
-								};
-								insertarDoc(data);
-							}
-						}
-					})
-				} else {
-					//se pregunta si el documento debe de ser enviado
-					Swal.fire({
-						title: '¿Este documento tiene que ser enviado?',
-						showDenyButton: true,
-						showCancelButton: true,
-						confirmButtonText: 'Si',
-						confirmButtonColor: '#bf9b55',
-						denyButtonText: 'No',
-						cancelButtonText: 'No',
-					}).then((result) => {
-						/* Read more about isConfirmed, isDenied below */
-						if (result.isConfirmed) {
-							if (document.querySelector('#input_expediente').value != '') {
-								const data = {
-									'folio': document.querySelector('#input_folio_atencion_lit').value,
-									'expediente': document.querySelector('#input_expediente').value,
-									'year': document.querySelector('#year_select_lit').value,
-									'placeholder': contenido,
-									'municipio': document.querySelector('#municipio_empleado').value,
-									// 'oficina': document.querySelector('#oficina_empleado').value,
-									// 'empleado': document.querySelector('#empleado').value,
-									'titulo': tipoPlantilla,
-									'statusenvio': 1,
-									'agente_asignado': document.querySelector('#empleado_asignado').value,
-									'victimaid': document.querySelector('#victima_modal_documento').value,
-									'imputado': document.querySelector('#imputado_modal_documento').value,
-
-								};
-								insertarDoc(data);
-							} else if (document.querySelector('#input_expediente').value == '') {
-
-								const data = {
-									'folio': document.querySelector('#input_folio_atencion_lit').value,
-									'year': document.querySelector('#year_select_lit').value,
-									'placeholder': contenido,
-									'municipio': document.querySelector('#municipio_empleado').value,
-									'titulo': tipoPlantilla,
-									'statusenvio': 1,
-									'agente_asignado': document.querySelector('#empleado_asignado').value,
-									'victimaid': document.querySelector('#victima_modal_documento').value,
-									'imputado': document.querySelector('#imputado_modal_documento').value,
-
-								};
-								insertarDoc(data);
-
-							}
-
-						} else {
-							if (document.querySelector('#input_expediente').value != '') {
-
-								const data = {
-									'folio': document.querySelector('#input_folio_atencion_lit').value,
-									'expediente': document.querySelector('#input_expediente').value,
-									'year': document.querySelector('#year_select_lit').value,
-									'placeholder': contenido,
-									'municipio': document.querySelector('#municipio_empleado').value,
-									// 'oficina': document.querySelector('#oficina_empleado').value,
-									// 'empleado': document.querySelector('#empleado').value,
-									'titulo': tipoPlantilla,
-									'statusenvio': 0,
-									'agente_asignado': document.querySelector('#empleado_asignado').value,
-									'victimaid': document.querySelector('#victima_modal_documento').value,
-									'imputado': document.querySelector('#imputado_modal_documento').value,
-
-								};
-								insertarDoc(data);
-							} else if (document.querySelector('#input_expediente').value == '') {
-								const data = {
-									'folio': document.querySelector('#input_folio_atencion_lit').value,
-									'year': document.querySelector('#year_select_lit').value,
-									'placeholder': contenido,
-									'municipio': document.querySelector('#municipio_empleado').value,
-									'titulo': tipoPlantilla,
-									'statusenvio': 0,
-									'agente_asignado': document.querySelector('#empleado_asignado').value,
-									'victimaid': document.querySelector('#victima_modal_documento').value,
-									'imputado': document.querySelector('#imputado_modal_documento').value,
-
-								};
-								insertarDoc(data);
-							}
-						}
-					})
-				}
-
-			}
-
-			//se obtiene el nombre de los parametros de la url
-			function getParameterByName(name, url = window.location.href) {
-				name = name.replace(/[\[\]]/g, "\\$&");
-				var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-					results = regex.exec(url);
-				if (!results) return null;
-				if (!results[2]) return '';
-				return decodeURIComponent(results[2].replace(/\+/g, " "));
-			}
-
-			//Funcion para validar que el nombre de un parametro exista en la url
-			function isParameterByName(name) {
-				let regex = new RegExp('[?&]' + name + '=');
-				return regex.test(window.location.href);
-			}
-
-			//funcion para agregar documentos al folio con la informacion ya establecida
-			function insertarDoc(data) {
-				$.ajax({
-					data: data,
-					url: "<?= base_url('/admin/dashboard/insert-documentosWSYWSG') ?>",
-					method: "POST",
-					dataType: "json",
-					success: function(response) {
-						const documentos = response.documentos;
-
-						if (response.status == 1) {
-							tinymce.get("documento").setContent('');
-							document.querySelector("#victima_modal_documento").value = '';
-							document.querySelector("#imputado_modal_documento").value = '';
-							const documentos = response.documentos;
-							Swal.fire({
-								icon: 'success',
-								text: 'Documento ingresado correctamente',
-								confirmButtonColor: '#bf9b55',
-							});
-
-							$('#documentos_modal').modal('hide');
-							let tabla_documentos = document.querySelectorAll('#table-documentos tr');
-							tabla_documentos.forEach(row => {
-								if (row.id !== '') {
-									row.remove();
-								}
-							});
-							llenarTablaDocumentos(documentos);
-							document.querySelector("#plantilla").value = '';
-						} else {
-							Swal.fire({
-								icon: 'error',
-								text: 'Documento no agregado',
-								confirmButtonColor: '#bf9b55',
-							});
-						}
-
-
-
-					},
-					error: function(jqXHR, textStatus, errorThrown) {}
-				});
-			}
-
+			
 			//Se convierte las fechas en horario de Tijuana
 			function dateToString(_date) {
 				let date = new Date(_date);
@@ -7300,21 +6483,12 @@
 	window.initMap = initMap;
 </script>
 <?php include 'video_denuncia_modals/folios_atendidos_modal.php' ?>
-<?php include 'video_denuncia_modals/send_email_modal.php' ?>
-<?php include 'video_denuncia_modals/prueba.php' ?>
 <?php include 'video_denuncia_modals/load_save_archivos_modal.php' ?>
-
 <?php include 'litigantes_modals/info_folio_modal.php' ?>
 <?php include 'litigantes_modals/salida_modal_litigantes.php' ?>
-<?php include 'video_denuncia_modals/marks.php' ?>
-<?php include 'video_denuncia_modals/encargados_modal.php' ?>
-<?php include 'video_denuncia_modals/asignar_agente_modal.php' ?>
-
 <?php include 'video_denuncia_modals/agregar_archivosExternos_modal.php' ?>
-
 <?php include 'video_denuncia_modals/persona_modal.php' ?>
 <?php include 'video_denuncia_modals/persona_moral_modal.php' ?>
-
 <?php include 'video_denuncia_modals/relacion_parentesco_modal.php' ?>
 <?php include 'video_denuncia_modals/relacion_parentesco_modal_insert.php' ?>
 <?php include 'video_denuncia_modals/insert_persona_fisica_modal.php' ?>
@@ -7326,13 +6500,7 @@
 <?php include 'video_denuncia_modals/agregar_vehiculos_modal.php' ?>
 <?php include 'video_denuncia_modals/objetos_involucrados_modal.php' ?>
 <?php include 'video_denuncia_modals/objetos_involucrados_modal_update.php' ?>
-<?php include 'video_denuncia_modals/documentos_modal.php' ?>
-<?php include 'video_denuncia_modals/documentos_modal_editar.php' ?>
-<?php include 'video_denuncia_modals/documentos_modal_wyswyg.php' ?>
-<?php include 'video_denuncia_modals/modal_validation_password_firma.php' ?>
-<?php include 'video_denuncia_modals/documentos_generados_modal.php' ?>
 
-<?php include 'documentos/modal_validation_password_doc_id.php' ?>
 
 
 <?php $this->endSection() ?>

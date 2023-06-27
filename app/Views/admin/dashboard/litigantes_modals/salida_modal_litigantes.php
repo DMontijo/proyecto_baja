@@ -329,7 +329,6 @@
 							$('.modal-backdrop').remove();
 							// location.reload();
 							window.location.href = `<?= base_url('/admin/dashboard/documentos_show?folio=') ?>` + inputFolio.value + '&year=' + year_select.value;
-							document.getElementById("form_folio").reset();
 						})
 					} else {
 						Swal.fire({
@@ -422,7 +421,6 @@
 								$('body').removeClass('modal-open');
 								$('.modal-backdrop').remove();
 								window.location.href = `<?= base_url('/admin/dashboard/documentos_show?expediente=') ?>` + data.expediente + '&year=' + year_select.value + '&folio=' + inputFolio.value + '&municipioasignado=' + municipio_empleado.value;
-								document.getElementById("form_folio").reset();
 							});
 						} else {
 							Swal.fire({

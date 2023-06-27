@@ -85,6 +85,32 @@ class FolioPersonaFisicaModel extends Model
 		$query = $builder->get();
 		return $query->getResult('array');
 	}
+	public function get_by_personas_propietarios($folio, $year)
+	{
+		$strQuery = 'SELECT 
+		t1.FOLIOID, t1.ANO, 
+		t1.NOMBRE, t1.PRIMERAPELLIDO, t1.SEGUNDOAPELLIDO, t1.PERSONAFISICAID,
+		NULL AS PERSONAMORALID, NULL AS DENOMINACION,
+		PERSONACALIDADJURIDICADESCR
+	  FROM
+	  FOLIOPERSONAFISICA t1
+		LEFT JOIN PERSONACALIDADJURIDICA ON PERSONACALIDADJURIDICA.PERSONACALIDADJURIDICAID = t1.CALIDADJURIDICAID
+	  WHERE
+		t1.FOLIOID = ' . $folio . ' AND t1.ANO = ' . $year . ' AND t1.PERSONAFISICAID IS NOT NULL 
+	UNION 
+	SELECT 
+		t1.FOLIOID, t1.ANO, 
+		NULL AS NOMBRE, NULL AS PRIMERAPELLIDO, NULL AS SEGUNDOAPELLIDO, NULL AS PERSONAFISICAID,
+		t1.PERSONAMORALID, t1.DENOMINACION,
+		PERSONACALIDADJURIDICADESCR
+	  FROM
+	  FOLIOPERSONAMORAL t1
+		LEFT JOIN PERSONACALIDADJURIDICA  ON PERSONACALIDADJURIDICA.PERSONACALIDADJURIDICAID = t1.CALIDADJURIDICAID
+	  WHERE 		
+		t1.FOLIOID = ' . $folio . ' AND t1.ANO = ' . $year . ' AND t1.PERSONAMORALID IS NOT NULL ';
+				return $this->db->query($strQuery)->getResult('array');
+
+	}
 	public function get_by_persona_fisica_filtro($folio, $year, $idpersonafisica)
 	{
 		$builder = $this->db->table($this->table);

@@ -174,9 +174,12 @@
 						select_victima_documento.add(option_vacio, null);
 
 						victimas.forEach(victima => {
+							let primer_apellido = victima.PRIMERAPELLIDO ? victima
+								.PRIMERAPELLIDO : '';
+
 							const option = document.createElement('option');
-							option.value = victima.PERSONAFISICAID;
-							option.text = victima.NOMBRE + ' ' + victima.PRIMERAPELLIDO + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
+							option.value = victima.PERSONAFISICAID ? victima.PERSONAFISICAID : victima.PERSONAMORALID + ' MORAL';
+							option.text = victima.NOMBRE ? victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PFCJDESCR : victima.DENOMINACION + ' | ' + victima.PMCJDESCR;
 							select_victima_documento.add(option, null);
 						});
 						$('#imputado_modal_documento').empty();
@@ -262,9 +265,12 @@
 						select_victima_documento.add(option_vacio, null);
 
 						victimas.forEach(victima => {
+							let primer_apellido = victima.PRIMERAPELLIDO ? victima
+								.PRIMERAPELLIDO : '';
+
 							const option = document.createElement('option');
-							option.value = victima.PERSONAFISICAID;
-							option.text = victima.NOMBRE + ' ' + victima.PRIMERAPELLIDO + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
+							option.value = victima.PERSONAFISICAID ? victima.PERSONAFISICAID : victima.PERSONAMORALID + ' MORAL';
+							option.text = victima.NOMBRE ? victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PFCJDESCR : victima.DENOMINACION + ' | ' + victima.PMCJDESCR;
 							select_victima_documento.add(option, null);
 						});
 						$('#imputado_modal_documento').empty();

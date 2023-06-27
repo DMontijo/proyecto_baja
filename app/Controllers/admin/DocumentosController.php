@@ -243,7 +243,7 @@ class DocumentosController extends BaseController
 		if (isset($folio) && isset($year) && empty($expediente)) {
 			$documentos = $this->_folioDocModelRead->get_by_folio($folio, $year);
 			$imputados = $this->_folioPersonaFisicaModelRead->get_imputados($folio, $year);
-			$victimas = $this->_folioPersonaFisicaModelRead->get_victimas($folio, $year);
+			$victimas = $this->_folioModelRead->get_victimas($folio, $year);
 			$correos = $this->_folioPersonaFisicaModelRead->get_correos_persona($folio, $year);
 
 			return json_encode(['status' => 1, 'documentos' => $documentos, 'victimas' => $victimas, "imputados" => $imputados, 'correos' => $correos]);
@@ -251,7 +251,7 @@ class DocumentosController extends BaseController
 		if ($expediente) {
 			$documentos = $this->_folioDocModelRead->get_by_folio($folio, $year);
 			$imputados = $this->_folioPersonaFisicaModelRead->get_imputados($folio, $year);
-			$victimas = $this->_folioPersonaFisicaModelRead->get_victimas($folio, $year);
+			$victimas = $this->_folioModelRead->get_victimas($folio, $year);
 			$correos = $this->_folioPersonaFisicaModelRead->get_correos_persona($folio, $year);
 
 			return json_encode(['status' => 1, 'documentos' => $documentos, 'victimas' => $victimas, "imputados" => $imputados, 'correos' => $correos]);

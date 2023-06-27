@@ -11,7 +11,7 @@
 				<div class="row">
 					<div class="col-3">
 						<div class="nav flex-column nav-pills" id="info_tabs" role="tablist" aria-orientation="vertical">
-						<a class="nav-link active" id="v-pills-objetos-involucrados-tab" data-toggle="pill" href="#v-pills-archivos-externos" role="tab" aria-controls="v-pills-archivos-externo" aria-selected="false"><i class="fas fa-file"></i> ARCHIVOS EXTERNOS</a>
+							<a class="nav-link active" id="v-pills-archivos-externos-tab" data-toggle="pill" href="#v-pills-archivos-externos" role="tab" aria-controls="v-pills-archivos-externo" aria-selected="false"><i class="fas fa-file"></i> ARCHIVOS EXTERNOS</a>
 							<a class="nav-link" id="v-pills-denuncia-tab" data-toggle="pill" href="#v-pills-denuncia" role="tab" aria-controls="v-pills-denuncia" aria-selected="false"><i class="fas fa-file-alt"></i> HECHO</a>
 							<a class="nav-link" id="v-pills-personas-tab" data-toggle="pill" href="#v-pills-personas" role="tab" aria-controls="v-pills-personas" aria-selected="false"><i class="fas fa-users"></i> PERSONAS</a>
 							<a class="nav-link" id="v-pills-personas-morales-tab" data-toggle="pill" href="#v-pills-personas-morales" role="tab" aria-controls="v-pills-personas-morales" aria-selected="true"><i class="fas fa-home"></i> PERSONAS MORALES</a>
@@ -27,6 +27,30 @@
 					</div>
 					<div class="col-9">
 						<div class="tab-content" id="info_content">
+							<div class="tab-pane fade  show active" id="v-pills-archivos-externos" role="tabpanel" aria-labelledby="v-pills-archivos-externos-tab">
+								<div id="adicionados" class="d-none"></div>
+
+								<div class="col-12 mb-2 p-0 text-right">
+									<div id="loading_archivos" name="loading_archivos" class="text-center d-none" style="min-height:50px;">
+										<div class="justify-content-center">
+											<div class="spinner-border text-primary" role="status">
+											</div>
+										</div>
+									</div>
+									<button type="button" id="refrescarArchivos" name="refrescarArchivos" class="btn btn-primary font-weight-bold">ACTUALIZAR ARCHIVOS</button>
+									<button type="button" id="agregarArchivosAdmin" name="agregarArchivosAdmin" class="btn btn-primary font-weight-bold"><i class="fas fa-plus mr-3"></i>AGREGAR ARCHIVOS</button>
+
+								</div>
+								<div class="table-responsive">
+									<table id="table-archivos" class="table table-bordered table-hover table-striped table-light">
+										<tr>
+											<th class="text-center bg-primary text-white">DESCRIPCIÓN</th>
+											<th class="text-center bg-primary text-white">DOCUMENTO</th>
+											<th class="text-center bg-primary text-white"></th>
+										</tr>
+									</table>
+								</div>
+							</div>
 							<div class="tab-pane fade" id="v-pills-denuncia" role="tabpanel" aria-labelledby="v-pills-denuncia-tab">
 								<?php echo view('/admin/dashboard/video_denuncia_forms/form_denuncia'); ?>
 							</div>
@@ -49,7 +73,7 @@
 							<div class="tab-pane fade" id="v-pills-personas-morales" role="tabpanel" aria-labelledby="v-pills-personas-morales-tab">
 								<div id="adicionados" class="d-none"></div>
 								<div class="table-responsive">
-									<table id="table-personas-morales" class="table table-bordered table-hover table-striped table-light">
+									<table id="table-morales" class="table table-bordered table-hover table-striped table-light">
 										<tr>
 											<th class="text-center bg-primary text-white">DENOMINACION</th>
 											<th class="text-center bg-primary text-white">MARCA COMERCIAL</th>
@@ -122,7 +146,7 @@
 								</div>
 							</div>
 							<div class="tab-pane fade" id="v-pills-vehiculos" role="tabpanel" aria-labelledby="v-pills-vehiculos-tab">
-							<div class="col-12 mb-2 p-0 text-right">
+								<div class="col-12 mb-2 p-0 text-right">
 									<button type="button" id="insertVehiculoModal" name="insertVehiculoModal" class="btn btn-primary font-weight-bold"><i class="fas fa-plus mr-3"></i>AGREGAR VEHÍCULO</button>
 								</div>
 								<div class="table-responsive">
@@ -135,31 +159,7 @@
 									</table>
 								</div>
 							</div>
-							<div class="tab-pane fade  show active" id="v-pills-archivos-externos" role="tabpanel" aria-labelledby="v-pills-archivos-externos-tab">
-								<div id="adicionados" class="d-none"></div>
-								
-								<div class="col-12 mb-2 p-0 text-right">
-								<div id="loading_archivos" name="loading_archivos" class="text-center d-none" style="min-height:50px;">
-									<div class="justify-content-center">
-										<div class="spinner-border text-primary" role="status">
-										</div>
-									</div>
-								</div>
-									<button type="button" id="refrescarArchivos" name="refrescarArchivos" class="btn btn-primary font-weight-bold">ACTUALIZAR ARCHIVOS</button>
-									<button type="button" id="agregarArchivosAdmin" name="agregarArchivosAdmin" class="btn btn-primary font-weight-bold"><i class="fas fa-plus mr-3"></i>AGREGAR ARCHIVOS</button>
 
-								</div>
-								<div class="table-responsive">
-									<table id="table-archivos" class="table table-bordered table-hover table-striped table-light">
-										<tr>
-											<th class="text-center bg-primary text-white">DESCRIPCIÓN</th>
-											<th class="text-center bg-primary text-white">DOCUMENTO</th>
-											<th class="text-center bg-primary text-white"></th>
-										</tr>
-									</table>
-								</div>
-
-							</div>
 
 							<!-- <div class="tab-pane fade" id="v-pills-documentos" role="tabpanel" aria-labelledby="v-pills-documentos-tab">
 								<?php //echo view('/admin/dashboard/video_denuncia_forms/form_documentos'); 
