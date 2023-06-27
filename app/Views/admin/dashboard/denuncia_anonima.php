@@ -2740,7 +2740,7 @@
 
 	}
 
-	function eliminarArbolDelictivo(personafisicavictima, personafisicaimputado, delitoModalidadId) {
+	function eliminarArbolDelictivo(personafisicavictima, personafisicaimputado, delitoModalidadId, tipo) {
 		$.ajax({
 			data: {
 				'personafisicavictima': personafisicavictima,
@@ -2748,6 +2748,7 @@
 				'delito': delitoModalidadId,
 				'folio': inputFolio.value,
 				'year': year_select.value,
+				'tipo': tipo,
 
 			},
 			url: "<?= base_url('/data/delete-arbol_delictivo-by-folio') ?>",
@@ -2909,7 +2910,7 @@
 
 	function llenarTablaFisFis(relacionFisFis) {
 		for (let i = 0; i < relacionFisFis.length; i++) {
-			var btn = `<button type='button'  class='btn btn-primary' onclick='eliminarArbolDelictivo(${relacionFisFis[i].PERSONAFISICAIDVICTIMA},${relacionFisFis[i].PERSONAFISICAIDIMPUTADO},${relacionFisFis[i].DELITOMODALIDADID})'><i class='fa fa-trash'></i></button>`
+			var btn = `<button type='button'  class='btn btn-primary' onclick='eliminarArbolDelictivo(${relacionFisFis[i].PERSONAFISICAIDVICTIMA},${relacionFisFis[i].PERSONAFISICAIDIMPUTADO},${relacionFisFis[i].DELITOMODALIDADID}, 0)'><i class='fa fa-trash'></i></button>`
 
 			var fila =
 				`<tr id="row${i}">` +

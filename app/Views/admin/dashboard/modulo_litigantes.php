@@ -465,9 +465,9 @@
 
 	function llenarTablaFisFis(relacionFisFis) {
 		for (let i = 0; i < relacionFisFis.length; i++) {
+			let tipo = relacionFisFis[i].PERSONAFISICAIDVICTIMA ? 0: 1;
 			var btn =
-				`<button type='button'  class='btn btn-primary' onclick='eliminarArbolDelictivo(${relacionFisFis[i].PERSONAFISICAIDVICTIMA},${relacionFisFis[i].PERSONAFISICAIDIMPUTADO},${relacionFisFis[i].DELITOMODALIDADID})'><i class='fa fa-trash'></i></button>`
-
+			`<button type='button' class='btn btn-primary' onclick='eliminarArbolDelictivo(${relacionFisFis[i].PERSONAFISICAIDVICTIMA ? relacionFisFis[i].PERSONAFISICAIDVICTIMA : relacionFisFis[i].PERSONAMORALIDVICTIMA}, ${relacionFisFis[i].PERSONAFISICAIDIMPUTADO}, ${relacionFisFis[i].DELITOMODALIDADID},${tipo})'><i class='fa fa-trash'></i></button>`
 			var fila =
 				`<tr id="row${i}">` +
 				`<td class="text-center">${relacionFisFis[i].NOMBREI}</td>` +
@@ -536,7 +536,7 @@
 	}
 
 	//Funcion para eliminar la relacion del arbol delictivo, recibe como parametro el imputado, victima y el id del delito
-	function eliminarArbolDelictivo(personafisicavictima, personafisicaimputado, delitoModalidadId) {
+	function eliminarArbolDelictivo(personafisicavictima, personafisicaimputado, delitoModalidadId, tipo) {
 		$.ajax({
 			data: {
 				'personafisicavictima': personafisicavictima,
@@ -544,6 +544,7 @@
 				'delito': delitoModalidadId,
 				'folio': inputFolio.value,
 				'year': year_select.value,
+				'tipo': tipo,
 
 			},
 			url: "<?= base_url('/data/delete-arbol_delictivo-by-folio') ?>",
@@ -864,50 +865,6 @@
 					option_vacio_im.selected = true;
 					if (victimas || imputados || correos || personas) {
 						//Siempre se limpian los selects, se declaran, y se llenan con la respuesta correspondiente
-						$('#victima_modal_documento').empty();
-						let select_victima_documento = document.querySelector(
-							"#victima_modal_documento");
-						let select_imputado_documento = document.querySelector(
-							"#imputado_modal_documento");
-						select_victima_documento.add(option_vacio_vm, null);
-						victimas.forEach(victima => {
-							let primer_apellido = victima.PRIMERAPELLIDO ? victima
-								.PRIMERAPELLIDO : '';
-
-							const option = document.createElement('option');
-							option.value = victima.PERSONAFISICAID;
-							option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
-							select_victima_documento.add(option, null);
-						});
-
-						$('#imputado_modal_documento').empty();
-						select_imputado_documento.add(option_vacio_im, null);
-
-						imputados.forEach(imputado => {
-							let primer_apellido = imputado.PRIMERAPELLIDO ? imputado
-								.PRIMERAPELLIDO : '';
-
-							const option = document.createElement('option');
-							option.value = imputado.PERSONAFISICAID;
-							option.text = imputado.NOMBRE + ' ' + primer_apellido;
-							select_imputado_documento.add(option, null);
-						});
-
-
-						$('#send_mail_select').empty();
-						let select_mail_send = document.querySelector("#send_mail_select");
-						correos.forEach(correo => {
-							const option = document.createElement('option');
-							option.value = correo.CORREO;
-							option.text = correo.CORREO;
-							select_mail_send.add(option, null);
-						});
-
-						const option_vacio = document.createElement('option');
-						option_vacio.value = '';
-						option_vacio.text = 'Selecciona ...';
-						option_vacio.disabled = true;
-						option_vacio.selected = true;
 						$('#victima_ofendido').empty();
 						const option_vacio_vic = document.createElement('option');
 						option_vacio_vic.value = '';
@@ -922,8 +879,8 @@
 								.PRIMERAPELLIDO : '';
 
 							const option = document.createElement('option');
-							option.value = victima.PERSONAFISICAID ? victima.PERSONAFISICAID : victima.PERSONAMORALID;
-							option.text = victima.NOMBRE ? victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PFCJDESCR : victima.DENOMINACION  + ' | ' + victima.PMCJDESCR;
+							option.value = victima.PERSONAFISICAID ? victima.PERSONAFISICAID : victima.PERSONAMORALID + ' MORAL';
+							option.text = victima.NOMBRE ? victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PFCJDESCR : victima.DENOMINACION + ' | ' + victima.PMCJDESCR;
 							select_victima_ofendido.add(option, null);
 						});
 
@@ -957,7 +914,13 @@
 							option.text = imputado.NOMBRE + ' ' + primer_apellido;
 							select_imputado_mputado.add(option, null);
 						});
+
 						$('#personaFisica1_I').empty();
+						const option_vacio = document.createElement('option');
+						option_vacio.value = '';
+						option_vacio.text = '';
+						option_vacio.disabled = true;
+						option_vacio.selected = true;
 						let select_personaFisica1_I = document.querySelector("#personaFisica1_I");
 						select_personaFisica1_I.add(option_vacio, null);
 						personas.forEach(persona => {
@@ -1230,7 +1193,7 @@
 						html: 'El folio ya se encuentra atendido.',
 						confirmButtonColor: '#bf9b55',
 					});
-				
+
 				} else {
 					card2.classList.add('d-none');
 					card3.classList.add('d-none');
@@ -1246,7 +1209,7 @@
 				}
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
-				console.log('Error', textStatus, jqXHR,errorThrown);
+				console.log('Error', textStatus, jqXHR, errorThrown);
 			}
 		});
 	});
@@ -1876,47 +1839,11 @@
 							.PRIMERAPELLIDO : '';
 
 						const option = document.createElement('option');
-						option.value = victima.PERSONAFISICAID;
-						option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
+						option.value = victima.PERSONAFISICAID ? victima.PERSONAFISICAID : victima.PERSONAMORALID + ' MORAL';
+						option.text = victima.NOMBRE ? victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PFCJDESCR : victima.DENOMINACION + ' | ' + victima.PMCJDESCR;
 						select_victima_ofendido.add(option, null);
 					});
-					const option_vacio_vd = document.createElement('option');
-					option_vacio_vd.value = '';
-					option_vacio_vd.text = '';
-					option_vacio_vd.disabled = true;
-					option_vacio_vd.selected = true;
-					$('#victima_modal_documento').empty();
-					let select_victima_documento = document.querySelector(
-						"#victima_modal_documento");
-					select_victima_documento.add(option_vacio_vd);
 
-					victimas.forEach(victima => {
-						let primer_apellido = victima.PRIMERAPELLIDO ? victima
-							.PRIMERAPELLIDO : '';
-
-						const option = document.createElement('option');
-						option.value = victima.PERSONAFISICAID;
-						option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
-						select_victima_documento.add(option, null);
-					});
-					const option_vacio_id = document.createElement('option');
-					option_vacio_id.value = '';
-					option_vacio_id.text = '';
-					option_vacio_id.disabled = true;
-					option_vacio_id.selected = true;
-					$('#imputado_modal_documento').empty();
-					let select_imputado_documento = document.querySelector(
-						"#imputado_modal_documento");
-					select_imputado_documento.add(option_vacio_id);
-					imputados.forEach(imputado => {
-						let primer_apellido = imputado.PRIMERAPELLIDO ? imputado
-							.PRIMERAPELLIDO : '';
-
-						const option = document.createElement('option');
-						option.value = imputado.PERSONAFISICAID;
-						option.text = imputado.NOMBRE + ' ' + primer_apellido;
-						select_imputado_documento.add(option, null);
-					});
 					$('#imputado_arbol').empty();
 					let select_imputado_mputado = document.querySelector("#imputado_arbol")
 					imputados.forEach(imputado => {
@@ -5211,19 +5138,7 @@
 								select_imputado_mputado.add(option, null);
 
 							});
-							$('#imputado_modal_documento').empty();
-							let select_imputado_modal = document.querySelector("#imputado_modal_documento");
-							select_imputado_modal.add(option_vacio, null);
-							imputados.forEach(imputado => {
-								let primer_apellido = imputado.PRIMERAPELLIDO ? imputado
-									.PRIMERAPELLIDO : '';
 
-								const option = document.createElement('option');
-								option.value = imputado.PERSONAFISICAID;
-								option.text = imputado.NOMBRE + ' ' + primer_apellido;
-								select_imputado_modal.add(option, null);
-
-							});
 							$('#victima_ofendido').empty();
 							let select_victima_ofendido = document.querySelector("#victima_ofendido");
 							select_victima_ofendido.add(option_vacio, null);
@@ -5232,22 +5147,11 @@
 									.PRIMERAPELLIDO : '';
 
 								const option = document.createElement('option');
-								option.value = victima.PERSONAFISICAID;
-								option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
+								option.value = victima.PERSONAFISICAID ? victima.PERSONAFISICAID : victima.PERSONAMORALID + ' MORAL';
+								option.text = victima.NOMBRE ? victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PFCJDESCR : victima.DENOMINACION + ' | ' + victima.PMCJDESCR;
 								select_victima_ofendido.add(option, null);
 							});
-							$('#victima_modal_documento').empty();
-							let select_victima_modal = document.querySelector("#victima_modal_documento");
-							select_victima_modal.add(option_vacio, null);
-							victimas.forEach(victima => {
-								let primer_apellido = victima.PRIMERAPELLIDO ? victima
-									.PRIMERAPELLIDO : '';
 
-								const option = document.createElement('option');
-								option.value = victima.PERSONAFISICAID;
-								option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
-								select_victima_modal.add(option, null);
-							});
 							document.getElementById('subirFotoPersona').value = '';
 
 
@@ -6360,47 +6264,11 @@
 									.PRIMERAPELLIDO : '';
 
 								const option = document.createElement('option');
-								option.value = victima.PERSONAFISICAID;
-								option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
+								option.value = victima.PERSONAFISICAID ? victima.PERSONAFISICAID : victima.PERSONAMORALID + ' MORAL';
+								option.text = victima.NOMBRE ? victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PFCJDESCR : victima.DENOMINACION + ' | ' + victima.PMCJDESCR;
 								select_victima_ofendido.add(option, null);
 							});
-							const option_vacio_vd = document.createElement('option');
-							option_vacio_vd.value = '';
-							option_vacio_vd.text = '';
-							option_vacio_vd.disabled = true;
-							option_vacio_vd.selected = true;
-							$('#victima_modal_documento').empty();
-							let select_victima_documento = document.querySelector(
-								"#victima_modal_documento");
-							select_victima_documento.add(option_vacio_vd);
 
-							victimas.forEach(victima => {
-								let primer_apellido = victima.PRIMERAPELLIDO ? victima
-									.PRIMERAPELLIDO : '';
-
-								const option = document.createElement('option');
-								option.value = victima.PERSONAFISICAID;
-								option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
-								select_victima_documento.add(option, null);
-							});
-							const option_vacio_id = document.createElement('option');
-							option_vacio_id.value = '';
-							option_vacio_id.text = '';
-							option_vacio_id.disabled = true;
-							option_vacio_id.selected = true;
-							$('#imputado_modal_documento').empty();
-							let select_imputado_documento = document.querySelector(
-								"#imputado_modal_documento");
-							select_imputado_documento.add(option_vacio_id);
-							imputados.forEach(imputado => {
-								let primer_apellido = imputado.PRIMERAPELLIDO ? imputado
-									.PRIMERAPELLIDO : '';
-
-								const option = document.createElement('option');
-								option.value = imputado.PERSONAFISICAID;
-								option.text = imputado.NOMBRE + ' ' + primer_apellido;
-								select_imputado_documento.add(option, null);
-							});
 							$('#imputado_arbol').empty();
 							let select_imputado_mputado = document.querySelector("#imputado_arbol")
 							imputados.forEach(imputado => {
