@@ -135,15 +135,6 @@
 	let current = null;
 
 
-	//Funion para prevenir cerrar la ventana durante la asignacion de una denuncia.
-	function preventCloseWindow() {
-		window.removeEventListener("beforeunload", null, false);
-		window.addEventListener("beforeunload", (evento) => {
-			evento.preventDefault();
-			evento.returnValue = "Si cierras se perdera todo lo que no hayas guardado o se desconectará la llamada.";
-			return "Si cierras se perdera todo lo que no hayas guardado o se desconectará la llamada.";
-		});
-	}
 
 	//Funcion para retornar cuando se presione la tecla ENTER al mismo tiempo que SHIFT, evitando su comportamiento normal
 	function pulsar(e) {
@@ -760,7 +751,6 @@
 	buscar_btn.addEventListener('click', (e) => {
 		//Limpia todos los valores en caso de que hayan quedado
 		borrarTodoConFolio();
-		preventCloseWindow();
 		$.ajax({
 			data: {
 				'folio': inputFolio.value,

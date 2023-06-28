@@ -95,7 +95,7 @@ $routes->group('admin', function ($routes) {
 
 		$routes->get('video-denuncia', 'admin/DashboardController::video_denuncia');
 		$routes->get('denuncia-anonima', 'admin/DashboardController::denuncia_anonima');
-		$routes->get('modulo-litigantes', 'admin/DashboardController::modulo_litigantes');
+		$routes->get('modulo-litigantes-consulta', 'admin/DashboardController::modulo_litigantes_consultar');
 
 		$routes->get('folios', 'admin/FoliosController::index');
 		$routes->get('folios_abiertos', 'admin/FoliosController::folios_abiertos');
@@ -107,10 +107,11 @@ $routes->group('admin', function ($routes) {
 		$routes->post('liberar_folio', 'admin/FoliosController::liberar_folio');
 		$routes->post('firmar_folio', 'admin/FoliosController::firmar_folio');
 
+		$routes->get('folios_escritos', 'admin/FoliosEscritosController::index');
 		$routes->get('buscar_folio', 'admin/FoliosController::getAllFolios');
 		$routes->post('buscar_folio', 'admin/FoliosController::getFilterFolios');
-		$routes->get('buscar_folio_litigante', 'admin/FoliosController::getAllFoliosLitigante');
-		$routes->post('buscar_folio_litigante', 'admin/FoliosController::getFilterFoliosLitigante');
+		$routes->get('buscar_folio_litigante', 'admin/FoliosEscritosController::getAllFoliosLitigante');
+		$routes->post('buscar_folio_litigante', 'admin/FoliosEscritosController::getFilterFoliosLitigante');
 		$routes->post('ver_folio', 'admin/FoliosController::viewFolio');
 		$routes->get('ver_folio', 'admin/FoliosController::viewFolio');
 

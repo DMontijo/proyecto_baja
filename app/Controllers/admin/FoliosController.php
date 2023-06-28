@@ -456,6 +456,7 @@ class FoliosController extends BaseController
 		$this->_loadView('Buscar folio', 'folios', '', $dataView, 'buscar_folio');
 	}
 
+	
 	/**
 	 * Función para filtrar los folios en consulta de folios
 	 * Se recibe por metodo POST el formulario de filtros
@@ -511,6 +512,7 @@ class FoliosController extends BaseController
 		$this->_loadView('Buscar folio', 'folios', '', $dataView, 'buscar_folio');
 	}
 
+	
 	/**
 	 * Función cuando abren un expediente desde consulta de folios o para abrir los folios atendidos de ese denuniante desde VIDEODENUNCIA
 	 * Recibe por metodo POST el folio y año, o GET en casod e ser desde VIDEODENUNCIA.

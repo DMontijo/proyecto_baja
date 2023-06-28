@@ -2528,7 +2528,7 @@ class DashboardController extends BaseController
 	 * Regresa todo los catálogos necesarios para el consumo de esta vista.
 	 *
 	 */
-	public function modulo_litigantes()
+	public function modulo_litigantes_consultar()
 	{
 		$data = (object) array();
 		$data->folio = $this->request->getGet('folio');

@@ -78,7 +78,7 @@
 				<?php if ($permiso->PERMISOID == 13) { ?>
 
 					<li class="c-sidebar-nav-item" id="nav-modulo-litigantes" name="nav-modulo-litigantes">
-						<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/modulo-litigantes">
+						<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/folios_escritos">
 							<i class="fas fa-building c-sidebar-nav-icon"></i> Modulo litigantes
 						</a>
 					</li>
@@ -118,6 +118,7 @@
 
 				<?php } ?>
 			<?php } ?>
+			
 			<?php foreach ($body_data->rolPermiso as $permiso) { ?>
 
 				<?php if ($permiso->PERMISOID == 11) { ?>
@@ -198,16 +199,6 @@
 				<?php } ?>
 			<?php } ?>
 
-			<?php foreach ($body_data->rolPermiso as $permiso) { ?>
-				<?php if ($permiso->PERMISOID == 13) { ?>
-					<li class="c-sidebar-nav-item" id="nav-ligar-empresa" name="nav-ligar-empresa">
-						<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url('admin/dashboard/lista_ligaciones') ?>">
-							<i class="fas fa-id-badge c-sidebar-nav-icon"></i> Ligar empresas
-						</a>
-					</li>
-				<?php } ?>
-			<?php } ?>
-			<li class="c-sideba
 			<li class=" c-sidebar-nav-item" id="nav-salir" name="nav-salir">
 				<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url('admin/logout') ?>">
 					<i class="fas fa-sign-out-alt c-sidebar-nav-icon"></i> Salir
