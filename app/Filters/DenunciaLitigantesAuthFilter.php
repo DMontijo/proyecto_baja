@@ -17,14 +17,14 @@ class DenunciaLitigantesAuthFilter implements FilterInterface
 			if ($control_session->ID != session('uuid')) {
 				session()->destroy;
 				session_unset();
-				return redirect()->to(base_url('/denuncia'));
+				return redirect()->to(base_url('/denuncia_litigantes'));
 			}
 		
 		}
 		else {
 			session()->destroy;
 			session_unset();
-			return redirect()->to(base_url('/denuncia'));
+			return redirect()->to(base_url('/denuncia_litigantes'));
 		}
 		if (!session('logged_in')) {
 			return redirect()->to(base_url('/denuncia_litigantes'));
