@@ -87,7 +87,7 @@
 								<div id="notas" class="form-group">
 									<label for="notas_caso_salida">Notas</label>
 									<textarea id="notas_caso_salida" class="form-control" placeholder="Notas..." rows="10" maxlength="1000" oninput="mayuscTextarea(this)" onkeydown="pulsar(event)" onkeyup="contarCaracteresSalidaDa(this)"></textarea>
-									<small id="numCaracterSalidaDa"> </small>
+									<small id="numCaracterSalidaLi"> </small>
 
 								</div>
 								<button type="button" id="btn-finalizar-derivacion" class="btn btn-primary">FINALIZAR</button>
@@ -133,17 +133,23 @@
 	const canalizaciones_container = document.querySelector('#canalizaciones_container');
 	const canalizaciones = document.querySelector('#canalizaciones');
 
-
-	//Evento change para seleccionar el tipo de salida
-	tipoSalida.addEventListener('change', (e) => {
+	//Al mostrar modal, mostrar caracteres restantes e informacion escrita
+	$(document).on('show.bs.modal', '#salida_modal_litigantes', function() {
 		const notas_caso_salida = document.querySelector('#notas_caso_salida');
 		notas_caso_salida.value = notas_mp.value;
-
+		if (charRemain < 1000) {
+			document.getElementById("numCaracterSalidaLi").innerHTML = charRemain + ' caracteres restantes';
+		} else {
+			document.getElementById("numCaracterSalidaLi").innerHTML = '1000 caracteres restantes';
+		}
+	});
+	//Evento change para seleccionar el tipo de salida
+	tipoSalida.addEventListener('change', (e) => {
 		//Se sacan los caracteres restantes
 		if (charRemain < 1000) {
-			document.getElementById("numCaracterSalidaDa").innerHTML = charRemain + ' caracteres restantes';
+			document.getElementById("numCaracterSalidaLi").innerHTML = charRemain + ' caracteres restantes';
 		} else {
-			document.getElementById("numCaracterSalidaDa").innerHTML = '1000 caracteres restantes';
+			document.getElementById("numCaracterSalidaLi").innerHTML = '1000 caracteres restantes';
 
 		}
 		if (!(e.target.value == 'DERIVADO' || e.target.value == 'CANALIZADO' || e.target.value == '1' || e.target.value == '4' || e.target.value == '5' || e.target.value == '6' || e.target.value == '7' || e.target.value == '8' || e.target.value == '9')) {
@@ -172,7 +178,7 @@
 					if (e.target.value == 7) {
 						e.target.value = 2;
 					}
-					
+
 					let data = {
 						'municipio': e.target.value,
 					}
@@ -544,9 +550,9 @@
 		var charRemainSalidaDa = (maxLength - strLength);
 
 		if (charRemainSalidaDa < 0) {
-			document.getElementById("numCaracterSalidaDa").innerHTML = '<span style="color: red;">Has superado el límite de ' + maxLength + ' caracteres </span>';
+			document.getElementById("numCaracterSalidaLi").innerHTML = '<span style="color: red;">Has superado el límite de ' + maxLength + ' caracteres </span>';
 		} else {
-			document.getElementById("numCaracterSalidaDa").innerHTML = charRemainSalidaDa + ' caracteres restantes';
+			document.getElementById("numCaracterSalidaLi").innerHTML = charRemainSalidaDa + ' caracteres restantes';
 		}
 	}
 </script>
