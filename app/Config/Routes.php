@@ -109,6 +109,8 @@ $routes->group('admin', function ($routes) {
 
 		$routes->get('buscar_folio', 'admin/FoliosController::getAllFolios');
 		$routes->post('buscar_folio', 'admin/FoliosController::getFilterFolios');
+		$routes->get('buscar_folio_litigante', 'admin/FoliosController::getAllFoliosLitigante');
+		$routes->post('buscar_folio_litigante', 'admin/FoliosController::getFilterFoliosLitigante');
 		$routes->post('ver_folio', 'admin/FoliosController::viewFolio');
 		$routes->get('ver_folio', 'admin/FoliosController::viewFolio');
 
@@ -425,6 +427,7 @@ $routes->group('denuncia_litigantes', function ($routes) {
 		$routes->get('subir_documentos_folio', 'litigantes/DashboardController::subir_documentos_view');
 		$routes->post('subir_documentos', 'litigantes/DashboardController::subir_documentos');
 		$routes->get('denuncias', 'litigantes/DashboardController::denuncias');
+		$routes->get('perfil', 'litigantes/DashboardController::profile');
 
 		$routes->get('denuncia_persona_moral', 'litigantes/DashboardController::denuncia_persona_moral');
 		$routes->post('create_denuncia_persona_moral', 'litigantes/DashboardController::create_denuncia_persona_moral');

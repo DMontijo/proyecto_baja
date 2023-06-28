@@ -71,7 +71,7 @@
 							<li>
 								<hr class="dropdown-divider">
 							</li>
-							<li><a class="dropdown-item" href="<?= base_url() ?>/constancia_extravio/dashboard/perfil"><i class="bi bi-person"></i> Perfil</a></li>
+							<li><a class="dropdown-item" href="<?= base_url() ?>/denuncia_litigantes/dashboard/perfil"><i class="bi bi-person"></i> Perfil</a></li>
 							<li>
 								<hr class="dropdown-divider">
 							</li>

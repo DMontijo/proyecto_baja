@@ -1208,6 +1208,16 @@ class DashboardController extends BaseController
 		}
 		$this->_loadView('Mis denuncias', $data, 'lista_denuncias');
 	}
+	/**
+	 * Vista de perfil, carga los datos del denunciante en la vista
+	 *
+	 */
+	public function profile()
+	{
+		$data = (object) array();
+		$data->user = $this->_denunciantesModelRead->asObject()->where('DENUNCIANTEID', session('DENUNCIANTEID'))->first();
+		$this->_loadView('Mi perfil', $data, 'perfil');
+	}
 
 	/**
 	 * Se obtiene el estado del expediente desde el WebService a Justicia
