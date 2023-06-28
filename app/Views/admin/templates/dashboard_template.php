@@ -75,7 +75,7 @@
 			<?php } ?>
 			<?php foreach ($body_data->rolPermiso as $permiso) { ?>
 
-				<?php if ($permiso->PERMISOID == 1) { ?>
+				<?php if ($permiso->PERMISOID == 13) { ?>
 
 					<li class="c-sidebar-nav-item" id="nav-modulo-litigantes" name="nav-modulo-litigantes">
 						<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/modulo-litigantes">

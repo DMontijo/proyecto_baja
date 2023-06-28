@@ -42,7 +42,7 @@
 							</div>
 
 							<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-								<label class="font-weight-bold" for="zona_usuario">Aceptar</label>
+								<label class="font-weight-bold input-required" for="zona_usuario">Aceptar</label>
 								<select class="form-control" id="relacionar" name="relacionar" required>
 									<option <?= $body_data->ligacion->RELACIONAR == 'N' ? 'selected' : '' ?> value="N">NO</option>
 									<option <?= $body_data->ligacion->RELACIONAR == 'S' ? 'selected' : '' ?> value="S">SI</option>
@@ -54,7 +54,7 @@
 									<?php if ($body_data->tipoarchivo == 'image/png' || $body_data->tipoarchivo == 'image/jpg' || $body_data->tipoarchivo == 'image/jpeg') { ?>
 										<img src='<?= $body_data->ligacion->PODERARCHIVO ?>' width="50%"></img>
 									<?php } else { ?>
-										<img src='<?= base_url() ?>/assets/img/file.png'  width="30%"></img>
+										<img src='<?= base_url() ?>/assets/img/file.png' width="30%"></img>
 									<?php } ?>
 								</a>
 							</div>
@@ -80,6 +80,12 @@
 			const oficina_select = document.querySelector('#oficina');
 			const form_actualizar_ligadura = document.querySelector('#form-actualizar-ligadura');
 
+			document.querySelector('#relacionar').addEventListener('change', (e) => {
+				if (e.target.value == "S") {
+					document.querySelector('#fecha_inicio_poder').setAttribute('required', true);
+					document.querySelector('#fecha_fin_poder').setAttribute('required', true);
+				}
+			});
 
 			//Convierte todos los input text a mayusculas
 			inputsText.forEach((input) => {

@@ -432,16 +432,16 @@
 				event.preventDefault();
 				event.stopPropagation();
 				documentos_close_btn.classList.add('d-none')
-				form_direccion_btn.disabled = true;
-				spinner_documentos.classList.remove('d-none');
-				btn_text_documentos.classList.add('d-none');
+				form_direccion_btn.disabled = false;
+				spinner_documentos.classList.add('d-none');
+				btn_text_documentos.classList.remove('d-none');
 				form_agregar_direccion.classList.add('was-validated')
 			} else {
 				event.preventDefault();
 				event.stopPropagation();
-				form_direccion_btn.disabled = false;
+				form_direccion_btn.disabled = true;
 				documentos_close_btn.classList.remove('d-none')
-				spinner_documentos.classList.add('d-none');
+				spinner_documentos.classList.remove('d-none');
 				btn_text_documentos.classList.remove('d-none');
 				form_agregar_direccion.classList.remove('was-validated')
 				agregarDireccionNotificion();

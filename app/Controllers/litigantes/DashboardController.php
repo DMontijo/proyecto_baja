@@ -81,11 +81,20 @@ class DashboardController extends BaseController
 	private $_personasMoralesNotificacionesModelRead;
 	private $_folioPersonaMoralModel;
 	private $_folioPersonaMoralModelRead;
+	private $_conexionesDBModelRead;
+	private $endpoint;
+	private $protocol;
+	private $ip;
+	private $_folioModelRead;
+
 
 
 	public function __construct()
 	{
 		$this->db_read = ENVIRONMENT == 'production' ? db_connect('default_read') : db_connect('development_read');
+		$this->protocol = 'https://';
+		$this->ip = "ws.fgebc.gob.mx";
+		$this->endpoint = $this->protocol . $this->ip . '/webServiceVD';
 
 		//Models
 		$this->_folioConsecutivoModel = new FolioConsecutivoModel();
@@ -106,6 +115,8 @@ class DashboardController extends BaseController
 		$this->_folioPersonaFisicaDomicilioModelRead = model('FolioPersonaFisicaDomicilioModel', true, $this->db_read);
 		$this->_folioVehiculoModelRead = model('FolioVehiculoModel', true, $this->db_read);
 		$this->_personasMoralesNotificacionesModelRead = model('PersonaMoralNotificacionesModel', true, $this->db_read);
+		$this->_conexionesDBModelRead = model('ConexionesDBModel', true, $this->db_read);
+		$this->_folioModelRead = model('FolioModel', true, $this->db_read);
 
 		$this->_folioPersonaMoralModelRead = model('FolioPersonaMoralModel', true, $this->db_read);
 		$this->_hechoLugarModelRead = model('HechoLugarModel', true, $this->db_read);
@@ -292,8 +303,8 @@ class DashboardController extends BaseController
 				'PODERNONOTARIO' => $this->request->getPost('poder_notario'),
 				'PODERNOPODER' => $this->request->getPost('poder_no_poder'),
 				'PODERARCHIVO' => $poder_data,
-				'FECHAINICIOPODER' =>NULL,
-				'FECHAFINPODER' =>NULL,
+				'FECHAINICIOPODER' => NULL,
+				'FECHAFINPODER' => NULL,
 
 			];
 			if ($this->_relacionFisicaMoralModel->save($data)) {
@@ -1011,7 +1022,7 @@ class DashboardController extends BaseController
 				'ESTADOID' => $this->request->getPost('estado_empresa'),
 				'MUNICIPIOID' => $this->request->getPost('municipio_empresa'),
 				'LOCALIDADID' => $this->request->getPost('localidad_empresa'),
-				'ZONA' => $this->request->getPost('zona_empresa') == 'URBANA'? 'U' : 'R',
+				'ZONA' => $this->request->getPost('zona_empresa') == 'URBANA' ? 'U' : 'R',
 				'COLONIAID' => $this->request->getPost('colonia_select_empresa'),
 				'COLONIADESCR' => $this->request->getPost('colonia_input_empresa'),
 				'CALLE' => $this->request->getPost('calle_empresa'),
@@ -1027,7 +1038,7 @@ class DashboardController extends BaseController
 
 			//Insercion de persona fisica, media filiacion y domicilio del ofendido
 			$ofendidoId = $this->_folioPersonaMorales($dataOfendido, $FOLIOID, 1, $year);
-						//DATOS DEL POSIBLE RESPONSABLE
+			//DATOS DEL POSIBLE RESPONSABLE
 			if (!empty($this->request->getPost('responsable')) && $this->request->getPost('responsable') == 'SI') {
 				$dataImputado = array(
 					'NOMBRE' => $this->request->getPost('nombre_imputado') && $this->request->getPost('nombre_imputado') != "" ? $this->request->getPost('nombre_imputado') : 'QUIEN RESULTE RESPONSABLE',
@@ -1170,7 +1181,106 @@ class DashboardController extends BaseController
 		$year = $this->request->getGet('year');
 		$this->_loadViewDenunciaPersonaFisica('Dashboard', 'dashboard', '', [], 'subir_documentos_denuncia_fisica');
 	}
+	/**
+	 * Vista de un listado de denuncias que tiene el usuario
+	 *
+	 */
+	public function denuncias()
+	{
+		$session = session();
+		$data = (object) array();
+		//Busqueda de folios de ese denunciante
+		$data->folios = $this->_folioModelRead->asObject()->join('TIPOEXPEDIENTE', 'FOLIO.TIPOEXPEDIENTEID = TIPOEXPEDIENTE.TIPOEXPEDIENTEID', 'LEFT')->join('MUNICIPIO', 'FOLIO.MUNICIPIOASIGNADOID = MUNICIPIO.MUNICIPIOID AND MUNICIPIO.ESTADOID = 2', 'LEFT')->join('EMPLEADOS', 'FOLIO.OFICINAASIGNADOID = EMPLEADOS.OFICINAID AND FOLIO.AGENTEASIGNADOID = EMPLEADOS.EMPLEADOID AND FOLIO.MUNICIPIOASIGNADOID = EMPLEADOS.MUNICIPIOID', 'LEFT')->where('DENUNCIANTEID', $session->get('DENUNCIANTEID'))->findAll();
+		foreach ($data->folios as $key => $folio) {
+			$folio->ESTADOENJUSTICIA = '';
+			$folio->OFICINAENJUSTICIA = '';
+			if ($folio->STATUS == 'EXPEDIENTE') {
+				try {
+					//Se obtiene el estado del expediente
+					$expediente_estado = $this->_getExpedienteStatusOficina($folio->EXPEDIENTEID, $folio->MUNICIPIOASIGNADOID);
+					if ($expediente_estado->status == 201) {
+						$folio->ESTADOENJUSTICIA = $expediente_estado->data[0]->ESTADOJURIDICOEXPEDIENTEDESCR ? $expediente_estado->data[0]->ESTADOJURIDICOEXPEDIENTEDESCR : '';
+						$folio->OFICINAENJUSTICIA = $expediente_estado->data[0]->OFICINADESCR ? $expediente_estado->data[0]->OFICINADESCR : '';
+					}
+				} catch (\Throwable $th) {
+				}
+			}
+		}
+		$this->_loadView('Mis denuncias', $data, 'lista_denuncias');
+	}
 
+	/**
+	 * Se obtiene el estado del expediente desde el WebService a Justicia
+	 *
+	 * @param  mixed $expedienteId
+	 * @param  mixed $municipio
+	 */
+	private function _getExpedienteStatusOficina($expedienteId, $municipio)
+	{
+		$function = '/expediente.php?process=getStatus';
+		$endpoint = $this->endpoint . $function;
+		$conexion = $this->_conexionesDBModelRead->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
+		$data = array();
+
+		$data['EXPEDIENTEID'] = $expedienteId;
+		$data['userDB'] = $conexion->USER;
+		$data['pwdDB'] = $conexion->PASSWORD;
+		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
+		$data['schema'] = $conexion->SCHEMA;
+
+		return $this->_curlPostDataEncrypt($endpoint, $data);
+	}
+	/**
+	 * Función CURL POST a Justicia encriptados
+	 *
+	 * @param  mixed $endpoint
+	 * @param  mixed $data
+	 */
+	private function _curlPostDataEncrypt($endpoint, $data)
+	{
+		// var_dump($data);exit;
+		$ch = curl_init();
+
+		curl_setopt($ch, CURLOPT_URL, $endpoint);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $this->_encriptar(json_encode($data), KEY_128));
+		$headers = array(
+			'Content-Type: application/json',
+			'Access-Control-Allow-Origin: *',
+			'Access-Control-Allow-Credentials: true',
+			'Access-Control-Allow-Headers: Content-Type',
+			'Hash-API: ' . password_hash(TOKEN_API, PASSWORD_BCRYPT),
+			'Key: ' . KEY_128
+		);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		$result = curl_exec($ch);
+
+		if ($result === false) {
+			$result = "{
+                'status' => 401,
+                'error' => 'Curl failed: '" . curl_error($ch) . "
+            }";
+		}
+		curl_close($ch);
+		// var_dump($data);
+		// var_dump($result);exit;
+		// return $result;
+		return json_decode($result);
+	}
+	/**
+	 * Función para encriptar los datos del metodo POST enviados al WebService de Justicia
+	 * @param  mixed $plaintext
+	 * @param  mixed $key128
+	 */
+	private function _encriptar($plaintext, $key128)
+	{
+		$iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-128-cbc'));
+		$cipherText = openssl_encrypt($plaintext, 'AES-128-CBC', hex2bin($key128), 1, $iv);
+		return base64_encode($iv . $cipherText);
+	}
 	/**
 	 * Funcion para subir mas documentos una vez realizada la denuncia
 	 */
@@ -1234,9 +1344,9 @@ class DashboardController extends BaseController
 	{
 		$notificacionId = $this->request->getPost('notificacionid');
 		$personaMoralId = $this->request->getPost('personamoralid');
-		$data = 
-		$this->_personasMoralesNotificacionesModelRead->asObject()
-		->where('PERSONAMORALID', $personaMoralId)->where('NOTIFICACIONID', $notificacionId)->first();
+		$data =
+			$this->_personasMoralesNotificacionesModelRead->asObject()
+			->where('PERSONAMORALID', $personaMoralId)->where('NOTIFICACIONID', $notificacionId)->first();
 
 		// var_dump($data);
 		// exit;
