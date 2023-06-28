@@ -71,8 +71,6 @@
 							<li>
 								<hr class="dropdown-divider">
 							</li>
-							<li><a class="dropdown-item" href="<?= base_url() ?>/denuncia/dashboard"><i class="bi bi-camera-video"></i> Denunciar</a></li>
-							<li><a class="dropdown-item" href="<?= base_url() ?>/constancia_extravio/dashboard"><i class="bi bi-file-earmark"></i> Constancias</a></li>
 							<li><a class="dropdown-item" href="<?= base_url() ?>/constancia_extravio/dashboard/perfil"><i class="bi bi-person"></i> Perfil</a></li>
 							<li>
 								<hr class="dropdown-divider">
