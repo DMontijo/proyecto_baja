@@ -50,7 +50,7 @@
 				<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
 					<li class="nav-item">
 						<a class="nav-link <?php if ('' === 'dashboard') echo 'active'; ?>" href="<?= base_url() ?>/denuncia_litigantes/dashboard"><i class="bi bi-file-earmark"></i>
-							Denuncias litigantes</a>
+							Inicio</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link <?php if ('' === 'dashboard') echo 'active'; ?>" href="<?= base_url() ?>/denuncia_litigantes/dashboard/ligaciones"><i class="bi bi-archive"></i> Mis ligaciones</a>
