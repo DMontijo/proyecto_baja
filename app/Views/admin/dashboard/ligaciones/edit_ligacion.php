@@ -31,6 +31,13 @@
 								<label class="font-weight-bold" for="litigante">Litigante</label>
 								<input type="text" name="litigante" class="form-control" id="litigante" value="<?= $body_data->litigante->NOMBRE ?> <?= $body_data->litigante->APELLIDO_PATERNO ?> <?= $body_data->litigante->APELLIDO_MATERNO ?>" disabled>
 							</div>
+							<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+								<label class="font-weight-bold input-required" for="zona_usuario">Aceptar</label>
+								<select class="form-control" id="relacionar" name="relacionar" required>
+									<option <?= $body_data->ligacion->RELACIONAR == 'N' ? 'selected' : '' ?> value="N">NO</option>
+									<option <?= $body_data->ligacion->RELACIONAR == 'S' ? 'selected' : '' ?> value="S">SI</option>
+								</select>
+							</div>
 
 							<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 								<label class="font-weight-bold" for="fecha_inicio_poder">Fecha inicio de poder</label>
@@ -41,14 +48,7 @@
 								<input type="date" name="fecha_fin_poder" class="form-control" id="fecha_fin_poder" value="<?= $body_data->ligacion->FECHAFINPODER ?>">
 							</div>
 
-							<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-								<label class="font-weight-bold input-required" for="zona_usuario">Aceptar</label>
-								<select class="form-control" id="relacionar" name="relacionar" required>
-									<option <?= $body_data->ligacion->RELACIONAR == 'N' ? 'selected' : '' ?> value="N">NO</option>
-									<option <?= $body_data->ligacion->RELACIONAR == 'S' ? 'selected' : '' ?> value="S">SI</option>
-								</select>
-							</div>
-
+							
 							<div class="col-12 text-center">
 								<a id="downloadArchivo" download="<?= $body_data->personasmorales->RFC ?>_<?= $body_data->litigante->NOMBRE ?>_<?= $body_data->litigante->APELLIDO_PATERNO ?>_<?= $body_data->litigante->APELLIDO_MATERNO ?>" href="<?= $body_data->ligacion->PODERARCHIVO ?>">
 									<?php if ($body_data->tipoarchivo == 'image/png' || $body_data->tipoarchivo == 'image/jpg' || $body_data->tipoarchivo == 'image/jpeg') { ?>
