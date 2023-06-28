@@ -8,7 +8,7 @@
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-12">
-				<h1 class="mb-4 text-center font-weight-bold">FOLIOS ESCRITOS</h1>
+				<h1 class="mb-4 text-center font-weight-bold">DENUNCIAS ESCRITAS</h1>
 				<a href=""></a>
 			</div>
 			<div class="col-12 col-sm-6 col-md-4 col-lg-3">

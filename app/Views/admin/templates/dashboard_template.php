@@ -79,7 +79,7 @@
 
 					<li class="c-sidebar-nav-item" id="nav-modulo-litigantes" name="nav-modulo-litigantes">
 						<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/folios_escritos">
-							<i class="fas fa-building c-sidebar-nav-icon"></i> Modulo litigantes
+							<i class="fas fa-building c-sidebar-nav-icon"></i> Denuncias escritas
 						</a>
 					</li>
 				<?php } ?>
