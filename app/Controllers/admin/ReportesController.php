@@ -2641,6 +2641,307 @@ class ReportesController extends BaseController
 		$writer->save("php://output");
 	}
 	/**
+	 * Vista para ingresar a los reportes de folios 
+	 * Se carga con un filtro default
+	 *
+	 */
+	public function getFoliosAnonima()
+	{
+		// Datos del filtro
+		$data = [
+			'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
+			'fechaFin' => date("Y-m-d"),
+			'TIPODENUNCIA' => 'DA',
+		];
+
+		$municipio = $this->_municipiosModelRead->asObject()->where('ESTADOID', 2)->findAll();
+		//Filtro
+		$resultFilter = $this->_folioModelRead->filterDates($data);
+		// var_dump($data);
+		// exit;
+		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
+		$empleado = $this->_usuariosModelRead->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
+
+		$dataView = (object)array();
+		$dataView->result = $resultFilter->result;
+		$dataView->municipios = $municipio;
+		$dataView->empleados = $empleado;
+		$dataView->filterParams = (object)$data;
+		$dataView->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
+		$this->_loadView('Folios generados', 'registro_anonima', '', $dataView, 'registro_anonima');
+	}
+
+	/**
+	 * Función para realizar un filtro en reporte de folios.
+	 * Recibe por metodo POST los datos del formulario del filtro
+	 *
+	 */
+	public function postFoliosAnonima()
+	{
+		//Datos del filtro
+		$data = [
+			'MUNICIPIOID' => $this->request->getPost('municipio'),
+			'AGENTEATENCIONID' => $this->request->getPost('agente'),
+			'STATUS' => $this->request->getPost('status'),
+			'TIPODENUNCIA' => $this->request->getPost('tipo'),
+			'TIPOEXP' => $this->request->getPost('tipoExp'),
+			'GENERO' => $this->request->getPost('genero'),
+			'fechaInicio' => $this->request->getPost('fechaInicio'),
+			'fechaFin' => $this->request->getPost('fechaFin'),
+			'horaInicio' => $this->request->getPost('horaInicio'),
+			'horaFin' => $this->request->getPost('horaFin')
+		];
+
+		foreach ($data as $clave => $valor) {
+			//Recorre el array y elimina los valores que nulos o vacíos
+			if (empty($valor)) unset($data[$clave]);
+		}
+		//Para cuando se borra el filtro
+		if (count($data) <= 0) {
+			$data = [
+				'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
+				'fechaFin' => date("Y-m-d"),
+			];
+		}
+
+		$municipio = $this->_municipiosModelRead->asObject()->where('ESTADOID', 2)->findAll();
+		//Generacion del filtro
+		$resultFilter = $this->_folioModelRead->filterDates($data);
+		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
+		$empleado = $this->_usuariosModelRead->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
+
+		if (isset($data['AGENTEATENCIONID'])) {
+			$agente = $this->_usuariosModelRead->asObject()->where('ID', $data['AGENTEATENCIONID'])->orderBy('NOMBRE', 'ASC')->first();
+			$data['AGENTENOMBRE'] = $agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' . $agente->APELLIDO_MATERNO;
+		}
+
+		if (isset($data['MUNICIPIOID'])) {
+			$mun = $this->_municipiosModelRead->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data['MUNICIPIOID'])->first();
+			$data['MUNICIPIONOMBRE'] = $mun->MUNICIPIODESCR;
+		}
+
+		$dataView = (object)array();
+		$dataView->result = $resultFilter->result;
+		$dataView->municipios = $municipio;
+		$dataView->empleados = $empleado;
+		$dataView->filterParams = (object)$data;
+		$dataView->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
+		$this->_loadView('Folios generados', 'registro_anonima', '', $dataView, 'registro_anonima');
+	}
+
+	/**
+	 * Función para generar el reporte XLSX de folios
+	 * Recibe por metodo POST los datos del filtro
+	 *
+	 */
+	public function createAnonimaXlsx()
+	{
+		//Datos del filtro
+
+		$data = [
+			'MUNICIPIOID' => $this->request->getPost('MUNICIPIOID'),
+			'AGENTEATENCIONID' => $this->request->getPost('AGENTEATENCIONID'),
+			'STATUS' => $this->request->getPost('STATUS'),
+			'TIPODENUNCIA' => $this->request->getPost('TIPODENUNCIA'),
+			'TIPOEXP' => $this->request->getPost('TIPOEXP'),
+			'GENERO' => $this->request->getPost('GENERO'),
+			'fechaInicio' => $this->request->getPost('fechaInicio'),
+			'fechaFin' => $this->request->getPost('fechaFin'),
+			'horaInicio' => $this->request->getPost('horaInicio'),
+			'horaFin' => $this->request->getPost('horaFin')
+		];
+
+		$date = date("Y_m_d_h_i_s");
+
+		foreach ($data as $clave => $valor) {
+			//Recorre el array y elimina los valores que nulos o vacíos
+			if (empty($valor)) unset($data[$clave]);
+		}
+		//Cuando no hay filtro
+		if (count($data) <= 0) {
+			$data = [
+				'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
+				'fechaFin' => date("Y-m-d"),
+			];
+		}
+
+		//Generacion del filtro
+		$resultFilter = $this->_folioModelRead->filterDates($data);
+
+		//Inicio del XLSX
+		$spreadSheet = new Spreadsheet();
+		$spreadSheet->getProperties()
+			->setCreator("Fiscalía General del Estado de Baja California")
+			->setLastModifiedBy("Fiscalía General del Estado de Baja California")
+			->setTitle("Reporte Denuncia Anónima" . $date)
+			->setSubject("Reporte Denuncia Anónima" . $date)
+			->setDescription(
+				"El presente documento fue generado por el Centro de Denuncia Tecnológica de la Fiscalía General del Estado de Baja California."
+			)
+			->setKeywords("reporte denuncia anonima cdtec fgebc")
+			->setCategory("Reportes");
+		$sheet = $spreadSheet->getActiveSheet();
+
+		//Estilo del header
+		$styleHeaders = [
+			'font' => [
+				'bold' => true,
+				'color' => ['argb' => 'FFFFFF'],
+				'name' => 'Arial',
+				'size' => '10'
+			],
+			'alignment' => [
+				'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+				'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+			],
+			'borders' => [
+				'allBorders' => [
+					'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+					'color' => ['argb' => '000000'],
+				],
+			],
+			'fill' => [
+				'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_GRADIENT_LINEAR,
+				'rotation' => 90,
+				'startColor' => [
+					'argb' => '511229',
+				],
+				'endColor' => [
+					'argb' => '511229',
+				],
+			],
+		];
+
+		//Estilo de las celdas
+		$styleCells = [
+			'font' => [
+				'bold' => false,
+				'color' => ['argb' => '000000'],
+				'name' => 'Arial',
+				'size' => '10'
+			],
+			'alignment' => [
+				'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+				'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+			],
+			'borders' => [
+				'allBorders' => [
+					'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+					'color' => ['argb' => '000000'],
+				],
+			],
+			'fill' => [
+				'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_GRADIENT_LINEAR,
+				'rotation' => 90,
+				'startColor' => [
+					'argb' => 'FFFFFF',
+				],
+				'endColor' => [
+					'argb' => 'FFFFFF',
+				],
+			],
+		];
+		$row = 1;
+
+		$columns = [
+			'A', 'B', 'C', 'D', 'E',
+			'F', 'G', 'H', 'I', 'J',
+			'K', 'L', 'M', 'N', 'O',
+			'P', 'Q', 'R', 'S', 'T',
+			'U', 'V', 'W', 'X', 'Y', 'Z'
+		];
+		//Cabeceras
+		$headers = [
+			'FOLIO',
+			'AÑO',
+			'MEDIO',
+			'EXPEDIENTE',
+			'CONTIENE PERICIALES',
+			'FECHA DE SALIDA',
+			'TIPO',
+			'FECHA DE SALIDA',
+			'NOMBRE DEL DENUNCIANTE',
+			'GENERO',
+			'NOMBRE DEL AGENTE',
+			'DELITO',
+			'ESTADO DE ATENCIÓN',
+			'MUNICIPIO DE ATENCIÓN',
+			'ESTATUS DE EXPEDIENTE',
+		];
+
+		for ($i = 0; $i < count($headers); $i++) {
+			$sheet->setCellValue($columns[$i] . 1, $headers[$i]);
+			$sheet->getColumnDimension($columns[$i])->setAutoSize(true);
+		}
+
+		$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
+
+		$row++;
+
+		//Rellenado del XLSX
+		foreach ($resultFilter->result as $index => $folio) {
+			$tipo = '';
+			if ($folio->TIPODENUNCIA == 'VD') {
+				$tipo = 'VIDEO';
+			} else if ($folio->TIPODENUNCIA == 'DA') {
+				$tipo = 'ANÓNIMA';
+			} else if ($folio->TIPODENUNCIA == 'TE') {
+				$tipo = 'TELEFÓNICA';
+			} else {
+				$tipo = 'ELECTRONICA';
+			}
+
+			$fechaSalida = '';
+
+			if ($folio->FECHASALIDA) {
+				$fechaSalida = date('d-m-Y H:i:s', strtotime($folio->FECHASALIDA));
+			}
+			$expedienteid = '';
+			if (isset($folio->EXPEDIENTEID)) {
+				$arrayExpediente = str_split($folio->EXPEDIENTEID);
+				$expedienteid = $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
+			}
+
+			$sheet->setCellValue('A' . $row, $folio->FOLIOID);
+			$sheet->setCellValue('B' . $row, $folio->ANO);
+			$sheet->setCellValue('C' . $row, $tipo);
+			$sheet->setCellValue('D' . $row, $folio->EXPEDIENTEID ? ($expedienteid . '/' . $folio->TIPOEXPEDIENTECLAVE) : '');
+			$sheet->setCellValue('E' . $row, isset($folio->PERCIALES) ? $folio->PERCIALES : 'NO');
+			$sheet->setCellValue('F' . $row, $folio->FECHASALIDA ? date('d-m-Y H:i:s', strtotime($folio->FECHASALIDA)) : '');
+			$sheet->setCellValue('G' . $row, $folio->TIPOEXPEDIENTECLAVE ? $folio->TIPOEXPEDIENTECLAVE : $folio->STATUS);
+			$sheet->setCellValue('H' . $row, $fechaSalida);
+			$sheet->setCellValue('I' . $row, $folio->NOMBRE_DENUNCIANTE);
+			$sheet->setCellValue('J' . $row, isset($folio->GENERO) ? ($folio->GENERO == 'M' ? 'MASCULINO' : ($folio->GENERO == 'F' ? 'FEMENINO' : '')) : '');
+			$sheet->setCellValue('K' . $row, $folio->NOMBRE_AGENTE);
+			$sheet->setCellValue('L' . $row, $folio->DELITO);
+			$sheet->setCellValue('M' . $row, $folio->ESTADODESCR);
+			$sheet->setCellValue('N' . $row, $folio->MUNICIPIODESCR);
+			$sheet->setCellValue('O' . $row, $folio->STATUS);
+
+			$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
+
+			if (!(($row - 1) >= count($resultFilter->result))) $row++;
+		}
+		$row++;
+		$row++;
+		$sheet->setCellValue('A' . $row, 'CANTIDAD DE RESULTADOS:');
+		$sheet->setCellValue('B' . $row, count($resultFilter->result));
+
+		$sheet->getStyle('A1:O1')->applyFromArray($styleHeaders);
+		$sheet->getStyle('A2:O' . $row)->applyFromArray($styleCells);
+
+		$writer = new Xlsx($spreadSheet);
+
+		$filename = urlencode("Reporte_Denuncia_Anonima_" . $date . ".xlsx");
+		$filename = str_replace(array(" ", "+"), '_', $filename);
+		header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+		header("Content-Disposition: attachment; filename=\"$filename\"");
+		header("Content-Transfer-Encoding: binary");
+		header("Cache-Control: max-age=0");
+		$writer->save("php://output");
+	}
+
+	/**
 	 * Función CURL GET para el serivicio de videollamada 
 	 *
 	 * @param  mixed $endpoint

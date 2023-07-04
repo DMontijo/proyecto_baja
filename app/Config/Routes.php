@@ -149,8 +149,11 @@ $routes->group('admin', function ($routes) {
 		$routes->post('registro_atenciones', 'admin/ReportesController::postRegistroAtenciones');
 		$routes->get('registro_ceeiav', 'admin/ReportesController::getComisionEstatal');
 		$routes->post('registro_ceeiav', 'admin/ReportesController::postComisionEstatal');
+		$routes->get('registro_anonima', 'admin/ReportesController::getFoliosAnonima');
+		$routes->post('registro_anonima', 'admin/ReportesController::postFoliosAnonima');
 
 		$routes->post('generar_excel_folios', 'admin/ReportesController::createFoliosXlsx');
+		$routes->post('generar_excel_anonimas', 'admin/ReportesController::createAnonimaXlsx');
 		$routes->post('generar_excel_constancias', 'admin/ReportesController::createConstanciasXlsx');
 		$routes->post('generar_excel_registro_diario', 'admin/ReportesController::createRegistroDiarioXlsx');
 		$routes->post('generar_excel_llamadas', 'admin/ReportesController::createLlamadasXlsx');

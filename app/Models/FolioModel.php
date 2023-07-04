@@ -135,6 +135,8 @@ class FolioModel extends Model
 			(isset($horaFin) ? (date('H:i:s', strtotime($horaFin))) : '23:59:59') . '" AS DATETIME)';
 		$strQuery = $strQuery . ' GROUP BY FOLIO.FOLIOID';
 		$strQuery = $strQuery . ' ORDER BY FOLIO.FECHASALIDA ASC';
+		// var_dump($strQuery);
+		// exit;
 		$resultAll = $this->db->query($strQuery)->getResult();
 
 		$strQueryCriterio = 'SELECT FOLIOID, ANO, NUMEROEXPEDIENTE, FOLIODOCID, TIPODOC FROM FOLIODOC WHERE TIPODOC = "CRITERIO DE OPORTUNIDAD"';
