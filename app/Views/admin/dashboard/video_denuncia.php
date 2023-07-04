@@ -1940,6 +1940,10 @@
 		document.getElementById("form_delitos_cometidos_insert").reset();
 		document.getElementById("form_objetos_involucrados").reset();
 		document.getElementById("form_vehiculo").reset();
+		document.getElementById("persona_fisica_form").reset();
+		document.getElementById("form_media_filiacion").reset();
+		document.getElementById("persona_fisica_domicilio_form").reset();
+
 		divFolioAtendido.classList.add('d-none');
 
 		// $('#v-pills-vehiculos-tab').css('display', 'NONE');
@@ -2125,6 +2129,10 @@
 		document.getElementById("form_delitos_cometidos_insert").reset();
 		document.getElementById("form_objetos_involucrados").reset();
 		document.getElementById("form_vehiculo").reset();
+		document.getElementById("persona_fisica_form").reset();
+		document.getElementById("form_media_filiacion").reset();
+		document.getElementById("persona_fisica_domicilio_form").reset();
+
 		divFolioAtendido.classList.add('d-none');
 
 		// $('#v-pills-vehiculos-tab').css('display', 'NONE');
