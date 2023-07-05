@@ -178,13 +178,14 @@ $file_text = $user_id . "_data.txt";
 				});
 			},
 			success: function(response) {
-				btnActualizarExpedientes.disabled = false;;
+				btnActualizarExpedientes.disabled = false;
+				console.log('Respuesta actualización expedientes:', response)
 
 				if (response.status == 1) {
 					Swal.fire({
 						icon: 'success',
 						title: 'Sincronizado exitosamente.',
-						text: 'Se han sincronizado las coordinaciones de los expedientes de CDTEC con Justicia Net correctamente.',
+						text: response.message,
 						showConfirmButton: false,
 						timer: 5000,
 						timerProgressBar: true,
@@ -193,7 +194,7 @@ $file_text = $user_id . "_data.txt";
 					Swal.fire({
 						icon: 'error',
 						title: 'Error en sincronización',
-						text: 'No fue posible sincronizar los expedientes con Justicia Net.',
+						text: response.message,
 						showConfirmButton: false,
 						timer: 2000,
 						timerProgressBar: true,

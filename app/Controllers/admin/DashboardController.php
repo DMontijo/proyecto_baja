@@ -4582,13 +4582,17 @@ class DashboardController extends BaseController
 			$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
 			$data['schema'] = $conexion->SCHEMA;
 			$response = $this->_curlPostDataEncrypt($endpoint, $data);
+			
 			//Respuesta de todos los expedientes cambiados desde justicia
 			if ($response->status == 201) {
 				$expedentesEnJusticia = [];
 				$oficinaAsignado = [];
 				$municipioAsignado = [];
-
+				if (count($response->data) <= 0) {
+					return json_encode(['status' => 1, 'message' => 'No hay expedientes por actualizar']);
+				}
 				foreach ($response->data as $key => $expedientes) {
+
 					//Se compara con los folios de Videodenuncia
 					$foliosVD = $this->_folioModelRead->asObject()->select('EXPEDIENTEID,MUNICIPIOASIGNADOID')->where('EXPEDIENTEID', $expedientes->EXPEDIENTEID)->where('MUNICIPIOASIGNADOID', $expedientes->MUNICIPIOID)->first();
 					if (isset($foliosVD)) {
@@ -4603,11 +4607,10 @@ class DashboardController extends BaseController
 				$datosUpdate = array(
 					'OFICINAASIGNADOID' => $oficinaAsignado,
 				);
+				$updateFoliosVD = false;
 				foreach ($datosUpdate['OFICINAASIGNADOID'] as $index => $valor) {
-					$updateFoliosVD = $this->_folioModel->set('OFICINAASIGNADOID', $valor)
-						->asObject()
-						->where('EXPEDIENTEID', $expedentesEnJusticia[$index])
-						->update();
+					$updateFoliosVD = $this->_folioModel->set('OFICINAASIGNADOID', $valor)->asObject()->where('EXPEDIENTEID', $expedentesEnJusticia[$index])->update();
+					return json_encode(['status' => 1, 'message' => $updateFoliosVD]);
 				}
 				if ($updateFoliosVD) {
 					try {
@@ -4634,17 +4637,21 @@ class DashboardController extends BaseController
 							$responseUpdate = $this->_curlPostDataEncrypt($endpointUpdate, $data);
 						}
 						if ($responseUpdate->status == 201) {
-							return json_encode(['status' => 1]);
+							return json_encode(['status' => 1, 'message' => 'Se han sincronizado las coordinaciones de los expedientes de CDTEC con Justicia Net correctamente.']);
 						} else {
-							return json_encode(['status' => 0]);
+							return json_encode(['status' => 0, 'message' => 'No fue posible sincronizar los expedientes con Justicia Net.']);
 						}
 					} catch (\Error $e) {
 						throw new \Exception('Error en actualizacion en Justicia: ' . $e->getMessage());
 					}
+				}else{
+					return json_encode(['status' => 1, 'message' => 'No hay expedientes por actualizar']);
 				}
+			} else {
+				return json_encode(['status' => 0, 'message' => 'El servicio respondío con error los folios desde Justicia Net.']);
 			}
 		} catch (\Exception $e) {
-			return json_encode(['status' => 0, 'error' => $e->getMessage()]);
+			return json_encode(['status' => 0, 'message' => 'Falló algo al intentar actualizar los folios', 'error' => $e->getMessage()]);
 		}
 	}
 
