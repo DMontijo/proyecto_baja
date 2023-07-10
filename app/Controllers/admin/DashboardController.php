@@ -4453,7 +4453,6 @@ class DashboardController extends BaseController
 
 	/**
 	 * Función para obtener los modulos desde el WebServices
-	 *
 	 */
 	public function getModulos()
 	{
@@ -4471,6 +4470,9 @@ class DashboardController extends BaseController
 		return json_encode($this->_curlPostDataEncrypt($endpoint, $data)->data);
 	}
 
+	/**
+	 * Funcion para traer las coordinaciones en base al municipio.
+	 */
 	public function getCoordinacion()
 	{
 
@@ -4486,6 +4488,9 @@ class DashboardController extends BaseController
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
 
+	/**
+	 * Funcion para traer las unidades en base al municiío y la coordinación
+	 */
 	public function getUnidades()
 	{
 		$municipio = $this->request->getPost('municipio');
@@ -4501,6 +4506,9 @@ class DashboardController extends BaseController
 		return json_encode($this->_curlPostDataEncrypt($endpoint, $data));
 	}
 
+	/**
+	 * Funcion para traer los agentes por unidad.
+	 */
 	public function getAgentByUnidad()
 	{
 		$municipio = $this->request->getPost('municipio');
@@ -4516,6 +4524,9 @@ class DashboardController extends BaseController
 		return json_encode($this->_curlPostDataEncrypt($endpoint, $data));
 	}
 
+	/**
+	 * Funcion para traer todos los empleados por oficina
+	 */
 	public function getEmpleadosByOficina()
 	{
 		$municipio = $this->request->getPost('municipio');
@@ -4568,91 +4579,96 @@ class DashboardController extends BaseController
 		}
 	}
 
-	/**Funcion para actualizar las oficinas asignadas de justicia en videodenuncia */
+	/**
+	 * Funcion para actualizar las oficinas asignadas de justicia en videodenuncia
+	 */
 	public function getOficinasByExpediente()
 	{
+		$municipios = [1, 2, 4];
+		$expedientesActualizados = [];
+		$expedientesNoActualizados = [];
+		$expedientesNoVD = [];
+		$function = '/expediente.php?process=getChangesVD';
+		$endpoint = $this->endpoint . $function;
+
 		try {
-			$municipios = [1, 2, 3, 4, 5, 6, 7];
 			$conexiones = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->whereIn('MUNICIPIOID', $municipios)->where('TYPE', ENVIRONMENT)->findAll();
-			$function = '/expediente.php?process=getChangesVD';
-			$endpoint = $this->endpoint . $function;
-			$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', 2)->where('TYPE', ENVIRONMENT)->first();
-			$data['userDB'] = $conexion->USER;
-			$data['pwdDB'] = $conexion->PASSWORD;
-			$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
-			$data['schema'] = $conexion->SCHEMA;
+			$conexionMexicali = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', 2)->where('TYPE', ENVIRONMENT)->first();
+
+			$data['userDB'] = $conexionMexicali->USER;
+			$data['pwdDB'] = $conexionMexicali->PASSWORD;
+			$data['instance'] = $conexionMexicali->IP . '/' . $conexionMexicali->INSTANCE;
+			$data['schema'] = $conexionMexicali->SCHEMA;
+
+			//Manda a traer todos los expedientes de la vista acumulada que solo se encuentra en Mexicali.
 			$response = $this->_curlPostDataEncrypt($endpoint, $data);
-			
-			//Respuesta de todos los expedientes cambiados desde justicia
+
 			if ($response->status == 201) {
-				$expedentesEnJusticia = [];
-				$oficinaAsignado = [];
-				$municipioAsignado = [];
+
 				if (count($response->data) <= 0) {
 					return json_encode(['status' => 1, 'message' => 'No hay expedientes por actualizar']);
 				}
-				foreach ($response->data as $key => $expedientes) {
+
+				foreach ($response->data as $expediente) {
 
 					//Se compara con los folios de Videodenuncia
-					$foliosVD = $this->_folioModelRead->asObject()->select('EXPEDIENTEID,MUNICIPIOASIGNADOID')->where('EXPEDIENTEID', $expedientes->EXPEDIENTEID)->where('MUNICIPIOASIGNADOID', $expedientes->MUNICIPIOID)->first();
-					if (isset($foliosVD)) {
-						array_push($expedentesEnJusticia, $foliosVD->EXPEDIENTEID);
-						array_push($oficinaAsignado, $expedientes->OFICINAIDCOORD);
-						array_push($municipioAsignado,  $foliosVD->MUNICIPIOASIGNADOID);
+					$folioVD = $this->_folioModelRead->asObject()->select('EXPEDIENTEID,MUNICIPIOASIGNADOID')->where('EXPEDIENTEID', $expediente->EXPEDIENTEID)->where('MUNICIPIOASIGNADOID', $expediente->MUNICIPIOID)->first();
+
+					//Valida si lo encontro en vd, de lo contrario son folios que no están en videodenuncia.
+					if (isset($folioVD)) {
+						try {
+							$this->_folioModel->set('OFICINAASIGNADOID', $expediente->OFICINAIDCOORD)->asObject()->where('EXPEDIENTEID', $folioVD->EXPEDIENTEID)->update();
+							//Guarda en el arreglo $expedientesActualizados los expedinetes que se actualizaron en videodenuncia.
+							array_push($expedientesActualizados, $folioVD->EXPEDIENTEID);
+						} catch (\Error $e) {
+							//Guarda en el arreglo $expedientesNoActualizados los expedinetes que no se actualizaron en videodenuncia.
+							array_push($expedientesNoActualizados, $folioVD->EXPEDIENTEID);
+						}
+					} else {
+						//Guarda en el arreglo $expedientesNoVD los expedinetes que no están en videodenuncia.
+						array_push($expedientesNoVD, $expediente->EXPEDIENTEID);
 					}
 				}
-				$municipio = array(
-					'MUNICIPIOASIGNADOID' => $municipioAsignado,
-				);
-				$datosUpdate = array(
-					'OFICINAASIGNADOID' => $oficinaAsignado,
-				);
-				$updateFoliosVD = false;
-				foreach ($datosUpdate['OFICINAASIGNADOID'] as $index => $valor) {
-					$updateFoliosVD = $this->_folioModel->set('OFICINAASIGNADOID', $valor)->asObject()->where('EXPEDIENTEID', $expedentesEnJusticia[$index])->update();
-					return json_encode(['status' => 1, 'message' => $updateFoliosVD]);
-				}
-				if ($updateFoliosVD) {
+				// return json_encode(['status' => 1, 'message' => ['Totales'=>count($response->data),'Actualizados' => $expedientesActualizados, 'No actualizados' => $expedientesNoVD]]);
+
+				foreach ($conexiones as $conexion) {
 					try {
-						$functionUpdate =  '/expediente.php?process=actualizarVD';
-						$endpointUpdate = $this->endpoint . $functionUpdate;
-						$data['EXPEDIENTEID'] = $expedentesEnJusticia;
-						foreach ($municipio['MUNICIPIOASIGNADOID'] as $index => $mun) {
-							if ($mun == 1 || $mun == 6) {
-								$data['userDB'] = $conexiones[0]->USER;
-								$data['pwdDB'] = $conexiones[0]->PASSWORD;
-								$data['instance'] = $conexiones[0]->IP . '/' . $conexiones[0]->INSTANCE;
-								$data['schema'] = $conexiones[0]->SCHEMA;
-							} else if ($mun == 2 || $mun == 3 || $mun == 7) {
-								$data['userDB'] = $conexiones[1]->USER;
-								$data['pwdDB'] = $conexiones[1]->PASSWORD;
-								$data['instance'] = $conexiones[1]->IP . '/' . $conexiones[1]->INSTANCE;
-								$data['schema'] = $conexiones[1]->SCHEMA;
-							} else if ($mun == 4 || $mun == 5) {
-								$data['userDB'] = $conexiones[3]->USER;
-								$data['pwdDB'] = $conexiones[3]->PASSWORD;
-								$data['instance'] = $conexiones[3]->IP . '/' . $conexiones[3]->INSTANCE;
-								$data['schema'] = $conexiones[3]->SCHEMA;
-							}
-							$responseUpdate = $this->_curlPostDataEncrypt($endpointUpdate, $data);
-						}
-						if ($responseUpdate->status == 201) {
-							return json_encode(['status' => 1, 'message' => 'Se han sincronizado las coordinaciones de los expedientes de CDTEC con Justicia Net correctamente.']);
-						} else {
-							return json_encode(['status' => 0, 'message' => 'No fue posible sincronizar los expedientes con Justicia Net.']);
-						}
+						//Actualiza en justicia los expedientes ya actualizados en videodenuncia.
+						$this->updateOficinaJusticiaVideodenuncia($conexion, $expedientesActualizados);
 					} catch (\Error $e) {
-						throw new \Exception('Error en actualizacion en Justicia: ' . $e->getMessage());
 					}
-				}else{
-					return json_encode(['status' => 1, 'message' => 'No hay expedientes por actualizar']);
+					try {
+						//Actualiza en justicia los expedientes que no son de videodenuncia.
+						$this->updateOficinaJusticiaVideodenuncia($conexion, $expedientesNoVD);
+					} catch (\Error $e) {
+					}
 				}
+
+				return json_encode(['status' => 1, 'message' => 'Se han sincronizado las coordinaciones de los expedientes de CDTEC con Justicia Net correctamente.']);
 			} else {
-				return json_encode(['status' => 0, 'message' => 'El servicio respondío con error los folios desde Justicia Net.']);
+				return json_encode(['status' => 0, 'message' => 'El servicio respondío con error los expedientes desde Justicia Net.', 'error' => $response]);
 			}
 		} catch (\Exception $e) {
 			return json_encode(['status' => 0, 'message' => 'Falló algo al intentar actualizar los folios', 'error' => $e->getMessage()]);
 		}
+	}
+
+	/**
+	 * Función que actualiza la vista de expedientes a SI en caso de que ya se haya actalizado en videodenuncia o esten fuera de videodenuncia.
+	 *
+	 * @param  mixed $conexion
+	 * @param  mixed $expedientes
+	 */
+	private function updateOficinaJusticiaVideodenuncia($conexion, $expedientes)
+	{
+		$functionUpdate =  '/expediente.php?process=actualizarVD';
+		$endpointUpdate = $this->endpoint . $functionUpdate;
+		$data['EXPEDIENTEID'] = $expedientes;
+		$data['userDB'] = $conexion->USER;
+		$data['pwdDB'] = $conexion->PASSWORD;
+		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
+		$data['schema'] = $conexion->SCHEMA;
+		return $this->_curlPostDataEncrypt($endpointUpdate, $data);
 	}
 
 	/**
@@ -5012,6 +5028,7 @@ class DashboardController extends BaseController
 		// return $result;
 		return json_decode($result);
 	}
+
 	public function getTimeVideo()
 	{
 		// $video = $this->request->getPost('name_video');
@@ -5072,6 +5089,7 @@ class DashboardController extends BaseController
 		// return json_encode(['tiempo' => $duration]);
 
 	}
+
 	/**
 	 * Función para obtener los videos del servicio de videollamada
 	 *
