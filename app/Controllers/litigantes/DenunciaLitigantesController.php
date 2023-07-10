@@ -68,6 +68,8 @@ class DenunciaLitigantesController extends BaseController
 		$this->_ocupacionModelRead = model('OcupacionModel', true, $this->db_read);
 		$this->_folioModelRead = model('FolioModel', true, $this->db_read);
 		$this->db = \Config\Database::connect();
+		$this->urlApi = VIDEOCALL_URL . "guests/";
+
 	}
 	/**
 	 * Vista de Login-Denuncia litigantes
@@ -199,6 +201,21 @@ class DenunciaLitigantesController extends BaseController
 
 			//Verifica que el correo sea unico
 			if ($this->validate(['correo' => 'required|is_unique[DENUNCIANTES.CORREO]'])) {
+					//Datos para el servicio de videollamada
+					$dataApi2 = [
+						'NOMBRE' => $this->request->getPost('nombre'),
+						'APELLIDO_PATERNO' => $this->request->getPost('apellido_paterno'),
+						'APELLIDO_MATERNO' => $this->request->getPost('apellido_materno'),
+						'CORREO' => $this->request->getPost('correo'),
+					];
+				$dataApi = array();
+				$dataApi['name'] = $this->request->getPost('nombre') . ' ' . $this->request->getPost('apellido_paterno');
+				$dataApi['details'] = $dataApi2;
+				$dataApi['gender'] = $this->request->getPost('sexo') == 'F' ? "FEMALE" : 'MALE';
+				$dataApi['languages'] = [(int)$this->request->getPost('idioma')];
+				$response = $this->_curlPost($this->urlApi, $dataApi);
+				$data['UUID'] = $response->uuid;
+
 					//Insercion de datos
 					$insertLitigante = $this->_denunciantesModel->insert($data);
 					if ($insertLitigante) {
@@ -218,6 +235,43 @@ class DenunciaLitigantesController extends BaseController
 			var_dump($th);exit;
 			return redirect()->to(base_url('/denuncia_litigantes/register'))->with('message', 'Hubo un error, no fue posible crear tu registro.');
 		}
+	}
+	/**
+	 * Función CURL POST a Justicia encriptados
+	 *
+	 * @param  mixed $endpoint
+	 * @param  mixed $data
+	 */
+	private function _curlPost($endpoint, $data)
+	{
+		$ch = curl_init();
+
+		curl_setopt($ch, CURLOPT_URL, $endpoint);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+		$headers = array(
+			'Content-Type: application/json',
+			'Access-Control-Allow-Origin: *',
+			'Access-Control-Allow-Credentials: true',
+			'Access-Control-Allow-Headers: Content-Type',
+			'X-API-KEY: ' . X_API_KEY
+		);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+		$result = curl_exec($ch);
+
+		if ($result === false) {
+			$result = "{
+                'status' => 401,
+                'error' => 'Curl failed: '" . curl_error($ch) . "
+            }";
+		}
+		curl_close($ch);
+
+		return json_decode($result);
 	}
 	/**
 	 * Función para autenticar el ingreso a la plataforma desde los litigantes
