@@ -7272,7 +7272,7 @@ class DashboardController extends BaseController
 			$personas = $this->_folioPersonaFisicaModelRead->get_by_folio($folio, $year);
 			$personaFisicaID = $this->_folioPersonaFisicaModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->orderBy('PERSONAFISICAID', 'desc')->first();
 			$imputados = $this->_folioPersonaFisicaModelRead->get_imputados($folio, $year);
-			$victimas = $this->_folioPersonaFisicaModelRead->get_victimas($folio, $year);
+			$victimas = $this->_folioModelRead->get_victimas($folio, $year);
 			$delitosModalidadFiltro = $this->_delitoModalidadModelRead->get_delitodescr($folio, $year);
 			$personasPropietarios = $this->_folioPersonaFisicaModelRead->get_by_personas_propietarios($folio, $year);
 

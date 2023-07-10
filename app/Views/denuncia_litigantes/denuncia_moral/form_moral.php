@@ -139,7 +139,7 @@
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 
 		<!-- Botón para agregar una dirección adicional -->
-		<button id="agregar-direccion" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregarDireccionModal">Agregar dirección</button>
+		<button id="agregar-direccion" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregarDireccionModal">Agregar otra dirección</button>
 	</div>
 </div>
 <script>

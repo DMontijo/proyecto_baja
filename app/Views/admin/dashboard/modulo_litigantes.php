@@ -1212,7 +1212,7 @@
 				row.remove();
 			}
 		});
-	
+
 		card2.classList.add('d-none');
 		card3.classList.add('d-none');
 		card4.classList.add('d-none');
@@ -1325,6 +1325,8 @@
 	}
 
 	function borrarTodo() {
+		let currentTime = new Date();
+		let year = currentTime.getFullYear()
 		buscar_nuevo_btn.classList.add('d-none');
 		inputFolio.classList.remove('d-none');
 		inputFolio.value = "";
@@ -1749,6 +1751,8 @@
 			dataType: "json",
 			success: function(response) {
 				if (response.status == 1) {
+					const personasPropietarios = response.personasPropietarios;
+
 					//Llenado de la tabla de personas
 					let tabla_personas = document.querySelectorAll('#table-personas tr');
 					tabla_personas.forEach(row => {
@@ -2722,7 +2726,7 @@
 					document.querySelector('#situacion_vehiculo').value = vehiculo.SITUACION ?
 						vehiculo.SITUACION : '';
 					document.querySelector('#propietario_vehiculo').value = vehiculo.PERSONAFISICAIDPROPIETARIO ?
-						vehiculo.PERSONAFISICAIDPROPIETARIO : vehiculo.PERSONAMORALIDPROPIETARIO+ " MORAL";
+						vehiculo.PERSONAFISICAIDPROPIETARIO : vehiculo.PERSONAMORALIDPROPIETARIO + " MORAL";
 					document.querySelector('#tipo_placas_vehiculo').value = vehiculo.TIPOPLACA ? vehiculo
 						.TIPOPLACA : '';
 					document.querySelector('#placas_vehiculo').value = vehiculo.PLACAS ? vehiculo.PLACAS : '';
@@ -3077,7 +3081,7 @@
 			var year_modal = document.querySelector('#year_modal');
 			var folio_modal = document.querySelector('#folio_modal');
 
-		
+
 			inputsText.forEach((input) => {
 				input.addEventListener('input', (event) => {
 					event.target.value = clearText(event.target.value).toUpperCase();
@@ -3756,7 +3760,7 @@
 					}
 				});
 			}, false);
-		
+
 
 			//Evento change de clasificacion de objetos para obtener la subclasificacion, se limpia el select de subclasificacion para no acumular
 			selectObjetoClasificacion.addEventListener("change", function() {
@@ -4601,6 +4605,7 @@
 						const victimas = response.victimas;
 						let relacionFisFis = response.relacionFisFis;
 						let fisicaImpDelito = response.fisicaImpDelito;
+						const personasPropietarios = response.personasPropietarios;
 
 
 						if (response.status == 1) {
@@ -4690,6 +4695,7 @@
 								option.text = persona.NOMBRE ? persona.NOMBRE + ' ' + primer_apellido : persona.DENOMINACION;
 								select_propietario_v.add(option, null);
 							});
+
 
 							$('#propietario_vehiculo_add').empty();
 							let select_propietario_v_add = document.querySelector("#propietario_vehiculo_add");
@@ -5803,6 +5809,8 @@
 					dataType: "json",
 					success: function(response) {
 						if (response.status == 1) {
+							const personasPropietarios = response.personasPropietarios;
+
 							document.getElementById("persona_fisica_form_insert").reset();
 
 							//se actualiza la tabla de personas fisicas y se vuelve a rellenar los selects y tablas donde se utilicen la informacion de personas fisicas
@@ -5919,13 +5927,13 @@
 							option_vacio_pro.selected = true;
 							select_propietario.add(option_vacio_pro, null);
 
-							personas.forEach(persona => {
+							personasPropietarios.forEach(persona => {
 								let primer_apellido = persona.PRIMERAPELLIDO ? persona
 									.PRIMERAPELLIDO : '';
 
 								const option = document.createElement('option');
-								option.value = persona.PERSONAFISICAID;
-								option.text = persona.NOMBRE + ' '.primer_apellido;
+								option.value = persona.PERSONAFISICAID ? persona.PERSONAFISICAID : persona.PERSONAMORALID + ' MORAL';
+								option.text = persona.NOMBRE ? persona.NOMBRE + ' ' + primer_apellido : persona.DENOMINACION;
 								select_propietario.add(option, null);
 							});
 
@@ -5937,15 +5945,16 @@
 							option_vacio_p.disabled = true;
 							option_vacio_p.selected = true;
 							select_propietario_v.add(option_vacio_p, null);
-							personas.forEach(persona => {
+							personasPropietarios.forEach(persona => {
 								let primer_apellido = persona.PRIMERAPELLIDO ? persona
 									.PRIMERAPELLIDO : '';
 
 								const option = document.createElement('option');
-								option.value = persona.PERSONAFISICAID;
-								option.text = persona.NOMBRE + ' ' + primer_apellido;
+								option.value = persona.PERSONAFISICAID ? persona.PERSONAFISICAID : persona.PERSONAMORALID + ' MORAL';
+								option.text = persona.NOMBRE ? persona.NOMBRE + ' ' + primer_apellido : persona.DENOMINACION;
 								select_propietario_v.add(option, null);
 							});
+
 
 							$('#propietario_vehiculo_add').empty();
 							let select_propietario_v_add = document.querySelector("#propietario_vehiculo_add");
@@ -5955,27 +5964,29 @@
 							option_vacio_p_add.disabled = true;
 							option_vacio_p_add.selected = true;
 							select_propietario_v_add.add(option_vacio_p_add, null);
-							personas.forEach(persona => {
+							personasPropietarios.forEach(persona => {
 								let primer_apellido = persona.PRIMERAPELLIDO ? persona
 									.PRIMERAPELLIDO : '';
 
 								const option = document.createElement('option');
-								option.value = persona.PERSONAFISICAID;
-								option.text = persona.NOMBRE + ' ' + primer_apellido;
+								option.value = persona.PERSONAFISICAID ? persona.PERSONAFISICAID : persona.PERSONAMORALID + ' MORAL';
+								option.text = persona.NOMBRE ? persona.NOMBRE + ' ' + primer_apellido : persona.DENOMINACION;
 								select_propietario_v_add.add(option, null);
 							});
+
 							$('#propietario_update').empty();
 							let select_propietario_update = document.querySelector(
 								"#propietario_update");
-							personas.forEach(persona => {
+								personasPropietarios.forEach(persona => {
 								let primer_apellido = persona.PRIMERAPELLIDO ? persona
 									.PRIMERAPELLIDO : '';
 
 								const option = document.createElement('option');
-								option.value = persona.PERSONAFISICAID;
-								option.text = persona.NOMBRE + ' ' + primer_apellido;
+								option.value = persona.PERSONAFISICAID ? persona.PERSONAFISICAID : persona.PERSONAMORALID + ' MORAL';
+								option.text = persona.NOMBRE ? persona.NOMBRE + ' ' + primer_apellido : persona.DENOMINACION;
 								select_propietario_update.add(option, null);
 							});
+
 							$('#municipio_pfd').empty();
 
 							$('#localidad_pfd').empty();
@@ -6326,7 +6337,7 @@
 				});
 			}
 
-			
+
 			//Se convierte las fechas en horario de Tijuana
 			function dateToString(_date) {
 				let date = new Date(_date);
