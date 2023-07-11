@@ -316,6 +316,7 @@ aceptar_llamada.addEventListener("click", () => {
 
 			agentVideoService.registerOnNewtworkQualityChanged((event, host) => {
 				
+				console.log('host',host);
 				const signal = createSignalLevel(event.newValue);
 				if(host.host) {
 					networkQualitySignalAgentButton.classList.remove("d-none");
