@@ -3467,7 +3467,7 @@ class DashboardController extends BaseController
 								foreach ($relacionMoralFis as $morFis) {
 									try {
 										$victimaMoral = $personasMoralesRelacionMysqlOracle[$morFis['PERSONAMORALIDVICTIMA']];
-										$imputado = $personasMoralesRelacionMysqlOracle[$morFis['PERSONAFISICAIDIMPUTADO']];
+										$imputado = $personasRelacionMysqlOracle[$morFis['PERSONAFISICAIDIMPUTADO']];
 										$_relacionMorFis = $this->_createRelacionMorFis($expedienteCreado->EXPEDIENTEID, $morFis, $victimaMoral['id_oracle'], $imputado['id_oracle'], $municipio);
 										if ($morFis['DELITOMODALIDADID'] == 178 || $morFis['DELITOMODALIDADID'] == 179) {
 											//Si el delito asignado es robo de vehiculo se crea el expediente del vehiculo.
