@@ -4558,6 +4558,8 @@
 				packetData.append("pf_id", document.querySelector('#pf_id').value);
 				packetData.append("ocupacion_descr", document.querySelector('#ocupacion_pf_m').value);
 				packetData.append("fotografia_actual_pf", document.querySelector('#fotografia_actual_pf').value);
+				packetData.append("edoc_pf", document.querySelector('#edoc_pf').value);
+
 				// const data = {
 				// 	'folio': document.querySelector('#input_folio_atencion_lit').value,
 				// 	'year': document.querySelector('#year_select_lit').value,

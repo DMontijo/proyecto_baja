@@ -447,11 +447,13 @@ class DashboardController extends BaseController
 		$data->cejaForma = $this->_cejaFormaModelRead->asObject()->findAll();
 		$data->pielColor = $this->_pielColorModelRead->asObject()->findAll();
 		$data->parentesco = $this->_parentescoModelRead->asObject()->findAll();
-		$data->empresas = $this->_relacionFisicaMoralModelRead->asObject()
-			->join('PERSONASMORALES', 'PERSONASMORALES.PERSONAMORALID = RELACIONFISICAMORAL.PERSONAMORALID')
-			->where('RELACIONFISICAMORAL.RELACIONAR', 'S')
-			->where('RELACIONFISICAMORAL.DENUNCIANTEID', session('DENUNCIANTEID'))
-			->findAll();
+		// $data->empresas = $this->_relacionFisicaMoralModelRead->asObject()
+		// 	->join('PERSONASMORALES', 'PERSONASMORALES.PERSONAMORALID = RELACIONFISICAMORAL.PERSONAMORALID')
+		// 	->where('RELACIONFISICAMORAL.RELACIONAR', 'S')
+		// 	->where('RELACIONFISICAMORAL.DENUNCIANTEID', session('DENUNCIANTEID'))
+		// 	->findAll();
+		$data->empresas = $this->_personasMoralesRead->asObject()->findAll();
+
 
 		// $data->distribuidorVehiculo = $this->_vehiculoDistribuidorModelRead->asObject()->findAll();
 		// $data->marcaVehiculo = $this->_vehiculoMarcaModelRead->asObject()->findAll();
@@ -531,6 +533,81 @@ class DashboardController extends BaseController
 
 		//Se verifica que se inserte correctamente a la tabla
 		if ($this->_folioModel->save($dataFolio)) {
+
+			//DATOS DEL DENUNCIANTE
+			$denunciante = $this->_denunciantesModelRead->asObject()->where('DENUNCIANTEID', session('DENUNCIANTEID'))->first();
+			$fecha = (object) [
+				'day' => date('d', strtotime($denunciante->FECHANACIMIENTO)),
+				'month' => date('m', strtotime($denunciante->FECHANACIMIENTO)),
+				'year' => date('Y', strtotime($denunciante->FECHANACIMIENTO)),
+			];
+
+			$hoy = (object) [
+				'day' => date('d'),
+				'month' => date('m'),
+				'year' => date('Y'),
+			];
+
+			$edad = $hoy->year - $fecha->year;
+			$m = $hoy->month - $fecha->month;
+
+			if ($m < 0) {
+				$edad--;
+			} else if ($m == 0) {
+				if ($hoy->day < (int) $fecha->day) {
+					$edad--;
+				}
+			}
+			$dataDenunciante = array(
+				'NOMBRE' => $denunciante->NOMBRE,
+				'PRIMERAPELLIDO' => $denunciante->APELLIDO_PATERNO,
+				'SEGUNDOAPELLIDO' => $denunciante->APELLIDO_MATERNO,
+				'FECHANACIMIENTO' => $denunciante->FECHANACIMIENTO,
+				'EDADCANTIDAD' => $edad,
+				'SEXO' => $denunciante->SEXO,
+				'TELEFONO' => $denunciante->TELEFONO,
+				'TELEFONO2' => $denunciante->TELEFONO2,
+				'CODIGOPAISTEL' => $denunciante->CODIGO_PAIS,
+				'CODIGOPAISTEL2' => $denunciante->CODIGO_PAIS2,
+				'CORREO' => $denunciante->CORREO,
+				'TIPOIDENTIFICACIONID' => $denunciante->TIPOIDENTIFICACIONID,
+				'NUMEROIDENTIFICACION' => $denunciante->NUMEROIDENTIFICACION,
+				'NACIONALIDADID' => $denunciante->NACIONALIDADID,
+				'PERSONAIDIOMAID' => $denunciante->IDIOMAID,
+				'ESCOLARIDADID' => $denunciante->ESCOLARIDADID,
+				'OCUPACIONID' => $denunciante->OCUPACIONID,
+				'OCUPACIONDESCR' => $denunciante->OCUPACIONDESCR,
+				'ESTADOCIVILID' => $denunciante->ESTADOCIVILID,
+				'ESTADOORIGENID' => $denunciante->ESTADOORIGENID,
+				'MUNICIPIOORIGENID' => $denunciante->MUNICIPIOORIGENID,
+				'FOTO' => $denunciante->DOCUMENTO,
+				'DENUNCIANTE' => 'S',
+				'FACEBOOK' => $denunciante->FACEBOOK,
+				'PAIS' => $denunciante->PAIS,
+				'INSTAGRAM' => $denunciante->INSTAGRAM,
+				'TWITTER' => $denunciante->TWITTER,
+				'LEER' => $denunciante->LEER,
+				'ESCRIBIR' => $denunciante->ESCRIBIR,
+				'DISCAPACIDADDESCR' => $denunciante->DISCAPACIDAD,
+			);
+
+			$dataDenuncianteDomicilio = array(
+				'PAIS' => $denunciante->PAIS,
+				'ESTADOID' => $denunciante->ESTADOID,
+				'MUNICIPIOID' => $denunciante->MUNICIPIOID,
+				'LOCALIDADID' => $denunciante->LOCALIDADID,
+				'COLONIAID' => $denunciante->COLONIAID,
+				'COLONIADESCR' => $denunciante->COLONIA,
+				'CALLE' => $denunciante->CALLE,
+				'NUMEROCASA' => $denunciante->NUM_EXT,
+				'NUMEROINTERIOR' => $denunciante->NUM_INT,
+				'CP' => $denunciante->CODIGOPOSTAL,
+			);
+
+			//Insercion de persona fisica, media filiacion y domicilio del denunciante
+			$denuncinateIdPersona = $this->_folioPersonaFisica($dataDenunciante, $FOLIOID, 5, $year);
+			$this->_folioPersonaFisicaMediaFiliacion($dataDenunciante, $FOLIOID, $denuncinateIdPersona, $year);
+			$this->_folioPersonaFisicaDomicilio($dataDenuncianteDomicilio, $FOLIOID, $denuncinateIdPersona, $year);
 
 			//CARTA PODER
 			$carta_poder = $this->request->getFile('carta_poder');
@@ -902,6 +979,81 @@ class DashboardController extends BaseController
 
 		//Se verifica que se inserte correctamente a la tabla
 		if ($this->_folioModel->save($dataFolio)) {
+
+			//DATOS DEL DENUNCIANTE
+			$denunciante = $this->_denunciantesModelRead->asObject()->where('DENUNCIANTEID', session('DENUNCIANTEID'))->first();
+			$fecha = (object) [
+				'day' => date('d', strtotime($denunciante->FECHANACIMIENTO)),
+				'month' => date('m', strtotime($denunciante->FECHANACIMIENTO)),
+				'year' => date('Y', strtotime($denunciante->FECHANACIMIENTO)),
+			];
+
+			$hoy = (object) [
+				'day' => date('d'),
+				'month' => date('m'),
+				'year' => date('Y'),
+			];
+
+			$edad = $hoy->year - $fecha->year;
+			$m = $hoy->month - $fecha->month;
+
+			if ($m < 0) {
+				$edad--;
+			} else if ($m == 0) {
+				if ($hoy->day < (int) $fecha->day) {
+					$edad--;
+				}
+			}
+			$dataDenunciante = array(
+				'NOMBRE' => $denunciante->NOMBRE,
+				'PRIMERAPELLIDO' => $denunciante->APELLIDO_PATERNO,
+				'SEGUNDOAPELLIDO' => $denunciante->APELLIDO_MATERNO,
+				'FECHANACIMIENTO' => $denunciante->FECHANACIMIENTO,
+				'EDADCANTIDAD' => $edad,
+				'SEXO' => $denunciante->SEXO,
+				'TELEFONO' => $denunciante->TELEFONO,
+				'TELEFONO2' => $denunciante->TELEFONO2,
+				'CODIGOPAISTEL' => $denunciante->CODIGO_PAIS,
+				'CODIGOPAISTEL2' => $denunciante->CODIGO_PAIS2,
+				'CORREO' => $denunciante->CORREO,
+				'TIPOIDENTIFICACIONID' => $denunciante->TIPOIDENTIFICACIONID,
+				'NUMEROIDENTIFICACION' => $denunciante->NUMEROIDENTIFICACION,
+				'NACIONALIDADID' => $denunciante->NACIONALIDADID,
+				'PERSONAIDIOMAID' => $denunciante->IDIOMAID,
+				'ESCOLARIDADID' => $denunciante->ESCOLARIDADID,
+				'OCUPACIONID' => $denunciante->OCUPACIONID,
+				'OCUPACIONDESCR' => $denunciante->OCUPACIONDESCR,
+				'ESTADOCIVILID' => $denunciante->ESTADOCIVILID,
+				'ESTADOORIGENID' => $denunciante->ESTADOORIGENID,
+				'MUNICIPIOORIGENID' => $denunciante->MUNICIPIOORIGENID,
+				'FOTO' => $denunciante->DOCUMENTO,
+				'DENUNCIANTE' => 'S',
+				'FACEBOOK' => $denunciante->FACEBOOK,
+				'PAIS' => $denunciante->PAIS,
+				'INSTAGRAM' => $denunciante->INSTAGRAM,
+				'TWITTER' => $denunciante->TWITTER,
+				'LEER' => $denunciante->LEER,
+				'ESCRIBIR' => $denunciante->ESCRIBIR,
+				'DISCAPACIDADDESCR' => $denunciante->DISCAPACIDAD,
+			);
+
+			$dataDenuncianteDomicilio = array(
+				'PAIS' => $denunciante->PAIS,
+				'ESTADOID' => $denunciante->ESTADOID,
+				'MUNICIPIOID' => $denunciante->MUNICIPIOID,
+				'LOCALIDADID' => $denunciante->LOCALIDADID,
+				'COLONIAID' => $denunciante->COLONIAID,
+				'COLONIADESCR' => $denunciante->COLONIA,
+				'CALLE' => $denunciante->CALLE,
+				'NUMEROCASA' => $denunciante->NUM_EXT,
+				'NUMEROINTERIOR' => $denunciante->NUM_INT,
+				'CP' => $denunciante->CODIGOPOSTAL,
+			);
+
+			//Insercion de persona fisica, media filiacion y domicilio del denunciante
+			$denuncinateIdPersona = $this->_folioPersonaFisica($dataDenunciante, $FOLIOID, 5, $year);
+			$this->_folioPersonaFisicaMediaFiliacion($dataDenunciante, $FOLIOID, $denuncinateIdPersona, $year);
+			$this->_folioPersonaFisicaDomicilio($dataDenuncianteDomicilio, $FOLIOID, $denuncinateIdPersona, $year);
 
 			//CARTA PODER
 			$carta_poder = $this->request->getFile('carta_poder_moral');
@@ -1333,10 +1485,11 @@ class DashboardController extends BaseController
 	{
 		$personaMoralId = $this->request->getPost('personamoralid');
 		$data  = (object)array();
-		$data->empresas = $this->_relacionFisicaMoralModelRead->asObject()
+		$data->empresas = 
+		$this->_relacionFisicaMoralModelRead->asObject()
 			->select('PERSONASMORALES.PERSONAMORALID, PERSONASMORALES.RFC, PERSONASMORALES.RAZONSOCIAL, PERSONASMORALES.MARCACOMERCIAL, PODERNOPODER, PODERNONOTARIO, PODERVOLUMEN, PERSONASMORALES.ESTADOID,PERSONASMORALES.MUNICIPIOID,PERSONASMORALES.LOCALIDADID,PERSONASMORALES.COLONIAID,PERSONASMORALES.COLONIADESCR,PERSONASMORALES.ZONA, PERSONASMORALES.CORREO, PERSONASMORALES.TELEFONO,PERSONASMORALES.NUMERO,PERSONASMORALES.NUMEROINTERIOR,PERSONASMORALES.REFERENCIA')
 			->join('PERSONASMORALES', 'PERSONASMORALES.PERSONAMORALID = RELACIONFISICAMORAL.PERSONAMORALID')
-			->where('RELACIONFISICAMORAL.RELACIONAR', 'S')
+			// ->where('RELACIONFISICAMORAL.RELACIONAR', 'S')
 			->where('RELACIONFISICAMORAL.DENUNCIANTEID', session('DENUNCIANTEID'))
 			->where('PERSONASMORALES.PERSONAMORALID', $personaMoralId)
 			->first();

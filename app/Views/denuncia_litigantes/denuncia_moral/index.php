@@ -19,6 +19,9 @@
 						<div id="progress-bar" aria-valuemax="100" aria-valuemin="0" aria-valuenow="50" class="progress-bar progress-bar-striped progress-bar-animated bg-yellow" role="progressbar"></div>
 					</div>
 					<form id="denuncia_moral_form" action="<?= base_url() ?>/denuncia_litigantes/dashboard/create_denuncia_persona_moral" method="post" enctype="multipart/form-data" class="row needs-validation" novalidate>
+						<div class="alert alert-danger d-none" role="alert" id="alerta_empresas">
+							No estas ligado a esta empresa, por favor regresa al <a href="<?= base_url() ?>/denuncia_litigantes/dashboard">menú de inicio </a> y ligate a ella.
+						</div>
 						<!-- DATOS EMPRESA -->
 						<div id="datos_moral" class="col-12 d-none step">
 							<?php include('form_moral.php') ?>
@@ -192,6 +195,14 @@
 		event.preventDefault();
 	});
 	document.querySelector('#empresa').addEventListener('change', (e) => {
+		clearSelect(direccion)
+		marca_comercial.value = "";
+		razon_social.value = "";
+		rfc_empresa.value = "";
+		poder_volumen.value = "";
+		poder_no_notario.value = "";
+		poder_no_poder.value = "";
+		document.getElementById('alerta_empresas').classList.add('d-none');
 
 		let data = {
 			'personamoralid': e.target.value,
@@ -203,30 +214,35 @@
 			method: "POST",
 			dataType: "json",
 			success: function(responsemaster) {
-				// let municipios = response.data;
+				if (responsemaster.data.empresas == null) {
 
-				// municipios.forEach(municipio => {
-				//     var option = document.createElement("option");
-				//     option.text = municipio.MUNICIPIODESCR;
-				//     option.value = municipio.MUNICIPIOID;
-				//     select_municipio.add(option);
-				// });
-				// select_municipio.disabled = false;
-				clearSelect(direccion)
-				let direcciones = responsemaster.data.notificaciones;
-				direcciones.forEach(direccion => {
-					let option = document.createElement("option");
-					option.text = direccion.CALLE + ',' + direccion.COLONIADESCR;
-					option.value = direccion.NOTIFICACIONID;
-					document.querySelector('#direccion').add(option);
-				});
-				marca_comercial.value = responsemaster.data.empresas.MARCACOMERCIAL;
-				razon_social.value = responsemaster.data.empresas.RAZONSOCIAL;
-				rfc_empresa.value = responsemaster.data.empresas.RFC;
-				poder_volumen.value = responsemaster.data.empresas.PODERVOLUMEN;
-				poder_no_notario.value = responsemaster.data.empresas.PODERNONOTARIO;
-				poder_no_poder.value = responsemaster.data.empresas.PODERNOPODER;
+					clearSelect(direccion)
+					marca_comercial.value = "";
+					razon_social.value = "";
+					rfc_empresa.value = "";
+					poder_volumen.value = "";
+					poder_no_notario.value = "";
+					poder_no_poder.value = "";
+					document.getElementById('alerta_empresas').classList.remove('d-none');
 
+				} else {
+					document.getElementById('alerta_empresas').classList.add('d-none');
+
+					clearSelect(direccion)
+					let direcciones = responsemaster.data.notificaciones;
+					direcciones.forEach(direccion => {
+						let option = document.createElement("option");
+						option.text = direccion.CALLE + ',' + direccion.COLONIADESCR;
+						option.value = direccion.NOTIFICACIONID;
+						document.querySelector('#direccion').add(option);
+					});
+					marca_comercial.value = responsemaster.data.empresas.MARCACOMERCIAL;
+					razon_social.value = responsemaster.data.empresas.RAZONSOCIAL;
+					rfc_empresa.value = responsemaster.data.empresas.RFC;
+					poder_volumen.value = responsemaster.data.empresas.PODERVOLUMEN;
+					poder_no_notario.value = responsemaster.data.empresas.PODERNONOTARIO;
+					poder_no_poder.value = responsemaster.data.empresas.PODERNOPODER;
+				}
 
 			},
 			error: function(jqXHR, textStatus, errorThrown) {}

@@ -279,7 +279,7 @@ if ($agent->isMobile()) {
 						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="identificacion" class="form-label fw-bold input-required">Identificación</label>
-							<select class="form-select" id="identificacion" name="identificacion" required disabled>
+							<select class="form-select" id="identificacion" name="identificacion" required readonly>
 								<?php foreach ($body_data->tiposIdentificaciones as $index => $identificacion) { ?>
 									<option value="<?= $identificacion->PERSONATIPOIDENTIFICACIONID ?>"> <?= $identificacion->PERSONATIPOIDENTIFICACIONDESCR ?> </option>
 								<?php } ?>
@@ -437,7 +437,9 @@ if ($agent->isMobile()) {
 	let stepCount = steps.length - 1;
 	let width = 100 / stepCount;
 	let currentStep = 0;
-
+	document.getElementById("identificacion").addEventListener("mousedown", function(event) {
+		event.preventDefault();
+	});
 	//Al hacer checked en manzana y lote cambia los textos del label
 	checkML.addEventListener('click', function() {
 		if (checkML.checked) {

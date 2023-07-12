@@ -28,7 +28,7 @@
 							</div>
 						</div>
 					</div> -->
-                    <div class="col-12 col-md-6 col-lg-4 text-center">
+                    <div class="col-12 col-md-6 col-lg-6 text-center">
                         <div class="card text-center bg-transparent border-0">
                             <div class="card-body">
                                 <a href="" class="text-decoration-none" data-bs-toggle="modal"
@@ -40,7 +40,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-md-6 col-lg-4 text-center">
+                    <div class="col-12 col-md-6 col-lg-6 text-center">
                         <div class="card text-center bg-transparent border-0">
                             <div class="card-body">
                                 <a href="" class="text-decoration-none" data-bs-toggle="modal"
@@ -52,7 +52,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-md-6 col-lg-4 text-center">
+                    <div class="col-12 col-md-6 col-lg-6 text-center">
                         <div class="card text-center bg-transparent border-0">
                             <div class="card-body">
                                 <a href="<?= base_url() ?>/denuncia_litigantes/dashboard/denuncia_persona_fisica" class="text-decoration-none" >
@@ -63,7 +63,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-md-6 col-lg-4 text-center">
+                    <div class="col-12 col-md-6 col-lg-6 text-center">
                         <div class="card text-center bg-transparent border-0">
                             <div class="card-body">
                                 <a href="<?= base_url() ?>/denuncia_litigantes/dashboard/denuncia_persona_moral" class="text-decoration-none">

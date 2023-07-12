@@ -75,7 +75,7 @@
 				<div class="card-body">
 					<a href="<?= base_url() ?>/denuncia_litigantes" class="text-decoration-none" onclick="handleClickBTN(event)" name="DenunciaLitigantes" id="DenunciaLitigantes">
 						<img src="<?= base_url() ?>/assets/img/icons/constancia.png" class="w-75" alt="Denuncia litigantes">
-						<p class="fw-bold fs-5 mt-2  text-dark ">Denuncia litigantes</p>
+						<p class="fw-bold fs-5 mt-2  text-dark ">Personas Morales y Litigantes</p>
 					</a>
 				</div>
 			</div>
