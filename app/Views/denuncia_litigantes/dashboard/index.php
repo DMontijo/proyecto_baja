@@ -13,29 +13,19 @@
         <div class="card rounded shadow border-0">
         <div class="card-body py-5">
                 <div class="container">
-                    <h1 class="text-center fw-bolder pb-1 text-blue">MODULO LITIGANTES</h1>
+                    <h1 class="text-center fw-bolder pb-1 text-blue">MODULO PERSONAS MORALES Y LITIGANTES</h1>
                 </div>
             </div>
             <section class="p-3">
                 <div class="row justify-content-center">
-                    <!-- <div class="col-12 col-md-6 col-lg-4 text-center">
-						<div class="card text-center bg-transparent border-0">
-							<div class="card-body">
-								<a href="" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#boletos_modal">
-									<img src="<?= base_url() ?>/assets/img/icons/boleto.png" class="w-75" alt="Video Denuncia">
-									<p class="fw-bold fs-5 mt-2  text-dark ">Boleto de sorteo</p>
-								</a>
-							</div>
-						</div>
-					</div> -->
                     <div class="col-12 col-md-6 col-lg-6 text-center">
                         <div class="card text-center bg-transparent border-0">
                             <div class="card-body">
                                 <a href="" class="text-decoration-none" data-bs-toggle="modal"
                                     data-bs-target="#crearEmpresaModal"> 
-                                    <img src="<?= base_url() ?>/assets/img/icons/crearempresa_btn.png" class="w-75"
-                                        alt="Crear empresa">
-                                    <p class="fw-bold fs-5 mt-2  text-dark ">Registrar empresa</p>
+                                    <img src="<?= base_url() ?>/assets/img/icons/crearempresa_btn.png" class="w-50"
+                                        alt="Crear persona moral">
+                                    <p class="fw-bold fs-5 mt-2  text-dark ">Registrar persona moral</p>
                                 </a>
                             </div>
                         </div>
@@ -45,29 +35,32 @@
                             <div class="card-body">
                                 <a href="" class="text-decoration-none" data-bs-toggle="modal"
                                     data-bs-target="#ligarEmpresaModal">
-                                    <img src="<?= base_url() ?>/assets/img/icons/ligarempresa_btn.png" class="w-75"
-                                        alt="Ligar a una empresa">
-                                    <p class="fw-bold fs-5 mt-2  text-dark ">Ligar a una empresa</p>
+                                    <img src="<?= base_url() ?>/assets/img/icons/ligarempresa_btn.png" class="w-50"
+                                        alt="Ligar a una persona moral">
+                                    <p class="fw-bold fs-5 mt-2  text-dark ">Ligar a una persona moral</p>
                                 </a>
                             </div>
                         </div>
                     </div>
+                    <?php if(session('PERFIL') == "LITIGANTE"){?>
                     <div class="col-12 col-md-6 col-lg-6 text-center">
                         <div class="card text-center bg-transparent border-0">
                             <div class="card-body">
                                 <a href="<?= base_url() ?>/denuncia_litigantes/dashboard/denuncia_persona_fisica" class="text-decoration-none" >
-                                    <img src="<?= base_url() ?>/assets/img/icons/personafisica_btn.png" class="w-75"
+                                    <img src="<?= base_url() ?>/assets/img/icons/personafisica_btn.png" class="w-50"
                                         alt="Denuncia persona física">
                                     <p class="fw-bold fs-5 mt-2  text-dark ">Persona Física</p>
                                 </a>
                             </div>
                         </div>
                     </div>
+                    <?php } ?>
+
                     <div class="col-12 col-md-6 col-lg-6 text-center">
                         <div class="card text-center bg-transparent border-0">
                             <div class="card-body">
                                 <a href="<?= base_url() ?>/denuncia_litigantes/dashboard/denuncia_persona_moral" class="text-decoration-none">
-                                    <img src="<?= base_url() ?>/assets/img/icons/personamoral_btn.png" class="w-75"
+                                    <img src="<?= base_url() ?>/assets/img/icons/personamoral_btn.png" class="w-50"
                                         alt="Denuncia persona moral">
                                     <p class="fw-bold fs-5 mt-2  text-dark ">Persona Moral</p>
                                 </a>

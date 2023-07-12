@@ -11,22 +11,30 @@
 		<div class="card rounded shadow border-0">
 			<div class="card-body py-5 p-sm-5">
 				<div class="container text-center">
-					<h1 class="text-center fw-bolder pb-1 text-blue">SUBIR ARCHIVOS</h1>
+					<h1 class="text-center fw-bolder pb-1 text-blue">SUBIR DENUNCIA ESCRITA</h1>
 					<p class="text-center fw-bold text-blue ">Recuerda subir solo uno a la vez.</p>
-
+					<div class="alert alert-warning" role="alert">
+						La denuncia por escrito es obligatorio.
+					</div>
 					<form id="subirDocForm" name="subirDocForm" action="<?= base_url() ?>/denuncia_litigantes/dashboard/subir_documentos" method="POST" enctype="multipart/form-data" class="row needs-validation" novalidate>
 						<div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-3">
 							<label for="documento_extra" class="form-label fw-bold ">Documento:</label>
-							<input type="text" class="form-control" id="folio" name="folio" value="<?= $_GET['folio']?>" hidden>
-							<input type="text" class="form-control" id="year" name="year" value="<?= $_GET['year']?>" hidden>
+							<input type="text" class="form-control" id="folio" name="folio" value="<?= $_GET['folio'] ?>" hidden>
+							<input type="text" class="form-control" id="year" name="year" value="<?= $_GET['year'] ?>" hidden>
 
 							<input class="form-control" type="file" id="documento_extra" name="documento_extra" accept="image/jpeg, image/jpg, image/png, application/pdf" required>
-							<img class="img-fluid d-none py-2" src="" id="img_preview_carta" name="img_preview_carta">
+							<img class="img-fluid d-none py-2" src="" style="width:50%;" id="img_preview_carta" name="img_preview_carta">
+							<div id="title-doc" class="d-none"></div>
 
 						</div>
 
 						<button type="submit" id="subirDocSubmit" name="subirDocSubmit" class="btn btn-primary">Subir documentos</button>
 					</form>
+					<div class="row p-2">
+						<div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-3">
+							<a href="<?= base_url() ?>/denuncia_litigantes/dashboard" type="button" id="finalizarDenuncia" name="finalizarDenuncia" class="btn btn-secondary w-100" disabled>FINALIZAR</a>
+						</div>
+					</div>
 
 				</div>
 			</div>
@@ -40,6 +48,7 @@
 			html: '<strong><?= session()->getFlashdata('message_success') ?></strong>',
 			confirmButtonColor: '#bf9b55',
 		})
+		document.querySelector('#finalizarDenuncia').disabled = false;
 	</script>
 <?php endif; ?>
 <?php if (session()->getFlashdata('message_error')) : ?>
@@ -97,6 +106,7 @@
 							});
 							return;
 						} else {
+							document.getElementById('subirDocSubmit').disabled = false;
 							const image = await blobToBase64(blob);
 							console.log(image);
 
@@ -104,6 +114,8 @@
 							preview.setAttribute('src', image);
 						}
 					} else {
+						// document.getElementById('subirDocSubmit').disabled = false;
+
 						let reader = new FileReader();
 						reader.onload = function(e) {
 
@@ -125,18 +137,36 @@
 						});
 						return;
 					} else {
+						// document.getElementById('subirDocSubmit').disabled = false;
+
 						let reader = new FileReader();
 						reader.onload = function(e) {
-							documento_identidad.value = e.target.result;
-							documento_identidad_modal.setAttribute('src', e.target.result);
+							// documento_identidad.value = e.target.result;
+							// documento_identidad_modal.setAttribute('src', '');
 							preview.classList.remove('d-none');
-							preview.setAttribute('src', e.target.result);
+							preview.setAttribute('src', '<?= base_url() ?>/assets/img/file.png');
+							// const title_doc = document.getElementById('title-doc');
+							// title_doc.classList.remove('d-none')
+							// title_doc.innerHTML = e.target.files[0].name;
+
+					
 						}
 						reader.readAsDataURL(e.target.files[0]);
+
 					}
 				}
 			}
 		});
+
+		//Funion para prevenir cerrar la ventana durante la asignacion de una denuncia.
+		function preventCloseWindow() {
+			window.removeEventListener("beforeunload", null, false);
+			window.addEventListener("beforeunload", (evento) => {
+				evento.preventDefault();
+				evento.returnValue = "Si cierras no se subirá la denuncia por escrito";
+				return "Si cierras no se subirá la denuncia por escrito";
+			});
+		}
 
 		function blobToBase64(blob) {
 			return new Promise((resolve, _) => {

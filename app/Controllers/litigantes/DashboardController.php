@@ -86,6 +86,7 @@ class DashboardController extends BaseController
 	private $protocol;
 	private $ip;
 	private $_folioModelRead;
+	private $_personaMoralGiroRead;
 
 
 
@@ -152,6 +153,7 @@ class DashboardController extends BaseController
 		$this->_vehiculoModeloModelRead = model('VehiculoModeloModel', true, $this->db_read);
 		$this->_vehiculoVersionModelRead = model('VehiculoVersionModel', true, $this->db_read);
 		$this->_vehiculoServicioModelRead = model('VehiculoServicioModel', true, $this->db_read);
+		$this->_personaMoralGiroRead = model('PersonaMoralGiroModel', true, $this->db_read);
 	}
 
 	/**
@@ -164,6 +166,7 @@ class DashboardController extends BaseController
 		$data = (object) array();
 		$data->empresas = $this->_personasMoralesRead->asObject()->findAll();
 		$data->estados = $this->_estadosModelRead->asObject()->findAll();
+		$data->giros = $this->_personaMoralGiroRead->asObject()->findAll();
 		$data->municipios = $this->_municipiosModelRead->asObject()->where('ESTADOID', '2')->findAll();
 		$data->lugares = $this->_hechoLugarModelRead->asObject()->orderBy('HECHODESCR', 'asc')->findAll();
 		$data->identificacion = $this->_documentosExtravioTipoModelRead->asObject()->orderBy('DOCUMENTOEXTRAVIOTIPODESCR', 'asc')->where('VISIBLE', '1')->findAll();
@@ -182,8 +185,9 @@ class DashboardController extends BaseController
 			//Datos del formulario
 			$data = [
 				'RAZONSOCIAL' => $this->request->getPost('razon_social'),
-				'MARCACOMERCIAL' => $this->request->getPost('marca_comercial'),
+				'MARCACOMERCIAL' => $this->request->getPost('marca_comercial') != "" ? $this->request->getPost('marca_comercial') : NULL,
 				'RFC' => $this->request->getPost('rfc'),
+				'PERSONAMORALGIROID' => $this->request->getPost('giro_empresa'),
 				'ESTADOID' => $this->request->getPost('estado_empresa'),
 				'MUNICIPIOID' => $this->request->getPost('municipio_empresa'),
 				'LOCALIDADID' => $this->request->getPost('localidad_empresa'),
@@ -192,8 +196,8 @@ class DashboardController extends BaseController
 				'COLONIADESCR' => $this->request->getPost('colonia_input_empresa'),
 				'CALLE' => $this->request->getPost('calle_empresa'),
 				'NUMERO' => $this->request->getPost('n_empresa'),
-				'NUMEROINTERIOR' => $this->request->getPost('ninterior_empresa'),
-				'REFERENCIA' => $this->request->getPost('referencia_empresa'),
+				'NUMEROINTERIOR' => $this->request->getPost('ninterior_empresa') != "" ? $this->request->getPost('ninterior_empresa') : NULL,
+				'REFERENCIA' => $this->request->getPost('referencia_empresa')  != "" ? $this->request->getPost('referencia_empresa') : NULL,
 				'TELEFONO' => $this->request->getPost('telefono_empresa'),
 				'CORREO' => $this->request->getPost('correo_empresa'),
 			];
@@ -213,12 +217,12 @@ class DashboardController extends BaseController
 			if ($this->_personasMoralesModel->save($data)) {
 				$data['PERSONAMORALID'] = $this->_personasMoralesModel->getInsertID();
 				$this->_personasMoralesNotificacionesModel->save($data);
-				return redirect()->to(base_url('/denuncia_litigantes/dashboard'))->with('message_success', 'Se ha creado la empresa.');
+				return redirect()->to(base_url('/denuncia_litigantes/dashboard'))->with('message_success', 'Se ha creado la persona moral.');
 			} else {
 				return redirect()->back()->with('message_error', 'Hubo un error en los datos y no se guardo, intentalo de nuevo.');
 			}
 		} else {
-			return redirect()->to(base_url('/denuncia_litigantes/dashboard'))->with('message_error', 'No tienes privilegios para ligarte a una empresa');
+			return redirect()->to(base_url('/denuncia_litigantes/dashboard'))->with('message_error', 'No tienes privilegios para ligarte a una persona moral');
 		}
 	}
 	/**
@@ -272,7 +276,7 @@ class DashboardController extends BaseController
 				// return redirect()->back()->with('message_error', 'Hubo un error en los datos y no se guardo, intentalo de nuevo.');
 			}
 		} else {
-			return redirect()->to(base_url('/denuncia_litigantes/dashboard'))->with('message_error', 'No tienes privilegios para agregar direcciones a una empresa');
+			return redirect()->to(base_url('/denuncia_litigantes/dashboard'))->with('message_error', 'No tienes privilegios para agregar direcciones a una persona moral');
 		}
 	}
 	/**
@@ -295,25 +299,37 @@ class DashboardController extends BaseController
 					$poder_data = null;
 				}
 			}
+			$nombre = explode('.', $poder_archivo->getName())[0];
 
 			$data = [
 				'PERSONAMORALID' => $this->request->getPost('empresa'),
 				'DENUNCIANTEID' => $id,
-				'PODERVOLUMEN' => $this->request->getPost('poder_volumen'),
-				'PODERNONOTARIO' => $this->request->getPost('poder_notario'),
-				'PODERNOPODER' => $this->request->getPost('poder_no_poder'),
+				'PODERVOLUMEN' => $this->request->getPost('poder_volumen') != "" ? $this->request->getPost('poder_volumen') : NULL,
+				'PODERNONOTARIO' => $this->request->getPost('poder_notario') != "" ? $this->request->getPost('poder_notario') : NULL,
+				'PODERNOPODER' => $this->request->getPost('poder_no_poder') != "" ? $this->request->getPost('poder_no_poder') : NULL,
 				'PODERARCHIVO' => $poder_data,
-				'FECHAINICIOPODER' => NULL,
-				'FECHAFINPODER' => NULL,
+				'FECHAINICIOPODER' => $this->request->getPost('fecha_inicio_poder') != "" ? $this->request->getPost('fecha_inicio_poder') : NULL,
+				'FECHAFINPODER' => $this->request->getPost('fecha_fin_poder') != "" ? $this->request->getPost('fecha_fin_poder') : NULL,
+				'CARGO' => $this->request->getPost('cargo'),
+
 
 			];
+			$existeRelacion = $this->_relacionFisicaMoralModel->asObject()->where('PERSONAMORALID', $data['PERSONAMORALID'])->where('DENUNCIANTEID', $data['DENUNCIANTEID'])->first();
+			if ($existeRelacion) {
+				$updateRelacion = $this->_relacionFisicaMoralModel->set($data)->where('PERSONAMORALID', $data['PERSONAMORALID'])->where('DENUNCIANTEID', $data['DENUNCIANTEID'])->update();
+				if ($updateRelacion) {
+					return redirect()->to(base_url('/denuncia_litigantes/dashboard'))->with('message_success', 'Se ha enviado la solicitud de ligación.');
+				} else {
+					return redirect()->back()->with('message_error', 'Hubo un error en los datos y no se guardo, intentalo de nuevo.');
+				}
+			}
 			if ($this->_relacionFisicaMoralModel->save($data)) {
 				return redirect()->to(base_url('/denuncia_litigantes/dashboard'))->with('message_success', 'Se ha enviado la solicitud de ligación.');
 			} else {
 				return redirect()->back()->with('message_error', 'Hubo un error en los datos y no se guardo, intentalo de nuevo.');
 			}
 		} else {
-			return redirect()->to(base_url('/denuncia_litigantes/dashboard'))->with('message_error', 'No tienes privilegios para ligarte a una empresa');
+			return redirect()->to(base_url('/denuncia_litigantes/dashboard'))->with('message_error', 'No tienes privilegios para ligarte a una persona moral');
 		}
 	}
 
@@ -447,12 +463,14 @@ class DashboardController extends BaseController
 		$data->cejaForma = $this->_cejaFormaModelRead->asObject()->findAll();
 		$data->pielColor = $this->_pielColorModelRead->asObject()->findAll();
 		$data->parentesco = $this->_parentescoModelRead->asObject()->findAll();
-		// $data->empresas = $this->_relacionFisicaMoralModelRead->asObject()
-		// 	->join('PERSONASMORALES', 'PERSONASMORALES.PERSONAMORALID = RELACIONFISICAMORAL.PERSONAMORALID')
-		// 	->where('RELACIONFISICAMORAL.RELACIONAR', 'S')
-		// 	->where('RELACIONFISICAMORAL.DENUNCIANTEID', session('DENUNCIANTEID'))
-		// 	->findAll();
-		$data->empresas = $this->_personasMoralesRead->asObject()->findAll();
+		$data->empresas = $this->_relacionFisicaMoralModelRead->asObject()
+			->join('PERSONASMORALES', 'PERSONASMORALES.PERSONAMORALID = RELACIONFISICAMORAL.PERSONAMORALID')
+			// ->where('RELACIONFISICAMORAL.RELACIONAR', 'S')
+			->where('RELACIONFISICAMORAL.DENUNCIANTEID', session('DENUNCIANTEID'))
+			->findAll();
+		$data->giros = $this->_personaMoralGiroRead->asObject()->findAll();
+
+		// $data->empresas = $this->_personasMoralesRead->asObject()->findAll();
 
 
 		// $data->distribuidorVehiculo = $this->_vehiculoDistribuidorModelRead->asObject()->findAll();
@@ -1056,25 +1074,25 @@ class DashboardController extends BaseController
 			$this->_folioPersonaFisicaDomicilio($dataDenuncianteDomicilio, $FOLIOID, $denuncinateIdPersona, $year);
 
 			//CARTA PODER
-			$carta_poder = $this->request->getFile('carta_poder_moral');
-			$carta_poder_data = null;
-			if ($carta_poder->isValid()) {
-				try {
-					$carta_poder_data = file_get_contents($carta_poder);
-				} catch (\Exception $e) {
-					$carta_poder_data = null;
-				}
-			}
-			$nombre = explode('.', $carta_poder->getName())[0];
+			// $carta_poder = $this->request->getFile('carta_poder_moral');
+			// $carta_poder_data = null;
+			// if ($carta_poder->isValid()) {
+			// 	try {
+			// 		$carta_poder_data = file_get_contents($carta_poder);
+			// 	} catch (\Exception $e) {
+			// 		$carta_poder_data = null;
+			// 	}
+			// }
+			// $nombre = explode('.', $carta_poder->getName())[0];
 
-			$dataArchivos = [
-				'FOLIOID' => $FOLIOID,
-				'ANO' => $year,
-				'ARCHIVODESCR' => strtoupper($nombre),
-				'ARCHIVO' => $carta_poder_data,
-				'EXTENSION' => $carta_poder->getClientExtension(),
-			];
-			$archivoExterno = $this->_folioExpArchivo($dataArchivos, $FOLIOID, $year);
+			// $dataArchivos = [
+			// 	'FOLIOID' => $FOLIOID,
+			// 	'ANO' => $year,
+			// 	'ARCHIVODESCR' => strtoupper($nombre),
+			// 	'ARCHIVO' => $carta_poder_data,
+			// 	'EXTENSION' => $carta_poder->getClientExtension(),
+			// ];
+			// $archivoExterno = $this->_folioExpArchivo($dataArchivos, $FOLIOID, $year);
 
 			//DATOS DESAPARECIDO
 			if ($dataFolio['HECHODELITO'] == "PERSONA DESAPARECIDA") {
@@ -1171,6 +1189,7 @@ class DashboardController extends BaseController
 				'NOTIFICACIONID' => $this->request->getPost('direccion'),
 				'DENOMINACION' => $this->request->getPost('razon_social'),
 				'MARCACOMERCIAL' => $this->request->getPost('marca_comercial_d'),
+				'PERSONAMORALGIROID' => $this->request->getPost('giro_empresa_denuncia'),
 				'ESTADOID' => $this->request->getPost('estado_empresa'),
 				'MUNICIPIOID' => $this->request->getPost('municipio_empresa'),
 				'LOCALIDADID' => $this->request->getPost('localidad_empresa'),
@@ -1475,7 +1494,7 @@ class DashboardController extends BaseController
 		if ($archivoExterno) {
 			return redirect()->to(base_url($url))->with('message_success', 'Se ha enviado tu documento.');
 		} else {
-			return redirect()->to(base_url($url))->with('message_success', 'No se pudo realizar el envio.');
+			return redirect()->to(base_url($url))->with('message_error', 'No se pudo realizar el envio.');
 		}
 	}
 	/**
@@ -1485,9 +1504,9 @@ class DashboardController extends BaseController
 	{
 		$personaMoralId = $this->request->getPost('personamoralid');
 		$data  = (object)array();
-		$data->empresas = 
-		$this->_relacionFisicaMoralModelRead->asObject()
-			->select('PERSONASMORALES.PERSONAMORALID, PERSONASMORALES.RFC, PERSONASMORALES.RAZONSOCIAL, PERSONASMORALES.MARCACOMERCIAL, PODERNOPODER, PODERNONOTARIO, PODERVOLUMEN, PERSONASMORALES.ESTADOID,PERSONASMORALES.MUNICIPIOID,PERSONASMORALES.LOCALIDADID,PERSONASMORALES.COLONIAID,PERSONASMORALES.COLONIADESCR,PERSONASMORALES.ZONA, PERSONASMORALES.CORREO, PERSONASMORALES.TELEFONO,PERSONASMORALES.NUMERO,PERSONASMORALES.NUMEROINTERIOR,PERSONASMORALES.REFERENCIA')
+		$data->empresas =
+			$this->_relacionFisicaMoralModelRead->asObject()
+			->select('PERSONASMORALES.PERSONAMORALID, PERSONASMORALES.RFC,PERSONASMORALES.PERSONAMORALGIROID,PERSONASMORALES.RAZONSOCIAL, PERSONASMORALES.MARCACOMERCIAL, PODERNOPODER, PODERNONOTARIO, PODERVOLUMEN, PERSONASMORALES.ESTADOID,PERSONASMORALES.MUNICIPIOID,PERSONASMORALES.LOCALIDADID,PERSONASMORALES.COLONIAID,PERSONASMORALES.COLONIADESCR,PERSONASMORALES.ZONA, PERSONASMORALES.CORREO, PERSONASMORALES.TELEFONO,PERSONASMORALES.NUMERO,PERSONASMORALES.NUMEROINTERIOR,PERSONASMORALES.REFERENCIA')
 			->join('PERSONASMORALES', 'PERSONASMORALES.PERSONAMORALID = RELACIONFISICAMORAL.PERSONAMORALID')
 			// ->where('RELACIONFISICAMORAL.RELACIONAR', 'S')
 			->where('RELACIONFISICAMORAL.DENUNCIANTEID', session('DENUNCIANTEID'))

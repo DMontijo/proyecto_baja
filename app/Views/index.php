@@ -74,7 +74,7 @@
 			<div class="card text-center bg-transparent border-0" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Para continuar debes aceptar el aviso de privacidad de datos y los términos y condiciones">
 				<div class="card-body">
 					<a href="<?= base_url() ?>/denuncia_litigantes" class="text-decoration-none" onclick="handleClickBTN(event)" name="DenunciaLitigantes" id="DenunciaLitigantes">
-						<img src="<?= base_url() ?>/assets/img/icons/constancia.png" class="w-75" alt="Denuncia litigantes">
+						<img src="<?= base_url() ?>/assets/img/icons/personamoral_btn_index.png" class="w-75" alt="Denuncia litigantes">
 						<p class="fw-bold fs-5 mt-2  text-dark ">Personas Morales y Litigantes</p>
 					</a>
 				</div>

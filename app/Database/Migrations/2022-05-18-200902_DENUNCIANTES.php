@@ -227,6 +227,11 @@ class DENUNCIANTES extends Migration
 				'constraint' => '1',
 				'null' => TRUE
 			],
+			'PERFIL' => [
+				'type' => 'VARCHAR',
+				'constraint' => '50',
+				'null' => TRUE
+			],
 			'MANZANA' => [
 				'type' => 'VARCHAR',
 				'constraint' => '100',

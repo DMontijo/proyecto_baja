@@ -163,6 +163,7 @@
 	let poder_volumen = document.querySelector('#poder_volumen');
 	let poder_no_poder = document.querySelector('#poder_no_poder');
 	let poder_no_notario = document.querySelector('#poder_no_notario');
+	let giro_empresa = document.querySelector('#giro_empresa_denuncia');
 
 	correo_empresa.readOnly = true;
 	estado_empresa.readOnly = true;
@@ -176,12 +177,12 @@
 	ninterior_empresa.readOnly = true;
 	referencia_empresa.readOnly = true;
 	telefono_empresa.readOnly = true;
-	marca_comercial.readOnly = true;
-	razon_social.readOnly = true;
-	rfc_empresa.readOnly = true;
-	poder_no_notario.readOnly = true;
-	poder_no_poder.readOnly = true;
-	poder_volumen.readOnly = true;
+	// marca_comercial.readOnly = true;
+	// razon_social.readOnly = true;
+	// rfc_empresa.readOnly = true;
+	// poder_no_notario.readOnly = true;
+	// poder_no_poder.readOnly = true;
+	// poder_volumen.readOnly = true;
 	document.getElementById("estado_empresa").addEventListener("mousedown", function(event) {
 		event.preventDefault();
 	});
@@ -202,6 +203,8 @@
 		poder_volumen.value = "";
 		poder_no_notario.value = "";
 		poder_no_poder.value = "";
+		giro_empresa.value = "";
+
 		document.getElementById('alerta_empresas').classList.add('d-none');
 
 		let data = {
@@ -223,6 +226,8 @@
 					poder_volumen.value = "";
 					poder_no_notario.value = "";
 					poder_no_poder.value = "";
+					giro_empresa.value = "";
+
 					document.getElementById('alerta_empresas').classList.remove('d-none');
 
 				} else {
@@ -242,6 +247,8 @@
 					poder_volumen.value = responsemaster.data.empresas.PODERVOLUMEN;
 					poder_no_notario.value = responsemaster.data.empresas.PODERNONOTARIO;
 					poder_no_poder.value = responsemaster.data.empresas.PODERNOPODER;
+					giro_empresa.value = responsemaster.data.empresas.PERSONAMORALGIROID;
+
 				}
 
 			},
@@ -478,66 +485,66 @@
 			}, false)
 		});
 
-		document.querySelector('#carta_poder_moral').addEventListener('change', async (e) => {
+		// document.querySelector('#carta_poder_moral').addEventListener('change', async (e) => {
 
-			let preview = document.querySelector('#img_preview_carta');
+		// 	let preview = document.querySelector('#img_preview_carta');
 
-			if (e.target.files && e.target.files[0]) {
-				if (e.target.files[0].type == "image/jpeg" || e.target.files[0].type == "image/png" || e.target.files[0].type == "image/jpg") {
-					if (e.target.files[0].size > 2000000) {
-						const blob = await comprimirImagen(e.target.files[0], 50);
-						if (blob.size > 2000000) {
-							e.target.value = '';
+		// 	if (e.target.files && e.target.files[0]) {
+		// 		if (e.target.files[0].type == "image/jpeg" || e.target.files[0].type == "image/png" || e.target.files[0].type == "image/jpg") {
+		// 			if (e.target.files[0].size > 2000000) {
+		// 				const blob = await comprimirImagen(e.target.files[0], 50);
+		// 				if (blob.size > 2000000) {
+		// 					e.target.value = '';
 
-							preview.classList.add('d-none');
-							preview.setAttribute('src', '');
-							Swal.fire({
-								icon: 'error',
-								text: 'No puedes subir un archivo mayor a 2 mb.',
-								confirmButtonColor: '#bf9b55',
-							});
-							return;
-						} else {
-							const image = await blobToBase64(blob);
-							console.log(image);
+		// 					preview.classList.add('d-none');
+		// 					preview.setAttribute('src', '');
+		// 					Swal.fire({
+		// 						icon: 'error',
+		// 						text: 'No puedes subir un archivo mayor a 2 mb.',
+		// 						confirmButtonColor: '#bf9b55',
+		// 					});
+		// 					return;
+		// 				} else {
+		// 					const image = await blobToBase64(blob);
+		// 					console.log(image);
 
-							preview.classList.remove('d-none');
-							preview.setAttribute('src', image);
-						}
-					} else {
-						let reader = new FileReader();
-						reader.onload = function(e) {
+		// 					preview.classList.remove('d-none');
+		// 					preview.setAttribute('src', image);
+		// 				}
+		// 			} else {
+		// 				let reader = new FileReader();
+		// 				reader.onload = function(e) {
 
-							preview.classList.remove('d-none');
-							preview.setAttribute('src', e.target.result);
-						}
-						reader.readAsDataURL(e.target.files[0]);
-					}
+		// 					preview.classList.remove('d-none');
+		// 					preview.setAttribute('src', e.target.result);
+		// 				}
+		// 				reader.readAsDataURL(e.target.files[0]);
+		// 			}
 
-				} else {
-					if (e.target.files[0].size > 2000000) {
-						e.target.value = '';
-						preview.classList.add('d-none');
-						preview.setAttribute('src', '');
-						Swal.fire({
-							icon: 'error',
-							text: 'No puedes subir un archivo mayor a 2 MB.',
-							confirmButtonColor: '#bf9b55',
-						});
-						return;
-					} else {
-						let reader = new FileReader();
-						reader.onload = function(e) {
-							documento_identidad.value = e.target.result;
-							documento_identidad_modal.setAttribute('src', e.target.result);
-							preview.classList.remove('d-none');
-							preview.setAttribute('src', e.target.result);
-						}
-						reader.readAsDataURL(e.target.files[0]);
-					}
-				}
-			}
-		});
+		// 		} else {
+		// 			if (e.target.files[0].size > 2000000) {
+		// 				e.target.value = '';
+		// 				preview.classList.add('d-none');
+		// 				preview.setAttribute('src', '');
+		// 				Swal.fire({
+		// 					icon: 'error',
+		// 					text: 'No puedes subir un archivo mayor a 2 MB.',
+		// 					confirmButtonColor: '#bf9b55',
+		// 				});
+		// 				return;
+		// 			} else {
+		// 				let reader = new FileReader();
+		// 				reader.onload = function(e) {
+		// 					documento_identidad.value = e.target.result;
+		// 					documento_identidad_modal.setAttribute('src', e.target.result);
+		// 					preview.classList.remove('d-none');
+		// 					preview.setAttribute('src', e.target.result);
+		// 				}
+		// 				reader.readAsDataURL(e.target.files[0]);
+		// 			}
+		// 		}
+		// 	}
+		// });
 
 		function blobToBase64(blob) {
 			return new Promise((resolve, _) => {
@@ -904,7 +911,6 @@
 					document.querySelector('#lugar_moral').value != '' &&
 					document.querySelector('#fecha_moral').value != '' &&
 					document.querySelector('#hora_moral').value != '' &&
-					document.querySelector('#carta_poder_moral').value != '' &&
 					document.querySelector('input[name="responsable"]:checked') &&
 					document.querySelector('#descripcion_breve_moral').value != ''
 				) {

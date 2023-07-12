@@ -21,12 +21,18 @@ class PERSONASMORALES extends Migration
             'MARCACOMERCIAL' => [
 				'type' => 'VARCHAR',
                 'constraint' => '255',
+                'null' => true,
+
 			],
             'RFC' => [
 				'type' => 'VARCHAR',
                 'constraint' => '100',
                 'unique' => TRUE,
 			],
+            'PERSONAMORALGIROID' => [
+                'type' => 'INT',
+                'unsigned' => true,
+            ],
             'ESTADOID' => [
                 'type' => 'INT',
                 'unsigned' => true,

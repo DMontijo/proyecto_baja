@@ -97,7 +97,7 @@ class DenunciaLitigantesController extends BaseController
 		$data->idiomas = $this->_personaIdiomaModelRead->asObject()->findAll();
 		$data->paises = $this->_paisesModelRead->asObject()->findAll();
 		$data->estados = $this->_estadosModelRead->asObject()->findAll();
-		$data->tiposIdentificaciones = $this->_tipoIdentificacionModelRead->asObject()->where('PERSONATIPOIDENTIFICACIONID',4)->findAll();
+		$data->tiposIdentificaciones = $this->_tipoIdentificacionModelRead->asObject()->findAll();
 		$data->escolaridades = $this->_escolaridadModelRead->asObject()->findAll();
 		$data->ocupaciones = $this->_ocupacionModelRead->asObject()->findAll();
 		$this->_loadView('Nueva solicitud', $data, 'register');
@@ -182,6 +182,8 @@ class DenunciaLitigantesController extends BaseController
 				'DOCUMENTO' => $documento,
 				'FIRMA' => $firma,
 				'TIPO' => 3,
+				'PERFIL' => $this->request->getPost('perfil'),
+
 			];
 
 			if ((int)$this->request->getPost('colonia_select') == 0) {
@@ -285,7 +287,7 @@ class DenunciaLitigantesController extends BaseController
 		$password = $this->request->getPost('password');
 		$email = trim($email);
 		$password = trim($password);
-		$data = $this->_denunciantesModelRead->where('CORREO', $email)->first();
+		$data = $this->_denunciantesModelRead->where('CORREO', $email)->where('TIPO', 3)->first();
 		if ($data) {
 			// Valida la contraseña ingresada con la de su usuario
 
@@ -322,7 +324,7 @@ class DenunciaLitigantesController extends BaseController
 				return redirect()->back();
 			}
 		} else {
-			$session->setFlashdata('message', 'El correo no está registrado, registrate para continuar.');
+			$session->setFlashdata('message', 'El correo no está registrado para el modulo de personas morales y litigantes, registrate para continuar.');
 			return redirect()->back();
 		}
 	}

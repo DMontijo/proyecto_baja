@@ -32,7 +32,16 @@
 								<input type="text" name="litigante" class="form-control" id="litigante" value="<?= $body_data->litigante->NOMBRE ?> <?= $body_data->litigante->APELLIDO_PATERNO ?> <?= $body_data->litigante->APELLIDO_MATERNO ?>" disabled>
 							</div>
 							<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-								<label class="font-weight-bold input-required" for="zona_usuario">Aceptar</label>
+								<label class="font-weight-bold input-required" for="cargo">Cargo en persona moral</label>
+								<select class="form-control" id="cargo" name="cargo" required>
+								<option <?= $body_data->ligacion->CARGO == NULL ? 'selected' : '' ?> value="" disabled>Selecciona el cargo</option>
+
+									<option <?= $body_data->ligacion->CARGO == 'LITIGANTE' ? 'selected' : '' ?> value="LITIGANTE">LITIGANTE</option>
+									<option <?= $body_data->ligacion->CARGO == 'APODERADO' ? 'selected' : '' ?> value="APODERADO">APODERADO</option>
+								</select>
+							</div>
+							<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+								<label class="font-weight-bold input-required" for="relacionar">Aceptar</label>
 								<select class="form-control" id="relacionar" name="relacionar" required>
 									<option <?= $body_data->ligacion->RELACIONAR == 'N' ? 'selected' : '' ?> value="N">NO</option>
 									<option <?= $body_data->ligacion->RELACIONAR == 'S' ? 'selected' : '' ?> value="S">SI</option>
@@ -51,9 +60,9 @@
 							
 							<div class="col-12 text-center">
 								<a id="downloadArchivo" download="<?= $body_data->personasmorales->RFC ?>_<?= $body_data->litigante->NOMBRE ?>_<?= $body_data->litigante->APELLIDO_PATERNO ?>_<?= $body_data->litigante->APELLIDO_MATERNO ?>" href="<?= $body_data->ligacion->PODERARCHIVO ?>">
-									<?php if ($body_data->tipoarchivo == 'image/png' || $body_data->tipoarchivo == 'image/jpg' || $body_data->tipoarchivo == 'image/jpeg') { ?>
+									<?php if (isset($body_data->tipoarchivo) && ($body_data->tipoarchivo == 'image/png' || $body_data->tipoarchivo == 'image/jpg' || $body_data->tipoarchivo == 'image/jpeg')) { ?>
 										<img src='<?= $body_data->ligacion->PODERARCHIVO ?>' width="50%"></img>
-									<?php } else { ?>
+									<?php } else if(isset($body_data->tipoarchivo) && (!$body_data->tipoarchivo == 'image/png' || !$body_data->tipoarchivo == 'image/jpg' || !$body_data->tipoarchivo == 'image/jpeg')){ ?>
 										<img src='<?= base_url() ?>/assets/img/file.png' width="30%"></img>
 									<?php } ?>
 								</a>
@@ -111,6 +120,8 @@
 					event.preventDefault();
 					event.stopPropagation();
 					document.querySelector('#btn-submit-datos').removeAttribute('disabled');
+					form_actualizar_ligadura.classList.add('was-validated')
+
 				}
 				form_actualizar_ligadura.classList.add('was-validated');
 			}, false);

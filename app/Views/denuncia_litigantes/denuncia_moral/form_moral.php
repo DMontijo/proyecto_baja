@@ -29,6 +29,18 @@
 		<input type="text" class="form-control" id="poder_volumen" name="poder_volumen" required>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="giro_empresa_denuncia" class="form-label fw-bold input-required">Giro de la empresa:</label>
+		<select class="form-select" id="giro_empresa_denuncia" name="giro_empresa_denuncia" required>
+			<option selected disabled value="">Elige el giro</option>
+			<?php foreach ($body_data->giros as $index => $giro) { ?>
+				<option value="<?= $giro->PERSONAMORALGIROID ?>"> <?= $giro->PERSONAMORALGIRODESCR ?> </option>
+			<?php } ?>
+		</select>
+		<div class="invalid-feedback">
+			Por favor, selecciona un giro.
+		</div>
+	</div>
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="poder_no_poder" class="form-label fw-bold">Número de poder:</label>
 		<input type="text" class="form-control" id="poder_no_poder" name="poder_no_poder" required>
 	</div>

@@ -19,6 +19,10 @@
                                             <th class="text-center">RAZÓN SOCIAL</th>
                                             <th class="text-center">RFC</th>
                                             <th class="text-center">LITIGANTE</th>
+                                            <th class="text-center">PERFIL</th>
+
+                                            <th class="text-center">CARGO EN PERSONA MORAL</th>
+
                                             <th class="text-center">ESTADO</th>
                                             <th class="text-center"></th>
                                         </tr>
@@ -31,11 +35,15 @@
                                                 <td class="text-center"><?= $liga->RFC ?></td>
                                                 <td class="text-center"><?= $liga->NOMBRE ?> <?= $liga->APELLIDO_PATERNO ?>
                                                     <?= $liga->APELLIDO_MATERNO ?></td>
+                                                <td class="text-center"><?= $liga->PERFIL ?></td>
+                                                <td class="text-center"><?= $liga->CARGO ?></td>
+
                                                 <?php if ($liga->RELACIONAR == 'N') { ?>
                                                     <td class="text-center text-danger font-weight-bold">AUN NO HA SIDO ACEPTADO</td>
                                                 <?php } else { ?>
                                                     <td class="text-center text-success font-weight-bold">ACEPTADO</td>
                                                 <?php } ?>
+
                                                 <td class="text-center">
                                                     <a type="button" class="btn btn-success" href="<?= base_url('admin/dashboard/editar_ligacion?id=' . $liga->ID) ?>">
                                                         <i class="fas fa-edit"></i>

@@ -278,8 +278,20 @@ if ($agent->isMobile()) {
 							<h3 class="text-center mb-3 fw-bold">DATOS DE IDENTIFICACIÓN DEL LITIGANTE</h3>
 						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+							<label for="perfil" class="form-label fw-bold input-required">Perfil</label>
+							<select class="form-select" id="perfil" name="perfil" required>
+								<option selected disabled value="">Selecciona su perfil en la empresa</option>
+								<option value="APODERADO">APODERADO</option>
+								<option value="LITIGANTE">LITIGANTE</option>
+
+							</select>
+							<div class="invalid-feedback">
+								El tipo de perfil es obligatorio.
+							</div>
+						</div>
+						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="identificacion" class="form-label fw-bold input-required">Identificación</label>
-							<select class="form-select" id="identificacion" name="identificacion" required readonly>
+							<select class="form-select" id="identificacion" name="identificacion" required>
 								<?php foreach ($body_data->tiposIdentificaciones as $index => $identificacion) { ?>
 									<option value="<?= $identificacion->PERSONATIPOIDENTIFICACIONID ?>"> <?= $identificacion->PERSONATIPOIDENTIFICACIONDESCR ?> </option>
 								<?php } ?>
@@ -290,7 +302,7 @@ if ($agent->isMobile()) {
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="numero_cedula" class="form-label fw-bold input-required">Número de cédula</label>
+							<label for="numero_cedula" class="form-label fw-bold input-required" id="labelIdentificacion">Número de cédula</label>
 							<input type="text" class="form-control" id="numero_cedula" name="numero_cedula" required>
 						</div>
 
@@ -341,7 +353,7 @@ if ($agent->isMobile()) {
 						</div>
 
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-							<label for="documento" class="form-label fw-bold input-required">Foto de la cédula</label>
+							<label for="documento" class="form-label fw-bold input-required" id="labelFoto">Foto de la cédula</label>
 							<img class="img-fluid d-none py-2" src="" id="img_preview" name="img_preview">
 							<input class="form-control" type="file" id="documento" name="documento" accept="image/jpeg, image/jpg, image/png, application/pdf" required>
 							<textarea id="documento_text" name="documento_text" hidden></textarea>
@@ -353,7 +365,7 @@ if ($agent->isMobile()) {
 							<?php } ?>
 						</div>
 
-		
+
 						<div class="col-12">
 							<hr>
 						</div>
@@ -433,12 +445,47 @@ if ($agent->isMobile()) {
 	const submitBtn = document.querySelector('#submit-btn');
 	const progress = document.querySelector('#progress-bar');
 	var checkML = document.getElementById('checkML');
-
+	var selectIdentificacion = document.getElementById('identificacion');
+	var identificacion = <?= json_encode($body_data->tiposIdentificaciones) ?>;
 	let stepCount = steps.length - 1;
 	let width = 100 / stepCount;
 	let currentStep = 0;
-	document.getElementById("identificacion").addEventListener("mousedown", function(event) {
-		event.preventDefault();
+
+	document.getElementById("perfil").addEventListener("change", function(event) {
+		clearSelect(selectIdentificacion);
+
+		if (event.target.value == "LITIGANTE") {
+			identificacion.forEach(identificacion => {
+				let option = document.createElement("option");
+				option.text = identificacion.PERSONATIPOIDENTIFICACIONDESCR;
+				option.value = identificacion.PERSONATIPOIDENTIFICACIONID;
+				selectIdentificacion.add(option);
+			});
+			var valorcedula = "4";
+			for (var i = selectIdentificacion.options.length - 1; i >= 0; i--) {
+				var option = selectIdentificacion.options[i];
+
+				if (option.value !== valorcedula) {
+					selectIdentificacion.remove(i);
+				}
+			}
+			document.getElementById('labelIdentificacion').innerHTML = "Número de cédula";
+			document.getElementById('labelFoto').innerHTML = "Foto de cédula";
+
+		} else {
+			while (selectIdentificacion.options.length > 0) {
+				selectIdentificacion.remove(0);
+			}
+			identificacion.forEach(identificacion => {
+				let option = document.createElement("option");
+				option.text = identificacion.PERSONATIPOIDENTIFICACIONDESCR;
+				option.value = identificacion.PERSONATIPOIDENTIFICACIONID;
+				selectIdentificacion.add(option);
+			});
+			document.getElementById('labelIdentificacion').innerHTML = "Número de identificación";
+			document.getElementById('labelFoto').innerHTML = "Foto de identificación";
+
+		}
 	});
 	//Al hacer checked en manzana y lote cambia los textos del label
 	checkML.addEventListener('click', function() {
@@ -456,7 +503,12 @@ if ($agent->isMobile()) {
 	});
 
 
-
+	//Limpia las opciones del select para que quede vacio
+	function clearSelect(select_element) {
+		for (let i = select_element.options.length; i >= 1; i--) {
+			select_element.remove(i);
+		}
+	}
 	//Funcion para eliminar los guiones y verifica que el telefono sea de longitud 10
 	function clearInputPhone(e) {
 		e.target.value = e.target.value.replace(/-/g, "");
@@ -1220,7 +1272,7 @@ if ($agent->isMobile()) {
 			});
 		};
 
-		document.querySelector('#correo_empresa').addEventListener('blur', (e) => {
+		document.querySelector('#correo').addEventListener('blur', (e) => {
 			let regex = /\S+@\S+\.\S+/
 
 			if (regex.test(e.target.value)) {
@@ -1228,7 +1280,7 @@ if ($agent->isMobile()) {
 					data: {
 						'email': e.target.value
 					},
-					url: "<?= base_url('/data/exist-email-empresarial') ?>",
+					url: "<?= base_url('/data/exist-email') ?>",
 					method: "POST",
 					dataType: "json",
 					success: function(response) {
@@ -1247,31 +1299,7 @@ if ($agent->isMobile()) {
 			};
 		})
 
-		document.querySelector('#rfc').addEventListener('blur', (e) => {
 
-			if ((e.target.value)) {
-				$.ajax({
-					data: {
-						'email': e.target.value
-					},
-					url: "<?= base_url('/data/exist-rfc') ?>",
-					method: "POST",
-					dataType: "json",
-					success: function(response) {
-						if (response.exist === 1) {
-							e.target.value = '';
-							prevBtn.click();
-							Swal.fire({
-								icon: 'error',
-								text: 'El RFC ya se encuentra registrado.',
-								confirmButtonColor: '#bf9b55',
-							});
-						}
-					},
-					error: function(jqXHR, textStatus, errorThrown) {}
-				});
-			};
-		})
 
 	})()
 

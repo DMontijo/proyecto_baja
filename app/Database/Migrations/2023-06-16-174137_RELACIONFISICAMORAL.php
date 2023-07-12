@@ -62,6 +62,7 @@ class RELACIONFISICAMORAL extends Migration
             ],
             'PODERARCHIVO' => [
                 'type' => 'LONGBLOB',
+                'null' => true,
             ],
             'FECHAINICIOPODER' => [
                 'type' => 'DATE',
@@ -70,6 +71,10 @@ class RELACIONFISICAMORAL extends Migration
             'FECHAFINPODER' => [
                 'type' => 'DATE',
                 'null' => true,
+            ],
+            'CARGO' => [
+                'type' => 'VARCHAR',
+                'constraint' => '50',
             ],
 
             'FECHAACTUALIZACION DATETIME ON UPDATE CURRENT_TIMESTAMP',

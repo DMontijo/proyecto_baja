@@ -12,6 +12,7 @@ class PersonasMoralesModel extends Model
 		'RAZONSOCIAL',
 		'MARCACOMERCIAL',
 		'RFC',
+		'PERSONAMORALGIROID',
 		'ESTADOID',
 		'MUNICIPIOID',
 		'LOCALIDADID',

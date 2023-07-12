@@ -748,7 +748,7 @@ class DashboardController extends BaseController
 			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
 		}
 		$data->litigacion = $this->_relacionFisicaMoralModelRead->asObject()
-			->select('RELACIONFISICAMORAL.*, DENUNCIANTES.NOMBRE,DENUNCIANTES.APELLIDO_PATERNO, DENUNCIANTES.APELLIDO_MATERNO,PERSONASMORALES.RAZONSOCIAL, PERSONASMORALES.MARCACOMERCIAL,PERSONASMORALES.RFC')
+			->select('RELACIONFISICAMORAL.*, DENUNCIANTES.NOMBRE,DENUNCIANTES.APELLIDO_PATERNO, DENUNCIANTES.APELLIDO_MATERNO,PERSONASMORALES.RAZONSOCIAL,DENUNCIANTES.PERFIL, PERSONASMORALES.MARCACOMERCIAL,PERSONASMORALES.RFC')
 			->join('DENUNCIANTES', 'DENUNCIANTES.DENUNCIANTEID = RELACIONFISICAMORAL.DENUNCIANTEID', 'LEFT')
 			->join('PERSONASMORALES', 'PERSONASMORALES.PERSONAMORALID = RELACIONFISICAMORAL.PERSONAMORALID', 'LEFT')
 			->findAll();
@@ -1143,7 +1143,7 @@ class DashboardController extends BaseController
 			// ->join('COLONIA', 'COLONIA.ESTADOID = PERSONASMORALES.ESTADOID AND COLONIA.MUNICIPIOID = PERSONASMORALES.MUNICIPIOID AND COLONIA.LOCALIDADID = PERSONASMORALES.LOCALIDADID AND COLONIA.COLONIAID = PERSONASMORALES.COLONIAID')
 			->where('PERSONAMORALID', $data->ligacion->PERSONAMORALID)->first();
 
-		if ($data->ligacion) {
+		if ($data->ligacion->PODERARCHIVO) {
 			$file_info = new \finfo(FILEINFO_MIME_TYPE);
 			$type = $file_info->buffer($data->ligacion->PODERARCHIVO);
 			$data->tipoarchivo = $type;
@@ -1167,7 +1167,9 @@ class DashboardController extends BaseController
 				'RECHAZAR' => 'S',
 				'USUARIOIDRECHAZO' => session('ID'),
 				'FECHAINICIOPODER' => NULL,
-				'FECHAFINPODER' => NULL
+				'FECHAFINPODER' => NULL,
+				'CARGO' => $this->request->getPost('cargo')
+
 			];
 		} else {
 			$data = [
@@ -1175,7 +1177,9 @@ class DashboardController extends BaseController
 				'RECHAZAR' => NULL,
 				'USUARIOIDRELACION' => session('ID'),
 				'FECHAINICIOPODER' => $this->request->getPost('fecha_inicio_poder'),
-				'FECHAFINPODER' => $this->request->getPost('fecha_fin_poder')
+				'FECHAFINPODER' => $this->request->getPost('fecha_fin_poder'),
+				'CARGO' => $this->request->getPost('cargo')
+
 			];
 		}
 

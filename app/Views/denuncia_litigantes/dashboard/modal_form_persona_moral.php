@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-lg modal-dialog-centered modal-xl">
         <div class="modal-content border-0">
             <div class="modal-header bg-primary">
-                <h5 class="modal-title text-white fw-bold" id="empresa_Label">Crear empresa
+                <h5 class="modal-title text-white fw-bold" id="empresa_Label">Crear persona moral
                 </h5>
                 <button id="documentos_close_btn" type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -30,8 +30,8 @@
                         </div>
                     </div>
                     <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-                        <label for="marca_comercial" class="form-label fw-bold input-required">Marca comercial:</label>
-                        <input class="form-control" type="text" id="marca_comercial" name="marca_comercial" required>
+                        <label for="marca_comercial" class="form-label fw-bold">Marca comercial:</label>
+                        <input class="form-control" type="text" id="marca_comercial" name="marca_comercial">
                         <div class="invalid-feedback">
                             La marca comercial es obligatorio
                         </div>
@@ -41,6 +41,18 @@
                         <input class="form-control" type="text" id="rfc" name="rfc" required>
                         <div class="invalid-feedback">
                             El RFC es obligatorio
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+                        <label for="giro_empresa" class="form-label fw-bold input-required">Giro de la empresa:</label>
+                        <select class="form-select" id="giro_empresa" name="giro_empresa" required>
+                            <option selected disabled value="">Elige el giro</option>
+                            <?php foreach ($body_data->giros as $index => $giro) { ?>
+                                <option value="<?= $giro->PERSONAMORALGIROID ?>"> <?= $giro->PERSONAMORALGIRODESCR ?> </option>
+                            <?php } ?>
+                        </select>
+                        <div class="invalid-feedback">
+                            Por favor, selecciona un giro.
                         </div>
                     </div>
                     <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -135,7 +147,7 @@
                     <div class="col-12 text-center">
                         <button id="form_empresa_btn" type="submit" class="btn btn-secondary">
                             <div id="spinner" class="spinner-border text-primary d-none" role="status"></div>
-                            <span id="text">Crear empresa</span>
+                            <span id="text">Crear persona moral</span>
                         </button>
                     </div>
                 </form>
