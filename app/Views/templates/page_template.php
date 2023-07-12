@@ -22,7 +22,7 @@
 </head>
 
 <body>
-	<script src="<?= base_url() ?>/assets/jQuery/jquery.js"></script>
+	<script src="<?= base_url() ?>/assets/jQuery/jquery.js?v=<?= rand() ?>"></script>
 	<header>
 		<!--Versión escritorio-->
 		<div class="container-fluid bg-primary p-0" style="height:162px;">
@@ -41,7 +41,7 @@
 	<footer class="container-fluid text-center text-white bg-primary d-flex align-items-center justify-content-center footer py-3" style="min-height:80px">
 		<span>© <?= date("Y") ?> Fiscalía General del Estado de Baja California</span>
 	</footer>
-	<script src="<?= base_url() ?>/assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script src="<?= base_url() ?>/assets/bootstrap/js/bootstrap.bundle.min.js?v=<?= rand() ?>"></script>
 </body>
 
 </html>
