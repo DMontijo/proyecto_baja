@@ -143,7 +143,7 @@
 											<th class="text-center">AÑO</th>
 											<th class="text-center">TIPO</th>
 											<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
-											<th class="text-center" style="min-width:150px;">CONTIENE PERCICIALES</th>
+											<th class="text-center" style="min-width:150px;">CONTIENE PERICIALES</th>
 											<th class="text-center" style="min-width:150px;">FECHA DE SALIDA</th>
 											<th class="text-center" style="min-width:100px;">ESTADO FOLIO</th>
 											<th class="text-center" style="min-width:250px;">NOMBRE DEL DENUNCIANTE</th>
