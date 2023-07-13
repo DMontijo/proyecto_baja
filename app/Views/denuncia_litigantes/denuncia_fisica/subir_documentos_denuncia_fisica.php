@@ -14,7 +14,7 @@
 					<h1 class="text-center fw-bolder pb-1 text-blue">SUBIR DENUNCIA ESCRITA</h1>
 					<p class="text-center fw-bold text-blue ">Recuerda subir solo uno a la vez.</p>
 					<div class="alert alert-warning" role="alert">
-						La denuncia por escrito es obligatorio.
+						La denuncia por escrito es obligatorio, súbelo para finalizar.
 					</div>
 					<form id="subirDocForm" name="subirDocForm" action="<?= base_url() ?>/denuncia_litigantes/dashboard/subir_documentos" method="POST" enctype="multipart/form-data" class="row needs-validation" novalidate>
 						<div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-3">
@@ -32,7 +32,7 @@
 					</form>
 					<div class="row p-2">
 						<div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-3">
-							<a href="<?= base_url() ?>/denuncia_litigantes/dashboard" type="button" id="finalizarDenuncia" name="finalizarDenuncia" class="btn btn-secondary w-100" disabled>FINALIZAR</a>
+							<button onclick="redirigir()" type="button" id="finalizarDenuncia" name="finalizarDenuncia" class="btn btn-secondary w-100" disabled>FINALIZAR</button>
 						</div>
 					</div>
 
@@ -48,7 +48,6 @@
 			html: '<strong><?= session()->getFlashdata('message_success') ?></strong>',
 			confirmButtonColor: '#bf9b55',
 		})
-		document.querySelector('#finalizarDenuncia').disabled = false;
 	</script>
 <?php endif; ?>
 <?php if (session()->getFlashdata('message_error')) : ?>
@@ -61,6 +60,9 @@
 	</script>
 <?php endif; ?>
 <script>
+	function redirigir() {
+		window.location.href = `<?= base_url() ?>/denuncia_litigantes/dashboard`;
+	}
 	(function() {
 		'use strict'
 		var forms = document.querySelectorAll('.needs-validation');
@@ -85,7 +87,23 @@
 				}, false)
 			})
 
-
+		const data = {
+			'folio': document.querySelector('#folio').value,
+			'year': document.querySelector('#year').value,
+		};
+		$.ajax({
+			data: data,
+			url: "<?= base_url('/data/getStatusFolio') ?>",
+			method: "GET",
+			dataType: "json",
+			success: function(response) {
+				if (response.data.STATUS == "ABIERTO") {
+					document.getElementById('finalizarDenuncia').disabled = false;
+				} else {
+					document.getElementById('finalizarDenuncia').disabled = true;
+				}
+			}
+		});
 		document.querySelector('#documento_extra').addEventListener('change', async (e) => {
 
 			let preview = document.querySelector('#img_preview_carta');
@@ -149,7 +167,7 @@
 							// title_doc.classList.remove('d-none')
 							// title_doc.innerHTML = e.target.files[0].name;
 
-					
+
 						}
 						reader.readAsDataURL(e.target.files[0]);
 

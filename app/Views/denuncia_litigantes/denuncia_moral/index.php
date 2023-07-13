@@ -884,7 +884,10 @@
 			case 'datos_moral':
 				if (
 					document.querySelector('#empresa').value != '' &&
-					document.querySelector('#marca_comercial_d').value != '' &&
+					document.querySelector('#razon_social').value != '' &&
+					document.querySelector('#rfc_empresa').value != '' &&
+					document.querySelector('#giro_empresa_denuncia').value != '' &&
+
 					document.querySelector('#correo_empresa').value != '' &&
 					document.querySelector('#estado_empresa').value != '' &&
 					document.querySelector('#municipio_empresa').value != '' &&

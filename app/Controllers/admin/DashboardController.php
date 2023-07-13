@@ -400,6 +400,7 @@ class DashboardController extends BaseController
 	private $_folioPersonaMoralModelRead;
 	private $_folioPersonaMoralModel;
 	private $_folioRelacionMoralFisModelRead;
+	private $_personaMoralGiroRead;
 
 	private $protocol;
 	private $ip;
@@ -666,6 +667,7 @@ class DashboardController extends BaseController
 		$this->_personasMoralesNotificacionesRead = model('PersonaMoralNotificacionesModel', true, $this->db_read);
 		$this->_relacionFisicaMoralModelRead = model('RelacionFisicaMoralModel', true, $this->db_read);
 		$this->_personasMoralesRead = model('PersonasMoralesModel', true, $this->db_read);
+		$this->_personaMoralGiroRead = model('PersonaMoralGiroModel', true, $this->db_read);
 
 		// $this->protocol = 'http://';
 		// $this->ip = "10.144.244.223";
@@ -755,6 +757,27 @@ class DashboardController extends BaseController
 		$data->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 		$this->_loadView('Ligaciones', 'ligaciones', '', $data, 'ligaciones/ligaciones');
+	}
+
+	/**
+	 * Vista de lista de personas morales
+	 * Retorna los usuarios registrados en CDTEC detallando su perfil.
+	 *
+	 */
+	public function personas_morales()
+	{
+		$data = (object) array();
+		if (!$this->permisos('LIGACIONES')) {
+			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
+		}
+		$data->personasmorales = $this->_personasMoralesRead->asObject()
+		->join('PERSONAMORALGIRO', 'PERSONAMORALGIRO.PERSONAMORALGIROID = PERSONASMORALES.PERSONAMORALGIROID','LEFT')
+		->join('ESTADO', 'ESTADO.ESTADOID = PERSONASMORALES.ESTADOID', 'LEFT')
+		->join('MUNICIPIO', 'MUNICIPIO.ESTADOID = PERSONASMORALES.ESTADOID AND MUNICIPIO.MUNICIPIOID = PERSONASMORALES.MUNICIPIOID', 'LEFT')
+		->findAll();
+		$data->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
+
+		$this->_loadView('Personas morales', 'personas morales', '', $data, 'ligaciones/personas_morales');
 	}
 
 	/**
@@ -1153,6 +1176,30 @@ class DashboardController extends BaseController
 
 		$this->_loadView('Editar ligacion', '', '', $data, 'ligaciones/edit_ligacion');
 	}
+		/**
+	 * Vista para editar una persona moral.
+	 * Recibe por metodo GET el ID de la persona mroal a editar para cargar el formulario.
+	 *
+	 */
+	public function editar_persona_moral()
+	{
+		$id = $this->request->getGet('id');
+		if (!$id) {
+			return redirect()->back()->with('message_error', 'No se envío el parámeto id.');
+		}
+		$data = (object) array();
+		$data->personasmorales = $this->_personasMoralesRead->asObject()->where('PERSONAMORALID', $id)->first();
+		$data->municipios = $this->_municipiosModelRead->asObject()->where('ESTADOID', $data->personasmorales->ESTADOID)->findAll();
+		$data->estados = $this->_estadosModelRead->asObject()->findAll();
+		$data->localidades = $this->_localidadesModelRead->asObject()->where('ESTADOID',  $data->personasmorales->ESTADOID)->where('MUNICIPIOID', $data->personasmorales->MUNICIPIOID)->findAll();
+		$data->colonias = $this->_coloniasModelRead->asObject()->where('ESTADOID',  $data->personasmorales->ESTADOID)->where('MUNICIPIOID', $data->personasmorales->MUNICIPIOID)->where('LOCALIDADID', $data->personasmorales->LOCALIDADID)->findAll();
+		$data->giros = $this->_personaMoralGiroRead->asObject()->findAll();
+
+
+		$data->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
+
+		$this->_loadView('Editar persona moral', '', '', $data, 'ligaciones/edit_persona_moral');
+	}
 	/**
 	 * Función para actualizar a una ligacion.
 	 * Recibe por metodo POST todos los campos del formulario para la actualización de una solicitud de ligacion.
@@ -1193,6 +1240,53 @@ class DashboardController extends BaseController
 				return redirect()->back()->with('message_error', 'No se pudo actualizar');
 			}
 		}
+	}
+
+	/**
+	 * Función para actualizar a una persona moral.
+	 * Recibe por metodo POST todos los campos del formulario para la actualización de una persona moral.
+	 */
+	public function update_persona_moral()
+	{
+		$id = $this->request->getPost('id');
+			$data = [
+				'RAZONSOCIAL' => $this->request->getPost('razon_social'),
+				'PERSONAMORALGIROID' => $this->request->getPost('giro_empresa'),
+				'MARCACOMERCIAL' =>$this->request->getPost('marca_comercial'),
+				'RFC' => $this->request->getPost('rfc'),
+				'ESTADOID' =>$this->request->getPost('estado_empresa'),
+				'MUNICIPIOID' => $this->request->getPost('municipio_empresa'),
+				'LOCALIDADID' => $this->request->getPost('localidad_empresa'),
+				'ZONA' =>NULL,
+				'COLONIAID' => $this->request->getPost('colonia_empresa'),
+				'COLONIADESCR' => $this->request->getPost('colonia_input_empresa'),
+				'CALLE' => $this->request->getPost('calle_empresa'),
+				'NUMERO' => $this->request->getPost('numero_empresa'),
+				'NUMEROINTERIOR' => $this->request->getPost('numeroi_empresa'),
+				'REFERENCIA' => $this->request->getPost('referencias_empresa'),
+				'TELEFONO' => $this->request->getPost('telefono_empresa'),
+				'CORREO' => $this->request->getPost('correo_empresa'),
+			];
+			$colonia = $this->_coloniasModelRead->asObject()->where('ESTADOID', $data['ESTADOID'])->where('MUNICIPIOID', $data['MUNICIPIOID'])->where('LOCALIDADID', $data['LOCALIDADID'])->where('COLONIAID', $data['COLONIAID'])->first();
+
+			if ($data['COLONIAID'] == '0') {
+				$data['COLONIAID'] = null;
+				$data['COLONIADESCR'] = $this->request->getPost('colonia_input_empresa');
+				$localidad = $this->_localidadesModelRead->asObject()->where('ESTADOID', $data['ESTADOID'])->where('MUNICIPIOID', $data['MUNICIPIOID'])->where('LOCALIDADID', $data['LOCALIDADID'])->first();
+				$data['ZONA'] = $localidad->ZONA;
+			} else {
+				$data['COLONIAID'] = (int) $this->request->getPost('colonia_empresa');
+				$data['COLONIADESCR'] = $colonia->COLONIADESCR;
+				$data['ZONA'] = $colonia->ZONA;
+			}
+			$update = $this->_personasMoralesModel->set($data)->where('PERSONAMORALID', $id)->update();
+
+			if ($update) {
+				return redirect()->to(base_url('/admin/dashboard/lista_moral'))->with('message_success', 'Persona moral actualizada correctamente.');
+			} else {
+				return redirect()->back()->with('message_error', 'No se pudo actualizar');
+			}
+		
 	}
 
 	/**
@@ -2907,7 +3001,9 @@ class DashboardController extends BaseController
 	public function existEmailEmpresarialNotificacion()
 	{
 		$email = $this->request->getPost('email');
-		$data = $this->_personasMoralesNotificacionesRead->where('CORREO', $email)->first();
+		$personamoralid = $this->request->getPost('personamoralid');
+
+		$data = $this->_personasMoralesNotificacionesRead->where('PERSONAMORALID', $personamoralid)->where('CORREO', $email)->first();
 		if ($data == null) {
 			return json_encode((object) ['exist' => 0]);
 		} else if (count($data) > 0) {

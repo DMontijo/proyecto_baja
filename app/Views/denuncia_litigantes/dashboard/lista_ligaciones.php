@@ -27,13 +27,17 @@
 										<th scope="row"><?= $ligar->RAZONSOCIAL  ?></th>
 										<td><?= $ligar->MARCACOMERCIAL ?></td>
 										<td><?= $ligar->RFC ?></td>
-										<?php if ($ligar->RELACIONAR == 'N') { ?>
-											<td class="text-danger fw-bold">AUN NO HA SIDO ACEPTADO</td>
-										<?php } else { ?>
-											<td class="text-success fw-bold">ACEPTADO</td>
+
+										<?php if ($ligar->RELACIONAR == 'N' && empty($ligar->RECHAZAR)) { ?>
+											<td class="text-center text-warning fw-bold">AUN NO HA SIDO ACEPTADO</td>
+										<?php } else if ($ligar->RELACIONAR == 'S') { ?>
+											<td class="text-center text-success fw-bold">ACEPTADO</td>
+										<?php } else if ($ligar->RECHAZAR == 'S') {  ?>
+											<td class="text-center text-danger fw-bold">RECHAZADO</td>
+
 										<?php } ?>
 
-										</td>
+
 									<?php } ?>
 
 									</tr>

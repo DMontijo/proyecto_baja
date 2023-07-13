@@ -273,7 +273,9 @@
         if (regex.test(e.target.value)) {
             $.ajax({
                 data: {
-                    'email': e.target.value
+                    'email': e.target.value,
+                    'personamoralid': document.querySelector('#empresa').value,
+
                 },
                 url: "<?= base_url('/data/exist-email-notificacion') ?>",
                 method: "POST",

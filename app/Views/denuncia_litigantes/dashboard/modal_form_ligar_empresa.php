@@ -52,8 +52,8 @@
                     </div>
 
                     <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-                        <label for="poder_archivo" class="form-label fw-bold">Fotografía poder:</label>
-                        <input type="file" class="form-control" id="poder_archivo" name="poder_archivo">
+                        <label for="poder_archivo" class="form-label fw-bold input-required">Fotografía poder:</label>
+                        <input type="file" class="form-control" id="poder_archivo" name="poder_archivo" required>
                     </div>
                     <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
                         <label for="cargo" class="form-label fw-bold input-required">¿Cúal es tu cargo en la persona moral?</label>

@@ -183,6 +183,10 @@ $routes->group('admin', function ($routes) {
 		$routes->get('lista_ligaciones', 'admin/DashboardController::ligaciones');
 		$routes->get('editar_ligacion', 'admin/DashboardController::editar_ligacion');
 		$routes->post('editar_ligacion', 'admin/DashboardController::update_ligacion');
+		$routes->get('lista_moral', 'admin/DashboardController::personas_morales');
+		$routes->get('editar_persona_moral', 'admin/DashboardController::editar_persona_moral');
+		$routes->post('editar_persona_moral', 'admin/DashboardController::update_persona_moral');
+
 	});
 });
 
@@ -379,6 +383,8 @@ $routes->group('data', function ($routes) {
 	$routes->post('get-marcacomercial-by-empresa', 'litigantes/DashboardController::getMarcaComercialByEmpresa');
 	$routes->post('get-notificacion-by-empresa', 'litigantes/DashboardController::getNotificacionDireccion');
 	$routes->post('create-direccion-notificacion', 'litigantes/DashboardController::crear_direccion_notificacion');
+	$routes->get('getStatusFolio', 'litigantes/DashboardController::getStatusFolio');
+
 });
 
 

@@ -17,16 +17,12 @@
 		<input type="text" class="form-control" id="marca_comercial_d" name="marca_comercial_d" required>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="razon_social" class="form-label fw-bold">Razón social:</label>
+		<label for="razon_social" class="form-label fw-bold input-required">Razón social:</label>
 		<input type="text" class="form-control" id="razon_social" name="razon_social" required>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="rfc_empresa" class="form-label fw-bold">RFC:</label>
+		<label for="rfc_empresa" class="form-label fw-bold input-required">RFC:</label>
 		<input type="text" class="form-control" id="rfc_empresa" name="rfc_empresa" required>
-	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="poder_volumen" class="form-label fw-bold">Volumen:</label>
-		<input type="text" class="form-control" id="poder_volumen" name="poder_volumen" required>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="giro_empresa_denuncia" class="form-label fw-bold input-required">Giro de la empresa:</label>
@@ -41,12 +37,17 @@
 		</div>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+		<label for="poder_volumen" class="form-label fw-bold">Volumen:</label>
+		<input type="text" class="form-control" id="poder_volumen" name="poder_volumen">
+	</div>
+
+	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="poder_no_poder" class="form-label fw-bold">Número de poder:</label>
-		<input type="text" class="form-control" id="poder_no_poder" name="poder_no_poder" required>
+		<input type="text" class="form-control" id="poder_no_poder" name="poder_no_poder">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="poder_no_notario" class="form-label fw-bold">Número de notario:</label>
-		<input type="text" class="form-control" id="poder_no_notario" name="poder_no_notario" required>
+		<input type="text" class="form-control" id="poder_no_notario" name="poder_no_notario">
 	</div>
 </div>
 <div class="row" id="contenedor-direcciones">

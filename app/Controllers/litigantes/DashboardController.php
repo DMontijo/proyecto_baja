@@ -963,7 +963,9 @@ class DashboardController extends BaseController
 			'HECHONARRACION' => $this->request->getPost('descripcion_breve_moral') != '' ? strtoupper($this->request->getPost('descripcion_breve_moral')) : NULL,
 			'HECHODELITO' => $this->request->getPost('delito_moral'),
 			'TIPODENUNCIA' => 'ES',
-			'NOTIFICACIONES' => 'S'
+			'NOTIFICACIONES' => 'S',
+			'STATUS' => 'PENDIENTE'
+
 		];
 
 		if ($this->request->getPost('check_ubi') == 'on') {
@@ -1488,14 +1490,30 @@ class DashboardController extends BaseController
 			'ARCHIVO' => $documento_extra_data,
 			'EXTENSION' => $documento_extra->getClientExtension(),
 		];
-		//Insercion del archivo
-		$archivoExterno = $this->_folioExpArchivo($data, $folio, $year);
-		$url = "/denuncia_litigantes/dashboard/subir_documentos_folio?folio=" . $folio . "&year=" . $year;
-		if ($archivoExterno) {
-			return redirect()->to(base_url($url))->with('message_success', 'Se ha enviado tu documento.');
-		} else {
-			return redirect()->to(base_url($url))->with('message_error', 'No se pudo realizar el envio.');
+		$dataFolio = [
+			'STATUS' => "ABIERTO",
+		];
+		$updateFolio = $this->_folioModel->set($dataFolio)->where('FOLIOID', $folio)->where('ANO', $year)->update();
+		if ($updateFolio) {
+			//Insercion del archivo
+			$archivoExterno = $this->_folioExpArchivo($data, $folio, $year);
+			$url = "/denuncia_litigantes/dashboard/subir_documentos_folio?folio=" . $folio . "&year=" . $year;
+			if ($archivoExterno) {
+				return redirect()->to(base_url($url))->with('message_success', 'Se ha enviado tu documento.');
+			} else {
+				return redirect()->to(base_url($url))->with('message_error', 'No se pudo realizar el envio.');
+			}
 		}
+	}
+	/**
+	 * Funcion para obtener el estatus del folio en el modulo de subir archivos de litigantes
+	 */
+	function getStatusFolio(){
+		$folio = $this->request->getGet('folio');
+		$year = $this->request->getGet('year');
+
+		$data = $this->_folioModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->first();
+		return json_encode((object)['data' => $data]);
 	}
 	/**
 	 * Funcion para obtener la marca comercial de acuerdo a la persona moral

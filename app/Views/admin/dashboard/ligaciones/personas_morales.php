@@ -7,48 +7,37 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <h1 class="mb-4 text-center font-weight-bold">LISTADO DE LIGACIONES REGISTRADAS</h1>
+                <h1 class="mb-4 text-center font-weight-bold">LISTADO DE PERSONAS MORALES REGISTRADAS</h1>
                 <div class="card shadow border-0 rounded">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-12 mt-3" style="overflow-x:scroll;">
-                                <table id="table-ligaciones" class="table table-bordered table-striped table-sm" data-page-length='50' style="width:100%">
+                                <table id="table-personas-morales" class="table table-bordered table-striped table-sm" data-page-length='50' style="width:100%">
                                     <thead>
                                         <tr>
                                             <th class="text-center">MARCA COMERCIAL</th>
                                             <th class="text-center">RAZÓN SOCIAL</th>
                                             <th class="text-center">RFC</th>
-                                            <th class="text-center">LITIGANTE</th>
-                                            <th class="text-center">PERFIL</th>
-
-                                            <th class="text-center">CARGO EN PERSONA MORAL</th>
-
+                                            <th class="text-center">GIRO</th>
                                             <th class="text-center">ESTADO</th>
+
+                                            <th class="text-center">MUNICIPIO</th>
                                             <th class="text-center"></th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php foreach ($body_data->litigacion as $index => $liga) { ?>
+                                        <?php foreach ($body_data->personasmorales as $index => $moral) { ?>
                                             <tr>
-                                                <td class="text-center"><?= $liga->MARCACOMERCIAL ?></td>
-                                                <td class="text-center"><?= $liga->RAZONSOCIAL ?></td>
-                                                <td class="text-center"><?= $liga->RFC ?></td>
-                                                <td class="text-center"><?= $liga->NOMBRE ?> <?= $liga->APELLIDO_PATERNO ?>
-                                                    <?= $liga->APELLIDO_MATERNO ?></td>
-                                                <td class="text-center"><?= $liga->PERFIL ?></td>
-                                                <td class="text-center"><?= $liga->CARGO ?></td>
+                                                <td class="text-center"><?= $moral->MARCACOMERCIAL ?></td>
+                                                <td class="text-center"><?= $moral->RAZONSOCIAL ?></td>
+                                                <td class="text-center"><?= $moral->RFC ?></td>
+                                                <td class="text-center"><?= $moral->PERSONAMORALGIRODESCR ?></td>
+                                                <td class="text-center"><?= $moral->ESTADODESCR ?></td>
+                                                <td class="text-center"><?= $moral->MUNICIPIODESCR ?></td>
 
-                                                <?php if ($liga->RELACIONAR == 'N' && empty($liga->RECHAZAR)) { ?>
-                                                    <td class="text-center text-warning font-weight-bold">AUN NO HA SIDO ACEPTADO</td>
-                                                <?php } else if($liga->RELACIONAR == 'S') { ?>
-                                                    <td class="text-center text-success font-weight-bold">ACEPTADO</td>
-                                                <?php }else if($liga->RECHAZAR == 'S') {  ?>
-                                                    <td class="text-center text-danger font-weight-bold">RECHAZADO</td>
-
-                                                <?php } ?>
-
+                                            
                                                 <td class="text-center">
-                                                    <a type="button" class="btn btn-success" href="<?= base_url('admin/dashboard/editar_persona_moral?id=' . $liga->ID) ?>">
+                                                    <a type="button" class="btn btn-success" href="<?= base_url('admin/dashboard/editar_persona_moral?id=' . $moral->PERSONAMORALID) ?>">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
                                                 </td>
@@ -66,7 +55,7 @@
 </section>
 <script>
     $(function() {
-        $("#table-ligaciones").DataTable({
+        $("#table-personas-morales").DataTable({
             responsive: false,
             lengthChange: false,
             autoWidth: true,
