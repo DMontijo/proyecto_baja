@@ -342,9 +342,10 @@ class DashboardController extends BaseController
 	{
 		$data = (object) array();
 		$data->ligaciones = $this->_relacionFisicaMoralModelRead->asObject()
-			->select('RAZONSOCIAL,MARCACOMERCIAL,RFC,RELACIONAR')
+			->select('RAZONSOCIAL,MARCACOMERCIAL,RFC,RELACIONAR,FECHAFINPODER,DENUNCIANTES.CORREO')
 			->join('PERSONASMORALES', 'PERSONASMORALES.PERSONAMORALID = RELACIONFISICAMORAL.PERSONAMORALID')
-			->where('DENUNCIANTEID', session('DENUNCIANTEID'))
+			->join('DENUNCIANTES', 'DENUNCIANTES.DENUNCIANTEID = RELACIONFISICAMORAL.DENUNCIANTEID')
+			->where('RELACIONFISICAMORAL.DENUNCIANTEID', session('DENUNCIANTEID'))
 			->findAll();
 		$this->_loadView('Mis ligaduras', $data, 'lista_ligaciones');
 	}

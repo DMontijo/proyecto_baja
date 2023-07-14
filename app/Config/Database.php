@@ -86,10 +86,10 @@ class Database extends Config
 
 	public $development = [
 		'DSN'      => '',
-		'hostname' => 'database-video-denuncia-baja-california-instance-1.cenwfxggsegs.us-east-1.rds.amazonaws.com',
-		'username' => 'fgebc_admin',
-		'password' => 'fgebc_dba0wner',
-		'database' => 'cdtec_testing',
+		'hostname' => 'localhost',
+		'username' => 'tibe',
+		'password' => '_jpGBkm[hO[9@D!]',
+		'database' => 'CDT_DB_TESTING',
 		'DBDriver' => 'MySQLi',
 		'DBPrefix' => '',
 		'pConnect' => false,
@@ -113,10 +113,10 @@ class Database extends Config
 
 	public $development_read = [
 		'DSN'      => '',
-		'hostname' => 'database-video-denuncia-baja-california-instance-1-us-east-1b.cenwfxggsegs.us-east-1.rds.amazonaws.com',
-		'username' => 'fgebc_admin',
-		'password' => 'fgebc_dba0wner',
-		'database' => 'cdtec_testing',
+		'hostname' => 'localhost',
+		'username' => 'tibe',
+		'password' => '_jpGBkm[hO[9@D!]',
+		'database' => 'CDT_DB_TESTING',
 		'DBDriver' => 'MySQLi',
 		'DBPrefix' => '',
 		'pConnect' => false,

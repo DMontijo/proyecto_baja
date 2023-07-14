@@ -18,6 +18,7 @@
 									<th scope="col">MARCA COMERCIAL</th>
 									<th scope="col">RFC</th>
 									<th scope="col">ESTADO</th>
+									<th scope="col">VENCIMIENTO DE PODER</th>
 									<th scope="col"></th>
 								</tr>
 							</thead>
@@ -38,6 +39,14 @@
 										<?php } ?>
 
 
+										<?php $date1 = new DateTime($ligar->FECHAFINPODER);
+											$date2 = new DateTime(date("Y-m-d"));	
+											$diff = $date1->diff($date2);
+											if(intval($diff->format('%d')) <= 3) { ?>
+											<td class="text-center text-danger fw-bold"> <?= intval($diff->format('%d')); ?> DÍAS</td>
+										<?php } else  { ?> 
+											<td class="text-center text-success fw-bold"> <?= intval($diff->format('%d')); ?> DÍAS</td>
+										<?php } ?>
 									<?php } ?>
 
 									</tr>
