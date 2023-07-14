@@ -76,6 +76,11 @@ class RELACIONFISICAMORAL extends Migration
                 'type' => 'VARCHAR',
                 'constraint' => '50',
             ],
+            'DESCRIPCIONCARGO' => [
+                'type' => 'TEXT',
+                'null' => true,
+
+            ],
 
             'FECHAACTUALIZACION DATETIME ON UPDATE CURRENT_TIMESTAMP',
         ]);

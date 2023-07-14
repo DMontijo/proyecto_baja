@@ -20,9 +20,7 @@
                                             <th class="text-center">RFC</th>
                                             <th class="text-center">LITIGANTE</th>
                                             <th class="text-center">PERFIL</th>
-
                                             <th class="text-center">CARGO EN PERSONA MORAL</th>
-
                                             <th class="text-center">ESTADO</th>
                                             <th class="text-center"></th>
                                         </tr>
@@ -48,7 +46,7 @@
                                                 <?php } ?>
 
                                                 <td class="text-center">
-                                                    <a type="button" class="btn btn-success" href="<?= base_url('admin/dashboard/editar_persona_moral?id=' . $liga->ID) ?>">
+                                                    <a type="button" class="btn btn-success" href="<?= base_url('admin/dashboard/editar_ligacion?id=' . $liga->ID) ?>">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
                                                 </td>

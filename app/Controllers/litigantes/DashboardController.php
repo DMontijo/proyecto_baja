@@ -301,30 +301,49 @@ class DashboardController extends BaseController
 			}
 			$nombre = explode('.', $poder_archivo->getName())[0];
 
-			$data = [
-				'PERSONAMORALID' => $this->request->getPost('empresa'),
-				'DENUNCIANTEID' => $id,
-				'PODERVOLUMEN' => $this->request->getPost('poder_volumen') != "" ? $this->request->getPost('poder_volumen') : NULL,
-				'PODERNONOTARIO' => $this->request->getPost('poder_notario') != "" ? $this->request->getPost('poder_notario') : NULL,
-				'PODERNOPODER' => $this->request->getPost('poder_no_poder') != "" ? $this->request->getPost('poder_no_poder') : NULL,
-				'PODERARCHIVO' => $poder_data,
-				'FECHAINICIOPODER' => $this->request->getPost('fecha_inicio_poder') != "" ? $this->request->getPost('fecha_inicio_poder') : NULL,
-				'FECHAFINPODER' => $this->request->getPost('fecha_fin_poder') != "" ? $this->request->getPost('fecha_fin_poder') : NULL,
-				'CARGO' => $this->request->getPost('cargo'),
+			if ($_FILES['poder_archivo']['name'] != null) {
+				$poder_data = file_get_contents($poder_archivo);
+				$data = [
+					'PERSONAMORALID' => $this->request->getPost('empresa'),
+					'DENUNCIANTEID' => $id,
+					'PODERVOLUMEN' => $this->request->getPost('poder_volumen') != "" ? $this->request->getPost('poder_volumen') : NULL,
+					'PODERNONOTARIO' => $this->request->getPost('poder_notario') != "" ? $this->request->getPost('poder_notario') : NULL,
+					'PODERNOPODER' => $this->request->getPost('poder_no_poder') != "" ? $this->request->getPost('poder_no_poder') : NULL,
+					'PODERARCHIVO' => $poder_data,
+					'FECHAINICIOPODER' => $this->request->getPost('fecha_inicio_poder') != "" ? $this->request->getPost('fecha_inicio_poder') : NULL,
+					'FECHAFINPODER' => $this->request->getPost('fecha_fin_poder') != "" ? $this->request->getPost('fecha_fin_poder') : NULL,
+					'CARGO' => $this->request->getPost('cargo'),
+					'DESCRIPCIONCARGO' => $this->request->getPost('descr_cargo') != "" ? $this->request->getPost('descr_cargo') : NULL,
 
+				];
+			} else {
+				$data = [
+					'PERSONAMORALID' => $this->request->getPost('empresa'),
+					'DENUNCIANTEID' => $id,
+					'PODERVOLUMEN' => $this->request->getPost('poder_volumen') != "" ? $this->request->getPost('poder_volumen') : NULL,
+					'PODERNONOTARIO' => $this->request->getPost('poder_notario') != "" ? $this->request->getPost('poder_notario') : NULL,
+					'PODERNOPODER' => $this->request->getPost('poder_no_poder') != "" ? $this->request->getPost('poder_no_poder') : NULL,
+					'FECHAINICIOPODER' => $this->request->getPost('fecha_inicio_poder') != "" ? $this->request->getPost('fecha_inicio_poder') : NULL,
+					'FECHAFINPODER' => $this->request->getPost('fecha_fin_poder') != "" ? $this->request->getPost('fecha_fin_poder') : NULL,
+					'CARGO' => $this->request->getPost('cargo'),
+					'DESCRIPCIONCARGO' => $this->request->getPost('descr_cargo') != "" ? $this->request->getPost('descr_cargo') : NULL,
 
-			];
+				];
+			}
 			$existeRelacion = $this->_relacionFisicaMoralModel->asObject()->where('PERSONAMORALID', $data['PERSONAMORALID'])->where('DENUNCIANTEID', $data['DENUNCIANTEID'])->first();
+
 			if ($existeRelacion) {
 				$updateRelacion = $this->_relacionFisicaMoralModel->set($data)->where('PERSONAMORALID', $data['PERSONAMORALID'])->where('DENUNCIANTEID', $data['DENUNCIANTEID'])->update();
 				if ($updateRelacion) {
-					return redirect()->to(base_url('/denuncia_litigantes/dashboard'))->with('message_success', 'Se ha enviado la solicitud de ligación.');
+					return redirect()->back()->with('message_success', 'Se ha enviado la solicitud de ligación.');
 				} else {
 					return redirect()->back()->with('message_error', 'Hubo un error en los datos y no se guardo, intentalo de nuevo.');
 				}
 			}
 			if ($this->_relacionFisicaMoralModel->save($data)) {
-				return redirect()->to(base_url('/denuncia_litigantes/dashboard'))->with('message_success', 'Se ha enviado la solicitud de ligación.');
+				return redirect()->back()->with('message_success', 'Se ha enviado la solicitud de ligación.');
+				// return redirect()->to(base_url('/denuncia_litigantes/dashboard'))->with('message_success', 'Se ha enviado la solicitud de ligación.');
+
 			} else {
 				return redirect()->back()->with('message_error', 'Hubo un error en los datos y no se guardo, intentalo de nuevo.');
 			}
@@ -342,11 +361,17 @@ class DashboardController extends BaseController
 	{
 		$data = (object) array();
 		$data->ligaciones = $this->_relacionFisicaMoralModelRead->asObject()
-			->select('RAZONSOCIAL,MARCACOMERCIAL,RFC,RELACIONAR,FECHAFINPODER,DENUNCIANTES.CORREO')
+			->select('RAZONSOCIAL,MARCACOMERCIAL,RFC,RELACIONAR,RELACIONFISICAMORAL.PERSONAMORALID,RELACIONFISICAMORAL.DENUNCIANTEID,FECHAFINPODER,DENUNCIANTES.CORREO')
 			->join('PERSONASMORALES', 'PERSONASMORALES.PERSONAMORALID = RELACIONFISICAMORAL.PERSONAMORALID')
 			->join('DENUNCIANTES', 'DENUNCIANTES.DENUNCIANTEID = RELACIONFISICAMORAL.DENUNCIANTEID')
 			->where('RELACIONFISICAMORAL.DENUNCIANTEID', session('DENUNCIANTEID'))
 			->findAll();
+		$data->empresas = $this->_personasMoralesRead->asObject()->findAll();
+		$data->estados = $this->_estadosModelRead->asObject()->findAll();
+		$data->giros = $this->_personaMoralGiroRead->asObject()->findAll();
+		$data->municipios = $this->_municipiosModelRead->asObject()->where('ESTADOID', '2')->findAll();
+		$data->lugares = $this->_hechoLugarModelRead->asObject()->orderBy('HECHODESCR', 'asc')->findAll();
+		$data->identificacion = $this->_documentosExtravioTipoModelRead->asObject()->orderBy('DOCUMENTOEXTRAVIOTIPODESCR', 'asc')->where('VISIBLE', '1')->findAll();
 		$this->_loadView('Mis ligaduras', $data, 'lista_ligaciones');
 	}
 	/**
@@ -1509,7 +1534,8 @@ class DashboardController extends BaseController
 	/**
 	 * Funcion para obtener el estatus del folio en el modulo de subir archivos de litigantes
 	 */
-	function getStatusFolio(){
+	function getStatusFolio()
+	{
 		$folio = $this->request->getGet('folio');
 		$year = $this->request->getGet('year');
 
@@ -1552,6 +1578,24 @@ class DashboardController extends BaseController
 		// var_dump($data);
 		// exit;
 		// $data = $this->_personasMoralesRead->asObject()->where('PERSONAMORALID', $personaMoralId)->first();
+		return json_encode((object)['data' => $data]);
+	}
+	/**
+	 * Funcion para obtener los datos de la relacion para poder actualizar
+	 */
+	public function getRelacionLitigantes()
+	{
+		$denuncianteId = $this->request->getPost('denuncianteid');
+		$personaMoralId = $this->request->getPost('personamoralid');
+		$data = $this->_relacionFisicaMoralModelRead->asObject()
+			->where('PERSONAMORALID', $personaMoralId)->where('DENUNCIANTEID', $denuncianteId)->first();
+		if ($data->PODERARCHIVO) {
+			$file_info = new \finfo(FILEINFO_MIME_TYPE);
+			$type = $file_info->buffer($data->PODERARCHIVO);
+			$data->PODERARCHIVO = 'data:' . $type . ';base64,' . base64_encode($data->PODERARCHIVO);
+		}
+		// 	var_dump($data);
+		// exit;
 		return json_encode((object)['data' => $data]);
 	}
 	/**

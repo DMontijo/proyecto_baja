@@ -9,10 +9,7 @@
         <label for="marca_comercial_pm" class="form-label font-weight-bold">Marca comercial</label>
         <input type="text" class="form-control" id="marca_comercial_pm" name="marca_comercial_pm">
     </div>
-    <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-        <label for="rfc_pm" class="form-label font-weight-bold">RFC</label>
-        <input type="text" class="form-control" id="rfc_pm" name="rfc_pm">
-    </div>
+
     <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
         <label for="estado_pm" class="form-label font-weight-bold">Estado</label>
         <select class="form-control" id="estado_pm" name="estado_pm">
@@ -76,12 +73,16 @@
         <label for="correo_pm" class="form-label font-weight-bold">Correo</label>
         <input type="email" class="form-control" id="correo_pm" name="correo_pm" maxlength="100">
     </div>
+    <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+        <label for="giro_pm" class="form-label font-weight-bold">Giro empresarial</label>
+        <select class="form-control" id="giro_pm" name="giro_pm">
+            <option selected value=""></option>
+            <?php foreach ($body_data->giros as $index => $giro) { ?>
+                <option value="<?= $giro->PERSONAMORALGIROID ?>"> <?= $giro->PERSONAMORALGIRODESCR ?> </option>
+            <?php } ?>
+        </select>
+    </div>
+    <div class="col-12 my-4 text-center">
+        <button type="submit" class="btn btn-primary font-weight-bold">ACTUALIZAR PERSONA MORAL</button>
+    </div>
 </form>
-<script>
-    var form = document.getElementById('persona_moral_form');
-
-    // Recorre todos los elementos del formulario y establece el atributo 'readonly'
-    for (var i = 0; i < form.elements.length; i++) {
-        form.elements[i].disabled = true;
-    }
-</script>

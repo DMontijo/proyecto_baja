@@ -314,6 +314,8 @@ $routes->group('data', function ($routes) {
 
 	$routes->post('update-preguntas-by-id', 'admin/DashboardController::updatePreguntasIniciales');
 	$routes->post('update-persona-fisica-by-id', 'admin/DashboardController::updatePersonaFisicaById');
+	$routes->post('update-persona-moral-by-id', 'admin/DashboardController::updatePersonaMoralById');
+
 	$routes->post('update-persona-fisica-domicilio-by-id', 'admin/DashboardController::updatePersonaFisicaDomicilioById');
 	$routes->post('update-media-filiacion-by-id', 'admin/DashboardController::updateMediaFiliacionById');
 	$routes->post('update-vehiculo-by-id', 'admin/DashboardController::updateVehiculoByFolio');
@@ -384,6 +386,8 @@ $routes->group('data', function ($routes) {
 	$routes->post('get-notificacion-by-empresa', 'litigantes/DashboardController::getNotificacionDireccion');
 	$routes->post('create-direccion-notificacion', 'litigantes/DashboardController::crear_direccion_notificacion');
 	$routes->get('getStatusFolio', 'litigantes/DashboardController::getStatusFolio');
+	$routes->post('getRelacionLitigantes', 'litigantes/DashboardController::getRelacionLitigantes');
+
 
 });
 

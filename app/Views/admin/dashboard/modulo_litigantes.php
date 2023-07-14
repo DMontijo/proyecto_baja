@@ -75,7 +75,7 @@
 		<div class="card rounded bg-white shadow" style="height: 215px;">
 			<div class="card-body">
 				<button id="folios-atendidos-btn" class="btn btn-primary btn-block h-50" role="button" data-toggle="modal" data-target="#folios_atendidos_modal"><i class="fas fa-file-alt"></i> FOLIOS DEL DENUNCIANTE</button>
-				<button id="enviar_alertas" title="Pulsa este botón en caso de emergencia o folios de suma importancia." class="btn btn-primary btn-block h-50	"><i class="fas fa-exclamation-triangle"></i> ALERTA</button>
+				<button id="enviar_alertas" title="Pulsa este botón en caso de emergencia o folios de suma importancia." class="btn btn-primary btn-block h-50  "><i class="fas fa-exclamation-triangle"></i> ALERTA</button>
 			</div>
 		</div>
 	</div>
@@ -186,8 +186,9 @@
 			`<button type='button'  class='btn btn-primary' onclick='viewPersonaMoral(${personas_morales.PERSONAMORALID})'><i class='fas fa-eye'></i></button>`
 
 		var fila =
-			`<td class="text-center">${personas_morales.RFC}</td>` +
-			`<td class="text-center">${personas_morales.MARCACOMERCIAL}</td>` +
+			`<tr id="row">` +
+			`<td class="text-center">${personas_morales.DENOMINACION}</td>` +
+			`<td class="text-center">${personas_morales.MARCACOMERCIAL ? personas_morales.MARCACOMERCIAL : ""}</td>` +
 			`<td class="text-center">${personas_morales.NOMBRE} ${personas_morales.APELLIDO_PATERNO} ${personas_morales.APELLIDO_MATERNO}</td>` +
 			`<td class="text-center">${btn}</td>` +
 			`</tr>`;
@@ -198,7 +199,7 @@
 		$("#adicionados").append(nFilas - 1);
 
 	}
-	//Funcion para iterar el llenado de tabla de los folios del mismo denunciante, recibe como parametros todos los folios		
+	//Funcion para iterar el llenado de tabla de los folios del mismo denunciante, recibe como parametros todos los folios    
 
 	function llenarTablaFolioDenunciantes(folioDenunciantes) {
 
@@ -266,7 +267,7 @@
 				let parentesco = response.parentesco;
 				let relacion_parentesco = response.parentescoRelacion;
 				let idPersonaFisica = response.idPersonaFisica;
-				// 	if (relacion_parentesco) {
+				//  if (relacion_parentesco) {
 				//Se asignan los valores del parentesco
 				document.querySelector('#parentesco_mf').value = parentesco.PERSONAPARENTESCOID ? parentesco
 					.PERSONAPARENTESCOID : '';
@@ -279,11 +280,11 @@
 
 				// } 
 				// if(relacion_parentesco == null) {
-				// 	document.querySelector('#parentesco_mf').value = '';
-				// 	document.querySelector('#personaFisica1').value = '';
-				// 	document.querySelector('#personaFisica2').value = idPersonaFisica ? idPersonaFisica : '';
-				// 	document.getElementById("insertParentesco").style.display="block";
-				// 	document.getElementById("updateParentesco").style.display="none";
+				//  document.querySelector('#parentesco_mf').value = '';
+				//  document.querySelector('#personaFisica1').value = '';
+				//  document.querySelector('#personaFisica2').value = idPersonaFisica ? idPersonaFisica : '';
+				//  document.getElementById("insertParentesco").style.display="block";
+				//  document.getElementById("updateParentesco").style.display="none";
 
 				// }
 				$('#relacion_parentesco_modal').modal('show');
@@ -1104,11 +1105,11 @@
 					document.querySelector('#autorizaFoto').value = folio.LOCALIZACIONPERSONAMEDIOS == 'S' ?
 						'S' : 'N';
 					// if (folio.HECHODELITO == "ROBO DE VEHÍCULO") {
-					// 	$('#v-pills-vehiculos-tab').css('display', 'block');
+					//  $('#v-pills-vehiculos-tab').css('display', 'block');
 					// } else {
-					// 	$('#v-pills-vehiculos-tab').css('display', 'NONE');
+					//  $('#v-pills-vehiculos-tab').css('display', 'NONE');
 					// }
-					//PERSONAS	
+					//PERSONAS  
 					if (personas)
 						llenarTablaPersonas(personas);
 					//PERSONAS MORALES
@@ -1515,21 +1516,21 @@
 	//Evento al buscar nuevo folio
 	buscar_nuevo_btn.addEventListener('click', () => {
 		// data = {
-		// 	'folio': inputFolio.value,
-		// 	'year': year_select.value,
+		//  'folio': inputFolio.value,
+		//  'year': year_select.value,
 		// }
 		// $.ajax({
-		// 	data: data,
-		// 	url: "<?= base_url('/data/restore-folio') ?>",
-		// 	method: "POST",
-		// 	dataType: "json",
+		//  data: data,
+		//  url: "<?= base_url('/data/restore-folio') ?>",
+		//  method: "POST",
+		//  dataType: "json",
 
 		// }).done(function(data) {}).fail(function(jqXHR, textStatus) {
-		// 	Swal.fire({
-		// 		icon: 'error',
-		// 		text: 'El folio quedó en proceso, comunicate con soporte técnico para devolver el estado a abierto.',
-		// 		confirmButtonColor: '#bf9b55',
-		// 	});
+		//  Swal.fire({
+		//    icon: 'error',
+		//    text: 'El folio quedó en proceso, comunicate con soporte técnico para devolver el estado a abierto.',
+		//    confirmButtonColor: '#bf9b55',
+		//  });
 		// });
 		Swal.fire({
 			icon: 'warning',
@@ -1582,9 +1583,9 @@
 						llenarTablaDocumentos(documentos);
 
 						// Swal.fire({
-						// 	icon: 'success',
-						// 	text: 'Encargado asignado correctamente',
-						// 	confirmButtonColor: '#bf9b55',
+						//  icon: 'success',
+						//  text: 'Encargado asignado correctamente',
+						//  confirmButtonColor: '#bf9b55',
 						// });
 						$('#encargadosModal').modal('hide');
 					}
@@ -2234,20 +2235,20 @@
 					//PARENTESCO
 
 					// if (relacion_parentesco) {
-					// 	document.querySelector('#parentesco_mf').value = parentesco.PERSONAPARENTESCOID ? parentesco.PERSONAPARENTESCOID : '';
-					// 	document.querySelector('#personaFisica1').value = relacion_parentesco.PERSONAFISICAID1 ? relacion_parentesco.PERSONAFISICAID1 : '';
-					// 	document.querySelector('#personaFisica2').value = idPersonaFisica ? idPersonaFisica : '';
-					// 	document.getElementById("updateParentesco").style.display="block";
-					// 	document.getElementById("insertParentesco").style.display="none";
+					//  document.querySelector('#parentesco_mf').value = parentesco.PERSONAPARENTESCOID ? parentesco.PERSONAPARENTESCOID : '';
+					//  document.querySelector('#personaFisica1').value = relacion_parentesco.PERSONAFISICAID1 ? relacion_parentesco.PERSONAFISICAID1 : '';
+					//  document.querySelector('#personaFisica2').value = idPersonaFisica ? idPersonaFisica : '';
+					//  document.getElementById("updateParentesco").style.display="block";
+					//  document.getElementById("insertParentesco").style.display="none";
 
 
 					// } 
 					// if(relacion_parentesco == null) {
-					// 	document.querySelector('#parentesco_mf').value = '';
-					// 	document.querySelector('#personaFisica1').value = '';
-					// 	document.querySelector('#personaFisica2').value = idPersonaFisica ? idPersonaFisica : '';
-					// 	document.getElementById("insertParentesco").style.display="block";
-					// 	document.getElementById("updateParentesco").style.display="none";
+					//  document.querySelector('#parentesco_mf').value = '';
+					//  document.querySelector('#personaFisica1').value = '';
+					//  document.querySelector('#personaFisica2').value = idPersonaFisica ? idPersonaFisica : '';
+					//  document.getElementById("insertParentesco").style.display="block";
+					//  document.getElementById("updateParentesco").style.display="none";
 
 					// }
 
@@ -2407,6 +2408,7 @@
 				if (response.status == 1) {
 					let personaMoral = response.personaMoral;
 					let notificacion = response.personaMoralNotificacion;
+					let foliopersonaMoral = response.foliopersonaMoral;
 
 					let folio = response.folio;
 					let poder = response.relacionMoralFisica;
@@ -2414,29 +2416,29 @@
 					document.querySelectorAll('#pm_id').forEach(element => {
 						element.value = id;
 					});
-					document.querySelector('#razon_social_pm').value = personaMoral.RAZONSOCIAL ? personaMoral.RAZONSOCIAL : 'hsh';
-					document.querySelector('#marca_comercial_pm').value = personaMoral.MARCACOMERCIAL ? personaMoral
+					document.querySelector('#razon_social_pm').value = foliopersonaMoral.DENOMINACION ? foliopersonaMoral.DENOMINACION : '';
+					document.querySelector('#marca_comercial_pm').value = foliopersonaMoral.MARCACOMERCIAL ? foliopersonaMoral
 						.MARCACOMERCIAL : '';
-					document.querySelector('#rfc_pm').value = personaMoral.RFC ? personaMoral
-						.RFC : '';
-					document.querySelector('#calle_pm').value = personaMoral.CALLE ? personaMoral
-						.CALLE : '';
-					document.querySelector('#n_exterior_pm').value = personaMoral.NUMERO ? personaMoral
-						.NUMERO : '';
-					document.querySelector('#n_interior_pm').value = personaMoral.NUMEROINTERIOR ? personaMoral
-						.NUMEROINTERIOR : '';
-					document.querySelector('#referencia_pm').value = personaMoral.REFERENCIA ? personaMoral
-						.REFERENCIA : '';
-					document.querySelector('#telefono_pm').value = personaMoral.TELEFONO ? personaMoral
-						.TELEFONO : '';
-					document.querySelector('#correo_pm').value = personaMoral.CORREO ? personaMoral
-						.CORREO : '';
 
-					document.querySelector('#estado_pm').value = personaMoral.ESTADOID ? personaMoral
+					document.querySelector('#calle_pm').value = foliopersonaMoral.CALLE ? foliopersonaMoral
+						.CALLE : '';
+					document.querySelector('#n_exterior_pm').value = foliopersonaMoral.NUMERO ? foliopersonaMoral
+						.NUMERO : '';
+					document.querySelector('#n_interior_pm').value = foliopersonaMoral.NUMEROINTERIOR ? foliopersonaMoral
+						.NUMEROINTERIOR : '';
+					document.querySelector('#referencia_pm').value = foliopersonaMoral.REFERENCIA ? foliopersonaMoral
+						.REFERENCIA : '';
+					document.querySelector('#telefono_pm').value = foliopersonaMoral.TELEFONO ? foliopersonaMoral
+						.TELEFONO : '';
+					document.querySelector('#correo_pm').value = foliopersonaMoral.CORREO ? foliopersonaMoral
+						.CORREO : '';
+					document.querySelector('#giro_pm').value = foliopersonaMoral.PERSONAMORALGIROID ? foliopersonaMoral.PERSONAMORALGIROID : '';
+
+					document.querySelector('#estado_pm').value = foliopersonaMoral.ESTADOID ? foliopersonaMoral
 						.ESTADOID : '';
-					if (personaMoral.ESTADOID && personaMoral.MUNICIPIOID) {
+					if (foliopersonaMoral.ESTADOID && foliopersonaMoral.MUNICIPIOID) {
 						let data = {
-							'estado_id': personaMoral.ESTADOID
+							'estado_id': foliopersonaMoral.ESTADOID
 						};
 						$.ajax({
 							data: data,
@@ -2451,18 +2453,18 @@
 									option.value = municipio.MUNICIPIOID;
 									document.querySelector('#municipio_pm').add(option);
 								});
-								document.querySelector('#municipio_pm').value = personaMoral
-									.MUNICIPIOID ? personaMoral.MUNICIPIOID : '';
+								document.querySelector('#municipio_pm').value = foliopersonaMoral
+									.MUNICIPIOID ? foliopersonaMoral.MUNICIPIOID : '';
 							},
 							error: function(jqXHR, textStatus, errorThrown) {}
 						});
 					} else {
 						document.querySelector('#municipio_pm').value = '';
 					}
-					if (personaMoral.ESTADOID && personaMoral.MUNICIPIOID && personaMoral.LOCALIDADID) {
+					if (foliopersonaMoral.ESTADOID && foliopersonaMoral.MUNICIPIOID && foliopersonaMoral.LOCALIDADID) {
 						let data = {
-							'estado_id': personaMoral.ESTADOID,
-							'municipio_id': personaMoral.MUNICIPIOID
+							'estado_id': foliopersonaMoral.ESTADOID,
+							'municipio_id': foliopersonaMoral.MUNICIPIOID
 						};
 
 						$.ajax({
@@ -2481,21 +2483,21 @@
 									select_localidad.add(option);
 								});
 
-								select_localidad.value = personaMoral.LOCALIDADID;
+								select_localidad.value = foliopersonaMoral.LOCALIDADID;
 							},
 							error: function(jqXHR, textStatus, errorThrown) {}
 						});
 					} else {
 						document.querySelector('#localidad_pm').value = '';
 					}
-					if (personaMoral.ESTADOID && personaMoral.MUNICIPIOID && personaMoral.LOCALIDADID && personaMoral
+					if (foliopersonaMoral.ESTADOID && foliopersonaMoral.MUNICIPIOID && foliopersonaMoral.LOCALIDADID && foliopersonaMoral
 						.COLONIAID) {
 						document.querySelector('#colonia_pfd').classList.add('d-none');
 						document.querySelector('#colonia_pfd_select').classList.remove('d-none');
 						let data = {
-							'estado_id': personaMoral.ESTADOID,
-							'municipio_id': personaMoral.MUNICIPIOID,
-							'localidad_id': personaMoral.LOCALIDADID
+							'estado_id': foliopersonaMoral.ESTADOID,
+							'municipio_id': foliopersonaMoral.MUNICIPIOID,
+							'localidad_id': foliopersonaMoral.LOCALIDADID
 						};
 						$.ajax({
 							data: data,
@@ -2517,7 +2519,7 @@
 								option.text = 'OTRO';
 								option.value = '0';
 								select_colonia.add(option);
-								select_colonia.value = personaMoral.COLONIAID;
+								select_colonia.value = foliopersonaMoral.COLONIAID;
 
 								input_colonia.value = '-';
 							},
@@ -2531,7 +2533,7 @@
 						option.value = '0';
 						document.querySelector('#colonia_pm_select').add(option);
 						document.querySelector('#colonia_pm_select').value = '0';
-						document.querySelector('#colonia_pm').value = personaMoral.COLONIADESCR ? personaMoral
+						document.querySelector('#colonia_pm').value = foliopersonaMoral.COLONIADESCR ? foliopersonaMoral
 							.COLONIADESCR : '';
 					}
 
@@ -2670,7 +2672,7 @@
 						document.querySelector('#moral_poder_download').setAttribute('href', poder
 							.PODERARCHIVO);
 						document.querySelector('#moral_poder_download').setAttribute('download',
-							personaMoral.RAZONSOCIAL + '_' + personaMoral.RFC + '.' + extension);
+							foliopersonaMoral.RAZONSOCIAL + '_' + foliopersonaMoral.RFC + '.' + extension);
 						document.querySelector('#contenedor_moral_poder').classList.remove('d-none');
 					} else {
 						document.querySelector('#moral_poder').setAttribute('src', '');
@@ -3323,7 +3325,7 @@
 				$('#agregar_vehiculos').modal('show');
 			}, false);
 			// btn_delito_imputado.addEventListener('click', (event) => {
-			// 	$('#insert_asignar_delitos_cometidos_modal').modal('show');
+			//  $('#insert_asignar_delitos_cometidos_modal').modal('show');
 			// }, false);
 
 			form_parentesco_insert.addEventListener('submit', (event) => {
@@ -3835,16 +3837,16 @@
 				}
 			}, false);
 			// form_fisimpdelito.addEventListener('submit', (event) => {
-			// 	if (!form_fisimpdelito.checkValidity()) {
-			// 		event.preventDefault();
-			// 		event.stopPropagation();
-			// 		form_fisimpdelito.classList.add('was-validated')
-			// 	} else {
-			// 		event.preventDefault();
-			// 		event.stopPropagation();
-			// 		form_fisimpdelito.classList.remove('was-validated')
-			// 		insertar_impdelito();
-			// 	}
+			//  if (!form_fisimpdelito.checkValidity()) {
+			//    event.preventDefault();
+			//    event.stopPropagation();
+			//    form_fisimpdelito.classList.add('was-validated')
+			//  } else {
+			//    event.preventDefault();
+			//    event.stopPropagation();
+			//    form_fisimpdelito.classList.remove('was-validated')
+			//    insertar_impdelito();
+			//  }
 			// }, false);
 
 
@@ -4561,36 +4563,36 @@
 				packetData.append("edoc_pf", document.querySelector('#edoc_pf').value);
 
 				// const data = {
-				// 	'folio': document.querySelector('#input_folio_atencion_lit').value,
-				// 	'year': document.querySelector('#year_select_lit').value,
-				// 	'pf_id': document.querySelector('#pf_id').value,
-				// 	'tipo_identificacion_pf': document.querySelector('#tipo_identificacion_pf').value,
-				// 	'numero_identidad_pf': document.querySelector('#numero_identidad_pf').value,
-				// 	'nombre_pf': document.querySelector('#nombre_pf').value,
-				// 	'apellido_paterno_pf': document.querySelector('#apellido_paterno_pf').value,
-				// 	'apellido_materno_pf': document.querySelector('#apellido_materno_pf').value,
-				// 	'nacionalidad_pf': document.querySelector('#nacionalidad_pf').value,
-				// 	'idioma_pf': document.querySelector('#idioma_pf').value,
-				// 	'edoorigen_pf': document.querySelector('#edoorigen_pf').value,
-				// 	'munorigen_pf': document.querySelector('#munorigen_pf').value,
-				// 	'telefono_pf': document.querySelector('#telefono_pf').value,
-				// 	'codigo_pais_pf': document.querySelector('#codigo_pais_pf').value,
-				// 	'telefono_pf_2': document.querySelector('#telefono_pf_2').value,
-				// 	'codigo_pais_pf_2': document.querySelector('#codigo_pais_pf_2').value,
-				// 	'correo_pf': document.querySelector('#correo_pf').value,
-				// 	'fecha_nacimiento_pf': document.querySelector('#fecha_nacimiento_pf').value,
-				// 	'edad_pf': document.querySelector('#edad_pf').value,
-				// 	'edoc_pf': document.querySelector('#edoc_pf').value,
-				// 	'sexo_pf': document.querySelector('#sexo_pf').value,
-				// 	'ocupacion_pf': document.querySelector('#ocupacion_pf').value,
-				// 	'escolaridad_pf': document.querySelector('#escolaridad_pf').value,
-				// 	'descripcionFisica_pf': document.querySelector('#descripcionFisica_pf').value,
-				// 	'calidad_juridica_pf': document.querySelector('#calidad_juridica_pf').value,
-				// 	'apodo_pf': document.querySelector('#apodo_pf').value,
-				// 	'denunciante_pf': document.querySelector('#denunciante_pf').value,
-				// 	'facebook_pf': document.querySelector('#facebook_pf').value,
-				// 	'instagram_pf': document.querySelector('#instagram_pf').value,
-				// 	'twitter_pf': document.querySelector('#twitter_pf').value,
+				//  'folio': document.querySelector('#input_folio_atencion_lit').value,
+				//  'year': document.querySelector('#year_select_lit').value,
+				//  'pf_id': document.querySelector('#pf_id').value,
+				//  'tipo_identificacion_pf': document.querySelector('#tipo_identificacion_pf').value,
+				//  'numero_identidad_pf': document.querySelector('#numero_identidad_pf').value,
+				//  'nombre_pf': document.querySelector('#nombre_pf').value,
+				//  'apellido_paterno_pf': document.querySelector('#apellido_paterno_pf').value,
+				//  'apellido_materno_pf': document.querySelector('#apellido_materno_pf').value,
+				//  'nacionalidad_pf': document.querySelector('#nacionalidad_pf').value,
+				//  'idioma_pf': document.querySelector('#idioma_pf').value,
+				//  'edoorigen_pf': document.querySelector('#edoorigen_pf').value,
+				//  'munorigen_pf': document.querySelector('#munorigen_pf').value,
+				//  'telefono_pf': document.querySelector('#telefono_pf').value,
+				//  'codigo_pais_pf': document.querySelector('#codigo_pais_pf').value,
+				//  'telefono_pf_2': document.querySelector('#telefono_pf_2').value,
+				//  'codigo_pais_pf_2': document.querySelector('#codigo_pais_pf_2').value,
+				//  'correo_pf': document.querySelector('#correo_pf').value,
+				//  'fecha_nacimiento_pf': document.querySelector('#fecha_nacimiento_pf').value,
+				//  'edad_pf': document.querySelector('#edad_pf').value,
+				//  'edoc_pf': document.querySelector('#edoc_pf').value,
+				//  'sexo_pf': document.querySelector('#sexo_pf').value,
+				//  'ocupacion_pf': document.querySelector('#ocupacion_pf').value,
+				//  'escolaridad_pf': document.querySelector('#escolaridad_pf').value,
+				//  'descripcionFisica_pf': document.querySelector('#descripcionFisica_pf').value,
+				//  'calidad_juridica_pf': document.querySelector('#calidad_juridica_pf').value,
+				//  'apodo_pf': document.querySelector('#apodo_pf').value,
+				//  'denunciante_pf': document.querySelector('#denunciante_pf').value,
+				//  'facebook_pf': document.querySelector('#facebook_pf').value,
+				//  'instagram_pf': document.querySelector('#instagram_pf').value,
+				//  'twitter_pf': document.querySelector('#twitter_pf').value,
 				// };
 
 				$.ajax({
@@ -4775,10 +4777,10 @@
 							// let select_propietario_update = document.querySelector("#propietario_update");
 							// select_propietario_update.add(option_vacio, null);
 							// personas.forEach(persona => {
-							// 	const option = document.createElement('option');
-							// 	option.value = persona.PERSONAFISICAID;
-							// 	option.text = persona.NOMBRE + ' ' + persona.PRIMERAPELLIDO;
-							// 	select_propietario_update.add(option, null);
+							//  const option = document.createElement('option');
+							//  option.value = persona.PERSONAFISICAID;
+							//  option.text = persona.NOMBRE + ' ' + persona.PRIMERAPELLIDO;
+							//  select_propietario_update.add(option, null);
 							// });
 						} else {
 							Swal.fire({
@@ -5112,6 +5114,197 @@
 							document.getElementById('lblInterior_pfd').innerHTML = "Número interior";
 							document.querySelector('#checkML_pfd').value = "off";
 							$('#folio_persona_fisica_modal').modal('hide');
+
+						} else {
+							Swal.fire({
+								icon: 'error',
+								text: 'No se actualizó el domicilio',
+								confirmButtonColor: '#bf9b55',
+							});
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						Swal.fire({
+							icon: 'error',
+							text: 'No se actualizó el domicilio',
+							confirmButtonColor: '#bf9b55',
+						});
+					}
+				});
+			}
+			//Fujcion para actualizar el folio persona moral
+			function actualizarPersonaMoral() {
+				const data = {
+					'folio': document.querySelector('#input_folio_atencion_lit').value,
+					'year': document.querySelector('#year_select_lit').value,
+					'pm_id': document.querySelector('#pm_id').value,
+					'razon_social_pm': document.querySelector('#razon_social_pm').value,
+					'marca_comercial_pm': document.querySelector('#marca_comercial_pm').value,
+					'estado_pm': document.querySelector('#estado_pm').value,
+					'municipio_pm': document.querySelector('#municipio_pm').value,
+					'localidad_pm': document.querySelector('#localidad_pm').value,
+					'colonia_pm_select': document.querySelector('#colonia_pm_select').value,
+					'colonia_pm': document.querySelector('#colonia_pm').value,
+					'calle_pm': document.querySelector('#calle_pm').value,
+					'n_exterior_pm': document.querySelector('#n_exterior_pm').value,
+					'n_interior_pm': document.querySelector('#n_interior_pm').value,
+					'referencia_pm': document.querySelector('#referencia_pm').value,
+					'telefono_pm': document.querySelector('#telefono_pm').value,
+					'correo_pm': document.querySelector('#correo_pm').value,
+					'giro_pm': document.querySelector('#giro_pm').value,
+
+
+				};
+
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/update-persona-moral-by-id') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						console.log(response);
+						const personas = response.personas;
+						const imputados = response.imputados;
+						const victimas = response.victimas;
+						let relacionFisFis = response.relacionFisFis;
+						let fisicaImpDelito = response.fisicaImpDelito;
+						const personasPropietarios = response.personasPropietarios;
+						const personas_morales = response.personas_morales;
+
+						if (response.status == 1) {
+							//Llena tabla de personas e itera los selects donde se usen la informacion de las personas morales
+							let tabla_personas_morales = document.querySelectorAll('#table-morales tr');
+							tabla_personas_morales.forEach(row => {
+								if (row.id !== '') {
+									row.remove();
+								}
+							});
+							llenarTablaPersonasMorales(response.personas_morales);
+							$('#personaFisica1_I').empty();
+							let select_personaFisica1_I = document.querySelector("#personaFisica1_I")
+							const option_vacio = document.createElement('option');
+							option_vacio.value = '';
+							option_vacio.text = 'Selecciona ...';
+							option_vacio.disabled = true;
+							option_vacio.selected = true;
+							select_personaFisica1_I.add(option_vacio, null);
+							personas.forEach(persona => {
+								let primer_apellido = persona.PRIMERAPELLIDO ? persona
+									.PRIMERAPELLIDO : '';
+
+								const option = document.createElement('option');
+								option.value = persona.PERSONAFISICAID;
+								option.text = persona.NOMBRE + ' ' + primer_apellido;
+								select_personaFisica1_I.add(option, null);
+							});
+
+							$('#personaFisica1').empty();
+							let select_personaFisica1 = document.querySelector("#personaFisica1")
+							const option_vacio_p = document.createElement('option');
+							option_vacio_p.value = '';
+							option_vacio_p.text = 'Selecciona ...';
+							option_vacio_p.disabled = true;
+							option_vacio_p.selected = true;
+							select_personaFisica1.add(option_vacio_p, null);
+							personas.forEach(persona => {
+								let primer_apellido = persona.PRIMERAPELLIDO ? persona
+									.PRIMERAPELLIDO : '';
+
+								const option = document.createElement('option');
+								option.value = persona.PERSONAFISICAID;
+								option.text = persona.NOMBRE + ' ' + primer_apellido;
+								select_personaFisica1.add(option, null);
+							});
+							$('#personaFisica2').empty();
+							let select_personaFisica2 = document.querySelector("#personaFisica2")
+							const option_vacio_pe2 = document.createElement('option');
+							option_vacio_pe2.value = '';
+							option_vacio_pe2.text = 'Selecciona ...';
+							option_vacio_pe2.disabled = true;
+							option_vacio_pe2.selected = true;
+							select_personaFisica2.add(option_vacio_pe2, null);
+							personas.forEach(persona => {
+								let primer_apellido = persona.PRIMERAPELLIDO ? persona
+									.PRIMERAPELLIDO : '';
+
+								const option = document.createElement('option');
+								option.value = persona.PERSONAFISICAID;
+								option.text = persona.NOMBRE + ' ' + primer_apellido;
+								select_personaFisica2.add(option, null);
+							});
+							$('#propietario').empty();
+							let select_propietario = document.querySelector("#propietario");
+							select_propietario.add(option_vacio, null);
+							personasPropietarios.forEach(persona => {
+								let primer_apellido = persona.PRIMERAPELLIDO ? persona
+									.PRIMERAPELLIDO : '';
+
+								const option = document.createElement('option');
+								option.value = persona.PERSONAFISICAID ? persona.PERSONAFISICAID : persona.PERSONAMORALID + ' MORAL';
+								option.text = persona.NOMBRE ? persona.NOMBRE + ' ' + primer_apellido : persona.DENOMINACION;
+								select_propietario.add(option, null);
+							});
+
+							$('#propietario_vehiculo').empty();
+							let select_propietario_v = document.querySelector("#propietario_vehiculo");
+							select_propietario_v.add(option_vacio, null);
+							personasPropietarios.forEach(persona => {
+								let primer_apellido = persona.PRIMERAPELLIDO ? persona
+									.PRIMERAPELLIDO : '';
+
+								const option = document.createElement('option');
+								option.value = persona.PERSONAFISICAID ? persona.PERSONAFISICAID : persona.PERSONAMORALID + ' MORAL';
+								option.text = persona.NOMBRE ? persona.NOMBRE + ' ' + primer_apellido : persona.DENOMINACION;
+								select_propietario_v.add(option, null);
+							});
+
+
+							$('#propietario_vehiculo_add').empty();
+							let select_propietario_v_add = document.querySelector("#propietario_vehiculo_add");
+							select_propietario_v_add.add(option_vacio, null);
+							personasPropietarios.forEach(persona => {
+								let primer_apellido = persona.PRIMERAPELLIDO ? persona
+									.PRIMERAPELLIDO : '';
+
+								const option = document.createElement('option');
+								option.value = persona.PERSONAFISICAID ? persona.PERSONAFISICAID : persona.PERSONAMORALID + ' MORAL';
+								option.text = persona.NOMBRE ? persona.NOMBRE + ' ' + primer_apellido : persona.DENOMINACION;
+								select_propietario_v_add.add(option, null);
+							});
+							$('#imputado_arbol').empty();
+							let select_imputado_mputado = document.querySelector("#imputado_arbol");
+							select_imputado_mputado.add(option_vacio, null);
+							imputados.forEach(imputado => {
+								let primer_apellido = imputado.PRIMERAPELLIDO ? imputado
+									.PRIMERAPELLIDO : '';
+
+								const option = document.createElement('option');
+								option.value = imputado.PERSONAFISICAID;
+								option.text = imputado.NOMBRE + ' ' + primer_apellido;
+								select_imputado_mputado.add(option, null);
+
+							});
+
+							$('#victima_ofendido').empty();
+							let select_victima_ofendido = document.querySelector("#victima_ofendido");
+							select_victima_ofendido.add(option_vacio, null);
+							victimas.forEach(victima => {
+								let primer_apellido = victima.PRIMERAPELLIDO ? victima
+									.PRIMERAPELLIDO : '';
+
+								const option = document.createElement('option');
+								option.value = victima.PERSONAFISICAID ? victima.PERSONAFISICAID : victima.PERSONAMORALID + ' MORAL';
+								option.text = victima.NOMBRE ? victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PFCJDESCR : victima.DENOMINACION + ' | ' + victima.PMCJDESCR;
+								select_victima_ofendido.add(option, null);
+							});
+
+
+							Swal.fire({
+								icon: 'success',
+								text: 'Persona moral actualizada correctamente',
+								confirmButtonColor: '#bf9b55',
+							});
+							$('#folio_persona_moral_modal').modal('hide');
 
 						} else {
 							Swal.fire({
@@ -5839,10 +6032,10 @@
 							// $('#delito_cometido').empty();
 							// let select_delitos_imputado = document.querySelector("#delito_cometido")
 							// delitosModalidadFiltro.forEach(modalidad => {
-							// 	const option = document.createElement('option');
-							// 	option.value = modalidad.DELITOMODALIDADID;
-							// 	option.text = modalidad.DELITOMODALIDADDESCR;
-							// 	select_delitos_imputado.add(option, null);
+							//  const option = document.createElement('option');
+							//  option.value = modalidad.DELITOMODALIDADID;
+							//  option.text = modalidad.DELITOMODALIDADDESCR;
+							//  select_delitos_imputado.add(option, null);
 
 							// });
 							$('#victima_ofendido').empty();
@@ -5979,7 +6172,7 @@
 							$('#propietario_update').empty();
 							let select_propietario_update = document.querySelector(
 								"#propietario_update");
-								personasPropietarios.forEach(persona => {
+							personasPropietarios.forEach(persona => {
 								let primer_apellido = persona.PRIMERAPELLIDO ? persona
 									.PRIMERAPELLIDO : '';
 
@@ -5999,18 +6192,18 @@
 							viewPersonaFisica(response.ultimoRegistro.PERSONAFISICAID);
 							// form_media_filiacion_insert.addEventListener('submit', (event) => {
 
-							// 	if (!form_media_filiacion_insert.checkValidity()) {
-							// 		event.preventDefault();
-							// 		event.stopPropagation();
-							// 		form_media_filiacion_insert.classList.add('was-validated')
-							// 	} else {
-							// 		event.preventDefault();
-							// 		event.stopPropagation();
-							// 		form_media_filiacion_insert.classList.remove('was-validated')
+							//  if (!form_media_filiacion_insert.checkValidity()) {
+							//    event.preventDefault();
+							//    event.stopPropagation();
+							//    form_media_filiacion_insert.classList.add('was-validated')
+							//  } else {
+							//    event.preventDefault();
+							//    event.stopPropagation();
+							//    form_media_filiacion_insert.classList.remove('was-validated')
 
-							// 		// console.log(response.ultimoRegistro.PERSONAFISICAID);
-							// 		actualizarPersonaMediaAfiliacion(response.ultimoRegistro.PERSONAFISICAID);
-							// 	}
+							//    // console.log(response.ultimoRegistro.PERSONAFISICAID);
+							//    actualizarPersonaMediaAfiliacion(response.ultimoRegistro.PERSONAFISICAID);
+							//  }
 
 							// }, false);
 						} else {
@@ -6131,10 +6324,10 @@
 							// $('#delito_cometido').empty();
 							// let select_delitos_imputado = document.querySelector("#delito_cometido")
 							// delitosModalidadFiltro.forEach(modalidad => {
-							// 	const option = document.createElement('option');
-							// 	option.value = modalidad.DELITOMODALIDADID;
-							// 	option.text = modalidad.DELITOMODALIDADDESCR;
-							// 	select_delitos_imputado.add(option, null);
+							//  const option = document.createElement('option');
+							//  option.value = modalidad.DELITOMODALIDADID;
+							//  option.text = modalidad.DELITOMODALIDADDESCR;
+							//  select_delitos_imputado.add(option, null);
 
 							// });
 

@@ -22,6 +22,7 @@ class RelacionFisicaMoralModel extends Model
 		'FECHAINICIOPODER',
 		'FECHAFINPODER',
 		'CARGO',
+		'DESCRIPCIONCARGO',
 		'FECHAREGISTRO',
 		'FECHAACTUALIZACION'
 	];

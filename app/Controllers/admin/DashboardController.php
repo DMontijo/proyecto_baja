@@ -1871,11 +1871,12 @@ class DashboardController extends BaseController
 		$data->documentos = $this->_folioDocModelRead->get_by_folio($numfolio, $year);
 		$data->archivosexternos = $this->_archivoExternoModelRead->asObject()->where('FOLIOID', $numfolio)->where('ANO', $year)->findAll();
 		$data->personas_morales = $this->_folioPersonaMoralModelRead->asObject()
-			->select('PERSONASMORALES.PERSONAMORALID, PERSONASMORALES.RFC, PERSONASMORALES.RAZONSOCIAL, PERSONASMORALES.MARCACOMERCIAL,
-		FOLIOPERSONAMORAL.FOLIOID,FOLIOPERSONAMORAL.ANO, FOLIOPERSONAMORAL.PERSONAMORALID,FOLIOPERSONAMORAL.NOTIFICACIONID,
+			->select(
+		// 'PERSONASMORALES.PERSONAMORALID, PERSONASMORALES.RFC, PERSONASMORALES.RAZONSOCIAL, PERSONASMORALES.MARCACOMERCIAL,
+		'FOLIOPERSONAMORAL.FOLIOID,FOLIOPERSONAMORAL.ANO, FOLIOPERSONAMORAL.PERSONAMORALID,FOLIOPERSONAMORAL.NOTIFICACIONID, FOLIOPERSONAMORAL.DENOMINACION,FOLIOPERSONAMORAL.MARCACOMERCIAL,
 		FOLIO.DENUNCIANTEID, FOLIO.FOLIOID, FOLIO.ANO,
 		DENUNCIANTES.NOMBRE, DENUNCIANTES.APELLIDO_PATERNO, DENUNCIANTES.APELLIDO_MATERNO, DENUNCIANTES.DENUNCIANTEID')
-			->join('PERSONASMORALES', 'PERSONASMORALES.PERSONAMORALID = FOLIOPERSONAMORAL.PERSONAMORALID', 'LEFT')
+			// ->join('PERSONASMORALES', 'PERSONASMORALES.PERSONAMORALID = FOLIOPERSONAMORAL.PERSONAMORALID', 'LEFT')
 			->join('FOLIO', 'FOLIO.FOLIOID = FOLIOPERSONAMORAL.FOLIOID AND FOLIO.ANO = FOLIOPERSONAMORAL.ANO', 'LEFT')
 			->join('DENUNCIANTES', 'DENUNCIANTES.DENUNCIANTEID = FOLIO.DENUNCIANTEID', 'LEFT')
 
@@ -2754,6 +2755,8 @@ class DashboardController extends BaseController
 			->where('ACTIVO', 1)
 			->findAll();
 		$data->delitosModalidad = $this->_delitoModalidadModelRead->asObject()->orderBy('DELITOMODALIDADDESCR', 'ASC')->where('DELITOMODALIDADDESCR IS NOT NULL')->where('DELITOMODALIDADDESCR !=', '')->findAll();
+		$data->giros = $this->_personaMoralGiroRead->asObject()->findAll();
+
 		$this->_loadView('Modulo litigantes', 'modulo litigantes', '', $data, 'modulo_litigantes');
 	}
 
@@ -6489,6 +6492,79 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
+
+	/**
+	 * Función para actualizar las personas moral de acuerdo a su ID a través del metodo POST.
+	 * Devuelve todos los datos necesarios para la actualizacion de las tablas visuales.
+	 *
+	 */
+	public function updatePersonaMoralById()
+	{
+		try {
+			$id = $this->request->getPost('pm_id');
+			$folio = $this->request->getPost('folio');
+			$year = $this->request->getPost('year');
+		
+				$data = array(
+					'DENOMINACION' => $this->request->getPost('razon_social_pm'),
+					'MARCACOMERCIAL' => $this->request->getPost('marca_comercial_pm'),					
+					'ESTADOID' => $this->request->getPost('estado_pm'),
+					'MUNICIPIOID' => $this->request->getPost('municipio_pm'),
+					'LOCALIDADID' => $this->request->getPost('localidad_pm'),
+					'COLONIAID' => $this->request->getPost('colonia_pm_select'),
+					'COLONIADESCR' => $this->request->getPost('colonia_pm'),
+					'CALLE' => $this->request->getPost('calle_pm'),
+					'NUMERO' => $this->request->getPost('n_exterior_pm'),
+					'NUMEROINTERIOR' => $this->request->getPost('n_interior_pm'),
+					'REFERENCIA' => $this->request->getPost('referencia_pm'),
+					'TELEFONO' => $this->request->getPost('telefono_pm'),
+					'CORREO' => $this->request->getPost('correo_pm'),
+					'PERSONAMORALGIROID' => $this->request->getPost('giro_pm'),
+				);
+		
+
+			$update = $this->_folioPersonaMoralModel->set($data)->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAMORALID', $id)->update();
+
+			if ($update) {
+
+				$personas = $this->_folioPersonaFisicaModel->get_by_folio($folio, $year);
+				$imputados = $this->_folioPersonaFisicaModel->get_imputados($folio, $year);
+				$victimas = $this->_folioModelRead->get_victimas($folio, $year);
+
+				$parentescoRelacion = $this->_parentescoPersonaFisicaModel->getRelacion($folio, $year);
+				// $personaiduno = $this->_parentescoPersonaFisicaModel->get_personaFisicaUno($folio, $year);
+				// $personaidDos = $this->_parentescoPersonaFisicaModel->get_personaFisicaDos($folio, $year);
+				// $parentesco = $this->_parentescoPersonaFisicaModel->get_Parentesco($folio, $year);
+				$fisicaImpDelito = $this->_imputadoDelitoModel->get_by_folio($folio, $year);
+				$relacionFisFis = $this->_relacionIDOModel->get_by_folio($folio, $year);
+				$personasPropietarios = $this->_folioPersonaFisicaModelRead->get_by_personas_propietarios($folio, $year);
+				$personas_morales = $this->_folioPersonaMoralModelRead->asObject()
+				->select(
+			// 'PERSONASMORALES.PERSONAMORALID, PERSONASMORALES.RFC, PERSONASMORALES.RAZONSOCIAL, PERSONASMORALES.MARCACOMERCIAL,
+			'FOLIOPERSONAMORAL.FOLIOID,FOLIOPERSONAMORAL.ANO, FOLIOPERSONAMORAL.PERSONAMORALID,FOLIOPERSONAMORAL.NOTIFICACIONID, FOLIOPERSONAMORAL.DENOMINACION,FOLIOPERSONAMORAL.MARCACOMERCIAL,
+			FOLIO.DENUNCIANTEID, FOLIO.FOLIOID, FOLIO.ANO,
+			DENUNCIANTES.NOMBRE, DENUNCIANTES.APELLIDO_PATERNO, DENUNCIANTES.APELLIDO_MATERNO, DENUNCIANTES.DENUNCIANTEID')
+				// ->join('PERSONASMORALES', 'PERSONASMORALES.PERSONAMORALID = FOLIOPERSONAMORAL.PERSONAMORALID', 'LEFT')
+				->join('FOLIO', 'FOLIO.FOLIOID = FOLIOPERSONAMORAL.FOLIOID AND FOLIO.ANO = FOLIOPERSONAMORAL.ANO', 'LEFT')
+				->join('DENUNCIANTES', 'DENUNCIANTES.DENUNCIANTEID = FOLIO.DENUNCIANTEID', 'LEFT')
+	
+				->where('FOLIOPERSONAMORAL.FOLIOID', $folio)->where('FOLIOPERSONAMORAL.ANO', $year)->first();
+				$datosBitacora = [
+					'ACCION' => 'Ha actualizado a una persona fisica',
+					'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year . ' PERSONAFISICAID: ' . $id,
+				];
+
+				$this->_bitacoraActividad($datosBitacora);
+
+				return json_encode(['status' => 1, 'personas' => $personas, 'personasPropietarios' => $personasPropietarios, 'imputados' => $imputados, 'victimas' => $victimas, 'parentescoRelacion' => $parentescoRelacion,  'fisicaImpDelito' => $fisicaImpDelito, 'relacionFisFis' => $relacionFisFis,'personas_morales'=> $personas_morales]);
+			} else {
+				return json_encode(['status' => 0]);
+			}
+		} catch (\Exception $e) {
+			return json_encode(['status' => 0]);
+		}
+	}
+
 	/**
 	 * Función para actualizar el domicilio de las personas fisicas de acuerdo a su ID a través del metodo POST.
 	 * Devuelve todos los datos necesarios para la actualizacion de las tablas visuales.

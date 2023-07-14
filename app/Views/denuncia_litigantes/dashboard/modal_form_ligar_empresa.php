@@ -23,21 +23,21 @@
 
                     <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
                         <label for="poder_volumen" class="form-label fw-bold">Poder volumen:</label>
-                        <input class="form-control" id="poder_volumen" name="poder_volumen">
+                        <input type="text" class="form-control" id="poder_volumen" name="poder_volumen">
                         <div class="invalid-feedback">
                             Por favor, ingresa el volumen.
                         </div>
                     </div>
                     <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
                         <label for="poder_notario" class="form-label fw-bold">Número notario:</label>
-                        <input class="form-control" id="poder_notario" name="poder_notario">
+                        <input type="text" class="form-control" id="poder_notario" name="poder_notario">
                         <div class="invalid-feedback">
                             Por favor, ingresa el número notario.
                         </div>
                     </div>
                     <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
                         <label for="poder_no_poder" class="form-label fw-bold">Número de poder:</label>
-                        <input class="form-control" id="poder_no_poder" name="poder_no_poder">
+                        <input type="text" class="form-control" id="poder_no_poder" name="poder_no_poder">
                         <div class="invalid-feedback">
                             Por favor, ingresa el número poder.
                         </div>
@@ -54,6 +54,8 @@
                     <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
                         <label for="poder_archivo" class="form-label fw-bold input-required">Fotografía poder:</label>
                         <input type="file" class="form-control" id="poder_archivo" name="poder_archivo" required>
+                        <img id="poder_foto" class="img-fluid" src="" style="max-width:300px;">
+
                     </div>
                     <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
                         <label for="cargo" class="form-label fw-bold input-required">¿Cúal es tu cargo en la persona moral?</label>
@@ -66,6 +68,10 @@
                         <div class="invalid-feedback">
                             El tipo de identificación es obligatorio.
                         </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+                        <label for="descr_cargo" class="form-label fw-bold">Descripcion del cargo:</label>
+                        <input type="text" class="form-control" id="descr_cargo" name="descr_cargo">
                     </div>
                     <div class="col-12">
                         <hr>
@@ -89,6 +95,21 @@
     const placas_close_btn = document.querySelector('#placas_close_btn');
     const spinner_placas = document.querySelector('#form_ligar_empresa_btn #spinner');
     const btn_text_placas = document.querySelector('#form_ligar_empresa_btn #text');
+    var inputsText = document.querySelectorAll('input[type="text"]');
+
+    inputsText.forEach((input) => {
+        input.addEventListener('input', (event) => {
+            event.target.value = clearText(event.target.value).toUpperCase();
+        }, false)
+    });
+    //Elimina todos los caracteres especiales del texto
+    function clearText(text) {
+        return text
+            .normalize('NFD')
+            .replaceAll(/([^n\u0300-\u036f]|n(?!\u0303(?![\u0300-\u036f])))[\u0300-\u036f]+/gi, "$1")
+            .normalize()
+            .replaceAll('´', '');
+    }
 
     form_ligar_empresa.addEventListener('submit', function(event) {
         if (!form_ligar_empresa.checkValidity()) {
