@@ -145,7 +145,7 @@
 
 											<tr>
 												<td class="text-center">
-													<a href="<?= base_url('/admin/dashboard/ver_folio?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO ?>" class="btn btn-primary text-white btn-sm"><i class="fas fa-folder-open"></i> ABRIR</a>
+													<a href="<?= base_url('/admin/dashboard/ver_folio_litigante?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO ?>" class="btn btn-primary text-white btn-sm"><i class="fas fa-folder-open"></i> ABRIR</a>
 												</td>
 												<td class="text-center font-weight-bold"><?= $folio->FOLIOID ?></td>
 												<td class="text-center"><?= $folio->ANO ?></td>

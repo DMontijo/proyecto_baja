@@ -1117,7 +1117,6 @@
 					//VEHICULOS
 					if (vehiculos) llenarTablaVehiculos(vehiculos);
 					//PARENTESCO
-					console.log(relacion_parentesco);
 					if (relacion_parentesco) llenarTablaParentesco(relacion_parentesco);
 
 					//ARBOL DELICTUAL
@@ -1735,7 +1734,7 @@
 
 	//Funcion para abrir una ventana para visualizar un folio del mismo denunciante
 	function viewFoliosDenunciantes(folio, year) {
-		window.open(`<?= base_url('/admin/dashboard/ver_folio?folio=') ?>` + folio + '&year=' + year, '_blank');
+		window.open(`<?= base_url('/admin/dashboard/ver_folio_litigante?folio=') ?>` + folio + '&year=' + year, '_blank');
 	}
 
 	//Funcion para eliminar una persona fisica del folio, recibe por parametro el id de la persona fisica

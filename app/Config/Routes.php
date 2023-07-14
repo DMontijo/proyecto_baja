@@ -114,6 +114,8 @@ $routes->group('admin', function ($routes) {
 		$routes->post('buscar_folio_litigante', 'admin/FoliosEscritosController::getFilterFoliosLitigante');
 		$routes->post('ver_folio', 'admin/FoliosController::viewFolio');
 		$routes->get('ver_folio', 'admin/FoliosController::viewFolio');
+		$routes->post('ver_folio_litigante', 'admin/FoliosController::viewFolioLitigantes');
+		$routes->get('ver_folio_litigante', 'admin/FoliosController::viewFolioLitigantes');
 
 		$routes->get('constancias', 'admin/ConstanciasController::index');
 		$routes->post('firmar_constancia_extravio', 'admin/FirmaController::firmar_constancia_extravio');

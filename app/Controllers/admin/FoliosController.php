@@ -98,6 +98,7 @@ class FoliosController extends BaseController
 	private $_vehiculoVersionModelRead;
 	private $_vehiculoServicioModelRead;
 	private $_estadosExtranjerosRead;
+	private $_personaMoralGiroRead;
 	public function __construct()
 	{
 		//Conexion de lectura
@@ -193,7 +194,8 @@ class FoliosController extends BaseController
 		$this->_vehiculoVersionModelRead = model('VehiculoVersionModel', true, $this->db_read);
 		$this->_vehiculoServicioModelRead = model('VehiculoServicioModel', true, $this->db_read);
 		$this->_estadosExtranjerosRead = model('EstadoExtranjeroModel', true, $this->db_read);
-		
+		$this->_personaMoralGiroRead = model('PersonaMoralGiroModel', true, $this->db_read);
+
 	}
 	/* Vista de Bandeja de Folios
 	* Retorna las cantidades visualizadas al ingresar a bandeja de folios de acuerdo al ROL
@@ -672,6 +674,167 @@ class FoliosController extends BaseController
 
 		// var_dump($data);exit;
 		$this->_loadView('Video denuncia', 'videodenuncia', '', $data, 'ver_folio');
+	}
+		/**
+	 * Función cuando abren un expediente desde consulta de folios o para abrir los folios atendidos de ese denuniante desde VIDEODENUNCIA
+	 * Recibe por metodo POST el folio y año, o GET en casod e ser desde VIDEODENUNCIA.
+	 *
+	 */
+	public function viewFolioLitigantes()
+	{
+		if (!$this->permisos('LIGACIONES')) {
+			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
+		}
+
+		$data = (object) array();
+		if ($this->request->getPost('folio')) {
+			$data->folio = $this->request->getPost('folio');
+		} else {
+			$data->folio = $this->request->getGet('folio');
+		}
+		if ($this->request->getPost('ano')) {
+			$data->year = $this->request->getPost('year');
+		} else {
+			$data->year = $this->request->getGet('year');
+		}
+
+		// Catálogos
+		$data->delitosUsuarios = $this->_delitosUsuariosModelRead->asObject()->orderBy('DELITO', 'ASC')->findAll();
+		$lugares = $this->_hechoLugarModelRead->orderBy('HECHODESCR', 'ASC')->findAll();
+		$lugares_sin = [];
+		$lugares_fuego = [];
+		$lugares_blanca = [];
+		foreach ($lugares as $lugar) {
+			if (strpos($lugar['HECHODESCR'], 'ARMA DE FUEGO')) {
+				array_push($lugares_fuego, (object) $lugar);
+			}
+			if (strpos($lugar['HECHODESCR'], 'ARMA BLANCA')) {
+				array_push($lugares_blanca, (object) $lugar);
+			}
+			if (!strpos($lugar['HECHODESCR'], 'ARMA BLANCA') && !strpos($lugar['HECHODESCR'], 'ARMA DE FUEGO')) {
+				array_push($lugares_sin, (object) $lugar);
+			}
+		}
+		$data->lugares = [];
+		$data->lugares = (object) array_merge($lugares_sin, $lugares_blanca, $lugares_fuego);
+
+		$data->edoCiviles = $this->_estadoCivilModelRead->asObject()->findAll();
+		$data->nacionalidades = $this->_nacionalidadModelRead->asObject()->findAll();
+		$data->calidadJuridica = $this->_folioPersonaCalidadJuridicaRead->asObject()->findAll();
+		$data->idiomas = $this->_idiomaModelRead->asObject()->findAll();
+
+		$data->municipios = $this->_municipiosModelRead->asObject()->where('ESTADOID', 2)->findAll();
+
+		$data->paises = $this->_paisesModelRead->asObject()->findAll();
+		$data->estados = $this->_estadosModelRead->asObject()->findAll();
+		$data->tiposIdentificaciones = $this->_tipoIdentificacionModelRead->asObject()->findAll();
+		$data->escolaridades = $this->_escolaridadModelRead->asObject()->findAll();
+		$data->ocupaciones = $this->_ocupacionModelRead->asObject()->findAll();
+		$data->colorVehiculo = $this->_coloresVehiculoModelRead->asObject()->findAll();
+		$data->tipoVehiculo = $this->_tipoVehiculoModelRead->asObject()->orderBy('VEHICULOTIPODESCR', 'ASC')->findAll();
+		$data->figura = $this->_figuraModelRead->asObject()->findAll();
+
+		$data->cejaContextura = $this->_cejaContexturaModelRead->asObject()->findAll();
+		$data->caraForma = $this->_caraFormaModelRead->asObject()->findAll();
+		$data->caraTamano = $this->_caraTamanoModelRead->asObject()->findAll();
+		$data->caraTez = $this->_caraTezModelRead->asObject()->findAll();
+		$data->orejaLobulo = $this->_orejaLobuloModelRead->asObject()->findAll();
+		$data->orejaForma = $this->_orejaFomaModelRead->asObject()->findAll();
+		$data->orejaTamano = $this->_orejaTamanoModelRead->asObject()->findAll();
+		$data->cabelloColor = $this->_cabelloColorModelRead->asObject()->findAll();
+		$data->cabelloEstilo = $this->_cabelloEstiloModelRead->asObject()->findAll();
+		$data->cabelloTamano = $this->_cabelloTamanoModelRead->asObject()->findAll();
+		$data->cabelloPeculiar = $this->_cabelloPeculiarModelRead->asObject()->findAll();
+		$data->frenteAltura = $this->_frenteAlturaModelRead->asObject()->findAll();
+		$data->frenteAnchura = $this->_frenteAnchuraModelRead->asObject()->findAll();
+		$data->frenteForma = $this->_frenteFormaModelRead->asObject()->findAll();
+		$data->frentePeculiar = $this->_frentePeculiarModelRead->asObject()->findAll();
+		$data->cejaColocacion = $this->_cejaColocacionModelRead->asObject()->findAll();
+		$data->cejaForma = $this->_cejaFormaModelRead->asObject()->findAll();
+		$data->cejaTamano = $this->_cejaTamanoModelRead->asObject()->findAll();
+		$data->cejaGrosor = $this->_cejaGrosorModelRead->asObject()->findAll();
+		$data->ojoColocacion = $this->_ojoColocacionModelRead->asObject()->findAll();
+		$data->ojoForma = $this->_ojoFormaModelRead->asObject()->findAll();
+		$data->ojoTamano = $this->_ojoTamanoModelRead->asObject()->findAll();
+		$data->ojoColor = $this->_ojoColorModelRead->asObject()->findAll();
+		$data->ojoPeculiar = $this->_ojoPeculiarModelRead->asObject()->findAll();
+		$data->narizTipo = $this->_narizTipoModelRead->asObject()->findAll();
+		$data->narizTamano = $this->_narizTamanoModelRead->asObject()->findAll();
+		$data->narizBase = $this->_narizBaseModelRead->asObject()->findAll();
+		$data->narizPeculiar = $this->_narizPeculiarModelRead->asObject()->findAll();
+		$data->bigoteForma = $this->_bigoteFormaModelRead->asObject()->findAll();
+		$data->bigoteTamano = $this->_bigoteTamanoModelRead->asObject()->findAll();
+		$data->bigoteGrosor = $this->_bigoteGrosorModelRead->asObject()->findAll();
+		$data->bigotePeculiar = $this->_bigotePeculiarModelRead->asObject()->findAll();
+		$data->bocaTamano = $this->_bocaTamanoModelRead->asObject()->findAll();
+		$data->bocaPeculiar = $this->_bocaPeculiarModelRead->asObject()->findAll();
+		$data->labioGrosor = $this->_labioGrosorModelRead->asObject()->findAll();
+		$data->labioLongitud = $this->_labioLongitudModelRead->asObject()->findAll();
+		$data->labioPeculiar = $this->_labioPeculiarModelRead->asObject()->findAll();
+		$data->labioPosicion = $this->_labioPosicionModelRead->asObject()->findAll();
+		$data->dienteTamano = $this->_dienteTamanoModelRead->asObject()->findAll();
+		$data->dienteTipo = $this->_dienteTipoModelRead->asObject()->findAll();
+		$data->dientePeculiar = $this->_dientePeculiarModelRead->asObject()->findAll();
+		$data->barbillaForma = $this->_barbillaFormaModelRead->asObject()->findAll();
+		$data->barbillaTamano = $this->_barbillaTamanoModelRead->asObject()->findAll();
+		$data->barbillaInclinacion = $this->_barbillaInclinacionModelRead->asObject()->findAll();
+		$data->barbillaPeculiar = $this->_barbillaPeculiarModelRead->asObject()->findAll();
+		$data->barbaTamano = $this->_barbaTamanoModelRead->asObject()->findAll();
+		$data->barbaPeculiar = $this->_barbaPeculiarModelRead->asObject()->findAll();
+		$data->cuelloTamano = $this->_cuelloTamanoModelRead->asObject()->findAll();
+		$data->cuelloGrosor = $this->_cuelloGrosorModelRead->asObject()->findAll();
+		$data->cuelloPeculiar = $this->_cuelloPeculiarModelRead->asObject()->findAll();
+		$data->hombroPosicion = $this->_hombroPosicionModelRead->asObject()->findAll();
+		$data->hombroLongitud = $this->_hombroLongitudModelRead->asObject()->findAll();
+		$data->hombroGrosor = $this->_hombroGrosorModelRead->asObject()->findAll();
+		$data->estomago = $this->_estomagoModelRead->asObject()->findAll();
+		$data->pielColor = $this->_pielColorModelRead->asObject()->findAll();
+		$data->etnia = $this->_etniaModelRead->asObject()->findAll();
+		$data->parentesco = $this->_parentescoModelRead->asObject()->findAll();
+		$data->objetoclasificacion = $this->_objetoClasificacionModelRead->asObject()->findAll();
+		$data->objetosubclasificacion = $this->_objetoSubclasificacionModelRead->asObject()->findAll();
+		$data->tipomoneda = $this->_tipoMonedaModelRead->asObject()->findAll();
+
+		$data->tipoExpediente = $this->_tipoExpedienteModelRead->asObject()->where('TIPOEXPEDIENTEID <= 5')->findAll();
+
+		$data->distribuidorVehiculo = $this->_vehiculoDistribuidorModelRead->asObject()->findAll();
+		$data->marcaVehiculo = $this->_vehiculoMarcaModelRead->asObject()->findAll();
+		$data->lineaVehiculo = $this->_vehiculoModeloModelRead->asObject()->findAll();
+		$data->versionVehiculo = $this->_vehiculoVersionModelRead->asObject()->findAll();
+		$data->servicioVehiculo = $this->_vehiculoServicioModelRead->asObject()->findAll();
+		$data->estadosExtranjeros = $this->_estadosExtranjerosRead->asObject()->findAll();
+		$data->giros = $this->_personaMoralGiroRead->asObject()->findAll();
+
+		//Datos del folio
+		$data->datosFolio = $this->_folioModelRead->asObject()->where('FOLIOID', $data->folio)->where('ANO', $data->year)->first();
+
+		// Cuando se le abrio expediente
+		if ($data->datosFolio->MUNICIPIOASIGNADOID  && $data->datosFolio->TIPOEXPEDIENTEID) {
+			$data->datosFolio = $this->_folioModelRead->asObject()->where('FOLIOID', $data->folio)->where('ANO', $data->year)->join('MUNICIPIO', 'FOLIO.MUNICIPIOASIGNADOID = MUNICIPIO.MUNICIPIOID AND MUNICIPIO.ESTADOID =2')->join('TIPOEXPEDIENTE', 'FOLIO.TIPOEXPEDIENTEID = TIPOEXPEDIENTE.TIPOEXPEDIENTEID')->first();
+		}
+		//Cuando estan remitidos
+		if ($data->datosFolio->AGENTEASIGNADOID) {
+			$data->datosFolio = $this->_folioModelRead->asObject()->where('FOLIOID', $data->folio)->where('ANO', $data->year)->join('MUNICIPIO', 'FOLIO.MUNICIPIOASIGNADOID = MUNICIPIO.MUNICIPIOID AND MUNICIPIO.ESTADOID =2')->join('EMPLEADOS', 'EMPLEADOS.EMPLEADOID = FOLIO.AGENTEASIGNADOID')->join('TIPOEXPEDIENTE', 'FOLIO.TIPOEXPEDIENTEID = TIPOEXPEDIENTE.TIPOEXPEDIENTEID')->first();
+			if ($data->datosFolio) {
+				$data->datosFolio = $this->_folioModelRead->asObject()->where('FOLIOID', $data->folio)->where('ANO', $data->year)->join('MUNICIPIO', 'FOLIO.MUNICIPIOASIGNADOID = MUNICIPIO.MUNICIPIOID AND MUNICIPIO.ESTADOID =2')->join('EMPLEADOS', 'EMPLEADOS.EMPLEADOID = FOLIO.AGENTEASIGNADOID AND EMPLEADOS.MUNICIPIOID = FOLIO.MUNICIPIOASIGNADOID')->join('TIPOEXPEDIENTE', 'FOLIO.TIPOEXPEDIENTEID = TIPOEXPEDIENTE.TIPOEXPEDIENTEID')->first();
+			} else {
+				$data->datosFolio = $this->_folioModelRead->asObject()->where('FOLIO.FOLIOID', $data->folio)->where('FOLIO.ANO', $data->year)->join('MUNICIPIO', 'FOLIO.MUNICIPIOASIGNADOID = MUNICIPIO.MUNICIPIOID AND MUNICIPIO.ESTADOID =2')->join('BANDEJARAC', 'BANDEJARAC.MEDIADORID = FOLIO.AGENTEASIGNADOID AND BANDEJARAC.FOLIOID = FOLIO.FOLIOID AND BANDEJARAC.ANO = FOLIO.ANO')->join('TIPOEXPEDIENTE', 'FOLIO.TIPOEXPEDIENTEID = TIPOEXPEDIENTE.TIPOEXPEDIENTEID')->first();
+			}
+		}
+
+		//Cuando es derivado
+		if ($data->datosFolio->INSTITUCIONREMISIONMUNICIPIOID && $data->datosFolio->STATUS == 'DERIVADO') {
+			$data->datosFolio = $this->_folioModelRead->asObject()->where('FOLIOID', $data->folio)->where('ANO', $data->year)->join('MUNICIPIO', 'FOLIO.INSTITUCIONREMISIONMUNICIPIOID = MUNICIPIO.MUNICIPIOID AND MUNICIPIO.ESTADOID =2')->join('DERIVACIONES', 'FOLIO.INSTITUCIONREMISIONID = DERIVACIONES.INSTITUCIONREMISIONID AND FOLIO.INSTITUCIONREMISIONMUNICIPIOID = DERIVACIONES.MUNICIPIOID')->first();
+		}
+		//Cuando es canalizado
+		if ($data->datosFolio->INSTITUCIONREMISIONMUNICIPIOID && $data->datosFolio->STATUS == 'CANALIZADO') {
+			$data->datosFolio = $this->_folioModelRead->asObject()->where('FOLIOID', $data->folio)->where('ANO', $data->year)->join('MUNICIPIO', 'FOLIO.INSTITUCIONREMISIONMUNICIPIOID = MUNICIPIO.MUNICIPIOID AND MUNICIPIO.ESTADOID =2')->join('CANALIZACIONES', 'FOLIO.INSTITUCIONREMISIONID = CANALIZACIONES.INSTITUCIONREMISIONID AND FOLIO.INSTITUCIONREMISIONMUNICIPIOID = CANALIZACIONES.MUNICIPIOID')->first();
+		}
+
+		$data->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
+
+		// var_dump($data);exit;
+		$this->_loadView('Video denuncia', 'videodenuncia', '', $data, 'ver_folio_litigantes');
 	}
 
 	/**
