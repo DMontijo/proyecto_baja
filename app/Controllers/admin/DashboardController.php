@@ -2516,7 +2516,6 @@ class DashboardController extends BaseController
 			['FOLIOID'=> 3757,'ANO'=> 2023, 'MUNICIPIO'=> 4,'EMPLEADO'=>9414,'OFICINA'=> 840,'AREA'=> 3001, 'EXPEDIENTE'=>102004202323472],
 			['FOLIOID'=> 3762,'ANO'=> 2023, 'MUNICIPIO'=> 4,'EMPLEADO'=>9414,'OFICINA'=> 840,'AREA'=> 3001, 'EXPEDIENTE'=>102004202323497],
 			['FOLIOID'=> 3778,'ANO'=> 2023, 'MUNICIPIO'=> 1,'EMPLEADO'=>8836,'OFICINA'=> 776,'AREA'=> 2559, 'EXPEDIENTE'=>102001202308023],
-			['FOLIOID'=> 3778,'ANO'=> 2023, 'MUNICIPIO'=> 1,'EMPLEADO'=>8836,'OFICINA'=> 776,'AREA'=> 2559, 'EXPEDIENTE'=>102001202308023],
 			['FOLIOID'=> 3847,'ANO'=> 2023, 'MUNICIPIO'=> 2,'EMPLEADO'=>4058,'OFICINA'=> 394,'AREA'=> 3301, 'EXPEDIENTE'=>102002202318930],
 			['FOLIOID'=> 3851,'ANO'=> 2023, 'MUNICIPIO'=> 2,'EMPLEADO'=>4058,'OFICINA'=> 394,'AREA'=> 3301, 'EXPEDIENTE'=>102002202318936],
 			['FOLIOID'=> 3861,'ANO'=> 2023, 'MUNICIPIO'=> 4,'EMPLEADO'=>10609,'OFICINA'=> 906,'AREA'=> 4023, 'EXPEDIENTE'=>102004202323491],
@@ -2726,15 +2725,13 @@ class DashboardController extends BaseController
 									'NOTAS' => 'Exp: ' . $expediente . ' Solicitud: ' . $_solicitudPericial->SOLICITUDID . 'Intervencion' . $intervencion,
 								];
 								$this->_bitacoraActividad($datosBitacora);
-								return json_encode(['status' => 1, 'message' => 'Se han sincronizado las coordinaciones de los expedientes de CDTEC con Justicia Net correctamente.']);
-							} else {
-								return json_encode(['status' => 0, 'message' => 'No fue posible sincronizar los expedientes con Justicia Net.']);
-							}
+							} 
 						}
 					}
 				}
 			}
 		}
+		return json_encode(['status' => 1, 'message' => 'Se han sincronizado las coordinaciones de los expedientes de CDTEC con Justicia Net correctamente.']);
 
 		// } catch (\Error $e) {
 		// 	throw new \Exception('Error en actualizacion en Justicia: ' . $e->getMessage());
