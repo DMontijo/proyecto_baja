@@ -2112,7 +2112,7 @@ class DashboardController extends BaseController
 				$this->subirArchivosRemision($bandeja['FOLIOID'], $bandeja['ANO'], $expediente);
 
 				//Se revisa que haya documentos subidos a Justicia de tipo periciales
-				$folioDoc = $this->_folioDocModelRead->expedienteDocumentos($folio, $year);
+				$folioDoc = $this->_folioDocModelRead->expedienteDocumentosJusticia($folio, $year);
 
 				if ($folioDoc) {
 					foreach ($folioDoc as $key => $doc) {
