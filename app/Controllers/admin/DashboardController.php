@@ -2553,6 +2553,11 @@ class DashboardController extends BaseController
 							$_intervencionPericial = $this->_createIntervencionPericial($dataInter, $municipio);
 
 							if ($_intervencionPericial->status == 201) {
+								$datosBitacora = [
+									'ACCION' => 'Se envio una solicitud pericial.',
+									'NOTAS' => 'Exp: ' . $expediente . ' Solicitud: ' . $_solicitudPericial->SOLICITUDID . 'Intervencion' . $intervencion,
+								];
+								$this->_bitacoraActividad($datosBitacora);
 								return json_encode(['status' => 1, 'message' => 'Se han sincronizado las coordinaciones de los expedientes de CDTEC con Justicia Net correctamente.']);
 							} else {
 								return json_encode(['status' => 0, 'message' => 'No fue posible sincronizar los expedientes con Justicia Net.']);
