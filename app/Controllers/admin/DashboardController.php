@@ -2513,6 +2513,7 @@ class DashboardController extends BaseController
 		//Se revisa que haya documentos subidos a Justicia de tipo periciales
 		$folioDocPericiales = $this->_folioDocModelRead->expedienteDocumentosJusticia($folio, $year);
 
+		var_dump($folioDocPericiales);exit;
 		// try {
 
 			if ($folioDocPericiales) {
