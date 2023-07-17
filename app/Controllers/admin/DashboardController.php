@@ -2499,6 +2499,17 @@ class DashboardController extends BaseController
 	{
 		// Datos de los objetos
 		$datosRegistros = [
+			['FOLIOID' => 3689, 'ANO' => 2023, 'MUNICIPIO' => 3, 'EMPLEADO' => 3926, 'OFICINA' => 392, 'AREA' => 3219, 'EXPEDIENTE' => 102003202302198],
+			['FOLIOID' => 3723, 'ANO' => 2023, 'MUNICIPIO' => 3, 'EMPLEADO' => 3395, 'OFICINA' => 316, 'AREA' => 2408, 'EXPEDIENTE' => 102003202302200],
+			['FOLIOID' => 4187, 'ANO' => 2023, 'MUNICIPIO' => 3, 'EMPLEADO' => 3395, 'OFICINA' => 316, 'AREA' => 2408, 'EXPEDIENTE' => 102003202302262],
+			['FOLIOID' => 4419, 'ANO' => 2023, 'MUNICIPIO' => 3, 'EMPLEADO' => 3983, 'OFICINA' => 325, 'AREA' => 2653, 'EXPEDIENTE' => 502003202301596],
+			['FOLIOID' => 5524, 'ANO' => 2023, 'MUNICIPIO' => 3, 'EMPLEADO' => 3926, 'OFICINA' => 392, 'AREA' => 3219, 'EXPEDIENTE' => 102003202302519],
+			['FOLIOID' => 5745, 'ANO' => 2023, 'MUNICIPIO' => 3, 'EMPLEADO' => 3395, 'OFICINA' => 316, 'AREA' => 2408, 'EXPEDIENTE' => 102003202302568],
+			['FOLIOID' => 6785, 'ANO' => 2023, 'MUNICIPIO' => 3, 'EMPLEADO' => 2963, 'OFICINA' => 316, 'AREA' => 2427, 'EXPEDIENTE' => 102003202302773],
+			['FOLIOID' => 6790, 'ANO' => 2023, 'MUNICIPIO' => 3, 'EMPLEADO' => 2955, 'OFICINA' => 392, 'AREA' => 2409, 'EXPEDIENTE' => 102003202302774],
+			['FOLIOID' => 7211, 'ANO' => 2023, 'MUNICIPIO' => 3, 'EMPLEADO' => 3945, 'OFICINA' => 316, 'AREA' => 2412, 'EXPEDIENTE' => 102003202302867],
+			['FOLIOID' => 7559, 'ANO' => 2023, 'MUNICIPIO' => 3, 'EMPLEADO' => 2955, 'OFICINA' => 317, 'AREA' => 2409, 'EXPEDIENTE' => 102003202302937],
+
 			['FOLIOID' => 3265, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 9414, 'OFICINA' => 840, 'AREA' => 3001, 'EXPEDIENTE' => 102004202322421],
 			['FOLIOID' => 3330, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 9457, 'OFICINA' => 838, 'AREA' => 2964, 'EXPEDIENTE' => 102004202322655],
 			['FOLIOID' => 3401, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10432, 'OFICINA' => 906, 'AREA' => 4259, 'EXPEDIENTE' => 102004202322663],
@@ -2506,8 +2517,7 @@ class DashboardController extends BaseController
 			['FOLIOID' => 3573, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10432, 'OFICINA' => 906, 'AREA' => 4259, 'EXPEDIENTE' => 102004202323001],
 			['FOLIOID' => 3599, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10709, 'OFICINA' => 924, 'AREA' => 4496, 'EXPEDIENTE' => 102004202323049],
 			['FOLIOID' => 3621, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10432, 'OFICINA' => 906, 'AREA' => 4259, 'EXPEDIENTE' => 102004202323079],
-			['FOLIOID' => 3689, 'ANO' => 2023, 'MUNICIPIO' => 3, 'EMPLEADO' => 3926, 'OFICINA' => 392, 'AREA' => 3219, 'EXPEDIENTE' => 102003202302198],
-			['FOLIOID' => 3723, 'ANO' => 2023, 'MUNICIPIO' => 3, 'EMPLEADO' => 3395, 'OFICINA' => 316, 'AREA' => 2408, 'EXPEDIENTE' => 102003202302200],
+		
 			['FOLIOID' => 3757, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 9414, 'OFICINA' => 840, 'AREA' => 3001, 'EXPEDIENTE' => 102004202323472],
 			['FOLIOID' => 3762, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 9414, 'OFICINA' => 840, 'AREA' => 3001, 'EXPEDIENTE' => 102004202323497],
 			['FOLIOID' => 3861, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10609, 'OFICINA' => 906, 'AREA' => 4023, 'EXPEDIENTE' => 102004202323491],
@@ -2519,12 +2529,10 @@ class DashboardController extends BaseController
 			['FOLIOID' => 4066, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10432, 'OFICINA' => 906, 'AREA' => 4259, 'EXPEDIENTE' => 102004202323871],
 			['FOLIOID' => 4093, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10432, 'OFICINA' => 906, 'AREA' => 4259, 'EXPEDIENTE' => 102004202323977],
 			['FOLIOID' => 4118, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10531, 'OFICINA' => 807, 'AREA' => 3629, 'EXPEDIENTE' => 502004202313477],
-			['FOLIOID' => 4187, 'ANO' => 2023, 'MUNICIPIO' => 3, 'EMPLEADO' => 3395, 'OFICINA' => 316, 'AREA' => 2408, 'EXPEDIENTE' => 102003202302262],
 			['FOLIOID' => 4308, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 9414, 'OFICINA' => 840, 'AREA' => 3001, 'EXPEDIENTE' => 102004202324453],
 			['FOLIOID' => 4355, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10432, 'OFICINA' => 906, 'AREA' => 4259, 'EXPEDIENTE' => 102004202324410],
 			['FOLIOID' => 4402, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10168, 'OFICINA' => 806, 'AREA' => 2866, 'EXPEDIENTE' => 502004202313696],
 			['FOLIOID' => 4408, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 9414, 'OFICINA' => 840, 'AREA' => 3001, 'EXPEDIENTE' => 102004202324554],
-			['FOLIOID' => 4419, 'ANO' => 2023, 'MUNICIPIO' => 3, 'EMPLEADO' => 3983, 'OFICINA' => 325, 'AREA' => 2653, 'EXPEDIENTE' => 502003202301596],
 			['FOLIOID' => 4421, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10391, 'OFICINA' => 810, 'AREA' => 2854, 'EXPEDIENTE' => 102004202324815],
 			['FOLIOID' => 4539, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10432, 'OFICINA' => 906, 'AREA' => 4259, 'EXPEDIENTE' => 102004202324839],
 			['FOLIOID' => 4590, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10609, 'OFICINA' => 840, 'AREA' => 4023, 'EXPEDIENTE' => 102004202324888],
@@ -2545,7 +2553,6 @@ class DashboardController extends BaseController
 			['FOLIOID' => 5325, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 9551, 'OFICINA' => 846, 'AREA' => 3037, 'EXPEDIENTE' => 102004202326428],
 			['FOLIOID' => 5375, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10160, 'OFICINA' => 807, 'AREA' => 3630, 'EXPEDIENTE' => 502004202314672],
 			['FOLIOID' => 5415, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10609, 'OFICINA' => 810, 'AREA' => 4023, 'EXPEDIENTE' => 102004202326610],
-			['FOLIOID' => 5524, 'ANO' => 2023, 'MUNICIPIO' => 3, 'EMPLEADO' => 3926, 'OFICINA' => 392, 'AREA' => 3219, 'EXPEDIENTE' => 102003202302519],
 			['FOLIOID' => 5561, 'ANO' => 2023, 'MUNICIPIO' => 5, 'EMPLEADO' => 10708, 'OFICINA' => 894, 'AREA' => 4495, 'EXPEDIENTE' => 102005202302731],
 			['FOLIOID' => 5565, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 9551, 'OFICINA' => 805, 'AREA' => 3037, 'EXPEDIENTE' => 102004202326934],
 			['FOLIOID' => 5578, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 9001, 'OFICINA' => 808, 'AREA' => 2842, 'EXPEDIENTE' => 102004202327189],
@@ -2556,7 +2563,6 @@ class DashboardController extends BaseController
 			['FOLIOID' => 5648, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10432, 'OFICINA' => 906, 'AREA' => 4259, 'EXPEDIENTE' => 102004202327050],
 			['FOLIOID' => 5660, 'ANO' => 2023, 'MUNICIPIO' => 5, 'EMPLEADO' => 9940, 'OFICINA' => 894, 'AREA' => 4226, 'EXPEDIENTE' => 102005202302742],
 			['FOLIOID' => 5701, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10692, 'OFICINA' => 807, 'AREA' => 3209, 'EXPEDIENTE' => 502004202314960],
-			['FOLIOID' => 5745, 'ANO' => 2023, 'MUNICIPIO' => 3, 'EMPLEADO' => 3395, 'OFICINA' => 316, 'AREA' => 2408, 'EXPEDIENTE' => 102003202302568],
 			['FOLIOID' => 5808, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10432, 'OFICINA' => 906, 'AREA' => 4259, 'EXPEDIENTE' => 102004202327373],
 			['FOLIOID' => 5867, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 9551, 'OFICINA' => 846, 'AREA' => 3037, 'EXPEDIENTE' => 102004202327484],
 			['FOLIOID' => 5868, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 9551, 'OFICINA' => 846, 'AREA' => 3037, 'EXPEDIENTE' => 102004202327514],
@@ -2579,8 +2585,7 @@ class DashboardController extends BaseController
 			['FOLIOID' => 6743, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10173, 'OFICINA' => 906, 'AREA' => 4341, 'EXPEDIENTE' => 102004202329472],
 			['FOLIOID' => 6745, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10173, 'OFICINA' => 906, 'AREA' => 4341, 'EXPEDIENTE' => 102004202329485],
 			['FOLIOID' => 6758, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10332, 'OFICINA' => 864, 'AREA' => 3823, 'EXPEDIENTE' => 502004202316012],
-			['FOLIOID' => 6785, 'ANO' => 2023, 'MUNICIPIO' => 3, 'EMPLEADO' => 2963, 'OFICINA' => 316, 'AREA' => 2427, 'EXPEDIENTE' => 102003202302773],
-			['FOLIOID' => 6790, 'ANO' => 2023, 'MUNICIPIO' => 3, 'EMPLEADO' => 2955, 'OFICINA' => 392, 'AREA' => 2409, 'EXPEDIENTE' => 102003202302774],
+		
 			['FOLIOID' => 6842, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10187, 'OFICINA' => 906, 'AREA' => 4261, 'EXPEDIENTE' => 102004202330060],
 			['FOLIOID' => 6851, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10453, 'OFICINA' => 906, 'AREA' => 4263, 'EXPEDIENTE' => 102004202329735],
 			['FOLIOID' => 6867, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10432, 'OFICINA' => 906, 'AREA' => 4259, 'EXPEDIENTE' => 102004202329655],
@@ -2595,14 +2600,12 @@ class DashboardController extends BaseController
 			['FOLIOID' => 6998, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10902, 'OFICINA' => 806, 'AREA' => 3679, 'EXPEDIENTE' => 502004202316254],
 			['FOLIOID' => 7005, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10692, 'OFICINA' => 807, 'AREA' => 3209, 'EXPEDIENTE' => 502004202316257],
 			['FOLIOID' => 7113, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10453, 'OFICINA' => 906, 'AREA' => 4263, 'EXPEDIENTE' => 102004202330139],
-			['FOLIOID' => 7211, 'ANO' => 2023, 'MUNICIPIO' => 3, 'EMPLEADO' => 3945, 'OFICINA' => 316, 'AREA' => 2412, 'EXPEDIENTE' => 102003202302867],
 			['FOLIOID' => 7217, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10738, 'OFICINA' => 906, 'AREA' => 4260, 'EXPEDIENTE' => 102004202330466],
 			['FOLIOID' => 7220, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 9385, 'OFICINA' => 864, 'AREA' => 3175, 'EXPEDIENTE' => 502004202316448],
 			['FOLIOID' => 7299, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10683, 'OFICINA' => 838, 'AREA' => 2968, 'EXPEDIENTE' => 102004202330454],
 			['FOLIOID' => 7327, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10453, 'OFICINA' => 906, 'AREA' => 4263, 'EXPEDIENTE' => 102004202330504],
 			['FOLIOID' => 7483, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 9553, 'OFICINA' => 906, 'AREA' => 4262, 'EXPEDIENTE' => 102004202330780],
 			['FOLIOID' => 7512, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10832, 'OFICINA' => 924, 'AREA' => 4488, 'EXPEDIENTE' => 102004202330832],
-			['FOLIOID' => 7559, 'ANO' => 2023, 'MUNICIPIO' => 3, 'EMPLEADO' => 2955, 'OFICINA' => 317, 'AREA' => 2409, 'EXPEDIENTE' => 102003202302937],
 			['FOLIOID' => 7727, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10511, 'OFICINA' => 812, 'AREA' => 2857, 'EXPEDIENTE' => 102004202331458],
 			['FOLIOID' => 7885, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 9551, 'OFICINA' => 846, 'AREA' => 3037, 'EXPEDIENTE' => 102004202331552],
 			['FOLIOID' => 7889, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 9410, 'OFICINA' => 845, 'AREA' => 3025, 'EXPEDIENTE' => 102004202331686],
@@ -2650,6 +2653,7 @@ class DashboardController extends BaseController
 
 					// Se suben los documentos periciales a Justicia.
 					$_solicitudPericial = $this->_createSolicitudesPericiales($solicitudp);
+					var_dump($_solicitudPericial);exit;
 					if ($_solicitudPericial->status == 201) {
 						//Crea la solicitud pericial a Justicia.
 						$_solicitudDocto = $this->_createSolicitudDocto($expediente, $_solicitudPericial->SOLICITUDID, $doc->EXPEDIENTEDOCID, $municipio);
@@ -2672,22 +2676,28 @@ class DashboardController extends BaseController
 
 							//Se crea la intervención pericial a Justicia.
 							$_intervencionPericial = $this->_createIntervencionPericial($dataInter, $municipio);
+							if ($_intervencionPericial->status == 201) {
+								$datosBitacora = [
+									'ACCION' => 'Se envio una solicitud pericial.',
+									'NOTAS' => 'Exp: ' . $expediente . ' Solicitud: ' . $_solicitudPericial->SOLICITUDID . 'Intervencion' . $intervencion,
+								];
+								$this->_bitacoraActividad($datosBitacora);
+					
+							}
 
+							
 						}
 					}
 				}
 			}
-		}
-		
-		if ($_intervencionPericial->status == 201) {
-			$datosBitacora = [
-				'ACCION' => 'Se envio una solicitud pericial.',
-				'NOTAS' => 'Exp: ' . $expediente . ' Solicitud: ' . $_solicitudPericial->SOLICITUDID . 'Intervencion' . $intervencion,
-			];
-			$this->_bitacoraActividad($datosBitacora);
-			return json_encode(['status' => 1, 'message' => 'Se han sincronizado las coordinaciones de los expedientes de CDTEC con Justicia Net correctamente.']);
+			if ($folio === end($arreglo)) {
+				// Acciones a realizar al final del recorrido
+				return json_encode(['status' => 1, 'message' => 'Se han sincronizado las coordinaciones de los expedientes de CDTEC con Justicia Net correctamente.']);
+			}
 
 		}
+		
+		
 
 		// } catch (\Error $e) {
 		// 	throw new \Exception('Error en actualizacion en Justicia: ' . $e->getMessage());
