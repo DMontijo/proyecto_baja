@@ -2630,7 +2630,7 @@ class DashboardController extends BaseController
 			$area = $folio->MUNICIPIO;
 
 
-			$archivosPericiales = $this->subirArchivosRemision($folioid, $year, $expediente);
+			// $archivosPericiales = $this->subirArchivosRemision($folioid, $year, $expediente);
 
 			//Se revisa que haya documentos subidos a Justicia de tipo periciales
 			$folioDocPericiales = $this->_folioDocModelRead->expedienteDocumentosJusticia($folioid, $year);
