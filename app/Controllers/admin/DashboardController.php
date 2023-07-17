@@ -1950,10 +1950,11 @@ class DashboardController extends BaseController
 
 				if ($update) {
 					$bandeja = $this->_folioModel->where('EXPEDIENTEID', $expediente)->first();
+					//Se suben los documentos y archivos externos a Justicia
+					$subirArchivos = $this->subirArchivosRemision($bandeja['FOLIOID'], $bandeja['ANO'], $expediente);
 
 					//Se revisa que haya documentos subidos a Justicia de tipo periciales
-					$folioDocPericiales = $this->_folioDocModelRead->expedienteDocumentos($folio, $year);
-
+					$folioDocPericiales = $this->_folioDocModelRead->expedienteDocumentosJusticia($folio, $year);
 					if ($folioDocPericiales) {
 						foreach ($folioDocPericiales as $key => $doc) {
 							$solicitudp = array();
@@ -2001,8 +2002,6 @@ class DashboardController extends BaseController
 							}
 						}
 					}
-					//Se suben los documentos y archivos externos a Justicia
-					$subirArchivos = $this->subirArchivosRemision($bandeja['FOLIOID'], $bandeja['ANO'], $expediente);
 
 					//Se crea la bandeja en Justicia.
 					$_bandeja_creada = $this->_createBandeja($bandeja);
@@ -3245,36 +3244,35 @@ class DashboardController extends BaseController
 					// 	} catch (\Exception $e) {
 					// 	}
 					// }
-					$relacionDocExpDoc = $this->_relacionFolioDocExpDocRead->where('FOLIOID', $docP['FOLIOID'])->where('ANO', $docP['ANO'])->where('EXPEDIENTEID', $docP['NUMEROEXPEDIENTE'])->where('FOLIODOCID', $docP['FOLIODOCID'])->orderBy('FOLIODOCID', 'asc')->first();
+					$relacionDocExpDoc = $this->_relacionFolioDocExpDocRead->where('FOLIOID', $docP->FOLIOID)->where('ANO', $docP->ANO)->where('EXPEDIENTEID', $docP->NUMEROEXPEDIENTE)->where('FOLIODOCID', $docP->FOLIODOCID)->orderBy('FOLIODOCID', 'asc')->first();
 
 					if ($relacionDocExpDoc == null) {
 						// Se crean los RTF´s de las solicitudes periciales
-
 						try {
 							PHPRtfLite::registerAutoloader();
 							// instancia de documento rtf 
 							$rtf = new PHPRtfLite();
 							$sect = $rtf->addSection();
-							$docP['PLACEHOLDER'] = str_replace('</p>', '<br>', $docP['PLACEHOLDER']);
+							$docP->PLACEHOLDER = str_replace('</p>', '<br>', $docP->PLACEHOLDER);
 
-							$sinetiqueta = strip_tags($docP['PLACEHOLDER'], ['strong', 'br']); //placeolder sin etiquetas html
+							$sinetiqueta = strip_tags($docP->PLACEHOLDER, ['strong', 'br']); //placeolder sin etiquetas html
 							//escribe el texto del rtf
 							$sect->writeText($sinetiqueta, new PHPRtfLite_Font(11, 'Arial'), new PHPRtfLite_ParFormat(PHPRtfLite_ParFormat::TEXT_ALIGN_LEFT));
 							// save rtf document
-							$rtf->save('assets/' . $docP['NUMEROEXPEDIENTE'] . '_' . $docP['FOLIODOCID'] . '.rtf');
-							$tarjet = FCPATH  . 'assets/' . $docP['NUMEROEXPEDIENTE'] . "_" . $docP['FOLIODOCID'] . ".rtf";
+							$rtf->save('assets/' . $docP->NUMEROEXPEDIENTE . '_' . $docP->FOLIODOCID . '.rtf');
+							$tarjet = FCPATH  . 'assets/' . $docP->NUMEROEXPEDIENTE . "_" . $docP->FOLIODOCID . ".rtf";
 							//Blob del rtf guardado
 							$data = file_get_contents($tarjet);
 							//Convierte el blob a UTF-16LE
 							$utf16le = mb_convert_encoding($data, 'UTF-16LE');
 
 							$plantilla = (object) array();
-							$plantilla = $this->_plantillasModelRead->where('TITULO', $docP['TIPODOC'])->first();
+							$plantilla = $this->_plantillasModelRead->where('TITULO', $docP->TIPODOC)->first();
 							$documentos = array();
 
 							//Convierte el blob a base64 para enviarlo al webservice.
 							$documentos['DOCUMENTO'] = base64_encode($utf16le);
-							$documentos['DOCTODESCR'] = $docP['TIPODOC'];
+							$documentos['DOCTODESCR'] = $docP->TIPODOC;
 
 
 							//Se asigna el autor y oficina dependiendo del enviroment
@@ -3331,15 +3329,14 @@ class DashboardController extends BaseController
 
 
 							// Se crean los documentos periciales
-							$expedienteDocumento = $this->_createFolioDocumentos($expediente, $documentos, $docP['MUNICIPIOID']);
-
+							$expedienteDocumento = $this->_createFolioDocumentos($expediente, $documentos, $docP->MUNICIPIOID);
 							if ($expedienteDocumento->status == 201) {
-								unlink(FCPATH  . 'assets/' . $docP['NUMEROEXPEDIENTE'] . "_" . $docP['FOLIODOCID'] . ".rtf");
+								unlink(FCPATH  . 'assets/' . $docP->NUMEROEXPEDIENTE . "_" . $docP->FOLIODOCID . ".rtf");
 								// unlink(FCPATH  . 'assets/' . $doc['NUMEROEXPEDIENTE'] . "_" . $doc['FOLIODOCID'] . ".bin");	
 								$datosRelacionFolioExpDoc = [
-									'FOLIODOCID' => $docP['FOLIODOCID'],
-									'FOLIOID' =>  $docP['FOLIOID'],
-									'ANO' => $docP['ANO'],
+									'FOLIODOCID' => $docP->FOLIODOCID,
+									'FOLIOID' =>  $docP->FOLIOID,
+									'ANO' => $docP->ANO,
 									'EXPEDIENTEID' => $expedienteDocumento->EXPEDIENTEID,
 									'EXPEDIENTEDOCID' => $expedienteDocumento->DOCUMENTOID,
 								];
@@ -3347,6 +3344,7 @@ class DashboardController extends BaseController
 								$this->_relacionFolioDocExpDoc->insert($datosRelacionFolioExpDoc);
 							}
 						} catch (\Throwable $th) {
+							return json_encode(['status' => 0, 'error' => $th->getMessage()]);
 						}
 					}
 				}
@@ -3508,7 +3506,7 @@ class DashboardController extends BaseController
 
 					foreach ($folioDocPeritaje as $key => $docP) {
 
-						$relacionDocExpDoc = $this->_relacionFolioDocExpDocRead->where('FOLIOID', $docP['FOLIOID'])->where('ANO', $docP['ANO'])->where('EXPEDIENTEID', $docP['NUMEROEXPEDIENTE'])->where('FOLIODOCID', $docP['FOLIODOCID'])->orderBy('FOLIODOCID', 'asc')->first();
+						$relacionDocExpDoc = $this->_relacionFolioDocExpDocRead->where('FOLIOID', $docP->FOLIOID)->where('ANO', $docP->ANO)->where('EXPEDIENTEID', $docP->NUMEROEXPEDIENTE)->where('FOLIODOCID', $docP->FOLIODOCID)->orderBy('FOLIODOCID', 'asc')->first();
 
 						if ($relacionDocExpDoc == null) {
 							// Se crean los RTF´s de las solicitudes periciales
@@ -3518,26 +3516,26 @@ class DashboardController extends BaseController
 								// instancia de documento rtf 
 								$rtf = new PHPRtfLite();
 								$sect = $rtf->addSection();
-								$docP['PLACEHOLDER'] = str_replace('</p>', '<br>', $docP['PLACEHOLDER']);
+								$docP->PLACEHOLDER = str_replace('</p>', '<br>', $docP->PLACEHOLDER);
 
-								$sinetiqueta = strip_tags($docP['PLACEHOLDER'], ['strong', 'br']); //placeolder sin etiquetas html
+								$sinetiqueta = strip_tags($docP->PLACEHOLDER, ['strong', 'br']); //placeolder sin etiquetas html
 								//escribe el texto del rtf
 								$sect->writeText($sinetiqueta, new PHPRtfLite_Font(11, 'Arial'), new PHPRtfLite_ParFormat(PHPRtfLite_ParFormat::TEXT_ALIGN_JUSTIFY));
 								// save rtf document
-								$rtf->save('assets/' . $docP['NUMEROEXPEDIENTE'] . '_' . $docP['FOLIODOCID'] . '.rtf');
-								$tarjet = FCPATH  . 'assets/' . $docP['NUMEROEXPEDIENTE'] . "_" . $docP['FOLIODOCID'] . ".rtf";
+								$rtf->save('assets/' . $docP->NUMEROEXPEDIENTE . '_' . $docP->FOLIODOCID . '.rtf');
+								$tarjet = FCPATH  . 'assets/' . $docP->NUMEROEXPEDIENTE . "_" . $docP->FOLIODOCID . ".rtf";
 								//Blob del rtf guardado
 								$data = file_get_contents($tarjet);
 								//Convierte el blob a UTF-16LE
 								$utf16le = mb_convert_encoding($data, 'UTF-16LE');
 
 								$plantilla = (object) array();
-								$plantilla = $this->_plantillasModelRead->where('TITULO', $docP['TIPODOC'])->first();
+								$plantilla = $this->_plantillasModelRead->where('TITULO', $docP->TIPODOC)->first();
 								$documentos = array();
 
 								//Convierte el blob a base64 para enviarlo al webservice.
 								$documentos['DOCUMENTO'] = base64_encode($utf16le);
-								$documentos['DOCTODESCR'] = $docP['TIPODOC'];
+								$documentos['DOCTODESCR'] = $docP->TIPODOC;
 								//Se asigna el autor y oficina dependiendo del enviroment
 
 								if (ENVIRONMENT == 'development') {
@@ -3595,19 +3593,18 @@ class DashboardController extends BaseController
 								// Se crean los documentos periciales
 
 
-								$expedienteDocumento = $this->_createFolioDocumentos($expediente, $documentos, $docP['MUNICIPIOID']);
+								$expedienteDocumento = $this->_createFolioDocumentos($expediente, $documentos, $docP->MUNICIPIOID);
 
 								if ($expedienteDocumento->status == 201) {
-									unlink(FCPATH  . 'assets/' . $docP['NUMEROEXPEDIENTE'] . "_" . $docP['FOLIODOCID'] . ".rtf");
+									unlink(FCPATH  . 'assets/' . $docP->NUMEROEXPEDIENTE . "_" . $docP->FOLIODOCID . ".rtf");
 									// unlink(FCPATH  . 'assets/' . $doc['NUMEROEXPEDIENTE'] . "_" . $doc['FOLIODOCID'] . ".bin");	
 									$datosRelacionFolioExpDoc = [
-										'FOLIODOCID' => $docP['FOLIODOCID'],
-										'FOLIOID' =>  $docP['FOLIOID'],
-										'ANO' => $docP['ANO'],
+										'FOLIODOCID' => $docP->FOLIODOCID,
+										'FOLIOID' =>  $docP->FOLIOID,
+										'ANO' => $docP->ANO,
 										'EXPEDIENTEID' => $expedienteDocumento->EXPEDIENTEID,
 										'EXPEDIENTEDOCID' => $expedienteDocumento->DOCUMENTOID,
 									];
-
 									$this->_relacionFolioDocExpDoc->insert($datosRelacionFolioExpDoc);
 								}
 							} catch (\Throwable $th) {
@@ -4582,7 +4579,7 @@ class DashboardController extends BaseController
 			$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
 			$data['schema'] = $conexion->SCHEMA;
 			$response = $this->_curlPostDataEncrypt($endpoint, $data);
-			
+
 			//Respuesta de todos los expedientes cambiados desde justicia
 			if ($response->status == 201) {
 				$expedentesEnJusticia = [];
@@ -4644,7 +4641,7 @@ class DashboardController extends BaseController
 					} catch (\Error $e) {
 						throw new \Exception('Error en actualizacion en Justicia: ' . $e->getMessage());
 					}
-				}else{
+				} else {
 					return json_encode(['status' => 1, 'message' => 'No hay expedientes por actualizar']);
 				}
 			} else {
