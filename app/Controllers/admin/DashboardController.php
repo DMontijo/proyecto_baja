@@ -2677,64 +2677,65 @@ class DashboardController extends BaseController
 			$area = $folio->MUNICIPIO;
 
 
-			$archivosPericiales = $this->subirArchivosRemision($folioid, $year, $expediente);
+			// $archivosPericiales = $this->subirArchivosRemision($folioid, $year, $expediente);
 
-			//Se revisa que haya documentos subidos a Justicia de tipo periciales
-			$folioDocPericiales = $this->_folioDocModelRead->expedienteDocumentosJusticia($folioid, $year);
+			// //Se revisa que haya documentos subidos a Justicia de tipo periciales
+			// $folioDocPericiales = $this->_folioDocModelRead->expedienteDocumentosJusticia($folioid, $year);
 
-			// try {
+			// // try {
 
-			if ($folioDocPericiales) {
-				foreach ($folioDocPericiales as $key => $doc) {
-					$solicitudp = array();
-					$solicitudp['ESTADOID'] = 2;
-					$solicitudp['MUNICIPIOID'] = $municipio;
-					$solicitudp['EMPLEADOIDREGISTRO'] = $empleado;
-					$solicitudp['OFICINAIDREGISTRO'] = $oficina;
-					$solicitudp['AREAIDREGISTRO'] = $area;
-					$solicitudp['ANO'] = $doc->ANO;
-					$solicitudp['TITULO'] = $doc->TIPODOC;
+			// if ($folioDocPericiales) {
+			// 	foreach ($folioDocPericiales as $key => $doc) {
+			// 		$solicitudp = array();
+			// 		$solicitudp['ESTADOID'] = 2;
+			// 		$solicitudp['MUNICIPIOID'] = $municipio;
+			// 		$solicitudp['EMPLEADOIDREGISTRO'] = $empleado;
+			// 		$solicitudp['OFICINAIDREGISTRO'] = $oficina;
+			// 		$solicitudp['AREAIDREGISTRO'] = $area;
+			// 		$solicitudp['ANO'] = $doc->ANO;
+			// 		$solicitudp['TITULO'] = $doc->TIPODOC;
 
-					// Se suben los documentos periciales a Justicia.
-					$_solicitudPericial = $this->_createSolicitudesPericiales($solicitudp);
-					if ($_solicitudPericial->status == 201) {
-						//Crea la solicitud pericial a Justicia.
-						$_solicitudDocto = $this->_createSolicitudDocto($expediente, $_solicitudPericial->SOLICITUDID, $doc->EXPEDIENTEDOCID, $municipio);
+			// 		// Se suben los documentos periciales a Justicia.
+			// 		$_solicitudPericial = $this->_createSolicitudesPericiales($solicitudp);
+			// 		if ($_solicitudPericial->status == 201) {
+			// 			//Crea la solicitud pericial a Justicia.
+			// 			$_solicitudDocto = $this->_createSolicitudDocto($expediente, $_solicitudPericial->SOLICITUDID, $doc->EXPEDIENTEDOCID, $municipio);
 
-						if ($_solicitudDocto->status == 201) {
-							//Crea la solicityd en el expediente a Justicia.
-							$_solicitudExpediente = $this->_createSolicitudExpediente($expediente, $_solicitudPericial->SOLICITUDID, $municipio);
-							$plantilla = (object) array();
+			// 			if ($_solicitudDocto->status == 201) {
+			// 				//Crea la solicityd en el expediente a Justicia.
+			// 				$_solicitudExpediente = $this->_createSolicitudExpediente($expediente, $_solicitudPericial->SOLICITUDID, $municipio);
+			// 				$plantilla = (object) array();
 
-							$plantilla = $this->_plantillasModel->where('TITULO',  $doc->TIPODOC)->first();
-							//Se obtiene el id de intervencion de acuerdo al municipio
-							if ($municipio == 1 ||  $municipio == 6) {
-								$intervencion = $plantilla['INTERVENCIONENSENADAID'];
-							} else if ($municipio == 2 || $municipio == 3 || $municipio == 7) {
-								$intervencion = $plantilla['INTERVENCIONMEXICALIID'];
-							} else if ($municipio == 4 || $municipio == 5) {
-								$intervencion = $plantilla['INTERVENCIONTIJUANAID'];
-							}
-							$dataInter =  array('SOLICITUDID' => $_solicitudPericial->SOLICITUDID, 'INTERVENCIONID' => $intervencion);
+			// 				$plantilla = $this->_plantillasModel->where('TITULO',  $doc->TIPODOC)->first();
+			// 				//Se obtiene el id de intervencion de acuerdo al municipio
+			// 				if ($municipio == 1 ||  $municipio == 6) {
+			// 					$intervencion = $plantilla['INTERVENCIONENSENADAID'];
+			// 				} else if ($municipio == 2 || $municipio == 3 || $municipio == 7) {
+			// 					$intervencion = $plantilla['INTERVENCIONMEXICALIID'];
+			// 				} else if ($municipio == 4 || $municipio == 5) {
+			// 					$intervencion = $plantilla['INTERVENCIONTIJUANAID'];
+			// 				}
+			// 				$dataInter =  array('SOLICITUDID' => $_solicitudPericial->SOLICITUDID, 'INTERVENCIONID' => $intervencion);
 
-							//Se crea la intervención pericial a Justicia.
-							$_intervencionPericial = $this->_createIntervencionPericial($dataInter, $municipio);
+			// 				//Se crea la intervención pericial a Justicia.
+			// 				$_intervencionPericial = $this->_createIntervencionPericial($dataInter, $municipio);
 
-							if ($_intervencionPericial->status == 201) {
-								$datosBitacora = [
-									'ACCION' => 'Se envio una solicitud pericial.',
-									'NOTAS' => 'Exp: ' . $expediente . ' Solicitud: ' . $_solicitudPericial->SOLICITUDID . 'Intervencion' . $intervencion,
-								];
-								$this->_bitacoraActividad($datosBitacora);
-								return json_encode(['status' => 1, 'message' => 'Se han sincronizado las coordinaciones de los expedientes de CDTEC con Justicia Net correctamente.']);
-							} else {
-								return json_encode(['status' => 0, 'message' => 'No fue posible sincronizar los expedientes con Justicia Net.']);
-							}
-						}
-					}
-				}
-			}
+			// 				if ($_intervencionPericial->status == 201) {
+			// 					$datosBitacora = [
+			// 						'ACCION' => 'Se envio una solicitud pericial.',
+			// 						'NOTAS' => 'Exp: ' . $expediente . ' Solicitud: ' . $_solicitudPericial->SOLICITUDID . 'Intervencion' . $intervencion,
+			// 					];
+			// 					$this->_bitacoraActividad($datosBitacora);
+			// 					return json_encode(['status' => 1, 'message' => 'Se han sincronizado las coordinaciones de los expedientes de CDTEC con Justicia Net correctamente.']);
+			// 				} else {
+			// 					return json_encode(['status' => 0, 'message' => 'No fue posible sincronizar los expedientes con Justicia Net.']);
+			// 				}
+			// 			}
+			// 		}
+			// 	}
+			// }
 		}
+		var_dump($folioid, $municipio, $expediente);exit;
 
 		// } catch (\Error $e) {
 		// 	throw new \Exception('Error en actualizacion en Justicia: ' . $e->getMessage());
