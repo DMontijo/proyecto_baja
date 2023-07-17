@@ -2494,6 +2494,76 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**Funcion para subir todos los documentos a periciales */
+	public function subirPericiales()
+	{
+		$folio = 7764;
+		$expediente = 502001202309147;
+		$year = 2023;
+		$oficina = 729;
+		$empleado = 8983;
+		$area = 3171;
+		$municipio = 1;
+
+		// foreach ($folios as $key => $folio) {
+		// 	# code...
+		// }
+		$archivosPericiales = $this->subirArchivosRemision($folio, $year, $expediente);
+
+		//Se revisa que haya documentos subidos a Justicia de tipo periciales
+		$folioDocPericiales = $this->_folioDocModelRead->expedienteDocumentosJusticia($folio, $year);
+
+		// try {
+
+			if ($folioDocPericiales) {
+				foreach ($folioDocPericiales as $key => $doc) {
+					$solicitudp = array();
+					$solicitudp['ESTADOID'] = 2;
+					$solicitudp['MUNICIPIOID'] = $municipio;
+					$solicitudp['EMPLEADOIDREGISTRO'] = $empleado;
+					$solicitudp['OFICINAIDREGISTRO'] = $oficina;
+					$solicitudp['AREAIDREGISTRO'] = $area;
+					$solicitudp['ANO'] = $doc->ANO;
+					$solicitudp['TITULO'] = $doc->TIPODOC;
+
+					// Se suben los documentos periciales a Justicia.
+					$_solicitudPericial = $this->_createSolicitudesPericiales($solicitudp);
+					if ($_solicitudPericial->status == 201) {
+						//Crea la solicitud pericial a Justicia.
+						$_solicitudDocto = $this->_createSolicitudDocto($expediente, $_solicitudPericial->SOLICITUDID, $doc->EXPEDIENTEDOCID, $municipio);
+
+						if ($_solicitudDocto->status == 201) {
+							//Crea la solicityd en el expediente a Justicia.
+							$_solicitudExpediente = $this->_createSolicitudExpediente($expediente, $_solicitudPericial->SOLICITUDID, $municipio);
+							$plantilla = (object) array();
+
+							$plantilla = $this->_plantillasModel->where('TITULO',  $doc->TIPODOC)->first();
+							//Se obtiene el id de intervencion de acuerdo al municipio
+							if ($municipio == 1 ||  $municipio == 6) {
+								$intervencion = $plantilla['INTERVENCIONENSENADAID'];
+							} else if ($municipio == 2 || $municipio == 3 || $municipio == 7) {
+								$intervencion = $plantilla['INTERVENCIONMEXICALIID'];
+							} else if ($municipio == 4 || $municipio == 5) {
+								$intervencion = $plantilla['INTERVENCIONTIJUANAID'];
+							}
+							$dataInter =  array('SOLICITUDID' => $_solicitudPericial->SOLICITUDID, 'INTERVENCIONID' => $intervencion);
+
+							//Se crea la intervención pericial a Justicia.
+							$_intervencionPericial = $this->_createIntervencionPericial($dataInter, $municipio);
+
+							if ($_intervencionPericial->status == 201) {
+								return json_encode(['status' => 1, 'message' => 'Se han sincronizado las coordinaciones de los expedientes de CDTEC con Justicia Net correctamente.']);
+							} else {
+								return json_encode(['status' => 0, 'message' => 'No fue posible sincronizar los expedientes con Justicia Net.']);
+							}
+						}
+					}
+				}
+			}
+		// } catch (\Error $e) {
+		// 	throw new \Exception('Error en actualizacion en Justicia: ' . $e->getMessage());
+		// }
+	}
 	/**
 	 * Función para verificar que el correo no exista
 	 * Recibe por metodo POST el email
@@ -3594,8 +3664,8 @@ class DashboardController extends BaseController
 
 
 								$expedienteDocumento = $this->_createFolioDocumentos($expediente, $documentos, $docP->MUNICIPIOID);
-
 								if ($expedienteDocumento->status == 201) {
+
 									unlink(FCPATH  . 'assets/' . $docP->NUMEROEXPEDIENTE . "_" . $docP->FOLIODOCID . ".rtf");
 									// unlink(FCPATH  . 'assets/' . $doc['NUMEROEXPEDIENTE'] . "_" . $doc['FOLIODOCID'] . ".bin");	
 									$datosRelacionFolioExpDoc = [
@@ -5009,6 +5079,7 @@ class DashboardController extends BaseController
 		// return $result;
 		return json_decode($result);
 	}
+
 	public function getTimeVideo()
 	{
 		// $video = $this->request->getPost('name_video');

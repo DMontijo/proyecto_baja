@@ -4,6 +4,8 @@
 <?php echo $header_data->title ?>
 <?= $this->endSection() ?>
 <?php $rolesToMonitor = [1, 2, 6, 7, 11]; ?>
+<?php $rolesToAdmin = [1]; ?>
+
 <?php
 helper('fiel_helper');
 $session = session();
@@ -22,6 +24,15 @@ $file_text = $user_id . "_data.txt";
 			</button>
 		</div>
 	<?php } ?>
+	<?php if (in_array(session('ROLID'), $rolesToAdmin)) { ?>
+
+		<div class="col-12 text-right pb-3">
+			<button type="button" id="btnSubirPericiales" name="btnSubirPericiales" class="btn btn-primary font-weight-bold text-white" data-toggle="tooltip" data-placement="top" title="Botón para sincronizar las coordinaciones de los expedientes con Justicia Net.">
+				<i class="fas fa-sync-alt"></i> SUBIR PERICIALES
+			</button>
+		</div>
+	<?php } ?>
+
 	<div class="col-12">
 		<?php if (file_exists($directory . '/' . $file_key) && file_exists($directory . '/' . $file_cer)) { ?>
 			<?php if (file_exists($directory . '/' . $file_text)) { ?>
@@ -203,6 +214,64 @@ $file_text = $user_id . "_data.txt";
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 				btnActualizarExpedientes.disabled = false;
+				Swal.fire({
+					icon: 'error',
+					title: 'Error en sincronización',
+					text: 'No fue posible sincronizar los expedientes con Justicia Net.',
+					showConfirmButton: false,
+					timer: 2000,
+					timerProgressBar: true,
+				});
+				console.error('Error de boton de sincronización:', textStatus);
+			}
+		});
+	}, false);
+
+	var btnSubirPericiales = document.querySelector('#btnSubirPericiales');
+
+	//Evento para actualizar las oficinas de los expedientes cuando se actualizan en Justicia. Sirve para sincronizarlo con VIdeodenuncia
+	btnSubirPericiales.addEventListener('click', (e) => {
+
+		$.ajax({
+			url: "<?= base_url('/data/subir-periciales') ?>",
+			method: "GET",
+			dataType: "json",
+			beforeSend: function() {
+				btnSubirPericiales.disabled = true;;
+				Swal.fire({
+					icon: 'info',
+					title: 'Sincronizando expedientes con Justicia Net.',
+					showConfirmButton: false,
+					timer: 2000,
+					timerProgressBar: true,
+				});
+			},
+			success: function(response) {
+				btnSubirPericiales.disabled = false;
+				console.log('Respuesta actualización expedientes:', response)
+
+				if (response.status == 1) {
+					Swal.fire({
+						icon: 'success',
+						title: 'Sincronizado exitosamente.',
+						text: response.message,
+						showConfirmButton: false,
+						timer: 5000,
+						timerProgressBar: true,
+					});
+				} else {
+					Swal.fire({
+						icon: 'error',
+						title: 'Error en sincronización',
+						text: response.message,
+						showConfirmButton: false,
+						timer: 2000,
+						timerProgressBar: true,
+					});
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				btnSubirPericiales.disabled = false;
 				Swal.fire({
 					icon: 'error',
 					title: 'Error en sincronización',
