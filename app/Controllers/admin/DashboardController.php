@@ -2509,7 +2509,6 @@ class DashboardController extends BaseController
 			['FOLIOID' => 6790, 'ANO' => 2023, 'MUNICIPIO' => 3, 'EMPLEADO' => 2955, 'OFICINA' => 392, 'AREA' => 2409, 'EXPEDIENTE' => 102003202302774],
 			['FOLIOID' => 7211, 'ANO' => 2023, 'MUNICIPIO' => 3, 'EMPLEADO' => 3945, 'OFICINA' => 316, 'AREA' => 2412, 'EXPEDIENTE' => 102003202302867],
 			['FOLIOID' => 7559, 'ANO' => 2023, 'MUNICIPIO' => 3, 'EMPLEADO' => 2955, 'OFICINA' => 317, 'AREA' => 2409, 'EXPEDIENTE' => 102003202302937],
-
 			['FOLIOID' => 3265, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 9414, 'OFICINA' => 840, 'AREA' => 3001, 'EXPEDIENTE' => 102004202322421],
 			['FOLIOID' => 3330, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 9457, 'OFICINA' => 838, 'AREA' => 2964, 'EXPEDIENTE' => 102004202322655],
 			['FOLIOID' => 3401, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10432, 'OFICINA' => 906, 'AREA' => 4259, 'EXPEDIENTE' => 102004202322663],
@@ -2630,9 +2629,7 @@ class DashboardController extends BaseController
 			$municipio = $folio->MUNICIPIO;
 			$empleado = $folio->EMPLEADO;
 			$oficina = $folio->OFICINA;
-			$area = $folio->MUNICIPIO;
-
-
+			$area = $folio->AREA;
 			// $archivosPericiales = $this->subirArchivosRemision($folioid, $year, $expediente);
 
 			//Se revisa que haya documentos subidos a Justicia de tipo periciales
@@ -2653,7 +2650,6 @@ class DashboardController extends BaseController
 
 					// Se suben los documentos periciales a Justicia.
 					$_solicitudPericial = $this->_createSolicitudesPericiales($solicitudp);
-					var_dump($_solicitudPericial);exit;
 					if ($_solicitudPericial->status == 201) {
 						//Crea la solicitud pericial a Justicia.
 						$_solicitudDocto = $this->_createSolicitudDocto($expediente, $_solicitudPericial->SOLICITUDID, $doc->EXPEDIENTEDOCID, $municipio);
