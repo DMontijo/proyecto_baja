@@ -3194,22 +3194,27 @@ class DashboardController extends BaseController
 
 						$this->_bitacoraActividad($datosBitacora);
 
-						$folio = $this->_folioModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->first();
-						$denunciante = $this->_denunciantesModelRead->asObject()->where('DENUNCIANTEID', $folio->DENUNCIANTEID)->first();
-						if ($folio->TIPODENUNCIA == 'VD' || $folio->TIPODENUNCIA == 'TE' || $folio->TIPODENUNCIA == 'EL') {
+						$folioRow2 = $this->_folioModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->first();
+						$denunciante = $this->_denunciantesModelRead->asObject()->where('DENUNCIANTEID', $folioRow2->DENUNCIANTEID)->first();
+						if ($folioRow2->TIPODENUNCIA == 'VD' || $folioRow2->TIPODENUNCIA == 'TE' || $folioRow2->TIPODENUNCIA == 'EL') {
 
-							if ($this->_sendEmailDerivacionCanalizacion($denunciante->CORREO, $folio->FOLIOID, $status)) {
+							if ($this->_sendEmailDerivacionCanalizacion($denunciante->CORREO, $folioRow2->FOLIOID, $status)) {
 								return json_encode(['status' => 1]);
 							} else {
 								return json_encode(['status' => 1]);
 							}
-						} else if ($folio->TIPODENUNCIA == 'DA') {
+						} else if ($folioRow2->TIPODENUNCIA == 'DA') {
 							return json_encode(['status' => 1]);
-						} else if ($folio->TIPODENUNCIA == 'ES') {
-							$folioPersonaMoral = $this->_folioPersonaMoralModelRead->asObject()->where('ANO', $year)->where('FOLIOID', $folio->FOLIOID)->first();
-							$notificacion = $this->_personasMoralesNotificacionesRead->asObject()->where('PERSONAMORALID', $folioPersonaMoral->PERSONAMORALID)->where('NOTIFICACIONID', $folioPersonaMoral->NOTIFICACIONID)->first();
+						} else if ($folioRow2->TIPODENUNCIA == 'ES') {
+							$folioPersonaMoral = $this->_folioPersonaMoralModelRead->asObject()->where('ANO', $year)->where('FOLIOID', $folioRow2->FOLIOID)->first();
+							if ($folioPersonaMoral) {
+								$notificacion = $this->_personasMoralesNotificacionesRead->asObject()->where('PERSONAMORALID', $folioPersonaMoral->PERSONAMORALID)->where('NOTIFICACIONID', $folioPersonaMoral->NOTIFICACIONID)->first();
+							}else{
+								$notificacion = $this->_denunciantesModelRead->asObject()->where('DENUNCIANTEID', $folioRow2->DENUNCIANTEID)->first();
 
-							if ($this->_sendEmailDerivacionCanalizacion($notificacion->CORREO, $folio->FOLIOID, $status)) {
+							}
+
+							if ($this->_sendEmailDerivacionCanalizacion($notificacion->CORREO, $folioRow2->FOLIOID, $status)) {
 								return json_encode(['status' => 1]);
 							} else {
 								return json_encode(['status' => 1]);

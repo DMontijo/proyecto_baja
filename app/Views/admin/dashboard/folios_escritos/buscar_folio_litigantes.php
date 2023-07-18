@@ -147,6 +147,9 @@
 												<td class="text-center">
 													<a href="<?= base_url('/admin/dashboard/ver_folio_litigante?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO ?>" class="btn btn-primary text-white btn-sm"><i class="fas fa-folder-open"></i> ABRIR</a>
 												</td>
+												<td class="text-center">
+													<a href="<?= base_url('/admin/dashboard/modulo-litigantes-consulta?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO ?>" class="btn btn-primary text-white btn-sm"><i class="fas fa-user-check"></i> ATENDER</a>
+												</td>
 												<td class="text-center font-weight-bold"><?= $folio->FOLIOID ?></td>
 												<td class="text-center"><?= $folio->ANO ?></td>
 												<td class="text-center font-weight-bold"><?= $expedienteid ?  $expedienteid . '/' . $folio->TIPOEXPEDIENTECLAVE : $folio->FOLIOID . '/' . $folio->ANO ?></td>

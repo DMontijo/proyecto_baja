@@ -2687,6 +2687,9 @@
 						.PODERNONOTARIO : '';
 					document.querySelector('#poder_pm').value = poder.PODERNOPODER ? poder
 						.PODERNOPODER : '';
+					document.querySelector('#btnLigacion').href = `<?= base_url('admin/dashboard/editar_ligacion?id=') ?>${poder.ID}`;
+					document.querySelector('#btnLigacion').target = "_blank";
+
 					$('#folio_persona_moral_modal').modal('show');
 
 				} else {

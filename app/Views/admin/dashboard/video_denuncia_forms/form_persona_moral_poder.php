@@ -1,12 +1,11 @@
-<form id="persona_moral_poder_form" action="" method="post" enctype="multipart/form-data"
-    class="row p-0 m-0 needs-validation" novalidate>
+<form id="persona_moral_poder_form" action="" method="post" enctype="multipart/form-data" class="row p-0 m-0 needs-validation" novalidate>
     <div id="contenedor_moral_poder" class="col-12 mb-5 d-none">
         <a id="moral_poder_download" download="" href="">
             <img id="moral_poder" class="img-fluid" src="" style="max-width:300px;">
             <br>
         </a>
     </div>
-	
+
     <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
         <label for="relacion_pm" class="form-label font-weight-bold">Aceptado</label>
         <select class="form-control" id="relacion_pm" name="relacion_pm">
@@ -14,7 +13,7 @@
             <option value="N">NO</option>
         </select>
     </div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+    <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
         <label for="volumen_pm" class="form-label font-weight-bold">Volumen</label>
         <input type="text" class="form-control" id="volumen_pm" name="volumen_pm">
     </div>
@@ -29,7 +28,12 @@
     <div class="col-12">
         <hr>
     </div>
-    
+    <td class="text-center">
+        <a type="button" class="btn btn-primary" id="btnLigacion" name="btnLigacion">
+         Editar ligación
+        </a>
+    </td>
+
 </form>
 <script>
     var form = document.getElementById('persona_moral_poder_form');

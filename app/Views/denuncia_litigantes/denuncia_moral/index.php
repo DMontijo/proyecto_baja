@@ -160,9 +160,9 @@
 	let zona_empresa = document.querySelector('#zona_empresa');
 	let razon_social = document.querySelector('#razon_social');
 	let rfc_empresa = document.querySelector('#rfc_empresa');
-	let poder_volumen = document.querySelector('#poder_volumen');
-	let poder_no_poder = document.querySelector('#poder_no_poder');
-	let poder_no_notario = document.querySelector('#poder_no_notario');
+	// let poder_volumen = document.querySelector('#poder_volumen');
+	// let poder_no_poder = document.querySelector('#poder_no_poder');
+	// let poder_no_notario = document.querySelector('#poder_no_notario');
 	let giro_empresa = document.querySelector('#giro_empresa_denuncia');
 
 	correo_empresa.readOnly = true;
@@ -200,9 +200,9 @@
 		marca_comercial.value = "";
 		razon_social.value = "";
 		rfc_empresa.value = "";
-		poder_volumen.value = "";
-		poder_no_notario.value = "";
-		poder_no_poder.value = "";
+		// poder_volumen.value = "";
+		// poder_no_notario.value = "";
+		// poder_no_poder.value = "";
 		giro_empresa.value = "";
 
 		document.getElementById('alerta_empresas').classList.add('d-none');
@@ -223,9 +223,9 @@
 					marca_comercial.value = "";
 					razon_social.value = "";
 					rfc_empresa.value = "";
-					poder_volumen.value = "";
-					poder_no_notario.value = "";
-					poder_no_poder.value = "";
+					// poder_volumen.value = "";
+					// poder_no_notario.value = "";
+					// poder_no_poder.value = "";
 					giro_empresa.value = "";
 
 					document.getElementById('alerta_empresas').classList.remove('d-none');
@@ -244,9 +244,9 @@
 					marca_comercial.value = responsemaster.data.empresas.MARCACOMERCIAL;
 					razon_social.value = responsemaster.data.empresas.RAZONSOCIAL;
 					rfc_empresa.value = responsemaster.data.empresas.RFC;
-					poder_volumen.value = responsemaster.data.empresas.PODERVOLUMEN;
-					poder_no_notario.value = responsemaster.data.empresas.PODERNONOTARIO;
-					poder_no_poder.value = responsemaster.data.empresas.PODERNOPODER;
+					// poder_volumen.value = responsemaster.data.empresas.PODERVOLUMEN;
+					// poder_no_notario.value = responsemaster.data.empresas.PODERNONOTARIO;
+					// poder_no_poder.value = responsemaster.data.empresas.PODERNOPODER;
 					giro_empresa.value = responsemaster.data.empresas.PERSONAMORALGIROID;
 
 				}

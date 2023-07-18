@@ -14,7 +14,7 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="marca_comercial_d" class="form-label fw-bold">Marca comercial:</label>
-		<input type="text" class="form-control" id="marca_comercial_d" name="marca_comercial_d" required>
+		<input type="text" class="form-control" id="marca_comercial_d" name="marca_comercial_d">
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="razon_social" class="form-label fw-bold input-required">Razón social:</label>
@@ -36,7 +36,7 @@
 			Por favor, selecciona un giro.
 		</div>
 	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+	<!-- <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="poder_volumen" class="form-label fw-bold">Volumen:</label>
 		<input type="text" class="form-control" id="poder_volumen" name="poder_volumen">
 	</div>
@@ -48,7 +48,7 @@
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="poder_no_notario" class="form-label fw-bold">Número de notario:</label>
 		<input type="text" class="form-control" id="poder_no_notario" name="poder_no_notario">
-	</div>
+	</div> -->
 </div>
 <div class="row" id="contenedor-direcciones">
 	<h3 class="fw-bold text-center text-blue pb-3">Dirección de notificacion</h3>
@@ -104,7 +104,7 @@
 		</div>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="marca_comercial_d" class="form-label fw-bold">Zona:</label>
+		<label for="zona_empresa" class="form-label fw-bold">Zona:</label>
 		<input type="text" class="form-control" id="zona_empresa" name="zona_empresa" maxlength="10" required>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">

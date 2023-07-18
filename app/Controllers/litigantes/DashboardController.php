@@ -543,7 +543,8 @@ class DashboardController extends BaseController
 			'HECHONARRACION' => $this->request->getPost('descripcion_breve') != '' ? strtoupper($this->request->getPost('descripcion_breve')) : NULL,
 			'HECHODELITO' => $this->request->getPost('delito'),
 			'TIPODENUNCIA' => 'ES',
-			'NOTIFICACIONES' => 'S'
+			'NOTIFICACIONES' => 'S',
+			'STATUS' => 'PENDIENTE'
 		];
 
 		if ($this->request->getPost('check_ubi') == 'on') {
@@ -942,7 +943,7 @@ class DashboardController extends BaseController
 			}
 			if ($this->_sendEmailFolio($session->get('CORREO'), $FOLIOID, $year)) {
 				$url = "/denuncia_litigantes/dashboard/subir_documentos_folio?folio=" . $FOLIOID . "&year=" . $year;
-				return redirect()->to(base_url($url))->with('message_success', 'Se ha creado tu folio.');
+				return redirect()->to(base_url($url))->with('message_success', 'Por favor, sube la denuncia escrita.');
 			} else {
 				return redirect()->back()->with('message_error', 'Hubo un error en los datos y no se guardo, intentalo de nuevo.');
 			}
@@ -1363,7 +1364,7 @@ class DashboardController extends BaseController
 			}
 			if ($this->_sendEmailFolio($session->get('CORREO'), $FOLIOID, $year)) {
 				$url = "/denuncia_litigantes/dashboard/subir_documentos_folio?folio=" . $FOLIOID . "&year=" . $year;
-				return redirect()->to(base_url($url))->with('message_success', 'Se ha creado tu folio.');
+				return redirect()->to(base_url($url))->with('message_success', 'Por favor, sube la denuncia escrita.');
 			} else {
 				return redirect()->back()->with('message_error', 'Hubo un error en los datos y no se guardo, intentalo de nuevo.');
 			}
