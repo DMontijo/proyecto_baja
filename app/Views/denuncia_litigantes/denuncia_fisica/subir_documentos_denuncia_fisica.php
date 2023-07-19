@@ -11,7 +11,7 @@
 		<div class="card rounded shadow border-0">
 			<div class="card-body py-5 p-sm-5">
 				<div class="container text-center">
-					<h1 class="text-center fw-bolder pb-1 text-blue">SUBIR DENUNCIA ESCRITA</h1>
+					<h1 class="text-center fw-bolder pb-1 text-blue">SUBIR ARCHIVO DE DENUNCIA POR ESCRITO Y ANEXOS</h1>
 					<p class="text-center fw-bold text-blue ">Recuerda subir solo uno a la vez.</p>
 					<div class="alert alert-warning" role="alert">
 						La denuncia por escrito es obligatorio, súbelo para finalizar.

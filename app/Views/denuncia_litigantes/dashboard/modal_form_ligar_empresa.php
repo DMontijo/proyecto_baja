@@ -43,16 +43,16 @@
                         </div>
                     </div>
                     <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-                        <label class="form-label fw-bold" for="fecha_inicio_poder">Fecha inicio de poder</label>
+                        <label class="form-label fw-bold" for="fecha_inicio_poder">Fecha de expedición de poder</label>
                         <input type="date" name="fecha_inicio_poder" class="form-control" id="fecha_inicio_poder">
                     </div>
                     <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-                        <label class="form-label fw-bold" for="fecha_fin_poder">Fecha fin de poder</label>
+                        <label class="form-label fw-bold" for="fecha_fin_poder">Fecha de vigencia del poder</label>
                         <input type="date" name="fecha_fin_poder" class="form-control" id="fecha_fin_poder">
                     </div>
 
                     <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-                        <label for="poder_archivo" class="form-label fw-bold input-required">Fotografía poder:</label>
+                        <label for="poder_archivo" class="form-label fw-bold input-required">Archivo del poder notarial:</label>
                         <input type="file" class="form-control" id="poder_archivo" name="poder_archivo" required>
                         <img id="poder_foto" class="img-fluid" src="" style="max-width:300px;">
 

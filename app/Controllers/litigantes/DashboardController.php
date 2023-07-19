@@ -650,12 +650,12 @@ class DashboardController extends BaseController
 			);
 
 			//Insercion de persona fisica, media filiacion y domicilio del denunciante
-			$denuncinateIdPersona = $this->_folioPersonaFisica($dataDenunciante, $FOLIOID, 5, $year);
+			$denuncinateIdPersona = $this->_folioPersonaFisica($dataDenunciante, $FOLIOID, 3, $year);
 			$this->_folioPersonaFisicaMediaFiliacion($dataDenunciante, $FOLIOID, $denuncinateIdPersona, $year);
 			$this->_folioPersonaFisicaDomicilio($dataDenuncianteDomicilio, $FOLIOID, $denuncinateIdPersona, $year);
 
 			//CARTA PODER
-			$carta_poder = $this->request->getFile('carta_poder');
+			/*$carta_poder = $this->request->getFile('carta_poder');
 			$carta_poder_data = null;
 			if ($carta_poder->isValid()) {
 				try {
@@ -673,7 +673,7 @@ class DashboardController extends BaseController
 				'ARCHIVO' => $carta_poder_data,
 				'EXTENSION' => $carta_poder->getClientExtension(),
 			];
-			$archivoExterno = $this->_folioExpArchivo($dataArchivos, $FOLIOID, $year);
+			$archivoExterno = $this->_folioExpArchivo($dataArchivos, $FOLIOID, $year);*/
 
 			//DATOS DESAPARECIDO
 			if ($dataFolio['HECHODELITO'] == "PERSONA DESAPARECIDA") {
@@ -1098,7 +1098,7 @@ class DashboardController extends BaseController
 			);
 
 			//Insercion de persona fisica, media filiacion y domicilio del denunciante
-			$denuncinateIdPersona = $this->_folioPersonaFisica($dataDenunciante, $FOLIOID, 5, $year);
+			$denuncinateIdPersona = $this->_folioPersonaFisica($dataDenunciante, $FOLIOID, 3, $year);
 			$this->_folioPersonaFisicaMediaFiliacion($dataDenunciante, $FOLIOID, $denuncinateIdPersona, $year);
 			$this->_folioPersonaFisicaDomicilio($dataDenuncianteDomicilio, $FOLIOID, $denuncinateIdPersona, $year);
 

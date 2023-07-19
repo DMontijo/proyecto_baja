@@ -133,12 +133,12 @@
 			La hora del delito es obligatoria
 		</div>
 	</div>
-	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+	<!-- <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="carta_poder" class="form-label fw-bold input-required">Carta poder:</label>
 		<input class="form-control" type="file" id="carta_poder" name="carta_poder" accept="image/jpeg, image/jpg, image/png, application/pdf" required>
 		<img class="img-fluid d-none py-2" src="" id="img_preview_carta" name="img_preview_carta">
 
-	</div>
+	</div> -->
 	<div class="col-12 mb-3">
 		<label for="descripcion_breve" class="form-label fw-bold input-required">Descripción breve del delito</label>
 		<textarea class="form-control" id="descripcion_breve" name="descripcion_breve" rows="10" maxlength="1000" onkeyup="contarCaracteres(this)" required></textarea>

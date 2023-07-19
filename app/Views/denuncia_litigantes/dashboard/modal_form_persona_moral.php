@@ -325,7 +325,7 @@
                 data: {
                     'email': e.target.value
                 },
-                url: "<?= base_url('/data/exist-email') ?>",
+                url: "<?= base_url('/data/exist-email-empresarial') ?>",
                 method: "POST",
                 dataType: "json",
                 success: function(response) {

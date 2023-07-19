@@ -51,7 +51,7 @@
 	</div> -->
 </div>
 <div class="row" id="contenedor-direcciones">
-	<h3 class="fw-bold text-center text-blue pb-3">Dirección de notificacion</h3>
+	<h3 class="fw-bold text-center text-blue pb-3">Dirección de notificación</h3>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="direccion" class="form-label fw-bold input-required">Dirección:</label>
 		<select class="form-select" id="direccion" name="direccion" required>
