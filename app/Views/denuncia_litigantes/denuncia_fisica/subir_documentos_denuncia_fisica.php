@@ -24,6 +24,9 @@
 
 							<input class="form-control" type="file" id="documento_extra" name="documento_extra" accept="image/jpeg, image/jpg, image/png, application/pdf" required>
 							<img class="img-fluid d-none py-2" src="" style="width:50%;" id="img_preview_carta" name="img_preview_carta">
+							<a id="descargar_documento" class="btn btn-primary d-none" download="">
+								Descargar archivo
+							</a>
 							<div id="title-doc" class="d-none"></div>
 
 						</div>
@@ -105,8 +108,10 @@
 			}
 		});
 		document.querySelector('#documento_extra').addEventListener('change', async (e) => {
-
+			let file = e.target.files[0];
 			let preview = document.querySelector('#img_preview_carta');
+			let title_doc = document.getElementById('title-doc');
+			let downloadLink = document.getElementById('descargar_documento');
 
 			if (e.target.files && e.target.files[0]) {
 				if (e.target.files[0].type == "image/jpeg" || e.target.files[0].type == "image/png" || e.target.files[0].type == "image/jpg") {
@@ -130,13 +135,24 @@
 
 							preview.classList.remove('d-none');
 							preview.setAttribute('src', image);
+							downloadLink.classList.remove('d-none');
+							downloadLink.href = e.target.result;
+							downloadLink.download = file.name;
+							title_doc.classList.remove('d-none')
+							title_doc.innerHTML = file.name;
+							preview.classList.remove('d-none');
 						}
 					} else {
 						// document.getElementById('subirDocSubmit').disabled = false;
 
 						let reader = new FileReader();
 						reader.onload = function(e) {
-
+							downloadLink.classList.remove('d-none');
+							downloadLink.href = e.target.result;
+							downloadLink.download = file.name;
+							title_doc.classList.remove('d-none')
+							title_doc.innerHTML = file.name;
+							preview.classList.remove('d-none');
 							preview.classList.remove('d-none');
 							preview.setAttribute('src', e.target.result);
 						}
@@ -159,16 +175,16 @@
 
 						let reader = new FileReader();
 						reader.onload = function(e) {
-							// documento_identidad.value = e.target.result;
-							// documento_identidad_modal.setAttribute('src', '');
+							downloadLink.classList.remove('d-none');
+							downloadLink.href = e.target.result;
+							downloadLink.download = file.name;
+							title_doc.classList.remove('d-none')
+							title_doc.innerHTML = file.name;
 							preview.classList.remove('d-none');
 							preview.setAttribute('src', '<?= base_url() ?>/assets/img/file.png');
-							// const title_doc = document.getElementById('title-doc');
-							// title_doc.classList.remove('d-none')
-							// title_doc.innerHTML = e.target.files[0].name;
-
-
 						}
+
+
 						reader.readAsDataURL(e.target.files[0]);
 
 					}
