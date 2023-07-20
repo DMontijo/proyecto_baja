@@ -697,21 +697,29 @@
 	function llenarTablaArchivosExternos(archivos) {
 		for (let i = 0; i < archivos.length; i++) {
 
-			if (archivos[i].EXTENSION == 'pdf' || archivos[i].EXTENSION == 'doc') {
+			if (archivos[i].EXTENSION == 'pdf') {
 				var img = `<a id="downloadArchivo" download=""><img src='<?= base_url() ?>/assets/img/file.png'));'  width="50px" height="50px"></img></a>`;
-
+				var frame = `<iframe src='${archivos[i].ARCHIVO}' width="100%" height="500px" frameborder="0"></iframe>`;
+			} else if (archivos[i].EXTENSION == 'doc' || archivos[i].EXTENSION == 'docx') {
+				var img = `<a id="downloadArchivo" download=""><img src='<?= base_url() ?>/assets/img/file.png'));'  width="50px" height="50px"></img></a>`;
+				var frame = `<div id="docxViewer">No se puede visualizar este archivo, descargalo</div>`;
 
 			} else {
 				var img = `<a id="downloadArchivo" download=""><img src='${archivos[i].ARCHIVO}');' width="50px" height="50px"></img></a>`;
+				var frame = "";
 
 			}
 			var btnEliminarArchivo =
 				`<button type='button' id="deleteArchivobtn" class='btn btn-primary' onclick='deleteArchivo(${archivos[i].FOLIOARCHIVOID})'><i class='fas fa-trash'></i></button>`;
+			var btnDescargar = `<a id="descargar_documento" class="btn btn-primary" download=""><i class='fas fa-download'></i></a>`
+
 			var fila =
 				`<tr id="row${i}">` +
 				`<td class="text-center" value="${archivos[i].FOLIOARCHIVOID}">${archivos[i].ARCHIVODESCR}</td>` +
 				`<td class="text-center" value="${archivos[i].FOLIOARCHIVOID}">${img}</td>` +
-				`<td class="text-center">${btnEliminarArchivo}</td>` +
+				`<td class="text-center" value="${archivos[i].FOLIOARCHIVOID}">${frame}</td>` +
+
+				`<td class="text-center">${btnEliminarArchivo} ${btnDescargar}</td>` +
 
 				`</tr>`;
 
@@ -723,6 +731,9 @@
 			///Funcion de descarga de archivos
 			document.querySelector('#downloadArchivo').setAttribute('href', archivos[i].ARCHIVO);
 			document.querySelector('#downloadArchivo').setAttribute('download', archivos[i].FOLIOID + '_' +
+				archivos[i].ANO + '_' + archivos[i].FOLIOARCHIVOID + '.' + archivos[i].EXTENSION);
+			document.querySelector('#descargar_documento').setAttribute('href', archivos[i].ARCHIVO);
+			document.querySelector('#descargar_documento').setAttribute('download', archivos[i].FOLIOID + '_' +
 				archivos[i].ANO + '_' + archivos[i].FOLIOARCHIVOID + '.' + archivos[i].EXTENSION);
 		}
 	}

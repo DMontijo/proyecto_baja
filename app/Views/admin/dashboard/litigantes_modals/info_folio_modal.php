@@ -46,6 +46,7 @@
 										<tr>
 											<th class="text-center bg-primary text-white">DESCRIPCIÓN</th>
 											<th class="text-center bg-primary text-white">DOCUMENTO</th>
+											<th class="text-center bg-primary text-white">VISUALIZACIÓN</th>
 											<th class="text-center bg-primary text-white"></th>
 										</tr>
 									</table>
