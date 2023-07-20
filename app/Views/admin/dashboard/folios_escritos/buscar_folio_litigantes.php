@@ -8,7 +8,7 @@
 		<div class="row">
 			<div class="col-12 text-center mb-4">
 				<h1 class="mb-4 text-center font-weight-bold">CONSULTA DE FOLIOS (DENUNCIAS ESCRITAS)</h1>
-				<!-- <a class="link link-primary" href="<?= base_url('admin/dashboard/reportes') ?>" role="button"><i class="fas fa-reply"></i> REGRESAR A REPORTES</a> -->
+                <a class="link link-primary" href="<?= base_url('admin/dashboard/folios_escritos') ?>" role="button"><i class="fas fa-reply"></i> REGRESAR A DENUNCIAS ESCRITAS</a>
 			</div>
 
 			<div class="col-12">
@@ -112,6 +112,7 @@
 								<table id="expedientes_generados" class="table table-bordered table-striped table-sm" style="font-size:12px;">
 									<thead>
 										<tr>
+											<th class="text-center"></th>
 											<th class="text-center"></th>
 											<th class="text-center">FOLIO</th>
 											<th class="text-center">AÑO</th>

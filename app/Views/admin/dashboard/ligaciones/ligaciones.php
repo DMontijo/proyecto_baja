@@ -6,8 +6,11 @@
 <section class="content">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-12 text-center mb-4">
                 <h1 class="mb-4 text-center font-weight-bold">LISTADO DE LIGACIONES REGISTRADAS</h1>
+                <a class="link link-primary" href="<?= base_url('admin/dashboard/folios_escritos') ?>" role="button"><i class="fas fa-reply"></i> REGRESAR A DENUNCIAS ESCRITAS</a>
+            </div>
+            <div class="col-12">
                 <div class="card shadow border-0 rounded">
                     <div class="card-body">
                         <div class="row">
@@ -38,9 +41,9 @@
 
                                                 <?php if ($liga->RELACIONAR == 'N' && empty($liga->RECHAZAR)) { ?>
                                                     <td class="text-center text-warning font-weight-bold">AUN NO HA SIDO ACEPTADO</td>
-                                                <?php } else if($liga->RELACIONAR == 'S') { ?>
+                                                <?php } else if ($liga->RELACIONAR == 'S') { ?>
                                                     <td class="text-center text-success font-weight-bold">ACEPTADO</td>
-                                                <?php }else if($liga->RECHAZAR == 'S') {  ?>
+                                                <?php } else if ($liga->RECHAZAR == 'S') {  ?>
                                                     <td class="text-center text-danger font-weight-bold">RECHAZADO</td>
 
                                                 <?php } ?>

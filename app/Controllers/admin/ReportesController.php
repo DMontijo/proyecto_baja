@@ -306,8 +306,10 @@ class ReportesController extends BaseController
 				$tipo = 'ANÓNIMA';
 			} else if ($folio->TIPODENUNCIA == 'TE') {
 				$tipo = 'TELEFÓNICA';
-			} else {
+			} else if ($folio->TIPODENUNCIA == 'EL') {
 				$tipo = 'ELECTRONICA';
+			} else if ($folio->TIPODENUNCIA == 'ES') {
+				$tipo = 'ESCRITA';
 			}
 
 			$fechaSalida = '';
@@ -957,8 +959,10 @@ class ReportesController extends BaseController
 				$tipo = 'ANÓNIMA';
 			} else if ($folio->TIPODENUNCIA == 'TE') {
 				$tipo = 'TELEFÓNICA';
-			} else {
+			} else if ($folio->TIPODENUNCIA == 'EL') {
 				$tipo = 'ELECTRONICA';
+			} else if ($folio->TIPODENUNCIA == 'ES') {
+				$tipo = 'ESCRITA';
 			}
 
 			$sheet->setCellValue('A' . $row, $row - 4);
@@ -2270,15 +2274,16 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('A2', "REPORTE DE ATENCIONES");
 			$tipo = '';
 			if ($folio->TIPODENUNCIA == 'VD') {
-				$tipo = 'VIDEO DENUNCIA';
+				$tipo = 'VIDEO';
 			} else if ($folio->TIPODENUNCIA == 'DA') {
 				$tipo = 'ANÓNIMA';
 			} else if ($folio->TIPODENUNCIA == 'TE') {
 				$tipo = 'TELEFÓNICA';
-			} else {
+			} else if ($folio->TIPODENUNCIA == 'EL') {
 				$tipo = 'ELECTRONICA';
+			} else if ($folio->TIPODENUNCIA == 'ES') {
+				$tipo = 'ESCRITA';
 			}
-
 			$sheet->setCellValue('A' . $row, $row - 4);
 			$sheet->setCellValue('B' . $row, $dateregistro);
 			$sheet->setCellValue('C' . $row, $folio->FOLIOID);
@@ -2387,7 +2392,7 @@ class ReportesController extends BaseController
 			'nombreAgente' => '',
 			'municipioDescr' => ''
 		];
-		
+
 		foreach ($dataPost as $clave => $valor) {
 			//Recorre el array y elimina los valores que nulos o vacíos
 			if (empty($valor)) unset($dataPost[$clave]);

@@ -6,8 +6,12 @@
 <section class="content">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-12 text-center mb-4">
                 <h1 class="mb-4 text-center font-weight-bold">LISTADO DE PERSONAS MORALES REGISTRADAS</h1>
+                <a class="link link-primary" href="<?= base_url('admin/dashboard/folios_escritos') ?>" role="button"><i class="fas fa-reply"></i> REGRESAR A DENUNCIAS ESCRITAS</a>
+            </div>
+            <div class="col-12">
+
                 <div class="card shadow border-0 rounded">
                     <div class="card-body">
                         <div class="row">
@@ -35,7 +39,7 @@
                                                 <td class="text-center"><?= $moral->ESTADODESCR ?></td>
                                                 <td class="text-center"><?= $moral->MUNICIPIODESCR ?></td>
 
-                                            
+
                                                 <td class="text-center">
                                                     <a type="button" class="btn btn-success" href="<?= base_url('admin/dashboard/editar_persona_moral?id=' . $moral->PERSONAMORALID) ?>">
                                                         <i class="fas fa-edit"></i>
