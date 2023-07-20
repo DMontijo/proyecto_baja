@@ -105,8 +105,8 @@ function getColorSignal(levelSignal){
 		case 3: case 2:
 			levelSignal = 2;
 			colorSignal = 'yellow';
-			$(toastGuest).toast('show');
-			turnOffCamera();
+			// $(toastGuest).toast('show');
+			// turnOffCamera();
 			break;
 		case 1:
 			colorSignal = 'red';
