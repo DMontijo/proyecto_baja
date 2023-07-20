@@ -1448,7 +1448,6 @@ class DashboardController extends BaseController
 	 */
 	private function _curlPostDataEncrypt($endpoint, $data)
 	{
-		// var_dump($data);exit;
 		$ch = curl_init();
 
 		curl_setopt($ch, CURLOPT_URL, $endpoint);
@@ -1559,9 +1558,6 @@ class DashboardController extends BaseController
 			->where('PERSONASMORALES.PERSONAMORALID', $personaMoralId)
 			->first();
 		$data->notificaciones = $this->_personasMoralesNotificacionesModelRead->asObject()->where('PERSONAMORALID', $personaMoralId)->findAll();
-
-		// var_dump($data);
-		// exit;
 		// $data = $this->_personasMoralesRead->asObject()->where('PERSONAMORALID', $personaMoralId)->first();
 		return json_encode((object)['data' => $data]);
 	}
@@ -1595,8 +1591,6 @@ class DashboardController extends BaseController
 			$type = $file_info->buffer($data->PODERARCHIVO);
 			$data->PODERARCHIVO = 'data:' . $type . ';base64,' . base64_encode($data->PODERARCHIVO);
 		}
-		// 	var_dump($data);
-		// exit;
 		return json_encode((object)['data' => $data]);
 	}
 	/**

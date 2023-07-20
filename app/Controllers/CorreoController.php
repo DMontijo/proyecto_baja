@@ -35,7 +35,6 @@ class CorreoController extends BaseController
 			return redirect()->to(base_url('/email'));
 		} else {
 			$data = $email->printDebugger(['headers']);
-			//var_dump(json_encode($data));
 		}
 	}
 	/**

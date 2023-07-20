@@ -672,7 +672,6 @@ class FoliosController extends BaseController
 
 		$data->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 
-		// var_dump($data);exit;
 		$this->_loadView('Video denuncia', 'videodenuncia', '', $data, 'ver_folio');
 	}
 		/**
@@ -833,7 +832,6 @@ class FoliosController extends BaseController
 
 		$data->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 
-		// var_dump($data);exit;
 		$this->_loadView('Video denuncia', 'videodenuncia', '', $data, 'ver_folio_litigantes');
 	}
 

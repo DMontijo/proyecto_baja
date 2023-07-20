@@ -1426,7 +1426,6 @@ class DashboardController extends BaseController
 	 */
 	private function _curlPostDataEncrypt($endpoint, $data)
 	{
-		// var_dump($data);exit;
 		$ch = curl_init();
 
 		curl_setopt($ch, CURLOPT_URL, $endpoint);

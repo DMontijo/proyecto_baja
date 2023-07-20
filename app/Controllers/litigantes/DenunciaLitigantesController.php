@@ -234,7 +234,6 @@ class DenunciaLitigantesController extends BaseController
 
 			}
 		} catch (\Throwable $th) {
-			var_dump($th);exit;
 			return redirect()->to(base_url('/denuncia_litigantes/register'))->with('message', 'Hubo un error, no fue posible crear tu registro.');
 		}
 	}

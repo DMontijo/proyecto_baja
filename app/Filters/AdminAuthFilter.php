@@ -80,13 +80,11 @@ class AdminAuthFilter implements FilterInterface
 			'ACTIVO' => 0,
 			'ID_USUARIO' => $session->get('ID'),
 		];
-		var_dump('logout');
 
 		// Verifica que tenga sesiones activas
 		$session_user =  $this->_sesionesModelRead->where('ID_USUARIO', $session->get('ID'))->where('ID', session('uuid'))->where('ACTIVO', 1)->orderBy('FECHAINICIO', 'DESC')->first();
 
 		if ($session_user) {
-			var_dump('actualizacion');
 			// Las cierra
 			$update = $this->_sesionesModel->set($sesion_data)->where('ID', $session_user['ID'])->update();
 			if ($update) {

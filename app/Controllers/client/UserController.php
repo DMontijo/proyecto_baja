@@ -339,8 +339,6 @@ class UserController extends BaseController
 				return redirect()->to(base_url('/denuncia/dashboard'));
 			}
 		} catch (\Exception $e) {
-			// var_dump($data);
-			// exit;
 			session()->destroy;
 			return redirect()->to(base_url('/denuncia'))->with('message_error', 'No se pudo actualizar el registro, ingresa e intentalo de nuevo.');
 		}

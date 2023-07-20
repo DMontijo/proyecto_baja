@@ -1781,7 +1781,6 @@ class DashboardController extends BaseController
 					$data->respuesta = $this->getDataFolio($numfolio, $year);
 					return json_encode($data);
 				}
-				// var_dump($data->archivosexternos);exit;
 				return json_encode($data);
 			} else {
 				return json_encode(['status' => 0, 'motivo' => 'El folio ' . $numfolio . ' del año ' . $year . ' no existe.']);
@@ -1853,7 +1852,6 @@ class DashboardController extends BaseController
 					$data->respuesta = $this->getDataFolio($numfolio, $year);
 					return json_encode($data);
 				}
-				// var_dump($data->archivosexternos);exit;
 				return json_encode($data);
 			} else {
 				return json_encode(['status' => 0, 'motivo' => 'El folio ' . $numfolio . ' del año ' . $year . ' no existe.']);
@@ -3467,7 +3465,6 @@ class DashboardController extends BaseController
 					$folioRow['TIPOEXPEDIENTEID'] = (int)$tiposExpedienteId;
 
 					$expedienteCreado = $this->_createExpediente($folioRow);
-					// var_dump($expedienteCreado);exit;
 
 					// $expedienteCreado = (object)array(
 					// 	'status' => 201,
@@ -5077,7 +5074,6 @@ class DashboardController extends BaseController
 
 		$data['EXPEDIENTEID'] = $expedienteId;
 		$data['SOLICITUDID'] = $solicitudExp;
-		// var_dump($data);exit;
 		$data['userDB'] = $conexion->USER;
 		$data['pwdDB'] = $conexion->PASSWORD;
 		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
@@ -5680,7 +5676,6 @@ class DashboardController extends BaseController
 	 */
 	private function _curlPostDataEncrypt($endpoint, $data)
 	{
-		// var_dump($data);exit;
 		$ch = curl_init();
 
 		curl_setopt($ch, CURLOPT_URL, $endpoint);
@@ -5712,102 +5707,7 @@ class DashboardController extends BaseController
 		// return $result;
 		return json_decode($result);
 	}
-	private function _curlPostDataEncryptPruebas($endpoint, $data)
-	{
-		// var_dump($data);exit;
-		$ch = curl_init();
 
-		curl_setopt($ch, CURLOPT_URL, $endpoint);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-		curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $this->_encriptar(json_encode($data), KEY_128));
-		$headers = array(
-			'Content-Type: application/json',
-			'Access-Control-Allow-Origin: *',
-			'Access-Control-Allow-Credentials: true',
-			'Access-Control-Allow-Headers: Content-Type',
-			'Hash-API: ' . password_hash(TOKEN_API, PASSWORD_BCRYPT),
-			'Key: ' . KEY_128
-		);
-		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-		$result = curl_exec($ch);
-
-		if ($result === false) {
-			$result = "{
-                'status' => 401,
-                'error' => 'Curl failed: '" . curl_error($ch) . "
-            }";
-		}
-		curl_close($ch);
-		var_dump($data);
-		var_dump($result);
-		exit;
-		// return $result;
-		// return json_decode($result);
-	}
-
-	public function getTimeVideo()
-	{
-		// $video = $this->request->getPost('name_video');
-
-		$s3 = new S3Client([
-			'version' => 'latest',
-			'region'  => 'us-east-1',
-			'credentials' => [
-				'key'    => 'AKIA4VSIIBT2MZIW5HBN',
-				'secret' => '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',
-			],
-		]);
-		// $s3->listBuckets()
-
-		$bucket = 'fgebc-records';
-		$key = 'pnx_46_b607792e2c7f837ac04ee95cc607e528_2023-01-26-15-08-07.mp4';
-
-		$result = $s3->getObject(array(
-			'Bucket' => $bucket,
-			'Key'    => $key,
-			'SaveAs' => FCPATH . '/tmp/video.mp4',
-
-		));
-
-
-		$content = $result['Body'];
-
-
-		$ffprobe = FFProbe::create([
-			'ffmpeg.binaries'  => '/usr/local/bin/ffmpeg', //'C:/ffmpeg/bin/ffmpeg.exe', // the path to the FFMpeg binary
-			'ffprobe.binaries' => '/usr/local/bin/ffprobe', //'C:/ffmpeg/bin/ffprobe.exe', // the path to the FFProbe binary
-			'timeout'          => 3600, // the timeout for the underlying process
-			'ffmpeg.threads'   => 12,   // the number of threads that FFMpeg should use
-		]);
-		// $client = new Client();
-
-		// // Crea un stream con el contenido del video desde S3
-		// $response = $client->request('GET', $s3->getObjectUrl($bucket, $key));
-		// $stream = $response->getBody();
-
-
-		// Obtiene la duración del video
-		// $video = $ffprobe->streams($stream)->videos()->first()->get('codec_name');
-		$duration = $ffprobe
-			->streams('https://fgebc-records.s3.amazonaws.com/pnx_46_b607792e2c7f837ac04ee95cc607e528_2023-01-26-15-08-07.mp4')
-			->videos()
-			->first()
-			->get('duration');
-		var_dump($duration);
-		exit;
-		// $duration = $video->get('duration');
-
-		// $ffmpeg = FFMpeg::create();
-
-		// $video = $ffmpeg->open($content);
-		// $duration = $video->get('duration');
-
-		// return json_encode(['tiempo' => $duration]);
-
-	}
 	/**
 	 * Función para obtener los videos del servicio de videollamada
 	 *
@@ -5937,13 +5837,9 @@ class DashboardController extends BaseController
 		// $response = $response->data;
 		// sort($response);
 
-		// var_dump($response);
-		// exit;
-
 		// for ($i = 1; $i <= 175; $i++) {
 		// 	try {
 		// 		$update = $this->_updateUserVideo($i, 'USUARIO', '-', 'agente_' . $i . '@usuario.com', 'M', 'agente');
-		// 		var_dump($update);
 		// 	} catch (\Exception $e) {
 		// 	}
 		// }
@@ -6308,7 +6204,6 @@ class DashboardController extends BaseController
 				unset($data[$clave]);
 			}
 		}
-		// var_dump($data);exit;
 		$data['userDB'] = $conexion->USER;
 		$data['pwdDB'] = $conexion->PASSWORD;
 		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
@@ -6771,9 +6666,6 @@ class DashboardController extends BaseController
 
 			$updateRelacionParentesco = $this->_parentescoPersonaFisicaModel->set($dataRelacionParentesco)->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID2', $id)->update();
 
-			//  var_dump($personaFisica);
-			// exit;
-
 			// // $this->_parentescoPersonaFisica($dataRelacionParentesco, $folio, $desaparecido, $year);
 
 
@@ -6998,8 +6890,6 @@ class DashboardController extends BaseController
 	 */
 	public function createVehiculoByFolio()
 	{
-
-		// var_dump($_POST);exit;
 		$folio = trim($this->request->getPost('folio'));
 		$year = trim($this->request->getPost('year'));
 		if ($this->permisosAgenteAtencion($folio, $year) == null) {

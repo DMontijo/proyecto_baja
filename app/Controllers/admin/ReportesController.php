@@ -1346,8 +1346,6 @@ class ReportesController extends BaseController
 		//Filtro
 
 		$documentos = $this->_plantillasModelRead->filtro_ordenes_proteccion($dataPost);
-		//  var_dump($documentos);
-		//  exit();
 		$municipio = $this->_municipiosModelRead->asObject()->where('ESTADOID', 2)->findAll();
 		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
 		$empleado = $this->_usuariosModelRead->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
@@ -1395,16 +1393,13 @@ class ReportesController extends BaseController
 		$documentos = $this->_plantillasModelRead->filtro_ordenes_proteccion($dataPost);
 		if (!empty($dataPost['AGENTEATENCIONID'])) {
 			foreach ($empleado as $index => $dato) {
-				//var_dump('info empleado', $dato);
 				if ($dato->ID == $dataPost['AGENTEATENCIONID']) {
-					//var_dump('info empleado', $dato);
 					$dataPost['nombreAgente'] = $dato->NOMBRE . ' ' . $dato->APELLIDO_PATERNO . ' ' . $dato->APELLIDO_MATERNO;
 				}
 			}
 		}
 		if (!empty($dataPost['MUNICIPIOID'])) {
 			foreach ($municipio as $index => $dato) {
-				///var_dump('info municipio', $dato);
 				if ($dato->MUNICIPIOID == $dataPost['MUNICIPIOID']) {
 					$dataPost['municipioDescr'] = $dato->MUNICIPIODESCR;
 				}
@@ -1668,16 +1663,13 @@ class ReportesController extends BaseController
 
 		if (!empty($dataPost['AGENTEATENCIONID'])) {
 			foreach ($empleado as $index => $dato) {
-				//var_dump('info empleado', $dato);
 				if ($dato->ID == $dataPost['AGENTEATENCIONID']) {
-					//var_dump('info empleado', $dato);
 					$dataPost['nombreAgente'] = $dato->NOMBRE . ' ' . $dato->APELLIDO_PATERNO . ' ' . $dato->APELLIDO_MATERNO;
 				}
 			}
 		}
 		if (!empty($dataPost['MUNICIPIOID'])) {
 			foreach ($municipio as $index => $dato) {
-				///var_dump('info municipio', $dato);
 				if ($dato->MUNICIPIOID == $dataPost['MUNICIPIOID']) {
 					$dataPost['municipioDescr'] = $dato->MUNICIPIODESCR;
 				}
@@ -1727,16 +1719,13 @@ class ReportesController extends BaseController
 
 		if (!empty($dataPost['AGENTEATENCIONID'])) {
 			foreach ($empleado as $index => $dato) {
-				//var_dump('info empleado', $dato);
 				if ($dato->ID == $dataPost['AGENTEATENCIONID']) {
-					//var_dump('info empleado', $dato);
 					$dataPost['nombreAgente'] = $dato->NOMBRE . ' ' . $dato->APELLIDO_PATERNO . ' ' . $dato->APELLIDO_MATERNO;
 				}
 			}
 		}
 		if (!empty($dataPost['MUNICIPIOID'])) {
 			foreach ($municipio as $index => $dato) {
-				///var_dump('info municipio', $dato);
 				if ($dato->MUNICIPIOID == $dataPost['MUNICIPIOID']) {
 					$dataPost['municipioDescr'] = $dato->MUNICIPIODESCR;
 				}
@@ -2406,16 +2395,13 @@ class ReportesController extends BaseController
 
 		if (!empty($dataPost['AGENTEATENCIONID'])) {
 			foreach ($empleado as $index => $dato) {
-				//var_dump('info empleado', $dato);
 				if ($dato->ID == $dataPost['AGENTEATENCIONID']) {
-					//var_dump('info empleado', $dato);
 					$dataPost['nombreAgente'] = $dato->NOMBRE . ' ' . $dato->APELLIDO_PATERNO . ' ' . $dato->APELLIDO_MATERNO;
 				}
 			}
 		}
 		if (!empty($dataPost['MUNICIPIOID'])) {
 			foreach ($municipio as $index => $dato) {
-				///var_dump('info municipio', $dato);
 				if ($dato->MUNICIPIOID == $dataPost['MUNICIPIOID']) {
 					$dataPost['municipioDescr'] = $dato->MUNICIPIODESCR;
 				}
