@@ -133,7 +133,9 @@ class FolioModel extends Model
 			(isset($horaInicio) ? (date('H:i:s', strtotime($horaInicio))) : '00:00:00') . '" AS DATETIME)' . ' AND ' . 'CAST("' .
 			(isset($fechaFin) ? (isset($obj['horaFin']) ? date("Y-m-d", strtotime($fechaFin)) : date("Y-m-d", strtotime(date("Y-m-d", strtotime($fechaFin))))) : date("Y-m-d")) . ' ' .
 			(isset($horaFin) ? (date('H:i:s', strtotime($horaFin))) : '23:59:59') . '" AS DATETIME)';
-		$strQuery = $strQuery . ' GROUP BY FOLIO.FOLIOID';
+			$strQuery = $strQuery . 'AND TIPODENUNCIA != "DA"';
+
+			$strQuery = $strQuery . ' GROUP BY FOLIO.FOLIOID';
 		$strQuery = $strQuery . ' ORDER BY FOLIO.FECHASALIDA ASC';
 		// var_dump($strQuery);
 		// exit;
