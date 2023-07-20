@@ -115,6 +115,8 @@
 											<th class="text-center" style="min-width:150px;">SERVIDOR PUBLICO SOLICITANTE</th>
 											<th class="text-center" style="min-width:150px;">DELITO</th>
 											<th class="text-center" style="min-width:150px;">NOMBRE DE LA VICTIMA/OFENDIDO</th>
+											<th class="text-center" style="min-width:150px;">GÉNERO</th>
+
 										</tr>
 									</thead>
 									<tbody>
@@ -133,6 +135,8 @@
 												<td class="text-center"><?= $doc->NOMBRE_MP ?></td>
 												<td class="text-center"><?= $doc->DELITOMODALIDADDESCR ?></td>
 												<td class="text-center"><?= $doc->NOMBRE_VTM ?></td>
+												<td class="text-center"><?=($doc->SEXO == 'M' ? 'MASCULINO' : ($doc->SEXO == 'F' ? 'FEMENINO' : ''))?></td>
+
 											</tr>
 										<?php $num++;
 										} ?>

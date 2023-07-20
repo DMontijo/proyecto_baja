@@ -118,6 +118,8 @@
 											<th class="text-center" style="min-width:150px;">TIPO DE ORDEN DE PROTECCIÓN</th>
 											<th class="text-center" style="min-width:150px;">NOMBRE DE LA VICTIMA/OFENDIDO</th>
 											<th class="text-center" style="min-width:150px;">GÉNERO</th>
+											<th class="text-center" style="min-width:150px;">EDAD</th>
+
 											<th class="text-center" style="min-width:150px;">VÍCTIMA LESIONADA</th>
 										</tr>
 									</thead>
@@ -139,6 +141,8 @@
 												<td class="text-center"><?= $orden->TIPODOC ?></td>
 												<td class="text-center"><?= $orden->NOMBRE_VTM ?></td>
 												<td class="text-center"><?= ($orden->SEXO == 'M' ? 'MASCULINO' : ($orden->SEXO == 'F' ? 'FEMENINO' : '')) ?></td>
+												<td class="text-center"><?= $orden->EDADCANTIDAD ? $orden->EDADCANTIDAD . " AÑOS" : "" ?></td>
+
 												<td class="text-center"><?= $orden->LESIONES ?></td>
 											</tr>
 										<?php $num++;
