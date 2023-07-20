@@ -699,7 +699,9 @@
 
 			if (archivos[i].EXTENSION == 'pdf') {
 				var img = `<a id="downloadArchivo" download=""><img src='<?= base_url() ?>/assets/img/file.png'));'  width="50px" height="50px"></img></a>`;
-				var frame = `<iframe src='${archivos[i].ARCHIVO}' width="100%" height="500px" frameborder="0"></iframe>`;
+				// var frame = `<iframe src='${archivos[i].ARCHIVO}' width="100%" height="500px" frameborder="0"></iframe>`;
+				var frame = `<a href="#" onclick="abrirPrevisualizador('${archivos[i].ARCHIVO}')">Abrir Previsualizador</a>`;
+
 			} else if (archivos[i].EXTENSION == 'doc' || archivos[i].EXTENSION == 'docx') {
 				var img = `<a id="downloadArchivo" download=""><img src='<?= base_url() ?>/assets/img/file.png'));'  width="50px" height="50px"></img></a>`;
 				var frame = `<div id="docxViewer">No se puede visualizar este archivo, descargalo</div>`;
@@ -736,6 +738,32 @@
 			document.querySelector('#descargar_documento').setAttribute('download', archivos[i].FOLIOID + '_' +
 				archivos[i].ANO + '_' + archivos[i].FOLIOARCHIVOID + '.' + archivos[i].EXTENSION);
 		}
+	}
+	/**Funcion para abrir el archivo pdf en otra pestaña */
+	function abrirPrevisualizador(url) {
+		let url_sin = url.replace("data:application/pdf;base64,", "");
+		//decodifica el base 64 y lo convierte en string
+		const binaryData = atob(url_sin);
+		//longitud del string
+		const arrayBuffer = new ArrayBuffer(binaryData.length);
+		//trata cada byte del ArrayBuffer como un número separado
+		const uint8Array = new Uint8Array(arrayBuffer);
+
+		for (let i = 0; i < binaryData.length; i++) {
+			uint8Array[i] = binaryData.charCodeAt(i);
+		}
+
+		//Se construye el PDF
+		const blob = new Blob([uint8Array], {
+			type: 'application/pdf'
+		});
+
+		// Crea el link y lo abre en nueva pestaña
+		const link = document.createElement('a');
+		console.log(link);
+		link.href = URL.createObjectURL(blob);
+		link.target = "_blank"
+		link.click();
 	}
 	//Funcion para iterar la tabla de vehiculos, recibe por parametro la informacion de los vehiculos
 
