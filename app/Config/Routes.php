@@ -432,6 +432,8 @@ $routes->group('denuncia_litigantes', function ($routes) {
 
 	$routes->group('dashboard', ['filter' => 'denunciaLitigantesAuth'], function ($routes) {
 		$routes->get('/', 'litigantes/DashboardController::index');
+		$routes->get('modulo', 'litigantes/DashboardController::modulo_litigantes');
+
 		$routes->post('crear_empresa', 'litigantes/DashboardController::crear_empresa');
 		$routes->post('ligar_empresa', 'litigantes/DashboardController::ligar_empresa');
 		$routes->get('ligaciones', 'litigantes/DashboardController::ligaciones');

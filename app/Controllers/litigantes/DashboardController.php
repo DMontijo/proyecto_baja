@@ -157,7 +157,7 @@ class DashboardController extends BaseController
 	}
 
 	/**
-	 * Vista para generar constancias de extravio.
+	 * Vista principal del modulo litigantes
 	 * Carga todos los catalogos para su funcionamiento
 	 *
 	 */
@@ -172,6 +172,23 @@ class DashboardController extends BaseController
 		$data->identificacion = $this->_documentosExtravioTipoModelRead->asObject()->orderBy('DOCUMENTOEXTRAVIOTIPODESCR', 'asc')->where('VISIBLE', '1')->findAll();
 		$data->denunciante = $this->_denunciantesModelRead->asObject()->where('DENUNCIANTEID', session('DENUNCIANTEID'))->first();
 		$this->_loadView('Denuncia litigantes', $data, 'index');
+	}
+		/**
+	 * Vista para ver las opciones de modulo litigantes
+	 * Carga todos los catalogos para su funcionamiento
+	 *
+	 */
+	public function modulo_litigantes()
+	{
+		$data = (object) array();
+		$data->empresas = $this->_personasMoralesRead->asObject()->findAll();
+		$data->estados = $this->_estadosModelRead->asObject()->findAll();
+		$data->giros = $this->_personaMoralGiroRead->asObject()->findAll();
+		$data->municipios = $this->_municipiosModelRead->asObject()->where('ESTADOID', '2')->findAll();
+		$data->lugares = $this->_hechoLugarModelRead->asObject()->orderBy('HECHODESCR', 'asc')->findAll();
+		$data->identificacion = $this->_documentosExtravioTipoModelRead->asObject()->orderBy('DOCUMENTOEXTRAVIOTIPODESCR', 'asc')->where('VISIBLE', '1')->findAll();
+		$data->denunciante = $this->_denunciantesModelRead->asObject()->where('DENUNCIANTEID', session('DENUNCIANTEID'))->first();
+		$this->_loadView('Denuncia litigantes', $data, 'modulo');
 	}
 	/**
 	 * Funcion para crear una empresa
