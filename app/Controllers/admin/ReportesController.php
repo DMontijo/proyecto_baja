@@ -2656,9 +2656,7 @@ class ReportesController extends BaseController
 
 		$municipio = $this->_municipiosModelRead->asObject()->where('ESTADOID', 2)->findAll();
 		//Filtro
-		$resultFilter = $this->_folioModelRead->filterDates($data);
-		// var_dump($data);
-		// exit;
+		$resultFilter = $this->_folioModelRead->filterDatesAnonima($data);
 		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
 		$empleado = $this->_usuariosModelRead->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
 
@@ -2706,7 +2704,7 @@ class ReportesController extends BaseController
 
 		$municipio = $this->_municipiosModelRead->asObject()->where('ESTADOID', 2)->findAll();
 		//Generacion del filtro
-		$resultFilter = $this->_folioModelRead->filterDates($data);
+		$resultFilter = $this->_folioModelRead->filterDatesAnonima($data);
 		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
 		$empleado = $this->_usuariosModelRead->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
 
@@ -2766,7 +2764,7 @@ class ReportesController extends BaseController
 		}
 
 		//Generacion del filtro
-		$resultFilter = $this->_folioModelRead->filterDates($data);
+		$resultFilter = $this->_folioModelRead->filterDatesAnonima($data);
 
 		//Inicio del XLSX
 		$spreadSheet = new Spreadsheet();
