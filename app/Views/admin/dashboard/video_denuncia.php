@@ -538,10 +538,10 @@
 <?php include("video_denuncia_media_devices_modal.php"); ?>
 <?php include("video_denuncia_toast.php"); ?>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.js?v=<?= rand() ?>"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.css?v=<?= rand() ?>">
 <script type="text/javascript" src="<?= base_url() ?>/assets/agent/assets/openvidu-browser-2.27.0.min.js?v=<?= rand() ?>"></script>
-<script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
+<script src="https://cdn.socket.io/4.6.0/socket.io.min.js?v=<?= rand() ?>" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
 <script src="<?= base_url() ?>/assets/js/video_denuncia.js?v=<?= rand() ?>" type="module"></script>
 <script>
 	$(function() {
@@ -5410,6 +5410,8 @@
 				packetData.append("pf_id", document.querySelector('#pf_id').value);
 				packetData.append("ocupacion_descr", document.querySelector('#ocupacion_pf_m').value);
 				packetData.append("fotografia_actual_pf", document.querySelector('#fotografia_actual_pf').value);
+				packetData.append("edoc_pf", document.querySelector('#edoc_pf').value);
+
 				// const data = {
 				// 	'folio': document.querySelector('#input_folio_atencion').value,
 				// 	'year': document.querySelector('#year_select').value,

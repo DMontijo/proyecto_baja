@@ -124,7 +124,7 @@
 			});
 
 		} else {
-			document.getElementById('div_unidad').classList.remove('d-none');
+			// document.getElementById('div_unidad').classList.remove('d-none');
 			document.getElementById('div_empleado').classList.add('d-none');
 			btn_remitir.disabled = true;
 
@@ -146,15 +146,15 @@
 
 
 
-				const unidades = data.data;
-				clearSelect(unidad);
-				unidades.forEach(unidade => {
-					let option = document.createElement("option");
-					option.text = unidade.OFICINADESCR;
-					option.value = unidade.OFICINAID;
-					unidad.add(option);
-				});
-				unidad.value = '';
+				// const unidades = data.data;
+				// clearSelect(unidad);
+				// unidades.forEach(unidade => {
+				// 	let option = document.createElement("option");
+				// 	option.text = unidade.OFICINADESCR;
+				// 	option.value = unidade.OFICINAID;
+				// 	unidad.add(option);
+				// });
+				// unidad.value = '';
 				btn_remitir.disabled = false;
 
 			}).fail(function(jqXHR, textStatus) {

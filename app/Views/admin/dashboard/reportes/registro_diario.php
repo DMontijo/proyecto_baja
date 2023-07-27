@@ -68,7 +68,7 @@
 												</select>
 											</div>
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
-												<label for="status" class="form-label font-weight-bold">Tipo:</label>
+												<label for="tipo" class="form-label font-weight-bold">Tipo:</label>
 												<select class="form-control" id="tipo" name="tipo" required>
 													<option selected value="">Todos los tipos...</option>
 													<option <?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'VD' ? 'selected' : '') : null ?> value="VD">CDTEC</option>

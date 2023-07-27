@@ -23,20 +23,20 @@
 	<link rel="stylesheet" href="<?= base_url() ?>/assets/styles/global.css">
 	<link rel="stylesheet" href="<?= base_url() ?>/assets/styles/client/style.css">
 	<!--Sweet Alert 2-->
-	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.js?v=<?= rand() ?>"></script>
 	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.css">
 
 	<title><?= $this->renderSection('title') ?> - Centro de Denuncia Tecnológica.</title>
 </head>
 
 <body>
-	<script src="<?= base_url() ?>/assets/jQuery/jquery.js"></script>
+	<script src="<?= base_url() ?>/assets/jQuery/jquery.js?v=<?= rand() ?>"></script>
 	<div class="container-fluid p-0 main">
 
 		<?= $this->renderSection('content') ?>
 
 	</div>
-	<script src="<?= base_url() ?>/assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script src="<?= base_url() ?>/assets/bootstrap/js/bootstrap.bundle.min.js?v=<?= rand() ?>"></script>
 	<script>
 		(function() {
 			'use strict'
