@@ -911,7 +911,7 @@ class ReportesController extends BaseController
 		$row++;
 
 		//Rellenado del XLSX
-		foreach ($resultFilter->result as $index => $folio) {
+		foreach ($resultFilter->result 	as $index => $folio) {
 			$inicio = '';
 			$fin = '';
 			$duracion = '';
@@ -923,6 +923,8 @@ class ReportesController extends BaseController
 			$remision = '';
 			$totalSeconds = 0;
 			$totalSeconds2 = 0;
+			$countTipoVD = 0;
+
 			if ($folio->TIPOEXPEDIENTEID == 1 || $folio->TIPOEXPEDIENTEID == 4) {
 				$remision = $folio->OFICINA_EMP;
 			} else if ($folio->TIPOEXPEDIENTEID == 5) {
@@ -1009,16 +1011,30 @@ class ReportesController extends BaseController
 
 			if ($cellValue != "NO HAY VIDEO" && $cellValueType == "VIDEO") {
 				$columnValues[] = $cellValue;
+				$countTipoVD++;
 			}
 		}
+	
 		foreach ($columnValues as $time) {
 			$totalSeconds += $this->timeToSeconds($time);
 		}
 		$totalTime = $this->secondsToTime($totalSeconds);
 		$totalSeconds2 = $this->timeToSeconds($totalTime);
-		$totalRegistro =  count($resultFilter->result);
-		$promedioDuracionSegundos = $totalSeconds2 / $totalRegistro;
+	
+		// $totalRegistro =  count($resultFilter->result);
+		
+		$promedioDuracionSegundos = $totalSeconds2 /  $countTipoVD;
 		$promedioDuracion = $this->secondsToTime($promedioDuracionSegundos);
+
+		// var_dump($totalSeconds);
+		// var_dump($totalTime);
+		// var_dump($totalSeconds2);
+		// var_dump($totalRegistro);
+		// var_dump($promedioDuracionSegundos);
+		// var_dump($promedioDuracion);
+		// var_dump($countTipoVD);
+
+		// exit;
 
 		$row++;
 		$row++;
@@ -2271,6 +2287,7 @@ class ReportesController extends BaseController
 			$remision = '';
 			$totalSeconds = 0;
 			$totalSeconds2 = 0;
+			$countTipoVD = 0;
 
 			if ($folio->TIPOEXPEDIENTEID == 1 || $folio->TIPOEXPEDIENTEID == 4) {
 				$remision = $folio->OFICINA_EMP;
@@ -2352,8 +2369,12 @@ class ReportesController extends BaseController
 		$maxRow = $sheet->getHighestRow();
 		for ($row = 5; $row <= $maxRow; $row++) {
 			$cellValue = $sheet->getCell($columnLetter . $row)->getValue();
-			if ($cellValue != "NO HAY VIDEO") {
+			$cellValueType = $sheet->getCell('G' . $row)->getValue();
+
+			if ($cellValue != "NO HAY VIDEO" && $cellValueType == "VIDEO") {
 				$columnValues[] = $cellValue;
+				$countTipoVD++;
+
 			}
 		}
 		foreach ($columnValues as $time) {
@@ -2361,8 +2382,8 @@ class ReportesController extends BaseController
 		}
 		$totalTime = $this->secondsToTime($totalSeconds);
 		$totalSeconds2 = $this->timeToSeconds($totalTime);
-		$totalRegistro =  count($resultFilter->result);
-		$promedioDuracionSegundos = $totalSeconds2 / $totalRegistro;
+		// $totalRegistro =  count($resultFilter->result);
+		$promedioDuracionSegundos = $totalSeconds2 / $countTipoVD;
 		$promedioDuracion = $this->secondsToTime($promedioDuracionSegundos);
 
 		$row++;
@@ -2404,6 +2425,7 @@ class ReportesController extends BaseController
 		list($hours, $minutes, $seconds) = explode(':', $time);
 		return ($hours * 3600) + ($minutes * 60) + $seconds;
 	}
+	
 
 	// Function to convert seconds to time string
 	function secondsToTime($seconds)

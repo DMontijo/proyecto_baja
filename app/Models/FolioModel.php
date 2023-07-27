@@ -593,6 +593,9 @@ class FolioModel extends Model
 				if (isset($obj['TIPOEXP'])) {
 					$strQuery = $strQuery . 'AND TIPOEXPEDIENTE.TIPOEXPEDIENTEID' . ' = ' . '"' . $obj['TIPOEXP'] . '"';
 				}
+				if (isset($obj['TIPODENUNCIA'])) {
+					$strQuery = $strQuery . 'AND FOLIO.TIPODENUNCIA' . ' = ' . '"' . $obj['TIPODENUNCIA'] . '"';
+				}
 				$strQuery = $strQuery . ' GROUP BY  FOLIO.FOLIOID';
 			}
 			if ($obj['STATUS'] == "SIN") {
@@ -632,6 +635,9 @@ class FolioModel extends Model
 				}
 				if (isset($obj['TIPOEXP'])) {
 					$strQuery = $strQuery . 'AND TIPOEXPEDIENTE.TIPOEXPEDIENTEID' . ' = ' . '"' . $obj['TIPOEXP'] . '"';
+				}
+				if (isset($obj['TIPODENUNCIA'])) {
+					$strQuery = $strQuery . 'AND FOLIO.TIPODENUNCIA' . ' = ' . '"' . $obj['TIPODENUNCIA'] . '"';
 				}
 				$strQuery = $strQuery . ' GROUP BY  FOLIO.FOLIOID';
 			}
@@ -674,6 +680,9 @@ class FolioModel extends Model
 				}
 				if (isset($obj['TIPOEXP'])) {
 					$strQuery = $strQuery . 'AND TIPOEXPEDIENTE.TIPOEXPEDIENTEID' . ' = ' . '"' . $obj['TIPOEXP'] . '"';
+				}
+				if (isset($obj['TIPODENUNCIA'])) {
+					$strQuery = $strQuery . 'AND FOLIO.TIPODENUNCIA' . ' = ' . '"' . $obj['TIPODENUNCIA'] . '"';
 				}
 				$strQuery = $strQuery . ' GROUP BY  FOLIO.FOLIOID';
 			}
@@ -720,6 +729,9 @@ class FolioModel extends Model
 			}
 			if (isset($obj['TIPOEXP'])) {
 				$strQuery = $strQuery . 'AND TIPOEXPEDIENTE.TIPOEXPEDIENTEID' . ' = ' . '"' . $obj['TIPOEXP'] . '"';
+			}
+			if (isset($obj['TIPODENUNCIA'])) {
+				$strQuery = $strQuery . 'AND FOLIO.TIPODENUNCIA' . ' = ' . '"' . $obj['TIPODENUNCIA'] . '"';
 			}
 			$strQuery = $strQuery . ' GROUP BY  FOLIO.FOLIOID';
 		}
