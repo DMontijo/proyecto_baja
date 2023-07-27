@@ -1005,7 +1005,9 @@ class ReportesController extends BaseController
 		$maxRow = $sheet->getHighestRow();
 		for ($row = 5; $row <= $maxRow; $row++) {
 			$cellValue = $sheet->getCell($columnLetter . $row)->getValue();
-			if ($cellValue != "NO HAY VIDEO") {
+			$cellValueType = $sheet->getCell('J' . $row)->getValue();
+
+			if ($cellValue != "NO HAY VIDEO" && $cellValueType == "VIDEO") {
 				$columnValues[] = $cellValue;
 			}
 		}
