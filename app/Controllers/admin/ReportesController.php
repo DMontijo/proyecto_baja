@@ -921,7 +921,8 @@ class ReportesController extends BaseController
 			$minutos = '';
 			$prioridad = '';
 			$remision = '';
-
+			$totalSeconds = 0;
+			$totalSeconds2 = 0;
 			if ($folio->TIPOEXPEDIENTEID == 1 || $folio->TIPOEXPEDIENTEID == 4) {
 				$remision = $folio->OFICINA_EMP;
 			} else if ($folio->TIPOEXPEDIENTEID == 5) {
@@ -965,7 +966,7 @@ class ReportesController extends BaseController
 				$tipo = 'ANÓNIMA';
 			} else if ($folio->TIPODENUNCIA == 'TE') {
 				$tipo = 'TELEFÓNICA';
-			} else {
+			} else if ($folio->TIPODENUNCIA == 'EL') {
 				$tipo = 'ELECTRONICA';
 			}
 
@@ -999,6 +1000,28 @@ class ReportesController extends BaseController
 			$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
 			if (!(($row - 4) >= count($resultFilter->result))) $row++;
 		}
+		$columnValues = array();
+		$columnLetter = 'I';
+		$maxRow = $sheet->getHighestRow();
+		for ($row = 5; $row <= $maxRow; $row++) {
+			$cellValue = $sheet->getCell($columnLetter . $row)->getValue();
+			if ($cellValue != "NO HAY VIDEO") {
+				$columnValues[] = $cellValue;
+			}
+		}
+		foreach ($columnValues as $time) {
+			$totalSeconds += $this->timeToSeconds($time);
+		}
+		$totalTime = $this->secondsToTime($totalSeconds);
+		$totalSeconds2 = $this->timeToSeconds($totalTime);
+		$totalRegistro =  count($resultFilter->result);
+		$promedioDuracionSegundos = $totalSeconds2 / $totalRegistro;
+		$promedioDuracion = $this->secondsToTime($promedioDuracionSegundos);
+
+		$row++;
+		$row++;
+		$sheet->setCellValue('A' . $row, 'PROMEDIO DE DURACIÓN DE LLAMADAS:');
+		$sheet->setCellValue('B' . $row, $promedioDuracion);
 		$row++;
 		$row++;
 		$sheet->setCellValue('A' . $row, 'CANTIDAD DE RESULTADOS: ');
@@ -2287,7 +2310,7 @@ class ReportesController extends BaseController
 				$tipo = 'ANÓNIMA';
 			} else if ($folio->TIPODENUNCIA == 'TE') {
 				$tipo = 'TELEFÓNICA';
-			} else if ($folio->TIPODENUNCIA == 'EL'){ 
+			} else if ($folio->TIPODENUNCIA == 'EL') {
 				$tipo = 'ELECTRONICA';
 			}
 
@@ -2337,7 +2360,7 @@ class ReportesController extends BaseController
 		$totalTime = $this->secondsToTime($totalSeconds);
 		$totalSeconds2 = $this->timeToSeconds($totalTime);
 		$totalRegistro =  count($resultFilter->result);
-		$promedioDuracionSegundos = $totalSeconds2 / $totalRegistro; 
+		$promedioDuracionSegundos = $totalSeconds2 / $totalRegistro;
 		$promedioDuracion = $this->secondsToTime($promedioDuracionSegundos);
 
 		$row++;
