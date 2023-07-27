@@ -149,6 +149,8 @@
 											<th class="text-center" style="min-width:250px;">NOMBRE DEL AGENTE</th>
 											<th class="text-center" style="min-width:250px;">DELITO</th>
 											<th class="text-center">MUNICIPIO</th>
+											<th class="text-center">MUNICIPIO HECHO</th>
+
 										</tr>
 									</thead>
 									<tbody>
@@ -166,7 +168,7 @@
 												$tipo = 'ANÓNIMA';
 											} else if ($folio->TIPODENUNCIA == 'TE') {
 												$tipo = 'TELEFÓNICA';
-											}else if ($folio->TIPODENUNCIA == 'EL') {
+											} else if ($folio->TIPODENUNCIA == 'EL') {
 												$tipo = 'ELECTRÓNICA';
 											}
 										?>
@@ -182,6 +184,8 @@
 												<td class="text-center"><?= $folio->NOMBRE_AGENTE ?></td>
 												<td class="text-center"><?= isset($folio->DELITO) ? $folio->DELITO : ''  ?></td>
 												<td class="text-center"><?= $folio->MUNICIPIODESCR ?></td>
+												<td class="text-center"><?= $folio->MUNICIPIOHECHO ?></td>
+
 											</tr>
 										<?php } ?>
 									</tbody>

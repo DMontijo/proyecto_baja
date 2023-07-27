@@ -138,6 +138,10 @@ class ReportesController extends BaseController
 			$mun = $this->_municipiosModelRead->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data['MUNICIPIOID'])->first();
 			$data['MUNICIPIONOMBRE'] = $mun->MUNICIPIODESCR;
 		}
+		if (isset($data['HECHOMUNICIPIOID'])) {
+			$munH = $this->_municipiosModelRead->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data['HECHOMUNICIPIOID'])->first();
+			$data['MUNICIPIOHECHONOMBRE'] = $munH->MUNICIPIODESCR;
+		}
 
 		$dataView = (object)array();
 		$dataView->result = $resultFilter->result;
@@ -285,6 +289,8 @@ class ReportesController extends BaseController
 			'DELITO',
 			'ESTADO DE ATENCIÓN',
 			'MUNICIPIO DE ATENCIÓN',
+			'MUNICIPIO DEL HECHO',
+
 			'ESTATUS DE EXPEDIENTE',
 		];
 
@@ -335,7 +341,9 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('L' . $row, $folio->DELITO);
 			$sheet->setCellValue('M' . $row, $folio->ESTADODESCR);
 			$sheet->setCellValue('N' . $row, $folio->MUNICIPIODESCR);
-			$sheet->setCellValue('O' . $row, $folio->STATUS);
+			$sheet->setCellValue('O' . $row, $folio->MUNICIPIOHECHO);
+
+			$sheet->setCellValue('P' . $row, $folio->STATUS);
 
 			$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
 
@@ -346,8 +354,8 @@ class ReportesController extends BaseController
 		$sheet->setCellValue('A' . $row, 'CANTIDAD DE RESULTADOS:');
 		$sheet->setCellValue('B' . $row, count($resultFilter->result));
 
-		$sheet->getStyle('A1:O1')->applyFromArray($styleHeaders);
-		$sheet->getStyle('A2:O' . $row)->applyFromArray($styleCells);
+		$sheet->getStyle('A1:P1')->applyFromArray($styleHeaders);
+		$sheet->getStyle('A2:P' . $row)->applyFromArray($styleCells);
 
 		$writer = new Xlsx($spreadSheet);
 
@@ -1566,6 +1574,7 @@ class ReportesController extends BaseController
 			"TIPO DE ORDEN DE PROTECCIÓN",
 			"VICTIMA/OFENDIDO",
 			"GÉNERO",
+			"EDAD",
 			"VÍCTIMA LESIONADA",
 		];
 
@@ -1599,22 +1608,23 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('I' . $row,  $orden->TIPODOC);
 			$sheet->setCellValue('J' . $row,  $orden->NOMBRE_VTM);
 			$sheet->setCellValue('K' . $row, ($orden->SEXO == 'M' ? 'MASCULINO' : ($orden->SEXO == 'F' ? 'FEMENINO' : '')));
-			$sheet->setCellValue('L' . $row,  $orden->LESIONES);
-			$sheet->setCellValue('M' . $row, '');
+			$sheet->setCellValue('L' . $row,  $orden->EDADCANTIDAD ? $orden->EDADCANTIDAD  . ' AÑOS' : "");
+			$sheet->setCellValue('M' . $row,  $orden->LESIONES);
+			$sheet->setCellValue('N' . $row, '');
 
 			$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
 
 			if (!(($row - 4) >= count($documentos))) $row++;
 			$num++;
 		}
-		$sheet->getStyle('A1:L1')->applyFromArray($styleCab);
-		$sheet->getStyle('A2:L2')->applyFromArray($styleCab);
+		$sheet->getStyle('A1:N1')->applyFromArray($styleCab);
+		$sheet->getStyle('A2:N2')->applyFromArray($styleCab);
 
-		$sheet->getStyle('A4:L4')->applyFromArray($styleHeaders);
-		$sheet->getStyle('A5:L' . $row)->applyFromArray($styleCells);
+		$sheet->getStyle('A4:N4')->applyFromArray($styleHeaders);
+		$sheet->getStyle('A5:N' . $row)->applyFromArray($styleCells);
 
-		$sheet->mergeCells('A1:R1');
-		$sheet->mergeCells('A2:R2');
+		$sheet->mergeCells('A1:N1');
+		$sheet->mergeCells('A2:N2');
 		$drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
 		$drawing->setName('FGEBC');
 		$drawing->setDescription('LOGO');
@@ -2234,6 +2244,8 @@ class ReportesController extends BaseController
 			$minutos = '';
 			$prioridad = '';
 			$remision = '';
+			$totalSeconds = 0;
+			$totalSeconds2 = 0;
 
 			if ($folio->TIPOEXPEDIENTEID == 1 || $folio->TIPOEXPEDIENTEID == 4) {
 				$remision = $folio->OFICINA_EMP;
@@ -2275,7 +2287,7 @@ class ReportesController extends BaseController
 				$tipo = 'ANÓNIMA';
 			} else if ($folio->TIPODENUNCIA == 'TE') {
 				$tipo = 'TELEFÓNICA';
-			} else {
+			} else if ($folio->TIPODENUNCIA == 'EL'){ 
 				$tipo = 'ELECTRONICA';
 			}
 
@@ -2308,6 +2320,31 @@ class ReportesController extends BaseController
 
 			if (!(($row - 4) >= count($resultFilter->result))) $row++;
 		}
+
+
+		$columnValues = array();
+		$columnLetter = 'F';
+		$maxRow = $sheet->getHighestRow();
+		for ($row = 5; $row <= $maxRow; $row++) {
+			$cellValue = $sheet->getCell($columnLetter . $row)->getValue();
+			if ($cellValue != "NO HAY VIDEO") {
+				$columnValues[] = $cellValue;
+			}
+		}
+		foreach ($columnValues as $time) {
+			$totalSeconds += $this->timeToSeconds($time);
+		}
+		$totalTime = $this->secondsToTime($totalSeconds);
+		$totalSeconds2 = $this->timeToSeconds($totalTime);
+		$totalRegistro =  count($resultFilter->result);
+		$promedioDuracionSegundos = $totalSeconds2 / $totalRegistro; 
+		$promedioDuracion = $this->secondsToTime($promedioDuracionSegundos);
+
+		$row++;
+		$row++;
+		$sheet->setCellValue('A' . $row, 'PROMEDIO DE DURACIÓN DE LLAMADAS:');
+		$sheet->setCellValue('B' . $row, $promedioDuracion);
+
 		$sheet->getStyle('A1:T1')->applyFromArray($styleCab);
 		$sheet->getStyle('A2:T2')->applyFromArray($styleCab);
 
@@ -2335,6 +2372,22 @@ class ReportesController extends BaseController
 		$writer->save("php://output");
 	}
 
+	/**Funciones para promediar */
+	// Function to convert time string to seconds
+	function timeToSeconds($time)
+	{
+		list($hours, $minutes, $seconds) = explode(':', $time);
+		return ($hours * 3600) + ($minutes * 60) + $seconds;
+	}
+
+	// Function to convert seconds to time string
+	function secondsToTime($seconds)
+	{
+		$hours = floor($seconds / 3600);
+		$minutes = floor(($seconds - ($hours * 3600)) / 60);
+		$seconds = $seconds - ($hours * 3600) - ($minutes * 60);
+		return sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds);
+	}
 	/**
 	 * Vista para ingresar a los reportes de ceeiav 
 	 * Se carga con un filtro default
@@ -2387,7 +2440,7 @@ class ReportesController extends BaseController
 			'nombreAgente' => '',
 			'municipioDescr' => ''
 		];
-		
+
 		foreach ($dataPost as $clave => $valor) {
 			//Recorre el array y elimina los valores que nulos o vacíos
 			if (empty($valor)) unset($dataPost[$clave]);
@@ -2568,6 +2621,8 @@ class ReportesController extends BaseController
 			"SERVIDOR PUBLICO SOLICITANTE",
 			"DELITO",
 			"VICTIMA/OFENDIDO",
+			"GÉNERO",
+
 		];
 
 		for ($i = 0; $i < count($headers); $i++) {
@@ -2597,21 +2652,22 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('G' . $row,  $orden->NOMBRE_MP);
 			$sheet->setCellValue('H' . $row,  $orden->DELITOMODALIDADDESCR);
 			$sheet->setCellValue('I' . $row,  $orden->NOMBRE_VTM);
-			$sheet->setCellValue('J' . $row, '');
+			$sheet->setCellValue('J' . $row, ($orden->SEXO == 'M' ? 'MASCULINO' : ($orden->SEXO == 'F' ? 'FEMENINO' : '')));
+			$sheet->setCellValue('K' . $row, '');
 
 			$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
 
 			if (!(($row - 4) >= count($documentos))) $row++;
 			$num++;
 		}
-		$sheet->getStyle('A1:J1')->applyFromArray($styleCab);
-		$sheet->getStyle('A2:I2')->applyFromArray($styleCab);
+		$sheet->getStyle('A1:K1')->applyFromArray($styleCab);
+		$sheet->getStyle('A2:K2')->applyFromArray($styleCab);
 
-		$sheet->getStyle('A4:J4')->applyFromArray($styleHeaders);
-		$sheet->getStyle('A5:J' . $row)->applyFromArray($styleCells);
+		$sheet->getStyle('A4:K4')->applyFromArray($styleHeaders);
+		$sheet->getStyle('A5:K' . $row)->applyFromArray($styleCells);
 
-		$sheet->mergeCells('A1:J1');
-		$sheet->mergeCells('A2:J2');
+		$sheet->mergeCells('A1:K1');
+		$sheet->mergeCells('A2:K2');
 		$drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
 		$drawing->setName('FGEBC');
 		$drawing->setDescription('LOGO');
