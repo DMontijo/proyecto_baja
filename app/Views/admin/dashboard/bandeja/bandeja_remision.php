@@ -91,7 +91,7 @@
 	coordinacion.addEventListener('change', (e) => {
 		let selectedOption = e.target.options[e.target.selectedIndex];
 		let selectedOptionInnerHTML = selectedOption.innerHTML;
-		if (selectedOptionInnerHTML.includes("VIDEO DENUNCIA")) {
+		if (selectedOptionInnerHTML.includes("CENTRO DE DENUNCIA TECNOLOGICA") || selectedOptionInnerHTML.includes("CENTRO DE DENUNCIA TECNOLOGICO")) {
 			document.getElementById('div_empleado').classList.remove('d-none');
 			document.getElementById('div_unidad').classList.add('d-none');
 			document.querySelector('#empleado').setAttribute('required', true);
