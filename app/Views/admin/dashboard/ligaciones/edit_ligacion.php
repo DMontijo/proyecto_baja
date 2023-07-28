@@ -62,7 +62,7 @@
 								<a id="downloadArchivo" download="<?= $body_data->personasmorales->RFC ?>_<?= $body_data->litigante->NOMBRE ?>_<?= $body_data->litigante->APELLIDO_PATERNO ?>_<?= $body_data->litigante->APELLIDO_MATERNO ?>" href="<?= $body_data->ligacion->PODERARCHIVO ?>">
 									<?php if (isset($body_data->tipoarchivo) && ($body_data->tipoarchivo == 'image/png' || $body_data->tipoarchivo == 'image/jpg' || $body_data->tipoarchivo == 'image/jpeg')) { ?>
 										<img src='<?= $body_data->ligacion->PODERARCHIVO ?>' width="50%"></img>
-									<?php } else if(isset($body_data->tipoarchivo) && (!$body_data->tipoarchivo == 'image/png' || !$body_data->tipoarchivo == 'image/jpg' || !$body_data->tipoarchivo == 'image/jpeg')){ ?>
+									<?php } else if(isset($body_data->tipoarchivo) &&($body_data->tipoarchivo != 'image/png' || $body_data->tipoarchivo != 'image/jpg' || $body_data->tipoarchivo != 'image/jpeg')){ ?>
 										<img src='<?= base_url() ?>/assets/img/file.png' width="30%"></img>
 									<?php } ?>
 								</a>
