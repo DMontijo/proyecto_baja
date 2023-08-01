@@ -2740,7 +2740,12 @@ class DashboardController extends BaseController
 		$telefonica = $this->request->getPost('denuncia_tel');
 		$electronica = $this->request->getPost('denuncia_electronica');
 
-		$agenteId = session('ID') ? session('ID') : 1;
+		if(session('ID')) {
+			$agenteId = session('ID');
+		} else {
+			return json_encode(['status' => 0, 'error' => 'Sesión finalizada por inactividad, vuelve a iniciar sesión.']);
+		}
+		// $agenteId = session('ID') ? session('ID') : 1;
 
 		try {
 
