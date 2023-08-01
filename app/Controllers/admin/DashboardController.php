@@ -2740,6 +2740,7 @@ class DashboardController extends BaseController
 		$telefonica = $this->request->getPost('denuncia_tel');
 		$electronica = $this->request->getPost('denuncia_electronica');
 
+		$agenteId="";
 		if(session('ID')) {
 			$agenteId = session('ID');
 		} else {
