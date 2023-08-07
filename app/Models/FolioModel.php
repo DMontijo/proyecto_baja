@@ -164,6 +164,7 @@ class FolioModel extends Model
 		foreach ($resultPericiales as $docto) {
 			if ($docto->NUMEROEXPEDIENTE) array_push($arrayPerciales, $docto->FOLIOID);
 		}
+
 		foreach ($resultAll as $folio) {
 
 			if (in_array($folio->FOLIOID, $arrayCriterio)) {
@@ -173,10 +174,10 @@ class FolioModel extends Model
 				$folio->TIPOEXPEDIENTECLAVE = $folio->TIPOEXPEDIENTECLAVE . ' - FACULTAD';
 			}
 			if (in_array($folio->FOLIOID, $arrayPerciales)) {
-				$folio->PERCICIALES = 'SI';
+				$folio->PERICIALES = 'SI';
 			}
-		}
 
+		}
 		$dataView = (object)array();
 		$dataView->result = $resultAll;
 		// $dataView->strQuery = $strQuery;
