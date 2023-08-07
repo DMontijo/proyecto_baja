@@ -2449,7 +2449,7 @@
 					let foliopersonaMoral = response.foliopersonaMoral;
 
 					let folio = response.folio;
-					let poder = response.relacionMoralFisica;
+					// let poder = response.relacionMoralFisica;
 					let idPersonaMoral = response.idPersonaMoral;
 					document.querySelectorAll('#pm_id').forEach(element => {
 						element.value = id;
@@ -2697,20 +2697,20 @@
 					//PODER
 
 					//LLenado de informacion en los valores
-					if (poder.PODERARCHIVO) {
-						extension = (((poder.PODERARCHIVO.split(';'))[0]).split('/'))[1];
+					if (personaMoral.PODERARCHIVO) {
+						extension = (((personaMoral.PODERARCHIVO.split(';'))[0]).split('/'))[1];
 						if (extension == 'pdf' || extension == 'doc') {
 							document.querySelector('#moral_poder').setAttribute('src', '<?= base_url() ?>/assets/img/file.png');
 
 						} else {
-							document.querySelector('#moral_poder').setAttribute('src', poder.PODERARCHIVO);
+							document.querySelector('#moral_poder').setAttribute('src', personaMoral.PODERARCHIVO);
 
 						}
 
-						document.querySelector('#moral_poder_download').setAttribute('href', poder
+						document.querySelector('#moral_poder_download').setAttribute('href', personaMoral
 							.PODERARCHIVO);
 						document.querySelector('#moral_poder_download').setAttribute('download',
-							foliopersonaMoral.RAZONSOCIAL + '_' + foliopersonaMoral.RFC + '.' + extension);
+						'PODER_' + personaMoral.RFC + '.' + extension);
 						document.querySelector('#contenedor_moral_poder').classList.remove('d-none');
 					} else {
 						document.querySelector('#moral_poder').setAttribute('src', '');
@@ -2718,15 +2718,14 @@
 						document.querySelector('#moral_poder_download').setAttribute('download', '');
 						document.querySelector('#contenedor_moral_poder').classList.remove('d-none');
 					}
-					document.querySelector('#relacion_pm').value = poder.RELACIONAR ? poder
-						.RELACIONAR : '';
-					document.querySelector('#volumen_pm').value = poder.PODERVOLUMEN ? poder
+
+					document.querySelector('#volumen_pm').value = personaMoral.PODERVOLUMEN ? personaMoral
 						.PODERVOLUMEN : '';
-					document.querySelector('#notario_pm').value = poder.PODERNONOTARIO ? poder
+					document.querySelector('#notario_pm').value = personaMoral.PODERNONOTARIO ? personaMoral
 						.PODERNONOTARIO : '';
-					document.querySelector('#poder_pm').value = poder.PODERNOPODER ? poder
+					document.querySelector('#poder_pm').value = personaMoral.PODERNOPODER ? personaMoral
 						.PODERNOPODER : '';
-					document.querySelector('#btnLigacion').href = `<?= base_url('admin/dashboard/editar_ligacion?id=') ?>${poder.ID}`;
+					document.querySelector('#btnLigacion').href = `<?= base_url('admin/dashboard/editar_persona_moral?id=') ?>${personaMoral.PERSONAMORALID}`;
 					document.querySelector('#btnLigacion').target = "_blank";
 
 					$('#folio_persona_moral_modal').modal('show');

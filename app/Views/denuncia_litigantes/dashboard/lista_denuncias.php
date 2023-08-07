@@ -21,6 +21,8 @@
 								<th scope="col" class="text-white">ESTADO</th>
 								<th scope="col" class="text-white">MUNICIPIO</th>
 								<th scope="col" class="text-white">OFICINA</th>
+								<th scope="col" class="text-white"></th>
+
 							</tr>
 						</thead>
 						<tbody>
@@ -39,6 +41,12 @@
 									<td class="text-center"><?= $folio->STATUS == 'EXPEDIENTE' ? ($folio->ESTADOENJUSTICIA != '' ? $folio->ESTADOENJUSTICIA : 'EN TRÁMITE') : ($folio->STATUS == 'ABIERTO' ? 'EN TRÁMITE' : $folio->STATUS) ?></td>
 									<td class="text-center"><?= $folio->EXPEDIENTEID ? $folio->MUNICIPIODESCR : '-' ?></td>
 									<td class="text-center"><?= $folio->STATUS == 'EXPEDIENTE' ? ($folio->OFICINAENJUSTICIA != '' ? $folio->OFICINAENJUSTICIA : '') : ($folio->OFICINAID ? $folio->OFICINADESCR : '') ?></td>
+									<td>
+										<a type="button" class="text-decoration-none btn btn-success" href="<?= base_url('/denuncia_litigantes/dashboard/subir_documentos_folio?folio=' . $folio->FOLIOID . '&year=' . $folio->ANO) ?>">
+											<!-- /denuncia_litigantes/dashboard/subir_documentos_folio?folio= .$folio->FOLIOID -->
+											<i class="bi bi-file-earmark-plus-fill"></i>
+										</a>
+									</td>
 								</tr>
 							<?php } ?>
 						</tbody>

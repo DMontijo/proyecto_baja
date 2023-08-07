@@ -114,6 +114,54 @@
 									<?php } ?>
 								</select>
 							</div>
+							<div class="col-12">
+								<hr>
+							</div>
+							<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+								<label for="poder_volumen" class="form-label font-weight-bold" ">Poder volumen:</label>
+								<input type=" text" class="form-control" id="poder_volumen" name="poder_volumen" value="<?= $body_data->personasmorales->PODERVOLUMEN ?>">
+									<div class="invalid-feedback">
+										Por favor, ingresa el volumen.
+									</div>
+							</div>
+							<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+								<label for="poder_notario" class="form-label font-weight-bold"">Número notario:</label>
+								<input type=" text" class="form-control" id="poder_notario" name="poder_notario" value="<?= $body_data->personasmorales->PODERNONOTARIO ?>">
+									<div class="invalid-feedback">
+										Por favor, ingresa el número notario.
+									</div>
+							</div>
+							<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+								<label for="poder_no_poder" class="form-label font-weight-bold"">Número de poder:</label>
+								<input type=" text" class="form-control" id="poder_no_poder" name="poder_no_poder" value="<?= $body_data->personasmorales->PODERNOPODER ?>">
+									<div class="invalid-feedback">
+										Por favor, ingresa el número poder.
+									</div>
+							</div>
+							<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+								<label class="font-weight-bold" for="fecha_inicio_poder">Fecha inicio de poder</label>
+								<input type="date" name="fecha_inicio_poder" class="form-control" id="fecha_inicio_poder" value="<?= $body_data->personasmorales->FECHAINICIOPODER ?>">
+							</div>
+							<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+								<label class="font-weight-bold" for="fecha_fin_poder">Fecha fin de poder</label>
+								<input type="date" name="fecha_fin_poder" class="form-control" id="fecha_fin_poder" value="<?= $body_data->personasmorales->FECHAFINPODER ?>">
+							</div>
+							<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+								<label for="poder_archivo" class="form-label font-weight-bold input-required">Archivo del poder notarial:</label>
+								<input type="file" class="form-control" id="poder_archivo" name="poder_archivo">
+								<img id="poder_foto" class="img-fluid" src="" style="max-width:300px;">
+
+							</div>
+
+							<div class="col-12 text-center">
+								<a id="downloadArchivo" download="PODER_<?= $body_data->personasmorales->RFC ?>" href="<?= $body_data->personasmorales->PODERARCHIVO ?>">
+									<?php if (isset($body_data->tipoarchivo) && ($body_data->tipoarchivo == 'image/png' || $body_data->tipoarchivo == 'image/jpg' || $body_data->tipoarchivo == 'image/jpeg')) { ?>
+										<img src='<?= $body_data->personasmorales->PODERARCHIVO ?>' width="50%"></img>
+									<?php } else if (isset($body_data->tipoarchivo) && ($body_data->tipoarchivo != 'image/png' || $body_data->tipoarchivo != 'image/jpg' || $body_data->tipoarchivo != 'image/jpeg')) { ?>
+										<img src='<?= base_url() ?>/assets/img/file.png' width="30%"></img>
+									<?php } ?>
+								</a>
+							</div>
 							<div class="col-12 pt-5 text-center">
 								<button type="submit" id="btn-submit-moral" class="btn btn-primary font-weight-bold">
 									ACTUALIZAR PERSONA MORAL

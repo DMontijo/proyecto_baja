@@ -10,25 +10,25 @@ class PERSONASMORALES extends Migration
     {
         $this->forge->addField([
             'PERSONAMORALID' => [
-				'type' => 'INT',
-				'unsigned' => TRUE,
+                'type' => 'INT',
+                'unsigned' => TRUE,
                 'auto_increment' => TRUE
-			],
+            ],
             'RAZONSOCIAL' => [
-				'type' => 'VARCHAR',
+                'type' => 'VARCHAR',
                 'constraint' => '255',
-			],
+            ],
             'MARCACOMERCIAL' => [
-				'type' => 'VARCHAR',
+                'type' => 'VARCHAR',
                 'constraint' => '255',
                 'null' => true,
 
-			],
+            ],
             'RFC' => [
-				'type' => 'VARCHAR',
+                'type' => 'VARCHAR',
                 'constraint' => '100',
                 'unique' => TRUE,
-			],
+            ],
             'PERSONAMORALGIROID' => [
                 'type' => 'INT',
                 'unsigned' => true,
@@ -79,13 +79,56 @@ class PERSONASMORALES extends Migration
                 'null' => true,
             ],
             'TELEFONO' => [
-				'type' => 'VARCHAR',
-				'constraint' => '100',
-			],
+                'type' => 'VARCHAR',
+                'constraint' => '100',
+            ],
             'CORREO' => [
-				'type' => 'VARCHAR',
-				'constraint' => '100',
-			],
+                'type' => 'VARCHAR',
+                'constraint' => '100',
+            ],
+            //LIGACION
+            'PODERVOLUMEN' => [
+                'type' => 'VARCHAR',
+                'constraint' => '15',
+                'null' => true,
+
+            ],
+            'PODERNONOTARIO' => [
+                'type' => 'VARCHAR',
+                'constraint' => '15',
+                'null' => true,
+            ],
+            'PODERNOPODER' => [
+                'type' => 'VARCHAR',
+                'constraint' => '15',
+                'null' => true,
+            ],
+            'PODERARCHIVO' => [
+                'type' => 'LONGBLOB',
+                'null' => true,
+            ],
+            'FECHAINICIOPODER' => [
+                'type' => 'DATE',
+                'null' => true,
+            ],
+            'FECHAFINPODER' => [
+                'type' => 'DATE',
+                'null' => true,
+            ],
+            'CARGO' => [
+                'type' => 'VARCHAR',
+                'constraint' => '50',
+            ],
+            'DESCRIPCIONCARGO' => [
+                'type' => 'TEXT',
+                'null' => true,
+
+            ],
+            'CAMBIO' => [
+                'type' => 'CHAR',
+                'constraint' => '1',
+                'default' => 'N'
+            ],
             'FECHAREGISTRO DATETIME DEFAULT CURRENT_TIMESTAMP',
             'FECHAACTUALIZACION DATETIME ON UPDATE CURRENT_TIMESTAMP',
         ]);

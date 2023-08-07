@@ -101,8 +101,8 @@
 	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3 d-flex align-items-center">
-		<input class="form-check-input" type="checkbox" id="check_ubi" name="check_ubi">
-		<label class="form-check-label fw-bold" for="check_ubi">
+		<input class="form-check-input" type="checkbox" id="check_ubi_moral" name="check_ubi_moral">
+		<label class="form-check-label fw-bold" for="check_ubi_moral">
 			Ubicación exacta del delito
 		</label>
 		<input type="text" class="form-control d-none" id="latitud_moral" name="latitud_moral">
@@ -145,21 +145,20 @@
 		<small id="numCaracter">1000 caracteres restantes</small>
 	</div>
 	<div class="col-12 mb-3 text-left text-md-center">
-		<label for="responsable" class="form-label fw-bold input-required">¿Conoce al posible responsable del delito?</label>
+		<label for="responsable_moral" class="form-label fw-bold input-required">¿Conoce al posible responsable del delito?</label>
 		<br>
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="radio" name="responsable" value="SI" required>
+			<input class="form-check-input" type="radio" name="responsable_moral" value="SI" required>
 			<label class="form-check-label" for="flexRadioDefault1">SI</label>
 		</div>
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="radio" name="responsable" value="NO" required checked>
+			<input class="form-check-input" type="radio" name="responsable_moral" value="NO" required checked>
 			<label class="form-check-label" for="flexRadioDefault2">NO</label>
 		</div>
 	</div>
 </div>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC8Y8sKd0VSyZcl9kPdCewI2mpXh95AJ-8&callback=initMapMoral&v=weekly" defer></script>
-
 <script>
+
 
 	//Funcion para eliminar los optiones de un select
 	function clearSelect(select_element) {
@@ -200,139 +199,6 @@
 	// 		error: function(jqXHR, textStatus, errorThrown) {}
 	// 	});
 	// });
-
-	let map_moral, infoWindowMoral;
-	let markerMoral = null;
-	let currentMoral = null;
-	//inicializa el mapa del hecho
-	const initMapMoral = () => {
-		const position = {
-			lat: 32.521036,
-			lng: -117.015543
-		};
-		const BAJACALIFORNIA_BOUNDS = {
-			north: 32.718754,
-			south: 28,
-			west: -118.407649,
-			east: -112.65424,
-			// 28,-118.407649 – 32.718754,-112.65424
-			// Check bound in https://developers-dot-devsite-v2-prod.appspot.com/map_morals/documentation/utils/geocoder
-		};
-		map_moral = new google.maps.Map(document.getElementById("map_moral"), {
-			center: position,
-			zoom: 10,
-			gestureHandling: "cooperative",
-			// restriction: {
-			//     latLngBounds: BAJACALIFORNIA_BOUNDS,
-			//     strictBounds: false,
-			// },
-		});
-
-		google.maps.event.addListener(map_moral, "click", (event) => {
-			addMarkerMoral(event.latLng, map_moral, 'evento');
-		});
-
-		infoWindowMoral = new google.maps.InfoWindow();
-
-		const locationButton = document.createElement("button");
-		locationButton.style.backgroundColor = "#fff";
-		locationButton.style.border = "2px solid #fff";
-		locationButton.style.borderRadius = "3px";
-		locationButton.style.boxShadow = "0 2px 6px rgba(0,0,0,.3)";
-		locationButton.style.color = "rgb(25,25,25)";
-		locationButton.style.cursor = "pointer";
-		locationButton.style.fontFamily = "Roboto,Arial,sans-serif";
-		locationButton.style.fontSize = "16px";
-		locationButton.style.lineHeight = "38px";
-		locationButton.style.margin = "8px 0 22px";
-		locationButton.style.padding = "0 5px";
-		locationButton.style.textAlign = "center";
-		locationButton.textContent = "Mi ubicación";
-		locationButton.title = "Clic para ir a tu ubicación actual.";
-		locationButton.type = "button";
-		locationButton.classList.add("custom-map-control-button");
-		map_moral.controls[google.maps.ControlPosition.TOP_CENTER].push(
-			locationButton
-		);
-
-		currentPositionMoral();
-
-
-		locationButton.addEventListener("click", () => {
-			currentPositionMoral();
-		});
-	};
-	//obtiene la posicion actual
-	const currentPositionMoral = () => {
-		if (navigator.geolocation) {
-			navigator.geolocation.getCurrentPosition(	
-				(position) => {
-					const pos = {
-						lat: position.coords.latitude,
-						lng: position.coords.longitude,
-					};
-
-					map_moral.setCenter(pos);
-					addMarkerMoral(pos, map_moral, 'current');
-					map_moral.setZoom(15);
-				},
-				() => {
-					handleLocationErrorMoral(true, infoWindowMoral, map_moral.getCenter());
-				}
-			);
-		} else {
-			handleLocationErrorMoral(false, infoWindowMoral, map_moral.getCenter());
-		}
-	};
-
-	//obtiene los errores de la localizacion
-	const handleLocationErrorMoral = (browserHasGeolocation, infoWindowMoral, pos) => {
-		infoWindowMoral.setPosition(pos);
-		infoWindowMoral.setContent(
-			browserHasGeolocation ?
-			"Error: The Geolocation service failed." :
-			"Error: Your browser doesn't support geolocation."
-		);
-		infoWindowMoral.open(map_moral);
-	};
-
-	//marca en el mapa la posicion del hecho
-	const addMarkerMoral = (position, map_moral, prov) => {
-
-		markerMoral ? (markerMoral.setMap(null), (markerMoral = null)) : null;
-		markerMoral = new google.maps.Marker({
-			position,
-		});
-		if (prov == 'current') {
-			document.getElementById('longitud_moral').value = position['lng'];
-			document.getElementById('latitud_moral').value = position['lat'];
-
-		} else {
-			document.getElementById('longitud_moral').value = position;
-			let stringpos = document.getElementById('longitud_moral').value
-			if (typeof stringpos == 'string') {
-				stringpos = stringpos.replace('(', '');
-				stringpos = stringpos.replace(')', '');
-				stringpos = stringpos.replace(' ', '');
-
-				let arr = stringpos.split(',');
-				const positionMake = {
-					lat: arr[0],
-					lng: arr[1]
-				};
-				document.getElementById('longitud_moral').value = positionMake['lng'];
-				document.getElementById('latitud_moral').value = positionMake['lat'];
-
-			}
-		}
-
-
-		// map.setCenter(position);
-		markerMoral.setMap(map_moral);
-	};
-
-	window.initMapMoral = initMapMoral;
-
 	//Funcion para contar carcateres de un elemento
 	function contarCaracteres(obj) {
 		var maxLength = 1000;

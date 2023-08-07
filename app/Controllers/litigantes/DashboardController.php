@@ -164,16 +164,70 @@ class DashboardController extends BaseController
 	public function index()
 	{
 		$data = (object) array();
-		$data->empresas = $this->_personasMoralesRead->asObject()->findAll();
+
+
 		$data->estados = $this->_estadosModelRead->asObject()->findAll();
 		$data->giros = $this->_personaMoralGiroRead->asObject()->findAll();
 		$data->municipios = $this->_municipiosModelRead->asObject()->where('ESTADOID', '2')->findAll();
 		$data->lugares = $this->_hechoLugarModelRead->asObject()->orderBy('HECHODESCR', 'asc')->findAll();
 		$data->identificacion = $this->_documentosExtravioTipoModelRead->asObject()->orderBy('DOCUMENTOEXTRAVIOTIPODESCR', 'asc')->where('VISIBLE', '1')->findAll();
 		$data->denunciante = $this->_denunciantesModelRead->asObject()->where('DENUNCIANTEID', session('DENUNCIANTEID'))->first();
+		$data->empresas = $this->_relacionFisicaMoralModelRead->asObject()
+			->join('PERSONASMORALES', 'PERSONASMORALES.PERSONAMORALID = RELACIONFISICAMORAL.PERSONAMORALID', 'LEFT')
+			// ->where('RELACIONFISICAMORAL.RELACIONAR', 'S')
+			->where('RELACIONFISICAMORAL.DENUNCIANTEID', session('DENUNCIANTEID'))
+			->findAll();
+
+		$data->paises = $this->_paisesModelRead->asObject()->findAll();
+		$data->estados = $this->_estadosModelRead->asObject()->findAll();
+		$data->estadosExtranjeros = $this->_estadosExtranjerosRead->asObject()->findAll();
+
+		$data->municipios = $this->_municipiosModelRead->asObject()->where('ESTADOID', '2')->findAll();
+		$data->nacionalidades = $this->_nacionalidadModelRead->asObject()->findAll();
+		$lugares = $this->_hechoLugarModelRead->orderBy('HECHODESCR', 'ASC')->findAll();
+
+		$lugares_sin = [];
+		$lugares_fuego = [];
+		$lugares_blanca = [];
+		$lugares_peticion = [];
+
+		foreach ($lugares as $lugar) {
+			if (strpos($lugar['HECHODESCR'], 'ARMA DE FUEGO')) {
+				array_push($lugares_fuego, (object) $lugar);
+			}
+			if (strpos($lugar['HECHODESCR'], 'ARMA BLANCA')) {
+				array_push($lugares_blanca, (object) $lugar);
+			}
+			if (!strpos($lugar['HECHODESCR'], 'ARMA BLANCA') && !strpos($lugar['HECHODESCR'], 'ARMA DE FUEGO')) {
+				array_push($lugares_sin, (object) $lugar);
+			}
+
+			if ($lugar['HECHODESCR'] == 'CASA HABITACION' || $lugar['HECHODESCR'] == 'DESPOBLADO' || $lugar['HECHODESCR'] == 'VIA PUBLICA' || $lugar['HECHODESCR'] == 'CENTRO ESCOLAR') {
+				array_push($lugares_peticion, (object) $lugar);
+			}
+		}
+		$data->lugares  = [];
+		$data->lugares =  (object) array_merge($lugares_peticion, $lugares_sin, $lugares_blanca, $lugares_fuego);
+		$lugares_merge = [];
+		$lugares_merge =  array_merge($lugares_peticion, $lugares_sin);
+		$data->lugares = (object)array_unique($lugares_merge, SORT_REGULAR);
+		$data->colorVehiculo = $this->_coloresVehiculoModelRead->asObject()->findAll();
+		$data->tipoVehiculo = $this->_tipoVehiculoModelRead->asObject()->orderBy('VEHICULOTIPODESCR', 'ASC')->findAll();
+		$data->delitosUsuarios = $this->_delitosUsuariosModelRead->asObject()->orderBy('DELITO', 'ASC')->findAll();
+		$data->escolaridades = $this->_escolaridadModelRead->asObject()->findAll();
+		$data->ocupaciones = $this->_ocupacionModelRead->asObject()->findAll();
+		$data->figura = $this->_figuraModelRead->asObject()->findAll();
+		$data->cabelloColor = $this->_cabelloColorModelRead->asObject()->findAll();
+		$data->cabelloTamano = $this->_cabelloTamanoModelRead->asObject()->findAll();
+		$data->frenteForma = $this->_frenteFormaModelRead->asObject()->findAll();
+		$data->ojoColor = $this->_ojoColorModelRead->asObject()->findAll();
+		$data->cabelloEstilo = $this->_cabelloEstiloModelRead->asObject()->findAll();
+		$data->cejaForma = $this->_cejaFormaModelRead->asObject()->findAll();
+		$data->pielColor = $this->_pielColorModelRead->asObject()->findAll();
+		$data->parentesco = $this->_parentescoModelRead->asObject()->findAll();
 		$this->_loadView('Denuncia litigantes', $data, 'index');
 	}
-		/**
+	/**
 	 * Vista para ver las opciones de modulo litigantes
 	 * Carga todos los catalogos para su funcionamiento
 	 *
@@ -234,7 +288,7 @@ class DashboardController extends BaseController
 			if ($this->_personasMoralesModel->save($data)) {
 				$data['PERSONAMORALID'] = $this->_personasMoralesModel->getInsertID();
 				$this->_personasMoralesNotificacionesModel->save($data);
-				return redirect()->to(base_url('/denuncia_litigantes/dashboard'))->with('message_success', 'Se ha creado la persona moral.');
+				return redirect()->to(base_url('/denuncia_litigantes/dashboard/modulo'))->with('message_success', 'Se ha creado la persona moral.');
 			} else {
 				return redirect()->back()->with('message_error', 'Hubo un error en los datos y no se guardo, intentalo de nuevo.');
 			}
@@ -377,12 +431,20 @@ class DashboardController extends BaseController
 	public function ligaciones()
 	{
 		$data = (object) array();
-		$data->ligaciones = $this->_relacionFisicaMoralModelRead->asObject()
-			->select('RAZONSOCIAL,MARCACOMERCIAL,RFC,RELACIONAR,RELACIONFISICAMORAL.PERSONAMORALID,RELACIONFISICAMORAL.DENUNCIANTEID,FECHAFINPODER,DENUNCIANTES.CORREO')
-			->join('PERSONASMORALES', 'PERSONASMORALES.PERSONAMORALID = RELACIONFISICAMORAL.PERSONAMORALID')
-			->join('DENUNCIANTES', 'DENUNCIANTES.DENUNCIANTEID = RELACIONFISICAMORAL.DENUNCIANTEID')
-			->where('RELACIONFISICAMORAL.DENUNCIANTEID', session('DENUNCIANTEID'))
+		// $data->ligaciones = $this->_relacionFisicaMoralModelRead->asObject()
+		// 	->select('RAZONSOCIAL,MARCACOMERCIAL,RFC,RELACIONAR,RELACIONFISICAMORAL.PERSONAMORALID,RELACIONFISICAMORAL.DENUNCIANTEID,PERSONASMORALES.FECHAFINPODER,DENUNCIANTES.CORREO')
+		// 	->join('PERSONASMORALES', 'PERSONASMORALES.PERSONAMORALID = RELACIONFISICAMORAL.PERSONAMORALID')
+		// 	->join('DENUNCIANTES', 'DENUNCIANTES.DENUNCIANTEID = RELACIONFISICAMORAL.DENUNCIANTEID')
+		// 	->where('RELACIONFISICAMORAL.DENUNCIANTEID', session('DENUNCIANTEID'))
+		// 	->findAll();
+		$data->ligaciones = $this->_folioPersonaMoralModelRead->asObject()->select('PERSONASMORALES.RAZONSOCIAL,PERSONASMORALES.MARCACOMERCIAL,PERSONASMORALES.RFC,PERSONASMORALES.PERSONAMORALID,FOLIO.DENUNCIANTEID,PERSONASMORALES.FECHAFINPODER,DENUNCIANTES.CORREO')
+			->join('PERSONASMORALES', 'PERSONASMORALES.PERSONAMORALID = FOLIOPERSONAMORAL.PERSONAMORALID')
+			->join('FOLIO', 'FOLIO.FOLIOID = FOLIOPERSONAMORAL.FOLIOID')
+			->join('DENUNCIANTES', 'DENUNCIANTES.DENUNCIANTEID = FOLIO.DENUNCIANTEID')
+			->where('FOLIO.DENUNCIANTEID', session('DENUNCIANTEID'))
+			->groupBy('PERSONASMORALES.RFC')
 			->findAll();
+
 		$data->empresas = $this->_personasMoralesRead->asObject()->findAll();
 		$data->estados = $this->_estadosModelRead->asObject()->findAll();
 		$data->giros = $this->_personaMoralGiroRead->asObject()->findAll();
@@ -456,73 +518,73 @@ class DashboardController extends BaseController
 	 * Vista de Dashboard-Denuncia Persona Fisica
 	 * Retorna los catálogos necesarios para iniciar la denuncia
 	 */
-	public function denuncia_persona_moral()
-	{
-		$data = (object) array();
-		$data->paises = $this->_paisesModelRead->asObject()->findAll();
-		$data->estados = $this->_estadosModelRead->asObject()->findAll();
-		$data->estadosExtranjeros = $this->_estadosExtranjerosRead->asObject()->findAll();
+	// public function denuncia_persona_moral()
+	// {
+	// 	$data = (object) array();
+	// 	$data->paises = $this->_paisesModelRead->asObject()->findAll();
+	// 	$data->estados = $this->_estadosModelRead->asObject()->findAll();
+	// 	$data->estadosExtranjeros = $this->_estadosExtranjerosRead->asObject()->findAll();
 
-		$data->municipios = $this->_municipiosModelRead->asObject()->where('ESTADOID', '2')->findAll();
-		$data->nacionalidades = $this->_nacionalidadModelRead->asObject()->findAll();
-		$lugares = $this->_hechoLugarModelRead->orderBy('HECHODESCR', 'ASC')->findAll();
+	// 	$data->municipios = $this->_municipiosModelRead->asObject()->where('ESTADOID', '2')->findAll();
+	// 	$data->nacionalidades = $this->_nacionalidadModelRead->asObject()->findAll();
+	// 	$lugares = $this->_hechoLugarModelRead->orderBy('HECHODESCR', 'ASC')->findAll();
 
-		$lugares_sin = [];
-		$lugares_fuego = [];
-		$lugares_blanca = [];
-		$lugares_peticion = [];
+	// 	$lugares_sin = [];
+	// 	$lugares_fuego = [];
+	// 	$lugares_blanca = [];
+	// 	$lugares_peticion = [];
 
-		foreach ($lugares as $lugar) {
-			if (strpos($lugar['HECHODESCR'], 'ARMA DE FUEGO')) {
-				array_push($lugares_fuego, (object) $lugar);
-			}
-			if (strpos($lugar['HECHODESCR'], 'ARMA BLANCA')) {
-				array_push($lugares_blanca, (object) $lugar);
-			}
-			if (!strpos($lugar['HECHODESCR'], 'ARMA BLANCA') && !strpos($lugar['HECHODESCR'], 'ARMA DE FUEGO')) {
-				array_push($lugares_sin, (object) $lugar);
-			}
+	// 	foreach ($lugares as $lugar) {
+	// 		if (strpos($lugar['HECHODESCR'], 'ARMA DE FUEGO')) {
+	// 			array_push($lugares_fuego, (object) $lugar);
+	// 		}
+	// 		if (strpos($lugar['HECHODESCR'], 'ARMA BLANCA')) {
+	// 			array_push($lugares_blanca, (object) $lugar);
+	// 		}
+	// 		if (!strpos($lugar['HECHODESCR'], 'ARMA BLANCA') && !strpos($lugar['HECHODESCR'], 'ARMA DE FUEGO')) {
+	// 			array_push($lugares_sin, (object) $lugar);
+	// 		}
 
-			if ($lugar['HECHODESCR'] == 'CASA HABITACION' || $lugar['HECHODESCR'] == 'DESPOBLADO' || $lugar['HECHODESCR'] == 'VIA PUBLICA' || $lugar['HECHODESCR'] == 'CENTRO ESCOLAR') {
-				array_push($lugares_peticion, (object) $lugar);
-			}
-		}
-		$data->lugares  = [];
-		$data->lugares =  (object) array_merge($lugares_peticion, $lugares_sin, $lugares_blanca, $lugares_fuego);
-		$lugares_merge = [];
-		$lugares_merge =  array_merge($lugares_peticion, $lugares_sin);
-		$data->lugares = (object)array_unique($lugares_merge, SORT_REGULAR);
-		$data->colorVehiculo = $this->_coloresVehiculoModelRead->asObject()->findAll();
-		$data->tipoVehiculo = $this->_tipoVehiculoModelRead->asObject()->orderBy('VEHICULOTIPODESCR', 'ASC')->findAll();
-		$data->delitosUsuarios = $this->_delitosUsuariosModelRead->asObject()->orderBy('DELITO', 'ASC')->findAll();
-		$data->escolaridades = $this->_escolaridadModelRead->asObject()->findAll();
-		$data->ocupaciones = $this->_ocupacionModelRead->asObject()->findAll();
-		$data->figura = $this->_figuraModelRead->asObject()->findAll();
-		$data->cabelloColor = $this->_cabelloColorModelRead->asObject()->findAll();
-		$data->cabelloTamano = $this->_cabelloTamanoModelRead->asObject()->findAll();
-		$data->frenteForma = $this->_frenteFormaModelRead->asObject()->findAll();
-		$data->ojoColor = $this->_ojoColorModelRead->asObject()->findAll();
-		$data->cabelloEstilo = $this->_cabelloEstiloModelRead->asObject()->findAll();
-		$data->cejaForma = $this->_cejaFormaModelRead->asObject()->findAll();
-		$data->pielColor = $this->_pielColorModelRead->asObject()->findAll();
-		$data->parentesco = $this->_parentescoModelRead->asObject()->findAll();
-		$data->empresas = $this->_relacionFisicaMoralModelRead->asObject()
-			->join('PERSONASMORALES', 'PERSONASMORALES.PERSONAMORALID = RELACIONFISICAMORAL.PERSONAMORALID')
-			// ->where('RELACIONFISICAMORAL.RELACIONAR', 'S')
-			->where('RELACIONFISICAMORAL.DENUNCIANTEID', session('DENUNCIANTEID'))
-			->findAll();
-		$data->giros = $this->_personaMoralGiroRead->asObject()->findAll();
+	// 		if ($lugar['HECHODESCR'] == 'CASA HABITACION' || $lugar['HECHODESCR'] == 'DESPOBLADO' || $lugar['HECHODESCR'] == 'VIA PUBLICA' || $lugar['HECHODESCR'] == 'CENTRO ESCOLAR') {
+	// 			array_push($lugares_peticion, (object) $lugar);
+	// 		}
+	// 	}
+	// 	$data->lugares  = [];
+	// 	$data->lugares =  (object) array_merge($lugares_peticion, $lugares_sin, $lugares_blanca, $lugares_fuego);
+	// 	$lugares_merge = [];
+	// 	$lugares_merge =  array_merge($lugares_peticion, $lugares_sin);
+	// 	$data->lugares = (object)array_unique($lugares_merge, SORT_REGULAR);
+	// 	$data->colorVehiculo = $this->_coloresVehiculoModelRead->asObject()->findAll();
+	// 	$data->tipoVehiculo = $this->_tipoVehiculoModelRead->asObject()->orderBy('VEHICULOTIPODESCR', 'ASC')->findAll();
+	// 	$data->delitosUsuarios = $this->_delitosUsuariosModelRead->asObject()->orderBy('DELITO', 'ASC')->findAll();
+	// 	$data->escolaridades = $this->_escolaridadModelRead->asObject()->findAll();
+	// 	$data->ocupaciones = $this->_ocupacionModelRead->asObject()->findAll();
+	// 	$data->figura = $this->_figuraModelRead->asObject()->findAll();
+	// 	$data->cabelloColor = $this->_cabelloColorModelRead->asObject()->findAll();
+	// 	$data->cabelloTamano = $this->_cabelloTamanoModelRead->asObject()->findAll();
+	// 	$data->frenteForma = $this->_frenteFormaModelRead->asObject()->findAll();
+	// 	$data->ojoColor = $this->_ojoColorModelRead->asObject()->findAll();
+	// 	$data->cabelloEstilo = $this->_cabelloEstiloModelRead->asObject()->findAll();
+	// 	$data->cejaForma = $this->_cejaFormaModelRead->asObject()->findAll();
+	// 	$data->pielColor = $this->_pielColorModelRead->asObject()->findAll();
+	// 	$data->parentesco = $this->_parentescoModelRead->asObject()->findAll();
+	// 	$data->empresas = $this->_relacionFisicaMoralModelRead->asObject()
+	// 		->join('PERSONASMORALES', 'PERSONASMORALES.PERSONAMORALID = RELACIONFISICAMORAL.PERSONAMORALID')
+	// 		// ->where('RELACIONFISICAMORAL.RELACIONAR', 'S')
+	// 		->where('RELACIONFISICAMORAL.DENUNCIANTEID', session('DENUNCIANTEID'))
+	// 		->findAll();
+	// 	$data->giros = $this->_personaMoralGiroRead->asObject()->findAll();
 
-		// $data->empresas = $this->_personasMoralesRead->asObject()->findAll();
+	// 	// $data->empresas = $this->_personasMoralesRead->asObject()->findAll();
 
 
-		// $data->distribuidorVehiculo = $this->_vehiculoDistribuidorModelRead->asObject()->findAll();
-		// $data->marcaVehiculo = $this->_vehiculoMarcaModelRead->asObject()->findAll();
-		// $data->lineaVehiculo = $this->_vehiculoModeloModelRead->asObject()->findAll();
-		// $data->versionVehiculo = $this->_vehiculoVersionModelRead->asObject()->findAll();
-		// $data->servicioVehiculo = $this->_vehiculoServicioModelRead->asObject()->findAll();
-		$this->_loadViewDenunciaPersonaMoral('Persona moral', 'persona moral', '', $data, 'index');
-	}
+	// 	// $data->distribuidorVehiculo = $this->_vehiculoDistribuidorModelRead->asObject()->findAll();
+	// 	// $data->marcaVehiculo = $this->_vehiculoMarcaModelRead->asObject()->findAll();
+	// 	// $data->lineaVehiculo = $this->_vehiculoModeloModelRead->asObject()->findAll();
+	// 	// $data->versionVehiculo = $this->_vehiculoVersionModelRead->asObject()->findAll();
+	// 	// $data->servicioVehiculo = $this->_vehiculoServicioModelRead->asObject()->findAll();
+	// 	// $this->_loadViewDenunciaPersonaMoral('Persona moral', 'persona moral', '', $data, 'index');
+	// }
 	/**
 	 * Función para crear denuncias persona fisica
 	 * Se recibe a través del metodo POST los datos del formulario
@@ -978,8 +1040,7 @@ class DashboardController extends BaseController
 		$session = session();
 		//Valida los datos requeridos para hacer una denuncia
 		if (($this->request->getPost('delito_moral') == null || $this->request->getPost('delito_moral') == '')
-			|| ($this->request->getPost('empresa') == null || $this->request->getPost('empresa') == '')
-			|| ($this->request->getPost('direccion') == null || $this->request->getPost('direccion') == '')
+			|| ($this->request->getPost('rfc_empresa') == null || $this->request->getPost('rfc_empresa') == '')
 			|| ($this->request->getPost('lugar_moral') == null || $this->request->getPost('lugar_moral') == '')
 			|| ($this->request->getPost('fecha_moral') == null || $this->request->getPost('fecha_moral') == '')
 			|| ($this->request->getPost('hora_moral') == null || $this->request->getPost('hora_moral') == '')
@@ -988,6 +1049,81 @@ class DashboardController extends BaseController
 		) {
 			return redirect()->to(base_url('/denuncia_litigantes/dashboard'))->with('message_error', 'Hubo un error, no subas documentos e imagenes muy grandes, máximo 2MB por documento.');
 		}
+
+		$rfc = $this->request->getPost('rfc_empresa');
+		$personamoralidExist = $this->_personasMoralesRead->select('PERSONAMORALID')->where('RFC', $rfc)->first();
+
+		$poder_archivo = $this->request->getFile('poder_archivo');
+		$poder_data = null;
+		if ($this->request->getFile('poder_archivo') != null && $poder_archivo->isValid()) {
+			try {
+				$nombre = explode('.', $poder_archivo->getName())[0];
+				$poder_data = file_get_contents($poder_archivo);
+			} catch (\Exception $e) {
+				$poder_data = null;
+			}
+		}
+
+		if ($this->request->getFile('poder_archivo') != null && $_FILES['poder_archivo']['name'] != null) {
+			$poder_data = file_get_contents($poder_archivo);
+		} //Datos del formulario nueva empresa
+		$dataMoral = [
+			'RAZONSOCIAL' => $this->request->getPost('razon_social'),
+			'MARCACOMERCIAL' => $this->request->getPost('marca_comercial') != "" ? $this->request->getPost('marca_comercial') : NULL,
+			'RFC' => $this->request->getPost('rfc_empresa'),
+			'PERSONAMORALGIROID' => $this->request->getPost('giro_empresa_denuncia'),
+			'ESTADOID' => $this->request->getPost('estado_empresa_c'),
+			'MUNICIPIOID' => $this->request->getPost('estado_empresa_c'),
+			'LOCALIDADID' => $this->request->getPost('localidad_empresa_c'),
+			'COLONIAID' => $this->request->getPost('colonia_select_empresa_c'),
+			'COLONIADESCR' => $this->request->getPost('colonia_input_empresa_c'),
+			'CALLE' => $this->request->getPost('calle_empresa_c'),
+			'NUMERO' => $this->request->getPost('n_empresa_c'),
+			'NUMEROINTERIOR' => $this->request->getPost('ninterior_empresa_c') != "" ? $this->request->getPost('ninterior_empresa_c') : NULL,
+			'REFERENCIA' => $this->request->getPost('referencia_empresa_c')  != "" ? $this->request->getPost('referencia_empresa_c') : NULL,
+			'TELEFONO' => $this->request->getPost('telefono_empresa_c'),
+			'CORREO' => $this->request->getPost('correo_empresa_c'),
+			'PODERVOLUMEN' => $this->request->getPost('poder_volumen') != "" ? $this->request->getPost('poder_volumen') : NULL,
+			'PODERNONOTARIO' => $this->request->getPost('poder_notario') != "" ? $this->request->getPost('poder_notario') : NULL,
+			'PODERNOPODER' => $this->request->getPost('poder_no_poder') != "" ? $this->request->getPost('poder_no_poder') : NULL,
+			'PODERARCHIVO' => $poder_data,
+			'FECHAINICIOPODER' => $this->request->getPost('fecha_inicio_poder') != "" ? $this->request->getPost('fecha_inicio_poder') : NULL,
+			'FECHAFINPODER' => $this->request->getPost('fecha_fin_poder') != "" ? $this->request->getPost('fecha_fin_poder') : NULL,
+			'CARGO' => $this->request->getPost('cargo'),
+			'DESCRIPCIONCARGO' => $this->request->getPost('descr_cargo') != "" ? $this->request->getPost('descr_cargo') : NULL,
+
+		];
+		$colonia = $this->_coloniasModelRead->asObject()->where('ESTADOID', $this->request->getPost('estado_empresa_c'))->where('MUNICIPIOID', $this->request->getPost('municipio_empresa_c'))->where('LOCALIDADID', $this->request->getPost('localidad_empresa_c'))->where('COLONIAID', $this->request->getPost('colonia_select_empresa_c'))->first();
+
+		if ($dataMoral['COLONIAID'] == '0' || $dataMoral['COLONIAID'] == null) {
+			$dataMoral['COLONIAID'] = null;
+			$dataMoral['COLONIADESCR'] = $this->request->getPost('colonia_input_empresa_c');
+			$localidad = $this->_localidadesModelRead->asObject()->where('ESTADOID', $this->request->getPost('estado_empresa_c'))->where('MUNICIPIOID', $this->request->getPost('municipio_empresa_c'))->where('LOCALIDADID', $this->request->getPost('localidad_empresa_c'))->first();
+			$dataMoral['ZONA'] = $localidad->ZONA;
+		} else {
+			$dataMoral['COLONIAID'] = (int) $this->request->getPost('colonia_select_empresa');
+			$dataMoral['COLONIADESCR'] = $colonia->COLONIADESCR;
+			$dataMoral['ZONA'] = $colonia->ZONA;
+		}
+
+		if (!$personamoralidExist) {
+			$this->_personasMoralesModel->save($dataMoral);
+			$dataMoral['PERSONAMORALID'] = $this->_personasMoralesModel->getInsertID();
+			$this->_personasMoralesNotificacionesModel->save($dataMoral);
+		}
+		//  else {
+		// 	if (!$this->request->getPost('direccion')) {
+		// 		$dataMoral['PERSONAMORALID'] = $personamoralidExist;
+		// 		$this->_personasMoralesNotificacionesModel->save($dataMoral);
+		// 	}
+
+		// }
+
+		$personamoralid = !$personamoralidExist ? $this->_personasMoralesModel->getInsertID() : $personamoralidExist;
+		$notificacionid = !$this->request->getPost('direccion') ? $this->_personasMoralesNotificacionesModel->getInsertID() : $this->request->getPost('direccion');
+
+
+
 		//Datos a insertar en folio
 		$dataFolio = [
 			'DENUNCIANTEID' => $session->get('DENUNCIANTEID'),
@@ -1012,7 +1148,7 @@ class DashboardController extends BaseController
 
 		];
 
-		if ($this->request->getPost('check_ubi') == 'on') {
+		if ($this->request->getPost('check_ubi_moral') == 'on') {
 			$dataFolio['HECHOCOORDENADAX'] = $this->request->getPost('longitud_moral');
 			$dataFolio['HECHOCOORDENADAY'] = $this->request->getPost('latitud_moral');
 		}
@@ -1231,8 +1367,8 @@ class DashboardController extends BaseController
 			//DATOS DEL OFENDIDO- EMPRESA
 
 			$dataOfendido = array(
-				'PERSONAMORALID' => trim($this->request->getPost('empresa')),
-				'NOTIFICACIONID' => $this->request->getPost('direccion'),
+				'PERSONAMORALID' => $personamoralid,
+				'NOTIFICACIONID' => $notificacionid,
 				'DENOMINACION' => $this->request->getPost('razon_social'),
 				'MARCACOMERCIAL' => $this->request->getPost('marca_comercial_d'),
 				'PERSONAMORALGIROID' => $this->request->getPost('giro_empresa_denuncia'),
@@ -1256,7 +1392,7 @@ class DashboardController extends BaseController
 			//Insercion de persona fisica, media filiacion y domicilio del ofendido
 			$ofendidoId = $this->_folioPersonaMorales($dataOfendido, $FOLIOID, 1, $year);
 			//DATOS DEL POSIBLE RESPONSABLE
-			if (!empty($this->request->getPost('responsable')) && $this->request->getPost('responsable') == 'SI') {
+			if (!empty($this->request->getPost('responsable_moral')) && $this->request->getPost('responsable_moral') == 'SI') {
 				$dataImputado = array(
 					'NOMBRE' => $this->request->getPost('nombre_imputado') && $this->request->getPost('nombre_imputado') != "" ? $this->request->getPost('nombre_imputado') : 'QUIEN RESULTE RESPONSABLE',
 					'PRIMERAPELLIDO' => $this->request->getPost('primer_apellido_imputado'),
@@ -1546,6 +1682,20 @@ class DashboardController extends BaseController
 			} else {
 				return redirect()->to(base_url($url))->with('message_error', 'No se pudo realizar el envio.');
 			}
+		}
+	}
+	/**Funcion para solicitar cambio de informacion de persona moral */
+	function solicitarCambio()
+	{
+		$personamoralid = $this->request->getPost('personamoralid');
+		$data = [
+			'CAMBIO' => "S",
+		];
+		$updateCambio = $this->_personasMoralesModel->set($data)->where('PERSONAMORALID', $personamoralid)->update();
+		if ($updateCambio) {
+			return json_encode(['status' => 1]);
+		} else {
+			return json_encode(['status' => 0]);
 		}
 	}
 	/**

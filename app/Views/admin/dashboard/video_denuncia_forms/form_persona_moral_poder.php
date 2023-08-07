@@ -7,13 +7,6 @@
     </div>
 
     <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-        <label for="relacion_pm" class="form-label font-weight-bold">Aceptado</label>
-        <select class="form-control" id="relacion_pm" name="relacion_pm">
-            <option value="S">SI</option>
-            <option value="N">NO</option>
-        </select>
-    </div>
-    <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
         <label for="volumen_pm" class="form-label font-weight-bold">Volumen</label>
         <input type="text" class="form-control" id="volumen_pm" name="volumen_pm">
     </div>
@@ -30,7 +23,7 @@
     </div>
     <td class="text-center">
         <a type="button" class="btn btn-primary" id="btnLigacion" name="btnLigacion">
-         Editar ligación
+         Editar persona moral
         </a>
     </td>
 

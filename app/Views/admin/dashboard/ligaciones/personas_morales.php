@@ -26,6 +26,8 @@
                                             <th class="text-center">ESTADO</th>
 
                                             <th class="text-center">MUNICIPIO</th>
+                                            <th class="text-center">SOLICITUD DE CAMBIO</th>
+
                                             <th class="text-center"></th>
                                         </tr>
                                     </thead>
@@ -38,6 +40,7 @@
                                                 <td class="text-center"><?= $moral->PERSONAMORALGIRODESCR ?></td>
                                                 <td class="text-center"><?= $moral->ESTADODESCR ?></td>
                                                 <td class="text-center"><?= $moral->MUNICIPIODESCR ?></td>
+                                                <td class="text-center"><?= $moral->CAMBIO == "S" ? "SI" : "NO" ?></td>
 
 
                                                 <td class="text-center">

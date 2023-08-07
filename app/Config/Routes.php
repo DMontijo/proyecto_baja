@@ -389,6 +389,7 @@ $routes->group('data', function ($routes) {
 	$routes->post('create-direccion-notificacion', 'litigantes/DashboardController::crear_direccion_notificacion');
 	$routes->get('getStatusFolio', 'litigantes/DashboardController::getStatusFolio');
 	$routes->post('getRelacionLitigantes', 'litigantes/DashboardController::getRelacionLitigantes');
+	$routes->post('solicitar_cambio', 'litigantes/DashboardController::solicitarCambio');
 
 
 });

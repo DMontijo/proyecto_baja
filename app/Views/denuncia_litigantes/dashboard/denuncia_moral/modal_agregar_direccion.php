@@ -112,8 +112,6 @@
 </div>
 <script>
     //Declaracion de elementos
-    const select_tipo_doc = document.querySelector("#tipodoc")
-    const solicitante = document.querySelector("input[name=solicitante]");
 
     document.querySelector('#correo_empresa_extra').blur();
 
@@ -267,34 +265,7 @@
         }
     });
 
-    document.querySelector('#correo_empresa_extra').addEventListener('blur', (e) => {
-        let regex = /\S+@\S+\.\S+/
-
-        if (regex.test(e.target.value)) {
-            $.ajax({
-                data: {
-                    'email': e.target.value,
-                    'personamoralid': document.querySelector('#empresa').value,
-
-                },
-                url: "<?= base_url('/data/exist-email-notificacion') ?>",
-                method: "POST",
-                dataType: "json",
-                success: function(response) {
-                    if (response.exist === 1) {
-                        e.target.value = '';
-                        Swal.fire({
-                            icon: 'error',
-                            text: 'El correo ya se encuentra registrado, ingresa uno diferente.',
-                            confirmButtonColor: '#bf9b55',
-                        });
-                    }
-                },
-                error: function(jqXHR, textStatus, errorThrown) {}
-            });
-        };
-    })
-
+  
 
     function clearSelect(select_element) {
         for (let i = select_element.options.length; i >= 1; i--) {

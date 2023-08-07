@@ -17,7 +17,6 @@
 									<th scope="col">RAZÓN SOCIAL</th>
 									<th scope="col">MARCA COMERCIAL</th>
 									<th scope="col">RFC</th>
-									<th scope="col">ESTADO</th>
 									<th scope="col">VENCIMIENTO DE PODER</th>
 									<th scope="col"></th>
 								</tr>
@@ -28,16 +27,6 @@
 										<th scope="row"><?= $ligar->RAZONSOCIAL  ?></th>
 										<td><?= $ligar->MARCACOMERCIAL ?></td>
 										<td><?= $ligar->RFC ?></td>
-
-										<?php if ($ligar->RELACIONAR == 'N' && empty($ligar->RECHAZAR)) { ?>
-											<td class="text-center text-warning fw-bold">AUN NO HA SIDO ACEPTADO</td>
-										<?php } else if ($ligar->RELACIONAR == 'S') { ?>
-											<td class="text-center text-success fw-bold">ACEPTADO</td>
-										<?php } else if ($ligar->RECHAZAR == 'S') {  ?>
-											<td class="text-center text-danger fw-bold">RECHAZADO</td>
-
-										<?php } ?>
-
 
 										<?php if (isset($ligar->FECHAFINPODER)) {
 											$date1 = new DateTime($ligar->FECHAFINPODER);
@@ -51,11 +40,7 @@
 										<?php } else { ?>
 											<td class="text-center">SIN FECHA REGISTRADA</td>
 										<?php } ?>
-										<td>
-											<a type="button" class="text-decoration-none btn btn-success" data-idpersonamoral="<?= $ligar->PERSONAMORALID ?>" data-iddenunciante="<?= $ligar->DENUNCIANTEID ?>" data-bs-toggle="modal" data-bs-target="#ligarEmpresaModal">
-												<i class="fas fa-edit"></i>
-											</a>
-										</td>
+				
 									<?php } ?>
 
 									</tr>

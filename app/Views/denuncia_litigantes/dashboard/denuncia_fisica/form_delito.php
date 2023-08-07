@@ -157,8 +157,9 @@
 		</div>
 	</div>
 </div>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC8Y8sKd0VSyZcl9kPdCewI2mpXh95AJ-8&callback=initMap&v=weekly" defer></script>
 <script>
+	
+
 	//Funcion para eliminar los optiones de un select
 	function clearSelect(select_element) {
 		for (let i = select_element.options.length; i >= 1; i--) {
@@ -310,139 +311,6 @@
 	// 		error: function(jqXHR, textStatus, errorThrown) {}
 	// 	});
 	// });
-
-	let map, infoWindow;
-	let marker = null;
-	let current = null;
-	//inicializa el mapa del hecho
-	const initMap = () => {
-		const position = {
-			lat: 32.521036,
-			lng: -117.015543
-		};
-		const BAJACALIFORNIA_BOUNDS = {
-			north: 32.718754,
-			south: 28,
-			west: -118.407649,
-			east: -112.65424,
-			// 28,-118.407649 – 32.718754,-112.65424
-			// Check bound in https://developers-dot-devsite-v2-prod.appspot.com/maps/documentation/utils/geocoder
-		};
-		map = new google.maps.Map(document.getElementById("map"), {
-			center: position,
-			zoom: 10,
-			gestureHandling: "cooperative",
-			// restriction: {
-			//     latLngBounds: BAJACALIFORNIA_BOUNDS,
-			//     strictBounds: false,
-			// },
-		});
-
-		google.maps.event.addListener(map, "click", (event) => {
-			addMarker(event.latLng, map, 'evento');
-		});
-
-		infoWindow = new google.maps.InfoWindow();
-
-		const locationButton = document.createElement("button");
-		locationButton.style.backgroundColor = "#fff";
-		locationButton.style.border = "2px solid #fff";
-		locationButton.style.borderRadius = "3px";
-		locationButton.style.boxShadow = "0 2px 6px rgba(0,0,0,.3)";
-		locationButton.style.color = "rgb(25,25,25)";
-		locationButton.style.cursor = "pointer";
-		locationButton.style.fontFamily = "Roboto,Arial,sans-serif";
-		locationButton.style.fontSize = "16px";
-		locationButton.style.lineHeight = "38px";
-		locationButton.style.margin = "8px 0 22px";
-		locationButton.style.padding = "0 5px";
-		locationButton.style.textAlign = "center";
-		locationButton.textContent = "Mi ubicación";
-		locationButton.title = "Clic para ir a tu ubicación actual.";
-		locationButton.type = "button";
-		locationButton.classList.add("custom-map-control-button");
-		map.controls[google.maps.ControlPosition.TOP_CENTER].push(
-			locationButton
-		);
-
-		currentPosition();
-
-
-		locationButton.addEventListener("click", () => {
-			currentPosition();
-		});
-	};
-	//obtiene la posicion actual
-	const currentPosition = () => {
-		if (navigator.geolocation) {
-			navigator.geolocation.getCurrentPosition(
-				(position) => {
-					const pos = {
-						lat: position.coords.latitude,
-						lng: position.coords.longitude,
-					};
-
-					map.setCenter(pos);
-					addMarker(pos, map, 'current');
-					map.setZoom(15);
-				},
-				() => {
-					handleLocationError(true, infoWindow, map.getCenter());
-				}
-			);
-		} else {
-			handleLocationError(false, infoWindow, map.getCenter());
-		}
-	};
-
-	//obtiene los errores de la localizacion
-	const handleLocationError = (browserHasGeolocation, infoWindow, pos) => {
-		infoWindow.setPosition(pos);
-		infoWindow.setContent(
-			browserHasGeolocation ?
-			"Error: The Geolocation service failed." :
-			"Error: Your browser doesn't support geolocation."
-		);
-		infoWindow.open(map);
-	};
-
-	//marca en el mapa la posicion del hecho
-	const addMarker = (position, map, prov) => {
-
-		marker ? (marker.setMap(null), (marker = null)) : null;
-		marker = new google.maps.Marker({
-			position,
-		});
-		if (prov == 'current') {
-			document.getElementById('longitud').value = position['lng'];
-			document.getElementById('latitud').value = position['lat'];
-
-		} else {
-			document.getElementById('longitud').value = position;
-			let stringpos = document.getElementById('longitud').value
-			if (typeof stringpos == 'string') {
-				stringpos = stringpos.replace('(', '');
-				stringpos = stringpos.replace(')', '');
-				stringpos = stringpos.replace(' ', '');
-
-				let arr = stringpos.split(',');
-				const positionMake = {
-					lat: arr[0],
-					lng: arr[1]
-				};
-				document.getElementById('longitud').value = positionMake['lng'];
-				document.getElementById('latitud').value = positionMake['lat'];
-
-			}
-		}
-
-
-		// map.setCenter(position);
-		marker.setMap(map);
-	};
-
-	window.initMap = initMap;
-
 	//Funcion para contar carcateres de un elemento
 	function contarCaracteres(obj) {
 		var maxLength = 1000;
