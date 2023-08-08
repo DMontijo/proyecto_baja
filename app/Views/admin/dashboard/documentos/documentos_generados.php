@@ -151,6 +151,7 @@
 						const imputados = response.imputados;
 						const victimas = response.victimas;
 						const correos = response.correos;
+						console.log(victimas);
 						//llena las tablas y selects necesarios para su implementacion
 						let tabla_documentos = document.querySelectorAll('#table-documentos tr');
 						tabla_documentos.forEach(row => {
@@ -178,8 +179,8 @@
 								.PRIMERAPELLIDO : '';
 
 							const option = document.createElement('option');
-							option.value = victima.PERSONAFISICAID ? victima.PERSONAFISICAID : victima.PERSONAMORALID + ' MORAL';
-							option.text = victima.NOMBRE ? victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PFCJDESCR : victima.DENOMINACION + ' | ' + victima.PMCJDESCR;
+							option.value = victima.PERSONAFISICAID ;
+							option.text = victima.NOMBRE ? victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PERSONACALIDADJURIDICADESCR : '';
 							select_victima_documento.add(option, null);
 						});
 						$('#imputado_modal_documento').empty();
@@ -269,8 +270,8 @@
 								.PRIMERAPELLIDO : '';
 
 							const option = document.createElement('option');
-							option.value = victima.PERSONAFISICAID ? victima.PERSONAFISICAID : victima.PERSONAMORALID + ' MORAL';
-							option.text = victima.NOMBRE ? victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PFCJDESCR : victima.DENOMINACION + ' | ' + victima.PMCJDESCR;
+							option.value = victima.PERSONAFISICAID;
+							option.text = victima.NOMBRE ? victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PERSONACALIDADJURIDICADESCR : '';
 							select_victima_documento.add(option, null);
 						});
 						$('#imputado_modal_documento').empty();

@@ -29,7 +29,10 @@
                             <label for="tipo_persona" class="form-label fw-bold input-required">Tipo persona</label>
                             <select class="form-control" id="tipo_persona" name="tipo_persona" required>
                                 <option selected disabled value="">Seleccione el tipo de persona de la denuncia</option>
-                                <option value="FISICA">PERSONA FISICA</option>
+                                <?php if (session('PERFIL') == "LITIGANTE") { ?>
+                                    <option value="FISICA">PERSONA FISICA</option>
+                                <?php } ?>
+
                                 <option value="MORAL">PERSONA MORAL</option>
 
                             </select>
@@ -180,7 +183,10 @@
     var stepCount = steps.length - 1;
     var width = 100 / stepCount;
     var currentStep = 0;
-
+		//Funcion para convertir el elemento a mayusculoas
+		const mayuscTextarea = (e) => {
+			e.value = e.value.toUpperCase();
+		}
     (function() {
         'use strict'
         var forms = document.querySelectorAll('.needs-validation')
@@ -227,6 +233,9 @@
                 event.target.value = clearText(event.target.value).toLowerCase();
             }, false)
         })
+		document.querySelector('#descripcion_breve').addEventListener('input', (event) => {
+			event.target.value = clearText(event.target.value).toUpperCase();
+		}, false)
 
         //Form add notificacion
         form_agregar_direccion.addEventListener('submit', (event) => {
@@ -946,8 +955,6 @@
         };
 
         document.querySelector('#rfc_empresa').addEventListener('blur', (e) => {
-
-            console.log(e.target.value);
             if ((e.target.value)) {
                 $.ajax({
                     data: {
@@ -1102,7 +1109,7 @@
                                 $("#poder_archivo").removeAttr("required");
                                 let extension = (((personamoral.PODERARCHIVO.split(';'))[0]).split('/'))[1];
                                 if (extension == 'pdf' || extension == 'doc') {
-                                    document.querySelector('poder_foto').setAttribute('src', '<?= base_url() ?>/assets/img/file.png');
+                                    document.querySelector('#poder_foto').setAttribute('src', '<?= base_url() ?>/assets/img/file.png');
                                 } else {
                                     document.querySelector('#poder_foto').setAttribute('src', personamoral.PODERARCHIVO);
                                 }

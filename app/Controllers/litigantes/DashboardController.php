@@ -1073,7 +1073,7 @@ class DashboardController extends BaseController
 			'RFC' => $this->request->getPost('rfc_empresa'),
 			'PERSONAMORALGIROID' => $this->request->getPost('giro_empresa_denuncia'),
 			'ESTADOID' => $this->request->getPost('estado_empresa_c'),
-			'MUNICIPIOID' => $this->request->getPost('estado_empresa_c'),
+			'MUNICIPIOID' => $this->request->getPost('municipio_empresa_c'),
 			'LOCALIDADID' => $this->request->getPost('localidad_empresa_c'),
 			'COLONIAID' => $this->request->getPost('colonia_select_empresa_c'),
 			'COLONIADESCR' => $this->request->getPost('colonia_input_empresa_c'),
@@ -1101,15 +1101,41 @@ class DashboardController extends BaseController
 			$localidad = $this->_localidadesModelRead->asObject()->where('ESTADOID', $this->request->getPost('estado_empresa_c'))->where('MUNICIPIOID', $this->request->getPost('municipio_empresa_c'))->where('LOCALIDADID', $this->request->getPost('localidad_empresa_c'))->first();
 			$dataMoral['ZONA'] = $localidad->ZONA;
 		} else {
-			$dataMoral['COLONIAID'] = (int) $this->request->getPost('colonia_select_empresa');
+			$dataMoral['COLONIAID'] = (int) $this->request->getPost('colonia_select_empresa_c');
 			$dataMoral['COLONIADESCR'] = $colonia->COLONIADESCR;
 			$dataMoral['ZONA'] = $colonia->ZONA;
 		}
 
 		if (!$personamoralidExist) {
 			$this->_personasMoralesModel->save($dataMoral);
-			$dataMoral['PERSONAMORALID'] = $this->_personasMoralesModel->getInsertID();
-			$this->_personasMoralesNotificacionesModel->save($dataMoral);
+			$dataNotificacion = [
+				'PERSONAMORALID' =>  $this->_personasMoralesModel->getInsertID(),
+				'ESTADOID' => $this->request->getPost('estado_empresa'),
+				'MUNICIPIOID' => $this->request->getPost('municipio_empresa'),
+				'LOCALIDADID' => $this->request->getPost('localidad_empresa'),
+				'COLONIAID' => $this->request->getPost('colonia_select_empresa'),
+				'COLONIADESCR' => $this->request->getPost('colonia_input_empresa'),
+				'CALLE' => $this->request->getPost('calle_empresa'),
+				'NUMERO' => $this->request->getPost('n_empresa'),
+				'NUMEROINTERIOR' => $this->request->getPost('ninterior_empresa') != "" ? $this->request->getPost('ninterior_empresa') : NULL,
+				'REFERENCIA' => $this->request->getPost('referencia_empresa')  != "" ? $this->request->getPost('referencia_empresa') : NULL,
+				'TELEFONO' => $this->request->getPost('telefono_empresa'),
+				'CORREO' => $this->request->getPost('correo_empresa'),
+			];
+			$colonia = $this->_coloniasModelRead->asObject()->where('ESTADOID', $this->request->getPost('estado_empresa'))->where('MUNICIPIOID', $this->request->getPost('municipio_empresa'))->where('LOCALIDADID', $this->request->getPost('localidad_empresa'))->where('COLONIAID', $this->request->getPost('colonia_select_empresa'))->first();
+
+			if ($dataNotificacion['COLONIAID'] == '0' || $dataNotificacion['COLONIAID'] == null) {
+				$dataNotificacion['COLONIAID'] = null;
+				$dataNotificacion['COLONIADESCR'] = $this->request->getPost('colonia_input_empresa');
+				$localidad = $this->_localidadesModelRead->asObject()->where('ESTADOID', $this->request->getPost('estado_empresa'))->where('MUNICIPIOID', $this->request->getPost('municipio_empresa'))->where('LOCALIDADID', $this->request->getPost('localidad_empresa'))->first();
+				$dataNotificacion['ZONA'] = $localidad->ZONA;
+			} else {
+				$dataNotificacion['COLONIAID'] = (int) $this->request->getPost('colonia_select_empresa');
+				$dataNotificacion['COLONIADESCR'] = $colonia->COLONIADESCR;
+				$dataNotificacion['ZONA'] = $colonia->ZONA;
+			}
+
+			$this->_personasMoralesNotificacionesModel->save($dataNotificacion);
 		}
 		//  else {
 		// 	if (!$this->request->getPost('direccion')) {
@@ -1366,29 +1392,41 @@ class DashboardController extends BaseController
 
 			//DATOS DEL OFENDIDO- EMPRESA
 
+
 			$dataOfendido = array(
 				'PERSONAMORALID' => $personamoralid,
 				'NOTIFICACIONID' => $notificacionid,
 				'DENOMINACION' => $this->request->getPost('razon_social'),
 				'MARCACOMERCIAL' => $this->request->getPost('marca_comercial_d'),
 				'PERSONAMORALGIROID' => $this->request->getPost('giro_empresa_denuncia'),
-				'ESTADOID' => $this->request->getPost('estado_empresa'),
-				'MUNICIPIOID' => $this->request->getPost('municipio_empresa'),
-				'LOCALIDADID' => $this->request->getPost('localidad_empresa'),
-				'ZONA' => $this->request->getPost('zona_empresa') == 'URBANA' ? 'U' : 'R',
-				'COLONIAID' => $this->request->getPost('colonia_select_empresa'),
-				'COLONIADESCR' => $this->request->getPost('colonia_input_empresa'),
-				'CALLE' => $this->request->getPost('calle_empresa'),
-				'NUMERO' => $this->request->getPost('n_empresa'),
-				'NUMEROINTERIOR' => $this->request->getPost('ninterior_empresa'),
-				'REFERENCIA' => $this->request->getPost('referencia_empresa'),
-				'TELEFONO' => $this->request->getPost('telefono_empresa'),
-				'CORREO' => $this->request->getPost('correo_empresa'),
+				'ESTADOID' => $this->request->getPost('estado_empresa_c'),
+				'MUNICIPIOID' => $this->request->getPost('municipio_empresa_c'),
+				'LOCALIDADID' => $this->request->getPost('localidad_empresa_c'),
+				'COLONIAID' => $this->request->getPost('colonia_select_empresa_c'),
+				'COLONIADESCR' => $this->request->getPost('colonia_input_empresa_c'),
+				'CALLE' => $this->request->getPost('calle_empresa_c'),
+				'NUMERO' => $this->request->getPost('n_empresa_c'),
+				'NUMEROINTERIOR' => $this->request->getPost('ninterior_empresa_c'),
+				'REFERENCIA' => $this->request->getPost('referencia_empresa_c'),
+				'TELEFONO' => $this->request->getPost('telefono_empresa_c'),
+				'CORREO' => $this->request->getPost('correo_empresa_c'),
 				'PODERVOLUMEN' => $this->request->getPost('poder_volumen'),
 				'PODERNONOTARIO' => $this->request->getPost('poder_no_notario'),
 				'PODERNOPODER' => $this->request->getPost('poder_no_poder'),
 			);
 
+			$colonia = $this->_coloniasModelRead->asObject()->where('ESTADOID', $this->request->getPost('estado_empresa_c'))->where('MUNICIPIOID', $this->request->getPost('municipio_empresa_c'))->where('LOCALIDADID', $this->request->getPost('localidad_empresa_c'))->where('COLONIAID', $this->request->getPost('colonia_select_empresa_c'))->first();
+
+			if ($dataOfendido['COLONIAID'] == '0' || $dataOfendido['COLONIAID'] == null) {
+				$dataOfendido['COLONIAID'] = null;
+				$dataOfendido['COLONIADESCR'] = $this->request->getPost('colonia_input_empresa_c');
+				$localidad = $this->_localidadesModelRead->asObject()->where('ESTADOID', $this->request->getPost('estado_empresa_c'))->where('MUNICIPIOID', $this->request->getPost('municipio_empresa_c'))->where('LOCALIDADID', $this->request->getPost('localidad_empresa_c'))->first();
+				$dataOfendido['ZONA'] = $localidad->ZONA;
+			} else {
+				$dataOfendido['COLONIAID'] = (int) $this->request->getPost('colonia_select_empresa_c');
+				$dataOfendido['COLONIADESCR'] = $colonia->COLONIADESCR;
+				$dataOfendido['ZONA'] = $colonia->ZONA;
+			}
 			//Insercion de persona fisica, media filiacion y domicilio del ofendido
 			$ofendidoId = $this->_folioPersonaMorales($dataOfendido, $FOLIOID, 1, $year);
 			//DATOS DEL POSIBLE RESPONSABLE
@@ -2080,7 +2118,7 @@ class DashboardController extends BaseController
 			'body_data' => $data,
 		];
 
-		echo view("denuncia_litigantes/denuncia_fisica/$view", $data2);
+		echo view("denuncia_litigantes/dashboard/denuncia_fisica/$view", $data2);
 	}
 	/**
 	 * Función para cargar cualquier vista en cualquier función. Denuncia Persona Moral

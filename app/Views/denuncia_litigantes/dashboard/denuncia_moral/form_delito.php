@@ -167,8 +167,123 @@
 		}
 	}
 	///deshabilita los select hasta que dependen de otros
+
 	document.querySelector('#localidad_moral').disabled = true;
 	document.querySelector('#colonia_select_moral').disabled = true;
+
+
+	//Evento para traer las localidades de acuerdo a un municipio. Se limpian los select para que no acumulen
+	document.querySelector('#municipio_moral').addEventListener('change', (e) => {
+		let select_localidad = document.querySelector('#localidad_moral');
+		let select_colonia = document.querySelector('#colonia_select_moral');
+		let input_colonia = document.querySelector('#colonia');
+
+		let estado = 2;
+		let municipio = e.target.value;
+
+		select_localidad.disabled = true;
+		select_colonia.disabled = true;
+
+		clearSelect(select_localidad);
+		clearSelect(select_colonia);
+
+		select_localidad.value = '';
+		select_colonia.value = '';
+		input_colonia.value = '';
+
+		select_colonia.classList.remove('d-none');
+		input_colonia.classList.add('d-none');
+
+		let data = {
+			'estado_id': estado,
+			'municipio_id': municipio
+		};
+
+		$.ajax({
+			data: data,
+			url: "<?= base_url('/data/get-localidades-by-municipio') ?>",
+			method: "POST",
+			dataType: "json",
+			success: function(response) {
+				let localidades = response.data;
+
+				localidades.forEach(localidad => {
+					var option = document.createElement("option");
+					option.text = localidad.LOCALIDADDESCR;
+					option.value = localidad.LOCALIDADID;
+					select_localidad.add(option);
+				});
+				select_localidad.disabled = false;
+			},
+			error: function(jqXHR, textStatus, errorThrown) {}
+		});
+	});
+	//Evento para traer las colonias de acuerdo a un municipio, estado y localidad. Se limpian los select para que no acumulen
+
+	document.querySelector('#localidad_moral').addEventListener('change', (e) => {
+		let select_colonia = document.querySelector('#colonia_select_moral');
+		let input_colonia = document.querySelector('#colonia');
+
+		select_colonia.disabled = true;
+
+		let estado = 2;
+		let municipio = document.querySelector('#municipio_moral').value;
+		let localidad = e.target.value;
+
+		clearSelect(select_colonia);
+		select_colonia.value = '';
+		input_colonia.value = '';
+		select_colonia.classList.remove('d-none');
+		input_colonia.classList.add('d-none');
+
+		let data = {
+			'estado_id': estado,
+			'municipio_id': municipio,
+			'localidad_id': localidad
+		};
+
+		$.ajax({
+			data: data,
+			url: "<?= base_url('/data/get-colonias-by-estado-municipio-localidad') ?>",
+			method: "POST",
+			dataType: "json",
+			success: function(response) {
+				let colonias = response.data;
+				// console.log(colonias);
+				colonias.forEach(colonia => {
+					var option = document.createElement("option");
+					option.text = colonia.COLONIADESCR;
+					option.value = colonia.COLONIAID;
+					select_colonia.add(option);
+				});
+
+				var option = document.createElement("option");
+				option.text = 'OTRO';
+				option.value = '0';
+				option.style = 'font-weight: bold;';
+				select_colonia.add(option);
+				select_colonia.disabled = false;
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+
+			}
+		});
+	});
+
+	//Evento change para modificar estilos de una colonia
+	document.querySelector('#colonia_select_moral').addEventListener('change', (e) => {
+		let select_colonia = document.querySelector('#colonia_select_moral');
+		let input_colonia = document.querySelector('#colonia_moral');
+
+		if (e.target.value === '0') {
+			select_colonia.classList.add('d-none');
+			input_colonia.classList.remove('d-none');
+			input_colonia.value = "";
+			input_colonia.focus();
+		} else {
+			input_colonia.value = e.target.value;
+		}
+	});
 
 
 	
