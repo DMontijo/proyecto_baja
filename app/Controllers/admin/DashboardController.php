@@ -1981,7 +1981,6 @@ class DashboardController extends BaseController
 		if ($data->foliopersonaMoral) {
 			$data->personaMoralNotificacion = $this->_personasMoralesNotificacionesRead->where('PERSONAMORALID', $id)->where('NOTIFICACIONID', $data->foliopersonaMoral['NOTIFICACIONID'])->first();
 			$data->folio = $this->_folioModelRead->where('FOLIOID', $folio)->where('ANO', $year)->first();
-			// $data->relacionMoralFisica = $this->_relacionFisicaMoralModelRead->where('DENUNCIANTEID', $data->folio['DENUNCIANTEID'])->where('PERSONAMORALID', $id)->first();
 			$data->personaMoral = $this->_personasMoralesRead->where('PERSONAMORALID', $id)->first();
 			$data->idPersonaMoral = $id;
 			if ($data->personaMoral['PODERARCHIVO']) {

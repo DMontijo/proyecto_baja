@@ -172,12 +172,6 @@ class DashboardController extends BaseController
 		$data->lugares = $this->_hechoLugarModelRead->asObject()->orderBy('HECHODESCR', 'asc')->findAll();
 		$data->identificacion = $this->_documentosExtravioTipoModelRead->asObject()->orderBy('DOCUMENTOEXTRAVIOTIPODESCR', 'asc')->where('VISIBLE', '1')->findAll();
 		$data->denunciante = $this->_denunciantesModelRead->asObject()->where('DENUNCIANTEID', session('DENUNCIANTEID'))->first();
-		$data->empresas = $this->_relacionFisicaMoralModelRead->asObject()
-			->join('PERSONASMORALES', 'PERSONASMORALES.PERSONAMORALID = RELACIONFISICAMORAL.PERSONAMORALID', 'LEFT')
-			// ->where('RELACIONFISICAMORAL.RELACIONAR', 'S')
-			->where('RELACIONFISICAMORAL.DENUNCIANTEID', session('DENUNCIANTEID'))
-			->findAll();
-
 		$data->paises = $this->_paisesModelRead->asObject()->findAll();
 		$data->estados = $this->_estadosModelRead->asObject()->findAll();
 		$data->estadosExtranjeros = $this->_estadosExtranjerosRead->asObject()->findAll();
@@ -570,7 +564,6 @@ class DashboardController extends BaseController
 	// 	$data->parentesco = $this->_parentescoModelRead->asObject()->findAll();
 	// 	$data->empresas = $this->_relacionFisicaMoralModelRead->asObject()
 	// 		->join('PERSONASMORALES', 'PERSONASMORALES.PERSONAMORALID = RELACIONFISICAMORAL.PERSONAMORALID')
-	// 		// ->where('RELACIONFISICAMORAL.RELACIONAR', 'S')
 	// 		->where('RELACIONFISICAMORAL.DENUNCIANTEID', session('DENUNCIANTEID'))
 	// 		->findAll();
 	// 	$data->giros = $this->_personaMoralGiroRead->asObject()->findAll();
@@ -1758,7 +1751,6 @@ class DashboardController extends BaseController
 			$this->_relacionFisicaMoralModelRead->asObject()
 			->select('PERSONASMORALES.PERSONAMORALID, PERSONASMORALES.RFC,PERSONASMORALES.PERSONAMORALGIROID,PERSONASMORALES.RAZONSOCIAL, PERSONASMORALES.MARCACOMERCIAL, PODERNOPODER, PODERNONOTARIO, PODERVOLUMEN, PERSONASMORALES.ESTADOID,PERSONASMORALES.MUNICIPIOID,PERSONASMORALES.LOCALIDADID,PERSONASMORALES.COLONIAID,PERSONASMORALES.COLONIADESCR,PERSONASMORALES.ZONA, PERSONASMORALES.CORREO, PERSONASMORALES.TELEFONO,PERSONASMORALES.NUMERO,PERSONASMORALES.NUMEROINTERIOR,PERSONASMORALES.REFERENCIA')
 			->join('PERSONASMORALES', 'PERSONASMORALES.PERSONAMORALID = RELACIONFISICAMORAL.PERSONAMORALID')
-			// ->where('RELACIONFISICAMORAL.RELACIONAR', 'S')
 			->where('RELACIONFISICAMORAL.DENUNCIANTEID', session('DENUNCIANTEID'))
 			->where('PERSONASMORALES.PERSONAMORALID', $personaMoralId)
 			->first();
