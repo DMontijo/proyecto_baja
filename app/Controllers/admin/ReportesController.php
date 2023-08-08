@@ -30,6 +30,7 @@ class ReportesController extends BaseController
 	private $_rolesPermisosModelRead;
 	private $_plantillasModelRead;
 	private $_videoCallModelRead;
+	private $_personasMoralesModelRead;
 
 	function __construct()
 	{
@@ -44,6 +45,8 @@ class ReportesController extends BaseController
 		$this->_constanciaExtravioModelRead = model('ConstanciaExtravioModel', true, $this->db_read);
 		$this->_rolesPermisosModelRead = model('RolesPermisosModel', true, $this->db_read);
 		$this->_plantillasModelRead = model('PlantillasModel', true, $this->db_read);
+		$this->_personasMoralesModelRead = model('PersonasMoralesModel', true, $this->db_read);
+
 		$this->_videoCallModelRead = new VideoCallReadModel();
 	}
 
@@ -3032,7 +3035,258 @@ class ReportesController extends BaseController
 		header("Cache-Control: max-age=0");
 		$writer->save("php://output");
 	}
+/**
+	 * Vista para ingresar a los reportes de personas morales 
+	 * Se carga con un filtro default
+	 *
+	 */
+	public function getMorales()
+	{
+		// Datos del filtro
+		$data = [
+			'fechaRegistro' => date("Y-m-d", strtotime('-1 month')),
+			'fechaFin' => date("Y-m-d"),
+		];
 
+		$municipio = $this->_municipiosModelRead->asObject()->where('ESTADOID', 2)->findAll();
+		//Filtro
+		$resultFilter = $this->_personasMoralesModelRead->filterPersonasMorales($data);
+		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
+		$empleado = $this->_usuariosModelRead->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
+
+		$dataView = (object)array();
+		$dataView->result = $resultFilter->result;
+		$dataView->municipios = $municipio;
+		$dataView->empleados = $empleado;
+		$dataView->filterParams = (object)$data;
+		$dataView->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
+		$this->_loadView('Personas morales generados', 'reporte personas morales', '', $dataView, 'reportes_personas_morales');
+	}
+
+	/**
+	 * Función para realizar un filtro en reporte de personas morales.
+	 * Recibe por metodo POST los datos del formulario del filtro
+	 *
+	 */
+	public function postMorales()
+	{
+		//Datos del filtro
+		$data = [
+			'MUNICIPIOID' => $this->request->getPost('municipio'),
+			'fechaRegistro' => $this->request->getPost('fechaRegistro'),
+			'fechaFin' => $this->request->getPost('fechaFin'),
+			'horaInicio' => $this->request->getPost('horaInicio'),
+			'horaFin' => $this->request->getPost('horaFin')
+		];
+
+		foreach ($data as $clave => $valor) {
+			//Recorre el array y elimina los valores que nulos o vacíos
+			if (empty($valor)) unset($data[$clave]);
+		}
+		//Para cuando se borra el filtro
+		if (count($data) <= 0) {
+			$data = [
+				'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
+				'fechaFin' => date("Y-m-d"),
+			];
+		}
+
+		$municipio = $this->_municipiosModelRead->asObject()->where('ESTADOID', 2)->findAll();
+		
+		//Generacion del filtro
+		$resultFilter = $this->_personasMoralesModelRead->filterPersonasMorales($data);
+		if (isset($data['MUNICIPIOID'])) {
+			$mun = $this->_municipiosModelRead->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data['MUNICIPIOID'])->first();
+			$data['MUNICIPIONOMBRE'] = $mun->MUNICIPIODESCR;
+		}
+		$dataView = (object)array();
+		$dataView->result = $resultFilter->result;
+		$dataView->municipios = $municipio;
+		$dataView->filterParams = (object)$data;
+		$dataView->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
+		$this->_loadView('Personas morales generados', 'reporte personas morales', '', $dataView, 'reportes_personas_morales');
+	}
+
+	/**
+	 * Función para generar el reporte XLSX de personas morales
+	 * Recibe por metodo POST los datos del filtro
+	 *
+	 */
+	public function createMoralesXlsx()
+	{
+		//Datos del filtro
+
+		$data = [
+			'MUNICIPIOID' => $this->request->getPost('MUNICIPIOID'),
+			'fechaRegistro' => $this->request->getPost('fechaInicio'),
+			'fechaFin' => $this->request->getPost('fechaFin'),
+			'horaInicio' => $this->request->getPost('horaInicio'),
+			'horaFin' => $this->request->getPost('horaFin')
+		];
+
+		$date = date("Y_m_d_h_i_s");
+
+		foreach ($data as $clave => $valor) {
+			//Recorre el array y elimina los valores que nulos o vacíos
+			if (empty($valor)) unset($data[$clave]);
+		}
+		//Cuando no hay filtro
+		if (count($data) <= 0) {
+			$data = [
+				'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
+				'fechaFin' => date("Y-m-d"),
+			];
+		}
+
+		//Generacion del filtro
+		$resultFilter = $this->_personasMoralesModelRead->filterPersonasMorales($data);
+
+		//Inicio del XLSX
+		$spreadSheet = new Spreadsheet();
+		$spreadSheet->getProperties()
+			->setCreator("Fiscalía General del Estado de Baja California")
+			->setLastModifiedBy("Fiscalía General del Estado de Baja California")
+			->setTitle("Reporte Folios" . $date)
+			->setSubject("Reporte Folios" . $date)
+			->setDescription(
+				"El presente documento fue generado por el Centro de Denuncia Tecnológica de la Fiscalía General del Estado de Baja California."
+			)
+			->setKeywords("reporte folios cdtec fgebc")
+			->setCategory("Reportes");
+		$sheet = $spreadSheet->getActiveSheet();
+
+		//Estilo del header
+		$styleHeaders = [
+			'font' => [
+				'bold' => true,
+				'color' => ['argb' => 'FFFFFF'],
+				'name' => 'Arial',
+				'size' => '10'
+			],
+			'alignment' => [
+				'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+				'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+			],
+			'borders' => [
+				'allBorders' => [
+					'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+					'color' => ['argb' => '000000'],
+				],
+			],
+			'fill' => [
+				'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_GRADIENT_LINEAR,
+				'rotation' => 90,
+				'startColor' => [
+					'argb' => '511229',
+				],
+				'endColor' => [
+					'argb' => '511229',
+				],
+			],
+		];
+
+		//Estilo de las celdas
+		$styleCells = [
+			'font' => [
+				'bold' => false,
+				'color' => ['argb' => '000000'],
+				'name' => 'Arial',
+				'size' => '10'
+			],
+			'alignment' => [
+				'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+				'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+			],
+			'borders' => [
+				'allBorders' => [
+					'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+					'color' => ['argb' => '000000'],
+				],
+			],
+			'fill' => [
+				'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_GRADIENT_LINEAR,
+				'rotation' => 90,
+				'startColor' => [
+					'argb' => 'FFFFFF',
+				],
+				'endColor' => [
+					'argb' => 'FFFFFF',
+				],
+			],
+		];
+		$row = 1;
+
+		$columns = [
+			'A', 'B', 'C', 'D', 'E',
+			'F', 'G', 'H', 'I', 'J',
+			'K', 'L', 'M', 'N', 'O',
+			'P', 'Q', 'R', 'S', 'T',
+			'U', 'V', 'W', 'X', 'Y', 'Z'
+		];
+		//Cabeceras
+		$headers = [
+			'RFC',
+			'RAZON SOCIAL',
+			'ESTADO',
+			'MUNICIPIO',
+			'TELEFONO',
+			'CORREO',
+			'PODER VOLUMEN',
+			'NO. NOTARIO',
+			'NO. PODER',
+			'FECHA INICIO DEL PODER',
+			'FECHA FIN DEL PODER'
+			
+		];
+
+		for ($i = 0; $i < count($headers); $i++) {
+			$sheet->setCellValue($columns[$i] . 1, $headers[$i]);
+			$sheet->getColumnDimension($columns[$i])->setAutoSize(true);
+		}
+
+		$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
+
+		$row++;
+
+		//Rellenado del XLSX
+		foreach ($resultFilter->result as $index => $morales) {
+		
+
+	
+			$sheet->setCellValue('A' . $row, $morales->RFC);
+			$sheet->setCellValue('B' . $row, $morales->RAZONSOCIAL);
+			$sheet->setCellValue('C' . $row,  $morales->ESTADODESCR);
+			$sheet->setCellValue('D' . $row, $morales->MUNICIPIODESCR);
+			$sheet->setCellValue('E' . $row,  $morales->TELEFONO);
+			$sheet->setCellValue('F' . $row, $morales->CORREO);
+			$sheet->setCellValue('G' . $row,  $morales->PODERVOLUMEN);
+			$sheet->setCellValue('H' . $row,  $morales->PODERNONOTARIO);
+			$sheet->setCellValue('I' . $row, $morales->PODERNOPODER);
+			$sheet->setCellValue('J' . $row, $morales->FECHAINICIOPODER);
+			$sheet->setCellValue('K' . $row, $morales->FECHAFINPODER);
+
+			$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
+
+			if (!(($row - 1) >= count($resultFilter->result))) $row++;
+		}
+		$row++;
+		$row++;
+		$sheet->setCellValue('A' . $row, 'CANTIDAD DE RESULTADOS:');
+		$sheet->setCellValue('B' . $row, count($resultFilter->result));
+
+		$sheet->getStyle('A1:K1')->applyFromArray($styleHeaders);
+		$sheet->getStyle('A2:K' . $row)->applyFromArray($styleCells);
+
+		$writer = new Xlsx($spreadSheet);
+
+		$filename = urlencode("Reporte_Personas_Morales_" . $date . ".xlsx");
+		$filename = str_replace(array(" ", "+"), '_', $filename);
+		header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+		header("Content-Disposition: attachment; filename=\"$filename\"");
+		header("Content-Transfer-Encoding: binary");
+		header("Cache-Control: max-age=0");
+		$writer->save("php://output");
+	}
 	/**
 	 * Función CURL GET para el serivicio de videollamada 
 	 *

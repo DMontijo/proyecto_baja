@@ -159,7 +159,8 @@ $routes->group('admin', function ($routes) {
 		$routes->post('registro_ceeiav', 'admin/ReportesController::postComisionEstatal');
 		$routes->get('registro_anonima', 'admin/ReportesController::getFoliosAnonima');
 		$routes->post('registro_anonima', 'admin/ReportesController::postFoliosAnonima');
-
+		$routes->get('reportes_morales', 'admin/ReportesController::getMorales');
+		$routes->post('reportes_morales', 'admin/ReportesController::postMorales');
 		$routes->post('generar_excel_folios', 'admin/ReportesController::createFoliosXlsx');
 		$routes->post('generar_excel_anonimas', 'admin/ReportesController::createAnonimaXlsx');
 		$routes->post('generar_excel_constancias', 'admin/ReportesController::createConstanciasXlsx');
@@ -169,6 +170,7 @@ $routes->group('admin', function ($routes) {
 		$routes->post('generar_excel_canadev', 'admin/ReportesController::createCanaDevXlsx');
 		$routes->post('generar_excel_registro_atenciones', 'admin/ReportesController::createRegistroAtencionesXlsx');
 		$routes->post('generar_excel_ceeaiv', 'admin/ReportesController::createComisionEstatalXlsx');
+		$routes->post('generar_excel_morales', 'admin/ReportesController::createMoralesXlsx');
 
 		$routes->get('documentos', 'admin/DocumentosController::index');
 		$routes->post('documentos', 'admin/DocumentosController::postDocumentos');
@@ -191,7 +193,6 @@ $routes->group('admin', function ($routes) {
 		$routes->get('lista_moral', 'admin/DashboardController::personas_morales');
 		$routes->get('editar_persona_moral', 'admin/DashboardController::editar_persona_moral');
 		$routes->post('editar_persona_moral', 'admin/DashboardController::update_persona_moral');
-
 	});
 });
 
@@ -205,7 +206,7 @@ $routes->group('denuncia', function ($routes) {
 	$routes->post('login_auth', 'client/AuthController::login_auth');
 	$routes->get('logout', 'client/AuthController::logout');
 	$routes->post('cerrar-sesion', 'client/AuthController::cerrar_sesiones');
-	$routes->get('actualizar-sesion','client/AuthController::checkLastActivity');
+	$routes->get('actualizar-sesion', 'client/AuthController::checkLastActivity');
 
 	// $routes->resource('denunciante', ['controller' => 'client/UserController']);
 	$routes->get('denunciante/new', 'client/UserController::new');
@@ -396,8 +397,6 @@ $routes->group('data', function ($routes) {
 	$routes->get('getStatusFolio', 'litigantes/DashboardController::getStatusFolio');
 	$routes->post('getRelacionLitigantes', 'litigantes/DashboardController::getRelacionLitigantes');
 	$routes->post('solicitar_cambio', 'litigantes/DashboardController::solicitarCambio');
-
-
 });
 
 
