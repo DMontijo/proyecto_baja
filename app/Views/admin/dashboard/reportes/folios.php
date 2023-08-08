@@ -177,7 +177,7 @@
 												<td class="text-center"><?= $folio->ANO ?></td>
 												<td class="text-center"><?= $tipo ?></td>
 												<td class="text-center font-weight-bold"><?= $expedienteid ? $expedienteid . '/' . $folio->TIPOEXPEDIENTECLAVE  : '' ?></td>
-												<td class="text-center"><?= isset($folio->PERCIALES) ? $folio->PERCIALES : 'NO' ?></td>
+												<td class="text-center"><?= isset($folio->PERICIALES) ? $folio->PERICIALES : 'NO' ?></td>
 												<td class="text-center"><?= $folio->FECHASALIDA ? date('d-m-Y H:i:s', strtotime($folio->FECHASALIDA)) : '' ?></td>
 												<td class="text-center"><?= $folio->STATUS ?></td>
 												<td class="text-center"><?= $folio->NOMBRE_DENUNCIANTE ?></td>
