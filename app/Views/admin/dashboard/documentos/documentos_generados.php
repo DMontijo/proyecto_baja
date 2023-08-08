@@ -127,6 +127,7 @@
 
 		let btn_archivos_externos = document.querySelector('#subirDocumento');
 		let resultado = getParameterByName('q');
+		let tipo_denuncia = <?= json_encode($body_data->foliorow[0]->TIPODENUNCIA) ?>;
 
 		//Funcion que verifica si existe ese nombre como parametro en la URL
 		function isParameterByName(name) {
@@ -151,6 +152,8 @@
 						const imputados = response.imputados;
 						const victimas = response.victimas;
 						const correos = response.correos;
+						const correosNoti = response.correosNoti;
+
 						console.log(victimas);
 						//llena las tablas y selects necesarios para su implementacion
 						let tabla_documentos = document.querySelectorAll('#table-documentos tr');
@@ -179,7 +182,7 @@
 								.PRIMERAPELLIDO : '';
 
 							const option = document.createElement('option');
-							option.value = victima.PERSONAFISICAID ;
+							option.value = victima.PERSONAFISICAID;
 							option.text = victima.NOMBRE ? victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PERSONACALIDADJURIDICADESCR : '';
 							select_victima_documento.add(option, null);
 						});
@@ -200,14 +203,6 @@
 						option_sms.disabled = true;
 						option_sms.selected = true;
 						select_mail_send.add(option_sms, null);
-						correos.forEach(correo => {
-							if (correo != '') {
-								const option = document.createElement('option');
-								option.value = correo.CORREO;
-								option.text = correo.CORREO;
-								select_mail_send.add(option, null);
-							}
-						});
 						$('#send_mail_select_uni').empty();
 						let send_mail_select_uni = document.querySelector("#send_mail_select_uni");
 						let option_smsu = document.createElement('option');
@@ -216,12 +211,41 @@
 						option_smsu.disabled = true;
 						option_smsu.selected = true;
 						send_mail_select_uni.add(option_smsu, null);
-						correos.forEach(correo => {
-							const option = document.createElement('option');
-							option.value = correo.CORREO;
-							option.text = correo.CORREO;
-							send_mail_select_uni.add(option, null);
-						});
+						if (tipo_denuncia == "ES") {
+							correosNoti.forEach(correo => {
+								if (correo != '') {
+									const option = document.createElement('option');
+									option.value = correo.CORREO;
+									option.text = correo.CORREO;
+									select_mail_send.add(option, null);
+								}
+							});
+
+							correosNoti.forEach(correo => {
+								const option = document.createElement('option');
+								option.value = correo.CORREO;
+								option.text = correo.CORREO;
+								send_mail_select_uni.add(option, null);
+							});
+						} else {
+							correos.forEach(correo => {
+								if (correo != '') {
+									const option = document.createElement('option');
+									option.value = correo.CORREO;
+									option.text = correo.CORREO;
+									select_mail_send.add(option, null);
+								}
+							});
+
+							correos.forEach(correo => {
+								const option = document.createElement('option');
+								option.value = correo.CORREO;
+								option.text = correo.CORREO;
+								send_mail_select_uni.add(option, null);
+							});
+						}
+
+
 					}
 				},
 				error: function(jqXHR, textStatus, errorThrown) {}
@@ -285,20 +309,54 @@
 						});
 						$('#send_mail_select').empty();
 						let select_mail_send = document.querySelector("#send_mail_select");
-						correos.forEach(correo => {
-							const option = document.createElement('option');
-							option.value = correo.CORREO;
-							option.text = correo.CORREO;
-							select_mail_send.add(option, null);
-						});
+						let option_sms = document.createElement('option');
+						option_sms.value = '';
+						option_sms.text = 'Seleccionar un correo...';
+						option_sms.disabled = true;
+						option_sms.selected = true;
+						select_mail_send.add(option_sms, null);
 						$('#send_mail_select_uni').empty();
 						let send_mail_select_uni = document.querySelector("#send_mail_select_uni");
-						correos.forEach(correo => {
-							const option = document.createElement('option');
-							option.value = correo.CORREO;
-							option.text = correo.CORREO;
-							send_mail_select_uni.add(option, null);
-						});
+						let option_smsu = document.createElement('option');
+						option_smsu.value = '';
+						option_smsu.text = 'Seleccionar un correo...';
+						option_smsu.disabled = true;
+						option_smsu.selected = true;
+						send_mail_select_uni.add(option_smsu, null);
+						if (tipo_denuncia == "ES") {
+							correosNoti.forEach(correo => {
+								if (correo != '') {
+									const option = document.createElement('option');
+									option.value = correo.CORREO;
+									option.text = correo.CORREO;
+									select_mail_send.add(option, null);
+								}
+							});
+
+							correosNoti.forEach(correo => {
+								const option = document.createElement('option');
+								option.value = correo.CORREO;
+								option.text = correo.CORREO;
+								send_mail_select_uni.add(option, null);
+							});
+						} else {
+							correos.forEach(correo => {
+								if (correo != '') {
+									const option = document.createElement('option');
+									option.value = correo.CORREO;
+									option.text = correo.CORREO;
+									select_mail_send.add(option, null);
+								}
+							});
+
+							correos.forEach(correo => {
+								const option = document.createElement('option');
+								option.value = correo.CORREO;
+								option.text = correo.CORREO;
+								send_mail_select_uni.add(option, null);
+							});
+						}
+
 					}
 				},
 				error: function(jqXHR, textStatus, errorThrown) {}

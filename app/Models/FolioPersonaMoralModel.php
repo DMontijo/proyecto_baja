@@ -36,4 +36,13 @@ class FolioPersonaMoralModel extends Model
 		'FECHAFINPODER',
 		'FECHAREGISTRO',
 	];
+	public function get_correos_notificacion($folio, $year){
+		$builder = $this->db->table($this->table);
+		$builder->select('PERSONAMORALNOTIFICACIONES.CORREO');
+		$builder->join('PERSONAMORALNOTIFICACIONES', 'PERSONAMORALNOTIFICACIONES.NOTIFICACIONID = FOLIOPERSONAMORAL.NOTIFICACIONID AND PERSONAMORALNOTIFICACIONES.PERSONAMORALID = FOLIOPERSONAMORAL.PERSONAMORALID');
+		$builder->where('FOLIOID', $folio);
+		$builder->where('ANO', $year);
+		$query = $builder->get();
+		return $query->getResult('array');
+	}
 }
