@@ -22,6 +22,15 @@
 			<div class="col-12 col-sm-6 col-md-4 col-lg-3">
 				<div class="card shadow border-0 text-center">
 					<div class="card-body p-2" style="height:200px;">
+						<a href="<?= base_url('admin/dashboard/registro_anonima') ?>" class="btn btn-primary btn-block h-100 d-flex flex-column justify-content-center align-items-center d-flex flex-column justify-content-center align-items-center">
+							<i class="far fa-clipboard" style="font-size: 20px;"></i><br><span class="font-weight-bold">DENUNCIA ANÓNIMA</span>
+						</a>
+					</div>
+				</div>
+			</div>
+			<div class="col-12 col-sm-6 col-md-4 col-lg-3">
+				<div class="card shadow border-0 text-center">
+					<div class="card-body p-2" style="height:200px;">
 						<a href="<?= base_url('admin/dashboard/reportes_constancias') ?>" class="btn btn-primary btn-block h-100 d-flex flex-column justify-content-center align-items-center d-flex flex-column justify-content-center align-items-center">
 							<i class="far fa-clipboard" style="font-size: 20px;"></i><br><span class="font-weight-bold">CONSTANCIAS</span>
 						</a>

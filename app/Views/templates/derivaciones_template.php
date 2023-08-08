@@ -20,18 +20,18 @@
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap">
 	<!--Sweet Alert 2-->
-	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.js?v=<?= rand() ?>"></script>
 	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.css">
 	<!--Styles-->
 	<link rel="stylesheet" href="<?= base_url() ?>/assets/styles/global.css">
 	<link rel="stylesheet" href="<?= base_url() ?>/assets/styles/client/style.css">
-	<script src="<?= base_url() ?>/assets/DataTables/jquery/jquery.min.js"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/jquery/jquery.min.js?v=<?= rand() ?>"></script>
 
 	<title><?= $this->renderSection('title') ?> - Centro de Denuncia Tecnológica.</title>
 </head>
 
 <body>
-	<script src="<?= base_url() ?>/assets/jQuery/jquery.js"></script>
+	<script src="<?= base_url() ?>/assets/jQuery/jquery.js?v=<?= rand() ?>"></script>
 	<header>
 		<div class="container-fluid bg-primary p-0 m-0 header">
 			<div class="container" style="max-width:900px;">
@@ -54,19 +54,19 @@
 	<footer class="container-fluid text-center text-white bg-primary d-flex align-items-center justify-content-center footer py-3">
 		<span>© <?= date("Y") ?> Fiscalía General del Estado de Baja California</span>
 	</footer>
-	<script src="<?= base_url() ?>/assets/bootstrap/js/bootstrap.bundle.min.js"></script>
-	<script src="<?= base_url() ?>/assets/DataTables/datatables/jquery.dataTables.min.js"></script>
-	<script src="<?= base_url() ?>/assets/DataTables/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
-	<script src="<?= base_url() ?>/assets/DataTables/datatables-responsive/js/dataTables.responsive.min.js"></script>
-	<script src="<?= base_url() ?>/assets/DataTables/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-	<script src="<?= base_url() ?>/assets/DataTables/datatables-buttons/js/dataTables.buttons.min.js"></script>
-	<script src="<?= base_url() ?>/assets/DataTables/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
-	<script src="<?= base_url() ?>/assets/DataTables/jszip/jszip.min.js"></script>
-	<script src="<?= base_url() ?>/assets/DataTables/pdfmake/pdfmake.min.js"></script>
-	<script src="<?= base_url() ?>/assets/DataTables/pdfmake/vfs_fonts.js"></script>
-	<script src="<?= base_url() ?>/assets/DataTables/datatables-buttons/js/buttons.html5.min.js"></script>
-	<script src="<?= base_url() ?>/assets/DataTables/datatables-buttons/js/buttons.print.min.js"></script>
-	<script src="<?= base_url() ?>/assets/DataTables/datatables-buttons/js/buttons.colVis.min.js"></script>
+	<script src="<?= base_url() ?>/assets/bootstrap/js/bootstrap.bundle.min.js?v=<?= rand() ?>"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/datatables/jquery.dataTables.min.js?v=<?= rand() ?>"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/datatables-bs4/js/dataTables.bootstrap4.min.js?v=<?= rand() ?>"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/datatables-responsive/js/dataTables.responsive.min.js?v=<?= rand() ?>"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/datatables-responsive/js/responsive.bootstrap4.min.js?v=<?= rand() ?>"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/datatables-buttons/js/dataTables.buttons.min.js?v=<?= rand() ?>"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/datatables-buttons/js/buttons.bootstrap4.min.js?v=<?= rand() ?>"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/jszip/jszip.min.js?v=<?= rand() ?>"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/pdfmake/pdfmake.min.js?v=<?= rand() ?>"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/pdfmake/vfs_fonts.js?v=<?= rand() ?>"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/datatables-buttons/js/buttons.html5.min.js?v=<?= rand() ?>"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/datatables-buttons/js/buttons.print.min.js?v=<?= rand() ?>"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/datatables-buttons/js/buttons.colVis.min.js?v=<?= rand() ?>"></script>
 </body>
 
 </html>

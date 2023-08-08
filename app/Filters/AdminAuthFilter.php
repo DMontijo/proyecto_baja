@@ -44,10 +44,10 @@ class AdminAuthFilter implements FilterInterface
 			$date1 = new DateTime(session("last_activity"));
 			$date2 = new DateTime(date("Y-m-d H:i:s"));	
 			$diff = $date1->diff($date2);
-			if(intval($diff->format('%i')) >= 120){
-				session()->destroy;
-				session_unset();
-				return redirect()->to(base_url('/admin'));
+			if(intval($diff->format('%H')) >= 2 || intval($diff->format('%d')) >= 1){
+				$this->logout();
+			}else{
+				$session->set('last_activity', date("Y-m-d H:i:s"));
 			}
 		}else{
 			$session->set('last_activity', date("Y-m-d H:i:s"));
@@ -79,8 +79,7 @@ class AdminAuthFilter implements FilterInterface
 		$sesion_data = [
 			'ACTIVO' => 0,
 			'ID_USUARIO' => $session->get('ID'),
-		];
-
+		]; 
 		// Verifica que tenga sesiones activas
 		$session_user =  $this->_sesionesModelRead->where('ID_USUARIO', $session->get('ID'))->where('ID', session('uuid'))->where('ACTIVO', 1)->orderBy('FECHAINICIO', 'DESC')->first();
 

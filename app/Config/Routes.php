@@ -157,8 +157,11 @@ $routes->group('admin', function ($routes) {
 		$routes->post('registro_atenciones', 'admin/ReportesController::postRegistroAtenciones');
 		$routes->get('registro_ceeiav', 'admin/ReportesController::getComisionEstatal');
 		$routes->post('registro_ceeiav', 'admin/ReportesController::postComisionEstatal');
+		$routes->get('registro_anonima', 'admin/ReportesController::getFoliosAnonima');
+		$routes->post('registro_anonima', 'admin/ReportesController::postFoliosAnonima');
 
 		$routes->post('generar_excel_folios', 'admin/ReportesController::createFoliosXlsx');
+		$routes->post('generar_excel_anonimas', 'admin/ReportesController::createAnonimaXlsx');
 		$routes->post('generar_excel_constancias', 'admin/ReportesController::createConstanciasXlsx');
 		$routes->post('generar_excel_registro_diario', 'admin/ReportesController::createRegistroDiarioXlsx');
 		$routes->post('generar_excel_llamadas', 'admin/ReportesController::createLlamadasXlsx');
@@ -202,6 +205,7 @@ $routes->group('denuncia', function ($routes) {
 	$routes->post('login_auth', 'client/AuthController::login_auth');
 	$routes->get('logout', 'client/AuthController::logout');
 	$routes->post('cerrar-sesion', 'client/AuthController::cerrar_sesiones');
+	$routes->get('actualizar-sesion','client/AuthController::checkLastActivity');
 
 	// $routes->resource('denunciante', ['controller' => 'client/UserController']);
 	$routes->get('denunciante/new', 'client/UserController::new');
@@ -303,6 +307,8 @@ $routes->group('data', function ($routes) {
 	$routes->post('restore-folio', 'admin/DashboardController::restoreFolio');
 	$routes->post('restore-folio-to-process', 'admin/DashboardController::restoreFolioProcess');
 	$routes->post('save-archivos-externos', 'admin/DashboardController::crearArchivo');
+
+	$routes->get('subir-periciales', 'admin/DashboardController::subirPericiales');
 
 	//GET, UPDATE, INSERT WITH AJAX
 	$routes->post('get-persona-fisica-by-id', 'admin/DashboardController::getPersonaFisicaById');

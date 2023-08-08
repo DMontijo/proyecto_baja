@@ -83,7 +83,6 @@
 												<select class="form-control" id="tipo" name="tipo" required>
 													<option selected value="">Todos los tipos de denuncia</option>
 													<option <?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'VD' ? 'selected' : '') : null ?> value="VD">CDTEC</option>
-													<option <?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'DA' ? 'selected' : '') : null ?> value="DA">DENUNCIA ANÓNIMA</option>
 													<option <?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'TE' ? 'selected' : '') : null ?> value="TE">TELEFÓNICA</option>
 													<option <?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'EL' ? 'selected' : '') : null ?> value="EL">ELECTRÓNICA</option>
 													<option <?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'ES' ? 'selected' : '') : null ?> value="ES">ESCRITA</option>
@@ -145,13 +144,15 @@
 											<th class="text-center">AÑO</th>
 											<th class="text-center">TIPO</th>
 											<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
-											<th class="text-center" style="min-width:150px;">CONTIENE PERCICIALES</th>
+											<th class="text-center" style="min-width:150px;">CONTIENE PERICIALES</th>
 											<th class="text-center" style="min-width:150px;">FECHA DE SALIDA</th>
 											<th class="text-center" style="min-width:100px;">ESTADO FOLIO</th>
 											<th class="text-center" style="min-width:250px;">NOMBRE DEL DENUNCIANTE</th>
 											<th class="text-center" style="min-width:250px;">NOMBRE DEL AGENTE</th>
 											<th class="text-center" style="min-width:250px;">DELITO</th>
 											<th class="text-center">MUNICIPIO</th>
+											<th class="text-center">MUNICIPIO HECHO</th>
+
 										</tr>
 									</thead>
 									<tbody>
@@ -181,13 +182,15 @@
 												<td class="text-center"><?= $folio->ANO ?></td>
 												<td class="text-center"><?= $tipo ?></td>
 												<td class="text-center font-weight-bold"><?= $expedienteid ? $expedienteid . '/' . $folio->TIPOEXPEDIENTECLAVE  : '' ?></td>
-												<td class="text-center"><?= isset($folio->PERCIALES) ? $folio->PERCIALES : 'NO' ?></td>
+												<td class="text-center"><?= isset($folio->PERICIALES) ? $folio->PERICIALES : 'NO' ?></td>
 												<td class="text-center"><?= $folio->FECHASALIDA ? date('d-m-Y H:i:s', strtotime($folio->FECHASALIDA)) : '' ?></td>
 												<td class="text-center"><?= $folio->STATUS ?></td>
 												<td class="text-center"><?= $folio->NOMBRE_DENUNCIANTE ?></td>
 												<td class="text-center"><?= $folio->NOMBRE_AGENTE ?></td>
 												<td class="text-center"><?= isset($folio->DELITO) ? $folio->DELITO : ''  ?></td>
 												<td class="text-center"><?= $folio->MUNICIPIODESCR ?></td>
+												<td class="text-center"><?= $folio->MUNICIPIOHECHO ?></td>
+
 											</tr>
 										<?php } ?>
 									</tbody>

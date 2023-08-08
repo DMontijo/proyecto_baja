@@ -20,29 +20,29 @@
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url('/dist/css/dash.css'); ?>">
 	<!-- Lada Telefonica -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js?v=<?= rand() ?>"></script>
 	<!--Sweet Alert 2-->
-	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.css">
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.js?v=<?= rand() ?>"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.css?v=<?= rand() ?>">
 	<!--DataTables-->
 	<link rel="stylesheet" href="<?= base_url() ?>/assets/DataTables/datatables-bs4/css/dataTables.bootstrap4.min.css">
 	<link rel="stylesheet" href="<?= base_url() ?>/assets/DataTables/datatables-responsive/css/responsive.bootstrap4.min.css">
 	<link rel="stylesheet" href="<?= base_url() ?>/assets/DataTables/datatables-buttons/css/buttons.bootstrap4.min.css">
-	<script src="<?= base_url() ?>/assets/DataTables/jquery/jquery.min.js"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/jquery/jquery.min.js?v=<?= rand() ?>"></script>
 	<link href="<?= base_url() ?>/assets/styles/admin/quill.snow.css" rel="stylesheet">
-	<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.3.2/tinymce.min.js"></script>
+	<script src="https://cdn.quilljs.com/1.3.6/quill.js?v=<?= rand() ?>"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.3.2/tinymce.min.js?v=<?= rand() ?>"></script>
 	<!-- Select 2 -->
 	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js?v=<?= rand() ?>"></script>
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css" rel="stylesheet" />
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.css" rel="stylesheet" />
 	<!-- Mapas -->
 
-	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js?v=<?= rand() ?>" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC8Y8sKd0VSyZcl9kPdCewI2mpXh95AJ-8&callback=initMap&v=weekly" defer></script>
 	<!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBZnoURjO4MKsTx6_iRb1stAdXiGHLKSrQ&callback=initMap&v=weekly" defer></script> -->
-	<script src="<?= base_url() ?>/assets/agent/agent.js" type="module"></script>
+	<script src="<?= base_url() ?>/assets/agent/agent.js?v=<?= rand() ?>" type="module"></script>
 
 </head>
 
@@ -118,7 +118,7 @@
 
 				<?php } ?>
 			<?php } ?>
-			
+
 			<?php foreach ($body_data->rolPermiso as $permiso) { ?>
 
 				<?php if ($permiso->PERMISOID == 11) { ?>
@@ -277,21 +277,21 @@
 	<script src="<?= base_url('/dist/js/commons.js'); ?>"></script>
 	<script src="<?= base_url('/dist/js/dash.js'); ?>"></script>
 	<!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
-	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-	<script src="<?= base_url() ?>/assets/DataTables/datatables/jquery.dataTables.min.js"></script>
-	<script src="<?= base_url() ?>/assets/DataTables/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
-	<script src="<?= base_url() ?>/assets/DataTables/datatables-responsive/js/dataTables.responsive.min.js"></script>
-	<script src="<?= base_url() ?>/assets/DataTables/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-	<script src="<?= base_url() ?>/assets/DataTables/datatables-buttons/js/dataTables.buttons.min.js"></script>
-	<script src="<?= base_url() ?>/assets/DataTables/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
-	<script src="<?= base_url() ?>/assets/DataTables/jszip/jszip.min.js"></script>
-	<script src="<?= base_url() ?>/assets/DataTables/pdfmake/pdfmake.min.js"></script>
-	<script src="<?= base_url() ?>/assets/DataTables/pdfmake/vfs_fonts.js"></script>
-	<script src="<?= base_url() ?>/assets/DataTables/datatables-buttons/js/buttons.html5.min.js"></script>
-	<script src="<?= base_url() ?>/assets/DataTables/datatables-buttons/js/buttons.print.min.js"></script>
-	<script src="<?= base_url() ?>/assets/DataTables/datatables-buttons/js/buttons.colVis.min.js"></script>
-	<script src="<?= base_url() ?>/assets/js/full_screen.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js?v=<?= rand() ?>" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js?v=<?= rand() ?>" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/datatables/jquery.dataTables.min.js?v=<?= rand() ?>"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/datatables-bs4/js/dataTables.bootstrap4.min.js?v=<?= rand() ?>"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/datatables-responsive/js/dataTables.responsive.min.js?v=<?= rand() ?>"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/datatables-responsive/js/responsive.bootstrap4.min.js?v=<?= rand() ?>"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/datatables-buttons/js/dataTables.buttons.min.js?v=<?= rand() ?>"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/datatables-buttons/js/buttons.bootstrap4.min.js?v=<?= rand() ?>"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/jszip/jszip.min.js?v=<?= rand() ?>"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/pdfmake/pdfmake.min.js?v=<?= rand() ?>"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/pdfmake/vfs_fonts.js?v=<?= rand() ?>"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/datatables-buttons/js/buttons.html5.min.js?v=<?= rand() ?>"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/datatables-buttons/js/buttons.print.min.js?v=<?= rand() ?>"></script>
+	<script src="<?= base_url() ?>/assets/DataTables/datatables-buttons/js/buttons.colVis.min.js?v=<?= rand() ?>"></script>
+	<script src="<?= base_url() ?>/assets/js/full_screen.js?v=<?= rand() ?>"></script>
 	<?php if (session()->getFlashdata('message_error')) : ?>
 		<script>
 			Swal.fire({
@@ -340,18 +340,31 @@
 							method: "get",
 							dataType: "json",
 							success: function(response) {
-								Swal.fire({
-									icon: 'success',
-									title: 'Sesión actualizada',
-								}).then((result) => {
-									closeSessionTimeout();
-								});
+								if (response.result) {
+									Swal.fire({
+										icon: 'success',
+										title: 'Sesión actualizada',
+										confirmButtonColor: '#bf9b55',
+									}).then((result) => {
+										if (result.isConfirmed) {
+											console.log(response);
+											closeSessionTimeout();
+										}
+									});
+								} else {
+									Swal.fire({
+										icon: 'error',
+										title: 'Tiempo agotado',
+										confirmButtonColor: '#bf9b55',
+									});
+								}
 							},
 							error: function(jqXHR, textStatus, errorThrown) {}
 						});
 					}
 				})
 			}, 7080000); ///7080000 for 1:58 hours
+
 		}
 	</script>
 </body>

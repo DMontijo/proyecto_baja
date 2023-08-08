@@ -2305,10 +2305,11 @@ class DashboardController extends BaseController
 
 				if ($update) {
 					$bandeja = $this->_folioModel->where('EXPEDIENTEID', $expediente)->first();
+					//Se suben los documentos y archivos externos a Justicia
+					$subirArchivos = $this->subirArchivosRemision($bandeja['FOLIOID'], $bandeja['ANO'], $expediente);
 
 					//Se revisa que haya documentos subidos a Justicia de tipo periciales
-					$folioDocPericiales = $this->_folioDocModelRead->expedienteDocumentos($folio, $year);
-
+					$folioDocPericiales = $this->_folioDocModelRead->expedienteDocumentosJusticia($folio, $year);
 					if ($folioDocPericiales) {
 						foreach ($folioDocPericiales as $key => $doc) {
 							$solicitudp = array();
@@ -2356,8 +2357,6 @@ class DashboardController extends BaseController
 							}
 						}
 					}
-					//Se suben los documentos y archivos externos a Justicia
-					$subirArchivos = $this->subirArchivosRemision($bandeja['FOLIOID'], $bandeja['ANO'], $expediente);
 
 					//Se crea la bandeja en Justicia.
 					$_bandeja_creada = $this->_createBandeja($bandeja);
@@ -2468,7 +2467,7 @@ class DashboardController extends BaseController
 				$this->subirArchivosRemision($bandeja['FOLIOID'], $bandeja['ANO'], $expediente);
 
 				//Se revisa que haya documentos subidos a Justicia de tipo periciales
-				$folioDoc = $this->_folioDocModelRead->expedienteDocumentos($folio, $year);
+				$folioDoc = $this->_folioDocModelRead->expedienteDocumentosJusticia($folio, $year);
 
 				if ($folioDoc) {
 					foreach ($folioDoc as $key => $doc) {
@@ -2989,6 +2988,121 @@ class DashboardController extends BaseController
 		}
 	}
 
+	/**Funcion para subir todos los documentos a periciales */
+	public function subirPericiales()
+	{
+		// Datos de los objetos
+		$datosRegistros = [
+			['FOLIOID' => 6842, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10187, 'OFICINA' => 906, 'AREA' => 4261, 'EXPEDIENTE' => 102004202330060],
+			['FOLIOID' => 6851, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10453, 'OFICINA' => 906, 'AREA' => 4263, 'EXPEDIENTE' => 102004202329735],
+			['FOLIOID' => 6867, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10432, 'OFICINA' => 906, 'AREA' => 4259, 'EXPEDIENTE' => 102004202329655],
+			['FOLIOID' => 6873, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10652, 'OFICINA' => 906, 'AREA' => 4405, 'EXPEDIENTE' => 102004202329673],
+			['FOLIOID' => 6892, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 8506, 'OFICINA' => 846, 'AREA' => 3073, 'EXPEDIENTE' => 102004202329697],
+			['FOLIOID' => 6899, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 9723, 'OFICINA' => 840, 'AREA' => 3028, 'EXPEDIENTE' => 102004202329709],
+			['FOLIOID' => 6919, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 9771, 'OFICINA' => 838, 'AREA' => 4244, 'EXPEDIENTE' => 102004202329757],
+			['FOLIOID' => 6922, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10738, 'OFICINA' => 906, 'AREA' => 4260, 'EXPEDIENTE' => 102004202329763],
+			['FOLIOID' => 6923, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 3036, 'OFICINA' => 864, 'AREA' => 3608, 'EXPEDIENTE' => 502004202316161],
+			['FOLIOID' => 6930, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10680, 'OFICINA' => 906, 'AREA' => 4264, 'EXPEDIENTE' => 102004202329811],
+			['FOLIOID' => 6940, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 9538, 'OFICINA' => 840, 'AREA' => 3001, 'EXPEDIENTE' => 102004202329826],
+			['FOLIOID' => 6998, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10902, 'OFICINA' => 806, 'AREA' => 3679, 'EXPEDIENTE' => 502004202316254],
+			['FOLIOID' => 7005, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10692, 'OFICINA' => 807, 'AREA' => 3209, 'EXPEDIENTE' => 502004202316257],
+			['FOLIOID' => 7113, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10453, 'OFICINA' => 906, 'AREA' => 4263, 'EXPEDIENTE' => 102004202330139],
+			['FOLIOID' => 7217, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10738, 'OFICINA' => 906, 'AREA' => 4260, 'EXPEDIENTE' => 102004202330466],
+			['FOLIOID' => 7220, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 9385, 'OFICINA' => 864, 'AREA' => 3175, 'EXPEDIENTE' => 502004202316448],
+			['FOLIOID' => 7299, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10683, 'OFICINA' => 838, 'AREA' => 2968, 'EXPEDIENTE' => 102004202330454],
+			['FOLIOID' => 7327, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10453, 'OFICINA' => 906, 'AREA' => 4263, 'EXPEDIENTE' => 102004202330504],
+			['FOLIOID' => 7483, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 9553, 'OFICINA' => 906, 'AREA' => 4262, 'EXPEDIENTE' => 102004202330780],
+			['FOLIOID' => 7512, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10832, 'OFICINA' => 924, 'AREA' => 4488, 'EXPEDIENTE' => 102004202330832],
+			['FOLIOID' => 7727, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10511, 'OFICINA' => 812, 'AREA' => 2857, 'EXPEDIENTE' => 102004202331458],
+			['FOLIOID' => 7885, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 9551, 'OFICINA' => 846, 'AREA' => 3037, 'EXPEDIENTE' => 102004202331552],
+			['FOLIOID' => 7889, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 9410, 'OFICINA' => 845, 'AREA' => 3025, 'EXPEDIENTE' => 102004202331686],
+			['FOLIOID' => 8016, 'ANO' => 2023, 'MUNICIPIO' => 4, 'EMPLEADO' => 10747, 'OFICINA' => 843, 'AREA' => 4520, 'EXPEDIENTE' => 102004202331751],
+		];
+
+		// Arreglo para almacenar los objetos
+		$arreglo = [];
+
+		// Crear y añadir objetos al arreglo
+		// foreach ($datosRegistros as $datos) {
+		// 	$objeto = (object) $datos;
+		// 	$arreglo[] = $objeto;
+		// }
+
+
+		foreach ($arreglo as $key => $folio) {
+			$folioid = $folio->FOLIOID;
+			$year = $folio->ANO;
+			$expediente = $folio->EXPEDIENTE;
+			$municipio = $folio->MUNICIPIO;
+			$empleado = $folio->EMPLEADO;
+			$oficina = $folio->OFICINA;
+			$area = $folio->AREA;
+			// $archivosPericiales = $this->subirArchivosRemision($folioid, $year, $expediente);
+
+			//Se revisa que haya documentos subidos a Justicia de tipo periciales
+			$folioDocPericiales = $this->_folioDocModelRead->expedienteDocumentosJusticia($folioid, $year);
+
+			// try {
+
+			if ($folioDocPericiales) {
+				foreach ($folioDocPericiales as $key => $doc) {
+					$solicitudp = array();
+					$solicitudp['ESTADOID'] = 2;
+					$solicitudp['MUNICIPIOID'] = $municipio;
+					$solicitudp['EMPLEADOIDREGISTRO'] = $empleado;
+					$solicitudp['OFICINAIDREGISTRO'] = $oficina;
+					$solicitudp['AREAIDREGISTRO'] = $area;
+					$solicitudp['ANO'] = $doc->ANO;
+					$solicitudp['TITULO'] = $doc->TIPODOC;
+
+					// Se suben los documentos periciales a Justicia.
+					$_solicitudPericial = $this->_createSolicitudesPericiales($solicitudp);
+					if ($_solicitudPericial->status == 201) {
+						//Crea la solicitud pericial a Justicia.
+						$_solicitudDocto = $this->_createSolicitudDocto($expediente, $_solicitudPericial->SOLICITUDID, $doc->EXPEDIENTEDOCID, $municipio);
+
+						if ($_solicitudDocto->status == 201) {
+							//Crea la solicityd en el expediente a Justicia.
+							$_solicitudExpediente = $this->_createSolicitudExpediente($expediente, $_solicitudPericial->SOLICITUDID, $municipio);
+							$plantilla = (object) array();
+
+							$plantilla = $this->_plantillasModel->where('TITULO',  $doc->TIPODOC)->first();
+							//Se obtiene el id de intervencion de acuerdo al municipio
+							if ($municipio == 1 ||  $municipio == 6) {
+								$intervencion = $plantilla['INTERVENCIONENSENADAID'];
+							} else if ($municipio == 2 || $municipio == 3 || $municipio == 7) {
+								$intervencion = $plantilla['INTERVENCIONMEXICALIID'];
+							} else if ($municipio == 4 || $municipio == 5) {
+								$intervencion = $plantilla['INTERVENCIONTIJUANAID'];
+							}
+							$dataInter =  array('SOLICITUDID' => $_solicitudPericial->SOLICITUDID, 'INTERVENCIONID' => $intervencion);
+
+							//Se crea la intervención pericial a Justicia.
+							$_intervencionPericial = $this->_createIntervencionPericial($dataInter, $municipio);
+							if ($_intervencionPericial->status == 201) {
+								$datosBitacora = [
+									'ACCION' => 'Se envio una solicitud pericial.',
+									'NOTAS' => 'Exp: ' . $expediente . ' Solicitud: ' . $_solicitudPericial->SOLICITUDID . 'Intervencion' . $intervencion,
+								];
+								$this->_bitacoraActividad($datosBitacora);
+							}
+						}
+					}
+				}
+			}
+			if ($folio === end($arreglo)) {
+				// Acciones a realizar al final del recorrido
+				return json_encode(['status' => 1, 'message' => 'Se han sincronizado las coordinaciones de los expedientes de CDTEC con Justicia Net correctamente.']);
+			}
+		}
+
+
+
+		// } catch (\Error $e) {
+		// 	throw new \Exception('Error en actualizacion en Justicia: ' . $e->getMessage());
+		// }
+	}
+
 	/**
 	 * Función para verificar que el correo no exista
 	 * Recibe por metodo POST el email
@@ -3182,7 +3296,13 @@ class DashboardController extends BaseController
 		$telefonica = $this->request->getPost('denuncia_tel');
 		$electronica = $this->request->getPost('denuncia_electronica');
 
-		$agenteId = session('ID') ? session('ID') : 1;
+		$agenteId="";
+		if(session('ID')) {
+			$agenteId = session('ID');
+		} else {
+			return json_encode(['status' => 0, 'error' => 'Sesión finalizada por inactividad, vuelve a iniciar sesión.']);
+		}
+		// $agenteId = session('ID') ? session('ID') : 1;
 
 		try {
 
@@ -3871,36 +3991,35 @@ class DashboardController extends BaseController
 					// 	} catch (\Exception $e) {
 					// 	}
 					// }
-					$relacionDocExpDoc = $this->_relacionFolioDocExpDocRead->where('FOLIOID', $docP['FOLIOID'])->where('ANO', $docP['ANO'])->where('EXPEDIENTEID', $docP['NUMEROEXPEDIENTE'])->where('FOLIODOCID', $docP['FOLIODOCID'])->orderBy('FOLIODOCID', 'asc')->first();
+					$relacionDocExpDoc = $this->_relacionFolioDocExpDocRead->where('FOLIOID', $docP->FOLIOID)->where('ANO', $docP->ANO)->where('EXPEDIENTEID', $docP->NUMEROEXPEDIENTE)->where('FOLIODOCID', $docP->FOLIODOCID)->orderBy('FOLIODOCID', 'asc')->first();
 
 					if ($relacionDocExpDoc == null) {
 						// Se crean los RTF´s de las solicitudes periciales
-
 						try {
 							PHPRtfLite::registerAutoloader();
 							// instancia de documento rtf 
 							$rtf = new PHPRtfLite();
 							$sect = $rtf->addSection();
-							$docP['PLACEHOLDER'] = str_replace('</p>', '<br>', $docP['PLACEHOLDER']);
+							$docP->PLACEHOLDER = str_replace('</p>', '<br>', $docP->PLACEHOLDER);
 
-							$sinetiqueta = strip_tags($docP['PLACEHOLDER'], ['strong', 'br']); //placeolder sin etiquetas html
+							$sinetiqueta = strip_tags($docP->PLACEHOLDER, ['strong', 'br']); //placeolder sin etiquetas html
 							//escribe el texto del rtf
 							$sect->writeText($sinetiqueta, new PHPRtfLite_Font(11, 'Arial'), new PHPRtfLite_ParFormat(PHPRtfLite_ParFormat::TEXT_ALIGN_LEFT));
 							// save rtf document
-							$rtf->save('assets/' . $docP['NUMEROEXPEDIENTE'] . '_' . $docP['FOLIODOCID'] . '.rtf');
-							$tarjet = FCPATH  . 'assets/' . $docP['NUMEROEXPEDIENTE'] . "_" . $docP['FOLIODOCID'] . ".rtf";
+							$rtf->save('assets/' . $docP->NUMEROEXPEDIENTE . '_' . $docP->FOLIODOCID . '.rtf');
+							$tarjet = FCPATH  . 'assets/' . $docP->NUMEROEXPEDIENTE . "_" . $docP->FOLIODOCID . ".rtf";
 							//Blob del rtf guardado
 							$data = file_get_contents($tarjet);
 							//Convierte el blob a UTF-16LE
 							$utf16le = mb_convert_encoding($data, 'UTF-16LE');
 
 							$plantilla = (object) array();
-							$plantilla = $this->_plantillasModelRead->where('TITULO', $docP['TIPODOC'])->first();
+							$plantilla = $this->_plantillasModelRead->where('TITULO', $docP->TIPODOC)->first();
 							$documentos = array();
 
 							//Convierte el blob a base64 para enviarlo al webservice.
 							$documentos['DOCUMENTO'] = base64_encode($utf16le);
-							$documentos['DOCTODESCR'] = $docP['TIPODOC'];
+							$documentos['DOCTODESCR'] = $docP->TIPODOC;
 
 
 							//Se asigna el autor y oficina dependiendo del enviroment
@@ -3957,15 +4076,14 @@ class DashboardController extends BaseController
 
 
 							// Se crean los documentos periciales
-							$expedienteDocumento = $this->_createFolioDocumentos($expediente, $documentos, $docP['MUNICIPIOID']);
-
+							$expedienteDocumento = $this->_createFolioDocumentos($expediente, $documentos, $docP->MUNICIPIOID);
 							if ($expedienteDocumento->status == 201) {
-								unlink(FCPATH  . 'assets/' . $docP['NUMEROEXPEDIENTE'] . "_" . $docP['FOLIODOCID'] . ".rtf");
+								unlink(FCPATH  . 'assets/' . $docP->NUMEROEXPEDIENTE . "_" . $docP->FOLIODOCID . ".rtf");
 								// unlink(FCPATH  . 'assets/' . $doc['NUMEROEXPEDIENTE'] . "_" . $doc['FOLIODOCID'] . ".bin");	
 								$datosRelacionFolioExpDoc = [
-									'FOLIODOCID' => $docP['FOLIODOCID'],
-									'FOLIOID' =>  $docP['FOLIOID'],
-									'ANO' => $docP['ANO'],
+									'FOLIODOCID' => $docP->FOLIODOCID,
+									'FOLIOID' =>  $docP->FOLIOID,
+									'ANO' => $docP->ANO,
 									'EXPEDIENTEID' => $expedienteDocumento->EXPEDIENTEID,
 									'EXPEDIENTEDOCID' => $expedienteDocumento->DOCUMENTOID,
 								];
@@ -3973,6 +4091,7 @@ class DashboardController extends BaseController
 								$this->_relacionFolioDocExpDoc->insert($datosRelacionFolioExpDoc);
 							}
 						} catch (\Throwable $th) {
+							return json_encode(['status' => 0, 'error' => $th->getMessage()]);
 						}
 					}
 				}
@@ -4134,7 +4253,7 @@ class DashboardController extends BaseController
 
 					foreach ($folioDocPeritaje as $key => $docP) {
 
-						$relacionDocExpDoc = $this->_relacionFolioDocExpDocRead->where('FOLIOID', $docP['FOLIOID'])->where('ANO', $docP['ANO'])->where('EXPEDIENTEID', $docP['NUMEROEXPEDIENTE'])->where('FOLIODOCID', $docP['FOLIODOCID'])->orderBy('FOLIODOCID', 'asc')->first();
+						$relacionDocExpDoc = $this->_relacionFolioDocExpDocRead->where('FOLIOID', $docP->FOLIOID)->where('ANO', $docP->ANO)->where('EXPEDIENTEID', $docP->NUMEROEXPEDIENTE)->where('FOLIODOCID', $docP->FOLIODOCID)->orderBy('FOLIODOCID', 'asc')->first();
 
 						if ($relacionDocExpDoc == null) {
 							// Se crean los RTF´s de las solicitudes periciales
@@ -4144,26 +4263,26 @@ class DashboardController extends BaseController
 								// instancia de documento rtf 
 								$rtf = new PHPRtfLite();
 								$sect = $rtf->addSection();
-								$docP['PLACEHOLDER'] = str_replace('</p>', '<br>', $docP['PLACEHOLDER']);
+								$docP->PLACEHOLDER = str_replace('</p>', '<br>', $docP->PLACEHOLDER);
 
-								$sinetiqueta = strip_tags($docP['PLACEHOLDER'], ['strong', 'br']); //placeolder sin etiquetas html
+								$sinetiqueta = strip_tags($docP->PLACEHOLDER, ['strong', 'br']); //placeolder sin etiquetas html
 								//escribe el texto del rtf
 								$sect->writeText($sinetiqueta, new PHPRtfLite_Font(11, 'Arial'), new PHPRtfLite_ParFormat(PHPRtfLite_ParFormat::TEXT_ALIGN_JUSTIFY));
 								// save rtf document
-								$rtf->save('assets/' . $docP['NUMEROEXPEDIENTE'] . '_' . $docP['FOLIODOCID'] . '.rtf');
-								$tarjet = FCPATH  . 'assets/' . $docP['NUMEROEXPEDIENTE'] . "_" . $docP['FOLIODOCID'] . ".rtf";
+								$rtf->save('assets/' . $docP->NUMEROEXPEDIENTE . '_' . $docP->FOLIODOCID . '.rtf');
+								$tarjet = FCPATH  . 'assets/' . $docP->NUMEROEXPEDIENTE . "_" . $docP->FOLIODOCID . ".rtf";
 								//Blob del rtf guardado
 								$data = file_get_contents($tarjet);
 								//Convierte el blob a UTF-16LE
 								$utf16le = mb_convert_encoding($data, 'UTF-16LE');
 
 								$plantilla = (object) array();
-								$plantilla = $this->_plantillasModelRead->where('TITULO', $docP['TIPODOC'])->first();
+								$plantilla = $this->_plantillasModelRead->where('TITULO', $docP->TIPODOC)->first();
 								$documentos = array();
 
 								//Convierte el blob a base64 para enviarlo al webservice.
 								$documentos['DOCUMENTO'] = base64_encode($utf16le);
-								$documentos['DOCTODESCR'] = $docP['TIPODOC'];
+								$documentos['DOCTODESCR'] = $docP->TIPODOC;
 								//Se asigna el autor y oficina dependiendo del enviroment
 
 								if (ENVIRONMENT == 'development') {
@@ -4221,19 +4340,18 @@ class DashboardController extends BaseController
 								// Se crean los documentos periciales
 
 
-								$expedienteDocumento = $this->_createFolioDocumentos($expediente, $documentos, $docP['MUNICIPIOID']);
-
+								$expedienteDocumento = $this->_createFolioDocumentos($expediente, $documentos, $docP->MUNICIPIOID);
 								if ($expedienteDocumento->status == 201) {
-									unlink(FCPATH  . 'assets/' . $docP['NUMEROEXPEDIENTE'] . "_" . $docP['FOLIODOCID'] . ".rtf");
+
+									unlink(FCPATH  . 'assets/' . $docP->NUMEROEXPEDIENTE . "_" . $docP->FOLIODOCID . ".rtf");
 									// unlink(FCPATH  . 'assets/' . $doc['NUMEROEXPEDIENTE'] . "_" . $doc['FOLIODOCID'] . ".bin");	
 									$datosRelacionFolioExpDoc = [
-										'FOLIODOCID' => $docP['FOLIODOCID'],
-										'FOLIOID' =>  $docP['FOLIOID'],
-										'ANO' => $docP['ANO'],
+										'FOLIODOCID' => $docP->FOLIODOCID,
+										'FOLIOID' =>  $docP->FOLIOID,
+										'ANO' => $docP->ANO,
 										'EXPEDIENTEID' => $expedienteDocumento->EXPEDIENTEID,
 										'EXPEDIENTEDOCID' => $expedienteDocumento->DOCUMENTOID,
 									];
-
 									$this->_relacionFolioDocExpDoc->insert($datosRelacionFolioExpDoc);
 								}
 							} catch (\Throwable $th) {
@@ -5188,7 +5306,6 @@ class DashboardController extends BaseController
 
 	/**
 	 * Función para obtener los modulos desde el WebServices
-	 *
 	 */
 	public function getModulos()
 	{
@@ -5206,13 +5323,16 @@ class DashboardController extends BaseController
 		return json_encode($this->_curlPostDataEncrypt($endpoint, $data)->data);
 	}
 
+	/**
+	 * Funcion para traer las coordinaciones en base al municipio.
+	 */
 	public function getCoordinacion()
 	{
 
 		$municipio = $this->request->getGet('municipioasignado');
 		$function = '/unidades.php?process=coordinacion';
 		$endpoint = $this->endpoint . $function;
-		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', (int) $municipio)->where('TYPE', ENVIRONMENT)->first();
+		$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', 2)->where('TYPE', ENVIRONMENT)->first();
 		$data['MUNICIPIOID'] = $municipio;
 		$data['userDB'] = $conexion->USER;
 		$data['pwdDB'] = $conexion->PASSWORD;
@@ -5221,6 +5341,9 @@ class DashboardController extends BaseController
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
 
+	/**
+	 * Funcion para traer las unidades en base al municiío y la coordinación
+	 */
 	public function getUnidades()
 	{
 		$municipio = $this->request->getPost('municipio');
@@ -5236,6 +5359,9 @@ class DashboardController extends BaseController
 		return json_encode($this->_curlPostDataEncrypt($endpoint, $data));
 	}
 
+	/**
+	 * Funcion para traer los agentes por unidad.
+	 */
 	public function getAgentByUnidad()
 	{
 		$municipio = $this->request->getPost('municipio');
@@ -5251,6 +5377,9 @@ class DashboardController extends BaseController
 		return json_encode($this->_curlPostDataEncrypt($endpoint, $data));
 	}
 
+	/**
+	 * Funcion para traer todos los empleados por oficina
+	 */
 	public function getEmpleadosByOficina()
 	{
 		$municipio = $this->request->getPost('municipio');
@@ -5303,84 +5432,96 @@ class DashboardController extends BaseController
 		}
 	}
 
-	/**Funcion para actualizar las oficinas asignadas de justicia en videodenuncia */
+	/**
+	 * Funcion para actualizar las oficinas asignadas de justicia en videodenuncia
+	 */
 	public function getOficinasByExpediente()
 	{
-		try {
-			$municipios = [1, 2, 3, 4, 5, 6, 7];
-			$conexiones = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->whereIn('MUNICIPIOID', $municipios)->where('TYPE', ENVIRONMENT)->findAll();
-			$function = '/expediente.php?process=getChangesVD';
-			$endpoint = $this->endpoint . $function;
-			$conexion = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', 2)->where('TYPE', ENVIRONMENT)->first();
-			$data['userDB'] = $conexion->USER;
-			$data['pwdDB'] = $conexion->PASSWORD;
-			$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
-			$data['schema'] = $conexion->SCHEMA;
-			$response = $this->_curlPostDataEncrypt($endpoint, $data);
-			//Respuesta de todos los expedientes cambiados desde justicia
-			if ($response->status == 201) {
-				$expedentesEnJusticia = [];
-				$oficinaAsignado = [];
-				$municipioAsignado = [];
+		$municipios = [1, 2, 4];
+		$expedientesActualizados = [];
+		$expedientesNoActualizados = [];
+		$expedientesNoVD = [];
+		$function = '/expediente.php?process=getChangesVD';
+		$endpoint = $this->endpoint . $function;
 
-				foreach ($response->data as $key => $expedientes) {
+		try {
+			$conexiones = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->whereIn('MUNICIPIOID', $municipios)->where('TYPE', ENVIRONMENT)->findAll();
+			$conexionMexicali = $this->_conexionesDBModel->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', 2)->where('TYPE', ENVIRONMENT)->first();
+
+			$data['userDB'] = $conexionMexicali->USER;
+			$data['pwdDB'] = $conexionMexicali->PASSWORD;
+			$data['instance'] = $conexionMexicali->IP . '/' . $conexionMexicali->INSTANCE;
+			$data['schema'] = $conexionMexicali->SCHEMA;
+
+			//Manda a traer todos los expedientes de la vista acumulada que solo se encuentra en Mexicali.
+			$response = $this->_curlPostDataEncrypt($endpoint, $data);
+
+			if ($response->status == 201) {
+
+				if (count($response->data) <= 0) {
+					return json_encode(['status' => 1, 'message' => 'No hay expedientes por actualizar']);
+				}
+
+				foreach ($response->data as $expediente) {
+
 					//Se compara con los folios de Videodenuncia
-					$foliosVD = $this->_folioModelRead->asObject()->select('EXPEDIENTEID,MUNICIPIOASIGNADOID')->where('EXPEDIENTEID', $expedientes->EXPEDIENTEID)->where('MUNICIPIOASIGNADOID', $expedientes->MUNICIPIOID)->first();
-					if (isset($foliosVD)) {
-						array_push($expedentesEnJusticia, $foliosVD->EXPEDIENTEID);
-						array_push($oficinaAsignado, $expedientes->OFICINAIDCOORD);
-						array_push($municipioAsignado,  $foliosVD->MUNICIPIOASIGNADOID);
+					$folioVD = $this->_folioModelRead->asObject()->select('EXPEDIENTEID,MUNICIPIOASIGNADOID')->where('EXPEDIENTEID', $expediente->EXPEDIENTEID)->where('MUNICIPIOASIGNADOID', $expediente->MUNICIPIOID)->first();
+
+					//Valida si lo encontro en vd, de lo contrario son folios que no están en videodenuncia.
+					if (isset($folioVD)) {
+						try {
+							$this->_folioModel->set('OFICINAASIGNADOID', $expediente->OFICINAIDCOORD)->asObject()->where('EXPEDIENTEID', $folioVD->EXPEDIENTEID)->update();
+							//Guarda en el arreglo $expedientesActualizados los expedinetes que se actualizaron en videodenuncia.
+							array_push($expedientesActualizados, $folioVD->EXPEDIENTEID);
+						} catch (\Error $e) {
+							//Guarda en el arreglo $expedientesNoActualizados los expedinetes que no se actualizaron en videodenuncia.
+							array_push($expedientesNoActualizados, $folioVD->EXPEDIENTEID);
+						}
+					} else {
+						//Guarda en el arreglo $expedientesNoVD los expedinetes que no están en videodenuncia.
+						array_push($expedientesNoVD, $expediente->EXPEDIENTEID);
 					}
 				}
-				$municipio = array(
-					'MUNICIPIOASIGNADOID' => $municipioAsignado,
-				);
-				$datosUpdate = array(
-					'OFICINAASIGNADOID' => $oficinaAsignado,
-				);
-				foreach ($datosUpdate['OFICINAASIGNADOID'] as $index => $valor) {
-					$updateFoliosVD = $this->_folioModel->set('OFICINAASIGNADOID', $valor)
-						->asObject()
-						->where('EXPEDIENTEID', $expedentesEnJusticia[$index])
-						->update();
-				}
-				if ($updateFoliosVD) {
+				// return json_encode(['status' => 1, 'message' => ['Totales'=>count($response->data),'Actualizados' => $expedientesActualizados, 'No actualizados' => $expedientesNoVD]]);
+
+				foreach ($conexiones as $conexion) {
 					try {
-						$functionUpdate =  '/expediente.php?process=actualizarVD';
-						$endpointUpdate = $this->endpoint . $functionUpdate;
-						$data['EXPEDIENTEID'] = $expedentesEnJusticia;
-						foreach ($municipio['MUNICIPIOASIGNADOID'] as $index => $mun) {
-							if ($mun == 1 || $mun == 6) {
-								$data['userDB'] = $conexiones[0]->USER;
-								$data['pwdDB'] = $conexiones[0]->PASSWORD;
-								$data['instance'] = $conexiones[0]->IP . '/' . $conexiones[0]->INSTANCE;
-								$data['schema'] = $conexiones[0]->SCHEMA;
-							} else if ($mun == 2 || $mun == 3 || $mun == 7) {
-								$data['userDB'] = $conexiones[1]->USER;
-								$data['pwdDB'] = $conexiones[1]->PASSWORD;
-								$data['instance'] = $conexiones[1]->IP . '/' . $conexiones[1]->INSTANCE;
-								$data['schema'] = $conexiones[1]->SCHEMA;
-							} else if ($mun == 4 || $mun == 5) {
-								$data['userDB'] = $conexiones[3]->USER;
-								$data['pwdDB'] = $conexiones[3]->PASSWORD;
-								$data['instance'] = $conexiones[3]->IP . '/' . $conexiones[3]->INSTANCE;
-								$data['schema'] = $conexiones[3]->SCHEMA;
-							}
-							$responseUpdate = $this->_curlPostDataEncrypt($endpointUpdate, $data);
-						}
-						if ($responseUpdate->status == 201) {
-							return json_encode(['status' => 1]);
-						} else {
-							return json_encode(['status' => 0]);
-						}
+						//Actualiza en justicia los expedientes ya actualizados en videodenuncia.
+						$this->updateOficinaJusticiaVideodenuncia($conexion, $expedientesActualizados);
 					} catch (\Error $e) {
-						throw new \Exception('Error en actualizacion en Justicia: ' . $e->getMessage());
+					}
+					try {
+						//Actualiza en justicia los expedientes que no son de videodenuncia.
+						$this->updateOficinaJusticiaVideodenuncia($conexion, $expedientesNoVD);
+					} catch (\Error $e) {
 					}
 				}
+
+				return json_encode(['status' => 1, 'message' => 'Se han sincronizado las coordinaciones de los expedientes de CDTEC con Justicia Net correctamente.']);
+			} else {
+				return json_encode(['status' => 0, 'message' => 'El servicio respondío con error los expedientes desde Justicia Net.', 'error' => $response]);
 			}
 		} catch (\Exception $e) {
-			return json_encode(['status' => 0, 'error' => $e->getMessage()]);
+			return json_encode(['status' => 0, 'message' => 'Falló algo al intentar actualizar los folios', 'error' => $e->getMessage()]);
 		}
+	}
+
+	/**
+	 * Función que actualiza la vista de expedientes a SI en caso de que ya se haya actalizado en videodenuncia o esten fuera de videodenuncia.
+	 *
+	 * @param  mixed $conexion
+	 * @param  mixed $expedientes
+	 */
+	private function updateOficinaJusticiaVideodenuncia($conexion, $expedientes)
+	{
+		$functionUpdate =  '/expediente.php?process=actualizarVD';
+		$endpointUpdate = $this->endpoint . $functionUpdate;
+		$data['EXPEDIENTEID'] = $expedientes;
+		$data['userDB'] = $conexion->USER;
+		$data['pwdDB'] = $conexion->PASSWORD;
+		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
+		$data['schema'] = $conexion->SCHEMA;
+		return $this->_curlPostDataEncrypt($endpointUpdate, $data);
 	}
 
 	/**
@@ -5404,6 +5545,7 @@ class DashboardController extends BaseController
 		$data['schema'] = $conexion->SCHEMA;
 		return $this->_curlPostDataEncrypt($endpoint, $data);
 	}
+
 	/**
 	 * Función para crear la relación del imputado y del delito en Justicia
 	 *
@@ -5494,7 +5636,6 @@ class DashboardController extends BaseController
 			'FECHAREGISTRO',
 			'PROVIENEPADRON',
 			'SEGUROVIGENTE',
-
 		];
 
 		$endpoint = $this->endpoint . $function;
@@ -5810,6 +5951,7 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
+
 	/**
 	 * Función para los usuarios activos de Jitsi
 	 * ! Deprecated method, do not use.
@@ -5832,6 +5974,7 @@ class DashboardController extends BaseController
 		}
 		return json_encode(['users' => $active_users, 'count' => count($active_users)]);
 	}
+
 	/**
 	 * Función para obtener los usuarios no activos en Jitsi
 	 * ! Deprecated method, do not use.
@@ -5856,6 +5999,7 @@ class DashboardController extends BaseController
 		sort($unused_users);
 		return $unused_users;
 	}
+
 	/**
 	 * Función para limpiar los videos en Jitsi
 	 * ! Deprecated method, do not use.
@@ -5934,6 +6078,7 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 1, 'message' => $update]);
 		}
 	}
+
 	/**
 	 * Función para cambiar el status del folio a en proceso cuando lo buscan
 	 *
@@ -6029,6 +6174,7 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
+
 	/**
 	 * Función para actualizar la tabla de folio en DENUNCIA ANONIMA a través del metodo POST
 	 *

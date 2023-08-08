@@ -166,7 +166,12 @@
 					let select_canalizacion = document.querySelector('#canalizaciones');
 					clearSelect(select_canalizacion);
 					select_canalizacion.value = '';
-
+					if (e.target.value == 6) {
+						e.target.value = 1;
+					}
+					if (e.target.value == 7) {
+						e.target.value = 2;
+					}
 					let data = {
 						'municipio': e.target.value,
 					}
@@ -211,7 +216,12 @@
 					let select_derivacion = document.querySelector('#derivaciones');
 					clearSelect(select_derivacion);
 					select_derivacion.value = '';
-
+					if (e.target.value == 6) {
+						e.target.value = 1;
+					}
+					if (e.target.value == 7) {
+						e.target.value = 2;
+					}
 					let data = {
 						'municipio': e.target.value,
 					}
