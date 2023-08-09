@@ -24,9 +24,9 @@
                                             <th class="text-center">RFC</th>
                                             <th class="text-center">GIRO</th>
                                             <th class="text-center">ESTADO</th>
-
                                             <th class="text-center">MUNICIPIO</th>
                                             <th class="text-center">SOLICITUD DE CAMBIO</th>
+                                            v <th class="text-center">VENCIMIENTO</th>
 
                                             <th class="text-center"></th>
                                         </tr>
@@ -42,6 +42,18 @@
                                                 <td class="text-center"><?= $moral->MUNICIPIODESCR ?></td>
                                                 <td class="text-center"><?= $moral->CAMBIO == "S" ? "SI" : "NO" ?></td>
 
+                                                <?php if (isset($moral->FECHAFINPODER)) {
+                                                    $date1 = new DateTime($moral->FECHAFINPODER);
+                                                    $date2 = new DateTime(date("Y-m-d"));
+                                                    $diff = $date1->diff($date2);
+                                                    if ((intval($diff->format('%d')) <= 3) && (intval($diff->format('%y')) <= 0) && (intval($diff->format('%m')) <= 3)) { ?>
+                                                        <td class="text-center text-danger font-weight-bold"> <?= intval($diff->format('%d'));?> DÍAS</td>
+                                                    <?php } else { ?>
+                                                        <td class="text-center text-success font-weight-bold"><?= intval($diff->format('%y'));?> AÑOS <?= intval($diff->format('%m'));?> MESES <?= intval($diff->format('%d'));?> DIAS</td>
+                                                    <?php } ?>
+                                                <?php } else { ?>
+                                                    <td class="text-center">SIN FECHA REGISTRADA</td>
+                                                <?php } ?>
 
                                                 <td class="text-center">
                                                     <a type="button" class="btn btn-success" href="<?= base_url('admin/dashboard/editar_persona_moral?id=' . $moral->PERSONAMORALID) ?>">

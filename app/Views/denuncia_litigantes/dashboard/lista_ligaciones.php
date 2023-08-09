@@ -32,10 +32,10 @@
 											$date1 = new DateTime($ligar->FECHAFINPODER);
 											$date2 = new DateTime(date("Y-m-d"));
 											$diff = $date1->diff($date2);
-											if (intval($diff->format('%d')) <= 3) { ?>
-												<td class="text-center text-danger fw-bold"> <?= intval($diff->format('%d')); ?> DÍAS</td>
+											if ((intval($diff->format('%d')) <= 3) && (intval($diff->format('%y')) <= 0) && (intval($diff->format('%m')) <= 3)) { ?>
+												<td class="text-center text-danger fw-bold"> <?= intval($diff->format('%d'));?> DÍAS</td>
 											<?php } else { ?>
-												<td class="text-center text-success fw-bold"> <?= intval($diff->format('%d')); ?> DÍAS</td>
+												<td class="text-center text-success fw-bold"><?= intval($diff->format('%y'));?> AÑOS <?= intval($diff->format('%m'));?> MESES <?= intval($diff->format('%d'));?> DIAS</td>
 											<?php } ?>
 										<?php } else { ?>
 											<td class="text-center">SIN FECHA REGISTRADA</td>
