@@ -937,6 +937,19 @@ class FolioModel extends Model
 		$builder = $this->db->table($this->table);
 		$builder->select(['FOLIO.*', 'DENUNCIANTES.NOMBRE', 'DENUNCIANTES.APELLIDO_PATERNO', 'DENUNCIANTES.APELLIDO_MATERNO']);
 		$builder->where('FOLIO.STATUS', 'ABIERTO');
+		$builder->where('TIPODENUNCIA !=','ES');
+		$builder->join('DENUNCIANTES', 'DENUNCIANTES.DENUNCIANTEID = FOLIO.DENUNCIANTEID', 'LEFT');
+		$builder->orderBy('FOLIO.FECHAREGISTRO ASC');
+		$query = $builder->get();
+		return $query->getResult('object');
+	}
+
+	public function get_folios_abiertos_escrita()
+	{
+		$builder = $this->db->table($this->table);
+		$builder->select(['FOLIO.*', 'DENUNCIANTES.NOMBRE', 'DENUNCIANTES.APELLIDO_PATERNO', 'DENUNCIANTES.APELLIDO_MATERNO']);
+		$builder->where('FOLIO.STATUS', 'ABIERTO');
+		$builder->where('TIPODENUNCIA','ES');
 		$builder->join('DENUNCIANTES', 'DENUNCIANTES.DENUNCIANTEID = FOLIO.DENUNCIANTEID', 'LEFT');
 		$builder->orderBy('FOLIO.FECHAREGISTRO ASC');
 		$query = $builder->get();

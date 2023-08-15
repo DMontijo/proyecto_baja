@@ -106,6 +106,10 @@ $routes->group('admin', function ($routes) {
 		$routes->get('folios_en_proceso', 'admin/FoliosController::folios_en_proceso');
 		$routes->post('liberar_folio', 'admin/FoliosController::liberar_folio');
 		$routes->post('firmar_folio', 'admin/FoliosController::firmar_folio');
+		//DENUNCIA ESCRITA
+		$routes->get('folios_en_proceso_escrita', 'admin/FoliosEscritosController::folios_en_proceso');
+		$routes->get('folios_abiertos_escrita', 'admin/FoliosEscritosController::folios_abiertos');
+		$routes->post('liberar_folio_escrita', 'admin/FoliosEscritosController::liberar_folio');
 
 		$routes->get('folios_escritos', 'admin/FoliosEscritosController::index');
 		$routes->get('buscar_folio', 'admin/FoliosController::getAllFolios');

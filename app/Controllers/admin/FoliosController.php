@@ -205,7 +205,7 @@ class FoliosController extends BaseController
 		$data = (object) array();
 		$agente = $this->_usuariosModelRead->asObject()->where('ID', session('ID'))->first();
 		$roles = [1, 2, 6, 7, 9, 11];
-		$data->abiertos = count($this->_folioModelRead->where('STATUS', 'ABIERTO')->findAll());
+		$data->abiertos = count($this->_folioModelRead->where('STATUS', 'ABIERTO')->where('TIPODENUNCIA !=','ES')->findAll());
 		if (!$this->permisos('FOLIOS')) {
 			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
 		}
@@ -213,14 +213,14 @@ class FoliosController extends BaseController
 			$data->derivados = count($this->_folioModelRead->asObject()->where('STATUS', 'DERIVADO')->where('FECHASALIDA BETWEEN "' . date('Y-m-d') . ' 00:00:00' . '" and "' . date('Y-m-d', strtotime("+ 1 day")) . ' 00:00:00' . '"')->findAll());
 			$data->canalizados = count($this->_folioModelRead->asObject()->where('STATUS', 'CANALIZADO')->where('FECHASALIDA BETWEEN "' . date('Y-m-d') . ' 00:00:00' . '" and "' . date('Y-m-d', strtotime("+ 1 day")) . ' 00:00:00' . '"')->findAll());
 			$data->expedientes = count($this->_folioModelRead->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('AGENTEFIRMAID !=', null)->where('AGENTEASIGNADOID  !=', null)->where('FECHASALIDA BETWEEN "' . date('Y-m-d') . ' 00:00:00' . '" and "' . date('Y-m-d', strtotime("+ 1 day")) . ' 00:00:00' . '"')->findAll());
-			$data->proceso = count($this->_folioModelRead->asObject()->where('STATUS', 'EN PROCESO')->findAll());
+			$data->proceso = count($this->_folioModelRead->asObject()->where('STATUS', 'EN PROCESO')->where('TIPODENUNCIA !=','ES')->findAll());
 			$data->expedientes_no_firmados = count($this->_folioModelRead->asObject()->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('AGENTEFIRMAID', null)->findAll());
 			$data->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 		} else {
 			$data->derivados = count($this->_folioModelRead->asObject()->where('AGENTEATENCIONID', session('ID'))->where('STATUS', 'DERIVADO')->where('FECHASALIDA BETWEEN "' . date('Y-m-d') . ' 00:00:00' . '" and "' . date('Y-m-d', strtotime("+ 1 day")) . ' 00:00:00' . '"')->findAll());
 			$data->canalizados = count($this->_folioModelRead->asObject()->where('AGENTEATENCIONID', session('ID'))->where('STATUS', 'CANALIZADO')->where('FECHASALIDA BETWEEN "' . date('Y-m-d') . ' 00:00:00' . '" and "' . date('Y-m-d', strtotime("+ 1 day")) . ' 00:00:00' . '"')->findAll());
 			$data->expedientes = count($this->_folioModelRead->asObject()->where('AGENTEATENCIONID', session('ID'))->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('AGENTEFIRMAID !=', null)->where('FECHASALIDA BETWEEN "' . date('Y-m-d') . ' 00:00:00' . '" and "' . date('Y-m-d', strtotime("+ 1 day")) . ' 00:00:00' . '"')->findAll());
-			$data->proceso = count($this->_folioModelRead->asObject()->where('STATUS', 'EN PROCESO')->findAll());
+			$data->proceso = count($this->_folioModelRead->asObject()->where('STATUS', 'EN PROCESO')->where('TIPODENUNCIA !=','ES')->findAll());
 			$data->expedientes_no_firmados = count($this->_folioModelRead->asObject()->where('AGENTEATENCIONID', session('ID'))->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('AGENTEFIRMAID', null)->findAll());
 			$data->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 		}
@@ -314,6 +314,7 @@ class FoliosController extends BaseController
 		$data->folio = $this->_folioModelRead->asObject()
 		->select('FOLIO.*, USUARIOS.*, DENUNCIANTES.NOMBRE AS NOMBREDENUNCIANTE,DENUNCIANTES.APELLIDO_PATERNO AS APPDENUNCIANTE, DENUNCIANTES.APELLIDO_MATERNO AS APMDENUNCIANTE')
 		->where('STATUS', 'EN PROCESO')
+		->where('TIPODENUNCIA !=','ES')
 		->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')
 		->join('DENUNCIANTES', 'DENUNCIANTES.DENUNCIANTEID = FOLIO.DENUNCIANTEID')
 
@@ -361,7 +362,7 @@ class FoliosController extends BaseController
 				->join('ROLES', 'ROLES.ID = USUARIOS.ROLID', 'LEFT')
 				->join('EMPLEADOS', 'EMPLEADOS.EMPLEADOID = FOLIO.AGENTEASIGNADOID AND EMPLEADOS.MUNICIPIOID = FOLIO.MUNICIPIOASIGNADOID', 'LEFT')
 				->join('TIPOEXPEDIENTE', 'TIPOEXPEDIENTE.TIPOEXPEDIENTEID = FOLIO.TIPOEXPEDIENTEID', 'LEFT')
-				->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)
+				->where('EXPEDIENTEID !=', null)->where('AGENTEATENCIONID !=', null)->where('AGENTEASIGNADOID !=',null)
 				->where('FECHASALIDA BETWEEN "' . date('Y-m-d') . ' 00:00:00' . '" and "' . date('Y-m-d', strtotime("+ 1 day")) . ' 00:00:00' . '"')
 				->findAll();
 		} else {

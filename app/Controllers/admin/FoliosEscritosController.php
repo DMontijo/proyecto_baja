@@ -9,7 +9,7 @@ use App\Models\BitacoraActividadModel;
 class FoliosEscritosController extends BaseController
 {
 
-	
+
 	private $_bitacoraActividadModel;
 	private $db_read;
 	private $_usuariosModelRead;
@@ -17,6 +17,7 @@ class FoliosEscritosController extends BaseController
 	private $_rolesPermisosModelRead;
 	private $_municipiosModelRead;
 	private $_tipoExpedienteModelRead;
+	private $_folioModel;
 	public function __construct()
 	{
 		//Conexion de lectura
@@ -25,13 +26,13 @@ class FoliosEscritosController extends BaseController
 		//Models writer
 		$this->_bitacoraActividadModel = new BitacoraActividadModel();
 
+		$this->_folioModel = new FolioModel();
 		//Models reader
 		$this->_usuariosModelRead = model('UsuariosModel', true, $this->db_read);
 		$this->_folioModelRead = model('FolioModel', true, $this->db_read);
 		$this->_rolesPermisosModelRead = model('RolesPermisosModel', true, $this->db_read);
 		$this->_municipiosModelRead = model('MunicipiosModel', true, $this->db_read);
 		$this->_tipoExpedienteModelRead = model('TipoExpedienteModel', true, $this->db_read);
-	
 	}
 	/* Vista de Bandeja de Folios Escritos
 	* Retorna las cantidades visualizadas al ingresar a bandeja de folios de acuerdo al ROL
@@ -46,6 +47,8 @@ class FoliosEscritosController extends BaseController
 			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
 		}
 		$data->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
+		$data->proceso = count($this->_folioModelRead->asObject()->where('STATUS', 'EN PROCESO')->where('TIPODENUNCIA', 'ES')->findAll());
+		$data->abiertos = count($this->_folioModelRead->where('STATUS', 'ABIERTO')->where('TIPODENUNCIA =', 'ES')->findAll());
 
 		$this->_loadView('Folios escritos', 'folios escritos', '', $data, 'index');
 	}
@@ -146,7 +149,65 @@ class FoliosEscritosController extends BaseController
 
 		$this->_loadView('Buscar folio litigante', 'folios', '', $dataView, 'buscar_folio_litigantes');
 	}
+	/**
+	 * Vista para visualizar los folios en proceso
+	 *
+	 */
+	public function folios_en_proceso()
+	{
+		if (!$this->permisos('FOLIOS')) {
+			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
+		}
+		$data = (object) array();
+		$data->folio = $this->_folioModelRead->asObject()
+			->select('FOLIO.*, USUARIOS.*, DENUNCIANTES.NOMBRE AS NOMBREDENUNCIANTE,DENUNCIANTES.APELLIDO_PATERNO AS APPDENUNCIANTE, DENUNCIANTES.APELLIDO_MATERNO AS APMDENUNCIANTE')
+			->where('STATUS', 'EN PROCESO')
+			->where('TIPODENUNCIA', 'ES')
+			->join('USUARIOS', 'USUARIOS.ID = FOLIO.AGENTEATENCIONID')
+			->join('DENUNCIANTES', 'DENUNCIANTES.DENUNCIANTEID = FOLIO.DENUNCIANTEID')
 
+			->findAll();
+		$data->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
+
+		$this->_loadView('Folios en proceso denuncia escrita', 'denuncia escrita', '', $data, 'folios_en_proceso');
+	}
+	/**
+	 * Vista para visualizar los folios abiertos
+	 *
+	 */
+	public function folios_abiertos()
+	{
+		if (!$this->permisos('FOLIOS')) {
+			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
+		}
+		$data = (object) array();
+		// $data->folio = $this->_folioModel->asObject()->where('STATUS', 'ABIERTO')->join('DENUNCIANTES', 'DENUNCIANTES.DENUNCIANTEID = FOLIO.DENUNCIANTEID')->findAll();
+		//Query folios abiertos
+		$data->folio = $this->_folioModelRead->get_folios_abiertos_escrita();
+		$data->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
+
+		$this->_loadView('Folios abiertos denuncia escrita', 'denuncia escrita', '', $data, 'folios_abiertos');
+	}
+
+
+	/**
+	 * Función para liberar los folios en proceso
+	 *
+	 */
+	public function liberar_folio()
+	{
+		$folio = $this->request->getVar('folio');
+		$year = $this->request->getVar('year');
+
+		$data = ['EXPEDIENTEID' => null, 'AGENTEATENCIONID' => null, 'AGENTEFIRMAID' => null, 'STATUS' => 'ABIERTO'];
+		$this->_folioModel->set($data)->where('FOLIOID', $folio)->where('ANO', $year)->where('EXPEDIENTEID IS NULL')->update();
+		$datosBitacora = [
+			'ACCION' => 'Ha liberado un folio desde folios en proceso.',
+			'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year
+		];
+		$this->_bitacoraActividad($datosBitacora);
+		return redirect()->to(base_url('/admin/dashboard/folios_en_proceso_escrita'));
+	}
 	/**
 	 * Función para cargar cualquier vista en cualquier función.
 	 *
