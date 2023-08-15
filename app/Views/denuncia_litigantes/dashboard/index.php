@@ -1411,8 +1411,8 @@
 
                         document.getElementById('datos_delito').classList.remove('step');
                         document.getElementById('datos_desaparecido').classList.remove('step');
-                        document.getElementById('datos_robo_vehiculo').classList.remove('step');
-                        document.getElementById('datos_robo_vehiculo_completo').classList.remove('step');
+                        // document.getElementById('datos_robo_vehiculo').classList.remove('step');
+                        // document.getElementById('datos_robo_vehiculo_completo').classList.remove('step');
                         document.getElementById('datos_ofendido').classList.remove('step');
 
                         const datos_delito = document.getElementById('datos_delito');
@@ -1441,7 +1441,52 @@
                         requiredFields5.forEach(field => {
                             field.removeAttribute('required');
                         });
+                        if (document.querySelector("#delito_moral").value == "PERSONA DESAPARECIDA") {
+                            $("input[name=documentos_vehiculo_moral][value='O']").prop("checked", true);
+                            document.getElementById('datos_robo_vehiculo').classList.remove('step');
+                            document.getElementById('datos_robo_vehiculo_completo').classList.remove('step');
+                            document.getElementById('datos_desaparecido').classList.add('step');
+                        }
 
+                        $('#delito_moral').change(function() {
+
+                            if (document.querySelector("#delito_moral").value == "ROBO DE VEHÍCULO") {
+                                var radio_doc_vehiculo = document.getElementById("radio_documentos_vehiculo");
+                                radio_doc_vehiculo.classList.remove('d-none');
+                                if (document.getElementById('documentos_vehiculo_moral').value == 'S') {
+                                    document.getElementById('datos_robo_vehiculo_completo').classList.add('step');
+                                    document.getElementById('datos_robo_vehiculo').classList.remove('step');
+                                } else if (document.getElementById('documentos_vehiculo_moral').value == 'N') {
+                                    document.getElementById('datos_robo_vehiculo').classList.add('step');
+                                    document.getElementById('datos_robo_vehiculo_completo').classList.remove('step');
+                                }
+                                // document.querySelector('input[name="documentos_vehiculo"]:checked').value = 'N';
+                                // document.querySelector('#documentos_vehiculo > [value="N"]').checked = true;	
+                                // $("input[name=documentos_vehiculo][value='N']").prop("checked",true);
+
+                                $('input[type=radio][name=documentos_vehiculo_moral]').change(function() {
+                                    if (this.value == 'S') {
+                                        console.log("si");
+                                        document.getElementById('datos_robo_vehiculo_completo').classList.add('step');
+                                        document.getElementById('datos_robo_vehiculo').classList.remove('step');
+                                    } else if (this.value == 'N') {
+                                        document.getElementById('datos_robo_vehiculo').classList.add('step');
+                                        document.getElementById('datos_robo_vehiculo_completo').classList.remove('step');
+                                    }
+
+                                });
+                            } else {
+                                var radio_doc_vehiculo = document.getElementById("radio_documentos_vehiculo");
+
+                                radio_doc_vehiculo.classList.add('d-none');
+                                $("input[name=documentos_vehiculo_moral][value='O']").prop("checked", true);
+                                document.getElementById('datos_robo_vehiculo').classList.remove('step');
+                                document.getElementById('datos_robo_vehiculo_completo').classList.remove('step');
+
+
+
+                            }
+                        })
                         steps = document.querySelectorAll('.step');
                         var stepCount = steps.length - 1;
                         var width = 100 / stepCount;
