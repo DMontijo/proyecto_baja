@@ -8,7 +8,7 @@
 		<div class="row">
 			<div class="col-12 text-center mb-4">
 				<h1 class="mb-4 text-center font-weight-bold">CONSULTA DE FOLIOS (DENUNCIAS ESCRITAS)</h1>
-                <a class="link link-primary" href="<?= base_url('admin/dashboard/folios_escritos') ?>" role="button"><i class="fas fa-reply"></i> REGRESAR A DENUNCIAS ESCRITAS</a>
+				<a class="link link-primary" href="<?= base_url('admin/dashboard/folios_escritos') ?>" role="button"><i class="fas fa-reply"></i> REGRESAR A DENUNCIAS ESCRITAS</a>
 			</div>
 
 			<div class="col-12">
@@ -126,6 +126,7 @@
 											<th class="text-center" style="min-width:250px;">DEPARTAMENTO ASIGNADO</th>
 											<th class="text-center" style="min-width:150px;">FECHA REGISTRO</th>
 											<th class="text-center" style="min-width:150px;">FECHA SALIDA</th>
+											<th class="text-center"></th>
 										</tr>
 									</thead>
 									<tbody>
@@ -163,6 +164,13 @@
 												<td class="text-center"><?= $folio->OFICINADESCR ? $folio->OFICINADESCR : $folio->MODULODESCR ?></td>
 												<td class="text-center"><?= date('d-m-Y H:i:s', strtotime($folio->FECHAREGISTRO)) ?></td>
 												<td class="text-center"><?= $folio->FECHASALIDA ?  date('d-m-Y H:i:s', strtotime($folio->FECHASALIDA)) : '' ?></td>
+												<?php if (session('ROLID') == 1 || session('ROLID') == 6 || session('ROLID') == 7) { ?>
+													<td class="text-center">
+														
+														<button type="button" class="btn btn-primary"onclick='asignarAgente(<?=$folio->FOLIOID?>,<?=$folio->ANO?>)' ><i class="fas fa-user-tag"></i></button>
+													</td>
+												<?php } ?>
+
 											</tr>
 										<?php } ?>
 									</tbody>
@@ -175,7 +183,7 @@
 		</div>
 	</div>
 </section>
-
+<?php include('asignar_agente_modal.php') ?>
 <?php if (session()->getFlashdata('message_error')) : ?>
 	<script>
 		Swal.fire({
@@ -232,6 +240,46 @@
 		} else {
 			document.querySelector('#filtros').classList.add('show');
 		}
+	}
+	//Funcion para asignar un agente al documento y que este lo firme, recibe por parametro el id del documento, folio y año
+
+	function asignarAgente(folio, ano) {
+		$('#asignarAgenteModal').modal('show');
+		const btn_asignar_agente = document.querySelector('#enviarAgente');
+
+		btn_asignar_agente.addEventListener('click', (e) => {
+			btn_asignar_agente.disabled = true;
+			$.ajax({
+				data: {
+					'folio': folio,
+					'year': ano,
+					'agenteid': document.querySelector('#selectAgente').value
+				},
+				url: "<?= base_url('/data/update-agente-atencion') ?>",
+				method: "POST",
+				dataType: "json",
+				success: function(response) {
+					const documentos = response.documentos;
+					if (response.status == 1) {
+						
+
+						Swal.fire({
+							icon: 'success',
+							text: 'Agente asignado correctamente',
+							confirmButtonColor: '#bf9b55',
+						});
+						$('#asignarAgenteModal').modal('hide');
+						location.reload();
+					}
+
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					btn_asignar_agente.disabled = false;
+
+				}
+			});
+		});
+
 	}
 </script>
 

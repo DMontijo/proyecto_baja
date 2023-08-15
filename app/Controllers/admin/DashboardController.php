@@ -3169,6 +3169,35 @@ class DashboardController extends BaseController
 		}
 	}
 	/**
+	 * Function para asignar un agente a un folio denuncia escrita
+	 * Recibe por metodo POST el folio, año y agente asignado.
+	 */
+	public function updateAgenteAsignado()
+	{
+		$folio = trim($this->request->getPost('folio'));
+		$year = trim($this->request->getPost('year'));
+		$agenteid = trim($this->request->getPost('agenteid'));
+		// Info a actualizar
+		$dataAgente = array(
+			'AGENTEATENCIONID' => $agenteid,
+			'STATUS'=> 'EN PROCESO',
+		);
+
+		$updateAgente = $this->_folioModel->set($dataAgente)->where('FOLIOID', $folio)->where('ANO', $year)->where('TIPODENUNCIA', 'ES')->whereIn('STATUS', ['ABIERTO','EN PROCESO'])->update();
+		if ($updateAgente) {
+			$datosBitacora = [
+				'ACCION' => 'Ha asignado un agente al folio.',
+				'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year . ' AGENTE: ' . $agenteid,
+			];
+
+			$this->_bitacoraActividad($datosBitacora);
+
+			return json_encode((object)['status' => 1]);;
+		} else {
+			return json_encode(['status' => 0]);
+		}
+	}
+	/**
 	 * Función para verificar que el correo empresarial no exista
 	 * Recibe por metodo POST el email
 	 *

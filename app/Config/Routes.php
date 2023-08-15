@@ -387,7 +387,7 @@ $routes->group('data', function ($routes) {
 	//Encargados
 	$routes->post('update-encargado', 'admin/DocumentosController::actualizarDocumentoEncargado');
 	$routes->post('update-agente-asignado', 'admin/DocumentosController::actualizarDocumentoAgenteAsignado');
-
+	$routes->post('update-agente-atencion', 'admin/DashboardController::updateAgenteAsignado');
 	$routes->post('email-alerts', 'admin/FirmaController::sendEmailAlertas');
 
 	//Persona moral
