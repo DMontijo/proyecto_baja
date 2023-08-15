@@ -3153,10 +3153,16 @@ class DashboardController extends BaseController
 	public function existEmailEmpresarial()
 	{
 		$email = $this->request->getPost('email');
+		$rfc = $this->request->getPost('rfc');
+
 		$data = $this->_personasMoralesRead->where('CORREO', $email)->first();
 		if ($data == null) {
 			return json_encode((object) ['exist' => 0]);
 		} else if (count($data) > 0) {
+			if ($data['RFC'] == $rfc) {
+				
+				return json_encode((object) ['exist' => 0]);
+			}
 			return json_encode((object) ['exist' => 1]);
 		} else {
 			return json_encode((object) ['exist' => 0]);
