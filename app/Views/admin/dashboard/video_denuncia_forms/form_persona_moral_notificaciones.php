@@ -63,12 +63,15 @@
         <label for="correo_pm_noti" class="form-label font-weight-bold">Correo</label>
         <input type="email" class="form-control" id="correo_pm_noti" name="correo_pm_noti" maxlength="100">
     </div>
+    <div class="col-12 my-4 text-center">
+        <button type="submit" class="btn btn-primary font-weight-bold">ACTUALIZAR NOTIFICACIÓN</button>
+    </div>
 </form>
-<script>
+<!-- <script>
     var form = document.getElementById('persona_moral_notificaciones_form');
 
     // Recorre todos los elementos del formulario y establece el atributo 'readonly'
     for (var i = 0; i < form.elements.length; i++) {
         form.elements[i].disabled = true;
     }
-</script>
+</script> -->

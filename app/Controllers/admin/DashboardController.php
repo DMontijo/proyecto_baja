@@ -112,6 +112,7 @@ use App\Models\FolioRelacionMoralFisModel;
 use App\Models\ObjetoClasificacionModel;
 use App\Models\ObjetoSubclasificacionModel;
 use App\Models\PermisosModel;
+use App\Models\PersonaMoralNotificacionesModel;
 use App\Models\PersonasMoralesModel;
 use App\Models\PlantillasModel;
 use App\Models\RelacionFisicaMoralModel;
@@ -274,7 +275,7 @@ class DashboardController extends BaseController
 	private $_sesionesDenunciantesModel;
 	private $_relacionFisicaMoralModel;
 	private $_folioRelacionMoralFisModel;
-
+	private $_personasMoralesNotificaciones;
 	//Reader
 	private $_folioModelRead;
 	private $_folioDocModelRead;
@@ -543,6 +544,7 @@ class DashboardController extends BaseController
 
 		$this->_folioPersonaMoralModel = new FolioPersonaMoralModel();
 		$this->_folioRelacionMoralFisModel = new FolioRelacionMoralFisModel();
+		$this->_personasMoralesNotificaciones = new PersonaMoralNotificacionesModel();
 		//Models reader
 		$this->_personasMoralesRead = model('PersonasMoralesModel', true, $this->db_read);
 		$this->_folioPersonaMoralModelRead = model('FolioPersonaMoralModel', true, $this->db_read);
@@ -6685,8 +6687,8 @@ class DashboardController extends BaseController
 
 					->where('FOLIOPERSONAMORAL.FOLIOID', $folio)->where('FOLIOPERSONAMORAL.ANO', $year)->first();
 				$datosBitacora = [
-					'ACCION' => 'Ha actualizado a una persona fisica',
-					'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year . ' PERSONAFISICAID: ' . $id,
+					'ACCION' => 'Ha actualizado a una persona morañ',
+					'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year . ' PERSONAMORALID: ' . $id,
 				];
 
 				$this->_bitacoraActividad($datosBitacora);
@@ -6699,7 +6701,67 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
+/**
+	 * Función para actualizar las personas moral de acuerdo a su ID a través del metodo POST.
+	 * Devuelve todos los datos necesarios para la actualizacion de las tablas visuales.
+	 *
+	 */
+	public function updatePersonaMoralNotificacionById()
+	{
+		try {
+			$id = $this->request->getPost('pm_id');
+			$id_noti = $this->request->getPost('n_id');
 
+			$folio = $this->request->getPost('folio');
+			$year = $this->request->getPost('year');
+
+			$data = array(
+				'ESTADOID' => $this->request->getPost('estado_pm_noti'),
+				'MUNICIPIOID' => $this->request->getPost('municipio_pm_noti'),
+				'LOCALIDADID' => $this->request->getPost('localidad_pm_noti'),
+				'COLONIAID' => $this->request->getPost('colonia_pm_noti_select'),
+				'COLONIADESCR' => $this->request->getPost('colonia_pm_noti'),
+				'CALLE' => $this->request->getPost('calle_pm_noti'),
+				'NUMERO' => $this->request->getPost('n_exterior_pm_noti'),
+				'NUMEROINTERIOR' => $this->request->getPost('n_interior_pm_noti'),
+				'REFERENCIA' => $this->request->getPost('referencia_pm_noti'),
+				'TELEFONO' => $this->request->getPost('telefono_pm_noti'),
+				'CORREO' => $this->request->getPost('correo_pm_noti'),
+			);
+
+			if ((int)$data['COLONIAID'] == 0) {
+				$data['COLONIAID'] = null;
+			}
+			if ($this->request->getPost('municipio_pm_noti') && $this->request->getPost('localidad_pm_noti') && $this->request->getPost('colonia_pm_noti_select')) {
+				$colonia = $this->_coloniasModelRead->asObject()->where('ESTADOID', $this->request->getPost('estado_pm_noti'))->where('MUNICIPIOID', $this->request->getPost('municipio_pm_noti'))->where('LOCALIDADID', $this->request->getPost('localidad_pm_noti'))->where('COLONIAID', $this->request->getPost('colonia_pm_noti_select'))->first();
+				$localidad = $this->_localidadesModelRead->asObject()->where('ESTADOID', $this->request->getPost('estado_pm_noti'))->where('MUNICIPIOID', $this->request->getPost('municipio_pm_noti'))->where('LOCALIDADID', $this->request->getPost('localidad_pm_noti'))->first();
+				if ((int)$data['COLONIAID'] == 0) {
+					$data['COLONIAID'] = null;
+					$data['ZONA'] = $localidad->ZONA;
+				} else {
+					$data['COLONIADESCR'] = $colonia->COLONIADESCR;
+					$data['ZONA'] = $colonia->ZONA;
+				}
+			}
+			$update = $this->_personasMoralesNotificaciones->set($data)->where('PERSONAMORALID', $id)->where('NOTIFICACIONID', $id_noti)->update();
+
+			if ($update) {
+
+				$datosBitacora = [
+					'ACCION' => 'Ha actualizado la notificación a una persona moral',
+					'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year . ' PERSONAMORALID: ' . $id,
+				];
+
+				$this->_bitacoraActividad($datosBitacora);
+
+				return json_encode(['status' => 1]);
+			} else {
+				return json_encode(['status' => 0]);
+			}
+		} catch (\Exception $e) {
+			return json_encode(['status' => 0]);
+		}
+	}
 	/**
 	 * Función para actualizar el domicilio de las personas fisicas de acuerdo a su ID a través del metodo POST.
 	 * Devuelve todos los datos necesarios para la actualizacion de las tablas visuales.

@@ -2710,7 +2710,7 @@
 						document.querySelector('#moral_poder_download').setAttribute('href', personaMoral
 							.PODERARCHIVO);
 						document.querySelector('#moral_poder_download').setAttribute('download',
-						'PODER_' + personaMoral.RFC + '.' + extension);
+							'PODER_' + personaMoral.RFC + '.' + extension);
 						document.querySelector('#contenedor_moral_poder').classList.remove('d-none');
 					} else {
 						document.querySelector('#moral_poder').setAttribute('src', '');
@@ -3073,6 +3073,7 @@
 			var form_delito = document.querySelector('#denuncia_form');
 			var form_persona_fisica = document.querySelector('#persona_fisica_form');
 			var form_persona_moral = document.querySelector('#persona_moral_form');
+			var form_persona_notificaciones = document.querySelector('#persona_moral_notificaciones_form');
 
 			var form_persona_fisica_domicilio = document.querySelector('#persona_fisica_domicilio_form');
 			var form_media_filiacion = document.querySelector('#form_media_filiacion');
@@ -3135,6 +3136,288 @@
 					event.target.value = clearText(event.target.value).toLowerCase();
 				}, false)
 			});
+			document.querySelector('#estado_pm').addEventListener('change', (e) => {
+				let select_municipio = document.querySelector('#municipio_pm');
+				select_municipio.disabled = true;
+				clearSelect(select_municipio);
+				select_municipio.value = '';
+				let data = {
+					'estado_id': e.target.value,
+				}
+
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/get-municipios-by-estado') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						let municipios = response.data;
+
+						municipios.forEach(municipio => {
+							var option = document.createElement("option");
+							option.text = municipio.MUNICIPIODESCR;
+							option.value = municipio.MUNICIPIOID;
+							select_municipio.add(option);
+						});
+						select_municipio.disabled = false;
+					},
+					error: function(jqXHR, textStatus, errorThrown) {}
+				});
+			});
+			document.querySelector('#municipio_pm').addEventListener('change', (e) => {
+				let select_localidad = document.querySelector('#localidad_pm');
+				let select_colonia = document.querySelector('#colonia_pm_select');
+				let input_colonia = document.querySelector('#colonia_pm');
+
+				let estado = document.querySelector('#estado_pm').value;
+				let municipio = e.target.value;
+
+				clearSelect(select_localidad);
+				clearSelect(select_colonia);
+
+				select_localidad.value = '';
+
+				let data = {
+					'estado_id': estado,
+					'municipio_id': municipio
+				};
+
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/get-localidades-by-municipio') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						let localidades = response.data;
+
+						localidades.forEach(localidad => {
+							var option = document.createElement("option");
+							option.text = localidad.LOCALIDADDESCR;
+							option.value = localidad.LOCALIDADID;
+							select_localidad.add(option);
+						});
+						select_localidad.disabled = false;
+					},
+					error: function(jqXHR, textStatus, errorThrown) {}
+				});
+			});
+
+			document.querySelector('#localidad_pm').addEventListener('change', (e) => {
+				let select_colonia = document.querySelector('#colonia_pm_select');
+				let input_colonia = document.querySelector('#colonia_pm');
+
+				let estado = document.querySelector('#estado_pm').value;
+				let municipio = document.querySelector('#municipio_pm').value;
+				let localidad = e.target.value;
+
+				clearSelect(select_colonia);
+				select_colonia.value = '';
+
+				let data = {
+					'estado_id': estado,
+					'municipio_id': municipio,
+					'localidad_id': localidad
+				};
+
+				console.log(data);
+
+				if (estado == 2) {
+					select_colonia.classList.remove('d-none');
+					input_colonia.classList.add('d-none');
+					input_colonia.value = '';
+					$.ajax({
+						data: data,
+						url: "<?= base_url('/data/get-colonias-by-estado-municipio-localidad') ?>",
+						method: "POST",
+						dataType: "json",
+						success: function(response) {
+							let colonias = response.data;
+
+							colonias.forEach(colonia => {
+								var option = document.createElement("option");
+								option.text = colonia.COLONIADESCR;
+								option.value = colonia.COLONIAID;
+								select_colonia.add(option);
+							});
+							select_colonia.disabled = false;
+
+							var option = document.createElement("option");
+							option.text = 'OTRO';
+							option.value = '0';
+							select_colonia.add(option);
+						},
+						error: function(jqXHR, textStatus, errorThrown) {
+
+						}
+					});
+
+				} else {
+					var option = document.createElement("option");
+					option.text = 'OTRO';
+					option.value = '0';
+					select_colonia.add(option);
+					select_colonia.value = '0';
+					input_colonia.value = '';
+					select_colonia.classList.add('d-none');
+					input_colonia.classList.remove('d-none');
+				}
+			});
+			document.querySelector('#colonia_pm_select').addEventListener('change', (e) => {
+				let select_colonia = document.querySelector('#colonia_pm_select');
+				let input_colonia = document.querySelector('#colonia_pm');
+
+				if (e.target.value === '0') {
+					select_colonia.classList.add('d-none');
+					input_colonia.classList.remove('d-none');
+					input_colonia.value = '';
+					input_colonia.focus();
+				} else {
+					input_colonia.value = '-';
+				}
+			});
+
+			document.querySelector('#estado_pm_noti').addEventListener('change', (e) => {
+				let select_municipio = document.querySelector('#municipio_pm_noti');
+				document.querySelector('#colonia_pm_noti').classList.add('d-none');
+				document.querySelector('#colonia_pm_noti_select').classList.remove('d-none');
+				select_municipio.disabled = true;
+				clearSelect(select_municipio);
+				select_municipio.value = '';
+				let data = {
+					'estado_id': e.target.value,
+				}
+
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/get-municipios-by-estado') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						let municipios = response.data;
+
+						municipios.forEach(municipio => {
+							var option = document.createElement("option");
+							option.text = municipio.MUNICIPIODESCR;
+							option.value = municipio.MUNICIPIOID;
+							select_municipio.add(option);
+						});
+						select_municipio.disabled = false;
+					},
+					error: function(jqXHR, textStatus, errorThrown) {}
+				});
+			});
+			document.querySelector('#municipio_pm_noti').addEventListener('change', (e) => {
+				let select_localidad = document.querySelector('#localidad_pm_noti');
+				let select_colonia = document.querySelector('#colonia_pm_noti_select');
+				let input_colonia = document.querySelector('#colonia_pm_noti');
+
+				let estado = document.querySelector('#estado_pm_noti').value;
+				let municipio = e.target.value;
+
+				clearSelect(select_localidad);
+				clearSelect(select_colonia);
+
+				select_localidad.value = '';
+
+				let data = {
+					'estado_id': estado,
+					'municipio_id': municipio
+				};
+
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/get-localidades-by-municipio') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						let localidades = response.data;
+
+						localidades.forEach(localidad => {
+							var option = document.createElement("option");
+							option.text = localidad.LOCALIDADDESCR;
+							option.value = localidad.LOCALIDADID;
+							select_localidad.add(option);
+						});
+						select_localidad.disabled = false;
+					},
+					error: function(jqXHR, textStatus, errorThrown) {}
+				});
+			});
+
+			document.querySelector('#localidad_pm_noti').addEventListener('change', (e) => {
+
+				let select_colonia = document.querySelector('#colonia_pm_noti_select');
+				let input_colonia = document.querySelector('#colonia_pm_noti');
+				let estado = document.querySelector('#estado_pm_noti').value;
+				let municipio = document.querySelector('#municipio_pm_noti').value;
+
+				let localidad = e.target.value;
+
+				clearSelect(select_colonia);
+				select_colonia.value = '';
+
+				let data = {
+					'estado_id': estado,
+					'municipio_id': municipio,
+					'localidad_id': localidad
+				};
+
+				console.log(data);
+
+				if (estado == 2) {
+					select_colonia.classList.remove('d-none');
+					input_colonia.classList.add('d-none');
+					input_colonia.value = '';
+					$.ajax({
+						data: data,
+						url: "<?= base_url('/data/get-colonias-by-estado-municipio-localidad') ?>",
+						method: "POST",
+						dataType: "json",
+						success: function(response) {
+							let colonias = response.data;
+
+							colonias.forEach(colonia => {
+								var option = document.createElement("option");
+								option.text = colonia.COLONIADESCR;
+								option.value = colonia.COLONIAID;
+								select_colonia.add(option);
+							});
+							select_colonia.disabled = false;
+
+							var option = document.createElement("option");
+							option.text = 'OTRO';
+							option.value = '0';
+							select_colonia.add(option);
+						},
+						error: function(jqXHR, textStatus, errorThrown) {
+
+						}
+					});
+
+				} else {
+					var option = document.createElement("option");
+					option.text = 'OTRO';
+					option.value = '0';
+					select_colonia.add(option);
+					select_colonia.value = '0';
+					input_colonia.value = '';
+					select_colonia.classList.add('d-none');
+					input_colonia.classList.remove('d-none');
+				}
+			});
+			document.querySelector('#colonia_pm_noti_select').addEventListener('change', (e) => {
+				let select_colonia = document.querySelector('#colonia_pm_noti_select');
+				let input_colonia = document.querySelector('#colonia_pm_noti');
+
+				if (e.target.value === '0') {
+					select_colonia.classList.add('d-none');
+					input_colonia.classList.remove('d-none');
+					input_colonia.value = '';
+					input_colonia.focus();
+				} else {
+					input_colonia.value = '-';
+				}
+			});
 			document.querySelector('#ocupacion_pf').addEventListener('change', (e) => {
 				let select_ocupacion = document.querySelector('#ocupacion_pf');
 				let input_ocupacion = document.querySelector('#ocupacion_pf_m');
@@ -3193,12 +3476,26 @@
 				if (!form_persona_moral.checkValidity()) {
 					event.preventDefault();
 					event.stopPropagation();
-					form_form_persona_moralpersona_fisica.classList.add('was-validated')
+					form_persona_moral.classList.add('was-validated')
 				} else {
 					event.preventDefault();
 					event.stopPropagation();
 					form_persona_moral.classList.remove('was-validated')
 					actualizarPersonaMoral();
+				}
+
+
+			}, false);
+			form_persona_notificaciones.addEventListener('submit', (event) => {
+				if (!form_persona_notificaciones.checkValidity()) {
+					event.preventDefault();
+					event.stopPropagation();
+					form_persona_notificaciones.classList.add('was-validated')
+				} else {
+					event.preventDefault();
+					event.stopPropagation();
+					form_persona_notificaciones.classList.remove('was-validated')
+					actualizarPersonaMoralNotificacion();
 				}
 			}, false);
 
@@ -5358,6 +5655,59 @@
 						Swal.fire({
 							icon: 'error',
 							text: 'No se actualizó el domicilio',
+							confirmButtonColor: '#bf9b55',
+						});
+					}
+				});
+			}
+
+			//Funcion para actualizar el folio persona moral notificacion
+			function actualizarPersonaMoralNotificacion() {
+				const data = {
+					'folio': document.querySelector('#input_folio_atencion_lit').value,
+					'year': document.querySelector('#year_select_lit').value,
+					'pm_id': document.querySelector('#pm_id').value,
+					'n_id': document.querySelector('#n_id').value,
+					'estado_pm_noti': document.querySelector('#estado_pm_noti').value,
+					'municipio_pm_noti': document.querySelector('#municipio_pm_noti').value,
+					'localidad_pm_noti': document.querySelector('#localidad_pm_noti').value,
+					'colonia_pm_noti_select': document.querySelector('#colonia_pm_noti_select').value,
+					'colonia_pm_noti': document.querySelector('#colonia_pm_noti').value,
+					'calle_pm_noti': document.querySelector('#calle_pm_noti').value,
+					'n_exterior_pm_noti': document.querySelector('#n_exterior_pm_noti').value,
+					'n_interior_pm_noti': document.querySelector('#n_interior_pm_noti').value,
+					'referencia_pm_noti': document.querySelector('#referencia_pm_noti').value,
+					'telefono_pm_noti': document.querySelector('#telefono_pm_noti').value,
+					'correo_pm_noti': document.querySelector('#correo_pm_noti').value
+				};
+
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/update-persona-moral-notificacion-by-id') ?>",
+					method: "POST",
+					dataType: "json",
+					success: function(response) {
+						console.log(response);
+						if (response.status == 1) {
+							Swal.fire({
+								icon: 'success',
+								text: 'Notificación actualizada correctamente',
+								confirmButtonColor: '#bf9b55',
+							});
+							$('#folio_persona_moral_modal').modal('hide');
+
+						} else {
+							Swal.fire({
+								icon: 'error',
+								text: 'No se actualizó la Notificación',
+								confirmButtonColor: '#bf9b55',
+							});
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						Swal.fire({
+							icon: 'error',
+							text: 'No se actualizó la Notificación',
 							confirmButtonColor: '#bf9b55',
 						});
 					}

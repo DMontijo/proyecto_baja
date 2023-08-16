@@ -328,6 +328,7 @@ $routes->group('data', function ($routes) {
 	$routes->post('update-preguntas-by-id', 'admin/DashboardController::updatePreguntasIniciales');
 	$routes->post('update-persona-fisica-by-id', 'admin/DashboardController::updatePersonaFisicaById');
 	$routes->post('update-persona-moral-by-id', 'admin/DashboardController::updatePersonaMoralById');
+	$routes->post('update-persona-moral-notificacion-by-id', 'admin/DashboardController::updatePersonaMoralNotificacionById');
 
 	$routes->post('update-persona-fisica-domicilio-by-id', 'admin/DashboardController::updatePersonaFisicaDomicilioById');
 	$routes->post('update-media-filiacion-by-id', 'admin/DashboardController::updateMediaFiliacionById');
