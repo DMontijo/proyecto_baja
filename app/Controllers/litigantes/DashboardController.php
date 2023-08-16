@@ -1563,7 +1563,17 @@ class DashboardController extends BaseController
 	{
 		$folio = $this->request->getGet('folio');
 		$year = $this->request->getGet('year');
-		$this->_loadViewDenunciaPersonaFisica('Dashboard', 'dashboard', '', [], 'subir_documentos_denuncia_fisica');
+		$data = (object) array();
+
+		$data->archivos = $this->_archivoExternoModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
+		if ($data->archivos) {
+			foreach ($data->archivos as $key => $archivos) {
+				$file_info = new \finfo(FILEINFO_MIME_TYPE);
+				$type = $file_info->buffer($archivos->ARCHIVO);
+				$archivos->ARCHIVO = 'data:' . $type . ';base64,' . base64_encode($archivos->ARCHIVO);
+			}
+		}
+		$this->_loadViewDenunciaPersonaFisica('Dashboard', 'dashboard', '', $data, 'subir_documentos_denuncia_fisica');
 	}
 	/**
 	 * Vista de un listado de denuncias que tiene el usuario
@@ -1681,7 +1691,7 @@ class DashboardController extends BaseController
 	{
 		$folio = $this->request->getPost('folio');
 		$year = $this->request->getPost('year');
-		$documento_extra = $this->request->getFile('documento_extra');
+		$documento_extra = $this->request->getFile('documento_extra_denuncia_escrita');
 		$documento_extra_data = null;
 		if ($documento_extra->isValid()) {
 			try {

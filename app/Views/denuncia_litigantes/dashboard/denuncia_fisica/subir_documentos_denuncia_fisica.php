@@ -18,11 +18,11 @@
 					</div>
 					<form id="subirDocForm" name="subirDocForm" action="<?= base_url() ?>/denuncia_litigantes/dashboard/subir_documentos" method="POST" enctype="multipart/form-data" class="row needs-validation" novalidate>
 						<div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-3">
-							<label for="documento_extra" class="form-label fw-bold ">Documento:</label>
+							<label for="documento_extra_denuncia_escrita" class="form-label fw-bold ">Documento:</label>
 							<input type="text" class="form-control" id="folio" name="folio" value="<?= $_GET['folio'] ?>" hidden>
 							<input type="text" class="form-control" id="year" name="year" value="<?= $_GET['year'] ?>" hidden>
 
-							<input class="form-control" type="file" id="documento_extra" name="documento_extra" accept="image/jpeg, image/jpg, image/png, application/pdf" required>
+							<input class="form-control" type="file" id="documento_extra_denuncia_escrita" name="documento_extra_denuncia_escrita" accept="image/jpeg, image/jpg, image/png, application/pdf" required>
 							<img class="img-fluid d-none py-2" src="" style="width:50%;" id="img_preview_carta" name="img_preview_carta">
 							<!-- <a id="descargar_documento" class="btn btn-primary d-none" download="">
 								Descargar archivo
@@ -33,6 +33,24 @@
 
 						<button type="submit" id="subirDocSubmit" name="subirDocSubmit" class="btn btn-primary">Subir documentos</button>
 					</form>
+					<hr>
+						<table id="archivos" class="table table-striped table-hover table-bordered mt-3">
+							<thead>
+								<tr class="text-center bg-blue text-white">
+									<th scope="col" width="90%">ARCHIVOS SUBIDOS</th>
+									<th scope="col" width="10%"></th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php foreach ($body_data->archivos as $index => $archivo) { ?>
+									<tr>
+										<td class="fw-bold col-3 text-center p-3"><?= $archivo->ARCHIVODESCR .'.'. $archivo->EXTENSION?> </td>
+										<td class="fw-bold col-3 text-center p-3"><button class="btn btn-primary"><a id="downloadArchivo" href="<?= $archivo->ARCHIVO; ?>"  download="<?= $archivo->ARCHIVODESCR . '.' . $archivo->EXTENSION; ?>" ></a><i class="bi bi-download"></i></button></td>
+									
+									</tr>
+								<?php } ?>
+							</tbody>
+						</table>
 					<div class="row p-2">
 						<div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-3">
 							<button onclick="redirigir()" type="button" id="finalizarDenuncia" name="finalizarDenuncia" class="btn btn-secondary w-100" disabled>CREAR DENUNCIA</button>
@@ -107,7 +125,7 @@
 				}
 			}
 		});
-		document.querySelector('#documento_extra').addEventListener('change', async (e) => {
+		document.querySelector('#documento_extra_denuncia_escrita').addEventListener('change', async (e) => {
 			let file = e.target.files[0];
 			let preview = document.querySelector('#img_preview_carta');
 			let title_doc = document.getElementById('title-doc');
