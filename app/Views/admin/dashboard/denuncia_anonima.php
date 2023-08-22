@@ -13,6 +13,7 @@
 <?php include 'modals_denuncia_anonima/form_denuncia.php' ?>
 <?php include 'modals_denuncia_anonima/persona_modal_da.php' ?>
 <?php include 'modals_denuncia_anonima/vehiculo_modal_da.php' ?>
+<?php include 'modals_denuncia_anonima/agregar_archivos_anonima_modal.php' ?>
 
 <?php include 'modals_denuncia_anonima/objetos_involucrados_modal_update.php' ?>
 
@@ -234,6 +235,34 @@
 						</table>
 					</div>
 				</div>
+				<div class="row card rounded shadow" id="archivosExternos" name="archivosExternos" style="display: none;">
+					<div class="col-12 pt-5">
+						<h3 class="font-weight-bold text-center text-blue pb-3">ARCHIVOS EXTERNOS</h3>
+					</div>
+
+					<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+						<div id="loading_archivos" name="loading_archivos" class="text-center d-none" style="min-height:50px;">
+							<div class="justify-content-center">
+								<div class="spinner-border text-primary" role="status">
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<br>
+							<button class="btn btn-primary font-weight-bold btn-lg" id="habilitar-archivo" name="habilitar-archivo" disabled>Agregar archivo</button>
+
+						</div>
+					</div>
+					<div class="table-responsive">
+						<table id="table-archivo" class="table table-bordered table-hover table-striped table-light">
+							<tr>
+								<th class="text-center bg-primary text-white">DESCRIPCIÓN</th>
+								<th class="text-center bg-primary text-white">DOCUMENTO</th>
+								<th class="text-center bg-primary text-white"></th>
+							</tr>
+						</table>
+					</div>
+				</div>
 
 				<div class="row card rounded shadow" id="delitosInvolucrados" name="delitosInvolucrados" style="display: none;">
 					<div class="col-12 pt-5">
@@ -316,11 +345,12 @@
 	var btn_salida = document.getElementById('habilitar-salida');
 	var btn_update_folio = document.getElementById('btn_update_folio');
 	var btn_enviar_alertas = document.querySelector('#enviar_alertas_da');
+	var btnSubirArchivosA = document.querySelector('#btnSubirArchivosAnonima');
 
 
 	var btn_vehiculo = document.getElementById('habilitar-vehiculos');
 	var notas_caso_mp = document.getElementById('notas_denuncia');
-
+	var btn_archivo = document.getElementById('habilitar-archivo');
 	var btn_arbol = document.getElementById('habilitar-delito');
 	var form_folio = document.getElementById('form_folio');
 	var div_personasInvolucradas = document.getElementById('personasInvolucradas');
@@ -359,9 +389,6 @@
 		theme: "bootstrap"
 	});
 
-
-
-
 	document.querySelector('#ocupacion_pf_da').addEventListener('change', (e) => {
 		let select_ocupacion = document.querySelector('#ocupacion_pf_da');
 		let input_ocupacion = document.querySelector('#ocupacion_pf_da_m');
@@ -398,6 +425,7 @@
 			btn_salida.disabled = false;
 			btn_arbol.disabled = false;
 			btn_vehiculo.disabled = false;
+			btn_archivo.disabled = false;
 			select_imputado.disabled = false;
 
 			$("#insert_persona_victima_modal_denuncia").one("hidden.bs.modal", function() {
@@ -412,6 +440,8 @@
 			btn_salida.disabled = false;
 			btn_arbol.disabled = false;
 			btn_vehiculo.disabled = false;
+			btn_archivo.disabled = false;
+
 			select_imputado.disabled = false;
 
 			document.querySelector('#calidad_juridica_new_da').value = 1;
@@ -889,10 +919,18 @@
 	btn_vehiculo.addEventListener('click', (event) => {
 		$('#insert_vehiculo_modal_denuncia').modal('show');
 	}, false);
+	btn_archivo.addEventListener('click', (event) => {
+		$('#agregar_archivos_modal_anonima').modal('show');
+	}, false);
 	btn_arbol.addEventListener('click', (event) => {
 		$('#insert_fisfis_modal_denuncia').modal('show');
 	}, false);
 
+	btnSubirArchivosA.addEventListener('click', (e) => {
+		e.preventDefault();
+		crearArchivos();
+
+	});
 	form_folio.addEventListener('submit', (event) => {
 		if (!form_folio.checkValidity()) {
 			event.preventDefault();
@@ -1311,78 +1349,78 @@
 	});
 
 	document.querySelector('#localidad_pfd_da').addEventListener('change', (e) => {
-				let select_colonia = document.querySelector('#colonia_pfd_da_select');
-				let input_colonia = document.querySelector('#colonia_pfd_da');
+		let select_colonia = document.querySelector('#colonia_pfd_da_select');
+		let input_colonia = document.querySelector('#colonia_pfd_da');
 
-				let estado = document.querySelector('#estado_pfd_da').value;
-				let municipio = document.querySelector('#municipio_pfd_da').value;
-				let localidad = e.target.value;
+		let estado = document.querySelector('#estado_pfd_da').value;
+		let municipio = document.querySelector('#municipio_pfd_da').value;
+		let localidad = e.target.value;
 
-				clearSelect(select_colonia);
-				select_colonia.value = '';
+		clearSelect(select_colonia);
+		select_colonia.value = '';
 
-				let data = {
-					'estado_id': estado,
-					'municipio_id': municipio,
-					'localidad_id': localidad
-				};
+		let data = {
+			'estado_id': estado,
+			'municipio_id': municipio,
+			'localidad_id': localidad
+		};
 
-				console.log(data);
+		console.log(data);
 
-				if (estado == 2) {
-					select_colonia.classList.remove('d-none');
-					input_colonia.classList.add('d-none');
-					input_colonia.value = '';
-					$.ajax({
-						data: data,
-						url: "<?= base_url('/data/get-colonias-by-estado-municipio-localidad') ?>",
-						method: "POST",
-						dataType: "json",
-						success: function(response) {
-							let colonias = response.data;
+		if (estado == 2) {
+			select_colonia.classList.remove('d-none');
+			input_colonia.classList.add('d-none');
+			input_colonia.value = '';
+			$.ajax({
+				data: data,
+				url: "<?= base_url('/data/get-colonias-by-estado-municipio-localidad') ?>",
+				method: "POST",
+				dataType: "json",
+				success: function(response) {
+					let colonias = response.data;
 
-							colonias.forEach(colonia => {
-								var option = document.createElement("option");
-								option.text = colonia.COLONIADESCR;
-								option.value = colonia.COLONIAID;
-								select_colonia.add(option);
-							});
-							select_colonia.disabled = false;
-
-							var option = document.createElement("option");
-							option.text = 'OTRO';
-							option.value = '0';
-							select_colonia.add(option);
-						},
-						error: function(jqXHR, textStatus, errorThrown) {
-
-						}
+					colonias.forEach(colonia => {
+						var option = document.createElement("option");
+						option.text = colonia.COLONIADESCR;
+						option.value = colonia.COLONIAID;
+						select_colonia.add(option);
 					});
+					select_colonia.disabled = false;
 
-				} else {
 					var option = document.createElement("option");
 					option.text = 'OTRO';
 					option.value = '0';
 					select_colonia.add(option);
-					select_colonia.value = '0';
-					input_colonia.value = '';
-					select_colonia.classList.add('d-none');
-					input_colonia.classList.remove('d-none');
-				}
-			});
-			document.querySelector('#colonia_pfd_da_select').addEventListener('change', (e) => {
-				let select_colonia = document.querySelector('#colonia_pfd_da_select');
-				let input_colonia = document.querySelector('#colonia_pfd_da');
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
 
-				if (e.target.value === '0') {
-					select_colonia.classList.add('d-none');
-					input_colonia.classList.remove('d-none');
-					input_colonia.value = '';
-					input_colonia.focus();
-				} else {
-					input_colonia.value = '-';
 				}
 			});
+
+		} else {
+			var option = document.createElement("option");
+			option.text = 'OTRO';
+			option.value = '0';
+			select_colonia.add(option);
+			select_colonia.value = '0';
+			input_colonia.value = '';
+			select_colonia.classList.add('d-none');
+			input_colonia.classList.remove('d-none');
+		}
+	});
+	document.querySelector('#colonia_pfd_da_select').addEventListener('change', (e) => {
+		let select_colonia = document.querySelector('#colonia_pfd_da_select');
+		let input_colonia = document.querySelector('#colonia_pfd_da');
+
+		if (e.target.value === '0') {
+			select_colonia.classList.add('d-none');
+			input_colonia.classList.remove('d-none');
+			input_colonia.value = '';
+			input_colonia.focus();
+		} else {
+			input_colonia.value = '-';
+		}
+	});
 	document.querySelector('#marca_ad_da').addEventListener('change', (e) => {
 		let select_linea = document.querySelector('#linea_vehiculo_da_ad');
 		let select_version = document.querySelector('#version_vehiculo_da_ad');
@@ -1495,8 +1533,11 @@
 					document.getElementById("objetosInvolucrados").style.display = "block";
 					document.getElementById("objetosInvolucrados").style.backgroundColor = "#E7E7E7";
 
+					document.getElementById("archivosExternos").style.display = "block";
 
 					document.getElementById("delitosInvolucrados").style.display = "block";
+					document.getElementById("delitosInvolucrados").style.backgroundColor = "#E7E7E7";
+
 					document.getElementById("roboVehiculo").style.display = "block";
 
 					document.getElementById("fisfis").style.display = "block";
@@ -1947,6 +1988,130 @@
 			}
 		});
 	}
+	//funcion para subir archivos externos
+	async function crearArchivos() {
+		document.getElementById('archivo_content').classList.add('d-none');
+		document.getElementById('documentos_anexar_spinner').classList.remove('d-none');
+		let documento;
+		let nombre_documento;
+		//se comprime el archivo
+		if ($("#documentoArchivo")[0].files && $("#documentoArchivo")[0].files[0]) {
+			if ($("#documentoArchivo")[0].files[0].type == "image/jpeg" || $("#documentoArchivo")[0].files[0].type == "image/png" || $("#documentoArchivo")[0].files[0].type == "image/jpg") {
+				nombre_documento = $("#documentoArchivo")[0].files[0].name;
+				documento = await comprimirImagen($("#documentoArchivo")[0].files[0], 50);
+				console.log(documento);
+			} else {
+				nombre_documento = $("#documentoArchivo")[0].files[0].name;
+				documento = $("#documentoArchivo")[0].files[0];
+			}
+		} else {
+			document.getElementById('archivo_content').classList.remove('d-none');
+			document.getElementById('documentos_anexar_spinner').classList.add('d-none');
+			Swal.fire({
+				icon: 'error',
+				text: 'Debes seleccionar un documento.',
+				showConfirmButton: false,
+				timer: 1000
+			});
+			return
+		}
+		var packetData = new FormData();
+		packetData.append("documentoArchivo", documento);
+		packetData.append("folio", document.querySelector('#folio').value);
+		packetData.append("year", document.querySelector('#year').value);
+		packetData.append("nombreDocumento", nombre_documento);
+
+		$.ajax({
+			url: "<?= base_url('/data/create_archivos_admin') ?>",
+			method: "POST",
+			dataType: 'json',
+			contentType: false,
+			data: packetData,
+			processData: false,
+			cache: false,
+			success: function(response) {
+				const archivos = response.archivos.archivosexternos;
+				console.log(response);
+				document.getElementById('archivo_content').classList.remove('d-none');
+				document.getElementById('documentos_anexar_spinner').classList.add('d-none');
+				if (response.status == 1) {
+					$('#agregar_archivos_modal_anonima').modal('hide');
+
+					Swal.fire({
+						icon: 'success',
+						text: 'Documento agregado correctamente.',
+						showConfirmButton: false,
+						timer: 1000
+					});
+
+					let preview = document.querySelector('#viewDocumentoArchivo');
+
+					document.getElementById('documentoArchivo').value = '';
+					preview.setAttribute('src', '');
+					//actualiza la tabla de archivos externos
+					let tabla_archivos = document.querySelectorAll(
+						'#table-archivos tr');
+					tabla_archivos.forEach(row => {
+						if (row.id !== '') {
+							row.remove();
+						}
+					});
+					llenarTablaArchivosExternos(archivos);
+
+				} else if (response.status == 0) {
+					Swal.fire({
+						icon: 'error',
+						text: 'No se subio el documento.',
+						showConfirmButton: false,
+						timer: 1000
+					});
+				} else if (response.status == 2) {
+					Swal.fire({
+						icon: 'error',
+						text: 'Debes seleccionar un documento.',
+						showConfirmButton: false,
+						timer: 1000
+					});
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				console.log(textStatus);
+				document.getElementById('archivo_content').classList.remove('d-none');
+				document.getElementById('documentos_anexar_spinner').classList.add('d-none');
+				Swal.fire({
+					icon: 'error',
+					text: 'No se subio el documento.',
+					showConfirmButton: false,
+					timer: 1000
+				});
+			}
+		});
+
+	}
+
+	//Funcion para comprimir las imagenes dado a un porcentaje
+	function comprimirImagen(imagenComoArchivo, porcentajeCalidad) {
+		return new Promise((resolve, reject) => {
+			const $canvas = document.createElement("canvas");
+			const imagen = new Image();
+			imagen.onload = () => {
+				$canvas.width = imagen.width;
+				$canvas.height = imagen.height;
+				$canvas.getContext("2d").drawImage(imagen, 0, 0);
+				$canvas.toBlob(
+					(blob) => {
+						if (blob === null) {
+							return reject(blob);
+						} else {
+							resolve(blob);
+						}
+					},
+					"image/jpeg", porcentajeCalidad / 100
+				);
+			};
+			imagen.src = URL.createObjectURL(imagenComoArchivo);
+		});
+	};
 
 	function agregarVehiculosInvolucrados() {
 		var packetData = new FormData();
@@ -2079,80 +2244,80 @@
 			'folio': document.querySelector('#folio').value,
 			'year': document.querySelector('#year').value,
 			'pf_id': id,
-			'ocupacion_mf': document.querySelector('#ocupacion_mf_da').value != null ? document.querySelector('#ocupacion_mf_da').value : (document.querySelector('#ocupacion_mf1_da').value?document.querySelector('#ocupacion_mf1_da').value:''),
-			'estatura_mf': document.querySelector('#estatura_mf_da').value != null? document.querySelector('#estatura_mf_da').value : (document.querySelector('#estatura_mf1_da').value?document.querySelector('#estatura_mf1_da').value:''),
-			'peso_mf': document.querySelector('#peso_mf_da').value != null? document.querySelector('#peso_mf_da').value :( document.querySelector('#peso_mf1_da').value? document.querySelector('#peso_mf1_da').value:''),
-			'senas_mf': document.querySelector('#senas_mf_da').value != null? document.querySelector('#senas_mf_da').value : (document.querySelector('#senas_mf1_da').value?document.querySelector('#senas_mf1_da').value:''),
-			'colortez_mf': document.querySelector('#colortez_mf_da').value != null? document.querySelector('#colortez_mf_da').value : (document.querySelector('#colortez_mf1_da').value?document.querySelector('#colortez_mf1_da').value:''),
-			'complexion_mf': document.querySelector('#complexion_mf_da').value != null? document.querySelector('#complexion_mf_da').value : (document.querySelector('#complexion_mf1_da').value?document.querySelector('#complexion_mf1_da').value:''),
-			'contextura_ceja_mf': document.querySelector('#contextura_ceja_mf_da').value != null? document.querySelector('#contextura_ceja_mf_da').value : (document.querySelector('#contextura_ceja_mf1_da').value?document.querySelector('#contextura_ceja_mf1_da').value:''),
-			'cara_forma_mf': document.querySelector('#cara_forma_mf_da').value != null? document.querySelector('#cara_forma_mf_da').value : (document.querySelector('#cara_forma_mf1_da').value?document.querySelector('#cara_forma_mf1_da').value:''),
-			'cara_tamano_mf': document.querySelector('#cara_tamano_mf_da').value != null? document.querySelector('#cara_tamano_mf_da').value : (document.querySelector('#cara_tamano_mf1_da').value?document.querySelector('#cara_tamano_mf1_da').value:''),
-			'caratez_mf': document.querySelector('#caratez_mf_da').value != null? document.querySelector('#caratez_mf_da').value : (document.querySelector('#caratez_mf1_da').value?document.querySelector('#caratez_mf1_da').value:''),
-			'lobulo_mf': document.querySelector('#lobulo_mf_da').value != null? document.querySelector('#lobulo_mf_da').value : (document.querySelector('#lobulo_mf1_da').value?document.querySelector('#lobulo_mf1_da').value:''),
-			'forma_oreja_mf': document.querySelector('#forma_oreja_mf_da').value!= null ? document.querySelector('#forma_oreja_mf_da').value :( document.querySelector('#forma_oreja_mf1_da').value? document.querySelector('#forma_oreja_mf1_da').value:''),
-			'tamano_oreja_mf': document.querySelector('#tamano_oreja_mf_da').value != null? document.querySelector('#tamano_oreja_mf_da').value : (document.querySelector('#tamano_oreja_mf1_da').value?document.querySelector('#tamano_oreja_mf1_da').value:''),
-			'colorC_mf': document.querySelector('#colorC_mf_da').value != null? document.querySelector('#colorC_mf_da').value : (document.querySelector('#colorC_mf1_da').value?document.querySelector('#colorC_mf1_da').value:''),
-			'formaC_mf': document.querySelector('#formaC_mf_da').value != null? document.querySelector('#formaC_mf_da').value : (document.querySelector('#formaC_mf1_da').value?document.querySelector('#formaC_mf1_da').value:''),
-			'tamanoC_mf': document.querySelector('#tamanoC_mf_da').value != null? document.querySelector('#tamanoC_mf_da').value : (document.querySelector('#tamanoC_mf1_da').value?document.querySelector('#tamanoC_mf1_da').value:''),
-			'peculiarC_mf': document.querySelector('#peculiarC_mf_da').value != null? document.querySelector('#peculiarC_mf_da').value :( document.querySelector('#peculiarC_mf1_da').value? document.querySelector('#peculiarC_mf1_da').value:''),
-			'cabello_descr_mf': document.querySelector('#cabello_descr_mf_da').value != null? document.querySelector('#cabello_descr_mf_da').value : (document.querySelector('#cabello_descr_mf1_da').value?document.querySelector('#cabello_descr_mf1_da').value:''),
-			'frente_altura_mf': document.querySelector('#frente_altura_mf_da').value != null? document.querySelector('#frente_altura_mf_da').value : (document.querySelector('#frente_altura_mf1_da').value?document.querySelector('#frente_altura_mf1_da').value:''),
-			'frente_anchura_ms': document.querySelector('#frente_anchura_ms_da').value != null? document.querySelector('#frente_anchura_ms_da').value : (document.querySelector('#frente_anchura_mf1_da').value?document.querySelector('#frente_anchura_mf1_da').value:''),
-			'tipoF_mf': document.querySelector('#tipoF_mf_da').value != null? document.querySelector('#tipoF_mf_da').value : (document.querySelector('#tipoF_mf1_da').value?document.querySelector('#tipoF_mf1_da').value:''),
-			'frente_peculiar_mf': document.querySelector('#frente_peculiar_mf_da').value != null? document.querySelector('#frente_peculiar_mf_da').value : (document.querySelector('#frente_peculiar_mf1_da').value?document.querySelector('#frente_peculiar_mf1_da').value:''),
-			'colocacion_ceja_mf': document.querySelector('#colocacion_ceja_mf_da').value != null? document.querySelector('#colocacion_ceja_mf_da').value : (document.querySelector('#colocacion_ceja_mf1_da').value?document.querySelector('#colocacion_ceja_mf1_da').value:''),
-			'ceja_mf': document.querySelector('#ceja_mf_da').value != null? document.querySelector('#ceja_mf_da').value : (document.querySelector('#ceja_mf1_da').value?document.querySelector('#ceja_mf1_da').value:''),
-			'tamano_ceja_mf': document.querySelector('#tamano_ceja_mf_da').value!= null ? document.querySelector('#tamano_ceja_mf_da').value : (document.querySelector('#tamano_ceja_mf1_da').value?document.querySelector('#tamano_ceja_mf1_da').value:''),
-			'grosor_ceja_mf': document.querySelector('#grosor_ceja_mf_da').value!= null ? document.querySelector('#grosor_ceja_mf_da').value : (document.querySelector('#grosor_ceja_mf1_da').value?document.querySelector('#grosor_ceja_mf1_da').value:''),
-			'colocacion_ojos_mf': document.querySelector('#colocacion_ojos_mf_da').value != null? document.querySelector('#colocacion_ojos_mf_da').value : d(ocument.querySelector('#colocacion_ojos_mf1_da').value?ocument.querySelector('#colocacion_ojos_mf1_da').value:''),
-			'forma_ojos_mf': document.querySelector('#forma_ojos_mf_da').value!= null ? document.querySelector('#forma_ojos_mf_da').value : (document.querySelector('#forma_ojos_mf1_da').value?document.querySelector('#forma_ojos_mf1_da').value:''),
-			'tamano_ojos_mf': document.querySelector('#tamano_ojos_mf_da').value!= null ? document.querySelector('#tamano_ojos_mf_da').value : (document.querySelector('#tamano_ojos_mf1_da').value?document.querySelector('#tamano_ojos_mf1_da').value:''),
-			'colorO_mf': document.querySelector('#colorO_mf_da').value!= null ? document.querySelector('#colorO_mf_da').value : (document.querySelector('#colorO_mf1_da').value?document.querySelector('#colorO_mf1_da').value:''),
-			'peculiaridad_ojos_mf': document.querySelector('#peculiaridad_ojos_mf_da').value != null? document.querySelector('#peculiaridad_ojos_mf_da').value : (document.querySelector('#peculiaridad_ojos_mf1_da').value?document.querySelector('#peculiaridad_ojos_mf1_da').value:''),
-			'nariz_tipo_mf': document.querySelector('#nariz_tipo_mf_da').value != null? document.querySelector('#nariz_tipo_mf_da').value :( document.querySelector('#nariz_tipo_mf1_da').value? document.querySelector('#nariz_tipo_mf1_da').value:''),
-			'nariz_tamano_mf': document.querySelector('#nariz_tamano_mf_da').value != null? document.querySelector('#nariz_tamano_mf_da').value : (document.querySelector('#nariz_tamano_mf1_da').value?document.querySelector('#nariz_tamano_mf1_da').value:''),
-			'nariz_base_mf': document.querySelector('#nariz_base_mf_da').value != null? document.querySelector('#nariz_base_mf_da').value : (document.querySelector('#nariz_base_mf1_da').value?document.querySelector('#nariz_base_mf1_da').value:''),
-			'nariz_peculiar_mf': document.querySelector('#nariz_peculiar_mf_da').value != null? document.querySelector('#nariz_peculiar_mf_da').value : (document.querySelector('#nariz_peculiar_mf1_da').value?document.querySelector('#nariz_peculiar_mf1_da').value:''),
-			'nariz_descr_mf': document.querySelector('#nariz_descr_mf_da').value != null? document.querySelector('#nariz_descr_mf_da').value : (document.querySelector('#nariz_descr_mf1_da').value?document.querySelector('#nariz_descr_mf1_da').value:''),
-			'bigote_forma_mf': document.querySelector('#bigote_forma_mf_da').value!= null ? document.querySelector('#bigote_forma_mf_da').value :( document.querySelector('#bigote_forma_mf1_da').value? document.querySelector('#bigote_forma_mf1_da').value:''),
-			'bigote_tamaño_mf': document.querySelector('#bigote_tamaño_mf_da').value != null? document.querySelector('#bigote_tamaño_mf_da').value : (document.querySelector('#bigote_tamaño_mf1_da').value?document.querySelector('#bigote_tamaño_mf1_da').value:''),
-			'bigote_grosor_mf': document.querySelector('#bigote_grosor_mf_da').value != null? document.querySelector('#bigote_grosor_mf_da').value : (document.querySelector('#bigote_grosor_mf1_da').value?document.querySelector('#bigote_grosor_mf1_da').value:''),
-			'bigote_peculiar_mf': document.querySelector('#bigote_peculiar_mf_da').value != null? document.querySelector('#bigote_peculiar_mf_da').value : (document.querySelector('#bigote_peculiar_mf1_da').value?document.querySelector('#bigote_peculiar_mf1_da').value:''),
-			'bigote_descr_mf': document.querySelector('#bigote_descr_mf_da').value != null? document.querySelector('#bigote_descr_mf_da').value : (document.querySelector('#bigote_descr_mf1_da').value?document.querySelector('#bigote_descr_mf1_da').value:''),
-			'boca_tamano_mf': document.querySelector('#boca_tamano_mf_da').value != null? document.querySelector('#boca_tamano_mf_da').value : (document.querySelector('#boca_tamano_mf1_da').value?document.querySelector('#boca_tamano_mf1_da').value:''),
-			'boca_peculiar_mf': document.querySelector('#boca_peculiar_mf_da').value != null? document.querySelector('#boca_peculiar_mf_da').value : (document.querySelector('#boca_peculiar_mf1_da').value?document.querySelector('#boca_peculiar_mf1_da').value:''),
-			'labio_longitud_mf': document.querySelector('#labio_longitud_mf_da').value != null? document.querySelector('#labio_longitud_mf_da').value :( document.querySelector('#labio_longitud_mf1_da').value? document.querySelector('#labio_longitud_mf1_da').value:''),
-			'labio_posicion_mf': document.querySelector('#labio_posicion_mf_da').value != null? document.querySelector('#labio_posicion_mf_da').value : (document.querySelector('#labio_posicion_mf1_da').value?document.querySelector('#labio_posicion_mf1_da').value:''),
-			'labio_peculiar_mf': document.querySelector('#labio_peculiar_mf_da').value != null? document.querySelector('#labio_peculiar_mf_da').value : (document.querySelector('#labio_peculiar_mf1_da').value?document.querySelector('#labio_peculiar_mf1_da').value:''),
-			'labio_grosor_mf': document.querySelector('#labio_grosor_mf_da').value != null? document.querySelector('#labio_grosor_mf_da').value : (document.querySelector('#labio_grosor_mf1_da').value?document.querySelector('#labio_grosor_mf1_da').value:''),
-			'dientes_tamano_mf': document.querySelector('#dientes_tamano_mf_da').value != null? document.querySelector('#dientes_tamano_mf_da').value : document.querySelector('#dientes_tamano_mf1_da').value?document.querySelector('#dientes_tamano_mf1_da').value:'',
-			'dientes_tipo_mf': document.querySelector('#dientes_tipo_mf_da').value != null? document.querySelector('#dientes_tipo_mf_da').value : (document.querySelector('#dientes_tipo_mf1_da').value?document.querySelector('#dientes_tipo_mf1_da').value:''),
-			'dientes_peculiar_mf': document.querySelector('#dientes_peculiar_mf_da').value != null? document.querySelector('#dientes_peculiar_mf_da').value : (document.querySelector('#dientes_peculiar_mf1_da').value?document.querySelector('#dientes_peculiar_mf1_da').value:''),
-			'dientes_descr_mf': document.querySelector('#dientes_descr_mf_da').value != null? document.querySelector('#dientes_descr_mf_da').value : (document.querySelector('#dientes_descr_mf1_da').value?document.querySelector('#dientes_descr_mf1_da').value:''),
-			'barbilla_forma_mf': document.querySelector('#barbilla_forma_mf_da').value != null? document.querySelector('#barbilla_forma_mf_da').value : (document.querySelector('#barbilla_forma_mf1_da').value?document.querySelector('#barbilla_forma_mf1_da').value:''),
-			'barbilla_tamano_mf': document.querySelector('#barbilla_tamano_mf_da').value != null? document.querySelector('#barbilla_tamano_mf_da').value : (document.querySelector('#barbilla_tamano_mf1_da').value?document.querySelector('#barbilla_tamano_mf1_da').value:''),
-			'barbilla_inclinacion_mf': document.querySelector('#barbilla_inclinacion_mf_da').value != null? document.querySelector('#barbilla_inclinacion_mf_da').value : (document.querySelector('#barbilla_inclinacion_mf1_da').value?document.querySelector('#barbilla_inclinacion_mf1_da').value:''),
-			'barbilla_peculiar_mf': document.querySelector('#barbilla_peculiar_mf_da').value != null? document.querySelector('#barbilla_peculiar_mf_da').value : (document.querySelector('#barbilla_peculiar_mf1_da').value?document.querySelector('#barbilla_peculiar_mf1_da').value:''),
-			'barbilla_descr_mf': document.querySelector('#barbilla_descr_mf_da').value != null? document.querySelector('#barbilla_descr_mf_da').value : (document.querySelector('#barbilla_descr_mf1_da').value?document.querySelector('#barbilla_descr_mf1_da').value:''),
-			'barba_tamano_mf': document.querySelector('#barba_tamano_mf_da').value != null? document.querySelector('#barba_tamano_mf_da').value : (document.querySelector('#barba_tamano_mf1_da').value?document.querySelector('#barba_tamano_mf1_da').value:''),
-			'barba_peculiar_mf': document.querySelector('#barba_peculiar_mf_da').value != null? document.querySelector('#barba_peculiar_mf_da').value : (document.querySelector('#barba_peculiar_mf1_da').value?document.querySelector('#barba_peculiar_mf1_da').value:''),
-			'barba_descr_mf': document.querySelector('#barba_descr_mf_da').value != null? document.querySelector('#barba_descr_mf_da').value : (document.querySelector('#barba_descr_mf1_da').value?document.querySelector('#barba_descr_mf1_da').value:''),
-			'cuello_tamano_mf': document.querySelector('#cuello_tamano_mf_da').value!= null ? document.querySelector('#cuello_tamano_mf_da').value : (document.querySelector('#cuello_tamano_mf1_da').value?document.querySelector('#cuello_tamano_mf1_da').value:''),
-			'cuello_grosor_mf': document.querySelector('#cuello_grosor_mf_da').value != null? document.querySelector('#cuello_grosor_mf_da').value : (document.querySelector('#cuello_grosor_mf1_da').value?document.querySelector('#cuello_grosor_mf1_da').value:''),
-			'cuello_peculiar_mf': document.querySelector('#cuello_peculiar_mf_da').value != null? document.querySelector('#cuello_peculiar_mf_da').value : (document.querySelector('#cuello_peculiar_mf1_da').value?document.querySelector('#cuello_peculiar_mf1_da').value:''),
-			'cuello_descr_mf': document.querySelector('#cuello_descr_mf_da').value != null? document.querySelector('#cuello_descr_mf_da').value : (document.querySelector('#cuello_descr_mf1_da').value?document.querySelector('#cuello_descr_mf1_da').value:''),
-			'hombro_posicion_mf': document.querySelector('#hombro_posicion_mf_da').value != null? document.querySelector('#hombro_posicion_mf_da').value : (document.querySelector('#hombro_posicion_mf1_da').value?document.querySelector('#hombro_posicion_mf1_da').value:''),
-			'hombro_tamano_mf': document.querySelector('#hombro_tamano_mf_da').value != null? document.querySelector('#hombro_tamano_mf_da').value : (document.querySelector('#hombro_tamano_mf1_da').value?document.querySelector('#hombro_tamano_mf1_da').value:''),
-			'hombro_grosor_mf': document.querySelector('#hombro_grosor_mf_da').value != null? document.querySelector('#hombro_grosor_mf_da').value : (document.querySelector('#hombro_grosor_mf1_da').value?document.querySelector('#hombro_grosor_mf1_da').value:''),
-			'estomago_mf': document.querySelector('#estomago_mf_da').value != null? document.querySelector('#estomago_mf_da').value : (document.querySelector('#estomago_mf1_da').value?document.querySelector('#estomago_mf1_da').value:''),
-			'escolaridad_mf': document.querySelector('#escolaridad_mf_da').value != null? document.querySelector('#escolaridad_mf_da').value : (document.querySelector('#escolaridad_mf1_da').value?document.querySelector('#escolaridad_mf1_da').value:''),
-			'etnia_mf': document.querySelector('#etnia_mf_da').value!= null ? document.querySelector('#etnia_mf_da').value :( document.querySelector('#etnia_mf1_da').value? document.querySelector('#etnia_mf1_da').value:''),
-			'estomago_descr_mf': document.querySelector('#estomago_descr_mf_da').value != null? document.querySelector('#estomago_descr_mf_da').value : (document.querySelector('#estomago_descr_mf1_da').value?document.querySelector('#estomago_descr_mf1_da').value:''),
-			'discapacidad_mf': document.querySelector('#discapacidad_mf_da').value != null? document.querySelector('#discapacidad_mf_da').value : (document.querySelector('#discapacidad_mf1_da').value?document.querySelector('#discapacidad_mf1_da').value:''),
-			'diaDesaparicion': document.querySelector('#diaDesaparicion_da').value != null? document.querySelector('#diaDesaparicion_da').value : (document.querySelector('#diaDesaparicion1_da').value?document.querySelector('#diaDesaparicion1_da').value:''),
-			'lugarDesaparicion': document.querySelector('#lugarDesaparicion_da').value != null? document.querySelector('#lugarDesaparicion_da').value : (document.querySelector('#lugarDesaparicion1_da').value?document.querySelector('#lugarDesaparicion1_da').value:''),
-			'vestimenta_mf': document.querySelector('#vestimenta_mf_da').value != null? document.querySelector('#vestimenta_mf_da').value : (document.querySelector('#vestimenta_mf1_da').value?document.querySelector('#vestimenta_mf1_da').value:''),
+			'ocupacion_mf': document.querySelector('#ocupacion_mf_da').value != null ? document.querySelector('#ocupacion_mf_da').value : (document.querySelector('#ocupacion_mf1_da').value ? document.querySelector('#ocupacion_mf1_da').value : ''),
+			'estatura_mf': document.querySelector('#estatura_mf_da').value != null ? document.querySelector('#estatura_mf_da').value : (document.querySelector('#estatura_mf1_da').value ? document.querySelector('#estatura_mf1_da').value : ''),
+			'peso_mf': document.querySelector('#peso_mf_da').value != null ? document.querySelector('#peso_mf_da').value : (document.querySelector('#peso_mf1_da').value ? document.querySelector('#peso_mf1_da').value : ''),
+			'senas_mf': document.querySelector('#senas_mf_da').value != null ? document.querySelector('#senas_mf_da').value : (document.querySelector('#senas_mf1_da').value ? document.querySelector('#senas_mf1_da').value : ''),
+			'colortez_mf': document.querySelector('#colortez_mf_da').value != null ? document.querySelector('#colortez_mf_da').value : (document.querySelector('#colortez_mf1_da').value ? document.querySelector('#colortez_mf1_da').value : ''),
+			'complexion_mf': document.querySelector('#complexion_mf_da').value != null ? document.querySelector('#complexion_mf_da').value : (document.querySelector('#complexion_mf1_da').value ? document.querySelector('#complexion_mf1_da').value : ''),
+			'contextura_ceja_mf': document.querySelector('#contextura_ceja_mf_da').value != null ? document.querySelector('#contextura_ceja_mf_da').value : (document.querySelector('#contextura_ceja_mf1_da').value ? document.querySelector('#contextura_ceja_mf1_da').value : ''),
+			'cara_forma_mf': document.querySelector('#cara_forma_mf_da').value != null ? document.querySelector('#cara_forma_mf_da').value : (document.querySelector('#cara_forma_mf1_da').value ? document.querySelector('#cara_forma_mf1_da').value : ''),
+			'cara_tamano_mf': document.querySelector('#cara_tamano_mf_da').value != null ? document.querySelector('#cara_tamano_mf_da').value : (document.querySelector('#cara_tamano_mf1_da').value ? document.querySelector('#cara_tamano_mf1_da').value : ''),
+			'caratez_mf': document.querySelector('#caratez_mf_da').value != null ? document.querySelector('#caratez_mf_da').value : (document.querySelector('#caratez_mf1_da').value ? document.querySelector('#caratez_mf1_da').value : ''),
+			'lobulo_mf': document.querySelector('#lobulo_mf_da').value != null ? document.querySelector('#lobulo_mf_da').value : (document.querySelector('#lobulo_mf1_da').value ? document.querySelector('#lobulo_mf1_da').value : ''),
+			'forma_oreja_mf': document.querySelector('#forma_oreja_mf_da').value != null ? document.querySelector('#forma_oreja_mf_da').value : (document.querySelector('#forma_oreja_mf1_da').value ? document.querySelector('#forma_oreja_mf1_da').value : ''),
+			'tamano_oreja_mf': document.querySelector('#tamano_oreja_mf_da').value != null ? document.querySelector('#tamano_oreja_mf_da').value : (document.querySelector('#tamano_oreja_mf1_da').value ? document.querySelector('#tamano_oreja_mf1_da').value : ''),
+			'colorC_mf': document.querySelector('#colorC_mf_da').value != null ? document.querySelector('#colorC_mf_da').value : (document.querySelector('#colorC_mf1_da').value ? document.querySelector('#colorC_mf1_da').value : ''),
+			'formaC_mf': document.querySelector('#formaC_mf_da').value != null ? document.querySelector('#formaC_mf_da').value : (document.querySelector('#formaC_mf1_da').value ? document.querySelector('#formaC_mf1_da').value : ''),
+			'tamanoC_mf': document.querySelector('#tamanoC_mf_da').value != null ? document.querySelector('#tamanoC_mf_da').value : (document.querySelector('#tamanoC_mf1_da').value ? document.querySelector('#tamanoC_mf1_da').value : ''),
+			'peculiarC_mf': document.querySelector('#peculiarC_mf_da').value != null ? document.querySelector('#peculiarC_mf_da').value : (document.querySelector('#peculiarC_mf1_da').value ? document.querySelector('#peculiarC_mf1_da').value : ''),
+			'cabello_descr_mf': document.querySelector('#cabello_descr_mf_da').value != null ? document.querySelector('#cabello_descr_mf_da').value : (document.querySelector('#cabello_descr_mf1_da').value ? document.querySelector('#cabello_descr_mf1_da').value : ''),
+			'frente_altura_mf': document.querySelector('#frente_altura_mf_da').value != null ? document.querySelector('#frente_altura_mf_da').value : (document.querySelector('#frente_altura_mf1_da').value ? document.querySelector('#frente_altura_mf1_da').value : ''),
+			'frente_anchura_ms': document.querySelector('#frente_anchura_ms_da').value != null ? document.querySelector('#frente_anchura_ms_da').value : (document.querySelector('#frente_anchura_mf1_da').value ? document.querySelector('#frente_anchura_mf1_da').value : ''),
+			'tipoF_mf': document.querySelector('#tipoF_mf_da').value != null ? document.querySelector('#tipoF_mf_da').value : (document.querySelector('#tipoF_mf1_da').value ? document.querySelector('#tipoF_mf1_da').value : ''),
+			'frente_peculiar_mf': document.querySelector('#frente_peculiar_mf_da').value != null ? document.querySelector('#frente_peculiar_mf_da').value : (document.querySelector('#frente_peculiar_mf1_da').value ? document.querySelector('#frente_peculiar_mf1_da').value : ''),
+			'colocacion_ceja_mf': document.querySelector('#colocacion_ceja_mf_da').value != null ? document.querySelector('#colocacion_ceja_mf_da').value : (document.querySelector('#colocacion_ceja_mf1_da').value ? document.querySelector('#colocacion_ceja_mf1_da').value : ''),
+			'ceja_mf': document.querySelector('#ceja_mf_da').value != null ? document.querySelector('#ceja_mf_da').value : (document.querySelector('#ceja_mf1_da').value ? document.querySelector('#ceja_mf1_da').value : ''),
+			'tamano_ceja_mf': document.querySelector('#tamano_ceja_mf_da').value != null ? document.querySelector('#tamano_ceja_mf_da').value : (document.querySelector('#tamano_ceja_mf1_da').value ? document.querySelector('#tamano_ceja_mf1_da').value : ''),
+			'grosor_ceja_mf': document.querySelector('#grosor_ceja_mf_da').value != null ? document.querySelector('#grosor_ceja_mf_da').value : (document.querySelector('#grosor_ceja_mf1_da').value ? document.querySelector('#grosor_ceja_mf1_da').value : ''),
+			'colocacion_ojos_mf': document.querySelector('#colocacion_ojos_mf_da').value != null ? document.querySelector('#colocacion_ojos_mf_da').value : d(ocument.querySelector('#colocacion_ojos_mf1_da').value ? ocument.querySelector('#colocacion_ojos_mf1_da').value : ''),
+			'forma_ojos_mf': document.querySelector('#forma_ojos_mf_da').value != null ? document.querySelector('#forma_ojos_mf_da').value : (document.querySelector('#forma_ojos_mf1_da').value ? document.querySelector('#forma_ojos_mf1_da').value : ''),
+			'tamano_ojos_mf': document.querySelector('#tamano_ojos_mf_da').value != null ? document.querySelector('#tamano_ojos_mf_da').value : (document.querySelector('#tamano_ojos_mf1_da').value ? document.querySelector('#tamano_ojos_mf1_da').value : ''),
+			'colorO_mf': document.querySelector('#colorO_mf_da').value != null ? document.querySelector('#colorO_mf_da').value : (document.querySelector('#colorO_mf1_da').value ? document.querySelector('#colorO_mf1_da').value : ''),
+			'peculiaridad_ojos_mf': document.querySelector('#peculiaridad_ojos_mf_da').value != null ? document.querySelector('#peculiaridad_ojos_mf_da').value : (document.querySelector('#peculiaridad_ojos_mf1_da').value ? document.querySelector('#peculiaridad_ojos_mf1_da').value : ''),
+			'nariz_tipo_mf': document.querySelector('#nariz_tipo_mf_da').value != null ? document.querySelector('#nariz_tipo_mf_da').value : (document.querySelector('#nariz_tipo_mf1_da').value ? document.querySelector('#nariz_tipo_mf1_da').value : ''),
+			'nariz_tamano_mf': document.querySelector('#nariz_tamano_mf_da').value != null ? document.querySelector('#nariz_tamano_mf_da').value : (document.querySelector('#nariz_tamano_mf1_da').value ? document.querySelector('#nariz_tamano_mf1_da').value : ''),
+			'nariz_base_mf': document.querySelector('#nariz_base_mf_da').value != null ? document.querySelector('#nariz_base_mf_da').value : (document.querySelector('#nariz_base_mf1_da').value ? document.querySelector('#nariz_base_mf1_da').value : ''),
+			'nariz_peculiar_mf': document.querySelector('#nariz_peculiar_mf_da').value != null ? document.querySelector('#nariz_peculiar_mf_da').value : (document.querySelector('#nariz_peculiar_mf1_da').value ? document.querySelector('#nariz_peculiar_mf1_da').value : ''),
+			'nariz_descr_mf': document.querySelector('#nariz_descr_mf_da').value != null ? document.querySelector('#nariz_descr_mf_da').value : (document.querySelector('#nariz_descr_mf1_da').value ? document.querySelector('#nariz_descr_mf1_da').value : ''),
+			'bigote_forma_mf': document.querySelector('#bigote_forma_mf_da').value != null ? document.querySelector('#bigote_forma_mf_da').value : (document.querySelector('#bigote_forma_mf1_da').value ? document.querySelector('#bigote_forma_mf1_da').value : ''),
+			'bigote_tamaño_mf': document.querySelector('#bigote_tamaño_mf_da').value != null ? document.querySelector('#bigote_tamaño_mf_da').value : (document.querySelector('#bigote_tamaño_mf1_da').value ? document.querySelector('#bigote_tamaño_mf1_da').value : ''),
+			'bigote_grosor_mf': document.querySelector('#bigote_grosor_mf_da').value != null ? document.querySelector('#bigote_grosor_mf_da').value : (document.querySelector('#bigote_grosor_mf1_da').value ? document.querySelector('#bigote_grosor_mf1_da').value : ''),
+			'bigote_peculiar_mf': document.querySelector('#bigote_peculiar_mf_da').value != null ? document.querySelector('#bigote_peculiar_mf_da').value : (document.querySelector('#bigote_peculiar_mf1_da').value ? document.querySelector('#bigote_peculiar_mf1_da').value : ''),
+			'bigote_descr_mf': document.querySelector('#bigote_descr_mf_da').value != null ? document.querySelector('#bigote_descr_mf_da').value : (document.querySelector('#bigote_descr_mf1_da').value ? document.querySelector('#bigote_descr_mf1_da').value : ''),
+			'boca_tamano_mf': document.querySelector('#boca_tamano_mf_da').value != null ? document.querySelector('#boca_tamano_mf_da').value : (document.querySelector('#boca_tamano_mf1_da').value ? document.querySelector('#boca_tamano_mf1_da').value : ''),
+			'boca_peculiar_mf': document.querySelector('#boca_peculiar_mf_da').value != null ? document.querySelector('#boca_peculiar_mf_da').value : (document.querySelector('#boca_peculiar_mf1_da').value ? document.querySelector('#boca_peculiar_mf1_da').value : ''),
+			'labio_longitud_mf': document.querySelector('#labio_longitud_mf_da').value != null ? document.querySelector('#labio_longitud_mf_da').value : (document.querySelector('#labio_longitud_mf1_da').value ? document.querySelector('#labio_longitud_mf1_da').value : ''),
+			'labio_posicion_mf': document.querySelector('#labio_posicion_mf_da').value != null ? document.querySelector('#labio_posicion_mf_da').value : (document.querySelector('#labio_posicion_mf1_da').value ? document.querySelector('#labio_posicion_mf1_da').value : ''),
+			'labio_peculiar_mf': document.querySelector('#labio_peculiar_mf_da').value != null ? document.querySelector('#labio_peculiar_mf_da').value : (document.querySelector('#labio_peculiar_mf1_da').value ? document.querySelector('#labio_peculiar_mf1_da').value : ''),
+			'labio_grosor_mf': document.querySelector('#labio_grosor_mf_da').value != null ? document.querySelector('#labio_grosor_mf_da').value : (document.querySelector('#labio_grosor_mf1_da').value ? document.querySelector('#labio_grosor_mf1_da').value : ''),
+			'dientes_tamano_mf': document.querySelector('#dientes_tamano_mf_da').value != null ? document.querySelector('#dientes_tamano_mf_da').value : document.querySelector('#dientes_tamano_mf1_da').value ? document.querySelector('#dientes_tamano_mf1_da').value : '',
+			'dientes_tipo_mf': document.querySelector('#dientes_tipo_mf_da').value != null ? document.querySelector('#dientes_tipo_mf_da').value : (document.querySelector('#dientes_tipo_mf1_da').value ? document.querySelector('#dientes_tipo_mf1_da').value : ''),
+			'dientes_peculiar_mf': document.querySelector('#dientes_peculiar_mf_da').value != null ? document.querySelector('#dientes_peculiar_mf_da').value : (document.querySelector('#dientes_peculiar_mf1_da').value ? document.querySelector('#dientes_peculiar_mf1_da').value : ''),
+			'dientes_descr_mf': document.querySelector('#dientes_descr_mf_da').value != null ? document.querySelector('#dientes_descr_mf_da').value : (document.querySelector('#dientes_descr_mf1_da').value ? document.querySelector('#dientes_descr_mf1_da').value : ''),
+			'barbilla_forma_mf': document.querySelector('#barbilla_forma_mf_da').value != null ? document.querySelector('#barbilla_forma_mf_da').value : (document.querySelector('#barbilla_forma_mf1_da').value ? document.querySelector('#barbilla_forma_mf1_da').value : ''),
+			'barbilla_tamano_mf': document.querySelector('#barbilla_tamano_mf_da').value != null ? document.querySelector('#barbilla_tamano_mf_da').value : (document.querySelector('#barbilla_tamano_mf1_da').value ? document.querySelector('#barbilla_tamano_mf1_da').value : ''),
+			'barbilla_inclinacion_mf': document.querySelector('#barbilla_inclinacion_mf_da').value != null ? document.querySelector('#barbilla_inclinacion_mf_da').value : (document.querySelector('#barbilla_inclinacion_mf1_da').value ? document.querySelector('#barbilla_inclinacion_mf1_da').value : ''),
+			'barbilla_peculiar_mf': document.querySelector('#barbilla_peculiar_mf_da').value != null ? document.querySelector('#barbilla_peculiar_mf_da').value : (document.querySelector('#barbilla_peculiar_mf1_da').value ? document.querySelector('#barbilla_peculiar_mf1_da').value : ''),
+			'barbilla_descr_mf': document.querySelector('#barbilla_descr_mf_da').value != null ? document.querySelector('#barbilla_descr_mf_da').value : (document.querySelector('#barbilla_descr_mf1_da').value ? document.querySelector('#barbilla_descr_mf1_da').value : ''),
+			'barba_tamano_mf': document.querySelector('#barba_tamano_mf_da').value != null ? document.querySelector('#barba_tamano_mf_da').value : (document.querySelector('#barba_tamano_mf1_da').value ? document.querySelector('#barba_tamano_mf1_da').value : ''),
+			'barba_peculiar_mf': document.querySelector('#barba_peculiar_mf_da').value != null ? document.querySelector('#barba_peculiar_mf_da').value : (document.querySelector('#barba_peculiar_mf1_da').value ? document.querySelector('#barba_peculiar_mf1_da').value : ''),
+			'barba_descr_mf': document.querySelector('#barba_descr_mf_da').value != null ? document.querySelector('#barba_descr_mf_da').value : (document.querySelector('#barba_descr_mf1_da').value ? document.querySelector('#barba_descr_mf1_da').value : ''),
+			'cuello_tamano_mf': document.querySelector('#cuello_tamano_mf_da').value != null ? document.querySelector('#cuello_tamano_mf_da').value : (document.querySelector('#cuello_tamano_mf1_da').value ? document.querySelector('#cuello_tamano_mf1_da').value : ''),
+			'cuello_grosor_mf': document.querySelector('#cuello_grosor_mf_da').value != null ? document.querySelector('#cuello_grosor_mf_da').value : (document.querySelector('#cuello_grosor_mf1_da').value ? document.querySelector('#cuello_grosor_mf1_da').value : ''),
+			'cuello_peculiar_mf': document.querySelector('#cuello_peculiar_mf_da').value != null ? document.querySelector('#cuello_peculiar_mf_da').value : (document.querySelector('#cuello_peculiar_mf1_da').value ? document.querySelector('#cuello_peculiar_mf1_da').value : ''),
+			'cuello_descr_mf': document.querySelector('#cuello_descr_mf_da').value != null ? document.querySelector('#cuello_descr_mf_da').value : (document.querySelector('#cuello_descr_mf1_da').value ? document.querySelector('#cuello_descr_mf1_da').value : ''),
+			'hombro_posicion_mf': document.querySelector('#hombro_posicion_mf_da').value != null ? document.querySelector('#hombro_posicion_mf_da').value : (document.querySelector('#hombro_posicion_mf1_da').value ? document.querySelector('#hombro_posicion_mf1_da').value : ''),
+			'hombro_tamano_mf': document.querySelector('#hombro_tamano_mf_da').value != null ? document.querySelector('#hombro_tamano_mf_da').value : (document.querySelector('#hombro_tamano_mf1_da').value ? document.querySelector('#hombro_tamano_mf1_da').value : ''),
+			'hombro_grosor_mf': document.querySelector('#hombro_grosor_mf_da').value != null ? document.querySelector('#hombro_grosor_mf_da').value : (document.querySelector('#hombro_grosor_mf1_da').value ? document.querySelector('#hombro_grosor_mf1_da').value : ''),
+			'estomago_mf': document.querySelector('#estomago_mf_da').value != null ? document.querySelector('#estomago_mf_da').value : (document.querySelector('#estomago_mf1_da').value ? document.querySelector('#estomago_mf1_da').value : ''),
+			'escolaridad_mf': document.querySelector('#escolaridad_mf_da').value != null ? document.querySelector('#escolaridad_mf_da').value : (document.querySelector('#escolaridad_mf1_da').value ? document.querySelector('#escolaridad_mf1_da').value : ''),
+			'etnia_mf': document.querySelector('#etnia_mf_da').value != null ? document.querySelector('#etnia_mf_da').value : (document.querySelector('#etnia_mf1_da').value ? document.querySelector('#etnia_mf1_da').value : ''),
+			'estomago_descr_mf': document.querySelector('#estomago_descr_mf_da').value != null ? document.querySelector('#estomago_descr_mf_da').value : (document.querySelector('#estomago_descr_mf1_da').value ? document.querySelector('#estomago_descr_mf1_da').value : ''),
+			'discapacidad_mf': document.querySelector('#discapacidad_mf_da').value != null ? document.querySelector('#discapacidad_mf_da').value : (document.querySelector('#discapacidad_mf1_da').value ? document.querySelector('#discapacidad_mf1_da').value : ''),
+			'diaDesaparicion': document.querySelector('#diaDesaparicion_da').value != null ? document.querySelector('#diaDesaparicion_da').value : (document.querySelector('#diaDesaparicion1_da').value ? document.querySelector('#diaDesaparicion1_da').value : ''),
+			'lugarDesaparicion': document.querySelector('#lugarDesaparicion_da').value != null ? document.querySelector('#lugarDesaparicion_da').value : (document.querySelector('#lugarDesaparicion1_da').value ? document.querySelector('#lugarDesaparicion1_da').value : ''),
+			'vestimenta_mf': document.querySelector('#vestimenta_mf_da').value != null ? document.querySelector('#vestimenta_mf_da').value : (document.querySelector('#vestimenta_mf1_da').value ? document.querySelector('#vestimenta_mf1_da').value : ''),
 			// 'parentesco_mf': document.querySelector('#parentesco_mf_da').value?document.querySelector('#parentesco_mf_da').value:document.querySelector('#parentesco_mf1_da').value,
 
 		};
@@ -2944,6 +3109,82 @@
 			var nFilas = $("#objetos-involucrados tr").length;
 			$("#adicionados").append(nFilas - 1);
 		}
+	}
+	//Funcion para iterar la tabla de archivos externos, recibe por parametro la informacion de los archivos
+
+	function llenarTablaArchivosExternos(archivos) {
+		for (let i = 0; i < archivos.length; i++) {
+
+			if (archivos[i].EXTENSION == 'pdf' || archivos[i].EXTENSION == 'doc') {
+				var img = `<a id="downloadArchivo" download=""><img src='<?= base_url() ?>/assets/img/file.png'));'  width="50px" height="50px"></img></a>`;
+
+
+			} else {
+				var img = `<a id="downloadArchivo" download=""><img src='${archivos[i].ARCHIVO}');' width="50px" height="50px"></img></a>`;
+
+			}
+			var btnEliminarArchivo =
+				`<button type='button' id="deleteArchivobtn" class='btn btn-primary' onclick='deleteArchivo(${archivos[i].FOLIOARCHIVOID})'><i class='fas fa-trash'></i></button>`;
+			var fila =
+				`<tr id="row${i}">` +
+				`<td class="text-center" value="${archivos[i].FOLIOARCHIVOID}">${archivos[i].ARCHIVODESCR}</td>` +
+				`<td class="text-center" value="${archivos[i].FOLIOARCHIVOID}">${img}</td>` +
+				`<td class="text-center">${btnEliminarArchivo}</td>` +
+
+				`</tr>`;
+
+			$('#table-archivo tr:first').after(fila);
+			$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
+			var nFilas = $("#archivo tr").length;
+			$("#adicionados").append(nFilas - 1);
+
+			///Funcion de descarga de archivos
+			document.querySelector('#downloadArchivo').setAttribute('href', archivos[i].ARCHIVO);
+			document.querySelector('#downloadArchivo').setAttribute('download', archivos[i].FOLIOID + '_' +
+				archivos[i].ANO + '_' + archivos[i].FOLIOARCHIVOID + '.' + archivos[i].EXTENSION);
+		}
+	}
+	//Funcion para eliminar un archivo externo, recibe por parametro el id del archivo
+	function deleteArchivo(archivoid) {
+		$.ajax({
+			data: {
+				'archivoid': archivoid,
+				'folio': inputFolio.value,
+				'year': year_select.value,
+			},
+			url: "<?= base_url('/data/delete-archivo-by-id') ?>",
+			method: "POST",
+			dataType: "json",
+			beforeSend: function() {
+				document.getElementById('deleteArchivobtn').disabled = true;
+
+			},
+			success: function(response) {
+				if (response.status == 1) {
+					const archivos = response.archivos.archivosexternos;
+					//llena la tabla de archivos externos
+					Swal.fire({
+						icon: 'success',
+						text: 'Archivo eliminado correctamente',
+						confirmButtonColor: '#bf9b55',
+					});
+					let tabla_archivos = document.querySelectorAll(
+						'#table-archivo tr');
+					tabla_archivos.forEach(row => {
+						if (row.id !== '') {
+							row.remove();
+						}
+					});
+					llenarTablaArchivosExternos(archivos);
+					document.getElementById('deleteArchivobtn').disabled = false;
+
+				} else {
+					document.getElementById('deleteArchivobtn').disabled = false;
+
+				}
+			}
+		});
+
 	}
 
 	function llenarTablaImpDel(impDelito) {
