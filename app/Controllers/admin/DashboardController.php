@@ -3552,10 +3552,10 @@ class DashboardController extends BaseController
 	{
 		// Convertir los caracteres a su forma sin acentos
 		$texto_sin_acentos = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $texto);
-    
+
 		// Eliminar comillas dobles, comillas simples y comillas invertidas
 		$texto_limpio = preg_replace('/[\'"`]/u', '', $texto_sin_acentos);
-		
+
 		return $texto_limpio;
 	}
 	public function limpiar_variables($variables)
@@ -3579,11 +3579,11 @@ class DashboardController extends BaseController
 	{
 		/**Limpieza de variables de metodo POST */
 		// Obtener las variables POST
-        $postVariables = $this->request->getPost();
-        // Limpiar las variables POST
-        $postVariablesLimpio = $this->limpiar_variables($postVariables);
-        // Actualizar las variables POST limpias en la solicitud
-        $this->request->setGlobal('post', $postVariablesLimpio);
+		$postVariables = $this->request->getPost();
+		// Limpiar las variables POST
+		$postVariablesLimpio = $this->limpiar_variables($postVariables);
+		// Actualizar las variables POST limpias en la solicitud
+		$this->request->setGlobal('post', $postVariablesLimpio);
 
 
 		$folio = $this->request->getPost('folio');
@@ -3659,12 +3659,15 @@ class DashboardController extends BaseController
 						if (count($relacionFisFis) == 0 || count($relacionFisFis) <= 0) {
 							throw new \Exception('Todos los imputados deben tener una relación con una persona física');
 						}
+					} else if ($folioRow['TIPODENUNCIA'] == 'ES' && count($personasMorales) == 0) {
+						if (count($relacionFisFis) == 0 || count($relacionFisFis) <= 0) {
+							throw new \Exception('Todos los imputados deben tener una relación con una persona física');
+						}
 					} else {
-						if (count($relacionMoralFis) == 0 || count($relacionMoralFis) <= 0) {
+						if ((count($relacionMoralFis) == 0 || count($relacionMoralFis) <= 0) && count($personasMorales) != 0) {
 							throw new \Exception('Todos los imputados deben tener una relación con una persona moral');
 						}
 					}
-
 
 
 					$narracion = $folioRow['HECHONARRACION'];
