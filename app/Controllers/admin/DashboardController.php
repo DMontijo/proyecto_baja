@@ -3615,7 +3615,6 @@ class DashboardController extends BaseController
 					$personasMorales = $this->_folioPersonaMoralModelRead->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->orderBy('PERSONAMORALID', 'asc')->findAll();
 					$relacionMoralFis = $this->_folioRelacionMoralFisModelRead->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
 
-
 					$imputados_con_delito = array();
 					$imputados = $this->_folioPersonaFisicaModelRead->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->orderBy('PERSONAFISICAID', 'asc')->where('CALIDADJURIDICAID', 2)->findAll();
 
@@ -3871,10 +3870,17 @@ class DashboardController extends BaseController
 								}
 							} else if ($folioRow['TIPODENUNCIA'] == 'DA') {
 								return json_encode(['status' => 1, 'expediente' => $expedienteCreado->EXPEDIENTEID]);
-							} else if ($folioRow['TIPODENUNCIA'] == 'ES') {
+							} else if ($folioRow['TIPODENUNCIA'] == 'ES' && count($personasMorales) > 0) {
 								$folioPersonaMoral = $this->_folioPersonaMoralModelRead->asObject()->where('ANO', $year)->where('FOLIOID', $folio)->first();
 								$notificacion = $this->_personasMoralesNotificacionesRead->asObject()->where('PERSONAMORALID', $folioPersonaMoral->PERSONAMORALID)->where('NOTIFICACIONID', $folioPersonaMoral->NOTIFICACIONID)->first();
 								if ($this->_sendEmailExpediente($notificacion->CORREO, $folio, $expedienteCreado->EXPEDIENTEID)) {
+									return json_encode(['status' => 1, 'expediente' => $expedienteCreado->EXPEDIENTEID]);
+								} else {
+									return json_encode(['status' => 1, 'expediente' => $expedienteCreado->EXPEDIENTEID, 'message' => 'Correo no enviado']);
+								}
+							} else if ($folioRow['TIPODENUNCIA'] == 'ES' && count($personasMorales) == 0) {
+								$denunciante = $this->_denunciantesModelRead->asObject()->where('DENUNCIANTEID', $folioRow['DENUNCIANTEID'])->first();
+								if ($this->_sendEmailExpediente($denunciante->CORREO, $folio, $expedienteCreado->EXPEDIENTEID)) {
 									return json_encode(['status' => 1, 'expediente' => $expedienteCreado->EXPEDIENTEID]);
 								} else {
 									return json_encode(['status' => 1, 'expediente' => $expedienteCreado->EXPEDIENTEID, 'message' => 'Correo no enviado']);
