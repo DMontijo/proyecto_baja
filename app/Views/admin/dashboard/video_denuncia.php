@@ -134,7 +134,7 @@
 		video {
 			width: 100%;
 		}
-		
+
 		.toast {
 			width: 350px;
 			max-width: 100%;
@@ -3486,7 +3486,7 @@
 				if (!form_delito.checkValidity()) {
 					event.preventDefault();
 					event.stopPropagation();
-					form_preguntas.classList.add('was-validated')
+					form_delito.classList.add('was-validated')
 				} else {
 					event.preventDefault();
 					event.stopPropagation();
@@ -4783,7 +4783,7 @@
 					input_colonia.value = '-';
 				}
 			});
-
+			
 			//Funcion  para actualizar los hechos de la denuncia
 			function actualizarDenuncia() {
 				const data = {
@@ -5116,7 +5116,7 @@
 						},
 						error: function(jqXHR, textStatus, errorThrown) {}
 					});
-		//Evento change para obtener las localidades de acuerdo al municipio. Limpia los select para que no se acumulen
+					//Evento change para obtener las localidades de acuerdo al municipio. Limpia los select para que no se acumulen
 
 					$.ajax({
 						data: data,
@@ -5174,7 +5174,7 @@
 					input_colonia.classList.add('d-none');
 				}
 			});
-		//Evento change para obtener los municipios de acuerdo al estado. Limpia los select para que no se acumulen
+			//Evento change para obtener los municipios de acuerdo al estado. Limpia los select para que no se acumulen
 
 			document.querySelector('#estado_select_new').addEventListener('change', (e) => {
 				let select_municipio = document.querySelector('#municipio_select_new');
@@ -5233,7 +5233,7 @@
 					document.querySelector('#colonia-message').classList.remove('d-none');
 				}
 			});
-		//Evento change para obtener las localidades de acuerdo al municipio. Limpia los select para que no se acumulen
+			//Evento change para obtener las localidades de acuerdo al municipio. Limpia los select para que no se acumulen
 
 			document.querySelector('#municipio_select_new').addEventListener('change', (e) => {
 				let select_localidad = document.querySelector('#localidad_select_new');
@@ -5272,7 +5272,7 @@
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
 			});
-		//Evento change para obtener los colonias de acuerdo al estado, municipio y localidad. Limpia los select para que no se acumulen
+			//Evento change para obtener los colonias de acuerdo al estado, municipio y localidad. Limpia los select para que no se acumulen
 
 			document.querySelector('#localidad_select_new').addEventListener('change', (e) => {
 				let select_colonia = document.querySelector('#colonia_select_new');
@@ -5673,7 +5673,7 @@
 			}
 			//DOMICILIO PERSONA FÍSICA
 
-		//Eventochange de pais para obtener los municipios y localidades  cuando es diferente a MX
+			//Eventochange de pais para obtener los municipios y localidades  cuando es diferente a MX
 
 			document.querySelector('#pais_pfd').addEventListener('change', (e) => {
 
@@ -5769,7 +5769,7 @@
 					input_colonia.classList.add('d-none');
 				}
 			});
-		//Evento change para obtener los municipios de acuerdo al estado. Limpia los select para que no se acumulen
+			//Evento change para obtener los municipios de acuerdo al estado. Limpia los select para que no se acumulen
 
 			document.querySelector('#estado_pfd').addEventListener('change', (e) => {
 				let select_municipio = document.querySelector('#municipio_pfd');
@@ -5826,7 +5826,7 @@
 					input_colonia.classList.remove('d-none');
 				}
 			});
-		//Evento change para obtener las localidades de acuerdo al municipio. Limpia los select para que no se acumulen
+			//Evento change para obtener las localidades de acuerdo al municipio. Limpia los select para que no se acumulen
 
 			document.querySelector('#municipio_pfd').addEventListener('change', (e) => {
 				let select_localidad = document.querySelector('#localidad_pfd');
@@ -5868,7 +5868,7 @@
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
 			});
-		//Evento change para obtener las colonias de acuerdo a la localidad. Limpia los select para que no se acumulen
+			//Evento change para obtener las colonias de acuerdo a la localidad. Limpia los select para que no se acumulen
 
 			document.querySelector('#localidad_pfd').addEventListener('change', (e) => {
 				let select_colonia = document.querySelector('#colonia_pfd_select');

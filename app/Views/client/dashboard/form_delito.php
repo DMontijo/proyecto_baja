@@ -120,7 +120,7 @@
 	</div> -->
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="fecha" class="form-label fw-bold input-required">Fecha del delito:</label>
-		<input type="date" class="form-control" id="fecha" name="fecha" max="<?= date("Y-m-d") ?>" required>
+		<input type="date" class="form-control" id="fecha" name="fecha" min="1900-01-01" max="<?= date("Y-m-d") ?>" required>
 		<div class="invalid-feedback">
 			La fecha del delito es obligatoria
 		</div>
@@ -152,6 +152,7 @@
 	</div>
 </div>
 <script>
+	
 	//Funcion para eliminar los optiones de un select
 	function clearSelect(select_element) {
 		for (let i = select_element.options.length; i >= 1; i--) {
