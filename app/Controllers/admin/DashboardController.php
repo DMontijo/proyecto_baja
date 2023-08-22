@@ -3162,7 +3162,7 @@ class DashboardController extends BaseController
 			return json_encode((object) ['exist' => 0]);
 		} else if (count($data) > 0) {
 			if ($data['RFC'] == $rfc) {
-				
+
 				return json_encode((object) ['exist' => 0]);
 			}
 			return json_encode((object) ['exist' => 1]);
@@ -3182,10 +3182,10 @@ class DashboardController extends BaseController
 		// Info a actualizar
 		$dataAgente = array(
 			'AGENTEATENCIONID' => $agenteid,
-			'STATUS'=> 'EN PROCESO',
+			'STATUS' => 'EN PROCESO',
 		);
 
-		$updateAgente = $this->_folioModel->set($dataAgente)->where('FOLIOID', $folio)->where('ANO', $year)->where('TIPODENUNCIA', 'ES')->whereIn('STATUS', ['ABIERTO','EN PROCESO'])->update();
+		$updateAgente = $this->_folioModel->set($dataAgente)->where('FOLIOID', $folio)->where('ANO', $year)->where('TIPODENUNCIA', 'ES')->whereIn('STATUS', ['ABIERTO', 'EN PROCESO'])->update();
 		if ($updateAgente) {
 			$datosBitacora = [
 				'ACCION' => 'Ha asignado un agente al folio.',
@@ -3332,8 +3332,8 @@ class DashboardController extends BaseController
 		$telefonica = $this->request->getPost('denuncia_tel');
 		$electronica = $this->request->getPost('denuncia_electronica');
 
-		$agenteId="";
-		if(session('ID')) {
+		$agenteId = "";
+		if (session('ID')) {
 			$agenteId = session('ID');
 		} else {
 			return json_encode(['status' => 0, 'error' => 'Sesión finalizada por inactividad, vuelve a iniciar sesión.']);
@@ -3548,6 +3548,28 @@ class DashboardController extends BaseController
 			}
 		}
 	}
+	public function quitar_caracteres_especiales($texto)
+	{
+		// Convertir los caracteres a su forma sin acentos
+		$texto_sin_acentos = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $texto);
+    
+		// Eliminar comillas dobles, comillas simples y comillas invertidas
+		$texto_limpio = preg_replace('/[\'"`]/u', '', $texto_sin_acentos);
+		
+		return $texto_limpio;
+	}
+	public function limpiar_variables($variables)
+	{
+		$variables_limpias = array();
+		foreach ($variables as $nombre => $valor) {
+			if (is_string($valor)) {
+				$variables_limpias[$nombre] = $this->quitar_caracteres_especiales($valor);
+			} else {
+				$variables_limpias[$nombre] = $valor;
+			}
+		}
+		return $variables_limpias;
+	}
 	/**
 	 * Función para dar salida y crear expediente en Justicia.
 	 * Se recibe por metodo POST el folio, año, municipio, estado, notas del agente, tipo de expediente, y tipo de denuncia.
@@ -3555,6 +3577,15 @@ class DashboardController extends BaseController
 	 */
 	public function saveInJusticia()
 	{
+		/**Limpieza de variables de metodo POST */
+		// Obtener las variables POST
+        $postVariables = $this->request->getPost();
+        // Limpiar las variables POST
+        $postVariablesLimpio = $this->limpiar_variables($postVariables);
+        // Actualizar las variables POST limpias en la solicitud
+        $this->request->setGlobal('post', $postVariablesLimpio);
+
+
 		$folio = $this->request->getPost('folio');
 		$year = $this->request->getPost('year');
 		$municipio = $this->request->getPost('municipio');
@@ -6701,7 +6732,7 @@ class DashboardController extends BaseController
 			return json_encode(['status' => 0]);
 		}
 	}
-/**
+	/**
 	 * Función para actualizar las personas moral de acuerdo a su ID a través del metodo POST.
 	 * Devuelve todos los datos necesarios para la actualizacion de las tablas visuales.
 	 *
@@ -8606,10 +8637,9 @@ class DashboardController extends BaseController
 		//Expediente
 		$expediente = $data->folio->EXPEDIENTEID ? $data->folio->EXPEDIENTEID : null;
 
-		if($data->folio->TIPODENUNCIA == 'ES'){
+		if ($data->folio->TIPODENUNCIA == 'ES') {
 			$data->foliomoral = $this->_folioPersonaMoralModelRead->asObject()->where('FOLIOID', $data->folio->FOLIOID)->where('ANO', $data->folio->ANO)->first();
 			$data->plantilla = str_replace('[RAZON_SOCIAL]',  $data->foliomoral->DENOMINACION ?  $data->foliomoral->DENOMINACION : '-', $data->plantilla);
-
 		}
 		if ($data->victima[0]['DESAPARECIDA'] == 'S' && $data->mediaFiliacionVictima) {
 			//Victima media filiación
