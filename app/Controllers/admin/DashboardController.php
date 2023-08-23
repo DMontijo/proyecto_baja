@@ -3672,6 +3672,12 @@ class DashboardController extends BaseController
 					$narracion = $folioRow['HECHONARRACION'];
 					$fecha = $folioRow['HECHOFECHA'];
 
+					if ($folioRow['HECHOCOORDENADAX'] == 'NaN') {
+						$folioRow['HECHOCOORDENADAX'] = NULL;
+					}
+					if ($folioRow['HECHOCOORDENADAY'] == 'NaN') {
+						$folioRow['HECHOCOORDENADAY'] = NULL;
+					}
 					//Asignación de variables para creaar el expediente
 					$folioRow['MUNICIPIOID'] = $municipio;
 					$folioRow['ESTADOID'] = $estado;
