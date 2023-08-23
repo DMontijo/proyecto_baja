@@ -668,6 +668,10 @@
 			case 'datos_delito':
 				let date1 = new Date(document.querySelector('#fecha').value);
 				let date2 = new Date("<?= date("Y-m-d") ?>");
+				let minDate = new Date("1900-01-01");
+				if (date1 < minDate) {
+					document.querySelector('#fecha').value = '';
+				}
 				if (date1 > date2) {
 					document.querySelector('#fecha').value = '';
 				}

@@ -2740,8 +2740,8 @@ class DashboardController extends BaseController
 		$telefonica = $this->request->getPost('denuncia_tel');
 		$electronica = $this->request->getPost('denuncia_electronica');
 
-		$agenteId="";
-		if(session('ID')) {
+		$agenteId = "";
+		if (session('ID')) {
 			$agenteId = session('ID');
 		} else {
 			return json_encode(['status' => 0, 'error' => 'Sesión finalizada por inactividad, vuelve a iniciar sesión.']);
@@ -2943,6 +2943,28 @@ class DashboardController extends BaseController
 			}
 		}
 	}
+	public function quitar_caracteres_especiales($texto)
+	{
+		// Convertir los caracteres a su forma sin acentos
+		$texto_sin_acentos = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $texto);
+
+		// Eliminar comillas dobles, comillas simples y comillas invertidas
+		$texto_limpio = preg_replace('/[\'"`]/u', '', $texto_sin_acentos);
+
+		return $texto_limpio;
+	}
+	public function limpiar_variables($variables)
+	{
+		$variables_limpias = array();
+		foreach ($variables as $nombre => $valor) {
+			if (is_string($valor)) {
+				$variables_limpias[$nombre] = $this->quitar_caracteres_especiales($valor);
+			} else {
+				$variables_limpias[$nombre] = $valor;
+			}
+		}
+		return $variables_limpias;
+	}
 	/**
 	 * Función para dar salida y crear expediente en Justicia.
 	 * Se recibe por metodo POST el folio, año, municipio, estado, notas del agente, tipo de expediente, y tipo de denuncia.
@@ -2950,6 +2972,14 @@ class DashboardController extends BaseController
 	 */
 	public function saveInJusticia()
 	{
+		/**Limpieza de variables de metodo POST */
+		// Obtener las variables POST
+		$postVariables = $this->request->getPost();
+		// Limpiar las variables POST
+		$postVariablesLimpio = $this->limpiar_variables($postVariables);
+		// Actualizar las variables POST limpias en la solicitud
+		$this->request->setGlobal('post', $postVariablesLimpio);
+
 		$folio = $this->request->getPost('folio');
 		$year = $this->request->getPost('year');
 		$municipio = $this->request->getPost('municipio');
@@ -3025,6 +3055,12 @@ class DashboardController extends BaseController
 					$narracion = $folioRow['HECHONARRACION'];
 					$fecha = $folioRow['HECHOFECHA'];
 
+					if ($folioRow['HECHOCOORDENADAX'] == 'NaN') {
+						$folioRow['HECHOCOORDENADAX'] = NULL;
+					}
+					if ($folioRow['HECHOCOORDENADAY'] == 'NaN') {
+						$folioRow['HECHOCOORDENADAY'] = NULL;
+					}
 					//Asignación de variables para creaar el expediente
 					$folioRow['MUNICIPIOID'] = $municipio;
 					$folioRow['ESTADOID'] = $estado;

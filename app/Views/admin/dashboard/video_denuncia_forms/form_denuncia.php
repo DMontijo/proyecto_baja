@@ -59,7 +59,10 @@
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="fecha_delito" class="form-label font-weight-bold">Fecha:</label>
-		<input type="date" class="form-control" id="fecha_delito" name="fecha_delito" required max="<?= date("Y-m-d") ?>">
+		<input type="date" class="form-control" id="fecha_delito" name="fecha_delito" required min="1900-01-01" max="<?= date("Y-m-d") ?>">
+		<div class="invalid-feedback">
+			La fecha del delito es no puede ser menor a 01-01-1900, ni mayor a la fecha actual.
+		</div>
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="hora_delito" class="form-label font-weight-bold">Hora:</label>
