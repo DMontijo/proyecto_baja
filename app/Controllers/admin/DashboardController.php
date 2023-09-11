@@ -3067,8 +3067,8 @@ class DashboardController extends BaseController
 					$folioRow['HECHOMEDIOCONOCIMIENTOID'] = (string) 6;
 					$folioRow['NOTASAGENTE'] = strtoupper($notas);
 					$folioRow['STATUS'] = 'EXPEDIENTE';
-					$folioRow['AGENTEATENCIONID'] = session('ID') ? session('ID') : 1;
-					$folioRow['AGENTEFIRMAID'] = session('ID') ? session('ID') : 1;
+					$folioRow['AGENTEATENCIONID'] = session('ID');
+					$folioRow['AGENTEFIRMAID'] = session('ID');
 
 					$folioRow['HECHOFECHA'] = $folioRow['HECHOFECHA'] . ' ' . $folioRow['HECHOHORA'];
 					$folioRow['HECHONARRACION'] = $notas;
