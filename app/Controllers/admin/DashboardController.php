@@ -1865,6 +1865,9 @@ class DashboardController extends BaseController
 			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
 		}
 		$coordinacion = $this->getCoordinacion();
+		if ($coordinacion == NULL) {
+			return redirect()->back()->with('message_error', 'No se encontrarón las coordinaciones, revisa con soporte técnico.');
+		}
 		$data = (object) array();
 		$data->municipio = $this->request->getGet('municipioasignado');
 		$data->folio = $this->request->getGet('folio');
@@ -4639,7 +4642,7 @@ class DashboardController extends BaseController
 		$data['pwdDB'] = $conexion->PASSWORD;
 		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
 		$data['schema'] = $conexion->SCHEMA;
-		return $this->_curlPostDataEncrypt($endpoint, $data);
+		return $this->_curlPostCoordDataEncrypt($endpoint, $data);
 	}
 
 	/**
@@ -5182,7 +5185,54 @@ class DashboardController extends BaseController
 		// return $result;
 		return json_decode($result);
 	}
+	/**
+	 * Función CURL POST a Justicia encriptados COORDINACION
+	 *
+	 * @param  mixed $endpoint
+	 * @param  mixed $data
+	 */
+	private function _curlPostCoordDataEncrypt($endpoint, $data)
+	{
+		$ch = curl_init();
 
+		curl_setopt($ch, CURLOPT_URL, $endpoint);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $this->_encriptar(json_encode($data), KEY_128));
+		$headers = array(
+			'Content-Type: application/json',
+			'Access-Control-Allow-Origin: *',
+			'Access-Control-Allow-Credentials: true',
+			'Access-Control-Allow-Headers: Content-Type',
+			'Hash-API: ' . password_hash(TOKEN_API, PASSWORD_BCRYPT),
+			'Key: ' . KEY_128
+		);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+
+		$result = curl_exec($ch);
+
+		if ($result === false) {
+			if (curl_errno($ch) == CURLE_OPERATION_TIMEDOUT) {
+				// La solicitud cURL ha excedido el tiempo de espera (timeout)
+				$result = "{
+					'status' => 401,
+					'error' => 'TNS:Connect timeout occurred'
+				}";
+			}
+			$result = "{
+                'status' => 401,
+                'error' => 'Curl failed: '" . curl_error($ch) . "
+            }";
+		}
+		curl_close($ch);
+		// var_dump($data);
+		// var_dump($result);exit;
+		// return $result;
+		return json_decode($result);
+	}
 	public function getTimeVideo()
 	{
 		// $video = $this->request->getPost('name_video');

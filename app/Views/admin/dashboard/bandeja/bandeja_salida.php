@@ -71,7 +71,7 @@
 													</td>
 												<?php } else { ?>
 													<td class="text-center">
-														<a type="button" href="<?= base_url('/admin/dashboard/bandeja_remision?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO . '&municipioasignado=' . $folio->MUNICIPIOASIGNADOID . '&expediente=' . $folio->EXPEDIENTEID ?>" class="btn btn-primary text-white btn-sm">REMITIR</a>
+														<a onclick="eventoRedirige('<?= $folio->FOLIOID ?>','<?= $folio->ANO ?>','<?= $folio->MUNICIPIOASIGNADOID ?>','<?= $folio->EXPEDIENTEID ?>', this)" type="button" class="btn btn-primary text-white btn-sm">REMITIR</a>
 													</td>
 												<?php } ?>
 											</tr>
@@ -118,7 +118,7 @@
 													</td>
 												<?php } else { ?>
 													<td class="text-center">
-														<a type="button" href="<?= base_url('/admin/dashboard/bandeja_remision?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO . '&municipioasignado=' . $folio->MUNICIPIOASIGNADOID . '&expediente=' . $folio->EXPEDIENTEID ?>" class="btn btn-primary text-white btn-sm">REMITIR</a>
+														<a onclick="eventoRedirige('<?= $folio->FOLIOID ?>','<?= $folio->ANO ?>','<?= $folio->MUNICIPIOASIGNADOID ?>','<?= $folio->EXPEDIENTEID ?>', this)" type="button" class="btn btn-primary text-white btn-sm">REMITIR</a>
 													</td>
 												<?php } ?>
 											</tr>
@@ -165,7 +165,7 @@
 													</td>
 												<?php } else { ?>
 													<td class="text-center">
-														<a type="button" href="<?= base_url('/admin/dashboard/bandeja_remision?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO . '&municipioasignado=' . $folio->MUNICIPIOASIGNADOID . '&expediente=' . $folio->EXPEDIENTEID ?>" class="btn btn-primary text-white btn-sm">REMITIR</a>
+														<a onclick="eventoRedirige('<?= $folio->FOLIOID ?>','<?= $folio->ANO ?>','<?= $folio->MUNICIPIOASIGNADOID ?>','<?= $folio->EXPEDIENTEID ?>', this)" type="button" class="btn btn-primary text-white btn-sm">REMITIR</a>
 													</td>
 												<?php } ?>
 											</tr>
@@ -212,7 +212,7 @@
 													</td>
 												<?php } else { ?>
 													<td class="text-center">
-														<a type="button" href="<?= base_url('/admin/dashboard/bandeja_remision?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO . '&municipioasignado=' . $folio->MUNICIPIOASIGNADOID . '&expediente=' . $folio->EXPEDIENTEID ?>" class="btn btn-primary text-white btn-sm">REMITIR</a>
+														<a onclick="eventoRedirige('<?= $folio->FOLIOID ?>','<?= $folio->ANO ?>','<?= $folio->MUNICIPIOASIGNADOID ?>','<?= $folio->EXPEDIENTEID ?>', this)" type="button" class="btn btn-primary text-white btn-sm">REMITIR</a>
 													</td>
 												<?php } ?>
 											</tr>
@@ -259,7 +259,7 @@
 													</td>
 												<?php } else { ?>
 													<td class="text-center">
-														<a type="button" href="<?= base_url('/admin/dashboard/bandeja_remision?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO . '&municipioasignado=' . $folio->MUNICIPIOASIGNADOID . '&expediente=' . $folio->EXPEDIENTEID ?>" class="btn btn-primary text-white btn-sm">REMITIR</a>
+														<a onclick="eventoRedirige('<?= $folio->FOLIOID ?>','<?= $folio->ANO ?>','<?= $folio->MUNICIPIOASIGNADOID ?>','<?= $folio->EXPEDIENTEID ?>', this)" type="button" class="btn btn-primary text-white btn-sm">REMITIR</a>
 													</td>
 												<?php } ?>
 											</tr>
@@ -275,6 +275,10 @@
 	</div>
 </section>
 <script>
+	function eventoRedirige(folio, year, municipio_asignado, expedienteid, btnRemitir) {
+		btnRemitir.classList.add('disabled');
+		btnRemitir.href = `<?= base_url('/admin/dashboard/bandeja_remision?folio=') ?> ${folio}&year=${year}&municipioasignado=${municipio_asignado}&expediente=${expedienteid}`;
+	}
 	$(function() {
 		$("#table-ensenada").DataTable({
 			responsive: false,
