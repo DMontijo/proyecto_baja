@@ -132,7 +132,7 @@
                     <div class="col-12 mt-5 text-center">
                         <button class="btn btn-primary mb-3 d-none" id="prev-btn" type="button"> <i class="bi bi-caret-left-fill"></i> Anterior</button>
                         <button class="btn btn-primary mb-3" id="next-btn" type="button"> Siguiente <i class="bi bi-caret-right-fill"></i> </button>
-                        <button class="btn btn-primary mb-3 d-none" type="submit" id="submit-btn"><i class="bi bi-camera-video-fill"></i> Presentar denuncia escrita</button>
+                        <button class="btn btn-primary mb-3 d-none" type="submit" id="submit-btn"><i class="bi bi-file-font"></i> Presentar denuncia escrita</button>
                     </div>
                 </form>
             </section>
@@ -218,6 +218,7 @@
             const documentos_close_btn = document.querySelector('#direccion_close_btn');
             const spinner_documentos = document.querySelector('#form_direccion_btn #spinner');
             const btn_text_documentos = document.querySelector('#form_direccion_btn #text');
+            const copiar_direccion = document.getElementById('copiar-direccion');
 
             // const datos_create_moral = document.getElementById('datos_create_moral');
             //Convierte todos los input text a mayusculas
@@ -301,7 +302,7 @@
                         event.stopPropagation();
                         submitBtn.removeAttribute('disabled');
                         console.log("Formulario que falla:", form);
-                        console.log("Campo que no se está llenando:", invalidField.name);
+                        console.log("Campo que no se está llenando:", invalidField.name, invalidField.value);
                     } else {
                         event.preventDefault();
                         submitBtn.setAttribute('disabled', true);
@@ -560,6 +561,23 @@
                 }
 
             });
+            copiar_direccion.addEventListener('click', function() {
+                console.log("click");
+                document.querySelector('#estado_empresa').value = document.querySelector('#estado_empresa_c').value;
+                copiarDireccion(document.querySelector('#estado_empresa').value);
+                // document.querySelector('#municipio_empresa').value = document.querySelector('#municipio_empresa_c').value;
+                // document.querySelector('#localidad_empresa').value = document.querySelector('#localidad_empresa_c').value;
+                // document.querySelector('#colonia_select_empresa').value = document.querySelector('#colonia_select_empresa_c').value;
+                document.querySelector('#calle_empresa').value = document.querySelector('#calle_empresa_c').value;
+                document.querySelector('#n_empresa').value = document.querySelector('#n_empresa_c').value;
+                document.querySelector('#ninterior_empresa').value = document.querySelector('#ninterior_empresa_c').value;
+                document.querySelector('#referencia_empresa').value = document.querySelector('#referencia_empresa_c').value;
+                document.querySelector('#telefono_empresa').value = document.querySelector('#telefono_empresa_c').value;
+                document.querySelector('#correo_empresa').value = document.querySelector('#correo_empresa_c').value;
+
+
+            });
+
             var check_ubi = document.getElementById('check_ubi');
 
 
@@ -1090,7 +1108,7 @@
                                     document.querySelector('#colonia_input_empresa_c').value = personamoral.COLONIADESCR;
                                 }
 
-
+                                copiar_direccion.disabled = true;
                                 document.getElementById('razon_social').value = personamoral.RAZONSOCIAL;
                                 document.getElementById('marca_comercial_d').value = personamoral.MARCACOMERCIAL ? personamoral.MARCACOMERCIAL : '';
                                 document.getElementById('giro_empresa_denuncia').value = personamoral.PERSONAMORALGIROID;
@@ -1194,12 +1212,22 @@
                                 document.getElementById('fecha_fin_poder').readOnly = false;
                                 document.getElementById('cargo').readOnly = false;
                                 document.getElementById('descr_cargo').readOnly = false;
+                                document.getElementById('poder_volumen').value = "";
+                                document.getElementById('poder_notario').value = "";
+                                document.getElementById('poder_no_poder').value = "";
+                                document.getElementById('fecha_inicio_poder').value = "";
+                                document.getElementById('fecha_fin_poder').value = "";
+                                document.getElementById('cargo').value = "";
+                                document.getElementById('descr_cargo').value = "";
+
                                 document.getElementById("cargo").removeEventListener("mousedown", mousedownHandler);
                                 direccion.value = "";
                                 $("#direccion").removeAttr("required");
                                 direccion.classList.remove('input-required');
                                 direccion.disabled = true;
                                 document.getElementById('agregar-direccion').disabled = true;
+                                copiar_direccion.disabled = false;
+
                                 zona_empresa.disabled = true;
                                 correo_empresa.readOnly = false;
                                 estado_empresa.readOnly = false;
@@ -1408,6 +1436,7 @@
                 if (tipo_persona.value == "MORAL") {
                     console.log("aqui");
                     if (validarStepMoral(vista[currentStep].id)) {
+                        console.log(vista[currentStep].id);
 
                         document.getElementById('datos_delito').classList.remove('step');
                         document.getElementById('datos_desaparecido').classList.remove('step');
@@ -1532,7 +1561,7 @@
 
 
                         document.getElementById('datos_desaparecido').classList.remove('step');
-                        
+
                         const datos_delito = document.getElementById('datos_delito');
                         const datos_moral = document.getElementById('datos_moral');
                         const datos_ligacion = document.getElementById('datos_ligacion');
@@ -1986,6 +2015,112 @@
                         console.log(textStatus);
                     }
                 });
+            }
+            //Funcion para llenar selects de notificacion al copiar
+            function copiarDireccion(estado) {
+                let select_municipio = document.querySelector('#municipio_empresa');
+                let select_localidad = document.querySelector('#localidad_empresa');
+                let select_colonia = document.querySelector('#colonia_select_empresa');
+                let input_colonia = document.querySelector('#colonia_input_empresa');
+                zona_empresa.readOnly = true;
+
+                clearSelect(select_municipio);
+                clearSelect(select_localidad);
+                clearSelect(select_colonia);
+
+                let data = {
+                    'estado_id': estado,
+                }
+                $.ajax({
+                    data: data,
+                    url: "<?= base_url('/data/get-municipios-by-estado') ?>",
+                    method: "POST",
+                    dataType: "json",
+                    success: function(response) {
+                        let municipios = response.data;
+
+                        municipios.forEach(municipio => {
+                            var option = document.createElement("option");
+                            option.text = municipio.MUNICIPIODESCR;
+                            option.value = municipio.MUNICIPIOID;
+                            select_municipio.add(option);
+                        });
+                        select_municipio.disabled = false;
+                        select_municipio.value = document.querySelector('#municipio_empresa_c').value;
+                        let dataLocalidades = {
+                            'estado_id': estado,
+                            'municipio_id': select_municipio.value
+                        };
+                        $.ajax({
+                            data: dataLocalidades,
+                            url: "<?= base_url('/data/get-localidades-by-municipio') ?>",
+                            method: "POST",
+                            dataType: "json",
+                            success: function(response) {
+                                let localidades = response.data;
+
+                                localidades.forEach(localidad => {
+                                    var option = document.createElement("option");
+                                    option.text = localidad.LOCALIDADDESCR;
+                                    option.value = localidad.LOCALIDADID;
+                                    select_localidad.add(option);
+                                });
+                                select_localidad.disabled = false;
+                                document.querySelector('#localidad_empresa').value = document.querySelector('#localidad_empresa_c').value;
+                                let dataColonias = {
+                                    'estado_id': estado,
+                                    'municipio_id': select_municipio.value,
+                                    'localidad_id': select_localidad.value
+                                };
+
+                                if (estado == 2) {
+                                    select_colonia.classList.remove('d-none');
+                                    input_colonia.classList.add('d-none');
+                                    input_colonia.value = '-';
+                                    $.ajax({
+                                        data: dataColonias,
+                                        url: "<?= base_url('/data/get-colonias-by-estado-municipio-localidad') ?>",
+                                        method: "POST",
+                                        dataType: "json",
+                                        success: function(response) {
+                                            let colonias = response.data;
+
+                                            colonias.forEach(colonia => {
+                                                var option = document.createElement("option");
+                                                option.text = colonia.COLONIADESCR;
+                                                option.value = colonia.COLONIAID;
+                                                select_colonia.add(option);
+                                            });
+                                            select_colonia.disabled = false;
+                                            var option = document.createElement("option");
+                                            option.text = 'OTRO';
+                                            option.value = '0';
+                                            select_colonia.add(option);
+                                            document.querySelector('#colonia_select_empresa').value = document.querySelector('#colonia_select_empresa_c').value;
+                                        },
+                                        error: function(jqXHR, textStatus, errorThrown) {
+
+                                        }
+                                    });
+                                } else {
+                                    var option = document.createElement("option");
+                                    option.text = 'OTRO';
+                                    option.value = '0';
+                                    select_colonia.add(option);
+                                    select_colonia.value = '0';
+                                    input_colonia.value = document.querySelector('#colonia_input_empresa_c').value;
+                                    select_colonia.classList.add('d-none');
+                                    input_colonia.classList.remove('d-none');
+                                }
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) {}
+                        });
+
+
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {}
+                });
+
             }
 
         })();

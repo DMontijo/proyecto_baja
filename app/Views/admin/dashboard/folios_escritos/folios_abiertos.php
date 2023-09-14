@@ -34,6 +34,7 @@
 										<!-- <td class="text-center"><?= $folio->STATUS ?></td> -->
 										<td class="text-center">
 											<a type="button" href="<?= base_url('/admin/dashboard/modulo-litigantes-consulta?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO  ?>" class="btn btn-primary text-white"><i class="fas fa-eye"></i></a>
+											<button type="button" class="btn btn-primary"onclick='asignarAgente(<?=$folio->FOLIOID?>,<?=$folio->ANO?>)' ><i class="fas fa-user-tag"></i></button>
 										</td>
 									</tr>
 								<?php } ?>
@@ -45,6 +46,8 @@
 		</div>
 	</div>
 </section>
+<?php include('asignar_agente_modal.php') ?>
+
 <script>
 	$(function() {
 		$("#folios_abiertos").DataTable({
@@ -66,6 +69,46 @@
 			}
 		});
 	});
+	//Funcion para asignar un agente al documento y que este lo firme, recibe por parametro el id del documento, folio y año
+
+	function asignarAgente(folio, ano) {
+		$('#asignarAgenteModal').modal('show');
+		const btn_asignar_agente = document.querySelector('#enviarAgente');
+
+		btn_asignar_agente.addEventListener('click', (e) => {
+			btn_asignar_agente.disabled = true;
+			$.ajax({
+				data: {
+					'folio': folio,
+					'year': ano,
+					'agenteid': document.querySelector('#selectAgente').value
+				},
+				url: "<?= base_url('/data/update-agente-atencion') ?>",
+				method: "POST",
+				dataType: "json",
+				success: function(response) {
+					const documentos = response.documentos;
+					if (response.status == 1) {
+						
+
+						Swal.fire({
+							icon: 'success',
+							text: 'Agente asignado correctamente',
+							confirmButtonColor: '#bf9b55',
+						});
+						$('#asignarAgenteModal').modal('hide');
+						location.reload();
+					}
+
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					btn_asignar_agente.disabled = false;
+
+				}
+			});
+		});
+
+	}
 </script>
 
 <?= $this->endSection() ?>

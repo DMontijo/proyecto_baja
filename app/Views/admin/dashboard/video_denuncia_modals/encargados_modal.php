@@ -20,7 +20,7 @@
 						<?php } ?>
 					</select>
 				</div>
-				<button class="btn btn-success" id="enviarEncargado"> Enviar</button>
+				<button class="btn btn-primary" id="enviarEncargado"> Enviar</button>
 			</div>
 		</div>
 	</div>

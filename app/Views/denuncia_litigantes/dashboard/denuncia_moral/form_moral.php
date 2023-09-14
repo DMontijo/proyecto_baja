@@ -123,6 +123,10 @@
 		</div>
 		<input type="number" id="codigo_pais" name="codigo_pais" maxlength="3" hidden>
 	</div>
+	<div class="col-12">
+		<!-- Botón para copiar la direccion de la empresa como notificacion-->
+		<button id="copiar-direccion" type="button" class="btn btn-primary" disabled>Copiar dirección de la empresa como notificacion</button>
+	</div>
 </div>
 <div class="row" id="contenedor-direcciones">
 	<h3 class="fw-bold text-center text-blue pb-3">Dirección de notificación</h3>

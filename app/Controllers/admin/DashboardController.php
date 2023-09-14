@@ -760,7 +760,6 @@ class DashboardController extends BaseController
 
 		$this->_loadView('Ligaciones', 'ligaciones', '', $data, 'ligaciones/ligaciones');
 	}
-
 	/**
 	 * Vista de lista de personas morales
 	 * Retorna los usuarios registrados en CDTEC detallando su perfil.

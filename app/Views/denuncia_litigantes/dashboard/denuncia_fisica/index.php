@@ -110,7 +110,7 @@
 						<div class="col-12 mt-5 text-center">
 							<button class="btn btn-primary mb-3 d-none" id="prev-btn" type="button"> <i class="bi bi-caret-left-fill"></i> Anterior</button>
 							<button class="btn btn-primary mb-3" id="next-btn" type="button"> Siguiente <i class="bi bi-caret-right-fill"></i> </button>
-							<button class="btn btn-primary mb-3 d-none" type="submit" id="submit-btn"><i class="bi bi-camera-video-fill"></i> Presentar denuncia escrita</button>
+							<button class="btn btn-primary mb-3 d-none" type="submit" id="submit-btn"><i class="bi bi-file-font"></i> Presentar denuncia escrita</button>
 						</div>
 					</form>
 				</div>

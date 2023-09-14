@@ -113,7 +113,6 @@
 									<thead>
 										<tr>
 											<th class="text-center"></th>
-											<!-- <th class="text-center"></th> -->
 											<th class="text-center">FOLIO</th>
 											<th class="text-center">AÑO</th>
 											<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
@@ -149,9 +148,6 @@
 												<td class="text-center">
 													<a href="<?= base_url('/admin/dashboard/ver_folio_litigante?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO ?>" class="btn btn-primary text-white btn-sm"><i class="fas fa-folder-open"></i> ABRIR</a>
 												</td>
-												<!-- <td class="text-center">
-													<a href="<?= base_url('/admin/dashboard/modulo-litigantes-consulta?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO ?>" class="btn btn-primary text-white btn-sm"><i class="fas fa-user-check"></i> ATENDER</a>
-												</td> -->
 												<td class="text-center font-weight-bold"><?= $folio->FOLIOID ?></td>
 												<td class="text-center"><?= $folio->ANO ?></td>
 												<td class="text-center font-weight-bold"><?= $expedienteid ?  $expedienteid . '/' . $folio->TIPOEXPEDIENTECLAVE : $folio->FOLIOID . '/' . $folio->ANO ?></td>
@@ -183,7 +179,6 @@
 		</div>
 	</div>
 </section>
-<?php include('asignar_agente_modal.php') ?>
 <?php if (session()->getFlashdata('message_error')) : ?>
 	<script>
 		Swal.fire({
@@ -241,46 +236,7 @@
 			document.querySelector('#filtros').classList.add('show');
 		}
 	}
-	//Funcion para asignar un agente al documento y que este lo firme, recibe por parametro el id del documento, folio y año
-
-	function asignarAgente(folio, ano) {
-		$('#asignarAgenteModal').modal('show');
-		const btn_asignar_agente = document.querySelector('#enviarAgente');
-
-		btn_asignar_agente.addEventListener('click', (e) => {
-			btn_asignar_agente.disabled = true;
-			$.ajax({
-				data: {
-					'folio': folio,
-					'year': ano,
-					'agenteid': document.querySelector('#selectAgente').value
-				},
-				url: "<?= base_url('/data/update-agente-atencion') ?>",
-				method: "POST",
-				dataType: "json",
-				success: function(response) {
-					const documentos = response.documentos;
-					if (response.status == 1) {
-						
-
-						Swal.fire({
-							icon: 'success',
-							text: 'Agente asignado correctamente',
-							confirmButtonColor: '#bf9b55',
-						});
-						$('#asignarAgenteModal').modal('hide');
-						location.reload();
-					}
-
-				},
-				error: function(jqXHR, textStatus, errorThrown) {
-					btn_asignar_agente.disabled = false;
-
-				}
-			});
-		});
-
-	}
+	
 </script>
 
 <?= $this->endSection() ?>

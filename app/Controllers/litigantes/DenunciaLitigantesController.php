@@ -392,7 +392,7 @@ class DenunciaLitigantesController extends BaseController
 	 */
 	private function _sendEmailPassword($to, $telefono, $password)
 	{
-		$body = view('email_template/password_email_template.php', ['email' => $to, 'password' => $password]);
+		$body = view('email_template/password_email_escrita_template.php', ['email' => $to, 'password' => $password]);
 		$mailersend = new MailerSend(['api_key' => EMAIL_TOKEN]);
 		$recipients = [
 			new Recipient($to, 'Your Client'),

@@ -185,6 +185,8 @@ class FoliosEscritosController extends BaseController
 		//Query folios abiertos
 		$data->folio = $this->_folioModelRead->get_folios_abiertos_escrita();
 		$data->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
+		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7";
+		$data->empleados = $this->_usuariosModelRead->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
 
 		$this->_loadView('Folios abiertos denuncia escrita', 'denuncia escrita', '', $data, 'folios_abiertos');
 	}

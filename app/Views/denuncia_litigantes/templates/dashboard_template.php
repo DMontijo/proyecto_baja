@@ -53,7 +53,7 @@
 							Inicio</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link <?php if ('' === 'dashboard') echo 'active'; ?>" href="<?= base_url() ?>/denuncia_litigantes/dashboard/ligaciones"><i class="bi bi-archive"></i> Mis ligaciones</a>
+						<a class="nav-link <?php if ('' === 'dashboard') echo 'active'; ?>" href="<?= base_url() ?>/denuncia_litigantes/dashboard/ligaciones"><i class="bi bi-archive"></i> Personas morales relacionadas</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="<?= base_url() ?>/denuncia_litigantes/dashboard/denuncias"><i class="bi bi-archive"></i> Mis

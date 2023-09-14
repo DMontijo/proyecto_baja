@@ -82,7 +82,7 @@
 <?php endif; ?>
 <script>
 	function redirigir() {
-		window.location.href = `<?= base_url() ?>/denuncia_litigantes/dashboard`;
+		window.location.href = `<?= base_url() ?>/denuncia_litigantes/dashboard/pantalla_final`;
 	}
 	(function() {
 		'use strict'

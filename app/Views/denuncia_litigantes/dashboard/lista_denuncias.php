@@ -42,10 +42,12 @@
 									<td class="text-center"><?= $folio->EXPEDIENTEID ? $folio->MUNICIPIODESCR : '-' ?></td>
 									<td class="text-center"><?= $folio->STATUS == 'EXPEDIENTE' ? ($folio->OFICINAENJUSTICIA != '' ? $folio->OFICINAENJUSTICIA : '') : ($folio->OFICINAID ? $folio->OFICINADESCR : '') ?></td>
 									<td>
+										<?php if($folio->STATUS == "PENDIENTE"){?>
 										<a type="button" class="text-decoration-none btn btn-success" href="<?= base_url('/denuncia_litigantes/dashboard/subir_documentos_folio?folio=' . $folio->FOLIOID . '&year=' . $folio->ANO) ?>">
 											<!-- /denuncia_litigantes/dashboard/subir_documentos_folio?folio= .$folio->FOLIOID -->
 											<i class="bi bi-file-earmark-plus-fill"></i>
 										</a>
+										<?php }?>
 									</td>
 								</tr>
 							<?php } ?>
@@ -58,5 +60,13 @@
 		</div>
 	</div>
 </div>
-
+<?php if (session()->getFlashdata('message_error')) : ?>
+		<script>
+			Swal.fire({
+				icon: 'error',
+				html: '<strong><?= session()->getFlashdata('message_error') ?></strong>',
+				confirmButtonColor: '#bf9b55',
+			})
+		</script>
+	<?php endif; ?>
 <?= $this->endSection() ?>

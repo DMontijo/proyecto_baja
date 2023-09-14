@@ -239,6 +239,15 @@ class DashboardController extends BaseController
 		$this->_loadView('Denuncia litigantes', $data, 'modulo');
 	}
 	/**
+	 * Vista para ver la pantalla final
+	 * Carga todos los catalogos para su funcionamiento
+	 *
+	 */
+	public function pantalla_final()
+	{
+		$this->_loadView('Denuncia creada', [], 'pantalla_final');
+	}
+	/**
 	 * Funcion para crear una empresa
 	 */
 	public function crear_empresa()
@@ -1564,16 +1573,21 @@ class DashboardController extends BaseController
 		$folio = $this->request->getGet('folio');
 		$year = $this->request->getGet('year');
 		$data = (object) array();
-
-		$data->archivos = $this->_archivoExternoModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
-		if ($data->archivos) {
-			foreach ($data->archivos as $key => $archivos) {
-				$file_info = new \finfo(FILEINFO_MIME_TYPE);
-				$type = $file_info->buffer($archivos->ARCHIVO);
-				$archivos->ARCHIVO = 'data:' . $type . ';base64,' . base64_encode($archivos->ARCHIVO);
+		$folioData = $this->_folioModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->first();
+		if ($folioData->STATUS == 'PENDIENTE') {
+			$data->archivos = $this->_archivoExternoModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
+			if ($data->archivos) {
+				foreach ($data->archivos as $key => $archivos) {
+					$file_info = new \finfo(FILEINFO_MIME_TYPE);
+					$type = $file_info->buffer($archivos->ARCHIVO);
+					$archivos->ARCHIVO = 'data:' . $type . ';base64,' . base64_encode($archivos->ARCHIVO);
+				}
 			}
+			$this->_loadViewDenunciaPersonaFisica('Dashboard', 'dashboard', '', $data, 'subir_documentos_denuncia_fisica');
+		}else{
+			return redirect()->to(base_url('/denuncia_litigantes/dashboard/denuncias'))->with('message_error', 'No se pueden añadir mas documentos a este folio.');
+
 		}
-		$this->_loadViewDenunciaPersonaFisica('Dashboard', 'dashboard', '', $data, 'subir_documentos_denuncia_fisica');
 	}
 	/**
 	 * Vista de un listado de denuncias que tiene el usuario
@@ -2024,7 +2038,7 @@ class DashboardController extends BaseController
 	{
 		$user = $this->_denunciantesModelRead->asObject()->where('CORREO', $to)->first();
 
-		$body = view('email_template/folio_email_template.php', ['folio' => $folio . '/' . $year]);
+		$body = view('email_template/folio_email_escrita_template.php', ['folio' => $folio . '/' . $year]);
 		$mailersend = new MailerSend(['api_key' => EMAIL_TOKEN]);
 		$recipients = [
 			new Recipient($to, 'Your Client'),
