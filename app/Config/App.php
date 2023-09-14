@@ -175,7 +175,7 @@ class App extends BaseConfig
 	 * @var integer
 	 */
 	// public $sessionExpiration = 7200;
-	public $sessionExpiration = 0;//12 hrs
+	public $sessionExpiration = (60 * 60) * 2;//12 hrs
 
 	/**
 	 * --------------------------------------------------------------------------
@@ -232,7 +232,7 @@ class App extends BaseConfig
 	 *
 	 * @var boolean
 	 */
-	public $sessionRegenerateDestroy = false;
+	public $sessionRegenerateDestroy = true;
 
 	/**
 	 * --------------------------------------------------------------------------
