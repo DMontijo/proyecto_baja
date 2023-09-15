@@ -5210,7 +5210,7 @@ class DashboardController extends BaseController
 			'Key: ' . KEY_128
 		);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+		// curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 
 		$result = curl_exec($ch);
 
