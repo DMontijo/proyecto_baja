@@ -17,14 +17,14 @@
 	<meta property="og:url" content="https://cdtec.fgebc.gob.mx" />
 	<meta property="og:title" content="Video Denuncia - Baja California" />
 	<meta property="og:description" content="Plataforma de video denuncia de la Fiscalía General del Estado de Baja California." />
-	<!-- <meta property="og:image" content="<?= base_url() ?>"><img src="<?= base_url() ?>/assets/img/post_videodenuncia.png" /> -->
+	<meta property="og:image" content="<?= base_url() ?>/assets/img/post_videodenuncia.png" />
 
 	<!-- Twitter -->
 	<meta property="twitter:card" content="summary_large_image" />
 	<meta property="twitter:url" content="https://cdtec.fgebc.gob.mx" />
 	<meta property="twitter:title" content="Video Denuncia - Baja California" />
 	<meta property="twitter:description" content="Plataforma de video denuncia de la Fiscalía General del Estado de Baja California." />
-	<!-- <meta property="twitter:image" content="<?= base_url() ?>"><img src="<?= base_url() ?>/assets/img/post_videodenuncia.png" /> -->
+	<meta property="twitter:image" content="<?= base_url() ?>/assets/img/post_videodenuncia.png" />
 
 	<!--Bootstrap 5-->
 	<link rel="stylesheet" href="<?= base_url() ?>/assets/bootstrap/css/bootstrap.css">
