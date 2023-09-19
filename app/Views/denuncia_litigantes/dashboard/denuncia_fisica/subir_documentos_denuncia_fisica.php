@@ -53,7 +53,13 @@
 						</table>
 					<div class="row p-2">
 						<div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-3">
-							<button onclick="redirigir()" type="button" id="finalizarDenuncia" name="finalizarDenuncia" class="btn btn-secondary w-100" disabled>CREAR DENUNCIA</button>
+							<button onclick="redirigir()" type="button" id="finalizarDenuncia" name="finalizarDenuncia" class="btn btn-secondary w-100" disabled>
+							<?php if($body_data->status == "PENDIENTE"){?>
+							CREAR DENUNCIA
+							<?php }else{?>
+								YA ESTA COMPLETADA LA DENUNCIA
+								<?php }?>
+						</button>
 						</div>
 					</div>
 
@@ -120,6 +126,8 @@
 			success: function(response) {
 				if (response.data.STATUS == "ABIERTO") {
 					document.getElementById('finalizarDenuncia').disabled = false;
+					document.getElementById('subirDocSubmit').disabled = true;
+
 				} else {
 					document.getElementById('finalizarDenuncia').disabled = true;
 				}

@@ -5,7 +5,6 @@
             <br>
         </a>
     </div>
-
     <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
         <label for="volumen_pm" class="form-label font-weight-bold">Volumen</label>
         <input type="text" class="form-control" id="volumen_pm" name="volumen_pm">
@@ -21,9 +20,21 @@
     <div class="col-12">
         <hr>
     </div>
-    <td class="text-center">
+    <div class="col-12  my-4 text-center">
+        <div class="alert alert-warning text-center font-weight-bold d-none mt-2" id="alert_poder" role="alert">
+            El poder del folio no coincide con el poder de la persona moral
+        </div>
+        <a type="button" class="btn btn-primary font-weight-bold text-white d-none" id="btnActualizarPoderFolio" name="btnActualizarPoderFolio">
+            ACTUALIZAR PODER
+        </a>
+    </div>
+    <div class="col-12 my-4 text-center">
+    <div class="alert alert-warning text-center font-weight-bold d-none mt-2" id="alert_poder_reciente" role="alert">
+            Existe un poder más actual, por favor revísalo en la persona moral
+            Puedes dar click en el botón "Ir a editar persona moral" 
+        </div>
         <a type="button" class="btn btn-primary" id="btnLigacion" name="btnLigacion">
-         Editar persona moral
+            Ir a editar persona moral
         </a>
     </td>
 

@@ -823,6 +823,8 @@
 					const archivos = response.respuesta.archivosexternos;
 					const folioDenunciantes = response.respuesta.folioDenunciantes;
 					const personasPropietarios = response.respuesta.personasPropietarios;
+					const poderes = response.respuesta.poderes;
+
 
 					//Cambios de estilos
 					inputFolio.classList.add('d-none');
@@ -2447,6 +2449,7 @@
 					let personaMoral = response.personaMoral;
 					let notificacion = response.personaMoralNotificacion;
 					let foliopersonaMoral = response.foliopersonaMoral;
+					let poderesPersonaMoral = response.poderes;
 
 					let folio = response.folio;
 					// let poder = response.relacionMoralFisica;
@@ -2695,22 +2698,54 @@
 					}
 
 					//PODER
+					// Inicializamos variables para las fechas más recientes de ACTIVO 0 y ACTIVO 1
+					let fechaActivo0MasReciente = null;
+					let fechaActivo1MasReciente = null;
 
+					// Filtra los objetos con ACTIVO igual a 0 y 1
+
+					for (const item of poderesPersonaMoral) {
+						const fechaItem = new Date(item.FECHAREGISTRO);
+
+						if (item.ACTIVO === "0" && (!fechaActivo0MasReciente || fechaItem > fechaActivo0MasReciente)) {
+							fechaActivo0MasReciente = fechaItem;
+						} else if (item.ACTIVO === "1" && (!fechaActivo1MasReciente || fechaItem > fechaActivo1MasReciente)) {
+							fechaActivo1MasReciente = fechaItem;
+						}
+					}
+					// Compara las fechas obtenidas
+					if (fechaActivo0MasReciente > fechaActivo1MasReciente) {
+						document.getElementById('alert_poder_reciente').classList.remove('d-none')
+					} else {
+						document.getElementById('alert_poder_reciente').classList.add('d-none')
+					}
+					// if (fechaActivo0 > fechaActivo1) {
+					// 	document.getElementById('alert_poder_reciente').classList.remove('d-none')
+					// }else{
+					// 	document.getElementById('alert_poder_reciente').classList.add('d-none')
+					// }
+					if (foliopersonaMoral.ACTIVO == 0) {
+						document.getElementById('alert_poder').classList.remove('d-none')
+						document.getElementById('btnActualizarPoderFolio').classList.remove('d-none')
+					} else {
+						document.getElementById('alert_poder').classList.add('d-none')
+						document.getElementById('btnActualizarPoderFolio').classList.add('d-none')
+					}
 					//LLenado de informacion en los valores
-					if (personaMoral.PODERARCHIVO) {
-						extension = (((personaMoral.PODERARCHIVO.split(';'))[0]).split('/'))[1];
+					if (foliopersonaMoral.PODERARCHIVO) {
+						extension = (((foliopersonaMoral.PODERARCHIVO.split(';'))[0]).split('/'))[1];
 						if (extension == 'pdf' || extension == 'doc') {
 							document.querySelector('#moral_poder').setAttribute('src', '<?= base_url() ?>/assets/img/file.png');
 
 						} else {
-							document.querySelector('#moral_poder').setAttribute('src', personaMoral.PODERARCHIVO);
+							document.querySelector('#moral_poder').setAttribute('src', foliopersonaMoral.PODERARCHIVO);
 
 						}
 
-						document.querySelector('#moral_poder_download').setAttribute('href', personaMoral
+						document.querySelector('#moral_poder_download').setAttribute('href', foliopersonaMoral
 							.PODERARCHIVO);
 						document.querySelector('#moral_poder_download').setAttribute('download',
-							'PODER_' + personaMoral.RFC + '.' + extension);
+							'PODER_' + foliopersonaMoral.DENOMINACION + '.' + extension);
 						document.querySelector('#contenedor_moral_poder').classList.remove('d-none');
 					} else {
 						document.querySelector('#moral_poder').setAttribute('src', '');
@@ -2719,11 +2754,11 @@
 						document.querySelector('#contenedor_moral_poder').classList.remove('d-none');
 					}
 
-					document.querySelector('#volumen_pm').value = personaMoral.PODERVOLUMEN ? personaMoral
+					document.querySelector('#volumen_pm').value = foliopersonaMoral.PODERVOLUMEN ? foliopersonaMoral
 						.PODERVOLUMEN : '';
-					document.querySelector('#notario_pm').value = personaMoral.PODERNONOTARIO ? personaMoral
+					document.querySelector('#notario_pm').value = foliopersonaMoral.PODERNONOTARIO ? foliopersonaMoral
 						.PODERNONOTARIO : '';
-					document.querySelector('#poder_pm').value = personaMoral.PODERNOPODER ? personaMoral
+					document.querySelector('#poder_pm').value = foliopersonaMoral.PODERNOPODER ? foliopersonaMoral
 						.PODERNOPODER : '';
 					document.querySelector('#btnLigacion').href = `<?= base_url('admin/dashboard/editar_persona_moral?id=') ?>${personaMoral.PERSONAMORALID}`;
 					document.querySelector('#btnLigacion').target = "_blank";
@@ -3135,6 +3170,56 @@
 				input.addEventListener('input', (event) => {
 					event.target.value = clearText(event.target.value).toLowerCase();
 				}, false)
+			});
+			document.querySelector('#btnActualizarPoderFolio').addEventListener('click', (e) => {
+				let data = {
+					'folio': inputFolio.value,
+					'year': year_select.value,
+				}
+				$.ajax({
+					data: data,
+					url: "<?= base_url('/data/change-poder-archivo') ?>",
+					method: "POST",
+					dataType: "json",
+					beforeSend: function() {
+						document.querySelector('#btnActualizarPoderFolio').classList.add('disabled');
+
+					},
+					success: function(response) {
+						if (response.status == 1) {
+							Swal.fire({
+								icon: 'success',
+								text: 'Poder actualizado correctamente',
+								confirmButtonColor: '#bf9b55',
+							});
+							const archivos = response.archivos;
+							if (archivos) {
+								let tabla_archivos = document.querySelectorAll(
+									'#table-archivos tr');
+								tabla_archivos.forEach(row => {
+									if (row.id !== '') {
+										row.remove();
+									}
+								});
+								llenarTablaArchivosExternos(archivos);
+							}
+							$('#folio_persona_moral_modal').modal('hide');
+							document.querySelector('#btnActualizarPoderFolio').classList.remove('disabled');
+
+						} else {
+							Swal.fire({
+								icon: 'error',
+								text: 'No se actualizó el poder',
+								confirmButtonColor: '#bf9b55',
+							});
+							document.querySelector('#btnActualizarPoderFolio').classList.remove('disabled');
+
+						}
+
+
+					},
+					error: function(jqXHR, textStatus, errorThrown) {}
+				});
 			});
 			document.querySelector('#estado_pm').addEventListener('change', (e) => {
 				let select_municipio = document.querySelector('#municipio_pm');
@@ -3651,6 +3736,7 @@
 				document.querySelector('#imputado_arbol').value = '';
 				document.querySelector('#delito_cometido').value = '';
 				document.querySelector('#victima_ofendido').value = '';
+				console.log(document.querySelector('#victima_ofendido').value);
 
 				$('#insert_asignar_arbol_delictual_modal').modal('show');
 			}, false);
@@ -7068,24 +7154,27 @@
 
 	window.initMap = initMap;
 </script>
+<?php include 'litigantes_modals/info_folio_modal.php' ?>
 <?php include 'video_denuncia_modals/folios_atendidos_modal.php' ?>
 <?php include 'video_denuncia_modals/load_save_archivos_modal.php' ?>
-<?php include 'litigantes_modals/info_folio_modal.php' ?>
-<?php include 'litigantes_modals/salida_modal_litigantes.php' ?>
-<?php include 'video_denuncia_modals/agregar_archivosExternos_modal.php' ?>
-<?php include 'video_denuncia_modals/persona_modal.php' ?>
-<?php include 'video_denuncia_modals/persona_moral_modal.php' ?>
-<?php include 'video_denuncia_modals/relacion_parentesco_modal.php' ?>
-<?php include 'video_denuncia_modals/relacion_parentesco_modal_insert.php' ?>
 <?php include 'video_denuncia_modals/insert_persona_fisica_modal.php' ?>
-<?php include 'video_denuncia_modals/vehiculo_modal.php' ?>
-<?php include 'video_denuncia_modals/media_filiacion_modal.php' ?>
-<?php include 'video_denuncia_modals/domicilio_modal.php' ?>
 <?php include 'video_denuncia_modals/insert_asignar_arbol_delictual_modal.php' ?>
 <?php include 'video_denuncia_modals/insert_asignar_delitos_cometidos_modal.php' ?>
 <?php include 'video_denuncia_modals/agregar_vehiculos_modal.php' ?>
 <?php include 'video_denuncia_modals/objetos_involucrados_modal.php' ?>
+<?php include 'video_denuncia_modals/relacion_parentesco_modal_insert.php' ?>
+<?php include 'video_denuncia_modals/agregar_archivosExternos_modal.php' ?>
+<?php include 'video_denuncia_modals/relacion_parentesco_modal.php' ?>
+<?php include 'video_denuncia_modals/vehiculo_modal.php' ?>
 <?php include 'video_denuncia_modals/objetos_involucrados_modal_update.php' ?>
+
+<?php include 'litigantes_modals/salida_modal_litigantes.php' ?>
+<?php include 'video_denuncia_modals/persona_modal.php' ?>
+<?php include 'video_denuncia_modals/persona_moral_modal.php' ?>
+<?php include 'video_denuncia_modals/media_filiacion_modal.php' ?>
+<?php include 'video_denuncia_modals/domicilio_modal.php' ?>
+
+
 
 
 

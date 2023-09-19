@@ -401,7 +401,11 @@ $routes->group('data', function ($routes) {
 	$routes->post('create-direccion-notificacion', 'litigantes/DashboardController::crear_direccion_notificacion');
 	$routes->get('getStatusFolio', 'litigantes/DashboardController::getStatusFolio');
 	$routes->post('getRelacionLitigantes', 'litigantes/DashboardController::getRelacionLitigantes');
-	$routes->post('solicitar_cambio', 'litigantes/DashboardController::solicitarCambio');
+	$routes->post('create-poder', 'litigantes/DashboardController::createPoder');
+	$routes->post('get-poder-by-id', 'litigantes/DashboardController::getPoderById');
+	$routes->post('cambiar-poder-activo', 'litigantes/DashboardController::cambiarPoderActual');
+	$routes->post('change-poder-archivo', 'litigantes/DashboardController::changePoderArchivo');
+
 });
 
 

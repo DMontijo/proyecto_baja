@@ -1,6 +1,5 @@
 <div class="row">
 	<h3 class="fw-bold text-center text-blue pb-3">Validación de persona moral</h3>
-
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="poder_volumen" class="form-label fw-bold">Poder volumen:</label>
 		<input type="text" class="form-control" id="poder_volumen" name="poder_volumen">
@@ -34,9 +33,17 @@
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 		<label for="poder_archivo" class="form-label fw-bold input-required">Archivo del poder notarial:</label>
 		<input type="file" class="form-control" id="poder_archivo" name="poder_archivo" required>
+		<a id="downloadArchivo" download="">
 		<img id="poder_foto" class="img-fluid" src="" style="max-width:300px;">
-		<button id="solicitar-cambio" name="solicitar-cambio" type="button" class="btn btn-primary d-none">Solicitar cambio</button>
+		</a>
 
+
+	</div>
+	<div class="col-12  my-4 text-center">
+        <div class="alert alert-warning text-center d-none font-weight-bold mt-2" id="alert_poder" role="alert">
+            La persona moral ya contiene un poder registrado
+        </div>
+		<button id="solicitar-cambio" name="solicitar-cambio" type="button" class="btn btn-primary d-none"  data-bs-toggle="modal" data-bs-target="#actualizarPoderModal" >Actualizar poder</button>
 
 	</div>
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">

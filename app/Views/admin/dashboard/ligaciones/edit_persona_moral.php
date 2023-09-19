@@ -13,6 +13,7 @@
 			<div class="card shadow border-0 rounded">
 				<div class="card-body">
 					<form id="form-actualizar-moral" class="g-3 needs-validation" action="<?= base_url() ?>/admin/dashboard/editar_persona_moral" method="POST" enctype="multipart/form-data" novalidate>
+						<h4 class="font-weight-bold mb-3 text-center">DATOS DE LA PERSONA MORAL</h4>
 						<div class="row">
 							<input type="text" name="id" value="<?= $body_data->personasmorales->PERSONAMORALID ?>" hidden readonly>
 							<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -117,23 +118,28 @@
 							<div class="col-12">
 								<hr>
 							</div>
+						</div>
+						<div class="row">
+							<div class="col-12">
+								<h4 class="font-weight-bold mb-3 text-center">DATOS DEL PODER ACTUAL</h4>
+							</div>
 							<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 								<label for="poder_volumen" class="form-label font-weight-bold" ">Poder volumen:</label>
-								<input type=" text" class="form-control" id="poder_volumen" name="poder_volumen" value="<?= $body_data->personasmorales->PODERVOLUMEN ?>">
+										<input type=" text" class="form-control" id="poder_volumen" name="poder_volumen" value="<?= $body_data->personasmorales->PODERVOLUMEN ?>">
 									<div class="invalid-feedback">
 										Por favor, ingresa el volumen.
 									</div>
 							</div>
 							<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 								<label for="poder_notario" class="form-label font-weight-bold"">Número notario:</label>
-								<input type=" text" class="form-control" id="poder_notario" name="poder_notario" value="<?= $body_data->personasmorales->PODERNONOTARIO ?>">
+										<input type=" text" class="form-control" id="poder_notario" name="poder_notario" value="<?= $body_data->personasmorales->PODERNONOTARIO ?>">
 									<div class="invalid-feedback">
 										Por favor, ingresa el número notario.
 									</div>
 							</div>
 							<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 								<label for="poder_no_poder" class="form-label font-weight-bold"">Número de poder:</label>
-								<input type=" text" class="form-control" id="poder_no_poder" name="poder_no_poder" value="<?= $body_data->personasmorales->PODERNOPODER ?>">
+										<input type=" text" class="form-control" id="poder_no_poder" name="poder_no_poder" value="<?= $body_data->personasmorales->PODERNOPODER ?>">
 									<div class="invalid-feedback">
 										Por favor, ingresa el número poder.
 									</div>
@@ -156,17 +162,78 @@
 							<div class="col-12 text-center">
 								<a id="downloadArchivo" download="PODER_<?= $body_data->personasmorales->RFC ?>" href="<?= $body_data->personasmorales->PODERARCHIVO ?>">
 									<?php if (isset($body_data->tipoarchivo) && ($body_data->tipoarchivo == 'image/png' || $body_data->tipoarchivo == 'image/jpg' || $body_data->tipoarchivo == 'image/jpeg')) { ?>
-										<img src='<?= $body_data->personasmorales->PODERARCHIVO ?>' width="50%"></img>
+										<img src='<?= $body_data->personasmorales->PODERARCHIVO ?>' width="10%"></img>
 									<?php } else if (isset($body_data->tipoarchivo) && ($body_data->tipoarchivo != 'image/png' || $body_data->tipoarchivo != 'image/jpg' || $body_data->tipoarchivo != 'image/jpeg')) { ?>
-										<img src='<?= base_url() ?>/assets/img/file.png' width="30%"></img>
+										<img src='<?= base_url() ?>/assets/img/file.png' width="10%"></img>
 									<?php } ?>
 								</a>
 							</div>
-							<div class="col-12 pt-5 text-center">
-								<button type="submit" id="btn-submit-moral" class="btn btn-primary font-weight-bold">
-									ACTUALIZAR PERSONA MORAL
-								</button>
+							<div class="col-12">
+								<hr>
 							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-12">
+								<h4 class="font-weight-bold mb-3 text-center">PODERES REGISTRADOS DE LA PERSONA MORAL</h4>
+							</div>
+						</div>
+						<div class="col-12">
+							<div class="table-responsive">
+								<table id="table-archivos" class="table table-bordered table-hover table-striped table-light">
+									<thead>
+										<tr>
+											<th class="text-center bg-primary text-white">VOLUMEN</th>
+											<th class="text-center bg-primary text-white">NO.NOTARIO</th>
+											<th class="text-center bg-primary text-white">NO.PODER</th>
+											<th class="text-center bg-primary text-white">FECHA DE EXPEDICIÓN DE PODER</th>
+											<th class="text-center bg-primary text-white">FECHA DE VIGENCIA DE PODER</th>
+											<th class="text-center bg-primary text-white">ARCHIVO</th>
+											<th class="text-center bg-primary text-white">STATUS</th>
+											<th class="text-center bg-primary text-white">FECHA DE REGISTRO</th>
+											<th class="text-center bg-primary text-white"></th>
+											<th class="text-center bg-primary text-white"></th>
+										</tr>
+									</thead>
+									<tbody>
+										<?php foreach ($body_data->poderes as $index => $poder) { ?>
+											<tr>
+												<td class="text-center"><?= $poder->PODERVOLUMEN ?></td>
+												<td class="text-center"><?= $poder->PODERNONOTARIO ?></td>
+												<td class="text-center"><?= $poder->PODERNOPODER ?></td>
+												<td class="text-center"><?= $poder->FECHAINICIOPODER ?></td>
+												<td class="text-center"><?= $poder->FECHAFINPODER ?></td>
+												<td class="text-center">
+													<?php if ($poder->EXTENSION == 'pdf' || $poder->EXTENSION == 'doc') { ?>
+														<a id="downloadArchivo" href="<?= $poder->PODERARCHIVO ?>" download="<?= 'ARCHIVOPODER_' . $poder->FECHAREGISTRO . ' .' . $poder->EXTENSION ?> "><img src='<?= base_url() ?>/assets/img/file.png' ));' width="50px" height="50px"></img></a>
+												</td>
+											<?php } else { ?>
+												<a id="downloadArchivo" href="<?= $poder->PODERARCHIVO ?>" download="<?= 'ARCHIVOPODER_' . $poder->FECHAREGISTRO . ' .' . $poder->EXTENSION ?> "><img src='<?= $poder->PODERARCHIVO ?>' width="50px" height="50px"></img></a>
+
+											<?php } ?>
+											<td class="font-weight-bold text-center"><?= $poder->ACTIVO == 1 ? "ACTIVO" : "INACTIVO" ?></td>
+
+											<td class="text-center"><?= $poder->FECHAREGISTRO ?></td>
+											<td class="text-center">
+												<?php if ($poder->ACTIVO != 1) {?>
+													<button type='button' id="actualPoderbtn" class='btn btn-primary' onclick='actualizarPoder(<?= $poder->PODERID ?>, <?= $body_data->personasmorales->PERSONAMORALID ?>, this)'><i class='fas fa-check'></i></button>
+												<?php }?>
+											</td>
+											<td class="text-center">
+												<?php if ($poder->EXTENSION == 'pdf' || $poder->EXTENSION == 'doc') { ?>
+													<a href="#" onclick="abrirPrevisualizador('<?= $poder->PODERARCHIVO ?>')">Abrir Previsualizador</a>
+												<?php } ?>
+											</td>
+											</tr>
+										<?php } ?>
+									</tbody>
+								</table>
+							</div>
+						</div>
+						<div class="col-12 pt-5 text-center">
+							<button type="submit" id="btn-submit-moral" class="btn btn-primary font-weight-bold">
+								ACTUALIZAR PERSONA MORAL
+							</button>
 						</div>
 					</form>
 				</div>
@@ -174,6 +241,26 @@
 		</div>
 	</div>
 	<script>
+		$(function() {
+		$("#table-archivos").DataTable({
+			responsive: true,
+			lengthChange: false,
+			autoWidth: true,
+			ordering: true,
+			order: [
+				[7, 'desc'],
+			],
+			searching: true,
+			pageLength: 20,
+			// dom: 'Bfrtip',
+			// buttons: [
+			// 	'copy', 'excel', 'pdf'
+			// ],
+			language: {
+				url: '//cdn.datatables.net/plug-ins/1.12.1/i18n/es-MX.json'
+			}
+		});
+	});
 		(function() {
 			'use strict';
 			//Declaracion de elementos
@@ -329,7 +416,6 @@
 					dataType: "json",
 					success: function(response) {
 						let localidades = response.data;
-						console.log('Localidades');
 						clearSelect(select_localidad);
 						clearSelect(select_colonia);
 						localidades.forEach(localidad => {
@@ -375,7 +461,6 @@
 					dataType: "json",
 					success: function(response) {
 						clearSelect(select_colonia);
-						console.log(response);
 						let colonias = response.data;
 						colonias.forEach(colonia => {
 							var option = document.createElement("option");
@@ -443,6 +528,56 @@
 			}, false);
 		})();
 		//Elimina todos los caracteres especiales del texto
+		function actualizarPoder(poderid, moralid, boton) {
+			let data = {
+				'poderid': poderid,
+				'moralid': moralid
+			}
+			$.ajax({
+				data: data,
+				url: "<?= base_url('/data/cambiar-poder-activo') ?>",
+				method: "POST",
+				dataType: "json",
+				success: function(response) {
+					if (response.status == 1) {
+						Swal.fire({
+							icon: 'success',
+							text: 'El poder se ha actualizado correctamente.',
+							confirmButtonColor: '#bf9b55',
+						});
+						boton.disabled= true;
+						location.reload();
+					}
+				},
+				error: function(jqXHR, textStatus, errorThrown) {}
+			});
+
+		}
+		/**Funcion para abrir el archivo pdf en otra pestaña */
+		function abrirPrevisualizador(url) {
+			let url_sin = url.replace("data:application/pdf;base64,", "");
+			//decodifica el base 64 y lo convierte en string
+			const binaryData = atob(url_sin);
+			//longitud del string
+			const arrayBuffer = new ArrayBuffer(binaryData.length);
+			//trata cada byte del ArrayBuffer como un número separado
+			const uint8Array = new Uint8Array(arrayBuffer);
+
+			for (let i = 0; i < binaryData.length; i++) {
+				uint8Array[i] = binaryData.charCodeAt(i);
+			}
+
+			//Se construye el PDF
+			const blob = new Blob([uint8Array], {
+				type: 'application/pdf'
+			});
+
+			// Crea el link y lo abre en nueva pestaña
+			const link = document.createElement('a');
+			link.href = URL.createObjectURL(blob);
+			link.target = "_blank"
+			link.click();
+		}
 
 		function clearText(text) {
 			return text

@@ -125,7 +125,7 @@
 	</div>
 	<div class="col-12">
 		<!-- Botón para copiar la direccion de la empresa como notificacion-->
-		<button id="copiar-direccion" type="button" class="btn btn-primary" disabled>Copiar dirección de la empresa como notificacion</button>
+		<button id="copiar-direccion" type="button" class="btn btn-primary d-none">Copiar dirección de la empresa como notificacion</button>
 	</div>
 </div>
 <div class="row" id="contenedor-direcciones">

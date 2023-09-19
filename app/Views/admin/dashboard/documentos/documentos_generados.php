@@ -154,7 +154,6 @@
 						const correos = response.correos;
 						const correosNoti = response.correosNoti;
 
-						console.log(victimas);
 						//llena las tablas y selects necesarios para su implementacion
 						let tabla_documentos = document.querySelectorAll('#table-documentos tr');
 						tabla_documentos.forEach(row => {
@@ -385,7 +384,6 @@
 					method: "POST",
 					dataType: "json",
 					success: function(response) {
-						console.log(response);
 						if (response.status == 1) {
 							const div_usuarios = document.querySelector('#usuarios');
 							document.querySelector('#empleado_asignado').setAttribute('required', false);
@@ -571,9 +569,6 @@
 
 
 			<?php if (session('ROLID') == 4 || session('ROLID') == 8 || session('ROLID') == 10) { ?>
-				console.log("victima");
-				console.log(document.querySelector('#victima_modal_documento').value == '');
-
 				if (tipoPlantilla == "CITATORIO") {
 					if ((document.querySelector('#victima_modal_documento').value != '') && document.querySelector('#empleado_asignado').getAttribute('required') == "true" && document.querySelector('#empleado_asignado').value != '' && select_uma.getAttribute('required') == "true" && select_uma.value != '' && select_notificacion.getAttribute('required') == "true" && select_notificacion.value != '' && select_proceso.getAttribute('required') == "true" && select_proceso.value != '' && tipoPlantilla == 'CITATORIO') {
 						$('#documentos_modal_wyswyg').modal('hide');
@@ -614,10 +609,6 @@
 
 
 			<?php } else { ?>
-
-				console.log("victima");
-				console.log(document.querySelector('#victima_modal_documento').value == '');
-
 				if (select_uma.getAttribute('required') == "true" && select_uma.value != '' && select_notificacion.getAttribute('required') == "true" && select_notificacion.value != '' && select_proceso.getAttribute('required') == "true" && select_proceso.value != '' && document.querySelector('#victima_modal_documento').value != '' && tipoPlantilla == 'CITATORIO') {
 					$('#documentos_modal_wyswyg').modal('hide');
 					$('#documentos_modal').modal('show');
@@ -651,14 +642,12 @@
 					'proceso': select_proceso.value
 
 				};
-				console.log(data);
 				$.ajax({
 					method: 'POST',
 					url: "<?= base_url('/data/get-plantilla') ?>",
 					data: data,
 					dataType: 'JSON',
 					success: function(response) {
-						console.log(response);
 						if (response.status == 1) {
 							const plantilla = response.plantilla;
 							tinymce.get("documento").setContent(plantilla.PLACEHOLDER);
@@ -710,14 +699,12 @@
 					'victima': victima,
 					'imputado': imputado,
 				};
-				console.log(data);
 				$.ajax({
 					method: 'POST',
 					url: "<?= base_url('/data/get-plantilla') ?>",
 					data: data,
 					dataType: 'JSON',
 					success: function(response) {
-						console.log(response);
 						if (response.status == 1) {
 							const plantilla = response.plantilla;
 							if (select_uma.getAttribute('required') == "true") {
@@ -789,7 +776,6 @@
 		}
 		btn_guardarFolioDoc.addEventListener('click', (event) => {
 			let contenidoModificado = tinymce.get("documento").getContent();
-			// console.log(plantilla.value);
 			insertarDocumento(contenidoModificado, plantilla.value);
 		}, false);
 		//funcion para asignar valores a los documentos a un folio
@@ -987,7 +973,6 @@
 					btn_firmar_doc.disabled = true;
 				},
 				success: function(response) {
-					// console.log(response);
 					if (response.status == 1) {
 
 						Swal.fire({
@@ -1042,7 +1027,6 @@
 					btn_firmar_doc_id.disabled = true;
 				},
 				success: function(response) {
-					// console.log(response);
 					if (response.status == 1) {
 
 						Swal.fire({
@@ -1098,7 +1082,6 @@
 					btn_enviarcorreoDoc.disabled = true;
 				},
 				success: function(response) {
-					console.log(response);
 					if (response.status == 1) {
 						Swal.fire({
 							icon: 'success',
@@ -1198,7 +1181,6 @@
 					btn_enviarcorreoDocUni.disabled = true;
 				},
 				success: function(response) {
-					console.log(response);
 					if (response.status == 1) {
 						Swal.fire({
 							icon: 'success',
@@ -1296,7 +1278,6 @@
 						btn_archivos_externos.disabled = true;
 					},
 					success: function(response) {
-						// console.log(response);
 						if (response.status == 1) {
 							$('#subirDocumentosModal').modal('hide');
 							$('#subirDocumentosModal').hide();
@@ -1607,7 +1588,6 @@
 		$('#change_status_modal').modal('show');
 		document.querySelector("#status_doc_envio").value = status_envio;
 		document.querySelector("#status_req_envio").value = enviado;
-		console.log(enviado);
 		document.querySelector("#status_doc_id").value = foliodocid;
 		document.querySelector("#folio_id_doc").value = folio;
 		document.querySelector("#ano_doc").value = ano;

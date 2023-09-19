@@ -169,6 +169,8 @@
 </div>
 
 <?php include('denuncia_moral/modal_agregar_direccion.php') ?>
+<?php include('denuncia_moral/modal_actualizar_poder.php') ?>
+
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC8Y8sKd0VSyZcl9kPdCewI2mpXh95AJ-8&callback=initMap&v=weekly" async></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC8Y8sKd0VSyZcl9kPdCewI2mpXh95AJ-8&callback=initMapMoral&v=weekly" async></script>
 
@@ -219,6 +221,8 @@
             const spinner_documentos = document.querySelector('#form_direccion_btn #spinner');
             const btn_text_documentos = document.querySelector('#form_direccion_btn #text');
             const copiar_direccion = document.getElementById('copiar-direccion');
+            const form_agregar_poder = document.querySelector('#form_actualizar_poder');
+            const form_actualizar_poder_btn = document.querySelector('#form_actualizar_poder_btn');
 
             // const datos_create_moral = document.getElementById('datos_create_moral');
             //Convierte todos los input text a mayusculas
@@ -257,6 +261,27 @@
                     btn_text_documentos.classList.remove('d-none');
                     form_agregar_direccion.classList.remove('was-validated')
                     agregarDireccionNotificion();
+                }
+            }, false);
+            //Form add poder
+            form_agregar_poder.addEventListener('submit', (event) => {
+                if (!form_agregar_poder.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    documentos_close_btn.classList.add('d-none')
+                    form_actualizar_poder_btn.disabled = false;
+                    spinner_documentos.classList.add('d-none');
+                    btn_text_documentos.classList.remove('d-none');
+                    form_agregar_poder.classList.add('was-validated')
+                } else {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    form_actualizar_poder_btn.disabled = true;
+                    documentos_close_btn.classList.remove('d-none')
+                    spinner_documentos.classList.remove('d-none');
+                    btn_text_documentos.classList.remove('d-none');
+                    form_agregar_poder.classList.remove('was-validated')
+                    agregarPoder();
                 }
             }, false);
             //Elimina los caracteres especiales del texto
@@ -562,7 +587,6 @@
 
             });
             copiar_direccion.addEventListener('click', function() {
-                console.log("click");
                 document.querySelector('#estado_empresa').value = document.querySelector('#estado_empresa_c').value;
                 copiarDireccion(document.querySelector('#estado_empresa').value);
                 // document.querySelector('#municipio_empresa').value = document.querySelector('#municipio_empresa_c').value;
@@ -1107,8 +1131,9 @@
                                     document.querySelector('#colonia_select_empresa_c').value = '0';
                                     document.querySelector('#colonia_input_empresa_c').value = personamoral.COLONIADESCR;
                                 }
-
-                                copiar_direccion.disabled = true;
+                                document.getElementById('solicitar-cambio').classList.remove('d-none');
+                                document.getElementById('alert_poder').classList.remove('d-none');
+                                copiar_direccion.classList.add('d-none');
                                 document.getElementById('razon_social').value = personamoral.RAZONSOCIAL;
                                 document.getElementById('marca_comercial_d').value = personamoral.MARCACOMERCIAL ? personamoral.MARCACOMERCIAL : '';
                                 document.getElementById('giro_empresa_denuncia').value = personamoral.PERSONAMORALGIROID;
@@ -1125,16 +1150,22 @@
                                 document.getElementById('fecha_fin_poder').value = personamoral.FECHAFINPODER ? personamoral.FECHAFINPODER : '';
                                 document.getElementById('cargo').value = personamoral.CARGO;
                                 document.getElementById('descr_cargo').value = personamoral.DESCRIPCIONCARGO ? personamoral.DESCRIPCIONCARGO : '';
+                                console.log("pm",personamoral);
                                 if (personamoral.PODERARCHIVO) {
                                     $("#poder_archivo").removeAttr("required");
                                     let extension = (((personamoral.PODERARCHIVO.split(';'))[0]).split('/'))[1];
                                     if (extension == 'pdf' || extension == 'doc') {
                                         document.querySelector('#poder_foto').setAttribute('src', '<?= base_url() ?>/assets/img/file.png');
+                                        document.querySelector('#downloadArchivo').setAttribute('href', personamoral.PODERARCHIVO);
+                                        document.querySelector('#downloadArchivo').setAttribute('download', 'ARCHIVOPODER.' + extension);
                                     } else {
                                         document.querySelector('#poder_foto').setAttribute('src', personamoral.PODERARCHIVO);
+                                        document.querySelector('#downloadArchivo').setAttribute('href', personamoral.PODERARCHIVO);
+                                        document.querySelector('#downloadArchivo').setAttribute('download', 'ARCHIVOPODER.' + extension);
                                     }
                                     document.getElementById('poder_archivo').disabled = true;
                                     document.getElementById('solicitar-cambio').classList.remove('d-none');
+                                    document.getElementById('alert_poder').classList.remove('d-none');
                                     document.getElementById('poder_volumen').readOnly = true;
                                     document.getElementById('poder_notario').readOnly = true;
                                     document.getElementById('poder_no_poder').readOnly = true;
@@ -1205,6 +1236,7 @@
                                 document.getElementById('cargo').value = "";
                                 document.getElementById("poder_foto").removeAttribute("src");
                                 document.getElementById('solicitar-cambio').classList.add('d-none');
+                                document.getElementById('alert_poder').classList.add('d-none');
                                 document.getElementById('poder_volumen').readOnly = false;
                                 document.getElementById('poder_notario').readOnly = false;
                                 document.getElementById('poder_no_poder').readOnly = false;
@@ -1226,7 +1258,7 @@
                                 direccion.classList.remove('input-required');
                                 direccion.disabled = true;
                                 document.getElementById('agregar-direccion').disabled = true;
-                                copiar_direccion.disabled = false;
+                                copiar_direccion.classList.remove('d-none');
 
                                 zona_empresa.disabled = true;
                                 correo_empresa.readOnly = false;
@@ -1741,27 +1773,27 @@
 
                 progress.style.width = `${currentStep*width}%`
             });
-            solicitarCambioBtn.addEventListener('click', () => {
-                $.ajax({
-                    data: {
-                        'personamoralid': empresaid,
+            // solicitarCambioBtn.addEventListener('click', () => {
+            //     $.ajax({
+            //         data: {
+            //             'personamoralid': empresaid,
 
-                    },
-                    url: "<?= base_url('/data/solicitar_cambio') ?>",
-                    method: "POST",
-                    dataType: "json",
-                    success: function(response) {
-                        if (response.status === 1) {
-                            Swal.fire({
-                                icon: 'success',
-                                text: 'Se ha solicitado el cambio.',
-                                confirmButtonColor: '#bf9b55',
-                            });
-                        }
-                    },
-                    error: function(jqXHR, textStatus, errorThrown) {}
-                });
-            });
+            //         },
+            //         url: "<?= base_url('/data/solicitar_cambio') ?>",
+            //         method: "POST",
+            //         dataType: "json",
+            //         success: function(response) {
+            //             if (response.status === 1) {
+            //                 Swal.fire({
+            //                     icon: 'success',
+            //                     text: 'Se ha solicitado el cambio.',
+            //                     confirmButtonColor: '#bf9b55',
+            //                 });
+            //             }
+            //         },
+            //         error: function(jqXHR, textStatus, errorThrown) {}
+            //     });
+            // });
 
             //Funcion mostrar o ocultar los elementos de paso según el número especificado, y también actualiza el ancho del progreso.
             function chargeCurrentStep(num) {
@@ -2002,6 +2034,49 @@
                                 confirmButtonColor: '#bf9b55',
                             });
                             $('#agregarDireccionModal').modal('hide');
+
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                text: 'No se agregó la información del parentesco',
+                                confirmButtonColor: '#bf9b55',
+                            });
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log(textStatus);
+                    }
+                });
+            }
+            //Funcion para agregar poder
+            function agregarPoder() {
+                var packetData = new FormData();
+                packetData.append("archivo", $("#poder_archivo_new")[0].files[0]);
+                packetData.append("volumen", document.querySelector('#poder_volumen_new').value);
+                packetData.append("notario", document.querySelector('#poder_notario_new').value);
+                packetData.append("poder", document.querySelector('#poder_no_poder_new').value);
+                packetData.append("fecha_inicio", document.querySelector('#fecha_inicio_poder_new').value);
+                packetData.append("fecha_fin", document.querySelector('#fecha_fin_poder_new').value);
+                packetData.append("personamoralid", empresaid);
+
+                $.ajax({
+                    data: packetData,
+                    url: "<?= base_url('/data/create-poder') ?>",
+                    method: "POST",
+                    dataType: "json",
+                    contentType: false,
+                    processData: false,
+                    cache: false,
+                    success: function(response) {
+                        if (response.status == 1) {
+                            document.getElementById("form_actualizar_poder").reset();
+
+                            Swal.fire({
+                                icon: 'success',
+                                text: 'Nuevo poder ingresado correctamente, en espera de autorización',
+                                confirmButtonColor: '#bf9b55',
+                            });
+                            $('#actualizarPoderModal').modal('hide');
 
                         } else {
                             Swal.fire({

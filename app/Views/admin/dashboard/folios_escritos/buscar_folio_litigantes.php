@@ -125,7 +125,6 @@
 											<th class="text-center" style="min-width:250px;">DEPARTAMENTO ASIGNADO</th>
 											<th class="text-center" style="min-width:150px;">FECHA REGISTRO</th>
 											<th class="text-center" style="min-width:150px;">FECHA SALIDA</th>
-											<th class="text-center"></th>
 										</tr>
 									</thead>
 									<tbody>
@@ -160,13 +159,6 @@
 												<td class="text-center"><?= $folio->OFICINADESCR ? $folio->OFICINADESCR : $folio->MODULODESCR ?></td>
 												<td class="text-center"><?= date('d-m-Y H:i:s', strtotime($folio->FECHAREGISTRO)) ?></td>
 												<td class="text-center"><?= $folio->FECHASALIDA ?  date('d-m-Y H:i:s', strtotime($folio->FECHASALIDA)) : '' ?></td>
-												<?php if (session('ROLID') == 1 || session('ROLID') == 6 || session('ROLID') == 7) { ?>
-													<td class="text-center">
-														
-														<button type="button" class="btn btn-primary"onclick='asignarAgente(<?=$folio->FOLIOID?>,<?=$folio->ANO?>)' ><i class="fas fa-user-tag"></i></button>
-													</td>
-												<?php } ?>
-
 											</tr>
 										<?php } ?>
 									</tbody>

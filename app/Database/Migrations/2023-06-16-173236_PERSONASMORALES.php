@@ -87,33 +87,11 @@ class PERSONASMORALES extends Migration
                 'constraint' => '100',
             ],
             //LIGACION
-            'PODERVOLUMEN' => [
-                'type' => 'VARCHAR',
-                'constraint' => '15',
+            'PODERID' => [
+                'type' => 'INT',
+                'unsigned' => true,
                 'null' => true,
 
-            ],
-            'PODERNONOTARIO' => [
-                'type' => 'VARCHAR',
-                'constraint' => '15',
-                'null' => true,
-            ],
-            'PODERNOPODER' => [
-                'type' => 'VARCHAR',
-                'constraint' => '15',
-                'null' => true,
-            ],
-            'PODERARCHIVO' => [
-                'type' => 'LONGBLOB',
-                'null' => true,
-            ],
-            'FECHAINICIOPODER' => [
-                'type' => 'DATE',
-                'null' => true,
-            ],
-            'FECHAFINPODER' => [
-                'type' => 'DATE',
-                'null' => true,
             ],
             'CARGO' => [
                 'type' => 'VARCHAR',

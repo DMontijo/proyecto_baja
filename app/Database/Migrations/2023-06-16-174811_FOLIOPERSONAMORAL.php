@@ -104,20 +104,9 @@ class FOLIOPERSONAMORAL extends Migration
                 'null' => true,
 
             ],
-            'PODERVOLUMEN' => [
-                'type' => 'VARCHAR',
-                'constraint' => '15',
-                'null' => true,
-
-            ],
-            'PODERNONOTARIO' => [
-                'type' => 'VARCHAR',
-                'constraint' => '15',
-                'null' => true,
-            ],
-            'PODERNOPODER' => [
-                'type' => 'VARCHAR',
-                'constraint' => '15',
+            'PODERID' => [
+                'type' => 'INT',
+                'unsigned' => true,
                 'null' => true,
             ],
             'FECHAREGISTRO DATETIME DEFAULT CURRENT_TIMESTAMP',

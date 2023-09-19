@@ -25,17 +25,12 @@ class PersonasMoralesModel extends Model
 		'REFERENCIA',
 		'TELEFONO',
 		'CORREO',
-		'PODERVOLUMEN',
-		'PODERNONOTARIO',
-		'PODERNOPODER',
-		'PODERARCHIVO',
-		'FECHAINICIOPODER',
-		'FECHAFINPODER',
 		'CARGO',
 		'DESCRIPCIONCARGO',
 		'CAMBIO',
 		'FECHAREGISTRO',
-		'FECHAACTUALIZACION'
+		'FECHAACTUALIZACION',
+		'PODERID'
 	];
 	public function filterPersonasMorales($obj)
 	{

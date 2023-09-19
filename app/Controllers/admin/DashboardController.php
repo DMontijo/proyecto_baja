@@ -402,6 +402,7 @@ class DashboardController extends BaseController
 	private $_folioPersonaMoralModel;
 	private $_folioRelacionMoralFisModelRead;
 	private $_personaMoralGiroRead;
+	private $_relacionPoderLitiganteRead;
 
 	private $protocol;
 	private $ip;
@@ -670,7 +671,7 @@ class DashboardController extends BaseController
 		$this->_relacionFisicaMoralModelRead = model('RelacionFisicaMoralModel', true, $this->db_read);
 		$this->_personasMoralesRead = model('PersonasMoralesModel', true, $this->db_read);
 		$this->_personaMoralGiroRead = model('PersonaMoralGiroModel', true, $this->db_read);
-
+		$this->_relacionPoderLitiganteRead = model('RelacionPoderLitigante', true, $this->db_read);
 		// $this->protocol = 'http://';
 		// $this->ip = "10.144.244.223";
 		// $this->endpoint = $this->protocol . $this->ip . '/webServiceVD';
@@ -1189,19 +1190,29 @@ class DashboardController extends BaseController
 			return redirect()->back()->with('message_error', 'No se envío el parámeto id.');
 		}
 		$data = (object) array();
-		$data->personasmorales = $this->_personasMoralesRead->asObject()->where('PERSONAMORALID', $id)->first();
+		$data->personasmorales = $this->_personasMoralesRead->asObject()->join('RELACIONPODERLITIGANTE', 'RELACIONPODERLITIGANTE.PODERID = PERSONASMORALES.PODERID')->where('PERSONASMORALES.PERSONAMORALID', $id)->first();
 		$data->municipios = $this->_municipiosModelRead->asObject()->where('ESTADOID', $data->personasmorales->ESTADOID)->findAll();
 		$data->estados = $this->_estadosModelRead->asObject()->findAll();
 		$data->localidades = $this->_localidadesModelRead->asObject()->where('ESTADOID',  $data->personasmorales->ESTADOID)->where('MUNICIPIOID', $data->personasmorales->MUNICIPIOID)->findAll();
 		$data->colonias = $this->_coloniasModelRead->asObject()->where('ESTADOID',  $data->personasmorales->ESTADOID)->where('MUNICIPIOID', $data->personasmorales->MUNICIPIOID)->where('LOCALIDADID', $data->personasmorales->LOCALIDADID)->findAll();
 		$data->giros = $this->_personaMoralGiroRead->asObject()->findAll();
 
+		$data->poderes = $this->_relacionPoderLitiganteRead->asObject()->where('PERSONAMORALID', $data->personasmorales->PERSONAMORALID)->orderBy('FECHAREGISTRO','DESC')->findAll();
 		if ($data->personasmorales->PODERARCHIVO) {
 			$file_info = new \finfo(FILEINFO_MIME_TYPE);
 			$type = $file_info->buffer($data->personasmorales->PODERARCHIVO);
 			$data->tipoarchivo = $type;
 			$data->personasmorales->PODERARCHIVO = 'data:' . $type . ';base64,' . base64_encode($data->personasmorales->PODERARCHIVO);
 		}
+		if ($data->poderes) {
+				foreach ($data->poderes as $key => $poder) {
+					$file_info = new \finfo(FILEINFO_MIME_TYPE);
+					$type = $file_info->buffer($poder->PODERARCHIVO);
+					$extension = strstr($type, '/'); 
+					$poder->EXTENSION = ltrim($extension, '/');
+					$poder->PODERARCHIVO = 'data:' . $type . ';base64,' . base64_encode($poder->PODERARCHIVO);
+				}
+			}
 		$data->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 		$this->_loadView('Editar persona moral', '', '', $data, 'ligaciones/edit_persona_moral');
@@ -1978,16 +1989,24 @@ class DashboardController extends BaseController
 		$year = trim($this->request->getPost('year'));
 
 		$data = (object) array();
-		$data->foliopersonaMoral = $this->_folioPersonaMoralModelRead->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAMORALID', $id)->first();
+		$data->foliopersonaMoral = $this->_folioPersonaMoralModelRead->join('RELACIONPODERLITIGANTE', 'RELACIONPODERLITIGANTE.PODERID= FOLIOPERSONAMORAL.PODERID')->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIOPERSONAMORAL.PERSONAMORALID', $id)->first();
 		if ($data->foliopersonaMoral) {
 			$data->personaMoralNotificacion = $this->_personasMoralesNotificacionesRead->where('PERSONAMORALID', $id)->where('NOTIFICACIONID', $data->foliopersonaMoral['NOTIFICACIONID'])->first();
 			$data->folio = $this->_folioModelRead->where('FOLIOID', $folio)->where('ANO', $year)->first();
-			$data->personaMoral = $this->_personasMoralesRead->where('PERSONAMORALID', $id)->first();
+			$data->personaMoral = $this->_personasMoralesRead->join('RELACIONPODERLITIGANTE', 'RELACIONPODERLITIGANTE.PODERID= PERSONASMORALES.PODERID')->where('PERSONASMORALES.PERSONAMORALID', $id)->first();
+			$data->poderes = $this->_relacionPoderLitiganteRead->asObject()->select('ACTIVO, FECHAREGISTRO')->where('PERSONAMORALID', $data->foliopersonaMoral['PERSONAMORALID'])->findAll();
+
 			$data->idPersonaMoral = $id;
+
 			if ($data->personaMoral['PODERARCHIVO']) {
 				$file_info = new \finfo(FILEINFO_MIME_TYPE);
 				$type = $file_info->buffer($data->personaMoral['PODERARCHIVO']);
 				$data->personaMoral['PODERARCHIVO'] = 'data:' . $type . ';base64,' . base64_encode($data->personaMoral['PODERARCHIVO']);
+			}
+			if ($data->foliopersonaMoral['PODERARCHIVO']) {
+				$file_info = new \finfo(FILEINFO_MIME_TYPE);
+				$type = $file_info->buffer($data->foliopersonaMoral['PODERARCHIVO']);
+				$data->foliopersonaMoral['PODERARCHIVO'] = 'data:' . $type . ';base64,' . base64_encode($data->foliopersonaMoral['PODERARCHIVO']);
 			}
 			$data->status = 1;
 			return json_encode($data);
@@ -3129,17 +3148,19 @@ class DashboardController extends BaseController
 	{
 		$rfc = $this->request->getPost('rfc');
 		$data = (object) array();
-		$data->moral = $this->_personasMoralesRead->where('RFC', $rfc)->first();
+		$data->moral = $this->_personasMoralesRead->join('RELACIONPODERLITIGANTE','RELACIONPODERLITIGANTE.PODERID= PERSONASMORALES.PODERID AND RELACIONPODERLITIGANTE.ACTIVO =1')->where('RFC', $rfc)->first();
 		// var_dump($data->moral);exit;
-
+		
 		if ($data->moral == null) {
-			return json_encode(['exist' => 0]);
+			return json_encode(['exist' => 0,]);
 		} else if (count($data->moral) > 0) {
 			$data->notificacion = $this->_personasMoralesNotificacionesRead->where('PERSONAMORALID', $data->moral['PERSONAMORALID'])->findAll();
-			// return json_encode(['exist' => 0, 'data'=> $data->moral]);
-			$file_info = new \finfo(FILEINFO_MIME_TYPE);
-			$type = $file_info->buffer($data->moral['PODERARCHIVO']);
-			$data->moral['PODERARCHIVO'] = 'data:' . $type . ';base64,' . base64_encode($data->moral['PODERARCHIVO']);
+			if ($data->moral['PODERARCHIVO']) {
+				$file_info = new \finfo(FILEINFO_MIME_TYPE);
+				$type = $file_info->buffer($data->moral['PODERARCHIVO']);
+				$data->moral['PODERARCHIVO']= 'data:' . $type . ';base64,' . base64_encode($data->moral['PODERARCHIVO']);
+			}
+			
 			return json_encode(['exist' => 1, 'notificaciones' => $data->notificacion, 'personamoralid' => $data->moral['PERSONAMORALID'], 'moral' => $data->moral]);
 		} else {
 			return json_encode(['exist' => 0]);
@@ -3598,6 +3619,7 @@ class DashboardController extends BaseController
 			if (!empty($tiposExpedienteId) && !empty($folio) && !empty($municipio) && !empty($estado) && !empty($notas)) {
 				$folioRow = $this->_folioModelRead->where('ANO', $year)->where('FOLIOID', $folio)->where('STATUS', 'EN PROCESO')->where('EXPEDIENTEID IS NULL')->first();
 				$folioVehiculoRow = $this->_folioVehiculoModelRead->where('ANO', $year)->where('FOLIOID', $folio)->findAll();
+				$archivosExternosVD = $this->_archivoExternoModelRead->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
 
 				if ($folioRow) {
 					//Se detecta que en la DB existan todos los campos necesarios para Justicia
@@ -3611,7 +3633,7 @@ class DashboardController extends BaseController
 					$relacionFisFis = $this->_relacionIDOModelRead->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
 					$parentescos = $this->_parentescoPersonaFisicaModelRead->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
 					$vehiculos = $this->_folioVehiculoModelRead->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
-					$personasMorales = $this->_folioPersonaMoralModelRead->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->orderBy('PERSONAMORALID', 'asc')->findAll();
+					$personasMorales = $this->_folioPersonaMoralModelRead->join('RELACIONPODERLITIGANTE', 'RELACIONPODERLITIGANTE.PODERID= FOLIOPERSONAMORAL.PODERID')->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->orderBy('FOLIOPERSONAMORAL.PERSONAMORALID', 'asc')->findAll();
 					$relacionMoralFis = $this->_folioRelacionMoralFisModelRead->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
 
 					$imputados_con_delito = array();
@@ -3856,6 +3878,66 @@ class DashboardController extends BaseController
 									}
 								}
 							}
+							if ($archivosExternosVD) {
+								try {
+					
+									foreach ($archivosExternosVD as $key => $arch) {
+															//Se verifica que los archivos externos no esten subidos en Justicia para no repetirlos
+					$relacionDocArc = $this->_relacionFolioDocModelRead->where('FOLIOID', $arch['FOLIOID'])->where('ANO', $arch['ANO'])->where('FOLIODOCID', $arch['FOLIOARCHIVOID'])->where('TIPO', 'ARCHIVO')->orderBy('FOLIODOCID', 'asc')->first();
+					if ($relacionDocArc == NULL) {
+						$foliovd = $this->_folioModelRead->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'EXPEDIENTE')->first();
+						$expediente = $foliovd['EXPEDIENTEID'];
+						$municipioid = $foliovd['MUNICIPIOID'] ? $foliovd['MUNICIPIOID'] : NULL;
+
+						//Se asigna el autor y oficina de acuerdo al .ENV
+						try {
+							if (ENVIRONMENT == 'development') {
+								if ($foliovd['MUNICIPIOASIGNADOID'] == 1) {
+									$autor = 8987;
+									$oficina = 793;
+								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 2 || $foliovd['MUNICIPIOASIGNADOID'] == 3) {
+									$autor = 3968;
+									$oficina = 394;
+								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
+									$autor = 10872;
+									$oficina = 924;
+								}
+							}
+
+							if (ENVIRONMENT == 'production') {
+								if ($foliovd['MUNICIPIOASIGNADOID'] == 1) {
+									$autor = 8988;
+									$oficina = 793;
+								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 2 || $foliovd['MUNICIPIOASIGNADOID'] == 3) {
+									$autor = 4179;
+									$oficina = 409;
+								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
+									$autor = 10832;
+									$oficina = 924;
+								}
+							}
+							// Se suben los archivos externos a Justicia.
+							$_archivo = $this->_createArchivosExternos($expediente, $folio, $year,  $municipioid, 53, $arch['ARCHIVODESCR'], $arch['ARCHIVO'], $arch['EXTENSION'], $autor, $oficina);
+							if ($_archivo->status == 201) {
+								$datosRelacionFolio = [
+									'FOLIODOCID' => $arch['FOLIOARCHIVOID'],
+									'FOLIOID' =>  $arch['FOLIOID'],
+									'ANO' => $arch['ANO'],
+									'EXPEDIENTEID' => $_archivo->EXPEDIENTEID,
+									'EXPEDIENTEARCHIVOID' => $_archivo->ARCHIVOID,
+									'TIPO' => 'ARCHIVO',
+
+								];
+								$this->_relacionFolioDocModel->insert($datosRelacionFolio);
+							}
+						} catch (\Exception $e) {
+						}
+					}
+									}
+								} catch (\Throwable $th) {
+								}
+								}
+
 						} catch (\Exception $e) {
 							throw new \Exception($e->getMessage());
 						}
@@ -8653,7 +8735,9 @@ class DashboardController extends BaseController
 
 		if ($data->folio->TIPODENUNCIA == 'ES') {
 			$data->foliomoral = $this->_folioPersonaMoralModelRead->asObject()->where('FOLIOID', $data->folio->FOLIOID)->where('ANO', $data->folio->ANO)->first();
-			$data->plantilla = str_replace('[RAZON_SOCIAL]',  $data->foliomoral->DENOMINACION ?  $data->foliomoral->DENOMINACION : '-', $data->plantilla);
+			if ($data->foliomoral) {
+				$data->plantilla = str_replace('[RAZON_SOCIAL]',  $data->foliomoral->DENOMINACION ?  $data->foliomoral->DENOMINACION : '-', $data->plantilla);
+			}
 		}
 		if ($data->victima[0]['DESAPARECIDA'] == 'S' && $data->mediaFiliacionVictima) {
 			//Victima media filiación
@@ -9411,6 +9495,7 @@ class DashboardController extends BaseController
 					'</p><p><b> PLACAS: </b> ' . ($vehiculos->PLACAS ? $vehiculos->PLACAS : '-') .
 					'<b> SERIE: </b> ' . ($vehiculos->NUMEROSERIE ? $vehiculos->NUMEROSERIE : '-') .
 					'<b> MARCA: </b>' . ($vehiculos->MARCADESCR ? $vehiculos->MARCADESCR : '-') .
+					'<b> MARCA EXACTA: </b>' . ($vehiculos->MARCADEXAC ? $vehiculos->MARCADEXAC : '-') .
 					'<b> MODELO: </b> ' . ($vehiculos->MODELODESCR ? $vehiculos->MODELODESCR : '-') .
 					'<b> ESTADO: </b> ' . ($estadoV ? $estadoV->ESTADODESCR : '-') .
 					'<b> LINEA: </b> ' . ($vehiculos->ANOVEHICULO ? $vehiculos->ANOVEHICULO : '-') .
@@ -9693,6 +9778,7 @@ class DashboardController extends BaseController
 						'</p><p><b> PLACAS: </b> ' . ($vehiculos->PLACAS ? $vehiculos->PLACAS : '-') .
 						'<b> SERIE: </b> ' . ($vehiculos->NUMEROSERIE ? $vehiculos->NUMEROSERIE : '-') .
 						'<b> MARCA: </b>' . ($vehiculos->MARCADESCR ? $vehiculos->MARCADESCR : '-') .
+						'<b> MARCA EXACTA: </b>' . ($vehiculos->MARCADEXAC ? $vehiculos->MARCADEXAC : '-') .
 						'<b> MODELO: </b> ' . ($vehiculos->MODELODESCR ? $vehiculos->MODELODESCR : '-') .
 						'<b> ESTADO: </b> ' . ($estadoV ? $estadoV->ESTADODESCR : '-') .
 						'<b> LINEA: </b> ' . ($vehiculos->ANOVEHICULO ? $vehiculos->ANOVEHICULO : '-') .

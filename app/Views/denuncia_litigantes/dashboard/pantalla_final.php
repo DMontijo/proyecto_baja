@@ -23,4 +23,22 @@
         </div>
     </div>
 </div>
+<?php if (session()->getFlashdata('message_success')) : ?>
+	<script>
+		Swal.fire({
+			icon: 'success',
+			html: '<strong><?= session()->getFlashdata('message_success') ?></strong>',
+			confirmButtonColor: '#bf9b55',
+		})
+	</script>
+<?php endif; ?>
+<?php if (session()->getFlashdata('message_error')) : ?>
+	<script>
+		Swal.fire({
+			icon: 'error',
+			html: '<strong><?= session()->getFlashdata('message') ?></strong>',
+			confirmButtonColor: '#bf9b55',
+		})
+	</script>
+<?php endif; ?>
 <?= $this->endSection() ?>
