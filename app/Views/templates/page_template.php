@@ -4,8 +4,26 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="icon" href="<?= base_url() ?>/assets/img/FGEBC.png" type="image/x-icon">
-	<link rel="shortcut icon" href="<?= base_url() ?>/assets/img/FGEBC.png" type="image/x-icon">
+	
+	<!-- Primary Meta Tags -->
+	<!-- <title>CDTEC</title> -->
+	<meta name="title" content="Video Denuncia - Baja California" />
+	<meta name="description" content="Plataforma de video denuncia de la Fiscalía General del Estado de Baja California." />
+
+	<!-- Open Graph / Facebook -->
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="https://cdtec.fgebc.gob.mx" />
+	<meta property="og:title" content="Video Denuncia - Baja California" />
+	<meta property="og:description" content="Plataforma de video denuncia de la Fiscalía General del Estado de Baja California." />
+	<meta property="og:image" content="<?= base_url() ?>"><img src="<?= base_url() ?>/assets/img/post_videodenuncia.png" />
+
+	<!-- Twitter -->
+	<meta property="twitter:card" content="summary_large_image" />
+	<meta property="twitter:url" content="https://cdtec.fgebc.gob.mx" />
+	<meta property="twitter:title" content="Video Denuncia - Baja California" />
+	<meta property="twitter:description" content="Plataforma de video denuncia de la Fiscalía General del Estado de Baja California." />
+	<meta property="twitter:image" content="<?= base_url() ?>"><img src="<?= base_url() ?>/assets/img/post_videodenuncia.png" />
+
 	<!--Bootstrap 5-->
 	<link rel="stylesheet" href="<?= base_url() ?>/assets/bootstrap/css/bootstrap.css">
 	<!--Bootstrap Icons-->
