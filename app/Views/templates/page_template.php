@@ -9,6 +9,8 @@
 	<!-- <title>CDTEC</title> -->
 	<meta name="title" content="Video Denuncia - Baja California" />
 	<meta name="description" content="Plataforma de video denuncia de la Fiscalía General del Estado de Baja California." />
+	<link rel="icon" href="<?= base_url() ?>/assets/img/FGEBC.png" type="image/x-icon">
+	<link rel="shortcut icon" href="<?= base_url() ?>/assets/img/FGEBC.png" type="image/x-icon">
 
 	<!-- Open Graph / Facebook -->
 	<meta property="og:type" content="website" />
