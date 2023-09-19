@@ -11,6 +11,7 @@
 	<!-- <title>CDTEC</title> -->
 	<meta name="title" content="Video Denuncia - Baja California" />
 	<meta name="description" content="Plataforma de video denuncia de la Fiscalía General del Estado de Baja California." />
+	<meta name=”keywords” content=”videodenuncia, video denuncia, fiscalia de baja california, baja california, cdtec, denuncia virtual, como denunciar” />
 
 	<!-- Open Graph / Facebook -->
 	<meta property="og:type" content="website" />
