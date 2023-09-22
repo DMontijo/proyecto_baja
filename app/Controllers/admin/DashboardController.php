@@ -2783,6 +2783,35 @@ class DashboardController extends BaseController
 				if ($folioRow) {
 					//Se detecta que en la DB existan todos los campos necesarios para Justicia
 					$this->deteccionErrores($folioRow, $folioVehiculoRow);
+					$fisImpDelito = $this->_imputadoDelitoModelRead->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
+					$imputados = $this->_folioPersonaFisicaModelRead->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->orderBy('PERSONAFISICAID', 'asc')->where('CALIDADJURIDICAID', 2)->findAll();
+					$relacionFisFis = $this->_relacionIDOModelRead->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
+					$imputados_con_delito = array();
+					$ofendidos = $this->_folioPersonaFisicaModelRead->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->orderBy('PERSONAFISICAID', 'asc')->where('CALIDADJURIDICAID', 1)->orWhere('CALIDADJURIDICAID', 6)->findAll();
+
+					if ($folioRow['TIPODENUNCIA'] != 'ES') {
+						if (!$ofendidos) {
+							throw new \Exception('Debe existir al menos un ofendido');
+						}	
+					}
+					if (!$imputados) {
+						throw new \Exception('Debe existir al menos un imputado');
+					}
+					// Verificación para que todos los imputados tengan un delito y una relación con el ofendido
+					foreach ($fisImpDelito as $value) {
+						if (!in_array($value['PERSONAFISICAID'], $imputados_con_delito)) {
+							array_push($imputados_con_delito, $value['PERSONAFISICAID']);
+						}
+					}
+
+					if (count($imputados_con_delito) != count($imputados)) {
+						throw new \Exception('Todos los imputados deben tener al menos 1 delito asignado');
+					}
+
+					if (count($relacionFisFis) == 0 || count($relacionFisFis) <= 0) {
+						throw new \Exception('Todos los imputados deben tener una relación con una persona física');
+					}
+
 					$update = $this->_folioModel->set($data)->where('ANO', $year)->where('FOLIOID', $folio)->update();
 
 
@@ -3009,6 +3038,7 @@ class DashboardController extends BaseController
 					$relacionFisFis = $this->_relacionIDOModelRead->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
 					$parentescos = $this->_parentescoPersonaFisicaModelRead->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
 					$vehiculos = $this->_folioVehiculoModelRead->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
+					$ofendidos = $this->_folioPersonaFisicaModelRead->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->orderBy('PERSONAFISICAID', 'asc')->where('CALIDADJURIDICAID', 1)->orWhere('CALIDADJURIDICAID', 6)->findAll();
 
 
 					$imputados_con_delito = array();
@@ -3037,6 +3067,15 @@ class DashboardController extends BaseController
 
 					if ($municipio == 7) {
 						$municipio = 2;
+					}
+					
+					if ($folioRow['TIPODENUNCIA'] != 'ES') {
+						if (!$ofendidos) {
+							throw new \Exception('Debe existir al menos un ofendido');
+						}	
+					}
+					if (!$imputados) {
+						throw new \Exception('Debe existir al menos un imputado');
 					}
 
 					// Verificación para que todos los imputados tengan un delito y una relación con el ofendido
