@@ -5548,7 +5548,7 @@ class DashboardController extends BaseController
 			$folioRow['NOTASAGENTE'] = null;
 			$folioRow['STATUS'] = 'EN PROCESO';
 			$folioRow['EXPEDIENTEID'] = null;
-			// $folioRow['AGENTEATENCIONID'] = NULL;
+			$folioRow['AGENTEATENCIONID'] = session('ID');
 			$folioRow['AGENTEFIRMAID'] = null;
 
 			$update = $this->_folioModel->set($folioRow)->where('ANO', $year)->where('FOLIOID', $folio)->where('EXPEDEINTEID IS NULL')->update();
