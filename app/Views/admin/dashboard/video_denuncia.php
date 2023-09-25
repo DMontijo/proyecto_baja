@@ -1745,7 +1745,20 @@
 						html: texto,
 						confirmButtonColor: '#bf9b55',
 					})
-				} else {
+				} 
+				// else if(response.status === 4){
+				// 	card2.classList.add('d-none');
+				// 	card3.classList.add('d-none');
+				// 	card4.classList.add('d-none');
+				// 	card5.classList.add('d-none');
+				// 	card6.classList.add('d-none');
+				// 	Swal.fire({
+				// 		icon: 'error',
+				// 		text: 'No existe sesión vigente para este usuario, por favor vuelve a iniciar sesión',
+				// 		confirmButtonColor: '#bf9b55',
+				// 	})
+				// }
+				else {
 					card2.classList.add('d-none');
 					card3.classList.add('d-none');
 					card4.classList.add('d-none');

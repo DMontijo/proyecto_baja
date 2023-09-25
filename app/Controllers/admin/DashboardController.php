@@ -1506,6 +1506,9 @@ class DashboardController extends BaseController
 		$year = trim($this->request->getPost('year'));
 		$search = $this->request->getPost('search');
 
+		// if(!session('ID')){
+		// 	return json_encode(['status' => 4]);
+		// }
 		if ($search != 'true') {
 			$data->folio = $this->_folioModelRead->asObject()->where('ANO', $year)->where('FOLIOID', $numfolio)->first();
 
@@ -3038,7 +3041,7 @@ class DashboardController extends BaseController
 					$relacionFisFis = $this->_relacionIDOModelRead->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
 					$parentescos = $this->_parentescoPersonaFisicaModelRead->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
 					$vehiculos = $this->_folioVehiculoModelRead->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
-					$ofendidos = $this->_folioPersonaFisicaModelRead->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->orderBy('PERSONAFISICAID', 'asc')->where('CALIDADJURIDICAID', 1)->orWhere('CALIDADJURIDICAID', 6)->findAll();
+					$ofendidos = $this->_folioPersonaFisicaModelRead->select('NOMBRE')->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->orderBy('PERSONAFISICAID', 'asc')->where('CALIDADJURIDICAID', 1)->orWhere('CALIDADJURIDICAID', 6)->findAll();
 
 
 					$imputados_con_delito = array();

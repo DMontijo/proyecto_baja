@@ -115,7 +115,6 @@ class Database extends Config
 		'DSN'      => '',
 		'hostname' => 'database-video-denuncia-baja-california-dev-cluster.cluster-ro-cenwfxggsegs.us-east-1.rds.amazonaws.com',
 		'username' => 'fgebc_admin',
-		'password' => 'fgebc_dba0wner',
 		'database' => 'cdtec_testing',
 		'DBDriver' => 'MySQLi',
 		'DBPrefix' => '',
