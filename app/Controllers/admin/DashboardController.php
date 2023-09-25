@@ -3257,7 +3257,7 @@ class DashboardController extends BaseController
 								if ($this->_sendEmailExpediente($denunciante->CORREO, $folio, $expedienteCreado->EXPEDIENTEID)) {
 									return json_encode(['status' => 1, 'expediente' => $expedienteCreado->EXPEDIENTEID]);
 								} else {
-									return json_encode(['status' => 1, 'expediente' => $expedienteCreado->EXPEDIENTEID, 'message' => 'Correo no enviado']);
+									return json_encode(['status' => 0, 'expediente' => $expedienteCreado->EXPEDIENTEID, 'message' => 'Se creó el expediente pero no se envió el correo. EXPEDIENTE NO:'. $expedienteCreado->EXPEDIENTEID]);
 								}
 							} else if ($folioRow['TIPODENUNCIA'] == 'DA') {
 								return json_encode(['status' => 1, 'expediente' => $expedienteCreado->EXPEDIENTEID]);

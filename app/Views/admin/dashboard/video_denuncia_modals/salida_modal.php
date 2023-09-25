@@ -649,7 +649,7 @@
 						}).done(function(data) {
 							Swal.fire({
 								icon: 'error',
-								text: 'Fallo la conexión, revisa con soporte técnico.',
+								text: 'Fallo la conexión, revisa con soporte técnico. Se restauró el folio a status: En proceso',
 								confirmButtonColor: '#bf9b55',
 							});
 							btnFinalizar.removeAttribute('disabled');
