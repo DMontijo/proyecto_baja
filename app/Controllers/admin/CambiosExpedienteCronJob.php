@@ -31,7 +31,7 @@ class CambiosExpedienteCronJob extends BaseController
         $this->endpoint = $this->protocol . $this->ip . '/webServiceVD';
     }
 
-
+    //Funcion que ejecutara el cronjob
     public function ejecutar_tarea()
     {
 
@@ -49,6 +49,8 @@ class CambiosExpedienteCronJob extends BaseController
             }
         }
     }
+
+    //Funcion donde consume los expediente en donde se realizo un cambio en Justicia
     private function _getInfo($expedienteID, $municipio)
     {
         $function = '/cambiosExpediente.php?process=getInfo';
@@ -70,6 +72,8 @@ class CambiosExpedienteCronJob extends BaseController
         $data['EXPEDIENTEID'] = $expedienteID;
         return $this->_curlPostDataEncrypt($endpoint, $data);
     }
+
+    //Funcion para actualizar los expedientes que se actualizaron en VD hacia Justicia
     private function _updateInfo($expedienteID, $municipio)
     {
         $function = '/cambiosExpediente.php?process=updateInfo';
@@ -86,6 +90,7 @@ class CambiosExpedienteCronJob extends BaseController
         return $this->_curlPostDataEncrypt($endpoint, $data);
     }
 
+    //Funcion para enviar correo del cambio de expediente al denunciante.
     private function _sendEmailCambioExpediente($to, $expedienteId, $oficina, $estadojuridico)
     {
         $folioM = $this->_folioModel->asObject()->where('EXPEDIENTEID', $expedienteId)->first();
@@ -120,6 +125,7 @@ class CambiosExpedienteCronJob extends BaseController
         }
     }
 
+    //Funcion CURL para conectar hacia Justicia
     private function _curlPostDataEncrypt($endpoint, $data)
     {
         // var_dump($data);exit;
@@ -155,6 +161,7 @@ class CambiosExpedienteCronJob extends BaseController
         return json_decode($result);
     }
 
+    //Funcion para encriptar los datos recibidos
     private function _encriptar($plaintext, $key128)
     {
         $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-128-cbc'));
