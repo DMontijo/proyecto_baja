@@ -52,7 +52,6 @@
 			var validation = Array.prototype.filter.call(forms, function(form) {
 				form.addEventListener('submit', function(event) {
 					if (password.value === password_confirm.value) {
-						console.log('Es igual');
 						if (!form.checkValidity()) {
 							event.preventDefault();
 							event.stopPropagation();

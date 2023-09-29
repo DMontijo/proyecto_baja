@@ -126,7 +126,6 @@
 		function closeSessionTimeout(){
 			var timeout; 
 			clearTimeout(timeout); 
-			console.log('timeout funcionando');
 			timeout = setTimeout(function(){
 				Swal.fire({
 					icon: 'error',
@@ -141,7 +140,6 @@
 							method: "get",
 							dataType: "json",
 							success: function(response) {
-								//console.log(response);
 								if(response.result){
 									Swal.fire({
 									icon: 'success',
@@ -149,7 +147,6 @@
 									confirmButtonColor: '#bf9b55',
 									}).then((result) => {
 										if (result.isConfirmed) {
-											console.log(response);
 											closeSessionTimeout();
 										}
 									});

@@ -326,7 +326,6 @@
 				document.getElementById('form_archivos_externos').classList.remove('d-none');
 				document.getElementById('documentos_anexar_spinner').classList.add('d-none');
 				if (response.status == 1) {
-					console.log(document.querySelectorAll('#table-archivos'));
 					Swal.fire({
 						icon: 'success',
 						text: 'Documento agregado correctamente.',

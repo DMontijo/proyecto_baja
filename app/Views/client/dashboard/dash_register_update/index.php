@@ -888,8 +888,6 @@ if ($agent->isMobile()) {
 				'localidad_id': localidad
 			};
 
-			console.log(data);
-
 			if (estado == 2) {
 				select_colonia.classList.remove('d-none');
 				input_colonia.classList.add('d-none');
@@ -973,7 +971,6 @@ if ($agent->isMobile()) {
 							return;
 						} else {
 							const image = await blobToBase64(blob);
-							console.log(image);
 							documento_identidad.value = image;
 							documento_identidad_modal.setAttribute('src', image);
 							preview.classList.remove('d-none');

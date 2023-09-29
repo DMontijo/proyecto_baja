@@ -279,7 +279,6 @@
 				method: "POST",
 				dataType: "json",
 			}).done((response) => {
-				console.log(response);
 				if (response.abiertos.length > 0) {
 					document.querySelector('#open_folios_modal #title_span').innerHTML = 'ABIERTO'
 					document.querySelector('#open_folios_modal #folio_num_span').innerHTML = response.abiertos[0].FOLIOID;
@@ -325,7 +324,6 @@
 
 				document.getElementById('datos_desaparecido').classList.add('step');
 				document.getElementById('datos_menor').classList.remove('step');
-				// console.log('Datos desaparecido');
 
 				document.querySelector('#nombre_menor').removeAttribute('required');
 				document.querySelector('#apellido_paterno_menor').removeAttribute('required');
@@ -523,7 +521,6 @@
 			progress.style.width = `${currentStep*width}%`
 			document.querySelector('#titulo').scrollIntoView();
 		} else {
-			// console.log('NO SE VALIDO');
 			submitBtn.click();
 			Swal.fire({
 				icon: 'error',

@@ -64,7 +64,6 @@
 		method: "POST",
 		dataType: "json",
 	}).done(function(data) {
-		// console.log(data);
 		data.forEach(oficina => {
 			let option = document.createElement("option");
 			option.text = oficina.OFICINADESCR;

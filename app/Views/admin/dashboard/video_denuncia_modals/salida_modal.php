@@ -523,7 +523,6 @@
 					// 	method: "POST",
 					// 	dataType: "json",
 					// 	success: function(response) {
-					// 		console.log(response);
 					// 	},
 					// 	error: function(jqXHR, textStatus, errorThrown) {}
 					// });

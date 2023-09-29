@@ -686,7 +686,6 @@
 				method: "POST",
 				dataType: "json",
 				success: function(response) {
-					console.log(response);
 					let delito_descr = '';
 					for (let index = 0; index < response.length; index++) {
 						if (index == response.length - 1) {
@@ -724,7 +723,6 @@
 
 	function llenarTablaDocumentos(documentos) {
 		for (let i = 0; i < documentos.length; i++) {
-			console.log(documentos[i]);
 			if (documentos[i].STATUS == 'FIRMADO') {
 				var btn =
 					`<button type='button'  class='btn btn-primary' onclick='viewDocumento(${documentos[i].FOLIODOCID})' disabled><i class="fas fa-eye"></i></button>`
@@ -811,7 +809,6 @@
 	//Funcion para eliminar el parentesco, se tiene que recibir por parametro la persona fisica1, personafisica2 y el parentesco a eliminar
 
 	function eliminarparentesco(personofisica1, personafisica2, parentesco) {
-		console.log("eliminar 2", parentesco);
 		$.ajax({
 			data: {
 				'personafisica1': personofisica1,
@@ -1702,7 +1699,6 @@
 					//VEHICULOS
 					if (vehiculos) llenarTablaVehiculos(vehiculos);
 					//PARENTESCO
-					console.log(relacion_parentesco);
 					if (relacion_parentesco) llenarTablaParentesco(relacion_parentesco);
 
 					//ARBOL DELICTUAL
@@ -4457,7 +4453,6 @@
 						method: "POST",
 						dataType: "json",
 						success: function(response) {
-							console.log(response);
 							if (response.status == 1) {
 								const div_usuarios = document.querySelector('#usuarios');
 								div_usuarios.classList.add('d-none');
@@ -4715,7 +4710,6 @@
 					dataType: "json",
 					success: function(response) {
 						let localidades = response.data;
-						console.log('Localidades');
 						clearSelect(select_localidad);
 						clearSelect(select_colonia);
 						localidades.forEach(localidad => {
@@ -4761,7 +4755,6 @@
 					dataType: "json",
 					success: function(response) {
 						clearSelect(select_colonia);
-						console.log(response);
 						let colonias = response.data;
 						colonias.forEach(colonia => {
 							var option = document.createElement("option");
@@ -4872,7 +4865,6 @@
 					method: "POST",
 					dataType: "json",
 					success: function(response) {
-						console.log(response);
 						if (response.status == 1) {
 							Swal.fire({
 								icon: 'success',
@@ -5302,8 +5294,6 @@
 					'municipio_id': municipio,
 					'localidad_id': localidad
 				};
-
-				console.log(data);
 
 				if (estado == 2) {
 					select_colonia.classList.remove('d-none');
@@ -5901,8 +5891,6 @@
 					'localidad_id': localidad
 				};
 
-				console.log(data);
-
 				if (estado == 2) {
 					select_colonia.classList.remove('d-none');
 					input_colonia.classList.add('d-none');
@@ -5987,7 +5975,6 @@
 					method: "POST",
 					dataType: "json",
 					success: function(response) {
-						console.log(response);
 						if (response.status == 1) {
 							Swal.fire({
 								icon: 'success',
@@ -6217,14 +6204,12 @@
 					// 'parentesco_mf': document.querySelector('#parentesco_mf').value?document.querySelector('#parentesco_mf').value:document.querySelector('#parentesco_mf1').value,
 
 				};
-				// console.log(id);
 				$.ajax({
 					data: data,
 					url: "<?= base_url('/data/update-media-filiacion-by-id') ?>",
 					method: "POST",
 					dataType: "json",
 					success: function(response) {
-						// console.log(respobse.idcalidad);
 						if (response.status == 1) {
 							Swal.fire({
 								icon: 'success',
@@ -6305,7 +6290,6 @@
 					'personaFisica2': document.querySelector('#personaFisica2_I').value,
 					'parentesco_mf': document.querySelector('#parentesco_mf_I').value,
 				};
-				// console.log(data);
 				$.ajax({
 					data: data,
 					url: "<?= base_url('/data/create-parentesco-by-id') ?>",
@@ -6397,7 +6381,6 @@
 					processData: false,
 					cache: false,
 					success: function(response) {
-						// console.log(respobse.idcalidad);
 						if (response.status == 1) {
 							const vehiculos = response.vehiculos;
 							Swal.fire({
@@ -6443,7 +6426,6 @@
 					if ($("#documentoArchivo")[0].files[0].type == "image/jpeg" || $("#documentoArchivo")[0].files[0].type == "image/png" || $("#documentoArchivo")[0].files[0].type == "image/jpg") {
 						nombre_documento = $("#documentoArchivo")[0].files[0].name;
 						documento = await comprimirImagen($("#documentoArchivo")[0].files[0], 50);
-						console.log(documento);
 					} else {
 						nombre_documento = $("#documentoArchivo")[0].files[0].name;
 						documento = $("#documentoArchivo")[0].files[0];
@@ -6475,7 +6457,6 @@
 					cache: false,
 					success: function(response) {
 						const archivos = response.archivos.archivosexternos;
-						console.log(response);
 						document.getElementById('archivo_content').classList.remove('d-none');
 						document.getElementById('documentos_anexar_spinner').classList.add('d-none');
 						if (response.status == 1) {
@@ -6602,7 +6583,6 @@
 					processData: false,
 					cache: false,
 					success: function(response) {
-						// console.log(respobse.idcalidad);
 						if (response.status == 1) {
 							const vehiculos = response.vehiculos;
 							Swal.fire({
@@ -6963,7 +6943,6 @@
 					method: "POST",
 					dataType: "json",
 					success: function(response) {
-						console.log(response);
 						if (response.status == 3) {
 							Swal.fire({
 								icon: 'error',
@@ -7258,9 +7237,6 @@
 			function obtenerPlantillas(tipoPlantilla, victima, imputado) {
 
 				<?php if (session('ROLID') == 4 || session('ROLID') == 8 || session('ROLID') == 10) { ?>
-					console.log("victima");
-					console.log(document.querySelector('#victima_modal_documento').value == '');
-
 					if (tipoPlantilla == "CITATORIO") {
 						if ((document.querySelector('#victima_modal_documento').value != '') && document.querySelector('#empleado_asignado').getAttribute('required') == "true" && document.querySelector('#empleado_asignado').value != '' && select_uma.getAttribute('required') == "true" && select_uma.value != '' && select_notificacion.getAttribute('required') == "true" && select_notificacion.value != '' && select_proceso.getAttribute('required') == "true" && select_proceso.value != '' && tipoPlantilla == 'CITATORIO') {
 							$('#documentos_modal_wyswyg').modal('hide');
@@ -7293,18 +7269,8 @@
 							$('#documentos_modal_wyswyg').modal('hide');
 							$('#documentos_modal').modal('show');
 						}
-
-
 					}
-
-
-
-
 				<?php } else { ?>
-
-					console.log("victima");
-					console.log(document.querySelector('#victima_modal_documento').value == '');
-
 					if (select_uma.getAttribute('required') == "true" && select_uma.value != '' && select_notificacion.getAttribute('required') == "true" && select_notificacion.value != '' && select_proceso.getAttribute('required') == "true" && select_proceso.value != '' && document.querySelector('#victima_modal_documento').value != '' && tipoPlantilla == 'CITATORIO') {
 						$('#documentos_modal_wyswyg').modal('hide');
 						$('#documentos_modal').modal('show');
@@ -7318,15 +7284,11 @@
 						});
 					}
 
-
-
 					if (select_uma.getAttribute('required') == "false" && tipoPlantilla != 'CITATORIO') {
 						$('#documentos_modal_wyswyg').modal('hide');
 						$('#documentos_modal').modal('show');
 					}
 				<?php } ?>
-
-
 				if (select_uma.value) {
 					const data = {
 

@@ -85,7 +85,6 @@
 			'min': '2000-01-01',
 			'max': '<?= date("Y-m-d") ?>'
 		};
-		console.log(data);
 		$.ajax({
 			data: data,
 			url: "<?= base_url('/data/get-video-link') ?>",

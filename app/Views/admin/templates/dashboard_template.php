@@ -312,7 +312,6 @@
 			var timeout; 
 		clearTimeout(timeout); 
 		timeout = setTimeout(function(){
-			console.log('timeout funcionando');
 			Swal.fire({
 				icon: 'error',
 				title: 'Tiempo de sesión agotado',
@@ -333,7 +332,6 @@
 									confirmButtonColor: '#bf9b55',
 									}).then((result) => {
 										if (result.isConfirmed) {
-											console.log(response);
 											closeSessionTimeout();
 										}
 									});
