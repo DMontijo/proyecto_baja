@@ -12,7 +12,7 @@
 						</div>
 					</div>
 				</div>
-				<form id="reset_password" action="<?= base_url("constancia_extravio/send_email_change_password") ?>" method="post" class="needs-validation" novalidate>
+				<form id="reset_password" action="<?= base_url("denuncia_litigantes/send_email_change_password") ?>" method="post" class="needs-validation" novalidate>
 					<div class="mb-3" id="divCorreo">
 						<label for="correo_reset_password" class="col-form-label">Correo electrónico:</label>
 						<input type="email" class="form-control" id="correo_reset_password" name="correo_reset_password" required>

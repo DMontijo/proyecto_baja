@@ -463,6 +463,52 @@ class DenunciaLitigantesController extends BaseController
 			return true;
 		};
 	}
+	/**
+	 * Función para mandar por email o sms la nueva contraseña
+	 *
+	 */
+	public function sendEmailChangePassword()
+	{
+		$password = $this->_generatePassword(6);
+		$to = $this->request->getPost('correo_reset_password');
+		$user = $this->_denunciantesModelRead->asObject()->where('CORREO', $to)->first();
+		$this->_denunciantesModel->set('PASSWORD', hashPassword($password))->where('DENUNCIANTEID', $user->DENUNCIANTEID)->update();
+
+
+		$body = view('email_template/reset_password_template.php', ['password' => $password]);
+		$mailersend = new MailerSend(['api_key' => EMAIL_TOKEN]);
+		$recipients = [
+			new Recipient($to, 'Your Client'),
+		];
+
+		$emailParams = (new EmailParams()) //check envio
+			->setFrom('notificacionfgebc@fgebc.gob.mx')
+			->setFromName('FGEBC')
+			->setRecipients($recipients)
+			->setSubject('Cambio de contraseña')
+			->setHtml($body)
+			->setText('Usted ha generado un nuevo registro en el Centro de Denuncia Tecnológica. Para acceder debes ingresar los siguientes datos. USUARIO: ' . $to . 'CONTRASEÑA' . $password)
+			->setReplyTo('notificacionfgebc@fgebc.gob.mx')
+			->setReplyToName('FGEBC');
+		$sendSMS = $this->sendSMS("Cambio de contraseña", $user->TELEFONO, 'Notificaciones FGEBC/Estimado usuario, tu contraseña es: ' . $password);
+		try {
+			$result = $mailersend->email->send($emailParams);
+		} catch (MailerSendValidationException $e) {
+			$result = false;
+		} catch (MailerSendRateLimitException $e) {
+			$result = false;
+		}
+
+		if ($result) {
+			return redirect()->to(base_url('/denuncia_litigantes'))->with('message_success', 'Verifica tu nueva contraseña en tu correo electrónico y/o mensajes SMS.');
+		} else {
+			if ($sendSMS == "") {
+				return redirect()->to(base_url('/denuncia_litigantes'))->with('message_success', 'Verifica tu nueva contraseña en tu correo electrónico y/o mensajes SMS.');
+			} else {
+				return redirect()->to(base_url('/denuncia_litigantes'))->with('message_error', 'Error');
+			}
+		}
+	}
 	private function _loadView($title, $data, $view)
 	{
 		$data = [

@@ -95,7 +95,7 @@ $routes->group('admin', function ($routes) {
 
 		$routes->get('video-denuncia', 'admin/DashboardController::video_denuncia');
 		$routes->get('denuncia-anonima', 'admin/DashboardController::denuncia_anonima');
-		$routes->get('modulo-litigantes-consulta', 'admin/DashboardController::modulo_litigantes_consultar');
+		$routes->get('denuncia-escrita', 'admin/DashboardController::modulo_litigantes_consultar');
 
 		$routes->get('folios', 'admin/FoliosController::index');
 		$routes->get('folios_abiertos', 'admin/FoliosController::folios_abiertos');
@@ -444,6 +444,7 @@ $routes->group('denuncia_litigantes', function ($routes) {
 	$routes->get('register', 'litigantes/DenunciaLitigantesController::register');
 	$routes->post('create', 'litigantes/DenunciaLitigantesController::create');
 	$routes->post('login_auth', 'litigantes/DenunciaLitigantesController::login_auth');
+	$routes->post('send_email_change_password', 'litigantes/DenunciaLitigantesController::sendEmailChangePassword');
 
 	$routes->group('dashboard', ['filter' => 'denunciaLitigantesAuth'], function ($routes) {
 		$routes->get('/', 'litigantes/DashboardController::index');
