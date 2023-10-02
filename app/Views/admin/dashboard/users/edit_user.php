@@ -71,6 +71,7 @@
 									El zona es obligatoria
 								</div>
 							</div>
+
 							<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 								<label class="font-weight-bold" for="rol_usuario">ROL de usuario</label>
 								<select class="form-control" id="rol_usuario" name="rol_usuario" required>
@@ -84,38 +85,78 @@
 									El rol es obligatorio
 								</div>
 							</div>
-							<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-								<label for="municipio" class="form-label font-weight-bold">Municipio</label>
-								<select class="form-control" name="municipio" id="municipio" required>
-									<option selected value="" disabled>Selecciona el municipio</option>
-									<option value="1" <?= $body_data->usuario->MUNICIPIOID == 1 ? 'selected' : '' ?>>ENSENADA
-									</option>
-									<option value="2" <?= $body_data->usuario->MUNICIPIOID == 2 ? 'selected' : '' ?>>MEXICALI
-									</option>
-									<option value="3" <?= $body_data->usuario->MUNICIPIOID == 3 ? 'selected' : '' ?>>TECATE
-									</option>
-									<option value="4" <?= $body_data->usuario->MUNICIPIOID == 4 ? 'selected' : '' ?>>TIJUANA
-									</option>
-									<option value="5" <?= $body_data->usuario->MUNICIPIOID == 5 ? 'selected' : '' ?>>PLAYAS DE
-										ROSARITO</option>
-								</select>
-								<div class="invalid-feedback">
-									El municipio es obligatorio
+							<?php if ($body_data->usuario->ROLID != 13) { ?>
+
+								<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+									<label for="municipio" class="form-label font-weight-bold">Municipio</label>
+									<select class="form-control" name="municipio" id="municipio" required>
+										<option selected value="" disabled>Selecciona el municipio</option>
+										<option value="1" <?= $body_data->usuario->MUNICIPIOID == 1 ? 'selected' : '' ?>>ENSENADA
+										</option>
+										<option value="2" <?= $body_data->usuario->MUNICIPIOID == 2 ? 'selected' : '' ?>>MEXICALI
+										</option>
+										<option value="3" <?= $body_data->usuario->MUNICIPIOID == 3 ? 'selected' : '' ?>>TECATE
+										</option>
+										<option value="4" <?= $body_data->usuario->MUNICIPIOID == 4 ? 'selected' : '' ?>>TIJUANA
+										</option>
+										<option value="5" <?= $body_data->usuario->MUNICIPIOID == 5 ? 'selected' : '' ?>>PLAYAS DE
+											ROSARITO</option>
+									</select>
+									<div class="invalid-feedback">
+										El municipio es obligatorio
+									</div>
 								</div>
-							</div>
-							<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-								<label for="oficina" class="font-weight-bold">Oficina</label>
-								<select class="form-control" name="oficina" id="oficina" required>
-									<option selected disabled value="">Selecciona la oficina</option>
-									<?php foreach ($body_data->oficinas as $index => $oficina) { ?>
-										<option value="<?= $oficina->OFICINAID ?>" <?= $oficina->OFICINAID == $body_data->usuario->OFICINAID ? 'selected' : '' ?>>
-											<?= $oficina->OFICINADESCR ?> </option>
-									<?php } ?>
-								</select>
-								<div class="invalid-feedback">
-									La oficina es obligatoria
+								<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+									<label for="oficina" class="font-weight-bold">Oficina</label>
+									<select class="form-control" name="oficina" id="oficina" required>
+										<option selected disabled value="">Selecciona la oficina</option>
+										<?php foreach ($body_data->oficinas as $index => $oficina) { ?>
+											<option value="<?= $oficina->OFICINAID ?>" <?= $oficina->OFICINAID == $body_data->usuario->OFICINAID ? 'selected' : '' ?>>
+												<?= $oficina->OFICINADESCR ?> </option>
+										<?php } ?>
+									</select>
+									<div class="invalid-feedback">
+										La oficina es obligatoria
+									</div>
 								</div>
-							</div>
+							<?php } ?>
+
+							<?php if ($body_data->usuario->ROLID == 13) { ?>
+								<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3" id="municipios_multiple">
+									<label for="mun" class="form-label font-weight-bold">Municipio</label>
+									<select class="js-example-basic-multiple form-control" name="mun[]" id="mun" multiple="multiple">
+										<?php foreach ($body_data->municipios as $municipio) {
+											$municipioID = $municipio->MUNICIPIOID;
+											$municipioDescr = $municipio->MUNICIPIODESCR;
+											// Utiliza in_array para verificar si el MUNICIPIOID está en el arreglo de seleccionados
+											$selected = in_array($municipioID, $body_data->municipioSeleccionadoIDs) ? 'selected' : '';
+											// Agrega la opción al select
+											echo "<option value='$municipioID' $selected>$municipioDescr</option>";
+										} ?>
+									</select>
+									<div class="invalid-feedback">
+										El municipio es obligatorio
+									</div>
+								</div>
+								<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3" id="oficina_multiple">
+									<label for="ofi" class="form-label font-weight-bold">Oficina</label>
+									<select class="js-example-basic-multiple form-control" name="ofi[]" id="ofi" multiple="multiple">
+										<option value="" disabled>Selecciona la oficina</option>
+										<?php foreach ($body_data->oficinas as $index => $oficina) {
+											$municipioID = $oficina->MUNICIPIOID;
+											$oficinaID = $oficina->OFICINAID;
+											$oficinaDescr = $oficina->OFICINADESCR;
+											// Utiliza in_array para verificar si el MUNICIPIOID está en el arreglo de seleccionados
+											$selected = in_array($oficinaID, $body_data->oficinaSeleccionadaIDs) ? 'selected' : '';
+											// Agrega la opción al select
+											echo "<option value='$municipioID,$oficinaID' $selected>$oficinaDescr</option>";
+										} ?>
+									</select>
+									<div class="invalid-feedback">
+										La oficina es obligatoria
+									</div>
+								</div>
+							<?php } ?>
 							<div class="col-12 pt-5 text-center">
 								<button type="submit" id="btn-submit-datos" class="btn btn-primary font-weight-bold">
 									ACTUALIZAR USUARIO
@@ -189,6 +230,43 @@
 			const password_confirm = document.querySelector('#password_confirm');
 			const toggle_password = document.querySelector('#toggle-password');
 			const toggle_password_confirm = document.querySelector('#toggle-password-confirm');
+
+			//Select de tipo multiple
+			$('#mun').select2();
+			$('#ofi').select2();
+			var selectedOffices = {};
+
+			$('#mun').on('change', function() {
+				var selectedValues = $(this).val();
+				var selectedOfficesTemp = $('#ofi').val(); // Almacena las oficinas seleccionadas antes de limpiar el select
+				console.log(selectedOfficesTemp);
+				$.ajax({
+					data: {
+						'municipio': selectedValues,
+					},
+					url: "<?= base_url('/data/get-oficinas-by-municipio') ?>",
+					method: "POST",
+					dataType: "json",
+				}).done(function(data) {
+					clearSelect(ofi);
+					data.forEach(oficina => {
+						let option = document.createElement("option");
+						option.text = oficina.OFICINADESCR;
+						option.value = oficina.MUNICIPIOID + ',' + oficina.OFICINAID;
+
+						// Verificar si la oficina ya se ha agregado
+						if (!selectedOffices[option.value]) {
+							ofi.add(option);
+							selectedOffices[option.value] = true;
+						}
+					});
+					// Vuelve a seleccionar las oficinas que estaban seleccionadas antes de limpiar el select
+					$('#ofi').val(selectedOfficesTemp);
+					// ofi.value = '';
+				}).fail(function(jqXHR, textStatus) {
+					clearSelect(ofi);
+				});
+			});
 
 			//Convierte todos los input text a mayusculas
 			inputsText.forEach((input) => {

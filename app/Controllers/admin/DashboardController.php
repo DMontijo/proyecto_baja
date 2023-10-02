@@ -708,6 +708,16 @@ class DashboardController extends BaseController
 			->join('OFICINA', 'OFICINA.OFICINAID = USUARIOS.OFICINAID AND OFICINA.MUNICIPIOID = USUARIOS.MUNICIPIOID AND OFICINA.ESTADOID = 2', 'LEFT')
 			->where('ROLID !=', 1)
 			->findAll();
+
+		foreach ($data->usuario as $user) {
+			if ($user->MUNICIPIOSOFICINASID) {
+
+				$visualizador = $this->_usuariosModelRead->user_visualizador($user->ID,$user->MUNICIPIOSOFICINASID );
+				$user->MUNICIPIODESCR = $visualizador['municipios'][0]->municipios_concatenados;
+				$user->OFICINADESCR = $visualizador['oficinas'][0]->oficinas_concatenadas;
+			}
+		}
+
 		$data->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 		$this->_loadView('Usuarios', 'usuarios', '', $data, 'users/users');
@@ -1070,12 +1080,19 @@ class DashboardController extends BaseController
 		$data = (object) array();
 		$data->zonas = $this->_zonasUsuariosModelRead->asObject()->where('NOMBRE_ZONA !=', 'SUPERUSUARIO')->findAll();
 		$data->roles = $this->_rolesUsuariosModelRead->asObject()->where('NOMBRE_ROL !=', 'SUPERUSUARIO')->findAll();
-		$data->municipios = $this->_municipiosModelRead->asObject()->where('ESTADOID', 2)->findAll();
+		$data->municipios = $this->_municipiosModelRead->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID <= 5')->findAll();
 		$data->usuario = $this->_usuariosModelRead->asObject()->where('ID', $id)->first();
+		if ($data->usuario->MUNICIPIOSOFICINASID) {
+			$municipiosOficinas = json_decode($data->usuario->MUNICIPIOSOFICINASID);
+			$data->municipioSeleccionadoIDs = array_column($municipiosOficinas, 'MUNICIPIOID');
+			$data->oficinaSeleccionadaIDs = array_column($municipiosOficinas, 'OFICINAID');
+			$data->oficinas = $this->_oficinasModelRead->asObject()->where('ESTADOID', 2)->whereIn('MUNICIPIOID', $data->municipioSeleccionadoIDs)->orderBy('OFICINADESCR', 'asc')->findAll();
+		} else {
+			$data->oficinas = $this->_oficinasModelRead->asObject()->where('MUNICIPIOID', $data->usuario->MUNICIPIOID)->orderBy('OFICINADESCR', 'asc')->findAll();
+		}
 		if (!$data->usuario) {
 			return redirect()->back()->with('message_error', 'No existe el usuario a editar.');
 		}
-		$data->oficinas = $this->_oficinasModelRead->asObject()->where('MUNICIPIOID', $data->usuario->MUNICIPIOID)->orderBy('OFICINADESCR', 'asc')->findAll();
 		$data->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 		$this->_loadView('Editar usuario', '', '', $data, 'users/edit_user');
@@ -1266,7 +1283,7 @@ class DashboardController extends BaseController
 		];
 
 		if ($this->validate(['correo_usuario' => 'required|valid_email|is_unique[USUARIOS.CORREO]'])) {
-			if ($data['ROLID'] != '5') {
+			if ($data['ROLID'] != '5' && $data['ROLID'] != '13') {
 				try {
 					$dataApi = array();
 					$dataApi['names'] = $this->request->getPost('nombre_usuario');
@@ -1318,18 +1335,45 @@ class DashboardController extends BaseController
 	{
 		$id = $this->request->getPost('id');
 		$usuario = $this->_usuariosModelRead->asObject()->where('ID', $id)->first();
-		$data = [
-			'NOMBRE' => trim($this->request->getPost('nombre_usuario')),
-			'APELLIDO_PATERNO' => trim($this->request->getPost('apellido_paterno_usuario')),
-			'APELLIDO_MATERNO' => trim($this->request->getPost('apellido_materno_usuario')),
-			'CORREO' => trim($this->request->getPost('correo_usuario')),
-			'SEXO' => trim($this->request->getPost('sexo_usuario')),
-			'ROLID' => trim($this->request->getPost('rol_usuario')),
-			'ZONAID' => trim($this->request->getPost('zona_usuario')),
-			'MUNICIPIOID' => trim($this->request->getPost('municipio')),
-			'OFICINAID' => trim($this->request->getPost('oficina')),
-		];
+		if ($this->request->getPost('mun') != null) {
+			$result = [];
 
+			foreach ($this->request->getPost('ofi') as $datos) {
+				// Separar el municipio y la oficina
+				$parts = explode(',', $datos);
+				$municipio = $parts[0];
+				$oficina = $parts[1];
+
+				// Crear un nuevo elemento en el resultado
+				$result[] = [
+					'MUNICIPIOID' => $municipio,
+					'OFICINAID' => $oficina
+				];
+			}
+
+			$data = [
+				'NOMBRE' => trim($this->request->getPost('nombre_usuario')),
+				'APELLIDO_PATERNO' => trim($this->request->getPost('apellido_paterno_usuario')),
+				'APELLIDO_MATERNO' => trim($this->request->getPost('apellido_materno_usuario')),
+				'CORREO' => trim($this->request->getPost('correo_usuario')),
+				'SEXO' => trim($this->request->getPost('sexo_usuario')),
+				'ROLID' => trim($this->request->getPost('rol_usuario')),
+				'ZONAID' => trim($this->request->getPost('zona_usuario')),
+				'MUNICIPIOSOFICINASID' => json_encode($result),
+			];
+		} else {
+			$data = [
+				'NOMBRE' => trim($this->request->getPost('nombre_usuario')),
+				'APELLIDO_PATERNO' => trim($this->request->getPost('apellido_paterno_usuario')),
+				'APELLIDO_MATERNO' => trim($this->request->getPost('apellido_materno_usuario')),
+				'CORREO' => trim($this->request->getPost('correo_usuario')),
+				'SEXO' => trim($this->request->getPost('sexo_usuario')),
+				'ROLID' => trim($this->request->getPost('rol_usuario')),
+				'ZONAID' => trim($this->request->getPost('zona_usuario')),
+				'MUNICIPIOID' => trim($this->request->getPost('municipio')),
+				'OFICINAID' => trim($this->request->getPost('oficina')),
+			];
+		}
 		if (!($data['CORREO'] === $usuario->CORREO)) {
 			if (!$this->validate(['correo_usuario' => 'required|valid_email|is_unique[USUARIOS.CORREO]'])) {
 				return redirect()->back()->with('message_error', 'Usuario no actualizado, el correo electrónico ya existe.');
@@ -1337,7 +1381,7 @@ class DashboardController extends BaseController
 		}
 
 		if ($usuario) {
-			if ($data['ROLID'] != '5') {
+			if ($data['ROLID'] != '5' &&  $data['ROLID'] != '13') {
 				try {
 					try {
 						$videoUser = $this->_updateUserVideo($usuario->TOKENVIDEO, $data['NOMBRE'], $data['APELLIDO_PATERNO'] . ' ' . $data['APELLIDO_MATERNO'], $data['CORREO'], $data['SEXO'], $data['ROLID']);
@@ -1671,7 +1715,7 @@ class DashboardController extends BaseController
 
 			$data->personaFisicaMediaFiliacion = $this->_folioMediaFiliacionRead->where('ANO', $year)->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
 			$data->folio = $this->_folioModelRead->where('FOLIOID', $folio)->where('ANO', $year)->first();
-		
+
 			$data->idPersonaFisica = $id;
 			if ($data->personaFisica['FOTO']) {
 				$file_info = new \finfo(FILEINFO_MIME_TYPE);
@@ -2776,7 +2820,7 @@ class DashboardController extends BaseController
 					if ($folioRow['TIPODENUNCIA'] != 'ES') {
 						if (!$ofendidos) {
 							throw new \Exception('Debe existir al menos un ofendido');
-						}	
+						}
 					}
 					if (!$imputados) {
 						throw new \Exception('Debe existir al menos un imputado');
@@ -3057,11 +3101,11 @@ class DashboardController extends BaseController
 					if ($municipio == 7) {
 						$municipio = 2;
 					}
-					
+
 					if ($folioRow['TIPODENUNCIA'] != 'ES') {
 						if (!$ofendidos) {
 							throw new \Exception('Debe existir al menos un ofendido');
-						}	
+						}
 					}
 					if (!$imputados) {
 						throw new \Exception('Debe existir al menos un imputado');
@@ -3246,7 +3290,7 @@ class DashboardController extends BaseController
 								if ($this->_sendEmailExpediente($denunciante->CORREO, $folio, $expedienteCreado->EXPEDIENTEID)) {
 									return json_encode(['status' => 1, 'expediente' => $expedienteCreado->EXPEDIENTEID]);
 								} else {
-									return json_encode(['status' => 0, 'expediente' => $expedienteCreado->EXPEDIENTEID, 'message' => 'Se creó el expediente pero no se envió el correo. EXPEDIENTE NO:'. $expedienteCreado->EXPEDIENTEID]);
+									return json_encode(['status' => 0, 'expediente' => $expedienteCreado->EXPEDIENTEID, 'message' => 'Se creó el expediente pero no se envió el correo. EXPEDIENTE NO:' . $expedienteCreado->EXPEDIENTEID]);
 								}
 							} else if ($folioRow['TIPODENUNCIA'] == 'DA') {
 								return json_encode(['status' => 1, 'expediente' => $expedienteCreado->EXPEDIENTEID]);
@@ -5239,7 +5283,7 @@ class DashboardController extends BaseController
 		// return $result;
 		return json_decode($result);
 	}
-	
+
 	/**
 	 * Función para obtener los videos del servicio de videollamada
 	 *
@@ -6684,7 +6728,7 @@ class DashboardController extends BaseController
 			$personas = $this->_folioPersonaFisicaModel->get_by_folio($folio, $year);
 
 			$parentescoRelacion = $this->_parentescoPersonaFisicaModel->getRelacion($folio, $year);
-		
+
 			$datosBitacora = [
 				'ACCION' => 'Ha ingresado un nuevo parentesco a una persona fisica',
 				'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
