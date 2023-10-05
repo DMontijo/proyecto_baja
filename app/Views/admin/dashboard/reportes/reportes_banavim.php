@@ -75,7 +75,7 @@
 												<input type="time" class="form-control" id="horaFin" name="horaFin" value="<?= isset($body_data->filterParams->horaFin) ? $body_data->filterParams->horaFin : '' ?>">
 											</div>
 											<div class="col-12 text-right">
-												<a href="<?= base_url('admin/dashboard/reporte_banavim') ?>" class="btn btn-secondary font-weight-bold" id="btnFiltroFolio" name="btnFiltroFolio">Borrar filtro</a>
+												<a href="<?= base_url('admin/dashboard/reportes_banavim') ?>" class="btn btn-secondary font-weight-bold" id="btnFiltroFolio" name="btnFiltroFolio">Borrar filtro</a>
 												<button type="submit" class="btn btn-primary font-weight-bold" id="btnFiltroFolio" name="btnFiltroFolio">Filtrar</button>
 											</div>
 										</form>
