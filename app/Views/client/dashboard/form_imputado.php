@@ -534,7 +534,6 @@
 			dataType: "json",
 			success: function(response) {
 				let colonias = response.data;
-				// console.log(colonias);
 				colonias.forEach(colonia => {
 					var option = document.createElement("option");
 					option.text = colonia.COLONIADESCR;

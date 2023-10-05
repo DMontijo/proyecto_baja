@@ -221,8 +221,6 @@
 
 			$('#mun').on('change', function() {
 				var selectedValues = $(this).val();
-				console.log(selectedValues); // Hacer algo con los valores seleccionados
-
 				$.ajax({
 					data: {
 						'municipio': selectedValues,
@@ -262,8 +260,6 @@
 			//Obtiene todas las oficinas de los municipios seleccionados
 			$('#mun').on('change', function() {
 				var selectedValues = $(this).val();
-				console.log(selectedValues); // Hacer algo con los valores seleccionados
-
 				$.ajax({
 					data: {
 						'municipio': selectedValues,

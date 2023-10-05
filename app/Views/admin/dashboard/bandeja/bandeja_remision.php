@@ -105,8 +105,6 @@
 				method: "POST",
 				dataType: "json",
 			}).done(function(response) {
-				console.log(response);
-
 				const empleado = response.data;
 				clearSelect(unidad);
 				empleado.forEach(emplead => {
@@ -137,14 +135,10 @@
 				method: "POST",
 				dataType: "json",
 			}).done(function(data) {
-				console.log(data.data);
 				document.getElementById('oficinaid').value = e.target.value.split(" ")[0]
 				document.getElementById('empleadoid').value = e.target.value.split(" ")[2];
 				document.getElementById('areaid').value = e.target.value.split(" ")[1];
 				document.getElementById('tipoOficina').value = 'COORDINACION';
-				console.log("coord");
-
-
 
 				// const unidades = data.data;
 				// clearSelect(unidad);
@@ -187,7 +181,6 @@
 			method: "POST",
 			dataType: "json",
 		}).done(function(data) {
-			console.log(data);
 			document.getElementById('oficinaid').value = data.data[0].OFICINAID_MP;
 			document.getElementById('empleadoid').value = data.data[0].EMPLEADOID_MP;
 			document.getElementById('areaid').value = data.data[0].AREAID_MP;
@@ -201,7 +194,6 @@
 					confirmButtonColor: '#bf9b55',
 				})
 			}
-			console.log(data.data[0].EMPLEADOID_MP);
 		}).fail(function(jqXHR, textStatus) {
 			console.log(textStatus);
 		});

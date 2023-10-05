@@ -648,7 +648,7 @@ class DashboardController extends BaseController
 		// $this->endpoint = $this->protocol . $this->ip . '/webServiceVD';
 		$this->protocol = 'https://';
 		$this->ip = "ws.fgebc.gob.mx";
-		$this->endpoint = $this->protocol . $this->ip . '/webServiceVD';
+		$this->endpoint = $this->protocol . $this->ip . '/webServiceVD'; //Conexion al WS de conexion a Justicia
 		$this->urlApi = VIDEOCALL_URL;
 	}
 
@@ -708,6 +708,16 @@ class DashboardController extends BaseController
 			->join('OFICINA', 'OFICINA.OFICINAID = USUARIOS.OFICINAID AND OFICINA.MUNICIPIOID = USUARIOS.MUNICIPIOID AND OFICINA.ESTADOID = 2', 'LEFT')
 			->where('ROLID !=', 1)
 			->findAll();
+
+		foreach ($data->usuario as $user) {
+			if ($user->MUNICIPIOSOFICINASID) {
+
+				$visualizador = $this->_usuariosModelRead->user_visualizador($user->ID,$user->MUNICIPIOSOFICINASID );
+				$user->MUNICIPIODESCR = $visualizador['municipios'][0]->municipios_concatenados;
+				$user->OFICINADESCR = $visualizador['oficinas'][0]->oficinas_concatenadas;
+			}
+		}
+
 		$data->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 		$this->_loadView('Usuarios', 'usuarios', '', $data, 'users/users');
@@ -791,9 +801,12 @@ class DashboardController extends BaseController
 	public function crear_archivos_externos()
 	{
 		$documento = $this->request->getFile('documentoArchivo');
+
+		//Retorna si no hay archivos
 		if (empty($documento)) {
 			return json_encode(['status' => 2]);
 		}
+		//Obtiene el contenido y la informacion del archivo
 		$doc = file_get_contents($documento);
 		$f = finfo_open();
 		$mime_type = finfo_buffer($f, $doc, FILEINFO_MIME_TYPE);
@@ -813,7 +826,7 @@ class DashboardController extends BaseController
 			'ARCHIVO' => $doc,
 			'EXTENSION' => $extension,
 		];
-		$archivoExterno = $this->_folioExpArchivo($data, $folio, $year);
+		$archivoExterno = $this->_folioExpArchivo($data, $folio, $year); //Inserta el archivo externo
 		if ($archivoExterno) {
 			$datados = (object) array();
 
@@ -845,7 +858,6 @@ class DashboardController extends BaseController
 		$data = $data;
 		$data['FOLIOID'] = $folio;
 		$data['ANO'] = $year;
-
 
 		$archivoExterno = $this->_archivoExternoModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->orderBy('FOLIOARCHIVOID ', 'desc')->first();
 
@@ -1068,12 +1080,19 @@ class DashboardController extends BaseController
 		$data = (object) array();
 		$data->zonas = $this->_zonasUsuariosModelRead->asObject()->where('NOMBRE_ZONA !=', 'SUPERUSUARIO')->findAll();
 		$data->roles = $this->_rolesUsuariosModelRead->asObject()->where('NOMBRE_ROL !=', 'SUPERUSUARIO')->findAll();
-		$data->municipios = $this->_municipiosModelRead->asObject()->where('ESTADOID', 2)->findAll();
+		$data->municipios = $this->_municipiosModelRead->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID <= 5')->findAll();
 		$data->usuario = $this->_usuariosModelRead->asObject()->where('ID', $id)->first();
+		if ($data->usuario->MUNICIPIOSOFICINASID) {
+			$municipiosOficinas = json_decode($data->usuario->MUNICIPIOSOFICINASID);
+			$data->municipioSeleccionadoIDs = array_column($municipiosOficinas, 'MUNICIPIOID');
+			$data->oficinaSeleccionadaIDs = array_column($municipiosOficinas, 'OFICINAID');
+			$data->oficinas = $this->_oficinasModelRead->asObject()->where('ESTADOID', 2)->whereIn('MUNICIPIOID', $data->municipioSeleccionadoIDs)->orderBy('OFICINADESCR', 'asc')->findAll();
+		} else {
+			$data->oficinas = $this->_oficinasModelRead->asObject()->where('MUNICIPIOID', $data->usuario->MUNICIPIOID)->orderBy('OFICINADESCR', 'asc')->findAll();
+		}
 		if (!$data->usuario) {
 			return redirect()->back()->with('message_error', 'No existe el usuario a editar.');
 		}
-		$data->oficinas = $this->_oficinasModelRead->asObject()->where('MUNICIPIOID', $data->usuario->MUNICIPIOID)->orderBy('OFICINADESCR', 'asc')->findAll();
 		$data->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 		$this->_loadView('Editar usuario', '', '', $data, 'users/edit_user');
@@ -1264,7 +1283,7 @@ class DashboardController extends BaseController
 		];
 
 		if ($this->validate(['correo_usuario' => 'required|valid_email|is_unique[USUARIOS.CORREO]'])) {
-			if ($data['ROLID'] != '5') {
+			if ($data['ROLID'] != '5' && $data['ROLID'] != '13') {
 				try {
 					$dataApi = array();
 					$dataApi['names'] = $this->request->getPost('nombre_usuario');
@@ -1316,18 +1335,45 @@ class DashboardController extends BaseController
 	{
 		$id = $this->request->getPost('id');
 		$usuario = $this->_usuariosModelRead->asObject()->where('ID', $id)->first();
-		$data = [
-			'NOMBRE' => trim($this->request->getPost('nombre_usuario')),
-			'APELLIDO_PATERNO' => trim($this->request->getPost('apellido_paterno_usuario')),
-			'APELLIDO_MATERNO' => trim($this->request->getPost('apellido_materno_usuario')),
-			'CORREO' => trim($this->request->getPost('correo_usuario')),
-			'SEXO' => trim($this->request->getPost('sexo_usuario')),
-			'ROLID' => trim($this->request->getPost('rol_usuario')),
-			'ZONAID' => trim($this->request->getPost('zona_usuario')),
-			'MUNICIPIOID' => trim($this->request->getPost('municipio')),
-			'OFICINAID' => trim($this->request->getPost('oficina')),
-		];
+		if ($this->request->getPost('mun') != null) {
+			$result = [];
 
+			foreach ($this->request->getPost('ofi') as $datos) {
+				// Separar el municipio y la oficina
+				$parts = explode(',', $datos);
+				$municipio = $parts[0];
+				$oficina = $parts[1];
+
+				// Crear un nuevo elemento en el resultado
+				$result[] = [
+					'MUNICIPIOID' => $municipio,
+					'OFICINAID' => $oficina
+				];
+			}
+
+			$data = [
+				'NOMBRE' => trim($this->request->getPost('nombre_usuario')),
+				'APELLIDO_PATERNO' => trim($this->request->getPost('apellido_paterno_usuario')),
+				'APELLIDO_MATERNO' => trim($this->request->getPost('apellido_materno_usuario')),
+				'CORREO' => trim($this->request->getPost('correo_usuario')),
+				'SEXO' => trim($this->request->getPost('sexo_usuario')),
+				'ROLID' => trim($this->request->getPost('rol_usuario')),
+				'ZONAID' => trim($this->request->getPost('zona_usuario')),
+				'MUNICIPIOSOFICINASID' => json_encode($result),
+			];
+		} else {
+			$data = [
+				'NOMBRE' => trim($this->request->getPost('nombre_usuario')),
+				'APELLIDO_PATERNO' => trim($this->request->getPost('apellido_paterno_usuario')),
+				'APELLIDO_MATERNO' => trim($this->request->getPost('apellido_materno_usuario')),
+				'CORREO' => trim($this->request->getPost('correo_usuario')),
+				'SEXO' => trim($this->request->getPost('sexo_usuario')),
+				'ROLID' => trim($this->request->getPost('rol_usuario')),
+				'ZONAID' => trim($this->request->getPost('zona_usuario')),
+				'MUNICIPIOID' => trim($this->request->getPost('municipio')),
+				'OFICINAID' => trim($this->request->getPost('oficina')),
+			];
+		}
 		if (!($data['CORREO'] === $usuario->CORREO)) {
 			if (!$this->validate(['correo_usuario' => 'required|valid_email|is_unique[USUARIOS.CORREO]'])) {
 				return redirect()->back()->with('message_error', 'Usuario no actualizado, el correo electrónico ya existe.');
@@ -1335,7 +1381,7 @@ class DashboardController extends BaseController
 		}
 
 		if ($usuario) {
-			if ($data['ROLID'] != '5') {
+			if ($data['ROLID'] != '5' &&  $data['ROLID'] != '13') {
 				try {
 					try {
 						$videoUser = $this->_updateUserVideo($usuario->TOKENVIDEO, $data['NOMBRE'], $data['APELLIDO_PATERNO'] . ' ' . $data['APELLIDO_MATERNO'], $data['CORREO'], $data['SEXO'], $data['ROLID']);
@@ -1460,7 +1506,7 @@ class DashboardController extends BaseController
 		$cer_fiel = $this->request->getFile('cer');
 		$user_id = session('ID');
 
-		$directory = FCPATH . 'uploads/FIEL/' . $user_id;
+		$directory = FCPATH . 'uploads/FIEL/' . $user_id; //Directorio donde se cargan las fiel
 		$file_key = $user_id . '_key.key';
 		$file_cer = $user_id . '_cer.cer';
 
@@ -1506,6 +1552,9 @@ class DashboardController extends BaseController
 		$year = trim($this->request->getPost('year'));
 		$search = $this->request->getPost('search');
 
+		// if(!session('ID')){
+		// 	return json_encode(['status' => 4]);
+		// }
 		if ($search != 'true') {
 			$data->folio = $this->_folioModelRead->asObject()->where('ANO', $year)->where('FOLIOID', $numfolio)->first();
 
@@ -1513,7 +1562,9 @@ class DashboardController extends BaseController
 				if ($data->folio->STATUS == 'ABIERTO') {
 					$data->status = 1;
 
+					//Información de todo el folio consultado
 					$data->respuesta = $this->getDataFolio($numfolio, $year);
+
 					$this->_folioModel->set(['STATUS' => 'EN PROCESO', 'AGENTEATENCIONID' => session('ID')])->where('ANO', $year)->where('FOLIOID', $numfolio)->update();
 					$datosBitacora = [
 						'ACCION' => 'Solicito la información para atender un folio.',
@@ -1523,8 +1574,9 @@ class DashboardController extends BaseController
 					return json_encode($data);
 				} else if ($data->folio->STATUS == 'EN PROCESO' && $data->folio->AGENTEATENCIONID == session('ID')) {
 					$data->status = 1;
-
+					//Información de todo el folio consultado
 					$data->respuesta = $this->getDataFolio($numfolio, $year);
+
 					$this->_folioModel->set(['STATUS' => 'EN PROCESO', 'AGENTEATENCIONID' => session('ID')])->where('ANO', $year)->where('FOLIOID', $numfolio)->update();
 					$datosBitacora = [
 						'ACCION' => 'Solicito la información para atender un folio.',
@@ -1537,6 +1589,8 @@ class DashboardController extends BaseController
 					return json_encode(['status' => 2, 'motivo' => 'EL FOLIO YA ESTA SIENDO ATENDIDO', 'agente' => $agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' . $agente->APELLIDO_MATERNO]);
 				} else if ($data->folio->STATUS == 'EN PROCESO' && $data->folio->TIPODENUNCIA == "DA" && $data->folio->AGENTEATENCIONID == session('ID')) {
 					$data->status = 1;
+
+					//Información de todo el folio consultado
 					$data->respuesta = $this->getDataFolio($numfolio, $year);
 
 					$datosBitacora = [
@@ -1557,6 +1611,8 @@ class DashboardController extends BaseController
 
 			if ($data->folio) {
 				$data->status = 1;
+
+				//Información de todo el folio consultado
 				$data->respuesta = $this->getDataFolio($numfolio, $year);
 
 
@@ -1564,10 +1620,11 @@ class DashboardController extends BaseController
 					$data->agente = $this->_usuariosModelRead->asObject()->where('ID', $data->folio->AGENTEATENCIONID)->first();
 				} else if ($data->folio->STATUS == 'EN PROCESO' && $data->folio->TIPODENUNCIA == "DA") {
 					$data->status = 1;
+
+					//Información de todo el folio consultado
 					$data->respuesta = $this->getDataFolio($numfolio, $year);
 					return json_encode($data);
 				}
-				// var_dump($data->archivosexternos);exit;
 				return json_encode($data);
 			} else {
 				return json_encode(['status' => 0, 'motivo' => 'El folio ' . $numfolio . ' del año ' . $year . ' no existe.']);
@@ -1594,9 +1651,6 @@ class DashboardController extends BaseController
 		$data->personas = $this->_folioPersonaFisicaModelRead->get_by_folio($numfolio, $year);
 		$data->correos = $this->_folioPersonaFisicaModelRead->get_correos_persona($numfolio, $year);
 		$data->parentescoRelacion = $this->_parentescoPersonaFisicaModel->getRelacion($numfolio, $year);
-		// $data->personaiduno = $this->_parentescoPersonaFisicaModelRead->get_personaFisicaUno($numfolio, $year);
-		// $data->personaidDos = $this->_parentescoPersonaFisicaModelRead->get_personaFisicaDos($numfolio, $year);
-		// $data->parentesco = $this->_parentescoPersonaFisicaModelRead->get_Parentesco($numfolio, $year);
 		$data->relacionFisFis = $this->_relacionIDOModelRead->get_by_folio($numfolio, $year);
 		$data->vehiculos = $this->_folioVehiculoModelRead->get_by_folio($numfolio, $year);
 		$data->fisicaImpDelito = $this->_imputadoDelitoModelRead->get_by_folio($numfolio, $year);
@@ -1661,19 +1715,7 @@ class DashboardController extends BaseController
 
 			$data->personaFisicaMediaFiliacion = $this->_folioMediaFiliacionRead->where('ANO', $year)->where('FOLIOID', $folio)->where('PERSONAFISICAID', $id)->first();
 			$data->folio = $this->_folioModelRead->where('FOLIOID', $folio)->where('ANO', $year)->first();
-			// if ($data->personaFisica['DESAPARECIDA'] == 'S') {
 
-			//     $data->parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID2', $data->personaFisicaMediaFiliacion['PERSONAFISICAID'])->first();
-			//     $data->parentesco = $this->_parentescoModel->where('PERSONAPARENTESCOID', $data->parentescoRelacion['PARENTESCOID'])->first();
-			// }
-			// $data->parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID2', $id)->first();
-			// $data->parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
-
-			// if ($data->parentescoRelacion) {
-			//     $data->parentesco = $this->_parentescoModel->where('PERSONAPARENTESCOID', $data->parentescoRelacion['PARENTESCOID'])->first();
-			// } else {
-			//     $data->parentesco = '';
-			// }
 			$data->idPersonaFisica = $id;
 			if ($data->personaFisica['FOTO']) {
 				$file_info = new \finfo(FILEINFO_MIME_TYPE);
@@ -1705,14 +1747,6 @@ class DashboardController extends BaseController
 
 		if ($data->parentescoRelacion) {
 			$data->parentesco = $this->_parentescoModel->where('PERSONAPARENTESCOID', $data->parentescoRelacion['PARENTESCOID'])->first();
-			// $data->parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID2', $id)->first();
-			// $data->parentescoRelacion = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
-
-			// if ($data->parentescoRelacion) {
-			//     $data->parentesco = $this->_parentescoModel->where('PERSONAPARENTESCOID', $data->parentescoRelacion['PARENTESCOID'])->first();
-			// } else {
-			//     $data->parentesco = '';
-			// }
 			$data->idPersonaFisica = $id;
 
 			$data->status = 1;
@@ -1738,7 +1772,6 @@ class DashboardController extends BaseController
 		$data = (object) array();
 		$data->imputado_delito = $this->_imputadoDelitoModelRead->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $id)->where('DELITOMODALIDADID', $delitomodalidadid)->first();
 		if ($data->imputado_delito) {
-
 			$data->status = 1;
 			return json_encode($data);
 		} else {
@@ -1787,7 +1820,6 @@ class DashboardController extends BaseController
 			foreach ($data->archivosexternos as $key => $archivos) {
 				$file_info = new \finfo(FILEINFO_MIME_TYPE);
 				$type = $file_info->buffer($archivos->ARCHIVO);
-
 				$archivos->ARCHIVO = 'data:' . $type . ';base64,' . base64_encode($archivos->ARCHIVO);
 			}
 		}
@@ -1810,6 +1842,7 @@ class DashboardController extends BaseController
 
 		if ($data->vehiculo) {
 			try {
+				//Codifica las fotos y los documentos de los vehiculos para su visualizacion
 				if ($data->vehiculo['FOTO']) {
 					$file_info = new \finfo(FILEINFO_MIME_TYPE);
 					$type = $file_info->buffer($data->vehiculo['FOTO']);
@@ -1865,6 +1898,9 @@ class DashboardController extends BaseController
 			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
 		}
 		$coordinacion = $this->getCoordinacion();
+		if ($coordinacion == NULL) {
+			return redirect()->back()->with('message_error', 'No se encontrarón las coordinaciones, revisa con soporte técnico.');
+		}
 		$data = (object) array();
 		$data->municipio = $this->request->getGet('municipioasignado');
 		$data->folio = $this->request->getGet('folio');
@@ -1910,8 +1946,6 @@ class DashboardController extends BaseController
 
 			$documents = $this->_folioDocModel->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
 			$status = 2;
-			// $dataInter =  array('SOLICITUDID' => 9000600, 'INTERVENCIONID' => 98);
-
 
 			foreach ($documents as $key => $document) {
 				if (
@@ -2601,9 +2635,6 @@ class DashboardController extends BaseController
 				return json_encode(['status' => 1, 'message' => 'Se han sincronizado las coordinaciones de los expedientes de CDTEC con Justicia Net correctamente.']);
 			}
 		}
-
-
-
 		// } catch (\Error $e) {
 		// 	throw new \Exception('Error en actualizacion en Justicia: ' . $e->getMessage());
 		// }
@@ -2740,8 +2771,8 @@ class DashboardController extends BaseController
 		$telefonica = $this->request->getPost('denuncia_tel');
 		$electronica = $this->request->getPost('denuncia_electronica');
 
-		$agenteId="";
-		if(session('ID')) {
+		$agenteId = "";
+		if (session('ID')) {
 			$agenteId = session('ID');
 		} else {
 			return json_encode(['status' => 0, 'error' => 'Sesión finalizada por inactividad, vuelve a iniciar sesión.']);
@@ -2780,6 +2811,35 @@ class DashboardController extends BaseController
 				if ($folioRow) {
 					//Se detecta que en la DB existan todos los campos necesarios para Justicia
 					$this->deteccionErrores($folioRow, $folioVehiculoRow);
+					$fisImpDelito = $this->_imputadoDelitoModelRead->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
+					$imputados = $this->_folioPersonaFisicaModelRead->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->orderBy('PERSONAFISICAID', 'asc')->where('CALIDADJURIDICAID', 2)->findAll();
+					$relacionFisFis = $this->_relacionIDOModelRead->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
+					$imputados_con_delito = array();
+					$ofendidos = $this->_folioPersonaFisicaModelRead->select('NOMBRE')->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->orderBy('PERSONAFISICAID', 'asc')->where('CALIDADJURIDICAID', 1)->orWhere('CALIDADJURIDICAID', 6)->findAll();
+
+					if ($folioRow['TIPODENUNCIA'] != 'ES') {
+						if (!$ofendidos) {
+							throw new \Exception('Debe existir al menos un ofendido');
+						}
+					}
+					if (!$imputados) {
+						throw new \Exception('Debe existir al menos un imputado');
+					}
+					// Verificación para que todos los imputados tengan un delito y una relación con el ofendido
+					foreach ($fisImpDelito as $value) {
+						if (!in_array($value['PERSONAFISICAID'], $imputados_con_delito)) {
+							array_push($imputados_con_delito, $value['PERSONAFISICAID']);
+						}
+					}
+
+					if (count($imputados_con_delito) != count($imputados)) {
+						throw new \Exception('Todos los imputados deben tener al menos 1 delito asignado');
+					}
+
+					if (count($relacionFisFis) == 0 || count($relacionFisFis) <= 0) {
+						throw new \Exception('Todos los imputados deben tener una relación con una persona física');
+					}
+
 					$update = $this->_folioModel->set($data)->where('ANO', $year)->where('FOLIOID', $folio)->update();
 
 
@@ -2943,6 +3003,32 @@ class DashboardController extends BaseController
 			}
 		}
 	}
+
+	/**Funcion para quitar todas las comillas al enviar el folio a Justicia */
+	public function quitar_caracteres_especiales($texto)
+	{
+		// Convertir los caracteres a su forma sin acentos
+		$texto_sin_acentos = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $texto);
+
+		// Eliminar comillas dobles, comillas simples y comillas invertidas
+		$texto_limpio = preg_replace('/[\'"`]/u', '', $texto_sin_acentos);
+
+		return $texto_limpio;
+	}
+
+	/**Funcion para limpiar todas las variables enviadas en el POST para enviar a Justicia */
+	public function limpiar_variables($variables)
+	{
+		$variables_limpias = array();
+		foreach ($variables as $nombre => $valor) {
+			if (is_string($valor)) {
+				$variables_limpias[$nombre] = $this->quitar_caracteres_especiales($valor);
+			} else {
+				$variables_limpias[$nombre] = $valor;
+			}
+		}
+		return $variables_limpias;
+	}
 	/**
 	 * Función para dar salida y crear expediente en Justicia.
 	 * Se recibe por metodo POST el folio, año, municipio, estado, notas del agente, tipo de expediente, y tipo de denuncia.
@@ -2950,6 +3036,14 @@ class DashboardController extends BaseController
 	 */
 	public function saveInJusticia()
 	{
+		/**Limpieza de variables de metodo POST */
+		// Obtener las variables POST
+		$postVariables = $this->request->getPost();
+		// Limpiar las variables POST
+		$postVariablesLimpio = $this->limpiar_variables($postVariables);
+		// Actualizar las variables POST limpias en la solicitud
+		$this->request->setGlobal('post', $postVariablesLimpio);
+
 		$folio = $this->request->getPost('folio');
 		$year = $this->request->getPost('year');
 		$municipio = $this->request->getPost('municipio');
@@ -2976,6 +3070,7 @@ class DashboardController extends BaseController
 					$relacionFisFis = $this->_relacionIDOModelRead->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
 					$parentescos = $this->_parentescoPersonaFisicaModelRead->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
 					$vehiculos = $this->_folioVehiculoModelRead->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
+					$ofendidos = $this->_folioPersonaFisicaModelRead->select('NOMBRE')->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->orderBy('PERSONAFISICAID', 'asc')->where('CALIDADJURIDICAID', 1)->orWhere('CALIDADJURIDICAID', 6)->findAll();
 
 
 					$imputados_con_delito = array();
@@ -2998,12 +3093,22 @@ class DashboardController extends BaseController
 						throw new \Exception('Solo puedes dar salida a San Felipe.');
 					}
 
+					//Redirigir el municipio de San Felipe y San Quintin
 					if ($municipio == 6) {
 						$municipio = 1;
 					}
 
 					if ($municipio == 7) {
 						$municipio = 2;
+					}
+
+					if ($folioRow['TIPODENUNCIA'] != 'ES') {
+						if (!$ofendidos) {
+							throw new \Exception('Debe existir al menos un ofendido');
+						}
+					}
+					if (!$imputados) {
+						throw new \Exception('Debe existir al menos un imputado');
 					}
 
 					// Verificación para que todos los imputados tengan un delito y una relación con el ofendido
@@ -3025,14 +3130,20 @@ class DashboardController extends BaseController
 					$narracion = $folioRow['HECHONARRACION'];
 					$fecha = $folioRow['HECHOFECHA'];
 
+					if ($folioRow['HECHOCOORDENADAX'] == 'NaN') {
+						$folioRow['HECHOCOORDENADAX'] = NULL;
+					}
+					if ($folioRow['HECHOCOORDENADAY'] == 'NaN') {
+						$folioRow['HECHOCOORDENADAY'] = NULL;
+					}
 					//Asignación de variables para creaar el expediente
 					$folioRow['MUNICIPIOID'] = $municipio;
 					$folioRow['ESTADOID'] = $estado;
 					$folioRow['HECHOMEDIOCONOCIMIENTOID'] = (string) 6;
 					$folioRow['NOTASAGENTE'] = strtoupper($notas);
 					$folioRow['STATUS'] = 'EXPEDIENTE';
-					$folioRow['AGENTEATENCIONID'] = session('ID') ? session('ID') : 1;
-					$folioRow['AGENTEFIRMAID'] = session('ID') ? session('ID') : 1;
+					$folioRow['AGENTEATENCIONID'] = session('ID');
+					$folioRow['AGENTEFIRMAID'] = session('ID');
 
 					$folioRow['HECHOFECHA'] = $folioRow['HECHOFECHA'] . ' ' . $folioRow['HECHOHORA'];
 					$folioRow['HECHONARRACION'] = $notas;
@@ -3040,9 +3151,11 @@ class DashboardController extends BaseController
 					$folioRow['ESTADOJURIDICOEXPEDIENTEID'] = (string) 13;
 					$folioRow['TIPOEXPEDIENTEID'] = (int)$tiposExpedienteId;
 
+					$folioRow = $this->limpiar_variables($folioRow);
 					$expedienteCreado = $this->_createExpediente($folioRow);
 					// var_dump($expedienteCreado);exit;
 
+					/**Variables para hacer pruebas */
 					// $expedienteCreado = (object)array(
 					// 	'status' => 201,
 					// 	'EXPEDIENTEID' => '102001202305366'
@@ -3089,7 +3202,7 @@ class DashboardController extends BaseController
 								} else if ($persona['NOMBRE'] == 'QRO') {
 									$persona['NOMBRE'] = 'QUIEN RESULTE OFENDIDO';
 								}
-
+								$persona = $this->limpiar_variables($persona);
 								//Se crean todas las personas fisicas
 								$_persona = $this->_createPersonaFisica($expedienteCreado->EXPEDIENTEID, $persona, $municipio);
 								if ($_persona->status == 201) {
@@ -3105,9 +3218,10 @@ class DashboardController extends BaseController
 									}
 
 									foreach ($domicilios as $key => $domicilio) {
+										$domicilio = $this->limpiar_variables($domicilio);
 										$_domicilio = $this->_createDomicilioPersonaFisica($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $domicilio, $municipio);
 									}
-
+									$mediaFiliacion = $this->limpiar_variables($mediaFiliacion);
 									$_mediaFiliacion = $this->_createPersonaFisicaMediaFilicacion($expedienteCreado->EXPEDIENTEID, $_persona->PERSONAFISICAID, $mediaFiliacion, $municipio);
 								}
 							}
@@ -3135,6 +3249,7 @@ class DashboardController extends BaseController
 											//Si el delito asignado es robo de vehiculo se crea el expediente del vehiculo.
 											if (count($vehiculos) > 0) {
 												foreach ($vehiculos as $vehiculo) {
+													$vehiculo = $this->limpiar_variables($vehiculo);
 													if ($vehiculo['PLACAS'] == '') {
 														$vehiculo['PLACAS'] = 'VACIO';
 													}
@@ -3179,7 +3294,7 @@ class DashboardController extends BaseController
 								if ($this->_sendEmailExpediente($denunciante->CORREO, $folio, $expedienteCreado->EXPEDIENTEID)) {
 									return json_encode(['status' => 1, 'expediente' => $expedienteCreado->EXPEDIENTEID]);
 								} else {
-									return json_encode(['status' => 1, 'expediente' => $expedienteCreado->EXPEDIENTEID, 'message' => 'Correo no enviado']);
+									return json_encode(['status' => 0, 'expediente' => $expedienteCreado->EXPEDIENTEID, 'message' => 'Se creó el expediente pero no se envió el correo. EXPEDIENTE NO:' . $expedienteCreado->EXPEDIENTEID]);
 								}
 							} else if ($folioRow['TIPODENUNCIA'] == 'DA') {
 								return json_encode(['status' => 1, 'expediente' => $expedienteCreado->EXPEDIENTEID]);
@@ -3343,28 +3458,6 @@ class DashboardController extends BaseController
 			try {
 
 				foreach ($folioDocPeritaje as $key => $docP) {
-					// $relacionDoc = $this->_relacionFolioDocModel->where('FOLIOID', $docP['FOLIOID'])->where('ANO', $docP['ANO'])->where('EXPEDIENTEID', $docP['NUMEROEXPEDIENTE'])->where('FOLIODOCID', $docP['FOLIODOCID'])->where('TIPO', 'DOCUMENTO PERITAJE')->orderBy('FOLIODOCID', 'asc')->first();
-
-					// if ($relacionDoc == NULL) {
-					// 	$municipioid = $docP['MUNICIPIOID'] ? $docP['MUNICIPIOID'] : NULL;
-
-					// 	try {
-					// 		$_archivo = $this->_createArchivosExternos($expediente, $folio, $year,  $municipioid, $docP['CLASIFICACIONDOCTOID'], $docP['TIPODOC'], $docP['PDF'], 'pdf');
-					// 		if ($_archivo->status == 201) {
-					// 			$datosRelacionFolio = [
-					// 				'FOLIODOCID' => $docP['FOLIODOCID'],
-					// 				'FOLIOID' =>  $docP['FOLIOID'],
-					// 				'ANO' => $docP['ANO'],
-					// 				'EXPEDIENTEID' => $_archivo->EXPEDIENTEID,
-					// 				'EXPEDIENTEARCHIVOID' => $_archivo->ARCHIVOID,
-					// 				'TIPO' => 'DOCUMENTO PERITAJE',
-
-					// 			];
-					// 			$this->_relacionFolioDocModel->insert($datosRelacionFolio);
-					// 		}
-					// 	} catch (\Exception $e) {
-					// 	}
-					// }
 					$relacionDocExpDoc = $this->_relacionFolioDocExpDocRead->where('FOLIOID', $docP->FOLIOID)->where('ANO', $docP->ANO)->where('EXPEDIENTEID', $docP->NUMEROEXPEDIENTE)->where('FOLIODOCID', $docP->FOLIODOCID)->orderBy('FOLIODOCID', 'asc')->first();
 
 					if ($relacionDocExpDoc == null) {
@@ -4603,7 +4696,7 @@ class DashboardController extends BaseController
 		$data['pwdDB'] = $conexion->PASSWORD;
 		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
 		$data['schema'] = $conexion->SCHEMA;
-		return $this->_curlPostDataEncrypt($endpoint, $data);
+		return $this->_curlPostCoordDataEncrypt($endpoint, $data);
 	}
 
 	/**
@@ -5146,66 +5239,53 @@ class DashboardController extends BaseController
 		// return $result;
 		return json_decode($result);
 	}
-
-	public function getTimeVideo()
+	/**
+	 * Función CURL POST a Justicia encriptados COORDINACION
+	 *
+	 * @param  mixed $endpoint
+	 * @param  mixed $data
+	 */
+	private function _curlPostCoordDataEncrypt($endpoint, $data)
 	{
-		// $video = $this->request->getPost('name_video');
+		$ch = curl_init();
 
-		$s3 = new S3Client([
-			'version' => 'latest',
-			'region'  => 'us-east-1',
-			'credentials' => [
-				'key'    => 'AKIA4VSIIBT2MZIW5HBN',
-				'secret' => '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',
-			],
-		]);
-		// $s3->listBuckets()
+		curl_setopt($ch, CURLOPT_URL, $endpoint);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $this->_encriptar(json_encode($data), KEY_128));
+		$headers = array(
+			'Content-Type: application/json',
+			'Access-Control-Allow-Origin: *',
+			'Access-Control-Allow-Credentials: true',
+			'Access-Control-Allow-Headers: Content-Type',
+			'Hash-API: ' . password_hash(TOKEN_API, PASSWORD_BCRYPT),
+			'Key: ' . KEY_128
+		);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		// curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 
-		$bucket = 'fgebc-records';
-		$key = 'pnx_46_b607792e2c7f837ac04ee95cc607e528_2023-01-26-15-08-07.mp4';
+		$result = curl_exec($ch);
 
-		$result = $s3->getObject(array(
-			'Bucket' => $bucket,
-			'Key'    => $key,
-			'SaveAs' => FCPATH . '/tmp/video.mp4',
-
-		));
-
-
-		$content = $result['Body'];
-
-
-		$ffprobe = FFProbe::create([
-			'ffmpeg.binaries'  => '/usr/local/bin/ffmpeg', //'C:/ffmpeg/bin/ffmpeg.exe', // the path to the FFMpeg binary
-			'ffprobe.binaries' => '/usr/local/bin/ffprobe', //'C:/ffmpeg/bin/ffprobe.exe', // the path to the FFProbe binary
-			'timeout'          => 3600, // the timeout for the underlying process
-			'ffmpeg.threads'   => 12,   // the number of threads that FFMpeg should use
-		]);
-		// $client = new Client();
-
-		// // Crea un stream con el contenido del video desde S3
-		// $response = $client->request('GET', $s3->getObjectUrl($bucket, $key));
-		// $stream = $response->getBody();
-
-
-		// Obtiene la duración del video
-		// $video = $ffprobe->streams($stream)->videos()->first()->get('codec_name');
-		$duration = $ffprobe
-			->streams('https://fgebc-records.s3.amazonaws.com/pnx_46_b607792e2c7f837ac04ee95cc607e528_2023-01-26-15-08-07.mp4')
-			->videos()
-			->first()
-			->get('duration');
-		var_dump($duration);
-		exit;
-		// $duration = $video->get('duration');
-
-		// $ffmpeg = FFMpeg::create();
-
-		// $video = $ffmpeg->open($content);
-		// $duration = $video->get('duration');
-
-		// return json_encode(['tiempo' => $duration]);
-
+		if ($result === false) {
+			if (curl_errno($ch) == CURLE_OPERATION_TIMEDOUT) {
+				// La solicitud cURL ha excedido el tiempo de espera (timeout)
+				$result = "{
+					'status' => 401,
+					'error' => 'TNS:Connect timeout occurred'
+				}";
+			}
+			$result = "{
+                'status' => 401,
+                'error' => 'Curl failed: '" . curl_error($ch) . "
+            }";
+		}
+		curl_close($ch);
+		// var_dump($data);
+		// var_dump($result);exit;
+		// return $result;
+		return json_decode($result);
 	}
 
 	/**
@@ -5423,7 +5503,7 @@ class DashboardController extends BaseController
 			$folioRow['NOTASAGENTE'] = null;
 			$folioRow['STATUS'] = 'EN PROCESO';
 			$folioRow['EXPEDIENTEID'] = null;
-			// $folioRow['AGENTEATENCIONID'] = NULL;
+			$folioRow['AGENTEATENCIONID'] = session('ID');
 			$folioRow['AGENTEFIRMAID'] = null;
 
 			$update = $this->_folioModel->set($folioRow)->where('ANO', $year)->where('FOLIOID', $folio)->where('EXPEDEINTEID IS NULL')->update();
@@ -5899,9 +5979,6 @@ class DashboardController extends BaseController
 				$victimas = $this->_folioPersonaFisicaModel->get_victimas($folio, $year);
 
 				$parentescoRelacion = $this->_parentescoPersonaFisicaModel->getRelacion($folio, $year);
-				// $personaiduno = $this->_parentescoPersonaFisicaModel->get_personaFisicaUno($folio, $year);
-				// $personaidDos = $this->_parentescoPersonaFisicaModel->get_personaFisicaDos($folio, $year);
-				// $parentesco = $this->_parentescoPersonaFisicaModel->get_Parentesco($folio, $year);
 				$fisicaImpDelito = $this->_imputadoDelitoModel->get_by_folio($folio, $year);
 				$relacionFisFis = $this->_relacionIDOModel->get_by_folio($folio, $year);
 
@@ -5974,8 +6051,6 @@ class DashboardController extends BaseController
 					$data['ZONA'] = $colonia->ZONA;
 				}
 			}
-
-			// var_dump($data);exit;
 
 			$update = $this->_folioPersonaFisicaDomicilioModel->set($data)->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $id)->where('DOMICILIOID', $id_domicilio)->update();
 
@@ -6101,11 +6176,6 @@ class DashboardController extends BaseController
 			$updatePersonaFisica = $this->_folioPersonaFisicaModel->set($dataPersonaFisica)->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $id)->update();
 
 			$updateRelacionParentesco = $this->_parentescoPersonaFisicaModel->set($dataRelacionParentesco)->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID2', $id)->update();
-
-			//  var_dump($personaFisica);
-			// exit;
-
-			// // $this->_parentescoPersonaFisica($dataRelacionParentesco, $folio, $desaparecido, $year);
 
 
 			if ($updateMediaFiliacion && $updatePersonaFisica && $updateRelacionParentesco) {
@@ -6534,9 +6604,7 @@ class DashboardController extends BaseController
 
 			if ($updateRelacionParentesco) {
 				$parentescoRelacion = $this->_parentescoPersonaFisicaModel->getRelacion($folio, $year);
-				// $personaiduno = $this->_parentescoPersonaFisicaModel->get_personaFisicaUno($folio, $year);
-				// $personaidDos = $this->_parentescoPersonaFisicaModel->get_personaFisicaDos($folio, $year);
-				// $parentesco = $this->_parentescoPersonaFisicaModel->get_Parentesco($folio, $year);
+
 				$datosBitacora = [
 					'ACCION' => 'Ha actualizado el parentesco de una persona fisica',
 					'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
@@ -6573,9 +6641,6 @@ class DashboardController extends BaseController
 			$deleteRelacionParentesco = $this->_parentescoPersonaFisicaModel->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID1', $idp1)->where('PERSONAFISICAID2', $idp2)->where('PARENTESCOID', $parentescoid)->delete();
 			if ($deleteRelacionParentesco) {
 				$parentescoRelacion = $this->_parentescoPersonaFisicaModel->getRelacion($folio, $year);
-				// $personaiduno = $this->_parentescoPersonaFisicaModel->get_personaFisicaUno($folio, $year);
-				// $personaidDos = $this->_parentescoPersonaFisicaModel->get_personaFisicaDos($folio, $year);
-				// $parentesco = $this->_parentescoPersonaFisicaModel->get_Parentesco($folio, $year);
 
 				$datosBitacora = [
 					'ACCION' => 'Ha eliminado una relación de parenteso',
@@ -6667,9 +6732,7 @@ class DashboardController extends BaseController
 			$personas = $this->_folioPersonaFisicaModel->get_by_folio($folio, $year);
 
 			$parentescoRelacion = $this->_parentescoPersonaFisicaModel->getRelacion($folio, $year);
-			// $personaiduno = $this->_parentescoPersonaFisicaModel->get_personaFisicaUno($folio, $year);
-			// $personaidDos = $this->_parentescoPersonaFisicaModel->get_personaFisicaDos($folio, $year);
-			// $parentesco = $this->_parentescoPersonaFisicaModel->get_Parentesco($folio, $year);
+
 			$datosBitacora = [
 				'ACCION' => 'Ha ingresado un nuevo parentesco a una persona fisica',
 				'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
@@ -6779,7 +6842,7 @@ class DashboardController extends BaseController
 			$dataNewPersonaFisica['OCUPACIONID'] = (int)$this->request->getPost('ocupacion');
 			$dataNewPersonaFisica['OCUPACIONDESCR'] = NULL;
 		}
-		// var_dump($dataNewPersonaFisicaDomicilio);exit;
+
 		//Crea la persona fisica, domicilio y filiación conforme al id consecutivo
 		$personaFisica = $this->_folioPersonaFisica($dataNewPersonaFisica, $folio, $year);
 		$mediaFiliacion = $this->_folioPersonaFisicaMediaFiliacion($dataNewPersonaFisica, $folio, $personaFisica, $year);
@@ -7029,11 +7092,7 @@ class DashboardController extends BaseController
 		$data['PERSONAFISICAID'] = $personaFisicaID;
 
 		$colonia = $this->_coloniasModelRead->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data['MUNICIPIOID'])->where('LOCALIDADID',  $data['LOCALIDADID'])->where('COLONIAID', $data['COLONIAID'])->first();
-		// if ((int) $data['COLONIAID'] == 0 || $data['COLONIAID'] == null) {
 
-		// if ($data['COLONIAID'] == null) {
-		// 	$data['LOCALIDADID'] = null;
-		// }
 		if ((int) $data['COLONIAID'] == 0) {
 			$data['COLONIAID'] = null;
 			$data['COLONIADESCR'] = $data['COLONIADESCR'];
@@ -7064,8 +7123,6 @@ class DashboardController extends BaseController
 				}
 			}
 		}
-
-
 
 		$personaDomicilio = $this->_folioPersonaFisicaDomicilioModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $personaFisicaID)->orderBy('DOMICILIOID', 'desc')->first();
 
@@ -7128,23 +7185,6 @@ class DashboardController extends BaseController
 		if (isset($checarDelito)) {
 			return json_encode(['status' => 3]);
 		}
-		// $this->_relacionIDOModel->transStart();
-		// $this->_relacionIDOModel->insert($datoRelacionFisfis);
-		// $this->_relacionIDOModel->transComplete();
-		// if ($this->_relacionIDOModel->transStatus() === false) {
-		// 	return json_encode(['status' => 0, 'message' => $_POST]);
-		// } else {
-		// 	$relacionFisFis = $this->_relacionIDOModelRead->get_by_folio($folio, $year);
-
-		// 	$datosBitacora = [
-		// 		'ACCION' => 'Ha ingresado una nueva relación de delito.',
-		// 		'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
-		// 	];
-
-		// 	$this->_bitacoraActividad($datosBitacora);
-
-		// 	return json_encode(['status' => 1, 'relacionFisFis' => $relacionFisFis]);
-		// }
 
 		$insertRelacionIDO = $this->_relacionIDOModel->insert($datoRelacionFisfis);
 
@@ -7337,12 +7377,10 @@ class DashboardController extends BaseController
 			if ($deleteVehiculo) {
 				$vehiculos = $this->_folioVehiculoModel->get_by_folio($folio, $year);
 
-
 				$datosBitacora = [
 					'ACCION' => 'Ha eliminado un vehiculo',
 					'NOTAS' => 'FOLIO: ' . $folio . ' AÑO: ' . $year,
 				];
-
 
 				$this->_bitacoraActividad($datosBitacora);
 
@@ -9289,7 +9327,6 @@ class DashboardController extends BaseController
 		$options = new Options();
 		$options->set('isRemoteEnabled', true);
 		$options->set('isPhpEnabled', true);
-		// $options->set('defaultFont', 'Arial');
 		$dompdf = new Dompdf($options);
 		$dompdf->loadHtml(view('doc_template/desaparecido_template', ['data' => $data]));
 		$dompdf->setPaper('A4', 'landscape');

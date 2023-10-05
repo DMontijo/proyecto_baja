@@ -53,7 +53,6 @@
 				form.addEventListener('submit', function(event) {
 					//verifica que las contraseñas sean iguales
 					if (password.value === password_confirm.value) {
-						console.log('Es igual');
 						if (!form.checkValidity()) {
 							event.preventDefault();
 							event.stopPropagation();

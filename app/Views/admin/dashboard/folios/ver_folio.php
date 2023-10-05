@@ -140,7 +140,6 @@ if ($body_data->datosFolio->INSTITUCIONREMISIONID) { ?>
 				dataType: "json",
 				success: function(response) {
 					respuesta = response;
-					console.log(respuesta);
 					if (response.status === 1) {
 						const folio = response.folio;
 						const preguntas = response.respuesta.preguntas_iniciales;
@@ -470,7 +469,6 @@ if ($body_data->datosFolio->INSTITUCIONREMISIONID) { ?>
 		// 		method: "POST",
 		// 		dataType: "json",
 		// 	}).done(function(data) {
-		// 		console.log(data);
 		// 	}).fail(function(jqXHR, textStatus) {
 		// 		Swal.fire({
 		// 			icon: 'error',

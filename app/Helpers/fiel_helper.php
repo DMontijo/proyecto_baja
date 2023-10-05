@@ -1,4 +1,6 @@
 <?php
+
+/**Funcion para validar la fiel */
 function validarFiel($agentId)
 {
 	date_default_timezone_set('America/Tijuana');

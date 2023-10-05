@@ -1572,7 +1572,6 @@ class FirmaController extends BaseController
 	 */
 	public function sendEmailOrdenesProteccion($municipioid, $municipiodescr, $fecha, $documentos)
 	{
-		//var_dump('enviando ordenes de proteccion');
 		if (ENVIRONMENT == 'development') {
 			switch ($municipioid) {
 				case 1:
@@ -1667,7 +1666,6 @@ class FirmaController extends BaseController
 			$result = false;
 			$info = $e->getMessage();
 		}
-		//var_dump($info);
 		return $result;
 	}
 

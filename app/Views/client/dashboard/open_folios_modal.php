@@ -28,7 +28,6 @@
 			method: "POST",
 			dataType: "json",
 		}).done((response) => {
-			console.log(response);
 			if (response.status == 1) {
 				window.location.href = response.url;
 			} else {

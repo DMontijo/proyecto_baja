@@ -1026,15 +1026,6 @@ class ReportesController extends BaseController
 		$promedioDuracionSegundos = $totalSeconds2 /  $countTipoVD;
 		$promedioDuracion = $this->secondsToTime($promedioDuracionSegundos);
 
-		// var_dump($totalSeconds);
-		// var_dump($totalTime);
-		// var_dump($totalSeconds2);
-		// var_dump($totalRegistro);
-		// var_dump($promedioDuracionSegundos);
-		// var_dump($promedioDuracion);
-		// var_dump($countTipoVD);
-
-		// exit;
 
 		$row++;
 		$row++;
@@ -1440,9 +1431,7 @@ class ReportesController extends BaseController
 		$documentos = $this->_plantillasModelRead->filtro_ordenes_proteccion($dataPost);
 		if (!empty($dataPost['AGENTEATENCIONID'])) {
 			foreach ($empleado as $index => $dato) {
-				//var_dump('info empleado', $dato);
 				if ($dato->ID == $dataPost['AGENTEATENCIONID']) {
-					//var_dump('info empleado', $dato);
 					$dataPost['nombreAgente'] = $dato->NOMBRE . ' ' . $dato->APELLIDO_PATERNO . ' ' . $dato->APELLIDO_MATERNO;
 				}
 			}
@@ -2501,16 +2490,13 @@ class ReportesController extends BaseController
 
 		if (!empty($dataPost['AGENTEATENCIONID'])) {
 			foreach ($empleado as $index => $dato) {
-				//var_dump('info empleado', $dato);
 				if ($dato->ID == $dataPost['AGENTEATENCIONID']) {
-					//var_dump('info empleado', $dato);
 					$dataPost['nombreAgente'] = $dato->NOMBRE . ' ' . $dato->APELLIDO_PATERNO . ' ' . $dato->APELLIDO_MATERNO;
 				}
 			}
 		}
 		if (!empty($dataPost['MUNICIPIOID'])) {
 			foreach ($municipio as $index => $dato) {
-				///var_dump('info municipio', $dato);
 				if ($dato->MUNICIPIOID == $dataPost['MUNICIPIOID']) {
 					$dataPost['municipioDescr'] = $dato->MUNICIPIODESCR;
 				}

@@ -1,15 +1,18 @@
 <?php
 
+/**Funcion para encriptar las contraseñas */
 function hashPassword($password)
 {
 	return password_hash($password, PASSWORD_DEFAULT);
 }
 
+/**Funcion para validar la contraseña con la contraseña encriptada */
 function validatePassword($password, $hash)
 {
 	return password_verify($password, $hash);
 }
 
+/**Funcion para saber el tipo de expediente de acuerdo a su  ID*/
 function tipoExpediente($num)
 {
 	$num = gettype($num) == 'string' ? $num : (string)$num;

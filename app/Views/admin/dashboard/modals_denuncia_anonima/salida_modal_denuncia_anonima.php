@@ -387,7 +387,6 @@
 					// 	method: "POST",
 					// 	dataType: "json",
 					// 	success: function(response) {
-					// 		console.log(response);
 
 					// 	},
 					// 	error: function(jqXHR, textStatus, errorThrown) {}
@@ -405,8 +404,6 @@
 					}).done(function(data) {
 						btnFinalizar.removeAttribute('disabled');
 						document.querySelector('#loading_general').classList.add('d-none');
-
-						console.log(data);
 
 						if (data.status == 1) {
 							document.querySelector('#tipo_salida').value = "";

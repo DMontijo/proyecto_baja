@@ -1327,7 +1327,6 @@
 					'localidad_id': localidad
 				};
 
-				console.log(data);
 
 				if (estado == 2) {
 					select_colonia.classList.remove('d-none');
@@ -1527,7 +1526,6 @@
 	}
 
 	function agregarPersonaFisica() {
-		console.log(document.querySelector('#calidad_juridica_new_da').value);
 		const data = {
 			'folio': document.querySelector('#folio').value,
 			'year': document.querySelector('#year').value,
@@ -1851,14 +1849,12 @@
 			'tentativa': document.querySelector('#tentativa').checked ? document.querySelector('#tentativa').value : null,
 			'conviolencia': document.querySelector('#conviolencia').checked ? document.querySelector('#conviolencia').value : null,
 		};
-		// console.log(data);
 		$.ajax({
 			data: data,
 			url: "<?= base_url('/data/create-relacion_ido-by-folio') ?>",
 			method: "POST",
 			dataType: "json",
 			success: function(response) {
-				console.log(response);
 				if (response.status == 3) {
 					Swal.fire({
 						icon: 'error',
@@ -2049,7 +2045,6 @@
 			method: "POST",
 			dataType: "json",
 			success: function(response) {
-				console.log(response);
 				if (response.status == 1) {
 					Swal.fire({
 						icon: 'success',
@@ -2156,14 +2151,12 @@
 			// 'parentesco_mf': document.querySelector('#parentesco_mf_da').value?document.querySelector('#parentesco_mf_da').value:document.querySelector('#parentesco_mf1_da').value,
 
 		};
-		// console.log(id);
 		$.ajax({
 			data: data,
 			url: "<?= base_url('/data/update-media-filiacion-by-id') ?>",
 			method: "POST",
 			dataType: "json",
 			success: function(response) {
-				// console.log(respobse.idcalidad);
 				if (response.status == 1) {
 					Swal.fire({
 						icon: 'success',
@@ -2754,7 +2747,6 @@
 			method: "POST",
 			dataType: "json",
 			success: function(response) {
-				console.log(response);
 				if (response.status == 3) {
 					Swal.fire({
 						title: 'Este es el ultimo registro, se eliminará el delito cometido de la denuncia',
@@ -3001,7 +2993,6 @@
 					const versionVehiculo = response.versionVehiculo;
 					const color = response.color;
 					const tipov = response.tipov;
-					console.log(vehiculo);
 					document.querySelector('#vehiculoid').value = id;
 
 					document.querySelector('#tipo_placas_vehiculo_da').value = vehiculo.TIPOPLACA ? vehiculo.TIPOPLACA : '';
@@ -3181,7 +3172,6 @@
 			processData: false,
 			cache: false,
 			success: function(response) {
-				// console.log(respobse.idcalidad);
 				if (response.status == 1) {
 					const vehiculos = response.vehiculos;
 					Swal.fire({
