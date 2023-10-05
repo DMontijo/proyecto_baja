@@ -7,7 +7,7 @@
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-12 text-center mb-4">
-				<h1 class="mb-4 text-center font-weight-bold">REPORTE DE PERSONAS MORALES</h1>
+				<h1 class="mb-4 text-center font-weight-bold">REPORTE BANAVIM</h1>
 				<a class="link link-primary" href="<?= base_url('admin/dashboard/reportes') ?>" role="button"><i class="fas fa-reply"></i> REGRESAR A REPORTES</a>
 			</div>
 			<div class="col-12">
@@ -25,7 +25,7 @@
 								</div>
 								<div id="filtros" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
 									<div class="card-body">
-										<form action="<?= base_url() ?>/admin/dashboard/reportes_morales" method="post" enctype="multipart/form-data" class="row needs-validation" novalidate>
+										<form action="<?= base_url() ?>/admin/dashboard/reportes_banavim" method="post" enctype="multipart/form-data" class="row needs-validation" novalidate>
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
 												<label for="municipio" class="form-label font-weight-bold">Municipio:</label>
 												<select class="form-control" id="municipio" name="municipio" required>
@@ -35,15 +35,36 @@
 													<?php } ?>
 												</select>
 											</div>
+
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
-												<label for="fecha" class="form-label font-weight-bold">Fecha de registro:</label>
-												<input type="date" class="form-control" id="fechaRegistro" name="fechaRegistro" max="<?= date("Y-m-d") ?>" value="<?= isset($body_data->filterParams->fechaRegistro) ? $body_data->filterParams->fechaRegistro : '' ?>">
+												<label for="agente" class="form-label font-weight-bold">Agente:</label>
+												<select class="form-control" id="agente" name="agente" required>
+													<option selected value="">Todos los agentes</option>
+													<?php foreach ($body_data->empleados as $index => $empleado) { ?>
+														<option <?= isset($body_data->filterParams->AGENTEATENCIONID) ? ($body_data->filterParams->AGENTEATENCIONID == $empleado->ID ? 'selected' : '') : null ?> value="<?= $empleado->ID ?>"> <?= $empleado->NOMBRE . ' ' . $empleado->APELLIDO_PATERNO . ' ' . $empleado->APELLIDO_MATERNO ?> </option>
+													<?php } ?>
+												</select>
+											</div>
+											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
+												<label for="tipo_orden" class="form-label font-weight-bold">Tipo orden de protección:</label>
+												<select class="form-control" id="tipo_orden" name="tipo_orden" required>
+													<option selected value="">Todos los tipos</option>
+													<?php foreach ($body_data->tiposOrden as $index => $tipoOrden) { ?>
+														<option <?= isset($body_data->filterParams->TIPOORDEN) ? ($body_data->filterParams->TIPOORDEN == $tipoOrden->TITULO ? 'selected' : '') : null ?> value="<?= $tipoOrden->TITULO ?>"><?= $tipoOrden->TITULO ?></option>
+													<?php } ?>
+												</select>
 											</div>
 
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
-												<label for="fecha" class="form-label font-weight-bold">Fecha de fin:</label>
+												<label for="fechaInicio" class="form-label font-weight-bold">Fecha de inicio:</label>
+												<input type="date" class="form-control" id="fechaInicio" name="fechaInicio" max="<?= date("Y-m-d") ?>" value="<?= isset($body_data->filterParams->fechaInicio) ? $body_data->filterParams->fechaInicio : '' ?>">
+											</div>
+
+											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
+												<label for="fecha" class="form-label font-weight-bold">Fecha de cierre:</label>
 												<input type="date" class="form-control" id="fechaFin" name="fechaFin" max="<?= date("Y-m-d") ?>" value="<?= isset($body_data->filterParams->fechaFin) ? $body_data->filterParams->fechaFin : '' ?>">
 											</div>
+
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
 												<label for="hora" class="form-label font-weight-bold">Hora de inicio:</label>
 												<input type="time" class="form-control" id="horaInicio" name="horaInicio" value="<?= isset($body_data->filterParams->horaInicio) ? $body_data->filterParams->horaInicio : '' ?>">
@@ -53,10 +74,8 @@
 												<label for="hora" class="form-label font-weight-bold">Hora de cierre:</label>
 												<input type="time" class="form-control" id="horaFin" name="horaFin" value="<?= isset($body_data->filterParams->horaFin) ? $body_data->filterParams->horaFin : '' ?>">
 											</div>
-
-
 											<div class="col-12 text-right">
-												<a href="<?= base_url('admin/dashboard/reportes_morales') ?>" class="btn btn-secondary font-weight-bold" id="btnFiltroFolio" name="btnFiltroFolio">Borrar filtro</a>
+												<a href="<?= base_url('admin/dashboard/reporte_banavim') ?>" class="btn btn-secondary font-weight-bold" id="btnFiltroFolio" name="btnFiltroFolio">Borrar filtro</a>
 												<button type="submit" class="btn btn-primary font-weight-bold" id="btnFiltroFolio" name="btnFiltroFolio">Filtrar</button>
 											</div>
 										</form>
@@ -74,7 +93,7 @@
 
 								<?php if (isset($body_data->filterParams)) { ?>
 									<!-- Form para aplicar mismo filtro utilizado para crear el archivo de excel-->
-									<form id="formExcel" action="<?= base_url() ?>/admin/dashboard/generar_excel_morales" method="post" class="needs-validation" novalidate>
+									<form id="formExcel" action="<?= base_url() ?>/admin/dashboard/generar_excel_banavim" method="post" class="needs-validation" novalidate>
 										<?php foreach ($body_data->filterParams as $index => $value) { ?>
 											<input type="hidden" id="<?= $index ?>" name="<?= $index ?>" value="<?= $value ?>">
 										<?php } ?>
@@ -85,42 +104,40 @@
 								<?php } ?>
 							</div>
 							<div class="col-12" style="overflow-x:auto;">
-								<table id="personas_morales_generados" class="table table-bordered table-striped table-sm" style="font-size:10px;">
+								<table id="banavim" class="table table-bordered table-striped table-sm" style="font-size:10px;">
 									<thead>
 										<tr>
-											<th class="text-center">RFC</th>
-											<th class="text-center">RAZON SOCIAL</th>
-											<th class="text-center" style="min-width:100px;">ESTADO</th>
-											<th class="text-center">MUNICIPIO</th>
-											<th class="text-center">TELEFONO</th>
-											<th class="text-center">CORREO</th>
-											<th class="text-center">VOLUMEN</th>
-											<th class="text-center">NO. NOTARIO</th>
-											<th class="text-center">NO. PODER</th>
-											<th class="text-center">FECHA INICIO PODER</th>
-											<th class="text-center">FECHA FIN DE PODER</th>
-
-
+											<th class="text-center">FOLIO</th>
+											<th class="text-center">FECHA DE EXPEDICIÓN</th>
+											<th class="text-center" style="min-width:100px;">NO. EXPEDIENTE</th>
+											<th class="text-center">MODULO QUE EXPIDE</th>
+											<th class="text-center">MUNICIPIO QUE ATIENDE</th>
+											<th class="text-center" style="min-width:150px;">SERVIDOR PUBLICO SOLICITANTE</th>
+											<th class="text-center">DELITO</th>
+											<th class="text-center">TIPO ORDEN DE PROTECCIÓN</th>
+											<th class="text-center">VICTIMA/OFENDIDO</th>
+											<th class="text-center">EDAD</th>
+											<th class="text-center">¿VICTIMA LESIONADA?</th>
 										</tr>
 									</thead>
 									<tbody>
 										<?php
-										foreach ($body_data->result as $index => $morales) {
-						
+										foreach ($body_data->dataOrdenes as $index => $banavim) {
+											$arrayExpediente = str_split($banavim->EXPEDIENTEID);
+											$expedienteid = $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
 										?>
 											<tr>
-												<td class="text-center font-weight-bold"><?= $morales->RFC ?></td>
-												<td class="text-center"><?= $morales->RAZONSOCIAL ?></td>
-												<td class="text-center"><?= $morales->ESTADODESCR ?></td>
-												<td class="text-center"><?= $morales->MUNICIPIODESCR ?></td>
-												<td class="text-center"><?= $morales->TELEFONO ?></td>
-												<td class="text-center"><?= $morales->CORREO ?></td>
-												<td class="text-center"><?= $morales->PODERVOLUMEN ?></td>
-												<td class="text-center"><?= $morales->PODERNONOTARIO ?></td>
-												<td class="text-center"><?= $morales->PODERNOPODER ?></td>
-												<td class="text-center"><?= $morales->FECHAINICIOPODER ?></td>
-												<td class="text-center"><?= $morales->FECHAFINPODER ?></td>
-
+												<td class="text-center font-weight-bold"><?= $banavim->FOLIOID . '/' . $banavim->ANO ?></td>
+												<td class="text-center"><?= $banavim->FECHAFIRMA ?  date("d/m/Y", strtotime($banavim->FECHAFIRMA)) : '' ?></td>
+												<td class="text-center font-weight-bold"><?= $expedienteid ? $expedienteid : '' ?></td>
+												<td class="text-center">CENTRO DE DENUNCIA TECNÓLOGICA</td>
+												<td class="text-center"><?= $banavim->MUNICIPIODESCR ?></td>
+												<td class="text-center"><?= $banavim->NOMBRE_MP ?></td>
+												<td class="text-center"><?= $banavim->DELITOMODALIDADDESCR ?></td>
+												<td class="text-center"><?= $banavim->TIPODOC ?></td>
+												<td class="text-center"><?= $banavim->NOMBRE_VTM ?></td>
+												<td class="text-center"><?= $banavim->EDADCANTIDAD ? $banavim->EDADCANTIDAD . " AÑOS" : "" ?></td>
+												<td class="text-center"><?= $banavim->LESIONES ?></td>
 
 											</tr>
 										<?php } ?>
@@ -164,7 +181,7 @@
 <?php endif; ?>
 <script>
 	$(function() {
-		$("#personas_morales_generados").DataTable({
+		$("#banavim").DataTable({
 			responsive: false,
 			lengthChange: false,
 			autoWidth: true,
@@ -205,7 +222,7 @@
 				El reporte sera generado de acuerdo a la siguiente información<br>
 				<ul style="text-align:left;">
 						<li><span style="font-weight:bold;">Municipio:</span> <?= isset($body_data->filterParams->MUNICIPIONOMBRE) ? $body_data->filterParams->MUNICIPIONOMBRE : '' ?></li>
-						<li><span style="font-weight:bold;">Fecha inicio:</span> <?= isset($body_data->filterParams->fechaRegistro) ? $body_data->filterParams->fechaRegistro : '' ?></li>
+						<li><span style="font-weight:bold;">Fecha inicio:</span> <?= isset($body_data->filterParams->fechaInicio) ? $body_data->filterParams->fechaInicio : '' ?></li>
 						<li><span style="font-weight:bold;">Fecha cierre:</span> <?= isset($body_data->filterParams->fechaFin) ? $body_data->filterParams->fechaFin : '' ?></li>
 						<li><span style="font-weight:bold;">Hora inicio:</span> <?= isset($body_data->filterParams->horaInicio) ? $body_data->filterParams->horaInicio : '' ?></li>
 						<li><span style="font-weight:bold;">Hora fin:</span> <?= isset($body_data->filterParams->horaFin) ? $body_data->filterParams->horaFin : '' ?></li>

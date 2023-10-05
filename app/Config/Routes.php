@@ -163,8 +163,8 @@ $routes->group('admin', function ($routes) {
 		$routes->post('registro_ceeiav', 'admin/ReportesController::postComisionEstatal');
 		$routes->get('registro_anonima', 'admin/ReportesController::getFoliosAnonima');
 		$routes->post('registro_anonima', 'admin/ReportesController::postFoliosAnonima');
-		$routes->get('reportes_morales', 'admin/ReportesController::getMorales');
-		$routes->post('reportes_morales', 'admin/ReportesController::postMorales');
+		$routes->get('reportes_banavim', 'admin/ReportesController::getBanavim');
+		$routes->post('reportes_banavim', 'admin/ReportesController::postBanavim');
 		$routes->post('generar_excel_folios', 'admin/ReportesController::createFoliosXlsx');
 		$routes->post('generar_excel_anonimas', 'admin/ReportesController::createAnonimaXlsx');
 		$routes->post('generar_excel_constancias', 'admin/ReportesController::createConstanciasXlsx');
@@ -174,7 +174,7 @@ $routes->group('admin', function ($routes) {
 		$routes->post('generar_excel_canadev', 'admin/ReportesController::createCanaDevXlsx');
 		$routes->post('generar_excel_registro_atenciones', 'admin/ReportesController::createRegistroAtencionesXlsx');
 		$routes->post('generar_excel_ceeaiv', 'admin/ReportesController::createComisionEstatalXlsx');
-		$routes->post('generar_excel_morales', 'admin/ReportesController::createMoralesXlsx');
+		$routes->post('generar_excel_banavim', 'admin/ReportesController::createBanavimXlsx');
 
 		$routes->get('documentos', 'admin/DocumentosController::index');
 		$routes->post('documentos', 'admin/DocumentosController::postDocumentos');
