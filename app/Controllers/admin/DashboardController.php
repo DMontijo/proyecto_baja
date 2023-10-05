@@ -8735,8 +8735,11 @@ class DashboardController extends BaseController
 
 		if ($data->folio->TIPODENUNCIA == 'ES') {
 			$data->foliomoral = $this->_folioPersonaMoralModelRead->asObject()->where('FOLIOID', $data->folio->FOLIOID)->where('ANO', $data->folio->ANO)->first();
+			$data->personamoral = $this->_personasMoralesRead->asObject()->where('PERSONAMORALID', $data->foliomoral->PERSONAMORALID)->first();
+			
 			if ($data->foliomoral) {
 				$data->plantilla = str_replace('[RAZON_SOCIAL]',  $data->foliomoral->DENOMINACION ?  $data->foliomoral->DENOMINACION : '-', $data->plantilla);
+				$data->plantilla = str_replace('[CARGO]',  $data->personamoral->CARGO ?  $data->personamoral->CARGO : '-', $data->plantilla);
 			}
 		}
 		if ($data->victima[0]['DESAPARECIDA'] == 'S' && $data->mediaFiliacionVictima) {
