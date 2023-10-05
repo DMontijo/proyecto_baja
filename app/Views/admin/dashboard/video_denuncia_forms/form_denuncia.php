@@ -86,7 +86,7 @@
 	<input type="text" class="form-control d-none" id="latitud_denuncia" name="latitud_denuncia">
 
 	<input type="text" class="form-control d-none" id="longitud_denuncia" name="longitud_denuncia">
-	
+
 </form>
 
 <script>

@@ -56,7 +56,7 @@ $routes->group('admin', function ($routes) {
 	$routes->post('login', 'admin/LoginController::login_auth');
 	$routes->get('logout', 'admin/LoginController::logout');
 	$routes->post('cerrar-sesion', 'admin/LoginController::cerrar_sesiones');
-	$routes->get('actualizar-sesion','admin/LoginController::checkLastActivity');
+	$routes->get('actualizar-sesion', 'admin/LoginController::checkLastActivity');
 
 	$routes->group('dashboard', ['filter' => 'adminAuth'], function ($routes) {
 		$routes->get('/', 'admin/DashboardController::index');
@@ -73,6 +73,7 @@ $routes->group('admin', function ($routes) {
 		$routes->get('nuevo_asignacion_permisos', 'admin/DashboardController::nuevo_asignacion_permiso');
 		$routes->post('create_asignacion_permiso', 'admin/DashboardController::create_asignacion_permiso');
 		$routes->post('create_rol', 'admin/DashboardController::create_rol');
+
 
 		$routes->get('eliminar_asignacion_permiso', 'admin/DashboardController::eliminar_asignacion_permiso');
 		$routes->get('nuevo_rol', 'admin/DashboardController::nuevo_rol');
@@ -91,8 +92,10 @@ $routes->group('admin', function ($routes) {
 		$routes->post('editar_usuario', 'admin/DashboardController::update_usuario');
 		$routes->post('editar_password', 'admin/DashboardController::editar_password');
 
+
 		$routes->get('video-denuncia', 'admin/DashboardController::video_denuncia');
 		$routes->get('denuncia-anonima', 'admin/DashboardController::denuncia_anonima');
+		$routes->get('denuncia-escrita', 'admin/DashboardController::modulo_litigantes_consultar');
 
 		$routes->get('folios', 'admin/FoliosController::index');
 		$routes->get('folios_abiertos', 'admin/FoliosController::folios_abiertos');
@@ -103,11 +106,20 @@ $routes->group('admin', function ($routes) {
 		$routes->get('folios_en_proceso', 'admin/FoliosController::folios_en_proceso');
 		$routes->post('liberar_folio', 'admin/FoliosController::liberar_folio');
 		$routes->post('firmar_folio', 'admin/FoliosController::firmar_folio');
+		//DENUNCIA ESCRITA
+		$routes->get('folios_en_proceso_escrita', 'admin/FoliosEscritosController::folios_en_proceso');
+		$routes->get('folios_abiertos_escrita', 'admin/FoliosEscritosController::folios_abiertos');
+		$routes->post('liberar_folio_escrita', 'admin/FoliosEscritosController::liberar_folio');
 
+		$routes->get('folios_escritos', 'admin/FoliosEscritosController::index');
 		$routes->get('buscar_folio', 'admin/FoliosController::getAllFolios');
 		$routes->post('buscar_folio', 'admin/FoliosController::getFilterFolios');
+		$routes->get('buscar_folio_litigante', 'admin/FoliosEscritosController::getAllFoliosLitigante');
+		$routes->post('buscar_folio_litigante', 'admin/FoliosEscritosController::getFilterFoliosLitigante');
 		$routes->post('ver_folio', 'admin/FoliosController::viewFolio');
 		$routes->get('ver_folio', 'admin/FoliosController::viewFolio');
+		$routes->post('ver_folio_litigante', 'admin/FoliosController::viewFolioLitigantes');
+		$routes->get('ver_folio_litigante', 'admin/FoliosController::viewFolioLitigantes');
 
 		$routes->get('constancias', 'admin/ConstanciasController::index');
 		$routes->post('firmar_constancia_extravio', 'admin/FirmaController::firmar_constancia_extravio');
@@ -151,7 +163,8 @@ $routes->group('admin', function ($routes) {
 		$routes->post('registro_ceeiav', 'admin/ReportesController::postComisionEstatal');
 		$routes->get('registro_anonima', 'admin/ReportesController::getFoliosAnonima');
 		$routes->post('registro_anonima', 'admin/ReportesController::postFoliosAnonima');
-
+		$routes->get('reportes_banavim', 'admin/ReportesController::getBanavim');
+		$routes->post('reportes_banavim', 'admin/ReportesController::postBanavim');
 		$routes->post('generar_excel_folios', 'admin/ReportesController::createFoliosXlsx');
 		$routes->post('generar_excel_anonimas', 'admin/ReportesController::createAnonimaXlsx');
 		$routes->post('generar_excel_constancias', 'admin/ReportesController::createConstanciasXlsx');
@@ -161,6 +174,7 @@ $routes->group('admin', function ($routes) {
 		$routes->post('generar_excel_canadev', 'admin/ReportesController::createCanaDevXlsx');
 		$routes->post('generar_excel_registro_atenciones', 'admin/ReportesController::createRegistroAtencionesXlsx');
 		$routes->post('generar_excel_ceeaiv', 'admin/ReportesController::createComisionEstatalXlsx');
+		$routes->post('generar_excel_banavim', 'admin/ReportesController::createBanavimXlsx');
 
 		$routes->get('documentos', 'admin/DocumentosController::index');
 		$routes->post('documentos', 'admin/DocumentosController::postDocumentos');
@@ -176,6 +190,13 @@ $routes->group('admin', function ($routes) {
 		$routes->post('send-documentos-correo', 'admin/FirmaController::sendEmailDocumentos');
 
 		$routes->post('send-documentos-correo-by-id', 'admin/FirmaController::sendEmailDocumentoByID');
+
+		$routes->get('lista_ligaciones', 'admin/DashboardController::ligaciones');
+		$routes->get('editar_ligacion', 'admin/DashboardController::editar_ligacion');
+		$routes->post('editar_ligacion', 'admin/DashboardController::update_ligacion');
+		$routes->get('lista_moral', 'admin/DashboardController::personas_morales');
+		$routes->get('editar_persona_moral', 'admin/DashboardController::editar_persona_moral');
+		$routes->post('editar_persona_moral', 'admin/DashboardController::update_persona_moral');
 	});
 });
 
@@ -189,7 +210,7 @@ $routes->group('denuncia', function ($routes) {
 	$routes->post('login_auth', 'client/AuthController::login_auth');
 	$routes->get('logout', 'client/AuthController::logout');
 	$routes->post('cerrar-sesion', 'client/AuthController::cerrar_sesiones');
-	$routes->get('actualizar-sesion','client/AuthController::checkLastActivity');
+	$routes->get('actualizar-sesion', 'client/AuthController::checkLastActivity');
 
 	// $routes->resource('denunciante', ['controller' => 'client/UserController']);
 	$routes->get('denunciante/new', 'client/UserController::new');
@@ -229,6 +250,9 @@ $routes->group('data', function ($routes) {
 	$routes->post('exist-email', 'client/UserController::existEmail');
 	$routes->post('exist-email-admin', 'admin/DashboardController::existEmailAdmin');
 	$routes->post('exist-email-solicitantes', 'extravio/ExtravioController::existEmailSolicitantes');
+	$routes->post('exist-rfc', 'admin/DashboardController::existRFC');
+	$routes->post('exist-email-empresarial', 'admin/DashboardController::existEmailEmpresarial');
+	$routes->post('exist-email-notificacion', 'admin/DashboardController::existEmailEmpresarialNotificacion');
 
 	$routes->post('get-municipios-by-estado', 'client/UserController::getMunicipiosByEstado');
 	$routes->post('get-localidades-by-municipio', 'client/UserController::getLocalidadesByMunicipio');
@@ -240,6 +264,7 @@ $routes->group('data', function ($routes) {
 
 	$routes->post('get-folio-information', 'admin/DashboardController::getFolioInformation');
 	$routes->post('get-folio-information-denuncia', 'admin/DashboardController::getFolioInformationDenunciaAnonima');
+	$routes->post('get-folio-information-litigantes', 'admin/DashboardController::getFolioInformationLitigantes');
 
 	$routes->post('update-status-folio', 'admin/DashboardController::updateStatusFolio');
 	$routes->post('update-salida-folio', 'admin/DashboardController::updateFolioSalida');
@@ -292,6 +317,8 @@ $routes->group('data', function ($routes) {
 
 	//GET, UPDATE, INSERT WITH AJAX
 	$routes->post('get-persona-fisica-by-id', 'admin/DashboardController::getPersonaFisicaById');
+	$routes->post('get-persona-moral-by-id', 'admin/DashboardController::getPersonaMoralById');
+
 	$routes->post('get-persona-domicilio-by-id', 'admin/DashboardController::findPersonadDomicilioById');
 	$routes->post('get-persona-vehiculo-by-id', 'admin/DashboardController::findPersonadVehiculoById');
 
@@ -300,6 +327,9 @@ $routes->group('data', function ($routes) {
 
 	$routes->post('update-preguntas-by-id', 'admin/DashboardController::updatePreguntasIniciales');
 	$routes->post('update-persona-fisica-by-id', 'admin/DashboardController::updatePersonaFisicaById');
+	$routes->post('update-persona-moral-by-id', 'admin/DashboardController::updatePersonaMoralById');
+	$routes->post('update-persona-moral-notificacion-by-id', 'admin/DashboardController::updatePersonaMoralNotificacionById');
+
 	$routes->post('update-persona-fisica-domicilio-by-id', 'admin/DashboardController::updatePersonaFisicaDomicilioById');
 	$routes->post('update-media-filiacion-by-id', 'admin/DashboardController::updateMediaFiliacionById');
 	$routes->post('update-vehiculo-by-id', 'admin/DashboardController::updateVehiculoByFolio');
@@ -362,8 +392,19 @@ $routes->group('data', function ($routes) {
 	//Encargados
 	$routes->post('update-encargado', 'admin/DocumentosController::actualizarDocumentoEncargado');
 	$routes->post('update-agente-asignado', 'admin/DocumentosController::actualizarDocumentoAgenteAsignado');
-
+	$routes->post('update-agente-atencion', 'admin/DashboardController::updateAgenteAsignado');
 	$routes->post('email-alerts', 'admin/FirmaController::sendEmailAlertas');
+
+	//Persona moral
+	$routes->post('get-marcacomercial-by-empresa', 'litigantes/DashboardController::getMarcaComercialByEmpresa');
+	$routes->post('get-notificacion-by-empresa', 'litigantes/DashboardController::getNotificacionDireccion');
+	$routes->post('create-direccion-notificacion', 'litigantes/DashboardController::crear_direccion_notificacion');
+	$routes->get('getStatusFolio', 'litigantes/DashboardController::getStatusFolio');
+	$routes->post('getRelacionLitigantes', 'litigantes/DashboardController::getRelacionLitigantes');
+	$routes->post('create-poder', 'litigantes/DashboardController::createPoder');
+	$routes->post('get-poder-by-id', 'litigantes/DashboardController::getPoderById');
+	$routes->post('cambiar-poder-activo', 'litigantes/DashboardController::cambiarPoderActual');
+	$routes->post('change-poder-archivo', 'litigantes/DashboardController::changePoderArchivo');
 
 });
 
@@ -396,6 +437,32 @@ $routes->group('constancia_extravio', function ($routes) {
 		$routes->get('perfil', 'extravio/ExtravioController::profile');
 		$routes->post('actualizar-perfil', 'extravio/ExtravioController::update_profile');
 		$routes->post('actualizar-password', 'extravio/ExtravioController::update_password');
+	});
+});
+$routes->group('denuncia_litigantes', function ($routes) {
+	$routes->get('/', 'litigantes/DenunciaLitigantesController::index');
+	$routes->get('register', 'litigantes/DenunciaLitigantesController::register');
+	$routes->post('create', 'litigantes/DenunciaLitigantesController::create');
+	$routes->post('login_auth', 'litigantes/DenunciaLitigantesController::login_auth');
+	$routes->post('send_email_change_password', 'litigantes/DenunciaLitigantesController::sendEmailChangePassword');
+
+	$routes->group('dashboard', ['filter' => 'denunciaLitigantesAuth'], function ($routes) {
+		$routes->get('/', 'litigantes/DashboardController::index');
+		$routes->get('modulo', 'litigantes/DashboardController::modulo_litigantes');
+		$routes->get('pantalla_final', 'litigantes/DashboardController::pantalla_final');
+
+		$routes->post('crear_empresa', 'litigantes/DashboardController::crear_empresa');
+		$routes->post('ligar_empresa', 'litigantes/DashboardController::ligar_empresa');
+		$routes->get('ligaciones', 'litigantes/DashboardController::ligaciones');
+		$routes->get('denuncia_persona_fisica', 'litigantes/DashboardController::denuncia_persona_fisica');
+		$routes->post('create_denuncia_persona_fisica', 'litigantes/DashboardController::create_denuncia_persona_fisica');
+		$routes->get('subir_documentos_folio', 'litigantes/DashboardController::subir_documentos_view');
+		$routes->post('subir_documentos', 'litigantes/DashboardController::subir_documentos');
+		$routes->get('denuncias', 'litigantes/DashboardController::denuncias');
+		$routes->get('perfil', 'litigantes/DashboardController::profile');
+
+		$routes->get('denuncia_persona_moral', 'litigantes/DashboardController::denuncia_persona_moral');
+		$routes->post('create_denuncia_persona_moral', 'litigantes/DashboardController::create_denuncia_persona_moral');
 	});
 });
 /**

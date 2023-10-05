@@ -26,6 +26,7 @@ class DocumentosController extends BaseController
 	private $_folioModelRead;
 	private $_usuariosModelRead;
 	private $_municipiosModelRead;
+	private $_folioPersonaMoralModelRead;
 
 	function __construct()
 	{
@@ -37,6 +38,8 @@ class DocumentosController extends BaseController
 		$this->_folioDocModelRead = model('FolioDocModel', true, $this->db_read);
 		$this->_plantillasModelRead = model('PlantillasModel', true, $this->db_read);
 		$this->_folioPersonaFisicaModelRead = model('FolioPersonaFisicaModel', true, $this->db_read);
+		$this->_folioPersonaMoralModelRead = model('FolioPersonaMoralModel', true, $this->db_read);
+
 		$this->_rolesPermisosModelRead = model('RolesPermisosModel', true, $this->db_read);
 		$this->_folioModelRead = model('FolioModel', true, $this->db_read);
 		$this->_usuariosModelRead = model('UsuariosModel', true, $this->db_read);
@@ -245,6 +248,7 @@ class DocumentosController extends BaseController
 			$imputados = $this->_folioPersonaFisicaModelRead->get_imputados($folio, $year);
 			$victimas = $this->_folioPersonaFisicaModelRead->get_victimas($folio, $year);
 			$correos = $this->_folioPersonaFisicaModelRead->get_correos_persona($folio, $year);
+			$correosNoti = $this->_folioPersonaMoralModelRead->get_correos_notificacion($folio, $year);
 
 			return json_encode(['status' => 1, 'documentos' => $documentos, 'victimas' => $victimas, "imputados" => $imputados, 'correos' => $correos]);
 		}
@@ -253,8 +257,9 @@ class DocumentosController extends BaseController
 			$imputados = $this->_folioPersonaFisicaModelRead->get_imputados($folio, $year);
 			$victimas = $this->_folioPersonaFisicaModelRead->get_victimas($folio, $year);
 			$correos = $this->_folioPersonaFisicaModelRead->get_correos_persona($folio, $year);
+			$correosNoti = $this->_folioPersonaMoralModelRead->get_correos_notificacion($folio, $year);
 
-			return json_encode(['status' => 1, 'documentos' => $documentos, 'victimas' => $victimas, "imputados" => $imputados, 'correos' => $correos]);
+			return json_encode(['status' => 1, 'documentos' => $documentos, 'victimas' => $victimas, "imputados" => $imputados, 'correos' => $correos, 'correosNoti'=> $correosNoti]);
 		} else {
 			return json_encode(['status' => 0]);
 		}

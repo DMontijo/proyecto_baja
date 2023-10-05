@@ -12,6 +12,7 @@ use App\Models\FolioPersonaFisicaMediaFiliacionModel;
 use App\Models\FolioPersonaFisicaModel;
 use App\Models\FolioPreguntasModel;
 use App\Models\FolioVehiculoModel;
+use App\Models\ParentescoModel;
 use App\Models\PersonaFisicaParentescoModel;
 use GuzzleHttp\Client;
 use MailerSend\MailerSend;
@@ -1425,7 +1426,6 @@ class DashboardController extends BaseController
 	 */
 	private function _curlPostDataEncrypt($endpoint, $data)
 	{
-		// var_dump($data);exit;
 		$ch = curl_init();
 
 		curl_setopt($ch, CURLOPT_URL, $endpoint);

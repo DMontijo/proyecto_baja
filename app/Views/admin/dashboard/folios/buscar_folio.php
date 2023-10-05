@@ -153,11 +153,12 @@
 												$tipo = 'VIDEO';
 											} else if ($folio->TIPODENUNCIA == 'DA') {
 												$tipo = 'ANÓNIMA';
-											} else if ($folio->TIPODENUNCIA == 'TE')  {
+											} else if ($folio->TIPODENUNCIA == 'TE') {
 												$tipo = 'TELEFÓNICA';
-											}else{
-												$tipo = 'ELECTRÓNICA';
-
+											} else if ($folio->TIPODENUNCIA == 'EL') {
+												$tipo = 'ELECTRONICA';
+											} else if ($folio->TIPODENUNCIA == 'ES') {
+												$tipo = 'ESCRITA';
 											} ?>
 
 											<tr>

@@ -152,6 +152,7 @@
 	</div>
 </div>
 <script>
+	
 	//Funcion para eliminar los optiones de un select
 	function clearSelect(select_element) {
 		for (let i = select_element.options.length; i >= 1; i--) {

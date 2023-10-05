@@ -55,6 +55,7 @@ class DenunciantesModel extends Model
 		'ESCRIBIR',
 		'APOYO',
 		'TIPO',
+		'PERFIL',
 		'MANZANA',
 		'LOTE',
 	];

@@ -134,7 +134,7 @@
 		video {
 			width: 100%;
 		}
-		
+
 		.toast {
 			width: 350px;
 			max-width: 100%;
@@ -928,7 +928,7 @@
 	function llenarTablaFisFis(relacionFisFis) {
 		for (let i = 0; i < relacionFisFis.length; i++) {
 			var btn =
-				`<button type='button'  class='btn btn-primary' onclick='eliminarArbolDelictivo(${relacionFisFis[i].PERSONAFISICAIDVICTIMA},${relacionFisFis[i].PERSONAFISICAIDIMPUTADO},${relacionFisFis[i].DELITOMODALIDADID})'><i class='fa fa-trash'></i></button>`
+				`<button type='button'  class='btn btn-primary' onclick='eliminarArbolDelictivo(${relacionFisFis[i].PERSONAFISICAIDVICTIMA},${relacionFisFis[i].PERSONAFISICAIDIMPUTADO},${relacionFisFis[i].DELITOMODALIDADID}, 0)'><i class='fa fa-trash'></i></button>`
 
 			var fila =
 				`<tr id="row${i}">` +
@@ -998,7 +998,7 @@
 	}
 
 	//Funcion para eliminar la relacion del arbol delictivo, recibe como parametro el imputado, victima y el id del delito
-	function eliminarArbolDelictivo(personafisicavictima, personafisicaimputado, delitoModalidadId) {
+	function eliminarArbolDelictivo(personafisicavictima, personafisicaimputado, delitoModalidadId, tipo) {
 		$.ajax({
 			data: {
 				'personafisicavictima': personafisicavictima,
@@ -1006,6 +1006,7 @@
 				'delito': delitoModalidadId,
 				'folio': inputFolio.value,
 				'year': year_select.value,
+				'tipo': tipo,
 
 			},
 			url: "<?= base_url('/data/delete-arbol_delictivo-by-folio') ?>",
@@ -1353,7 +1354,7 @@
 
 							const option = document.createElement('option');
 							option.value = victima.PERSONAFISICAID;
-							option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
+							option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PFCJDESCR;
 							select_victima_documento.add(option, null);
 						});
 
@@ -1400,7 +1401,7 @@
 
 							const option = document.createElement('option');
 							option.value = victima.PERSONAFISICAID;
-							option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
+							option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PFCJDESCR;
 							select_victima_ofendido.add(option, null);
 						});
 						$('#imputado_delito_cometido').empty();
@@ -2420,7 +2421,7 @@
 
 						const option = document.createElement('option');
 						option.value = victima.PERSONAFISICAID;
-						option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
+						option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PFCJDESCR;
 						select_victima_ofendido.add(option, null);
 					});
 					const option_vacio_vd = document.createElement('option');
@@ -2439,7 +2440,7 @@
 
 						const option = document.createElement('option');
 						option.value = victima.PERSONAFISICAID;
-						option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
+						option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PFCJDESCR;
 						select_victima_documento.add(option, null);
 					});
 					const option_vacio_id = document.createElement('option');
@@ -3494,7 +3495,7 @@
 				if (!form_delito.checkValidity()) {
 					event.preventDefault();
 					event.stopPropagation();
-					form_preguntas.classList.add('was-validated')
+					form_delito.classList.add('was-validated')
 				} else {
 					event.preventDefault();
 					event.stopPropagation();
@@ -4788,7 +4789,7 @@
 					input_colonia.value = '-';
 				}
 			});
-
+			
 			//Funcion  para actualizar los hechos de la denuncia
 			function actualizarDenuncia() {
 				const data = {
@@ -5120,7 +5121,7 @@
 						},
 						error: function(jqXHR, textStatus, errorThrown) {}
 					});
-		//Evento change para obtener las localidades de acuerdo al municipio. Limpia los select para que no se acumulen
+					//Evento change para obtener las localidades de acuerdo al municipio. Limpia los select para que no se acumulen
 
 					$.ajax({
 						data: data,
@@ -5178,7 +5179,7 @@
 					input_colonia.classList.add('d-none');
 				}
 			});
-		//Evento change para obtener los municipios de acuerdo al estado. Limpia los select para que no se acumulen
+			//Evento change para obtener los municipios de acuerdo al estado. Limpia los select para que no se acumulen
 
 			document.querySelector('#estado_select_new').addEventListener('change', (e) => {
 				let select_municipio = document.querySelector('#municipio_select_new');
@@ -5237,7 +5238,7 @@
 					document.querySelector('#colonia-message').classList.remove('d-none');
 				}
 			});
-		//Evento change para obtener las localidades de acuerdo al municipio. Limpia los select para que no se acumulen
+			//Evento change para obtener las localidades de acuerdo al municipio. Limpia los select para que no se acumulen
 
 			document.querySelector('#municipio_select_new').addEventListener('change', (e) => {
 				let select_localidad = document.querySelector('#localidad_select_new');
@@ -5276,7 +5277,7 @@
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
 			});
-		//Evento change para obtener los colonias de acuerdo al estado, municipio y localidad. Limpia los select para que no se acumulen
+			//Evento change para obtener los colonias de acuerdo al estado, municipio y localidad. Limpia los select para que no se acumulen
 
 			document.querySelector('#localidad_select_new').addEventListener('change', (e) => {
 				let select_colonia = document.querySelector('#colonia_select_new');
@@ -5599,7 +5600,7 @@
 
 								const option = document.createElement('option');
 								option.value = victima.PERSONAFISICAID;
-								option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
+								option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PFCJDESCR;
 								select_victima_ofendido.add(option, null);
 							});
 							$('#victima_modal_documento').empty();
@@ -5611,7 +5612,7 @@
 
 								const option = document.createElement('option');
 								option.value = victima.PERSONAFISICAID;
-								option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
+								option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PFCJDESCR;
 								select_victima_modal.add(option, null);
 							});
 							document.getElementById('subirFotoPersona').value = '';
@@ -5675,7 +5676,7 @@
 			}
 			//DOMICILIO PERSONA FÍSICA
 
-		//Eventochange de pais para obtener los municipios y localidades  cuando es diferente a MX
+			//Eventochange de pais para obtener los municipios y localidades  cuando es diferente a MX
 
 			document.querySelector('#pais_pfd').addEventListener('change', (e) => {
 
@@ -5771,7 +5772,7 @@
 					input_colonia.classList.add('d-none');
 				}
 			});
-		//Evento change para obtener los municipios de acuerdo al estado. Limpia los select para que no se acumulen
+			//Evento change para obtener los municipios de acuerdo al estado. Limpia los select para que no se acumulen
 
 			document.querySelector('#estado_pfd').addEventListener('change', (e) => {
 				let select_municipio = document.querySelector('#municipio_pfd');
@@ -5828,7 +5829,7 @@
 					input_colonia.classList.remove('d-none');
 				}
 			});
-		//Evento change para obtener las localidades de acuerdo al municipio. Limpia los select para que no se acumulen
+			//Evento change para obtener las localidades de acuerdo al municipio. Limpia los select para que no se acumulen
 
 			document.querySelector('#municipio_pfd').addEventListener('change', (e) => {
 				let select_localidad = document.querySelector('#localidad_pfd');
@@ -5870,7 +5871,7 @@
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
 			});
-		//Evento change para obtener las colonias de acuerdo a la localidad. Limpia los select para que no se acumulen
+			//Evento change para obtener las colonias de acuerdo a la localidad. Limpia los select para que no se acumulen
 
 			document.querySelector('#localidad_pfd').addEventListener('change', (e) => {
 				let select_colonia = document.querySelector('#colonia_pfd_select');
@@ -6717,7 +6718,7 @@
 
 								const option = document.createElement('option');
 								option.value = victima.PERSONAFISICAID;
-								option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
+								option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PFCJDESCR;
 								select_victima_ofendido.add(option, null);
 							});
 							const option_vacio_vd = document.createElement('option');
@@ -6736,7 +6737,7 @@
 
 								const option = document.createElement('option');
 								option.value = victima.PERSONAFISICAID;
-								option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
+								option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PFCJDESCR;
 								select_victima_documento.add(option, null);
 							});
 							const option_vacio_id = document.createElement('option');
